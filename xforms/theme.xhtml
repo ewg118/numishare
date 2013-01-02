@@ -1,0 +1,113 @@
+<!--
+	Copyright (C) 2010 Ethan Gruber
+	Numishare: http://code.google.com/p/numishare/
+	Apache License 2.0
+	
+	Heavily modified from upload form developed by Orbeon	
+-->
+<html xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns="http://www.w3.org/1999/xhtml" xmlns:xxforms="http://orbeon.org/oxf/xml/xforms" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:fr="http://orbeon.org/oxf/xml/form-runner"
+	xmlns:xi="http://www.w3.org/2001/XInclude">
+	<head>
+		<title>Numishare: Theme</title>
+		<!-- Core + Skin CSS -->
+		<xhtml:link rel="stylesheet" type="text/css" href="/apps/numishare/css/jquery-ui-1.8.10.custom.css"/>
+		<xhtml:link rel="stylesheet" href="/apps/numishare/css/reset-fonts-grids.css"/>
+		<xhtml:link rel="stylesheet" href="/apps/numishare/css/base-min.css"/>
+		<xhtml:link rel="stylesheet" href="/apps/numishare/css/fonts-min.css"/>
+
+		<!-- numishare styling -->
+		<xhtml:link rel="stylesheet" href="/apps/numishare/css/xforms.css"/>
+
+		<xhtml:script type="text/javascript" src="/apps/numishare/javascript/jquery-1.6.1.min.js"/>
+		<xhtml:script type="text/javascript" src="/apps/numishare/javascript/numishare-menu.js"/>
+		
+		<xforms:model>
+			<!-- exist URL is stored in an XML file -->
+			<xforms:instance id="exist-url">
+				<xi:include href="exist-url.xml"/>
+			</xforms:instance>
+			
+			<xforms:instance id="control-instance">
+				<controls xmlns="">
+					<collection-name/>
+				</controls>
+			</xforms:instance>
+			
+			<xforms:instance id="dump">
+				<dump/>
+			</xforms:instance>
+			
+			<!-- collections/authentication instances -->
+			<xforms:instance id="collections-list">
+				<collections xmlns="">
+					<collection roll="admin" name="numishare"/>
+				</collections>
+			</xforms:instance>
+			
+			<xforms:instance id="config">
+				<config xmlns=""/>
+			</xforms:instance>
+			
+			<xforms:submission id="load-collections" serialization="none" method="get" action="{instance('exist-url')}collections-list.xml" replace="instance" instance="collections-list"
+				xxforms:username="admin" xxforms:password="">
+				<!-- if the config loads successfully, set the collection names based on authentication -->
+				<xforms:action ev:event="xforms-submit-done">
+					<!-- set default if security is false -->
+					<xforms:action if="not(string(instance('control-instance')/request-security/role))">
+						<xforms:setvalue ref="instance('control-instance')/collection-name">numishare</xforms:setvalue>
+					</xforms:action>
+					<!-- if there is a security role, set the collection-name value if it is in the list, otherwise set new collection name -->
+					<xforms:action if="string(instance('control-instance')/request-security/role)">
+						<xforms:action if="string(instance('collections-list')/collection[@role=instance('control-instance')/request-security/role]/@name)">
+							<xforms:setvalue ref="instance('control-instance')/collection-name"
+								value="instance('collections-list')/collection[@role=instance('control-instance')/request-security/role]/@name"/>
+						</xforms:action>
+					</xforms:action>				
+					<xforms:send submission="load-config"/>
+				</xforms:action>
+				<!-- if the config has not been created (given that the URL in exist-url.xml is correct), create it -->
+				<xforms:message ev:event="xforms-submit-error" level="modal">Unable to load Numishare collections list.</xforms:message>
+			</xforms:submission>
+			
+			<xforms:submission id="load-config" serialization="none" method="get" action="{instance('exist-url')}{instance('control-instance')/collection-name}/config.xml" xxforms:username="admin" xxforms:password="" replace="instance"
+				instance="config">
+				<xforms:message ev:event="xforms-submit-error" level="modal">Unable to load Numishare configuration</xforms:message>
+			</xforms:submission>
+			
+			<xforms:action ev:event="xforms-model-construct-done">
+				<xforms:insert context="instance('control-instance')" nodeset="collection-name" position="after"
+					origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/get-authentication.xpl', 'dump', instance('dump'), 'data')"/>
+				<xforms:send submission="load-collections"/>
+			</xforms:action>
+		</xforms:model>
+	</head>
+	<xhtml:body class="yui-skin-sam">
+		<xhtml:div id="doc4" class="yui-t2 content ui-corner-all">
+			<xxforms:variable name="display_path">../</xxforms:variable>
+			<xi:include href="header.xml"/>
+			<xhtml:div id="bd">
+				<xhtml:div id="yui-main">
+					<xhtml:div class="yui-b">
+						<xhtml:h1>Theme</xhtml:h1>
+						<xhtml:p>Use the menu on the left to navigate theme options.</xhtml:p>
+					</xhtml:div>
+				</xhtml:div>
+				<xhtml:div class="yui-b">
+					<xhtml:ul>
+						<xhtml:li>
+							<a href="jquery-ui/">jQuery UI Theme</a>
+						</xhtml:li>
+						<xhtml:li>
+							<a href="layout/">Layout and Displayable Content</a>
+						</xhtml:li>
+					</xhtml:ul>
+				</xhtml:div>
+			</xhtml:div>
+
+			<!--<widget:xforms-instance-inspector id="orbeon-xforms-inspector" xmlns:widget="http://orbeon.org/oxf/xml/widget"/>-->
+
+		</xhtml:div>
+
+	</xhtml:body>
+</html>

@@ -1,0 +1,161 @@
+<!-- 	author: Ethan Gruber, American Numismatic Society 
+	last modified: August, 2011
+	Function: Enable the user to input positive or negative integer for date or date ranges, automatically generate labels based on these integers
+-->
+<xbl:xbl xmlns="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xxforms="http://orbeon.org/oxf/xml/xforms"
+	xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:xbl="http://www.w3.org/ns/xbl" xmlns:xxbl="http://orbeon.org/oxf/xml/xbl" xmlns:oxf="http://www.orbeon.com/oxf/processors"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xbl:binding id="numishare-type-date" element="numishare|type-date">
+		<xbl:template>
+			<xforms:group xbl:attr="model context ref bind" xxbl:scope="outer">
+				<xbl:content includes="xforms|label,xforms|help,xforms|hint,xforms|alert"/>
+				<xforms:group xxbl:scope="inner">
+					<xxforms:variable name="binding" as="node()?">
+						<xxforms:sequence select="." xxbl:scope="outer"/>
+					</xxforms:variable>
+
+					<!-- set the radio button on form load -->
+					<xforms:action ev:event="xforms-enabled" ev:target="#observer">
+						<xforms:action if="contains($binding/@normal, '/')">
+							<xforms:setvalue ref="instance('date-type')" value="'range'"/>
+							<xforms:setvalue ref="instance('date-temp')/range/fromDate" value="substring-before($binding/@normal, '/')"/>
+							<xforms:setvalue ref="instance('date-temp')/range/toDate" value="substring-after($binding/@normal, '/')"/>
+						</xforms:action>
+						<xforms:action if="not(contains($binding/@normal, '/'))">
+							<xforms:setvalue ref="instance('date-type')" value="'exact'"/>
+							<xforms:setvalue ref="instance('date-temp')/exact" value="$binding/@normal"/>
+						</xforms:action>
+					</xforms:action>
+
+					<div class="subsection">
+						<h3>Date</h3>
+						<xforms:trigger appearance="minimal">
+							<xforms:delete ev:event="DOMActivate" nodeset="$binding"/>
+							<xforms:label>
+								<img src="../../images/remove.gif"/>
+							</xforms:label>
+						</xforms:trigger>
+						<p>Note: Use negative numbers to denote B.C. dates. Date should be four digits, e.g. 23 B.C. is -0023.</p>
+						<radiogroup>
+							<xforms:select1 ref="instance('date-type')" appearance="full">
+								<xforms:label>Date Type</xforms:label>
+								<xforms:item>
+									<xforms:label>exact</xforms:label>
+									<xforms:value>exact</xforms:value>
+								</xforms:item>
+								<xforms:item>
+									<xforms:label>range</xforms:label>
+									<xforms:value>range</xforms:value>
+								</xforms:item>
+								<xforms:action ev:event="xforms-value-changed">
+									<!--<xforms:setvalue ref="$binding/@normal"/>	
+									<xforms:setvalue ref="$binding"/>				-->
+									<xforms:action if=". = 'exact'">
+										<xforms:toggle case="exact"/>
+									</xforms:action>
+									<xforms:action if=". = 'range'">
+										<xforms:toggle case="range"/>
+									</xforms:action>
+								</xforms:action>
+							</xforms:select1>
+						</radiogroup>
+
+						<xforms:switch>
+							<xforms:case id="exact">
+								<xforms:group ref="instance('date-temp')/exact">
+									<div>
+										<xforms:input ref="." incremental="true">
+											<xforms:label>Date</xforms:label>
+											<xforms:alert>Must be integer.</xforms:alert>
+											<xforms:action ev:event="xforms-value-changed">
+												<xxforms:variable name="year" select="instance('date-temp')/exact"/>
+												<xforms:setvalue ref="$binding/@normal" value="$year"/>
+												<xxforms:variable name="era"
+													select="if (number($year) &lt; 0) then concat(abs(number($year)), ' B.C.') else if (number($year) &gt; 0 and number($year) &lt; 400) then concat('A.D. ', number($year)) else number($year)"/>
+												<xforms:setvalue ref="$binding" value="$era"/>
+											</xforms:action>
+										</xforms:input>
+									</div>
+								</xforms:group>
+							</xforms:case>
+							<xforms:case id="range">
+								<xforms:group ref="instance('date-temp')/range">
+									<div>
+										<xforms:input ref="fromDate" incremental="true">
+											<xforms:label>From</xforms:label>
+											<xforms:alert>Must be integer.</xforms:alert>
+											<xforms:action ev:event="xforms-value-changed">
+												<xxforms:variable name="fromDate" select="instance('date-temp')/range/fromDate"/>
+												<xxforms:variable name="toDate" select="instance('date-temp')/range/toDate"/>
+												<xforms:setvalue ref="$binding/@normal" value="concat($fromDate, '/', $toDate)"/>
+												<xxforms:variable name="from-era"
+													select="if (number($fromDate) &lt; 0) then concat(abs(number($fromDate)), ' B.C.') else if (number($fromDate) &gt; 0 and number($fromDate) &lt; 400) then concat('A.D. ', number($fromDate)) else number($fromDate)"/>
+												<xxforms:variable name="to-era"
+													select="if (number($toDate) &lt; 0) then concat(abs(number($toDate)), ' B.C.') else if (number($toDate) &gt; 0 and number($toDate) &lt; 400) then concat('A.D. ', number($toDate)) else number($toDate)"/>
+												<xforms:setvalue ref="$binding" value="concat($from-era, ' - ', $to-era)"/>
+											</xforms:action>
+										</xforms:input>
+									</div>
+									<div>
+										<xforms:input ref="toDate" incremental="true">
+											<xforms:label>To</xforms:label>
+											<xforms:alert>Must be integer.</xforms:alert>
+											<xforms:action ev:event="xforms-value-changed">
+												<xxforms:variable name="fromDate" select="instance('date-temp')/range/fromDate"/>
+												<xxforms:variable name="toDate" select="instance('date-temp')/range/toDate"/>
+												<xforms:setvalue ref="$binding/@normal" value="concat($fromDate, '/', $toDate)"/>
+												<xxforms:variable name="from-era"
+													select="if (number($fromDate) &lt; 0) then concat(abs(number($fromDate)), ' B.C.') else if (number($fromDate) &gt; 0 and number($fromDate) &lt; 400) then concat('A.D. ', number($fromDate)) else number($fromDate)"/>
+												<xxforms:variable name="to-era"
+													select="if (number($toDate) &lt; 0) then concat(abs(number($toDate)), ' B.C.') else if (number($toDate) &gt; 0 and number($toDate) &lt; 400) then concat('A.D. ', number($toDate)) else number($toDate)"/>
+												<xforms:setvalue ref="$binding" value="concat($from-era, if(string($from-era) and string($to-era)) then ' - ' else '', $to-era)"/>
+											</xforms:action>
+										</xforms:input>
+									</div>
+								</xforms:group>
+							</xforms:case>
+						</xforms:switch>
+						<div>
+							<xforms:input ref="$binding">
+								<xforms:label>Label</xforms:label>
+								<xforms:alert>Required</xforms:alert>
+							</xforms:input>
+						</div>
+					</div>
+					<!-- ********************************************************************** -->
+					<!-- ***********************  DIALOG INTERNAL MODEL *********************** -->
+					<xforms:model id="type-date-model">
+						<xs:schema elementFormDefault="qualified" attributeFormDefault="unqualified">
+							<xs:simpleType name="iso8601year">
+								<xs:restriction base="xs:string">
+									<xs:pattern value="\-?(0|1|2)([0-9]{3})"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:schema>
+
+						<xforms:instance id="date-type">
+							<date-type xmlns="">exact</date-type>
+						</xforms:instance>
+
+						<xforms:instance id="date-temp">
+							<date xmlns="">
+								<exact/>
+								<range>
+									<fromDate/>
+									<toDate/>
+								</range>
+							</date>
+						</xforms:instance>
+
+						<xforms:bind nodeset="instance('date-temp')">
+							<xforms:bind nodeset="exact" required="true()" type="iso8601year"/>
+							<xforms:bind nodeset="range">
+								<xforms:bind nodeset="*" required="true()" type="iso8601year"/>
+							</xforms:bind>
+						</xforms:bind>
+					</xforms:model>
+				</xforms:group>
+			</xforms:group>
+		</xbl:template>
+	</xbl:binding>
+</xbl:xbl>

@@ -1,0 +1,273 @@
+/*
+  ****************************************
+  GLOBAL
+  ****************************************
+ */
+html {
+	font-family:sans-serif;
+	background-color:silver;
+}
+.content {
+	border:1px solid gray;
+	background-color:white;
+}
+#header {
+	padding:10px;
+	font-size:24px;
+	font-weight:bold;
+	letter-spacing:6px;
+	background-color:#ebebeb;
+	color:gray;
+}
+#form {
+	padding:5px;
+}
+.center {
+	text-align:center;
+}
+table {
+	margin-left:auto;
+	margin-right:auto;
+	width:90%;
+}
+td {
+	border:1px solid silver;
+	padding:2px;
+}
+th {
+	border: 1px solid silver;
+	background-color:#DDDDDD;
+	padding:2px;
+	font-weight:bold;
+}
+dt{
+	width:125px;
+	float:left;
+}
+.result_metadata {
+	width:450px;
+	border:0;
+	float:left;
+}
+#form h1, #form h2, #form h3, #form h4, #form h5, #form h6 {
+	display:inline;
+}
+.section {
+	margin-bottom:25px;
+	width:100%;
+	display:table;
+}
+.section>h2 {
+	display:inline;
+}
+.subsection {
+	padding:10px 0 10px 25px;
+	width:95%;
+}
+.success {
+	width:50%;
+	padding:10px;
+	border:1px solid #3c803c;
+	margin:0 auto;
+	background-color:#47e547;
+	color:#3c803c;
+}
+.warning {
+	padding:5px;
+	color:#ef8700;
+	font-weight:bold;
+}
+.error {
+	padding:25px;
+	margin:10px;
+	background-color:red;
+	border:2px solid #8d0000;
+}
+.pair_div {
+	width:75%;
+	display:table;
+	border:1px solid silver;
+	padding:5px;
+	margin:2px 0;
+}
+.ui-menubar-item {
+	list-style-type:none;
+}
+/*
+  ****************************************
+  ORBEON XFORM SPECIFIC STYLE
+  ****************************************
+ */
+.submission {
+	text-align:center;
+	margin:10px 0;
+}
+.xforms-submit {
+	margin-left:10px;
+	margin-right:10px;
+}
+.xforms-label {
+	float:left;
+	width:10em;
+}
+.xforms-textarea-appearance-xxforms-autosize {
+	width: 30em;
+	margin-bottom: 4px
+}
+.xforms-input input, textarea, .fr-autocomplete-search input, .xforms-upload-select {
+	width: 30em;
+	margin-bottom: 4px;
+	padding:2px;
+	border:1px solid silver;
+}
+.xforms-select1 {
+	margin-bottom: 4px;
+	width:15em;
+}
+.xforms-select1-appearance-compact{
+	width:30em;	
+}
+.xforms-submit img {
+	vertical-align: middle
+}
+.xforms-trigger-appearance-minimal img {
+	vertical-align: middle
+}
+.xforms-control {
+	margin-right: 10px;
+}
+.xforms-trigger {
+	text-decoration:none;
+}
+.xforms-repeat-selected-item-1, .xforms-repeat-selected-item-2, .xforms-repeat-selected-item-3, .xforms-repeat-selected-item-4 {
+	background:inherit;
+}
+.widget-tab-panel {
+	padding-top: 1em;
+}
+.widget-tabs-panel {
+	border:0;
+	padding:20px;
+}
+/*
+  #form .widget-tabs {
+  width: 800px;
+  margin-left:200px;
+  }
+  #form .xbl-fr-tabview {
+  width: 800px;
+  margin-left:200px;
+  }
+ */
+/*.fr-autocomplete-container .yui-ac-content {
+	overflow-x: hidden;
+	overflow-y: auto;
+	*height:expression(this.scrollHeight>100?"100px":"auto");
+}*/
+.yui-skin-sam .yui-ac-container {
+	position:relative;
+	top:0;
+	width:30em;
+	margin-right:1em;
+}
+.xbl-fr-autocomplete .yui-ac {
+	position:relative;
+	float:left;
+}
+.xbl-fr-autocomplete .xforms-input-input {
+	width:30em;
+	margin-bottom:2px;
+}
+.yui-editor-editable-container {
+	height:100px;
+}
+.xforms-repeat-selected-item-2 {
+	background:none;
+}
+.mask {
+	opacity:0;
+}
+.xforms-output {
+	margin:0;
+}
+.ui-state-error, .ui-state-highlight {
+	padding: 0pt 0.7em;
+	margin:20px auto;
+	width:400px;
+	font-size:12px;
+}
+/*
+  ****************************************
+  PAGINATION
+  ****************************************
+ */
+.paging_div {
+	width:100%;
+	display:table;
+	padding-top:10px;
+	padding-bottom:10px;
+}
+.pagingBtn, .pagingSep {
+	padding:2px;
+	text-decoration:none;
+}
+.pagingBtn {
+	font-weight:bold;
+}
+.pagingBtn:hover {
+	background-color:#DDDDDD;
+	text-decoration:underline;
+}
+/*
+  * jQuery UI Menubar @VERSION
+  *
+  * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)
+  * Dual licensed under the MIT or GPL Version 2 licenses.
+  * http://jquery.org/license
+ */
+.ui-menubar {
+	list-style: none;
+	margin: 0;
+	padding-left: 0;
+	border-left:0px;
+	border-right:0px;
+	 
+}
+.ui-menubar-item {
+	float: left;
+	 
+}
+.ui-menubar .ui-button {
+	float: left;
+	font-weight: normal;
+	border-top-width: 0 !important;
+	border-bottom-width: 0 !important;
+	margin: 0;
+	outline: none;
+	 
+}
+.ui-menubar .ui-menubar-link {
+	border-right: 1px dashed transparent;
+	border-left: 1px dashed transparent;
+	 
+}
+.ui-menubar .ui-menu {
+	width: 200px;
+	position: absolute;
+	z-index: 9999;
+	 
+}
+/*
+  ****************************************
+  LAYOUT FORM
+  ****************************************
+ */
+ .layout-image-container{
+ 	margin:80px;	
+ 	text-align:center;
+ }
+ .layout-image{
+ 	background-color:silver;
+ 	border:1px solid gray;
+ 	padding:10px 0; 	
+ }

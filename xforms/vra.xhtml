@@ -1,0 +1,1589 @@
+<html xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns="http://www.w3.org/1999/xhtml" xmlns:xxforms="http://orbeon.org/oxf/xml/xforms" xmlns:p="http://www.orbeon.com/oxf/pipeline" xmlns:xi="http://www.w3.org/2001/XInclude"
+	xmlns:fr="http://orbeon.org/oxf/xml/form-runner">
+	<head>
+		<title>Numishare: Edit Artifact</title>
+		<!-- Core + Skin CSS -->
+		<xhtml:link rel="stylesheet" type="text/css" href="/apps/numishare/css/jquery-ui-1.8.10.custom.css"/>
+
+		<!-- numishare styling -->
+		<xhtml:link rel="stylesheet" href="/apps/numishare/css/xforms.css"/>
+
+		<xhtml:script type="text/javascript" src="/apps/numishare/javascript/jquery-1.6.1.min.js"/>
+		<xhtml:script type="text/javascript" src="/apps/numishare/javascript/numishare-menu.js"/>
+		<xforms:model>
+			<xforms:instance id="vra" xmlns="">
+				<vra>
+					<work id="" source="">
+						<agentSet>
+							<display/>
+							<agent>
+								<name type="personal"/>
+								<role/>
+							</agent>
+						</agentSet>
+						<locationSet/>
+						<titleSet>
+							<title/>
+						</titleSet>
+						<worktypeSet>
+							<worktype/>
+						</worktypeSet>
+					</work>
+				</vra>
+			</xforms:instance>
+
+			<xforms:instance id="status">
+				<status/>
+			</xforms:instance>
+
+			<!-- solr response for id query -->
+			<xforms:instance id="is-published">
+				<response xmlns=""/>
+			</xforms:instance>
+
+			<!-- send to Solr -->
+			<xforms:instance id="addIndex">
+				<add xmlns=""/>
+			</xforms:instance>
+
+			<!-- Instance for Solr commit-->
+			<xforms:instance id="sendCommit">
+				<commit/>
+			</xforms:instance>
+
+			<!-- load URLs from config.xml in eXist into form for Solr and CSS file -->
+			<xforms:instance id="config">
+				<config xmlns="">
+					<url/>
+					<solr_published/>
+				</config>
+			</xforms:instance>
+
+			<xforms:instance id="display-template">
+				<display xmlns=""/>
+			</xforms:instance>
+
+			<xforms:instance id="worktype-template">
+				<worktype xmlns=""/>
+			</xforms:instance>
+			<xforms:instance id="agentcorpname-template">
+				<agent xmlns="">
+					<name type="corporate"/>
+					<role/>
+				</agent>
+			</xforms:instance>
+			<xforms:instance id="agentfamname-template">
+				<agent xmlns="">
+					<name type="family"/>
+					<role/>
+				</agent>
+			</xforms:instance>
+			<xforms:instance id="agentpersname-template">
+				<agent xmlns="">
+					<name type="personal"/>
+					<role/>
+				</agent>
+			</xforms:instance>
+			<xforms:instance id="dateSet-template">
+				<dateSet xmlns="">
+					<display/>
+					<date type="creation">
+						<earliestDate/>
+						<latestDate/>
+					</date>
+				</dateSet>
+			</xforms:instance>
+			<xforms:instance id="date-template">
+				<date xmlns="">
+					<earliestDate/>
+					<latestDate/>
+				</date>
+			</xforms:instance>
+			<xforms:instance id="descriptionSet-template">
+				<descriptionSet xmlns="">
+					<display/>
+				</descriptionSet>
+			</xforms:instance>
+			<xforms:instance id="description-template">
+				<description source="" xmlns=""/>
+			</xforms:instance>
+			<xforms:instance id="inscriptionSet-template">
+				<inscriptionSet xmlns=""/>
+			</xforms:instance>
+			<xforms:instance id="inscription-template">
+				<inscription xmlns=""/>
+			</xforms:instance>
+			<xforms:instance id="inscriptionauthor-template">
+				<author xmlns=""/>
+			</xforms:instance>
+			<xforms:instance id="inscriptiontext-template">
+				<text xmlns="" type=""/>
+			</xforms:instance>
+			<xforms:instance id="inscriptionposition-template">
+				<position xmlns=""/>
+			</xforms:instance>
+			<xforms:instance id="materialSet-template">
+				<materialSet xmlns="">
+					<material/>
+				</materialSet>
+			</xforms:instance>
+			<xforms:instance id="material-template">
+				<material xmlns=""/>
+			</xforms:instance>
+			<xforms:instance id="measurementsSet-template">
+				<measurementsSet xmlns=""/>
+			</xforms:instance>
+			<xforms:instance id="weight-template">
+				<measurements type="weight" unit="" xmlns=""/>
+			</xforms:instance>
+			<xforms:instance id="measurement-template">
+				<measurements type="" unit="" xmlns=""/>
+			</xforms:instance>
+			<xforms:instance id="rightsSet-template">
+				<rightsSet xmlns="">
+					<rights>
+						<rightsHolder/>
+						<text/>
+					</rights>
+				</rightsSet>
+			</xforms:instance>
+			<xforms:instance id="rights-template">
+				<rights xmlns="">
+					<rightsHolder/>
+					<text/>
+				</rights>
+			</xforms:instance>
+			<xforms:instance id="stateEditionSet-template">
+				<stateEditionSet xmlns="">
+					<stateEdition>
+						<name/>
+						<description/>
+					</stateEdition>
+				</stateEditionSet>
+			</xforms:instance>
+			<xforms:instance id="stateEdition-template">
+				<stateEdition xmlns="">
+					<name/>
+					<description/>
+				</stateEdition>
+			</xforms:instance>
+			<xforms:instance id="styleSet-template">
+				<styleSet xmlns="">
+					<style/>
+				</styleSet>
+			</xforms:instance>
+			<xforms:instance id="style-template">
+				<style xmlns=""/>
+			</xforms:instance>
+			<xforms:instance id="subjectSet-template">
+				<subjectSet xmlns="">
+					<subject>
+						<term type="descriptiveTopic"/>
+					</subject>
+				</subjectSet>
+			</xforms:instance>
+			<xforms:instance id="subject-template">
+				<subject xmlns="">
+					<term type="descriptiveTopic"/>
+				</subject>
+			</xforms:instance>
+			<xforms:instance id="techniqueSet-template">
+				<techniqueSet xmlns="">
+					<technique/>
+				</techniqueSet>
+			</xforms:instance>
+			<xforms:instance id="technique-template">
+				<technique xmlns=""/>
+			</xforms:instance>
+			<xforms:instance id="textrefSet-template">
+				<textrefSet xmlns="">
+					<textref>
+						<name type=""/>
+						<refid type="citation"/>
+					</textref>
+				</textrefSet>
+			</xforms:instance>
+			<xforms:instance id="textref-template">
+				<textref xmlns="">
+					<name type=""/>
+					<refid type="citation"/>
+				</textref>
+			</xforms:instance>
+			<xforms:instance id="institution-template">
+				<location type="" xmlns="">
+					<name extent="institution"/>
+				</location>
+			</xforms:instance>
+			<xforms:instance id="city-template">
+				<location type="" xmlns="">
+					<name type="geographic" extent="city"/>
+				</location>
+			</xforms:instance>
+			<xforms:instance id="region-template">
+				<location type="" xmlns="">
+					<name type="geographic" extent="region"/>
+				</location>
+			</xforms:instance>
+			<xforms:instance id="state-template">
+				<location type="" xmlns="">
+					<name type="geographic" extent="state"/>
+				</location>
+			</xforms:instance>
+
+			<!-- image templates -->
+			<xforms:instance id="imageSet-template">
+				<imageSet xmlns="">
+					<display/>
+				</imageSet>
+			</xforms:instance>
+			<!-- thumb -->
+			<xforms:instance id="thumb-template">
+				<image source="thumb" href="images/artifacts/thumb/.jpg" xmlns=""/>
+			</xforms:instance>
+			<!-- screen -->
+			<xforms:instance id="screen-template">
+				<image source="screen" href="images/artifacts/screen/.jpg" xmlns=""/>
+			</xforms:instance>
+			<!-- large -->
+			<xforms:instance id="large-template">
+				<image source="large" href="images/artifacts/large/.jp2" xmlns=""/>
+			</xforms:instance>
+
+			<!-- predefined instances -->
+			<xforms:instance id="agenttype-template">
+				<roles xmlns="">
+					<role>
+						<name>Select...</name>
+						<value/>
+					</role>
+					<role>
+						<name>Personal</name>
+						<value>personal</value>
+					</role>
+					<role>
+						<name>Family</name>
+						<value>family</value>
+					</role>
+					<role>
+						<name>Corporate</name>
+						<value>corporate</value>
+					</role>
+				</roles>
+			</xforms:instance>
+			<xforms:instance id="geogtype-template">
+				<types xmlns="">
+					<type value="creation">Creation</type>
+					<type value="discovery">Discovery</type>
+					<type value="performance">Performance</type>
+					<type value="publication">Publication</type>
+					<type value="site">Site</type>
+				</types>
+			</xforms:instance>
+			<xforms:instance id="inscriptiontype-template">
+				<roles xmlns="">
+					<role>
+						<name>Select...</name>
+						<value/>
+					</role>
+					<role>
+						<name>Caption</name>
+						<value>caption</value>
+					</role>
+					<role>
+						<name>Date</name>
+						<value>date</value>
+					</role>
+					<role>
+						<name>Mark</name>
+						<value>mark</value>
+					</role>
+					<role>
+						<name>Signature</name>
+						<value>signature</value>
+					</role>
+					<role>
+						<name>Text</name>
+						<value>text</value>
+					</role>
+					<role>
+						<name>Translation</name>
+						<value>translation</value>
+					</role>
+					<role>
+						<name>Other</name>
+						<value>other</value>
+					</role>
+				</roles>
+			</xforms:instance>
+			<xforms:instance id="measurementtype-template">
+				<roles xmlns="">
+					<role>
+						<name>Select...</name>
+						<value/>
+					</role>
+					<role>
+						<name>Area</name>
+						<value>area</value>
+					</role>
+					<role>
+						<name>Base</name>
+						<value>base</value>
+					</role>
+					<role>
+						<name>Circumference</name>
+						<value>circumference</value>
+					</role>
+					<role>
+						<name>Depth</name>
+						<value>depth</value>
+					</role>
+					<role>
+						<name>Diameter</name>
+						<value>diameter</value>
+					</role>
+					<role>
+						<name>Height</name>
+						<value>height</value>
+					</role>
+					<role>
+						<name>Length</name>
+						<value>length</value>
+					</role>
+					<role>
+						<name>Width</name>
+						<value>width</value>
+					</role>
+					<role>
+						<name>Other</name>
+						<value>other</value>
+					</role>
+				</roles>
+			</xforms:instance>
+			<xforms:instance id="measurementunit-template">
+				<roles xmlns="">
+					<role>
+						<name>Select...</name>
+						<value/>
+					</role>
+					<role>
+						<name>Millimeters</name>
+						<value>mm</value>
+					</role>
+					<role>
+						<name>Centimeters</name>
+						<value>cm</value>
+					</role>
+					<role>
+						<name>Meters</name>
+						<value>meter</value>
+					</role>
+				</roles>
+			</xforms:instance>
+			<xforms:instance id="weightunit-template">
+				<roles xmlns="">
+					<role>
+						<name>Select...</name>
+						<value/>
+					</role>
+					<role>
+						<name>Grams</name>
+						<value>g</value>
+					</role>
+					<role>
+						<name>Kilograms</name>
+						<value>kg</value>
+					</role>
+				</roles>
+			</xforms:instance>
+			<xforms:instance id="institutiontype-template">
+				<roles xmlns="">
+					<role>
+						<name>Select...</name>
+						<value/>
+					</role>
+					<role>
+						<name>Owner</name>
+						<value>owner</value>
+					</role>
+					<role>
+						<name>Repository</name>
+						<value>repository</value>
+					</role>
+					<role>
+						<name>Former Owner</name>
+						<value>formerOwner</value>
+					</role>
+					<role>
+						<name>Former Repository</name>
+						<value>formerRepository</value>
+					</role>
+				</roles>
+			</xforms:instance>
+			<xforms:instance id="textreftype-template">
+				<roles xmlns="">
+					<role>
+						<name>Select...</name>
+						<value/>
+					</role>
+					<role>
+						<name>Book</name>
+						<value>book</value>
+					</role>
+					<role>
+						<name>Catalog</name>
+						<value>catalog</value>
+					</role>
+					<role>
+						<name>Corpus</name>
+						<value>corpus</value>
+					</role>
+					<role>
+						<name>Electronic</name>
+						<value>electronic</value>
+					</role>
+					<role>
+						<name>Serial</name>
+						<value>serial</value>
+					</role>
+					<role>
+						<name>Other</name>
+						<value>other</value>
+					</role>
+				</roles>
+			</xforms:instance>
+			<!-- Controlled Vocabulary Autosuggest  -->
+			<!-- Instance containing the query string -->
+			<xforms:instance id="suggest-query">
+				<query/>
+			</xforms:instance>
+			<xforms:instance id="suggest-buffer">
+				<buffer/>
+			</xforms:instance>
+			<!-- Instance with the suggestions we get back from Solr -->
+			<xforms:instance id="suggestions">
+				<suggestions/>
+			</xforms:instance>
+			<!-- serves to aggregate current itemsets for each autocomplete in repetition -->
+			<xforms:instance id="suggestions-aggregate-city">
+				<suggestions xmlns=""/>
+			</xforms:instance>
+			<xforms:instance id="suggestions-aggregate-corpname">
+				<suggestions xmlns=""/>
+			</xforms:instance>
+			<xforms:instance id="suggestions-aggregate-famname">
+				<suggestions xmlns=""/>
+			</xforms:instance>
+			<xforms:instance id="suggestions-aggregate-format">
+				<suggestions xmlns=""/>
+			</xforms:instance>
+			<xforms:instance id="suggestions-aggregate-institution">
+				<suggestions xmlns=""/>
+			</xforms:instance>
+			<xforms:instance id="suggestions-aggregate-material">
+				<suggestions xmlns=""/>
+			</xforms:instance>
+			<xforms:instance id="suggestions-aggregate-persname">
+				<suggestions xmlns=""/>
+			</xforms:instance>
+			<xforms:instance id="suggestions-aggregate-region">
+				<suggestions xmlns=""/>
+			</xforms:instance>
+			<xforms:instance id="suggestions-aggregate-state">
+				<suggestions xmlns=""/>
+			</xforms:instance>
+			<xforms:instance id="suggestions-aggregate-style">
+				<suggestions xmlns=""/>
+			</xforms:instance>
+			<xforms:instance id="suggestions-aggregate-subject">
+				<suggestions xmlns=""/>
+			</xforms:instance>
+			<xforms:instance id="suggestions-aggregate-technique">
+				<suggestions xmlns=""/>
+			</xforms:instance>
+
+			<xforms:instance id="facet-result-template">
+				<int name="" xmlns=""/>
+			</xforms:instance>
+
+			<xforms:instance id="response-temp">
+				<response xmlns="">
+					<lst name="responseHeader">
+						<int name="status">0</int>
+						<int name="QTime">0</int>
+					</lst>
+					<lst name="terms">
+						<lst name="">
+							<int name="">1</int>
+						</lst>
+					</lst>
+				</response>
+			</xforms:instance>
+
+			<xforms:submission id="city-suggest" serialization="none" method="get"
+				action="http://localhost:8080/solr/numishare-published/terms?terms.fl=city_facet&amp;terms.limit=10&amp;terms.sort=index&amp;terms.prefix={instance('suggest-query')}" instance="suggestions"
+				replace="instance"/>
+			<xforms:submission id="corpname-suggest" serialization="none" method="get"
+				action="http://localhost:8080/solr/numishare-published/terms?terms.fl=corpname_facet&amp;terms.limit=10&amp;terms.sort=index&amp;terms.prefix={instance('suggest-query')}" instance="suggestions"
+				replace="instance"/>
+			<xforms:submission id="famname-suggest" serialization="none" method="get"
+				action="http://localhost:8080/solr/numishare-published/terms?terms.fl=dynasty_facet&amp;terms.limit=10&amp;terms.sort=index&amp;terms.prefix={instance('suggest-query')}" instance="suggestions"
+				replace="instance"/>
+			<xforms:submission id="format-suggest" serialization="none" method="get"
+				action="http://localhost:8080/solr/numishare-published/terms?terms.fl=objectType_facet&amp;terms.limit=10&amp;terms.sort=index&amp;terms.prefix={instance('suggest-query')}" instance="suggestions"
+				replace="instance"/>
+			<xforms:submission id="institution-suggest" serialization="none" method="get"
+				action="http://localhost:8080/solr/numishare-published/terms?terms.fl=institution_facet&amp;terms.limit=10&amp;terms.sort=index&amp;terms.prefix={instance('suggest-query')}" instance="suggestions"
+				replace="instance"/>
+			<xforms:submission id="material-suggest" serialization="none" method="get"
+				action="http://localhost:8080/solr/numishare-published/terms?terms.fl=material_facet&amp;terms.limit=10&amp;terms.sort=index&amp;terms.prefix={instance('suggest-query')}" instance="suggestions"
+				replace="instance"/>
+			<xforms:submission id="persname-suggest" serialization="none" method="get"
+				action="http://localhost:8080/solr/numishare-published/terms?terms.fl=persname_facet&amp;terms.limit=10&amp;terms.sort=index&amp;terms.prefix={instance('suggest-query')}" instance="suggestions"
+				replace="instance"/>
+			<xforms:submission id="region-suggest" serialization="none" method="get"
+				action="http://localhost:8080/solr/numishare-published/terms?terms.fl=region_facet&amp;terms.limit=10&amp;terms.sort=index&amp;terms.prefix={instance('suggest-query')}" instance="suggestions"
+				replace="instance"/>
+			<xforms:submission id="state-suggest" serialization="none" method="get"
+				action="http://localhost:8080/solr/numishare-published/terms?terms.fl=state_facet&amp;terms.limit=10&amp;terms.sort=index&amp;terms.prefix={instance('suggest-query')}" instance="suggestions"
+				replace="instance"/>
+			<xforms:submission id="style-suggest" serialization="none" method="get"
+				action="http://localhost:8080/solr/numishare-published/terms?terms.fl=style_facet&amp;terms.limit=10&amp;terms.sort=index&amp;terms.prefix={instance('suggest-query')}" instance="suggestions"
+				replace="instance"/>
+			<xforms:submission id="subject-suggest" serialization="none" method="get"
+				action="http://localhost:8080/solr/numishare-published/terms?terms.fl=subject_facet&amp;terms.limit=10&amp;terms.sort=index&amp;terms.prefix={instance('suggest-query')}" instance="suggestions"
+				replace="instance"/>
+			<xforms:submission id="technique-suggest" serialization="none" method="get"
+				action="http://localhost:8080/solr/numishare-published/terms?terms.fl=technique_facet&amp;terms.limit=10&amp;terms.sort=index&amp;terms.prefix={instance('suggest-query')}" instance="suggestions"
+				replace="instance"/>
+
+
+			<!-- set labels for all autocompletes -->
+			<!-- provenance: city -->
+			<xforms:action ev:event="xforms-ready">
+				<xforms:action xxforms:iterate="instance('vra')//location[@type='creation' or @type='discovery' or @type='performance' or @type='publication' or @type='site'][name/@extent='city']">
+					<xxforms:variable name="name" select="name/@extent"/>
+					<xxforms:variable name="facet" select="concat($name, '_facet')"/>
+					<xforms:insert context="instance(concat('suggestions-aggregate-', $name))" nodeset="response" origin="instance('response-temp')"/>
+					<xforms:setvalue ref="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst/@name" value="$facet"/>
+					<xforms:setvalue ref="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst[@name=$facet]/int/@name" value="normalize-space(context())"/>
+					<xforms:setindex repeat="{concat($name, '-repeat')}" index="position()"/>
+					<xforms:dispatch target="{concat($name, '-autocomplete-control')}" name="fr-set-label">
+						<xxforms:context name="label" select="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst[@name=$facet]/int/@name"/>
+					</xforms:dispatch>
+				</xforms:action>
+				<!-- corpname: political entity -->
+				<xforms:action xxforms:iterate="instance('vra')//name[@type='corporate']">
+					<xxforms:variable name="name" select="'corpname'"/>
+					<xxforms:variable name="facet" select="concat($name, '_facet')"/>
+					<xforms:insert context="instance(concat('suggestions-aggregate-', $name))" nodeset="response" origin="instance('response-temp')"/>
+					<xforms:setvalue ref="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst/@name" value="$facet"/>
+					<xforms:setvalue ref="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst[@name=$facet]/int/@name" value="normalize-space(context())"/>
+					<xforms:setindex repeat="{concat($name, '-repeat')}" index="position()"/>
+					<xforms:dispatch target="{concat($name, '-autocomplete-control')}" name="fr-set-label">
+						<xxforms:context name="label" select="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst[@name=$facet]/int/@name"/>
+					</xforms:dispatch>
+				</xforms:action>
+				<!-- famname -->
+				<xforms:action xxforms:iterate="instance('vra')//name[@type='family']">
+					<xxforms:variable name="name" select="'famname'"/>
+					<xxforms:variable name="facet" select="concat($name, '_facet')"/>
+					<xforms:insert context="instance(concat('suggestions-aggregate-', $name))" nodeset="response" origin="instance('response-temp')"/>
+					<xforms:setvalue ref="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst/@name" value="$facet"/>
+					<xforms:setvalue ref="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst[@name=$facet]/int/@name" value="normalize-space(context())"/>
+					<xforms:setindex repeat="{concat($name, '-repeat')}" index="position()"/>
+					<xforms:dispatch target="{concat($name, '-autocomplete-control')}" name="fr-set-label">
+						<xxforms:context name="label" select="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst[@name=$facet]/int/@name"/>
+					</xforms:dispatch>
+				</xforms:action>
+				<!-- institution/collector -->
+				<xforms:action xxforms:iterate="instance('vra')//location[name/@extent='institution']">
+					<xxforms:variable name="name" select="'institution'"/>
+					<xxforms:variable name="facet" select="concat($name, '_facet')"/>
+					<xforms:insert context="instance(concat('suggestions-aggregate-', $name))" nodeset="response" origin="instance('response-temp')"/>
+					<xforms:setvalue ref="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst/@name" value="$facet"/>
+					<xforms:setvalue ref="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst[@name=$facet]/int/@name" value="normalize-space(context())"/>
+					<xforms:setindex repeat="{concat($name, '-repeat')}" index="position()"/>
+					<xforms:dispatch target="{concat($name, '-autocomplete-control')}" name="fr-set-label">
+						<xxforms:context name="label" select="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst[@name=$facet]/int/@name"/>
+					</xforms:dispatch>
+				</xforms:action>
+				<!-- material -->
+				<xforms:action xxforms:iterate="instance('vra')//material">
+					<xxforms:variable name="name" select="name()"/>
+					<xxforms:variable name="facet" select="concat($name, '_facet')"/>
+					<xforms:insert context="instance(concat('suggestions-aggregate-', $name))" nodeset="response" origin="instance('response-temp')"/>
+					<xforms:setvalue ref="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst/@name" value="$facet"/>
+					<xforms:setvalue ref="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst[@name=$facet]/int/@name" value="normalize-space(context())"/>
+					<xforms:setindex repeat="{concat($name, '-repeat')}" index="position()"/>
+					<xforms:dispatch target="{concat($name, '-autocomplete-control')}" name="fr-set-label">
+						<xxforms:context name="label" select="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst[@name=$facet]/int/@name"/>
+					</xforms:dispatch>
+				</xforms:action>
+				<!-- persname -->
+				<xforms:action xxforms:iterate="instance('vra')//name[@type='personal']">
+					<xxforms:variable name="name" select="'persname'"/>
+					<xxforms:variable name="facet" select="concat($name, '_facet')"/>
+					<xforms:insert context="instance(concat('suggestions-aggregate-', $name))" nodeset="response" origin="instance('response-temp')"/>
+					<xforms:setvalue ref="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst/@name" value="$facet"/>
+					<xforms:setvalue ref="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst[@name=$facet]/int/@name" value="normalize-space(context())"/>
+					<xforms:setindex repeat="{concat($name, '-repeat')}" index="position()"/>
+					<xforms:dispatch target="{concat($name, '-autocomplete-control')}" name="fr-set-label">
+						<xxforms:context name="label" select="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst[@name=$facet]/int/@name"/>
+					</xforms:dispatch>
+				</xforms:action>
+				<!-- provenance: region -->
+				<xforms:action xxforms:iterate="instance('vra')//location[@type='creation' or @type='discovery' or @type='performance' or @type='publication' or @type='site'][name/@extent='region']">
+					<xxforms:variable name="name" select="name/@extent"/>
+					<xxforms:variable name="facet" select="concat($name, '_facet')"/>
+					<xforms:insert context="instance(concat('suggestions-aggregate-', $name))" nodeset="response" origin="instance('response-temp')"/>
+					<xforms:setvalue ref="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst/@name" value="$facet"/>
+					<xforms:setvalue ref="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst[@name=$facet]/int/@name" value="normalize-space(context())"/>
+					<xforms:setindex repeat="{concat($name, '-repeat')}" index="position()"/>
+					<xforms:dispatch target="{concat($name, '-autocomplete-control')}" name="fr-set-label">
+						<xxforms:context name="label" select="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst[@name=$facet]/int/@name"/>
+					</xforms:dispatch>
+				</xforms:action>
+				<!-- provenance: state -->
+				<xforms:action xxforms:iterate="instance('vra')//location[@type='creation' or @type='discovery' or @type='performance' or @type='publication' or @type='site'][name/@extent='state']">
+					<xxforms:variable name="name" select="name/@extent"/>
+					<xxforms:variable name="facet" select="concat($name, '_facet')"/>
+					<xforms:insert context="instance(concat('suggestions-aggregate-', $name))" nodeset="response" origin="instance('response-temp')"/>
+					<xforms:setvalue ref="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst/@name" value="$facet"/>
+					<xforms:setvalue ref="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst[@name=$facet]/int/@name" value="normalize-space(context())"/>
+					<xforms:setindex repeat="{concat($name, '-repeat')}" index="position()"/>
+					<xforms:dispatch target="{concat($name, '-autocomplete-control')}" name="fr-set-label">
+						<xxforms:context name="label" select="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst[@name=$facet]/int/@name"/>
+					</xforms:dispatch>
+				</xforms:action>
+				<!-- technique -->
+				<xforms:action xxforms:iterate="instance('vra')//technique">
+					<xxforms:variable name="name" select="name()"/>
+					<xxforms:variable name="facet" select="concat($name, '_facet')"/>
+					<xforms:insert context="instance(concat('suggestions-aggregate-', $name))" nodeset="response" origin="instance('response-temp')"/>
+					<xforms:setvalue ref="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst/@name" value="$facet"/>
+					<xforms:setvalue ref="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst[@name=$facet]/int/@name" value="normalize-space(context())"/>
+					<xforms:setindex repeat="{concat($name, '-repeat')}" index="position()"/>
+					<xforms:dispatch target="{concat($name, '-autocomplete-control')}" name="fr-set-label">
+						<xxforms:context name="label" select="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst[@name=$facet]/int/@name"/>
+					</xforms:dispatch>
+				</xforms:action>
+				<!-- style -->
+				<xforms:action xxforms:iterate="instance('vra')//style">
+					<xxforms:variable name="name" select="name()"/>
+					<xxforms:variable name="facet" select="concat($name, '_facet')"/>
+					<xforms:insert context="instance(concat('suggestions-aggregate-', $name))" nodeset="response" origin="instance('response-temp')"/>
+					<xforms:setvalue ref="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst/@name" value="$facet"/>
+					<xforms:setvalue ref="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst[@name=$facet]/int/@name" value="normalize-space(context())"/>
+					<xforms:setindex repeat="{concat($name, '-repeat')}" index="position()"/>
+					<xforms:dispatch target="{concat($name, '-autocomplete-control')}" name="fr-set-label">
+						<xxforms:context name="label" select="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst[@name=$facet]/int/@name"/>
+					</xforms:dispatch>
+				</xforms:action>
+				<!-- format -->
+				<xforms:action xxforms:iterate="instance('vra')//worktype">
+					<xxforms:variable name="name" select="'format'"/>
+					<xxforms:variable name="facet" select="concat($name, '_facet')"/>
+					<xforms:insert context="instance(concat('suggestions-aggregate-', $name))" nodeset="response" origin="instance('response-temp')"/>
+					<xforms:setvalue ref="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst/@name" value="$facet"/>
+					<xforms:setvalue ref="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst[@name=$facet]/int/@name" value="normalize-space(context())"/>
+					<xforms:setindex repeat="{concat($name, '-repeat')}" index="position()"/>
+					<xforms:dispatch target="{concat($name, '-autocomplete-control')}" name="fr-set-label">
+						<xxforms:context name="label" select="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst[@name=$facet]/int/@name"/>
+					</xforms:dispatch>
+				</xforms:action>
+				<!-- subject -->
+				<xforms:action xxforms:iterate="instance('vra')//subject">
+					<xxforms:variable name="name" select="name()"/>
+					<xxforms:variable name="facet" select="concat($name, '_facet')"/>
+					<xforms:insert context="instance(concat('suggestions-aggregate-', $name))" nodeset="response" origin="instance('response-temp')"/>
+					<xforms:setvalue ref="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst/@name" value="$facet"/>
+					<xforms:setvalue ref="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst[@name=$facet]/int/@name" value="normalize-space(context())"/>
+					<xforms:setindex repeat="{concat($name, '-repeat')}" index="position()"/>
+					<xforms:dispatch target="{concat($name, '-autocomplete-control')}" name="fr-set-label">
+						<xxforms:context name="label" select="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst[@name=$facet]/int/@name"/>
+					</xforms:dispatch>
+
+
+				</xforms:action>
+			</xforms:action>
+
+			<!-- for getting parameters for loading pages -->
+			<xforms:action ev:event="xforms-model-construct-done">
+				<xforms:setvalue ref="instance('vra')/work/@id" value="xxforms:get-request-parameter('id')"/>
+				<xforms:setvalue ref="instance('deleteId')/id" value="xxforms:get-request-parameter('id')"/>
+			</xforms:action>
+
+			<!-- Type for language -->
+			<xforms:bind nodeset="instance('vra')">
+				<xforms:bind nodeset="imageSet">
+					<xforms:bind nodeset="display" required="true()"/>
+				</xforms:bind>
+				<xforms:bind nodeset="work">
+					<xforms:bind nodeset="@id" required="true()"/>
+					<xforms:bind nodeset="@source" required="true()"/>
+					<!--<xforms:bind nodeset="agentSet">
+						<xforms:bind nodeset="agent/name" required="true()"/>
+					</xforms:bind>-->
+					<xforms:bind nodeset="descriptionSet">
+						<xforms:bind nodeset="display" required="true()"/>
+					</xforms:bind>
+					<xforms:bind nodeset="subjectSet">
+						<xforms:bind nodeset="subject">
+							<xforms:bind nodeset="term" required="true()"/>
+						</xforms:bind>
+					</xforms:bind>
+					<xforms:bind nodeset="textrefSet">
+						<xforms:bind nodeset="textref">
+							<xforms:bind nodeset="name" required="true()"/>
+							<xforms:bind nodeset="refid" required="true()"/>
+						</xforms:bind>
+					</xforms:bind>
+					<xforms:bind nodeset="titleSet">
+						<xforms:bind nodeset="title" required="true()"/>
+					</xforms:bind>
+					<xforms:bind nodeset="worktypeSet">
+						<xforms:bind nodeset="worktype" required="true()"/>
+					</xforms:bind>
+				</xforms:bind>
+			</xforms:bind>
+
+			<!-- Load File -->
+			<xforms:submission id="load-submission" serialization="none" method="get" action="{instance('exist-url')}{instance('control-instance')/collection-name}/vra/{instance('vra')/work/@id}.xml" xxforms:username="admin" xxforms:password=""
+				replace="instance" instance="vra"> </xforms:submission>
+
+			<!-- Save File -->
+			<xforms:submission id="save-submission" ref="instance('vra')" xxforms:username="admin" xxforms:password="" action="{instance('exist-url')}{instance('control-instance')/collection-name}/vra/{instance('vra')/work/@id}.xml"
+				method="put" replace="none">
+				<xforms:setvalue ev:event="xforms-submit-done" ref="instance('status')">Artifact saved.</xforms:setvalue>
+				<xforms:message ev:event="xforms-submit-error" level="modal">Save Error!</xforms:message>
+				<xforms:send ev:event="xforms-submit-done" submission="query-solr-for-publication"/>
+			</xforms:submission>
+			<!-- submission to query solr to see if the document is published -->
+			<xforms:submission id="query-solr-for-publication" serialization="none" method="get" action="{instance('config')/solr_published}select/?q=id:{instance('guide')/@id}" replace="instance"
+				instance="is-published">
+				<!-- if the document is found in solr, get the updated solr doc -->
+				<xforms:send ev:event="xforms-submit-done" if="instance('is-published')/result[@name='response']/@numFound = '1'" submission="to-solr"/>
+			</xforms:submission>
+			<!-- access service to read in pre-transformed solr doc -->
+			<xforms:submission id="to-solr" method="get" replace="instance" instance="addIndex" serialization="none" resource="{instance('config')/url}id/{instance('vra')/@id}.solr">
+				<xforms:message ev:event="xforms-submit-error" level="modal">Error transforming VRA Core guide to Solr document.</xforms:message>
+				<xforms:send ev:event="xforms-submit-done" submission="publish-submission"/>
+			</xforms:submission>
+			<!-- post instance to Solr -->
+			<xforms:submission id="publish-submission" action="{instance('config')/solr_published}update" ref="instance('addIndex')" instance="addIndex" replace="instance" method="post">
+				<xforms:send ev:event="xforms-submit-done" submission="submit-commit"/>
+				<xforms:setvalue ev:event="xforms-submit-done" ref="instance('status')">Artifact saved and updated to search index.</xforms:setvalue>
+				<xforms:message ev:event="xforms-submit-error" level="modal">Data Failed to POST to Solr. Index may be offline or URL is incorrect.</xforms:message>
+			</xforms:submission>
+			<!-- send commit -->
+			<xforms:submission id="submit-commit" action="{instance('config')/solr_published}update" ref="instance('sendCommit')" instance="sendCommit" replace="none" method="post"/>
+
+			<!-- load XML data on form load -->
+			<xforms:send ev:event="xforms-model-construct-done" submission="load-submission"/>
+
+			<!-- load site info -->
+			<xforms:submission id="load-config" serialization="none" method="get" action="{instance('exist-url')}{instance('control-instance')/collection-name}/config.xml" xxforms:username="admin" xxforms:password=""
+				replace="instance" instance="config"/>
+		</xforms:model>
+
+	</head>
+	<xhtml:body>
+		<xhtml:div class="content ui-corner-all">
+			<xhtml:div id="hd">
+				<xhtml:div id="header">NUMISHARE ADMINISTRATION</xhtml:div>
+			</xhtml:div>
+			<ul role="menubar" id="menu" class="menubar ui-menubar ui-widget-header ui-helper-clearfix">
+				<li role="presentation" class="ui-menubar-item">
+					<a aria-haspopup="true" role="menuitem" class="ui-button ui-widget ui-button-text-only ui-menubar-link" href="../../" tabindex="-1"><span class="ui-button-text">Objects</span></a>
+				</li>
+
+				<li role="presentation" class="ui-menubar-item">
+					<a aria-haspopup="true" role="menuitem" class="ui-button ui-widget ui-button-text-only ui-menubar-link" tabindex="-1" href="../../pages/"><span class="ui-button-text"
+						>Pages</span></a>
+				</li>
+				<li role="presentation" class="ui-menubar-item">
+					<a aria-haspopup="true" role="menuitem" class="ui-button ui-widget ui-button-text-only ui-menubar-link" tabindex="-1" href="../../imports/"><span class="ui-button-text">Imports</span></a>
+				</li>
+				<li role="presentation" class="ui-menubar-item">
+					<a aria-haspopup="true" role="menuitem" class="ui-button ui-widget ui-button-text-only ui-menubar-link" tabindex="-1" href="../../batch-publication/"><span class="ui-button-text"
+							>Batch Publication</span></a>
+				</li>
+				<li role="presentation" class="ui-menubar-item">
+					<a aria-haspopup="true" role="menuitem" class="ui-button ui-widget ui-button-text-only ui-menubar-link" href="../settings/"><span class="ui-button-text">Numishare
+						Settings</span></a>
+				</li>
+			</ul>
+
+			<div id="form">
+				<xforms:group ref="instance('status')/text()">
+					<div class="success">
+						<xforms:output ref="instance('status')"/>
+					</div>
+				</xforms:group>
+				<p>
+					<a href="../../">&lt; Return</a>
+				</p>
+				<div class="submission">
+					<xforms:submit submission="save-submission" appearance="minimal">
+						<xforms:label class="file_control"><img src="{$display_path}images/save.gif" alt="Save"/> Save</xforms:label>
+					</xforms:submit>
+					<xforms:submit submission="load-submission" appearance="minimal">
+						<xforms:label class="file_control"><img src="{$display_path}images/recycle-green.png" alt="Load"/> Load</xforms:label>
+					</xforms:submit>
+				</div>
+				<h1>Create/Edit Artifact</h1>
+				<xforms:group ref="instance('vra')">
+					<div class="trigger_container">
+						<xforms:group ref=".[count(//textrefSet) &lt; 1]">
+							<xforms:trigger appearance="minimal">
+								<xforms:label>
+									<img src="{$display_path}images/add.gif"/>Bibliography</xforms:label>
+								<xforms:insert ev:event="DOMActivate" context="work" origin="instance('textrefSet-template')"/>
+							</xforms:trigger>
+						</xforms:group>
+						<xforms:trigger appearance="minimal">
+							<xforms:label>
+								<img src="{$display_path}images/add.gif"/>Image</xforms:label>
+							<xforms:insert ev:event="DOMActivate" context="." nodeset="./child::node()[last()]" origin="instance('imageSet-template')"/>
+						</xforms:trigger>
+						<xforms:group ref=".[count(//subjectSet) &lt; 1]">
+							<xforms:trigger appearance="minimal">
+								<xforms:label>
+									<img src="{$display_path}images/add.gif"/>Subjects</xforms:label>
+								<xforms:insert ev:event="DOMActivate" context="work" origin="instance('subjectSet-template')"/>
+							</xforms:trigger>
+						</xforms:group>
+						<xforms:group ref=".[count(//descriptionSet) &lt; 1]">
+							<xforms:trigger appearance="minimal">
+								<xforms:label>
+									<img src="{$display_path}images/add.gif"/>Commentary</xforms:label>
+								<xforms:insert ev:event="DOMActivate" context="work" origin="instance('descriptionSet-template')"/>
+							</xforms:trigger>
+						</xforms:group>
+					</div>
+					<xforms:group ref="work">
+						<div class="section">
+							<h2>Descriptive Information</h2>
+							<div class="trigger_container">
+								<xforms:group ref=".[count(//dateSet) &lt; 1]">
+									<xforms:trigger appearance="minimal">
+										<xforms:label>
+											<img src="{$display_path}images/add.gif"/>Date</xforms:label>
+										<xforms:insert ev:event="DOMActivate" context="." origin="instance('dateSet-template')"/>
+									</xforms:trigger>
+								</xforms:group>
+							</div>
+							<div>
+								<xforms:input ref="@id">
+									<xforms:label>Document ID</xforms:label>
+									<xforms:alert>The doc id is required</xforms:alert>
+								</xforms:input>
+							</div>
+							<div>
+								<xforms:input ref="titleSet/title">
+									<xforms:label>Title</xforms:label>
+									<xforms:alert>Title is required</xforms:alert>
+								</xforms:input>
+							</div>
+							<xforms:repeat id="date" nodeset="dateSet">
+								<div class="pair_div">
+									<div>
+										<xforms:input ref="display">
+											<xforms:label>Date - Text</xforms:label>
+										</xforms:input>
+									</div>
+									<div>
+										<xforms:input ref="date/earliestDate">
+											<xforms:label>Earliest Date</xforms:label>
+										</xforms:input>
+									</div>
+									<div>
+										<xforms:input ref="date/latestDate">
+											<xforms:label>Latest Date</xforms:label>
+										</xforms:input>
+									</div>
+									<div style="float:right;">
+										<xforms:trigger appearance="minimal">
+											<xforms:delete ev:event="DOMActivate" nodeset="." at="index('date')"/>
+											<xforms:label>
+												<img src="{$display_path}images/remove.gif"/>
+											</xforms:label>
+										</xforms:trigger>
+									</div>
+								</div>
+							</xforms:repeat>
+						</div>
+						<div class="section">
+							<h2>Physical Attributes</h2>
+							<div class="trigger_container">
+								<xforms:group ref=".[count(//inscriptionSet) &lt; 1]">
+									<xforms:trigger appearance="minimal">
+										<xforms:label>
+											<img src="{$display_path}images/add.gif"/>Inscription Set</xforms:label>
+										<xforms:insert ev:event="DOMActivate" context="." origin="instance('inscriptionSet-template')"/>
+									</xforms:trigger>
+								</xforms:group>
+								<xforms:group ref=".[count(//materialSet) &lt; 1]">
+									<xforms:trigger appearance="minimal">
+										<xforms:label>
+											<img src="{$display_path}images/add.gif"/>Material Set</xforms:label>
+										<xforms:insert ev:event="DOMActivate" context="." origin="instance('materialSet-template')"/>
+									</xforms:trigger>
+								</xforms:group>
+								<xforms:group ref=".[count(//measurementsSet) &lt; 1]">
+									<xforms:trigger appearance="minimal">
+										<xforms:label>
+											<img src="{$display_path}images/add.gif"/>Measurements Set</xforms:label>
+										<xforms:insert ev:event="DOMActivate" context="." origin="instance('measurementsSet-template')"/>
+									</xforms:trigger>
+								</xforms:group>
+								<xforms:group ref=".[count(//styleSet) &lt; 1]">
+									<xforms:trigger appearance="minimal">
+										<xforms:label>
+											<img src="{$display_path}images/add.gif"/>Style Set</xforms:label>
+										<xforms:insert ev:event="DOMActivate" context="." origin="instance('styleSet-template')"/>
+									</xforms:trigger>
+								</xforms:group>
+								<xforms:group ref=".[count(//techniqueSet) &lt; 1]">
+									<xforms:trigger appearance="minimal">
+										<xforms:label>
+											<img src="{$display_path}images/add.gif"/>Technique Set</xforms:label>
+										<xforms:insert ev:event="DOMActivate" context="." origin="instance('techniqueSet-template')"/>
+									</xforms:trigger>
+								</xforms:group>
+							</div>
+							<!-- repeatable VRA Core worktype: format -->
+							<xi:include href="inputs/vra-format.xml"/>
+							<xforms:repeat id="inscriptionSet" nodeset="inscriptionSet">
+								<div class="subsection">
+									<h3>Inscription Set</h3>
+									<xforms:trigger appearance="minimal">
+										<xforms:delete ev:event="DOMActivate" nodeset="." at="index('inscriptionSet')"/>
+										<xforms:label>
+											<img src="{$display_path}images/remove.gif"/>
+										</xforms:label>
+									</xforms:trigger>
+									<div class="trigger_container">
+										<xforms:group ref=".[count(display) &lt; 1]">
+											<xforms:trigger appearance="minimal">
+												<xforms:label>
+													<img src="{$display_path}images/add.gif"/>Summary Line</xforms:label>
+												<xforms:insert ev:event="DOMActivate" context="." origin="instance('display-template')"/>
+											</xforms:trigger>
+										</xforms:group>
+										<xforms:trigger appearance="minimal">
+											<xforms:label>
+												<img src="{$display_path}images/add.gif"/>Inscription</xforms:label>
+											<xforms:insert ev:event="DOMActivate" context="." nodeset="./child::node()[last()]" origin="instance('inscription-template')"/>
+										</xforms:trigger>
+									</div>
+									<xforms:repeat id="inscriptiondisplay" nodeset="display">
+										<div>
+											<xforms:input ref=".">
+												<xforms:label>Summary Line</xforms:label>
+											</xforms:input>
+											<xforms:trigger appearance="minimal">
+												<xforms:delete ev:event="DOMActivate" nodeset="." at="index('inscriptiondisplay')"/>
+												<xforms:label>
+													<img src="{$display_path}images/remove.gif"/>
+												</xforms:label>
+											</xforms:trigger>
+										</div>
+									</xforms:repeat>
+									<xforms:repeat id="inscription" nodeset="inscription">
+										<div class="subsection">
+											<h4>Inscription</h4>
+											<xforms:trigger appearance="minimal">
+												<xforms:delete ev:event="DOMActivate" nodeset="." at="index('inscriptionSet')"/>
+												<xforms:label>
+													<img src="{$display_path}images/remove.gif"/>
+												</xforms:label>
+											</xforms:trigger>
+											<div class="trigger_container">
+												<xforms:group ref=".[count(author) &lt; 1]">
+													<xforms:trigger appearance="minimal">
+														<xforms:label>
+															<img src="{$display_path}images/add.gif"/>Author</xforms:label>
+														<xforms:insert ev:event="DOMActivate" context="." origin="instance('inscriptionauthor-template')"/>
+													</xforms:trigger>
+												</xforms:group>
+												<xforms:group ref=".[count(position) &lt; 1]">
+													<xforms:trigger appearance="minimal">
+														<xforms:label>
+															<img src="{$display_path}images/add.gif"/>Position</xforms:label>
+														<xforms:insert ev:event="DOMActivate" context="." origin="instance('inscriptionposition-template')"/>
+													</xforms:trigger>
+												</xforms:group>
+												<xforms:trigger appearance="minimal">
+													<xforms:label>
+														<img src="{$display_path}images/add.gif"/>Text</xforms:label>
+													<xforms:insert ev:event="DOMActivate" context="." nodeset="./child::node()[last()]" origin="instance('inscriptiontext-template')"/>
+												</xforms:trigger>
+											</div>
+											<xforms:group ref="author">
+												<div>
+													<xforms:input ref=".">
+														<xforms:label>Author</xforms:label>
+													</xforms:input>
+													<xforms:trigger appearance="minimal">
+														<xforms:delete ev:event="DOMActivate" nodeset="."/>
+														<xforms:label>
+															<img src="{$display_path}images/remove.gif"/>
+														</xforms:label>
+													</xforms:trigger>
+												</div>
+											</xforms:group>
+											<xforms:group ref="position">
+												<div>
+													<xforms:input ref=".">
+														<xforms:label>Position</xforms:label>
+													</xforms:input>
+													<xforms:trigger appearance="minimal">
+														<xforms:delete ev:event="DOMActivate" nodeset="."/>
+														<xforms:label>
+															<img src="{$display_path}images/remove.gif"/>
+														</xforms:label>
+													</xforms:trigger>
+												</div>
+											</xforms:group>
+											<xforms:repeat id="inscriptiontext" nodeset="text">
+												<div>
+													<xforms:input ref=".">
+														<xforms:label>Text</xforms:label>
+													</xforms:input>
+													<xforms:select1 ref="@type">
+														<xforms:itemset nodeset="instance('inscriptiontype-template')/role">
+															<xforms:label ref="name"/>
+															<xforms:value ref="value"/>
+														</xforms:itemset>
+													</xforms:select1>
+													<xforms:trigger appearance="minimal">
+														<xforms:delete ev:event="DOMActivate" nodeset="." at="index('inscriptiontext')"/>
+														<xforms:label>
+															<img src="{$display_path}images/remove.gif"/>
+														</xforms:label>
+													</xforms:trigger>
+												</div>
+											</xforms:repeat>
+										</div>
+									</xforms:repeat>
+								</div>
+							</xforms:repeat>
+							<!-- materials -->
+							<xforms:repeat id="materialSet" nodeset="materialSet">
+								<div class="subsection">
+									<h3>Material Set</h3>
+									<xforms:trigger appearance="minimal">
+										<xforms:delete ev:event="DOMActivate" nodeset="."/>
+										<xforms:label>
+											<img src="{$display_path}images/remove.gif"/>
+										</xforms:label>
+									</xforms:trigger>
+									<div class="trigger_container">
+										<xforms:trigger appearance="minimal">
+											<xforms:label>
+												<img src="{$display_path}images/add.gif"/>Material</xforms:label>
+											<xforms:insert ev:event="DOMActivate" context="." nodeset="./child::node()[last()]" origin="instance('material-template')"/>
+										</xforms:trigger>
+									</div>
+									<!-- material -->
+									<xi:include href="inputs/vra-material.xml"/>
+								</div>
+							</xforms:repeat>
+							<!-- measurements -->
+							<xforms:repeat id="measurementsSet" nodeset="measurementsSet">
+								<div class="subsection">
+									<h3>Measurements Set</h3>
+									<xforms:trigger appearance="minimal">
+										<xforms:delete ev:event="DOMActivate" nodeset="." at="index('measurementsSet')"/>
+										<xforms:label>
+											<img src="{$display_path}images/remove.gif"/>
+										</xforms:label>
+									</xforms:trigger>
+									<div class="trigger_container">
+										<xforms:group ref=".[count(display) &lt; 1]">
+											<xforms:trigger appearance="minimal">
+												<xforms:label>
+													<img src="{$display_path}images/add.gif"/>Summary Line</xforms:label>
+												<xforms:insert ev:event="DOMActivate" context="." origin="instance('display-template')"/>
+											</xforms:trigger>
+										</xforms:group>
+										<xforms:trigger appearance="minimal">
+											<xforms:label>
+												<img src="{$display_path}images/add.gif"/>Dimension</xforms:label>
+											<xforms:insert ev:event="DOMActivate" context="." nodeset="./child::node()[last()]" origin="instance('measurement-template')"/>
+										</xforms:trigger>
+										<xforms:group ref=".[count(measurements[@type='weight']) &lt; 1]">
+											<xforms:trigger appearance="minimal">
+												<xforms:label>
+													<img src="{$display_path}images/add.gif"/>Weight</xforms:label>
+												<xforms:insert ev:event="DOMActivate" context="." nodeset="./child::node()[last()]" origin="instance('weight-template')"/>
+											</xforms:trigger>
+										</xforms:group>
+									</div>
+									<xforms:group ref="display">
+										<div>
+											<xforms:input ref=".">
+												<xforms:label>Summary Line</xforms:label>
+											</xforms:input>
+											<xforms:trigger appearance="minimal">
+												<xforms:delete ev:event="DOMActivate" nodeset="."/>
+												<xforms:label>
+													<img src="{$display_path}images/remove.gif"/>
+												</xforms:label>
+											</xforms:trigger>
+										</div>
+									</xforms:group>
+									<xforms:repeat id="measurement" nodeset="measurements[not(@type='weight')]">
+										<div>
+											<xforms:input ref=".">
+												<xforms:label>Dimension</xforms:label>
+											</xforms:input>
+											<xforms:select1 ref="@type">
+												<xforms:itemset nodeset="instance('measurementtype-template')/role">
+													<xforms:label ref="name"/>
+													<xforms:value ref="value"/>
+												</xforms:itemset>
+											</xforms:select1>
+											<xforms:select1 ref="@unit">
+												<xforms:itemset nodeset="instance('measurementunit-template')/role">
+													<xforms:label ref="name"/>
+													<xforms:value ref="value"/>
+												</xforms:itemset>
+											</xforms:select1>
+											<xforms:trigger appearance="minimal">
+												<xforms:delete ev:event="DOMActivate" nodeset="." at="index('measurement')"/>
+												<xforms:label>
+													<img src="{$display_path}images/remove.gif"/>
+												</xforms:label>
+											</xforms:trigger>
+										</div>
+									</xforms:repeat>
+									<xforms:group ref="measurements[@type='weight']">
+										<div>
+											<xforms:input ref=".">
+												<xforms:label>Weight</xforms:label>
+											</xforms:input>
+											<xforms:select1 ref="@unit">
+												<xforms:itemset nodeset="instance('weightunit-template')/role">
+													<xforms:label ref="name"/>
+													<xforms:value ref="value"/>
+												</xforms:itemset>
+											</xforms:select1>
+											<xforms:trigger appearance="minimal">
+												<xforms:delete ev:event="DOMActivate" nodeset="."/>
+												<xforms:label>
+													<img src="{$display_path}images/remove.gif"/>
+												</xforms:label>
+											</xforms:trigger>
+										</div>
+									</xforms:group>
+								</div>
+							</xforms:repeat>
+							<!-- styleSet, allow more than one style within styleSet -->
+							<xforms:repeat id="styleSet" nodeset="styleSet">
+								<div class="subsection">
+									<h3>Style Set</h3>
+									<xforms:trigger appearance="minimal">
+										<xforms:delete ev:event="DOMActivate" nodeset="." at="index('styleSet')"/>
+										<xforms:label>
+											<img src="{$display_path}images/remove.gif"/>
+										</xforms:label>
+									</xforms:trigger>
+									<div class="trigger_container">
+										<xforms:trigger appearance="minimal">
+											<xforms:label>
+												<img src="{$display_path}images/add.gif"/>Style</xforms:label>
+											<xforms:insert ev:event="DOMActivate" context="." nodeset="./child::node()[last()]" origin="instance('style-template')"/>
+										</xforms:trigger>
+									</div>
+									<!-- style repeat -->
+									<xi:include href="inputs/style.xml"/>
+								</div>
+							</xforms:repeat>
+							<!-- techniqueSet, allow more than one technique within techniqueSet -->
+							<xforms:repeat id="techniqueSet" nodeset="techniqueSet">
+								<div class="subsection">
+									<h3>Technique Set</h3>
+									<xforms:trigger appearance="minimal">
+										<xforms:delete ev:event="DOMActivate" nodeset="." at="index('techniqueSet')"/>
+										<xforms:label>
+											<img src="{$display_path}images/remove.gif"/>
+										</xforms:label>
+									</xforms:trigger>
+									<div class="trigger_container">
+										<xforms:trigger appearance="minimal">
+											<xforms:label>
+												<img src="{$display_path}images/add.gif"/>Technique</xforms:label>
+											<xforms:insert ev:event="DOMActivate" context="." nodeset="./child::node()[last()]" origin="instance('technique-template')"/>
+										</xforms:trigger>
+									</div>
+									<!-- style repeat -->
+									<xi:include href="inputs/technique.xml"/>
+								</div>
+							</xforms:repeat>
+						</div>
+						<div class="section">
+							<h2>Provenance</h2>
+							<div class="trigger_container">
+								<xforms:trigger appearance="minimal">
+									<xforms:label>
+										<img src="{$display_path}images/add.gif"/>Creator Corporate Name</xforms:label>
+									<xforms:insert ev:event="DOMActivate" context="." nodeset="agentSet/child::node()[last()]" origin="instance('agentcorpname-template')"/>
+								</xforms:trigger>
+								<xforms:trigger appearance="minimal">
+									<xforms:label>
+										<img src="{$display_path}images/add.gif"/>Creator Family Name</xforms:label>
+									<xforms:insert ev:event="DOMActivate" context="." nodeset="agentSet/child::node()[last()]" origin="instance('agentfamname-template')"/>
+								</xforms:trigger>
+								<xforms:trigger appearance="minimal">
+									<xforms:label>
+										<img src="{$display_path}images/add.gif"/>Creator Personal Name</xforms:label>
+									<xforms:insert ev:event="DOMActivate" context="." nodeset="agentSet/child::node()[last()]" origin="instance('agentpersname-template')"/>
+								</xforms:trigger>
+								<xforms:trigger appearance="minimal">
+									<xforms:label>
+										<img src="{$display_path}images/add.gif"/>City</xforms:label>
+									<xforms:insert ev:event="DOMActivate" context="locationSet" nodeset="child::node()[last()]" origin="instance('city-template')"/>
+								</xforms:trigger>
+								<xforms:trigger appearance="minimal">
+									<xforms:label>
+										<img src="{$display_path}images/add.gif"/>Region</xforms:label>
+									<xforms:insert ev:event="DOMActivate" context="locationSet" nodeset="child::node()[last()]" origin="instance('region-template')"/>
+								</xforms:trigger>
+								<xforms:trigger appearance="minimal">
+									<xforms:label>
+										<img src="{$display_path}images/add.gif"/>State</xforms:label>
+									<xforms:insert ev:event="DOMActivate" context="locationSet" nodeset="child::node()[last()]" origin="instance('state-template')"/>
+								</xforms:trigger>
+							</div>
+							<xforms:group ref="agentSet">
+								<xi:include href="inputs/vra-persname.xml"/>
+								<xi:include href="inputs/vra-famname.xml"/>
+								<xi:include href="inputs/vra-corpname.xml"/>
+							</xforms:group>
+							<xforms:group
+								ref="locationSet[location/@type='creation' or location/@type='discovery' or location/@type='performance' or location/@type='publication' or location/@type='site']">
+								<!-- city -->
+								<xi:include href="inputs/vra-city.xml"/>
+								<!-- region -->
+								<xi:include href="inputs/vra-region.xml"/>
+								<!-- state -->
+								<xi:include href="inputs/vra-state.xml"/>
+							</xforms:group>
+						</div>
+						<div class="section">
+							<h2>Archival Information</h2>
+							<div class="trigger_container">
+								<xforms:trigger appearance="minimal">
+									<xforms:label>
+										<img src="{$display_path}images/add.gif"/>Collector/Institution</xforms:label>
+									<xforms:insert ev:event="DOMActivate" context="locationSet" nodeset="child::node()[last()]" origin="instance('institution-template')"/>
+								</xforms:trigger>
+								<xforms:group ref=".[count(//rightsSet) &lt; 1]">
+									<xforms:trigger appearance="minimal">
+										<xforms:label>
+											<img src="{$display_path}images/add.gif"/>Rights Set</xforms:label>
+										<xforms:insert ev:event="DOMActivate" context="." origin="instance('rightsSet-template')"/>
+									</xforms:trigger>
+								</xforms:group>
+								<xforms:group ref=".[count(//stateEditionSet) &lt; 1]">
+									<xforms:trigger appearance="minimal">
+										<xforms:label>
+											<img src="{$display_path}images/add.gif"/>State Edition Set</xforms:label>
+										<xforms:insert ev:event="DOMActivate" context="." origin="instance('stateEditionSet-template')"/>
+									</xforms:trigger>
+								</xforms:group>
+							</div>
+							<div>
+								<xforms:input ref="@source">
+									<xforms:label>Collection Name</xforms:label>
+									<xforms:alert>The collection name is required</xforms:alert>
+								</xforms:input>
+							</div>
+							<!-- institution -->
+							<xforms:group ref="locationSet[location/name/@extent='institution']">
+								<xi:include href="inputs/institution.xml"/>
+							</xforms:group>
+							<xforms:group ref="rightsSet">
+								<div class="subsection">
+									<h3>Rights Set</h3>
+									<xforms:trigger appearance="minimal">
+										<xforms:delete ev:event="DOMActivate" nodeset="."/>
+										<xforms:label>
+											<img src="{$display_path}images/remove.gif"/>
+										</xforms:label>
+									</xforms:trigger>
+									<div class="trigger_container">
+										<xforms:trigger appearance="minimal">
+											<xforms:label>
+												<img src="{$display_path}images/add.gif"/>Rights</xforms:label>
+											<xforms:insert ev:event="DOMActivate" context="." nodeset="./child::node()[last()]" origin="instance('rights-template')"/>
+										</xforms:trigger>
+									</div>
+									<xforms:repeat nodeset="rights">
+										<div class="pair_div">
+											<div>
+												<xforms:input ref="rightsHolder">
+													<xforms:label>Rights Holder</xforms:label>
+												</xforms:input>
+											</div>
+											<div>
+												<xforms:input ref="text">
+													<xforms:label>Text</xforms:label>
+												</xforms:input>
+											</div>
+											<xforms:group ref=".[count(//rights) &gt; 1]">
+												<xforms:trigger appearance="minimal" style="float:right">
+													<xforms:delete ev:event="DOMActivate" nodeset="."/>
+													<xforms:label>
+														<img src="{$display_path}images/remove.gif"/>
+													</xforms:label>
+												</xforms:trigger>
+											</xforms:group>
+										</div>
+									</xforms:repeat>
+								</div>
+							</xforms:group>
+							<xforms:group ref="stateEditionSet">
+								<div class="subsection">
+									<h3>State Edition Set</h3>
+									<xforms:trigger appearance="minimal">
+										<xforms:delete ev:event="DOMActivate" nodeset="."/>
+										<xforms:label>
+											<img src="{$display_path}images/remove.gif"/>
+										</xforms:label>
+									</xforms:trigger>
+									<div class="trigger_container">
+										<xforms:trigger appearance="minimal">
+											<xforms:label>
+												<img src="{$display_path}images/add.gif"/>State Edition</xforms:label>
+											<xforms:insert ev:event="DOMActivate" context="." nodeset="./child::node()[last()]" origin="instance('stateEdition-template')"/>
+										</xforms:trigger>
+									</div>
+									<xforms:repeat nodeset="stateEdition">
+										<div class="pair_div">
+											<div>
+												<xforms:input ref="name">
+													<xforms:label>Name</xforms:label>
+												</xforms:input>
+											</div>
+											<div>
+												<xforms:input ref="description">
+													<xforms:label>Description</xforms:label>
+												</xforms:input>
+											</div>
+											<xforms:group ref=".[count(//stateEdition) &gt; 1]">
+												<xforms:trigger appearance="minimal" style="float:right">
+													<xforms:delete ev:event="DOMActivate" nodeset="."/>
+													<xforms:label>
+														<img src="{$display_path}images/remove.gif"/>
+													</xforms:label>
+												</xforms:trigger>
+											</xforms:group>
+										</div>
+									</xforms:repeat>
+								</div>
+							</xforms:group>
+						</div>
+						<xforms:repeat id="textrefSet" nodeset="textrefSet">
+							<div class="section">
+								<h2>Bibliography</h2>
+								<xforms:trigger appearance="minimal">
+									<xforms:delete ev:event="DOMActivate" nodeset="." at="index('textrefSet')"/>
+									<xforms:label>
+										<img src="{$display_path}images/remove.gif"/>
+									</xforms:label>
+								</xforms:trigger>
+								<div class="trigger_container">
+									<xforms:trigger appearance="minimal">
+										<xforms:label>
+											<img src="{$display_path}images/add.gif"/>Reference</xforms:label>
+										<xforms:insert ev:event="DOMActivate" context="." nodeset="./child::node()[last()]" origin="instance('textref-template')"/>
+									</xforms:trigger>
+								</div>
+								<xforms:repeat nodeset="textref" id="textref">
+									<div class="pair_div">
+										<div>
+											<xforms:input ref="name">
+												<xforms:label>Reference</xforms:label>
+												<xforms:alert>Required</xforms:alert>
+											</xforms:input>
+											<xforms:select1 ref="name/@type">
+												<xforms:itemset nodeset="instance('textreftype-template')/role">
+													<xforms:label ref="name"/>
+													<xforms:value ref="value"/>
+												</xforms:itemset>
+											</xforms:select1>
+										</div>
+										<div>
+											<xforms:input ref="refid">
+												<xforms:label>Identifier</xforms:label>
+												<xforms:alert>Required</xforms:alert>
+											</xforms:input>
+										</div>
+										<xforms:group ref=".[count(//textref) &gt; 1]">
+											<div style="float:right;">
+												<xforms:trigger appearance="minimal">
+													<xforms:delete ev:event="DOMActivate" nodeset="." at="index('description')"/>
+													<xforms:label>
+														<img src="{$display_path}images/remove.gif"/>
+													</xforms:label>
+												</xforms:trigger>
+											</div>
+										</xforms:group>
+									</div>
+								</xforms:repeat>
+							</div>
+						</xforms:repeat>
+						<!-- subjectSet.  <term> is repeatable element within <subject> -->
+						<xforms:repeat id="subjectSet" nodeset="subjectSet">
+							<div class="section">
+								<h2>Subjects</h2>
+								<xforms:trigger appearance="minimal">
+									<xforms:delete ev:event="DOMActivate" nodeset="." at="index('subjectSet')"/>
+									<xforms:label>
+										<img src="{$display_path}images/remove.gif"/>
+									</xforms:label>
+								</xforms:trigger>
+								<div class="trigger_container">
+									<xforms:trigger appearance="minimal">
+										<xforms:label>
+											<img src="{$display_path}images/add.gif"/>Subject Term</xforms:label>
+										<xforms:insert ev:event="DOMActivate" context="." nodeset="./child::node()[last()]" origin="instance('subject-template')"/>
+									</xforms:trigger>
+								</div>
+								<!-- subject -->
+								<xi:include href="inputs/vra-subject.xml"/>
+							</div>
+						</xforms:repeat>
+						<!-- commentary -->
+						<xforms:repeat id="descriptionSet" nodeset="descriptionSet">
+							<div class="section">
+								<h2>Commentary</h2>
+								<xforms:trigger appearance="minimal">
+									<xforms:delete ev:event="DOMActivate" nodeset="." at="index('descriptionSet')"/>
+									<xforms:label>
+										<img src="{$display_path}images/remove.gif"/>
+									</xforms:label>
+								</xforms:trigger>
+								<div class="trigger_container">
+									<xforms:trigger appearance="minimal">
+										<xforms:label>
+											<img src="{$display_path}images/add.gif"/>Description Section</xforms:label>
+										<xforms:insert ev:event="DOMActivate" context="." nodeset="./child::node()[last()]" origin="instance('description-template')"/>
+									</xforms:trigger>
+								</div>
+								<div>
+									<xforms:input ref="display">
+										<xforms:label>Title/Byline</xforms:label>
+										<xforms:alert>Required</xforms:alert>
+									</xforms:input>
+								</div>
+								<xforms:repeat id="description" nodeset="description">
+									<div class="pair_div">
+										<div>
+											<xforms:input ref="@source">
+												<xforms:label>Source</xforms:label>
+											</xforms:input>
+										</div>
+										<div>
+											<xforms:textarea ref=".">
+												<xforms:label>Section</xforms:label>
+											</xforms:textarea>
+										</div>
+										<xforms:group ref=".[count(//description) &gt; 1]">
+											<div style="float:right;">
+												<xforms:trigger appearance="minimal">
+													<xforms:delete ev:event="DOMActivate" nodeset="." at="index('description')"/>
+													<xforms:label>
+														<img src="{$display_path}images/remove.gif"/>
+													</xforms:label>
+												</xforms:trigger>
+											</div>
+										</xforms:group>
+									</div>
+								</xforms:repeat>
+							</div>
+						</xforms:repeat>
+					</xforms:group>
+					<xforms:repeat nodeset="imageSet" id="imageSet">
+						<div class="section">
+							<h2>Image</h2>
+							<xforms:trigger appearance="minimal">
+								<xforms:delete ev:event="DOMActivate" nodeset="." at="index('imageSet')"/>
+								<xforms:label>
+									<img src="{$display_path}images/remove.gif"/>
+								</xforms:label>
+							</xforms:trigger>
+							<div class="trigger_container">
+								<xforms:trigger appearance="minimal">
+									<xforms:label>
+										<img src="{$display_path}images/add.gif"/>Thumbnail</xforms:label>
+									<xforms:insert ev:event="DOMActivate" context="." nodeset="./child::node()[last()]" origin="instance('thumb-template')"/>
+								</xforms:trigger>
+								<xforms:trigger appearance="minimal">
+									<xforms:label>
+										<img src="{$display_path}images/add.gif"/>Screen</xforms:label>
+									<xforms:insert ev:event="DOMActivate" context="." nodeset="./child::node()[last()]" origin="instance('screen-template')"/>
+								</xforms:trigger>
+								<xforms:trigger appearance="minimal">
+									<xforms:label>
+										<img src="{$display_path}images/add.gif"/>Large</xforms:label>
+									<xforms:insert ev:event="DOMActivate" context="." nodeset="./child::node()[last()]" origin="instance('large-template')"/>
+								</xforms:trigger>
+							</div>
+							<div>
+								<xforms:input ref="display">
+									<xforms:label>Caption</xforms:label>
+									<xforms:alert>Required</xforms:alert>
+								</xforms:input>
+							</div>
+							<xforms:repeat nodeset="image[@source='thumb']" id="thumb">
+								<div>
+									<xforms:input ref="@href">
+										<xforms:label>Thumbnail</xforms:label>
+									</xforms:input>
+									<xforms:trigger appearance="minimal">
+										<xforms:delete ev:event="DOMActivate" nodeset="." at="index('thumb')"/>
+										<xforms:label>
+											<img src="{$display_path}images/remove.gif"/>
+										</xforms:label>
+									</xforms:trigger>
+								</div>
+							</xforms:repeat>
+							<xforms:repeat nodeset="image[@source='screen']" id="screen">
+								<div>
+									<xforms:input ref="@href">
+										<xforms:label>Screen</xforms:label>
+									</xforms:input>
+									<xforms:trigger appearance="minimal">
+										<xforms:delete ev:event="DOMActivate" nodeset="." at="index('screen')"/>
+										<xforms:label>
+											<img src="{$display_path}images/remove.gif"/>
+										</xforms:label>
+									</xforms:trigger>
+								</div>
+							</xforms:repeat>
+							<xforms:repeat nodeset="image[@source='large']" id="large">
+								<div>
+									<xforms:input ref="@href">
+										<xforms:label>Large</xforms:label>
+									</xforms:input>
+									<xforms:trigger appearance="minimal">
+										<xforms:delete ev:event="DOMActivate" nodeset="." at="index('large')"/>
+										<xforms:label>
+											<img src="{$display_path}images/remove.gif"/>
+										</xforms:label>
+									</xforms:trigger>
+								</div>
+							</xforms:repeat>
+						</div>
+					</xforms:repeat>
+				</xforms:group>
+			</div>
+		</xhtml:div>
+	</xhtml:body>
+
+</html>
