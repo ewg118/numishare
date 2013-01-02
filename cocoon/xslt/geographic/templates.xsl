@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:exsl="http://exslt.org/common" xmlns:gml="http://www.opengis.net/gml/"
 	xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nm="http://nomisma.org/id/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:nuds="http://nomisma.org/nuds"
-	xmlns:nh="http://nomisma.org/nudsHoard" xmlns:xlink="http://www.w3.org/1999/xlink" version="2.0">
+	xmlns:nh="http://nomisma.org/nudsHoard" xmlns:cinclude="http://apache.org/cocoon/include/1.0" xmlns:xlink="http://www.w3.org/1999/xlink" version="2.0">
 	<xsl:template name="kml">
 		<kml xmlns="http://earth.google.com/kml/2.0">
 			<Document>
@@ -44,14 +44,41 @@
 		</kml>
 	</xsl:template>
 
-	<xsl:template name="json"> [ <xsl:choose>
+	<xsl:template name="json">
+		<xsl:text> [ </xsl:text>
+		<xsl:choose>
 			<xsl:when test="count(/content/*[local-name()='nuds']) &gt; 0">
 				<xsl:apply-templates select="/content/nuds:nuds" mode="json"/>
 			</xsl:when>
 			<xsl:when test="count(/content/*[local-name()='nudsHoard']) &gt; 0">
 				<xsl:apply-templates select="/content/nh:nudsHoard" mode="json"/>
 			</xsl:when>
-		</xsl:choose> ] </xsl:template>
+		</xsl:choose>
+		<xsl:text> ] </xsl:text>
+	</xsl:template>
+
+	<xsl:template match="nuds:nuds" mode="kml">
+		<xsl:for-each select="exsl:node-set($nudsGroup)/descendant::nuds:geogname[@xlink:role='mint'][string(@xlink:href)]">
+			<xsl:call-template name="getPlacemark">
+				<xsl:with-param name="href" select="@xlink:href"/>
+				<xsl:with-param name="styleUrl">#mint</xsl:with-param>
+			</xsl:call-template>
+		</xsl:for-each>
+		
+		<!-- gather associated hoards from Metis is available -->
+		<xsl:if test="string($sparql_endpoint)">
+			<cinclude:include src="cocoon:/widget?uri={concat('http://numismatics.org/ocre/', 'id/', $id)}&amp;template=kml"/>
+		</xsl:if>
+	</xsl:template>
+	
+	<xsl:template match="nuds:nuds" mode="json">
+		<xsl:for-each select="exsl:node-set($nudsGroup)/descendant::nuds:geogname[@xlink:role='mint'][string(@xlink:href)]">
+			<xsl:call-template name="getJsonPoint">
+				<xsl:with-param name="href" select="@xlink:href"/>
+				<xsl:with-param name="type">mint</xsl:with-param>
+			</xsl:call-template>
+		</xsl:for-each>
+	</xsl:template>
 
 	<xsl:template match="nh:nudsHoard" mode="kml">
 		<xsl:for-each select="descendant::nh:geogname[@xlink:role='findspot'][string(@xlink:href)]">
@@ -127,20 +154,6 @@
 				<xsl:text>,</xsl:text>
 			</xsl:if>
 		</xsl:for-each>
-	</xsl:template>
-
-	<xsl:template match="nuds:nuds" mode="kml">
-		<xsl:for-each select="exsl:node-set($nudsGroup)/descendant::nuds:geogname[@xlink:role='mint'][string(@xlink:href)]">
-			<xsl:call-template name="getPlacemark">
-				<xsl:with-param name="href" select="@xlink:href"/>
-				<xsl:with-param name="styleUrl">#mint</xsl:with-param>
-			</xsl:call-template>
-		</xsl:for-each>
-		
-		<!-- gather associated hoards from Metis is available -->
-		<xsl:if test="string($sparql_endpoint)">
-			<cinclude:include src="cocoon:/widget?uri={concat($url, 'id/', $id)}&amp;template=kml"/>
-		</xsl:if>
 	</xsl:template>
 
 	<xsl:template name="getJsonPoint">

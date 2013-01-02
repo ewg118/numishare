@@ -6,6 +6,8 @@
 	<xsl:include href="templates.xsl"/>
 	<xsl:output method="xml" encoding="UTF-8"/>
 
+	<xsl:param name="id"/>
+
 	<!-- config variables -->
 	<xsl:variable name="url" select="/content/config/url"/>
 	<xsl:variable name="sparql_endpoint" select="/content/config/sparql_endpoint"/>

@@ -235,11 +235,11 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 					<xsl:if test="$position &gt; 1">
 						<xsl:attribute name="style">display:none</xsl:attribute>
 					</xsl:if>
-					<img class="gi" src="{res:binding[@name='obvThumb']/res:uri}"/>
+					<img src="{res:binding[@name='obvThumb']/res:uri}"/>
 				</a>
 			</xsl:when>
 			<xsl:when test="not(string(res:binding[@name='obvRef']/res:uri)) and string(res:binding[@name='obvThumb']/res:uri)">
-				<img class="gi" src="{res:binding[@name='obvThumb']/res:uri}">
+				<img src="{res:binding[@name='obvThumb']/res:uri}">
 					<xsl:if test="$position &gt; 1">
 						<xsl:attribute name="style">display:none</xsl:attribute>
 					</xsl:if>
@@ -254,11 +254,11 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 					<xsl:if test="$position &gt; 1">
 						<xsl:attribute name="style">display:none</xsl:attribute>
 					</xsl:if>
-					<img class="gi" src="{res:binding[@name='revThumb']/res:uri}"/>
+					<img src="{res:binding[@name='revThumb']/res:uri}"/>
 				</a>
 			</xsl:when>
 			<xsl:when test="not(string(res:binding[@name='revRef']/res:uri)) and string(res:binding[@name='revThumb']/res:uri)">
-				<img class="gi" src="{res:binding[@name='revThumb']/res:uri}">
+				<img src="{res:binding[@name='revThumb']/res:uri}">
 					<xsl:if test="$position &gt; 1">
 						<xsl:attribute name="style">display:none</xsl:attribute>
 					</xsl:if>
