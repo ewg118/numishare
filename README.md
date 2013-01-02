@@ -1,6 +1,3 @@
-numishare
-=========
-
 Numishare is an open source suite of applications for managing digital cultural heritage artifacts, with a particular focus on coins and medals. It is developed and maintained by the American Numismatic Society and employed for its online collection. The architecture of the application is built upon an XML foundation. Coins and medals are described in an XML adaptation of NUDS, the Numismatic Database Standard. Other artifacts are encoded in VRA Core 4.0. The adherence to common library/archive/museum standards and best practices ensures the long-term sustainability and curation of the data.
 
 Background
