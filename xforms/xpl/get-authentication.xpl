@@ -23,10 +23,10 @@
 				<role>admin</role>
 				<role>kittredge</role>
 				<role>rrch</role>
-				<role>papal</role>
-				<role>hsa</role>
+				<role>papal</role>				
 				<role>mantis</role>
 				<role>egypt</role>
+				<role>uva</role>
 			</config>
 		</p:input>
 		<p:output name="data" ref="data"/>
