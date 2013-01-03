@@ -105,7 +105,7 @@
 		<div id="bd">
 			<div id="backgroundPopup"/>
 			<h1>Maps</h1>
-			<p>For useage instructions, see <a href="http://wiki.numismatics.org/numishare:maps">http://wiki.numismatics.org/numishare:maps</a>.</p>
+			<p>For usage instructions, see <a href="http://wiki.numismatics.org/numishare:maps">http://wiki.numismatics.org/numishare:maps</a>.</p>
 			<div class="remove_facets"/>
 
 			<xsl:choose>
