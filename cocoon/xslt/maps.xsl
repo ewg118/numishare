@@ -55,6 +55,7 @@
 					<xsl:when test="$collection_type='hoard'">
 						<!-- timemap dependencies -->
 						<script type="text/javascript" src="http://www.openlayers.org/api/OpenLayers.js"/>
+						<script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3.2&amp;sensor=false"/>
 						<script type="text/javascript" src="{$display_path}javascript/mxn.js"/>
 						<script type="text/javascript" src="http://static.simile.mit.edu/timeline/api-2.2.0/timeline-api.js?bundle=true"/>
 						<script type="text/javascript" src="{$display_path}javascript/timemap_full.pack.js"/>
@@ -104,7 +105,7 @@
 		<div id="bd">
 			<div id="backgroundPopup"/>
 			<h1>Maps</h1>
-			<!--<cinclude:include src="cocoon:/get_department_checkbox"/>-->
+			<p>For useage instructions, see <a href="http://wiki.numismatics.org/numishare:maps">http://wiki.numismatics.org/numishare:maps</a>.</p>
 			<div class="remove_facets"/>
 
 			<xsl:choose>
