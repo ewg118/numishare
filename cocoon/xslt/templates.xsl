@@ -138,10 +138,7 @@
 							<xsl:choose>
 								<xsl:when test="$chartType = .">
 									<xsl:attribute name="checked">checked</xsl:attribute>
-								</xsl:when>
-								<xsl:when test=". = 'column'">
-									<xsl:attribute name="checked">checked</xsl:attribute>
-								</xsl:when>
+								</xsl:when>								
 							</xsl:choose>
 						</input>
 						<label for="chartType-radio">
