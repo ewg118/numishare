@@ -87,7 +87,7 @@
 				</xsl:when>
 				<xsl:when test="contains(@xlink:href, 'nomisma.org')">
 					<xsl:variable name="href" select="@xlink:href"/>
-					<xsl:variable name="coordinates" select="exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/descendant::gml:pos"/>
+					<xsl:variable name="coordinates" select="exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/gml:pos"/>
 					<xsl:if test="string($coordinates)">
 						<xsl:variable name="lat" select="substring-before($coordinates, ' ')"/>
 						<xsl:variable name="lon" select="substring-after($coordinates, ' ')"/>

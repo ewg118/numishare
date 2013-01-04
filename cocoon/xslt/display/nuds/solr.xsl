@@ -8,7 +8,7 @@
 		<xsl:apply-templates select="//nuds:nuds"/>
 	</xsl:template>
 
-	<xsl:template match="nuds:nuds">
+	<xsl:template match="nuds:nuds">		
 		<doc>
 			<field name="id">
 				<xsl:value-of select="nuds:nudsHeader/nuds:nudsid"/>
@@ -89,7 +89,29 @@
 
 	<xsl:template match="nuds:findspotDesc">
 		<xsl:choose>
-			<xsl:when test="string(nuds:findspot/@xlink:href)"> </xsl:when>
+			<xsl:when test="string(@xlink:href)">
+				<xsl:variable name="href" select="@xlink:href"/>
+				<xsl:choose>
+					<xsl:when test="contains($href, 'nomisma.org')">
+						<xsl:variable name="coordinates" select="exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/descendant::gml:pos"/>
+						<xsl:if test="string($coordinates)">
+							<xsl:variable name="lat" select="substring-before($coordinates, ' ')"/>
+							<xsl:variable name="lon" select="substring-after($coordinates, ' ')"/>
+							<!-- *_geo format is 'mint name|URI of resource|KML-compliant geographic coordinates' -->
+							<field name="findspot_geo">
+								<xsl:value-of select="exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/skos:prefLabel"/>
+								<xsl:text>|</xsl:text>
+								<xsl:value-of select="@xlink:href"/>
+								<xsl:text>|</xsl:text>
+								<xsl:value-of select="concat($lon, ',', $lat)"/>
+							</field>
+						</xsl:if>
+					</xsl:when>
+				</xsl:choose>
+				<field name="findspot_uri">
+					<xsl:value-of select="$href"/>
+				</field>
+			</xsl:when>
 			<xsl:otherwise>
 				<field name="findspot_geo">
 					<xsl:value-of select="concat(findspot/name, '|', tokenize(findspot/gml:Point/gml:coordinates, ', ')[2], ',', tokenize(findspot/gml:Point/gml:coordinates, ', ')[1])"/>
