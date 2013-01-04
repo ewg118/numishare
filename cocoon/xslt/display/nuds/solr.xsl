@@ -8,7 +8,7 @@
 		<xsl:apply-templates select="//nuds:nuds"/>
 	</xsl:template>
 
-	<xsl:template match="nuds:nuds">		
+	<xsl:template match="nuds:nuds">
 		<doc>
 			<field name="id">
 				<xsl:value-of select="nuds:nudsHeader/nuds:nudsid"/>
@@ -25,7 +25,7 @@
 			<field name="timestamp">
 				<xsl:value-of select="if(contains(datetime:dateTime(), 'Z')) then datetime:dateTime() else concat(datetime:dateTime(), 'Z')"/>
 			</field>
-			
+
 			<!-- insert coin type facets and URIs -->
 			<xsl:for-each select="descendant::nuds:typeDesc[string(@xlink:href)]">
 				<xsl:variable name="href" select="@xlink:href"/>
@@ -46,36 +46,40 @@
 		<xsl:variable name="recordType">
 			<xsl:value-of select="parent::nuds:nuds/@recordType"/>
 		</xsl:variable>
-		
+		<xsl:variable name="nuds:typeDesc_resource">
+			<xsl:if test="string(nuds:typeDesc/@xlink:href)">
+				<xsl:value-of select="nuds:typeDesc/@xlink:href"/>
+			</xsl:if>
+		</xsl:variable>
 		<xsl:variable name="typeDesc">
 			<xsl:choose>
 				<xsl:when test="string(nuds:typeDesc/@xlink:href)">
 					<xsl:choose>
-						<xsl:when test="contains(nuds:typeDesc/@xlink:href, 'nomisma.org')">
-							<xsl:copy-of select="document(concat(nuds:typeDesc/@xlink:href, '.nuds'))/nuds:nuds"/>
+						<xsl:when test="string($nuds:typeDesc_resource)">
+							<xsl:copy-of select="exsl:node-set($nudsGroup)/nudsGroup/object[@xlink:href = $nuds:typeDesc_resource]/nuds:nuds/nuds:descMeta/nuds:typeDesc"/>
 						</xsl:when>
 						<xsl:otherwise>
-							<xsl:copy-of select="document(concat(nuds:typeDesc/@xlink:href, '.xml'))/nuds:nuds/nuds:descMeta/nuds:typeDesc/*"/>
+							<xsl:copy-of select="/content/nuds:nuds/nuds:descMeta/nuds:typeDesc"/>
 						</xsl:otherwise>
-					</xsl:choose>					
+					</xsl:choose>
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:copy-of select="nuds:typeDesc"/>
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-		
+
 		<xsl:call-template name="get_coin_sort_fields">
 			<xsl:with-param name="typeDesc" select="$typeDesc"/>
 		</xsl:call-template>
-		
+
 		<field name="title_display">
 			<xsl:value-of select="normalize-space(nuds:title)"/>
 		</field>
 		<xsl:if test="string(nuds:department)">
 			<field name="department_facet">
 				<xsl:value-of select="nuds:department"/>
-			</field>			
+			</field>
 		</xsl:if>
 		<xsl:apply-templates select="nuds:subjectSet"/>
 		<xsl:apply-templates select="nuds:physDesc"/>
@@ -127,7 +131,7 @@
 					<xsl:choose>
 						<xsl:when test="@type='category'">
 							<field name="category_display">
-								<xsl:value-of select="."/>								
+								<xsl:value-of select="."/>
 							</field>
 							<xsl:variable name="subsets" select="tokenize(., '--')"/>
 							<xsl:for-each select="$subsets">
@@ -142,8 +146,8 @@
 							</field>
 						</xsl:otherwise>
 					</xsl:choose>
-					
-				</xsl:when>				
+
+				</xsl:when>
 				<xsl:otherwise>
 					<field name="subject_facet">
 						<xsl:value-of select="normalize-space(.)"/>
@@ -256,7 +260,7 @@
 				<xsl:value-of select="."/>
 			</field>
 		</xsl:for-each>
-		
+
 		<!-- dateOnObject -->
 		<xsl:for-each select="nuds:dateOnObject/*[string(@standardDate)]/@standardDate">
 			<xsl:sort order="ascending"/>
@@ -294,29 +298,17 @@
 		</xsl:if>
 
 		<xsl:for-each select="nuds:custodhist/nuds:chronlist/nuds:chronitem">
-			<xsl:variable name="value">
-				<xsl:value-of select="date"/>
-				<xsl:text> - </xsl:text>
-				<xsl:choose>
-					<xsl:when test="nuds:prevColl">
-						<xsl:value-of select="nuds:prevColl"/>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:value-of select="nuds:saleCatalog"/>
-						<xsl:if test="nuds:saleItem">
-							<xsl:text>: </xsl:text>
-							<xsl:value-of select="nuds:saleItem"/>
-						</xsl:if>
-					</xsl:otherwise>
-				</xsl:choose>
-			</xsl:variable>
-			
-			<field name="prevcoll_text">
-				<xsl:value-of select="$value"/>
-			</field>
-			<field name="prevcoll_facet">
-				<xsl:value-of select="$value"/>
-			</field>
+			<xsl:if test="nuds:previousColl/nuds:saleCatalog">
+				<xsl:variable name="value">
+					<xsl:value-of select="nuds:previousColl/nuds:saleCatalog"/>
+				</xsl:variable>
+				<field name="prevcoll_text">
+					<xsl:value-of select="$value"/>
+				</field>
+				<field name="prevcoll_facet">
+					<xsl:value-of select="$value"/>
+				</field>
+			</xsl:if>
 		</xsl:for-each>
 	</xsl:template>
 
