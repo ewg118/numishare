@@ -27,6 +27,7 @@
 				<role>mantis</role>
 				<role>egypt</role>
 				<role>uva</role>
+				<role>electrum</role>
 			</config>
 		</p:input>
 		<p:output name="data" ref="data"/>
