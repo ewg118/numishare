@@ -28,7 +28,7 @@
 		<xsl:param name="typeDesc_resource"/>
 		<h2>Typological Attributes</h2>
 		<xsl:if test="string($typeDesc_resource)">
-			<p>Source: <a href="{$typeDesc_resource}"><xsl:value-of select="$typeDesc_resource"/></a></p>
+			<p>Source: <a href="{$typeDesc_resource}"><xsl:value-of select="exsl:node-set($nudsGroup)/nudsGroup/object[@xlink:href = $typeDesc_resource]/nuds:nuds/nuds:descMeta/nuds:title"/></a></p>
 		</xsl:if>
 		<ul>
 			<xsl:apply-templates mode="descMeta"/>
@@ -63,7 +63,7 @@
 							<xsl:text>: </xsl:text>
 						</b>
 					</xsl:if>
-					
+
 
 					<!-- create link from facet, if applicable -->
 
@@ -177,13 +177,13 @@
 							</xsl:for-each>
 						</xsl:if>-->
 					</xsl:if>
-					
+
 					<!-- display label on right for right-to-left scripts -->
 					<xsl:if test="$lang='ar'">
 						<b>
 							<xsl:text> : </xsl:text>
 							<xsl:value-of select="numishare:regularize_node($field, $lang)"/>
-							
+
 						</b>
 					</xsl:if>
 				</li>
@@ -294,9 +294,9 @@
 				<a href="{$id}.rdf">
 					<img src="{$display_path}images/rdf.gif" title="RDF" alt="RDF"/>
 				</a>
-			</div>			
+			</div>
 			<div class="icon">AddThis could go here...</div>
 		</div>
 	</xsl:template>
-	
+
 </xsl:stylesheet>

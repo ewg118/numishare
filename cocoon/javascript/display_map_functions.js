@@ -1,6 +1,6 @@
-function initialize_map(has_mint_geo, id, path, field) {
+function initialize_map(id, path) {
 
-	map = new OpenLayers.Map('basicMap', {
+	map = new OpenLayers.Map('mapcontainer', {
                     controls: [
                         new OpenLayers.Control.PanZoomBar(),
                         new OpenLayers.Control.Navigation(),
@@ -13,7 +13,6 @@ function initialize_map(has_mint_geo, id, path, field) {
 	map.addLayer(new OpenLayers.Layer.Google("Google Physical", {type: google.maps.MapTypeId.TERRAIN}));
 	
 	//point for coin or hoard KML
-	if (has_mint_geo == 'true'){
 	var kmlLayer = new OpenLayers.Layer.Vector($('#object_title').text(), {	
 	 	eventListeners: {'loadend': kmlLoaded },
 		strategies: [
@@ -27,25 +26,6 @@ function initialize_map(has_mint_geo, id, path, field) {
 	                })
 	            })
 	});
-	}
-	
-	//point(s) for findspot(s)
-	if (field.length > 0){
-		var findspotLayer = new OpenLayers.Layer.Vector('Findspot(s)', {
-		 	styleMap: findspotStyle,	 	
-		 	eventListeners: {'loadend': kmlLoaded },
-			strategies: [
-					new OpenLayers.Strategy.Fixed()
-				],
-			protocol: new OpenLayers.Protocol.HTTP({
-		                url: path + "findspots.kml?q=id%22" + id + "%22&field=" + field,
-		                format: new OpenLayers.Format.KML({
-		                    extractStyles: false, 
-		                    extractAttributes: true
-		                })
-		            })
-		});
-	}
 	
 	//add other facets
 	$('#term-list').children('li').each(function(){
@@ -80,12 +60,7 @@ function initialize_map(has_mint_geo, id, path, field) {
 	});
 	
 	//add origin point last
-	if (has_mint_geo == 'true'){
-		map.addLayer(kmlLayer);
-	}
-	if (field.length > 0){
-		map.addLayer(findspotLayer);
-	}
+	map.addLayer(kmlLayer);
 	
 	function kmlLoaded(){
 		map.zoomToExtent(kmlLayer.getDataExtent());

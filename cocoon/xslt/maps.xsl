@@ -105,7 +105,7 @@
 		<div id="bd">
 			<div id="backgroundPopup"/>
 			<h1>Maps</h1>
-			<p>For useage instructions, see <a href="http://wiki.numismatics.org/numishare:maps">http://wiki.numismatics.org/numishare:maps</a>.</p>
+			<p>For usage instructions, see <a href="http://wiki.numismatics.org/numishare:maps">http://wiki.numismatics.org/numishare:maps</a>.</p>
 			<div class="remove_facets"/>
 
 			<xsl:choose>
@@ -134,7 +134,7 @@
 									<tbody>
 										<tr>
 											<th style="width:100px">Legend</th>
-											<td style="background-color:#ffcc66;border:2px solid #cc6633;width:50px;"/>
+											<td style="background-color:#0000ff;border:2px solid #000072;width:50px;"/>
 											<td style="width:100px">Mint</td>
 											<td style="background-color:#00a000;border:2px solid #006100;width:50px;"/>
 											<td style="width:100px">Findspot</td>

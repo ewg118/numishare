@@ -22,7 +22,7 @@
 	<xsl:variable name="nuds:typeDesc">
 		<xsl:choose>
 			<xsl:when test="string($nuds:typeDesc_resource)">
-				<xsl:copy-of select="exsl:node-set($nudsGroup)//nuds:typeDesc[@xlink:href=$nuds:typeDesc_resource]"/>
+				<xsl:copy-of select="exsl:node-set($nudsGroup)/nudsGroup/object[@xlink:href = $nuds:typeDesc_resource]/nuds:nuds/nuds:descMeta/nuds:typeDesc"/>
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:copy-of select="/content/nuds:nuds/nuds:descMeta/nuds:typeDesc"/>
@@ -46,25 +46,20 @@
 		<!-- below is a series of conditionals for forming the image boxes and displaying obverse and reverse images, iconography, and legends if they are available within the EAD document -->
 		<xsl:choose>
 			<xsl:when test="not($mode = 'compare')">
-				<!-- determine whether the document has published findspots or associated object findspots -->
-				<xsl:variable name="findspot_field">
-					<xsl:if test="$has_findspot_geo = 'true'">
-						<xsl:value-of select="if ($recordType = 'conceptual') then 'ao_findspot_geo' else 'findspot_geo'"/>
-					</xsl:if>
-				</xsl:variable>
+				<!-- determine whether the document has published findspots or associated object findspots -->				
 				<script type="text/javascript" langage="javascript">
                                                         $(function () {
                                                                 $("#tabs").tabs({
                                                                         show: function (event, ui) {
-                                                                                if (ui.panel.id == "map" &amp;&amp; $('#basicMap').html().length == 0) {
-                                                                                        $('#basicMap').html('');
-                                                                                        initialize_map('<xsl:value-of select="$has_mint_geo"/>', '<xsl:value-of select="$id"/>', '<xsl:value-of select="$display_path"/>', '<xsl:value-of select="$findspot_field"/>');
+                                                                                if (ui.panel.id == "mapTab" &amp;&amp; $('#mapcontainer').html().length == 0) {
+                                                                                        $('#mapcontainer').html('');
+                                                                                        initialize_map('<xsl:value-of select="$id"/>', '<xsl:value-of select="$display_path"/>');
                                                                                 }
                                                                         }
                                                                 });
                                                         });
                                                 </script>
-				<xsl:if test="$has_mint_geo = 'true' or $has_findspot_geo = 'true'">
+				<xsl:if test="$has_mint_geo = 'true'">
 					<script type="text/javascript" src="http://www.openlayers.org/api/OpenLayers.js"/>
 					<script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3.2&amp;sensor=false"/>
 					<script type="text/javascript" src="{$display_path}javascript/display_map_functions.js"/>
@@ -76,15 +71,15 @@
 							<xsl:value-of select="normalize-space(nuds:descMeta/nuds:title)"/>
 						</h1>
 						<xsl:call-template name="nuds_content"/>
-						
+
 						<!-- show associated objects, preferencing those from Metis first -->
 						<xsl:choose>
-							<xsl:when test="string($sparql_endpoint)">								
+							<xsl:when test="string($sparql_endpoint)">
 								<cinclude:include src="cocoon:/widget?uri={concat($url, 'id/', $id)}&amp;template=display"/>
 							</xsl:when>
 							<xsl:when test="count(nuds:digRep/nuds:associatedObject) &gt; 0">
 								<div class="objects">
-									<h2>Examples of this type</h2>									
+									<h2>Examples of this type</h2>
 									<xsl:apply-templates select="nuds:digRep/nuds:associatedObject"/>
 								</div>
 							</xsl:when>
@@ -217,7 +212,7 @@
 						</li>
 						<xsl:if test="$has_mint_geo = 'true' or $has_findspot_geo = 'true'">
 							<li>
-								<a href="#map">Map</a>
+								<a href="#mapTab">Map</a>
 							</li>
 						</xsl:if>
 						<xsl:if test="$recordType='conceptual' and (count(//nuds:associatedObject) &gt; 0 or string($sparql_endpoint))">
@@ -271,10 +266,10 @@
 						</xsl:if>-->
 					</div>
 					<xsl:if test="$has_mint_geo = 'true' or $has_findspot_geo = 'true'">
-						<div id="map">
+						<div id="mapTab">
 							<h2>Map This Object</h2>
 							<p>Use the layer control along the right edge of the map (the "plus" symbol) to toggle map layers.</p>
-							<div id="basicMap"/>
+							<div id="mapcontainer"/>
 							<ul id="term-list" style="display:none">
 								<xsl:for-each select="document(concat($solr-url, 'select?q=id:&#x022;', $id, '&#x022;'))//arr">
 									<xsl:if test="contains(@name, '_facet') and not(contains(@name, 'institution')) and not(contains(@name, 'collection')) and not(contains(@name, 'department'))">
@@ -297,7 +292,9 @@
 					</xsl:if>
 					<xsl:if test="nuds:descMeta/nuds:adminDesc/*">
 						<div id="administrative">
-							<xsl:apply-templates select="nuds:descMeta/nuds:adminDesc"/>
+							<div class="metadata_section">
+								<xsl:apply-templates select="nuds:descMeta/nuds:adminDesc"/>
+							</div>
 						</div>
 					</xsl:if>
 					<xsl:if test="nuds:description">
@@ -492,7 +489,7 @@
 				<xsl:value-of select="//mets:fileGrp[@USE='obverse']/mets:file[@USE='reference']/mets:FLocat/@xlink:href"/>
 			</xsl:if>
 		</xsl:variable>
-		
+
 		<!-- display legend and type and image if available -->
 		<xsl:choose>
 			<xsl:when test="exsl:node-set($nuds:typeDesc)/nuds:typeDesc/nuds:obverse">
@@ -506,7 +503,7 @@
 									<a href="{numishare:get_flickr_uri($photo_id)}">
 										<img src="{$obverse_image}" alt="{$side}"/>
 									</a>
-									
+
 								</xsl:when>
 								<xsl:when test="contains($obverse_image, 'http://')">
 									<img src="{$obverse_image}" alt="{$side}"/>
@@ -517,7 +514,7 @@
 							</xsl:choose>
 							<br/>
 						</xsl:if>
-						
+
 						<b>
 							<xsl:value-of select="numishare:regularize_node($side, $lang)"/>
 							<xsl:if test="string(nuds:legend) or string(nuds:type)">
@@ -549,7 +546,7 @@
 				<xsl:value-of select="//mets:fileGrp[@USE='reverse']/mets:file[@USE='reference']/mets:FLocat/@xlink:href"/>
 			</xsl:if>
 		</xsl:variable>
-		
+
 		<!-- display legend and type and image if available -->
 		<xsl:choose>
 			<xsl:when test="exsl:node-set($nuds:typeDesc)/nuds:typeDesc/nuds:reverse">
@@ -563,7 +560,7 @@
 									<a href="{numishare:get_flickr_uri($photo_id)}">
 										<img src="{$reverse_image}" alt="{$side}"/>
 									</a>
-									
+
 								</xsl:when>
 								<xsl:when test="contains($reverse_image, 'http://')">
 									<img src="{$reverse_image}" alt="{$side}"/>
@@ -574,7 +571,7 @@
 							</xsl:choose>
 							<br/>
 						</xsl:if>
-						
+
 						<b>
 							<xsl:value-of select="numishare:regularize_node($side, $lang)"/>
 							<xsl:if test="string(nuds:legend) or string(nuds:type)">
