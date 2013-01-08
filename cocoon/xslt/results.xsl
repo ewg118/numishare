@@ -2,7 +2,8 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0" xmlns:exsl="http://exslt.org/common" xmlns:cinclude="http://apache.org/cocoon/include/1.0"
 	xmlns:numishare="http://code.google.com/p/numishare/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
 	<xsl:include href="results_generic.xsl"/>
-	<xsl:include href="search_segments.xsl"/>
+	<xsl:include href="templates.xsl"/>
+	<xsl:include href="functions.xsl"/>
 	<xsl:include href="header.xsl"/>
 	<xsl:include href="footer.xsl"/>
 	

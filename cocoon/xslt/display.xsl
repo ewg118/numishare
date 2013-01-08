@@ -5,6 +5,7 @@
 	<xsl:include href="header.xsl"/>
 	<xsl:include href="footer.xsl"/>
 	<xsl:include href="templates.xsl"/>
+	<xsl:include href="functions.xsl"/>
 	<xsl:include href="display/nuds/html.xsl"/>
 	<xsl:include href="display/nudsHoard/html.xsl"/>
 	<xsl:include href="display/shared-html.xsl"/>

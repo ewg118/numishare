@@ -6,10 +6,11 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:nuds="http://nomisma.org/nuds" xmlns:nh="http://nomisma.org/nudsHoard" xmlns:nm="http://nomisma.org/id/"
 	xmlns:exsl="http://exslt.org/common" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xlink="http://www.w3.org/1999/xlink" exclude-result-prefixes="#all" version="2.0">
 	<xsl:output method="xml" encoding="UTF-8"/>
-
+	<xsl:include href="functions.xsl"/>
 	<xsl:include href="display/nuds/solr.xsl"/>
 	<xsl:include href="display/nudsHoard/solr.xsl"/>
 	<xsl:include href="display/shared-solr.xsl"/>
+	
 	<xsl:param name="collection-name"/>
 
 	<!-- config variables -->
