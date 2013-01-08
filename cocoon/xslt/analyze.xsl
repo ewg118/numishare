@@ -5,7 +5,7 @@
 	<xsl:include href="header.xsl"/>
 	<xsl:include href="footer.xsl"/>
 	<xsl:include href="templates.xsl"/>
-	<xsl:include href="search_segments.xsl"/>
+	<xsl:include href="functions.xsl"/>	
 
 	<xsl:param name="pipeline"/>
 	<xsl:param name="display_path"/>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes="xs numishare cinclude"
 	xmlns:numishare="http://code.google.com/p/numishare/" xmlns:cinclude="http://apache.org/cocoon/include/1.0" xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl" version="2.0">
-	<xsl:include href="../search_segments.xsl"/>
+	<xsl:include href="../functions.xsl"/>
 	<xsl:output method="xml" encoding="UTF-8"/>
 	<xsl:param name="q"/>
 

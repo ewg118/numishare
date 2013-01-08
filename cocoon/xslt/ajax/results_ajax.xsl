@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:numishare="http://code.google.com/p/numishare/" xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes="xs numishare" version="2.0">
-	<xsl:include href="../search_segments.xsl"/>
+	<xsl:include href="../functions.xsl"/>
 	<xsl:include href="../results_generic.xsl"/>
 	<xsl:param name="display_path">
 		<xsl:text/>
@@ -33,7 +33,6 @@
 			<a id="clear_all" href="#">clear</a>
 		</h1>
 		<xsl:call-template name="paging"/>
-		<!--<xsl:call-template name="sort"/>-->
 		<div style="display:table;width:100%;">
 			<xsl:apply-templates select="descendant::doc" mode="map"/>
 		</div>

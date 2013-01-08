@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:cinclude="http://apache.org/cocoon/include/1.0" xmlns:exsl="http://exslt.org/common"
 	xmlns:numishare="http://code.google.com/p/numishare/" xmlns:xs="http://www.w3.org/2001/XMLSchema" version="2.0">
-	<xsl:output method="xml" encoding="UTF-8"/>
-	<xsl:include href="search_segments.xsl"/>
+	<xsl:output method="xml" encoding="UTF-8"/>	
 	<xsl:include href="header.xsl"/>
 	<xsl:include href="footer.xsl"/>
+	<xsl:include href="templates.xsl"/>
+	<xsl:include href="functions.xsl"/>
 
 	<xsl:param name="pipeline"/>
 	<xsl:param name="display_path"/>
+	<xsl:param name="lang"/>
 
 	<xsl:param name="q"/>
 

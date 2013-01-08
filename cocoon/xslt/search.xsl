@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:exsl="http://exslt.org/common" version="2.0">
 	<xsl:output method="xml" encoding="UTF-8"/>
-	<xsl:include href="search_segments.xsl"/>
 	<xsl:include href="header.xsl"/>
 	<xsl:include href="footer.xsl"/>
+	<xsl:include href="templates.xsl"/>
+	<xsl:include href="functions.xsl"/>
 	
 	<xsl:param name="pipeline"/>
 	<xsl:param name="lang"/>
