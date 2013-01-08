@@ -110,10 +110,7 @@
 					<b>Closing Date: </b>										
 					<xsl:choose>
 						<xsl:when test="count(exsl:node-set($dates)/dates/date) &gt; 0">
-							<xsl:call-template name="nh:normalize_date">
-								<xsl:with-param name="start_date" select="exsl:node-set($dates)/dates/date[last()]"/>
-								<xsl:with-param name="end_date" select="exsl:node-set($dates)/dates/date[last()]"/>
-							</xsl:call-template>
+							<xsl:value-of select="nh:normalize_date(exsl:node-set($dates)/dates/date[last()], exsl:node-set($dates)/dates/date[last()])"/>
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:text>Unknown</xsl:text>

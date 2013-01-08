@@ -26,9 +26,9 @@ $(document).ready(function () {
 		//initialize map
 		var mintStyle = new OpenLayers.Style({
 			pointRadius: "${radius}",
-			fillColor: "#ffcc66",
+			fillColor: "#0000ff",
 			fillOpacity: 0.8,
-			strokeColor: "#cc6633",
+			strokeColor: "#000072",
 			strokeWidth: 2,
 			strokeOpacity: 0.8
 		}, {
@@ -38,6 +38,39 @@ $(document).ready(function () {
 				}
 			}
 		});	
+		var hoardStyle = new OpenLayers.Style({
+			pointRadius: "${radius}",
+			//pointRadius: "5",
+			fillColor: "#00a000",
+			fillOpacity: 0.8,
+			strokeColor: "#006100",
+			strokeWidth: 2,
+			strokeOpacity: 0.8
+		},
+		{
+			context: {
+				radius: function (feature) {
+					return Math.min(feature.attributes.count, 7) + 3;
+				}
+			}
+		});
+		//add findspot layer for hoards
+		var hoardLayer = new OpenLayers.Layer.Vector("findspot", {
+			styleMap: hoardStyle,
+			eventListeners: {
+				'loadend': kmlLoaded
+			},
+			strategies:[
+			new OpenLayers.Strategy.Fixed(),
+			new OpenLayers.Strategy.Cluster()],
+			protocol: new OpenLayers.Protocol.HTTP({
+				url: "findspots.kml?q=" + q,
+				format: new OpenLayers.Format.KML({
+					extractStyles: false,
+					extractAttributes: true
+				})
+			})
+		});
 		var mintLayer = new OpenLayers.Layer.Vector("mint", {
 			styleMap: mintStyle,
 			eventListeners: {
@@ -59,7 +92,9 @@ $(document).ready(function () {
 			controls:[
 			new OpenLayers.Control.PanZoomBar(),
 			new OpenLayers.Control.Navigation(),
-			new OpenLayers.Control.ScaleLine()]
+			new OpenLayers.Control.ScaleLine(),
+			new OpenLayers.Control.LayerSwitcher({'ascending':true})]
+			
 		});
 		
 		map.addLayer(new OpenLayers.Layer.Google("Google Physical", {
@@ -67,22 +102,28 @@ $(document).ready(function () {
 		}));
 		
 		map.addLayer(mintLayer);
+		map.addLayer(hoardLayer);
 		
 		
 		//zoom to extent of world
-		map.zoomTo('2');
+		map.zoomTo('2');	
 		
-		
-		
-		selectControl = new OpenLayers.Control.SelectFeature([mintLayer], {
+		//enable events for mint selection
+		SelectControl = new OpenLayers.Control.SelectFeature([mintLayer, hoardLayer], {
 			clickout: true,
 			multiple: false,
 			hover: false
-		});
+		});	
 		
-		map.addControl(selectControl);
-		selectControl.activate();
+		
+		map.addControl(SelectControl);
+		
+		SelectControl.activate();
+		
 		mintLayer.events.on({
+			"featureselected": onFeatureSelect, "featureunselected": onFeatureUnselect
+		});
+		hoardLayer.events.on({
 			"featureselected": onFeatureSelect, "featureunselected": onFeatureUnselect
 		});
 	}
@@ -390,6 +431,12 @@ $(document).ready(function () {
 		function (data) {
 			$('#results') .html(data);
 		});
+		return false;
+	});
+	
+	//clear query
+	$('#clear_all').livequery('click', function(event){
+		$('#results').html('');
 		return false;
 	});
 	

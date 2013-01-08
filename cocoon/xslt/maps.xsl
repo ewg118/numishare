@@ -3,7 +3,7 @@
 	<!-- includes -->
 	<xsl:include href="header.xsl"/>
 	<xsl:include href="footer.xsl"/>
-	<xsl:include href="search_segments.xsl"/>
+	<xsl:include href="functions.xsl"/>
 
 	<xsl:param name="pipeline"/>
 	<xsl:param name="display_path"/>
@@ -134,7 +134,7 @@
 									<tbody>
 										<tr>
 											<th style="width:100px">Legend</th>
-											<td style="background-color:#ffcc66;border:2px solid #cc6633;width:50px;"/>
+											<td style="background-color:#0000ff;border:2px solid #000072;width:50px;"/>
 											<td style="width:100px">Mint</td>
 											<td style="background-color:#00a000;border:2px solid #006100;width:50px;"/>
 											<td style="width:100px">Findspot</td>

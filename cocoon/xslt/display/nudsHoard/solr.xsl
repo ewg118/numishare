@@ -72,10 +72,7 @@
 			<field name="closing_date_display">
 				<xsl:choose>
 					<xsl:when test="count(exsl:node-set($dates)/dates/date) &gt; 0">
-						<xsl:call-template name="nh:normalize_date">
-							<xsl:with-param name="start_date" select="exsl:node-set($dates)/dates/date[last()]"/>
-							<xsl:with-param name="end_date" select="exsl:node-set($dates)/dates/date[last()]"/>
-						</xsl:call-template>
+						<xsl:value-of select="nh:normalize_date(exsl:node-set($dates)/dates/date[last()], exsl:node-set($dates)/dates/date[last()])"/>
 					</xsl:when>
 					<xsl:otherwise>
 						<xsl:text>Unknown</xsl:text>
@@ -137,44 +134,6 @@
 
 	<xsl:template match="nh:hoardDesc">
 		<xsl:apply-templates select="nh:findspot/nh:geogname[@xlink:role='findspot']"/>
-	</xsl:template>
-
-	<xsl:template name="nh:normalize_date">
-		<xsl:param name="start_date"/>
-		<xsl:param name="end_date"/>
-
-		<xsl:choose>
-			<xsl:when test="number($start_date) = number($end_date)">
-				<xsl:if test="number($start_date) &lt; 500 and number($start_date) &gt; 0">
-					<xsl:text>A.D. </xsl:text>
-				</xsl:if>
-				<xsl:value-of select="abs(number($start_date))"/>
-				<xsl:if test="number($start_date) &lt; 0">
-					<xsl:text> B.C.</xsl:text>
-				</xsl:if>
-			</xsl:when>
-			<xsl:otherwise>
-				<!-- start date -->
-
-				<xsl:if test="number($start_date) &lt; 500 and number($start_date) &gt; 0">
-					<xsl:text>A.D. </xsl:text>
-				</xsl:if>
-				<xsl:value-of select="abs(number($start_date))"/>
-				<xsl:if test="number($start_date) &lt; 0">
-					<xsl:text> B.C.</xsl:text>
-				</xsl:if>
-				<xsl:text> - </xsl:text>
-
-				<!-- end date -->
-				<xsl:if test="number($end_date) &lt; 500 and number($end_date) &gt; 0">
-					<xsl:text>A.D. </xsl:text>
-				</xsl:if>
-				<xsl:value-of select="abs(number($end_date))"/>
-				<xsl:if test="number($end_date) &lt; 0">
-					<xsl:text> B.C.</xsl:text>
-				</xsl:if>
-			</xsl:otherwise>
-		</xsl:choose>
 	</xsl:template>
 
 	<!--<xsl:template match="nh:contentsDesc">

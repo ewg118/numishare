@@ -100,7 +100,7 @@
 			</tbody>
 		</table>
 	</xsl:template>
-	
+
 	<xsl:template name="visualization">
 		<xsl:variable name="queryOptions">authority,deity,denomination,dynasty,issuer,material,mint,portrait,region</xsl:variable>
 		<xsl:variable name="chartTypes">line,spline,area,areaspline,column,bar,scatter</xsl:variable>
@@ -112,8 +112,8 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-		
-		<p>Use this feature to visualize percentages or numeric occurrences of the following typologies.</p>		
+
+		<p>Use this feature to visualize percentages or numeric occurrences of the following typologies.</p>
 		<form action="{$action}" id="visualize-form" style="margin-bottom:40px;">
 			<h2>Step 1: Select Numeric Response Type</h2>
 			<input type="radio" name="type" value="percentage">
@@ -138,14 +138,14 @@
 							<xsl:choose>
 								<xsl:when test="$chartType = .">
 									<xsl:attribute name="checked">checked</xsl:attribute>
-								</xsl:when>								
+								</xsl:when>
 							</xsl:choose>
 						</input>
 						<label for="chartType-radio">
 							<xsl:value-of select="."/>
 						</label>
 					</span>
-					
+
 				</xsl:for-each>
 			</div>
 			<div style="display:table;width:100%">
@@ -170,7 +170,7 @@
 					</span>
 				</xsl:for-each>
 			</div>
-			
+
 			<xsl:choose>
 				<xsl:when test="$pipeline='analyze'">
 					<h2>
@@ -203,13 +203,13 @@
 					</xsl:choose>
 				</xsl:otherwise>
 			</xsl:choose>
-			
+
 			<input type="hidden" name="calculate" id="calculate-input" value=""/>
 			<input type="hidden" name="compare" class="compare-input" value=""/>
 			<br/>
 			<input type="submit" value="Calculate Selected" id="submit-calculate"/>
 		</form>
-		
+
 		<!-- output charts and tables -->
 		<xsl:for-each select="tokenize($calculate, ',')">
 			<xsl:variable name="element">
@@ -233,17 +233,17 @@
 					<xsl:value-of select="."/>
 				</xsl:if>
 			</xsl:variable>
-			
+
 			<xsl:call-template name="nh:quant">
 				<xsl:with-param name="element" select="$element"/>
 				<xsl:with-param name="role" select="$role"/>
 			</xsl:call-template>
 		</xsl:for-each>
 	</xsl:template>
-	
+
 	<xsl:template name="data-download">
 		<xsl:variable name="queryOptions">authority,deity,denomination,dynasty,issuer,material,mint,portrait,region</xsl:variable>
-		
+
 		<p>Use this feature to download a CSV for the given query and selected hoards.</p>
 		<form action="{$display_path}hoards.csv" id="csv-form" style="margin-bottom:40px;">
 			<h2>Step 1: Select Numeric Response Type</h2>
@@ -283,7 +283,7 @@
 					</span>
 				</xsl:for-each>
 			</div>
-			
+
 			<xsl:choose>
 				<xsl:when test="$pipeline='analyze'">
 					<h2>
@@ -304,13 +304,13 @@
 					</div>
 				</xsl:otherwise>
 			</xsl:choose>
-			
+
 			<input type="hidden" name="compare" class="compare-input" value=""/>
 			<br/>
 			<input type="submit" value="Calculate Selected" id="submit-csv"/>
 		</form>
 	</xsl:template>
-	
+
 	<xsl:template name="vis-checks">
 		<xsl:param name="query_fragment"/>
 		<xsl:choose>
@@ -325,7 +325,7 @@
 			<xsl:value-of select="concat(upper-case(substring($query_fragment, 1, 1)), substring($query_fragment, 2))"/>
 		</label>
 	</xsl:template>
-	
+
 	<xsl:template name="vis-radios">
 		<xsl:param name="query_fragment"/>
 		<input type="radio" name="calculate" id="{$query_fragment}-radio" value="{$query_fragment}"/>
@@ -333,88 +333,127 @@
 			<xsl:value-of select="concat(upper-case(substring($query_fragment, 1, 1)), substring($query_fragment, 2))"/>
 		</label>
 	</xsl:template>
-	
+
 	<xsl:template name="get-hoards">
 		<div class="compare-div">
 			<cinclude:include src="cocoon:/get_hoards?compare={$compare}&amp;q=*"/>
 		</div>
 	</xsl:template>
 	
-	<!-- ************** NORMALIZATION TEMPLATES ************** -->
-
-	<xsl:template name="nh:normalize_date">
-		<xsl:param name="start_date"/>
-		<xsl:param name="end_date"/>
-
-		<xsl:choose>
-			<xsl:when test="number($start_date) = number($end_date)">
-				<xsl:if test="number($start_date) &lt; 500 and number($start_date) &gt; 0">
-					<xsl:text>A.D. </xsl:text>
-				</xsl:if>
-				<xsl:value-of select="abs(number($start_date))"/>
-				<xsl:if test="number($start_date) &lt; 0">
-					<xsl:text> B.C.</xsl:text>
-				</xsl:if>
-			</xsl:when>
-			<xsl:otherwise>
-				<!-- start date -->
-
-				<xsl:if test="number($start_date) &lt; 500 and number($start_date) &gt; 0">
-					<xsl:text>A.D. </xsl:text>
-				</xsl:if>
-				<xsl:value-of select="abs(number($start_date))"/>
-				<xsl:if test="number($start_date) &lt; 0">
-					<xsl:text> B.C.</xsl:text>
-				</xsl:if>
-				<xsl:text> - </xsl:text>
-
-				<!-- end date -->
-				<xsl:if test="number($end_date) &lt; 500 and number($end_date) &gt; 0">
-					<xsl:text>A.D. </xsl:text>
-				</xsl:if>
-				<xsl:value-of select="abs(number($end_date))"/>
-				<xsl:if test="number($end_date) &lt; 0">
-					<xsl:text> B.C.</xsl:text>
-				</xsl:if>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>
-
-	<!--***************************************** FUNCTIONS **************************************** -->
-	<xsl:function name="numishare:get_flickr_uri">
-		<xsl:param name="photo_id"/>
-		<xsl:value-of
-			select="document(concat('http://api.flickr.com/services/rest/?method=flickr.photos.getInfo&amp;api_key=', $flickr-api-key, '&amp;photo_id=', $photo_id, '&amp;format=rest'))/rsp/photo/urls/url[@type='photopage']"
-		/>
-	</xsl:function>
-
-	<xsl:function name="numishare:regularize_node">
-		<xsl:param name="name"/>
-		<xsl:param name="lang"/>
-
-		<xsl:choose>
-			<xsl:when test="$lang='ar'"> </xsl:when>
-			<xsl:otherwise>
+	<xsl:template name="search_forms">
+		<div class="search-form">
+			<p>To conduct a free text search select ‘Keyword’ on the drop-down menu above and enter the text for which you wish to search. The search allows wildcard searches with the * and ?
+				characters and exact string matches by surrounding phrases by double quotes (like Google). <a href="http://lucene.apache.org/java/2_9_1/queryparsersyntax.html#Term%20Modifiers"
+					target="_blank">See the Lucene query syntax</a> documentation for more information.</p>
+			<form id="advancedSearchForm" method="GET" action="results">
+				<div id="inputContainer">
+					<div class="searchItemTemplate">
+						<select class="category_list">
+							<xsl:call-template name="search_options"/>
+						</select>
+						<div style="display:inline;" class="option_container">
+							<input type="text" id="search_text" class="search_text" style="display: inline;"/>
+						</div>
+						<a class="gateTypeBtn" href="#">add »</a>
+						<!--<a class="removeBtn" href="#">« remove</a>-->
+					</div>
+				</div>
+				<input name="q" id="q_input" type="hidden"/>
 				<xsl:choose>
-					<xsl:when test="$name='acqinfo'">Aquisitition Information</xsl:when>
-					<xsl:when test="$name='acquiredFrom'">Acquired From</xsl:when>
-					<xsl:when test="$name='conservationState'">Conservation State</xsl:when>
-					<xsl:when test="$name='custodhist'">Custodial History</xsl:when>
-					<xsl:when test="$name='dateOnObject'">Date on Object</xsl:when>
-					<xsl:when test="$name='dateRange'">Date Range</xsl:when>
-					<xsl:when test="$name='fromDate'">From Date</xsl:when>
-					<xsl:when test="$name='toDate'">To Date</xsl:when>
-					<xsl:when test="$name='objectType'">Object Type</xsl:when>
-					<xsl:when test="$name='saleCatalog'">Sale Catalog</xsl:when>
-					<xsl:when test="$name='saleItem'">Sale Item</xsl:when>
-					<xsl:when test="$name='salePrice'">Sale Price</xsl:when>
-					<xsl:when test="$name='testmark'">Test Mark</xsl:when>
+					<xsl:when test="$pipeline='analyze'">
+						<input type="submit" value="Filter" id="filterButton"/>
+					</xsl:when>
+					<xsl:when test="$pipeline='visualize'">
+						<input type="submit" value="Add Query" id="search_buttom"/>
+					</xsl:when>
 					<xsl:otherwise>
-						<xsl:value-of select="concat(upper-case(substring($name, 1, 1)), substring($name, 2))"/>
+						<input type="submit" value="Search" id="search_button"/>
 					</xsl:otherwise>
 				</xsl:choose>
-			</xsl:otherwise>
-		</xsl:choose>
-
-	</xsl:function>
+				
+			</form>
+			
+			<xsl:if test="$pipeline='visualize'">
+				<span style="display:none" id="paramName"/>
+			</xsl:if>
+		</div>
+		
+		<div id="searchItemTemplate" class="searchItemTemplate">
+			<select class="category_list">
+				<xsl:call-template name="search_options"/>
+			</select>
+			<div style="display:inline;" class="option_container">
+				<input type="text" class="search_text" style="display: inline;"/>
+			</div>
+			<a class="gateTypeBtn" href="#">add »</a>
+			<a class="removeBtn" href="#" style="display:none;">« remove</a>
+		</div>
+	</xsl:template>
+	
+	<xsl:template name="search_options">
+		<xsl:variable name="fields">
+			<xsl:text>fulltext,artist_text,authority_text,coinType_facet,color_text,deity_text,denomination_facet,department_facet,diameter_num,dynasty_facet,findspot_text,objectType_facet,identifier_display,issuer_text,legend_text,obv_leg_text,rev_leg_text,maker_text,manufacture_facet,material_facet,mint_text,portrait_text,reference_facet,region_text,taq_num,tpq_num,type_text,obv_type_text,rev_type_text,weight_num,year_num</xsl:text>
+		</xsl:variable>
+		
+		<xsl:for-each select="tokenize($fields, ',')">
+			<xsl:variable name="name" select="."/>
+			<xsl:variable name="root" select="substring-before($name, '_')"/>
+			<xsl:choose>
+				<xsl:when test="$collection_type='hoard'">
+					<xsl:if test="not($name='diameter_num') and not($name='weight_num') and not($name='year_num')">
+						<xsl:choose>
+							<!-- display only those search options when their facet equivalent has hits -->
+							<xsl:when test="exsl:node-set($facets)//lst[starts-with(@name, $root)][number(int[@name='numFacetTerms']) &gt; 0]">
+								<option value="{$name}" class="search_option">
+									<xsl:value-of select="numishare:normalize_fields($name)"/>
+								</option>
+							</xsl:when>
+							<!-- display those search options when they aren't connected to facets -->
+							<xsl:when test="not(exsl:node-set($facets)//lst[starts-with(@name, $root)])">
+								<option value="{$name}" class="search_option">
+									<xsl:value-of select="numishare:normalize_fields($name)"/>
+								</option>
+							</xsl:when>
+						</xsl:choose>
+						
+					</xsl:if>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:if test="not($name='taq_num') and not($name='tpq_num')">
+						<xsl:choose>
+							<!-- display only those search options when their facet equivalent has hits -->
+							<xsl:when test="exsl:node-set($facets)//lst[starts-with(@name, $root)][number(int[@name='numFacetTerms']) &gt; 0]">
+								<option value="{$name}" class="search_option">
+									<xsl:value-of select="numishare:normalize_fields($name)"/>
+								</option>
+							</xsl:when>
+							<!-- display those search options when they aren't connected to facets -->
+							<xsl:when test="not(exsl:node-set($facets)//lst[starts-with(@name, $root)])">
+								<option value="{$name}" class="search_option">
+									<xsl:value-of select="numishare:normalize_fields($name)"/>
+								</option>
+							</xsl:when>
+						</xsl:choose>
+					</xsl:if>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:for-each>
+	</xsl:template>
+	
+	<xsl:template name="recompile_category">
+		<xsl:param name="level" as="xs:integer"/>
+		<xsl:param name="category_fragment"/>
+		<xsl:param name="tokenized_fragment"/>
+		<xsl:value-of select="substring-after(replace($tokenized_fragment[contains(., concat('L', $level, '|'))], '&#x022;', ''), '|')"/>
+		<!--<xsl:value-of select="substring-after(replace(., '&#x022;', ''), '|')"/>-->
+		<xsl:if test="contains($category_fragment, concat('L', $level + 1, '|'))">
+			<xsl:text>--</xsl:text>
+			<xsl:call-template name="recompile_category">
+				<xsl:with-param name="tokenized_fragment" select="$tokenized_fragment"/>
+				<xsl:with-param name="category_fragment" select="$category_fragment"/>
+				<xsl:with-param name="level" select="$level + 1"/>
+			</xsl:call-template>
+		</xsl:if>
+		
+	</xsl:template>
 </xsl:stylesheet>

@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:numishare="http://code.google.com/p/numishare/" xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes="xs exsl numishare" version="2.0" xmlns="http://www.w3.org/2005/Atom" xmlns:exsl="http://exslt.org/common">
 	<xsl:output method="text" encoding="UTF-8"/>
-
-	<xsl:include href="../search_segments.xsl"/>
+	<xsl:include href="../functions.xsl"/>
 
 	<xsl:param name="q"/>	
 	<xsl:param name="rows" as="xs:integer">100</xsl:param>

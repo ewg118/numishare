@@ -41,7 +41,7 @@
 							</a>
 						</xsl:when>
 						<xsl:otherwise>
-							<a href="{$display_path}id/{str[@name='id']}">
+							<a href="{$display_path}id/{str[@name='id']}{if (string($lang)) then concat('?lang=', $lang) else ''}">
 								<xsl:value-of select="str[@name='title_display']"/>
 							</a>
 						</xsl:otherwise>
