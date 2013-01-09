@@ -209,6 +209,9 @@ dt {
 .remove_filter {
 	float:right;
 }
+.remove_filter_ar {
+	float:left;	
+}
 .remove_segment {
 	margin-left:2px;
 }

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:saxon="http://saxon.sf.net/" version="2.0">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:numishare="http://code.google.com/p/numishare/" xmlns:saxon="http://saxon.sf.net/" version="2.0" exclude-result-prefixes="#all">
 	<xsl:include href="header.xsl"/>
 	<xsl:include href="footer.xsl"/>
+	<xsl:include href="functions.xsl"/>
 
 	<xsl:param name="pipeline"/>
 	<xsl:param name="display_path"/>
@@ -94,7 +95,7 @@
 					<form action="results" method="GET" id="qs_form" style="padding:10px 0">
 						<input type="text" id="qs_text"/>
 						<input type="hidden" name="q" id="qs_query" value="*:*"/>
-						<input id="qs_button" type="submit" value="Search"/>
+						<input id="qs_button" type="submit" value="{numishare:normalizeLabel('header_search', $lang)}"/>
 					</form>
 				</div>
 				<div id="linked_data" style="margin:10px 0;">

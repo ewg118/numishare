@@ -1,0 +1,467 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Repeated functions for regularization to be used through Numishare -->
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:nh="http://nomisma.org/nudsHoard" xmlns:numishare="http://code.google.com/p/numishare/"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes="#all" version="2.0">
+
+	<xsl:function name="numishare:get_flickr_uri">
+		<xsl:param name="photo_id"/>
+		<xsl:value-of
+			select="document(concat('http://api.flickr.com/services/rest/?method=flickr.photos.getInfo&amp;api_key=', $flickr-api-key, '&amp;photo_id=', $photo_id, '&amp;format=rest'))/rsp/photo/urls/url[@type='photopage']"
+		/>
+	</xsl:function>
+
+
+	<!-- ************** NORMALIZATION TEMPLATES ************** -->
+	<xsl:function name="nh:normalize_date">
+		<xsl:param name="start_date"/>
+		<xsl:param name="end_date"/>
+
+		<xsl:choose>
+			<xsl:when test="number($start_date) = number($end_date)">
+				<xsl:if test="number($start_date) &lt; 500 and number($start_date) &gt; 0">
+					<xsl:text>A.D. </xsl:text>
+				</xsl:if>
+				<xsl:value-of select="abs(number($start_date))"/>
+				<xsl:if test="number($start_date) &lt; 0">
+					<xsl:text> B.C.</xsl:text>
+				</xsl:if>
+			</xsl:when>
+			<xsl:otherwise>
+				<!-- start date -->
+
+				<xsl:if test="number($start_date) &lt; 500 and number($start_date) &gt; 0">
+					<xsl:text>A.D. </xsl:text>
+				</xsl:if>
+				<xsl:value-of select="abs(number($start_date))"/>
+				<xsl:if test="number($start_date) &lt; 0">
+					<xsl:text> B.C.</xsl:text>
+				</xsl:if>
+				<xsl:text> - </xsl:text>
+
+				<!-- end date -->
+				<xsl:if test="number($end_date) &lt; 500 and number($end_date) &gt; 0">
+					<xsl:text>A.D. </xsl:text>
+				</xsl:if>
+				<xsl:value-of select="abs(number($end_date))"/>
+				<xsl:if test="number($end_date) &lt; 0">
+					<xsl:text> B.C.</xsl:text>
+				</xsl:if>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:function>
+
+	<!-- normalize NUDS element -->
+	<xsl:function name="numishare:regularize_node">
+		<xsl:param name="name"/>
+		<xsl:param name="lang"/>
+		<xsl:choose>
+			<xsl:when test="$lang='ar'">
+				<xsl:choose>
+					<xsl:when test="$name='acknowledgment'">تعريف</xsl:when>
+					<xsl:when test="$name='acqinfo'">وسائل الحصول عليها</xsl:when>
+					<xsl:when test="$name='acquiredFrom'">مكان الحصول عليها</xsl:when>
+					<xsl:when test="$name='appraisal'">القيمة</xsl:when>
+					<xsl:when test="$name='appraiser'">من الذى حدد القيمة </xsl:when>
+					<xsl:when test="$name='authority'">المسئول عنها</xsl:when>
+					<xsl:when test="$name='axis'">المحور الرأسى </xsl:when>
+					<xsl:when test="$name='collection'">دار الكتب و الوثائق القومية المصرية </xsl:when>
+					<xsl:when test="$name='completeness'"> الحالة الخارجية </xsl:when>
+					<xsl:when test="$name='condition'">الظروف </xsl:when>
+					<xsl:when test="$name='conservationState'">حالة الترميم </xsl:when>
+					<xsl:when test="$name='coordinates'">الإحداثيات </xsl:when>
+					<xsl:when test="$name='countermark'">العلامة المائية </xsl:when>
+					<xsl:when test="$name='custodhist'">مكان وجود القطعة</xsl:when>
+					<xsl:when test="$name='date'">التاريخ </xsl:when>
+					<xsl:when test="$name='dateOnObject'">التاريخ مسجل على القطعة</xsl:when>
+					<xsl:when test="$name='denomination'">طائفة</xsl:when>
+					<xsl:when test="$name='department'">القسم</xsl:when>
+					<xsl:when test="$name='deposit'">مكان الحفظ</xsl:when>
+					<xsl:when test="$name='description'">التوصيف</xsl:when>
+					<xsl:when test="$name='diameter'">قطر</xsl:when>
+					<xsl:when test="$name='discovery'">الاكتشاف</xsl:when>
+					<xsl:when test="$name='disposition'">تقسيم و ترتيب القطع</xsl:when>
+					<xsl:when test="$name='edge'">الحواف </xsl:when>
+					<xsl:when test="$name='era'">الفترة الزمنية </xsl:when>
+					<xsl:when test="$name='finder'"> المكتشف </xsl:when>
+					<xsl:when test="$name='findspot'">مكان اكتشاف القطعة </xsl:when>
+					<xsl:when test="$name='geographic'">المكان </xsl:when>
+					<xsl:when test="$name='grade'">تصنيف الحالة </xsl:when>
+					<xsl:when test="$name='height'">الارتفاع </xsl:when>
+					<xsl:when test="$name='identifier'">رقم السجل </xsl:when>
+					<xsl:when test="$name='issuer'">السئول عن الضرب</xsl:when>
+					<xsl:when test="$name='landowner'">المالك</xsl:when>
+					<xsl:when test="$name='legend'">الكتابات</xsl:when>
+					<xsl:when test="$name='material'">المادة الخام</xsl:when>
+					<xsl:when test="$name='measurementsSet'">القياسات</xsl:when>
+					<xsl:when test="$name='mint'">دار الضرب</xsl:when>
+					<xsl:when test="$name='note'">ملاحظات</xsl:when>
+					<xsl:when test="$name='objectType'">تصنيف القطعة</xsl:when>
+					<xsl:when test="$name='obverse'">الوجه</xsl:when>
+					<xsl:when test="$name='owner'">حائز القطعة</xsl:when>
+					<xsl:when test="$name='portrait'">الصور</xsl:when>
+					<xsl:when test="$name='private'">خصوصية القطعة </xsl:when>
+					<xsl:when test="$name='public'">عمومية القطعة </xsl:when>
+					<xsl:when test="$name='reference'">مرجع</xsl:when>
+					<xsl:when test="$name='region'">المكان</xsl:when>
+					<xsl:when test="$name='repository'">مكان وجود القطعة </xsl:when>
+					<xsl:when test="$name='reverse'">الظهر </xsl:when>
+					<xsl:when test="$name='saleCatalog'">الكتالوج </xsl:when>
+					<xsl:when test="$name='saleItem'">الرقم بالكتالوج </xsl:when>
+					<xsl:when test="$name='salePrice'">السعربالكتالوج </xsl:when>
+					<xsl:when test="$name='shape'">الشكل الخارجى </xsl:when>
+					<xsl:when test="$name='state'">السلطة </xsl:when>
+					<xsl:when test="$name='symbol'">الرمز </xsl:when>
+					<xsl:when test="$name='testmark'">علامات اختبارجودة القطع </xsl:when>
+					<xsl:when test="$name='title'">اللقب </xsl:when>
+					<xsl:when test="$name='type'">الطراز </xsl:when>
+					<xsl:when test="$name='thickness'">السمك </xsl:when>
+					<xsl:when test="$name='wear'">الحالة من الحفظ </xsl:when>
+					<xsl:when test="$name='weight'">الوزن </xsl:when>
+					<xsl:when test="$name='width'">العرض </xsl:when>
+					<xsl:otherwise> Unlabeled field: <xsl:value-of select="$name"/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:when>
+			<xsl:when test="$lang='fr'">
+				<xsl:choose>
+					<xsl:when test="$name='acknowledgment'">Remerciement</xsl:when>
+					<xsl:when test="$name='acqinfo'">Pédigré</xsl:when>
+					<xsl:when test="$name='acquiredFrom'">Acquis de </xsl:when>
+					<xsl:when test="$name='adminDesc'">Historique administratif</xsl:when>
+					<xsl:when test="$name='appraisal'">Valorisation</xsl:when>
+					<xsl:when test="$name='appraiser'">Evaluateur</xsl:when>
+					<xsl:when test="$name='authority'">Autorité émettrice</xsl:when>
+					<xsl:when test="$name='axis'">Axe</xsl:when>
+					<xsl:when test="$name='collection'">Collection</xsl:when>
+					<xsl:when test="$name='color'">Couleur</xsl:when>
+					<xsl:when test="$name='completeness'">Intégrité</xsl:when>
+					<xsl:when test="$name='condition'">Etat de conservation</xsl:when>
+					<xsl:when test="$name='conservationState'">Etat de conservation</xsl:when>
+					<xsl:when test="$name='coordinates'">Coordonnées</xsl:when>
+					<xsl:when test="$name='countermark'">Contremarque</xsl:when>
+					<xsl:when test="$name='custodhist'">Provenance</xsl:when>
+					<xsl:when test="$name='date'">Date</xsl:when>
+					<xsl:when test="$name='dateOnObject'">Date sur l'objet</xsl:when>
+					<xsl:when test="$name='dob'">Date sur l'objet</xsl:when>
+					<xsl:when test="$name='denomination'">Dénomination</xsl:when>
+					<xsl:when test="$name='department'">Département</xsl:when>
+					<xsl:when test="$name='deposit'">Dépôt</xsl:when>
+					<xsl:when test="$name='description'">Description</xsl:when>
+					<xsl:when test="$name='diameter'">Diamètre</xsl:when>
+					<xsl:when test="$name='discovery'">Découverte</xsl:when>
+					<xsl:when test="$name='disposition'">Disposition</xsl:when>
+					<xsl:when test="$name='dynasty'">Dynastie</xsl:when>
+					<xsl:when test="$name='edge'">Bordure</xsl:when>
+					<xsl:when test="$name='era'">Ere</xsl:when>
+					<xsl:when test="$name='finder'">Inventeur</xsl:when>
+					<xsl:when test="$name='findspot'">Lieu de découverte</xsl:when>
+					<xsl:when test="$name='fromDate'">A partir de l'année</xsl:when>
+					<xsl:when test="$name='geographic'">Géographique</xsl:when>
+					<xsl:when test="$name='grade'">Etat</xsl:when>
+					<xsl:when test="$name='height'">Hauteur</xsl:when>
+					<xsl:when test="$name='identifier'">Identifiant</xsl:when>
+					<xsl:when test="$name='issuer'">Emetteur</xsl:when>
+					<xsl:when test="$name='landowner'">Propriétaire du sol</xsl:when>
+					<xsl:when test="$name='legend'">Légende</xsl:when>
+					<xsl:when test="$name='material'">Matériau</xsl:when>
+					<xsl:when test="$name='measurementsSet'">Mesures</xsl:when>
+					<xsl:when test="$name='mint'">Atelier</xsl:when>
+					<xsl:when test="$name='note'">Note</xsl:when>
+					<xsl:when test="$name='objectType'">Type d'objet</xsl:when>
+					<xsl:when test="$name='obverse'">Avers/Droit</xsl:when>
+					<xsl:when test="$name='obv_leg'"> Légende d'avers/de droit</xsl:when>
+					<xsl:when test="$name='owner'">Propriétaire</xsl:when>
+					<xsl:when test="$name='physDesc'">Description physique</xsl:when>
+					<xsl:when test="$name='portrait'">Portrait</xsl:when>
+					<xsl:when test="$name='private'">Privé</xsl:when>
+					<xsl:when test="$name='public'">Publique</xsl:when>
+					<xsl:when test="$name='reference'">Référence</xsl:when>
+					<xsl:when test="$name='refDesc'">Références</xsl:when>
+					<xsl:when test="$name='region'">Région</xsl:when>
+					<xsl:when test="$name='repository'">Dépositaire</xsl:when>
+					<xsl:when test="$name='reverse'">Revers</xsl:when>
+					<xsl:when test="$name='rev_leg'">Légende de revers</xsl:when>
+					<xsl:when test="$name='saleCatalog'">Catalogue de vente</xsl:when>
+					<xsl:when test="$name='saleItem'">Numéro de lot</xsl:when>
+					<xsl:when test="$name='salePrice'">Prix de vente</xsl:when>
+					<xsl:when test="$name='shape'">Forme</xsl:when>
+					<xsl:when test="$name='state'">Etat</xsl:when>
+					<xsl:when test="$name='subject'">Sujet</xsl:when>
+					<xsl:when test="$name='subjectSet'">Sujets</xsl:when>
+					<xsl:when test="$name='symbol'">Symbole</xsl:when>
+					<xsl:when test="$name='testmark'">Marque de test</xsl:when>
+					<xsl:when test="$name='timestamp'">Date de modification de l'entrée catalogue</xsl:when>
+					<xsl:when test="$name='title'">Titre</xsl:when>
+					<xsl:when test="$name='toDate'">Jusqu'à l'année</xsl:when>
+					<xsl:when test="$name='type'">Type</xsl:when>
+					<xsl:when test="$name='typeDesc'">Description typologique</xsl:when>
+					<xsl:when test="$name='thickness'">Epaisseur</xsl:when>
+					<xsl:when test="$name='undertypeDesc'">Description du sous-type</xsl:when>
+					<xsl:when test="$name='wear'">Usure</xsl:when>
+					<xsl:when test="$name='weight'">Poids</xsl:when>
+					<xsl:when test="$name='width'">Largeur</xsl:when>
+					<xsl:when test="$name='year'">Année</xsl:when>
+					<xsl:otherwise> Unlabeled field: <xsl:value-of select="$name"/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:choose>
+					<xsl:when test="$name='acqinfo'">Aquisitition Information</xsl:when>
+					<xsl:when test="$name='acquiredFrom'">Acquired From</xsl:when>
+					<xsl:when test="$name='adminDesc'">Administrative History</xsl:when>
+					<xsl:when test="$name='closing_date'">Closing Date</xsl:when>					
+					<xsl:when test="$name='conservationState'">Conservation State</xsl:when>
+					<xsl:when test="$name='custodhist'">Custodial History</xsl:when>
+					<xsl:when test="$name='dateOnObject'">Date on Object</xsl:when>
+					<xsl:when test="$name='dob'">Date on Object</xsl:when>
+					<xsl:when test="$name='dateRange'">Date Range</xsl:when>
+					<xsl:when test="$name='findspotDesc'">Findspot Description</xsl:when>
+					<xsl:when test="$name='fulltext'">Keyword</xsl:when>
+					<xsl:when test="$name='hoardDesc'">Hoard Description</xsl:when>
+					<xsl:when test="$name='fromDate'">From Date</xsl:when>
+					<xsl:when test="$name='toDate'">To Date</xsl:when>
+					<xsl:when test="$name='measurementsSet'">Measurements</xsl:when>
+					<xsl:when test="$name='objectType'">Object Type</xsl:when>
+					<xsl:when test="$name = 'obv_leg'">Obverse Legend</xsl:when>
+					<xsl:when test="$name = 'obv_type'">Obverse Type</xsl:when>
+					<xsl:when test="$name='physDesc'">Physical Description</xsl:when>
+					<xsl:when test="$name='refDesc'">References</xsl:when>
+					<xsl:when test="$name = 'rev_leg'">Reverse Legend</xsl:when>
+					<xsl:when test="$name = 'rev_type'">Reverse Type</xsl:when>
+					<xsl:when test="$name='saleCatalog'">Sale Catalog</xsl:when>
+					<xsl:when test="$name='saleItem'">Sale Item</xsl:when>
+					<xsl:when test="$name='salePrice'">Sale Price</xsl:when>
+					<xsl:when test="$name='subjectSet'">SubjectSet</xsl:when>
+					<xsl:when test="$name='testmark'">Test Mark</xsl:when>
+					<xsl:when test="$name='typeDesc'">Typological Description</xsl:when>
+					<xsl:when test="$name = 'timestamp'">Date Record Modified</xsl:when>
+					<xsl:when test="$name='undertypeDesc'">Undertype Description</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="concat(upper-case(substring($name, 1, 1)), substring($name, 2))"/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:function>
+
+	<!-- normalize solr fields -->
+	<xsl:function name="numishare:normalize_fields">
+		<xsl:param name="field"/>
+		<xsl:param name="lang"/>
+		<xsl:choose>
+			<xsl:when test="$lang='ar'">
+				<xsl:choose>
+					<xsl:when test="contains($field, '_uri')">
+						<xsl:variable name="name" select="substring-before($field, '_uri')"/>
+						<xsl:text> URI</xsl:text>
+						<xsl:value-of select="numishare:regularize_node($name, $lang)"/>
+					</xsl:when>
+					<xsl:when test="contains($field, '_facet')">
+						<xsl:variable name="name" select="substring-before($field, '_facet')"/>
+						<xsl:value-of select="numishare:regularize_node($name, $lang)"/>
+					</xsl:when>
+					<xsl:when test="contains($field, '_num')">
+						<xsl:variable name="name" select="substring-before($field, '_num')"/>
+						<xsl:value-of select="numishare:regularize_node($name, $lang)"/>
+					</xsl:when>
+					<xsl:when test="contains($field, '_text')">
+						<xsl:variable name="name" select="substring-before($field, '_text')"/>
+						<xsl:value-of select="numishare:regularize_node($name, $lang)"/>
+					</xsl:when>
+					<xsl:when test="contains($field, '_min') or contains($field, '_max')">
+						<xsl:variable name="name" select="substring-before($field, '_m')"/>
+						<xsl:value-of select="numishare:normalize_fields($name, $lang)"/>
+					</xsl:when>
+					<xsl:when test="contains($field, '_display')">
+						<xsl:variable name="name" select="substring-before($field, '_display')"/>
+						<xsl:value-of select="numishare:regularize_node($name, $lang)"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="numishare:regularize_node($field, $lang)"/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:when>
+			<xsl:when test="$lang='fr'">
+				<xsl:choose>
+					<xsl:when test="contains($field, '_uri')">
+						<xsl:variable name="name" select="substring-before($field, '_uri')"/>
+						<xsl:value-of select="numishare:regularize_node($name, $lang)"/>
+						<xsl:text> URI</xsl:text>
+					</xsl:when>
+					<xsl:when test="contains($field, '_facet')">
+						<xsl:variable name="name" select="substring-before($field, '_facet')"/>
+						<xsl:value-of select="numishare:regularize_node($name, $lang)"/>
+					</xsl:when>
+					<xsl:when test="contains($field, '_num')">
+						<xsl:variable name="name" select="substring-before($field, '_num')"/>
+						<xsl:value-of select="numishare:regularize_node($name, $lang)"/>
+					</xsl:when>
+					<xsl:when test="contains($field, '_text')">
+						<xsl:variable name="name" select="substring-before($field, '_text')"/>
+						<xsl:value-of select="numishare:regularize_node($name, $lang)"/>
+					</xsl:when>
+					<xsl:when test="contains($field, '_min') or contains($field, '_max')">
+						<xsl:variable name="name" select="substring-before($field, '_m')"/>
+						<xsl:value-of select="numishare:normalize_fields($name, $lang)"/>
+					</xsl:when>
+					<xsl:when test="contains($field, '_display')">
+						<xsl:variable name="name" select="substring-before($field, '_display')"/>
+						<xsl:value-of select="numishare:regularize_node($name, $lang)"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="numishare:regularize_node($field, $lang)"/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:choose>
+					<xsl:when test="contains($field, '_uri')">
+						<xsl:variable name="name" select="substring-before($field, '_uri')"/>
+						<xsl:value-of select="numishare:regularize_node($name, $lang)"/>
+						<xsl:text> URI</xsl:text>
+					</xsl:when>
+					<xsl:when test="contains($field, '_facet')">
+						<xsl:variable name="name" select="substring-before($field, '_facet')"/>
+						<xsl:value-of select="numishare:regularize_node($name, $lang)"/>
+					</xsl:when>
+					<xsl:when test="contains($field, '_num')">
+						<xsl:variable name="name" select="substring-before($field, '_num')"/>
+						<xsl:value-of select="numishare:regularize_node($name, $lang)"/>
+					</xsl:when>
+					<xsl:when test="contains($field, '_text')">
+						<xsl:variable name="name" select="substring-before($field, '_text')"/>
+						<xsl:value-of select="numishare:regularize_node($name, $lang)"/>
+					</xsl:when>
+					<xsl:when test="contains($field, '_min') or contains($field, '_max')">
+						<xsl:variable name="name" select="substring-before($field, '_m')"/>
+						<xsl:value-of select="numishare:normalize_fields($name, $lang)"/>
+					</xsl:when>
+					<xsl:when test="contains($field, '_display')">
+						<xsl:variable name="name" select="substring-before($field, '_display')"/>
+						<xsl:value-of select="numishare:regularize_node($name, $lang)"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="numishare:regularize_node($field, $lang)"/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:function>
+
+	<xsl:function name="numishare:normalizeLabel">
+		<xsl:param name="label"/>
+		<xsl:param name="lang"/>
+		<xsl:choose>
+			<xsl:when test="$lang='ar'">
+				<xsl:choose>
+					<!-- header menu labels -->
+					<xsl:when test="$label='header_home'">المكان</xsl:when>
+					<xsl:when test="$label='header_search'">البحث</xsl:when>
+					<xsl:when test="$label='header_browse'">البحث بالتحديد</xsl:when>
+					<xsl:when test="$label='header_maps'">الخرائط</xsl:when>
+					<xsl:when test="$label='header_compare'">المقارنة</xsl:when>
+					<xsl:when test="$label='header_language'">اللغة</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="concat('No label for ', $label)"/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:when>
+			<xsl:when test="$lang='fr'">
+				<xsl:choose>
+					<!-- header menu labels -->
+					<xsl:when test="$label='header_home'">Accueil</xsl:when>
+					<xsl:when test="$label='header_search'">Chercher</xsl:when>
+					<xsl:when test="$label='header_browse'">Explorer</xsl:when>
+					<xsl:when test="$label='header_maps'">Cartes</xsl:when>
+					<xsl:when test="$label='header_compare'">Comparer</xsl:when>
+					<xsl:when test="$label='header_analyze'">Analyse des trésors</xsl:when>
+					<xsl:when test="$label='header_visualize'">Visualiser la recherche</xsl:when>
+					<xsl:when test="$label='header_language'">Langue</xsl:when>
+					<xsl:when test="$label='display_summary'">Résumé</xsl:when>
+					<xsl:when test="$label='display_map'">Carte</xsl:when>
+					<xsl:when test="$label='display_administrative'">Administratif</xsl:when>
+					<xsl:when test="$label='results_all-terms'">Tous les termes</xsl:when>
+					<xsl:when test="$label='results_map-results'">Résultats géographiques</xsl:when>
+					<xsl:when test="$label='results_data-options'">Options de données</xsl:when>
+					<xsl:when test="$label='results_refine-results'">Raffiner le résultat</xsl:when>
+					<xsl:when test="$label='results_quick-search'">Recherche rapide</xsl:when>
+					<xsl:when test="$label='results_has-images'">Images disponibles</xsl:when>
+					<xsl:when test="$label='results_refine-search'">Raffiner la recherche</xsl:when>
+					<xsl:when test="$label='results_select'">Sélectionner à partir de la liste</xsl:when>
+					<xsl:when test="$label='results_sort-results'">Classer les résultats</xsl:when>
+					<xsl:when test="$label='results_sort-category'">Sort Category</xsl:when>
+					<xsl:when test="$label='results_ascending'">Ordre ascendant</xsl:when>
+					<xsl:when test="$label='results_descending'">Ordre descendant</xsl:when>
+					<xsl:when test="$label='results_result-desc'">Afficher les références XX à YY à partir de ZZ résultats</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="concat('No label for ', $label)"/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:choose>
+					<!-- header menu labels -->
+					<xsl:when test="$label='header_home'">Home</xsl:when>
+					<xsl:when test="$label='header_search'">Search</xsl:when>
+					<xsl:when test="$label='header_browse'">Browse</xsl:when>
+					<xsl:when test="$label='header_maps'">Maps</xsl:when>
+					<xsl:when test="$label='header_compare'">Compare</xsl:when>
+					<xsl:when test="$label='header_analyze'">Analyze Hoards</xsl:when>
+					<xsl:when test="$label='header_visualize'">Visualize Queries</xsl:when>
+					<xsl:when test="$label='header_language'">Language</xsl:when>
+					<xsl:when test="$label='display_administrative'">Administrative</xsl:when>
+					<xsl:when test="$label='display_commentary'">Commentary</xsl:when>
+					<xsl:when test="$label='display_contents'">Contents</xsl:when>
+					<xsl:when test="$label='display_map'">Map</xsl:when>
+					<xsl:when test="$label='display_quantitative'">Quantitative Analysis</xsl:when>
+					<xsl:when test="$label='display_summary'">Summary</xsl:when>
+					<xsl:when test="$label='results_all-terms'">All Terms</xsl:when>
+					<xsl:when test="$label='results_map-results'">Map Results</xsl:when>
+					<xsl:when test="$label='results_data-options'">Data Options</xsl:when>
+					<xsl:when test="$label='results_refine-results'">Refine Results</xsl:when>
+					<xsl:when test="$label='results_quick-search'">Quick Search</xsl:when>
+					<xsl:when test="$label='results_has-images'">Has Images</xsl:when>
+					<xsl:when test="$label='results_refine-search'">Refine Search</xsl:when>
+					<xsl:when test="$label='results_select'">Select from List</xsl:when>
+					<xsl:when test="$label='results_sort-results'">Sort Results</xsl:when>
+					<xsl:when test="$label='results_sort-category'">Sort Category</xsl:when>
+					<xsl:when test="$label='results_ascending'">Ascending</xsl:when>
+					<xsl:when test="$label='results_descending'">Descending</xsl:when>
+					<xsl:when test="$label='results_result-desc'">Displaying records XX to YY of ZZ total results.</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="concat('No label for ', $label)"/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:function>
+
+	<xsl:function name="numishare:normalize_century">
+		<xsl:param name="name"/>
+		<xsl:variable name="cleaned" select="number(translate($name, '\', ''))"/>
+		<xsl:variable name="century" select="abs($cleaned)"/>
+		<xsl:variable name="suffix">
+			<xsl:choose>
+				<xsl:when test="$century mod 10 = 1 and $century != 11">
+					<xsl:text>st</xsl:text>
+				</xsl:when>
+				<xsl:when test="$century mod 10 = 2 and $century != 12">
+					<xsl:text>nd</xsl:text>
+				</xsl:when>
+				<xsl:when test="$century mod 10 = 3 and $century != 13">
+					<xsl:text>rd</xsl:text>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:text>th</xsl:text>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+
+		<xsl:value-of select="concat($century, $suffix)"/>
+		<xsl:if test="$cleaned &lt; 0">
+			<xsl:text> B.C.</xsl:text>
+		</xsl:if>
+	</xsl:function>
+
+</xsl:stylesheet>

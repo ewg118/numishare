@@ -2,7 +2,8 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0" xmlns:exsl="http://exslt.org/common" xmlns:cinclude="http://apache.org/cocoon/include/1.0"
 	xmlns:numishare="http://code.google.com/p/numishare/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
 	<xsl:include href="results_generic.xsl"/>
-	<xsl:include href="search_segments.xsl"/>
+	<xsl:include href="templates.xsl"/>
+	<xsl:include href="functions.xsl"/>
 	<xsl:include href="header.xsl"/>
 	<xsl:include href="footer.xsl"/>
 	
@@ -152,7 +153,7 @@
 			<div class="yui-b">
 				<xsl:if test="//result[@name='response']/@numFound &gt; 0">
 					<div class="data_options">
-						<h2>Data Options</h2>
+						<h2><xsl:value-of select="numishare:normalizeLabel('results_data-options', $lang)"/></h2>
 						<a href="{$display_path}feed/?q={$q}">
 							<img src="{$display_path}images/atom-medium.png" title="Atom" alt="Atom"/>
 						</a>
@@ -170,7 +171,7 @@
 							<img src="{$display_path}images/visualize.png" title="Visualize" alt="Visualize"/>
 						</a>
 					</div>
-					<h2>Refine Results</h2>
+					<h2><xsl:value-of select="numishare:normalizeLabel('results_refine-results', $lang)"/></h2>
 					<xsl:call-template name="quick_search"/>
 					<xsl:apply-templates select="descendant::lst[@name='facet_fields']"/>
 				</xsl:if>

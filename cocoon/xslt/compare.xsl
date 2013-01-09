@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?cocoon-disable-caching?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:exsl="http://exslt.org/common" exclude-result-prefixes="#all" version="2.0">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:numishare="http://code.google.com/p/numishare/" xmlns:exsl="http://exslt.org/common" exclude-result-prefixes="#all" version="2.0">
 	<xsl:output method="xml" indent="yes" encoding="UTF-8" media-type="text/html"/>
-	<xsl:include href="search_segments.xsl"/>
 	<xsl:include href="header.xsl"/>
 	<xsl:include href="footer.xsl"/>
+	<xsl:include href="templates.xsl"/>
+	<xsl:include href="functions.xsl"/>
 
 	<xsl:param name="pipeline"/>
 	<xsl:param name="lang"/>
@@ -22,7 +23,8 @@
 			<head>
 				<title>
 					<xsl:value-of select="//config/title"/>
-					<xsl:text>: Compare Coins</xsl:text>
+					<xsl:text>: </xsl:text>
+					<xsl:value-of select="numishare:normalizeLabel('header_compare', $lang)"/>
 				</title>
 				<link rel="shortcut icon" type="image/x-icon" href="{$display_path}images/favicon.png"/>
 				<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.8.2r1/build/grids/grids-min.css"/>
@@ -36,10 +38,19 @@
 				<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"/>
 				<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js"/>
 
+				<!-- menu -->
+				<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.core.js"/>
+				<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.widget.js"/>
+				<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.position.js"/>
+				<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.button.js"/>
+				<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.menu.js"/>
+				<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.menubar.js"/>
+				<script type="text/javascript" src="{$display_path}javascript/numishare-menu.js"/>
+
+				<!-- search related functions -->
 				<script type="text/javascript" src="{$display_path}javascript/jquery.livequery.js"/>
 				<script type="text/javascript" src="{$display_path}javascript/compare.js"/>
 				<script type="text/javascript" src="{$display_path}javascript/compare_functions.js"/>
-				<script type="text/javascript" src="{$display_path}javascript/numishare-menu.js"/>
 				<xsl:if test="string(/config/google_analytics/script)">
 					<script type="text/javascript">
 						<xsl:value-of select="//config/google_analytics/script"/>
@@ -60,7 +71,9 @@
 		<div id="bd">
 			<div id="yui-main">
 				<div class="yui-g">
-					<h1>Compare</h1>
+					<h1>
+						<xsl:value-of select="numishare:normalizeLabel('header_compare', $lang)"/>
+					</h1>
 					<p>This feature allows you to compare the results of conducting two separate searches of the database. The results of the searches are displayed on the results page in parallel
 						columns and may be sorted separately.</p>
 					<div class="yui-u first">

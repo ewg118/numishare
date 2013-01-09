@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:numishare="http://code.google.com/p/numishare/" xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes="xs exsl numishare" version="2.0" xmlns="http://www.w3.org/2005/Atom" xmlns:exsl="http://exslt.org/common">
 	<xsl:output method="text" encoding="UTF-8"/>
-
-	<xsl:include href="../search_segments.xsl"/>
+	<xsl:include href="../functions.xsl"/>
 
 	<xsl:param name="q"/>	
 	<xsl:param name="rows" as="xs:integer">100</xsl:param>
 	<xsl:param name="start"/>
+	<xsl:param name="lang"/>
 	<xsl:variable name="start_var" as="xs:integer">
 		<xsl:choose>
 			<xsl:when test="number($start)">
@@ -15,6 +15,8 @@
 			<xsl:otherwise>0</xsl:otherwise>
 		</xsl:choose>
 	</xsl:variable>
+	
+	
 	<xsl:param name="url">
 		<xsl:value-of select="/content/config/url"/>
 	</xsl:param>
@@ -29,7 +31,7 @@
 		<!-- display human-readable field names in header row -->
 		<xsl:for-each select="$tokenized_fields">
 			<xsl:text>"</xsl:text>
-			<xsl:value-of select="numishare:normalize_fields(.)"/>
+			<xsl:value-of select="numishare:normalize_fields(., $lang)"/>
 			<xsl:text>"</xsl:text>
 			<xsl:text>,</xsl:text>			
 		</xsl:for-each>

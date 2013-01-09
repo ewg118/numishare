@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:cinclude="http://apache.org/cocoon/include/1.0" xmlns:exsl="http://exslt.org/common"
 	xmlns:numishare="http://code.google.com/p/numishare/" xmlns:xs="http://www.w3.org/2001/XMLSchema" version="2.0">
-	<xsl:output method="xml" encoding="UTF-8"/>
-	<xsl:include href="search_segments.xsl"/>
+	<xsl:output method="xml" encoding="UTF-8"/>	
 	<xsl:include href="header.xsl"/>
 	<xsl:include href="footer.xsl"/>
+	<xsl:include href="templates.xsl"/>
+	<xsl:include href="functions.xsl"/>
 
 	<xsl:param name="pipeline"/>
 	<xsl:param name="display_path"/>
+	<xsl:param name="lang"/>
 
 	<xsl:param name="q"/>
 
@@ -19,7 +21,7 @@
 
 	<!-- variables -->
 	<xsl:variable name="category_normalized">
-		<xsl:value-of select="numishare:normalize_fields($category)"/>
+		<xsl:value-of select="numishare:normalize_fields($category, $lang)"/>
 	</xsl:variable>
 	<xsl:variable name="tokenized_q" select="tokenize($q, ' AND ')"/>
 	<xsl:variable name="numFound" select="//result[@name='response']/@numFound" as="xs:integer"/>
@@ -278,7 +280,7 @@
 					<xsl:text> for </xsl:text>
 					<xsl:choose>
 						<xsl:when test="string($facet)">
-							<xsl:value-of select="numishare:normalize_fields($facet)"/>
+							<xsl:value-of select="numishare:normalize_fields($facet, $lang)"/>
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:value-of select="$customQuery"/>
@@ -367,7 +369,7 @@
 						<xsl:variable name="name">
 							<xsl:choose>
 								<xsl:when test="string($field)">
-									<xsl:value-of select="numishare:normalize_fields($field)"/>
+									<xsl:value-of select="numishare:normalize_fields($field, $lang)"/>
 								</xsl:when>
 								<xsl:otherwise>Keyword</xsl:otherwise>
 							</xsl:choose>
@@ -465,7 +467,7 @@
 
 									<!-- display either the term or the regularized name for the century -->
 									<b>
-										<xsl:value-of select="numishare:normalize_fields($field)"/>
+										<xsl:value-of select="numishare:normalize_fields($field, $lang)"/>
 										<xsl:text>: </xsl:text>
 									</b>
 									<xsl:value-of select="if ($field='century_num') then numishare:normalize_century($value) else $value"/>

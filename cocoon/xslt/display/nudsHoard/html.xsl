@@ -55,10 +55,14 @@
 					<div id="tabs">
 						<ul>
 							<li>
-								<a href="#contents">Contents</a>
+								<a href="#contents">
+									<xsl:value-of select="numishare:normalizeLabel('display_contents', $lang)"/>
+								</a>
 							</li>
 							<li>
-								<a href="#quantitative">Quantitative</a>
+								<a href="#quantitative">
+									<xsl:value-of select="numishare:normalizeLabel('display_quantitative', $lang)"/>
+								</a>
 							</li>
 						</ul>
 						<div id="contents">
@@ -69,7 +73,9 @@
 							</xsl:if>
 						</div>
 						<div id="quantitative">
-							<h1>Quantitative Analysis</h1>
+							<h1>
+								<xsl:value-of select="numishare:normalizeLabel('display_quantitative', $lang)"/>
+							</h1>
 							<div id="accordion">
 								<h3>Visualization</h3>
 								<div>
@@ -89,7 +95,7 @@
 	</xsl:template>
 
 	<xsl:template match="nh:hoardDesc">
-		<h2>Hoard Description</h2>
+		<h2><xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/></h2>
 		<ul>
 			<xsl:apply-templates mode="descMeta"/>
 			<xsl:if test="not(nh:deposit/nh:date)">
@@ -107,13 +113,10 @@
 					</dates>
 				</xsl:variable>
 				<li>
-					<b>Closing Date: </b>										
+					<b>Closing Date: </b>
 					<xsl:choose>
 						<xsl:when test="count(exsl:node-set($dates)/dates/date) &gt; 0">
-							<xsl:call-template name="nh:normalize_date">
-								<xsl:with-param name="start_date" select="exsl:node-set($dates)/dates/date[last()]"/>
-								<xsl:with-param name="end_date" select="exsl:node-set($dates)/dates/date[last()]"/>
-							</xsl:call-template>
+							<xsl:value-of select="nh:normalize_date(exsl:node-set($dates)/dates/date[last()], exsl:node-set($dates)/dates/date[last()])"/>
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:text>Unknown</xsl:text>
@@ -126,7 +129,7 @@
 	</xsl:template>
 
 	<xsl:template name="nh:contents">
-		<h2>Contents</h2>
+		<h2><xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/></h2>
 
 		<table style="width:100%">
 			<thead>
