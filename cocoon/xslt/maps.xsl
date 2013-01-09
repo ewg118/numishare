@@ -18,7 +18,8 @@
 			<head>
 				<title>
 					<xsl:value-of select="//config/title"/>
-					<xsl:text>: Map the Collection</xsl:text>
+					<xsl:text>: </xsl:text>
+					<xsl:value-of select="numishare:normalizeLabel('header_maps', $lang)"/>
 				</title>
 				<link rel="shortcut icon" type="image/x-icon" href="{$display_path}images/favicon.png"/>
 				<!-- YUI grids -->
@@ -104,7 +105,7 @@
 	<xsl:template name="maps">
 		<div id="bd">
 			<div id="backgroundPopup"/>
-			<h1>Maps</h1>
+			<h1><xsl:value-of select="numishare:normalizeLabel('header_maps', $lang)"/></h1>
 			<p>For usage instructions, see <a href="http://wiki.numismatics.org/numishare:maps">http://wiki.numismatics.org/numishare:maps</a>.</p>
 			<div class="remove_facets"/>
 
@@ -133,11 +134,11 @@
 								<table>
 									<tbody>
 										<tr>
-											<th style="width:100px">Legend</th>
+											<th style="width:100px"><xsl:value-of select="numishare:regularize_node('legend', $lang)"/></th>
 											<td style="background-color:#0000ff;border:2px solid #000072;width:50px;"/>
-											<td style="width:100px">Mint</td>
+											<td style="width:100px"><xsl:value-of select="numishare:regularize_node('mint', $lang)"/></td>
 											<td style="background-color:#00a000;border:2px solid #006100;width:50px;"/>
-											<td style="width:100px">Findspot</td>
+											<td style="width:100px"><xsl:value-of select="numishare:regularize_node('findspot', $lang)"/></td>
 										</tr>
 									</tbody>
 								</table>
@@ -153,6 +154,9 @@
 			</xsl:choose>
 			<!--<input type="hidden" name="q" id="facet_form_query" value="{if (string($imageavailable_stripped)) then $imageavailable_stripped else '*:*'}"/>-->
 			<input id="facet_form_query" name="q" value="*:*" type="hidden"/>
+			<xsl:if test="string($lang)">
+				<input type="hidden" name="lang" value="{$lang}"/>
+			</xsl:if>
 			<span style="display:none" id="collection_type">
 				<xsl:value-of select="$collection_type"/>
 			</span>
@@ -173,7 +177,7 @@
 				</xsl:variable>
 				
 				<xsl:variable name="title">
-					<xsl:value-of select="numishare:normalize_fields(@name)"/>
+					<xsl:value-of select="numishare:normalize_fields(@name, $lang)"/>
 				</xsl:variable>
 				<xsl:choose>
 					<xsl:when test="@name = 'category_facet'">
