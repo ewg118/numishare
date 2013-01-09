@@ -38,7 +38,7 @@
 	<xsl:template match="nuds:nuds">
 		<xsl:if test="$mode = 'compare'">
 			<div class="compare_options">
-				<a href="compare_results?q={$q}&amp;start={$start}&amp;image={$image}&amp;side={$side}&amp;mode=compare" class="back_results">« Search results</a>
+				<a href="compare_results?q={$q}&amp;start={$start}&amp;image={$image}&amp;side={$side}&amp;mode=compare{if (string($lang)) then concat('&amp;lang=', $lang) else ''}" class="back_results">« Search results</a>
 				<xsl:text> | </xsl:text>
 				<a href="id/{$id}">Full record »</a>
 			</div>
@@ -46,7 +46,7 @@
 		<!-- below is a series of conditionals for forming the image boxes and displaying obverse and reverse images, iconography, and legends if they are available within the EAD document -->
 		<xsl:choose>
 			<xsl:when test="not($mode = 'compare')">
-				<!-- determine whether the document has published findspots or associated object findspots -->				
+				<!-- determine whether the document has published findspots or associated object findspots -->
 				<script type="text/javascript" langage="javascript">
                                                         $(function () {
                                                                 $("#tabs").tabs({
@@ -208,26 +208,36 @@
 				<div id="tabs">
 					<ul>
 						<li>
-							<a href="#summary">Summary</a>
+							<a href="#summary">
+								<xsl:value-of select="numishare:normalizeLabel('display_summary', $lang)"/>
+							</a>
 						</li>
 						<xsl:if test="$has_mint_geo = 'true' or $has_findspot_geo = 'true'">
 							<li>
-								<a href="#mapTab">Map</a>
+								<a href="#mapTab">
+									<xsl:value-of select="numishare:normalizeLabel('display_map', $lang)"/>
+								</a>
 							</li>
 						</xsl:if>
 						<xsl:if test="$recordType='conceptual' and (count(//nuds:associatedObject) &gt; 0 or string($sparql_endpoint))">
 							<li>
-								<a href="#charts">Quantitative</a>
+								<a href="#charts">
+									<xsl:value-of select="numishare:normalizeLabel('display_quantitative', $lang)"/>
+								</a>
 							</li>
 						</xsl:if>
 						<xsl:if test="nuds:descMeta/nuds:adminDesc/*">
 							<li>
-								<a href="#administrative">Administrative</a>
+								<a href="#administrative">
+									<xsl:value-of select="numishare:normalizeLabel('display_administrative', $lang)"/>
+								</a>
 							</li>
 						</xsl:if>
 						<xsl:if test="nuds:description">
 							<li>
-								<a href="#commentary">Commentary</a>
+								<a href="#commentary">
+									<xsl:value-of select="numishare:normalizeLabel('display_commentary', $lang)"/>
+								</a>
 							</li>
 						</xsl:if>
 
@@ -308,28 +318,36 @@
 	</xsl:template>
 
 	<xsl:template match="nuds:undertypeDesc">
-		<h2>Undertype</h2>
+		<h2>
+			<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
+		</h2>
 		<ul>
 			<xsl:apply-templates mode="descMeta"/>
 		</ul>
 	</xsl:template>
 
 	<xsl:template match="nuds:findspotDesc">
-		<h2>Findspot</h2>
+		<h2>
+			<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
+		</h2>
 		<ul>
 			<xsl:apply-templates mode="descMeta"/>
 		</ul>
 	</xsl:template>
 
 	<xsl:template match="nuds:adminDesc">
-		<h2>Administrative History</h2>
+		<h2>
+			<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
+		</h2>
 		<ul>
 			<xsl:apply-templates mode="descMeta"/>
 		</ul>
 	</xsl:template>
 
 	<xsl:template match="nuds:subjectSet">
-		<h2>Subjects</h2>
+		<h2>
+			<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
+		</h2>
 		<ul>
 			<xsl:apply-templates select="subject"/>
 		</ul>
@@ -340,13 +358,13 @@
 			<xsl:choose>
 				<xsl:when test="string(@type)">
 					<b><xsl:value-of select="@type"/>: </b>
-					<a href="{$display_path}results?q={@type}_facet:&#x022;{normalize-space(.)}&#x022;">
+					<a href="{$display_path}results?q={@type}_facet:&#x022;{normalize-space(.)}&#x022;{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
 						<xsl:value-of select="."/>
 					</a>
 				</xsl:when>
 				<xsl:otherwise>
-					<b>Subject: </b>
-					<a href="{$display_path}results?q=subject_facet:&#x022;{normalize-space(.)}&#x022;">
+					<b><xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>: </b>
+					<a href="{$display_path}results?q=subject_facet:&#x022;{normalize-space(.)}&#x022;{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
 						<xsl:value-of select="."/>
 					</a>
 				</xsl:otherwise>
@@ -423,7 +441,7 @@
 			<dl>
 				<xsl:if test="exsl:node-set($object)/nuds:nudsHeader/nuds:publicationStmt/nuds:publisher">
 					<div>
-						<dt>Publisher: </dt>
+						<dt><xsl:value-of select="numishare:regularize_node('publisher', $lang)"/>: </dt>
 						<dd style="margin-left:125px;">
 							<xsl:value-of select="exsl:node-set($object)/nuds:nudsHeader/nuds:publicationStmt/nuds:publisher"/>
 						</dd>
@@ -444,7 +462,7 @@
 				</xsl:if>-->
 				<xsl:if test="exsl:node-set($object)/nuds:descMeta/nuds:physDesc/nuds:axis">
 					<div>
-						<dt>Axis: </dt>
+						<dt><xsl:value-of select="numishare:regularize_node('axis', $lang)"/>: </dt>
 						<dd style="margin-left:125px;">
 							<xsl:value-of select="exsl:node-set($object)/nuds:descMeta/nuds:physDesc/nuds:axis"/>
 						</dd>
@@ -452,7 +470,7 @@
 				</xsl:if>
 				<xsl:if test="exsl:node-set($object)/nuds:descMeta/nuds:physDesc/nuds:measurementsSet/nuds:diameter">
 					<div>
-						<dt>Diameter: </dt>
+						<dt><xsl:value-of select="numishare:regularize_node('diameter', $lang)"/>: </dt>
 						<dd style="margin-left:125px;">
 							<xsl:value-of select="exsl:node-set($object)/nuds:descMeta/nuds:physDesc/nuds:measurementsSet/nuds:diameter"/>
 						</dd>
@@ -460,25 +478,12 @@
 				</xsl:if>
 				<xsl:if test="exsl:node-set($object)/nuds:descMeta/nuds:physDesc/nuds:measurementsSet/nuds:weight">
 					<div>
-						<dt>Weight: </dt>
+						<dt><xsl:value-of select="numishare:regularize_node('weight', $lang)"/>: </dt>
 						<dd style="margin-left:125px;">
 							<xsl:value-of select="exsl:node-set($object)/nuds:descMeta/nuds:physDesc/nuds:measurementsSet/nuds:weight"/>
 						</dd>
 					</div>
 				</xsl:if>
-				<!--<xsl:if test="exsl:node-set($object)/nuds:descMeta/nuds:refDesc/nuds:reference">
-					<div>
-						<dt>Reference(s): </dt>
-						<dd style="margin-left:125px;">
-							<xsl:for-each select="exsl:node-set($object)/nuds:descMeta/nuds:refDesc/nuds:reference">
-								<xsl:value-of select="."/>
-								<xsl:if test="not(position() = last())">
-									<xsl:text>, </xsl:text>
-								</xsl:if>
-							</xsl:for-each>
-						</dd>
-					</div>
-				</xsl:if>-->
 			</dl>
 		</div>
 	</xsl:template>
@@ -599,7 +604,9 @@
 
 	<!-- charts template -->
 	<xsl:template name="charts">
-		<h2>Quantitative Analysis</h2>
+		<h2>
+			<xsl:value-of select="numishare:normalizeLabel('display_quantitative', $lang)"/>
+		</h2>
 		<p>Average weight for this coin-type: <cinclude:include src="cocoon:/get_avg_weight?q=id:&#x022;{$id}&#x022;"/> grams</p>
 		<xsl:if test="string($weightQuery)">
 			<div id="{@name}-container" style="min-width: 400px; height: 400px; margin: 20px auto"/>

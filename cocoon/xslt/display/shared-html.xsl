@@ -11,14 +11,18 @@
 
 	<!--***************************************** ELEMENT TEMPLATES **************************************** -->
 	<xsl:template match="*[local-name()='refDesc']">
-		<h2>References</h2>
+		<h2>
+			<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
+		</h2>
 		<ul>
 			<xsl:apply-templates mode="descMeta"/>
 		</ul>
 	</xsl:template>
 
 	<xsl:template match="nuds:physDesc[child::*]">
-		<h2>Physical Attributes</h2>
+		<h2>
+			<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
+		</h2>
 		<ul>
 			<xsl:apply-templates mode="descMeta"/>
 		</ul>
@@ -26,7 +30,9 @@
 
 	<xsl:template match="nuds:typeDesc">
 		<xsl:param name="typeDesc_resource"/>
-		<h2>Typological Attributes</h2>
+		<h2>
+			<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
+		</h2>
 		<xsl:if test="string($typeDesc_resource)">
 			<p>Source: <a href="{$typeDesc_resource}"><xsl:value-of select="exsl:node-set($nudsGroup)/nudsGroup/object[@xlink:href = $typeDesc_resource]/nuds:nuds/nuds:descMeta/nuds:title"/></a></p>
 		</xsl:if>
@@ -113,7 +119,7 @@
 
 					<xsl:choose>
 						<xsl:when test="contains($facets, $field)">
-							<a href="{$display_path}results?q={$field}_facet:&#x022;{normalize-space(.)}&#x022;">
+							<a href="{$display_path}results?q={$field}_facet:&#x022;{normalize-space(.)}&#x022;{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
 								<xsl:value-of select="$value"/>
 							</a>
 						</xsl:when>

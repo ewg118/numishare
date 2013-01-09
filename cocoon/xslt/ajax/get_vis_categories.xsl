@@ -6,6 +6,7 @@
 	<!-- use the calculate URI parameter to output tables/charts for counts of material, denomination, issuer, etc. -->
 	<xsl:param name="q"/>
 	<xsl:param name="category"/>
+	<xsl:param name="lang"/>
 
 	<xsl:template match="/">
 		<div>
@@ -21,7 +22,7 @@
 						</xsl:otherwise>
 					</xsl:choose>
 					<label for="{$query_fragment}-checkbox">
-						<xsl:value-of select="numishare:normalize_fields(@name)"/>
+						<xsl:value-of select="numishare:normalize_fields(@name, $lang)"/>
 					</label>
 				</span>
 			</xsl:for-each>

@@ -6,6 +6,7 @@
 	<xsl:param name="q"/>	
 	<xsl:param name="rows" as="xs:integer">100</xsl:param>
 	<xsl:param name="start"/>
+	<xsl:param name="lang"/>
 	<xsl:variable name="start_var" as="xs:integer">
 		<xsl:choose>
 			<xsl:when test="number($start)">
@@ -14,6 +15,8 @@
 			<xsl:otherwise>0</xsl:otherwise>
 		</xsl:choose>
 	</xsl:variable>
+	
+	
 	<xsl:param name="url">
 		<xsl:value-of select="/content/config/url"/>
 	</xsl:param>
@@ -28,7 +31,7 @@
 		<!-- display human-readable field names in header row -->
 		<xsl:for-each select="$tokenized_fields">
 			<xsl:text>"</xsl:text>
-			<xsl:value-of select="numishare:normalize_fields(.)"/>
+			<xsl:value-of select="numishare:normalize_fields(., $lang)"/>
 			<xsl:text>"</xsl:text>
 			<xsl:text>,</xsl:text>			
 		</xsl:for-each>

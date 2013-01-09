@@ -153,7 +153,7 @@
 			<div class="yui-b">
 				<xsl:if test="//result[@name='response']/@numFound &gt; 0">
 					<div class="data_options">
-						<h2>Data Options</h2>
+						<h2><xsl:value-of select="numishare:normalizeLabel('results_data-options', $lang)"/></h2>
 						<a href="{$display_path}feed/?q={$q}">
 							<img src="{$display_path}images/atom-medium.png" title="Atom" alt="Atom"/>
 						</a>
@@ -171,7 +171,7 @@
 							<img src="{$display_path}images/visualize.png" title="Visualize" alt="Visualize"/>
 						</a>
 					</div>
-					<h2>Refine Results</h2>
+					<h2><xsl:value-of select="numishare:normalizeLabel('results_refine-results', $lang)"/></h2>
 					<xsl:call-template name="quick_search"/>
 					<xsl:apply-templates select="descendant::lst[@name='facet_fields']"/>
 				</xsl:if>

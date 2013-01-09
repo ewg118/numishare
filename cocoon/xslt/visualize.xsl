@@ -21,7 +21,7 @@
 
 	<!-- variables -->
 	<xsl:variable name="category_normalized">
-		<xsl:value-of select="numishare:normalize_fields($category)"/>
+		<xsl:value-of select="numishare:normalize_fields($category, $lang)"/>
 	</xsl:variable>
 	<xsl:variable name="tokenized_q" select="tokenize($q, ' AND ')"/>
 	<xsl:variable name="numFound" select="//result[@name='response']/@numFound" as="xs:integer"/>
@@ -280,7 +280,7 @@
 					<xsl:text> for </xsl:text>
 					<xsl:choose>
 						<xsl:when test="string($facet)">
-							<xsl:value-of select="numishare:normalize_fields($facet)"/>
+							<xsl:value-of select="numishare:normalize_fields($facet, $lang)"/>
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:value-of select="$customQuery"/>
@@ -369,7 +369,7 @@
 						<xsl:variable name="name">
 							<xsl:choose>
 								<xsl:when test="string($field)">
-									<xsl:value-of select="numishare:normalize_fields($field)"/>
+									<xsl:value-of select="numishare:normalize_fields($field, $lang)"/>
 								</xsl:when>
 								<xsl:otherwise>Keyword</xsl:otherwise>
 							</xsl:choose>
@@ -467,7 +467,7 @@
 
 									<!-- display either the term or the regularized name for the century -->
 									<b>
-										<xsl:value-of select="numishare:normalize_fields($field)"/>
+										<xsl:value-of select="numishare:normalize_fields($field, $lang)"/>
 										<xsl:text>: </xsl:text>
 									</b>
 									<xsl:value-of select="if ($field='century_num') then numishare:normalize_century($value) else $value"/>
