@@ -140,12 +140,12 @@ $(document).ready(function () {
 			}).get();
 			var length = array_of_checked_values.length;
 			
-			if (length > 3) {
-				$('button[title=' + title + ']').children('span:nth-child(2)').text(title + ': ' + length + ' selected');
-			} else if (length > 0 && length <= 3) {
-				$('button[title=' + title + ']').children('span:nth-child(2)').text(title + ': ' + array_of_checked_values.join(', '));
-			} else if (length == 0) {
-				$('button[title=' + title + ']').children('span:nth-child(2)').text(title);
+			if (length > 3){
+				$(this).next('button').children('span:nth-child(2)').text(title + ': ' + length + ' selected');
+			} else if (length > 0 && length <= 3){
+				$(this).next('button').children('span:nth-child(2)').text(title + ': ' + array_of_checked_values.join(', '));
+			} else if (length == 0){
+				$(this).next('button').children('span:nth-child(2)').text(title);
 			}
 		},
 		beforeopen: function () {
@@ -181,9 +181,9 @@ $(document).ready(function () {
 			}).get();
 			var length = array_of_checked_values.length;
 			if (length > 3) {
-				$('button[title=' + title + ']').children('span:nth-child(2)').text(title + ': ' + length + ' selected');
+				$(this).next('button').children('span:nth-child(2)').text(title + ': ' + length + ' selected');
 			} else if (length > 0 && length <= 3) {
-				$('button[title=' + title + ']').children('span:nth-child(2)').text(title + ': ' + array_of_checked_values.join(', '));
+				$(this).next('button').children('span:nth-child(2)').text(title + ': ' + array_of_checked_values.join(', '));
 			} else if (length == 0) {
 				var q = getQuery();
 				if (q.length > 0) {
@@ -523,9 +523,11 @@ $(document).ready(function () {
 		map.addPopup(popup);
 		
 		$('.show_coins').livequery('click', function (event) {
-			query = $(this).attr('q');
+			var query = $(this).attr('q');
+			var lang =  $('input[name=lang]').val();
 			$.get('results_ajax', {
-				q: query
+				q: query,
+				lang: lang
 			},
 			function (data) {
 				$('#results') .html(data);
