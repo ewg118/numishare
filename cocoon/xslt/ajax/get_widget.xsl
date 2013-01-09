@@ -7,6 +7,7 @@
 	<xsl:param name="collection"/>
 	<xsl:param name="department"/>
 	<xsl:param name="section"/>
+	<xsl:param name="lang"/>
 
 	<xsl:template match="/">
 		<xsl:apply-templates select="//lst[@name='facet_fields']"/>
@@ -95,7 +96,7 @@
 			<xsl:when test="@name = 'department_facet'"/>
 			<xsl:otherwise>
 				<xsl:variable name="title">
-					<xsl:value-of select="numishare:normalize_fields(@name)"/>
+					<xsl:value-of select="numishare:normalize_fields(@name, $lang)"/>
 				</xsl:variable>
 
 				<xsl:variable name="count" select="number(int[@name='numFacetTerms'])"/>

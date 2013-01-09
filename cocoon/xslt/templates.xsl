@@ -359,6 +359,9 @@
 					</div>
 				</div>
 				<input name="q" id="q_input" type="hidden"/>
+				<xsl:if test="string($lang)">
+					<input name="lang" type="hidden" value="{$lang}"/>
+				</xsl:if>
 				<xsl:choose>
 					<xsl:when test="$pipeline='analyze'">
 						<input type="submit" value="Filter" id="filterButton"/>
@@ -367,7 +370,7 @@
 						<input type="submit" value="Add Query" id="search_buttom"/>
 					</xsl:when>
 					<xsl:otherwise>
-						<input type="submit" value="Search" id="search_button"/>
+						<input type="submit" value="{numishare:normalizeLabel('header_search', $lang)}" id="search_button"/>
 					</xsl:otherwise>
 				</xsl:choose>
 				
@@ -405,13 +408,13 @@
 							<!-- display only those search options when their facet equivalent has hits -->
 							<xsl:when test="exsl:node-set($facets)//lst[starts-with(@name, $root)][number(int[@name='numFacetTerms']) &gt; 0]">
 								<option value="{$name}" class="search_option">
-									<xsl:value-of select="numishare:normalize_fields($name)"/>
+									<xsl:value-of select="numishare:normalize_fields($name, $lang)"/>
 								</option>
 							</xsl:when>
 							<!-- display those search options when they aren't connected to facets -->
 							<xsl:when test="not(exsl:node-set($facets)//lst[starts-with(@name, $root)])">
 								<option value="{$name}" class="search_option">
-									<xsl:value-of select="numishare:normalize_fields($name)"/>
+									<xsl:value-of select="numishare:normalize_fields($name, $lang)"/>
 								</option>
 							</xsl:when>
 						</xsl:choose>
@@ -424,13 +427,13 @@
 							<!-- display only those search options when their facet equivalent has hits -->
 							<xsl:when test="exsl:node-set($facets)//lst[starts-with(@name, $root)][number(int[@name='numFacetTerms']) &gt; 0]">
 								<option value="{$name}" class="search_option">
-									<xsl:value-of select="numishare:normalize_fields($name)"/>
+									<xsl:value-of select="numishare:normalize_fields($name, $lang)"/>
 								</option>
 							</xsl:when>
 							<!-- display those search options when they aren't connected to facets -->
 							<xsl:when test="not(exsl:node-set($facets)//lst[starts-with(@name, $root)])">
 								<option value="{$name}" class="search_option">
-									<xsl:value-of select="numishare:normalize_fields($name)"/>
+									<xsl:value-of select="numishare:normalize_fields($name, $lang)"/>
 								</option>
 							</xsl:when>
 						</xsl:choose>
