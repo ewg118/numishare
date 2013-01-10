@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:numishare="http://code.google.com/p/numishare/" xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes="xs numishare" version="2.0">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:numishare="http://code.google.com/p/numishare/" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	exclude-result-prefixes="xs numishare" version="2.0">
 	<xsl:include href="../functions.xsl"/>
 	<xsl:include href="../results_generic.xsl"/>
 	<xsl:param name="display_path">
@@ -18,7 +19,7 @@
 	<xsl:template match="/">
 		<xsl:variable name="place_string" select="replace(translate($tokenized_q[contains(., '_uri')], '&#x022;()', ''), '[a-z]+_uri:', '')"/>
 		<xsl:variable name="places" select="tokenize($place_string, ' OR ')"/>
-		
+
 		<h1>
 			<xsl:text>Place</xsl:text>
 			<xsl:if test="contains($place_string, ' OR ')">
@@ -74,12 +75,13 @@
 								<dt><xsl:value-of select="numishare:regularize_node('obverse', $lang)"/>:</dt>
 								<dd style="margin-left:125px;">
 									<xsl:value-of
-										select="if (string-length(str[@name='obv_type_display']) &gt; 30) then concat(substring(str[@name='obv_type_display'], 1, 30), '...') else str[@name='obv_type_display']"/>
+										select="if (string-length(str[@name='obv_leg_display']) &gt; 30) then concat(substring(str[@name='obv_leg_display'], 1, 30), '...') else str[@name='obv_leg_display']"/>
 									<xsl:if test="str[@name='obv_leg_display'] and str[@name='obv_type_display']">
 										<xsl:text>: </xsl:text>
 									</xsl:if>
 									<xsl:value-of
-										select="if (string-length(str[@name='obv_leg_display']) &gt; 30) then concat(substring(str[@name='obv_leg_display'], 1, 30), '...') else str[@name='obv_leg_display']"/>
+										select="if (string-length(str[@name='obv_type_display']) &gt; 30) then concat(substring(str[@name='obv_type_display'], 1, 30), '...') else str[@name='obv_type_display']"
+									/>
 								</dd>
 							</div>
 						</xsl:if>
@@ -88,12 +90,13 @@
 								<dt><xsl:value-of select="numishare:regularize_node('reverse', $lang)"/>:</dt>
 								<dd style="margin-left:125px;">
 									<xsl:value-of
-										select="if (string-length(str[@name='rev_type_display']) &gt; 30) then concat(substring(str[@name='rev_type_display'], 1, 30), '...') else str[@name='rev_type_display']"/>
+										select="if (string-length(str[@name='rev_leg_display']) &gt; 30) then concat(substring(str[@name='rev_leg_display'], 1, 30), '...') else str[@name='rev_leg_display']"/>
 									<xsl:if test="str[@name='rev_leg_display'] and str[@name='rev_type_display']">
 										<xsl:text>: </xsl:text>
 									</xsl:if>
 									<xsl:value-of
-										select="if (string-length(str[@name='rev_leg_display']) &gt; 30) then concat(substring(str[@name='rev_leg_display'], 1, 30), '...') else str[@name='rev_leg_display']"/>
+										select="if (string-length(str[@name='rev_type_display']) &gt; 30) then concat(substring(str[@name='rev_type_display'], 1, 30), '...') else str[@name='rev_type_display']"
+									/>
 								</dd>
 							</div>
 						</xsl:if>
@@ -120,11 +123,11 @@
 									<xsl:value-of select="float[@name='weight_num']"/>
 								</dd>
 							</div>
-						</xsl:if>						
+						</xsl:if>
 					</xsl:otherwise>
 				</xsl:choose>
 			</dl>
-			
+
 			<div class="gi_c">
 				<xsl:choose>
 					<xsl:when test="str[@name='recordType'] = 'physical'">
@@ -143,7 +146,7 @@
 						<xsl:variable name="count" select="count(arr[@name='ao_uri']/str)"/>
 						<xsl:variable name="title" select="str[@name='title_display']	"/>
 						<xsl:variable name="docId" select="str[@name='id']"/>
-						
+
 						<xsl:if test="count(arr[@name='ao_thumbnail_obv']/str) &gt; 0">
 							<xsl:variable name="nudsid" select="substring-before(arr[@name='ao_thumbnail_obv']/str[1], '|')"/>
 							<a class="thumbImage" rel="{str[@name='id']}-gallery" href="{substring-after(arr[@name='ao_reference_obv']/str[contains(., $nudsid)], '|')}"

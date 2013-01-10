@@ -78,19 +78,27 @@
 							</xsl:if>
 						</xsl:when>
 						<xsl:otherwise>
-							<xsl:if test="str[@name='obv_leg_display']">
+							<xsl:if test="str[@name='obv_leg_display'] or str[@name='obv_type_display']">
 								<div>
 									<dt><xsl:value-of select="numishare:regularize_node('obverse', $lang)"/>:</dt>
 									<dd style="margin-left:150px;">
 										<xsl:value-of select="str[@name='obv_leg_display']"/>
+										<xsl:if test="str[@name='obv_leg_display'] and str[@name='obv_type_display']">
+											<xsl:text>: </xsl:text>
+										</xsl:if>
+										<xsl:value-of select="str[@name='obv_type_display']"/>
 									</dd>
 								</div>
 							</xsl:if>
-							<xsl:if test="str[@name='rev_leg_display']">
+							<xsl:if test="str[@name='rev_leg_display'] or str[@name='rev_type_display']">
 								<div>
 									<dt><xsl:value-of select="numishare:regularize_node('reverse', $lang)"/>:</dt>
 									<dd style="margin-left:150px;">
 										<xsl:value-of select="str[@name='rev_leg_display']"/>
+										<xsl:if test="str[@name='rev_leg_display'] and str[@name='rev_type_display']">
+											<xsl:text>: </xsl:text>
+										</xsl:if>
+										<xsl:value-of select="str[@name='rev_type_display']"/>
 									</dd>
 								</div>
 							</xsl:if>
