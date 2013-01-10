@@ -5,9 +5,11 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0" xmlns:exsl="http://exslt.org/common" xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	xmlns:numishare="http://code.google.com/p/numishare/" xmlns:res="http://www.w3.org/2005/sparql-results#" exclude-result-prefixes="#all">
-
+	<xsl:include href="../functions.xsl"/>
+	
 	<xsl:param name="template"/>
 	<xsl:param name="uri"/>
+	<xsl:param name="lang"/>
 
 	<!-- config variables -->
 	<xsl:variable name="endpoint" select="/config/sparql_endpoint"/>
@@ -165,7 +167,7 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 			<dl>
 				<xsl:if test="res:binding[@name='publisher']/res:literal">
 					<div>
-						<dt>Publisher: </dt>
+						<dt><xsl:value-of select="numishare:regularize_node('publisher', $lang)"/>: </dt>
 						<dd style="margin-left:125px;">
 							<xsl:value-of select="res:binding[@name='publisher']/res:literal"/>
 						</dd>
@@ -173,7 +175,7 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 				</xsl:if>
 				<xsl:if test="string(res:binding[@name='axis']/res:literal)">
 					<div>
-						<dt>Axis: </dt>
+						<dt><xsl:value-of select="numishare:regularize_node('axis', $lang)"/>: </dt>
 						<dd style="margin-left:125px;">
 							<xsl:value-of select="string(res:binding[@name='axis']/res:literal)"/>
 						</dd>
@@ -181,7 +183,7 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 				</xsl:if>
 				<xsl:if test="string(res:binding[@name='diameter']/res:literal)">
 					<div>
-						<dt>Diameter: </dt>
+						<dt><xsl:value-of select="numishare:regularize_node('diameter', $lang)"/>: </dt>
 						<dd style="margin-left:125px;">
 							<xsl:value-of select="string(res:binding[@name='diameter']/res:literal)"/>
 						</dd>
@@ -189,7 +191,7 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 				</xsl:if>
 				<xsl:if test="string(res:binding[@name='weight']/res:literal)">
 					<div>
-						<dt>Weight: </dt>
+						<dt><xsl:value-of select="numishare:regularize_node('weight', $lang)"/>: </dt>
 						<dd style="margin-left:125px;">
 							<xsl:value-of select="string(res:binding[@name='weight']/res:literal)"/>
 						</dd>
