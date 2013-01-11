@@ -230,8 +230,6 @@
 			<map:match pattern="id/*">
 				<map:aggregate element="content">
 					<map:part src="{global:exist-url}{global:collection-name}/objects/{1}.xml"/>
-					<map:part src="cocoon:/query_findspot_geo/{1}"/>
-					<map:part src="cocoon:/query_mint_geo/{1}"/>
 					<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
 				</map:aggregate>
 				<map:transform src="xslt/display.xsl" label="basiccontent" type="xslt-saxon">
@@ -715,26 +713,6 @@
 				<map:generate src="{global:exist-url}{global:collection-name}/objects/{url-encode:{request-param:id}}.xml"/>
 				<map:transform src="xslt/ajax/get_hoard_quant.xsl" label="basiccontent" type="xslt-saxon">
 					<map:parameter name="use-request-parameters" value="true"/>
-				</map:transform>
-				<map:serialize type="xml"/>
-			</map:match>
-
-			<!-- not AJAX, but xsl:document() querying -->
-			<!-- query solr for available geographic coordinates -->
-			<map:match pattern="query_findspot_geo/*">
-				<map:generate src="{global:solr-url}select?q=collection-name:{global:collection-name}+AND+{url-encode:id:&#x022;{1}&#x022; AND (findspot_geo:* OR ao_findspot_geo:*)}" label="record"/>
-				<map:transform type="xslt-saxon" src="xslt/ajax/query_geo.xsl" label="basiccontent">
-					<map:parameter name="use-request-parameters" value="true"/>
-					<map:parameter name="field" value="findspot"/>
-				</map:transform>
-				<map:serialize type="xml"/>
-			</map:match>
-
-			<map:match pattern="query_mint_geo/*">
-				<map:generate src="{global:solr-url}select?q=collection-name:{global:collection-name}+AND+{url-encode:id:&#x022;{1}&#x022; AND mint_geo:*}" label="record"/>
-				<map:transform type="xslt-saxon" src="xslt/ajax/query_geo.xsl" label="basiccontent">
-					<map:parameter name="use-request-parameters" value="true"/>
-					<map:parameter name="field" value="mint"/>
 				</map:transform>
 				<map:serialize type="xml"/>
 			</map:match>

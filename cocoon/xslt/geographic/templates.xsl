@@ -67,7 +67,7 @@
 		
 		<!-- gather associated hoards from Metis is available -->
 		<xsl:if test="string($sparql_endpoint)">
-			<cinclude:include src="cocoon:/widget?uri={concat($url, 'id/', $id)}&amp;template=kml"/>
+			<cinclude:include src="cocoon:/widget?uri={concat('http://numismatics.org/ocre/', 'id/', $id)}&amp;template=kml"/>
 		</xsl:if>
 	</xsl:template>
 	

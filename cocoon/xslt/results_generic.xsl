@@ -392,7 +392,7 @@
 				<xsl:when test="str[@name='recordType'] = 'conceptual'">
 					<xsl:choose>
 						<xsl:when test="string($sparql_endpoint)">
-							<cinclude:include src="cocoon:/widget?uri={$url}id/{str[@name='id']}&amp;template=results"/>
+							<cinclude:include src="cocoon:/widget?uri={'http://numismatics.org/ocre/'}id/{str[@name='id']}&amp;template=results"/>
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:variable name="count" select="count(arr[@name='ao_uri']/str)"/>
