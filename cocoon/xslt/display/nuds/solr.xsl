@@ -97,13 +97,23 @@
 				<xsl:variable name="href" select="@xlink:href"/>
 				<xsl:choose>
 					<xsl:when test="contains($href, 'nomisma.org')">
+						<xsl:variable name="label">
+							<xsl:choose>
+								<xsl:when test="string(exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/skos:prefLabel)">
+									<xsl:value-of select="exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/skos:prefLabel"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:value-of select="$href"/>
+								</xsl:otherwise>
+							</xsl:choose>
+						</xsl:variable>
 						<xsl:variable name="coordinates" select="exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/descendant::gml:pos"/>
 						<xsl:if test="string($coordinates)">
 							<xsl:variable name="lat" select="substring-before($coordinates, ' ')"/>
 							<xsl:variable name="lon" select="substring-after($coordinates, ' ')"/>
 							<!-- *_geo format is 'mint name|URI of resource|KML-compliant geographic coordinates' -->
 							<field name="findspot_geo">
-								<xsl:value-of select="exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/skos:prefLabel"/>
+								<xsl:value-of select="$label"/>
 								<xsl:text>|</xsl:text>
 								<xsl:value-of select="@xlink:href"/>
 								<xsl:text>|</xsl:text>

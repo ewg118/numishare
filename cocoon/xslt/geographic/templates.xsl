@@ -58,16 +58,24 @@
 	</xsl:template>
 
 	<xsl:template match="nuds:nuds" mode="kml">
+		<!-- create mint points -->
 		<xsl:for-each select="exsl:node-set($nudsGroup)/descendant::nuds:geogname[@xlink:role='mint'][string(@xlink:href)]">
 			<xsl:call-template name="getPlacemark">
 				<xsl:with-param name="href" select="@xlink:href"/>
 				<xsl:with-param name="styleUrl">#mint</xsl:with-param>
 			</xsl:call-template>
 		</xsl:for-each>
+		<!-- create findspot points (for physical coins -->
+		<xsl:for-each select="exsl:node-set($nudsGroup)/descendant::nuds:geogname[@xlink:role='findspot'][string(@xlink:href)]|descendant::nuds:findspotDesc[string(@xlink:href)]">
+			<xsl:call-template name="getPlacemark">
+				<xsl:with-param name="href" select="@xlink:href"/>
+				<xsl:with-param name="styleUrl">#hoard</xsl:with-param>
+			</xsl:call-template>
+		</xsl:for-each>
 		
 		<!-- gather associated hoards from Metis is available -->
 		<xsl:if test="string($sparql_endpoint)">
-			<cinclude:include src="cocoon:/widget?uri={concat('http://numismatics.org/ocre/', 'id/', $id)}&amp;template=kml"/>
+			<cinclude:include src="cocoon:/widget?uri={concat($url, 'id/', $id)}&amp;template=kml"/>
 		</xsl:if>
 	</xsl:template>
 	
@@ -285,6 +293,20 @@
 					<xsl:when test="$styleUrl='#mapped'">
 						<xsl:value-of select="ancestor::nuds:nuds/nuds:descMeta/nuds:title"/>
 					</xsl:when>
+					<xsl:when test="local-name()='findspotDesc'">
+						<xsl:choose>
+							<xsl:when test="contains($href, 'nomisma.org')">
+								<xsl:choose>
+									<xsl:when test="string(exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/skos:prefLabel)">
+										<xsl:value-of select="exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/skos:prefLabel"/>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:value-of select="$href"/>
+									</xsl:otherwise>
+								</xsl:choose>
+							</xsl:when>
+						</xsl:choose>
+					</xsl:when>
 					<xsl:otherwise>
 						<xsl:value-of select="."/>
 					</xsl:otherwise>
@@ -324,7 +346,7 @@
 					</Point>
 				</xsl:when>
 				<xsl:when test="contains($href, 'nomisma')">
-					<xsl:variable name="coordinates" select="exsl:node-set($rdf)//*[@rdf:about=$href]/gml:pos"/>
+					<xsl:variable name="coordinates" select="exsl:node-set($rdf)//*[@rdf:about=$href]/descendant::gml:pos"/>
 					<xsl:if test="string($coordinates)">
 						<xsl:variable name="lat" select="substring-before($coordinates, ' ')"/>
 						<xsl:variable name="lon" select="substring-after($coordinates, ' ')"/>
