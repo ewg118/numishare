@@ -198,11 +198,6 @@
 							<xsl:apply-templates select="nuds:descMeta/nuds:findspotDesc"/>
 						</div>
 					</xsl:if>
-					<xsl:if test="nuds:nuds:descMeta/nuds:nuds:adminDesc/*">
-						<div class="metadata_section">
-							<xsl:apply-templates select="nuds:descMeta/nuds:adminDesc"/>
-						</div>
-					</xsl:if>
 				</div>
 			</xsl:when>
 			<xsl:otherwise>
@@ -224,6 +219,13 @@
 							<li>
 								<a href="#charts">
 									<xsl:value-of select="numishare:normalizeLabel('display_quantitative', $lang)"/>
+								</a>
+							</li>
+						</xsl:if>
+						<xsl:if test="nuds:descMeta/nuds:adminDesc/*">
+							<li>
+								<a href="#administrative">
+									<xsl:value-of select="numishare:normalizeLabel('display_administrative', $lang)"/>
 								</a>
 							</li>
 						</xsl:if>
@@ -268,11 +270,6 @@
 								<xsl:apply-templates select="nuds:descMeta/nuds:findspotDesc"/>
 							</div>
 						</xsl:if>
-						<xsl:if test="nuds:descMeta/nuds:adminDesc/*">
-							<div class="metadata_section">
-								<xsl:apply-templates select="nuds:descMeta/nuds:adminDesc"/>
-							</div>
-						</xsl:if>
 					</div>
 					<xsl:if test="$has_mint_geo = 'true' or $has_findspot_geo = 'true'">
 						<div id="mapTab">
@@ -297,6 +294,13 @@
 					<xsl:if test="$recordType='conceptual' and (count(//nuds:associatedObject) &gt; 0 or string($sparql_endpoint))">
 						<div id="charts">
 							<xsl:call-template name="charts"/>
+						</div>
+					</xsl:if>
+					<xsl:if test="nuds:descMeta/nuds:adminDesc/*">
+						<div id="administrative">
+							<div class="metadata_section">
+								<xsl:apply-templates select="nuds:descMeta/nuds:adminDesc"/>
+							</div>
 						</div>
 					</xsl:if>
 					<xsl:if test="nuds:description">
