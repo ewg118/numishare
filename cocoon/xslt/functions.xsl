@@ -212,7 +212,7 @@
 					<xsl:when test="$name='adminDesc'">Administrative History</xsl:when>
 					<xsl:when test="$name='closing_date'">Closing Date</xsl:when>					
 					<xsl:when test="$name='conservationState'">Conservation State</xsl:when>
-					<xsl:when test="$name='custodhist'">Custodial History</xsl:when>
+					<xsl:when test="$name='custodhist'">Provenance</xsl:when>
 					<xsl:when test="$name='dateOnObject'">Date on Object</xsl:when>
 					<xsl:when test="$name='dob'">Date on Object</xsl:when>
 					<xsl:when test="$name='dateRange'">Date Range</xsl:when>
@@ -226,6 +226,7 @@
 					<xsl:when test="$name = 'obv_leg'">Obverse Legend</xsl:when>
 					<xsl:when test="$name = 'obv_type'">Obverse Type</xsl:when>
 					<xsl:when test="$name='physDesc'">Physical Description</xsl:when>
+					<xsl:when test="$name='previousColl'">Previous Collection</xsl:when>
 					<xsl:when test="$name='refDesc'">References</xsl:when>
 					<xsl:when test="$name = 'rev_leg'">Reverse Legend</xsl:when>
 					<xsl:when test="$name = 'rev_type'">Reverse Type</xsl:when>

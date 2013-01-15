@@ -5,6 +5,9 @@ Library: jQuery
 Description: Rendering graphics based on hoard counts
 ************************************/
 $(document).ready(function () {
+	//enable fancyBox
+	$('a.thumbImage').fancybox();
+
 	//enable basic query form
 	
 	/**
