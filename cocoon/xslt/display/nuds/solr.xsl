@@ -120,6 +120,9 @@
 								<xsl:value-of select="concat($lon, ',', $lat)"/>
 							</field>
 						</xsl:if>
+						<field name="findspot_facet">
+							<xsl:value-of select="$label"/>
+						</field>
 					</xsl:when>
 				</xsl:choose>
 				<field name="findspot_uri">
@@ -127,8 +130,11 @@
 				</field>
 			</xsl:when>
 			<xsl:otherwise>
-				<field name="findspot_geo">
-					<xsl:value-of select="concat(findspot/name, '|', tokenize(findspot/gml:Point/gml:coordinates, ', ')[2], ',', tokenize(findspot/gml:Point/gml:coordinates, ', ')[1])"/>
+				<!--<field name="findspot_geo">
+					<xsl:value-of select="concat(nuds:findspot/nuds:geogname[@xlink:role='findspot'], '|', tokenize(findspot/gml:Point/gml:coordinates, ', ')[2], ',', tokenize(findspot/gml:Point/gml:coordinates, ', ')[1])"/>
+					</field>-->
+				<field name="findspot_facet">
+					<xsl:value-of select="nuds:findspot/nuds:geoname[@xlink:role='findspot']"/>
 				</field>
 			</xsl:otherwise>
 		</xsl:choose>

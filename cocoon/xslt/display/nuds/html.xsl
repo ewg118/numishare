@@ -227,13 +227,6 @@
 								</a>
 							</li>
 						</xsl:if>
-						<xsl:if test="nuds:descMeta/nuds:adminDesc/*">
-							<li>
-								<a href="#administrative">
-									<xsl:value-of select="numishare:normalizeLabel('display_administrative', $lang)"/>
-								</a>
-							</li>
-						</xsl:if>
 						<xsl:if test="nuds:description">
 							<li>
 								<a href="#commentary">
@@ -275,6 +268,11 @@
 								<xsl:apply-templates select="nuds:descMeta/nuds:findspotDesc"/>
 							</div>
 						</xsl:if>
+						<xsl:if test="nuds:descMeta/nuds:adminDesc/*">
+							<div class="metadata_section">
+								<xsl:apply-templates select="nuds:descMeta/nuds:adminDesc"/>
+							</div>
+						</xsl:if>
 					</div>
 					<xsl:if test="$has_mint_geo = 'true' or $has_findspot_geo = 'true'">
 						<div id="mapTab">
@@ -299,13 +297,6 @@
 					<xsl:if test="$recordType='conceptual' and (count(//nuds:associatedObject) &gt; 0 or string($sparql_endpoint))">
 						<div id="charts">
 							<xsl:call-template name="charts"/>
-						</div>
-					</xsl:if>
-					<xsl:if test="nuds:descMeta/nuds:adminDesc/*">
-						<div id="administrative">
-							<div class="metadata_section">
-								<xsl:apply-templates select="nuds:descMeta/nuds:adminDesc"/>
-							</div>
 						</div>
 					</xsl:if>
 					<xsl:if test="nuds:description">
@@ -334,12 +325,13 @@
 		<xsl:choose>
 			<xsl:when test="string(@xlink:href)">
 				<xsl:variable name="href" select="@xlink:href"/>
+				<xsl:variable name="currentLang" select="if (string($lang)) then $lang else 'en'"/>
 				<xsl:variable name="label">
 					<xsl:choose>
 						<xsl:when test="contains($href, 'nomisma.org')">
 							<xsl:choose>
-								<xsl:when test="string(exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/skos:prefLabel[@xml:lang=$lang])">
-									<xsl:value-of select="exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/skos:prefLabel[@xml:lang=$lang]"/>
+								<xsl:when test="string(exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/skos:prefLabel[@xml:lang=$currentLang])">
+									<xsl:value-of select="exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/skos:prefLabel[@xml:lang=$currentLang]"/>
 								</xsl:when>
 								<xsl:otherwise>
 									<xsl:value-of select="$href"/>
@@ -348,7 +340,7 @@
 						</xsl:when>
 					</xsl:choose>
 				</xsl:variable>
-				
+
 				<p>Source: <a href="{@xlink:href}"><xsl:value-of select="$label"/></a></p>
 			</xsl:when>
 			<xsl:otherwise>
@@ -377,7 +369,7 @@
 		</ul>
 	</xsl:template>
 
-	<xsl:template match="subject">
+	<xsl:template match="nuds:subject">
 		<li>
 			<xsl:choose>
 				<xsl:when test="string(@type)">
@@ -393,6 +385,21 @@
 					</a>
 				</xsl:otherwise>
 			</xsl:choose>
+		</li>
+	</xsl:template>
+
+	<xsl:template match="nuds:custodhist" mode="descMeta">
+		<li>
+			<h4>
+				<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
+			</h4>
+			<ul>
+				<xsl:for-each select="descendant::nuds:chronitem">
+					<li>
+						<xsl:apply-templates select="*" mode="descMeta"/>
+					</li>
+				</xsl:for-each>
+			</ul>
 		</li>
 	</xsl:template>
 
