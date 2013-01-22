@@ -97,19 +97,34 @@
 				<xsl:variable name="href" select="@xlink:href"/>
 				<xsl:choose>
 					<xsl:when test="contains($href, 'nomisma.org')">
-						<xsl:variable name="coordinates" select="exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/descendant::gml:pos"/>
-						<xsl:if test="string($coordinates)">
-							<xsl:variable name="lat" select="substring-before($coordinates, ' ')"/>
-							<xsl:variable name="lon" select="substring-after($coordinates, ' ')"/>
-							<!-- *_geo format is 'mint name|URI of resource|KML-compliant geographic coordinates' -->
-							<field name="findspot_geo">
-								<xsl:value-of select="exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/skos:prefLabel"/>
-								<xsl:text>|</xsl:text>
-								<xsl:value-of select="@xlink:href"/>
-								<xsl:text>|</xsl:text>
-								<xsl:value-of select="concat($lon, ',', $lat)"/>
-							</field>
+						<xsl:variable name="label">
+							<xsl:choose>
+								<xsl:when test="string(exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/skos:prefLabel)">
+									<xsl:value-of select="exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/skos:prefLabel"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:value-of select="$href"/>
+								</xsl:otherwise>
+							</xsl:choose>
+						</xsl:variable>
+						<xsl:if test="string(exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/descendant::gml:pos[1])">
+							<xsl:variable name="coordinates" select="exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/descendant::gml:pos[1]"/>
+							<xsl:if test="string($coordinates)">
+								<xsl:variable name="lat" select="substring-before($coordinates, ' ')"/>
+								<xsl:variable name="lon" select="substring-after($coordinates, ' ')"/>
+								<!-- *_geo format is 'mint name|URI of resource|KML-compliant geographic coordinates' -->
+								<field name="findspot_geo">
+									<xsl:value-of select="$label"/>
+									<xsl:text>|</xsl:text>
+									<xsl:value-of select="@xlink:href"/>
+									<xsl:text>|</xsl:text>
+									<xsl:value-of select="concat($lon, ',', $lat)"/>
+								</field>
+							</xsl:if>
 						</xsl:if>
+						<field name="findspot_facet">
+							<xsl:value-of select="$label"/>
+						</field>
 					</xsl:when>
 				</xsl:choose>
 				<field name="findspot_uri">
@@ -117,8 +132,11 @@
 				</field>
 			</xsl:when>
 			<xsl:otherwise>
-				<field name="findspot_geo">
-					<xsl:value-of select="concat(findspot/name, '|', tokenize(findspot/gml:Point/gml:coordinates, ', ')[2], ',', tokenize(findspot/gml:Point/gml:coordinates, ', ')[1])"/>
+				<!--<field name="findspot_geo">
+					<xsl:value-of select="concat(nuds:findspot/nuds:geogname[@xlink:role='findspot'], '|', tokenize(findspot/gml:Point/gml:coordinates, ', ')[2], ',', tokenize(findspot/gml:Point/gml:coordinates, ', ')[1])"/>
+					</field>-->
+				<field name="findspot_facet">
+					<xsl:value-of select="nuds:findspot/nuds:geoname[@xlink:role='findspot']"/>
 				</field>
 			</xsl:otherwise>
 		</xsl:choose>
@@ -297,18 +315,13 @@
 			</field>
 		</xsl:if>
 
-		<xsl:for-each select="nuds:custodhist/nuds:chronlist/nuds:chronitem">
-			<xsl:if test="nuds:previousColl/nuds:saleCatalog">
-				<xsl:variable name="value">
-					<xsl:value-of select="nuds:previousColl/nuds:saleCatalog"/>
-				</xsl:variable>
-				<field name="prevcoll_text">
-					<xsl:value-of select="$value"/>
-				</field>
-				<field name="prevcoll_facet">
-					<xsl:value-of select="$value"/>
-				</field>
-			</xsl:if>
+		<xsl:for-each select="nuds:provenance/nuds:chronList/nuds:chronItem/nuds:previousColl|nuds:provenance/nuds:chronList/nuds:chronItem/nuds:auction/nuds:saleCatalog">
+			<field name="provenance_text">
+				<xsl:value-of select="."/>
+			</field>
+			<field name="provenance_facet">
+				<xsl:value-of select="."/>
+			</field>
 		</xsl:for-each>
 	</xsl:template>
 

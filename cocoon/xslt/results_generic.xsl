@@ -131,6 +131,19 @@
 									</dd>
 								</div>
 							</xsl:if>
+							<xsl:if test="arr[@name='provenance_facet']">
+								<div>
+									<dt><xsl:value-of select="numishare:regularize_node('provenance', $lang)"/>: </dt>
+									<dd style="margin-left:150px;">
+										<xsl:for-each select="arr[@name='provenance_facet']/str">
+											<xsl:value-of select="."/>
+											<xsl:if test="not(position() = last())">
+												<xsl:text>, </xsl:text>
+											</xsl:if>
+										</xsl:for-each>
+									</dd>
+								</div>
+							</xsl:if>
 						</xsl:otherwise>
 					</xsl:choose>
 
@@ -168,7 +181,7 @@
 									</dd>
 								</div>
 							</xsl:when>
-							<xsl:when test="contains($sort, '_facet') or contains($sort, 'reference_facet') or contains($sort, 'prevcoll_display')">
+							<xsl:when test="contains($sort, '_facet') or contains($sort, 'reference_facet') or contains($sort, 'provenance_display')">
 								<div>
 									<xsl:choose>
 										<xsl:when test="matches($sort, 'objectType_facet')">
@@ -227,7 +240,7 @@
 
 	<xsl:template match="lst[@name='facet_fields']">
 		<!-- ignore mint_geo-->
-		<xsl:apply-templates select="lst" mode="facet"/>
+		<xsl:apply-templates select="lst[not(@name='mint_geo') and number(int[@name='numFacetTerms']) &gt; 0]" mode="facet"/>
 		<form action="results" id="facet_form">
 			<xsl:variable name="imageavailable_stripped">
 				<xsl:for-each select="$tokenized_q[not(contains(., 'imagesavailable'))]">
@@ -263,7 +276,7 @@
 		</form>
 	</xsl:template>
 
-	<xsl:template match="lst[not(@name='mint_geo') and number(int[@name='numFacetTerms']) &gt; 0]" mode="facet">
+	<xsl:template match="lst" mode="facet">
 		<xsl:variable name="val" select="@name"/>
 		<xsl:variable name="new_query">
 			<xsl:for-each select="$tokenized_q[not(contains(., $val))]">
@@ -392,7 +405,7 @@
 				<xsl:when test="str[@name='recordType'] = 'conceptual'">
 					<xsl:choose>
 						<xsl:when test="string($sparql_endpoint)">
-							<cinclude:include src="cocoon:/widget?uri={$url}id/{str[@name='id']}&amp;template=results"/>
+							<cinclude:include src="cocoon:/widget?uri={'http://numismatics.org/ocre/'}id/{str[@name='id']}&amp;template=results"/>
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:variable name="count" select="count(arr[@name='ao_uri']/str)"/>
@@ -452,7 +465,7 @@
 					</h1>
 				</xsl:when>
 				<xsl:otherwise>
-					<h1>Filters <xsl:if test="//lst[@name='mint_geo']/int[@name='numFacetTerms'] &gt; 0">
+					<h1><xsl:value-of select="numishare:normalizeLabel('results_filters', $lang)"/> <xsl:if test="//lst[@name='mint_geo']/int[@name='numFacetTerms'] &gt; 0">
 							<a href="#resultMap" id="map_results"><xsl:value-of select="numishare:normalizeLabel('results_map-results', $lang)"/></a>
 						</xsl:if>
 					</h1>
@@ -480,7 +493,7 @@
 								<xsl:when test="string($field)">
 									<xsl:value-of select="numishare:normalize_fields($field, $lang)"/>
 								</xsl:when>
-								<xsl:otherwise>Keyword</xsl:otherwise>
+								<xsl:otherwise><xsl:value-of select="numishare:normalize_fields('fulltext', $lang)"/></xsl:otherwise>
 							</xsl:choose>
 						</xsl:variable>
 						<xsl:variable name="term">
@@ -502,7 +515,8 @@
 							<!-- establish orientation based on language parameter -->
 							<xsl:choose>
 								<xsl:when test="$lang='ar'">
-									<a class="ui-icon ui-icon-closethick remove_filter_ar" href="{$display_path}results?q={if (string($new_query)) then encode-for-uri($new_query) else '*:*'}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}"/>
+									<a class="ui-icon ui-icon-closethick remove_filter_ar"
+										href="{$display_path}results?q={if (string($new_query)) then encode-for-uri($new_query) else '*:*'}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}"/>
 									<span>
 										<xsl:value-of select="if ($field = 'century_num') then numishare:normalize_century($term) else $term"/>
 										<b>:<xsl:value-of select="$name"/></b>
@@ -513,7 +527,9 @@
 										<b><xsl:value-of select="$name"/>: </b>
 										<xsl:value-of select="if ($field = 'century_num') then numishare:normalize_century($term) else $term"/>
 									</span>
-									<a class="ui-icon ui-icon-closethick remove_filter" href="{$display_path}results?q={if (string($new_query)) then encode-for-uri($new_query) else '*:*'}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">X</a>
+									<a class="ui-icon ui-icon-closethick remove_filter"
+										href="{$display_path}results?q={if (string($new_query)) then encode-for-uri($new_query) else '*:*'}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}"
+										>X</a>
 								</xsl:otherwise>
 							</xsl:choose>
 						</div>
@@ -526,7 +542,8 @@
 						<div class="ui-widget ui-state-default ui-corner-all stacked_term">
 							<xsl:if test="$lang='ar'">
 								<xsl:attribute name="style">text-align:right</xsl:attribute>
-								<a class="ui-icon ui-icon-closethick remove_filter_ar" href="{$display_path}results?q={if (string($new_query)) then encode-for-uri($new_query) else '*:*'}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}"/>
+								<a class="ui-icon ui-icon-closethick remove_filter_ar"
+									href="{$display_path}results?q={if (string($new_query)) then encode-for-uri($new_query) else '*:*'}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}"/>
 							</xsl:if>
 							<span>
 								<xsl:for-each select="$tokenized-fragments">
@@ -632,7 +649,9 @@
 								</xsl:for-each>
 							</span>
 							<xsl:if test="not($lang='ar')">
-								<a class="ui-icon ui-icon-closethick remove_filter" href="{$display_path}results?q={if (string($new_query)) then encode-for-uri($new_query) else '*:*'}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">X</a>
+								<a class="ui-icon ui-icon-closethick remove_filter"
+									href="{$display_path}results?q={if (string($new_query)) then encode-for-uri($new_query) else '*:*'}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}"
+									>X</a>
 							</xsl:if>
 						</div>
 					</xsl:when>
@@ -645,10 +664,10 @@
 								<xsl:choose>
 									<xsl:when test="$lang='ar'">
 										<xsl:value-of select="."/>
-										<b><xsl:text> :</xsl:text> Keyword</b>
+										<b><xsl:text> :</xsl:text> <xsl:value-of select="numishare:normalize_fields('fulltext', $lang)"/></b>
 									</xsl:when>
 									<xsl:otherwise>
-										<b>Keyword: </b>
+										<b><xsl:value-of select="numishare:normalize_fields('fulltext', $lang)"/>: </b>
 										<xsl:value-of select="."/>
 									</xsl:otherwise>
 								</xsl:choose>
@@ -771,7 +790,9 @@
 					<xsl:if test="$lang='ar'">
 						<xsl:attribute name="style">text-align:right</xsl:attribute>
 					</xsl:if>
-					<a id="clear_all" href="?q=*:*">Clear All Terms</a>
+					<a id="clear_all" href="?q=*:*">
+						<xsl:value-of select="numishare:normalizeLabel('results_clear-all', $lang)"/>
+					</a>
 				</div>
 			</xsl:if>
 		</div>
@@ -828,7 +849,9 @@
 					<xsl:choose>
 						<xsl:when test="$start_var &gt;= $rows">
 							<li class="ui-state-default ui-corner-all">
-								<a class="pagingBtn" href="?q={encode-for-uri($q)}&amp;start={$previous}{if (string($sort)) then concat('&amp;sort=', $sort) else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">«</a>
+								<a class="pagingBtn"
+									href="?q={encode-for-uri($q)}&amp;start={$previous}{if (string($sort)) then concat('&amp;sort=', $sort) else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}"
+									>«</a>
 							</li>
 
 						</xsl:when>
@@ -840,7 +863,8 @@
 					<!-- always display links to the first two pages -->
 					<xsl:if test="$start_var div $rows &gt;= 3">
 						<li class="ui-state-default ui-corner-all">
-							<a class="pagingBtn" href="?q={encode-for-uri($q)}&amp;start=0{if (string($sort)) then concat('&amp;sort=', $sort) else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+							<a class="pagingBtn"
+								href="?q={encode-for-uri($q)}&amp;start=0{if (string($sort)) then concat('&amp;sort=', $sort) else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
 								<xsl:text>1</xsl:text>
 							</a>
 						</li>
@@ -848,7 +872,8 @@
 					</xsl:if>
 					<xsl:if test="$start_var div $rows &gt;= 4">
 						<li class="ui-state-default ui-corner-all">
-							<a class="pagingBtn" href="?q={encode-for-uri($q)}&amp;start={$rows}{if (string($sort)) then concat('&amp;sort=', $sort) else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+							<a class="pagingBtn"
+								href="?q={encode-for-uri($q)}&amp;start={$rows}{if (string($sort)) then concat('&amp;sort=', $sort) else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
 								<xsl:text>2</xsl:text>
 							</a>
 						</li>
@@ -863,14 +888,16 @@
 					<!-- always display links to the previous two pages -->
 					<xsl:if test="$start_var div $rows &gt;= 2">
 						<li class="ui-state-default ui-corner-all">
-							<a class="pagingBtn" href="?q={encode-for-uri($q)}&amp;start={$start_var - ($rows * 2)}{if (string($sort)) then concat('&amp;sort=', $sort) else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+							<a class="pagingBtn"
+								href="?q={encode-for-uri($q)}&amp;start={$start_var - ($rows * 2)}{if (string($sort)) then concat('&amp;sort=', $sort) else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
 								<xsl:value-of select="($start_var div $rows) -1"/>
 							</a>
 						</li>
 					</xsl:if>
 					<xsl:if test="$start_var div $rows &gt;= 1">
 						<li class="ui-state-default ui-corner-all">
-							<a class="pagingBtn" href="?q={encode-for-uri($q)}&amp;start={$start_var - $rows}{if (string($sort)) then concat('&amp;sort=', $sort) else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+							<a class="pagingBtn"
+								href="?q={encode-for-uri($q)}&amp;start={$start_var - $rows}{if (string($sort)) then concat('&amp;sort=', $sort) else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
 								<xsl:value-of select="$start_var div $rows"/>
 							</a>
 						</li>
@@ -885,14 +912,16 @@
 					<!-- next two pages -->
 					<xsl:if test="($start_var div $rows) + 1 &lt; $total">
 						<li class="ui-state-default ui-corner-all">
-							<a class="pagingBtn" href="?q={encode-for-uri($q)}&amp;start={$start_var + $rows}{if (string($sort)) then concat('&amp;sort=', $sort) else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+							<a class="pagingBtn"
+								href="?q={encode-for-uri($q)}&amp;start={$start_var + $rows}{if (string($sort)) then concat('&amp;sort=', $sort) else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
 								<xsl:value-of select="($start_var div $rows) +2"/>
 							</a>
 						</li>
 					</xsl:if>
 					<xsl:if test="($start_var div $rows) + 2 &lt; $total">
 						<li class="ui-state-default ui-corner-all">
-							<a class="pagingBtn" href="?q={encode-for-uri($q)}&amp;start={$start_var + ($rows * 2)}{if (string($sort)) then concat('&amp;sort=', $sort) else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+							<a class="pagingBtn"
+								href="?q={encode-for-uri($q)}&amp;start={$start_var + ($rows * 2)}{if (string($sort)) then concat('&amp;sort=', $sort) else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
 								<xsl:value-of select="($start_var div $rows) +3"/>
 							</a>
 						</li>
@@ -904,14 +933,16 @@
 					<!-- last two pages -->
 					<xsl:if test="$start_var div $rows &lt;= $total - 5">
 						<li class="ui-state-default ui-corner-all">
-							<a class="pagingBtn" href="?q={encode-for-uri($q)}&amp;start={($total * $rows) - ($rows * 2)}{if (string($sort)) then concat('&amp;sort=', $sort) else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+							<a class="pagingBtn"
+								href="?q={encode-for-uri($q)}&amp;start={($total * $rows) - ($rows * 2)}{if (string($sort)) then concat('&amp;sort=', $sort) else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
 								<xsl:value-of select="$total - 1"/>
 							</a>
 						</li>
 					</xsl:if>
 					<xsl:if test="$start_var div $rows &lt;= $total - 4">
 						<li class="ui-state-default ui-corner-all">
-							<a class="pagingBtn" href="?q={encode-for-uri($q)}&amp;start={($total * $rows) - $rows}{if (string($sort)) then concat('&amp;sort=', $sort) else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+							<a class="pagingBtn"
+								href="?q={encode-for-uri($q)}&amp;start={($total * $rows) - $rows}{if (string($sort)) then concat('&amp;sort=', $sort) else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
 								<xsl:value-of select="$total"/>
 							</a>
 						</li>
@@ -920,7 +951,9 @@
 					<xsl:choose>
 						<xsl:when test="$numFound - $start_var &gt; $rows">
 							<li class="ui-state-default ui-corner-all">
-								<a class="pagingBtn" href="?q={encode-for-uri($q)}&amp;start={$next}{if (string($sort)) then concat('&amp;sort=', $sort) else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">»</a>
+								<a class="pagingBtn"
+									href="?q={encode-for-uri($q)}&amp;start={$next}{if (string($sort)) then concat('&amp;sort=', $sort) else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}"
+									>»</a>
 							</li>
 						</xsl:when>
 						<xsl:otherwise>

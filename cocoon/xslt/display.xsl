@@ -17,11 +17,9 @@
 
 	<xsl:variable name="geonames-url">
 		<xsl:text>http://api.geonames.org</xsl:text>
-	</xsl:variable>	
+	</xsl:variable>
 	<xsl:variable name="geonames_api_key" select="/content/config/geonames_api_key"/>
-	<xsl:variable name="has_mint_geo" select="/content/response-mint"/>
-	<xsl:variable name="has_findspot_geo" select="/content/response-findspot"/>
-	<xsl:variable name="sparql_endpoint" select="/content/config/sparql_endpoint"/>	
+	<xsl:variable name="sparql_endpoint" select="/content/config/sparql_endpoint"/>
 	<xsl:variable name="url">
 		<xsl:value-of select="/content/config/url"/>
 	</xsl:variable>
@@ -34,7 +32,7 @@
 		<xsl:if test="not(string($mode))">
 			<xsl:text>../</xsl:text>
 		</xsl:if>
-	</xsl:param>	
+	</xsl:param>
 
 	<xsl:variable name="recordType">
 		<xsl:choose>
@@ -105,6 +103,21 @@
 		</rdf:RDF>
 	</xsl:variable>
 
+
+	<xsl:variable name="has_mint_geo">
+		<xsl:choose>
+			<xsl:when test="count(exsl:node-set($rdf)/descendant::nm:mint) &gt; 0">true</xsl:when>
+			<xsl:otherwise>false</xsl:otherwise>
+		</xsl:choose>
+	</xsl:variable>
+	<xsl:variable name="has_findspot_geo">
+		<xsl:choose>
+			<xsl:when test="count(exsl:node-set($rdf)/descendant::nm:findspot) &gt; 0 or count(descendant::*[local-name()='geogname'][@xlink:role='findspot' and string(@xlink:href)]) &gt; 0"
+				>true</xsl:when>
+			<xsl:otherwise>false</xsl:otherwise>
+		</xsl:choose>
+	</xsl:variable>
+
 	<xsl:template match="/">
 		<xsl:choose>
 			<xsl:when test="not(string($mode))">
@@ -132,7 +145,7 @@
 						<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.8.2r1/build/fonts/fonts-min.css"/>
 						<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"/>
 						<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js"/>
-						
+
 						<!-- menu -->
 						<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.core.js"/>
 						<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.widget.js"/>
@@ -190,8 +203,8 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
-	
-	
+
+
 
 	<xsl:template name="display">
 		<xsl:choose>
