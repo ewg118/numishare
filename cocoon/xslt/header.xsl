@@ -5,7 +5,7 @@
 
 		<!-- if displaying a coin or artifact record, the path to the other sections should be {$display_path} ; otherwise nothing -->
 		<div id="hd">
-			<div class="banner align-right">
+			<!--<div class="banner align-right">
 				<xsl:if test="string(/content/config/banner_text)">
 					<div class="banner_text">
 						<xsl:value-of select="/content/config/banner_text"/>
@@ -14,7 +14,7 @@
 				<xsl:if test="string(//config/banner_image/@xlink:href)">
 					<img src="{$display_path}images/{//config/banner_image/@xlink:href}" alt="banner image"/>
 				</xsl:if>
-			</div>
+			</div>-->
 			<ul role="menubar" id="menu">
 				<xsl:call-template name="menubar"/>
 			</ul>
