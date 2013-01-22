@@ -631,7 +631,7 @@
 					<!-- header menu labels -->
 					<xsl:when test="$label='header_home'">Acasă</xsl:when>
 					<xsl:when test="$label='header_search'">Căutare</xsl:when>
-					<xsl:when test="$label='header_browse'">Explore</xsl:when>
+					<xsl:when test="$label='header_browse'">Explorare</xsl:when>
 					<xsl:when test="$label='header_maps'">Hărţi</xsl:when>
 					<xsl:when test="$label='header_compare'">Comparativ</xsl:when>
 					<xsl:when test="$label='header_analyze'">Analiza tezaurelor</xsl:when>
