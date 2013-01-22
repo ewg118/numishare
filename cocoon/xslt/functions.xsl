@@ -57,8 +57,7 @@
 		<xsl:choose>
 			<xsl:when test="$lang='ar'">
 				<xsl:choose>
-					<xsl:when test="$name='acknowledgment'">تعريف</xsl:when>
-					<xsl:when test="$name='acqinfo'">وسائل الحصول عليها</xsl:when>
+					<xsl:when test="$name='acknowledgment'">تعريف</xsl:when>					
 					<xsl:when test="$name='acquiredFrom'">مكان الحصول عليها</xsl:when>
 					<xsl:when test="$name='appraisal'">القيمة</xsl:when>
 					<xsl:when test="$name='appraiser'">من الذى حدد القيمة </xsl:when>
@@ -70,7 +69,7 @@
 					<xsl:when test="$name='conservationState'">حالة الترميم </xsl:when>
 					<xsl:when test="$name='coordinates'">الإحداثيات </xsl:when>
 					<xsl:when test="$name='countermark'">العلامة المائية </xsl:when>
-					<xsl:when test="$name='custodhist'">مكان وجود القطعة</xsl:when>
+					<xsl:when test="$name='provenance'">مكان وجود القطعة</xsl:when>
 					<xsl:when test="$name='date'">التاريخ </xsl:when>
 					<xsl:when test="$name='dateOnObject'">التاريخ مسجل على القطعة</xsl:when>
 					<xsl:when test="$name='denomination'">طائفة</xsl:when>
@@ -124,8 +123,7 @@
 			</xsl:when>
 			<xsl:when test="$lang='de'">
 				<xsl:choose>
-					<xsl:when test="$name='acknowledgment'">[]</xsl:when>
-					<xsl:when test="$name='acqinfo'">[]</xsl:when>
+					<xsl:when test="$name='acknowledgment'">[]</xsl:when>					
 					<xsl:when test="$name='acquiredFrom'">Erworben von</xsl:when>
 					<xsl:when test="$name='adminDesc'">Administrativ</xsl:when>
 					<xsl:when test="$name='appraisal'">[]</xsl:when>
@@ -142,7 +140,7 @@
 					<xsl:when test="$name='contents'">Inhalt</xsl:when>
 					<xsl:when test="$name='coordinates'">Koordinaten</xsl:when>
 					<xsl:when test="$name='countermark'">Gegenstemple</xsl:when>
-					<xsl:when test="$name='custodhist'">Herkunft</xsl:when>
+					<xsl:when test="$name='provenance'">Herkunft</xsl:when>
 					<xsl:when test="$name='date'">Datum</xsl:when>
 					<xsl:when test="$name='dateOnObject'">Datum auf Gegenstand</xsl:when>
 					<xsl:when test="$name='dob'">Datum auf Gegenstand</xsl:when>
@@ -218,8 +216,7 @@
 			</xsl:when>
 			<xsl:when test="$lang='fr'">
 				<xsl:choose>
-					<xsl:when test="$name='acknowledgment'">Remerciement</xsl:when>
-					<xsl:when test="$name='acqinfo'">Pédigré</xsl:when>
+					<xsl:when test="$name='acknowledgment'">Remerciement</xsl:when>					
 					<xsl:when test="$name='acquiredFrom'">Acquis de </xsl:when>
 					<xsl:when test="$name='adminDesc'">Historique administratif</xsl:when>
 					<xsl:when test="$name='appraisal'">Valorisation</xsl:when>
@@ -233,7 +230,7 @@
 					<xsl:when test="$name='conservationState'">Etat de conservation</xsl:when>
 					<xsl:when test="$name='coordinates'">Coordonnées</xsl:when>
 					<xsl:when test="$name='countermark'">Contremarque</xsl:when>
-					<xsl:when test="$name='custodhist'">Provenance</xsl:when>
+					<xsl:when test="$name='provenance'">Provenance</xsl:when>
 					<xsl:when test="$name='date'">Date</xsl:when>
 					<xsl:when test="$name='dateOnObject'">Date sur l'objet</xsl:when>
 					<xsl:when test="$name='dob'">Date sur l'objet</xsl:when>
@@ -301,8 +298,7 @@
 			</xsl:when>
 			<xsl:when test="$lang='ro'">
 				<xsl:choose>
-					<xsl:when test="$name='acknowledgment'">Mulţumiri</xsl:when>
-					<xsl:when test="$name='acqinfo'">Informaţii asupra achiziţionării</xsl:when>
+					<xsl:when test="$name='acknowledgment'">Mulţumiri</xsl:when>					
 					<xsl:when test="$name='acquiredFrom'">Achiziţionat de la</xsl:when>
 					<xsl:when test="$name='adminDesc'">Istoric administrativ</xsl:when>
 					<xsl:when test="$name='appraisal'">Evaluare</xsl:when>
@@ -319,7 +315,7 @@
 					<xsl:when test="$name='contents'">Conţinut</xsl:when>
 					<xsl:when test="$name='coordinates'">Coordonate</xsl:when>
 					<xsl:when test="$name='countermark'">Contramarcă</xsl:when>
-					<xsl:when test="$name='custodhist'">Provenienţă</xsl:when>
+					<xsl:when test="$name='provenance'">Provenienţă</xsl:when>
 					<xsl:when test="$name='date'">Datare</xsl:when>
 					<xsl:when test="$name='dateOnObject'">Datarea de pe obiect</xsl:when>
 					<xsl:when test="$name='dob'">Datarea de pe obiect</xsl:when>
@@ -395,13 +391,12 @@
 				</xsl:choose>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:choose>
-					<xsl:when test="$name='acqinfo'">Aquisitition Information</xsl:when>
+				<xsl:choose>					
 					<xsl:when test="$name='acquiredFrom'">Acquired From</xsl:when>
 					<xsl:when test="$name='adminDesc'">Administrative History</xsl:when>
 					<xsl:when test="$name='closing_date'">Closing Date</xsl:when>					
 					<xsl:when test="$name='conservationState'">Conservation State</xsl:when>
-					<xsl:when test="$name='custodhist'">Provenance</xsl:when>
+					<xsl:when test="$name='provenance'">Provenance</xsl:when>
 					<xsl:when test="$name='dateOnObject'">Date on Object</xsl:when>
 					<xsl:when test="$name='dob'">Date on Object</xsl:when>
 					<xsl:when test="$name='dateRange'">Date Range</xsl:when>

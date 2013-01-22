@@ -392,13 +392,13 @@
 		</li>
 	</xsl:template>
 
-	<xsl:template match="nuds:custodhist" mode="descMeta">
+	<xsl:template match="nuds:provenance" mode="descMeta">
 		<li>
 			<h4>
 				<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
 			</h4>
 			<ul>
-				<xsl:for-each select="descendant::nuds:chronitem">
+				<xsl:for-each select="descendant::nuds:chronItem">
 					<li>
 						<xsl:apply-templates select="*" mode="descMeta"/>
 					</li>
@@ -798,13 +798,13 @@
 		</xsl:for-each>
 	</xsl:when>-->
 
-	<xsl:template match="nuds:chronlist | nuds:list">
+	<xsl:template match="nuds:chronList | nuds:list">
 		<ul class="list">
 			<xsl:apply-templates/>
 		</ul>
 	</xsl:template>
 
-	<xsl:template match="nuds:chronitem | nuds:item">
+	<xsl:template match="nuds:chronItem | nuds:item">
 		<li>
 			<xsl:apply-templates/>
 		</li>
@@ -812,7 +812,7 @@
 
 	<xsl:template match="nuds:date">
 		<xsl:choose>
-			<xsl:when test="parent::nuds:chronitem">
+			<xsl:when test="parent::nuds:chronItem">
 				<i>
 					<xsl:value-of select="."/>
 				</i>
