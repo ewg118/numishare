@@ -315,18 +315,13 @@
 			</field>
 		</xsl:if>
 
-		<xsl:for-each select="nuds:custodhist/nuds:chronlist/nuds:chronitem">
-			<xsl:if test="nuds:previousColl/nuds:saleCatalog">
-				<xsl:variable name="value">
-					<xsl:value-of select="nuds:previousColl/nuds:saleCatalog"/>
-				</xsl:variable>
-				<field name="prevcoll_text">
-					<xsl:value-of select="$value"/>
-				</field>
-				<field name="prevcoll_facet">
-					<xsl:value-of select="$value"/>
-				</field>
-			</xsl:if>
+		<xsl:for-each select="nuds:provenance/nuds:chronList/nuds:chronItem/nuds:previousColl|nuds:provenance/nuds:chronList/nuds:chronItem/nuds:auction/nuds:saleCatalog">
+			<field name="provenance_text">
+				<xsl:value-of select="."/>
+			</field>
+			<field name="provenance_facet">
+				<xsl:value-of select="."/>
+			</field>
 		</xsl:for-each>
 	</xsl:template>
 

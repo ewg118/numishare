@@ -131,6 +131,19 @@
 									</dd>
 								</div>
 							</xsl:if>
+							<xsl:if test="arr[@name='provenance_facet']">
+								<div>
+									<dt><xsl:value-of select="numishare:regularize_node('provenance', $lang)"/>: </dt>
+									<dd style="margin-left:150px;">
+										<xsl:for-each select="arr[@name='provenance_facet']/str">
+											<xsl:value-of select="."/>
+											<xsl:if test="not(position() = last())">
+												<xsl:text>, </xsl:text>
+											</xsl:if>
+										</xsl:for-each>
+									</dd>
+								</div>
+							</xsl:if>
 						</xsl:otherwise>
 					</xsl:choose>
 
@@ -168,7 +181,7 @@
 									</dd>
 								</div>
 							</xsl:when>
-							<xsl:when test="contains($sort, '_facet') or contains($sort, 'reference_facet') or contains($sort, 'prevcoll_display')">
+							<xsl:when test="contains($sort, '_facet') or contains($sort, 'reference_facet') or contains($sort, 'provenance_display')">
 								<div>
 									<xsl:choose>
 										<xsl:when test="matches($sort, 'objectType_facet')">
