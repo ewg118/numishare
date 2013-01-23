@@ -114,6 +114,7 @@
 		<xsl:choose>
 			<xsl:when test="count(exsl:node-set($rdf)/descendant::nm:findspot) &gt; 0 or count(descendant::*[local-name()='geogname'][@xlink:role='findspot' and string(@xlink:href)]) &gt; 0"
 				>true</xsl:when>
+			<xsl:when test="/content/response-findspot = 'true'">true</xsl:when>
 			<xsl:otherwise>false</xsl:otherwise>
 		</xsl:choose>
 	</xsl:variable>
