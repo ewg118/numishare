@@ -123,6 +123,13 @@
 
 			<!-- get sortable fields: distinct values in $nudsGroup -->
 			<xsl:call-template name="get_hoard_sort_fields"/>
+			
+			<field name="fulltext">
+				<xsl:for-each select="descendant-or-self::text()">
+					<xsl:value-of select="normalize-space(.)"/>
+					<xsl:text> </xsl:text>
+				</xsl:for-each>
+			</field>
 		</doc>
 	</xsl:template>
 

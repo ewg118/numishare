@@ -20,22 +20,23 @@
 				<xsl:for-each select="//lst[@name='findspot_geo']/int">
 					<xsl:variable name="mint" select="tokenize(@name, '\|')[1]"/>
 					<xsl:variable name="uri" select="tokenize(@name, '\|')[2]"/>
-					<xsl:variable name="coordinates" select="tokenize(@name, '\|')[3]"/>
-					
-					<Placemark>
-						<name>
-							<xsl:value-of select="$mint"/>
-						</name>
-						<description>
-							<xsl:value-of select="$uri"/>
-						</description>
-						<styleUrl>#hoard</styleUrl>
-						<Point>
-							<coordinates>
-								<xsl:value-of select="$coordinates"/>
-							</coordinates>
-						</Point>
-					</Placemark>
+					<xsl:variable name="coordinates" select="tokenize(@name, '\|')[3]"/>					
+					<xsl:if test="string-length($coordinates) &gt; 1">
+						<Placemark>
+							<name>
+								<xsl:value-of select="$mint"/>
+							</name>
+							<description>
+								<xsl:value-of select="$uri"/>
+							</description>
+							<styleUrl>#hoard</styleUrl>
+							<Point>
+								<coordinates>
+									<xsl:value-of select="$coordinates"/>
+								</coordinates>
+							</Point>
+						</Placemark>
+					</xsl:if>
 				</xsl:for-each>
 			</Document>
 		</kml>

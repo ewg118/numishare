@@ -501,7 +501,7 @@
 		<!-- geographic coordinates -->
 		<!-- *_geo format is 'mint/findspot name|URI of resource|KML-compliant geographic coordinates' -->
 		<field name="mint_geo" type="string" indexed="true" stored="true" multiValued="true"/>
-		<field name="findspot_geo" type="string" indexed="true" stored="true"/>	
+		<field name="findspot_geo" type="string" indexed="true" stored="true" multiValued="true"/>	
 		
 		<!-- uris -->
 		<dynamicField name="*_uri"  type="string"  indexed="true"  stored="true" multiValued="true"/>

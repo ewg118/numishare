@@ -119,6 +119,7 @@
 					<map:parameter name="use-request-parameters" value="true"/>
 					<map:parameter name="collection-name" value="{global:collection-name}"/>
 				</map:transform>
+				<map:transform type="cinclude"/>
 				<map:serialize type="xml"/>
 			</map:match>
 
@@ -131,6 +132,7 @@
 					<map:parameter name="use-request-parameters" value="true"/>
 					<map:parameter name="collection-name" value="{global:collection-name}"/>
 				</map:transform>
+				<map:transform type="cinclude"/>
 				<map:serialize type="xml"/>
 			</map:match>
 
