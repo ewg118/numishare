@@ -312,25 +312,36 @@
 					</xsl:otherwise>
 				</xsl:choose>
 			</name>
-			<xsl:if test="$styleUrl='#mapped'">
-				<description>
-					<xsl:value-of select="."/>
-					<!-- display date -->
-					<xsl:if test="ancestor::nuds:nuds/nuds:descMeta/nuds:typeDesc/nuds:date or ancestor::nuds:nuds/nuds:descMeta/nuds:typeDesc/nuds:dateRange">
-						<xsl:text>, </xsl:text>
-						<xsl:choose>
-							<xsl:when test="string(ancestor::nuds:nuds/nuds:descMeta/nuds:typeDesc/nuds:date)">
-								<xsl:value-of select="ancestor::nuds:nuds/nuds:descMeta/nuds:typeDesc/nuds:date"/>
-							</xsl:when>
-							<xsl:when test="string(ancestor::nuds:nuds/nuds:descMeta/nuds:typeDesc/nuds:dateRange)">
-								<xsl:value-of select="ancestor::nuds:nuds/nuds:descMeta/nuds:typeDesc/nuds:dateRange/nuds:fromDate"/>
-								<xsl:text> - </xsl:text>
-								<xsl:value-of select="ancestor::nuds:nuds/nuds:descMeta/nuds:typeDesc/nuds:dateRange/nuds:toDate"/>
-							</xsl:when>
-						</xsl:choose>
-					</xsl:if>
-				</description>
-			</xsl:if>
+			<xsl:choose>
+				<xsl:when test="$styleUrl='#mapped'">
+					<description>
+						<xsl:value-of select="."/>
+						<!-- display date -->
+						<xsl:if test="ancestor::nuds:nuds/nuds:descMeta/nuds:typeDesc/nuds:date or ancestor::nuds:nuds/nuds:descMeta/nuds:typeDesc/nuds:dateRange">
+							<xsl:text>, </xsl:text>
+							<xsl:choose>
+								<xsl:when test="string(ancestor::nuds:nuds/nuds:descMeta/nuds:typeDesc/nuds:date)">
+									<xsl:value-of select="ancestor::nuds:nuds/nuds:descMeta/nuds:typeDesc/nuds:date"/>
+								</xsl:when>
+								<xsl:when test="string(ancestor::nuds:nuds/nuds:descMeta/nuds:typeDesc/nuds:dateRange)">
+									<xsl:value-of select="ancestor::nuds:nuds/nuds:descMeta/nuds:typeDesc/nuds:dateRange/nuds:fromDate"/>
+									<xsl:text> - </xsl:text>
+									<xsl:value-of select="ancestor::nuds:nuds/nuds:descMeta/nuds:typeDesc/nuds:dateRange/nuds:toDate"/>
+								</xsl:when>
+							</xsl:choose>
+						</xsl:if>
+					</description>
+				</xsl:when>
+				<xsl:otherwise>
+					<description>
+						<![CDATA[
+          					<span><a href="]]><xsl:value-of select="$href"/><![CDATA[" target="_blank">]]><xsl:value-of select="."/><![CDATA[</a>]]>						
+						<![CDATA[</span>
+        				]]>
+					</description>
+				</xsl:otherwise>
+			</xsl:choose>
+			
 			<styleUrl>
 				<xsl:value-of select="$styleUrl"/>
 			</styleUrl>
