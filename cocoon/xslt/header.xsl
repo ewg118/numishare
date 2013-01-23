@@ -5,16 +5,22 @@
 
 		<!-- if displaying a coin or artifact record, the path to the other sections should be {$display_path} ; otherwise nothing -->
 		<div id="hd">
-			<!--<div class="banner align-right">
-				<xsl:if test="string(/content/config/banner_text)">
-					<div class="banner_text">
-						<xsl:value-of select="/content/config/banner_text"/>
-					</div>
-				</xsl:if>
-				<xsl:if test="string(//config/banner_image/@xlink:href)">
-					<img src="{$display_path}images/{//config/banner_image/@xlink:href}" alt="banner image"/>
-				</xsl:if>
-			</div>-->
+			<table>
+				<tr>
+					<td style="width:10%">
+						<img src="{$display_path}images/uva-logo.jpg" alt="logo"/>
+					</td>
+					<td>
+						<span class="banner_text">The University of Virginia Art Museum <br/>Numismatic Collection</span>
+					</td>
+					<td style="width:25%">
+						<form action="results" method="GET" id="qs_form" style="padding:10px 0">
+							<input type="text" name="q" id="qs_text"/>							
+							<input id="qs_button" type="submit" value="{numishare:normalizeLabel('header_search', $lang)}"/>
+						</form>
+					</td>
+				</tr>
+			</table>
 			<ul role="menubar" id="menu">
 				<xsl:call-template name="menubar"/>
 			</ul>
@@ -41,7 +47,7 @@
 						</ul>
 					</li>
 				</xsl:if>
-				<xsl:for-each select="//config/pages/page[public = '1']" >
+				<xsl:for-each select="//config/pages/page[public = '1']">
 					<li role="presentation">
 						<a href="{$display_path}pages/{@stub}{if (string($lang)) then concat('?lang=', $lang) else ''}">
 							<xsl:value-of select="short-title"/>
@@ -159,6 +165,6 @@
 				</xsl:if>
 			</xsl:otherwise>
 		</xsl:choose>
-	
+
 	</xsl:template>
 </xsl:stylesheet>

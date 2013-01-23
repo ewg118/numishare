@@ -89,14 +89,6 @@
 			</div>
 			<div class="yui3-u-1-3" id="numishare-widget">
 				<div class="content">
-					<div id="quick_search" style="margin:10px 0;">
-						<div class="ui-widget-header ui-helper-clearfix ui-corner-all">Search the Collection</div>
-						<form action="results" method="GET" id="qs_form" style="padding:10px 0">
-							<input type="text" id="qs_text"/>
-							<input type="hidden" name="q" id="qs_query" value="*:*"/>
-							<input id="qs_button" type="submit" value="{numishare:normalizeLabel('header_search', $lang)}"/>
-						</form>
-					</div>
 					<div id="linked_data" style="margin:10px 0;">
 						<div class="ui-widget-header ui-helper-clearfix ui-corner-all">Linked Data</div>
 						<!--<a href="{$display_path}rdf/">

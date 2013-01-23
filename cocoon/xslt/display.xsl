@@ -139,10 +139,7 @@
 						</xsl:if>
 						<!-- CSS -->
 						<link rel="shortcut icon" type="image/x-icon" href="{$display_path}images/favicon.png"/>
-						<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.8.2r1/build/grids/grids-min.css"/>
-						<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.8.2r1/build/reset-fonts-grids/reset-fonts-grids.css"/>
-						<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.8.2r1/build/base/base-min.css"/>
-						<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.8.2r1/build/fonts/fonts-min.css"/>
+						<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.8.0/build/cssgrids/grids-min.css"/>
 						<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"/>
 						<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js"/>
 
@@ -189,12 +186,10 @@
 							</script>
 						</xsl:if>
 					</head>
-					<body class="yui-skin-sam">
-						<div id="doc4" class="{//config/theme/layouts/*[name()=$pipeline]/yui_class}">
-							<xsl:call-template name="header"/>
-							<xsl:call-template name="display"/>
-							<xsl:call-template name="footer"/>
-						</div>
+					<body>
+						<xsl:call-template name="header"/>
+						<xsl:call-template name="display"/>
+						<xsl:call-template name="footer"/>
 					</body>
 				</html>
 			</xsl:when>
@@ -217,7 +212,7 @@
 				</xsl:choose>
 			</xsl:when>
 			<xsl:otherwise>
-				<div id="bd">
+				<div class="yui3-g">
 					<xsl:choose>
 						<xsl:when test="count(/content/*[local-name()='nuds']) &gt; 0">
 							<xsl:call-template name="nuds"/>
