@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="2.0" xmlns:nuds="http://nomisma.org/nuds" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:datetime="http://exslt.org/dates-and-times"
 	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:exsl="http://exslt.org/common" xmlns:mets="http://www.loc.gov/METS/"
-	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml/" xmlns:skos="http://www.w3.org/2004/02/skos/core#" exclude-result-prefixes="#all">
+	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:cinclude="http://apache.org/cocoon/include/1.0" xmlns:gml="http://www.opengis.net/gml/" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+	exclude-result-prefixes="#all">
 
 
 	<xsl:template name="nuds">
@@ -38,7 +39,21 @@
 			</xsl:for-each>
 
 			<xsl:apply-templates select="nuds:descMeta"/>
-			<xsl:apply-templates select="nuds:digRep"/>
+			<xsl:choose>
+				<xsl:when test="string($sparql_endpoint)">
+					<cinclude:include src="cocoon:/widget?uri={concat($url, 'id/', $id)}&amp;template=solr"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:apply-templates select="nuds:digRep"/>
+				</xsl:otherwise>
+			</xsl:choose>
+			
+			<field name="fulltext">
+				<xsl:for-each select="descendant-or-self::text()">
+					<xsl:value-of select="normalize-space(.)"/>
+					<xsl:text> </xsl:text>
+				</xsl:for-each>
+			</field>
 		</doc>
 	</xsl:template>
 
