@@ -286,31 +286,36 @@
 	<xsl:template name="getPlacemark">
 		<xsl:param name="href"/>
 		<xsl:param name="styleUrl"/>
+		
+		<xsl:variable name="label">
+			<!-- display the title (coin type reference) for hoards, place name for other points -->
+			<xsl:choose>
+				<xsl:when test="$styleUrl='#mapped'">
+					<xsl:value-of select="ancestor::nuds:nuds/nuds:descMeta/nuds:title"/>
+				</xsl:when>
+				<xsl:when test="local-name()='findspotDesc'">
+					<xsl:choose>
+						<xsl:when test="contains($href, 'nomisma.org')">
+							<xsl:choose>
+								<xsl:when test="string(exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/skos:prefLabel)">
+									<xsl:value-of select="exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/skos:prefLabel"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:value-of select="$href"/>
+								</xsl:otherwise>
+							</xsl:choose>
+						</xsl:when>
+					</xsl:choose>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="."/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		
 		<Placemark xmlns="http://earth.google.com/kml/2.0">
 			<name>
-				<!-- display the title (coin type reference) for hoards, place name for other points -->
-				<xsl:choose>
-					<xsl:when test="$styleUrl='#mapped'">
-						<xsl:value-of select="ancestor::nuds:nuds/nuds:descMeta/nuds:title"/>
-					</xsl:when>
-					<xsl:when test="local-name()='findspotDesc'">
-						<xsl:choose>
-							<xsl:when test="contains($href, 'nomisma.org')">
-								<xsl:choose>
-									<xsl:when test="string(exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/skos:prefLabel)">
-										<xsl:value-of select="exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/skos:prefLabel"/>
-									</xsl:when>
-									<xsl:otherwise>
-										<xsl:value-of select="$href"/>
-									</xsl:otherwise>
-								</xsl:choose>
-							</xsl:when>
-						</xsl:choose>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:value-of select="."/>
-					</xsl:otherwise>
-				</xsl:choose>
+				<xsl:value-of select="$label"/>
 			</name>
 			<xsl:choose>
 				<xsl:when test="$styleUrl='#mapped'">
@@ -335,7 +340,7 @@
 				<xsl:otherwise>
 					<description>
 						<![CDATA[
-          					<span><a href="]]><xsl:value-of select="$href"/><![CDATA[" target="_blank">]]><xsl:value-of select="."/><![CDATA[</a>]]>						
+          					<span><a href="]]><xsl:value-of select="$href"/><![CDATA[" target="_blank">]]><xsl:value-of select="$label"/><![CDATA[</a>]]>						
 						<![CDATA[</span>
         				]]>
 					</description>
