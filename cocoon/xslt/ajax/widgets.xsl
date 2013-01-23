@@ -29,6 +29,9 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 			<xsl:when test="$template = 'kml'">
 				<xsl:call-template name="numishare:getFindspots"/>
 			</xsl:when>
+			<xsl:when test="$template = 'solr'">
+				<xsl:call-template name="numishare:solrFields"/>
+			</xsl:when>
 		</xsl:choose>
 
 	</xsl:template>
@@ -107,6 +110,34 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 		</div>
 
 	</xsl:template>
+	
+	<xsl:template name="numishare:solrFields">
+		<xsl:variable name="query">
+			<![CDATA[PREFIX oac:      <http://www.openannotation.org/ns/>
+			PREFIX rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+			PREFIX dcterms:  <http://purl.org/dc/terms/>
+			PREFIX nm:       <http://nomisma.org/id/>
+			
+			SELECT ?annotation ?uri ?title ?publisher ?weight ?axis ?obvThumb ?revThumb ?obvRef ?revRef ?findspot ?numismatic_term  WHERE {
+			?annotation oac:hasBody <typeUri>.
+			?annotation oac:hasTarget ?uri .
+			?annotation dcterms:title ?title .
+			?annotation dcterms:publisher ?publisher .
+			OPTIONAL { ?annotation nm:weight ?weight }
+			OPTIONAL { ?annotation nm:axis ?axis }
+			OPTIONAL { ?annotation nm:obverseThumbnail ?obvThumb }
+			OPTIONAL { ?annotation nm:reverseThumbnail ?revThumb }
+			OPTIONAL { ?annotation nm:obverseReference ?obvRef }
+			OPTIONAL { ?annotation nm:reverseReference ?revRef }
+			OPTIONAL { ?annotation nm:findspot ?findspot }
+			OPTIONAL { ?annotation nm:numismatic_term ?numismatic_term }}]]>
+		</xsl:variable>
+		<xsl:variable name="service" select="concat($endpoint, '?query=', encode-for-uri(normalize-space(replace($query, 'typeUri', $uri))), '&amp;output=xml')"/>
+		
+		<xsl:apply-templates select="document($service)/res:sparql" mode="solr"/>
+	</xsl:template>
+	
+	<!-- **************** PROCESS SPARQL RESPONSE ****************-->
 
 	<xsl:template match="res:sparql" mode="display">
 		<xsl:variable name="coin-count"
@@ -156,7 +187,13 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 	<xsl:template match="res:sparql" mode="kml">
 		<xsl:apply-templates select="descendant::res:result/res:binding[@name='findspot']" mode="kml"/>
 	</xsl:template>
-
+	
+	<xsl:template match="res:sparql" mode="solr">
+		<xsl:apply-templates select="descendant::res:result/res:binding[@name='findspot']" mode="solr"/>
+	</xsl:template>
+	
+	
+	<!-- **************** PROCESS INDIVIDUAL RESULTS ****************-->
 	<xsl:template match="res:result" mode="display">
 		<div class="g_doc">
 			<span class="result_link">
@@ -310,6 +347,40 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 				</TimeStamp>
 			</xsl:if>
 		</Placemark>
+	</xsl:template>
+	
+	<xsl:template match="res:binding[@name='findspot']" mode="solr">
+		<!-- *_geo format is 'mint name|URI of resource|KML-compliant geographic coordinates' -->
+		<xsl:variable name="coords">
+			<xsl:choose>
+				<xsl:when test="contains(child::res:uri, 'geonames')">
+					<xsl:variable name="geonameId" select="substring-before(substring-after(child::res:uri, 'geonames.org/'), '/')"/>
+					<xsl:variable name="geonames_data" select="document(concat($geonames-url, '/get?geonameId=', $geonameId, '&amp;username=', $geonames_api_key, '&amp;style=full'))"/>
+					<xsl:variable name="coordinates" select="concat(exsl:node-set($geonames_data)//lng, ',', exsl:node-set($geonames_data)//lat)"/>
+					
+					<xsl:value-of select="$coordinates"/>
+				</xsl:when>
+				<xsl:when test="string(res:literal)">
+					<xsl:value-of select="res:literal"/>
+				</xsl:when>
+			</xsl:choose>
+		</xsl:variable>
+		
+		<field name="findspot_facet">
+			<xsl:value-of select="parent::node()/res:binding[@name='title']/res:literal"/>
+		</field>
+		<xsl:if test="string(child::res:uri)">
+			<field name="findspot_uri">
+				<xsl:value-of select="child::res:uri"/>
+			</field>
+		</xsl:if>
+		<field name="findspot_geo">
+			<xsl:value-of select="parent::node()/res:binding[@name='title']/res:literal"/>
+			<xsl:text>|</xsl:text>
+			<xsl:value-of select="child::res:uri"/>
+			<xsl:text>|</xsl:text>
+			<xsl:value-of select="$coords"/>
+		</field>
 	</xsl:template>
 
 </xsl:stylesheet>

@@ -4,20 +4,23 @@
 	Function: This stylesheet reads the incoming object model (nuds or nudsHoard)
 -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:nuds="http://nomisma.org/nuds" xmlns:nh="http://nomisma.org/nudsHoard" xmlns:nm="http://nomisma.org/id/"
-	xmlns:exsl="http://exslt.org/common" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xlink="http://www.w3.org/1999/xlink" exclude-result-prefixes="#all" version="2.0">
+	xmlns:exsl="http://exslt.org/common" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:cinclude="http://apache.org/cocoon/include/1.0"
+	exclude-result-prefixes="#all" version="2.0">
 	<xsl:output method="xml" encoding="UTF-8"/>
 	<xsl:include href="functions.xsl"/>
 	<xsl:include href="display/nuds/solr.xsl"/>
 	<xsl:include href="display/nudsHoard/solr.xsl"/>
 	<xsl:include href="display/shared-solr.xsl"/>
-	
+
 	<xsl:param name="collection-name"/>
 
 	<!-- config variables -->
 	<xsl:variable name="geonames-url">
 		<xsl:text>http://api.geonames.org</xsl:text>
 	</xsl:variable>
+	<xsl:variable name="url" select="/content/config/url"/>
 	<xsl:variable name="geonames_api_key" select="/content/config/geonames_api_key"/>
+	<xsl:variable name="sparql_endpoint" select="/content/config/sparql_endpoint"/>
 	<xsl:variable name="publisher" select="/content/config/template/publisher"/>
 
 	<xsl:variable name="nudsGroup">
@@ -115,8 +118,8 @@
 	</xsl:template>
 
 	<xsl:template match="/">
-		
-		
+
+
 		<add>
 			<xsl:choose>
 				<xsl:when test="count(descendant::nuds:nuds) &gt; 0">
