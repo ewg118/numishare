@@ -105,7 +105,7 @@
 					These only need to be changed if Solr and Orbeon are run on a different server or Tomcat application than Cocoon -->
 				<solr-url>http://localhost:8080/solr/numishare-published/</solr-url>
 				<exist-url>http://localhost:8080/orbeon/exist/rest/db/</exist-url>
-				<collection-name>egypt</collection-name>
+				<collection-name>numishare</collection-name>
 			</global-variables>
 		</map:component-configurations>
 
@@ -231,8 +231,9 @@
 
 			<map:match pattern="id/*">
 				<map:aggregate element="content">
-					<map:part src="{global:exist-url}{global:collection-name}/objects/{1}.xml"/>
+					<map:part src="{global:exist-url}{global:collection-name}/objects/{1}.xml"/>					
 					<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
+					<map:part src="cocoon:/query_findspot_geo/{1}"/>
 				</map:aggregate>
 				<map:transform src="xslt/display.xsl" label="basiccontent" type="xslt-saxon">
 					<map:parameter name="use-request-parameters" value="true"/>
@@ -715,6 +716,18 @@
 				<map:generate src="{global:exist-url}{global:collection-name}/objects/{url-encode:{request-param:id}}.xml"/>
 				<map:transform src="xslt/ajax/get_hoard_quant.xsl" label="basiccontent" type="xslt-saxon">
 					<map:parameter name="use-request-parameters" value="true"/>
+				</map:transform>
+				<map:serialize type="xml"/>
+			</map:match>
+			
+			<!-- query solr for available geographic coordinates -->
+			<map:match pattern="query_findspot_geo/*">
+				<map:generate
+					src="{global:solr-url}select?q=collection-name:{global:collection-name}+AND+{url-encode:id:&#x022;{1}&#x022; AND (findspot_geo:* OR ao_findspot_geo:*)}&amp;rows=0"
+					label="record"/>
+				<map:transform type="xslt-saxon" src="xslt/ajax/query_geo.xsl" label="basiccontent">
+					<map:parameter name="use-request-parameters" value="true"/>
+					<map:parameter name="field" value="findspot"/>
 				</map:transform>
 				<map:serialize type="xml"/>
 			</map:match>

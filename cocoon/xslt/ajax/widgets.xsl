@@ -311,11 +311,15 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 			<name>
 				<xsl:value-of select="parent::node()/res:binding[@name='title']/res:literal"/>
 			</name>
-			<xsl:if test="string(parent::node()/res:binding[@name='burial']/res:literal)">
-				<description>
-					<xsl:value-of select="parent::node()/res:binding[@name='burial']/res:literal"/>
-				</description>
-			</xsl:if>
+			<description>
+				<![CDATA[
+          					<span><a href="]]><xsl:value-of select="parent::node()/res:binding[@name='uri']/res:uri"/><![CDATA[" target="_blank">]]><xsl:value-of select="parent::node()/res:binding[@name='title']/res:literal"/><![CDATA[</a>]]>
+				<xsl:if test="string(parent::node()/res:binding[@name='burial']/res:literal)">
+					<![CDATA[- closing date: ]]><xsl:value-of select="number(parent::node()/res:binding[@name='burial']/res:literal)"/>
+				</xsl:if>
+				<![CDATA[</span>
+        				]]>
+			</description>
 
 			<styleUrl>#mapped</styleUrl>
 			<!-- add placemark -->
