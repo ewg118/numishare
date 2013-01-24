@@ -63,6 +63,14 @@
 									<xsl:value-of select="str[@name='closing_date_display']"/>
 								</dd>
 							</div>
+							<xsl:if test="string(str[@name='description_display'])">
+								<div>
+									<dt><xsl:value-of select="numishare:regularize_node('description', $lang)"/>:</dt>
+									<dd style="margin-left:150px;">
+										<xsl:value-of select="str[@name='description_display']"/>
+									</dd>
+								</div>	
+							</xsl:if>
 							<xsl:if test="arr[@name='reference_facet']">
 								<div>
 									<dt><xsl:value-of select="numishare:regularize_node('reference', $lang)"/>: </dt>
