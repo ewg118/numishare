@@ -58,10 +58,18 @@
 	</xsl:template>
 
 	<xsl:template match="nuds:nuds" mode="kml">
+		<!-- create mint points -->
 		<xsl:for-each select="exsl:node-set($nudsGroup)/descendant::nuds:geogname[@xlink:role='mint'][string(@xlink:href)]">
 			<xsl:call-template name="getPlacemark">
 				<xsl:with-param name="href" select="@xlink:href"/>
 				<xsl:with-param name="styleUrl">#mint</xsl:with-param>
+			</xsl:call-template>
+		</xsl:for-each>
+		<!-- create findspot points (for physical coins -->
+		<xsl:for-each select="exsl:node-set($nudsGroup)/descendant::nuds:geogname[@xlink:role='findspot'][string(@xlink:href)]|descendant::nuds:findspotDesc[string(@xlink:href)]">
+			<xsl:call-template name="getPlacemark">
+				<xsl:with-param name="href" select="@xlink:href"/>
+				<xsl:with-param name="styleUrl">#hoard</xsl:with-param>
 			</xsl:call-template>
 		</xsl:for-each>
 		
@@ -278,37 +286,67 @@
 	<xsl:template name="getPlacemark">
 		<xsl:param name="href"/>
 		<xsl:param name="styleUrl"/>
+		
+		<xsl:variable name="label">
+			<!-- display the title (coin type reference) for hoards, place name for other points -->
+			<xsl:choose>
+				<xsl:when test="$styleUrl='#mapped'">
+					<xsl:value-of select="ancestor::nuds:nuds/nuds:descMeta/nuds:title"/>
+				</xsl:when>
+				<xsl:when test="local-name()='findspotDesc'">
+					<xsl:choose>
+						<xsl:when test="contains($href, 'nomisma.org')">
+							<xsl:choose>
+								<xsl:when test="string(exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/skos:prefLabel)">
+									<xsl:value-of select="exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/skos:prefLabel"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:value-of select="$href"/>
+								</xsl:otherwise>
+							</xsl:choose>
+						</xsl:when>
+					</xsl:choose>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="."/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		
 		<Placemark xmlns="http://earth.google.com/kml/2.0">
 			<name>
-				<!-- display the title (coin type reference) for hoards, place name for other points -->
-				<xsl:choose>
-					<xsl:when test="$styleUrl='#mapped'">
-						<xsl:value-of select="ancestor::nuds:nuds/nuds:descMeta/nuds:title"/>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:value-of select="."/>
-					</xsl:otherwise>
-				</xsl:choose>
+				<xsl:value-of select="$label"/>
 			</name>
-			<xsl:if test="$styleUrl='#mapped'">
-				<description>
-					<xsl:value-of select="."/>
-					<!-- display date -->
-					<xsl:if test="ancestor::nuds:nuds/nuds:descMeta/nuds:typeDesc/nuds:date or ancestor::nuds:nuds/nuds:descMeta/nuds:typeDesc/nuds:dateRange">
-						<xsl:text>, </xsl:text>
-						<xsl:choose>
-							<xsl:when test="string(ancestor::nuds:nuds/nuds:descMeta/nuds:typeDesc/nuds:date)">
-								<xsl:value-of select="ancestor::nuds:nuds/nuds:descMeta/nuds:typeDesc/nuds:date"/>
-							</xsl:when>
-							<xsl:when test="string(ancestor::nuds:nuds/nuds:descMeta/nuds:typeDesc/nuds:dateRange)">
-								<xsl:value-of select="ancestor::nuds:nuds/nuds:descMeta/nuds:typeDesc/nuds:dateRange/nuds:fromDate"/>
-								<xsl:text> - </xsl:text>
-								<xsl:value-of select="ancestor::nuds:nuds/nuds:descMeta/nuds:typeDesc/nuds:dateRange/nuds:toDate"/>
-							</xsl:when>
-						</xsl:choose>
-					</xsl:if>
-				</description>
-			</xsl:if>
+			<xsl:choose>
+				<xsl:when test="$styleUrl='#mapped'">
+					<description>
+						<xsl:value-of select="."/>
+						<!-- display date -->
+						<xsl:if test="ancestor::nuds:nuds/nuds:descMeta/nuds:typeDesc/nuds:date or ancestor::nuds:nuds/nuds:descMeta/nuds:typeDesc/nuds:dateRange">
+							<xsl:text>, </xsl:text>
+							<xsl:choose>
+								<xsl:when test="string(ancestor::nuds:nuds/nuds:descMeta/nuds:typeDesc/nuds:date)">
+									<xsl:value-of select="ancestor::nuds:nuds/nuds:descMeta/nuds:typeDesc/nuds:date"/>
+								</xsl:when>
+								<xsl:when test="string(ancestor::nuds:nuds/nuds:descMeta/nuds:typeDesc/nuds:dateRange)">
+									<xsl:value-of select="ancestor::nuds:nuds/nuds:descMeta/nuds:typeDesc/nuds:dateRange/nuds:fromDate"/>
+									<xsl:text> - </xsl:text>
+									<xsl:value-of select="ancestor::nuds:nuds/nuds:descMeta/nuds:typeDesc/nuds:dateRange/nuds:toDate"/>
+								</xsl:when>
+							</xsl:choose>
+						</xsl:if>
+					</description>
+				</xsl:when>
+				<xsl:otherwise>
+					<description>
+						<![CDATA[
+          					<span><a href="]]><xsl:value-of select="$href"/><![CDATA[" target="_blank">]]><xsl:value-of select="$label"/><![CDATA[</a>]]>						
+						<![CDATA[</span>
+        				]]>
+					</description>
+				</xsl:otherwise>
+			</xsl:choose>
+			
 			<styleUrl>
 				<xsl:value-of select="$styleUrl"/>
 			</styleUrl>
@@ -324,7 +362,7 @@
 					</Point>
 				</xsl:when>
 				<xsl:when test="contains($href, 'nomisma')">
-					<xsl:variable name="coordinates" select="exsl:node-set($rdf)//*[@rdf:about=$href]/gml:pos"/>
+					<xsl:variable name="coordinates" select="exsl:node-set($rdf)//*[@rdf:about=$href]/descendant::gml:pos"/>
 					<xsl:if test="string($coordinates)">
 						<xsl:variable name="lat" select="substring-before($coordinates, ' ')"/>
 						<xsl:variable name="lon" select="substring-after($coordinates, ' ')"/>

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?cocoon-disable-caching?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mets="http://www.loc.gov/METS/"
-	xmlns:exsl="http://exslt.org/common" xmlns:numishare="http://code.google.com/p/numishare/" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:cinclude="http://apache.org/cocoon/include/1.0"
-	xmlns:nuds="http://nomisma.org/nuds" exclude-result-prefixes="xs xlink mets exsl numishare xsl skos xlink cinclude" version="2.0">
+	xmlns:exsl="http://exslt.org/common" xmlns:numishare="http://code.google.com/p/numishare/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+	xmlns:cinclude="http://apache.org/cocoon/include/1.0" xmlns:nuds="http://nomisma.org/nuds" exclude-result-prefixes="xs xlink mets exsl numishare xsl skos xlink cinclude" version="2.0">
 
 	<xsl:param name="q"/>
 	<xsl:param name="weightQuery"/>
@@ -38,7 +38,8 @@
 	<xsl:template match="nuds:nuds">
 		<xsl:if test="$mode = 'compare'">
 			<div class="compare_options">
-				<a href="compare_results?q={$q}&amp;start={$start}&amp;image={$image}&amp;side={$side}&amp;mode=compare{if (string($lang)) then concat('&amp;lang=', $lang) else ''}" class="back_results">« Search results</a>
+				<a href="compare_results?q={$q}&amp;start={$start}&amp;image={$image}&amp;side={$side}&amp;mode=compare{if (string($lang)) then concat('&amp;lang=', $lang) else ''}"
+					class="back_results">« Search results</a>
 				<xsl:text> | </xsl:text>
 				<a href="id/{$id}">Full record »</a>
 			</div>
@@ -59,7 +60,7 @@
                                                                 });
                                                         });
                                                 </script>
-				<xsl:if test="$has_mint_geo = 'true'">
+				<xsl:if test="$has_mint_geo = 'true' or $has_findspot_geo = 'true'">
 					<script type="text/javascript" src="http://www.openlayers.org/api/OpenLayers.js"/>
 					<script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3.2&amp;sensor=false"/>
 					<script type="text/javascript" src="{$display_path}javascript/display_map_functions.js"/>
@@ -75,7 +76,7 @@
 						<!-- show associated objects, preferencing those from Metis first -->
 						<xsl:choose>
 							<xsl:when test="string($sparql_endpoint)">
-								<cinclude:include src="cocoon:/widget?uri={concat($url, 'id/', $id)}&amp;template=display"/>
+								<cinclude:include src="cocoon:/widget?uri={concat('http://numismatics.org/ocre/', 'id/', $id)}&amp;template=display"/>
 							</xsl:when>
 							<xsl:when test="count(nuds:digRep/nuds:associatedObject) &gt; 0">
 								<div class="objects">
@@ -192,14 +193,9 @@
 							<xsl:apply-templates select="nuds:descMeta/nuds:refDesc"/>
 						</div>
 					</xsl:if>
-					<!--<xsl:if test="descMeta/findspotDesc">
+					<xsl:if test="nuds:descMeta/nuds:findspotDesc">
 						<div class="metadata_section">
-							<xsl:apply-templates select="descMeta/findspotDesc"/>
-						</div>
-					</xsl:if>-->
-					<xsl:if test="nuds:nuds:descMeta/nuds:nuds:adminDesc/*">
-						<div class="metadata_section">
-							<xsl:apply-templates select="nuds:descMeta/nuds:adminDesc"/>
+							<xsl:apply-templates select="nuds:descMeta/nuds:findspotDesc"/>
 						</div>
 					</xsl:if>
 				</div>
@@ -269,11 +265,11 @@
 								<xsl:apply-templates select="nuds:descMeta/nuds:subjectSet"/>
 							</div>
 						</xsl:if>
-						<!--<xsl:if test="descMeta/findspotDesc">
+						<xsl:if test="nuds:descMeta/nuds:findspotDesc">
 							<div class="metadata_section">
-								<xsl:apply-templates select="descMeta/findspotDesc"/>
+								<xsl:apply-templates select="nuds:descMeta/nuds:findspotDesc"/>
 							</div>
-						</xsl:if>-->
+						</xsl:if>
 					</div>
 					<xsl:if test="$has_mint_geo = 'true' or $has_findspot_geo = 'true'">
 						<div id="mapTab">
@@ -330,9 +326,33 @@
 		<h2>
 			<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
 		</h2>
-		<ul>
-			<xsl:apply-templates mode="descMeta"/>
-		</ul>
+		<xsl:choose>
+			<xsl:when test="string(@xlink:href)">
+				<xsl:variable name="href" select="@xlink:href"/>
+				<xsl:variable name="currentLang" select="if (string($lang)) then $lang else 'en'"/>
+				<xsl:variable name="label">
+					<xsl:choose>
+						<xsl:when test="contains($href, 'nomisma.org')">
+							<xsl:choose>
+								<xsl:when test="string(exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/skos:prefLabel[@xml:lang=$currentLang])">
+									<xsl:value-of select="exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/skos:prefLabel[@xml:lang=$currentLang]"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:value-of select="$href"/>
+								</xsl:otherwise>
+							</xsl:choose>
+						</xsl:when>
+					</xsl:choose>
+				</xsl:variable>
+
+				<p>Source: <a href="{@xlink:href}"><xsl:value-of select="$label"/></a></p>
+			</xsl:when>
+			<xsl:otherwise>
+				<ul>
+					<xsl:apply-templates mode="descMeta"/>
+				</ul>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 	<xsl:template match="nuds:adminDesc">
@@ -353,7 +373,7 @@
 		</ul>
 	</xsl:template>
 
-	<xsl:template match="subject">
+	<xsl:template match="nuds:subject">
 		<li>
 			<xsl:choose>
 				<xsl:when test="string(@type)">
@@ -369,6 +389,21 @@
 					</a>
 				</xsl:otherwise>
 			</xsl:choose>
+		</li>
+	</xsl:template>
+
+	<xsl:template match="nuds:provenance" mode="descMeta">
+		<li>
+			<h4>
+				<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
+			</h4>
+			<ul>
+				<xsl:for-each select="descendant::nuds:chronItem">
+					<li>
+						<xsl:apply-templates select="*" mode="descMeta"/>
+					</li>
+				</xsl:for-each>
+			</ul>
 		</li>
 	</xsl:template>
 
@@ -647,6 +682,49 @@
 			<!-- create checkboxes for available facets -->
 			<xsl:for-each select="//nuds:material|//nuds:denomination|//nuds:department|//nuds:manufacture|//nuds:persname|//nuds:corpname|//nuds:famname|//nuds:geogname">
 				<xsl:sort select="local-name()"/>
+				<xsl:variable name="href" select="@xlink:href"/>
+				<xsl:variable name="value">
+					<xsl:choose>
+						<xsl:when test="string($lang) and contains($href, 'nomisma.org')">
+							<xsl:choose>
+								<xsl:when test="string(exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/skos:prefLabel[@xml:lang=$lang])">
+									<xsl:value-of select="exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/skos:prefLabel[@xml:lang=$lang]"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:value-of select="exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/skos:prefLabel[@xml:lang='en']"/>
+								</xsl:otherwise>
+							</xsl:choose>
+						</xsl:when>
+						<xsl:when test="string($lang) and contains($href, 'geonames.org')">
+							<xsl:variable name="geonameId" select="substring-before(substring-after($href, 'geonames.org/'), '/')"/>
+							<xsl:variable name="geonames_data" select="document(concat($geonames-url, '/get?geonameId=', $geonameId, '&amp;username=', $geonames_api_key, '&amp;style=full'))"/>
+							<xsl:choose>
+								<xsl:when test="count(exsl:node-set($geonames_data)//alternateName[@lang=$lang]) &gt; 0">
+									<xsl:for-each select="exsl:node-set($geonames_data)//alternateName[@lang=$lang]">
+										<xsl:value-of select="."/>
+										<xsl:if test="not(position()=last())">
+											<xsl:text>/</xsl:text>
+										</xsl:if>
+									</xsl:for-each>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:value-of select="exsl:node-set($geonames_data)//name"/>
+								</xsl:otherwise>
+							</xsl:choose>
+						</xsl:when>
+						<xsl:otherwise>
+							<!-- if there is no text value and it points to nomisma.org, grab the prefLabel -->
+							<xsl:choose>
+								<xsl:when test="not(string(normalize-space(.))) and contains($href, 'nomisma.org')">
+									<xsl:value-of select="exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/skos:prefLabel[@xml:lang='en']"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:value-of select="."/>
+								</xsl:otherwise>
+							</xsl:choose>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:variable>
 				<xsl:variable name="name">
 					<xsl:choose>
 						<xsl:when test="string(@xlink:role)">
@@ -673,9 +751,9 @@
 				</xsl:choose>
 
 				<label for="{$name}-checkbox">
-					<xsl:value-of select="concat(upper-case(substring($name, 1, 1)), substring($name, 2))"/>
+					<xsl:value-of select="numishare:regularize_node($name, $lang)"/>
 					<xsl:text>: </xsl:text>
-					<xsl:value-of select="."/>
+					<xsl:value-of select="$value"/>
 				</label>
 				<br/>
 			</xsl:for-each>
@@ -720,13 +798,13 @@
 		</xsl:for-each>
 	</xsl:when>-->
 
-	<xsl:template match="nuds:chronlist | nuds:list">
+	<xsl:template match="nuds:chronList | nuds:list">
 		<ul class="list">
 			<xsl:apply-templates/>
 		</ul>
 	</xsl:template>
 
-	<xsl:template match="nuds:chronitem | nuds:item">
+	<xsl:template match="nuds:chronItem | nuds:item">
 		<li>
 			<xsl:apply-templates/>
 		</li>
@@ -734,7 +812,7 @@
 
 	<xsl:template match="nuds:date">
 		<xsl:choose>
-			<xsl:when test="parent::nuds:chronitem">
+			<xsl:when test="parent::nuds:chronItem">
 				<i>
 					<xsl:value-of select="."/>
 				</i>
