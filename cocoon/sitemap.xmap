@@ -109,7 +109,7 @@
 					These only need to be changed if Solr and Orbeon are run on a different server or Tomcat application than Cocoon -->
 				<solr-url>http://localhost:8080/solr/numishare-published/</solr-url>
 				<exist-url>http://localhost:8080/orbeon/exist/rest/db/</exist-url>
-				<collection-name>rrch</collection-name>
+				<collection-name>numishare</collection-name>
 			</global-variables>
 		</map:component-configurations>
 
