@@ -232,7 +232,7 @@
 			<!-- treat hoard and non-hoard documents differently -->
 			<xsl:choose>
 				<xsl:when test="str[@name='recordType'] = 'hoard'">
-					<xsl:if test="str[@name='findspot_geo']">
+					<xsl:if test="arr[@name='findspot_geo']/str">
 						<link rel="alternate kml" type="application/vnd.google-earth.kml+xml" href="{$url}id/{str[@name='id']}.kml"/>
 					</xsl:if>
 					
@@ -290,9 +290,9 @@
 		
 		<xsl:choose>
 			<xsl:when test="str[@name='recordType'] = 'hoard'">
-				<xsl:if test="string(str[@name='findspot_geo'])">
+				<xsl:if test="string(arr[@name='findspot_geo']/str)">
 					<georss:where>
-						<xsl:variable name="tokenized_georef" select="tokenize(str[@name='findspot_geo'], '\|')"/>
+						<xsl:variable name="tokenized_georef" select="tokenize(arr[@name='findspot_geo']/str[1], '\|')"/>
 						<xsl:variable name="coordinates" select="$tokenized_georef[3]"/>
 						<xsl:variable name="lon" select="substring-before($coordinates, ',')"/>
 						<xsl:variable name="lat" select="substring-after($coordinates, ',')"/>
@@ -408,9 +408,9 @@
 				<xsl:when test="string(arr[@name='findspot_uri']/str)">
 					<nm:findspot rdf:resource="{arr[@name='findspot_uri']/str}"/>
 				</xsl:when>
-				<xsl:when test="string(str[@name='findspot_geo'])">
+				<xsl:when test="string(arr[@name='findspot_geo']/str[1])">
 					<nm:findspot>
-						<xsl:value-of select="tokenize(str[@name='findspot_geo'])[last()]"/>
+						<xsl:value-of select="tokenize(arr[@name='findspot_geo']/str[1], '\|')[last()]"/>
 					</nm:findspot>
 				</xsl:when>
 			</xsl:choose>

@@ -167,7 +167,7 @@ dt {
 }
 .calculate {
 	display:none;
-	margin-top:20px;	
+	margin-top:20px;
 }
 /*
   ***************************************
@@ -210,7 +210,7 @@ dt {
 	float:right;
 }
 .remove_filter_ar {
-	float:left;	
+	float:left;
 }
 .remove_segment {
 	margin-left:2px;
@@ -471,18 +471,18 @@ button.ui-multiselect {
 .departments>input {
 	vertical-align:bottom;
 }
-.legend{
-	margin:25px 0;	
+.legend {
+	margin:25px 0;
 }
 .legend td {
-	border:0;	
+	border:0;
 }
 .legend th {
 	background-color:white;
-	border: 0;	
+	border: 0;
 }
-.olLayerGooglePoweredBy{
-	display:none;	
+.olLayerGooglePoweredBy {
+	display:none;
 }
 /*
   .olLayerGoogleCopyright {
@@ -546,7 +546,7 @@ button.ui-multiselect {
 }
 .fl {
 	float:left;
-	width:20%;	
+	width:20%;
 }
 /*
   ***************************************
@@ -604,7 +604,7 @@ div.custominfostyle {
   PAGINATION
   ***************************************
  */
- .paging_div {
+.paging_div {
 	width:100%;
 	display:table;
 	padding-top:10px;
@@ -613,7 +613,7 @@ div.custominfostyle {
 .paging li {
 	float: left;
 	list-style: none outside none;
-	margin: 2px;	
+	margin: 2px;
 	position: relative;
 	width:30px;
 	text-align:center;
@@ -633,16 +633,16 @@ div.custominfostyle {
 #numishare-widget img {
 	padding:10px;
 }
-/* Used for date (century/decade) facet*/
-.date-div{
-	margin-top:-10px;	
+/* Used for date (century/decade) facet */
+.date-div {
+	margin-top:-10px;
 }
-.century-multiselect-checkboxes{
+.century-multiselect-checkboxes {
 	display:table;
-	width:100%;	
+	width:100%;
 }
-.decades-list{
-	margin:0 0 0 25px;	
+.decades-list {
+	margin:0 0 0 25px;
 }
 .close {
 	float:right;
@@ -653,8 +653,7 @@ div.custominfostyle {
 	font-weight:bold;
 	cursor:pointer;
 }
-
-/*background*/
+/* background */
 #backgroundPopup {
 	display:none;
 	position:fixed;
@@ -671,23 +670,27 @@ div.custominfostyle {
   ANALYSIS
   ***************************************
  */
- #filterHoards, #searchBox{
- 	width:600px;
- 	text-align:left;
- }
- .filter-div, .customQuery, .compareQuery{
- 	padding:10px 0;	
- }
- .filter-div span, .customQuery span, .compareQuery span{
- 	padding:0 5px;	
- }
- .removeFilter, .removeQuery {
- 	font-size:80%;	
- }
- .anOption{
- 	float:left;
- 	width:20%;
- }
+#filterHoards, #searchBox {
+	width:600px;
+	text-align:left;
+}
+.filter-div, .customQuery, .compareQuery {
+	padding:10px 0;
+}
+.filter-div span, .customQuery span, .compareQuery span {
+	padding:0 5px;
+}
+.removeFilter, .removeQuery {
+	font-size:80%;
+}
+.anOption {
+	float:left;
+	width:20%;
+}
+.customQuery{
+	display:table;
+	width:100%;
+}
 /*
   ***************************************
   jQuery UI Menubar @VERSION

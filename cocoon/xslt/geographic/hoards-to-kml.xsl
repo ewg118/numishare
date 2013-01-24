@@ -19,9 +19,9 @@
 				</Style>
 
 				<xsl:for-each select="//doc">
-					<xsl:variable name="findspot" select="tokenize(str[@name='findspot_geo'], '\|')[1]"/>
-					<xsl:variable name="uri" select="tokenize(str[@name='findspot_geo'], '\|')[2]"/>
-					<xsl:variable name="coordinates" select="tokenize(str[@name='findspot_geo'], '\|')[3]"/>
+					<xsl:variable name="findspot" select="tokenize(arr[@name='findspot_geo']/str[1], '\|')[1]"/>
+					<xsl:variable name="uri" select="tokenize(arr[@name='findspot_geo']/str[1], '\|')[2]"/>
+					<xsl:variable name="coordinates" select="tokenize(arr[@name='findspot_geo']/str[1], '\|')[3]"/>
 
 					<xsl:variable name="description">
 						<xsl:text>&lt;a href="</xsl:text>

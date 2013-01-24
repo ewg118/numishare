@@ -452,7 +452,7 @@
 				<map:transform type="xslt-saxon" src="xslt/geographic/hoards-to-kml.xsl" label="basiccontent">
 					<map:parameter name="use-request-parameters" value="true"/>
 				</map:transform>
-				<map:serialize type="kml"/>
+				<map:serialize type="xml"/>
 			</map:match>
 
 			<!-- KML of unique findspots given a Solr query -->

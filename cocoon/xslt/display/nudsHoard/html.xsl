@@ -35,6 +35,19 @@
 							<div id="timeline"/>
 						</div>
 					</div>
+					<div class="legend">
+						<table>
+							<tbody>
+								<tr>
+									<th style="width:100px"><xsl:value-of select="numishare:regularize_node('legend', $lang)"/></th>
+									<td style="background-color:#6992fd;border:2px solid black;width:50px;"/>
+									<td style="width:100px"><xsl:value-of select="numishare:regularize_node('mint', $lang)"/></td>
+									<td style="background-color:#d86458;border:2px solid black;width:50px;"/>
+									<td style="width:100px"><xsl:value-of select="numishare:regularize_node('findspot', $lang)"/></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
 				</div>
 				<div class="yui-u">
 					<xsl:if test="nh:descMeta/nh:hoardDesc">
