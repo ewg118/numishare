@@ -47,6 +47,24 @@
 		<!-- below is a series of conditionals for forming the image boxes and displaying obverse and reverse images, iconography, and legends if they are available within the EAD document -->
 		<xsl:choose>
 			<xsl:when test="not($mode = 'compare')">
+				<xsl:variable name="title">
+					<xsl:choose>
+						<xsl:when test="string(nuds:descMeta/nuds:title[@xml:lang=$lang])">
+							<xsl:value-of select="nuds:descMeta/nuds:title[@xml:lang=$lang]"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:choose>
+								<xsl:when test="string(nuds:descMeta/nuds:title[@xml:lang='en'])">
+									<xsl:value-of select="nuds:descMeta/nuds:title[@xml:lang='en']"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:value-of select="normalize-space(nuds:descMeta/nuds:title[1])"/>
+								</xsl:otherwise>
+							</xsl:choose>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:variable>
+				
 				<!-- determine whether the document has published findspots or associated object findspots -->
 				<script type="text/javascript" langage="javascript">
                                                         $(function () {
@@ -69,7 +87,7 @@
 				<xsl:choose>
 					<xsl:when test="$recordType='conceptual'">
 						<h1 id="object_title">
-							<xsl:value-of select="normalize-space(nuds:descMeta/nuds:title)"/>
+							<xsl:value-of select="$title"/>							
 						</h1>
 						<xsl:call-template name="nuds_content"/>
 
@@ -98,7 +116,7 @@
 											</xsl:when>
 											<xsl:when test="$image_location = 'right'">
 												<h1 id="object_title">
-													<xsl:value-of select="normalize-space(nuds:descMeta/nuds:title)"/>
+													<xsl:value-of select="$title"/>
 												</h1>
 												<xsl:call-template name="nuds_content"/>
 											</xsl:when>
@@ -108,7 +126,7 @@
 										<xsl:choose>
 											<xsl:when test="$image_location = 'left'">
 												<h1 id="object_title">
-													<xsl:value-of select="normalize-space(nuds:descMeta/nuds:title)"/>
+													<xsl:value-of select="$title"/>
 												</h1>
 												<xsl:call-template name="nuds_content"/>
 											</xsl:when>
