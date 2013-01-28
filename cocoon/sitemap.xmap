@@ -558,12 +558,16 @@
 			</map:match>
 
 			<map:match pattern="results_ajax">
-				<map:generate
-					src="{global:solr-url}select?q=collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}&amp;rows=24&amp;start={request-param:start}&amp;sort={url-encode:{request-param:sort}}"
-					label="record"/>
+				<map:aggregate element="content">
+					<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
+					<map:part
+						src="{global:solr-url}select?q=collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}&amp;rows=24&amp;start={request-param:start}&amp;sort={url-encode:{request-param:sort}}"
+						label="record"/>
+				</map:aggregate>
 				<map:transform type="xslt-saxon" src="xslt/ajax/results_ajax.xsl" label="basiccontent">
 					<map:parameter name="use-request-parameters" value="true"/>
 				</map:transform>
+				<map:transform type="cinclude"/>
 				<map:serialize type="html"/>
 			</map:match>
 

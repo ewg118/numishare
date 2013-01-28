@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:numishare="http://code.google.com/p/numishare/" xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	exclude-result-prefixes="xs numishare" version="2.0">
+	xmlns:cinclude="http://apache.org/cocoon/include/1.0" exclude-result-prefixes="#all" version="2.0">
 	<xsl:include href="../functions.xsl"/>
 	<xsl:include href="../results_generic.xsl"/>
 	<xsl:param name="display_path">
@@ -15,6 +15,9 @@
 	<xsl:param name="tokenized_q" select="tokenize($q, ' AND ')"/>
 
 	<xsl:variable name="numFound" select="//result[@name='response']/@numFound" as="xs:integer"/>
+	
+	<!-- config variables -->	
+	<xsl:variable name="sparql_endpoint" select="/content//sparql_endpoint"/>	
 
 	<xsl:template match="/">
 		<xsl:variable name="place_string" select="replace(translate($tokenized_q[contains(., '_uri')], '&#x022;()', ''), '[a-z]+_uri:', '')"/>
@@ -143,40 +146,47 @@
 						</xsl:if>
 					</xsl:when>
 					<xsl:when test="str[@name='recordType'] = 'conceptual'">
-						<xsl:variable name="count" select="count(arr[@name='ao_uri']/str)"/>
-						<xsl:variable name="title" select="str[@name='title_display']	"/>
-						<xsl:variable name="docId" select="str[@name='id']"/>
+						<xsl:choose>
+							<xsl:when test="string($sparql_endpoint)">
+								<cinclude:include src="cocoon:/widget?uri=http://numismatics.org/ocre/id/{str[@name='id']}&amp;template=results"/>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:variable name="count" select="count(arr[@name='ao_uri']/str)"/>
+								<xsl:variable name="title" select="str[@name='title_display']	"/>
+								<xsl:variable name="docId" select="str[@name='id']"/>
 
-						<xsl:if test="count(arr[@name='ao_thumbnail_obv']/str) &gt; 0">
-							<xsl:variable name="nudsid" select="substring-before(arr[@name='ao_thumbnail_obv']/str[1], '|')"/>
-							<a class="thumbImage" rel="{str[@name='id']}-gallery" href="{substring-after(arr[@name='ao_reference_obv']/str[contains(., $nudsid)], '|')}"
-								title="Obverse of {$title}: {$nudsid}">
-								<img src="{substring-after(arr[@name='ao_thumbnail_obv']/str[1], '|')}"/>
-							</a>
-							<xsl:if test="arr[@name='ao_thumbnail_rev']/str[contains(., $nudsid)]">
-								<a class="thumbImage" rel="{str[@name='id']}-gallery" href="{substring-after(arr[@name='ao_reference_rev']/str[contains(., $nudsid)], '|')}"
-									title="Reverse of {$title}: {$nudsid}">
-									<img src="{substring-after(arr[@name='ao_thumbnail_rev']/str[contains(., $nudsid)], '|')}"/>
-								</a>
-							</xsl:if>
-							<div style="display:none">
-								<xsl:for-each select="arr[@name='ao_thumbnail_obv']/str[not(contains(., $nudsid))]">
-									<xsl:variable name="thisId" select="substring-before(., '|')"/>
-									<a class="thumbImage" rel="{$docId}-gallery" href="{substring-after(//arr[@name='ao_reference_obv']/str[contains(., $thisId)], '|')}"
-										title="Obverse of {$title}: {$thisId}">
-										<img src="{substring-after(., '|')}" alt="image"/>
+								<xsl:if test="count(arr[@name='ao_thumbnail_obv']/str) &gt; 0">
+									<xsl:variable name="nudsid" select="substring-before(arr[@name='ao_thumbnail_obv']/str[1], '|')"/>
+									<a class="thumbImage" rel="{str[@name='id']}-gallery" href="{substring-after(arr[@name='ao_reference_obv']/str[contains(., $nudsid)], '|')}"
+										title="Obverse of {$title}: {$nudsid}">
+										<img src="{substring-after(arr[@name='ao_thumbnail_obv']/str[1], '|')}"/>
 									</a>
-									<xsl:if test="//arr[@name='ao_thumbnail_rev']/str[contains(., $thisId)]">
-										<a class="thumbImage" rel="{$docId}-gallery" href="{substring-after(ancestor::doc/arr[@name='ao_reference_rev']/str[contains(., $thisId)], '|')}"
-											title="Reverse of {$title}: {$thisId}">
-											<img src="{substring-after(//arr[@name='ao_thumbnail_rev']/str[contains(., $thisId)], '|')}"/>
+									<xsl:if test="arr[@name='ao_thumbnail_rev']/str[contains(., $nudsid)]">
+										<a class="thumbImage" rel="{str[@name='id']}-gallery" href="{substring-after(arr[@name='ao_reference_rev']/str[contains(., $nudsid)], '|')}"
+											title="Reverse of {$title}: {$nudsid}">
+											<img src="{substring-after(arr[@name='ao_thumbnail_rev']/str[contains(., $nudsid)], '|')}"/>
 										</a>
 									</xsl:if>
-								</xsl:for-each>
-							</div>
-						</xsl:if>
-						<br/>
-						<xsl:value-of select="concat($count, if($count = 1) then ' associated coin' else ' associated coins')"/>
+									<div style="display:none">
+										<xsl:for-each select="arr[@name='ao_thumbnail_obv']/str[not(contains(., $nudsid))]">
+											<xsl:variable name="thisId" select="substring-before(., '|')"/>
+											<a class="thumbImage" rel="{$docId}-gallery" href="{substring-after(//arr[@name='ao_reference_obv']/str[contains(., $thisId)], '|')}"
+												title="Obverse of {$title}: {$thisId}">
+												<img src="{substring-after(., '|')}" alt="image"/>
+											</a>
+											<xsl:if test="//arr[@name='ao_thumbnail_rev']/str[contains(., $thisId)]">
+												<a class="thumbImage" rel="{$docId}-gallery" href="{substring-after(ancestor::doc/arr[@name='ao_reference_rev']/str[contains(., $thisId)], '|')}"
+													title="Reverse of {$title}: {$thisId}">
+													<img src="{substring-after(//arr[@name='ao_thumbnail_rev']/str[contains(., $thisId)], '|')}"/>
+												</a>
+											</xsl:if>
+										</xsl:for-each>
+									</div>
+								</xsl:if>
+								<br/>
+								<xsl:value-of select="concat($count, if($count = 1) then ' associated coin' else ' associated coins')"/>
+							</xsl:otherwise>
+						</xsl:choose>
 					</xsl:when>
 				</xsl:choose>
 			</div>
