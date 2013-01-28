@@ -43,13 +43,14 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 			PREFIX dcterms:  <http://purl.org/dc/terms/>
 			PREFIX nm:       <http://nomisma.org/id/>
 			
-			SELECT ?annotation ?uri ?title ?publisher ?weight ?axis ?obvThumb ?revThumb ?obvRef ?revRef ?findspot ?numismatic_term  WHERE {
+			SELECT ?annotation ?uri ?title ?publisher ?weight ?axis ?diameter ?obvThumb ?revThumb ?obvRef ?revRef ?findspot ?numismatic_term  WHERE {
 			?annotation oac:hasBody <typeUri>.
 			?annotation oac:hasTarget ?uri .
 			?annotation dcterms:title ?title .
 			?annotation dcterms:publisher ?publisher .
 			OPTIONAL { ?annotation nm:weight ?weight }
 			OPTIONAL { ?annotation nm:axis ?axis }
+			OPTIONAL { ?annotation nm:diameter ?diameter }
 			OPTIONAL { ?annotation nm:obverseThumbnail ?obvThumb }
 			OPTIONAL { ?annotation nm:reverseThumbnail ?revThumb }
 			OPTIONAL { ?annotation nm:obverseReference ?obvRef }
@@ -90,12 +91,13 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 			PREFIX dcterms:  <http://purl.org/dc/terms/>
 			PREFIX nm:       <http://nomisma.org/id/>
 			
-			SELECT ?annotation ?uri ?publisher ?weight ?axis ?obvThumb ?revThumb ?obvRef ?revRef ?findspot ?numismatic_term  WHERE {
+			SELECT ?annotation ?uri ?publisher ?weight ?axis ?diameter ?obvThumb ?revThumb ?obvRef ?revRef ?findspot ?numismatic_term  WHERE {
 			?annotation oac:hasBody <typeUri>.
 			?annotation oac:hasTarget ?uri .
 			?annotation dcterms:publisher ?publisher .
 			OPTIONAL { ?annotation nm:weight ?weight }
 			OPTIONAL { ?annotation nm:axis ?axis }
+			OPTIONAL { ?annotation nm:diameter ?diameter }
 			OPTIONAL { ?annotation nm:obverseThumbnail ?obvThumb }
 			OPTIONAL { ?annotation nm:reverseThumbnail ?revThumb }
 			OPTIONAL { ?annotation nm:obverseReference ?obvRef }
@@ -118,13 +120,14 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 			PREFIX dcterms:  <http://purl.org/dc/terms/>
 			PREFIX nm:       <http://nomisma.org/id/>
 			
-			SELECT ?annotation ?uri ?title ?publisher ?weight ?axis ?obvThumb ?revThumb ?obvRef ?revRef ?findspot ?numismatic_term  WHERE {
+			SELECT ?annotation ?uri ?title ?publisher ?weight ?axis ?diameter ?obvThumb ?revThumb ?obvRef ?revRef ?findspot ?numismatic_term  WHERE {
 			?annotation oac:hasBody <typeUri>.
 			?annotation oac:hasTarget ?uri .
 			?annotation dcterms:title ?title .
 			?annotation dcterms:publisher ?publisher .
 			OPTIONAL { ?annotation nm:weight ?weight }
 			OPTIONAL { ?annotation nm:axis ?axis }
+			OPTIONAL { ?annotation nm:diameter ?diameter }
 			OPTIONAL { ?annotation nm:obverseThumbnail ?obvThumb }
 			OPTIONAL { ?annotation nm:reverseThumbnail ?revThumb }
 			OPTIONAL { ?annotation nm:obverseReference ?obvRef }
