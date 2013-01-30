@@ -9,8 +9,15 @@ function initialize_map(id, path) {
                     ]
 	});
 	
-	//google physical
-	map.addLayer(new OpenLayers.Layer.Google("Google Physical", {type: google.maps.MapTypeId.TERRAIN}));
+	var imperium = new OpenLayers.Layer.XYZ(
+	"Imperium Romanum",[
+	"http://pelagios.dme.ait.ac.at/tilesets/imperium/${z}/${x}/${y}.png"], {
+		sphericalMercator: true,
+		isBaseLayer: true,
+		numZoomLevels: 12
+	});
+	
+	map.addLayer(imperium);
 	
 	//point for coin or hoard KML
 	var kmlLayer = new OpenLayers.Layer.Vector($('#object_title').text(), {	

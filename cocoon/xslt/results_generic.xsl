@@ -8,9 +8,9 @@
 			<xsl:value-of select="numishare:normalize_fields($sort_category, $lang)"/>
 		</xsl:variable>
 		<xsl:variable name="collection" select="substring-before(str[@name='identifier_display'], '.')"/>
+		<xsl:variable name="row" select="if (position() mod 2 = 0) then 'even-row' else 'odd-row'"/>
 
-
-		<div class="result_doc">
+		<div class="result_doc {$row}">			
 			<!--<xsl:if test="not($mode='compare') and //config/theme/layouts/*[name()=$pipeline]/image_location = 'left'">
 				<xsl:call-template name="result_image">
 					<xsl:with-param name="alignment">left</xsl:with-param>
@@ -32,172 +32,142 @@
 					<div style="text-align:center;">
 						<img src="{str[@name=$img_string]}" style="max-height:320px; min-height:320px;"/>
 					</div>
-				</xsl:if>-->
-			<span class="result_link">
-				<xsl:choose>
-					<xsl:when test="$mode = 'compare'">
-						<a href="{$display_path}display_ajax/{str[@name='id']}?mode=compare&amp;q={$q}&amp;start={$start}&amp;image={$image}&amp;side={$side}" class="compare">
-							<xsl:value-of select="str[@name='title_display']"/>
-						</a>
-					</xsl:when>
-					<xsl:otherwise>
-						<a href="{$display_path}id/{str[@name='id']}{if (string($lang)) then concat('?lang=', $lang) else ''}">
-							<xsl:value-of select="str[@name='title_display']"/>
-						</a>
-					</xsl:otherwise>
-				</xsl:choose>
-			</span>
-			<br/>
-			<dl>
-				<xsl:choose>
-					<xsl:when test="str[@name='recordType'] = 'hoard'">
-						<div>
-							<dt><xsl:value-of select="numishare:regularize_node('findspot', $lang)"/>:</dt>
-							<dd style="margin-left:150px;">
-								<xsl:value-of select="arr[@name='findspot_facet']/str[1]"/>
-							</dd>
-						</div>
-						<div>
-							<dt><xsl:value-of select="numishare:regularize_node('closing_date', $lang)"/>:</dt>
-							<dd style="margin-left:150px;">
-								<xsl:value-of select="str[@name='closing_date_display']"/>
-							</dd>
-						</div>
-						<xsl:if test="arr[@name='reference_facet']">
-							<div>
-								<dt><xsl:value-of select="numishare:regularize_node('reference', $lang)"/>: </dt>
-								<dd style="margin-left:150px;">
-									<xsl:for-each select="arr[@name='reference_facet']/str">
-										<xsl:value-of select="."/>
-										<xsl:if test="not(position() = last())">
-											<xsl:text>, </xsl:text>
-										</xsl:if>
-									</xsl:for-each>
-								</dd>
-							</div>
-						</xsl:if>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:if test="str[@name='obv_leg_display'] or str[@name='obv_type_display']">
-							<div>
-								<dt><xsl:value-of select="numishare:regularize_node('obverse', $lang)"/>:</dt>
-								<dd style="margin-left:150px;">
-									<xsl:value-of select="str[@name='obv_leg_display']"/>
-									<xsl:if test="str[@name='obv_leg_display'] and str[@name='obv_type_display']">
-										<xsl:text>: </xsl:text>
-									</xsl:if>
-									<xsl:value-of select="str[@name='obv_type_display']"/>
-								</dd>
-							</div>
-						</xsl:if>
-						<xsl:if test="str[@name='rev_leg_display'] or str[@name='rev_type_display']">
-							<div>
-								<dt><xsl:value-of select="numishare:regularize_node('reverse', $lang)"/>:</dt>
-								<dd style="margin-left:150px;">
-									<xsl:value-of select="str[@name='rev_leg_display']"/>
-									<xsl:if test="str[@name='rev_leg_display'] and str[@name='rev_type_display']">
-										<xsl:text>: </xsl:text>
-									</xsl:if>
-									<xsl:value-of select="str[@name='rev_type_display']"/>
-								</dd>
-							</div>
-						</xsl:if>
-						<xsl:if test="float[@name='diameter_num']">
-							<div>
-								<dt><xsl:value-of select="numishare:regularize_node('diameter', $lang)"/>: </dt>
-								<dd style="margin-left:150px;">
-									<xsl:value-of select="float[@name='diameter_num']"/>
-								</dd>
-							</div>
-						</xsl:if>
-						<xsl:if test="float[@name='weight_num']">
-							<div>
-								<dt><xsl:value-of select="numishare:regularize_node('weight', $lang)"/>: </dt>
-								<dd style="margin-left:150px;">
-									<xsl:value-of select="float[@name='weight_num']"/>
-								</dd>
-							</div>
-						</xsl:if>
-						<xsl:if test="arr[@name='reference_facet']">
-							<div>
-								<dt><xsl:value-of select="numishare:regularize_node('reference', $lang)"/>: </dt>
-								<dd style="margin-left:150px;">
-									<xsl:for-each select="arr[@name='reference_facet']/str">
-										<xsl:value-of select="."/>
-										<xsl:if test="not(position() = last())">
-											<xsl:text>, </xsl:text>
-										</xsl:if>
-									</xsl:for-each>
-								</dd>
-							</div>
-						</xsl:if>
-						<xsl:if test="arr[@name='provenance_facet']">
-							<div>
-								<dt><xsl:value-of select="numishare:regularize_node('provenance', $lang)"/>: </dt>
-								<dd style="margin-left:150px;">
-									<xsl:for-each select="arr[@name='provenance_facet']/str">
-										<xsl:value-of select="."/>
-										<xsl:if test="not(position() = last())">
-											<xsl:text>, </xsl:text>
-										</xsl:if>
-									</xsl:for-each>
-								</dd>
-							</div>
-						</xsl:if>
-					</xsl:otherwise>
-				</xsl:choose>
+					</xsl:if>-->
 
-
-
-				<!-- display appropriate sort category if it isn't one of the default display fields -->
-				<xsl:if
-					test="string($sort) and not(contains($sort_category, 'year')) and not(contains($sort_category, 'department_facet')) and not(contains($sort_category, 'weight_num')) and not(contains($sort_category, 'dimensions_display'))">
-					<xsl:choose>
-						<xsl:when test="contains($sort, '_num')">
-							<div>
-								<dt>
-									<xsl:value-of select="$regularized_sort"/>
-									<xsl:text>:</xsl:text>
-								</dt>
-								<dd style="margin-left: 150px;">
-									<xsl:for-each select="distinct-values(*[@name=$sort_category])">
-										<xsl:sort order="descending"/>
-										<xsl:value-of select="."/>
-										<xsl:if test="not(position() = last())">
-											<xsl:text>, </xsl:text>
-										</xsl:if>
-									</xsl:for-each>
-								</dd>
-							</div>
-						</xsl:when>
-						<xsl:when test="contains($sort, 'timestamp')">
-							<div>
-								<dt>
-									<xsl:value-of select="$regularized_sort"/>
-									<xsl:text>:</xsl:text>
-								</dt>
-								<dd style="margin-left: 150px;">
-									<xsl:value-of select="date[@name='timestamp']"/>
-								</dd>
-							</div>
-						</xsl:when>
-						<xsl:when test="contains($sort, '_facet') or contains($sort, 'reference_facet') or contains($sort, 'provenance_display')">
-							<div>
-								<xsl:choose>
-									<xsl:when test="matches($sort, 'objectType_facet')">
-										<dt><xsl:value-of select="numishare:regularize_node('objectType', $lang)"/>:</dt>
-										<dd style="margin-left: 150px;">
-											<xsl:value-of select="str[@name='objectType_facet']"/>
+			<table>
+				<tr>
+					<td class="result_image">
+						<xsl:call-template name="result_image"/>
+					</td>
+					<td>
+						<span class="result_link">
+							<xsl:choose>
+								<xsl:when test="$mode = 'compare'">
+									<a href="{$display_path}display_ajax/{str[@name='id']}?mode=compare&amp;q={$q}&amp;start={$start}&amp;image={$image}&amp;side={$side}" class="compare">
+										<xsl:value-of select="str[@name='title_display']"/>
+									</a>
+								</xsl:when>
+								<xsl:otherwise>
+									<a href="{$display_path}id/{str[@name='id']}{if (string($lang)) then concat('?lang=', $lang) else ''}">
+										<xsl:value-of select="str[@name='title_display']"/>
+									</a>
+								</xsl:otherwise>
+							</xsl:choose>
+						</span>
+						<br/>
+						<dl>
+							<xsl:choose>
+								<xsl:when test="str[@name='recordType'] = 'hoard'">
+									<div>
+										<dt><xsl:value-of select="numishare:regularize_node('findspot', $lang)"/>:</dt>
+										<dd style="margin-left:100px;">
+											<xsl:value-of select="arr[@name='findspot_facet']/str[1]"/>
 										</dd>
-									</xsl:when>
-									<xsl:otherwise>
-										<xsl:if test="arr[@name=$sort_category]/str">
+									</div>
+									<div>
+										<dt><xsl:value-of select="numishare:regularize_node('closing_date', $lang)"/>:</dt>
+										<dd style="margin-left:100px;">
+											<xsl:value-of select="str[@name='closing_date_display']"/>
+										</dd>
+									</div>
+									<xsl:if test="arr[@name='reference_facet']">
+										<div>
+											<dt><xsl:value-of select="numishare:regularize_node('reference', $lang)"/>: </dt>
+											<dd style="margin-left:100px;">
+												<xsl:for-each select="arr[@name='reference_facet']/str">
+													<xsl:value-of select="."/>
+													<xsl:if test="not(position() = last())">
+														<xsl:text>, </xsl:text>
+													</xsl:if>
+												</xsl:for-each>
+											</dd>
+										</div>
+									</xsl:if>
+								</xsl:when>
+								<xsl:otherwise>
+									<!--<xsl:if test="str[@name='obv_leg_display'] or str[@name='obv_type_display']">
+										<div>
+											<dt><xsl:value-of select="numishare:regularize_node('obverse', $lang)"/>:</dt>
+											<dd style="margin-left:100px;">
+												<xsl:value-of select="str[@name='obv_leg_display']"/>
+												<xsl:if test="str[@name='obv_leg_display'] and str[@name='obv_type_display']">
+													<xsl:text>: </xsl:text>
+												</xsl:if>
+												<xsl:value-of select="str[@name='obv_type_display']"/>
+											</dd>
+										</div>
+									</xsl:if>
+									<xsl:if test="str[@name='rev_leg_display'] or str[@name='rev_type_display']">
+										<div>
+											<dt><xsl:value-of select="numishare:regularize_node('reverse', $lang)"/>:</dt>
+											<dd style="margin-left:100px;">
+												<xsl:value-of select="str[@name='rev_leg_display']"/>
+												<xsl:if test="str[@name='rev_leg_display'] and str[@name='rev_type_display']">
+													<xsl:text>: </xsl:text>
+												</xsl:if>
+												<xsl:value-of select="str[@name='rev_type_display']"/>
+											</dd>
+										</div>
+									</xsl:if>-->
+									<xsl:if test="float[@name='diameter_num']">
+										<div>
+											<dt><xsl:value-of select="numishare:regularize_node('diameter', $lang)"/>: </dt>
+											<dd style="margin-left:100px;">
+												<xsl:value-of select="float[@name='diameter_num']"/>
+											</dd>
+										</div>
+									</xsl:if>
+									<xsl:if test="float[@name='weight_num']">
+										<div>
+											<dt><xsl:value-of select="numishare:regularize_node('weight', $lang)"/>: </dt>
+											<dd style="margin-left:100px;">
+												<xsl:value-of select="float[@name='weight_num']"/>
+											</dd>
+										</div>
+									</xsl:if>
+									<xsl:if test="arr[@name='reference_facet']">
+										<div>
+											<dt><xsl:value-of select="numishare:regularize_node('reference', $lang)"/>: </dt>
+											<dd style="margin-left:100px;">
+												<xsl:for-each select="arr[@name='reference_facet']/str">
+													<xsl:value-of select="."/>
+													<xsl:if test="not(position() = last())">
+														<xsl:text>, </xsl:text>
+													</xsl:if>
+												</xsl:for-each>
+											</dd>
+										</div>
+									</xsl:if>
+									<xsl:if test="arr[@name='provenance_facet']">
+										<div>
+											<dt><xsl:value-of select="numishare:regularize_node('provenance', $lang)"/>: </dt>
+											<dd style="margin-left:100px;">
+												<xsl:for-each select="arr[@name='provenance_facet']/str">
+													<xsl:value-of select="."/>
+													<xsl:if test="not(position() = last())">
+														<xsl:text>, </xsl:text>
+													</xsl:if>
+												</xsl:for-each>
+											</dd>
+										</div>
+									</xsl:if>
+								</xsl:otherwise>
+							</xsl:choose>
+
+
+
+							<!-- display appropriate sort category if it isn't one of the default display fields -->
+							<xsl:if
+								test="string($sort) and not(contains($sort_category, 'year')) and not(contains($sort_category, 'department_facet')) and not(contains($sort_category, 'weight_num')) and not(contains($sort_category, 'dimensions_display'))">
+								<xsl:choose>
+									<xsl:when test="contains($sort, '_num')">
+										<div>
 											<dt>
 												<xsl:value-of select="$regularized_sort"/>
 												<xsl:text>:</xsl:text>
 											</dt>
-											<dd style="margin-left: 150px;">
-												<xsl:for-each select="arr[@name=$sort_category]/str">
+											<dd style="margin-left: 100px;">
+												<xsl:for-each select="distinct-values(*[@name=$sort_category])">
 													<xsl:sort order="descending"/>
 													<xsl:value-of select="."/>
 													<xsl:if test="not(position() = last())">
@@ -205,36 +175,70 @@
 													</xsl:if>
 												</xsl:for-each>
 											</dd>
+										</div>
+									</xsl:when>
+									<xsl:when test="contains($sort, 'timestamp')">
+										<div>
+											<dt>
+												<xsl:value-of select="$regularized_sort"/>
+												<xsl:text>:</xsl:text>
+											</dt>
+											<dd style="margin-left: 100px;">
+												<xsl:value-of select="date[@name='timestamp']"/>
+											</dd>
+										</div>
+									</xsl:when>
+									<xsl:when test="contains($sort, '_facet') or contains($sort, 'reference_facet') or contains($sort, 'provenance_display')">
+										<div>
+											<xsl:choose>
+												<xsl:when test="matches($sort, 'objectType_facet')">
+													<dt><xsl:value-of select="numishare:regularize_node('objectType', $lang)"/>:</dt>
+													<dd style="margin-left: 100px;">
+														<xsl:value-of select="str[@name='objectType_facet']"/>
+													</dd>
+												</xsl:when>
+												<xsl:otherwise>
+													<xsl:if test="arr[@name=$sort_category]/str">
+														<dt>
+															<xsl:value-of select="$regularized_sort"/>
+															<xsl:text>:</xsl:text>
+														</dt>
+														<dd style="margin-left: 100px;">
+															<xsl:for-each select="arr[@name=$sort_category]/str">
+																<xsl:sort order="descending"/>
+																<xsl:value-of select="."/>
+																<xsl:if test="not(position() = last())">
+																	<xsl:text>, </xsl:text>
+																</xsl:if>
+															</xsl:for-each>
+														</dd>
+													</xsl:if>
+												</xsl:otherwise>
+											</xsl:choose>
+										</div>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:if test="str[@name=$sort_category]">
+											<div>
+												<dt>
+													<xsl:value-of select="$regularized_sort"/>
+													<xsl:text>:</xsl:text>
+												</dt>
+												<dd style="margin-left: 100px;">
+													<xsl:value-of select="substring(str[@name=$sort_category], 1, 25)"/>
+													<xsl:if test="string-length(str[@name=$sort_category]) &gt; 25">
+														<xsl:text>...</xsl:text>
+													</xsl:if>
+												</dd>
+											</div>
 										</xsl:if>
 									</xsl:otherwise>
 								</xsl:choose>
-							</div>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:if test="str[@name=$sort_category]">
-								<div>
-									<dt>
-										<xsl:value-of select="$regularized_sort"/>
-										<xsl:text>:</xsl:text>
-									</dt>
-									<dd style="margin-left: 150px;">
-										<xsl:value-of select="substring(str[@name=$sort_category], 1, 25)"/>
-										<xsl:if test="string-length(str[@name=$sort_category]) &gt; 25">
-											<xsl:text>...</xsl:text>
-										</xsl:if>
-									</dd>
-								</div>
 							</xsl:if>
-						</xsl:otherwise>
-					</xsl:choose>
-				</xsl:if>
-			</dl>
-
-			<!--<xsl:if test="not($mode='compare') and //config/theme/layouts/*[name()=$pipeline]/image_location = 'right'">
-				<xsl:call-template name="result_image">
-					<xsl:with-param name="alignment">right</xsl:with-param>
-				</xsl:call-template>
-			</xsl:if>-->
+						</dl>
+					</td>
+				</tr>
+			</table>
 		</div>
 	</xsl:template>
 
@@ -394,68 +398,65 @@
 	<xsl:template match="lst[@name='mint_geo' or number(int[@name='numFacetTerms']) = 0]" mode="facet"/>
 
 	<xsl:template name="result_image">
-		<xsl:param name="alignment"/>
-		<td class="result_image_{$alignment}">
-			<xsl:choose>
-				<xsl:when test="str[@name='recordType'] = 'physical'">
-					<xsl:if test="string(str[@name='thumbnail_obv'])">
-						<a class="thumbImage" href="{str[@name='reference_obv']}" title="Obverse of {str[@name='title_display']}">
-							<img src="{str[@name='thumbnail_obv']}"/>
-						</a>
-					</xsl:if>
-					<xsl:if test="string(str[@name='thumbnail_rev'])">
-						<a class="thumbImage" href="{str[@name='reference_rev']}" title="Reverse of {str[@name='title_display']}">
-							<img src="{str[@name='thumbnail_rev']}"/>
-						</a>
-					</xsl:if>
-				</xsl:when>
-				<xsl:when test="str[@name='recordType'] = 'conceptual'">
-					<xsl:choose>
-						<xsl:when test="string($sparql_endpoint)">
-							<cinclude:include src="cocoon:/widget?uri={'http://numismatics.org/ocre/'}id/{str[@name='id']}&amp;template=results"/>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:variable name="count" select="count(arr[@name='ao_uri']/str)"/>
-							<xsl:variable name="title" select="str[@name='title_display']	"/>
-							<xsl:variable name="docId" select="str[@name='id']"/>
+		<xsl:choose>
+			<xsl:when test="str[@name='recordType'] = 'physical'">
+				<xsl:if test="string(str[@name='thumbnail_obv'])">
+					<a class="thumbImage" href="{str[@name='reference_obv']}" title="Obverse of {str[@name='title_display']}">
+						<img src="{str[@name='thumbnail_obv']}"/>
+					</a>
+				</xsl:if>
+				<xsl:if test="string(str[@name='thumbnail_rev'])">
+					<a class="thumbImage" href="{str[@name='reference_rev']}" title="Reverse of {str[@name='title_display']}">
+						<img src="{str[@name='thumbnail_rev']}"/>
+					</a>
+				</xsl:if>
+			</xsl:when>
+			<xsl:when test="str[@name='recordType'] = 'conceptual'">
+				<xsl:choose>
+					<xsl:when test="string($sparql_endpoint)">
+						<cinclude:include src="cocoon:/widget?uri={'http://numismatics.org/ocre/'}id/{str[@name='id']}&amp;template=results"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:variable name="count" select="count(arr[@name='ao_uri']/str)"/>
+						<xsl:variable name="title" select="str[@name='title_display']	"/>
+						<xsl:variable name="docId" select="str[@name='id']"/>
 
-							<xsl:if test="count(arr[@name='ao_thumbnail_obv']/str) &gt; 0">
-								<xsl:variable name="nudsid" select="substring-before(arr[@name='ao_thumbnail_obv']/str[1], '|')"/>
-								<a class="thumbImage" rel="{str[@name='id']}-gallery" href="{substring-after(arr[@name='ao_reference_obv']/str[contains(., $nudsid)], '|')}"
-									title="Obverse of {$title}: {$nudsid}">
-									<img src="{substring-after(arr[@name='ao_thumbnail_obv']/str[1], '|')}"/>
+						<xsl:if test="count(arr[@name='ao_thumbnail_obv']/str) &gt; 0">
+							<xsl:variable name="nudsid" select="substring-before(arr[@name='ao_thumbnail_obv']/str[1], '|')"/>
+							<a class="thumbImage" rel="{str[@name='id']}-gallery" href="{substring-after(arr[@name='ao_reference_obv']/str[contains(., $nudsid)], '|')}"
+								title="Obverse of {$title}: {$nudsid}">
+								<img src="{substring-after(arr[@name='ao_thumbnail_obv']/str[1], '|')}"/>
+							</a>
+							<xsl:if test="arr[@name='ao_thumbnail_rev']/str[contains(., $nudsid)]">
+								<a class="thumbImage" rel="{str[@name='id']}-gallery" href="{substring-after(arr[@name='ao_reference_rev']/str[contains(., $nudsid)], '|')}"
+									title="Reverse of {$title}: {$nudsid}">
+									<img src="{substring-after(arr[@name='ao_thumbnail_rev']/str[contains(., $nudsid)], '|')}"/>
 								</a>
-								<xsl:if test="arr[@name='ao_thumbnail_rev']/str[contains(., $nudsid)]">
-									<a class="thumbImage" rel="{str[@name='id']}-gallery" href="{substring-after(arr[@name='ao_reference_rev']/str[contains(., $nudsid)], '|')}"
-										title="Reverse of {$title}: {$nudsid}">
-										<img src="{substring-after(arr[@name='ao_thumbnail_rev']/str[contains(., $nudsid)], '|')}"/>
+							</xsl:if>
+							<div style="display:none">
+								<xsl:for-each select="arr[@name='ao_thumbnail_obv']/str[not(contains(., $nudsid))]">
+									<xsl:variable name="thisId" select="substring-before(., '|')"/>
+									<a class="thumbImage" rel="{$docId}-gallery" href="{substring-after(//arr[@name='ao_reference_obv']/str[contains(., $thisId)], '|')}"
+										title="Obverse of {$title}: {$thisId}">
+										<img src="{substring-after(., '|')}" alt="image"/>
 									</a>
-								</xsl:if>
-								<div style="display:none">
-									<xsl:for-each select="arr[@name='ao_thumbnail_obv']/str[not(contains(., $nudsid))]">
-										<xsl:variable name="thisId" select="substring-before(., '|')"/>
-										<a class="thumbImage" rel="{$docId}-gallery" href="{substring-after(//arr[@name='ao_reference_obv']/str[contains(., $thisId)], '|')}"
-											title="Obverse of {$title}: {$thisId}">
-											<img src="{substring-after(., '|')}" alt="image"/>
+									<xsl:if test="//arr[@name='ao_thumbnail_rev']/str[contains(., $thisId)]">
+										<a class="thumbImage" rel="{$docId}-gallery" href="{substring-after(ancestor::doc/arr[@name='ao_reference_rev']/str[contains(., $thisId)], '|')}"
+											title="Reverse of {$title}: {$thisId}">
+											<img src="{substring-after(//arr[@name='ao_thumbnail_rev']/str[contains(., $thisId)], '|')}"/>
 										</a>
-										<xsl:if test="//arr[@name='ao_thumbnail_rev']/str[contains(., $thisId)]">
-											<a class="thumbImage" rel="{$docId}-gallery" href="{substring-after(ancestor::doc/arr[@name='ao_reference_rev']/str[contains(., $thisId)], '|')}"
-												title="Reverse of {$title}: {$thisId}">
-												<img src="{substring-after(//arr[@name='ao_thumbnail_rev']/str[contains(., $thisId)], '|')}"/>
-											</a>
-										</xsl:if>
-									</xsl:for-each>
-								</div>
-							</xsl:if>
-							<xsl:if test="$count &gt; 0">
-								<br/>
-								<xsl:value-of select="concat($count, if($count = 1) then ' associated coin' else ' associated coins')"/>
-							</xsl:if>
-						</xsl:otherwise>
-					</xsl:choose>
-				</xsl:when>
-			</xsl:choose>
-		</td>
+									</xsl:if>
+								</xsl:for-each>
+							</div>
+						</xsl:if>
+						<xsl:if test="$count &gt; 0">
+							<br/>
+							<xsl:value-of select="concat($count, if($count = 1) then ' associated coin' else ' associated coins')"/>
+						</xsl:if>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:when>
+		</xsl:choose>
 	</xsl:template>
 
 	<xsl:template name="remove_facets">

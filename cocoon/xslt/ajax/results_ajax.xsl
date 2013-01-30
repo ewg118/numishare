@@ -70,7 +70,7 @@
 						</div>
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:if test="str[@name='obv_leg_display'] or str[@name='obv_type_display']">
+						<!--<xsl:if test="str[@name='obv_leg_display'] or str[@name='obv_type_display']">
 							<div>
 								<dt><xsl:value-of select="numishare:regularize_node('obverse', $lang)"/>:</dt>
 								<dd style="margin-left:125px;">
@@ -99,7 +99,7 @@
 									/>
 								</dd>
 							</div>
-						</xsl:if>
+						</xsl:if>-->
 						<xsl:if test="int[@name='axis_num']">
 							<div>
 								<dt><xsl:value-of select="numishare:regularize_node('diameter', $lang)"/>: </dt>

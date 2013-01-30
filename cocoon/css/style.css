@@ -277,9 +277,24 @@ li.term {
 	display:block;
 	width:100%;
 }
-.result_doc>td {
-	padding:15px 0 15px 0;
-	margin-bottom:15px;
+.result_doc{
+	height:180px;	
+}
+.result_doc td {
+	vertical-align:top;	
+}
+.result_image {
+	width:100px;	
+}
+.odd-row {
+	border-bottom:1px solid silver;
+	background-color:white;
+	vertical-align:top;
+}
+.even-row {
+	border-bottom:1px solid silver;
+	background-color:#EFEFEF;
+	vertical-align:top;
 }
 .result_image_left {
 	width:260px;
@@ -440,8 +455,11 @@ button.ui-multiselect {
 .thumbImage, .flickrthumb {
 	margin:5px;
 }
-.thumbImage>img {
-	max-width:120px;
+.result_image img {
+	max-width:80px;	
+}
+.gi_c img {
+	max-width:120px;	
 }
 /*
   ***************************************

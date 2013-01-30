@@ -154,17 +154,18 @@
 						<xsl:when test="$numFound &gt; 0">
 							<xsl:call-template name="paging"/>
 							<xsl:call-template name="sort"/>
-							<xsl:variable name="pageCount" select="count(descendant::doc)"/>
+							<xsl:variable name="pageCount" select="count(descendant::doc)" as="xs:integer"/>
+							<xsl:variable name="split" select="xs:integer(ceiling($pageCount div 2))"/>
 							
 							<div class="yui3-g">
 								<div class="yui3-u-1-2">
-									<div class="content">
-										<xsl:apply-templates select="descendant::doc[position() &lt;= ceiling($pageCount div 2)]"/>
+									<div class="content">								
+										<xsl:apply-templates select="descendant::doc[position() &lt;= $split]"/>
 									</div>
 								</div>
 								<div class="yui3-u-1-2">
-									<div class="content">
-										<xsl:apply-templates select="descendant::doc[position() &gt; ceiling($pageCount div 2)]"/>
+									<div class="content">							
+										<xsl:apply-templates select="descendant::doc[position() &gt; $split]"/>
 									</div>
 								</div>
 							</div>
