@@ -8,7 +8,7 @@
 	<xsl:include href="functions.xsl"/>
 	<xsl:include href="display/nuds/html.xsl"/>
 	<xsl:include href="display/nudsHoard/html.xsl"/>
-	<xsl:include href="display/shared-html.xsl"/>
+	<xsl:include href="display/shared-html.xsl"/>	
 
 	<xsl:param name="pipeline"/>
 	<xsl:param name="solr-url"/>

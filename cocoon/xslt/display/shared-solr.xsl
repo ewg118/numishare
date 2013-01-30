@@ -7,7 +7,8 @@
 -->
 <xsl:stylesheet xmlns:nuds="http://nomisma.org/nuds" xmlns:nh="http://nomisma.org/nudsHoard" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:datetime="http://exslt.org/dates-and-times"
 	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:exsl="http://exslt.org/common" xmlns:mets="http://www.loc.gov/METS/"
-	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml/" xmlns:skos="http://www.w3.org/2004/02/skos/core#" exclude-result-prefixes="#all" version="2.0">
+	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mods="http://www.loc.gov/mods/v3" xmlns:gml="http://www.opengis.net/gml/" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+	exclude-result-prefixes="#all" version="2.0">
 
 	<xsl:template match="nuds:typeDesc">
 		<xsl:param name="recordType"/>
@@ -112,22 +113,33 @@
 
 	<!-- generalize refDesc for NUDS and NUDS Hoard records -->
 	<xsl:template match="*[local-name()='refDesc']">
-		<xsl:for-each select="*[local-name()='reference']">
+		<xsl:variable name="refs">
+			<refs>
+				<xsl:for-each select="*[local-name()='reference']">
+					<ref>
+						<xsl:call-template name="get_ref"/>
+					</ref>
+				</xsl:for-each>
+			</refs>
+		</xsl:variable>
+
+		<xsl:for-each select="exsl:node-set($refs)//ref">
 			<xsl:sort order="ascending"/>
 			<field name="reference_facet">
-				<xsl:call-template name="get_ref"/>
+				<xsl:value-of select="."/>
 			</field>
 			<xsl:if test="position() = 1">
 				<field name="reference_min">
-					<xsl:call-template name="get_ref"/>
+					<xsl:value-of select="."/>
 				</field>
 			</xsl:if>
 			<xsl:if test="position() = last()">
 				<field name="reference_max">
-					<xsl:call-template name="get_ref"/>
+					<xsl:value-of select="."/>
 				</field>
 			</xsl:if>
 		</xsl:for-each>
+
 	</xsl:template>
 
 	<xsl:template match="nuds:date">
@@ -285,20 +297,26 @@
 			</xsl:for-each>
 		</xsl:for-each>
 	</xsl:template>
-	
+
 	<xsl:template name="get_ref">
 		<xsl:choose>
-			<xsl:when test="string(*[local-name()='title'])">
-				<xsl:value-of select="normalize-space(*[local-name()='title'])"/>
-				<xsl:if test="string(*[local-name()='identifier'])">
-					<xsl:text> </xsl:text>
-					<xsl:value-of select="normalize-space(*[local-name()='identifier'])"/>
-				</xsl:if>
+			<xsl:when test="*[local-name()='objectXMLWrap']/mods:modsCollection">
+				<xsl:value-of select="*[local-name()='objectXMLWrap']/mods:modsCollection/mods:mods/@ID"/>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:value-of select="."/>
+				<xsl:choose>
+					<xsl:when test="string(*[local-name()='title'])">
+						<xsl:value-of select="normalize-space(*[local-name()='title'])"/>
+						<xsl:if test="string(*[local-name()='identifier'])">
+							<xsl:text> </xsl:text>
+							<xsl:value-of select="normalize-space(*[local-name()='identifier'])"/>
+						</xsl:if>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="."/>
+					</xsl:otherwise>
+				</xsl:choose>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
-
 </xsl:stylesheet>
