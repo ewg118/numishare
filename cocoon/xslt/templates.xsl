@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
 	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:exsl="http://exslt.org/common" xmlns:numishare="http://code.google.com/p/numishare/" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-	xmlns:cinclude="http://apache.org/cocoon/include/1.0" xmlns:nuds="http://nomisma.org/nuds" xmlns:nh="http://nomisma.org/nudsHoard" xmlns:nm="http://nomisma.org/id/"
-	xmlns:math="http://exslt.org/math" exclude-result-prefixes=" #all" version="2.0">
+	xmlns:cinclude="http://apache.org/cocoon/include/1.0" xmlns:nuds="http://nomisma.org/nuds" xmlns:mods="http://www.loc.gov/mods/v3" xmlns:nh="http://nomisma.org/nudsHoard"
+	xmlns:nm="http://nomisma.org/id/" xmlns:math="http://exslt.org/math" exclude-result-prefixes=" #all" version="2.0">
 
 	<xsl:variable name="flickr-api-key" select="//config/flickr_api_key"/>
 
@@ -339,7 +339,8 @@
 			<cinclude:include src="cocoon:/get_hoards?compare={$compare}&amp;q=*"/>
 		</div>
 	</xsl:template>
-	
+
+	<!-- ************** SEARCH FORM ************** -->
 	<xsl:template name="search_forms">
 		<div class="search-form">
 			<p>To conduct a free text search select ‘Keyword’ on the drop-down menu above and enter the text for which you wish to search. The search allows wildcard searches with the * and ?
@@ -373,14 +374,14 @@
 						<input type="submit" value="{numishare:normalizeLabel('header_search', $lang)}" id="search_button"/>
 					</xsl:otherwise>
 				</xsl:choose>
-				
+
 			</form>
-			
+
 			<xsl:if test="$pipeline='visualize'">
 				<span style="display:none" id="paramName"/>
 			</xsl:if>
 		</div>
-		
+
 		<div id="searchItemTemplate" class="searchItemTemplate">
 			<select class="category_list">
 				<xsl:call-template name="search_options"/>
@@ -392,12 +393,13 @@
 			<a class="removeBtn" href="#" style="display:none;">« remove</a>
 		</div>
 	</xsl:template>
-	
+
+	<!-- ************** SEARCH DROP-DOWN MENUS ************** -->
 	<xsl:template name="search_options">
 		<xsl:variable name="fields">
 			<xsl:text>fulltext,artist_text,authority_text,coinType_facet,color_text,deity_text,denomination_facet,department_facet,diameter_num,dynasty_facet,findspot_text,objectType_facet,identifier_display,issuer_text,legend_text,obv_leg_text,rev_leg_text,maker_text,manufacture_facet,material_facet,mint_text,portrait_text,reference_facet,region_text,taq_num,tpq_num,type_text,obv_type_text,rev_type_text,weight_num,year_num</xsl:text>
 		</xsl:variable>
-		
+
 		<xsl:for-each select="tokenize($fields, ',')">
 			<xsl:variable name="name" select="."/>
 			<xsl:variable name="root" select="substring-before($name, '_')"/>
@@ -418,7 +420,7 @@
 								</option>
 							</xsl:when>
 						</xsl:choose>
-						
+
 					</xsl:if>
 				</xsl:when>
 				<xsl:otherwise>
@@ -442,7 +444,8 @@
 			</xsl:choose>
 		</xsl:for-each>
 	</xsl:template>
-	
+
+	<!-- ************** RE-ASSEMBLE CATEGORY SOLR FIELDS INTO HUMAN-READABLE CATEGORY ************** -->
 	<xsl:template name="recompile_category">
 		<xsl:param name="level" as="xs:integer"/>
 		<xsl:param name="category_fragment"/>
@@ -457,6 +460,109 @@
 				<xsl:with-param name="level" select="$level + 1"/>
 			</xsl:call-template>
 		</xsl:if>
-		
+	</xsl:template>
+
+	<!-- ************** PROCESS MODS RECORD INTO CHICAGO MANUAL OF STYLE CITATION ************** -->
+	<xsl:template name="mods-citation">
+		<xsl:apply-templates select="mods:modsCollection"/>
+	</xsl:template>
+
+	<xsl:template match="mods:modsCollection">
+		<xsl:apply-templates select="mods:mods"/>
+	</xsl:template>
+
+	<xsl:template match="mods:mods">
+		<!-- name -->
+		<xsl:for-each select="mods:name[@type='personal']">
+			<xsl:choose>
+				<xsl:when test="position() = 1">
+					<xsl:value-of select="mods:namePart[@type='family']"/>
+					<xsl:text>, </xsl:text>
+					<xsl:value-of select="mods:namePart[@type='given']"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<!-- create separator -->
+					<xsl:choose>
+						<xsl:when test="position()=last()"> and </xsl:when>
+						<xsl:otherwise>, </xsl:otherwise>
+					</xsl:choose>
+
+					<xsl:value-of select="mods:namePart[@type='given']"/>
+					<xsl:text> </xsl:text>
+					<xsl:value-of select="mods:namePart[@type='family']"/>
+				</xsl:otherwise>
+			</xsl:choose>
+			<xsl:if test="position()=last()">
+				<xsl:text>. </xsl:text>
+			</xsl:if>
+		</xsl:for-each>
+
+		<!-- title -->
+		<xsl:choose>
+			<!-- when it is a journal article -->
+			<xsl:when test="mods:relatedItem[@type='host']">
+				<!-- article title -->
+				<xsl:text>"</xsl:text>
+				<xsl:apply-templates select="mods:titleInfo"/>
+				<xsl:text>." </xsl:text>
+				<!-- journal title and publication -->
+				<i>
+					<xsl:apply-templates select="mods:relatedItem[@type='host']/mods:titleInfo"/>
+				</i>
+				<xsl:apply-templates select="mods:part"/>
+				<xsl:text>.</xsl:text>
+			</xsl:when>
+			<!-- when it is a monograph -->
+			<xsl:otherwise>
+				<i>
+					<xsl:apply-templates select="mods:titleInfo"/>
+				</i>
+				<xsl:text>. </xsl:text>
+				<xsl:apply-templates select="mods:originInfo"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template match="mods:titleInfo">
+		<xsl:value-of select="mods:title"/>
+		<xsl:if test="mods:subTitle">
+			<xsl:text>: </xsl:text>
+			<xsl:value-of select="mods:subTitle"/>
+		</xsl:if>
+	</xsl:template>
+
+	<xsl:template match="mods:part">
+		<xsl:if test="mods:detail[@type='volume']">
+			<xsl:text> </xsl:text>
+			<xsl:value-of select="mods:detail[@type='volume']/mods:number"/>
+		</xsl:if>
+		<xsl:if test="mods:date">
+			<xsl:text> (</xsl:text>
+			<xsl:value-of select="mods:date"/>
+			<xsl:text>)</xsl:text>
+		</xsl:if>
+		<xsl:apply-templates select="mods:extent[@unit='page']"/>
+	</xsl:template>
+
+	<xsl:template match="mods:extent[@unit='page']">
+		<xsl:text>: </xsl:text>
+		<xsl:value-of select="mods:start"/>
+		<xsl:text>-</xsl:text>
+		<xsl:value-of select="mods:end"/>
+	</xsl:template>
+	
+	<xsl:template match="mods:originInfo">
+		<xsl:if test="mods:place/mods:placeTerm">
+			<xsl:value-of select="mods:place/mods:placeTerm"/>
+			<xsl:text>: </xsl:text>
+		</xsl:if>
+		<xsl:if test="mods:publisher">
+			<xsl:value-of select="mods:publisher"/>
+		</xsl:if>
+		<xsl:if test="mods:dateIssued">
+			<xsl:text>, </xsl:text>
+			<xsl:value-of select="mods:dateIssued"/>
+		</xsl:if>
+		<xsl:text>.</xsl:text>
 	</xsl:template>
 </xsl:stylesheet>
