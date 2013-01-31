@@ -44,10 +44,7 @@
 					<xsl:text>: Visualize Queries</xsl:text>
 				</title>
 				<link rel="shortcut icon" type="image/x-icon" href="{$display_path}images/favicon.png"/>
-				<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.8.2r1/build/grids/grids-min.css"/>
-				<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.8.2r1/build/reset-fonts-grids/reset-fonts-grids.css"/>
-				<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.8.2r1/build/base/base-min.css"/>
-				<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.8.2r1/build/fonts/fonts-min.css"/>
+				<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.8.0/build/cssgrids/grids-min.css"/>
 				<!-- Core + Skin CSS -->
 				<link type="text/css" href="{$display_path}themes/{//config/theme/jquery_ui_theme}.css" rel="stylesheet"/>
 				<link type="text/css" href="{$display_path}jquery.fancybox-1.3.4.css" rel="stylesheet"/>
@@ -78,20 +75,22 @@
 					</script>
 				</xsl:if>
 			</head>
-			<body class="yui-skin-sam">
-				<div id="doc4" class="{//config/theme/layouts/*[name()=$pipeline]/yui_class}">
-					<xsl:call-template name="header"/>
-					<xsl:call-template name="visualize"/>
-					<xsl:call-template name="footer"/>
-				</div>
+			<body>
+				<xsl:call-template name="header"/>
+				<xsl:call-template name="visualize"/>
+				<xsl:call-template name="footer"/>
 			</body>
 		</html>
 	</xsl:template>
 
 	<xsl:template name="visualize">
-		<div id="bd">
-			<xsl:apply-templates select="/content/response"/>
-		</div>
+		<div class="yui3-g">
+			<div class="yui3-u-1">
+				<div class="content">
+					<xsl:apply-templates select="/content/response"/>
+				</div>
+			</div>
+		</div>		
 	</xsl:template>
 
 	<xsl:template match="response">
@@ -118,7 +117,7 @@
 	</xsl:template>
 
 	<xsl:template name="visualize_options">
-		<xsl:variable name="chartTypes">line,spline,area,areaspline,column,bar,scatter</xsl:variable>
+		<xsl:variable name="chartTypes">column,bar</xsl:variable>
 
 		<form action="{$display_path}visualize" style="margin-bottom:40px;">
 			<h2>Step 1: Select Numeric Response Type</h2>

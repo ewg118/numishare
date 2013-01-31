@@ -362,7 +362,7 @@
 					</Point>
 				</xsl:when>
 				<xsl:when test="contains($href, 'nomisma')">
-					<xsl:variable name="coordinates" select="exsl:node-set($rdf)//*[@rdf:about=$href]/descendant::gml:pos"/>
+					<xsl:variable name="coordinates" select="exsl:node-set($rdf)//*[@rdf:about=$href]/descendant::gml:pos[1]"/>
 					<xsl:if test="string($coordinates)">
 						<xsl:variable name="lat" select="substring-before($coordinates, ' ')"/>
 						<xsl:variable name="lon" select="substring-after($coordinates, ' ')"/>

@@ -141,6 +141,7 @@
 						<!-- CSS -->
 						<link rel="shortcut icon" type="image/x-icon" href="{$display_path}images/favicon.png"/>
 						<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.8.0/build/cssgrids/grids-min.css"/>
+
 						<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"/>
 						<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js"/>
 
@@ -152,6 +153,27 @@
 						<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.menu.js"/>
 						<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.menubar.js"/>
 						<script type="text/javascript" src="{$display_path}javascript/numishare-menu.js"/>
+
+						<xsl:if test="$recordType='physical'">
+							<!-- determine whether the document has published findspots or associated object findspots -->
+							<script type="text/javascript" langage="javascript">
+			                                                        $(function () {
+			                                                                $("#tabs").tabs({
+			                                                                        show: function (event, ui) {
+			                                                                                if (ui.panel.id == "mapTab" &amp;&amp; $('#mapcontainer').html().length == 0) {
+			                                                                                        $('#mapcontainer').html('');
+			                                                                                        initialize_map('<xsl:value-of select="$id"/>', '<xsl:value-of select="$display_path"/>');
+			                                                                                }
+			                                                                        }
+			                                                                });
+			                                                        });
+							</script>
+							<xsl:if test="$has_mint_geo = 'true' or $has_findspot_geo = 'true'">
+								<script type="text/javascript" src="http://www.openlayers.org/api/OpenLayers.js"/>
+								<!--<script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3.2&amp;sensor=false"/>-->
+								<script type="text/javascript" src="{$display_path}javascript/display_map_functions.js"/>
+							</xsl:if>
+						</xsl:if>
 
 						<!-- coin-type CSS and JS dependencies -->
 						<xsl:if test="$recordType='conceptual'">
@@ -178,6 +200,10 @@
 							<script type="text/javascript" src="{$display_path}javascript/loaders/xml.js"/>
 							<script type="text/javascript" src="{$display_path}javascript/loaders/kml.js"/>
 						</xsl:if>
+
+						<!-- pelagios widget -->
+						<script type="text/javascript" src="http://pelagios.github.com/pelagios-widgets/lib/require.js"/>
+						<script type="text/javascript" src="http://pelagios.github.com/pelagios-widgets/place.js"/>
 
 						<link type="text/css" href="{$display_path}themes/{//config/theme/jquery_ui_theme}.css" rel="stylesheet"/>
 						<link type="text/css" href="{$display_path}style.css" rel="stylesheet"/>

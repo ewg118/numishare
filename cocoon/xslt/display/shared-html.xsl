@@ -15,8 +15,30 @@
 			<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
 		</h2>
 		<ul>
-			<xsl:apply-templates mode="descMeta"/>
+			<xsl:apply-templates select="*[local-name()='reference'][not(child::*[local-name()='objectXMLWrap'])]" mode="descMeta"/>
+			<xsl:apply-templates select="*[local-name()='reference']/*[local-name()='objectXMLWrap']"/>
 		</ul>
+	</xsl:template>
+
+	<xsl:template match="*[local-name()='objectXMLWrap']">
+		<xsl:variable name="label">
+			<xsl:choose>
+				<xsl:when test="parent::*[local-name()='reference']">
+					<xsl:value-of select="numishare:regularize_node(parent::node()/local-name(), $lang)"/>
+				</xsl:when>
+			</xsl:choose>
+		</xsl:variable>
+
+		<li>
+			<b><xsl:value-of select="$label"/>: </b>
+			<!-- determine which template to process -->
+			<xsl:choose>
+				<!-- process MODS record into Chicago Manual of Style formatted citation -->
+				<xsl:when test="child::*[local-name()='modsCollection']">
+					<xsl:call-template name="mods-citation"/>
+				</xsl:when>
+			</xsl:choose>
+		</li>
 	</xsl:template>
 
 	<xsl:template match="nuds:physDesc[child::*]">
@@ -159,29 +181,16 @@
 
 					<!-- create links to resources -->
 					<xsl:if test="string($href)">
-
-						<a href="{$href}" target="_blank" title="{if (contains($href, 'geonames')) then 'geonames' else if (contains($href, 'nomisma')) then 'nomisma' else ''}">
-							<img src="{$display_path}images/external.png" alt="external link" class="external_link"/>
-						</a>
-						<!-- parse nomisma RDFa, create links for pleiades and wikipedia -->
-						<!--<xsl:if test="contains($href, 'nomisma.org')">
-							<xsl:for-each select="exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/skos:related">
-								<xsl:variable name="source">
-									<xsl:choose>
-										<xsl:when test="contains(@rdf:resource, 'pleiades')">
-											<xsl:text>pleiades</xsl:text>
-										</xsl:when>
-										<xsl:when test="contains(@rdf:resource, 'wikipedia')">
-											<xsl:text>wikipedia</xsl:text>
-										</xsl:when>
-									</xsl:choose>
-								</xsl:variable>
-
-								<a href="{@rdf:resource}" target="_blank" title="{$source}">
-									<img src="{$display_path}images/{$source}.png" alt="{$source}" class="external_link"/>
-								</a>
-							</xsl:for-each>
-						</xsl:if>-->
+							<a href="{$href}" target="_blank" title="{if (contains($href, 'geonames')) then 'geonames' else if (contains($href, 'nomisma')) then 'nomisma' else ''}">
+								<img src="{$display_path}images/external.png" alt="external link" class="external_link"/>
+							</a>
+							<!-- parse nomisma RDFa, create links for pleiades and wikipedia -->
+							<xsl:if test="contains($href, 'nomisma.org') and ($field='mint' or $field='region')">
+								<xsl:for-each select="exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/skos:related[contains(@rdf:resource, 'pleiades')]">
+									<xsl:variable name="pleiades-id" select="substring-after(@rdf:resource, 'places/')"/>
+									<span id="{generate-id()}" data-pleiades_id="{$pleiades-id}" class="pelagios pelagios-place" title="Click for Pelagios relations"/>
+								</xsl:for-each>
+							</xsl:if>
 					</xsl:if>
 
 					<!-- display label on right for right-to-left scripts -->

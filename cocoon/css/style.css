@@ -7,6 +7,20 @@
   GLOBAL
   ***************************************
  */
+html {
+	background-position:right top;
+	background-image:url('images/uva-banner.jpg');
+	background-repeat:no-repeat;
+	font:12px arial, helvetica, sans-serif;
+}
+body {
+	max-width:80%;
+	margin-left:40px;
+	min-width:1000px;
+}
+.content {
+	padding:5px;	
+}
 a > img {
 	border:none;
 }
@@ -35,19 +49,9 @@ select {
 ol li, ul li, dl li {
 	list-style-type:none;
 }
-html {
-	background-position:right top;
-	background-image:url('images/uva-banner.jpg');
-	background-repeat:no-repeat;
-	font:12px arial, helvetica, sans-serif;
-}
-body {
-	max-width:80%;
-	margin-left:40px;
-	min-width:1000px;
-}
-.content {
-	padding:5px;	
+h4 {
+	margin:0;
+	padding:0;	
 }
 .ui-widget-header {
 	border-left:0;
@@ -129,7 +133,7 @@ dt {
 	margin-bottom:20px;
 }
 .adminhist_div, .phystech, .bibref, .metadata_section ul {
-	margin-left:20px;
+	margin-left:10px;
 	margin-bottom:10px;
 }
 .submenu {
@@ -171,6 +175,12 @@ dt {
 .calculate {
 	display:none;
 	margin-top:20px;
+}
+/*.pelagios-place {
+	float:left;	
+}*/
+.pelagios-place .icon{
+	max-width:12px;
 }
 /*
   ***************************************
