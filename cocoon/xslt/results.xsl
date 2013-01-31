@@ -53,10 +53,7 @@
 				<meta name="itemsPerPage" content="{$rows}"/>
 				
 				<link rel="shortcut icon" type="image/x-icon" href="{$display_path}images/favicon.png"/>
-				<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.8.2r1/build/grids/grids-min.css"/>
-				<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.8.2r1/build/reset-fonts-grids/reset-fonts-grids.css"/>
-				<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.8.2r1/build/base/base-min.css"/>
-				<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.8.2r1/build/fonts/fonts-min.css"/>
+				<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.8.0/build/cssgrids/grids-min.css"/>
 				<!-- Core + Skin CSS -->
 				<link type="text/css" href="{$display_path}themes/{//config/theme/jquery_ui_theme}.css" rel="stylesheet"/>
 				<link type="text/css" href="{$display_path}style.css" rel="stylesheet"/>
@@ -110,74 +107,72 @@
 						<xsl:value-of select="//config/google_analytics/script"/>
 					</script>
 				</xsl:if>
-			</head>
-			<body class="yui-skin-sam">
-				<div id="doc4" class="{//config/theme/layouts/*[name()=$pipeline]/yui_class}">
-					<xsl:call-template name="header"/>
-					<xsl:call-template name="results"/>
-					<xsl:call-template name="footer"/>
-				</div>
+			</head>			
+			<body>
+				<xsl:call-template name="header"/>
+				<xsl:call-template name="results"/>
+				<xsl:call-template name="footer"/>
 			</body>
 		</html>
 	</xsl:template>
 
 	<xsl:template name="results">
 		<div id="backgroundPopup"/>
-		<div id="bd">
-			<div id="yui-main">
-				<div class="yui-b">
-					<div style="{if (//config/theme/layouts/*[name()=$pipeline]/yui_class = 'yui-t2') then 'margin-left:20px' else ''}">
-						<xsl:call-template name="remove_facets"/>
-						<xsl:choose>
-							<xsl:when test="$numFound &gt; 0">
-								<!-- include resultMap div when there are geographical results-->
-								<xsl:if test="//lst[@name='mint_geo']/int[@name='numFacetTerms'] &gt; 0">
-									<div style="display:none">
-										<div id="resultMap"/>
-									</div>
-								</xsl:if>
-								<xsl:call-template name="paging"/>
-								<xsl:call-template name="sort"/>
-								<table>
-									<xsl:apply-templates select="descendant::doc"/>
-								</table>
-								<xsl:call-template name="paging"/>
-							</xsl:when>
-							<xsl:otherwise>
-								<h2> No results found. <a href="results?q=*:*">Start over.</a></h2>
-							</xsl:otherwise>
-						</xsl:choose>
-					</div>
-				</div>
-			</div>
-			<div class="yui-b">
-				<xsl:if test="//result[@name='response']/@numFound &gt; 0">
-					<div class="data_options">
-						<h2><xsl:value-of select="numishare:normalizeLabel('results_data-options', $lang)"/></h2>
-						<a href="{$display_path}feed/?q={$q}">
-							<img src="{$display_path}images/atom-medium.png" title="Atom" alt="Atom"/>
-						</a>
-						<xsl:if test="//lst[@name='mint_geo']/int[@name='numFacetTerms'] &gt; 0">
-							<a href="{$display_path}query.kml?q={$q}">
-								<img src="{$display_path}images/googleearth.png" alt="KML" title="KML: Limit, 500 objects"/>
+		<div class="yui3-g">
+			<div class="yui3-u-1-4">
+				<div class="content">
+					<xsl:if test="//result[@name='response']/@numFound &gt; 0">
+						<div class="data_options">
+							<h2><xsl:value-of select="numishare:normalizeLabel('results_data-options', $lang)"/></h2>
+							<a href="{$display_path}feed/?q={$q}">
+								<img src="{$display_path}images/atom-medium.png" title="Atom" alt="Atom"/>
 							</a>
-						</xsl:if>
-						<a href="{$display_path}data.csv?q={$q}">
-							<!-- the image below is copyright of Silvestre Herrera, available freely on wikimedia commons: http://commons.wikimedia.org/wiki/File:X-office-spreadsheet_Gion.svg -->
-							<img src="{$display_path}images/spreadsheet.png" title="CSV" alt="CSV"/>
-						</a>
-						<a href="{$display_path}visualize?q={$q}">
-							<!-- the image below is copyright of Mark James, available freely on wikimedia commons: http://commons.wikimedia.org/wiki/File:Chart_bar.png -->
-							<img src="{$display_path}images/visualize.png" title="Visualize" alt="Visualize"/>
-						</a>
-					</div>
-					<h2><xsl:value-of select="numishare:normalizeLabel('results_refine-results', $lang)"/></h2>
-					<xsl:call-template name="quick_search"/>
-					<xsl:apply-templates select="descendant::lst[@name='facet_fields']"/>
-				</xsl:if>
-				<span style="display:none" id="collection_type">
-					<xsl:value-of select="$collection_type"/>
-				</span>
+							<xsl:if test="//lst[@name='mint_geo']/int[@name='numFacetTerms'] &gt; 0">
+								<a href="{$display_path}query.kml?q={$q}">
+									<img src="{$display_path}images/googleearth.png" alt="KML" title="KML: Limit, 500 objects"/>
+								</a>
+							</xsl:if>
+							<a href="{$display_path}data.csv?q={$q}">
+								<!-- the image below is copyright of Silvestre Herrera, available freely on wikimedia commons: http://commons.wikimedia.org/wiki/File:X-office-spreadsheet_Gion.svg -->
+								<img src="{$display_path}images/spreadsheet.png" title="CSV" alt="CSV"/>
+							</a>
+							<a href="{$display_path}visualize?q={$q}">
+								<!-- the image below is copyright of Mark James, available freely on wikimedia commons: http://commons.wikimedia.org/wiki/File:Chart_bar.png -->
+								<img src="{$display_path}images/visualize.png" title="Visualize" alt="Visualize"/>
+							</a>
+						</div>
+						<h2><xsl:value-of select="numishare:normalizeLabel('results_refine-results', $lang)"/></h2>
+						<xsl:call-template name="quick_search"/>
+						<xsl:apply-templates select="descendant::lst[@name='facet_fields']"/>
+					</xsl:if>
+					<span style="display:none" id="collection_type">
+						<xsl:value-of select="$collection_type"/>
+					</span>
+				</div>				
+			</div>
+			<div class="yui3-u-3-4">
+				<div class="content">					
+					<xsl:call-template name="remove_facets"/>
+					<xsl:choose>
+						<xsl:when test="$numFound &gt; 0">
+							<!-- include resultMap div when there are geographical results-->
+							<xsl:if test="//lst[@name='mint_geo']/int[@name='numFacetTerms'] &gt; 0">
+								<div style="display:none">
+									<div id="resultMap"/>
+								</div>
+							</xsl:if>
+							<xsl:call-template name="paging"/>
+							<xsl:call-template name="sort"/>
+							<table>
+								<xsl:apply-templates select="descendant::doc"/>
+							</table>
+							<xsl:call-template name="paging"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<h2> No results found. <a href="results?q=*:*">Start over.</a></h2>
+						</xsl:otherwise>
+					</xsl:choose>
+				</div>
 			</div>
 		</div>
 	</xsl:template>

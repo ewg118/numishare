@@ -140,10 +140,7 @@
 						</xsl:if>
 						<!-- CSS -->
 						<link rel="shortcut icon" type="image/x-icon" href="{$display_path}images/favicon.png"/>
-						<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.8.2r1/build/grids/grids-min.css"/>
-						<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.8.2r1/build/reset-fonts-grids/reset-fonts-grids.css"/>
-						<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.8.2r1/build/base/base-min.css"/>
-						<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.8.2r1/build/fonts/fonts-min.css"/>
+						<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.8.0/build/cssgrids/grids-min.css"/>
 						<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"/>
 						<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js"/>
 
@@ -156,31 +153,52 @@
 						<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.menubar.js"/>
 						<script type="text/javascript" src="{$display_path}javascript/numishare-menu.js"/>
 
-						<!-- coin-type CSS and JS dependencies -->
-						<xsl:if test="$recordType='conceptual'">
-							<link type="text/css" href="{$display_path}jquery.fancybox-1.3.4.css" rel="stylesheet"/>
-							<script type="text/javascript" src="{$display_path}javascript/jquery.fancybox-1.3.4.min.js"/>
-							<script type="text/javascript" src="{$display_path}javascript/highcharts.js"/>
-							<script type="text/javascript" src="{$display_path}javascript/display_functions.js"/>
-						</xsl:if>
+						<xsl:choose>
+							<xsl:when test="$recordType='physical'">
+								<!-- determine whether the document has published findspots or associated object findspots -->
+								<script type="text/javascript" langage="javascript">
+			                                                        $(function () {
+			                                                                $("#tabs").tabs({
+			                                                                        show: function (event, ui) {
+			                                                                                if (ui.panel.id == "mapTab" &amp;&amp; $('#mapcontainer').html().length == 0) {
+			                                                                                        $('#mapcontainer').html('');
+			                                                                                        initialize_map('<xsl:value-of select="$id"/>', '<xsl:value-of select="$display_path"/>');
+			                                                                                }
+			                                                                        }
+			                                                                });
+			                                                        });
+							</script>
+								<xsl:if test="$has_mint_geo = 'true' or $has_findspot_geo = 'true'">
+									<script type="text/javascript" src="http://www.openlayers.org/api/OpenLayers.js"/>
+									<script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3.2&amp;sensor=false"/>
+									<script type="text/javascript" src="{$display_path}javascript/display_map_functions.js"/>
+								</xsl:if>
+							</xsl:when>
+							<!-- coin-type CSS and JS dependencies -->
+							<xsl:when test="$recordType='conceptual'">
+								<link type="text/css" href="{$display_path}jquery.fancybox-1.3.4.css" rel="stylesheet"/>
+								<script type="text/javascript" src="{$display_path}javascript/jquery.fancybox-1.3.4.min.js"/>
+								<script type="text/javascript" src="{$display_path}javascript/highcharts.js"/>
+								<script type="text/javascript" src="{$display_path}javascript/display_functions.js"/>
+							</xsl:when>
+							<!-- hoard CSS and JS dependencies -->
+							<xsl:when test="$recordType='hoard'">
+								<script type="text/javascript" src="{$display_path}javascript/highcharts.js"/>
+								<script type="text/javascript" src="{$display_path}javascript/jquery.livequery.js"/>
+								<script type="text/javascript" src="{$display_path}javascript/display_hoard_functions.js"/>
+								<script type="text/javascript" src="{$display_path}javascript/analysis_functions.js"/>
 
-						<!-- hoard CSS and JS dependencies -->
-						<xsl:if test="$recordType='hoard'">
-							<script type="text/javascript" src="{$display_path}javascript/highcharts.js"/>
-							<script type="text/javascript" src="{$display_path}javascript/jquery.livequery.js"/>
-							<script type="text/javascript" src="{$display_path}javascript/display_hoard_functions.js"/>
-							<script type="text/javascript" src="{$display_path}javascript/analysis_functions.js"/>
-
-							<!-- mapping -->
-							<script type="text/javascript" src="http://www.openlayers.org/api/OpenLayers.js"/>
-							<script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3.2&amp;sensor=false"/>
-							<script type="text/javascript" src="{$display_path}javascript/mxn.js"/>
-							<script type="text/javascript" src="http://static.simile.mit.edu/timeline/api-2.2.0/timeline-api.js?bundle=true"/>
-							<script type="text/javascript" src="{$display_path}javascript/timemap_full.pack.js"/>
-							<script type="text/javascript" src="{$display_path}javascript/param.js"/>
-							<script type="text/javascript" src="{$display_path}javascript/loaders/xml.js"/>
-							<script type="text/javascript" src="{$display_path}javascript/loaders/kml.js"/>
-						</xsl:if>
+								<!-- mapping -->
+								<script type="text/javascript" src="http://www.openlayers.org/api/OpenLayers.js"/>
+								<script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3.2&amp;sensor=false"/>
+								<script type="text/javascript" src="{$display_path}javascript/mxn.js"/>
+								<script type="text/javascript" src="http://static.simile.mit.edu/timeline/api-2.2.0/timeline-api.js?bundle=true"/>
+								<script type="text/javascript" src="{$display_path}javascript/timemap_full.pack.js"/>
+								<script type="text/javascript" src="{$display_path}javascript/param.js"/>
+								<script type="text/javascript" src="{$display_path}javascript/loaders/xml.js"/>
+								<script type="text/javascript" src="{$display_path}javascript/loaders/kml.js"/>
+							</xsl:when>
+						</xsl:choose>
 
 						<link type="text/css" href="{$display_path}themes/{//config/theme/jquery_ui_theme}.css" rel="stylesheet"/>
 						<link type="text/css" href="{$display_path}style.css" rel="stylesheet"/>
@@ -190,12 +208,10 @@
 							</script>
 						</xsl:if>
 					</head>
-					<body class="yui-skin-sam">
-						<div id="doc4" class="{//config/theme/layouts/*[name()=$pipeline]/yui_class}">
-							<xsl:call-template name="header"/>
-							<xsl:call-template name="display"/>
-							<xsl:call-template name="footer"/>
-						</div>
+					<body>
+						<xsl:call-template name="header"/>
+						<xsl:call-template name="display"/>
+						<xsl:call-template name="footer"/>
 					</body>
 				</html>
 			</xsl:when>
@@ -208,28 +224,30 @@
 
 
 	<xsl:template name="display">
-		<xsl:choose>
-			<xsl:when test="$mode='compare'">
-				<xsl:choose>
-					<xsl:when test="count(/content/*[local-name()='nuds']) &gt; 0">
-						<xsl:call-template name="nuds"/>
-					</xsl:when>
-					<xsl:otherwise>false</xsl:otherwise>
-				</xsl:choose>
-			</xsl:when>
-			<xsl:otherwise>
-				<div id="bd">
+		<div class="yui3-g">
+			<xsl:choose>
+				<xsl:when test="$mode='compare'">
 					<xsl:choose>
 						<xsl:when test="count(/content/*[local-name()='nuds']) &gt; 0">
 							<xsl:call-template name="nuds"/>
 						</xsl:when>
-						<xsl:when test="count(/content/*[local-name()='nudsHoard']) &gt; 0">
-							<xsl:call-template name="nudsHoard"/>
-						</xsl:when>
 						<xsl:otherwise>false</xsl:otherwise>
 					</xsl:choose>
-				</div>
-			</xsl:otherwise>
-		</xsl:choose>
+				</xsl:when>
+				<xsl:otherwise>
+					<div id="bd">
+						<xsl:choose>
+							<xsl:when test="count(/content/*[local-name()='nuds']) &gt; 0">
+								<xsl:call-template name="nuds"/>
+							</xsl:when>
+							<xsl:when test="count(/content/*[local-name()='nudsHoard']) &gt; 0">
+								<xsl:call-template name="nudsHoard"/>
+							</xsl:when>
+							<xsl:otherwise>false</xsl:otherwise>
+						</xsl:choose>
+					</div>
+				</xsl:otherwise>
+			</xsl:choose>
+		</div>
 	</xsl:template>
 </xsl:stylesheet>

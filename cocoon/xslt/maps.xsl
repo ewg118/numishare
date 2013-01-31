@@ -23,10 +23,7 @@
 				</title>
 				<link rel="shortcut icon" type="image/x-icon" href="{$display_path}images/favicon.png"/>
 				<!-- YUI grids -->
-				<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.8.2r1/build/grids/grids-min.css"/>
-				<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.8.2r1/build/reset-fonts-grids/reset-fonts-grids.css"/>
-				<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.8.2r1/build/base/base-min.css"/>
-				<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.8.2r1/build/fonts/fonts-min.css"/>
+				<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.8.0/build/cssgrids/grids-min.css"/>
 				
 				<!-- local theme and styling -->
 				<link type="text/css" href="{$display_path}themes/{//config/theme/jquery_ui_theme}.css" rel="stylesheet"/>
@@ -103,63 +100,67 @@
 	</xsl:template>
 
 	<xsl:template name="maps">
-		<div id="bd">
-			<div id="backgroundPopup"/>
-			<h1><xsl:value-of select="numishare:normalizeLabel('header_maps', $lang)"/></h1>
-			<p>For usage instructions, see <a href="http://wiki.numismatics.org/numishare:maps">http://wiki.numismatics.org/numishare:maps</a>.</p>
-			<div class="remove_facets"/>
-
-			<xsl:choose>
-				<xsl:when test="//result[@name='response']/@numFound &gt; 0">
-					<div style="display:table">
-						<ul id="filter_list" section="maps">
-							<xsl:apply-templates select="//lst[@name='facet_fields']"/>
-						</ul>
-					</div>
-					<!-- display timemap divs for hoard records or regular map + ajax results div for non-hoard collections -->
+		<div class="yui3-g">
+			<div class="yui3-u">
+				<div class="content">
+					<div id="backgroundPopup"/>
+					<h1><xsl:value-of select="numishare:normalizeLabel('header_maps', $lang)"/></h1>
+					<p>For usage instructions, see <a href="http://wiki.numismatics.org/numishare:maps">http://wiki.numismatics.org/numishare:maps</a>.</p>
+					<div class="remove_facets"/>
+					
 					<xsl:choose>
-						<xsl:when test="$collection_type='hoard'">
-							<div id="timemap">
-								<div id="mapcontainer">
-									<div id="map"/>
-								</div>
-								<div id="timelinecontainer">
-									<div id="timeline"/>
-								</div>
+						<xsl:when test="//result[@name='response']/@numFound &gt; 0">
+							<div style="display:table">
+								<ul id="filter_list" section="maps">
+									<xsl:apply-templates select="//lst[@name='facet_fields']"/>
+								</ul>
 							</div>
+							<!-- display timemap divs for hoard records or regular map + ajax results div for non-hoard collections -->
+							<xsl:choose>
+								<xsl:when test="$collection_type='hoard'">
+									<div id="timemap">
+										<div id="mapcontainer">
+											<div id="map"/>
+										</div>
+										<div id="timelinecontainer">
+											<div id="timeline"/>
+										</div>
+									</div>
+								</xsl:when>
+								<xsl:otherwise>
+									<div id="mapcontainer"/>
+									<div class="legend">
+										<table>
+											<tbody>
+												<tr>
+													<th style="width:100px"><xsl:value-of select="numishare:regularize_node('legend', $lang)"/></th>
+													<td style="background-color:#0000ff;border:2px solid #000072;width:50px;"/>
+													<td style="width:100px"><xsl:value-of select="numishare:regularize_node('mint', $lang)"/></td>
+													<td style="background-color:#00a000;border:2px solid #006100;width:50px;"/>
+													<td style="width:100px"><xsl:value-of select="numishare:regularize_node('findspot', $lang)"/></td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+									<a name="results"/>
+									<div id="results"/>
+								</xsl:otherwise>
+							</xsl:choose>
 						</xsl:when>
 						<xsl:otherwise>
-							<div id="mapcontainer"/>
-							<div class="legend">
-								<table>
-									<tbody>
-										<tr>
-											<th style="width:100px"><xsl:value-of select="numishare:regularize_node('legend', $lang)"/></th>
-											<td style="background-color:#0000ff;border:2px solid #000072;width:50px;"/>
-											<td style="width:100px"><xsl:value-of select="numishare:regularize_node('mint', $lang)"/></td>
-											<td style="background-color:#00a000;border:2px solid #006100;width:50px;"/>
-											<td style="width:100px"><xsl:value-of select="numishare:regularize_node('findspot', $lang)"/></td>
-										</tr>
-									</tbody>
-								</table>
-							</div>
-							<a name="results"/>
-							<div id="results"/>
+							<h2> No results found.</h2>
 						</xsl:otherwise>
 					</xsl:choose>
-				</xsl:when>
-				<xsl:otherwise>
-					<h2> No results found.</h2>
-				</xsl:otherwise>
-			</xsl:choose>
-			<!--<input type="hidden" name="q" id="facet_form_query" value="{if (string($imageavailable_stripped)) then $imageavailable_stripped else '*:*'}"/>-->
-			<input id="facet_form_query" name="q" value="*:*" type="hidden"/>
-			<xsl:if test="string($lang)">
-				<input type="hidden" name="lang" value="{$lang}"/>
-			</xsl:if>
-			<span style="display:none" id="collection_type">
-				<xsl:value-of select="$collection_type"/>
-			</span>
+					<!--<input type="hidden" name="q" id="facet_form_query" value="{if (string($imageavailable_stripped)) then $imageavailable_stripped else '*:*'}"/>-->
+					<input id="facet_form_query" name="q" value="*:*" type="hidden"/>
+					<xsl:if test="string($lang)">
+						<input type="hidden" name="lang" value="{$lang}"/>
+					</xsl:if>
+					<span style="display:none" id="collection_type">
+						<xsl:value-of select="$collection_type"/>
+					</span>
+				</div>
+			</div>
 		</div>
 	</xsl:template>
 	

@@ -5,7 +5,7 @@
 	<xsl:include href="header.xsl"/>
 	<xsl:include href="footer.xsl"/>
 	<xsl:include href="templates.xsl"/>
-	<xsl:include href="functions.xsl"/>	
+	<xsl:include href="functions.xsl"/>
 
 	<xsl:param name="pipeline"/>
 	<xsl:param name="display_path"/>
@@ -35,10 +35,7 @@
 					<xsl:text>: Analyze Hoards</xsl:text>
 				</title>
 				<link rel="shortcut icon" type="image/x-icon" href="{$display_path}images/favicon.png"/>
-				<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.8.2r1/build/grids/grids-min.css"/>
-				<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.8.2r1/build/reset-fonts-grids/reset-fonts-grids.css"/>
-				<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.8.2r1/build/base/base-min.css"/>
-				<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.8.2r1/build/fonts/fonts-min.css"/>
+				<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.8.0/build/cssgrids/grids-min.css"/>
 				<!-- Core + Skin CSS -->
 				<link type="text/css" href="{$display_path}themes/{//config/theme/jquery_ui_theme}.css" rel="stylesheet"/>
 				<link type="text/css" href="{$display_path}jquery.fancybox-1.3.4.css" rel="stylesheet"/>
@@ -70,43 +67,45 @@
 					</script>
 				</xsl:if>
 			</head>
-			<body class="yui-skin-sam">
-				<div id="doc4" class="{//config/theme/layouts/*[name()=$pipeline]/yui_class}">
-					<xsl:call-template name="header"/>
-					<xsl:call-template name="body"/>
-					<xsl:call-template name="footer"/>
-				</div>
+			<body>
+				<xsl:call-template name="header"/>
+				<xsl:call-template name="body"/>
+				<xsl:call-template name="footer"/>
 			</body>
 		</html>
 	</xsl:template>
 
 	<xsl:template name="body">
-		<div id="bd">
-			<h1>Quantitative Analysis</h1>
-			<div id="tabs">
-				<ul>
-					<li>
-						<a href="#visualization">Visualization</a>
-					</li>
-					<li>
-						<a href="#data-download">Data Download</a>
-					</li>
-				</ul>
-				<div id="visualization" class="tab">
-					<h3>Visualization</h3>
-					<xsl:call-template name="visualization"/>
-				</div>
-				<div id="data-download" class="tab">
-					<h3>Data Download</h3>
-					<xsl:call-template name="data-download"/>
-				</div>
-			</div>
-			<div style="display:none">
-				<div id="filterHoards">
-					<h3>Filter Hoards</h3>
-					<xsl:call-template name="search_forms"/>
+		<div class="yui3-g">
+			<div class="yui3-u-1">
+				<div class="content">
+					<h1>Quantitative Analysis</h1>
+					<div id="tabs">
+						<ul>
+							<li>
+								<a href="#visualization">Visualization</a>
+							</li>
+							<li>
+								<a href="#data-download">Data Download</a>
+							</li>
+						</ul>
+						<div id="visualization" class="tab">
+							<h3>Visualization</h3>
+							<xsl:call-template name="visualization"/>
+						</div>
+						<div id="data-download" class="tab">
+							<h3>Data Download</h3>
+							<xsl:call-template name="data-download"/>
+						</div>
+					</div>
+					<div style="display:none">
+						<div id="filterHoards">
+							<h3>Filter Hoards</h3>
+							<xsl:call-template name="search_forms"/>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
-	</xsl:template>	
+	</xsl:template>
 </xsl:stylesheet>

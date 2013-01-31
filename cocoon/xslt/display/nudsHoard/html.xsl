@@ -39,8 +39,8 @@
 			</xsl:choose>
 		</xsl:variable>
 		
-		<div class="yui-b">
-			<div class="yui-g first">
+		<div class="yui3-u-1">
+			<div class="content">
 				<h1>
 					<xsl:choose>
 						<xsl:when test="string($title)">
@@ -51,49 +51,55 @@
 						</xsl:otherwise>
 					</xsl:choose>
 				</h1>
-				<div class="yui-u first">
-					<div id="timemap">
-						<div id="mapcontainer">
-							<div id="map"/>
-						</div>
-						<div id="timelinecontainer">
-							<div id="timeline"/>
-						</div>
+			</div>
+		</div>
+		<div class="yui3-u-1-2">
+			<div class="content">
+				<div id="timemap">
+					<div id="mapcontainer">
+						<div id="map"/>
 					</div>
-					<div class="legend">
-						<table>
-							<tbody>
-								<tr>
-									<th style="width:100px">
-										<xsl:value-of select="numishare:regularize_node('legend', $lang)"/>
-									</th>
-									<td style="background-color:#6992fd;border:2px solid black;width:50px;"/>
-									<td style="width:100px">
-										<xsl:value-of select="numishare:regularize_node('mint', $lang)"/>
-									</td>
-									<td style="background-color:#d86458;border:2px solid black;width:50px;"/>
-									<td style="width:100px">
-										<xsl:value-of select="numishare:regularize_node('findspot', $lang)"/>
-									</td>
-								</tr>
-							</tbody>
-						</table>
+					<div id="timelinecontainer">
+						<div id="timeline"/>
 					</div>
 				</div>
-				<div class="yui-u">
-					<xsl:if test="nh:descMeta/nh:hoardDesc">
-						<div class="metadata_section">
-							<xsl:apply-templates select="nh:descMeta/nh:hoardDesc"/>
-						</div>
-					</xsl:if>
-					<xsl:if test="nh:descMeta/nh:refDesc">
-						<div class="metadata_section">
-							<xsl:apply-templates select="nh:descMeta/nh:refDesc"/>
-						</div>
-					</xsl:if>
+				<div class="legend">
+					<table>
+						<tbody>
+							<tr>
+								<th style="width:100px">
+									<xsl:value-of select="numishare:regularize_node('legend', $lang)"/>
+								</th>
+								<td style="background-color:#6992fd;border:2px solid black;width:50px;"/>
+								<td style="width:100px">
+									<xsl:value-of select="numishare:regularize_node('mint', $lang)"/>
+								</td>
+								<td style="background-color:#d86458;border:2px solid black;width:50px;"/>
+								<td style="width:100px">
+									<xsl:value-of select="numishare:regularize_node('findspot', $lang)"/>
+								</td>
+							</tr>
+						</tbody>
+					</table>
 				</div>
 			</div>
-			<div class="yui-g">
+		</div>
+		<div class="yui3-u-1-2">
+			<div class="content">
+				<xsl:if test="nh:descMeta/nh:hoardDesc">
+					<div class="metadata_section">
+						<xsl:apply-templates select="nh:descMeta/nh:hoardDesc"/>
+					</div>
+				</xsl:if>
+				<xsl:if test="nh:descMeta/nh:refDesc">
+					<div class="metadata_section">
+						<xsl:apply-templates select="nh:descMeta/nh:refDesc"/>
+					</div>
+				</xsl:if>
+			</div>
+		</div>
+		<div class="yui3-u-1">
+			<div class="content">
 				<!--********************************* MENU ******************************************* -->
 				<xsl:if test="count(nh:descMeta/nh:contentsDesc/nh:contents/*) &gt; 0">
 					<div id="tabs">
@@ -133,7 +139,6 @@
 						</div>
 					</div>
 				</xsl:if>
-
 			</div>
 		</div>
 	</xsl:template>
