@@ -25,12 +25,8 @@
 					<xsl:value-of select="numishare:normalizeLabel('header_search', $lang)"/>
 				</title>
 				<link rel="shortcut icon" type="image/x-icon" href="{$display_path}images/favicon.png"/>
-				<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.8.2r1/build/grids/grids-min.css"/>
-				<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.8.2r1/build/reset-fonts-grids/reset-fonts-grids.css"/>
-				<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.8.2r1/build/base/base-min.css"/>
-				<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.8.2r1/build/fonts/fonts-min.css"/>
+				<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.8.0/build/cssgrids/grids-min.css"/>
 				<!-- Core + Skin CSS -->
-				<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.8.2r1/build/menu/assets/skins/sam/menu.css"/>
 				<link type="text/css" href="{$display_path}themes/{//config/theme/jquery_ui_theme}.css" rel="stylesheet"/>
 				<link type="text/css" href="{$display_path}style.css" rel="stylesheet"/>
 				<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"/>
@@ -55,23 +51,25 @@
 					</script>
 				</xsl:if>
 			</head>
-			<body class="yui-skin-sam">
-				<div id="doc4" class="{//config/theme/layouts/*[name()=$pipeline]/yui_class}">
-					<xsl:call-template name="header"/>
-					<xsl:call-template name="search"/>
-					<xsl:call-template name="footer"/>
-				</div>
+			<body>
+				<xsl:call-template name="header"/>
+				<xsl:call-template name="search"/>
+				<xsl:call-template name="footer"/>
 			</body>
 		</html>
 	</xsl:template>
 
 	<xsl:template name="search">
-		<div id="bd">
-			<h1>
-				<xsl:value-of select="numishare:normalizeLabel('header_search', $lang)"/>
-			</h1>
-			<p>This page allows you to search the entire collection for specific terms or keywords.</p>
-			<xsl:call-template name="search_forms"/>
+		<div class="yui3-g">
+			<div class="yui3-u">
+				<div class="content">
+					<h1>
+						<xsl:value-of select="numishare:normalizeLabel('header_search', $lang)"/>
+					</h1>
+					<p>This page allows you to search the entire collection for specific terms or keywords.</p>
+					<xsl:call-template name="search_forms"/>
+				</div>
+			</div>
 		</div>
 	</xsl:template>
 </xsl:stylesheet>

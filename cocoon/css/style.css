@@ -7,6 +7,20 @@
   GLOBAL
   ***************************************
  */
+ html {
+	font:13px arial, helvetica, sans-serif;
+	background-color:silver;
+}
+body {
+	margin:auto;
+	width:972px;
+	border:1px solid gray;
+	margin-top:10px;
+	background-color:white;
+}
+.content {
+	padding:5px;	
+}
 a > img {
 	border:none;
 }
@@ -21,13 +35,13 @@ th {
 	font-weight:bold;
 }
 input {
-	font:12px arial, helvetica, sans-serif;
+	font:13px arial, helvetica, sans-serif;
 }
 select {
 	width:200px;
 	margin-left:15px;
 	margin-right:5px;
-	font:12px arial, helvetica, sans-serif;
+	font:13px arial, helvetica, sans-serif;
 }
 #facet ol, ul, dl {
 	margin:0em;
@@ -35,15 +49,9 @@ select {
 ol li, ul li, dl li {
 	list-style-type:none;
 }
-html {
-	background-color:silver;
-}
-#bd {
-	padding:5px;
-	background-color:white;
-}
-#doc4 {
-	border:1px solid gray;
+h4 {
+	margin:0;
+	padding:0;	
 }
 .ui-widget-header {
 	border-left:0;
@@ -67,6 +75,9 @@ html {
 	margin:10px;
 	background-color:#ef8700;
 	border:2px solid #b76e0e;
+}
+table tr td {
+	border:0;	
 }
 dt {
 	width:125px;
@@ -178,8 +189,6 @@ dt {
 .quick_search {
 	margin:5px 0;
 	padding:5px 0;
-	border-bottom:1px solid silver;
-	border-top:1px solid silver;
 }
 .collection_search {
 	margin:5px 0;

@@ -49,13 +49,18 @@ $(document).ready(function () {
 		var id = $(this).attr('id').split('-')[0];
 		var type = $('input:radio[name=type]:checked').val();
 		var chartType = $('input:radio[name=chartType]:checked').val();
+		if (chartType == 'bar') {
+			var height = 800;
+		} else {
+			var height = 400;
+		}
 		
 		var table = $(this),
 		options = {
 			chart: {
 				renderTo: id + '-container',
 				type: chartType,
-				width: 948
+				height: height
 			},
 			title: {
 				text: $(this).children('caption').text()

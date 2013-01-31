@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:cinclude="http://apache.org/cocoon/include/1.0" xmlns:exsl="http://exslt.org/common"
 	xmlns:numishare="http://code.google.com/p/numishare/" xmlns:xs="http://www.w3.org/2001/XMLSchema" version="2.0">
-	<xsl:output method="xml" encoding="UTF-8"/>
+	<xsl:output method="xml" encoding="UTF-8"/>	
 	<xsl:include href="header.xsl"/>
 	<xsl:include href="footer.xsl"/>
 	<xsl:include href="templates.xsl"/>
@@ -44,17 +44,14 @@
 					<xsl:text>: Visualize Queries</xsl:text>
 				</title>
 				<link rel="shortcut icon" type="image/x-icon" href="{$display_path}images/favicon.png"/>
-				<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.8.2r1/build/grids/grids-min.css"/>
-				<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.8.2r1/build/reset-fonts-grids/reset-fonts-grids.css"/>
-				<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.8.2r1/build/base/base-min.css"/>
-				<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.8.2r1/build/fonts/fonts-min.css"/>
+				<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.8.0/build/cssgrids/grids-min.css"/>
 				<!-- Core + Skin CSS -->
 				<link type="text/css" href="{$display_path}themes/{//config/theme/jquery_ui_theme}.css" rel="stylesheet"/>
 				<link type="text/css" href="{$display_path}jquery.fancybox-1.3.4.css" rel="stylesheet"/>
 				<link type="text/css" href="{$display_path}style.css" rel="stylesheet"/>
 				<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"/>
 				<script type="text/javascript" src="{$display_path}javascript/jquery-ui-1.8.10.custom.min.js"/>
-
+				
 				<!-- menu -->
 				<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.core.js"/>
 				<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.widget.js"/>
@@ -63,7 +60,7 @@
 				<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.menu.js"/>
 				<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.menubar.js"/>
 				<script type="text/javascript" src="{$display_path}javascript/numishare-menu.js"/>
-
+				
 				<!-- visualize functions -->
 				<script type="text/javascript" src="{$display_path}javascript/highcharts.js"/>
 				<script type="text/javascript" src="{$display_path}javascript/visualize_functions.js"/>
@@ -78,26 +75,28 @@
 					</script>
 				</xsl:if>
 			</head>
-			<body class="yui-skin-sam">
-				<div id="doc4" class="{//config/theme/layouts/*[name()=$pipeline]/yui_class}">
-					<xsl:call-template name="header"/>
-					<xsl:call-template name="visualize"/>
-					<xsl:call-template name="footer"/>
-				</div>
+			<body>
+				<xsl:call-template name="header"/>
+				<xsl:call-template name="visualize"/>
+				<xsl:call-template name="footer"/>
 			</body>
 		</html>
 	</xsl:template>
 
 	<xsl:template name="visualize">
-		<div id="bd">
-			<xsl:apply-templates select="/content/response"/>
-		</div>
+		<div class="yui3-g">
+			<div class="yui3-u-1">
+				<div class="content">
+					<xsl:apply-templates select="/content/response"/>
+				</div>
+			</div>
+		</div>		
 	</xsl:template>
 
 	<xsl:template match="response">
 		<h1>Visualize</h1>
 		<p>Use the data selection and visualization options below to generate a chart based selected parameters. Instructions for using this feature can be found at <a
-				href="http://wiki.numismatics.org/numishare:visualize" target="_blank">http://wiki.numismatics.org/numishare:visualize</a>.</p>
+			href="http://wiki.numismatics.org/numishare:visualize" target="_blank">http://wiki.numismatics.org/numishare:visualize</a>.</p>
 
 		<!-- display the facet list only if there is a $q -->
 		<xsl:if test="string($q)">
@@ -118,7 +117,7 @@
 	</xsl:template>
 
 	<xsl:template name="visualize_options">
-		<xsl:variable name="chartTypes">line,spline,area,areaspline,column,bar,scatter</xsl:variable>
+		<xsl:variable name="chartTypes">column,bar</xsl:variable>
 
 		<form action="{$display_path}visualize" style="margin-bottom:40px;">
 			<h2>Step 1: Select Numeric Response Type</h2>
@@ -161,24 +160,22 @@
 			<div style="display:table;width:100%">
 				<h2>Step 3: Select Categories for Analysis</h2>
 				<cinclude:include src="cocoon:/get_vis_categories?category={$category}&amp;q={$qString}"/>
-				<div class="customQuery">
-					<h3>
-						<xsl:text>Add Custom Queries</xsl:text>
-						<span style="font-size:80%;margin-left:10px;">
-							<a href="#searchBox" class="addQuery" id="customQuery">Add Query</a>
-						</span>
-					</h3>
-					<div id="customQueryDiv">
-						<xsl:for-each select="tokenize($custom, '\|')">
-							<div class="customQuery">
-								<b>Custom Query: </b>
-								<span>
-									<xsl:value-of select="."/>
-								</span>
-								<a href="#" class="removeQuery">Remove Query</a>
-							</div>
-						</xsl:for-each>
-					</div>
+				<h3>
+					<xsl:text>Add Custom Queries</xsl:text>
+					<span style="font-size:80%;margin-left:10px;">
+						<a href="#searchBox" class="addQuery" id="customQuery">Add Query</a>
+					</span>
+				</h3>
+				<div id="customQueryDiv">
+					<xsl:for-each select="tokenize($custom, '\|')">
+						<div class="customQuery">
+							<b>Custom Query: </b>
+							<span>
+								<xsl:value-of select="."/>
+							</span>
+							<a href="#" class="removeQuery">Remove Query</a>
+						</div>
+					</xsl:for-each>
 				</div>
 			</div>
 
