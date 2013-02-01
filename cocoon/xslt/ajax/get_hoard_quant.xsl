@@ -19,14 +19,14 @@
 			</xsl:when>
 			<xsl:when test="$calculate='dynasty'">
 				<xsl:text>famname</xsl:text>
-			</xsl:when>
+			</xsl:when>			
 			<xsl:otherwise>
 				<xsl:text>persname</xsl:text>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:variable>
 	<xsl:variable name="role">
-		<xsl:if test="$calculate != 'material' and $calculate != 'denomination'">
+		<xsl:if test="$calculate != 'material' and $calculate != 'denomination' and $calculate != 'date'">
 			<xsl:value-of select="$calculate"/>
 		</xsl:if>
 	</xsl:variable>
@@ -74,12 +74,15 @@
 	<xsl:template match="/">
 		<xsl:variable name="total" select="sum(exsl:node-set($contentsDesc)//nh:coinGrp/@count) + count(exsl:node-set($contentsDesc)//nh:coin)"/>
 
-		<hoard id="{$id}">
+		<hoard id="{$id}" total="{$total}">
 			<xsl:variable name="total-counts">
 				<total-counts>
 					<xsl:choose>
 						<xsl:when test="string(@role)">
 							<xsl:apply-templates select="exsl:node-set($nudsGroup)//*[local-name()=$element][@xlink:role=$role]"/>
+						</xsl:when>
+						<xsl:when test="$calculate='date'">
+							<xsl:apply-templates select="exsl:node-set($nudsGroup)//nuds:typeDesc/nuds:date|exsl:node-set($nudsGroup)//nuds:typeDesc/nuds:dateRange/nuds:toDate"/>
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:apply-templates select="exsl:node-set($nudsGroup)//*[local-name()=$element]"/>
@@ -88,28 +91,56 @@
 				</total-counts>
 			</xsl:variable>
 			
-			<xsl:for-each select="distinct-values(exsl:node-set($total-counts)//name)">
-				<xsl:variable name="name" select="."/>
-				<name>
-					<xsl:attribute name="count">
-						<xsl:variable name="count" select="sum(exsl:node-set($total-counts)//name[.=$name]/@count)"/>
-						<xsl:choose>
-							<xsl:when test="$type='count'">
-								<xsl:value-of select="$count"/>
-							</xsl:when>
-							<xsl:otherwise>
-								<xsl:value-of select="format-number(($count div $total) * 100, '##.00')"/>
-							</xsl:otherwise>
-						</xsl:choose>
-					</xsl:attribute>
-					<xsl:value-of select="$name"/>
-				</name>
-			</xsl:for-each>
+			<xsl:choose>
+				<xsl:when test="$type='cumulative'">
+					<!-- preprocess date counts into counts per distinct value -->
+					<xsl:variable name="date-counts">
+						<date-counts>
+							<xsl:for-each select="distinct-values(exsl:node-set($total-counts)//name)">
+								<xsl:sort data-type="number" order="ascending"/>
+								<xsl:variable name="name" select="."/>						
+								<name count="{sum(exsl:node-set($total-counts)//name[.=$name]/@count)}">
+									<xsl:value-of select="$name"/>
+								</name>
+							</xsl:for-each>
+						</date-counts>
+					</xsl:variable>
+					
+					<!-- output cumulative percentage -->
+					<xsl:for-each select="exsl:node-set($date-counts)//name">
+						<xsl:sort data-type="number" order="ascending"/>
+						<xsl:variable name="name" select="."/>						
+						<name count="{format-number(((@count + sum(preceding-sibling::name/@count)) div $total) * 100, '##.00')}">
+							<xsl:value-of select="$name"/>
+						</name>
+					</xsl:for-each>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:for-each select="distinct-values(exsl:node-set($total-counts)//name)">
+						<xsl:variable name="name" select="."/>
+						<name>
+							<xsl:attribute name="count">
+								<xsl:variable name="count" select="sum(exsl:node-set($total-counts)//name[.=$name]/@count)"/>
+								<xsl:choose>
+									<xsl:when test="$type='count'">
+										<xsl:value-of select="$count"/>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:value-of select="format-number(($count div $total) * 100, '##.00')"/>
+									</xsl:otherwise>
+								</xsl:choose>
+							</xsl:attribute>
+							<xsl:value-of select="$name"/>
+						</name>
+					</xsl:for-each>
+				</xsl:otherwise>
+			</xsl:choose>
+			
 		</hoard>
 	</xsl:template>
 	
 	<xsl:template match="*">
-		<xsl:variable name="value" select="."/>
+		<xsl:variable name="value" select="if (@standardDate) then number(@standardDate) else ."/>
 		<xsl:variable name="source" select="ancestor::object/@xlink:href"/>
 		<xsl:variable name="count">
 			<xsl:choose>

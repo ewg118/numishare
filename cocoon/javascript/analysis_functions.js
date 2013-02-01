@@ -38,7 +38,7 @@ $(document).ready(function(){
 						};
 					} else {
 						// add values
-						options.series[j - 1].data.push(parseFloat(this.innerHTML));
+						options.series[j - 1].data.push(this.innerHTML == 'null' ? null : parseFloat(this.innerHTML));
 					}
 				}
 			});
@@ -55,8 +55,7 @@ $(document).ready(function(){
 		options = {
 			chart: {
 				renderTo: id + '-container',
-				type: chartType,
-				width: 880
+				type: chartType
 			},
 			title: {
 				text: $(this).children('caption').text()
@@ -65,6 +64,7 @@ $(document).ready(function(){
 				enabled: true
 			},
 			xAxis: {
+				type: 'linear',
 				labels: {
 					rotation: - 45,
 					align: 'right',
@@ -90,10 +90,17 @@ $(document).ready(function(){
 	
 	//set max number of 4 hoards for comparison (5 shown in total)
 	$("#visualize-form .compare-select").livequery('change', function (event) {
-		if ($("#visualize-form .compare-option:selected").length > 4) {
-			$("#submit-calculate").attr("disabled", "disabled");
+		if ($("#visualize-form .compare-option:selected").length > 6) {
+			$("#submit-vis").attr("disabled", "disabled");
 		} else {
-			$("#submit-calculate").removeAttr('disabled');
+			$("#submit-vis").removeAttr('disabled');
+		}
+	});
+	$("#date-form .compare-select").livequery('change', function (event) {
+		if ($("#date-form .compare-option:selected").length > 6) {
+			$("#submit-date").attr("disabled", "disabled");
+		} else {
+			$("#submit-date").removeAttr('disabled');
 		}
 	});
 	
@@ -111,22 +118,26 @@ $(document).ready(function(){
 		return false;
 	});
 	
-	$('#submit-calculate').click(function () {
-		//get calculate facets
-		var facets = new Array();
-		$('.calculate-checkbox:checked').each(function () {
-			facets.push($(this).val());
-		});
-		var param1 = facets.join(',');
-		$('#calculate-input').attr('value', param1);
-		
+	$('.submit-vis').click(function () {
+		var id = $(this).parent('form').attr('id');
+		if (id == 'visualize-form') {
+			//get calculate facets		
+			var facets = new Array();
+			$('.calculate-checkbox:checked').each(function () {
+				facets.push($(this).val());
+			});
+			var param1 = facets.join(',');
+			$(this).siblings('input[name=calculate]').attr('value', param1);
+		} else {
+			$(this).siblings('input[name=calculate]').attr('value', 'date');
+		}
 		//get compare value
-		var hoards = new Array();
-		$('#visualize-form .compare-option:selected').each(function () {
+		var hoards = new Array();		
+		$('#' + id + ' .compare-option:selected').each(function () {
 			hoards.push($(this).val());
 		});
 		var param2 = hoards.join(',');
-		$('#visualize-form .compare-input').attr('value', param2);
+		$(this).siblings('input[name=compare]').attr('value', param2);
 	});
 	
 	$('#submit-csv').click(function () {
