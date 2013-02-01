@@ -129,7 +129,15 @@
 							<div id="accordion">
 								<h3>Visualization</h3>
 								<div>
-									<xsl:call-template name="visualization"/>
+									<xsl:call-template name="visualization">
+										<xsl:with-param name="action" select="concat('./', $id, '#quantitative')"/>
+									</xsl:call-template>
+								</div>
+								<h3>Date Analysis</h3>
+								<div>
+									<xsl:call-template name="date-vis">
+										<xsl:with-param name="action" select="concat('./', $id, '#quantitative')"/>
+									</xsl:call-template>
 								</div>
 								<h3>Data Download</h3>
 								<div>

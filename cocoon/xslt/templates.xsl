@@ -31,6 +31,7 @@
 			<caption>
 				<xsl:choose>
 					<xsl:when test="$type='count'">Occurrences</xsl:when>
+					<xsl:when test="$type='cumulative'">Cumulative Percentage</xsl:when>
 					<xsl:otherwise>Percentage</xsl:otherwise>
 				</xsl:choose>
 				<xsl:text> for </xsl:text>
@@ -62,7 +63,7 @@
 			</thead>
 			<tbody>
 				<xsl:for-each select="distinct-values(exsl:node-set($counts)//name)">
-					<xsl:sort/>
+					<xsl:sort data-type="{if ($calculate = 'date') then 'number' else 'text'}"/>
 					<xsl:variable name="name" select="if (string(.)) then . else 'Null value'"/>
 					<tr>
 						<th>
@@ -75,7 +76,7 @@
 										<xsl:value-of select="exsl:node-set($counts)//hoard[@id=$id]/*[local-name()='name'][text()=$name]/@count"/>
 									</xsl:when>
 									<xsl:otherwise>
-										<xsl:text>0</xsl:text>
+										<xsl:text>null</xsl:text>
 									</xsl:otherwise>
 								</xsl:choose>
 							</td>
@@ -89,7 +90,7 @@
 											<xsl:value-of select="exsl:node-set($counts)//hoard[@id=$hoard-id]/*[local-name()='name'][text()=$name]/@count"/>
 										</xsl:when>
 										<xsl:otherwise>
-											<xsl:text>0</xsl:text>
+											<xsl:text>null</xsl:text>
 										</xsl:otherwise>
 									</xsl:choose>
 								</td>
@@ -102,16 +103,9 @@
 	</xsl:template>
 
 	<xsl:template name="visualization">
+		<xsl:param name="action"/>
 		<xsl:variable name="queryOptions">authority,deity,denomination,dynasty,issuer,material,mint,portrait,region</xsl:variable>
-		<xsl:variable name="chartTypes">line,spline,area,areaspline,column,bar,scatter</xsl:variable>
-		<xsl:variable name="action">
-			<xsl:choose>
-				<xsl:when test="$pipeline = 'analyze'">#visualization</xsl:when>
-				<xsl:otherwise>
-					<xsl:value-of select="concat('./', $id, '#quantitative')"/>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:variable>
+		<xsl:variable name="chartTypes">bar,column</xsl:variable>
 
 		<p>Use this feature to visualize percentages or numeric occurrences of the following typologies.</p>
 		<form action="{$action}" id="visualize-form" style="margin-bottom:40px;">
@@ -135,11 +129,9 @@
 				<xsl:for-each select="tokenize($chartTypes, ',')">
 					<span class="anOption">
 						<input type="radio" name="chartType" value="{.}">
-							<xsl:choose>
-								<xsl:when test="$chartType = .">
-									<xsl:attribute name="checked">checked</xsl:attribute>
-								</xsl:when>
-							</xsl:choose>
+							<xsl:if test="$chartType = . or (.='column' and not(string($chartType)))">
+								<xsl:attribute name="checked">checked</xsl:attribute>
+							</xsl:if>
 						</input>
 						<label for="chartType-radio">
 							<xsl:value-of select="."/>
@@ -207,37 +199,136 @@
 			<input type="hidden" name="calculate" id="calculate-input" value=""/>
 			<input type="hidden" name="compare" class="compare-input" value=""/>
 			<br/>
-			<input type="submit" value="Calculate Selected" id="submit-calculate"/>
+			<input type="submit" value="Calculate Selected" class="submit-vis" id="submit-vis"/>
 		</form>
 
 		<!-- output charts and tables -->
 		<xsl:for-each select="tokenize($calculate, ',')">
-			<xsl:variable name="element">
-				<xsl:choose>
-					<xsl:when test=". = 'material' or .='denomination'">
+			<xsl:if test="not(.='date')">
+				<xsl:variable name="element">
+					<xsl:choose>
+						<xsl:when test=". = 'material' or .='denomination'">
+							<xsl:value-of select="."/>
+						</xsl:when>
+						<xsl:when test=".='mint' or .='region'">
+							<xsl:text>geogname</xsl:text>
+						</xsl:when>
+						<xsl:when test=".='dynasty'">
+							<xsl:text>famname</xsl:text>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:text>persname</xsl:text>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:variable>
+				<xsl:variable name="role">
+					<xsl:if test=". != 'material' and . != 'denomination'">
 						<xsl:value-of select="."/>
-					</xsl:when>
-					<xsl:when test=".='mint' or .='region'">
-						<xsl:text>geogname</xsl:text>
-					</xsl:when>
-					<xsl:when test=".='dynasty'">
-						<xsl:text>famname</xsl:text>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:text>persname</xsl:text>
-					</xsl:otherwise>
-				</xsl:choose>
-			</xsl:variable>
-			<xsl:variable name="role">
-				<xsl:if test=". != 'material' and . != 'denomination'">
-					<xsl:value-of select="."/>
+					</xsl:if>
+				</xsl:variable>
+				
+				<xsl:call-template name="nh:quant">
+					<xsl:with-param name="element" select="$element"/>
+					<xsl:with-param name="role" select="$role"/>
+				</xsl:call-template>
+			</xsl:if>
+		</xsl:for-each>
+	</xsl:template>
+	
+	<xsl:template name="date-vis">	
+		<xsl:param name="action"/>		
+		<xsl:variable name="chartTypes">area,line,spline,areaspline</xsl:variable>
+		
+		<p>Use this feature to render percentages or numeric occurrences of coins of a particular date within hoards.</p>
+		<form action="{$action}" id="date-form" style="margin-bottom:40px;">
+			<h2>Step 1: Select Numeric Response Type</h2>
+			<input type="radio" name="type" value="percentage">
+				<xsl:if test="$type != 'count'">
+					<xsl:attribute name="checked">checked</xsl:attribute>
 				</xsl:if>
-			</xsl:variable>
-
-			<xsl:call-template name="nh:quant">
-				<xsl:with-param name="element" select="$element"/>
-				<xsl:with-param name="role" select="$role"/>
-			</xsl:call-template>
+			</input>
+			<label for="type-radio">Percentage</label>
+			<br/>
+			<input type="radio" name="type" value="cumulative">
+				<xsl:if test="$type = 'cumulative'">
+					<xsl:attribute name="checked">checked</xsl:attribute>
+				</xsl:if>
+			</input>			
+			<label for="type-radio">Cumulative Percentage</label>
+			<br/>
+			<input type="radio" name="type" value="count">
+				<xsl:if test="$type = 'count'">
+					<xsl:attribute name="checked">checked</xsl:attribute>
+				</xsl:if>
+			</input>			
+			<label for="type-radio">Count</label>
+			<br/>			
+			<div style="display:table;width:100%">
+				<h2>Step 2: Select Chart Type</h2>
+				<xsl:for-each select="tokenize($chartTypes, ',')">
+					<span class="anOption">
+						<input type="radio" name="chartType" value="{.}">
+							<xsl:if test="$chartType = . or (.='line' and not(string($chartType)))">
+								<xsl:attribute name="checked">checked</xsl:attribute>
+							</xsl:if>
+						</input>
+						<label for="chartType-radio">
+							<xsl:value-of select="."/>
+						</label>
+					</span>
+					
+				</xsl:for-each>
+			</div>
+			<xsl:choose>
+				<xsl:when test="$pipeline='analyze'">
+					<h2>
+						<xsl:text>Step 3: Select Hoards</xsl:text>
+						<span style="font-size:60%;margin-left:10px;">
+							<a href="#filterHoards" id="showFilter">Filter List</a>
+						</span>
+					</h2>
+					<div class="filter-div" style="display:none">
+						<b>Filter Query:</b>
+						<span/>
+						<a href="#" class="removeFilter">Remove Filter</a>
+					</div>
+					<xsl:call-template name="get-hoards"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<h2>Step 3: Select Hoards to Compare (optional)</h2>
+					<xsl:choose>
+						<xsl:when test="not(string($compare))">
+							<div>
+								<a href="#" class="compare-button"><img src="{$display_path}images/plus.gif" alt="Expand"/>Compare to Other Hoards</a>
+								<div class="compare-div"/>
+							</div>
+						</xsl:when>
+						<xsl:otherwise>
+							<div class="compare-div">
+								<cinclude:include src="cocoon:/get_hoards?compare={$compare}&amp;q=*"/>
+							</div>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:otherwise>
+			</xsl:choose>
+			
+			<input type="hidden" name="calculate" id="calculate-input" value=""/>
+			<input type="hidden" name="compare" class="compare-input" value=""/>
+			<br/>
+			<input type="submit" value="Calculate Selected" class="submit-vis" id="submit-date"/>
+		</form>
+		
+		<!-- output charts and tables -->
+		<xsl:for-each select="tokenize($calculate, ',')">
+			<xsl:if test=".='date'">
+				<xsl:variable name="element">date</xsl:variable>
+				<xsl:variable name="role"/>
+				
+				<xsl:call-template name="nh:quant">
+					<xsl:with-param name="element" select="$element"/>
+					<xsl:with-param name="role" select="$role"/>
+				</xsl:call-template>
+			</xsl:if>
 		</xsl:for-each>
 	</xsl:template>
 
