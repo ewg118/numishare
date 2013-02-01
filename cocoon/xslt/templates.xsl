@@ -103,7 +103,7 @@
 
 	<xsl:template name="visualization">
 		<xsl:variable name="queryOptions">authority,deity,denomination,dynasty,issuer,material,mint,portrait,region</xsl:variable>
-		<xsl:variable name="chartTypes">line,spline,area,areaspline,column,bar,scatter</xsl:variable>
+		<xsl:variable name="chartTypes">bar,column</xsl:variable>
 		<xsl:variable name="action">
 			<xsl:choose>
 				<xsl:when test="$pipeline = 'analyze'">#visualization</xsl:when>
