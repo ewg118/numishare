@@ -725,6 +725,15 @@
 				<map:transform src="xslt/ajax/get_hoard_quant.xsl" label="basiccontent" type="xslt-saxon">
 					<map:parameter name="use-request-parameters" value="true"/>
 				</map:transform>
+				<map:select type="parameter">
+					<map:parameter name="parameter-selector-test" value="{request-param:format}"/>
+					<map:when test="js">
+						<map:serialize type="text"/>
+					</map:when>
+					<map:otherwise>
+						<map:serialize type="xml"/>
+					</map:otherwise>
+				</map:select>
 				<map:serialize type="xml"/>
 			</map:match>
 			

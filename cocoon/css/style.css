@@ -335,6 +335,9 @@ li.term {
 	border:1px solid silver;
 	padding:2px;
 }
+.compare-select{
+	width:400px;	
+}
 .category_list, .search_text {
 	width:175px;
 }
