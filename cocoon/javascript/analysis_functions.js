@@ -139,6 +139,9 @@ $(document).ready(function () {
 					return this.y + (type == 'count'? ' coins: ': '%: ') + year;
 				}
 			},
+			exporting: {
+         				enabled: true
+			},
 			series: data
 		});
 	}
