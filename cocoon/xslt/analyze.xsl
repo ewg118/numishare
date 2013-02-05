@@ -54,6 +54,7 @@
 
 				<!-- analysis scripts -->
 				<script type="text/javascript" src="{$display_path}javascript/highcharts.js"/>
+				<script type="text/javascript" src="{$display_path}javascript/modules/exporting.js"/>
 				<script type="text/javascript" src="{$display_path}javascript/jquery.livequery.js"/>
 				<script type="text/javascript" src="{$display_path}javascript/analysis_functions.js"/>
 				<!-- filter functions -->

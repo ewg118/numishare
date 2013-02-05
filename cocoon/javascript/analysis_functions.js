@@ -1,14 +1,14 @@
 /*******************
-VISUALIZATION FUNCTIONS 
+VISUALIZATION FUNCTIONS
 Author: Ethan Gruber
 Modification Date: November 2012
 Description: Functions used in the Hoard Display and Analyze pipelines
 for manipulating forms and rendering tables in the form of highcharts
 ********************/
 
-$(document).ready(function(){
+$(document).ready(function () {
 	$("#tabs").tabs();
-
+	
 	/**
 	* Visualize an HTML table using Highcharts. The top (horizontal) header
 	* is used for series names, and the left (vertical) header is used
@@ -38,19 +38,23 @@ $(document).ready(function(){
 						};
 					} else {
 						// add values
-						options.series[j - 1].data.push(this.innerHTML == 'null' ? null : parseFloat(this.innerHTML));
+						options.series[j - 1].data.push(this.innerHTML == 'null'? null: parseFloat(this.innerHTML));
 					}
 				}
 			});
 		});
+		console.log(options.series);
 		
 		var chart = new Highcharts.Chart(options);
 	}
 	
+	/** CREATE HIGHCHARTS BASED ON HTML TABLES **/
 	$('.calculate').each(function () {
 		var id = $(this).attr('id').split('-')[0];
-		var type = $('input:radio[name=type]:checked').val();
-		var chartType = $('input:radio[name=chartType]:checked').val();
+		var formId = $(this).siblings('form').attr('id');
+		var type = $('#' + formId + ' input:radio[name=type]:checked').val();
+		var chartType = $('#' + formId + ' input:radio[name=chartType]:checked').val();
+		
 		var table = $(this),
 		options = {
 			chart: {
@@ -64,7 +68,6 @@ $(document).ready(function(){
 				enabled: true
 			},
 			xAxis: {
-				type: 'linear',
 				labels: {
 					rotation: - 45,
 					align: 'right',
@@ -75,6 +78,8 @@ $(document).ready(function(){
 				}
 			},
 			yAxis: {
+				max: (type == 'count'? null: 100),
+				min: (type == 'count'? null: 0),
 				title: {
 					text: (type == 'percentage'? 'Percentage': 'Occurrences')
 				}
@@ -86,6 +91,89 @@ $(document).ready(function(){
 			}
 		};
 		Highcharts.visualize(table, options);
+	});
+	
+	/***** CREATE CHART FOR DATES *****/
+	if ($('#dateData').text().length > 0) {
+		var data = eval($('#dateData').text());
+		var type = $('#date-form input:radio[name=type]:checked').val();
+		var chartType = $('#date-form input:radio[name=chartType]:checked').val();
+		var chart;
+		chart = new Highcharts.Chart({
+			chart: {
+				renderTo: 'dateChart',
+				type: chartType
+			},
+			title: {
+				text: $('#dateData').attr('title')
+			},
+			xAxis: {
+				type: 'datetime',
+				labels: {
+					rotation: - 45,
+					align: 'right',
+					formatter: function () {
+						var year = this.value;
+						if (year < 0) {
+							return Math.abs(year) + ' B.C.';
+						} else {
+							return 'A.D. ' + year;
+						}
+					}
+				}
+			},
+			yAxis: {
+				max: (type == 'count'? null: 100),
+				min: (type == 'count'? null: 0),
+				title: {
+					text: (type == 'count'? 'Occurrences': 'Percentage')
+				}
+			},
+			tooltip: {
+				formatter: function () {
+					if (this.x < 0) {
+						var year = Math.abs(this.x) + ' B.C.';
+					} else {
+						var year = 'A.D. ' + this.x;
+					}
+					return this.y + (type == 'count'? ' coins: ': '%: ') + year;
+				}
+			},
+			exporting: {
+         				enabled: true,
+         				width:1200
+			},
+			series: data
+		});
+	}
+	
+	//lock bar and column charts for count in date visualization--line, spine, area, and areaspline for percentages
+	$('#date-form input[name=type]').change(function(){
+		if ($(this).val()=='count'){
+			//endable quantification-based visualizations
+			$('#date-form').find('input[value=bar]').attr('disabled',false);
+			$('#date-form').find('input[value=column]').attr('disabled',false);
+			//disable percentage-based visualizations
+			$('#date-form').find('input[value=line]').attr('disabled',true);
+			$('#date-form').find('input[value=area]').attr('disabled',true);
+			$('#date-form').find('input[value=spline]').attr('disabled',true);
+			$('#date-form').find('input[value=areaspline]').attr('disabled',true);
+			
+			//set column as default
+			$('#date-form').find('input[value=column]').attr('checked',true);
+		} else {
+			//endable quantification-based visualizations
+			$('#date-form').find('input[value=bar]').attr('disabled',true);
+			$('#date-form').find('input[value=column]').attr('disabled',true);
+			//disable percentage-based visualizations
+			$('#date-form').find('input[value=line]').attr('disabled',false);
+			$('#date-form').find('input[value=area]').attr('disabled',false);
+			$('#date-form').find('input[value=spline]').attr('disabled',false);
+			$('#date-form').find('input[value=areaspline]').attr('disabled',false);
+			
+			//set line as default
+			$('#date-form').find('input[value=line]').attr('checked',true);
+		}
 	});
 	
 	//set max number of 4 hoards for comparison (5 shown in total)
@@ -108,8 +196,8 @@ $(document).ready(function(){
 		//display the compare multiselect list only if it hasn't already been generated
 		var cd = $(this).parent().children('.compare-div');
 		if (cd.html().indexOf('<option') < 0) {
-			$.get('../get_hoards', { 
-				q: '*' 
+			$.get('../get_hoards', {
+				q: '*'
 			},
 			function (data) {
 				cd.html(data);
@@ -121,7 +209,7 @@ $(document).ready(function(){
 	$('.submit-vis').click(function () {
 		var id = $(this).parent('form').attr('id');
 		if (id == 'visualize-form') {
-			//get calculate facets		
+			//get calculate facets
 			var facets = new Array();
 			$('.calculate-checkbox:checked').each(function () {
 				facets.push($(this).val());
@@ -132,7 +220,7 @@ $(document).ready(function(){
 			$(this).siblings('input[name=calculate]').attr('value', 'date');
 		}
 		//get compare value
-		var hoards = new Array();		
+		var hoards = new Array();
 		$('#' + id + ' .compare-option:selected').each(function () {
 			hoards.push($(this).val());
 		});
@@ -150,7 +238,7 @@ $(document).ready(function(){
 		$('#csv-form .compare-input').attr('value', param2);
 	});
 	
-	/********* FILTERING FUNCTIONS **********/	
+	/********* FILTERING FUNCTIONS **********/
 	$("#showFilter").fancybox();
 	
 	// total options for advanced search - used for unique id's on dynamically created elements
@@ -171,29 +259,29 @@ $(document).ready(function(){
 	})
 	
 	//filter button activation
-	$('#advancedSearchForm').submit(function() {
+	$('#advancedSearchForm').submit(function () {
 		var q = assembleQuery();
 		$('.filter-div').children('span').html(q);
-		$('.filter-div').show();		
-		$.get('get_hoards', { 
-				q: q 
-			},
-			function (data) {
-				$('.compare-div').html(data);
-			});
+		$('.filter-div').show();
+		$.get('get_hoards', {
+			q: q
+		},
+		function (data) {
+			$('.compare-div').html(data);
+		});
 		$.fancybox.close();
 		return false;
 	});
 	
 	//remove filter
-	$('.removeFilter').click(function(){
-		$('.filter-div').hide();	
-		$.get('get_hoards', { 
-			q: '*' 
-			},
-			function (data) {
-				$('.compare-div').html(data);
-			});
+	$('.removeFilter').click(function () {
+		$('.filter-div').hide();
+		$.get('get_hoards', {
+			q: '*'
+		},
+		function (data) {
+			$('.compare-div').html(data);
+		});
 		return false;
 	})
 })

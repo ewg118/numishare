@@ -26,12 +26,11 @@
 			</counts>
 		</xsl:variable>
 
-		<div id="{.}-container" style="min-width: 400px; height: 400px; margin: 0 auto"/>
-		<table class="calculate" id="{.}-table">
+		<div id="{if (string($role)) then $role else $element}-container" style="min-width: 400px; height: 400px; margin: 0 auto"/>
+		<table class="calculate" id="{if (string($role)) then $role else $element}-table">
 			<caption>
 				<xsl:choose>
-					<xsl:when test="$type='count'">Occurrences</xsl:when>
-					<xsl:when test="$type='cumulative'">Cumulative Percentage</xsl:when>
+					<xsl:when test="$type='count'">Occurrences</xsl:when>					
 					<xsl:otherwise>Percentage</xsl:otherwise>
 				</xsl:choose>
 				<xsl:text> for </xsl:text>
@@ -102,6 +101,43 @@
 		</table>
 	</xsl:template>
 
+	<xsl:template name="nh:dateQuant">
+		<!-- use get_hoard_quant to calculate -->
+		<div id="dateChart"/>
+		<div id="dateData" style="display:none">
+			<xsl:attribute name="title">
+				<xsl:choose>
+					<xsl:when test="$type='count'">Occurrences</xsl:when>
+					<xsl:when test="$type='cumulative'">Cumulative Percentage</xsl:when>
+					<xsl:otherwise>Percentage</xsl:otherwise>
+				</xsl:choose>
+				<xsl:text> for </xsl:text>
+				<xsl:value-of select="numishare:regularize_node('date', $lang)"/>
+			</xsl:attribute>
+
+			<xsl:text>[</xsl:text>
+			<xsl:if test="$pipeline = 'display'">
+				<cinclude:include src="cocoon:/get_hoard_quant?id={$id}&amp;type={$type}&amp;format=js&amp;calculate=date"/>
+			</xsl:if>
+			<!-- if there is a compare parameter, load get_hoard_quant with document() function -->
+			<xsl:if test="string($compare) and string($calculate)">
+				<xsl:if test="$pipeline='display'">
+					<xsl:text>,</xsl:text>
+				</xsl:if>
+				<xsl:for-each select="tokenize($compare, ',')">
+					<cinclude:include src="cocoon:/get_hoard_quant?id={.}&amp;type={$type}&amp;format=js&amp;calculate=date"/>
+					<xsl:if test="not(position()=last())">
+						<xsl:text>,</xsl:text>
+					</xsl:if>
+				</xsl:for-each>
+			</xsl:if>
+			<xsl:text>]</xsl:text>
+		</div>
+
+	</xsl:template>
+
+
+	<!-- ************** FORM TEMPLATES ************** -->
 	<xsl:template name="visualization">
 		<xsl:param name="action"/>
 		<xsl:variable name="queryOptions">authority,deity,denomination,dynasty,issuer,material,mint,portrait,region</xsl:variable>
@@ -226,7 +262,7 @@
 						<xsl:value-of select="."/>
 					</xsl:if>
 				</xsl:variable>
-				
+
 				<xsl:call-template name="nh:quant">
 					<xsl:with-param name="element" select="$element"/>
 					<xsl:with-param name="role" select="$role"/>
@@ -234,11 +270,11 @@
 			</xsl:if>
 		</xsl:for-each>
 	</xsl:template>
-	
-	<xsl:template name="date-vis">	
-		<xsl:param name="action"/>		
-		<xsl:variable name="chartTypes">area,line,spline,areaspline</xsl:variable>
-		
+
+	<xsl:template name="date-vis">
+		<xsl:param name="action"/>
+		<xsl:variable name="chartTypes">bar,column,area,line,spline,areaspline</xsl:variable>
+
 		<p>Use this feature to render percentages or numeric occurrences of coins of a particular date within hoards.</p>
 		<form action="{$action}" id="date-form" style="margin-bottom:40px;">
 			<h2>Step 1: Select Numeric Response Type</h2>
@@ -253,16 +289,16 @@
 				<xsl:if test="$type = 'cumulative'">
 					<xsl:attribute name="checked">checked</xsl:attribute>
 				</xsl:if>
-			</input>			
+			</input>
 			<label for="type-radio">Cumulative Percentage</label>
 			<br/>
 			<input type="radio" name="type" value="count">
 				<xsl:if test="$type = 'count'">
 					<xsl:attribute name="checked">checked</xsl:attribute>
 				</xsl:if>
-			</input>			
+			</input>
 			<label for="type-radio">Count</label>
-			<br/>			
+			<br/>
 			<div style="display:table;width:100%">
 				<h2>Step 2: Select Chart Type</h2>
 				<xsl:for-each select="tokenize($chartTypes, ',')">
@@ -271,12 +307,18 @@
 							<xsl:if test="$chartType = . or (.='line' and not(string($chartType)))">
 								<xsl:attribute name="checked">checked</xsl:attribute>
 							</xsl:if>
+							<xsl:if test="$type='count' and (.='line' or .='area' or .='areaspline' or .='spline')">
+								<xsl:attribute name="disabled">disabled</xsl:attribute>
+							</xsl:if>
+							<xsl:if test="$type!='count' and (.='column' or .='bar')">
+								<xsl:attribute name="disabled">disabled</xsl:attribute>
+							</xsl:if>
 						</input>
 						<label for="chartType-radio">
 							<xsl:value-of select="."/>
 						</label>
 					</span>
-					
+
 				</xsl:for-each>
 			</div>
 			<xsl:choose>
@@ -311,25 +353,26 @@
 					</xsl:choose>
 				</xsl:otherwise>
 			</xsl:choose>
-			
+
 			<input type="hidden" name="calculate" id="calculate-input" value=""/>
 			<input type="hidden" name="compare" class="compare-input" value=""/>
 			<br/>
 			<input type="submit" value="Calculate Selected" class="submit-vis" id="submit-date"/>
 		</form>
-		
-		<!-- output charts and tables -->
-		<xsl:for-each select="tokenize($calculate, ',')">
-			<xsl:if test=".='date'">
-				<xsl:variable name="element">date</xsl:variable>
-				<xsl:variable name="role"/>
-				
-				<xsl:call-template name="nh:quant">
-					<xsl:with-param name="element" select="$element"/>
-					<xsl:with-param name="role" select="$role"/>
-				</xsl:call-template>
-			</xsl:if>
-		</xsl:for-each>
+
+		<xsl:if test="$calculate='date'">
+			<xsl:choose>
+				<xsl:when test="$type='count'">
+					<xsl:call-template name="nh:quant">
+						<xsl:with-param name="element">date</xsl:with-param>
+						<xsl:with-param name="role"/>
+					</xsl:call-template>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:call-template name="nh:dateQuant"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:if>
 	</xsl:template>
 
 	<xsl:template name="data-download">
@@ -641,7 +684,7 @@
 		<xsl:text>-</xsl:text>
 		<xsl:value-of select="mods:end"/>
 	</xsl:template>
-	
+
 	<xsl:template match="mods:originInfo">
 		<xsl:if test="mods:place/mods:placeTerm">
 			<xsl:value-of select="mods:place/mods:placeTerm"/>
