@@ -140,7 +140,8 @@ $(document).ready(function () {
 				}
 			},
 			exporting: {
-         				enabled: true
+         				enabled: true,
+         				width:1200
 			},
 			series: data
 		});
