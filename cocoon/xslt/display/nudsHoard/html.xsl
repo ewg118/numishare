@@ -9,6 +9,7 @@
 	<xsl:param name="compare"/>
 	<xsl:param name="type"/>
 	<xsl:param name="chartType"/>
+	<xsl:param name="exclude"/>
 
 	<xsl:template name="nudsHoard">
 		<xsl:apply-templates select="/content/nh:nudsHoard"/>
@@ -144,6 +145,7 @@
 									<xsl:call-template name="data-download"/>
 								</div>
 							</div>
+							<span id="formId" style="display:none"/>
 						</div>
 					</div>
 				</xsl:if>

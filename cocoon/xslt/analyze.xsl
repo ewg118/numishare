@@ -16,6 +16,7 @@
 	<xsl:param name="compare"/>
 	<xsl:param name="type"/>
 	<xsl:param name="chartType"/>
+	<xsl:param name="exclude"/>
 
 	<!-- config variables -->
 	<xsl:variable name="url">
@@ -116,6 +117,7 @@
 							<xsl:call-template name="search_forms"/>
 						</div>
 					</div>
+					<span id="formId" style="display:none"/>
 				</div>
 			</div>
 		</div>
