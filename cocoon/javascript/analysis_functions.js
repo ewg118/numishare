@@ -140,40 +140,62 @@ $(document).ready(function () {
 				}
 			},
 			exporting: {
-         				enabled: true,
-         				width:1200
+				enabled: true,
+				width: 1200
 			},
 			series: data
 		});
 	}
 	
 	//lock bar and column charts for count in date visualization--line, spine, area, and areaspline for percentages
-	$('#date-form input[name=type]').change(function(){
-		if ($(this).val()=='count'){
-			//endable quantification-based visualizations
-			$('#date-form').find('input[value=bar]').attr('disabled',false);
-			$('#date-form').find('input[value=column]').attr('disabled',false);
+	$('#date-form input[name=type]').change(function () {
+		if ($(this).val() == 'count') {
+			//enable quantification-based visualizations
+			$('#date-form').find('input[value=bar]').attr('disabled', false);
+			$('#date-form').find('input[value=column]').attr('disabled', false);
 			//disable percentage-based visualizations
-			$('#date-form').find('input[value=line]').attr('disabled',true);
-			$('#date-form').find('input[value=area]').attr('disabled',true);
-			$('#date-form').find('input[value=spline]').attr('disabled',true);
-			$('#date-form').find('input[value=areaspline]').attr('disabled',true);
+			$('#date-form').find('input[value=line]').attr('disabled', true);
+			$('#date-form').find('input[value=area]').attr('disabled', true);
+			$('#date-form').find('input[value=spline]').attr('disabled', true);
+			$('#date-form').find('input[value=areaspline]').attr('disabled', true);
 			
 			//set column as default
-			$('#date-form').find('input[value=column]').attr('checked',true);
+			$('#date-form').find('input[value=column]').attr('checked', true);
 		} else {
-			//endable quantification-based visualizations
-			$('#date-form').find('input[value=bar]').attr('disabled',true);
-			$('#date-form').find('input[value=column]').attr('disabled',true);
+			//enable quantification-based visualizations
+			$('#date-form').find('input[value=bar]').attr('disabled', true);
+			$('#date-form').find('input[value=column]').attr('disabled', true);
 			//disable percentage-based visualizations
-			$('#date-form').find('input[value=line]').attr('disabled',false);
-			$('#date-form').find('input[value=area]').attr('disabled',false);
-			$('#date-form').find('input[value=spline]').attr('disabled',false);
-			$('#date-form').find('input[value=areaspline]').attr('disabled',false);
+			$('#date-form').find('input[value=line]').attr('disabled', false);
+			$('#date-form').find('input[value=area]').attr('disabled', false);
+			$('#date-form').find('input[value=spline]').attr('disabled', false);
+			$('#date-form').find('input[value=areaspline]').attr('disabled', false);
 			
 			//set line as default
-			$('#date-form').find('input[value=line]').attr('checked',true);
+			$('#date-form').find('input[value=line]').attr('checked', true);
 		}
+	});
+	
+	//disable and re-enable other calculate types in data download form when "cumulative" is selected
+	$('#csv-form input[name=type]').change(function () {
+		if ($(this).val() == 'cumulative') {
+			$('#csv-form input[name=calculate][value!=date]').attr('disabled', true);
+			//set date as default
+			$('#csv-form input[value=date]').attr('checked', true);
+		} else {
+			$('#csv-form input[name=calculate]').attr('disabled', false);
+		}
+	});
+	
+	//enable cumulative when "date" is checked, otherwise disable
+	$('#csv-form input[name=calculate]').change(function () {
+		if ($(this).val() == 'date') {
+			$('#csv-form input[value=cumulative]').attr('disabled', false);			
+		} else {
+			$('#csv-form input[value=cumulative]').attr('disabled', true);			
+		}
+		//set percentage as default
+		$('#csv-form input[value=percentage]').attr('checked', true);
 	});
 	
 	//set max number of 4 hoards for comparison (5 shown in total)
@@ -191,7 +213,7 @@ $(document).ready(function () {
 			$("#submit-date").removeAttr('disabled');
 		}
 	});
-	
+	/***** GET HOARDS FOR COMPARISON ON DISPLAY PAGE *****/
 	$('.compare-button').click(function () {
 		//display the compare multiselect list only if it hasn't already been generated
 		var cd = $(this).parent().children('.compare-div');
@@ -206,6 +228,13 @@ $(document).ready(function () {
 		return false;
 	});
 	
+	/***** TOGGLE OPTIONAL SETTINGS *****/
+	$('.optional-button').click(function(){
+		var formId = $(this).attr('id').split('-')[0] + '-form';
+		$('#' + formId + ' .optional-div').toggle('slow');
+	});
+	
+	/***** SUBMIT FORMS *****/
 	$('.submit-vis').click(function () {
 		var id = $(this).parent('form').attr('id');
 		if (id == 'visualize-form') {
@@ -234,21 +263,38 @@ $(document).ready(function () {
 		});
 		var param3 = codes.join(',');
 		$(this).siblings('input[name=exclude]').attr('value', param3);
-		
 	});
 	
 	$('#submit-csv').click(function () {
+		var id = $(this).parent('form').attr('id');
 		//get compare value
 		var hoards = new Array();
-		$('#csv-form .compare-option:selected').each(function () {
+		$('#' + id + ' .compare-option:selected').each(function () {
 			hoards.push($(this).val());
 		});
 		var param2 = hoards.join(',');
-		$('#csv-form .compare-input').attr('value', param2);
+		$('#' + id + ' .compare-input').attr('value', param2);
+		
+		//get exclude value
+		var codes = new Array();
+		$('#' + id + ' .exclude-option:selected').each(function () {
+			codes.push($(this).val());
+		});
+		var param3 = codes.join(',');
+		$(this).siblings('input[name=exclude]').attr('value', param3);
 	});
 	
 	/********* FILTERING FUNCTIONS **********/
-	$("#showFilter").fancybox();
+	$(".showFilter").each(function () {
+		var tthis = this;
+		$(this).fancybox({			
+			onStart: function () {
+				var formId = tthis.id.split('-')[0] + '-form';
+				alert(formId);
+				$('#formId').html(formId);
+			}
+		});
+	});
 	
 	// total options for advanced search - used for unique id's on dynamically created elements
 	var total_options = 1;
@@ -269,14 +315,15 @@ $(document).ready(function () {
 	
 	//filter button activation
 	$('#advancedSearchForm').submit(function () {
+		var formId = $('#formId').text();
 		var q = assembleQuery();
-		$('.filter-div').children('span').html(q);
-		$('.filter-div').show();
+		$('#' + formId + ' .filter-div').children('span').html(q);
+		$('#' + formId + ' .filter-div').show();
 		$.get('get_hoards', {
 			q: q
 		},
 		function (data) {
-			$('.compare-div').html(data);
+			$('#' + formId + ' .compare-div').html(data);
 		});
 		$.fancybox.close();
 		return false;
@@ -284,12 +331,13 @@ $(document).ready(function () {
 	
 	//remove filter
 	$('.removeFilter').click(function () {
-		$('.filter-div').hide();
+		var formId = $('#formId').text();
+		$('#' + formId + ' .filter-div').hide();
 		$.get('get_hoards', {
 			q: '*'
 		},
 		function (data) {
-			$('.compare-div').html(data);
+			$('#' + formId + ' .compare-div').html(data);
 		});
 		return false;
 	})

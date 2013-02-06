@@ -117,6 +117,7 @@
 							<xsl:call-template name="search_forms"/>
 						</div>
 					</div>
+					<span id="formId" style="display:none"/>
 				</div>
 			</div>
 		</div>

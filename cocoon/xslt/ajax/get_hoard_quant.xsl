@@ -177,23 +177,64 @@
 				</total-counts>
 			</xsl:variable>
 
-			<xsl:for-each select="distinct-values(exsl:node-set($total-counts)//name)">
-				<xsl:variable name="name" select="."/>
-				<name>
-					<xsl:attribute name="count">
-						<xsl:variable name="count" select="sum(exsl:node-set($total-counts)//name[.=$name]/@count)"/>
-						<xsl:choose>
-							<xsl:when test="$type='count'">
-								<xsl:value-of select="$count"/>
-							</xsl:when>
-							<xsl:otherwise>
-								<xsl:value-of select="format-number(($count div $total) * 100, '##.00')"/>
-							</xsl:otherwise>
-						</xsl:choose>
-					</xsl:attribute>
-					<xsl:value-of select="$name"/>
-				</name>
-			</xsl:for-each>
+			<xsl:choose>
+				<xsl:when test="$calculate='date'">
+					<!-- preprocess date counts into counts per distinct value -->
+					<xsl:variable name="date-counts">
+						<date-counts>
+							<xsl:for-each select="distinct-values(exsl:node-set($total-counts)//name)">
+								<xsl:sort data-type="number" order="ascending"/>
+								<xsl:variable name="name" select="."/>
+								<name count="{sum(exsl:node-set($total-counts)//name[.=$name]/@count)}">
+									<xsl:value-of select="$name"/>
+								</name>
+							</xsl:for-each>
+						</date-counts>
+					</xsl:variable>
+					
+					<!-- output cumulative percentage -->
+					<xsl:for-each select="exsl:node-set($date-counts)//name">
+						<xsl:sort data-type="number" order="ascending"/>
+						<xsl:variable name="name" select="."/>
+						<name>
+							<xsl:attribute name="count">
+								<xsl:choose>
+									<xsl:when test="$type='cumulative'">
+										<xsl:value-of select="format-number(((@count + sum(preceding-sibling::name/@count)) div $total) * 100, '##.00')"/>
+									</xsl:when>
+									<xsl:when test="$type='count'">
+										<xsl:value-of select="@count"/>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:value-of select="format-number((@count div $total) * 100, '##.00')"/>
+									</xsl:otherwise>
+								</xsl:choose>
+							</xsl:attribute>
+							<xsl:value-of select="$name"/>
+						</name>						
+					</xsl:for-each>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:for-each select="distinct-values(exsl:node-set($total-counts)//name)">
+						<xsl:variable name="name" select="."/>
+						<name>
+							<xsl:attribute name="count">
+								<xsl:variable name="count" select="sum(exsl:node-set($total-counts)//name[.=$name]/@count)"/>
+								<xsl:choose>
+									<xsl:when test="$type='count'">
+										<xsl:value-of select="$count"/>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:value-of select="format-number(($count div $total) * 100, '##.00')"/>
+									</xsl:otherwise>
+								</xsl:choose>
+							</xsl:attribute>
+							<xsl:value-of select="$name"/>
+						</name>
+					</xsl:for-each>
+				</xsl:otherwise>
+			</xsl:choose>
+			
 		</hoard>
 	</xsl:template>
 

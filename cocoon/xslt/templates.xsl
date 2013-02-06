@@ -106,7 +106,7 @@
 	<xsl:template name="nh:dateQuant">
 		<!-- use get_hoard_quant to calculate -->
 		<div id="dateChart"/>
-		<div id="dateData" style="display:none">			
+		<div id="dateData" style="display:none">
 			<xsl:attribute name="title">
 				<xsl:choose>
 					<xsl:when test="$type='count'">Occurrences</xsl:when>
@@ -200,43 +200,43 @@
 					</span>
 				</xsl:for-each>
 			</div>
-			<div class="yui3-g">
-				<div class="yui3-u-1-2">
+			<xsl:choose>
+				<xsl:when test="$pipeline='analyze'">
+					<h2>
+						<xsl:text>Step 4: Select Hoards</xsl:text>
+						<span style="font-size:60%;margin-left:10px;">
+							<a href="#filterHoards" class="showFilter" id="visualize-filter">Filter List</a>
+						</span>
+					</h2>
+					<div class="filter-div" style="display:none">
+						<b>Filter Query:</b>
+						<span/>
+						<a href="#" class="removeFilter">Remove Filter</a>
+					</div>
+					<xsl:call-template name="get-hoards"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<h2>Step 4: Select Hoards to Compare (optional)</h2>
 					<xsl:choose>
-						<xsl:when test="$pipeline='analyze'">
-							<h2>
-								<xsl:text>Step 4: Select Hoards</xsl:text>
-								<span style="font-size:60%;margin-left:10px;">
-									<a href="#filterHoards" id="showFilter">Filter List</a>
-								</span>
-							</h2>
-							<div class="filter-div" style="display:none">
-								<b>Filter Query:</b>
-								<span/>
-								<a href="#" class="removeFilter">Remove Filter</a>
+						<xsl:when test="not(string($compare))">
+							<div>
+								<a href="#" class="compare-button"><img src="{$display_path}images/plus.gif" alt="Expand"/>Compare to Other Hoards</a>
+								<div class="compare-div"/>
 							</div>
-							<xsl:call-template name="get-hoards"/>
 						</xsl:when>
 						<xsl:otherwise>
-							<h2>Step 4: Select Hoards to Compare (optional)</h2>
-							<xsl:choose>
-								<xsl:when test="not(string($compare))">
-									<div>
-										<a href="#" class="compare-button"><img src="{$display_path}images/plus.gif" alt="Expand"/>Compare to Other Hoards</a>
-										<div class="compare-div"/>
-									</div>
-								</xsl:when>
-								<xsl:otherwise>
-									<div class="compare-div">
-										<cinclude:include src="cocoon:/get_hoards?compare={$compare}&amp;q=*"/>
-									</div>
-								</xsl:otherwise>
-							</xsl:choose>
+							<div class="compare-div">
+								<cinclude:include src="cocoon:/get_hoards?compare={$compare}&amp;q=*"/>
+							</div>
 						</xsl:otherwise>
 					</xsl:choose>
-				</div>
-				<div class="yui3-u-1-2">
-					<h3>Optional Settings: Exclude Certainty Codes</h3>
+				</xsl:otherwise>
+			</xsl:choose>
+
+			<div>
+				<h3>Optional Settings<span style="font-size:60%;margin-left:10px;"><a href="#" class="optional-button" id="visualize-options">Hide/Show Options</a></span></h3>
+				<div class="optional-div" style="display:none">
+					<h4>Exclude Certainty Codes</h4>
 					<cinclude:include src="cocoon:/get_certainty_codes?exclude={$exclude}"/>
 				</div>
 			</div>
@@ -331,43 +331,42 @@
 
 				</xsl:for-each>
 			</div>
-			<div class="yui3-g">
-				<div class="yui3-u-1-2">
+			<xsl:choose>
+				<xsl:when test="$pipeline='analyze'">
+					<h2>
+						<xsl:text>Step 3: Select Hoards</xsl:text>
+						<span style="font-size:60%;margin-left:10px;">
+							<a href="#filterHoards" class="showFilter" id="date-filter">Filter List</a>
+						</span>
+					</h2>
+					<div class="filter-div" style="display:none">
+						<b>Filter Query:</b>
+						<span/>
+						<a href="#" class="removeFilter">Remove Filter</a>
+					</div>
+					<xsl:call-template name="get-hoards"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<h2>Step 3: Select Hoards to Compare (optional)</h2>
 					<xsl:choose>
-						<xsl:when test="$pipeline='analyze'">
-							<h2>
-								<xsl:text>Step 3: Select Hoards</xsl:text>
-								<span style="font-size:60%;margin-left:10px;">
-									<a href="#filterHoards" id="showFilter">Filter List</a>
-								</span>
-							</h2>
-							<div class="filter-div" style="display:none">
-								<b>Filter Query:</b>
-								<span/>
-								<a href="#" class="removeFilter">Remove Filter</a>
+						<xsl:when test="not(string($compare))">
+							<div>
+								<a href="#" class="compare-button"><img src="{$display_path}images/plus.gif" alt="Expand"/>Compare to Other Hoards</a>
+								<div class="compare-div"/>
 							</div>
-							<xsl:call-template name="get-hoards"/>
 						</xsl:when>
 						<xsl:otherwise>
-							<h2>Step 3: Select Hoards to Compare (optional)</h2>
-							<xsl:choose>
-								<xsl:when test="not(string($compare))">
-									<div>
-										<a href="#" class="compare-button"><img src="{$display_path}images/plus.gif" alt="Expand"/>Compare to Other Hoards</a>
-										<div class="compare-div"/>
-									</div>
-								</xsl:when>
-								<xsl:otherwise>
-									<div class="compare-div">
-										<cinclude:include src="cocoon:/get_hoards?compare={$compare}&amp;q=*"/>
-									</div>
-								</xsl:otherwise>
-							</xsl:choose>
+							<div class="compare-div">
+								<cinclude:include src="cocoon:/get_hoards?compare={$compare}&amp;q=*"/>
+							</div>
 						</xsl:otherwise>
 					</xsl:choose>
-				</div>
-				<div class="yui3-u-1-2">
-					<h3>Optional Settings: Exclude Certainty Codes</h3>
+				</xsl:otherwise>
+			</xsl:choose>
+			<div>
+				<h3>Optional Settings<span style="font-size:60%;margin-left:10px;"><a href="#" class="optional-button" id="date-options">Hide/Show Options</a></span></h3>
+				<div class="optional-div" style="display:none">
+					<h4>Exclude Certainty Codes</h4>
 					<cinclude:include src="cocoon:/get_certainty_codes?exclude={$exclude}"/>
 				</div>
 			</div>
@@ -395,13 +394,13 @@
 	</xsl:template>
 
 	<xsl:template name="data-download">
-		<xsl:variable name="queryOptions">authority,deity,denomination,dynasty,issuer,material,mint,portrait,region</xsl:variable>
+		<xsl:variable name="queryOptions">authority,date,deity,denomination,dynasty,issuer,material,mint,portrait,region</xsl:variable>		
 
 		<p>Use this feature to download a CSV for the given query and selected hoards.</p>
 		<form action="{$display_path}hoards.csv" id="csv-form" style="margin-bottom:40px;">
 			<h2>Step 1: Select Numeric Response Type</h2>
 			<input type="radio" name="type" value="percentage">
-				<xsl:if test="$type != 'count'">
+				<xsl:if test="$type != 'count' and $type != 'cumulative'">
 					<xsl:attribute name="checked">checked</xsl:attribute>
 				</xsl:if>
 			</input>
@@ -413,6 +412,16 @@
 				</xsl:if>
 			</input>
 			<label for="type-radio">Count</label>
+			<br/>
+			<input type="radio" name="type" value="cumulative">
+				<xsl:if test="$type = 'cumulative'">
+					<xsl:attribute name="checked">checked</xsl:attribute>
+				</xsl:if>
+				<xsl:if test="$calculate != 'date'">
+					<xsl:attribute name="disabled">disabled</xsl:attribute>
+				</xsl:if>
+			</input>
+			<label for="type-radio">Cumulative Percentage</label>
 			<br/>
 			<div style="width:100%;display:table">
 				<h2>Step 2: Select Categories for Analysis</h2>
@@ -441,12 +450,15 @@
 				<xsl:when test="$pipeline='analyze'">
 					<h2>
 						<xsl:text>Step 3: Select Hoards</xsl:text>
-						<div class="filter-div" style="display:none">
-							<b>Filter Query:</b>
-							<span/>
-							<a href="#" class="removeFilter">Remove Filter</a>
-						</div>
+						<span style="font-size:60%;margin-left:10px;">
+							<a href="#filterHoards" class="showFilter" id="csv-filter">Filter List</a>
+						</span>
 					</h2>
+					<div class="filter-div" style="display:none">
+						<b>Filter Query:</b>
+						<span/>
+						<a href="#" class="removeFilter">Remove Filter</a>
+					</div>
 					<xsl:call-template name="get-hoards"/>
 				</xsl:when>
 				<xsl:otherwise>
@@ -457,7 +469,15 @@
 					</div>
 				</xsl:otherwise>
 			</xsl:choose>
-
+			
+			<div>
+				<h3>Optional Settings<span style="font-size:60%;margin-left:10px;"><a href="#" class="optional-button" id="csv-options">Hide/Show Options</a></span></h3>
+				<div class="optional-div" style="display:none">
+					<h4>Exclude Certainty Codes</h4>
+					<cinclude:include src="cocoon:/get_certainty_codes?exclude={$exclude}"/>
+				</div>
+			</div>
+			<input type="hidden" name="exclude" class="exclude-input" value=""/>
 			<input type="hidden" name="compare" class="compare-input" value=""/>
 			<br/>
 			<input type="submit" value="Calculate Selected" id="submit-csv"/>
