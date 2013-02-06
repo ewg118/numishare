@@ -9,6 +9,10 @@
 	<xsl:param name="calculate"/>
 	<xsl:param name="type"/>
 	<xsl:param name="format"/>
+	<xsl:param name="exclude"/>
+	<xsl:variable name="codes" as="item()*">
+		<xsl:sequence select="tokenize($exclude, ',')"/>
+	</xsl:variable>
 
 	<xsl:variable name="element">
 		<xsl:choose>
@@ -38,11 +42,15 @@
 		<xsl:copy-of select="descendant::nh:contents"/>
 	</xsl:variable>
 
+	<!--<test>
+		<xsl:value-of select="boolean(index-of($codes, '7'))"/>
+		</test>-->
+
 	<xsl:variable name="nudsGroup">
 		<nudsGroup>
 			<!-- get nomisma NUDS documents with get-nuds API -->
 			<xsl:variable name="id-param">
-				<xsl:for-each select="distinct-values(descendant::nuds:typeDesc[contains(@xlink:href, 'nomisma.org')]/@xlink:href)">
+				<xsl:for-each select="distinct-values(descendant::nuds:typeDesc[contains(@xlink:href, 'nomisma.org') and (boolean(index-of($codes, @certainty)) = false())]/@xlink:href)">
 					<xsl:value-of select="substring-after(., 'id/')"/>
 					<xsl:if test="not(position()=last())">
 						<xsl:text>|</xsl:text>
@@ -57,7 +65,7 @@
 			</xsl:for-each>
 
 			<!-- incorporate other typeDescs which do not point to nomisma.org -->
-			<xsl:for-each select="descendant::nuds:typeDesc[not(contains(@xlink:href, 'nomisma.org'))]">
+			<xsl:for-each select="descendant::nuds:typeDesc[not(contains(@xlink:href, 'nomisma.org')) and (boolean(index-of($codes, @certainty)) = false())]">
 				<xsl:choose>
 					<xsl:when test="string(@xlink:href)">
 						<object xlink:href="{@xlink:href}">
@@ -84,7 +92,7 @@
 	</xsl:template>
 
 	<xsl:template name="generateJs">
-		<xsl:variable name="total" select="sum(exsl:node-set($contentsDesc)//nh:coinGrp/@count) + count(exsl:node-set($contentsDesc)//nh:coin)"/>
+		<xsl:variable name="total" select="sum(exsl:node-set($contentsDesc)//nh:coinGrp[boolean(index-of($codes, nuds:typeDesc/@certainty)) = false()]/@count) + count(exsl:node-set($contentsDesc)//nh:coin[boolean(index-of($codes, nuds:typeDesc/@certainty)) = false()])"/>
 		<xsl:variable name="total-counts">
 			<total-counts>
 				<xsl:choose>
@@ -101,11 +109,10 @@
 			</total-counts>
 		</xsl:variable>
 
-		
 		<xsl:text>{ name: '</xsl:text>
 		<xsl:value-of select="$id"/>
 		<xsl:text>', data: [</xsl:text>
-		
+
 		<xsl:choose>
 			<xsl:when test="$calculate='date'">
 				<!-- preprocess date counts into counts per distinct value -->
@@ -120,7 +127,7 @@
 						</xsl:for-each>
 					</date-counts>
 				</xsl:variable>
-				
+
 				<!-- output cumulative percentage -->
 				<xsl:for-each select="exsl:node-set($date-counts)//name">
 					<xsl:sort data-type="number" order="ascending"/>
@@ -139,22 +146,21 @@
 							<xsl:value-of select="format-number((@count div $total) * 100, '##.00')"/>
 						</xsl:otherwise>
 					</xsl:choose>
-					
+
 					<xsl:text>]</xsl:text>
 					<xsl:if test="not(position()=last())">
 						<xsl:text>,</xsl:text>
 					</xsl:if>
-				</xsl:for-each>			
-		</xsl:when>
+				</xsl:for-each>
+			</xsl:when>
 		</xsl:choose>
-		
-		
 		<xsl:text>]}</xsl:text>
 	</xsl:template>
 
 	<xsl:template name="generateXml">
-		<xsl:variable name="total" select="sum(exsl:node-set($contentsDesc)//nh:coinGrp/@count) + count(exsl:node-set($contentsDesc)//nh:coin)"/>
+		<xsl:variable name="total" select="sum(exsl:node-set($contentsDesc)//nh:coinGrp[boolean(index-of($codes, nuds:typeDesc/@certainty)) = false()]/@count) + count(exsl:node-set($contentsDesc)//nh:coin[boolean(index-of($codes, nuds:typeDesc/@certainty)) = false()])"/>
 		<hoard id="{$id}" total="{$total}">
+			
 			<xsl:variable name="total-counts">
 				<total-counts>
 					<xsl:choose>

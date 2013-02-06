@@ -226,6 +226,15 @@ $(document).ready(function () {
 		});
 		var param2 = hoards.join(',');
 		$(this).siblings('input[name=compare]').attr('value', param2);
+		
+		//get exclude value
+		var codes = new Array();
+		$('#' + id + ' .exclude-option:selected').each(function () {
+			codes.push($(this).val());
+		});
+		var param3 = codes.join(',');
+		$(this).siblings('input[name=exclude]').attr('value', param3);
+		
 	});
 	
 	$('#submit-csv').click(function () {

@@ -147,6 +147,23 @@
 				</map:transform>
 				<map:serialize type="csv"/>
 			</map:match>
+			
+			<map:match pattern="get_hoard_quant">
+				<map:generate src="{global:exist-url}{global:collection-name}/objects/{url-encode:{request-param:id}}.xml"/>
+				<map:transform src="xslt/ajax/get_hoard_quant.xsl" label="basiccontent" type="xslt-saxon">
+					<map:parameter name="use-request-parameters" value="true"/>
+				</map:transform>
+				<map:select type="parameter">
+					<map:parameter name="parameter-selector-test" value="{request-param:format}"/>
+					<map:when test="js">
+						<map:serialize type="text"/>
+					</map:when>
+					<map:otherwise>
+						<map:serialize type="xml"/>
+					</map:otherwise>
+				</map:select>
+				<map:serialize type="xml"/>
+			</map:match>
 		</map:pipeline>
 
 		<map:pipeline>
@@ -625,6 +642,15 @@
 				<map:transform type="cinclude"/>
 				<map:serialize type="html"/>
 			</map:match>
+			
+			<!-- get unique certainty codes within the collection -->
+			<map:match pattern="get_certainty_codes">
+				<map:generate src="{global:exist-url}{global:collection-name}/get_certainty_codes.xql"/>
+				<map:transform src="xslt/ajax/get_certainty_codes.xsl" type="xslt-saxon">
+					<map:parameter name="use-request-parameters" value="true"/>					
+				</map:transform>				
+				<map:serialize type="xml"/>
+			</map:match>
 
 			<map:match pattern="get_decades">
 				<map:generate
@@ -720,7 +746,7 @@
 			</map:match>
 
 			<!-- for comparing quantative analyses of hoards -->
-			<map:match pattern="get_hoard_quant">
+			<!--<map:match pattern="get_hoard_quant">
 				<map:generate src="{global:exist-url}{global:collection-name}/objects/{url-encode:{request-param:id}}.xml"/>
 				<map:transform src="xslt/ajax/get_hoard_quant.xsl" label="basiccontent" type="xslt-saxon">
 					<map:parameter name="use-request-parameters" value="true"/>
@@ -735,7 +761,7 @@
 					</map:otherwise>
 				</map:select>
 				<map:serialize type="xml"/>
-			</map:match>
+			</map:match>-->
 			
 			<!-- query solr for available geographic coordinates -->
 			<map:match pattern="query_findspot_geo/*">

@@ -16,6 +16,7 @@
 	<xsl:param name="compare"/>
 	<xsl:param name="type"/>
 	<xsl:param name="chartType"/>
+	<xsl:param name="exclude"/>
 
 	<!-- config variables -->
 	<xsl:variable name="url">
