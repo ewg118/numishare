@@ -41,7 +41,7 @@
 			<xsl:apply-templates select="nuds:descMeta"/>
 			<xsl:choose>
 				<xsl:when test="string($sparql_endpoint)">
-					<cinclude:include src="cocoon:/widget?uri={concat($url, 'id/', $id)}&amp;template=solr"/>
+					<!--<cinclude:include src="cocoon:/widget?uri={concat($url, 'id/', $id)}&amp;template=solr"/>-->
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:apply-templates select="nuds:digRep"/>

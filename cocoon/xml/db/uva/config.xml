@@ -1,0 +1,99 @@
+<config xmlns:xxi="http://orbeon.org/oxf/xml/xinclude" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:xxforms="http://orbeon.org/oxf/xml/xforms" xmlns:widget="http://orbeon.org/oxf/xml/widget" xmlns:exist="http://exist.sourceforge.net/NS/exist" xmlns:numishare="http://code.google.com/p/numishare/">
+	<firstrun>false</firstrun>
+	<title>University of Virginia Art Museum Numismatic Collection</title>
+	<description>Enter short description for collection.</description>
+	<banner_text>The University of Virginia Art Museum Numismatic Collection</banner_text>
+	<!--<banner_image xlink:href="numishare-long.png"/>-->
+	<url>http://localhost:8080/cocoon/uva/</url>
+	<solr_published>http://localhost:8080/solr/numishare-published/</solr_published>
+	<solr_all>http://localhost:8080/solr/numishare-all/</solr_all>
+	<flickr_api_key/>
+	<geonames_api_key>anscoins</geonames_api_key>
+	<contact/>
+	<google_analytics>
+		<script type="text/javascript"/>
+	</google_analytics>
+	<collection_type>object</collection_type>
+	<features_enabled>true</features_enabled>
+	<pelagios_enabled>false</pelagios_enabled>
+	<ctype_enabled>false</ctype_enabled>
+	<template>
+		<copyrightHolder>University of Virginia Art Museum</copyrightHolder>
+		<collection/>
+		<language langcode="eng">English</language>
+		<license>http://opendatacommons.org/licenses/odbl/</license>
+		<owner/>
+		<publisher>University of Virginia Library</publisher>
+		<repository/>
+		<project/>
+		<createdBy/>
+	</template>
+	<images>
+		<absolute_path>/usr/local/projects/numishare/cocoon/</absolute_path>
+		<thumbnail>120</thumbnail>
+		<reference>400</reference>
+	</images>
+	<languages>
+		<language code="ar" enabled="true">
+			<label xml:lang="ar">العربيّة</label>
+			<label xml:lang="en">Arabic</label>
+			<label xml:lang="de">Arabisch</label>
+			<label xml:lang="fr">Arabe</label>
+			<label xml:lang="ro">Arabă</label>
+		</language>
+		<language code="de" enabled="true">
+			<label xml:lang="ar">ألماني</label>
+			<label xml:lang="de">Deutsch</label>
+			<label xml:lang="en">German</label>
+			<label xml:lang="fr">Allemand</label>
+			<label xml:lang="ro">Germană</label>
+		</language>
+		<language code="en" enabled="true">
+			<label xml:lang="ar">إنجليزي</label>
+			<label xml:lang="de">Englisch</label>
+			<label xml:lang="en">English</label>
+			<label xml:lang="fr">Anglais</label>
+			<label xml:lang="ro">Engleză</label>
+		</language>
+		<language code="fr" enabled="true">
+			<label xml:lang="ar">فرنسي</label>
+			<label xml:lang="de">Französisch</label>
+			<label xml:lang="en">French</label>
+			<label xml:lang="fr">Français</label>
+			<label xml:lang="ro">Franceză</label>
+		</language>
+		<language code="ro" enabled="true">
+			<label xml:lang="ar">رومانيا</label>
+			<label xml:lang="de">Rumänisch</label>
+			<label xml:lang="en">Romanian</label>
+			<label xml:lang="fr">Roumain</label>
+			<label xml:lang="ro">Romană</label>
+		</language>
+	</languages>
+	<theme>
+		<jquery_ui_theme>smoothness</jquery_ui_theme>
+		<layouts>
+			<index>
+				<yui_class>yui-t5</yui_class>
+			</index>
+			<results>
+				<yui_class>yui-t2</yui_class>
+				<image_location>right</image_location>
+			</results>
+			<display>
+				<nuds>
+					<orientation>vertical</orientation>
+					<image_location>left</image_location>
+				</nuds>
+			</display>
+		</layouts>
+	</theme>
+	<footer>Powered by &lt;a href="https://github.com/ewg118/numishare" target="_blank"&gt;Numishare&lt;/a&gt;.</footer>
+	<pages>
+		<index>Numishare is a free, open source, modularized system of Tomcat applications for the web delivery of cultural heritage artifacts, with particular focus on coins and
+			medals. Metadata are edited with XForms and delivered with Cocoon and Solr.</index>
+		<compare enabled="true"/>
+		<analyze enabled="false"/>
+		<visualize enabled="true"/>
+	</pages>
+</config>

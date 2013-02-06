@@ -14,7 +14,7 @@ html {
 	font:12px arial, helvetica, sans-serif;
 }
 body {
-	max-width:80%;
+	max-width:90%;
 	margin-left:40px;
 	min-width:1000px;
 }
@@ -521,9 +521,9 @@ button.ui-multiselect {
 	font-size:140%;
 }
 .g_doc {
-	width:30%;
+	width:33%;
 	float:left;
-	height:325px;
+	height:200px;
 }
 /* gallery image container */
 .gi_c {

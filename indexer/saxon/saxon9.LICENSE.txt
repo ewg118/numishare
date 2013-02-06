@@ -1,0 +1,27 @@
+Conditions of Use
+
+These conditions of use apply to the open source version of the Saxon product. Additional terms and conditions apply to the commercial Saxon-SA product.
+
+Saxon
+
+The contents of the downloaded file (saxon.zip) are subject to the Mozilla Public License Version 1.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.mozilla.org/MPL/
+
+Software distributed under the License is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License for the specific language governing rights and limitations under the License.
+
+The Original Code of Saxon comprises all those components which are not explicitly attributed to other parties.
+
+The Initial Developer of the Original Code is Michael Kay. Until February 2001 Michael Kay was an employee of International Computers Limited (now part of Fujitsu Limited), and original code developed during that time was released under this license by permission from International Computers Limited. From February 2001 until February 2004 Michael Kay was an employee of Software AG, and code developed during that time was released under this license by permission from Software AG, acting as a "Contributor". Subsequent code has been developed by Saxonica Limited, of which Michael Kay is a Director, again acting as a "Contributor". A small number of modules, or enhancements to modules, have been developed by other individuals (either written specially for Saxon, or incorporated into Saxon having initially been released as part of another open source product). Such contributions are acknowledged individually in comments attached to the relevant code modules. All Rights Reserved.
+
+If you produce a product that includes or requires Saxon, please refer to it prominently as "The Saxon XSLT and XQuery Processor from Saxonica Limited", and include the URL of the home page, which is at http://www.saxonica.com/. As a courtesy, please take reasonable steps to ensure that your users know that they are running Saxon.
+
+There is no guarantee of technical support, though I am usually able to answer enquiries within a few days. Please subscribe to the mailing list available at http://lists.sourceforge.net/lists/listinfo/saxon-help and raise any enquiries there. Also check the Saxon project pages on sourceforge for details of known errors; all bugs are listed there as soon as I have sufficient evidence to describe the nature of the problem.
+
+Please do not enter suspected bugs directly into the "bugs" tracker on SourceForge. I prefer to keep that for confirmed bugs only, so that it is easier to search for known bugs.
+
+The commercial Saxon-SA product is a "Larger Work" as defined by section 3.7 of the Mozilla Public License. It consists of the open source "Covered Code" (with no modifications) plus additional components distributed in executable form only.
+
+Other components
+
+Saxon includes the org.apache.xerces.util.XMLChar module from the Apache Xerces product, renamed as net.sf.saxon.om.XMLChar but otherwise unchanged. See the copyright statements included in the source code of that module for conditions of use.
+
+Saxon includes code for performing Unicode normalization that is derived from the sample code published for this purpose by the Unicode consortium. For the terms of use of this code, see http://www.unicode.org/terms_of_use.html, which should be regarded as forming part of these conditions of use, and part of the Saxon documentation. The original code and data published by Unicode Inc has been modified in the following ways: (a) two bugs have been fixed (these have been reported to the originator), (b) the routines for extracting data from the Unicode character database have been rewritten so that the required subset of the data is precompiled into Saxon, for efficiency, (c) dependencies on the ICU software from IBM have been removed, replacing calls to the relevant routines by calls to utility functions within Saxon itself, (d) package names have been changed, (e) redundant code has been removed.
