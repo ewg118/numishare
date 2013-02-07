@@ -22,6 +22,7 @@ $(document).ready(function() {
 		$.get('compare_results', {
 			q : query1, start:0, image:image,  side:'1', mode: 'compare'
 		}, function (data) {
+			alert(data);
 			$('#search1') .html(data);
 		});
 		// pass the query to the search_results url passing the needed url params:	

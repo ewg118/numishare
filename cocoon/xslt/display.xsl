@@ -121,6 +121,7 @@
 
 	<xsl:template match="/">
 		<xsl:choose>
+			<!-- regular HTML display mode-->
 			<xsl:when test="not(string($mode))">
 				<html>
 					<head>
@@ -218,38 +219,35 @@
 				</html>
 			</xsl:when>
 			<xsl:otherwise>
+				<!-- only call display template for compare display -->
 				<xsl:call-template name="display"/>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
 
-
-
 	<xsl:template name="display">
-		<div class="yui3-g">
-			<xsl:choose>
-				<xsl:when test="$mode='compare'">
+		<xsl:choose>
+			<xsl:when test="$mode='compare'">
+				<xsl:choose>
+					<xsl:when test="count(/content/*[local-name()='nuds']) &gt; 0">
+						<xsl:call-template name="nuds"/>
+					</xsl:when>
+					<xsl:otherwise>false</xsl:otherwise>
+				</xsl:choose>
+			</xsl:when>
+			<xsl:otherwise>
+				<div class="yui3-g">
 					<xsl:choose>
 						<xsl:when test="count(/content/*[local-name()='nuds']) &gt; 0">
 							<xsl:call-template name="nuds"/>
 						</xsl:when>
+						<xsl:when test="count(/content/*[local-name()='nudsHoard']) &gt; 0">
+							<xsl:call-template name="nudsHoard"/>
+						</xsl:when>
 						<xsl:otherwise>false</xsl:otherwise>
 					</xsl:choose>
-				</xsl:when>
-				<xsl:otherwise>
-					<div id="bd">
-						<xsl:choose>
-							<xsl:when test="count(/content/*[local-name()='nuds']) &gt; 0">
-								<xsl:call-template name="nuds"/>
-							</xsl:when>
-							<xsl:when test="count(/content/*[local-name()='nudsHoard']) &gt; 0">
-								<xsl:call-template name="nudsHoard"/>
-							</xsl:when>
-							<xsl:otherwise>false</xsl:otherwise>
-						</xsl:choose>
-					</div>
-				</xsl:otherwise>
-			</xsl:choose>
-		</div>
+				</div>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 </xsl:stylesheet>

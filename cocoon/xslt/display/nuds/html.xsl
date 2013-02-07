@@ -46,27 +46,31 @@
 		</xsl:if>
 		<!-- below is a series of conditionals for forming the image boxes and displaying obverse and reverse images, iconography, and legends if they are available within the EAD document -->
 		<xsl:choose>
-			<xsl:when test="not($mode = 'compare')">				
+			<xsl:when test="not($mode = 'compare')">
 				<xsl:call-template name="icons"/>
 				<xsl:choose>
 					<xsl:when test="$recordType='conceptual'">
-						<h1 id="object_title">
-							<xsl:value-of select="normalize-space(nuds:descMeta/nuds:title)"/>
-						</h1>
-						<xsl:call-template name="nuds_content"/>
+						<div class="yui3-u-1">
+							<div class="content">
+								<h1 id="object_title">
+									<xsl:value-of select="normalize-space(nuds:descMeta/nuds:title)"/>
+								</h1>
+								<xsl:call-template name="nuds_content"/>
 
-						<!-- show associated objects, preferencing those from Metis first -->
-						<xsl:choose>
-							<xsl:when test="string($sparql_endpoint)">
-								<cinclude:include src="cocoon:/widget?uri={concat('http://numismatics.org/ocre/', 'id/', $id)}&amp;template=display"/>
-							</xsl:when>
-							<xsl:when test="count(nuds:digRep/nuds:associatedObject) &gt; 0">
-								<div class="objects">
-									<h2>Examples of this type</h2>
-									<xsl:apply-templates select="nuds:digRep/nuds:associatedObject"/>
-								</div>
-							</xsl:when>
-						</xsl:choose>
+								<!-- show associated objects, preferencing those from Metis first -->
+								<xsl:choose>
+									<xsl:when test="string($sparql_endpoint)">
+										<cinclude:include src="cocoon:/widget?uri={concat('http://numismatics.org/ocre/', 'id/', $id)}&amp;template=display"/>
+									</xsl:when>
+									<xsl:when test="count(nuds:digRep/nuds:associatedObject) &gt; 0">
+										<div class="objects">
+											<h2>Examples of this type</h2>
+											<xsl:apply-templates select="nuds:digRep/nuds:associatedObject"/>
+										</div>
+									</xsl:when>
+								</xsl:choose>
+							</div>
+						</div>
 					</xsl:when>
 					<xsl:when test="$recordType='physical'">
 						<xsl:choose>
@@ -78,32 +82,42 @@
 										</h1>
 									</div>
 								</div>
-								<div class="yui3-u-5-12">
-									<div class="content">
-										<xsl:choose>
-											<xsl:when test="$image_location = 'left'">
+
+								<xsl:choose>
+									<xsl:when test="$image_location = 'left'">
+										<div class="yui3-u-5-12">
+											<div class="content">
 												<xsl:call-template name="obverse_image"/>
 												<xsl:call-template name="reverse_image"/>
-											</xsl:when>
-											<xsl:when test="$image_location = 'right'">												
+											</div>
+										</div>
+									</xsl:when>
+									<xsl:when test="$image_location = 'right'">
+										<div class="yui3-u-7-12">
+											<div class="content">
 												<xsl:call-template name="nuds_content"/>
-											</xsl:when>
-										</xsl:choose>
-									</div>
-								</div>
-								<div class="yui3-u-7-12">
-									<div class="content">
-										<xsl:choose>
-											<xsl:when test="$image_location = 'left'">												
+											</div>
+										</div>
+									</xsl:when>
+								</xsl:choose>
+
+								<xsl:choose>
+									<xsl:when test="$image_location = 'left'">
+										<div class="yui3-u-7-12">
+											<div class="content">
 												<xsl:call-template name="nuds_content"/>
-											</xsl:when>
-											<xsl:when test="$image_location = 'right'">
+											</div>
+										</div>
+									</xsl:when>
+									<xsl:when test="$image_location = 'right'">
+										<div class="yui3-u-5-12">
+											<div class="content">
 												<xsl:call-template name="obverse_image"/>
 												<xsl:call-template name="reverse_image"/>
-											</xsl:when>
-										</xsl:choose>
-									</div>
-								</div>
+											</div>
+										</div>
+									</xsl:when>
+								</xsl:choose>
 							</xsl:when>
 							<xsl:when test="$orientation = 'horizontal'">
 								<div class="content">
@@ -114,7 +128,7 @@
 											</h1>
 										</div>
 									</div>
-									
+
 									<xsl:choose>
 										<xsl:when test="$image_location = 'top'">
 											<div class="yui3-u-1-2">
@@ -159,9 +173,13 @@
 				<xsl:call-template name="icons"/>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:call-template name="obverse_image"/>
-				<xsl:call-template name="reverse_image"/>
-				<xsl:call-template name="nuds_content"/>
+				<div class="yui3-u-1-1">
+					<div class="content">
+						<xsl:call-template name="obverse_image"/>
+						<xsl:call-template name="reverse_image"/>
+						<xsl:call-template name="nuds_content"/>
+					</div>
+				</div>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>

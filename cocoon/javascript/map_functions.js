@@ -37,7 +37,7 @@ $(document).ready(function () {
 					return Math.min(feature.attributes.count, 7) + 3;
 				}
 			}
-		});	
+		});
 		var hoardStyle = new OpenLayers.Style({
 			pointRadius: "${radius}",
 			//pointRadius: "5",
@@ -93,8 +93,9 @@ $(document).ready(function () {
 			new OpenLayers.Control.PanZoomBar(),
 			new OpenLayers.Control.Navigation(),
 			new OpenLayers.Control.ScaleLine(),
-			new OpenLayers.Control.LayerSwitcher({'ascending':true})]
-			
+			new OpenLayers.Control.LayerSwitcher({
+				'ascending': true
+			})]
 		});
 		
 		map.addLayer(new OpenLayers.Layer.Google("Google Physical", {
@@ -106,14 +107,14 @@ $(document).ready(function () {
 		
 		
 		//zoom to extent of world
-		map.zoomTo('2');	
+		map.zoomTo('2');
 		
 		//enable events for mint selection
 		SelectControl = new OpenLayers.Control.SelectFeature([mintLayer, hoardLayer], {
 			clickout: true,
 			multiple: false,
 			hover: false
-		});	
+		});
 		
 		
 		map.addControl(SelectControl);
@@ -140,11 +141,11 @@ $(document).ready(function () {
 			}).get();
 			var length = array_of_checked_values.length;
 			
-			if (length > 3){
+			if (length > 3) {
 				$(this).next('button').children('span:nth-child(2)').text(title + ': ' + length + ' selected');
-			} else if (length > 0 && length <= 3){
+			} else if (length > 0 && length <= 3) {
 				$(this).next('button').children('span:nth-child(2)').text(title + ': ' + array_of_checked_values.join(', '));
-			} else if (length == 0){
+			} else if (length == 0) {
 				$(this).next('button').children('span:nth-child(2)').text(title);
 			}
 		},
@@ -234,8 +235,7 @@ $(document).ready(function () {
 		if (collection_type == 'hoard') {
 			$('#timemap').html('<div id="mapcontainer"><div id="map"/></div><div id="timelinecontainer"><div id="timeline"/></div>');
 			initialize_timemap(query);
-			
-		} else {		
+		} else {
 			newUrl = "mints.kml?q=" + query;
 			
 			mintLayer.loaded = false;
@@ -250,7 +250,8 @@ $(document).ready(function () {
 	
 	$('#category_facet_link').hover(function () {
 		$(this) .attr('class', 'ui-multiselect ui-widget ui-state-default ui-corner-all ui-state-focus');
-	}, function () {
+	},
+	function () {
 		$(this) .attr('class', 'ui-multiselect ui-widget ui-state-default ui-corner-all');
 	});
 	
@@ -435,7 +436,7 @@ $(document).ready(function () {
 	});
 	
 	//clear query
-	$('#clear_all').livequery('click', function(event){
+	$('#clear_all').livequery('click', function (event) {
 		$('#results').html('');
 		return false;
 	});
@@ -524,7 +525,7 @@ $(document).ready(function () {
 		
 		$('.show_coins').livequery('click', function (event) {
 			var query = $(this).attr('q');
-			var lang =  $('input[name=lang]').val();
+			var lang = $('input[name=lang]').val();
 			$.get('results_ajax', {
 				q: query,
 				lang: lang
