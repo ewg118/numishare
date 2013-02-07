@@ -223,16 +223,22 @@
 					<xsl:when test="$name='appraiser'">Evaluateur</xsl:when>
 					<xsl:when test="$name='authority'">Autorité émettrice</xsl:when>
 					<xsl:when test="$name='axis'">Axe</xsl:when>
+					<xsl:when test="$name='century'">Siècle</xsl:when>
+					<xsl:when test="$name='coinType'">Type de monnaie</xsl:when>
 					<xsl:when test="$name='collection'">Collection</xsl:when>
 					<xsl:when test="$name='color'">Couleur</xsl:when>
 					<xsl:when test="$name='completeness'">Intégrité</xsl:when>
 					<xsl:when test="$name='condition'">Etat de conservation</xsl:when>
 					<xsl:when test="$name='conservationState'">Etat de conservation</xsl:when>
+					<xsl:when test="$name='contents'">Contenu</xsl:when>
 					<xsl:when test="$name='coordinates'">Coordonnées</xsl:when>
-					<xsl:when test="$name='countermark'">Contremarque</xsl:when>
-					<xsl:when test="$name='provenance'">Provenance</xsl:when>
+					<xsl:when test="$name='countermark'">Contremarque</xsl:when>					
 					<xsl:when test="$name='date'">Date</xsl:when>
+					<xsl:when test="$name='dateRange'">Intervalle chronologique</xsl:when>					
 					<xsl:when test="$name='dateOnObject'">Date sur l'objet</xsl:when>
+					<xsl:when test="$name='decade'">Décennie</xsl:when>
+					<xsl:when test="$name='degree'">Degré</xsl:when>
+					<xsl:when test="$name='deity'">Divinité</xsl:when>
 					<xsl:when test="$name='dob'">Date sur l'objet</xsl:when>
 					<xsl:when test="$name='denomination'">Dénomination</xsl:when>
 					<xsl:when test="$name='department'">Département</xsl:when>
@@ -250,10 +256,13 @@
 					<xsl:when test="$name='geographic'">Géographique</xsl:when>
 					<xsl:when test="$name='grade'">Etat</xsl:when>
 					<xsl:when test="$name='height'">Hauteur</xsl:when>
+					<xsl:when test="$name='hoard'">Trésor</xsl:when>
+					<xsl:when test="$name='hoardDesc'">Description du trésor</xsl:when>
 					<xsl:when test="$name='identifier'">Identifiant</xsl:when>
 					<xsl:when test="$name='issuer'">Emetteur</xsl:when>
 					<xsl:when test="$name='landowner'">Propriétaire du sol</xsl:when>
 					<xsl:when test="$name='legend'">Légende</xsl:when>
+					<xsl:when test="$name='manufacture'">Technique d'émission</xsl:when>
 					<xsl:when test="$name='material'">Matériau</xsl:when>
 					<xsl:when test="$name='measurementsSet'">Mesures</xsl:when>
 					<xsl:when test="$name='mint'">Atelier</xsl:when>
@@ -261,17 +270,21 @@
 					<xsl:when test="$name='objectType'">Type d'objet</xsl:when>
 					<xsl:when test="$name='obverse'">Avers/Droit</xsl:when>
 					<xsl:when test="$name='obv_leg'"> Légende d'avers/de droit</xsl:when>
+					<xsl:when test="$name='obv_type'">Type d'avers</xsl:when>
 					<xsl:when test="$name='owner'">Propriétaire</xsl:when>
 					<xsl:when test="$name='physDesc'">Description physique</xsl:when>
 					<xsl:when test="$name='portrait'">Portrait</xsl:when>
 					<xsl:when test="$name='private'">Privé</xsl:when>
+					<xsl:when test="$name='provenance'">Provenance</xsl:when>
 					<xsl:when test="$name='public'">Publique</xsl:when>
+					<xsl:when test="$name='publisher'">Maison d'édition</xsl:when>
 					<xsl:when test="$name='reference'">Référence</xsl:when>
 					<xsl:when test="$name='refDesc'">Références</xsl:when>
 					<xsl:when test="$name='region'">Région</xsl:when>
 					<xsl:when test="$name='repository'">Dépositaire</xsl:when>
 					<xsl:when test="$name='reverse'">Revers</xsl:when>
 					<xsl:when test="$name='rev_leg'">Légende de revers</xsl:when>
+					<xsl:when test="$name='rev_type'">Type de revers</xsl:when>
 					<xsl:when test="$name='saleCatalog'">Catalogue de vente</xsl:when>
 					<xsl:when test="$name='saleItem'">Numéro de lot</xsl:when>
 					<xsl:when test="$name='salePrice'">Prix de vente</xsl:when>
@@ -603,11 +616,14 @@
 					<xsl:when test="$label='display_summary'">Résumé</xsl:when>
 					<xsl:when test="$label='display_map'">Carte</xsl:when>
 					<xsl:when test="$label='display_administrative'">Administratif</xsl:when>
+					<xsl:when test="$label='display_quantitative'">Analyse quantitative</xsl:when>
+					<xsl:when test="$label='display_visualization'">Visualisation</xsl:when>
+					<xsl:when test="$label='display_data-download'">Récupérer les données</xsl:when>
 					<xsl:when test="$label='results_all-terms'">Tous les termes</xsl:when>
 					<xsl:when test="$label='results_map-results'">Résultats géographiques</xsl:when>
 					<xsl:when test="$label='results_data-options'">Options de données</xsl:when>
 					<xsl:when test="$label='results_refine-results'">Raffiner le résultat</xsl:when>
-					<xsl:when test="$label='results_quick-search'">Recherche rapide</xsl:when>
+					<xsl:when test="$label='results_quick-search'">Recherche rapide</xsl:when>				
 					<xsl:when test="$label='results_has-images'">Images disponibles</xsl:when>
 					<xsl:when test="$label='results_refine-search'">Raffiner la recherche</xsl:when>
 					<xsl:when test="$label='results_select'">Sélectionner à partir de la liste</xsl:when>
@@ -616,6 +632,10 @@
 					<xsl:when test="$label='results_ascending'">Ordre ascendant</xsl:when>
 					<xsl:when test="$label='results_descending'">Ordre descendant</xsl:when>
 					<xsl:when test="$label='results_result-desc'">Afficher les références XX à YY à partir de ZZ résultats</xsl:when>
+					<xsl:when test="$label='results_filters'">Filtres</xsl:when>
+					<xsl:when test="$label='results_clear-all'">Effacer les termes sélectionnés</xsl:when>
+					<xsl:when test="$label='results_keyword'">Mot clef</xsl:when>
+					<xsl:when test="$label='results_sort-category'">Classer les catégories</xsl:when>					
 					<xsl:otherwise>
 						<xsl:value-of select="concat('No label for ', $label)"/>
 					</xsl:otherwise>
