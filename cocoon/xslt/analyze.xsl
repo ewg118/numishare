@@ -16,6 +16,7 @@
 	<xsl:param name="compare"/>
 	<xsl:param name="type"/>
 	<xsl:param name="chartType"/>
+	<xsl:param name="exclude"/>
 
 	<!-- config variables -->
 	<xsl:variable name="url">
@@ -54,6 +55,7 @@
 
 				<!-- analysis scripts -->
 				<script type="text/javascript" src="{$display_path}javascript/highcharts.js"/>
+				<script type="text/javascript" src="{$display_path}javascript/modules/exporting.js"/>
 				<script type="text/javascript" src="{$display_path}javascript/jquery.livequery.js"/>
 				<script type="text/javascript" src="{$display_path}javascript/analysis_functions.js"/>
 				<!-- filter functions -->
@@ -86,12 +88,23 @@
 								<a href="#visualization">Visualization</a>
 							</li>
 							<li>
+								<a href="#date-analysis">Date Analysis</a>
+							</li>
+							<li>
 								<a href="#data-download">Data Download</a>
 							</li>
 						</ul>
 						<div id="visualization" class="tab">
-							<h3>Visualization</h3>
-							<xsl:call-template name="visualization"/>
+							<h3>Typological Visualization</h3>
+							<xsl:call-template name="visualization">
+								<xsl:with-param name="action">#visualization</xsl:with-param>
+							</xsl:call-template>
+						</div>
+						<div id="date-analysis" class="tab">
+							<h3>Date Analysis</h3>
+							<xsl:call-template name="date-vis">
+								<xsl:with-param name="action">#date-analysis</xsl:with-param>
+							</xsl:call-template>
 						</div>
 						<div id="data-download" class="tab">
 							<h3>Data Download</h3>
@@ -104,6 +117,7 @@
 							<xsl:call-template name="search_forms"/>
 						</div>
 					</div>
+					<span id="formId" style="display:none"/>
 				</div>
 			</div>
 		</div>

@@ -179,11 +179,13 @@
 								<link type="text/css" href="{$display_path}jquery.fancybox-1.3.4.css" rel="stylesheet"/>
 								<script type="text/javascript" src="{$display_path}javascript/jquery.fancybox-1.3.4.min.js"/>
 								<script type="text/javascript" src="{$display_path}javascript/highcharts.js"/>
+								<script type="text/javascript" src="{$display_path}javascript/modules/exporting.js"/>
 								<script type="text/javascript" src="{$display_path}javascript/display_functions.js"/>
 							</xsl:when>
 							<!-- hoard CSS and JS dependencies -->
 							<xsl:when test="$recordType='hoard'">
 								<script type="text/javascript" src="{$display_path}javascript/highcharts.js"/>
+								<script type="text/javascript" src="{$display_path}javascript/modules/exporting.js"/>
 								<script type="text/javascript" src="{$display_path}javascript/jquery.livequery.js"/>
 								<script type="text/javascript" src="{$display_path}javascript/display_hoard_functions.js"/>
 								<script type="text/javascript" src="{$display_path}javascript/analysis_functions.js"/>

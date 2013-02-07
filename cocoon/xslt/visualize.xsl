@@ -63,6 +63,7 @@
 				
 				<!-- visualize functions -->
 				<script type="text/javascript" src="{$display_path}javascript/highcharts.js"/>
+				<script type="text/javascript" src="{$display_path}javascript/modules/exporting.js"/>
 				<script type="text/javascript" src="{$display_path}javascript/visualize_functions.js"/>
 				<!-- compare/customQuery functions -->
 				<script type="text/javascript" src="{$display_path}javascript/jquery.fancybox-1.3.4.min.js"/>

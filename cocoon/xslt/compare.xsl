@@ -29,6 +29,7 @@
 				<link rel="shortcut icon" type="image/x-icon" href="{$display_path}images/favicon.png"/>
 				<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.8.0/build/cssgrids/grids-min.css"/>
 				<!-- Core + Skin CSS -->
+				<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.8.2r1/build/menu/assets/skins/sam/menu.css"/>
 				<link type="text/css" href="{$display_path}themes/{//config/theme/jquery_ui_theme}.css" rel="stylesheet"/>
 				<link type="text/css" href="{$display_path}style.css" rel="stylesheet"/>
 				<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"/>
@@ -45,6 +46,7 @@
 
 				<!-- search related functions -->
 				<script type="text/javascript" src="{$display_path}javascript/jquery.livequery.js"/>
+				<script type="text/javascript" src="{$display_path}javascript/search_functions.js"/>
 				<script type="text/javascript" src="{$display_path}javascript/compare.js"/>
 				<script type="text/javascript" src="{$display_path}javascript/compare_functions.js"/>
 				<xsl:if test="string(/config/google_analytics/script)">
@@ -88,7 +90,7 @@
 							</div>
 						</form>
 					</div>
-					<table id="search1"/>
+					<div id="search1"/>
 				</div>
 			</div>
 			<div class="yui3-u-1-2">
@@ -124,7 +126,7 @@
 						<a id="removeBtn_1" class="removeBtn" href="#">«</a>
 					</div>
 				</div>
-				<table id="search2"/>
+				<div id="search2"/>
 			</div>
 		</div>
 	</xsl:template>

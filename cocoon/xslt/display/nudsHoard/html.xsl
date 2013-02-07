@@ -9,6 +9,7 @@
 	<xsl:param name="compare"/>
 	<xsl:param name="type"/>
 	<xsl:param name="chartType"/>
+	<xsl:param name="exclude"/>
 
 	<xsl:template name="nudsHoard">
 		<xsl:apply-templates select="/content/nh:nudsHoard"/>
@@ -129,13 +130,22 @@
 							<div id="accordion">
 								<h3>Visualization</h3>
 								<div>
-									<xsl:call-template name="visualization"/>
+									<xsl:call-template name="visualization">
+										<xsl:with-param name="action" select="concat('./', $id, '#quantitative')"/>
+									</xsl:call-template>
+								</div>
+								<h3>Date Analysis</h3>
+								<div>
+									<xsl:call-template name="date-vis">
+										<xsl:with-param name="action" select="concat('./', $id, '#quantitative')"/>
+									</xsl:call-template>
 								</div>
 								<h3>Data Download</h3>
 								<div>
 									<xsl:call-template name="data-download"/>
 								</div>
 							</div>
+							<span id="formId" style="display:none"/>
 						</div>
 					</div>
 				</xsl:if>

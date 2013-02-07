@@ -12,9 +12,9 @@
 	<xsl:template match="doc">
 		<xsl:variable name="id" select="str[@name='id']"/>
 		<option value="{$id}" class="compare-option">
-			<xsl:for-each select="$tokens[.=$id]">
+			<xsl:if test="boolean(index-of($tokens, $id))">
 				<xsl:attribute name="selected">selected</xsl:attribute>
-			</xsl:for-each>
+			</xsl:if>
 			
 			<xsl:value-of select="str[@name='title_display']"/>
 		</option>
