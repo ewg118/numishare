@@ -8,7 +8,7 @@ and piecing together the search query.
 ************************************/
 $(document).ready(function() {	
 	$('#advancedSearchForm').submit(function() {
-		var q = assembleQuery();
+		var q = assembleQuery('advancedSearchForm');
 		$('#q_input') .attr('value', q);
 	});
 });
