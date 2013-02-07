@@ -572,19 +572,6 @@
 			</map:match>
 
 			<!-- compare page -->
-			<map:match pattern="display_ajax/*">
-				<map:aggregate element="content">
-					<map:part src="{global:exist-url}{global:collection-name}/objects/{1}.xml"/>
-					<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
-				</map:aggregate>
-				<map:transform src="xslt/ajax/display_ajax.xsl" label="basiccontent" type="xslt-saxon">
-					<map:parameter name="use-request-parameters" value="true"/>
-					<map:parameter name="solr-url" value="{global:solr-url}"/>
-					<map:parameter name="pipeline" value="display"/>
-				</map:transform>
-				<map:serialize type="html"/>
-			</map:match>
-
 			<map:match pattern="compare_results">
 				<map:aggregate element="content">
 					<map:part
