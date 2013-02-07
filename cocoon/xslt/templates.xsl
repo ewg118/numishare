@@ -15,19 +15,21 @@
 			<counts>
 				<!-- use get_hoard_quant to calculate -->
 				<xsl:if test="$pipeline = 'display'">
-					<xsl:copy-of select="document(concat($url, 'get_hoard_quant?id=', $id, '&amp;calculate=', if (string($role)) then $role else $element, '&amp;type=', $type))"/>
+					<xsl:copy-of
+						select="document(concat($url, 'get_hoard_quant?id=', $id, '&amp;calculate=', if (string($role)) then $role else $element, '&amp;type=', $type, '&amp;exclude=', $exclude))"/>
 				</xsl:if>
 				<!-- if there is a compare parameter, load get_hoard_quant with document() function -->
 				<xsl:if test="string($compare) and string($calculate)">
 					<xsl:for-each select="tokenize($compare, ',')">
-						<xsl:copy-of select="document(concat($url, 'get_hoard_quant?id=', ., '&amp;calculate=', if (string($role)) then $role else $element, '&amp;type=', $type))"/>
+						<xsl:copy-of
+							select="document(concat($url, 'get_hoard_quant?id=', ., '&amp;calculate=', if (string($role)) then $role else $element, '&amp;type=', $type, '&amp;exclude=', $exclude))"/>
 					</xsl:for-each>
 				</xsl:if>
 			</counts>
 		</xsl:variable>
 
-		<div id="{.}-container" style="min-width: 400px; height: 400px; margin: 0 auto"/>
-		<table class="calculate" id="{.}-table">
+		<div id="{if (string($role)) then $role else $element}-container" style="min-width: 400px; height: 400px; margin: 0 auto"/>
+		<table class="calculate" id="{if (string($role)) then $role else $element}-table">
 			<caption>
 				<xsl:choose>
 					<xsl:when test="$type='count'">Occurrences</xsl:when>
@@ -62,7 +64,7 @@
 			</thead>
 			<tbody>
 				<xsl:for-each select="distinct-values(exsl:node-set($counts)//name)">
-					<xsl:sort/>
+					<xsl:sort data-type="{if ($calculate = 'date') then 'number' else 'text'}"/>
 					<xsl:variable name="name" select="if (string(.)) then . else 'Null value'"/>
 					<tr>
 						<th>
@@ -75,7 +77,7 @@
 										<xsl:value-of select="exsl:node-set($counts)//hoard[@id=$id]/*[local-name()='name'][text()=$name]/@count"/>
 									</xsl:when>
 									<xsl:otherwise>
-										<xsl:text>0</xsl:text>
+										<xsl:text>null</xsl:text>
 									</xsl:otherwise>
 								</xsl:choose>
 							</td>
@@ -89,7 +91,7 @@
 											<xsl:value-of select="exsl:node-set($counts)//hoard[@id=$hoard-id]/*[local-name()='name'][text()=$name]/@count"/>
 										</xsl:when>
 										<xsl:otherwise>
-											<xsl:text>0</xsl:text>
+											<xsl:text>null</xsl:text>
 										</xsl:otherwise>
 									</xsl:choose>
 								</td>
@@ -101,17 +103,47 @@
 		</table>
 	</xsl:template>
 
+	<xsl:template name="nh:dateQuant">
+		<!-- use get_hoard_quant to calculate -->
+		<div id="dateChart"/>
+		<div id="dateData" style="display:none">
+			<xsl:attribute name="title">
+				<xsl:choose>
+					<xsl:when test="$type='count'">Occurrences</xsl:when>
+					<xsl:when test="$type='cumulative'">Cumulative Percentage</xsl:when>
+					<xsl:otherwise>Percentage</xsl:otherwise>
+				</xsl:choose>
+				<xsl:text> for </xsl:text>
+				<xsl:value-of select="numishare:regularize_node('date', $lang)"/>
+			</xsl:attribute>
+
+			<xsl:text>[</xsl:text>
+			<xsl:if test="$pipeline = 'display'">
+				<cinclude:include src="cocoon:/get_hoard_quant?id={$id}&amp;type={$type}&amp;format=js&amp;calculate=date&amp;exclude={$exclude}"/>
+			</xsl:if>
+			<!-- if there is a compare parameter, load get_hoard_quant with document() function -->
+			<xsl:if test="string($compare) and string($calculate)">
+				<xsl:if test="$pipeline='display'">
+					<xsl:text>,</xsl:text>
+				</xsl:if>
+				<xsl:for-each select="tokenize($compare, ',')">
+					<cinclude:include src="cocoon:/get_hoard_quant?id={.}&amp;type={$type}&amp;format=js&amp;calculate=date&amp;exclude={$exclude}"/>
+					<xsl:if test="not(position()=last())">
+						<xsl:text>,</xsl:text>
+					</xsl:if>
+				</xsl:for-each>
+			</xsl:if>
+			<xsl:text>]</xsl:text>
+		</div>
+
+	</xsl:template>
+
+
+	<!-- ************** FORM TEMPLATES ************** -->
 	<xsl:template name="visualization">
+		<xsl:param name="action"/>
 		<xsl:variable name="queryOptions">authority,deity,denomination,dynasty,issuer,material,mint,portrait,region</xsl:variable>
-		<xsl:variable name="chartTypes">line,spline,area,areaspline,column,bar,scatter</xsl:variable>
-		<xsl:variable name="action">
-			<xsl:choose>
-				<xsl:when test="$pipeline = 'analyze'">#visualization</xsl:when>
-				<xsl:otherwise>
-					<xsl:value-of select="concat('./', $id, '#quantitative')"/>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:variable>
+		<xsl:variable name="chartTypes">bar,column</xsl:variable>
 
 		<p>Use this feature to visualize percentages or numeric occurrences of the following typologies.</p>
 		<form action="{$action}" id="visualize-form" style="margin-bottom:40px;">
@@ -135,11 +167,9 @@
 				<xsl:for-each select="tokenize($chartTypes, ',')">
 					<span class="anOption">
 						<input type="radio" name="chartType" value="{.}">
-							<xsl:choose>
-								<xsl:when test="$chartType = .">
-									<xsl:attribute name="checked">checked</xsl:attribute>
-								</xsl:when>
-							</xsl:choose>
+							<xsl:if test="$chartType = . or (.='column' and not(string($chartType)))">
+								<xsl:attribute name="checked">checked</xsl:attribute>
+							</xsl:if>
 						</input>
 						<label for="chartType-radio">
 							<xsl:value-of select="."/>
@@ -170,13 +200,12 @@
 					</span>
 				</xsl:for-each>
 			</div>
-
 			<xsl:choose>
 				<xsl:when test="$pipeline='analyze'">
 					<h2>
 						<xsl:text>Step 4: Select Hoards</xsl:text>
 						<span style="font-size:60%;margin-left:10px;">
-							<a href="#filterHoards" id="showFilter">Filter List</a>
+							<a href="#filterHoards" class="showFilter" id="visualize-filter">Filter List</a>
 						</span>
 					</h2>
 					<div class="filter-div" style="display:none">
@@ -204,51 +233,174 @@
 				</xsl:otherwise>
 			</xsl:choose>
 
+			<div>
+				<h3>Optional Settings<span style="font-size:60%;margin-left:10px;"><a href="#" class="optional-button" id="visualize-options">Hide/Show Options</a></span></h3>
+				<div class="optional-div" style="display:none">
+					<h4>Exclude Certainty Codes</h4>
+					<cinclude:include src="cocoon:/get_certainty_codes?exclude={$exclude}"/>
+				</div>
+			</div>
+
 			<input type="hidden" name="calculate" id="calculate-input" value=""/>
 			<input type="hidden" name="compare" class="compare-input" value=""/>
+			<input type="hidden" name="exclude" class="exclude-input" value=""/>
 			<br/>
-			<input type="submit" value="Calculate Selected" id="submit-calculate"/>
+			<input type="submit" value="Calculate Selected" class="submit-vis" id="submit-vis"/>
 		</form>
 
 		<!-- output charts and tables -->
 		<xsl:for-each select="tokenize($calculate, ',')">
-			<xsl:variable name="element">
-				<xsl:choose>
-					<xsl:when test=". = 'material' or .='denomination'">
+			<xsl:if test="not(.='date')">
+				<xsl:variable name="element">
+					<xsl:choose>
+						<xsl:when test=". = 'material' or .='denomination'">
+							<xsl:value-of select="."/>
+						</xsl:when>
+						<xsl:when test=".='mint' or .='region'">
+							<xsl:text>geogname</xsl:text>
+						</xsl:when>
+						<xsl:when test=".='dynasty'">
+							<xsl:text>famname</xsl:text>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:text>persname</xsl:text>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:variable>
+				<xsl:variable name="role">
+					<xsl:if test=". != 'material' and . != 'denomination'">
 						<xsl:value-of select="."/>
-					</xsl:when>
-					<xsl:when test=".='mint' or .='region'">
-						<xsl:text>geogname</xsl:text>
-					</xsl:when>
-					<xsl:when test=".='dynasty'">
-						<xsl:text>famname</xsl:text>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:text>persname</xsl:text>
-					</xsl:otherwise>
-				</xsl:choose>
-			</xsl:variable>
-			<xsl:variable name="role">
-				<xsl:if test=". != 'material' and . != 'denomination'">
-					<xsl:value-of select="."/>
-				</xsl:if>
-			</xsl:variable>
+					</xsl:if>
+				</xsl:variable>
 
-			<xsl:call-template name="nh:quant">
-				<xsl:with-param name="element" select="$element"/>
-				<xsl:with-param name="role" select="$role"/>
-			</xsl:call-template>
+				<xsl:call-template name="nh:quant">
+					<xsl:with-param name="element" select="$element"/>
+					<xsl:with-param name="role" select="$role"/>
+				</xsl:call-template>
+			</xsl:if>
 		</xsl:for-each>
 	</xsl:template>
 
+	<xsl:template name="date-vis">
+		<xsl:param name="action"/>
+		<xsl:variable name="chartTypes">bar,column,area,line,spline,areaspline</xsl:variable>
+
+		<p>Use this feature to render percentages or numeric occurrences of coins of a particular date within hoards.</p>
+		<form action="{$action}" id="date-form" style="margin-bottom:40px;">
+			<h2>Step 1: Select Numeric Response Type</h2>
+			<input type="radio" name="type" value="percentage">
+				<xsl:if test="$type != 'count'">
+					<xsl:attribute name="checked">checked</xsl:attribute>
+				</xsl:if>
+			</input>
+			<label for="type-radio">Percentage</label>
+			<br/>
+			<input type="radio" name="type" value="cumulative">
+				<xsl:if test="$type = 'cumulative'">
+					<xsl:attribute name="checked">checked</xsl:attribute>
+				</xsl:if>
+			</input>
+			<label for="type-radio">Cumulative Percentage</label>
+			<br/>
+			<input type="radio" name="type" value="count">
+				<xsl:if test="$type = 'count'">
+					<xsl:attribute name="checked">checked</xsl:attribute>
+				</xsl:if>
+			</input>
+			<label for="type-radio">Count</label>
+			<br/>
+			<div style="display:table;width:100%">
+				<h2>Step 2: Select Chart Type</h2>
+				<xsl:for-each select="tokenize($chartTypes, ',')">
+					<span class="anOption">
+						<input type="radio" name="chartType" value="{.}">
+							<xsl:if test="$chartType = . or (.='line' and not(string($chartType)))">
+								<xsl:attribute name="checked">checked</xsl:attribute>
+							</xsl:if>
+							<xsl:if test="$type='count' and (.='line' or .='area' or .='areaspline' or .='spline')">
+								<xsl:attribute name="disabled">disabled</xsl:attribute>
+							</xsl:if>
+							<xsl:if test="$type!='count' and (.='column' or .='bar')">
+								<xsl:attribute name="disabled">disabled</xsl:attribute>
+							</xsl:if>
+						</input>
+						<label for="chartType-radio">
+							<xsl:value-of select="."/>
+						</label>
+					</span>
+
+				</xsl:for-each>
+			</div>
+			<xsl:choose>
+				<xsl:when test="$pipeline='analyze'">
+					<h2>
+						<xsl:text>Step 3: Select Hoards</xsl:text>
+						<span style="font-size:60%;margin-left:10px;">
+							<a href="#filterHoards" class="showFilter" id="date-filter">Filter List</a>
+						</span>
+					</h2>
+					<div class="filter-div" style="display:none">
+						<b>Filter Query:</b>
+						<span/>
+						<a href="#" class="removeFilter">Remove Filter</a>
+					</div>
+					<xsl:call-template name="get-hoards"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<h2>Step 3: Select Hoards to Compare (optional)</h2>
+					<xsl:choose>
+						<xsl:when test="not(string($compare))">
+							<div>
+								<a href="#" class="compare-button"><img src="{$display_path}images/plus.gif" alt="Expand"/>Compare to Other Hoards</a>
+								<div class="compare-div"/>
+							</div>
+						</xsl:when>
+						<xsl:otherwise>
+							<div class="compare-div">
+								<cinclude:include src="cocoon:/get_hoards?compare={$compare}&amp;q=*"/>
+							</div>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:otherwise>
+			</xsl:choose>
+			<div>
+				<h3>Optional Settings<span style="font-size:60%;margin-left:10px;"><a href="#" class="optional-button" id="date-options">Hide/Show Options</a></span></h3>
+				<div class="optional-div" style="display:none">
+					<h4>Exclude Certainty Codes</h4>
+					<cinclude:include src="cocoon:/get_certainty_codes?exclude={$exclude}"/>
+				</div>
+			</div>
+
+			<input type="hidden" name="calculate" id="calculate-input" value=""/>
+			<input type="hidden" name="compare" class="compare-input" value=""/>
+			<input type="hidden" name="exclude" class="exclude-input" value=""/>
+			<br/>
+			<input type="submit" value="Calculate Selected" class="submit-vis" id="submit-date"/>
+		</form>
+
+		<xsl:if test="$calculate='date'">
+			<xsl:choose>
+				<xsl:when test="$type='count'">
+					<xsl:call-template name="nh:quant">
+						<xsl:with-param name="element">date</xsl:with-param>
+						<xsl:with-param name="role"/>
+					</xsl:call-template>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:call-template name="nh:dateQuant"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:if>
+	</xsl:template>
+
 	<xsl:template name="data-download">
-		<xsl:variable name="queryOptions">authority,deity,denomination,dynasty,issuer,material,mint,portrait,region</xsl:variable>
+		<xsl:variable name="queryOptions">authority,date,deity,denomination,dynasty,issuer,material,mint,portrait,region</xsl:variable>		
 
 		<p>Use this feature to download a CSV for the given query and selected hoards.</p>
 		<form action="{$display_path}hoards.csv" id="csv-form" style="margin-bottom:40px;">
 			<h2>Step 1: Select Numeric Response Type</h2>
 			<input type="radio" name="type" value="percentage">
-				<xsl:if test="$type != 'count'">
+				<xsl:if test="$type != 'count' and $type != 'cumulative'">
 					<xsl:attribute name="checked">checked</xsl:attribute>
 				</xsl:if>
 			</input>
@@ -260,6 +412,16 @@
 				</xsl:if>
 			</input>
 			<label for="type-radio">Count</label>
+			<br/>
+			<input type="radio" name="type" value="cumulative">
+				<xsl:if test="$type = 'cumulative'">
+					<xsl:attribute name="checked">checked</xsl:attribute>
+				</xsl:if>
+				<xsl:if test="$calculate != 'date'">
+					<xsl:attribute name="disabled">disabled</xsl:attribute>
+				</xsl:if>
+			</input>
+			<label for="type-radio">Cumulative Percentage</label>
 			<br/>
 			<div style="width:100%;display:table">
 				<h2>Step 2: Select Categories for Analysis</h2>
@@ -288,12 +450,15 @@
 				<xsl:when test="$pipeline='analyze'">
 					<h2>
 						<xsl:text>Step 3: Select Hoards</xsl:text>
-						<div class="filter-div" style="display:none">
-							<b>Filter Query:</b>
-							<span/>
-							<a href="#" class="removeFilter">Remove Filter</a>
-						</div>
+						<span style="font-size:60%;margin-left:10px;">
+							<a href="#filterHoards" class="showFilter" id="csv-filter">Filter List</a>
+						</span>
 					</h2>
+					<div class="filter-div" style="display:none">
+						<b>Filter Query:</b>
+						<span/>
+						<a href="#" class="removeFilter">Remove Filter</a>
+					</div>
 					<xsl:call-template name="get-hoards"/>
 				</xsl:when>
 				<xsl:otherwise>
@@ -304,7 +469,15 @@
 					</div>
 				</xsl:otherwise>
 			</xsl:choose>
-
+			
+			<div>
+				<h3>Optional Settings<span style="font-size:60%;margin-left:10px;"><a href="#" class="optional-button" id="csv-options">Hide/Show Options</a></span></h3>
+				<div class="optional-div" style="display:none">
+					<h4>Exclude Certainty Codes</h4>
+					<cinclude:include src="cocoon:/get_certainty_codes?exclude={$exclude}"/>
+				</div>
+			</div>
+			<input type="hidden" name="exclude" class="exclude-input" value=""/>
 			<input type="hidden" name="compare" class="compare-input" value=""/>
 			<br/>
 			<input type="submit" value="Calculate Selected" id="submit-csv"/>
@@ -550,7 +723,7 @@
 		<xsl:text>-</xsl:text>
 		<xsl:value-of select="mods:end"/>
 	</xsl:template>
-	
+
 	<xsl:template match="mods:originInfo">
 		<xsl:if test="mods:place/mods:placeTerm">
 			<xsl:value-of select="mods:place/mods:placeTerm"/>

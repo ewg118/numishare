@@ -1,14 +1,14 @@
 /*******************
-VISUALIZATION FUNCTIONS 
+VISUALIZATION FUNCTIONS
 Author: Ethan Gruber
 Modification Date: November 2012
 Description: Functions used in the Hoard Display and Analyze pipelines
 for manipulating forms and rendering tables in the form of highcharts
 ********************/
 
-$(document).ready(function(){
+$(document).ready(function () {
 	$("#tabs").tabs();
-
+	
 	/**
 	* Visualize an HTML table using Highcharts. The top (horizontal) header
 	* is used for series names, and the left (vertical) header is used
@@ -38,25 +38,28 @@ $(document).ready(function(){
 						};
 					} else {
 						// add values
-						options.series[j - 1].data.push(parseFloat(this.innerHTML));
+						options.series[j - 1].data.push(this.innerHTML == 'null'? null: parseFloat(this.innerHTML));
 					}
 				}
 			});
 		});
+		console.log(options.series);
 		
 		var chart = new Highcharts.Chart(options);
 	}
 	
+	/** CREATE HIGHCHARTS BASED ON HTML TABLES **/
 	$('.calculate').each(function () {
 		var id = $(this).attr('id').split('-')[0];
-		var type = $('input:radio[name=type]:checked').val();
-		var chartType = $('input:radio[name=chartType]:checked').val();
+		var formId = $(this).siblings('form').attr('id');
+		var type = $('#' + formId + ' input:radio[name=type]:checked').val();
+		var chartType = $('#' + formId + ' input:radio[name=chartType]:checked').val();
+		
 		var table = $(this),
 		options = {
 			chart: {
 				renderTo: id + '-container',
-				type: chartType,
-				width: 880
+				type: chartType
 			},
 			title: {
 				text: $(this).children('caption').text()
@@ -75,6 +78,8 @@ $(document).ready(function(){
 				}
 			},
 			yAxis: {
+				max: (type == 'count'? null: 100),
+				min: (type == 'count'? null: 0),
 				title: {
 					text: (type == 'percentage'? 'Percentage': 'Occurrences')
 				}
@@ -88,21 +93,133 @@ $(document).ready(function(){
 		Highcharts.visualize(table, options);
 	});
 	
-	//set max number of 4 hoards for comparison (5 shown in total)
-	$("#visualize-form .compare-select").livequery('change', function (event) {
-		if ($("#visualize-form .compare-option:selected").length > 4) {
-			$("#submit-calculate").attr("disabled", "disabled");
+	/***** CREATE CHART FOR DATES *****/
+	if ($('#dateData').text().length > 0) {
+		var data = eval($('#dateData').text());
+		var type = $('#date-form input:radio[name=type]:checked').val();
+		var chartType = $('#date-form input:radio[name=chartType]:checked').val();
+		var chart;
+		chart = new Highcharts.Chart({
+			chart: {
+				renderTo: 'dateChart',
+				type: chartType
+			},
+			title: {
+				text: $('#dateData').attr('title')
+			},
+			xAxis: {
+				type: 'datetime',
+				labels: {
+					rotation: - 45,
+					align: 'right',
+					formatter: function () {
+						var year = this.value;
+						if (year < 0) {
+							return Math.abs(year) + ' B.C.';
+						} else {
+							return 'A.D. ' + year;
+						}
+					}
+				}
+			},
+			yAxis: {
+				max: (type == 'count'? null: 100),
+				min: (type == 'count'? null: 0),
+				title: {
+					text: (type == 'count'? 'Occurrences': 'Percentage')
+				}
+			},
+			tooltip: {
+				formatter: function () {
+					if (this.x < 0) {
+						var year = Math.abs(this.x) + ' B.C.';
+					} else {
+						var year = 'A.D. ' + this.x;
+					}
+					return this.y + (type == 'count'? ' coins: ': '%: ') + year;
+				}
+			},
+			exporting: {
+				enabled: true,
+				width: 1200
+			},
+			series: data
+		});
+	}
+	
+	//lock bar and column charts for count in date visualization--line, spine, area, and areaspline for percentages
+	$('#date-form input[name=type]').change(function () {
+		if ($(this).val() == 'count') {
+			//enable quantification-based visualizations
+			$('#date-form').find('input[value=bar]').attr('disabled', false);
+			$('#date-form').find('input[value=column]').attr('disabled', false);
+			//disable percentage-based visualizations
+			$('#date-form').find('input[value=line]').attr('disabled', true);
+			$('#date-form').find('input[value=area]').attr('disabled', true);
+			$('#date-form').find('input[value=spline]').attr('disabled', true);
+			$('#date-form').find('input[value=areaspline]').attr('disabled', true);
+			
+			//set column as default
+			$('#date-form').find('input[value=column]').attr('checked', true);
 		} else {
-			$("#submit-calculate").removeAttr('disabled');
+			//enable quantification-based visualizations
+			$('#date-form').find('input[value=bar]').attr('disabled', true);
+			$('#date-form').find('input[value=column]').attr('disabled', true);
+			//disable percentage-based visualizations
+			$('#date-form').find('input[value=line]').attr('disabled', false);
+			$('#date-form').find('input[value=area]').attr('disabled', false);
+			$('#date-form').find('input[value=spline]').attr('disabled', false);
+			$('#date-form').find('input[value=areaspline]').attr('disabled', false);
+			
+			//set line as default
+			$('#date-form').find('input[value=line]').attr('checked', true);
 		}
 	});
 	
+	//disable and re-enable other calculate types in data download form when "cumulative" is selected
+	$('#csv-form input[name=type]').change(function () {
+		if ($(this).val() == 'cumulative') {
+			$('#csv-form input[name=calculate][value!=date]').attr('disabled', true);
+			//set date as default
+			$('#csv-form input[value=date]').attr('checked', true);
+		} else {
+			$('#csv-form input[name=calculate]').attr('disabled', false);
+		}
+	});
+	
+	//enable cumulative when "date" is checked, otherwise disable
+	$('#csv-form input[name=calculate]').change(function () {
+		if ($(this).val() == 'date') {
+			$('#csv-form input[value=cumulative]').attr('disabled', false);			
+		} else {
+			$('#csv-form input[value=cumulative]').attr('disabled', true);			
+		}
+		//set percentage as default
+		$('#csv-form input[value=percentage]').attr('checked', true);
+	});
+	
+	//set max number of 4 hoards for comparison (5 shown in total)
+	$("#visualize-form .compare-select").livequery('change', function (event) {
+		if ($("#visualize-form .compare-option:selected").length > 6) {
+			$("#submit-vis").attr("disabled", "disabled");
+		} else {
+			$("#submit-vis").removeAttr('disabled');
+		}
+	});
+	$("#date-form .compare-select").livequery('change', function (event) {
+		if ($("#date-form .compare-option:selected").length > 6) {
+			$("#submit-date").attr("disabled", "disabled");
+		} else {
+			$("#submit-date").removeAttr('disabled');
+		}
+	});
+	/***** GET HOARDS FOR COMPARISON ON DISPLAY PAGE *****/
 	$('.compare-button').click(function () {
 		//display the compare multiselect list only if it hasn't already been generated
 		var cd = $(this).parent().children('.compare-div');
 		if (cd.html().indexOf('<option') < 0) {
-			$.get('../get_hoards', { 
-				q: '*' 
+			$.get('../get_hoards', {
+				q: '*'
 			},
 			function (data) {
 				cd.html(data);
@@ -111,36 +228,73 @@ $(document).ready(function(){
 		return false;
 	});
 	
-	$('#submit-calculate').click(function () {
-		//get calculate facets
-		var facets = new Array();
-		$('.calculate-checkbox:checked').each(function () {
-			facets.push($(this).val());
-		});
-		var param1 = facets.join(',');
-		$('#calculate-input').attr('value', param1);
-		
+	/***** TOGGLE OPTIONAL SETTINGS *****/
+	$('.optional-button').click(function(){
+		var formId = $(this).attr('id').split('-')[0] + '-form';
+		$('#' + formId + ' .optional-div').toggle('slow');
+	});
+	
+	/***** SUBMIT FORMS *****/
+	$('.submit-vis').click(function () {
+		var id = $(this).parent('form').attr('id');
+		if (id == 'visualize-form') {
+			//get calculate facets
+			var facets = new Array();
+			$('.calculate-checkbox:checked').each(function () {
+				facets.push($(this).val());
+			});
+			var param1 = facets.join(',');
+			$(this).siblings('input[name=calculate]').attr('value', param1);
+		} else {
+			$(this).siblings('input[name=calculate]').attr('value', 'date');
+		}
 		//get compare value
 		var hoards = new Array();
-		$('#visualize-form .compare-option:selected').each(function () {
+		$('#' + id + ' .compare-option:selected').each(function () {
 			hoards.push($(this).val());
 		});
 		var param2 = hoards.join(',');
-		$('#visualize-form .compare-input').attr('value', param2);
+		$(this).siblings('input[name=compare]').attr('value', param2);
+		
+		//get exclude value
+		var codes = new Array();
+		$('#' + id + ' .exclude-option:selected').each(function () {
+			codes.push($(this).val());
+		});
+		var param3 = codes.join(',');
+		$(this).siblings('input[name=exclude]').attr('value', param3);
 	});
 	
 	$('#submit-csv').click(function () {
+		var id = $(this).parent('form').attr('id');
 		//get compare value
 		var hoards = new Array();
-		$('#csv-form .compare-option:selected').each(function () {
+		$('#' + id + ' .compare-option:selected').each(function () {
 			hoards.push($(this).val());
 		});
 		var param2 = hoards.join(',');
-		$('#csv-form .compare-input').attr('value', param2);
+		$('#' + id + ' .compare-input').attr('value', param2);
+		
+		//get exclude value
+		var codes = new Array();
+		$('#' + id + ' .exclude-option:selected').each(function () {
+			codes.push($(this).val());
+		});
+		var param3 = codes.join(',');
+		$(this).siblings('input[name=exclude]').attr('value', param3);
 	});
 	
-	/********* FILTERING FUNCTIONS **********/	
-	$("#showFilter").fancybox();
+	/********* FILTERING FUNCTIONS **********/
+	$(".showFilter").each(function () {
+		var tthis = this;
+		$(this).fancybox({			
+			onStart: function () {
+				var formId = tthis.id.split('-')[0] + '-form';
+				alert(formId);
+				$('#formId').html(formId);
+			}
+		});
+	});
 	
 	// total options for advanced search - used for unique id's on dynamically created elements
 	var total_options = 1;
@@ -160,29 +314,31 @@ $(document).ready(function(){
 	})
 	
 	//filter button activation
-	$('#advancedSearchForm').submit(function() {
+	$('#advancedSearchForm').submit(function () {
+		var formId = $('#formId').text();
 		var q = assembleQuery();
-		$('.filter-div').children('span').html(q);
-		$('.filter-div').show();		
-		$.get('get_hoards', { 
-				q: q 
-			},
-			function (data) {
-				$('.compare-div').html(data);
-			});
+		$('#' + formId + ' .filter-div').children('span').html(q);
+		$('#' + formId + ' .filter-div').show();
+		$.get('get_hoards', {
+			q: q
+		},
+		function (data) {
+			$('#' + formId + ' .compare-div').html(data);
+		});
 		$.fancybox.close();
 		return false;
 	});
 	
 	//remove filter
-	$('.removeFilter').click(function(){
-		$('.filter-div').hide();	
-		$.get('get_hoards', { 
-			q: '*' 
-			},
-			function (data) {
-				$('.compare-div').html(data);
-			});
+	$('.removeFilter').click(function () {
+		var formId = $('#formId').text();
+		$('#' + formId + ' .filter-div').hide();
+		$.get('get_hoards', {
+			q: '*'
+		},
+		function (data) {
+			$('#' + formId + ' .compare-div').html(data);
+		});
 		return false;
 	})
 })

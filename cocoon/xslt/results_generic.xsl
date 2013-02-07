@@ -30,13 +30,13 @@
 						</xsl:choose>
 					</xsl:variable>
 					<div style="text-align:center;">
-						<img src="{str[@name=$img_string]}" style="max-height:320px; min-height:320px;"/>
+						<img src="{str[@name=$img_string]}" style="height:320px"/>
 					</div>
 				</xsl:if>
 				<span class="result_link">
 					<xsl:choose>
 						<xsl:when test="$mode = 'compare'">
-							<a href="{$display_path}display_ajax/{str[@name='id']}?mode=compare&amp;q={$q}&amp;start={$start}&amp;image={$image}&amp;side={$side}" class="compare">
+							<a href="{$display_path}id/{str[@name='id']}?mode=compare&amp;q={$q}&amp;start={$start}&amp;image={$image}&amp;side={$side}" class="compare">
 								<xsl:value-of select="str[@name='title_display']"/>
 							</a>
 						</xsl:when>
@@ -69,7 +69,7 @@
 									<dd style="margin-left:150px;">
 										<xsl:value-of select="str[@name='description_display']"/>
 									</dd>
-								</div>	
+								</div>
 							</xsl:if>
 							<xsl:if test="arr[@name='reference_facet']">
 								<div>
@@ -473,8 +473,12 @@
 					</h1>
 				</xsl:when>
 				<xsl:otherwise>
-					<h1><xsl:value-of select="numishare:normalizeLabel('results_filters', $lang)"/> <xsl:if test="//lst[@name='mint_geo']/int[@name='numFacetTerms'] &gt; 0">
-							<a href="#resultMap" id="map_results"><xsl:value-of select="numishare:normalizeLabel('results_map-results', $lang)"/></a>
+					<h1>
+						<xsl:value-of select="numishare:normalizeLabel('results_filters', $lang)"/>
+						<xsl:if test="//lst[@name='mint_geo']/int[@name='numFacetTerms'] &gt; 0">
+							<a href="#resultMap" id="map_results">
+								<xsl:value-of select="numishare:normalizeLabel('results_map-results', $lang)"/>
+							</a>
 						</xsl:if>
 					</h1>
 				</xsl:otherwise>
@@ -501,7 +505,9 @@
 								<xsl:when test="string($field)">
 									<xsl:value-of select="numishare:normalize_fields($field, $lang)"/>
 								</xsl:when>
-								<xsl:otherwise><xsl:value-of select="numishare:normalize_fields('fulltext', $lang)"/></xsl:otherwise>
+								<xsl:otherwise>
+									<xsl:value-of select="numishare:normalize_fields('fulltext', $lang)"/>
+								</xsl:otherwise>
 							</xsl:choose>
 						</xsl:variable>
 						<xsl:variable name="term">
@@ -672,7 +678,10 @@
 								<xsl:choose>
 									<xsl:when test="$lang='ar'">
 										<xsl:value-of select="."/>
-										<b><xsl:text> :</xsl:text> <xsl:value-of select="numishare:normalize_fields('fulltext', $lang)"/></b>
+										<b>
+											<xsl:text> :</xsl:text>
+											<xsl:value-of select="numishare:normalize_fields('fulltext', $lang)"/>
+										</b>
 									</xsl:when>
 									<xsl:otherwise>
 										<b><xsl:value-of select="numishare:normalize_fields('fulltext', $lang)"/>: </b>
@@ -1052,8 +1061,6 @@
 		</div>
 	</xsl:template>
 
-
-
 	<xsl:template name="render_categories">
 		<xsl:param name="category_fragment"/>
 
@@ -1090,7 +1097,7 @@
 			</xsl:choose>
 		</xsl:variable>
 
-		<xsl:variable name="next" as="xs:integer">
+		<xsl:variable name="next">
 			<xsl:value-of select="$start_var+$rows"/>
 		</xsl:variable>
 
@@ -1103,8 +1110,23 @@
 			</xsl:choose>
 		</xsl:variable>
 
+		<xsl:variable name="current" select="$start_var div $rows + 1"/>
+		<xsl:variable name="total" select="ceiling($numFound div $rows)"/>
+
 		<div style="width:100%;display:table;">
 			<div style="float:left;">
+				<xsl:variable name="startRecord" select="$start_var + 1"/>
+				<xsl:variable name="endRecord">
+					<xsl:choose>
+						<xsl:when test="$numFound &gt; ($start_var + $rows)">
+							<xsl:value-of select="$start_var + $rows"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="$numFound"/>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:variable>
+
 				<xsl:value-of select="replace(replace(replace(numishare:normalizeLabel('results_result-desc', $lang), 'XX', string($startRecord)), 'YY', string($endRecord)), 'ZZ', string($numFound))"
 				/>
 			</div>

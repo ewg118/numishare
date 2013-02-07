@@ -10,6 +10,7 @@
 	<xsl:param name="calculate"/>
 	<xsl:param name="compare"/>
 	<xsl:param name="type"/>
+	<xsl:param name="exclude"/>
 	
 	<xsl:template match="/">
 		<xsl:for-each select="tokenize($calculate, ',')">
@@ -21,6 +22,9 @@
 					<xsl:when test=".='mint' or .='region'">
 						<xsl:text>geogname</xsl:text>
 					</xsl:when>
+					<xsl:when test=".='date'">
+						<xsl:text>date</xsl:text>
+					</xsl:when>
 					<xsl:when test=".='dynasty'">
 						<xsl:text>famname</xsl:text>
 					</xsl:when>
@@ -30,7 +34,7 @@
 				</xsl:choose>
 			</xsl:variable>
 			<xsl:variable name="role">
-				<xsl:if test=". != 'material' and . != 'denomination'">
+				<xsl:if test=". != 'material' and . != 'denomination' and . != 'date'">
 					<xsl:value-of select="."/>
 				</xsl:if>
 			</xsl:variable>
@@ -50,7 +54,7 @@
 				<!-- if there is a compare parameter, load get_hoard_quant with document() function -->
 				<xsl:if test="string($compare) and string($calculate)">
 					<xsl:for-each select="tokenize($compare, ',')">
-						<xsl:copy-of select="document(concat($url, 'get_hoard_quant?id=', ., '&amp;calculate=', if (string($role)) then $role else $element, '&amp;type=', $type))"/>
+						<xsl:copy-of select="document(concat($url, 'get_hoard_quant?id=', ., '&amp;calculate=', if (string($role)) then $role else $element, '&amp;type=', $type, '&amp;exclude=', $exclude))"/>
 					</xsl:for-each>
 				</xsl:if>
 			</counts>
@@ -72,7 +76,7 @@
 </xsl:text>
 		<!-- list distinct names -->
 		<xsl:for-each select="distinct-values(exsl:node-set($counts)//name)">
-			<xsl:sort/>
+			<xsl:sort data-type="{if ($calculate = 'date') then 'number' else 'text'}"/>
 			<xsl:variable name="name" select="."/>
 			
 			<!-- display first column: name -->
