@@ -15,9 +15,6 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-
-<!-- test -->
-
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 	<map:components>
 		<!-- *********************************** -->
@@ -569,20 +566,6 @@
 					<map:parameter name="use-request-parameters" value="true"/>
 				</map:transform>
 				<map:transform type="cinclude"/>
-				<map:serialize type="html"/>
-			</map:match>
-
-			<!-- compare page -->
-			<map:match pattern="display_ajax/*">
-				<map:aggregate element="content">
-					<map:part src="{global:exist-url}{global:collection-name}/objects/{1}.xml"/>
-					<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
-				</map:aggregate>
-				<map:transform src="xslt/ajax/display_ajax.xsl" label="basiccontent" type="xslt-saxon">
-					<map:parameter name="use-request-parameters" value="true"/>
-					<map:parameter name="solr-url" value="{global:solr-url}"/>
-					<map:parameter name="pipeline" value="display"/>
-				</map:transform>
 				<map:serialize type="html"/>
 			</map:match>
 

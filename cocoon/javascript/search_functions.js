@@ -54,7 +54,7 @@ $('.category_list') .livequery('change', function(event){
 	}
 	//SELECTING OTHER DROP DOWN MENUS SECTION
 	else {	
-		var query = assembleQuery();
+		var query = assembleQuery('advancedSearchForm');
 		var container = $(this) .parent('.searchItemTemplate') .children('.option_container');
 		container.html('<img style="margin-left:100px;margin-right:100px;" src="images/ajax-loader.gif"/>');		
 		var q = query + ' AND ' + field + ':[* TO *]';
@@ -96,10 +96,10 @@ function cloneTemplate (){
 }
 
 // activates the advanced search action
-function assembleQuery(){
+function assembleQuery(formId){
 	var query = new Array();
 	// loop through each ".searchItemTemplate" and build the query
-	$('#advancedSearchForm .searchItemTemplate') .each(function () {
+	$('#' + formId + ' .searchItemTemplate') .each(function () {
 		var field = $(this) .children('.category_list') .val();
 		
 		if ((field != 'year_num' && field != 'weight_num' && field != 'diameter_num' && field != 'taq_num' && field != 'tpq_num') && $(this) .children('.option_container') .children('.search_text') .val().length > 0) {

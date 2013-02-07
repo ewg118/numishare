@@ -10,7 +10,7 @@
 		<xsl:variable name="collection" select="substring-before(str[@name='identifier_display'], '.')"/>
 		<xsl:variable name="row" select="if (position() mod 2 = 0) then 'even-row' else 'odd-row'"/>
 
-		<div class="result_doc {$row}">			
+		<div class="{if ($mode='compare') then '' else 'result_doc'} {$row}">
 			<!--<xsl:if test="not($mode='compare') and //config/theme/layouts/*[name()=$pipeline]/image_location = 'left'">
 				<xsl:call-template name="result_image">
 					<xsl:with-param name="alignment">left</xsl:with-param>
@@ -18,32 +18,34 @@
 			</xsl:if>-->
 
 
-			<!--<xsl:if test="$mode='compare'">
-					<xsl:variable name="img_string">
-						<xsl:choose>
-							<xsl:when test="$image='reverse'">
-								<xsl:text>reference_rev</xsl:text>
-							</xsl:when>
-							<xsl:otherwise>
-								<xsl:text>reference_obv</xsl:text>
-							</xsl:otherwise>
-						</xsl:choose>
-					</xsl:variable>
-					<div style="text-align:center;">
-						<img src="{str[@name=$img_string]}" style="max-height:320px; min-height:320px;"/>
-					</div>
-					</xsl:if>-->
+			<xsl:if test="$mode='compare'">
+				<xsl:variable name="img_string">
+					<xsl:choose>
+						<xsl:when test="$image='reverse'">
+							<xsl:text>reference_rev</xsl:text>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:text>reference_obv</xsl:text>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:variable>
+				<div style="text-align:center;">
+					<img src="{str[@name=$img_string]}" style="height:320px;"/>
+				</div>
+			</xsl:if>
 
 			<table>
 				<tr>
-					<td class="result_image">
-						<xsl:call-template name="result_image"/>
-					</td>
+					<xsl:if test="not($mode='compare')">
+						<td class="result_image">
+							<xsl:call-template name="result_image"/>
+						</td>
+					</xsl:if>
 					<td>
 						<span class="result_link">
 							<xsl:choose>
 								<xsl:when test="$mode = 'compare'">
-									<a href="{$display_path}display_ajax/{str[@name='id']}?mode=compare&amp;q={$q}&amp;start={$start}&amp;image={$image}&amp;side={$side}" class="compare">
+									<a href="{$display_path}id/{str[@name='id']}?mode=compare&amp;q={$q}&amp;start={$start}&amp;image={$image}&amp;side={$side}" class="compare">
 										<xsl:value-of select="str[@name='title_display']"/>
 									</a>
 								</xsl:when>
@@ -1089,7 +1091,7 @@
 			</xsl:choose>
 		</xsl:variable>
 
-		<xsl:variable name="next" as="xs:integer">
+		<xsl:variable name="next">
 			<xsl:value-of select="$start_var+$rows"/>
 		</xsl:variable>
 
@@ -1102,8 +1104,22 @@
 			</xsl:choose>
 		</xsl:variable>
 
+		<xsl:variable name="current" select="$start_var div $rows + 1"/>
+		<xsl:variable name="total" select="ceiling($numFound div $rows)"/>
+
 		<div style="width:100%;display:table;">
 			<div style="float:left;">
+				<xsl:variable name="startRecord" select="$start_var + 1"/>
+				<xsl:variable name="endRecord">
+					<xsl:choose>
+						<xsl:when test="$numFound &gt; ($start_var + $rows)">
+							<xsl:value-of select="$start_var + $rows"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="$numFound"/>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:variable>
 				<xsl:value-of select="replace(replace(replace(numishare:normalizeLabel('results_result-desc', $lang), 'XX', string($startRecord)), 'YY', string($endRecord)), 'ZZ', string($numFound))"
 				/>
 			</div>

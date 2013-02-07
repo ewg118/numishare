@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
-	xmlns:cinclude="http://apache.org/cocoon/include/1.0">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" version="2.0">
 
 	<xsl:output method="xml" encoding="UTF-8"/>
 	<xsl:param name="collection_path" select="/content/config/url"/>
 	<xsl:include href="../results_generic.xsl"/>
+	<xsl:include href="../functions.xsl"/>
 
+	<xsl:param name="display_path"/>
 	<xsl:param name="q"/>
 	<xsl:param name="rows">20</xsl:param>
 	<xsl:param name="start"/>
@@ -13,7 +14,16 @@
 	<xsl:param name="image"/>
 	<xsl:param name="side"/>
 	<xsl:param name="sort"/>
-	
+	<xsl:param name="lang"/>
+	<xsl:variable name="start_var" as="xs:integer">
+		<xsl:choose>
+			<xsl:when test="number($start)">
+				<xsl:value-of select="$start"/>
+			</xsl:when>
+			<xsl:otherwise>0</xsl:otherwise>
+		</xsl:choose>
+	</xsl:variable>
+
 	<xsl:variable name="numFound">
 		<xsl:value-of select="//result[@name='response']/@numFound"/>
 	</xsl:variable>

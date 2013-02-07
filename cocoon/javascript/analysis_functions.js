@@ -161,7 +161,7 @@ $(document).ready(function(){
 	
 	//filter button activation
 	$('#advancedSearchForm').submit(function() {
-		var q = assembleQuery();
+		var q = assembleQuery('advancedSearchForm');
 		$('.filter-div').children('span').html(q);
 		$('.filter-div').show();		
 		$.get('get_hoards', { 

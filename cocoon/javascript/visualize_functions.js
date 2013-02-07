@@ -136,7 +136,7 @@ $(document).ready(function () {
 	
 	//filter button activation
 	$('#advancedSearchForm').submit(function() {
-		var q = assembleQuery();
+		var q = assembleQuery('advancedSearchForm');
 		var param = $('#paramName').text();
 		
 		//insert new query

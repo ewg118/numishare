@@ -46,6 +46,7 @@
 
 				<!-- search related functions -->
 				<script type="text/javascript" src="{$display_path}javascript/jquery.livequery.js"/>
+				<script type="text/javascript" src="{$display_path}javascript/search_functions.js"/>
 				<script type="text/javascript" src="{$display_path}javascript/compare.js"/>
 				<script type="text/javascript" src="{$display_path}javascript/compare_functions.js"/>
 				<xsl:if test="string(/config/google_analytics/script)">
@@ -89,7 +90,7 @@
 							</div>
 						</form>
 					</div>
-					<table id="search1"/>
+					<div id="search1"/>
 				</div>
 			</div>
 			<div class="yui3-u-1-2">
@@ -125,7 +126,7 @@
 						<a id="removeBtn_1" class="removeBtn" href="#">«</a>
 					</div>
 				</div>
-				<table id="search2"/>
+				<div id="search2"/>
 			</div>
 		</div>
 	</xsl:template>

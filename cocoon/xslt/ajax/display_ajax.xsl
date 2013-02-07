@@ -2,6 +2,7 @@
 <?cocoon-disable-caching?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0">	
 	<xsl:include href="../display/nuds/html.xsl"/>
+	<xsl:include href="../functions.xsl"/>
 
 	<xsl:param name="q"/>
 	<xsl:param name="start"/>
@@ -9,6 +10,7 @@
 	<xsl:param name="image"/>
 	<xsl:param name="side"/>
 	<xsl:param name="display_path"/>
+	<xsl:param name="lang"/>
 	
 	<xsl:variable name="flickr-api-key" select="/content/config/flickr_api_key"/>		
 	
