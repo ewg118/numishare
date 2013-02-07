@@ -71,7 +71,7 @@
 		</language>
 	</languages>
 	<theme>
-		<jquery_ui_theme>smoothness</jquery_ui_theme>
+		<jquery_ui_theme>ui-lightness</jquery_ui_theme>
 		<layouts>
 			<index>
 				<yui_class>yui-t5</yui_class>

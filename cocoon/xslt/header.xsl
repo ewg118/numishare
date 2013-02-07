@@ -14,7 +14,7 @@
 						<span class="banner_text">The University of Virginia Art Museum <br/>Numismatic Collection</span>
 					</td>
 					<td style="width:25%">
-						<form action="results" method="GET" id="qs_form" style="padding:10px 0">
+						<form action="{$display_path}results" method="GET" id="qs_form" style="padding:10px 0">
 							<input type="text" name="q" id="qs_text"/>							
 							<input id="qs_button" type="submit" value="{numishare:normalizeLabel('header_search', $lang)}"/>
 						</form>

@@ -19,7 +19,7 @@ body {
 	min-width:1000px;
 }
 .content {
-	padding:5px;	
+	padding:5px;
 }
 a > img {
 	border:none;
@@ -51,7 +51,7 @@ ol li, ul li, dl li {
 }
 h4 {
 	margin:0;
-	padding:0;	
+	padding:0;
 }
 .ui-widget-header {
 	border-left:0;
@@ -77,7 +77,7 @@ h4 {
 	border:2px solid #b76e0e;
 }
 table tr td {
-	border:0;	
+	border:0;
 }
 dt {
 	width:125px;
@@ -176,10 +176,12 @@ dt {
 	display:none;
 	margin-top:20px;
 }
-/*.pelagios-place {
-	float:left;	
-}*/
-.pelagios-place .icon{
+/*
+  .pelagios-place {
+  float:left;
+  }
+ */
+.pelagios-place .icon {
 	max-width:12px;
 }
 /*
@@ -244,9 +246,9 @@ li.term {
 	display:table;
 	width:100%;
 }
-#filter_list{
+#filter_list {
 	margin:0;
-	padding:0;	
+	padding:0;
 }
 .rfl {
 	float:left;
@@ -287,14 +289,14 @@ li.term {
 	display:block;
 	width:100%;
 }
-.result_doc{
-	height:180px;	
+.result_doc {
+	height:180px;
 }
 .result_doc td {
-	vertical-align:top;	
+	vertical-align:top;
 }
 .result_image {
-	width:100px;	
+	width:100px;
 }
 .odd-row {
 	border-bottom:1px solid silver;
@@ -466,10 +468,10 @@ button.ui-multiselect {
 	margin:5px;
 }
 .result_image img {
-	max-width:80px;	
+	max-width:80px;
 }
 .gi_c img {
-	max-width:120px;	
+	max-width:120px;
 }
 /*
   ***************************************
