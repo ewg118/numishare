@@ -17,6 +17,7 @@
 	<xsl:param name="type"/>
 	<xsl:param name="chartType"/>
 	<xsl:param name="exclude"/>
+	<xsl:param name="options"/>
 
 	<!-- config variables -->
 	<xsl:variable name="url">

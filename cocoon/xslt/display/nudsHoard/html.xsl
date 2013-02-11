@@ -10,6 +10,7 @@
 	<xsl:param name="type"/>
 	<xsl:param name="chartType"/>
 	<xsl:param name="exclude"/>
+	<xsl:param name="options"/>
 
 	<xsl:template name="nudsHoard">
 		<xsl:apply-templates select="/content/nh:nudsHoard"/>

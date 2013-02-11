@@ -217,33 +217,52 @@
 				</xsl:when>
 				<xsl:otherwise>
 					<h2>Step 4: Select Hoards to Compare (optional)</h2>
-					<xsl:choose>
-						<xsl:when test="not(string($compare))">
-							<div>
-								<a href="#" class="compare-button"><img src="{$display_path}images/plus.gif" alt="Expand"/>Compare to Other Hoards</a>
-								<div class="compare-div"/>
-							</div>
-						</xsl:when>
-						<xsl:otherwise>
-							<div class="compare-div">
-								<cinclude:include src="cocoon:/get_hoards?compare={$compare}&amp;q=*"/>
-							</div>
-						</xsl:otherwise>
-					</xsl:choose>
+					<div class="compare-div">
+						<cinclude:include src="cocoon:/get_hoards?compare={$compare}&amp;q=*&amp;ignore={$id}"/>
+					</div>
 				</xsl:otherwise>
 			</xsl:choose>
 
 			<div>
 				<h3>Optional Settings<span style="font-size:60%;margin-left:10px;"><a href="#" class="optional-button" id="visualize-options">Hide/Show Options</a></span></h3>
 				<div class="optional-div" style="display:none">
-					<h4>Exclude Certainty Codes</h4>
-					<cinclude:include src="cocoon:/get_certainty_codes?exclude={$exclude}"/>
+					<div>
+						<dl>
+							<dt>Exclude Certainty Codes</dt>
+							<dd>
+								<cinclude:include src="cocoon:/get_certainty_codes?exclude={$exclude}"/>
+							</dd>
+						</dl>
+					</div>
+					<div>
+						<dl>
+							<dt>Stacking Options</dt>
+							<dd>
+								<select id="stacking">
+									<option value="">Select...</option>
+									<option value="stacking:normal">
+										<xsl:if test="contains($options, 'stacking:normal')">
+											<xsl:attribute name="selected">selected</xsl:attribute>
+										</xsl:if>
+										<xsl:text>Cumulative</xsl:text>
+									</option>
+									<option value="stacking:percent">
+										<xsl:if test="contains($options, 'stacking:percent')">
+											<xsl:attribute name="selected">selected</xsl:attribute>
+										</xsl:if>
+										<xsl:text>Percentage</xsl:text>
+									</option>
+								</select>
+							</dd>
+						</dl>
+					</div>
 				</div>
 			</div>
 
 			<input type="hidden" name="calculate" id="calculate-input" value=""/>
 			<input type="hidden" name="compare" class="compare-input" value=""/>
 			<input type="hidden" name="exclude" class="exclude-input" value=""/>
+			<input type="hidden" name="options" id="options-input" value="{$options}"/>
 			<br/>
 			<input type="submit" value="Calculate Selected" class="submit-vis" id="submit-vis"/>
 		</form>
@@ -394,7 +413,7 @@
 	</xsl:template>
 
 	<xsl:template name="data-download">
-		<xsl:variable name="queryOptions">authority,date,deity,denomination,dynasty,issuer,material,mint,portrait,region</xsl:variable>		
+		<xsl:variable name="queryOptions">authority,date,deity,denomination,dynasty,issuer,material,mint,portrait,region</xsl:variable>
 
 		<p>Use this feature to download a CSV for the given query and selected hoards.</p>
 		<form action="{$display_path}hoards.csv" id="csv-form" style="margin-bottom:40px;">
@@ -469,7 +488,7 @@
 					</div>
 				</xsl:otherwise>
 			</xsl:choose>
-			
+
 			<div>
 				<h3>Optional Settings<span style="font-size:60%;margin-left:10px;"><a href="#" class="optional-button" id="csv-options">Hide/Show Options</a></span></h3>
 				<div class="optional-div" style="display:none">

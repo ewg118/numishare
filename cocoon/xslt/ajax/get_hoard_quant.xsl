@@ -96,7 +96,7 @@
 		<xsl:variable name="total-counts">
 			<total-counts>
 				<xsl:choose>
-					<xsl:when test="string(@role)">
+					<xsl:when test="string($role)">
 						<xsl:apply-templates select="exsl:node-set($nudsGroup)//*[local-name()=$element][@xlink:role=$role]"/>
 					</xsl:when>
 					<xsl:when test="$calculate='date'">
@@ -164,7 +164,7 @@
 			<xsl:variable name="total-counts">
 				<total-counts>
 					<xsl:choose>
-						<xsl:when test="string(@role)">
+						<xsl:when test="string($role)">
 							<xsl:apply-templates select="exsl:node-set($nudsGroup)//*[local-name()=$element][@xlink:role=$role]"/>
 						</xsl:when>
 						<xsl:when test="$calculate='date'">
