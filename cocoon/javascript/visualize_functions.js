@@ -49,11 +49,14 @@ $(document).ready(function () {
 		var id = $(this).attr('id').split('-')[0];
 		var type = $('input:radio[name=type]:checked').val();
 		var chartType = $('input:radio[name=chartType]:checked').val();
+		var optionString = $('#options-input').val();
 		if (chartType == 'bar') {
 			var height = 800;
 		} else {
 			var height = 400;
 		}
+		
+		var options = processOptions(optionString);
 		
 		var table = $(this),
 		options = {
@@ -70,7 +73,7 @@ $(document).ready(function () {
 			},
 			xAxis: {
 				labels: {
-					rotation: -45,
+					rotation: - 45,
 					align: 'right',
 					style: {
 						fontSize: '11px',
@@ -79,18 +82,36 @@ $(document).ready(function () {
 				}
 			},
 			yAxis: {
+				max: (type == 'count'? null: 100),
+				min: (type == 'count'? null: 0),
 				title: {
-					text: (type == 'percentage' ? 'Percentage': 'Occurrences')
+					text: (type == 'percentage'? 'Percentage': 'Occurrences')
 				}
 			},
 			tooltip: {
-				formatter: function () {					
+				formatter: function () {
 					return this.y + (type == 'percentage'? '%: ': ' coin(s): ') + this.x;
+				}
+			},
+			plotOptions: {
+				series: {
+					stacking: (type == 'count' ? options.stacking : null)					
 				}
 			}
 		};
 		Highcharts.visualize(table, options);
 	});
+	
+	function processOptions(optionString) {
+		var options = {};
+		var result = optionString.split('|');
+		for (i = 0; i < result.length; i++) {
+			var key = result[i].split(':')[0];
+			var value = result[i].split(':')[1];
+			options[key] = value;
+		}
+		return options;
+	}
 	
 	$('#submit-calculate').click(function () {
 		//set the calculate input
@@ -114,13 +135,27 @@ $(document).ready(function () {
 		$('.compareQuery').each(function () {
 			compares.push($(this).children('span').text());
 		});
-		var compare = compares.join('|');
+		
+		//assemble comparative queries if available, set *:* as default
+		if (compares.length > 0) {
+			var compare = compares.join('|');
+		} else {
+			var compare = '*:*';
+		}
 		$('#compare-input').attr('value', compare);
-	});	
+		
+		//assemble options
+		optionsArray = new Array();
+		$('.optional-div option:selected').each(function () {
+			optionsArray.push($(this).val());
+		});
+		var options = optionsArray.join('|');
+		$('#options-input').attr('value', options);
+	});
 	
 	/********* COMPARE/CUSTOMQUERY FUNCTIONS **********/
-	//add customQuery	
-	$(".addQuery").click(function(){
+	//add customQuery
+	$(".addQuery").click(function () {
 		var href = $(this).attr('href');
 		var id = $(this).attr('id');
 		
@@ -135,20 +170,20 @@ $(document).ready(function () {
 	});
 	
 	//filter button activation
-	$('#advancedSearchForm').submit(function() {
+	$('#advancedSearchForm').submit(function () {
 		var q = assembleQuery('advancedSearchForm');
 		var param = $('#paramName').text();
 		
 		//insert new query
-		if (param == 'customQuery'){
+		if (param == 'customQuery') {
 			var newQuery = '<div class="customQuery"><b>Custom Query: </b><span>' + q + '</span><a href="#" class="removeQuery">Remove Query</a></div>'
 			$('#' + param + 'Div').append(newQuery);
-		} else if (param == 'compareQuery'){
+		} else if (param == 'compareQuery') {
 			var newQuery = '<div class="compareQuery"><b>Comparison Query: </b><span>' + q + '</span><a href="#" class="removeQuery">Remove Query</a></div>'
 			$('#' + param + 'Div').append(newQuery);
 		}
 		//close fancybox
-		$.fancybox.close();	
+		$.fancybox.close();
 		
 		//clear searchBox for next addition
 		$('#inputContainer').empty();
@@ -156,16 +191,22 @@ $(document).ready(function () {
 		//reset template
 		var tpl = cloneTemplate();
 		$('#inputContainer') .html(tpl);
-	
+		
 		// display the entire new template
-		tpl.fadeIn('fast');		
-			
+		tpl.fadeIn('fast');
+		
 		return false;
 	});
 	
 	//remove comparison or custom queries
-	$('.removeQuery').livequery('click', function(){
+	$('.removeQuery').livequery('click', function () {
 		$(this).parent('div').remove();
 		return false;
+	});
+	
+	/***** TOGGLE OPTIONAL SETTINGS *****/
+	$('.optional-button').click(function () {
+		var formId = $(this).attr('id').split('-')[0] + '-form';
+		$('#' + formId + ' .optional-div').toggle('slow');
 	});
 })
