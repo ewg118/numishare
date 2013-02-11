@@ -331,7 +331,7 @@ $(document).ready(function () {
 	//filter button activation
 	$('#advancedSearchForm').submit(function () {
 		var formId = $('#formId').text();
-		var q = assembleQuery();
+		var q = assembleQuery('advancedSearchForm');
 		$('#' + formId + ' .filter-div').children('span').html(q);
 		$('#' + formId + ' .filter-div').show();
 		$.get('get_hoards', {
