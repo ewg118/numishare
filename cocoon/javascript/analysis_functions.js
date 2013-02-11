@@ -255,7 +255,9 @@ $(document).ready(function () {
 			//get options
 			optionsArray = new Array();
 			$('.optional-div option:selected').each(function () {
-				optionsArray.push($(this).val());
+				if($(this).parent().attr('class') != 'certainty-select'){
+					optionsArray.push($(this).val());
+				}
 			});
 			var options = optionsArray.join('|');
 			$('#options-input').attr('value', options);
