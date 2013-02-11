@@ -162,13 +162,14 @@
 			<div style="display:table;width:100%">
 				<h2>Step 3: Select Categories for Analysis</h2>
 				<cinclude:include src="cocoon:/get_vis_categories?category={$category}&amp;q={$qString}"/>
-				<h3>
-					<xsl:text>Add Custom Queries</xsl:text>
-					<span style="font-size:80%;margin-left:10px;">
-						<a href="#searchBox" class="addQuery" id="customQuery">Add Query</a>
-					</span>
-				</h3>
+
 				<div id="customQueryDiv">
+					<h3>
+						<xsl:text>Add Custom Queries</xsl:text>
+						<span style="font-size:80%;margin-left:10px;">
+							<a href="#searchBox" class="addQuery" id="customQuery">Add Query</a>
+						</span>
+					</h3>
 					<xsl:for-each select="tokenize($custom, '\|')">
 						<div class="customQuery">
 							<b>Custom Query: </b>
@@ -209,23 +210,26 @@
 
 			<div>
 				<h3>Optional Settings<span style="font-size:60%;margin-left:10px;"><a href="#" class="optional-button" id="visualize-options">Hide/Show Options</a></span></h3>
-				<div class="optional-div" style="display:none">
-					<select id="stacking">
-						<option value="">Select Stacking Option...</option>
-						<option value="stacking:normal">
-							<xsl:if test="contains($options, 'stacking:normal')">
-								<xsl:attribute name="selected">selected</xsl:attribute>
-							</xsl:if>
-							<xsl:text>Cumulative</xsl:text>
-						</option>
-						<option value="stacking:percent">
-							<xsl:if test="contains($options, 'stacking:percent')">
-								<xsl:attribute name="selected">selected</xsl:attribute>
-							</xsl:if>
-							<xsl:text>Percentage</xsl:text>
-						</option>
-						
-					</select>
+				<div class="optional-div" style="display:none;">
+					<div>
+						<label for="stacking">Stacking Options</label>
+						<select id="stacking">
+							<option value="">Select...</option>
+							<option value="stacking:normal">
+								<xsl:if test="contains($options, 'stacking:normal')">
+									<xsl:attribute name="selected">selected</xsl:attribute>
+								</xsl:if>
+								<xsl:text>Cumulative</xsl:text>
+							</option>
+							<option value="stacking:percent">
+								<xsl:if test="contains($options, 'stacking:percent')">
+									<xsl:attribute name="selected">selected</xsl:attribute>
+								</xsl:if>
+								<xsl:text>Percentage</xsl:text>
+							</option>
+						</select>
+					</div>
+
 				</div>
 			</div>
 

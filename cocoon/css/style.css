@@ -699,6 +699,10 @@ div.custominfostyle {
 	width:600px;
 	text-align:left;
 }
+#customQueryDiv {
+	width:100%;
+	display:table;	
+}
 .filter-div, .customQuery, .compareQuery {
 	padding:10px 0;
 }
