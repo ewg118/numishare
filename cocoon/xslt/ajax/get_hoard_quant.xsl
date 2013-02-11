@@ -37,6 +37,7 @@
 	</xsl:variable>
 
 	<xsl:variable name="id" select="normalize-space(//*[local-name()='nudsid'])"/>
+	<xsl:variable name="title" select="normalize-space(//*[local-name()='descMeta']/*[local-name()='title'])"/>
 
 	<xsl:variable name="contentsDesc">
 		<xsl:copy-of select="descendant::nh:contents"/>
@@ -110,7 +111,7 @@
 		</xsl:variable>
 
 		<xsl:text>{ name: '</xsl:text>
-		<xsl:value-of select="$id"/>
+		<xsl:value-of select="$title"/>
 		<xsl:text>', data: [</xsl:text>
 
 		<xsl:choose>
@@ -159,7 +160,7 @@
 
 	<xsl:template name="generateXml">
 		<xsl:variable name="total" select="sum(exsl:node-set($contentsDesc)//nh:coinGrp[boolean(index-of($codes, nuds:typeDesc/@certainty)) = false()]/@count) + count(exsl:node-set($contentsDesc)//nh:coin[boolean(index-of($codes, nuds:typeDesc/@certainty)) = false()])"/>
-		<hoard id="{$id}" total="{$total}">
+		<hoard id="{$id}" total="{$total}" title="{$title}">
 			
 			<xsl:variable name="total-counts">
 				<total-counts>

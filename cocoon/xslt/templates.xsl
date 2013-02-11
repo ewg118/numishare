@@ -55,8 +55,9 @@
 					</xsl:if>
 					<xsl:if test="string($compare)">
 						<xsl:for-each select="tokenize($compare, ',')">
-							<th>
-								<xsl:value-of select="."/>
+							<xsl:variable name="localId" select="."/>
+							<th>								
+								<xsl:value-of select="exsl:node-set($counts)//hoard[@id=$localId]/@title"/>
 							</th>
 						</xsl:for-each>
 					</xsl:if>
