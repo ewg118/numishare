@@ -306,7 +306,6 @@ $(document).ready(function () {
 		$(this).fancybox({
 			onStart: function () {
 				var formId = tthis.id.split('-')[0] + '-form';
-				alert(formId);
 				$('#formId').html(formId);
 			}
 		});
