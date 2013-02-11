@@ -566,6 +566,7 @@
 				</map:aggregate>
 				<map:transform type="xslt-saxon" src="xslt/ajax/results_ajax.xsl" label="basiccontent">
 					<map:parameter name="use-request-parameters" value="true"/>
+					<map:parameter name="pipeline" value="results"/>
 				</map:transform>
 				<map:transform type="cinclude"/>
 				<map:serialize type="html"/>

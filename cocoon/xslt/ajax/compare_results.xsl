@@ -7,6 +7,7 @@
 	<xsl:include href="../functions.xsl"/>
 
 	<xsl:param name="display_path"/>
+	<xsl:param name="pipeline"/>
 	<xsl:param name="q"/>
 	<xsl:param name="rows">20</xsl:param>
 	<xsl:param name="start"/>

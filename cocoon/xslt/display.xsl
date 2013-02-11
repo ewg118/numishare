@@ -121,6 +121,7 @@
 
 	<xsl:template match="/">
 		<xsl:choose>
+			<!-- regular HTML display mode-->
 			<xsl:when test="not(string($mode))">
 				<html>
 					<head>
@@ -181,6 +182,25 @@
 								<script type="text/javascript" src="{$display_path}javascript/highcharts.js"/>
 								<script type="text/javascript" src="{$display_path}javascript/modules/exporting.js"/>
 								<script type="text/javascript" src="{$display_path}javascript/display_functions.js"/>
+
+								<script type="text/javascript" langage="javascript">
+			                                                        $(function () {
+			                                                                $("#tabs").tabs({
+			                                                                        show: function (event, ui) {
+			                                                                                if (ui.panel.id == "mapTab" &amp;&amp; $('#mapcontainer').html().length == 0) {
+			                                                                                        $('#mapcontainer').html('');
+			                                                                                        initialize_map('<xsl:value-of select="$id"/>', '<xsl:value-of select="$display_path"/>');
+			                                                                                }
+			                                                                        }
+			                                                                });
+			                                                        });
+							</script>
+								<!-- mapping -->
+								<xsl:if test="$has_mint_geo = 'true' or $has_findspot_geo = 'true'">
+									<script type="text/javascript" src="http://www.openlayers.org/api/OpenLayers.js"/>
+									<script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3.2&amp;sensor=false"/>
+									<script type="text/javascript" src="{$display_path}javascript/display_map_functions.js"/>
+								</xsl:if>
 							</xsl:when>
 							<!-- hoard CSS and JS dependencies -->
 							<xsl:when test="$recordType='hoard'">
@@ -218,38 +238,35 @@
 				</html>
 			</xsl:when>
 			<xsl:otherwise>
+				<!-- only call display template for compare display -->
 				<xsl:call-template name="display"/>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
 
-
-
 	<xsl:template name="display">
-		<div class="yui3-g">
-			<xsl:choose>
-				<xsl:when test="$mode='compare'">
+		<xsl:choose>
+			<xsl:when test="$mode='compare'">
+				<xsl:choose>
+					<xsl:when test="count(/content/*[local-name()='nuds']) &gt; 0">
+						<xsl:call-template name="nuds"/>
+					</xsl:when>
+					<xsl:otherwise>false</xsl:otherwise>
+				</xsl:choose>
+			</xsl:when>
+			<xsl:otherwise>
+				<div class="yui3-g">
 					<xsl:choose>
 						<xsl:when test="count(/content/*[local-name()='nuds']) &gt; 0">
 							<xsl:call-template name="nuds"/>
 						</xsl:when>
+						<xsl:when test="count(/content/*[local-name()='nudsHoard']) &gt; 0">
+							<xsl:call-template name="nudsHoard"/>
+						</xsl:when>
 						<xsl:otherwise>false</xsl:otherwise>
 					</xsl:choose>
-				</xsl:when>
-				<xsl:otherwise>
-					<div id="bd">
-						<xsl:choose>
-							<xsl:when test="count(/content/*[local-name()='nuds']) &gt; 0">
-								<xsl:call-template name="nuds"/>
-							</xsl:when>
-							<xsl:when test="count(/content/*[local-name()='nudsHoard']) &gt; 0">
-								<xsl:call-template name="nudsHoard"/>
-							</xsl:when>
-							<xsl:otherwise>false</xsl:otherwise>
-						</xsl:choose>
-					</div>
-				</xsl:otherwise>
-			</xsl:choose>
-		</div>
+				</div>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 </xsl:stylesheet>
