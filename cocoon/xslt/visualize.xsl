@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:cinclude="http://apache.org/cocoon/include/1.0" xmlns:exsl="http://exslt.org/common"
 	xmlns:numishare="http://code.google.com/p/numishare/" xmlns:xs="http://www.w3.org/2001/XMLSchema" version="2.0">
-	<xsl:output method="xml" encoding="UTF-8"/>	
+	<xsl:output method="xml" encoding="UTF-8"/>
 	<xsl:include href="header.xsl"/>
 	<xsl:include href="footer.xsl"/>
 	<xsl:include href="templates.xsl"/>
@@ -17,6 +17,7 @@
 	<xsl:param name="chartType"/>
 	<xsl:param name="compare"/>
 	<xsl:param name="custom"/>
+	<xsl:param name="options"/>
 	<xsl:param name="type"/>
 
 	<!-- variables -->
@@ -51,7 +52,7 @@
 				<link type="text/css" href="{$display_path}style.css" rel="stylesheet"/>
 				<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"/>
 				<script type="text/javascript" src="{$display_path}javascript/jquery-ui-1.8.10.custom.min.js"/>
-				
+
 				<!-- menu -->
 				<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.core.js"/>
 				<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.widget.js"/>
@@ -60,7 +61,7 @@
 				<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.menu.js"/>
 				<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.menubar.js"/>
 				<script type="text/javascript" src="{$display_path}javascript/numishare-menu.js"/>
-				
+
 				<!-- visualize functions -->
 				<script type="text/javascript" src="{$display_path}javascript/highcharts.js"/>
 				<script type="text/javascript" src="{$display_path}javascript/modules/exporting.js"/>
@@ -91,13 +92,13 @@
 					<xsl:apply-templates select="/content/response"/>
 				</div>
 			</div>
-		</div>		
+		</div>
 	</xsl:template>
 
 	<xsl:template match="response">
 		<h1>Visualize</h1>
 		<p>Use the data selection and visualization options below to generate a chart based selected parameters. Instructions for using this feature can be found at <a
-			href="http://wiki.numismatics.org/numishare:visualize" target="_blank">http://wiki.numismatics.org/numishare:visualize</a>.</p>
+				href="http://wiki.numismatics.org/numishare:visualize" target="_blank">http://wiki.numismatics.org/numishare:visualize</a>.</p>
 
 		<!-- display the facet list only if there is a $q -->
 		<xsl:if test="string($q)">
@@ -120,7 +121,7 @@
 	<xsl:template name="visualize_options">
 		<xsl:variable name="chartTypes">column,bar</xsl:variable>
 
-		<form action="{$display_path}visualize" style="margin-bottom:40px;">
+		<form action="{$display_path}visualize" id="visualize-form" style="margin-bottom:40px;">
 			<h2>Step 1: Select Numeric Response Type</h2>
 			<input type="radio" name="type" value="percentage">
 				<xsl:if test="$type != 'count'">
@@ -180,7 +181,6 @@
 				</div>
 			</div>
 
-
 			<h2>
 				<xsl:choose>
 					<xsl:when test="string($q)">
@@ -206,8 +206,32 @@
 					</div>
 				</xsl:for-each>
 			</div>
+
+			<div>
+				<h3>Optional Settings<span style="font-size:60%;margin-left:10px;"><a href="#" class="optional-button" id="visualize-options">Hide/Show Options</a></span></h3>
+				<div class="optional-div" style="display:none">
+					<select id="stacking">
+						<option value="">Select Stacking Option...</option>
+						<option value="stacking:normal">
+							<xsl:if test="contains($options, 'stacking:normal')">
+								<xsl:attribute name="selected">selected</xsl:attribute>
+							</xsl:if>
+							<xsl:text>Cumulative</xsl:text>
+						</option>
+						<option value="stacking:percent">
+							<xsl:if test="contains($options, 'stacking:percent')">
+								<xsl:attribute name="selected">selected</xsl:attribute>
+							</xsl:if>
+							<xsl:text>Percentage</xsl:text>
+						</option>
+						
+					</select>
+				</div>
+			</div>
+
 			<input type="hidden" name="category" id="calculate-input" value=""/>
 			<input type="hidden" name="compare" id="compare-input" value=""/>
+			<input type="hidden" name="options" id="options-input" value="{$options}"/>
 			<input type="hidden" name="custom" id="custom-input" value=""/>
 			<xsl:if test="string($q)">
 				<input type="hidden" name="q" value="{$q}"/>
