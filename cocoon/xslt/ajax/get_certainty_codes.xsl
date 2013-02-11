@@ -14,7 +14,7 @@
 	<xsl:template match="code">
 		<xsl:variable name="code" select="."/>
 		<option value="{$code}" class="exclude-option">
-			<xsl:if test="boolean(index-of($tokens, $code))">
+			<xsl:if test="boolean(index-of($tokens, $code)) or ($code != '1' and $code != '5' and $code !='6')">
 				<xsl:attribute name="selected">selected</xsl:attribute>
 			</xsl:if>
 			<xsl:value-of select="$code"/>
