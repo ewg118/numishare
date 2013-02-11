@@ -219,14 +219,14 @@ $(document).ready(function () {
 	
 	//set max number of 4 hoards for comparison (5 shown in total)
 	$("#visualize-form .compare-select").livequery('change', function (event) {
-		if ($("#visualize-form .compare-option:selected").length > 10) {
+		if ($("#visualize-form .compare-option:selected").length > 8) {
 			$("#submit-vis").attr("disabled", "disabled");
 		} else {
 			$("#submit-vis").removeAttr('disabled');
 		}
 	});
 	$("#date-form .compare-select").livequery('change', function (event) {
-		if ($("#date-form .compare-option:selected").length > 10) {
+		if ($("#date-form .compare-option:selected").length > 8) {
 			$("#submit-date").attr("disabled", "disabled");
 		} else {
 			$("#submit-date").removeAttr('disabled');
