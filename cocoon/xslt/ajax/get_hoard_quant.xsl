@@ -6,6 +6,8 @@
 	<xsl:output method="xml" encoding="UTF-8" omit-xml-declaration="yes"/>
 
 	<!-- use the calculate URI parameter to output tables/charts for counts of material, denomination, issuer, etc. -->
+	<xsl:param name="lang"/>
+	<xsl:variable name="defaultLang" select="if (string($lang)) then $lang else 'en'"/>
 	<xsl:param name="calculate"/>
 	<xsl:param name="type"/>
 	<xsl:param name="format"/>
@@ -24,14 +26,14 @@
 			</xsl:when>
 			<xsl:when test="$calculate='dynasty'">
 				<xsl:text>famname</xsl:text>
-			</xsl:when>
+			</xsl:when>			
 			<xsl:otherwise>
 				<xsl:text>persname</xsl:text>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:variable>
 	<xsl:variable name="role">
-		<xsl:if test="$calculate != 'material' and $calculate != 'denomination' and $calculate != 'date'">
+		<xsl:if test="$calculate != 'material' and $calculate != 'denomination' and $calculate != 'date' and $calculate != 'coinType'">
 			<xsl:value-of select="$calculate"/>
 		</xsl:if>
 	</xsl:variable>
@@ -102,7 +104,7 @@
 					</xsl:when>
 					<xsl:when test="$calculate='date'">
 						<xsl:apply-templates select="exsl:node-set($nudsGroup)//nuds:typeDesc/nuds:date|exsl:node-set($nudsGroup)//nuds:typeDesc/nuds:dateRange/nuds:toDate"/>
-					</xsl:when>
+					</xsl:when>					
 					<xsl:otherwise>
 						<xsl:apply-templates select="exsl:node-set($nudsGroup)//*[local-name()=$element]"/>
 					</xsl:otherwise>
@@ -170,6 +172,9 @@
 						</xsl:when>
 						<xsl:when test="$calculate='date'">
 							<xsl:apply-templates select="exsl:node-set($nudsGroup)//nuds:typeDesc/nuds:date|exsl:node-set($nudsGroup)//nuds:typeDesc/nuds:dateRange/nuds:toDate"/>
+						</xsl:when>
+						<xsl:when test="$calculate='coinType'">
+							<xsl:apply-templates select="exsl:node-set($nudsGroup)//nuds:title[@xml:lang=$defaultLang]"/>							
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:apply-templates select="exsl:node-set($nudsGroup)//*[local-name()=$element]"/>
