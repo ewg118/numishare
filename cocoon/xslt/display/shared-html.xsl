@@ -15,7 +15,8 @@
 			<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
 		</h2>
 		<ul>
-			<xsl:apply-templates mode="descMeta"/>
+			<xsl:apply-templates select="*[local-name()='reference'][not(child::*[local-name()='objectXMLWrap'])]" mode="descMeta"/>
+			<xsl:apply-templates select="*[local-name()='reference']/*[local-name()='objectXMLWrap']"/>
 		</ul>
 	</xsl:template>
 
@@ -55,6 +56,9 @@
 					<xsl:choose>
 						<xsl:when test="string(@xlink:role)">
 							<xsl:value-of select="@xlink:role"/>
+						</xsl:when>
+						<xsl:when test="string(@localType)">
+							<xsl:value-of select="@localType"/>
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:value-of select="local-name()"/>
@@ -242,6 +246,27 @@
 				</xsl:choose>
 			</xsl:otherwise>
 		</xsl:choose>
+	</xsl:template>
+	
+	<xsl:template match="*[local-name()='objectXMLWrap']">
+		<xsl:variable name="label">
+			<xsl:choose>
+				<xsl:when test="parent::*[local-name()='reference']">
+					<xsl:value-of select="numishare:regularize_node(parent::node()/local-name(), $lang)"/>
+				</xsl:when>
+			</xsl:choose>
+		</xsl:variable>	
+		
+		<li>
+			<b><xsl:value-of select="$label"/>: </b>
+			<!-- determine which template to process -->
+			<xsl:choose>
+				<!-- process MODS record into Chicago Manual of Style formatted citation -->
+				<xsl:when test="child::*[local-name()='modsCollection']">
+					<xsl:call-template name="mods-citation"/>
+				</xsl:when>
+			</xsl:choose>
+		</li>
 	</xsl:template>
 
 	<!--***************************************** CREATE LINK FROM CATEGORY **************************************** -->
