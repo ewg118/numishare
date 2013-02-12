@@ -57,7 +57,7 @@
 		<xsl:choose>
 			<xsl:when test="$lang='ar'">
 				<xsl:choose>
-					<xsl:when test="$name='acknowledgment'">تعريف</xsl:when>					
+					<xsl:when test="$name='acknowledgment'">تعريف</xsl:when>
 					<xsl:when test="$name='acquiredFrom'">مكان الحصول عليها</xsl:when>
 					<xsl:when test="$name='appraisal'">القيمة</xsl:when>
 					<xsl:when test="$name='appraiser'">من الذى حدد القيمة </xsl:when>
@@ -123,7 +123,7 @@
 			</xsl:when>
 			<xsl:when test="$lang='de'">
 				<xsl:choose>
-					<xsl:when test="$name='acknowledgment'">[]</xsl:when>					
+					<xsl:when test="$name='acknowledgment'">[]</xsl:when>
 					<xsl:when test="$name='acquiredFrom'">Erworben von</xsl:when>
 					<xsl:when test="$name='adminDesc'">Administrativ</xsl:when>
 					<xsl:when test="$name='appraisal'">[]</xsl:when>
@@ -191,7 +191,7 @@
 					<xsl:when test="$name='rev_leg'">Rückseitenlegende</xsl:when>
 					<xsl:when test="$name='rev_type'">Rückseitentyp</xsl:when>
 					<xsl:when test="$name='saleCatalog'">Auktionskatalog</xsl:when>
-					<xsl:when test="$name='saleItem'"></xsl:when>
+					<xsl:when test="$name='saleItem'"/>
 					<xsl:when test="$name='salePrice'">Verkaufspreis</xsl:when>
 					<xsl:when test="$name='shape'">Form</xsl:when>
 					<xsl:when test="$name='state'">Zustand</xsl:when>
@@ -216,7 +216,7 @@
 			</xsl:when>
 			<xsl:when test="$lang='fr'">
 				<xsl:choose>
-					<xsl:when test="$name='acknowledgment'">Remerciement</xsl:when>					
+					<xsl:when test="$name='acknowledgment'">Remerciement</xsl:when>
 					<xsl:when test="$name='acquiredFrom'">Acquis de </xsl:when>
 					<xsl:when test="$name='adminDesc'">Historique administratif</xsl:when>
 					<xsl:when test="$name='appraisal'">Valorisation</xsl:when>
@@ -232,9 +232,9 @@
 					<xsl:when test="$name='conservationState'">Etat de conservation</xsl:when>
 					<xsl:when test="$name='contents'">Contenu</xsl:when>
 					<xsl:when test="$name='coordinates'">Coordonnées</xsl:when>
-					<xsl:when test="$name='countermark'">Contremarque</xsl:when>					
+					<xsl:when test="$name='countermark'">Contremarque</xsl:when>
 					<xsl:when test="$name='date'">Date</xsl:when>
-					<xsl:when test="$name='dateRange'">Intervalle chronologique</xsl:when>					
+					<xsl:when test="$name='dateRange'">Intervalle chronologique</xsl:when>
 					<xsl:when test="$name='dateOnObject'">Date sur l'objet</xsl:when>
 					<xsl:when test="$name='decade'">Décennie</xsl:when>
 					<xsl:when test="$name='degree'">Degré</xsl:when>
@@ -311,7 +311,7 @@
 			</xsl:when>
 			<xsl:when test="$lang='ro'">
 				<xsl:choose>
-					<xsl:when test="$name='acknowledgment'">Mulţumiri</xsl:when>					
+					<xsl:when test="$name='acknowledgment'">Mulţumiri</xsl:when>
 					<xsl:when test="$name='acquiredFrom'">Achiziţionat de la</xsl:when>
 					<xsl:when test="$name='adminDesc'">Istoric administrativ</xsl:when>
 					<xsl:when test="$name='appraisal'">Evaluare</xsl:when>
@@ -404,10 +404,11 @@
 				</xsl:choose>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:choose>					
+				<xsl:choose>
 					<xsl:when test="$name='acquiredFrom'">Acquired From</xsl:when>
 					<xsl:when test="$name='adminDesc'">Administrative History</xsl:when>
-					<xsl:when test="$name='closing_date'">Closing Date</xsl:when>					
+					<xsl:when test="$name='coinType'">Coin Type</xsl:when>
+					<xsl:when test="$name='closing_date'">Closing Date</xsl:when>
 					<xsl:when test="$name='conservationState'">Conservation State</xsl:when>
 					<xsl:when test="$name='provenance'">Provenance</xsl:when>
 					<xsl:when test="$name='dateOnObject'">Date on Object</xsl:when>
@@ -419,14 +420,15 @@
 					<xsl:when test="$name='fromDate'">From Date</xsl:when>
 					<xsl:when test="$name='toDate'">To Date</xsl:when>
 					<xsl:when test="$name='measurementsSet'">Measurements</xsl:when>
+					<xsl:when test="$name='noteSet'">Notes</xsl:when>
 					<xsl:when test="$name='objectType'">Object Type</xsl:when>
-					<xsl:when test="$name = 'obv_leg'">Obverse Legend</xsl:when>
-					<xsl:when test="$name = 'obv_type'">Obverse Type</xsl:when>
+					<xsl:when test="$name='obv_leg'">Obverse Legend</xsl:when>
+					<xsl:when test="$name='obv_type'">Obverse Type</xsl:when>
 					<xsl:when test="$name='physDesc'">Physical Description</xsl:when>
 					<xsl:when test="$name='previousColl'">Previous Collection</xsl:when>
 					<xsl:when test="$name='refDesc'">References</xsl:when>
-					<xsl:when test="$name = 'rev_leg'">Reverse Legend</xsl:when>
-					<xsl:when test="$name = 'rev_type'">Reverse Type</xsl:when>
+					<xsl:when test="$name='rev_leg'">Reverse Legend</xsl:when>
+					<xsl:when test="$name='rev_type'">Reverse Type</xsl:when>
 					<xsl:when test="$name='saleCatalog'">Sale Catalog</xsl:when>
 					<xsl:when test="$name='saleItem'">Sale Item</xsl:when>
 					<xsl:when test="$name='salePrice'">Sale Price</xsl:when>
@@ -623,7 +625,7 @@
 					<xsl:when test="$label='results_map-results'">Résultats géographiques</xsl:when>
 					<xsl:when test="$label='results_data-options'">Options de données</xsl:when>
 					<xsl:when test="$label='results_refine-results'">Raffiner le résultat</xsl:when>
-					<xsl:when test="$label='results_quick-search'">Recherche rapide</xsl:when>				
+					<xsl:when test="$label='results_quick-search'">Recherche rapide</xsl:when>
 					<xsl:when test="$label='results_has-images'">Images disponibles</xsl:when>
 					<xsl:when test="$label='results_refine-search'">Raffiner la recherche</xsl:when>
 					<xsl:when test="$label='results_select'">Sélectionner à partir de la liste</xsl:when>
@@ -635,7 +637,7 @@
 					<xsl:when test="$label='results_filters'">Filtres</xsl:when>
 					<xsl:when test="$label='results_clear-all'">Effacer les termes sélectionnés</xsl:when>
 					<xsl:when test="$label='results_keyword'">Mot clef</xsl:when>
-					<xsl:when test="$label='results_sort-category'">Classer les catégories</xsl:when>					
+					<xsl:when test="$label='results_sort-category'">Classer les catégories</xsl:when>
 					<xsl:otherwise>
 						<xsl:value-of select="concat('No label for ', $label)"/>
 					</xsl:otherwise>

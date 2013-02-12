@@ -40,7 +40,7 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-		
+
 		<div class="yui3-u-1">
 			<div class="content">
 				<h1>
@@ -96,6 +96,16 @@
 				<xsl:if test="nh:descMeta/nh:refDesc">
 					<div class="metadata_section">
 						<xsl:apply-templates select="nh:descMeta/nh:refDesc"/>
+					</div>
+				</xsl:if>
+				<xsl:if test="nh:descMeta/nh:noteSet">
+					<div class="metadata_section">
+						<h2>
+							<xsl:value-of select="numishare:regularize_node('noteSet', $lang)"/>
+						</h2>
+						<ul>
+							<xsl:apply-templates select="nh:descMeta/nh:noteSet/nh:note" mode="descMeta"/>
+						</ul>
 					</div>
 				</xsl:if>
 			</div>
