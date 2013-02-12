@@ -139,19 +139,25 @@
 								<xsl:value-of select="numishare:normalizeLabel('display_quantitative', $lang)"/>
 							</h1>
 							<div id="accordion">
-								<h3>Visualization</h3>
+								<h3>
+									<xsl:value-of select="numishare:normalizeLabel('display_visualization', $lang)"/>
+								</h3>
 								<div>
 									<xsl:call-template name="visualization">
 										<xsl:with-param name="action" select="concat('./', $id, '#quantitative')"/>
 									</xsl:call-template>
 								</div>
-								<h3>Date Analysis</h3>
+								<h3>
+									<xsl:value-of select="numishare:normalizeLabel('display_date-analysis', $lang)"/>
+								</h3>
 								<div>
 									<xsl:call-template name="date-vis">
 										<xsl:with-param name="action" select="concat('./', $id, '#quantitative')"/>
 									</xsl:call-template>
 								</div>
-								<h3>Data Download</h3>
+								<h3>
+									<xsl:value-of select="numishare:normalizeLabel('display_data-download', $lang)"/>
+								</h3>
 								<div>
 									<xsl:call-template name="data-download"/>
 								</div>

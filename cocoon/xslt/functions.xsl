@@ -701,6 +701,7 @@
 					<xsl:when test="$label='display_quantitative'">Quantitative Analysis</xsl:when>
 					<xsl:when test="$label='display_visualization'">Visualization</xsl:when>
 					<xsl:when test="$label='display_data-download'">Data Download</xsl:when>
+					<xsl:when test="$label='display_date-analysis'">Date Analysis</xsl:when>
 					<xsl:when test="$label='results_all-terms'">All Terms</xsl:when>
 					<xsl:when test="$label='results_map-results'">Map Results</xsl:when>
 					<xsl:when test="$label='results_filters'">Filters</xsl:when>

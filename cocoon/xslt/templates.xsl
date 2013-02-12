@@ -143,7 +143,7 @@
 	<!-- ************** FORM TEMPLATES ************** -->
 	<xsl:template name="visualization">
 		<xsl:param name="action"/>
-		<xsl:variable name="queryOptions">authority,deity,denomination,dynasty,issuer,material,mint,portrait,region</xsl:variable>
+		<xsl:variable name="queryOptions">authority,coinType,deity,denomination,dynasty,issuer,material,mint,portrait,region</xsl:variable>
 		<xsl:variable name="chartTypes">bar,column</xsl:variable>
 
 		<p>Use this feature to visualize percentages or numeric occurrences of the following typologies.</p>
@@ -515,7 +515,7 @@
 			</xsl:otherwise>
 		</xsl:choose>
 		<label for="{$query_fragment}-checkbox">
-			<xsl:value-of select="concat(upper-case(substring($query_fragment, 1, 1)), substring($query_fragment, 2))"/>
+			<xsl:value-of select="numishare:normalize_fields($query_fragment, $lang)"/>
 		</label>
 	</xsl:template>
 
@@ -523,7 +523,7 @@
 		<xsl:param name="query_fragment"/>
 		<input type="radio" name="calculate" id="{$query_fragment}-radio" value="{$query_fragment}"/>
 		<label for="{$query_fragment}-checkbox">
-			<xsl:value-of select="concat(upper-case(substring($query_fragment, 1, 1)), substring($query_fragment, 2))"/>
+			<xsl:value-of select="numishare:normalize_fields($query_fragment, $lang)"/>
 		</label>
 	</xsl:template>
 
