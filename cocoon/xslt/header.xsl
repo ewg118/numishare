@@ -5,7 +5,7 @@
 
 		<!-- if displaying a coin or artifact record, the path to the other sections should be {$display_path} ; otherwise nothing -->
 		<div id="hd">
-			<table>
+			<table style="width:100%">
 				<tr>
 					<td style="width:10%">
 						<img src="{$display_path}images/uva-logo.jpg" alt="logo"/>

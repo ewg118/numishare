@@ -9,6 +9,8 @@
 	<xsl:param name="compare"/>
 	<xsl:param name="type"/>
 	<xsl:param name="chartType"/>
+	<xsl:param name="exclude"/>
+	<xsl:param name="options"/>
 
 	<xsl:template name="nudsHoard">
 		<xsl:apply-templates select="/content/nh:nudsHoard"/>
@@ -21,35 +23,95 @@
 	</xsl:template>
 
 	<xsl:template name="nudsHoard_content">
-		<div class="yui-b">
-			<div class="yui-g first">
+		<xsl:variable name="title">
+			<xsl:choose>
+				<xsl:when test="string(nh:descMeta/nh:title[@xml:lang=$lang])">
+					<xsl:value-of select="nh:descMeta/nh:title[@xml:lang=$lang]"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:choose>
+						<xsl:when test="string(nh:descMeta/nh:title[@xml:lang='en'])">
+							<xsl:value-of select="nh:descMeta/nh:title[@xml:lang='en']"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="normalize-space(nh:descMeta/nh:title[1])"/>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+
+		<div class="yui3-u-1">
+			<div class="content">
 				<h1>
-					<xsl:value-of select="$id"/>
+					<xsl:choose>
+						<xsl:when test="string($title)">
+							<xsl:value-of select="$title"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="$id"/>
+						</xsl:otherwise>
+					</xsl:choose>
 				</h1>
-				<div class="yui-u first">
-					<div id="timemap">
-						<div id="mapcontainer">
-							<div id="map"/>
-						</div>
-						<div id="timelinecontainer">
-							<div id="timeline"/>
-						</div>
+			</div>
+		</div>
+		<div class="yui3-u-1-2">
+			<div class="content">
+				<div id="timemap">
+					<div id="mapcontainer">
+						<div id="map"/>
+					</div>
+					<div id="timelinecontainer">
+						<div id="timeline"/>
 					</div>
 				</div>
-				<div class="yui-u">
-					<xsl:if test="nh:descMeta/nh:hoardDesc">
-						<div class="metadata_section">
-							<xsl:apply-templates select="nh:descMeta/nh:hoardDesc"/>
-						</div>
-					</xsl:if>
-					<xsl:if test="nh:descMeta/nh:refDesc">
-						<div class="metadata_section">
-							<xsl:apply-templates select="nh:descMeta/nh:refDesc"/>
-						</div>
-					</xsl:if>
+				<div class="legend">
+					<table>
+						<tbody>
+							<tr>
+								<th style="width:100px">
+									<xsl:value-of select="numishare:regularize_node('legend', $lang)"/>
+								</th>
+								<td style="background-color:#6992fd;border:2px solid black;width:50px;"/>
+								<td style="width:100px">
+									<xsl:value-of select="numishare:regularize_node('mint', $lang)"/>
+								</td>
+								<td style="background-color:#d86458;border:2px solid black;width:50px;"/>
+								<td style="width:100px">
+									<xsl:value-of select="numishare:regularize_node('findspot', $lang)"/>
+								</td>
+							</tr>
+						</tbody>
+					</table>
 				</div>
 			</div>
-			<div class="yui-g">
+		</div>
+		<div class="yui3-u-1-2">
+			<div class="content">
+				<xsl:if test="nh:descMeta/nh:hoardDesc">
+					<div class="metadata_section">
+						<xsl:apply-templates select="nh:descMeta/nh:hoardDesc"/>
+					</div>
+				</xsl:if>
+				<xsl:if test="nh:descMeta/nh:refDesc">
+					<div class="metadata_section">
+						<xsl:apply-templates select="nh:descMeta/nh:refDesc"/>
+					</div>
+				</xsl:if>
+				<xsl:if test="nh:descMeta/nh:noteSet">
+					<div class="metadata_section">
+						<h2>
+							<xsl:value-of select="numishare:regularize_node('noteSet', $lang)"/>
+						</h2>
+						<ul>
+							<xsl:apply-templates select="nh:descMeta/nh:noteSet/nh:note" mode="descMeta"/>
+						</ul>
+					</div>
+				</xsl:if>
+			</div>
+		</div>
+		<div class="yui3-u-1">
+			<div class="content">
 				<!--********************************* MENU ******************************************* -->
 				<xsl:if test="count(nh:descMeta/nh:contentsDesc/nh:contents/*) &gt; 0">
 					<div id="tabs">
@@ -77,28 +139,51 @@
 								<xsl:value-of select="numishare:normalizeLabel('display_quantitative', $lang)"/>
 							</h1>
 							<div id="accordion">
-								<h3>Visualization</h3>
+								<h3>
+									<xsl:value-of select="numishare:normalizeLabel('display_visualization', $lang)"/>
+								</h3>
 								<div>
-									<xsl:call-template name="visualization"/>
+									<xsl:call-template name="visualization">
+										<xsl:with-param name="action" select="concat('./', $id, '#quantitative')"/>
+									</xsl:call-template>
 								</div>
-								<h3>Data Download</h3>
+								<h3>
+									<xsl:value-of select="numishare:normalizeLabel('display_date-analysis', $lang)"/>
+								</h3>
+								<div>
+									<xsl:call-template name="date-vis">
+										<xsl:with-param name="action" select="concat('./', $id, '#quantitative')"/>
+									</xsl:call-template>
+								</div>
+								<h3>
+									<xsl:value-of select="numishare:normalizeLabel('display_data-download', $lang)"/>
+								</h3>
 								<div>
 									<xsl:call-template name="data-download"/>
 								</div>
 							</div>
+							<span id="formId" style="display:none"/>
 						</div>
 					</div>
 				</xsl:if>
-
 			</div>
 		</div>
 	</xsl:template>
 
 	<xsl:template match="nh:hoardDesc">
-		<h2><xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/></h2>
+		<xsl:variable name="hasContents">
+			<xsl:choose>
+				<xsl:when test="count(parent::node()/nh:contentsDesc/nh:contents/*) &gt; 0">true</xsl:when>
+				<xsl:otherwise>false</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+
+		<h2>
+			<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
+		</h2>
 		<ul>
 			<xsl:apply-templates mode="descMeta"/>
-			<xsl:if test="not(nh:deposit/nh:date)">
+			<xsl:if test="not(nh:deposit/nh:date) and not(nh:deposit/nh:dateRange)">
 				<!-- get date values for closing date -->
 				<xsl:variable name="dates">
 					<dates>
@@ -124,12 +209,31 @@
 					</xsl:choose>
 				</li>
 			</xsl:if>
+			<xsl:if test="$hasContents = 'true'">
+				<xsl:variable name="denominations">
+					<xsl:copy-of select="document(concat($url, 'get_hoard_quant?id=', $id, '&amp;calculate=denomination&amp;type=count'))"/>
+				</xsl:variable>
 
+				<li>
+					<b>Description: </b>
+					<xsl:for-each select="exsl:node-set($denominations)//*[local-name()='name']">
+						<xsl:sort select="@count" order="descending" data-type="number"/>
+						<xsl:value-of select="."/>
+						<xsl:text>: </xsl:text>
+						<xsl:value-of select="@count"/>
+						<xsl:if test="not(position()=last())">
+							<xsl:text>, </xsl:text>
+						</xsl:if>
+					</xsl:for-each>
+				</li>
+			</xsl:if>
 		</ul>
 	</xsl:template>
 
 	<xsl:template name="nh:contents">
-		<h2><xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/></h2>
+		<h2>
+			<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
+		</h2>
 
 		<table style="width:100%">
 			<thead>
@@ -170,9 +274,29 @@
 				<xsl:value-of select="if(@count) then @count else 1"/>
 			</td>
 			<td>
+				<xsl:choose>
+					<xsl:when test="nuds:typeDesc/@certainty='2'">
+						<xsl:text>As </xsl:text>
+					</xsl:when>
+					<xsl:when test="nuds:typeDesc/@certainty='3'">
+						<xsl:text>Copy of </xsl:text>
+					</xsl:when>
+					<xsl:when test="nuds:typeDesc/@certainty='4'">
+						<xsl:text>Copy as </xsl:text>
+					</xsl:when>
+					<xsl:when test="nuds:typeDesc/@certainty='5'">
+						<xsl:text>As issue </xsl:text>
+					</xsl:when>
+					<xsl:when test="nuds:typeDesc/@certainty='9'">
+						<xsl:text>At least one of </xsl:text>
+					</xsl:when>
+				</xsl:choose>
 				<a href="{$typeDesc_resource}" target="_blank">
 					<xsl:value-of select="exsl:node-set($nudsGroup)/nudsGroup/object[@xlink:href = $typeDesc_resource]/nuds:nuds/nuds:descMeta/nuds:title"/>
 				</a>
+				<xsl:if test="nuds:typeDesc/@certainty='7'">
+					<xsl:text> (extraneous)</xsl:text>
+				</xsl:if>
 				<br/>
 				<xsl:if test="string(exsl:node-set($typeDesc)/nuds:typeDesc/nuds:denomination)">
 					<xsl:value-of select="exsl:node-set($typeDesc)/nuds:typeDesc/nuds:denomination"/>

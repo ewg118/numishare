@@ -10,7 +10,7 @@
 						<scale>1</scale>
 						<hotSpot x="0.5" y="0.5" xunits="fraction" yunits="fraction"/>
 						<Icon>
-							<href>http://maps.google.com/mapfiles/kml/pal4/icon48.png</href>
+							<href>http://maps.google.com/intl/en_us/mapfiles/ms/micons/blue-dot.png</href>
 						</Icon>
 					</IconStyle>
 				</Style>
@@ -19,16 +19,7 @@
 						<scale>1</scale>
 						<hotSpot x="0.5" y="0.5" xunits="fraction" yunits="fraction"/>
 						<Icon>
-							<href>http://maps.google.com/mapfiles/kml/pal4/icon49.png</href>
-						</Icon>
-					</IconStyle>
-				</Style>
-				<Style xmlns="" id="mapped">
-					<IconStyle>
-						<scale>1</scale>
-						<hotSpot x="0.5" y="0.5" xunits="fraction" yunits="fraction"/>
-						<Icon>
-							<href>http://maps.google.com/mapfiles/kml/pal4/icon57.png</href>
+							<href>http://maps.google.com/intl/en_us/mapfiles/ms/micons/red-dot.png</href>
 						</Icon>
 					</IconStyle>
 				</Style>
@@ -99,7 +90,8 @@
 			<!-- commenting out unique portion: [not(.=preceding::nuds:geogname)] -->
 			<xsl:call-template name="getPlacemark">
 				<xsl:with-param name="href" select="@xlink:href"/>
-				<xsl:with-param name="styleUrl">#mapped</xsl:with-param>
+				<xsl:with-param name="type">mapped</xsl:with-param>
+				<xsl:with-param name="styleUrl">#mint</xsl:with-param>
 			</xsl:call-template>
 		</xsl:for-each>
 	</xsl:template>
@@ -285,12 +277,13 @@
 
 	<xsl:template name="getPlacemark">
 		<xsl:param name="href"/>
+		<xsl:param name="type"/>
 		<xsl:param name="styleUrl"/>
 		
 		<xsl:variable name="label">
 			<!-- display the title (coin type reference) for hoards, place name for other points -->
 			<xsl:choose>
-				<xsl:when test="$styleUrl='#mapped'">
+				<xsl:when test="$type='mapped'">
 					<xsl:value-of select="ancestor::nuds:nuds/nuds:descMeta/nuds:title"/>
 				</xsl:when>
 				<xsl:when test="local-name()='findspotDesc'">
@@ -318,7 +311,7 @@
 				<xsl:value-of select="$label"/>
 			</name>
 			<xsl:choose>
-				<xsl:when test="$styleUrl='#mapped'">
+				<xsl:when test="$type='mapped'">
 					<description>
 						<xsl:value-of select="."/>
 						<!-- display date -->

@@ -95,7 +95,7 @@ $(document).ready(function () {
 			},
 			plotOptions: {
 				series: {
-					stacking: (type = 'count' ? options.stacking : null)					
+					stacking: (type == 'count' ? options.stacking : null)					
 				}
 			}
 		};

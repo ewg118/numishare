@@ -83,10 +83,7 @@ function initialize_map(q, collection_type) {
 			})
 		})
 	});
-	
-	if (collection_type == 'hoard') {
-		map.addLayer(hoardLayer);
-	}
+	map.addLayer(hoardLayer);
 	
 	function kmlLoaded() {
 		if (collection_type == 'hoard') {
@@ -96,31 +93,29 @@ function initialize_map(q, collection_type) {
 		}
 		
 		if (q == '*:*') {
-			map.zoomTo('2');
+			map.zoomTo('3');
 		} else {
 			map.zoomTo('5');
 		}
 	}
 	
-	selectControl = new OpenLayers.Control.SelectFeature([mintLayer, hoardLayer], {
+	//enable events for mint selection
+	SelectControl = new OpenLayers.Control.SelectFeature([mintLayer, hoardLayer], {
 		clickout: true,
-		//toggle: true,
 		multiple: false,
-		hover: false,
-		//toggleKey: "ctrlKey",
-		//multipleKey: "shiftKey"
+		hover: false
 	});
 	
-	map.addControl(selectControl);
-	selectControl.activate();
+	map.addControl(SelectControl);
+	
+	SelectControl.activate();
+	
 	mintLayer.events.on({
 		"featureselected": onFeatureSelect, "featureunselected": onFeatureUnselect
 	});
-	if (collection_type == 'hoard') {
-		hoardLayer.events.on({
-			"featureselected": onFeatureSelect, "featureunselected": onFeatureUnselect
-		});
-	}
+	hoardLayer.events.on({
+		"featureselected": onFeatureSelect, "featureunselected": onFeatureUnselect
+	});
 	
 	function onPopupClose(evt) {
 		map.removePopup(map.popups[0]);

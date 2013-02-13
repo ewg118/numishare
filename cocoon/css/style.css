@@ -11,7 +11,8 @@ html {
 	background-position:right top;
 	background-image:url('images/uva-banner.jpg');
 	background-repeat:no-repeat;
-	font:12px arial, helvetica, sans-serif;
+	font:12px Trebuchet MS,Tahoma,Verdana,Arial,sans-serif;
+	color: #333333;
 }
 body {
 	max-width:90%;
@@ -35,13 +36,12 @@ th {
 	font-weight:bold;
 }
 input {
-	font:12px arial, helvetica, sans-serif;
+	font:12px Trebuchet MS,Tahoma,Verdana,Arial,sans-serif;
 }
 select {
 	width:200px;
 	margin-left:15px;
 	margin-right:5px;
-	font:12px arial, helvetica, sans-serif;
 }
 #facet ol, ul, dl {
 	margin:0em;
@@ -109,9 +109,9 @@ dt {
   ***************************************
  */
 #ft {
-	padding:10px 0;
-	text-align:center;
-	background-color:#ebebeb;
+	background-color:#EFEFEF;
+	border:1px solid silver;
+	margin:20px 0;
 }
 /*
   ***************************************
