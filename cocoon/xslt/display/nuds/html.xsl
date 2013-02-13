@@ -294,6 +294,25 @@
 							<h2>Map This Object</h2>
 							<p>Use the layer control along the right edge of the map (the "plus" symbol) to toggle map layers.</p>
 							<div id="mapcontainer"/>
+							<div class="legend">
+								<table>
+									<tbody>
+										<tr>
+											<th style="width:100px;background:none">
+												<xsl:value-of select="numishare:regularize_node('legend', $lang)"/>
+											</th>
+											<td style="background-color:#6992fd;border:2px solid black;width:50px;"/>
+											<td style="width:100px">
+												<xsl:value-of select="numishare:regularize_node('mint', $lang)"/>
+											</td>
+											<td style="background-color:#d86458;border:2px solid black;width:50px;"/>
+											<td style="width:100px">
+												<xsl:value-of select="numishare:regularize_node('findspot', $lang)"/>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
 							<ul id="term-list" style="display:none">
 								<xsl:for-each select="document(concat($solr-url, 'select?q=id:&#x022;', $id, '&#x022;'))//arr">
 									<xsl:if test="contains(@name, '_facet') and not(contains(@name, 'institution')) and not(contains(@name, 'collection')) and not(contains(@name, 'department'))">
