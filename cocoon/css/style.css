@@ -46,7 +46,7 @@ select {
 #facet ol, ul, dl {
 	margin:0em;
 }
-ol li, ul li, dl li {
+ul li, dl li {
 	list-style-type:none;
 }
 h4 {
