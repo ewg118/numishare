@@ -54,6 +54,8 @@ $(document).ready(function () {
 		var formId = $(this).siblings('form').attr('id');
 		var type = $('#' + formId + ' input:radio[name=type]:checked').val();
 		var chartType = $('#' + formId + ' input:radio[name=chartType]:checked').val();
+		var optionString = $('#options-input').val();
+		var formOptions = processOptions(optionString);
 		
 		var table = $(this),
 		options = {
@@ -87,6 +89,11 @@ $(document).ready(function () {
 			tooltip: {
 				formatter: function () {
 					return this.y + (type == 'percentage'? '%: ': ' coins: ') + this.x;
+				}
+			},
+			plotOptions: {
+				series: {
+					stacking: (type == 'count'? formOptions.stacking: null)
 				}
 			}
 		};
@@ -147,6 +154,18 @@ $(document).ready(function () {
 		});
 	}
 	
+	function processOptions(optionString) {
+		var options = {
+		};
+		var result = optionString.split('|');
+		for (i = 0; i < result.length; i++) {
+			var key = result[i].split(':')[0];
+			var value = result[i].split(':')[1];
+			options[key] = value;
+		}
+		return options;
+	}
+	
 	//lock bar and column charts for count in date visualization--line, spine, area, and areaspline for percentages
 	$('#date-form input[name=type]').change(function () {
 		if ($(this).val() == 'count') {
@@ -190,9 +209,9 @@ $(document).ready(function () {
 	//enable cumulative when "date" is checked, otherwise disable
 	$('#csv-form input[name=calculate]').change(function () {
 		if ($(this).val() == 'date') {
-			$('#csv-form input[value=cumulative]').attr('disabled', false);			
+			$('#csv-form input[value=cumulative]').attr('disabled', false);
 		} else {
-			$('#csv-form input[value=cumulative]').attr('disabled', true);			
+			$('#csv-form input[value=cumulative]').attr('disabled', true);
 		}
 		//set percentage as default
 		$('#csv-form input[value=percentage]').attr('checked', true);
@@ -200,38 +219,25 @@ $(document).ready(function () {
 	
 	//set max number of 4 hoards for comparison (5 shown in total)
 	$("#visualize-form .compare-select").livequery('change', function (event) {
-		if ($("#visualize-form .compare-option:selected").length > 6) {
+		if ($("#visualize-form .compare-option:selected").length > 8) {
 			$("#submit-vis").attr("disabled", "disabled");
 		} else {
 			$("#submit-vis").removeAttr('disabled');
 		}
 	});
 	$("#date-form .compare-select").livequery('change', function (event) {
-		if ($("#date-form .compare-option:selected").length > 6) {
+		if ($("#date-form .compare-option:selected").length > 8) {
 			$("#submit-date").attr("disabled", "disabled");
 		} else {
 			$("#submit-date").removeAttr('disabled');
 		}
 	});
-	/***** GET HOARDS FOR COMPARISON ON DISPLAY PAGE *****/
-	$('.compare-button').click(function () {
-		//display the compare multiselect list only if it hasn't already been generated
-		var cd = $(this).parent().children('.compare-div');
-		if (cd.html().indexOf('<option') < 0) {
-			$.get('../get_hoards', {
-				q: '*'
-			},
-			function (data) {
-				cd.html(data);
-			});
-		}
-		return false;
-	});
 	
 	/***** TOGGLE OPTIONAL SETTINGS *****/
-	$('.optional-button').click(function(){
+	$('.optional-button').click(function () {
 		var formId = $(this).attr('id').split('-')[0] + '-form';
 		$('#' + formId + ' .optional-div').toggle('slow');
+		return false;
 	});
 	
 	/***** SUBMIT FORMS *****/
@@ -245,6 +251,16 @@ $(document).ready(function () {
 			});
 			var param1 = facets.join(',');
 			$(this).siblings('input[name=calculate]').attr('value', param1);
+			
+			//get options
+			optionsArray = new Array();
+			$('.optional-div option:selected').each(function () {
+				if($(this).parent().attr('class') != 'certainty-select'){
+					optionsArray.push($(this).val());
+				}
+			});
+			var options = optionsArray.join('|');
+			$('#options-input').attr('value', options);
 		} else {
 			$(this).siblings('input[name=calculate]').attr('value', 'date');
 		}
@@ -287,10 +303,9 @@ $(document).ready(function () {
 	/********* FILTERING FUNCTIONS **********/
 	$(".showFilter").each(function () {
 		var tthis = this;
-		$(this).fancybox({			
+		$(this).fancybox({
 			onStart: function () {
 				var formId = tthis.id.split('-')[0] + '-form';
-				alert(formId);
 				$('#formId').html(formId);
 			}
 		});
@@ -316,7 +331,7 @@ $(document).ready(function () {
 	//filter button activation
 	$('#advancedSearchForm').submit(function () {
 		var formId = $('#formId').text();
-		var q = assembleQuery();
+		var q = assembleQuery('advancedSearchForm');
 		$('#' + formId + ' .filter-div').children('span').html(q);
 		$('#' + formId + ' .filter-div').show();
 		$.get('get_hoards', {
