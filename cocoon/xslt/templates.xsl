@@ -218,9 +218,7 @@
 				</xsl:when>
 				<xsl:otherwise>
 					<h2>Step 4: Select Hoards to Compare (optional)</h2>
-					<div class="compare-div">
-						<cinclude:include src="cocoon:/get_hoards?compare={$compare}&amp;q=*&amp;ignore={$id}"/>
-					</div>
+					<xsl:call-template name="get-hoards"/>
 				</xsl:otherwise>
 			</xsl:choose>
 
@@ -368,19 +366,7 @@
 				</xsl:when>
 				<xsl:otherwise>
 					<h2>Step 3: Select Hoards to Compare (optional)</h2>
-					<xsl:choose>
-						<xsl:when test="not(string($compare))">
-							<div>
-								<a href="#" class="compare-button"><img src="{$display_path}images/plus.gif" alt="Expand"/>Compare to Other Hoards</a>
-								<div class="compare-div"/>
-							</div>
-						</xsl:when>
-						<xsl:otherwise>
-							<div class="compare-div">
-								<cinclude:include src="cocoon:/get_hoards?compare={$compare}&amp;q=*"/>
-							</div>
-						</xsl:otherwise>
-					</xsl:choose>
+					<xsl:call-template name="get-hoards"/>
 				</xsl:otherwise>
 			</xsl:choose>
 			<div>
@@ -483,10 +469,7 @@
 				</xsl:when>
 				<xsl:otherwise>
 					<h2>Step 3: Select Hoards to Compare (optional)</h2>
-					<div>
-						<a href="#" class="compare-button"><img src="{$display_path}images/plus.gif" alt="Expand"/>Compare to Other Hoards</a>
-						<div class="compare-div"/>
-					</div>
+					<xsl:call-template name="get-hoards"/>
 				</xsl:otherwise>
 			</xsl:choose>
 
@@ -529,7 +512,7 @@
 
 	<xsl:template name="get-hoards">
 		<div class="compare-div">
-			<cinclude:include src="cocoon:/get_hoards?compare={$compare}&amp;q=*"/>
+			<cinclude:include src="cocoon:/get_hoards?compare={$compare}&amp;q=*&amp;ignore={$id}"/>
 		</div>
 	</xsl:template>
 
@@ -590,7 +573,7 @@
 	<!-- ************** SEARCH DROP-DOWN MENUS ************** -->
 	<xsl:template name="search_options">
 		<xsl:variable name="fields">
-			<xsl:text>fulltext,artist_facet,authority_facet,coinType_facet,color_text,deity_facet,denomination_facet,department_facet,diameter_num,dynasty_facet,findspot_text,objectType_facet,identifier_display,issuer_facet,legend_text,obv_leg_text,rev_leg_text,maker_facet,manufacture_facet,material_facet,mint_facet,portrait_facet,reference_facet,region_facet,taq_num,tpq_num,type_text,obv_type_text,rev_type_text,weight_num,year_num</xsl:text>
+			<xsl:text>fulltext,artist_facet,authority_facet,taq_num,coinType_facet,color_text,deity_facet,denomination_facet,department_facet,diameter_num,dynasty_facet,findspot_text,objectType_facet,identifier_display,issuer_facet,legend_text,obv_leg_text,rev_leg_text,maker_facet,manufacture_facet,material_facet,mint_facet,tpq_num,portrait_facet,reference_facet,region_face,type_text,obv_type_text,rev_type_text,weight_num,year_num</xsl:text>
 		</xsl:variable>
 
 		<xsl:for-each select="tokenize($fields, ',')">
