@@ -1,1 +1,105 @@
-<nuds xmlns="http://nomisma.org/nuds" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mets="http://www.loc.gov/METS/" recordType="physical"><nudsHeader><nudsid>1989.19.14</nudsid><publicationStmt><publisher>The University of Virginia Library</publisher><createdBy>Ethan Gruber and/or Carrie Sulosky</createdBy><langUsage><language langcode="en">English</language></langUsage></publicationStmt><rightsStmt><license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/"/><date standardDate="2012"/></rightsStmt><revisionStmt><revision><description>Migrated from EAD to NUDS</description><date standardDateTime="2012-12-12T15:05:54.552-05:00Z"/></revision></revisionStmt></nudsHeader><descMeta><title xml:lang="en">Gold aureus of Lucius Verus, Rome, A.D. 162</title><department>Roman</department><subjectSet><subject xmlns="" xmlns:xi="http://www.w3.org/2001/XInclude">Concordia</subject></subjectSet><typeDesc><objectType xlink:href="http://nomisma.org/id/coin">Coin</objectType><denomination xlink:href="http://nomisma.org/id/aureus">Aureus</denomination><material xlink:href="http://nomisma.org/id/au">Gold</material><date standardDate="0162">A.D. 162</date><authority><persname xlink:type="simple" xlink:role="authority" xlink:href="http://nomisma.org/id/lucius_verus">Lucius Verus</persname><persname xlink:type="simple" xlink:role="authority" xlink:href="http://nomisma.org/id/marcus_aurelius">Marcus Aurelius</persname><famname xlink:type="simple" xlink:role="dynasty">Antonine</famname><corpname xlink:type="simple" xlink:role="state">Roman Empire</corpname></authority><geographic><geogname xlink:type="simple" xlink:role="mint" xlink:href="http://nomisma.org/id/rome">Rome</geogname><geogname xlink:type="simple" xlink:role="region" xlink:href="http://nomisma.org/id/latium">Latium</geogname></geographic><obverse><type><description xml:lang="en">Lucius Verus facing right; bare head; bare shoulder.</description></type><legend>IMP(ERATOR) CAES(AR) L(VCIVS) AVREL(IVS) VERVS AVG(VSTVS)</legend><persname xlink:type="simple" xlink:role="portrait" xlink:href="http://nomisma.org/id/lucius_verus">Lucius Verus</persname></obverse><reverse><type><description xml:lang="en">Two figures facing each other; bearded; draped.</description></type><legend>CONCORDIAE AVGVSTOR(VM) TR(IBVNICIA) P(OTESTATE) CO(N)S(VL) II</legend></reverse></typeDesc><physDesc><axis>6</axis><measurementsSet><diameter units="mm">18</diameter></measurementsSet></physDesc><adminDesc><identifier>1989.19.14</identifier><repository>The University of Virginia Art Museum</repository><collection>Gold Coins of the U.Va. Art Museum</collection><acqinfo><acquiredFrom>Acquired from the Worldwide Treasure Bureau, September, 1989.</acquiredFrom></acqinfo><custodhist><chronlist><chronitem><date standardDate="1946">1946</date><previousColl>Ex: Hermann Mosberg Collection. Appraised by Münzen und Medallen, Basel, Switzerland. Collection assembled in the 1920s and 1930s.</previousColl></chronitem></chronlist></custodhist></adminDesc><refDesc><reference><title>RIC</title><identifier>450</identifier></reference></refDesc></descMeta><digRep><mets:fileSec><mets:fileGrp USE="obverse"><mets:file USE="reference" MIMETYPE="image/jpeg"><mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n1989_19_14_obv.jpg"/></mets:file><mets:file USE="thumbnail" MIMETYPE="image/jpeg"><mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1989_19_14_obv.jpg"/></mets:file></mets:fileGrp><mets:fileGrp USE="reverse"><mets:file USE="reference" MIMETYPE="image/jpeg"><mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n1989_19_14_rev.jpg"/></mets:file><mets:file USE="thumbnail" MIMETYPE="image/jpeg"><mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1989_19_14_rev.jpg"/></mets:file></mets:fileGrp></mets:fileSec></digRep></nuds>
+<nuds xmlns="http://nomisma.org/nuds" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mets="http://www.loc.gov/METS/" recordType="physical">
+	<nudsHeader>
+		<nudsid>1989.19.14</nudsid>
+		<publicationStmt>
+			<publisher>The University of Virginia Library</publisher>
+			<createdBy>Ethan Gruber and/or Carrie Sulosky</createdBy>
+			<langUsage>
+				<language langcode="en">English</language>
+			</langUsage>
+		</publicationStmt>
+		<rightsStmt>
+			<license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/"/>
+			<date standardDate="2012"/>
+		</rightsStmt>
+		<revisionStmt>
+			<revision>
+				<description>Migrated from EAD to NUDS</description>
+				<date standardDateTime="2012-12-12T15:05:54.552-05:00Z"/>
+			</revision>
+		</revisionStmt>
+	</nudsHeader>
+	<descMeta>
+		<title xml:lang="en">Gold aureus of Lucius Verus, Rome, A.D. 162</title>
+		<department>Roman</department>
+		<subjectSet>
+			<subject xmlns="" xmlns:xi="http://www.w3.org/2001/XInclude">Concordia</subject>
+		</subjectSet>
+		<typeDesc>
+			<objectType xlink:href="http://nomisma.org/id/coin">Coin</objectType>
+			<denomination xlink:href="http://nomisma.org/id/aureus">Aureus</denomination>
+			<material xlink:href="http://nomisma.org/id/au">Gold</material>
+			<date standardDate="0162">A.D. 162</date>
+			<authority>
+				<persname xlink:type="simple" xlink:role="authority" xlink:href="http://nomisma.org/id/lucius_verus">Lucius Verus</persname>				
+				<famname xlink:type="simple" xlink:role="dynasty">Antonine</famname>
+				<corpname xlink:type="simple" xlink:role="state">Roman Empire</corpname>
+			</authority>
+			<geographic>
+				<geogname xlink:type="simple" xlink:role="mint" xlink:href="http://nomisma.org/id/rome">Rome</geogname>
+				<geogname xlink:type="simple" xlink:role="region" xlink:href="http://nomisma.org/id/latium">Latium</geogname>
+			</geographic>
+			<obverse>
+				<type>
+					<description xml:lang="en">Lucius Verus facing right; bare head; bare shoulder.</description>
+				</type>
+				<legend>IMP(ERATOR) CAES(AR) L(VCIVS) AVREL(IVS) VERVS AVG(VSTVS)</legend>
+				<persname xlink:type="simple" xlink:role="portrait" xlink:href="http://nomisma.org/id/lucius_verus">Lucius Verus</persname>
+			</obverse>
+			<reverse>
+				<type>
+					<description xml:lang="en">Two figures facing each other; bearded; draped.</description>
+				</type>
+				<legend>CONCORDIAE AVGVSTOR(VM) TR(IBVNICIA) P(OTESTATE) CO(N)S(VL) II</legend>
+			</reverse>
+		</typeDesc>
+		<physDesc>
+			<axis>6</axis>
+			<measurementsSet>
+				<diameter units="mm">18</diameter>
+			</measurementsSet>
+		</physDesc>
+		<adminDesc>
+			<identifier>1989.19.14</identifier>
+			<repository>The University of Virginia Art Museum</repository>
+			<collection>Gold Coins of the U.Va. Art Museum</collection>
+			<acqinfo>
+				<acquiredFrom>Acquired from the Worldwide Treasure Bureau, September, 1989.</acquiredFrom>
+			</acqinfo>
+			<custodhist>
+				<chronlist>
+					<chronitem>
+						<date standardDate="1946">1946</date>
+						<previousColl>Ex: Hermann Mosberg Collection. Appraised by Münzen und Medallen, Basel, Switzerland. Collection assembled in the 1920s and 1930s.</previousColl>
+					</chronitem>
+				</chronlist>
+			</custodhist>
+		</adminDesc>
+		<refDesc>
+			<reference>
+				<title>RIC</title>
+				<identifier>450</identifier>
+			</reference>
+		</refDesc>
+	</descMeta>
+	<digRep>
+		<mets:fileSec>
+			<mets:fileGrp USE="obverse">
+				<mets:file USE="reference" MIMETYPE="image/jpeg">
+					<mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n1989_19_14_obv.jpg"/>
+				</mets:file>
+				<mets:file USE="thumbnail" MIMETYPE="image/jpeg">
+					<mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1989_19_14_obv.jpg"/>
+				</mets:file>
+			</mets:fileGrp>
+			<mets:fileGrp USE="reverse">
+				<mets:file USE="reference" MIMETYPE="image/jpeg">
+					<mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n1989_19_14_rev.jpg"/>
+				</mets:file>
+				<mets:file USE="thumbnail" MIMETYPE="image/jpeg">
+					<mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1989_19_14_rev.jpg"/>
+				</mets:file>
+			</mets:fileGrp>
+		</mets:fileSec>
+	</digRep>
+</nuds>

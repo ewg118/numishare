@@ -1,1 +1,109 @@
-<nuds xmlns="http://nomisma.org/nuds" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mets="http://www.loc.gov/METS/" recordType="physical"><nudsHeader><nudsid>1995.3.1</nudsid><publicationStmt><publisher>The University of Virginia Library</publisher><createdBy>Ethan Gruber and/or Carrie Sulosky</createdBy><langUsage><language langcode="en">English</language></langUsage></publicationStmt><rightsStmt><license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/"/><date standardDate="2012"/></rightsStmt><revisionStmt><revision><description>Migrated from EAD to NUDS</description><date standardDateTime="2012-12-12T15:05:54.552-05:00Z"/></revision></revisionStmt></nudsHeader><descMeta><title xml:lang="en">Gold dekadrachm of Hiketas, Syracuse, 287-278 B.C.</title><department>Greek</department><typeDesc><objectType xlink:href="http://nomisma.org/id/coin">Coin</objectType><denomination xlink:href="http://nomisma.org/id/decadrachm">Decadrachm</denomination><material xlink:href="http://nomisma.org/id/au">Gold</material><dateRange><fromDate standardDate="-0287">287 B.C.</fromDate><toDate standardDate="-0278">278 B.C.</toDate></dateRange><authority><persname xlink:type="simple" xlink:role="authority" xlink:href="http://nomisma.org/id/hicetas">Hicetas</persname><persname xlink:type="simple" xlink:role="authority">Euainetos</persname></authority><geographic><geogname xlink:type="simple" xlink:role="mint" xlink:href="http://nomisma.org/id/syracuse">Syracuse</geogname><geogname xlink:type="simple" xlink:role="region" xlink:href="http://nomisma.org/id/sicily">Sicily</geogname></geographic><obverse><type><description xml:lang="en">Female, facing left; hair bound; torch behind neck</description></type><legend>ΣΥΡΑΚΟΣΙΩΝ</legend><persname xlink:type="simple" xlink:role="deity">Persephone</persname></obverse><reverse><type><description xml:lang="en">Nike riding biga, right, holding reins and kentron; crescent moon at 12 o’clock; Θ below horses’ legs</description></type><legend>(E)ΠΙ ΙΚΕΤΑ</legend><persname xlink:type="simple" xlink:role="deity">Nike</persname></reverse></typeDesc><physDesc><measurementsSet><diameter units="mm">16</diameter><weight units="g">4.23</weight></measurementsSet></physDesc><adminDesc><identifier>1995.3.1</identifier><repository>The University of Virginia Art Museum</repository><collection>Gold Coins of the U.Va. Art Museum</collection><acqinfo><acquiredFrom>Acquired from Rare Coins &amp; Classical Arts Ltd., 1995.</acquiredFrom></acqinfo><custodhist><chronlist><chronitem><date standardDate="December, 1979">December, 1979</date><previousColl>Ex: NFA, lot 78.</previousColl></chronitem><chronitem><date standardDate="1934">1934</date><previousColl>Ex: Ars Classica XVII, Zurich. Lot 282.</previousColl></chronitem></chronlist></custodhist></adminDesc><refDesc><reference><title>Sylloge Nummorum Graecorum SNG</title><identifier>776</identifier></reference></refDesc></descMeta><digRep><mets:fileSec><mets:fileGrp USE="obverse"><mets:file USE="reference" MIMETYPE="image/jpeg"><mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n1995_3_1_obv.jpg"/></mets:file><mets:file USE="thumbnail" MIMETYPE="image/jpeg"><mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1995_3_1_obv.jpg"/></mets:file></mets:fileGrp><mets:fileGrp USE="reverse"><mets:file USE="reference" MIMETYPE="image/jpeg"><mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n1995_3_1_rev.jpg"/></mets:file><mets:file USE="thumbnail" MIMETYPE="image/jpeg"><mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1995_3_1_rev.jpg"/></mets:file></mets:fileGrp></mets:fileSec></digRep></nuds>
+<nuds xmlns="http://nomisma.org/nuds" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mets="http://www.loc.gov/METS/" recordType="physical">
+	<nudsHeader>
+		<nudsid>1995.3.1</nudsid>
+		<publicationStmt>
+			<publisher>The University of Virginia Library</publisher>
+			<createdBy>Ethan Gruber and/or Carrie Sulosky</createdBy>
+			<langUsage>
+				<language langcode="en">English</language>
+			</langUsage>
+		</publicationStmt>
+		<rightsStmt>
+			<license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/"/>
+			<date standardDate="2012"/>
+		</rightsStmt>
+		<revisionStmt>
+			<revision>
+				<description>Migrated from EAD to NUDS</description>
+				<date standardDateTime="2012-12-12T15:05:54.552-05:00Z"/>
+			</revision>
+		</revisionStmt>
+	</nudsHeader>
+	<descMeta>
+		<title xml:lang="en">Gold dekadrachm of Hiketas, Syracuse, 287-278 B.C.</title>
+		<department>Greek</department>
+		<typeDesc>
+			<objectType xlink:href="http://nomisma.org/id/coin">Coin</objectType>
+			<denomination xlink:href="http://nomisma.org/id/decadrachm">Decadrachm</denomination>
+			<material xlink:href="http://nomisma.org/id/au">Gold</material>
+			<dateRange>
+				<fromDate standardDate="-0287">287 B.C.</fromDate>
+				<toDate standardDate="-0278">278 B.C.</toDate>
+			</dateRange>
+			<authority>
+				<persname xlink:type="simple" xlink:role="authority" xlink:href="http://nomisma.org/id/hicetas">Hicetas</persname>
+				<persname xlink:type="simple" xlink:role="authority">Euainetos</persname>
+			</authority>
+			<geographic>
+				<geogname xlink:type="simple" xlink:role="mint" xlink:href="http://nomisma.org/id/syracuse">Syracuse</geogname>
+				<geogname xlink:type="simple" xlink:role="region" xlink:href="http://nomisma.org/id/sicily">Sicily</geogname>
+			</geographic>
+			<obverse>
+				<type>
+					<description xml:lang="en">Female, facing left; hair bound; torch behind neck</description>
+				</type>
+				<legend>ΣΥΡΑΚΟΣΙΩΝ</legend>
+				<persname xlink:type="simple" xlink:role="deity">Persephone</persname>
+			</obverse>
+			<reverse>
+				<type>
+					<description xml:lang="en">Nike riding biga, right, holding reins and kentron; crescent moon at 12 o’clock; Θ below horses’ legs</description>
+				</type>
+				<legend>(E)ΠΙ ΙΚΕΤΑ</legend>
+				<persname xlink:type="simple" xlink:role="deity">Nike</persname>
+			</reverse>
+		</typeDesc>
+		<physDesc>
+			<measurementsSet>
+				<diameter units="mm">16</diameter>
+				<weight units="g">4.23</weight>
+			</measurementsSet>
+		</physDesc>
+		<adminDesc>
+			<identifier>1995.3.1</identifier>
+			<repository>The University of Virginia Art Museum</repository>
+			<collection>Gold Coins of the U.Va. Art Museum</collection>
+			<acqinfo>
+				<acquiredFrom>Acquired from Rare Coins &amp; Classical Arts Ltd., 1995.</acquiredFrom>
+			</acqinfo>
+			<custodhist>
+				<chronlist>
+					<chronitem>
+						<date standardDate="December, 1979">December, 1979</date>
+						<previousColl>Ex: NFA, lot 78.</previousColl>
+					</chronitem>
+					<chronitem>
+						<date standardDate="1934">1934</date>
+						<previousColl>Ex: Ars Classica XVII, Zurich. Lot 282.</previousColl>
+					</chronitem>
+				</chronlist>
+			</custodhist>
+		</adminDesc>
+		<refDesc>
+			<reference>
+				<title>Sylloge Nummorum Graecorum SNG</title>
+				<identifier>776</identifier>
+			</reference>
+		</refDesc>
+	</descMeta>
+	<digRep>
+		<mets:fileSec>
+			<mets:fileGrp USE="obverse">
+				<mets:file USE="reference" MIMETYPE="image/jpeg">
+					<mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n1995_3_1_obv.jpg"/>
+				</mets:file>
+				<mets:file USE="thumbnail" MIMETYPE="image/jpeg">
+					<mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1995_3_1_obv.jpg"/>
+				</mets:file>
+			</mets:fileGrp>
+			<mets:fileGrp USE="reverse">
+				<mets:file USE="reference" MIMETYPE="image/jpeg">
+					<mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n1995_3_1_rev.jpg"/>
+				</mets:file>
+				<mets:file USE="thumbnail" MIMETYPE="image/jpeg">
+					<mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1995_3_1_rev.jpg"/>
+				</mets:file>
+			</mets:fileGrp>
+		</mets:fileSec>
+	</digRep>
+</nuds>

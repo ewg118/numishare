@@ -1,5 +1,89 @@
-<nuds xmlns="http://nomisma.org/nuds" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mets="http://www.loc.gov/METS/" recordType="physical"><nudsHeader><nudsid>FIC.50.78</nudsid><publicationStmt><publisher>The University of Virginia Library</publisher><createdBy>Ethan Gruber and/or Carrie Sulosky</createdBy><langUsage><language langcode="en">English</language></langUsage></publicationStmt><rightsStmt><license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/"/><date standardDate="2012"/></rightsStmt><revisionStmt><revision><description>Migrated from EAD to NUDS</description><date standardDateTime="2012-12-12T15:05:54.552-05:00Z"/></revision></revisionStmt></nudsHeader><descMeta><title xml:lang="en">Bronze Coin of Apameia, 75 B.C.</title><department>Greek</department><description>Pella, rebuilt by Seleucus I Nicator (reign: 305-281 B.C.) and named Apamea for his
-		wife, Apama, a princess of India whose father gave him 500 elephants, kept at this city and
-		symbol of Seleucid kings.</description><subjectSet><subject xmlns="" xmlns:xi="http://www.w3.org/2001/XInclude">Found in Collection</subject></subjectSet><typeDesc><objectType xlink:href="http://nomisma.org/id/coin">Coin</objectType><material xlink:href="http://nomisma.org/id/ae">Bronze</material><date standardDate="-0075">75 B.C.</date><authority><corpname xlink:type="simple" xlink:role="authority">Apamea on the Orontes</corpname><corpname xlink:type="simple" xlink:role="authority">Seleucid Empire</corpname></authority><geographic><geogname xlink:type="simple" xlink:role="mint" xlink:href="http://nomisma.org/id/apameia_syria">Apameia</geogname><geogname xlink:type="simple" xlink:role="region" xlink:href="http://nomisma.org/id/syria">Syria</geogname></geographic><obverse><type><description xml:lang="en">Head of Zeus right, laureate: border of
-				dots.</description></type></obverse><reverse><type><description xml:lang="en">Elephant, walking right, with mark of H by
-				foot.  In exergue: ΚΑ.</description></type><legend>ΑΠΑΜΕΩΝ ΤΗΣΙΕΡΑΣ ΚΑΙΑΣΥΛΟΥ</legend><persname xlink:type="simple" xlink:role="deity">Zeus</persname></reverse></typeDesc><physDesc><measurementsSet><diameter units="mm">22</diameter></measurementsSet></physDesc><adminDesc><identifier>FIC.50.78</identifier><repository>The University of Virginia Art Museum</repository><collection>Found in Collection 50</collection></adminDesc><refDesc><reference><title>BMC Greek</title><identifier>14</identifier></reference></refDesc></descMeta><digRep><mets:fileSec><mets:fileGrp USE="obverse"><mets:file USE="reference" MIMETYPE="image/jpeg"><mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/nfic_50_78_obv.jpg"/></mets:file><mets:file USE="thumbnail" MIMETYPE="image/jpeg"><mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/nfic_50_78_obv.jpg"/></mets:file></mets:fileGrp><mets:fileGrp USE="reverse"><mets:file USE="reference" MIMETYPE="image/jpeg"><mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/nfic_50_78_rev.jpg"/></mets:file><mets:file USE="thumbnail" MIMETYPE="image/jpeg"><mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/nfic_50_78_rev.jpg"/></mets:file></mets:fileGrp></mets:fileSec></digRep></nuds>
+<nuds xmlns="http://nomisma.org/nuds" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mets="http://www.loc.gov/METS/" recordType="physical">
+	<nudsHeader>
+		<nudsid>FIC.50.78</nudsid>
+		<publicationStmt>
+			<publisher>The University of Virginia Library</publisher>
+			<createdBy>Ethan Gruber and/or Carrie Sulosky</createdBy>
+			<langUsage>
+				<language langcode="en">English</language>
+			</langUsage>
+		</publicationStmt>
+		<rightsStmt>
+			<license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/"/>
+			<date standardDate="2012"/>
+		</rightsStmt>
+		<revisionStmt>
+			<revision>
+				<description>Migrated from EAD to NUDS</description>
+				<date standardDateTime="2012-12-12T15:05:54.552-05:00Z"/>
+			</revision>
+		</revisionStmt>
+	</nudsHeader>
+	<descMeta>
+		<title xml:lang="en">Bronze Coin of Apameia, 75 B.C.</title>
+		<department>Greek</department>		
+		<subjectSet>
+			<subject xmlns="" xmlns:xi="http://www.w3.org/2001/XInclude">Found in Collection</subject>
+		</subjectSet>
+		<typeDesc>
+			<objectType xlink:href="http://nomisma.org/id/coin">Coin</objectType>
+			<material xlink:href="http://nomisma.org/id/ae">Bronze</material>
+			<date standardDate="-0075">75 B.C.</date>
+			<authority>
+				<corpname xlink:type="simple" xlink:role="authority">Apamea on the Orontes</corpname>				
+			</authority>
+			<geographic>
+				<geogname xlink:type="simple" xlink:role="mint" xlink:href="http://nomisma.org/id/apameia_syria">Apameia</geogname>
+				<geogname xlink:type="simple" xlink:role="region" xlink:href="http://nomisma.org/id/syria">Syria</geogname>
+			</geographic>
+			<obverse>
+				<type>
+					<description xml:lang="en">Head of Zeus right, laureate: border of dots.</description>
+				</type>
+				<persname xlink:type="simple" xlink:role="deity">Zeus</persname>
+			</obverse>
+			<reverse>
+				<type>
+					<description xml:lang="en">Elephant, walking right, with mark of H by foot. In exergue: ΚΑ.</description>
+				</type>
+				<legend>ΑΠΑΜΕΩΝ ΤΗΣΙΕΡΑΣ ΚΑΙΑΣΥΛΟΥ</legend>				
+			</reverse>
+		</typeDesc>
+		<physDesc>
+			<measurementsSet>
+				<diameter units="mm">22</diameter>
+			</measurementsSet>
+		</physDesc>
+		<adminDesc>
+			<identifier>FIC.50.78</identifier>
+			<repository>The University of Virginia Art Museum</repository>
+			<collection>Found in Collection 50</collection>
+		</adminDesc>
+		<refDesc>
+			<reference>
+				<title>BMC Greek</title>
+				<identifier>14</identifier>
+			</reference>
+		</refDesc>
+	</descMeta>
+	<digRep>
+		<mets:fileSec>
+			<mets:fileGrp USE="obverse">
+				<mets:file USE="reference" MIMETYPE="image/jpeg">
+					<mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/nfic_50_78_obv.jpg"/>
+				</mets:file>
+				<mets:file USE="thumbnail" MIMETYPE="image/jpeg">
+					<mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/nfic_50_78_obv.jpg"/>
+				</mets:file>
+			</mets:fileGrp>
+			<mets:fileGrp USE="reverse">
+				<mets:file USE="reference" MIMETYPE="image/jpeg">
+					<mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/nfic_50_78_rev.jpg"/>
+				</mets:file>
+				<mets:file USE="thumbnail" MIMETYPE="image/jpeg">
+					<mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/nfic_50_78_rev.jpg"/>
+				</mets:file>
+			</mets:fileGrp>
+		</mets:fileSec>
+	</digRep>
+</nuds>
