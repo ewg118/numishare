@@ -55,6 +55,14 @@
 								<h1 id="object_title">
 									<xsl:value-of select="normalize-space(nuds:descMeta/nuds:title)"/>
 								</h1>
+								<!--<div id="timemap">
+									<div id="mapcontainer">
+										<div id="map"/>
+									</div>
+									<div id="timelinecontainer">
+										<div id="timeline"/>
+									</div>
+								</div>-->
 								<xsl:call-template name="nuds_content"/>
 
 								<!-- show associated objects, preferencing those from Metis first -->
@@ -293,7 +301,22 @@
 						<div id="mapTab">
 							<h2>Map This Object</h2>
 							<p>Use the layer control along the right edge of the map (the "plus" symbol) to toggle map layers.</p>
-							<div id="mapcontainer"/>
+							
+							<xsl:choose>
+								<xsl:when test="$recordType='conceptual'">
+									<div id="timemap">
+										<div id="mapcontainer">
+											<div id="map"/>
+										</div>
+										<div id="timelinecontainer">
+											<div id="timeline"/>
+										</div>
+									</div>
+								</xsl:when>
+								<xsl:otherwise>
+									<div id="mapcontainer"/>
+								</xsl:otherwise>
+							</xsl:choose>
 							<div class="legend">
 								<table>
 									<tbody>

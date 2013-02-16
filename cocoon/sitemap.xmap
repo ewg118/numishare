@@ -752,7 +752,15 @@
 				<map:transform type="xslt-saxon" src="xslt/ajax/widgets.xsl" label="basiccontent">
 					<map:parameter name="use-request-parameters" value="true"/>
 				</map:transform>
-				<map:serialize type="xml"/>
+				<map:select type="parameter">
+					<map:parameter name="parameter-selector-test" value="{request-param:template}"/>
+					<map:when test="json">
+						<map:serialize type="text"/>
+					</map:when>
+					<map:otherwise>
+						<map:serialize type="xml"/>
+					</map:otherwise>
+				</map:select>
 			</map:match>
 		</map:pipeline>
 	</map:pipelines>

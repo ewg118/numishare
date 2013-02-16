@@ -725,6 +725,23 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:function>
+	
+	<xsl:function name="numishare:normalizeYear">
+		<xsl:param name="year" as="xs:integer"/>
+	
+		<xsl:choose>
+			<xsl:when test="$year &lt; 0">
+				<xsl:value-of select="abs($year)"/>
+				<xsl:text> B.C.</xsl:text>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:if test="$year &lt;=400">
+					<xsl:text>A.D. </xsl:text>
+				</xsl:if>
+				<xsl:value-of select="$year"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:function>
 
 	<xsl:function name="numishare:normalize_century">
 		<xsl:param name="name"/>
