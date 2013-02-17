@@ -587,7 +587,7 @@
 								</option>
 							</xsl:when>
 							<!-- display those search options when they aren't connected to facets -->
-							<xsl:when test="not(exsl:node-set($facets)//lst[starts-with(@name, $root)][count(int) &gt; 0])">
+							<xsl:when test="not(exsl:node-set($facets)//lst[starts-with(@name, $root)])">
 								<option value="{$name}" class="search_option">
 									<xsl:value-of select="numishare:normalize_fields($name, $lang)"/>
 								</option>
@@ -606,7 +606,7 @@
 								</option>
 							</xsl:when>
 							<!-- display those search options when they aren't connected to facets -->
-							<xsl:when test="not(exsl:node-set($facets)//lst[starts-with(@name, $root)][count(int) &gt; 0])">
+							<xsl:when test="not(exsl:node-set($facets)//lst[starts-with(@name, $root)])">
 								<option value="{$name}" class="search_option">
 									<xsl:value-of select="numishare:normalize_fields($name, $lang)"/>
 								</option>

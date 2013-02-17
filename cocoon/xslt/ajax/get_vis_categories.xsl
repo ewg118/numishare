@@ -10,7 +10,7 @@
 
 	<xsl:template match="/">
 		<div>
-			<xsl:for-each select="//lst[@name='facet_fields']/lst">
+			<xsl:for-each select="//lst[@name='facet_fields']/lst[count(int) &gt; 0]">
 				<xsl:variable name="query_fragment" select="@name"/>
 				<span class="anOption">
 					<xsl:choose>
