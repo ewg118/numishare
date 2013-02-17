@@ -248,7 +248,7 @@
 		<!-- ignore mint_geo-->
 		<div style="display:table">
 			<ul id="filter_list">
-				<xsl:apply-templates select="lst[not(@name='mint_geo') and number(int[@name='numFacetTerms']) &gt; 0]" mode="facet"/>
+				<xsl:apply-templates select="lst[not(@name='mint_geo')]" mode="facet"/>
 			</ul>
 		</div>
 		<form action="results" id="facet_form">
@@ -286,7 +286,7 @@
 		</form>
 	</xsl:template>
 
-	<xsl:template match="lst" mode="facet">
+	<xsl:template match="lst[count(int) &gt; 0]" mode="facet">
 		<xsl:variable name="val" select="@name"/>
 		<xsl:variable name="new_query">
 			<xsl:for-each select="$tokenized_q[not(contains(., $val))]">
@@ -365,16 +365,7 @@
 						</ul>
 					</div>
 				</xsl:when>
-				<xsl:otherwise>
-					<xsl:variable name="count" select="number(int[@name='numFacetTerms'])"/>
-					<xsl:variable name="mincount" as="xs:integer">
-						<xsl:choose>
-							<xsl:when test="$count &gt; 500">
-								<xsl:value-of select="ceiling($count div 500)"/>
-							</xsl:when>
-							<xsl:otherwise>1</xsl:otherwise>
-						</xsl:choose>
-					</xsl:variable>
+				<xsl:otherwise>					
 					<xsl:variable name="select_new_query">
 						<xsl:choose>
 							<xsl:when test="string($new_query)">
@@ -385,10 +376,10 @@
 							</xsl:otherwise>
 						</xsl:choose>
 					</xsl:variable>
-					<select id="{@name}-select" multiple="multiple" class="multiselect {@name}-button" size="10" title="{numishare:normalize_fields(@name, $lang)}" q="{$q}" mincount="{$mincount}"
+					<select id="{@name}-select" multiple="multiple" class="multiselect {@name}-button" size="10" title="{numishare:normalize_fields(@name, $lang)}" q="{$q}" mincount="1"
 						new_query="{if (contains($q, @name)) then $select_new_query else ''}" style="width:175px">
 						<xsl:if test="contains($q, @name)">
-							<cinclude:include src="cocoon:/get_facet_options?q={$q}&amp;category={@name}&amp;sort=index&amp;offset=0&amp;limit=-1&amp;rows=0&amp;mincount={$mincount}"/>
+							<cinclude:include src="cocoon:/get_facet_options?q={$q}&amp;category={@name}&amp;sort=index&amp;offset=0&amp;limit=-1&amp;rows=0&amp;mincount=1"/>
 						</xsl:if>
 					</select>
 					<br/>
@@ -397,7 +388,7 @@
 		</li>
 	</xsl:template>
 
-	<xsl:template match="lst[@name='mint_geo' or number(int[@name='numFacetTerms']) = 0]" mode="facet"/>
+	<xsl:template match="lst[@name='mint_geo'" mode="facet"/>
 
 	<xsl:template name="result_image">
 		<xsl:choose>

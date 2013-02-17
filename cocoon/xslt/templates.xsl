@@ -581,13 +581,13 @@
 					<xsl:if test="not($name='diameter_num') and not($name='weight_num') and not($name='year_num')">
 						<xsl:choose>
 							<!-- display only those search options when their facet equivalent has hits -->
-							<xsl:when test="exsl:node-set($facets)//lst[starts-with(@name, $root)][number(int[@name='numFacetTerms']) &gt; 0]">
+							<xsl:when test="exsl:node-set($facets)//lst[starts-with(@name, $root)][count(int) &gt; 0]">
 								<option value="{$name}" class="search_option">
 									<xsl:value-of select="numishare:normalize_fields($name, $lang)"/>
 								</option>
 							</xsl:when>
 							<!-- display those search options when they aren't connected to facets -->
-							<xsl:when test="not(exsl:node-set($facets)//lst[starts-with(@name, $root)])">
+							<xsl:when test="not(exsl:node-set($facets)//lst[starts-with(@name, $root)][count(int) &gt; 0])">
 								<option value="{$name}" class="search_option">
 									<xsl:value-of select="numishare:normalize_fields($name, $lang)"/>
 								</option>
@@ -600,13 +600,13 @@
 					<xsl:if test="not($name='taq_num') and not($name='tpq_num')">
 						<xsl:choose>
 							<!-- display only those search options when their facet equivalent has hits -->
-							<xsl:when test="exsl:node-set($facets)//lst[starts-with(@name, $root)][number(int[@name='numFacetTerms']) &gt; 0]">
+							<xsl:when test="exsl:node-set($facets)//lst[starts-with(@name, $root)][count(int) &gt; 0]">
 								<option value="{$name}" class="search_option">
 									<xsl:value-of select="numishare:normalize_fields($name, $lang)"/>
 								</option>
 							</xsl:when>
 							<!-- display those search options when they aren't connected to facets -->
-							<xsl:when test="not(exsl:node-set($facets)//lst[starts-with(@name, $root)])">
+							<xsl:when test="not(exsl:node-set($facets)//lst[starts-with(@name, $root)][count(int) &gt; 0])">
 								<option value="{$name}" class="search_option">
 									<xsl:value-of select="numishare:normalize_fields($name, $lang)"/>
 								</option>

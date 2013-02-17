@@ -165,7 +165,7 @@
 	</xsl:template>
 	
 	<xsl:template match="lst[@name='facet_fields']">
-		<xsl:for-each select="lst[not(@name='mint_geo') and number(int[@name='numFacetTerms']) &gt; 0 and not(@name='mint_facet')]|lst[@name='mint_facet' and $collection_type='hoard']">
+		<xsl:for-each select="lst[not(@name='mint_geo') and not(@name='mint_facet')]|lst[@name='mint_facet' and $collection_type='hoard']">
 			<li class="fl">
 				<xsl:variable name="val" select="@name"/>
 				<xsl:variable name="new_query">
@@ -242,15 +242,6 @@
 						</div>
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:variable name="count" select="number(int[@name='numFacetTerms'])"/>
-						<xsl:variable name="mincount" as="xs:integer">
-							<xsl:choose>
-								<xsl:when test="$count &gt; 500">
-									<xsl:value-of select="ceiling($count div 500)"/>
-								</xsl:when>
-								<xsl:otherwise>1</xsl:otherwise>
-							</xsl:choose>
-						</xsl:variable>
 						<xsl:variable name="select_new_query">
 							<xsl:choose>
 								<xsl:when test="string($new_query)">
@@ -261,7 +252,7 @@
 								</xsl:otherwise>
 							</xsl:choose>
 						</xsl:variable>
-						<select id="{@name}-select" multiple="multiple" class="multiselect" size="10" title="{$title}" q="{$q}" mincount="{$mincount}"
+						<select id="{@name}-select" multiple="multiple" class="multiselect" size="10" title="{$title}" q="{$q}" mincount="1"
 							new_query="{if (contains($q, @name)) then $select_new_query else ''}">
 							<xsl:if test="$pipeline='maps'">
 								<xsl:attribute name="style">width:180px</xsl:attribute>

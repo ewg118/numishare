@@ -76,21 +76,16 @@
 				<script type="text/javascript" src="{$display_path}javascript/facet_functions.js"/>
 				<script type="text/javascript" src="{$display_path}javascript/sort_results.js"/>
 				<script type="text/javascript" src="{$display_path}javascript/numishare-menu.js"/>
+				<script src="http://www.openlayers.org/api/OpenLayers.js" type="text/javascript">//</script>
+				<script src="http://maps.google.com/maps/api/js?v=3.2&amp;sensor=false">//</script>
+				<script type="text/javascript" src="{$display_path}javascript/result_map_functions.js"/>
 				<script type="text/javascript">
 							$(document).ready(function(){
 								$('a.thumbImage').fancybox();
+								initialize_map('<xsl:value-of select="$q"/>','<xsl:value-of select="$collection_type"/>');
 							});
 						</script>
-				<xsl:if test="//lst[@name='mint_geo']/int[@name='numFacetTerms'] &gt; 0">
-					<script src="http://www.openlayers.org/api/OpenLayers.js" type="text/javascript">//</script>
-					<script src="http://maps.google.com/maps/api/js?v=3.2&amp;sensor=false">//</script>
-					<script type="text/javascript" src="{$display_path}javascript/result_map_functions.js"/>
-					<script type="text/javascript">
-								$(document).ready(function() {
-									initialize_map('<xsl:value-of select="$q"/>','<xsl:value-of select="$collection_type"/>');
-								});
-							</script>
-				</xsl:if>
+
 
 				<xsl:if test="string(/config/google_analytics/script)">
 					<script type="text/javascript">
@@ -119,11 +114,9 @@
 						<a href="{$display_path}feed/?q={$q}">
 							<img src="{$display_path}images/atom-medium.png" title="Atom" alt="Atom"/>
 						</a>
-						<xsl:if test="//lst[@name='mint_geo']/int[@name='numFacetTerms'] &gt; 0">
-							<a href="{$display_path}query.kml?q={$q}">
-								<img src="{$display_path}images/googleearth.png" alt="KML" title="KML: Limit, 500 objects"/>
-							</a>
-						</xsl:if>
+						<a href="{$display_path}query.kml?q={$q}">
+							<img src="{$display_path}images/googleearth.png" alt="KML" title="KML: Limit, 500 objects"/>
+						</a>
 						<a href="{$display_path}data.csv?q={$q}">
 							<!-- the image below is copyright of Silvestre Herrera, available freely on wikimedia commons: http://commons.wikimedia.org/wiki/File:X-office-spreadsheet_Gion.svg -->
 							<img src="{$display_path}images/spreadsheet.png" title="CSV" alt="CSV"/>
@@ -133,10 +126,8 @@
 							<img src="{$display_path}images/visualize.png" title="Visualize" alt="Visualize"/>
 						</a>
 					</div>
-					<xsl:if test="//lst[@name='mint_geo']/int[@name='numFacetTerms'] &gt; 0">
-						<div id="resultMap"/>
-					</xsl:if>
-					<xsl:if test="//result[@name='response']/@numFound &gt; 0">						
+					<div id="resultMap"/>
+					<xsl:if test="//result[@name='response']/@numFound &gt; 0">
 						<h2>
 							<xsl:value-of select="numishare:normalizeLabel('results_refine-results', $lang)"/>
 						</h2>
@@ -156,21 +147,21 @@
 							<xsl:call-template name="sort"/>
 							<xsl:variable name="pageCount" select="count(descendant::doc)" as="xs:integer"/>
 							<xsl:variable name="split" select="xs:integer(ceiling($pageCount div 2))"/>
-							
+
 							<div class="yui3-g">
 								<div class="yui3-u-1-2">
-									<div class="content">								
+									<div class="content">
 										<xsl:apply-templates select="descendant::doc[position() &lt;= $split]"/>
 									</div>
 								</div>
 								<div class="yui3-u-1-2">
-									<div class="content">							
+									<div class="content">
 										<xsl:apply-templates select="descendant::doc[position() &gt; $split]"/>
 									</div>
 								</div>
 							</div>
-							
-							
+
+
 							<!--<table>
 								<xsl:apply-templates select="descendant::doc"/>
 							</table>-->

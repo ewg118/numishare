@@ -3,13 +3,12 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:nh="http://nomisma.org/nudsHoard" xmlns:numishare="http://code.google.com/p/numishare/"
 	xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes="#all" version="2.0">
 
-	<xsl:function name="numishare:get_flickr_uri">
+	<!--<xsl:function name="numishare:get_flickr_uri">
 		<xsl:param name="photo_id"/>
 		<xsl:value-of
 			select="document(concat('http://api.flickr.com/services/rest/?method=flickr.photos.getInfo&amp;api_key=', $flickr-api-key, '&amp;photo_id=', $photo_id, '&amp;format=rest'))/rsp/photo/urls/url[@type='photopage']"
 		/>
-	</xsl:function>
-
+	</xsl:function>-->
 
 	<!-- ************** NORMALIZATION TEMPLATES ************** -->
 	<xsl:function name="nh:normalize_date">
