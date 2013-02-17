@@ -1,1 +1,119 @@
-<nuds xmlns="http://nomisma.org/nuds" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mets="http://www.loc.gov/METS/" recordType="physical"><nudsHeader><nudsid>1991.17.180</nudsid><publicationStmt><publisher>The University of Virginia Library</publisher><createdBy>Ethan Gruber and/or Carrie Sulosky</createdBy><langUsage><language langcode="en">English</language></langUsage></publicationStmt><rightsStmt><license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/"/><date standardDate="2012"/></rightsStmt><revisionStmt><revision><description>Migrated from EAD to NUDS</description><date standardDateTime="2012-12-12T15:05:54.552-05:00Z"/></revision></revisionStmt></nudsHeader><descMeta><title xml:lang="en">Billon antoninianus of Claudius II Gothicus, Mediolanum, A. D. 268-270</title><department>Roman</department><typeDesc><objectType xlink:href="http://nomisma.org/id/coin">Coin</objectType><denomination xlink:href="http://nomisma.org/id/antoninianus">Antoninianus</denomination><material xlink:type="simple" xlink:href="http://nomisma.org/id/ar">Silver</material><dateRange><fromDate standardDate="0268">268</fromDate><toDate standardDate="0270">270</toDate></dateRange><authority><persname xlink:type="simple" xlink:role="authority" xlink:href="http://nomisma.org/id/claudius_ii_gothicus">Claudius II Gothicus</persname><corpname xlink:type="simple" xlink:role="state">Roman Empire</corpname></authority><geographic><geogname xlink:type="simple" xlink:role="mint" xlink:href="http://nomisma.org/id/mediolanum">Mediolanum</geogname><geogname xlink:type="simple" xlink:role="region" xlink:href="http://nomisma.org/id/gallia_cisalpina">Gallia</geogname></geographic><obverse><type><description xml:lang="en">Radiate bust, right, draped, cuirassed.</description></type><legend>IMP(ERATOR) CLAVDIVS P(IVS) F(ELIX) AVG(VSTVS)</legend><persname xlink:type="simple" xlink:role="portrait" xlink:href="http://nomisma.org/id/claudius_ii_gothicus">Claudius II Gothicus</persname></obverse><reverse><type><description xml:lang="en">Fides standing left, holding two ensigns.</description></type><legend>FIDES MILI(TVM)</legend><persname xlink:type="simple" xlink:role="deity">Fides</persname></reverse></typeDesc><physDesc><axis>6</axis><measurementsSet><diameter units="mm">19</diameter><weight units="g">2.37</weight></measurementsSet></physDesc><findspotDesc xlink:type="simple" xlink:href="http://nomisma.org/id/olivers_orchard_hoards"/><adminDesc><identifier>1991.17.180</identifier><repository>The University of Virginia Art Museum</repository><collection>The Oliver's Orchard Hoard</collection><acqinfo><acquiredFrom>Three hundred and two coins were acquired in 1991 from a cross section of 1,025 coins belonging to the Worldwide Treasure Bureau.</acquiredFrom></acqinfo><custodhist><description xml:lang="en">The Oliver's Orchard Hoard was discovered near Colchester, England (ancient Camulodunum) in 1983.</description></custodhist></adminDesc><refDesc><reference><title>RIC</title><identifier>149</identifier></reference><reference><title>The Cunetio Treasure</title><identifier>2259</identifier></reference></refDesc></descMeta><digRep><mets:fileSec><mets:fileGrp USE="obverse"><mets:file USE="reference" MIMETYPE="image/jpeg"><mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n1991_17_180_obv.jpg"/></mets:file><mets:file USE="thumbnail" MIMETYPE="image/jpeg"><mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1991_17_180_obv.jpg"/></mets:file></mets:fileGrp><mets:fileGrp USE="reverse"><mets:file USE="reference" MIMETYPE="image/jpeg"><mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n1991_17_180_rev.jpg"/></mets:file><mets:file USE="thumbnail" MIMETYPE="image/jpeg"><mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1991_17_180_rev.jpg"/></mets:file></mets:fileGrp></mets:fileSec></digRep></nuds>
+<?xml version="1.0" encoding="UTF-8"?>
+<nuds xmlns="http://nomisma.org/nuds" xmlns:xlink="http://www.w3.org/1999/xlink"
+      xmlns:mets="http://www.loc.gov/METS/"
+      recordType="physical">
+   <nudsHeader>
+      <nudsid>1991.17.180</nudsid>
+      <publicationStmt>
+         <publisher>The University of Virginia Library</publisher>
+         <createdBy>Ethan Gruber and/or Carrie Sulosky</createdBy>
+         <langUsage>
+            <language langcode="en">English</language>
+         </langUsage>
+      </publicationStmt>
+      <rightsStmt>
+         <license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/"/>
+         <date standardDate="2012"/>
+      </rightsStmt>
+      <revisionStmt>
+         <revision>
+            <description>Migrated from EAD to NUDS</description>
+            <date standardDateTime="2012-12-12T15:05:54.552-05:00Z"/>
+         </revision>
+      </revisionStmt>
+   </nudsHeader>
+   <descMeta>
+      <title xml:lang="en">Antoninianus of Claudius II Gothicus, Mediolanum, 268-270. 1991.17.180.</title>
+      <department>Roman</department>
+      <typeDesc>
+         <objectType xlink:href="http://nomisma.org/id/coin">Coin</objectType>
+         <denomination xlink:href="http://nomisma.org/id/antoninianus">Antoninianus</denomination>
+         <material xlink:type="simple" xlink:href="http://nomisma.org/id/ar">Silver</material>
+         <dateRange>
+            <fromDate standardDate="0268">268</fromDate>
+            <toDate standardDate="0270">270</toDate>
+         </dateRange>
+         <authority>
+            <persname xlink:type="simple" xlink:role="authority"
+                      xlink:href="http://nomisma.org/id/claudius_ii_gothicus">Claudius II Gothicus</persname>
+            <corpname xlink:type="simple" xlink:role="state">Roman Empire</corpname>
+         </authority>
+         <geographic>
+            <geogname xlink:type="simple" xlink:role="mint"
+                      xlink:href="http://nomisma.org/id/mediolanum">Mediolanum</geogname>
+            <geogname xlink:type="simple" xlink:role="region"
+                      xlink:href="http://nomisma.org/id/gallia_cisalpina">Gallia</geogname>
+         </geographic>
+         <obverse>
+            <type>
+               <description xml:lang="en">Radiate bust, right, draped, cuirassed.</description>
+            </type>
+            <legend>IMP(ERATOR) CLAVDIVS P(IVS) F(ELIX) AVG(VSTVS)</legend>
+            <persname xlink:type="simple" xlink:role="portrait"
+                      xlink:href="http://nomisma.org/id/claudius_ii_gothicus">Claudius II Gothicus</persname>
+         </obverse>
+         <reverse>
+            <type>
+               <description xml:lang="en">Fides standing left, holding two ensigns.</description>
+            </type>
+            <legend>FIDES MILI(TVM)</legend>
+            <persname xlink:type="simple" xlink:role="deity">Fides</persname>
+         </reverse>
+      </typeDesc>
+      <physDesc>
+         <axis>6</axis>
+         <measurementsSet>
+            <diameter units="mm">19</diameter>
+            <weight units="g">2.37</weight>
+         </measurementsSet>
+      </physDesc>
+      <findspotDesc xlink:type="simple" xlink:href="http://nomisma.org/id/olivers_orchard_hoards"/>
+      <adminDesc>
+         <identifier>1991.17.180</identifier>
+         <repository>The University of Virginia Art Museum</repository>
+         <collection>The Oliver's Orchard Hoard</collection>
+         <provenance>
+            <chronList>
+               <chronItem>
+                  <acquisition>
+                     <acquiredFrom>Three hundred and two coins were acquired in 1991 from a cross section of 1,025 coins belonging to the Worldwide Treasure Bureau.</acquiredFrom>
+                  </acquisition>
+               </chronItem>
+               <chronItem>
+                  <description xml:lang="en">The Oliver's Orchard Hoard was discovered near Colchester, England (ancient Camulodunum) in 1983.</description>
+               </chronItem>
+            </chronList>
+         </provenance>
+      </adminDesc>
+      <refDesc>
+         <reference>
+            <title>RIC</title>
+            <identifier>149</identifier>
+         </reference>
+         <reference>
+            <title>The Cunetio Treasure</title>
+            <identifier>2259</identifier>
+         </reference>
+      </refDesc>
+   </descMeta>
+   <digRep>
+      <mets:fileSec>
+         <mets:fileGrp USE="obverse">
+            <mets:file USE="reference" MIMETYPE="image/jpeg">
+               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n1991_17_180_obv.jpg"/>
+            </mets:file>
+            <mets:file USE="thumbnail" MIMETYPE="image/jpeg">
+               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1991_17_180_obv.jpg"/>
+            </mets:file>
+         </mets:fileGrp>
+         <mets:fileGrp USE="reverse">
+            <mets:file USE="reference" MIMETYPE="image/jpeg">
+               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n1991_17_180_rev.jpg"/>
+            </mets:file>
+            <mets:file USE="thumbnail" MIMETYPE="image/jpeg">
+               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1991_17_180_rev.jpg"/>
+            </mets:file>
+         </mets:fileGrp>
+      </mets:fileSec>
+   </digRep>
+</nuds>

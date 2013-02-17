@@ -1,3 +1,95 @@
-<nuds xmlns="http://nomisma.org/nuds" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mets="http://www.loc.gov/METS/" recordType="physical"><nudsHeader><nudsid>FIC.50.13</nudsid><publicationStmt><publisher>The University of Virginia Library</publisher><createdBy>Ethan Gruber and/or Carrie Sulosky</createdBy><langUsage><language langcode="en">English</language></langUsage></publicationStmt><rightsStmt><license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/"/><date standardDate="2012"/></rightsStmt><revisionStmt><revision><description>Migrated from EAD to NUDS</description><date standardDateTime="2012-12-12T15:05:54.552-05:00Z"/></revision></revisionStmt></nudsHeader><descMeta><title xml:lang="en">Bronze Coin of Cleopatra, Damascus, 33 - 32 B.C.</title><department>Greek</department><subjectSet><subject xmlns="" xmlns:xi="http://www.w3.org/2001/XInclude">Found in Collection</subject></subjectSet><typeDesc><objectType xlink:href="http://nomisma.org/id/coin">Coin</objectType><material xlink:href="http://nomisma.org/id/ae">Bronze</material><dateRange><fromDate standardDate="0033">A.D. 33</fromDate><toDate standardDate="0032">A.D. 32</toDate></dateRange><authority><persname xlink:type="simple" xlink:role="authority" xlink:href="http://nomisma.org/id/cleopatra_vii">Cleopatra</persname><famname xlink:type="simple" xlink:role="dynasty">Ptolemaic</famname><corpname xlink:type="simple" xlink:role="state">Ptolemaic Kingdom</corpname></authority><geographic><geogname xlink:type="simple" xlink:role="mint" xlink:href="http://nomisma.org/id/damascus">Damascus</geogname><geogname xlink:type="simple" xlink:role="region" xlink:href="http://nomisma.org/id/syria">Syria</geogname></geographic><obverse><type><description xml:lang="en">Diademed bust of Cleopatra VII, right.</description></type></obverse><reverse><type><description xml:lang="en">Tyche of Damascus seated left on rock, her right
+<?xml version="1.0" encoding="UTF-8"?>
+<nuds xmlns="http://nomisma.org/nuds" xmlns:xlink="http://www.w3.org/1999/xlink"
+      xmlns:mets="http://www.loc.gov/METS/"
+      recordType="physical">
+   <nudsHeader>
+      <nudsid>FIC.50.13</nudsid>
+      <publicationStmt>
+         <publisher>The University of Virginia Library</publisher>
+         <createdBy>Ethan Gruber and/or Carrie Sulosky</createdBy>
+         <langUsage>
+            <language langcode="en">English</language>
+         </langUsage>
+      </publicationStmt>
+      <rightsStmt>
+         <license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/"/>
+         <date standardDate="2012"/>
+      </rightsStmt>
+      <revisionStmt>
+         <revision>
+            <description>Migrated from EAD to NUDS</description>
+            <date standardDateTime="2012-12-12T15:05:54.552-05:00Z"/>
+         </revision>
+      </revisionStmt>
+   </nudsHeader>
+   <descMeta>
+      <title xml:lang="en">Coin of Cleopatra, Damascus, A.D. 33-A.D. 32. FIC.50.13.</title>
+      <department>Greek</department>
+      <typeDesc>
+         <objectType xlink:href="http://nomisma.org/id/coin">Coin</objectType>
+         <material xlink:href="http://nomisma.org/id/ae">Bronze</material>
+         <dateRange>
+            <fromDate standardDate="0033">A.D. 33</fromDate>
+            <toDate standardDate="0032">A.D. 32</toDate>
+         </dateRange>
+         <authority>
+            <persname xlink:type="simple" xlink:role="authority"
+                      xlink:href="http://nomisma.org/id/cleopatra_vii">Cleopatra</persname>
+            <famname xlink:type="simple" xlink:role="dynasty">Ptolemaic</famname>
+            <corpname xlink:type="simple" xlink:role="state">Ptolemaic Kingdom</corpname>
+         </authority>
+         <geographic>
+            <geogname xlink:type="simple" xlink:role="mint"
+                      xlink:href="http://nomisma.org/id/damascus">Damascus</geogname>
+            <geogname xlink:type="simple" xlink:role="region"
+                      xlink:href="http://nomisma.org/id/syria">Syria</geogname>
+         </geographic>
+         <obverse>
+            <type>
+               <description xml:lang="en">Diademed bust of Cleopatra VII, right.</description>
+            </type>
+         </obverse>
+         <reverse>
+            <type>
+               <description xml:lang="en">Tyche of Damascus seated left on rock, her right
 				arm extended, her left holding cornucopiae, the river-god Chrysoroas swimming at her
-				feet.</description></type><legend>ΔΑΜΑΣΚΗΝΩΝ</legend><persname xlink:type="simple" xlink:role="deity">Tyche</persname><persname xlink:type="simple" xlink:role="deity">Chrysoroas</persname></reverse></typeDesc><adminDesc><identifier>FIC.50.13</identifier><repository>The University of Virginia Art Museum</repository><collection>Found in Collection 50</collection></adminDesc><refDesc><reference><title>RPC</title><identifier>4781</identifier></reference></refDesc></descMeta><digRep><mets:fileSec><mets:fileGrp USE="obverse"><mets:file USE="reference" MIMETYPE="image/jpeg"><mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/nfic_50_13_obv.jpg"/></mets:file><mets:file USE="thumbnail" MIMETYPE="image/jpeg"><mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/nfic_50_13_obv.jpg"/></mets:file></mets:fileGrp><mets:fileGrp USE="reverse"><mets:file USE="reference" MIMETYPE="image/jpeg"><mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/nfic_50_13_rev.jpg"/></mets:file><mets:file USE="thumbnail" MIMETYPE="image/jpeg"><mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/nfic_50_13_rev.jpg"/></mets:file></mets:fileGrp></mets:fileSec></digRep></nuds>
+				feet.</description>
+            </type>
+            <legend>ΔΑΜΑΣΚΗΝΩΝ</legend>
+            <persname xlink:type="simple" xlink:role="deity">Tyche</persname>
+            <persname xlink:type="simple" xlink:role="deity">Chrysoroas</persname>
+         </reverse>
+      </typeDesc>
+      <adminDesc>
+         <identifier>FIC.50.13</identifier>
+         <repository>The University of Virginia Art Museum</repository>
+         <collection>Found in Collection 50</collection>
+      </adminDesc>
+      <refDesc>
+         <reference>
+            <title>RPC</title>
+            <identifier>4781</identifier>
+         </reference>
+      </refDesc>
+   </descMeta>
+   <digRep>
+      <mets:fileSec>
+         <mets:fileGrp USE="obverse">
+            <mets:file USE="reference" MIMETYPE="image/jpeg">
+               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/nfic_50_13_obv.jpg"/>
+            </mets:file>
+            <mets:file USE="thumbnail" MIMETYPE="image/jpeg">
+               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/nfic_50_13_obv.jpg"/>
+            </mets:file>
+         </mets:fileGrp>
+         <mets:fileGrp USE="reverse">
+            <mets:file USE="reference" MIMETYPE="image/jpeg">
+               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/nfic_50_13_rev.jpg"/>
+            </mets:file>
+            <mets:file USE="thumbnail" MIMETYPE="image/jpeg">
+               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/nfic_50_13_rev.jpg"/>
+            </mets:file>
+         </mets:fileGrp>
+      </mets:fileSec>
+   </digRep>
+</nuds>

@@ -1,2 +1,75 @@
-<nuds xmlns="http://nomisma.org/nuds" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mets="http://www.loc.gov/METS/" recordType="physical"><nudsHeader><nudsid>1989.EL.14.47</nudsid><publicationStmt><publisher>The University of Virginia Library</publisher><createdBy>Ethan Gruber and/or Carrie Sulosky</createdBy><langUsage><language langcode="en">English</language></langUsage></publicationStmt><rightsStmt><license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/"/><date standardDate="2012"/></rightsStmt><revisionStmt><revision><description>Migrated from EAD to NUDS</description><date standardDateTime="2012-12-12T15:05:54.552-05:00Z"/></revision></revisionStmt></nudsHeader><descMeta><title xml:lang="en">Silver denarius of Manlius Cordius Rufus, Rome, 46 B.C.</title><department>Roman</department><subjectSet><subject xmlns="" xmlns:xi="http://www.w3.org/2001/XInclude">Extended Loan Coins</subject></subjectSet><typeDesc xlink:type="simple" xlink:href="http://nomisma.org/id/rrc-463.1b"/><adminDesc><identifier>1989.EL.14.47</identifier><repository>Virginia Museum of Fine Arts</repository><collection>The Mosberg Collection</collection><acqinfo><acquiredFrom>Acquired from the Worldwide Treasure Bureau, 1989. These coins are currently on extended loan.</acquiredFrom></acqinfo><custodhist><description xml:lang="en">Noted as "49 Diverse Republik Denare" on an envelope addressed in Zurich. Some or all of these coins may have been acquired by Hermann Mosberg at the
-					Haeberlin Auction.</description><chronlist><chronitem><date standardDate="1946">1946</date><previousColl>Ex: Hermann Mosberg Collection. Appraised by Munzen und Medallen, Basel, Switzerland.</previousColl></chronitem><chronitem><date standardDate="1933">1933</date><previousColl>Haeberlin Auction, lot 1333.</previousColl></chronitem></chronlist></custodhist></adminDesc></descMeta><digRep><mets:fileSec><mets:fileGrp USE="obverse"><mets:file USE="reference" MIMETYPE="image/jpeg"><mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n14_1989_47_obv.jpg"/></mets:file><mets:file USE="thumbnail" MIMETYPE="image/jpeg"><mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n14_1989_47_obv.jpg"/></mets:file></mets:fileGrp><mets:fileGrp USE="reverse"><mets:file USE="reference" MIMETYPE="image/jpeg"><mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n14_1989_47_rev.jpg"/></mets:file><mets:file USE="thumbnail" MIMETYPE="image/jpeg"><mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n14_1989_47_rev.jpg"/></mets:file></mets:fileGrp></mets:fileSec></digRep></nuds>
+<?xml version="1.0" encoding="UTF-8"?>
+<nuds xmlns="http://nomisma.org/nuds" xmlns:xlink="http://www.w3.org/1999/xlink"
+      xmlns:mets="http://www.loc.gov/METS/"
+      recordType="physical">
+   <nudsHeader>
+      <nudsid>1989.EL.14.47</nudsid>
+      <publicationStmt>
+         <publisher>The University of Virginia Library</publisher>
+         <createdBy>Ethan Gruber and/or Carrie Sulosky</createdBy>
+         <langUsage>
+            <language langcode="en">English</language>
+         </langUsage>
+      </publicationStmt>
+      <rightsStmt>
+         <license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/"/>
+         <date standardDate="2012"/>
+      </rightsStmt>
+      <revisionStmt>
+         <revision>
+            <description>Migrated from EAD to NUDS</description>
+            <date standardDateTime="2012-12-12T15:05:54.552-05:00Z"/>
+         </revision>
+      </revisionStmt>
+   </nudsHeader>
+   <descMeta>
+      <title xml:lang="en">Coin. 1989.EL.14.47.</title>
+      <department>Roman</department>
+      <typeDesc xlink:type="simple" xlink:href="http://nomisma.org/id/rrc-463.1b"/>
+      <adminDesc>
+         <identifier>1989.EL.14.47</identifier>
+         <repository>Virginia Museum of Fine Arts</repository>
+         <collection>The Mosberg Collection</collection>
+         <provenance>
+            <chronList>
+               <chronItem>
+                  <acquisition>
+                     <acquiredFrom>Acquired from the Worldwide Treasure Bureau, 1989. These coins are currently on extended loan.</acquiredFrom>
+                  </acquisition>
+               </chronItem>
+               <chronItem>
+                  <date standardDate="1946">1946</date>
+                  <previousColl>Ex: Hermann Mosberg Collection. Appraised by Munzen und Medallen, Basel, Switzerland.</previousColl>
+               </chronItem>
+               <chronItem>
+                  <date standardDate="1933">1933</date>
+                  <previousColl>Haeberlin Auction, lot 1333.</previousColl>
+               </chronItem>
+               <chronItem>
+                  <previousColl>Noted as "49 Diverse Republik Denare" on an envelope addressed in Zurich. Some or all of these coins may have been acquired by Hermann Mosberg at the Haeberlin Auction.</previousColl>
+               </chronItem>
+            </chronList>
+         </provenance>
+      </adminDesc>
+   </descMeta>
+   <digRep>
+      <mets:fileSec>
+         <mets:fileGrp USE="obverse">
+            <mets:file USE="reference" MIMETYPE="image/jpeg">
+               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n14_1989_47_obv.jpg"/>
+            </mets:file>
+            <mets:file USE="thumbnail" MIMETYPE="image/jpeg">
+               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n14_1989_47_obv.jpg"/>
+            </mets:file>
+         </mets:fileGrp>
+         <mets:fileGrp USE="reverse">
+            <mets:file USE="reference" MIMETYPE="image/jpeg">
+               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n14_1989_47_rev.jpg"/>
+            </mets:file>
+            <mets:file USE="thumbnail" MIMETYPE="image/jpeg">
+               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n14_1989_47_rev.jpg"/>
+            </mets:file>
+         </mets:fileGrp>
+      </mets:fileSec>
+   </digRep>
+</nuds>

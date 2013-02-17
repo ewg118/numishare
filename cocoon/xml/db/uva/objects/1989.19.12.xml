@@ -1,1 +1,103 @@
-<nuds xmlns="http://nomisma.org/nuds" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mets="http://www.loc.gov/METS/" recordType="physical"><nudsHeader><nudsid>1989.19.12</nudsid><publicationStmt><publisher>The University of Virginia Library</publisher><createdBy>Ethan Gruber and/or Carrie Sulosky</createdBy><langUsage><language langcode="en">English</language></langUsage></publicationStmt><rightsStmt><license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/"/><date standardDate="2012"/></rightsStmt><revisionStmt><revision><description>Migrated from EAD to NUDS</description><date standardDateTime="2012-12-12T15:05:54.552-05:00Z"/></revision></revisionStmt></nudsHeader><descMeta><title xml:lang="en">Bronze denarius of Antoninus Pius, Rome, A.D. 140-143</title><department>Roman</department><typeDesc><objectType xlink:href="http://nomisma.org/id/coin">Coin</objectType><denomination xlink:href="http://nomisma.org/id/denarius">Denarius</denomination><material xlink:href="http://nomisma.org/id/ae">Bronze</material><dateRange><fromDate standardDate="0140">A.D. 140</fromDate><toDate standardDate="0143">A.D. 143</toDate></dateRange><authority><persname xlink:type="simple" xlink:role="authority" xlink:href="http://nomisma.org/id/antoninus_pius">Antoninus Pius</persname><famname xlink:type="simple" xlink:role="dynasty">Antonine</famname><corpname xlink:type="simple" xlink:role="state">Roman Empire</corpname></authority><geographic><geogname xlink:type="simple" xlink:role="mint" xlink:href="http://nomisma.org/id/rome">Rome</geogname><geogname xlink:type="simple" xlink:role="region" xlink:href="http://nomisma.org/id/latium">Latium</geogname></geographic><obverse><type><description xml:lang="en">Head, radiate, right.</description></type><legend>ANTONINVS AVG(VSTVS) PIVS P(ATER) P(ATRIAE) TR(IBVNICIA) P(OTESTATE) XXI</legend><persname xlink:type="simple" xlink:role="portrait" xlink:href="http://nomisma.org/id/antoninus_pius">Antoninus Pius</persname></obverse><reverse><type><description xml:lang="en">Antoninus, veiled, standing left, sacrificing with patera held in right hand over a tripod, left arm at side.</description></type><legend>VOTA SUSCEPTA DEC(ENNALIA) III CO(N)S(VL) IIII S(ENATVS) C(ONSVLTVM)</legend><persname xlink:type="simple" xlink:role="portrait" xlink:href="http://nomisma.org/id/antoninus_pius">Antoninus Pius</persname></reverse></typeDesc><adminDesc><identifier>1989.19.12</identifier><repository>The University of Virginia Art Museum</repository><collection>University of Virginia Miscellanea</collection><acqinfo><acquiredFrom>Acquired from the Worldwide Treasure Bureau, September, 1989.</acquiredFrom></acqinfo><custodhist><chronlist><chronitem><date standardDate="1946">1946</date><previousColl>Ex: Hermann Mosberg Collection. Appraised by Münzen und Medallen, Basel, Switzerland. Collection assembled in the 1920s and 1930s.</previousColl></chronitem></chronlist></custodhist></adminDesc></descMeta><digRep><mets:fileSec><mets:fileGrp USE="obverse"><mets:file USE="reference" MIMETYPE="image/jpeg"><mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n1989_19_12_obv.jpg"/></mets:file><mets:file USE="thumbnail" MIMETYPE="image/jpeg"><mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1989_19_12_obv.jpg"/></mets:file></mets:fileGrp><mets:fileGrp USE="reverse"><mets:file USE="reference" MIMETYPE="image/jpeg"><mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n1989_19_12_rev.jpg"/></mets:file><mets:file USE="thumbnail" MIMETYPE="image/jpeg"><mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1989_19_12_rev.jpg"/></mets:file></mets:fileGrp></mets:fileSec></digRep></nuds>
+<?xml version="1.0" encoding="UTF-8"?>
+<nuds xmlns="http://nomisma.org/nuds" xmlns:xlink="http://www.w3.org/1999/xlink"
+      xmlns:mets="http://www.loc.gov/METS/"
+      recordType="physical">
+   <nudsHeader>
+      <nudsid>1989.19.12</nudsid>
+      <publicationStmt>
+         <publisher>The University of Virginia Library</publisher>
+         <createdBy>Ethan Gruber and/or Carrie Sulosky</createdBy>
+         <langUsage>
+            <language langcode="en">English</language>
+         </langUsage>
+      </publicationStmt>
+      <rightsStmt>
+         <license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/"/>
+         <date standardDate="2012"/>
+      </rightsStmt>
+      <revisionStmt>
+         <revision>
+            <description>Migrated from EAD to NUDS</description>
+            <date standardDateTime="2012-12-12T15:05:54.552-05:00Z"/>
+         </revision>
+      </revisionStmt>
+   </nudsHeader>
+   <descMeta>
+      <title xml:lang="en">Denarius of Antoninus Pius, Rome, A.D. 140-A.D. 143. 1989.19.12.</title>
+      <department>Roman</department>
+      <typeDesc>
+         <objectType xlink:href="http://nomisma.org/id/coin">Coin</objectType>
+         <denomination xlink:href="http://nomisma.org/id/denarius">Denarius</denomination>
+         <material xlink:href="http://nomisma.org/id/ae">Bronze</material>
+         <dateRange>
+            <fromDate standardDate="0140">A.D. 140</fromDate>
+            <toDate standardDate="0143">A.D. 143</toDate>
+         </dateRange>
+         <authority>
+            <persname xlink:type="simple" xlink:role="authority"
+                      xlink:href="http://nomisma.org/id/antoninus_pius">Antoninus Pius</persname>
+            <famname xlink:type="simple" xlink:role="dynasty">Antonine</famname>
+            <corpname xlink:type="simple" xlink:role="state">Roman Empire</corpname>
+         </authority>
+         <geographic>
+            <geogname xlink:type="simple" xlink:role="mint" xlink:href="http://nomisma.org/id/rome">Rome</geogname>
+            <geogname xlink:type="simple" xlink:role="region"
+                      xlink:href="http://nomisma.org/id/latium">Latium</geogname>
+         </geographic>
+         <obverse>
+            <type>
+               <description xml:lang="en">Head, radiate, right.</description>
+            </type>
+            <legend>ANTONINVS AVG(VSTVS) PIVS P(ATER) P(ATRIAE) TR(IBVNICIA) P(OTESTATE) XXI</legend>
+            <persname xlink:type="simple" xlink:role="portrait"
+                      xlink:href="http://nomisma.org/id/antoninus_pius">Antoninus Pius</persname>
+         </obverse>
+         <reverse>
+            <type>
+               <description xml:lang="en">Antoninus, veiled, standing left, sacrificing with patera held in right hand over a tripod, left arm at side.</description>
+            </type>
+            <legend>VOTA SUSCEPTA DEC(ENNALIA) III CO(N)S(VL) IIII S(ENATVS) C(ONSVLTVM)</legend>
+            <persname xlink:type="simple" xlink:role="portrait"
+                      xlink:href="http://nomisma.org/id/antoninus_pius">Antoninus Pius</persname>
+         </reverse>
+      </typeDesc>
+      <adminDesc>
+         <identifier>1989.19.12</identifier>
+         <repository>The University of Virginia Art Museum</repository>
+         <collection>University of Virginia Miscellanea</collection>
+         <provenance>
+            <chronList>
+               <chronItem>
+                  <acquisition>
+                     <acquiredFrom>Acquired from the Worldwide Treasure Bureau, September, 1989.</acquiredFrom>
+                  </acquisition>
+               </chronItem>
+               <chronItem>
+                  <date standardDate="1946">1946</date>
+                  <previousColl>Ex: Hermann Mosberg Collection. Appraised by Münzen und Medallen, Basel, Switzerland. Collection assembled in the 1920s and 1930s.</previousColl>
+               </chronItem>
+            </chronList>
+         </provenance>
+      </adminDesc>
+   </descMeta>
+   <digRep>
+      <mets:fileSec>
+         <mets:fileGrp USE="obverse">
+            <mets:file USE="reference" MIMETYPE="image/jpeg">
+               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n1989_19_12_obv.jpg"/>
+            </mets:file>
+            <mets:file USE="thumbnail" MIMETYPE="image/jpeg">
+               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1989_19_12_obv.jpg"/>
+            </mets:file>
+         </mets:fileGrp>
+         <mets:fileGrp USE="reverse">
+            <mets:file USE="reference" MIMETYPE="image/jpeg">
+               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n1989_19_12_rev.jpg"/>
+            </mets:file>
+            <mets:file USE="thumbnail" MIMETYPE="image/jpeg">
+               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1989_19_12_rev.jpg"/>
+            </mets:file>
+         </mets:fileGrp>
+      </mets:fileSec>
+   </digRep>
+</nuds>

@@ -1,1 +1,70 @@
-<nuds xmlns="http://nomisma.org/nuds" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mets="http://www.loc.gov/METS/" recordType="physical"><nudsHeader><nudsid>1989.19.3</nudsid><publicationStmt><publisher>The University of Virginia Library</publisher><createdBy>Ethan Gruber and/or Carrie Sulosky</createdBy><langUsage><language langcode="en">English</language></langUsage></publicationStmt><rightsStmt><license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/"/><date standardDate="2012"/></rightsStmt><revisionStmt><revision><description>Migrated from EAD to NUDS</description><date standardDateTime="2012-12-12T15:05:54.552-05:00Z"/></revision></revisionStmt></nudsHeader><descMeta><title xml:lang="en">Silver denarius of Quintus Pomponius Musa, Rome, 66 B.C.</title><department>Roman</department><typeDesc xlink:type="simple" xlink:href="http://nomisma.org/id/rrc-410.5"/><adminDesc><identifier>1989.19.3</identifier><repository>The University of Virginia Art Museum</repository><collection>University of Virginia Miscellanea</collection><acqinfo><acquiredFrom>Acquired from the Worldwide Treasure Bureau, September, 1989.</acquiredFrom></acqinfo><custodhist><description xml:lang="en">Ex: Errico Collection, 1930's.</description></custodhist></adminDesc><refDesc><reference xlink:href="http://nomisma.org/id/rrc-410.5"/></refDesc></descMeta><digRep><mets:fileSec><mets:fileGrp USE="obverse"><mets:file USE="reference" MIMETYPE="image/jpeg"><mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n1989_19_3_obv.jpg"/></mets:file><mets:file USE="thumbnail" MIMETYPE="image/jpeg"><mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1989_19_3_obv.jpg"/></mets:file></mets:fileGrp><mets:fileGrp USE="reverse"><mets:file USE="reference" MIMETYPE="image/jpeg"><mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n1989_19_3_rev.jpg"/></mets:file><mets:file USE="thumbnail" MIMETYPE="image/jpeg"><mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1989_19_3_rev.jpg"/></mets:file></mets:fileGrp></mets:fileSec></digRep></nuds>
+<?xml version="1.0" encoding="UTF-8"?>
+<nuds xmlns="http://nomisma.org/nuds" xmlns:xlink="http://www.w3.org/1999/xlink"
+      xmlns:mets="http://www.loc.gov/METS/"
+      recordType="physical">
+   <nudsHeader>
+      <nudsid>1989.19.3</nudsid>
+      <publicationStmt>
+         <publisher>The University of Virginia Library</publisher>
+         <createdBy>Ethan Gruber and/or Carrie Sulosky</createdBy>
+         <langUsage>
+            <language langcode="en">English</language>
+         </langUsage>
+      </publicationStmt>
+      <rightsStmt>
+         <license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/"/>
+         <date standardDate="2012"/>
+      </rightsStmt>
+      <revisionStmt>
+         <revision>
+            <description>Migrated from EAD to NUDS</description>
+            <date standardDateTime="2012-12-12T15:05:54.552-05:00Z"/>
+         </revision>
+      </revisionStmt>
+   </nudsHeader>
+   <descMeta>
+      <title xml:lang="en">Denarius of Q Pomponius Musa, Rome, 66 BC. 1989.19.3.</title>
+      <department>Roman</department>
+      <typeDesc xlink:type="simple" xlink:href="http://nomisma.org/id/rrc-410.5"/>
+      <adminDesc>
+         <identifier>1989.19.3</identifier>
+         <repository>The University of Virginia Art Museum</repository>
+         <collection>University of Virginia Miscellanea</collection>
+         <provenance>
+            <chronList>
+               <chronItem>
+                  <acquisition>
+                     <acquiredFrom>Acquired from the Worldwide Treasure Bureau, September, 1989.</acquiredFrom>
+                  </acquisition>
+               </chronItem>
+               <chronItem>
+                  <previousColl>Ex: Errico Collection, 1930's.</previousColl>
+               </chronItem>
+            </chronList>
+         </provenance>
+      </adminDesc>
+      <refDesc>
+         <reference xlink:href="http://nomisma.org/id/rrc-410.5"/>
+      </refDesc>
+   </descMeta>
+   <digRep>
+      <mets:fileSec>
+         <mets:fileGrp USE="obverse">
+            <mets:file USE="reference" MIMETYPE="image/jpeg">
+               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n1989_19_3_obv.jpg"/>
+            </mets:file>
+            <mets:file USE="thumbnail" MIMETYPE="image/jpeg">
+               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1989_19_3_obv.jpg"/>
+            </mets:file>
+         </mets:fileGrp>
+         <mets:fileGrp USE="reverse">
+            <mets:file USE="reference" MIMETYPE="image/jpeg">
+               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n1989_19_3_rev.jpg"/>
+            </mets:file>
+            <mets:file USE="thumbnail" MIMETYPE="image/jpeg">
+               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1989_19_3_rev.jpg"/>
+            </mets:file>
+         </mets:fileGrp>
+      </mets:fileSec>
+   </digRep>
+</nuds>

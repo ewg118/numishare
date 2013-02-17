@@ -427,7 +427,7 @@
 		</li>
 	</xsl:template>
 
-	<xsl:template match="nuds:provenance" mode="descMeta">
+	<!--<xsl:template match="nuds:provenance" mode="descMeta">
 		<li>
 			<h4>
 				<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
@@ -440,7 +440,7 @@
 				</xsl:for-each>
 			</ul>
 		</li>
-	</xsl:template>
+	</xsl:template>-->
 
 	<xsl:template match="nuds:associatedObject">
 		<xsl:variable name="object">

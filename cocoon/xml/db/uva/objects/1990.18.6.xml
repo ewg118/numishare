@@ -1,1 +1,105 @@
-<nuds xmlns="http://nomisma.org/nuds" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mets="http://www.loc.gov/METS/" recordType="physical"><nudsHeader><nudsid>1990.18.6</nudsid><publicationStmt><publisher>The University of Virginia Library</publisher><createdBy>Ethan Gruber and/or Carrie Sulosky</createdBy><langUsage><language langcode="en">English</language></langUsage></publicationStmt><rightsStmt><license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/"/><date standardDate="2012"/></rightsStmt><revisionStmt><revision><description>Migrated from EAD to NUDS</description><date standardDateTime="2012-12-12T15:05:54.552-05:00Z"/></revision></revisionStmt></nudsHeader><descMeta><title xml:lang="en">Silver tetradrachm of Antigonos Gonatas, Amphipolis, 277-239 B.C.</title><department>Greek</department><typeDesc><objectType xlink:href="http://nomisma.org/id/coin">Coin</objectType><denomination xlink:href="http://nomisma.org/id/tetradrachm">Tetradrachm</denomination><material xlink:href="http://nomisma.org/id/ar">Silver</material><dateRange><fromDate standardDate="-0277">277 B.C.</fromDate><toDate standardDate="-0239">239 B.C.</toDate></dateRange><authority><persname xlink:type="simple" xlink:role="authority" xlink:href="http://nomisma.org/id/antigonus_ii">Antigonus II Gonatas</persname><famname xlink:type="simple" xlink:role="dynasty">Antigonid</famname><corpname xlink:type="simple" xlink:role="state">Macedonian Kingdom</corpname></authority><geographic><geogname xlink:type="simple" xlink:role="mint" xlink:href="http://nomisma.org/id/amphipolis">Amphipolis</geogname></geographic><obverse><type><description xml:lang="en">Bust of Pan, left, lagobolon at shoulder, at center of Macedonian shield.</description></type><persname xlink:type="simple" xlink:role="deity">Pan</persname></obverse><reverse><type><description xml:lang="en">Athena Alkidemos advancing left, brandishing thunderbolt in right hand and holding shield with left; crested Macedonian helmet to the left.</description></type><legend>BASILEOS ANTIGONOY</legend><persname xlink:type="simple" xlink:role="deity">Athena</persname></reverse></typeDesc><adminDesc><identifier>1990.18.6</identifier><repository>The University of Virginia Art Museum</repository><collection>University of Virginia Miscellanea</collection><acqinfo><acquiredFrom>Acquired from the Worldwide Treasure Bureau, 1990.</acquiredFrom></acqinfo><custodhist><chronlist><chronitem><date standardDate="1946">1946</date><previousColl>Ex: Hermann Mosberg Collection. Appraised by Münzen und Medallen, Basel, Switzerland.</previousColl></chronitem></chronlist></custodhist></adminDesc><refDesc><reference><title>SNG Ashmolean</title><identifier>3260</identifier></reference></refDesc></descMeta><digRep><mets:fileSec><mets:fileGrp USE="obverse"><mets:file USE="reference" MIMETYPE="image/jpeg"><mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n1990_18_6_obv.jpg"/></mets:file><mets:file USE="thumbnail" MIMETYPE="image/jpeg"><mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1990_18_6_obv.jpg"/></mets:file></mets:fileGrp><mets:fileGrp USE="reverse"><mets:file USE="reference" MIMETYPE="image/jpeg"><mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n1990_18_6_rev.jpg"/></mets:file><mets:file USE="thumbnail" MIMETYPE="image/jpeg"><mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1990_18_6_rev.jpg"/></mets:file></mets:fileGrp></mets:fileSec></digRep></nuds>
+<?xml version="1.0" encoding="UTF-8"?>
+<nuds xmlns="http://nomisma.org/nuds" xmlns:xlink="http://www.w3.org/1999/xlink"
+      xmlns:mets="http://www.loc.gov/METS/"
+      recordType="physical">
+   <nudsHeader>
+      <nudsid>1990.18.6</nudsid>
+      <publicationStmt>
+         <publisher>The University of Virginia Library</publisher>
+         <createdBy>Ethan Gruber and/or Carrie Sulosky</createdBy>
+         <langUsage>
+            <language langcode="en">English</language>
+         </langUsage>
+      </publicationStmt>
+      <rightsStmt>
+         <license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/"/>
+         <date standardDate="2012"/>
+      </rightsStmt>
+      <revisionStmt>
+         <revision>
+            <description>Migrated from EAD to NUDS</description>
+            <date standardDateTime="2012-12-12T15:05:54.552-05:00Z"/>
+         </revision>
+      </revisionStmt>
+   </nudsHeader>
+   <descMeta>
+      <title xml:lang="en">Tetradrachm of Antigonus II Gonatas, Amphipolis, 277 B.C.-239 B.C.. 1990.18.6.</title>
+      <department>Greek</department>
+      <typeDesc>
+         <objectType xlink:href="http://nomisma.org/id/coin">Coin</objectType>
+         <denomination xlink:href="http://nomisma.org/id/tetradrachm">Tetradrachm</denomination>
+         <material xlink:href="http://nomisma.org/id/ar">Silver</material>
+         <dateRange>
+            <fromDate standardDate="-0277">277 B.C.</fromDate>
+            <toDate standardDate="-0239">239 B.C.</toDate>
+         </dateRange>
+         <authority>
+            <persname xlink:type="simple" xlink:role="authority"
+                      xlink:href="http://nomisma.org/id/antigonus_ii">Antigonus II Gonatas</persname>
+            <famname xlink:type="simple" xlink:role="dynasty">Antigonid</famname>
+            <corpname xlink:type="simple" xlink:role="state">Macedonian Kingdom</corpname>
+         </authority>
+         <geographic>
+            <geogname xlink:type="simple" xlink:role="mint"
+                      xlink:href="http://nomisma.org/id/amphipolis">Amphipolis</geogname>
+         </geographic>
+         <obverse>
+            <type>
+               <description xml:lang="en">Bust of Pan, left, lagobolon at shoulder, at center of Macedonian shield.</description>
+            </type>
+            <persname xlink:type="simple" xlink:role="deity">Pan</persname>
+         </obverse>
+         <reverse>
+            <type>
+               <description xml:lang="en">Athena Alkidemos advancing left, brandishing thunderbolt in right hand and holding shield with left; crested Macedonian helmet to the left.</description>
+            </type>
+            <legend>BASILEOS ANTIGONOY</legend>
+            <persname xlink:type="simple" xlink:role="deity">Athena</persname>
+         </reverse>
+      </typeDesc>
+      <adminDesc>
+         <identifier>1990.18.6</identifier>
+         <repository>The University of Virginia Art Museum</repository>
+         <collection>University of Virginia Miscellanea</collection>
+         <provenance>
+            <chronList>
+               <chronItem>
+                  <acquisition>
+                     <acquiredFrom>Acquired from the Worldwide Treasure Bureau, 1990.</acquiredFrom>
+                  </acquisition>
+               </chronItem>
+               <chronItem>
+                  <date standardDate="1946">1946</date>
+                  <previousColl>Ex: Hermann Mosberg Collection. Appraised by Münzen und Medallen, Basel, Switzerland.</previousColl>
+               </chronItem>
+            </chronList>
+         </provenance>
+      </adminDesc>
+      <refDesc>
+         <reference>
+            <title>SNG Ashmolean</title>
+            <identifier>3260</identifier>
+         </reference>
+      </refDesc>
+   </descMeta>
+   <digRep>
+      <mets:fileSec>
+         <mets:fileGrp USE="obverse">
+            <mets:file USE="reference" MIMETYPE="image/jpeg">
+               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n1990_18_6_obv.jpg"/>
+            </mets:file>
+            <mets:file USE="thumbnail" MIMETYPE="image/jpeg">
+               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1990_18_6_obv.jpg"/>
+            </mets:file>
+         </mets:fileGrp>
+         <mets:fileGrp USE="reverse">
+            <mets:file USE="reference" MIMETYPE="image/jpeg">
+               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n1990_18_6_rev.jpg"/>
+            </mets:file>
+            <mets:file USE="thumbnail" MIMETYPE="image/jpeg">
+               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1990_18_6_rev.jpg"/>
+            </mets:file>
+         </mets:fileGrp>
+      </mets:fileSec>
+   </digRep>
+</nuds>

@@ -1,1 +1,116 @@
-<nuds xmlns="http://nomisma.org/nuds" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mets="http://www.loc.gov/METS/" recordType="physical"><nudsHeader><nudsid>1995.3.2</nudsid><publicationStmt><publisher>The University of Virginia Library</publisher><createdBy>Ethan Gruber and/or Carrie Sulosky</createdBy><langUsage><language langcode="en">English</language></langUsage></publicationStmt><rightsStmt><license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/"/><date standardDate="2012"/></rightsStmt><revisionStmt><revision><description>Migrated from EAD to NUDS</description><date standardDateTime="2012-12-12T15:05:54.552-05:00Z"/></revision></revisionStmt></nudsHeader><descMeta><title xml:lang="en">Gold solidus of Valentinian I, Treveri, A.D. 364-375</title><department>Roman</department><typeDesc><objectType xlink:href="http://nomisma.org/id/coin">Coin</objectType><denomination xlink:href="http://nomisma.org/id/solidus">Solidus</denomination><material xlink:href="http://nomisma.org/id/au">Gold</material><dateRange><fromDate standardDate="0364">364</fromDate><toDate standardDate="0375">375</toDate></dateRange><authority><persname xlink:type="simple" xlink:role="authority" xlink:href="http://nomisma.org/id/valentinian_i">Valentinian I</persname><famname xlink:type="simple" xlink:role="dynasty">Valentinian</famname><corpname xlink:type="simple" xlink:role="state">Roman Empire</corpname></authority><geographic><geogname xlink:type="simple" xlink:role="mint" xlink:href="http://nomisma.org/id/treveri">Treveri</geogname></geographic><obverse><type><description xml:lang="en">Head right, pearl-diademed, draped, cuirassed.</description></type><legend>D(OMINVS) N(OSTER) VALENTINIANVS P(IVS) F(ELIX) AVG(VSTVS)</legend><persname xlink:type="simple" xlink:role="portrait" xlink:href="http://nomisma.org/id/valentinian_i">Valentinian I</persname></obverse><reverse><type><description xml:lang="en">Two emperors standing facing, holding globe. Between them, in back, Victory with outspread wings.</description></type><legend>VICTORIA AVGG(VSTORVM) Exergue: TROP</legend><persname xlink:type="simple" xlink:role="deity">Victory</persname><persname xlink:type="simple" xlink:role="portrait" xlink:href="http://nomisma.org/id/valentinian_i">Valentinian I</persname><persname xlink:type="simple" xlink:role="portrait" xlink:href="http://nomisma.org/id/valentinian_ii">Valentinian II</persname></reverse></typeDesc><physDesc><axis>6</axis><measurementsSet><diameter units="mm">21</diameter><weight units="g">4.44</weight></measurementsSet></physDesc><adminDesc><identifier>1995.3.2</identifier><repository>The University of Virginia Art Museum</repository><collection>Gold Coins of the U.Va. Art Museum</collection><acqinfo><acquiredFrom>Acquired from Rare Coins &amp; Classical Arts Ltd., 1995.</acquiredFrom></acqinfo><custodhist><chronlist><chronitem><date standardDate="July 19, 1950">July 19, 1950</date><previousColl>Ex: H. P. Hall Collection. Glendinings, London, lot 2063.</previousColl></chronitem><chronitem><date standardDate="1926">1926</date><previousColl>Ex: Spink, London.</previousColl></chronitem></chronlist></custodhist></adminDesc></descMeta><digRep><mets:fileSec><mets:fileGrp USE="obverse"><mets:file USE="reference" MIMETYPE="image/jpeg"><mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n1995_3_2_obv.jpg"/></mets:file><mets:file USE="thumbnail" MIMETYPE="image/jpeg"><mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1995_3_2_obv.jpg"/></mets:file></mets:fileGrp><mets:fileGrp USE="reverse"><mets:file USE="reference" MIMETYPE="image/jpeg"><mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n1995_3_2_rev.jpg"/></mets:file><mets:file USE="thumbnail" MIMETYPE="image/jpeg"><mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1995_3_2_rev.jpg"/></mets:file></mets:fileGrp></mets:fileSec></digRep></nuds>
+<?xml version="1.0" encoding="UTF-8"?>
+<nuds xmlns="http://nomisma.org/nuds" xmlns:xlink="http://www.w3.org/1999/xlink"
+      xmlns:mets="http://www.loc.gov/METS/"
+      recordType="physical">
+   <nudsHeader>
+      <nudsid>1995.3.2</nudsid>
+      <publicationStmt>
+         <publisher>The University of Virginia Library</publisher>
+         <createdBy>Ethan Gruber and/or Carrie Sulosky</createdBy>
+         <langUsage>
+            <language langcode="en">English</language>
+         </langUsage>
+      </publicationStmt>
+      <rightsStmt>
+         <license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/"/>
+         <date standardDate="2012"/>
+      </rightsStmt>
+      <revisionStmt>
+         <revision>
+            <description>Migrated from EAD to NUDS</description>
+            <date standardDateTime="2012-12-12T15:05:54.552-05:00Z"/>
+         </revision>
+      </revisionStmt>
+   </nudsHeader>
+   <descMeta>
+      <title xml:lang="en">Solidus of Valentinian I, Treveri, 364-375. 1995.3.2.</title>
+      <department>Roman</department>
+      <typeDesc>
+         <objectType xlink:href="http://nomisma.org/id/coin">Coin</objectType>
+         <denomination xlink:href="http://nomisma.org/id/solidus">Solidus</denomination>
+         <material xlink:href="http://nomisma.org/id/au">Gold</material>
+         <dateRange>
+            <fromDate standardDate="0364">364</fromDate>
+            <toDate standardDate="0375">375</toDate>
+         </dateRange>
+         <authority>
+            <persname xlink:type="simple" xlink:role="authority"
+                      xlink:href="http://nomisma.org/id/valentinian_i">Valentinian I</persname>
+            <famname xlink:type="simple" xlink:role="dynasty">Valentinian</famname>
+            <corpname xlink:type="simple" xlink:role="state">Roman Empire</corpname>
+         </authority>
+         <geographic>
+            <geogname xlink:type="simple" xlink:role="mint"
+                      xlink:href="http://nomisma.org/id/treveri">Treveri</geogname>
+         </geographic>
+         <obverse>
+            <type>
+               <description xml:lang="en">Head right, pearl-diademed, draped, cuirassed.</description>
+            </type>
+            <legend>D(OMINVS) N(OSTER) VALENTINIANVS P(IVS) F(ELIX) AVG(VSTVS)</legend>
+            <persname xlink:type="simple" xlink:role="portrait"
+                      xlink:href="http://nomisma.org/id/valentinian_i">Valentinian I</persname>
+         </obverse>
+         <reverse>
+            <type>
+               <description xml:lang="en">Two emperors standing facing, holding globe. Between them, in back, Victory with outspread wings.</description>
+            </type>
+            <legend>VICTORIA AVGG(VSTORVM) Exergue: TROP</legend>
+            <persname xlink:type="simple" xlink:role="deity">Victory</persname>
+            <persname xlink:type="simple" xlink:role="portrait"
+                      xlink:href="http://nomisma.org/id/valentinian_i">Valentinian I</persname>
+            <persname xlink:type="simple" xlink:role="portrait"
+                      xlink:href="http://nomisma.org/id/valentinian_ii">Valentinian II</persname>
+         </reverse>
+      </typeDesc>
+      <physDesc>
+         <axis>6</axis>
+         <measurementsSet>
+            <diameter units="mm">21</diameter>
+            <weight units="g">4.44</weight>
+         </measurementsSet>
+      </physDesc>
+      <adminDesc>
+         <identifier>1995.3.2</identifier>
+         <repository>The University of Virginia Art Museum</repository>
+         <collection>Gold Coins of the U.Va. Art Museum</collection>
+         <provenance>
+            <chronList>
+               <chronItem>
+                  <acquisition>
+                     <acquiredFrom>Acquired from Rare Coins &amp; Classical Arts Ltd., 1995.</acquiredFrom>
+                  </acquisition>
+               </chronItem>
+               <chronItem>
+                  <date>July 19, 1950</date>
+                  <previousColl>Ex: H. P. Hall Collection. Glendinings, London, lot 2063.</previousColl>
+               </chronItem>
+               <chronItem>
+                  <date standardDate="1926">1926</date>
+                  <previousColl>Ex: Spink, London.</previousColl>
+               </chronItem>
+            </chronList>
+         </provenance>
+      </adminDesc>
+   </descMeta>
+   <digRep>
+      <mets:fileSec>
+         <mets:fileGrp USE="obverse">
+            <mets:file USE="reference" MIMETYPE="image/jpeg">
+               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n1995_3_2_obv.jpg"/>
+            </mets:file>
+            <mets:file USE="thumbnail" MIMETYPE="image/jpeg">
+               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1995_3_2_obv.jpg"/>
+            </mets:file>
+         </mets:fileGrp>
+         <mets:fileGrp USE="reverse">
+            <mets:file USE="reference" MIMETYPE="image/jpeg">
+               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n1995_3_2_rev.jpg"/>
+            </mets:file>
+            <mets:file USE="thumbnail" MIMETYPE="image/jpeg">
+               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1995_3_2_rev.jpg"/>
+            </mets:file>
+         </mets:fileGrp>
+      </mets:fileSec>
+   </digRep>
+</nuds>

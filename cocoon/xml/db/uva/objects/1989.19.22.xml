@@ -1,94 +1,106 @@
-<nuds xmlns="http://nomisma.org/nuds" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mets="http://www.loc.gov/METS/" recordType="physical">
-	<nudsHeader>
-		<nudsid>1989.19.22</nudsid>
-		<publicationStmt>
-			<publisher>The University of Virginia Library</publisher>
-			<createdBy>Ethan Gruber and/or Carrie Sulosky</createdBy>
-			<langUsage>
-				<language langcode="en">English</language>
-			</langUsage>
-		</publicationStmt>
-		<rightsStmt>
-			<license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/"/>
-			<date standardDate="2012"/>
-		</rightsStmt>
-		<revisionStmt>
-			<revision>
-				<description>Migrated from EAD to NUDS</description>
-				<date standardDateTime="2012-12-12T15:05:54.552-05:00Z"/>
-			</revision>
-		</revisionStmt>
-	</nudsHeader>
-	<descMeta>
-		<title xml:lang="en">Bronze denarius of Gordian III, Rome, A.D. 238-244</title>
-		<department>Roman</department>
-		<typeDesc>
-			<objectType xlink:href="http://nomisma.org/id/coin">Coin</objectType>
-			<denomination xlink:href="http://nomisma.org/id/denarius">Denarius</denomination>
-			<material xlink:href="http://nomisma.org/id/ae">Bronze</material>
-			<dateRange>
-				<fromDate standardDate="0238">238</fromDate>
-				<toDate standardDate="0244">244</toDate>
-			</dateRange>
-			<authority>
-				<persname xlink:type="simple" xlink:role="authority" xlink:href="http://nomisma.org/id/gordian_iii">Gordian III</persname>
-				<corpname xlink:type="simple" xlink:role="state">Roman Empire</corpname>
-			</authority>
-			<geographic>
-				<geogname xlink:type="simple" xlink:role="mint" xlink:href="http://nomisma.org/id/rome">Rome</geogname>
-				<geogname xlink:type="simple" xlink:role="region" xlink:href="http://nomisma.org/id/latium">Latium</geogname>
-			</geographic>
-			<obverse>
-				<type>
-					<description xml:lang="en">Laureate bust, right, draped, cuirassed.</description>
-				</type>
-				<legend>IMP(ERATOR) GORDIANVS PIVS FEL(IX) AVG(VSTVS)</legend>
-				<persname xlink:type="simple" xlink:role="portrait" xlink:href="http://nomisma.org/id/gordian_iii">Gordian III</persname>
-			</obverse>
-			<reverse>
-				<type>
-					<description xml:lang="en">Laetita standing left, holding wreath in right hand and rudder in left.</description>
-				</type>
-				<legend>LAETITIA AVG(VSTI) N(OSTER) S(ENATUS) C(ONSULTO)</legend>
-				<persname xlink:type="simple" xlink:role="deity">Laetitia</persname>
-			</reverse>
-		</typeDesc>
-		<adminDesc>
-			<identifier>1989.19.22</identifier>
-			<repository>The University of Virginia Art Museum</repository>
-			<collection>University of Virginia Miscellanea</collection>
-			<acqinfo>
-				<acquiredFrom>Acquired from the Worldwide Treasure Bureau, September, 1989.</acquiredFrom>
-			</acqinfo>
-			<custodhist>
-				<description xml:lang="en">From a London auction of 1952.</description>
-			</custodhist>
-		</adminDesc>
-		<refDesc>
-			<reference>
-				<title>RIC</title>
-				<identifier>300b</identifier>
-			</reference>
-		</refDesc>
-	</descMeta>
-	<digRep>
-		<mets:fileSec>
-			<mets:fileGrp USE="obverse">
-				<mets:file USE="reference" MIMETYPE="image/jpeg">
-					<mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n1989_19_22_obv.jpg"/>
-				</mets:file>
-				<mets:file USE="thumbnail" MIMETYPE="image/jpeg">
-					<mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1989_19_22_obv.jpg"/>
-				</mets:file>
-			</mets:fileGrp>
-			<mets:fileGrp USE="reverse">
-				<mets:file USE="reference" MIMETYPE="image/jpeg">
-					<mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n1989_19_22_rev.jpg"/>
-				</mets:file>
-				<mets:file USE="thumbnail" MIMETYPE="image/jpeg">
-					<mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1989_19_22_rev.jpg"/>
-				</mets:file>
-			</mets:fileGrp>
-		</mets:fileSec>
-	</digRep>
+<?xml version="1.0" encoding="UTF-8"?>
+<nuds xmlns="http://nomisma.org/nuds" xmlns:xlink="http://www.w3.org/1999/xlink"
+      xmlns:mets="http://www.loc.gov/METS/"
+      recordType="physical">
+   <nudsHeader>
+      <nudsid>1989.19.22</nudsid>
+      <publicationStmt>
+         <publisher>The University of Virginia Library</publisher>
+         <createdBy>Ethan Gruber and/or Carrie Sulosky</createdBy>
+         <langUsage>
+            <language langcode="en">English</language>
+         </langUsage>
+      </publicationStmt>
+      <rightsStmt>
+         <license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/"/>
+         <date standardDate="2012"/>
+      </rightsStmt>
+      <revisionStmt>
+         <revision>
+            <description>Migrated from EAD to NUDS</description>
+            <date standardDateTime="2012-12-12T15:05:54.552-05:00Z"/>
+         </revision>
+      </revisionStmt>
+   </nudsHeader>
+   <descMeta>
+      <title xml:lang="en">Denarius of Gordian III, Rome, 238-244. 1989.19.22.</title>
+      <department>Roman</department>
+      <typeDesc>
+         <objectType xlink:href="http://nomisma.org/id/coin">Coin</objectType>
+         <denomination xlink:href="http://nomisma.org/id/denarius">Denarius</denomination>
+         <material xlink:href="http://nomisma.org/id/ae">Bronze</material>
+         <dateRange>
+            <fromDate standardDate="0238">238</fromDate>
+            <toDate standardDate="0244">244</toDate>
+         </dateRange>
+         <authority>
+            <persname xlink:type="simple" xlink:role="authority"
+                      xlink:href="http://nomisma.org/id/gordian_iii">Gordian III</persname>
+            <corpname xlink:type="simple" xlink:role="state">Roman Empire</corpname>
+         </authority>
+         <geographic>
+            <geogname xlink:type="simple" xlink:role="mint" xlink:href="http://nomisma.org/id/rome">Rome</geogname>
+            <geogname xlink:type="simple" xlink:role="region"
+                      xlink:href="http://nomisma.org/id/latium">Latium</geogname>
+         </geographic>
+         <obverse>
+            <type>
+               <description xml:lang="en">Laureate bust, right, draped, cuirassed.</description>
+            </type>
+            <legend>IMP(ERATOR) GORDIANVS PIVS FEL(IX) AVG(VSTVS)</legend>
+            <persname xlink:type="simple" xlink:role="portrait"
+                      xlink:href="http://nomisma.org/id/gordian_iii">Gordian III</persname>
+         </obverse>
+         <reverse>
+            <type>
+               <description xml:lang="en">Laetita standing left, holding wreath in right hand and rudder in left.</description>
+            </type>
+            <legend>LAETITIA AVG(VSTI) N(OSTER) S(ENATUS) C(ONSULTO)</legend>
+            <persname xlink:type="simple" xlink:role="deity">Laetitia</persname>
+         </reverse>
+      </typeDesc>
+      <adminDesc>
+         <identifier>1989.19.22</identifier>
+         <repository>The University of Virginia Art Museum</repository>
+         <collection>University of Virginia Miscellanea</collection>
+         <provenance>
+            <chronList>
+               <chronItem>
+                  <acquisition>
+                     <acquiredFrom>Acquired from the Worldwide Treasure Bureau, September, 1989.</acquiredFrom>
+                  </acquisition>
+               </chronItem>
+               <chronItem>
+                  <previousColl>From a London auction of 1952.</previousColl>
+               </chronItem>
+            </chronList>
+         </provenance>
+      </adminDesc>
+      <refDesc>
+         <reference>
+            <title>RIC</title>
+            <identifier>300b</identifier>
+         </reference>
+      </refDesc>
+   </descMeta>
+   <digRep>
+      <mets:fileSec>
+         <mets:fileGrp USE="obverse">
+            <mets:file USE="reference" MIMETYPE="image/jpeg">
+               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n1989_19_22_obv.jpg"/>
+            </mets:file>
+            <mets:file USE="thumbnail" MIMETYPE="image/jpeg">
+               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1989_19_22_obv.jpg"/>
+            </mets:file>
+         </mets:fileGrp>
+         <mets:fileGrp USE="reverse">
+            <mets:file USE="reference" MIMETYPE="image/jpeg">
+               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n1989_19_22_rev.jpg"/>
+            </mets:file>
+            <mets:file USE="thumbnail" MIMETYPE="image/jpeg">
+               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1989_19_22_rev.jpg"/>
+            </mets:file>
+         </mets:fileGrp>
+      </mets:fileSec>
+   </digRep>
 </nuds>

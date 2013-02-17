@@ -1,3 +1,89 @@
-<nuds xmlns="http://nomisma.org/nuds" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mets="http://www.loc.gov/METS/" recordType="physical"><nudsHeader><nudsid>FIC.50.10</nudsid><publicationStmt><publisher>The University of Virginia Library</publisher><createdBy>Ethan Gruber and/or Carrie Sulosky</createdBy><langUsage><language langcode="en">English</language></langUsage></publicationStmt><rightsStmt><license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/"/><date standardDate="2012"/></rightsStmt><revisionStmt><revision><description>Migrated from EAD to NUDS</description><date standardDateTime="2012-12-12T15:05:54.552-05:00Z"/></revision></revisionStmt></nudsHeader><descMeta><title xml:lang="en">Bronze Coin of Trajan, Tiberias, A.D. 99-100</title><department>Roman</department><subjectSet><subject xmlns="" xmlns:xi="http://www.w3.org/2001/XInclude">Found in Collection</subject></subjectSet><typeDesc><objectType xlink:href="http://nomisma.org/id/coin">Coin</objectType><material xlink:href="http://nomisma.org/id/ae">Bronze</material><dateRange><fromDate standardDate="0099">A.D. 99</fromDate><toDate standardDate="0100">A.D. 100</toDate></dateRange><authority><persname xlink:type="simple" xlink:role="authority" xlink:href="http://nomisma.org/id/trajan">Trajan</persname><famname xlink:type="simple" xlink:role="dynasty">Nerva-Trajan-Hadrian</famname><corpname xlink:type="simple" xlink:role="state">Roman Empire</corpname></authority><geographic><geogname xlink:type="simple" xlink:role="mint" xlink:href="http://nomisma.org/id/tiberias">Tiberias</geogname><geogname xlink:type="simple" xlink:role="region" xlink:href="http://nomisma.org/id/samaria">Samaria</geogname></geographic><obverse><type><description xml:lang="en">Bust of Trajan, right, laureate, undraped.</description></type><legend>AΥTOKAI NE(Ρ) (TΡ)AINOΣ</legend></obverse><reverse><type><description xml:lang="en">Hygieia, wearing long chiton and peplos, seated
+<?xml version="1.0" encoding="UTF-8"?>
+<nuds xmlns="http://nomisma.org/nuds" xmlns:xlink="http://www.w3.org/1999/xlink"
+      xmlns:mets="http://www.loc.gov/METS/"
+      recordType="physical">
+   <nudsHeader>
+      <nudsid>FIC.50.10</nudsid>
+      <publicationStmt>
+         <publisher>The University of Virginia Library</publisher>
+         <createdBy>Ethan Gruber and/or Carrie Sulosky</createdBy>
+         <langUsage>
+            <language langcode="en">English</language>
+         </langUsage>
+      </publicationStmt>
+      <rightsStmt>
+         <license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/"/>
+         <date standardDate="2012"/>
+      </rightsStmt>
+      <revisionStmt>
+         <revision>
+            <description>Migrated from EAD to NUDS</description>
+            <date standardDateTime="2012-12-12T15:05:54.552-05:00Z"/>
+         </revision>
+      </revisionStmt>
+   </nudsHeader>
+   <descMeta>
+      <title xml:lang="en">Coin of Trajan, Tiberias, A.D. 99-A.D. 100. FIC.50.10.</title>
+      <department>Roman</department>
+      <typeDesc>
+         <objectType xlink:href="http://nomisma.org/id/coin">Coin</objectType>
+         <material xlink:href="http://nomisma.org/id/ae">Bronze</material>
+         <dateRange>
+            <fromDate standardDate="0099">A.D. 99</fromDate>
+            <toDate standardDate="0100">A.D. 100</toDate>
+         </dateRange>
+         <authority>
+            <persname xlink:type="simple" xlink:role="authority"
+                      xlink:href="http://nomisma.org/id/trajan">Trajan</persname>
+            <famname xlink:type="simple" xlink:role="dynasty">Nerva-Trajan-Hadrian</famname>
+            <corpname xlink:type="simple" xlink:role="state">Roman Empire</corpname>
+         </authority>
+         <geographic>
+            <geogname xlink:type="simple" xlink:role="mint"
+                      xlink:href="http://nomisma.org/id/tiberias">Tiberias</geogname>
+            <geogname xlink:type="simple" xlink:role="region"
+                      xlink:href="http://nomisma.org/id/samaria">Samaria</geogname>
+         </geographic>
+         <obverse>
+            <type>
+               <description xml:lang="en">Bust of Trajan, right, laureate, undraped.</description>
+            </type>
+            <legend>AΥTOKAI NE(Ρ) (TΡ)AINOΣ</legend>
+         </obverse>
+         <reverse>
+            <type>
+               <description xml:lang="en">Hygieia, wearing long chiton and peplos, seated
 				right on rock (water below) holding in right hand a serpent feeding from phiale in
-				her left.</description></type><legend>TIBEΡI KLAUDI ET AΠ</legend><persname xlink:type="simple" xlink:role="deity">Hygieia</persname></reverse></typeDesc><adminDesc><identifier>FIC.50.10</identifier><repository>The University of Virginia Art Museum</repository><collection>Found in Collection 50</collection></adminDesc></descMeta><digRep><mets:fileSec><mets:fileGrp USE="obverse"><mets:file USE="reference" MIMETYPE="image/jpeg"><mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/nfic_50_10_obv.jpg"/></mets:file><mets:file USE="thumbnail" MIMETYPE="image/jpeg"><mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/nfic_50_10_obv.jpg"/></mets:file></mets:fileGrp><mets:fileGrp USE="reverse"><mets:file USE="reference" MIMETYPE="image/jpeg"><mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/nfic_50_10_rev.jpg"/></mets:file><mets:file USE="thumbnail" MIMETYPE="image/jpeg"><mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/nfic_50_10_rev.jpg"/></mets:file></mets:fileGrp></mets:fileSec></digRep></nuds>
+				her left.</description>
+            </type>
+            <legend>TIBEΡI KLAUDI ET AΠ</legend>
+            <persname xlink:type="simple" xlink:role="deity">Hygieia</persname>
+         </reverse>
+      </typeDesc>
+      <adminDesc>
+         <identifier>FIC.50.10</identifier>
+         <repository>The University of Virginia Art Museum</repository>
+         <collection>Found in Collection 50</collection>
+      </adminDesc>
+   </descMeta>
+   <digRep>
+      <mets:fileSec>
+         <mets:fileGrp USE="obverse">
+            <mets:file USE="reference" MIMETYPE="image/jpeg">
+               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/nfic_50_10_obv.jpg"/>
+            </mets:file>
+            <mets:file USE="thumbnail" MIMETYPE="image/jpeg">
+               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/nfic_50_10_obv.jpg"/>
+            </mets:file>
+         </mets:fileGrp>
+         <mets:fileGrp USE="reverse">
+            <mets:file USE="reference" MIMETYPE="image/jpeg">
+               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/nfic_50_10_rev.jpg"/>
+            </mets:file>
+            <mets:file USE="thumbnail" MIMETYPE="image/jpeg">
+               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/nfic_50_10_rev.jpg"/>
+            </mets:file>
+         </mets:fileGrp>
+      </mets:fileSec>
+   </digRep>
+</nuds>

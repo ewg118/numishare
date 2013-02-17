@@ -1,3 +1,120 @@
-<nuds xmlns="http://nomisma.org/nuds" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mets="http://www.loc.gov/METS/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" recordType="physical" xsi:schemaLocation="http://nomisma.org/nuds http://nomisma.org/nuds/nuds.xsd"><nudsHeader><nudsid>1987.46.1</nudsid><publicationStmt><date standardDate="2012"/><publisher>The University of Virginia Library</publisher><createdBy>Ethan Gruber and/or Carrie Sulosky</createdBy><langUsage><language languageCode="en">English</language></langUsage></publicationStmt><rightsStmt><copyrightHolder>University of Virginia Library</copyrightHolder><license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/"/><date standardDate="2012"/></rightsStmt><revisionStmt><revision><eventDateTime standardDateTime="2012-12-12T15:05:54.552-05:00"/><description xml:lang="en">Migrated from EAD to NUDS</description></revision></revisionStmt></nudsHeader><descMeta><title xml:lang="en">Billon antoninianus of Gallienus, Rome, A. D. 257-268</title><department>Roman</department><typeDesc><objectType xlink:href="http://nomisma.org/id/coin">Coin</objectType><dateRange><fromDate standardDate="0257">257</fromDate><toDate standardDate="0268">268</toDate></dateRange><denomination xlink:href="http://nomisma.org/id/antoninianus">Antoninianus</denomination><material xlink:type="simple" xlink:href="http://nomisma.org/id/ar">Silver</material><authority><persname xlink:type="simple" xlink:role="authority" xlink:href="http://nomisma.org/id/gallienus">Gallienus</persname><corpname xlink:type="simple" xlink:role="state">Roman Empire</corpname></authority><geographic><geogname xlink:type="simple" xlink:role="mint" xlink:href="http://nomisma.org/id/rome">Rome</geogname><geogname xlink:type="simple" xlink:role="region" xlink:href="http://nomisma.org/id/latium">Latium</geogname></geographic><obverse><legend>GALLIENVS AVG(VSTVS)</legend><type><description xml:lang="en">Radiate bust, right.</description></type><persname xlink:type="simple" xlink:role="portrait" xlink:href="http://nomisma.org/id/gallienus">Gallienus</persname></obverse><reverse><legend>IOVI CONSERVAT(ORI)</legend><type><description xml:lang="en">Jupiter standing left, holding thunderbolt in right hand and sceptre in left.</description></type><persname xlink:type="simple" xlink:role="deity">Jupiter</persname></reverse></typeDesc><findspotDesc xlink:type="simple" xlink:href="http://nomisma.org/id/normanby_hoard"/><refDesc><reference><title>RIC</title><identifier>210</identifier></reference><reference><title>The Cunetio Treasure</title><identifier>1271</identifier></reference><reference><title>The Normanby Hoard</title><identifier>256</identifier></reference></refDesc><adminDesc><identifier>1987.46.1</identifier><repository>The University of Virginia Art Museum</repository><collection>The Normanby Hoard</collection><acqinfo><date standardDate="1987">1987</date><acquiredFrom>Fifty-one coins were purchased from the Worldwide Treasure Bureau in 1987. According to Samuel E. Cox of the WTB, this selection of coins represents the top 2% of the
-					hoard in terms of condition.</acquiredFrom></acqinfo><custodhist><description xml:lang="en">A hoard of third century antoniniani numbering about 47,000 was discovered near Normanby, Lincolnshire, England in December of 1985. From 1985-1987, the
-					hoard was processed by The British Museum under the direction of Roger Bland.</description></custodhist></adminDesc></descMeta><digRep><mets:fileSec><mets:fileGrp USE="obverse"><mets:file USE="reference" MIMETYPE="image/jpeg"><mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n1987_46_1_obv.jpg"/></mets:file><mets:file USE="thumbnail" MIMETYPE="image/jpeg"><mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1987_46_1_obv.jpg"/></mets:file></mets:fileGrp><mets:fileGrp USE="reverse"><mets:file USE="reference" MIMETYPE="image/jpeg"><mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n1987_46_1_rev.jpg"/></mets:file><mets:file USE="thumbnail" MIMETYPE="image/jpeg"><mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1987_46_1_rev.jpg"/></mets:file></mets:fileGrp></mets:fileSec></digRep></nuds>
+<?xml version="1.0" encoding="UTF-8"?>
+<nuds xmlns="http://nomisma.org/nuds" xmlns:xlink="http://www.w3.org/1999/xlink"
+      xmlns:mets="http://www.loc.gov/METS/"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      recordType="physical"
+      xsi:schemaLocation="http://nomisma.org/nuds http://nomisma.org/nuds/nuds.xsd">
+   <nudsHeader>
+      <nudsid>1987.46.1</nudsid>
+      <publicationStmt>
+         <date standardDate="2012"/>
+         <publisher>The University of Virginia Library</publisher>
+         <createdBy>Ethan Gruber and/or Carrie Sulosky</createdBy>
+         <langUsage>
+            <language languageCode="en">English</language>
+         </langUsage>
+      </publicationStmt>
+      <rightsStmt>
+         <copyrightHolder>University of Virginia Library</copyrightHolder>
+         <license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/"/>
+         <date standardDate="2012"/>
+      </rightsStmt>
+      <revisionStmt>
+         <revision>
+            <eventDateTime standardDateTime="2012-12-12T15:05:54.552-05:00"/>
+            <description xml:lang="en">Migrated from EAD to NUDS</description>
+         </revision>
+      </revisionStmt>
+   </nudsHeader>
+   <descMeta>
+      <title xml:lang="en">Antoninianus of Gallienus, Rome, 257-268. 1987.46.1.</title>
+      <department>Roman</department>
+      <typeDesc>
+         <objectType xlink:href="http://nomisma.org/id/coin">Coin</objectType>
+         <dateRange>
+            <fromDate standardDate="0257">257</fromDate>
+            <toDate standardDate="0268">268</toDate>
+         </dateRange>
+         <denomination xlink:href="http://nomisma.org/id/antoninianus">Antoninianus</denomination>
+         <material xlink:type="simple" xlink:href="http://nomisma.org/id/ar">Silver</material>
+         <authority>
+            <persname xlink:type="simple" xlink:role="authority"
+                      xlink:href="http://nomisma.org/id/gallienus">Gallienus</persname>
+            <corpname xlink:type="simple" xlink:role="state">Roman Empire</corpname>
+         </authority>
+         <geographic>
+            <geogname xlink:type="simple" xlink:role="mint" xlink:href="http://nomisma.org/id/rome">Rome</geogname>
+            <geogname xlink:type="simple" xlink:role="region"
+                      xlink:href="http://nomisma.org/id/latium">Latium</geogname>
+         </geographic>
+         <obverse>
+            <legend>GALLIENVS AVG(VSTVS)</legend>
+            <type>
+               <description xml:lang="en">Radiate bust, right.</description>
+            </type>
+            <persname xlink:type="simple" xlink:role="portrait"
+                      xlink:href="http://nomisma.org/id/gallienus">Gallienus</persname>
+         </obverse>
+         <reverse>
+            <legend>IOVI CONSERVAT(ORI)</legend>
+            <type>
+               <description xml:lang="en">Jupiter standing left, holding thunderbolt in right hand and sceptre in left.</description>
+            </type>
+            <persname xlink:type="simple" xlink:role="deity">Jupiter</persname>
+         </reverse>
+      </typeDesc>
+      <findspotDesc xlink:type="simple" xlink:href="http://nomisma.org/id/normanby_hoard"/>
+      <refDesc>
+         <reference>
+            <title>RIC</title>
+            <identifier>210</identifier>
+         </reference>
+         <reference>
+            <title>The Cunetio Treasure</title>
+            <identifier>1271</identifier>
+         </reference>
+         <reference>
+            <title>The Normanby Hoard</title>
+            <identifier>256</identifier>
+         </reference>
+      </refDesc>
+      <adminDesc>
+         <identifier>1987.46.1</identifier>
+         <repository>The University of Virginia Art Museum</repository>
+         <collection>The Normanby Hoard</collection>
+         <provenance>
+            <chronList>
+               <chronItem>
+                  <acquisition>
+                     <acquiredFrom>Fifty-one coins were purchased from the Worldwide Treasure Bureau in 1987. According to Samuel E. Cox of the WTB, this selection of coins represents the top 2% of the
+					hoard in terms of condition.</acquiredFrom>
+                  </acquisition>
+               </chronItem>
+               <chronItem>
+                  <description xml:lang="en">A hoard of third century antoniniani numbering about 47,000 was discovered near Normanby, Lincolnshire, England in December of 1985. From 1985-1987, the hoard was processed by The British Museum under the direction of Roger Bland.</description>
+               </chronItem>
+            </chronList>
+         </provenance>
+      </adminDesc>
+   </descMeta>
+   <digRep>
+      <mets:fileSec>
+         <mets:fileGrp USE="obverse">
+            <mets:file USE="reference" MIMETYPE="image/jpeg">
+               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n1987_46_1_obv.jpg"/>
+            </mets:file>
+            <mets:file USE="thumbnail" MIMETYPE="image/jpeg">
+               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1987_46_1_obv.jpg"/>
+            </mets:file>
+         </mets:fileGrp>
+         <mets:fileGrp USE="reverse">
+            <mets:file USE="reference" MIMETYPE="image/jpeg">
+               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n1987_46_1_rev.jpg"/>
+            </mets:file>
+            <mets:file USE="thumbnail" MIMETYPE="image/jpeg">
+               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1987_46_1_rev.jpg"/>
+            </mets:file>
+         </mets:fileGrp>
+      </mets:fileSec>
+   </digRep>
+</nuds>

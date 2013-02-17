@@ -1,1 +1,107 @@
-<nuds xmlns="http://nomisma.org/nuds" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mets="http://www.loc.gov/METS/" recordType="physical"><nudsHeader><nudsid>1990.18.5</nudsid><publicationStmt><publisher>The University of Virginia Library</publisher><createdBy>Ethan Gruber and/or Carrie Sulosky</createdBy><langUsage><language langcode="en">English</language></langUsage></publicationStmt><rightsStmt><license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/"/><date standardDate="2012"/></rightsStmt><revisionStmt><revision><description>Migrated from EAD to NUDS</description><date standardDateTime="2012-12-12T15:05:54.552-05:00Z"/></revision></revisionStmt></nudsHeader><descMeta><title xml:lang="en">Silver tetradrachm of Demetrios Poliorcetes, Salamis, 306-283 B.C.</title><department>Greek</department><typeDesc><objectType xlink:href="http://nomisma.org/id/coin">Coin</objectType><denomination xlink:href="http://nomisma.org/id/tetradrachm">Tetradrachm</denomination><material xlink:href="http://nomisma.org/id/ar">Silver</material><dateRange><fromDate standardDate="-0306">306 B.C.</fromDate><toDate standardDate="-0283">283 B.C.</toDate></dateRange><authority><persname xlink:type="simple" xlink:role="authority" xlink:href="http://nomisma.org/id/demetrius_i">Demetrius I Poliorcetes</persname><famname xlink:type="simple" xlink:role="dynasty">Antigonid</famname><corpname xlink:type="simple" xlink:role="state">Macedonian Kingdom</corpname></authority><geographic><geogname xlink:type="simple" xlink:role="mint" xlink:href="http://nomisma.org/id/salamis_attica">Salamis</geogname><geogname xlink:type="simple" xlink:role="region" xlink:href="http://nomisma.org/id/attica">Attica</geogname></geographic><obverse><type><description xml:lang="en">Nike standing left on prow, blowing trumpet held in right hand, holding stylis in left hand.</description></type><persname xlink:type="simple" xlink:role="deity">Nike</persname></obverse><reverse><type><description xml:lang="en">Poseidon standing left, with chlamys on left arm and thrusting trident with right.</description></type><legend>BASILEOS DEMETRIOU</legend><persname xlink:type="simple" xlink:role="deity">Poseidon</persname></reverse></typeDesc><adminDesc><identifier>1990.18.5</identifier><repository>The University of Virginia Art Museum</repository><collection>University of Virginia Miscellanea</collection><acqinfo><acquiredFrom>Acquired from the Worldwide Treasure Bureau, 1990.</acquiredFrom></acqinfo><custodhist><chronlist><chronitem><date standardDate="1946">1946</date><previousColl>Ex: Hermann Mosberg Collection. Appraised by Münzen und Medallen, Basel, Switzerland.</previousColl></chronitem></chronlist></custodhist></adminDesc><refDesc><reference><title>Dewing</title><identifier>1195</identifier></reference></refDesc></descMeta><digRep><mets:fileSec><mets:fileGrp USE="obverse"><mets:file USE="reference" MIMETYPE="image/jpeg"><mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n1990_18_5_obv.jpg"/></mets:file><mets:file USE="thumbnail" MIMETYPE="image/jpeg"><mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1990_18_5_obv.jpg"/></mets:file></mets:fileGrp><mets:fileGrp USE="reverse"><mets:file USE="reference" MIMETYPE="image/jpeg"><mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n1990_18_5_rev.jpg"/></mets:file><mets:file USE="thumbnail" MIMETYPE="image/jpeg"><mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1990_18_5_rev.jpg"/></mets:file></mets:fileGrp></mets:fileSec></digRep></nuds>
+<?xml version="1.0" encoding="UTF-8"?>
+<nuds xmlns="http://nomisma.org/nuds" xmlns:xlink="http://www.w3.org/1999/xlink"
+      xmlns:mets="http://www.loc.gov/METS/"
+      recordType="physical">
+   <nudsHeader>
+      <nudsid>1990.18.5</nudsid>
+      <publicationStmt>
+         <publisher>The University of Virginia Library</publisher>
+         <createdBy>Ethan Gruber and/or Carrie Sulosky</createdBy>
+         <langUsage>
+            <language langcode="en">English</language>
+         </langUsage>
+      </publicationStmt>
+      <rightsStmt>
+         <license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/"/>
+         <date standardDate="2012"/>
+      </rightsStmt>
+      <revisionStmt>
+         <revision>
+            <description>Migrated from EAD to NUDS</description>
+            <date standardDateTime="2012-12-12T15:05:54.552-05:00Z"/>
+         </revision>
+      </revisionStmt>
+   </nudsHeader>
+   <descMeta>
+      <title xml:lang="en">Tetradrachm of Demetrius I Poliorcetes, Salamis, 306 B.C.-283 B.C.. 1990.18.5.</title>
+      <department>Greek</department>
+      <typeDesc>
+         <objectType xlink:href="http://nomisma.org/id/coin">Coin</objectType>
+         <denomination xlink:href="http://nomisma.org/id/tetradrachm">Tetradrachm</denomination>
+         <material xlink:href="http://nomisma.org/id/ar">Silver</material>
+         <dateRange>
+            <fromDate standardDate="-0306">306 B.C.</fromDate>
+            <toDate standardDate="-0283">283 B.C.</toDate>
+         </dateRange>
+         <authority>
+            <persname xlink:type="simple" xlink:role="authority"
+                      xlink:href="http://nomisma.org/id/demetrius_i">Demetrius I Poliorcetes</persname>
+            <famname xlink:type="simple" xlink:role="dynasty">Antigonid</famname>
+            <corpname xlink:type="simple" xlink:role="state">Macedonian Kingdom</corpname>
+         </authority>
+         <geographic>
+            <geogname xlink:type="simple" xlink:role="mint"
+                      xlink:href="http://nomisma.org/id/salamis_attica">Salamis</geogname>
+            <geogname xlink:type="simple" xlink:role="region"
+                      xlink:href="http://nomisma.org/id/attica">Attica</geogname>
+         </geographic>
+         <obverse>
+            <type>
+               <description xml:lang="en">Nike standing left on prow, blowing trumpet held in right hand, holding stylis in left hand.</description>
+            </type>
+            <persname xlink:type="simple" xlink:role="deity">Nike</persname>
+         </obverse>
+         <reverse>
+            <type>
+               <description xml:lang="en">Poseidon standing left, with chlamys on left arm and thrusting trident with right.</description>
+            </type>
+            <legend>BASILEOS DEMETRIOU</legend>
+            <persname xlink:type="simple" xlink:role="deity">Poseidon</persname>
+         </reverse>
+      </typeDesc>
+      <adminDesc>
+         <identifier>1990.18.5</identifier>
+         <repository>The University of Virginia Art Museum</repository>
+         <collection>University of Virginia Miscellanea</collection>
+         <provenance>
+            <chronList>
+               <chronItem>
+                  <acquisition>
+                     <acquiredFrom>Acquired from the Worldwide Treasure Bureau, 1990.</acquiredFrom>
+                  </acquisition>
+               </chronItem>
+               <chronItem>
+                  <date standardDate="1946">1946</date>
+                  <previousColl>Ex: Hermann Mosberg Collection. Appraised by Münzen und Medallen, Basel, Switzerland.</previousColl>
+               </chronItem>
+            </chronList>
+         </provenance>
+      </adminDesc>
+      <refDesc>
+         <reference>
+            <title>Dewing</title>
+            <identifier>1195</identifier>
+         </reference>
+      </refDesc>
+   </descMeta>
+   <digRep>
+      <mets:fileSec>
+         <mets:fileGrp USE="obverse">
+            <mets:file USE="reference" MIMETYPE="image/jpeg">
+               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n1990_18_5_obv.jpg"/>
+            </mets:file>
+            <mets:file USE="thumbnail" MIMETYPE="image/jpeg">
+               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1990_18_5_obv.jpg"/>
+            </mets:file>
+         </mets:fileGrp>
+         <mets:fileGrp USE="reverse">
+            <mets:file USE="reference" MIMETYPE="image/jpeg">
+               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n1990_18_5_rev.jpg"/>
+            </mets:file>
+            <mets:file USE="thumbnail" MIMETYPE="image/jpeg">
+               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1990_18_5_rev.jpg"/>
+            </mets:file>
+         </mets:fileGrp>
+      </mets:fileSec>
+   </digRep>
+</nuds>

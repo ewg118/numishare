@@ -1,3 +1,102 @@
-<nuds xmlns="http://nomisma.org/nuds" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mets="http://www.loc.gov/METS/" recordType="physical"><nudsHeader><nudsid>1989.19.16</nudsid><publicationStmt><publisher>The University of Virginia Library</publisher><createdBy>Ethan Gruber and/or Carrie Sulosky</createdBy><langUsage><language langcode="en">English</language></langUsage></publicationStmt><rightsStmt><license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/"/><date standardDate="2012"/></rightsStmt><revisionStmt><revision><description>Migrated from EAD to NUDS</description><date standardDateTime="2012-12-12T15:05:54.552-05:00Z"/></revision></revisionStmt></nudsHeader><descMeta><title xml:lang="en">Silver denarius of Caracalla, Rome, A.D. 198-199</title><department>Roman</department><typeDesc><objectType xlink:href="http://nomisma.org/id/coin">Coin</objectType><denomination xlink:href="http://nomisma.org/id/denarius">Denarius</denomination><material xlink:href="http://nomisma.org/id/ar">Silver</material><dateRange><fromDate standardDate="0198">A.D. 198</fromDate><toDate standardDate="0199">A.D. 199</toDate></dateRange><authority><persname xlink:type="simple" xlink:role="authority" xlink:href="http://nomisma.org/id/caracalla">Caracalla</persname><famname xlink:type="simple" xlink:role="dynasty">Severan</famname><corpname xlink:type="simple" xlink:role="state">Roman Empire</corpname></authority><geographic><geogname xlink:type="simple" xlink:role="mint" xlink:href="http://nomisma.org/id/rome">Rome</geogname><geogname xlink:type="simple" xlink:role="region" xlink:href="http://nomisma.org/id/latium">Latium</geogname></geographic><obverse><type><description xml:lang="en">Head, laureate, right, draped, cuirassed.</description></type><legend>IMP(ERATOR) CAES(AR) M(ARCVS) AVR(ELIVS) ANTON(INVS) AVG(VSTVS)</legend><persname xlink:type="simple" xlink:role="portrait" xlink:href="http://nomisma.org/id/caracalla">Caracalla</persname></obverse><reverse><type><description xml:lang="en">Felicitas standing left with foot on a prow, holding caduceus in right hand and cornucopiae in left.</description></type><legend>FELICITAS AVGG(VSTI)</legend><persname xlink:type="simple" xlink:role="deity">Felicitas</persname></reverse></typeDesc><adminDesc><identifier>1989.19.16</identifier><repository>The University of Virginia Art Museum</repository><collection>University of Virginia Miscellanea</collection><custodhist><description xml:lang="en">Ex: Virgil Brand Collection. Virgil Brand was once the largest collector of ancient coins in the world. he died in 1926, and the vast majority of his
-					collection mysteriously vanished. This coin was discovered with a number of others at a midwestern university in the early 1980's, verified as having been part of the Brand
-					collection, and auctioned by Christies in New York in 1984.</description></custodhist></adminDesc><refDesc><reference><title>RIC</title><identifier>18</identifier></reference></refDesc></descMeta><digRep><mets:fileSec><mets:fileGrp USE="obverse"><mets:file USE="reference" MIMETYPE="image/jpeg"><mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n1989_19_16_obv.jpg"/></mets:file><mets:file USE="thumbnail" MIMETYPE="image/jpeg"><mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1989_19_16_obv.jpg"/></mets:file></mets:fileGrp><mets:fileGrp USE="reverse"><mets:file USE="reference" MIMETYPE="image/jpeg"><mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n1989_19_16_rev.jpg"/></mets:file><mets:file USE="thumbnail" MIMETYPE="image/jpeg"><mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1989_19_16_rev.jpg"/></mets:file></mets:fileGrp></mets:fileSec></digRep></nuds>
+<?xml version="1.0" encoding="UTF-8"?>
+<nuds xmlns="http://nomisma.org/nuds" xmlns:xlink="http://www.w3.org/1999/xlink"
+      xmlns:mets="http://www.loc.gov/METS/"
+      recordType="physical">
+   <nudsHeader>
+      <nudsid>1989.19.16</nudsid>
+      <publicationStmt>
+         <publisher>The University of Virginia Library</publisher>
+         <createdBy>Ethan Gruber and/or Carrie Sulosky</createdBy>
+         <langUsage>
+            <language langcode="en">English</language>
+         </langUsage>
+      </publicationStmt>
+      <rightsStmt>
+         <license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/"/>
+         <date standardDate="2012"/>
+      </rightsStmt>
+      <revisionStmt>
+         <revision>
+            <description>Migrated from EAD to NUDS</description>
+            <date standardDateTime="2012-12-12T15:05:54.552-05:00Z"/>
+         </revision>
+      </revisionStmt>
+   </nudsHeader>
+   <descMeta>
+      <title xml:lang="en">Denarius of Caracalla, Rome, A.D. 198-A.D. 199. 1989.19.16.</title>
+      <department>Roman</department>
+      <typeDesc>
+         <objectType xlink:href="http://nomisma.org/id/coin">Coin</objectType>
+         <denomination xlink:href="http://nomisma.org/id/denarius">Denarius</denomination>
+         <material xlink:href="http://nomisma.org/id/ar">Silver</material>
+         <dateRange>
+            <fromDate standardDate="0198">A.D. 198</fromDate>
+            <toDate standardDate="0199">A.D. 199</toDate>
+         </dateRange>
+         <authority>
+            <persname xlink:type="simple" xlink:role="authority"
+                      xlink:href="http://nomisma.org/id/caracalla">Caracalla</persname>
+            <famname xlink:type="simple" xlink:role="dynasty">Severan</famname>
+            <corpname xlink:type="simple" xlink:role="state">Roman Empire</corpname>
+         </authority>
+         <geographic>
+            <geogname xlink:type="simple" xlink:role="mint" xlink:href="http://nomisma.org/id/rome">Rome</geogname>
+            <geogname xlink:type="simple" xlink:role="region"
+                      xlink:href="http://nomisma.org/id/latium">Latium</geogname>
+         </geographic>
+         <obverse>
+            <type>
+               <description xml:lang="en">Head, laureate, right, draped, cuirassed.</description>
+            </type>
+            <legend>IMP(ERATOR) CAES(AR) M(ARCVS) AVR(ELIVS) ANTON(INVS) AVG(VSTVS)</legend>
+            <persname xlink:type="simple" xlink:role="portrait"
+                      xlink:href="http://nomisma.org/id/caracalla">Caracalla</persname>
+         </obverse>
+         <reverse>
+            <type>
+               <description xml:lang="en">Felicitas standing left with foot on a prow, holding caduceus in right hand and cornucopiae in left.</description>
+            </type>
+            <legend>FELICITAS AVGG(VSTI)</legend>
+            <persname xlink:type="simple" xlink:role="deity">Felicitas</persname>
+         </reverse>
+      </typeDesc>
+      <adminDesc>
+         <identifier>1989.19.16</identifier>
+         <repository>The University of Virginia Art Museum</repository>
+         <collection>University of Virginia Miscellanea</collection>
+         <provenance>
+            <chronList>
+               <chronItem>
+                  <previousColl>Ex: Virgil Brand Collection. Virgil Brand was once the largest collector of ancient coins in the world. he died in 1926, and the vast majority of his collection mysteriously vanished. This coin was discovered with a number of others at a midwestern university in the early 1980's, verified as having been part of the Brand collection, and auctioned by Christies in New York in 1984.</previousColl>
+               </chronItem>
+            </chronList>
+         </provenance>
+      </adminDesc>
+      <refDesc>
+         <reference>
+            <title>RIC</title>
+            <identifier>18</identifier>
+         </reference>
+      </refDesc>
+   </descMeta>
+   <digRep>
+      <mets:fileSec>
+         <mets:fileGrp USE="obverse">
+            <mets:file USE="reference" MIMETYPE="image/jpeg">
+               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n1989_19_16_obv.jpg"/>
+            </mets:file>
+            <mets:file USE="thumbnail" MIMETYPE="image/jpeg">
+               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1989_19_16_obv.jpg"/>
+            </mets:file>
+         </mets:fileGrp>
+         <mets:fileGrp USE="reverse">
+            <mets:file USE="reference" MIMETYPE="image/jpeg">
+               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n1989_19_16_rev.jpg"/>
+            </mets:file>
+            <mets:file USE="thumbnail" MIMETYPE="image/jpeg">
+               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1989_19_16_rev.jpg"/>
+            </mets:file>
+         </mets:fileGrp>
+      </mets:fileSec>
+   </digRep>
+</nuds>

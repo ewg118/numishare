@@ -1,1 +1,114 @@
-<nuds xmlns="http://nomisma.org/nuds" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mets="http://www.loc.gov/METS/" recordType="physical"><nudsHeader><nudsid>1991.17.295</nudsid><publicationStmt><publisher>The University of Virginia Library</publisher><createdBy>Ethan Gruber and/or Carrie Sulosky</createdBy><langUsage><language langcode="en">English</language></langUsage></publicationStmt><rightsStmt><license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/"/><date standardDate="2012"/></rightsStmt><revisionStmt><revision><description>Migrated from EAD to NUDS</description><date standardDateTime="2012-12-12T15:05:54.552-05:00Z"/></revision></revisionStmt></nudsHeader><descMeta><title xml:lang="en">Billon antoninianus of Tetricus II, A. D. 270-273</title><department>Roman</department><typeDesc><objectType xlink:href="http://nomisma.org/id/coin">Coin</objectType><denomination xlink:href="http://nomisma.org/id/antoninianus">Antoninianus</denomination><material xlink:type="simple" xlink:href="http://nomisma.org/id/ar">Silver</material><dateRange><fromDate standardDate="0270">270</fromDate><toDate standardDate="0273">273</toDate></dateRange><authority><persname xlink:type="simple" xlink:role="authority" xlink:href="http://nomisma.org/id/tectricus_ii">Tetricus II</persname><corpname xlink:type="simple" xlink:role="state">Gallic Empire</corpname></authority><geographic/><obverse><type><description xml:lang="en">Radiate head, right; draped.</description></type><legend>C(AIVS) PIV(S) ESV(VIVS) TETRICVS CAES(AR)</legend><persname xlink:type="simple" xlink:role="portrait" xlink:href="http://nomisma.org/id/tectricus_ii">Tetricus II</persname></obverse><reverse><type><description xml:lang="en">Spes walking left, holding flower in right hand and raising robe with left.</description></type><legend>SPES PVBLICA</legend><persname xlink:type="simple" xlink:role="deity">Spes</persname></reverse></typeDesc><physDesc><axis>7</axis><measurementsSet><diameter units="mm">18</diameter><weight units="g">2.67</weight></measurementsSet></physDesc><findspotDesc xlink:type="simple" xlink:href="http://nomisma.org/id/olivers_orchard_hoards"/><adminDesc><identifier>1991.17.295</identifier><repository>The University of Virginia Art Museum</repository><collection>The Oliver's Orchard Hoard</collection><acqinfo><acquiredFrom>Three hundred and two coins were acquired in 1991 from a cross section of 1,025 coins belonging to the Worldwide Treasure Bureau.</acquiredFrom></acqinfo><custodhist><description xml:lang="en">The Oliver's Orchard Hoard was discovered near Colchester, England (ancient Camulodunum) in 1983.</description></custodhist></adminDesc><refDesc><reference><title>RIC</title><identifier>272</identifier></reference><reference><title>The Cunetio Treasure</title><identifier>2608</identifier></reference></refDesc></descMeta><digRep><mets:fileSec><mets:fileGrp USE="obverse"><mets:file USE="reference" MIMETYPE="image/jpeg"><mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n1991_17_295_obv.jpg"/></mets:file><mets:file USE="thumbnail" MIMETYPE="image/jpeg"><mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1991_17_295_obv.jpg"/></mets:file></mets:fileGrp><mets:fileGrp USE="reverse"><mets:file USE="reference" MIMETYPE="image/jpeg"><mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n1991_17_295_rev.jpg"/></mets:file><mets:file USE="thumbnail" MIMETYPE="image/jpeg"><mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1991_17_295_rev.jpg"/></mets:file></mets:fileGrp></mets:fileSec></digRep></nuds>
+<?xml version="1.0" encoding="UTF-8"?>
+<nuds xmlns="http://nomisma.org/nuds" xmlns:xlink="http://www.w3.org/1999/xlink"
+      xmlns:mets="http://www.loc.gov/METS/"
+      recordType="physical">
+   <nudsHeader>
+      <nudsid>1991.17.295</nudsid>
+      <publicationStmt>
+         <publisher>The University of Virginia Library</publisher>
+         <createdBy>Ethan Gruber and/or Carrie Sulosky</createdBy>
+         <langUsage>
+            <language langcode="en">English</language>
+         </langUsage>
+      </publicationStmt>
+      <rightsStmt>
+         <license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/"/>
+         <date standardDate="2012"/>
+      </rightsStmt>
+      <revisionStmt>
+         <revision>
+            <description>Migrated from EAD to NUDS</description>
+            <date standardDateTime="2012-12-12T15:05:54.552-05:00Z"/>
+         </revision>
+      </revisionStmt>
+   </nudsHeader>
+   <descMeta>
+      <title xml:lang="en">Antoninianus of Tetricus II, 270-273. 1991.17.295.</title>
+      <department>Roman</department>
+      <typeDesc>
+         <objectType xlink:href="http://nomisma.org/id/coin">Coin</objectType>
+         <denomination xlink:href="http://nomisma.org/id/antoninianus">Antoninianus</denomination>
+         <material xlink:type="simple" xlink:href="http://nomisma.org/id/ar">Silver</material>
+         <dateRange>
+            <fromDate standardDate="0270">270</fromDate>
+            <toDate standardDate="0273">273</toDate>
+         </dateRange>
+         <authority>
+            <persname xlink:type="simple" xlink:role="authority"
+                      xlink:href="http://nomisma.org/id/tectricus_ii">Tetricus II</persname>
+            <corpname xlink:type="simple" xlink:role="state">Gallic Empire</corpname>
+         </authority>
+         <geographic/>
+         <obverse>
+            <type>
+               <description xml:lang="en">Radiate head, right; draped.</description>
+            </type>
+            <legend>C(AIVS) PIV(S) ESV(VIVS) TETRICVS CAES(AR)</legend>
+            <persname xlink:type="simple" xlink:role="portrait"
+                      xlink:href="http://nomisma.org/id/tectricus_ii">Tetricus II</persname>
+         </obverse>
+         <reverse>
+            <type>
+               <description xml:lang="en">Spes walking left, holding flower in right hand and raising robe with left.</description>
+            </type>
+            <legend>SPES PVBLICA</legend>
+            <persname xlink:type="simple" xlink:role="deity">Spes</persname>
+         </reverse>
+      </typeDesc>
+      <physDesc>
+         <axis>7</axis>
+         <measurementsSet>
+            <diameter units="mm">18</diameter>
+            <weight units="g">2.67</weight>
+         </measurementsSet>
+      </physDesc>
+      <findspotDesc xlink:type="simple" xlink:href="http://nomisma.org/id/olivers_orchard_hoards"/>
+      <adminDesc>
+         <identifier>1991.17.295</identifier>
+         <repository>The University of Virginia Art Museum</repository>
+         <collection>The Oliver's Orchard Hoard</collection>
+         <provenance>
+            <chronList>
+               <chronItem>
+                  <acquisition>
+                     <acquiredFrom>Three hundred and two coins were acquired in 1991 from a cross section of 1,025 coins belonging to the Worldwide Treasure Bureau.</acquiredFrom>
+                  </acquisition>
+               </chronItem>
+               <chronItem>
+                  <description xml:lang="en">The Oliver's Orchard Hoard was discovered near Colchester, England (ancient Camulodunum) in 1983.</description>
+               </chronItem>
+            </chronList>
+         </provenance>
+      </adminDesc>
+      <refDesc>
+         <reference>
+            <title>RIC</title>
+            <identifier>272</identifier>
+         </reference>
+         <reference>
+            <title>The Cunetio Treasure</title>
+            <identifier>2608</identifier>
+         </reference>
+      </refDesc>
+   </descMeta>
+   <digRep>
+      <mets:fileSec>
+         <mets:fileGrp USE="obverse">
+            <mets:file USE="reference" MIMETYPE="image/jpeg">
+               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n1991_17_295_obv.jpg"/>
+            </mets:file>
+            <mets:file USE="thumbnail" MIMETYPE="image/jpeg">
+               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1991_17_295_obv.jpg"/>
+            </mets:file>
+         </mets:fileGrp>
+         <mets:fileGrp USE="reverse">
+            <mets:file USE="reference" MIMETYPE="image/jpeg">
+               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n1991_17_295_rev.jpg"/>
+            </mets:file>
+            <mets:file USE="thumbnail" MIMETYPE="image/jpeg">
+               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1991_17_295_rev.jpg"/>
+            </mets:file>
+         </mets:fileGrp>
+      </mets:fileSec>
+   </digRep>
+</nuds>
