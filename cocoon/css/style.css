@@ -11,7 +11,7 @@ html {
 	background-position:right top;
 	background-image:url('images/uva-banner.jpg');
 	background-repeat:no-repeat;
-	font:12px Trebuchet MS,Tahoma,Verdana,Arial,sans-serif;
+	font:13px Trebuchet MS,Tahoma,Verdana,Arial,sans-serif;
 	color: #333333;
 }
 body {
@@ -21,6 +21,12 @@ body {
 }
 .content {
 	padding:5px;
+}
+a, .ui-menu a {
+	color: #1C94C4;
+}
+a:hover {
+	color:#EB8F00;
 }
 a > img {
 	border:none;
@@ -36,7 +42,7 @@ th {
 	font-weight:bold;
 }
 input {
-	font:12px Trebuchet MS,Tahoma,Verdana,Arial,sans-serif;
+	font:13px Trebuchet MS,Tahoma,Verdana,Arial,sans-serif;
 }
 select {
 	width:200px;
@@ -701,7 +707,7 @@ div.custominfostyle {
 }
 #customQueryDiv {
 	width:100%;
-	display:table;	
+	display:table;
 }
 .filter-div, .customQuery, .compareQuery {
 	padding:10px 0;

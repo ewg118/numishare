@@ -3,15 +3,16 @@
 	<xsl:output method="xhtml" encoding="UTF-8"/>
 	<xsl:include href="header.xsl"/>
 	<xsl:include href="footer.xsl"/>
-		
+	<xsl:include href="functions.xsl"/>
+
 	<xsl:param name="stub"/>
 	<xsl:param name="pipeline"/>
 	<xsl:param name="lang"/>
-	
+
 	<xsl:param name="display_path">
 		<xsl:text>../</xsl:text>
 	</xsl:param>
-	
+
 	<xsl:template match="/">
 		<html>
 			<head>
@@ -21,16 +22,13 @@
 					<xsl:value-of select="//page[@stub = $stub]/title"/>
 				</title>
 				<link rel="shortcut icon" type="image/x-icon" href="{$display_path}images/favicon.png"/>
-				<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.8.2r1/build/grids/grids-min.css"/>
-				<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.8.2r1/build/reset-fonts-grids/reset-fonts-grids.css"/>
-				<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.8.2r1/build/base/base-min.css"/>
-				<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.8.2r1/build/fonts/fonts-min.css"/>
+				<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.8.0/build/cssgrids/grids-min.css"/>
 				<!-- Core + Skin CSS -->
 				<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.8.2r1/build/menu/assets/skins/sam/menu.css"/>
 				<link type="text/css" href="{$display_path}themes/{//config/theme/jquery_ui_theme}.css" rel="stylesheet"/>
 				<link type="text/css" href="{$display_path}style.css" rel="stylesheet"/>
 				<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"/>
-				<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js"/>	
+				<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js"/>
 
 				<!-- menu -->
 				<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.core.js"/>
@@ -47,19 +45,21 @@
 					</script>
 				</xsl:if>
 			</head>
-			<body class="yui-skin-sam">
-				<div id="doc4" class="{//config/theme/layouts/*[name()=$pipeline]/yui_class}">
-					<xsl:call-template name="header"/>
-					<xsl:call-template name="pages"/>
-					<xsl:call-template name="footer"/>
-				</div>
+			<body>
+				<xsl:call-template name="header"/>
+				<xsl:call-template name="pages"/>
+				<xsl:call-template name="footer"/>
 			</body>
 		</html>
 	</xsl:template>
 
 	<xsl:template name="pages">
-		<div id="bd">
-			<xsl:copy-of select="saxon:parse(concat('&lt;div&gt;', string(//page[@stub = $stub]/text), '&lt;/div&gt;'))"/>
+		<div class="yui3-g">
+			<div class="yui3-u-1">
+				<div class="content">
+					<xsl:copy-of select="saxon:parse(concat('&lt;div&gt;', string(//page[@stub = $stub]/text), '&lt;/div&gt;'))"/>
+				</div>
+			</div>
 		</div>
 	</xsl:template>
 </xsl:stylesheet>

@@ -185,12 +185,12 @@
 								<img src="{$display_path}images/external.png" alt="external link" class="external_link"/>
 							</a>
 							<!-- parse nomisma RDFa, create links for pleiades and wikipedia -->
-							<xsl:if test="contains($href, 'nomisma.org') and ($field='mint' or $field='region')">
+							<!--<xsl:if test="contains($href, 'nomisma.org') and ($field='mint' or $field='region')">
 								<xsl:for-each select="exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/skos:related[contains(@rdf:resource, 'pleiades')]">
 									<xsl:variable name="pleiades-id" select="substring-after(@rdf:resource, 'places/')"/>
 									<span id="{generate-id()}" data-pleiades_id="{$pleiades-id}" class="pelagios pelagios-place" title="Click for Pelagios relations"/>
 								</xsl:for-each>
-							</xsl:if>
+							</xsl:if>-->
 					</xsl:if>
 
 					<!-- display label on right for right-to-left scripts -->

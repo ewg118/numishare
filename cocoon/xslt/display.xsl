@@ -202,8 +202,8 @@
 						</xsl:if>
 
 						<!-- pelagios widget -->
-						<script type="text/javascript" src="http://pelagios.github.com/pelagios-widgets/lib/require.js"/>
-						<script type="text/javascript" src="http://pelagios.github.com/pelagios-widgets/place.js"/>
+						<!--<script type="text/javascript" src="http://pelagios.github.com/pelagios-widgets/lib/require.js"/>
+						<script type="text/javascript" src="http://pelagios.github.com/pelagios-widgets/place.js"/>-->
 
 						<link type="text/css" href="{$display_path}themes/{//config/theme/jquery_ui_theme}.css" rel="stylesheet"/>
 						<link type="text/css" href="{$display_path}style.css" rel="stylesheet"/>

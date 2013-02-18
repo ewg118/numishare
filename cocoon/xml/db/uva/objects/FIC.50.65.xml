@@ -36,12 +36,12 @@
          <authority>
             <persname xlink:type="simple" xlink:role="authority"
                       xlink:href="http://nomisma.org/id/hadrian">Hadrian</persname>
-            <famname xlink:type="simple" xlink:role="dynasty">Nerva-Trajan-Hadrian</famname>
+            <famname xlink:type="simple" xlink:role="dynasty">Ulpian</famname>
             <corpname xlink:type="simple" xlink:role="state">Roman Empire</corpname>
          </authority>
          <geographic>
             <geogname xlink:type="simple" xlink:role="mint"
-                      xlink:href="http://nomisma.org/id/jersualem">Jerusalem</geogname>
+                      xlink:href="http://nomisma.org/id/jerusalem">Jerusalem</geogname>
             <geogname xlink:type="simple" xlink:role="region"
                       xlink:href="http://nomisma.org/id/samaria">Samaria</geogname>
          </geographic>

@@ -1,4 +1,7 @@
-<config xmlns:xxi="http://orbeon.org/oxf/xml/xinclude" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:xxforms="http://orbeon.org/oxf/xml/xforms" xmlns:widget="http://orbeon.org/oxf/xml/widget" xmlns:exist="http://exist.sourceforge.net/NS/exist" xmlns:numishare="http://code.google.com/p/numishare/">
+<config xmlns:xxi="http://orbeon.org/oxf/xml/xinclude" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xforms="http://www.w3.org/2002/xforms"
+	xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:fr="http://orbeon.org/oxf/xml/form-runner"
+	xmlns:xxforms="http://orbeon.org/oxf/xml/xforms" xmlns:widget="http://orbeon.org/oxf/xml/widget" xmlns:exist="http://exist.sourceforge.net/NS/exist"
+	xmlns:numishare="http://code.google.com/p/numishare/">
 	<firstrun>false</firstrun>
 	<title>University of Virginia Art Museum Numismatic Collection</title>
 	<description>Enter short description for collection.</description>
@@ -15,8 +18,8 @@
 	</google_analytics>
 	<collection_type>object</collection_type>
 	<features_enabled>true</features_enabled>
-	<pelagios_enabled>false</pelagios_enabled>
-	<ctype_enabled>false</ctype_enabled>
+	<pelagios_enabled>true</pelagios_enabled>
+	<ctype_enabled>true</ctype_enabled>
 	<template>
 		<copyrightHolder>University of Virginia Art Museum</copyrightHolder>
 		<collection/>
@@ -90,8 +93,31 @@
 	</theme>
 	<footer>Powered by &lt;a href="https://github.com/ewg118/numishare" target="_blank"&gt;Numishare&lt;/a&gt;.</footer>
 	<pages>
-		<index>Numishare is a free, open source, modularized system of Tomcat applications for the web delivery of cultural heritage artifacts, with particular focus on coins and
-			medals. Metadata are edited with XForms and delivered with Cocoon and Solr.</index>
+		<index>&lt;p&gt;The University of Virginia Art Museum houses nearly 600 coins of Greek and Roman origin. The coins were generally acquired in small lots that were purchased or donated from 1987-2001, but
+			larger groups of coins belonging to English hoards were also acquired, including 51 from the &lt;a href="http://nomisma.org/id/normanby_hoard" target="_blank"&gt;Normanby Hoard&lt;/a&gt; and 302 from the
+			&lt;a href="http://nomisma.org/id/olivers_orchard_hoards" target="_blank"&gt;Oliver's Orchard Hoards&lt;/a&gt;. About 450 of the total number of coins are from the Roman Republic or Empire, providing
+			a broad sample of coins from the late 3rd century B.C. to the late 3rd century A.D., particularly from the Crisis of the Third Century--including more than 100 coins from the breakaway Gallic
+			Empire of A.D. 260-274. Among the collection is a small handful of Byzantine, Jewish, Nabataean, and Medieval coinage.&lt;/p&gt;
+			
+			&lt;p&gt; This version of the numismatic collection website is based on &lt;a href="https://github.com/ewg118/numishare" target="_blank"&gt;Numishare&lt;/a&gt;, an open source framework for publishing and coins and
+			medals. Numishare originated with the first release of this collection in 2008 through the &lt;a href="http://scholarslab.org" target="_blank"&gt;Scholars' Lab&lt;/a&gt; of the &lt;a href="http://lib.virginia.edu" target="_blank"&gt;University of Virginia Library&lt;/a&gt;, following its development during a Roman numismatics
+			graduate seminar taught by Prof. John Dobbins in the Fall of 2007. Currently, it is developed and maintained the &lt;a href="http://numismatics.org/" target="_blank"&gt;American Numismatic
+			Society&lt;/a&gt;, and utilizes numismatic concepts defined by &lt;a href="http://nomisma.org" target="_blank"&gt;Nomisma.org&lt;/a&gt; and geographic places defined by the &lt;a href="http://pleiades.stoa.org/" target="_blank"&gt;Pleiades Gazetteer of Ancient
+			Places&lt;/a&gt; to make the collection broadly available by means of linked open data in &lt;a href="http://pelagios-project.blogspot.com/" target="_blank"&gt;Pelagios&lt;/a&gt; and &lt;a
+			href="http://numismatics.org/ocre/" target="_blank"&gt;Online Coins of the Roman Empire&lt;/a&gt;.&lt;/p&gt;</index>
+		<page xmlns:p="http://www.orbeon.com/oxf/pipeline" stub="credits" id="e9a567be9423717130dc1143facd710e">
+			<title>Credits</title>
+			<short-title>Credits</short-title>
+			<public>1</public>
+			<text> &lt;h1&gt;Credits&lt;/h1&gt; &lt;p&gt;This project arose as an Innovation Grant of $5,000 awarded by the University of Virginia Library to work in conjunction of the University of
+				Virginia Art Museum, related to a Roman Numismatics class taught by Professor John Dobbins in the Classical Art and Archaeology progam.&lt;/p&gt;
+				&lt;h3&gt;Programming/Coordination&lt;/h3&gt; &lt;ul&gt; &lt;li&gt;Ethan Gruber&lt;/li&gt; &lt;/ul&gt; &lt;h3&gt;Encoding/Bibliographical Research&lt;/h3&gt; &lt;ul&gt; &lt;li&gt;Jared
+				Benton&lt;/li&gt; &lt;li&gt;Ethan Gruber&lt;/li&gt; &lt;li&gt;Carrie Sulosky&lt;/li&gt; &lt;/ul&gt; &lt;h3&gt;Imaging&lt;/h3&gt; &lt;ul&gt; &lt;li&gt;Andrew Curley (Scholarly
+				Resources, University of Virginia Library)&lt;/li&gt; &lt;/ul&gt; &lt;h3&gt;Academic Contributors&lt;/h3&gt; &lt;ul&gt; &lt;li&gt;John J. Dobbins, Professor of Classical Art &#38;amp;
+				Archaeology&lt;/li&gt; &lt;li&gt;Jared Benton&lt;/li&gt; &lt;li&gt;Katherine Boller&lt;/li&gt; &lt;li&gt;Bob Coleman&lt;/li&gt; &lt;li&gt;Nick Genau&lt;/li&gt; &lt;li&gt;Renee
+				Gondek&lt;/li&gt; &lt;li&gt;Ethan Gruber&lt;/li&gt; &lt;li&gt;Stephanie Layton&lt;/li&gt; &lt;li&gt;Ismini Miliaresis&lt;/li&gt; &lt;li&gt;Carrie Sulosky&lt;/li&gt; &lt;/ul&gt;
+				&lt;h3&gt;University of Virginia Art Museum&lt;/h3&gt; &lt;ul&gt; &lt;li&gt;Nicole Anastasi&lt;/li&gt; &lt;li&gt;Jean Collier&lt;/li&gt; &lt;/ul&gt; </text>
+		</page>
 		<compare enabled="true"/>
 		<analyze enabled="false"/>
 		<visualize enabled="true"/>
