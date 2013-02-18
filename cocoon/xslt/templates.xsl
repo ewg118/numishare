@@ -400,7 +400,7 @@
 	</xsl:template>
 
 	<xsl:template name="data-download">
-		<xsl:variable name="queryOptions">authority,date,deity,denomination,dynasty,issuer,material,mint,portrait,region</xsl:variable>
+		<xsl:variable name="queryOptions">authority,coinType,date,deity,denomination,dynasty,issuer,material,mint,portrait,region</xsl:variable>
 
 		<p>Use this feature to download a CSV for the given query and selected hoards.</p>
 		<form action="{$display_path}hoards.csv" id="csv-form" style="margin-bottom:40px;">
