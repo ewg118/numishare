@@ -3,7 +3,7 @@ FILE=compilation.xml
 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" > $FILE
 echo '<content>' >> $FILE
 cat ../cocoon/xml/db/uva/config.xml >> $FILE
-for i in `ls ../cocoon/xml/db/uva/objects/*.xml`; do cat $i >> $FILE; done;
+for i in `ls ../cocoon/xml/db/uva/objects/*.xml`; do sed 's/<?xml\ version=\"1.0\"\ encoding=\"UTF-8\"?>//g' $i >> $FILE; done;
 echo '</content>' >> $FILE
 
 #process add doc
