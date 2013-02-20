@@ -56,7 +56,7 @@
 					<xsl:if test="string($compare)">
 						<xsl:for-each select="tokenize($compare, ',')">
 							<xsl:variable name="localId" select="."/>
-							<th>								
+							<th>
 								<xsl:value-of select="exsl:node-set($counts)//hoard[@id=$localId]/@title"/>
 							</th>
 						</xsl:for-each>
@@ -107,7 +107,7 @@
 	<xsl:template name="nh:dateQuant">
 		<!-- use get_hoard_quant to calculate -->
 		<div id="dateChart"/>
-		<div id="dateData" style="display:none">
+		<span id="dateData" style="white-space:nowrap;overflow:hidden">
 			<xsl:attribute name="title">
 				<xsl:choose>
 					<xsl:when test="$type='count'">Occurrences</xsl:when>
@@ -129,13 +129,15 @@
 				</xsl:if>
 				<xsl:for-each select="tokenize($compare, ',')">
 					<cinclude:include src="cocoon:/get_hoard_quant?id={.}&amp;type={$type}&amp;format=js&amp;calculate=date&amp;exclude={$exclude}"/>
-					<xsl:if test="not(position()=last())">
-						<xsl:text>,</xsl:text>
+					<xsl:if test="not(position()=last())">						
+						<!-- threre must be a line break between objects or there will be Javascript eval problems! -->
+						<xsl:text>,
+</xsl:text>
 					</xsl:if>
 				</xsl:for-each>
 			</xsl:if>
 			<xsl:text>]</xsl:text>
-		</div>
+		</span>
 
 	</xsl:template>
 
@@ -181,6 +183,11 @@
 			</div>
 			<div style="display:table;width:100%">
 				<h2>Step 3: Select Categories for Analysis</h2>
+				<div style="height:30px">
+					<div class="ui-state-error ui-corner-all" id="visualize-cat-alert">
+						<span class="ui-icon ui-icon-alert" style="float:left"/>
+						<strong>Alert:</strong> At least one category must be selected.</div>
+				</div>
 				<xsl:for-each select="tokenize($queryOptions, ',')">
 					<xsl:variable name="query_fragment" select="."/>
 					<span class="anOption">
@@ -209,6 +216,14 @@
 							<a href="#filterHoards" class="showFilter" id="visualize-filter">Filter List</a>
 						</span>
 					</h2>
+					
+					<div style="height:30px">
+						<div class="ui-state-error ui-corner-all" id="visualize-hoard-alert">
+							<span class="ui-icon ui-icon-alert" style="float:left"/>
+							<strong>Alert:</strong> At least one and up to eight hoards may be selected.</div>
+					</div>
+					
+					
 					<div class="filter-div" style="display:none">
 						<b>Filter Query:</b>
 						<span/>
@@ -218,6 +233,11 @@
 				</xsl:when>
 				<xsl:otherwise>
 					<h2>Step 4: Select Hoards to Compare (optional)</h2>
+					<div style="height:30px">
+						<div class="ui-state-error ui-corner-all" id="visualize-hoard-alert">
+							<span class="ui-icon ui-icon-alert" style="float:left"/>
+							<strong>Alert:</strong> At least one and up to eight hoards may be selected.</div>
+					</div>
 					<xsl:call-template name="get-hoards"/>
 				</xsl:otherwise>
 			</xsl:choose>
@@ -263,7 +283,7 @@
 			<input type="hidden" name="exclude" class="exclude-input" value=""/>
 			<input type="hidden" name="options" id="options-input" value="{$options}"/>
 			<br/>
-			<input type="submit" value="Calculate Selected" class="submit-vis" id="submit-vis"/>
+			<input type="submit" value="Calculate Selected" class="submit-vis" id="visualize-submit"/>
 		</form>
 
 		<!-- output charts and tables -->
@@ -357,6 +377,11 @@
 							<a href="#filterHoards" class="showFilter" id="date-filter">Filter List</a>
 						</span>
 					</h2>
+					<div style="height:30px">
+						<div class="ui-state-error ui-corner-all" id="date-hoard-alert">
+							<span class="ui-icon ui-icon-alert" style="float:left"/>
+							<strong>Alert:</strong> At least one and up to eight hoards may be selected.</div>
+					</div>
 					<div class="filter-div" style="display:none">
 						<b>Filter Query:</b>
 						<span/>
@@ -366,6 +391,11 @@
 				</xsl:when>
 				<xsl:otherwise>
 					<h2>Step 3: Select Hoards to Compare (optional)</h2>
+					<div style="height:30px">
+						<div class="ui-state-error ui-corner-all" id="date-hoard-alert">
+							<span class="ui-icon ui-icon-alert" style="float:left"/>
+							<strong>Alert:</strong> At least one and up to eight hoards may be selected.</div>
+					</div>
 					<xsl:call-template name="get-hoards"/>
 				</xsl:otherwise>
 			</xsl:choose>
@@ -381,7 +411,7 @@
 			<input type="hidden" name="compare" class="compare-input" value=""/>
 			<input type="hidden" name="exclude" class="exclude-input" value=""/>
 			<br/>
-			<input type="submit" value="Calculate Selected" class="submit-vis" id="submit-date"/>
+			<input type="submit" value="Calculate Selected" class="submit-vis" id="date-submit"/>
 		</form>
 
 		<xsl:if test="$calculate='date'">
@@ -431,6 +461,11 @@
 			<br/>
 			<div style="width:100%;display:table">
 				<h2>Step 2: Select Categories for Analysis</h2>
+				<div style="height:30px">
+					<div class="ui-state-error ui-corner-all" id="csv-cat-alert">
+						<span class="ui-icon ui-icon-alert" style="float:left"/>
+						<strong>Alert:</strong> A category must be selected.</div>
+				</div>
 				<xsl:for-each select="tokenize($queryOptions, ',')">
 					<xsl:variable name="query_fragment" select="."/>
 					<span class="anOption">
@@ -460,6 +495,11 @@
 							<a href="#filterHoards" class="showFilter" id="csv-filter">Filter List</a>
 						</span>
 					</h2>
+					<div style="height:30px">
+						<div class="ui-state-error ui-corner-all" id="csv-hoard-alert">
+							<span class="ui-icon ui-icon-alert" style="float:left"/>
+							<strong>Alert:</strong> At least one and up to eight hoards may be selected.</div>
+					</div>
 					<div class="filter-div" style="display:none">
 						<b>Filter Query:</b>
 						<span/>
@@ -469,6 +509,11 @@
 				</xsl:when>
 				<xsl:otherwise>
 					<h2>Step 3: Select Hoards to Compare (optional)</h2>
+					<div style="height:30px">
+						<div class="ui-state-error ui-corner-all" id="csv-hoard-alert">
+							<span class="ui-icon ui-icon-alert" style="float:left"/>
+							<strong>Alert:</strong> At least one and up to eight hoards may be selected.</div>
+					</div>
 					<xsl:call-template name="get-hoards"/>
 				</xsl:otherwise>
 			</xsl:choose>
@@ -483,7 +528,7 @@
 			<input type="hidden" name="exclude" class="exclude-input" value=""/>
 			<input type="hidden" name="compare" class="compare-input" value=""/>
 			<br/>
-			<input type="submit" value="Calculate Selected" id="submit-csv"/>
+			<input type="submit" value="Calculate Selected" id="csv-submit"/>
 		</form>
 	</xsl:template>
 
@@ -504,7 +549,7 @@
 
 	<xsl:template name="vis-radios">
 		<xsl:param name="query_fragment"/>
-		<input type="radio" name="calculate" id="{$query_fragment}-radio" value="{$query_fragment}"/>
+		<input type="radio" name="calculate" id="{$query_fragment}-radio" value="{$query_fragment}" class="calculate-checkbox"/>
 		<label for="{$query_fragment}-checkbox">
 			<xsl:value-of select="numishare:normalize_fields($query_fragment, $lang)"/>
 		</label>

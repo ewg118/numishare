@@ -76,6 +76,11 @@ h4 {
 	background-color:#ef8700;
 	border:2px solid #b76e0e;
 }
+.ui-state-error{
+	width:400px;
+	font-size:90%;
+	margin:10px auto;
+}
 table tr td {
 	border:0;	
 }

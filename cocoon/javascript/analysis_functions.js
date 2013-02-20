@@ -102,7 +102,8 @@ $(document).ready(function () {
 	
 	/***** CREATE CHART FOR DATES *****/
 	if ($('#dateData').text().length > 0) {
-		var data = eval($('#dateData').text());
+		var value = $('#dateData').text();
+		var data = eval($.trim(value));
 		var type = $('#date-form input:radio[name=type]:checked').val();
 		var chartType = $('#date-form input:radio[name=chartType]:checked').val();
 		var chart;
@@ -217,21 +218,96 @@ $(document).ready(function () {
 		$('#csv-form input[value=percentage]').attr('checked', true);
 	});
 	
-	//set max number of 4 hoards for comparison (5 shown in total)
-	$("#visualize-form .compare-select").livequery('change', function (event) {
-		if ($("#visualize-form .compare-option:selected").length > 8) {
-			$("#submit-vis").attr("disabled", "disabled");
+	/***** SHOW ALERT/DISABLE SUBMIT WHEN NO/TOO MANY HOARDS SELECTED *****/
+	//when page loads
+	$('.compare-select').each(function(){
+		var formId = $(this).closest('form').attr('id').split('-')[0];
+		var errorId = '#' + formId + '-hoard-alert';
+		var submitId = '#' + formId + '-submit';
+		var cats = $('#' + formId + '-form .calculate-checkbox:checked').length;
+		if ($(this).children('option:selected').length == 0){
+			$(errorId).show();
+			$(submitId).attr('disabled', 'disabled');
 		} else {
-			$("#submit-vis").removeAttr('disabled');
+			$(errorId).hide();
+			//only enable submit if categories have been selected
+			if (formId == 'date'){
+				$(submitId).removeAttr('disabled');
+			} else {
+				if (cats > 0){
+					$(submitId).removeAttr('disabled');
+				}
+			}
+			
 		}
 	});
-	$("#date-form .compare-select").livequery('change', function (event) {
-		if ($("#date-form .compare-option:selected").length > 8) {
-			$("#submit-date").attr("disabled", "disabled");
+	
+	//when options changed
+	$('.compare-select').livequery('change', function (event) {
+		var formId = $(this).closest('form').attr('id').split('-')[0];
+		var errorId = '#' + formId + '-hoard-alert';
+		var submitId = '#' + formId + '-submit';
+		var cats = $('#' + formId + '-form .calculate-checkbox:checked').length;
+		if ($(this).children('option:selected').length == 0){
+			$(errorId).fadeIn();
+			$(submitId).attr('disabled', 'disabled');
+		} else if ($(this).children('option:selected').length > 8 && formId != 'csv'){
+			$(errorId).fadeIn();
+			$(submitId).attr('disabled', 'disabled');
+		} else if  ($(this).children('option:selected').length > 30 && formId == 'csv') {
+			$(errorId).fadeIn();
+			$(submitId).attr('disabled', 'disabled');
 		} else {
-			$("#submit-date").removeAttr('disabled');
+			$(errorId).fadeOut();
+			//only enable submit if categories have been selected
+			if (formId == 'date'){
+				$(submitId).removeAttr('disabled');
+			} else {
+				if (cats > 0){
+					$(submitId).removeAttr('disabled');
+				}
+			}
 		}
 	});
+	
+	/***** SHOW ALERT/DISABLE SUBMIT NO CALCULATE CATEGORIES ARE SELECTED *****/
+	//when page loads
+	$('#tabs form').each(function(){
+		var formId = $(this).attr('id').split('-')[0];
+		if (formId != 'date') {
+			var errorId = '#' + formId + '-cat-alert';
+			var submitId = '#' + formId + '-submit';
+			var hoards = $('#' + formId + '-form .compare-select').children('option:selected').length;
+			if ($('#' + formId + '-form .calculate-checkbox:checked').length == 0){
+				$(errorId).show();
+				$(submitId).attr('disabled', 'disabled');
+			} else {
+				$(errorId).hide();
+				//only enable submit if hoards have been selected
+				if (hoards > 0){
+					$(submitId).removeAttr('disabled');
+				}
+			}
+		}
+	});
+	
+	//when options changed
+	$('.calculate-checkbox').change(function() {
+		var formId = $(this).closest('form').attr('id').split('-')[0];
+		var errorId = '#' + formId + '-cat-alert';
+		var submitId = '#' + formId + '-submit';
+		var hoards = $('#' + formId + '-form .compare-select').children('option:selected').length;
+		if ($('#' + formId + '-form .calculate-checkbox:checked').length == 0){
+			$(errorId).fadeIn();
+			$(submitId).attr('disabled', 'disabled');
+		} else {
+			$(errorId).fadeOut();
+			//only enable submit if hoards have been selected
+			if (hoards > 0){
+				$(submitId).removeAttr('disabled');
+			}
+		}
+	});	
 	
 	/***** TOGGLE OPTIONAL SETTINGS *****/
 	$('.optional-button').click(function () {

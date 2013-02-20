@@ -112,9 +112,9 @@
 			</total-counts>
 		</xsl:variable>
 
-		<xsl:text>{ name: '</xsl:text>
-		<xsl:value-of select="$title"/>
-		<xsl:text>', data: [</xsl:text>
+		<xsl:text>{ name: "</xsl:text>
+		<xsl:value-of select="normalize-space($title)"/>
+		<xsl:text>", data: [</xsl:text>
 
 		<xsl:choose>
 			<xsl:when test="$calculate='date'">
