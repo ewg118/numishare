@@ -107,7 +107,7 @@
 	<xsl:template name="nh:dateQuant">
 		<!-- use get_hoard_quant to calculate -->
 		<div id="dateChart"/>
-		<span id="dateData" style="white-space:nowrap;overflow:hidden">
+		<span id="dateData" style="white-space:nowrap;overflow:hidden;display:none">
 			<xsl:attribute name="title">
 				<xsl:choose>
 					<xsl:when test="$type='count'">Occurrences</xsl:when>
