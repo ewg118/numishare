@@ -186,7 +186,7 @@
 				<div style="height:30px">
 					<div class="ui-state-error ui-corner-all" id="visualize-cat-alert">
 						<span class="ui-icon ui-icon-alert" style="float:left"/>
-						<strong>Alert:</strong> At least one category must be selected.</div>
+						<strong>Alert:</strong> At least 1 category must be selected.</div>
 				</div>
 				<xsl:for-each select="tokenize($queryOptions, ',')">
 					<xsl:variable name="query_fragment" select="."/>
@@ -220,7 +220,7 @@
 					<div style="height:30px">
 						<div class="ui-state-error ui-corner-all" id="visualize-hoard-alert">
 							<span class="ui-icon ui-icon-alert" style="float:left"/>
-							<strong>Alert:</strong> At least one and up to eight hoards may be selected.</div>
+							<strong>Alert:</strong> At least 1 and up to 8 hoards may be selected.</div>
 					</div>
 					
 					
@@ -236,7 +236,7 @@
 					<div style="height:30px">
 						<div class="ui-state-error ui-corner-all" id="visualize-hoard-alert">
 							<span class="ui-icon ui-icon-alert" style="float:left"/>
-							<strong>Alert:</strong> At least one and up to eight hoards may be selected.</div>
+							<strong>Alert:</strong> At least 1 and up to 8 hoards may be selected.</div>
 					</div>
 					<xsl:call-template name="get-hoards"/>
 				</xsl:otherwise>
@@ -380,7 +380,7 @@
 					<div style="height:30px">
 						<div class="ui-state-error ui-corner-all" id="date-hoard-alert">
 							<span class="ui-icon ui-icon-alert" style="float:left"/>
-							<strong>Alert:</strong> At least one and up to eight hoards may be selected.</div>
+							<strong>Alert:</strong> At least 1 and up to 8 hoards may be selected.</div>
 					</div>
 					<div class="filter-div" style="display:none">
 						<b>Filter Query:</b>
@@ -394,7 +394,7 @@
 					<div style="height:30px">
 						<div class="ui-state-error ui-corner-all" id="date-hoard-alert">
 							<span class="ui-icon ui-icon-alert" style="float:left"/>
-							<strong>Alert:</strong> At least one and up to eight hoards may be selected.</div>
+							<strong>Alert:</strong> At least 1 and up to 8 hoards may be selected.</div>
 					</div>
 					<xsl:call-template name="get-hoards"/>
 				</xsl:otherwise>
