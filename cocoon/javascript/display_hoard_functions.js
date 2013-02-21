@@ -40,6 +40,7 @@ function initialize_timemap(id) {
 			//theme: "red",
 			type: "json", // Data to be loaded in KML - must be a local URL
 			options: {
+				infoTemplate: '<div><strong><a href="{{href}}" target="_blank">{{title}}</a></strong><br/><br/><em>{{description}}</em></div>',
 				url: "../apis/get?id=" + id + "&format=json"// KML file to load
 			}
 		}],
