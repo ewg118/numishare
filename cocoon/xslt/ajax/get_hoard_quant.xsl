@@ -45,10 +45,6 @@
 		<xsl:copy-of select="descendant::nh:contents"/>
 	</xsl:variable>
 
-	<!--<test>
-		<xsl:value-of select="boolean(index-of($codes, '7'))"/>
-		</test>-->
-
 	<xsl:variable name="nudsGroup">
 		<nudsGroup>
 			<!-- get nomisma NUDS documents with get-nuds API -->

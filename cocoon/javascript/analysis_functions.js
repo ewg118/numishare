@@ -357,7 +357,7 @@ $(document).ready(function () {
 		$(this).siblings('input[name=exclude]').attr('value', param3);
 	});
 	
-	$('#submit-csv').click(function () {
+	$('#csv-submit').click(function () {
 		var id = $(this).parent('form').attr('id');
 		//get compare value
 		var hoards = new Array();
