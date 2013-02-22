@@ -36,9 +36,9 @@ $('.category_list') .livequery('change', function(event){
 	//YEAR
 	else if (field == 'year_num' || field == 'taq_num' || field == 'tpq_num') {
 		$(this) .parent() .children('.option_container') .html('From: <input type="text" class="from_date"/>' +
-		'<select class="from_era"><option value="minus">B.C.</option><option value="" selected="selected">A.D.</option></select>' +
+		'<select class="from_era"><option value="minus" selected="selected">B.C.</option><option value="">A.D.</option></select>' +
 		'To: <input type="text" class="to_date"/>' +
-		'<select class="to_era"><option value="minus">B.C.</option><option value="" selected="selected">A.D.</option></select>');
+		'<select class="to_era"><option value="minus" selected="selected">B.C.</option><option value="">A.D.</option></select>');
 	}
 	//WEIGHT
 	else if (field == 'weight_num') {

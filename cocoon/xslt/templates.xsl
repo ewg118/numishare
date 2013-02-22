@@ -184,7 +184,7 @@
 			<div style="display:table;width:100%">
 				<h2>Step 3: Select Categories for Analysis</h2>
 				<div style="height:30px">
-					<div class="ui-state-error ui-corner-all" id="visualize-cat-alert">
+					<div class="ui-state-error ui-corner-all" id="visualize-cat-alert" style="display:none">
 						<span class="ui-icon ui-icon-alert" style="float:left"/>
 						<strong>Alert:</strong> At least 1 category must be selected.</div>
 				</div>
@@ -218,7 +218,7 @@
 					</h2>
 					
 					<div style="height:30px">
-						<div class="ui-state-error ui-corner-all" id="visualize-hoard-alert">
+						<div class="ui-state-error ui-corner-all" id="visualize-hoard-alert" style="display:none">
 							<span class="ui-icon ui-icon-alert" style="float:left"/>
 							<strong>Alert:</strong> At least 1 and up to 8 hoards may be selected.</div>
 					</div>
@@ -234,9 +234,9 @@
 				<xsl:otherwise>
 					<h2>Step 4: Select Hoards to Compare (optional)</h2>
 					<div style="height:30px">
-						<div class="ui-state-error ui-corner-all" id="visualize-hoard-alert">
+						<div class="ui-state-error ui-corner-all" id="visualize-hoard-alert" style="display:none">
 							<span class="ui-icon ui-icon-alert" style="float:left"/>
-							<strong>Alert:</strong> At least 1 and up to 8 hoards may be selected.</div>
+							<strong>Alert:</strong> Up to 8 hoards may be selected.</div>
 					</div>
 					<xsl:call-template name="get-hoards"/>
 				</xsl:otherwise>
@@ -378,7 +378,7 @@
 						</span>
 					</h2>
 					<div style="height:30px">
-						<div class="ui-state-error ui-corner-all" id="date-hoard-alert">
+						<div class="ui-state-error ui-corner-all" id="date-hoard-alert" style="display:none">
 							<span class="ui-icon ui-icon-alert" style="float:left"/>
 							<strong>Alert:</strong> At least 1 and up to 8 hoards may be selected.</div>
 					</div>
@@ -392,9 +392,9 @@
 				<xsl:otherwise>
 					<h2>Step 3: Select Hoards to Compare (optional)</h2>
 					<div style="height:30px">
-						<div class="ui-state-error ui-corner-all" id="date-hoard-alert">
+						<div class="ui-state-error ui-corner-all" id="date-hoard-alert" style="display:none">
 							<span class="ui-icon ui-icon-alert" style="float:left"/>
-							<strong>Alert:</strong> At least 1 and up to 8 hoards may be selected.</div>
+							<strong>Alert:</strong> Up to 8 hoards may be selected.</div>
 					</div>
 					<xsl:call-template name="get-hoards"/>
 				</xsl:otherwise>
@@ -462,7 +462,7 @@
 			<div style="width:100%;display:table">
 				<h2>Step 2: Select Categories for Analysis</h2>
 				<div style="height:30px">
-					<div class="ui-state-error ui-corner-all" id="csv-cat-alert">
+					<div class="ui-state-error ui-corner-all" id="csv-cat-alert" style="display:none">
 						<span class="ui-icon ui-icon-alert" style="float:left"/>
 						<strong>Alert:</strong> A category must be selected.</div>
 				</div>
@@ -496,7 +496,7 @@
 						</span>
 					</h2>
 					<div style="height:30px">
-						<div class="ui-state-error ui-corner-all" id="csv-hoard-alert">
+						<div class="ui-state-error ui-corner-all" id="csv-hoard-alert" style="display:none">
 							<span class="ui-icon ui-icon-alert" style="float:left"/>
 							<strong>Alert:</strong> At least 1 and up to 30 hoards may be selected.</div>
 					</div>
@@ -510,9 +510,9 @@
 				<xsl:otherwise>
 					<h2>Step 3: Select Hoards to Compare (optional)</h2>
 					<div style="height:30px">
-						<div class="ui-state-error ui-corner-all" id="csv-hoard-alert">
+						<div class="ui-state-error ui-corner-all" id="csv-hoard-alert" style="display:none">
 							<span class="ui-icon ui-icon-alert" style="float:left"/>
-							<strong>Alert:</strong> At least 1 and up to 30 hoards may be selected.</div>
+							<strong>Alert:</strong> Up to 30 hoards may be selected.</div>
 					</div>
 					<xsl:call-template name="get-hoards"/>
 				</xsl:otherwise>
@@ -525,6 +525,9 @@
 					<cinclude:include src="cocoon:/get_certainty_codes?exclude={$exclude}"/>
 				</div>
 			</div>
+			<xsl:if test="$pipeline='display'">
+				<input type="hidden" id="thisHoard" value="{$id}"/>
+			</xsl:if>
 			<input type="hidden" name="exclude" class="exclude-input" value=""/>
 			<input type="hidden" name="compare" class="compare-input" value=""/>
 			<br/>

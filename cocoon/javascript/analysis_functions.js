@@ -221,13 +221,16 @@ $(document).ready(function () {
 	/***** SHOW ALERT/DISABLE SUBMIT WHEN NO/TOO MANY HOARDS SELECTED *****/
 	//when page loads
 	$('.compare-select').each(function(){
+		var pipeline = $('#vis-pipeline').html();
 		var formId = $(this).closest('form').attr('id').split('-')[0];
 		var errorId = '#' + formId + '-hoard-alert';
 		var submitId = '#' + formId + '-submit';
 		var cats = $('#' + formId + '-form .calculate-checkbox:checked').length;
 		if ($(this).children('option:selected').length == 0){
-			$(errorId).show();
-			$(submitId).attr('disabled', 'disabled');
+			if (pipeline == 'analyze') {
+				$(errorId).show();
+				$(submitId).attr('disabled', 'disabled');			
+			}			
 		} else {
 			$(errorId).hide();
 			//only enable submit if categories have been selected
@@ -238,19 +241,21 @@ $(document).ready(function () {
 					$(submitId).removeAttr('disabled');
 				}
 			}
-			
-		}
+		}	
 	});
 	
 	//when options changed
 	$('.compare-select').livequery('change', function (event) {
+		var pipeline = $('#vis-pipeline').html();
 		var formId = $(this).closest('form').attr('id').split('-')[0];
 		var errorId = '#' + formId + '-hoard-alert';
 		var submitId = '#' + formId + '-submit';
 		var cats = $('#' + formId + '-form .calculate-checkbox:checked').length;
 		if ($(this).children('option:selected').length == 0){
-			$(errorId).fadeIn();
-			$(submitId).attr('disabled', 'disabled');
+			if (pipeline == 'analyze') {
+				$(errorId).fadeIn();
+				$(submitId).attr('disabled', 'disabled');
+			}
 		} else if ($(this).children('option:selected').length > 8 && formId != 'csv'){
 			$(errorId).fadeIn();
 			$(submitId).attr('disabled', 'disabled');
@@ -273,6 +278,7 @@ $(document).ready(function () {
 	/***** SHOW ALERT/DISABLE SUBMIT NO CALCULATE CATEGORIES ARE SELECTED *****/
 	//when page loads
 	$('#tabs form').each(function(){
+		var pipeline = $('#vis-pipeline').html();
 		var formId = $(this).attr('id').split('-')[0];
 		if (formId != 'date') {
 			var errorId = '#' + formId + '-cat-alert';
@@ -284,7 +290,7 @@ $(document).ready(function () {
 			} else {
 				$(errorId).hide();
 				//only enable submit if hoards have been selected
-				if (hoards > 0){
+				if (hoards > 0 || pipeline=='display'){
 					$(submitId).removeAttr('disabled');
 				}
 			}
@@ -293,6 +299,7 @@ $(document).ready(function () {
 	
 	//when options changed
 	$('.calculate-checkbox').change(function() {
+		var pipeline = $('#vis-pipeline').html();
 		var formId = $(this).closest('form').attr('id').split('-')[0];
 		var errorId = '#' + formId + '-cat-alert';
 		var submitId = '#' + formId + '-submit';
@@ -303,7 +310,7 @@ $(document).ready(function () {
 		} else {
 			$(errorId).fadeOut();
 			//only enable submit if hoards have been selected
-			if (hoards > 0){
+			if (hoards > 0 || pipeline=='display'){
 				$(submitId).removeAttr('disabled');
 			}
 		}
@@ -359,8 +366,15 @@ $(document).ready(function () {
 	
 	$('#csv-submit').click(function () {
 		var id = $(this).parent('form').attr('id');
-		//get compare value
+		var pipeline = $('#vis-pipeline').html();
+		
 		var hoards = new Array();
+		//get thisHoard, if form is submitted through display pipeline
+		if (pipeline == 'display') {
+			hoards.push($('#thisHoard').val());
+		}
+		
+		//get compare value		
 		$('#' + id + ' .compare-option:selected').each(function () {
 			hoards.push($(this).val());
 		});

@@ -85,6 +85,9 @@
 					<h1>
 						<xsl:value-of select="numishare:normalizeLabel('display_quantitative', $lang)"/>
 					</h1>
+					<span style="display:none" id="vis-pipeline">
+						<xsl:value-of select="$pipeline"/>
+					</span>
 					<div id="tabs">
 						<ul>
 							<li>
