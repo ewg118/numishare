@@ -82,7 +82,7 @@
 				<script type="text/javascript">
 							$(document).ready(function(){
 								$('a.thumbImage').fancybox();
-								initialize_map('<xsl:value-of select="$q"/>','<xsl:value-of select="$collection_type"/>');
+								initialize_map('<xsl:value-of select="if (string($q)) then $q else '*:*'"/>','<xsl:value-of select="$collection_type"/>');
 							});
 						</script>
 
