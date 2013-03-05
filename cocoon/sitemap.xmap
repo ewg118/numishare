@@ -383,14 +383,14 @@
 					<map:when test="">
 						<map:aggregate element="content">
 							<map:part
-								src="{global:solr-url}select?q=collection-name:{global:collection-name}+AND+*:*&amp;start={request-param:start}&amp;sort={url-encode:{request-param:sort}}&amp;facet.mincount=1&amp;facet.field=authority_facet&amp;facet.field=coinType_facet&amp;facet.field=century_num&amp;facet.field=deity_facet&amp;facet.field=denomination_facet&amp;facet.field=department_facet&amp;facet.field=dynasty_facet&amp;facet.field=findspot_facet&amp;facet.field=issuer_facet&amp;facet.field=manufacture_facet&amp;facet.field=material_facet&amp;facet.field=mint_facet&amp;facet.field=objectType_facet&amp;facet.field=portrait_facet&amp;facet.field=reference_facet&amp;facet.field=region_facet&amp;facet.field=repository_facet&amp;facet.field=script_facet&amp;facet.field=state_facet&amp;facet.field=mint_geo&amp;fl=id,recordType,title_display,closing_date_display,findspot_facet,reference_facet,weight_num,diameter_num,axis_num,description_display,obv_leg_display,rev_leg_display,obv_type_display,rev_type_display,thumbnail_obv,thumbnail_rev,reference_obv,reference_rev"/>
+								src="{global:solr-url}select?q=collection-name:{global:collection-name}+AND+*:*&amp;start={request-param:start}&amp;sort={url-encode:{request-param:sort}}&amp;facet.mincount=1&amp;facet.field=authority_facet&amp;facet.field=coinType_facet&amp;facet.field=century_num&amp;facet.field=deity_facet&amp;facet.field=denomination_facet&amp;facet.field=department_facet&amp;facet.field=dynasty_facet&amp;facet.field=findspot_hier&amp;facet.field=issuer_facet&amp;facet.field=manufacture_facet&amp;facet.field=material_facet&amp;facet.field=mint_facet&amp;facet.field=objectType_facet&amp;facet.field=portrait_facet&amp;facet.field=reference_facet&amp;facet.field=region_facet&amp;facet.field=repository_facet&amp;facet.field=script_facet&amp;facet.field=state_facet&amp;facet.field=mint_geo&amp;fl=id,recordType,title_display,closing_date_display,findspot_facet,reference_facet,weight_num,diameter_num,axis_num,description_display,obv_leg_display,rev_leg_display,obv_type_display,rev_type_display,thumbnail_obv,thumbnail_rev,reference_obv,reference_rev"/>
 							<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
 						</map:aggregate>
 					</map:when>
 					<map:otherwise>
 						<map:aggregate element="content">
 							<map:part
-								src="{global:solr-url}select?q=collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}&amp;start={request-param:start}&amp;sort={url-encode:{request-param:sort}}&amp;facet.mincount=1&amp;facet.field=authority_facet&amp;facet.field=coinType_facet&amp;facet.field=century_num&amp;facet.field=deity_facet&amp;facet.field=denomination_facet&amp;facet.field=department_facet&amp;facet.field=dynasty_facet&amp;facet.field=findspot_facet&amp;facet.field=issuer_facet&amp;facet.field=manufacture_facet&amp;facet.field=material_facet&amp;facet.field=mint_facet&amp;facet.field=objectType_facet&amp;facet.field=portrait_facet&amp;facet.field=reference_facet&amp;facet.field=region_facet&amp;facet.field=repository_facet&amp;facet.field=script_facet&amp;facet.field=state_facet&amp;facet.field=mint_geo&amp;fl=id,recordType,title_display,closing_date_display,findspot_facet,reference_facet,weight_num,diameter_num,axis_num,description_display,obv_leg_display,rev_leg_display,obv_type_display,rev_type_display,thumbnail_obv,thumbnail_rev,reference_obv,reference_rev"/>
+								src="{global:solr-url}select?q=collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}&amp;start={request-param:start}&amp;sort={url-encode:{request-param:sort}}&amp;facet.mincount=1&amp;facet.field=authority_facet&amp;facet.field=coinType_facet&amp;facet.field=century_num&amp;facet.field=deity_facet&amp;facet.field=denomination_facet&amp;facet.field=department_facet&amp;facet.field=dynasty_facet&amp;facet.field=findspot_hier&amp;facet.field=issuer_facet&amp;facet.field=manufacture_facet&amp;facet.field=material_facet&amp;facet.field=mint_facet&amp;facet.field=objectType_facet&amp;facet.field=portrait_facet&amp;facet.field=reference_facet&amp;facet.field=region_facet&amp;facet.field=repository_facet&amp;facet.field=script_facet&amp;facet.field=state_facet&amp;facet.field=mint_geo&amp;fl=id,recordType,title_display,closing_date_display,findspot_facet,reference_facet,weight_num,diameter_num,axis_num,description_display,obv_leg_display,rev_leg_display,obv_type_display,rev_type_display,thumbnail_obv,thumbnail_rev,reference_obv,reference_rev"/>
 							<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
 						</map:aggregate>
 					</map:otherwise>
@@ -474,7 +474,7 @@
 			<map:match pattern="maps">
 				<map:aggregate element="content">
 					<map:part
-						src="{global:solr-url}select?q=collection-name:{global:collection-name}+AND+*:*+AND+{url-encode:(mint_geo:* OR findspot_geo:*)}&amp;rows=0&amp;facet.mincount=1&amp;facet.field=authority_facet&amp;facet.field=century_num&amp;facet.field=coinType_facet&amp;facet.field=deity_facet&amp;facet.field=denomination_facet&amp;facet.field=department_facet&amp;facet.field=dynasty_facet&amp;facet.field=findspot_facet&amp;facet.field=issuer_facet&amp;facet.field=manufacture_facet&amp;facet.field=material_facet&amp;facet.field=mint_facet&amp;facet.field=objectType_facet&amp;facet.field=portrait_facet&amp;facet.field=region_facet&amp;facet.field=repository_facet&amp;facet.field=script_facet&amp;facet.field=state_facet&amp;facet.field=mint_geo"
+						src="{global:solr-url}select?q=collection-name:{global:collection-name}+AND+*:*+AND+{url-encode:(mint_geo:* OR findspot_geo:*)}&amp;rows=0&amp;facet.mincount=1&amp;facet.field=authority_facet&amp;facet.field=century_num&amp;facet.field=coinType_facet&amp;facet.field=deity_facet&amp;facet.field=denomination_facet&amp;facet.field=department_facet&amp;facet.field=dynasty_facet&amp;facet.field=findspot_hier&amp;facet.field=issuer_facet&amp;facet.field=manufacture_facet&amp;facet.field=material_facet&amp;facet.field=mint_facet&amp;facet.field=objectType_facet&amp;facet.field=portrait_facet&amp;facet.field=region_facet&amp;facet.field=repository_facet&amp;facet.field=script_facet&amp;facet.field=state_facet&amp;facet.field=mint_geo"
 						label="record"/>
 					<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
 				</map:aggregate>
@@ -630,12 +630,13 @@
 				<map:serialize type="html"/>
 			</map:match>
 
-			<map:match pattern="get_categories">
+			<map:match pattern="get_hier">
 				<map:generate
-					src="{global:solr-url}select?q=collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}&amp;facet.sort=index&amp;rows=0&amp;facet.field=category_facet&amp;fq=collection-name:{global:collection-name}+AND+{url-encode:category_facet:{request-param:fq}}&amp;facet.prefix={url-encode:{request-param:prefix}}&amp;link={url-encode:{request-param:link}}&amp;section={request-param:section}&amp;mode={request-param:mode}"
+					src="{global:solr-url}select?q=collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}&amp;facet.sort=index&amp;rows=0&amp;facet.field={request-param:field}_hier&amp;fq=collection-name:{global:collection-name}+AND+{url-encode:{request-param:field}_hier:{request-param:fq}}&amp;facet.prefix={url-encode:{request-param:prefix}}&amp;link={url-encode:{request-param:link}}&amp;mode={request-param:mode}"
 					label="record"/>
-				<map:transform type="xslt-saxon" src="xslt/ajax/get_categories.xsl" label="basiccontent">
+				<map:transform type="xslt-saxon" src="xslt/ajax/get_hier.xsl" label="basiccontent">
 					<map:parameter name="use-request-parameters" value="true"/>
+					<map:parameter name="collection-name" value="{global:collection-name}"/>
 					<map:parameter name="solr-url" value="{global:solr-url}"/>
 				</map:transform>
 				<map:transform type="cinclude"/>

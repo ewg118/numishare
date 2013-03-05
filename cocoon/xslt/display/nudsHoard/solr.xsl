@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="2.0" xmlns:nh="http://nomisma.org/nudsHoard" xmlns:nuds="http://nomisma.org/nuds" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:datetime="http://exslt.org/dates-and-times" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:exsl="http://exslt.org/common"
-	xmlns:mets="http://www.loc.gov/METS/" xmlns:math="http://exslt.org/math" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml/"
-	xmlns:skos="http://www.w3.org/2004/02/skos/core#" exclude-result-prefixes="#all">
+	xmlns:mets="http://www.loc.gov/METS/" xmlns:math="http://exslt.org/math" xmlns:cinclude="http://apache.org/cocoon/include/1.0" xmlns:xlink="http://www.w3.org/1999/xlink"
+	xmlns:gml="http://www.opengis.net/gml/" xmlns:skos="http://www.w3.org/2004/02/skos/core#" exclude-result-prefixes="#all">
 	<xsl:output method="xml" encoding="UTF-8"/>
 
 	<xsl:template name="nudsHoard">
@@ -47,27 +47,39 @@
 				</xsl:for-each>
 			</dates>
 		</xsl:variable>
-
+		<xsl:variable name="hasContents">
+			<xsl:choose>
+				<xsl:when test="count(nh:descMeta/nh:contentsDesc/nh:contents/*) &gt; 0">true</xsl:when>
+				<xsl:otherwise>false</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<xsl:variable name="title">
+			<xsl:value-of select="normalize-space(nh:descMeta/nh:title[1])"/>
+		</xsl:variable>
 
 		<doc>
 			<field name="id">
 				<xsl:value-of select="nh:nudsHeader/nh:nudsid"/>
-			</field>
+			</field>			
 			<field name="collection-name">
 				<xsl:value-of select="$collection-name"/>
 			</field>
 			<field name="title_display">
-				<xsl:value-of select="nh:nudsHeader/nh:nudsid"/>
+				<xsl:choose>
+					<xsl:when test="string($title)">
+						<xsl:value-of select="$title"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="nh:nudsHeader/nh:nudsid"/>
+					</xsl:otherwise>
+				</xsl:choose>
 			</field>
 			<field name="recordType">hoard</field>
 			<field name="publisher_display">
 				<xsl:value-of select="$publisher"/>
 			</field>
 			<field name="hasContents">
-				<xsl:choose>
-					<xsl:when test="count(nh:descMeta/nh:contentsDesc/nh:contents/*) &gt; 0">true</xsl:when>
-					<xsl:otherwise>false</xsl:otherwise>
-				</xsl:choose>
+				<xsl:value-of select="$hasContents"/>
 			</field>
 			<field name="closing_date_display">
 				<xsl:choose>
@@ -90,6 +102,27 @@
 			<field name="timestamp">
 				<xsl:value-of select="if(contains(datetime:dateTime(), 'Z')) then datetime:dateTime() else concat(datetime:dateTime(), 'Z')"/>
 			</field>
+
+
+			<!-- create description if there are contents -->
+			<xsl:if test="$hasContents = 'true'">
+				<xsl:variable name="denominations">
+					<xsl:copy-of select="document(concat($url, 'get_hoard_quant?id=', nh:nudsHeader/nh:nudsid, '&amp;calculate=denomination&amp;type=count'))"/>					
+				</xsl:variable>	
+				
+				<field name="description_display">					
+					<xsl:for-each select="exsl:node-set($denominations)//*[local-name()='name']">
+						<xsl:sort select="@count" order="descending" data-type="number"/>
+						<xsl:value-of select="."/>
+						<xsl:text>: </xsl:text>
+						<xsl:value-of select="@count"/>
+						<xsl:if test="not(position()=last())">
+							<xsl:text>, </xsl:text>
+						</xsl:if>
+					</xsl:for-each>
+				</field>
+			</xsl:if>
+
 
 			<xsl:apply-templates select="nh:descMeta"/>
 
@@ -123,7 +156,7 @@
 
 			<!-- get sortable fields: distinct values in $nudsGroup -->
 			<xsl:call-template name="get_hoard_sort_fields"/>
-			
+
 			<field name="fulltext">
 				<xsl:for-each select="descendant-or-self::text()">
 					<xsl:value-of select="normalize-space(.)"/>

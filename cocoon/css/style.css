@@ -247,7 +247,7 @@ div.facet {
 	margin-bottom:10px;
 	border:1px solid silver;
 }
-li.term {
+li.h_item {
 	margin:2px 0;
 	display:table;
 	width:100%;
@@ -665,8 +665,11 @@ div.custominfostyle {
 	padding:10px;
 }
 /* Used for date (century/decade) facet */
-.date-div {
+.date-div, .hierarchical-div {
 	margin-top:-10px;
+}
+.hierarchical-list {
+	display:table;
 }
 .century-multiselect-checkboxes {
 	display:table;
