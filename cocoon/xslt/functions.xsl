@@ -433,6 +433,8 @@
 					<xsl:when test="$name='saleItem'">Sale Item</xsl:when>
 					<xsl:when test="$name='salePrice'">Sale Price</xsl:when>
 					<xsl:when test="$name='subjectSet'">SubjectSet</xsl:when>
+					<xsl:when test="$name='tpq'">Opening Date</xsl:when>
+					<xsl:when test="$name='taq'">Closing Date</xsl:when>
 					<xsl:when test="$name='testmark'">Test Mark</xsl:when>
 					<xsl:when test="$name='typeDesc'">Typological Description</xsl:when>
 					<xsl:when test="$name = 'timestamp'">Date Record Modified</xsl:when>
@@ -450,101 +452,37 @@
 		<xsl:param name="field"/>
 		<xsl:param name="lang"/>
 		<xsl:choose>
-			<xsl:when test="$lang='ar'">
-				<xsl:choose>
-					<xsl:when test="contains($field, '_uri')">
-						<xsl:variable name="name" select="substring-before($field, '_uri')"/>
-						<xsl:text> URI</xsl:text>
-						<xsl:value-of select="numishare:regularize_node($name, $lang)"/>
-					</xsl:when>
-					<xsl:when test="contains($field, '_facet')">
-						<xsl:variable name="name" select="substring-before($field, '_facet')"/>
-						<xsl:value-of select="numishare:regularize_node($name, $lang)"/>
-					</xsl:when>
-					<xsl:when test="contains($field, '_num')">
-						<xsl:variable name="name" select="substring-before($field, '_num')"/>
-						<xsl:value-of select="numishare:regularize_node($name, $lang)"/>
-					</xsl:when>
-					<xsl:when test="contains($field, '_text')">
-						<xsl:variable name="name" select="substring-before($field, '_text')"/>
-						<xsl:value-of select="numishare:regularize_node($name, $lang)"/>
-					</xsl:when>
-					<xsl:when test="contains($field, '_min') or contains($field, '_max')">
-						<xsl:variable name="name" select="substring-before($field, '_m')"/>
-						<xsl:value-of select="numishare:normalize_fields($name, $lang)"/>
-					</xsl:when>
-					<xsl:when test="contains($field, '_display')">
-						<xsl:variable name="name" select="substring-before($field, '_display')"/>
-						<xsl:value-of select="numishare:regularize_node($name, $lang)"/>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:value-of select="numishare:regularize_node($field, $lang)"/>
-					</xsl:otherwise>
-				</xsl:choose>
+			<xsl:when test="contains($field, '_uri')">
+				<xsl:variable name="name" select="substring-before($field, '_uri')"/>
+				<xsl:value-of select="numishare:regularize_node($name, $lang)"/>
+				<xsl:text> URI</xsl:text>
 			</xsl:when>
-			<xsl:when test="$lang='fr'">
-				<xsl:choose>
-					<xsl:when test="contains($field, '_uri')">
-						<xsl:variable name="name" select="substring-before($field, '_uri')"/>
-						<xsl:value-of select="numishare:regularize_node($name, $lang)"/>
-						<xsl:text> URI</xsl:text>
-					</xsl:when>
-					<xsl:when test="contains($field, '_facet')">
-						<xsl:variable name="name" select="substring-before($field, '_facet')"/>
-						<xsl:value-of select="numishare:regularize_node($name, $lang)"/>
-					</xsl:when>
-					<xsl:when test="contains($field, '_num')">
-						<xsl:variable name="name" select="substring-before($field, '_num')"/>
-						<xsl:value-of select="numishare:regularize_node($name, $lang)"/>
-					</xsl:when>
-					<xsl:when test="contains($field, '_text')">
-						<xsl:variable name="name" select="substring-before($field, '_text')"/>
-						<xsl:value-of select="numishare:regularize_node($name, $lang)"/>
-					</xsl:when>
-					<xsl:when test="contains($field, '_min') or contains($field, '_max')">
-						<xsl:variable name="name" select="substring-before($field, '_m')"/>
-						<xsl:value-of select="numishare:normalize_fields($name, $lang)"/>
-					</xsl:when>
-					<xsl:when test="contains($field, '_display')">
-						<xsl:variable name="name" select="substring-before($field, '_display')"/>
-						<xsl:value-of select="numishare:regularize_node($name, $lang)"/>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:value-of select="numishare:regularize_node($field, $lang)"/>
-					</xsl:otherwise>
-				</xsl:choose>
+			<xsl:when test="contains($field, '_facet')">
+				<xsl:variable name="name" select="substring-before($field, '_facet')"/>
+				<xsl:value-of select="numishare:regularize_node($name, $lang)"/>
+			</xsl:when>
+			<xsl:when test="contains($field, '_hier')">
+				<xsl:variable name="name" select="substring-before($field, '_hier')"/>
+				<xsl:value-of select="numishare:regularize_node($name, $lang)"/>
+			</xsl:when>
+			<xsl:when test="contains($field, '_num')">
+				<xsl:variable name="name" select="substring-before($field, '_num')"/>
+				<xsl:value-of select="numishare:regularize_node($name, $lang)"/>
+			</xsl:when>
+			<xsl:when test="contains($field, '_text')">
+				<xsl:variable name="name" select="substring-before($field, '_text')"/>
+				<xsl:value-of select="numishare:regularize_node($name, $lang)"/>
+			</xsl:when>
+			<xsl:when test="contains($field, '_min') or contains($field, '_max')">
+				<xsl:variable name="name" select="substring-before($field, '_m')"/>
+				<xsl:value-of select="numishare:normalize_fields($name, $lang)"/>
+			</xsl:when>
+			<xsl:when test="contains($field, '_display')">
+				<xsl:variable name="name" select="substring-before($field, '_display')"/>
+				<xsl:value-of select="numishare:regularize_node($name, $lang)"/>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:choose>
-					<xsl:when test="contains($field, '_uri')">
-						<xsl:variable name="name" select="substring-before($field, '_uri')"/>
-						<xsl:value-of select="numishare:regularize_node($name, $lang)"/>
-						<xsl:text> URI</xsl:text>
-					</xsl:when>
-					<xsl:when test="contains($field, '_facet')">
-						<xsl:variable name="name" select="substring-before($field, '_facet')"/>
-						<xsl:value-of select="numishare:regularize_node($name, $lang)"/>
-					</xsl:when>
-					<xsl:when test="contains($field, '_num')">
-						<xsl:variable name="name" select="substring-before($field, '_num')"/>
-						<xsl:value-of select="numishare:regularize_node($name, $lang)"/>
-					</xsl:when>
-					<xsl:when test="contains($field, '_text')">
-						<xsl:variable name="name" select="substring-before($field, '_text')"/>
-						<xsl:value-of select="numishare:regularize_node($name, $lang)"/>
-					</xsl:when>
-					<xsl:when test="contains($field, '_min') or contains($field, '_max')">
-						<xsl:variable name="name" select="substring-before($field, '_m')"/>
-						<xsl:value-of select="numishare:normalize_fields($name, $lang)"/>
-					</xsl:when>
-					<xsl:when test="contains($field, '_display')">
-						<xsl:variable name="name" select="substring-before($field, '_display')"/>
-						<xsl:value-of select="numishare:regularize_node($name, $lang)"/>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:value-of select="numishare:regularize_node($field, $lang)"/>
-					</xsl:otherwise>
-				</xsl:choose>
+				<xsl:value-of select="numishare:regularize_node($field, $lang)"/>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:function>
@@ -722,23 +660,6 @@
 						<xsl:value-of select="concat('No label for ', $label)"/>
 					</xsl:otherwise>
 				</xsl:choose>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:function>
-	
-	<xsl:function name="numishare:normalizeYear">
-		<xsl:param name="year" as="xs:integer"/>
-	
-		<xsl:choose>
-			<xsl:when test="$year &lt; 0">
-				<xsl:value-of select="abs($year)"/>
-				<xsl:text> B.C.</xsl:text>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:if test="$year &lt;=400">
-					<xsl:text>A.D. </xsl:text>
-				</xsl:if>
-				<xsl:value-of select="$year"/>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:function>

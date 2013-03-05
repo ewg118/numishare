@@ -473,6 +473,9 @@
 		<!-- facets -->
 		<dynamicField name="*_facet" type="string" indexed="true" stored="true" multiValued="true"/>
 		
+		<!-- hiearchical fields (category in Mantis; findspot drilldown) -->
+		<dynamicField name="*_hier" type="string" indexed="true" stored="true" multiValued="true"/>
+		
 		<!--sorting -->
 		<dynamicField name="*_max" type="string" indexed="true" stored="true"/>
 		<dynamicField name="*_min" type="string" indexed="true" stored="true"/>

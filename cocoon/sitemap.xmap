@@ -643,12 +643,13 @@
 				<map:serialize type="html"/>
 			</map:match>
 
-			<map:match pattern="get_categories">
+			<map:match pattern="get_hier">
 				<map:generate
-					src="{global:solr-url}select?q=collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}&amp;facet.sort=index&amp;rows=0&amp;facet.field=category_facet&amp;fq=collection-name:{global:collection-name}+AND+{url-encode:category_facet:{request-param:fq}}&amp;facet.prefix={url-encode:{request-param:prefix}}&amp;link={url-encode:{request-param:link}}&amp;section={request-param:section}&amp;mode={request-param:mode}"
+					src="{global:solr-url}select?q=collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}&amp;facet.sort=index&amp;rows=0&amp;facet.field={request-param:field}_hier&amp;fq=collection-name:{global:collection-name}+AND+{url-encode:{request-param:field}_hier:{request-param:fq}}&amp;facet.prefix={url-encode:{request-param:prefix}}&amp;link={url-encode:{request-param:link}}&amp;mode={request-param:mode}"
 					label="record"/>
-				<map:transform type="xslt-saxon" src="xslt/ajax/get_categories.xsl" label="basiccontent">
+				<map:transform type="xslt-saxon" src="xslt/ajax/get_hier.xsl" label="basiccontent">
 					<map:parameter name="use-request-parameters" value="true"/>
+					<map:parameter name="collection-name" value="{global:collection-name}"/>
 					<map:parameter name="solr-url" value="{global:solr-url}"/>
 				</map:transform>
 				<map:transform type="cinclude"/>
