@@ -303,7 +303,7 @@
 				<xsl:when test="contains(@name, '_hier')">
 					<xsl:variable name="title" select="numishare:regularize_node(substring-before(@name, '_'), $lang)"/>
 					
-					<button class="ui-multiselect ui-widget ui-state-default ui-corner-all hierarchical-facet" type="button" title="{$title}" aria-haspopup="true" style="width: 200px;" id="{@name}_link" label="{$q}">
+					<button class="ui-multiselect ui-widget ui-state-default ui-corner-all hierarchical-facet" type="button" title="{$title}" aria-haspopup="true" style="width: 175px;" id="{@name}_link" label="{$q}">
 						<span class="ui-icon ui-icon-triangle-2-n-s"/>
 						<span>
 							<xsl:value-of select="$title"/>
@@ -312,7 +312,7 @@
 					
 					<xsl:choose>
 						<xsl:when test="contains($q, @name)">
-							<div class="ui-multiselect-menu ui-widget ui-widget-content ui-corner-all hierarchical-div" id="{substring-before(@name, '_hier')}-container" style="width: 200px">
+							<div class="ui-multiselect-menu ui-widget ui-widget-content ui-corner-all hierarchical-div" id="{substring-before(@name, '_hier')}-container" style="width: 175px">
 								<div class="ui-widget-header ui-corner-all ui-multiselect-header ui-helper-clearfix ui-multiselect-hasfilter">
 									<ul class="ui-helper-reset">
 										<li class="ui-multiselect-close">
@@ -329,7 +329,7 @@
 							</div>
 						</xsl:when>
 						<xsl:otherwise>
-							<div class="ui-multiselect-menu ui-widget ui-widget-content ui-corner-all hierarchical-div" id="{substring-before(@name, '_hier')}-container" style="width: 200px;">
+							<div class="ui-multiselect-menu ui-widget ui-widget-content ui-corner-all hierarchical-div" id="{substring-before(@name, '_hier')}-container" style="width: 175px;">
 								<div class="ui-widget-header ui-corner-all ui-multiselect-header ui-helper-clearfix ui-multiselect-hasfilter">
 									<ul class="ui-helper-reset">
 										<li class="ui-multiselect-close">
@@ -362,7 +362,7 @@
 								</li>
 							</ul>
 						</div>
-						<ul class="century-multiselect-checkboxes ui-helper-reset" id="{@name}-list" style="height: 175px;">
+						<ul class="century-multiselect-checkboxes ui-helper-reset hierarchical-list" id="{@name}-list" style="height: 175px;">
 							<xsl:if test="contains($q, @name)">
 								<cinclude:include src="cocoon:/get_centuries?q={encode-for-uri($q)}"/>
 							</xsl:if>

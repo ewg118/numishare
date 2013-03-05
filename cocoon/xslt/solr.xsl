@@ -77,7 +77,7 @@
 	<!-- accumulate unique geonames IDs -->
 	<xsl:variable name="geonames">
 		<places>
-			<xsl:for-each select="distinct-values(descendant::*[local-name()='geogname'][contains(@xlink:href, 'geonames.org')]/@xlink:href)">
+			<xsl:for-each select="distinct-values(descendant::*[local-name()='geogname'][contains(@xlink:href, 'geonames.org')]/@xlink:href|exsl:node-set($rdf)/descendant::*[contains(@rdf:resource, 'geonames.org')]/@rdf:resource)">
 				<xsl:variable name="geonameId" select="substring-before(substring-after(., 'geonames.org/'), '/')"/>
 				<xsl:variable name="geonames_data" as="element()*">
 					<results>
@@ -96,6 +96,8 @@
 							<xsl:value-of select="."/>
 						</xsl:if>		
 					</xsl:for-each>
+					<xsl:text>|</xsl:text>
+					<xsl:value-of select="$geonames_data//name"/>
 				</xsl:variable>
 				
 				<place id="{.}" hierarchy="{$hierarchy}">

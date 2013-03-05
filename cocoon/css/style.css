@@ -668,15 +668,16 @@ div.custominfostyle {
 .date-div, .hierarchical-div {
 	margin-top:-10px;
 }
+.hierarchical-list ul {
+	padding-left:20px;
+		
+}
 .hierarchical-list {
 	display:table;
 }
 .century-multiselect-checkboxes {
 	display:table;
 	width:100%;
-}
-.decades-list {
-	margin:0 0 0 25px;
 }
 .close {
 	float:right;
