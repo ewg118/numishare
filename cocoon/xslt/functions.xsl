@@ -3,12 +3,7 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:nh="http://nomisma.org/nudsHoard" xmlns:numishare="http://code.google.com/p/numishare/"
 	xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes="#all" version="2.0">
 
-	<xsl:function name="numishare:get_flickr_uri">
-		<xsl:param name="photo_id"/>
-		<xsl:value-of
-			select="document(concat('http://api.flickr.com/services/rest/?method=flickr.photos.getInfo&amp;api_key=', $flickr-api-key, '&amp;photo_id=', $photo_id, '&amp;format=rest'))/rsp/photo/urls/url[@type='photopage']"
-		/>
-	</xsl:function>
+	
 
 
 	<!-- ************** NORMALIZATION TEMPLATES ************** -->
@@ -660,6 +655,23 @@
 						<xsl:value-of select="concat('No label for ', $label)"/>
 					</xsl:otherwise>
 				</xsl:choose>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:function>
+	
+	<xsl:function name="numishare:normalizeYear">
+		<xsl:param name="year" as="xs:integer"/>
+		
+		<xsl:choose>
+			<xsl:when test="$year &lt; 0">
+				<xsl:value-of select="abs($year)"/>
+				<xsl:text> B.C.</xsl:text>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:if test="$year &lt;=400">
+					<xsl:text>A.D. </xsl:text>
+				</xsl:if>
+				<xsl:value-of select="$year"/>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:function>
