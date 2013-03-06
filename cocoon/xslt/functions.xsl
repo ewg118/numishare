@@ -3,12 +3,7 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:nh="http://nomisma.org/nudsHoard" xmlns:numishare="http://code.google.com/p/numishare/"
 	xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes="#all" version="2.0">
 
-	<xsl:function name="numishare:get_flickr_uri">
-		<xsl:param name="photo_id"/>
-		<xsl:value-of
-			select="document(concat('http://api.flickr.com/services/rest/?method=flickr.photos.getInfo&amp;api_key=', $flickr-api-key, '&amp;photo_id=', $photo_id, '&amp;format=rest'))/rsp/photo/urls/url[@type='photopage']"
-		/>
-	</xsl:function>
+	
 
 
 	<!-- ************** NORMALIZATION TEMPLATES ************** -->
@@ -57,7 +52,7 @@
 		<xsl:choose>
 			<xsl:when test="$lang='ar'">
 				<xsl:choose>
-					<xsl:when test="$name='acknowledgment'">تعريف</xsl:when>					
+					<xsl:when test="$name='acknowledgment'">تعريف</xsl:when>
 					<xsl:when test="$name='acquiredFrom'">مكان الحصول عليها</xsl:when>
 					<xsl:when test="$name='appraisal'">القيمة</xsl:when>
 					<xsl:when test="$name='appraiser'">من الذى حدد القيمة </xsl:when>
@@ -123,7 +118,7 @@
 			</xsl:when>
 			<xsl:when test="$lang='de'">
 				<xsl:choose>
-					<xsl:when test="$name='acknowledgment'">[]</xsl:when>					
+					<xsl:when test="$name='acknowledgment'">[]</xsl:when>
 					<xsl:when test="$name='acquiredFrom'">Erworben von</xsl:when>
 					<xsl:when test="$name='adminDesc'">Administrativ</xsl:when>
 					<xsl:when test="$name='appraisal'">[]</xsl:when>
@@ -191,7 +186,7 @@
 					<xsl:when test="$name='rev_leg'">Rückseitenlegende</xsl:when>
 					<xsl:when test="$name='rev_type'">Rückseitentyp</xsl:when>
 					<xsl:when test="$name='saleCatalog'">Auktionskatalog</xsl:when>
-					<xsl:when test="$name='saleItem'"></xsl:when>
+					<xsl:when test="$name='saleItem'"/>
 					<xsl:when test="$name='salePrice'">Verkaufspreis</xsl:when>
 					<xsl:when test="$name='shape'">Form</xsl:when>
 					<xsl:when test="$name='state'">Zustand</xsl:when>
@@ -216,23 +211,29 @@
 			</xsl:when>
 			<xsl:when test="$lang='fr'">
 				<xsl:choose>
-					<xsl:when test="$name='acknowledgment'">Remerciement</xsl:when>					
+					<xsl:when test="$name='acknowledgment'">Remerciement</xsl:when>
 					<xsl:when test="$name='acquiredFrom'">Acquis de </xsl:when>
 					<xsl:when test="$name='adminDesc'">Historique administratif</xsl:when>
 					<xsl:when test="$name='appraisal'">Valorisation</xsl:when>
 					<xsl:when test="$name='appraiser'">Evaluateur</xsl:when>
 					<xsl:when test="$name='authority'">Autorité émettrice</xsl:when>
 					<xsl:when test="$name='axis'">Axe</xsl:when>
+					<xsl:when test="$name='century'">Siècle</xsl:when>
+					<xsl:when test="$name='coinType'">Type de monnaie</xsl:when>
 					<xsl:when test="$name='collection'">Collection</xsl:when>
 					<xsl:when test="$name='color'">Couleur</xsl:when>
 					<xsl:when test="$name='completeness'">Intégrité</xsl:when>
 					<xsl:when test="$name='condition'">Etat de conservation</xsl:when>
 					<xsl:when test="$name='conservationState'">Etat de conservation</xsl:when>
+					<xsl:when test="$name='contents'">Contenu</xsl:when>
 					<xsl:when test="$name='coordinates'">Coordonnées</xsl:when>
 					<xsl:when test="$name='countermark'">Contremarque</xsl:when>
-					<xsl:when test="$name='provenance'">Provenance</xsl:when>
 					<xsl:when test="$name='date'">Date</xsl:when>
+					<xsl:when test="$name='dateRange'">Intervalle chronologique</xsl:when>
 					<xsl:when test="$name='dateOnObject'">Date sur l'objet</xsl:when>
+					<xsl:when test="$name='decade'">Décennie</xsl:when>
+					<xsl:when test="$name='degree'">Degré</xsl:when>
+					<xsl:when test="$name='deity'">Divinité</xsl:when>
 					<xsl:when test="$name='dob'">Date sur l'objet</xsl:when>
 					<xsl:when test="$name='denomination'">Dénomination</xsl:when>
 					<xsl:when test="$name='department'">Département</xsl:when>
@@ -250,10 +251,13 @@
 					<xsl:when test="$name='geographic'">Géographique</xsl:when>
 					<xsl:when test="$name='grade'">Etat</xsl:when>
 					<xsl:when test="$name='height'">Hauteur</xsl:when>
+					<xsl:when test="$name='hoard'">Trésor</xsl:when>
+					<xsl:when test="$name='hoardDesc'">Description du trésor</xsl:when>
 					<xsl:when test="$name='identifier'">Identifiant</xsl:when>
 					<xsl:when test="$name='issuer'">Emetteur</xsl:when>
 					<xsl:when test="$name='landowner'">Propriétaire du sol</xsl:when>
 					<xsl:when test="$name='legend'">Légende</xsl:when>
+					<xsl:when test="$name='manufacture'">Technique d'émission</xsl:when>
 					<xsl:when test="$name='material'">Matériau</xsl:when>
 					<xsl:when test="$name='measurementsSet'">Mesures</xsl:when>
 					<xsl:when test="$name='mint'">Atelier</xsl:when>
@@ -261,17 +265,21 @@
 					<xsl:when test="$name='objectType'">Type d'objet</xsl:when>
 					<xsl:when test="$name='obverse'">Avers/Droit</xsl:when>
 					<xsl:when test="$name='obv_leg'"> Légende d'avers/de droit</xsl:when>
+					<xsl:when test="$name='obv_type'">Type d'avers</xsl:when>
 					<xsl:when test="$name='owner'">Propriétaire</xsl:when>
 					<xsl:when test="$name='physDesc'">Description physique</xsl:when>
 					<xsl:when test="$name='portrait'">Portrait</xsl:when>
 					<xsl:when test="$name='private'">Privé</xsl:when>
+					<xsl:when test="$name='provenance'">Provenance</xsl:when>
 					<xsl:when test="$name='public'">Publique</xsl:when>
+					<xsl:when test="$name='publisher'">Maison d'édition</xsl:when>
 					<xsl:when test="$name='reference'">Référence</xsl:when>
 					<xsl:when test="$name='refDesc'">Références</xsl:when>
 					<xsl:when test="$name='region'">Région</xsl:when>
 					<xsl:when test="$name='repository'">Dépositaire</xsl:when>
 					<xsl:when test="$name='reverse'">Revers</xsl:when>
 					<xsl:when test="$name='rev_leg'">Légende de revers</xsl:when>
+					<xsl:when test="$name='rev_type'">Type de revers</xsl:when>
 					<xsl:when test="$name='saleCatalog'">Catalogue de vente</xsl:when>
 					<xsl:when test="$name='saleItem'">Numéro de lot</xsl:when>
 					<xsl:when test="$name='salePrice'">Prix de vente</xsl:when>
@@ -298,7 +306,7 @@
 			</xsl:when>
 			<xsl:when test="$lang='ro'">
 				<xsl:choose>
-					<xsl:when test="$name='acknowledgment'">Mulţumiri</xsl:when>					
+					<xsl:when test="$name='acknowledgment'">Mulţumiri</xsl:when>
 					<xsl:when test="$name='acquiredFrom'">Achiziţionat de la</xsl:when>
 					<xsl:when test="$name='adminDesc'">Istoric administrativ</xsl:when>
 					<xsl:when test="$name='appraisal'">Evaluare</xsl:when>
@@ -391,10 +399,11 @@
 				</xsl:choose>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:choose>					
+				<xsl:choose>
 					<xsl:when test="$name='acquiredFrom'">Acquired From</xsl:when>
 					<xsl:when test="$name='adminDesc'">Administrative History</xsl:when>
-					<xsl:when test="$name='closing_date'">Closing Date</xsl:when>					
+					<xsl:when test="$name='coinType'">Coin Type</xsl:when>
+					<xsl:when test="$name='closing_date'">Closing Date</xsl:when>
 					<xsl:when test="$name='conservationState'">Conservation State</xsl:when>
 					<xsl:when test="$name='provenance'">Provenance</xsl:when>
 					<xsl:when test="$name='dateOnObject'">Date on Object</xsl:when>
@@ -406,18 +415,21 @@
 					<xsl:when test="$name='fromDate'">From Date</xsl:when>
 					<xsl:when test="$name='toDate'">To Date</xsl:when>
 					<xsl:when test="$name='measurementsSet'">Measurements</xsl:when>
+					<xsl:when test="$name='noteSet'">Notes</xsl:when>
 					<xsl:when test="$name='objectType'">Object Type</xsl:when>
-					<xsl:when test="$name = 'obv_leg'">Obverse Legend</xsl:when>
-					<xsl:when test="$name = 'obv_type'">Obverse Type</xsl:when>
+					<xsl:when test="$name='obv_leg'">Obverse Legend</xsl:when>
+					<xsl:when test="$name='obv_type'">Obverse Type</xsl:when>
 					<xsl:when test="$name='physDesc'">Physical Description</xsl:when>
 					<xsl:when test="$name='previousColl'">Previous Collection</xsl:when>
 					<xsl:when test="$name='refDesc'">References</xsl:when>
-					<xsl:when test="$name = 'rev_leg'">Reverse Legend</xsl:when>
-					<xsl:when test="$name = 'rev_type'">Reverse Type</xsl:when>
+					<xsl:when test="$name='rev_leg'">Reverse Legend</xsl:when>
+					<xsl:when test="$name='rev_type'">Reverse Type</xsl:when>
 					<xsl:when test="$name='saleCatalog'">Sale Catalog</xsl:when>
 					<xsl:when test="$name='saleItem'">Sale Item</xsl:when>
 					<xsl:when test="$name='salePrice'">Sale Price</xsl:when>
 					<xsl:when test="$name='subjectSet'">SubjectSet</xsl:when>
+					<xsl:when test="$name='tpq'">Opening Date</xsl:when>
+					<xsl:when test="$name='taq'">Closing Date</xsl:when>
 					<xsl:when test="$name='testmark'">Test Mark</xsl:when>
 					<xsl:when test="$name='typeDesc'">Typological Description</xsl:when>
 					<xsl:when test="$name = 'timestamp'">Date Record Modified</xsl:when>
@@ -435,101 +447,37 @@
 		<xsl:param name="field"/>
 		<xsl:param name="lang"/>
 		<xsl:choose>
-			<xsl:when test="$lang='ar'">
-				<xsl:choose>
-					<xsl:when test="contains($field, '_uri')">
-						<xsl:variable name="name" select="substring-before($field, '_uri')"/>
-						<xsl:text> URI</xsl:text>
-						<xsl:value-of select="numishare:regularize_node($name, $lang)"/>
-					</xsl:when>
-					<xsl:when test="contains($field, '_facet')">
-						<xsl:variable name="name" select="substring-before($field, '_facet')"/>
-						<xsl:value-of select="numishare:regularize_node($name, $lang)"/>
-					</xsl:when>
-					<xsl:when test="contains($field, '_num')">
-						<xsl:variable name="name" select="substring-before($field, '_num')"/>
-						<xsl:value-of select="numishare:regularize_node($name, $lang)"/>
-					</xsl:when>
-					<xsl:when test="contains($field, '_text')">
-						<xsl:variable name="name" select="substring-before($field, '_text')"/>
-						<xsl:value-of select="numishare:regularize_node($name, $lang)"/>
-					</xsl:when>
-					<xsl:when test="contains($field, '_min') or contains($field, '_max')">
-						<xsl:variable name="name" select="substring-before($field, '_m')"/>
-						<xsl:value-of select="numishare:normalize_fields($name, $lang)"/>
-					</xsl:when>
-					<xsl:when test="contains($field, '_display')">
-						<xsl:variable name="name" select="substring-before($field, '_display')"/>
-						<xsl:value-of select="numishare:regularize_node($name, $lang)"/>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:value-of select="numishare:regularize_node($field, $lang)"/>
-					</xsl:otherwise>
-				</xsl:choose>
+			<xsl:when test="contains($field, '_uri')">
+				<xsl:variable name="name" select="substring-before($field, '_uri')"/>
+				<xsl:value-of select="numishare:regularize_node($name, $lang)"/>
+				<xsl:text> URI</xsl:text>
 			</xsl:when>
-			<xsl:when test="$lang='fr'">
-				<xsl:choose>
-					<xsl:when test="contains($field, '_uri')">
-						<xsl:variable name="name" select="substring-before($field, '_uri')"/>
-						<xsl:value-of select="numishare:regularize_node($name, $lang)"/>
-						<xsl:text> URI</xsl:text>
-					</xsl:when>
-					<xsl:when test="contains($field, '_facet')">
-						<xsl:variable name="name" select="substring-before($field, '_facet')"/>
-						<xsl:value-of select="numishare:regularize_node($name, $lang)"/>
-					</xsl:when>
-					<xsl:when test="contains($field, '_num')">
-						<xsl:variable name="name" select="substring-before($field, '_num')"/>
-						<xsl:value-of select="numishare:regularize_node($name, $lang)"/>
-					</xsl:when>
-					<xsl:when test="contains($field, '_text')">
-						<xsl:variable name="name" select="substring-before($field, '_text')"/>
-						<xsl:value-of select="numishare:regularize_node($name, $lang)"/>
-					</xsl:when>
-					<xsl:when test="contains($field, '_min') or contains($field, '_max')">
-						<xsl:variable name="name" select="substring-before($field, '_m')"/>
-						<xsl:value-of select="numishare:normalize_fields($name, $lang)"/>
-					</xsl:when>
-					<xsl:when test="contains($field, '_display')">
-						<xsl:variable name="name" select="substring-before($field, '_display')"/>
-						<xsl:value-of select="numishare:regularize_node($name, $lang)"/>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:value-of select="numishare:regularize_node($field, $lang)"/>
-					</xsl:otherwise>
-				</xsl:choose>
+			<xsl:when test="contains($field, '_facet')">
+				<xsl:variable name="name" select="substring-before($field, '_facet')"/>
+				<xsl:value-of select="numishare:regularize_node($name, $lang)"/>
+			</xsl:when>
+			<xsl:when test="contains($field, '_hier')">
+				<xsl:variable name="name" select="substring-before($field, '_hier')"/>
+				<xsl:value-of select="numishare:regularize_node($name, $lang)"/>
+			</xsl:when>
+			<xsl:when test="contains($field, '_num')">
+				<xsl:variable name="name" select="substring-before($field, '_num')"/>
+				<xsl:value-of select="numishare:regularize_node($name, $lang)"/>
+			</xsl:when>
+			<xsl:when test="contains($field, '_text')">
+				<xsl:variable name="name" select="substring-before($field, '_text')"/>
+				<xsl:value-of select="numishare:regularize_node($name, $lang)"/>
+			</xsl:when>
+			<xsl:when test="contains($field, '_min') or contains($field, '_max')">
+				<xsl:variable name="name" select="substring-before($field, '_m')"/>
+				<xsl:value-of select="numishare:normalize_fields($name, $lang)"/>
+			</xsl:when>
+			<xsl:when test="contains($field, '_display')">
+				<xsl:variable name="name" select="substring-before($field, '_display')"/>
+				<xsl:value-of select="numishare:regularize_node($name, $lang)"/>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:choose>
-					<xsl:when test="contains($field, '_uri')">
-						<xsl:variable name="name" select="substring-before($field, '_uri')"/>
-						<xsl:value-of select="numishare:regularize_node($name, $lang)"/>
-						<xsl:text> URI</xsl:text>
-					</xsl:when>
-					<xsl:when test="contains($field, '_facet')">
-						<xsl:variable name="name" select="substring-before($field, '_facet')"/>
-						<xsl:value-of select="numishare:regularize_node($name, $lang)"/>
-					</xsl:when>
-					<xsl:when test="contains($field, '_num')">
-						<xsl:variable name="name" select="substring-before($field, '_num')"/>
-						<xsl:value-of select="numishare:regularize_node($name, $lang)"/>
-					</xsl:when>
-					<xsl:when test="contains($field, '_text')">
-						<xsl:variable name="name" select="substring-before($field, '_text')"/>
-						<xsl:value-of select="numishare:regularize_node($name, $lang)"/>
-					</xsl:when>
-					<xsl:when test="contains($field, '_min') or contains($field, '_max')">
-						<xsl:variable name="name" select="substring-before($field, '_m')"/>
-						<xsl:value-of select="numishare:normalize_fields($name, $lang)"/>
-					</xsl:when>
-					<xsl:when test="contains($field, '_display')">
-						<xsl:variable name="name" select="substring-before($field, '_display')"/>
-						<xsl:value-of select="numishare:regularize_node($name, $lang)"/>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:value-of select="numishare:regularize_node($field, $lang)"/>
-					</xsl:otherwise>
-				</xsl:choose>
+				<xsl:value-of select="numishare:regularize_node($field, $lang)"/>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:function>
@@ -603,6 +551,9 @@
 					<xsl:when test="$label='display_summary'">Résumé</xsl:when>
 					<xsl:when test="$label='display_map'">Carte</xsl:when>
 					<xsl:when test="$label='display_administrative'">Administratif</xsl:when>
+					<xsl:when test="$label='display_quantitative'">Analyse quantitative</xsl:when>
+					<xsl:when test="$label='display_visualization'">Visualisation</xsl:when>
+					<xsl:when test="$label='display_data-download'">Récupérer les données</xsl:when>
 					<xsl:when test="$label='results_all-terms'">Tous les termes</xsl:when>
 					<xsl:when test="$label='results_map-results'">Résultats géographiques</xsl:when>
 					<xsl:when test="$label='results_data-options'">Options de données</xsl:when>
@@ -616,6 +567,10 @@
 					<xsl:when test="$label='results_ascending'">Ordre ascendant</xsl:when>
 					<xsl:when test="$label='results_descending'">Ordre descendant</xsl:when>
 					<xsl:when test="$label='results_result-desc'">Afficher les références XX à YY à partir de ZZ résultats</xsl:when>
+					<xsl:when test="$label='results_filters'">Filtres</xsl:when>
+					<xsl:when test="$label='results_clear-all'">Effacer les termes sélectionnés</xsl:when>
+					<xsl:when test="$label='results_keyword'">Mot clef</xsl:when>
+					<xsl:when test="$label='results_sort-category'">Classer les catégories</xsl:when>
 					<xsl:otherwise>
 						<xsl:value-of select="concat('No label for ', $label)"/>
 					</xsl:otherwise>
@@ -679,6 +634,7 @@
 					<xsl:when test="$label='display_quantitative'">Quantitative Analysis</xsl:when>
 					<xsl:when test="$label='display_visualization'">Visualization</xsl:when>
 					<xsl:when test="$label='display_data-download'">Data Download</xsl:when>
+					<xsl:when test="$label='display_date-analysis'">Date Analysis</xsl:when>
 					<xsl:when test="$label='results_all-terms'">All Terms</xsl:when>
 					<xsl:when test="$label='results_map-results'">Map Results</xsl:when>
 					<xsl:when test="$label='results_filters'">Filters</xsl:when>
@@ -699,6 +655,23 @@
 						<xsl:value-of select="concat('No label for ', $label)"/>
 					</xsl:otherwise>
 				</xsl:choose>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:function>
+	
+	<xsl:function name="numishare:normalizeYear">
+		<xsl:param name="year" as="xs:integer"/>
+		
+		<xsl:choose>
+			<xsl:when test="$year &lt; 0">
+				<xsl:value-of select="abs($year)"/>
+				<xsl:text> B.C.</xsl:text>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:if test="$year &lt;=400">
+					<xsl:text>A.D. </xsl:text>
+				</xsl:if>
+				<xsl:value-of select="$year"/>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:function>

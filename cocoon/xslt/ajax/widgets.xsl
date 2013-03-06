@@ -29,6 +29,9 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 			<xsl:when test="$template = 'kml'">
 				<xsl:call-template name="numishare:getFindspots"/>
 			</xsl:when>
+			<xsl:when test="$template = 'json'">
+				<xsl:call-template name="numishare:getJsonFindspots"/>
+			</xsl:when>
 			<xsl:when test="$template = 'solr'">
 				<xsl:call-template name="numishare:solrFields"/>
 			</xsl:when>
@@ -83,6 +86,27 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 		<xsl:variable name="service" select="concat($endpoint, '?query=', encode-for-uri(normalize-space(replace($query, 'typeUri', $uri))), '&amp;output=xml')"/>
 
 		<xsl:apply-templates select="document($service)/res:sparql" mode="kml"/>
+	</xsl:template>
+	
+	<xsl:template name="numishare:getJsonFindspots">
+		<xsl:variable name="query">
+			<![CDATA[PREFIX oac:      <http://www.openannotation.org/ns/>
+			PREFIX rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+			PREFIX dcterms:  <http://purl.org/dc/terms/>
+			PREFIX nm:       <http://nomisma.org/id/>
+			
+			SELECT ?annotation ?uri ?title ?publisher ?findspot ?numismatic_term ?burial WHERE {
+			?annotation oac:hasBody <typeUri>.
+			?annotation oac:hasTarget ?uri .
+			?annotation dcterms:title ?title .
+			?annotation dcterms:publisher ?publisher .
+			?annotation nm:findspot ?findspot .
+			OPTIONAL { ?annotation nm:numismatic_term ?numismatic_term }
+			OPTIONAL { ?annotation nm:approximateburialdate ?burial }}]]>
+		</xsl:variable>
+		<xsl:variable name="service" select="concat($endpoint, '?query=', encode-for-uri(normalize-space(replace($query, 'typeUri', $uri))), '&amp;output=xml')"/>
+		
+		<xsl:apply-templates select="document($service)/res:sparql" mode="json"/>
 	</xsl:template>
 
 	<xsl:template name="numishare:getImages">
@@ -196,6 +220,10 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 
 	<xsl:template match="res:sparql" mode="solr">
 		<xsl:apply-templates select="descendant::res:result/res:binding[@name='findspot']" mode="solr"/>
+	</xsl:template>
+	
+	<xsl:template match="res:sparql" mode="json">
+		<xsl:apply-templates select="descendant::res:result/res:binding[@name='findspot']" mode="json"/>
 	</xsl:template>
 
 
@@ -340,6 +368,48 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 				</a>
 			</xsl:when>
 		</xsl:choose>
+	</xsl:template>
+	
+	<xsl:template match="res:binding[@name='findspot']" mode="json">
+		<xsl:variable name="coordinates">
+			<!-- add placemark -->
+			<xsl:choose>
+				<xsl:when test="contains(child::res:uri, 'geonames')">
+					<xsl:variable name="geonameId" select="substring-before(substring-after(child::res:uri, 'geonames.org/'), '/')"/>
+					<xsl:variable name="geonames_data" select="document(concat($geonames-url, '/get?geonameId=', $geonameId, '&amp;username=', $geonames_api_key, '&amp;style=full'))"/>
+					<xsl:variable name="coordinates" select="concat(exsl:node-set($geonames_data)//lng, ',', exsl:node-set($geonames_data)//lat)"/>
+					<xsl:value-of select="$coordinates"/>
+				</xsl:when>
+				<xsl:when test="string(res:literal)">
+					<xsl:value-of select="res:literal"/>
+				</xsl:when>
+			</xsl:choose>
+		</xsl:variable>
+		<xsl:variable name="title">
+			<xsl:value-of select="parent::node()/res:binding[@name='title']/res:literal"/>
+		</xsl:variable>
+		<xsl:variable name="description">
+			<![CDATA[
+          					<span><a href="]]><xsl:value-of select="parent::node()/res:binding[@name='uri']/res:uri"/><![CDATA[" target="_blank">]]><xsl:value-of
+				select="parent::node()/res:binding[@name='title']/res:literal"/><![CDATA[</a>]]>
+			<xsl:if test="string(parent::node()/res:binding[@name='burial']/res:literal)">
+				<![CDATA[- closing date: ]]><xsl:value-of select="number(parent::node()/res:binding[@name='burial']/res:literal)"/>
+			</xsl:if>
+			<![CDATA[</span>
+        				]]>
+		</xsl:variable>
+		<xsl:variable name="theme">red</xsl:variable>
+		
+		<xsl:variable name="start">
+			<xsl:value-of select="number(parent::node()/res:binding[@name='burial']/res:literal)"/>
+		</xsl:variable>
+		<xsl:variable name="end">
+			<xsl:value-of select="number(parent::node()/res:binding[@name='burial']/res:literal)"/>
+		</xsl:variable>
+		
+		<!-- output --> { <xsl:if test="not($coordinates='NULL')">"point": {"lon": <xsl:value-of select="tokenize($coordinates, '\|')[2]"/>, "lat": <xsl:value-of
+			select="tokenize($coordinates, '\|')[1]"/>},</xsl:if> "title": "<xsl:value-of select="$title"/>", "start": "<xsl:value-of select="$start"/>", <xsl:if test="string($end)">"end":
+				"<xsl:value-of select="$end"/>",</xsl:if> "options": { "theme": "<xsl:value-of select="$theme"/>", "description": "<xsl:value-of select="$description"/>" } } 
 	</xsl:template>
 
 	<xsl:template match="res:binding[@name='findspot']" mode="kml">

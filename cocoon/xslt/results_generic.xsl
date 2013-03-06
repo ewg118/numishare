@@ -296,41 +296,45 @@
 		</xsl:variable>
 
 		<xsl:choose>
-			<xsl:when test="@name = 'category_facet'">
-				<!--<h2>Category</h2>-->
-				<button class="ui-multiselect ui-widget ui-state-default ui-corner-all" type="button" title="Category" aria-haspopup="true" style="width: 200px;" id="{@name}_link" label="{$q}">
+			<xsl:when test="contains(@name, '_hier')">
+				<xsl:variable name="title" select="numishare:regularize_node(substring-before(@name, '_'), $lang)"/>
+
+				<button class="ui-multiselect ui-widget ui-state-default ui-corner-all hierarchical-facet" type="button" title="{$title}" aria-haspopup="true" style="width: 200px;" id="{@name}_link" label="{$q}">
 					<span class="ui-icon ui-icon-triangle-2-n-s"/>
-					<span>Category</span>
+					<span>
+						<xsl:value-of select="$title"/>
+					</span>
 				</button>
+
 				<xsl:choose>
 					<xsl:when test="contains($q, @name)">
-						<div class="ui-multiselect-menu ui-widget ui-widget-content ui-corner-all" style="width: 200px">
+						<div class="ui-multiselect-menu ui-widget ui-widget-content ui-corner-all hierarchical-div" id="{substring-before(@name, '_hier')}-container" style="width: 200px">
 							<div class="ui-widget-header ui-corner-all ui-multiselect-header ui-helper-clearfix ui-multiselect-hasfilter">
 								<ul class="ui-helper-reset">
 									<li class="ui-multiselect-close">
-										<a class="ui-multiselect-close category-close" href="#"> close<span class="ui-icon ui-icon-circle-close"/>
+										<a class="ui-multiselect-close hier-close" href="#"> close<span class="ui-icon ui-icon-circle-close"/>
 										</a>
 									</li>
 								</ul>
 							</div>
-							<ul class="category-multiselect-checkboxes ui-helper-reset" id="{@name}-list" style="height: 175px;">
+							<ul class="{substring-before(@name, '_hier')}-multiselect-checkboxes ui-helper-reset hierarchical-list" id="{@name}-list" style="height: 175px;" title="{$title}">
 								<xsl:if test="contains($q, @name)">
-									<cinclude:include src="cocoon:/get_categories?q={$q}&amp;fq=*&amp;prefix=L1&amp;link=&amp;section=collection"/>
+									<cinclude:include src="cocoon:/get_hier?q={$q}&amp;fq=*&amp;prefix=L1&amp;link=&amp;field={substring-before(@name, '_hier')}"/>
 								</xsl:if>
 							</ul>
 						</div>
 					</xsl:when>
 					<xsl:otherwise>
-						<div class="ui-multiselect-menu ui-widget ui-widget-content ui-corner-all" style="width: 200px;">
+						<div class="ui-multiselect-menu ui-widget ui-widget-content ui-corner-all hierarchical-div" id="{substring-before(@name, '_hier')}-container" style="width: 200px;">
 							<div class="ui-widget-header ui-corner-all ui-multiselect-header ui-helper-clearfix ui-multiselect-hasfilter">
 								<ul class="ui-helper-reset">
 									<li class="ui-multiselect-close">
-										<a class="ui-multiselect-close category-close" href="#"> close<span class="ui-icon ui-icon-circle-close"/>
+										<a class="ui-multiselect-close hier-close" href="#"> close<span class="ui-icon ui-icon-circle-close"/>
 										</a>
 									</li>
 								</ul>
 							</div>
-							<ul class="category-multiselect-checkboxes ui-helper-reset" id="{@name}-list" style="height: 175px;"/>
+							<ul class="{substring-before(@name, '_hier')}-multiselect-checkboxes ui-helper-reset hierarchical-list" id="{@name}-list" style="height: 175px;" title="{$title}"/>
 						</div>
 					</xsl:otherwise>
 				</xsl:choose>
@@ -532,14 +536,48 @@
 									<a class="ui-icon ui-icon-closethick remove_filter_ar"
 										href="{$display_path}results?q={if (string($new_query)) then encode-for-uri($new_query) else '*:*'}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}"/>
 									<span>
-										<xsl:value-of select="if ($field = 'century_num') then numishare:normalize_century($term) else $term"/>
+										<xsl:choose>
+											<xsl:when test="$field='century_num'">
+												<xsl:value-of select="numishare:normalize_century($term)"/>
+											</xsl:when>
+											<xsl:when test="contains($field, '_hier')">
+												<xsl:variable name="tokens" select="tokenize(substring($term, 2, string-length($term)-2), '\+')"/>
+												<xsl:for-each select="$tokens[position() &gt; 1]">
+													<xsl:sort/>
+													<xsl:value-of select="normalize-space(substring-after(., '|'))"/>
+													<xsl:if test="not(position()=last())">
+														<xsl:text>--</xsl:text>
+													</xsl:if>
+												</xsl:for-each>
+											</xsl:when>
+											<xsl:otherwise>
+												<xsl:value-of select="$term"/>
+											</xsl:otherwise>
+										</xsl:choose>
 										<b>:<xsl:value-of select="$name"/></b>
 									</span>
 								</xsl:when>
 								<xsl:otherwise>
 									<span>
 										<b><xsl:value-of select="$name"/>: </b>
-										<xsl:value-of select="if ($field = 'century_num') then numishare:normalize_century($term) else $term"/>
+										<xsl:choose>
+											<xsl:when test="$field='century_num'">
+												<xsl:value-of select="numishare:normalize_century($term)"/>
+											</xsl:when>
+											<xsl:when test="contains($field, '_hier')">
+												<xsl:variable name="tokens" select="tokenize(substring($term, 2, string-length($term)-2), '\+')"/>
+												<xsl:for-each select="$tokens[position() &gt; 1]">
+													<xsl:sort/>
+													<xsl:value-of select="normalize-space(substring-after(., '|'))"/>
+													<xsl:if test="not(position()=last())">
+														<xsl:text>--</xsl:text>
+													</xsl:if>
+												</xsl:for-each>
+											</xsl:when>
+											<xsl:otherwise>
+												<xsl:value-of select="$term"/>
+											</xsl:otherwise>
+										</xsl:choose>
 									</span>
 									<a class="ui-icon ui-icon-closethick remove_filter"
 										href="{$display_path}results?q={if (string($new_query)) then encode-for-uri($new_query) else '*:*'}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}"
@@ -573,6 +611,13 @@
 													</xsl:matching-substring>
 												</xsl:analyze-string>
 											</xsl:when>
+											<xsl:when test="substring($after-colon, 1, 1) = '('">
+												<xsl:analyze-string select="$after-colon" regex="\(([^\)]+)\)">
+													<xsl:matching-substring>
+														<xsl:value-of select="concat('(', regex-group(1), ')')"/>
+													</xsl:matching-substring>
+												</xsl:analyze-string>
+											</xsl:when>
 											<xsl:otherwise>
 												<xsl:analyze-string select="$after-colon" regex="([0-9]+)">
 													<xsl:matching-substring>
@@ -600,6 +645,13 @@
 															</xsl:matching-substring>
 														</xsl:analyze-string>
 													</xsl:when>
+													<xsl:when test="substring($after-colon, 1, 1) = '('">
+														<xsl:analyze-string select="$after-colon" regex="\(([^\)]+)\)">
+															<xsl:matching-substring>
+																<xsl:value-of select="concat('(', regex-group(1), ')')"/>
+															</xsl:matching-substring>
+														</xsl:analyze-string>
+													</xsl:when>
 													<xsl:otherwise>
 														<xsl:analyze-string select="$after-colon" regex="([0-9]+)">
 															<xsl:matching-substring>
@@ -609,7 +661,7 @@
 													</xsl:otherwise>
 												</xsl:choose>
 											</xsl:variable>
-											<xsl:value-of select="concat($other_field, ':', $other_value)"/>
+											<xsl:value-of select="concat($other_field, ':', encode-for-uri($other_value))"/>
 											<xsl:if test="position() != last()">
 												<xsl:text> OR </xsl:text>
 											</xsl:if>
@@ -634,8 +686,27 @@
 											<a
 												href="{$display_path}results?q={if (string($multicategory_query) and string($new_query)) then concat($new_query, ' AND ', $multicategory_query) else if (string($multicategory_query) and not(string($new_query))) then $multicategory_query else $new_query}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}"
 												>X</a>
-											<xsl:text>]</xsl:text>
-											<xsl:value-of select="if ($field='century_num') then numishare:normalize_century($value) else $value"/>
+											<xsl:text>]</xsl:text>											
+											
+											<xsl:choose>
+												<xsl:when test="$field='century_num'">
+													<xsl:value-of select="numishare:normalize_century($value)"/>
+												</xsl:when>
+												<xsl:when test="contains($field, '_hier')">
+													<xsl:variable name="tokens" select="tokenize(substring($value, 2, string-length($value)-2), '\+')"/>
+													<xsl:for-each select="$tokens[position() &gt; 1]">
+														<xsl:sort/>
+														<xsl:value-of select="normalize-space(replace(substring-after(., '|'), '&#x022;', ''))"/>
+														<xsl:if test="not(position()=last())">
+															<xsl:text>--</xsl:text>
+														</xsl:if>
+													</xsl:for-each>
+												</xsl:when>
+												<xsl:otherwise>
+													<xsl:value-of select="$value"/>
+												</xsl:otherwise>
+											</xsl:choose>
+											
 											<b>
 												<xsl:text>: </xsl:text>
 												<xsl:value-of select="numishare:normalize_fields($field, $lang)"/>
@@ -647,7 +718,25 @@
 												<xsl:value-of select="numishare:normalize_fields($field, $lang)"/>
 												<xsl:text>: </xsl:text>
 											</b>
-											<xsl:value-of select="if ($field='century_num') then numishare:normalize_century($value) else $value"/>
+											
+											<xsl:choose>
+												<xsl:when test="$field='century_num'">
+													<xsl:value-of select="numishare:normalize_century($value)"/>
+												</xsl:when>
+												<xsl:when test="contains($field, '_hier')">
+													<xsl:variable name="tokens" select="tokenize(substring($value, 2, string-length($value)-2), '\+')"/>
+													<xsl:for-each select="$tokens[position() &gt; 1]">
+														<xsl:sort/>
+														<xsl:value-of select="normalize-space(replace(substring-after(., '|'), '&#x022;', ''))"/>
+														<xsl:if test="not(position()=last())">
+															<xsl:text>--</xsl:text>
+														</xsl:if>
+													</xsl:for-each>
+												</xsl:when>
+												<xsl:otherwise>
+													<xsl:value-of select="$value"/>
+												</xsl:otherwise>
+											</xsl:choose>
 
 											<xsl:text>[</xsl:text>
 											<!-- concatenate the query with the multicategory removed with the new multicategory, or if the multicategory is empty, display just the $new_query -->
@@ -693,69 +782,7 @@
 					</xsl:when>
 				</xsl:choose>
 			</xsl:for-each>
-			<!--<xsl:if test="contains($q, 'category_facet')">
-				<xsl:variable name="category_query" select="$tokenized_q[contains(., 'category_facet')]"/>
-				<xsl:choose>
-					<!-\- if the category query comes from the search widget: -\->
-					<xsl:when test="contains($q, '(category_facet')">
-						<xsl:variable name="tokenized-multicategory" select="tokenize(substring-after(substring($category_query, 1, string-length($category_query) - 1), '('), ' OR ')"/>
-						<xsl:variable name="new_query">
-							<xsl:for-each select="$tokenized_q[not(. = $category_query)]">
-								<xsl:value-of select="."/>
-								<xsl:if test="position() != last()">
-									<xsl:text> AND </xsl:text>
-								</xsl:if>
-							</xsl:for-each>
-						</xsl:variable>
-
-						<div class="ui-widget ui-state-default ui-corner-all stacked_term">
-							<span class="term">
-								<b>Category: </b>
-								<xsl:for-each select="$tokenized-multicategory">
-									<xsl:variable name="value" select="."/>
-									<xsl:variable name="new_multicategory">
-										<xsl:for-each select="$tokenized-multicategory[not(. = $value)]">
-											<xsl:value-of select="."/>
-											<xsl:if test="position() != last()">
-												<xsl:text> OR </xsl:text>
-											</xsl:if>
-										</xsl:for-each>
-									</xsl:variable>
-									<xsl:variable name="multicategory_query">
-										<xsl:choose>
-											<xsl:when test="contains($new_multicategory, ' OR ')">
-												<xsl:value-of select="concat('(', $new_multicategory, ')')"/>
-											</xsl:when>
-											<xsl:otherwise>
-												<xsl:value-of select="$new_multicategory"/>
-											</xsl:otherwise>
-										</xsl:choose>
-									</xsl:variable>
-									<xsl:call-template name="recompile_category">
-										<xsl:with-param name="category_fragment" select="."/>
-										<xsl:with-param name="tokenized_fragment" select="tokenize(substring-after(replace(replace(replace(., '\)', ''), '\(', ''), '\+', ''), 'category_facet:'), ' ')"/>
-										<xsl:with-param name="level" as="xs:integer">1</xsl:with-param>
-									</xsl:call-template>
-									<xsl:text>[</xsl:text>
-									<a class="remove_segment"
-										href="?q={if (string($new_query)) then encode-for-uri(concat($new_query, ' AND ', $multicategory_query)) else encode-for-uri($multicategory_query)}">X</a>
-									<xsl:text>]</xsl:text>
-									<xsl:if test="not(position() = last())">
-										<xsl:text> OR </xsl:text>
-									</xsl:if>
-								</xsl:for-each>
-							</span>
-							<a class="ui-icon ui-icon-closethick remove_filter" href="?q={if (string($new_query)) then encode-for-uri($new_query) else '*:*'}">X</a>
-						</div>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:call-template name="render_categories">
-							<xsl:with-param name="category_fragment" select="$category_query"/>
-						</xsl:call-template>
-					</xsl:otherwise>
-				</xsl:choose>
-
-			</xsl:if>-->
+			
 			<!-- remove sort term -->
 			<xsl:if test="string($sort)">
 				<xsl:variable name="field" select="substring-before($sort, ' ')"/>

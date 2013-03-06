@@ -5,9 +5,9 @@ Library: jQuery
 Description: Rendering graphics based on hoard counts
 ************************************/
 $(document).ready(function () {
-	//enable fancyBox
 	$('a.thumbImage').fancybox();
-
+	
+	$("#tabs").tabs();
 	//enable basic query form
 	
 	/**
@@ -82,7 +82,11 @@ $(document).ready(function () {
 				formatter: function () {					
 					return this.y + ' grams';
 				}
-			}
+			},
+			exporting: {
+				enabled: true,
+				width: 1200
+			},
 		};
 		Highcharts.visualize(table, options);
 	});
@@ -92,8 +96,6 @@ $(document).ready(function () {
         			(RegExp(name + '=' + '(.+?)(&|$)').exec(location.search)||[,null])[1]
     		);
 	}
-
-
 	
 	$('#submit-weights').click(function () {
 		var selection = new Array();

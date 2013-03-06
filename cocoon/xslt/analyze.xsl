@@ -17,6 +17,7 @@
 	<xsl:param name="type"/>
 	<xsl:param name="chartType"/>
 	<xsl:param name="exclude"/>
+	<xsl:param name="options"/>
 
 	<!-- config variables -->
 	<xsl:variable name="url">
@@ -81,33 +82,41 @@
 		<div class="yui3-g">
 			<div class="yui3-u-1">
 				<div class="content">
-					<h1>Quantitative Analysis</h1>
+					<h1>
+						<xsl:value-of select="numishare:normalizeLabel('display_quantitative', $lang)"/>
+					</h1>
+					<span style="display:none" id="vis-pipeline">
+						<xsl:value-of select="$pipeline"/>
+					</span>
 					<div id="tabs">
 						<ul>
 							<li>
-								<a href="#visualization">Visualization</a>
+								<a href="#visualization">
+									<xsl:value-of select="numishare:normalizeLabel('display_visualization', $lang)"/>
+								</a>
 							</li>
 							<li>
-								<a href="#date-analysis">Date Analysis</a>
+								<a href="#date-analysis">
+									<xsl:value-of select="numishare:normalizeLabel('display_date-analysis', $lang)"/>
+								</a>
 							</li>
 							<li>
-								<a href="#data-download">Data Download</a>
+								<a href="#data-download">
+									<xsl:value-of select="numishare:normalizeLabel('display_data-download', $lang)"/>
+								</a>
 							</li>
 						</ul>
 						<div id="visualization" class="tab">
-							<h3>Typological Visualization</h3>
 							<xsl:call-template name="visualization">
 								<xsl:with-param name="action">#visualization</xsl:with-param>
 							</xsl:call-template>
 						</div>
 						<div id="date-analysis" class="tab">
-							<h3>Date Analysis</h3>
 							<xsl:call-template name="date-vis">
 								<xsl:with-param name="action">#date-analysis</xsl:with-param>
 							</xsl:call-template>
 						</div>
 						<div id="data-download" class="tab">
-							<h3>Data Download</h3>
 							<xsl:call-template name="data-download"/>
 						</div>
 					</div>

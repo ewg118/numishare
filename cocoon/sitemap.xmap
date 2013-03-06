@@ -286,7 +286,7 @@
 			<map:match pattern="ctype.rdf">
 				<map:aggregate element="content">
 					<map:part
-						src="{global:solr-url}select?q=collection-name:{global:collection-name}+AND+{url-encode:coinType_uri:*}&amp;rows=100000&amp;fl=id,title_display,coinType_uri,recordType,publisher_display,axis_num,diameter_num,taq_num,weight_num,thumbnail_obv,reference_obv,thumbnail_rev,reference_rev,findspot_uri,findspot_geo"/>
+						src="{global:solr-url}select?q=collection-name:{global:collection-name}+AND+{url-encode:coinType_uri:*}&amp;rows=100000&amp;fl=id,title_display,coinType_uri,recordType,publisher_display,repository_facet,axis_num,diameter_num,taq_num,weight_num,thumbnail_obv,reference_obv,thumbnail_rev,reference_rev,findspot_uri,findspot_geo"/>
 					<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
 				</map:aggregate>
 				<map:transform src="xslt/linked_data/solr_to_rdf.xsl" label="basiccontent" type="xslt-saxon">
@@ -643,12 +643,13 @@
 				<map:serialize type="html"/>
 			</map:match>
 
-			<map:match pattern="get_categories">
+			<map:match pattern="get_hier">
 				<map:generate
-					src="{global:solr-url}select?q=collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}&amp;facet.sort=index&amp;rows=0&amp;facet.field=category_facet&amp;fq=collection-name:{global:collection-name}+AND+{url-encode:category_facet:{request-param:fq}}&amp;facet.prefix={url-encode:{request-param:prefix}}&amp;link={url-encode:{request-param:link}}&amp;section={request-param:section}&amp;mode={request-param:mode}"
+					src="{global:solr-url}select?q=collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}&amp;facet.sort=index&amp;rows=0&amp;facet.field={request-param:field}_hier&amp;fq=collection-name:{global:collection-name}+AND+{url-encode:{request-param:field}_hier:{request-param:fq}}&amp;facet.prefix={url-encode:{request-param:prefix}}&amp;link={url-encode:{request-param:link}}&amp;mode={request-param:mode}"
 					label="record"/>
-				<map:transform type="xslt-saxon" src="xslt/ajax/get_categories.xsl" label="basiccontent">
+				<map:transform type="xslt-saxon" src="xslt/ajax/get_hier.xsl" label="basiccontent">
 					<map:parameter name="use-request-parameters" value="true"/>
+					<map:parameter name="collection-name" value="{global:collection-name}"/>
 					<map:parameter name="solr-url" value="{global:solr-url}"/>
 				</map:transform>
 				<map:transform type="cinclude"/>
@@ -752,7 +753,15 @@
 				<map:transform type="xslt-saxon" src="xslt/ajax/widgets.xsl" label="basiccontent">
 					<map:parameter name="use-request-parameters" value="true"/>
 				</map:transform>
-				<map:serialize type="xml"/>
+				<map:select type="parameter">
+					<map:parameter name="parameter-selector-test" value="{request-param:template}"/>
+					<map:when test="json">
+						<map:serialize type="text"/>
+					</map:when>
+					<map:otherwise>
+						<map:serialize type="xml"/>
+					</map:otherwise>
+				</map:select>
 			</map:match>
 		</map:pipeline>
 	</map:pipelines>

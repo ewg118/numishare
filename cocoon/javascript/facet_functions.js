@@ -1,3 +1,8 @@
+/*******************
+FUNCTIONS USED IN FACET-BASED PAGES: BROWSE, COLLECTION, AND MAPS
+
+
+********************/
 function getQuery(){
 	//get categories
 	query = new Array();
@@ -15,30 +20,29 @@ function getQuery(){
 		query.push(non_facet_terms.join(' AND '));
 	}
 	
-	
-	categories = new Array();
-	$('.term') .children('input:checked') .each(function () {
-		if ($(this) .parent('.term') .html() .indexOf('category_level') < 0 || $(this) .parent('.term') .children('ul') .html() .indexOf('<li') < 0 || $(this) .parent('.term') .children('.category_level').find('input:checked').length == 0) {
-			segment = new Array();
-			$(this) .parents('.term').each(function () {
-				segment.push('+"' + $(this).children('input').val() + '"');
-			});
-			var joined = 'category_facet:(' + segment.join(' ') + ')';
-			categories.push(joined);
+	//hierarchical facets
+	$('.hierarchical-list').each(function(){
+		var field = $(this).attr('id').split('-list')[0];
+		var categories = new Array();
+		$(this).find('input:checked') .each(function () {
+			if ($(this) .parent('.h_item') .html() .indexOf('category_level') < 0 || $(this) .parent('.h_item') .children('ul') .html() .indexOf('<li') < 0 || $(this) .parent('.h_item') .children('.category_level').find('input:checked').length == 0) {
+				segment = new Array();
+				$(this) .parents('.h_item').each(function () {
+					segment.push('+"' + $(this).children('input').val() + '"');
+				});
+				var joined = field + ':(' + segment.join(' ') + ')';
+				categories.push(joined);
+			}
+		});
+		//if the categories array is not null, establish the category query string
+		if (categories[0] != null) {
+			if (categories.length > 1) {
+				query.push('(' + categories.join(' OR ') + ')');
+			} else {
+				query.push(categories[0]);				
+			}
 		}
 	});
-	//if the categories array is not null, establish the category query string
-	if (categories[0] != null) {
-		if (categories.length > 1) {
-			if (collection_type == 'hoard'){
-				query.push(categories.join(' AND '));
-			} else {
-				query.push('(' + categories.join(' OR ') + ')');
-			}
-		} else {
-			query.push(categories[0]);				
-		}
-	}
 	
 	//get century/decades
 	var date = getDate();
@@ -175,23 +179,23 @@ function dateLabel(){
 	$('#century_num_link').children('span:nth-child(2)').text(date_string);
 }
 
-function category_label(){
+function hierarchyLabel(field, title){
 	categories = new Array();
-	$('.term') .children('input:checked') .each(function () {
-		if ($(this) .parent('.term') .html() .indexOf('category_level') < 0 || $(this) .parent('.term') .children('ul') .html() .indexOf('<li') < 0 || $(this) .parent('.term') .children('.category_level').find('input:checked').length == 0) {
+	$('#' + field + '_hier-list input:checked') .each(function () {
+		if ($(this) .parent('.h_item') .html() .indexOf('category_level') < 0 || $(this) .parent('.h_item') .children('ul') .html() .indexOf('<li') < 0 || $(this) .parent('.h_item') .children('.category_level').find('input:checked').length == 0) {
 			segment = new Array();
-			$(this) .parents('.term').each(function () {
+			$(this) .parents('.h_item').each(function () {
 				segment.push($(this).children('input').val().split('|')[1]);
 			});
 			var joined = segment.reverse().join('--');
 			categories.push(joined);
 			if (categories.length > 0 && categories.length <= 3){
-				$('#category_facet_link').attr('title', 'Category: ' + categories.join(', '));
-				$('#category_facet_link').children('span:nth-child(2)').text( 'Category: ' + categories.join(', '));
+				$('#' + field + '_hier_link').attr('title', title + ': ' + categories.join(', '));
+				$('#' + field + '_hier_link').children('span:nth-child(2)').text(title + ': ' + categories.join(', '));
 			} else if (categories.length > 3){
-				$('#category_facet_link').attr('title',  'Category: ' + categories.length + ' selected');
-				$('#category_facet_link').children('span:nth-child(2)').text( 'Category: ' + categories.length + ' selected');
-			} 
+				$('#' + field + '_hier_link').attr('title',  title + ': ' + categories.length + ' selected');
+				$('#' + field + '_hier_link').children('span:nth-child(2)').text(title + ': ' + categories.length + ' selected');
+			}
 		}
 	});
 }

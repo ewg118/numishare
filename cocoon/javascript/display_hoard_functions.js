@@ -5,9 +5,10 @@ Library: jQuery
 Description: Rendering graphics based on hoard counts
 ************************************/
 $(document).ready(function () {
-	$("#accordion").accordion({
+	/*$("#accordion").accordion({
 		//heightStyle: "content"
-	});
+	});*/
+	$("#quantTabs").tabs();
 	
 	$('.toggle-coin').click(function () {
 		var id = $(this).attr('id').split('-')[0];
@@ -40,6 +41,7 @@ function initialize_timemap(id) {
 			//theme: "red",
 			type: "json", // Data to be loaded in KML - must be a local URL
 			options: {
+				infoTemplate: '<div><strong><a href="{{href}}" target="_blank">{{title}}</a></strong><br/><br/><em>{{description}}</em></div>',
 				url: "../apis/get?id=" + id + "&format=json"// KML file to load
 			}
 		}],

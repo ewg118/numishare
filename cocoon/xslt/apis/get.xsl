@@ -10,6 +10,7 @@
 	<xsl:param name="id"/>
 	<xsl:param name="format"/>
 	<xsl:param name="mode"/>
+	<xsl:param name="lang"/>
 
 	<!-- config variables -->
 	<xsl:variable name="url" select="/content/config/url"/>

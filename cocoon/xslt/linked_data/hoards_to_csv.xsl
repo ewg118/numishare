@@ -7,6 +7,8 @@
 		<xsl:value-of select="//config/url"/>
 	</xsl:variable>
 	
+	<xsl:param name="lang"/>
+	<xsl:variable name="defaultLang" select="if (string($lang)) then $lang else 'en'"/>
 	<xsl:param name="calculate"/>
 	<xsl:param name="compare"/>
 	<xsl:param name="type"/>
@@ -17,25 +19,28 @@
 			<xsl:variable name="element">
 				<xsl:choose>
 					<xsl:when test=". = 'material' or .='denomination'">
-						<xsl:value-of select="."/>
+						<xsl:value-of select="$calculate"/>
 					</xsl:when>
 					<xsl:when test=".='mint' or .='region'">
 						<xsl:text>geogname</xsl:text>
 					</xsl:when>
-					<xsl:when test=".='date'">
-						<xsl:text>date</xsl:text>
-					</xsl:when>
 					<xsl:when test=".='dynasty'">
 						<xsl:text>famname</xsl:text>
+					</xsl:when>	
+					<xsl:when test=".='coinType'">
+						<xsl:text>coinType</xsl:text>
 					</xsl:when>
+					<xsl:when test=".='date'">
+						<xsl:text>date</xsl:text>
+					</xsl:when>					
 					<xsl:otherwise>
 						<xsl:text>persname</xsl:text>
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:variable>
 			<xsl:variable name="role">
-				<xsl:if test=". != 'material' and . != 'denomination' and . != 'date'">
-					<xsl:value-of select="."/>
+				<xsl:if test="$calculate != 'material' and $calculate != 'denomination' and $calculate != 'date' and $calculate != 'coinType'">
+					<xsl:value-of select="$calculate"/>
 				</xsl:if>
 			</xsl:variable>
 			
@@ -59,6 +64,8 @@
 				</xsl:if>
 			</counts>
 		</xsl:variable>
+		
+		<!--<xsl:copy-of select="$counts"/>-->
 		
 		<!-- display first row of CSV (hoard names) -->
 		<xsl:text>"",</xsl:text>

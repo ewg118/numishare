@@ -7,9 +7,15 @@ If the list is populated and then hidden, when it is re-activated, it fades in r
 ************************************/
 $(document).ready(function () {
 	var popupStatus = 0;
+	var pipeline = 'results';
 	
-	//set category button label on page load
-	category_label();
+	//set hierarchical labels on load
+	$('.hierarchical-facet').each(function(){
+		var field = $(this).attr('id').split('_hier')[0];
+		var title = $(this).attr('title');
+		hierarchyLabel(field, title);
+	});
+	
 	dateLabel();
 	
 	$("#backgroundPopup").livequery('click', function (event) {
@@ -39,7 +45,6 @@ $(document).ready(function () {
 		header: '<a class="ui-multiselect-none" href="#"><span class="ui-icon ui-icon-closethick"/><span>Uncheck all</span></a>',
 		create: function () {
 			var title = $(this).attr('title');
-			//alert(title);
 			var array_of_checked_values = $(this).multiselect("getChecked").map(function () {
 				return this.value;
 			}).get();
@@ -123,108 +128,83 @@ $(document).ready(function () {
 		}
 	}).multiselectfilter();
 	
-	$('#category_facet_link').hover(function () {
+	/***************** DRILLDOWN HIERARCHICAL FACETS ********************/
+	$('.hierarchical-facet').hover(function () {
 		$(this) .attr('class', 'ui-multiselect ui-widget ui-state-default ui-corner-all ui-state-focus');
 	},
 	function () {
 		$(this) .attr('class', 'ui-multiselect ui-widget ui-state-default ui-corner-all');
-	});
+	});	
 	
-	$('.category-close') .click(function () {
+	$('.hier-close') .click(function () {
 		disablePopup();
-	});
+		return false;
+	});	
 	
-	$('#category_facet_link').click(function () {
+	$('.hierarchical-facet').click(function () {
 		if (popupStatus == 0) {
 			$("#backgroundPopup").fadeIn("fast");
 			popupStatus = 1;
 		}
 		var list_id = $(this) .attr('id').split('_link')[0] + '-list';
-		var category = $(this) .attr('id') .split('_link')[0];
-		//var q = $(this) .attr('label');
+		var field = $(this) .attr('id').split('_hier')[0];
 		var q = getQuery();
 		if ($('#' + list_id).html().indexOf('<li') < 0) {
-			$.get('get_categories', {
-				q: q, category: category, prefix: 'L1', fq: '*', section: 'collection', link: ''
+			$.get('get_hier', {
+				q: q, field: field, prefix: 'L1', fq: '*', section: 'collection', link: ''
 			},
 			function (data) {
 				$('#' + list_id) .html(data);
 			});
 		}
 		$('#' + list_id).parent('div').attr('style', 'width: 192px;display:block;');
+		return false;
 	});
 	
 	//expand category when expand/compact image pressed
 	$('.expand_category') .livequery('click', function (event) {
-		var fq = $(this) .attr('id').split('__')[0];
-		var list = fq.split('|')[1] + '__list';
+		var fq = $(this).next('input').val();
+		var list = $(this) .attr('id').split('__')[0].split('|')[1] + '__list';
+		var field = $(this).attr('field');
 		var prefix = $(this).attr('next-prefix');
-		//var q = $(this) .attr('q');
 		var q = getQuery();
 		var section = $(this) .attr('section');
 		var link = $(this) .attr('link');
 		if ($(this) .children('img') .attr('src') .indexOf('plus') >= 0) {
-			$.get('get_categories', {
-				q: q, prefix: prefix, fq: '"' + fq.replace('_', ' ') + '"', link: link, section: section
+			$.get('get_hier', {
+				q: q, field:field, prefix: prefix, fq: '"' +fq + '"', link: link, section: section
 			},
 			function (data) {
 				$('#' + list) .html(data);
 			});
-			$(this) .parent('.term') .children('.category_level') .show();
+			$(this) .parent('li') .children('.' + field + '_level') .show();
 			$(this) .children('img') .attr('src', $(this) .children('img').attr('src').replace('plus', 'minus'));
 		} else {
-			$(this) .parent('.term') .children('.category_level') .hide();
+			$(this) .parent('li') .children('.' + field + '_level') .hide();
 			$(this) .children('img') .attr('src', $(this) .children('img').attr('src').replace('minus', 'plus'));
 		}
 	});
 	
 	//remove all ancestor or descendent checks on uncheck
-	$('.term input') .livequery('click', function (event) {
-		if ($(this) .is(':checked')) {
-			$(this) .parents('.term') .children('input') .attr('checked', true);
-		} else {
-			$(this) .parent('.term') .children('.category_level') .find('input').attr('checked', false);
-			//on unchecking, repopulate the categories
-			if ($(this) .parent().parent().parent().children('span').attr('class') == 'expand_category') {
-				var fq = $(this) .parent().parent().parent().children('.expand_category').attr('id').split('__')[0];
-				var list = fq.split('|')[1] + '__list';
-				var prefix = $(this).parent().parent().parent().children('.expand_category').attr('next-prefix');
-				var section = $(this).parent().parent().parent().children('.expand_category') .attr('section');
-				var link = $(this).parent().parent().parent().children('.expand_category') .attr('link');
-				var query = getQuery();
-				$.get('get_categories', {
-					q: query, prefix: prefix, fq: '"' + fq.replace('_', ' ') + '"', link: link, section: section
-				},
-				function (data) {
-					$('#' + list) .html(data);
-				});
-			} else {
-				var query = getQuery();
-				$.get('get_categories', {
-					q: query, category: 'category_facet', prefix: 'L1', fq: '*', section: 'collection', link: ''
-				},
-				function (data) {
-					$('#category_facet-list') .html(data);
-				});
-			}
-		}
+	$('.h_item input') .livequery('click', function (event) {
+		var field = $(this).closest('.ui-multiselect-menu').attr('id').split('-')[0];
+		var title = $('.' + field + '-multiselect-checkboxes').attr('title');
+		
 		var count_checked = 0;
-		$('.term input').each(function () {
-			if (this.checked) {
-				count_checked++;
-			}
+		$('#' + field + '_hier-list input:checked').each(function () {
+			count_checked++;
 		});
 		
 		if (count_checked > 0) {
-			category_label();
+			hierarchyLabel(field, title);
 		} else {
-			$('#category_facet_link').attr('title', 'Category');
-			$('#category_facet_link').children('span:nth-child(2)').html('Category');
+			$('#' + field + '_hier_link').attr('title', title);
+			$('#' + field + '_hier_link').children('span:nth-child(2)').html(title);
 		}
-	});
+		
+	});	
 	
-	
-	//handle expandable dates
+	/***************** DRILLDOWN FOR DATES ********************/
 	$('#century_num_link').hover(function () {
 		$(this) .attr('class', 'ui-multiselect ui-widget ui-state-default ui-corner-all ui-state-focus');
 	},
@@ -284,7 +264,6 @@ $(document).ready(function () {
 	//check parent century box when a decade box is checked
 	$('.decade_checkbox').livequery('click', function (event) {
 		if ($(this) .is(':checked')) {
-			//alert('test');
 			$(this) .parent('li').parent('ul').parent('li') .children('input') .attr('checked', true);
 		}
 		//set label
@@ -299,6 +278,8 @@ $(document).ready(function () {
 		dateLabel();
 	});
 	
+	
+	/***** SEARCH *****/
 	$('#search_button') .click(function () {
 		var q = getQuery();
 		$('#facet_form_query').attr('value', q);
@@ -316,7 +297,8 @@ $(document).ready(function () {
 		//disables popup only if it is enabled
 		if (popupStatus == 1) {
 			$("#backgroundPopup").fadeOut("fast");
-			$('#category_facet-list') .parent('div').attr('style', 'width: 192px;');
+			$('#category_hier-list') .parent('div').attr('style', 'width: 192px;');
+			$('#findspot_hier-list') .parent('div').attr('style', 'width: 192px;');
 			$('#century_num-list') .parent('div').attr('style', 'width: 192px;');
 			popupStatus = 0;
 		}

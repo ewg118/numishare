@@ -10,6 +10,7 @@
 	<xsl:param name="type"/>
 	<xsl:param name="chartType"/>
 	<xsl:param name="exclude"/>
+	<xsl:param name="options"/>
 
 	<xsl:template name="nudsHoard">
 		<xsl:apply-templates select="/content/nh:nudsHoard"/>
@@ -39,7 +40,7 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-		
+
 		<div class="yui3-u-1">
 			<div class="content">
 				<h1>
@@ -97,6 +98,16 @@
 						<xsl:apply-templates select="nh:descMeta/nh:refDesc"/>
 					</div>
 				</xsl:if>
+				<xsl:if test="nh:descMeta/nh:noteSet">
+					<div class="metadata_section">
+						<h2>
+							<xsl:value-of select="numishare:regularize_node('noteSet', $lang)"/>
+						</h2>
+						<ul>
+							<xsl:apply-templates select="nh:descMeta/nh:noteSet/nh:note" mode="descMeta"/>
+						</ul>
+					</div>
+				</xsl:if>
 			</div>
 		</div>
 		<div class="yui3-u-1">
@@ -127,21 +138,38 @@
 							<h1>
 								<xsl:value-of select="numishare:normalizeLabel('display_quantitative', $lang)"/>
 							</h1>
-							<div id="accordion">
-								<h3>Visualization</h3>
-								<div>
+							<span style="display:none" id="vis-pipeline">
+								<xsl:value-of select="$pipeline"/>
+							</span>
+							<div id="quantTabs">
+								<ul>
+									<li>
+										<a href="#visTab">
+											<xsl:value-of select="numishare:normalizeLabel('display_visualization', $lang)"/>
+										</a>
+									</li>
+									<li>
+										<a href="#dateTab">
+											<xsl:value-of select="numishare:normalizeLabel('display_date-analysis', $lang)"/>
+										</a>
+									</li>
+									<li>
+										<a href="#csvTab">
+											<xsl:value-of select="numishare:normalizeLabel('display_data-download', $lang)"/>
+										</a>
+									</li>
+								</ul>
+								<div id="visTab">
 									<xsl:call-template name="visualization">
 										<xsl:with-param name="action" select="concat('./', $id, '#quantitative')"/>
 									</xsl:call-template>
 								</div>
-								<h3>Date Analysis</h3>
-								<div>
+								<div id="dateTab">
 									<xsl:call-template name="date-vis">
 										<xsl:with-param name="action" select="concat('./', $id, '#quantitative')"/>
 									</xsl:call-template>
 								</div>
-								<h3>Data Download</h3>
-								<div>
+								<div id="csvTab">
 									<xsl:call-template name="data-download"/>
 								</div>
 							</div>
@@ -281,17 +309,24 @@
 					<xsl:text> (extraneous)</xsl:text>
 				</xsl:if>
 				<br/>
-				<xsl:if test="string(exsl:node-set($typeDesc)/nuds:typeDesc/nuds:denomination)">
-					<xsl:value-of select="exsl:node-set($typeDesc)/nuds:typeDesc/nuds:denomination"/>
-					<xsl:if test="string(exsl:node-set($typeDesc)/nuds:typeDesc/nuds:date) or string(exsl:node-set($typeDesc)/nuds:typeDesc/nuds:dateRange)">
-						<xsl:text>, </xsl:text>
-					</xsl:if>
-				</xsl:if>
+				<xsl:for-each select="exsl:node-set($typeDesc)/nuds:typeDesc/nuds:denomination">
+					<xsl:value-of select="."/>
+					<xsl:choose>
+						<xsl:when test="not(position()=last())">
+							<xsl:text>, </xsl:text>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:if test="parent::nuds:typeDesc/nuds:date or parent::nuds:typeDesc/nuds:dateRange">
+								<xsl:text>, </xsl:text>
+							</xsl:if>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:for-each>
 				<xsl:choose>
-					<xsl:when test="string(exsl:node-set($typeDesc)/nuds:typeDesc/nuds:date)">
-						<xsl:value-of select="exsl:node-set($typeDesc)/nuds:typeDesc/nuds:date"/>
+					<xsl:when test="exsl:node-set($typeDesc)/nuds:typeDesc/nuds:date">
+						<xsl:value-of select="exsl:node-set($typeDesc)/nuds:typeDesc/nuds:date[1]"/>
 					</xsl:when>
-					<xsl:when test="string(exsl:node-set($typeDesc)/nuds:typeDesc/nuds:dateRange)">
+					<xsl:when test="exsl:node-set($typeDesc)/nuds:typeDesc/nuds:dateRange">
 						<xsl:value-of select="exsl:node-set($typeDesc)/nuds:typeDesc/nuds:dateRange/nuds:fromDate"/>
 						<xsl:text> - </xsl:text>
 						<xsl:value-of select="exsl:node-set($typeDesc)/nuds:typeDesc/nuds:dateRange/nuds:toDate"/>
