@@ -116,7 +116,11 @@
 							<xsl:value-of select="nuds:nudsHeader/nuds:publicationStmt/nuds:publisher"/>
 						</dcterms:publisher>
 					</xsl:if>
-
+					<xsl:for-each select="descendant::nuds:repository">
+						<nm:collection>
+							<xsl:value-of select="."/>
+						</nm:collection>
+					</xsl:for-each>
 					<nm:numismatic_term rdf:resource="http://nomisma.org/id/coin"/>
 					<xsl:if test="string(nuds:descMeta/nuds:typeDesc/@xlink:href)">
 						<nm:type_series_item rdf:resource="{nuds:descMeta/nuds:typeDesc/@xlink:href}"/>
@@ -327,16 +331,14 @@
 								</xsl:if>
 							</xsl:for-each>
 						</dates>
-					</xsl:variable>					
+					</xsl:variable>
 					<xsl:if test="count($dates//date) &gt; 0">
 						<nm:closing_date rdf:datatype="xs:gYear">
 							<xsl:value-of select="format-number($dates//date[last()], '0000')"/>
 						</nm:closing_date>
 					</xsl:if>
 				</xsl:when>
-				<xsl:otherwise>
-					
-				</xsl:otherwise>
+				<xsl:otherwise> </xsl:otherwise>
 			</xsl:choose>
 
 
@@ -654,6 +656,11 @@
 			<dcterms:publisher>
 				<xsl:value-of select="str[@name='publisher_display']"/>
 			</dcterms:publisher>
+			<xsl:for-each select="arr[@name='repository_facet']/str">
+				<nm:collection>
+					<xsl:value-of select="."/>
+				</nm:collection>
+			</xsl:for-each>
 			<xsl:for-each select="arr[@name='coinType_uri']/str">
 				<nm:type_series_item rdf:resource="{.}"/>
 			</xsl:for-each>
