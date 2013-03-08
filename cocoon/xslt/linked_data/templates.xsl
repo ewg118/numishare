@@ -655,7 +655,7 @@
 			<dcterms:publisher>
 				<xsl:value-of select="str[@name='publisher_display']"/>
 			</dcterms:publisher>
-			<nm:numismatic_term rdf:resource="http://nomisma.org/id/{if ($recordType='hoard' then 'hoard' else 'coin'}"/>
+			<nm:numismatic_term rdf:resource="http://nomisma.org/id/{if ($recordType='hoard') then 'hoard' else 'coin'}"/>
 			<xsl:for-each select="arr[@name='repository_facet']/str">
 				<nm:collection>
 					<xsl:value-of select="."/>
