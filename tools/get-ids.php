@@ -53,7 +53,7 @@ function processFeed($dom, $format){
 	}
 	
 	//process NEXT page, if applicable
-	$links = $xpath->query("descendant::link[@rel='next']");
+	$links = $xpath->query("descendant::atom:link[@rel='next']");
 	foreach ($links as $link){
 		$href = $link->getAttribute('href');
 		$newDom = new DOMDocument('1.0', 'UTF-8');
