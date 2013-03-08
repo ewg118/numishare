@@ -80,7 +80,6 @@
 		<xsl:choose>
 			<xsl:when test="@recordType='conceptual'">
 				<nm:type_series_item rdf:about="{$url}id/{$id}">
-
 					<!-- insert titles -->
 					<xsl:for-each select="descendant::nuds:descMeta/nuds:title">
 						<skos:prefLabel>
@@ -96,13 +95,13 @@
 							<xsl:value-of select="."/>
 						</skos:definition>
 					</xsl:for-each>
-
+					
 					<!-- process typeDesc -->
 					<xsl:apply-templates select="nuds:descMeta/nuds:typeDesc" mode="nomisma"/>
 				</nm:type_series_item>
 			</xsl:when>
 			<xsl:when test="@recordType='physical'">
-				<nm:coin rdf:about="{$url}id/{$id}">
+				<rdf:Description rdf:about="{$url}id/{$id}">
 					<dcterms:title>
 						<xsl:value-of select="nuds:descMeta/nuds:title"/>
 					</dcterms:title>
@@ -115,7 +114,7 @@
 						<dcterms:publisher>
 							<xsl:value-of select="nuds:nudsHeader/nuds:publicationStmt/nuds:publisher"/>
 						</dcterms:publisher>
-					</xsl:if>
+					</xsl:if>					
 					<xsl:for-each select="descendant::nuds:repository">
 						<nm:collection>
 							<xsl:value-of select="."/>
@@ -130,7 +129,7 @@
 
 					<!-- images -->
 					<xsl:apply-templates select="nuds:digRep/mets:fileSec" mode="nomisma"/>
-				</nm:coin>
+				</rdf:Description>
 			</xsl:when>
 		</xsl:choose>
 	</xsl:template>
@@ -257,7 +256,7 @@
 	<xsl:template match="nh:nudsHoard" mode="nomisma">
 		<xsl:variable name="id" select="descendant::*[local-name()='nudsid']"/>
 
-		<nm:hoard rdf:about="{$url}id/{$id}">
+		<rdf:Description rdf:about="{$url}id/{$id}">
 			<xsl:choose>
 				<xsl:when test="lang('en', descendant::nh:descMeta/nh:title)">
 					<dcterms:title xml:lang="en">
@@ -276,6 +275,7 @@
 			<xsl:for-each select="descendant::nh:geogname[@xlink:role='findspot'][string(@xlink:href)]">
 				<nm:findspot rdf:resource="{@xlink:href}"/>
 			</xsl:for-each>
+			<nm:numismatic_term rdf:resource="http://nomisma.org/id/hoard"/>
 			<!-- closing date -->
 			<xsl:choose>
 				<xsl:when test="not(descendant::nh:deposit/nh:date) and not(descendant::nh:deposit/nh:dateRange)">
@@ -345,7 +345,7 @@
 			<xsl:for-each select="descendant::nuds:typeDesc/@xlink:href|descendant::nuds:undertypeDesc/@xlink:href">
 				<nm:type_series_item rdf:resource="{.}"/>
 			</xsl:for-each>
-		</nm:hoard>
+		</rdf:Description>
 	</xsl:template>
 
 	<!-- ************** SOLR-TO-XML **************** -->
@@ -644,9 +644,8 @@
 		<xsl:variable name="id" select="str[@name='id']"/>
 		<xsl:variable name="recordType" select="str[@name='recordType']"/>
 
-		<xsl:element name="nm:{if($recordType='hoard') then 'hoard' else 'coin'}">
+		<rdf:Descripton>
 			<xsl:attribute name="rdf:about" select="concat($url, 'id/', $id)"/>
-
 			<dcterms:title xml:lang="{if (str[@name='lang']) then str[@name='lang'] else 'en'}">
 				<xsl:value-of select="str[@name='title_display']"/>
 			</dcterms:title>
@@ -656,6 +655,7 @@
 			<dcterms:publisher>
 				<xsl:value-of select="str[@name='publisher_display']"/>
 			</dcterms:publisher>
+			<nm:numismatic_term rdf:resource="http://nomisma.org/id/{if ($recordType='hoard' then 'hoard' else 'coin'}"/>
 			<xsl:for-each select="arr[@name='repository_facet']/str">
 				<nm:collection>
 					<xsl:value-of select="."/>
@@ -753,6 +753,6 @@
 
 				<nm:reverseReference rdf:resource="{$href}"/>
 			</xsl:if>
-		</xsl:element>
+		</rdf:Descripton>
 	</xsl:template>
 </xsl:stylesheet>

@@ -46,7 +46,7 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 			PREFIX dcterms:  <http://purl.org/dc/terms/>
 			PREFIX nm:       <http://nomisma.org/id/>
 			
-			SELECT ?annotation ?uri ?title ?publisher ?collection ?weight ?axis ?diameter ?obvThumb ?revThumb ?obvRef ?revRef ?findspot  WHERE {
+			SELECT ?annotation ?uri ?title ?publisher ?collection ?weight ?axis ?diameter ?obvThumb ?revThumb ?obvRef ?revRef ?findspot ?numismatic_term WHERE {
 			?annotation nm:type_series_item <typeUri>.
 			?annotation dcterms:title ?title .
 			?annotation dcterms:publisher ?publisher .
