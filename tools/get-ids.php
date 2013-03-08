@@ -13,9 +13,9 @@ DIRECTIONS: edit the $format, $searchUrl, and $q variables and execute the PHP s
  * $q = query, conforming to Lucene query syntax
  * $sort = sort field and direction, 'timestamp+desc' default.  this will not have to be changed under most circumstances
  ************************/
-$format = 'rdf';
+$format = 'xml';
 $searchUrl = 'http://localhost:8080/cocoon/numishare/apis/search';
-$q = 'id:ric.1\(2\)*';
+$q = '*:*';
 $sort = 'timestamp desc';
 $feed = "{$searchUrl}?q={$q}&sort={$sort}&format=atom";
 
