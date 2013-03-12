@@ -417,7 +417,14 @@
 				<xsl:when test="str[@name='recordType'] = 'conceptual'">
 					<xsl:choose>
 						<xsl:when test="string($sparql_endpoint)">
-							<cinclude:include src="cocoon:/widget?uri={'http://numismatics.org/ocre/'}id/{str[@name='id']}&amp;template=results"/>
+							<xsl:variable name="id" select="str[@name='id']"/>
+							<xsl:variable name="group" as="element()*">
+								<xsl:copy-of select="$sparqlResult//res:group[@id=$id]"/>
+							</xsl:variable>
+							
+							<xsl:call-template name="numishare:renderSparqlResults">
+								<xsl:with-param name="group" select="$group"/>
+							</xsl:call-template>
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:variable name="count" select="count(arr[@name='ao_uri']/str)"/>

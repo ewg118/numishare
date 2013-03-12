@@ -32,6 +32,39 @@
 	<xsl:variable name="sparql_endpoint" select="/content//sparql_endpoint"/>	
 	<xsl:variable name="url" select="/content/config/url"/>
 	
+	<!-- get block of images from SPARQL endpoint -->
+	<xsl:variable name="sparqlResult" as="element()*">
+		<xsl:if test="string($sparql_endpoint)">
+			<xsl:variable name="identifiers">
+				<xsl:for-each select="descendant::str[@name='id']">
+					<xsl:value-of select="."/>
+					<xsl:if test="not(position()=last())">
+						<xsl:text>|</xsl:text>
+					</xsl:if>
+				</xsl:for-each>
+			</xsl:variable>
+			
+			<xsl:variable name="response" as="element()*">
+				<xsl:copy-of select="document(concat($url, '/widget?identifiers=', $identifiers, '&amp;template=results&amp;baseUri=http://numismatics.org/ocre/id/'))/res:sparql"/>
+			</xsl:variable>
+			
+			<!-- process sparql into a manageable XML model -->
+			<response xmlns="http://www.w3.org/2005/sparql-results#">
+				<xsl:for-each select="descendant::str[@name='id']">
+					<xsl:variable name="uri" select="concat('http://numismatics.org/ocre/id/', .)"/>
+					<group>
+						<xsl:attribute name="id" select="."/>
+						<xsl:for-each
+							select="distinct-values($response/descendant::res:result[res:binding[@name='type']/res:uri=$uri]/res:binding[@name='object']/res:uri)">
+							<xsl:variable name="objectUri" select="."/>
+							<xsl:copy-of select="$response/descendant::res:result[res:binding[@name='object']/res:uri=$objectUri][1]"/>
+						</xsl:for-each>
+					</group>
+				</xsl:for-each>
+			</response>
+		</xsl:if>
+	</xsl:variable>
+	
 	<xsl:template match="/">
 		<html>
 			<head profile="http://a9.com/-/spec/opensearch/1.1/">

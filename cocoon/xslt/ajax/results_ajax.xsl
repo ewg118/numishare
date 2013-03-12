@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:numishare="http://code.google.com/p/numishare/" xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	xmlns:cinclude="http://apache.org/cocoon/include/1.0" exclude-result-prefixes="#all" version="2.0">
+	xmlns:res="http://www.w3.org/2005/sparql-results#" xmlns:cinclude="http://apache.org/cocoon/include/1.0" exclude-result-prefixes="#all" version="2.0">
 	<xsl:include href="../functions.xsl"/>
+	<xsl:include href="../templates.xsl"/>
 	<xsl:include href="../results_generic.xsl"/>
 	<xsl:param name="display_path">
 		<xsl:text/>
@@ -15,9 +16,43 @@
 	<xsl:param name="tokenized_q" select="tokenize($q, ' AND ')"/>
 
 	<xsl:variable name="numFound" select="//result[@name='response']/@numFound" as="xs:integer"/>
-	
-	<!-- config variables -->	
-	<xsl:variable name="sparql_endpoint" select="/content//sparql_endpoint"/>	
+
+	<!-- config variables -->
+	<xsl:variable name="sparql_endpoint" select="/content//sparql_endpoint"/>
+	<xsl:variable name="url" select="/content//url"/>
+
+	<!-- get block of images from SPARQL endpoint -->
+	<xsl:variable name="sparqlResult" as="element()*">
+		<xsl:if test="string($sparql_endpoint)">
+			<xsl:variable name="identifiers">
+				<xsl:for-each select="descendant::str[@name='id']">
+					<xsl:value-of select="."/>
+					<xsl:if test="not(position()=last())">
+						<xsl:text>|</xsl:text>
+					</xsl:if>
+				</xsl:for-each>
+			</xsl:variable>
+
+			<xsl:variable name="response" as="element()*">
+				<xsl:copy-of select="document(concat($url, '/widget?identifiers=', $identifiers, '&amp;template=results&amp;baseUri=http://numismatics.org/ocre/id/'))/res:sparql"/>
+			</xsl:variable>
+
+			<!-- process sparql into a manageable XML model -->
+			<response xmlns="http://www.w3.org/2005/sparql-results#">
+				<xsl:for-each select="descendant::str[@name='id']">
+					<xsl:variable name="uri" select="concat('http://numismatics.org/ocre/id/', .)"/>
+					<group>
+						<xsl:attribute name="id" select="."/>
+						<xsl:for-each
+							select="distinct-values($response/descendant::res:result[res:binding[@name='type']/res:uri=$uri]/res:binding[@name='object']/res:uri)">
+							<xsl:variable name="objectUri" select="."/>
+							<xsl:copy-of select="$response/descendant::res:result[res:binding[@name='object']/res:uri=$objectUri][1]"/>
+						</xsl:for-each>
+					</group>
+				</xsl:for-each>
+			</response>
+		</xsl:if>
+	</xsl:variable>
 
 	<xsl:template match="/">
 		<xsl:variable name="place_string" select="replace(translate($tokenized_q[contains(., '_uri')], '&#x022;()', ''), '[a-z]+_uri:', '')"/>
@@ -148,7 +183,14 @@
 					<xsl:when test="str[@name='recordType'] = 'conceptual'">
 						<xsl:choose>
 							<xsl:when test="string($sparql_endpoint)">
-								<cinclude:include src="cocoon:/widget?uri=http://numismatics.org/ocre/id/{str[@name='id']}&amp;template=results"/>
+								<xsl:variable name="id" select="str[@name='id']"/>
+								<xsl:variable name="group" as="element()*">
+									<xsl:copy-of select="$sparqlResult//res:group[@id=$id]"/>
+								</xsl:variable>
+
+								<xsl:call-template name="numishare:renderSparqlResults">
+									<xsl:with-param name="group" select="$group"/>
+								</xsl:call-template>
 							</xsl:when>
 							<xsl:otherwise>
 								<xsl:variable name="count" select="count(arr[@name='ao_uri']/str)"/>

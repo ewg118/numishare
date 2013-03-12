@@ -10,6 +10,8 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 	<xsl:param name="template"/>
 	<xsl:param name="uri"/>
 	<xsl:param name="lang"/>
+	<xsl:param name="identifiers"/>
+	<xsl:param name="baseUri"/>
 
 	<!-- config variables -->
 	<xsl:variable name="endpoint" select="/config/sparql_endpoint"/>
@@ -107,7 +109,7 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 		<xsl:apply-templates select="document($service)/res:sparql" mode="json"/>
 	</xsl:template>
 
-	<xsl:template name="numishare:getImages">
+	<!--<xsl:template name="numishare:getImages">
 		<xsl:variable name="query">
 			<![CDATA[ 
 			PREFIX rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -134,9 +136,81 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 		<div>
 			<xsl:apply-templates select="document($service)/res:sparql" mode="results"/>
 		</div>
-
+	</xsl:template>-->
+	
+	<xsl:template name="numishare:getImages">
+		<xsl:variable name="query">
+			<![CDATA[ 
+			PREFIX rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+			PREFIX dcterms:  <http://purl.org/dc/terms/>
+			PREFIX nm:       <http://nomisma.org/id/>
+			
+			SELECT ?object ?numismatic_term ?identifier ?publisher ?collection ?obvThumb ?revThumb ?obvRef ?revRef ?type WHERE {
+			<typeUris>
+			?object dcterms:publisher ?publisher .
+			?object nm:numismatic_term ?numismatic_term .
+			OPTIONAL { ?object dcterms:identifier ?identifier }
+			OPTIONAL { ?object nm:collection ?collection }			
+			OPTIONAL { ?object nm:obverseThumbnail ?obvThumb }
+			OPTIONAL { ?object nm:reverseThumbnail ?revThumb }
+			OPTIONAL { ?object nm:obverseReference ?obvRef }
+			OPTIONAL { ?object nm:reverseReference ?revRef }
+			OPTIONAL { ?object nm:type_series_item ?type }
+			]]>
+		</xsl:variable>
+		
+		<xsl:variable name="template">
+			<xsl:text><![CDATA[ { ?object nm:type_series_item <typeUri> }]]></xsl:text>
+		</xsl:variable>
+		
+		<xsl:variable name="union">
+			<xsl:for-each select="tokenize($identifiers, '\|')">
+				<xsl:if test="not(position()=1)">
+					<xsl:text>UNION </xsl:text>
+				</xsl:if>
+				<xsl:value-of select="replace($template, 'typeUri', concat($baseUri, .))"/>
+			</xsl:for-each>			
+		</xsl:variable>
+		
+		<xsl:variable name="filter">
+			<xsl:text> FILTER(</xsl:text>
+			<xsl:for-each select="tokenize($identifiers, '\|')">
+				<xsl:variable name="escapedId" select="replace(replace(replace(., '\)', '\\\\)'), '\(', '\\\\('), '\.', '\\\\.')"/>
+				<xsl:text>regex(str(?type), "</xsl:text>
+				<xsl:value-of select="$escapedId"/>
+				<xsl:text>", "i")</xsl:text>
+				<xsl:if test="not(position()=last())">
+					<xsl:text> || </xsl:text>
+				</xsl:if>
+			</xsl:for-each>
+			<xsl:text>)</xsl:text>
+		</xsl:variable>
+		
+		<xsl:variable name="post">
+			<xsl:value-of select="normalize-space(concat(replace($query, '&lt;typeUris&gt;', $union), $filter, '}'))"/>
+		</xsl:variable>
+		
+		<xsl:variable name="service" select="concat($endpoint, '?query=', encode-for-uri($post), '&amp;output=xml')"/>
+		<xsl:copy-of select="document($service)/res:sparql"/>
 	</xsl:template>
 
+	<!--<xsl:template name="numishare:solrFields">
+		<xsl:variable name="query">
+			<![CDATA[
+			PREFIX rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+			PREFIX dcterms:  <http://purl.org/dc/terms/>
+			PREFIX nm:       <http://nomisma.org/id/>
+			
+			SELECT ?object ?title ?findspot  WHERE {
+			?object nm:type_series_item <typeUri>.
+			?object dcterms:title ?title .
+			?object nm:findspot ?findspot}]]>
+		</xsl:variable>
+		<xsl:variable name="service" select="concat($endpoint, '?query=', encode-for-uri(normalize-space(replace($query, 'typeUri', $uri))), '&amp;output=xml')"/>
+
+		<xsl:apply-templates select="document($service)/res:sparql" mode="solr"/>
+		</xsl:template>-->
+	
 	<xsl:template name="numishare:solrFields">
 		<xsl:variable name="query">
 			<![CDATA[
@@ -144,26 +218,50 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 			PREFIX dcterms:  <http://purl.org/dc/terms/>
 			PREFIX nm:       <http://nomisma.org/id/>
 			
-			SELECT ?object ?uri ?title ?publisher ?identifier ?collection ?weight ?axis ?diameter ?obvThumb ?revThumb ?obvRef ?revRef ?findspot ?numismatic_term  WHERE {
-			?object nm:type_series_item <typeUri>.
-			?object dcterms:title ?title .
-			?object dcterms:publisher ?publisher .
-			OPTIONAL { ?object dcterms:identifier ?identifier } .
-			OPTIONAL { ?object nm:collection ?collection } .
-			OPTIONAL { ?object nm:weight ?weight }
-			OPTIONAL { ?object nm:axis ?axis }
-			OPTIONAL { ?object nm:diameter ?diameter }
-			OPTIONAL { ?object nm:obverseThumbnail ?obvThumb }
-			OPTIONAL { ?object nm:reverseThumbnail ?revThumb }
-			OPTIONAL { ?object nm:obverseReference ?obvRef }
-			OPTIONAL { ?object nm:reverseReference ?revRef }
-			OPTIONAL { ?object nm:findspot ?findspot }
-			OPTIONAL { ?object nm:numismatic_term ?numismatic_term }}
-			ORDER BY ASC(?publisher)]]>
+			SELECT ?object ?title ?type ?findspot  WHERE {
+			<typeUris>
+			?object dcterms:title ?title .			
+			?object nm:findspot ?findspot .
+			?object nm:type_series_item ?type . 
+			]]>
 		</xsl:variable>
-		<xsl:variable name="service" select="concat($endpoint, '?query=', encode-for-uri(normalize-space(replace($query, 'typeUri', $uri))), '&amp;output=xml')"/>
-
-		<xsl:apply-templates select="document($service)/res:sparql" mode="solr"/>
+		
+		<xsl:variable name="template">
+			<xsl:text><![CDATA[ { ?object nm:type_series_item <typeUri> }]]></xsl:text>
+		</xsl:variable>
+		
+		<xsl:variable name="union">
+			<xsl:for-each select="tokenize($identifiers, '\|')">
+				<xsl:if test="not(position()=1)">
+					<xsl:text>UNION </xsl:text>
+				</xsl:if>
+				<xsl:value-of select="replace($template, 'typeUri', concat($baseUri, .))"/>
+			</xsl:for-each>			
+		</xsl:variable>
+		
+		<xsl:variable name="filter">
+			<xsl:text> FILTER(</xsl:text>
+			<xsl:for-each select="tokenize($identifiers, '\|')">
+				<xsl:variable name="escapedId" select="replace(replace(replace(., '\)', '\\\\)'), '\(', '\\\\('), '\.', '\\\\.')"/>
+				<xsl:text>regex(str(?type), "</xsl:text>
+				<xsl:value-of select="$escapedId"/>
+				<xsl:text>", "i")</xsl:text>
+				<xsl:if test="not(position()=last())">
+					<xsl:text> || </xsl:text>
+				</xsl:if>
+			</xsl:for-each>
+			<xsl:text>)</xsl:text>
+		</xsl:variable>
+		
+		<xsl:variable name="post">
+			<xsl:value-of select="normalize-space(concat(replace($query, '&lt;typeUris&gt;', $union), $filter, '}'))"/>
+		</xsl:variable>
+		
+		<xsl:variable name="service" select="concat($endpoint, '?query=', encode-for-uri($post), '&amp;output=xml')"/>
+		
+		<xsl:copy-of select="document($service)/res:sparql"/>
+		
+		<!--<xsl:apply-templates select="document($service)/res:sparql" mode="solr"/>-->
 	</xsl:template>
 
 	<!-- **************** PROCESS SPARQL RESPONSE ****************-->
