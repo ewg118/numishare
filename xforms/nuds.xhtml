@@ -652,7 +652,7 @@
 				resource="{instance('config')/url}id/{instance('coin')/nuds:nudsHeader/nuds:nudsid}.solr">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Error transforming NUDS document to Solr document.</xforms:message>
 				<xforms:action ev:event="xforms-submit-done">
-					<xforms:insert context="instance('addIndex')/doc" origin="instance('collection-field')"/>
+					<!--<xforms:insert context="instance('addIndex')/doc" origin="instance('collection-field')"/>-->
 					<xforms:send submission="publish-submission"/>
 				</xforms:action>
 			</xforms:submission>
