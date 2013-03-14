@@ -100,7 +100,7 @@
 
 	<xsl:template name="maps">
 		<div class="yui3-g">
-			<div class="yui3">
+			<div class="yui3-u">
 				<div class="content">
 					<div id="backgroundPopup"/>
 					<h1>
