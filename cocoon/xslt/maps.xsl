@@ -100,7 +100,7 @@
 
 	<xsl:template name="maps">
 		<div class="yui3-g">
-			<div class="yui3-u">
+			<div class="yui3-u-1-1">
 				<div class="content">
 					<div id="backgroundPopup"/>
 					<h1>
@@ -111,7 +111,7 @@
 
 					<xsl:choose>
 						<xsl:when test="//result[@name='response']/@numFound &gt; 0">
-							<div style="display:table">
+							<div style="display:table;width:100%">
 								<ul id="filter_list" section="maps">
 									<xsl:apply-templates select="//lst[@name='facet_fields']"/>
 								</ul>
