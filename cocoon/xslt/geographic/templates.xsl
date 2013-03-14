@@ -95,9 +95,7 @@
 		<!-- gather associated hoards from Metis is available -->
 		<xsl:choose>
 			<xsl:when test="string($sparql_endpoint)">
-				<xsl:call-template name="numishare:getJsonFindspots">
-					<xsl:with-param name="uri" select="concat('http://numismatics.org/ocre/', 'id/', $id)"/>
-				</xsl:call-template>
+				<cinclude:include src="cocoon:/widget?uri={concat('http://numismatics.org/ocre/', 'id/', $id)}&amp;template=json"/>
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:for-each select="exsl:node-set($nudsGroup)/descendant::nuds:geogname[@xlink:role='findspot'][string(@xlink:href)]|descendant::nuds:findspotDesc[string(@xlink:href)]">
@@ -422,75 +420,4 @@
 			</xsl:choose>
 		</Placemark>
 	</xsl:template>
-
-	<!-- get findspots from SPARQL endpoint, returned in JSON -->
-	<xsl:template name="numishare:getJsonFindspots">
-		<xsl:param name="uri"/>
-
-		<xsl:variable name="query">
-			<![CDATA[
-			PREFIX rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-			PREFIX dcterms:  <http://purl.org/dc/terms/>
-			PREFIX nm:       <http://nomisma.org/id/>
-			
-			SELECT ?annotation ?uri ?title ?publisher ?findspot ?numismatic_term ?burial WHERE {
-			?annotation nm:type_series_item <typeUri>.
-			?annotation dcterms:title ?title .
-			?annotation dcterms:publisher ?publisher .
-			?annotation nm:findspot ?findspot .
-			OPTIONAL { ?annotation nm:numismatic_term ?numismatic_term }
-			OPTIONAL { ?annotation nm:closing_date ?burial }}]]>
-		</xsl:variable>
-		<xsl:variable name="service" select="concat($sparql_endpoint, '?query=', encode-for-uri(normalize-space(replace($query, 'typeUri', $uri))), '&amp;output=xml')"/>
-		<xsl:apply-templates select="document($service)/res:sparql" mode="json"/>
-	</xsl:template>
-
-	<xsl:template match="res:sparql" mode="json">
-		<xsl:if test="count(descendant::res:result/res:binding[@name='findspot']) &gt; 0">
-			<xsl:text>,</xsl:text>
-		</xsl:if>
-		<xsl:apply-templates select="descendant::res:result/res:binding[@name='findspot']" mode="json"/>
-	</xsl:template>
-
-	<xsl:template match="res:binding[@name='findspot']" mode="json">
-		<xsl:variable name="coordinates">
-			<!-- add placemark -->
-			<xsl:choose>
-				<xsl:when test="contains(child::res:uri, 'geonames')">
-					<xsl:variable name="geonameId" select="substring-before(substring-after(child::res:uri, 'geonames.org/'), '/')"/>
-					<xsl:variable name="geonames_data" select="document(concat($geonames-url, '/get?geonameId=', $geonameId, '&amp;username=', $geonames_api_key, '&amp;style=full'))"/>
-					<xsl:variable name="coordinates" select="concat(exsl:node-set($geonames_data)//lng, '|', exsl:node-set($geonames_data)//lat)"/>
-					<xsl:value-of select="$coordinates"/>
-				</xsl:when>
-				<xsl:when test="string(res:literal)">
-					<xsl:value-of select="res:literal"/>
-				</xsl:when>
-			</xsl:choose>
-		</xsl:variable>
-		<xsl:variable name="title">
-			<xsl:value-of select="parent::node()/res:binding[@name='title']/res:literal"/>
-		</xsl:variable>
-		<xsl:variable name="description">
-			<![CDATA[
-          					<span><a href=']]><xsl:value-of select="parent::node()/res:binding[@name='uri']/res:uri"/><![CDATA[' target='_blank'>]]><xsl:value-of
-				select="parent::node()/res:binding[@name='title']/res:literal"/><![CDATA[</a>]]>
-			<xsl:if test="string(parent::node()/res:binding[@name='burial']/res:literal)">
-				<![CDATA[- closing date: ]]><xsl:value-of select="numishare:normalizeYear(number(parent::node()/res:binding[@name='burial']/res:literal))"/>
-			</xsl:if>
-			<![CDATA[</span>
-        				]]>
-		</xsl:variable>
-		<xsl:variable name="theme">red</xsl:variable>
-		<xsl:variable name="start">
-			<xsl:value-of select="number(parent::node()/res:binding[@name='burial']/res:literal)"/>
-		</xsl:variable>
-		<xsl:variable name="end"/>
-		<!-- output --> { <xsl:if test="not($coordinates='NULL')">"point": {"lon": <xsl:value-of select="tokenize($coordinates, '\|')[1]"/>, "lat": <xsl:value-of
-				select="tokenize($coordinates, '\|')[2]"/>},</xsl:if> "title": "<xsl:value-of select="$title"/>", "start": "<xsl:value-of select="$start"/>", <xsl:if test="string($end)">"end":
-					"<xsl:value-of select="$end"/>",</xsl:if> "options": { "theme": "<xsl:value-of select="$theme"/>", "infoHtml": "<xsl:value-of select="normalize-space($description)"/>" } } <xsl:if
-			test="not(position()=last())">
-			<xsl:text>,</xsl:text>
-		</xsl:if>
-	</xsl:template>
-
 </xsl:stylesheet>

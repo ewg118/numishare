@@ -497,6 +497,7 @@
 				<map:transform type="xslt-saxon" src="xslt/apis/get.xsl" label="basiccontent">
 					<map:parameter name="use-request-parameters" value="true"/>
 				</map:transform>
+				<map:transform type="cinclude"/>
 				<map:select type="parameter">
 					<map:parameter name="parameter-selector-test" value="{request-param:format}"/>
 					<map:when test="json">
