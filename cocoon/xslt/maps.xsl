@@ -90,19 +90,17 @@
 					</script>
 				</xsl:if>
 			</head>
-			<body class="yui-skin-sam">
-				<div id="doc4" class="{//config/theme/layouts/*[name()=$pipeline]/yui_class}">
-					<xsl:call-template name="header"/>
-					<xsl:call-template name="maps"/>
-					<xsl:call-template name="footer"/>
-				</div>
+			<body>
+				<xsl:call-template name="header"/>
+				<xsl:call-template name="maps"/>
+				<xsl:call-template name="footer"/>
 			</body>
 		</html>
 	</xsl:template>
 
 	<xsl:template name="maps">
 		<div class="yui3-g">
-			<div class="yui3-u-1">
+			<div class="yui3">
 				<div class="content">
 					<div id="backgroundPopup"/>
 					<h1>
