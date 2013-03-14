@@ -785,7 +785,7 @@
 		<xi:include href="oxf:/xbl/numishare/date/date.xbl" xi:omit-xml-base="true"/>
 		<xi:include href="oxf:/xbl/numishare/dateRange/dateRange.xbl" xi:omit-xml-base="true"/>
 		<xi:include href="oxf:/xbl/numishare/denomination/denomination.xbl" xi:omit-xml-base="true"/>
-		<xi:include href="oxf:/xbl/numishare/department/department.xbl" xi:omit-xml-base="true"/>
+		<!--<xi:include href="oxf:/xbl/numishare/department/department.xbl" xi:omit-xml-base="true"/>-->
 		<xi:include href="oxf:/xbl/numishare/description/description.xbl" xi:omit-xml-base="true"/>
 		<xi:include href="oxf:/xbl/numishare/dynasty/dynasty.xbl" xi:omit-xml-base="true"/>		
 		<xi:include href="oxf:/xbl/numishare/file-upload/file-upload.xbl" xi:omit-xml-base="true"/>
@@ -979,7 +979,18 @@
 										</xforms:trigger>
 									</xhtml:div>
 									<xforms:repeat nodeset="nuds:department">
-										<numishare:department/>
+<!--										<numishare:department/>-->
+										<xhtml:div>
+											<xforms:input ref=".">
+												<xforms:label>Department</xforms:label>												
+											</xforms:input>
+											<xforms:trigger appearance="minimal">
+												<xforms:delete ev:event="DOMActivate" nodeset="."/>												
+												<xforms:label>
+													<xhtml:img src="{$display_path}images/remove.gif"/>
+												</xforms:label>
+											</xforms:trigger>
+										</xhtml:div>
 									</xforms:repeat>
 									<xforms:group ref="nuds:description">
 										<numishare:description/>
