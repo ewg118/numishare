@@ -632,7 +632,7 @@
 			<dcterms:title>
 				<xsl:value-of select="str[@name='title_display']"/>
 			</dcterms:title>
-			<xsl:for-each select="arr[@name='pleiades_uri']/str">
+			<xsl:for-each select="distinct-values(arr[@name='pleiades_uri']/str)">
 				<oac:hasBody rdf:resource="{.}#this"/>
 			</xsl:for-each>
 			<oac:hasTarget rdf:resource="{$url}id/{$id}"/>
