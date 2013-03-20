@@ -429,6 +429,9 @@
 		<!-- collection-name token -->
 		<field name="collection-name" type="string" index="true" stored="true"/>
 		
+		<!-- language of the solr document for multi-lingual interfaces -->
+		<field name="lang" type="string" index="true" stored="true"/>
+		
 		<!-- record type -->
 		<field name="recordType" type="string" indexed="true" stored="true"/>
 		
