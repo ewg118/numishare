@@ -732,8 +732,15 @@
 					<map:otherwise>
 						<map:serialize type="xml"/>
 					</map:otherwise>
-				</map:select>
-				<map:serialize type="xml"/>
+				</map:select>				
+			</map:match>
+			
+			<map:match pattern="get_closing_date">
+				<map:generate src="{global:exist-url}{global:collection-name}/objects/{url-encode:{request-param:id}}.xml"/>
+				<map:transform src="xslt/ajax/get_closing_date.xsl" label="basiccontent" type="xslt-saxon">
+					<map:parameter name="use-request-parameters" value="true"/>
+				</map:transform>
+				<map:serialize type="text"/>
 			</map:match>
 			
 			<!-- query solr for available geographic coordinates -->
