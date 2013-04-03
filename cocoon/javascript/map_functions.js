@@ -76,7 +76,7 @@ $(document).ready(function () {
 			new OpenLayers.Strategy.Fixed(),
 			new OpenLayers.Strategy.Cluster()],
 			protocol: new OpenLayers.Protocol.HTTP({
-				url: "findspots.kml?q=" + q,
+				url: "findspots.kml?q=" + q + (lang.length > 0 ? '&lang=' + lang : ''),
 				format: new OpenLayers.Format.KML({
 					extractStyles: false,
 					extractAttributes: true
@@ -92,7 +92,7 @@ $(document).ready(function () {
 			new OpenLayers.Strategy.Fixed(),
 			new OpenLayers.Strategy.Cluster()],
 			protocol: new OpenLayers.Protocol.HTTP({
-				url: "mints.kml?q=" + q,
+				url: "mints.kml?q=" + q + (lang.length > 0 ? '&lang=' + lang : ''),
 				format: new OpenLayers.Format.KML({
 					extractStyles: false,
 					extractAttributes: true
@@ -248,8 +248,8 @@ $(document).ready(function () {
 		if (collection_type == 'hoard') {
 			$('#timemap').html('<div id="mapcontainer"><div id="map"/></div><div id="timelinecontainer"><div id="timeline"/></div>');
 			initialize_timemap(query);
-		} else {
-			newUrl = "mints.kml?q=" + query;
+		} else {			
+			newUrl = "mints.kml?q=" + query + (lang.length > 0 ? '&lang=' + lang : '');
 			
 			mintLayer.loaded = false;
 			mintLayer.setVisibility(true);
@@ -553,7 +553,7 @@ $(document).ready(function () {
 				theme: "red",
 				type: "kml", // Data to be loaded in KML - must be a local URL
 				options: {
-					url: "hoards.kml?q=" + q// KML file to load
+					url: "hoards.kml?q=" + q + (lang.length > 0 ? '&lang=' + lang : '')// KML file to load
 				}
 			}],
 			bandIntervals:[
