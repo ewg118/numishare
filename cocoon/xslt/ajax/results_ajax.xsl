@@ -49,7 +49,7 @@
 
 		<div class="g_doc">
 			<span class="result_link">
-				<a href="id/{str[@name='id']}{if (string($lang)) then concat('?lang=', $lang) else ''}" target="_blank">
+				<a href="id/{str[@name='nudsid']}{if (string($lang)) then concat('?lang=', $lang) else ''}" target="_blank">
 					<xsl:value-of select="str[@name='title_display']"/>
 				</a>
 			</span>
@@ -145,16 +145,16 @@
 					<xsl:when test="str[@name='recordType'] = 'conceptual'">
 						<xsl:variable name="count" select="count(arr[@name='ao_uri']/str)"/>
 						<xsl:variable name="title" select="str[@name='title_display']	"/>
-						<xsl:variable name="docId" select="str[@name='id']"/>
+						<xsl:variable name="docId" select="str[@name='nudsid']"/>
 
 						<xsl:if test="count(arr[@name='ao_thumbnail_obv']/str) &gt; 0">
 							<xsl:variable name="nudsid" select="substring-before(arr[@name='ao_thumbnail_obv']/str[1], '|')"/>
-							<a class="thumbImage" rel="{str[@name='id']}-gallery" href="{substring-after(arr[@name='ao_reference_obv']/str[contains(., $nudsid)], '|')}"
+							<a class="thumbImage" rel="{str[@name='nudsid']}-gallery" href="{substring-after(arr[@name='ao_reference_obv']/str[contains(., $nudsid)], '|')}"
 								title="Obverse of {$title}: {$nudsid}">
 								<img src="{substring-after(arr[@name='ao_thumbnail_obv']/str[1], '|')}"/>
 							</a>
 							<xsl:if test="arr[@name='ao_thumbnail_rev']/str[contains(., $nudsid)]">
-								<a class="thumbImage" rel="{str[@name='id']}-gallery" href="{substring-after(arr[@name='ao_reference_rev']/str[contains(., $nudsid)], '|')}"
+								<a class="thumbImage" rel="{str[@name='nudsid']}-gallery" href="{substring-after(arr[@name='ao_reference_rev']/str[contains(., $nudsid)], '|')}"
 									title="Reverse of {$title}: {$nudsid}">
 									<img src="{substring-after(arr[@name='ao_thumbnail_rev']/str[contains(., $nudsid)], '|')}"/>
 								</a>

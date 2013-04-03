@@ -8,6 +8,12 @@ If the list is populated and then hidden, when it is re-activated, it fades in r
 $(document).ready(function () {
 	var popupStatus = 0;
 	var pipeline = 'results';
+	var langStr = getURLParameter('lang');
+	if (langStr == 'null'){
+		var lang = '';
+	} else {
+		var lang = langStr;
+	}
 	
 	//set hierarchical labels on load
 	$('.hierarchical-facet').each(function(){
@@ -65,7 +71,7 @@ $(document).ready(function () {
 			var mincount = $(this).attr('mincount');
 			
 			$.get('get_facet_options', {
-				q: q, category: category, sort: 'index', limit: - 1, offset: 0, mincount: mincount
+				q: q, category: category, sort: 'index', limit: - 1, offset: 0, mincount: mincount, lang: lang
 			},
 			function (data) {
 				$('#' + id) .html(data);
@@ -100,7 +106,7 @@ $(document).ready(function () {
 					var category = id.split('-select')[0];
 					var mincount = $(this).attr('mincount');
 					$.get('get_facet_options', {
-						q: q, category: category, sort: 'index', limit: - 1, offset: 0, mincount: mincount
+						q: q, category: category, sort: 'index', limit: - 1, offset: 0, mincount: mincount, lang: lang
 					},
 					function (data) {
 						$('#' + id) .attr('new_query', '');
@@ -117,7 +123,7 @@ $(document).ready(function () {
 				var category = id.split('-select')[0];
 				var mincount = $(this).attr('mincount');
 				$.get('get_facet_options', {
-					q: q, category: category, sort: 'index', limit: - 1, offset: 0, mincount: mincount
+					q: q, category: category, sort: 'index', limit: - 1, offset: 0, mincount: mincount, lang: lang
 				},
 				function (data) {
 					$('#' + id) .attr('new_query', '');
@@ -151,7 +157,7 @@ $(document).ready(function () {
 		var q = getQuery();
 		if ($('#' + list_id).html().indexOf('<li') < 0) {
 			$.get('get_hier', {
-				q: q, field: field, prefix: 'L1', fq: '*', section: 'collection', link: ''
+				q: q, field: field, prefix: 'L1', fq: '*', section: 'collection', link: '', lang: lang
 			},
 			function (data) {
 				$('#' + list_id) .html(data);
@@ -172,7 +178,7 @@ $(document).ready(function () {
 		var link = $(this) .attr('link');
 		if ($(this) .children('img') .attr('src') .indexOf('plus') >= 0) {
 			$.get('get_hier', {
-				q: q, field:field, prefix: prefix, fq: '"' +fq + '"', link: link, section: section
+				q: q, field:field, prefix: prefix, fq: '"' +fq + '"', link: link, section: section, lang: lang
 			},
 			function (data) {
 				$('#' + list) .html(data);
@@ -302,5 +308,12 @@ $(document).ready(function () {
 			$('#century_num-list') .parent('div').attr('style', 'width: 192px;');
 			popupStatus = 0;
 		}
+	}
+	
+	
+	function getURLParameter(name) {
+	    return decodeURI(
+	        (RegExp(name + '=' + '(.+?)(&|$)').exec(location.search)||[,null])[1]
+	    );
 	}
 });

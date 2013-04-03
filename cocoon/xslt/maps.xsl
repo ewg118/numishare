@@ -174,7 +174,7 @@
 	</xsl:template>
 
 	<xsl:template match="lst[@name='facet_fields']">
-		<xsl:for-each select="lst[not(@name='mint_geo') and number(int[@name='numFacetTerms']) &gt; 0 and not(@name='mint_facet')]|lst[@name='mint_facet' and $collection_type='hoard']">
+		<xsl:for-each select="lst[not(@name='mint_geo') and not(@name='mint_facet')]">
 			<li class="fl">
 				<xsl:variable name="val" select="@name"/>
 				<xsl:variable name="new_query">

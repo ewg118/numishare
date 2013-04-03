@@ -27,7 +27,7 @@
 	</xsl:template>
 
 	<xsl:template match="doc">		
-		<Placemark id="{str[@name='id']}">
+		<Placemark id="{str[@name='nudsid']}">
 			<name>
 				<xsl:value-of select="str[@name='title_display']"/>
 			</name>

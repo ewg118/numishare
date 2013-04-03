@@ -343,9 +343,10 @@
 			<styleUrl>
 				<xsl:value-of select="$styleUrl"/>
 			</styleUrl>
+			
 			<xsl:choose>
-				<xsl:when test="contains($href, 'geonames')">
-					<xsl:variable name="geonameId" select="substring-before(substring-after($href, 'geonames.org/'), '/')"/>
+				<xsl:when test="exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/descendant::nm:findspot[contains(@rdf:resource, 'geonames.org')]">					
+					<xsl:variable name="geonameId" select="substring-before(substring-after(exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/descendant::nm:findspot[contains(@rdf:resource, 'geonames.org')]/@rdf:resource, 'geonames.org/'), '/')"/>
 					<xsl:variable name="geonames_data" select="document(concat($geonames-url, '/get?geonameId=', $geonameId, '&amp;username=', $geonames_api_key, '&amp;style=full'))"/>
 					<xsl:variable name="coordinates" select="concat(exsl:node-set($geonames_data)//lng, ',', exsl:node-set($geonames_data)//lat)"/>
 					<Point>
@@ -354,7 +355,7 @@
 						</coordinates>
 					</Point>
 				</xsl:when>
-				<xsl:when test="contains($href, 'nomisma')">
+				<xsl:when test="string(exsl:node-set($rdf)//*[@rdf:about=$href]/descendant::gml:pos[1])">
 					<xsl:variable name="coordinates" select="exsl:node-set($rdf)//*[@rdf:about=$href]/descendant::gml:pos[1]"/>
 					<xsl:if test="string($coordinates)">
 						<xsl:variable name="lat" select="substring-before($coordinates, ' ')"/>

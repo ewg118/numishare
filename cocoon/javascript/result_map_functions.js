@@ -1,4 +1,11 @@
 function initialize_map(q, collection_type) {
+	var langStr = getURLParameter('lang');
+	if (langStr == 'null'){
+		var lang = '';
+	} else {
+		var lang = langStr;
+	}
+
 	map = new OpenLayers.Map('resultMap', {
 		controls:[
 		new OpenLayers.Control.PanZoomBar(),
@@ -57,7 +64,7 @@ function initialize_map(q, collection_type) {
 		new OpenLayers.Strategy.Fixed(),
 		new OpenLayers.Strategy.Cluster()],
 		protocol: new OpenLayers.Protocol.HTTP({
-			url: "mints.kml?q=" + q,
+			url: "mints.kml?q=" + q + (lang.length > 0 ? '&lang=' + lang : ''),
 			format: new OpenLayers.Format.KML({
 				extractStyles: false,
 				extractAttributes: true
@@ -76,7 +83,7 @@ function initialize_map(q, collection_type) {
 		new OpenLayers.Strategy.Fixed(),
 		new OpenLayers.Strategy.Cluster()],
 		protocol: new OpenLayers.Protocol.HTTP({
-			url: "findspots.kml?q=" + q,
+			url: "findspots.kml?q=" + q + (lang.length > 0 ? '&lang=' + lang : ''),
 			format: new OpenLayers.Format.KML({
 				extractStyles: false,
 				extractAttributes: true
@@ -152,5 +159,11 @@ function initialize_map(q, collection_type) {
 	
 	function onFeatureUnselect(event) {
 		map.removePopup(map.popups[0]);
+	}
+	
+	function getURLParameter(name) {
+	    return decodeURI(
+	        (RegExp(name + '=' + '(.+?)(&|$)').exec(location.search)||[,null])[1]
+	    );
 	}
 }

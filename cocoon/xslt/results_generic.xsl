@@ -45,12 +45,12 @@
 						<span class="result_link">
 							<xsl:choose>
 								<xsl:when test="$mode = 'compare'">
-									<a href="{$display_path}id/{str[@name='id']}?mode=compare&amp;q={$q}&amp;start={$start}&amp;image={$image}&amp;side={$side}" class="compare">
+									<a href="{$display_path}id/{str[@name='nudsid']}?mode=compare&amp;q={$q}&amp;start={$start}&amp;image={$image}&amp;side={$side}" class="compare">
 										<xsl:value-of select="str[@name='title_display']"/>
 									</a>
 								</xsl:when>
 								<xsl:otherwise>
-									<a href="{$display_path}id/{str[@name='id']}{if (string($lang)) then concat('?lang=', $lang) else ''}">
+									<a href="{$display_path}id/{str[@name='nudsid']}{if (string($lang)) then concat('?lang=', $lang) else ''}">
 										<xsl:value-of select="str[@name='title_display']"/>
 									</a>
 								</xsl:otherwise>
@@ -411,21 +411,21 @@
 			<xsl:when test="str[@name='recordType'] = 'conceptual'">
 				<xsl:choose>
 					<xsl:when test="string($sparql_endpoint)">
-						<cinclude:include src="cocoon:/widget?uri={'http://numismatics.org/ocre/'}id/{str[@name='id']}&amp;template=results"/>
+						<cinclude:include src="cocoon:/widget?uri={'http://numismatics.org/ocre/'}id/{str[@name='nudsid']}&amp;template=results"/>
 					</xsl:when>
 					<xsl:otherwise>
 						<xsl:variable name="count" select="count(arr[@name='ao_uri']/str)"/>
 						<xsl:variable name="title" select="str[@name='title_display']	"/>
-						<xsl:variable name="docId" select="str[@name='id']"/>
+						<xsl:variable name="docId" select="str[@name='nudsid']"/>
 
 						<xsl:if test="count(arr[@name='ao_thumbnail_obv']/str) &gt; 0">
 							<xsl:variable name="nudsid" select="substring-before(arr[@name='ao_thumbnail_obv']/str[1], '|')"/>
-							<a class="thumbImage" rel="{str[@name='id']}-gallery" href="{substring-after(arr[@name='ao_reference_obv']/str[contains(., $nudsid)], '|')}"
+							<a class="thumbImage" rel="{str[@name='nudsid']}-gallery" href="{substring-after(arr[@name='ao_reference_obv']/str[contains(., $nudsid)], '|')}"
 								title="Obverse of {$title}: {$nudsid}">
 								<img src="{substring-after(arr[@name='ao_thumbnail_obv']/str[1], '|')}"/>
 							</a>
 							<xsl:if test="arr[@name='ao_thumbnail_rev']/str[contains(., $nudsid)]">
-								<a class="thumbImage" rel="{str[@name='id']}-gallery" href="{substring-after(arr[@name='ao_reference_rev']/str[contains(., $nudsid)], '|')}"
+								<a class="thumbImage" rel="{str[@name='nudsid']}-gallery" href="{substring-after(arr[@name='ao_reference_rev']/str[contains(., $nudsid)], '|')}"
 									title="Reverse of {$title}: {$nudsid}">
 									<img src="{substring-after(arr[@name='ao_thumbnail_rev']/str[contains(., $nudsid)], '|')}"/>
 								</a>

@@ -5,6 +5,13 @@ Library: jQuery
 These are a series of functions for pagination, selection, and sorting of queries in the compare section.
 ************************************/
 $(document).ready(function () {
+
+	var langStr = getURLParameter('lang');
+	if (langStr == 'null'){
+		var lang = '';
+	} else {
+		var lang = langStr;
+	}
 	
 	/*** return to search results from item record ***/
 	$(' #search1 .back_results') .livequery('click', function (event) {
@@ -87,7 +94,7 @@ $(document).ready(function () {
 		var query = $('#search1 input[name=q]') .attr('value');
 		var sort = $('#search1 .sortForm_categories') .attr('value') + ' ' + $('#search1 .sortForm_order') .attr('value');
 		$.get('compare_results', {
-			q: query, start: 0, image: image, side: '1', mode: 'compare', sort: sort
+			q: query, start: 0, image: image, side: '1', mode: 'compare', sort: sort, lang: lang
 		},
 		function (data) {
 			$('#search1') .html(data);
@@ -117,11 +124,17 @@ $(document).ready(function () {
 		var query = $('#search2 input[name=q]') .attr('value');
 		var sort = $('#search2 .sortForm_categories') .attr('value') + ' ' + $('#search2 .sortForm_order') .attr('value');
 		$.get('compare_results', {
-			q: query, start: 0, image: image, side: '1', mode: 'compare', sort: sort
+			q: query, start: 0, image: image, side: '1', mode: 'compare', sort: sort , lang: lang
 		},
 		function (data) {
 			$('#search2') .html(data);
 		});
 		return false;
 	});
+	
+	function getURLParameter(name) {
+	    return decodeURI(
+	        (RegExp(name + '=' + '(.+?)(&|$)').exec(location.search)||[,null])[1]
+	    );
+	}
 });
