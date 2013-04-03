@@ -424,7 +424,8 @@
 			Many of the fields are applicable to VRA core as well.  Only a few fields are designed for VRA Core only -->
 		<!-- unique id -->
 		<field name="id" type="string" indexed="true" stored="true"/>
-		<field name="sortid" type="string" indexed="true" stored="true"/>
+		<field name="nudsid" type="string" indexed="true" stored="true"/>
+		<field name="sortid" type="string" indexed="true" stored="true"/>		
 		
 		<!-- collection-name token -->
 		<field name="collection-name" type="string" index="true" stored="true"/>
