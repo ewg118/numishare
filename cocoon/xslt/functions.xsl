@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Repeated functions for regularization to be used through Numishare -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:nh="http://nomisma.org/nudsHoard" xmlns:numishare="http://code.google.com/p/numishare/"
-	xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes="#all" version="2.0">
-
-	
-
+	xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes="#all" version="2.0">
 
 	<!-- ************** NORMALIZATION TEMPLATES ************** -->
 	<xsl:function name="nh:normalize_date">
@@ -658,10 +655,10 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:function>
-	
+
 	<xsl:function name="numishare:normalizeYear">
 		<xsl:param name="year" as="xs:integer"/>
-		
+
 		<xsl:choose>
 			<xsl:when test="$year &lt; 0">
 				<xsl:value-of select="abs($year)"/>
@@ -701,6 +698,20 @@
 		<xsl:if test="$cleaned &lt; 0">
 			<xsl:text> B.C.</xsl:text>
 		</xsl:if>
+	</xsl:function>
+
+	<xsl:function name="numishare:getNomismaLabel">
+		<xsl:param name="rdf" as="element()*"/>
+		<xsl:param name="lang"/>
+
+		<xsl:choose>
+			<xsl:when test="string($rdf//skos:prefLabel[@xml:lang=$lang])">
+				<xsl:value-of select="$rdf//skos:prefLabel[@xml:lang=$lang]"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="$rdf//skos:prefLabel[@xml:lang='en']"/>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:function>
 
 </xsl:stylesheet>

@@ -4,17 +4,42 @@
 	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:res="http://www.w3.org/2005/sparql-results#" xmlns:gml="http://www.opengis.net/gml/" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
 	xmlns:cinclude="http://apache.org/cocoon/include/1.0" exclude-result-prefixes="#all">
 
-	<xsl:template name="nuds">
-		<xsl:apply-templates select="//nuds:nuds"/>
+	<xsl:template name="nuds">	
+		<!-- create default document -->
+		<xsl:apply-templates select="//nuds:nuds">
+			<xsl:with-param name="lang"/>
+		</xsl:apply-templates>
+		
+		<!-- create documents for each additional activated language -->
+		<xsl:for-each select="//config/descendant::language[@enabled='true']">
+			<xsl:apply-templates select="//nuds:nuds">
+				<xsl:with-param name="lang" select="@code"/>
+			</xsl:apply-templates>
+		</xsl:for-each>
 	</xsl:template>
 
 	<xsl:template match="nuds:nuds">
+		<xsl:param name="lang"/>
 		<xsl:variable name="id" select="nuds:nudsHeader/nuds:nudsid"/>
-
 		<doc>
 			<field name="id">
+				<xsl:choose>
+					<xsl:when test="string($lang)">
+						<xsl:value-of select="concat($id, '-', $lang)"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="$id"/>
+					</xsl:otherwise>
+				</xsl:choose>				
+			</field>
+			<field name="nudsid">
 				<xsl:value-of select="$id"/>
 			</field>
+			<xsl:if test="string($lang)">
+				<field name="lang">
+					<xsl:value-of select="$lang"/>
+				</field>
+			</xsl:if>			
 			<xsl:if test="$collection-name = 'ocre'">
 				<xsl:call-template name="sortid"/>
 			</xsl:if>
@@ -42,7 +67,10 @@
 				</field>
 			</xsl:for-each>
 
-			<xsl:apply-templates select="nuds:descMeta"/>
+			<xsl:apply-templates select="nuds:descMeta">
+				<xsl:with-param name="lang" select="$lang"/>
+			</xsl:apply-templates>
+			
 			<xsl:choose>
 				<xsl:when test="string($sparql_endpoint)">
 					<!-- get findspots -->
@@ -77,6 +105,7 @@
 	</xsl:template>
 
 	<xsl:template match="nuds:descMeta">
+		<xsl:param name="lang"/>
 		<xsl:variable name="recordType">
 			<xsl:value-of select="parent::nuds:nuds/@recordType"/>
 		</xsl:variable>
@@ -105,6 +134,7 @@
 
 		<xsl:call-template name="get_coin_sort_fields">
 			<xsl:with-param name="typeDesc" select="$typeDesc"/>
+			<xsl:with-param name="lang" select="$lang"/>
 		</xsl:call-template>
 
 		<field name="title_display">
@@ -119,6 +149,7 @@
 		<xsl:apply-templates select="nuds:physDesc"/>
 		<xsl:apply-templates select="exsl:node-set($typeDesc)//nuds:typeDesc">
 			<xsl:with-param name="recordType" select="$recordType"/>
+			<xsl:with-param name="lang" select="$lang"/>
 		</xsl:apply-templates>
 		<xsl:apply-templates select="nuds:adminDesc"/>
 		<xsl:apply-templates select="nuds:refDesc"/>
