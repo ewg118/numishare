@@ -487,26 +487,26 @@
 						<xsl:value-of select="str[@name='title_display']"/>
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:value-of select="str[@name='id']"/>
+						<xsl:value-of select="str[@name='nudsid']"/>
 					</xsl:otherwise>
 				</xsl:choose>
 			</title>
-			<link href="{$url}id/{str[@name='id']}"/>
+			<link href="{$url}id/{str[@name='nudsid']}"/>
 			<id>
-				<xsl:value-of select="str[@name='id']"/>
+				<xsl:value-of select="str[@name='nudsid']"/>
 			</id>
 			<updated>
 				<xsl:value-of select="date[@name='timestamp']"/>
 			</updated>
 
-			<link rel="alternate xml" type="text/xml" href="{$url}id/{str[@name='id']}.xml"/>
-			<link rel="alternate rdf" type="application/rdf+xml" href="{$url}id/{str[@name='id']}.rdf"/>
+			<link rel="alternate xml" type="text/xml" href="{$url}id/{str[@name='nudsid']}.xml"/>
+			<link rel="alternate rdf" type="application/rdf+xml" href="{$url}id/{str[@name='nudsid']}.rdf"/>
 
 			<!-- treat hoard and non-hoard documents differently -->
 			<xsl:choose>
 				<xsl:when test="str[@name='recordType'] = 'hoard'">
 					<xsl:if test="str[@name='findspot_geo']">
-						<link rel="alternate kml" type="application/vnd.google-earth.kml+xml" href="{$url}id/{str[@name='id']}.kml"/>
+						<link rel="alternate kml" type="application/vnd.google-earth.kml+xml" href="{$url}id/{str[@name='nudsid']}.kml"/>
 					</xsl:if>
 
 					<xsl:call-template name="geotemp">
@@ -515,7 +515,7 @@
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:if test="str[@name='mint_geo']">
-						<link rel="alternate kml" type="application/vnd.google-earth.kml+xml" href="{$url}id/{str[@name='id']}.kml"/>
+						<link rel="alternate kml" type="application/vnd.google-earth.kml+xml" href="{$url}id/{str[@name='nudsid']}.kml"/>
 					</xsl:if>
 					<xsl:call-template name="geotemp">
 						<xsl:with-param name="recordType" select="str[@name='recordType']"/>
@@ -533,12 +533,12 @@
 						<xsl:value-of select="str[@name='title_display']"/>
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:value-of select="str[@name='id']"/>
+						<xsl:value-of select="str[@name='nudsid']"/>
 					</xsl:otherwise>
 				</xsl:choose>
 			</title>
 			<link>
-				<xsl:value-of select="concat($url, 'id/', str[@name='id'])"/>
+				<xsl:value-of select="concat($url, 'id/', str[@name='nudsid'])"/>
 			</link>
 			<pubDate>
 				<xsl:value-of select="date[@name='timestamp']"/>
@@ -626,7 +626,7 @@
 
 	<!-- PELAGIOS RDF -->
 	<xsl:template match="doc" mode="pelagios">
-		<xsl:variable name="id" select="str[@name='id']"/>
+		<xsl:variable name="id" select="str[@name='nudsid']"/>
 
 		<oac:Annotation rdf:about="{$url}pelagios.rdf#{$id}">
 			<dcterms:title>
@@ -641,7 +641,7 @@
 
 	<!-- CTYPE/NOMISMA RDF -->
 	<xsl:template match="doc" mode="ctype">
-		<xsl:variable name="id" select="str[@name='id']"/>
+		<xsl:variable name="id" select="str[@name='nudsid']"/>
 		<xsl:variable name="recordType" select="str[@name='recordType']"/>
 
 		<rdf:Descripton>

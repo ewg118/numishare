@@ -6,12 +6,12 @@
 	
 	<xsl:template match="/">
 		<select multiple="multiple" size="10" class="compare-select">
-			<xsl:apply-templates select="descendant::doc[not(str[@name='id']=$ignore)]"/>
+			<xsl:apply-templates select="descendant::doc[not(str[@name='nudsid']=$ignore)]"/>
 		</select>
 	</xsl:template>
 
 	<xsl:template match="doc">
-		<xsl:variable name="id" select="str[@name='id']"/>
+		<xsl:variable name="id" select="str[@name='nudsid']"/>
 		<option value="{$id}" class="compare-option">
 			<xsl:if test="boolean(index-of($tokens, $id))">
 				<xsl:attribute name="selected">selected</xsl:attribute>

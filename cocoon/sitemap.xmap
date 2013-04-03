@@ -15,9 +15,6 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-
-<!-- test -->
-
 <map:sitemap xmlns:map="http://apache.org/cocoon/sitemap/1.0">
 	<map:components>
 		<!-- *********************************** -->
@@ -62,10 +59,6 @@
 				<encoding>UTF-8</encoding>
 			</map:serializer>
 			<map:serializer name="rdf" mime-type="application/rdf+xml" src="org.apache.cocoon.serialization.XMLSerializer">
-				<encoding>UTF-8</encoding>
-				<indent>yes</indent>
-			</map:serializer>
-			<map:serializer name="xml" mime-type="application/xml" src="org.apache.cocoon.serialization.XMLSerializer">
 				<encoding>UTF-8</encoding>
 				<indent>yes</indent>
 			</map:serializer>
@@ -235,9 +228,9 @@
 
 			<map:match pattern="id/*">
 				<map:aggregate element="content">
-					<map:part src="{global:exist-url}{global:collection-name}/objects/{1}.xml"/>					
-					<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
+					<map:part src="{global:exist-url}{global:collection-name}/objects/{1}.xml"/>
 					<map:part src="cocoon:/query_findspot_geo/{1}"/>
+					<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
 				</map:aggregate>
 				<map:transform src="xslt/display.xsl" label="basiccontent" type="xslt-saxon">
 					<map:parameter name="use-request-parameters" value="true"/>
@@ -262,9 +255,9 @@
 			<!-- returned results capped at 50,000 -->
 			<map:match pattern="pelagios.rdf">
 				<map:aggregate element="content">
-					<map:part src="{global:solr-url}select?q=collection-name:{global:collection-name}+AND+{url-encode:pleiades_uri:*}&amp;rows=50000&amp;fl=id,title_display,pleiades_uri"/>
+					<map:part src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}+AND+{url-encode:pleiades_uri:*}&amp;rows=50000&amp;fl=id,title_display,pleiades_uri"/>
 					<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
-				</map:aggregate>
+				</map:aggregate>				
 				<map:transform src="xslt/linked_data/solr_to_rdf.xsl" label="basiccontent" type="xslt-saxon">
 					<map:parameter name="use-request-parameters" value="true"/>
 					<map:parameter name="mode" value="pelagios"/>
@@ -286,7 +279,7 @@
 			<map:match pattern="ctype.rdf">
 				<map:aggregate element="content">
 					<map:part
-						src="{global:solr-url}select?q=collection-name:{global:collection-name}+AND+{url-encode:coinType_uri:*}&amp;rows=100000&amp;fl=id,title_display,coinType_uri,recordType,publisher_display,repository_facet,axis_num,diameter_num,taq_num,weight_num,thumbnail_obv,reference_obv,thumbnail_rev,reference_rev,findspot_uri,findspot_geo"/>
+						src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}+AND+{url-encode:coinType_uri:*}&amp;rows=100000&amp;fl=id,title_display,coinType_uri,recordType,publisher_display,axis_num,diameter_num,taq_num,weight_num,thumbnail_obv,reference_obv,thumbnail_rev,reference_rev,findspot_uri,findspot_geo"/>
 					<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
 				</map:aggregate>
 				<map:transform src="xslt/linked_data/solr_to_rdf.xsl" label="basiccontent" type="xslt-saxon">
@@ -304,7 +297,7 @@
 			<map:match pattern="feed/">
 				<map:aggregate element="content">
 					<map:part
-						src="{global:solr-url}select?q=collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}&amp;sort={url-encode:timestamp desc}&amp;rows=100&amp;start={request-param:start}&amp;fl=id,recordType,title_display,mint_geo,findspot_geo,tpq_num,taq_num,year_num,timestamp"/>
+						src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}&amp;sort={url-encode:timestamp desc}&amp;rows=100&amp;start={request-param:start}&amp;fl=id,recordType,title_display,mint_geo,findspot_geo,tpq_num,taq_num,year_num,timestamp"/>
 					<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
 				</map:aggregate>
 				<map:transform src="xslt/linked_data/feed.xsl" label="basiccontent" type="xslt-saxon">
@@ -324,10 +317,22 @@
 
 			<!-- CSV -->
 			<map:match pattern="data.csv">
-				<map:aggregate element="content">
-					<map:part src="{global:solr-url}select?q=collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}&amp;sort={url-encode:{request-param:sort}}&amp;rows=500"/>
-					<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
-				</map:aggregate>
+				<map:select type="parameter">
+					<map:parameter name="parameter-selector-test" value="{request-param:lang}"/>
+					<map:when test="">
+						<map:aggregate element="content">
+							<map:part src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}&amp;sort={url-encode:{request-param:sort}}&amp;rows=500"/>
+							<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
+						</map:aggregate>
+					</map:when>
+					<map:otherwise>
+						<map:aggregate element="content">
+							<map:part src="{global:solr-url}select?q=lang:{request-param:lang}+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}&amp;sort={url-encode:{request-param:sort}}&amp;rows=500"/>
+							<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
+						</map:aggregate>
+					</map:otherwise>
+				</map:select>
+				
 				<map:transform src="xslt/linked_data/solr_to_csv.xsl" label="basiccontent" type="xslt-saxon">
 					<map:parameter name="use-request-parameters" value="true"/>
 				</map:transform>
@@ -366,12 +371,26 @@
 
 			<!-- produces the search form; needs to be generated as xml and serialized as xhtml -->
 			<map:match pattern="search">
-				<map:aggregate element="content">
-					<map:part
-						src="{global:solr-url}select?q=collection-name:{global:collection-name}+AND+*:*&amp;rows=0&amp;facet.field=artist_facet&amp;facet.field=authority_facet&amp;facet.field=coinType_facet&amp;facet.field=degree_facet&amp;facet.field=deity_facet&amp;facet.field=denomination_facet&amp;facet.field=department_facet&amp;facet.field=dynasty_facet&amp;facet.field=engraver_facet&amp;facet.field=era_facet&amp;facet.field=findspot_facet&amp;facet.field=grade_facet&amp;facet.field=institution_facet&amp;facet.field=issuer_facet&amp;facet.field=maker_facet&amp;facet.field=manufacture_facet&amp;facet.field=material_facet&amp;facet.field=mint_facet&amp;facet.field=objectType_facet&amp;facet.field=owner_facet&amp;facet.field=portrait_facet&amp;facet.field=reference_facet&amp;facet.field=region_facet&amp;facet.field=repository_facet&amp;facet.field=script_facet&amp;facet.field=state_facet&amp;facet.field=mint_geo&amp;facet.numFacetTerms=1"
-						label="record"/>
-					<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
-				</map:aggregate>
+				<map:select type="parameter">
+					<map:parameter name="parameter-selector-test" value="{request-param:lang}"/>
+					<map:when test="">
+						<map:aggregate element="content">
+							<map:part
+								src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}+AND+*:*&amp;rows=0&amp;facet.field=artist_facet&amp;facet.field=authority_facet&amp;facet.field=coinType_facet&amp;facet.field=degree_facet&amp;facet.field=deity_facet&amp;facet.field=denomination_facet&amp;facet.field=department_facet&amp;facet.field=dynasty_facet&amp;facet.field=engraver_facet&amp;facet.field=era_facet&amp;facet.field=findspot_facet&amp;facet.field=grade_facet&amp;facet.field=institution_facet&amp;facet.field=issuer_facet&amp;facet.field=maker_facet&amp;facet.field=manufacture_facet&amp;facet.field=material_facet&amp;facet.field=mint_facet&amp;facet.field=objectType_facet&amp;facet.field=owner_facet&amp;facet.field=portrait_facet&amp;facet.field=reference_facet&amp;facet.field=region_facet&amp;facet.field=repository_facet&amp;facet.field=script_facet&amp;facet.field=state_facet&amp;facet.field=mint_geo&amp;facet.numFacetTerms=1"
+								label="record"/>
+							<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
+						</map:aggregate>
+					</map:when>
+					<map:otherwise>
+						<map:aggregate element="content">
+							<map:part
+								src="{global:solr-url}select?q=lang:{request-param:lang}+AND+collection-name:{global:collection-name}+AND+*:*&amp;rows=0&amp;facet.field=artist_facet&amp;facet.field=authority_facet&amp;facet.field=coinType_facet&amp;facet.field=degree_facet&amp;facet.field=deity_facet&amp;facet.field=denomination_facet&amp;facet.field=department_facet&amp;facet.field=dynasty_facet&amp;facet.field=engraver_facet&amp;facet.field=era_facet&amp;facet.field=findspot_facet&amp;facet.field=grade_facet&amp;facet.field=institution_facet&amp;facet.field=issuer_facet&amp;facet.field=maker_facet&amp;facet.field=manufacture_facet&amp;facet.field=material_facet&amp;facet.field=mint_facet&amp;facet.field=objectType_facet&amp;facet.field=owner_facet&amp;facet.field=portrait_facet&amp;facet.field=reference_facet&amp;facet.field=region_facet&amp;facet.field=repository_facet&amp;facet.field=script_facet&amp;facet.field=state_facet&amp;facet.field=mint_geo&amp;facet.numFacetTerms=1"
+								label="record"/>
+							<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
+						</map:aggregate>
+					</map:otherwise>
+				</map:select>
+				
 				<map:transform type="xslt-saxon" src="xslt/search.xsl" label="basiccontent">
 					<map:parameter name="use-request-parameters" value="true"/>
 					<map:parameter name="pipeline" value="search"/>
@@ -383,18 +402,91 @@
 				<map:select type="parameter">
 					<map:parameter name="parameter-selector-test" value="{request-param:q}"/>
 					<map:when test="">
-						<map:aggregate element="content">
-							<map:part
-								src="{global:solr-url}select?q=collection-name:{global:collection-name}+AND+*:*&amp;start={request-param:start}&amp;sort={url-encode:{request-param:sort}}&amp;facet.field=artist_facet&amp;facet.field=authority_facet&amp;facet.field=century_num&amp;facet.field=coinType_facet&amp;facet.field=degree_facet&amp;facet.field=deity_facet&amp;facet.field=denomination_facet&amp;facet.field=department_facet&amp;facet.field=dynasty_facet&amp;facet.field=engraver_facet&amp;facet.field=era_facet&amp;facet.field=findspot_facet&amp;facet.field=grade_facet&amp;facet.field=institution_facet&amp;facet.field=issuer_facet&amp;facet.field=maker_facet&amp;facet.field=manufacture_facet&amp;facet.field=material_facet&amp;facet.field=mint_facet&amp;facet.field=objectType_facet&amp;facet.field=owner_facet&amp;facet.field=portrait_facet&amp;facet.field=provenance_facet&amp;facet.field=reference_facet&amp;facet.field=region_facet&amp;facet.field=repository_facet&amp;facet.field=script_facet&amp;facet.field=state_facet&amp;facet.field=mint_geo&amp;facet.numFacetTerms=1&amp;fl=id,recordType,title_display,closing_date_display,findspot_facet,provenance_facet,reference_facet,weight_num,diameter_num,axis_num,description_display,obv_leg_display,rev_leg_display,obv_type_display,rev_type_display,thumbnail_obv,thumbnail_rev,reference_obv,reference_rev"/>
-							<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
-						</map:aggregate>
+						<map:select type="parameter">
+							<map:parameter name="parameter-selector-test" value="{request-param:sort}"/>
+							<map:when test="">
+								<map:select type="parameter">
+									<map:parameter name="parameter-selector-test" value="{request-param:lang}"/>
+									<map:when test="">
+										<map:aggregate element="content">
+											<map:part
+												src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}+AND+*:*&amp;start={request-param:start}&amp;sort=sortid+asc&amp;facet.field=artist_facet&amp;facet.field=authority_facet&amp;facet.field=century_num&amp;facet.field=coinType_facet&amp;facet.field=degree_facet&amp;facet.field=deity_facet&amp;facet.field=denomination_facet&amp;facet.field=department_facet&amp;facet.field=dynasty_facet&amp;facet.field=engraver_facet&amp;facet.field=era_facet&amp;facet.field=findspot_hier&amp;facet.field=findspot_facet&amp;facet.field=grade_facet&amp;facet.field=institution_facet&amp;facet.field=issuer_facet&amp;facet.field=maker_facet&amp;facet.field=manufacture_facet&amp;facet.field=material_facet&amp;facet.field=mint_facet&amp;facet.field=objectType_facet&amp;facet.field=owner_facet&amp;facet.field=portrait_facet&amp;facet.field=provenance_facet&amp;facet.field=reference_facet&amp;facet.field=region_facet&amp;facet.field=repository_facet&amp;facet.field=script_facet&amp;facet.field=state_facet&amp;facet.field=mint_geo&amp;facet.numFacetTerms=1"/>
+											<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
+										</map:aggregate>
+									</map:when>
+									<map:otherwise>
+										<map:aggregate element="content">
+											<map:part
+												src="{global:solr-url}select?q=lang:{request-param:lang}+AND+collection-name:{global:collection-name}+AND+*:*&amp;start={request-param:start}&amp;sort=sortid+asc&amp;facet.field=artist_facet&amp;facet.field=authority_facet&amp;facet.field=century_num&amp;facet.field=coinType_facet&amp;facet.field=degree_facet&amp;facet.field=deity_facet&amp;facet.field=denomination_facet&amp;facet.field=department_facet&amp;facet.field=dynasty_facet&amp;facet.field=engraver_facet&amp;facet.field=era_facet&amp;facet.field=findspot_hier&amp;facet.field=findspot_facet&amp;facet.field=grade_facet&amp;facet.field=institution_facet&amp;facet.field=issuer_facet&amp;facet.field=maker_facet&amp;facet.field=manufacture_facet&amp;facet.field=material_facet&amp;facet.field=mint_facet&amp;facet.field=objectType_facet&amp;facet.field=owner_facet&amp;facet.field=portrait_facet&amp;facet.field=provenance_facet&amp;facet.field=reference_facet&amp;facet.field=region_facet&amp;facet.field=repository_facet&amp;facet.field=script_facet&amp;facet.field=state_facet&amp;facet.field=mint_geo&amp;facet.numFacetTerms=1"/>
+											<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
+										</map:aggregate>
+									</map:otherwise>
+								</map:select>								
+							</map:when>
+							<map:otherwise>
+								<map:select type="parameter">
+									<map:parameter name="parameter-selector-test" value="{request-param:lang}"/>
+									<map:when test="">
+										<map:aggregate element="content">
+											<map:part
+												src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}+AND+*:*&amp;start={request-param:start}&amp;sort={url-encode:{request-param:sort}}&amp;facet.field=artist_facet&amp;facet.field=authority_facet&amp;facet.field=century_num&amp;facet.field=coinType_facet&amp;facet.field=degree_facet&amp;facet.field=deity_facet&amp;facet.field=denomination_facet&amp;facet.field=department_facet&amp;facet.field=dynasty_facet&amp;facet.field=engraver_facet&amp;facet.field=era_facet&amp;facet.field=findspot_hier&amp;facet.field=findspot_facet&amp;facet.field=grade_facet&amp;facet.field=institution_facet&amp;facet.field=issuer_facet&amp;facet.field=maker_facet&amp;facet.field=manufacture_facet&amp;facet.field=material_facet&amp;facet.field=mint_facet&amp;facet.field=objectType_facet&amp;facet.field=owner_facet&amp;facet.field=portrait_facet&amp;facet.field=provenance_facet&amp;facet.field=reference_facet&amp;facet.field=region_facet&amp;facet.field=repository_facet&amp;facet.field=script_facet&amp;facet.field=state_facet&amp;facet.field=mint_geo&amp;facet.numFacetTerms=1"/>
+											<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
+										</map:aggregate>
+									</map:when>
+									<map:otherwise>
+										<map:aggregate element="content">
+											<map:part
+												src="{global:solr-url}select?q=lang:{request-param:lang}+AND+collection-name:{global:collection-name}+AND+*:*&amp;start={request-param:start}&amp;sort={url-encode:{request-param:sort}}&amp;facet.field=artist_facet&amp;facet.field=authority_facet&amp;facet.field=century_num&amp;facet.field=coinType_facet&amp;facet.field=degree_facet&amp;facet.field=deity_facet&amp;facet.field=denomination_facet&amp;facet.field=department_facet&amp;facet.field=dynasty_facet&amp;facet.field=engraver_facet&amp;facet.field=era_facet&amp;facet.field=findspot_hier&amp;facet.field=findspot_facet&amp;facet.field=grade_facet&amp;facet.field=institution_facet&amp;facet.field=issuer_facet&amp;facet.field=maker_facet&amp;facet.field=manufacture_facet&amp;facet.field=material_facet&amp;facet.field=mint_facet&amp;facet.field=objectType_facet&amp;facet.field=owner_facet&amp;facet.field=portrait_facet&amp;facet.field=provenance_facet&amp;facet.field=reference_facet&amp;facet.field=region_facet&amp;facet.field=repository_facet&amp;facet.field=script_facet&amp;facet.field=state_facet&amp;facet.field=mint_geo&amp;facet.numFacetTerms=1"/>
+											<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
+										</map:aggregate>
+									</map:otherwise>
+								</map:select>
+								
+							</map:otherwise>
+						</map:select>
 					</map:when>
 					<map:otherwise>
-						<map:aggregate element="content">
-							<map:part
-								src="{global:solr-url}select?q=collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}&amp;start={request-param:start}&amp;sort={url-encode:{request-param:sort}}&amp;facet.field=artist_facet&amp;facet.field=authority_facet&amp;facet.field=century_num&amp;facet.field=coinType_facet&amp;facet.field=degree_facet&amp;facet.field=deity_facet&amp;facet.field=denomination_facet&amp;facet.field=department_facet&amp;facet.field=dynasty_facet&amp;facet.field=engraver_facet&amp;facet.field=era_facet&amp;facet.field=findspot_facet&amp;facet.field=grade_facet&amp;facet.field=institution_facet&amp;facet.field=issuer_facet&amp;facet.field=maker_facet&amp;facet.field=manufacture_facet&amp;facet.field=material_facet&amp;facet.field=mint_facet&amp;facet.field=objectType_facet&amp;facet.field=owner_facet&amp;facet.field=portrait_facet&amp;facet.field=provenance_facet&amp;facet.field=reference_facet&amp;facet.field=region_facet&amp;facet.field=repository_facet&amp;facet.field=script_facet&amp;facet.field=state_facet&amp;facet.field=mint_geo&amp;facet.numFacetTerms=1&amp;fl=id,recordType,title_display,closing_date_display,findspot_facet,provenance_facet,reference_facet,weight_num,diameter_num,axis_num,description_display,obv_leg_display,rev_leg_display,obv_type_display,rev_type_display,thumbnail_obv,thumbnail_rev,reference_obv,reference_rev"/>
-							<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
-						</map:aggregate>
+						<map:select type="parameter">
+							<map:parameter name="parameter-selector-test" value="{request-param:sort}"/>
+							<map:when test="">
+								<map:select type="parameter">
+									<map:parameter name="parameter-selector-test" value="{request-param:lang}"/>
+									<map:when test="">
+										<map:aggregate element="content">
+											<map:part
+												src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}&amp;start={request-param:start}&amp;sort=sortid+asc&amp;facet.field=artist_facet&amp;facet.field=authority_facet&amp;facet.field=century_num&amp;facet.field=coinType_facet&amp;facet.field=degree_facet&amp;facet.field=deity_facet&amp;facet.field=denomination_facet&amp;facet.field=department_facet&amp;facet.field=dynasty_facet&amp;facet.field=engraver_facet&amp;facet.field=era_facet&amp;facet.field=findspot_hier&amp;facet.field=findspot_facet&amp;facet.field=grade_facet&amp;facet.field=institution_facet&amp;facet.field=issuer_facet&amp;facet.field=maker_facet&amp;facet.field=manufacture_facet&amp;facet.field=material_facet&amp;facet.field=mint_facet&amp;facet.field=objectType_facet&amp;facet.field=owner_facet&amp;facet.field=portrait_facet&amp;facet.field=provenance_facet&amp;facet.field=reference_facet&amp;facet.field=region_facet&amp;facet.field=repository_facet&amp;facet.field=script_facet&amp;facet.field=state_facet&amp;facet.field=mint_geo&amp;facet.numFacetTerms=1"/>
+											<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
+										</map:aggregate>
+									</map:when>
+									<map:otherwise>
+										<map:aggregate element="content">
+											<map:part
+												src="{global:solr-url}select?q=lang:{request-param:lang}+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}&amp;start={request-param:start}&amp;sort=sortid+asc&amp;facet.field=artist_facet&amp;facet.field=authority_facet&amp;facet.field=century_num&amp;facet.field=coinType_facet&amp;facet.field=degree_facet&amp;facet.field=deity_facet&amp;facet.field=denomination_facet&amp;facet.field=department_facet&amp;facet.field=dynasty_facet&amp;facet.field=engraver_facet&amp;facet.field=era_facet&amp;facet.field=findspot_hier&amp;facet.field=findspot_facet&amp;facet.field=grade_facet&amp;facet.field=institution_facet&amp;facet.field=issuer_facet&amp;facet.field=maker_facet&amp;facet.field=manufacture_facet&amp;facet.field=material_facet&amp;facet.field=mint_facet&amp;facet.field=objectType_facet&amp;facet.field=owner_facet&amp;facet.field=portrait_facet&amp;facet.field=provenance_facet&amp;facet.field=reference_facet&amp;facet.field=region_facet&amp;facet.field=repository_facet&amp;facet.field=script_facet&amp;facet.field=state_facet&amp;facet.field=mint_geo&amp;facet.numFacetTerms=1"/>
+											<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
+										</map:aggregate>
+									</map:otherwise>
+								</map:select>								
+							</map:when>
+							<map:otherwise>
+								<map:select type="parameter">
+									<map:parameter name="parameter-selector-test" value="{request-param:lang}"/>
+									<map:when test="">
+										<map:aggregate element="content">
+											<map:part
+												src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}&amp;start={request-param:start}&amp;sort={url-encode:{request-param:sort}}&amp;facet.field=artist_facet&amp;facet.field=authority_facet&amp;facet.field=century_num&amp;facet.field=coinType_facet&amp;facet.field=degree_facet&amp;facet.field=deity_facet&amp;facet.field=denomination_facet&amp;facet.field=department_facet&amp;facet.field=dynasty_facet&amp;facet.field=engraver_facet&amp;facet.field=era_facet&amp;facet.field=findspot_hier&amp;facet.field=findspot_facet&amp;facet.field=grade_facet&amp;facet.field=institution_facet&amp;facet.field=issuer_facet&amp;facet.field=maker_facet&amp;facet.field=manufacture_facet&amp;facet.field=material_facet&amp;facet.field=mint_facet&amp;facet.field=objectType_facet&amp;facet.field=owner_facet&amp;facet.field=portrait_facet&amp;facet.field=provenance_facet&amp;facet.field=reference_facet&amp;facet.field=region_facet&amp;facet.field=repository_facet&amp;facet.field=script_facet&amp;facet.field=state_facet&amp;facet.field=mint_geo&amp;facet.numFacetTerms=1"/>
+											<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
+										</map:aggregate>
+									</map:when>
+									<map:otherwise>
+										<map:aggregate element="content">
+											<map:part
+												src="{global:solr-url}select?q=lang:{request-param:lang}+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}&amp;start={request-param:start}&amp;sort={url-encode:{request-param:sort}}&amp;facet.field=artist_facet&amp;facet.field=authority_facet&amp;facet.field=century_num&amp;facet.field=coinType_facet&amp;facet.field=degree_facet&amp;facet.field=deity_facet&amp;facet.field=denomination_facet&amp;facet.field=department_facet&amp;facet.field=dynasty_facet&amp;facet.field=engraver_facet&amp;facet.field=era_facet&amp;facet.field=findspot_hier&amp;facet.field=findspot_facet&amp;facet.field=grade_facet&amp;facet.field=institution_facet&amp;facet.field=issuer_facet&amp;facet.field=maker_facet&amp;facet.field=manufacture_facet&amp;facet.field=material_facet&amp;facet.field=mint_facet&amp;facet.field=objectType_facet&amp;facet.field=owner_facet&amp;facet.field=portrait_facet&amp;facet.field=provenance_facet&amp;facet.field=reference_facet&amp;facet.field=region_facet&amp;facet.field=repository_facet&amp;facet.field=script_facet&amp;facet.field=state_facet&amp;facet.field=mint_geo&amp;facet.numFacetTerms=1"/>
+											<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
+										</map:aggregate>
+									</map:otherwise>
+								</map:select>
+							</map:otherwise>
+						</map:select>
 					</map:otherwise>
 				</map:select>
 				<map:transform type="xslt-saxon" src="xslt/results.xsl" label="basiccontent">
@@ -407,12 +499,26 @@
 
 			<!-- COMPARE PAGE -->
 			<map:match pattern="compare">
-				<map:aggregate element="content">
-					<map:part
-						src="{global:solr-url}select?q=collection-name:{global:collection-name}+AND+*:*&amp;rows=0&amp;facet.field=artist_facet&amp;facet.field=authority_facet&amp;facet.field=coinType_facet&amp;facet.field=degree_facet&amp;facet.field=deity_facet&amp;facet.field=denomination_facet&amp;facet.field=department_facet&amp;facet.field=dynasty_facet&amp;facet.field=engraver_facet&amp;facet.field=era_facet&amp;facet.field=findspot_facet&amp;facet.field=grade_facet&amp;facet.field=institution_facet&amp;facet.field=issuer_facet&amp;facet.field=maker_facet&amp;facet.field=manufacture_facet&amp;facet.field=material_facet&amp;facet.field=mint_facet&amp;facet.field=objectType_facet&amp;facet.field=owner_facet&amp;facet.field=portrait_facet&amp;facet.field=region_facet&amp;facet.field=repository_facet&amp;facet.field=script_facet&amp;facet.field=state_facet&amp;facet.field=mint_geo&amp;facet.numFacetTerms=1"
-						label="record"/>
-					<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
-				</map:aggregate>
+				<map:select type="parameter">
+					<map:parameter name="parameter-selector-test" value="{request-param:lang}"/>
+					<map:when test="">
+						<map:aggregate element="content">
+							<map:part
+								src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}+AND+*:*&amp;rows=0&amp;facet.field=artist_facet&amp;facet.field=authority_facet&amp;facet.field=coinType_facet&amp;facet.field=degree_facet&amp;facet.field=deity_facet&amp;facet.field=denomination_facet&amp;facet.field=department_facet&amp;facet.field=dynasty_facet&amp;facet.field=engraver_facet&amp;facet.field=era_facet&amp;facet.field=findspot_facet&amp;facet.field=grade_facet&amp;facet.field=institution_facet&amp;facet.field=issuer_facet&amp;facet.field=maker_facet&amp;facet.field=manufacture_facet&amp;facet.field=material_facet&amp;facet.field=mint_facet&amp;facet.field=objectType_facet&amp;facet.field=owner_facet&amp;facet.field=portrait_facet&amp;facet.field=region_facet&amp;facet.field=repository_facet&amp;facet.field=script_facet&amp;facet.field=state_facet&amp;facet.field=mint_geo&amp;facet.numFacetTerms=1"
+								label="record"/>
+							<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
+						</map:aggregate>
+					</map:when>
+					<map:otherwise>
+						<map:aggregate element="content">
+							<map:part
+								src="{global:solr-url}select?q=lang:{request-param:lang}+AND+collection-name:{global:collection-name}+AND+*:*&amp;rows=0&amp;facet.field=artist_facet&amp;facet.field=authority_facet&amp;facet.field=coinType_facet&amp;facet.field=degree_facet&amp;facet.field=deity_facet&amp;facet.field=denomination_facet&amp;facet.field=department_facet&amp;facet.field=dynasty_facet&amp;facet.field=engraver_facet&amp;facet.field=era_facet&amp;facet.field=findspot_facet&amp;facet.field=grade_facet&amp;facet.field=institution_facet&amp;facet.field=issuer_facet&amp;facet.field=maker_facet&amp;facet.field=manufacture_facet&amp;facet.field=material_facet&amp;facet.field=mint_facet&amp;facet.field=objectType_facet&amp;facet.field=owner_facet&amp;facet.field=portrait_facet&amp;facet.field=region_facet&amp;facet.field=repository_facet&amp;facet.field=script_facet&amp;facet.field=state_facet&amp;facet.field=mint_geo&amp;facet.numFacetTerms=1"
+								label="record"/>
+							<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
+						</map:aggregate>
+					</map:otherwise>
+				</map:select>
+				
 				<map:transform type="xslt-saxon" src="xslt/compare.xsl" label="basiccontent">
 					<map:parameter name="use-request-parameters" value="true"/>
 					<map:parameter name="pipeline" value="compare"/>
@@ -423,10 +529,22 @@
 			<!-- GEOGRAPHIC SERVICE -->
 			<!-- KML of mints for individual objects given a Solr query -->
 			<map:match pattern="query.kml">
-				<map:aggregate element="content">
-					<map:part src="{global:solr-url}select?q=collection-name:{global:collection-name}+AND+{url-encode:{request-param:q} AND mint_geo:*}&amp;start={request-param:start}&amp;rows=500"/>
-					<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
-				</map:aggregate>
+				<map:select type="parameter">
+					<map:parameter name="parameter-selector-test" value="{request-param:lang}"/>
+					<map:when test="">
+						<map:aggregate element="content">
+							<map:part src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q} AND mint_geo:*}&amp;start={request-param:start}&amp;rows=500"/>
+							<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
+						</map:aggregate>
+					</map:when>
+					<map:otherwise>
+						<map:aggregate element="content">
+							<map:part src="{global:solr-url}select?q=lang:{request-param:lang}+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q} AND mint_geo:*}&amp;start={request-param:start}&amp;rows=500"/>
+							<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
+						</map:aggregate>
+					</map:otherwise>
+				</map:select>
+				
 				<map:transform type="xslt-saxon" src="xslt/geographic/solr-to-kml.xsl" label="basiccontent">
 					<map:parameter name="use-request-parameters" value="true"/>
 				</map:transform>
@@ -435,11 +553,24 @@
 
 			<!-- KML for unique mints given a Solr query -->
 			<map:match pattern="mints.kml">
-				<map:aggregate element="content">
-					<map:part
-						src="{global:solr-url}select?q=collection-name:{global:collection-name}+AND+{url-encode:{request-param:q} AND mint_geo:*}&amp;start={request-param:start}&amp;rows=0&amp;facet.limit=-1&amp;facet.field=mint_geo"/>
-					<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
-				</map:aggregate>
+				<map:select type="parameter">
+					<map:parameter name="parameter-selector-test" value="{request-param:lang}"/>
+					<map:when test="">
+						<map:aggregate element="content">
+							<map:part
+								src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q} AND mint_geo:*}&amp;start={request-param:start}&amp;rows=0&amp;facet.limit=-1&amp;facet.field=mint_geo"/>
+							<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
+						</map:aggregate>
+					</map:when>
+					<map:otherwise>
+						<map:aggregate element="content">
+							<map:part
+								src="{global:solr-url}select?q=lang:{request-param:lang}+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q} AND mint_geo:*}&amp;start={request-param:start}&amp;rows=0&amp;facet.limit=-1&amp;facet.field=mint_geo"/>
+							<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
+						</map:aggregate>
+					</map:otherwise>
+				</map:select>
+				
 				<map:transform type="xslt-saxon" src="xslt/geographic/mints-to-kml.xsl" label="basiccontent">
 					<map:parameter name="use-request-parameters" value="true"/>
 				</map:transform>
@@ -448,24 +579,49 @@
 
 			<!-- KML of findspots for individual objects (hoards) given a Solr query, includes date ranges for hoards -->
 			<map:match pattern="hoards.kml">
-				<map:aggregate element="content">
-					<map:part
-						src="{global:solr-url}select?q=collection-name:{global:collection-name}+AND+{url-encode:{request-param:q} AND findspot_geo:*}&amp;rows=10000&amp;fl=id,title_display,findspot_geo,tpq_num,taq_num,closing_date_display"/>
-					<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
-				</map:aggregate>
+				<map:select type="parameter">
+					<map:parameter name="parameter-selector-test" value="{request-param:lang}"/>
+					<map:when test="">
+						<map:aggregate element="content">
+							<map:part
+								src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q} AND findspot_geo:*}&amp;rows=10000&amp;fl=id,title_display,findspot_geo,tpq_num,taq_num,closing_date_display"/>
+							<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
+						</map:aggregate>
+					</map:when>
+					<map:otherwise>
+						<map:aggregate element="content">
+							<map:part
+								src="{global:solr-url}select?q=lang:{request-param:lang}+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q} AND findspot_geo:*}&amp;rows=10000&amp;fl=id,title_display,findspot_geo,tpq_num,taq_num,closing_date_display"/>
+							<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
+						</map:aggregate>
+					</map:otherwise>
+				</map:select>
 				<map:transform type="xslt-saxon" src="xslt/geographic/hoards-to-kml.xsl" label="basiccontent">
 					<map:parameter name="use-request-parameters" value="true"/>
 				</map:transform>
-				<map:serialize type="xml"/>
+				<map:serialize type="kml"/>
 			</map:match>
 
 			<!-- KML of unique findspots given a Solr query -->
 			<map:match pattern="findspots.kml">
-				<map:aggregate element="content">
-					<map:part
-						src="{global:solr-url}select?q=collection-name:{global:collection-name}+AND+{url-encode:{request-param:q} AND findspot_geo:*}&amp;start={request-param:start}&amp;rows=0&amp;facet.limit=-1&amp;facet.field=findspot_geo"/>
-					<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
-				</map:aggregate>
+				<map:select type="parameter">
+					<map:parameter name="parameter-selector-test" value="{request-param:lang}"/>
+					<map:when test="">
+						<map:aggregate element="content">
+							<map:part
+								src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q} AND findspot_geo:*}&amp;start={request-param:start}&amp;rows=0&amp;facet.limit=-1&amp;facet.field=findspot_geo"/>
+							<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
+						</map:aggregate>
+					</map:when>
+					<map:otherwise>
+						<map:aggregate element="content">
+							<map:part
+								src="{global:solr-url}select?q=lang:{request-param:lang}+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q} AND findspot_geo:*}&amp;start={request-param:start}&amp;rows=0&amp;facet.limit=-1&amp;facet.field=findspot_geo"/>
+							<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
+						</map:aggregate>
+					</map:otherwise>
+				</map:select>
+				
 				<map:transform type="xslt-saxon" src="xslt/geographic/findspots-to-kml.xsl" label="basiccontent">
 					<map:parameter name="use-request-parameters" value="true"/>
 				</map:transform>
@@ -474,12 +630,26 @@
 
 			<!-- MAPS PIPELINE -->
 			<map:match pattern="maps">
-				<map:aggregate element="content">
-					<map:part
-						src="{global:solr-url}select?q=collection-name:{global:collection-name}+AND+*:*+AND+{url-encode:(mint_geo:* OR findspot_geo:*)}&amp;rows=0&amp;facet.field=artist_facet&amp;facet.field=authority_facet&amp;facet.field=century_num&amp;facet.field=coinType_facet&amp;facet.field=degree_facet&amp;facet.field=deity_facet&amp;facet.field=denomination_facet&amp;facet.field=department_facet&amp;facet.field=dynasty_facet&amp;facet.field=engraver_facet&amp;facet.field=era_facet&amp;facet.field=findspot_facet&amp;facet.field=grade_facet&amp;facet.field=institution_facet&amp;facet.field=issuer_facet&amp;facet.field=maker_facet&amp;facet.field=manufacture_facet&amp;facet.field=material_facet&amp;facet.field=mint_facet&amp;facet.field=objectType_facet&amp;facet.field=owner_facet&amp;facet.field=portrait_facet&amp;facet.field=region_facet&amp;facet.field=repository_facet&amp;facet.field=script_facet&amp;facet.field=state_facet&amp;facet.field=mint_geo&amp;facet.numFacetTerms=1"
-						label="record"/>
-					<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
-				</map:aggregate>
+				<map:select type="parameter">
+					<map:parameter name="parameter-selector-test" value="{request-param:lang}"/>
+					<map:when test="">
+						<map:aggregate element="content">
+							<map:part
+								src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}+AND+*:*+AND+{url-encode:(mint_geo:* OR findspot_geo:*)}&amp;rows=0&amp;facet.field=artist_facet&amp;facet.field=authority_facet&amp;facet.field=century_num&amp;facet.field=coinType_facet&amp;facet.field=degree_facet&amp;facet.field=deity_facet&amp;facet.field=denomination_facet&amp;facet.field=department_facet&amp;facet.field=dynasty_facet&amp;facet.field=engraver_facet&amp;facet.field=era_facet&amp;facet.field=findspot_hier&amp;facet.field=findspot_facet&amp;facet.field=grade_facet&amp;facet.field=institution_facet&amp;facet.field=issuer_facet&amp;facet.field=maker_facet&amp;facet.field=manufacture_facet&amp;facet.field=material_facet&amp;facet.field=mint_facet&amp;facet.field=objectType_facet&amp;facet.field=owner_facet&amp;facet.field=portrait_facet&amp;facet.field=region_facet&amp;facet.field=repository_facet&amp;facet.field=script_facet&amp;facet.field=state_facet&amp;facet.field=mint_geo&amp;facet.numFacetTerms=1"
+								label="record"/>
+							<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
+						</map:aggregate>
+					</map:when>
+					<map:otherwise>
+						<map:aggregate element="content">
+							<map:part
+								src="{global:solr-url}select?q=lang:{request-param:lang}+AND+collection-name:{global:collection-name}+AND+*:*+AND+{url-encode:(mint_geo:* OR findspot_geo:*)}&amp;rows=0&amp;facet.field=artist_facet&amp;facet.field=authority_facet&amp;facet.field=century_num&amp;facet.field=coinType_facet&amp;facet.field=degree_facet&amp;facet.field=deity_facet&amp;facet.field=denomination_facet&amp;facet.field=department_facet&amp;facet.field=dynasty_facet&amp;facet.field=engraver_facet&amp;facet.field=era_facet&amp;facet.field=findspot_hier&amp;facet.field=findspot_facet&amp;facet.field=grade_facet&amp;facet.field=institution_facet&amp;facet.field=issuer_facet&amp;facet.field=maker_facet&amp;facet.field=manufacture_facet&amp;facet.field=material_facet&amp;facet.field=mint_facet&amp;facet.field=objectType_facet&amp;facet.field=owner_facet&amp;facet.field=portrait_facet&amp;facet.field=region_facet&amp;facet.field=repository_facet&amp;facet.field=script_facet&amp;facet.field=state_facet&amp;facet.field=mint_geo&amp;facet.numFacetTerms=1"
+								label="record"/>
+							<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
+						</map:aggregate>
+					</map:otherwise>
+				</map:select>
+				
 				<map:transform type="xslt-saxon" src="xslt/maps.xsl" label="basiccontent">
 					<map:parameter name="use-request-parameters" value="true"/>
 					<map:parameter name="pipeline" value="maps"/>
@@ -496,7 +666,7 @@
 				</map:aggregate>
 				<map:transform type="xslt-saxon" src="xslt/apis/get.xsl" label="basiccontent">
 					<map:parameter name="use-request-parameters" value="true"/>
-				</map:transform>
+				</map:transform>				
 				<map:transform type="cinclude"/>
 				<map:select type="parameter">
 					<map:parameter name="parameter-selector-test" value="{request-param:format}"/>
@@ -514,11 +684,23 @@
 
 			<!-- search API  XML results conform to OpenSearch -->
 			<map:match pattern="apis/search">
-				<map:aggregate element="content">
-					<map:part
-						src="{global:solr-url}select?q=collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}&amp;sort={url-encode:{request-param:sort}}&amp;rows=100&amp;start={request-param:start}&amp;fl=id,recordType,title_display,mint_geo,findspot_geo,tpq_num,taq_num,year_num,timestamp"/>
-					<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
-				</map:aggregate>
+				<map:select type="parameter">
+					<map:parameter name="parameter-selector-test" value="{request-param:lang}"/>
+					<map:when test="">
+						<map:aggregate element="content">
+							<map:part
+								src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}&amp;sort={url-encode:{request-param:sort}}&amp;rows=100&amp;start={request-param:start}&amp;fl=id,recordType,title_display,mint_geo,findspot_geo,tpq_num,taq_num,year_num,timestamp"/>
+							<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
+						</map:aggregate>
+					</map:when>
+					<map:otherwise>
+						<map:aggregate element="content">
+							<map:part
+								src="{global:solr-url}select?q=lang:{request-param:lang}+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}&amp;sort={url-encode:{request-param:sort}}&amp;rows=100&amp;start={request-param:start}&amp;fl=id,recordType,title_display,mint_geo,findspot_geo,tpq_num,taq_num,year_num,timestamp"/>
+							<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
+						</map:aggregate>
+					</map:otherwise>
+				</map:select>
 				<map:transform type="xslt-saxon" src="xslt/apis/search.xsl" label="basiccontent">
 					<map:parameter name="use-request-parameters" value="true"/>
 				</map:transform>
@@ -539,7 +721,7 @@
 			<!-- AJAX COMPONENTS -->
 			<!-- get the number of documents in the solr index that have images -->
 			<map:match pattern="feature_count">
-				<map:generate src="{global:solr-url}select?q=collection-name:{global:collection-name}+AND+{url-encode:imagesavailable:true}&amp;facet.limit=1" label="record"/>
+				<map:generate src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}+AND+{url-encode:imagesavailable:true}&amp;facet.limit=1" label="record"/>
 				<map:transform src="xslt/ajax/get_feature_count.xsl" label="basiccontent" type="xslt-saxon">
 					<map:parameter name="use-request-parameters" value="true"/>
 				</map:transform>
@@ -549,7 +731,7 @@
 			<!-- features for index page -->
 			<map:match pattern="get_feature">
 				<map:aggregate element="content">
-					<map:part src="{global:solr-url}select?q=collection-name:{global:collection-name}+AND+{url-encode:imagesavailable:true}&amp;start={request-param:seed}&amp;rows=1"/>
+					<map:part src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}+AND+{url-encode:imagesavailable:true}&amp;start={request-param:seed}&amp;rows=1"/>
 					<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
 				</map:aggregate>
 				<map:transform src="xslt/ajax/get_feature.xsl" label="basiccontent" type="xslt-saxon">
@@ -559,15 +741,28 @@
 			</map:match>
 
 			<map:match pattern="results_ajax">
-				<map:aggregate element="content">
-					<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
-					<map:part
-						src="{global:solr-url}select?q=collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}&amp;rows=24&amp;start={request-param:start}&amp;sort={url-encode:{request-param:sort}}"
-						label="record"/>
-				</map:aggregate>
+				<map:select type="parameter">
+					<map:parameter name="parameter-selector-test" value="{request-param:lang}"/>
+					<map:when test="">
+						<map:aggregate element="content">							
+							<map:part
+								src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}&amp;rows=24&amp;start={request-param:start}&amp;sort={url-encode:{request-param:sort}}"
+								label="record"/>
+							<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
+						</map:aggregate>
+					</map:when>
+					<map:otherwise>
+						<map:aggregate element="content">
+							<map:part
+								src="{global:solr-url}select?q=lang:{request-param:lang}+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}&amp;rows=24&amp;start={request-param:start}&amp;sort={url-encode:{request-param:sort}}"
+								label="record"/>
+							<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>							
+						</map:aggregate>
+					</map:otherwise>
+				</map:select>
+				
 				<map:transform type="xslt-saxon" src="xslt/ajax/results_ajax.xsl" label="basiccontent">
 					<map:parameter name="use-request-parameters" value="true"/>
-					<map:parameter name="pipeline" value="results"/>
 				</map:transform>
 				<map:transform type="cinclude"/>
 				<map:serialize type="html"/>
@@ -575,11 +770,24 @@
 
 			<!-- compare page -->
 			<map:match pattern="compare_results">
-				<map:aggregate element="content">
-					<map:part
-						src="{global:solr-url}select?q=collection-name:{global:collection-name}+AND+{url-encode:{request-param:q} AND imagesavailable:true}&amp;sort={url-encode:{request-param:sort}}&amp;start={url-encode:{request-param:start}}&amp;image={url-encode:{request-param:image}}&amp;mode={request-param:mode}"/>
-					<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
-				</map:aggregate>
+				<map:select type="parameter">
+					<map:parameter name="parameter-selector-test" value="{request-param:lang}"/>
+					<map:when test="">
+						<map:aggregate element="content">
+							<map:part
+								src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q} AND imagesavailable:true}&amp;sort={url-encode:{request-param:sort}}&amp;start={url-encode:{request-param:start}}&amp;image={url-encode:{request-param:image}}&amp;mode={request-param:mode}"/>
+							<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
+						</map:aggregate>
+					</map:when>
+					<map:otherwise>
+						<map:aggregate element="content">
+							<map:part
+								src="{global:solr-url}select?q=lang:{request-param:lang}+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q} AND imagesavailable:true}&amp;sort={url-encode:{request-param:sort}}&amp;start={url-encode:{request-param:start}}&amp;image={url-encode:{request-param:image}}&amp;mode={request-param:mode}"/>
+							<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
+						</map:aggregate>
+					</map:otherwise>
+				</map:select>
+				
 				<map:transform type="xslt-saxon" src="xslt/ajax/compare_results.xsl" label="basiccontent">
 					<map:parameter name="use-request-parameters" value="true"/>
 				</map:transform>
@@ -595,9 +803,20 @@
 			</map:match>
 
 			<map:match pattern="get_hoards">
-				<map:generate
-					src="{global:solr-url}select?q=collection-name:{global:collection-name}+AND+recordType:hoard+AND+hasContents:true+AND+{url-encode:{request-param:q}}&amp;start=0&amp;rows=10000&amp;fl=id&amp;fl=title_display&amp;sort=title_display%20asc"
-					label="record"/>
+				<map:select type="parameter">
+					<map:parameter name="parameter-selector-test" value="{request-param:lang}"/>
+					<map:when test="">
+						<map:generate
+							src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}+AND+recordType:hoard+AND+hasContents:true+AND+{url-encode:{request-param:q}}&amp;start=0&amp;rows=10000&amp;fl=id&amp;fl=title_display&amp;sort=title_display%20asc"
+							label="record"/>
+					</map:when>
+					<map:otherwise>
+						<map:generate
+							src="{global:solr-url}select?q=lang:{request-param}+AND+collection-name:{global:collection-name}+AND+recordType:hoard+AND+hasContents:true+AND+{url-encode:{request-param:q}}&amp;start=0&amp;rows=10000&amp;fl=id&amp;fl=title_display&amp;sort=title_display%20asc"
+							label="record"/>
+					</map:otherwise>
+				</map:select>
+				
 				<map:transform src="xslt/ajax/get_hoards.xsl" label="basiccontent" type="xslt-saxon">
 					<map:parameter name="use-request-parameters" value="true"/>
 				</map:transform>
@@ -614,15 +833,6 @@
 				<map:transform type="cinclude"/>
 				<map:serialize type="html"/>
 			</map:match>
-			
-			<!-- get unique certainty codes within the collection -->
-			<map:match pattern="get_certainty_codes">
-				<map:generate src="{global:exist-url}{global:collection-name}/get_certainty_codes.xql"/>
-				<map:transform src="xslt/ajax/get_certainty_codes.xsl" type="xslt-saxon">
-					<map:parameter name="use-request-parameters" value="true"/>					
-				</map:transform>				
-				<map:serialize type="xml"/>
-			</map:match>
 
 			<map:match pattern="get_decades">
 				<map:generate
@@ -635,9 +845,19 @@
 			</map:match>
 
 			<map:match pattern="get_facet_options">
-				<map:generate
-					src="{global:solr-url}select?q=collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}&amp;category={request-param:category}&amp;facet.field={request-param:category}&amp;facet.sort={request-param:sort}&amp;facet.limit={request-param:limit}&amp;rows=0&amp;facet.mincount={request-param:mincount}"
-					label="record"/>
+				<map:select type="parameter">
+					<map:parameter name="parameter-selector-test" value="{request-param:lang}"/>
+					<map:when test="">
+						<map:generate
+							src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}&amp;category={request-param:category}&amp;facet.field={request-param:category}&amp;facet.sort={request-param:sort}&amp;facet.limit={request-param:limit}&amp;rows=0&amp;facet.mincount={request-param:mincount}"
+							label="record"/>
+					</map:when>
+					<map:otherwise>
+						<map:generate
+							src="{global:solr-url}select?q=lang:{request-param:lang}+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}&amp;category={request-param:category}&amp;facet.field={request-param:category}&amp;facet.sort={request-param:sort}&amp;facet.limit={request-param:limit}&amp;rows=0&amp;facet.mincount={request-param:mincount}"
+							label="record"/>
+					</map:otherwise>
+				</map:select>
 				<map:transform type="xslt-saxon" src="xslt/ajax/get_facet_options.xsl" label="basiccontent">
 					<map:parameter name="use-request-parameters" value="true"/>
 				</map:transform>
@@ -645,9 +865,19 @@
 			</map:match>
 
 			<map:match pattern="get_hier">
-				<map:generate
-					src="{global:solr-url}select?q=collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}&amp;facet.sort=index&amp;rows=0&amp;facet.field={request-param:field}_hier&amp;fq=collection-name:{global:collection-name}+AND+{url-encode:{request-param:field}_hier:{request-param:fq}}&amp;facet.prefix={url-encode:{request-param:prefix}}&amp;link={url-encode:{request-param:link}}&amp;mode={request-param:mode}"
-					label="record"/>
+				<map:select type="parameter">
+					<map:parameter name="parameter-selector-test" value="{request-param:lang}"/>
+					<map:when test="">
+						<map:generate
+							src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}&amp;facet.sort=index&amp;rows=0&amp;facet.field={request-param:field}_hier&amp;fq=collection-name:{global:collection-name}+AND+{url-encode:{request-param:field}_hier:{request-param:fq}}&amp;facet.prefix={url-encode:{request-param:prefix}}&amp;link={url-encode:{request-param:link}}&amp;mode={request-param:mode}"
+							label="record"/>
+					</map:when>
+					<map:otherwise>
+						<map:generate
+							src="{global:solr-url}select?q=lang:{request-param:lang}+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}&amp;facet.sort=index&amp;rows=0&amp;facet.field={request-param:field}_hier&amp;fq=collection-name:{global:collection-name}+AND+{url-encode:{request-param:field}_hier:{request-param:fq}}&amp;facet.prefix={url-encode:{request-param:prefix}}&amp;link={url-encode:{request-param:link}}&amp;mode={request-param:mode}"
+							label="record"/>
+					</map:otherwise>
+				</map:select>				
 				<map:transform type="xslt-saxon" src="xslt/ajax/get_hier.xsl" label="basiccontent">
 					<map:parameter name="use-request-parameters" value="true"/>
 					<map:parameter name="collection-name" value="{global:collection-name}"/>
@@ -658,9 +888,19 @@
 			</map:match>
 
 			<map:match pattern="get_search_facets">
-				<map:generate
-					src="{global:solr-url}select?q=collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}&amp;category={request-param:category}&amp;facet.field={request-param:category}&amp;facet.limit=-1&amp;facet.sort=index&amp;rows=0"
-					label="record"/>
+				<map:select type="parameter">
+					<map:parameter name="parameter-selector-test" value="{request-param:lang}"/>
+					<map:when test="">
+						<map:generate
+							src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}&amp;category={request-param:category}&amp;facet.field={request-param:category}&amp;facet.limit=-1&amp;facet.sort=index&amp;rows=0"
+							label="record"/>
+					</map:when>
+					<map:otherwise>
+						<map:generate
+							src="{global:solr-url}select?q=lang:{request-param:lang}+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}&amp;category={request-param:category}&amp;facet.field={request-param:category}&amp;facet.limit=-1&amp;facet.sort=index&amp;rows=0"
+							label="record"/>
+					</map:otherwise>
+				</map:select>				
 				<map:transform type="xslt-saxon" src="xslt/ajax/get_search_facets.xsl" label="basiccontent">
 					<map:parameter name="use-request-parameters" value="true"/>
 				</map:transform>
@@ -669,9 +909,20 @@
 
 			<!-- maps section ajax -->
 			<map:match pattern="maps_get_facet_options">
-				<map:generate
-					src="{global:solr-url}select?q=collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}+AND+mint_uri:*&amp;category={request-param:category}&amp;facet.field={request-param:category}&amp;facet.sort={request-param:sort}&amp;facet.limit={request-param:limit}&amp;rows=0&amp;facet.mincount={request-param:mincount}"
-					label="record"/>
+				<map:select type="parameter">
+					<map:parameter name="parameter-selector-test" value="{request-param:lang}"/>
+					<map:when test="">
+						<map:generate
+							src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}+AND+mint_uri:*&amp;category={request-param:category}&amp;facet.field={request-param:category}&amp;facet.sort={request-param:sort}&amp;facet.limit={request-param:limit}&amp;rows=0&amp;facet.mincount={request-param:mincount}"
+							label="record"/>
+					</map:when>
+					<map:otherwise>
+						<map:generate
+							src="{global:solr-url}select?q=lang:{request-param:lang}+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}+AND+mint_uri:*&amp;category={request-param:category}&amp;facet.field={request-param:category}&amp;facet.sort={request-param:sort}&amp;facet.limit={request-param:limit}&amp;rows=0&amp;facet.mincount={request-param:mincount}"
+							label="record"/>
+					</map:otherwise>
+				</map:select>
+				
 				<map:transform type="xslt-saxon" src="xslt/ajax/get_facet_options.xsl" label="basiccontent">
 					<map:parameter name="use-request-parameters" value="true"/>
 				</map:transform>
@@ -689,9 +940,19 @@
 			</map:match>
 
 			<map:match pattern="get_vis_quant">
-				<map:generate
-					src="{global:solr-url}select?q=collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}&amp;facet=true&amp;rows=0&amp;facet.field={url-encode:{request-param:category}}"
-					label="record"/>
+				<map:select type="parameter">
+					<map:parameter name="parameter-selector-test" value="{request-param:lang}"/>
+					<map:when test="">
+						<map:generate
+							src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}&amp;facet=true&amp;rows=0&amp;facet.field={url-encode:{request-param:category}}"
+							label="record"/>
+					</map:when>
+					<map:otherwise>
+						<map:generate
+							src="{global:solr-url}select?q=lang:{request-param:lang}+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}&amp;facet=true&amp;rows=0&amp;facet.field={url-encode:{request-param:category}}"
+							label="record"/>
+					</map:otherwise>
+				</map:select>
 				<map:transform type="xslt-saxon" src="xslt/ajax/get_vis_quant.xsl" label="basiccontent">
 					<map:parameter name="use-request-parameters" value="true"/>
 				</map:transform>
@@ -699,9 +960,19 @@
 			</map:match>
 
 			<map:match pattern="get_vis_custom">
-				<map:generate
-					src="{global:solr-url}select?q=collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}+AND+{url-encode:{request-param:customQuery}}&amp;facet=false&amp;rows=0"
-					label="record"/>
+				<map:select type="parameter">
+					<map:parameter name="parameter-selector-test" value="{request-param:lang}"/>
+					<map:when test="">
+						<map:generate
+							src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}+AND+{url-encode:{request-param:customQuery}}&amp;facet=false&amp;rows=0"
+							label="record"/>
+					</map:when>
+					<map:otherwise>
+						<map:generate
+							src="{global:solr-url}select?q=lang:{request-param:lang}+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}+AND+{url-encode:{request-param:customQuery}}&amp;facet=false&amp;rows=0"
+							label="record"/>
+					</map:otherwise>
+				</map:select>
 				<map:transform type="xslt-saxon" src="xslt/ajax/get_vis_custom.xsl" label="basiccontent">
 					<map:parameter name="use-request-parameters" value="true"/>
 				</map:transform>
@@ -709,9 +980,19 @@
 			</map:match>
 
 			<map:match pattern="get_vis_categories">
-				<map:generate
-					src="{global:solr-url}select?q=collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}&amp;rows=0&amp;facet.field=artist_facet&amp;facet.field=authority_facet&amp;facet.field=coinType_facet&amp;facet.field=degree_facet&amp;facet.field=deity_facet&amp;facet.field=denomination_facet&amp;facet.field=department_facet&amp;facet.field=dynasty_facet&amp;facet.field=engraver_facet&amp;facet.field=era_facet&amp;facet.field=findspot_facet&amp;facet.field=grade_facet&amp;facet.field=institution_facet&amp;facet.field=issuer_facet&amp;facet.field=maker_facet&amp;facet.field=manufacture_facet&amp;facet.field=material_facet&amp;facet.field=mint_facet&amp;facet.field=objectType_facet&amp;facet.field=owner_facet&amp;facet.field=portrait_facet&amp;facet.field=region_facet&amp;facet.field=repository_facet&amp;facet.field=script_facet&amp;facet.field=state_facet&amp;facet.numFacetTerms=1"
-					label="record"/>
+				<map:select type="parameter">
+					<map:parameter name="parameter-selector-test" value="{request-param:lang}"/>
+					<map:when test="">
+						<map:generate
+							src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}&amp;rows=0&amp;facet.field=artist_facet&amp;facet.field=authority_facet&amp;facet.field=coinType_facet&amp;facet.field=degree_facet&amp;facet.field=deity_facet&amp;facet.field=denomination_facet&amp;facet.field=department_facet&amp;facet.field=dynasty_facet&amp;facet.field=engraver_facet&amp;facet.field=era_facet&amp;facet.field=findspot_facet&amp;facet.field=grade_facet&amp;facet.field=institution_facet&amp;facet.field=issuer_facet&amp;facet.field=maker_facet&amp;facet.field=manufacture_facet&amp;facet.field=material_facet&amp;facet.field=mint_facet&amp;facet.field=objectType_facet&amp;facet.field=owner_facet&amp;facet.field=portrait_facet&amp;facet.field=region_facet&amp;facet.field=repository_facet&amp;facet.field=script_facet&amp;facet.field=state_facet&amp;facet.numFacetTerms=1"
+							label="record"/>
+					</map:when>
+					<map:otherwise>
+						<map:generate
+							src="{global:solr-url}select?q=lang:{request-param:lang}+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}&amp;rows=0&amp;facet.field=artist_facet&amp;facet.field=authority_facet&amp;facet.field=coinType_facet&amp;facet.field=degree_facet&amp;facet.field=deity_facet&amp;facet.field=denomination_facet&amp;facet.field=department_facet&amp;facet.field=dynasty_facet&amp;facet.field=engraver_facet&amp;facet.field=era_facet&amp;facet.field=findspot_facet&amp;facet.field=grade_facet&amp;facet.field=institution_facet&amp;facet.field=issuer_facet&amp;facet.field=maker_facet&amp;facet.field=manufacture_facet&amp;facet.field=material_facet&amp;facet.field=mint_facet&amp;facet.field=objectType_facet&amp;facet.field=owner_facet&amp;facet.field=portrait_facet&amp;facet.field=region_facet&amp;facet.field=repository_facet&amp;facet.field=script_facet&amp;facet.field=state_facet&amp;facet.numFacetTerms=1"
+							label="record"/>
+					</map:otherwise>
+				</map:select>
 				<map:transform type="xslt-saxon" src="xslt/ajax/get_vis_categories.xsl" label="basiccontent">
 					<map:parameter name="use-request-parameters" value="true"/>
 				</map:transform>
@@ -724,30 +1005,22 @@
 				<map:transform src="xslt/ajax/get_hoard_quant.xsl" label="basiccontent" type="xslt-saxon">
 					<map:parameter name="use-request-parameters" value="true"/>
 				</map:transform>
-				<map:select type="parameter">
-					<map:parameter name="parameter-selector-test" value="{request-param:format}"/>
-					<map:when test="js">
-						<map:serialize type="text"/>
-					</map:when>
-					<map:otherwise>
-						<map:serialize type="xml"/>
-					</map:otherwise>
-				</map:select>				
+				<map:serialize type="xml"/>
 			</map:match>
-			
-			<map:match pattern="get_closing_date">
-				<map:generate src="{global:exist-url}{global:collection-name}/objects/{url-encode:{request-param:id}}.xml"/>
-				<map:transform src="xslt/ajax/get_closing_date.xsl" label="basiccontent" type="xslt-saxon">
-					<map:parameter name="use-request-parameters" value="true"/>
-				</map:transform>
-				<map:serialize type="text"/>
-			</map:match>
-			
+
 			<!-- query solr for available geographic coordinates -->
 			<map:match pattern="query_findspot_geo/*">
-				<map:generate
-					src="{global:solr-url}select?q=collection-name:{global:collection-name}+AND+{url-encode:id:&#x022;{1}&#x022; AND (findspot_geo:* OR ao_findspot_geo:*)}&amp;rows=0"
-					label="record"/>
+				<map:select type="parameter">
+					<map:parameter name="parameter-selector-test" value="{request-param:lang}"/>
+					<map:when test="">
+						<map:generate src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}+AND+{url-encode:id:&#x022;{1}&#x022; AND (findspot_geo:* OR ao_findspot_geo:*)}&amp;rows=0"
+							label="record"/>
+					</map:when>
+					<map:otherwise>
+						<map:generate src="{global:solr-url}select?q=lang:{request-param:lang}+AND+collection-name:{global:collection-name}+AND+{url-encode:id:&#x022;{1}&#x022; AND (findspot_geo:* OR ao_findspot_geo:*)}&amp;rows=0"
+							label="record"/>
+					</map:otherwise>
+				</map:select>
 				<map:transform type="xslt-saxon" src="xslt/ajax/query_geo.xsl" label="basiccontent">
 					<map:parameter name="use-request-parameters" value="true"/>
 					<map:parameter name="field" value="findspot"/>
@@ -769,7 +1042,7 @@
 					<map:otherwise>
 						<map:serialize type="xml"/>
 					</map:otherwise>
-				</map:select>
+				</map:select>				
 			</map:match>
 		</map:pipeline>
 	</map:pipelines>

@@ -5,6 +5,19 @@ Library: jQuery
 Description: Functions used for search and compare.
 ************************************/
 // assign the gate/boolean button click handler
+var langStr = getURLParameter('lang');
+if (langStr == 'null'){
+	var lang = '';
+} else {
+	var lang = langStr;
+}
+
+function getURLParameter(name) {
+	return decodeURI(
+	    (RegExp(name + '=' + '(.+?)(&|$)').exec(location.search)||[,null])[1]
+	);
+}
+
 $('.gateTypeBtn') .livequery('click', function(event){
 	gateTypeBtnClick($(this));
 	return false;
@@ -36,9 +49,9 @@ $('.category_list') .livequery('change', function(event){
 	//YEAR
 	else if (field == 'year_num' || field == 'taq_num' || field == 'tpq_num') {
 		$(this) .parent() .children('.option_container') .html('From: <input type="text" class="from_date"/>' +
-		'<select class="from_era"><option value="minus" selected="selected">B.C.</option><option value="">A.D.</option></select>' +
+		'<select class="from_era"><option value="minus">B.C.</option><option value="" selected="selected">A.D.</option></select>' +
 		'To: <input type="text" class="to_date"/>' +
-		'<select class="to_era"><option value="minus" selected="selected">B.C.</option><option value="">A.D.</option></select>');
+		'<select class="to_era"><option value="minus">B.C.</option><option value="" selected="selected">A.D.</option></select>');
 	}
 	//WEIGHT
 	else if (field == 'weight_num') {
@@ -59,7 +72,7 @@ $('.category_list') .livequery('change', function(event){
 		container.html('<img style="margin-left:100px;margin-right:100px;" src="images/ajax-loader.gif"/>');		
 		var q = query + ' AND ' + field + ':[* TO *]';
 		$.get('get_search_facets', {
-			q : q, category:field
+			q : q, category:field, lang: lang
 		}, function (data) {		
 			container.html(data);
 		});				
