@@ -141,7 +141,7 @@
 
 					<xsl:choose>
 						<xsl:when test="contains($facets, $field)">
-							<a href="{$display_path}results?q={$field}_facet:&#x022;{normalize-space(.)}&#x022;{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+							<a href="{$display_path}results?q={$field}_facet:&#x022;{$value}&#x022;{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
 								<xsl:value-of select="$value"/>
 							</a>
 						</xsl:when>
