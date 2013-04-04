@@ -570,7 +570,7 @@
 	<!-- ************** SEARCH DROP-DOWN MENUS ************** -->
 	<xsl:template name="search_options">
 		<xsl:variable name="fields">
-			<xsl:text>fulltext,artist_facet,authority_facet,coinType_facet,color_text,deity_facet,denomination_facet,department_facet,diameter_num,dynasty_facet,findspot_text,objectType_facet,identifier_display,issuer_facet,legend_text,obv_leg_text,rev_leg_text,maker_facet,manufacture_facet,material_facet,mint_facet,portrait_facet,reference_text,region_facet,taq_num,tpq_num,type_text,obv_type_text,rev_type_text,weight_num,year_num</xsl:text>
+			<xsl:text>fulltext,artist_facet,authority_facet,coinType_facet,color_text,deity_facet,denomination_facet,department_facet,diameter_num,dynasty_facet,findspot_text,objectType_facet,identifier_display,issuer_facet,legend_text,obv_leg_text,rev_leg_text,maker_facet,manufacture_facet,material_facet,mint_facet,portrait_facet,reference_facet,region_facet,taq_num,tpq_num,type_text,obv_type_text,rev_type_text,weight_num,year_num</xsl:text>
 		</xsl:variable>
 
 		<xsl:for-each select="tokenize($fields, ',')">
@@ -654,18 +654,34 @@
 		<!-- object count -->
 		<xsl:if test="$count &gt; 0">
 			<br/>
-			<xsl:if test="$count != $coin-count and $count != $hoard-count">
-				<xsl:value-of select="concat($count, if($count = 1) then ' associated object' else ' associated objects')"/>
-				<xsl:text>: </xsl:text>
-			</xsl:if>
 			<xsl:if test="$coin-count &gt; 0">
-				<xsl:value-of select="concat($coin-count, if($coin-count = 1) then ' coin' else ' coins')"/>
+				<xsl:value-of select="$coin-count"/>
+				<xsl:text> </xsl:text>
+				<xsl:choose>
+					<xsl:when test="$coin-count = 1">
+						<xsl:value-of select="numishare:normalizeLabel('results_coin', $lang)"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="numishare:normalizeLabel('results_coins', $lang)"/>
+					</xsl:otherwise>
+				</xsl:choose>				
 			</xsl:if>
 			<xsl:if test="$coin-count &gt; 0 and $hoard-count &gt; 0">
-				<xsl:text> and </xsl:text>
+				<xsl:text> </xsl:text>
+				<xsl:value-of select="numishare:normalizeLabel('results_and', $lang)"/>
+				<xsl:text> </xsl:text>
 			</xsl:if>
 			<xsl:if test="$hoard-count &gt; 0">
-				<xsl:value-of select="concat($hoard-count, if($hoard-count = 1) then ' hoard' else ' hoards')"/>
+				<xsl:value-of select="$hoard-count"/>
+				<xsl:text> </xsl:text>
+				<xsl:choose>
+					<xsl:when test="$hoard-count = 1">
+						<xsl:value-of select="numishare:normalizeLabel('results_hoard', $lang)"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="numishare:normalizeLabel('results_hoards', $lang)"/>
+					</xsl:otherwise>
+				</xsl:choose>	
 			</xsl:if>
 		</xsl:if>
 	</xsl:template>

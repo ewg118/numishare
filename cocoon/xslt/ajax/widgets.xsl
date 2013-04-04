@@ -249,18 +249,34 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 		<!-- object count -->
 		<xsl:if test="$count &gt; 0">
 			<br/>
-			<xsl:if test="$count != $coin-count and $count != $hoard-count">
-				<xsl:value-of select="concat($count, if($count = 1) then ' associated object' else ' associated objects')"/>
-				<xsl:text>: </xsl:text>
-			</xsl:if>
 			<xsl:if test="$coin-count &gt; 0">
-				<xsl:value-of select="concat($coin-count, if($coin-count = 1) then ' coin' else ' coins')"/>
+				<xsl:value-of select="$coin-count"/>
+				<xsl:text> </xsl:text>
+				<xsl:choose>
+					<xsl:when test="$coin-count = 1">
+						<xsl:value-of select="numishare:normalizeLabel('results_coin', $lang)"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="numishare:normalizeLabel('results_coins', $lang)"/>
+					</xsl:otherwise>
+				</xsl:choose>				
 			</xsl:if>
 			<xsl:if test="$coin-count &gt; 0 and $hoard-count &gt; 0">
-				<xsl:text> and </xsl:text>
+				<xsl:text> </xsl:text>
+				<xsl:value-of select="numishare:normalizeLabel('results_and', $lang)"/>
+				<xsl:text> </xsl:text>
 			</xsl:if>
 			<xsl:if test="$hoard-count &gt; 0">
-				<xsl:value-of select="concat($hoard-count, if($hoard-count = 1) then ' hoard' else ' hoards')"/>
+				<xsl:value-of select="$hoard-count"/>
+				<xsl:text> </xsl:text>
+				<xsl:choose>
+					<xsl:when test="$hoard-count = 1">
+						<xsl:value-of select="numishare:normalizeLabel('results_hoard', $lang)"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="numishare:normalizeLabel('results_hoards', $lang)"/>
+					</xsl:otherwise>
+				</xsl:choose>	
 			</xsl:if>
 		</xsl:if>
 	</xsl:template>
