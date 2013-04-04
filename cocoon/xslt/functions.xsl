@@ -115,12 +115,13 @@
 			</xsl:when>
 			<xsl:when test="$lang='de'">
 				<xsl:choose>
-					<xsl:when test="$name='acknowledgment'">[]</xsl:when>
+					<xsl:when test="$name='acknowledgment'">Bestätigung</xsl:when>
 					<xsl:when test="$name='acquiredFrom'">Erworben von</xsl:when>
 					<xsl:when test="$name='adminDesc'">Administrativ</xsl:when>
-					<xsl:when test="$name='appraisal'">[]</xsl:when>
-					<xsl:when test="$name='appraiser'">[]</xsl:when>
-					<xsl:when test="$name='authority'">[]</xsl:when>
+					<xsl:when test="$name='appraisal'">Schätzung</xsl:when>
+					<xsl:when test="$name='appraiser'">Schätzer</xsl:when>
+					<xsl:when test="$name='auction'">Auktion</xsl:when>
+					<xsl:when test="$name='authority'">Autorität</xsl:when>
 					<xsl:when test="$name='axis'">Stellung</xsl:when>
 					<xsl:when test="$name='century'">Jahrhundert</xsl:when>
 					<xsl:when test="$name='coinType'">Münztyp</xsl:when>
@@ -136,7 +137,7 @@
 					<xsl:when test="$name='date'">Datum</xsl:when>
 					<xsl:when test="$name='dateOnObject'">Datum auf Gegenstand</xsl:when>
 					<xsl:when test="$name='dob'">Datum auf Gegenstand</xsl:when>
-					<xsl:when test="$name='dateRange'">[]</xsl:when>
+					<xsl:when test="$name='dateRange'">Datierungsspanne</xsl:when>
 					<xsl:when test="$name='decade'">Jahrzehnt</xsl:when>
 					<xsl:when test="$name='degree'">Grad</xsl:when>
 					<xsl:when test="$name='deity'">Gottheit</xsl:when>
@@ -146,15 +147,15 @@
 					<xsl:when test="$name='description'">Beschreibung</xsl:when>
 					<xsl:when test="$name='diameter'">Durchmesser</xsl:when>
 					<xsl:when test="$name='discovery'">Entdeckung</xsl:when>
-					<xsl:when test="$name='disposition'">[]</xsl:when>
+					<xsl:when test="$name='disposition'">Disposition</xsl:when>
 					<xsl:when test="$name='dynasty'">Dynastie</xsl:when>
 					<xsl:when test="$name='edge'">Rand</xsl:when>
-					<xsl:when test="$name='era'">[]</xsl:when>
+					<xsl:when test="$name='era'">Epoche</xsl:when>
 					<xsl:when test="$name='finder'">Finder</xsl:when>
 					<xsl:when test="$name='findspot'">Fundstelle</xsl:when>
 					<xsl:when test="$name='fromDate'">Datum von</xsl:when>
 					<xsl:when test="$name='geographic'">Geographisch</xsl:when>
-					<xsl:when test="$name='grade'">[]</xsl:when>
+					<xsl:when test="$name='grade'">Grad</xsl:when>
 					<xsl:when test="$name='height'">Höhe</xsl:when>
 					<xsl:when test="$name='hoardDes'">Schatzfundbeschreibung</xsl:when>
 					<xsl:when test="$name='identifier'">Bestimmt von</xsl:when>
@@ -166,24 +167,27 @@
 					<xsl:when test="$name='measurementsSet'">Maße</xsl:when>
 					<xsl:when test="$name='mint'">Münzstätte</xsl:when>
 					<xsl:when test="$name='note'">Anmerkung</xsl:when>
-					<xsl:when test="$name='objectType'">[]</xsl:when>
+					<xsl:when test="$name='notes'">Anmerkungen</xsl:when>
+					<xsl:when test="$name='objectType'">Objekttyp</xsl:when>
 					<xsl:when test="$name='obverse'">Vorderseite</xsl:when>
 					<xsl:when test="$name='obv_leg'"> Vorderseitenlegende</xsl:when>
 					<xsl:when test="$name='obv_type'">Vorderseitentyp</xsl:when>
 					<xsl:when test="$name='owner'">Eigentümer</xsl:when>
 					<xsl:when test="$name='physDesc'">Physische Beschreibung</xsl:when>
 					<xsl:when test="$name='portrait'">Porträt</xsl:when>
-					<xsl:when test="$name='private'">privat</xsl:when>
+					<xsl:when test="$name='previousColl'">Vormalige sammlung</xsl:when>
+					<xsl:when test="$name='private'">Privat</xsl:when>
 					<xsl:when test="$name='public'">öffentlich</xsl:when>
+					<xsl:when test="$name='publisher'">Verlag</xsl:when>
 					<xsl:when test="$name='reference'">Zitat</xsl:when>
 					<xsl:when test="$name='refDesc'">Zitate</xsl:when>
 					<xsl:when test="$name='region'">Region</xsl:when>
-					<xsl:when test="$name='repository'">[]</xsl:when>
+					<xsl:when test="$name='repository'">Depot</xsl:when>
 					<xsl:when test="$name='reverse'">Rückseite</xsl:when>
 					<xsl:when test="$name='rev_leg'">Rückseitenlegende</xsl:when>
 					<xsl:when test="$name='rev_type'">Rückseitentyp</xsl:when>
 					<xsl:when test="$name='saleCatalog'">Auktionskatalog</xsl:when>
-					<xsl:when test="$name='saleItem'"/>
+					<xsl:when test="$name='saleItem'">Auktionslot</xsl:when>
 					<xsl:when test="$name='salePrice'">Verkaufspreis</xsl:when>
 					<xsl:when test="$name='shape'">Form</xsl:when>
 					<xsl:when test="$name='state'">Zustand</xsl:when>
@@ -192,7 +196,7 @@
 					<xsl:when test="$name='symbol'">Symbol</xsl:when>
 					<xsl:when test="$name='testmark'">Prüfmarke</xsl:when>
 					<xsl:when test="$name='timestamp'">Moodifizierungsdatum</xsl:when>
-					<xsl:when test="$name='title'">[]</xsl:when>
+					<xsl:when test="$name='title'">Titel</xsl:when>
 					<xsl:when test="$name='toDate'">Datum bis</xsl:when>
 					<xsl:when test="$name='type'">Typ</xsl:when>
 					<xsl:when test="$name='typeDesc'">Typologische Beschreibung</xsl:when>
@@ -515,7 +519,10 @@
 					<xsl:when test="$label='display_quantitative'">Quantitative Analyse</xsl:when>
 					<xsl:when test="$label='display_visualization'">Visualisierung</xsl:when>
 					<xsl:when test="$label='display_data-download'">Datendownload</xsl:when>
+					<xsl:when test="$label='display_date-analysis'">Datumsanalyse</xsl:when>
 					<xsl:when test="$label='results_all-terms'">Alle Begriffe</xsl:when>
+					<xsl:when test="$label='results_keyword'">Schlagwort</xsl:when>
+					<xsl:when test="$label='results_clear-all'">Alle Begriffe löchen</xsl:when>
 					<xsl:when test="$label='results_map-results'">Kartierungsergebnisse</xsl:when>
 					<xsl:when test="$label='results_filters'">Filter</xsl:when>
 					<xsl:when test="$label='results_data-options'">Datenoptionen</xsl:when>
@@ -529,6 +536,11 @@
 					<xsl:when test="$label='results_ascending'">Aufsteigend</xsl:when>
 					<xsl:when test="$label='results_descending'">Absteigend</xsl:when>
 					<xsl:when test="$label='results_result-desc'">Ergebnisse von XX bis YY aus ZZ Gesamtergebnissen anzeigen</xsl:when>
+					<xsl:when test="$label='results_coin'">Münze</xsl:when>
+					<xsl:when test="$label='results_coins'">Münzen</xsl:when>
+					<xsl:when test="$label='results_hoard'">Schatzfund</xsl:when>
+					<xsl:when test="$label='results_hoards'">Schatzfunden</xsl:when>
+					<xsl:when test="$label='results_and'">und</xsl:when>
 					<xsl:otherwise>
 						<xsl:value-of select="concat('No label for ', $label)"/>
 					</xsl:otherwise>
@@ -568,6 +580,11 @@
 					<xsl:when test="$label='results_clear-all'">Effacer les termes sélectionnés</xsl:when>
 					<xsl:when test="$label='results_keyword'">Mot clef</xsl:when>
 					<xsl:when test="$label='results_sort-category'">Classer les catégories</xsl:when>
+					<xsl:when test="$label='results_coin'">monnaie</xsl:when>
+					<xsl:when test="$label='results_coins'">monnaies</xsl:when>
+					<xsl:when test="$label='results_hoard'">trésor</xsl:when>
+					<xsl:when test="$label='results_hoards'">trésors</xsl:when>
+					<xsl:when test="$label='results_and'">et</xsl:when>
 					<xsl:otherwise>
 						<xsl:value-of select="concat('No label for ', $label)"/>
 					</xsl:otherwise>
@@ -607,6 +624,11 @@
 					<xsl:when test="$label='results_ascending'">Ordine ascendentă</xsl:when>
 					<xsl:when test="$label='results_descending'">Ordine descendentă</xsl:when>
 					<xsl:when test="$label='results_result-desc'">Afişare rezultate de la XX la YY din totalul de ZZ rezultate</xsl:when>
+					<xsl:when test="$label='results_coin'">monedă</xsl:when>
+					<xsl:when test="$label='results_coins'">monede</xsl:when>
+					<xsl:when test="$label='results_hoard'">tezaur</xsl:when>
+					<xsl:when test="$label='results_hoards'">tezaure</xsl:when>
+					<xsl:when test="$label='results_and'">și</xsl:when>
 					<xsl:otherwise>
 						<xsl:value-of select="concat('No label for ', $label)"/>
 					</xsl:otherwise>
@@ -648,6 +670,11 @@
 					<xsl:when test="$label='results_ascending'">Ascending</xsl:when>
 					<xsl:when test="$label='results_descending'">Descending</xsl:when>
 					<xsl:when test="$label='results_result-desc'">Displaying records XX to YY of ZZ total results.</xsl:when>
+					<xsl:when test="$label='results_coin'">coin</xsl:when>
+					<xsl:when test="$label='results_coins'">coins</xsl:when>
+					<xsl:when test="$label='results_hoard'">hoard</xsl:when>
+					<xsl:when test="$label='results_hoards'">hoards</xsl:when>
+					<xsl:when test="$label='results_and'">and</xsl:when>
 					<xsl:otherwise>
 						<xsl:value-of select="concat('No label for ', $label)"/>
 					</xsl:otherwise>

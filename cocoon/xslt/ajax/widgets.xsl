@@ -10,6 +10,8 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 	<xsl:param name="template"/>
 	<xsl:param name="uri"/>
 	<xsl:param name="lang"/>
+	<xsl:param name="identifiers"/>
+	<xsl:param name="baseUri"/>
 
 	<!-- config variables -->
 	<xsl:variable name="endpoint" select="/config/sparql_endpoint"/>
@@ -46,20 +48,20 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 			PREFIX dcterms:  <http://purl.org/dc/terms/>
 			PREFIX nm:       <http://nomisma.org/id/>
 			
-			SELECT ?annotation ?uri ?title ?publisher ?collection ?weight ?axis ?diameter ?obvThumb ?revThumb ?obvRef ?revRef ?findspot ?numismatic_term WHERE {
-			?annotation nm:type_series_item <typeUri>.
-			?annotation dcterms:title ?title .
-			?annotation dcterms:publisher ?publisher .
-			OPTIONAL { ?annotation nm:collection ?collection } .
-			OPTIONAL { ?annotation nm:weight ?weight }
-			OPTIONAL { ?annotation nm:axis ?axis }
-			OPTIONAL { ?annotation nm:diameter ?diameter }
-			OPTIONAL { ?annotation nm:obverseThumbnail ?obvThumb }
-			OPTIONAL { ?annotation nm:reverseThumbnail ?revThumb }
-			OPTIONAL { ?annotation nm:obverseReference ?obvRef }
-			OPTIONAL { ?annotation nm:reverseReference ?revRef }
-			OPTIONAL { ?annotation nm:findspot ?findspot }
-			OPTIONAL { ?annotation nm:numismatic_term ?numismatic_term }}
+			SELECT ?object ?title ?publisher ?identifier ?collection ?weight ?axis ?diameter ?obvThumb ?revThumb ?obvRef ?revRef  WHERE {
+			?object nm:type_series_item <typeUri>.
+			?object nm:numismatic_term <http://nomisma.org/id/coin>.
+			?object dcterms:title ?title .
+			?object dcterms:publisher ?publisher .
+			OPTIONAL { ?object dcterms:identifier ?identifier } .
+			OPTIONAL { ?object nm:collection ?collection } .
+			OPTIONAL { ?object nm:weight ?weight }
+			OPTIONAL { ?object nm:axis ?axis }
+			OPTIONAL { ?object nm:diameter ?diameter }
+			OPTIONAL { ?object nm:obverseThumbnail ?obvThumb }
+			OPTIONAL { ?object nm:reverseThumbnail ?revThumb }
+			OPTIONAL { ?object nm:obverseReference ?obvRef }
+			OPTIONAL { ?object nm:reverseReference ?revRef }}
 			ORDER BY ASC(?publisher)]]>
 		</xsl:variable>
 		<xsl:variable name="service" select="concat($endpoint, '?query=', encode-for-uri(normalize-space(replace($query, 'typeUri', $uri))), '&amp;output=xml')"/>
@@ -74,13 +76,13 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 			PREFIX dcterms:  <http://purl.org/dc/terms/>
 			PREFIX nm:       <http://nomisma.org/id/>
 			
-			SELECT ?annotation ?uri ?title ?publisher ?findspot ?numismatic_term ?burial WHERE {
-			?annotation nm:type_series_item <typeUri>.
-			?annotation dcterms:title ?title .
-			?annotation dcterms:publisher ?publisher .
-			?annotation nm:findspot ?findspot .
-			OPTIONAL { ?annotation nm:numismatic_term ?numismatic_term }
-			OPTIONAL { ?annotation nm:closing_date ?burial }}]]>
+			SELECT ?object ?uri ?title ?publisher ?findspot ?numismatic_term ?burial WHERE {
+			?object nm:type_series_item <typeUri>.
+			?object dcterms:title ?title .
+			?object dcterms:publisher ?publisher .
+			?object nm:findspot ?findspot .
+			OPTIONAL { ?object nm:numismatic_term ?numismatic_term }
+			OPTIONAL { ?object nm:closing_date ?burial }}]]>
 		</xsl:variable>
 		<xsl:variable name="service" select="concat($endpoint, '?query=', encode-for-uri(normalize-space(replace($query, 'typeUri', $uri))), '&amp;output=xml')"/>
 
@@ -94,19 +96,19 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 			PREFIX dcterms:  <http://purl.org/dc/terms/>
 			PREFIX nm:       <http://nomisma.org/id/>
 			
-			SELECT ?annotation ?uri ?title ?publisher ?findspot ?numismatic_term ?burial WHERE {
-			?annotation nm:type_series_item <typeUri>.
-			?annotation dcterms:title ?title .
-			?annotation dcterms:publisher ?publisher .
-			?annotation nm:findspot ?findspot .
-			OPTIONAL { ?annotation nm:numismatic_term ?numismatic_term }
-			OPTIONAL { ?annotation nm:closing_date ?burial }}]]>
+			SELECT ?object ?uri ?title ?publisher ?findspot ?numismatic_term ?burial WHERE {
+			?object nm:type_series_item <typeUri>.
+			?object dcterms:title ?title .
+			?object dcterms:publisher ?publisher .
+			?object nm:findspot ?findspot .
+			OPTIONAL { ?object nm:numismatic_term ?numismatic_term }
+			OPTIONAL { ?object nm:closing_date ?burial }}]]>
 		</xsl:variable>
 		<xsl:variable name="service" select="concat($endpoint, '?query=', encode-for-uri(normalize-space(replace($query, 'typeUri', $uri))), '&amp;output=xml')"/>
 		
 		<xsl:apply-templates select="document($service)/res:sparql" mode="json"/>
 	</xsl:template>
-
+	
 	<xsl:template name="numishare:getImages">
 		<xsl:variable name="query">
 			<![CDATA[ 
@@ -114,29 +116,55 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 			PREFIX dcterms:  <http://purl.org/dc/terms/>
 			PREFIX nm:       <http://nomisma.org/id/>
 			
-			SELECT ?annotation ?uri ?publisher ?collection ?weight ?axis ?diameter ?obvThumb ?revThumb ?obvRef ?revRef ?findspot ?numismatic_term  WHERE {
-			?annotation nm:type_series_item<typeUri>.
-			?annotation dcterms:publisher ?publisher .
-			OPTIONAL { ?annotation nm:collection ?collection } .
-			OPTIONAL { ?annotation nm:weight ?weight }
-			OPTIONAL { ?annotation nm:axis ?axis }
-			OPTIONAL { ?annotation nm:diameter ?diameter }
-			OPTIONAL { ?annotation nm:obverseThumbnail ?obvThumb }
-			OPTIONAL { ?annotation nm:reverseThumbnail ?revThumb }
-			OPTIONAL { ?annotation nm:obverseReference ?obvRef }
-			OPTIONAL { ?annotation nm:reverseReference ?revRef }
-			OPTIONAL { ?annotation nm:findspot ?findspot }
-			OPTIONAL { ?annotation nm:numismatic_term ?numismatic_term }}
-			ORDER BY ASC(?publisher)]]>
+			SELECT ?object ?numismatic_term ?identifier ?publisher ?collection ?obvThumb ?revThumb ?obvRef ?revRef ?type WHERE {
+			<typeUris>
+			?object dcterms:publisher ?publisher .
+			?object nm:numismatic_term ?numismatic_term .
+			OPTIONAL { ?object dcterms:identifier ?identifier }
+			OPTIONAL { ?object nm:collection ?collection }			
+			OPTIONAL { ?object nm:obverseThumbnail ?obvThumb }
+			OPTIONAL { ?object nm:reverseThumbnail ?revThumb }
+			OPTIONAL { ?object nm:obverseReference ?obvRef }
+			OPTIONAL { ?object nm:reverseReference ?revRef }
+			OPTIONAL { ?object nm:type_series_item ?type }
+			]]>
 		</xsl:variable>
-		<xsl:variable name="service" select="concat($endpoint, '?query=', encode-for-uri(normalize-space(replace($query, 'typeUri', $uri))), '&amp;output=xml')"/>
-
-		<div>
-			<xsl:apply-templates select="document($service)/res:sparql" mode="results"/>
-		</div>
-
+		
+		<xsl:variable name="template">
+			<xsl:text><![CDATA[ { ?object nm:type_series_item <typeUri> }]]></xsl:text>
+		</xsl:variable>
+		
+		<xsl:variable name="union">
+			<xsl:for-each select="tokenize($identifiers, '\|')">
+				<xsl:if test="not(position()=1)">
+					<xsl:text>UNION </xsl:text>
+				</xsl:if>
+				<xsl:value-of select="replace($template, 'typeUri', concat($baseUri, .))"/>
+			</xsl:for-each>			
+		</xsl:variable>
+		
+		<xsl:variable name="filter">
+			<xsl:text> FILTER(</xsl:text>
+			<xsl:for-each select="tokenize($identifiers, '\|')">
+				<xsl:variable name="escapedId" select="replace(replace(replace(., '\)', '\\\\)'), '\(', '\\\\('), '\.', '\\\\.')"/>
+				<xsl:text>regex(str(?type), "</xsl:text>
+				<xsl:value-of select="$escapedId"/>
+				<xsl:text>", "i")</xsl:text>
+				<xsl:if test="not(position()=last())">
+					<xsl:text> || </xsl:text>
+				</xsl:if>
+			</xsl:for-each>
+			<xsl:text>)</xsl:text>
+		</xsl:variable>
+		
+		<xsl:variable name="post">
+			<xsl:value-of select="normalize-space(concat(replace($query, '&lt;typeUris&gt;', $union), $filter, '}'))"/>
+		</xsl:variable>
+		
+		<xsl:variable name="service" select="concat($endpoint, '?query=', encode-for-uri($post), '&amp;output=xml')"/>
+		<xsl:copy-of select="document($service)/res:sparql"/>
 	</xsl:template>
-
+	
 	<xsl:template name="numishare:solrFields">
 		<xsl:variable name="query">
 			<![CDATA[
@@ -144,25 +172,50 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 			PREFIX dcterms:  <http://purl.org/dc/terms/>
 			PREFIX nm:       <http://nomisma.org/id/>
 			
-			SELECT ?annotation ?uri ?title ?publisher ?collection ?weight ?axis ?diameter ?obvThumb ?revThumb ?obvRef ?revRef ?findspot ?numismatic_term  WHERE {
-			?annotation nm:type_series_item <typeUri>.
-			?annotation dcterms:title ?title .
-			?annotation dcterms:publisher ?publisher .
-			OPTIONAL { ?annotation nm:collection ?collection } .
-			OPTIONAL { ?annotation nm:weight ?weight }
-			OPTIONAL { ?annotation nm:axis ?axis }
-			OPTIONAL { ?annotation nm:diameter ?diameter }
-			OPTIONAL { ?annotation nm:obverseThumbnail ?obvThumb }
-			OPTIONAL { ?annotation nm:reverseThumbnail ?revThumb }
-			OPTIONAL { ?annotation nm:obverseReference ?obvRef }
-			OPTIONAL { ?annotation nm:reverseReference ?revRef }
-			OPTIONAL { ?annotation nm:findspot ?findspot }
-			OPTIONAL { ?annotation nm:numismatic_term ?numismatic_term }}
-			ORDER BY ASC(?publisher)]]>
+			SELECT ?object ?title ?type ?findspot  WHERE {
+			<typeUris>
+			?object dcterms:title ?title .			
+			?object nm:findspot ?findspot .
+			?object nm:type_series_item ?type . 
+			]]>
 		</xsl:variable>
-		<xsl:variable name="service" select="concat($endpoint, '?query=', encode-for-uri(normalize-space(replace($query, 'typeUri', $uri))), '&amp;output=xml')"/>
-
-		<xsl:apply-templates select="document($service)/res:sparql" mode="solr"/>
+		
+		<xsl:variable name="template">
+			<xsl:text><![CDATA[ { ?object nm:type_series_item <typeUri> }]]></xsl:text>
+		</xsl:variable>
+		
+		<xsl:variable name="union">
+			<xsl:for-each select="tokenize($identifiers, '\|')">
+				<xsl:if test="not(position()=1)">
+					<xsl:text>UNION </xsl:text>
+				</xsl:if>
+				<xsl:value-of select="replace($template, 'typeUri', concat($baseUri, .))"/>
+			</xsl:for-each>			
+		</xsl:variable>
+		
+		<xsl:variable name="filter">
+			<xsl:text> FILTER(</xsl:text>
+			<xsl:for-each select="tokenize($identifiers, '\|')">
+				<xsl:variable name="escapedId" select="replace(replace(replace(., '\)', '\\\\)'), '\(', '\\\\('), '\.', '\\\\.')"/>
+				<xsl:text>regex(str(?type), "</xsl:text>
+				<xsl:value-of select="$escapedId"/>
+				<xsl:text>", "i")</xsl:text>
+				<xsl:if test="not(position()=last())">
+					<xsl:text> || </xsl:text>
+				</xsl:if>
+			</xsl:for-each>
+			<xsl:text>)</xsl:text>
+		</xsl:variable>
+		
+		<xsl:variable name="post">
+			<xsl:value-of select="normalize-space(concat(replace($query, '&lt;typeUris&gt;', $union), $filter, '}'))"/>
+		</xsl:variable>
+		
+		<xsl:variable name="service" select="concat($endpoint, '?query=', encode-for-uri($post), '&amp;output=xml')"/>
+		
+		<xsl:copy-of select="document($service)/res:sparql"/>
+		
+		<!--<xsl:apply-templates select="document($service)/res:sparql" mode="solr"/>-->
 	</xsl:template>
 
 	<!-- **************** PROCESS SPARQL RESPONSE ****************-->
@@ -196,18 +249,34 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 		<!-- object count -->
 		<xsl:if test="$count &gt; 0">
 			<br/>
-			<xsl:if test="$count != $coin-count and $count != $hoard-count">
-				<xsl:value-of select="concat($count, if($count = 1) then ' associated object' else ' associated objects')"/>
-				<xsl:text>: </xsl:text>
-			</xsl:if>
 			<xsl:if test="$coin-count &gt; 0">
-				<xsl:value-of select="concat($coin-count, if($coin-count = 1) then ' coin' else ' coins')"/>
+				<xsl:value-of select="$coin-count"/>
+				<xsl:text> </xsl:text>
+				<xsl:choose>
+					<xsl:when test="$coin-count = 1">
+						<xsl:value-of select="numishare:normalizeLabel('results_coin', $lang)"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="numishare:normalizeLabel('results_coins', $lang)"/>
+					</xsl:otherwise>
+				</xsl:choose>				
 			</xsl:if>
 			<xsl:if test="$coin-count &gt; 0 and $hoard-count &gt; 0">
-				<xsl:text> and </xsl:text>
+				<xsl:text> </xsl:text>
+				<xsl:value-of select="numishare:normalizeLabel('results_and', $lang)"/>
+				<xsl:text> </xsl:text>
 			</xsl:if>
 			<xsl:if test="$hoard-count &gt; 0">
-				<xsl:value-of select="concat($hoard-count, if($hoard-count = 1) then ' hoard' else ' hoards')"/>
+				<xsl:value-of select="$hoard-count"/>
+				<xsl:text> </xsl:text>
+				<xsl:choose>
+					<xsl:when test="$hoard-count = 1">
+						<xsl:value-of select="numishare:normalizeLabel('results_hoard', $lang)"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="numishare:normalizeLabel('results_hoards', $lang)"/>
+					</xsl:otherwise>
+				</xsl:choose>	
 			</xsl:if>
 		</xsl:if>
 	</xsl:template>
@@ -221,6 +290,9 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 	</xsl:template>
 	
 	<xsl:template match="res:sparql" mode="json">
+		<xsl:if test="count(descendant::res:result/res:binding[@name='findspot']) &gt; 0">
+			<xsl:text>,</xsl:text>
+		</xsl:if>
 		<xsl:apply-templates select="descendant::res:result/res:binding[@name='findspot']" mode="json"/>
 	</xsl:template>
 
@@ -229,7 +301,7 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 	<xsl:template match="res:result" mode="display">
 		<div class="g_doc">
 			<span class="result_link">
-				<a href="{res:binding[@name='uri']/res:uri}" target="_blank">
+				<a href="{res:binding[@name='object']/res:uri}" target="_blank">
 					<xsl:value-of select="res:binding[@name='title']/res:literal"/>
 				</a>
 			</span>
@@ -271,7 +343,7 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 				<xsl:choose>
 					<xsl:when test="string(res:binding[@name='obvRef']/res:uri) and string(res:binding[@name='obvThumb']/res:uri)">
 						<a class="thumbImage" rel="gallery" href="{res:binding[@name='obvRef']/res:uri}"
-							title="Obverse of {res:binding[@name='identifier']/res:literal}: {res:binding[@name='publisher']/res:literal}">
+							title="Obverse of {res:binding[@name='identifier']/res:literal}: {res:binding[@name='collection']/res:literal}">
 							<img class="gi" src="{res:binding[@name='obvThumb']/res:uri}"/>
 						</a>
 					</xsl:when>
@@ -288,7 +360,7 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 				<xsl:choose>
 					<xsl:when test="string(res:binding[@name='revRef']/res:uri) and string(res:binding[@name='revThumb']/res:uri)">
 						<a class="thumbImage" rel="gallery" href="{res:binding[@name='revRef']/res:uri}"
-							title="Reverse of {res:binding[@name='identifier']/res:literal}: {res:binding[@name='publisher']/res:literal}">
+							title="Reverse of {res:binding[@name='identifier']/res:literal}: {res:binding[@name='collection']/res:literal}">
 							<img class="gi" src="{res:binding[@name='revThumb']/res:uri}"/>
 						</a>
 					</xsl:when>
@@ -312,7 +384,7 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 		<xsl:choose>
 			<xsl:when test="string(res:binding[@name='obvRef']/res:uri) and string(res:binding[@name='obvThumb']/res:uri)">
 				<a class="thumbImage" rel="gallery" href="{res:binding[@name='obvRef']/res:uri}"
-					title="Obverse of {res:binding[@name='identifier']/res:literal}: {res:binding[@name='publisher']/res:literal}">
+					title="Obverse of {res:binding[@name='identifier']/res:literal}: {res:binding[@name='collection']/res:literal}">
 					<xsl:if test="$position &gt; 1">
 						<xsl:attribute name="style">display:none</xsl:attribute>
 					</xsl:if>
@@ -328,7 +400,7 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 			</xsl:when>
 			<xsl:when test="string(res:binding[@name='obvRef']/res:uri) and not(string(res:binding[@name='obvThumb']/res:uri))">
 				<a class="thumbImage" rel="gallery" href="{res:binding[@name='obvRef']/res:uri}"
-					title="Obverse of {res:binding[@name='identifier']/res:literal}: {res:binding[@name='publisher']/res:literal}">
+					title="Obverse of {res:binding[@name='identifier']/res:literal}: {res:binding[@name='collection']/res:literal}">
 					<img src="{res:binding[@name='obvRef']/res:uri}" style="max-width:120px">
 						<xsl:if test="$position &gt; 1">
 							<xsl:attribute name="style">display:none</xsl:attribute>
@@ -341,7 +413,7 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 		<xsl:choose>
 			<xsl:when test="string(res:binding[@name='revRef']/res:uri) and string(res:binding[@name='revThumb']/res:uri)">
 				<a class="thumbImage" rel="gallery" href="{res:binding[@name='revRef']/res:uri}"
-					title="Reverse of {res:binding[@name='identifier']/res:literal}: {res:binding[@name='publisher']/res:literal}">
+					title="Reverse of {res:binding[@name='identifier']/res:literal}: {res:binding[@name='collection']/res:literal}">
 					<xsl:if test="$position &gt; 1">
 						<xsl:attribute name="style">display:none</xsl:attribute>
 					</xsl:if>
@@ -357,7 +429,7 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 			</xsl:when>
 			<xsl:when test="string(res:binding[@name='revRef']/res:uri) and not(string(res:binding[@name='revThumb']/res:uri))">
 				<a class="thumbImage" rel="gallery" href="{res:binding[@name='revRef']/res:uri}"
-					title="Obverse of {res:binding[@name='identifier']/res:literal}: {res:binding[@name='publisher']/res:literal}">
+					title="Obverse of {res:binding[@name='identifier']/res:literal}: {res:binding[@name='collection']/res:literal}">
 					<img src="{res:binding[@name='revRef']/res:uri}" style="max-width:120px">
 						<xsl:if test="$position &gt; 1">
 							<xsl:attribute name="style">display:none</xsl:attribute>
@@ -374,9 +446,15 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 			<xsl:choose>
 				<xsl:when test="contains(child::res:uri, 'geonames')">
 					<xsl:variable name="geonameId" select="substring-before(substring-after(child::res:uri, 'geonames.org/'), '/')"/>
-					<xsl:variable name="geonames_data" select="document(concat($geonames-url, '/get?geonameId=', $geonameId, '&amp;username=', $geonames_api_key, '&amp;style=full'))"/>
-					<xsl:variable name="coordinates" select="concat(exsl:node-set($geonames_data)//lng, ',', exsl:node-set($geonames_data)//lat)"/>
-					<xsl:value-of select="$coordinates"/>
+					<xsl:if test="number($geonameId)">
+						<xsl:variable name="geonames_data" as="element()*">
+							<xml><xsl:copy-of select="document(concat($geonames-url, '/get?geonameId=', $geonameId, '&amp;username=', $geonames_api_key, '&amp;style=full'))"/></xml>
+						</xsl:variable>
+						<xsl:if test="string($geonames_data//lng) and string($geonames_data//lng)">
+							<xsl:variable name="coords" select="concat($geonames_data//lng, ',', $geonames_data//lat)"/>
+							<xsl:value-of select="$coords"/>
+						</xsl:if>
+					</xsl:if>
 				</xsl:when>
 				<xsl:when test="string(res:literal)">
 					<xsl:value-of select="res:literal"/>
@@ -388,7 +466,7 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 		</xsl:variable>
 		<xsl:variable name="description">
 			<![CDATA[
-          					<span><a href="]]><xsl:value-of select="parent::node()/res:binding[@name='uri']/res:uri"/><![CDATA[" target="_blank">]]><xsl:value-of
+          					<span><a href=']]><xsl:value-of select="parent::node()/res:binding[@name='object']/res:uri"/><![CDATA[' target='_blank'>]]><xsl:value-of
 				select="parent::node()/res:binding[@name='title']/res:literal"/><![CDATA[</a>]]>
 			<xsl:if test="string(parent::node()/res:binding[@name='burial']/res:literal)">
 				<![CDATA[- closing date: ]]><xsl:value-of select="number(parent::node()/res:binding[@name='burial']/res:literal)"/>
@@ -405,9 +483,12 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 			<xsl:value-of select="number(parent::node()/res:binding[@name='burial']/res:literal)"/>
 		</xsl:variable>
 		
-		<!-- output --> { <xsl:if test="not($coordinates='NULL')">"point": {"lon": <xsl:value-of select="tokenize($coordinates, '\|')[2]"/>, "lat": <xsl:value-of
-			select="tokenize($coordinates, '\|')[1]"/>},</xsl:if> "title": "<xsl:value-of select="$title"/>", "start": "<xsl:value-of select="$start"/>", <xsl:if test="string($end)">"end":
-				"<xsl:value-of select="$end"/>",</xsl:if> "options": { "theme": "<xsl:value-of select="$theme"/>", "description": "<xsl:value-of select="$description"/>" } } 
+		<!-- output -->	
+		{ <xsl:if test="string($coordinates)">"point": {"lon": <xsl:value-of select="tokenize($coordinates, ',')[1]"/>, "lat": <xsl:value-of select="tokenize($coordinates, ',')[2]"
+		/>},</xsl:if> "title": "<xsl:value-of select="$title"/>", "start": "<xsl:value-of select="$start"/>", <xsl:if test="string($end)">"end": "<xsl:value-of select="$end"/>",</xsl:if>
+		"options": { "theme": "<xsl:value-of select="$theme"/>", "description": "<xsl:value-of select="normalize-space($description)"/>" } }<xsl:if test="not(position()=last())">
+			<xsl:text>,</xsl:text>
+		</xsl:if>
 	</xsl:template>
 
 	<xsl:template match="res:binding[@name='findspot']" mode="kml">

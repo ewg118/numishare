@@ -2,7 +2,7 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
 	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:exsl="http://exslt.org/common" xmlns:numishare="http://code.google.com/p/numishare/" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
 	xmlns:cinclude="http://apache.org/cocoon/include/1.0" xmlns:nuds="http://nomisma.org/nuds" xmlns:mods="http://www.loc.gov/mods/v3" xmlns:nh="http://nomisma.org/nudsHoard"
-	xmlns:nm="http://nomisma.org/id/" xmlns:math="http://exslt.org/math" exclude-result-prefixes=" #all" version="2.0">
+	xmlns:res="http://www.w3.org/2005/sparql-results#" xmlns:nm="http://nomisma.org/id/" xmlns:math="http://exslt.org/math" exclude-result-prefixes=" #all" version="2.0">
 
 	<xsl:variable name="flickr-api-key" select="//config/flickr_api_key"/>
 
@@ -394,7 +394,7 @@
 	</xsl:template>
 
 	<xsl:template name="data-download">
-		<xsl:variable name="queryOptions">authority,date,deity,denomination,dynasty,issuer,material,mint,portrait,region</xsl:variable>		
+		<xsl:variable name="queryOptions">authority,date,deity,denomination,dynasty,issuer,material,mint,portrait,region</xsl:variable>
 
 		<p>Use this feature to download a CSV for the given query and selected hoards.</p>
 		<form action="{$display_path}hoards.csv" id="csv-form" style="margin-bottom:40px;">
@@ -469,7 +469,7 @@
 					</div>
 				</xsl:otherwise>
 			</xsl:choose>
-			
+
 			<div>
 				<h3>Optional Settings<span style="font-size:60%;margin-left:10px;"><a href="#" class="optional-button" id="csv-options">Hide/Show Options</a></span></h3>
 				<div class="optional-div" style="display:none">
@@ -581,7 +581,7 @@
 					<xsl:if test="not($name='diameter_num') and not($name='weight_num') and not($name='year_num')">
 						<xsl:choose>
 							<!-- display only those search options when their facet equivalent has hits -->
-							<xsl:when test="exsl:node-set($facets)//lst[starts-with(@name, $root)][count(int) &gt; 0]">
+							<xsl:when test="exsl:node-set($facets)//lst[starts-with(@name, $root)][number(int[@name='numFacetTerms']) &gt; 0]">
 								<option value="{$name}" class="search_option">
 									<xsl:value-of select="numishare:normalize_fields($name, $lang)"/>
 								</option>
@@ -600,7 +600,7 @@
 					<xsl:if test="not($name='taq_num') and not($name='tpq_num')">
 						<xsl:choose>
 							<!-- display only those search options when their facet equivalent has hits -->
-							<xsl:when test="exsl:node-set($facets)//lst[starts-with(@name, $root)][count(int) &gt; 0]">
+							<xsl:when test="exsl:node-set($facets)//lst[starts-with(@name, $root)][number(int[@name='numFacetTerms']) &gt; 0]">
 								<option value="{$name}" class="search_option">
 									<xsl:value-of select="numishare:normalize_fields($name, $lang)"/>
 								</option>
@@ -633,6 +633,119 @@
 				<xsl:with-param name="level" select="$level + 1"/>
 			</xsl:call-template>
 		</xsl:if>
+	</xsl:template>
+
+	<!-- ************** PROCESS GROUP OF SPARQL RESULTS FROM METIS TO DISPLAY IMAGES ************** -->
+	<xsl:template name="numishare:renderSparqlResults">
+		<xsl:param name="group"/>
+		<xsl:variable name="count" select="count($group/descendant::res:result)"/>
+		<xsl:variable name="coin-count" select="count($group/descendant::res:result[contains(res:binding[@name='numismatic_term']/res:uri, 'coin')])"/>
+		<xsl:variable name="hoard-count" select="count($group/descendant::res:result[contains(res:binding[@name='numismatic_term']/res:uri, 'hoard')])"/>
+
+
+		<!--<xsl:variable name="count" select="$group/@hoards + $group/@coins"/>
+		<xsl:variable name="coin-count" select="$group/@coins"/>
+		<xsl:variable name="hoard-count" select="$group/@hoards"/>-->
+
+		<!-- get images -->
+		<xsl:apply-templates select="$group/res:result[res:binding[contains(@name, 'rev') or contains(@name, 'obv')]]" mode="results">
+			<xsl:with-param name="id" select="tokenize($url, '/')[last()]"/>
+		</xsl:apply-templates>
+		<!-- object count -->
+		<xsl:if test="$count &gt; 0">
+			<br/>
+			<xsl:if test="$coin-count &gt; 0">
+				<xsl:value-of select="$coin-count"/>
+				<xsl:text> </xsl:text>
+				<xsl:choose>
+					<xsl:when test="$coin-count = 1">
+						<xsl:value-of select="numishare:normalizeLabel('results_coin', $lang)"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="numishare:normalizeLabel('results_coins', $lang)"/>
+					</xsl:otherwise>
+				</xsl:choose>				
+			</xsl:if>
+			<xsl:if test="$coin-count &gt; 0 and $hoard-count &gt; 0">
+				<xsl:text> </xsl:text>
+				<xsl:value-of select="numishare:normalizeLabel('results_and', $lang)"/>
+				<xsl:text> </xsl:text>
+			</xsl:if>
+			<xsl:if test="$hoard-count &gt; 0">
+				<xsl:value-of select="$hoard-count"/>
+				<xsl:text> </xsl:text>
+				<xsl:choose>
+					<xsl:when test="$hoard-count = 1">
+						<xsl:value-of select="numishare:normalizeLabel('results_hoard', $lang)"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="numishare:normalizeLabel('results_hoards', $lang)"/>
+					</xsl:otherwise>
+				</xsl:choose>	
+			</xsl:if>
+		</xsl:if>
+	</xsl:template>
+
+	<xsl:template match="res:result" mode="results">
+		<xsl:variable name="position" select="position()"/>
+		<!-- obverse -->
+		<xsl:choose>
+			<xsl:when test="string(res:binding[@name='obvRef']/res:uri) and string(res:binding[@name='obvThumb']/res:uri)">
+				<a class="thumbImage" rel="gallery" href="{res:binding[@name='obvRef']/res:uri}"
+					title="Obverse of {res:binding[@name='identifier']/res:literal}: {res:binding[@name='collection']/res:literal}">
+					<xsl:if test="$position &gt; 1">
+						<xsl:attribute name="style">display:none</xsl:attribute>
+					</xsl:if>
+					<img src="{res:binding[@name='obvThumb']/res:uri}"/>
+				</a>
+			</xsl:when>
+			<xsl:when test="not(string(res:binding[@name='obvRef']/res:uri)) and string(res:binding[@name='obvThumb']/res:uri)">
+				<img src="{res:binding[@name='obvThumb']/res:uri}">
+					<xsl:if test="$position &gt; 1">
+						<xsl:attribute name="style">display:none</xsl:attribute>
+					</xsl:if>
+				</img>
+			</xsl:when>
+			<xsl:when test="string(res:binding[@name='obvRef']/res:uri) and not(string(res:binding[@name='obvThumb']/res:uri))">
+				<a class="thumbImage" rel="gallery" href="{res:binding[@name='obvRef']/res:uri}"
+					title="Obverse of {res:binding[@name='identifier']/res:literal}: {res:binding[@name='collection']/res:literal}">
+					<img src="{res:binding[@name='obvRef']/res:uri}" style="max-width:120px">
+						<xsl:if test="$position &gt; 1">
+							<xsl:attribute name="style">display:none</xsl:attribute>
+						</xsl:if>
+					</img>
+				</a>
+			</xsl:when>
+		</xsl:choose>
+		<!-- reverse-->
+		<xsl:choose>
+			<xsl:when test="string(res:binding[@name='revRef']/res:uri) and string(res:binding[@name='revThumb']/res:uri)">
+				<a class="thumbImage" rel="gallery" href="{res:binding[@name='revRef']/res:uri}"
+					title="Reverse of {res:binding[@name='identifier']/res:literal}: {res:binding[@name='collection']/res:literal}">
+					<xsl:if test="$position &gt; 1">
+						<xsl:attribute name="style">display:none</xsl:attribute>
+					</xsl:if>
+					<img src="{res:binding[@name='revThumb']/res:uri}"/>
+				</a>
+			</xsl:when>
+			<xsl:when test="not(string(res:binding[@name='revRef']/res:uri)) and string(res:binding[@name='revThumb']/res:uri)">
+				<img src="{res:binding[@name='revThumb']/res:uri}">
+					<xsl:if test="$position &gt; 1">
+						<xsl:attribute name="style">display:none</xsl:attribute>
+					</xsl:if>
+				</img>
+			</xsl:when>
+			<xsl:when test="string(res:binding[@name='revRef']/res:uri) and not(string(res:binding[@name='revThumb']/res:uri))">
+				<a class="thumbImage" rel="gallery" href="{res:binding[@name='revRef']/res:uri}"
+					title="Obverse of {res:binding[@name='identifier']/res:literal}: {res:binding[@name='collection']/res:literal}">
+					<img src="{res:binding[@name='revRef']/res:uri}" style="max-width:120px">
+						<xsl:if test="$position &gt; 1">
+							<xsl:attribute name="style">display:none</xsl:attribute>
+						</xsl:if>
+					</img>
+				</a>
+			</xsl:when>
+		</xsl:choose>
 	</xsl:template>
 
 	<!-- ************** PROCESS MODS RECORD INTO CHICAGO MANUAL OF STYLE CITATION ************** -->
