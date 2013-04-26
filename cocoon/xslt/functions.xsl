@@ -732,13 +732,21 @@
 		<xsl:param name="lang"/>
 		
 		<xsl:choose>
-			<xsl:when test="$rdf/skos:prefLabel[@xml:lang=$lang]">
-				<xsl:value-of select="$rdf/skos:prefLabel[@xml:lang=$lang]"/>
+			<xsl:when test="string($lang)">
+				<xsl:choose>
+					<xsl:when test="$rdf/skos:prefLabel[@xml:lang=$lang]">
+						<xsl:value-of select="$rdf/skos:prefLabel[@xml:lang=$lang]"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="$rdf/skos:prefLabel[@xml:lang='en']"/>
+					</xsl:otherwise>
+				</xsl:choose>	
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:value-of select="$rdf/skos:prefLabel[@xml:lang='en']"/>
 			</xsl:otherwise>
 		</xsl:choose>
+		
 	</xsl:function>
 
 </xsl:stylesheet>

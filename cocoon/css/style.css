@@ -683,7 +683,7 @@ div.custominfostyle {
 }
 /*
   ***************************************
-  ANALYSIS
+  VISUALIZATION/ANALYSIS
   ***************************************
  */
 #filterHoards, #searchBox {
@@ -706,10 +706,6 @@ div.custominfostyle {
 .anOption {
 	float:left;
 	width:20%;
-}
-.customQuery {
-	display:table;
-	width:100%;
 }
 /*
   ***************************************

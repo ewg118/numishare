@@ -182,8 +182,10 @@
 								<script type="text/javascript" src="{$display_path}javascript/jquery.fancybox-1.3.4.min.js"/>
 								<script type="text/javascript" src="{$display_path}javascript/highcharts.js"/>
 								<script type="text/javascript" src="{$display_path}javascript/modules/exporting.js"/>
+								<script type="text/javascript" src="{$display_path}javascript/jquery.livequery.js"/>
 								<script type="text/javascript" src="{$display_path}javascript/display_map_functions.js"/>
-								<script type="text/javascript" src="{$display_path}javascript/display_functions.js"/>								
+								<script type="text/javascript" src="{$display_path}javascript/display_functions.js"/>
+								<script type="text/javascript" src="{$display_path}javascript/visualize_functions.js"/>								
 
 								<!-- mapping -->
 								<script type="text/javascript" src="http://www.openlayers.org/api/OpenLayers.js"/>								

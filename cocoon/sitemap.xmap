@@ -938,16 +938,6 @@
 				<map:serialize type="html"/>
 			</map:match>
 
-			<!-- for quantitative analysis -->
-			<map:match pattern="get_avg_weight">
-				<map:generate src="{global:solr-url}select?q=collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}&amp;facet=true&amp;facet.field=ao_weight&amp;rows=0"
-					label="record"/>
-				<map:transform type="xslt-saxon" src="xslt/ajax/get_avg_weight.xsl" label="basiccontent">
-					<map:parameter name="use-request-parameters" value="true"/>
-				</map:transform>
-				<map:serialize type="text"/>
-			</map:match>
-
 			<map:match pattern="get_vis_quant">
 				<map:select type="parameter">
 					<map:parameter name="parameter-selector-test" value="{request-param:lang}"/>
@@ -1056,7 +1046,7 @@
 			<!-- METIS WIDGETS -->
 			<map:match pattern="widget">
 				<map:generate src="{global:exist-url}{global:collection-name}/config.xml"/>
-				<map:transform type="xslt-saxon" src="xslt/ajax/widgets.xsl" label="basiccontent">
+				<map:transform type="xslt-saxon" src="xslt/sparql/templates.xsl" label="basiccontent">
 					<map:parameter name="use-request-parameters" value="true"/>
 				</map:transform>
 				<map:select type="parameter">
@@ -1064,6 +1054,12 @@
 					<map:when test="json">
 						<map:serialize type="text"/>
 					</map:when>
+					<map:when test="facets">
+						<map:serialize type="html"/>
+					</map:when>
+					<map:when test="avgMeasurement">
+						<map:serialize type="text"/>
+					</map:when>					
 					<map:otherwise>
 						<map:serialize type="xml"/>
 					</map:otherwise>
