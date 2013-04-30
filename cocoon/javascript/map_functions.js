@@ -7,8 +7,20 @@ If the list is populated and then hidden, when it is re-activated, it fades in r
 ************************************/
 $(document).ready(function () {
 	var popupStatus = 0;
-	//set category button label on page load
-	category_label();
+	
+	var langStr = getURLParameter('lang');
+	if (langStr == 'null'){
+		var lang = '';
+	} else {
+		var lang = langStr;
+	}
+	
+	//set hierarchical labels on load
+	$('.hierarchical-facet').each(function(){
+		var field = $(this).attr('id').split('_hier')[0];
+		var title = $(this).attr('title');
+		hierarchyLabel(field, title);
+	});
 	dateLabel();
 	
 	$("#backgroundPopup").livequery('click', function (event) {
@@ -64,7 +76,7 @@ $(document).ready(function () {
 			new OpenLayers.Strategy.Fixed(),
 			new OpenLayers.Strategy.Cluster()],
 			protocol: new OpenLayers.Protocol.HTTP({
-				url: "findspots.kml?q=" + q,
+				url: "findspots.kml?q=" + q + (lang.length > 0 ? '&lang=' + lang : ''),
 				format: new OpenLayers.Format.KML({
 					extractStyles: false,
 					extractAttributes: true
@@ -80,7 +92,7 @@ $(document).ready(function () {
 			new OpenLayers.Strategy.Fixed(),
 			new OpenLayers.Strategy.Cluster()],
 			protocol: new OpenLayers.Protocol.HTTP({
-				url: "mints.kml?q=" + q,
+				url: "mints.kml?q=" + q + (lang.length > 0 ? '&lang=' + lang : ''),
 				format: new OpenLayers.Format.KML({
 					extractStyles: false,
 					extractAttributes: true
@@ -98,9 +110,15 @@ $(document).ready(function () {
 			})]
 		});
 		
-		map.addLayer(new OpenLayers.Layer.Google("Google Physical", {
-			type: google.maps.MapTypeId.TERRAIN
-		}));
+		var imperium = new OpenLayers.Layer.XYZ(
+		"Imperium Romanum",[
+		"http://pelagios.dme.ait.ac.at/tilesets/imperium/${z}/${x}/${y}.png"], {
+			sphericalMercator: true,
+			isBaseLayer: true,
+			numZoomLevels: 12
+		});
+		
+		map.addLayer(imperium);
 		
 		map.addLayer(mintLayer);
 		map.addLayer(hoardLayer);
@@ -156,23 +174,12 @@ $(document).ready(function () {
 			var mincount = $(this).attr('mincount');
 			
 			$.get('maps_get_facet_options', {
-				q: q, category: category, sort: 'index', limit: - 1, offset: 0, mincount: mincount
+				q: q, category: category, sort: 'index', limit: - 1, offset: 0, mincount: mincount, lang: lang
 			},
 			function (data) {
 				$('#' + id) .html(data);
 				$("#" + id).multiselect('refresh')
 			});
-		},
-		//close menu: restore button title if no checkboxes are selected
-		close: function () {
-			var title = $(this).attr('title');
-			var id = $(this) .attr('id');
-			var array_of_checked_values = $(this).multiselect("getChecked").map(function () {
-				return this.value;
-			}).get();
-			if (array_of_checked_values.length == 0) {
-				$('button[title=' + title + ']').children('span:nth-child(2)').text(title);
-			}
 		},
 		click: function () {
 			var title = $(this).attr('title');
@@ -185,35 +192,17 @@ $(document).ready(function () {
 				$(this).next('button').children('span:nth-child(2)').text(title + ': ' + length + ' selected');
 			} else if (length > 0 && length <= 3) {
 				$(this).next('button').children('span:nth-child(2)').text(title + ': ' + array_of_checked_values.join(', '));
-			} else if (length == 0) {
-				var q = getQuery();
-				if (q.length > 0) {
-					var category = id.split('-select')[0];
-					var mincount = $(this).attr('mincount');
-					$.get('maps_get_facet_options', {
-						q: q, category: category, sort: 'index', limit: - 1, offset: 0, mincount: mincount
-					},
-					function (data) {
-						$('#' + id) .attr('new_query', '');
-						$('#' + id) .html(data);
-						$('#' + id).multiselect('refresh');
-					});
-				}
+			} else if (length == 0){
+				$(this).next('button').children('span:nth-child(2)').text(title);
 			}
-			
-			if ($('#mapcontainer').length > 0) {
-				//update map
-				refresh_map();
-			}
-		},
-		uncheckAll: function () {
-			var id = $(this) .attr('id');
-			q = getQuery();
+
+			//refresh dynamically 
+			var q = getQuery();
 			if (q.length > 0) {
 				var category = id.split('-select')[0];
 				var mincount = $(this).attr('mincount');
 				$.get('maps_get_facet_options', {
-					q: q, category: category, sort: 'index', limit: - 1, offset: 0, mincount: mincount
+					q: q, category: category, sort: 'index', limit: - 1, offset: 0, mincount: mincount, lang: lang
 				},
 				function (data) {
 					$('#' + id) .attr('new_query', '');
@@ -221,22 +210,46 @@ $(document).ready(function () {
 					$('#' + id).multiselect('refresh');
 				});
 			}
+			
 			if ($('#mapcontainer').length > 0) {
 				//update map
-				refresh_map();
+				refreshMap();
+			}
+		},
+		uncheckAll: function () {	
+			//reset title
+			var title = $(this).attr('title');
+			$(this).next('button').children('span:nth-child(2)').text(title);	
+			
+			var id = $(this) .attr('id');
+			q = getQuery();
+			var category = id.split('-select')[0];
+			var mincount = $(this).attr('mincount');
+			$.get('maps_get_facet_options', {
+				q: q, category: category, sort: 'index', limit: - 1, offset: 0, mincount: mincount, lang: lang
+			},
+			function (data) {
+				$('#' + id) .attr('new_query', '');
+				$('#' + id) .html(data);
+				$('#' + id).multiselect('refresh');
+			});
+			
+			if ($('#mapcontainer').length > 0) {
+				//update map
+				refreshMap();
 			}
 		}
 	}).multiselectfilter();
 	
-	function refresh_map() {
+	function refreshMap() {
 		var query = getQuery();
 		
 		//refresh maps.
 		if (collection_type == 'hoard') {
 			$('#timemap').html('<div id="mapcontainer"><div id="map"/></div><div id="timelinecontainer"><div id="timeline"/></div>');
 			initialize_timemap(query);
-		} else {
-			newUrl = "mints.kml?q=" + query;
+		} else {			
+			newUrl = "mints.kml?q=" + query + (lang.length > 0 ? '&lang=' + lang : '');
 			
 			mintLayer.loaded = false;
 			mintLayer.setVisibility(true);
@@ -248,107 +261,100 @@ $(document).ready(function () {
 		}
 	}
 	
-	$('#category_facet_link').hover(function () {
+	$('a.pagingBtn') .livequery('click', function (event) {
+		var href = 'results_ajax' + $(this) .attr('href');
+		$.get(href, {
+		},
+		function (data) {
+			$('#results') .html(data);
+		});
+		return false;
+	});
+	
+	//clear query
+	$('#clear_all').livequery('click', function (event) {
+		$('#results').html('');
+		return false;
+	});
+	
+	/***************** DRILLDOWN HIERARCHICAL FACETS ********************/
+	$('.hierarchical-facet').hover(function () {
 		$(this) .attr('class', 'ui-multiselect ui-widget ui-state-default ui-corner-all ui-state-focus');
 	},
 	function () {
 		$(this) .attr('class', 'ui-multiselect ui-widget ui-state-default ui-corner-all');
-	});
+	});	
 	
-	$('.category-close') .click(function () {
+	$('.hier-close') .click(function () {
 		disablePopup();
-	});
+		return false;
+	});	
 	
-	$('#category_facet_link').click(function () {
+	$('.hierarchical-facet').click(function () {
 		if (popupStatus == 0) {
 			$("#backgroundPopup").fadeIn("fast");
 			popupStatus = 1;
 		}
 		var list_id = $(this) .attr('id').split('_link')[0] + '-list';
-		var category = $(this) .attr('id') .split('_link')[0];
-		//var q = $(this) .attr('label');
+		var field = $(this) .attr('id').split('_hier')[0];
 		var q = getQuery();
 		if ($('#' + list_id).html().indexOf('<li') < 0) {
-			$.get('get_categories', {
-				q: q, category: category, prefix: 'L1', fq: '*', section: 'collection', link: ''
+			$.get('get_hier', {
+				q: q, field: field, prefix: 'L1', fq: '*', section: 'collection', link: '', lang: lang
 			},
 			function (data) {
 				$('#' + list_id) .html(data);
 			});
 		}
 		$('#' + list_id).parent('div').attr('style', 'width: 192px;display:block;');
+		return false;
 	});
 	
 	//expand category when expand/compact image pressed
 	$('.expand_category') .livequery('click', function (event) {
-		var fq = $(this) .attr('id').split('__')[0];
-		var list = fq.split('|')[1] + '__list';
+		var fq = $(this).next('input').val();
+		var list = $(this) .attr('id').split('__')[0].split('|')[1] + '__list';
+		var field = $(this).attr('field');
 		var prefix = $(this).attr('next-prefix');
-		//var q = $(this) .attr('q');
 		var q = getQuery();
 		var section = $(this) .attr('section');
 		var link = $(this) .attr('link');
 		if ($(this) .children('img') .attr('src') .indexOf('plus') >= 0) {
-			$.get('get_categories', {
-				q: q, prefix: prefix, fq: '"' + fq.replace('_', ' ') + '"', link: link, section: section
+			$.get('get_hier', {
+				q: q, field:field, prefix: prefix, fq: '"' +fq + '"', link: link, section: section, lang: lang
 			},
 			function (data) {
 				$('#' + list) .html(data);
 			});
-			$(this) .parent('.term') .children('.category_level') .show();
+			$(this) .parent('li') .children('.' + field + '_level') .show();
 			$(this) .children('img') .attr('src', $(this) .children('img').attr('src').replace('plus', 'minus'));
 		} else {
-			$(this) .parent('.term') .children('.category_level') .hide();
+			$(this) .parent('li') .children('.' + field + '_level') .hide();
 			$(this) .children('img') .attr('src', $(this) .children('img').attr('src').replace('minus', 'plus'));
 		}
 	});
 	
 	//remove all ancestor or descendent checks on uncheck
-	$('.term input') .livequery('click', function (event) {
-		if ($(this) .is(':checked')) {
-			$(this) .parents('.term') .children('input') .attr('checked', true);
-		} else {
-			$(this) .parent('.term') .children('.category_level') .find('input').attr('checked', false);
-			//on unchecking, repopulate the categories
-			if ($(this) .parent().parent().parent().children('span').attr('class') == 'expand_category') {
-				var fq = $(this) .parent().parent().parent().children('.expand_category').attr('id').split('__')[0];
-				var list = fq.split('|')[1] + '__list';
-				var prefix = $(this).parent().parent().parent().children('.expand_category').attr('next-prefix');
-				var section = $(this).parent().parent().parent().children('.expand_category') .attr('section');
-				var link = $(this).parent().parent().parent().children('.expand_category') .attr('link');
-				var query = getQuery();
-				$.get('get_categories', {
-					q: query, prefix: prefix, fq: '"' + fq.replace('_', ' ') + '"', link: link, section: section
-				},
-				function (data) {
-					$('#' + list) .html(data);
-				});
-			} else {
-				var query = getQuery();
-				$.get('get_categories', {
-					q: query, category: 'category_facet', prefix: 'L1', fq: '*', section: 'collection', link: ''
-				},
-				function (data) {
-					$('#category_facet-list') .html(data);
-				});
-			}
-		}
+	$('.h_item input') .livequery('click', function (event) {
+		var field = $(this).closest('.ui-multiselect-menu').attr('id').split('-')[0];
+		var title = $('.' + field + '-multiselect-checkboxes').attr('title');
+		
 		var count_checked = 0;
-		$('.term input').each(function () {
-			if (this.checked) {
-				count_checked++;
-			}
+		$('#' + field + '_hier-list input:checked').each(function () {
+			count_checked++;
 		});
 		
 		if (count_checked > 0) {
-			category_label();
+			hierarchyLabel(field, title);
+			refreshMap();
 		} else {
-			$('#category_facet_link').attr('title', 'Category');
-			$('#category_facet_link').children('span:nth-child(2)').html('Category');
+			$('#' + field + '_hier_link').attr('title', title);
+			$('#' + field + '_hier_link').children('span:nth-child(2)').html(title);
 		}
+		
 	});
 	
-	//handle expandable dates
+	/***************** DRILLDOWN FOR DATES ********************/
 	$('#century_num_link').hover(function () {
 		$(this) .attr('class', 'ui-multiselect ui-widget ui-state-default ui-corner-all ui-state-focus');
 	},
@@ -408,12 +414,11 @@ $(document).ready(function () {
 	//check parent century box when a decade box is checked
 	$('.decade_checkbox').livequery('click', function (event) {
 		if ($(this) .is(':checked')) {
-			//alert('test');
 			$(this) .parent('li').parent('ul').parent('li') .children('input') .attr('checked', true);
 		}
 		//set label
 		dateLabel();
-		refresh_map();
+		refreshMap();
 	});
 	//uncheck child decades when century is unchecked
 	$('.century_checkbox').livequery('click', function (event) {
@@ -422,23 +427,7 @@ $(document).ready(function () {
 		}
 		//set label
 		dateLabel();
-		refresh_map();
-	});
-	
-	$('a.pagingBtn') .livequery('click', function (event) {
-		var href = 'results_ajax' + $(this) .attr('href');
-		$.get(href, {
-		},
-		function (data) {
-			$('#results') .html(data);
-		});
-		return false;
-	});
-	
-	//clear query
-	$('#clear_all').livequery('click', function (event) {
-		$('#results').html('');
-		return false;
+		refreshMap();
 	});
 	
 	/***************************/
@@ -453,7 +442,8 @@ $(document).ready(function () {
 		//disables popup only if it is enabled
 		if (popupStatus == 1) {
 			$("#backgroundPopup").fadeOut("fast");
-			$('#category_facet-list') .parent('div').attr('style', 'width: 192px;');
+			$('#category_hier-list') .parent('div').attr('style', 'width: 192px;');
+			$('#findspot_hier-list') .parent('div').attr('style', 'width: 192px;');
 			$('#century_num-list') .parent('div').attr('style', 'width: 192px;');
 			popupStatus = 0;
 		}
@@ -541,6 +531,12 @@ $(document).ready(function () {
 		map.removePopup(map.popups[0]);
 	}
 	
+	function getURLParameter(name) {
+	    return decodeURI(
+	        (RegExp(name + '=' + '(.+?)(&|$)').exec(location.search)||[,null])[1]
+	    );
+	}
+	
 	/********************
 	TimeMap function for hoard collections
 	********************/
@@ -557,7 +553,7 @@ $(document).ready(function () {
 				theme: "red",
 				type: "kml", // Data to be loaded in KML - must be a local URL
 				options: {
-					url: "hoards.kml?q=" + q// KML file to load
+					url: "hoards.kml?q=" + q + (lang.length > 0 ? '&lang=' + lang : '')// KML file to load
 				}
 			}],
 			bandIntervals:[

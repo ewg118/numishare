@@ -27,9 +27,9 @@
 						<xsl:text>&lt;a href="</xsl:text>
 						<xsl:value-of select="$url"/>
 						<xsl:text>id/</xsl:text>
-						<xsl:value-of select="str[@name='id']"/>
+						<xsl:value-of select="str[@name='nudsid']"/>
 						<xsl:text>" target="_blank"&gt;</xsl:text>
-						<xsl:value-of select="str[@name='id']"/>
+						<xsl:value-of select="str[@name='nudsid']"/>
 						<xsl:text>&lt;/a&gt;, closing date: </xsl:text>
 						<xsl:value-of select="str[@name='closing_date_display']"/>
 					</xsl:variable>

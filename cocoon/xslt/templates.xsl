@@ -2,7 +2,7 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
 	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:exsl="http://exslt.org/common" xmlns:numishare="http://code.google.com/p/numishare/" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
 	xmlns:cinclude="http://apache.org/cocoon/include/1.0" xmlns:nuds="http://nomisma.org/nuds" xmlns:mods="http://www.loc.gov/mods/v3" xmlns:nh="http://nomisma.org/nudsHoard"
-	xmlns:nm="http://nomisma.org/id/" xmlns:math="http://exslt.org/math" exclude-result-prefixes=" #all" version="2.0">
+	xmlns:res="http://www.w3.org/2005/sparql-results#" xmlns:nm="http://nomisma.org/id/" xmlns:math="http://exslt.org/math" exclude-result-prefixes=" #all" version="2.0">
 
 	<xsl:variable name="flickr-api-key" select="//config/flickr_api_key"/>
 
@@ -394,7 +394,7 @@
 	</xsl:template>
 
 	<xsl:template name="data-download">
-		<xsl:variable name="queryOptions">authority,date,deity,denomination,dynasty,issuer,material,mint,portrait,region</xsl:variable>		
+		<xsl:variable name="queryOptions">authority,date,deity,denomination,dynasty,issuer,material,mint,portrait,region</xsl:variable>
 
 		<p>Use this feature to download a CSV for the given query and selected hoards.</p>
 		<form action="{$display_path}hoards.csv" id="csv-form" style="margin-bottom:40px;">
@@ -469,7 +469,7 @@
 					</div>
 				</xsl:otherwise>
 			</xsl:choose>
-			
+
 			<div>
 				<h3>Optional Settings<span style="font-size:60%;margin-left:10px;"><a href="#" class="optional-button" id="csv-options">Hide/Show Options</a></span></h3>
 				<div class="optional-div" style="display:none">
@@ -547,7 +547,6 @@
 						<input type="submit" value="{numishare:normalizeLabel('header_search', $lang)}" id="search_button"/>
 					</xsl:otherwise>
 				</xsl:choose>
-
 			</form>
 
 			<xsl:if test="$pipeline='visualize'">
@@ -570,7 +569,7 @@
 	<!-- ************** SEARCH DROP-DOWN MENUS ************** -->
 	<xsl:template name="search_options">
 		<xsl:variable name="fields">
-			<xsl:text>fulltext,artist_text,authority_text,coinType_facet,color_text,deity_text,denomination_facet,department_facet,diameter_num,dynasty_facet,findspot_text,objectType_facet,identifier_display,issuer_text,legend_text,obv_leg_text,rev_leg_text,maker_text,manufacture_facet,material_facet,mint_text,portrait_text,reference_facet,region_text,taq_num,tpq_num,type_text,obv_type_text,rev_type_text,weight_num,year_num</xsl:text>
+			<xsl:text>fulltext,artist_facet,authority_facet,coinType_facet,color_text,deity_facet,denomination_facet,department_facet,diameter_num,dynasty_facet,findspot_text,objectType_facet,identifier_display,issuer_facet,legend_text,obv_leg_text,rev_leg_text,maker_facet,manufacture_facet,material_facet,mint_facet,portrait_facet,reference_facet,region_facet,taq_num,tpq_num,type_text,obv_type_text,rev_type_text,weight_num,year_num</xsl:text>
 		</xsl:variable>
 
 		<xsl:for-each select="tokenize($fields, ',')">
@@ -634,6 +633,427 @@
 			</xsl:call-template>
 		</xsl:if>
 	</xsl:template>
+
+	<!-- ************** PROCESS GROUP OF SPARQL RESULTS FROM METIS TO DISPLAY IMAGES ************** -->
+	<xsl:template name="numishare:renderSparqlResults">
+		<xsl:param name="group"/>
+		<xsl:variable name="count" select="count($group/descendant::res:result)"/>
+		<xsl:variable name="coin-count" select="count($group/descendant::res:result[contains(res:binding[@name='numismatic_term']/res:uri, 'coin')])"/>
+		<xsl:variable name="hoard-count" select="count($group/descendant::res:result[contains(res:binding[@name='numismatic_term']/res:uri, 'hoard')])"/>
+
+
+		<!--<xsl:variable name="count" select="$group/@hoards + $group/@coins"/>
+		<xsl:variable name="coin-count" select="$group/@coins"/>
+		<xsl:variable name="hoard-count" select="$group/@hoards"/>-->
+
+		<!-- get images -->
+		<xsl:apply-templates select="$group/res:result[res:binding[contains(@name, 'rev') or contains(@name, 'obv')]]" mode="results">
+			<xsl:with-param name="id" select="tokenize($url, '/')[last()]"/>
+		</xsl:apply-templates>
+		<!-- object count -->
+		<xsl:if test="$count &gt; 0">
+			<br/>
+			<xsl:if test="$coin-count &gt; 0">
+				<xsl:value-of select="$coin-count"/>
+				<xsl:text> </xsl:text>
+				<xsl:choose>
+					<xsl:when test="$coin-count = 1">
+						<xsl:value-of select="numishare:normalizeLabel('results_coin', $lang)"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="numishare:normalizeLabel('results_coins', $lang)"/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:if>
+			<xsl:if test="$coin-count &gt; 0 and $hoard-count &gt; 0">
+				<xsl:text> </xsl:text>
+				<xsl:value-of select="numishare:normalizeLabel('results_and', $lang)"/>
+				<xsl:text> </xsl:text>
+			</xsl:if>
+			<xsl:if test="$hoard-count &gt; 0">
+				<xsl:value-of select="$hoard-count"/>
+				<xsl:text> </xsl:text>
+				<xsl:choose>
+					<xsl:when test="$hoard-count = 1">
+						<xsl:value-of select="numishare:normalizeLabel('results_hoard', $lang)"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="numishare:normalizeLabel('results_hoards', $lang)"/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:if>
+		</xsl:if>
+	</xsl:template>
+
+	<xsl:template match="res:result" mode="results">
+		<xsl:variable name="position" select="position()"/>
+		<!-- obverse -->
+		<xsl:choose>
+			<xsl:when test="string(res:binding[@name='obvRef']/res:uri) and string(res:binding[@name='obvThumb']/res:uri)">
+				<a class="thumbImage" rel="gallery" href="{res:binding[@name='obvRef']/res:uri}"
+					title="Obverse of {res:binding[@name='identifier']/res:literal}: {res:binding[@name='collection']/res:literal}">
+					<xsl:if test="$position &gt; 1">
+						<xsl:attribute name="style">display:none</xsl:attribute>
+					</xsl:if>
+					<img src="{res:binding[@name='obvThumb']/res:uri}"/>
+				</a>
+			</xsl:when>
+			<xsl:when test="not(string(res:binding[@name='obvRef']/res:uri)) and string(res:binding[@name='obvThumb']/res:uri)">
+				<img src="{res:binding[@name='obvThumb']/res:uri}">
+					<xsl:if test="$position &gt; 1">
+						<xsl:attribute name="style">display:none</xsl:attribute>
+					</xsl:if>
+				</img>
+			</xsl:when>
+			<xsl:when test="string(res:binding[@name='obvRef']/res:uri) and not(string(res:binding[@name='obvThumb']/res:uri))">
+				<a class="thumbImage" rel="gallery" href="{res:binding[@name='obvRef']/res:uri}"
+					title="Obverse of {res:binding[@name='identifier']/res:literal}: {res:binding[@name='collection']/res:literal}">
+					<img src="{res:binding[@name='obvRef']/res:uri}" style="max-width:120px">
+						<xsl:if test="$position &gt; 1">
+							<xsl:attribute name="style">display:none</xsl:attribute>
+						</xsl:if>
+					</img>
+				</a>
+			</xsl:when>
+		</xsl:choose>
+		<!-- reverse-->
+		<xsl:choose>
+			<xsl:when test="string(res:binding[@name='revRef']/res:uri) and string(res:binding[@name='revThumb']/res:uri)">
+				<a class="thumbImage" rel="gallery" href="{res:binding[@name='revRef']/res:uri}"
+					title="Reverse of {res:binding[@name='identifier']/res:literal}: {res:binding[@name='collection']/res:literal}">
+					<xsl:if test="$position &gt; 1">
+						<xsl:attribute name="style">display:none</xsl:attribute>
+					</xsl:if>
+					<img src="{res:binding[@name='revThumb']/res:uri}"/>
+				</a>
+			</xsl:when>
+			<xsl:when test="not(string(res:binding[@name='revRef']/res:uri)) and string(res:binding[@name='revThumb']/res:uri)">
+				<img src="{res:binding[@name='revThumb']/res:uri}">
+					<xsl:if test="$position &gt; 1">
+						<xsl:attribute name="style">display:none</xsl:attribute>
+					</xsl:if>
+				</img>
+			</xsl:when>
+			<xsl:when test="string(res:binding[@name='revRef']/res:uri) and not(string(res:binding[@name='revThumb']/res:uri))">
+				<a class="thumbImage" rel="gallery" href="{res:binding[@name='revRef']/res:uri}"
+					title="Obverse of {res:binding[@name='identifier']/res:literal}: {res:binding[@name='collection']/res:literal}">
+					<img src="{res:binding[@name='revRef']/res:uri}" style="max-width:120px">
+						<xsl:if test="$position &gt; 1">
+							<xsl:attribute name="style">display:none</xsl:attribute>
+						</xsl:if>
+					</img>
+				</a>
+			</xsl:when>
+		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template name="measurementForm">
+		<xsl:variable name="measurements">axis,diameter,weight</xsl:variable>
+		<xsl:variable name="chartTypes">column,bar</xsl:variable>
+
+		<xsl:if test="string($sparqlQuery)">
+			<div id="weight-container" style="min-width: 400px; height: 400px; margin: 20px auto"/>
+			<!-- class="calculate" -->
+			<table class="measurementTable">
+				<caption>
+					<xsl:value-of select="numishare:regularize_node($measurement, $lang)"/>
+				</caption>
+				<thead>
+					<tr>
+						<th/>
+						<th id="measurementUnits">
+							<xsl:choose>
+								<xsl:when test="$measurement='diameter'">mm</xsl:when>
+								<xsl:when test="$measurement='weight'">g</xsl:when>
+							</xsl:choose>
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<th>
+							<xsl:value-of select="$id"/>
+						</th>
+						<td>
+							<cinclude:include
+								src="cocoon:/widget?constraints={encode-for-uri(concat('nm:type_series_item &lt;http://numismatics.org/ocre/id/', $id, '&gt;'))}&amp;template=avgMeasurement&amp;measurement={$measurement}"
+							/>
+						</td>
+					</tr>
+					<xsl:for-each select="$tokenized_sparqlQuery">
+						<xsl:variable name="hrefs" as="item()*">
+							<xsl:analyze-string select="." regex="&lt;([^>]+)&gt;">
+								<xsl:matching-substring>
+									<xsl:value-of select="document(concat('http://admin.numismatics.org/nomisma/apis/getLabel?uri=', regex-group(1), '&amp;lang=', $lang))/response"/>
+								</xsl:matching-substring>
+							</xsl:analyze-string>
+						</xsl:variable>
+						<xsl:variable name="dates" as="item()*">
+							<xsl:analyze-string select="." regex="&#x022;(-?\d{{4}})&#x022;">
+								<xsl:matching-substring>
+									<xsl:value-of select="numishare:normalizeYear(number(translate(., '&#x022;', '')))"/>
+								</xsl:matching-substring>
+							</xsl:analyze-string>
+						</xsl:variable>
+						<tr>
+							<th>
+								<!-- display proper labels for hrefs -->
+								<xsl:value-of select="string-join($hrefs, '/')"/>
+
+								<xsl:if test="count($hrefs) &gt; 0 and count($dates) &gt; 0">
+									<xsl:text>, </xsl:text>
+								</xsl:if>
+
+								<!-- display year range, if applicable -->
+								<xsl:value-of select="string-join($dates, '-')"/>
+							</th>
+							<td>
+								<cinclude:include
+									src="cocoon:/widget?constraints={encode-for-uri(concat('dcterms:partOf &lt;http://nomisma.org/id/ric&gt; AND ', .))}&amp;template=avgMeasurement&amp;measurement={$measurement}"
+								/>
+							</td>
+						</tr>
+					</xsl:for-each>
+				</tbody>
+			</table>
+		</xsl:if>
+
+		<form id="charts-form" action="./{$id}#charts" style="margin:20px">
+			<div style="display:table;width:100%">
+				<h3>1: Select Measurement</h3>
+				<xsl:for-each select="tokenize($measurements, ',')">
+					<span class="anOption">
+						<input type="radio" name="measurement" value="{.}">
+							<xsl:choose>
+								<xsl:when test="$measurement = .">
+									<xsl:attribute name="checked">checked</xsl:attribute>
+								</xsl:when>
+								<xsl:when test=". = 'weight' and not(string($measurement))">
+									<xsl:attribute name="checked">checked</xsl:attribute>
+								</xsl:when>
+							</xsl:choose>
+						</input>
+						<label for="measurement-radio">
+							<xsl:value-of select="numishare:regularize_node(., $lang)"/>
+						</label>
+					</span>
+				</xsl:for-each>
+			</div>
+
+			<div style="display:table;width:100%">
+				<h3>2: Select Chart Type</h3>
+				<xsl:for-each select="tokenize($chartTypes, ',')">
+					<span class="anOption">
+						<input type="radio" name="chartType" value="{.}">
+							<xsl:choose>
+								<xsl:when test="$chartType = .">
+									<xsl:attribute name="checked">checked</xsl:attribute>
+								</xsl:when>
+								<xsl:when test=". = 'column' and not(string($chartType))">
+									<xsl:attribute name="checked">checked</xsl:attribute>
+								</xsl:when>
+							</xsl:choose>
+						</input>
+						<label for="chartType-radio">
+							<xsl:value-of select="."/>
+						</label>
+					</span>
+				</xsl:for-each>
+			</div>
+
+			<xsl:choose>
+				<xsl:when test="$pipeline='display'">
+					<!-- create categories as a variable -->
+					<xsl:variable name="typologicalCategories" as="element()*">
+						<categories>
+							<xsl:for-each
+								select="//nuds:material[string(@xlink:href)]|//nuds:denomination[string(@xlink:href)]|//nuds:manufacture[string(@xlink:href)]|//nuds:persname[string(@xlink:href)]|//nuds:corpname[string(@xlink:href)]|//nuds:famname[string(@xlink:href)]|//nuds:geogname[string(@xlink:href)]">
+								<xsl:sort select="local-name()"/>
+								<xsl:variable name="href" select="@xlink:href"/>
+								<xsl:variable name="value">
+									<xsl:choose>
+										<xsl:when test="string($lang) and contains($href, 'nomisma.org')">
+											<xsl:choose>
+												<xsl:when test="string(exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/skos:prefLabel[@xml:lang=$lang])">
+													<xsl:value-of select="exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/skos:prefLabel[@xml:lang=$lang]"/>
+												</xsl:when>
+												<xsl:otherwise>
+													<xsl:value-of select="exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/skos:prefLabel[@xml:lang='en']"/>
+												</xsl:otherwise>
+											</xsl:choose>
+										</xsl:when>
+										<xsl:otherwise>
+											<!-- if there is no text value and it points to nomisma.org, grab the prefLabel -->
+											<xsl:choose>
+												<xsl:when test="not(string(normalize-space(.))) and contains($href, 'nomisma.org')">
+													<xsl:value-of select="exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/skos:prefLabel[@xml:lang='en']"/>
+												</xsl:when>
+												<xsl:otherwise>
+													<xsl:value-of select="."/>
+												</xsl:otherwise>
+											</xsl:choose>
+										</xsl:otherwise>
+									</xsl:choose>
+								</xsl:variable>
+								<xsl:variable name="name">
+									<xsl:choose>
+										<xsl:when test="string(@xlink:role)">
+											<xsl:value-of select="@xlink:role"/>
+										</xsl:when>
+										<xsl:when test="string(@type)">
+											<xsl:value-of select="@type"/>
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:value-of select="local-name()"/>
+										</xsl:otherwise>
+									</xsl:choose>
+								</xsl:variable>
+								<category name="{$name}" href="{$href}" value="{$value}" query="{concat('nm:', $name, ' &lt;', $href, '&gt;')}"/>
+							</xsl:for-each>
+						</categories>
+					</xsl:variable>
+					<div style="display:table;width:100%">
+						<h3>3: Compare By Category</h3>
+						<!-- create checkboxes for available facets -->
+						<xsl:for-each select="$typologicalCategories//category">
+							<span class="anOption">
+								<xsl:variable name="query_fragment" select="@query"/>
+								<xsl:choose>
+									<xsl:when test="boolean(index-of($tokenized_sparqlQuery, $query_fragment)) = true()">
+										<input type="checkbox" id="{@name}-checkbox" checked="checked" value="{$query_fragment}" class="weight-checkbox"/>
+									</xsl:when>
+									<xsl:otherwise>
+										<input type="checkbox" id="{@name}-checkbox" value="{$query_fragment}" class="weight-checkbox"/>
+									</xsl:otherwise>
+								</xsl:choose>
+								<label for="{@name}-checkbox">
+									<xsl:value-of select="numishare:regularize_node(@name, $lang)"/>
+									<xsl:text>: </xsl:text>
+									<xsl:value-of select="@value"/>
+								</label>
+							</span>
+						</xsl:for-each>
+					</div>
+					<div id="customSparqlQueryDiv">
+						<h3>
+							<xsl:text>4. Add Custom Queries</xsl:text>
+							<span style="font-size:80%;margin-left:10px;">
+								<a href="#searchBox" id="addSparqlQuery">+ <span>Add New</span></a>
+							</span>
+						</h3>
+						<xsl:for-each select="$tokenized_sparqlQuery">
+							<xsl:variable name="val" select="."/>
+							<xsl:if test="not($typologicalCategories//category[@query=$val])">
+								<div class="customSparqlQuery">
+									<b>Custom Query: </b>
+									<span>
+										<xsl:value-of select="."/>
+									</span>
+									<a href="#" class="removeQuery">Remove Query</a>
+								</div>
+							</xsl:if>
+						</xsl:for-each>
+					</div>
+				</xsl:when>
+				<xsl:when test="$pipeline='visualize'">
+					<div id="customSparqlQueryDiv">
+						<h3>
+							<xsl:text>3. Add Custom Queries</xsl:text>
+							<span style="font-size:80%;margin-left:10px;">
+								<a href="#searchBox" id="addSparqlQuery">+ <span>Add New</span></a>
+							</span>
+						</h3>
+						<xsl:for-each select="$tokenized_sparqlQuery[boolean(index-of($tokenized_sparqlQuery, .)) = true()]">
+							<div class="customSparqlQuery">
+								<b>Custom Query: </b>
+								<span>
+									<xsl:value-of select="."/>
+								</span>
+								<a href="#" class="removeQuery">Remove Query</a>
+							</div>
+						</xsl:for-each>
+					</div>
+				</xsl:when>
+			</xsl:choose>
+
+			<input type="hidden" name="sparqlQuery" id="sparqlQuery" value=""/>
+			<xsl:if test="string($lang)">
+				<input type="hidden" name="lang" value="{$lang}"/>
+			</xsl:if>
+			<br/>
+			<input type="submit" value="Generate Chart" id="submit-measurements"/>
+		</form>
+
+		<div style="display:none">
+			<div id="searchBox" class="popupQuery">
+				<h3>Add Query</h3>
+				<xsl:call-template name="sparql_form"/>
+			</div>
+		</div>
+	</xsl:template>
+
+	<!-- ************** SEARCH INTERFACE FOR CUSTOM WEIGHT QUERIES FROM SPARQL **************** -->
+	<xsl:template name="sparql_form">
+		<div class="queryGroup">
+			<form id="sparqlForm" method="GET">
+				<div id="sparqlInputContainer">
+					<div class="searchItemTemplate">
+						<select class="sparql_facets">
+							<option>Select...</option>
+							<xsl:call-template name="sparql_search_options"/>
+						</select>
+						<div class="option_container" style="display:inline"/>
+						<a class="gateTypeBtn" href="#">add »</a>
+					</div>
+				</div>
+				<input name="q" id="q_input" type="hidden"/>
+				<xsl:if test="string($lang)">
+					<input name="lang" type="hidden" value="{$lang}"/>
+				</xsl:if>
+				<input type="submit" value="Add Query"/>
+			</form>
+		</div>
+
+		<div id="searchItemTemplate" class="searchItemTemplate">
+			<select class="sparql_facets">
+				<option>Select...</option>
+				<xsl:call-template name="sparql_search_options"/>
+			</select>
+			<div style="display:inline;" class="option_container"/>
+			<a class="gateTypeBtn" href="#">add »</a>
+			<a class="removeBtn" href="#" style="display:none;">« remove</a>
+		</div>
+
+		<span id="dateTemplate">
+			<xsl:value-of select="numishare:normalize_fields('fromDate', $lang)"/>
+			<xsl:text>:</xsl:text>
+			<input type="text" class="from_date"/>
+			<select class="from_era">
+				<option value="minus">B.C.</option>
+				<option value="" selected="selected">A.D.</option>
+			</select>
+			<xsl:value-of select="numishare:normalize_fields('toDate', $lang)"/>
+			<xsl:text>: </xsl:text>
+			<input type="text" class="to_date"/>
+			<select class="to_era">
+				<option value="minus">B.C.</option>
+				<option value="" selected="selected">A.D.</option>
+			</select>
+		</span>
+	</xsl:template>
+
+	<xsl:template name="sparql_search_options">
+		<xsl:variable name="fields">
+			<xsl:text>authority,date,deity,denomination,issuer,manufacture,material,mint,region</xsl:text>
+		</xsl:variable>
+		<xsl:for-each select="tokenize($fields, ',')">
+			<xsl:variable name="name" select="."/>
+			<option value="{if ($name = 'date') then 'date' else concat('nm:', $name)}" class="search_option">
+				<xsl:value-of select="numishare:normalize_fields($name, $lang)"/>
+			</option>
+		</xsl:for-each>
+	</xsl:template>
+
 
 	<!-- ************** PROCESS MODS RECORD INTO CHICAGO MANUAL OF STYLE CITATION ************** -->
 	<xsl:template name="mods-citation">

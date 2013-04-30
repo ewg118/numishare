@@ -12,6 +12,9 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 	<xsl:param name="lang"/>
 	<xsl:param name="identifiers"/>
 	<xsl:param name="baseUri"/>
+	<xsl:param name="constraints"/>
+	<xsl:param name="field"/>
+	<xsl:param name="measurement"/>
 
 	<!-- config variables -->
 	<xsl:variable name="endpoint" select="/config/sparql_endpoint"/>
@@ -37,8 +40,11 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 			<xsl:when test="$template = 'solr'">
 				<xsl:call-template name="numishare:solrFields"/>
 			</xsl:when>
-			<xsl:when test="$template = 'avgWeight'">
-				<xsl:call-template name="numishare:avgWeight"/>
+			<xsl:when test="$template = 'avgMeasurement'">
+				<xsl:call-template name="numishare:avgMeasurement"/>
+			</xsl:when>
+			<xsl:when test="$template = 'facets'">
+				<xsl:call-template name="numishare:facets"/>
 			</xsl:when>
 		</xsl:choose>
 
@@ -91,7 +97,7 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 
 		<xsl:apply-templates select="document($service)/res:sparql" mode="kml"/>
 	</xsl:template>
-	
+
 	<xsl:template name="numishare:getJsonFindspots">
 		<xsl:variable name="query">
 			<![CDATA[
@@ -108,10 +114,10 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 			OPTIONAL { ?object nm:closing_date ?burial }}]]>
 		</xsl:variable>
 		<xsl:variable name="service" select="concat($endpoint, '?query=', encode-for-uri(normalize-space(replace($query, 'typeUri', $uri))), '&amp;output=xml')"/>
-		
+
 		<xsl:apply-templates select="document($service)/res:sparql" mode="json"/>
 	</xsl:template>
-	
+
 	<xsl:template name="numishare:getImages">
 		<xsl:variable name="query">
 			<![CDATA[ 
@@ -132,20 +138,20 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 			OPTIONAL { ?object nm:type_series_item ?type }
 			]]>
 		</xsl:variable>
-		
+
 		<xsl:variable name="template">
 			<xsl:text><![CDATA[ { ?object nm:type_series_item <typeUri> }]]></xsl:text>
 		</xsl:variable>
-		
+
 		<xsl:variable name="union">
 			<xsl:for-each select="tokenize($identifiers, '\|')">
 				<xsl:if test="not(position()=1)">
 					<xsl:text>UNION </xsl:text>
 				</xsl:if>
 				<xsl:value-of select="replace($template, 'typeUri', concat($baseUri, .))"/>
-			</xsl:for-each>			
+			</xsl:for-each>
 		</xsl:variable>
-		
+
 		<xsl:variable name="filter">
 			<xsl:text> FILTER(</xsl:text>
 			<xsl:for-each select="tokenize($identifiers, '\|')">
@@ -159,15 +165,15 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 			</xsl:for-each>
 			<xsl:text>)</xsl:text>
 		</xsl:variable>
-		
+
 		<xsl:variable name="post">
 			<xsl:value-of select="normalize-space(concat(replace($query, '&lt;typeUris&gt;', $union), $filter, '}'))"/>
 		</xsl:variable>
-		
+
 		<xsl:variable name="service" select="concat($endpoint, '?query=', encode-for-uri($post), '&amp;output=xml')"/>
 		<xsl:copy-of select="document($service)/res:sparql"/>
 	</xsl:template>
-	
+
 	<xsl:template name="numishare:solrFields">
 		<xsl:variable name="query">
 			<![CDATA[
@@ -182,20 +188,20 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 			?object nm:type_series_item ?type . 
 			]]>
 		</xsl:variable>
-		
+
 		<xsl:variable name="template">
 			<xsl:text><![CDATA[ { ?object nm:type_series_item <typeUri> }]]></xsl:text>
 		</xsl:variable>
-		
+
 		<xsl:variable name="union">
 			<xsl:for-each select="tokenize($identifiers, '\|')">
 				<xsl:if test="not(position()=1)">
 					<xsl:text>UNION </xsl:text>
 				</xsl:if>
 				<xsl:value-of select="replace($template, 'typeUri', concat($baseUri, .))"/>
-			</xsl:for-each>			
+			</xsl:for-each>
 		</xsl:variable>
-		
+
 		<xsl:variable name="filter">
 			<xsl:text> FILTER(</xsl:text>
 			<xsl:for-each select="tokenize($identifiers, '\|')">
@@ -209,19 +215,58 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 			</xsl:for-each>
 			<xsl:text>)</xsl:text>
 		</xsl:variable>
-		
+
 		<xsl:variable name="post">
 			<xsl:value-of select="normalize-space(concat(replace($query, '&lt;typeUris&gt;', $union), $filter, '}'))"/>
 		</xsl:variable>
-		
+
 		<xsl:variable name="service" select="concat($endpoint, '?query=', encode-for-uri($post), '&amp;output=xml')"/>
-		
+
 		<xsl:copy-of select="document($service)/res:sparql"/>
-		
+
 		<!--<xsl:apply-templates select="document($service)/res:sparql" mode="solr"/>-->
 	</xsl:template>
+
+	<xsl:template name="numishare:avgMeasurement">	
+		<xsl:variable name="api">
+			<xsl:choose>
+				<xsl:when test="$measurement='axis'">avgAxis</xsl:when>
+				<xsl:when test="$measurement='diameter'">avgDiameter</xsl:when>
+				<xsl:when test="$measurement='weight'">avgWeight</xsl:when>
+			</xsl:choose>
+		</xsl:variable>
+		
+		
+		<xsl:variable name="service" select="concat('http://admin.numismatics.org/nomisma/apis/', $api, '?constraints=', encode-for-uri($constraints))"/>
+		<xsl:value-of select="format-number(document($service)//response, '#.00')"/>		
+	</xsl:template>
 	
-	<xsl:template name="numishare:avgWeight">
+	<xsl:template name="numishare:facets">
+		<xsl:variable name="query">
+			<![CDATA[
+			PREFIX rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+			PREFIX dcterms:  <http://purl.org/dc/terms/>
+			PREFIX nm:       <http://nomisma.org/id/>
+			PREFIX skos:      <http://www.w3.org/2004/02/skos/core#>						
+			SELECT DISTINCT ?val ?label WHERE {
+			?object dcterms:partOf <http://nomisma.org/id/ric>.
+			?object FIELD ?val .
+			?val skos:prefLabel ?label
+			FILTER(langMatches(lang(?label), "LANG"))} 
+			ORDER BY asc(?label)
+			]]>
+		</xsl:variable>		
+		<xsl:variable name="langStr" select="if (string($lang)) then $lang else 'en'"/>
+		<xsl:variable name="service" select="concat($endpoint, '?query=', encode-for-uri(normalize-space(replace(replace($query, 'LANG', $langStr), 'FIELD', $field))), '&amp;output=xml')"/>
+		
+		<select class="search_text">
+			<option value="">Select option from list...</option>
+			<xsl:for-each select="document($service)//res:result">
+				<option value="{res:binding[@name='val']/res:uri}" class="term">
+					<xsl:value-of select="res:binding[@name='label']/res:literal"/>
+				</option>
+			</xsl:for-each>
+		</select>
 		
 	</xsl:template>
 
@@ -266,7 +311,7 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 					<xsl:otherwise>
 						<xsl:value-of select="numishare:normalizeLabel('results_coins', $lang)"/>
 					</xsl:otherwise>
-				</xsl:choose>				
+				</xsl:choose>
 			</xsl:if>
 			<xsl:if test="$coin-count &gt; 0 and $hoard-count &gt; 0">
 				<xsl:text> </xsl:text>
@@ -283,7 +328,7 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 					<xsl:otherwise>
 						<xsl:value-of select="numishare:normalizeLabel('results_hoards', $lang)"/>
 					</xsl:otherwise>
-				</xsl:choose>	
+				</xsl:choose>
 			</xsl:if>
 		</xsl:if>
 	</xsl:template>
@@ -295,7 +340,7 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 	<xsl:template match="res:sparql" mode="solr">
 		<xsl:apply-templates select="descendant::res:result/res:binding[@name='findspot']" mode="solr"/>
 	</xsl:template>
-	
+
 	<xsl:template match="res:sparql" mode="json">
 		<xsl:if test="count(descendant::res:result/res:binding[@name='findspot']) &gt; 0">
 			<xsl:text>,</xsl:text>
@@ -446,8 +491,8 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 			</xsl:when>
 		</xsl:choose>
 	</xsl:template>
-	
-	<xsl:template match="res:binding[@name='findspot']" mode="json">		
+
+	<xsl:template match="res:binding[@name='findspot']" mode="json">
 		<xsl:variable name="coordinates">
 			<!-- add placemark -->
 			<xsl:choose>
@@ -482,17 +527,14 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
         				]]>
 		</xsl:variable>
 		<xsl:variable name="theme">red</xsl:variable>
-		
 		<xsl:variable name="start">
 			<xsl:value-of select="number(parent::node()/res:binding[@name='burial']/res:literal)"/>
 		</xsl:variable>
 		<xsl:variable name="end">
 			<xsl:value-of select="number(parent::node()/res:binding[@name='burial']/res:literal)"/>
 		</xsl:variable>
-		
-		<!-- output -->	
-		{ <xsl:if test="string($coordinates)">"point": {"lon": <xsl:value-of select="tokenize($coordinates, ',')[1]"/>, "lat": <xsl:value-of select="tokenize($coordinates, ',')[2]"
-		/>},</xsl:if> "title": "<xsl:value-of select="$title"/>", "start": "<xsl:value-of select="$start"/>", <xsl:if test="string($end)">"end": "<xsl:value-of select="$end"/>",</xsl:if>
+		<!-- output --> { <xsl:if test="string($coordinates)">"point": {"lon": <xsl:value-of select="tokenize($coordinates, ',')[1]"/>, "lat": <xsl:value-of select="tokenize($coordinates, ',')[2]"
+			/>},</xsl:if> "title": "<xsl:value-of select="$title"/>", "start": "<xsl:value-of select="$start"/>", <xsl:if test="string($end)">"end": "<xsl:value-of select="$end"/>",</xsl:if>
 		"options": { "theme": "<xsl:value-of select="$theme"/>", "description": "<xsl:value-of select="normalize-space($description)"/>" } }<xsl:if test="not(position()=last())">
 			<xsl:text>,</xsl:text>
 		</xsl:if>
@@ -557,7 +599,7 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 					</results>
 				</xsl:variable>
 				<xsl:variable name="coordinates" select="concat($geonames_data//lng, ',', $geonames_data//lat)"/>
-				
+
 				<field name="findspot_geo">
 					<xsl:value-of select="parent::node()/res:binding[@name='title']/res:literal"/>
 					<xsl:text>|</xsl:text>
@@ -565,9 +607,9 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 					<xsl:text>|</xsl:text>
 					<xsl:value-of select="$coordinates"/>
 				</field>
-				
+
 				<!-- hierarchy -->
-			<!--	<xsl:variable name="hierarchy">
+				<!--	<xsl:variable name="hierarchy">
 					<xsl:value-of select="$geonames_data//countryName"/>
 					<xsl:for-each select="$geonames_data//*[starts-with(local-name(), 'adminName')]">
 						<xsl:sort select="local-name()"/>

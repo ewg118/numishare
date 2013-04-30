@@ -461,9 +461,7 @@
 				<xforms:action ev:event="xforms-submit-done">
 					<xforms:send submission="post-solr-doc"/>
 					<xforms:send submission="submit-commit"/>
-
-					<!-- optimize index -->
-					<xforms:send submission="optimize"/>
+					
 					<!-- reload table -->
 					<xforms:setvalue ref="instance('control-instance')/solr-core" value="instance('config')/solr_all"/>
 					<xforms:delete nodeset="instance('list')/*"/>
@@ -1077,12 +1075,14 @@
 								<!-- get Solr document -->
 								<xforms:send submission="generate-add-document"/>
 							</xforms:action>
+							<!-- optimize index -->
+							<xforms:send submission="optimize"/>
 						</xforms:action>
 						
-						<!-- if nuds-count is greater than 0, process 5000 coin or coin-type records at a time -->
+						<!-- if nuds-count is greater than 0, process 1000 coin or coin-type records at a time -->
 						<xforms:action if="number(instance('control-instance')/nuds-count) &gt; 0">
 							<xforms:setvalue ref="instance('eXist-xquery')/exist:text">&lt;report> { for $i at $position in collection()  return 
-								concat(substring-before(substring-after(document-uri($i), 'objects/'), '.xml'), if ($position mod 5000 = 0) then ',' else '|') } &lt;/report></xforms:setvalue>
+								concat(substring-before(substring-after(document-uri($i), 'objects/'), '.xml'), if ($position mod 100 = 0) then ',' else '|') } &lt;/report></xforms:setvalue>
 							<xforms:send submission="xquery-collection"/>
 							<xxforms:variable name="tokens" select="tokenize(replace(instance('collection-result')/report, ' ', ''), ',')"/>
 							<xforms:action xxforms:iterate="$tokens">
@@ -1091,6 +1091,8 @@
 								<!-- get Solr document -->
 								<xforms:send submission="generate-add-document"/>
 							</xforms:action>
+							<!-- optimize index -->
+							<xforms:send submission="optimize"/>
 						</xforms:action>
 					</xforms:action>
 				</fr:positive-choice>

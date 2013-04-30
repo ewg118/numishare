@@ -4,13 +4,21 @@
 	xmlns:exsl="http://exslt.org/common" xmlns:numishare="http://code.google.com/p/numishare/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
 	xmlns:cinclude="http://apache.org/cocoon/include/1.0" xmlns:nuds="http://nomisma.org/nuds" exclude-result-prefixes="#all" version="2.0">
 
-	<xsl:param name="q"/>
-	<xsl:param name="weightQuery"/>
-	<xsl:variable name="tokenized_weightQuery" select="tokenize($weightQuery, ' AND ')"/>
+	<xsl:param name="q"/>	
 	<xsl:param name="start"/>
 	<xsl:param name="image"/>
 	<xsl:param name="side"/>
 	<xsl:param name="type"/>
+	
+	<!-- quantitative analysis parameters -->
+	<xsl:param name="measurement"/>
+	<xsl:param name="numericType"/>
+	<xsl:param name="chartType"/>
+	<xsl:param name="sparqlQuery"/>
+	<!--<xsl:variable name="tokenized_sparqlQuery" select="tokenize($sparqlQuery, '\|')"/>-->
+	<xsl:variable name="tokenized_sparqlQuery" as="item()*">
+		<xsl:sequence select="tokenize($sparqlQuery, '\|')"/>
+	</xsl:variable>
 
 	<xsl:variable name="recordType" select="/content/nuds:nuds/@recordType"/>
 
@@ -55,6 +63,14 @@
 								<h1 id="object_title">
 									<xsl:value-of select="normalize-space(nuds:descMeta/nuds:title)"/>
 								</h1>
+								<!--<div id="timemap">
+									<div id="mapcontainer">
+										<div id="map"/>
+									</div>
+									<div id="timelinecontainer">
+										<div id="timeline"/>
+									</div>
+								</div>-->
 								<xsl:call-template name="nuds_content"/>
 
 								<!-- show associated objects, preferencing those from Metis first -->
@@ -293,7 +309,41 @@
 						<div id="mapTab">
 							<h2>Map This Object</h2>
 							<p>Use the layer control along the right edge of the map (the "plus" symbol) to toggle map layers.</p>
-							<div id="mapcontainer"/>
+							
+							<xsl:choose>
+								<xsl:when test="$recordType='conceptual'">
+									<div id="timemap">
+										<div id="mapcontainer">
+											<div id="map"/>
+										</div>
+										<div id="timelinecontainer">
+											<div id="timeline"/>
+										</div>
+									</div>
+								</xsl:when>
+								<xsl:otherwise>
+									<div id="mapcontainer"/>
+								</xsl:otherwise>
+							</xsl:choose>
+							<div class="legend">
+								<table>
+									<tbody>
+										<tr>
+											<th style="width:100px;background:none">
+												<xsl:value-of select="numishare:regularize_node('legend', $lang)"/>
+											</th>
+											<td style="background-color:#6992fd;border:2px solid black;width:50px;"/>
+											<td style="width:100px">
+												<xsl:value-of select="numishare:regularize_node('mint', $lang)"/>
+											</td>
+											<td style="background-color:#d86458;border:2px solid black;width:50px;"/>
+											<td style="width:100px">
+												<xsl:value-of select="numishare:regularize_node('findspot', $lang)"/>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
 							<ul id="term-list" style="display:none">
 								<xsl:for-each select="document(concat($solr-url, 'select?q=id:&#x022;', $id, '&#x022;'))//arr">
 									<xsl:if test="contains(@name, '_facet') and not(contains(@name, 'institution')) and not(contains(@name, 'collection')) and not(contains(@name, 'department'))">
@@ -660,141 +710,16 @@
 		<h2>
 			<xsl:value-of select="numishare:normalizeLabel('display_quantitative', $lang)"/>
 		</h2>
-		<p>Average weight for this coin-type: <cinclude:include src="cocoon:/get_avg_weight?q=id:&#x022;{$id}&#x022;"/> grams</p>
-		<xsl:if test="string($weightQuery)">
-			<div id="{@name}-container" style="min-width: 400px; height: 400px; margin: 20px auto"/>
-			<!-- class="calculate" -->
-			<table class="calculate">
-				<caption>Average Weight for Coin-Type: <xsl:value-of select="$id"/></caption>
-				<thead>
-					<tr>
-						<th/>
-						<th>Average Weight</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<th>
-							<xsl:value-of select="$id"/>
-						</th>
-						<td>
-							<cinclude:include src="cocoon:/get_avg_weight?q=id:&#x022;{$id}&#x022;"/>
-						</td>
-					</tr>
-					<xsl:for-each select="$tokenized_weightQuery">
-						<tr>
-							<th>
-								<xsl:value-of select="substring-after(translate(., '&#x022;', ''), ':')"/>
-							</th>
-							<td>
-								<cinclude:include src="cocoon:/get_avg_weight?q={.}"/>
-							</td>
-						</tr>
-					</xsl:for-each>
-				</tbody>
-			</table>
-		</xsl:if>
-
-		<form id="charts-form" action="./{$id}#charts" style="margin:20px">
-			<h3>Compare weights in related categories</h3>
-			<!-- create checkboxes for available facets -->
-			<xsl:for-each select="//nuds:material|//nuds:denomination|//nuds:department|//nuds:manufacture|//nuds:persname|//nuds:corpname|//nuds:famname|//nuds:geogname">
-				<xsl:sort select="local-name()"/>
-				<xsl:variable name="href" select="@xlink:href"/>
-				<xsl:variable name="value">
-					<xsl:choose>
-						<xsl:when test="string($lang) and contains($href, 'nomisma.org')">
-							<xsl:choose>
-								<xsl:when test="string(exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/skos:prefLabel[@xml:lang=$lang])">
-									<xsl:value-of select="exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/skos:prefLabel[@xml:lang=$lang]"/>
-								</xsl:when>
-								<xsl:otherwise>
-									<xsl:value-of select="exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/skos:prefLabel[@xml:lang='en']"/>
-								</xsl:otherwise>
-							</xsl:choose>
-						</xsl:when>
-						<xsl:when test="string($lang) and contains($href, 'geonames.org')">
-							<xsl:variable name="geonameId" select="substring-before(substring-after($href, 'geonames.org/'), '/')"/>
-							<xsl:variable name="geonames_data" select="document(concat($geonames-url, '/get?geonameId=', $geonameId, '&amp;username=', $geonames_api_key, '&amp;style=full'))"/>
-							<xsl:choose>
-								<xsl:when test="count(exsl:node-set($geonames_data)//alternateName[@lang=$lang]) &gt; 0">
-									<xsl:for-each select="exsl:node-set($geonames_data)//alternateName[@lang=$lang]">
-										<xsl:value-of select="."/>
-										<xsl:if test="not(position()=last())">
-											<xsl:text>/</xsl:text>
-										</xsl:if>
-									</xsl:for-each>
-								</xsl:when>
-								<xsl:otherwise>
-									<xsl:value-of select="exsl:node-set($geonames_data)//name"/>
-								</xsl:otherwise>
-							</xsl:choose>
-						</xsl:when>
-						<xsl:otherwise>
-							<!-- if there is no text value and it points to nomisma.org, grab the prefLabel -->
-							<xsl:choose>
-								<xsl:when test="not(string(normalize-space(.))) and contains($href, 'nomisma.org')">
-									<xsl:value-of select="exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/skos:prefLabel[@xml:lang='en']"/>
-								</xsl:when>
-								<xsl:otherwise>
-									<xsl:value-of select="."/>
-								</xsl:otherwise>
-							</xsl:choose>
-						</xsl:otherwise>
-					</xsl:choose>
-				</xsl:variable>
-				<xsl:variable name="name">
-					<xsl:choose>
-						<xsl:when test="string(@xlink:role)">
-							<xsl:value-of select="@xlink:role"/>
-						</xsl:when>
-						<xsl:when test="string(@type)">
-							<xsl:value-of select="@type"/>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:value-of select="local-name()"/>
-						</xsl:otherwise>
-					</xsl:choose>
-				</xsl:variable>
-
-				<xsl:variable name="query_fragment" select="concat($name, '_facet:&#x022;', ., '&#x022;')"/>
-
-				<xsl:choose>
-					<xsl:when test="contains($weightQuery, $query_fragment)">
-						<input type="checkbox" id="{$name}-checkbox" checked="checked" value="{$query_fragment}" class="weight-checkbox"/>
-					</xsl:when>
-					<xsl:otherwise>
-						<input type="checkbox" id="{$name}-checkbox" value="{$query_fragment}" class="weight-checkbox"/>
-					</xsl:otherwise>
-				</xsl:choose>
-
-				<label for="{$name}-checkbox">
-					<xsl:value-of select="numishare:regularize_node($name, $lang)"/>
-					<xsl:text>: </xsl:text>
-					<xsl:value-of select="$value"/>
-				</label>
-				<br/>
-			</xsl:for-each>
-			<div>
-				<label>
-					<xsl:text>Chart Type</xsl:text>
-					<select name="type">
-						<xsl:variable name="types">column,line,spline,area,areaspline,scatter</xsl:variable>
-						<xsl:for-each select="tokenize($types, ',')">
-							<option>
-								<xsl:if test="$type = .">
-									<xsl:attribute name="selected">selected</xsl:attribute>
-								</xsl:if>
-								<xsl:value-of select="."/>
-							</option>
-						</xsl:for-each>
-					</select>
-				</label>
-			</div>
-			<input type="hidden" name="weightQuery" id="weights-q" value=""/>
-			<br/>
-			<input type="submit" value="Modify Chart" id="submit-weights"/>
-		</form>
+		<p>Average measurements for this coin type:</p>
+		<dl>
+			<dt><xsl:value-of select="numishare:regularize_node('axis', $lang)"/>:</dt>
+			<dd><cinclude:include src="cocoon:/widget?constraints=nm:type_series_item &lt;http://numismatics.org/ocre/id/{$id}&gt;&amp;template=avgMeasurement&amp;measurement=axis"/></dd>
+			<dt><xsl:value-of select="numishare:regularize_node('diameter', $lang)"/>:</dt>
+			<dd><cinclude:include src="cocoon:/widget?constraints=nm:type_series_item &lt;http://numismatics.org/ocre/id/{$id}&gt;&amp;template=avgMeasurement&amp;measurement=diameter"/></dd>
+			<dt><xsl:value-of select="numishare:regularize_node('weight', $lang)"/>:</dt>
+			<dd><cinclude:include src="cocoon:/widget?constraints=nm:type_series_item &lt;http://numismatics.org/ocre/id/{$id}&gt;&amp;template=avgMeasurement&amp;measurement=weight"/></dd>
+		</dl>
+		<xsl:call-template name="measurementForm"/>
 	</xsl:template>
 
 	<!--<xsl:when test="$field = 'category_facet'">

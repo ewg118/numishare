@@ -424,10 +424,15 @@
 			Many of the fields are applicable to VRA core as well.  Only a few fields are designed for VRA Core only -->
 		<!-- unique id -->
 		<field name="id" type="string" indexed="true" stored="true"/>
+		<!-- nudsid may be repeated across documents for multi-lingual records -->
+		<field name="nudsid" type="string" indexed="true" stored="true"/>
 		<field name="sortid" type="string" indexed="true" stored="true"/>
 		
 		<!-- collection-name token -->
 		<field name="collection-name" type="string" index="true" stored="true"/>
+		
+		<!-- language of the solr document for multi-lingual interfaces -->
+		<field name="lang" type="string" index="true" stored="true"/>
 		
 		<!-- record type -->
 		<field name="recordType" type="string" indexed="true" stored="true"/>
@@ -472,6 +477,9 @@
 		
 		<!-- facets -->
 		<dynamicField name="*_facet" type="string" indexed="true" stored="true" multiValued="true"/>
+		
+		<!-- hiearchical fields (category in Mantis; findspot drilldown) -->
+		<dynamicField name="*_hier" type="string" indexed="true" stored="true" multiValued="true"/>
 		
 		<!--sorting -->
 		<dynamicField name="*_max" type="string" indexed="true" stored="true"/>

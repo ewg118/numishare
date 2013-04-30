@@ -48,7 +48,7 @@
 				<xsl:text>"</xsl:text>
 				<xsl:text>,</xsl:text>				
 			</xsl:for-each>
-			<xsl:value-of select="concat($url, 'id/', str[@name='id'])"/>						
+			<xsl:value-of select="concat($url, 'id/', str[@name='nudsid'])"/>						
 			<xsl:text>
 </xsl:text>
 		</xsl:for-each>

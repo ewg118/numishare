@@ -5,6 +5,19 @@ Library: jQuery
 Description: Functions used for search and compare.
 ************************************/
 // assign the gate/boolean button click handler
+var langStr = getURLParameter('lang');
+if (langStr == 'null'){
+	var lang = '';
+} else {
+	var lang = langStr;
+}
+
+function getURLParameter(name) {
+	return decodeURI(
+	    (RegExp(name + '=' + '(.+?)(&|$)').exec(location.search)||[,null])[1]
+	);
+}
+
 $('.gateTypeBtn') .livequery('click', function(event){
 	gateTypeBtnClick($(this));
 	return false;
@@ -59,7 +72,7 @@ $('.category_list') .livequery('change', function(event){
 		container.html('<img style="margin-left:100px;margin-right:100px;" src="images/ajax-loader.gif"/>');		
 		var q = query + ' AND ' + field + ':[* TO *]';
 		$.get('get_search_facets', {
-			q : q, category:field
+			q : q, category:field, lang: lang
 		}, function (data) {		
 			container.html(data);
 		});				

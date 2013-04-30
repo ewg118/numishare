@@ -6,6 +6,8 @@
 	<xsl:output method="xml" encoding="UTF-8" omit-xml-declaration="yes"/>
 
 	<!-- use the calculate URI parameter to output tables/charts for counts of material, denomination, issuer, etc. -->
+	<xsl:param name="lang"/>
+	<xsl:variable name="defaultLang" select="if (string($lang)) then $lang else 'en'"/>
 	<xsl:param name="calculate"/>
 	<xsl:param name="type"/>
 	<xsl:param name="format"/>
@@ -24,27 +26,24 @@
 			</xsl:when>
 			<xsl:when test="$calculate='dynasty'">
 				<xsl:text>famname</xsl:text>
-			</xsl:when>
+			</xsl:when>			
 			<xsl:otherwise>
 				<xsl:text>persname</xsl:text>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:variable>
 	<xsl:variable name="role">
-		<xsl:if test="$calculate != 'material' and $calculate != 'denomination' and $calculate != 'date'">
+		<xsl:if test="$calculate != 'material' and $calculate != 'denomination' and $calculate != 'date' and $calculate != 'coinType'">
 			<xsl:value-of select="$calculate"/>
 		</xsl:if>
 	</xsl:variable>
 
 	<xsl:variable name="id" select="normalize-space(//*[local-name()='nudsid'])"/>
+	<xsl:variable name="title" select="normalize-space(//*[local-name()='descMeta']/*[local-name()='title'])"/>
 
 	<xsl:variable name="contentsDesc">
 		<xsl:copy-of select="descendant::nh:contents"/>
 	</xsl:variable>
-
-	<!--<test>
-		<xsl:value-of select="boolean(index-of($codes, '7'))"/>
-		</test>-->
 
 	<xsl:variable name="nudsGroup">
 		<nudsGroup>
@@ -96,12 +95,12 @@
 		<xsl:variable name="total-counts">
 			<total-counts>
 				<xsl:choose>
-					<xsl:when test="string(@role)">
+					<xsl:when test="string($role)">
 						<xsl:apply-templates select="exsl:node-set($nudsGroup)//*[local-name()=$element][@xlink:role=$role]"/>
 					</xsl:when>
 					<xsl:when test="$calculate='date'">
 						<xsl:apply-templates select="exsl:node-set($nudsGroup)//nuds:typeDesc/nuds:date|exsl:node-set($nudsGroup)//nuds:typeDesc/nuds:dateRange/nuds:toDate"/>
-					</xsl:when>
+					</xsl:when>					
 					<xsl:otherwise>
 						<xsl:apply-templates select="exsl:node-set($nudsGroup)//*[local-name()=$element]"/>
 					</xsl:otherwise>
@@ -109,9 +108,9 @@
 			</total-counts>
 		</xsl:variable>
 
-		<xsl:text>{ name: '</xsl:text>
-		<xsl:value-of select="$id"/>
-		<xsl:text>', data: [</xsl:text>
+		<xsl:text>{ name: "</xsl:text>
+		<xsl:value-of select="normalize-space($title)"/>
+		<xsl:text>", data: [</xsl:text>
 
 		<xsl:choose>
 			<xsl:when test="$calculate='date'">
@@ -159,16 +158,19 @@
 
 	<xsl:template name="generateXml">
 		<xsl:variable name="total" select="sum(exsl:node-set($contentsDesc)//nh:coinGrp[boolean(index-of($codes, nuds:typeDesc/@certainty)) = false()]/@count) + count(exsl:node-set($contentsDesc)//nh:coin[boolean(index-of($codes, nuds:typeDesc/@certainty)) = false()])"/>
-		<hoard id="{$id}" total="{$total}">
+		<hoard id="{$id}" total="{$total}" title="{$title}">
 			
 			<xsl:variable name="total-counts">
 				<total-counts>
 					<xsl:choose>
-						<xsl:when test="string(@role)">
+						<xsl:when test="string($role)">
 							<xsl:apply-templates select="exsl:node-set($nudsGroup)//*[local-name()=$element][@xlink:role=$role]"/>
 						</xsl:when>
 						<xsl:when test="$calculate='date'">
 							<xsl:apply-templates select="exsl:node-set($nudsGroup)//nuds:typeDesc/nuds:date|exsl:node-set($nudsGroup)//nuds:typeDesc/nuds:dateRange/nuds:toDate"/>
+						</xsl:when>
+						<xsl:when test="$calculate='coinType'">
+							<xsl:apply-templates select="exsl:node-set($nudsGroup)//nuds:title[@xml:lang=$defaultLang]"/>							
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:apply-templates select="exsl:node-set($nudsGroup)//*[local-name()=$element]"/>

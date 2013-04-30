@@ -7,7 +7,7 @@
   GLOBAL
   ***************************************
  */
- html {
+html {
 	font:13px arial, helvetica, sans-serif;
 	background-color:silver;
 }
@@ -19,7 +19,7 @@ body {
 	background-color:white;
 }
 .content {
-	padding:5px;	
+	padding:5px;
 }
 a > img {
 	border:none;
@@ -46,12 +46,12 @@ select {
 #facet ol, ul, dl {
 	margin:0em;
 }
-ol li, ul li, dl li {
+ul li, dl li {
 	list-style-type:none;
 }
 h4 {
 	margin:0;
-	padding:0;	
+	padding:0;
 }
 .ui-widget-header {
 	border-left:0;
@@ -76,8 +76,13 @@ h4 {
 	background-color:#ef8700;
 	border:2px solid #b76e0e;
 }
+.ui-state-error {
+	width:400px;
+	font-size:90%;
+	margin:10px auto;
+}
 table tr td {
-	border:0;	
+	border:0;
 }
 dt {
 	width:125px;
@@ -235,7 +240,7 @@ div.facet {
 	margin-bottom:10px;
 	border:1px solid silver;
 }
-li.term {
+li.h_item {
 	margin:2px 0;
 	display:table;
 	width:100%;
@@ -272,10 +277,6 @@ li.term {
 	max-height:400px;
 	z-index:2002;
 	position:absolute;
-}
-.facet_list_expanded li.term {
-	width:400px;
-	padding-left:50px;
 }
 .category_level {
 	margin-left:15px;
@@ -335,8 +336,8 @@ li.term {
 	border:1px solid silver;
 	padding:2px;
 }
-.compare-select{
-	width:400px;	
+.compare-select {
+	width:400px;
 }
 .category_list, .search_text {
 	width:175px;
@@ -646,8 +647,11 @@ div.custominfostyle {
 	padding:10px;
 }
 /* Used for date (century/decade) facet */
-.date-div {
+.date-div, .hierarchical-div {
 	margin-top:-10px;
+}
+.hierarchical-list {
+	display:table;
 }
 .century-multiselect-checkboxes {
 	display:table;
@@ -679,12 +683,16 @@ div.custominfostyle {
 }
 /*
   ***************************************
-  ANALYSIS
+  VISUALIZATION/ANALYSIS
   ***************************************
  */
 #filterHoards, #searchBox {
 	width:600px;
 	text-align:left;
+}
+#customQueryDiv {
+	width:100%;
+	display:table;
 }
 .filter-div, .customQuery, .compareQuery {
 	padding:10px 0;
@@ -698,10 +706,6 @@ div.custominfostyle {
 .anOption {
 	float:left;
 	width:20%;
-}
-.customQuery{
-	display:table;
-	width:100%;
 }
 /*
   ***************************************
