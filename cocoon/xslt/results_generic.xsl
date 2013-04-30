@@ -52,29 +52,62 @@
 					<xsl:choose>
 						<xsl:when test="str[@name='recordType'] = 'hoard'">
 							<div>
-								<dt><xsl:value-of select="numishare:regularize_node('findspot', $lang)"/>:</dt>
-								<dd style="margin-left:150px;">
+								<dt>
+									<xsl:if test="$lang='ar'">
+										<xsl:attribute name="class">ar</xsl:attribute>
+									</xsl:if>
+									<xsl:value-of select="numishare:regularize_node('findspot', $lang)"/>
+								</dt>
+								<dd>
+									<xsl:if test="$lang='ar'">
+										<xsl:attribute name="class">ar</xsl:attribute>
+									</xsl:if>
 									<xsl:value-of select="arr[@name='findspot_facet']/str[1]"/>
 								</dd>
+
 							</div>
 							<div>
-								<dt><xsl:value-of select="numishare:regularize_node('closing_date', $lang)"/>:</dt>
-								<dd style="margin-left:150px;">
+								<dt>
+									<xsl:if test="$lang='ar'">
+										<xsl:attribute name="class">ar</xsl:attribute>
+									</xsl:if>
+									<xsl:value-of select="numishare:regularize_node('closing_date', $lang)"/>
+								</dt>
+								<dd>
+									<xsl:if test="$lang='ar'">
+										<xsl:attribute name="class">ar</xsl:attribute>
+									</xsl:if>
 									<xsl:value-of select="str[@name='closing_date_display']"/>
 								</dd>
 							</div>
 							<xsl:if test="string(str[@name='description_display'])">
 								<div>
-									<dt><xsl:value-of select="numishare:regularize_node('description', $lang)"/>:</dt>
-									<dd style="margin-left:150px;">
+									<dt>
+										<xsl:if test="$lang='ar'">
+											<xsl:attribute name="class">ar</xsl:attribute>
+										</xsl:if>
+										<xsl:value-of select="numishare:regularize_node('description', $lang)"/>
+									</dt>
+									<dd>
+										<xsl:if test="$lang='ar'">
+											<xsl:attribute name="class">ar</xsl:attribute>
+										</xsl:if>
 										<xsl:value-of select="str[@name='description_display']"/>
 									</dd>
 								</div>
 							</xsl:if>
 							<xsl:if test="arr[@name='reference_facet']">
 								<div>
-									<dt><xsl:value-of select="numishare:regularize_node('reference', $lang)"/>: </dt>
-									<dd style="margin-left:150px;">
+									<dt>
+										<xsl:if test="$lang='ar'">
+											<xsl:attribute name="class">ar</xsl:attribute>
+										</xsl:if>
+										<xsl:value-of select="numishare:regularize_node('reference', $lang)"/>
+									</dt>
+									<dd>
+										<xsl:if test="$lang='ar'">
+											<xsl:attribute name="class">ar</xsl:attribute>
+										</xsl:if>
 										<xsl:for-each select="arr[@name='reference_facet']/str">
 											<xsl:value-of select="."/>
 											<xsl:if test="not(position() = last())">
@@ -88,8 +121,16 @@
 						<xsl:otherwise>
 							<xsl:if test="str[@name='obv_leg_display'] or str[@name='obv_type_display']">
 								<div>
-									<dt><xsl:value-of select="numishare:regularize_node('obverse', $lang)"/>:</dt>
-									<dd style="margin-left:150px;">
+									<dt>
+										<xsl:if test="$lang='ar'">
+											<xsl:attribute name="class">ar</xsl:attribute>
+										</xsl:if>
+										<xsl:value-of select="numishare:regularize_node('obverse', $lang)"/>
+									</dt>
+									<dd>
+										<xsl:if test="$lang='ar'">
+											<xsl:attribute name="class">ar</xsl:attribute>
+										</xsl:if>
 										<xsl:value-of select="str[@name='obv_leg_display']"/>
 										<xsl:if test="str[@name='obv_leg_display'] and str[@name='obv_type_display']">
 											<xsl:text>: </xsl:text>
@@ -100,8 +141,16 @@
 							</xsl:if>
 							<xsl:if test="str[@name='rev_leg_display'] or str[@name='rev_type_display']">
 								<div>
-									<dt><xsl:value-of select="numishare:regularize_node('reverse', $lang)"/>:</dt>
-									<dd style="margin-left:150px;">
+									<dt>
+										<xsl:if test="$lang='ar'">
+											<xsl:attribute name="class">ar</xsl:attribute>
+										</xsl:if>
+										<xsl:value-of select="numishare:regularize_node('reverse', $lang)"/>
+									</dt>
+									<dd>
+										<xsl:if test="$lang='ar'">
+											<xsl:attribute name="class">ar</xsl:attribute>
+										</xsl:if>
 										<xsl:value-of select="str[@name='rev_leg_display']"/>
 										<xsl:if test="str[@name='rev_leg_display'] and str[@name='rev_type_display']">
 											<xsl:text>: </xsl:text>
@@ -112,24 +161,48 @@
 							</xsl:if>
 							<xsl:if test="float[@name='diameter_num']">
 								<div>
-									<dt><xsl:value-of select="numishare:regularize_node('diameter', $lang)"/>: </dt>
-									<dd style="margin-left:150px;">
+									<dt>
+										<xsl:if test="$lang='ar'">
+											<xsl:attribute name="class">ar</xsl:attribute>
+										</xsl:if>
+										<xsl:value-of select="numishare:regularize_node('diameter', $lang)"/>
+									</dt>
+									<dd>
+										<xsl:if test="$lang='ar'">
+											<xsl:attribute name="class">ar</xsl:attribute>
+										</xsl:if>
 										<xsl:value-of select="float[@name='diameter_num']"/>
 									</dd>
 								</div>
 							</xsl:if>
 							<xsl:if test="float[@name='weight_num']">
 								<div>
-									<dt><xsl:value-of select="numishare:regularize_node('weight', $lang)"/>: </dt>
-									<dd style="margin-left:150px;">
+									<dt>
+										<xsl:if test="$lang='ar'">
+											<xsl:attribute name="class">ar</xsl:attribute>
+										</xsl:if>
+										<xsl:value-of select="numishare:regularize_node('weight', $lang)"/>
+									</dt>
+									<dd>
+										<xsl:if test="$lang='ar'">
+											<xsl:attribute name="class">ar</xsl:attribute>
+										</xsl:if>
 										<xsl:value-of select="float[@name='weight_num']"/>
 									</dd>
 								</div>
 							</xsl:if>
 							<xsl:if test="arr[@name='reference_facet']">
 								<div>
-									<dt><xsl:value-of select="numishare:regularize_node('reference', $lang)"/>: </dt>
-									<dd style="margin-left:150px;">
+									<dt>
+										<xsl:if test="$lang='ar'">
+											<xsl:attribute name="class">ar</xsl:attribute>
+										</xsl:if>
+										<xsl:value-of select="numishare:regularize_node('reference', $lang)"/>
+									</dt>
+									<dd>
+										<xsl:if test="$lang='ar'">
+											<xsl:attribute name="class">ar</xsl:attribute>
+										</xsl:if>
 										<xsl:for-each select="arr[@name='reference_facet']/str">
 											<xsl:value-of select="."/>
 											<xsl:if test="not(position() = last())">
@@ -141,8 +214,16 @@
 							</xsl:if>
 							<xsl:if test="arr[@name='provenance_facet']">
 								<div>
-									<dt><xsl:value-of select="numishare:regularize_node('provenance', $lang)"/>: </dt>
-									<dd style="margin-left:150px;">
+									<dt>
+										<xsl:if test="$lang='ar'">
+											<xsl:attribute name="class">ar</xsl:attribute>
+										</xsl:if>
+										<xsl:value-of select="numishare:regularize_node('provenance', $lang)"/>
+									</dt>
+									<dd>
+										<xsl:if test="$lang='ar'">
+											<xsl:attribute name="class">ar</xsl:attribute>
+										</xsl:if>
 										<xsl:for-each select="arr[@name='provenance_facet']/str">
 											<xsl:value-of select="."/>
 											<xsl:if test="not(position() = last())">
@@ -167,7 +248,7 @@
 										<xsl:value-of select="$regularized_sort"/>
 										<xsl:text>:</xsl:text>
 									</dt>
-									<dd style="margin-left: 150px;">
+									<dd>
 										<xsl:for-each select="distinct-values(*[@name=$sort_category])">
 											<xsl:sort order="descending"/>
 											<xsl:value-of select="."/>
@@ -184,7 +265,7 @@
 										<xsl:value-of select="$regularized_sort"/>
 										<xsl:text>:</xsl:text>
 									</dt>
-									<dd style="margin-left: 150px;">
+									<dd>
 										<xsl:value-of select="date[@name='timestamp']"/>
 									</dd>
 								</div>
@@ -193,8 +274,10 @@
 								<div>
 									<xsl:choose>
 										<xsl:when test="matches($sort, 'objectType_facet')">
-											<dt><xsl:value-of select="numishare:regularize_node('objectType', $lang)"/>:</dt>
-											<dd style="margin-left: 150px;">
+											<dt>
+												<xsl:value-of select="numishare:regularize_node('objectType', $lang)"/>
+											</dt>
+											<dd>
 												<xsl:value-of select="str[@name='objectType_facet']"/>
 											</dd>
 										</xsl:when>
@@ -204,7 +287,7 @@
 													<xsl:value-of select="$regularized_sort"/>
 													<xsl:text>:</xsl:text>
 												</dt>
-												<dd style="margin-left: 150px;">
+												<dd>
 													<xsl:for-each select="arr[@name=$sort_category]/str">
 														<xsl:sort order="descending"/>
 														<xsl:value-of select="."/>
@@ -225,7 +308,7 @@
 											<xsl:value-of select="$regularized_sort"/>
 											<xsl:text>:</xsl:text>
 										</dt>
-										<dd style="margin-left: 150px;">
+										<dd>
 											<xsl:value-of select="substring(str[@name=$sort_category], 1, 25)"/>
 											<xsl:if test="string-length(str[@name=$sort_category]) &gt; 25">
 												<xsl:text>...</xsl:text>
@@ -299,7 +382,8 @@
 			<xsl:when test="contains(@name, '_hier')">
 				<xsl:variable name="title" select="numishare:regularize_node(substring-before(@name, '_'), $lang)"/>
 
-				<button class="ui-multiselect ui-widget ui-state-default ui-corner-all hierarchical-facet" type="button" title="{$title}" aria-haspopup="true" style="width: 200px;" id="{@name}_link" label="{$q}">
+				<button class="ui-multiselect ui-widget ui-state-default ui-corner-all hierarchical-facet" type="button" title="{$title}" aria-haspopup="true" style="width: 200px;" id="{@name}_link"
+					label="{$q}">
 					<span class="ui-icon ui-icon-triangle-2-n-s"/>
 					<span>
 						<xsl:value-of select="$title"/>
@@ -421,7 +505,7 @@
 							<xsl:variable name="group" as="element()*">
 								<xsl:copy-of select="$sparqlResult//res:group[@id=$id]"/>
 							</xsl:variable>
-							
+
 							<xsl:call-template name="numishare:renderSparqlResults">
 								<xsl:with-param name="group" select="$group"/>
 							</xsl:call-template>
@@ -693,8 +777,8 @@
 											<a
 												href="{$display_path}results?q={if (string($multicategory_query) and string($new_query)) then concat($new_query, ' AND ', $multicategory_query) else if (string($multicategory_query) and not(string($new_query))) then $multicategory_query else $new_query}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}"
 												>X</a>
-											<xsl:text>]</xsl:text>											
-											
+											<xsl:text>]</xsl:text>
+
 											<xsl:choose>
 												<xsl:when test="$field='century_num'">
 													<xsl:value-of select="numishare:normalize_century($value)"/>
@@ -713,7 +797,7 @@
 													<xsl:value-of select="$value"/>
 												</xsl:otherwise>
 											</xsl:choose>
-											
+
 											<b>
 												<xsl:text>: </xsl:text>
 												<xsl:value-of select="numishare:normalize_fields($field, $lang)"/>
@@ -725,7 +809,7 @@
 												<xsl:value-of select="numishare:normalize_fields($field, $lang)"/>
 												<xsl:text>: </xsl:text>
 											</b>
-											
+
 											<xsl:choose>
 												<xsl:when test="$field='century_num'">
 													<xsl:value-of select="numishare:normalize_century($value)"/>
@@ -789,7 +873,7 @@
 					</xsl:when>
 				</xsl:choose>
 			</xsl:for-each>
-			
+
 			<!-- remove sort term -->
 			<xsl:if test="string($sort)">
 				<xsl:variable name="field" select="substring-before($sort, ' ')"/>

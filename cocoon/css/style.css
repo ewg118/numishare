@@ -87,6 +87,24 @@ table tr td {
 dt {
 	width:125px;
 	float:left;
+	font-weight:bold;
+}
+dd {
+	float:left;
+	width:325px;
+	margin:0;
+}
+dt.ar {
+	width:125px;
+	float:right;
+	text-align:right;
+	font-weight:bold;
+}
+dd.ar {
+	float:left;
+	width:325px;
+	margin:0;
+	text-align:right;	
 }
 /*
   ***************************************

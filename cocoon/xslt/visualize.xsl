@@ -240,6 +240,9 @@
 			<xsl:if test="string($q)">
 				<input type="hidden" name="q" value="{$q}"/>
 			</xsl:if>
+			<xsl:if test="string($lang)">
+				<input type="hidden" name="lang" value="{$lang}"/>
+			</xsl:if>
 			<br/>
 			<input type="submit" value="Generate Charts" id="submit-calculate"/>
 		</form>
