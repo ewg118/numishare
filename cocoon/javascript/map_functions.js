@@ -110,15 +110,8 @@ $(document).ready(function () {
 			})]
 		});
 		
-		var imperium = new OpenLayers.Layer.XYZ(
-		"Imperium Romanum",[
-		"http://pelagios.dme.ait.ac.at/tilesets/imperium/${z}/${x}/${y}.png"], {
-			sphericalMercator: true,
-			isBaseLayer: true,
-			numZoomLevels: 12
-		});
-		
-		map.addLayer(imperium);
+		//google physical
+		map.addLayer(new OpenLayers.Layer.Google("Google Physical",{type: google.maps.MapTypeId.TERRAIN}));
 		
 		map.addLayer(mintLayer);
 		map.addLayer(hoardLayer);
