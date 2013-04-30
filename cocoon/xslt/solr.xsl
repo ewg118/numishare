@@ -22,6 +22,13 @@
 	<xsl:variable name="geonames_api_key" select="/content/config/geonames_api_key"/>
 	<xsl:variable name="sparql_endpoint" select="/content/config/sparql_endpoint"/>
 	<xsl:variable name="publisher" select="/content/config/template/publisher"/>
+	<xsl:variable name="langs" as="element()*">
+		<langs>
+			<xsl:for-each select="/content/config/descendant::language[@enabled='true']">
+				<lang code="{@code}"/>
+			</xsl:for-each>
+		</langs>
+	</xsl:variable>
 
 	<xsl:variable name="nudsGroup">
 		<nudsGroup>
@@ -73,7 +80,7 @@
 			</xsl:call-template>
 		</rdf:RDF>
 	</xsl:variable>
-	
+
 	<!-- get block of images from SPARQL endpoint -->
 	<xsl:variable name="sparqlResult" as="element()*">
 		<xsl:if test="string($sparql_endpoint)">
@@ -85,23 +92,23 @@
 					</xsl:if>
 				</xsl:for-each>
 			</xsl:variable>
-			
+
 			<xsl:variable name="response" as="element()*">
 				<xsl:copy-of select="document(concat($url, 'widget?identifiers=', $identifiers, '&amp;template=solr&amp;baseUri=http://numismatics.org/ocre/id/'))/res:sparql"/>
-			</xsl:variable>			
-			
+			</xsl:variable>
+
 			<!-- process sparql into a manageable XML model -->
 			<response xmlns="http://www.w3.org/2005/sparql-results#">
 				<xsl:for-each select="descendant::nuds:nudsid">
 					<xsl:variable name="uri" select="concat('http://numismatics.org/ocre/id/', .)"/>
 					<group>
-						<xsl:attribute name="id" select="."/>	
+						<xsl:attribute name="id" select="."/>
 						<xsl:for-each select="distinct-values($response/descendant::res:result[res:binding[@name='type']/res:uri=$uri]/res:binding[@name='object']/res:uri)">
 							<xsl:variable name="objectUri" select="."/>
 							<xsl:copy-of select="$response/descendant::res:result[res:binding[@name='object']/res:uri=$objectUri][1]"/>
 						</xsl:for-each>
 					</group>
-				</xsl:for-each>				
+				</xsl:for-each>
 			</response>
 		</xsl:if>
 	</xsl:variable>
@@ -136,6 +143,20 @@
 					</xsl:variable>
 
 					<place id="{.}" hierarchy="{$hierarchy}">
+						<!-- add attributes for alternate place names -->
+						<xsl:for-each select="$langs//lang">
+							<xsl:variable name="lang" select="@code"/>
+							<xsl:if test="count($geonames_data//alternateName[@lang=$lang]) &gt; 0">
+								<xsl:attribute name="{$lang}">
+									<xsl:for-each select="$geonames_data//alternateName[@lang=$lang]">
+										<xsl:value-of select="."/>
+										<xsl:if test="not(position()=last())">
+											<xsl:text>/</xsl:text>
+										</xsl:if>
+									</xsl:for-each>
+								</xsl:attribute>
+							</xsl:if>
+						</xsl:for-each>
 						<xsl:value-of select="$coordinates"/>
 					</place>
 				</xsl:if>
@@ -173,7 +194,7 @@
 	</xsl:template>
 
 	<xsl:template match="/">
-		<add>
+		<add>						
 			<xsl:choose>
 				<xsl:when test="count(descendant::nuds:nuds) &gt; 0">
 					<xsl:call-template name="nuds"/>

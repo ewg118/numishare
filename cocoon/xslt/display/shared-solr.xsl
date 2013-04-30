@@ -98,6 +98,16 @@
 				<xsl:when test="string($lang) and contains($href, 'nomisma.org')">
 					<xsl:value-of select="numishare:getNomismaLabel(exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href], $lang)"/>
 				</xsl:when>
+				<xsl:when test="contains(@xlink:href, 'geonames')">
+					<xsl:choose>
+						<xsl:when test="string($lang)">
+							<xsl:value-of select="$geonames//place[@id=$href]/attribute::*[name()=$lang]"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="normalize-space(.)"/>
+						</xsl:otherwise>
+					</xsl:choose>	
+				</xsl:when>
 				<xsl:otherwise>
 					<xsl:value-of select="normalize-space(.)"/>
 				</xsl:otherwise>
@@ -107,6 +117,16 @@
 			<xsl:choose>
 				<xsl:when test="string($lang) and contains($href, 'nomisma.org')">
 					<xsl:value-of select="numishare:getNomismaLabel(exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href], $lang)"/>
+				</xsl:when>
+				<xsl:when test="contains(@xlink:href, 'geonames')">
+					<xsl:choose>
+						<xsl:when test="string($lang)">
+							<xsl:value-of select="$geonames//place[@id=$href]/attribute::*[name()=$lang]"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="normalize-space(.)"/>
+						</xsl:otherwise>
+					</xsl:choose>	
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:value-of select="normalize-space(.)"/>
@@ -123,16 +143,27 @@
 				<xsl:when test="contains(@xlink:href, 'geonames')">
 					<xsl:variable name="href" select="@xlink:href"/>
 					<xsl:variable name="value" select="."/>
+					<xsl:variable name="label">
+						<xsl:choose>
+							<xsl:when test="string($lang)">
+								<xsl:value-of select="$geonames//place[@id=$href]/attribute::*[name()=$lang]"/>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:value-of select="$value"/>
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:variable>
+					
 					<!-- *_geo format is 'mint name|URI of resource|KML-compliant geographic coordinates' -->
 					<field name="{@xlink:role}_geo">
-						<xsl:value-of select="."/>
+						<xsl:value-of select="$label"/>
 						<xsl:text>|</xsl:text>
 						<xsl:value-of select="$href"/>
 						<xsl:text>|</xsl:text>
-						<xsl:value-of select="exsl:node-set($geonames)//place[@id=$href]"/>
+						<xsl:value-of select="$geonames//place[@id=$href]"/>
 					</field>
 					<!-- insert hierarchical facets -->
-					<xsl:for-each select="tokenize(exsl:node-set($geonames)//place[@id=$href]/@hierarchy, '\|')">
+					<xsl:for-each select="tokenize($geonames//place[@id=$href]/@hierarchy, '\|')">
 						<xsl:if test="not(. = $value)">
 							<field name="findspot_hier">
 								<xsl:value-of select="concat('L', position(), '|', .)"/>
@@ -144,7 +175,7 @@
 						<xsl:if test="position()=last()">
 							<xsl:variable name="level" select="if (.=$value) then position() else position() + 1"/>
 							<field name="findspot_hier">
-								<xsl:value-of select="concat('L', $level, '|', $value)"/>
+								<xsl:value-of select="concat('L', $level, '|', .)"/>
 							</field>
 						</xsl:if>
 					</xsl:for-each>
