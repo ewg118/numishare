@@ -7,12 +7,16 @@ set :repository,  "git://github.com/waynegraham/numishare.git"
 set :scn, :git
 set :branch, "feature/uva_deployment"
 
+set :user, 'sds-deployer'
+set :run_method, :run
+
 set :deploy_to, "/usr/local/projects/#{application}"
 set :deploy_via, :remote_cache
 
 set :normalize_asset_timestamps, false
 
 # if you want to clean up old releases on each deploy uncomment this:
+after "deploy", "solr:index"
 after "deploy:restart", "deploy:cleanup"
 
 namespace :solr do
