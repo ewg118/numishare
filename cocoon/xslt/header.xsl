@@ -5,22 +5,22 @@
 
 		<!-- if displaying a coin or artifact record, the path to the other sections should be {$display_path} ; otherwise nothing -->
 		<div id="hd">
-			<table style="width:100%">
-				<tr>
-					<td style="width:10%">
-						<img src="{$display_path}images/uva-logo.jpg" alt="logo"/>
-					</td>
-					<td>
-						<span class="banner_text">The University of Virginia Art Museum <br/>Numismatic Collection</span>
-					</td>
-					<td style="width:25%">
-						<form action="{$display_path}results" method="GET" id="qs_form" style="padding:10px 0">
-							<input type="text" name="q" id="qs_text"/>							
-							<input id="qs_button" type="submit" value="{numishare:normalizeLabel('header_search', $lang)}"/>
-						</form>
-					</td>
-				</tr>
-			</table>
+			<div class="banner align-right ui-widget-content" style="border:0">
+				<div style="float:left;width:400px;">
+					<form action="{$display_path}results" method="GET" id="qs_form" style="margin:20px 80px">
+						<input type="text" name="q" id="qs_text"/>
+						<input id="qs_button" type="submit" value="{numishare:normalizeLabel('header_search', $lang)}"/>
+					</form>
+				</div>
+				<xsl:if test="string(/content/config/banner_text)">
+					<div class="banner_text">
+						<xsl:value-of select="/content/config/banner_text"/>
+					</div>
+				</xsl:if>
+				<xsl:if test="string(//config/banner_image/@xlink:href)">
+					<img src="{$display_path}images/{//config/banner_image/@xlink:href}" alt="banner image"/>
+				</xsl:if>
+			</div>
 			<ul role="menubar" id="menu">
 				<xsl:call-template name="menubar"/>
 			</ul>
@@ -31,22 +31,7 @@
 	<xsl:template name="menubar">
 		<xsl:choose>
 			<xsl:when test="$lang='ar'">
-				<xsl:if test="count(//config/descendant::language[@enabled='true']) &gt; 1">
-					<li role="presentation">
-						<a href="#Language">
-							<xsl:value-of select="numishare:normalizeLabel('header_language', $lang)"/>
-						</a>
-						<ul role="menu">
-							<xsl:for-each select="//config/descendant::language[@enabled='true']">
-								<li role="presentation">
-									<a role="menuitem" href="?lang={@code}">
-										<xsl:value-of select="if (string(label[@xml:lang=$lang])) then label[@xml:lang=$lang] else label[@xml:lang='en']"/>
-									</a>
-								</li>
-							</xsl:for-each>
-						</ul>
-					</li>
-				</xsl:if>
+				<xsl:call-template name="languages"/>
 				<xsl:for-each select="//config/pages/page[public = '1']">
 					<li role="presentation">
 						<a href="{$display_path}pages/{@stub}{if (string($lang)) then concat('?lang=', $lang) else ''}">
@@ -146,25 +131,29 @@
 					</li>
 				</xsl:for-each>
 				<!-- display the language switching menu when 2 or more languages are enabled -->
-				<xsl:if test="count(//config/descendant::language[@enabled='true']) &gt; 1">
-					<li role="presentation">
-						<a href="#Language">
-							<xsl:value-of select="numishare:normalizeLabel('header_language', $lang)"/>
-						</a>
-						<ul role="menu">
-							<xsl:for-each select="//config/descendant::language[@enabled='true']">
-								<xsl:sort select="@code"/>
-								<li role="presentation">
-									<a role="menuitem" href="?lang={@code}">
-										<xsl:value-of select="if (string(label[@xml:lang=$lang])) then label[@xml:lang=$lang] else label[@xml:lang='en']"/>
-									</a>
-								</li>
-							</xsl:for-each>
-						</ul>
-					</li>
-				</xsl:if>
+				<xsl:call-template name="languages"/>
 			</xsl:otherwise>
 		</xsl:choose>
 
+	</xsl:template>
+	
+	<xsl:template name="languages">
+		<xsl:if test="count(//config/descendant::language[@enabled='true']) &gt; 1">
+			<li role="presentation">
+				<a href="#Language">
+					<xsl:value-of select="numishare:normalizeLabel('header_language', $lang)"/>
+				</a>
+				<ul role="menu">
+					<xsl:for-each select="//config/descendant::language[@enabled='true']">
+						<xsl:sort select="@code"/>
+						<li role="presentation">
+							<a role="menuitem" href="?lang={@code}">
+								<xsl:value-of select="numishare:normalizeLabel(concat('lang_', @code), $lang)"/>
+							</a>
+						</li>
+					</xsl:for-each>
+				</ul>
+			</li>
+		</xsl:if>
 	</xsl:template>
 </xsl:stylesheet>

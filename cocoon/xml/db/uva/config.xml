@@ -37,41 +37,13 @@
 		<reference>400</reference>
 	</images>
 	<languages>
-		<language code="ar" enabled="true">
-			<label xml:lang="ar">العربيّة</label>
-			<label xml:lang="en">Arabic</label>
-			<label xml:lang="de">Arabisch</label>
-			<label xml:lang="fr">Arabe</label>
-			<label xml:lang="ro">Arabă</label>
-		</language>
-		<language code="de" enabled="true">
-			<label xml:lang="ar">ألماني</label>
-			<label xml:lang="de">Deutsch</label>
-			<label xml:lang="en">German</label>
-			<label xml:lang="fr">Allemand</label>
-			<label xml:lang="ro">Germană</label>
-		</language>
-		<language code="en" enabled="true">
-			<label xml:lang="ar">إنجليزي</label>
-			<label xml:lang="de">Englisch</label>
-			<label xml:lang="en">English</label>
-			<label xml:lang="fr">Anglais</label>
-			<label xml:lang="ro">Engleză</label>
-		</language>
-		<language code="fr" enabled="true">
-			<label xml:lang="ar">فرنسي</label>
-			<label xml:lang="de">Französisch</label>
-			<label xml:lang="en">French</label>
-			<label xml:lang="fr">Français</label>
-			<label xml:lang="ro">Franceză</label>
-		</language>
-		<language code="ro" enabled="true">
-			<label xml:lang="ar">رومانيا</label>
-			<label xml:lang="de">Rumänisch</label>
-			<label xml:lang="en">Romanian</label>
-			<label xml:lang="fr">Roumain</label>
-			<label xml:lang="ro">Romană</label>
-		</language>
+		<language code="ar" enabled="false"/>
+		<language code="de" enabled="true"/>
+		<language code="en" enabled="true"/>
+		<language code="fr" enabled="true"/>
+		<language code="nl" enabled="true"/>
+		<language code="ro" enabled="true"/>
+		<language code="ru" enabled="true"/>
 	</languages>
 	<theme>
 		<jquery_ui_theme>ui-lightness</jquery_ui_theme>
