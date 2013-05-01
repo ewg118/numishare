@@ -14,7 +14,11 @@
 	<xsl:variable name="collection_type" select="//config/collection_type"/>
 
 	<!-- load facets into variable -->
-	<xsl:variable name="facets" select="//lst[@name='facet_fields']"/>
+	<xsl:variable name="facets" as="element()*">
+		<facets>
+			<xsl:copy-of select="//lst[@name='facet_fields']/lst[count(int) &gt; 0]"/>
+		</facets>
+	</xsl:variable>
 
 	<xsl:template match="/">
 		<html>
@@ -65,7 +69,7 @@
 				<div class="content">
 					<h1>
 						<xsl:value-of select="numishare:normalizeLabel('header_search', $lang)"/>
-					</h1>
+					</h1>					
 					<p>This page allows you to search the entire collection for specific terms or keywords.</p>
 					<xsl:call-template name="search_forms"/>
 				</div>

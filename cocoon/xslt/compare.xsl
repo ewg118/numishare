@@ -16,7 +16,11 @@
 	<xsl:variable name="collection_type" select="//config/collection_type"/>
 
 	<!-- load facets into variable -->
-	<xsl:variable name="facets" select="//lst[@name='facet_fields']"/>
+	<xsl:variable name="facets" as="element()*">
+		<facets>
+			<xsl:copy-of select="//lst[@name='facet_fields']/lst[count(int) &gt; 0]"/>
+		</facets>
+	</xsl:variable>
 
 	<xsl:template match="/">
 		<html>

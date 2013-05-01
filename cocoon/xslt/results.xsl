@@ -40,9 +40,9 @@
 					<xsl:text>: Browse Collection</xsl:text>
 				</title>
 				<!-- alternates -->
-				<link rel="alternate" type="application/atom+xml" href="{concat(//config/url, 'feed/?q=', $q)}"/>
-				<link rel="alternate" type="text/csv" href="{concat(//config/url, 'data.csv/?q=', $q)}"/>
-				<link rel="alternate" type="application/application/vnd.google-earth.kml+xml" href="{concat(//config/url, 'query.kml/?q=', $q)}"/>
+				<link rel="alternate" type="application/atom+xml" href="{concat(//config/url, 'feed/?q=', $q, if(string($lang)) then concat('&amp;lang=', $lang) else '')}"/>
+				<link rel="alternate" type="text/csv" href="{concat(//config/url, 'data.csv/?q=', $q, if(string($lang)) then concat('&amp;lang=', $lang) else '')}"/>
+				<link rel="alternate" type="application/application/vnd.google-earth.kml+xml" href="{concat(//config/url, 'query.kml/?q=', $q, if(string($lang)) then concat('&amp;lang=', $lang) else '')}"/>
 				<!-- opensearch compliance -->
 				<link rel="search" type="application/opensearchdescription+xml" href="{$url}opensearch.xml" title="Example Search for {$url}"/>
 				<meta name="totalResults" content="{$numFound}"/>
@@ -111,17 +111,17 @@
 						<h2>
 							<xsl:value-of select="numishare:normalizeLabel('results_data-options', $lang)"/>
 						</h2>
-						<a href="{$display_path}feed/?q={$q}">
+						<a href="{$display_path}feed/?q={$q}{if(string($lang)) then concat('&amp;lang=', $lang) else ''}">
 							<img src="{$display_path}images/atom-medium.png" title="Atom" alt="Atom"/>
 						</a>
-						<a href="{$display_path}query.kml?q={$q}">
+						<a href="{$display_path}query.kml?q={$q}{if(string($lang)) then concat('&amp;lang=', $lang) else ''}">
 							<img src="{$display_path}images/googleearth.png" alt="KML" title="KML: Limit, 500 objects"/>
 						</a>
-						<a href="{$display_path}data.csv?q={$q}">
+						<a href="{$display_path}data.csv?q={$q}{if(string($lang)) then concat('&amp;lang=', $lang) else ''}">
 							<!-- the image below is copyright of Silvestre Herrera, available freely on wikimedia commons: http://commons.wikimedia.org/wiki/File:X-office-spreadsheet_Gion.svg -->
 							<img src="{$display_path}images/spreadsheet.png" title="CSV" alt="CSV"/>
 						</a>
-						<a href="{$display_path}visualize?compare={$q}">
+						<a href="{$display_path}visualize?compare={$q}{if(string($lang)) then concat('&amp;lang=', $lang) else ''}">
 							<!-- the image below is copyright of Mark James, available freely on wikimedia commons: http://commons.wikimedia.org/wiki/File:Chart_bar.png -->
 							<img src="{$display_path}images/visualize.png" title="Visualize" alt="Visualize"/>
 						</a>

@@ -2,32 +2,32 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:numishare="http://code.google.com/p/numishare/" xmlns:xlink="http://www.w3.org/1999/xlink" exclude-result-prefixes="#all"
 	version="2.0">
 	<xsl:template name="header">
-
+		
 		<!-- if displaying a coin or artifact record, the path to the other sections should be {$display_path} ; otherwise nothing -->
 		<div id="hd">
-			<div class="banner align-right ui-widget-content" style="border:0">
-				<div style="float:left;width:400px;">
-					<form action="{$display_path}results" method="GET" id="qs_form" style="margin:20px 80px">
-						<input type="text" name="q" id="qs_text"/>
-						<input id="qs_button" type="submit" value="{numishare:normalizeLabel('header_search', $lang)}"/>
-					</form>
-				</div>
-				<xsl:if test="string(/content/config/banner_text)">
-					<div class="banner_text">
-						<xsl:value-of select="/content/config/banner_text"/>
-					</div>
-				</xsl:if>
-				<xsl:if test="string(//config/banner_image/@xlink:href)">
-					<img src="{$display_path}images/{//config/banner_image/@xlink:href}" alt="banner image"/>
-				</xsl:if>
-			</div>
+			<table style="width:100%">
+				<tr>
+					<td style="width:10%">
+						<img src="{$display_path}images/uva-logo.jpg" alt="logo"/>
+					</td>
+					<td>
+						<span class="banner_text">The University of Virginia Art Museum <br/>Numismatic Collection</span>
+					</td>
+					<td style="width:25%">
+						<form action="{$display_path}results" method="GET" id="qs_form" style="padding:10px 0">
+							<input type="text" name="q" id="qs_text"/>	
+							<input id="qs_button" type="submit" value="{numishare:normalizeLabel('header_search', $lang)}"/>
+						</form>
+					</td>
+				</tr>
+			</table>
 			<ul role="menubar" id="menu">
 				<xsl:call-template name="menubar"/>
 			</ul>
 			<div id="log"/>
 		</div>
 	</xsl:template>
-
+	
 	<xsl:template name="menubar">
 		<xsl:choose>
 			<xsl:when test="$lang='ar'">
@@ -133,8 +133,7 @@
 				<!-- display the language switching menu when 2 or more languages are enabled -->
 				<xsl:call-template name="languages"/>
 			</xsl:otherwise>
-		</xsl:choose>
-
+		</xsl:choose>		
 	</xsl:template>
 	
 	<xsl:template name="languages">
@@ -157,3 +156,6 @@
 		</xsl:if>
 	</xsl:template>
 </xsl:stylesheet>
+
+
+
