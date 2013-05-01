@@ -295,11 +295,23 @@
 			</map:match>
 
 			<map:match pattern="feed/">
-				<map:aggregate element="content">
-					<map:part
-						src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}&amp;sort={url-encode:timestamp desc}&amp;rows=100&amp;start={request-param:start}&amp;fl=id,recordType,title_display,mint_geo,findspot_geo,tpq_num,taq_num,year_num,timestamp"/>
-					<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
-				</map:aggregate>
+				<map:select type="parameter">
+					<map:parameter name="parameter-selector-test" value="{request-param:lang}"/>
+					<map:when test="">
+						<map:aggregate element="content">
+							<map:part
+								src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}&amp;sort={url-encode:timestamp desc}&amp;rows=100&amp;start={request-param:start}&amp;fl=id,recordType,title_display,mint_geo,findspot_geo,tpq_num,taq_num,year_num,timestamp"/>
+							<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
+						</map:aggregate>
+					</map:when>
+					<map:otherwise>
+						<map:aggregate element="content">
+							<map:part
+								src="{global:solr-url}select?q=lang:{request-param:lang}+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}&amp;sort={url-encode:timestamp desc}&amp;rows=100&amp;start={request-param:start}&amp;fl=id,recordType,title_display,mint_geo,findspot_geo,tpq_num,taq_num,year_num,timestamp"/>
+							<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
+						</map:aggregate>
+					</map:otherwise>
+				</map:select>
 				<map:transform src="xslt/linked_data/feed.xsl" label="basiccontent" type="xslt-saxon">
 					<map:parameter name="use-request-parameters" value="true"/>
 				</map:transform>
