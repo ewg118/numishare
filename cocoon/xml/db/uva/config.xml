@@ -7,7 +7,7 @@
 	<description>Enter short description for collection.</description>
 	<banner_text>The University of Virginia Art Museum Numismatic Collection</banner_text>
 	<!--<banner_image xlink:href="numishare-long.png"/>-->
-	<url>http://localhost:8080/cocoon/uva/</url>
+	<url>http://coins.lib.virginia.edu/</url>
 	<solr_published>http://localhost:8080/solr33/numishare-published/</solr_published>
 	<solr_all>http://localhost:8080/solr/numishare-all/</solr_all>
 	<flickr_api_key/>
