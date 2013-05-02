@@ -296,20 +296,44 @@
 
 			<map:match pattern="feed/">
 				<map:select type="parameter">
-					<map:parameter name="parameter-selector-test" value="{request-param:lang}"/>
+					<map:parameter name="parameter-selector-test" value="{request-param:q}"/>
 					<map:when test="">
-						<map:aggregate element="content">
-							<map:part
-								src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}&amp;sort={url-encode:timestamp desc}&amp;rows=100&amp;start={request-param:start}&amp;fl=id,recordType,title_display,mint_geo,findspot_geo,tpq_num,taq_num,year_num,timestamp"/>
-							<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
-						</map:aggregate>
+						<map:select type="parameter">
+							<map:parameter name="parameter-selector-test" value="{request-param:lang}"/>
+							<map:when test="">
+								<map:aggregate element="content">
+									<map:part
+										src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}+AND+*:*&amp;sort={url-encode:timestamp desc}&amp;rows=100&amp;start={request-param:start}&amp;fl=id,nudsid,recordType,title_display,mint_geo,findspot_geo,tpq_num,taq_num,year_num,timestamp"/>
+									<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
+								</map:aggregate>
+							</map:when>
+							<map:otherwise>
+								<map:aggregate element="content">
+									<map:part
+										src="{global:solr-url}select?q=lang:{request-param:lang}+AND+collection-name:{global:collection-name}+AND+*:*&amp;sort={url-encode:timestamp desc}&amp;rows=100&amp;start={request-param:start}&amp;fl=id,nudsid,recordType,title_display,mint_geo,findspot_geo,tpq_num,taq_num,year_num,timestamp"/>
+									<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
+								</map:aggregate>
+							</map:otherwise>
+						</map:select>
 					</map:when>
 					<map:otherwise>
-						<map:aggregate element="content">
-							<map:part
-								src="{global:solr-url}select?q=lang:{request-param:lang}+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}&amp;sort={url-encode:timestamp desc}&amp;rows=100&amp;start={request-param:start}&amp;fl=id,recordType,title_display,mint_geo,findspot_geo,tpq_num,taq_num,year_num,timestamp"/>
-							<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
-						</map:aggregate>
+						<map:select type="parameter">
+							<map:parameter name="parameter-selector-test" value="{request-param:lang}"/>
+							<map:when test="">
+								<map:aggregate element="content">
+									<map:part
+										src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}&amp;sort={url-encode:timestamp desc}&amp;rows=100&amp;start={request-param:start}&amp;fl=id,nudsid,recordType,title_display,mint_geo,findspot_geo,tpq_num,taq_num,year_num,timestamp"/>
+									<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
+								</map:aggregate>
+							</map:when>
+							<map:otherwise>
+								<map:aggregate element="content">
+									<map:part
+										src="{global:solr-url}select?q=lang:{request-param:lang}+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}&amp;sort={url-encode:timestamp desc}&amp;rows=100&amp;start={request-param:start}&amp;fl=id,nudsid,recordType,title_display,mint_geo,findspot_geo,tpq_num,taq_num,year_num,timestamp"/>
+									<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
+								</map:aggregate>
+							</map:otherwise>
+						</map:select>
 					</map:otherwise>
 				</map:select>
 				<map:transform src="xslt/linked_data/feed.xsl" label="basiccontent" type="xslt-saxon">
@@ -330,21 +354,42 @@
 			<!-- CSV -->
 			<map:match pattern="data.csv">
 				<map:select type="parameter">
-					<map:parameter name="parameter-selector-test" value="{request-param:lang}"/>
+					<map:parameter name="parameter-selector-test" value="{request-param:q}"/>
 					<map:when test="">
-						<map:aggregate element="content">
-							<map:part src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}&amp;sort={url-encode:{request-param:sort}}&amp;rows=500"/>
-							<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
-						</map:aggregate>
+						<map:select type="parameter">
+							<map:parameter name="parameter-selector-test" value="{request-param:lang}"/>
+							<map:when test="">
+								<map:aggregate element="content">
+									<map:part src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}&amp;sort={url-encode:{request-param:sort}}&amp;rows=500"/>
+									<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
+								</map:aggregate>
+							</map:when>
+							<map:otherwise>
+								<map:aggregate element="content">
+									<map:part src="{global:solr-url}select?q=lang:{request-param:lang}+AND+collection-name:{global:collection-name}&amp;sort={url-encode:{request-param:sort}}&amp;rows=500"/>
+									<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
+								</map:aggregate>
+							</map:otherwise>
+						</map:select>
 					</map:when>
 					<map:otherwise>
-						<map:aggregate element="content">
-							<map:part src="{global:solr-url}select?q=lang:{request-param:lang}+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}&amp;sort={url-encode:{request-param:sort}}&amp;rows=500"/>
-							<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
-						</map:aggregate>
+						<map:select type="parameter">
+							<map:parameter name="parameter-selector-test" value="{request-param:lang}"/>
+							<map:when test="">
+								<map:aggregate element="content">
+									<map:part src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}&amp;sort={url-encode:{request-param:sort}}&amp;rows=500"/>
+									<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
+								</map:aggregate>
+							</map:when>
+							<map:otherwise>
+								<map:aggregate element="content">
+									<map:part src="{global:solr-url}select?q=lang:{request-param:lang}+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}&amp;sort={url-encode:{request-param:sort}}&amp;rows=500"/>
+									<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
+								</map:aggregate>
+							</map:otherwise>
+						</map:select>
 					</map:otherwise>
 				</map:select>
-				
 				<map:transform src="xslt/linked_data/solr_to_csv.xsl" label="basiccontent" type="xslt-saxon">
 					<map:parameter name="use-request-parameters" value="true"/>
 				</map:transform>
@@ -542,21 +587,42 @@
 			<!-- KML of mints for individual objects given a Solr query -->
 			<map:match pattern="query.kml">
 				<map:select type="parameter">
-					<map:parameter name="parameter-selector-test" value="{request-param:lang}"/>
+					<map:parameter name="parameter-selector-test" value="{request-param:q}"/>
 					<map:when test="">
-						<map:aggregate element="content">
-							<map:part src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q} AND mint_geo:*}&amp;start={request-param:start}&amp;rows=500"/>
-							<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
-						</map:aggregate>
+						<map:select type="parameter">
+							<map:parameter name="parameter-selector-test" value="{request-param:lang}"/>
+							<map:when test="">
+								<map:aggregate element="content">
+									<map:part src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}+AND+mint_geo:*&amp;start={request-param:start}&amp;rows=500"/>
+									<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
+								</map:aggregate>
+							</map:when>
+							<map:otherwise>
+								<map:aggregate element="content">
+									<map:part src="{global:solr-url}select?q=lang:{request-param:lang}+AND+collection-name:{global:collection-name}+AND+mint_geo:*&amp;start={request-param:start}&amp;rows=500"/>
+									<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
+								</map:aggregate>
+							</map:otherwise>
+						</map:select>
 					</map:when>
 					<map:otherwise>
-						<map:aggregate element="content">
-							<map:part src="{global:solr-url}select?q=lang:{request-param:lang}+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q} AND mint_geo:*}&amp;start={request-param:start}&amp;rows=500"/>
-							<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
-						</map:aggregate>
+						<map:select type="parameter">
+							<map:parameter name="parameter-selector-test" value="{request-param:lang}"/>
+							<map:when test="">
+								<map:aggregate element="content">
+									<map:part src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q} AND mint_geo:*}&amp;start={request-param:start}&amp;rows=500"/>
+									<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
+								</map:aggregate>
+							</map:when>
+							<map:otherwise>
+								<map:aggregate element="content">
+									<map:part src="{global:solr-url}select?q=lang:{request-param:lang}+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q} AND mint_geo:*}&amp;start={request-param:start}&amp;rows=500"/>
+									<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
+								</map:aggregate>
+							</map:otherwise>
+						</map:select>
 					</map:otherwise>
 				</map:select>
-				
 				<map:transform type="xslt-saxon" src="xslt/geographic/solr-to-kml.xsl" label="basiccontent">
 					<map:parameter name="use-request-parameters" value="true"/>
 				</map:transform>
