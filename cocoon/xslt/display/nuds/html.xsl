@@ -14,11 +14,14 @@
 	<xsl:param name="measurement"/>
 	<xsl:param name="numericType"/>
 	<xsl:param name="chartType"/>
+	<xsl:param name="interval"/>
+	<xsl:param name="fromDate"/>
+	<xsl:param name="toDate"/>
 	<xsl:param name="sparqlQuery"/>
-	<!--<xsl:variable name="tokenized_sparqlQuery" select="tokenize($sparqlQuery, '\|')"/>-->
 	<xsl:variable name="tokenized_sparqlQuery" as="item()*">
 		<xsl:sequence select="tokenize($sparqlQuery, '\|')"/>
 	</xsl:variable>
+	<xsl:variable name="duration" select="number($toDate) - number($fromDate)"/>
 
 	<xsl:variable name="recordType" select="/content/nuds:nuds/@recordType"/>
 

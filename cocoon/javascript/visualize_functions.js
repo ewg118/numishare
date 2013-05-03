@@ -17,6 +17,9 @@ $(document).ready(function () {
 		    (RegExp(name + '=' + '(.+?)(&|$)').exec(location.search)||[,null])[1]
 		);
 	}
+	
+	var pipeline = $('#pipeline').text();
+	
 	//enable basic query form
 	
 	/**
@@ -237,9 +240,9 @@ $(document).ready(function () {
 		} 
 		//sparql-based facets
 		else {
-			$.get('../widget', {
+			$.get(pipeline + 'widget', {
 				field: field, lang: lang, template: 'facets'
-			}, function (data) {	
+			}, function (data) {
 				container.html(data);
 			});
 		}
@@ -257,7 +260,7 @@ $(document).ready(function () {
 				text: $(this).children('caption').text()
 			},
 			legend: {
-				enabled: false
+				enabled: true
 			},
 			xAxis: {
 				labels: {
@@ -295,59 +298,24 @@ $(document).ready(function () {
 		$('.customSparqlQuery span').each(function(){
 			selection.push($(this).text());
 		});
+		//set sparqlQuery
 		var q = selection.join('|');
-		//alert(q);
 		$('#sparqlQuery').attr('value', q);
-		//return false;
+		
+		//process interval/duration
+		if ($(this).closest('form').find('.from_date') .val().length > 0 && $(this).closest('form').find('.to_date') .val().length > 0 && $(this).closest('form').find('select[name=interval]') .val().length > 0){
+			var fromDate = ($(this).closest('form').find('.from_era') .val() == 'minus' ? '-' : '') + Math.abs($(this).closest('form').find('.from_date') .val());
+			var toDate = ($(this).closest('form').find('.to_era') .val() == 'minus' ? '-' : '') + Math.abs($(this).closest('form').find('.to_date') .val());
+			
+			//set values
+			$(this).closest('form').find('.from_date').attr('value', fromDate);
+			$(this).closest('form').find('.to_date').attr('value', toDate);
+		}
+		
+		
+		/*var string = 'nm:end_date ?date';
+		string += ' FILTER ( ?date >= "' + fromDate +'"^^xs:gYear \\\\and ?date <= "' + toDate + '"^^xs:gYear )';*/	
 	});
-	
-	/***** TOGGLING SPARQL FACET FORM*****/
-	$('.gateTypeBtn') .livequery('click', function(event){
-		gateTypeBtnClick($(this));
-		return false;
-	});
-	
-	// focus the text field after selecting the field to search on
-	$('.searchItemTemplate select').livequery('change', function(event){
-		$(this) .siblings('.search_text') .focus();
-	});
-	
-	$('.removeBtn').livequery('click', function(event){
-		// fade out the entire template
-		$(this) .parent() .fadeOut('fast', function () {
-			$(this) .remove();
-		});
-		return false;
-	});
-	
-	// copy the base template
-	function gateTypeBtnClick(btn) {
-		//clone the template
-		var tpl = cloneTemplate();
-		
-		// focus the text field after select
-		$(tpl) .children('select') .change(function () {
-			$(this) .siblings('input') .focus();
-		});
-		
-		// add the new template to the dom
-		$(btn) .parent() .after(tpl);
-		
-		tpl.children('.removeBtn').removeAttr('style');
-		tpl.children('.removeBtn') .before(' |&nbsp;');
-		
-		// display the entire new template
-		tpl.fadeIn('fast');
-	}
-	
-	function cloneTemplate (){
-		var tpl = $('#searchItemTemplate') .clone();
-		
-		//remove id to avoid duplication with the template
-		tpl.removeAttr('id');
-		
-		return tpl;
-	}
 	
 	$('#addSparqlQuery').fancybox();
 	
@@ -367,13 +335,63 @@ $(document).ready(function () {
 		$('#sparqlInputContainer').empty();
 		
 		//reset template
-		var tpl = cloneTemplate();
+		var tpl = cloneTemplate('sparqlForm');
 		$('#sparqlInputContainer') .html(tpl);
 		
 		// display the entire new template
 		tpl.fadeIn('fast');
 		
 		return false;
+	});
+	/***** VALIDATION *****/
+	//lock bar and column charts for count in date visualization--line, spine, area, and areaspline for percentages
+	$('#charts-form select[name=interval]').change(function () {
+		if ($(this).val()  > 0 && $(this).siblings('input[name=fromDate]').val() > 0 && $(this).siblings('input[name=toDate]').val() > 0 ) {
+			//enable linear options
+			$('#charts-form').find('input[value=line]').attr('disabled', false);
+			$('#charts-form').find('input[value=area]').attr('disabled', false);
+			$('#charts-form').find('input[value=spline]').attr('disabled', false);
+			$('#charts-form').find('input[value=areaspline]').attr('disabled', false);
+		} else {
+			$('#charts-form').find('input[value=line]').attr('disabled', true);
+			$('#charts-form').find('input[value=area]').attr('disabled', true);
+			$('#charts-form').find('input[value=spline]').attr('disabled', true);
+			$('#charts-form').find('input[value=areaspline]').attr('disabled', true);			
+			//disable submit
+			$('#charts-form input[type=submit]').attr('disabled', 'disabled');
+		}
+	});
+	$('#charts-form input[name=fromDate]').change(function () {
+		if ($(this).siblings('select[name=interval]').val()  > 0 && $(this).val() > 0 && $(this).siblings('input[name=toDate]').val() > 0 ) {
+			//enable linear options
+			$('#charts-form').find('input[value=line]').attr('disabled', false);
+			$('#charts-form').find('input[value=area]').attr('disabled', false);
+			$('#charts-form').find('input[value=spline]').attr('disabled', false);
+			$('#charts-form').find('input[value=areaspline]').attr('disabled', false);
+		} else {
+			$('#charts-form').find('input[value=line]').attr('disabled', true);
+			$('#charts-form').find('input[value=area]').attr('disabled', true);
+			$('#charts-form').find('input[value=spline]').attr('disabled', true);
+			$('#charts-form').find('input[value=areaspline]').attr('disabled', true);
+			//disable submit
+			$('#charts-form input[type=submit]').attr('disabled', 'disabled');
+		}
+	});
+	$('#charts-form input[name=toDate]').change(function () {
+		if ($(this).siblings('select[name=interval]').val()  > 0 && $(this).siblings('input[name=fromDate]').val() > 0 && $(this).val() > 0 ) {
+			//enable linear options
+			$('#charts-form').find('input[value=line]').attr('disabled', false);
+			$('#charts-form').find('input[value=area]').attr('disabled', false);
+			$('#charts-form').find('input[value=spline]').attr('disabled', false);
+			$('#charts-form').find('input[value=areaspline]').attr('disabled', false);
+		} else {
+			$('#charts-form').find('input[value=line]').attr('disabled', true);
+			$('#charts-form').find('input[value=area]').attr('disabled', true);
+			$('#charts-form').find('input[value=spline]').attr('disabled', true);
+			$('#charts-form').find('input[value=areaspline]').attr('disabled', true);
+			//disable submit
+			$('#charts-form input[type=submit]').attr('disabled', 'disabled');
+		}
 	});
 	
 	function assembleSparqlQuery(formId){

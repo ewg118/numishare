@@ -748,77 +748,22 @@
 	</xsl:template>
 
 	<xsl:template name="measurementForm">
+		<xsl:variable name="action">
+			<xsl:choose>
+				<xsl:when test="$pipeline='visualize'">#measurements</xsl:when>
+				<xsl:when test="$pipeline='display'">
+					<xsl:value-of select="concat('./', $id, '#charts')"/>
+				</xsl:when>
+			</xsl:choose>
+		</xsl:variable>
 		<xsl:variable name="measurements">axis,diameter,weight</xsl:variable>
-		<xsl:variable name="chartTypes">column,bar</xsl:variable>
+		<xsl:variable name="chartTypes">bar,column,area,line,spline,areaspline</xsl:variable>
 
 		<xsl:if test="string($sparqlQuery)">
-			<div id="weight-container" style="min-width: 400px; height: 400px; margin: 20px auto"/>
-			<!-- class="calculate" -->
-			<table class="measurementTable">
-				<caption>
-					<xsl:value-of select="numishare:regularize_node($measurement, $lang)"/>
-				</caption>
-				<thead>
-					<tr>
-						<th/>
-						<th id="measurementUnits">
-							<xsl:choose>
-								<xsl:when test="$measurement='diameter'">mm</xsl:when>
-								<xsl:when test="$measurement='weight'">g</xsl:when>
-							</xsl:choose>
-						</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<th>
-							<xsl:value-of select="$id"/>
-						</th>
-						<td>
-							<cinclude:include
-								src="cocoon:/widget?constraints={encode-for-uri(concat('nm:type_series_item &lt;http://numismatics.org/ocre/id/', $id, '&gt;'))}&amp;template=avgMeasurement&amp;measurement={$measurement}"
-							/>
-						</td>
-					</tr>
-					<xsl:for-each select="$tokenized_sparqlQuery">
-						<xsl:variable name="hrefs" as="item()*">
-							<xsl:analyze-string select="." regex="&lt;([^>]+)&gt;">
-								<xsl:matching-substring>
-									<xsl:value-of select="document(concat('http://admin.numismatics.org/nomisma/apis/getLabel?uri=', regex-group(1), '&amp;lang=', $lang))/response"/>
-								</xsl:matching-substring>
-							</xsl:analyze-string>
-						</xsl:variable>
-						<xsl:variable name="dates" as="item()*">
-							<xsl:analyze-string select="." regex="&#x022;(-?\d{{4}})&#x022;">
-								<xsl:matching-substring>
-									<xsl:value-of select="numishare:normalizeYear(number(translate(., '&#x022;', '')))"/>
-								</xsl:matching-substring>
-							</xsl:analyze-string>
-						</xsl:variable>
-						<tr>
-							<th>
-								<!-- display proper labels for hrefs -->
-								<xsl:value-of select="string-join($hrefs, '/')"/>
-
-								<xsl:if test="count($hrefs) &gt; 0 and count($dates) &gt; 0">
-									<xsl:text>, </xsl:text>
-								</xsl:if>
-
-								<!-- display year range, if applicable -->
-								<xsl:value-of select="string-join($dates, '-')"/>
-							</th>
-							<td>
-								<cinclude:include
-									src="cocoon:/widget?constraints={encode-for-uri(concat('dcterms:partOf &lt;http://nomisma.org/id/ric&gt; AND ', .))}&amp;template=avgMeasurement&amp;measurement={$measurement}"
-								/>
-							</td>
-						</tr>
-					</xsl:for-each>
-				</tbody>
-			</table>
+			<xsl:call-template name="measurementTable"/>
 		</xsl:if>
 
-		<form id="charts-form" action="./{$id}#charts" style="margin:20px">
+		<form id="charts-form" action="{$action}" style="margin:20px">
 			<div style="display:table;width:100%">
 				<h3>1: Select Measurement</h3>
 				<xsl:for-each select="tokenize($measurements, ',')">
@@ -845,19 +790,18 @@
 				<xsl:for-each select="tokenize($chartTypes, ',')">
 					<span class="anOption">
 						<input type="radio" name="chartType" value="{.}">
-							<xsl:choose>
-								<xsl:when test="$chartType = .">
-									<xsl:attribute name="checked">checked</xsl:attribute>
-								</xsl:when>
-								<xsl:when test=". = 'column' and not(string($chartType))">
-									<xsl:attribute name="checked">checked</xsl:attribute>
-								</xsl:when>
-							</xsl:choose>
+							<xsl:if test="$chartType = . or (.='column' and not(string($chartType)))">
+								<xsl:attribute name="checked">checked</xsl:attribute>
+							</xsl:if>
+							<xsl:if test="not(number($duration)) and (.='line' or .='area' or .='areaspline' or .='spline')">
+								<xsl:attribute name="disabled">disabled</xsl:attribute>
+							</xsl:if>							
 						</input>
 						<label for="chartType-radio">
 							<xsl:value-of select="."/>
 						</label>
 					</span>
+					
 				</xsl:for-each>
 			</div>
 
@@ -938,7 +882,7 @@
 						<h3>
 							<xsl:text>4. Add Custom Queries</xsl:text>
 							<span style="font-size:80%;margin-left:10px;">
-								<a href="#searchBox" id="addSparqlQuery">+ <span>Add New</span></a>
+								<a href="#sparqlBox" id="addSparqlQuery">+ <span>Add New</span></a>
 							</span>
 						</h3>
 						<xsl:for-each select="$tokenized_sparqlQuery">
@@ -960,10 +904,10 @@
 						<h3>
 							<xsl:text>3. Add Custom Queries</xsl:text>
 							<span style="font-size:80%;margin-left:10px;">
-								<a href="#searchBox" id="addSparqlQuery">+ <span>Add New</span></a>
+								<a href="#sparqlBox" id="addSparqlQuery">+ <span>Add New</span></a>
 							</span>
 						</h3>
-						<xsl:for-each select="$tokenized_sparqlQuery[boolean(index-of($tokenized_sparqlQuery, .)) = true()]">
+						<xsl:for-each select="$tokenized_sparqlQuery">
 							<div class="customSparqlQuery">
 								<b>Custom Query: </b>
 								<span>
@@ -976,6 +920,90 @@
 				</xsl:when>
 			</xsl:choose>
 
+			<!-- only display duration in visualize page: doesn't work properly from coin type comparison -->
+			<xsl:if test="$pipeline='visualize'">
+				<div style="display:table;width:100%">
+					<h3>
+						<xsl:choose>
+							<xsl:when test="$pipeline='display'">5</xsl:when>
+							<xsl:when test="$pipeline='visualize'">4</xsl:when>
+						</xsl:choose>
+						<xsl:text>: Arrange by Interval (optional)</xsl:text>
+					</h3>
+					<h4>Interval (years)</h4>
+					<select name="interval">
+						<option value="">Select...</option>
+						<option value="5">
+							<xsl:if test="$interval='5'">
+								<xsl:attribute name="selected">selected</xsl:attribute>
+							</xsl:if>
+							<xsl:text>5</xsl:text>
+						</option>
+						<option value="10">
+							<xsl:if test="$interval='10'">
+								<xsl:attribute name="selected">selected</xsl:attribute>
+							</xsl:if>
+							<xsl:text>10</xsl:text>
+						</option>
+						<option value="20">
+							<xsl:if test="$interval='20'">
+								<xsl:attribute name="selected">selected</xsl:attribute>
+							</xsl:if>
+							<xsl:text>20</xsl:text>
+						</option>
+						<option value="25">
+							<xsl:if test="$interval='25'">
+								<xsl:attribute name="selected">selected</xsl:attribute>
+							</xsl:if>
+							<xsl:text>25</xsl:text>
+						</option>
+						<option value="50">
+							<xsl:if test="$interval='50'">
+								<xsl:attribute name="selected">selected</xsl:attribute>
+							</xsl:if>
+							<xsl:text>50</xsl:text>
+						</option>
+					</select>
+					
+					<h4>Duration</h4>
+					<xsl:value-of select="numishare:normalize_fields('fromDate', $lang)"/>
+					<xsl:text>:</xsl:text>
+					<input type="text" class="from_date" name="fromDate" value="{if (string($fromDate)) then abs(number($fromDate)) else ''}"/>
+					<select class="from_era">
+						<option value="minus">
+							<xsl:if test="number($fromDate) &lt; 0">
+								<xsl:attribute name="selected">selected</xsl:attribute>
+							</xsl:if>
+							<xsl:text>B.C.</xsl:text>
+						</option>
+						<option value="">
+							<xsl:if test="number($fromDate) &gt; 0 or not(string($fromDate))">
+								<xsl:attribute name="selected">selected</xsl:attribute>
+							</xsl:if>
+							<xsl:text>A.D.</xsl:text>
+						</option>
+					</select>
+					<xsl:value-of select="numishare:normalize_fields('toDate', $lang)"/>
+					<xsl:text>: </xsl:text>
+					<input type="text" class="to_date" name="toDate" value="{if (string($toDate)) then abs(number($toDate)) else ''}"/>
+					<select class="to_era">
+						<option value="minus">
+							<xsl:if test="number($toDate) &lt; 0">
+								<xsl:attribute name="selected">selected</xsl:attribute>
+							</xsl:if>
+							<xsl:text>B.C.</xsl:text>
+						</option>
+						<option value="">
+							<xsl:if test="number($toDate) &gt; 0 or not(string($toDate))">
+								<xsl:attribute name="selected">selected</xsl:attribute>
+							</xsl:if>
+							<xsl:text>A.D.</xsl:text>
+						</option>
+					</select>
+				</div>
+			</xsl:if>
+			
+
 			<input type="hidden" name="sparqlQuery" id="sparqlQuery" value=""/>
 			<xsl:if test="string($lang)">
 				<input type="hidden" name="lang" value="{$lang}"/>
@@ -985,11 +1013,18 @@
 		</form>
 
 		<div style="display:none">
-			<div id="searchBox" class="popupQuery">
+			<div id="sparqlBox" class="popupQuery">
 				<h3>Add Query</h3>
 				<xsl:call-template name="sparql_form"/>
 			</div>
 		</div>
+
+		<span id="pipeline" style="display:none">
+			<xsl:choose>
+				<xsl:when test="$pipeline='display'">../</xsl:when>
+				<xsl:otherwise>./</xsl:otherwise>
+			</xsl:choose>
+		</span>
 	</xsl:template>
 
 	<!-- ************** SEARCH INTERFACE FOR CUSTOM WEIGHT QUERIES FROM SPARQL **************** -->
@@ -1014,7 +1049,7 @@
 			</form>
 		</div>
 
-		<div id="searchItemTemplate" class="searchItemTemplate">
+		<div id="sparqlItemTemplate" class="searchItemTemplate">
 			<select class="sparql_facets">
 				<option>Select...</option>
 				<xsl:call-template name="sparql_search_options"/>
@@ -1052,6 +1087,207 @@
 				<xsl:value-of select="numishare:normalize_fields($name, $lang)"/>
 			</option>
 		</xsl:for-each>
+	</xsl:template>
+
+	<!-- ************** GENERATE TABLE FROM PIPELINES THAT EXECUTE SPARQL QUERIES ************** -->
+	<xsl:template name="measurementTable">
+		<xsl:variable name="iterations" select="ceiling(number($duration) div number($interval))"/>
+
+		<div id="weight-container" style="min-width: 400px; height: 400px; margin: 20px auto"/>
+		<!-- class="measurementTable"-->
+		<table class="measurementTable">
+			<caption>
+				<xsl:value-of select="numishare:regularize_node($measurement, $lang)"/>
+			</caption>
+			<thead>
+				<tr>
+					<!-- create new table row for basic comparison.  or create a cell for each comparison and row for interval comparison -->
+					<xsl:choose>
+						<xsl:when test="$duration castable as xs:integer">
+							<th id="measurementUnits">
+								<xsl:choose>
+									<xsl:when test="$measurement='diameter'">mm</xsl:when>
+									<xsl:when test="$measurement='weight'">g</xsl:when>
+								</xsl:choose>
+							</th>
+							<!-- generate th -->
+							<xsl:for-each select="$tokenized_sparqlQuery">
+								<xsl:variable name="hrefs" as="item()*">
+									<xsl:analyze-string select="." regex="&lt;([^>]+)&gt;">
+										<xsl:matching-substring>
+											<xsl:value-of select="document(concat('http://admin.numismatics.org/nomisma/apis/getLabel?uri=', regex-group(1), '&amp;lang=', $lang))/response"/>
+										</xsl:matching-substring>
+									</xsl:analyze-string>
+								</xsl:variable>
+								<xsl:variable name="dates" as="item()*">
+									<xsl:analyze-string select="." regex="&#x022;(-?\d{{4}})&#x022;">
+										<xsl:matching-substring>
+											<xsl:value-of select="numishare:normalizeYear(number(translate(., '&#x022;', '')))"/>
+										</xsl:matching-substring>
+									</xsl:analyze-string>
+								</xsl:variable>
+
+								<th>
+									<xsl:value-of select="string-join($hrefs, '/')"/>
+
+									<xsl:if test="count($hrefs) &gt; 0 and count($dates) &gt; 0">
+										<xsl:text>, </xsl:text>
+									</xsl:if>
+
+									<!-- display year range, if applicable -->
+									<xsl:value-of select="string-join($dates, '-')"/>
+								</th>
+							</xsl:for-each>
+						</xsl:when>
+						<xsl:otherwise>
+							<th/>
+							<th id="measurementUnits">
+								<xsl:choose>
+									<xsl:when test="$measurement='diameter'">mm</xsl:when>
+									<xsl:when test="$measurement='weight'">g</xsl:when>
+								</xsl:choose>
+							</th>
+						</xsl:otherwise>
+					</xsl:choose>
+				</tr>
+			</thead>
+			<tbody>
+				<!-- only show current coin type measurement in display pipeline -->
+				<xsl:if test="$pipeline='display'">
+					<tr>
+						<th>
+							<xsl:value-of select="$id"/>
+						</th>
+						<td>
+							<cinclude:include
+								src="cocoon:/widget?constraints={encode-for-uri(concat('nm:type_series_item &lt;http://numismatics.org/ocre/id/', $id, '&gt;'))}&amp;template=avgMeasurement&amp;measurement={$measurement}"
+							/>
+						</td>
+					</tr>
+				</xsl:if>
+
+				<!-- create new table row for basic comparison.  or create a cell for each comparison and row for interval comparison -->
+				<xsl:choose>
+					<xsl:when test="$duration castable as xs:integer">
+						<xsl:call-template name="processInterval">
+							<xsl:with-param name="start">1</xsl:with-param>
+							<xsl:with-param name="iterations" select="$iterations"/>
+						</xsl:call-template>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:for-each select="$tokenized_sparqlQuery">
+							<xsl:variable name="hrefs" as="item()*">
+								<xsl:analyze-string select="." regex="&lt;([^>]+)&gt;">
+									<xsl:matching-substring>
+										<xsl:value-of select="document(concat('http://admin.numismatics.org/nomisma/apis/getLabel?uri=', regex-group(1), '&amp;lang=', $lang))/response"/>
+									</xsl:matching-substring>
+								</xsl:analyze-string>
+							</xsl:variable>
+							<xsl:variable name="dates" as="item()*">
+								<xsl:analyze-string select="." regex="&#x022;(-?\d{{4}})&#x022;">
+									<xsl:matching-substring>
+										<xsl:value-of select="numishare:normalizeYear(number(translate(., '&#x022;', '')))"/>
+									</xsl:matching-substring>
+								</xsl:analyze-string>
+							</xsl:variable>
+							<tr>
+								<th>
+									<!-- display proper labels for hrefs -->
+									<xsl:value-of select="string-join($hrefs, '/')"/>
+
+									<xsl:if test="count($hrefs) &gt; 0 and count($dates) &gt; 0">
+										<xsl:text>, </xsl:text>
+									</xsl:if>
+
+									<!-- display year range, if applicable -->
+									<xsl:value-of select="string-join($dates, '-')"/>
+								</th>
+								<td>
+									<cinclude:include
+										src="cocoon:/widget?constraints={encode-for-uri(concat('dcterms:partOf &lt;http://nomisma.org/id/ric&gt; AND ', .))}&amp;template=avgMeasurement&amp;measurement={$measurement}"
+									/>
+								</td>
+							</tr>
+						</xsl:for-each>
+					</xsl:otherwise>
+				</xsl:choose>
+			</tbody>
+		</table>
+	</xsl:template>
+
+	<xsl:template name="processInterval">
+		<xsl:param name="start"/>
+		<xsl:param name="iterations"/>
+
+		<xsl:variable name="from">
+			<xsl:choose>
+				<xsl:when test="((number($start) - 1) * number($interval)) + number($fromDate) = 0">
+					<xsl:text>0001</xsl:text>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="format-number(((number($start) - 1) * number($interval)) + number($fromDate), '0000')"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<xsl:variable name="to">
+			<xsl:choose>
+				<xsl:when test="((number($start) * number($interval)) + number($fromDate)) = 0">
+					<xsl:text>-0001</xsl:text>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:choose>
+						<xsl:when test="((number($start) * number($interval)) + number($fromDate)) &lt; number($toDate)">
+							<xsl:value-of select="format-number((number($start) * number($interval)) + number($fromDate), '0000')"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="format-number(number($toDate), '0000')"/>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+
+		<tr>
+			<th>
+				<xsl:value-of select="number($from)"/>/<xsl:value-of select="number($to)"/>
+			</th>
+			<xsl:for-each select="$tokenized_sparqlQuery">
+				<xsl:variable name="hrefs" as="item()*">
+					<xsl:analyze-string select="." regex="&lt;([^>]+)&gt;">
+						<xsl:matching-substring>
+							<xsl:value-of select="document(concat('http://admin.numismatics.org/nomisma/apis/getLabel?uri=', regex-group(1), '&amp;lang=', $lang))/response"/>
+						</xsl:matching-substring>
+					</xsl:analyze-string>
+				</xsl:variable>
+				<xsl:variable name="dates" as="item()*">
+					<xsl:analyze-string select="." regex="&#x022;(-?\d{{4}})&#x022;">
+						<xsl:matching-substring>
+							<xsl:value-of select="numishare:normalizeYear(number(translate(., '&#x022;', '')))"/>
+						</xsl:matching-substring>
+					</xsl:analyze-string>
+				</xsl:variable>
+
+				<td>
+					<xsl:variable name="filter">
+						<xsl:text>nm:end_date ?date FILTER ( ?date &gt;= "</xsl:text>
+						<xsl:value-of select="$from"/>
+						<xsl:text>"^^xs:gYear \\and ?date &lt; "</xsl:text>
+						<xsl:value-of select="$to"/>
+						<xsl:text>"^^xs:gYear )</xsl:text>
+					</xsl:variable>
+					<!--<xsl:value-of select="encode-for-uri(concat('dcterms:partOf &lt;http://nomisma.org/id/ric&gt; AND ', ., ' AND ', $filter))"/>-->
+					<cinclude:include
+						src="cocoon:/widget?constraints={encode-for-uri(concat('dcterms:partOf &lt;http://nomisma.org/id/ric&gt; AND ', ., ' AND ', $filter))}&amp;template=avgMeasurement&amp;measurement={$measurement}"
+					/>
+				</td>
+			</xsl:for-each>
+		</tr>
+		<xsl:if test="$start &lt; $iterations">
+			<xsl:call-template name="processInterval">
+				<xsl:with-param name="start" select="number($start) + 1"/>
+				<xsl:with-param name="iterations" select="$iterations"/>
+			</xsl:call-template>
+		</xsl:if>
 	</xsl:template>
 
 

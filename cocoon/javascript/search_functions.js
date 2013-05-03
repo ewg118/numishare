@@ -18,6 +18,7 @@ function getURLParameter(name) {
 	);
 }
 
+/***** TOGGLING FACET FORM*****/
 $('.gateTypeBtn') .livequery('click', function(event){
 	gateTypeBtnClick($(this));
 	return false;
@@ -81,8 +82,10 @@ $('.category_list') .livequery('change', function(event){
 
 // copy the base template
 function gateTypeBtnClick(btn) {
+	var formId = btn.closest('form').attr('id');
+	
 	//clone the template
-	var tpl = cloneTemplate();
+	var tpl = cloneTemplate(formId);
 	
 	// focus the text field after select
 	$(tpl) .children('select') .change(function () {
@@ -99,8 +102,12 @@ function gateTypeBtnClick(btn) {
 	tpl.fadeIn('fast');
 }
 
-function cloneTemplate (){
-	var tpl = $('#searchItemTemplate') .clone();
+function cloneTemplate (formId){	
+	if (formId == 'sparqlForm') {
+		var tpl = $('#sparqlItemTemplate') .clone();
+	} else {
+		var tpl = $('#searchItemTemplate') .clone();
+	}
 	
 	//remove id to avoid duplication with the template
 	tpl.removeAttr('id');
