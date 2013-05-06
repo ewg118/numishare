@@ -355,6 +355,12 @@ $(document).ready(function () {
 	$('#charts-form input[name=toDate]').change(function () {
 		validateForm();	
 	});
+	$('#charts-form .from_era').change(function () {
+		validateForm();	
+	});
+	$('#charts-form .to_era').change(function () {
+		validateForm();	
+	});
 	
 	function validateForm(){
 		if ($('#charts-form select[name=interval]').val()  > 0 && $('#charts-form input[name=fromDate]').val() > 0 && $('#charts-form input[name=toDate]').val() > 0 ) {
@@ -362,19 +368,37 @@ $(document).ready(function () {
 			$('#charts-form').find('input[value=line]').attr('disabled', false);
 			$('#charts-form').find('input[value=area]').attr('disabled', false);
 			$('#charts-form').find('input[value=spline]').attr('disabled', false);
-			$('#charts-form').find('input[value=areaspline]').attr('disabled', false);			
-			//enable submit
-			$('#charts-form input[type=submit]').attr('disabled', false);
+			$('#charts-form').find('input[value=areaspline]').attr('disabled', false);
+			//make sure toDate is greater than fromDate
+			var from_era = $('#charts-form .from_era') .val() == 'minus' ? -1 : 1;
+			var to_era = $('#charts-form .to_era') .val() == 'minus' ? -1 : 1;
+			
+			var fromDate = Math.abs($('#charts-form input[name=fromDate]').val()) * from_era;
+			var toDate = Math.abs($('#charts-form input[name=toDate]').val()) * to_era;
+			if (toDate > fromDate){
+				//enable submit/hide error		
+				$('#charts-form input[type=submit]').attr('disabled', false);
+				$('#measurement-alert').hide();
+			} else {
+				//disable submit/show error
+				$('#charts-form input[type=submit]').attr('disabled', true);
+				$('#validationError').text($('#visualize_error2').text());
+				$('#measurement-alert').show();	
+			}			
 		} else if ($('#charts-form select[name=interval]').val().length == 0 && $('#charts-form input[name=fromDate]').val().length == 0 && $('#charts-form input[name=toDate]').val().length == 0) {
 			//enable submit
 			$('#charts-form input[type=submit]').attr('disabled', false);
+			$('#measurement-alert').hide();
 		} else {
 			$('#charts-form').find('input[value=line]').attr('disabled', true);
 			$('#charts-form').find('input[value=area]').attr('disabled', true);
 			$('#charts-form').find('input[value=spline]').attr('disabled', true);
 			$('#charts-form').find('input[value=areaspline]').attr('disabled', true);			
 			//disable submit
-			$('#charts-form input[type=submit]').attr('disabled', 'disabled');
+			$('#charts-form input[type=submit]').attr('disabled', true);
+			//show error
+			$('#validationError').text($('#visualize_error1').text());
+			$('#measurement-alert').show();		
 		}
 	}
 	
@@ -413,17 +437,15 @@ $(document).ready(function () {
 			var toDate = Math.abs($(this).find('.to_date') .val());
 			
 			if ((field != 'date' && field != '') && selectVar.length > 0) {	
-				var fieldLabel = $(this) .children('.sparql_facets').children('option:selected') .text();
 				var termLabel = $(this) .children('.option_container').find('option:selected') .text();
-				query.push(fieldLabel + ': ' + termLabel);
+				query.push(termLabel);
 			}  else if (field == 'date' && Math.floor(fromDate) == fromDate && Math.floor(toDate) == toDate){
-				var fieldLabel = $(this) .children('.sparql_facets').children('option:selected') .text();
 				var from_era = $(this).find('.from_era') .children('option:selected').text();
 				var to_era = $(this).find('.to_era') .children('option:selected').text();				
-				query.push(fieldLabel + ': ' + fromDate + ' ' + from_era + '-' + toDate + ' ' + to_era);
+				query.push(fromDate + ' ' + from_era + '-' + toDate + ' ' + to_era);
 			}
 		});
-		label = query.join (' AND ');
+		label = query.join ('/');
 		return label;
 	}
 	

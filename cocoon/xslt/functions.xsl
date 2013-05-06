@@ -1042,6 +1042,8 @@
 					<xsl:when test="$label='results_and'">and</xsl:when>
 					<xsl:when test="$label='visualize_typological'">Typological Analysis</xsl:when>
 					<xsl:when test="$label='visualize_measurement'">Measurement Analysis</xsl:when>
+					<xsl:when test="$label='visualize_error1'">Interval and duration are required.</xsl:when>
+					<xsl:when test="$label='visualize_error2'">To Date must be later than From Date.</xsl:when>
 					<xsl:when test="$label='lang_ar'">Arabic</xsl:when>
 					<xsl:when test="$label='lang_de'">German</xsl:when>
 					<xsl:when test="$label='lang_en'">English</xsl:when>

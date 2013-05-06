@@ -145,9 +145,21 @@
 							<xsl:apply-templates select="/content/response"/>
 						</xsl:otherwise>
 					</xsl:choose>
+					
+					<!--errors -->
+					<div style="display:none">
+						<span>errors</span>
+						<span id="visualize_error1">
+							<xsl:value-of select="numishare:normalizeLabel('visualize_error1', $lang)"/>
+						</span>
+						<span id="visualize_error2">
+							<xsl:value-of select="numishare:normalizeLabel('visualize_error2', $lang)"/>
+						</span>
+					</div>
 				</div>
 			</div>
 		</div>
+	
 	</xsl:template>
 
 	<xsl:template match="response">

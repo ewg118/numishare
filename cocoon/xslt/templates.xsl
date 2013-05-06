@@ -2,7 +2,7 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
 	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:exsl="http://exslt.org/common" xmlns:numishare="http://code.google.com/p/numishare/" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
 	xmlns:cinclude="http://apache.org/cocoon/include/1.0" xmlns:nuds="http://nomisma.org/nuds" xmlns:mods="http://www.loc.gov/mods/v3" xmlns:nh="http://nomisma.org/nudsHoard"
-	xmlns:nm="http://nomisma.org/id/" xmlns:math="http://exslt.org/math" exclude-result-prefixes=" #all" version="2.0">
+	xmlns:nm="http://nomisma.org/id/" xmlns:math="http://exslt.org/math" xmlns:res="http://www.w3.org/2005/sparql-results#" exclude-result-prefixes=" #all" version="2.0">
 
 	<xsl:variable name="flickr-api-key" select="//config/flickr_api_key"/>
 
@@ -129,7 +129,7 @@
 				</xsl:if>
 				<xsl:for-each select="tokenize($compare, ',')">
 					<cinclude:include src="cocoon:/get_hoard_quant?id={.}&amp;type={$type}&amp;format=js&amp;calculate=date&amp;exclude={$exclude}"/>
-					<xsl:if test="not(position()=last())">						
+					<xsl:if test="not(position()=last())">
 						<!-- threre must be a line break between objects or there will be Javascript eval problems! -->
 						<xsl:text>,
 </xsl:text>
@@ -216,14 +216,14 @@
 							<a href="#filterHoards" class="showFilter" id="visualize-filter">Filter List</a>
 						</span>
 					</h2>
-					
+
 					<div style="height:30px">
 						<div class="ui-state-error ui-corner-all" id="visualize-hoard-alert" style="display:none">
 							<span class="ui-icon ui-icon-alert" style="float:left"/>
 							<strong>Alert:</strong> At least 1 and up to 8 hoards may be selected.</div>
 					</div>
-					
-					
+
+
 					<div class="filter-div" style="display:none">
 						<b>Filter Query:</b>
 						<span/>
@@ -668,7 +668,7 @@
 			</xsl:choose>
 		</xsl:for-each>
 	</xsl:template>
-	
+
 	<xsl:template name="measurementForm">
 		<xsl:variable name="action">
 			<xsl:choose>
@@ -717,13 +717,13 @@
 							</xsl:if>
 							<xsl:if test="not(number($duration)) and (.='line' or .='area' or .='areaspline' or .='spline')">
 								<xsl:attribute name="disabled">disabled</xsl:attribute>
-							</xsl:if>							
+							</xsl:if>
 						</input>
 						<label for="chartType-radio">
 							<xsl:value-of select="."/>
 						</label>
 					</span>
-					
+
 				</xsl:for-each>
 			</div>
 
@@ -811,8 +811,11 @@
 							<xsl:variable name="val" select="."/>
 							<xsl:if test="not($typologicalCategories//category[@query=$val])">
 								<div class="customSparqlQuery">
-									<b>Custom Query: </b>
-									<span>
+									<b>Query: </b>
+									<span class="hr">
+										<xsl:call-template name="sparqlLabel"/>
+									</span>
+									<span class="mr">
 										<xsl:value-of select="."/>
 									</span>
 									<a href="#" class="removeQuery">Remove Query</a>
@@ -833,7 +836,7 @@
 							<div class="customSparqlQuery">
 								<b>Query: </b>
 								<span class="hr">
-									query
+									<xsl:call-template name="sparqlLabel"/>
 								</span>
 								<span class="mr">
 									<xsl:value-of select="."/>
@@ -848,6 +851,13 @@
 			<!-- only display duration in visualize page: doesn't work properly from coin type comparison -->
 			<xsl:if test="$pipeline='visualize'">
 				<div style="display:table;width:100%">
+					<div style="height:30px">
+						<div class="ui-state-error ui-corner-all" id="measurement-alert" style="display:none">
+							<span class="ui-icon ui-icon-alert" style="float:left"/>
+							<strong>Alert:</strong>
+							<span id="validationError"/>
+						</div>
+					</div>
 					<h3>
 						<xsl:choose>
 							<xsl:when test="$pipeline='display'">5</xsl:when>
@@ -889,7 +899,7 @@
 							<xsl:text>50</xsl:text>
 						</option>
 					</select>
-					
+
 					<h4>Duration</h4>
 					<xsl:value-of select="numishare:normalize_fields('fromDate', $lang)"/>
 					<xsl:text>:</xsl:text>
@@ -927,7 +937,7 @@
 					</select>
 				</div>
 			</xsl:if>
-			
+
 
 			<input type="hidden" name="sparqlQuery" id="sparqlQuery" value=""/>
 			<xsl:if test="string($lang)">
@@ -1014,6 +1024,33 @@
 		</xsl:for-each>
 	</xsl:template>
 
+	<!-- use the Nomisma getLabel API to resolve the label -->
+	<xsl:template name="sparqlLabel">
+		<xsl:variable name="hrefs" as="item()*">
+			<xsl:analyze-string select="." regex="&lt;([^>]+)&gt;">
+				<xsl:matching-substring>
+					<xsl:value-of select="document(concat('http://admin.numismatics.org/nomisma/apis/getLabel?uri=', regex-group(1), '&amp;lang=', $lang))/response"/>
+				</xsl:matching-substring>
+			</xsl:analyze-string>
+		</xsl:variable>
+		<xsl:variable name="dates" as="item()*">
+			<xsl:analyze-string select="." regex="&#x022;(-?\d{{4}})&#x022;">
+				<xsl:matching-substring>
+					<xsl:value-of select="numishare:normalizeYear(number(translate(., '&#x022;', '')))"/>
+				</xsl:matching-substring>
+			</xsl:analyze-string>
+		</xsl:variable>
+
+		<xsl:value-of select="string-join($hrefs, '/')"/>
+
+		<xsl:if test="count($hrefs) &gt; 0 and count($dates) &gt; 0">
+			<xsl:text>, </xsl:text>
+		</xsl:if>
+
+		<!-- display year range, if applicable -->
+		<xsl:value-of select="string-join($dates, '-')"/>
+	</xsl:template>
+
 	<!-- ************** GENERATE TABLE FROM PIPELINES THAT EXECUTE SPARQL QUERIES ************** -->
 	<xsl:template name="measurementTable">
 		<xsl:variable name="iterations" select="ceiling(number($duration) div number($interval))"/>
@@ -1037,30 +1074,8 @@
 							</th>
 							<!-- generate th -->
 							<xsl:for-each select="$tokenized_sparqlQuery">
-								<xsl:variable name="hrefs" as="item()*">
-									<xsl:analyze-string select="." regex="&lt;([^>]+)&gt;">
-										<xsl:matching-substring>
-											<xsl:value-of select="document(concat('http://admin.numismatics.org/nomisma/apis/getLabel?uri=', regex-group(1), '&amp;lang=', $lang))/response"/>
-										</xsl:matching-substring>
-									</xsl:analyze-string>
-								</xsl:variable>
-								<xsl:variable name="dates" as="item()*">
-									<xsl:analyze-string select="." regex="&#x022;(-?\d{{4}})&#x022;">
-										<xsl:matching-substring>
-											<xsl:value-of select="numishare:normalizeYear(number(translate(., '&#x022;', '')))"/>
-										</xsl:matching-substring>
-									</xsl:analyze-string>
-								</xsl:variable>
-
 								<th>
-									<xsl:value-of select="string-join($hrefs, '/')"/>
-
-									<xsl:if test="count($hrefs) &gt; 0 and count($dates) &gt; 0">
-										<xsl:text>, </xsl:text>
-									</xsl:if>
-
-									<!-- display year range, if applicable -->
-									<xsl:value-of select="string-join($dates, '-')"/>
+									<xsl:call-template name="sparqlLabel"/>
 								</th>
 							</xsl:for-each>
 						</xsl:when>
@@ -1101,31 +1116,9 @@
 					</xsl:when>
 					<xsl:otherwise>
 						<xsl:for-each select="$tokenized_sparqlQuery">
-							<xsl:variable name="hrefs" as="item()*">
-								<xsl:analyze-string select="." regex="&lt;([^>]+)&gt;">
-									<xsl:matching-substring>
-										<xsl:value-of select="document(concat('http://admin.numismatics.org/nomisma/apis/getLabel?uri=', regex-group(1), '&amp;lang=', $lang))/response"/>
-									</xsl:matching-substring>
-								</xsl:analyze-string>
-							</xsl:variable>
-							<xsl:variable name="dates" as="item()*">
-								<xsl:analyze-string select="." regex="&#x022;(-?\d{{4}})&#x022;">
-									<xsl:matching-substring>
-										<xsl:value-of select="numishare:normalizeYear(number(translate(., '&#x022;', '')))"/>
-									</xsl:matching-substring>
-								</xsl:analyze-string>
-							</xsl:variable>
 							<tr>
 								<th>
-									<!-- display proper labels for hrefs -->
-									<xsl:value-of select="string-join($hrefs, '/')"/>
-
-									<xsl:if test="count($hrefs) &gt; 0 and count($dates) &gt; 0">
-										<xsl:text>, </xsl:text>
-									</xsl:if>
-
-									<!-- display year range, if applicable -->
-									<xsl:value-of select="string-join($dates, '-')"/>
+									<xsl:call-template name="sparqlLabel"/>
 								</th>
 								<td>
 									<cinclude:include
@@ -1230,6 +1223,119 @@
 				<xsl:with-param name="level" select="$level + 1"/>
 			</xsl:call-template>
 		</xsl:if>
+	</xsl:template>
+
+	<!-- ************** PROCESS GROUP OF SPARQL RESULTS FROM METIS TO DISPLAY IMAGES ************** -->
+	<xsl:template name="numishare:renderSparqlResults">
+		<xsl:param name="group"/>
+		<xsl:variable name="count" select="count($group/descendant::res:result)"/>
+		<xsl:variable name="coin-count" select="count($group/descendant::res:result[contains(res:binding[@name='numismatic_term']/res:uri, 'coin')])"/>
+		<xsl:variable name="hoard-count" select="count($group/descendant::res:result[contains(res:binding[@name='numismatic_term']/res:uri, 'hoard')])"/>
+
+
+		<!--<xsl:variable name="count" select="$group/@hoards + $group/@coins"/>
+			<xsl:variable name="coin-count" select="$group/@coins"/>
+			<xsl:variable name="hoard-count" select="$group/@hoards"/>-->
+
+		<!-- get images -->
+		<xsl:apply-templates select="$group/res:result[res:binding[contains(@name, 'rev') or contains(@name, 'obv')]]" mode="results">
+			<xsl:with-param name="id" select="tokenize($url, '/')[last()]"/>
+		</xsl:apply-templates>
+		<!-- object count -->
+		<xsl:if test="$count &gt; 0">
+			<br/>
+			<xsl:if test="$coin-count &gt; 0">
+				<xsl:value-of select="$coin-count"/>
+				<xsl:text> </xsl:text>
+				<xsl:choose>
+					<xsl:when test="$coin-count = 1">
+						<xsl:value-of select="numishare:normalizeLabel('results_coin', $lang)"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="numishare:normalizeLabel('results_coins', $lang)"/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:if>
+			<xsl:if test="$coin-count &gt; 0 and $hoard-count &gt; 0">
+				<xsl:text> </xsl:text>
+				<xsl:value-of select="numishare:normalizeLabel('results_and', $lang)"/>
+				<xsl:text> </xsl:text>
+			</xsl:if>
+			<xsl:if test="$hoard-count &gt; 0">
+				<xsl:value-of select="$hoard-count"/>
+				<xsl:text> </xsl:text>
+				<xsl:choose>
+					<xsl:when test="$hoard-count = 1">
+						<xsl:value-of select="numishare:normalizeLabel('results_hoard', $lang)"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="numishare:normalizeLabel('results_hoards', $lang)"/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:if>
+		</xsl:if>
+	</xsl:template>
+
+	<xsl:template match="res:result" mode="results">
+		<xsl:variable name="position" select="position()"/>
+		<!-- obverse -->
+		<xsl:choose>
+			<xsl:when test="string(res:binding[@name='obvRef']/res:uri) and string(res:binding[@name='obvThumb']/res:uri)">
+				<a class="thumbImage" rel="gallery" href="{res:binding[@name='obvRef']/res:uri}"
+					title="Obverse of {res:binding[@name='identifier']/res:literal}: {res:binding[@name='collection']/res:literal}">
+					<xsl:if test="$position &gt; 1">
+						<xsl:attribute name="style">display:none</xsl:attribute>
+					</xsl:if>
+					<img src="{res:binding[@name='obvThumb']/res:uri}"/>
+				</a>
+			</xsl:when>
+			<xsl:when test="not(string(res:binding[@name='obvRef']/res:uri)) and string(res:binding[@name='obvThumb']/res:uri)">
+				<img src="{res:binding[@name='obvThumb']/res:uri}">
+					<xsl:if test="$position &gt; 1">
+						<xsl:attribute name="style">display:none</xsl:attribute>
+					</xsl:if>
+				</img>
+			</xsl:when>
+			<xsl:when test="string(res:binding[@name='obvRef']/res:uri) and not(string(res:binding[@name='obvThumb']/res:uri))">
+				<a class="thumbImage" rel="gallery" href="{res:binding[@name='obvRef']/res:uri}"
+					title="Obverse of {res:binding[@name='identifier']/res:literal}: {res:binding[@name='collection']/res:literal}">
+					<img src="{res:binding[@name='obvRef']/res:uri}" style="max-width:120px">
+						<xsl:if test="$position &gt; 1">
+							<xsl:attribute name="style">display:none</xsl:attribute>
+						</xsl:if>
+					</img>
+				</a>
+			</xsl:when>
+		</xsl:choose>
+		<!-- reverse-->
+		<xsl:choose>
+			<xsl:when test="string(res:binding[@name='revRef']/res:uri) and string(res:binding[@name='revThumb']/res:uri)">
+				<a class="thumbImage" rel="gallery" href="{res:binding[@name='revRef']/res:uri}"
+					title="Reverse of {res:binding[@name='identifier']/res:literal}: {res:binding[@name='collection']/res:literal}">
+					<xsl:if test="$position &gt; 1">
+						<xsl:attribute name="style">display:none</xsl:attribute>
+					</xsl:if>
+					<img src="{res:binding[@name='revThumb']/res:uri}"/>
+				</a>
+			</xsl:when>
+			<xsl:when test="not(string(res:binding[@name='revRef']/res:uri)) and string(res:binding[@name='revThumb']/res:uri)">
+				<img src="{res:binding[@name='revThumb']/res:uri}">
+					<xsl:if test="$position &gt; 1">
+						<xsl:attribute name="style">display:none</xsl:attribute>
+					</xsl:if>
+				</img>
+			</xsl:when>
+			<xsl:when test="string(res:binding[@name='revRef']/res:uri) and not(string(res:binding[@name='revThumb']/res:uri))">
+				<a class="thumbImage" rel="gallery" href="{res:binding[@name='revRef']/res:uri}"
+					title="Obverse of {res:binding[@name='identifier']/res:literal}: {res:binding[@name='collection']/res:literal}">
+					<img src="{res:binding[@name='revRef']/res:uri}" style="max-width:120px">
+						<xsl:if test="$position &gt; 1">
+							<xsl:attribute name="style">display:none</xsl:attribute>
+						</xsl:if>
+					</img>
+				</a>
+			</xsl:when>
+		</xsl:choose>
 	</xsl:template>
 
 	<!-- ************** PROCESS MODS RECORD INTO CHICAGO MANUAL OF STYLE CITATION ************** -->
