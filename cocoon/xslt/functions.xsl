@@ -701,7 +701,7 @@
 					<xsl:when test="$label='lang_da'">نوع كعك</xsl:when>
 					<xsl:when test="$label='lang_nn'">اللغة النروجية</xsl:when>
 					<xsl:otherwise>
-						<xsl:value-of select="concat('No label for ', $label)"/>
+						<xsl:value-of select="concat('[', $label, ']')"/>
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
@@ -760,7 +760,7 @@
 					<xsl:when test="$label='lang_da'">Dänisch</xsl:when>
 					<xsl:when test="$label='lang_nn'">Norwegisch</xsl:when>
 					<xsl:otherwise>
-						<xsl:value-of select="concat('No label for ', $label)"/>
+						<xsl:value-of select="concat('[', $label, ']')"/>
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
@@ -818,7 +818,7 @@
 					<xsl:when test="$label='lang_da'">Danois</xsl:when>
 					<xsl:when test="$label='lang_nn'">Norvégien</xsl:when>
 					<xsl:otherwise>
-						<xsl:value-of select="concat('No label for ', $label)"/>
+						<xsl:value-of select="concat('[', $label, ']')"/>
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
@@ -876,7 +876,7 @@
 					<xsl:when test="$label='lang_da'">Deens</xsl:when>
 					<xsl:when test="$label='lang_nn'">Noors</xsl:when>
 					<xsl:otherwise>
-						<xsl:value-of select="concat('No label for ', $label)"/>
+						<xsl:value-of select="concat('[', $label, ']')"/>
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
@@ -918,7 +918,7 @@
 					<xsl:when test="$label='results_coins'">monede</xsl:when>
 					<xsl:when test="$label='results_hoard'">tezaur</xsl:when>
 					<xsl:when test="$label='results_hoards'">tezaure</xsl:when>
-					<xsl:when test="$label='results_and'">și</xsl:when>
+					<xsl:when test="$label='results_and'">și</xsl:when>				
 					<xsl:when test="$label='lang_ar'">Arabă</xsl:when>
 					<xsl:when test="$label='lang_de'">Germană</xsl:when>
 					<xsl:when test="$label='lang_en'">Engleză</xsl:when>
@@ -934,7 +934,7 @@
 					<xsl:when test="$label='lang_da'">Daneză</xsl:when>
 					<xsl:when test="$label='lang_nn'">Norvegiană</xsl:when>
 					<xsl:otherwise>
-						<xsl:value-of select="concat('No label for ', $label)"/>
+						<xsl:value-of select="concat('[', $label, ']')"/>
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
@@ -995,7 +995,7 @@
 					<xsl:when test="$label='lang_da'">Датский</xsl:when>
 					<xsl:when test="$label='lang_nn'">Норвежский</xsl:when>
 					<xsl:otherwise>
-						<xsl:value-of select="concat('No label for ', $label)"/>
+						<xsl:value-of select="concat('[', $label, ']')"/>
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
@@ -1040,6 +1040,10 @@
 					<xsl:when test="$label='results_hoard'">hoard</xsl:when>
 					<xsl:when test="$label='results_hoards'">hoards</xsl:when>
 					<xsl:when test="$label='results_and'">and</xsl:when>
+					<xsl:when test="$label='visualize_typological'">Typological Analysis</xsl:when>
+					<xsl:when test="$label='visualize_measurement'">Measurement Analysis</xsl:when>
+					<xsl:when test="$label='visualize_error1'">Interval and duration are required.</xsl:when>
+					<xsl:when test="$label='visualize_error2'">To Date must be later than From Date.</xsl:when>
 					<xsl:when test="$label='lang_ar'">Arabic</xsl:when>
 					<xsl:when test="$label='lang_de'">German</xsl:when>
 					<xsl:when test="$label='lang_en'">English</xsl:when>
@@ -1055,7 +1059,7 @@
 					<xsl:when test="$label='lang_da'">Danish</xsl:when>
 					<xsl:when test="$label='lang_nn'">Norwegian</xsl:when>
 					<xsl:otherwise>
-						<xsl:value-of select="concat('No label for ', $label)"/>
+						<xsl:value-of select="concat('[', $label, ']')"/>
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:otherwise>
