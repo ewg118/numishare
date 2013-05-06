@@ -295,7 +295,7 @@ $(document).ready(function () {
 		$('.weight-checkbox:checked').each(function(){
 			selection.push($(this).val());
 		});
-		$('.customSparqlQuery span').each(function(){
+		$('.customSparqlQuery .mr').each(function(){
 			selection.push($(this).text());
 		});
 		//set sparqlQuery
@@ -311,10 +311,6 @@ $(document).ready(function () {
 			$(this).closest('form').find('.from_date').attr('value', fromDate);
 			$(this).closest('form').find('.to_date').attr('value', toDate);
 		}
-		
-		
-		/*var string = 'nm:end_date ?date';
-		string += ' FILTER ( ?date >= "' + fromDate +'"^^xs:gYear \\\\and ?date <= "' + toDate + '"^^xs:gYear )';*/	
 	});
 	
 	$('#addSparqlQuery').fancybox();
@@ -323,9 +319,14 @@ $(document).ready(function () {
 	//filter button activation
 	$('#sparqlForm').submit(function () {
 		var q = assembleSparqlQuery('sparqlForm');
+		var label = assembleSparqlLabel('sparqlForm');
+		
+		//create human and machine readable spans
+		var hr = '<span class="hr">' + label + '</span>';
+		var mr = '<span class="mr">' + q + '</span>';
 		
 		//insert new query
-		var newQuery = '<div class="customSparqlQuery"><b>Custom Query: </b><span>' + q + '</span><a href="#" class="removeQuery">Remove Query</a></div>';
+		var newQuery = '<div class="customSparqlQuery"><b>Query: </b>' + hr + mr + '<a href="#" class="removeQuery">Remove Query</a></div>';
 		$('#customSparqlQueryDiv').append(newQuery);
 			
 		//close fancybox
@@ -346,12 +347,27 @@ $(document).ready(function () {
 	/***** VALIDATION *****/
 	//lock bar and column charts for count in date visualization--line, spine, area, and areaspline for percentages
 	$('#charts-form select[name=interval]').change(function () {
-		if ($(this).val()  > 0 && $(this).siblings('input[name=fromDate]').val() > 0 && $(this).siblings('input[name=toDate]').val() > 0 ) {
+		validateForm();	
+	});
+	$('#charts-form input[name=fromDate]').change(function () {
+		validateForm();	
+	});
+	$('#charts-form input[name=toDate]').change(function () {
+		validateForm();	
+	});
+	
+	function validateForm(){
+		if ($('#charts-form select[name=interval]').val()  > 0 && $('#charts-form input[name=fromDate]').val() > 0 && $('#charts-form input[name=toDate]').val() > 0 ) {
 			//enable linear options
 			$('#charts-form').find('input[value=line]').attr('disabled', false);
 			$('#charts-form').find('input[value=area]').attr('disabled', false);
 			$('#charts-form').find('input[value=spline]').attr('disabled', false);
-			$('#charts-form').find('input[value=areaspline]').attr('disabled', false);
+			$('#charts-form').find('input[value=areaspline]').attr('disabled', false);			
+			//enable submit
+			$('#charts-form input[type=submit]').attr('disabled', false);
+		} else if ($('#charts-form select[name=interval]').val().length == 0 && $('#charts-form input[name=fromDate]').val().length == 0 && $('#charts-form input[name=toDate]').val().length == 0) {
+			//enable submit
+			$('#charts-form input[type=submit]').attr('disabled', false);
 		} else {
 			$('#charts-form').find('input[value=line]').attr('disabled', true);
 			$('#charts-form').find('input[value=area]').attr('disabled', true);
@@ -360,39 +376,7 @@ $(document).ready(function () {
 			//disable submit
 			$('#charts-form input[type=submit]').attr('disabled', 'disabled');
 		}
-	});
-	$('#charts-form input[name=fromDate]').change(function () {
-		if ($(this).siblings('select[name=interval]').val()  > 0 && $(this).val() > 0 && $(this).siblings('input[name=toDate]').val() > 0 ) {
-			//enable linear options
-			$('#charts-form').find('input[value=line]').attr('disabled', false);
-			$('#charts-form').find('input[value=area]').attr('disabled', false);
-			$('#charts-form').find('input[value=spline]').attr('disabled', false);
-			$('#charts-form').find('input[value=areaspline]').attr('disabled', false);
-		} else {
-			$('#charts-form').find('input[value=line]').attr('disabled', true);
-			$('#charts-form').find('input[value=area]').attr('disabled', true);
-			$('#charts-form').find('input[value=spline]').attr('disabled', true);
-			$('#charts-form').find('input[value=areaspline]').attr('disabled', true);
-			//disable submit
-			$('#charts-form input[type=submit]').attr('disabled', 'disabled');
-		}
-	});
-	$('#charts-form input[name=toDate]').change(function () {
-		if ($(this).siblings('select[name=interval]').val()  > 0 && $(this).siblings('input[name=fromDate]').val() > 0 && $(this).val() > 0 ) {
-			//enable linear options
-			$('#charts-form').find('input[value=line]').attr('disabled', false);
-			$('#charts-form').find('input[value=area]').attr('disabled', false);
-			$('#charts-form').find('input[value=spline]').attr('disabled', false);
-			$('#charts-form').find('input[value=areaspline]').attr('disabled', false);
-		} else {
-			$('#charts-form').find('input[value=line]').attr('disabled', true);
-			$('#charts-form').find('input[value=area]').attr('disabled', true);
-			$('#charts-form').find('input[value=spline]').attr('disabled', true);
-			$('#charts-form').find('input[value=areaspline]').attr('disabled', true);
-			//disable submit
-			$('#charts-form input[type=submit]').attr('disabled', 'disabled');
-		}
-	});
+	}
 	
 	function assembleSparqlQuery(formId){
 		var query = new Array();
@@ -418,6 +402,29 @@ $(document).ready(function () {
 		});
 		q = query.join(' AND ');
 		return q;
+	}
+	
+	function assembleSparqlLabel(formId){
+		var query = new Array();
+		$('#' + formId + ' .searchItemTemplate') .each(function () {
+			var selectVar = $(this) .children('.option_container') .children('.search_text') .val();
+			var field = $(this) .children('.sparql_facets') .val();
+			var fromDate = Math.abs($(this).find('.from_date') .val());
+			var toDate = Math.abs($(this).find('.to_date') .val());
+			
+			if ((field != 'date' && field != '') && selectVar.length > 0) {	
+				var fieldLabel = $(this) .children('.sparql_facets').children('option:selected') .text();
+				var termLabel = $(this) .children('.option_container').find('option:selected') .text();
+				query.push(fieldLabel + ': ' + termLabel);
+			}  else if (field == 'date' && Math.floor(fromDate) == fromDate && Math.floor(toDate) == toDate){
+				var fieldLabel = $(this) .children('.sparql_facets').children('option:selected') .text();
+				var from_era = $(this).find('.from_era') .children('option:selected').text();
+				var to_era = $(this).find('.to_era') .children('option:selected').text();				
+				query.push(fieldLabel + ': ' + fromDate + ' ' + from_era + '-' + toDate + ' ' + to_era);
+			}
+		});
+		label = query.join (' AND ');
+		return label;
 	}
 	
 	function pad(n, width, z) {
