@@ -127,7 +127,7 @@
 			<!-- create description if there are contents -->
 			<xsl:if test="$hasContents = 'true'">
 				<xsl:variable name="denominations">
-					<xsl:copy-of select="document(concat($url, 'get_hoard_quant?id=', nh:nudsHeader/nh:nudsid, '&amp;calculate=denomination&amp;type=count'))"/>					
+					<xsl:copy-of select="document(concat('cocoon:/get_hoard_quant?id=', nh:nudsHeader/nh:nudsid, '&amp;calculate=denomination&amp;type=count'))"/>					
 				</xsl:variable>	
 				
 				<field name="description_display">					
