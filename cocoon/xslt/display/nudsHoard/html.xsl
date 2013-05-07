@@ -211,7 +211,7 @@
 			</xsl:if>
 			<xsl:if test="$hasContents = 'true'">
 				<xsl:variable name="denominations">
-					<xsl:copy-of select="document(concat($url, 'get_hoard_quant?id=', $id, '&amp;calculate=denomination&amp;type=count'))"/>
+					<xsl:copy-of select="document(concat('cocoon:/get_hoard_quant?id=', $id, '&amp;calculate=denomination&amp;type=count'))"/>
 				</xsl:variable>
 
 				<li>

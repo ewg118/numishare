@@ -87,7 +87,7 @@
 			</xsl:variable>
 
 			<xsl:variable name="response" as="element()*">
-				<xsl:copy-of select="document(concat($url, 'widget?identifiers=', $identifiers, '&amp;template=solr&amp;baseUri=http://numismatics.org/ocre/id/'))/res:sparql"/>
+				<xsl:copy-of select="document(concat('cocoon:/widget?identifiers=', $identifiers, '&amp;template=solr&amp;baseUri=http://numismatics.org/ocre/id/'))/res:sparql"/>
 			</xsl:variable>
 
 			<!-- process sparql into a manageable XML model -->

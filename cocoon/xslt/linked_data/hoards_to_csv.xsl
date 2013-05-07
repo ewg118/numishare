@@ -50,7 +50,7 @@
 				<!-- if there is a compare parameter, load get_hoard_quant with document() function -->
 				<xsl:if test="string($compare) and string($calculate)">
 					<xsl:for-each select="tokenize($compare, ',')">
-						<xsl:copy-of select="document(concat($url, 'get_hoard_quant?id=', ., '&amp;calculate=', if (string($role)) then $role else $element, '&amp;type=', $type))"/>
+						<xsl:copy-of select="document(concat('cocoon:/get_hoard_quant?id=', ., '&amp;calculate=', if (string($role)) then $role else $element, '&amp;type=', $type))"/>
 					</xsl:for-each>
 				</xsl:if>
 			</counts>
