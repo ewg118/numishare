@@ -19,6 +19,11 @@ $(document).ready(function () {
 	}
 	
 	var pipeline = $('#pipeline').text();
+	if (pipeline == 'display'){
+		var path = '../';
+	} else if (pipeline=='visualize') {
+		var path = './';
+	}
 	
 	//enable basic query form
 	
@@ -230,21 +235,43 @@ $(document).ready(function () {
 	$('.sparql_facets') .livequery('change', function(event){
 		var field = $(this) .children("option:selected") .val();
 		var container = $(this) .parent('.searchItemTemplate') .children('.option_container');
+		var formId = $(this).closest('form').attr('id');
 		
 		//date
 		if (field == 'date') {
 			var tpl = $('#dateTemplate') .clone();		
-			//remove id to avoid duplication with the template
-			tpl.removeAttr('id');
+			//generate random id for validation
+			tpl.attr('id', makeid());
 			container.html(tpl);
+			
+			//disable the date option in other drop-downs
+			$(this).parent().siblings('.searchItemTemplate').each(function(){
+				$(this).find('option[value=date]').attr('disabled', true);	
+			});
 		} 
 		//sparql-based facets
 		else {
-			$.get(pipeline + 'widget', {
+			//set ajax loading image
+			container.html('<img src="' + path + 'images/ajax-loader.gif"/>');
+			//get sparql results from widget pipeline via ajax
+			$.get(path + 'widget', {
 				field: field, lang: lang, template: 'facets'
 			}, function (data) {
 				container.html(data);
 			});
+			
+			//enable date in drop downs if there are no dates. remove error and active submit button
+			var count = countDate();
+			if (count == 0) {
+				//enable date
+				$(this).parent().siblings('.searchItemTemplate').each(function(){
+					$(this).find('option[value=date]').attr('disabled', false);	
+				});
+				//enable submit
+				$('#' + formId + ' input[type=submit]').attr('disabled', false);
+				//hide error				
+				$('#' + formId + '-alert').hide();
+			}
 		}
 	});
 	
@@ -346,59 +373,97 @@ $(document).ready(function () {
 	});
 	/***** VALIDATION *****/
 	//lock bar and column charts for count in date visualization--line, spine, area, and areaspline for percentages
-	$('#charts-form select[name=interval]').change(function () {
-		validateForm();	
+	
+	//validate measurementsForm
+	$('#measurementsForm select[name=interval]').change(function () {
+		var formId = $(this).closest('form').attr('id');
+		validateForm(formId, formId);	
 	});
-	$('#charts-form input[name=fromDate]').change(function () {
-		validateForm();	
+	$('#measurementsForm input[name=fromDate]').change(function () {
+		var formId = $(this).closest('form').attr('id');
+		validateForm(formId, formId);	
 	});
-	$('#charts-form input[name=toDate]').change(function () {
-		validateForm();	
+	$('#measurementsForm input[name=toDate]').change(function () {
+		var formId = $(this).closest('form').attr('id');
+		validateForm(formId, formId);	
 	});
-	$('#charts-form .from_era').change(function () {
-		validateForm();	
+	$('#measurementsForm .from_era').change(function () {
+		var formId = $(this).closest('form').attr('id');
+		validateForm(formId, formId);	
 	});
-	$('#charts-form .to_era').change(function () {
-		validateForm();	
+	$('#measurementsForm .to_era').change(function () {
+		var formId = $(this).closest('form').attr('id');
+		validateForm(formId, formId);	
 	});
 	
-	function validateForm(){
-		if ($('#charts-form select[name=interval]').val()  > 0 && $('#charts-form input[name=fromDate]').val() > 0 && $('#charts-form input[name=toDate]').val() > 0 ) {
+	//validate sparqlForm
+	$('.option_container').find('input[name=fromDate]').livequery('change', function () {
+		var formId = $(this).closest('form').attr('id');
+		var spanId = $(this).parent('span').attr('id');
+		validateForm(spanId, formId);
+	});
+	$('.option_container').find('input[name=toDate]').livequery('change', function () {
+		var formId = $(this).closest('form').attr('id');
+		var spanId = $(this).parent('span').attr('id');
+		validateForm(spanId, formId);
+	});
+	$('.option_container').find('.from_era').livequery('change', function () {
+		var formId = $(this).closest('form').attr('id');
+		var spanId = $(this).parent('span').attr('id');
+		validateForm(spanId, formId);
+	});
+	$('.option_container').find('.to_era').livequery('change', function () {
+		var formId = $(this).closest('form').attr('id');
+		var spanId = $(this).parent('span').attr('id');
+		validateForm(spanId, formId);
+	});
+	
+	//validation function, works on both measurementsForm and sparqlForm
+	function validateForm(id, formId){	
+		if ($('#' + id + ' select[name=interval]').val()  > 0 && $('#' + id + ' input[name=fromDate]').val() > 0 && $('#' + id + ' input[name=toDate]').val() > 0 ) {
 			//enable linear options
-			$('#charts-form').find('input[value=line]').attr('disabled', false);
-			$('#charts-form').find('input[value=area]').attr('disabled', false);
-			$('#charts-form').find('input[value=spline]').attr('disabled', false);
-			$('#charts-form').find('input[value=areaspline]').attr('disabled', false);
+			if (pipeline=='visualize'){
+				$('#' + id).find('input[value=line]').attr('disabled', false);
+				$('#' + id).find('input[value=area]').attr('disabled', false);
+				$('#' + id).find('input[value=spline]').attr('disabled', false);
+				$('#' + id).find('input[value=areaspline]').attr('disabled', false);
+			}			
 			//make sure toDate is greater than fromDate
-			var from_era = $('#charts-form .from_era') .val() == 'minus' ? -1 : 1;
-			var to_era = $('#charts-form .to_era') .val() == 'minus' ? -1 : 1;
+			var from_era = $('#' + id + ' .from_era') .val() == 'minus' ? -1 : 1;
+			var to_era = $('#' + id + ' .to_era') .val() == 'minus' ? -1 : 1;
 			
-			var fromDate = Math.abs($('#charts-form input[name=fromDate]').val()) * from_era;
-			var toDate = Math.abs($('#charts-form input[name=toDate]').val()) * to_era;
+			var fromDate = Math.abs($('#' + id + ' input[name=fromDate]').val()) * from_era;
+			var toDate = Math.abs($('#' + id + ' input[name=toDate]').val()) * to_era;
 			if (toDate > fromDate){
-				//enable submit/hide error		
-				$('#charts-form input[type=submit]').attr('disabled', false);
-				$('#measurement-alert').hide();
+				//enable submit/hide error
+				$('#' + formId + ' input[type=submit]').attr('disabled', false);
+				$('#' + formId + '-alert').hide();
 			} else {
 				//disable submit/show error
-				$('#charts-form input[type=submit]').attr('disabled', true);
-				$('#validationError').text($('#visualize_error2').text());
-				$('#measurement-alert').show();	
+				$('#' + formId + ' input[type=submit]').attr('disabled', true);
+				$('#' + formId + '-alert span.validationError').text($('#visualize_error2').text());
+				$('#' + formId + '-alert').show();	
 			}			
-		} else if ($('#charts-form select[name=interval]').val().length == 0 && $('#charts-form input[name=fromDate]').val().length == 0 && $('#charts-form input[name=toDate]').val().length == 0) {
-			//enable submit
-			$('#charts-form input[type=submit]').attr('disabled', false);
-			$('#measurement-alert').hide();
+		} else if ($('#' + id + ' select[name=interval]').val().length == 0 && $('#' + id + ' input[name=fromDate]').val().length == 0 && $('#' + id + ' input[name=toDate]').val().length == 0) {
+			if (pipeline=='visualize'){
+				//enable submit
+				$('#' + formId + ' input[type=submit]').attr('disabled', false);			
+				$('#' + formId + '-alert').hide();
+			}
+		} else if ($('#' + id + ' select[name=interval]').val() == 1 && $('#' + id + ' input[name=fromDate]').val().length == 0 && $('#' + id + ' input[name=toDate]').val().length == 0) {
+			$('#' + formId + '-alert').hide();
 		} else {
-			$('#charts-form').find('input[value=line]').attr('disabled', true);
-			$('#charts-form').find('input[value=area]').attr('disabled', true);
-			$('#charts-form').find('input[value=spline]').attr('disabled', true);
-			$('#charts-form').find('input[value=areaspline]').attr('disabled', true);			
+			if (pipeline=='visualize'){
+				$('#' + id).find('input[value=line]').attr('disabled', true);
+				$('#' + id).find('input[value=area]').attr('disabled', true);
+				$('#' + id).find('input[value=spline]').attr('disabled', true);
+				$('#' + id).find('input[value=areaspline]').attr('disabled', true);
+			}
 			//disable submit
-			$('#charts-form input[type=submit]').attr('disabled', true);
+			$('#' + formId + ' input[type=submit]').attr('disabled', true);
 			//show error
-			$('#validationError').text($('#visualize_error1').text());
-			$('#measurement-alert').show();		
+			$('#' + formId + '-alert span.validationError').text($('#visualize_error1').text());
+			$('#' + formId + '-alert').show();		
 		}
 	}
 	
@@ -454,5 +519,27 @@ $(document).ready(function () {
 		n = n + '';
 		return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
 	}
+	
+	//make random string, from http://stackoverflow.com/questions/1349404/generate-a-string-of-5-random-characters-in-javascript
+	function makeid()
+	{
+	    var text = "";
+	    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+	
+	    for( var i=0; i < 5; i++ )
+	        text += possible.charAt(Math.floor(Math.random() * possible.length));
+	
+	    return text;
+	}
 });
+
+function countDate (){
+	var count = 0;
+	$('.sparql_facets').each(function(){
+		if ($(this).val() == 'date'){
+			count++;
+		}
+	});
+	return count;
+}
 

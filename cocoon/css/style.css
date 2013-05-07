@@ -727,9 +727,7 @@ div.custominfostyle {
 	width:20%;
 }
 /***SPARQL QUERY****/
-.popupQuery{
-	background-color:#ebebeb;
-	border:1px dashed gray;
+.popupQuery {
 	width:700px;
 	padding:2px;
 }

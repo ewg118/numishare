@@ -145,17 +145,6 @@
 							<xsl:apply-templates select="/content/response"/>
 						</xsl:otherwise>
 					</xsl:choose>
-					
-					<!--errors -->
-					<div style="display:none">
-						<span>errors</span>
-						<span id="visualize_error1">
-							<xsl:value-of select="numishare:normalizeLabel('visualize_error1', $lang)"/>
-						</span>
-						<span id="visualize_error2">
-							<xsl:value-of select="numishare:normalizeLabel('visualize_error2', $lang)"/>
-						</span>
-					</div>
 				</div>
 			</div>
 		</div>
@@ -185,7 +174,7 @@
 		<xsl:variable name="chartTypes">column,bar</xsl:variable>
 
 		<form action="#typological" id="visualize-form" style="margin-bottom:40px;">
-			<h2>Step 1: Select Numeric Response Type</h2>
+			<h3>1. Select Numeric Response Type</h3>
 			<input type="radio" name="type" value="percentage">
 				<xsl:if test="$type != 'count'">
 					<xsl:attribute name="checked">checked</xsl:attribute>
@@ -201,7 +190,7 @@
 			<label for="type-radio">Count</label>
 			<br/>
 			<div style="display:table;width:100%">
-				<h2>Step 2: Select Chart Type</h2>
+				<h3>2. Select Chart Type</h3>
 				<xsl:for-each select="tokenize($chartTypes, ',')">
 					<span class="anOption">
 						<input type="radio" name="chartType" value="{.}">
@@ -223,16 +212,16 @@
 
 			<!-- include checkbox categories -->
 			<div style="display:table;width:100%">
-				<h2>Step 3: Select Categories for Analysis</h2>
+				<h3>3. Select Categories for Analysis</h3>
 				<cinclude:include src="cocoon:/get_vis_categories?category={$category}&amp;q={$qString}"/>
 
 				<div id="customQueryDiv">
-					<h3>
+					<h4>
 						<xsl:text>Add Custom Queries</xsl:text>
 						<span style="font-size:80%;margin-left:10px;">
 							<a href="#searchBox" class="addQuery" id="customQuery">Add Query</a>
 						</span>
-					</h3>
+					</h4>
 					<xsl:for-each select="tokenize($custom, '\|')">
 						<div class="customQuery">
 							<b>Custom Query: </b>
@@ -245,20 +234,20 @@
 				</div>
 			</div>
 
-			<h2>
+			<h3>
 				<xsl:choose>
 					<xsl:when test="string($q)">
-						<xsl:text>Step 4: Compare to other Queries (optional)</xsl:text>
+						<xsl:text>4. Compare to other Queries (optional)</xsl:text>
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:text>Step 4: Compare Queries</xsl:text>
+						<xsl:text>4. Compare Queries</xsl:text>
 					</xsl:otherwise>
 				</xsl:choose>
 
 				<span style="font-size:80%;margin-left:10px;">
 					<a href="#searchBox" class="addQuery" id="compareQuery">Add Query</a>
 				</span>
-			</h2>
+			</h3>
 			<div id="compareQueryDiv">
 				<xsl:for-each select="tokenize($compare, '\|')">
 					<div class="compareQuery">
@@ -272,7 +261,7 @@
 			</div>
 
 			<div>
-				<h3>Optional Settings<span style="font-size:60%;margin-left:10px;"><a href="#" class="optional-button" id="visualize-options">Hide/Show Options</a></span></h3>
+				<h4>Optional Settings<span style="font-size:60%;margin-left:10px;"><a href="#" class="optional-button" id="visualize-options">Hide/Show Options</a></span></h4>
 				<div class="optional-div" style="display:none;">
 					<div>
 						<label for="stacking">Stacking Options</label>
