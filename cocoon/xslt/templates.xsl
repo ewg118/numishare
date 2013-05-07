@@ -679,15 +679,20 @@
 			</xsl:choose>
 		</xsl:variable>
 		<xsl:variable name="measurements">axis,diameter,weight</xsl:variable>
-		<xsl:variable name="chartTypes">bar,column,area,line,spline,areaspline</xsl:variable>
+		<xsl:variable name="chartTypes">
+			<xsl:choose>
+				<xsl:when test="$pipeline='display'">bar,column</xsl:when>
+				<xsl:otherwise>bar,column,area,line,spline,areaspline</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
 
 		<xsl:if test="string($sparqlQuery)">
 			<xsl:call-template name="measurementTable"/>
 		</xsl:if>
 
-		<form id="charts-form" action="{$action}" style="margin:20px">
+		<form id="measurementsForm" action="{$action}" style="margin:20px">
 			<div style="display:table;width:100%">
-				<h3>1: Select Measurement</h3>
+				<h3>1. Select Measurement</h3>
 				<xsl:for-each select="tokenize($measurements, ',')">
 					<span class="anOption">
 						<input type="radio" name="measurement" value="{.}">
@@ -708,7 +713,7 @@
 			</div>
 
 			<div style="display:table;width:100%">
-				<h3>2: Select Chart Type</h3>
+				<h3>2. Select Chart Type</h3>
 				<xsl:for-each select="tokenize($chartTypes, ',')">
 					<span class="anOption">
 						<input type="radio" name="chartType" value="{.}">
@@ -779,7 +784,7 @@
 						</categories>
 					</xsl:variable>
 					<div style="display:table;width:100%">
-						<h3>3: Compare By Category</h3>
+						<h3>3. Compare By Category</h3>
 						<!-- create checkboxes for available facets -->
 						<xsl:for-each select="$typologicalCategories//category">
 							<span class="anOption">
@@ -802,7 +807,7 @@
 					</div>
 					<div id="customSparqlQueryDiv">
 						<h3>
-							<xsl:text>4. Add Custom Queries</xsl:text>
+							<xsl:text>4. Add Queries</xsl:text>
 							<span style="font-size:80%;margin-left:10px;">
 								<a href="#sparqlBox" id="addSparqlQuery">+ <span>Add New</span></a>
 							</span>
@@ -852,10 +857,10 @@
 			<xsl:if test="$pipeline='visualize'">
 				<div style="display:table;width:100%">
 					<div style="height:30px">
-						<div class="ui-state-error ui-corner-all" id="measurement-alert" style="display:none">
+						<div class="ui-state-error ui-corner-all" id="measurementsForm-alert" style="display:none">
 							<span class="ui-icon ui-icon-alert" style="float:left"/>
 							<strong>Alert:</strong>
-							<span id="validationError"/>
+							<span class="validationError"/>
 						</div>
 					</div>
 					<h3>
@@ -863,7 +868,7 @@
 							<xsl:when test="$pipeline='display'">5</xsl:when>
 							<xsl:when test="$pipeline='visualize'">4</xsl:when>
 						</xsl:choose>
-						<xsl:text>: Arrange by Interval (optional)</xsl:text>
+						<xsl:text>. Arrange by Interval (optional)</xsl:text>
 					</h3>
 					<h4>Interval (years)</h4>
 					<select name="interval">
@@ -950,21 +955,37 @@
 		<div style="display:none">
 			<div id="sparqlBox" class="popupQuery">
 				<h3>Add Query</h3>
+				<p>Use the drop-down menus below to formulate your measurement query. A date range can only be specified once per query.</p>
 				<xsl:call-template name="sparql_form"/>
 			</div>
 		</div>
+		
+		<!--errors -->
+		<div style="display:none">
+			<span>errors</span>
+			<span id="visualize_error1">
+				<xsl:value-of select="numishare:normalizeLabel('visualize_error1', $lang)"/>
+			</span>
+			<span id="visualize_error2">
+				<xsl:value-of select="numishare:normalizeLabel('visualize_error2', $lang)"/>
+			</span>						
+		</div>
 
 		<span id="pipeline" style="display:none">
-			<xsl:choose>
-				<xsl:when test="$pipeline='display'">../</xsl:when>
-				<xsl:otherwise>./</xsl:otherwise>
-			</xsl:choose>
+			<xsl:value-of select="$pipeline"/>
 		</span>
 	</xsl:template>
 
 	<!-- ************** SEARCH INTERFACE FOR CUSTOM WEIGHT QUERIES FROM SPARQL **************** -->
 	<xsl:template name="sparql_form">
 		<div class="queryGroup">
+			<div style="height:30px">
+				<div class="ui-state-error ui-corner-all" id="sparqlForm-alert" style="display:none">
+					<span class="ui-icon ui-icon-alert" style="float:left"/>
+					<strong>Alert:</strong>
+					<span class="validationError"/>
+				</div>
+			</div>
 			<form id="sparqlForm" method="GET">
 				<div id="sparqlInputContainer">
 					<div class="searchItemTemplate">
@@ -997,18 +1018,24 @@
 		<span id="dateTemplate">
 			<xsl:value-of select="numishare:normalize_fields('fromDate', $lang)"/>
 			<xsl:text>:</xsl:text>
-			<input type="text" class="from_date"/>
+			<input type="text" class="from_date" name="fromDate"/>
 			<select class="from_era">
 				<option value="minus">B.C.</option>
 				<option value="" selected="selected">A.D.</option>
 			</select>
 			<xsl:value-of select="numishare:normalize_fields('toDate', $lang)"/>
 			<xsl:text>: </xsl:text>
-			<input type="text" class="to_date"/>
+			<input type="text" class="to_date" name="toDate"/>
 			<select class="to_era">
 				<option value="minus">B.C.</option>
 				<option value="" selected="selected">A.D.</option>
 			</select>
+			<!-- empty, unused input, necessary for generalized validation -->
+			<div style="display:none">
+				<select name="interval">
+					<option value="1">1</option>
+				</select>
+			</div>
 		</span>
 	</xsl:template>
 

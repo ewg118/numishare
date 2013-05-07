@@ -702,7 +702,7 @@ div.custominfostyle {
 }
 /*
   ***************************************
-  ANALYSIS
+  VISUALIZATION/ANALYSIS
   ***************************************
  */
 #filterHoards, #searchBox {
@@ -721,10 +721,25 @@ div.custominfostyle {
 }
 .removeFilter, .removeQuery {
 	font-size:80%;
+	margin-left:10px;
 }
 .anOption {
 	float:left;
 	width:20%;
+}
+/***SPARQL QUERY****/
+.popupQuery {
+	width:700px;
+	padding:2px;
+}
+#dateTemplate {
+	display:none;
+}
+.measurementTable{
+	display:none;	
+}
+.mr {
+	display:none;	
 }
 /*
   ***************************************
