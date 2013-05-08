@@ -991,7 +991,7 @@
 					<xsl:when test="$label='results_sort-category'">Ταξινόμηση κατηγοριών</xsl:when>
 					<xsl:when test="$label='results_ascending'">Αύξουσα σειρά</xsl:when>
 					<xsl:when test="$label='results_descending'">Φθίνουσα σειρά</xsl:when>
-					<xsl:when test="$label='results_result-desc'">Παρουσίαση αποτελεσμάτων Χ έως Χ από συνολικά Χ</xsl:when>
+					<xsl:when test="$label='results_result-desc'">Παρουσίαση αποτελεσμάτων XX έως YY από συνολικά ZZ</xsl:when>
 					<xsl:when test="$label='results_coin'">νόμισμα</xsl:when>
 					<xsl:when test="$label='results_coins'">νομίσματα</xsl:when>
 					<xsl:when test="$label='results_hoard'">«θησαυρός»</xsl:when>
@@ -1108,7 +1108,7 @@
 					<xsl:when test="$label='results_sort-category'">Ordina la categoria</xsl:when>
 					<xsl:when test="$label='results_ascending'">Ordine crescente</xsl:when>
 					<xsl:when test="$label='results_descending'">Ordine decrescente</xsl:when>
-					<xsl:when test="$label='results_result-desc'">Esporre i risultati da X a X su un totale di X risultati</xsl:when>
+					<xsl:when test="$label='results_result-desc'">Esporre i risultati da XX a YY su un totale di ZZ risultati</xsl:when>
 					<xsl:when test="$label='results_coin'">moneta</xsl:when>
 					<xsl:when test="$label='results_coins'">monete</xsl:when>
 					<xsl:when test="$label='results_hoard'">ripostiglio</xsl:when>
