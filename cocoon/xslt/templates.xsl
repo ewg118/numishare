@@ -11,7 +11,7 @@
 	<xsl:template name="nh:quant">
 		<xsl:param name="element"/>
 		<xsl:param name="role"/>
-		<xsl:variable name="counts">
+		<xsl:variable name="counts" as="element()*">
 			<counts>
 				<!-- use get_hoard_quant to calculate -->
 				<xsl:if test="$pipeline = 'display'">
@@ -57,14 +57,14 @@
 						<xsl:for-each select="tokenize($compare, ',')">
 							<xsl:variable name="localId" select="."/>
 							<th>
-								<xsl:value-of select="exsl:node-set($counts)//hoard[@id=$localId]/@title"/>
+								<xsl:value-of select="$counts//hoard[@id=$localId]/@title"/>
 							</th>
 						</xsl:for-each>
 					</xsl:if>
 				</tr>
 			</thead>
 			<tbody>
-				<xsl:for-each select="distinct-values(exsl:node-set($counts)//name)">
+				<xsl:for-each select="distinct-values($counts//name)">
 					<xsl:sort data-type="{if ($calculate = 'date') then 'number' else 'text'}"/>
 					<xsl:variable name="name" select="if (string(.)) then . else 'Null value'"/>
 					<tr>
@@ -74,8 +74,8 @@
 						<xsl:if test="$pipeline = 'display'">
 							<td>
 								<xsl:choose>
-									<xsl:when test="number(exsl:node-set($counts)//hoard[@id=$id]/*[local-name()='name'][text()=$name]/@count)">
-										<xsl:value-of select="exsl:node-set($counts)//hoard[@id=$id]/*[local-name()='name'][text()=$name]/@count"/>
+									<xsl:when test="number($counts//hoard[@id=$id]/*[local-name()='name'][text()=$name]/@count)">
+										<xsl:value-of select="$counts//hoard[@id=$id]/*[local-name()='name'][text()=$name]/@count"/>
 									</xsl:when>
 									<xsl:otherwise>
 										<xsl:text>null</xsl:text>
@@ -88,8 +88,8 @@
 								<xsl:variable name="hoard-id" select="."/>
 								<td>
 									<xsl:choose>
-										<xsl:when test="number(exsl:node-set($counts)//hoard[@id=$hoard-id]/*[local-name()='name'][text()=$name]/@count)">
-											<xsl:value-of select="exsl:node-set($counts)//hoard[@id=$hoard-id]/*[local-name()='name'][text()=$name]/@count"/>
+										<xsl:when test="number($counts//hoard[@id=$hoard-id]/*[local-name()='name'][text()=$name]/@count)">
+											<xsl:value-of select="$counts//hoard[@id=$hoard-id]/*[local-name()='name'][text()=$name]/@count"/>
 										</xsl:when>
 										<xsl:otherwise>
 											<xsl:text>null</xsl:text>

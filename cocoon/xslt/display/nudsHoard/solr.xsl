@@ -10,18 +10,18 @@
 		<xsl:apply-templates select="//nh:nudsHoard">
 			<xsl:with-param name="lang"/>
 		</xsl:apply-templates>
-		
+
 		<!-- create documents for each additional activated language -->
 		<xsl:for-each select="//config/descendant::language[@enabled='true']">
 			<xsl:apply-templates select="//nh:nudsHoard">
 				<xsl:with-param name="lang" select="@code"/>
 			</xsl:apply-templates>
-		</xsl:for-each>		
+		</xsl:for-each>
 	</xsl:template>
 
 	<xsl:template match="nh:nudsHoard">
 		<xsl:param name="lang"/>
-		
+
 		<xsl:variable name="all-dates">
 			<dates>
 				<xsl:for-each select="descendant::nuds:typeDesc">
@@ -78,7 +78,7 @@
 					<xsl:otherwise>
 						<xsl:value-of select="nh:nudsHeader/nh:nudsid"/>
 					</xsl:otherwise>
-				</xsl:choose>				
+				</xsl:choose>
 			</field>
 			<field name="nudsid">
 				<xsl:value-of select="nh:nudsHeader/nh:nudsid"/>
@@ -87,7 +87,7 @@
 				<field name="lang">
 					<xsl:value-of select="$lang"/>
 				</field>
-			</xsl:if>				
+			</xsl:if>
 			<field name="collection-name">
 				<xsl:value-of select="$collection-name"/>
 			</field>
@@ -126,12 +126,14 @@
 
 			<!-- create description if there are contents -->
 			<xsl:if test="$hasContents = 'true'">
-				<xsl:variable name="denominations">
-					<xsl:copy-of select="document(concat('cocoon:/get_hoard_quant?id=', nh:nudsHeader/nh:nudsid, '&amp;calculate=denomination&amp;type=count'))"/>					
-				</xsl:variable>	
-				
-				<field name="description_display">					
-					<xsl:for-each select="exsl:node-set($denominations)//*[local-name()='name']">
+				<xsl:variable name="denominations" as="element()*">
+					<denominations>
+						<xsl:copy-of select="document(concat('cocoon:/get_hoard_quant?id=', nh:nudsHeader/nh:nudsid, '&amp;calculate=denomination&amp;type=count'))"/>
+					</denominations>
+				</xsl:variable>
+
+				<field name="description_display">
+					<xsl:for-each select="$denominations//*[local-name()='name']">
 						<xsl:sort select="@count" order="descending" data-type="number"/>
 						<xsl:value-of select="."/>
 						<xsl:text>: </xsl:text>
