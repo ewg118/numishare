@@ -39,8 +39,10 @@
 	<languages>
 		<language code="ar" enabled="false"/>
 		<language code="de" enabled="true"/>
-		<language code="en" enabled="true"/>
+		<language code="el" enabled="true"/>
+		<language code="en" enabled="true"/>		
 		<language code="fr" enabled="true"/>
+		<language code="it" enabled="true"/>
 		<language code="nl" enabled="true"/>
 		<language code="ro" enabled="true"/>
 		<language code="ru" enabled="true"/>
