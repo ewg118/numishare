@@ -221,13 +221,15 @@
 				</li>
 			</xsl:if>
 			<xsl:if test="$hasContents = 'true'">
-				<xsl:variable name="denominations">
-					<xsl:copy-of select="document(concat('cocoon:/get_hoard_quant?id=', $id, '&amp;calculate=denomination&amp;type=count'))"/>
+				<xsl:variable name="denominations" as="element()*">
+					<denominations>
+						<xsl:copy-of select="document(concat('cocoon:/get_hoard_quant?id=', $id, '&amp;calculate=denomination&amp;type=count'))"/>
+					</denominations>
 				</xsl:variable>
 
 				<li>
 					<b>Description: </b>
-					<xsl:for-each select="exsl:node-set($denominations)//*[local-name()='name']">
+					<xsl:for-each select="$denominations//*[local-name()='name']">
 						<xsl:sort select="@count" order="descending" data-type="number"/>
 						<xsl:value-of select="."/>
 						<xsl:text>: </xsl:text>

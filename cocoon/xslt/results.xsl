@@ -54,8 +54,7 @@
 					<xsl:variable name="uri" select="concat('http://numismatics.org/ocre/id/', .)"/>
 					<group>
 						<xsl:attribute name="id" select="."/>
-						<xsl:for-each
-							select="distinct-values($response/descendant::res:result[res:binding[@name='type']/res:uri=$uri]/res:binding[@name='object']/res:uri)">
+						<xsl:for-each select="distinct-values($response/descendant::res:result[res:binding[@name='type']/res:uri=$uri]/res:binding[@name='object']/res:uri)">
 							<xsl:variable name="objectUri" select="."/>
 							<xsl:copy-of select="$response/descendant::res:result[res:binding[@name='object']/res:uri=$objectUri][1]"/>
 						</xsl:for-each>
@@ -75,7 +74,8 @@
 				<!-- alternates -->
 				<link rel="alternate" type="application/atom+xml" href="{concat(//config/url, 'feed/?q=', $q)}"/>
 				<link rel="alternate" type="text/csv" href="{concat(//config/url, 'data.csv/?q=', $q)}"/>
-				<link rel="alternate" type="application/application/vnd.google-earth.kml+xml" href="{concat(//config/url, 'query.kml/?q=', $q, if(string($lang)) then concat('&amp;lang=', $lang) else '')}"/>
+				<link rel="alternate" type="application/application/vnd.google-earth.kml+xml"
+					href="{concat(//config/url, 'query.kml/?q=', $q, if(string($lang)) then concat('&amp;lang=', $lang) else '')}"/>
 				<!-- opensearch compliance -->
 				<link rel="search" type="application/opensearchdescription+xml" href="{$url}opensearch.xml" title="Example Search for {$url}"/>
 				<meta name="totalResults" content="{$numFound}"/>
