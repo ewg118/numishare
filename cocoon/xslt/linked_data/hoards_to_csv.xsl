@@ -54,7 +54,7 @@
 	<xsl:template name="render-csv">
 		<xsl:param name="element"/>
 		<xsl:param name="role"/>		
-		<xsl:variable name="counts">
+		<xsl:variable name="counts" as="element()*">
 			<counts>
 				<!-- if there is a compare parameter, load get_hoard_quant with document() function -->
 				<xsl:if test="string($compare) and string($calculate)">
@@ -69,7 +69,7 @@
 		
 		<!-- display first row of CSV (hoard names) -->
 		<xsl:text>"",</xsl:text>
-		<xsl:for-each select="exsl:node-set($counts)//hoard">
+		<xsl:for-each select="$counts//hoard">
 			<xsl:sort select="@id"/>
 			<xsl:text>"</xsl:text>
 			<xsl:value-of select="@id"/>
@@ -82,7 +82,7 @@
 		<xsl:text>
 </xsl:text>
 		<!-- list distinct names -->
-		<xsl:for-each select="distinct-values(exsl:node-set($counts)//name)">
+		<xsl:for-each select="distinct-values($counts//name)">
 			<xsl:sort data-type="{if ($calculate = 'date') then 'number' else 'text'}"/>
 			<xsl:variable name="name" select="."/>
 			
@@ -91,7 +91,7 @@
 			<xsl:value-of select="$name"/>
 			<xsl:text>",</xsl:text>
 			<!-- display the value per hoard -->
-			<xsl:for-each select="exsl:node-set($counts)//hoard">
+			<xsl:for-each select="$counts//hoard">
 				<xsl:sort select="@id"/>
 				<xsl:text>"</xsl:text>
 				<xsl:value-of select="if (number(name[.=$name]/@count)) then name[.=$name]/@count else 0"/>

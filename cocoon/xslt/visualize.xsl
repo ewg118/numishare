@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:cinclude="http://apache.org/cocoon/include/1.0" xmlns:exsl="http://exslt.org/common"
-	xmlns:numishare="http://code.google.com/p/numishare/" xmlns:xs="http://www.w3.org/2001/XMLSchema" version="2.0">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:cinclude="http://apache.org/cocoon/include/1.0" xmlns:numishare="http://code.google.com/p/numishare/"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" version="2.0">
 	<xsl:output method="xml" encoding="UTF-8"/>
 	<xsl:include href="header.xsl"/>
 	<xsl:include href="footer.xsl"/>
@@ -116,7 +116,7 @@
 					</h1>
 					<p>Use the data selection and visualization options below to generate a chart based selected parameters. Instructions for using this feature can be found at <a
 							href="http://wiki.numismatics.org/numishare:visualize" target="_blank">http://wiki.numismatics.org/numishare:visualize</a>.</p>
-					
+
 					<!-- display tabs for measurement analysis only if there is a sparql endpoint-->
 					<xsl:choose>
 						<xsl:when test="string(//config/sparql_endpoint)">
@@ -148,7 +148,7 @@
 				</div>
 			</div>
 		</div>
-	
+
 	</xsl:template>
 
 	<xsl:template match="response">
@@ -319,7 +319,7 @@
 	<xsl:template name="quant">
 		<xsl:param name="facet"/>
 		<xsl:param name="customQuery"/>
-		<xsl:variable name="counts">
+		<xsl:variable name="counts" as="element()*">
 			<counts>
 				<xsl:choose>
 					<xsl:when test="string($facet)">
@@ -342,8 +342,8 @@
 						<!-- if there is a compare parameter, load get_hoard_quant with document() function -->
 						<xsl:if test="string($compare)">
 							<xsl:for-each select="tokenize($compare, '\|')">
-								<xsl:copy-of select="document(concat('cocoon:/get_vis_custom?q=', encode-for-uri(.), '&amp;customQuery=', $customQuery, '&amp;total=', $numFound, '&amp;type=', $type ))"
-								/>
+								<xsl:copy-of
+									select="document(concat('cocoon:/get_vis_custom?q=', encode-for-uri(.), '&amp;customQuery=', $customQuery, '&amp;total=', $numFound, '&amp;type=', $type ))"/>
 							</xsl:for-each>
 						</xsl:if>
 					</xsl:when>
@@ -352,7 +352,7 @@
 		</xsl:variable>
 
 		<!-- only display chart if there are counts -->
-		<xsl:if test="count(exsl:node-set($counts)//name) &gt; 0">
+		<xsl:if test="count($counts//name) &gt; 0">
 			<div id="{.}-container" style="min-width: 400px; height: 400px; margin: 0 auto"/>
 			<table class="calculate" id="{.}-table">
 				<caption>
@@ -389,7 +389,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					<xsl:for-each select="distinct-values(exsl:node-set($counts)//name)">
+					<xsl:for-each select="distinct-values($counts//name)">
 						<xsl:sort/>
 						<xsl:variable name="name" select="."/>
 						<tr>
@@ -399,8 +399,8 @@
 							<xsl:if test="string($q)">
 								<td>
 									<xsl:choose>
-										<xsl:when test="number(exsl:node-set($counts)//query[@q=$q]/*[local-name()='name'][text()=$name]/@count)">
-											<xsl:value-of select="exsl:node-set($counts)//query[@q=$q]/*[local-name()='name'][text()=$name]/@count"/>
+										<xsl:when test="number($counts//query[@q=$q]/*[local-name()='name'][text()=$name]/@count)">
+											<xsl:value-of select="$counts//query[@q=$q]/*[local-name()='name'][text()=$name]/@count"/>
 										</xsl:when>
 										<xsl:otherwise>
 											<xsl:text>0</xsl:text>
@@ -413,8 +413,8 @@
 									<xsl:variable name="new-q" select="."/>
 									<td>
 										<xsl:choose>
-											<xsl:when test="number(exsl:node-set($counts)//query[@q=$new-q]/*[local-name()='name'][text()=$name]/@count)">
-												<xsl:value-of select="exsl:node-set($counts)//query[@q=$new-q]/*[local-name()='name'][text()=$name]/@count"/>
+											<xsl:when test="number($counts//query[@q=$new-q]/*[local-name()='name'][text()=$name]/@count)">
+												<xsl:value-of select="$counts//query[@q=$new-q]/*[local-name()='name'][text()=$name]/@count"/>
 											</xsl:when>
 											<xsl:otherwise>
 												<xsl:text>0</xsl:text>
