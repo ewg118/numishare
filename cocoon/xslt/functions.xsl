@@ -1285,7 +1285,7 @@
 					<xsl:when test="$label='results_sort-results'">Сортировать результаты</xsl:when>
 					<xsl:when test="$label='results_sort-category'">Сортировать категории</xsl:when>
 					<xsl:when test="$label='results_ascending'">По возрастанию</xsl:when>
-					<xsl:when test="$label='results_descending'">По возрастанию</xsl:when>
+					<xsl:when test="$label='results_descending'">По убыванию</xsl:when>
 					<xsl:when test="$label='results_result-desc'">Отображать записи XX из YY из ZZ результатов </xsl:when>
 					<xsl:when test="$label='results_coin'">монета</xsl:when>
 					<xsl:when test="$label='results_coins'">монеты</xsl:when>
