@@ -695,8 +695,8 @@
 					<xsl:when test="$name='appraisal'">Оценка</xsl:when>
 					<xsl:when test="$name='appraiser'">Оценщик</xsl:when>
 					<xsl:when test="$name='auction'">Аукцион</xsl:when>
-					<xsl:when test="$name='authority'">Полномочия</xsl:when>
-					<xsl:when test="$name='axis'">Ось</xsl:when>
+					<xsl:when test="$name='authority'">Правитель</xsl:when>
+					<xsl:when test="$name='axis'">Оси</xsl:when>
 					<xsl:when test="$name='century'">Век</xsl:when>
 					<xsl:when test="$name='coinType'">Монетный тип</xsl:when>
 					<xsl:when test="$name='collection'">Собрание</xsl:when>
@@ -712,7 +712,7 @@
 					<xsl:when test="$name='dob'">Датировка предмета</xsl:when>
 					<xsl:when test="$name='dateRange'">Диапазон дат</xsl:when>
 					<xsl:when test="$name='decade'">Десятилетие</xsl:when>
-					<xsl:when test="$name='degree'">Степень</xsl:when>
+					<xsl:when test="$name='degree'">Проба</xsl:when>
 					<xsl:when test="$name='deity'">Божество</xsl:when>
 					<xsl:when test="$name='denomination'">Номинал</xsl:when>
 					<xsl:when test="$name='department'">Отделение</xsl:when>
@@ -732,7 +732,7 @@
 					<xsl:when test="$name='height'">Высота</xsl:when>
 					<xsl:when test="$name='hoardDesc'">Описание клада</xsl:when>
 					<xsl:when test="$name='identifier'">Идентификатор</xsl:when>
-					<xsl:when test="$name='issuer'">Издатель</xsl:when>
+					<xsl:when test="$name='issuer'">Эмитент</xsl:when>
 					<xsl:when test="$name='landowner'">Землевладелец</xsl:when>
 					<xsl:when test="$name='legend'">Легенда</xsl:when>
 					<xsl:when test="$name='manufacture'">Производство</xsl:when>
@@ -1262,8 +1262,7 @@
 					<xsl:when test="$label='header_compare'">Сравнить</xsl:when>
 					<xsl:when test="$label='header_language'">Язык</xsl:when>
 					<xsl:when test="$label='header_analyze'">Анализ кладов</xsl:when>
-					<xsl:when test="$label='header_visualize'">Отобразить запросы</xsl:when>
-					<xsl:when test="$label='Display'"/>
+					<xsl:when test="$label='header_visualize'">Отобразить запросы</xsl:when>				
 					<xsl:when test="$label='display_summary'">Резюме</xsl:when>
 					<xsl:when test="$label='display_map'">Карта</xsl:when>
 					<xsl:when test="$label='display_administrative'">Администрирование</xsl:when>
@@ -1271,8 +1270,7 @@
 					<xsl:when test="$label='display_data-download'">Загрузка данных</xsl:when>
 					<xsl:when test="$label='display_quantitative'">Количественный анализ</xsl:when>
 					<xsl:when test="$label='display_date-analysis'">Анализ датировки</xsl:when>
-					<xsl:when test="$label='display_contents'">Содержание</xsl:when>
-					<xsl:when test="$label='Browse/Results'"/>
+					<xsl:when test="$label='display_contents'">Содержание</xsl:when>					
 					<xsl:when test="$label='results_all-terms'">Все значения</xsl:when>
 					<xsl:when test="$label='results_map-results'">Карта результатов</xsl:when>
 					<xsl:when test="$label='results_filters'">Фильтры</xsl:when>
@@ -1286,15 +1284,14 @@
 					<xsl:when test="$label='results_select'">Выбрать из списка</xsl:when>
 					<xsl:when test="$label='results_sort-results'">Сортировать результаты</xsl:when>
 					<xsl:when test="$label='results_sort-category'">Сортировать категории</xsl:when>
-					<xsl:when test="$label='results_ascending'">Возрастание</xsl:when>
-					<xsl:when test="$label='results_descending'">Убывание</xsl:when>
+					<xsl:when test="$label='results_ascending'">По возрастанию</xsl:when>
+					<xsl:when test="$label='results_descending'">По возрастанию</xsl:when>
 					<xsl:when test="$label='results_result-desc'">Отображать записи XX из YY из ZZ результатов </xsl:when>
 					<xsl:when test="$label='results_coin'">монета</xsl:when>
 					<xsl:when test="$label='results_coins'">монеты</xsl:when>
 					<xsl:when test="$label='results_hoard'">клад</xsl:when>
 					<xsl:when test="$label='results_hoards'">клады</xsl:when>
-					<xsl:when test="$label='results_and'">и </xsl:when>
-					<xsl:when test="$label='Languages'"/>
+					<xsl:when test="$label='results_and'">и </xsl:when>					
 					<xsl:when test="$label='lang_ar'">Арабский</xsl:when>
 					<xsl:when test="$label='lang_de'">Немецкий</xsl:when>
 					<xsl:when test="$label='lang_en'">Английский</xsl:when>
