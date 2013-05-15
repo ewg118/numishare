@@ -59,7 +59,7 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 			
 			SELECT ?object ?title ?publisher ?identifier ?collection ?weight ?axis ?diameter ?obvThumb ?revThumb ?obvRef ?revRef  WHERE {
 			?object nm:type_series_item <typeUri>.
-			?object nm:numismatic_term <http://nomisma.org/id/coin>.
+			?object rdf:type <http://nomisma.org/id/coin>.
 			?object dcterms:title ?title .
 			?object dcterms:publisher ?publisher .
 			OPTIONAL { ?object dcterms:identifier ?identifier } .
@@ -85,12 +85,12 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 			PREFIX dcterms:  <http://purl.org/dc/terms/>
 			PREFIX nm:       <http://nomisma.org/id/>
 			
-			SELECT ?object ?uri ?title ?publisher ?findspot ?numismatic_term ?burial WHERE {
+			SELECT ?object ?uri ?title ?publisher ?findspot ?objectType ?burial WHERE {
 			?object nm:type_series_item <typeUri>.
 			?object dcterms:title ?title .
 			?object dcterms:publisher ?publisher .
 			?object nm:findspot ?findspot .
-			OPTIONAL { ?object nm:numismatic_term ?numismatic_term }
+			OPTIONAL { ?object rdf:type ?objectType }
 			OPTIONAL { ?object nm:closing_date ?burial }}]]>
 		</xsl:variable>
 		<xsl:variable name="service" select="concat($endpoint, '?query=', encode-for-uri(normalize-space(replace($query, 'typeUri', $uri))), '&amp;output=xml')"/>
@@ -105,12 +105,12 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 			PREFIX dcterms:  <http://purl.org/dc/terms/>
 			PREFIX nm:       <http://nomisma.org/id/>
 			
-			SELECT ?object ?uri ?title ?publisher ?findspot ?numismatic_term ?burial WHERE {
+			SELECT ?object ?uri ?title ?publisher ?findspot ?objectType ?burial WHERE {
 			?object nm:type_series_item <typeUri>.
 			?object dcterms:title ?title .
 			?object dcterms:publisher ?publisher .
 			?object nm:findspot ?findspot .
-			OPTIONAL { ?object nm:numismatic_term ?numismatic_term }
+			OPTIONAL { ?object rdf:type ?objectType }
 			OPTIONAL { ?object nm:closing_date ?burial }}]]>
 		</xsl:variable>
 		<xsl:variable name="service" select="concat($endpoint, '?query=', encode-for-uri(normalize-space(replace($query, 'typeUri', $uri))), '&amp;output=xml')"/>
@@ -125,10 +125,10 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 			PREFIX dcterms:  <http://purl.org/dc/terms/>
 			PREFIX nm:       <http://nomisma.org/id/>
 			
-			SELECT ?object ?numismatic_term ?identifier ?publisher ?collection ?obvThumb ?revThumb ?obvRef ?revRef ?type WHERE {
+			SELECT ?object ?objectType ?identifier ?publisher ?collection ?obvThumb ?revThumb ?obvRef ?revRef ?type WHERE {
 			<typeUris>
 			?object dcterms:publisher ?publisher .
-			?object nm:numismatic_term ?numismatic_term .
+			?object rdf:type ?objectType .
 			OPTIONAL { ?object dcterms:identifier ?identifier }
 			OPTIONAL { ?object nm:collection ?collection }			
 			OPTIONAL { ?object nm:obverseThumbnail ?obvThumb }
@@ -274,14 +274,14 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 
 	<xsl:template match="res:sparql" mode="display">
 		<xsl:variable name="coin-count"
-			select="count(descendant::res:result[contains(res:binding[@name='numismatic_term']/res:uri, 'coin')]) + count(descendant::res:result[not(child::res:binding[@name='numismatic_term'])])"/>
+			select="count(descendant::res:result[contains(res:binding[@name='objectType']/res:uri, 'coin')]) + count(descendant::res:result[not(child::res:binding[@name='objectType'])])"/>
 
 		<xsl:if test="$coin-count &gt; 0">
 			<div class="objects">
 				<h2>Examples of this type</h2>
 
 				<!-- choose between between Metis (preferred) or internal links -->
-				<xsl:apply-templates select="descendant::res:result[not(contains(res:binding[@name='numismatic_term'], 'hoard'))]" mode="display"/>
+				<xsl:apply-templates select="descendant::res:result[not(contains(res:binding[@name='objectType'], 'hoard'))]" mode="display"/>
 			</div>
 		</xsl:if>
 
@@ -291,8 +291,8 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 		<xsl:variable name="id" select="generate-id()"/>
 		<xsl:variable name="count" select="count(descendant::res:result)"/>
 		<xsl:variable name="coin-count"
-			select="count(descendant::res:result[contains(res:binding[@name='numismatic_term']/res:uri, 'coin')]) + count(descendant::res:result[not(child::res:binding[@name='numismatic_term'])])"/>
-		<xsl:variable name="hoard-count" select="count(descendant::res:result[contains(res:binding[@name='numismatic_term']/res:uri, 'hoard')])"/>
+			select="count(descendant::res:result[contains(res:binding[@name='objectType']/res:uri, 'coin')]) + count(descendant::res:result[not(child::res:binding[@name='objectType'])])"/>
+		<xsl:variable name="hoard-count" select="count(descendant::res:result[contains(res:binding[@name='objectType']/res:uri, 'hoard')])"/>
 
 		<!-- get images -->
 		<xsl:apply-templates select="descendant::res:result[res:binding[contains(@name, 'rev') or contains(@name, 'obv')]]" mode="results">

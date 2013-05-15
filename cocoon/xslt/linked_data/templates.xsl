@@ -101,7 +101,7 @@
 				</nm:type_series_item>
 			</xsl:when>
 			<xsl:when test="@recordType='physical'">
-				<rdf:Description rdf:about="{$url}id/{$id}">
+				<nm:coin rdf:about="{$url}id/{$id}">
 					<dcterms:title>
 						<xsl:value-of select="nuds:descMeta/nuds:title"/>
 					</dcterms:title>
@@ -119,8 +119,7 @@
 						<nm:collection>
 							<xsl:value-of select="."/>
 						</nm:collection>
-					</xsl:for-each>
-					<nm:numismatic_term rdf:resource="http://nomisma.org/id/coin"/>
+					</xsl:for-each>					
 					<xsl:if test="string(nuds:descMeta/nuds:typeDesc/@xlink:href)">
 						<nm:type_series_item rdf:resource="{nuds:descMeta/nuds:typeDesc/@xlink:href}"/>
 					</xsl:if>
@@ -129,7 +128,7 @@
 
 					<!-- images -->
 					<xsl:apply-templates select="nuds:digRep/mets:fileSec" mode="nomisma"/>
-				</rdf:Description>
+				</nm:coin>
 			</xsl:when>
 		</xsl:choose>
 	</xsl:template>

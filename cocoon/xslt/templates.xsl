@@ -1256,8 +1256,8 @@
 	<xsl:template name="numishare:renderSparqlResults">
 		<xsl:param name="group"/>
 		<xsl:variable name="count" select="count($group/descendant::res:result)"/>
-		<xsl:variable name="coin-count" select="count($group/descendant::res:result[contains(res:binding[@name='numismatic_term']/res:uri, 'coin')])"/>
-		<xsl:variable name="hoard-count" select="count($group/descendant::res:result[contains(res:binding[@name='numismatic_term']/res:uri, 'hoard')])"/>
+		<xsl:variable name="coin-count" select="count($group/descendant::res:result[contains(res:binding[@name='objectType']/res:uri, 'coin')])"/>
+		<xsl:variable name="hoard-count" select="count($group/descendant::res:result[contains(res:binding[@name='objectType']/res:uri, 'hoard')])"/>
 
 
 		<!--<xsl:variable name="count" select="$group/@hoards + $group/@coins"/>
