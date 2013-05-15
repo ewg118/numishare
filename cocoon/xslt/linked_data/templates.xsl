@@ -256,7 +256,7 @@
 	<xsl:template match="nh:nudsHoard" mode="nomisma">
 		<xsl:variable name="id" select="descendant::*[local-name()='nudsid']"/>
 
-		<rdf:Description rdf:about="{$url}id/{$id}">
+		<nm:hoard rdf:about="{$url}id/{$id}">
 			<xsl:choose>
 				<xsl:when test="lang('en', descendant::nh:descMeta/nh:title)">
 					<dcterms:title xml:lang="en">
@@ -274,8 +274,7 @@
 			</dcterms:publisher>
 			<xsl:for-each select="descendant::nh:geogname[@xlink:role='findspot'][string(@xlink:href)]">
 				<nm:findspot rdf:resource="{@xlink:href}"/>
-			</xsl:for-each>
-			<nm:numismatic_term rdf:resource="http://nomisma.org/id/hoard"/>
+			</xsl:for-each>			
 			<!-- closing date -->
 			<xsl:choose>
 				<xsl:when test="not(descendant::nh:deposit/nh:date) and not(descendant::nh:deposit/nh:dateRange)">
@@ -345,7 +344,7 @@
 			<xsl:for-each select="descendant::nuds:typeDesc/@xlink:href|descendant::nuds:undertypeDesc/@xlink:href">
 				<nm:type_series_item rdf:resource="{.}"/>
 			</xsl:for-each>
-		</rdf:Description>
+		</nm:hoard>
 	</xsl:template>
 
 	<!-- ************** SOLR-TO-XML **************** -->
