@@ -19,7 +19,7 @@
 						</xsl:when>
 					</xsl:choose>
 				</xsl:when>
-				<xsl:when test="$mode='ctype'">
+				<xsl:when test="$mode='nomisma'">
 					<xsl:choose>
 						<xsl:when test="count(/content/*[local-name()='nuds']) &gt; 0">
 							<xsl:apply-templates select="/content/nuds:nuds" mode="nomisma"/>
@@ -639,11 +639,11 @@
 	</xsl:template>
 
 	<!-- CTYPE/NOMISMA RDF -->
-	<xsl:template match="doc" mode="ctype">
+	<xsl:template match="doc" mode="nomisma">
 		<xsl:variable name="id" select="str[@name='nudsid']"/>
 		<xsl:variable name="recordType" select="str[@name='recordType']"/>
 
-		<rdf:Descripton>
+		<xsl:element name="nm:{if ($recordType='hoard') then 'hoard' else 'coin'}">
 			<xsl:attribute name="rdf:about" select="concat($url, 'id/', $id)"/>
 			<dcterms:title xml:lang="{if (str[@name='lang']) then str[@name='lang'] else 'en'}">
 				<xsl:value-of select="str[@name='title_display']"/>
@@ -653,8 +653,7 @@
 			</dcterms:identifier>
 			<dcterms:publisher>
 				<xsl:value-of select="str[@name='publisher_display']"/>
-			</dcterms:publisher>
-			<nm:numismatic_term rdf:resource="http://nomisma.org/id/{if ($recordType='hoard') then 'hoard' else 'coin'}"/>
+			</dcterms:publisher>			
 			<xsl:for-each select="arr[@name='repository_facet']/str">
 				<nm:collection>
 					<xsl:value-of select="."/>
@@ -707,7 +706,7 @@
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:variable>
-
+				
 				<nm:obverseThumbnail rdf:resource="{$href}"/>
 			</xsl:if>
 			<xsl:if test="string(str[@name='reference_obv'])">
@@ -721,7 +720,7 @@
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:variable>
-
+				
 				<nm:obverseReference rdf:resource="{$href}"/>
 			</xsl:if>
 			<xsl:if test="string(str[@name='thumbnail_rev'])">
@@ -735,7 +734,7 @@
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:variable>
-
+				
 				<nm:reverseThumbnail rdf:resource="{$href}"/>
 			</xsl:if>
 			<xsl:if test="string(str[@name='reference_rev'])">
@@ -749,9 +748,9 @@
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:variable>
-
+				
 				<nm:reverseReference rdf:resource="{$href}"/>
 			</xsl:if>
-		</rdf:Descripton>
+		</xsl:element>
 	</xsl:template>
 </xsl:stylesheet>

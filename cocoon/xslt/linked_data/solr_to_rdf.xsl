@@ -18,8 +18,8 @@
 				<xsl:when test="$mode='pelagios'">
 					<xsl:apply-templates select="//doc" mode="pelagios"/>
 				</xsl:when>
-				<xsl:when test="$mode='ctype'">
-					<xsl:apply-templates select="//doc" mode="ctype"/>
+				<xsl:when test="$mode='nomisma'">
+					<xsl:apply-templates select="//doc" mode="nomisma"/>
 				</xsl:when>
 			</xsl:choose>
 		</rdf:RDF>
