@@ -150,16 +150,16 @@
 					<xsl:choose>
 						<xsl:when test="string($lang) and contains($href, 'nomisma.org')">
 							<xsl:choose>
-								<xsl:when test="string(exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/skos:prefLabel[@xml:lang=$lang])">
-									<xsl:value-of select="exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/skos:prefLabel[@xml:lang=$lang]"/>
+								<xsl:when test="string($rdf/*[@rdf:about=$href]/skos:prefLabel[@xml:lang=$lang])">
+									<xsl:value-of select="$rdf/*[@rdf:about=$href]/skos:prefLabel[@xml:lang=$lang]"/>
 								</xsl:when>
 								<xsl:otherwise>
-									<xsl:value-of select="exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/skos:prefLabel[@xml:lang='en']"/>
+									<xsl:value-of select="$rdf/*[@rdf:about=$href]/skos:prefLabel[@xml:lang='en']"/>
 								</xsl:otherwise>
 							</xsl:choose>
 						</xsl:when>
 						<xsl:otherwise>
-							<xsl:value-of select="exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/skos:prefLabel[@xml:lang='en']"/>
+							<xsl:value-of select="$rdf/*[@rdf:about=$href]/skos:prefLabel[@xml:lang='en']"/>
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:with-param>
@@ -309,11 +309,11 @@
 							<xsl:choose>
 								<xsl:when test="string($lang)">
 									<xsl:choose>
-										<xsl:when test="lang($lang, exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$thisHref]/skos:prefLabel)">
-											<xsl:value-of select="exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$thisHref]/skos:prefLabel[@xml:lang=$lang]"/>
+										<xsl:when test="string($rdf/*[@rdf:about=$thisHref]/skos:prefLabel[@xml:lang=$lang])">
+											<xsl:value-of select="$rdf/*[@rdf:about=$thisHref]/skos:prefLabel[@xml:lang=$lang]"/>
 										</xsl:when>
 										<xsl:otherwise>
-											<xsl:value-of select="exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$thisHref]/skos:prefLabel[@xml:lang='en']"/>
+											<xsl:value-of select="$rdf/*[@rdf:about=$thisHref]/skos:prefLabel[@xml:lang='en']"/>
 										</xsl:otherwise>
 									</xsl:choose>
 								</xsl:when>
