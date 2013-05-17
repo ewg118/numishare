@@ -56,7 +56,8 @@
 						<script type="text/javascript" src="http://www.openlayers.org/api/OpenLayers.js"/>
 						<script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3.2&amp;sensor=false"/>
 						<script type="text/javascript" src="{$display_path}javascript/mxn.js"/>
-						<script type="text/javascript" src="http://static.simile.mit.edu/timeline/api-2.2.0/timeline-api.js?bundle=true"/>
+						<script type="text/javascript" src="{$display_path}javascript/timeline-2.3.0.js"/>
+						<link type="text/css" href="{$display_path}timeline-2.3.0.css" rel="stylesheet"/>
 						<script type="text/javascript" src="{$display_path}javascript/timemap_full.pack.js"/>
 						<script type="text/javascript" src="{$display_path}javascript/param.js"/>
 						<script type="text/javascript" src="{$display_path}javascript/loaders/xml.js"/>
@@ -90,17 +91,19 @@
 					</script>
 				</xsl:if>
 			</head>
-			<body>
-				<xsl:call-template name="header"/>
-				<xsl:call-template name="maps"/>
-				<xsl:call-template name="footer"/>
+			<body class="yui-skin-sam">
+				<div id="doc4" class="{//config/theme/layouts/*[name()=$pipeline]/yui_class}">
+					<xsl:call-template name="header"/>
+					<xsl:call-template name="maps"/>
+					<xsl:call-template name="footer"/>
+				</div>
 			</body>
 		</html>
 	</xsl:template>
 
 	<xsl:template name="maps">
 		<div class="yui3-g">
-			<div class="yui3-u-1">
+			<div class="yui3-u">
 				<div class="content">
 					<div id="backgroundPopup"/>
 					<h1>
@@ -111,7 +114,7 @@
 
 					<xsl:choose>
 						<xsl:when test="//result[@name='response']/@numFound &gt; 0">
-							<div style="display:table;width:100%">
+							<div style="display:table">
 								<ul id="filter_list" section="maps">
 									<xsl:apply-templates select="//lst[@name='facet_fields']"/>
 								</ul>

@@ -62,6 +62,9 @@
 				<encoding>UTF-8</encoding>
 				<indent>yes</indent>
 			</map:serializer>
+			<map:serializer name="text" mime-type="text/plain" src="org.apache.cocoon.serialization.TextSerializer"  logger="sitemap.serializer.text">
+				<encoding>utf-8</encoding>
+			</map:serializer>
 		</map:serializers>
 	</map:components>
 
