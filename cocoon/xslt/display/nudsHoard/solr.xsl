@@ -155,11 +155,13 @@
 						<xsl:variable name="href" select="@xlink:href"/>
 						<xsl:apply-templates select="exsl:node-set($nudsGroup)//object[@xlink:href=$href]/descendant::nuds:typeDesc">
 							<xsl:with-param name="recordType">hoard</xsl:with-param>
+							<xsl:with-param name="lang" select="$lang"/>
 						</xsl:apply-templates>
 					</xsl:when>
 					<xsl:otherwise>
 						<xsl:apply-templates select=".">
 							<xsl:with-param name="recordType">hoard</xsl:with-param>
+							<xsl:with-param name="lang" select="$lang"/>
 						</xsl:apply-templates>
 					</xsl:otherwise>
 				</xsl:choose>
