@@ -24,7 +24,11 @@ namespace :deploy do
   task :link, :roles => :app, :except => { :no_release => true } do
     web_root = "#{current_path}/www"
     run "mkdir -p #{web_root}"
-    run "cd #{web_root} && ln -snf #{current_path}/cocoon/css"
+    run "cd #{web_root} && ln -snf #{current_path}/cocoon/css/style.css"
+    run "cd #{web_root} && ln -snf #{current_path}/cocoon/css/themes"
+    run "cd #{web_root} && ln -snf #{current_path}/cocoon/css/jquery.fancybox-1.3.4.css"
+    run "cd #{web_root} && ln -snf #{current_path}/cocoon/css/jquery.multiselect.css"
+    run "cd #{web_root} && ln -snf #{current_path}/cocoon/css/jquery-ui-1.8.10.custom.css"
     run "cd #{web_root} && ln -snf #{current_path}/cocoon/images"
     run "cd #{web_root} && ln -snf #{current_path}/cocoon/javascript"
     run "cd #{web_root}/images && ln -snf #{shared_path}/coins"
