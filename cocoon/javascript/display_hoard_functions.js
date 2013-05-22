@@ -5,9 +5,7 @@ Library: jQuery
 Description: Rendering graphics based on hoard counts
 ************************************/
 $(document).ready(function () {
-	$("#accordion").accordion({
-		//heightStyle: "content"
-	});
+	 $("#quantTabs").tabs();
 	
 	$('.toggle-coin').click(function () {
 		var id = $(this).attr('id').split('-')[0];

@@ -28,11 +28,13 @@
 				</xsl:for-each>
 			</xsl:variable>
 
-			<xsl:for-each select="document(concat('http://nomisma.org/get-nuds?id=', $id-param))//nuds:nuds">
-				<object xlink:href="http://nomisma.org/id/{nuds:nudsHeader/nuds:nudsid}">
-					<xsl:copy-of select="."/>
-				</object>
-			</xsl:for-each>
+			<xsl:if test="string-length($id-param) &gt; 0">
+				<xsl:for-each select="document(concat('http://admin.numismatics.org/nomisma/apis/getNuds?identifiers=', $id-param))//nuds:nuds">
+					<object xlink:href="http://nomisma.org/id/{nuds:nudsHeader/nuds:nudsid}">
+						<xsl:copy-of select="."/>
+					</object>
+				</xsl:for-each>
+			</xsl:if>
 
 			<!-- incorporate other typeDescs which do not point to nomisma.org -->
 			<xsl:for-each select="descendant::nuds:typeDesc[not(contains(@xlink:href, 'nomisma.org')) and (boolean(index-of($codes, @certainty)) = false())]">

@@ -123,12 +123,11 @@
 				<xsl:value-of select="if(contains(datetime:dateTime(), 'Z')) then datetime:dateTime() else concat(datetime:dateTime(), 'Z')"/>
 			</field>
 
-
 			<!-- create description if there are contents -->
 			<xsl:if test="$hasContents = 'true'">
 				<xsl:variable name="denominations" as="element()*">
 					<denominations>
-						<xsl:copy-of select="document(concat('cocoon:/get_hoard_quant?id=', nh:nudsHeader/nh:nudsid, '&amp;calculate=denomination&amp;type=count'))"/>
+						<xsl:copy-of select="document(concat('cocoon:/get_hoard_quant?id=', nh:nudsHeader/nh:nudsid, '&amp;calculate=denomination&amp;type=count', if(string($lang)) then concat('&amp;lang=', $lang) else ''))"/>
 					</denominations>
 				</xsl:variable>
 

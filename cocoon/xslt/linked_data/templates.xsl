@@ -60,7 +60,7 @@
 			<dcterms:title>
 				<xsl:value-of select="descendant::*[local-name()='descMeta']/*[local-name()='title']"/>
 			</dcterms:title>
-			<xsl:for-each select="distinct-values(exsl:node-set($rdf)//skos:related[contains(@rdf:resource, 'pleiades')]/@rdf:resource)">
+			<xsl:for-each select="distinct-values($rdf//skos:related[contains(@rdf:resource, 'pleiades')]/@rdf:resource)">
 				<oac:hasBody rdf:resource="{.}#this"/>
 			</xsl:for-each>
 			<oac:hasTarget rdf:resource="{$url}id/{$id}"/>
@@ -290,7 +290,7 @@
 							</xsl:variable>
 
 							<xsl:if test="string-length($id-param) &gt; 0">
-								<xsl:for-each select="document(concat('http://nomisma.org/get-nuds?id=', $id-param))//nuds:nuds">
+								<xsl:for-each select="document(concat('http://admin.numismatics.org/nomisma/apis/getNuds?identifiers=', $id-param))//nuds:nuds">
 									<object xlink:href="http://nomisma.org/id/{nuds:nudsHeader/nuds:nudsid}">
 										<xsl:copy-of select="."/>
 									</object>
@@ -705,7 +705,7 @@
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:variable>
-				
+
 				<nm:obverseThumbnail rdf:resource="{$href}"/>
 			</xsl:if>
 			<xsl:if test="string(str[@name='reference_obv'])">
@@ -719,7 +719,7 @@
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:variable>
-				
+
 				<nm:obverseReference rdf:resource="{$href}"/>
 			</xsl:if>
 			<xsl:if test="string(str[@name='thumbnail_rev'])">
@@ -733,7 +733,7 @@
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:variable>
-				
+
 				<nm:reverseThumbnail rdf:resource="{$href}"/>
 			</xsl:if>
 			<xsl:if test="string(str[@name='reference_rev'])">
@@ -747,7 +747,7 @@
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:variable>
-				
+
 				<nm:reverseReference rdf:resource="{$href}"/>
 			</xsl:if>
 		</xsl:element>

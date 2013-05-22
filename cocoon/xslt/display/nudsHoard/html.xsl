@@ -195,35 +195,15 @@
 		<ul>
 			<xsl:apply-templates mode="descMeta"/>
 			<xsl:if test="not(nh:deposit/nh:date) and not(nh:deposit/nh:dateRange)">
-				<!-- get date values for closing date -->
-				<xsl:variable name="dates">
-					<dates>
-						<xsl:for-each select="distinct-values(exsl:node-set($nudsGroup)/descendant::*/@standardDate)">
-							<xsl:sort data-type="number"/>
-							<xsl:if test="number(.)">
-								<date>
-									<xsl:value-of select="number(.)"/>
-								</date>
-							</xsl:if>
-						</xsl:for-each>
-					</dates>
-				</xsl:variable>
 				<li>
 					<b>Closing Date: </b>
-					<xsl:choose>
-						<xsl:when test="count(exsl:node-set($dates)/dates/date) &gt; 0">
-							<xsl:value-of select="nh:normalize_date(exsl:node-set($dates)/dates/date[last()], exsl:node-set($dates)/dates/date[last()])"/>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:text>Unknown</xsl:text>
-						</xsl:otherwise>
-					</xsl:choose>
+					<cinclude:include src="cocoon:/get_closing_date?id={$id}&amp;exclude=2,3,4,7,8,9"/>
 				</li>
 			</xsl:if>
 			<xsl:if test="$hasContents = 'true'">
 				<xsl:variable name="denominations" as="element()*">
 					<denominations>
-						<xsl:copy-of select="document(concat('cocoon:/get_hoard_quant?id=', $id, '&amp;calculate=denomination&amp;type=count'))"/>
+						<xsl:copy-of select="document(concat('cocoon:/get_hoard_quant?id=', $id, '&amp;calculate=denomination&amp;type=count', if(string($lang)) then concat('&amp;lang=', $lang) else ''))"/>
 					</denominations>
 				</xsl:variable>
 
@@ -311,8 +291,17 @@
 					<xsl:text> (extraneous)</xsl:text>
 				</xsl:if>
 				<br/>
+				<!--<xsl:copy-of select="$typeDesc"/>-->
 				<xsl:for-each select="exsl:node-set($typeDesc)/nuds:typeDesc/nuds:denomination">
-					<xsl:value-of select="."/>
+					<xsl:variable name="href" select="@xlink:href"/>
+					<xsl:choose>
+						<xsl:when test="string($lang) and contains($href, 'nomisma.org')">
+							<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about=$href], $lang)"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="normalize-space(.)"/>
+						</xsl:otherwise>
+					</xsl:choose>
 					<xsl:choose>
 						<xsl:when test="not(position()=last())">
 							<xsl:text>, </xsl:text>
@@ -327,11 +316,13 @@
 				<xsl:choose>
 					<xsl:when test="exsl:node-set($typeDesc)/nuds:typeDesc/nuds:date">
 						<xsl:value-of select="exsl:node-set($typeDesc)/nuds:typeDesc/nuds:date[1]"/>
+						<xsl:text> (RRC)</xsl:text>
 					</xsl:when>
 					<xsl:when test="exsl:node-set($typeDesc)/nuds:typeDesc/nuds:dateRange">
 						<xsl:value-of select="exsl:node-set($typeDesc)/nuds:typeDesc/nuds:dateRange/nuds:fromDate"/>
 						<xsl:text> - </xsl:text>
 						<xsl:value-of select="exsl:node-set($typeDesc)/nuds:typeDesc/nuds:dateRange/nuds:toDate"/>
+						<xsl:text> (RRC)</xsl:text>
 					</xsl:when>
 				</xsl:choose>
 				<div class="coin-content" id="{$obj-id}-div" style="display:none">

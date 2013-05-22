@@ -79,17 +79,7 @@
 
 					<!-- pull language from nomisma, if available -->
 					<xsl:variable name="value">
-						<xsl:choose>
-							<xsl:when test="string($lang) and contains($href, 'nomisma.org')">
-								<xsl:choose>
-									<xsl:when test="string(exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/skos:prefLabel[@xml:lang=$lang])">
-										<xsl:value-of select="exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/skos:prefLabel[@xml:lang=$lang]"/>
-									</xsl:when>
-									<xsl:otherwise>
-										<xsl:value-of select="exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/skos:prefLabel[@xml:lang='en']"/>
-									</xsl:otherwise>
-								</xsl:choose>
-							</xsl:when>
+						<xsl:choose>							
 							<xsl:when test="string($lang) and contains($href, 'geonames.org')">
 								<xsl:variable name="geonameId" select="substring-before(substring-after($href, 'geonames.org/'), '/')"/>
 								<xsl:variable name="geonames_data" select="document(concat($geonames-url, '/get?geonameId=', $geonameId, '&amp;username=', $geonames_api_key, '&amp;style=full'))"/>
@@ -108,13 +98,12 @@
 								</xsl:choose>
 							</xsl:when>
 							<xsl:otherwise>
-								<!-- if there is no text value and it points to nomisma.org, grab the prefLabel -->
 								<xsl:choose>
-									<xsl:when test="not(string(normalize-space(.))) and contains($href, 'nomisma.org')">
-										<xsl:value-of select="exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/skos:prefLabel[@xml:lang='en']"/>
+									<xsl:when test="string($lang) and contains($href, 'nomisma.org')">
+										<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about=$href], $lang)"/>
 									</xsl:when>
 									<xsl:otherwise>
-										<xsl:value-of select="."/>
+										<xsl:value-of select="normalize-space(.)"/>
 									</xsl:otherwise>
 								</xsl:choose>
 							</xsl:otherwise>
@@ -169,7 +158,7 @@
 						</a>
 						<!-- parse nomisma RDFa, create links for pleiades and wikipedia -->
 						<!--<xsl:if test="contains($href, 'nomisma.org')">
-							<xsl:for-each select="exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/skos:related">
+							<xsl:for-each select="$rdf/*[@rdf:about=$href]/skos:related">
 								<xsl:variable name="source">
 									<xsl:choose>
 										<xsl:when test="contains(@rdf:resource, 'pleiades')">
