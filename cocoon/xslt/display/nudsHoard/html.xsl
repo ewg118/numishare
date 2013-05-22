@@ -266,30 +266,10 @@
 			<td style="width:10%;text-align:center">
 				<xsl:value-of select="if(@count) then @count else 1"/>
 			</td>
-			<td>
-				<xsl:choose>
-					<xsl:when test="nuds:typeDesc/@certainty='2'">
-						<xsl:text>As </xsl:text>
-					</xsl:when>
-					<xsl:when test="nuds:typeDesc/@certainty='3'">
-						<xsl:text>Copy of </xsl:text>
-					</xsl:when>
-					<xsl:when test="nuds:typeDesc/@certainty='4'">
-						<xsl:text>Copy as </xsl:text>
-					</xsl:when>
-					<xsl:when test="nuds:typeDesc/@certainty='5'">
-						<xsl:text>As issue </xsl:text>
-					</xsl:when>
-					<xsl:when test="nuds:typeDesc/@certainty='9'">
-						<xsl:text>At least one of </xsl:text>
-					</xsl:when>
-				</xsl:choose>
+			<td>				
 				<a href="{$typeDesc_resource}" target="_blank">
 					<xsl:value-of select="exsl:node-set($nudsGroup)/nudsGroup/object[@xlink:href = $typeDesc_resource]/nuds:nuds/nuds:descMeta/nuds:title"/>
 				</a>
-				<xsl:if test="nuds:typeDesc/@certainty='7'">
-					<xsl:text> (extraneous)</xsl:text>
-				</xsl:if>
 				<br/>
 				<!--<xsl:copy-of select="$typeDesc"/>-->
 				<xsl:for-each select="exsl:node-set($typeDesc)/nuds:typeDesc/nuds:denomination">
