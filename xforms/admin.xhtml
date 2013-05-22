@@ -93,13 +93,42 @@
 						<reference>400</reference>
 					</images>
 					<languages>
-						<language code="ar" enabled="false"/>
-						<language code="de" enabled="false"/>
-						<language code="en" enabled="false"/>
-						<language code="fr" enabled="false"/>
-						<language code="nl" enabled="false"/>
-						<language code="ro" enabled="false"/>
-						<language code="ru" enabled="false"/>
+						<language code="ar" enabled="false">
+							<label xml:lang="ar">العربيّة</label>
+							<label xml:lang="en">Arabic</label>
+							<label xml:lang="de">Arabisch</label>
+							<label xml:lang="fr">Arabe</label>
+							<label xml:lang="ro">Arabă</label>
+						</language>
+						<language code="de" enabled="false">
+							<label xml:lang="ar">ألماني</label>
+							<label xml:lang="de">Deutsch</label>
+							<label xml:lang="en">German</label>
+							<label xml:lang="fr">Allemand</label>
+							<label xml:lang="ro">Germană</label>
+						</language>
+						<language code="en" enabled="false">
+							<label xml:lang="ar">إنجليزي</label>
+							<label xml:lang="de">Englisch</label>
+							<label xml:lang="en">English</label>
+							<label xml:lang="fr">Anglais</label>
+							<label xml:lang="ro">Engleză</label>
+						</language>
+						<language code="fr" enabled="false">
+							<label xml:lang="ar">فرنسي</label>
+							<label xml:lang="de">Französisch</label>
+							<label xml:lang="en">French</label>
+							<label xml:lang="fr">Français</label>
+							<label xml:lang="ro">Franceză</label>
+						</language>						
+						
+						<language code="ro" enabled="false">
+							<label xml:lang="ar">رومانيا</label>
+							<label xml:lang="de">Rumänisch</label>
+							<label xml:lang="en">Romanian</label>
+							<label xml:lang="fr">Roumain</label>
+							<label xml:lang="ro">Romană</label>
+						</language>
 					</languages>
 					<theme>
 						<jquery_ui_theme>smoothness</jquery_ui_theme>
@@ -402,6 +431,14 @@
 
 					<!-- get Solr document -->
 					<xforms:send submission="generate-add-document"/>
+					<xforms:send submission="submit-commit"/>
+					
+					<!-- optimize index -->
+					<xforms:send submission="optimize"/>
+					<!-- reload table -->
+					<xforms:setvalue ref="instance('control-instance')/solr-core" value="instance('config')/solr_all"/>
+					<xforms:delete nodeset="instance('list')/*"/>
+					<xforms:send submission="query-solr"/>
 				</xforms:action>
 			</xforms:submission>
 			<!-- access service to read in pre-transformed solr doc -->
@@ -431,12 +468,6 @@
 				<xforms:message ev:event="xforms-submit-error" level="modal">Error getting Solr document from Cocoon xquery pipeline.</xforms:message>
 				<xforms:action ev:event="xforms-submit-done">
 					<xforms:send submission="post-solr-doc"/>
-					<xforms:send submission="submit-commit"/>
-					
-					<!-- reload table -->
-					<xforms:setvalue ref="instance('control-instance')/solr-core" value="instance('config')/solr_all"/>
-					<xforms:delete nodeset="instance('list')/*"/>
-					<xforms:send submission="query-solr"/>
 				</xforms:action>
 			</xforms:submission>
 
@@ -1044,16 +1075,23 @@
 								<xforms:setvalue ref="instance('control-instance')/identifiers" value="context()"/>
 								<xforms:setvalue ref="instance('control-instance')/solr-core" value="instance('config')/solr_published"/>
 								<!-- get Solr document -->
-								<xforms:send submission="generate-add-document"/>
+								<xforms:send submission="generate-add-document"/>								
 							</xforms:action>
+							
+							<!-- commit and optimize only after posting all docs to solr -->
+							<xforms:send submission="submit-commit"/>							
 							<!-- optimize index -->
 							<xforms:send submission="optimize"/>
+							<!-- reload table -->
+							<xforms:setvalue ref="instance('control-instance')/solr-core" value="instance('config')/solr_all"/>
+							<xforms:delete nodeset="instance('list')/*"/>
+							<xforms:send submission="query-solr"/>
 						</xforms:action>
 						
-						<!-- if nuds-count is greater than 0, process 1000 coin or coin-type records at a time -->
+						<!-- if nuds-count is greater than 0, process 5000 coin or coin-type records at a time -->
 						<xforms:action if="number(instance('control-instance')/nuds-count) &gt; 0">
 							<xforms:setvalue ref="instance('eXist-xquery')/exist:text">&lt;report> { for $i at $position in collection()  return 
-								concat(substring-before(substring-after(document-uri($i), 'objects/'), '.xml'), if ($position mod 100 = 0) then ',' else '|') } &lt;/report></xforms:setvalue>
+								concat(substring-before(substring-after(document-uri($i), 'objects/'), '.xml'), if ($position mod 5000 = 0) then ',' else '|') } &lt;/report></xforms:setvalue>
 							<xforms:send submission="xquery-collection"/>
 							<xxforms:variable name="tokens" select="tokenize(replace(instance('collection-result')/report, ' ', ''), ',')"/>
 							<xforms:action xxforms:iterate="$tokens">
@@ -1062,8 +1100,14 @@
 								<!-- get Solr document -->
 								<xforms:send submission="generate-add-document"/>
 							</xforms:action>
+							<!-- commit and optimize only after posting all docs to solr -->
+							<xforms:send submission="submit-commit"/>							
 							<!-- optimize index -->
 							<xforms:send submission="optimize"/>
+							<!-- reload table -->
+							<xforms:setvalue ref="instance('control-instance')/solr-core" value="instance('config')/solr_all"/>
+							<xforms:delete nodeset="instance('list')/*"/>
+							<xforms:send submission="query-solr"/>
 						</xforms:action>
 					</xforms:action>
 				</fr:positive-choice>
