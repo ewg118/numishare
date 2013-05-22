@@ -19,6 +19,18 @@ set :normalize_asset_timestamps, false
 after "deploy", "solr:index"
 after "deploy:restart", "deploy:cleanup"
 
+namespace :deploy do
+  desc 'Make the links'
+  task :link, :roles => :app, :except => { :no_release => true } do
+    web_root = "#{current_path}/www"
+    run "mkdir -p #{web_root}"
+    run "cd #{web_root} && ln -snf #{current_path}/cocoon/css"
+    run "cd #{web_root} && ln -snf #{current_path}/cocoon/images"
+    run "cd #{web_root} && ln -snf #{current_path}/cocoon/javascript"
+    run "cd #{web_root}/images && ln -snf #{shared_path}/coins"
+  end
+end
+
 namespace :solr do
   desc 'Runs the indexer/generate_index.sh script'
   task :index, :roles => :app, :except => {:no_release => true} do
