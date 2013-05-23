@@ -3,9 +3,9 @@ set :default_stage, "staging"
 require 'capistrano/ext/multistage'
 
 set :application, "coins"
-set :repository,  "git://github.com/waynegraham/numishare.git"
+set :repository,  "git://github.com/ewg118/numishare.git"
 set :scn, :git
-set :branch, "feature/uva_deployment"
+set :branch, "uva"
 
 set :user, 'sds-deployer'
 set :run_method, :run
