@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <!--
   Licensed to the Apache Software Foundation (ASF) under one or more
-  contributor license agreements.  See the NOTICE file distributed with
+  contributor license agreements. See the NOTICE file distributed with
   this work for additional information regarding copyright ownership.
   The ASF licenses this file to You under the Apache License, Version 2.0
   (the "License"); you may not use this file except in compliance with
-  the License.  You may obtain a copy of the License at
+  the License. You may obtain a copy of the License at
 
       http://www.apache.org/licenses/LICENSE-2.0
 
@@ -63,7 +63,7 @@
 				<indent>yes</indent>
 			</map:serializer>
 			<map:serializer name="text-utf" mime-type="text/plain" src="org.apache.cocoon.serialization.TextSerializer">
-				<encoding>UTF-8</encoding>				
+				<encoding>UTF-8</encoding>
 			</map:serializer>
 		</map:serializers>
 	</map:components>
@@ -101,9 +101,9 @@
 
 		<map:component-configurations>
 			<global-variables>
-				<!-- static variables, referred to as generate calls in pipelines.  
-					These only need to be changed if Solr and Orbeon are run on a different server or Tomcat application than Cocoon -->
-				<solr-url>http://localhost:8080/solr33/numishare-published/</solr-url>
+				<!-- static variables, referred to as generate calls in pipelines.
+These only need to be changed if Solr and Orbeon are run on a different server or Tomcat application than Cocoon -->
+				<solr-url>http://localhost:8080/solr/numishare-published/</solr-url>
 				<!--<exist-url>http://localhost:8080/orbeon/exist/rest/db/</exist-url>-->
 				<exist-url>xml/db/</exist-url>
 				<collection-name>uva</collection-name>
@@ -259,9 +259,10 @@
 			<!-- returned results capped at 50,000 -->
 			<map:match pattern="pelagios.rdf">
 				<map:aggregate element="content">
-					<map:part src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}+AND+{url-encode:pleiades_uri:*}&amp;rows=50000&amp;fl=id,nudsid,title_display,pleiades_uri"/>
+					<map:part
+						src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}+AND+{url-encode:pleiades_uri:*}&amp;rows=50000&amp;fl=id,nudsid,title_display,pleiades_uri"/>
 					<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
-				</map:aggregate>				
+				</map:aggregate>
 				<map:transform src="xslt/linked_data/solr_to_rdf.xsl" label="basiccontent" type="xslt-saxon">
 					<map:parameter name="use-request-parameters" value="true"/>
 					<map:parameter name="mode" value="pelagios"/>
@@ -370,7 +371,8 @@
 							</map:when>
 							<map:otherwise>
 								<map:aggregate element="content">
-									<map:part src="{global:solr-url}select?q=lang:{request-param:lang}+AND+collection-name:{global:collection-name}&amp;sort={url-encode:{request-param:sort}}&amp;rows=500"/>
+									<map:part
+										src="{global:solr-url}select?q=lang:{request-param:lang}+AND+collection-name:{global:collection-name}&amp;sort={url-encode:{request-param:sort}}&amp;rows=500"/>
 									<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
 								</map:aggregate>
 							</map:otherwise>
@@ -381,13 +383,15 @@
 							<map:parameter name="parameter-selector-test" value="{request-param:lang}"/>
 							<map:when test="">
 								<map:aggregate element="content">
-									<map:part src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}&amp;sort={url-encode:{request-param:sort}}&amp;rows=500"/>
+									<map:part
+										src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}&amp;sort={url-encode:{request-param:sort}}&amp;rows=500"/>
 									<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
 								</map:aggregate>
 							</map:when>
 							<map:otherwise>
 								<map:aggregate element="content">
-									<map:part src="{global:solr-url}select?q=lang:{request-param:lang}+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}&amp;sort={url-encode:{request-param:sort}}&amp;rows=500"/>
+									<map:part
+										src="{global:solr-url}select?q=lang:{request-param:lang}+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}&amp;sort={url-encode:{request-param:sort}}&amp;rows=500"/>
 									<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
 								</map:aggregate>
 							</map:otherwise>
@@ -451,7 +455,7 @@
 						</map:aggregate>
 					</map:otherwise>
 				</map:select>
-				
+
 				<map:transform type="xslt-saxon" src="xslt/search.xsl" label="basiccontent">
 					<map:parameter name="use-request-parameters" value="true"/>
 					<map:parameter name="pipeline" value="search"/>
@@ -482,7 +486,7 @@
 											<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
 										</map:aggregate>
 									</map:otherwise>
-								</map:select>								
+								</map:select>
 							</map:when>
 							<map:otherwise>
 								<map:select type="parameter">
@@ -502,7 +506,7 @@
 										</map:aggregate>
 									</map:otherwise>
 								</map:select>
-								
+
 							</map:otherwise>
 						</map:select>
 					</map:when>
@@ -526,7 +530,7 @@
 											<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
 										</map:aggregate>
 									</map:otherwise>
-								</map:select>								
+								</map:select>
 							</map:when>
 							<map:otherwise>
 								<map:select type="parameter">
@@ -579,7 +583,7 @@
 						</map:aggregate>
 					</map:otherwise>
 				</map:select>
-				
+
 				<map:transform type="xslt-saxon" src="xslt/compare.xsl" label="basiccontent">
 					<map:parameter name="use-request-parameters" value="true"/>
 					<map:parameter name="pipeline" value="compare"/>
@@ -603,7 +607,8 @@
 							</map:when>
 							<map:otherwise>
 								<map:aggregate element="content">
-									<map:part src="{global:solr-url}select?q=lang:{request-param:lang}+AND+collection-name:{global:collection-name}+AND+mint_geo:*&amp;start={request-param:start}&amp;rows=500"/>
+									<map:part
+										src="{global:solr-url}select?q=lang:{request-param:lang}+AND+collection-name:{global:collection-name}+AND+mint_geo:*&amp;start={request-param:start}&amp;rows=500"/>
 									<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
 								</map:aggregate>
 							</map:otherwise>
@@ -614,13 +619,15 @@
 							<map:parameter name="parameter-selector-test" value="{request-param:lang}"/>
 							<map:when test="">
 								<map:aggregate element="content">
-									<map:part src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q} AND mint_geo:*}&amp;start={request-param:start}&amp;rows=500"/>
+									<map:part
+										src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q} AND mint_geo:*}&amp;start={request-param:start}&amp;rows=500"/>
 									<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
 								</map:aggregate>
 							</map:when>
 							<map:otherwise>
 								<map:aggregate element="content">
-									<map:part src="{global:solr-url}select?q=lang:{request-param:lang}+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q} AND mint_geo:*}&amp;start={request-param:start}&amp;rows=500"/>
+									<map:part
+										src="{global:solr-url}select?q=lang:{request-param:lang}+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q} AND mint_geo:*}&amp;start={request-param:start}&amp;rows=500"/>
 									<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
 								</map:aggregate>
 							</map:otherwise>
@@ -652,7 +659,7 @@
 						</map:aggregate>
 					</map:otherwise>
 				</map:select>
-				
+
 				<map:transform type="xslt-saxon" src="xslt/geographic/mints-to-kml.xsl" label="basiccontent">
 					<map:parameter name="use-request-parameters" value="true"/>
 				</map:transform>
@@ -703,7 +710,7 @@
 						</map:aggregate>
 					</map:otherwise>
 				</map:select>
-				
+
 				<map:transform type="xslt-saxon" src="xslt/geographic/findspots-to-kml.xsl" label="basiccontent">
 					<map:parameter name="use-request-parameters" value="true"/>
 				</map:transform>
@@ -731,7 +738,7 @@
 						</map:aggregate>
 					</map:otherwise>
 				</map:select>
-				
+
 				<map:transform type="xslt-saxon" src="xslt/maps.xsl" label="basiccontent">
 					<map:parameter name="use-request-parameters" value="true"/>
 					<map:parameter name="pipeline" value="maps"/>
@@ -748,7 +755,7 @@
 				</map:aggregate>
 				<map:transform type="xslt-saxon" src="xslt/apis/get.xsl" label="basiccontent">
 					<map:parameter name="use-request-parameters" value="true"/>
-				</map:transform>				
+				</map:transform>
 				<map:transform type="cinclude"/>
 				<map:select type="parameter">
 					<map:parameter name="parameter-selector-test" value="{request-param:format}"/>
@@ -764,7 +771,7 @@
 				</map:select>
 			</map:match>
 
-			<!-- search API  XML results conform to OpenSearch -->
+			<!-- search API XML results conform to OpenSearch -->
 			<map:match pattern="apis/search">
 				<map:select type="parameter">
 					<map:parameter name="parameter-selector-test" value="{request-param:lang}"/>
@@ -826,7 +833,7 @@
 				<map:select type="parameter">
 					<map:parameter name="parameter-selector-test" value="{request-param:lang}"/>
 					<map:when test="">
-						<map:aggregate element="content">							
+						<map:aggregate element="content">
 							<map:part
 								src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}&amp;rows=24&amp;start={request-param:start}&amp;sort={url-encode:{request-param:sort}}"
 								label="record"/>
@@ -838,11 +845,11 @@
 							<map:part
 								src="{global:solr-url}select?q=lang:{request-param:lang}+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}&amp;rows=24&amp;start={request-param:start}&amp;sort={url-encode:{request-param:sort}}"
 								label="record"/>
-							<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>							
+							<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
 						</map:aggregate>
 					</map:otherwise>
 				</map:select>
-				
+
 				<map:transform type="xslt-saxon" src="xslt/ajax/results_ajax.xsl" label="basiccontent">
 					<map:parameter name="use-request-parameters" value="true"/>
 				</map:transform>
@@ -869,7 +876,7 @@
 						</map:aggregate>
 					</map:otherwise>
 				</map:select>
-				
+
 				<map:transform type="xslt-saxon" src="xslt/ajax/compare_results.xsl" label="basiccontent">
 					<map:parameter name="use-request-parameters" value="true"/>
 				</map:transform>
@@ -898,7 +905,7 @@
 							label="record"/>
 					</map:otherwise>
 				</map:select>
-				
+
 				<map:transform src="xslt/ajax/get_hoards.xsl" label="basiccontent" type="xslt-saxon">
 					<map:parameter name="use-request-parameters" value="true"/>
 				</map:transform>
@@ -925,7 +932,7 @@
 				</map:transform>
 				<map:serialize type="html"/>
 			</map:match>
-			
+
 			<!-- get unique certainty codes within the collection -->
 			<map:match pattern="get_certainty_codes">
 				<map:generate src="{global:exist-url}{global:collection-name}/get_certainty_codes.xql"/>
@@ -968,7 +975,7 @@
 							src="{global:solr-url}select?q=lang:{request-param:lang}+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}&amp;facet.sort=index&amp;rows=0&amp;facet.field={request-param:field}_hier&amp;fq=collection-name:{global:collection-name}+AND+{url-encode:{request-param:field}_hier:{request-param:fq}}&amp;facet.prefix={url-encode:{request-param:prefix}}&amp;link={url-encode:{request-param:link}}&amp;mode={request-param:mode}"
 							label="record"/>
 					</map:otherwise>
-				</map:select>				
+				</map:select>
 				<map:transform type="xslt-saxon" src="xslt/ajax/get_hier.xsl" label="basiccontent">
 					<map:parameter name="use-request-parameters" value="true"/>
 					<map:parameter name="collection-name" value="{global:collection-name}"/>
@@ -991,7 +998,7 @@
 							src="{global:solr-url}select?q=lang:{request-param:lang}+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}&amp;category={request-param:category}&amp;facet.field={request-param:category}&amp;facet.limit=-1&amp;facet.sort=index&amp;rows=0"
 							label="record"/>
 					</map:otherwise>
-				</map:select>				
+				</map:select>
 				<map:transform type="xslt-saxon" src="xslt/ajax/get_search_facets.xsl" label="basiccontent">
 					<map:parameter name="use-request-parameters" value="true"/>
 				</map:transform>
@@ -1013,7 +1020,7 @@
 							label="record"/>
 					</map:otherwise>
 				</map:select>
-				
+
 				<map:transform type="xslt-saxon" src="xslt/ajax/get_facet_options.xsl" label="basiccontent">
 					<map:parameter name="use-request-parameters" value="true"/>
 				</map:transform>
@@ -1089,7 +1096,7 @@
 				</map:transform>
 				<map:serialize type="html"/>
 			</map:match>
-			
+
 			<!-- for comparing quantative analyses of hoards -->
 			<map:match pattern="get_hoard_quant">
 				<map:generate src="{global:exist-url}{global:collection-name}/objects/{url-encode:{request-param:id}}.xml"/>
@@ -1104,9 +1111,9 @@
 					<map:otherwise>
 						<map:serialize type="xml"/>
 					</map:otherwise>
-				</map:select>				
+				</map:select>
 			</map:match>
-			
+
 			<map:match pattern="get_closing_date">
 				<map:generate src="{global:exist-url}{global:collection-name}/objects/{url-encode:{request-param:id}}.xml"/>
 				<map:transform src="xslt/ajax/get_closing_date.xsl" label="basiccontent" type="xslt-saxon">
@@ -1120,11 +1127,13 @@
 				<map:select type="parameter">
 					<map:parameter name="parameter-selector-test" value="{request-param:lang}"/>
 					<map:when test="">
-						<map:generate src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}+AND+{url-encode:id:&#x022;{1}&#x022; AND (findspot_geo:* OR ao_findspot_geo:*)}&amp;rows=0"
+						<map:generate
+							src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}+AND+{url-encode:id:&#x022;{1}&#x022; AND (findspot_geo:* OR ao_findspot_geo:*)}&amp;rows=0"
 							label="record"/>
 					</map:when>
 					<map:otherwise>
-						<map:generate src="{global:solr-url}select?q=lang:{request-param:lang}+AND+collection-name:{global:collection-name}+AND+{url-encode:id:&#x022;{1}&#x022; AND (findspot_geo:* OR ao_findspot_geo:*)}&amp;rows=0"
+						<map:generate
+							src="{global:solr-url}select?q=lang:{request-param:lang}+AND+collection-name:{global:collection-name}+AND+{url-encode:id:&#x022;{1}&#x022; AND (findspot_geo:* OR ao_findspot_geo:*)}&amp;rows=0"
 							label="record"/>
 					</map:otherwise>
 				</map:select>
@@ -1149,7 +1158,7 @@
 					<map:otherwise>
 						<map:serialize type="xml"/>
 					</map:otherwise>
-				</map:select>				
+				</map:select>
 			</map:match>
 		</map:pipeline>
 	</map:pipelines>

@@ -9,12 +9,12 @@ echo '</content>' >> $FILE
 #process add doc
 java -jar saxon/saxon9.jar -xi:on -s $FILE -xsl:../cocoon/xslt/solr.xsl collection-name=uva > add_doc.xml
 
-COIN_INDEX=http://localhost:8080/solr33/numishare-published/update
+COIN_INDEX=http://localhost:8080/solr/numishare-published/update
 echo Removing existing documents
 curl $COIN_INDEX --data-binary '<delete><query>*:*</query></delete>' -H 'Content-type:text/xml; charset=utf-8'
 curl $COIN_INDEX --data-binary '<commit/>' -H 'Content-type:text/xml; charset=utf-8'
 echo Posting Solr add document to $COIN_INDEX
-curl $COIN_INDEX --data-binary @add_doc.xml -H 'Content-type:text/xml; charset=utf-8' 
+curl $COIN_INDEX --data-binary @add_doc.xml -H 'Content-type:text/xml; charset=utf-8'
 curl $COIN_INDEX --data-binary '<commit/>' -H 'Content-type:text/xml; charset=utf-8'
 curl $COIN_INDEX --data-binary '<optimize/>' -H 'Content-type:text/xml; charset=utf-8'
 echo Done. Cleaning up.
