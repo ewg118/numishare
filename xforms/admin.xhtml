@@ -431,8 +431,6 @@
 
 					<!-- get Solr document -->
 					<xforms:send submission="generate-add-document"/>
-					<xforms:send submission="submit-commit"/>
-					
 					<!-- optimize index -->
 					<xforms:send submission="optimize"/>
 					<!-- reload table -->
@@ -468,6 +466,7 @@
 				<xforms:message ev:event="xforms-submit-error" level="modal">Error getting Solr document from Cocoon xquery pipeline.</xforms:message>
 				<xforms:action ev:event="xforms-submit-done">
 					<xforms:send submission="post-solr-doc"/>
+					<xforms:send submission="submit-commit"/>
 				</xforms:action>
 			</xforms:submission>
 
@@ -1076,10 +1075,7 @@
 								<xforms:setvalue ref="instance('control-instance')/solr-core" value="instance('config')/solr_published"/>
 								<!-- get Solr document -->
 								<xforms:send submission="generate-add-document"/>								
-							</xforms:action>
-							
-							<!-- commit and optimize only after posting all docs to solr -->
-							<xforms:send submission="submit-commit"/>							
+							</xforms:action>										
 							<!-- optimize index -->
 							<xforms:send submission="optimize"/>
 							<!-- reload table -->
@@ -1099,9 +1095,7 @@
 								<xforms:setvalue ref="instance('control-instance')/solr-core" value="instance('config')/solr_published"/>
 								<!-- get Solr document -->
 								<xforms:send submission="generate-add-document"/>
-							</xforms:action>
-							<!-- commit and optimize only after posting all docs to solr -->
-							<xforms:send submission="submit-commit"/>							
+							</xforms:action>						
 							<!-- optimize index -->
 							<xforms:send submission="optimize"/>
 							<!-- reload table -->
