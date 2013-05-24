@@ -18,6 +18,7 @@ set :normalize_asset_timestamps, false
 # if you want to clean up old releases on each deploy uncomment this:
 after "deploy", "solr:index", "deploy:link"
 after "deploy:restart", "deploy:cleanup"
+after "deploy:cold", "deploy:solr_config_link"
 
 namespace :deploy do
   desc 'Make the links'
@@ -32,6 +33,11 @@ namespace :deploy do
     run "cd #{web_root} && ln -snf #{current_path}/cocoon/images"
     run "cd #{web_root} && ln -snf #{current_path}/cocoon/javascript"
     run "cd #{web_root}/images && ln -snf #{shared_path}/coins"
+  end
+
+  desc 'Solr config links'
+  task :solr_config_link, :roles => :app, :except => { :no_release => true } do
+    run "cd #{shared_path}/solr-home/ && ln -snf #{current_path}/solr33-home/published/conf"
   end
 end
 
