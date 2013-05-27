@@ -28,7 +28,7 @@
       <typeDesc>
          <objectType xlink:href="http://nomisma.org/id/coin">Coin</objectType>
          <denomination xlink:href="http://nomisma.org/id/aureus">Aureus</denomination>
-         <material xlink:href="http://nomisma.org/id/au">Gold</material>
+         <material xlink:href="http://nomisma.org/id/av">Gold</material>
          <date standardDate="0162">A.D. 162</date>
          <authority>
             <persname xlink:type="simple" xlink:role="authority"

@@ -27,7 +27,7 @@
       <department>Roman</department>
       <typeDesc>
          <objectType xlink:href="http://nomisma.org/id/coin">Coin</objectType>
-         <denomination xlink:href="http://nomisma.org/id/drachm">Drachm</denomination>
+         <denomination xlink:href="http://nomisma.org/id/drachma">Drachm</denomination>
          <material xlink:href="http://nomisma.org/id/ae">Bronze</material>
          <dateRange>
             <fromDate standardDate="0138">A.D. 138</fromDate>

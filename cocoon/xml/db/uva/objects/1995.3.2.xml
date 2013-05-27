@@ -28,7 +28,7 @@
       <typeDesc>
          <objectType xlink:href="http://nomisma.org/id/coin">Coin</objectType>
          <denomination xlink:href="http://nomisma.org/id/solidus">Solidus</denomination>
-         <material xlink:href="http://nomisma.org/id/au">Gold</material>
+         <material xlink:href="http://nomisma.org/id/av">Gold</material>
          <dateRange>
             <fromDate standardDate="0364">364</fromDate>
             <toDate standardDate="0375">375</toDate>

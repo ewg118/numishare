@@ -28,7 +28,7 @@
       <typeDesc>
          <objectType xlink:href="http://nomisma.org/id/coin">Coin</objectType>
          <denomination xlink:href="http://nomisma.org/id/decadrachm">Decadrachm</denomination>
-         <material xlink:href="http://nomisma.org/id/au">Gold</material>
+         <material xlink:href="http://nomisma.org/id/av">Gold</material>
          <dateRange>
             <fromDate standardDate="-0287">287 B.C.</fromDate>
             <toDate standardDate="-0278">278 B.C.</toDate>

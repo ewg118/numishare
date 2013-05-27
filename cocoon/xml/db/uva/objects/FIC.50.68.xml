@@ -27,7 +27,7 @@
       <department>Greek</department>
       <typeDesc>
          <objectType xlink:href="http://nomisma.org/id/coin">Coin</objectType>
-         <denomination xlink:href="http://nomisma.org/id/drachm">Drachm</denomination>
+         <denomination xlink:href="http://nomisma.org/id/drachma">Drachm</denomination>
          <material xlink:href="http://nomisma.org/id/ar">Silver</material>
          <dateRange>
             <fromDate standardDate="-0176">176 B.C.</fromDate>
