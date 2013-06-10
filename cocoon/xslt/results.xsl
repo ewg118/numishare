@@ -149,7 +149,7 @@
 	<xsl:template name="results">
 		<div id="backgroundPopup"/>
 		<div class="yui3-g">
-			<div class="yui3-u-1-4">
+			<div class="yui3-u-7-24">
 				<div class="content">
 					<xsl:if test="//result[@name='response']/@numFound &gt; 0">
 						<div class="data_options">
@@ -184,7 +184,7 @@
 					</span>
 				</div>
 			</div>
-			<div class="yui3-u-3-4">
+			<div class="yui3-u-17-24">
 				<div class="content">
 					<xsl:call-template name="remove_facets"/>
 					<xsl:choose>
