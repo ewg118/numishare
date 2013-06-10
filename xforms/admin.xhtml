@@ -72,7 +72,7 @@
 					<google_analytics>
 						<script type="text/javascript"/>
 					</google_analytics>
-					<collection_type>object</collection_type>					
+					<collection_type>object</collection_type>
 					<features_enabled>true</features_enabled>
 					<pelagios_enabled>false</pelagios_enabled>
 					<ctype_enabled>false</ctype_enabled>
@@ -93,42 +93,15 @@
 						<reference>400</reference>
 					</images>
 					<languages>
-						<language code="ar" enabled="false">
-							<label xml:lang="ar">العربيّة</label>
-							<label xml:lang="en">Arabic</label>
-							<label xml:lang="de">Arabisch</label>
-							<label xml:lang="fr">Arabe</label>
-							<label xml:lang="ro">Arabă</label>
-						</language>
-						<language code="de" enabled="false">
-							<label xml:lang="ar">ألماني</label>
-							<label xml:lang="de">Deutsch</label>
-							<label xml:lang="en">German</label>
-							<label xml:lang="fr">Allemand</label>
-							<label xml:lang="ro">Germană</label>
-						</language>
-						<language code="en" enabled="false">
-							<label xml:lang="ar">إنجليزي</label>
-							<label xml:lang="de">Englisch</label>
-							<label xml:lang="en">English</label>
-							<label xml:lang="fr">Anglais</label>
-							<label xml:lang="ro">Engleză</label>
-						</language>
-						<language code="fr" enabled="false">
-							<label xml:lang="ar">فرنسي</label>
-							<label xml:lang="de">Französisch</label>
-							<label xml:lang="en">French</label>
-							<label xml:lang="fr">Français</label>
-							<label xml:lang="ro">Franceză</label>
-						</language>						
-						
-						<language code="ro" enabled="false">
-							<label xml:lang="ar">رومانيا</label>
-							<label xml:lang="de">Rumänisch</label>
-							<label xml:lang="en">Romanian</label>
-							<label xml:lang="fr">Roumain</label>
-							<label xml:lang="ro">Romană</label>
-						</language>
+						<language code="ar" enabled="false"/>
+						<language code="de" enabled="false"/>
+						<language code="el" enabled="false"/>
+						<language code="en" enabled="false"/>
+						<language code="fr" enabled="false"/>
+						<language code="it" enabled="false"/>
+						<language code="nl" enabled="false"/>
+						<language code="ro" enabled="false"/>
+						<language code="ru" enabled="false"/>
 					</languages>
 					<theme>
 						<jquery_ui_theme>smoothness</jquery_ui_theme>
@@ -151,7 +124,7 @@
 					<footer>Powered by &lt;a href="http://code.google.com/p/numishare/" target="_blank"&gt;Numishare&lt;/a&gt;.</footer>
 					<pages>
 						<index>Numishare is a free, open source, modularized system of Tomcat applications for the web delivery of cultural heritage artifacts, with particular focus on coins and
-						medals. Metadata are edited with XForms and delivered with Cocoon and Solr.</index>
+							medals. Metadata are edited with XForms and delivered with Cocoon and Solr.</index>
 						<compare enabled="true"/>
 						<analyze enabled="false"/>
 						<visualize enabled="true"/>
@@ -162,7 +135,195 @@
 			<xforms:instance id="imports-template">
 				<imports/>
 			</xforms:instance>
-			<xforms:instance id="languageselect-template" src="/apps/numishare/instances/languages.xml"/>
+			
+			<xforms:instance id="languages">
+				<languages xmlns="">
+					<language value="aa">Afar</language>
+					<language value="ab">Abkhaz</language>
+					<language value="ae">Avestan</language>
+					<language value="af">Afrikaans</language>
+					<language value="ak">Akan</language>
+					<language value="am">Amharic</language>
+					<language value="an">Aragonese</language>
+					<language value="ar">Arabic</language>
+					<language value="as">Assamese</language>
+					<language value="av">Avar</language>
+					<language value="ay">Aymara</language>
+					<language value="az">Azerbaijani</language>
+					<language value="ba">Bashkir</language>
+					<language value="be">Belarusian</language>
+					<language value="bg">Bulgarian</language>
+					<language value="bh">Bihari</language>
+					<language value="bi">Bislama</language>
+					<language value="bm">Bambara</language>
+					<language value="bn">Bengali</language>
+					<language value="bo">Tibetan</language>
+					<language value="br">Breton</language>
+					<language value="bs">Bosnian</language>
+					<language value="ca">Catalan, Valencian</language>
+					<language value="ce">Chechen</language>
+					<language value="ch">Chamorro</language>
+					<language value="co">Corsican</language>
+					<language value="cr">Cree</language>
+					<language value="cs">Czech</language>
+					<language value="cu">Church Slavic</language>
+					<language value="cv">Chuvash</language>
+					<language value="cy">Welsh</language>
+					<language value="da">Danish</language>
+					<language value="de">German</language>
+					<language value="dv">Dhivehi, Dhivehi, Maldivian</language>
+					<language value="dz">Dzongkha</language>
+					<language value="ee">Ewe</language>
+					<language value="el">Modern Greek</language>
+					<language value="en">English</language>
+					<language value="eo">Esperanto</language>
+					<language value="es">Spanish, Castilian</language>
+					<language value="et">Estonian</language>
+					<language value="eu">Basque</language>
+					<language value="fa">Persian</language>
+					<language value="ff">Fula</language>
+					<language value="fi">Finnish</language>
+					<language value="fj">Fijian</language>
+					<language value="fo">Faroese</language>
+					<language value="fr">French</language>
+					<language value="fy">West Frisian</language>
+					<language value="ga">Irish</language>
+					<language value="gd">Gaelic, Scottish Gaelic</language>
+					<language value="gl">Galician</language>
+					<language value="gn">Guaraní</language>
+					<language value="gu">Gujarati</language>
+					<language value="gv">Manx</language>
+					<language value="ha">Hausa</language>
+					<language value="he">Modern Hebrew</language>
+					<language value="hi">Hindi</language>
+					<language value="ho">Hiri Motu</language>
+					<language value="hr">Croatian</language>
+					<language value="ht">Haitian Creole, Haitian Creole</language>
+					<language value="hu">Hungarian</language>
+					<language value="hy">Armenian</language>
+					<language value="hz">Herero</language>
+					<language value="ia">Interlingua (International Auxiliary Language Association)</language>
+					<language value="id">Indonesian</language>
+					<language value="ie">Interlingue, Occidental</language>
+					<language value="ig">Igbo</language>
+					<language value="ii">Yi, Nuosu</language>
+					<language value="ik">Inupiaq</language>
+					<language value="io">Ido</language>
+					<language value="is">Icelandic</language>
+					<language value="it">Italian</language>
+					<language value="iu">Inuktitut</language>
+					<language value="ja">Japanese</language>
+					<language value="jv">Javanese</language>
+					<language value="ka">Georgian</language>
+					<language value="kg">Kongo</language>
+					<language value="ki">Gikuyu, Kikuyu</language>
+					<language value="kj">Kwanyama, Kuanyama</language>
+					<language value="kk">Kazakh</language>
+					<language value="kl">Kalaallisut, Greenlandic</language>
+					<language value="km">Central Khmer</language>
+					<language value="kn">Kannada</language>
+					<language value="ko">Korean</language>
+					<language value="kr">Kanuri</language>
+					<language value="ks">Kashmiri</language>
+					<language value="ku">Kurdish</language>
+					<language value="kv">Komi</language>
+					<language value="kw">Cornish</language>
+					<language value="ky">Kyrgyz, Kirgiz</language>
+					<language value="la">Latin</language>
+					<language value="lb">Luxembourgish, Letzeburgesch</language>
+					<language value="lg">Luganda</language>
+					<language value="li">Limburgish, Limburgan, Limburger</language>
+					<language value="ln">Lingala</language>
+					<language value="lo">Lao</language>
+					<language value="lt">Lithuanian</language>
+					<language value="lu">Luba-Katanga</language>
+					<language value="lv">Latvian</language>
+					<language value="mg">Malagasy</language>
+					<language value="mh">Marshallese</language>
+					<language value="mi">Māori</language>
+					<language value="mk">Macedonian</language>
+					<language value="ml">Malayalam</language>
+					<language value="mn">Mongolian</language>
+					<language value="mr">Marathi</language>
+					<language value="ms">Malay</language>
+					<language value="mt">Maltese</language>
+					<language value="my">Burmese</language>
+					<language value="na">Nauruan</language>
+					<language value="nb">Norwegian Bokmål</language>
+					<language value="nd">Northern Ndebele</language>
+					<language value="ne">Nepali</language>
+					<language value="ng">Ndonga</language>
+					<language value="nl">Dutch, Flemish</language>
+					<language value="nn">Norwegian Nynorsk</language>
+					<language value="no">Norwegian</language>
+					<language value="nr">Southern Ndebele</language>
+					<language value="nv">Navajo, Navaho</language>
+					<language value="ny">Chichewa, Chewa, Nyanja</language>
+					<language value="oc">Occitan (after 1500)</language>
+					<language value="oj">Anishinaabe</language>
+					<language value="om">Oromo</language>
+					<language value="or">Oriya</language>
+					<language value="os">Ossetic, Ossetian</language>
+					<language value="pa">Punjabi, Panjabi</language>
+					<language value="pi">Pali, Pāli</language>
+					<language value="pl">Polish</language>
+					<language value="ps">Pashto, Pushto</language>
+					<language value="pt">Portuguese</language>
+					<language value="qu">Quechua</language>
+					<language value="rm">Romansh</language>
+					<language value="rn">Kirundi</language>
+					<language value="ro">Romanian, Moldavian, Moldovan</language>
+					<language value="ru">Russian</language>
+					<language value="rw">Kinyarwanda</language>
+					<language value="sa">Sanskrit</language>
+					<language value="sc">Sardinian</language>
+					<language value="sd">Sindhi</language>
+					<language value="se">Northern Sami</language>
+					<language value="sg">Sango</language>
+					<language value="si">Sinhala, Sinhalese</language>
+					<language value="sk">Slovak</language>
+					<language value="sl">Slovene</language>
+					<language value="sm">Samoan</language>
+					<language value="sn">Shona</language>
+					<language value="so">Somali</language>
+					<language value="sq">Albanian</language>
+					<language value="sr">Serbian</language>
+					<language value="ss">Swati</language>
+					<language value="st">Sotho</language>
+					<language value="su">Sundanese</language>
+					<language value="sv">Swedish</language>
+					<language value="sw">Swahili</language>
+					<language value="ta">Tamil</language>
+					<language value="te">Telugu</language>
+					<language value="tg">Tajik</language>
+					<language value="th">Thai</language>
+					<language value="ti">Tigrinya</language>
+					<language value="tk">Turkmen</language>
+					<language value="tl">Tagalog</language>
+					<language value="tn">Tswana</language>
+					<language value="to">Tongan (Tonga Islands)</language>
+					<language value="tr">Turkish</language>
+					<language value="ts">Tsonga</language>
+					<language value="tt">Tatar</language>
+					<language value="tw">Twi</language>
+					<language value="ty">Tahitian</language>
+					<language value="ug">Uyghur, Uyghur</language>
+					<language value="uk">Ukrainian</language>
+					<language value="ur">Urdu</language>
+					<language value="uz">Uzbek</language>
+					<language value="ve">Venda</language>
+					<language value="vi">Vietnamese</language>
+					<language value="vo">Volapük</language>
+					<language value="wa">Walloon</language>
+					<language value="wo">Wolof</language>
+					<language value="xh">Xhosa</language>
+					<language value="yi">Yiddish</language>
+					<language value="yo">Yoruba</language>
+					<language value="za">Zhuang, Chuang</language>
+					<language value="zh">Chinese</language>
+					<language value="zu">Zulu</language>
+				</languages>
+			</xforms:instance>
 
 			<xforms:instance id="create-object-collection">
 				<exist:query xmlns="">
@@ -606,13 +767,13 @@
 										<xforms:label>Select Language...</xforms:label>
 										<xforms:value/>
 									</xforms:item>
-									<xforms:itemset nodeset="instance('languageselect-template')//language">
-										<xforms:label ref="name"/>
-										<xforms:value ref="name"/>
+									<xforms:itemset nodeset="instance('languages')/language">
+										<xforms:label ref="."/>
+										<xforms:value ref="."/>
 									</xforms:itemset>
 									<xforms:alert>Required</xforms:alert>
 									<xxforms:variable name="language" select="."/>
-									<xforms:setvalue ref="@langcode" value="instance('languageselect-template')//language[name = $language]/code" ev:event="xforms-value-changed"/>
+									<xforms:setvalue ref="@langcode" value="instance('languages')//language[. = $language]/@value" ev:event="xforms-value-changed"/>
 								</xforms:select1>
 							</div>
 							<xhtml:h3>URLS</xhtml:h3>
@@ -621,7 +782,7 @@
 									<xforms:label>Public Site</xforms:label>
 									<xforms:alert>Required, must be a URL</xforms:alert>
 								</xforms:input>
-							</div>							
+							</div>
 							<div>
 								<xforms:input ref="solr_published">
 									<xforms:label>Solr Published</xforms:label>
@@ -1063,19 +1224,19 @@
 						<xforms:setvalue ref="instance('eXist-xquery')/exist:text">&lt;report&gt;{count(collection()/*[local-name()='nudsHoard'])}&lt;/report&gt;</xforms:setvalue>
 						<xforms:send submission="xquery-collection"/>
 						<xforms:setvalue ref="instance('control-instance')/nh-count" value="instance('collection-result')/report"/>
-						
+
 						<!-- if nh-count is greater than 0, process 100 hoard records at a time -->
 						<xforms:action if="number(instance('control-instance')/nh-count) &gt; 0">
-							<xforms:setvalue ref="instance('eXist-xquery')/exist:text">&lt;report> { for $i at $position in collection()  return 
-							concat(substring-before(substring-after(document-uri($i), 'objects/'), '.xml'), if ($position mod 100 = 0) then ',' else '|') } &lt;/report></xforms:setvalue>
+							<xforms:setvalue ref="instance('eXist-xquery')/exist:text">&lt;report> { for $i at $position in collection() return
+								concat(substring-before(substring-after(document-uri($i), 'objects/'), '.xml'), if ($position mod 100 = 0) then ',' else '|') } &lt;/report></xforms:setvalue>
 							<xforms:send submission="xquery-collection"/>
 							<xxforms:variable name="tokens" select="tokenize(replace(instance('collection-result')/report, ' ', ''), ',')"/>
 							<xforms:action xxforms:iterate="$tokens">
 								<xforms:setvalue ref="instance('control-instance')/identifiers" value="context()"/>
 								<xforms:setvalue ref="instance('control-instance')/solr-core" value="instance('config')/solr_published"/>
 								<!-- get Solr document -->
-								<xforms:send submission="generate-add-document"/>								
-							</xforms:action>										
+								<xforms:send submission="generate-add-document"/>
+							</xforms:action>
 							<!-- optimize index -->
 							<xforms:send submission="optimize"/>
 							<!-- reload table -->
@@ -1083,10 +1244,10 @@
 							<xforms:delete nodeset="instance('list')/*"/>
 							<xforms:send submission="query-solr"/>
 						</xforms:action>
-						
+
 						<!-- if nuds-count is greater than 0, process 5000 coin or coin-type records at a time -->
 						<xforms:action if="number(instance('control-instance')/nuds-count) &gt; 0">
-							<xforms:setvalue ref="instance('eXist-xquery')/exist:text">&lt;report> { for $i at $position in collection()  return 
+							<xforms:setvalue ref="instance('eXist-xquery')/exist:text">&lt;report> { for $i at $position in collection() return
 								concat(substring-before(substring-after(document-uri($i), 'objects/'), '.xml'), if ($position mod 5000 = 0) then ',' else '|') } &lt;/report></xforms:setvalue>
 							<xforms:send submission="xquery-collection"/>
 							<xxforms:variable name="tokens" select="tokenize(replace(instance('collection-result')/report, ' ', ''), ',')"/>
@@ -1095,7 +1256,7 @@
 								<xforms:setvalue ref="instance('control-instance')/solr-core" value="instance('config')/solr_published"/>
 								<!-- get Solr document -->
 								<xforms:send submission="generate-add-document"/>
-							</xforms:action>						
+							</xforms:action>
 							<!-- optimize index -->
 							<xforms:send submission="optimize"/>
 							<!-- reload table -->
