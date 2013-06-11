@@ -3,23 +3,12 @@
   GLOBAL
   ****************************************
  */
-html {
-	font-family:sans-serif;
-	background-color:silver;
+.yui3-g {
+	margin:20px auto;
+	min-width:960px;
+	max-width:90%;
 }
 .content {
-	border:1px solid gray;
-	background-color:white;
-}
-#header {
-	padding:10px;
-	font-size:24px;
-	font-weight:bold;
-	letter-spacing:6px;
-	background-color:#ebebeb;
-	color:gray;
-}
-#form {
 	padding:5px;
 }
 .center {
@@ -40,7 +29,7 @@ th {
 	padding:2px;
 	font-weight:bold;
 }
-dt{
+dt {
 	width:125px;
 	float:left;
 }
@@ -98,43 +87,35 @@ dt{
   ORBEON XFORM SPECIFIC STYLE
   ****************************************
  */
-.submission {
-	text-align:center;
-	margin:10px 0;
+.orbeon .xforms-control {
+	margin-bottom: 10px;
 }
-.xforms-submit {
-	margin-left:10px;
-	margin-right:10px;
+.orbeon .xforms-label {
+	font-weight: bold;
+	display: inline-block;
+	min-width: 9em
 }
-.xforms-label {
-	float:left;
-	width:10em;
+.orbeon .xforms-select1-appearance-full .xforms-label {
+	vertical-align: top
 }
-.xforms-textarea-appearance-xxforms-autosize {
-	width: 30em;
-	margin-bottom: 4px
+.orbeon .xforms-input input, .orbeon .xforms-textarea textarea, .orbeon .xforms-select1 select {
+	width: 20em;
+	margin-bottom: 2px;
 }
-.xforms-input input, textarea, .fr-autocomplete-search input, .xforms-upload-select {
-	width: 30em;
-	margin-bottom: 4px;
-	padding:2px;
-	border:1px solid silver;
+.orbeon .xforms-repeat-selected-item-1 .form-td {
+	background-color: #f5f5f5
 }
-.xforms-select1 {
-	margin-bottom: 4px;
-	width:15em;
+.orbeon .xforms-items {
+	display: inline-block
 }
-.xforms-select1-appearance-compact{
-	width:30em;	
-}
-.xforms-submit img {
-	vertical-align: middle
+.trigger_container {
+	margin-bottom:20px;
 }
 .xforms-trigger-appearance-minimal img {
 	vertical-align: middle
 }
-.xforms-control {
-	margin-right: 10px;
+.xforms-output {
+	margin:0;
 }
 .xforms-trigger {
 	text-decoration:none;
@@ -142,53 +123,14 @@ dt{
 .xforms-repeat-selected-item-1, .xforms-repeat-selected-item-2, .xforms-repeat-selected-item-3, .xforms-repeat-selected-item-4 {
 	background:inherit;
 }
-.widget-tab-panel {
-	padding-top: 1em;
-}
-.widget-tabs-panel {
-	border:0;
-	padding:20px;
-}
-/*
-  #form .widget-tabs {
-  width: 800px;
-  margin-left:200px;
-  }
-  #form .xbl-fr-tabview {
-  width: 800px;
-  margin-left:200px;
-  }
- */
-/*.fr-autocomplete-container .yui-ac-content {
-	overflow-x: hidden;
-	overflow-y: auto;
-	*height:expression(this.scrollHeight>100?"100px":"auto");
-}*/
-.yui-skin-sam .yui-ac-container {
-	position:relative;
-	top:0;
-	width:30em;
-	margin-right:1em;
-}
-.xbl-fr-autocomplete .yui-ac {
-	position:relative;
-	float:left;
-}
-.xbl-fr-autocomplete .xforms-input-input {
-	width:30em;
-	margin-bottom:2px;
-}
-.yui-editor-editable-container {
-	height:100px;
-}
 .xforms-repeat-selected-item-2 {
 	background:none;
 }
-.mask {
-	opacity:0;
+.xxforms-dialog-body>a, .xxforms-dialog-body>span {
+	width:100px;
 }
-.xforms-output {
-	margin:0;
+.xbl-component {
+	margin:5px 0;
 }
 .ui-state-error, .ui-state-highlight {
 	padding: 0pt 0.7em;
@@ -231,11 +173,9 @@ dt{
 	padding-left: 0;
 	border-left:0px;
 	border-right:0px;
-	 
 }
 .ui-menubar-item {
 	float: left;
-	 
 }
 .ui-menubar .ui-button {
 	float: left;
@@ -244,30 +184,27 @@ dt{
 	border-bottom-width: 0 !important;
 	margin: 0;
 	outline: none;
-	 
 }
 .ui-menubar .ui-menubar-link {
 	border-right: 1px dashed transparent;
 	border-left: 1px dashed transparent;
-	 
 }
 .ui-menubar .ui-menu {
 	width: 200px;
 	position: absolute;
 	z-index: 9999;
-	 
 }
 /*
   ****************************************
   LAYOUT FORM
   ****************************************
  */
- .layout-image-container{
- 	margin:80px;	
- 	text-align:center;
- }
- .layout-image{
- 	background-color:silver;
- 	border:1px solid gray;
- 	padding:10px 0; 	
- }
+.layout-image-container {
+	margin:80px;
+	text-align:center;
+}
+.layout-image {
+	background-color:silver;
+	border:1px solid gray;
+	padding:10px 0;
+}
