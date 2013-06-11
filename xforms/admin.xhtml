@@ -4,21 +4,22 @@
     numishare: http://code.google.com/p/numishare/
     Apache License 2.0: http://code.google.com/p/numishare/    
 -->
-<xhtml:html xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ev="http://www.w3.org/2001/xml-events"
-	xmlns:xxforms="http://orbeon.org/oxf/xml/xforms" xmlns:widget="http://orbeon.org/oxf/xml/widget" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:fr="http://orbeon.org/oxf/xml/form-runner"
-	xmlns:exist="http://exist.sourceforge.net/NS/exist" xmlns:xxi="http://orbeon.org/oxf/xml/xinclude" xmlns:numishare="http://code.google.com/p/numishare/" xmlns:xlink="http://www.w3.org/1999/xlink">
-	<xhtml:head>
-		<xhtml:title>Numishare: Administrative Interface</xhtml:title>
+<html xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xxforms="http://orbeon.org/oxf/xml/xforms" xmlns:widget="http://orbeon.org/oxf/xml/widget" xmlns:xi="http://www.w3.org/2001/XInclude"
+	xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:exist="http://exist.sourceforge.net/NS/exist" xmlns:xxi="http://orbeon.org/oxf/xml/xinclude"
+	xmlns:numishare="http://code.google.com/p/numishare/" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<head>
+		<title>Numishare: Administrative Interface</title>
 		<!-- Core + Skin CSS -->
-		<xhtml:link rel="stylesheet" href="/fr/style/bootstrap/css/bootstrap.css" type="text/css"/>
-		<xhtml:link rel="stylesheet" href="/fr/style/form-runner-bootstrap-override.css" type="text/css"/>
-		<xhtml:link rel="stylesheet" href="/config/theme/examples.css" type="text/css" media="all"/>
-		<xhtml:link rel="shortcut icon" href="/ops/images/orbeon-icon-16.ico"/>
-		<xhtml:link rel="icon" href="/ops/images/orbeon-icon-16.png" type="image/png"/>
-		<xhtml:link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.8.0/build/cssgrids/grids-min.css"/>
+		<link rel="stylesheet" href="/fr/style/bootstrap/css/bootstrap.css" type="text/css"/>
+		<link rel="stylesheet" href="/fr/style/form-runner-bootstrap-override.css" type="text/css"/>
+		<link rel="stylesheet" href="/config/theme/examples.css" type="text/css" media="all"/>
+		<link rel="shortcut icon" href="/ops/images/orbeon-icon-16.ico"/>
+		<link rel="icon" href="/ops/images/orbeon-icon-16.png" type="image/png"/>
+		<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.8.0/build/cssgrids/grids-min.css"/>
 
 		<!-- numishare styling -->
-		<xhtml:link rel="stylesheet" href="/apps/numishare/css/xforms.css"/>
+		<link rel="stylesheet" href="/apps/numishare/css/xforms.css"/>
 		<xforms:model>
 			<!-- exist URL is stored in an XML file -->
 			<xforms:instance id="exist-url">
@@ -625,8 +626,7 @@
 				resource="{instance('config')/url}ingest?identifiers={instance('control-instance')/identifiers}">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Error getting Solr document from Cocoon xquery pipeline.</xforms:message>
 				<xforms:action ev:event="xforms-submit-done">
-					<xforms:send submission="post-solr-doc"/>
-					<xforms:send submission="submit-commit"/>
+					<xforms:send submission="post-solr-doc"/>					
 				</xforms:action>
 			</xforms:submission>
 
@@ -688,14 +688,14 @@
 			</xforms:action>
 		</xforms:model>
 		<!--<xi:include href="oxf:/xbl/numishare/publish-all/publish-all.xbl" xi:omit-xml-base="true"/>-->
-	</xhtml:head>
-	<xhtml:body>
+	</head>
+	<body>
 		<xxforms:variable name="display_path">./</xxforms:variable>
-		<xhtml:div class="yui3-g">
-			<xhtml:div class="yui3-u-1">
-				<xhtml:div class="content">
+		<div class="yui3-g">
+			<div class="yui3-u-1">
+				<div class="content">
 					<xi:include href="header.xml"/>
-					<xhtml:div id="form">
+					<div id="form">
 						<xforms:action ev:event="xforms-enabled" if="not(string(instance('control-instance')/collection-name))">
 							<xxforms:show dialog="create-collection"/>
 						</xforms:action>
@@ -704,11 +704,11 @@
 						</xforms:action>
 						<xxforms:dialog id="create-collection" appearance="full" level="modal" close="false" draggable="true" visible="false">
 							<xforms:label>Welcome to Numishare</xforms:label>
-							<xhtml:p>Please create a collection for your authenticated group.</xhtml:p>
+							<p>Please create a collection for your authenticated group.</p>
 							<xforms:group ref="instance('collections-list')">
-								<xhtml:h3>
+								<h3>
 									<xforms:output ref="instance('control-instance')/request-security/role"/>
-								</xhtml:h3>
+								</h3>
 								<div>
 									<xforms:input ref="collection[@role=instance('control-instance')/request-security/role]/@name">
 										<xforms:label>Collection Name</xforms:label>
@@ -735,9 +735,9 @@
 						</xxforms:dialog>
 						<xxforms:dialog id="firstrun" appearance="full" level="modal" close="false" draggable="true" visible="false">
 							<xforms:label>Welcome to Numishare</xforms:label>
-							<xhtml:p>This is the first time you have run Numishare.<xhtml:br/>Please set the following fields (they can be changed later under "Settings")</xhtml:p>
+							<p>This is the first time you have run Numishare.<br/>Please set the following fields (they can be changed later under "Settings")</p>
 							<xforms:group ref="instance('config-template')">
-								<xhtml:h3>Boilerplate</xhtml:h3>
+								<h3>Boilerplate</h3>
 								<div>
 									<xforms:input ref="title">
 										<xforms:label>Site Title</xforms:label>
@@ -778,7 +778,7 @@
 										<xforms:setvalue ref="@langcode" value="instance('languages')//language[. = $language]/@value" ev:event="xforms-value-changed"/>
 									</xforms:select1>
 								</div>
-								<xhtml:h3>URLS</xhtml:h3>
+								<h3>URLS</h3>
 								<div>
 									<xforms:input ref="url">
 										<xforms:label>Public Site</xforms:label>
@@ -810,49 +810,49 @@
 							</xforms:trigger>
 						</xxforms:dialog>
 						<xforms:group ref="instance('control-instance')/status/text()">
-							<xhtml:div class="success">
+							<div class="success">
 								<xforms:output ref="instance('control-instance')/status"/>
-							</xhtml:div>
+							</div>
 						</xforms:group>
 						<xforms:group ref="instance('control-instance')/error/text()">
-							<xhtml:div class="error">
+							<div class="error">
 								<xforms:output ref="instance('control-instance')/error"/>
-							</xhtml:div>
+							</div>
 						</xforms:group>
-						<xhtml:h2>Object Management</xhtml:h2>
-						<xhtml:ul>
-							<xhtml:li>
-								<xhtml:a href="edit/coin/">Create New Coin or Medal</xhtml:a>
-							</xhtml:li>
-							<xhtml:li>
-								<xhtml:a href="edit/object/">Create New Non-Coin Object</xhtml:a>
-							</xhtml:li>
-						</xhtml:ul>
-						<xhtml:h2>Publication</xhtml:h2>
-						<xhtml:ul>
-							<xhtml:li>
+						<h2>Object Management</h2>
+						<ul>
+							<li>
+								<a href="edit/coin/">Create New Coin or Medal</a>
+							</li>
+							<li>
+								<a href="edit/object/">Create New Non-Coin Object</a>
+							</li>
+						</ul>
+						<h2>Publication</h2>
+						<ul>
+							<li>
 								<xforms:trigger appearance="minimal">
 									<xforms:label>Publish All Objects</xforms:label>
 									<xforms:dispatch target="publish-all" name="fr-show" ev:event="DOMActivate"/>
 								</xforms:trigger>
-							</xhtml:li>
-							<xhtml:li>
+							</li>
+							<li>
 								<xforms:trigger appearance="minimal">
 									<xforms:label>Reindex Published Objects</xforms:label>
 									<xforms:dispatch target="republish-dialog" name="fr-show" ev:event="DOMActivate"/>
 								</xforms:trigger>
-							</xhtml:li>
-							<xhtml:li>
+							</li>
+							<li>
 								<xforms:trigger appearance="minimal">
 									<xforms:label>Unpublish All Objects</xforms:label>
 									<xforms:dispatch target="unpublish-all" name="fr-show" ev:event="DOMActivate"/>
 								</xforms:trigger>
-							</xhtml:li>
-						</xhtml:ul>
+							</li>
+						</ul>
 						<xforms:group ref="instance('list')">
 							<xforms:group ref=".[count(item) &gt; 0]">
-								<xhtml:h3>List of Objects</xhtml:h3>
-								<xhtml:div>
+								<h3>List of Objects</h3>
+								<div>
 									<xforms:input ref="instance('control-instance')/solr-query"/>
 									<xforms:trigger>
 										<xforms:label>Search</xforms:label>
@@ -875,7 +875,7 @@
 											</xforms:action>
 										</xforms:trigger>
 									</xforms:group>
-								</xhtml:div>
+								</div>
 								<!-- pagination variables -->
 								<xxforms:variable name="numFound" select="instance('all-response')/result/@numFound"/>
 								<xxforms:variable name="page" select="number(instance('control-instance')/page)"/>
@@ -884,15 +884,15 @@
 								<xxforms:variable name="current" select="$page"/>
 								<xxforms:variable name="total" select="ceiling($numFound div 20)"/>
 								<!-- pagination -->
-								<xhtml:div class="paging_div">
-									<xhtml:div style="float:left;"> Displaying records <xhtml:b>
+								<div class="paging_div">
+									<div style="float:left;"> Displaying records <b>
 											<xforms:output value="(($page - 1) * 20) + 1"/>
-										</xhtml:b> to <xhtml:b>
+										</b> to <b>
 											<xforms:output value="if ($numFound &gt; $page * 20) then $page * 20 else $numFound"/>
-										</xhtml:b> of <xhtml:b>
+										</b> of <b>
 											<xforms:output value="$numFound"/>
-										</xhtml:b> total results.</xhtml:div>
-									<xhtml:div style="float:right;">
+										</b> total results.</div>
+									<div style="float:right;">
 										<xforms:group ref=".[$page &gt; 1]">
 											<xforms:trigger appearance="minimal">
 												<xforms:label>«Previous</xforms:label>
@@ -905,7 +905,7 @@
 											</xforms:trigger>
 										</xforms:group>
 										<xforms:group ref=".[$page = 1]">
-											<xhtml:span class="pagingSep">«Previous</xhtml:span>
+											<span class="pagingSep">«Previous</span>
 										</xforms:group>
 										<!-- always display links to the first two pages -->
 										<xforms:group ref=".[$page &gt; 3]">
@@ -932,7 +932,7 @@
 										</xforms:group>
 										<!-- display only if you are on page 6 or greater -->
 										<xforms:group ref=".[$page &gt; 5]">
-											<xhtml:span class="pagingSep">...</xhtml:span>
+											<span class="pagingSep">...</span>
 										</xforms:group>
 										<!-- always display links to the previous two pages -->
 										<xforms:group ref=".[$page &gt; 2]">
@@ -962,9 +962,9 @@
 											</xforms:trigger>
 										</xforms:group>
 										<!-- current page -->
-										<xhtml:span class="pagingBtn">
+										<span class="pagingBtn">
 											<xforms:output value="$current"/>
-										</xhtml:span>
+										</span>
 										<!-- next two pages -->
 										<xforms:group ref=".[$page + 1 &lt;= $total]">
 											<xforms:trigger appearance="minimal">
@@ -994,7 +994,7 @@
 										</xforms:group>
 										<!-- separator -->
 										<xforms:group ref=".[$page &lt;= $total - 4]">
-											<xhtml:span class="pagingSep">...</xhtml:span>
+											<span class="pagingSep">...</span>
 										</xforms:group>
 										<!-- last two pages -->
 										<xforms:group ref=".[$page &lt;= $total - 4]">
@@ -1036,67 +1036,58 @@
 											</xforms:trigger>
 										</xforms:group>
 										<xforms:group ref=".[not($total &gt; $current)]">
-											<xhtml:span class="pagingSep">Next»</xhtml:span>
+											<span class="pagingSep">Next»</span>
 										</xforms:group>
-									</xhtml:div>
-								</xhtml:div>
-								<xhtml:table style="width:100%">
-									<xhtml:thead>
-										<xhtml:tr>
-											<xhtml:th style="width:79%">Title</xhtml:th>
-											<xhtml:th style="width:8%">Public<br/>View</xhtml:th>
-											<!--<xhtml:th style="width:8%">Private<br/>View</xhtml:th>-->
-											<xhtml:th style="width:8%">Publish</xhtml:th>
-											<xhtml:th style="width:5%">Delete</xhtml:th>
-										</xhtml:tr>
-									</xhtml:thead>
-									<xhtml:tbody>
+									</div>
+								</div>
+								<table style="width:100%">
+									<thead>
+										<tr>
+											<th style="width:79%">Title</th>
+											<th style="width:8%">Public<br/>View</th>
+											<!--<th style="width:8%">Private<br/>View</th>-->
+											<th style="width:8%">Publish</th>
+											<th style="width:5%">Delete</th>
+										</tr>
+									</thead>
+									<tbody>
 										<xforms:repeat nodeset="instance('list')/item">
 											<xxforms:variable name="id" select="id"/>
 											<xxforms:variable name="class" select="if (position() mod 2 = 0) then 'even-row' else 'odd-row'"/>
-											<xhtml:tr>
-												<xhtml:td class="{$class}">
+											<tr>
+												<td class="{$class}">
 													<div class="result_metadata">
-														<xhtml:h4>
-															<xhtml:a href="edit/coin/?id={$id}">
+														<h4>
+															<a href="edit/coin/?id={$id}">
 																<xforms:output ref="title"/>
 																<xforms:output ref="concat(' (', $id, ')')"/>
-															</xhtml:a>
-														</xhtml:h4>
-														<dl>
-															<div>
-																<dt>Record Type: </dt>
-																<dd style="margin-left:150px;">
-																	<xforms:output ref="recordType"/>
-																</dd>
-															</div>
+															</a>
+														</h4>
+														<ul>
+															<li><b>Record Type:</b>
+																<xforms:output ref="recordType"/></li>
+
 															<xforms:group ref=".[string(obverseLegend) or string(obverseType)]">
-																<div>
-																	<dt>Obverse:</dt>
-																	<dd style="margin-left:150px;">
-																		<xforms:output ref="obverseType"/>
-																		<xforms:group ref=".[string(obverseLegend) and string(obverseType)]">
-																			<span>: </span>
-																		</xforms:group>
-																		<xforms:output ref="obverseLegend"/>
-																	</dd>
-																</div>
+																<li><b>Obverse:</b>
+																	<xforms:output ref="obverseType"/>
+																	<xforms:group ref=".[string(obverseLegend) and string(obverseType)]">
+																		<span>: </span>
+																	</xforms:group>
+																	<xforms:output ref="obverseLegend"/>
+																</li>
 															</xforms:group>
 															<xforms:group ref=".[string(reverseLegend) or string(reverseType)]">
-																<div>
-																	<dt>Reverse:</dt>
-																	<dd style="margin-left:150px;">
-																		<xforms:output ref="reverseType"/>
-																		<xforms:group ref=".[string(reverseLegend) and string(reverseType)]">
-																			<span>: </span>
-																		</xforms:group>
-																		<xforms:output ref="reverseLegend"/>
-																	</dd>
-																</div>
+																<li><b>Reverse:</b>
+																	<xforms:output ref="reverseType"/>
+																	<xforms:group ref=".[string(reverseLegend) and string(reverseType)]">
+																		<span>: </span>
+																	</xforms:group>
+																	<xforms:output ref="reverseLegend"/>
+																</li>
 															</xforms:group>
-														</dl>
+														</ul>
 													</div>
-													<div style="float:right">
+													<div style="float:right;width:300px">
 														<xforms:group ref=".[string(thumbnail_obv)]">
 															<xforms:output mediatype="image/*" value="concat(instance('config')/url, thumbnail_obv)"/>
 														</xforms:group>
@@ -1104,12 +1095,12 @@
 															<xforms:output mediatype="image/*" value="concat(instance('config')/url, thumbnail_rev)"/>
 														</xforms:group>
 													</div>
-												</xhtml:td>
-												<xhtml:td class="{$class} center"><xhtml:a href="{instance('config')/url}id/{$id}.xml" target="_blank">xml</xhtml:a> | <xhtml:a
-														href="{instance('config')/url}id/{$id}" target="_blank">html</xhtml:a></xhtml:td>
-												<!--<xhtml:td class="{$class} center"><xhtml:a href="id/{$id}.xml" target="_blank">xml</xhtml:a> | <xhtml:a href="show/{$id}" target="_blank"
-												>html</xhtml:a></xhtml:td>-->
-												<xhtml:td class="{$class} center">
+												</td>
+												<td class="{$class} center"><a href="{instance('config')/url}id/{$id}.xml" target="_blank">xml</a> | <a
+														href="{instance('config')/url}id/{$id}" target="_blank">html</a></td>
+												<!--<td class="{$class} center"><a href="id/{$id}.xml" target="_blank">xml</a> | <a href="show/{$id}" target="_blank"
+												>html</a></td>-->
+												<td class="{$class} center">
 													<xforms:group ref=".[published = 'true']">
 														<xforms:trigger appearance="minimal">
 															<xforms:label>unpublish</xforms:label>
@@ -1128,11 +1119,11 @@
 															</xforms:action>
 														</xforms:trigger>
 													</xforms:group>
-												</xhtml:td>
-												<xhtml:td class="{$class} center">
+												</td>
+												<td class="{$class} center">
 													<xforms:trigger appearance="minimal">
 														<xforms:label>
-															<xhtml:img src="{$display_path}images/remove.gif"/>
+															<img src="{$display_path}images/remove.gif"/>
 														</xforms:label>
 														<xforms:action ev:event="DOMActivate">
 															<xforms:setvalue ref="instance('deleteId')/id" value="$id"/>
@@ -1140,18 +1131,18 @@
 															<xforms:dispatch target="delete" name="fr-show" ev:event="DOMActivate"/>
 														</xforms:action>
 													</xforms:trigger>
-												</xhtml:td>
-											</xhtml:tr>
+												</td>
+											</tr>
 										</xforms:repeat>
-									</xhtml:tbody>
-								</xhtml:table>
+									</tbody>
+								</table>
 							</xforms:group>
 							<xforms:group ref=".[count(item)=0]">
 								<xforms:group ref=".[instance('control-instance')/solr-query = 'fulltext:*']">
-									<xhtml:h1>No objects in collection.</xhtml:h1>
+									<h1>No objects in collection.</h1>
 								</xforms:group>
 								<xforms:group ref=".[instance('control-instance')/solr-query != 'fulltext:*']">
-									<xhtml:h1>No objects that match query: <xforms:output ref="instance('control-instance')/solr-query"/>-- <xforms:trigger appearance="minimal">
+									<h1>No objects that match query: <xforms:output ref="instance('control-instance')/solr-query"/>-- <xforms:trigger appearance="minimal">
 											<xforms:label>clear</xforms:label>
 											<xforms:action ev:event="DOMActivate">
 												<xforms:delete nodeset="instance('list')/*"/>
@@ -1160,16 +1151,15 @@
 												<xforms:setvalue ref="instance('control-instance')/solr-core" value="instance('config')/solr_all"/>
 												<xforms:send submission="query-solr"/>
 											</xforms:action>
-										</xforms:trigger></xhtml:h1>
+										</xforms:trigger></h1>
 								</xforms:group>
 							</xforms:group>
 						</xforms:group>
-					</xhtml:div>
-				</xhtml:div>
-			</xhtml:div>
-			<!--<widget:xforms-instance-inspector id="orbeon-xforms-inspector" xmlns:widget="http://orbeon.org/oxf/xml/widget"/>-->
-
-		</xhtml:div>
+						<fr:xforms-inspector/>
+					</div>
+				</div>
+			</div>
+		</div>
 		<!-- dialogs -->
 		<fr:alert-dialog id="publish">
 			<fr:label>Publish</fr:label>
@@ -1227,54 +1217,23 @@
 			<fr:negative-choice/>
 			<fr:positive-choice>
 				<xforms:action ev:event="DOMActivate">
-					<!-- get count for NUDS records -->
-					<xforms:setvalue ref="instance('eXist-xquery')/exist:text">&lt;report&gt;{count(collection()/*[local-name()='nuds'])}&lt;/report&gt;</xforms:setvalue>
+					<xforms:setvalue ref="instance('eXist-xquery')/exist:text">&lt;report> { for $i at $position in collection() return concat(substring-before(substring-after(document-uri($i),
+						'objects/'), '.xml'), if ($position mod 100 = 0) then ',' else '|') } &lt;/report></xforms:setvalue>
 					<xforms:send submission="xquery-collection"/>
-					<xforms:setvalue ref="instance('control-instance')/nuds-count" value="instance('collection-result')/report"/>
-					<!-- get count for NUDS Hoard Records -->
-					<xforms:setvalue ref="instance('eXist-xquery')/exist:text">&lt;report&gt;{count(collection()/*[local-name()='nudsHoard'])}&lt;/report&gt;</xforms:setvalue>
-					<xforms:send submission="xquery-collection"/>
-					<xforms:setvalue ref="instance('control-instance')/nh-count" value="instance('collection-result')/report"/>
-
-					<!-- if nh-count is greater than 0, process 100 hoard records at a time -->
-					<xforms:action if="number(instance('control-instance')/nh-count) &gt; 0">
-						<xforms:setvalue ref="instance('eXist-xquery')/exist:text">&lt;report> { for $i at $position in collection() return concat(substring-before(substring-after(document-uri($i),
-							'objects/'), '.xml'), if ($position mod 100 = 0) then ',' else '|') } &lt;/report></xforms:setvalue>
-						<xforms:send submission="xquery-collection"/>
-						<xxforms:variable name="tokens" select="tokenize(replace(instance('collection-result')/report, ' ', ''), ',')"/>
-						<xforms:action xxforms:iterate="$tokens">
-							<xforms:setvalue ref="instance('control-instance')/identifiers" value="context()"/>
-							<xforms:setvalue ref="instance('control-instance')/solr-core" value="instance('config')/solr_published"/>
-							<!-- get Solr document -->
-							<xforms:send submission="generate-add-document"/>
-						</xforms:action>
-						<!-- optimize index -->
-						<xforms:send submission="optimize"/>
-						<!-- reload table -->
-						<xforms:setvalue ref="instance('control-instance')/solr-core" value="instance('config')/solr_all"/>
-						<xforms:delete nodeset="instance('list')/*"/>
-						<xforms:send submission="query-solr"/>
+					<xxforms:variable name="tokens" select="tokenize(replace(instance('collection-result')/report, ' ', ''), ',')"/>
+					<xforms:action xxforms:iterate="$tokens">
+						<xforms:setvalue ref="instance('control-instance')/identifiers" value="context()"/>
+						<xforms:setvalue ref="instance('control-instance')/solr-core" value="instance('config')/solr_published"/>
+						<!-- get Solr document -->
+						<xforms:send submissiong="generate-add-document"/>							
 					</xforms:action>
-
-					<!-- if nuds-count is greater than 0, process 5000 coin or coin-type records at a time -->
-					<xforms:action if="number(instance('control-instance')/nuds-count) &gt; 0">
-						<xforms:setvalue ref="instance('eXist-xquery')/exist:text">&lt;report> { for $i at $position in collection() return concat(substring-before(substring-after(document-uri($i),
-							'objects/'), '.xml'), if ($position mod 5000 = 0) then ',' else '|') } &lt;/report></xforms:setvalue>
-						<xforms:send submission="xquery-collection"/>
-						<xxforms:variable name="tokens" select="tokenize(replace(instance('collection-result')/report, ' ', ''), ',')"/>
-						<xforms:action xxforms:iterate="$tokens">
-							<xforms:setvalue ref="instance('control-instance')/identifiers" value="context()"/>
-							<xforms:setvalue ref="instance('control-instance')/solr-core" value="instance('config')/solr_published"/>
-							<!-- get Solr document -->
-							<xforms:send submission="generate-add-document"/>
-						</xforms:action>
-						<!-- optimize index -->
-						<xforms:send submission="optimize"/>
-						<!-- reload table -->
-						<xforms:setvalue ref="instance('control-instance')/solr-core" value="instance('config')/solr_all"/>
-						<xforms:delete nodeset="instance('list')/*"/>
-						<xforms:send submission="query-solr"/>
-					</xforms:action>
+					<!-- optimize index -->
+					<xforms:send submission="submit-commit"/>
+					<xforms:send submission="optimize"/>
+					<!-- reload table -->
+					<xforms:setvalue ref="instance('control-instance')/solr-core" value="instance('config')/solr_all"/>
+					<xforms:delete nodeset="instance('list')/*"/>
+					<xforms:send submission="query-solr"/>
 				</xforms:action>
 			</fr:positive-choice>
 		</fr:alert-dialog>
@@ -1309,5 +1268,5 @@
 				</xforms:action>
 			</fr:positive-choice>
 		</fr:alert-dialog>
-	</xhtml:body>
-</xhtml:html>
+	</body>
+</html>

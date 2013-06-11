@@ -4,42 +4,42 @@
     numishare: http://code.google.com/p/numishare/
     Apache License 2.0: http://code.google.com/p/numishare/    
 -->
-<xhtml:html xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ev="http://www.w3.org/2001/xml-events"
-	xmlns:xxforms="http://orbeon.org/oxf/xml/xforms" xmlns:widget="http://orbeon.org/oxf/xml/widget" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:fr="http://orbeon.org/oxf/xml/form-runner"
-	xmlns:exist="http://exist.sourceforge.net/NS/exist" xmlns:ead="urn:isbn:1-931666-22-9" xmlns:xxi="http://orbeon.org/oxf/xml/xinclude" xmlns:numishare="http://code.google.com/p/numishare/">
-	<xhtml:head>
-		<xhtml:title>Numishare: Administrative Interface</xhtml:title>
+<html xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xxforms="http://orbeon.org/oxf/xml/xforms" xmlns:widget="http://orbeon.org/oxf/xml/widget" xmlns:xi="http://www.w3.org/2001/XInclude"
+	xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:exist="http://exist.sourceforge.net/NS/exist" xmlns:ead="urn:isbn:1-931666-22-9" xmlns:xxi="http://orbeon.org/oxf/xml/xinclude"
+	xmlns:numishare="http://code.google.com/p/numishare/">
+	<head>
+		<title>Numishare: Administrative Interface</title>
 		<!-- Core + Skin CSS -->
-		<xhtml:link rel="stylesheet" type="text/css" href="/apps/numishare/css/jquery-ui-1.8.10.custom.css"/>
-		<xhtml:link rel="stylesheet" href="/apps/numishare/css/reset-fonts-grids.css"/>
-		<xhtml:link rel="stylesheet" href="/apps/numishare/css/base-min.css"/>
-		<xhtml:link rel="stylesheet" href="/apps/numishare/css/fonts-min.css"/>
+		<link rel="stylesheet" href="/fr/style/bootstrap/css/bootstrap.css" type="text/css"/>
+		<link rel="stylesheet" href="/fr/style/form-runner-bootstrap-override.css" type="text/css"/>
+		<link rel="stylesheet" href="/config/theme/examples.css" type="text/css" media="all"/>
+		<link rel="shortcut icon" href="/ops/images/orbeon-icon-16.ico"/>
+		<link rel="icon" href="/ops/images/orbeon-icon-16.png" type="image/png"/>
+		<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.8.0/build/cssgrids/grids-min.css"/>
 
 		<!-- numishare styling -->
-		<xhtml:link rel="stylesheet" href="/apps/numishare/css/xforms.css"/>
-
-		<xhtml:script type="text/javascript" src="/apps/numishare/javascript/jquery-1.6.1.min.js"/>
-		<xhtml:script type="text/javascript" src="/apps/numishare/javascript/numishare-menu.js"/>
+		<link rel="stylesheet" href="/apps/numishare/css/xforms.css"/>
 		<xforms:model>
 			<!-- exist URL is stored in an XML file -->
 			<xforms:instance id="exist-url">
 				<xi:include href="exist-url.xml"/>
 			</xforms:instance>
-			
+
 			<xforms:instance id="status">
 				<status/>
 			</xforms:instance>
-			
+
 			<xforms:instance id="control-instance">
 				<controls xmlns="">
 					<collection-name/>
 				</controls>
 			</xforms:instance>
-			
+
 			<xforms:instance id="dump">
 				<dump/>
 			</xforms:instance>
-			
+
 			<!-- collections/authentication instances -->
 			<xforms:instance id="collections-list">
 				<collections xmlns="">
@@ -101,20 +101,20 @@
 							<xforms:setvalue ref="instance('control-instance')/collection-name"
 								value="instance('collections-list')/collection[@role=instance('control-instance')/request-security/role]/@name"/>
 						</xforms:action>
-					</xforms:action>	
+					</xforms:action>
 					<xforms:send submission="load-config"/>
 				</xforms:action>
 				<!-- if the config has not been created (given that the URL in exist-url.xml is correct), create it -->
 				<xforms:message ev:event="xforms-submit-error" level="modal">Unable to load Numishare collections list.</xforms:message>
 			</xforms:submission>
-			
-			<xforms:submission id="load-config" serialization="none" method="get" action="{instance('exist-url')}{instance('control-instance')/collection-name}/config.xml" replace="instance" instance="config" xxforms:username="admin"
-				xxforms:password="">
+
+			<xforms:submission id="load-config" serialization="none" method="get" action="{instance('exist-url')}{instance('control-instance')/collection-name}/config.xml" replace="instance"
+				instance="config" xxforms:username="admin" xxforms:password="">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Cannot load Numishare configuration from eXist.</xforms:message>
 			</xforms:submission>
 
-			<xforms:submission id="save-config" ref="instance('config')" action="{instance('exist-url')}{instance('control-instance')/collection-name}/config.xml" method="put" replace="none" xxforms:username="admin"
-				xxforms:password="">
+			<xforms:submission id="save-config" ref="instance('config')" action="{instance('exist-url')}{instance('control-instance')/collection-name}/config.xml" method="put" replace="none"
+				xxforms:username="admin" xxforms:password="">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Error Saving Config.</xforms:message>
 			</xforms:submission>
 
@@ -124,42 +124,40 @@
 				<xforms:send submission="load-collections"/>
 			</xforms:action>
 		</xforms:model>
-	</xhtml:head>
-	<xhtml:body class="yui-skin-sam">
-		<xhtml:div id="doc4" class="yui-t2 content ui-corner-all">
-			<xxforms:variable name="display_path">../../</xxforms:variable>
-			<xi:include href="header.xml"/>			
-			<div id="bd">
-				<xhtml:div id="form">
-					<xforms:group ref="instance('status')/text()">
-						<xhtml:div class="success">
-							<xforms:output ref="instance('status')"/>
-						</xhtml:div>
-					</xforms:group>
-					<p>
-						<a href="../">&lt; Return</a>
-					</p>
-					<xhtml:h2>Select jQuery UI Theme</xhtml:h2>
-					<xhtml:p>Select the jQuery UI theme below. This theme affects the style of the multiselect on the browse page, tabs in the object display page, and other controls within Numishare.
-						Refer to the <xhtml:a href="http://jqueryui.com/themeroller/" target="_blank">jQuery Themeroller Gallery</xhtml:a> for visual examples. Default is 'smoothness'
-						(silver/gray).</xhtml:p>
-					<xforms:select1 ref="instance('config')/theme/jquery_ui_theme">
-						<xforms:label>Theme</xforms:label>
-						<xforms:alert>Required</xforms:alert>
-						<xforms:itemset nodeset="instance('themes')/theme">
-							<xforms:label ref="."/>
-							<xforms:value ref="."/>
-						</xforms:itemset>
-						<xforms:action ev:event="xforms-value-changed">
-							<xforms:send submission="save-config"/>
-							<xforms:setvalue ref="instance('status')" value="concat('jQuery theme set to ', instance('config')/theme/jquery_ui_theme)"/>
-						</xforms:action>
-					</xforms:select1>
-				</xhtml:div>
+	</head>
+	<body>
+		<xxforms:variable name="display_path">../../</xxforms:variable>
+		<div class="yui3-g">
+			<div class="yui3-u-1">
+				<div class="content">
+					<xi:include href="header.xml"/>
+					<div id="form">
+						<xforms:group ref="instance('status')/text()">
+							<div class="success">
+								<xforms:output ref="instance('status')"/>
+							</div>
+						</xforms:group>
+						<p>
+							<a href="../">&lt; Return</a>
+						</p>
+						<h2>Select jQuery UI Theme</h2>
+						<p>Select the jQuery UI theme below. This theme affects the style of the multiselect on the browse page, tabs in the object display page, and other controls within Numishare.
+							Refer to the <a href="http://jqueryui.com/themeroller/" target="_blank">jQuery Themeroller Gallery</a> for visual examples. Default is 'smoothness' (silver/gray).</p>
+						<xforms:select1 ref="instance('config')/theme/jquery_ui_theme">
+							<xforms:label>Theme</xforms:label>
+							<xforms:alert>Required</xforms:alert>
+							<xforms:itemset nodeset="instance('themes')/theme">
+								<xforms:label ref="."/>
+								<xforms:value ref="."/>
+							</xforms:itemset>
+							<xforms:action ev:event="xforms-value-changed">
+								<xforms:send submission="save-config"/>
+								<xforms:setvalue ref="instance('status')" value="concat('jQuery theme set to ', instance('config')/theme/jquery_ui_theme)"/>
+							</xforms:action>
+						</xforms:select1>
+					</div>
+				</div>
 			</div>
-			
-			<!--<widget:xforms-instance-inspector id="orbeon-xforms-inspector" xmlns:widget="http://orbeon.org/oxf/xml/widget"/>-->
-			
-		</xhtml:div>		
-	</xhtml:body>	
-</xhtml:html>
+		</div>
+	</body>
+</html>

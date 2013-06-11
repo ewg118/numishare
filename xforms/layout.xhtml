@@ -10,22 +10,21 @@
 	<head>
 		<title>Numishare: Administrative Interface</title>
 		<!-- Core + Skin CSS -->
-		<link rel="stylesheet" type="text/css" href="/apps/numishare/css/jquery-ui-1.8.10.custom.css"/>
-		<link rel="stylesheet" href="/apps/numishare/css/reset-fonts-grids.css"/>
-		<link rel="stylesheet" href="/apps/numishare/css/base-min.css"/>
-		<link rel="stylesheet" href="/apps/numishare/css/fonts-min.css"/>
+		<link rel="stylesheet" href="/fr/style/bootstrap/css/bootstrap.css" type="text/css"/>
+		<link rel="stylesheet" href="/fr/style/form-runner-bootstrap-override.css" type="text/css"/>
+		<link rel="stylesheet" href="/config/theme/examples.css" type="text/css" media="all"/>
+		<link rel="shortcut icon" href="/ops/images/orbeon-icon-16.ico"/>
+		<link rel="icon" href="/ops/images/orbeon-icon-16.png" type="image/png"/>
+		<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.8.0/build/cssgrids/grids-min.css"/>
 
 		<!-- numishare styling -->
 		<link rel="stylesheet" href="/apps/numishare/css/xforms.css"/>
-
-		<script type="text/javascript" src="/apps/numishare/javascript/jquery-1.6.1.min.js"/>
-		<script type="text/javascript" src="/apps/numishare/javascript/numishare-menu.js"/>
 		<xforms:model>
 			<!-- exist URL is stored in an XML file -->
 			<xforms:instance id="exist-url">
 				<xi:include href="exist-url.xml"/>
 			</xforms:instance>
-			
+
 			<xforms:instance id="control-instance">
 				<controls xmlns="">
 					<display>
@@ -37,18 +36,18 @@
 					<collection-name/>
 				</controls>
 			</xforms:instance>
-			
+
 			<xforms:instance id="dump">
 				<dump/>
 			</xforms:instance>
-			
+
 			<!-- collections/authentication instances -->
 			<xforms:instance id="collections-list">
 				<collections xmlns="">
 					<collection roll="admin" name="numishare"/>
 				</collections>
 			</xforms:instance>
-			
+
 			<xforms:instance id="config">
 				<config xmlns=""/>
 			</xforms:instance>
@@ -56,7 +55,7 @@
 			<xforms:instance id="status">
 				<status/>
 			</xforms:instance>
-			
+
 			<!-- submissions -->
 			<xforms:submission id="load-collections" serialization="none" method="get" action="{instance('exist-url')}collections-list.xml" replace="instance" instance="collections-list"
 				xxforms:username="admin" xxforms:password="">
@@ -72,19 +71,20 @@
 							<xforms:setvalue ref="instance('control-instance')/collection-name"
 								value="instance('collections-list')/collection[@role=instance('control-instance')/request-security/role]/@name"/>
 						</xforms:action>
-					</xforms:action>				
+					</xforms:action>
 					<xforms:send submission="load-config"/>
 				</xforms:action>
 				<!-- if the config has not been created (given that the URL in exist-url.xml is correct), create it -->
 				<xforms:message ev:event="xforms-submit-error" level="modal">Unable to load Numishare collections list.</xforms:message>
 			</xforms:submission>
-			
-			<xforms:submission id="load-config" serialization="none" method="get" action="{instance('exist-url')}{instance('control-instance')/collection-name}/config.xml" replace="instance" instance="config" xxforms:username="admin"
-				xxforms:password="">
+
+			<xforms:submission id="load-config" serialization="none" method="get" action="{instance('exist-url')}{instance('control-instance')/collection-name}/config.xml" replace="instance"
+				instance="config" xxforms:username="admin" xxforms:password="">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Cannot load Numishare configuration from eXist.</xforms:message>
 			</xforms:submission>
 
-			<xforms:submission id="save-config" ref="instance('config')" action="{instance('exist-url')}{instance('control-instance')/collection-name}/config.xml" method="put" replace="none" xxforms:username="admin" xxforms:password="">
+			<xforms:submission id="save-config" ref="instance('config')" action="{instance('exist-url')}{instance('control-instance')/collection-name}/config.xml" method="put" replace="none"
+				xxforms:username="admin" xxforms:password="">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Error Saving Config.</xforms:message>
 				<xforms:setvalue ref="instance('status')" ev:event="xforms-submit-done">Numishare configuration saved.</xforms:setvalue>
 			</xforms:submission>
@@ -100,204 +100,203 @@
 			</xforms:action>
 		</xforms:model>
 	</head>
-	<body class="yui-skin-sam">
-		<div id="doc4" class="yui-t2 content ui-corner-all">
-			<xxforms:variable name="display_path">../../</xxforms:variable>
-			<xi:include href="header.xml"/>
-			<div id="bd">
-				<div id="form">
-					<xforms:group ref="instance('status')/text()">
-						<div class="success">
-							<xforms:output ref="instance('status')"/>
+	<body>
+		<xxforms:variable name="display_path">../../</xxforms:variable>
+		<div class="yui3-g">
+			<div class="yui3-u-1">
+				<div class="content">
+					<xi:include href="header.xml"/>
+					<div id="form">
+						<xforms:group ref="instance('status')/text()">
+							<div class="success">
+								<xforms:output ref="instance('status')"/>
+							</div>
+						</xforms:group>
+						<p>
+							<a href="../">&lt; Return</a>
+						</p>
+						<div class="submission">
+							<xforms:submit submission="save-config" appearance="minimal">
+								<xforms:label class="file_control"><img src="{$display_path}images/save.gif" alt="Save"/> Save</xforms:label>
+							</xforms:submit>
 						</div>
-					</xforms:group>
-					<p>
-						<a href="../">&lt; Return</a>
-					</p>
-					<div class="submission">
-						<xforms:submit submission="save-config" appearance="minimal">
-							<xforms:label class="file_control"><img src="{$display_path}images/save.gif" alt="Save"/> Save</xforms:label>
-						</xforms:submit>
-					</div>
-					<h1>Manage Numishare Layouts and Displayable Content</h1>
-					<fr:tabview>
-						<fr:tab id="display">
-							<fr:label>Object Display</fr:label>
-							<h2>Object Display Page</h2>
-							<p>Select a page layout from the following four choices. Note that these layouts apply to physical--not conceptual--record types.</p>
-							<div class="yui-g">
-								<div class="yui-u first">
-									<div class="layout-image-container">
-										<div class="layout-image ui-corner-all">
-											<xforms:trigger appearance="minimal">
-												<xforms:label>
-													<img src="{$display_path}images/alignment_display_vl.png"/>
-												</xforms:label>
-												<xforms:action ev:event="DOMActivate">
-													<!--<xforms:setvalue xxforms:iterate="instance('control-instance')/display/*" value="''"/>-->
-													<xforms:setvalue ref="instance('control-instance')/display/vl">true</xforms:setvalue>
-												</xforms:action>
-											</xforms:trigger>
-										</div>
-										<radiogroup>
-											<xforms:select1 ref="instance('control-instance')/display/vl" appearance="full">
-												<xforms:item>
-													<xforms:label>Vertical orientation, images on left</xforms:label>
-													<xforms:value>true</xforms:value>
-												</xforms:item>
-												<xforms:action ev:event="xforms-value-changed" if=".='true'">
-													<xxforms:variable name="name" select="name()"/>
-													<xforms:action xxforms:iterate="instance('control-instance')/display/*[not(name() = $name)]">
-														<xforms:setvalue ref="context()" value="''"/>
+						<h1>Manage Numishare Layouts and Displayable Content</h1>
+						<fr:tabview>
+							<fr:tab id="display">
+								<fr:label>Object Display</fr:label>
+								<h2>Object Display Page</h2>
+								<p>Select a page layout from the following four choices. Note that these layouts apply to physical--not conceptual--record types.</p>
+								<div class="yui3-g">
+									<div class="yui3-u-1-2">
+										<div class="layout-image-container">
+											<div class="layout-image ui-corner-all">
+												<xforms:trigger appearance="minimal">
+													<xforms:label>
+														<img src="{$display_path}images/alignment_display_vl.png"/>
+													</xforms:label>
+													<xforms:action ev:event="DOMActivate">
+														<!--<xforms:setvalue xxforms:iterate="instance('control-instance')/display/*" value="''"/>-->
+														<xforms:setvalue ref="instance('control-instance')/display/vl">true</xforms:setvalue>
 													</xforms:action>
-													<!-- set the config values -->
-													<xforms:setvalue ref="instance('config')/theme/layouts/display/nuds/orientation">vertical</xforms:setvalue>
-													<xforms:setvalue ref="instance('config')/theme/layouts/display/nuds/image_location">left</xforms:setvalue>
-												</xforms:action>
-											</xforms:select1>
-										</radiogroup>
-									</div>
-								</div>
-								<div class="yui-u">
-									<div class="layout-image-container">
-										<div class="layout-image ui-corner-all">
-											<xforms:trigger appearance="minimal">
-												<xforms:label>
-													<img src="{$display_path}images/alignment_display_vr.png"/>
-												</xforms:label>
-												<xforms:action ev:event="DOMActivate">
-													<!--<xforms:setvalue xxforms:iterate="instance('control-instance')/display/*" value="''"/>-->
-													<xforms:setvalue ref="instance('control-instance')/display/vr">true</xforms:setvalue>
-												</xforms:action>
-											</xforms:trigger>
+												</xforms:trigger>
+											</div>
+											<radiogroup>
+												<xforms:select1 ref="instance('control-instance')/display/vl" appearance="full">
+													<xforms:item>
+														<xforms:label>Vertical orientation, images on left</xforms:label>
+														<xforms:value>true</xforms:value>
+													</xforms:item>
+													<xforms:action ev:event="xforms-value-changed" if=".='true'">
+														<xxforms:variable name="name" select="name()"/>
+														<xforms:action xxforms:iterate="instance('control-instance')/display/*[not(name() = $name)]">
+															<xforms:setvalue ref="context()" value="''"/>
+														</xforms:action>
+														<!-- set the config values -->
+														<xforms:setvalue ref="instance('config')/theme/layouts/display/nuds/orientation">vertical</xforms:setvalue>
+														<xforms:setvalue ref="instance('config')/theme/layouts/display/nuds/image_location">left</xforms:setvalue>
+													</xforms:action>
+												</xforms:select1>
+											</radiogroup>
 										</div>
-										<radiogroup>
-											<xforms:select1 ref="instance('control-instance')/display/vr" appearance="full">
-												<xforms:item>
-													<xforms:label>Vertical orientation, images on right</xforms:label>
-													<xforms:value>true</xforms:value>
-												</xforms:item>
-												<xforms:action ev:event="xforms-value-changed" if=".='true'">
-													<xxforms:variable name="name" select="name()"/>
-													<xforms:setvalue xxforms:iterate="instance('control-instance')/display/*[not(name() = $name)]" value="''"/>
-													<!-- set the config values -->
-													<xforms:setvalue ref="instance('config')/theme/layouts/display/nuds/orientation">vertical</xforms:setvalue>
-													<xforms:setvalue ref="instance('config')/theme/layouts/display/nuds/image_location">right</xforms:setvalue>
-												</xforms:action>
-											</xforms:select1>
-										</radiogroup>
 									</div>
-								</div>
-							</div>
-							<div class="yui-g">
-								<div class="yui-u first">
-									<div class="layout-image-container">
-										<div class="layout-image ui-corner-all">
-											<xforms:trigger appearance="minimal">
-												<xforms:label>
-													<img src="{$display_path}images/alignment_display_ht.png"/>
-												</xforms:label>
-												<xforms:action ev:event="DOMActivate">
-													<!--<xforms:setvalue xxforms:iterate="instance('control-instance')/display/*" value="''"/>-->
-													<xforms:setvalue ref="instance('control-instance')/display/ht">true</xforms:setvalue>
-												</xforms:action>
-											</xforms:trigger>
+									<div class="yui3-u-1-2">
+										<div class="layout-image-container">
+											<div class="layout-image ui-corner-all">
+												<xforms:trigger appearance="minimal">
+													<xforms:label>
+														<img src="{$display_path}images/alignment_display_vr.png"/>
+													</xforms:label>
+													<xforms:action ev:event="DOMActivate">
+														<!--<xforms:setvalue xxforms:iterate="instance('control-instance')/display/*" value="''"/>-->
+														<xforms:setvalue ref="instance('control-instance')/display/vr">true</xforms:setvalue>
+													</xforms:action>
+												</xforms:trigger>
+											</div>
+											<radiogroup>
+												<xforms:select1 ref="instance('control-instance')/display/vr" appearance="full">
+													<xforms:item>
+														<xforms:label>Vertical orientation, images on right</xforms:label>
+														<xforms:value>true</xforms:value>
+													</xforms:item>
+													<xforms:action ev:event="xforms-value-changed" if=".='true'">
+														<xxforms:variable name="name" select="name()"/>
+														<xforms:setvalue xxforms:iterate="instance('control-instance')/display/*[not(name() = $name)]" value="''"/>
+														<!-- set the config values -->
+														<xforms:setvalue ref="instance('config')/theme/layouts/display/nuds/orientation">vertical</xforms:setvalue>
+														<xforms:setvalue ref="instance('config')/theme/layouts/display/nuds/image_location">right</xforms:setvalue>
+													</xforms:action>
+												</xforms:select1>
+											</radiogroup>
 										</div>
-										<radiogroup>
-											<xforms:select1 ref="instance('control-instance')/display/ht" appearance="full">
-												<xforms:item>
-													<xforms:label>Horizontal orientation, images on top</xforms:label>
-													<xforms:value>true</xforms:value>
-												</xforms:item>
-												<xforms:action ev:event="xforms-value-changed" if=".='true'">
-													<xxforms:variable name="name" select="name()"/>
-													<xforms:setvalue xxforms:iterate="instance('control-instance')/display/*[not(name() = $name)]" value="''"/>
-													<!-- set the config values -->
-													<xforms:setvalue ref="instance('config')/theme/layouts/display/nuds/orientation">horizontal</xforms:setvalue>
-													<xforms:setvalue ref="instance('config')/theme/layouts/display/nuds/image_location">top</xforms:setvalue>
-												</xforms:action>
-											</xforms:select1>
-										</radiogroup>
 									</div>
 								</div>
-								<div class="yui-u">
-									<div class="layout-image-container">
-										<div class="layout-image ui-corner-all">
-											<xforms:trigger appearance="minimal">
-												<xforms:label>
-													<img src="{$display_path}images/alignment_display_hb.png"/>
-												</xforms:label>
-												<xforms:action ev:event="DOMActivate">
-													<!--<xforms:setvalue xxforms:iterate="instance('control-instance')/display/*" value="''"/>-->
-													<xforms:setvalue ref="instance('control-instance')/display/hb">true</xforms:setvalue>
-												</xforms:action>
-											</xforms:trigger>
+								<div class="yui3-g">
+									<div class="yui3-u-1-2">
+										<div class="layout-image-container">
+											<div class="layout-image ui-corner-all">
+												<xforms:trigger appearance="minimal">
+													<xforms:label>
+														<img src="{$display_path}images/alignment_display_ht.png"/>
+													</xforms:label>
+													<xforms:action ev:event="DOMActivate">
+														<!--<xforms:setvalue xxforms:iterate="instance('control-instance')/display/*" value="''"/>-->
+														<xforms:setvalue ref="instance('control-instance')/display/ht">true</xforms:setvalue>
+													</xforms:action>
+												</xforms:trigger>
+											</div>
+											<radiogroup>
+												<xforms:select1 ref="instance('control-instance')/display/ht" appearance="full">
+													<xforms:item>
+														<xforms:label>Horizontal orientation, images on top</xforms:label>
+														<xforms:value>true</xforms:value>
+													</xforms:item>
+													<xforms:action ev:event="xforms-value-changed" if=".='true'">
+														<xxforms:variable name="name" select="name()"/>
+														<xforms:setvalue xxforms:iterate="instance('control-instance')/display/*[not(name() = $name)]" value="''"/>
+														<!-- set the config values -->
+														<xforms:setvalue ref="instance('config')/theme/layouts/display/nuds/orientation">horizontal</xforms:setvalue>
+														<xforms:setvalue ref="instance('config')/theme/layouts/display/nuds/image_location">top</xforms:setvalue>
+													</xforms:action>
+												</xforms:select1>
+											</radiogroup>
 										</div>
-										<radiogroup>
-											<xforms:select1 ref="instance('control-instance')/display/hb" appearance="full">
+									</div>
+									<div class="yui3-u-1-2">
+										<div class="layout-image-container">
+											<div class="layout-image ui-corner-all">
+												<xforms:trigger appearance="minimal">
+													<xforms:label>
+														<img src="{$display_path}images/alignment_display_hb.png"/>
+													</xforms:label>
+													<xforms:action ev:event="DOMActivate">
+														<!--<xforms:setvalue xxforms:iterate="instance('control-instance')/display/*" value="''"/>-->
+														<xforms:setvalue ref="instance('control-instance')/display/hb">true</xforms:setvalue>
+													</xforms:action>
+												</xforms:trigger>
+											</div>
+											<radiogroup>
+												<xforms:select1 ref="instance('control-instance')/display/hb" appearance="full">
+													<xforms:item>
+														<xforms:label>Horizontal orientation, images on bottom</xforms:label>
+														<xforms:value>true</xforms:value>
+													</xforms:item>
+													<xforms:action ev:event="xforms-value-changed" if=".='true'">
+														<xxforms:variable name="name" select="name()"/>
+														<xforms:setvalue xxforms:iterate="instance('control-instance')/display/*[not(name() = $name)]" value="''"/>
+														<!-- set the config values -->
+														<xforms:setvalue ref="instance('config')/theme/layouts/display/nuds/orientation">horizontal</xforms:setvalue>
+														<xforms:setvalue ref="instance('config')/theme/layouts/display/nuds/image_location">bottom</xforms:setvalue>
+													</xforms:action>
+												</xforms:select1>
+											</radiogroup>
+										</div>
+									</div>
+								</div>
+							</fr:tab>
+							<fr:tab id="results">
+								<fr:label>Browse Page</fr:label>
+								<h2>Browse Page</h2>
+								<p>Two page layouts are available for the browse section. Facets may occur either in a left or right-aligned column. Output fields can also be selected from the list
+									below and ordered. Keep in mind that selecting many fields may result in a cumbersome user experience. Thumbnail images may be aligned either to the left or right
+									of the record content.</p> <xforms:group ref="instance('config')/theme/layouts/results">
+									<div class="subsection">
+										<h3>Facet Column Alignment</h3>
+										<div>
+											<xforms:select1 ref="yui_class">
+												<xforms:label>Alignment</xforms:label>
 												<xforms:item>
-													<xforms:label>Horizontal orientation, images on bottom</xforms:label>
-													<xforms:value>true</xforms:value>
+													<xforms:label>left</xforms:label>
+													<xforms:value>yui-t2</xforms:value>
 												</xforms:item>
-												<xforms:action ev:event="xforms-value-changed" if=".='true'">
-													<xxforms:variable name="name" select="name()"/>
-													<xforms:setvalue xxforms:iterate="instance('control-instance')/display/*[not(name() = $name)]" value="''"/>
-													<!-- set the config values -->
-													<xforms:setvalue ref="instance('config')/theme/layouts/display/nuds/orientation">horizontal</xforms:setvalue>
-													<xforms:setvalue ref="instance('config')/theme/layouts/display/nuds/image_location">bottom</xforms:setvalue>
-												</xforms:action>
+												<xforms:item>
+													<xforms:label>right</xforms:label>
+													<xforms:value>yui-t5</xforms:value>
+												</xforms:item>
 											</xforms:select1>
-										</radiogroup>
+										</div>
 									</div>
-								</div>
-							</div>
-						</fr:tab>
-						<fr:tab id="results">
-							<fr:label>Browse Page</fr:label>
-							<h2>Browse Page</h2>
-							<p>Two page layouts are available for the browse section. Facets may occur either in a left or right-aligned column. Output fields can also be selected from the list below
-								and ordered. Keep in mind that selecting many fields may result in a cumbersome user experience. Thumbnail images may be aligned either to the left or right of the
-								record content.</p> 
-							
-							<xforms:group ref="instance('config')/theme/layouts/results">
-								<div class="subsection">
-									<h3>Facet Column Alignment</h3>
-									<div>
-										<xforms:select1 ref="yui_class">
-											<xforms:label>Alignment</xforms:label>
-											<xforms:item>
-												<xforms:label>left</xforms:label>
-												<xforms:value>yui-t2</xforms:value>
-											</xforms:item>
-											<xforms:item>
-												<xforms:label>right</xforms:label>
-												<xforms:value>yui-t5</xforms:value>
-											</xforms:item>
-										</xforms:select1>
+									<div class="subsection">
+										<h3>Result Documents</h3>
+										<div>
+											<xforms:select1 ref="image_location">
+												<xforms:label>Thumbnail Alignment</xforms:label>
+												<xforms:item>
+													<xforms:label>left</xforms:label>
+													<xforms:value>left</xforms:value>
+												</xforms:item>
+												<xforms:item>
+													<xforms:label>right</xforms:label>
+													<xforms:value>right</xforms:value>
+												</xforms:item>
+											</xforms:select1>
+										</div>
 									</div>
-								</div>
-								<div class="subsection">
-									<h3>Result Documents</h3>
-									<div>
-										<xforms:select1 ref="image_location">
-											<xforms:label>Thumbnail Alignment</xforms:label>
-											<xforms:item>
-												<xforms:label>left</xforms:label>
-												<xforms:value>left</xforms:value>
-											</xforms:item>
-											<xforms:item>
-												<xforms:label>right</xforms:label>
-												<xforms:value>right</xforms:value>
-											</xforms:item>
-										</xforms:select1>
-									</div>
-								</div>
-							</xforms:group>							
-						</fr:tab>
-					</fr:tabview>
+								</xforms:group>
+							</fr:tab>
+						</fr:tabview>
+					</div>
 				</div>
 			</div>
-			<!--<widget:xforms-instance-inspector id="orbeon-xforms-inspector" xmlns:widget="http://orbeon.org/oxf/xml/widget"/>-->
 		</div>
 	</body>
 </html>
