@@ -1,9 +1,9 @@
-<html xmlns="http://nomisma.org/nuds" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events"
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events"
 	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xxforms="http://orbeon.org/oxf/xml/xforms" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:numishare="http://code.google.com/p/numishare/" xmlns:mets="http://www.loc.gov/METS/" xmlns:nuds="http://nomisma.org/nuds"
 	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:xbl="http://www.w3.org/ns/xbl"
-	xmlns:xxbl="http://orbeon.org/oxf/xml/xbl" xmlns:oxf="http://www.orbeon.com/oxf/processors" xmlns:pipeline="java:org.orbeon.oxf.processor.pipeline.PipelineFunctionLibrary"
-	xmlns:saxon="http://saxon.sf.net/" xmlns:exf="http://www.exforms.org/exf/1-0" xmlns:xxi="http://orbeon.org/oxf/xml/xinclude">
+	xmlns:xxbl="http://orbeon.org/oxf/xml/xbl" xmlns:oxf="http://www.orbeon.com/oxf/processors" xmlns:saxon="http://saxon.sf.net/" xmlns:exf="http://www.exforms.org/exf/1-0"
+	xmlns:xxi="http://orbeon.org/oxf/xml/xinclude">
 	<head>
 		<title>Numishare: Edit Coin</title>
 		<!-- Core + Skin CSS -->
@@ -16,8 +16,7 @@
 
 		<!-- numishare styling -->
 		<link rel="stylesheet" href="/apps/numishare/css/xforms.css"/>
-		<xforms:model>
-
+		<xforms:model xmlns="http://nomisma.org/nuds">
 			<!-- date/time formats courtesy EAC-CPF schema -->
 			<xs:schema elementFormDefault="qualified" attributeFormDefault="unqualified">
 				<xs:simpleType name="m.data.standardDateTime">
@@ -1448,7 +1447,8 @@
 											</xforms:group>
 											<xforms:delete ev:event="xforms-value-changed" if="count(*) = 0" nodeset="."/>
 										</xforms:group>
-									</div> <xforms:group ref="nuds:shape">
+									</div>
+									<xforms:group ref="nuds:shape">
 										<div>
 											<xforms:input ref=".">
 												<xforms:label>Shape</xforms:label>
@@ -1671,7 +1671,8 @@
 									<!-- XBL -->
 									<xforms:group ref="nuds:findspot">
 										<numishare:findspot/>
-									</xforms:group> <fr:alert-dialog id="remove-findspotDesc">
+									</xforms:group>
+									<fr:alert-dialog id="remove-findspotDesc">
 										<fr:label>Remove Findspot Description</fr:label>
 										<fr:message>This will remove the findspotDesc and its metadata.</fr:message>
 										<fr:negative-choice>
@@ -2112,6 +2113,10 @@
 									<fr:label>Record Metadata</fr:label>
 									<numishare:nudsHeader/>
 								</fr:tab>
+								<!--<fr:tab>
+									<fr:label>Inspector</fr:label>
+									<fr:xforms-inspector/>
+								</fr:tab>-->
 							</fr:tabview>
 						</xforms:group>
 					</div>

@@ -2,9 +2,9 @@
 	last modified: January, 2012
 	Function: reference information, appears in acqinfo, custodhist/previousColl, and refDesc
 -->
-<xbl:xbl xmlns="http://nomisma.org/nuds" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events"
+<xbl:xbl xmlns:nuds="http://nomisma.org/nuds" xmlns="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events"
 	xmlns:xxforms="http://orbeon.org/oxf/xml/xforms" xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:xbl="http://www.w3.org/ns/xbl" xmlns:xxbl="http://orbeon.org/oxf/xml/xbl"
-	xmlns:oxf="http://www.orbeon.com/oxf/processors" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	xmlns:oxf="http://www.orbeon.com/oxf/processors" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:numishare="http://code.google.com/p/numishare/">
 	<xbl:binding id="numishare-reference" element="numishare|reference">
 		<xbl:template>
 			<xforms:group xbl:attr="model context ref bind" xxbl:scope="outer">
@@ -14,30 +14,30 @@
 						<xxforms:sequence select="." xxbl:scope="outer"/>
 					</xxforms:variable>
 					<xforms:group ref="$binding">
-						<xhtml:h4>Reference</xhtml:h4>
+						<h4>Reference</h4>
 						<xforms:trigger appearance="minimal">
 							<xforms:delete ev:event="DOMActivate" nodeset="."/>
 							<xforms:label>
-								<xhtml:img src="../../images/remove.gif"/>
+								<img src="../../images/remove.gif"/>
 							</xforms:label>
 						</xforms:trigger>
-						<xhtml:div class="trigger_container">
+						<div class="trigger_container">
 							<xforms:group ref=".[count(nuds:identifier) = 0]">
 								<xforms:trigger appearance="minimal">
 									<xforms:label>
-										<xhtml:img src="../../images/add.gif"/>Identifier</xforms:label>
+										<img src="../../images/add.gif"/>Identifier</xforms:label>
 									<xforms:insert ev:event="DOMActivate" context="." origin="instance('identifier-template')" nodeset="./child::node()[last()]"/>
 								</xforms:trigger>
 							</xforms:group>
-						</xhtml:div>
-						<xhtml:div>
+						</div>
+						<div>
 							<xforms:input ref="*[local-name()='title']">
 								<xforms:label>Title</xforms:label>
 								<xforms:alert>Required</xforms:alert>
 							</xforms:input>
-						</xhtml:div>
+						</div>
 						<xforms:group ref="nuds:identifier">
-							<xhtml:div>
+							<div>
 								<xforms:input ref=".">
 									<xforms:label>Identifier</xforms:label>
 									<xforms:alert>Required</xforms:alert>
@@ -45,10 +45,10 @@
 								<xforms:trigger appearance="minimal">
 									<xforms:delete ev:event="DOMActivate" nodeset="."/>
 									<xforms:label>
-										<xhtml:img src="../../images/remove.gif"/>
+										<img src="../../images/remove.gif"/>
 									</xforms:label>
 								</xforms:trigger>
-							</xhtml:div>							
+							</div>
 						</xforms:group>
 					</xforms:group>
 					<!-- ********************************************************************** -->
