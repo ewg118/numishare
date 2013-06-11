@@ -1155,7 +1155,7 @@
 								</xforms:group>
 							</xforms:group>
 						</xforms:group>
-						<fr:xforms-inspector/>
+<!--						<fr:xforms-inspector/>-->
 					</div>
 				</div>
 			</div>
@@ -1225,10 +1225,10 @@
 						<xforms:setvalue ref="instance('control-instance')/identifiers" value="context()"/>
 						<xforms:setvalue ref="instance('control-instance')/solr-core" value="instance('config')/solr_published"/>
 						<!-- get Solr document -->
-						<xforms:send submissiong="generate-add-document"/>							
+						<xforms:send submission="generate-add-document"/>	
+						<xforms:send submission="submit-commit"/>						
 					</xforms:action>
-					<!-- optimize index -->
-					<xforms:send submission="submit-commit"/>
+					<!-- optimize index -->					
 					<xforms:send submission="optimize"/>
 					<!-- reload table -->
 					<xforms:setvalue ref="instance('control-instance')/solr-core" value="instance('config')/solr_all"/>

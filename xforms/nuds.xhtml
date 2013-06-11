@@ -1,23 +1,23 @@
-<xhtml:html xmlns="http://nomisma.org/nuds" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events"
+<html xmlns="http://nomisma.org/nuds" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events"
 	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xxforms="http://orbeon.org/oxf/xml/xforms" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:numishare="http://code.google.com/p/numishare/" xmlns:mets="http://www.loc.gov/METS/" xmlns:nuds="http://nomisma.org/nuds"
 	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:xbl="http://www.w3.org/ns/xbl"
 	xmlns:xxbl="http://orbeon.org/oxf/xml/xbl" xmlns:oxf="http://www.orbeon.com/oxf/processors" xmlns:pipeline="java:org.orbeon.oxf.processor.pipeline.PipelineFunctionLibrary"
 	xmlns:saxon="http://saxon.sf.net/" xmlns:exf="http://www.exforms.org/exf/1-0" xmlns:xxi="http://orbeon.org/oxf/xml/xinclude">
-	<xhtml:head>
-		<xhtml:title>Numishare: Edit Coin</xhtml:title>
+	<head>
+		<title>Numishare: Edit Coin</title>
 		<!-- Core + Skin CSS -->
-		<xhtml:link rel="stylesheet" href="/fr/style/bootstrap/css/bootstrap.css" type="text/css"/>
-		<xhtml:link rel="stylesheet" href="/fr/style/form-runner-bootstrap-override.css" type="text/css"/>
-		<xhtml:link rel="stylesheet" href="/config/theme/examples.css" type="text/css" media="all"/>
-		<xhtml:link rel="shortcut icon" href="/ops/images/orbeon-icon-16.ico"/>
-		<xhtml:link rel="icon" href="/ops/images/orbeon-icon-16.png" type="image/png"/>
-		<xhtml:link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.8.0/build/cssgrids/grids-min.css"/>
-		
+		<link rel="stylesheet" href="/fr/style/bootstrap/css/bootstrap.css" type="text/css"/>
+		<link rel="stylesheet" href="/fr/style/form-runner-bootstrap-override.css" type="text/css"/>
+		<link rel="stylesheet" href="/config/theme/examples.css" type="text/css" media="all"/>
+		<link rel="shortcut icon" href="/ops/images/orbeon-icon-16.ico"/>
+		<link rel="icon" href="/ops/images/orbeon-icon-16.png" type="image/png"/>
+		<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.8.0/build/cssgrids/grids-min.css"/>
+
 		<!-- numishare styling -->
-		<xhtml:link rel="stylesheet" href="/apps/numishare/css/xforms.css"/>
+		<link rel="stylesheet" href="/apps/numishare/css/xforms.css"/>
 		<xforms:model>
-			
+
 			<!-- date/time formats courtesy EAC-CPF schema -->
 			<xs:schema elementFormDefault="qualified" attributeFormDefault="unqualified">
 				<xs:simpleType name="m.data.standardDateTime">
@@ -346,7 +346,7 @@
 			<xforms:instance id="findspotDesc-template">
 				<findspotDesc>
 					<findspot>
-						<geogname xlink:role="findspot" xlink:href=""/>						
+						<geogname xlink:role="findspot" xlink:href=""/>
 					</findspot>
 				</findspotDesc>
 			</xforms:instance>
@@ -451,13 +451,13 @@
 				<!-- validate dates anywhere -->
 				<xforms:bind nodeset="//@standardDate" type="m.data.standardDate"/>
 				<xforms:bind nodeset="//@standardDateTime" type="m.data.standardDateTime"/>
-				
+
 				<xforms:bind nodeset="nuds:nudsHeader">
 					<xforms:bind nodeset="nuds:nudsid" required="true()" type="xs:anyURI"/>
 					<xforms:bind nodeset="nuds:publicationStmt">
 						<xforms:bind nodeset="nuds:publisher" required="true()"/>
 						<xforms:bind nodeset="nuds:createdBy" required="true()"/>
-						
+
 						<!--<xforms:bind nodeset="nuds:project"/>-->
 						<xforms:bind nodeset="nuds:langUsage">
 							<xforms:bind nodeset="nuds:language" required="true()">
@@ -525,9 +525,9 @@
 						</xforms:bind>
 					</xforms:bind>
 					<xforms:bind nodeset="nuds:undertypeDesc">
-						<xforms:bind nodeset="@xlink:href" required="true()" type="xs:anyURI"/>						
+						<xforms:bind nodeset="@xlink:href" required="true()" type="xs:anyURI"/>
 					</xforms:bind>
-					<xforms:bind nodeset="nuds:adminDesc">						
+					<xforms:bind nodeset="nuds:adminDesc">
 						<xforms:bind nodeset="descendant::nuds:sale/*" required="true()"/>
 						<xforms:bind nodeset="nuds:acqinfo">
 							<xforms:bind nodeset="nuds:acquiredFrom" required="true()"/>
@@ -535,7 +535,7 @@
 						</xforms:bind>
 					</xforms:bind>
 					<xforms:bind nodeset="nuds:findspotDesc">
-						<xforms:bind nodeset="nuds:findspot">							
+						<xforms:bind nodeset="nuds:findspot">
 							<xforms:bind nodeset="nuds:geogname" required="true()">
 								<xforms:bind nodeset="@xlink:href" type="xs:anyURI" required="true()"/>
 							</xforms:bind>
@@ -786,7 +786,7 @@
 		<xi:include href="oxf:/xbl/numishare/denomination/denomination.xbl" xi:omit-xml-base="true"/>
 		<xi:include href="oxf:/xbl/numishare/department/department.xbl" xi:omit-xml-base="true"/>
 		<xi:include href="oxf:/xbl/numishare/description/description.xbl" xi:omit-xml-base="true"/>
-		<xi:include href="oxf:/xbl/numishare/dynasty/dynasty.xbl" xi:omit-xml-base="true"/>		
+		<xi:include href="oxf:/xbl/numishare/dynasty/dynasty.xbl" xi:omit-xml-base="true"/>
 		<xi:include href="oxf:/xbl/numishare/file-upload/file-upload.xbl" xi:omit-xml-base="true"/>
 		<xi:include href="oxf:/xbl/numishare/findspot/findspot.xbl" xi:omit-xml-base="true"/>
 		<xi:include href="oxf:/xbl/numishare/mark/mark.xbl" xi:omit-xml-base="true"/>
@@ -798,196 +798,1001 @@
 		<xi:include href="oxf:/xbl/numishare/region/region.xbl" xi:omit-xml-base="true"/>
 		<xi:include href="oxf:/xbl/numishare/sale/sale.xbl" xi:omit-xml-base="true"/>
 		<xi:include href="oxf:/xbl/numishare/type-undertype/type-undertype.xbl" xi:omit-xml-base="true"/>
-	</xhtml:head>
+	</head>
 
-	<xhtml:body class="yui-skin-sam">
-		<xhtml:div id="doc4" class="yui-t2 content ui-corner-all">
-			<xxforms:variable name="display_path">../../</xxforms:variable>
-			<xi:include href="header.xml"/>
-			<xhtml:div id="bd">
-				<xhtml:div id="form">
-					<xforms:group ref="instance('status')/text()">
-						<xhtml:div class="success">
-							<xforms:output ref="instance('status')"/>
-						</xhtml:div>
-					</xforms:group>
-					<xhtml:p>
-						<xhtml:a href="../../">&lt; Return</xhtml:a>
-					</xhtml:p>
-					<xhtml:div class="submission">
-						<xforms:trigger appearance="minimal">
-							<xforms:action ev:event="DOMActivate">
-								<xforms:action if="not(string(instance('coin')/nuds:nudsHeader/nuds:publicationStmt/nuds:date/@standardDateTime))">
-									<xforms:setvalue ref="instance('coin')/nuds:nudsHeader/nuds:publicationStmt/nuds:date/@standardDateTime" value="current-dateTime()"/>
-								</xforms:action>
-								<xforms:send submission="save-submission"/>
-							</xforms:action>
-							<xforms:label class="file_control"><xhtml:img src="{$display_path}images/save.gif" alt="Save"/>Save</xforms:label>
-						</xforms:trigger>
-						<xforms:submit submission="load-submission" appearance="minimal">
-							<xforms:label class="file_control"><xhtml:img src="{$display_path}images/recycle-green.png" alt="Load"/> Load</xforms:label>
-						</xforms:submit>
-					</xhtml:div>
-					<xhtml:h1>Create/Edit Coin</xhtml:h1>
-					<xforms:group ref="instance('coin')">
-						<xhtml:div>
-							<xforms:input ref="nuds:nudsHeader/nuds:nudsid">
-								<xforms:label>NUDS ID</xforms:label>
-								<xforms:alert>Required; Must be URI</xforms:alert>
-							</xforms:input>
-						</xhtml:div>
-						<xhtml:div>
-							<xforms:select1 ref="@recordType">
-								<xforms:label>Record Type</xforms:label>
-								<xforms:alert>Required</xforms:alert>
-								<xforms:item>
-									<xforms:label>Conceptual</xforms:label>
-									<xforms:value>conceptual</xforms:value>
-								</xforms:item>
-								<xforms:item>
-									<xforms:label>Physical</xforms:label>
-									<xforms:value>physical</xforms:value>
-								</xforms:item>
-								<xforms:action ev:event="xforms-value-changed">
-									<xforms:action if="instance('coin')/@recordType='conceptual'">
-										<!-- show dialog to remove physDesc if it is not empty -->
-										<xforms:dispatch target="switch-to-conceptual" name="fr-show"
-											if="instance('coin')/nuds:descMeta/nuds:physDesc/* or instance('coin')/nuds:descMeta/nuds:adminDesc/* or instance('coin')/nuds:descMeta/nuds:undertypeDesc/* or instance('coin')/nuds:descMeta/nuds:findspotDesc/*"/>
-										<!-- remove physDesc, undertypeDesc, findspotDesc, and adminDesc without warning if it is empty -->
-										<xforms:delete nodeset="instance('coin')/nuds:descMeta/nuds:physDesc" if="not(instance('coin')/nuds:descMeta/nuds:physDesc/*)"/>
-										<xforms:delete nodeset="instance('coin')/nuds:descMeta/nuds:adminDesc" if="not(instance('coin')/nuds:descMeta/nuds:adminDesc/*)"/>
-										<xforms:delete nodeset="instance('coin')/nuds:descMeta/nuds:undertypeDesc" if="not(instance('coin')/nuds:descMeta/nuds:undertypeDesc/*)"/>
-										<xforms:delete nodeset="instance('coin')/nuds:descMeta/nuds:findspotDesc" if="not(instance('coin')/nuds:descMeta/nuds:findspotDesc/*)"/>
-										<!-- remove fileSec from digRep -->
-										<xforms:delete context="instance('coin')/nuds:digRep" nodeset="mets:fileSec"/>
-									</xforms:action>
-									<xforms:action if="instance('coin')/@recordType='physical'">
-										<!-- insert physDesc if it doesn't already exist -->
-										<xforms:insert context="instance('coin')/nuds:descMeta" nodeset="./child::node()[last()]" origin="instance('physDesc-template')"
-											if="count(instance('coin')/nuds:descMeta/nuds:physDesc) = 0"/>
-										<xforms:insert context="instance('coin')/nuds:descMeta" nodeset="./child::node()[last()]" origin="instance('adminDesc-template')"
-											if="count(instance('coin')/nuds:descMeta/nuds:adminDesc) = 0"/>
-										<!-- insert fileSec back into digRep -->
-										<xforms:insert context="instance('coin')/nuds:digRep" origin="instance('fileSec-template')"/>
-										<!-- remove associatedObject -->
-										<xforms:delete context="instance('coin')/nuds:digRep" nodeset="nuds:associatedObject"/>
-									</xforms:action>
-								</xforms:action>
-							</xforms:select1>
-						</xhtml:div>
-						<xhtml:div class="trigger_container">
-							<xforms:group ref=".[count(nuds:descMeta/nuds:undertypeDesc) &lt; 1 and @recordType = 'physical']">
-								<xforms:trigger appearance="minimal">
-									<xforms:label>
-										<xhtml:img src="{$display_path}images/add.gif"/>Undertype Description</xforms:label>
-									<xforms:insert ev:event="DOMActivate" context="nuds:descMeta" origin="instance('undertypeDesc-template')" nodeset="./child::node()[last()]"/>
-								</xforms:trigger>
-							</xforms:group>
-							<xforms:group ref=".[count(nuds:descMeta/nuds:refDesc) &lt; 1]">
-								<xforms:trigger appearance="minimal">
-									<xforms:label>
-										<xhtml:img src="{$display_path}images/add.gif"/>Reference Description</xforms:label>
-									<xforms:insert ev:event="DOMActivate" context="nuds:descMeta" origin="instance('refDesc-template')" nodeset="./child::node()[last()]"/>
-								</xforms:trigger>
-							</xforms:group>
-							<xforms:group ref=".[count(nuds:descMeta/nuds:findspotDesc) &lt; 1 and @recordType = 'physical']">
-								<xforms:trigger appearance="minimal">
-									<xforms:label>
-										<xhtml:img src="{$display_path}images/add.gif"/>Findspot Description</xforms:label>
-									<xforms:insert ev:event="DOMActivate" context="nuds:descMeta" origin="instance('findspotDesc-template')" nodeset="./child::node()[last()]"/>
-								</xforms:trigger>
-							</xforms:group>
-							<xforms:group ref=".[count(nuds:digRep) &lt; 1]">
-								<xforms:trigger appearance="minimal">
-									<xforms:label>
-										<xhtml:img src="{$display_path}images/add.gif"/>Digital Representations</xforms:label>
-									<xforms:insert ev:event="DOMActivate" context="." origin="instance('digRep-template')" nodeset="./child::node()[last()]"/>
-									<xforms:insert ev:event="DOMActivate" context="digRep" origin="instance('fileSec-template')" if="instance('coin')/@recordType = 'physical'"/>
-								</xforms:trigger>
-							</xforms:group>
-						</xhtml:div>
-						<fr:alert-dialog id="switch-to-conceptual">
-							<fr:label>Switch to Conceptual Record Type</fr:label>
-							<fr:message>This will remove NUDS components that cannot occur in conceptual records (e.g., physical description). Confirm?</fr:message>
-							<fr:negative-choice>
+	<body>
+		<xxforms:variable name="display_path">../../</xxforms:variable>
+		<div class="yui3-g">
+			<div class="yui3-u-1">
+				<div class="content">
+					<xi:include href="header.xml"/>
+					<div id="form">
+						<xforms:group ref="instance('status')/text()">
+							<div class="success">
+								<xforms:output ref="instance('status')"/>
+							</div>
+						</xforms:group>
+						<p>
+							<a href="../../">&lt; Return</a>
+						</p>
+						<div class="submission">
+							<xforms:trigger appearance="minimal">
 								<xforms:action ev:event="DOMActivate">
-									<xforms:setvalue ref="instance('coin')/@recordType" value="'physical'"/>
+									<xforms:action if="not(string(instance('coin')/nuds:nudsHeader/nuds:publicationStmt/nuds:date/@standardDateTime))">
+										<xforms:setvalue ref="instance('coin')/nuds:nudsHeader/nuds:publicationStmt/nuds:date/@standardDateTime" value="current-dateTime()"/>
+									</xforms:action>
+									<xforms:send submission="save-submission"/>
 								</xforms:action>
-							</fr:negative-choice>
-							<fr:positive-choice>
-								<xforms:action ev:event="DOMActivate">
-									<xforms:delete nodeset="instance('coin')/nuds:descMeta/nuds:physDesc"/>
-									<xforms:delete nodeset="instance('coin')/nuds:descMeta/nuds:adminDesc"/>
-									<xforms:delete nodeset="instance('coin')/nuds:descMeta/nuds:undertypeDesc"/>
-									<xforms:delete nodeset="instance('coin')/nuds:descMeta/nuds:findspotDesc"/>
-								</xforms:action>
-							</fr:positive-choice>
-						</fr:alert-dialog>
-						<fr:tabview>
-							<!--**************************************** DESCMETA **********************************-->
-							<fr:tab id="descmeta-tab">
-								<fr:label>Descriptive Metadata</fr:label>
-								<xforms:group ref="nuds:descMeta">
-									<xhtml:h2>Descriptive Metadata</xhtml:h2>
-									<xhtml:div class="trigger_container">
-										<xforms:trigger appearance="minimal">
-											<xforms:label>
-												<xhtml:img src="{$display_path}images/add.gif"/>Department</xforms:label>
-											<xforms:insert ev:event="DOMActivate" context="." origin="instance('department-template')" nodeset="nuds:title" position="after"/>
-										</xforms:trigger>
-										<xforms:group ref=".[count(nuds:description) = 0]">
+								<xforms:label class="file_control"><img src="{$display_path}images/save.gif" alt="Save"/>Save</xforms:label>
+							</xforms:trigger>
+							<xforms:submit submission="load-submission" appearance="minimal">
+								<xforms:label class="file_control"><img src="{$display_path}images/recycle-green.png" alt="Load"/> Load</xforms:label>
+							</xforms:submit>
+						</div>
+						<h1>Create/Edit Coin</h1>
+						<xforms:group ref="instance('coin')">
+							<div>
+								<xforms:input ref="nuds:nudsHeader/nuds:nudsid">
+									<xforms:label>NUDS ID</xforms:label>
+									<xforms:alert>Required; Must be URI</xforms:alert>
+								</xforms:input>
+							</div>
+							<div>
+								<xforms:select1 ref="@recordType">
+									<xforms:label>Record Type</xforms:label>
+									<xforms:alert>Required</xforms:alert>
+									<xforms:item>
+										<xforms:label>Conceptual</xforms:label>
+										<xforms:value>conceptual</xforms:value>
+									</xforms:item>
+									<xforms:item>
+										<xforms:label>Physical</xforms:label>
+										<xforms:value>physical</xforms:value>
+									</xforms:item>
+									<xforms:action ev:event="xforms-value-changed">
+										<xforms:action if="instance('coin')/@recordType='conceptual'">
+											<!-- show dialog to remove physDesc if it is not empty -->
+											<xforms:dispatch target="switch-to-conceptual" name="fr-show"
+												if="instance('coin')/nuds:descMeta/nuds:physDesc/* or instance('coin')/nuds:descMeta/nuds:adminDesc/* or instance('coin')/nuds:descMeta/nuds:undertypeDesc/* or instance('coin')/nuds:descMeta/nuds:findspotDesc/*"/>
+											<!-- remove physDesc, undertypeDesc, findspotDesc, and adminDesc without warning if it is empty -->
+											<xforms:delete nodeset="instance('coin')/nuds:descMeta/nuds:physDesc" if="not(instance('coin')/nuds:descMeta/nuds:physDesc/*)"/>
+											<xforms:delete nodeset="instance('coin')/nuds:descMeta/nuds:adminDesc" if="not(instance('coin')/nuds:descMeta/nuds:adminDesc/*)"/>
+											<xforms:delete nodeset="instance('coin')/nuds:descMeta/nuds:undertypeDesc" if="not(instance('coin')/nuds:descMeta/nuds:undertypeDesc/*)"/>
+											<xforms:delete nodeset="instance('coin')/nuds:descMeta/nuds:findspotDesc" if="not(instance('coin')/nuds:descMeta/nuds:findspotDesc/*)"/>
+											<!-- remove fileSec from digRep -->
+											<xforms:delete context="instance('coin')/nuds:digRep" nodeset="mets:fileSec"/>
+										</xforms:action>
+										<xforms:action if="instance('coin')/@recordType='physical'">
+											<!-- insert physDesc if it doesn't already exist -->
+											<xforms:insert context="instance('coin')/nuds:descMeta" nodeset="./child::node()[last()]" origin="instance('physDesc-template')"
+												if="count(instance('coin')/nuds:descMeta/nuds:physDesc) = 0"/>
+											<xforms:insert context="instance('coin')/nuds:descMeta" nodeset="./child::node()[last()]" origin="instance('adminDesc-template')"
+												if="count(instance('coin')/nuds:descMeta/nuds:adminDesc) = 0"/>
+											<!-- insert fileSec back into digRep -->
+											<xforms:insert context="instance('coin')/nuds:digRep" origin="instance('fileSec-template')"/>
+											<!-- remove associatedObject -->
+											<xforms:delete context="instance('coin')/nuds:digRep" nodeset="nuds:associatedObject"/>
+										</xforms:action>
+									</xforms:action>
+								</xforms:select1>
+							</div>
+							<div class="trigger_container">
+								<xforms:group ref=".[count(nuds:descMeta/nuds:undertypeDesc) &lt; 1 and @recordType = 'physical']">
+									<xforms:trigger appearance="minimal">
+										<xforms:label>
+											<img src="{$display_path}images/add.gif"/>Undertype Description</xforms:label>
+										<xforms:insert ev:event="DOMActivate" context="nuds:descMeta" origin="instance('undertypeDesc-template')" nodeset="./child::node()[last()]"/>
+									</xforms:trigger>
+								</xforms:group>
+								<xforms:group ref=".[count(nuds:descMeta/nuds:refDesc) &lt; 1]">
+									<xforms:trigger appearance="minimal">
+										<xforms:label>
+											<img src="{$display_path}images/add.gif"/>Reference Description</xforms:label>
+										<xforms:insert ev:event="DOMActivate" context="nuds:descMeta" origin="instance('refDesc-template')" nodeset="./child::node()[last()]"/>
+									</xforms:trigger>
+								</xforms:group>
+								<xforms:group ref=".[count(nuds:descMeta/nuds:findspotDesc) &lt; 1 and @recordType = 'physical']">
+									<xforms:trigger appearance="minimal">
+										<xforms:label>
+											<img src="{$display_path}images/add.gif"/>Findspot Description</xforms:label>
+										<xforms:insert ev:event="DOMActivate" context="nuds:descMeta" origin="instance('findspotDesc-template')" nodeset="./child::node()[last()]"/>
+									</xforms:trigger>
+								</xforms:group>
+								<xforms:group ref=".[count(nuds:digRep) &lt; 1]">
+									<xforms:trigger appearance="minimal">
+										<xforms:label>
+											<img src="{$display_path}images/add.gif"/>Digital Representations</xforms:label>
+										<xforms:insert ev:event="DOMActivate" context="." origin="instance('digRep-template')" nodeset="./child::node()[last()]"/>
+										<xforms:insert ev:event="DOMActivate" context="digRep" origin="instance('fileSec-template')" if="instance('coin')/@recordType = 'physical'"/>
+									</xforms:trigger>
+								</xforms:group>
+							</div>
+							<fr:alert-dialog id="switch-to-conceptual">
+								<fr:label>Switch to Conceptual Record Type</fr:label>
+								<fr:message>This will remove NUDS components that cannot occur in conceptual records (e.g., physical description). Confirm?</fr:message>
+								<fr:negative-choice>
+									<xforms:action ev:event="DOMActivate">
+										<xforms:setvalue ref="instance('coin')/@recordType" value="'physical'"/>
+									</xforms:action>
+								</fr:negative-choice>
+								<fr:positive-choice>
+									<xforms:action ev:event="DOMActivate">
+										<xforms:delete nodeset="instance('coin')/nuds:descMeta/nuds:physDesc"/>
+										<xforms:delete nodeset="instance('coin')/nuds:descMeta/nuds:adminDesc"/>
+										<xforms:delete nodeset="instance('coin')/nuds:descMeta/nuds:undertypeDesc"/>
+										<xforms:delete nodeset="instance('coin')/nuds:descMeta/nuds:findspotDesc"/>
+									</xforms:action>
+								</fr:positive-choice>
+							</fr:alert-dialog>
+							<fr:tabview>
+								<!--**************************************** DESCMETA **********************************-->
+								<fr:tab id="descmeta-tab">
+									<fr:label>Descriptive Metadata</fr:label>
+									<xforms:group ref="nuds:descMeta">
+										<h2>Descriptive Metadata</h2>
+										<div class="trigger_container">
 											<xforms:trigger appearance="minimal">
 												<xforms:label>
-													<xhtml:img src="{$display_path}images/add.gif"/>Description</xforms:label>
-												<xforms:insert ev:event="DOMActivate" context="." origin="instance('description-template')" nodeset="nuds:title" position="after"/>
+													<img src="{$display_path}images/add.gif"/>Department</xforms:label>
+												<xforms:insert ev:event="DOMActivate" context="." origin="instance('department-template')" nodeset="nuds:title" position="after"/>
+											</xforms:trigger>
+											<xforms:group ref=".[count(nuds:description) = 0]">
+												<xforms:trigger appearance="minimal">
+													<xforms:label>
+														<img src="{$display_path}images/add.gif"/>Description</xforms:label>
+													<xforms:insert ev:event="DOMActivate" context="." origin="instance('description-template')" nodeset="nuds:title" position="after"/>
+												</xforms:trigger>
+											</xforms:group>
+											<xforms:trigger appearance="minimal">
+												<xforms:label>
+													<img src="{$display_path}images/add.gif"/>Note</xforms:label>
+												<xforms:insert ev:event="DOMActivate" context="." origin="instance('note-template')" nodeset="./child::node()[last()]"/>
+											</xforms:trigger>
+										</div>
+										<div>
+											<xforms:input ref="nuds:title">
+												<xforms:label>Title</xforms:label>
+												<xforms:alert>The title is required</xforms:alert>
+											</xforms:input>
+											<xforms:trigger>
+												<xforms:label>Generate</xforms:label>
+												<xforms:action ev:event="DOMActivate">
+													<xxforms:variable name="material" select="instance('coin')/nuds:descMeta/nuds:typeDesc/nuds:material"/>
+													<xxforms:variable name="denomination"
+														select="if(string(instance('coin')/nuds:descMeta/nuds:typeDesc/nuds:denomination)) then concat(' ', instance('coin')/nuds:descMeta/nuds:typeDesc/nuds:denomination) else concat(' ', instance('coin')/nuds:descMeta/nuds:typeDesc/nuds:objectType)"/>
+													<xxforms:variable name="name-sep"
+														select="if(string(instance('coin')/nuds:descMeta/nuds:typeDesc/nuds:authority/nuds:persname[@xlink:role='issuer']) or string(instance('coin')/nuds:descMeta/nuds:typeDesc/nuds:authority/nuds:persname[@xlink:role='authority']) or string(instance('coin')/nuds:descMeta/nuds:typeDesc/nuds:geographic/nuds:geogname)) then ' of' else ''"/>
+													<xxforms:variable name="issuer"
+														select="if(string(instance('coin')/nuds:descMeta/nuds:typeDesc/nuds:authority/nuds:persname[@xlink:role='authority'])) then concat(' ', instance('coin')/nuds:descMeta/nuds:typeDesc/nuds:authority/nuds:persname[@xlink:role='authority']) else if(string(instance('coin')/nuds:descMeta/nuds:typeDesc/nuds:authority/nuds:persname[@xlink:role='issuer'])) then concat(' ', instance('coin')/nuds:descMeta/nuds:typeDesc/nuds:authority/nuds:persname[@xlink:role='issuer']) else ''"/>
+													<xxforms:variable name="mint"
+														select="if(string(instance('coin')/nuds:descMeta/nuds:typeDesc/nuds:geographic/nuds:geogname[@xlink:role='mint'])) then concat(', ', instance('coin')/nuds:descMeta/nuds:typeDesc/nuds:geographic/nuds:geogname[@xlink:role='mint']) else ''"/>
+													<xxforms:variable name="region"
+														select="if(string(instance('coin')/nuds:descMeta/nuds:typeDesc/nuds:geographic/nuds:geogname[@xlink:role='region'])) then concat(', ', instance('coin')/nuds:descMeta/nuds:typeDesc/nuds:geographic/nuds:geogname[@xlink:role='region']) else ''"/>
+													<xxforms:variable name="date"
+														select="if(string(instance('coin')/nuds:descMeta/nuds:typeDesc/nuds:date)) then concat(', ', instance('coin')/nuds:descMeta/nuds:typeDesc/nuds:date) else ''"/>
+													<xxforms:variable name="identifier"
+														select="if(string(instance('coin')/nuds:descMeta/nuds:adminDesc/nuds:identifier)) then concat('  ', instance('coin')/nuds:descMeta/nuds:adminDesc/nuds:identifier, '.') else ''"/>
+													<xforms:setvalue ref="title"
+														value="concat($material, $denomination, $name-sep, $issuer, $mint, $region, $date, if(substring($date, string-length($date)) = '.') then '' else '.', $identifier)"
+													/>
+												</xforms:action>
+											</xforms:trigger>
+										</div>
+										<xforms:repeat nodeset="nuds:department">
+											<numishare:department/>
+										</xforms:repeat>
+										<xforms:group ref="nuds:description">
+											<numishare:description/>
+										</xforms:group>
+										<xforms:repeat nodeset="nuds:note">
+											<div>
+												<xforms:textarea ref=".">
+													<xforms:label>Note</xforms:label>
+												</xforms:textarea>
+												<xforms:trigger appearance="minimal">
+													<xforms:delete ev:event="DOMActivate" nodeset="."/>
+													<xforms:label>
+														<img src="{$display_path}images/remove.gif"/>
+													</xforms:label>
+												</xforms:trigger>
+											</div>
+										</xforms:repeat>
+									</xforms:group>
+								</fr:tab>
+								<!--**************************************** PHYSICAL DESCRIPTION **********************************-->
+								<fr:tab bind="physdesc-tab">
+									<fr:label>Physical</fr:label>
+									<h2>Physical Description</h2>
+									<span class="add">
+										<xforms:trigger appearance="minimal">
+											<xforms:label>
+												<img src="{$display_path}images/add.gif"/>
+											</xforms:label>
+											<xxforms:show ev:event="DOMActivate" dialog="physdesc-objects"/>
+										</xforms:trigger>
+									</span>
+									<xxforms:dialog id="physdesc-objects" appearance="full" level="modal" close="true" draggable="true" visible="false">
+										<xforms:label>Descriptors</xforms:label>
+										<xforms:group ref=".[count(nuds:axis) &lt; 1]">
+											<xforms:trigger appearance="minimal">
+												<xforms:label>
+													<img src="{$display_path}images/add.gif"/>Axis</xforms:label>
+												<xforms:insert ev:event="DOMActivate" context="." origin="instance('axis-template')" nodeset="./child::node()[last()]"/>
+											</xforms:trigger>
+										</xforms:group>
+										<xforms:group ref=".[count(nuds:measurementsSet/nuds:diameter) &lt; 1]">
+											<xforms:trigger appearance="minimal">
+												<xforms:label>
+													<img src="{$display_path}images/add.gif"/>Diameter</xforms:label>
+												<xforms:insert ev:event="DOMActivate" context="." origin="instance('measurementsSet-template')" nodeset="./child::node()[last()]"
+													if="count(nuds:measurementsSet) = 0"/>
+												<xforms:insert ev:event="DOMActivate" context="nuds:measurementsSet" origin="instance('diameter-template')" nodeset="./child::node()[last()]"/>
+											</xforms:trigger>
+										</xforms:group>
+										<xforms:group ref=".[count(nuds:measurementsSet/nuds:height) &lt; 1]">
+											<xforms:trigger appearance="minimal">
+												<xforms:label>
+													<img src="{$display_path}images/add.gif"/>Height</xforms:label>
+												<xforms:insert ev:event="DOMActivate" context="." origin="instance('measurementsSet-template')" nodeset="./child::node()[last()]"
+													if="count(nuds:measurementsSet) = 0"/>
+												<xforms:insert ev:event="DOMActivate" context="nuds:measurementsSet" origin="instance('height-template')" nodeset="./child::node()[last()]"/>
+											</xforms:trigger>
+										</xforms:group>
+										<xforms:group ref=".[count(nuds:shape) &lt; 1]">
+											<xforms:trigger appearance="minimal">
+												<xforms:label>
+													<img src="{$display_path}images/add.gif"/>Shape</xforms:label>
+												<xforms:insert ev:event="DOMActivate" context="." origin="instance('shape-template')" nodeset="./child::node()[last()]"/>
+											</xforms:trigger>
+										</xforms:group>
+										<xforms:group ref=".[count(nuds:measurementsSet/nuds:thickness) &lt; 1]">
+											<xforms:trigger appearance="minimal">
+												<xforms:label>
+													<img src="{$display_path}images/add.gif"/>Thickness</xforms:label>
+												<xforms:insert ev:event="DOMActivate" context="." origin="instance('measurementsSet-template')" nodeset="./child::node()[last()]"
+													if="count(nuds:measurementsSet) = 0"/>
+												<xforms:insert ev:event="DOMActivate" context="nuds:measurementsSet" origin="instance('thickness-template')" nodeset="./child::node()[last()]"/>
+											</xforms:trigger>
+										</xforms:group>
+										<xforms:group ref=".[count(nuds:measurementsSet/nuds:weight) &lt; 1]">
+											<xforms:trigger appearance="minimal">
+												<xforms:label>
+													<img src="{$display_path}images/add.gif"/>Weight</xforms:label>
+												<xforms:insert ev:event="DOMActivate" context="." origin="instance('measurementsSet-template')" nodeset="./child::node()[last()]"
+													if="count(nuds:measurementsSet) = 0"/>
+												<xforms:insert ev:event="DOMActivate" context="nuds:measurementsSet" origin="instance('weight-template')" nodeset="./child::node()[last()]"/>
+											</xforms:trigger>
+										</xforms:group>
+										<xforms:group ref=".[count(nuds:measurementsSet/nuds:width) &lt; 1]">
+											<xforms:trigger appearance="minimal">
+												<xforms:label>
+													<img src="{$display_path}images/add.gif"/>Width</xforms:label>
+												<xforms:insert ev:event="DOMActivate" context="." origin="instance('measurementsSet-template')" nodeset="./child::node()[last()]"
+													if="count(nuds:measurementsSet) = 0"/>
+												<xforms:insert ev:event="DOMActivate" context="nuds:measurementsSet" origin="instance('width-template')" nodeset="./child::node()[last()]"/>
+											</xforms:trigger>
+										</xforms:group>
+									</xxforms:dialog>
+									<xforms:group ref="nuds:axis">
+										<div>
+											<xforms:input ref=".">
+												<xforms:label>Axis</xforms:label>
+											</xforms:input>
+											<xforms:trigger appearance="minimal">
+												<xforms:delete ev:event="DOMActivate" nodeset="."/>
+												<xforms:label>
+													<img src="{$display_path}images/remove.gif"/>
+												</xforms:label>
+											</xforms:trigger>
+										</div>
+									</xforms:group>
+									<xforms:group ref="nuds:measurementsSet">
+										<div class="subsection">
+											<h3>Measurements</h3>
+											<xforms:group ref="nuds:diameter">
+												<div>
+													<xforms:input ref=".">
+														<xforms:label>Diameter</xforms:label>
+														<xforms:alert>Must be numeric value.</xforms:alert>
+													</xforms:input>
+													<xforms:trigger appearance="minimal">
+														<xforms:delete ev:event="DOMActivate" nodeset="."/>
+														<xforms:delete ev:event="DOMActivate" nodeset="parent::nuds:measurementsSet" if="count(parent::node()/*) = 0"/>
+														<xforms:label>
+															<img src="{$display_path}images/remove.gif"/>
+														</xforms:label>
+													</xforms:trigger>
+												</div>
+											</xforms:group>
+											<xforms:group ref="nuds:height">
+												<div>
+													<xforms:input ref=".">
+														<xforms:label>Height</xforms:label>
+														<xforms:alert>Must be numeric value.</xforms:alert>
+													</xforms:input>
+													<xforms:trigger appearance="minimal">
+														<xforms:delete ev:event="DOMActivate" nodeset="."/>
+														<xforms:delete ev:event="DOMActivate" nodeset="parent::nuds:measurementsSet" if="count(parent::node()/*) = 0"/>
+														<xforms:label>
+															<img src="{$display_path}images/remove.gif"/>
+														</xforms:label>
+													</xforms:trigger>
+												</div>
+											</xforms:group>
+											<xforms:group ref="nuds:thickness">
+												<div>
+													<xforms:input ref=".">
+														<xforms:label>Thickness</xforms:label>
+														<xforms:alert>Must be numeric value.</xforms:alert>
+													</xforms:input>
+													<xforms:trigger appearance="minimal">
+														<xforms:delete ev:event="DOMActivate" nodeset="."/>
+														<xforms:delete ev:event="DOMActivate" nodeset="parent::nuds:measurementsSet" if="count(parent::node()/*) = 0"/>
+														<xforms:label>
+															<img src="{$display_path}images/remove.gif"/>
+														</xforms:label>
+													</xforms:trigger>
+												</div>
+											</xforms:group>
+											<xforms:group ref="nuds:weight">
+												<div>
+													<xforms:input ref=".">
+														<xforms:label>Weight</xforms:label>
+														<xforms:alert>Must be numeric value.</xforms:alert>
+													</xforms:input>
+													<xforms:trigger appearance="minimal">
+														<xforms:delete ev:event="DOMActivate" nodeset="."/>
+														<xforms:delete ev:event="DOMActivate" nodeset="parent::nuds:measurementsSet" if="count(parent::node()/*) = 0"/>
+														<xforms:label>
+															<img src="{$display_path}images/remove.gif"/>
+														</xforms:label>
+													</xforms:trigger>
+												</div>
+											</xforms:group>
+											<xforms:group ref="nuds:width">
+												<div>
+													<xforms:input ref=".">
+														<xforms:label>Width</xforms:label>
+														<xforms:alert>Must be numeric value.</xforms:alert>
+													</xforms:input>
+													<xforms:trigger appearance="minimal">
+														<xforms:delete ev:event="DOMActivate" nodeset="."/>
+														<xforms:delete ev:event="DOMActivate" nodeset="parent::nuds:measurementsSet" if="count(parent::node()/*) = 0"/>
+														<xforms:label>
+															<img src="{$display_path}images/remove.gif"/>
+														</xforms:label>
+													</xforms:trigger>
+												</div>
+											</xforms:group>
+										</div>
+									</xforms:group>
+									<div class="subsection">
+										<h3>Conservation State</h3>
+										<span class="add">
+											<xforms:trigger appearance="minimal">
+												<xforms:label>
+													<img src="{$display_path}images/add.gif"/>
+												</xforms:label>
+												<xxforms:show ev:event="DOMActivate" dialog="conservationState-objects"/>
+											</xforms:trigger>
+										</span>
+										<xxforms:dialog id="conservationState-objects" appearance="full" level="modal" close="true" draggable="true" visible="false">
+											<xforms:label>Conservation State Objects</xforms:label>
+											<xforms:group ref=".[count(nuds:conservationState/nuds:completeness) &lt; 1]">
+												<xforms:trigger appearance="minimal">
+													<xforms:label>
+														<img src="{$display_path}images/add.gif"/>Completeness</xforms:label>
+													<xforms:action ev:event="DOMActivate">
+														<xforms:insert context="." origin="instance('conservationState-template')" nodeset="./child::node()[last()]"
+															if="count(nuds:conservationState) = 0"/>
+														<xforms:insert context="nuds:conservationState" origin="instance('completeness-template')" nodeset="./child::node()[last()]"/>
+														<xxforms:hide dialog="conservationState-objects"/>
+													</xforms:action>
+												</xforms:trigger>
+											</xforms:group>
+											<xforms:group ref=".[count(nuds:conservationState/nuds:condition) &lt; 1]">
+												<xforms:trigger appearance="minimal">
+													<xforms:label>
+														<img src="{$display_path}images/add.gif"/>Condition</xforms:label>
+													<xforms:action ev:event="DOMActivate">
+														<xforms:insert context="." origin="instance('conservationState-template')" nodeset="./child::node()[last()]"
+															if="count(nuds:conservationState) = 0"/>
+														<xforms:insert context="nuds:conservationState" origin="instance('condition-template')" nodeset="./child::node()[last()]"/>
+														<xxforms:hide dialog="conservationState-objects"/>
+													</xforms:action>
+												</xforms:trigger>
+											</xforms:group>
+											<xforms:group ref=".[count(nuds:conservationState/nuds:grade) &lt; 1]">
+												<xforms:trigger appearance="minimal">
+													<xforms:label>
+														<img src="{$display_path}images/add.gif"/>Grade</xforms:label>
+													<xforms:action ev:event="DOMActivate">
+														<xforms:insert context="." origin="instance('conservationState-template')" nodeset="./child::node()[last()]"
+															if="count(nuds:conservationState) = 0"/>
+														<xforms:insert context="nuds:conservationState" origin="instance('grade-template')" nodeset="./child::node()[last()]"/>
+														<xxforms:hide dialog="conservationState-objects"/>
+													</xforms:action>
+												</xforms:trigger>
+											</xforms:group>
+											<xforms:group ref=".[count(nuds:conservationState/nuds:wear) &lt; 1]">
+												<xforms:trigger appearance="minimal">
+													<xforms:label>
+														<img src="{$display_path}images/add.gif"/>Wear</xforms:label>
+													<xforms:action ev:event="DOMActivate">
+														<xforms:insert context="." origin="instance('conservationState-template')" nodeset="./child::node()[last()]"
+															if="count(nuds:conservationState) = 0"/>
+														<xforms:insert context="nuds:conservationState" origin="instance('wear-template')" nodeset="./child::node()[last()]"/>
+														<xxforms:hide dialog="conservationState-objects"/>
+													</xforms:action>
+												</xforms:trigger>
+											</xforms:group>
+											<!-- obverse -->
+											<xforms:group ref=".[count(nuds:conservationState/nuds:obverse/nuds:completeness) &lt; 1]">
+												<xforms:trigger appearance="minimal">
+													<xforms:label>
+														<img src="{$display_path}images/add.gif"/>Obverse--Completeness</xforms:label>
+													<xforms:action ev:event="DOMActivate">
+														<xforms:insert context="." origin="instance('conservationState-template')" nodeset="./child::node()[last()]"
+															if="count(nuds:conservationState) = 0"/>
+														<xforms:insert context="nuds:conservationState" origin="instance('obverse-template')" nodeset="./child::node()[last()]"
+															if="count(nuds:conservationState/nuds:obverse) = 0"/>
+														<xforms:insert context="nuds:conservationState/nuds:obverse" origin="instance('completeness-template')" nodeset="./child::node()[last()]"/>
+														<xxforms:hide dialog="conservationState-objects"/>
+													</xforms:action>
+												</xforms:trigger>
+											</xforms:group>
+											<xforms:group ref=".[count(nuds:conservationState/nuds:obverse/nuds:condition) &lt; 1]">
+												<xforms:trigger appearance="minimal">
+													<xforms:label>
+														<img src="{$display_path}images/add.gif"/>Obverse--Condition</xforms:label>
+													<xforms:action ev:event="DOMActivate">
+														<xforms:insert context="." origin="instance('conservationState-template')" nodeset="./child::node()[last()]"
+															if="count(nuds:conservationState) = 0"/>
+														<xforms:insert context="nuds:conservationState" origin="instance('obverse-template')" nodeset="./child::node()[last()]"
+															if="count(nuds:conservationState/nuds:obverse) = 0"/>
+														<xforms:insert context="nuds:conservationState/nuds:obverse" origin="instance('condition-template')" nodeset="./child::node()[last()]"/>
+														<xxforms:hide dialog="conservationState-objects"/>
+													</xforms:action>
+												</xforms:trigger>
+											</xforms:group>
+											<xforms:group ref=".[count(nuds:conservationState/nuds:obverse/nuds:grade) &lt; 1]">
+												<xforms:trigger appearance="minimal">
+													<xforms:label>
+														<img src="{$display_path}images/add.gif"/>Obverse--Grade</xforms:label>
+													<xforms:action ev:event="DOMActivate">
+														<xforms:insert context="." origin="instance('conservationState-template')" nodeset="./child::node()[last()]"
+															if="count(nuds:conservationState) = 0"/>
+														<xforms:insert context="nuds:conservationState" origin="instance('obverse-template')" nodeset="./child::node()[last()]"
+															if="count(nuds:conservationState/nuds:obverse) = 0"/>
+														<xforms:insert context="nuds:conservationState/nuds:obverse" origin="instance('grade-template')" nodeset="./child::node()[last()]"/>
+														<xxforms:hide dialog="conservationState-objects"/>
+													</xforms:action>
+												</xforms:trigger>
+											</xforms:group>
+											<xforms:group ref=".[count(nuds:conservationState/nuds:obverse/nuds:wear) &lt; 1]">
+												<xforms:trigger appearance="minimal">
+													<xforms:label>
+														<img src="{$display_path}images/add.gif"/>Obverse--Wear</xforms:label>
+													<xforms:action ev:event="DOMActivate">
+														<xforms:insert context="." origin="instance('conservationState-template')" nodeset="./child::node()[last()]"
+															if="count(nuds:conservationState) = 0"/>
+														<xforms:insert context="nuds:conservationState" origin="instance('obverse-template')" nodeset="./child::node()[last()]"
+															if="count(nuds:conservationState/nuds:obverse) = 0"/>
+														<xforms:insert context="nuds:conservationState/nuds:obverse" origin="instance('wear-template')" nodeset="./child::node()[last()]"/>
+														<xxforms:hide dialog="conservationState-objects"/>
+													</xforms:action>
+												</xforms:trigger>
+											</xforms:group>
+											<!-- reverse -->
+											<xforms:group ref=".[count(nuds:conservationState/nuds:reverse/nuds:completeness) &lt; 1]">
+												<xforms:trigger appearance="minimal">
+													<xforms:label>
+														<img src="{$display_path}images/add.gif"/>Reverse--Completeness</xforms:label>
+													<xforms:action ev:event="DOMActivate">
+														<xforms:insert context="." origin="instance('conservationState-template')" nodeset="./child::node()[last()]"
+															if="count(nuds:conservationState) = 0"/>
+														<xforms:insert context="nuds:conservationState" origin="instance('reverse-template')" nodeset="./child::node()[last()]"
+															if="count(nuds:conservationState/nuds:reverse) = 0"/>
+														<xforms:insert context="nuds:conservationState/nuds:reverse" origin="instance('completeness-template')" nodeset="./child::node()[last()]"/>
+														<xxforms:hide dialog="conservationState-objects"/>
+													</xforms:action>
+												</xforms:trigger>
+											</xforms:group>
+											<xforms:group ref=".[count(nuds:conservationState/nuds:reverse/nuds:condition) &lt; 1]">
+												<xforms:trigger appearance="minimal">
+													<xforms:label>
+														<img src="{$display_path}images/add.gif"/>Reverse--Condition</xforms:label>
+													<xforms:action ev:event="DOMActivate">
+														<xforms:insert context="." origin="instance('conservationState-template')" nodeset="./child::node()[last()]" if="count(conservationState) = 0"/>
+														<xforms:insert context="nuds:conservationState" origin="instance('reverse-template')" nodeset="./child::node()[last()]"
+															if="count(nuds:conservationState/nuds:reverse) = 0"/>
+														<xforms:insert context="nuds:conservationState/nuds:reverse" origin="instance('condition-template')" nodeset="./child::node()[last()]"/>
+														<xxforms:hide dialog="conservationState-objects"/>
+													</xforms:action>
+												</xforms:trigger>
+											</xforms:group>
+											<xforms:group ref=".[count(nuds:conservationState/nuds:reverse/nuds:grade) &lt; 1]">
+												<xforms:trigger appearance="minimal">
+													<xforms:label>
+														<img src="{$display_path}images/add.gif"/>Reverse--Grade</xforms:label>
+													<xforms:action ev:event="DOMActivate">
+														<xforms:insert context="." origin="instance('conservationState-template')" nodeset="./child::node()[last()]"
+															if="count(nuds:conservationState) = 0"/>
+														<xforms:insert context="nuds:conservationState" origin="instance('reverse-template')" nodeset="./child::node()[last()]"
+															if="count(nuds:conservationState/nuds:reverse) = 0"/>
+														<xforms:insert context="nuds:conservationState/nuds:reverse" origin="instance('grade-template')" nodeset="./child::node()[last()]"/>
+														<xxforms:hide dialog="conservationState-objects"/>
+													</xforms:action>
+												</xforms:trigger>
+											</xforms:group>
+											<xforms:group ref=".[count(nuds:conservationState/nuds:reverse/nuds:wear) &lt; 1]">
+												<xforms:trigger appearance="minimal">
+													<xforms:label>
+														<img src="{$display_path}images/add.gif"/>Reverse--Wear</xforms:label>
+													<xforms:action ev:event="DOMActivate">
+														<xforms:insert context="." origin="instance('conservationState-template')" nodeset="./child::node()[last()]"
+															if="count(nuds:conservationState) = 0"/>
+														<xforms:insert context="nuds:conservationState" origin="instance('reverse-template')" nodeset="./child::node()[last()]"
+															if="count(nuds:conservationState/nuds:reverse) = 0"/>
+														<xforms:insert context="nuds:conservationState/nuds:reverse" origin="instance('wear-template')" nodeset="./child::node()[last()]"/>
+														<xxforms:hide dialog="conservationState-objects"/>
+													</xforms:action>
+												</xforms:trigger>
+											</xforms:group>
+										</xxforms:dialog>
+										<xforms:group ref="nuds:conservationState">
+											<numishare:conservationState/>
+											<xforms:group ref="nuds:obverse">
+												<div class="subsection">
+													<h4>Obverse</h4>
+													<numishare:conservationState/>
+													<xforms:delete ev:event="xforms-value-changed" if="count(*) = 0" nodeset="."/>
+												</div>
+											</xforms:group>
+											<xforms:group ref="nuds:reverse">
+												<div class="subsection">
+													<h4>Reverse</h4>
+													<numishare:conservationState/>
+													<xforms:delete ev:event="xforms-value-changed" if="count(*) = 0" nodeset="."/>
+												</div>
+											</xforms:group>
+											<xforms:delete ev:event="xforms-value-changed" if="count(*) = 0" nodeset="."/>
+										</xforms:group>
+									</div>
+									<!-- ************* COUNTERMARK ************** -->
+									<div class="subsection">
+										<h3>Countermark</h3>
+										<div class="trigger_container">
+											<xforms:trigger appearance="minimal">
+												<xforms:label>
+													<img src="{$display_path}images/add.gif"/>Mark--Obverse</xforms:label>
+												<xforms:action ev:event="DOMActivate">
+													<xforms:insert context="." origin="instance('countermark-template')" nodeset="./child::node()[last()]" if="count(nuds:countermark) = 0"/>
+													<xforms:insert context="nuds:countermark" origin="instance('obverse-template')" if="count(nuds:obverse) = 0"/>
+													<xforms:insert context="nuds:countermark/nuds:obverse" origin="instance('mark-template')" nodeset="./child::node()[last()]"/>
+												</xforms:action>
+											</xforms:trigger>
+											<xforms:trigger appearance="minimal">
+												<xforms:label>
+													<img src="{$display_path}images/add.gif"/>Mark--Reverse</xforms:label>
+												<xforms:action ev:event="DOMActivate">
+													<xforms:insert context="." origin="instance('countermark-template')" nodeset="./child::node()[last()]" if="count(nuds:countermark) = 0"/>
+													<xforms:insert context="nuds:countermark" origin="instance('reverse-template')" nodeset="./child::node()[last()]" if="count(nuds:reverse) = 0"/>
+													<xforms:insert context="nuds:countermark/nuds:reverse" origin="instance('mark-template')" nodeset="./child::node()[last()]"/>
+												</xforms:action>
+											</xforms:trigger>
+										</div>
+										<xforms:group ref="nuds:countermark">
+											<xforms:group ref="nuds:obverse">
+												<div class="subsection">
+													<h4>Obverse</h4>
+													<xforms:repeat nodeset="nuds:mark">
+														<numishare:mark/>
+													</xforms:repeat>
+												</div>
+												<xforms:delete ev:event="xforms-value-changed" if="count(*) = 0" nodeset="."/>
+											</xforms:group>
+											<xforms:group ref="nuds:reverse">
+												<div class="subsection">
+													<h4>Reverse</h4>
+													<xforms:repeat nodeset="nuds:mark">
+														<numishare:mark/>
+													</xforms:repeat>
+												</div>
+												<xforms:delete ev:event="xforms-value-changed" if="count(*) = 0" nodeset="."/>
+											</xforms:group>
+											<xforms:delete ev:event="xforms-value-changed" if="count(*) = 0" nodeset="."/>
+										</xforms:group>
+									</div>
+									<!-- ************* TESTMARK ************** -->
+									<div class="subsection">
+										<h3>Testmark</h3>
+										<div class="trigger_container">
+											<xforms:trigger appearance="minimal">
+												<xforms:label>
+													<img src="{$display_path}images/add.gif"/>Mark--Obverse</xforms:label>
+												<xforms:action ev:event="DOMActivate">
+													<xforms:insert context="." origin="instance('testmark-template')" nodeset="./child::node()[last()]" if="count(nuds:testmark) = 0"/>
+													<xforms:insert context="nuds:testmark" origin="instance('obverse-template')" if="count(nuds:obverse) = 0"/>
+													<xforms:insert context="nuds:testmark/nuds:obverse" origin="instance('mark-template')" nodeset="./child::node()[last()]"/>
+												</xforms:action>
+											</xforms:trigger>
+											<xforms:trigger appearance="minimal">
+												<xforms:label>
+													<img src="{$display_path}images/add.gif"/>Mark--Reverse</xforms:label>
+												<xforms:action ev:event="DOMActivate">
+													<xforms:insert context="." origin="instance('testmark-template')" nodeset="./child::node()[last()]" if="count(nuds:testmark) = 0"/>
+													<xforms:insert context="nuds:testmark" origin="instance('reverse-template')" nodeset="./child::node()[last()]" if="count(nuds:reverse) = 0"/>
+													<xforms:insert context="nuds:testmark/nuds:reverse" origin="instance('mark-template')" nodeset="./child::node()[last()]"/>
+												</xforms:action>
+											</xforms:trigger>
+										</div>
+										<xforms:group ref="nuds:testmark">
+											<xforms:group ref="nuds:obverse">
+												<div class="subsection">
+													<h4>Obverse</h4>
+													<xforms:repeat nodeset="nuds:mark">
+														<numishare:mark/>
+													</xforms:repeat>
+												</div>
+												<xforms:delete ev:event="xforms-value-changed" if="count(*) = 0" nodeset="."/>
+											</xforms:group>
+											<xforms:group ref="nuds:reverse">
+												<div class="subsection">
+													<h4>Reverse</h4>
+													<xforms:repeat nodeset="nuds:mark">
+														<numishare:mark/>
+													</xforms:repeat>
+												</div>
+												<xforms:delete ev:event="xforms-value-changed" if="count(*) = 0" nodeset="."/>
+											</xforms:group>
+											<xforms:delete ev:event="xforms-value-changed" if="count(*) = 0" nodeset="."/>
+										</xforms:group>
+									</div> <xforms:group ref="nuds:shape">
+										<div>
+											<xforms:input ref=".">
+												<xforms:label>Shape</xforms:label>
+											</xforms:input>
+											<xforms:trigger appearance="minimal">
+												<xforms:delete ev:event="DOMActivate" nodeset="."/>
+												<xforms:label>
+													<img src="{$display_path}images/remove.gif"/>
+												</xforms:label>
+											</xforms:trigger>
+										</div>
+									</xforms:group>
+								</fr:tab>
+								<!--**************************************** TYPOLOGICAL DESCRIPTION **********************************-->
+								<fr:tab id="typedesc-tab">
+									<fr:label>Typological</fr:label>
+									<xforms:group ref="nuds:descMeta/nuds:typeDesc">
+										<div class="section">
+											<radiogroup>
+												<xforms:select1 ref="instance('typedesc-type')" appearance="full">
+													<xforms:label>Resource Type</xforms:label>
+													<xforms:item>
+														<xforms:label>Manual</xforms:label>
+														<xforms:value>manual</xforms:value>
+													</xforms:item>
+													<xforms:item>
+														<xforms:label>Web Resource</xforms:label>
+														<xforms:value>resource</xforms:value>
+													</xforms:item>
+													<xforms:action ev:event="xforms-value-changed">
+														<xforms:action if=".='manual'">
+															<xforms:toggle case="manual-type"/>
+															<xforms:delete nodeset="instance('coin')/nuds:descMeta/nuds:typeDesc/@xlink:href"/>
+															<xforms:delete nodeset="instance('typeDesc-resource')/*"/>
+															<xforms:insert context="instance('coin')/nuds:descMeta/nuds:typeDesc" origin="instance('objectType-template')"/>
+														</xforms:action>
+														<xforms:action if=".='resource'">
+															<xforms:insert context="instance('coin')/nuds:descMeta/nuds:typeDesc" origin="xxforms:attribute('xlink:href', '')"
+																if="not(instance('coin')/nuds:descMeta/nuds:typeDesc/*)"/>
+															<xforms:toggle case="resource-type" if="not(instance('coin')/nuds:descMeta/nuds:typeDesc/*)"/>
+															<xforms:dispatch name="fr-show" target="confirm-typeDesc-removal" if="instance('coin')/nuds:descMeta/nuds:typeDesc/*"/>
+														</xforms:action>
+													</xforms:action>
+												</xforms:select1>
+											</radiogroup>
+										</div>
+										<fr:alert-dialog id="confirm-typeDesc-removal">
+											<fr:label>Remove Typological Description Elements</fr:label>
+											<fr:message>Switching the typeDesc to refer to a web resource will remove child elements. Confirm?</fr:message>
+											<fr:negative-choice>
+												<xforms:setvalue ref="instance('typedesc-type')" value="'manual'" ev:event="DOMActivate"/>
+											</fr:negative-choice>
+											<fr:positive-choice>
+												<xforms:action ev:event="DOMActivate">
+													<xforms:delete nodeset="*"/>
+													<xforms:insert context="." origin="xxforms:attribute('xlink:href', '')"/>
+													<xforms:toggle case="resource-type"/>
+												</xforms:action>
+											</fr:positive-choice>
+										</fr:alert-dialog>
+										<div class="section">
+											<h2>Typological Description</h2>
+											<xforms:switch>
+												<xforms:case id="manual-type">
+													<numishare:type-undertype/>
+												</xforms:case>
+												<xforms:case id="resource-type">
+													<div>
+														<xforms:input ref="@xlink:href">
+															<xforms:label>Resource</xforms:label>
+															<xforms:alert>Required; must be URI</xforms:alert>
+														</xforms:input>
+													</div>
+													<xforms:group ref=".[string-length(@xlink:href) &gt; 0]">
+														<xforms:trigger>
+															<xforms:action ev:event="DOMActivate">
+																<xforms:send submission="get-typeDesc"/>
+															</xforms:action>
+															<xforms:label>Search</xforms:label>
+														</xforms:trigger>
+														<xforms:group ref="instance('typeDesc-resource')/nuds:descMeta/nuds:typeDesc">
+															<!-- if the conceptual document already contains a reference to the current physical object, provide a button to disassociate it -->
+															<xforms:group
+																ref=".[instance('typeDesc-resource')/nuds:digRep/nuds:associatedObject[@xlink:href = concat(instance('config')/url, 'id/', instance('coin')/nuds:nudsHeader/nuds:nudsid)]]">
+																<xforms:trigger>
+																	<xforms:action ev:event="DOMActivate">
+																		<xforms:dispatch name="fr-show" target="disassociateObject-dialog"/>
+																	</xforms:action>
+																	<xforms:label>Disassociate Object</xforms:label>
+																</xforms:trigger>
+															</xforms:group>
+															<xforms:group
+																ref=".[not(instance('typeDesc-resource')/nuds:digRep/nuds:associatedObject[@xlink:href = concat(instance('config')/url, 'id/', instance('coin')/nuds:nudsHeader/nuds:nudsid)])]">
+																<div>
+																	<span class="warning">Is the information displayed below correct?</span>
+																	<!-- if the typeDesc is correct, insert a reference to current nuds document into the conceptual document, otherwise remove the @xlink:href and typedesc instance -->
+																	<xforms:trigger>
+																		<xforms:action ev:event="DOMActivate">
+																			<xforms:dispatch name="fr-show" target="associateObject-dialog"
+																				if="contains(instance('coin')/nuds:descMeta/nuds:typeDesc/@xlink:href, instance('config')/url)"/>
+																		</xforms:action>
+																		<xforms:label>Yes</xforms:label>
+																	</xforms:trigger>
+																	<xforms:trigger>
+																		<xforms:action ev:event="DOMActivate">
+																			<xforms:delete context="instance('typeDesc-resource')/*"/>
+																			<xforms:setvalue ref="instance('coin')/nuds:descMeta/nuds:typeDesc/@xlink:href"/>
+																		</xforms:action>
+																		<xforms:label>No</xforms:label>
+																	</xforms:trigger>
+																</div>
+															</xforms:group>
+															<fr:alert-dialog id="associateObject-dialog">
+																<fr:label>Associate Object</fr:label>
+																<fr:message>Do you wish to associate this physical object with its source conceptual object?</fr:message>
+																<fr:negative-choice/>
+																<fr:positive-choice>
+																	<xforms:action ev:event="DOMActivate">
+																		<xforms:insert origin="instance('digRep-template')" context="instance('typeDesc-resource')" nodeset="./child::node()[last()]"
+																			if="count(instance('typeDesc-resource')/nuds:digRep) = 0"/>
+																		<xforms:insert origin="instance('associatedObject-template')" context="instance('typeDesc-resource')/nuds:digRep"
+																			nodeset="./child::node()[last()]"/>
+																		<xforms:setvalue ref="instance('typeDesc-resource')/nuds:digRep/nuds:associatedObject[last()]/@xlink:href"
+																			value="concat(instance('config')/url, 'id/', instance('coin')/nuds:nudsHeader/nuds:nudsid)"/>
+																		<xforms:send submission="save-conceptual"/>
+																	</xforms:action>
+																</fr:positive-choice>
+															</fr:alert-dialog>
+															<fr:alert-dialog id="disassociateObject-dialog">
+																<fr:label>Disassociate Object</fr:label>
+																<fr:message>Do you wish to disassociate this physical object with its source conceptual object?</fr:message>
+																<fr:negative-choice/>
+																<fr:positive-choice>
+																	<xforms:action ev:event="DOMActivate">
+																		<xforms:delete context="instance('typeDesc-resource')/nuds:digRep"
+																			nodeset="nuds:associatedObject[@xlink:href = concat(instance('config')/url, 'id/', instance('coin')/nuds:nudsHeader/nuds:nudsid)]"/>
+																		<xforms:delete context="instance('typeDesc-resource')" nodeset="nuds:digRep"
+																			if="count(instance('typeDesc-resource')/nuds:digRep/nuds:associatedObject) = 0"/>
+																		<xforms:send submission="save-conceptual"/>
+																		<xforms:setvalue ref="instance('coin')/nuds:descMeta/nuds:typeDesc/@xlink:href"/>
+																		<xforms:delete context="instance('typeDesc-resource')/*"/>
+																	</xforms:action>
+																</fr:positive-choice>
+															</fr:alert-dialog>
+															<numishare:output-typeDesc/>
+														</xforms:group>
+													</xforms:group>
+												</xforms:case>
+											</xforms:switch>
+										</div>
+									</xforms:group>
+								</fr:tab>
+								<!--**************************************** UNDERTYPE DESCRIPTION **********************************-->
+								<fr:tab bind="undertypedesc-tab">
+									<fr:label>Undertype</fr:label>
+									<h2>Undertype Description</h2>
+									<xforms:trigger appearance="minimal">
+										<xforms:dispatch target="remove-undertypeDesc" name="fr-show" ev:event="DOMActivate"/>
+										<xforms:label>
+											<img src="{$display_path}images/remove.gif"/>
+										</xforms:label>
+									</xforms:trigger>
+									<fr:alert-dialog id="remove-undertypeDesc">
+										<fr:label>Remove Undertype Description</fr:label>
+										<fr:message>Confirm the removal of the undertypeDesc and its metadata.</fr:message>
+										<fr:negative-choice/>
+										<fr:positive-choice>
+											<xforms:action ev:event="DOMActivate">
+												<xforms:delete nodeset="."/>
+											</xforms:action>
+										</fr:positive-choice>
+									</fr:alert-dialog>
+									<numishare:type-undertype/>
+								</fr:tab>
+								<!--**************************************** REFERENCE DESCRIPTION **********************************-->
+								<fr:tab bind="refdesc-tab">
+									<fr:label>References</fr:label>
+									<h2>Reference Description</h2>
+									<xforms:trigger appearance="minimal">
+										<xforms:dispatch target="remove-refDesc" name="fr-show" ev:event="DOMActivate"/>
+										<xforms:label>
+											<img src="{$display_path}images/remove.gif"/>
+										</xforms:label>
+									</xforms:trigger>
+									<div class="trigger_container">
+										<xforms:trigger appearance="minimal">
+											<xforms:label>
+												<img src="{$display_path}images/add.gif"/>Reference</xforms:label>
+											<xforms:action ev:event="DOMActivate">
+												<xforms:insert context="." origin="instance('reference-template')" nodeset="./child::node()[last()]"/>
+											</xforms:action>
+										</xforms:trigger>
+									</div>
+									<fr:alert-dialog id="remove-refDesc">
+										<fr:label>Remove Reference Description</fr:label>
+										<fr:message>Confirm the removal of the refDesc and its metadata.</fr:message>
+										<fr:negative-choice/>
+										<fr:positive-choice>
+											<xforms:action ev:event="DOMActivate">
+												<xforms:delete nodeset="."/>
+											</xforms:action>
+										</fr:positive-choice>
+									</fr:alert-dialog>
+									<div class="section">
+										<xforms:repeat nodeset="nuds:reference">
+											<numishare:reference/>
+										</xforms:repeat>
+									</div>
+								</fr:tab>
+								<!--**************************************** FINDSPOT DESCRIPTION **********************************-->
+								<fr:tab bind="findspotdesc-tab">
+									<fr:label>Findspot</fr:label>
+									<h2>Findspot Description</h2>
+									<xforms:trigger appearance="minimal">
+										<xforms:dispatch target="remove-findspotDesc" name="fr-show" ev:event="DOMActivate"/>
+										<xforms:label>
+											<img src="{$display_path}images/remove.gif"/>
+										</xforms:label>
+									</xforms:trigger>
+									<!-- XBL -->
+									<xforms:group ref="nuds:findspot">
+										<numishare:findspot/>
+									</xforms:group> <fr:alert-dialog id="remove-findspotDesc">
+										<fr:label>Remove Findspot Description</fr:label>
+										<fr:message>This will remove the findspotDesc and its metadata.</fr:message>
+										<fr:negative-choice>
+											<fr:label>Cancel</fr:label>
+										</fr:negative-choice>
+										<fr:positive-choice>
+											<fr:label>OK</fr:label>
+											<xforms:action ev:event="DOMActivate">
+												<xforms:delete nodeset="."/>
+											</xforms:action>
+										</fr:positive-choice>
+									</fr:alert-dialog>
+									<xforms:setvalue ref="instance('findspot-changed')" value="'true'" ev:event="xforms-value-changed"/>
+								</fr:tab>
+								<!--**************************************** ADMINISTRATIVE DESCRIPTION **********************************-->
+								<fr:tab bind="admindesc-tab">
+									<fr:label>Administrative</fr:label>
+									<h2>Administrative Description</h2>
+									<span class="add">
+										<xforms:trigger appearance="minimal">
+											<xforms:label>
+												<img src="{$display_path}images/add.gif"/>
+											</xforms:label>
+											<xxforms:show ev:event="DOMActivate" dialog="adminDesc-objects"/>
+										</xforms:trigger>
+									</span>
+									<xxforms:dialog id="adminDesc-objects" appearance="full" level="modal" close="true" draggable="true" visible="false">
+										<xforms:label>Administrative Description Objects</xforms:label>
+										<xforms:trigger appearance="minimal">
+											<xforms:label>
+												<img src="{$display_path}images/add.gif"/>Acknowledgment</xforms:label>
+											<xforms:action ev:event="DOMActivate">
+												<xforms:insert context="." origin="instance('acknowledgment-template')" nodeset="./child::node()[last()]"/>
+												<xxforms:hide dialog="adminDesc-objects"/>
+											</xforms:action>
+										</xforms:trigger>
+										<xforms:group ref=".[count(nuds:acqinfo) &lt; 1]">
+											<xforms:trigger appearance="minimal">
+												<xforms:label>
+													<img src="{$display_path}images/add.gif"/>Acquisition Information</xforms:label>
+												<xforms:action ev:event="DOMActivate">
+													<xforms:insert context="." origin="instance('acqinfo-template')" nodeset="./child::node()[last()]"/>
+													<xxforms:hide dialog="adminDesc-objects"/>
+												</xforms:action>
 											</xforms:trigger>
 										</xforms:group>
 										<xforms:trigger appearance="minimal">
 											<xforms:label>
-												<xhtml:img src="{$display_path}images/add.gif"/>Note</xforms:label>
-											<xforms:insert ev:event="DOMActivate" context="." origin="instance('note-template')" nodeset="./child::node()[last()]"/>
-										</xforms:trigger>
-									</xhtml:div>
-									<xhtml:div>
-										<xforms:input ref="nuds:title">
-											<xforms:label>Title</xforms:label>
-											<xforms:alert>The title is required</xforms:alert>
-										</xforms:input>
-										<xforms:trigger>
-											<xforms:label>Generate</xforms:label>
+												<img src="{$display_path}images/add.gif"/>Appraisal</xforms:label>
 											<xforms:action ev:event="DOMActivate">
-												<xxforms:variable name="material" select="instance('coin')/nuds:descMeta/nuds:typeDesc/nuds:material"/>
-												<xxforms:variable name="denomination"
-													select="if(string(instance('coin')/nuds:descMeta/nuds:typeDesc/nuds:denomination)) then concat(' ', instance('coin')/nuds:descMeta/nuds:typeDesc/nuds:denomination) else concat(' ', instance('coin')/nuds:descMeta/nuds:typeDesc/nuds:objectType)"/>
-												<xxforms:variable name="name-sep"
-													select="if(string(instance('coin')/nuds:descMeta/nuds:typeDesc/nuds:authority/nuds:persname[@xlink:role='issuer']) or string(instance('coin')/nuds:descMeta/nuds:typeDesc/nuds:authority/nuds:persname[@xlink:role='authority']) or string(instance('coin')/nuds:descMeta/nuds:typeDesc/nuds:geographic/nuds:geogname)) then ' of' else ''"/>
-												<xxforms:variable name="issuer"
-													select="if(string(instance('coin')/nuds:descMeta/nuds:typeDesc/nuds:authority/nuds:persname[@xlink:role='authority'])) then concat(' ', instance('coin')/nuds:descMeta/nuds:typeDesc/nuds:authority/nuds:persname[@xlink:role='authority']) else if(string(instance('coin')/nuds:descMeta/nuds:typeDesc/nuds:authority/nuds:persname[@xlink:role='issuer'])) then concat(' ', instance('coin')/nuds:descMeta/nuds:typeDesc/nuds:authority/nuds:persname[@xlink:role='issuer']) else ''"/>
-												<xxforms:variable name="mint"
-													select="if(string(instance('coin')/nuds:descMeta/nuds:typeDesc/nuds:geographic/nuds:geogname[@xlink:role='mint'])) then concat(', ', instance('coin')/nuds:descMeta/nuds:typeDesc/nuds:geographic/nuds:geogname[@xlink:role='mint']) else ''"/>
-												<xxforms:variable name="region"
-													select="if(string(instance('coin')/nuds:descMeta/nuds:typeDesc/nuds:geographic/nuds:geogname[@xlink:role='region'])) then concat(', ', instance('coin')/nuds:descMeta/nuds:typeDesc/nuds:geographic/nuds:geogname[@xlink:role='region']) else ''"/>
-												<xxforms:variable name="date"
-													select="if(string(instance('coin')/nuds:descMeta/nuds:typeDesc/nuds:date)) then concat(', ', instance('coin')/nuds:descMeta/nuds:typeDesc/nuds:date) else ''"/>
-												<xxforms:variable name="identifier"
-													select="if(string(instance('coin')/nuds:descMeta/nuds:adminDesc/nuds:identifier)) then concat('  ', instance('coin')/nuds:descMeta/nuds:adminDesc/nuds:identifier, '.') else ''"/>
-												<xforms:setvalue ref="title"
-													value="concat($material, $denomination, $name-sep, $issuer, $mint, $region, $date, if(substring($date, string-length($date)) = '.') then '' else '.', $identifier)"
-												/>
+												<xforms:insert context="." origin="instance('appraisal-template')" nodeset="./child::node()[last()]"/>
+												<xxforms:hide dialog="adminDesc-objects"/>
 											</xforms:action>
 										</xforms:trigger>
-									</xhtml:div>
-									<xforms:repeat nodeset="nuds:department">
-										<numishare:department/>
-									</xforms:repeat>
-									<xforms:group ref="nuds:description">
-										<numishare:description/>
-									</xforms:group>
-									<xforms:repeat nodeset="nuds:note">
+										<xforms:group ref=".[count(nuds:collection) &lt; 1]">
+											<xforms:trigger appearance="minimal">
+												<xforms:label>
+													<img src="{$display_path}images/add.gif"/>Collection</xforms:label>
+												<xforms:action ev:event="DOMActivate">
+													<xforms:insert context="." origin="instance('collection-template')" nodeset="./child::node()[last()]"/>
+													<xxforms:hide dialog="adminDesc-objects"/>
+												</xforms:action>
+											</xforms:trigger>
+										</xforms:group>
+										<xforms:group ref=".[count(nuds:custodhist) &lt; 1]">
+											<xforms:trigger appearance="minimal">
+												<xforms:label>
+													<img src="{$display_path}images/add.gif"/>Custodial History</xforms:label>
+												<xforms:action ev:event="DOMActivate">
+													<xforms:insert context="." origin="instance('custodhist-template')" nodeset="./child::node()[last()]"/>
+													<xxforms:hide dialog="adminDesc-objects"/>
+												</xforms:action>
+											</xforms:trigger>
+										</xforms:group>
+										<xforms:group ref=".[count(nuds:identifier) &lt; 1]">
+											<xforms:trigger appearance="minimal">
+												<xforms:label>
+													<img src="{$display_path}images/add.gif"/>Identifier</xforms:label>
+												<xforms:action ev:event="DOMActivate">
+													<xforms:insert context="." origin="instance('identifier-template')" nodeset="./child::node()[last()]"/>
+													<xxforms:hide dialog="adminDesc-objects"/>
+												</xforms:action>
+											</xforms:trigger>
+										</xforms:group>
+										<xforms:trigger appearance="minimal">
+											<xforms:label>
+												<img src="{$display_path}images/add.gif"/>Owner</xforms:label>
+											<xforms:action ev:event="DOMActivate">
+												<xforms:insert context="." origin="instance('owner-template')" nodeset="./child::node()[last()]"/>
+												<xxforms:hide dialog="adminDesc-objects"/>
+											</xforms:action>
+										</xforms:trigger>
+										<xforms:group ref=".[count(nuds:repository) &lt; 1]">
+											<xforms:trigger appearance="minimal">
+												<xforms:label>
+													<img src="{$display_path}images/add.gif"/>Repository</xforms:label>
+												<xforms:action ev:event="DOMActivate">
+													<xforms:insert context="." origin="instance('repository-template')" nodeset="./child::node()[last()]"/>
+													<xxforms:hide dialog="adminDesc-objects"/>
+												</xforms:action>
+											</xforms:trigger>
+										</xforms:group>
+									</xxforms:dialog>
+									<xforms:group ref="nuds:identifier">
 										<div>
-											<xforms:textarea ref=".">
-												<xforms:label>Note</xforms:label>
-											</xforms:textarea>
+											<xforms:input ref=".">
+												<xforms:label>Identifier</xforms:label>
+											</xforms:input>
+											<xforms:trigger appearance="minimal">
+												<xforms:delete ev:event="DOMActivate" nodeset="."/>
+												<xforms:label>
+													<img src="{$display_path}images/remove.gif"/>
+												</xforms:label>
+											</xforms:trigger>
+										</div>
+									</xforms:group>
+									<xforms:repeat nodeset="nuds:acknowledgment">
+										<div>
+											<xforms:input ref=".">
+												<xforms:label>Acknowledgment</xforms:label>
+											</xforms:input>
 											<xforms:trigger appearance="minimal">
 												<xforms:delete ev:event="DOMActivate" nodeset="."/>
 												<xforms:label>
@@ -996,1124 +1801,322 @@
 											</xforms:trigger>
 										</div>
 									</xforms:repeat>
-								</xforms:group>
-							</fr:tab>
-							<!--**************************************** PHYSICAL DESCRIPTION **********************************-->
-							<fr:tab bind="physdesc-tab">
-								<fr:label>Physical</fr:label>
-								<xhtml:h2>Physical Description</xhtml:h2>
-								<span class="add">
-									<xforms:trigger appearance="minimal">
-										<xforms:label>
-											<xhtml:img src="{$display_path}images/add.gif"/>
-										</xforms:label>
-										<xxforms:show ev:event="DOMActivate" dialog="physdesc-objects"/>
-									</xforms:trigger>
-								</span>
-								<xxforms:dialog id="physdesc-objects" appearance="full" level="modal" close="true" draggable="true" visible="false">
-									<xforms:label>Descriptors</xforms:label>
-									<xforms:group ref=".[count(nuds:axis) &lt; 1]">
-										<xforms:trigger appearance="minimal">
-											<xforms:label>
-												<xhtml:img src="{$display_path}images/add.gif"/>Axis</xforms:label>
-											<xforms:insert ev:event="DOMActivate" context="." origin="instance('axis-template')" nodeset="./child::node()[last()]"/>
-										</xforms:trigger>
-									</xforms:group>
-									<xforms:group ref=".[count(nuds:measurementsSet/nuds:diameter) &lt; 1]">
-										<xforms:trigger appearance="minimal">
-											<xforms:label>
-												<xhtml:img src="{$display_path}images/add.gif"/>Diameter</xforms:label>
-											<xforms:insert ev:event="DOMActivate" context="." origin="instance('measurementsSet-template')" nodeset="./child::node()[last()]"
-												if="count(nuds:measurementsSet) = 0"/>
-											<xforms:insert ev:event="DOMActivate" context="nuds:measurementsSet" origin="instance('diameter-template')" nodeset="./child::node()[last()]"/>
-										</xforms:trigger>
-									</xforms:group>
-									<xforms:group ref=".[count(nuds:measurementsSet/nuds:height) &lt; 1]">
-										<xforms:trigger appearance="minimal">
-											<xforms:label>
-												<xhtml:img src="{$display_path}images/add.gif"/>Height</xforms:label>
-											<xforms:insert ev:event="DOMActivate" context="." origin="instance('measurementsSet-template')" nodeset="./child::node()[last()]"
-												if="count(nuds:measurementsSet) = 0"/>
-											<xforms:insert ev:event="DOMActivate" context="nuds:measurementsSet" origin="instance('height-template')" nodeset="./child::node()[last()]"/>
-										</xforms:trigger>
-									</xforms:group>
-									<xforms:group ref=".[count(nuds:shape) &lt; 1]">
-										<xforms:trigger appearance="minimal">
-											<xforms:label>
-												<xhtml:img src="{$display_path}images/add.gif"/>Shape</xforms:label>
-											<xforms:insert ev:event="DOMActivate" context="." origin="instance('shape-template')" nodeset="./child::node()[last()]"/>
-										</xforms:trigger>
-									</xforms:group>
-									<xforms:group ref=".[count(nuds:measurementsSet/nuds:thickness) &lt; 1]">
-										<xforms:trigger appearance="minimal">
-											<xforms:label>
-												<xhtml:img src="{$display_path}images/add.gif"/>Thickness</xforms:label>
-											<xforms:insert ev:event="DOMActivate" context="." origin="instance('measurementsSet-template')" nodeset="./child::node()[last()]"
-												if="count(nuds:measurementsSet) = 0"/>
-											<xforms:insert ev:event="DOMActivate" context="nuds:measurementsSet" origin="instance('thickness-template')" nodeset="./child::node()[last()]"/>
-										</xforms:trigger>
-									</xforms:group>
-									<xforms:group ref=".[count(nuds:measurementsSet/nuds:weight) &lt; 1]">
-										<xforms:trigger appearance="minimal">
-											<xforms:label>
-												<xhtml:img src="{$display_path}images/add.gif"/>Weight</xforms:label>
-											<xforms:insert ev:event="DOMActivate" context="." origin="instance('measurementsSet-template')" nodeset="./child::node()[last()]"
-												if="count(nuds:measurementsSet) = 0"/>
-											<xforms:insert ev:event="DOMActivate" context="nuds:measurementsSet" origin="instance('weight-template')" nodeset="./child::node()[last()]"/>
-										</xforms:trigger>
-									</xforms:group>
-									<xforms:group ref=".[count(nuds:measurementsSet/nuds:width) &lt; 1]">
-										<xforms:trigger appearance="minimal">
-											<xforms:label>
-												<xhtml:img src="{$display_path}images/add.gif"/>Width</xforms:label>
-											<xforms:insert ev:event="DOMActivate" context="." origin="instance('measurementsSet-template')" nodeset="./child::node()[last()]"
-												if="count(nuds:measurementsSet) = 0"/>
-											<xforms:insert ev:event="DOMActivate" context="nuds:measurementsSet" origin="instance('width-template')" nodeset="./child::node()[last()]"/>
-										</xforms:trigger>
-									</xforms:group>
-								</xxforms:dialog>
-								<xforms:group ref="nuds:axis">
-									<xhtml:div>
-										<xforms:input ref=".">
-											<xforms:label>Axis</xforms:label>
-										</xforms:input>
-										<xforms:trigger appearance="minimal">
-											<xforms:delete ev:event="DOMActivate" nodeset="."/>
-											<xforms:label>
-												<xhtml:img src="{$display_path}images/remove.gif"/>
-											</xforms:label>
-										</xforms:trigger>
-									</xhtml:div>
-								</xforms:group>
-								<xforms:group ref="nuds:measurementsSet">
-									<xhtml:div class="subsection">
-										<xhtml:h3>Measurements</xhtml:h3>
-										<xforms:group ref="nuds:diameter">
-											<xhtml:div>
-												<xforms:input ref=".">
-													<xforms:label>Diameter</xforms:label>
-													<xforms:alert>Must be numeric value.</xforms:alert>
-												</xforms:input>
-												<xforms:trigger appearance="minimal">
-													<xforms:delete ev:event="DOMActivate" nodeset="."/>
-													<xforms:delete ev:event="DOMActivate" nodeset="parent::nuds:measurementsSet" if="count(parent::node()/*) = 0"/>
-													<xforms:label>
-														<xhtml:img src="{$display_path}images/remove.gif"/>
-													</xforms:label>
-												</xforms:trigger>
-											</xhtml:div>
-										</xforms:group>
-										<xforms:group ref="nuds:height">
-											<xhtml:div>
-												<xforms:input ref=".">
-													<xforms:label>Height</xforms:label>
-													<xforms:alert>Must be numeric value.</xforms:alert>
-												</xforms:input>
-												<xforms:trigger appearance="minimal">
-													<xforms:delete ev:event="DOMActivate" nodeset="."/>
-													<xforms:delete ev:event="DOMActivate" nodeset="parent::nuds:measurementsSet" if="count(parent::node()/*) = 0"/>
-													<xforms:label>
-														<xhtml:img src="{$display_path}images/remove.gif"/>
-													</xforms:label>
-												</xforms:trigger>
-											</xhtml:div>
-										</xforms:group>
-										<xforms:group ref="nuds:thickness">
-											<xhtml:div>
-												<xforms:input ref=".">
-													<xforms:label>Thickness</xforms:label>
-													<xforms:alert>Must be numeric value.</xforms:alert>
-												</xforms:input>
-												<xforms:trigger appearance="minimal">
-													<xforms:delete ev:event="DOMActivate" nodeset="."/>
-													<xforms:delete ev:event="DOMActivate" nodeset="parent::nuds:measurementsSet" if="count(parent::node()/*) = 0"/>
-													<xforms:label>
-														<xhtml:img src="{$display_path}images/remove.gif"/>
-													</xforms:label>
-												</xforms:trigger>
-											</xhtml:div>
-										</xforms:group>
-										<xforms:group ref="nuds:weight">
-											<xhtml:div>
-												<xforms:input ref=".">
-													<xforms:label>Weight</xforms:label>
-													<xforms:alert>Must be numeric value.</xforms:alert>
-												</xforms:input>
-												<xforms:trigger appearance="minimal">
-													<xforms:delete ev:event="DOMActivate" nodeset="."/>
-													<xforms:delete ev:event="DOMActivate" nodeset="parent::nuds:measurementsSet" if="count(parent::node()/*) = 0"/>
-													<xforms:label>
-														<xhtml:img src="{$display_path}images/remove.gif"/>
-													</xforms:label>
-												</xforms:trigger>
-											</xhtml:div>
-										</xforms:group>
-										<xforms:group ref="nuds:width">
-											<xhtml:div>
-												<xforms:input ref=".">
-													<xforms:label>Width</xforms:label>
-													<xforms:alert>Must be numeric value.</xforms:alert>
-												</xforms:input>
-												<xforms:trigger appearance="minimal">
-													<xforms:delete ev:event="DOMActivate" nodeset="."/>
-													<xforms:delete ev:event="DOMActivate" nodeset="parent::nuds:measurementsSet" if="count(parent::node()/*) = 0"/>
-													<xforms:label>
-														<xhtml:img src="{$display_path}images/remove.gif"/>
-													</xforms:label>
-												</xforms:trigger>
-											</xhtml:div>
-										</xforms:group>
-									</xhtml:div>
-								</xforms:group>
-								<xhtml:div class="subsection">
-									<xhtml:h3>Conservation State</xhtml:h3>
-									<span class="add">
-										<xforms:trigger appearance="minimal">
-											<xforms:label>
-												<xhtml:img src="{$display_path}images/add.gif"/>
-											</xforms:label>
-											<xxforms:show ev:event="DOMActivate" dialog="conservationState-objects"/>
-										</xforms:trigger>
-									</span>
-									<xxforms:dialog id="conservationState-objects" appearance="full" level="modal" close="true" draggable="true" visible="false">
-										<xforms:label>Conservation State Objects</xforms:label>
-										<xforms:group ref=".[count(nuds:conservationState/nuds:completeness) &lt; 1]">
+									<xforms:repeat nodeset="nuds:appraisal">
+										<div>
+											<h3>Appraisal</h3>
 											<xforms:trigger appearance="minimal">
+												<xforms:delete ev:event="DOMActivate" nodeset="."/>
 												<xforms:label>
-													<xhtml:img src="{$display_path}images/add.gif"/>Completeness</xforms:label>
-												<xforms:action ev:event="DOMActivate">
-													<xforms:insert context="." origin="instance('conservationState-template')" nodeset="./child::node()[last()]" if="count(nuds:conservationState) = 0"/>
-													<xforms:insert context="nuds:conservationState" origin="instance('completeness-template')" nodeset="./child::node()[last()]"/>
-													<xxforms:hide dialog="conservationState-objects"/>
-												</xforms:action>
+													<img src="{$display_path}images/remove.gif"/>
+												</xforms:label>
 											</xforms:trigger>
-										</xforms:group>
-										<xforms:group ref=".[count(nuds:conservationState/nuds:condition) &lt; 1]">
-											<xforms:trigger appearance="minimal">
-												<xforms:label>
-													<xhtml:img src="{$display_path}images/add.gif"/>Condition</xforms:label>
-												<xforms:action ev:event="DOMActivate">
-													<xforms:insert context="." origin="instance('conservationState-template')" nodeset="./child::node()[last()]" if="count(nuds:conservationState) = 0"/>
-													<xforms:insert context="nuds:conservationState" origin="instance('condition-template')" nodeset="./child::node()[last()]"/>
-													<xxforms:hide dialog="conservationState-objects"/>
-												</xforms:action>
-											</xforms:trigger>
-										</xforms:group>
-										<xforms:group ref=".[count(nuds:conservationState/nuds:grade) &lt; 1]">
-											<xforms:trigger appearance="minimal">
-												<xforms:label>
-													<xhtml:img src="{$display_path}images/add.gif"/>Grade</xforms:label>
-												<xforms:action ev:event="DOMActivate">
-													<xforms:insert context="." origin="instance('conservationState-template')" nodeset="./child::node()[last()]" if="count(nuds:conservationState) = 0"/>
-													<xforms:insert context="nuds:conservationState" origin="instance('grade-template')" nodeset="./child::node()[last()]"/>
-													<xxforms:hide dialog="conservationState-objects"/>
-												</xforms:action>
-											</xforms:trigger>
-										</xforms:group>
-										<xforms:group ref=".[count(nuds:conservationState/nuds:wear) &lt; 1]">
-											<xforms:trigger appearance="minimal">
-												<xforms:label>
-													<xhtml:img src="{$display_path}images/add.gif"/>Wear</xforms:label>
-												<xforms:action ev:event="DOMActivate">
-													<xforms:insert context="." origin="instance('conservationState-template')" nodeset="./child::node()[last()]" if="count(nuds:conservationState) = 0"/>
-													<xforms:insert context="nuds:conservationState" origin="instance('wear-template')" nodeset="./child::node()[last()]"/>
-													<xxforms:hide dialog="conservationState-objects"/>
-												</xforms:action>
-											</xforms:trigger>
-										</xforms:group>
-										<!-- obverse -->
-										<xforms:group ref=".[count(nuds:conservationState/nuds:obverse/nuds:completeness) &lt; 1]">
-											<xforms:trigger appearance="minimal">
-												<xforms:label>
-													<xhtml:img src="{$display_path}images/add.gif"/>Obverse--Completeness</xforms:label>
-												<xforms:action ev:event="DOMActivate">
-													<xforms:insert context="." origin="instance('conservationState-template')" nodeset="./child::node()[last()]" if="count(nuds:conservationState) = 0"/>
-													<xforms:insert context="nuds:conservationState" origin="instance('obverse-template')" nodeset="./child::node()[last()]"
-														if="count(nuds:conservationState/nuds:obverse) = 0"/>
-													<xforms:insert context="nuds:conservationState/nuds:obverse" origin="instance('completeness-template')" nodeset="./child::node()[last()]"/>
-													<xxforms:hide dialog="conservationState-objects"/>
-												</xforms:action>
-											</xforms:trigger>
-										</xforms:group>
-										<xforms:group ref=".[count(nuds:conservationState/nuds:obverse/nuds:condition) &lt; 1]">
-											<xforms:trigger appearance="minimal">
-												<xforms:label>
-													<xhtml:img src="{$display_path}images/add.gif"/>Obverse--Condition</xforms:label>
-												<xforms:action ev:event="DOMActivate">
-													<xforms:insert context="." origin="instance('conservationState-template')" nodeset="./child::node()[last()]" if="count(nuds:conservationState) = 0"/>
-													<xforms:insert context="nuds:conservationState" origin="instance('obverse-template')" nodeset="./child::node()[last()]"
-														if="count(nuds:conservationState/nuds:obverse) = 0"/>
-													<xforms:insert context="nuds:conservationState/nuds:obverse" origin="instance('condition-template')" nodeset="./child::node()[last()]"/>
-													<xxforms:hide dialog="conservationState-objects"/>
-												</xforms:action>
-											</xforms:trigger>
-										</xforms:group>
-										<xforms:group ref=".[count(nuds:conservationState/nuds:obverse/nuds:grade) &lt; 1]">
-											<xforms:trigger appearance="minimal">
-												<xforms:label>
-													<xhtml:img src="{$display_path}images/add.gif"/>Obverse--Grade</xforms:label>
-												<xforms:action ev:event="DOMActivate">
-													<xforms:insert context="." origin="instance('conservationState-template')" nodeset="./child::node()[last()]" if="count(nuds:conservationState) = 0"/>
-													<xforms:insert context="nuds:conservationState" origin="instance('obverse-template')" nodeset="./child::node()[last()]"
-														if="count(nuds:conservationState/nuds:obverse) = 0"/>
-													<xforms:insert context="nuds:conservationState/nuds:obverse" origin="instance('grade-template')" nodeset="./child::node()[last()]"/>
-													<xxforms:hide dialog="conservationState-objects"/>
-												</xforms:action>
-											</xforms:trigger>
-										</xforms:group>
-										<xforms:group ref=".[count(nuds:conservationState/nuds:obverse/nuds:wear) &lt; 1]">
-											<xforms:trigger appearance="minimal">
-												<xforms:label>
-													<xhtml:img src="{$display_path}images/add.gif"/>Obverse--Wear</xforms:label>
-												<xforms:action ev:event="DOMActivate">
-													<xforms:insert context="." origin="instance('conservationState-template')" nodeset="./child::node()[last()]" if="count(nuds:conservationState) = 0"/>
-													<xforms:insert context="nuds:conservationState" origin="instance('obverse-template')" nodeset="./child::node()[last()]"
-														if="count(nuds:conservationState/nuds:obverse) = 0"/>
-													<xforms:insert context="nuds:conservationState/nuds:obverse" origin="instance('wear-template')" nodeset="./child::node()[last()]"/>
-													<xxforms:hide dialog="conservationState-objects"/>
-												</xforms:action>
-											</xforms:trigger>
-										</xforms:group>
-										<!-- reverse -->
-										<xforms:group ref=".[count(nuds:conservationState/nuds:reverse/nuds:completeness) &lt; 1]">
-											<xforms:trigger appearance="minimal">
-												<xforms:label>
-													<xhtml:img src="{$display_path}images/add.gif"/>Reverse--Completeness</xforms:label>
-												<xforms:action ev:event="DOMActivate">
-													<xforms:insert context="." origin="instance('conservationState-template')" nodeset="./child::node()[last()]" if="count(nuds:conservationState) = 0"/>
-													<xforms:insert context="nuds:conservationState" origin="instance('reverse-template')" nodeset="./child::node()[last()]"
-														if="count(nuds:conservationState/nuds:reverse) = 0"/>
-													<xforms:insert context="nuds:conservationState/nuds:reverse" origin="instance('completeness-template')" nodeset="./child::node()[last()]"/>
-													<xxforms:hide dialog="conservationState-objects"/>
-												</xforms:action>
-											</xforms:trigger>
-										</xforms:group>
-										<xforms:group ref=".[count(nuds:conservationState/nuds:reverse/nuds:condition) &lt; 1]">
-											<xforms:trigger appearance="minimal">
-												<xforms:label>
-													<xhtml:img src="{$display_path}images/add.gif"/>Reverse--Condition</xforms:label>
-												<xforms:action ev:event="DOMActivate">
-													<xforms:insert context="." origin="instance('conservationState-template')" nodeset="./child::node()[last()]" if="count(conservationState) = 0"/>
-													<xforms:insert context="nuds:conservationState" origin="instance('reverse-template')" nodeset="./child::node()[last()]"
-														if="count(nuds:conservationState/nuds:reverse) = 0"/>
-													<xforms:insert context="nuds:conservationState/nuds:reverse" origin="instance('condition-template')" nodeset="./child::node()[last()]"/>
-													<xxforms:hide dialog="conservationState-objects"/>
-												</xforms:action>
-											</xforms:trigger>
-										</xforms:group>
-										<xforms:group ref=".[count(nuds:conservationState/nuds:reverse/nuds:grade) &lt; 1]">
-											<xforms:trigger appearance="minimal">
-												<xforms:label>
-													<xhtml:img src="{$display_path}images/add.gif"/>Reverse--Grade</xforms:label>
-												<xforms:action ev:event="DOMActivate">
-													<xforms:insert context="." origin="instance('conservationState-template')" nodeset="./child::node()[last()]" if="count(nuds:conservationState) = 0"/>
-													<xforms:insert context="nuds:conservationState" origin="instance('reverse-template')" nodeset="./child::node()[last()]"
-														if="count(nuds:conservationState/nuds:reverse) = 0"/>
-													<xforms:insert context="nuds:conservationState/nuds:reverse" origin="instance('grade-template')" nodeset="./child::node()[last()]"/>
-													<xxforms:hide dialog="conservationState-objects"/>
-												</xforms:action>
-											</xforms:trigger>
-										</xforms:group>
-										<xforms:group ref=".[count(nuds:conservationState/nuds:reverse/nuds:wear) &lt; 1]">
-											<xforms:trigger appearance="minimal">
-												<xforms:label>
-													<xhtml:img src="{$display_path}images/add.gif"/>Reverse--Wear</xforms:label>
-												<xforms:action ev:event="DOMActivate">
-													<xforms:insert context="." origin="instance('conservationState-template')" nodeset="./child::node()[last()]" if="count(nuds:conservationState) = 0"/>
-													<xforms:insert context="nuds:conservationState" origin="instance('reverse-template')" nodeset="./child::node()[last()]"
-														if="count(nuds:conservationState/nuds:reverse) = 0"/>
-													<xforms:insert context="nuds:conservationState/nuds:reverse" origin="instance('wear-template')" nodeset="./child::node()[last()]"/>
-													<xxforms:hide dialog="conservationState-objects"/>
-												</xforms:action>
-											</xforms:trigger>
-										</xforms:group>
-									</xxforms:dialog>
-									<xforms:group ref="nuds:conservationState">
-										<numishare:conservationState/>
-										<xforms:group ref="nuds:obverse">
-											<xhtml:div class="subsection">
-												<xhtml:h4>Obverse</xhtml:h4>
-												<numishare:conservationState/>
-												<xforms:delete ev:event="xforms-value-changed" if="count(*) = 0" nodeset="."/>
-											</xhtml:div>
-										</xforms:group>
-										<xforms:group ref="nuds:reverse">
-											<xhtml:div class="subsection">
-												<xhtml:h4>Reverse</xhtml:h4>
-												<numishare:conservationState/>
-												<xforms:delete ev:event="xforms-value-changed" if="count(*) = 0" nodeset="."/>
-											</xhtml:div>
-										</xforms:group>
-										<xforms:delete ev:event="xforms-value-changed" if="count(*) = 0" nodeset="."/>
-									</xforms:group>
-								</xhtml:div>
-
-								<!-- ************* COUNTERMARK ************** -->
-								<xhtml:div class="subsection">
-									<xhtml:h3>Countermark</xhtml:h3>
-									<div class="trigger_container">
-										<xforms:trigger appearance="minimal">
-											<xforms:label>
-												<xhtml:img src="{$display_path}images/add.gif"/>Mark--Obverse</xforms:label>
-											<xforms:action ev:event="DOMActivate">
-												<xforms:insert context="." origin="instance('countermark-template')" nodeset="./child::node()[last()]" if="count(nuds:countermark) = 0"/>
-												<xforms:insert context="nuds:countermark" origin="instance('obverse-template')" if="count(nuds:obverse) = 0"/>
-												<xforms:insert context="nuds:countermark/nuds:obverse" origin="instance('mark-template')" nodeset="./child::node()[last()]"/>
-											</xforms:action>
-										</xforms:trigger>
-										<xforms:trigger appearance="minimal">
-											<xforms:label>
-												<xhtml:img src="{$display_path}images/add.gif"/>Mark--Reverse</xforms:label>
-											<xforms:action ev:event="DOMActivate">
-												<xforms:insert context="." origin="instance('countermark-template')" nodeset="./child::node()[last()]" if="count(nuds:countermark) = 0"/>
-												<xforms:insert context="nuds:countermark" origin="instance('reverse-template')" nodeset="./child::node()[last()]" if="count(nuds:reverse) = 0"/>
-												<xforms:insert context="nuds:countermark/nuds:reverse" origin="instance('mark-template')" nodeset="./child::node()[last()]"/>
-											</xforms:action>
-										</xforms:trigger>
-									</div>
-
-									<xforms:group ref="nuds:countermark">
-										<xforms:group ref="nuds:obverse">
-											<xhtml:div class="subsection">
-												<xhtml:h4>Obverse</xhtml:h4>
-												<xforms:repeat nodeset="nuds:mark">
-													<numishare:mark/>
-												</xforms:repeat>
-											</xhtml:div>
-											<xforms:delete ev:event="xforms-value-changed" if="count(*) = 0" nodeset="."/>
-										</xforms:group>
-										<xforms:group ref="nuds:reverse">
-											<xhtml:div class="subsection">
-												<xhtml:h4>Reverse</xhtml:h4>
-												<xforms:repeat nodeset="nuds:mark">
-													<numishare:mark/>
-												</xforms:repeat>
-											</xhtml:div>
-											<xforms:delete ev:event="xforms-value-changed" if="count(*) = 0" nodeset="."/>
-										</xforms:group>
-										<xforms:delete ev:event="xforms-value-changed" if="count(*) = 0" nodeset="."/>
-									</xforms:group>
-								</xhtml:div>
-
-								<!-- ************* TESTMARK ************** -->
-								<xhtml:div class="subsection">
-									<xhtml:h3>Testmark</xhtml:h3>
-									<div class="trigger_container">
-										<xforms:trigger appearance="minimal">
-											<xforms:label>
-												<xhtml:img src="{$display_path}images/add.gif"/>Mark--Obverse</xforms:label>
-											<xforms:action ev:event="DOMActivate">
-												<xforms:insert context="." origin="instance('testmark-template')" nodeset="./child::node()[last()]" if="count(nuds:testmark) = 0"/>
-												<xforms:insert context="nuds:testmark" origin="instance('obverse-template')" if="count(nuds:obverse) = 0"/>
-												<xforms:insert context="nuds:testmark/nuds:obverse" origin="instance('mark-template')" nodeset="./child::node()[last()]"/>
-											</xforms:action>
-										</xforms:trigger>
-										<xforms:trigger appearance="minimal">
-											<xforms:label>
-												<xhtml:img src="{$display_path}images/add.gif"/>Mark--Reverse</xforms:label>
-											<xforms:action ev:event="DOMActivate">
-												<xforms:insert context="." origin="instance('testmark-template')" nodeset="./child::node()[last()]" if="count(nuds:testmark) = 0"/>
-												<xforms:insert context="nuds:testmark" origin="instance('reverse-template')" nodeset="./child::node()[last()]" if="count(nuds:reverse) = 0"/>
-												<xforms:insert context="nuds:testmark/nuds:reverse" origin="instance('mark-template')" nodeset="./child::node()[last()]"/>
-											</xforms:action>
-										</xforms:trigger>
-									</div>
-
-									<xforms:group ref="nuds:testmark">
-										<xforms:group ref="nuds:obverse">
-											<xhtml:div class="subsection">
-												<xhtml:h4>Obverse</xhtml:h4>
-												<xforms:repeat nodeset="nuds:mark">
-													<numishare:mark/>
-												</xforms:repeat>
-											</xhtml:div>
-											<xforms:delete ev:event="xforms-value-changed" if="count(*) = 0" nodeset="."/>
-										</xforms:group>
-										<xforms:group ref="nuds:reverse">
-											<xhtml:div class="subsection">
-												<xhtml:h4>Reverse</xhtml:h4>
-												<xforms:repeat nodeset="nuds:mark">
-													<numishare:mark/>
-												</xforms:repeat>
-											</xhtml:div>
-											<xforms:delete ev:event="xforms-value-changed" if="count(*) = 0" nodeset="."/>
-										</xforms:group>
-										<xforms:delete ev:event="xforms-value-changed" if="count(*) = 0" nodeset="."/>
-									</xforms:group>
-								</xhtml:div>
-
-								<xforms:group ref="nuds:shape">
-									<xhtml:div>
-										<xforms:input ref=".">
-											<xforms:label>Shape</xforms:label>
-										</xforms:input>
-										<xforms:trigger appearance="minimal">
-											<xforms:delete ev:event="DOMActivate" nodeset="."/>
-											<xforms:label>
-												<xhtml:img src="{$display_path}images/remove.gif"/>
-											</xforms:label>
-										</xforms:trigger>
-									</xhtml:div>
-								</xforms:group>
-							</fr:tab>
-							<!--**************************************** TYPOLOGICAL DESCRIPTION **********************************-->
-							<fr:tab id="typedesc-tab">
-								<fr:label>Typological</fr:label>
-								<xforms:group ref="nuds:descMeta/nuds:typeDesc">
-									<xhtml:div class="section">
-										<radiogroup>
-											<xforms:select1 ref="instance('typedesc-type')" appearance="full">
-												<xforms:label>Resource Type</xforms:label>
-												<xforms:item>
-													<xforms:label>Manual</xforms:label>
-													<xforms:value>manual</xforms:value>
-												</xforms:item>
-												<xforms:item>
-													<xforms:label>Web Resource</xforms:label>
-													<xforms:value>resource</xforms:value>
-												</xforms:item>
-												<xforms:action ev:event="xforms-value-changed">
-													<xforms:action if=".='manual'">
-														<xforms:toggle case="manual-type"/>
-														<xforms:delete nodeset="instance('coin')/nuds:descMeta/nuds:typeDesc/@xlink:href"/>
-														<xforms:delete nodeset="instance('typeDesc-resource')/*"/>
-														<xforms:insert context="instance('coin')/nuds:descMeta/nuds:typeDesc" origin="instance('objectType-template')"/>
-													</xforms:action>
-													<xforms:action if=".='resource'">
-														<xforms:insert context="instance('coin')/nuds:descMeta/nuds:typeDesc" origin="xxforms:attribute('xlink:href', '')"
-															if="not(instance('coin')/nuds:descMeta/nuds:typeDesc/*)"/>
-														<xforms:toggle case="resource-type" if="not(instance('coin')/nuds:descMeta/nuds:typeDesc/*)"/>
-														<xforms:dispatch name="fr-show" target="confirm-typeDesc-removal" if="instance('coin')/nuds:descMeta/nuds:typeDesc/*"/>
-													</xforms:action>
-												</xforms:action>
-											</xforms:select1>
-										</radiogroup>
-									</xhtml:div>
-									<fr:alert-dialog id="confirm-typeDesc-removal">
-										<fr:label>Remove Typological Description Elements</fr:label>
-										<fr:message>Switching the typeDesc to refer to a web resource will remove child elements. Confirm?</fr:message>
-										<fr:negative-choice>
-											<xforms:setvalue ref="instance('typedesc-type')" value="'manual'" ev:event="DOMActivate"/>
-										</fr:negative-choice>
-										<fr:positive-choice>
-											<xforms:action ev:event="DOMActivate">
-												<xforms:delete nodeset="*"/>
-												<xforms:insert context="." origin="xxforms:attribute('xlink:href', '')"/>
-												<xforms:toggle case="resource-type"/>
-											</xforms:action>
-										</fr:positive-choice>
-									</fr:alert-dialog>
-									<xhtml:div class="section">
-										<xhtml:h2>Typological Description</xhtml:h2>
-										<xforms:switch>
-											<xforms:case id="manual-type">
-												<numishare:type-undertype/>
-											</xforms:case>
-											<xforms:case id="resource-type">
-												<xhtml:div>
-													<xforms:input ref="@xlink:href">
-														<xforms:label>Resource</xforms:label>
-														<xforms:alert>Required; must be URI</xforms:alert>
+											<div class="subsection">
+												<div>
+													<xforms:input ref="nuds:appraiser">
+														<xforms:label>Appraiser</xforms:label>
+														<xforms:alert>Required</xforms:alert>
 													</xforms:input>
-												</xhtml:div>
-												<xforms:group ref=".[string-length(@xlink:href) &gt; 0]">
-													<xforms:trigger>
-														<xforms:action ev:event="DOMActivate">
-															<xforms:send submission="get-typeDesc"/>
-														</xforms:action>
-														<xforms:label>Search</xforms:label>
-													</xforms:trigger>
-													<xforms:group ref="instance('typeDesc-resource')/nuds:descMeta/nuds:typeDesc">
-														<!-- if the conceptual document already contains a reference to the current physical object, provide a button to disassociate it -->
-														<xforms:group
-															ref=".[instance('typeDesc-resource')/nuds:digRep/nuds:associatedObject[@xlink:href = concat(instance('config')/url, 'id/', instance('coin')/nuds:nudsHeader/nuds:nudsid)]]">
-															<xforms:trigger>
-																<xforms:action ev:event="DOMActivate">
-																	<xforms:dispatch name="fr-show" target="disassociateObject-dialog"/>
-																</xforms:action>
-																<xforms:label>Disassociate Object</xforms:label>
-															</xforms:trigger>
-														</xforms:group>
-														<xforms:group
-															ref=".[not(instance('typeDesc-resource')/nuds:digRep/nuds:associatedObject[@xlink:href = concat(instance('config')/url, 'id/', instance('coin')/nuds:nudsHeader/nuds:nudsid)])]">
-															<xhtml:div>
-																<span class="warning">Is the information displayed below correct?</span>
-																<!-- if the typeDesc is correct, insert a reference to current nuds document into the conceptual document, otherwise remove the @xlink:href and typedesc instance -->
-																<xforms:trigger>
-																	<xforms:action ev:event="DOMActivate">
-																		<xforms:dispatch name="fr-show" target="associateObject-dialog"
-																			if="contains(instance('coin')/nuds:descMeta/nuds:typeDesc/@xlink:href, instance('config')/url)"/>
-																	</xforms:action>
-																	<xforms:label>Yes</xforms:label>
-																</xforms:trigger>
-																<xforms:trigger>
-																	<xforms:action ev:event="DOMActivate">
-																		<xforms:delete context="instance('typeDesc-resource')/*"/>
-																		<xforms:setvalue ref="instance('coin')/nuds:descMeta/nuds:typeDesc/@xlink:href"/>
-																	</xforms:action>
-																	<xforms:label>No</xforms:label>
-																</xforms:trigger>
-															</xhtml:div>
-														</xforms:group>
-														<fr:alert-dialog id="associateObject-dialog">
-															<fr:label>Associate Object</fr:label>
-															<fr:message>Do you wish to associate this physical object with its source conceptual object?</fr:message>
-															<fr:negative-choice/>
-															<fr:positive-choice>
-																<xforms:action ev:event="DOMActivate">
-																	<xforms:insert origin="instance('digRep-template')" context="instance('typeDesc-resource')" nodeset="./child::node()[last()]"
-																		if="count(instance('typeDesc-resource')/nuds:digRep) = 0"/>
-																	<xforms:insert origin="instance('associatedObject-template')" context="instance('typeDesc-resource')/nuds:digRep"
-																		nodeset="./child::node()[last()]"/>
-																	<xforms:setvalue ref="instance('typeDesc-resource')/nuds:digRep/nuds:associatedObject[last()]/@xlink:href"
-																		value="concat(instance('config')/url, 'id/', instance('coin')/nuds:nudsHeader/nuds:nudsid)"/>
-																	<xforms:send submission="save-conceptual"/>
-																</xforms:action>
-															</fr:positive-choice>
-														</fr:alert-dialog>
-														<fr:alert-dialog id="disassociateObject-dialog">
-															<fr:label>Disassociate Object</fr:label>
-															<fr:message>Do you wish to disassociate this physical object with its source conceptual object?</fr:message>
-															<fr:negative-choice/>
-															<fr:positive-choice>
-																<xforms:action ev:event="DOMActivate">
-																	<xforms:delete context="instance('typeDesc-resource')/nuds:digRep"
-																		nodeset="nuds:associatedObject[@xlink:href = concat(instance('config')/url, 'id/', instance('coin')/nuds:nudsHeader/nuds:nudsid)]"/>
-																	<xforms:delete context="instance('typeDesc-resource')" nodeset="nuds:digRep"
-																		if="count(instance('typeDesc-resource')/nuds:digRep/nuds:associatedObject) = 0"/>
-																	<xforms:send submission="save-conceptual"/>
-																	<xforms:setvalue ref="instance('coin')/nuds:descMeta/nuds:typeDesc/@xlink:href"/>
-																	<xforms:delete context="instance('typeDesc-resource')/*"/>
-																</xforms:action>
-															</fr:positive-choice>
-														</fr:alert-dialog>
-														<numishare:output-typeDesc/>
-													</xforms:group>
-												</xforms:group>
-											</xforms:case>
-										</xforms:switch>
-									</xhtml:div>
-								</xforms:group>
-							</fr:tab>
-							<!--**************************************** UNDERTYPE DESCRIPTION **********************************-->
-							<fr:tab bind="undertypedesc-tab">
-								<fr:label>Undertype</fr:label>
-								<xhtml:h2>Undertype Description</xhtml:h2>
-								<xforms:trigger appearance="minimal">
-									<xforms:dispatch target="remove-undertypeDesc" name="fr-show" ev:event="DOMActivate"/>
-									<xforms:label>
-										<xhtml:img src="{$display_path}images/remove.gif"/>
-									</xforms:label>
-								</xforms:trigger>
-								<fr:alert-dialog id="remove-undertypeDesc">
-									<fr:label>Remove Undertype Description</fr:label>
-									<fr:message>Confirm the removal of the undertypeDesc and its metadata.</fr:message>
-									<fr:negative-choice/>
-									<fr:positive-choice>
-										<xforms:action ev:event="DOMActivate">
-											<xforms:delete nodeset="."/>
-										</xforms:action>
-									</fr:positive-choice>
-								</fr:alert-dialog>
-								<numishare:type-undertype/>
-							</fr:tab>
-							<!--**************************************** REFERENCE DESCRIPTION **********************************-->
-							<fr:tab bind="refdesc-tab">
-								<fr:label>References</fr:label>
-								<xhtml:h2>Reference Description</xhtml:h2>
-								<xforms:trigger appearance="minimal">
-									<xforms:dispatch target="remove-refDesc" name="fr-show" ev:event="DOMActivate"/>
-									<xforms:label>
-										<xhtml:img src="{$display_path}images/remove.gif"/>
-									</xforms:label>
-								</xforms:trigger>
-								<xhtml:div class="trigger_container">
-									<xforms:trigger appearance="minimal">
-										<xforms:label>
-											<xhtml:img src="{$display_path}images/add.gif"/>Reference</xforms:label>
-										<xforms:action ev:event="DOMActivate">
-											<xforms:insert context="." origin="instance('reference-template')" nodeset="./child::node()[last()]"/>
-										</xforms:action>
-									</xforms:trigger>
-								</xhtml:div>
-								<fr:alert-dialog id="remove-refDesc">
-									<fr:label>Remove Reference Description</fr:label>
-									<fr:message>Confirm the removal of the refDesc and its metadata.</fr:message>
-									<fr:negative-choice/>
-									<fr:positive-choice>
-										<xforms:action ev:event="DOMActivate">
-											<xforms:delete nodeset="."/>
-										</xforms:action>
-									</fr:positive-choice>
-								</fr:alert-dialog>
-								<xhtml:div class="section">
-									<xforms:repeat nodeset="nuds:reference">
-										<numishare:reference/>
-									</xforms:repeat>
-								</xhtml:div>
-							</fr:tab>
-							<!--**************************************** FINDSPOT DESCRIPTION **********************************-->
-							<fr:tab bind="findspotdesc-tab">
-								<fr:label>Findspot</fr:label>
-								<xhtml:h2>Findspot Description</xhtml:h2>
-								<xforms:trigger appearance="minimal">
-									<xforms:dispatch target="remove-findspotDesc" name="fr-show" ev:event="DOMActivate"/>
-									<xforms:label>
-										<xhtml:img src="{$display_path}images/remove.gif"/>
-									</xforms:label>
-								</xforms:trigger>
-								
-								<!-- XBL -->
-								<xforms:group ref="nuds:findspot">
-									<numishare:findspot/>
-								</xforms:group>
-								
-								<fr:alert-dialog id="remove-findspotDesc">
-									<fr:label>Remove Findspot Description</fr:label>
-									<fr:message>This will remove the findspotDesc and its metadata.</fr:message>
-									<fr:negative-choice>
-										<fr:label>Cancel</fr:label>
-									</fr:negative-choice>
-									<fr:positive-choice>
-										<fr:label>OK</fr:label>
-										<xforms:action ev:event="DOMActivate">
-											<xforms:delete nodeset="."/>
-										</xforms:action>
-									</fr:positive-choice>
-								</fr:alert-dialog>
-								<xforms:setvalue ref="instance('findspot-changed')" value="'true'" ev:event="xforms-value-changed"/>
-							</fr:tab>
-							<!--**************************************** ADMINISTRATIVE DESCRIPTION **********************************-->
-							<fr:tab bind="admindesc-tab">
-								<fr:label>Administrative</fr:label>
-								<xhtml:h2>Administrative Description</xhtml:h2>
-								<span class="add">
-									<xforms:trigger appearance="minimal">
-										<xforms:label>
-											<xhtml:img src="{$display_path}images/add.gif"/>
-										</xforms:label>
-										<xxforms:show ev:event="DOMActivate" dialog="adminDesc-objects"/>
-									</xforms:trigger>
-								</span>
-								<xxforms:dialog id="adminDesc-objects" appearance="full" level="modal" close="true" draggable="true" visible="false">
-									<xforms:label>Administrative Description Objects</xforms:label>
-									<xforms:trigger appearance="minimal">
-										<xforms:label>
-											<xhtml:img src="{$display_path}images/add.gif"/>Acknowledgment</xforms:label>
-										<xforms:action ev:event="DOMActivate">
-											<xforms:insert context="." origin="instance('acknowledgment-template')" nodeset="./child::node()[last()]"/>
-											<xxforms:hide dialog="adminDesc-objects"/>
-										</xforms:action>
-									</xforms:trigger>
-									<xforms:group ref=".[count(nuds:acqinfo) &lt; 1]">
-										<xforms:trigger appearance="minimal">
-											<xforms:label>
-												<xhtml:img src="{$display_path}images/add.gif"/>Acquisition Information</xforms:label>
-											<xforms:action ev:event="DOMActivate">
-												<xforms:insert context="." origin="instance('acqinfo-template')" nodeset="./child::node()[last()]"/>
-												<xxforms:hide dialog="adminDesc-objects"/>
-											</xforms:action>
-										</xforms:trigger>
-									</xforms:group>
-									<xforms:trigger appearance="minimal">
-										<xforms:label>
-											<xhtml:img src="{$display_path}images/add.gif"/>Appraisal</xforms:label>
-										<xforms:action ev:event="DOMActivate">
-											<xforms:insert context="." origin="instance('appraisal-template')" nodeset="./child::node()[last()]"/>
-											<xxforms:hide dialog="adminDesc-objects"/>
-										</xforms:action>
-									</xforms:trigger>
-									<xforms:group ref=".[count(nuds:collection) &lt; 1]">
-										<xforms:trigger appearance="minimal">
-											<xforms:label>
-												<xhtml:img src="{$display_path}images/add.gif"/>Collection</xforms:label>
-											<xforms:action ev:event="DOMActivate">
-												<xforms:insert context="." origin="instance('collection-template')" nodeset="./child::node()[last()]"/>
-												<xxforms:hide dialog="adminDesc-objects"/>
-											</xforms:action>
-										</xforms:trigger>
-									</xforms:group>
-									<xforms:group ref=".[count(nuds:custodhist) &lt; 1]">
-										<xforms:trigger appearance="minimal">
-											<xforms:label>
-												<xhtml:img src="{$display_path}images/add.gif"/>Custodial History</xforms:label>
-											<xforms:action ev:event="DOMActivate">
-												<xforms:insert context="." origin="instance('custodhist-template')" nodeset="./child::node()[last()]"/>
-												<xxforms:hide dialog="adminDesc-objects"/>
-											</xforms:action>
-										</xforms:trigger>
-									</xforms:group>
-									<xforms:group ref=".[count(nuds:identifier) &lt; 1]">
-										<xforms:trigger appearance="minimal">
-											<xforms:label>
-												<xhtml:img src="{$display_path}images/add.gif"/>Identifier</xforms:label>
-											<xforms:action ev:event="DOMActivate">
-												<xforms:insert context="." origin="instance('identifier-template')" nodeset="./child::node()[last()]"/>
-												<xxforms:hide dialog="adminDesc-objects"/>
-											</xforms:action>
-										</xforms:trigger>
-									</xforms:group>
-									<xforms:trigger appearance="minimal">
-										<xforms:label>
-											<xhtml:img src="{$display_path}images/add.gif"/>Owner</xforms:label>
-										<xforms:action ev:event="DOMActivate">
-											<xforms:insert context="." origin="instance('owner-template')" nodeset="./child::node()[last()]"/>
-											<xxforms:hide dialog="adminDesc-objects"/>
-										</xforms:action>
-									</xforms:trigger>
-									<xforms:group ref=".[count(nuds:repository) &lt; 1]">
-										<xforms:trigger appearance="minimal">
-											<xforms:label>
-												<xhtml:img src="{$display_path}images/add.gif"/>Repository</xforms:label>
-											<xforms:action ev:event="DOMActivate">
-												<xforms:insert context="." origin="instance('repository-template')" nodeset="./child::node()[last()]"/>
-												<xxforms:hide dialog="adminDesc-objects"/>
-											</xforms:action>
-										</xforms:trigger>
-									</xforms:group>
-								</xxforms:dialog>
-								<xforms:group ref="nuds:identifier">
-									<xhtml:div>
-										<xforms:input ref=".">
-											<xforms:label>Identifier</xforms:label>
-										</xforms:input>
-										<xforms:trigger appearance="minimal">
-											<xforms:delete ev:event="DOMActivate" nodeset="."/>
-											<xforms:label>
-												<xhtml:img src="{$display_path}images/remove.gif"/>
-											</xforms:label>
-										</xforms:trigger>
-									</xhtml:div>
-								</xforms:group>
-								<xforms:repeat nodeset="nuds:acknowledgment">
-									<xhtml:div>
-										<xforms:input ref=".">
-											<xforms:label>Acknowledgment</xforms:label>
-										</xforms:input>
-										<xforms:trigger appearance="minimal">
-											<xforms:delete ev:event="DOMActivate" nodeset="."/>
-											<xforms:label>
-												<xhtml:img src="{$display_path}images/remove.gif"/>
-											</xforms:label>
-										</xforms:trigger>
-									</xhtml:div>
-								</xforms:repeat>
-								<xforms:repeat nodeset="nuds:appraisal">
-									<xhtml:div>
-										<xhtml:h3>Appraisal</xhtml:h3>
-										<xforms:trigger appearance="minimal">
-											<xforms:delete ev:event="DOMActivate" nodeset="."/>
-											<xforms:label>
-												<xhtml:img src="{$display_path}images/remove.gif"/>
-											</xforms:label>
-										</xforms:trigger>
-										<xhtml:div class="subsection">
-											<xhtml:div>
-												<xforms:input ref="nuds:appraiser">
-													<xforms:label>Appraiser</xforms:label>
-													<xforms:alert>Required</xforms:alert>
-												</xforms:input>
-											</xhtml:div>
-											<xforms:group ref="nuds:date">
-												<numishare:date/>
-											</xforms:group>
-										</xhtml:div>
-									</xhtml:div>
-								</xforms:repeat>
-								<xforms:group ref="nuds:collection">
-									<xhtml:div>
-										<xforms:input ref=".">
-											<xforms:label>Collection</xforms:label>
-										</xforms:input>
-										<xforms:trigger appearance="minimal">
-											<xforms:delete ev:event="DOMActivate" nodeset="."/>
-											<xforms:label>
-												<xhtml:img src="{$display_path}images/remove.gif"/>
-											</xforms:label>
-										</xforms:trigger>
-									</xhtml:div>
-								</xforms:group>
-								<xforms:repeat nodeset="nuds:owner">
-									<xhtml:div>
-										<xforms:input ref=".">
-											<xforms:label>Owner</xforms:label>
-										</xforms:input>
-										<xforms:trigger appearance="minimal">
-											<xforms:delete ev:event="DOMActivate" nodeset="."/>
-											<xforms:label>
-												<xhtml:img src="{$display_path}images/remove.gif"/>
-											</xforms:label>
-										</xforms:trigger>
-									</xhtml:div>
-								</xforms:repeat>
-								<xforms:group ref="nuds:physloc">
-									<xhtml:div>
-										<xforms:input ref=".">
-											<xforms:label>Physical Location</xforms:label>
-										</xforms:input>
-										<xforms:trigger appearance="minimal">
-											<xforms:delete ev:event="DOMActivate" nodeset="."/>
-											<xforms:label>
-												<xhtml:img src="{$display_path}images/remove.gif"/>
-											</xforms:label>
-										</xforms:trigger>
-									</xhtml:div>
-								</xforms:group>
-								<xforms:group ref="nuds:repository">
-									<xhtml:div>
-										<xforms:input ref=".">
-											<xforms:label>Repository</xforms:label>
-										</xforms:input>
-										<xforms:trigger appearance="minimal">
-											<xforms:delete ev:event="DOMActivate" nodeset="."/>
-											<xforms:label>
-												<xhtml:img src="{$display_path}images/remove.gif"/>
-											</xforms:label>
-										</xforms:trigger>
-									</xhtml:div>
-								</xforms:group>
-								<xforms:group ref="nuds:acqinfo">
-									<xhtml:div class="section">
-										<xhtml:h3>Acquisition Information</xhtml:h3>
-										<xforms:trigger appearance="minimal">
-											<xforms:delete ev:event="DOMActivate" nodeset="."/>
-											<xforms:label>
-												<xhtml:img src="{$display_path}images/remove.gif"/>
-											</xforms:label>
-										</xforms:trigger>
-										<xforms:group ref=".[count(nuds:sale) = 0]">
-											<xforms:trigger appearance="minimal">
-												<xforms:label>
-													<xhtml:img src="{$display_path}images/add.gif"/>Sale</xforms:label>
-												<xforms:action ev:event="DOMActivate">
-													<xforms:insert context="." origin="instance('sale-template')"/>
-												</xforms:action>
-											</xforms:trigger>
-										</xforms:group>
-										<xhtml:div class="subsection">
-											<xhtml:div>
-												<xforms:input ref="nuds:acquiredFrom">
-													<xforms:label>Acquired From</xforms:label>
-													<xforms:alert>Required</xforms:alert>
-												</xforms:input>
-											</xhtml:div>
-											<xhtml:div>
-												<xforms:input ref="nuds:acquiredMethod">
-													<xforms:label>Acquisition Method</xforms:label>
-													<xforms:alert>Required</xforms:alert>
-												</xforms:input>
-											</xhtml:div>
-											<xforms:group ref="nuds:date">
-												<numishare:date/>
-											</xforms:group>
-											<xforms:group ref="nuds:sale">
-												<numishare:sale/>
-											</xforms:group>
-										</xhtml:div>
-									</xhtml:div>
-								</xforms:group>
-								<xforms:group ref="nuds:custodhist">
-									<xhtml:div class="section">
-										<xhtml:h3>Custodial History</xhtml:h3>
-										<xforms:trigger appearance="minimal">
-											<xforms:delete ev:event="DOMActivate" nodeset="."/>
-											<xforms:label>
-												<xhtml:img src="{$display_path}images/remove.gif"/>
-											</xforms:label>
-										</xforms:trigger>
-										<xhtml:div class="trigger_container">
-											<xforms:trigger appearance="minimal">
-												<xforms:label>
-													<xhtml:img src="{$display_path}images/add.gif"/>Previous Collection</xforms:label>
-												<xforms:action ev:event="DOMActivate">
-													<xforms:insert context="nuds:chronlist" origin="instance('chronitem-template')" nodeset="./child::node()[last()]"/>
-												</xforms:action>
-											</xforms:trigger>
-										</xhtml:div>
-										<xforms:repeat nodeset="nuds:chronlist/nuds:chronitem">
-											<xhtml:div class="subsection">
-												<xforms:group ref="nuds:previousColl">
-													<xhtml:h4>Previous Collection</xhtml:h4>
-													<xhtml:div class="trigger_container">
-														<xforms:group ref=".[count(*) = 0]">
-															<xforms:trigger appearance="minimal">
-																<xforms:label>
-																	<xhtml:img src="{$display_path}images/add.gif"/>Description</xforms:label>
-																<xforms:action ev:event="DOMActivate">
-																	<xforms:insert context="." origin="instance('description-template')"/>
-																</xforms:action>
-															</xforms:trigger>
-															<xforms:trigger appearance="minimal">
-																<xforms:label>
-																	<xhtml:img src="{$display_path}images/add.gif"/>Sale</xforms:label>
-																<xforms:action ev:event="DOMActivate">
-																	<xforms:insert context="." origin="instance('sale-template')"/>
-																</xforms:action>
-															</xforms:trigger>
-														</xforms:group>
-													</xhtml:div>
-													<xforms:group ref="nuds:description">
-														<numishare:description/>
-													</xforms:group>
-													<xforms:group ref="nuds:sale">
-														<numishare:sale/>
-													</xforms:group>
-												</xforms:group>
+												</div>
 												<xforms:group ref="nuds:date">
 													<numishare:date/>
 												</xforms:group>
-											</xhtml:div>
-										</xforms:repeat>
-									</xhtml:div>
-								</xforms:group>
-							</fr:tab>
-							<!--**************************************** DIGITAL REPRESENTATIONS **********************************-->
-							<fr:tab bind="digrep-tab">
-								<fr:label>Digital Representations</fr:label>
-								<xhtml:h2>Digital Representations</xhtml:h2>
-								<xforms:trigger appearance="minimal">
-									<xforms:action ev:event="DOMActivate">
-										<!-- dispatch the dialog to delete obverse and reverse images from the server if either the obverse or reverse thumbnail has an OWNERID (which is the original filename, and not set when using flickr) -->
-										<xforms:dispatch target="delete-digRep-dialog" name="fr-show"
-											if="string(mets:fileSec/mets:fileGrp[@USE='obverse']/mets:file[@USE='thumbnail']/@OWNERID) or string(mets:fileSec/mets:fileGrp[@USE='reverse']/mets:file[@USE='thumbnail']/@OWNERID)"/>
-										<!-- delete the digRep if neither the obverse nor reverse have been uploaded by the user -->
-										<xforms:delete nodeset="."
-											if="not(string(mets:fileSec/mets:fileGrp[@USE='obverse']/mets:file[@USE='thumbnail']/@OWNERID)) and not(string(mets:fileSec/mets:fileGrp[@USE='reverse']/mets:file[@USE='thumbnail']/@OWNERID))"
-										/>
-									</xforms:action>
-									<xforms:label>
-										<xhtml:img src="{$display_path}images/remove.gif"/>
-									</xforms:label>
-								</xforms:trigger>
-								<xforms:group ref=".[count(mets:fileSec) = 0]">
-									<xhtml:div class="trigger_container">
-										<xforms:trigger appearance="minimal">
-											<xforms:label>
-												<xhtml:img src="{$display_path}images/add.gif"/>Associated Object</xforms:label>
-											<xforms:action ev:event="DOMActivate">
-												<xforms:insert context="." origin="instance('associatedObject-template')"/>
-											</xforms:action>
-										</xforms:trigger>
-									</xhtml:div>
-								</xforms:group>
-								<xforms:group ref="mets:fileSec">
-									<xhtml:div class="trigger_container">
-										<xforms:group ref=".[count(mets:fileGrp[@USE='obverse']) &lt; 1]">
+											</div>
+										</div>
+									</xforms:repeat>
+									<xforms:group ref="nuds:collection">
+										<div>
+											<xforms:input ref=".">
+												<xforms:label>Collection</xforms:label>
+											</xforms:input>
+											<xforms:trigger appearance="minimal">
+												<xforms:delete ev:event="DOMActivate" nodeset="."/>
+												<xforms:label>
+													<img src="{$display_path}images/remove.gif"/>
+												</xforms:label>
+											</xforms:trigger>
+										</div>
+									</xforms:group>
+									<xforms:repeat nodeset="nuds:owner">
+										<div>
+											<xforms:input ref=".">
+												<xforms:label>Owner</xforms:label>
+											</xforms:input>
+											<xforms:trigger appearance="minimal">
+												<xforms:delete ev:event="DOMActivate" nodeset="."/>
+												<xforms:label>
+													<img src="{$display_path}images/remove.gif"/>
+												</xforms:label>
+											</xforms:trigger>
+										</div>
+									</xforms:repeat>
+									<xforms:group ref="nuds:physloc">
+										<div>
+											<xforms:input ref=".">
+												<xforms:label>Physical Location</xforms:label>
+											</xforms:input>
+											<xforms:trigger appearance="minimal">
+												<xforms:delete ev:event="DOMActivate" nodeset="."/>
+												<xforms:label>
+													<img src="{$display_path}images/remove.gif"/>
+												</xforms:label>
+											</xforms:trigger>
+										</div>
+									</xforms:group>
+									<xforms:group ref="nuds:repository">
+										<div>
+											<xforms:input ref=".">
+												<xforms:label>Repository</xforms:label>
+											</xforms:input>
+											<xforms:trigger appearance="minimal">
+												<xforms:delete ev:event="DOMActivate" nodeset="."/>
+												<xforms:label>
+													<img src="{$display_path}images/remove.gif"/>
+												</xforms:label>
+											</xforms:trigger>
+										</div>
+									</xforms:group>
+									<xforms:group ref="nuds:acqinfo">
+										<div class="section">
+											<h3>Acquisition Information</h3>
+											<xforms:trigger appearance="minimal">
+												<xforms:delete ev:event="DOMActivate" nodeset="."/>
+												<xforms:label>
+													<img src="{$display_path}images/remove.gif"/>
+												</xforms:label>
+											</xforms:trigger>
+											<xforms:group ref=".[count(nuds:sale) = 0]">
+												<xforms:trigger appearance="minimal">
+													<xforms:label>
+														<img src="{$display_path}images/add.gif"/>Sale</xforms:label>
+													<xforms:action ev:event="DOMActivate">
+														<xforms:insert context="." origin="instance('sale-template')"/>
+													</xforms:action>
+												</xforms:trigger>
+											</xforms:group>
+											<div class="subsection">
+												<div>
+													<xforms:input ref="nuds:acquiredFrom">
+														<xforms:label>Acquired From</xforms:label>
+														<xforms:alert>Required</xforms:alert>
+													</xforms:input>
+												</div>
+												<div>
+													<xforms:input ref="nuds:acquiredMethod">
+														<xforms:label>Acquisition Method</xforms:label>
+														<xforms:alert>Required</xforms:alert>
+													</xforms:input>
+												</div>
+												<xforms:group ref="nuds:date">
+													<numishare:date/>
+												</xforms:group>
+												<xforms:group ref="nuds:sale">
+													<numishare:sale/>
+												</xforms:group>
+											</div>
+										</div>
+									</xforms:group>
+									<xforms:group ref="nuds:custodhist">
+										<div class="section">
+											<h3>Custodial History</h3>
+											<xforms:trigger appearance="minimal">
+												<xforms:delete ev:event="DOMActivate" nodeset="."/>
+												<xforms:label>
+													<img src="{$display_path}images/remove.gif"/>
+												</xforms:label>
+											</xforms:trigger>
+											<div class="trigger_container">
+												<xforms:trigger appearance="minimal">
+													<xforms:label>
+														<img src="{$display_path}images/add.gif"/>Previous Collection</xforms:label>
+													<xforms:action ev:event="DOMActivate">
+														<xforms:insert context="nuds:chronlist" origin="instance('chronitem-template')" nodeset="./child::node()[last()]"/>
+													</xforms:action>
+												</xforms:trigger>
+											</div>
+											<xforms:repeat nodeset="nuds:chronlist/nuds:chronitem">
+												<div class="subsection">
+													<xforms:group ref="nuds:previousColl">
+														<h4>Previous Collection</h4>
+														<div class="trigger_container">
+															<xforms:group ref=".[count(*) = 0]">
+																<xforms:trigger appearance="minimal">
+																	<xforms:label>
+																		<img src="{$display_path}images/add.gif"/>Description</xforms:label>
+																	<xforms:action ev:event="DOMActivate">
+																		<xforms:insert context="." origin="instance('description-template')"/>
+																	</xforms:action>
+																</xforms:trigger>
+																<xforms:trigger appearance="minimal">
+																	<xforms:label>
+																		<img src="{$display_path}images/add.gif"/>Sale</xforms:label>
+																	<xforms:action ev:event="DOMActivate">
+																		<xforms:insert context="." origin="instance('sale-template')"/>
+																	</xforms:action>
+																</xforms:trigger>
+															</xforms:group>
+														</div>
+														<xforms:group ref="nuds:description">
+															<numishare:description/>
+														</xforms:group>
+														<xforms:group ref="nuds:sale">
+															<numishare:sale/>
+														</xforms:group>
+													</xforms:group>
+													<xforms:group ref="nuds:date">
+														<numishare:date/>
+													</xforms:group>
+												</div>
+											</xforms:repeat>
+										</div>
+									</xforms:group>
+								</fr:tab>
+								<!--**************************************** DIGITAL REPRESENTATIONS **********************************-->
+								<fr:tab bind="digrep-tab">
+									<fr:label>Digital Representations</fr:label>
+									<h2>Digital Representations</h2>
+									<xforms:trigger appearance="minimal">
+										<xforms:action ev:event="DOMActivate">
+											<!-- dispatch the dialog to delete obverse and reverse images from the server if either the obverse or reverse thumbnail has an OWNERID (which is the original filename, and not set when using flickr) -->
+											<xforms:dispatch target="delete-digRep-dialog" name="fr-show"
+												if="string(mets:fileSec/mets:fileGrp[@USE='obverse']/mets:file[@USE='thumbnail']/@OWNERID) or string(mets:fileSec/mets:fileGrp[@USE='reverse']/mets:file[@USE='thumbnail']/@OWNERID)"/>
+											<!-- delete the digRep if neither the obverse nor reverse have been uploaded by the user -->
+											<xforms:delete nodeset="."
+												if="not(string(mets:fileSec/mets:fileGrp[@USE='obverse']/mets:file[@USE='thumbnail']/@OWNERID)) and not(string(mets:fileSec/mets:fileGrp[@USE='reverse']/mets:file[@USE='thumbnail']/@OWNERID))"
+											/>
+										</xforms:action>
+										<xforms:label>
+											<img src="{$display_path}images/remove.gif"/>
+										</xforms:label>
+									</xforms:trigger>
+									<xforms:group ref=".[count(mets:fileSec) = 0]">
+										<div class="trigger_container">
 											<xforms:trigger appearance="minimal">
 												<xforms:label>
-													<xhtml:img src="{$display_path}images/add.gif"/>Obverse Image</xforms:label>
+													<img src="{$display_path}images/add.gif"/>Associated Object</xforms:label>
 												<xforms:action ev:event="DOMActivate">
-													<xforms:insert context="." origin="instance('fileGrp-obverse-template')"/>
+													<xforms:insert context="." origin="instance('associatedObject-template')"/>
 												</xforms:action>
 											</xforms:trigger>
+										</div>
+									</xforms:group>
+									<xforms:group ref="mets:fileSec">
+										<div class="trigger_container">
+											<xforms:group ref=".[count(mets:fileGrp[@USE='obverse']) &lt; 1]">
+												<xforms:trigger appearance="minimal">
+													<xforms:label>
+														<img src="{$display_path}images/add.gif"/>Obverse Image</xforms:label>
+													<xforms:action ev:event="DOMActivate">
+														<xforms:insert context="." origin="instance('fileGrp-obverse-template')"/>
+													</xforms:action>
+												</xforms:trigger>
+											</xforms:group>
+											<xforms:group ref=".[count(mets:fileGrp[@USE='reverse']) &lt; 1]">
+												<xforms:trigger appearance="minimal">
+													<xforms:label>
+														<img src="{$display_path}images/add.gif"/>Reverse Image</xforms:label>
+													<xforms:action ev:event="DOMActivate">
+														<xforms:insert context="." origin="instance('fileGrp-reverse-template')" nodeset="./child::node()[last()]"/>
+													</xforms:action>
+												</xforms:trigger>
+											</xforms:group>
+										</div>
+										<xforms:group ref=".[count(mets:fileGrp) = 0]">
+											<div class="ui-widget">
+												<div class="ui-state-highlight ui-corner-all">
+													<p>
+														<span class="ui-icon ui-icon-info" style="float: left; margin-right: 0.3em;"/>
+														<strong>Warning!</strong> An image is required before the record can be saved. </p>
+												</div>
+											</div>
 										</xforms:group>
-										<xforms:group ref=".[count(mets:fileGrp[@USE='reverse']) &lt; 1]">
+										<xforms:group ref="mets:fileGrp[@USE='obverse']">
+											<div class="subsection">
+												<h3>Obverse</h3>
+												<numishare:file-upload/>
+											</div>
+										</xforms:group>
+										<xforms:group ref="mets:fileGrp[@USE='reverse']">
+											<div class="subsection">
+												<h3>Reverse</h3>
+												<numishare:file-upload/>
+											</div>
+										</xforms:group>
+										<fr:alert-dialog id="delete-digRep-dialog">
+											<fr:label>Delete Digital Representations</fr:label>
+											<fr:message>Confirm the deletion of image files associated with this object.</fr:message>
+											<fr:negative-choice/>
+											<fr:positive-choice>
+												<xforms:action ev:event="DOMActivate">
+													<!-- delete Obverse image -->
+													<!-- get filename -->
+													<xforms:action
+														if="string(instance('coin')/digRep/mets:fileSec/mets:fileGrp[@USE='obverse']/mets:file[@USE='thumbnail']/mets:FLocat/@xlink:href) and string(instance('coin')/digRep/mets:fileSec/mets:fileGrp[@USE='obverse']/mets:file[@USE='thumbnail']/@OWNERID)">
+														<xforms:setvalue ref="instance('delete-config')/delete/file"
+															value="substring-after(instance('coin')/digRep/mets:fileSec/mets:fileGrp[@USE='obverse']/mets:file[@USE='thumbnail']/mets:FLocat/@xlink:href, 'media/thumbnail/')"/>
+														<!-- thumbnail -->
+														<xforms:setvalue ref="instance('delete-config')/delete/directory" value="concat(instance('config')/images/absolute_path, 'thumbnail')"/>
+														<xforms:insert context="instance('dump')"
+															origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/remove-image.xpl', ('delete-config', 'dump'), (instance('delete-config'), instance('dump')), 'data')"/>
+														<!-- reference -->
+														<xforms:setvalue ref="instance('delete-config')/delete/directory" value="concat(instance('config')/images/absolute_path, 'reference')"/>
+														<xforms:insert context="instance('dump')"
+															origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/remove-image.xpl', ('delete-config', 'dump'), (instance('delete-config'), instance('dump')), 'data')"/>
+														<!-- ARCHIVE -->
+														<xforms:setvalue ref="instance('delete-config')/delete/directory" value="concat(instance('config')/images/absolute_path, 'archive')"/>
+														<xforms:insert context="instance('dump')"
+															origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/remove-image.xpl', ('delete-config', 'dump'), (instance('delete-config'), instance('dump')), 'data')"
+														/>
+													</xforms:action>
+													<!-- delete Reverse image -->
+													<!-- get filename -->
+													<xforms:action
+														if="string(instance('coin')/digRep/mets:fileSec/mets:fileGrp[@USE='reverse']/mets:file[@USE='thumbnail']/mets:FLocat/@xlink:href) and string(instance('coin')/digRep/mets:fileSec/mets:fileGrp[@USE='reverse']/mets:file[@USE='thumbnail']/@OWNERID)">
+														<xforms:setvalue ref="instance('delete-config')/delete/file"
+															value="substring-after(instance('coin')/digRep/mets:fileSec/mets:fileGrp[@USE='reverse']/mets:file[@USE='thumbnail']/mets:FLocat/@xlink:href, 'media/thumbnail/')"/>
+														<!-- thumbnail -->
+														<xforms:setvalue ref="instance('delete-config')/delete/directory" value="concat(instance('config')/images/absolute_path, 'thumbnail')"/>
+														<xforms:insert context="instance('dump')"
+															origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/remove-image.xpl', ('delete-config', 'dump'), (instance('delete-config'), instance('dump')), 'data')"/>
+														<!-- reference -->
+														<xforms:setvalue ref="instance('delete-config')/delete/directory" value="concat(instance('config')/images/absolute_path, 'reference')"/>
+														<xforms:insert context="instance('dump')"
+															origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/remove-image.xpl', ('delete-config', 'dump'), (instance('delete-config'), instance('dump')), 'data')"/>
+														<!-- ARCHIVE -->
+														<xforms:setvalue ref="instance('delete-config')/delete/directory" value="concat(instance('config')/images/absolute_path, 'archive')"/>
+														<xforms:insert context="instance('dump')"
+															origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/remove-image.xpl', ('delete-config', 'dump'), (instance('delete-config'), instance('dump')), 'data')"
+														/>
+													</xforms:action>
+													<xforms:delete nodeset="."/>
+												</xforms:action>
+											</fr:positive-choice>
+										</fr:alert-dialog>
+									</xforms:group>
+									<xforms:repeat nodeset="nuds:associatedObject">
+										<div>
+											<xforms:input ref="@xlink:href">
+												<xforms:label>URI</xforms:label>
+												<xforms:alert>Required; Must be URI</xforms:alert>
+											</xforms:input>
 											<xforms:trigger appearance="minimal">
+												<xforms:delete ev:event="DOMActivate" nodeset="."/>
 												<xforms:label>
-													<xhtml:img src="{$display_path}images/add.gif"/>Reverse Image</xforms:label>
-												<xforms:action ev:event="DOMActivate">
-													<xforms:insert context="." origin="instance('fileGrp-reverse-template')" nodeset="./child::node()[last()]"/>
-												</xforms:action>
+													<img src="{$display_path}images/remove.gif"/>
+												</xforms:label>
 											</xforms:trigger>
-										</xforms:group>
-									</xhtml:div>
-									<xforms:group ref=".[count(mets:fileGrp) = 0]">
-										<xhtml:div class="ui-widget">
-											<xhtml:div class="ui-state-highlight ui-corner-all">
-												<p>
-													<span class="ui-icon ui-icon-info" style="float: left; margin-right: 0.3em;"/>
-													<strong>Warning!</strong> An image is required before the record can be saved. </p>
-											</xhtml:div>
-										</xhtml:div>
-									</xforms:group>
-									<xforms:group ref="mets:fileGrp[@USE='obverse']">
-										<xhtml:div class="subsection">
-											<xhtml:h3>Obverse</xhtml:h3>
-											<numishare:file-upload/>
-										</xhtml:div>
-									</xforms:group>
-									<xforms:group ref="mets:fileGrp[@USE='reverse']">
-										<xhtml:div class="subsection">
-											<xhtml:h3>Reverse</xhtml:h3>
-											<numishare:file-upload/>
-										</xhtml:div>
-									</xforms:group>
-									<fr:alert-dialog id="delete-digRep-dialog">
-										<fr:label>Delete Digital Representations</fr:label>
-										<fr:message>Confirm the deletion of image files associated with this object.</fr:message>
-										<fr:negative-choice/>
-										<fr:positive-choice>
-											<xforms:action ev:event="DOMActivate">
-												<!-- delete Obverse image -->
-												<!-- get filename -->
-												<xforms:action
-													if="string(instance('coin')/digRep/mets:fileSec/mets:fileGrp[@USE='obverse']/mets:file[@USE='thumbnail']/mets:FLocat/@xlink:href) and string(instance('coin')/digRep/mets:fileSec/mets:fileGrp[@USE='obverse']/mets:file[@USE='thumbnail']/@OWNERID)">
-													<xforms:setvalue ref="instance('delete-config')/delete/file"
-														value="substring-after(instance('coin')/digRep/mets:fileSec/mets:fileGrp[@USE='obverse']/mets:file[@USE='thumbnail']/mets:FLocat/@xlink:href, 'media/thumbnail/')"/>
-													<!-- thumbnail -->
-													<xforms:setvalue ref="instance('delete-config')/delete/directory" value="concat(instance('config')/images/absolute_path, 'thumbnail')"/>
-													<xforms:insert context="instance('dump')"
-														origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/remove-image.xpl', ('delete-config', 'dump'), (instance('delete-config'), instance('dump')), 'data')"/>
-													<!-- reference -->
-													<xforms:setvalue ref="instance('delete-config')/delete/directory" value="concat(instance('config')/images/absolute_path, 'reference')"/>
-													<xforms:insert context="instance('dump')"
-														origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/remove-image.xpl', ('delete-config', 'dump'), (instance('delete-config'), instance('dump')), 'data')"/>
-													<!-- ARCHIVE -->
-													<xforms:setvalue ref="instance('delete-config')/delete/directory" value="concat(instance('config')/images/absolute_path, 'archive')"/>
-													<xforms:insert context="instance('dump')"
-														origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/remove-image.xpl', ('delete-config', 'dump'), (instance('delete-config'), instance('dump')), 'data')"
-													/>
-												</xforms:action>
-												<!-- delete Reverse image -->
-												<!-- get filename -->
-												<xforms:action
-													if="string(instance('coin')/digRep/mets:fileSec/mets:fileGrp[@USE='reverse']/mets:file[@USE='thumbnail']/mets:FLocat/@xlink:href) and string(instance('coin')/digRep/mets:fileSec/mets:fileGrp[@USE='reverse']/mets:file[@USE='thumbnail']/@OWNERID)">
-													<xforms:setvalue ref="instance('delete-config')/delete/file"
-														value="substring-after(instance('coin')/digRep/mets:fileSec/mets:fileGrp[@USE='reverse']/mets:file[@USE='thumbnail']/mets:FLocat/@xlink:href, 'media/thumbnail/')"/>
-													<!-- thumbnail -->
-													<xforms:setvalue ref="instance('delete-config')/delete/directory" value="concat(instance('config')/images/absolute_path, 'thumbnail')"/>
-													<xforms:insert context="instance('dump')"
-														origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/remove-image.xpl', ('delete-config', 'dump'), (instance('delete-config'), instance('dump')), 'data')"/>
-													<!-- reference -->
-													<xforms:setvalue ref="instance('delete-config')/delete/directory" value="concat(instance('config')/images/absolute_path, 'reference')"/>
-													<xforms:insert context="instance('dump')"
-														origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/remove-image.xpl', ('delete-config', 'dump'), (instance('delete-config'), instance('dump')), 'data')"/>
-													<!-- ARCHIVE -->
-													<xforms:setvalue ref="instance('delete-config')/delete/directory" value="concat(instance('config')/images/absolute_path, 'archive')"/>
-													<xforms:insert context="instance('dump')"
-														origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/remove-image.xpl', ('delete-config', 'dump'), (instance('delete-config'), instance('dump')), 'data')"
-													/>
-												</xforms:action>
-												<xforms:delete nodeset="."/>
-											</xforms:action>
-										</fr:positive-choice>
-									</fr:alert-dialog>
-								</xforms:group>
-								<xforms:repeat nodeset="nuds:associatedObject">
-									<xhtml:div>
-										<xforms:input ref="@xlink:href">
-											<xforms:label>URI</xforms:label>
-											<xforms:alert>Required; Must be URI</xforms:alert>
-										</xforms:input>
-										<xforms:trigger appearance="minimal">
-											<xforms:delete ev:event="DOMActivate" nodeset="."/>
-											<xforms:label>
-												<xhtml:img src="{$display_path}images/remove.gif"/>
-											</xforms:label>
-										</xforms:trigger>
-									</xhtml:div>
-								</xforms:repeat>
-							</fr:tab>
-							<!--**************************************** NUDS HEADER **********************************-->
-							<fr:tab bind="nudsHeader-tab">
-								<fr:label>Record Metadata</fr:label>
-								<numishare:nudsHeader/>
-							</fr:tab>
-						</fr:tabview>
-					</xforms:group>
-				</xhtml:div>
-			</xhtml:div>
-			<!--<fr:xforms-inspector id="orbeon-xforms-inspector"/>-->
-		</xhtml:div>
-	</xhtml:body>
-</xhtml:html>
+										</div>
+									</xforms:repeat>
+								</fr:tab>
+								<!--**************************************** NUDS HEADER **********************************-->
+								<fr:tab bind="nudsHeader-tab">
+									<fr:label>Record Metadata</fr:label>
+									<numishare:nudsHeader/>
+								</fr:tab>
+							</fr:tabview>
+						</xforms:group>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
