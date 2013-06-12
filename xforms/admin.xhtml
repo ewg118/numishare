@@ -386,11 +386,11 @@
 			</xforms:instance>
 
 			<!-- send to Solr -->
-			<xforms:instance id="addIndex">
+			<xforms:instance id="addIndex" xxforms:exclude-result-prefixes="#all">
 				<add xmlns=""/>
 			</xforms:instance>
-			<xforms:instance id="collection-field">
-				<field name="collection-name"/>
+			<xforms:instance id="collection-field" xxforms:exclude-result-prefixes="#all">
+				<field name="collection-name" xmlns=""/>
 			</xforms:instance>
 			<!-- Instance for Solr commit-->
 			<xforms:instance id="sendCommit">
@@ -415,7 +415,7 @@
 			</xforms:instance>
 
 			<xforms:instance id="dump">
-				<dump/>
+				<dump xmlns=""/>
 			</xforms:instance>
 
 			<!-- ************************* BINDINGS ************************** -->
@@ -531,7 +531,8 @@
 						</xforms:action>
 						<!-- optimize index -->
 						<xforms:setvalue ref="instance('control-instance')/solr-core" value="instance('config')/solr_all"/>
-						<xforms:send submission="optimize"/>
+						<xforms:send submission="submit-commit"/>
+						<!--<xforms:send submission="optimize"/>-->
 					</xforms:action>
 					<!-- reload table -->
 					<xforms:delete nodeset="instance('list')/*"/>
@@ -1155,7 +1156,7 @@
 								</xforms:group>
 							</xforms:group>
 						</xforms:group>
-<!--						<fr:xforms-inspector/>-->
+						<!--<fr:xforms-inspector/>-->
 					</div>
 				</div>
 			</div>
