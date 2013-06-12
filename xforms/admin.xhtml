@@ -4,7 +4,7 @@
     numishare: http://code.google.com/p/numishare/
     Apache License 2.0: http://code.google.com/p/numishare/    
 -->
-<html xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xxforms="http://orbeon.org/oxf/xml/xforms" xmlns:widget="http://orbeon.org/oxf/xml/widget" xmlns:xi="http://www.w3.org/2001/XInclude"
 	xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:exist="http://exist.sourceforge.net/NS/exist" xmlns:xxi="http://orbeon.org/oxf/xml/xinclude"
 	xmlns:numishare="http://code.google.com/p/numishare/" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -20,7 +20,7 @@
 
 		<!-- numishare styling -->
 		<link rel="stylesheet" href="/apps/numishare/css/xforms.css"/>
-		<xforms:model>
+		<xforms:model xmlns="http://nomisma.org/nuds">
 			<!-- exist URL is stored in an XML file -->
 			<xforms:instance id="exist-url">
 				<xi:include href="exist-url.xml"/>
@@ -405,7 +405,7 @@
 			<!-- delete from Solr -->
 			<xforms:instance id="deleteId">
 				<delete xmlns="">
-					<id/>
+					<query/>
 				</delete>
 			</xforms:instance>
 			<xforms:instance id="deleteAll">
@@ -1106,6 +1106,7 @@
 														<xforms:trigger appearance="minimal">
 															<xforms:label>unpublish</xforms:label>
 															<xforms:action ev:event="DOMActivate">
+																<xforms:setvalue ref="instance('deleteId')/query" value="concat('nudsid:&#x0022;',$id, '&#x022;')"/>
 																<xforms:setvalue ref="instance('id')" value="$id"/>
 																<xforms:dispatch target="unpublish" name="fr-show"/>
 															</xforms:action>
@@ -1127,7 +1128,7 @@
 															<img src="{$display_path}images/remove.gif"/>
 														</xforms:label>
 														<xforms:action ev:event="DOMActivate">
-															<xforms:setvalue ref="instance('deleteId')/id" value="$id"/>
+															<xforms:setvalue ref="instance('deleteId')/query" value="concat('nudsid:&#x0022;',$id, '&#x022;')"/>
 															<xforms:setvalue ref="instance('id')" value="$id"/>
 															<xforms:dispatch target="delete" name="fr-show" ev:event="DOMActivate"/>
 														</xforms:action>
@@ -1156,7 +1157,7 @@
 								</xforms:group>
 							</xforms:group>
 						</xforms:group>
-						<!--<fr:xforms-inspector/>-->
+						<fr:xforms-inspector/>
 					</div>
 				</div>
 			</div>
