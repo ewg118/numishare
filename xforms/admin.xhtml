@@ -386,7 +386,7 @@
 			</xforms:instance>
 
 			<!-- send to Solr -->
-			<xforms:instance id="addIndex">
+			<xforms:instance id="addIndex" xxforms:exclude-result-prefixes="#all">
 				<add xmlns=""/>
 			</xforms:instance>
 			<xforms:instance id="collection-field" xxforms:exclude-result-prefixes="#all">
@@ -405,7 +405,7 @@
 			<!-- delete from Solr -->
 			<xforms:instance id="deleteId">
 				<delete xmlns="">
-					<id/>
+					<query/>
 				</delete>
 			</xforms:instance>
 			<xforms:instance id="deleteAll">
@@ -1106,6 +1106,7 @@
 														<xforms:trigger appearance="minimal">
 															<xforms:label>unpublish</xforms:label>
 															<xforms:action ev:event="DOMActivate">
+																<xforms:setvalue ref="instance('deleteId')/query" value="concat('nudsid:&#x0022;',$id, '&#x022;')"/>
 																<xforms:setvalue ref="instance('id')" value="$id"/>
 																<xforms:dispatch target="unpublish" name="fr-show"/>
 															</xforms:action>
@@ -1127,7 +1128,7 @@
 															<img src="{$display_path}images/remove.gif"/>
 														</xforms:label>
 														<xforms:action ev:event="DOMActivate">
-															<xforms:setvalue ref="instance('deleteId')/id" value="$id"/>
+															<xforms:setvalue ref="instance('deleteId')/query" value="concat('nudsid:&#x0022;',$id, '&#x022;')"/>
 															<xforms:setvalue ref="instance('id')" value="$id"/>
 															<xforms:dispatch target="delete" name="fr-show" ev:event="DOMActivate"/>
 														</xforms:action>
@@ -1156,7 +1157,7 @@
 								</xforms:group>
 							</xforms:group>
 						</xforms:group>
-						<!--<fr:xforms-inspector/>-->
+						<fr:xforms-inspector/>
 					</div>
 				</div>
 			</div>
