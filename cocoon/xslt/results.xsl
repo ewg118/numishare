@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0" xmlns:exsl="http://exslt.org/common" xmlns:cinclude="http://apache.org/cocoon/include/1.0"
-	xmlns:numishare="http://code.google.com/p/numishare/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	xmlns:numishare="http://code.google.com/p/numishare/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:res="http://www.w3.org/2005/sparql-results#" exclude-result-prefixes="#all">
 	<xsl:include href="results_generic.xsl"/>
 	<xsl:include href="templates.xsl"/>
 	<xsl:include href="functions.xsl"/>
 	<xsl:include href="header.xsl"/>
 	<xsl:include href="footer.xsl"/>
-	
-	<xsl:param name="pipeline"/>	
+
+	<xsl:param name="pipeline"/>
 	<xsl:param name="lang"/>
 	<xsl:param name="display_path"/>
 	<xsl:param name="q"/>
@@ -24,14 +24,46 @@
 	</xsl:variable>
 	<xsl:param name="tokenized_q" select="tokenize($q, ' AND ')"/>
 	<xsl:param name="mode"/>
-	
+
 	<xsl:variable name="numFound" select="//result[@name='response']/@numFound" as="xs:integer"/>
-	
+
 	<!-- config variables -->
 	<xsl:variable name="collection_type" select="/content//collection_type"/>
-	<xsl:variable name="sparql_endpoint" select="/content//sparql_endpoint"/>	
+	<xsl:variable name="sparql_endpoint" select="/content//sparql_endpoint"/>
 	<xsl:variable name="url" select="/content/config/url"/>
-	
+
+	<!-- get block of images from SPARQL endpoint -->
+	<xsl:variable name="sparqlResult" as="element()*">
+		<xsl:if test="string($sparql_endpoint)">
+			<xsl:variable name="identifiers">
+				<xsl:for-each select="descendant::str[@name='nudsid']">
+					<xsl:value-of select="."/>
+					<xsl:if test="not(position()=last())">
+						<xsl:text>|</xsl:text>
+					</xsl:if>
+				</xsl:for-each>
+			</xsl:variable>
+
+			<xsl:variable name="response" as="element()*">
+				<xsl:copy-of select="document(concat('cocoon:/widget?identifiers=', $identifiers, '&amp;template=results&amp;baseUri=http://numismatics.org/ocre/id/'))/res:sparql"/>
+			</xsl:variable>
+
+			<!-- process sparql into a manageable XML model -->
+			<response xmlns="http://www.w3.org/2005/sparql-results#">
+				<xsl:for-each select="descendant::str[@name='nudsid']">
+					<xsl:variable name="uri" select="concat('http://numismatics.org/ocre/id/', .)"/>
+					<group>
+						<xsl:attribute name="id" select="."/>
+						<xsl:for-each select="distinct-values($response/descendant::res:result[res:binding[@name='type']/res:uri=$uri]/res:binding[@name='object']/res:uri)">
+							<xsl:variable name="objectUri" select="."/>
+							<xsl:copy-of select="$response/descendant::res:result[res:binding[@name='object']/res:uri=$objectUri][1]"/>
+						</xsl:for-each>
+					</group>
+				</xsl:for-each>
+			</response>
+		</xsl:if>
+	</xsl:variable>
+
 	<xsl:template match="/">
 		<html>
 			<head profile="http://a9.com/-/spec/opensearch/1.1/">
@@ -39,26 +71,24 @@
 					<xsl:value-of select="//config/title"/>
 					<xsl:text>: Browse Collection</xsl:text>
 				</title>
-				<!-- alternates -->										
+				<!-- alternates -->
 				<link rel="alternate" type="application/atom+xml" href="{concat(//config/url, 'feed/?q=', $q)}"/>
 				<link rel="alternate" type="text/csv" href="{concat(//config/url, 'data.csv/?q=', $q)}"/>
-				<link rel="alternate" type="application/application/vnd.google-earth.kml+xml" href="{concat(//config/url, 'query.kml/?q=', $q)}"/>
+				<link rel="alternate" type="application/application/vnd.google-earth.kml+xml"
+					href="{concat(//config/url, 'query.kml/?q=', $q, if(string($lang)) then concat('&amp;lang=', $lang) else '')}"/>
 				<!-- opensearch compliance -->
-				<link rel="search"
-					type="application/opensearchdescription+xml" 
-					href="{$url}opensearch.xml"
-					title="Example Search for {$url}" />
+				<link rel="search" type="application/opensearchdescription+xml" href="{$url}opensearch.xml" title="Example Search for {$url}"/>
 				<meta name="totalResults" content="{$numFound}"/>
 				<meta name="startIndex" content="{$start_var}"/>
 				<meta name="itemsPerPage" content="{$rows}"/>
-				
+
 				<link rel="shortcut icon" type="image/x-icon" href="{$display_path}images/favicon.png"/>
 				<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.8.0/build/cssgrids/grids-min.css"/>
 				<!-- Core + Skin CSS -->
 				<link type="text/css" href="{$display_path}themes/{//config/theme/jquery_ui_theme}.css" rel="stylesheet"/>
 				<link type="text/css" href="{$display_path}style.css" rel="stylesheet"/>
 				<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"/>
-				<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js"/>	
+				<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js"/>
 
 				<!-- menu -->
 				<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.core.js"/>
@@ -68,7 +98,7 @@
 				<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.menu.js"/>
 				<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.menubar.js"/>
 				<script type="text/javascript" src="{$display_path}javascript/numishare-menu.js"/>
-				
+
 				<link type="text/css" href="{$display_path}jquery.multiselect.css" rel="stylesheet"/>
 				<link type="text/css" href="{$display_path}jquery.fancybox-1.3.4.css" rel="stylesheet"/>
 				<script type="text/javascript" src="{$display_path}javascript/jquery.multiselect.min.js"/>
@@ -107,7 +137,7 @@
 						<xsl:value-of select="//config/google_analytics/script"/>
 					</script>
 				</xsl:if>
-			</head>			
+			</head>
 			<body>
 				<xsl:call-template name="header"/>
 				<xsl:call-template name="results"/>
@@ -119,39 +149,43 @@
 	<xsl:template name="results">
 		<div id="backgroundPopup"/>
 		<div class="yui3-g">
-			<div class="yui3-u-1-4">
+			<div class="yui3-u-7-24">
 				<div class="content">
 					<xsl:if test="//result[@name='response']/@numFound &gt; 0">
 						<div class="data_options">
-							<h2><xsl:value-of select="numishare:normalizeLabel('results_data-options', $lang)"/></h2>
-							<a href="{$display_path}feed/?q={$q}">
+							<h2>
+								<xsl:value-of select="numishare:normalizeLabel('results_data-options', $lang)"/>
+							</h2>
+							<a href="{$display_path}feed/?q={$q}{if(string($lang)) then concat('&amp;lang=', $lang) else ''}">
 								<img src="{$display_path}images/atom-medium.png" title="Atom" alt="Atom"/>
 							</a>
 							<xsl:if test="//lst[@name='mint_geo']/int[@name='numFacetTerms'] &gt; 0">
-								<a href="{$display_path}query.kml?q={$q}">
+								<a href="{$display_path}query.kml?q={$q}{if(string($lang)) then concat('&amp;lang=', $lang) else ''}">
 									<img src="{$display_path}images/googleearth.png" alt="KML" title="KML: Limit, 500 objects"/>
 								</a>
 							</xsl:if>
-							<a href="{$display_path}data.csv?q={$q}">
+							<a href="{$display_path}data.csv?q={$q}{if(string($lang)) then concat('&amp;lang=', $lang) else ''}">
 								<!-- the image below is copyright of Silvestre Herrera, available freely on wikimedia commons: http://commons.wikimedia.org/wiki/File:X-office-spreadsheet_Gion.svg -->
 								<img src="{$display_path}images/spreadsheet.png" title="CSV" alt="CSV"/>
 							</a>
-							<a href="{$display_path}visualize?compare={$q}">
+							<a href="{$display_path}visualize?compare={$q}{if(string($lang)) then concat('&amp;lang=', $lang) else ''}">
 								<!-- the image below is copyright of Mark James, available freely on wikimedia commons: http://commons.wikimedia.org/wiki/File:Chart_bar.png -->
 								<img src="{$display_path}images/visualize.png" title="Visualize" alt="Visualize"/>
 							</a>
 						</div>
-						<h2><xsl:value-of select="numishare:normalizeLabel('results_refine-results', $lang)"/></h2>
-						<xsl:call-template name="quick_search"/>
+						<h2>
+							<xsl:value-of select="numishare:normalizeLabel('results_refine-results', $lang)"/>
+						</h2>
+						<!--<xsl:call-template name="quick_search"/>-->
 						<xsl:apply-templates select="descendant::lst[@name='facet_fields']"/>
 					</xsl:if>
 					<span style="display:none" id="collection_type">
 						<xsl:value-of select="$collection_type"/>
 					</span>
-				</div>				
+				</div>
 			</div>
-			<div class="yui3-u-3-4">
-				<div class="content">					
+			<div class="yui3-u-17-24">
+				<div class="content">
 					<xsl:call-template name="remove_facets"/>
 					<xsl:choose>
 						<xsl:when test="$numFound &gt; 0">
@@ -163,7 +197,7 @@
 							</xsl:if>
 							<xsl:call-template name="paging"/>
 							<xsl:call-template name="sort"/>
-							<table>
+							<table style="width:100%">
 								<xsl:apply-templates select="descendant::doc"/>
 							</table>
 							<xsl:call-template name="paging"/>

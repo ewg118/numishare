@@ -22,7 +22,7 @@
 	</xsl:param>
 	<!-- list of fields to display in the csv -->
 	<xsl:variable name="fields">
-		<xsl:text>title_display,identifier_display,authority_facet,century_num,color_display,dob_num,timestamp,degree_facet,deity_facet,denomination_facet,department_facet,dimensions_display,dynasty_facet,era_facet,findspot_facet,imagesponsor_display,issuer_facet,locality_facet,manufacture_facet,material_facet,mint_facet,obv_leg_display,objectType_facet,persname_facet,provenance_display,reference_display,region_facet,rev_leg_display,weight_num,year_num</xsl:text>
+		<xsl:text>title_display,identifier_display,authority_facet,color_display,dob_num,timestamp,degree_facet,deity_facet,denomination_facet,department_facet,diameter_num,dynasty_facet,era_facet,findspot_facet,issuer_facet,manufacture_facet,material_facet,mint_facet,obv_leg_display,objectType_facet,portrait_facet,reference_facet,region_facet,rev_leg_display,weight_num,year_num</xsl:text>
 	</xsl:variable>
 	<xsl:variable name="tokenized_fields" select="tokenize($fields, ',')"/>
 	<xsl:variable name="field_count" select="count($tokenized_fields)"/>
@@ -48,7 +48,7 @@
 				<xsl:text>"</xsl:text>
 				<xsl:text>,</xsl:text>				
 			</xsl:for-each>
-			<xsl:value-of select="concat($url, 'id/', str[@name='id'])"/>						
+			<xsl:value-of select="concat($url, 'id/', str[@name='nudsid'])"/>						
 			<xsl:text>
 </xsl:text>
 		</xsl:for-each>

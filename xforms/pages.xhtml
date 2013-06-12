@@ -4,24 +4,21 @@
     numishare: http://code.google.com/p/numishare/
     Apache License 2.0: http://code.google.com/p/numishare/    
 -->
-<xhtml:html xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ev="http://www.w3.org/2001/xml-events"
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ev="http://www.w3.org/2001/xml-events"
 	xmlns:xxforms="http://orbeon.org/oxf/xml/xforms" xmlns:widget="http://orbeon.org/oxf/xml/widget" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:fr="http://orbeon.org/oxf/xml/form-runner"
 	xmlns:exist="http://exist.sourceforge.net/NS/exist" xmlns:ead="urn:isbn:1-931666-22-9" xmlns:xxi="http://orbeon.org/oxf/xml/xinclude" xmlns:numishare="http://code.google.com/p/numishare/">
-	<xhtml:head>
-		<xhtml:title>Numishare: Manage Pages</xhtml:title>
+	<head>
+		<title>Numishare: Manage Pages</title>
 		<!-- Core + Skin CSS -->
-		<xhtml:link rel="stylesheet" type="text/css" href="/apps/numishare/css/jquery-ui-1.8.10.custom.css"/>
-		<xhtml:link rel="stylesheet" href="/apps/numishare/css/reset-fonts-grids.css"/>
-		<xhtml:link rel="stylesheet" href="/apps/numishare/css/base-min.css"/>
-		<xhtml:link rel="stylesheet" href="/apps/numishare/css/fonts-min.css"/>
+		<link rel="stylesheet" href="/fr/style/bootstrap/css/bootstrap.css" type="text/css"/>
+		<link rel="stylesheet" href="/fr/style/form-runner-bootstrap-override.css" type="text/css"/>
+		<link rel="stylesheet" href="/config/theme/examples.css" type="text/css" media="all"/>
+		<link rel="shortcut icon" href="/ops/images/orbeon-icon-16.ico"/>
+		<link rel="icon" href="/ops/images/orbeon-icon-16.png" type="image/png"/>
+		<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.8.0/build/cssgrids/grids-min.css"/>
 
 		<!-- numishare styling -->
-		<xhtml:link rel="stylesheet" href="/apps/numishare/css/xforms.css"/>
-
-		<xhtml:script type="text/javascript" src="/apps/numishare/javascript/jquery-1.6.1.min.js"/>
-		<xhtml:script type="text/javascript" src="/apps/numishare/javascript/numishare-menu.js"/>
-
-
+		<link rel="stylesheet" href="/apps/numishare/css/xforms.css"/>
 		<xforms:model>
 			<!-- exist URL is stored in an XML file -->
 			<xforms:instance id="exist-url">
@@ -105,218 +102,218 @@
 				<xforms:send submission="load-collections"/>
 			</xforms:action>
 		</xforms:model>
-	</xhtml:head>
+	</head>
 
-	<xhtml:body class="yui-skin-sam">
-		<xhtml:div id="doc4" class="yui-t2 content ui-corner-all">
-			<xxforms:variable name="display_path">../</xxforms:variable>
-			<xi:include href="header.xml"/>
-			<div id="bd">
-				<xhtml:div id="form">
-					<xforms:group ref="instance('status')/text()">
-						<xhtml:div class="success">
-							<xforms:output ref="instance('status')"/>
-						</xhtml:div>
-					</xforms:group>
-					<xhtml:h2>Page Management</xhtml:h2>
-					<xhtml:p>
-						<xhtml:a href="../edit/page/">Create New Page</xhtml:a>
-						<xhtml:br/>
-					</xhtml:p>
-					<xforms:group ref="instance('config')/pages">
-						<xforms:group ref=".[count(page) &gt; 0]">
-							<!-- pagination variables -->
-							<xxforms:variable name="numFound" select="number(count(page))"/>
-							<xxforms:variable name="page" select="number(instance('page-number'))"/>
-							<xxforms:variable name="next" select="$page + 1"/>
-							<xxforms:variable name="previous" select="if ($page &gt;= 1) then $page - 1 else 1"/>
-							<xxforms:variable name="current" select="$page"/>
-							<xxforms:variable name="total" select="ceiling($numFound div 10)"/>
-							<!-- pagination -->
-							<xhtml:div class="paging_div">
-								<xhtml:div style="float:left;"> Displaying records <xhtml:b><xforms:output value="(($page - 1) * 10) + 1"/></xhtml:b> to <xhtml:b><xforms:output
-											value="if ($numFound &gt; $page * 10) then $page * 10 else $numFound"/></xhtml:b> of <xhtml:b><xforms:output value="$numFound"/>
-									</xhtml:b> total results.</xhtml:div>
-								<xhtml:div style="float:right;">
-									<xforms:group ref=".[$page &gt; 1]">
-										<xhtml:a class="pagingBtn" href="?page={$previous}">«Previous</xhtml:a>
-									</xforms:group>
-									<xforms:group ref=".[$page = 1]">
-										<xhtml:span class="pagingSep">«Previous</xhtml:span>
-									</xforms:group>
-									<!-- always display links to the first two pages -->
-									<xforms:group ref=".[$page &gt; 3]">
-										<xhtml:a class="pagingBtn" href="?page=1">1</xhtml:a>
-									</xforms:group>
-									<xforms:group ref=".[$page &gt; 4]">
-										<xhtml:a class="pagingBtn" href="?page=2">2</xhtml:a>
-									</xforms:group>
-									<!-- display only if you are on page 6 or greater -->
-									<xforms:group ref=".[$page &gt; 5]">
-										<xhtml:span class="pagingSep">...</xhtml:span>
-									</xforms:group>
-									<!-- always display links to the previous two pages -->
-									<xforms:group ref=".[$page &gt; 2]">
-										<xhtml:a class="pagingBtn" href="?page={$page - 2}">
-											<xforms:output value="$page - 2"/>
-										</xhtml:a>
-									</xforms:group>
-									<xforms:group ref=".[$page &gt; 1]">
-										<xhtml:a class="pagingBtn" href="?page={$page - 1}">
-											<xforms:output value="$page - 1"/>
-										</xhtml:a>
-									</xforms:group>
-									<!-- current page -->
-									<xhtml:span class="pagingBtn">
-										<xhtml:b>
-											<xforms:output value="$current"/>
-										</xhtml:b>
-									</xhtml:span>
-									<!-- next two pages -->
-									<xforms:group ref=".[$page + 1 &lt;= $total]">
-										<xhtml:a class="pagingBtn" href="?page={$page + 1}">
-											<xforms:output value="$page + 1"/>
-										</xhtml:a>
-									</xforms:group>
-									<xforms:group ref=".[$page + 2 &lt;= $total]">
-										<xhtml:a class="pagingBtn" href="?page={$page + 2}">
-											<xforms:output value="$page + 2"/>
-										</xhtml:a>
-									</xforms:group>
-									<!-- separator -->
-									<xforms:group ref=".[$page &lt;= $total - 4]">
-										<xhtml:span class="pagingSep">...</xhtml:span>
-									</xforms:group>
-									<!-- last two pages -->
-									<xforms:group ref=".[$page &lt;= $total - 4]">
-										<xhtml:a class="pagingBtn" href="?page={$total - 1}">
-											<xforms:output value="$total - 1"/>
-										</xhtml:a>
-									</xforms:group>
-									<xforms:group ref=".[$page &lt;= $total - 3]">
-										<xhtml:a class="pagingBtn" href="?page={$total}">
-											<xforms:output value="$total"/>
-										</xhtml:a>
-									</xforms:group>
-									<!-- next page -->
-									<xforms:group ref=".[$total &gt; $current]">
-										<xhtml:a class="pagingBtn" href="?page={$next}">Next»</xhtml:a>
-									</xforms:group>
-									<xforms:group ref=".[not($total &gt; $current)]">
-										<xhtml:span class="pagingSep">Next»</xhtml:span>
-									</xforms:group>
-								</xhtml:div>
-							</xhtml:div>
-							<!--<xsl:call-template name="paging"/>-->
-							<xhtml:table style="width:100%;font-size:12px;">
-								<xhtml:thead>
-									<xhtml:tr>
-										<xhtml:th style="width:70%">Title</xhtml:th>
-										<xhtml:th style="width:10%">View</xhtml:th>
-										<xhtml:th style="width:10%">Publish</xhtml:th>
-										<xhtml:th style="width:10%">Delete</xhtml:th>
-									</xhtml:tr>
-								</xhtml:thead>
-								<xhtml:tbody>
-									<xforms:repeat nodeset="instance('config')//page">
-										<xxforms:variable name="position" value="position()"/>
-										<xxforms:variable name="id" select="@id"/>
-										<xxforms:variable name="class" select="if (position() mod 2 = 0) then 'even-row' else 'odd-row'"/>
-										<xhtml:tr>
-											<xhtml:td class="{$class}">
-												<xhtml:h3>
-													<xhtml:a href="../edit/page/?id={$id}&amp;mode=edit">
-														<xforms:output ref="short-title"/>
-													</xhtml:a>
-												</xhtml:h3>
-											</xhtml:td>
-											<xhtml:td class="{$class} center">
-												<xhtml:a href="{$url}id/{$id}" target="_blank">html</xhtml:a>
-											</xhtml:td>
-											<xhtml:td class="{$class} center">
-												<xforms:group ref=".[public = '1']">
+	<body>
+		<xxforms:variable name="display_path">../</xxforms:variable>
+		<div class="yui3-g">
+			<div class="yui3-u-1">
+				<div class="content">
+					<xi:include href="header.xml"/>
+					<div id="form">
+						<xforms:group ref="instance('status')/text()">
+							<div class="success">
+								<xforms:output ref="instance('status')"/>
+							</div>
+						</xforms:group>
+						<h2>Page Management</h2>
+						<p>
+							<a href="../edit/page/">Create New Page</a>
+							<br/>
+						</p>
+						<xforms:group ref="instance('config')/pages">
+							<xforms:group ref=".[count(page) &gt; 0]">
+								<!-- pagination variables -->
+								<xxforms:variable name="numFound" select="number(count(page))"/>
+								<xxforms:variable name="page" select="number(instance('page-number'))"/>
+								<xxforms:variable name="next" select="$page + 1"/>
+								<xxforms:variable name="previous" select="if ($page &gt;= 1) then $page - 1 else 1"/>
+								<xxforms:variable name="current" select="$page"/>
+								<xxforms:variable name="total" select="ceiling($numFound div 10)"/>
+								<!-- pagination -->
+								<div class="paging_div">
+									<div style="float:left;"> Displaying records <b><xforms:output value="(($page - 1) * 10) + 1"/></b> to <b><xforms:output
+												value="if ($numFound &gt; $page * 10) then $page * 10 else $numFound"/></b> of <b><xforms:output value="$numFound"/>
+										</b> total results.</div>
+									<div style="float:right;">
+										<xforms:group ref=".[$page &gt; 1]">
+											<a class="pagingBtn" href="?page={$previous}">«Previous</a>
+										</xforms:group>
+										<xforms:group ref=".[$page = 1]">
+											<span class="pagingSep">«Previous</span>
+										</xforms:group>
+										<!-- always display links to the first two pages -->
+										<xforms:group ref=".[$page &gt; 3]">
+											<a class="pagingBtn" href="?page=1">1</a>
+										</xforms:group>
+										<xforms:group ref=".[$page &gt; 4]">
+											<a class="pagingBtn" href="?page=2">2</a>
+										</xforms:group>
+										<!-- display only if you are on page 6 or greater -->
+										<xforms:group ref=".[$page &gt; 5]">
+											<span class="pagingSep">...</span>
+										</xforms:group>
+										<!-- always display links to the previous two pages -->
+										<xforms:group ref=".[$page &gt; 2]">
+											<a class="pagingBtn" href="?page={$page - 2}">
+												<xforms:output value="$page - 2"/>
+											</a>
+										</xforms:group>
+										<xforms:group ref=".[$page &gt; 1]">
+											<a class="pagingBtn" href="?page={$page - 1}">
+												<xforms:output value="$page - 1"/>
+											</a>
+										</xforms:group>
+										<!-- current page -->
+										<span class="pagingBtn">
+											<b>
+												<xforms:output value="$current"/>
+											</b>
+										</span>
+										<!-- next two pages -->
+										<xforms:group ref=".[$page + 1 &lt;= $total]">
+											<a class="pagingBtn" href="?page={$page + 1}">
+												<xforms:output value="$page + 1"/>
+											</a>
+										</xforms:group>
+										<xforms:group ref=".[$page + 2 &lt;= $total]">
+											<a class="pagingBtn" href="?page={$page + 2}">
+												<xforms:output value="$page + 2"/>
+											</a>
+										</xforms:group>
+										<!-- separator -->
+										<xforms:group ref=".[$page &lt;= $total - 4]">
+											<span class="pagingSep">...</span>
+										</xforms:group>
+										<!-- last two pages -->
+										<xforms:group ref=".[$page &lt;= $total - 4]">
+											<a class="pagingBtn" href="?page={$total - 1}">
+												<xforms:output value="$total - 1"/>
+											</a>
+										</xforms:group>
+										<xforms:group ref=".[$page &lt;= $total - 3]">
+											<a class="pagingBtn" href="?page={$total}">
+												<xforms:output value="$total"/>
+											</a>
+										</xforms:group>
+										<!-- next page -->
+										<xforms:group ref=".[$total &gt; $current]">
+											<a class="pagingBtn" href="?page={$next}">Next»</a>
+										</xforms:group>
+										<xforms:group ref=".[not($total &gt; $current)]">
+											<span class="pagingSep">Next»</span>
+										</xforms:group>
+									</div>
+								</div>
+								<!--<xsl:call-template name="paging"/>-->
+								<table style="width:100%;font-size:12px;">
+									<thead>
+										<tr>
+											<th style="width:70%">Title</th>
+											<th style="width:10%">View</th>
+											<th style="width:10%">Publish</th>
+											<th style="width:10%">Delete</th>
+										</tr>
+									</thead>
+									<tbody>
+										<xforms:repeat nodeset="instance('config')//page">
+											<xxforms:variable name="position" value="position()"/>
+											<xxforms:variable name="id" select="@id"/>
+											<xxforms:variable name="class" select="if (position() mod 2 = 0) then 'even-row' else 'odd-row'"/>
+											<tr>
+												<td class="{$class}">
+													<h3>
+														<a href="../edit/page/?id={$id}&amp;mode=edit">
+															<xforms:output ref="short-title"/>
+														</a>
+													</h3>
+												</td>
+												<td class="{$class} center">
+													<a href="{$url}id/{$id}" target="_blank">html</a>
+												</td>
+												<td class="{$class} center">
+													<xforms:group ref=".[public = '1']">
+														<xforms:trigger appearance="minimal">
+															<xforms:label>unpublish</xforms:label>
+															<xforms:dispatch target="unpublish" name="fr-show" ev:event="DOMActivate"/>
+														</xforms:trigger>
+													</xforms:group>
+													<xforms:group ref=".[public = '0']">
+														<xforms:trigger appearance="minimal">
+															<xforms:label>publish</xforms:label>
+															<xforms:dispatch target="publish" name="fr-show" ev:event="DOMActivate"/>
+														</xforms:trigger>
+													</xforms:group>
+												</td>
+												<td class="{$class} center">
 													<xforms:trigger appearance="minimal">
-														<xforms:label>unpublish</xforms:label>
-														<xforms:dispatch target="unpublish" name="fr-show" ev:event="DOMActivate"/>
+														<xforms:label>
+															<img src="/apps/eaditor/images/remove.gif"/>
+														</xforms:label>
+														<xforms:dispatch target="delete" name="fr-show" ev:event="DOMActivate"/>
 													</xforms:trigger>
-												</xforms:group>
-												<xforms:group ref=".[public = '0']">
-													<xforms:trigger appearance="minimal">
-														<xforms:label>publish</xforms:label>
-														<xforms:dispatch target="publish" name="fr-show" ev:event="DOMActivate"/>
-													</xforms:trigger>
-												</xforms:group>
-											</xhtml:td>
-											<xhtml:td class="{$class} center">
-												<xforms:trigger appearance="minimal">
-													<xforms:label>
-														<xhtml:img src="/apps/eaditor/images/remove.gif"/>
-													</xforms:label>
-													<xforms:dispatch target="delete" name="fr-show" ev:event="DOMActivate"/>
-												</xforms:trigger>
-											</xhtml:td>
-										</xhtml:tr>
-										<!-- dialogs -->
-										<fr:alert-dialog id="publish">
-											<fr:label>Publish</fr:label>
-											<fr:message>Do you want to publish this page?</fr:message>
-											<fr:negative-choice/>
-											<fr:positive-choice>
-												<xforms:action ev:event="DOMActivate">
-													<xforms:setvalue ref="public" value="1"/>
-													<xforms:send submission="save-config"/>
-												</xforms:action>
-											</fr:positive-choice>
-										</fr:alert-dialog>
-										<fr:alert-dialog id="unpublish">
-											<fr:label>Unpublish</fr:label>
-											<fr:message>Do you want to unpublish this page?</fr:message>
-											<fr:negative-choice/>
-											<fr:positive-choice>
-												<xforms:action ev:event="DOMActivate">
-													<xforms:setvalue ref="public" value="0"/>
-													<xforms:send submission="save-config"/>
-												</xforms:action>
-											</fr:positive-choice>
-										</fr:alert-dialog>
-										<fr:alert-dialog id="delete">
-											<fr:label>Delete</fr:label>
-											<fr:message>Are you sure you want to delete this page?</fr:message>
-											<fr:negative-choice/>
-											<fr:positive-choice>
-												<xforms:action ev:event="DOMActivate">
-													<xforms:delete nodeset="."/>
-													<xforms:send submission="save-config"/>
-												</xforms:action>
-											</fr:positive-choice>
-										</fr:alert-dialog>
-									</xforms:repeat>
-								</xhtml:tbody>
-							</xhtml:table>
-						</xforms:group> <xhtml:div class="section">
-							<xhtml:h2>Page Structure</xhtml:h2>
-							<xhtml:div>
-								<xforms:input ref="compare/@enabled">
-									<xforms:label>Compare Section</xforms:label>
-									<xforms:send submission="save-config" ev:event="xforms-value-changed"/>
-								</xforms:input>
-								<xhtml:p>If enabled (the default), the compare option will be available in the navigation menu. The compare page is not functional in coin-type catalogs.</xhtml:p>
-							</xhtml:div>
-							<xhtml:div>
-								<xforms:input ref="analyze/@enabled">
-									<xforms:label>Analysis Section</xforms:label>
-									<xforms:send submission="save-config" ev:event="xforms-value-changed"/>
-								</xforms:input>
-								<xhtml:p>If enabled (disabled by default), the quantitative analysis option will be available in the navigation menu. This feature is only functional in hoard
-									catalogs.</xhtml:p>
-							</xhtml:div>
-						</xhtml:div>
-					</xforms:group>
-				</xhtml:div>
+												</td>
+											</tr>
+											<!-- dialogs -->
+											<fr:alert-dialog id="publish">
+												<fr:label>Publish</fr:label>
+												<fr:message>Do you want to publish this page?</fr:message>
+												<fr:negative-choice/>
+												<fr:positive-choice>
+													<xforms:action ev:event="DOMActivate">
+														<xforms:setvalue ref="public" value="1"/>
+														<xforms:send submission="save-config"/>
+													</xforms:action>
+												</fr:positive-choice>
+											</fr:alert-dialog>
+											<fr:alert-dialog id="unpublish">
+												<fr:label>Unpublish</fr:label>
+												<fr:message>Do you want to unpublish this page?</fr:message>
+												<fr:negative-choice/>
+												<fr:positive-choice>
+													<xforms:action ev:event="DOMActivate">
+														<xforms:setvalue ref="public" value="0"/>
+														<xforms:send submission="save-config"/>
+													</xforms:action>
+												</fr:positive-choice>
+											</fr:alert-dialog>
+											<fr:alert-dialog id="delete">
+												<fr:label>Delete</fr:label>
+												<fr:message>Are you sure you want to delete this page?</fr:message>
+												<fr:negative-choice/>
+												<fr:positive-choice>
+													<xforms:action ev:event="DOMActivate">
+														<xforms:delete nodeset="."/>
+														<xforms:send submission="save-config"/>
+													</xforms:action>
+												</fr:positive-choice>
+											</fr:alert-dialog>
+										</xforms:repeat>
+									</tbody>
+								</table>
+							</xforms:group>
+							<div class="section">
+								<h2>Page Structure</h2>
+								<div>
+									<xforms:input ref="compare/@enabled">
+										<xforms:label>Compare Section</xforms:label>
+										<xforms:send submission="save-config" ev:event="xforms-value-changed"/>
+									</xforms:input>
+									<p>If enabled (the default), the compare option will be available in the navigation menu. The compare page is not functional in coin-type catalogs.</p>
+								</div>
+								<div>
+									<xforms:input ref="analyze/@enabled">
+										<xforms:label>Analysis Section</xforms:label>
+										<xforms:send submission="save-config" ev:event="xforms-value-changed"/>
+									</xforms:input>
+									<p>If enabled (disabled by default), the quantitative analysis option will be available in the navigation menu. This feature is only functional in hoard
+										catalogs.</p>
+								</div>
+							</div>
+						</xforms:group>
+					</div>
+				</div>
 			</div>
-
-			<!--<widget:xforms-instance-inspector id="orbeon-xforms-inspector" xmlns:widget="http://orbeon.org/oxf/xml/widget"/>-->
-
-		</xhtml:div>
-	</xhtml:body>
-</xhtml:html>
+		</div>
+	</body>
+</html>

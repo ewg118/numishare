@@ -1,4 +1,4 @@
-<config xmlns="http://www.orbeon.com/oxf/controller">
+<config xmlns="http://www.orbeon.com/oxf/controller">	
 	<page path-info="/numishare/" view="admin.xhtml" id="admin"/>
 	<page path-info="/numishare/edit/coin/" view="nuds.xhtml"/>
 	<page path-info="/numishare/edit/object/" view="vra.xhtml"/>	
@@ -12,7 +12,8 @@
 	<page path-info="/numishare/theme/jquery-ui/" view="jquery-ui.xhtml"/>
 	<page path-info="/numishare/theme/layout/" view="layout.xhtml"/>
 	<page path-info="/numishare/ingest/" view="query-ans.xhtml"/>
-	<!--<page path-info="/numishare/logout">
+	<!--<page path-info="/numishare/login" view="login.xhtml"/>
+	<page path-info="/numishare/logout">
 		<action action="xpl/logout.xpl">
 			<result page="admin"/>
 		</action>

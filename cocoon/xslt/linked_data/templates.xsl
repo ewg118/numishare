@@ -19,7 +19,7 @@
 						</xsl:when>
 					</xsl:choose>
 				</xsl:when>
-				<xsl:when test="$mode='ctype'">
+				<xsl:when test="$mode='nomisma'">
 					<xsl:choose>
 						<xsl:when test="count(/content/*[local-name()='nuds']) &gt; 0">
 							<xsl:apply-templates select="/content/nuds:nuds" mode="nomisma"/>
@@ -60,7 +60,7 @@
 			<dcterms:title>
 				<xsl:value-of select="descendant::*[local-name()='descMeta']/*[local-name()='title']"/>
 			</dcterms:title>
-			<xsl:for-each select="distinct-values(exsl:node-set($rdf)//skos:related[contains(@rdf:resource, 'pleiades')]/@rdf:resource)">
+			<xsl:for-each select="distinct-values($rdf//skos:related[contains(@rdf:resource, 'pleiades')]/@rdf:resource)">
 				<oac:hasBody rdf:resource="{.}#this"/>
 			</xsl:for-each>
 			<oac:hasTarget rdf:resource="{$url}id/{$id}"/>
@@ -80,7 +80,6 @@
 		<xsl:choose>
 			<xsl:when test="@recordType='conceptual'">
 				<nm:type_series_item rdf:about="{$url}id/{$id}">
-
 					<!-- insert titles -->
 					<xsl:for-each select="descendant::nuds:descMeta/nuds:title">
 						<skos:prefLabel>
@@ -96,7 +95,7 @@
 							<xsl:value-of select="."/>
 						</skos:definition>
 					</xsl:for-each>
-
+					
 					<!-- process typeDesc -->
 					<xsl:apply-templates select="nuds:descMeta/nuds:typeDesc" mode="nomisma"/>
 				</nm:type_series_item>
@@ -115,13 +114,12 @@
 						<dcterms:publisher>
 							<xsl:value-of select="nuds:nudsHeader/nuds:publicationStmt/nuds:publisher"/>
 						</dcterms:publisher>
-					</xsl:if>
+					</xsl:if>					
 					<xsl:for-each select="descendant::nuds:repository">
 						<nm:collection>
 							<xsl:value-of select="."/>
 						</nm:collection>
-					</xsl:for-each>
-					<nm:numismatic_term rdf:resource="http://nomisma.org/id/coin"/>
+					</xsl:for-each>					
 					<xsl:if test="string(nuds:descMeta/nuds:typeDesc/@xlink:href)">
 						<nm:type_series_item rdf:resource="{nuds:descMeta/nuds:typeDesc/@xlink:href}"/>
 					</xsl:if>
@@ -275,7 +273,7 @@
 			</dcterms:publisher>
 			<xsl:for-each select="descendant::nh:geogname[@xlink:role='findspot'][string(@xlink:href)]">
 				<nm:findspot rdf:resource="{@xlink:href}"/>
-			</xsl:for-each>
+			</xsl:for-each>			
 			<!-- closing date -->
 			<xsl:choose>
 				<xsl:when test="not(descendant::nh:deposit/nh:date) and not(descendant::nh:deposit/nh:dateRange)">
@@ -292,7 +290,7 @@
 							</xsl:variable>
 
 							<xsl:if test="string-length($id-param) &gt; 0">
-								<xsl:for-each select="document(concat('http://nomisma.org/get-nuds?id=', $id-param))//nuds:nuds">
+								<xsl:for-each select="document(concat('http://admin.numismatics.org/nomisma/apis/getNuds?identifiers=', $id-param))//nuds:nuds">
 									<object xlink:href="http://nomisma.org/id/{nuds:nudsHeader/nuds:nudsid}">
 										<xsl:copy-of select="."/>
 									</object>
@@ -487,26 +485,26 @@
 						<xsl:value-of select="str[@name='title_display']"/>
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:value-of select="str[@name='id']"/>
+						<xsl:value-of select="str[@name='nudsid']"/>
 					</xsl:otherwise>
 				</xsl:choose>
 			</title>
-			<link href="{$url}id/{str[@name='id']}"/>
+			<link href="{$url}id/{str[@name='nudsid']}"/>
 			<id>
-				<xsl:value-of select="str[@name='id']"/>
+				<xsl:value-of select="str[@name='nudsid']"/>
 			</id>
 			<updated>
 				<xsl:value-of select="date[@name='timestamp']"/>
 			</updated>
 
-			<link rel="alternate xml" type="text/xml" href="{$url}id/{str[@name='id']}.xml"/>
-			<link rel="alternate rdf" type="application/rdf+xml" href="{$url}id/{str[@name='id']}.rdf"/>
+			<link rel="alternate xml" type="text/xml" href="{$url}id/{str[@name='nudsid']}.xml"/>
+			<link rel="alternate rdf" type="application/rdf+xml" href="{$url}id/{str[@name='nudsid']}.rdf"/>
 
 			<!-- treat hoard and non-hoard documents differently -->
 			<xsl:choose>
 				<xsl:when test="str[@name='recordType'] = 'hoard'">
 					<xsl:if test="str[@name='findspot_geo']">
-						<link rel="alternate kml" type="application/vnd.google-earth.kml+xml" href="{$url}id/{str[@name='id']}.kml"/>
+						<link rel="alternate kml" type="application/vnd.google-earth.kml+xml" href="{$url}id/{str[@name='nudsid']}.kml"/>
 					</xsl:if>
 
 					<xsl:call-template name="geotemp">
@@ -515,7 +513,7 @@
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:if test="str[@name='mint_geo']">
-						<link rel="alternate kml" type="application/vnd.google-earth.kml+xml" href="{$url}id/{str[@name='id']}.kml"/>
+						<link rel="alternate kml" type="application/vnd.google-earth.kml+xml" href="{$url}id/{str[@name='nudsid']}.kml"/>
 					</xsl:if>
 					<xsl:call-template name="geotemp">
 						<xsl:with-param name="recordType" select="str[@name='recordType']"/>
@@ -533,12 +531,12 @@
 						<xsl:value-of select="str[@name='title_display']"/>
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:value-of select="str[@name='id']"/>
+						<xsl:value-of select="str[@name='nudsid']"/>
 					</xsl:otherwise>
 				</xsl:choose>
 			</title>
 			<link>
-				<xsl:value-of select="concat($url, 'id/', str[@name='id'])"/>
+				<xsl:value-of select="concat($url, 'id/', str[@name='nudsid'])"/>
 			</link>
 			<pubDate>
 				<xsl:value-of select="date[@name='timestamp']"/>
@@ -626,13 +624,13 @@
 
 	<!-- PELAGIOS RDF -->
 	<xsl:template match="doc" mode="pelagios">
-		<xsl:variable name="id" select="str[@name='id']"/>
+		<xsl:variable name="id" select="str[@name='nudsid']"/>
 
 		<oac:Annotation rdf:about="{$url}pelagios.rdf#{$id}">
 			<dcterms:title>
 				<xsl:value-of select="str[@name='title_display']"/>
 			</dcterms:title>
-			<xsl:for-each select="arr[@name='pleiades_uri']/str">
+			<xsl:for-each select="distinct-values(arr[@name='pleiades_uri']/str)">
 				<oac:hasBody rdf:resource="{.}#this"/>
 			</xsl:for-each>
 			<oac:hasTarget rdf:resource="{$url}id/{$id}"/>
@@ -640,13 +638,12 @@
 	</xsl:template>
 
 	<!-- CTYPE/NOMISMA RDF -->
-	<xsl:template match="doc" mode="ctype">
-		<xsl:variable name="id" select="str[@name='id']"/>
+	<xsl:template match="doc" mode="nomisma">
+		<xsl:variable name="id" select="str[@name='nudsid']"/>
 		<xsl:variable name="recordType" select="str[@name='recordType']"/>
 
-		<xsl:element name="nm:{if($recordType='hoard') then 'hoard' else 'coin'}">
+		<xsl:element name="nm:{if ($recordType='hoard') then 'hoard' else 'coin'}">
 			<xsl:attribute name="rdf:about" select="concat($url, 'id/', $id)"/>
-
 			<dcterms:title xml:lang="{if (str[@name='lang']) then str[@name='lang'] else 'en'}">
 				<xsl:value-of select="str[@name='title_display']"/>
 			</dcterms:title>
@@ -655,7 +652,7 @@
 			</dcterms:identifier>
 			<dcterms:publisher>
 				<xsl:value-of select="str[@name='publisher_display']"/>
-			</dcterms:publisher>
+			</dcterms:publisher>			
 			<xsl:for-each select="arr[@name='repository_facet']/str">
 				<nm:collection>
 					<xsl:value-of select="."/>

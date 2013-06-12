@@ -5,17 +5,52 @@ Library: jQuery
 Description: Functions used for search and compare.
 ************************************/
 // assign the gate/boolean button click handler
+var langStr = getURLParameter('lang');
+if (langStr == 'null'){
+	var lang = '';
+} else {
+	var lang = langStr;
+}
+
+function getURLParameter(name) {
+	return decodeURI(
+	    (RegExp(name + '=' + '(.+?)(&|$)').exec(location.search)||[,null])[1]
+	);
+}
+
+/***** TOGGLING FACET FORM*****/
 $('.gateTypeBtn') .livequery('click', function(event){
 	gateTypeBtnClick($(this));
+	
+	//disable date select option if there is already a date select option
+	if ($(this).closest('form').attr('id') == 'sparqlForm'){
+		var count = countDate();
+		if (count == 1) {
+			$('#sparqlForm .searchItemTemplate').each(function(){
+				//disable all new searchItemTemplates which are not already set to date
+				if ($(this).children('.sparql_facets').val() != 'date'){
+					$(this).find('option[value=date]').attr('disabled', true);
+				}
+				
+			});
+		}
+	}
+	
 	return false;
 });
 
-// focus the text field after selecting the field to search on
-$('.searchItemTemplate select').livequery('change', function(event){
-	$(this) .siblings('.search_text') .focus();
-});
-
 $('.removeBtn').livequery('click', function(event){
+	//enable date option in sparql form if the date is being removed
+	if ($(this).closest('form').attr('id') == 'sparqlForm'){
+		$('#sparqlForm .searchItemTemplate').each(function(){
+			$(this).find('option[value=date]').attr('disabled', false);
+			//enable submit
+			$('#sparqlForm input[type=submit]').attr('disabled', false);
+			//hide error				
+			$('#sparqlForm-alert').hide();
+		});
+	}
+
 	// fade out the entire template
 	$(this) .parent() .fadeOut('fast', function () {
 		$(this) .remove();
@@ -36,9 +71,9 @@ $('.category_list') .livequery('change', function(event){
 	//YEAR
 	else if (field == 'year_num' || field == 'taq_num' || field == 'tpq_num') {
 		$(this) .parent() .children('.option_container') .html('From: <input type="text" class="from_date"/>' +
-		'<select class="from_era"><option value="minus" selected="selected">B.C.</option><option value="">A.D.</option></select>' +
+		'<select class="from_era"><option value="minus">B.C.</option><option value="" selected="selected">A.D.</option></select>' +
 		'To: <input type="text" class="to_date"/>' +
-		'<select class="to_era"><option value="minus" selected="selected">B.C.</option><option value="">A.D.</option></select>');
+		'<select class="to_era"><option value="minus">B.C.</option><option value="" selected="selected">A.D.</option></select>');
 	}
 	//WEIGHT
 	else if (field == 'weight_num') {
@@ -59,7 +94,7 @@ $('.category_list') .livequery('change', function(event){
 		container.html('<img style="margin-left:100px;margin-right:100px;" src="images/ajax-loader.gif"/>');		
 		var q = query + ' AND ' + field + ':[* TO *]';
 		$.get('get_search_facets', {
-			q : q, category:field
+			q : q, category:field, lang: lang
 		}, function (data) {		
 			container.html(data);
 		});				
@@ -68,8 +103,10 @@ $('.category_list') .livequery('change', function(event){
 
 // copy the base template
 function gateTypeBtnClick(btn) {
+	var formId = btn.closest('form').attr('id');
+	
 	//clone the template
-	var tpl = cloneTemplate();
+	var tpl = cloneTemplate(formId);
 	
 	// focus the text field after select
 	$(tpl) .children('select') .change(function () {
@@ -86,8 +123,12 @@ function gateTypeBtnClick(btn) {
 	tpl.fadeIn('fast');
 }
 
-function cloneTemplate (){
-	var tpl = $('#searchItemTemplate') .clone();
+function cloneTemplate (formId){	
+	if (formId == 'sparqlForm') {
+		var tpl = $('#sparqlItemTemplate') .clone();
+	} else {
+		var tpl = $('#searchItemTemplate') .clone();
+	}
 	
 	//remove id to avoid duplication with the template
 	tpl.removeAttr('id');

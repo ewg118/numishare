@@ -1,4 +1,11 @@
 function initialize_map(q, collection_type) {
+	var langStr = getURLParameter('lang');
+	if (langStr == 'null'){
+		var lang = '';
+	} else {
+		var lang = langStr;
+	}
+
 	map = new OpenLayers.Map('resultMap', {
 		controls:[
 		new OpenLayers.Control.PanZoomBar(),
@@ -38,9 +45,15 @@ function initialize_map(q, collection_type) {
 			}
 		}
 	});
-	map.addLayer(new OpenLayers.Layer.Google("Google Physical", {
-		type: google.maps.MapTypeId.TERRAIN
-	}));
+	var imperium = new OpenLayers.Layer.XYZ(
+	"Imperium Romanum",[
+	"http://pelagios.dme.ait.ac.at/tilesets/imperium/${z}/${x}/${y}.png"], {
+		sphericalMercator: true,
+		isBaseLayer: true,
+		numZoomLevels: 12
+	});
+	
+	map.addLayer(imperium);
 	var mintLayer = new OpenLayers.Layer.Vector("KML", {
 		styleMap: mintStyle,
 		
@@ -51,7 +64,7 @@ function initialize_map(q, collection_type) {
 		new OpenLayers.Strategy.Fixed(),
 		new OpenLayers.Strategy.Cluster()],
 		protocol: new OpenLayers.Protocol.HTTP({
-			url: "mints.kml?q=" + q,
+			url: "mints.kml?q=" + q + (lang.length > 0 ? '&lang=' + lang : ''),
 			format: new OpenLayers.Format.KML({
 				extractStyles: false,
 				extractAttributes: true
@@ -70,17 +83,14 @@ function initialize_map(q, collection_type) {
 		new OpenLayers.Strategy.Fixed(),
 		new OpenLayers.Strategy.Cluster()],
 		protocol: new OpenLayers.Protocol.HTTP({
-			url: "findspots.kml?q=" + q,
+			url: "findspots.kml?q=" + q + (lang.length > 0 ? '&lang=' + lang : ''),
 			format: new OpenLayers.Format.KML({
 				extractStyles: false,
 				extractAttributes: true
 			})
 		})
 	});
-	
-	if (collection_type == 'hoard') {
-		map.addLayer(hoardLayer);
-	}
+	map.addLayer(hoardLayer);
 	
 	function kmlLoaded() {
 		if (collection_type == 'hoard') {
@@ -90,31 +100,29 @@ function initialize_map(q, collection_type) {
 		}
 		
 		if (q == '*:*') {
-			map.zoomTo('2');
+			map.zoomTo('3');
 		} else {
 			map.zoomTo('5');
 		}
 	}
 	
-	selectControl = new OpenLayers.Control.SelectFeature([mintLayer, hoardLayer], {
+	//enable events for mint selection
+	SelectControl = new OpenLayers.Control.SelectFeature([mintLayer, hoardLayer], {
 		clickout: true,
-		//toggle: true,
 		multiple: false,
-		hover: false,
-		//toggleKey: "ctrlKey",
-		//multipleKey: "shiftKey"
+		hover: false
 	});
 	
-	map.addControl(selectControl);
-	selectControl.activate();
+	map.addControl(SelectControl);
+	
+	SelectControl.activate();
+	
 	mintLayer.events.on({
 		"featureselected": onFeatureSelect, "featureunselected": onFeatureUnselect
 	});
-	if (collection_type == 'hoard') {
-		hoardLayer.events.on({
-			"featureselected": onFeatureSelect, "featureunselected": onFeatureUnselect
-		});
-	}
+	hoardLayer.events.on({
+		"featureselected": onFeatureSelect, "featureunselected": onFeatureUnselect
+	});
 	
 	function onPopupClose(evt) {
 		map.removePopup(map.popups[0]);
@@ -151,5 +159,11 @@ function initialize_map(q, collection_type) {
 	
 	function onFeatureUnselect(event) {
 		map.removePopup(map.popups[0]);
+	}
+	
+	function getURLParameter(name) {
+	    return decodeURI(
+	        (RegExp(name + '=' + '(.+?)(&|$)').exec(location.search)||[,null])[1]
+	    );
 	}
 }

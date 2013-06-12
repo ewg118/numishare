@@ -4,10 +4,10 @@
 	or geonames (refers to geonames.org APIs)
 -->
 
-<xbl:xbl xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xxforms="http://orbeon.org/oxf/xml/xforms"
+<xbl:xbl xmlns="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xxforms="http://orbeon.org/oxf/xml/xforms"
 	xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:xbl="http://www.w3.org/ns/xbl" xmlns:xxbl="http://orbeon.org/oxf/xml/xbl" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-	xmlns:oxf="http://www.orbeon.com/oxf/processors" xmlns="urn:isbn:1-931666-22-9" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:georss="http://www.georss.org/georss"
-	xmlns:gml="http://www.opengis.net/gml" xmlns:atom="http://www.w3.org/2005/Atom">
+	xmlns:oxf="http://www.orbeon.com/oxf/processors" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml"
+	xmlns:atom="http://www.w3.org/2005/Atom" xmlns:numishare="http://code.google.com/p/numishare/" xmlns:nuds="http://nomisma.org/nuds">
 	<xbl:binding id="numishare-region" element="numishare|region">
 		<xbl:template>
 			<xforms:group xbl:attr="model context ref bind" xxbl:scope="outer">
@@ -33,7 +33,7 @@
 
 					<!-- display only outputted value and link to nomisma id, if applicable -->
 					<xforms:group ref=".[string($binding)]">
-						<xhtml:div>
+						<div>
 							<xforms:output ref="$binding">
 								<xforms:label>Region</xforms:label>
 							</xforms:output>
@@ -56,7 +56,7 @@
 									<xforms:delete nodeset="$binding"/>
 								</xforms:action>
 								<xforms:label>
-									<xhtml:img src="../../images/remove.gif"/>
+									<img src="../../images/remove.gif"/>
 								</xforms:label>
 							</xforms:trigger>
 							<xforms:group ref="$binding[not($binding/@certainty)]">
@@ -66,7 +66,7 @@
 										<img src="../../images/add.gif"/>Certainty </xforms:label>
 								</xforms:trigger>
 							</xforms:group>
-						</xhtml:div>
+						</div>
 					</xforms:group>
 
 					<!-- if $binding does not contain a value, display the interface for selecting a value -->
@@ -274,24 +274,24 @@
 						<xforms:instance id="exist-url">
 							<xi:include href="../../../apps/numishare/exist-url.xml"/>
 						</xforms:instance>
-						
+
 						<xforms:instance id="control-instance">
 							<control xmlns="">
 								<collection-name/>
 							</control>
 						</xforms:instance>
-						
+
 						<!-- collections/authentication instances -->
 						<xforms:instance id="collections-list">
 							<collections xmlns="">
 								<collection roll="admin" name="numishare"/>
 							</collections>
 						</xforms:instance>
-						
+
 						<xforms:instance id="dump">
 							<dump/>
 						</xforms:instance>
-						
+
 						<!-- site info -->
 						<xforms:instance id="config">
 							<config xmlns=""/>
@@ -474,7 +474,8 @@
 
 						<!-- get XML representation of single geoname, initiated on xforms-enabled -->
 						<xforms:submission id="get-geonameId" serialization="none" method="get"
-							action="http://api.geonames.org/get?geonameId={instance('geonameId')}&amp;username={instance('config')/geonames_api_key}&amp;style=full" instance="geoname-query-response" replace="instance">
+							action="http://api.geonames.org/get?geonameId={instance('geonameId')}&amp;username={instance('config')/geonames_api_key}&amp;style=full" instance="geoname-query-response"
+							replace="instance">
 							<xforms:action ev:event="xforms-submit-done">
 								<xforms:insert context="instance('geoname-temp')" origin="instance('geoname-query-response')"/>
 								<xforms:action xxforms:iterate="instance('geoname-temp')//geoname">
@@ -492,7 +493,7 @@
 								</xforms:action>
 							</xforms:action>
 						</xforms:submission>
-						
+
 						<xforms:submission id="load-collections" serialization="none" method="get" action="{instance('exist-url')}collections-list.xml" replace="instance" instance="collections-list"
 							xxforms:username="admin" xxforms:password="">
 							<!-- if the config loads successfully, set the collection names based on authentication -->
@@ -507,14 +508,15 @@
 										<xforms:setvalue ref="instance('control-instance')/collection-name"
 											value="instance('collections-list')/collection[@role=instance('control-instance')/request-security/role]/@name"/>
 									</xforms:action>
-								</xforms:action>				
+								</xforms:action>
 								<xforms:send submission="load-config"/>
 							</xforms:action>
 							<!-- if the config has not been created (given that the URL in exist-url.xml is correct), create it -->
 							<xforms:message ev:event="xforms-submit-error" level="modal">Unable to load Numishare collections list.</xforms:message>
 						</xforms:submission>
 
-						<xforms:submission id="load-config" serialization="none" method="get" action="{instance('exist-url')}{instance('control-instance')/collection-name}/config.xml" replace="instance" instance="config"/>
+						<xforms:submission id="load-config" serialization="none" method="get" action="{instance('exist-url')}{instance('control-instance')/collection-name}/config.xml"
+							replace="instance" instance="config"/>
 
 						<!-- query nomisma for ancient regions -->
 						<xforms:submission id="query-nomisma" serialization="none" method="get" action="http://nomisma.org/feed/?q=typeof:head_1911_region+{instance('search-query')}" instance="feed"

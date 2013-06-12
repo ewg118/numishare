@@ -58,7 +58,7 @@
 			</xsl:variable>
 
 			<xsl:if test="string-length($id-param) &gt; 0">
-				<xsl:for-each select="document(concat('http://nomisma.org/get-nuds?id=', $id-param))//nuds:nuds">
+				<xsl:for-each select="document(concat('http://admin.numismatics.org/nomisma/apis/getNuds?identifiers=', $id-param))//nuds:nuds">
 					<object xlink:href="http://nomisma.org/id/{nuds:nudsHeader/nuds:nudsid}">
 						<xsl:copy-of select="."/>
 					</object>
@@ -86,8 +86,9 @@
 	</xsl:variable>
 
 	<!-- get non-coin-type RDF in the document -->
-	<xsl:variable name="rdf">
-		<rdf:RDF>
+	<xsl:variable name="rdf" as="element()*">
+		<rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:nm="http://nomisma.org/id/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+			xmlns:rdfa="http://www.w3.org/ns/rdfa#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:gml="http://www.opengis.net/gml/">
 			<xsl:variable name="id-param">
 				<xsl:for-each
 					select="distinct-values(descendant::*[not(local-name()='typeDesc') and not(local-name()='reference')][contains(@xlink:href, 'nomisma.org')]/@xlink:href|exsl:node-set($nudsGroup)/descendant::*[not(local-name()='object') and not(local-name()='typeDesc')][contains(@xlink:href, 'nomisma.org')]/@xlink:href)">
@@ -98,21 +99,21 @@
 				</xsl:for-each>
 			</xsl:variable>
 
-			<xsl:variable name="rdf_url" select="concat('http://www.w3.org/2012/pyRdfa/extract?format=xml&amp;uri=', encode-for-uri(concat('http://nomisma.org/get-ids?id=', $id-param)))"/>
-			<xsl:copy-of select="document($rdf_url)/descendant::*[string(@rdf:about) and not(local-name()='Description')]"/>
+			<xsl:variable name="rdf_url" select="concat('http://admin.numismatics.org/nomisma/apis/getRdf?identifiers=', $id-param)"/>
+			<xsl:copy-of select="document($rdf_url)/rdf:RDF/*"/>
 		</rdf:RDF>
 	</xsl:variable>
 
 
 	<xsl:variable name="has_mint_geo">
 		<xsl:choose>
-			<xsl:when test="count(exsl:node-set($rdf)/descendant::nm:mint) &gt; 0">true</xsl:when>
+			<xsl:when test="count($rdf/descendant::nm:mint) &gt; 0">true</xsl:when>
 			<xsl:otherwise>false</xsl:otherwise>
 		</xsl:choose>
 	</xsl:variable>
 	<xsl:variable name="has_findspot_geo">
 		<xsl:choose>
-			<xsl:when test="count(exsl:node-set($rdf)/descendant::nm:findspot) &gt; 0 or count(descendant::*[local-name()='geogname'][@xlink:role='findspot' and string(@xlink:href)]) &gt; 0"
+			<xsl:when test="count($rdf/descendant::nm:findspot) &gt; 0 or count(descendant::*[local-name()='geogname'][@xlink:role='findspot' and string(@xlink:href)]) &gt; 0"
 				>true</xsl:when>
 			<xsl:when test="/content/response-findspot = 'true'">true</xsl:when>
 			<xsl:otherwise>false</xsl:otherwise>
@@ -177,20 +178,30 @@
 							</xsl:when>
 							<!-- coin-type CSS and JS dependencies -->
 							<xsl:when test="$recordType='conceptual'">
-								<!-- CSS and JS dependencies -->
 								<link type="text/css" href="{$display_path}jquery.fancybox-1.3.4.css" rel="stylesheet"/>
 								<script type="text/javascript" src="{$display_path}javascript/jquery.fancybox-1.3.4.min.js"/>
 								<script type="text/javascript" src="{$display_path}javascript/highcharts.js"/>
 								<script type="text/javascript" src="{$display_path}javascript/modules/exporting.js"/>
-								<script type="text/javascript" src="{$display_path}javascript/display_map_functions.js"/>
-								<script type="text/javascript" src="{$display_path}javascript/display_functions.js"/>								
+								<script type="text/javascript" src="{$display_path}javascript/display_functions.js"/>
 
+								<script type="text/javascript" langage="javascript">
+			                                                        $(function () {
+			                                                                $("#tabs").tabs({
+			                                                                        show: function (event, ui) {
+			                                                                                if (ui.panel.id == "mapTab" &amp;&amp; $('#mapcontainer').html().length == 0) {
+			                                                                                        $('#mapcontainer').html('');
+			                                                                                        initialize_map('<xsl:value-of select="$id"/>', '<xsl:value-of select="$display_path"/>');
+			                                                                                }
+			                                                                        }
+			                                                                });
+			                                                        });
+							</script>
 								<!-- mapping -->
-								<script type="text/javascript" src="http://www.openlayers.org/api/OpenLayers.js"/>								
-								<script type="text/javascript" src="{$display_path}javascript/mxn.js"/>
-								<script type="text/javascript" src="http://static.simile.mit.edu/timeline/api-2.2.0/timeline-api.js?bundle=true"/>
-								<script type="text/javascript" src="{$display_path}javascript/timemap_full.pack.js"/>
-								<script type="text/javascript" src="{$display_path}javascript/param.js"/>
+								<xsl:if test="$has_mint_geo = 'true' or $has_findspot_geo = 'true'">
+									<script type="text/javascript" src="http://www.openlayers.org/api/OpenLayers.js"/>
+									<script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3.2&amp;sensor=false"/>
+									<script type="text/javascript" src="{$display_path}javascript/display_map_functions.js"/>
+								</xsl:if>
 							</xsl:when>
 							<!-- hoard CSS and JS dependencies -->
 							<xsl:when test="$recordType='hoard'">
@@ -204,9 +215,12 @@
 								<script type="text/javascript" src="http://www.openlayers.org/api/OpenLayers.js"/>
 								<script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3.2&amp;sensor=false"/>
 								<script type="text/javascript" src="{$display_path}javascript/mxn.js"/>
-								<script type="text/javascript" src="http://static.simile.mit.edu/timeline/api-2.2.0/timeline-api.js?bundle=true"/>
+								<script type="text/javascript" src="{$display_path}javascript/timeline-2.3.0.js"/>
+								<link type="text/css" href="{$display_path}timeline-2.3.0.css" rel="stylesheet"/>
 								<script type="text/javascript" src="{$display_path}javascript/timemap_full.pack.js"/>
 								<script type="text/javascript" src="{$display_path}javascript/param.js"/>
+								<script type="text/javascript" src="{$display_path}javascript/loaders/xml.js"/>
+								<script type="text/javascript" src="{$display_path}javascript/loaders/kml.js"/>
 							</xsl:when>
 						</xsl:choose>
 

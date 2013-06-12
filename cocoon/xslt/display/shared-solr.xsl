@@ -8,10 +8,11 @@
 <xsl:stylesheet xmlns:nuds="http://nomisma.org/nuds" xmlns:nh="http://nomisma.org/nudsHoard" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:datetime="http://exslt.org/dates-and-times"
 	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:exsl="http://exslt.org/common" xmlns:mets="http://www.loc.gov/METS/"
 	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mods="http://www.loc.gov/mods/v3" xmlns:gml="http://www.opengis.net/gml/" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-	exclude-result-prefixes="#all" version="2.0">
+	xmlns:numishare="http://code.google.com/p/numishare/" exclude-result-prefixes="#all" version="2.0">
 
 	<xsl:template match="nuds:typeDesc">
 		<xsl:param name="recordType"/>
+		<xsl:param name="lang"/>
 
 		<xsl:apply-templates select="nuds:date|nuds:dateRange">
 			<xsl:with-param name="recordType" select="$recordType"/>
@@ -19,16 +20,31 @@
 
 		<xsl:for-each select="nuds:obverse | nuds:reverse">
 			<xsl:variable name="side" select="substring(local-name(), 1, 3)"/>
-			<xsl:for-each select="nuds:type/nuds:description">
-				<xsl:if test="$recordType != 'hoard' and position() = 1">
-					<field name="{$side}_type_display">
-						<xsl:value-of select="normalize-space(.)"/>
+
+			<!-- get correct type description based on lang, default to english -->
+			<xsl:choose>
+				<xsl:when test="nuds:type/nuds:description[@xml:lang=$lang]">
+					<xsl:if test="$recordType != 'hoard'">
+						<field name="{$side}_type_display">
+							<xsl:value-of select="normalize-space(nuds:type/nuds:description[@xml:lang=$lang])"/>
+						</field>
+					</xsl:if>
+					<field name="{$side}_type_text">
+						<xsl:value-of select="normalize-space(nuds:type/nuds:description[@xml:lang=$lang])"/>
 					</field>
-				</xsl:if>
-				<field name="{$side}_type_text">
-					<xsl:value-of select="normalize-space(.)"/>
-				</field>
-			</xsl:for-each>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:if test="$recordType != 'hoard'">
+						<field name="{$side}_type_display">
+							<xsl:value-of select="normalize-space(nuds:type/nuds:description[@xml:lang='en'])"/>
+						</field>
+					</xsl:if>
+					<field name="{$side}_type_text">
+						<xsl:value-of select="normalize-space(nuds:type/nuds:description[@xml:lang='en'])"/>
+					</field>
+				</xsl:otherwise>
+			</xsl:choose>
+
 			<xsl:if test="nuds:legend">
 				<xsl:if test="$recordType != 'hoard'">
 					<field name="{$side}_leg_display">
@@ -43,30 +59,79 @@
 
 		<!-- *********** FACETS ************** -->
 
-		<xsl:apply-templates select="nuds:objectType | nuds:denomination | nuds:manufacture | nuds:material"/>
-		<xsl:apply-templates select="descendant::nuds:persname | descendant::nuds:corpname | descendant::nuds:geogname|descendant::nuds:famname"/>
+		<xsl:apply-templates select="nuds:objectType | nuds:denomination | nuds:manufacture | nuds:material">
+			<xsl:with-param name="lang" select="$lang"/>
+		</xsl:apply-templates>
+		<xsl:apply-templates select="descendant::nuds:persname | descendant::nuds:corpname | descendant::nuds:geogname|descendant::nuds:famname">
+			<xsl:with-param name="lang" select="$lang"/>
+		</xsl:apply-templates>
 
 	</xsl:template>
 
 	<xsl:template match="nuds:objectType|nuds:denomination|nuds:manufacture|nuds:material|nuds:famname">
+		<xsl:param name="lang"/>
 		<xsl:variable name="facet" select="if (local-name()='famname') then 'dynasty' else local-name()"/>
+		<xsl:variable name="href" select="@xlink:href"/>
 
 		<field name="{$facet}_facet">
-			<xsl:value-of select="."/>
+			<xsl:choose>
+				<xsl:when test="string($lang) and contains($href, 'nomisma.org')">
+					<xsl:value-of select="numishare:getNomismaLabel(exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href], $lang)"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="normalize-space(.)"/>
+				</xsl:otherwise>
+			</xsl:choose>
 		</field>
-		<xsl:if test="string(@xlink:href)">
+		<xsl:if test="string($href)">
 			<field name="{$facet}_uri">
-				<xsl:value-of select="@xlink:href"/>
+				<xsl:value-of select="$href"/>
 			</field>
 		</xsl:if>
 	</xsl:template>
 
 	<xsl:template match="nuds:persname|nuds:corpname |*[local-name()='geogname']">
+		<xsl:param name="lang"/>
+		<xsl:variable name="href" select="@xlink:href"/>
 		<field name="{@xlink:role}_facet">
-			<xsl:value-of select="normalize-space(.)"/>
+			<xsl:choose>
+				<xsl:when test="string($lang) and contains($href, 'nomisma.org')">
+					<xsl:value-of select="numishare:getNomismaLabel(exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href], $lang)"/>
+				</xsl:when>
+				<xsl:when test="contains(@xlink:href, 'geonames')">
+					<xsl:choose>
+						<xsl:when test="string($lang)">
+							<xsl:value-of select="$geonames//place[@id=$href]/attribute::*[name()=$lang]"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="normalize-space(.)"/>
+						</xsl:otherwise>
+					</xsl:choose>	
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="normalize-space(.)"/>
+				</xsl:otherwise>
+			</xsl:choose>
 		</field>
 		<field name="{@xlink:role}_text">
-			<xsl:value-of select="normalize-space(.)"/>
+			<xsl:choose>
+				<xsl:when test="string($lang) and contains($href, 'nomisma.org')">
+					<xsl:value-of select="numishare:getNomismaLabel(exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href], $lang)"/>
+				</xsl:when>
+				<xsl:when test="contains(@xlink:href, 'geonames')">
+					<xsl:choose>
+						<xsl:when test="string($lang)">
+							<xsl:value-of select="$geonames//place[@id=$href]/attribute::*[name()=$lang]"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="normalize-space(.)"/>
+						</xsl:otherwise>
+					</xsl:choose>	
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="normalize-space(.)"/>
+				</xsl:otherwise>
+			</xsl:choose>
 		</field>
 		<xsl:if test="string(@xlink:href)">
 			<field name="{@xlink:role}_uri">
@@ -78,18 +143,29 @@
 				<xsl:when test="contains(@xlink:href, 'geonames')">
 					<xsl:variable name="href" select="@xlink:href"/>
 					<xsl:variable name="value" select="."/>
+					<xsl:variable name="label">
+						<xsl:choose>
+							<xsl:when test="string($lang)">
+								<xsl:value-of select="$geonames//place[@id=$href]/attribute::*[name()=$lang]"/>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:value-of select="$value"/>
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:variable>
+					
 					<!-- *_geo format is 'mint name|URI of resource|KML-compliant geographic coordinates' -->
 					<field name="{@xlink:role}_geo">
-						<xsl:value-of select="."/>
+						<xsl:value-of select="$label"/>
 						<xsl:text>|</xsl:text>
 						<xsl:value-of select="$href"/>
 						<xsl:text>|</xsl:text>
-						<xsl:value-of select="exsl:node-set($geonames)//place[@id=$href]"/>
+						<xsl:value-of select="$geonames//place[@id=$href]"/>
 					</field>
 					<!-- insert hierarchical facets -->
-					<xsl:for-each select="tokenize(exsl:node-set($geonames)//place[@id=$href]/@hierarchy, '\|')">
+					<xsl:for-each select="tokenize($geonames//place[@id=$href]/@hierarchy, '\|')">
 						<xsl:if test="not(. = $value)">
-							<field name="findspot_hier">				
+							<field name="findspot_hier">
 								<xsl:value-of select="concat('L', position(), '|', .)"/>
 							</field>
 							<field name="findspot_text">
@@ -98,8 +174,8 @@
 						</xsl:if>
 						<xsl:if test="position()=last()">
 							<xsl:variable name="level" select="if (.=$value) then position() else position() + 1"/>
-							<field name="findspot_hier">			
-								<xsl:value-of select="concat('L', $level, '|', $value)"/>
+							<field name="findspot_hier">
+								<xsl:value-of select="concat('L', $level, '|', .)"/>
 							</field>
 						</xsl:if>
 					</xsl:for-each>
@@ -112,7 +188,14 @@
 						<xsl:variable name="lon" select="substring-after($coordinates, ' ')"/>
 						<!-- *_geo format is 'mint name|URI of resource|KML-compliant geographic coordinates' -->
 						<field name="{@xlink:role}_geo">
-							<xsl:value-of select="."/>
+							<xsl:choose>
+								<xsl:when test="string($lang)">
+									<xsl:value-of select="numishare:getNomismaLabel(exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href], $lang)"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:value-of select="normalize-space(.)"/>
+								</xsl:otherwise>
+							</xsl:choose>
 							<xsl:text>|</xsl:text>
 							<xsl:value-of select="@xlink:href"/>
 							<xsl:text>|</xsl:text>
@@ -291,6 +374,7 @@
 
 	<xsl:template name="get_coin_sort_fields">
 		<xsl:param name="typeDesc"/>
+		<xsl:param name="lang"/>
 		<!-- sortable fields -->
 		<xsl:variable name="sort-fields">
 			<xsl:text>artist,authority,deity,denomination,dynasty,issuer,maker,manufacture,material,mint,portrait,region</xsl:text>
@@ -300,16 +384,34 @@
 			<xsl:variable name="field" select="."/>
 			<!-- for each sortable field which is a multiValued field in Solr (a facet), grab the min and max values -->
 			<xsl:for-each select="exsl:node-set($typeDesc)/descendant::*[local-name()=$field and local-name() !='authority']|exsl:node-set($typeDesc)/descendant::*[@xlink:role=$field]">
-				<xsl:sort order="ascending"/>
+				<xsl:sort order="ascending" select="if (@xlink:href) then @xlink:href else ."/>
+				<xsl:variable name="href" select="@xlink:href"/>
 				<xsl:variable name="name" select="if(@xlink:role) then @xlink:role else local-name()"/>
+				<xsl:variable name="label">
+					<xsl:choose>
+						<xsl:when test="string($lang)">
+							<xsl:choose>
+								<xsl:when test="contains($href, 'nomisma.org')">
+									<xsl:value-of select="numishare:getNomismaLabel(exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href], $lang)"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:value-of select="normalize-space(.)"/>
+								</xsl:otherwise>
+							</xsl:choose>							
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="normalize-space(.)"/>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:variable>
 				<xsl:if test="position()=1">
 					<field name="{$name}_min">
-						<xsl:value-of select="normalize-space(.)"/>
+						<xsl:value-of select="$label"/>
 					</field>
 				</xsl:if>
 				<xsl:if test="position() = last()">
 					<field name="{$name}_max">
-						<xsl:value-of select="normalize-space(.)"/>
+						<xsl:value-of select="$label"/>
 					</field>
 				</xsl:if>
 			</xsl:for-each>

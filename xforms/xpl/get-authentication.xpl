@@ -28,6 +28,7 @@
 				<role>egypt</role>
 				<role>uva</role>
 				<role>electrum</role>
+				<role>byz</role>
 			</config>
 		</p:input>
 		<p:output name="data" ref="data"/>

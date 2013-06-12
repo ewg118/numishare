@@ -32,7 +32,7 @@
 				</nuds:denomination>
 			</xsl:for-each>
 			<nuds:mintCoordinates>
-				<gml:Point gml:id="{str[@name='id']}">
+				<gml:Point gml:id="{str[@name='nudsid']}">
 					<gml:coordinates>
 						<xsl:value-of select="replace(arr[@name='mint_geo']/str[1], ',', ', ')"/>
 					</gml:coordinates>

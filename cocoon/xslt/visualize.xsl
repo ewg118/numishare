@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:cinclude="http://apache.org/cocoon/include/1.0" xmlns:exsl="http://exslt.org/common"
-	xmlns:numishare="http://code.google.com/p/numishare/" xmlns:xs="http://www.w3.org/2001/XMLSchema" version="2.0">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:cinclude="http://apache.org/cocoon/include/1.0" xmlns:numishare="http://code.google.com/p/numishare/"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" version="2.0">
 	<xsl:output method="xml" encoding="UTF-8"/>
 	<xsl:include href="header.xsl"/>
 	<xsl:include href="footer.xsl"/>
@@ -13,12 +13,28 @@
 
 	<xsl:param name="q"/>
 
+	<!-- quantitative analysis parameters -->
+	<!-- typological comparison -->
 	<xsl:param name="category"/>
-	<xsl:param name="chartType"/>
 	<xsl:param name="compare"/>
 	<xsl:param name="custom"/>
 	<xsl:param name="options"/>
 	<xsl:param name="type"/>
+
+	<!-- measurement comparison -->
+	<xsl:param name="measurement"/>
+	<xsl:param name="numericType"/>
+	<xsl:param name="interval"/>
+	<xsl:param name="fromDate"/>
+	<xsl:param name="toDate"/>
+	<xsl:param name="sparqlQuery"/>
+	<xsl:variable name="tokenized_sparqlQuery" as="item()*">
+		<xsl:sequence select="tokenize($sparqlQuery, '\|')"/>
+	</xsl:variable>
+	<xsl:variable name="duration" select="number($toDate) - number($fromDate)"/>
+
+	<!-- both -->
+	<xsl:param name="chartType"/>
 
 	<!-- variables -->
 	<xsl:variable name="category_normalized">
@@ -42,7 +58,8 @@
 			<head>
 				<title>
 					<xsl:value-of select="//config/title"/>
-					<xsl:text>: Visualize Queries</xsl:text>
+					<xsl:text>: </xsl:text>
+					<xsl:value-of select="numishare:normalizeLabel('header_visualize', $lang)"/>
 				</title>
 				<link rel="shortcut icon" type="image/x-icon" href="{$display_path}images/favicon.png"/>
 				<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.8.0/build/cssgrids/grids-min.css"/>
@@ -61,14 +78,19 @@
 				<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.menu.js"/>
 				<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.menubar.js"/>
 				<script type="text/javascript" src="{$display_path}javascript/numishare-menu.js"/>
-
+				<script type="text/javascript">
+					$(document).ready (function(){
+						$("#tabs").tabs();
+					});
+				</script>
+				<!-- required libraries -->
+				<script type="text/javascript" src="{$display_path}javascript/jquery.fancybox-1.3.4.min.js"/>
+				<script type="text/javascript" src="{$display_path}javascript/jquery.livequery.js"/>
 				<!-- visualize functions -->
 				<script type="text/javascript" src="{$display_path}javascript/highcharts.js"/>
 				<script type="text/javascript" src="{$display_path}javascript/modules/exporting.js"/>
 				<script type="text/javascript" src="{$display_path}javascript/visualize_functions.js"/>
 				<!-- compare/customQuery functions -->
-				<script type="text/javascript" src="{$display_path}javascript/jquery.fancybox-1.3.4.min.js"/>
-				<script type="text/javascript" src="{$display_path}javascript/jquery.livequery.js"/>
 				<script type="text/javascript" src="{$display_path}javascript/search_functions.js"/>
 
 				<xsl:if test="string(/config/google_analytics/script)">
@@ -89,17 +111,47 @@
 		<div class="yui3-g">
 			<div class="yui3-u-1">
 				<div class="content">
-					<xsl:apply-templates select="/content/response"/>
+					<h1>
+						<xsl:value-of select="numishare:normalizeLabel('header_visualize', $lang)"/>
+					</h1>
+					<p>Use the data selection and visualization options below to generate a chart based selected parameters. Instructions for using this feature can be found at <a
+							href="http://wiki.numismatics.org/numishare:visualize" target="_blank">http://wiki.numismatics.org/numishare:visualize</a>.</p>
+
+					<!-- display tabs for measurement analysis only if there is a sparql endpoint-->
+					<xsl:choose>
+						<xsl:when test="string(//config/sparql_endpoint)">
+							<div id="tabs">
+								<ul>
+									<li>
+										<a href="#typological">
+											<xsl:value-of select="numishare:normalizeLabel('visualize_typological', $lang)"/>
+										</a>
+									</li>
+									<li>
+										<a href="#measurements">
+											<xsl:value-of select="numishare:normalizeLabel('visualize_measurement', $lang)"/>
+										</a>
+									</li>
+								</ul>
+								<div id="typological">
+									<xsl:apply-templates select="/content/response"/>
+								</div>
+								<div id="measurements">
+									<xsl:call-template name="measurementForm"/>
+								</div>
+							</div>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:apply-templates select="/content/response"/>
+						</xsl:otherwise>
+					</xsl:choose>
 				</div>
 			</div>
 		</div>
+
 	</xsl:template>
 
 	<xsl:template match="response">
-		<h1>Visualize</h1>
-		<p>Use the data selection and visualization options below to generate a chart based selected parameters. Instructions for using this feature can be found at <a
-				href="http://wiki.numismatics.org/numishare:visualize" target="_blank">http://wiki.numismatics.org/numishare:visualize</a>.</p>
-
 		<!-- display the facet list only if there is a $q -->
 		<xsl:if test="string($q)">
 			<xsl:call-template name="display_facets">
@@ -121,8 +173,8 @@
 	<xsl:template name="visualize_options">
 		<xsl:variable name="chartTypes">column,bar</xsl:variable>
 
-		<form action="{$display_path}visualize" id="visualize-form" style="margin-bottom:40px;">
-			<h2>Step 1: Select Numeric Response Type</h2>
+		<form action="#typological" id="visualize-form" style="margin-bottom:40px;">
+			<h3>1. Select Numeric Response Type</h3>
 			<input type="radio" name="type" value="percentage">
 				<xsl:if test="$type != 'count'">
 					<xsl:attribute name="checked">checked</xsl:attribute>
@@ -138,7 +190,7 @@
 			<label for="type-radio">Count</label>
 			<br/>
 			<div style="display:table;width:100%">
-				<h2>Step 2: Select Chart Type</h2>
+				<h3>2. Select Chart Type</h3>
 				<xsl:for-each select="tokenize($chartTypes, ',')">
 					<span class="anOption">
 						<input type="radio" name="chartType" value="{.}">
@@ -160,16 +212,16 @@
 
 			<!-- include checkbox categories -->
 			<div style="display:table;width:100%">
-				<h2>Step 3: Select Categories for Analysis</h2>
+				<h3>3. Select Categories for Analysis</h3>
 				<cinclude:include src="cocoon:/get_vis_categories?category={$category}&amp;q={$qString}"/>
 
 				<div id="customQueryDiv">
-					<h3>
+					<h4>
 						<xsl:text>Add Custom Queries</xsl:text>
 						<span style="font-size:80%;margin-left:10px;">
 							<a href="#searchBox" class="addQuery" id="customQuery">Add Query</a>
 						</span>
-					</h3>
+					</h4>
 					<xsl:for-each select="tokenize($custom, '\|')">
 						<div class="customQuery">
 							<b>Custom Query: </b>
@@ -182,20 +234,20 @@
 				</div>
 			</div>
 
-			<h2>
+			<h3>
 				<xsl:choose>
 					<xsl:when test="string($q)">
-						<xsl:text>Step 4: Compare to other Queries (optional)</xsl:text>
+						<xsl:text>4. Compare to other Queries (optional)</xsl:text>
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:text>Step 4: Compare Queries</xsl:text>
+						<xsl:text>4. Compare Queries</xsl:text>
 					</xsl:otherwise>
 				</xsl:choose>
 
 				<span style="font-size:80%;margin-left:10px;">
 					<a href="#searchBox" class="addQuery" id="compareQuery">Add Query</a>
 				</span>
-			</h2>
+			</h3>
 			<div id="compareQueryDiv">
 				<xsl:for-each select="tokenize($compare, '\|')">
 					<div class="compareQuery">
@@ -209,7 +261,7 @@
 			</div>
 
 			<div>
-				<h3>Optional Settings<span style="font-size:60%;margin-left:10px;"><a href="#" class="optional-button" id="visualize-options">Hide/Show Options</a></span></h3>
+				<h4>Optional Settings<span style="font-size:60%;margin-left:10px;"><a href="#" class="optional-button" id="visualize-options">Hide/Show Options</a></span></h4>
 				<div class="optional-div" style="display:none;">
 					<div>
 						<label for="stacking">Stacking Options</label>
@@ -240,8 +292,11 @@
 			<xsl:if test="string($q)">
 				<input type="hidden" name="q" value="{$q}"/>
 			</xsl:if>
+			<xsl:if test="string($lang)">
+				<input type="hidden" name="lang" value="{$lang}"/>
+			</xsl:if>
 			<br/>
-			<input type="submit" value="Generate Charts" id="submit-calculate"/>
+			<input type="submit" value="Generate Chart" id="submit-calculate"/>
 		</form>
 
 		<!-- output charts and tables for facets -->
@@ -264,31 +319,31 @@
 	<xsl:template name="quant">
 		<xsl:param name="facet"/>
 		<xsl:param name="customQuery"/>
-		<xsl:variable name="counts">
+		<xsl:variable name="counts" as="element()*">
 			<counts>
 				<xsl:choose>
 					<xsl:when test="string($facet)">
 						<!-- if there is a $q parameter, gather data -->
 						<xsl:if test="string($q)">
-							<xsl:copy-of select="document(concat($url, 'get_vis_quant?q=', encode-for-uri($q), '&amp;category=', $facet, '&amp;type=', $type ))"/>
+							<xsl:copy-of select="document(concat('cocoon:/get_vis_quant?q=', encode-for-uri($q), '&amp;category=', $facet, '&amp;type=', $type ))"/>
 						</xsl:if>
 						<!-- if there is a compare parameter, load get_hoard_quant with document() function -->
 						<xsl:if test="string($compare)">
 							<xsl:for-each select="tokenize($compare, '\|')">
-								<xsl:copy-of select="document(concat($url, 'get_vis_quant?q=', encode-for-uri(.), '&amp;category=', $facet, '&amp;type=', $type ))"/>
+								<xsl:copy-of select="document(concat('cocoon:/get_vis_quant?q=', encode-for-uri(.), '&amp;category=', $facet, '&amp;type=', $type ))"/>
 							</xsl:for-each>
 						</xsl:if>
 					</xsl:when>
 					<xsl:when test="string($customQuery)">
 						<!-- if there is a $q parameter, gather data -->
 						<xsl:if test="string($q)">
-							<xsl:copy-of select="document(concat($url, 'get_vis_custom?q=', encode-for-uri($q), '&amp;customQuery=', $customQuery, '&amp;total=', $numFound, '&amp;type=', $type ))"/>
+							<xsl:copy-of select="document(concat('cocoon:/get_vis_custom?q=', encode-for-uri($q), '&amp;customQuery=', $customQuery, '&amp;total=', $numFound, '&amp;type=', $type ))"/>
 						</xsl:if>
 						<!-- if there is a compare parameter, load get_hoard_quant with document() function -->
 						<xsl:if test="string($compare)">
 							<xsl:for-each select="tokenize($compare, '\|')">
-								<xsl:copy-of select="document(concat($url, 'get_vis_custom?q=', encode-for-uri(.), '&amp;customQuery=', $customQuery, '&amp;total=', $numFound, '&amp;type=', $type ))"
-								/>
+								<xsl:copy-of
+									select="document(concat('cocoon:/get_vis_custom?q=', encode-for-uri(.), '&amp;customQuery=', $customQuery, '&amp;total=', $numFound, '&amp;type=', $type ))"/>
 							</xsl:for-each>
 						</xsl:if>
 					</xsl:when>
@@ -297,7 +352,7 @@
 		</xsl:variable>
 
 		<!-- only display chart if there are counts -->
-		<xsl:if test="count(exsl:node-set($counts)//name) &gt; 0">
+		<xsl:if test="count($counts//name) &gt; 0">
 			<div id="{.}-container" style="min-width: 400px; height: 400px; margin: 0 auto"/>
 			<table class="calculate" id="{.}-table">
 				<caption>
@@ -334,7 +389,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					<xsl:for-each select="distinct-values(exsl:node-set($counts)//name)">
+					<xsl:for-each select="distinct-values($counts//name)">
 						<xsl:sort/>
 						<xsl:variable name="name" select="."/>
 						<tr>
@@ -344,8 +399,8 @@
 							<xsl:if test="string($q)">
 								<td>
 									<xsl:choose>
-										<xsl:when test="number(exsl:node-set($counts)//query[@q=$q]/*[local-name()='name'][text()=$name]/@count)">
-											<xsl:value-of select="exsl:node-set($counts)//query[@q=$q]/*[local-name()='name'][text()=$name]/@count"/>
+										<xsl:when test="number($counts//query[@q=$q]/*[local-name()='name'][text()=$name]/@count)">
+											<xsl:value-of select="$counts//query[@q=$q]/*[local-name()='name'][text()=$name]/@count"/>
 										</xsl:when>
 										<xsl:otherwise>
 											<xsl:text>0</xsl:text>
@@ -358,8 +413,8 @@
 									<xsl:variable name="new-q" select="."/>
 									<td>
 										<xsl:choose>
-											<xsl:when test="number(exsl:node-set($counts)//query[@q=$new-q]/*[local-name()='name'][text()=$name]/@count)">
-												<xsl:value-of select="exsl:node-set($counts)//query[@q=$new-q]/*[local-name()='name'][text()=$name]/@count"/>
+											<xsl:when test="number($counts//query[@q=$new-q]/*[local-name()='name'][text()=$name]/@count)">
+												<xsl:value-of select="$counts//query[@q=$new-q]/*[local-name()='name'][text()=$name]/@count"/>
 											</xsl:when>
 											<xsl:otherwise>
 												<xsl:text>0</xsl:text>

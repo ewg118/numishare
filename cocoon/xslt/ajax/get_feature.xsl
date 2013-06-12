@@ -10,11 +10,11 @@
 
 	<xsl:template match="doc">		
 		<div>
-			<a href="id/{str[@name='id']}">
+			<a href="id/{str[@name='nudsid']}">
 				<img src="{str[@name='thumbnail_obv']}"/>
 			</a>
 			<br/>
-			<a href="id/{str[@name='id']}">
+			<a href="id/{str[@name='nudsid']}">
 				<xsl:value-of select="str[@name='title_display']"/>
 			</a>
 			<xsl:if test="string(str[@name='imagesponsor'])">

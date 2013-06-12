@@ -11,22 +11,21 @@
 	<head>
 		<title>Numishare: Upload CSV File</title>
 		<!-- Core + Skin CSS -->
-		<xhtml:link rel="stylesheet" type="text/css" href="/apps/numishare/css/jquery-ui-1.8.10.custom.css"/>
-		<xhtml:link rel="stylesheet" href="/apps/numishare/css/reset-fonts-grids.css"/>
-		<xhtml:link rel="stylesheet" href="/apps/numishare/css/base-min.css"/>
-		<xhtml:link rel="stylesheet" href="/apps/numishare/css/fonts-min.css"/>
+		<xhtml:link rel="stylesheet" href="/fr/style/bootstrap/css/bootstrap.css" type="text/css"/>
+		<xhtml:link rel="stylesheet" href="/fr/style/form-runner-bootstrap-override.css" type="text/css"/>
+		<xhtml:link rel="stylesheet" href="/config/theme/examples.css" type="text/css" media="all"/>
+		<xhtml:link rel="shortcut icon" href="/ops/images/orbeon-icon-16.ico"/>
+		<xhtml:link rel="icon" href="/ops/images/orbeon-icon-16.png" type="image/png"/>
+		<xhtml:link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.8.0/build/cssgrids/grids-min.css"/>
 
 		<!-- numishare styling -->
 		<xhtml:link rel="stylesheet" href="/apps/numishare/css/xforms.css"/>
-
-		<xhtml:script type="text/javascript" src="/apps/numishare/javascript/jquery-1.6.1.min.js"/>
-		<xhtml:script type="text/javascript" src="/apps/numishare/javascript/numishare-menu.js"/>
 		<xforms:model>
 			<!-- exist URL is stored in an XML file -->
 			<xforms:instance id="exist-url">
 				<xi:include href="exist-url.xml"/>
 			</xforms:instance>
-			
+
 			<xforms:instance id="control-instance">
 				<controls xmlns="">
 					<simple-upload-trigger/>
@@ -35,11 +34,11 @@
 					<collection-name/>
 				</controls>
 			</xforms:instance>
-			
+
 			<xforms:instance id="dump">
 				<dump/>
 			</xforms:instance>
-			
+
 			<!-- collections/authentication instances -->
 			<xforms:instance id="collections-list">
 				<collections xmlns="">
@@ -114,7 +113,7 @@
 					<field label="Authority: Personal" value="authority-personal"/>
 					<field label="Authority: Personal URI" value="authority-personal-uri"/>
 					<field label="Authority: Corporate" value="authority-corporate"/>
-					<field label="Authority: Corporate URI" value="authority-corporate-uri"/>					
+					<field label="Authority: Corporate URI" value="authority-corporate-uri"/>
 					<field label="Collection" value="collection"/>
 					<field label="Commentary" value="description"/>
 					<!--<field label="Color" value="color"/>-->
@@ -145,8 +144,8 @@
 					<field label="Issuer: Personal URI" value="issuer-personal-uri"/>
 					<field label="Issuer: Corporate" value="issuer-corporate"/>
 					<field label="Issuer: Corporate" value="issuer-corporate-uri"/>
-					<field label="Maker: Personal" value="maker-personal"/>					
-					<field label="Maker: Corporate" value="maker-corporate"/>					
+					<field label="Maker: Personal" value="maker-personal"/>
+					<field label="Maker: Corporate" value="maker-corporate"/>
 					<field label="Magistrate" value="magistrate"/>
 					<field label="Magistrate URI" value="magistrate-uri"/>
 					<field label="Manufacture" value="manufacture"/>
@@ -160,7 +159,7 @@
 					<field label="Obverse Completeness" value="obverse-completeness"/>
 					<field label="Obverse Condition" value="obverse-condition"/>
 					<field label="Obverse Deity" value="obverse-deity"/>
-					<field label="Obverse Deity URI" value="obverse-deity-uri"/>					
+					<field label="Obverse Deity URI" value="obverse-deity-uri"/>
 					<field label="Obverse Engraver" value="obverse-engraver"/>
 					<field label="Obverse Grade" value="obverse-grade"/>
 					<field label="Obverse Legend" value="obverse-legend"/>
@@ -264,7 +263,7 @@
 					</xforms:bind>
 				</xforms:bind>
 			</xforms:bind>
-			
+
 			<xforms:submission id="load-collections" serialization="none" method="get" action="{instance('exist-url')}collections-list.xml" replace="instance" instance="collections-list"
 				xxforms:username="admin" xxforms:password="">
 				<!-- if the config loads successfully, set the collection names based on authentication -->
@@ -279,7 +278,7 @@
 							<xforms:setvalue ref="instance('control-instance')/collection-name"
 								value="instance('collections-list')/collection[@role=instance('control-instance')/request-security/role]/@name"/>
 						</xforms:action>
-					</xforms:action>			
+					</xforms:action>
 					<xforms:send submission="load-imports"/>
 					<xforms:send submission="load-config"/>
 				</xforms:action>
@@ -288,8 +287,8 @@
 			</xforms:submission>
 
 			<!-- load site info -->
-			<xforms:submission id="load-config" serialization="none" method="get" action="{instance('exist-url')}{instance('control-instance')/collection-name}/config.xml" xxforms:username="admin" xxforms:password="" replace="instance"
-				instance="config"/>
+			<xforms:submission id="load-config" serialization="none" method="get" action="{instance('exist-url')}{instance('control-instance')/collection-name}/config.xml" xxforms:username="admin"
+				xxforms:password="" replace="instance" instance="config"/>
 
 			<xforms:submission id="background-submission" method="post" replace="none" resource="test:">
 				<xforms:action ev:event="xforms-submit-done">
@@ -306,8 +305,9 @@
 				</xforms:action>
 			</xforms:submission>
 
-			<xforms:submission id="save-submission" ref="instance('processed-xml')/*[local-name()='nuds'][*[local-name()='nudsHeader']/*[local-name()='nudsid'] = instance('current-id')]" xxforms:username="admin" xxforms:password=""
-				action="{instance('exist-url')}{instance('control-instance')/collection-name}/objects/{instance('current-id')}.xml" method="put" replace="none">
+			<xforms:submission id="save-submission" ref="instance('processed-xml')/*[local-name()='nuds'][*[local-name()='nudsHeader']/*[local-name()='nudsid'] = instance('current-id')]"
+				xxforms:username="admin" xxforms:password="" action="{instance('exist-url')}{instance('control-instance')/collection-name}/objects/{instance('current-id')}.xml" method="put"
+				replace="none">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Save Error!</xforms:message>
 				<xforms:action ev:event="xforms-submit-done">
 					<xforms:insert origin="instance('file-template')" context="instance('imports')/import[last()]" nodeset="./child::node()[last()]"/>
@@ -318,11 +318,11 @@
 				<!--<xforms:send ev:event="xforms-submit-done" submission="query-solr-for-publication"/>-->
 			</xforms:submission>
 
-			<xforms:submission id="load-imports" serialization="none" method="get" action="{instance('exist-url')}{instance('control-instance')/collection-name}/imports.xml" xxforms:username="admin" xxforms:password="" replace="instance"
-				instance="imports"/>
+			<xforms:submission id="load-imports" serialization="none" method="get" action="{instance('exist-url')}{instance('control-instance')/collection-name}/imports.xml" xxforms:username="admin"
+				xxforms:password="" replace="instance" instance="imports"/>
 
-			<xforms:submission id="save-imports" ref="instance('imports')" xxforms:username="admin" xxforms:password="" action="{instance('exist-url')}{instance('control-instance')/collection-name}/imports.xml" method="put"
-				replace="none">
+			<xforms:submission id="save-imports" ref="instance('imports')" xxforms:username="admin" xxforms:password=""
+				action="{instance('exist-url')}{instance('control-instance')/collection-name}/imports.xml" method="put" replace="none">
 				<xforms:action ev:event="xforms-submit-done">
 					<xforms:send submission="submit-commit"/>
 					<xforms:setvalue ref="instance('status')">CSV file succesfully imported.</xforms:setvalue>
@@ -354,71 +354,72 @@
 		</xforms:model>
 	</head>
 
-	<xhtml:body class="yui-skin-sam">
-		<xhtml:div id="doc4" class="yui-t2 content ui-corner-all">
-			<xxforms:variable name="display_path">../../</xxforms:variable>
-			<xi:include href="header.xml"/>
-			<div id="bd">
-				<xhtml:div id="form">
-					<xforms:group ref="instance('status')/text()">
-						<div class="success">
-							<xforms:output ref="instance('status')"/>
-						</div>
-					</xforms:group>
-					<xforms:switch>
-						<xforms:case id="upload-file">
-							<div class="section">
-								<h3>Upload CSV file</h3>
-								<p>Use this feature to import coins and medals into Numishare from a standard format CSV file.</p>
-								<p>Please select the file to upload:</p>
-								<xforms:group ref="instance('files-instance')/file">
-									<div class="subsection">
-										<!-- Upload field -->
-										<fr:upload ref="." xxforms:size="60">
-											<xforms:filename ref="@filename"/>
-											<xforms:mediatype ref="@mediatype"/>
-											<xxforms:size ref="@size"/>
-										</fr:upload>
-									</div>
-								</xforms:group>
-								<p>
-									<xforms:submit submission="background-submission" ref="instance('control-instance')/simple-upload-trigger">
-										<xforms:label>Upload</xforms:label>
-									</xforms:submit>
-								</p>
+	<xhtml:body>
+		<xxforms:variable name="display_path">../../</xxforms:variable>
+		<div class="yui3-g">
+			<div class="yui3-u-1">
+				<div class="content">
+					<xi:include href="header.xml"/>
+					<div id="form">
+						<xforms:group ref="instance('status')/text()">
+							<div class="success">
+								<xforms:output ref="instance('status')"/>
 							</div>
-						</xforms:case>
-						<xforms:case id="map-columns">
-							<xforms:group ref="instance('xml-file')//row[last()]">
+						</xforms:group>
+						<xforms:switch>
+							<xforms:case id="upload-file">
 								<div class="section">
-									<h4>Map CSV columns to numismatic fields</h4>
-									<p>Use the right column to select the semantically appropriate Numishare field to map to the CSV column heading, left.</p>
-									<!-- list warnings -->
-									<!--<xforms:group ref=".[count(elem[@mapping='title']) != 1]">
+									<h3>Upload CSV file</h3>
+									<p>Use this feature to import coins and medals into Numishare from a standard format CSV file.</p>
+									<p>Please select the file to upload:</p>
+									<xforms:group ref="instance('files-instance')/file">
+										<div class="subsection">
+											<!-- Upload field -->
+											<fr:upload ref="." xxforms:size="60">
+												<xforms:filename ref="@filename"/>
+												<xforms:mediatype ref="@mediatype"/>
+												<xxforms:size ref="@size"/>
+											</fr:upload>
+										</div>
+									</xforms:group>
+									<p>
+										<xforms:submit submission="background-submission" ref="instance('control-instance')/simple-upload-trigger">
+											<xforms:label>Upload</xforms:label>
+										</xforms:submit>
+									</p>
+								</div>
+							</xforms:case>
+							<xforms:case id="map-columns">
+								<xforms:group ref="instance('xml-file')//row[last()]">
+									<div class="section">
+										<h4>Map CSV columns to numismatic fields</h4>
+										<p>Use the right column to select the semantically appropriate Numishare field to map to the CSV column heading, left.</p>
+										<!-- list warnings -->
+										<!--<xforms:group ref=".[count(elem[@mapping='title']) != 1]">
 										<div class="ui-state-error ui-corner-all">
 											<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"/>
 												<strong>Alert:</strong>Title must occur once.</p>
 										</div>
 									</xforms:group>-->
-									<xforms:group ref=".[count(elem[@mapping='objectType']) != 1 and count(elem[@mapping='objectType-uri']) != 1]">
-										<div class="ui-state-error ui-corner-all">
-											<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"/>
-												<strong>Alert:</strong>Object Type must occur once.</p>
-										</div>
-									</xforms:group>
-									<xforms:group ref=".[count(elem[@mapping='typeDesc-uri']) = 1]">
-										<div class="ui-state-highlight ui-corner-all">
-											<p><span class="ui-icon ui-icon-info" style="float: left; margin-right: 0.3em;"/>
-												<strong>Note:</strong>When Typological Description URI is selected, other typological elements will be ignored.</p>
-										</div>
-									</xforms:group>
-									<xforms:group ref=".[count(elem[@mapping='typeDesc-uri']) &gt; 1]">
-										<div class="ui-state-error ui-corner-all">
-											<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"/>
-												<strong>Alert:</strong>Typological Description URI may be selected at most one time.</p>
-										</div>
-									</xforms:group>
-									<!--<div>
+										<xforms:group ref=".[count(elem[@mapping='objectType']) != 1 and count(elem[@mapping='objectType-uri']) != 1]">
+											<div class="ui-state-error ui-corner-all">
+												<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"/>
+													<strong>Alert:</strong>Object Type must occur once.</p>
+											</div>
+										</xforms:group>
+										<xforms:group ref=".[count(elem[@mapping='typeDesc-uri']) = 1]">
+											<div class="ui-state-highlight ui-corner-all">
+												<p><span class="ui-icon ui-icon-info" style="float: left; margin-right: 0.3em;"/>
+													<strong>Note:</strong>When Typological Description URI is selected, other typological elements will be ignored.</p>
+											</div>
+										</xforms:group>
+										<xforms:group ref=".[count(elem[@mapping='typeDesc-uri']) &gt; 1]">
+											<div class="ui-state-error ui-corner-all">
+												<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"/>
+													<strong>Alert:</strong>Typological Description URI may be selected at most one time.</p>
+											</div>
+										</xforms:group>
+										<!--<div>
 										<xforms:select ref="instance('publish')" appearance="full">
 											<xforms:item>
 												<xforms:label>Publish</xforms:label>
@@ -426,80 +427,78 @@
 											</xforms:item>
 										</xforms:select>
 									</div>-->
-									<div>
-										<xforms:select1 ref="recordType">
-											<xforms:alert>Record Type is required.</xforms:alert>
-											<xforms:label>Record Type</xforms:label>
-											<xforms:itemset nodeset="instance('recordTypes')/recordType">
-												<xforms:label ref="@label"/>
-												<xforms:value ref="@value"/>
-											</xforms:itemset>
-										</xforms:select1>
-									</div>
-									<table>
-										<thead>
-											<tr>
-												<th>CSV Column Label</th>
-												<th>Numishare Field</th>
-											</tr>
-										</thead>
-										<tbody>
-											<xforms:repeat nodeset="elem">
+										<div>
+											<xforms:select1 ref="recordType">
+												<xforms:alert>Record Type is required.</xforms:alert>
+												<xforms:label>Record Type</xforms:label>
+												<xforms:itemset nodeset="instance('recordTypes')/recordType">
+													<xforms:label ref="@label"/>
+													<xforms:value ref="@value"/>
+												</xforms:itemset>
+											</xforms:select1>
+										</div>
+										<table>
+											<thead>
 												<tr>
-													<td style="width:25%;">
-														<xforms:output value="@name"/>
-													</td>
-													<td style="text-align:center;">
-														<xforms:select1 ref="@mapping">
-															<xforms:alert>Title cannot occur more than once.</xforms:alert>
-															<xforms:item>
-																<xforms:label>Select...</xforms:label>
-																<xforms:value/>
-															</xforms:item>
-															<xforms:itemset nodeset="instance('fields')/field">
-																<xforms:label ref="@label"/>
-																<xforms:value ref="@value"/>
-															</xforms:itemset>
-														</xforms:select1>
-													</td>
+													<th>CSV Column Label</th>
+													<th>Numishare Field</th>
 												</tr>
-											</xforms:repeat>
-										</tbody>
-									</table>
-									<!-- show import button only if it meets validation criteria -->
-									<xforms:group ref=".[count(elem[@mapping='objectType']) = 1 or count(elem[@mapping='objectType-uri']) = 1]">
-										<xforms:trigger>
-											<xforms:label>Import</xforms:label>
-											<xforms:action ev:event="DOMActivate">
-												<xforms:action xxforms:iterate="instance('xml-file')//row[not(position() = last())]"
-													if=".[count(instance('xml-file')//row[last()]/elem[@mapping='nudsid']) = 0 and count(id) = 0]">
-													<xforms:insert context="." origin="instance('id-template')"/>
-													<xforms:setvalue ref="id" value="concat('n_', substring(string(digest( string( random( true ) ), 'MD5', 'hex' )), 1, 8))"/>
+											</thead>
+											<tbody>
+												<xforms:repeat nodeset="elem">
+													<tr>
+														<td style="width:25%;">
+															<xforms:output value="@name"/>
+														</td>
+														<td style="text-align:center;">
+															<xforms:select1 ref="@mapping">
+																<xforms:alert>Title cannot occur more than once.</xforms:alert>
+																<xforms:item>
+																	<xforms:label>Select...</xforms:label>
+																	<xforms:value/>
+																</xforms:item>
+																<xforms:itemset nodeset="instance('fields')/field">
+																	<xforms:label ref="@label"/>
+																	<xforms:value ref="@value"/>
+																</xforms:itemset>
+															</xforms:select1>
+														</td>
+													</tr>
+												</xforms:repeat>
+											</tbody>
+										</table>
+										<!-- show import button only if it meets validation criteria -->
+										<xforms:group ref=".[count(elem[@mapping='objectType']) = 1 or count(elem[@mapping='objectType-uri']) = 1]">
+											<xforms:trigger>
+												<xforms:label>Import</xforms:label>
+												<xforms:action ev:event="DOMActivate">
+													<xforms:action xxforms:iterate="instance('xml-file')//row[not(position() = last())]"
+														if=".[count(instance('xml-file')//row[last()]/elem[@mapping='nudsid']) = 0 and count(id) = 0]">
+														<xforms:insert context="." origin="instance('id-template')"/>
+														<xforms:setvalue ref="id" value="concat('n_', substring(string(digest( string( random( true ) ), 'MD5', 'hex' )), 1, 8))"/>
+													</xforms:action>
+													<xforms:insert nodeset="instance('processed-xml')"
+														origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/xml-to-nuds.xpl', 'source', instance('xml-file'), 'finalized')"/>
+													<!-- insert new import node -->
+													<xforms:insert origin="instance('import-template')" context="instance('imports')" nodeset="./child::node()[last()]"/>
+													<xforms:setvalue ref="instance('imports')/import[last()]/@date" value="concat(datetime:dateTime(), 'Z')"/>
+													<xforms:setvalue ref="instance('imports')/import[last()]/@filename" value="instance('files-instance')/file/@filename"/>
+													<!-- iterate through new components to save each one individually to eXist -->
+													<xforms:action xxforms:iterate="instance('processed-xml')/*[local-name()='nuds']">
+														<xforms:setvalue ref="instance('current-id')" value="context()/nuds:nudsHeader/nuds:nudsid"/>
+														<xforms:send submission="save-submission"/>
+													</xforms:action>
+													<xforms:send submission="save-imports"/>
 												</xforms:action>
-												<xforms:insert nodeset="instance('processed-xml')"
-													origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/xml-to-nuds.xpl', 'source', instance('xml-file'), 'finalized')"/>
-												<!-- insert new import node -->
-												<xforms:insert origin="instance('import-template')" context="instance('imports')" nodeset="./child::node()[last()]"/>
-												<xforms:setvalue ref="instance('imports')/import[last()]/@date" value="concat(datetime:dateTime(), 'Z')"/>
-												<xforms:setvalue ref="instance('imports')/import[last()]/@filename" value="instance('files-instance')/file/@filename"/>
-												<!-- iterate through new components to save each one individually to eXist -->
-												<xforms:action xxforms:iterate="instance('processed-xml')/*[local-name()='nuds']">
-													<xforms:setvalue ref="instance('current-id')" value="context()/nuds:nudsHeader/nuds:nudsid"/>
-													<xforms:send submission="save-submission"/>
-												</xforms:action>
-												<xforms:send submission="save-imports"/>
-											</xforms:action>
-										</xforms:trigger>
-									</xforms:group>
-								</div>
-							</xforms:group>
-						</xforms:case>
-					</xforms:switch>
-				</xhtml:div>
+											</xforms:trigger>
+										</xforms:group>
+									</div>
+								</xforms:group>
+							</xforms:case>
+						</xforms:switch>
+					</div>
+				</div>
 			</div>
-
-			<!--<widget:xforms-instance-inspector id="orbeon-xforms-inspector" xmlns:widget="http://orbeon.org/oxf/xml/widget"/>-->
-
-		</xhtml:div>
+		</div>
 	</xhtml:body>
 </html>
