@@ -285,9 +285,11 @@
 
 							<xsl:variable name="geonameId" select="substring-before(substring-after($href, 'geonames.org/'), '/')"/>
 							<xsl:variable name="geonames_data" as="element()*">
-								<xsl:copy-of
-									select="document(concat($geonames-url, '/get?geonameId=', $geonameId, '&amp;username=', $geonames_api_key, '&amp;style=full'))"
-								/>
+								<xml>
+									<xsl:copy-of
+										select="document(concat($geonames-url, '/get?geonameId=', $geonameId, '&amp;username=', $geonames_api_key, '&amp;style=full'))"
+									/>
+								</xml>
 							</xsl:variable>
 
 							<geo:lat>
