@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes="xs exsl nuds nh xlink mets" xmlns:exsl="http://exslt.org/common"
-	xmlns:gml="http://www.opengis.net/gml/" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nm="http://nomisma.org/id/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-	xmlns:nuds="http://nomisma.org/nuds" xmlns:nh="http://nomisma.org/nudsHoard" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xlink="http://www.w3.org/1999/xlink"
-	xmlns:georss="http://www.georss.org/georss" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:oac="http://www.openannotation.org/ns/" xmlns:owl="http://www.w3.org/2002/07/owl#"
-	xmlns:dc="http://purl.org/dc/terms/" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:mets="http://www.loc.gov/METS/" version="2.0">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	exclude-result-prefixes="xs exsl nuds nh xlink mets" xmlns:exsl="http://exslt.org/common" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"
+	xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nm="http://nomisma.org/id/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	xmlns:nuds="http://nomisma.org/nuds" xmlns:nh="http://nomisma.org/nudsHoard" xmlns:dcterms="http://purl.org/dc/terms/"
+	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:georss="http://www.georss.org/georss" xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:oac="http://www.openannotation.org/ns/" xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:dc="http://purl.org/dc/terms/"
+	xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:mets="http://www.loc.gov/METS/" version="2.0">
 
 	<!-- ************** OBJECT-TO-RDF **************** -->
 	<xsl:template name="rdf">
@@ -95,7 +97,7 @@
 							<xsl:value-of select="."/>
 						</skos:definition>
 					</xsl:for-each>
-					
+
 					<!-- process typeDesc -->
 					<xsl:apply-templates select="nuds:descMeta/nuds:typeDesc" mode="nomisma"/>
 				</nm:type_series_item>
@@ -114,12 +116,12 @@
 						<dcterms:publisher>
 							<xsl:value-of select="nuds:nudsHeader/nuds:publicationStmt/nuds:publisher"/>
 						</dcterms:publisher>
-					</xsl:if>					
+					</xsl:if>
 					<xsl:for-each select="descendant::nuds:repository">
 						<nm:collection>
 							<xsl:value-of select="."/>
 						</nm:collection>
-					</xsl:for-each>					
+					</xsl:for-each>
 					<xsl:if test="string(nuds:descMeta/nuds:typeDesc/@xlink:href)">
 						<nm:type_series_item rdf:resource="{nuds:descMeta/nuds:typeDesc/@xlink:href}"/>
 					</xsl:if>
@@ -272,8 +274,33 @@
 				<xsl:value-of select="descendant::nh:nudsHeader//nh:publisher"/>
 			</dcterms:publisher>
 			<xsl:for-each select="descendant::nh:geogname[@xlink:role='findspot'][string(@xlink:href)]">
-				<nm:findspot rdf:resource="{@xlink:href}"/>
-			</xsl:for-each>			
+				<xsl:variable name="href" select="@xlink:href"/>
+				<nm:findspot>
+					<rdf:Description rdf:about="{@xlink:href}">
+						<xsl:if test="contains(@xlink:href, 'geonames.org')">
+							<xsl:variable name="geonames-url">
+								<xsl:text>http://api.geonames.org</xsl:text>
+							</xsl:variable>
+							<xsl:variable name="geonames_api_key" select="/content/config/geonames_api_key"/>
+
+							<xsl:variable name="geonameId" select="substring-before(substring-after($href, 'geonames.org/'), '/')"/>
+							<xsl:variable name="geonames_data" as="element()*">
+								<xsl:copy-of
+									select="document(concat($geonames-url, '/get?geonameId=', $geonameId, '&amp;username=', $geonames_api_key, '&amp;style=full'))"
+								/>
+							</xsl:variable>
+
+							<geo:lat>
+								<xsl:value-of select="$geonames_data//lat"/>
+							</geo:lat>
+							<geo:long>
+								<xsl:value-of select="$geonames_data//lng"/>
+							</geo:long>
+						</xsl:if>
+					</rdf:Description>
+
+				</nm:findspot>
+			</xsl:for-each>
 			<!-- closing date -->
 			<xsl:choose>
 				<xsl:when test="not(descendant::nh:deposit/nh:date) and not(descendant::nh:deposit/nh:dateRange)">
@@ -373,8 +400,8 @@
 			</xsl:if>
 		</xsl:variable>
 
-		<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml/" xmlns:gx="http://www.google.com/kml/ext/2.2"
-			xmlns="http://www.w3.org/2005/Atom">
+		<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:georss="http://www.georss.org/georss"
+			xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns="http://www.w3.org/2005/Atom">
 			<title>
 				<xsl:value-of select="/content/config/title"/>
 			</title>
@@ -446,7 +473,8 @@
 				</link>
 				<xsl:if test="string(/content/config/template/copyrightHolder) or string(/content/config/template/license)">
 					<copyright>
-						<xsl:if test="string(/content/config/template/copyrightHolder)">Copyright: <xsl:value-of select="/content/config/template/copyrightHolder"/></xsl:if>
+						<xsl:if test="string(/content/config/template/copyrightHolder)">Copyright: <xsl:value-of
+								select="/content/config/template/copyrightHolder"/></xsl:if>
 						<xsl:if test="string(/content/config/template/copyrightHolder) and string(/content/config/template/license)">
 							<xsl:text>, </xsl:text>
 						</xsl:if>
@@ -478,7 +506,8 @@
 	</xsl:template>
 
 	<xsl:template match="doc" mode="atom">
-		<entry xmlns="http://www.w3.org/2005/Atom" xmlns:gml="http://www.opengis.net/gml/" xmlns:georss="http://www.georss.org/georss" xmlns:gx="http://www.google.com/kml/ext/2.2">
+		<entry xmlns="http://www.w3.org/2005/Atom" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:georss="http://www.georss.org/georss"
+			xmlns:gx="http://www.google.com/kml/ext/2.2">
 			<title>
 				<xsl:choose>
 					<xsl:when test="string(str[@name='title_display'])">
@@ -567,11 +596,11 @@
 						<xsl:variable name="coordinates" select="$tokenized_georef[3]"/>
 						<xsl:variable name="lon" select="substring-before($coordinates, ',')"/>
 						<xsl:variable name="lat" select="substring-after($coordinates, ',')"/>
-						<gml:Point>
-							<gml:pos>
+						<geo:Point>
+							<geo:pos>
 								<xsl:value-of select="concat($lat, ' ', $lon)"/>
-							</gml:pos>
-						</gml:Point>
+							</geo:pos>
+						</geo:Point>
 					</georss:where>
 				</xsl:if>
 				<xsl:if test="number(int[@name='tpq_num']) and number(int[@name='taq_num'])">
@@ -593,11 +622,11 @@
 							<xsl:variable name="coordinates" select="$tokenized_georef[3]"/>
 							<xsl:variable name="lon" select="substring-before($coordinates, ',')"/>
 							<xsl:variable name="lat" select="substring-after($coordinates, ',')"/>
-							<gml:Point>
-								<gml:pos>
+							<geo:Point>
+								<geo:pos>
 									<xsl:value-of select="concat($lat, ' ', $lon)"/>
-								</gml:pos>
-							</gml:Point>
+								</geo:pos>
+							</geo:Point>
 						</xsl:for-each>
 					</georss:where>
 				</xsl:if>
@@ -652,7 +681,7 @@
 			</dcterms:identifier>
 			<dcterms:publisher>
 				<xsl:value-of select="str[@name='publisher_display']"/>
-			</dcterms:publisher>			
+			</dcterms:publisher>
 			<xsl:for-each select="arr[@name='repository_facet']/str">
 				<nm:collection>
 					<xsl:value-of select="."/>
@@ -683,16 +712,19 @@
 					<xsl:value-of select="format-number(int[@name='taq_num'], '0000')"/>
 				</nm:closing_date>
 			</xsl:if>
-			<xsl:choose>
-				<xsl:when test="string(arr[@name='findspot_uri']/str)">
-					<nm:findspot rdf:resource="{arr[@name='findspot_uri']/str}"/>
-				</xsl:when>
-				<xsl:when test="string(str[@name='findspot_geo'])">
-					<nm:findspot>
-						<xsl:value-of select="tokenize(str[@name='findspot_geo'])[last()]"/>
-					</nm:findspot>
-				</xsl:when>
-			</xsl:choose>
+			<xsl:if test="string(str[@name='findspot_geo'])">
+				<xsl:variable name="findspot" select="tokenize(str[@name='findspot_geo'], '\|')"/>
+				<nm:findspot>
+					<rdf:Description rdf:about="{$findspot[2]}">
+						<geo:lat>
+							<xsl:value-of select="substring-after($findspot[3], ',')"/>
+						</geo:lat>
+						<geo:long>
+							<xsl:value-of select="substring-before($findspot[3], ',')"/>
+						</geo:long>
+					</rdf:Description>
+				</nm:findspot>
+			</xsl:if>
 			<!-- images -->
 			<xsl:if test="string(str[@name='thumbnail_obv'])">
 				<xsl:variable name="href">
