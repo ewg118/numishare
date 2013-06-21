@@ -7,7 +7,7 @@
 -->
 <xsl:stylesheet xmlns:nuds="http://nomisma.org/nuds" xmlns:nh="http://nomisma.org/nudsHoard" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:datetime="http://exslt.org/dates-and-times"
 	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:exsl="http://exslt.org/common" xmlns:mets="http://www.loc.gov/METS/"
-	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mods="http://www.loc.gov/mods/v3" xmlns:gml="http://www.opengis.net/gml/" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mods="http://www.loc.gov/mods/v3" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
 	xmlns:numishare="http://code.google.com/p/numishare/" exclude-result-prefixes="#all" version="2.0">
 
 	<xsl:template match="nuds:typeDesc">
@@ -76,7 +76,7 @@
 		<field name="{$facet}_facet">
 			<xsl:choose>
 				<xsl:when test="string($lang) and contains($href, 'nomisma.org')">
-					<xsl:value-of select="numishare:getNomismaLabel(exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href], $lang)"/>
+					<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about=$href], $lang)"/>
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:value-of select="normalize-space(.)"/>
@@ -96,7 +96,7 @@
 		<field name="{@xlink:role}_facet">
 			<xsl:choose>
 				<xsl:when test="string($lang) and contains($href, 'nomisma.org')">
-					<xsl:value-of select="numishare:getNomismaLabel(exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href], $lang)"/>
+					<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about=$href], $lang)"/>
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:value-of select="normalize-space(.)"/>
@@ -106,7 +106,7 @@
 		<field name="{@xlink:role}_text">
 			<xsl:choose>
 				<xsl:when test="string($lang) and contains($href, 'nomisma.org')">
-					<xsl:value-of select="numishare:getNomismaLabel(exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href], $lang)"/>
+					<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about=$href], $lang)"/>
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:value-of select="normalize-space(.)"/>
@@ -151,15 +151,17 @@
 				</xsl:when>
 				<xsl:when test="contains(@xlink:href, 'nomisma.org')">
 					<xsl:variable name="href" select="@xlink:href"/>
-					<xsl:variable name="coordinates" select="exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/gml:pos"/>
-					<xsl:if test="string($coordinates)">
-						<xsl:variable name="lat" select="substring-before($coordinates, ' ')"/>
-						<xsl:variable name="lon" select="substring-after($coordinates, ' ')"/>
+					<xsl:variable name="coordinates">
+						<xsl:if test="$rdf/*[@rdf:about=$href]/descendant::geo:lat and $rdf/*[@rdf:about=$href]/descendant::geo:long">
+							<xsl:text>true</xsl:text>
+						</xsl:if>
+					</xsl:variable>
+					<xsl:if test="$coordinates = 'true'">
 						<!-- *_geo format is 'mint name|URI of resource|KML-compliant geographic coordinates' -->
 						<field name="{@xlink:role}_geo">
 							<xsl:choose>
 								<xsl:when test="string($lang)">
-									<xsl:value-of select="numishare:getNomismaLabel(exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href], $lang)"/>
+									<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about=$href], $lang)"/>
 								</xsl:when>
 								<xsl:otherwise>
 									<xsl:value-of select="normalize-space(.)"/>
@@ -168,12 +170,12 @@
 							<xsl:text>|</xsl:text>
 							<xsl:value-of select="@xlink:href"/>
 							<xsl:text>|</xsl:text>
-							<xsl:value-of select="concat($lon, ',', $lat)"/>
+							<xsl:value-of select="concat($rdf/*[@rdf:about=$href]/descendant::geo:long, ',', $rdf/*[@rdf:about=$href]/descendant::geo:lat)"/>
 						</field>
 					</xsl:if>
-					<xsl:if test="exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/skos:related[contains(@rdf:resource, 'pleiades')]">
+					<xsl:if test="$rdf/*[@rdf:about=$href]/skos:related[contains(@rdf:resource, 'pleiades')]">
 						<field name="pleiades_uri">
-							<xsl:value-of select="exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/skos:related[contains(@rdf:resource, 'pleiades')]/@rdf:resource"/>
+							<xsl:value-of select="$rdf/*[@rdf:about=$href]/skos:related[contains(@rdf:resource, 'pleiades')]/@rdf:resource"/>
 						</field>
 					</xsl:if>
 				</xsl:when>
@@ -361,7 +363,7 @@
 						<xsl:when test="string($lang)">
 							<xsl:choose>
 								<xsl:when test="contains($href, 'nomisma.org')">
-									<xsl:value-of select="numishare:getNomismaLabel(exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href], $lang)"/>
+									<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about=$href], $lang)"/>
 								</xsl:when>
 								<xsl:otherwise>
 									<xsl:value-of select="normalize-space(.)"/>

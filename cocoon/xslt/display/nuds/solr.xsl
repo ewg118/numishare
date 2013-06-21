@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="2.0" xmlns:nuds="http://nomisma.org/nuds" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:datetime="http://exslt.org/dates-and-times" xmlns:nm="http://nomisma.org/id/"
 	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:exsl="http://exslt.org/common" xmlns:mets="http://www.loc.gov/METS/"
-	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:res="http://www.w3.org/2005/sparql-results#" xmlns:gml="http://www.opengis.net/gml/" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:res="http://www.w3.org/2005/sparql-results#" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
 	xmlns:cinclude="http://apache.org/cocoon/include/1.0" exclude-result-prefixes="#all">
 
 	<xsl:template name="nuds">	
@@ -164,31 +164,25 @@
 					<xsl:when test="contains($href, 'nomisma.org')">
 						<xsl:variable name="label">
 							<xsl:choose>
-								<xsl:when test="string(exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/skos:prefLabel)">
-									<xsl:value-of select="exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/skos:prefLabel"/>
+								<xsl:when test="string($rdf/*[@rdf:about=$href]/skos:prefLabel)">
+									<xsl:value-of select="$rdf/*[@rdf:about=$href]/skos:prefLabel"/>
 								</xsl:when>
 								<xsl:otherwise>
 									<xsl:value-of select="$href"/>
 								</xsl:otherwise>
 							</xsl:choose>
 						</xsl:variable>
-						<xsl:if test="string(exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/descendant::gml:pos[1])">
-							<xsl:variable name="coordinates" select="exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/descendant::gml:pos[1]"/>
-							<xsl:if test="string($coordinates)">
-								<xsl:variable name="lat" select="substring-before($coordinates, ' ')"/>
-								<xsl:variable name="lon" select="substring-after($coordinates, ' ')"/>
-								<!-- *_geo format is 'mint name|URI of resource|KML-compliant geographic coordinates' -->
-								<field name="findspot_geo">
-									<xsl:value-of select="$label"/>
-									<xsl:text>|</xsl:text>
-									<xsl:value-of select="@xlink:href"/>
-									<xsl:text>|</xsl:text>
-									<xsl:value-of select="concat($lon, ',', $lat)"/>
-								</field>
-							</xsl:if>
+						<xsl:if test="$rdf/*[@rdf:about=$href]/descendant::geo:lat and $rdf/*[@rdf:about=$href]/descendant::geo:long">							
+							<field name="findspot_geo">
+								<xsl:value-of select="$label"/>
+								<xsl:text>|</xsl:text>
+								<xsl:value-of select="@xlink:href"/>
+								<xsl:text>|</xsl:text>
+								<xsl:value-of select="concat($rdf/*[@rdf:about=$href]/descendant::geo:long, ',', $rdf/*[@rdf:about=$href]/descendant::geo:lat)"/>
+							</field>
 						</xsl:if>
-						<xsl:if test="exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/descendant::nm:findspot[contains(@rdf:resource, 'geonames.org')]">
-							<xsl:variable name="geonamesUri" select="exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/descendant::nm:findspot[contains(@rdf:resource, 'geonames.org')][1]/@rdf:resource"/>
+						<xsl:if test="$rdf/*[@rdf:about=$href]/descendant::nm:findspot[contains(@rdf:resource, 'geonames.org')]">
+							<xsl:variable name="geonamesUri" select="$rdf/*[@rdf:about=$href]/descendant::nm:findspot[contains(@rdf:resource, 'geonames.org')][1]/@rdf:resource"/>
 							<field name="findspot_geo">
 								<xsl:value-of select="$label"/>
 								<xsl:text>|</xsl:text>
@@ -205,8 +199,6 @@
 								<field name="findspot_text">
 									<xsl:value-of select="."/>
 								</field>
-
-
 							</xsl:for-each>
 						</xsl:if>
 						<field name="findspot_facet">
@@ -219,9 +211,6 @@
 				</field>
 			</xsl:when>
 			<xsl:otherwise>
-				<!--<field name="findspot_geo">
-					<xsl:value-of select="concat(nuds:findspot/nuds:geogname[@xlink:role='findspot'], '|', tokenize(findspot/gml:Point/gml:coordinates, ', ')[2], ',', tokenize(findspot/gml:Point/gml:coordinates, ', ')[1])"/>
-					</field>-->
 				<field name="findspot_facet">
 					<xsl:value-of select="nuds:findspot/nuds:geoname[@xlink:role='findspot']"/>
 				</field>
@@ -332,7 +321,7 @@
 		</xsl:if>
 
 		<!-- get findspot, if available -->
-		<xsl:if test="count(exsl:node-set($objectDoc)//nuds:findspot) &gt; 0">
+		<!--<xsl:if test="count(exsl:node-set($objectDoc)//nuds:findspot) &gt; 0">
 			<xsl:variable name="name" select="exsl:node-set($objectDoc)//nuds:findspot/nuds:name"/>
 			<xsl:variable name="gml-coordinates" select="exsl:node-set($objectDoc)//nuds:findspot/gml:coordinates"/>
 			<xsl:variable name="kml-coordinates" select="concat(tokenize($gml-coordinates, ', ')[2], ',', tokenize($gml-coordinates, ', ')[1])"/>
@@ -342,7 +331,7 @@
 					<xsl:value-of select="concat($name, '|', @xlink:href, '|', $kml-coordinates)"/>
 				</field>
 			</xsl:if>
-		</xsl:if>
+		</xsl:if>-->
 	</xsl:template>
 
 	<xsl:template match="mets:fileSec">

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:georss="http://www.georss.org/georss"
-	xmlns:gml="http://www.opengis.net/gml/" version="2.0" exclude-result-prefixes="#all">
+	xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" version="2.0" exclude-result-prefixes="#all">
 	<xsl:include href="../linked_data/templates.xsl"/>
 	<xsl:output method="xml" encoding="UTF-8" indent="yes"/>
 
