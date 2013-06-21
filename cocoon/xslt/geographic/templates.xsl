@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:exsl="http://exslt.org/common" xmlns:gml="http://www.opengis.net/gml/"
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:exsl="http://exslt.org/common" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"
 	xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nm="http://nomisma.org/id/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:nuds="http://nomisma.org/nuds"
 	xmlns:nh="http://nomisma.org/nudsHoard" xmlns:cinclude="http://apache.org/cocoon/include/1.0" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:numishare="http://code.google.com/p/numishare/"
-	xmlns:res="http://www.w3.org/2005/sparql-results#" exclude-result-prefixes="exsl gml skos nm rdf nuds nh cinclude xlink numishare res" version="2.0">
+	xmlns:res="http://www.w3.org/2005/sparql-results#" exclude-result-prefixes="exsl geo skos nm rdf nuds nh cinclude xlink numishare res" version="2.0">
 	<xsl:template name="kml">
 		<kml xmlns="http://earth.google.com/kml/2.0">
 			<Document>
@@ -248,12 +248,14 @@
 					</xsl:choose>
 				</xsl:when>
 				<xsl:when test="contains($href, 'nomisma')">
-					<xsl:variable name="coords" select="$rdf/*[@rdf:about=$href]/gml:pos"/>
+					<xsl:variable name="coords">
+						<xsl:if test="$rdf/*[@rdf:about=$href]/geo:lat and $rdf/*[@rdf:about=$href]/geo:long">
+							<xsl:text>true</xsl:text>
+						</xsl:if>
+					</xsl:variable>
 					<xsl:choose>
-						<xsl:when test="string($coords)">
-							<xsl:variable name="lat" select="substring-before($coords, ' ')"/>
-							<xsl:variable name="lon" select="substring-after($coords, ' ')"/>
-							<xsl:value-of select="concat($lat, '|', $lon)"/>
+						<xsl:when test="$coords = 'true'">
+							<xsl:value-of select="concat($rdf/*[@rdf:about=$href]/geo:lat, '|', $rdf/*[@rdf:about=$href]/geo:long)"/>
 						</xsl:when>
 						<xsl:otherwise>NULL</xsl:otherwise>
 					</xsl:choose>
@@ -284,12 +286,14 @@
 										</xsl:choose>
 									</xsl:when>
 									<xsl:when test="contains($thisHref, 'nomisma')">
-										<xsl:variable name="coords" select="exsl:node-set($rdf)//*[@rdf:about=$thisHref]/gml:pos"/>
+										<xsl:variable name="coords">
+											<xsl:if test="$rdf/*[@rdf:about=$href]/geo:lat and $rdf/*[@rdf:about=$href]/geo:long">
+												<xsl:text>true</xsl:text>
+											</xsl:if>
+										</xsl:variable>
 										<xsl:choose>
-											<xsl:when test="string($coords)">
-												<xsl:variable name="lat" select="substring-before($coords, ' ')"/>
-												<xsl:variable name="lon" select="substring-after($coords, ' ')"/>
-												<xsl:value-of select="concat($lat, '|', $lon)"/>
+											<xsl:when test="$coords = 'true'">
+												<xsl:value-of select="concat($rdf/*[@rdf:about=$href]/geo:lat, '|', $rdf/*[@rdf:about=$href]/geo:long)"/>
 											</xsl:when>
 											<xsl:otherwise>NULL</xsl:otherwise>
 										</xsl:choose>
@@ -498,13 +502,13 @@
 					</Point>
 				</xsl:when>
 				<xsl:when test="contains($href, 'nomisma')">
-					<xsl:variable name="coordinates" select="$rdf//*[@rdf:about=$href]/descendant::gml:pos[1]"/>
-					<xsl:if test="string($coordinates)">
-						<xsl:variable name="lat" select="substring-before($coordinates, ' ')"/>
-						<xsl:variable name="lon" select="substring-after($coordinates, ' ')"/>
+					<xsl:variable name="coordinates">
+						<xsl:if test="$rdf//*[@rdf:about=$href]/descendant::geo:long and $rdf//*[@rdf:about=$href]/descendant::geo:lat">true</xsl:if>
+					</xsl:variable>
+					<xsl:if test="$coordinates='true'">
 						<Point>
 							<coordinates>
-								<xsl:value-of select="concat($lon, ',', $lat)"/>
+								<xsl:value-of select="concat($rdf//*[@rdf:about=$href]/descendant::geo:long[1], ',', $rdf//*[@rdf:about=$href]/descendant::geo:lat[1])"/>
 							</coordinates>
 						</Point>
 					</xsl:if>
