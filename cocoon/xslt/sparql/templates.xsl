@@ -237,7 +237,7 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 		</xsl:variable>
 		
 		
-		<xsl:variable name="service" select="concat('http://admin.numismatics.org/nomisma/apis/', $api, '?constraints=', encode-for-uri($constraints))"/>
+		<xsl:variable name="service" select="concat('http://nomisma.numismatics.org/apis/', $api, '?constraints=', encode-for-uri($constraints))"/>
 		<xsl:value-of select="format-number(document($service)//response, '#.00')"/>		
 	</xsl:template>
 	

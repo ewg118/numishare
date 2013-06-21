@@ -47,7 +47,6 @@
 
 	<xsl:variable name="nudsGroup" as="element()*">
 		<nudsGroup>
-			<!-- get nomisma NUDS documents with get-nuds API -->
 			<xsl:variable name="id-param">
 				<xsl:for-each select="distinct-values(descendant::nuds:typeDesc[contains(@xlink:href, 'nomisma.org') and (boolean(index-of($codes, @certainty)) = false())]/@xlink:href)">
 					<xsl:value-of select="substring-after(., 'id/')"/>
