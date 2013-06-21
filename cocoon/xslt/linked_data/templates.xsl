@@ -127,6 +127,9 @@
 					</xsl:if>
 					<!-- physical attributes -->
 					<xsl:apply-templates select="nuds:descMeta/nuds:physDesc" mode="nomisma"/>
+					
+					<!-- findspot-->
+					<xsl:apply-templates select="nuds:descMeta/nuds:findspotDesc" mode="nomisma"/>
 
 					<!-- images -->
 					<xsl:apply-templates select="nuds:digRep/mets:fileSec" mode="nomisma"/>
@@ -252,6 +255,12 @@
 			<xsl:value-of select="nuds:toDate/@standardDate"/>
 		</nm:end_date>
 	</xsl:template>
+	
+	<xsl:template match="nuds:findspotDesc" mode="nomisma">
+		<xsl:if test="string(@xlink:href)">
+			<nm:findspot rdf:resource="{@xlink:href}"/>
+		</xsl:if>
+	</xsl:template>
 
 	<!-- PROCESS NUDS-HOARD RECORDS INTO NOMISMA/METIS COMPLIANT RDF MODELS -->
 	<xsl:template match="nh:nudsHoard" mode="nomisma">
@@ -308,7 +317,6 @@
 				<xsl:when test="not(descendant::nh:deposit/nh:date) and not(descendant::nh:deposit/nh:dateRange)">
 					<xsl:variable name="nudsGroup" as="element()*">
 						<nudsGroup>
-							<!-- get nomisma NUDS documents with get-nuds API -->
 							<xsl:variable name="id-param">
 								<xsl:for-each select="distinct-values(descendant::nuds:typeDesc[contains(@xlink:href, 'nomisma.org')]/@xlink:href)">
 									<xsl:value-of select="substring-after(., 'id/')"/>
@@ -319,7 +327,7 @@
 							</xsl:variable>
 
 							<xsl:if test="string-length($id-param) &gt; 0">
-								<xsl:for-each select="document(concat('http://admin.numismatics.org/nomisma/apis/getNuds?identifiers=', $id-param))//nuds:nuds">
+								<xsl:for-each select="document(concat('http://nomisma.numismatics.org/apis/getNuds?identifiers=', $id-param))//nuds:nuds">
 									<object xlink:href="http://nomisma.org/id/{nuds:nudsHeader/nuds:nudsid}">
 										<xsl:copy-of select="."/>
 									</object>
@@ -714,18 +722,25 @@
 					<xsl:value-of select="format-number(int[@name='taq_num'], '0000')"/>
 				</nm:closing_date>
 			</xsl:if>
-			<xsl:if test="string(str[@name='findspot_geo'])">
-				<xsl:variable name="findspot" select="tokenize(str[@name='findspot_geo'], '\|')"/>
-				<nm:findspot>
-					<rdf:Description rdf:about="{$findspot[2]}">
-						<geo:lat>
-							<xsl:value-of select="substring-after($findspot[3], ',')"/>
-						</geo:lat>
-						<geo:long>
-							<xsl:value-of select="substring-before($findspot[3], ',')"/>
-						</geo:long>
-					</rdf:Description>
-				</nm:findspot>
+			<xsl:if test="arr[@name='findspot_geo']/str">
+				<xsl:variable name="findspot" select="tokenize(arr[@name='findspot_geo']/str, '\|')"/>
+				<xsl:choose>
+					<xsl:when test="contains($findspot[2], 'nomisma.org')">
+						<nm:findspot rdf:resource="{$findspot[2]}"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<nm:findspot>
+							<rdf:Description rdf:about="{$findspot[2]}">
+								<geo:lat>
+									<xsl:value-of select="substring-after($findspot[3], ',')"/>
+								</geo:lat>
+								<geo:long>
+									<xsl:value-of select="substring-before($findspot[3], ',')"/>
+								</geo:long>
+							</rdf:Description>
+						</nm:findspot>
+					</xsl:otherwise>
+				</xsl:choose>
 			</xsl:if>
 			<!-- images -->
 			<xsl:if test="string(str[@name='thumbnail_obv'])">
