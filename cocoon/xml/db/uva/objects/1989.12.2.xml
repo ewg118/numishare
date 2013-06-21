@@ -23,7 +23,7 @@
       </revisionStmt>
    </nudsHeader>
    <descMeta>
-      <title xml:lang="en">Coin of Thessalian Confederacy, Thessaly, 196 B.C.-146 B.C. 1989.12.2.</title>
+      <title xml:lang="en">Coin of Thessalian League, Thessaly, 196 B.C.-146 B.C. 1989.12.2.</title>
       <department>Greek</department>
       <typeDesc>
          <objectType xlink:href="http://nomisma.org/id/coin">Coin</objectType>
@@ -33,7 +33,7 @@
             <toDate standardDate="-0146">146 B.C.</toDate>
          </dateRange>
          <authority>
-            <corpname xlink:type="simple" xlink:role="authority">Thessalian Confederacy</corpname>
+         	<corpname xlink:type="simple" xlink:role="authority" xlink:href="http://nomisma.org/id/thessalian_league">Thessalian League</corpname>
          </authority>
          <geographic>
             <geogname xlink:type="simple" xlink:role="region"
