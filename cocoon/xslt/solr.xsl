@@ -6,7 +6,7 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:nuds="http://nomisma.org/nuds" xmlns:nh="http://nomisma.org/nudsHoard" xmlns:nm="http://nomisma.org/id/"
 	xmlns:exsl="http://exslt.org/common" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:cinclude="http://apache.org/cocoon/include/1.0"
 	exclude-result-prefixes="#all" version="2.0">
-	<xsl:output method="xml" encoding="UTF-8"/>
+	<xsl:output method="xml" encoding="UTF-8" indent="yes"/>
 	<xsl:include href="functions.xsl"/>
 	<xsl:include href="display/nuds/solr.xsl"/>
 	<xsl:include href="display/nudsHoard/solr.xsl"/>
@@ -35,7 +35,7 @@
 			</xsl:variable>
 
 			<xsl:if test="string-length($id-param) &gt; 0">
-				<xsl:for-each select="document(concat('http://nomisma.numismatics.org/apis/getNuds?identifiers=', $id-param))//nuds:nuds">
+				<xsl:for-each select="document(concat('http://nomisma.numismatics.org/apis/getNuds?identifiers=', encode-for-uri($id-param)))//nuds:nuds">
 					<object xlink:href="http://nomisma.org/id/{nuds:nudsHeader/nuds:nudsid}">
 						<xsl:copy-of select="."/>
 					</object>
@@ -45,11 +45,9 @@
 			<!-- incorporate other typeDescs which do not point to nomisma.org -->
 			<xsl:for-each select="distinct-values(descendant::nuds:typeDesc[string(@xlink:href) and not(contains(@xlink:href, 'nomisma.org'))]/@xlink:href)">
 				<xsl:variable name="href" select="."/>
-				<xsl:if test="boolean(document(concat($href, '.xml')))">
-					<object xlink:href="{$href}">
-						<xsl:copy-of select="document(concat($href, '.xml'))/nuds:nuds"/>
-					</object>
-				</xsl:if>
+				<object xlink:href="{$href}">
+					<xsl:copy-of select="document(concat($href, '.xml'))/nuds:nuds"/>
+				</object>
 			</xsl:for-each>
 			<xsl:for-each select="descendant::nuds:typeDesc[not(string(@xlink:href))]">
 				<object>
@@ -122,7 +120,7 @@
 			</xsl:for-each>
 		</xsl:variable>
 		
-		<xsl:variable name="rdf_url" select="concat('http://nomisma.numismatics.org/apis/getRdf?identifiers=', $id-param)"/>
+		<xsl:variable name="rdf_url" select="concat('http://nomisma.numismatics.org/apis/getRdf?identifiers=', encode-for-uri($id-param))"/>
 		<xsl:copy-of select="document($rdf_url)/rdf:RDF/*"/>
 		
 		<xsl:if test="$end &lt; $count">

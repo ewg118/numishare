@@ -71,15 +71,7 @@
 				<xsl:with-param name="lang" select="$lang"/>
 			</xsl:apply-templates>
 			
-			<xsl:choose>
-				<xsl:when test="string($sparql_endpoint)">
-					<!-- get findspots -->
-					<xsl:apply-templates select="$sparqlResult/descendant::res:group[@id=$id]/res:result"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:apply-templates select="nuds:digRep"/>
-				</xsl:otherwise>
-			</xsl:choose>
+			<xsl:apply-templates select="nuds:digRep"/>
 		</doc>
 	</xsl:template>
 
