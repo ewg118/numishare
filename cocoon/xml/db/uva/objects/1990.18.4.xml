@@ -34,7 +34,7 @@
             <toDate standardDate="-0317">317 B.C.</toDate>
          </dateRange>
          <authority>
-            <persname xlink:type="simple" xlink:role="authority">Philip III Arrhidaeus</persname>
+            <persname xlink:type="simple" xlink:role="authority" xlink:href="http://nomisma.org/id/philip_iii_arrhidaeus">Philip III Arrhidaeus</persname>
             <famname xlink:type="simple" xlink:role="dynasty">Argead</famname>
             <corpname xlink:type="simple" xlink:role="state">Macedonian Kingdom</corpname>
          </authority>

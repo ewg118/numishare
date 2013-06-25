@@ -40,7 +40,7 @@
          </authority>
          <geographic>
             <geogname xlink:type="simple" xlink:role="mint" xlink:href="http://nomisma.org/id/siscia">Siscia</geogname>
-            <geogname xlink:type="simple" xlink:role="region">Pannonia-- </geogname>
+            <geogname xlink:type="simple" xlink:role="region" xlink:href="http://nomisma.org/id/pannonia">Pannonia</geogname>
          </geographic>
          <obverse>
             <type>

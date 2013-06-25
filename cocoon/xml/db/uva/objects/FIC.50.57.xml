@@ -30,7 +30,7 @@
          <material xlink:href="http://nomisma.org/id/ae">Bronze</material>
          <date standardDate="0018">A.D. 18</date>
          <authority>
-            <persname xlink:type="simple" xlink:role="authority">Valerius Gratus</persname>
+            <persname xlink:type="simple" xlink:role="issuer" xlink:href="http://nomisma.org/id/valerius_gratus">Valerius Gratus</persname>
             <persname xlink:type="simple" xlink:role="authority"
                       xlink:href="http://nomisma.org/id/tiberius">Tiberius</persname>
             <famname xlink:type="simple" xlink:role="dynasty">Julio-Claudian</famname>

@@ -33,7 +33,7 @@
             <toDate standardDate="-0168">168 B.C.</toDate>
          </dateRange>
          <authority>
-            <corpname xlink:type="simple" xlink:role="authority">Epirote League</corpname>
+            <corpname xlink:type="simple" xlink:role="authority" xlink:href="http://nomisma.org/id/epirote_league"></corpname>
          </authority>
          <geographic>
             <geogname xlink:type="simple" xlink:role="region"
