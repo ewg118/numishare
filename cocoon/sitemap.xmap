@@ -244,6 +244,15 @@ These only need to be changed if Solr and Orbeon are run on a different server o
 				<map:transform type="cinclude"/>
 				<map:serialize type="html"/>
 			</map:match>
+			
+			<!-- redirect from old display-uva pipeline -->
+			<map:match pattern="display-uva">
+				<map:generate src="xml/redirects.xml"/>
+				<map:transform src="xslt/redirect.xsl" label="basiccontent" type="xslt-saxon">
+					<map:parameter name="use-request-parameters" value="true"/>
+				</map:transform>
+				<map:serialize type="html"/>
+			</map:match>
 
 			<!-- QUERY RESULTS/LINKED DATA -->
 			<!-- RDF for contributing to Pelagios -->
