@@ -84,12 +84,15 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 			PREFIX rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 			PREFIX dcterms:  <http://purl.org/dc/terms/>
 			PREFIX nm:       <http://nomisma.org/id/>
+			PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>
 			
-			SELECT ?object ?uri ?title ?publisher ?findspot ?objectType ?burial WHERE {
+			SELECT ?object ?uri ?title ?publisher ?findspot ?lat ?long ?objectType ?burial WHERE {
 			?object nm:type_series_item <typeUri>.
 			?object dcterms:title ?title .
 			?object dcterms:publisher ?publisher .
 			?object nm:findspot ?findspot .
+			?findspot geo:lat ?lat .
+			?findspot geo:long ?long .
 			OPTIONAL { ?object rdf:type ?objectType }
 			OPTIONAL { ?object nm:closing_date ?burial }}]]>
 		</xsl:variable>
@@ -104,12 +107,15 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 			PREFIX rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 			PREFIX dcterms:  <http://purl.org/dc/terms/>
 			PREFIX nm:       <http://nomisma.org/id/>
+			PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>
 			
-			SELECT ?object ?uri ?title ?publisher ?findspot ?objectType ?burial WHERE {
+			SELECT ?object ?uri ?title ?publisher ?findspot ?objectType ?burial ?lat ?long WHERE {
 			?object nm:type_series_item <typeUri>.
 			?object dcterms:title ?title .
 			?object dcterms:publisher ?publisher .
 			?object nm:findspot ?findspot .
+			?findspot geo:lat ?lat .
+			?findspot geo:long ?long .
 			OPTIONAL { ?object rdf:type ?objectType }
 			OPTIONAL { ?object nm:closing_date ?burial }}]]>
 		</xsl:variable>
@@ -174,17 +180,20 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 		<xsl:copy-of select="document($service)/res:sparql"/>
 	</xsl:template>
 
-	<xsl:template name="numishare:solrFields">
+	<!--<xsl:template name="numishare:solrFields">
 		<xsl:variable name="query">
 			<![CDATA[
 			PREFIX rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 			PREFIX dcterms:  <http://purl.org/dc/terms/>
 			PREFIX nm:       <http://nomisma.org/id/>
+			PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>
 			
-			SELECT ?object ?title ?type ?findspot  WHERE {
+			SELECT ?object ?title ?type ?findspot ?lat ?long WHERE {
 			<typeUris>
 			?object dcterms:title ?title .			
 			?object nm:findspot ?findspot .
+			?findspot geo:lat ?lat .
+			?findspot geo:long ?long .
 			?object nm:type_series_item ?type . 
 			]]>
 		</xsl:variable>
@@ -223,8 +232,27 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 		<xsl:variable name="service" select="concat($endpoint, '?query=', encode-for-uri($post), '&amp;output=xml')"/>
 
 		<xsl:copy-of select="document($service)/res:sparql"/>
+	</xsl:template>-->
 
-		<!--<xsl:apply-templates select="document($service)/res:sparql" mode="solr"/>-->
+	<xsl:template name="numishare:solrFields">
+		<xsl:variable name="query">
+			<![CDATA[
+			PREFIX rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+			PREFIX dcterms:  <http://purl.org/dc/terms/>
+			PREFIX nm:       <http://nomisma.org/id/>
+			PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>
+			
+			SELECT ?object ?title ?findspot ?lat ?long WHERE {
+			?object nm:type_series_item <typeUri> .
+			?object dcterms:title ?title .			
+			?object nm:findspot ?findspot .
+			?findspot geo:lat ?lat .
+			?findspot geo:long ?long }
+			]]>
+		</xsl:variable>		
+		
+		<xsl:variable name="service" select="concat($endpoint, '?query=', encode-for-uri(normalize-space(replace($query, 'typeUri', $uri))), '&amp;output=xml')"/>	
+		<xsl:copy-of select="document($service)/res:sparql"/>
 	</xsl:template>
 
 	<xsl:template name="numishare:avgMeasurement">	
@@ -249,7 +277,7 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 			PREFIX nm:       <http://nomisma.org/id/>
 			PREFIX skos:      <http://www.w3.org/2004/02/skos/core#>						
 			SELECT DISTINCT ?val ?label WHERE {
-			?object dcterms:partOf <http://nomisma.org/id/ric>.
+			?object dcterms:isPartOf <http://nomisma.org/id/ric>.
 			?object FIELD ?val .
 			?val skos:prefLabel ?label
 			FILTER(langMatches(lang(?label), "LANG"))} 
@@ -335,10 +363,6 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 
 	<xsl:template match="res:sparql" mode="kml">
 		<xsl:apply-templates select="descendant::res:result/res:binding[@name='findspot']" mode="kml"/>
-	</xsl:template>
-
-	<xsl:template match="res:sparql" mode="solr">
-		<xsl:apply-templates select="descendant::res:result/res:binding[@name='findspot']" mode="solr"/>
 	</xsl:template>
 
 	<xsl:template match="res:sparql" mode="json">
@@ -587,69 +611,4 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 			</xsl:if>
 		</Placemark>
 	</xsl:template>
-
-	<xsl:template match="res:binding[@name='findspot']" mode="solr">
-		<!-- *_geo format is 'mint name|URI of resource|KML-compliant geographic coordinates' -->
-		<xsl:choose>
-			<xsl:when test="contains(child::res:uri, 'geonames')">
-				<xsl:variable name="geonameId" select="substring-before(substring-after(child::res:uri, 'geonames.org/'), '/')"/>
-				<xsl:variable name="geonames_data" as="element()*">
-					<results>
-						<xsl:copy-of select="document(concat($geonames-url, '/get?geonameId=', $geonameId, '&amp;username=', $geonames_api_key, '&amp;style=full'))"/>
-					</results>
-				</xsl:variable>
-				<xsl:variable name="coordinates" select="concat($geonames_data//lng, ',', $geonames_data//lat)"/>
-
-				<field name="findspot_geo">
-					<xsl:value-of select="parent::node()/res:binding[@name='title']/res:literal"/>
-					<xsl:text>|</xsl:text>
-					<xsl:value-of select="child::res:uri"/>
-					<xsl:text>|</xsl:text>
-					<xsl:value-of select="$coordinates"/>
-				</field>
-
-				<!-- hierarchy -->
-				<!--	<xsl:variable name="hierarchy">
-					<xsl:value-of select="$geonames_data//countryName"/>
-					<xsl:for-each select="$geonames_data//*[starts-with(local-name(), 'adminName')]">
-						<xsl:sort select="local-name()"/>
-						<xsl:if test="string-length(.) &gt; 0">
-							<xsl:text>|</xsl:text>
-							<xsl:value-of select="."/>
-						</xsl:if>		
-					</xsl:for-each>
-					<xsl:text>|</xsl:text>
-					<xsl:value-of select="$geonames_data//name"/>
-				</xsl:variable>
-				
-				<xsl:for-each select="tokenize($hierarchy, '\|')">
-					<field name="findspot_hier">
-						<xsl:value-of select="concat('L', position(), '|', .)"/>
-					</field>
-					<field name="findspot_text">
-						<xsl:value-of select="."/>
-					</field>
-				</xsl:for-each>-->
-			</xsl:when>
-			<xsl:when test="string(res:literal)">
-				<field name="findspot_geo">
-					<xsl:value-of select="parent::node()/res:binding[@name='title']/res:literal"/>
-					<xsl:text>|</xsl:text>
-					<xsl:value-of select="child::res:uri"/>
-					<xsl:text>|</xsl:text>
-					<xsl:value-of select="res:literal"/>
-				</field>
-			</xsl:when>
-		</xsl:choose>
-
-		<field name="findspot_facet">
-			<xsl:value-of select="parent::node()/res:binding[@name='title']/res:literal"/>
-		</field>
-		<xsl:if test="string(child::res:uri)">
-			<field name="findspot_uri">
-				<xsl:value-of select="child::res:uri"/>
-			</field>
-		</xsl:if>
-	</xsl:template>
-
 </xsl:stylesheet>

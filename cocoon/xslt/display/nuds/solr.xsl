@@ -4,12 +4,12 @@
 	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:res="http://www.w3.org/2005/sparql-results#" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
 	xmlns:cinclude="http://apache.org/cocoon/include/1.0" exclude-result-prefixes="#all">
 
-	<xsl:template name="nuds">
+	<xsl:template name="nuds">	
 		<!-- create default document -->
 		<xsl:apply-templates select="//nuds:nuds">
 			<xsl:with-param name="lang"/>
 		</xsl:apply-templates>
-
+		
 		<!-- create documents for each additional activated language -->
 		<xsl:for-each select="//config/descendant::language[@enabled='true']">
 			<xsl:apply-templates select="//nuds:nuds">
@@ -30,7 +30,7 @@
 					<xsl:otherwise>
 						<xsl:value-of select="$id"/>
 					</xsl:otherwise>
-				</xsl:choose>
+				</xsl:choose>				
 			</field>
 			<field name="nudsid">
 				<xsl:value-of select="$id"/>
@@ -39,7 +39,7 @@
 				<field name="lang">
 					<xsl:value-of select="$lang"/>
 				</field>
-			</xsl:if>
+			</xsl:if>			
 			<xsl:if test="$collection-name = 'ocre'">
 				<xsl:call-template name="sortid"/>
 			</xsl:if>
@@ -70,16 +70,32 @@
 			<xsl:apply-templates select="nuds:descMeta">
 				<xsl:with-param name="lang" select="$lang"/>
 			</xsl:apply-templates>
-
+			
 			<xsl:choose>
 				<xsl:when test="string($sparql_endpoint)">
-					<!-- get findspots -->
+					<!-- get findspots -->				
 					<xsl:apply-templates select="$sparqlResult/descendant::res:group[@id=$id]/res:result"/>
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:apply-templates select="nuds:digRep"/>
 				</xsl:otherwise>
 			</xsl:choose>
+			
+			<!-- fulltext -->
+			<field name="fulltext">
+				<xsl:value-of select="nuds:nudsHeader/nuds:nudsid"/>
+				<xsl:text> </xsl:text>
+				<xsl:for-each select="nuds:descMeta/descendant-or-self::text()">
+					<xsl:value-of select="normalize-space(.)"/>
+					<xsl:text> </xsl:text>
+				</xsl:for-each>
+				<xsl:if test="string($lang)">
+					<xsl:for-each select="$rdf/descendant-or-self::node()[@xml:lang=$lang]/text()">
+						<xsl:value-of select="normalize-space(.)"/>
+						<xsl:text> </xsl:text>
+					</xsl:for-each>
+				</xsl:if>
+			</field>
 		</doc>
 	</xsl:template>
 
@@ -90,7 +106,7 @@
 		<field name="findspot_facet">
 			<xsl:value-of select="$title"/>
 		</field>
-		<xsl:if test="$geonames//place[@id=$uri]">
+		<xsl:if test="res:binding[@name='long']/res:literal and res:binding[@name='lat']/res:literal">
 			<field name="findspot_uri">
 				<xsl:value-of select="$uri"/>
 			</field>
@@ -99,7 +115,7 @@
 				<xsl:text>|</xsl:text>
 				<xsl:value-of select="$uri"/>
 				<xsl:text>|</xsl:text>
-				<xsl:value-of select="$geonames//place[@id=$uri]"/>
+				<xsl:value-of select="concat(res:binding[@name='long']/res:literal, ',', res:binding[@name='lat']/res:literal)"/>
 			</field>
 		</xsl:if>
 	</xsl:template>
@@ -172,15 +188,17 @@
 								</xsl:otherwise>
 							</xsl:choose>
 						</xsl:variable>
-						<xsl:if test="$rdf/*[@rdf:about=$href]/descendant::geo:lat and $rdf/*[@rdf:about=$href]/descendant::geo:long">
-							<!-- *_geo format is 'mint name|URI of resource|KML-compliant geographic coordinates' -->
-							<field name="findspot_geo">
-								<xsl:value-of select="$label"/>
-								<xsl:text>|</xsl:text>
-								<xsl:value-of select="@xlink:href"/>
-								<xsl:text>|</xsl:text>
-								<xsl:value-of select="concat($rdf/*[@rdf:about=$href]/descendant::geo:long, ',', $rdf/*[@rdf:about=$href]/descendant::geo:lat)"/>
-							</field>
+						<xsl:if test="$rdf/*[@rdf:about=$href]/descendant::geo:lat and $rdf/*[@rdf:about=$href]/descendant::geo:long">							
+							<xsl:if test="string($coordinates)">
+								<!-- *_geo format is 'mint name|URI of resource|KML-compliant geographic coordinates' -->
+								<field name="findspot_geo">
+									<xsl:value-of select="$label"/>
+									<xsl:text>|</xsl:text>
+									<xsl:value-of select="@xlink:href"/>
+									<xsl:text>|</xsl:text>
+									<xsl:value-of select="concat($rdf/*[@rdf:about=$href]/descendant::geo:long, ',', $rdf/*[@rdf:about=$href]/descendant::geo:lat)"/>
+								</field>
+							</xsl:if>
 						</xsl:if>
 						<xsl:if test="$rdf/*[@rdf:about=$href]/descendant::nm:findspot[contains(@rdf:resource, 'geonames.org')]">
 							<xsl:variable name="geonamesUri" select="$rdf/*[@rdf:about=$href]/descendant::nm:findspot[contains(@rdf:resource, 'geonames.org')][1]/@rdf:resource"/>
