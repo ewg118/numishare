@@ -248,15 +248,20 @@ $(document).ready(function () {
 		if (collection_type == 'hoard') {
 			$('#timemap').html('<div id="mapcontainer"><div id="map"/></div><div id="timelinecontainer"><div id="timeline"/></div>');
 			initialize_timemap(query);
-		} else {			
-			newUrl = "mints.kml?q=" + query + (lang.length > 0 ? '&lang=' + lang : '');
-			
-			mintLayer.loaded = false;
-			mintLayer.setVisibility(true);
+		} else {	
+			var mintQuery = "mints.kml?q=" + query + (lang.length > 0 ? '&lang=' + lang : '');
+			var findspotQuery = "findspots.kml?q=" + query + (lang.length > 0 ? '&lang=' + lang : '');				
+			mintLayer.loaded = false;	
+			hoardLayer.loaded = false;				
 			//the refresh will force it to get the new KML data//
 			mintLayer.refresh({
-				force: true, url: newUrl
+				force: true, url: mintQuery
 			});
+			hoardLayer.refresh({
+				force: true, url: findspotQuery
+			});
+			mintLayer.setVisibility(true);
+			hoardLayer.setVisibility(true);
 			map.zoomToExtent(mintLayer.getDataExtent());
 		}
 	}
