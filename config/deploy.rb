@@ -17,8 +17,10 @@ set :normalize_asset_timestamps, false
 
 # if you want to clean up old releases on each deploy uncomment this:
 after "deploy", "solr:index", "deploy:link"
-after "deploy:restart", "deploy:cleanup"
+#after "deploy:restart", "deploy:cleanup"
 after "deploy:cold", "deploy:solr_config_link"
+
+#removed deploy:cleanup after deploy:restart
 
 namespace :deploy do
   desc 'Make the links'
