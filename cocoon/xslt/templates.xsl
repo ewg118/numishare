@@ -621,7 +621,7 @@
 	<!-- ************** SEARCH DROP-DOWN MENUS ************** -->
 	<xsl:template name="search_options">
 		<xsl:variable name="fields">
-			<xsl:text>fulltext,artist_facet,authority_facet,taq_num,coinType_facet,color_text,deity_facet,denomination_facet,department_facet,diameter_num,dynasty_facet,findspot_text,id,issuer_facet,legend_text,obv_leg_text,rev_leg_text,maker_facet,manufacture_facet,material_facet,mint_facet,tpq_num,objectType_facet,portrait_facet,reference_text,region_face,type_text,obv_type_text,rev_type_text,weight_num,year_num</xsl:text>
+			<xsl:text>fulltext,authority_facet,taq_num,coinType_facet,deity_facet,denomination_facet,department_facet,diameter_num,dynasty_facet,findspot_facet,nudsid,issuer_facet,legend_text,obv_leg_text,rev_leg_text,manufacture_facet,material_facet,mint_facet,tpq_num,objectType_facet,portrait_facet,reference_text,region_facet,type_text,obv_type_text,rev_type_text,weight_num,year_num</xsl:text>
 		</xsl:variable>
 
 		<xsl:for-each select="tokenize($fields, ',')">
@@ -651,13 +651,13 @@
 					<xsl:if test="not($name='taq_num') and not($name='tpq_num')">
 						<xsl:choose>
 							<!-- display only those search options when their facet equivalent has hits -->
-							<xsl:when test="exsl:node-set($facets)//lst[starts-with(@name, $root)][number(int[@name='numFacetTerms']) &gt; 0]">
+							<xsl:when test="$facets//lst[starts-with(@name, $root)]/int &gt; 0">
 								<option value="{$name}" class="search_option">
 									<xsl:value-of select="numishare:normalize_fields($name, $lang)"/>
 								</option>
 							</xsl:when>
 							<!-- display those search options when they aren't connected to facets -->
-							<xsl:when test="not(exsl:node-set($facets)//lst[starts-with(@name, $root)])">
+							<xsl:when test="not($facets//lst[starts-with(@name, $root)])">
 								<option value="{$name}" class="search_option">
 									<xsl:value-of select="numishare:normalize_fields($name, $lang)"/>
 								</option>
