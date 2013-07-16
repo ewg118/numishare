@@ -15,30 +15,8 @@
 			<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
 		</h2>
 		<ul>
-			<xsl:apply-templates select="*[local-name()='reference'][not(child::*[local-name()='objectXMLWrap'])]" mode="descMeta"/>
-			<xsl:apply-templates select="*[local-name()='reference']/*[local-name()='objectXMLWrap']"/>
+			<xsl:apply-templates mode="descMeta"/>
 		</ul>
-	</xsl:template>
-
-	<xsl:template match="*[local-name()='objectXMLWrap']">
-		<xsl:variable name="label">
-			<xsl:choose>
-				<xsl:when test="parent::*[local-name()='reference']">
-					<xsl:value-of select="numishare:regularize_node(parent::node()/local-name(), $lang)"/>
-				</xsl:when>
-			</xsl:choose>
-		</xsl:variable>
-
-		<li>
-			<b><xsl:value-of select="$label"/>: </b>
-			<!-- determine which template to process -->
-			<xsl:choose>
-				<!-- process MODS record into Chicago Manual of Style formatted citation -->
-				<xsl:when test="child::*[local-name()='modsCollection']">
-					<xsl:call-template name="mods-citation"/>
-				</xsl:when>
-			</xsl:choose>
-		</li>
 	</xsl:template>
 
 	<xsl:template match="nuds:physDesc[child::*]">
@@ -100,11 +78,11 @@
 						<xsl:choose>
 							<xsl:when test="string($lang) and contains($href, 'nomisma.org')">
 								<xsl:choose>
-									<xsl:when test="string(exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/skos:prefLabel[@xml:lang=$lang])">
-										<xsl:value-of select="exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/skos:prefLabel[@xml:lang=$lang]"/>
+									<xsl:when test="string($rdf/*[@rdf:about=$href]/skos:prefLabel[@xml:lang=$lang][1])">
+										<xsl:value-of select="$rdf/*[@rdf:about=$href]/skos:prefLabel[@xml:lang=$lang][1]"/>
 									</xsl:when>
 									<xsl:otherwise>
-										<xsl:value-of select="exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/skos:prefLabel[@xml:lang='en']"/>
+										<xsl:value-of select="$rdf/*[@rdf:about=$href]/skos:prefLabel[@xml:lang='en'][1]"/>
 									</xsl:otherwise>
 								</xsl:choose>
 							</xsl:when>
@@ -129,7 +107,7 @@
 								<!-- if there is no text value and it points to nomisma.org, grab the prefLabel -->
 								<xsl:choose>
 									<xsl:when test="not(string(normalize-space(.))) and contains($href, 'nomisma.org')">
-										<xsl:value-of select="exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/skos:prefLabel[@xml:lang='en']"/>
+										<xsl:value-of select="$rdf/*[@rdf:about=$href]/skos:prefLabel[@xml:lang='en'][1]"/>
 									</xsl:when>
 									<xsl:otherwise>
 										<xsl:value-of select="."/>
@@ -181,16 +159,10 @@
 
 					<!-- create links to resources -->
 					<xsl:if test="string($href)">
-							<a href="{$href}" target="_blank" title="{if (contains($href, 'geonames')) then 'geonames' else if (contains($href, 'nomisma')) then 'nomisma' else ''}">
-								<img src="{$display_path}images/external.png" alt="external link" class="external_link"/>
-							</a>
-							<!-- parse nomisma RDFa, create links for pleiades and wikipedia -->
-							<!--<xsl:if test="contains($href, 'nomisma.org') and ($field='mint' or $field='region')">
-								<xsl:for-each select="exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/skos:related[contains(@rdf:resource, 'pleiades')]">
-									<xsl:variable name="pleiades-id" select="substring-after(@rdf:resource, 'places/')"/>
-									<span id="{generate-id()}" data-pleiades_id="{$pleiades-id}" class="pelagios pelagios-place" title="Click for Pelagios relations"/>
-								</xsl:for-each>
-							</xsl:if>-->
+
+						<a href="{$href}" target="_blank" title="{if (contains($href, 'geonames')) then 'geonames' else if (contains($href, 'nomisma')) then 'nomisma' else ''}">
+							<img src="{$display_path}images/external.png" alt="external link" class="external_link"/>
+						</a>
 					</xsl:if>
 
 					<!-- display label on right for right-to-left scripts -->
@@ -298,19 +270,20 @@
 	</xsl:template>
 	<!--***************************************** OPTIONS BAR **************************************** -->
 	<xsl:template name="icons">
-
-		<div class="submenu">
-			<div class="icon">
-				<a href="{$id}.xml">
-					<img src="{$display_path}images/xml.png" title="XML" alt="XML"/>
-				</a>
+		<div class="yui3-u-1">
+			<div class="submenu">
+				<div class="icon">
+					<a href="{$id}.xml">
+						<img src="{$display_path}images/xml.png" title="XML" alt="XML"/>
+					</a>
+				</div>
+				<div class="icon">
+					<a href="{$id}.rdf">
+						<img src="{$display_path}images/rdf.gif" title="RDF" alt="RDF"/>
+					</a>
+				</div>
+				<div class="icon">AddThis could go here...</div>
 			</div>
-			<div class="icon">
-				<a href="{$id}.rdf">
-					<img src="{$display_path}images/rdf.gif" title="RDF" alt="RDF"/>
-				</a>
-			</div>
-			<div class="icon">AddThis could go here...</div>
 		</div>
 	</xsl:template>
 
