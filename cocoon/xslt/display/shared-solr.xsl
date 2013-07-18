@@ -181,6 +181,14 @@
 				</xsl:when>
 			</xsl:choose>
 		</xsl:if>
+		<xsl:if test="string(@xlink:href) and @xlink:role = 'region'">
+			<xsl:variable name="href" select="@xlink:href"/>
+			<xsl:for-each select="$rdf/*[@rdf:about=$href]/skos:related[contains(@rdf:resource, 'pleiades.stoa.org')]">
+				<field name="pleiades_uri">
+					<xsl:value-of select="@rdf:resource"/>
+				</field>
+			</xsl:for-each>
+		</xsl:if>
 	</xsl:template>
 
 	<!-- generalize refDesc for NUDS and NUDS Hoard records -->
