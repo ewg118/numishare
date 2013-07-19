@@ -1262,7 +1262,7 @@
 					<xsl:when test="$label='header_compare'">Сравнить</xsl:when>
 					<xsl:when test="$label='header_language'">Язык</xsl:when>
 					<xsl:when test="$label='header_analyze'">Анализ кладов</xsl:when>
-					<xsl:when test="$label='header_visualize'">Отобразить запросы</xsl:when>				
+					<xsl:when test="$label='header_visualize'">Отобразить запросы</xsl:when>
 					<xsl:when test="$label='display_summary'">Резюме</xsl:when>
 					<xsl:when test="$label='display_map'">Карта</xsl:when>
 					<xsl:when test="$label='display_administrative'">Администрирование</xsl:when>
@@ -1270,7 +1270,7 @@
 					<xsl:when test="$label='display_data-download'">Загрузка данных</xsl:when>
 					<xsl:when test="$label='display_quantitative'">Количественный анализ</xsl:when>
 					<xsl:when test="$label='display_date-analysis'">Анализ датировки</xsl:when>
-					<xsl:when test="$label='display_contents'">Содержание</xsl:when>					
+					<xsl:when test="$label='display_contents'">Содержание</xsl:when>
 					<xsl:when test="$label='results_all-terms'">Все значения</xsl:when>
 					<xsl:when test="$label='results_map-results'">Карта результатов</xsl:when>
 					<xsl:when test="$label='results_filters'">Фильтры</xsl:when>
@@ -1291,7 +1291,7 @@
 					<xsl:when test="$label='results_coins'">монеты</xsl:when>
 					<xsl:when test="$label='results_hoard'">клад</xsl:when>
 					<xsl:when test="$label='results_hoards'">клады</xsl:when>
-					<xsl:when test="$label='results_and'">и </xsl:when>					
+					<xsl:when test="$label='results_and'">и </xsl:when>
 					<xsl:when test="$label='lang_ar'">Арабский</xsl:when>
 					<xsl:when test="$label='lang_de'">Немецкий</xsl:when>
 					<xsl:when test="$label='lang_en'">Английский</xsl:when>
@@ -1331,6 +1331,7 @@
 					<xsl:when test="$label='display_visualization'">Visualization</xsl:when>
 					<xsl:when test="$label='display_data-download'">Data Download</xsl:when>
 					<xsl:when test="$label='display_date-analysis'">Date Analysis</xsl:when>
+					<xsl:when test="$label='display_examples'">Examples of this type</xsl:when>
 					<xsl:when test="$label='results_all-terms'">All Terms</xsl:when>
 					<xsl:when test="$label='results_map-results'">Map Results</xsl:when>
 					<xsl:when test="$label='results_filters'">Filters</xsl:when>
@@ -1354,8 +1355,59 @@
 					<xsl:when test="$label='results_and'">and</xsl:when>
 					<xsl:when test="$label='visualize_typological'">Typological Analysis</xsl:when>
 					<xsl:when test="$label='visualize_measurement'">Measurement Analysis</xsl:when>
+					<xsl:when test="$label='visualize_desc'">Use the data selection and visualization options below to generate a chart based on selected parameters. Instructions for using this feature can be found here</xsl:when>
+					<xsl:when test="$label='visualize_type_desc'">Use this feature to visualize percentages or numeric occurrences of the following typologies</xsl:when>
+					<xsl:when test="$label='visualize_date_desc'">Use this feature to render percentages or numeric occurrences of coins of a particular date within hoards</xsl:when>
+					<xsl:when test="$label='visualize_csv_desc'">Use this feature to download a CSV for the given query and selected hoards</xsl:when>
+					<xsl:when test="$label='visualize_response_type'">Select Numeric Response Type</xsl:when>
+					<xsl:when test="$label='visualize_select_measurement'">Select Measurement</xsl:when>
+					<xsl:when test="$label='visualize_chart_type'">Select Chart Type</xsl:when>
+					<xsl:when test="$label='visualize_categories'">Select Categories for Analysis</xsl:when>
+					<xsl:when test="$label='visualize_select_hoards'">Select Hoards</xsl:when>
+					<xsl:when test="$label='visualize_select_hoards_optional'">Select Hoards to Compare (optional)</xsl:when>
+					<xsl:when test="$label='visualize_compare'">Compare Queries</xsl:when>
+					<xsl:when test="$label='visualize_compare_category'">Compare by Category</xsl:when>
+					<xsl:when test="$label='visualize_filter_list'">Filter List</xsl:when>
+					<xsl:when test="$label='visualize_filter_query'">Filter Query</xsl:when>
+					<xsl:when test="$label='visualize_remove_filter'">Remove Filter</xsl:when>
+					<xsl:when test="$label='visualize_add_custom'">Add Custom Queries</xsl:when>
+					<xsl:when test="$label='visualize_custom_query'">Custom Query</xsl:when>
+					<xsl:when test="$label='visualize_compare_optional'">Compare to other Queries (optional)</xsl:when>
+					<xsl:when test="$label='visualize_comparison_query'">Comparison Query</xsl:when>
+					<xsl:when test="$label='visualize_remove_query'">Remove Query</xsl:when>
+					<xsl:when test="$label='visualize_query'">Query</xsl:when>
+					<xsl:when test="$label='visualize_add_query'">Add Query</xsl:when>
+					<xsl:when test="$label='visualize_add_queries'">Add Queries</xsl:when>
+					<xsl:when test="$label='visualize_add_new'">Add New</xsl:when>
+					<xsl:when test="$label='visualize_add_query_desc'">Use the drop-down menus below to formulate your measurement query. A date range can only
+						be specified once per query.</xsl:when>
+					<xsl:when test="$label='visualize_optional_settings'">Optional Settings</xsl:when>
+					<xsl:when test="$label='visualize_hide-show'">Hide/Show Options</xsl:when>
+					<xsl:when test="$label='visualize_stacking_options'">Stacking Options</xsl:when>
+					<xsl:when test="$label='visualize_remove_certainty_codes'">Remove Certainty Codes</xsl:when>
+					<xsl:when test="$label='visualize_arrange'">Arrange by Interval (optional)</xsl:when>
+					<xsl:when test="$label='visualize_interval'">Interval (years)</xsl:when>
+					<xsl:when test="$label='visualize_duration'">Duration</xsl:when>
+					<xsl:when test="$label='visualize_calculate'">Calculate Selected</xsl:when>
+					<xsl:when test="$label='visualize_generate'">Generate Chart</xsl:when>
+					<xsl:when test="$label='numeric_count'">Count</xsl:when>
+					<xsl:when test="$label='numeric_percentage'">Percentage</xsl:when>
+					<xsl:when test="$label='numeric_cumulative'">Cumulative</xsl:when>
+					<xsl:when test="$label='numeric_cumulative_percentage'">Cumulative Percentage</xsl:when>
+					<xsl:when test="$label='chart_bar'">bar</xsl:when>
+					<xsl:when test="$label='chart_column'">column</xsl:when>
+					<xsl:when test="$label='chart_area'">area</xsl:when>
+					<xsl:when test="$label='chart_spline'">spline</xsl:when>
+					<xsl:when test="$label='chart_areaspline'">areaspline</xsl:when>
+					<xsl:when test="$label='chart_line'">line</xsl:when>
+					<xsl:when test="$label='visualize_alert'">Alert</xsl:when>
 					<xsl:when test="$label='visualize_error1'">Interval and duration are required.</xsl:when>
 					<xsl:when test="$label='visualize_error2'">To Date must be later than From Date.</xsl:when>
+					<xsl:when test="$label='visualize_error3'">A category must be selected.</xsl:when>
+					<xsl:when test="$label='visualize_error4'">At least 1 and up to 8 hoards may be selected.</xsl:when>
+					<xsl:when test="$label='visualize_error5'">Up to 8 hoards may be selected.</xsl:when>
+					<xsl:when test="$label='visualize_error6'">At least 1 and up to 30 hoards may be selected.</xsl:when>
+					<xsl:when test="$label='visualize_errory'">Up to 30 hoards may be selected.</xsl:when>
 					<xsl:when test="$label='lang_ar'">Arabic</xsl:when>
 					<xsl:when test="$label='lang_de'">German</xsl:when>
 					<xsl:when test="$label='lang_en'">English</xsl:when>
