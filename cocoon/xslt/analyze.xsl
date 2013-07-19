@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:exsl="http://exslt.org/common"
-	xmlns:numishare="http://code.google.com/p/numishare/" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:cinclude="http://apache.org/cocoon/include/1.0" xmlns:nuds="http://nomisma.org/nuds"
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:exsl="http://exslt.org/common" xmlns:numishare="http://code.google.com/p/numishare/"
+	xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:cinclude="http://apache.org/cocoon/include/1.0" xmlns:nuds="http://nomisma.org/nuds"
 	xmlns:nh="http://nomisma.org/nudsHoard" xmlns:nm="http://nomisma.org/id/" xmlns:math="http://exslt.org/math" exclude-result-prefixes="#all" version="2.0">
 	<xsl:include href="header.xsl"/>
 	<xsl:include href="footer.xsl"/>
@@ -16,6 +17,8 @@
 	<xsl:param name="compare"/>
 	<xsl:param name="type"/>
 	<xsl:param name="chartType"/>
+	<xsl:param name="exclude"/>
+	<xsl:param name="options"/>
 
 	<!-- config variables -->
 	<xsl:variable name="url">
@@ -32,7 +35,7 @@
 			<head>
 				<title>
 					<xsl:value-of select="//config/title"/>
-					<xsl:text>: Analyze Hoards</xsl:text>
+					<xsl:text>: <xsl:value-of select="numishare:normalizeLabel('header_analyze', $lang)"/></xsl:text>
 				</title>
 				<link rel="shortcut icon" type="image/x-icon" href="{$display_path}images/favicon.png"/>
 				<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.8.0/build/cssgrids/grids-min.css"/>
@@ -54,6 +57,7 @@
 
 				<!-- analysis scripts -->
 				<script type="text/javascript" src="{$display_path}javascript/highcharts.js"/>
+				<script type="text/javascript" src="{$display_path}javascript/modules/exporting.js"/>
 				<script type="text/javascript" src="{$display_path}javascript/jquery.livequery.js"/>
 				<script type="text/javascript" src="{$display_path}javascript/analysis_functions.js"/>
 				<!-- filter functions -->
@@ -79,31 +83,53 @@
 		<div class="yui3-g">
 			<div class="yui3-u-1">
 				<div class="content">
-					<h1>Quantitative Analysis</h1>
+					<h1>
+						<xsl:value-of select="numishare:normalizeLabel('header_analyze', $lang)"/>
+					</h1>
+					<span style="display:none" id="vis-pipeline">
+						<xsl:value-of select="$pipeline"/>
+					</span>
 					<div id="tabs">
 						<ul>
 							<li>
-								<a href="#visualization">Visualization</a>
+								<a href="#visualization">
+									<xsl:value-of select="numishare:normalizeLabel('display_visualization', $lang)"/>
+								</a>
 							</li>
 							<li>
-								<a href="#data-download">Data Download</a>
+								<a href="#date-analysis">
+									<xsl:value-of select="numishare:normalizeLabel('display_date-analysis', $lang)"/>
+								</a>
+							</li>
+							<li>
+								<a href="#data-download">
+									<xsl:value-of select="numishare:normalizeLabel('display_data-download', $lang)"/>
+								</a>
 							</li>
 						</ul>
 						<div id="visualization" class="tab">
-							<h3>Visualization</h3>
-							<xsl:call-template name="visualization"/>
+							<xsl:call-template name="visualization">
+								<xsl:with-param name="action">#visualization</xsl:with-param>
+							</xsl:call-template>
+						</div>
+						<div id="date-analysis" class="tab">
+							<xsl:call-template name="date-vis">
+								<xsl:with-param name="action">#date-analysis</xsl:with-param>
+							</xsl:call-template>
 						</div>
 						<div id="data-download" class="tab">
-							<h3>Data Download</h3>
 							<xsl:call-template name="data-download"/>
 						</div>
 					</div>
 					<div style="display:none">
 						<div id="filterHoards">
-							<h3>Filter Hoards</h3>
+							<h3>
+								<xsl:value-of select="numishare:normalizeLabel('visualize_filter_hoards', $lang)"/>
+							</h3>
 							<xsl:call-template name="search_forms"/>
 						</div>
 					</div>
+					<span id="formId" style="display:none"/>
 				</div>
 			</div>
 		</div>
