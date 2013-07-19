@@ -787,6 +787,8 @@
 				<xsl:choose>
 					<xsl:when test="$name='acquiredFrom'">Acquired From</xsl:when>
 					<xsl:when test="$name='adminDesc'">Administrative History</xsl:when>
+					<xsl:when test="$name='chronItem'">Chronological Item</xsl:when>
+					<xsl:when test="$name='chronList'">Chronological List</xsl:when>
 					<xsl:when test="$name='coinType'">Coin Type</xsl:when>
 					<xsl:when test="$name='closing_date'">Closing Date</xsl:when>
 					<xsl:when test="$name='conservationState'">Conservation State</xsl:when>
