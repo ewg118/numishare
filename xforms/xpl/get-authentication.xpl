@@ -21,9 +21,14 @@
 		<p:input name="config">
 			<config>				
 				<role>admin</role>
-				<role>chrr</role>
-				<role>ocre</role>
+				<role>kittredge</role>
+				<role>rrch</role>
+				<role>papal</role>				
 				<role>mantis</role>
+				<role>egypt</role>
+				<role>uva</role>
+				<role>electrum</role>
+				<role>byz</role>
 			</config>
 		</p:input>
 		<p:output name="data" ref="data"/>
