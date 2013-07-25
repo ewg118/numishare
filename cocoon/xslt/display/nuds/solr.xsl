@@ -156,11 +156,6 @@
 		<field name="title_display">
 			<xsl:value-of select="normalize-space(nuds:title)"/>
 		</field>
-		<xsl:if test="string(nuds:department)">
-			<field name="department_facet">
-				<xsl:value-of select="nuds:department"/>
-			</field>
-		</xsl:if>
 		<xsl:apply-templates select="nuds:subjectSet"/>
 		<xsl:apply-templates select="nuds:physDesc"/>
 		<xsl:apply-templates select="exsl:node-set($typeDesc)//nuds:typeDesc">
@@ -397,7 +392,7 @@
 	</xsl:template>
 
 	<xsl:template match="nuds:adminDesc">
-		<xsl:for-each select="nuds:collection | nuds:repository | nuds:owner">
+		<xsl:for-each select="nuds:collection | nuds:repository | nuds:owner | nuds:department">
 			<field name="{local-name()}_facet">
 				<xsl:value-of select="normalize-space(.)"/>
 			</field>
