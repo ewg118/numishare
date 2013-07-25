@@ -57,7 +57,7 @@
 			</xsl:variable>
 
 			<xsl:if test="string-length($id-param) &gt; 0">
-				<xsl:for-each select="document(concat('http://nomisma.numismatics.org/apis/getNuds?identifiers=', $id-param))//nuds:nuds">
+				<xsl:for-each select="document(concat('http://nomisma.org/apis/getNuds?identifiers=', $id-param))//nuds:nuds">
 					<object xlink:href="http://nomisma.org/id/{nuds:nudsHeader/nuds:nudsid}">
 						<xsl:copy-of select="."/>
 					</object>
@@ -94,7 +94,7 @@
 				</xsl:for-each>
 			</xsl:variable>
 
-			<xsl:variable name="rdf_url" select="concat('http://nomisma.numismatics.org/apis/getRdf?identifiers=', $id-param)"/>
+			<xsl:variable name="rdf_url" select="concat('http://nomisma.org/apis/getRdf?identifiers=', $id-param)"/>
 			<xsl:copy-of select="document($rdf_url)/rdf:RDF/*"/>
 		</rdf:RDF>
 	</xsl:variable>
@@ -282,7 +282,14 @@
 							<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about=$href], $defaultLang)"/>
 						</xsl:when>
 						<xsl:otherwise>
-							<xsl:value-of select="normalize-space(.)"/>
+							<xsl:choose>
+								<xsl:when test="not(string(.))">
+									<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about=$href], 'en')"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:value-of select="normalize-space(.)"/>
+								</xsl:otherwise>
+							</xsl:choose>
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:otherwise>
