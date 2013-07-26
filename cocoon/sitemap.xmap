@@ -710,6 +710,34 @@
 			</map:match>
 
 			<!-- MAPS PIPELINE -->
+			<map:match pattern="maps/fullscreen">
+				<map:select type="parameter">
+					<map:parameter name="parameter-selector-test" value="{request-param:lang}"/>
+					<map:when test="">
+						<map:aggregate element="content">
+							<map:part
+								src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}+AND+*:*+AND+{url-encode:(mint_geo:* OR findspot_geo:*)}&amp;rows=0&amp;facet.field=artist_facet&amp;facet.field=authority_facet&amp;facet.field=century_num&amp;facet.field=coinType_facet&amp;facet.field=degree_facet&amp;facet.field=deity_facet&amp;facet.field=denomination_facet&amp;facet.field=department_facet&amp;facet.field=dynasty_facet&amp;facet.field=engraver_facet&amp;facet.field=era_facet&amp;facet.field=findspot_hier&amp;facet.field=findspot_facet&amp;facet.field=grade_facet&amp;facet.field=institution_facet&amp;facet.field=issuer_facet&amp;facet.field=maker_facet&amp;facet.field=manufacture_facet&amp;facet.field=material_facet&amp;facet.field=mint_facet&amp;facet.field=objectType_facet&amp;facet.field=owner_facet&amp;facet.field=portrait_facet&amp;facet.field=region_facet&amp;facet.field=repository_facet&amp;facet.field=script_facet&amp;facet.field=state_facet&amp;facet.field=mint_geo&amp;facet.numFacetTerms=1"
+								label="record"/>
+							<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
+						</map:aggregate>
+					</map:when>
+					<map:otherwise>
+						<map:aggregate element="content">
+							<map:part
+								src="{global:solr-url}select?q=lang:{request-param:lang}+AND+collection-name:{global:collection-name}+AND+*:*+AND+{url-encode:(mint_geo:* OR findspot_geo:*)}&amp;rows=0&amp;facet.field=artist_facet&amp;facet.field=authority_facet&amp;facet.field=century_num&amp;facet.field=coinType_facet&amp;facet.field=degree_facet&amp;facet.field=deity_facet&amp;facet.field=denomination_facet&amp;facet.field=department_facet&amp;facet.field=dynasty_facet&amp;facet.field=engraver_facet&amp;facet.field=era_facet&amp;facet.field=findspot_hier&amp;facet.field=findspot_facet&amp;facet.field=grade_facet&amp;facet.field=institution_facet&amp;facet.field=issuer_facet&amp;facet.field=maker_facet&amp;facet.field=manufacture_facet&amp;facet.field=material_facet&amp;facet.field=mint_facet&amp;facet.field=objectType_facet&amp;facet.field=owner_facet&amp;facet.field=portrait_facet&amp;facet.field=region_facet&amp;facet.field=repository_facet&amp;facet.field=script_facet&amp;facet.field=state_facet&amp;facet.field=mint_geo&amp;facet.numFacetTerms=1"
+								label="record"/>
+							<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
+						</map:aggregate>
+					</map:otherwise>
+				</map:select>
+				
+				<map:transform type="xslt-saxon" src="xslt/maps_fullscreen.xsl" label="basiccontent">
+					<map:parameter name="use-request-parameters" value="true"/>
+					<map:parameter name="pipeline" value="maps_fullscreen"/>
+				</map:transform>
+				<map:transform type="cinclude"/>
+				<map:serialize type="html"/>
+			</map:match>
 			<map:match pattern="maps">
 				<map:select type="parameter">
 					<map:parameter name="parameter-selector-test" value="{request-param:lang}"/>

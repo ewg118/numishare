@@ -4,9 +4,7 @@
 	<xsl:include href="../functions.xsl"/>
 	<xsl:include href="../templates.xsl"/>
 	<xsl:include href="../results_generic.xsl"/>
-	<xsl:param name="display_path">
-		<xsl:text/>
-	</xsl:param>
+	<xsl:param name="display_path"/>	
 	<xsl:param name="lang"/>
 
 	<xsl:param name="q"/>
@@ -86,7 +84,7 @@
 
 		<div class="g_doc">
 			<span class="result_link">
-				<a href="id/{str[@name='nudsid']}{if (string($lang)) then concat('?lang=', $lang) else ''}" target="_blank">
+				<a href="{$display_path}id/{str[@name='nudsid']}{if (string($lang)) then concat('?lang=', $lang) else ''}" target="_blank">
 					<xsl:value-of select="str[@name='title_display']"/>
 				</a>
 			</span>
