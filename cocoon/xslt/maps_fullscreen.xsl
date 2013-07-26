@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:numishare="http://code.google.com/p/numishare/" exclude-result-prefixes="#all"
-	version="2.0">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:numishare="http://code.google.com/p/numishare/" exclude-result-prefixes="#all" version="2.0">
 	<!-- includes -->
 	<xsl:include href="header.xsl"/>
 	<xsl:include href="footer.xsl"/>
@@ -8,7 +8,7 @@
 
 	<xsl:param name="pipeline"/>
 	<xsl:param name="department"/>
-	<xsl:variable name="display_path"/>
+	<xsl:variable name="display_path">../</xsl:variable>
 	<xsl:variable name="collection_type" select="/content//collection_type"/>
 
 	<xsl:param name="q"/>
@@ -25,30 +25,24 @@
 				</title>
 				<link rel="shortcut icon" type="image/x-icon" href="{$display_path}images/favicon.png"/>
 				<!-- YUI grids -->
-				<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.8.0/build/cssgrids/grids-min.css"/>
+				<!--<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.8.0/build/cssgrids/grids-min.css"/>-->
 
 				<!-- local theme and styling -->
 				<link type="text/css" href="{$display_path}themes/{//config/theme/jquery_ui_theme}.css" rel="stylesheet"/>
-				<link type="text/css" href="{$display_path}style.css" rel="stylesheet"/>
+				<link type="text/css" href="{$display_path}fullscreen.css" rel="stylesheet"/>
 
 				<!-- jquery -->
 				<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"/>
 				<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js"/>
-
-				<!-- menu -->
-				<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.core.js"/>
-				<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.widget.js"/>
-				<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.position.js"/>
-				<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.button.js"/>
-				<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.menu.js"/>
-				<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.menubar.js"/>
-				<script type="text/javascript" src="{$display_path}javascript/numishare-menu.js"/>
 
 				<!-- facet related js and css -->
 				<link type="text/css" href="{$display_path}jquery.multiselect.css" rel="stylesheet"/>
 				<script type="text/javascript" src="{$display_path}javascript/jquery.multiselect.min.js"/>
 				<script type="text/javascript" src="{$display_path}javascript/jquery.multiselectfilter.js"/>
 				<script type="text/javascript" src="{$display_path}javascript/jquery.livequery.js"/>
+				
+				<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.core.js"/>
+				<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.button.js"/>
 
 				<!-- display timemap for hoards, regular openlayers map for coin and coin type collections -->
 				<xsl:choose>
@@ -65,6 +59,7 @@
 						<script type="text/javascript" src="{$display_path}javascript/loaders/kml.js"/>
 						<script type="text/javascript" src="{$display_path}javascript/map_functions.js"/>
 						<script type="text/javascript" src="{$display_path}javascript/facet_functions.js"/>
+						<script type="text/javascript" src="{$display_path}javascript/map_fullscreen_functions.js"/>
 					</xsl:when>
 					<xsl:otherwise>
 						<!-- fancybox -->
@@ -75,13 +70,7 @@
 						<script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3.2&amp;sensor=false"/>
 						<script type="text/javascript" src="{$display_path}javascript/map_functions.js"/>
 						<script type="text/javascript" src="{$display_path}javascript/facet_functions.js"/>
-						<script type="text/javascript">
-						$(document).ready(function(){
-							$('a.thumbImage').livequery(function(){
-								$(this).fancybox();
-							});
-						});
-						</script>
+						<script type="text/javascript" src="{$display_path}javascript/map_fullscreen_functions.js"/>
 					</xsl:otherwise>
 				</xsl:choose>
 
@@ -93,88 +82,84 @@
 				</xsl:if>
 			</head>
 			<body>
-				<xsl:call-template name="header"/>
 				<xsl:call-template name="maps"/>
-				<xsl:call-template name="footer"/>
 			</body>
 		</html>
 	</xsl:template>
 
 	<xsl:template name="maps">
-		<div class="yui3-g">
-			<div class="yui3-u-1">
-				<div class="content">
-					<div id="backgroundPopup"/>
-					<h1>
-						<xsl:value-of select="numishare:normalizeLabel('header_maps', $lang)"/>
-					</h1>
-					<p>For usage instructions, see <a href="http://wiki.numismatics.org/numishare:maps">http://wiki.numismatics.org/numishare:maps</a>.  View in <a href="maps/fullscreen">fullscreen mode</a>.</p>
-					
-					<div class="remove_facets"/>
+		<div id="backgroundPopup"/>
 
-					<xsl:choose>
-						<xsl:when test="//result[@name='response']/@numFound &gt; 0">
-							<div style="display:table">
-								<ul id="filter_list" section="maps">
-									<xsl:apply-templates select="//lst[@name='facet_fields']"/>
-								</ul>
-							</div>
-							<!-- display timemap divs for hoard records or regular map + ajax results div for non-hoard collections -->
-							<xsl:choose>
-								<xsl:when test="$collection_type='hoard'">
-									<div id="timemap">
-										<div id="mapcontainer">
-											<div id="map"/>
-										</div>
-										<div id="timelinecontainer">
-											<div id="timeline"/>
-										</div>
-									</div>
-								</xsl:when>
-								<xsl:otherwise>
-									<div id="mapcontainer"/>
-									<div class="legend">
-										<table>
-											<tbody>
-												<tr>
-													<th style="width:100px">
-														<xsl:value-of select="numishare:regularize_node('legend', $lang)"/>
-													</th>
-													<td style="background-color:#0000ff;border:2px solid #000072;width:50px;"/>
-													<td style="width:100px">
-														<xsl:value-of select="numishare:regularize_node('mint', $lang)"/>
-													</td>
-													<td style="background-color:#00a000;border:2px solid #006100;width:50px;"/>
-													<td style="width:100px">
-														<xsl:value-of select="numishare:regularize_node('findspot', $lang)"/>
-													</td>
-												</tr>
-											</tbody>
-										</table>
-									</div>
-									<a name="results"/>
-									<div id="results"/>
-								</xsl:otherwise>
-							</xsl:choose>
-						</xsl:when>
-						<xsl:otherwise>
-							<h2> No results found.</h2>
-						</xsl:otherwise>
-					</xsl:choose>
-					<!--<input type="hidden" name="q" id="facet_form_query" value="{if (string($imageavailable_stripped)) then $imageavailable_stripped else '*:*'}"/>-->
-					<input id="facet_form_query" name="q" value="*:*" type="hidden"/>
-					<xsl:if test="string($lang)">
-						<input type="hidden" name="lang" value="{$lang}"/>
-					</xsl:if>
-					<span style="display:none" id="collection_type">
-						<xsl:value-of select="$collection_type"/>						
-					</span>
-					<span style="display:none" id="path">
-						<xsl:value-of select="$display_path"/>						
-					</span>
+		<xsl:choose>
+			<xsl:when test="//result[@name='response']/@numFound &gt; 0">
+				<div id="legend" class="ui-corner-all">
+					<h2>
+						<xsl:value-of select="numishare:regularize_node('legend', $lang)"/>
+						<a href="#map_filters" id="show_filters">
+							<xsl:value-of select="numishare:normalizeLabel('results_refine-results', $lang)"/>
+						</a>
+					</h2>
+
+					<div class="legend">
+						<table>
+							<tbody>
+								<tr>
+									<td style="background-color:#0000ff;border:2px solid #000072;width:50px;"/>
+									<td style="width:100px">
+										<xsl:value-of select="numishare:regularize_node('mint', $lang)"/>
+									</td>
+									<td style="background-color:#00a000;border:2px solid #006100;width:50px;"/>
+									<td style="width:100px">
+										<xsl:value-of select="numishare:regularize_node('findspot', $lang)"/>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
 				</div>
-			</div>
-		</div>
+				<div style="display:none">
+					<div id="map_filters">
+						<h2><xsl:value-of select="numishare:normalizeLabel('results_refine-results', $lang)"/></h2>
+						<ul id="filter_list" section="maps">
+							<xsl:apply-templates select="//lst[@name='facet_fields']"/>
+						</ul>
+						<input type="button" id="close" value="Close"/>
+					</div>
+				</div>
+				<!-- display timemap divs for hoard records or regular map + ajax results div for non-hoard collections -->
+				<xsl:choose>
+					<xsl:when test="$collection_type='hoard'">
+						<div id="timemap">
+							<div id="mapcontainer">
+								<div id="map"/>
+							</div>
+							<div id="timelinecontainer">
+								<div id="timeline"/>
+							</div>
+						</div>
+					</xsl:when>
+					<xsl:otherwise>
+						<div id="mapcontainer"/>
+						<a name="results"/>
+						<div id="results"/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:when>
+			<xsl:otherwise>
+				<h2> No results found.</h2>
+			</xsl:otherwise>
+		</xsl:choose>
+		<!--<input type="hidden" name="q" id="facet_form_query" value="{if (string($imageavailable_stripped)) then $imageavailable_stripped else '*:*'}"/>-->
+		<input id="facet_form_query" name="q" value="*:*" type="hidden"/>
+		<xsl:if test="string($lang)">
+			<input type="hidden" name="lang" value="{$lang}"/>
+		</xsl:if>
+		<span style="display:none" id="collection_type">
+			<xsl:value-of select="$collection_type"/>
+		</span>
+		<span style="display:none" id="path">
+			<xsl:value-of select="$display_path"/>
+		</span>
 	</xsl:template>
 
 	<xsl:template match="lst[@name='facet_fields']">
@@ -197,15 +182,16 @@
 					<xsl:when test="contains(@name, '_hier')">
 						<xsl:variable name="title" select="numishare:regularize_node(substring-before(@name, '_'), $lang)"/>
 
-						<button class="ui-multiselect ui-widget ui-state-default ui-corner-all hierarchical-facet" type="button" title="{$title}" aria-haspopup="true" style="width: 180px;"
-							id="{@name}_link" label="{$q}">
+						<button class="ui-multiselect ui-widget ui-state-default ui-corner-all hierarchical-facet" type="button" title="{$title}"
+							aria-haspopup="true" style="width: 180px;" id="{@name}_link" label="{$q}">
 							<span class="ui-icon ui-icon-triangle-2-n-s"/>
 							<span>
 								<xsl:value-of select="$title"/>
 							</span>
 						</button>
 
-						<div class="ui-multiselect-menu ui-widget ui-widget-content ui-corner-all hierarchical-div" id="{substring-before(@name, '_hier')}-container" style="width: 180px;">
+						<div class="ui-multiselect-menu ui-widget ui-widget-content ui-corner-all hierarchical-div"
+							id="{substring-before(@name, '_hier')}-container" style="width: 180px;">
 							<div class="ui-widget-header ui-corner-all ui-multiselect-header ui-helper-clearfix ui-multiselect-hasfilter">
 								<ul class="ui-helper-reset">
 									<li class="ui-multiselect-close">
@@ -214,14 +200,18 @@
 									</li>
 								</ul>
 							</div>
-							<ul class="{substring-before(@name, '_hier')}-multiselect-checkboxes ui-helper-reset hierarchical-list" id="{@name}-list" style="height: 175px;" title="{$title}"/>
+							<ul class="{substring-before(@name, '_hier')}-multiselect-checkboxes ui-helper-reset hierarchical-list" id="{@name}-list"
+								style="height: 175px;" title="{$title}"/>
 						</div>
 						<br/>
 					</xsl:when>
 					<xsl:when test="@name='century_num'">
-						<button class="ui-multiselect ui-widget ui-state-default ui-corner-all" type="button" title="Date" aria-haspopup="true" style="width: 180px;" id="{@name}_link" label="{$q}">
+						<button class="ui-multiselect ui-widget ui-state-default ui-corner-all" type="button" title="{numishare:regularize_node('date', $lang)}"
+							aria-haspopup="true" style="width: 180px;" id="{@name}_link" label="{$q}">
 							<span class="ui-icon ui-icon-triangle-2-n-s"/>
-							<span>Date</span>
+							<span>
+								<xsl:value-of select="numishare:regularize_node('date', $lang)"/>
+							</span>
 						</button>
 						<div class="ui-multiselect-menu ui-widget ui-widget-content ui-corner-all date-div" style="width: 180px;">
 							<div class="ui-widget-header ui-corner-all ui-multiselect-header ui-helper-clearfix ui-multiselect-hasfilter">
