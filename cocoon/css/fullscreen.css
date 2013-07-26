@@ -53,7 +53,7 @@ button.ui-multiselect{
 	bottom: 2em;
 	left: 2em;
 	width: 300px;
-	z-index: 20000;
+	z-index: 1000;
 	background-color: white;
 	padding: 0.5em;
 	background-color:#F7F6ED;
