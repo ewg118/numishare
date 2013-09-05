@@ -1,0 +1,301 @@
+<!-- 	author: Ethan Gruber, American Numismatic Society 
+	last modified: June, 2011
+	function: EAD state component; user taps into LCSH or local vocabulary for states
+-->
+<xbl:xbl xmlns="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xxforms="http://orbeon.org/oxf/xml/xforms"
+	xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:xbl="http://www.w3.org/ns/xbl" xmlns:xxbl="http://orbeon.org/oxf/xml/xbl" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+	xmlns:oxf="http://www.orbeon.com/oxf/processors" xmlns:numishare="http://code.google.com/p/numishare/" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:nuds="http://nomisma.org/nuds">
+
+
+	<xbl:binding id="numishare-output-typeDesc" element="numishare|output-typeDesc">
+		<xbl:template>
+			<xforms:group xbl:attr="model context ref bind" xxbl:scope="outer">
+				<xbl:content includes="xforms|label,xforms|help,xforms|hint,xforms|alert"/>
+				<xforms:group xxbl:scope="inner">
+					<xxforms:variable name="binding" as="node()?">
+						<xxforms:sequence select="." xxbl:scope="outer"/>
+					</xxforms:variable>
+					<xforms:group ref="$binding">
+						<h2>Reference</h2>
+						<div class="section">
+							<xforms:group ref="nuds:date">
+								<div>
+									<xforms:output ref=".">
+										<xforms:label>Date</xforms:label>
+									</xforms:output>
+								</div>
+							</xforms:group>
+							<xforms:group ref="nuds:denomination">
+								<div>
+									<xforms:output ref=".">
+										<xforms:label>Denomination</xforms:label>
+									</xforms:output>
+
+								</div>
+							</xforms:group>
+							<xforms:group ref="nuds:manufacture">
+								<div>
+									<xforms:output ref=".">
+										<xforms:label>Manufacture</xforms:label>
+									</xforms:output>
+
+								</div>
+							</xforms:group>
+							<xforms:group ref="nuds:material">
+								<div>
+									<xforms:output ref=".">
+										<xforms:label>Material</xforms:label>
+									</xforms:output>
+								</div>
+							</xforms:group>
+							<xforms:group ref="nuds:weightStandard">
+								<div>
+									<xforms:output ref=".">
+										<xforms:label>Material</xforms:label>
+									</xforms:output>
+								</div>
+							</xforms:group>							
+						</div>
+						<div class="subsection">
+							<h3>Obverse</h3>
+							<xforms:group ref="nuds:obverse">
+								<xforms:repeat nodeset="nuds:persname[@xlink:role='artist']">
+									<div>
+										<xforms:output ref=".">
+											<xforms:label>Artist</xforms:label>
+										</xforms:output>
+									</div>
+								</xforms:repeat>
+								<xforms:repeat nodeset="nuds:persname[@xlink:role='deity']">
+									<div>
+										<xforms:output ref=".">
+											<xforms:label>Deity</xforms:label>
+										</xforms:output>
+									</div>
+								</xforms:repeat>
+								<xforms:group ref="nuds:description">
+									<div>
+										<xforms:output ref=".">
+											<xforms:label>Description</xforms:label>
+										</xforms:output>
+									</div>
+								</xforms:group>
+								<xforms:repeat nodeset="nuds:persname[@xlink:role='engraver']">
+									<div>
+										<xforms:output ref=".">
+											<xforms:label>Engraver</xforms:label>
+										</xforms:output>
+									</div>
+								</xforms:repeat>
+								<xforms:group ref="nuds:legend">
+									<div>
+										<xforms:output ref=".">
+											<xforms:label>Legend</xforms:label>
+										</xforms:output>
+									</div>
+								</xforms:group>
+								<xforms:repeat nodeset="nuds:persname[@xlink:role='portrait']">
+									<div>
+										<xforms:output ref=".">
+											<xforms:label>Portrait</xforms:label>
+										</xforms:output>
+									</div>
+								</xforms:repeat>
+								<xforms:group ref="nuds:symbol">
+									<div>
+										<xforms:output ref=".">
+											<xforms:label>Symbol</xforms:label>
+										</xforms:output>
+									</div>
+								</xforms:group>
+								<xforms:group ref="nuds:type">
+									<div>
+										<xforms:output ref=".">
+											<xforms:label>Type</xforms:label>
+										</xforms:output>
+									</div>
+								</xforms:group>
+							</xforms:group>
+						</div>
+						<div class="subsection">
+							<h3>Reverse</h3>
+							<xforms:group ref="nuds:reverse">
+								<xforms:repeat nodeset="nuds:persname[@xlink:role='artist']">
+									<div>
+										<xforms:output ref=".">
+											<xforms:label>Artist</xforms:label>
+										</xforms:output>
+									</div>
+								</xforms:repeat>
+								<xforms:repeat nodeset="nuds:persname[@xlink:role='deity']">
+									<div>
+										<xforms:output ref=".">
+											<xforms:label>Deity</xforms:label>
+										</xforms:output>
+									</div>
+								</xforms:repeat>
+								<xforms:group ref="nuds:description">
+									<div>
+										<xforms:output ref=".">
+											<xforms:label>Description</xforms:label>
+										</xforms:output>
+									</div>
+								</xforms:group>
+								<xforms:repeat nodeset="nuds:persname[@xlink:role='engraver']">
+									<div>
+										<xforms:output ref=".">
+											<xforms:label>Engraver</xforms:label>
+										</xforms:output>
+									</div>
+								</xforms:repeat>
+								<xforms:group ref="nuds:legend">
+									<div>
+										<xforms:output ref=".">
+											<xforms:label>Legend</xforms:label>
+										</xforms:output>
+									</div>
+								</xforms:group>
+								<xforms:repeat nodeset="nuds:persname[@xlink:role='portrait']">
+									<div>
+										<xforms:output ref=".">
+											<xforms:label>Portrait</xforms:label>
+										</xforms:output>
+									</div>
+								</xforms:repeat>
+								<xforms:group ref="nuds:symbol">
+									<div>
+										<xforms:output ref=".">
+											<xforms:label>Symbol</xforms:label>
+										</xforms:output>
+									</div>
+								</xforms:group>
+								<xforms:group ref="nuds:type">
+									<div>
+										<xforms:output ref=".">
+											<xforms:label>Type</xforms:label>
+										</xforms:output>
+									</div>
+								</xforms:group>
+							</xforms:group>
+						</div>
+						<div class="subsection">
+							<h3>Edge</h3>
+
+							<xforms:group ref="nuds:obverse">
+								<xforms:group ref="nuds:description">
+									<div>
+										<xforms:output ref=".">
+											<xforms:label>Description</xforms:label>
+										</xforms:output>
+									</div>
+								</xforms:group>
+								<xforms:group ref="nuds:legend">
+									<div>
+										<xforms:output ref=".">
+											<xforms:label>Legend</xforms:label>
+										</xforms:output>
+									</div>
+								</xforms:group>
+								<xforms:group ref="nuds:type">
+									<div>
+										<xforms:output ref=".">
+											<xforms:label>Type</xforms:label>
+										</xforms:output>
+									</div>
+								</xforms:group>
+							</xforms:group>
+						</div>
+						<div class="subsection">
+							<h3>Authority and Personal</h3>
+							<xforms:group ref="nuds:authority">
+								<xforms:repeat nodeset="nuds:persname[@xlink:role='artist']">
+									<div>
+										<xforms:output ref=".">
+											<xforms:label>Artist</xforms:label>
+										</xforms:output>
+									</div>
+								</xforms:repeat>
+								<xforms:repeat nodeset="nuds:persname[@xlink:role='authority']">
+									<div>
+										<xforms:output ref=".">
+											<xforms:label>Authority</xforms:label>
+										</xforms:output>
+									</div>
+								</xforms:repeat>
+								<xforms:repeat nodeset="nuds:corpname[@xlink:role='authority']">
+									<div>
+										<xforms:output ref=".">
+											<xforms:label>Authority</xforms:label>
+										</xforms:output>
+									</div>
+								</xforms:repeat>
+								<xforms:repeat nodeset="nuds:famname">
+									<div>
+										<xforms:output ref=".">
+											<xforms:label>Dynasty</xforms:label>
+										</xforms:output>
+									</div>
+								</xforms:repeat>
+								<xforms:repeat nodeset="nuds:persname[@xlink:role='engraver']">
+									<div>
+										<xforms:output ref=".">
+											<xforms:label>Engraver</xforms:label>
+										</xforms:output>
+									</div>
+								</xforms:repeat>
+								<xforms:repeat nodeset="nuds:persname[@xlink:role='issuer']">
+									<div>
+										<xforms:output ref=".">
+											<xforms:label>Issuer</xforms:label>
+										</xforms:output>
+									</div>
+								</xforms:repeat>
+								<xforms:repeat nodeset="nuds:corpname[@xlink:role='issuer']">
+									<div>
+										<xforms:output ref=".">
+											<xforms:label>Issuer</xforms:label>
+										</xforms:output>
+									</div>
+								</xforms:repeat>
+								<xforms:repeat nodeset="nuds:persname[@xlink:role='maker']">
+									<div>
+										<xforms:output ref=".">
+											<xforms:label>Maker</xforms:label>
+										</xforms:output>
+									</div>
+								</xforms:repeat>
+								<xforms:repeat nodeset="nuds:corpname[@xlink:role='state']">
+									<div>
+										<xforms:output ref=".">
+											<xforms:label>State</xforms:label>
+										</xforms:output>
+									</div>
+								</xforms:repeat>
+							</xforms:group>
+						</div>
+						<!-- geographic -->
+						<div class="subsection">
+							<h3>Geographic</h3>
+							<xforms:group ref="nuds:geographic">
+								<div>
+									<xforms:repeat nodeset="nuds:geogname[@xlink:role='mint']">
+										<xforms:output ref=".">
+											<xforms:label>Mint</xforms:label>
+										</xforms:output>
+									</xforms:repeat>
+								</div>
+								<div>
+									<xforms:repeat nodeset="nuds:geogname[@xlink:role='region']">
+										<xforms:output ref=".">
+											<xforms:label>Region</xforms:label>
+										</xforms:output>
+									</xforms:repeat>
+								</div>
+							</xforms:group>
+						</div>
+					</xforms:group>
+				</xforms:group>
+			</xforms:group>
+		</xbl:template>
+	</xbl:binding>
+</xbl:xbl>
