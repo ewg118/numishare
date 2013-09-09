@@ -64,8 +64,8 @@
 				</xs:simpleType>
 			</xs:schema>
 
-			<xforms:instance id="coin">
-				<nuds:nuds recordType="physical" xmlns="http://nomisma.org/nuds" xmlns:mets="http://www.loc.gov/METS/" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml">
+			<xforms:instance id="coin" xxforms:exclude-result-prefixes="#all">
+				<nuds recordType="physical" xmlns="http://nomisma.org/nuds" xmlns:mets="http://www.loc.gov/METS/" xmlns:xlink="http://www.w3.org/1999/xlink">
 					<nudsHeader>
 						<nudsid/>
 						<publicationStmt>
@@ -89,7 +89,7 @@
 						</typeDesc>
 						<adminDesc/>
 					</descMeta>
-				</nuds:nuds>
+				</nuds>
 			</xforms:instance>
 
 			<xforms:instance id="test">
@@ -118,10 +118,6 @@
 				<collections xmlns="">
 					<collection roll="admin" name="numishare"/>
 				</collections>
-			</xforms:instance>
-
-			<xforms:instance id="collection-field">
-				<field name="collection-name"/>
 			</xforms:instance>
 
 			<!-- nuds instances -->
@@ -183,123 +179,123 @@
 			</xforms:instance>-->
 
 			<!-- commonly repeatable elements -->
-			<xforms:instance id="date-template">
+			<xforms:instance id="date-template" xxforms:exclude-result-prefixes="#all">
 				<date standardDate=""/>
 			</xforms:instance>
-			<xforms:instance id="description-template">
+			<xforms:instance id="description-template" xxforms:exclude-result-prefixes="#all">
 				<description xml:lang=""/>
 			</xforms:instance>
-			<xforms:instance id="identifier-template">
+			<xforms:instance id="identifier-template" xxforms:exclude-result-prefixes="#all">
 				<identifier/>
 			</xforms:instance>
-			<xforms:instance id="note-template">
+			<xforms:instance id="note-template" xxforms:exclude-result-prefixes="#all">
 				<note/>
 			</xforms:instance>
-			<xforms:instance id="obverse-template">
+			<xforms:instance id="obverse-template" xxforms:exclude-result-prefixes="#all">
 				<obverse/>
 			</xforms:instance>
-			<xforms:instance id="reverse-template">
+			<xforms:instance id="reverse-template" xxforms:exclude-result-prefixes="#all">
 				<reverse/>
 			</xforms:instance>
 
 			<!-- descMeta templates -->
-			<xforms:instance id="abstract-template">
+			<xforms:instance id="abstract-template" xxforms:exclude-result-prefixes="#all">
 				<abstract title="" author=""/>
 			</xforms:instance>
-			<xforms:instance id="department-template">
+			<xforms:instance id="department-template" xxforms:exclude-result-prefixes="#all">
 				<department/>
 			</xforms:instance>
 
 			<!-- physDesc templates -->
-			<xforms:instance id="physDesc-template">
+			<xforms:instance id="physDesc-template" xxforms:exclude-result-prefixes="#all">
 				<physDesc/>
 			</xforms:instance>
-			<xforms:instance id="axis-template">
+			<xforms:instance id="axis-template" xxforms:exclude-result-prefixes="#all">
 				<axis clock=""/>
 			</xforms:instance>
-			<xforms:instance id="completeness-template">
+			<xforms:instance id="completeness-template" xxforms:exclude-result-prefixes="#all">
 				<completeness/>
 			</xforms:instance>
-			<xforms:instance id="condition-template">
+			<xforms:instance id="condition-template" xxforms:exclude-result-prefixes="#all">
 				<condition/>
 			</xforms:instance>
-			<xforms:instance id="conservationState-template">
+			<xforms:instance id="conservationState-template" xxforms:exclude-result-prefixes="#all">
 				<conservationState/>
 			</xforms:instance>
-			<xforms:instance id="countermark-template">
+			<xforms:instance id="countermark-template" xxforms:exclude-result-prefixes="#all">
 				<countermark/>
 			</xforms:instance>
-			<xforms:instance id="diameter-template">
-				<diameter units="cm"/>
+			<xforms:instance id="diameter-template" xxforms:exclude-result-prefixes="#all">
+				<diameter/>
 			</xforms:instance>
-			<xforms:instance id="grade-template">
+			<xforms:instance id="grade-template" xxforms:exclude-result-prefixes="#all">
 				<grade/>
 			</xforms:instance>
-			<xforms:instance id="height-template">
-				<height units="cm"/>
+			<xforms:instance id="height-template" xxforms:exclude-result-prefixes="#all">
+				<height/>
 			</xforms:instance>
-			<xforms:instance id="mark-template">
+			<xforms:instance id="mark-template" xxforms:exclude-result-prefixes="#all">
 				<mark>
 					<description/>
 				</mark>
 			</xforms:instance>
-			<xforms:instance id="measurementsSet-template">
+			<xforms:instance id="measurementsSet-template" xxforms:exclude-result-prefixes="#all">
 				<measurementsSet/>
 			</xforms:instance>
-			<xforms:instance id="shape-template">
+			<xforms:instance id="shape-template" xxforms:exclude-result-prefixes="#all">
 				<shape/>
 			</xforms:instance>
-			<xforms:instance id="testmark-template">
+			<xforms:instance id="testmark-template" xxforms:exclude-result-prefixes="#all">
 				<testmark/>
 			</xforms:instance>
-			<xforms:instance id="thickness-template">
-				<thickness units="cm"/>
+			<xforms:instance id="thickness-template" xxforms:exclude-result-prefixes="#all">
+				<thickness/>
 			</xforms:instance>
-			<xforms:instance id="wear-template">
+			<xforms:instance id="wear-template" xxforms:exclude-result-prefixes="#all">
 				<wear/>
 			</xforms:instance>
-			<xforms:instance id="weight-template">
+			<xforms:instance id="weight-template" xxforms:exclude-result-prefixes="#all">
 				<weight units="g"/>
 			</xforms:instance>
-			<xforms:instance id="width-template">
-				<width units="cm"/>
+			<xforms:instance id="width-template" xxforms:exclude-result-prefixes="#all">
+				<width/>
 			</xforms:instance>
 
 			<!-- objecttype -->
-			<xforms:instance id="objectType-template">
+			<xforms:instance id="objectType-template" xxforms:exclude-result-prefixes="#all">
 				<objectType/>
 			</xforms:instance>
 
 			<!-- undertypeDesc -->
-			<xforms:instance id="undertypeDesc-template">
+			<xforms:instance id="undertypeDesc-template" xxforms:exclude-result-prefixes="#all">
 				<undertypeDesc/>
 			</xforms:instance>
 
 
 			<!-- adminDesc -->
-			<xforms:instance id="adminDesc-template">
+			<xforms:instance id="adminDesc-template" xxforms:exclude-result-prefixes="#all">
 				<adminDesc/>
 			</xforms:instance>
-			<xforms:instance id="acknowledgment-template">
+			<xforms:instance id="acknowledgment-template" xxforms:exclude-result-prefixes="#all">
 				<acknowledgment/>
 			</xforms:instance>
-			<xforms:instance id="acqinfo-template">
-				<acqinfo>
+			<xforms:instance id="acqinfo-template" xxforms:exclude-result-prefixes="#all">
+				<acqinfo xxforms:exclude-result-prefixes="#all">
 					<date/>
 					<acquiredFrom/>
 					<acquiredMethod/>
 				</acqinfo>
 			</xforms:instance>
-			<xforms:instance id="appraisal-template">
+			<xforms:instance id="appraisal-template" xxforms:exclude-result-prefixes="#all">
 				<appraisal>
 					<date/>
 					<appraiser/>
 				</appraisal>
 			</xforms:instance>
-			<xforms:instance id="collection-template">
+			<xforms:instance id="collection-template" xxforms:exclude-result-prefixes="#all">
 				<collection/>
 			</xforms:instance>
-			<xforms:instance id="custodhist-template">
+			<xforms:instance id="custodhist-template" xxforms:exclude-result-prefixes="#all">
 				<custodhist>
 					<chronlist>
 						<chronitem>
@@ -309,40 +305,40 @@
 					</chronlist>
 				</custodhist>
 			</xforms:instance>
-			<xforms:instance id="chronitem-template">
+			<xforms:instance id="chronitem-template" xxforms:exclude-result-prefixes="#all">
 				<chronitem>
 					<date/>
 					<previousColl/>
 				</chronitem>
 			</xforms:instance>
-			<xforms:instance id="sale-template">
+			<xforms:instance id="sale-template" xxforms:exclude-result-prefixes="#all">
 				<sale>
 					<saleCatalog/>
 					<saleItem/>
 				</sale>
 			</xforms:instance>
-			<xforms:instance id="owner-template">
+			<xforms:instance id="owner-template" xxforms:exclude-result-prefixes="#all">
 				<owner/>
 			</xforms:instance>
-			<xforms:instance id="physloc-template">
+			<xforms:instance id="physloc-template" xxforms:exclude-result-prefixes="#all">
 				<physloc/>
 			</xforms:instance>
-			<xforms:instance id="repository-template">
+			<xforms:instance id="repository-template" xxforms:exclude-result-prefixes="#all">
 				<repository/>
 			</xforms:instance>
 
 			<!-- references -->
-			<xforms:instance id="refDesc-template">
+			<xforms:instance id="refDesc-template" xxforms:exclude-result-prefixes="#all">
 				<refDesc/>
 			</xforms:instance>
-			<xforms:instance id="reference-template">
+			<xforms:instance id="reference-template" xxforms:exclude-result-prefixes="#all">
 				<reference>
 					<title/>
 				</reference>
 			</xforms:instance>
 
 			<!-- findspotDesc -->
-			<xforms:instance id="findspotDesc-template">
+			<xforms:instance id="findspotDesc-template" xxforms:exclude-result-prefixes="#all">
 				<findspotDesc>
 					<findspot>
 						<geogname xlink:role="findspot" xlink:href=""/>
@@ -351,18 +347,18 @@
 			</xforms:instance>
 
 			<!-- digital representations -->
-			<xforms:instance id="digRep-template">
+			<xforms:instance id="digRep-template" xxforms:exclude-result-prefixes="#all">
 				<digRep/>
 			</xforms:instance>
-			<xforms:instance id="associatedObject-template">
+			<xforms:instance id="associatedObject-template" xxforms:exclude-result-prefixes="#all">
 				<associatedObject xlink:href=""/>
 			</xforms:instance>
 
 			<!-- mets -->
-			<xforms:instance id="fileSec-template">
+			<xforms:instance id="fileSec-template" xxforms:exclude-result-prefixes="#all">
 				<mets:fileSec xmlns=""/>
 			</xforms:instance>
-			<xforms:instance id="fileGrp-obverse-template">
+			<xforms:instance id="fileGrp-obverse-template" xxforms:exclude-result-prefixes="#all">
 				<mets:fileGrp ID="" USE="obverse" xmlns="">
 					<mets:file ID="" USE="archive" OWNERID="" MIMETYPE="" CREATED="">
 						<mets:FLocat LOCTYPE="URL" xlink:href=""/>
@@ -375,7 +371,7 @@
 					</mets:file>
 				</mets:fileGrp>
 			</xforms:instance>
-			<xforms:instance id="fileGrp-reverse-template">
+			<xforms:instance id="fileGrp-reverse-template" xxforms:exclude-result-prefixes="#all">
 				<mets:fileGrp ID="" USE="reverse" xmlns="">
 					<mets:file ID="" USE="archive" OWNERID="" MIMETYPE="" CREATED="">
 						<mets:FLocat LOCTYPE="URL" xlink:href=""/>
@@ -389,42 +385,30 @@
 				</mets:fileGrp>
 			</xforms:instance>
 
-			<xforms:instance id="color-template">
+			<xforms:instance id="color-template" xxforms:exclude-result-prefixes="#all">
 				<physfacet type="color"/>
 			</xforms:instance>
 
 
-			<xforms:instance id="dob-template">
+			<xforms:instance id="dob-template" xxforms:exclude-result-prefixes="#all">
 				<physfacet type="dob"/>
 			</xforms:instance>
 
-			<xforms:instance id="script-template">
+			<xforms:instance id="script-template" xxforms:exclude-result-prefixes="#all">
 				<materialspec type="script"/>
 			</xforms:instance>
-			<xforms:instance id="sernum-template">
+			<xforms:instance id="sernum-template" xxforms:exclude-result-prefixes="#all">
 				<physfacet type="sernum"/>
 			</xforms:instance>
-			<xforms:instance id="signature-template">
+			<xforms:instance id="signature-template" xxforms:exclude-result-prefixes="#all">
 				<physfacet type="signature"/>
 			</xforms:instance>
 
-			<xforms:instance id="subject-template">
+			<xforms:instance id="subject-template" xxforms:exclude-result-prefixes="#all">
 				<subject/>
 			</xforms:instance>
-			<xforms:instance id="subjectEvent-template">
-				<subject type="subjectEvent"/>
-			</xforms:instance>
-			<xforms:instance id="subjectIssuer-template">
-				<subject type="subjectIssuer"/>
-			</xforms:instance>
-			<xforms:instance id="subjectPerson-template">
-				<subject type="subjectPerson"/>
-			</xforms:instance>
-			<xforms:instance id="subjectPlace-template">
-				<subject type="subjectPlace"/>
-			</xforms:instance>
-
-			<xforms:instance id="watermark-template">
+			
+			<xforms:instance id="watermark-template" xxforms:exclude-result-prefixes="#all">
 				<physfacet type="watermark"/>
 			</xforms:instance>
 
@@ -597,12 +581,6 @@
 
 				<xforms:action ev:event="xforms-submit-done">
 					<xforms:setvalue ref="instance('status')">Coin saved.</xforms:setvalue>
-					<!-- post to Solr all core -->
-					<xforms:insert nodeset="instance('addIndex')" origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/nuds-to-solr-private.xpl', 'data', instance('coin'), 'data')"/>
-					<xforms:insert context="instance('addIndex')/doc" origin="instance('collection-field')"/>
-					<!-- check to see if the document is already published to Solr -->
-					<xforms:send submission="post-to-all"/>
-
 					<!-- check to see if the document is already published to Solr -->
 					<xforms:send submission="query-solr-for-publication"/>
 
@@ -613,59 +591,21 @@
 							<xforms:send submission="conceptual-query-solr-for-publication"/>
 						</xforms:action>
 					</xforms:action>-->
-
-					<!-- if this object is a conceptual object and has associated objects in the local numishare instance, repost them to solr if they are already published -->
-					<xforms:action if="count(instance('coin')//nuds:associatedObject) &gt; 0">
-						<xforms:action xxforms:iterate="instance('coin')//nuds:associatedObject[contains(@xlink:href, instance('config')/url)]">
-							<xxforms:variable name="uri" select="@xlink:href"/>
-							<xforms:setvalue ref="instance('associatedObject-temp')/id" value="substring-after($uri, 'id/')"/>
-							<xforms:setvalue ref="instance('associatedObject-temp')/uri" value="$uri"/>
-							<xforms:send submission="physical-query-solr-for-publication"/>
-						</xforms:action>
-					</xforms:action>
 				</xforms:action>
 			</xforms:submission>
 
 			<!-- submission to query solr to see if the document is published -->
 			<xforms:submission id="query-solr-for-publication" serialization="none" method="get"
-				action="{instance('config')/solr_published}select/?q=collection-name:{instance('control-instance')/collection-name} AND id:&#x022;{instance('coin')/nuds:nudsHeader/nuds:nudsid}&#x022;"
+				action="{instance('config')/solr_published}select/?q=collection-name:{instance('control-instance')/collection-name} AND nudsid:&#x022;{instance('coin')/nuds:nudsHeader/nuds:nudsid}&#x022;"
 				replace="instance" instance="is-published">
 				<!-- if the document is found in solr, get the updated solr doc -->
 				<xforms:send ev:event="xforms-submit-done" if="instance('is-published')/result[@name='response']/@numFound = '1'" submission="to-solr"/>
-			</xforms:submission>
-			<xforms:submission id="conceptual-query-solr-for-publication" serialization="none" method="get"
-				action="{instance('config')/solr_published}select/?q=collection-name:{instance('control-instance')/collection-name} AND id:&#x022;{instance('typeDesc-resource')/nuds:nudsHeader/nuds:nudsid}&#x022;"
-				replace="instance" instance="is-published">
-				<!-- if the document is found in solr, get the updated solr doc -->
-				<xforms:send ev:event="xforms-submit-done" if="instance('is-published')/result[@name='response']/@numFound = '1'" submission="conceptual-to-solr"/>
-			</xforms:submission>
-			<xforms:submission id="physical-query-solr-for-publication" serialization="none" method="get"
-				action="{instance('config')/solr_published}select/?q=collection-name:{instance('control-instance')/collection-name} AND id:&#x022;{instance('associatedObject-temp')/id}&#x022;"
-				replace="instance" instance="is-published">
-				<!-- if the document is found in solr, get the updated solr doc -->
-				<xforms:send ev:event="xforms-submit-done" if="instance('is-published')/result[@name='response']/@numFound = '1'" submission="physical-to-solr"/>
 			</xforms:submission>
 			<!-- access service to read in pre-transformed solr doc -->
 			<xforms:submission id="to-solr" method="get" replace="instance" instance="addIndex" serialization="none"
 				resource="{instance('config')/url}id/{instance('coin')/nuds:nudsHeader/nuds:nudsid}.solr">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Error transforming NUDS document to Solr document.</xforms:message>
 				<xforms:action ev:event="xforms-submit-done">
-					<xforms:insert context="instance('addIndex')/doc" origin="instance('collection-field')"/>
-					<xforms:send submission="publish-submission"/>
-				</xforms:action>
-			</xforms:submission>
-			<xforms:submission id="conceptual-to-solr" method="get" replace="instance" instance="addIndex" serialization="none"
-				resource="{instance('config')/url}id/{instance('typeDesc-resource')/nuds:nudsHeader/nuds:nudsid}.solr">
-				<xforms:message ev:event="xforms-submit-error" level="modal">Error transforming NUDS document to Solr document.</xforms:message>
-				<xforms:action ev:event="xforms-submit-done">
-					<xforms:insert context="instance('addIndex')/doc" origin="instance('collection-field')"/>
-					<xforms:send submission="publish-submission"/>
-				</xforms:action>
-			</xforms:submission>
-			<xforms:submission id="physical-to-solr" method="get" replace="instance" instance="addIndex" serialization="none" resource="{instance('associatedObject-temp')/uri}.solr">
-				<xforms:message ev:event="xforms-submit-error" level="modal">Error transforming NUDS document to Solr document.</xforms:message>
-				<xforms:action ev:event="xforms-submit-done">
-					<xforms:insert context="instance('addIndex')/doc" origin="instance('collection-field')"/>
 					<xforms:send submission="publish-submission"/>
 				</xforms:action>
 			</xforms:submission>
@@ -744,7 +684,6 @@
 								value="instance('collections-list')/collection[@role=instance('control-instance')/request-security/role]/@name"/>
 						</xforms:action>
 					</xforms:action>
-					<xforms:setvalue ref="instance('collection-field')" value="instance('control-instance')/collection-name"/>
 					<xforms:send submission="load-config"/>
 				</xforms:action>
 				<!-- if the config has not been created (given that the URL in exist-url.xml is correct), create it -->
@@ -755,15 +694,6 @@
 			<xforms:submission id="get-typeDesc" serialization="none" method="get" action="{instance('coin')/nuds:descMeta/nuds:typeDesc/@xlink:href}.xml" replace="instance"
 				instance="typeDesc-resource">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Unable to load typeDesc at specified URI.</xforms:message>
-			</xforms:submission>
-
-			<!-- save conceptual object -->
-			<xforms:submission id="save-conceptual" ref="instance('typeDesc-resource')" xxforms:username="admin" xxforms:password=""
-				action="{instance('exist-url')}{instance('control-instance')/collection-name}/objects/{instance('typeDesc-resource')/nuds:nudsHeader/nuds:nudsid}.xml" method="put" replace="none">
-				<xforms:setvalue ev:event="xforms-submit-done" ref="instance('status')">Conceptual object saved.</xforms:setvalue>
-				<xforms:message ev:event="xforms-submit-error" level="modal">Error saving conceptual object.</xforms:message>
-				<!-- check to see if the document is already published to Solr -->
-				<xforms:send ev:event="xforms-submit-done" submission="conceptual-query-solr-for-publication"/>
 			</xforms:submission>
 
 			<!-- always post the doc to the all-index -->
@@ -779,7 +709,6 @@
 		<!-- XBL components -->
 		<xi:include href="xbl/cp-name/cp-name.xbl" xi:omit-xml-base="true"/>
 		<xi:include href="xbl/conservationState/conservationState.xbl" xi:omit-xml-base="true"/>
-		<!--<xi:include href="xbl/type-date/type-date.xbl" xi:omit-xml-base="true"/>-->
 		<xi:include href="xbl/date/date.xbl" xi:omit-xml-base="true"/>
 		<xi:include href="xbl/dateRange/dateRange.xbl" xi:omit-xml-base="true"/>
 		<xi:include href="xbl/denomination/denomination.xbl" xi:omit-xml-base="true"/>
@@ -788,13 +717,12 @@
 		<xi:include href="xbl/dynasty/dynasty.xbl" xi:omit-xml-base="true"/>
 		<xi:include href="xbl/file-upload/file-upload.xbl" xi:omit-xml-base="true"/>
 		<xi:include href="xbl/findspot/findspot.xbl" xi:omit-xml-base="true"/>
+		<xi:include href="xbl/geogname/geogname.xbl" xi:omit-xml-base="true"/>
 		<xi:include href="xbl/mark/mark.xbl" xi:omit-xml-base="true"/>
 		<xi:include href="xbl/material/material.xbl" xi:omit-xml-base="true"/>
-		<xi:include href="xbl/mint/mint.xbl" xi:omit-xml-base="true"/>
 		<xi:include href="xbl/nudsHeader/nudsHeader.xbl" xi:omit-xml-base="true"/>
 		<xi:include href="xbl/output-typeDesc/output-typeDesc.xbl" xi:omit-xml-base="true"/>
 		<xi:include href="xbl/reference/reference.xbl" xi:omit-xml-base="true"/>
-		<xi:include href="xbl/region/region.xbl" xi:omit-xml-base="true"/>
 		<xi:include href="xbl/sale/sale.xbl" xi:omit-xml-base="true"/>
 		<xi:include href="xbl/type-undertype/type-undertype.xbl" xi:omit-xml-base="true"/>
 	</head>
@@ -2113,10 +2041,10 @@
 									<fr:label>Record Metadata</fr:label>
 									<numishare:nudsHeader/>
 								</fr:tab>
-								<!--<fr:tab>
+								<fr:tab>
 									<fr:label>Inspector</fr:label>
 									<fr:xforms-inspector/>
-								</fr:tab>-->
+								</fr:tab>
 							</fr:tabview>
 						</xforms:group>
 					</div>

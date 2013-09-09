@@ -94,12 +94,10 @@
 					</xforms:group>
 					<!-- ********************************************************************** -->
 					<!-- ***********************  DIALOG INTERNAL MODEL *********************** -->
-					<xforms:model id="nudsHeader-model">
-						<xforms:instance id="project-template">
+					<xforms:model id="nudsHeader-model" xmlns="http://nomisma.org/nuds">
+						<xforms:instance id="project-template" xxforms:exclude-result-prefixes="#all">
 							<project/>
 						</xforms:instance>
-						
-						<!--<xforms:instance id="languageselect-template" src="/apps/numishare/instances/languages.xml"/>-->
 					</xforms:model>
 				</xforms:group>
 			</xforms:group>

@@ -2,10 +2,10 @@
 	last modified: January 2011
 	function: EAD corporate and personal names component; user taps into VIAF for controlled vocabularies or local vocabulary
 -->
-<xbl:xbl xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xxforms="http://orbeon.org/oxf/xml/xforms" xmlns:fr="http://orbeon.org/oxf/xml/form-runner"
-	xmlns:xbl="http://www.w3.org/ns/xbl" xmlns:xxbl="http://orbeon.org/oxf/xml/xbl" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xlink="http://www.w3.org/1999/xlink"
-	xmlns:oxf="http://www.orbeon.com/oxf/processors" xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:ns2="http://viaf.org/viaf/terms#" xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:numishare="http://code.google.com/p/numishare/">
+<xbl:xbl xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xxforms="http://orbeon.org/oxf/xml/xforms"
+	xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:xbl="http://www.w3.org/ns/xbl" xmlns:xxbl="http://orbeon.org/oxf/xml/xbl"
+	xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:oxf="http://www.orbeon.com/oxf/processors"
+	xmlns="http://www.w3.org/1999/xhtml" xmlns:numishare="http://code.google.com/p/numishare/" xmlns:res="http://www.w3.org/2005/sparql-results#">
 
 	<xbl:binding id="numishare-cp-name" element="numishare|cp-name">
 		<xbl:template>
@@ -16,16 +16,25 @@
 						<xxforms:sequence select="." xxbl:scope="outer"/>
 					</xxforms:variable>
 					<xforms:action ev:event="xforms-enabled" ev:target="#observer">
-						<xforms:insert context="instance('control-instance')" nodeset="collection-name" position="after"
-							origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/get-authentication.xpl', 'dump', instance('dump'), 'data')"/>
-						<xforms:send submission="load-collections"/>
 						<xforms:action if="not(string($binding))">
+							<!-- load collections/config if no $binding-->
+							<xforms:insert context="instance('control-instance')" nodeset="collection-name" position="after"
+								origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/get-authentication.xpl', 'dump', instance('dump'), 'data')"/>
+							<xforms:send submission="load-collections"/>
+
 							<xforms:setvalue ref="instance('interface-type')" value="'viaf'"/>
 							<!-- set role and index -->
 							<xforms:setvalue ref="instance('control-instance')/role" value="$binding/@xlink:role"/>
-							<xforms:setvalue ref="instance('control-instance')/index" if="$binding/local-name()='persname'">local.personalNames</xforms:setvalue>
-							<xforms:setvalue ref="instance('control-instance')/index" if="$binding/local-name()='corpname'">local.corporateNames</xforms:setvalue>
-							<xforms:setvalue ref="instance('terms-temp')/lst/@name" value="concat($binding/@xlink:role, '_facet')"/>
+							<xforms:setvalue ref="instance('control-instance')/facet" value="concat($binding/@xlink:role, '_facet')"/>
+							<xforms:setvalue ref="instance('control-instance')/label"
+								value="concat(substring(upper-case($binding/@xlink:role), 1, 1), substring($binding/@xlink:role, 2), if($binding/local-name()='persname') then '--Personal' else '--Corporate')"/>
+							<xforms:setvalue ref="instance('control-instance')/index" if="$binding/local-name()='persname'"
+								>local.personalNames</xforms:setvalue>
+							<xforms:setvalue ref="instance('control-instance')/index" if="$binding/local-name()='corpname'"
+								>local.corporateNames</xforms:setvalue>
+							
+							<xforms:setvalue ref="instance('sparqlQuery')" value="replace(instance('sparqlQuery'), 'CONCEPT', $binding/@xlink:role)"/>
+							<xforms:send submission="submit-sparqlQuery"/>
 						</xforms:action>
 					</xforms:action>
 
@@ -33,15 +42,11 @@
 					<xforms:group ref=".[string($binding)]">
 						<div>
 							<xforms:output ref="$binding">
-								<xforms:label
-									value="concat(upper-case(substring($binding/@xlink:role, 1, 1)), substring($binding/@xlink:role, 2), if($binding/@xlink:role='authority' or $binding/@xlink:role='issuer') then if(name()='persname') then '--Personal' else '--Corporate' else '')"
-								/>
+								<xforms:label ref="instance('control-instance')/label"/>
 							</xforms:output>
 							<xforms:group ref=".[string($binding/@xlink:href)]">
-								<xforms:trigger appearance="xxforms:link">
-									<xforms:label>
-										<img src="../../images/external.png"/>
-									</xforms:label>
+								<xforms:trigger appearance="minimal">
+									<xforms:label><img src="../../images/external.png"/></xforms:label>
 									<xforms:load ev:event="DOMActivate" ref="$binding/@xlink:href" show="new"/>
 								</xforms:trigger>
 							</xforms:group>
@@ -50,20 +55,16 @@
 									<!-- delete all holdover values before removing bind, possible orbeon bug -->
 									<xforms:setvalue ref="instance('temp')"/>
 									<xforms:setvalue ref="instance('temp')/@href"/>
-									<xforms:setvalue ref="instance('suggest-query')"/>
 									<xforms:setvalue ref="instance('search-query')"/>
 									<xforms:delete context="instance('feed')/*"/>
 									<xforms:delete nodeset="$binding"/>
 								</xforms:action>
-								<xforms:label>
-									<img src="../../images/remove.gif"/>
-								</xforms:label>
+								<xforms:label><img src="../../images/remove.gif"/></xforms:label>
 							</xforms:trigger>
 							<xforms:group ref="$binding[not($binding/@title)]">
 								<xforms:trigger appearance="minimal">
 									<xforms:insert if="not($binding/title)" context="$binding" origin="xxforms:attribute('title', '')" ev:event="DOMActivate"/>
-									<xforms:label>
-										<img src="../../images/add.gif"/>Title</xforms:label>
+									<xforms:label><img src="../../images/add.gif"/>Title</xforms:label>
 								</xforms:trigger>
 							</xforms:group>
 						</div>
@@ -73,21 +74,16 @@
 					<xforms:group ref=".[not(string($binding))]">
 						<div style="display:table;width:100%;">
 							<h4>
-								<xforms:output
-									value="concat(upper-case(substring($binding/@xlink:role, 1, 1)), substring($binding/@xlink:role, 2), if($binding/@xlink:role='authority' or $binding/@xlink:role='issuer') then if(name()='persname') then '--Personal' else '--Corporate' else '')"
-								/>
+								<xforms:output ref="instance('control-instance')/label"/>
 							</h4>
 							<xforms:trigger appearance="minimal">
 								<xforms:delete ev:event="DOMActivate" nodeset="$binding"/>
-								<xforms:label>
-									<img src="/apps/numishare/images/remove.gif"/>
-								</xforms:label>
+								<xforms:label><img src="/apps/numishare/images/remove.gif"/></xforms:label>
 							</xforms:trigger>
 							<xforms:group ref="$binding[not($binding/@title)]">
 								<xforms:trigger appearance="minimal">
 									<xforms:insert if="not($binding/@title)" context="$binding" origin="xxforms:attribute('title', '')" ev:event="DOMActivate"/>
-									<xforms:label>
-										<img src="../../images/add.gif"/>Title</xforms:label>
+									<xforms:label><img src="../../images/add.gif"/>Title</xforms:label>
 								</xforms:trigger>
 							</xforms:group>
 
@@ -100,6 +96,10 @@
 											<xforms:value>viaf</xforms:value>
 										</xforms:item>
 										<xforms:item>
+											<xforms:label>Nomisma</xforms:label>
+											<xforms:value>nomisma</xforms:value>
+										</xforms:item>
+										<xforms:item>
 											<xforms:label>Local Vocabulary</xforms:label>
 											<xforms:value>local</xforms:value>
 										</xforms:item>
@@ -107,18 +107,25 @@
 											<xforms:action if=". = 'viaf'">
 												<!-- remove temporary values, applicable when switching back to names from local -->
 												<xforms:delete context="instance('list')/*"/>
-												<xforms:setvalue ref="instance('search-query')" value="''"/>
+												<xforms:setvalue ref="instance('search-query')"/>
 												<xforms:insert if="not($binding/@xlink:href)" context="$binding" origin="xxforms:attribute('xlink:href', '')"/>
+												<xforms:setvalue ref="instance('temp')"/>
+												<xforms:setvalue ref="instance('temp')/@href"/>
 												<xforms:toggle case="viaf-search"/>
+											</xforms:action>
+											<xforms:action if=". = 'nomisma'">
+												<xforms:delete context="instance('feed')/*"/>
+												<xforms:setvalue ref="instance('search-query')"/>
+												<xforms:insert if="not($binding/@xlink:href)" context="$binding" origin="xxforms:attribute('xlink:href', '')"/>
+												<xforms:setvalue ref="instance('temp')"/>
+												<xforms:setvalue ref="instance('temp')/@href"/>
+												<xforms:toggle case="nomisma-search"/>
 											</xforms:action>
 											<xforms:action if=". = 'local'">
 												<!-- delete attributes, clear $binding text when applicable -->
-												<xforms:delete if="not(string($binding/text()))" context="instance('solr-response')/*"/>
-												<xforms:dispatch target="autocomplete-control" name="fr-set-label">
-													<xxforms:context name="label" select="''"/>
-												</xforms:dispatch>
-												<xforms:setvalue if="$binding/@xlink:href" ref="$binding" value="''"/>
 												<xforms:delete if="$binding/@xlink:href" context="$binding/@xlink:href"/>
+												<xforms:setvalue ref="instance('temp')"/>
+												<xforms:setvalue ref="instance('temp')/@href"/>												
 												<xforms:toggle case="local-autosuggest"/>
 											</xforms:action>
 										</xforms:action>
@@ -136,8 +143,8 @@
 										<xforms:trigger>
 											<xforms:action ev:event="DOMActivate">
 												<xforms:delete context="instance('list')/*"/>
-												<xforms:setvalue ref="$binding"/>
-												<xforms:setvalue ref="$binding/@xlink:href"/>
+												<xforms:setvalue ref="instance('temp')"/>
+												<xforms:setvalue ref="instance('temp')/@href"/>
 												<xforms:send submission="query-viaf"/>
 											</xforms:action>
 											<xforms:label>Search</xforms:label>
@@ -164,32 +171,93 @@
 										</xforms:trigger>
 									</xforms:group>
 								</xforms:case>
-								<xforms:case id="local-autosuggest">
-									<fr:autocomplete ref="instance('temp')" dynamic-itemset="true" id="autocomplete-control">
-										<xforms:action ev:event="fr-search-changed">
-											<xxforms:variable name="search-value" select="event('fr-search-value')"/>
-											<xxforms:variable name="make-suggestion" select="string-length($search-value) >= 2"/>
-											<xforms:action if="$make-suggestion">
-												<xforms:setvalue ref="instance('suggest-query')" value="$search-value"/>
-												<xforms:send submission="solr-suggest"/>
-												<!-- always insert currently typed item into the itemset -->
+								<xforms:case id="nomisma-search">
+									<div>
+										<xforms:input ref="instance('search-query')">
+											<xforms:label>Search</xforms:label>
+										</xforms:input>
+										<xforms:trigger>
+											<xforms:action ev:event="DOMActivate">
+												<xforms:delete context="instance('feed')/*"/>
+												<xforms:setvalue ref="instance('temp')"/>
+												<xforms:setvalue ref="instance('temp')/@href"/>
+												<xforms:send submission="query-nomisma"/>
 											</xforms:action>
-										</xforms:action>
-										<xforms:label style="float:left">Term</xforms:label>
-										<xforms:alert>Required</xforms:alert>
-										<!-- get response from current position in suggestions-aggregate instance -->
-										<xforms:itemset nodeset="instance('solr-response')//lst[@name=concat(instance('control-instance')/role, '_facet')]/int">
-											<xforms:label ref="@name"/>
-											<xforms:value ref="@name"/>
-										</xforms:itemset>
-									</fr:autocomplete>
-									<xforms:group ref=".[string-length(instance('temp')) &gt; 0]">
+											<xforms:label>Search</xforms:label>
+										</xforms:trigger>
+									</div>
+
+									<xforms:group ref=".[count(instance('feed')//*[local-name()='entry']) &gt; 0]">
+										<xforms:select1 ref="instance('temp')/@href" appearance="compact" id="nomisma-list">
+											<xforms:label ref="instance('control-instance')/label"/>
+											<xforms:itemset nodeset="instance('feed')//*[local-name()='entry']">
+												<xforms:label ref="*[local-name()='title']"/>
+												<xforms:value ref="*[local-name()='link'][1]/@href"/>
+											</xforms:itemset>
+											<xforms:output ref="instance('control-instance')/label"/>
+											<xforms:action ev:event="xforms-value-changed">
+												<!--<xforms:setvalue ref="instance('nomisma-definition')"/>-->
+												<xforms:setvalue ref="instance('nomisma-definition')"
+													value="instance('feed')//*[local-name()='entry'][*[local-name()='link'][1]/@href = instance('temp')/@href]/*[local-name()='content']"
+												/>
+											</xforms:action>
+										</xforms:select1>
+										<xforms:trigger>
+											<xforms:label>Select</xforms:label>
+											<xforms:action ev:event="DOMActivate">
+												<xforms:setvalue ref="$binding/@xlink:href" value="instance('temp')/@href"/>
+												<xforms:setvalue ref="$binding"
+													value="instance('feed')//*[local-name()='entry'][*[local-name()='link'][1]/@href = instance('temp')/@href]/*[local-name()='title']"
+												/>
+											</xforms:action>
+										</xforms:trigger>
+									</xforms:group>
+
+									<xforms:group ref=".[string(instance('nomisma-definition'))]">
+										<div>
+											<xforms:output ref="instance('nomisma-definition')">
+												<xforms:label>Definition</xforms:label>
+											</xforms:output>
+										</div>
+									</xforms:group>
+								</xforms:case>
+								<xforms:case id="local-autosuggest">
+									<div>
+										<xforms:input ref="instance('search-query')">
+											<xforms:label>Term</xforms:label>
+										</xforms:input>
+										<xforms:trigger>
+											<xforms:action ev:event="DOMActivate">
+												<xforms:send submission="suggest-term"/>
+											</xforms:action>
+											<xforms:label>Search</xforms:label>
+										</xforms:trigger>
+										<xforms:trigger>
+											<xforms:label>Add New</xforms:label>
+											<xforms:action ev:event="DOMActivate">
+												<xforms:setvalue ref="$binding" value="instance('search-query')"/>
+											</xforms:action>
+										</xforms:trigger>
+									</div>
+									<xforms:group ref=".[count(instance('solr-response')/lst[@name='terms']//int) &gt; 0]">
+										<xforms:select1 ref="instance('temp')" appearance="compact" size="10">
+											<xforms:label>Location</xforms:label>
+											<xforms:itemset nodeset="instance('solr-response')/lst[@name='terms']//int">
+												<xforms:label ref="@name"/>
+												<xforms:value ref="@name"/>
+											</xforms:itemset>
+										</xforms:select1>
 										<xforms:trigger>
 											<xforms:label>Select</xforms:label>
 											<xforms:action ev:event="DOMActivate">
 												<xforms:setvalue ref="$binding" value="instance('temp')"/>
 											</xforms:action>
 										</xforms:trigger>
+									</xforms:group>
+									<xforms:group ref=".[string-length(instance('control-instance')/local-message) &gt; 0]">
+										<p>
+											<xforms:output ref="instance('control-instance')/local-message"/>
+										</p>
 									</xforms:group>
 								</xforms:case>
 							</xforms:switch>
@@ -211,8 +279,6 @@
 						</div>
 					</xforms:group>
 
-					<!--<fr:xforms-inspector id="orbeon-xforms-inspector"/>-->
-
 					<!-- ********************************************************************** -->
 					<!-- ***********************  DIALOG INTERNAL MODEL *********************** -->
 					<xforms:model id="cp-name-model" xmlns:xi="http://www.w3.org/2001/XInclude">
@@ -225,6 +291,10 @@
 								<index/>
 								<role/>
 								<collection-name/>
+								<local-message/>
+								<facet/>
+								<label/>
+								<typeof/>
 							</control>
 						</xforms:instance>
 
@@ -253,9 +323,6 @@
 						</xforms:instance>
 
 						<!-- Instances containing the query string -->
-						<xforms:instance id="suggest-query">
-							<query/>
-						</xforms:instance>
 						<xforms:instance id="search-query">
 							<query/>
 						</xforms:instance>
@@ -267,23 +334,10 @@
 						<xforms:instance id="list">
 							<list xmlns=""/>
 						</xforms:instance>
-						<xforms:instance id="item-template">
-							<item href="" xmlns=""/>
-						</xforms:instance>
 
 						<!-- local vocabulary -->
-						<xforms:instance id="facet-result-template">
-							<int name="" xmlns=""/>
-						</xforms:instance>
 						<xforms:instance id="solr-response">
 							<response xmlns=""/>
-						</xforms:instance>
-						<xforms:instance id="terms-temp">
-							<lst name="terms" xmlns="">
-								<lst name="">
-									<int name="">1</int>
-								</lst>
-							</lst>
 						</xforms:instance>
 
 						<!-- interface type radio button -->
@@ -291,11 +345,36 @@
 							<interface/>
 						</xforms:instance>
 
+						<!-- Nomisma SPARQL: get types to use in Atom feed query -->
+						<xforms:instance id="sparqlQuery">
+							<query>
+								<![CDATA[PREFIX rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+								PREFIX dcterms:  <http://purl.org/dc/terms/>
+								PREFIX nm:       <http://nomisma.org/id/>
+								PREFIX skos:      <http://www.w3.org/2004/02/skos/core#>
+								SELECT ?object WHERE {
+								?object skos:broader+ nm:CONCEPT}]]>
+							</query>
+						</xforms:instance>
+
+						<xforms:instance id="sparqlResponse">
+							<sparql xmlns="http://www.w3.org/2005/sparql-results#"/>
+						</xforms:instance>
+
+						<!-- instances for nomisma -->
+						<xforms:instance id="feed">
+							<feed/>
+						</xforms:instance>
+						
+						<xforms:instance id="nomisma-definition">
+							<definition xmlns=""/>
+						</xforms:instance>
+
 						<!-- require a value for temp, thus requiring a value for $binding -->
 						<xforms:bind nodeset="instance('temp')" required="true()"/>
 
-						<xforms:submission id="load-collections" serialization="none" method="get" action="{instance('exist-url')}collections-list.xml" replace="instance" instance="collections-list"
-							xxforms:username="admin" xxforms:password="">
+						<xforms:submission id="load-collections" serialization="none" method="get" action="{instance('exist-url')}collections-list.xml"
+							replace="instance" instance="collections-list" xxforms:username="admin" xxforms:password="">
 							<!-- if the config loads successfully, set the collection names based on authentication -->
 							<xforms:action ev:event="xforms-submit-done">
 								<!-- set default if security is false -->
@@ -304,7 +383,8 @@
 								</xforms:action>
 								<!-- if there is a security role, set the collection-name value if it is in the list, otherwise set new collection name -->
 								<xforms:action if="string(instance('control-instance')/request-security/role)">
-									<xforms:action if="string(instance('collections-list')/collection[@role=instance('control-instance')/request-security/role]/@name)">
+									<xforms:action
+										if="string(instance('collections-list')/collection[@role=instance('control-instance')/request-security/role]/@name)">
 										<xforms:setvalue ref="instance('control-instance')/collection-name"
 											value="instance('collections-list')/collection[@role=instance('control-instance')/request-security/role]/@name"/>
 									</xforms:action>
@@ -315,15 +395,19 @@
 							<xforms:message ev:event="xforms-submit-error" level="modal">Unable to load Numishare collections list.</xforms:message>
 						</xforms:submission>
 
-						<xforms:submission id="load-config" serialization="none" method="get" action="{instance('exist-url')}{instance('control-instance')/collection-name}/config.xml"
-							replace="instance" instance="config"/>
+						<xforms:submission id="load-config" serialization="none" method="get"
+							action="{instance('exist-url')}{instance('control-instance')/collection-name}/config.xml" replace="instance" instance="config"
+							xxforms:username="admin" xxforms:password="">
+							<xforms:message ev:event="xforms-submit-error" level="modal">Unable to load Numishare config.</xforms:message>
+						</xforms:submission>
 
 						<!-- search for matching keywords -->
 						<xforms:submission id="query-viaf" serialization="none" method="get"
 							action="http://viaf.org/viaf/search?query={instance('control-instance')/index}+all+%22{instance('search-query')}%22+and+local.sources+any+%22lc%22&amp;maximumRecords=100&amp;sortKeys=holdingscount&amp;httpAccept=text/xml"
 							instance="response" replace="instance">
 							<xforms:action ev:event="xforms-submit-done">
-								<xforms:insert nodeset="instance('list')" origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/viaf-list.xpl', 'data', instance('response'), 'data')"/>
+								<xforms:insert nodeset="instance('list')"
+									origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/viaf-list.xpl', 'data', instance('response'), 'data')"/>
 								<xforms:message if="count(instance('list')/item) = 0" level="modal">No results found for query.</xforms:message>
 								<xforms:setvalue if="count(instance('list')/item) &gt; 0" ref="instance('search-results')"
 									value="concat('Displaying first 100 of ', count(instance('list')/item), ' result(s).')"/>
@@ -331,14 +415,35 @@
 							<xforms:message ev:event="xforms-submit-error" level="modal">Error querying VIAF.</xforms:message>
 						</xforms:submission>
 
-						<xforms:submission id="solr-suggest" serialization="none" method="get"
-							action="{instance('config')/solr_published}terms?terms.fl={instance('control-instance')/role}_facet&amp;terms.limit=10&amp;terms.sort=index&amp;terms.prefix={instance('suggest-query')}"
-							instance="solr-response" replace="instance">
+						<xforms:submission id="query-nomisma" serialization="none" method="get"
+							action="http://nomisma.org/feed/?q=typeof:{instance('control-instance')/typeof}+(prefLabel:{instance('search-query')} OR altLabel:{instance('search-query')})" instance="feed"
+							replace="instance">
+							<xforms:message ev:event="xforms-submit-error" level="modal">Unable to communicate with nomisma.org Atom feed.</xforms:message>
+						</xforms:submission>
+
+						<!-- Nomisma SPARQL Query -->
+						<xforms:submission id="submit-sparqlQuery"
+							action="http://nomisma.org/query?query={encode-for-uri(instance('sparqlQuery'))}&amp;output=xml" ref="instance('sparqlResponse')"
+							replace="instance" method="get">
+							<xforms:message ev:event="xforms-submit-error" level="modal">SPARQL query failed.</xforms:message>
+							<!-- generate the control-instance/typeof from SPARQL results -->
 							<xforms:action ev:event="xforms-submit-done">
-								<xforms:insert context="instance('solr-response')/lst[@name='terms']/lst[@name=concat(instance('control-instance')/role, '_facet')]"
-									origin="instance('facet-result-template')"/>
-								<xforms:setvalue ref="instance('solr-response')/lst[@name='terms']/lst[@name=concat(instance('control-instance')/role, '_facet')]/int[1]/@name"
-									value="instance('suggest-query')"/>
+								<xforms:setvalue ref="instance('control-instance')/typeof"
+									value="concat('(', instance('control-instance')/role, ' OR ', replace(string-join(instance('sparqlResponse')//res:binding[@name='object']/res:uri, ' OR '), 'http://nomisma.org/id/', '' ), ')')"
+								/>
+							</xforms:action>
+						</xforms:submission>
+
+						<xforms:submission id="suggest-term" serialization="none" method="get"
+							action="{instance('config')/solr_published}terms?terms.fl={instance('control-instance')/facet}&amp;terms.limit=25&amp;terms.sort=index&amp;terms.regex.flag=case_insensitive&amp;terms.regex=.*{instance('search-query')}.*"
+							instance="solr-response" replace="instance">
+							<xforms:message ev:event="xforms-submit-error" level="modal">Unable to query Solr.</xforms:message>
+							<xforms:action ev:event="xforms-submit-done">
+								<!-- set or clear message based on number of results found -->
+								<xforms:setvalue ref="instance('control-instance')/local-message"
+									if="count(instance('solr-response')/lst[@name='terms']//int) = 0">No matching terms found.</xforms:setvalue>
+								<xforms:setvalue ref="instance('control-instance')/local-message"
+									if="count(instance('solr-response')/lst[@name='terms']//int) &gt; 0"/>
 							</xforms:action>
 						</xforms:submission>
 					</xforms:model>
