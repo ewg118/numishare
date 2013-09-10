@@ -230,22 +230,20 @@ $(document).ready(function () {
 		
 		q = getQuery();
 		var list_id = $(this) .attr('id').split('_link')[0] + '-list';
-		$.get('get_centuries', {
-			q: q
-		},
-		function (data) {
-			$('#century_num-list').html(data);
-		});
+		if ($('#' + list_id).html().indexOf('<li') < 0){
+			$.get('get_centuries', {
+				q: q
+			},
+			function (data) {
+				$('#century_num-list').html(data);
+			});
+		}
 		
 		$('#' + list_id).parent('div').attr('style', 'width: 192px;display:block;');
 	});
 	
 	$('.expand_century').livequery('click', function (event) {
 		var century = $(this).attr('century');
-		if (century < 0) {
-			century = "\\" + century;
-		}
-		//var q = $(this).attr('q');
 		var q = getQuery();
 		var expand_image = $(this).children('img').attr('src');
 		//hide list if it is expanded
@@ -257,7 +255,7 @@ $(document).ready(function () {
 			//perform ajax load on first click of expand button
 			if ($(this).parent('li').children('ul').html().indexOf('<li') < 0) {
 				$.get('get_decades', {
-					q: q, century: century
+					q: q, century: '"' + century + '"'
 				},
 				function (data) {
 					$('#century_' + century + '_list').html(data);
