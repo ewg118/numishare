@@ -21,7 +21,9 @@ $(document).ready(function () {
 		var title = $(this).attr('title');
 		hierarchyLabel(field, title);
 	});
-	dateLabel();
+	if ($('#century_num').length > 0){
+		dateLabel();
+	}
 	
 	$("#backgroundPopup").livequery('click', function (event) {
 		disablePopup();
