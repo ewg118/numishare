@@ -30,7 +30,6 @@ $(document).ready(function () {
 	/* INITIALIZE MAP */
 	var q = '*:*';
 	var collection_type = $('#collection_type').text();
-	var path = $('#path').text();
 	
 	//initialize timemap if hoard
 	if (collection_type == 'hoard') {
@@ -77,7 +76,7 @@ $(document).ready(function () {
 			new OpenLayers.Strategy.Fixed(),
 			new OpenLayers.Strategy.Cluster()],
 			protocol: new OpenLayers.Protocol.HTTP({
-				url: path + "findspots.kml?q=" + q + (lang.length > 0 ? '&lang=' + lang : ''),
+				url: "findspots.kml?q=" + q + (lang.length > 0 ? '&lang=' + lang : ''),
 				format: new OpenLayers.Format.KML({
 					extractStyles: false,
 					extractAttributes: true
@@ -93,7 +92,7 @@ $(document).ready(function () {
 			new OpenLayers.Strategy.Fixed(),
 			new OpenLayers.Strategy.Cluster()],
 			protocol: new OpenLayers.Protocol.HTTP({
-				url: path + "mints.kml?q=" + q + (lang.length > 0 ? '&lang=' + lang : ''),
+				url: "mints.kml?q=" + q + (lang.length > 0 ? '&lang=' + lang : ''),
 				format: new OpenLayers.Format.KML({
 					extractStyles: false,
 					extractAttributes: true
@@ -105,26 +104,22 @@ $(document).ready(function () {
 			controls:[
 			new OpenLayers.Control.PanZoomBar(),
 			new OpenLayers.Control.Navigation(),
+			new OpenLayers.Control.ScaleLine(),
 			new OpenLayers.Control.LayerSwitcher({
 				'ascending': true
 			})]
 		});
 		
-		var googlePhys = new OpenLayers.Layer.Google("Google Physical",{type: google.maps.MapTypeId.TERRAIN});
-		
-		/*var imperium = new OpenLayers.Layer.XYZ(
+		var imperium = new OpenLayers.Layer.XYZ(
 		"Imperium Romanum",[
 		"http://pelagios.dme.ait.ac.at/tilesets/imperium/${z}/${x}/${y}.png"], {
 			sphericalMercator: true,
 			isBaseLayer: true,
-			numZoomLevels: 10
+			numZoomLevels: 12
 		});
-		map.addLayer(imperium);*/
 		
-		//add google physical
-		map.addLayer(googlePhys);
+		map.addLayer(imperium);
 		
-		//add KML layers
 		map.addLayer(mintLayer);
 		map.addLayer(hoardLayer);
 		
@@ -178,7 +173,7 @@ $(document).ready(function () {
 			var category = id.split('-select')[0];
 			var mincount = $(this).attr('mincount');
 			
-			$.get(path + 'maps_get_facet_options', {
+			$.get('maps_get_facet_options', {
 				q: q, category: category, sort: 'index', limit: - 1, offset: 0, mincount: mincount, lang: lang
 			},
 			function (data) {
@@ -206,7 +201,7 @@ $(document).ready(function () {
 			if (q.length > 0) {
 				var category = id.split('-select')[0];
 				var mincount = $(this).attr('mincount');
-				$.get(path + 'maps_get_facet_options', {
+				$.get('maps_get_facet_options', {
 					q: q, category: category, sort: 'index', limit: - 1, offset: 0, mincount: mincount, lang: lang
 				},
 				function (data) {
@@ -230,7 +225,7 @@ $(document).ready(function () {
 			q = getQuery();
 			var category = id.split('-select')[0];
 			var mincount = $(this).attr('mincount');
-			$.get(path + 'maps_get_facet_options', {
+			$.get('maps_get_facet_options', {
 				q: q, category: category, sort: 'index', limit: - 1, offset: 0, mincount: mincount, lang: lang
 			},
 			function (data) {
@@ -253,28 +248,22 @@ $(document).ready(function () {
 		if (collection_type == 'hoard') {
 			$('#timemap').html('<div id="mapcontainer"><div id="map"/></div><div id="timelinecontainer"><div id="timeline"/></div>');
 			initialize_timemap(query);
-		} else {	
-			var mintQuery = path + "mints.kml?q=" + query + (lang.length > 0 ? '&lang=' + lang : '');
-			var findspotQuery = path + "findspots.kml?q=" + query + (lang.length > 0 ? '&lang=' + lang : '');				
-			mintLayer.loaded = false;	
-			hoardLayer.loaded = false;				
+		} else {			
+			newUrl = "mints.kml?q=" + query + (lang.length > 0 ? '&lang=' + lang : '');
+			
+			mintLayer.loaded = false;
+			mintLayer.setVisibility(true);
 			//the refresh will force it to get the new KML data//
 			mintLayer.refresh({
-				force: true, url: mintQuery
+				force: true, url: newUrl
 			});
-			hoardLayer.refresh({
-				force: true, url: findspotQuery
-			});
-			mintLayer.setVisibility(true);
-			hoardLayer.setVisibility(true);
 			map.zoomToExtent(mintLayer.getDataExtent());
 		}
 	}
 	
 	$('a.pagingBtn') .livequery('click', function (event) {
-		var href = path + 'results_ajax' + $(this) .attr('href');
+		var href = 'results_ajax' + $(this) .attr('href');
 		$.get(href, {
-			display_path: path
 		},
 		function (data) {
 			$('#results') .html(data);
@@ -310,7 +299,7 @@ $(document).ready(function () {
 		var field = $(this) .attr('id').split('_hier')[0];
 		var q = getQuery();
 		if ($('#' + list_id).html().indexOf('<li') < 0) {
-			$.get(path + 'get_hier', {
+			$.get('get_hier', {
 				q: q, field: field, prefix: 'L1', fq: '*', section: 'collection', link: '', lang: lang
 			},
 			function (data) {
@@ -331,7 +320,7 @@ $(document).ready(function () {
 		var section = $(this) .attr('section');
 		var link = $(this) .attr('link');
 		if ($(this) .children('img') .attr('src') .indexOf('plus') >= 0) {
-			$.get(path + 'get_hier', {
+			$.get('get_hier', {
 				q: q, field:field, prefix: prefix, fq: '"' +fq + '"', link: link, section: section, lang: lang
 			},
 			function (data) {
@@ -385,21 +374,21 @@ $(document).ready(function () {
 		
 		q = getQuery();
 		var list_id = $(this) .attr('id').split('_link')[0] + '-list';
-		$.get(path + 'get_centuries', {
-			q: q
-		},
-		function (data) {
-			$('#century_num-list').html(data);
-		});
+		if ($('#' + list_id).html().indexOf('<li') < 0){
+			$.get('get_centuries', {
+				q: q
+			},
+			function (data) {
+				$('#century_num-list').html(data);
+			});
+		}
 		
 		$('#' + list_id).parent('div').attr('style', 'width: 192px;display:block;');
 	});
 	
 	$('.expand_century').livequery('click', function (event) {
 		var century = $(this).attr('century');
-		if (century < 0) {
-			century = "\\" + century;
-		}
+	
 		//var q = $(this).attr('q');
 		var q = getQuery();
 		var expand_image = $(this).children('img').attr('src');
@@ -411,8 +400,8 @@ $(document).ready(function () {
 			$(this).children('img').attr('src', expand_image.replace('plus', 'minus'));
 			//perform ajax load on first click of expand button
 			if ($(this).parent('li').children('ul').html().indexOf('<li') < 0) {
-				$.get(path + 'get_decades', {
-					q: q, century: century
+				$.get('get_decades', {
+					q: q, century: '"' + century + '"'
 				},
 				function (data) {
 					$('#century_' + century + '_list').html(data);
@@ -527,10 +516,9 @@ $(document).ready(function () {
 		$('.show_coins').livequery('click', function (event) {
 			var query = $(this).attr('q');
 			var lang = $('input[name=lang]').val();
-			$.get(path + 'results_ajax', {
+			$.get('results_ajax', {
 				q: query,
-				lang: lang,
-				display_path: path
+				lang: lang
 			},
 			function (data) {
 				$('#results') .html(data);
@@ -565,7 +553,7 @@ $(document).ready(function () {
 				theme: "red",
 				type: "kml", // Data to be loaded in KML - must be a local URL
 				options: {
-					url: path + "hoards.kml?q=" + q + (lang.length > 0 ? '&lang=' + lang : '')// KML file to load
+					url: "hoards.kml?q=" + q + (lang.length > 0 ? '&lang=' + lang : '')// KML file to load
 				}
 			}],
 			bandIntervals:[

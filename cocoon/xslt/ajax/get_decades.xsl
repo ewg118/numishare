@@ -1,14 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes="xs exsl xs xi" version="2.0"
-	xmlns:xi="http://www.w3.org/2001/XInclude" xmlns="http://www.w3.org/1999/xhtml" xmlns:exsl="http://exslt.org/common">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes="#all" version="2.0">
 	<xsl:output method="xml" encoding="UTF-8"/>
 
 	<xsl:param name="q"/>
 	<xsl:param name="century"/>
-	<xsl:variable name="century_int" select="number(translate($century, '\', ''))"/>
+	<xsl:variable name="century_int" select="number(translate($century, '&#x022;', ''))"/>
+	<xsl:variable name="decades" as="element()*">
+		<decades>
+			<xsl:analyze-string select="$q" regex="(decade_num:&#x022;[^&#x022;]+&#x022;)">
+				<xsl:matching-substring>
+					<xsl:for-each select="regex-group(1)">
+						<decade>
+							<xsl:value-of select="substring-after(translate(., '&#x022;', ''), ':')"/>
+						</decade>
+					</xsl:for-each>
+				</xsl:matching-substring>
+			</xsl:analyze-string>
+		</decades>
+	</xsl:variable>
 
 	<xsl:template match="/">
-		<!--<xsl:copy-of select="*"/>-->		
+		<!--<xsl:copy-of select="*"/>-->
 		<xsl:apply-templates select="descendant::lst[@name='decade_num']"/>
 	</xsl:template>
 
@@ -25,16 +37,16 @@
 						<xsl:call-template name="generate-list"/>
 					</xsl:if>
 				</xsl:when>
-			</xsl:choose>			
+			</xsl:choose>
 		</xsl:for-each>
 	</xsl:template>
-	
+
 	<xsl:template name="generate-list">
 		<xsl:choose>
 			<xsl:when test="number(@name) &lt; 0">
 				<li>
 					<xsl:choose>
-						<xsl:when test="contains($q, concat('decade_num:\', @name))">
+						<xsl:when test="boolean(index-of($decades//decade, @name)) = true()">
 							<input type="checkbox" value="{@name}" checked="checked" class="decade_checkbox"/>
 						</xsl:when>
 						<xsl:otherwise>
@@ -47,7 +59,7 @@
 			<xsl:otherwise>
 				<li>
 					<xsl:choose>
-						<xsl:when test="contains($q, concat('decade_num:', @name))">
+						<xsl:when test="boolean(index-of($decades//decade, @name)) = true()">
 							<input type="checkbox" value="{@name}" checked="checked" class="decade_checkbox"/>
 						</xsl:when>
 						<xsl:otherwise>
