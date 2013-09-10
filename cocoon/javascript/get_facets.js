@@ -22,7 +22,9 @@ $(document).ready(function () {
 		hierarchyLabel(field, title);
 	});
 	
-	dateLabel();
+	if ($('#century_num').length > 0){
+		dateLabel();
+	}
 	
 	$("#backgroundPopup").livequery('click', function (event) {
 		disablePopup();
@@ -86,7 +88,7 @@ $(document).ready(function () {
 				return this.value;
 			}).get();
 			if (array_of_checked_values.length == 0) {
-				$('button[title=' + title + ']').children('span:nth-child(2)').text(title);
+				$(this).next('button').children('span:nth-child(2)').text(title);
 			}
 		},
 		click: function () {
@@ -97,9 +99,9 @@ $(document).ready(function () {
 			}).get();
 			var length = array_of_checked_values.length;
 			if (length > 3) {
-				$('button[title=' + title + ']').children('span:nth-child(2)').text(title + ': ' + length + ' selected');
+				$(this).next('button').children('span:nth-child(2)').text(title + ': ' + length + ' selected');
 			} else if (length > 0 && length <= 3) {
-				$('button[title=' + title + ']').children('span:nth-child(2)').text(title + ': ' + array_of_checked_values.join(', '));
+				$(this).next('button').children('span:nth-child(2)').text(title + ': ' + array_of_checked_values.join(', '));
 			} else if (length == 0) {
 				var q = getQuery();
 				if (q.length > 0) {

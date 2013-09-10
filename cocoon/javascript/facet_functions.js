@@ -12,7 +12,7 @@ function getQuery(){
 	var query_terms = $('#facet_form_query').attr('value').split(' AND ');	
 	var non_facet_terms = new Array();
 	for (i in query_terms){
-		if (query_terms[i].indexOf('_facet') < 0 && query_terms[i].indexOf('dob_num') < 0 && query_terms[i] != '*:*'){
+		if (query_terms[i].indexOf('_facet') < 0 && query_terms[i].indexOf('dob_num') < 0 && query_terms[i].indexOf('taq_num') < 0 && query_terms[i] != '*:*'){
 			non_facet_terms.push(query_terms[i]);				
 		}
 	}
@@ -59,7 +59,7 @@ function getQuery(){
 
 		if (segment[0] != null) {
 			if (segment.length > 1){
-				if (collection_type == 'hoard'){
+				if (collection_type == 'hoard' && (facet != 'taq_num' && facet != 'findspot_facet')){
 					query.push(segment.join(' AND '));
 				} else {
 					query.push('(' + segment.join(' OR ') + ')');
