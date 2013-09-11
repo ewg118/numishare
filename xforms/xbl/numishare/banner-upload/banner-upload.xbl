@@ -4,7 +4,8 @@
 -->
 <xbl:xbl xmlns="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xxforms="http://orbeon.org/oxf/xml/xforms"
 	xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:xbl="http://www.w3.org/ns/xbl" xmlns:xxbl="http://orbeon.org/oxf/xml/xbl" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-	xmlns:oxf="http://www.orbeon.com/oxf/processors" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:date="http://exslt.org/dates-and-times">
+	xmlns:oxf="http://www.orbeon.com/oxf/processors" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:date="http://exslt.org/dates-and-times"
+	xmlns:numishare="http://code.google.com/p/numishare/">
 
 
 	<xbl:binding id="numishare-banner-upload" element="numishare|banner-upload">
@@ -18,7 +19,7 @@
 					<xforms:action ev:event="xforms-enabled" ev:target="#observer">
 						<xforms:insert context="instance('control-instance')" nodeset="collection-name" position="after"
 							origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/get-authentication.xpl', 'dump', instance('dump'), 'data')"/>
-						<xforms:send submission="load-collections"/>						
+						<xforms:send submission="load-collections"/>
 					</xforms:action>
 					<xxforms:variable name="created" select="current-dateTime()"/>
 
@@ -141,7 +142,7 @@
 						<xforms:instance id="exist-url">
 							<xi:include href="../../../apps/numishare/exist-url.xml"/>
 						</xforms:instance>
-						
+
 						<xforms:instance id="control-instance">
 							<controls xmlns="">
 								<simple-upload-trigger/>
@@ -150,14 +151,14 @@
 								<collection-name/>
 							</controls>
 						</xforms:instance>
-						
+
 						<!-- collections/authentication instances -->
 						<xforms:instance id="collections-list">
 							<collections xmlns="">
 								<collection roll="admin" name="numishare"/>
 							</collections>
 						</xforms:instance>
-						
+
 						<!-- site info -->
 						<xforms:instance id="config">
 							<config xmlns=""/>
@@ -221,7 +222,7 @@
 
 						<!-- Get obverse file upload, encode it in base64 to include in xml-rpc payload to send to be resized -->
 						<xforms:submission id="upload-banner" method="post" replace="none" resource="test:"/>
-						
+
 						<xforms:submission id="load-collections" serialization="none" method="get" action="{instance('exist-url')}collections-list.xml" replace="instance" instance="collections-list"
 							xxforms:username="admin" xxforms:password="">
 							<!-- if the config loads successfully, set the collection names based on authentication -->
@@ -236,7 +237,7 @@
 										<xforms:setvalue ref="instance('control-instance')/collection-name"
 											value="instance('collections-list')/collection[@role=instance('control-instance')/request-security/role]/@name"/>
 									</xforms:action>
-								</xforms:action>				
+								</xforms:action>
 								<xforms:send submission="load-config"/>
 							</xforms:action>
 							<!-- if the config has not been created (given that the URL in exist-url.xml is correct), create it -->
@@ -245,8 +246,8 @@
 
 
 						<!-- get image dimensions from config -->
-						<xforms:submission id="load-config" serialization="none" method="get" action="{instance('exist-url')}{instance('control-instance')/collection-name}/config.xml" xxforms:username="admin" xxforms:password=""
-							replace="instance" instance="config">
+						<xforms:submission id="load-config" serialization="none" method="get" action="{instance('exist-url')}{instance('control-instance')/collection-name}/config.xml"
+							xxforms:username="admin" xxforms:password="" replace="instance" instance="config">
 							<xforms:message ev:event="xforms-submit-error" level="modal">Unable to load Numishare configuration</xforms:message>
 						</xforms:submission>
 					</xforms:model>

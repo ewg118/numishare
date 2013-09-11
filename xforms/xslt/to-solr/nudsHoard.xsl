@@ -11,12 +11,23 @@
 	</xsl:template>
 
 	<xsl:template match="nh:nudsHoard">
+		<xsl:variable name="title">
+			<xsl:value-of select="normalize-space(nh:descMeta/nh:title[1])"/>
+		</xsl:variable>
+		
 		<doc>
 			<field name="id">
 				<xsl:value-of select="nh:control/nh:recordId"/>
 			</field>
 			<field name="title_display">
-				<xsl:value-of select="nh:control/nh:recordId"/>
+				<xsl:choose>
+					<xsl:when test="string($title)">
+						<xsl:value-of select="$title"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="nh:control/nh:recordId"/>
+					</xsl:otherwise>
+				</xsl:choose>
 			</field>
 			<field name="recordType">hoard</field>
 			<field name="timestamp">

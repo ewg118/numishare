@@ -2,7 +2,7 @@
 	last modified: June, 2011
 	function: EAD state component; user taps into LCSH or local vocabulary for states
 -->
-<xbl:xbl xmlns="http://nomisma.org/nuds" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events"
+<xbl:xbl xmlns:nuds="http://nomisma.org/nuds" xmlns="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events"
 	xmlns:xxforms="http://orbeon.org/oxf/xml/xforms" xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:xbl="http://www.w3.org/ns/xbl" xmlns:xxbl="http://orbeon.org/oxf/xml/xbl"
 	xmlns:oxf="http://www.orbeon.com/oxf/processors" xmlns:numishare="http://code.google.com/p/numishare/" xmlns:xlink="http://www.w3.org/1999/xlink">
 
@@ -26,52 +26,52 @@
 					</xforms:action>
 
 					<xforms:group ref="$binding">
-						<xhtml:div class="trigger_container">
+						<div class="trigger_container">
 							<xforms:group ref=".[count(nuds:date) = 0 and count(nuds:dateRange) = 0]">
 								<xforms:trigger appearance="minimal">
 									<xforms:label>
-										<xhtml:img src="../../images/add.gif"/>Date</xforms:label>
+										<img src="../../images/add.gif"/>Date</xforms:label>
 									<xforms:insert ev:event="DOMActivate" context="." origin="instance('date-template')" nodeset="./child::node()[last()]"/>
 								</xforms:trigger>
 								<xforms:trigger appearance="minimal">
 									<xforms:label>
-										<xhtml:img src="../../images/add.gif"/>Date Range</xforms:label>
+										<img src="../../images/add.gif"/>Date Range</xforms:label>
 									<xforms:insert ev:event="DOMActivate" context="." origin="instance('dateRange-template')" nodeset="./child::node()[last()]"/>
 								</xforms:trigger>
 							</xforms:group>
 							<xforms:group ref=".[count(nuds:denomination) = 0]">
 								<xforms:trigger appearance="minimal">
 									<xforms:label>
-										<xhtml:img src="../../images/add.gif"/>Denomination</xforms:label>
+										<img src="../../images/add.gif"/>Denomination</xforms:label>
 									<xforms:insert ev:event="DOMActivate" context="." origin="instance('denomination-template')" nodeset="./child::node()[last()]"/>
 								</xforms:trigger>
 							</xforms:group>
 							<xforms:group ref=".[count(nuds:manufacture) = 0]">
 								<xforms:trigger appearance="minimal">
 									<xforms:label>
-										<xhtml:img src="../../images/add.gif"/>Manufacture</xforms:label>
+										<img src="../../images/add.gif"/>Manufacture</xforms:label>
 									<xforms:insert ev:event="DOMActivate" context="." origin="instance('manufacture-template')" nodeset="./child::node()[last()]"/>
 								</xforms:trigger>
 							</xforms:group>
 							<xforms:group ref=".[count(nuds:material) = 0]">
 								<xforms:trigger appearance="minimal">
 									<xforms:label>
-										<xhtml:img src="../../images/add.gif"/>Material</xforms:label>
+										<img src="../../images/add.gif"/>Material</xforms:label>
 									<xforms:insert ev:event="DOMActivate" context="." origin="instance('material-template')" nodeset="./child::node()[last()]"/>
 								</xforms:trigger>
 							</xforms:group>
 							<xforms:group ref=".[count(nuds:weightStandard) = 0]">
 								<xforms:trigger appearance="minimal">
 									<xforms:label>
-										<xhtml:img src="../../images/add.gif"/>Weight Standard</xforms:label>
+										<img src="../../images/add.gif"/>Weight Standard</xforms:label>
 									<xforms:insert ev:event="DOMActivate" context="." origin="instance('weightStandard-template')" nodeset="./child::node()[last()]"/>
 								</xforms:trigger>
 							</xforms:group>
-						</xhtml:div>
-						<xhtml:div class="section">
-							<xhtml:div>
+						</div>
+						<div class="section">
+							<div>
 								<xforms:group ref="nuds:objectType">
-									<xhtml:div>
+									<div>
 										<xforms:select1 ref="@xlink:href">
 											<xforms:label>Object Type</xforms:label>
 											<xforms:alert>Required</xforms:alert>
@@ -89,14 +89,14 @@
 												<xforms:setvalue ref="parent::node()" if="not(string($href))"/>
 											</xforms:action>
 										</xforms:select1>
-									</xhtml:div>
+									</div>
 								</xforms:group>
-							</xhtml:div>
+							</div>
 							<xforms:group ref="nuds:denomination">
 								<numishare:denomination/>
 							</xforms:group>
 							<xforms:group ref="nuds:manufacture">
-								<xhtml:div>
+								<div>
 									<xforms:select1 ref="@xlink:href">
 										<xforms:label>Manufacture</xforms:label>
 										<xforms:alert>Required</xforms:alert>
@@ -117,13 +117,13 @@
 									<xforms:trigger appearance="minimal">
 										<xforms:delete ev:event="DOMActivate" nodeset="."/>
 										<xforms:label>
-											<xhtml:img src="../../images/remove.gif"/>
+											<img src="../../images/remove.gif"/>
 										</xforms:label>
 									</xforms:trigger>
-								</xhtml:div>
+								</div>
 							</xforms:group>
 							<xforms:repeat nodeset="nuds:material">
-								<xhtml:div>
+								<div>
 									<xforms:select1 ref="@xlink:href">
 										<xforms:label>Material</xforms:label>
 										<xforms:alert>Required</xforms:alert>
@@ -144,45 +144,45 @@
 									<xforms:trigger appearance="minimal">
 										<xforms:delete ev:event="DOMActivate" nodeset="."/>
 										<xforms:label>
-											<xhtml:img src="../../images/remove.gif"/>
+											<img src="../../images/remove.gif"/>
 										</xforms:label>
 									</xforms:trigger>
-								</xhtml:div>
+								</div>
 							</xforms:repeat>
 							<xforms:group ref="nuds:weightStandard">
 								<h4>Weight Standard</h4>
 								<xforms:trigger appearance="minimal">
 									<xforms:delete ev:event="DOMActivate" nodeset="."/>
 									<xforms:label>
-										<xhtml:img src="../../images/remove.gif"/>
+										<img src="../../images/remove.gif"/>
 									</xforms:label>
 								</xforms:trigger>
-								<xhtml:div>
+								<div>
 									<xforms:input ref=".">
 										<xforms:label>Weight</xforms:label>
 										<xforms:alert>Must be numeric value.</xforms:alert>
 									</xforms:input>
-								</xhtml:div>
-								<xhtml:div>
+								</div>
+								<div>
 									<xforms:input ref="@origin">
 										<xforms:label>Origin</xforms:label>
 										<xforms:alert>Required</xforms:alert>
 									</xforms:input>
-								</xhtml:div>
+								</div>
 							</xforms:group>
-						</xhtml:div>
+						</div>
 						<xforms:group ref="nuds:date">
 							<numishare:date/>
 						</xforms:group>
 						<xforms:group ref="nuds:dateRange">
 							<numishare:dateRange/>
 						</xforms:group>
-						<xhtml:div class="subsection">
+						<div class="subsection">
 							<h3>Obverse</h3>
 							<span class="add">
 								<xforms:trigger appearance="minimal">
 									<xforms:label>
-										<xhtml:img src="../../images/add.gif"/>
+										<img src="../../images/add.gif"/>
 									</xforms:label>
 									<xxforms:show ev:event="DOMActivate" dialog="obverse-objects"/>
 								</xforms:trigger>
@@ -191,14 +191,14 @@
 								<xforms:label>Obverse Descriptors</xforms:label>
 								<xforms:trigger appearance="minimal">
 									<xforms:label>
-										<xhtml:img src="../../images/add.gif"/>Artist</xforms:label>
+										<img src="../../images/add.gif"/>Artist</xforms:label>
 									<xforms:insert ev:event="DOMActivate" context="." origin="instance('obverse-template')" nodeset="./child::node()[last()]" if="count(nuds:obverse) = 0"/>
 									<xforms:insert ev:event="DOMActivate" context="nuds:obverse" origin="instance('artist-template')" nodeset="./child::node()[last()]"/>
 									<xxforms:hide ev:event="DOMActivate" dialog="obverse-objects"/>
 								</xforms:trigger>
 								<xforms:trigger appearance="minimal">
 									<xforms:label>
-										<xhtml:img src="../../images/add.gif"/>Deity</xforms:label>
+										<img src="../../images/add.gif"/>Deity</xforms:label>
 									<xforms:insert ev:event="DOMActivate" context="." origin="instance('obverse-template')" nodeset="./child::node()[last()]" if="count(nuds:obverse) = 0"/>
 									<xforms:insert ev:event="DOMActivate" context="nuds:obverse" origin="instance('deity-template')" nodeset="./child::node()[last()]"/>
 									<xxforms:hide ev:event="DOMActivate" dialog="obverse-objects"/>
@@ -206,7 +206,7 @@
 								<!--<xforms:group ref=".[count(nuds:obverse/nuds:description) = 0]">
 									<xforms:trigger appearance="minimal">
 										<xforms:label>
-											<xhtml:img src="../../images/add.gif"/>Description</xforms:label>
+											<img src="../../images/add.gif"/>Description</xforms:label>
 										<xforms:insert ev:event="DOMActivate" context="." origin="instance('obverse-template')" nodeset="./child::node()[last()]" if="count(nuds:obverse) = 0"/>
 										<xforms:insert ev:event="DOMActivate" context="nuds:obverse" origin="instance('description-template')" nodeset="./child::node()[last()]"/>
 										<xxforms:hide ev:event="DOMActivate" dialog="obverse-objects"/>
@@ -214,7 +214,7 @@
 								</xforms:group>-->
 								<xforms:trigger appearance="minimal">
 									<xforms:label>
-										<xhtml:img src="../../images/add.gif"/>Engraver</xforms:label>
+										<img src="../../images/add.gif"/>Engraver</xforms:label>
 									<xforms:insert ev:event="DOMActivate" context="." origin="instance('obverse-template')" nodeset="./child::node()[last()]" if="count(nuds:obverse) = 0"/>
 									<xforms:insert ev:event="DOMActivate" context="nuds:obverse" origin="instance('engraver-template')" nodeset="./child::node()[last()]"/>
 									<xxforms:hide ev:event="DOMActivate" dialog="obverse-objects"/>
@@ -222,7 +222,7 @@
 								<xforms:group ref=".[count(nuds:obverse/nuds:legend) = 0]">
 									<xforms:trigger appearance="minimal">
 										<xforms:label>
-											<xhtml:img src="../../images/add.gif"/>Legend</xforms:label>
+											<img src="../../images/add.gif"/>Legend</xforms:label>
 										<xforms:insert ev:event="DOMActivate" context="." origin="instance('obverse-template')" nodeset="./child::node()[last()]" if="nuds:count(obverse) = 0"/>
 										<xforms:insert ev:event="DOMActivate" context="nuds:obverse" origin="instance('legend-template')" nodeset="./child::node()[last()]"/>
 										<xxforms:hide ev:event="DOMActivate" dialog="obverse-objects"/>
@@ -230,7 +230,7 @@
 								</xforms:group>
 								<xforms:trigger appearance="minimal">
 									<xforms:label>
-										<xhtml:img src="../../images/add.gif"/>Portrait</xforms:label>
+										<img src="../../images/add.gif"/>Portrait</xforms:label>
 									<xforms:insert ev:event="DOMActivate" context="." origin="instance('obverse-template')" nodeset="./child::node()[last()]" if="count(nuds:obverse) = 0"/>
 									<xforms:insert ev:event="DOMActivate" context="nuds:obverse" origin="instance('portrait-template')" nodeset="./child::node()[last()]"/>
 									<xxforms:hide ev:event="DOMActivate" dialog="obverse-objects"/>
@@ -238,7 +238,7 @@
 								<xforms:group ref=".[count(nuds:obverse/nuds:symbol) = 0]">
 									<xforms:trigger appearance="minimal">
 										<xforms:label>
-											<xhtml:img src="../../images/add.gif"/>Symbol</xforms:label>
+											<img src="../../images/add.gif"/>Symbol</xforms:label>
 										<xforms:insert ev:event="DOMActivate" context="." origin="instance('obverse-template')" nodeset="./child::node()[last()]" if="count(nuds:obverse) = 0"/>
 										<xforms:insert ev:event="DOMActivate" context="nuds:obverse" origin="instance('symbol-template')" nodeset="./child::node()[last()]"/>
 										<xxforms:hide ev:event="DOMActivate" dialog="obverse-objects"/>
@@ -246,7 +246,7 @@
 								</xforms:group>
 								<xforms:trigger appearance="minimal">
 									<xforms:label>
-										<xhtml:img src="../../images/add.gif"/>Type Description</xforms:label>
+										<img src="../../images/add.gif"/>Type Description</xforms:label>
 									<xforms:insert ev:event="DOMActivate" context="." origin="instance('obverse-template')" nodeset="./child::node()[last()]" if="count(nuds:obverse) = 0"/>
 									<xforms:insert ev:event="DOMActivate" context="nuds:obverse" origin="instance('type-template')" nodeset="./child::node()[last()]" if="count(nuds:type) = 0"/>
 									<xforms:insert ev:event="DOMActivate" context="nuds:obverse/nuds:type" origin="instance('description-template')" nodeset="./child::node()[last()]"/>
@@ -255,7 +255,7 @@
 								<xforms:group ref=".[count(nuds:obverse/nuds:typeSeries) = 0]">
 									<xforms:trigger appearance="minimal">
 										<xforms:label>
-											<xhtml:img src="../../images/add.gif"/>Type Series</xforms:label>
+											<img src="../../images/add.gif"/>Type Series</xforms:label>
 										<xforms:insert ev:event="DOMActivate" context="." origin="instance('obverse-template')" nodeset="./child::node()[last()]" if="count(nuds:obverse) = 0"/>
 										<xforms:insert ev:event="DOMActivate" context="nuds:obverse" origin="instance('typeSeries-template')" nodeset="./child::node()[last()]"/>
 										<xxforms:hide ev:event="DOMActivate" dialog="obverse-objects"/>
@@ -263,7 +263,7 @@
 								</xforms:group>
 							</xxforms:dialog>
 							<xforms:group ref="nuds:obverse">
-								<xhtml:div class="subsection">
+								<div class="subsection">
 									<xforms:group ref=".[count(nuds:type/nuds:description/@xml:lang) &gt; count(nuds:type/nuds:description/@xml:lang[not(preceding::nuds:description/@xml:lang = .)])]">
 										<div class="ui-state-error ui-corner-all">
 											<p>
@@ -279,7 +279,7 @@
 										<numishare:cp-name/>
 									</xforms:repeat>
 									<xforms:group ref="nuds:description">
-										<xhtml:div>
+										<div>
 											<xforms:input ref=".">
 												<xforms:label>Description</xforms:label>
 												<xforms:alert>Must contain a value.</xforms:alert>
@@ -287,16 +287,16 @@
 											<xforms:trigger appearance="minimal">
 												<xforms:delete ev:event="DOMActivate" nodeset="."/>
 												<xforms:label>
-													<xhtml:img src="../../images/remove.gif"/>
+													<img src="../../images/remove.gif"/>
 												</xforms:label>
 											</xforms:trigger>
-										</xhtml:div>
+										</div>
 									</xforms:group>
 									<xforms:repeat nodeset="nuds:persname[@xlink:role='engraver']">
 										<numishare:cp-name/>
 									</xforms:repeat>
 									<xforms:group ref="nuds:legend">
-										<xhtml:div>
+										<div>
 											<xforms:input ref=".">
 												<xforms:label>Legend</xforms:label>
 												<xforms:alert>Must contain a value.</xforms:alert>
@@ -304,16 +304,16 @@
 											<xforms:trigger appearance="minimal">
 												<xforms:delete ev:event="DOMActivate" nodeset="."/>
 												<xforms:label>
-													<xhtml:img src="../../images/remove.gif"/>
+													<img src="../../images/remove.gif"/>
 												</xforms:label>
 											</xforms:trigger>
-										</xhtml:div>
+										</div>
 									</xforms:group>
 									<xforms:repeat nodeset="nuds:persname[@xlink:role='portrait']">
 										<numishare:cp-name/>
 									</xforms:repeat>
 									<xforms:group ref="nuds:symbol">
-										<xhtml:div>
+										<div>
 											<xforms:input ref=".">
 												<xforms:label>Symbol</xforms:label>
 												<xforms:alert>Must contain a value.</xforms:alert>
@@ -321,20 +321,20 @@
 											<xforms:trigger appearance="minimal">
 												<xforms:delete ev:event="DOMActivate" nodeset="."/>
 												<xforms:label>
-													<xhtml:img src="../../images/remove.gif"/>
+													<img src="../../images/remove.gif"/>
 												</xforms:label>
 											</xforms:trigger>
-										</xhtml:div>
+										</div>
 									</xforms:group>
 									<xforms:group ref="nuds:type">
-										<xhtml:h4>Type</xhtml:h4>
+										<h4>Type</h4>
 										<xforms:repeat nodeset="nuds:description">
 											<numishare:description/>
 										</xforms:repeat>
 										<xforms:delete ev:event="xforms-value-changed" if="count(*) = 0" nodeset="."/>
 									</xforms:group>
 									<xforms:group ref="nuds:typeSeries">
-										<xhtml:div>
+										<div>
 											<xforms:input ref=".">
 												<xforms:label>Type Series</xforms:label>
 												<xforms:alert>Must contain a value.</xforms:alert>
@@ -342,21 +342,21 @@
 											<xforms:trigger appearance="minimal">
 												<xforms:delete ev:event="DOMActivate" nodeset="."/>
 												<xforms:label>
-													<xhtml:img src="../../images/remove.gif"/>
+													<img src="../../images/remove.gif"/>
 												</xforms:label>
 											</xforms:trigger>
-										</xhtml:div>
+										</div>
 									</xforms:group>
 									<xforms:delete ev:event="xforms-value-changed" if="count(*) = 0" nodeset="."/>
-								</xhtml:div>
+								</div>
 							</xforms:group>
-						</xhtml:div>
-						<xhtml:div class="subsection">
+						</div>
+						<div class="subsection">
 							<h3>Reverse</h3>
 							<span class="add">
 								<xforms:trigger appearance="minimal">
 									<xforms:label>
-										<xhtml:img src="../../images/add.gif"/>
+										<img src="../../images/add.gif"/>
 									</xforms:label>
 									<xxforms:show ev:event="DOMActivate" dialog="reverse-objects"/>
 								</xforms:trigger>
@@ -365,14 +365,14 @@
 								<xforms:label>Reverse Descriptors</xforms:label>
 								<xforms:trigger appearance="minimal">
 									<xforms:label>
-										<xhtml:img src="../../images/add.gif"/>Artist</xforms:label>
+										<img src="../../images/add.gif"/>Artist</xforms:label>
 									<xforms:insert ev:event="DOMActivate" context="." origin="instance('reverse-template')" nodeset="./child::node()[last()]" if="count(nuds:reverse) = 0"/>
 									<xforms:insert ev:event="DOMActivate" context="nuds:reverse" origin="instance('artist-template')" nodeset="./child::node()[last()]"/>
 									<xxforms:hide ev:event="DOMActivate" dialog="reverse-objects"/>
 								</xforms:trigger>
 								<xforms:trigger appearance="minimal">
 									<xforms:label>
-										<xhtml:img src="../../images/add.gif"/>Deity</xforms:label>
+										<img src="../../images/add.gif"/>Deity</xforms:label>
 									<xforms:insert ev:event="DOMActivate" context="." origin="instance('reverse-template')" nodeset="./child::node()[last()]" if="count(nuds:reverse) = 0"/>
 									<xforms:insert ev:event="DOMActivate" context="nuds:reverse" origin="instance('deity-template')" nodeset="./child::node()[last()]"/>
 									<xxforms:hide ev:event="DOMActivate" dialog="reverse-objects"/>
@@ -380,7 +380,7 @@
 								<!--<xforms:group ref=".[count(nuds:reverse/nuds:description) = 0]">
 									<xforms:trigger appearance="minimal">
 										<xforms:label>
-											<xhtml:img src="../../images/add.gif"/>Description</xforms:label>
+											<img src="../../images/add.gif"/>Description</xforms:label>
 										<xforms:insert ev:event="DOMActivate" context="." origin="instance('reverse-template')" nodeset="./child::node()[last()]" if="count(nuds:reverse) = 0"/>
 										<xforms:insert ev:event="DOMActivate" context="nuds:reverse" origin="instance('description-template')" nodeset="./child::node()[last()]"/>
 										<xxforms:hide ev:event="DOMActivate" dialog="reverse-objects"/>
@@ -388,7 +388,7 @@
 								</xforms:group>-->
 								<xforms:trigger appearance="minimal">
 									<xforms:label>
-										<xhtml:img src="../../images/add.gif"/>Engraver</xforms:label>
+										<img src="../../images/add.gif"/>Engraver</xforms:label>
 									<xforms:insert ev:event="DOMActivate" context="." origin="instance('reverse-template')" nodeset="./child::node()[last()]" if="count(nuds:reverse) = 0"/>
 									<xforms:insert ev:event="DOMActivate" context="nuds:reverse" origin="instance('engraver-template')" nodeset="./child::node()[last()]"/>
 									<xxforms:hide ev:event="DOMActivate" dialog="reverse-objects"/>
@@ -396,7 +396,7 @@
 								<xforms:group ref=".[count(nuds:reverse/nuds:legend) = 0]">
 									<xforms:trigger appearance="minimal">
 										<xforms:label>
-											<xhtml:img src="../../images/add.gif"/>Legend</xforms:label>
+											<img src="../../images/add.gif"/>Legend</xforms:label>
 										<xforms:insert ev:event="DOMActivate" context="." origin="instance('reverse-template')" nodeset="./child::node()[last()]" if="count(nuds:reverse) = 0"/>
 										<xforms:insert ev:event="DOMActivate" context="nuds:reverse" origin="instance('legend-template')" nodeset="./child::node()[last()]"/>
 										<xxforms:hide ev:event="DOMActivate" dialog="reverse-objects"/>
@@ -404,7 +404,7 @@
 								</xforms:group>
 								<xforms:trigger appearance="minimal">
 									<xforms:label>
-										<xhtml:img src="../../images/add.gif"/>Portrait</xforms:label>
+										<img src="../../images/add.gif"/>Portrait</xforms:label>
 									<xforms:insert ev:event="DOMActivate" context="." origin="instance('reverse-template')" nodeset="./child::node()[last()]" if="count(nuds:reverse) = 0"/>
 									<xforms:insert ev:event="DOMActivate" context="nuds:reverse" origin="instance('portrait-template')" nodeset="./child::node()[last()]"/>
 									<xxforms:hide ev:event="DOMActivate" dialog="reverse-objects"/>
@@ -412,7 +412,7 @@
 								<xforms:group ref=".[count(nuds:reverse/nuds:symbol) = 0]">
 									<xforms:trigger appearance="minimal">
 										<xforms:label>
-											<xhtml:img src="../../images/add.gif"/>Symbol</xforms:label>
+											<img src="../../images/add.gif"/>Symbol</xforms:label>
 										<xforms:insert ev:event="DOMActivate" context="." origin="instance('reverse-template')" nodeset="./child::node()[last()]" if="count(nuds:reverse) = 0"/>
 										<xforms:insert ev:event="DOMActivate" context="nuds:reverse" origin="instance('symbol-template')" nodeset="./child::node()[last()]"/>
 										<xxforms:hide ev:event="DOMActivate" dialog="reverse-objects"/>
@@ -420,7 +420,7 @@
 								</xforms:group>
 								<xforms:trigger appearance="minimal">
 									<xforms:label>
-										<xhtml:img src="../../images/add.gif"/>Type Description</xforms:label>
+										<img src="../../images/add.gif"/>Type Description</xforms:label>
 									<xforms:insert ev:event="DOMActivate" context="." origin="instance('reverse-template')" nodeset="./child::node()[last()]" if="count(nuds:reverse) = 0"/>
 									<xforms:insert ev:event="DOMActivate" context="nuds:reverse" origin="instance('type-template')" nodeset="./child::node()[last()]" if="count(nuds:type) = 0"/>
 									<xforms:insert ev:event="DOMActivate" context="nuds:reverse/nuds:type" origin="instance('description-template')" nodeset="./child::node()[last()]"/>
@@ -429,7 +429,7 @@
 								<xforms:group ref=".[count(nuds:reverse/nuds:typeSeries) = 0]">
 									<xforms:trigger appearance="minimal">
 										<xforms:label>
-											<xhtml:img src="../../images/add.gif"/>Type Series</xforms:label>
+											<img src="../../images/add.gif"/>Type Series</xforms:label>
 										<xforms:insert ev:event="DOMActivate" context="." origin="instance('reverse-template')" nodeset="./child::node()[last()]" if="count(nuds:reverse) = 0"/>
 										<xforms:insert ev:event="DOMActivate" context="nuds:reverse" origin="instance('typeSeries-template')" nodeset="./child::node()[last()]"/>
 										<xxforms:hide ev:event="DOMActivate" dialog="reverse-objects"/>
@@ -437,7 +437,7 @@
 								</xforms:group>
 							</xxforms:dialog>
 							<xforms:group ref="nuds:reverse">
-								<xhtml:div class="subsection">
+								<div class="subsection">
 									<xforms:group ref=".[count(nuds:type/nuds:description/@xml:lang) &gt; count(nuds:type/nuds:description/@xml:lang[not(preceding::nuds:description/@xml:lang = .)])]">
 										<div class="ui-state-error ui-corner-all">
 											<p>
@@ -452,7 +452,7 @@
 										<numishare:cp-name/>
 									</xforms:repeat>
 									<xforms:group ref="nuds:description">
-										<xhtml:div>
+										<div>
 											<xforms:input ref=".">
 												<xforms:label>Description</xforms:label>
 												<xforms:alert>Must contain a value.</xforms:alert>
@@ -460,16 +460,16 @@
 											<xforms:trigger appearance="minimal">
 												<xforms:delete ev:event="DOMActivate" nodeset="."/>
 												<xforms:label>
-													<xhtml:img src="../../images/remove.gif"/>
+													<img src="../../images/remove.gif"/>
 												</xforms:label>
 											</xforms:trigger>
-										</xhtml:div>
+										</div>
 									</xforms:group>
 									<xforms:repeat nodeset="nuds:persname[@xlink:role='engraver']">
 										<numishare:cp-name/>
 									</xforms:repeat>
 									<xforms:group ref="nuds:legend">
-										<xhtml:div>
+										<div>
 											<xforms:input ref=".">
 												<xforms:label>Legend</xforms:label>
 												<xforms:alert>Must contain a value.</xforms:alert>
@@ -477,16 +477,16 @@
 											<xforms:trigger appearance="minimal">
 												<xforms:delete ev:event="DOMActivate" nodeset="."/>
 												<xforms:label>
-													<xhtml:img src="../../images/remove.gif"/>
+													<img src="../../images/remove.gif"/>
 												</xforms:label>
 											</xforms:trigger>
-										</xhtml:div>
+										</div>
 									</xforms:group>
 									<xforms:repeat nodeset="nuds:persname[@xlink:role='portrait']">
 										<numishare:cp-name/>
 									</xforms:repeat>
 									<xforms:group ref="nuds:symbol">
-										<xhtml:div>
+										<div>
 											<xforms:input ref=".">
 												<xforms:label>Symbol</xforms:label>
 												<xforms:alert>Must contain a value.</xforms:alert>
@@ -494,20 +494,20 @@
 											<xforms:trigger appearance="minimal">
 												<xforms:delete ev:event="DOMActivate" nodeset="."/>
 												<xforms:label>
-													<xhtml:img src="../../images/remove.gif"/>
+													<img src="../../images/remove.gif"/>
 												</xforms:label>
 											</xforms:trigger>
-										</xhtml:div>
+										</div>
 									</xforms:group>
 									<xforms:group ref="nuds:type">
-										<xhtml:h4>Type</xhtml:h4>
+										<h4>Type</h4>
 										<xforms:repeat nodeset="nuds:description">
 											<numishare:description/>
 										</xforms:repeat>
 										<xforms:delete ev:event="xforms-value-changed" if="count(*) = 0" nodeset="."/>
 									</xforms:group>
 									<xforms:group ref="nuds:typeSeries">
-										<xhtml:div>
+										<div>
 											<xforms:input ref=".">
 												<xforms:label>Type Series</xforms:label>
 												<xforms:alert>Must contain a value.</xforms:alert>
@@ -515,21 +515,21 @@
 											<xforms:trigger appearance="minimal">
 												<xforms:delete ev:event="DOMActivate" nodeset="."/>
 												<xforms:label>
-													<xhtml:img src="../../images/remove.gif"/>
+													<img src="../../images/remove.gif"/>
 												</xforms:label>
 											</xforms:trigger>
-										</xhtml:div>
+										</div>
 									</xforms:group>
 									<xforms:delete ev:event="xforms-value-changed" if="count(*) = 0" nodeset="."/>
-								</xhtml:div>
+								</div>
 							</xforms:group>
-						</xhtml:div>
-						<xhtml:div class="subsection">
+						</div>
+						<div class="subsection">
 							<h3>Edge</h3>
 							<span class="add">
 								<xforms:trigger appearance="minimal">
 									<xforms:label>
-										<xhtml:img src="../../images/add.gif"/>
+										<img src="../../images/add.gif"/>
 									</xforms:label>
 									<xxforms:show ev:event="DOMActivate" dialog="edge-objects"/>
 								</xforms:trigger>
@@ -539,7 +539,7 @@
 								<xforms:group ref=".[count(nuds:edge/nuds:description) = 0]">
 									<xforms:trigger appearance="minimal">
 										<xforms:label>
-											<xhtml:img src="../../images/add.gif"/>Description</xforms:label>
+											<img src="../../images/add.gif"/>Description</xforms:label>
 										<xforms:insert ev:event="DOMActivate" context="." origin="instance('edge-template')" nodeset="./child::node()[last()]" if="count(nuds:edge) = 0"/>
 										<xforms:insert ev:event="DOMActivate" context="nuds:edge" origin="instance('description-template')" nodeset="./child::node()[last()]"/>
 										<xxforms:hide ev:event="DOMActivate" dialog="edge-objects"/>
@@ -548,7 +548,7 @@
 								<xforms:group ref=".[count(nuds:edge/nuds:legend) = 0]">
 									<xforms:trigger appearance="minimal">
 										<xforms:label>
-											<xhtml:img src="../../images/add.gif"/>Legend</xforms:label>
+											<img src="../../images/add.gif"/>Legend</xforms:label>
 										<xforms:insert ev:event="DOMActivate" context="." origin="instance('edge-template')" nodeset="./child::node()[last()]" if="count(nuds:edge) = 0"/>
 										<xforms:insert ev:event="DOMActivate" context="nuds:edge" origin="instance('legend-template')" nodeset="./child::node()[last()]"/>
 										<xxforms:hide ev:event="DOMActivate" dialog="edge-objects"/>
@@ -557,7 +557,7 @@
 								<xforms:group ref=".[count(nuds:edge/nuds:type) = 0]">
 									<xforms:trigger appearance="minimal">
 										<xforms:label>
-											<xhtml:img src="../../images/add.gif"/>Type</xforms:label>
+											<img src="../../images/add.gif"/>Type</xforms:label>
 										<xforms:insert ev:event="DOMActivate" context="." origin="instance('edge-template')" nodeset="./child::node()[last()]" if="count(nuds:edge) = 0"/>
 										<xforms:insert ev:event="DOMActivate" context="nuds:edge" origin="instance('type-template')" nodeset="./child::node()[last()]"/>
 										<xxforms:hide ev:event="DOMActivate" dialog="edge-objects"/>
@@ -565,9 +565,9 @@
 								</xforms:group>
 							</xxforms:dialog>
 							<xforms:group ref="edge">
-								<xhtml:div class="subsection">
+								<div class="subsection">
 									<xforms:group ref="nuds:description">
-										<xhtml:div>
+										<div>
 											<xforms:input ref=".">
 												<xforms:label>Description</xforms:label>
 												<xforms:alert>Must contain a value.</xforms:alert>
@@ -575,13 +575,13 @@
 											<xforms:trigger appearance="minimal">
 												<xforms:delete ev:event="DOMActivate" nodeset="."/>
 												<xforms:label>
-													<xhtml:img src="../../images/remove.gif"/>
+													<img src="../../images/remove.gif"/>
 												</xforms:label>
 											</xforms:trigger>
-										</xhtml:div>
+										</div>
 									</xforms:group>
 									<xforms:group ref="nuds:legend">
-										<xhtml:div>
+										<div>
 											<xforms:input ref=".">
 												<xforms:label>Legend</xforms:label>
 												<xforms:alert>Must contain a value.</xforms:alert>
@@ -589,13 +589,13 @@
 											<xforms:trigger appearance="minimal">
 												<xforms:delete ev:event="DOMActivate" nodeset="."/>
 												<xforms:label>
-													<xhtml:img src="../../images/remove.gif"/>
+													<img src="../../images/remove.gif"/>
 												</xforms:label>
 											</xforms:trigger>
-										</xhtml:div>
+										</div>
 									</xforms:group>
 									<xforms:group ref="nuds:type">
-										<xhtml:div>
+										<div>
 											<xforms:input ref=".">
 												<xforms:label>Type</xforms:label>
 												<xforms:alert>Must contain a value.</xforms:alert>
@@ -603,21 +603,21 @@
 											<xforms:trigger appearance="minimal">
 												<xforms:delete ev:event="DOMActivate" nodeset="."/>
 												<xforms:label>
-													<xhtml:img src="../../images/remove.gif"/>
+													<img src="../../images/remove.gif"/>
 												</xforms:label>
 											</xforms:trigger>
-										</xhtml:div>
+										</div>
 									</xforms:group>
 									<xforms:delete ev:event="xforms-value-changed" if="count(*) = 0" nodeset="."/>
-								</xhtml:div>
+								</div>
 							</xforms:group>
-						</xhtml:div>
-						<xhtml:div class="subsection">
+						</div>
+						<div class="subsection">
 							<h3>Authority and Personal</h3>
 							<span class="add">
 								<xforms:trigger appearance="minimal">
 									<xforms:label>
-										<xhtml:img src="../../images/add.gif"/>
+										<img src="../../images/add.gif"/>
 									</xforms:label>
 									<xxforms:show ev:event="DOMActivate" dialog="authority-objects"/>
 								</xforms:trigger>
@@ -626,70 +626,70 @@
 								<xforms:label>Authority Descriptors</xforms:label>
 								<xforms:trigger appearance="minimal">
 									<xforms:label>
-										<xhtml:img src="../../images/add.gif"/>Artist</xforms:label>
+										<img src="../../images/add.gif"/>Artist</xforms:label>
 									<xforms:insert ev:event="DOMActivate" context="." origin="instance('authpers-template')" nodeset="./child::node()[last()]" if="count(nuds:authority) = 0"/>
 									<xforms:insert ev:event="DOMActivate" context="nuds:authority" origin="instance('artist-template')" nodeset="./child::node()[last()]"/>
 									<xxforms:hide ev:event="DOMActivate" dialog="authority-objects"/>
 								</xforms:trigger>
 								<xforms:trigger appearance="minimal">
 									<xforms:label>
-										<xhtml:img src="../../images/add.gif"/>Authority--Corporate</xforms:label>
+										<img src="../../images/add.gif"/>Authority--Corporate</xforms:label>
 									<xforms:insert ev:event="DOMActivate" context="." origin="instance('authpers-template')" nodeset="./child::node()[last()]" if="count(nuds:authority) = 0"/>
 									<xforms:insert ev:event="DOMActivate" context="nuds:authority" origin="instance('authorityCorporate-template')" nodeset="./child::node()[last()]"/>
 									<xxforms:hide ev:event="DOMActivate" dialog="authority-objects"/>
 								</xforms:trigger>
 								<xforms:trigger appearance="minimal">
 									<xforms:label>
-										<xhtml:img src="../../images/add.gif"/>Authority--Personal</xforms:label>
+										<img src="../../images/add.gif"/>Authority--Personal</xforms:label>
 									<xforms:insert ev:event="DOMActivate" context="." origin="instance('authpers-template')" nodeset="./child::node()[last()]" if="count(nuds:authority) = 0"/>
 									<xforms:insert ev:event="DOMActivate" context="nuds:authority" origin="instance('authorityPersonal-template')" nodeset="./child::node()[last()]"/>
 									<xxforms:hide ev:event="DOMActivate" dialog="authority-objects"/>
 								</xforms:trigger>
 								<xforms:trigger appearance="minimal">
 									<xforms:label>
-										<xhtml:img src="../../images/add.gif"/>Dynasty</xforms:label>
+										<img src="../../images/add.gif"/>Dynasty</xforms:label>
 									<xforms:insert ev:event="DOMActivate" context="." origin="instance('authpers-template')" nodeset="./child::node()[last()]" if="count(nuds:authority) = 0"/>
 									<xforms:insert ev:event="DOMActivate" context="nuds:authority" origin="instance('dynasty-template')" nodeset="./child::node()[last()]"/>
 									<xxforms:hide ev:event="DOMActivate" dialog="authority-objects"/>
 								</xforms:trigger>
 								<xforms:trigger appearance="minimal">
 									<xforms:label>
-										<xhtml:img src="../../images/add.gif"/>Engraver</xforms:label>
+										<img src="../../images/add.gif"/>Engraver</xforms:label>
 									<xforms:insert ev:event="DOMActivate" context="." origin="instance('authpers-template')" nodeset="./child::node()[last()]" if="count(nuds:authority) = 0"/>
 									<xforms:insert ev:event="DOMActivate" context="nuds:authority" origin="instance('engraver-template')" nodeset="./child::node()[last()]"/>
 									<xxforms:hide ev:event="DOMActivate" dialog="authority-objects"/>
 								</xforms:trigger>
 								<xforms:trigger appearance="minimal">
 									<xforms:label>
-										<xhtml:img src="../../images/add.gif"/>Issuer--Corporate</xforms:label>
+										<img src="../../images/add.gif"/>Issuer--Corporate</xforms:label>
 									<xforms:insert ev:event="DOMActivate" context="." origin="instance('authpers-template')" nodeset="./child::node()[last()]" if="count(nuds:authority) = 0"/>
 									<xforms:insert ev:event="DOMActivate" context="nuds:authority" origin="instance('issuerCorporate-template')" nodeset="./child::node()[last()]"/>
 									<xxforms:hide ev:event="DOMActivate" dialog="authority-objects"/>
 								</xforms:trigger>
 								<xforms:trigger appearance="minimal">
 									<xforms:label>
-										<xhtml:img src="../../images/add.gif"/>Issuer--Personal</xforms:label>
+										<img src="../../images/add.gif"/>Issuer--Personal</xforms:label>
 									<xforms:insert ev:event="DOMActivate" context="." origin="instance('authpers-template')" nodeset="./child::node()[last()]" if="count(nuds:authority) = 0"/>
 									<xforms:insert ev:event="DOMActivate" context="nuds:authority" origin="instance('issuerPersonal-template')" nodeset="./child::node()[last()]"/>
 									<xxforms:hide ev:event="DOMActivate" dialog="authority-objects"/>
 								</xforms:trigger>
 								<xforms:trigger appearance="minimal">
 									<xforms:label>
-										<xhtml:img src="../../images/add.gif"/>Maker</xforms:label>
+										<img src="../../images/add.gif"/>Maker</xforms:label>
 									<xforms:insert ev:event="DOMActivate" context="." origin="instance('authpers-template')" nodeset="./child::node()[last()]" if="count(nuds:authority) = 0"/>
 									<xforms:insert ev:event="DOMActivate" context="nuds:authority" origin="instance('maker-template')" nodeset="./child::node()[last()]"/>
 									<xxforms:hide ev:event="DOMActivate" dialog="authority-objects"/>
 								</xforms:trigger>
 								<xforms:trigger appearance="minimal">
 									<xforms:label>
-										<xhtml:img src="../../images/add.gif"/>State</xforms:label>
+										<img src="../../images/add.gif"/>State</xforms:label>
 									<xforms:insert ev:event="DOMActivate" context="." origin="instance('authpers-template')" nodeset="./child::node()[last()]" if="count(nuds:authority) = 0"/>
 									<xforms:insert ev:event="DOMActivate" context="nuds:authority" origin="instance('state-template')" nodeset="./child::node()[last()]"/>
 									<xxforms:hide ev:event="DOMActivate" dialog="authority-objects"/>
 								</xforms:trigger>
 							</xxforms:dialog>
 							<xforms:group ref="nuds:authority">
-								<xhtml:div class="subsection">
+								<div class="subsection">
 									<xforms:repeat nodeset="nuds:persname[@xlink:role='artist']">
 										<numishare:cp-name/>
 									</xforms:repeat>
@@ -718,28 +718,28 @@
 										<numishare:cp-name/>
 									</xforms:repeat>
 									<xforms:delete ev:event="xforms-value-changed" if="count(*) = 0" nodeset="."/>
-								</xhtml:div>
+								</div>
 							</xforms:group>
-						</xhtml:div>
+						</div>
 						<!-- geographic -->
-						<xhtml:div class="subsection">
+						<div class="subsection">
 							<h3>Geographic</h3>
-							<xhtml:div class="trigger_container">
+							<div class="trigger_container">
 								<xforms:trigger appearance="minimal">
 									<xforms:label>
-										<xhtml:img src="../../images/add.gif"/>Mint</xforms:label>
+										<img src="../../images/add.gif"/>Mint</xforms:label>
 									<xforms:insert ev:event="DOMActivate" context="." origin="instance('geographic-template')" nodeset="./child::node()[last()]" if="count(nuds:geographic) = 0"/>
 									<xforms:insert ev:event="DOMActivate" context="nuds:geographic" origin="instance('mint-template')" nodeset="./child::node()[last()]"/>
 								</xforms:trigger>
 								<xforms:trigger appearance="minimal">
 									<xforms:label>
-										<xhtml:img src="../../images/add.gif"/>Region</xforms:label>
+										<img src="../../images/add.gif"/>Region</xforms:label>
 									<xforms:insert ev:event="DOMActivate" context="." origin="instance('geographic-template')" nodeset="./child::node()[last()]" if="count(nuds:geographic) = 0"/>
 									<xforms:insert ev:event="DOMActivate" context="nuds:geographic" origin="instance('region-template')" nodeset="./child::node()[last()]"/>
 								</xforms:trigger>
-							</xhtml:div>
+							</div>
 							<xforms:group ref="nuds:geographic">
-								<xhtml:div class="subsection">
+								<div class="subsection">
 									<xforms:repeat nodeset="nuds:geogname[@xlink:role='mint']">
 										<numishare:mint/>
 									</xforms:repeat>
@@ -747,15 +747,15 @@
 										<numishare:region/>
 									</xforms:repeat>
 									<xforms:delete ev:event="xforms-value-changed" if="count(*) = 0" nodeset="."/>
-								</xhtml:div>
+								</div>
 							</xforms:group>
-						</xhtml:div>
+						</div>
 
 						<!--<fr:xforms-inspector id="orbeon-xforms-inspector"/>-->
 					</xforms:group>
 					<!-- ********************************************************************** -->
 					<!-- ***********************  DIALOG INTERNAL MODEL *********************** -->
-					<xforms:model id="type-undertype-model">
+					<xforms:model id="type-undertype-model" xmlns="http://nomisma.org/nuds">
 						<!-- typeDesc templates -->
 						<xforms:instance id="date-template">
 							<date standardDate=""/>
@@ -767,36 +767,36 @@
 							</dateRange>
 						</xforms:instance>
 						<xforms:instance id="denomination-template">
-							<denomination xlink:arcrole="http://nomisma.org/id/denomination"/>
+							<denomination/>
 						</xforms:instance>
 						<xforms:instance id="manufacture-template">
 							<manufacture xlink:href=""/>
 						</xforms:instance>
 						<xforms:instance id="material-template">
-							<material xlink:arcrole="http://nomisma.org/id/material" xlink:href=""/>
+							<material xlink:href=""/>
 						</xforms:instance>
 						<!--geographic -->
 						<xforms:instance id="geographic-template">
 							<geographic/>
 						</xforms:instance>
 						<xforms:instance id="mint-template">
-							<geogname xlink:arcrole="http://nomisma.org/id/mint" xlink:role="mint"/>
+							<geogname xlink:role="mint"/>
 						</xforms:instance>
 						<xforms:instance id="region-template">
-							<geogname xlink:arcrole="http://nomisma.org/id/region" xlink:role="region"/>
+							<geogname xlink:role="region"/>
 						</xforms:instance>
 						<!--authority/personal -->
 						<xforms:instance id="authpers-template">
 							<authority/>
 						</xforms:instance>
 						<xforms:instance id="artist-template">
-							<persname xlink:arcrole="http://nomisma.org/id/artist" xlink:role="artist"/>
+							<persname xlink:role="artist"/>
 						</xforms:instance>
 						<xforms:instance id="authorityPersonal-template">
-							<persname xlink:arcrole="http://nomisma.org/id/authority" xlink:role="authority"/>
+							<persname xlink:role="authority"/>
 						</xforms:instance>
 						<xforms:instance id="authorityCorporate-template">
-							<corpname xlink:arcrole="http://nomisma.org/id/authority" xlink:role="authority"/>
+							<corpname xlink:role="authority"/>
 						</xforms:instance>
 						<xforms:instance id="dynasty-template">
 							<famname xlink:role="dynasty"/>
@@ -805,19 +805,19 @@
 							<persname xlink:role="deity"/>
 						</xforms:instance>
 						<xforms:instance id="engraver-template">
-							<persname xlink:arcrole="http://nomisma.org/id/engraver" xlink:role="engraver"/>
+							<persname xlink:role="engraver"/>
 						</xforms:instance>
 						<xforms:instance id="issuerPersonal-template">
-							<persname xlink:arcrole="http://nomisma.org/id/issuer" xlink:role="issuer"/>
+							<persname xlink:role="issuer"/>
 						</xforms:instance>
 						<xforms:instance id="issuerCorporate-template">
-							<corpname xlink:arcrole="http://nomisma.org/id/issuer" xlink:role="issuer"/>
+							<corpname xlink:role="issuer"/>
 						</xforms:instance>
 						<xforms:instance id="maker-template">
-							<persname xlink:arcrole="http://nomisma.org/id/maker" xlink:role="maker"/>
+							<persname xlink:role="maker"/>
 						</xforms:instance>
 						<xforms:instance id="state-template">
-							<corpname xlink:arcrole="http://nomisma.org/id/state" xlink:role="state"/>
+							<corpname xlink:role="state"/>
 						</xforms:instance>
 						<!-- obverse/reverse edge -->
 						<xforms:instance id="obverse-template">
@@ -836,7 +836,7 @@
 							<legend/>
 						</xforms:instance>
 						<xforms:instance id="portrait-template">
-							<persname xlink:arcrole="http://nomisma.org/id/portrait" xlink:role="portrait"/>
+							<persname xlink:role="portrait"/>
 						</xforms:instance>
 						<xforms:instance id="symbol-template">
 							<symbol/>

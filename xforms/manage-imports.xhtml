@@ -6,26 +6,26 @@
 	Heavily modified from upload form developed by Orbeon	
 -->
 <html xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	xmlns="http://www.w3.org/1999/xhtml" xmlns:xxforms="http://orbeon.org/oxf/xml/xforms" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:xi="http://www.w3.org/2001/XInclude">
+	xmlns="http://www.w3.org/1999/xhtml" xmlns:xxforms="http://orbeon.org/oxf/xml/xforms" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:fr="http://orbeon.org/oxf/xml/form-runner"
+	xmlns:xi="http://www.w3.org/2001/XInclude">
 	<head>
 		<title>Numishare: Manage CSV Imports</title>
 		<!-- Core + Skin CSS -->
-		<xhtml:link rel="stylesheet" type="text/css" href="/apps/numishare/css/jquery-ui-1.8.10.custom.css"/>
-		<xhtml:link rel="stylesheet" href="/apps/numishare/css/reset-fonts-grids.css"/>
-		<xhtml:link rel="stylesheet" href="/apps/numishare/css/base-min.css"/>
-		<xhtml:link rel="stylesheet" href="/apps/numishare/css/fonts-min.css"/>
+		<link rel="stylesheet" href="/fr/style/bootstrap/css/bootstrap.css" type="text/css"/>
+		<link rel="stylesheet" href="/fr/style/form-runner-bootstrap-override.css" type="text/css"/>
+		<link rel="stylesheet" href="/config/theme/examples.css" type="text/css" media="all"/>
+		<link rel="shortcut icon" href="/ops/images/orbeon-icon-16.ico"/>
+		<link rel="icon" href="/ops/images/orbeon-icon-16.png" type="image/png"/>
+		<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.8.0/build/cssgrids/grids-min.css"/>
 
 		<!-- numishare styling -->
-		<xhtml:link rel="stylesheet" href="/apps/numishare/css/xforms.css"/>
-
-		<xhtml:script type="text/javascript" src="/apps/numishare/javascript/jquery-1.6.1.min.js"/>
-		<xhtml:script type="text/javascript" src="/apps/numishare/javascript/numishare-menu.js"/>
+		<link rel="stylesheet" href="/apps/numishare/css/xforms.css"/>
 		<xforms:model>
 			<!-- exist URL is stored in an XML file -->
 			<xforms:instance id="exist-url">
 				<xi:include href="exist-url.xml"/>
 			</xforms:instance>
-			
+
 			<xforms:instance id="control-instance">
 				<controls xmlns="">
 					<simple-upload-trigger/>
@@ -34,18 +34,18 @@
 					<collection-name/>
 				</controls>
 			</xforms:instance>
-			
+
 			<xforms:instance id="dump">
 				<dump/>
 			</xforms:instance>
-			
+
 			<!-- collections/authentication instances -->
 			<xforms:instance id="collections-list">
 				<collections xmlns="">
 					<collection roll="admin" name="numishare"/>
 				</collections>
 			</xforms:instance>
-			
+
 			<xforms:instance id="imports">
 				<imports xmlns=""/>
 			</xforms:instance>
@@ -82,7 +82,7 @@
 					<solr_published/>
 				</config>
 			</xforms:instance>
-			
+
 			<xforms:submission id="load-collections" serialization="none" method="get" action="{instance('exist-url')}collections-list.xml" replace="instance" instance="collections-list"
 				xxforms:username="admin" xxforms:password="">
 				<!-- if the config loads successfully, set the collection names based on authentication -->
@@ -97,7 +97,7 @@
 							<xforms:setvalue ref="instance('control-instance')/collection-name"
 								value="instance('collections-list')/collection[@role=instance('control-instance')/request-security/role]/@name"/>
 						</xforms:action>
-					</xforms:action>			
+					</xforms:action>
 					<xforms:send submission="load-imports"/>
 					<xforms:send submission="load-config"/>
 				</xforms:action>
@@ -106,10 +106,10 @@
 			</xforms:submission>
 
 			<!-- load site info -->
-			<xforms:submission id="load-config" serialization="none" method="get" action="{instance('exist-url')}{instance('control-instance')/collection-name}/config.xml" xxforms:username="admin" xxforms:password=""
-				replace="instance" instance="config"/>
+			<xforms:submission id="load-config" serialization="none" method="get" action="{instance('exist-url')}{instance('control-instance')/collection-name}/config.xml" xxforms:username="admin"
+				xxforms:password="" replace="instance" instance="config"/>
 
-			<xforms:submission id="delete-submission" action="/exist/rest/numishare/objects/{instance('current-id')}.xml"  xxforms:username="admin" xxforms:password="" method="delete" replace="none">
+			<xforms:submission id="delete-submission" action="/exist/rest/numishare/objects/{instance('current-id')}.xml" xxforms:username="admin" xxforms:password="" method="delete" replace="none">
 				<xforms:send ev:event="xforms-submit-done" submission="delete-from-solr"/>
 			</xforms:submission>
 
@@ -122,10 +122,11 @@
 				<xforms:send submission="optimize" ev:event="xforms-submit-done"/>
 			</xforms:submission>
 
-			<xforms:submission id="load-imports" serialization="none" method="get" action="{instance('exist-url')}{instance('control-instance')/collection-name}/imports.xml" xxforms:username="admin" xxforms:password="" replace="instance"
-				instance="imports"/>
+			<xforms:submission id="load-imports" serialization="none" method="get" action="{instance('exist-url')}{instance('control-instance')/collection-name}/imports.xml" xxforms:username="admin"
+				xxforms:password="" replace="instance" instance="imports"/>
 
-			<xforms:submission id="save-imports" ref="instance('imports')" xxforms:username="admin" xxforms:password="" action="{instance('exist-url')}{instance('control-instance')/collection-name}/imports.xml" method="put" replace="none">
+			<xforms:submission id="save-imports" ref="instance('imports')" xxforms:username="admin" xxforms:password=""
+				action="{instance('exist-url')}{instance('control-instance')/collection-name}/imports.xml" method="put" replace="none">
 				<xforms:send submission="submitCommit" ev:event="xforms-submit-done"/>
 				<xforms:setvalue ref="instance('status')" ev:event="xforms-submit-done">CSV import and associated files removed.</xforms:setvalue>
 				<xforms:message ev:event="xforms-submit-error" level="modal">Error saving imports record.</xforms:message>
@@ -141,85 +142,84 @@
 			</xforms:action>
 		</xforms:model>
 	</head>
-	<xhtml:body class="yui-skin-sam">
-		<xhtml:div id="doc4" class="yui-t2 content ui-corner-all">
-			<xxforms:variable name="display_path">../</xxforms:variable>
-			<xi:include href="header.xml"/>			
-			<div id="bd">
-				<xhtml:div id="form">
-					<xforms:group ref="instance('status')/text()">
-						<div class="success">
-							<xforms:output ref="instance('status')"/>
-						</div>
-					</xforms:group>
-					<h3>Imports</h3>
-					<p><a href="new/">New Import</a></p>
-					<xforms:group ref="instance('imports')">
-						<xforms:group ref=".[count(import) &gt; 0]">
-							<div class="section">							
-								<table style="width:100%;font-size:12px;">
-									<thead>
-										<th>File Name</th>
-										<th>Import Date</th>
-										<th>Files</th>
-										<th>Delete?</th>
-									</thead>
-									<tbody>
-										<xforms:repeat nodeset="import">
-											<xxforms:variable name="date" select="@date"/>
-											<tr>
-												<td>
-													<xforms:output value="@filename"/>
-												</td>
-												<td>
-													<xforms:output value="$date"/>
-												</td>
-												<td style="text-align:center">
-													<xforms:output value="count(file)"/>
-												</td>
-												<td style="text-align:center">
-													<xforms:trigger appearance="minimal">
-														<xforms:action ev:event="DOMActivate">
-															<xforms:setvalue ref="instance('timestamp')" value="$date"/>
-															<xforms:dispatch target="remove-import-dialog" name="fr-show"/>
-														</xforms:action> <xforms:label>
-															<img src="{$display_path}images/remove.gif"/>
-														</xforms:label>
-													</xforms:trigger>
-												</td>
-											</tr>
-										</xforms:repeat>
-									</tbody>
-								</table>
+	<body>
+		<xxforms:variable name="display_path">../</xxforms:variable>
+		<div class="yui3-g">
+			<div class="yui3-u-1">
+				<div class="content">
+					<xi:include href="header.xml"/>
+					<div id="form">
+						<xforms:group ref="instance('status')/text()">
+							<div class="success">
+								<xforms:output ref="instance('status')"/>
 							</div>
 						</xforms:group>
-						<xforms:group ref=".[count(import) = 0]">
-							<p>There have been no imports from CSV yet.</p>
+						<h3>Imports</h3>
+						<p><a href="new/">New Import</a></p>
+						<xforms:group ref="instance('imports')">
+							<xforms:group ref=".[count(import) &gt; 0]">
+								<div class="section">
+									<table style="width:100%;font-size:12px;">
+										<thead>
+											<th>File Name</th>
+											<th>Import Date</th>
+											<th>Files</th>
+											<th>Delete?</th>
+										</thead>
+										<tbody>
+											<xforms:repeat nodeset="import">
+												<xxforms:variable name="date" select="@date"/>
+												<tr>
+													<td>
+														<xforms:output value="@filename"/>
+													</td>
+													<td>
+														<xforms:output value="$date"/>
+													</td>
+													<td style="text-align:center">
+														<xforms:output value="count(file)"/>
+													</td>
+													<td style="text-align:center">
+														<xforms:trigger appearance="minimal">
+															<xforms:action ev:event="DOMActivate">
+																<xforms:setvalue ref="instance('timestamp')" value="$date"/>
+																<xforms:dispatch target="remove-import-dialog" name="fr-show"/>
+															</xforms:action>
+															<xforms:label>
+																<img src="{$display_path}images/remove.gif"/>
+															</xforms:label>
+														</xforms:trigger>
+													</td>
+												</tr>
+											</xforms:repeat>
+										</tbody>
+									</table>
+								</div>
+							</xforms:group>
+							<xforms:group ref=".[count(import) = 0]">
+								<p>There have been no imports from CSV yet.</p>
+							</xforms:group>
 						</xforms:group>
-					</xforms:group>
-					
-					<fr:alert-dialog id="remove-import-dialog">
-						<fr:label>Confirm Delete</fr:label>
-						<fr:message> Are you sure you wish to undo this import? </fr:message>
-						<fr:negative-choice/>
-						<fr:positive-choice>
-							<xforms:action ev:event="DOMActivate">
-								<xforms:action xxforms:iterate="instance('imports')/import[@date = instance('timestamp')]/file">
-									<xxforms:variable name="id" select="@id"/>
-									<xforms:setvalue ref="instance('current-id')" value="$id"/>
-									<xforms:setvalue ref="instance('deleteId')/id" value="$id"/>
-									<xforms:send submission="delete-submission"/>
+						<fr:alert-dialog id="remove-import-dialog">
+							<fr:label>Confirm Delete</fr:label>
+							<fr:message> Are you sure you wish to undo this import? </fr:message>
+							<fr:negative-choice/>
+							<fr:positive-choice>
+								<xforms:action ev:event="DOMActivate">
+									<xforms:action xxforms:iterate="instance('imports')/import[@date = instance('timestamp')]/file">
+										<xxforms:variable name="id" select="@id"/>
+										<xforms:setvalue ref="instance('current-id')" value="$id"/>
+										<xforms:setvalue ref="instance('deleteId')/id" value="$id"/>
+										<xforms:send submission="delete-submission"/>
+									</xforms:action>
+									<xforms:delete context="instance('imports')/import[@date = instance('timestamp')]"/>
+									<xforms:send submission="save-imports"/>
 								</xforms:action>
-								<xforms:delete context="instance('imports')/import[@date = instance('timestamp')]"/>
-								<xforms:send submission="save-imports"/>
-							</xforms:action>
-						</fr:positive-choice>
-					</fr:alert-dialog>
-				</xhtml:div>
+							</fr:positive-choice>
+						</fr:alert-dialog>
+					</div>
+				</div>
 			</div>
-			
-			<!--<widget:xforms-instance-inspector id="orbeon-xforms-inspector" xmlns:widget="http://orbeon.org/oxf/xml/widget"/>-->
-			
-		</xhtml:div>		
-	</xhtml:body>	
+		</div>
+	</body>
 </html>
