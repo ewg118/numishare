@@ -119,7 +119,14 @@
 					</xsl:if>
 					<xsl:for-each select="descendant::nuds:collection">
 						<nm:collection>
-							<xsl:value-of select="."/>
+							<xsl:choose>
+								<xsl:when test="string(@xlink:href)">
+									<xsl:attribute name="rdf:resource" select="@xlink:href"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:value-of select="."/>
+								</xsl:otherwise>
+							</xsl:choose>
 						</nm:collection>
 					</xsl:for-each>
 					<xsl:if test="string(nuds:descMeta/nuds:typeDesc/@xlink:href)">
@@ -692,10 +699,8 @@
 			<dcterms:publisher>
 				<xsl:value-of select="str[@name='publisher_display']"/>
 			</dcterms:publisher>
-			<xsl:for-each select="arr[@name='collection_facet']/str">
-				<nm:collection>
-					<xsl:value-of select="."/>
-				</nm:collection>
+			<xsl:for-each select="arr[@name='collection_uri']/str">
+				<nm:collection rdf:resource="{.}"/>
 			</xsl:for-each>
 			<xsl:for-each select="arr[@name='coinType_uri']/str">
 				<nm:type_series_item rdf:resource="{.}"/>

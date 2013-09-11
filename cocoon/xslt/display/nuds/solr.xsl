@@ -396,6 +396,11 @@
 			<field name="{local-name()}_facet">
 				<xsl:value-of select="normalize-space(.)"/>
 			</field>
+			<xsl:if test="string(@xlink:href)">
+				<field name="{local-name()}_uri">
+					<xsl:value-of select="@xlink:href"/>
+				</field>
+			</xsl:if>
 		</xsl:for-each>
 
 		<xsl:if test="nuds:identifier">
