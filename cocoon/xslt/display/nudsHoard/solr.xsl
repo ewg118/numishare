@@ -76,15 +76,15 @@
 			<field name="id">
 				<xsl:choose>
 					<xsl:when test="string($lang)">
-						<xsl:value-of select="concat(nh:nudsHeader/nh:nudsid, '-', $lang)"/>
+						<xsl:value-of select="concat(nh:control/nh:recordId, '-', $lang)"/>
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:value-of select="nh:nudsHeader/nh:nudsid"/>
+						<xsl:value-of select="nh:control/nh:recordId"/>
 					</xsl:otherwise>
 				</xsl:choose>
 			</field>
-			<field name="nudsid">
-				<xsl:value-of select="nh:nudsHeader/nh:nudsid"/>
+			<field name="recordId">
+				<xsl:value-of select="nh:control/nh:recordId"/>
 			</field>
 			<xsl:if test="string($lang)">
 				<field name="lang">
@@ -100,7 +100,7 @@
 						<xsl:value-of select="$title"/>
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:value-of select="nh:nudsHeader/nh:nudsid"/>
+						<xsl:value-of select="nh:control/nh:recordId"/>
 					</xsl:otherwise>
 				</xsl:choose>
 			</field>

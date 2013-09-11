@@ -23,7 +23,7 @@
 	<xsl:variable name="sparqlResult" as="element()*">
 		<xsl:if test="string($sparql_endpoint)">
 			<xsl:variable name="identifiers">
-				<xsl:for-each select="descendant::str[@name='nudsid']">
+				<xsl:for-each select="descendant::str[@name='recordId']">
 					<xsl:value-of select="."/>
 					<xsl:if test="not(position()=last())">
 						<xsl:text>|</xsl:text>
@@ -37,7 +37,7 @@
 
 			<!-- process sparql into a manageable XML model -->
 			<response xmlns="http://www.w3.org/2005/sparql-results#">
-				<xsl:for-each select="descendant::str[@name='nudsid']">
+				<xsl:for-each select="descendant::str[@name='recordId']">
 					<xsl:variable name="uri" select="concat('http://numismatics.org/ocre/id/', .)"/>
 					<group>
 						<xsl:attribute name="id" select="."/>
@@ -84,7 +84,7 @@
 
 		<div class="g_doc">
 			<span class="result_link">
-				<a href="{$display_path}id/{str[@name='nudsid']}{if (string($lang)) then concat('?lang=', $lang) else ''}" target="_blank">
+				<a href="{$display_path}id/{str[@name='recordId']}{if (string($lang)) then concat('?lang=', $lang) else ''}" target="_blank">
 					<xsl:value-of select="str[@name='title_display']"/>
 				</a>
 			</span>
@@ -253,7 +253,7 @@
 					<xsl:when test="str[@name='recordType'] = 'conceptual'">
 						<xsl:choose>
 							<xsl:when test="string($sparql_endpoint)">
-								<xsl:variable name="id" select="str[@name='nudsid']"/>
+								<xsl:variable name="id" select="str[@name='recordId']"/>
 								<xsl:variable name="group" as="element()*">
 									<xsl:copy-of select="$sparqlResult//res:group[@id=$id]"/>
 								</xsl:variable>
@@ -265,22 +265,22 @@
 							<xsl:otherwise>
 								<xsl:variable name="count" select="count(arr[@name='ao_uri']/str)"/>
 								<xsl:variable name="title" select="str[@name='title_display']	"/>
-								<xsl:variable name="docId" select="str[@name='nudsid']"/>
+								<xsl:variable name="docId" select="str[@name='recordId']"/>
 
 								<xsl:if test="count(arr[@name='ao_thumbnail_obv']/str) &gt; 0">
-									<xsl:variable name="nudsid" select="substring-before(arr[@name='ao_thumbnail_obv']/str[1], '|')"/>
-									<a class="thumbImage" rel="{str[@name='nudsid']}-gallery" href="{substring-after(arr[@name='ao_reference_obv']/str[contains(., $nudsid)], '|')}"
-										title="Obverse of {$title}: {$nudsid}">
+									<xsl:variable name="recordId" select="substring-before(arr[@name='ao_thumbnail_obv']/str[1], '|')"/>
+									<a class="thumbImage" rel="{str[@name='recordId']}-gallery" href="{substring-after(arr[@name='ao_reference_obv']/str[contains(., $recordId)], '|')}"
+										title="Obverse of {$title}: {$recordId}">
 										<img src="{substring-after(arr[@name='ao_thumbnail_obv']/str[1], '|')}"/>
 									</a>
-									<xsl:if test="arr[@name='ao_thumbnail_rev']/str[contains(., $nudsid)]">
-										<a class="thumbImage" rel="{str[@name='nudsid']}-gallery" href="{substring-after(arr[@name='ao_reference_rev']/str[contains(., $nudsid)], '|')}"
-											title="Reverse of {$title}: {$nudsid}">
-											<img src="{substring-after(arr[@name='ao_thumbnail_rev']/str[contains(., $nudsid)], '|')}"/>
+									<xsl:if test="arr[@name='ao_thumbnail_rev']/str[contains(., $recordId)]">
+										<a class="thumbImage" rel="{str[@name='recordId']}-gallery" href="{substring-after(arr[@name='ao_reference_rev']/str[contains(., $recordId)], '|')}"
+											title="Reverse of {$title}: {$recordId}">
+											<img src="{substring-after(arr[@name='ao_thumbnail_rev']/str[contains(., $recordId)], '|')}"/>
 										</a>
 									</xsl:if>
 									<div style="display:none">
-										<xsl:for-each select="arr[@name='ao_thumbnail_obv']/str[not(contains(., $nudsid))]">
+										<xsl:for-each select="arr[@name='ao_thumbnail_obv']/str[not(contains(., $recordId))]">
 											<xsl:variable name="thisId" select="substring-before(., '|')"/>
 											<a class="thumbImage" rel="{$docId}-gallery" href="{substring-after(//arr[@name='ao_reference_obv']/str[contains(., $thisId)], '|')}"
 												title="Obverse of {$title}: {$thisId}">

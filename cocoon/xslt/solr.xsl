@@ -37,7 +37,7 @@
 
 			<xsl:if test="string-length($id-param) &gt; 0">
 				<xsl:for-each select="document(concat('http://nomisma.org/get-nuds?id=', encode-for-uri($id-param)))//nuds:nuds">
-					<object xlink:href="http://nomisma.org/id/{nuds:nudsHeader/nuds:nudsid}">
+					<object xlink:href="http://nomisma.org/id/{nuds:control/nuds:recordId}">
 						<xsl:copy-of select="."/>
 					</object>
 				</xsl:for-each>
@@ -79,7 +79,7 @@
 	<xsl:variable name="sparqlResult" as="element()*">
 		<xsl:if test="string($sparql_endpoint)">
 			<!--<xsl:variable name="identifiers">
-				<xsl:for-each select="descendant::nuds:nudsid">
+				<xsl:for-each select="descendant::nuds:recordId">
 					<xsl:value-of select="."/>
 					<xsl:if test="not(position()=last())">
 						<xsl:text>|</xsl:text>
@@ -88,7 +88,7 @@
 			</xsl:variable>-->			
 			<!--<xsl:variable name="response" as="element()*">
 				<response xmlns="http://www.w3.org/2005/sparql-results#">
-					<xsl:for-each select="descendant::nuds:nudsid">
+					<xsl:for-each select="descendant::nuds:recordId">
 						<group>
 							<xsl:attribute name="id" select="."/>	
 							<xsl:variable name="uri" select="concat('http://numismatics.org/ocre/id/', .)"/>
@@ -99,7 +99,7 @@
 				</xsl:variable>-->	
 
 			<response xmlns="http://www.w3.org/2005/sparql-results#">
-				<xsl:for-each select="descendant::nuds:nudsid">
+				<xsl:for-each select="descendant::nuds:recordId">
 					<group>
 						<xsl:attribute name="id" select="."/>	
 						<xsl:variable name="uri" select="concat('http://numismatics.org/ocre/id/', .)"/>
@@ -110,7 +110,7 @@
 			
 			<!-- process sparql into a manageable XML model -->
 			<!--<response xmlns="http://www.w3.org/2005/sparql-results#">
-				<xsl:for-each select="descendant::nuds:nudsid">
+				<xsl:for-each select="descendant::nuds:recordId">
 					<xsl:variable name="uri" select="concat('http://numismatics.org/ocre/id/', .)"/>
 					<group>
 						<xsl:attribute name="id" select="."/>	

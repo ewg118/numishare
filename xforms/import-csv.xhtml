@@ -98,7 +98,7 @@
 
 			<xforms:instance id="fields">
 				<fields xmlns="">
-					<field label="Document ID" value="nudsid"/>
+					<field label="Document ID" value="recordId"/>
 					<field label="Acknowledgment" value="acknowledgment"/>
 					<field label="Acquisition: Acquired From" value="acquired-from"/>
 					<field label="Acquisition: Acquired Date" value="acquired-date"/>
@@ -305,7 +305,7 @@
 				</xforms:action>
 			</xforms:submission>
 
-			<xforms:submission id="save-submission" ref="instance('processed-xml')/*[local-name()='nuds'][*[local-name()='nudsHeader']/*[local-name()='nudsid'] = instance('current-id')]"
+			<xforms:submission id="save-submission" ref="instance('processed-xml')/*[local-name()='nuds'][*[local-name()='control']/*[local-name()='recordId'] = instance('current-id')]"
 				xxforms:username="admin" xxforms:password="" action="{instance('exist-url')}{instance('control-instance')/collection-name}/objects/{instance('current-id')}.xml" method="put"
 				replace="none">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Save Error!</xforms:message>
@@ -473,7 +473,7 @@
 												<xforms:label>Import</xforms:label>
 												<xforms:action ev:event="DOMActivate">
 													<xforms:action xxforms:iterate="instance('xml-file')//row[not(position() = last())]"
-														if=".[count(instance('xml-file')//row[last()]/elem[@mapping='nudsid']) = 0 and count(id) = 0]">
+														if=".[count(instance('xml-file')//row[last()]/elem[@mapping='recordId']) = 0 and count(id) = 0]">
 														<xforms:insert context="." origin="instance('id-template')"/>
 														<xforms:setvalue ref="id" value="concat('n_', substring(string(digest( string( random( true ) ), 'MD5', 'hex' )), 1, 8))"/>
 													</xforms:action>
@@ -485,7 +485,7 @@
 													<xforms:setvalue ref="instance('imports')/import[last()]/@filename" value="instance('files-instance')/file/@filename"/>
 													<!-- iterate through new components to save each one individually to eXist -->
 													<xforms:action xxforms:iterate="instance('processed-xml')/*[local-name()='nuds']">
-														<xforms:setvalue ref="instance('current-id')" value="context()/nuds:nudsHeader/nuds:nudsid"/>
+														<xforms:setvalue ref="instance('current-id')" value="context()/nuds:control/nuds:recordId"/>
 														<xforms:send submission="save-submission"/>
 													</xforms:action>
 													<xforms:send submission="save-imports"/>

@@ -540,11 +540,11 @@
 				</div>
 			</xsl:if>
 			<dl>
-				<xsl:if test="exsl:node-set($object)/nuds:nudsHeader/nuds:publicationStmt/nuds:publisher">
+				<xsl:if test="exsl:node-set($object)/nuds:control/nuds:publicationStmt/nuds:publisher">
 					<div>
 						<dt><xsl:value-of select="numishare:regularize_node('publisher', $lang)"/>: </dt>
 						<dd style="margin-left:125px;">
-							<xsl:value-of select="exsl:node-set($object)/nuds:nudsHeader/nuds:publicationStmt/nuds:publisher"/>
+							<xsl:value-of select="exsl:node-set($object)/nuds:control/nuds:publicationStmt/nuds:publisher"/>
 						</dd>
 					</div>
 				</xsl:if>

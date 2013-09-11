@@ -336,12 +336,12 @@
 					<query id="get-objects"> declare namespace nuds="http://nomisma.org/nuds"; declare namespace nh="http://nomisma.org/nudsHoard"; &lt;report>
 						{ for $record in subsequence(collection(), START, 20) let $type := $record/*/local-name() return if ($type='nuds') then &lt;record>
 						&lt;type>{ $type } &lt;/type> &lt;recordType>{ string($record/nuds:nuds/@recordType) }&lt;/recordType> &lt;id>{
-						$record//nuds:nudsid/text() }&lt;/id> &lt;title>{ $record//nuds:descMeta/nuds:title[@xml:lang='en']/text() }&lt;/title> &lt;obverse> {
+						$record//nuds:recordId/text() }&lt;/id> &lt;title>{ $record//nuds:descMeta/nuds:title[@xml:lang='en']/text() }&lt;/title> &lt;obverse> {
 						concat($record//nuds:typeDesc/nuds:obverse/nuds:type/nuds:description[@xml:lang='en'], '/',
 						$record//nuds:typeDesc/nuds:obverse/nuds:legend) } &lt;/obverse> &lt;reverse> {
 						concat($record//nuds:typeDesc/nuds:reverse/nuds:type/nuds:description[@xml:lang='en'], '/',
 						$record//nuds:typeDesc/nuds:reverse/nuds:legend) } &lt;/reverse> &lt;published/> &lt;/record> else if ($type='nudsHoard') then
-						&lt;record> &lt;type>{ $type } &lt;/type> &lt;id>{ $record//nh:nudsid/text() }&lt;/id> &lt;title>{
+						&lt;record> &lt;type>{ $type } &lt;/type> &lt;id>{ $record//nh:recordId/text() }&lt;/id> &lt;title>{
 						$record//nh:descMeta/nh:title[@xml:lang='en']/text() }&lt;/title> &lt;published/> &lt;/record> else &lt;record/> } &lt;/report> </query>
 					<query id="create-collection"/>
 					<!--<query id="query-objects"> &lt;report> { for $record in collection()[contains(descendant::*[local-name()='unittitle'], 'QUERY') or
@@ -1161,7 +1161,7 @@
 			<fr:negative-choice/>
 			<fr:positive-choice>
 				<xforms:action ev:event="DOMActivate">
-					<xforms:setvalue ref="instance('deleteId')/query" value="concat('nudsid:&#x022;', instance('control-instance')/id, '&#x022;')"/>
+					<xforms:setvalue ref="instance('deleteId')/query" value="concat('recordId:&#x022;', instance('control-instance')/id, '&#x022;')"/>
 					<xforms:setvalue ref="instance('control-instance')/solr-core" value="instance('config')/solr_published"/>
 					<xforms:send submission="delete-solr-doc"/>
 					<!-- reload table -->
@@ -1180,7 +1180,7 @@
 			<fr:positive-choice>
 				<xforms:action ev:event="DOMActivate">
 					<xforms:send submission="delete-object"/>
-					<xforms:setvalue ref="instance('deleteId')/query" value="concat('nudsid:&#x022;', instance('control-instance')/id, '&#x022;')"/>
+					<xforms:setvalue ref="instance('deleteId')/query" value="concat('recordId:&#x022;', instance('control-instance')/id, '&#x022;')"/>
 					<xforms:setvalue ref="instance('control-instance')/solr-core" value="instance('config')/solr_published"/>
 					<xforms:send submission="delete-solr-doc"/>
 					<!-- get new numCount -->

@@ -43,7 +43,7 @@
 		</xsl:choose>
 	</xsl:variable>
 
-	<xsl:variable name="id" select="normalize-space(//*[local-name()='nudsid'])"/>
+	<xsl:variable name="id" select="normalize-space(//*[local-name()='recordId'])"/>
 
 	<xsl:variable name="nudsGroup">
 		<nudsGroup>
@@ -58,7 +58,7 @@
 
 			<xsl:if test="string-length($id-param) &gt; 0">
 				<xsl:for-each select="document(concat('http://nomisma.numismatics.org/apis/getNuds?identifiers=', $id-param))//nuds:nuds">
-					<object xlink:href="http://nomisma.org/id/{nuds:nudsHeader/nuds:nudsid}">
+					<object xlink:href="http://nomisma.org/id/{nuds:control/nuds:recordId}">
 						<xsl:copy-of select="."/>
 					</object>
 				</xsl:for-each>
@@ -129,7 +129,7 @@
 							<xsl:value-of select="//config/title"/>
 							<xsl:text>: </xsl:text>
 							<xsl:value-of
-								select="if (descendant::nuds:nuds) then descendant::nuds:nuds/nuds:descMeta/nuds:title else if (descendant::*[local-name()='nudsHoard']) then descendant::nuds:nudsid else ''"
+								select="if (descendant::nuds:nuds) then descendant::nuds:nuds/nuds:descMeta/nuds:title else if (descendant::*[local-name()='nudsHoard']) then descendant::nuds:recordId else ''"
 							/>
 						</title>
 						<!-- alternates -->
