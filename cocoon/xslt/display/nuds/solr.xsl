@@ -74,7 +74,7 @@
 			<xsl:choose>
 				<xsl:when test="string($sparql_endpoint)">
 					<!-- get findspots -->				
-					<xsl:apply-templates select="$sparqlResult/descendant::res:group[@id=$id]/res:result"/>
+					<!--<xsl:apply-templates select="$sparqlResult/descendant::res:group[@id=$id]/res:result"/>-->
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:apply-templates select="nuds:digRep"/>
@@ -184,16 +184,13 @@
 							</xsl:choose>
 						</xsl:variable>
 						<xsl:if test="$rdf/*[@rdf:about=$href]/descendant::geo:lat and $rdf/*[@rdf:about=$href]/descendant::geo:long">							
-							<xsl:if test="string($coordinates)">
-								<!-- *_geo format is 'mint name|URI of resource|KML-compliant geographic coordinates' -->
-								<field name="findspot_geo">
-									<xsl:value-of select="$label"/>
-									<xsl:text>|</xsl:text>
-									<xsl:value-of select="@xlink:href"/>
-									<xsl:text>|</xsl:text>
-									<xsl:value-of select="concat($rdf/*[@rdf:about=$href]/descendant::geo:long, ',', $rdf/*[@rdf:about=$href]/descendant::geo:lat)"/>
-								</field>
-							</xsl:if>
+							<field name="findspot_geo">
+								<xsl:value-of select="$label"/>
+								<xsl:text>|</xsl:text>
+								<xsl:value-of select="@xlink:href"/>
+								<xsl:text>|</xsl:text>
+								<xsl:value-of select="concat($rdf/*[@rdf:about=$href]/descendant::geo:long, ',', $rdf/*[@rdf:about=$href]/descendant::geo:lat)"/>
+							</field>
 						</xsl:if>
 						<xsl:if test="$rdf/*[@rdf:about=$href]/descendant::nm:findspot[contains(@rdf:resource, 'geonames.org')]">
 							<xsl:variable name="geonamesUri" select="$rdf/*[@rdf:about=$href]/descendant::nm:findspot[contains(@rdf:resource, 'geonames.org')][1]/@rdf:resource"/>
