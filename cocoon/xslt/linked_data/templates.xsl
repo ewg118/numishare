@@ -117,7 +117,7 @@
 							<xsl:value-of select="nuds:control/nuds:publicationStmt/nuds:publisher"/>
 						</dcterms:publisher>
 					</xsl:if>
-					<xsl:for-each select="descendant::nuds:repository">
+					<xsl:for-each select="descendant::nuds:collection">
 						<nm:collection>
 							<xsl:value-of select="."/>
 						</nm:collection>
@@ -692,7 +692,7 @@
 			<dcterms:publisher>
 				<xsl:value-of select="str[@name='publisher_display']"/>
 			</dcterms:publisher>
-			<xsl:for-each select="arr[@name='repository_facet']/str">
+			<xsl:for-each select="arr[@name='collection_facet']/str">
 				<nm:collection>
 					<xsl:value-of select="."/>
 				</nm:collection>
