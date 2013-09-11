@@ -4,27 +4,41 @@
       recordType="physical">
    <control>
       <recordId>1991.17.253</recordId>
+      <maintenanceStatus>revised</maintenanceStatus>
+      <publicationStatus>approved</publicationStatus>
+      <maintenanceAgency>
+         <agencyName>University of Virginia Library</agencyName>
+         <agencyCode>US-viu</agencyCode>
+      </maintenanceAgency>
+      <maintenanceHistory>
+         <maintenanceEvent>
+            <eventType>derived</eventType>
+            <eventDateTime standardDateTime="2012-12-12T15:05:54.552-05:00Z">2012-12-12T15:05:54.552-05:00Z</eventDateTime>
+            <agentType>human</agentType>
+            <agent>Ethan Gruber and/or Carrie Sulosky</agent>
+            <eventDescription>Migrated from EAD to NUDS</eventDescription>
+         </maintenanceEvent>
+         <maintenanceEvent>
+            <eventType>revised</eventType>
+            <eventDateTime standardDateTime="2013-09-11T12:21:01.197-04:00Z">2013-09-11T12:21:01.197-04:00Z</eventDateTime>
+            <agentType>human</agentType>
+            <agent>XSLT</agent>
+            <eventDescription>Migrated to new NUDS schema version; nudsHeader to control.</eventDescription>
+         </maintenanceEvent>
+      </maintenanceHistory>
       <publicationStmt>
          <publisher>The University of Virginia Library</publisher>
-         <createdBy>Ethan Gruber and/or Carrie Sulosky</createdBy>
-         <langUsage>
-            <language langcode="en">English</language>
-         </langUsage>
+         
+         
       </publicationStmt>
       <rightsStmt>
          <license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/"/>
          <date standardDate="2012"/>
       </rightsStmt>
-      <revisionStmt>
-         <revision>
-            <description>Migrated from EAD to NUDS</description>
-            <date standardDateTime="2012-12-12T15:05:54.552-05:00Z"/>
-         </revision>
-      </revisionStmt>
    </control>
    <descMeta>
       <title xml:lang="en">Antoninianus of Victorinus, 268-270. 1991.17.253.</title>
-      <department>Roman</department>
+      
       <typeDesc>
          <objectType xlink:href="http://nomisma.org/id/coin">Coin</objectType>
          <denomination xlink:href="http://nomisma.org/id/antoninianus">Antoninianus</denomination>
@@ -65,8 +79,6 @@
       <findspotDesc xlink:type="simple" xlink:href="http://nomisma.org/id/olivers_orchard_hoards"/>
       <adminDesc>
          <identifier>1991.17.253</identifier>
-         <repository>The University of Virginia Art Museum</repository>
-         <collection>The Oliver's Orchard Hoard</collection>
          <provenance>
             <chronList>
                <chronItem>
@@ -79,6 +91,8 @@
                </chronItem>
             </chronList>
          </provenance>
+         <department>Roman</department>
+         <collection xlink:type="simple" xlink:href="http://nomisma.org/id/uva">The Fralin Museum of Art</collection>
       </adminDesc>
       <refDesc>
          <reference>

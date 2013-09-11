@@ -1,80 +1,96 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<nuds xmlns="http://nomisma.org/nuds" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mets="http://www.loc.gov/METS/" recordType="physical">
-	<control>
-		<recordId>2012.106</recordId>
-		<publicationStmt>
-			<publisher>The University of Virginia Library</publisher>
-			<createdBy>Ethan Gruber and/or Carrie Sulosky</createdBy>
-			<langUsage>
-				<language langcode="en">English</language>
-			</langUsage>
-		</publicationStmt>
-		<rightsStmt>
-			<license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/"/>
-			<date standardDate="2012"/>
-		</rightsStmt>
-		<revisionStmt>
-			<revision>
-				<description>Migrated from EAD to NUDS</description>
-				<date standardDateTime="2012-12-12T15:05:54.552-05:00Z"/>
-			</revision>
-		</revisionStmt>
-	</control>
-	<descMeta>
-		<title xml:lang="en">Denarius of C Licinius Macer, Rome, 84 B.C. 2012.106.</title>
-		<department>Roman</department>
-		<typeDesc xlink:type="simple" xlink:href="http://nomisma.org/id/rrc-354.1"/>
-		<adminDesc>
-			<identifier>2012.106</identifier>
-			<repository>Virginia Museum of Fine Arts</repository>
-			<collection>The Mosberg Collection</collection>
-			<provenance>
-				<chronList>
-					<chronItem>
-						<acquisition>
-							<date standardDate="2012">2012</date>
-							<acquiredFrom>Purchased from the University of Virginia Art Museum</acquiredFrom>
-						</acquisition>
-					</chronItem>
-					<chronItem>
-						<date standardDate="1946">1946</date>
-						<previousColl>Ex: Hermann Mosberg Collection. Appraised by Munzen und Medallen, Basel, Switzerland.</previousColl>
-					</chronItem>
-					<chronItem>
-						<date standardDate="1933">1933</date>
-						<previousColl>Haeberlin Auction, lot 1333.</previousColl>
-					</chronItem>
-					<chronItem>
-						<previousColl>Noted as "49 Diverse Republik Denare" on an envelope addressed in Zurich. Some or all of these coins may have been
+<nuds xmlns="http://nomisma.org/nuds" xmlns:xlink="http://www.w3.org/1999/xlink"
+      xmlns:mets="http://www.loc.gov/METS/"
+      recordType="physical">
+	  <control>
+      <recordId>2012.106</recordId>
+      <maintenanceStatus>revised</maintenanceStatus>
+      <publicationStatus>approved</publicationStatus>
+      <maintenanceAgency>
+         <agencyName>University of Virginia Library</agencyName>
+         <agencyCode>US-viu</agencyCode>
+      </maintenanceAgency>
+      <maintenanceHistory>
+         <maintenanceEvent>
+            <eventType>derived</eventType>
+            <eventDateTime standardDateTime="2012-12-12T15:05:54.552-05:00Z">2012-12-12T15:05:54.552-05:00Z</eventDateTime>
+            <agentType>human</agentType>
+            <agent>Ethan Gruber and/or Carrie Sulosky</agent>
+            <eventDescription>Migrated from EAD to NUDS</eventDescription>
+         </maintenanceEvent>
+         <maintenanceEvent>
+            <eventType>revised</eventType>
+            <eventDateTime standardDateTime="2013-09-11T12:21:02.008-04:00Z">2013-09-11T12:21:02.008-04:00Z</eventDateTime>
+            <agentType>human</agentType>
+            <agent>XSLT</agent>
+            <eventDescription>Migrated to new NUDS schema version; nudsHeader to control.</eventDescription>
+         </maintenanceEvent>
+      </maintenanceHistory>
+      <publicationStmt>
+			      <publisher>The University of Virginia Library</publisher>
+			
+			
+		    </publicationStmt>
+      <rightsStmt>
+			      <license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/"/>
+			      <date standardDate="2012"/>
+		    </rightsStmt>
+   </control>
+	  <descMeta>
+		    <title xml:lang="en">Denarius of C Licinius Macer, Rome, 84 B.C. 2012.106.</title>
+		
+		    <typeDesc xlink:type="simple" xlink:href="http://nomisma.org/id/rrc-354.1"/>
+		    <adminDesc>
+         <identifier>2012.106</identifier>
+         <provenance>
+				        <chronList>
+					          <chronItem>
+						            <acquisition>
+							              <date standardDate="2012">2012</date>
+							              <acquiredFrom>Purchased from the University of Virginia Art Museum</acquiredFrom>
+						            </acquisition>
+					          </chronItem>
+					          <chronItem>
+						            <date standardDate="1946">1946</date>
+						            <previousColl>Ex: Hermann Mosberg Collection. Appraised by Munzen und Medallen, Basel, Switzerland.</previousColl>
+					          </chronItem>
+					          <chronItem>
+						            <date standardDate="1933">1933</date>
+						            <previousColl>Haeberlin Auction, lot 1333.</previousColl>
+					          </chronItem>
+					          <chronItem>
+						            <previousColl>Noted as "49 Diverse Republik Denare" on an envelope addressed in Zurich. Some or all of these coins may have been
 							acquired by Hermann Mosberg at the Haeberlin Auction.</previousColl>
-					</chronItem>
-					<chronItem>
-						<date standardDate="1989">1989</date>
-						<previousColl>Acquired from the Worldwide Treasure Bureau, 1989, by the University of Virginia Art Museum for extended loan:
+					          </chronItem>
+					          <chronItem>
+						            <date standardDate="1989">1989</date>
+						            <previousColl>Acquired from the Worldwide Treasure Bureau, 1989, by the University of Virginia Art Museum for extended loan:
 							1989.EL.14.23.</previousColl>
-					</chronItem>
-				</chronList>
-			</provenance>
-		</adminDesc>
-	</descMeta>
-	<digRep>
-		<mets:fileSec>
-			<mets:fileGrp USE="obverse">
-				<mets:file USE="reference" MIMETYPE="image/jpeg">
-					<mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n14_1989_23_obv.jpg"/>
-				</mets:file>
-				<mets:file USE="thumbnail" MIMETYPE="image/jpeg">
-					<mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n14_1989_23_obv.jpg"/>
-				</mets:file>
-			</mets:fileGrp>
-			<mets:fileGrp USE="reverse">
-				<mets:file USE="reference" MIMETYPE="image/jpeg">
-					<mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n14_1989_23_rev.jpg"/>
-				</mets:file>
-				<mets:file USE="thumbnail" MIMETYPE="image/jpeg">
-					<mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n14_1989_23_rev.jpg"/>
-				</mets:file>
-			</mets:fileGrp>
-		</mets:fileSec>
-	</digRep>
+					          </chronItem>
+				        </chronList>
+			      </provenance>
+         <department>Roman</department>
+         <collection xlink:type="simple" xlink:href="http://nomisma.org/id/vmfa">Virginia Museum of Fine Arts</collection>
+      </adminDesc>
+	  </descMeta>
+	  <digRep>
+		    <mets:fileSec>
+			      <mets:fileGrp USE="obverse">
+				        <mets:file USE="reference" MIMETYPE="image/jpeg">
+					          <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n14_1989_23_obv.jpg"/>
+				        </mets:file>
+				        <mets:file USE="thumbnail" MIMETYPE="image/jpeg">
+					          <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n14_1989_23_obv.jpg"/>
+				        </mets:file>
+			      </mets:fileGrp>
+			      <mets:fileGrp USE="reverse">
+				        <mets:file USE="reference" MIMETYPE="image/jpeg">
+					          <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n14_1989_23_rev.jpg"/>
+				        </mets:file>
+				        <mets:file USE="thumbnail" MIMETYPE="image/jpeg">
+					          <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n14_1989_23_rev.jpg"/>
+				        </mets:file>
+			      </mets:fileGrp>
+		    </mets:fileSec>
+	  </digRep>
 </nuds>

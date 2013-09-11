@@ -6,29 +6,43 @@
       xsi:schemaLocation="http://nomisma.org/nuds http://nomisma.org/nuds/nuds.xsd">
    <control>
       <recordId>1994.6</recordId>
+      <maintenanceStatus>revised</maintenanceStatus>
+      <publicationStatus>approved</publicationStatus>
+      <maintenanceAgency>
+         <agencyName>University of Virginia Library</agencyName>
+         <agencyCode>US-viu</agencyCode>
+      </maintenanceAgency>
+      <maintenanceHistory>
+         <maintenanceEvent>
+            <eventType>derived</eventType>
+            <eventDateTime standardDateTime=""/>
+            <agentType>human</agentType>
+            <agent>Ethan Gruber and/or Carrie Sulosky</agent>
+            <eventDescription>Migrated from EAD to NUDS</eventDescription>
+         </maintenanceEvent>
+         <maintenanceEvent>
+            <eventType>revised</eventType>
+            <eventDateTime standardDateTime="2013-09-11T12:20:58.911-04:00Z">2013-09-11T12:20:58.911-04:00Z</eventDateTime>
+            <agentType>human</agentType>
+            <agent>XSLT</agent>
+            <eventDescription>Migrated to new NUDS schema version; nudsHeader to control.</eventDescription>
+         </maintenanceEvent>
+      </maintenanceHistory>
       <publicationStmt>
          <date standardDate="2012"/>
          <publisher>The University of Virginia Library</publisher>
-         <createdBy>Ethan Gruber and/or Carrie Sulosky</createdBy>
-         <langUsage>
-            <language languageCode="en">English</language>
-         </langUsage>
+         
+         
       </publicationStmt>
       <rightsStmt>
          <copyrightHolder>University of Virginia Library</copyrightHolder>
          <license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/"/>
          <date standardDate="2012"/>
       </rightsStmt>
-      <revisionStmt>
-         <revision>
-            <eventDateTime standardDateTime="2012-12-12T15:05:54.552-05:00"/>
-            <description xml:lang="en">Migrated from EAD to NUDS</description>
-         </revision>
-      </revisionStmt>
    </control>
    <descMeta>
       <title xml:lang="en">Aureus of Claudius, Rome,  A.D. 50-54. 1994.6.</title>
-      <department>Roman</department>
+      
       <typeDesc xlink:type="simple" xlink:href="http://numismatics.org/ocre/id/ric.1(2).cl.80"/>
       <physDesc>
          <axis>7</axis>
@@ -39,8 +53,6 @@
       </physDesc>
       <adminDesc>
          <identifier>1994.6</identifier>
-         <repository>The University of Virginia Art Museum</repository>
-         <collection>Gold Coins of the U.Va. Art Museum</collection>
          <provenance>
             <chronList>
                <chronItem>
@@ -61,6 +73,8 @@
                </chronItem>
             </chronList>
          </provenance>
+         <department>Roman</department>
+         <collection xlink:type="simple" xlink:href="http://nomisma.org/id/uva">The Fralin Museum of Art</collection>
       </adminDesc>
    </descMeta>
    <digRep>
