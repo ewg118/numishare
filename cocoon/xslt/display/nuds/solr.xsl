@@ -71,7 +71,31 @@
 				<xsl:with-param name="lang" select="$lang"/>
 			</xsl:apply-templates>
 			
-			<xsl:apply-templates select="nuds:digRep"/>
+			<xsl:choose>
+				<xsl:when test="string($sparql_endpoint)">
+					<!-- get findspots -->				
+					<xsl:apply-templates select="$sparqlResult/descendant::res:group[@id=$id]/res:result"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:apply-templates select="nuds:digRep"/>
+				</xsl:otherwise>
+			</xsl:choose>
+			
+			<!-- fulltext -->
+			<field name="fulltext">
+				<xsl:value-of select="nuds:control/nuds:recordId"/>
+				<xsl:text> </xsl:text>
+				<xsl:for-each select="nuds:descMeta/descendant-or-self::text()">
+					<xsl:value-of select="normalize-space(.)"/>
+					<xsl:text> </xsl:text>
+				</xsl:for-each>
+				<xsl:if test="string($lang)">
+					<xsl:for-each select="$rdf/descendant-or-self::node()[@xml:lang=$lang]/text()">
+						<xsl:value-of select="normalize-space(.)"/>
+						<xsl:text> </xsl:text>
+					</xsl:for-each>
+				</xsl:if>
+			</field>
 		</doc>
 	</xsl:template>
 
@@ -82,7 +106,7 @@
 		<field name="findspot_facet">
 			<xsl:value-of select="$title"/>
 		</field>
-		<xsl:if test="$geonames//place[@id=$uri]">
+		<xsl:if test="res:binding[@name='long']/res:literal and res:binding[@name='lat']/res:literal">
 			<field name="findspot_uri">
 				<xsl:value-of select="$uri"/>
 			</field>
@@ -91,7 +115,7 @@
 				<xsl:text>|</xsl:text>
 				<xsl:value-of select="$uri"/>
 				<xsl:text>|</xsl:text>
-				<xsl:value-of select="$geonames//place[@id=$uri]"/>
+				<xsl:value-of select="concat(res:binding[@name='long']/res:literal, ',', res:binding[@name='lat']/res:literal)"/>
 			</field>
 		</xsl:if>
 	</xsl:template>
@@ -160,13 +184,16 @@
 							</xsl:choose>
 						</xsl:variable>
 						<xsl:if test="$rdf/*[@rdf:about=$href]/descendant::geo:lat and $rdf/*[@rdf:about=$href]/descendant::geo:long">							
-							<field name="findspot_geo">
-								<xsl:value-of select="$label"/>
-								<xsl:text>|</xsl:text>
-								<xsl:value-of select="@xlink:href"/>
-								<xsl:text>|</xsl:text>
-								<xsl:value-of select="concat($rdf/*[@rdf:about=$href]/descendant::geo:long, ',', $rdf/*[@rdf:about=$href]/descendant::geo:lat)"/>
-							</field>
+							<xsl:if test="string($coordinates)">
+								<!-- *_geo format is 'mint name|URI of resource|KML-compliant geographic coordinates' -->
+								<field name="findspot_geo">
+									<xsl:value-of select="$label"/>
+									<xsl:text>|</xsl:text>
+									<xsl:value-of select="@xlink:href"/>
+									<xsl:text>|</xsl:text>
+									<xsl:value-of select="concat($rdf/*[@rdf:about=$href]/descendant::geo:long, ',', $rdf/*[@rdf:about=$href]/descendant::geo:lat)"/>
+								</field>
+							</xsl:if>
 						</xsl:if>
 						<xsl:if test="$rdf/*[@rdf:about=$href]/descendant::nm:findspot[contains(@rdf:resource, 'geonames.org')]">
 							<xsl:variable name="geonamesUri" select="$rdf/*[@rdf:about=$href]/descendant::nm:findspot[contains(@rdf:resource, 'geonames.org')][1]/@rdf:resource"/>
@@ -186,6 +213,8 @@
 								<field name="findspot_text">
 									<xsl:value-of select="."/>
 								</field>
+
+
 							</xsl:for-each>
 						</xsl:if>
 						<field name="findspot_facet">
@@ -367,6 +396,11 @@
 			<field name="{local-name()}_facet">
 				<xsl:value-of select="normalize-space(.)"/>
 			</field>
+			<xsl:if test="string(@xlink:href)">
+				<field name="{local-name()}_uri">
+					<xsl:value-of select="@xlink:href"/>
+				</field>
+			</xsl:if>
 		</xsl:for-each>
 
 		<xsl:if test="nuds:identifier">
