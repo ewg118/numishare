@@ -2,8 +2,8 @@
 <nuds xmlns="http://nomisma.org/nuds" xmlns:xlink="http://www.w3.org/1999/xlink"
       xmlns:mets="http://www.loc.gov/METS/"
       recordType="physical">
-   <nudsHeader>
-      <nudsid>1997.7.1</nudsid>
+   <control>
+      <recordId>1997.7.1</recordId>
       <publicationStmt>
          <publisher>The University of Virginia Library</publisher>
          <createdBy>Ethan Gruber and/or Carrie Sulosky</createdBy>
@@ -21,7 +21,7 @@
             <date standardDateTime="2012-12-12T15:05:54.552-05:00Z"/>
          </revision>
       </revisionStmt>
-   </nudsHeader>
+   </control>
    <descMeta>
       <title xml:lang="en">Aureus of Trajan, Rome,  A.D. 98-117. 1997.7.1.</title>
       <department>Roman</department>

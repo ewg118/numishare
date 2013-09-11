@@ -269,7 +269,7 @@ These only need to be changed if Solr and Orbeon are run on a different server o
 			<map:match pattern="pelagios.rdf">
 				<map:aggregate element="content">
 					<map:part
-						src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}+AND+{url-encode:pleiades_uri:*}&amp;rows=50000&amp;fl=id,nudsid,title_display,pleiades_uri"/>
+						src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}+AND+{url-encode:pleiades_uri:*}&amp;rows=50000&amp;fl=id,recordId,title_display,pleiades_uri"/>
 					<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
 				</map:aggregate>
 				<map:transform src="xslt/linked_data/solr_to_rdf.xsl" label="basiccontent" type="xslt-saxon">
@@ -293,7 +293,7 @@ These only need to be changed if Solr and Orbeon are run on a different server o
 			<map:match pattern="nomisma.rdf">
 				<map:aggregate element="content">
 					<map:part
-						src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}+AND+{url-encode:coinType_uri:*}&amp;rows=100000&amp;fl=id,nudsid,title_display,repository_facet,coinType_uri,recordType,publisher_display,axis_num,diameter_num,taq_num,weight_num,thumbnail_obv,reference_obv,thumbnail_rev,reference_rev,findspot_uri,findspot_geo"/>
+						src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}+AND+{url-encode:coinType_uri:*}&amp;rows=100000&amp;fl=id,recordId,title_display,repository_facet,coinType_uri,recordType,publisher_display,axis_num,diameter_num,taq_num,weight_num,thumbnail_obv,reference_obv,thumbnail_rev,reference_rev,findspot_uri,findspot_geo"/>
 					<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
 				</map:aggregate>
 				<map:transform src="xslt/linked_data/solr_to_rdf.xsl" label="basiccontent" type="xslt-saxon">
@@ -317,14 +317,14 @@ These only need to be changed if Solr and Orbeon are run on a different server o
 							<map:when test="">
 								<map:aggregate element="content">
 									<map:part
-										src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}+AND+*:*&amp;sort={url-encode:timestamp desc}&amp;rows=100&amp;start={request-param:start}&amp;fl=id,nudsid,recordType,title_display,mint_geo,findspot_geo,tpq_num,taq_num,year_num,timestamp"/>
+										src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}+AND+*:*&amp;sort={url-encode:timestamp desc}&amp;rows=100&amp;start={request-param:start}&amp;fl=id,recordId,recordType,title_display,mint_geo,findspot_geo,tpq_num,taq_num,year_num,timestamp"/>
 									<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
 								</map:aggregate>
 							</map:when>
 							<map:otherwise>
 								<map:aggregate element="content">
 									<map:part
-										src="{global:solr-url}select?q=lang:{request-param:lang}+AND+collection-name:{global:collection-name}+AND+*:*&amp;sort={url-encode:timestamp desc}&amp;rows=100&amp;start={request-param:start}&amp;fl=id,nudsid,recordType,title_display,mint_geo,findspot_geo,tpq_num,taq_num,year_num,timestamp"/>
+										src="{global:solr-url}select?q=lang:{request-param:lang}+AND+collection-name:{global:collection-name}+AND+*:*&amp;sort={url-encode:timestamp desc}&amp;rows=100&amp;start={request-param:start}&amp;fl=id,recordId,recordType,title_display,mint_geo,findspot_geo,tpq_num,taq_num,year_num,timestamp"/>
 									<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
 								</map:aggregate>
 							</map:otherwise>
@@ -336,14 +336,14 @@ These only need to be changed if Solr and Orbeon are run on a different server o
 							<map:when test="">
 								<map:aggregate element="content">
 									<map:part
-										src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}&amp;sort={url-encode:timestamp desc}&amp;rows=100&amp;start={request-param:start}&amp;fl=id,nudsid,recordType,title_display,mint_geo,findspot_geo,tpq_num,taq_num,year_num,timestamp"/>
+										src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}&amp;sort={url-encode:timestamp desc}&amp;rows=100&amp;start={request-param:start}&amp;fl=id,recordId,recordType,title_display,mint_geo,findspot_geo,tpq_num,taq_num,year_num,timestamp"/>
 									<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
 								</map:aggregate>
 							</map:when>
 							<map:otherwise>
 								<map:aggregate element="content">
 									<map:part
-										src="{global:solr-url}select?q=lang:{request-param:lang}+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}&amp;sort={url-encode:timestamp desc}&amp;rows=100&amp;start={request-param:start}&amp;fl=id,nudsid,recordType,title_display,mint_geo,findspot_geo,tpq_num,taq_num,year_num,timestamp"/>
+										src="{global:solr-url}select?q=lang:{request-param:lang}+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}&amp;sort={url-encode:timestamp desc}&amp;rows=100&amp;start={request-param:start}&amp;fl=id,recordId,recordType,title_display,mint_geo,findspot_geo,tpq_num,taq_num,year_num,timestamp"/>
 									<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
 								</map:aggregate>
 							</map:otherwise>
@@ -682,14 +682,14 @@ These only need to be changed if Solr and Orbeon are run on a different server o
 					<map:when test="">
 						<map:aggregate element="content">
 							<map:part
-								src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q} AND findspot_geo:*}&amp;rows=10000&amp;fl=id,nudsid,title_display,findspot_geo,tpq_num,taq_num,closing_date_display"/>
+								src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q} AND findspot_geo:*}&amp;rows=10000&amp;fl=id,recordId,title_display,findspot_geo,tpq_num,taq_num,closing_date_display"/>
 							<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
 						</map:aggregate>
 					</map:when>
 					<map:otherwise>
 						<map:aggregate element="content">
 							<map:part
-								src="{global:solr-url}select?q=lang:{request-param:lang}+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q} AND findspot_geo:*}&amp;rows=10000&amp;fl=id,nudsid,title_display,findspot_geo,tpq_num,taq_num,closing_date_display"/>
+								src="{global:solr-url}select?q=lang:{request-param:lang}+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q} AND findspot_geo:*}&amp;rows=10000&amp;fl=id,recordId,title_display,findspot_geo,tpq_num,taq_num,closing_date_display"/>
 							<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
 						</map:aggregate>
 					</map:otherwise>
@@ -813,14 +813,14 @@ These only need to be changed if Solr and Orbeon are run on a different server o
 					<map:when test="">
 						<map:aggregate element="content">
 							<map:part
-								src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}&amp;sort={url-encode:{request-param:sort}}&amp;rows=100&amp;start={request-param:start}&amp;fl=id,nudsid,recordType,title_display,mint_geo,findspot_geo,tpq_num,taq_num,year_num,timestamp"/>
+								src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}&amp;sort={url-encode:{request-param:sort}}&amp;rows=100&amp;start={request-param:start}&amp;fl=id,recordId,recordType,title_display,mint_geo,findspot_geo,tpq_num,taq_num,year_num,timestamp"/>
 							<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
 						</map:aggregate>
 					</map:when>
 					<map:otherwise>
 						<map:aggregate element="content">
 							<map:part
-								src="{global:solr-url}select?q=lang:{request-param:lang}+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}&amp;sort={url-encode:{request-param:sort}}&amp;rows=100&amp;start={request-param:start}&amp;fl=id,nudsid,recordType,title_display,mint_geo,findspot_geo,tpq_num,taq_num,year_num,timestamp"/>
+								src="{global:solr-url}select?q=lang:{request-param:lang}+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}&amp;sort={url-encode:{request-param:sort}}&amp;rows=100&amp;start={request-param:start}&amp;fl=id,recordId,recordType,title_display,mint_geo,findspot_geo,tpq_num,taq_num,year_num,timestamp"/>
 							<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
 						</map:aggregate>
 					</map:otherwise>
@@ -931,12 +931,12 @@ These only need to be changed if Solr and Orbeon are run on a different server o
 					<map:parameter name="parameter-selector-test" value="{request-param:lang}"/>
 					<map:when test="">
 						<map:generate
-							src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}+AND+recordType:hoard+AND+hasContents:true+AND+{url-encode:{request-param:q}}&amp;start=0&amp;rows=10000&amp;fl=id,nudsid,title_display&amp;sort=title_display%20asc"
+							src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}+AND+recordType:hoard+AND+hasContents:true+AND+{url-encode:{request-param:q}}&amp;start=0&amp;rows=10000&amp;fl=id,recordId,title_display&amp;sort=title_display%20asc"
 							label="record"/>
 					</map:when>
 					<map:otherwise>
 						<map:generate
-							src="{global:solr-url}select?q=lang:{request-param}+AND+collection-name:{global:collection-name}+AND+recordType:hoard+AND+hasContents:true+AND+{url-encode:{request-param:q}}&amp;start=0&amp;rows=10000&amp;fl=id,nudsid,title_display&amp;sort=title_display%20asc"
+							src="{global:solr-url}select?q=lang:{request-param}+AND+collection-name:{global:collection-name}+AND+recordType:hoard+AND+hasContents:true+AND+{url-encode:{request-param:q}}&amp;start=0&amp;rows=10000&amp;fl=id,recordId,title_display&amp;sort=title_display%20asc"
 							label="record"/>
 					</map:otherwise>
 				</map:select>

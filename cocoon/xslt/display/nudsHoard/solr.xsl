@@ -73,15 +73,15 @@
 			<field name="id">
 				<xsl:choose>
 					<xsl:when test="string($lang)">
-						<xsl:value-of select="concat(nh:nudsHeader/nh:nudsid, '-', $lang)"/>
+						<xsl:value-of select="concat(nh:control/nh:recordId, '-', $lang)"/>
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:value-of select="nh:nudsHeader/nh:nudsid"/>
+						<xsl:value-of select="nh:control/nh:recordId"/>
 					</xsl:otherwise>
 				</xsl:choose>
 			</field>
-			<field name="nudsid">
-				<xsl:value-of select="nh:nudsHeader/nh:nudsid"/>
+			<field name="recordId">
+				<xsl:value-of select="nh:control/nh:recordId"/>
 			</field>
 			<xsl:if test="string($lang)">
 				<field name="lang">
@@ -97,7 +97,7 @@
 						<xsl:value-of select="$title"/>
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:value-of select="nh:nudsHeader/nh:nudsid"/>
+						<xsl:value-of select="nh:control/nh:recordId"/>
 					</xsl:otherwise>
 				</xsl:choose>
 			</field>
@@ -109,7 +109,7 @@
 				<xsl:value-of select="$hasContents"/>
 			</field>
 			<field name="closing_date_display">
-				<cinclude:include src="cocoon:/get_closing_date?id={nh:nudsHeader/nh:nudsid}&amp;exclude=2,3,4,7,8,9"/>
+				<cinclude:include src="cocoon:/get_closing_date?id={nh:control/nh:recordId}&amp;exclude=2,3,4,7,8,9"/>
 			</field>
 			<xsl:if test="count(exsl:node-set($dates)/dates/date) &gt; 0">
 				<field name="tpq_num">
@@ -128,7 +128,7 @@
 			<xsl:if test="$hasContents = 'true'">
 				<xsl:variable name="denominations" as="element()*">
 					<denominations>
-						<xsl:copy-of select="document(concat('cocoon:/get_hoard_quant?id=', nh:nudsHeader/nh:nudsid, '&amp;calculate=denomination&amp;type=count'))"/>
+						<xsl:copy-of select="document(concat('cocoon:/get_hoard_quant?id=', nh:control/nh:recordId, '&amp;calculate=denomination&amp;type=count'))"/>
 					</denominations>
 				</xsl:variable>
 

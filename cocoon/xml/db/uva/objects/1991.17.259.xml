@@ -2,8 +2,8 @@
 <nuds xmlns="http://nomisma.org/nuds" xmlns:xlink="http://www.w3.org/1999/xlink"
       xmlns:mets="http://www.loc.gov/METS/"
       recordType="physical">
-   <nudsHeader>
-      <nudsid>1991.17.259</nudsid>
+   <control>
+      <recordId>1991.17.259</recordId>
       <publicationStmt>
          <publisher>The University of Virginia Library</publisher>
          <createdBy>Ethan Gruber and/or Carrie Sulosky</createdBy>
@@ -21,7 +21,7 @@
             <date standardDateTime="2012-12-12T15:05:54.552-05:00Z"/>
          </revision>
       </revisionStmt>
-   </nudsHeader>
+   </control>
    <descMeta>
       <title xml:lang="en">Antoninianus of Victorinus, Colonia Claudia Ara Agrippinensium, 268-270. 1991.17.259.</title>
       <department>Roman</department>

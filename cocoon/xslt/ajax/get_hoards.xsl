@@ -10,7 +10,7 @@
 	</xsl:template>
 
 	<xsl:template match="doc">
-		<xsl:variable name="id" select="str[@name='nudsid']"/>
+		<xsl:variable name="id" select="str[@name='recordId']"/>
 		<option value="{$id}" class="compare-option">
 			<xsl:for-each select="$tokens[.=$id]">
 				<xsl:attribute name="selected">selected</xsl:attribute>

@@ -20,7 +20,7 @@
 
 	<xsl:template match="nuds:nuds">
 		<xsl:param name="lang"/>
-		<xsl:variable name="id" select="nuds:nudsHeader/nuds:nudsid"/>
+		<xsl:variable name="id" select="nuds:control/nuds:recordId"/>
 		<doc>
 			<field name="id">
 				<xsl:choose>
@@ -32,7 +32,7 @@
 					</xsl:otherwise>
 				</xsl:choose>				
 			</field>
-			<field name="nudsid">
+			<field name="recordId">
 				<xsl:value-of select="$id"/>
 			</field>
 			<xsl:if test="string($lang)">
@@ -274,14 +274,14 @@
 		<!-- thumbnails-->
 		<xsl:if test="string(exsl:node-set($objectDoc)//mets:fileGrp[@USE='obverse']/mets:file[@USE='thumbnail']/mets:FLocat/@xlink:href)">
 			<field name="ao_thumbnail_obv">
-				<xsl:value-of select="exsl:node-set($objectDoc)//nuds:nudsid"/>
+				<xsl:value-of select="exsl:node-set($objectDoc)//nuds:recordId"/>
 				<xsl:text>|</xsl:text>
 				<xsl:value-of select="exsl:node-set($objectDoc)//mets:fileGrp[@USE='obverse']/mets:file[@USE='thumbnail']/mets:FLocat/@xlink:href"/>
 			</field>
 		</xsl:if>
 		<xsl:if test="string(exsl:node-set($objectDoc)//mets:fileGrp[@USE='reverse']/mets:file[@USE='thumbnail']/mets:FLocat/@xlink:href)">
 			<field name="ao_thumbnail_rev">
-				<xsl:value-of select="exsl:node-set($objectDoc)//nuds:nudsid"/>
+				<xsl:value-of select="exsl:node-set($objectDoc)//nuds:recordId"/>
 				<xsl:text>|</xsl:text>
 				<xsl:value-of select="exsl:node-set($objectDoc)//mets:fileGrp[@USE='reverse']/mets:file[@USE='thumbnail']/mets:FLocat/@xlink:href"/>
 			</field>
@@ -289,14 +289,14 @@
 		<!-- reference-->
 		<xsl:if test="string(exsl:node-set($objectDoc)//mets:fileGrp[@USE='obverse']/mets:file[@USE='reference']/mets:FLocat/@xlink:href)">
 			<field name="ao_reference_obv">
-				<xsl:value-of select="exsl:node-set($objectDoc)//nuds:nudsid"/>
+				<xsl:value-of select="exsl:node-set($objectDoc)//nuds:recordId"/>
 				<xsl:text>|</xsl:text>
 				<xsl:value-of select="exsl:node-set($objectDoc)//mets:fileGrp[@USE='obverse']/mets:file[@USE='reference']/mets:FLocat/@xlink:href"/>
 			</field>
 		</xsl:if>
 		<xsl:if test="string(exsl:node-set($objectDoc)//mets:fileGrp[@USE='reverse']/mets:file[@USE='reference']/mets:FLocat/@xlink:href)">
 			<field name="ao_reference_rev">
-				<xsl:value-of select="exsl:node-set($objectDoc)//nuds:nudsid"/>
+				<xsl:value-of select="exsl:node-set($objectDoc)//nuds:recordId"/>
 				<xsl:text>|</xsl:text>
 				<xsl:value-of select="exsl:node-set($objectDoc)//mets:fileGrp[@USE='reverse']/mets:file[@USE='reference']/mets:FLocat/@xlink:href"/>
 			</field>
@@ -408,7 +408,7 @@
 
 	<xsl:template name="sortid">
 		<field name="sortid">
-			<xsl:variable name="segs" select="tokenize(nuds:nudsHeader/nuds:nudsid, '\.')"/>
+			<xsl:variable name="segs" select="tokenize(nuds:control/nuds:recordId, '\.')"/>
 			<xsl:variable name="auth">
 				<xsl:choose>
 					<xsl:when test="$segs[3] = 'aug'">01</xsl:when>

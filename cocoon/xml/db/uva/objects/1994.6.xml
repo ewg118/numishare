@@ -4,8 +4,8 @@
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       recordType="physical"
       xsi:schemaLocation="http://nomisma.org/nuds http://nomisma.org/nuds/nuds.xsd">
-   <nudsHeader>
-      <nudsid>1994.6</nudsid>
+   <control>
+      <recordId>1994.6</recordId>
       <publicationStmt>
          <date standardDate="2012"/>
          <publisher>The University of Virginia Library</publisher>
@@ -25,7 +25,7 @@
             <description xml:lang="en">Migrated from EAD to NUDS</description>
          </revision>
       </revisionStmt>
-   </nudsHeader>
+   </control>
    <descMeta>
       <title xml:lang="en">Aureus of Claudius, Rome,  A.D. 50-54. 1994.6.</title>
       <department>Roman</department>

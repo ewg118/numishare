@@ -13,10 +13,10 @@
 	<xsl:template match="nh:nudsHoard">
 		<doc>
 			<field name="id">
-				<xsl:value-of select="nh:nudsHeader/nh:nudsid"/>
+				<xsl:value-of select="nh:control/nh:recordId"/>
 			</field>
 			<field name="title_display">
-				<xsl:value-of select="nh:nudsHeader/nh:nudsid"/>
+				<xsl:value-of select="nh:control/nh:recordId"/>
 			</field>
 			<field name="recordType">hoard</field>
 			<field name="timestamp">

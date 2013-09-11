@@ -331,10 +331,10 @@
 						<xforms:message level="modal">Mismatch between Solr records and objects in eXist. Collection list flushed and reindexed.</xforms:message>
 						<xforms:setvalue ref="instance('deleteAll')/query" value="concat('collection-name:', instance('control-instance')/collection-name)"/>
 						<xforms:send submission="delete-all"/>
-						<xforms:setvalue ref="instance('eXist-xquery')/exist:text">&lt;report> { for $foo in collection() return &lt;item> { $foo//*[local-name()='nudsHeader']/*[local-name()='nudsid']
+						<xforms:setvalue ref="instance('eXist-xquery')/exist:text">&lt;report> { for $foo in collection() return &lt;item> { $foo//*[local-name()='control']/*[local-name()='recordId']
 							} &lt;/item> } &lt;/report></xforms:setvalue>
 						<xforms:send submission="xquery-collection"/>
-						<xforms:action xxforms:iterate="instance('collection-result')/report/item/*[local-name()='nudsid']">
+						<xforms:action xxforms:iterate="instance('collection-result')/report/item/*[local-name()='recordId']">
 							<xxforms:variable name="id" select="."/>
 							<xforms:setvalue ref="instance('id')" value="$id"/>
 							<xforms:send submission="load-object"/>

@@ -68,8 +68,8 @@
 
 			<xforms:instance id="coin">
 				<nuds:nuds recordType="physical" xmlns="http://nomisma.org/nuds" xmlns:mets="http://www.loc.gov/METS/" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml">
-					<nudsHeader>
-						<nudsid/>
+					<control>
+						<recordId/>
 						<publicationStmt>
 							<publisher/>
 							<createdBy/>
@@ -82,7 +82,7 @@
 							<copyrightHolder/>
 							<!--<date standardDateTime=""/>-->
 						</rightsStmt>
-					</nudsHeader>
+					</control>
 					<descMeta>
 						<title/>
 						<physDesc/>
@@ -453,8 +453,8 @@
 				<xforms:bind nodeset="//@standardDate" type="m.data.standardDate"/>
 				<xforms:bind nodeset="//@standardDateTime" type="m.data.standardDateTime"/>
 				
-				<xforms:bind nodeset="nuds:nudsHeader">
-					<xforms:bind nodeset="nuds:nudsid" required="true()" type="xs:anyURI"/>
+				<xforms:bind nodeset="nuds:control">
+					<xforms:bind nodeset="nuds:recordId" required="true()" type="xs:anyURI"/>
 					<xforms:bind nodeset="nuds:publicationStmt">
 						<xforms:bind nodeset="nuds:publisher" required="true()"/>
 						<xforms:bind nodeset="nuds:createdBy" required="true()"/>
@@ -568,7 +568,7 @@
 			</xforms:bind>
 
 			<!-- bind physDesc tab existence of elements -->
-			<xforms:bind id="nudsHeader-tab" nodeset="instance('coin')/nuds:nudsHeader"/>
+			<xforms:bind id="control-tab" nodeset="instance('coin')/nuds:control"/>
 			<xforms:bind id="admindesc-tab" nodeset="instance('coin')/nuds:descMeta/nuds:adminDesc"/>
 			<xforms:bind id="physdesc-tab" nodeset="instance('coin')/nuds:descMeta/nuds:physDesc"/>
 			<xforms:bind id="refdesc-tab" nodeset="instance('coin')/nuds:descMeta/nuds:refDesc"/>
@@ -587,14 +587,14 @@
 
 			<!-- Load File -->
 			<xforms:submission id="load-submission" serialization="none" method="get"
-				action="{instance('exist-url')}{instance('control-instance')/collection-name}/objects/{instance('coin')/nuds:nudsHeader/nuds:nudsid}.xml" xxforms:username="admin" xxforms:password=""
+				action="{instance('exist-url')}{instance('control-instance')/collection-name}/objects/{instance('coin')/nuds:control/nuds:recordId}.xml" xxforms:username="admin" xxforms:password=""
 				replace="instance" instance="coin">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Error loading file.</xforms:message>
 			</xforms:submission>
 
 			<!-- Save File -->
 			<xforms:submission id="save-submission" ref="instance('coin')" xxforms:username="admin" xxforms:password=""
-				action="{instance('exist-url')}{instance('control-instance')/collection-name}/objects/{instance('coin')/nuds:nudsHeader/nuds:nudsid}.xml" method="put" replace="none">
+				action="{instance('exist-url')}{instance('control-instance')/collection-name}/objects/{instance('coin')/nuds:control/nuds:recordId}.xml" method="put" replace="none">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Save Error. Are all required inputs filled?</xforms:message>
 
 				<xforms:action ev:event="xforms-submit-done">
@@ -611,7 +611,7 @@
 					<!-- update the conceptual object, if applicable, to Solr, if the findspot has been changed -->
 					<!--<xforms:action
 						if="instance('findspot-temp')/resource != instance('coin')//nuds:findspot/@xlink:href or instance('findspot-temp')/name != instance('coin')//nuds:findspot/nuds:name or instance('findspot-temp')/coordinates != instance('coin')//nuds:findspot/gml:Point/gml:coordinates">
-						<xforms:action if="string(instance('typeDesc-resource')/nuds:nudsHeader/nuds:nudsid)">
+						<xforms:action if="string(instance('typeDesc-resource')/nuds:control/nuds:recordId)">
 							<xforms:send submission="conceptual-query-solr-for-publication"/>
 						</xforms:action>
 					</xforms:action>-->
@@ -630,13 +630,13 @@
 
 			<!-- submission to query solr to see if the document is published -->
 			<xforms:submission id="query-solr-for-publication" serialization="none" method="get"
-				action="{instance('config')/solr_published}select/?q=collection-name:{instance('control-instance')/collection-name} AND id:&#x022;{instance('coin')/nuds:nudsHeader/nuds:nudsid}&#x022;"
+				action="{instance('config')/solr_published}select/?q=collection-name:{instance('control-instance')/collection-name} AND id:&#x022;{instance('coin')/nuds:control/nuds:recordId}&#x022;"
 				replace="instance" instance="is-published">
 				<!-- if the document is found in solr, get the updated solr doc -->
 				<xforms:send ev:event="xforms-submit-done" if="instance('is-published')/result[@name='response']/@numFound = '1'" submission="to-solr"/>
 			</xforms:submission>
 			<xforms:submission id="conceptual-query-solr-for-publication" serialization="none" method="get"
-				action="{instance('config')/solr_published}select/?q=collection-name:{instance('control-instance')/collection-name} AND id:&#x022;{instance('typeDesc-resource')/nuds:nudsHeader/nuds:nudsid}&#x022;"
+				action="{instance('config')/solr_published}select/?q=collection-name:{instance('control-instance')/collection-name} AND id:&#x022;{instance('typeDesc-resource')/nuds:control/nuds:recordId}&#x022;"
 				replace="instance" instance="is-published">
 				<!-- if the document is found in solr, get the updated solr doc -->
 				<xforms:send ev:event="xforms-submit-done" if="instance('is-published')/result[@name='response']/@numFound = '1'" submission="conceptual-to-solr"/>
@@ -649,7 +649,7 @@
 			</xforms:submission>
 			<!-- access service to read in pre-transformed solr doc -->
 			<xforms:submission id="to-solr" method="get" replace="instance" instance="addIndex" serialization="none"
-				resource="{instance('config')/url}id/{instance('coin')/nuds:nudsHeader/nuds:nudsid}.solr">
+				resource="{instance('config')/url}id/{instance('coin')/nuds:control/nuds:recordId}.solr">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Error transforming NUDS document to Solr document.</xforms:message>
 				<xforms:action ev:event="xforms-submit-done">
 					<xforms:insert context="instance('addIndex')/doc" origin="instance('collection-field')"/>
@@ -657,7 +657,7 @@
 				</xforms:action>
 			</xforms:submission>
 			<xforms:submission id="conceptual-to-solr" method="get" replace="instance" instance="addIndex" serialization="none"
-				resource="{instance('config')/url}id/{instance('typeDesc-resource')/nuds:nudsHeader/nuds:nudsid}.solr">
+				resource="{instance('config')/url}id/{instance('typeDesc-resource')/nuds:control/nuds:recordId}.solr">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Error transforming NUDS document to Solr document.</xforms:message>
 				<xforms:action ev:event="xforms-submit-done">
 					<xforms:insert context="instance('addIndex')/doc" origin="instance('collection-field')"/>
@@ -687,10 +687,10 @@
 				<xforms:action ev:event="xforms-submit-done">
 
 					<!-- load object or create new one -->
-					<xforms:setvalue ref="instance('coin')/nuds:nudsHeader/nuds:nudsid" value="xxforms:get-request-parameter('id')"/>
+					<xforms:setvalue ref="instance('coin')/nuds:control/nuds:recordId" value="xxforms:get-request-parameter('id')"/>
 
 					<!-- if the id is successfully passed from a url parameter, load the document -->
-					<xforms:action if="string(instance('coin')/nuds:nudsHeader/nuds:nudsid)">
+					<xforms:action if="string(instance('coin')/nuds:control/nuds:recordId)">
 						<xforms:send submission="load-submission"/>
 						<!-- if typeDesc is an xlink:href, set the resource case -->
 						<xforms:action if="instance('coin')/nuds:descMeta/nuds:typeDesc/@xlink:href">
@@ -704,16 +704,16 @@
 						<xforms:setvalue ref="instance('findspot-temp')/coordinates" value="instance('coin')//nuds:findspot/gml:Point/gml:coordinates"/>
 					</xforms:action>
 
-					<!-- generate unique id and populate adminDesc and nudsHeader fields with required information -->
-					<xforms:action if="not(string(instance('coin')/nuds:nudsHeader/nuds:nudsid))">
-						<xforms:setvalue ref="instance('coin')/nuds:nudsHeader/nuds:nudsid" value="substring(string(digest( string( random( true ) ), 'MD5', 'hex' )), 1, 10)"/>
-						<!-- set nudsHeader data from config if it is a new document -->
-						<xforms:setvalue ref="instance('coin')/nuds:nudsHeader/nuds:publicationStmt/nuds:publisher" value="instance('config')/template/publisher"/>
-						<xforms:setvalue ref="instance('coin')/nuds:nudsHeader/nuds:publicationStmt/nuds:createdBy" value="instance('config')/template/createdBy"/>
-						<xforms:setvalue ref="instance('coin')/nuds:nudsHeader/nuds:publicationStmt/nuds:project" value="instance('config')/template/project"/>
-						<xforms:setvalue ref="instance('coin')/nuds:nudsHeader/nuds:publicationStmt/nuds:langUsage/nuds:language" value="instance('config')/template/language"/>
-						<xforms:setvalue ref="instance('coin')/nuds:nudsHeader/nuds:publicationStmt/nuds:langUsage/nuds:language/@langcode" value="instance('config')/template/language/@langcode"/>
-						<xforms:setvalue ref="instance('coin')/nuds:nudsHeader/nuds:rightsStmt/nuds:copyrightHolder" value="instance('config')/template/copyrightHolder"/>
+					<!-- generate unique id and populate adminDesc and control fields with required information -->
+					<xforms:action if="not(string(instance('coin')/nuds:control/nuds:recordId))">
+						<xforms:setvalue ref="instance('coin')/nuds:control/nuds:recordId" value="substring(string(digest( string( random( true ) ), 'MD5', 'hex' )), 1, 10)"/>
+						<!-- set control data from config if it is a new document -->
+						<xforms:setvalue ref="instance('coin')/nuds:control/nuds:publicationStmt/nuds:publisher" value="instance('config')/template/publisher"/>
+						<xforms:setvalue ref="instance('coin')/nuds:control/nuds:publicationStmt/nuds:createdBy" value="instance('config')/template/createdBy"/>
+						<xforms:setvalue ref="instance('coin')/nuds:control/nuds:publicationStmt/nuds:project" value="instance('config')/template/project"/>
+						<xforms:setvalue ref="instance('coin')/nuds:control/nuds:publicationStmt/nuds:langUsage/nuds:language" value="instance('config')/template/language"/>
+						<xforms:setvalue ref="instance('coin')/nuds:control/nuds:publicationStmt/nuds:langUsage/nuds:language/@langcode" value="instance('config')/template/language/@langcode"/>
+						<xforms:setvalue ref="instance('coin')/nuds:control/nuds:rightsStmt/nuds:copyrightHolder" value="instance('config')/template/copyrightHolder"/>
 						<!-- populate adminDesc -->
 						<xforms:action if="string(instance('config')/template/collection)">
 							<xforms:insert context="instance('coin')/nuds:descMeta/nuds:adminDesc" origin="instance('collection-template')"/>
@@ -761,7 +761,7 @@
 
 			<!-- save conceptual object -->
 			<xforms:submission id="save-conceptual" ref="instance('typeDesc-resource')" xxforms:username="admin" xxforms:password=""
-				action="{instance('exist-url')}{instance('control-instance')/collection-name}/objects/{instance('typeDesc-resource')/nuds:nudsHeader/nuds:nudsid}.xml" method="put" replace="none">
+				action="{instance('exist-url')}{instance('control-instance')/collection-name}/objects/{instance('typeDesc-resource')/nuds:control/nuds:recordId}.xml" method="put" replace="none">
 				<xforms:setvalue ev:event="xforms-submit-done" ref="instance('status')">Conceptual object saved.</xforms:setvalue>
 				<xforms:message ev:event="xforms-submit-error" level="modal">Error saving conceptual object.</xforms:message>
 				<!-- check to see if the document is already published to Solr -->
@@ -793,7 +793,7 @@
 		<xi:include href="oxf:/xbl/numishare/mark/mark.xbl" xi:omit-xml-base="true"/>
 		<xi:include href="oxf:/xbl/numishare/material/material.xbl" xi:omit-xml-base="true"/>
 		<xi:include href="oxf:/xbl/numishare/mint/mint.xbl" xi:omit-xml-base="true"/>
-		<xi:include href="oxf:/xbl/numishare/nudsHeader/nudsHeader.xbl" xi:omit-xml-base="true"/>
+		<xi:include href="oxf:/xbl/numishare/control/control.xbl" xi:omit-xml-base="true"/>
 		<xi:include href="oxf:/xbl/numishare/output-typeDesc/output-typeDesc.xbl" xi:omit-xml-base="true"/>
 		<xi:include href="oxf:/xbl/numishare/reference/reference.xbl" xi:omit-xml-base="true"/>
 		<xi:include href="oxf:/xbl/numishare/region/region.xbl" xi:omit-xml-base="true"/>
@@ -818,8 +818,8 @@
 					<xhtml:div class="submission">
 						<xforms:trigger appearance="minimal">
 							<xforms:action ev:event="DOMActivate">
-								<xforms:action if="not(string(instance('coin')/nuds:nudsHeader/nuds:publicationStmt/nuds:date/@standardDateTime))">
-									<xforms:setvalue ref="instance('coin')/nuds:nudsHeader/nuds:publicationStmt/nuds:date/@standardDateTime" value="current-dateTime()"/>
+								<xforms:action if="not(string(instance('coin')/nuds:control/nuds:publicationStmt/nuds:date/@standardDateTime))">
+									<xforms:setvalue ref="instance('coin')/nuds:control/nuds:publicationStmt/nuds:date/@standardDateTime" value="current-dateTime()"/>
 								</xforms:action>
 								<xforms:send submission="save-submission"/>
 							</xforms:action>
@@ -832,7 +832,7 @@
 					<xhtml:h1>Create/Edit Coin</xhtml:h1>
 					<xforms:group ref="instance('coin')">
 						<xhtml:div>
-							<xforms:input ref="nuds:nudsHeader/nuds:nudsid">
+							<xforms:input ref="nuds:control/nuds:recordId">
 								<xforms:label>NUDS ID</xforms:label>
 								<xforms:alert>Required; Must be URI</xforms:alert>
 							</xforms:input>
@@ -1527,7 +1527,7 @@
 													<xforms:group ref="instance('typeDesc-resource')/nuds:descMeta/nuds:typeDesc">
 														<!-- if the conceptual document already contains a reference to the current physical object, provide a button to disassociate it -->
 														<xforms:group
-															ref=".[instance('typeDesc-resource')/nuds:digRep/nuds:associatedObject[@xlink:href = concat(instance('config')/url, 'id/', instance('coin')/nuds:nudsHeader/nuds:nudsid)]]">
+															ref=".[instance('typeDesc-resource')/nuds:digRep/nuds:associatedObject[@xlink:href = concat(instance('config')/url, 'id/', instance('coin')/nuds:control/nuds:recordId)]]">
 															<xforms:trigger>
 																<xforms:action ev:event="DOMActivate">
 																	<xforms:dispatch name="fr-show" target="disassociateObject-dialog"/>
@@ -1536,7 +1536,7 @@
 															</xforms:trigger>
 														</xforms:group>
 														<xforms:group
-															ref=".[not(instance('typeDesc-resource')/nuds:digRep/nuds:associatedObject[@xlink:href = concat(instance('config')/url, 'id/', instance('coin')/nuds:nudsHeader/nuds:nudsid)])]">
+															ref=".[not(instance('typeDesc-resource')/nuds:digRep/nuds:associatedObject[@xlink:href = concat(instance('config')/url, 'id/', instance('coin')/nuds:control/nuds:recordId)])]">
 															<xhtml:div>
 																<span class="warning">Is the information displayed below correct?</span>
 																<!-- if the typeDesc is correct, insert a reference to current nuds document into the conceptual document, otherwise remove the @xlink:href and typedesc instance -->
@@ -1567,7 +1567,7 @@
 																	<xforms:insert origin="instance('associatedObject-template')" context="instance('typeDesc-resource')/nuds:digRep"
 																		nodeset="./child::node()[last()]"/>
 																	<xforms:setvalue ref="instance('typeDesc-resource')/nuds:digRep/nuds:associatedObject[last()]/@xlink:href"
-																		value="concat(instance('config')/url, 'id/', instance('coin')/nuds:nudsHeader/nuds:nudsid)"/>
+																		value="concat(instance('config')/url, 'id/', instance('coin')/nuds:control/nuds:recordId)"/>
 																	<xforms:send submission="save-conceptual"/>
 																</xforms:action>
 															</fr:positive-choice>
@@ -1579,7 +1579,7 @@
 															<fr:positive-choice>
 																<xforms:action ev:event="DOMActivate">
 																	<xforms:delete context="instance('typeDesc-resource')/nuds:digRep"
-																		nodeset="nuds:associatedObject[@xlink:href = concat(instance('config')/url, 'id/', instance('coin')/nuds:nudsHeader/nuds:nudsid)]"/>
+																		nodeset="nuds:associatedObject[@xlink:href = concat(instance('config')/url, 'id/', instance('coin')/nuds:control/nuds:recordId)]"/>
 																	<xforms:delete context="instance('typeDesc-resource')" nodeset="nuds:digRep"
 																		if="count(instance('typeDesc-resource')/nuds:digRep/nuds:associatedObject) = 0"/>
 																	<xforms:send submission="save-conceptual"/>
@@ -2106,9 +2106,9 @@
 								</xforms:repeat>
 							</fr:tab>
 							<!--**************************************** NUDS HEADER **********************************-->
-							<fr:tab bind="nudsHeader-tab">
+							<fr:tab bind="control-tab">
 								<fr:label>Record Metadata</fr:label>
-								<numishare:nudsHeader/>
+								<numishare:control/>
 							</fr:tab>
 						</fr:tabview>
 					</xforms:group>

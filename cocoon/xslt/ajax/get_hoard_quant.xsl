@@ -38,7 +38,7 @@
 		</xsl:if>
 	</xsl:variable>
 
-	<xsl:variable name="id" select="normalize-space(//*[local-name()='nudsid'])"/>
+	<xsl:variable name="id" select="normalize-space(//*[local-name()='recordId'])"/>
 	<xsl:variable name="title" select="normalize-space(//*[local-name()='descMeta']/*[local-name()='title'])"/>
 
 	<xsl:variable name="contentsDesc" as="element()*">
@@ -59,7 +59,7 @@
 
 			<xsl:if test="string-length($id-param) &gt; 0">
 				<xsl:for-each select="document(concat('http://nomisma.org/apis/getNuds?identifiers=', $id-param))//nuds:nuds">
-					<object xlink:href="http://nomisma.org/id/{nuds:nudsHeader/nuds:nudsid}">
+					<object xlink:href="http://nomisma.org/id/{nuds:control/nuds:recordId}">
 						<xsl:copy-of select="."/>
 					</object>
 				</xsl:for-each>

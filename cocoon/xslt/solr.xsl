@@ -36,7 +36,7 @@
 
 			<xsl:if test="string-length($id-param) &gt; 0">
 				<xsl:for-each select="document(concat('http://nomisma.org/apis/getNuds?identifiers=', encode-for-uri($id-param)))//nuds:nuds">
-					<object xlink:href="http://nomisma.org/id/{nuds:nudsHeader/nuds:nudsid}">
+					<object xlink:href="http://nomisma.org/id/{nuds:control/nuds:recordId}">
 						<xsl:copy-of select="."/>
 					</object>
 				</xsl:for-each>
