@@ -277,13 +277,11 @@
 				<xforms:bind nodeset="ctype_enabled" type="xs:boolean"/>
 				<xforms:bind nodeset="template">
 					<!-- about the electronic record -->
-					<xforms:bind nodeset="publisher" required="true()"/>
+					<xforms:bind nodeset="agencyName" required="true()"/>
 					<xforms:bind nodeset="copyrightHolder" required="true()"/>
 					<xforms:bind nodeset="createdBy"/>
 					<xforms:bind nodeset="project"/>
-					<xforms:bind nodeset="language">
-						<xforms:bind constraint="string-length(@langcode) &gt; 0"/>
-					</xforms:bind>
+					<xforms:bind nodeset="language" required="true()"/>
 					<!-- about the physical item -->
 					<xforms:bind nodeset="repository"/>
 					<xforms:bind nodeset="owner"/>
@@ -347,7 +345,7 @@
 
 			</xforms:submission>
 		</xforms:model>
-		<xi:include href="oxf:/xbl/numishare/banner-upload/banner-upload.xbl" xi:omit-xml-base="true"/>
+		<xi:include href="xbl/banner-upload/banner-upload.xbl" xi:omit-xml-base="true"/>
 	</xhtml:head>
 
 	<xhtml:body>
@@ -468,14 +466,14 @@
 											<div class="subsection">
 												<h3>Electronic Records</h3>
 												<p>The following fields pertain to electronic records and will be populated automatically into each new object record. They can be changed on a
-													per-document bases from within the object editing form. The publisher is the entity responsible for the web site which provides access to the
+													per-document bases from within the object editing form. The maintenance agency is the entity responsible for the web site which provides access to the
 													electronic record. The copyright holder maintains the intellectual property (and may differ from the repository or physical custodian). The project
 													field pertains to the project responsible for the creation of the record. CreatedBy denotes the individual responsible for entering metadata. The
 													language refers to the language of the electronic record.</p>
 												<p>Publisher, copyright holder, and language are required. Project and createdBy may be left blank.</p>
 												<div>
-													<xforms:input ref="publisher">
-														<xforms:label>Publisher</xforms:label>
+													<xforms:input ref="agencyName">
+														<xforms:label>Maintenance Agency</xforms:label>
 														<xforms:alert>Required</xforms:alert>
 													</xforms:input>
 												</div>

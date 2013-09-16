@@ -53,7 +53,7 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:variable>
-	<xsl:variable name="publisher" select="exsl:node-set($config)/config/template/publisher"/>
+	<xsl:variable name="publisher" select="exsl:node-set($config)/config/template/agencyName"/>
 	<xsl:variable name="copyrightHolder" select="exsl:node-set($config)/config/template/copyrightHolder"/>
 	<xsl:variable name="language" select="exsl:node-set($config)/config/template/language"/>
 	<xsl:variable name="langcode" select="exsl:node-set($config)/config/template/language/@langcode"/>

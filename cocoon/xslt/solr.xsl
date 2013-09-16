@@ -21,7 +21,7 @@
 	<xsl:variable name="url" select="/content/config/url"/>
 	<xsl:variable name="geonames_api_key" select="/content/config/geonames_api_key"/>
 	<xsl:variable name="sparql_endpoint" select="/content/config/sparql_endpoint"/>
-	<xsl:variable name="publisher" select="/content/config/template/publisher"/>
+	<xsl:variable name="publisher" select="/content/config/template/agencyName"/>
 
 	<xsl:variable name="nudsGroup">
 		<nudsGroup>

@@ -60,17 +60,9 @@
 								<xsl:call-template name="nuds_content"/>
 
 								<!-- show associated objects, preferencing those from Metis first -->
-								<xsl:choose>
-									<xsl:when test="string($sparql_endpoint)">
-										<cinclude:include src="cocoon:/widget?uri={concat('http://numismatics.org/ocre/', 'id/', $id)}&amp;template=display"/>
-									</xsl:when>
-									<xsl:when test="count(nuds:digRep/nuds:associatedObject) &gt; 0">
-										<div class="objects">
-											<h2>Examples of this type</h2>
-											<xsl:apply-templates select="nuds:digRep/nuds:associatedObject"/>
-										</div>
-									</xsl:when>
-								</xsl:choose>
+								<xsl:if test="string($sparql_endpoint)">
+									<cinclude:include src="cocoon:/widget?uri={concat('http://numismatics.org/ocre/', 'id/', $id)}&amp;template=display"/>
+								</xsl:if>
 							</div>
 						</div>
 					</xsl:when>
@@ -435,124 +427,8 @@
 				</xsl:for-each>
 			</ul>
 		</li>
-	</xsl:template>-->
-
-	<xsl:template match="nuds:associatedObject">
-		<xsl:variable name="object">
-			<xsl:copy-of select="document(concat(@xlink:href, '.xml'))/nuds:nuds/*"/>
-		</xsl:variable>
-		<div class="g_doc">
-			<span class="result_link">
-				<a href="{@xlink:href}" target="_blank">
-					<xsl:value-of select="exsl:node-set($object)/nuds:descMeta/nuds:title"/>
-				</a>
-			</span>
-			<xsl:if test="exsl:node-set($object)/nuds:digRep/mets:fileSec">
-				<div class="gi_c">
-					<xsl:if test="exsl:node-set($object)/nuds:digRep/mets:fileSec/mets:fileGrp[@USE='obverse']">
-						<xsl:choose>
-							<xsl:when test="contains(exsl:node-set($object)/nuds:digRep/mets:fileSec/mets:fileGrp[@USE='obverse']/mets:file[@USE='reference']/mets:FLocat/@xlink:href, 'flickr')">
-								<xsl:variable name="photo_id"
-									select="substring-before(tokenize(exsl:node-set($object)/nuds:digRep/mets:fileSec/mets:fileGrp[@USE='obverse']/mets:file[@USE='reference']/mets:FLocat/@xlink:href, '/')[last()], '_')"/>
-								<xsl:variable name="flickr_uri" select="numishare:get_flickr_uri($photo_id)"/>
-
-								<a href="{$flickr_uri}" target="_blank" class="flickrthumb">
-									<img class="gi" src="{exsl:node-set($object)/nuds:digRep/mets:fileSec/mets:fileGrp[@USE='obverse']/mets:file[@USE='thumbnail']/mets:FLocat/@xlink:href}"/>
-								</a>
-							</xsl:when>
-							<xsl:when test="contains(exsl:node-set($object)/nuds:digRep/mets:fileSec/mets:fileGrp[@USE='obverse']/mets:file[@USE='reference']/mets:FLocat/@xlink:href, 'http://')">
-								<a href="{exsl:node-set($object)/nuds:digRep/mets:fileSec/mets:fileGrp[@USE='obverse']/mets:file[@USE='reference']/mets:FLocat/@xlink:href}" class="thumbImage">
-									<img class="gi" src="{exsl:node-set($object)/nuds:digRep/mets:fileSec/mets:fileGrp[@USE='obverse']/mets:file[@USE='thumbnail']/mets:FLocat/@xlink:href}"/>
-								</a>
-							</xsl:when>
-							<xsl:otherwise>
-								<a href="{concat($display_path, exsl:node-set($object)/nuds:digRep/mets:fileSec/mets:fileGrp[@USE='obverse']/mets:file[@USE='reference']/mets:FLocat/@xlink:href)}"
-									class="thumbImage">
-									<img class="gi"
-										src="{concat($display_path, exsl:node-set($object)/nuds:digRep/mets:fileSec/mets:fileGrp[@USE='obverse']/mets:file[@USE='thumbnail']/mets:FLocat/@xlink:href)}"
-									/>
-								</a>
-							</xsl:otherwise>
-						</xsl:choose>
-					</xsl:if>
-					<xsl:if test="exsl:node-set($object)/nuds:digRep/mets:fileSec/mets:fileGrp[@USE='reverse']">
-						<xsl:choose>
-							<xsl:when test="contains(exsl:node-set($object)/nuds:digRep/mets:fileSec/mets:fileGrp[@USE='reverse']/mets:file[@USE='reference']/mets:FLocat/@xlink:href, 'flickr')">
-								<xsl:variable name="photo_id"
-									select="substring-before(tokenize(exsl:node-set($object)/nuds:digRep/mets:fileSec/mets:fileGrp[@USE='reverse']/mets:file[@USE='reference']/mets:FLocat/@xlink:href, '/')[last()], '_')"/>
-								<a
-									href="{document(concat('http://api.flickr.com/services/rest/?method=flickr.photos.getInfo&amp;api_key=', $flickr-api-key, '&amp;photo_id=', $photo_id, '&amp;format=rest'))/rsp/photo/urls/url[@type='photopage']}"
-									target="_blank" class="flickrthumb">
-									<img class="gi" src="{exsl:node-set($object)/nuds:digRep/mets:fileSec/mets:fileGrp[@USE='reverse']/mets:file[@USE='thumbnail']/mets:FLocat/@xlink:href}"/>
-								</a>
-							</xsl:when>
-							<xsl:when test="contains(exsl:node-set($object)/nuds:digRep/mets:fileSec/mets:fileGrp[@USE='reverse']/mets:file[@USE='reference']/mets:FLocat/@xlink:href, 'http://')">
-								<a href="{exsl:node-set($object)/nuds:digRep/mets:fileSec/mets:fileGrp[@USE='reverse']/mets:file[@USE='reference']/mets:FLocat/@xlink:href}" class="thumbImage">
-									<img class="gi" src="{exsl:node-set($object)/nuds:digRep/mets:fileSec/mets:fileGrp[@USE='reverse']/mets:file[@USE='thumbnail']/mets:FLocat/@xlink:href}"/>
-								</a>
-							</xsl:when>
-							<xsl:otherwise>
-								<a href="{concat($display_path, exsl:node-set($object)/nuds:digRep/mets:fileSec/mets:fileGrp[@USE='reverse']/mets:file[@USE='reference']/mets:FLocat/@xlink:href)}"
-									class="thumbImage">
-									<img class="gi"
-										src="{concat($display_path, exsl:node-set($object)/nuds:digRep/mets:fileSec/mets:fileGrp[@USE='reverse']/mets:file[@USE='thumbnail']/mets:FLocat/@xlink:href)}"
-									/>
-								</a>
-							</xsl:otherwise>
-						</xsl:choose>
-					</xsl:if>
-				</div>
-			</xsl:if>
-			<dl>
-				<xsl:if test="exsl:node-set($object)/nuds:control/nuds:publicationStmt/nuds:publisher">
-					<div>
-						<dt><xsl:value-of select="numishare:regularize_node('publisher', $lang)"/>: </dt>
-						<dd style="margin-left:125px;">
-							<xsl:value-of select="exsl:node-set($object)/nuds:control/nuds:publicationStmt/nuds:publisher"/>
-						</dd>
-					</div>
-				</xsl:if>
-				<!--<xsl:if test="exsl:node-set($object)/nuds:descMeta/nuds:descMeta/nuds:adminDesc/nuds:owner">
-					<div>
-						<dt>Owner: </dt>
-						<dd style="margin-left:125px;">
-							<xsl:for-each select="exsl:node-set($object)/nuds:descMeta/nuds:adminDesc/nuds:owner">
-								<xsl:value-of select="."/>
-								<xsl:if test="not(position() = last())">
-									<xsl:text>, </xsl:text>
-								</xsl:if>
-							</xsl:for-each>
-						</dd>
-					</div>
-				</xsl:if>-->
-				<xsl:if test="exsl:node-set($object)/nuds:descMeta/nuds:physDesc/nuds:axis">
-					<div>
-						<dt><xsl:value-of select="numishare:regularize_node('axis', $lang)"/>: </dt>
-						<dd style="margin-left:125px;">
-							<xsl:value-of select="exsl:node-set($object)/nuds:descMeta/nuds:physDesc/nuds:axis"/>
-						</dd>
-					</div>
-				</xsl:if>
-				<xsl:if test="exsl:node-set($object)/nuds:descMeta/nuds:physDesc/nuds:measurementsSet/nuds:diameter">
-					<div>
-						<dt><xsl:value-of select="numishare:regularize_node('diameter', $lang)"/>: </dt>
-						<dd style="margin-left:125px;">
-							<xsl:value-of select="exsl:node-set($object)/nuds:descMeta/nuds:physDesc/nuds:measurementsSet/nuds:diameter"/>
-						</dd>
-					</div>
-				</xsl:if>
-				<xsl:if test="exsl:node-set($object)/nuds:descMeta/nuds:physDesc/nuds:measurementsSet/nuds:weight">
-					<div>
-						<dt><xsl:value-of select="numishare:regularize_node('weight', $lang)"/>: </dt>
-						<dd style="margin-left:125px;">
-							<xsl:value-of select="exsl:node-set($object)/nuds:descMeta/nuds:physDesc/nuds:measurementsSet/nuds:weight"/>
-						</dd>
-					</div>
-				</xsl:if>
-			</dl>
-		</div>
-	</xsl:template>
-
+		</xsl:template>-->
+	
 	<xsl:template name="obverse_image">
 		<xsl:variable name="obverse_image">
 			<xsl:if test="string(//mets:fileGrp[@USE='obverse']/mets:file[@USE='reference']/mets:FLocat/@xlink:href)">

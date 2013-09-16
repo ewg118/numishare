@@ -287,7 +287,7 @@
 				</xsl:otherwise>
 			</xsl:choose>
 			<dcterms:publisher>
-				<xsl:value-of select="descendant::nh:control//nh:publisher"/>
+				<xsl:value-of select="descendant::nh:control/nh:maintenanceAgency/nh:agencyName"/>
 			</dcterms:publisher>
 			<xsl:for-each select="descendant::nh:geogname[@xlink:role='findspot'][string(@xlink:href)]">
 				<xsl:variable name="href" select="@xlink:href"/>
@@ -434,7 +434,7 @@
 			<link rel="search" type="application/opensearchdescription+xml" href="{$url}opensearch.xml"/>
 			<author>
 				<name>
-					<xsl:value-of select="//config/templates/publisher"/>
+					<xsl:value-of select="//config/templates/agencyName"/>
 				</name>
 			</author>
 			<!-- opensearch results -->
