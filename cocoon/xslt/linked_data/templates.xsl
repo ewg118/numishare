@@ -112,9 +112,9 @@
 							<xsl:value-of select="nuds:descMeta/nuds:adminDesc/nuds:identifier"/>
 						</dcterms:identifier>
 					</xsl:if>
-					<xsl:if test="nuds:control/nuds:publicationStmt/nuds:publisher">
+					<xsl:if test="nuds:control/nuds:maintenanceAgency/nuds:agencyName">
 						<dcterms:publisher>
-							<xsl:value-of select="nuds:control/nuds:publicationStmt/nuds:publisher"/>
+							<xsl:value-of select="nuds:control/nuds:maintenanceAgency/nuds:agencyName"/>
 						</dcterms:publisher>
 					</xsl:if>
 					<xsl:for-each select="descendant::nuds:collection">
@@ -287,7 +287,7 @@
 				</xsl:otherwise>
 			</xsl:choose>
 			<dcterms:publisher>
-				<xsl:value-of select="descendant::nh:control//nh:publisher"/>
+				<xsl:value-of select="descendant::nh:control/nuds:maintenanceAgency/nuds:agencyName"/>
 			</dcterms:publisher>
 			<xsl:for-each select="descendant::nh:geogname[@xlink:role='findspot'][string(@xlink:href)]">
 				<xsl:variable name="href" select="@xlink:href"/>
@@ -434,7 +434,7 @@
 			<link rel="search" type="application/opensearchdescription+xml" href="{$url}opensearch.xml"/>
 			<author>
 				<name>
-					<xsl:value-of select="//config/templates/publisher"/>
+					<xsl:value-of select="//config/templates/agencyName"/>
 				</name>
 			</author>
 			<!-- opensearch results -->

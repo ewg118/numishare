@@ -7,7 +7,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xxforms="http://orbeon.org/oxf/xml/xforms" xmlns:widget="http://orbeon.org/oxf/xml/widget"
 	xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:exist="http://exist.sourceforge.net/NS/exist"
-	xmlns:xxi="http://orbeon.org/oxf/xml/xinclude" xmlns:numishare="http://code.google.com/p/numishare/" xmlns:xlink="http://www.w3.org/1999/xlink">
+	xmlns:xxi="http://orbeon.org/oxf/xml/xinclude" xmlns:numishare="http://code.google.com/p/numishare/" xmlns:xlink="http://www.w3.org/1999/xlink"
+	xmlns:nuds="http://nomisma.org/nuds">
 	<head>
 		<title>Numishare: Administrative Interface</title>
 		<!-- Core + Skin CSS -->
@@ -30,6 +31,7 @@
 				<controls xmlns="">
 					<id/>
 					<identifiers/>
+					<publicationStatus/>
 					<collection-name/>
 					<status/>
 					<error/>
@@ -56,7 +58,7 @@
 			</xforms:instance>
 
 			<xforms:instance id="config-template">
-				<config xmlns:xlink="http://www.w3.org/1999/xlink" version="0.1">
+				<config xmlns:xlink="http://www.w3.org/1999/xlink" version="0.2">
 					<firstrun/>
 					<title>Numishare - Digital Artifactual Exhibition</title>
 					<description>Enter short description for collection.</description>
@@ -76,15 +78,13 @@
 					<pelagios_enabled>false</pelagios_enabled>
 					<ctype_enabled>false</ctype_enabled>
 					<template>
+						<agencyName/>
 						<copyrightHolder/>
 						<collection/>
-						<language langcode=""/>
+						<language/>
 						<license>http://opendatacommons.org/licenses/odbl/</license>
 						<owner/>
-						<publisher/>
 						<repository/>
-						<project/>
-						<createdBy/>
 					</template>
 					<images>
 						<absolute_path>/usr/local/projects/numishare/cocoon/</absolute_path>
@@ -131,197 +131,16 @@
 				</config>
 			</xforms:instance>
 
+			<xforms:instance id="coin" xxforms:exclude-result-prefixes="#all">
+				<nuds xmlns=""/>
+			</xforms:instance>
+
 			<xforms:instance id="imports-template">
 				<imports/>
 			</xforms:instance>
 
 			<xforms:instance id="languages">
-				<languages xmlns="">
-					<language value="aa">Afar</language>
-					<language value="ab">Abkhaz</language>
-					<language value="ae">Avestan</language>
-					<language value="af">Afrikaans</language>
-					<language value="ak">Akan</language>
-					<language value="am">Amharic</language>
-					<language value="an">Aragonese</language>
-					<language value="ar">Arabic</language>
-					<language value="as">Assamese</language>
-					<language value="av">Avar</language>
-					<language value="ay">Aymara</language>
-					<language value="az">Azerbaijani</language>
-					<language value="ba">Bashkir</language>
-					<language value="be">Belarusian</language>
-					<language value="bg">Bulgarian</language>
-					<language value="bh">Bihari</language>
-					<language value="bi">Bislama</language>
-					<language value="bm">Bambara</language>
-					<language value="bn">Bengali</language>
-					<language value="bo">Tibetan</language>
-					<language value="br">Breton</language>
-					<language value="bs">Bosnian</language>
-					<language value="ca">Catalan, Valencian</language>
-					<language value="ce">Chechen</language>
-					<language value="ch">Chamorro</language>
-					<language value="co">Corsican</language>
-					<language value="cr">Cree</language>
-					<language value="cs">Czech</language>
-					<language value="cu">Church Slavic</language>
-					<language value="cv">Chuvash</language>
-					<language value="cy">Welsh</language>
-					<language value="da">Danish</language>
-					<language value="de">German</language>
-					<language value="dv">Dhivehi, Dhivehi, Maldivian</language>
-					<language value="dz">Dzongkha</language>
-					<language value="ee">Ewe</language>
-					<language value="el">Modern Greek</language>
-					<language value="en">English</language>
-					<language value="eo">Esperanto</language>
-					<language value="es">Spanish, Castilian</language>
-					<language value="et">Estonian</language>
-					<language value="eu">Basque</language>
-					<language value="fa">Persian</language>
-					<language value="ff">Fula</language>
-					<language value="fi">Finnish</language>
-					<language value="fj">Fijian</language>
-					<language value="fo">Faroese</language>
-					<language value="fr">French</language>
-					<language value="fy">West Frisian</language>
-					<language value="ga">Irish</language>
-					<language value="gd">Gaelic, Scottish Gaelic</language>
-					<language value="gl">Galician</language>
-					<language value="gn">Guaraní</language>
-					<language value="gu">Gujarati</language>
-					<language value="gv">Manx</language>
-					<language value="ha">Hausa</language>
-					<language value="he">Modern Hebrew</language>
-					<language value="hi">Hindi</language>
-					<language value="ho">Hiri Motu</language>
-					<language value="hr">Croatian</language>
-					<language value="ht">Haitian Creole, Haitian Creole</language>
-					<language value="hu">Hungarian</language>
-					<language value="hy">Armenian</language>
-					<language value="hz">Herero</language>
-					<language value="ia">Interlingua (International Auxiliary Language Association)</language>
-					<language value="id">Indonesian</language>
-					<language value="ie">Interlingue, Occidental</language>
-					<language value="ig">Igbo</language>
-					<language value="ii">Yi, Nuosu</language>
-					<language value="ik">Inupiaq</language>
-					<language value="io">Ido</language>
-					<language value="is">Icelandic</language>
-					<language value="it">Italian</language>
-					<language value="iu">Inuktitut</language>
-					<language value="ja">Japanese</language>
-					<language value="jv">Javanese</language>
-					<language value="ka">Georgian</language>
-					<language value="kg">Kongo</language>
-					<language value="ki">Gikuyu, Kikuyu</language>
-					<language value="kj">Kwanyama, Kuanyama</language>
-					<language value="kk">Kazakh</language>
-					<language value="kl">Kalaallisut, Greenlandic</language>
-					<language value="km">Central Khmer</language>
-					<language value="kn">Kannada</language>
-					<language value="ko">Korean</language>
-					<language value="kr">Kanuri</language>
-					<language value="ks">Kashmiri</language>
-					<language value="ku">Kurdish</language>
-					<language value="kv">Komi</language>
-					<language value="kw">Cornish</language>
-					<language value="ky">Kyrgyz, Kirgiz</language>
-					<language value="la">Latin</language>
-					<language value="lb">Luxembourgish, Letzeburgesch</language>
-					<language value="lg">Luganda</language>
-					<language value="li">Limburgish, Limburgan, Limburger</language>
-					<language value="ln">Lingala</language>
-					<language value="lo">Lao</language>
-					<language value="lt">Lithuanian</language>
-					<language value="lu">Luba-Katanga</language>
-					<language value="lv">Latvian</language>
-					<language value="mg">Malagasy</language>
-					<language value="mh">Marshallese</language>
-					<language value="mi">Māori</language>
-					<language value="mk">Macedonian</language>
-					<language value="ml">Malayalam</language>
-					<language value="mn">Mongolian</language>
-					<language value="mr">Marathi</language>
-					<language value="ms">Malay</language>
-					<language value="mt">Maltese</language>
-					<language value="my">Burmese</language>
-					<language value="na">Nauruan</language>
-					<language value="nb">Norwegian Bokmål</language>
-					<language value="nd">Northern Ndebele</language>
-					<language value="ne">Nepali</language>
-					<language value="ng">Ndonga</language>
-					<language value="nl">Dutch, Flemish</language>
-					<language value="nn">Norwegian Nynorsk</language>
-					<language value="no">Norwegian</language>
-					<language value="nr">Southern Ndebele</language>
-					<language value="nv">Navajo, Navaho</language>
-					<language value="ny">Chichewa, Chewa, Nyanja</language>
-					<language value="oc">Occitan (after 1500)</language>
-					<language value="oj">Anishinaabe</language>
-					<language value="om">Oromo</language>
-					<language value="or">Oriya</language>
-					<language value="os">Ossetic, Ossetian</language>
-					<language value="pa">Punjabi, Panjabi</language>
-					<language value="pi">Pali, Pāli</language>
-					<language value="pl">Polish</language>
-					<language value="ps">Pashto, Pushto</language>
-					<language value="pt">Portuguese</language>
-					<language value="qu">Quechua</language>
-					<language value="rm">Romansh</language>
-					<language value="rn">Kirundi</language>
-					<language value="ro">Romanian, Moldavian, Moldovan</language>
-					<language value="ru">Russian</language>
-					<language value="rw">Kinyarwanda</language>
-					<language value="sa">Sanskrit</language>
-					<language value="sc">Sardinian</language>
-					<language value="sd">Sindhi</language>
-					<language value="se">Northern Sami</language>
-					<language value="sg">Sango</language>
-					<language value="si">Sinhala, Sinhalese</language>
-					<language value="sk">Slovak</language>
-					<language value="sl">Slovene</language>
-					<language value="sm">Samoan</language>
-					<language value="sn">Shona</language>
-					<language value="so">Somali</language>
-					<language value="sq">Albanian</language>
-					<language value="sr">Serbian</language>
-					<language value="ss">Swati</language>
-					<language value="st">Sotho</language>
-					<language value="su">Sundanese</language>
-					<language value="sv">Swedish</language>
-					<language value="sw">Swahili</language>
-					<language value="ta">Tamil</language>
-					<language value="te">Telugu</language>
-					<language value="tg">Tajik</language>
-					<language value="th">Thai</language>
-					<language value="ti">Tigrinya</language>
-					<language value="tk">Turkmen</language>
-					<language value="tl">Tagalog</language>
-					<language value="tn">Tswana</language>
-					<language value="to">Tongan (Tonga Islands)</language>
-					<language value="tr">Turkish</language>
-					<language value="ts">Tsonga</language>
-					<language value="tt">Tatar</language>
-					<language value="tw">Twi</language>
-					<language value="ty">Tahitian</language>
-					<language value="ug">Uyghur, Uyghur</language>
-					<language value="uk">Ukrainian</language>
-					<language value="ur">Urdu</language>
-					<language value="uz">Uzbek</language>
-					<language value="ve">Venda</language>
-					<language value="vi">Vietnamese</language>
-					<language value="vo">Volapük</language>
-					<language value="wa">Walloon</language>
-					<language value="wo">Wolof</language>
-					<language value="xh">Xhosa</language>
-					<language value="yi">Yiddish</language>
-					<language value="yo">Yoruba</language>
-					<language value="za">Zhuang, Chuang</language>
-					<language value="zh">Chinese</language>
-					<language value="zu">Zulu</language>
-				</languages>
+				<xi:include href="instances/languages.xml"/>
 			</xforms:instance>
 
 			<xforms:instance id="eXist-xquery">
@@ -458,13 +277,9 @@
 				<xforms:bind nodeset="solr_all" required="true()"/>
 				<xforms:bind nodeset="template">
 					<!-- about the electronic record -->
-					<xforms:bind nodeset="publisher" required="true()"/>
+					<xforms:bind nodeset="agencyName" required="true()"/>
 					<xforms:bind nodeset="copyrightHolder" required="true()"/>
-					<xforms:bind nodeset="createdBy"/>
-					<xforms:bind nodeset="project"/>
-					<xforms:bind nodeset="language">
-						<xforms:bind constraint="string-length(@langcode) &gt; 0"/>
-					</xforms:bind>
+					<xforms:bind nodeset="language" required="true()"/>
 					<!-- about the physical item -->
 					<xforms:bind nodeset="repository"/>
 					<xforms:bind nodeset="owner"/>
@@ -594,6 +409,22 @@
 				replace="none" xxforms:username="admin" xxforms:password="">
 				<xforms:setvalue ev:event="xforms-submit-done" ref="instance('control-instance')/status">Object successfully deleted.</xforms:setvalue>
 			</xforms:submission>
+
+			<!-- ************************* LOAD/SAVE RECORD TO UPDATE PUBLICATIONSTATUS ********************** -->
+			<xforms:submission id="load-coin" serialization="none" method="get"
+				action="{instance('exist-url')}{instance('control-instance')/collection-name}/objects/{instance('control-instance')/id}.xml"
+				xxforms:username="admin" xxforms:password="" replace="instance" instance="coin">
+				<xforms:message ev:event="xforms-submit-error" level="modal">Error loading file.</xforms:message>
+				<xforms:action ev:event="xforms-submit-done">
+					<xforms:setvalue ref="instance('coin')/nuds:control/nuds:publicationStatus" value="instance('control-instance')/publicationStatus"/>
+					<xforms:send submission="save-coin"/>
+				</xforms:action>
+			</xforms:submission>
+
+			<xforms:submission id="save-coin" ref="instance('coin')" xxforms:username="admin" xxforms:password=""
+				action="{instance('exist-url')}{instance('control-instance')/collection-name}/objects/{instance('control-instance')/id}.xml" method="put"
+				replace="none"/>
+
 			<!-- ************************* SOLR SUBMISSIONS ************************** -->
 			<!-- query Solr for the id of all currently published documents and repost them to solr -->
 			<xforms:submission id="republish" serialization="none" method="get"
@@ -661,31 +492,6 @@
 				replace="none" method="post">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Failed to optimize Solr index.</xforms:message>
 			</xforms:submission>
-
-			<!-- get 20 search results, depending on page -->
-			<!--<xforms:submission id="query-solr" serialization="none" method="get"
-				action="{instance('control-instance')/solr-core}select/?q=collection-name:{instance('control-instance')/collection-name} AND {instance('control-instance')/solr-query}&amp;rows=20&amp;start={(instance('control-instance')/page - 1) * 20}"
-				replace="instance" instance="all-response">
-				<xforms:message ev:event="xforms-submit-error" level="modal">Solr is inaccessible. Please check Solr configuration.</xforms:message>
-				<xforms:action ev:event="xforms-submit-done">
-					<xforms:action xxforms:iterate="instance('all-response')//doc">
-						<xforms:var name="id" select="str[@name='id']"/>
-						<xforms:setvalue ref="instance('control-instance')/id" value="$id"/>
-						<xforms:insert context="instance('list')" nodeset="./child::node()[last()]" origin="instance('item-template')"/>
-						<xforms:setvalue ref="instance('list')/item[last()]/title" value="context()/str[@name='title_display']"/>
-						<xforms:setvalue ref="instance('list')/item[last()]/id" value="$id"/>
-						<xforms:setvalue ref="instance('list')/item[last()]/recordType" value="context()/str[@name='recordType']"/>
-						<xforms:setvalue ref="instance('list')/item[last()]/obverseLegend" value="context()/str[@name='obv_leg_display']"/>
-						<xforms:setvalue ref="instance('list')/item[last()]/obverseType" value="context()/str[@name='obv_type_display']"/>
-						<xforms:setvalue ref="instance('list')/item[last()]/reverseLegend" value="context()/str[@name='rev_leg_display']"/>
-						<xforms:setvalue ref="instance('list')/item[last()]/reverseType" value="context()/str[@name='rev_type_display']"/>
-						<xforms:setvalue ref="instance('list')/item[last()]/thumbnail_obv" value="context()/str[@name='thumbnail_obv']"/>
-						<xforms:setvalue ref="instance('list')/item[last()]/thumbnail_rev" value="context()/str[@name='thumbnail_rev']"/>
-						<xforms:setvalue ref="instance('control-instance')/solr-core" value="instance('config')/solr_published"/>
-						<xforms:send submission="query-solr-for-publication"/>
-					</xforms:action>
-				</xforms:action>
-			</xforms:submission>-->
 
 			<!-- submission to query solr to see if the document is published -->
 			<xforms:submission id="query-solr-for-publication" serialization="none" method="get"
@@ -770,8 +576,8 @@
 									</xforms:input>
 								</div>
 								<div>
-									<xforms:input ref="template/publisher">
-										<xforms:label>Publisher</xforms:label>
+									<xforms:input ref="template/agencyName">
+										<xforms:label>Maintenance Agency</xforms:label>
 										<xforms:alert>Required</xforms:alert>
 									</xforms:input>
 								</div>
@@ -783,19 +589,16 @@
 								</div>
 								<div>
 									<xforms:select1 ref="template/language">
-										<xforms:label>Language of Record</xforms:label>
+										<xforms:label>Default Language</xforms:label>
 										<xforms:item>
 											<xforms:label>Select Language...</xforms:label>
 											<xforms:value/>
 										</xforms:item>
 										<xforms:itemset nodeset="instance('languages')/language">
 											<xforms:label ref="."/>
-											<xforms:value ref="."/>
+											<xforms:value ref="@value"/>
 										</xforms:itemset>
 										<xforms:alert>Required</xforms:alert>
-										<xforms:var name="language" select="."/>
-										<xforms:setvalue ref="@langcode" value="instance('languages')//language[. = $language]/@value"
-											ev:event="xforms-value-changed"/>
 									</xforms:select1>
 								</div>
 								<h3>URLS</h3>
@@ -811,20 +614,15 @@
 										<xforms:alert>Required, must be a URL</xforms:alert>
 									</xforms:input>
 								</div>
-								<div>
-									<xforms:input ref="solr_all">
-										<xforms:label>Solr All</xforms:label>
-										<xforms:alert>Required, must be a URL</xforms:alert>
-									</xforms:input>
-								</div>
 							</xforms:group>
 							<xforms:trigger>
 								<xforms:label>Save</xforms:label>
 								<xforms:action ev:event="DOMActivate">
 									<xforms:setvalue ref="instance('config-template')/firstrun" value="'false'"/>
-									<xforms:send submission="save-imports"/> <xforms:setvalue ref="instance('eXist-xquery')/exist:text"
-										value="instance('xqueries')/query[@id='create-collection']"/>
-									<xforms:send submission="add-object-collection"/> <xforms:send submission="save-config"/>
+									<xforms:send submission="save-imports"/>
+									<xforms:setvalue ref="instance('eXist-xquery')/exist:text" value="instance('xqueries')/query[@id='create-collection']"/>
+									<xforms:send submission="add-object-collection"/>
+									<xforms:send submission="save-config"/>
 									<xxforms:hide dialog="firstrun"/>
 								</xforms:action>
 							</xforms:trigger>
@@ -1143,6 +941,11 @@
 			<fr:negative-choice/>
 			<fr:positive-choice>
 				<xforms:action ev:event="DOMActivate">
+					<!-- update publicationStatus -->
+					<xforms:setvalue ref="instance('control-instance')/publicationStatus">approved</xforms:setvalue>
+					<xforms:send submission="load-coin"/>
+
+					<!-- publish to solr -->
 					<xforms:setvalue ref="instance('control-instance')/solr-core" value="instance('config')/solr_published"/>
 					<xforms:send submission="nuds-to-solr"/>
 					<xforms:send submission="submit-commit"/>
@@ -1161,6 +964,11 @@
 			<fr:negative-choice/>
 			<fr:positive-choice>
 				<xforms:action ev:event="DOMActivate">
+					<!-- update publicationStatus -->
+					<xforms:setvalue ref="instance('control-instance')/publicationStatus">inProcess</xforms:setvalue>
+					<xforms:send submission="load-coin"/>
+					
+					<!-- delete from Solr -->
 					<xforms:setvalue ref="instance('deleteId')/query" value="concat('recordId:&#x022;', instance('control-instance')/id, '&#x022;')"/>
 					<xforms:setvalue ref="instance('control-instance')/solr-core" value="instance('config')/solr_published"/>
 					<xforms:send submission="delete-solr-doc"/>
@@ -1199,7 +1007,7 @@
 		</fr:alert-dialog>
 		<!-- mass publication dialogs -->
 		<fr:alert-dialog id="publish-all">
-			<fr:label>Publish All</fr:label>
+			<fr:label>Publish All</fr:label>lo
 			<fr:message>Do you want to publish all objects? This may take several minutes.</fr:message>
 			<fr:negative-choice/>
 			<fr:positive-choice>

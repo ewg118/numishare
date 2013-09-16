@@ -68,21 +68,25 @@
 				<nuds recordType="physical" xmlns="http://nomisma.org/nuds" xmlns:mets="http://www.loc.gov/METS/" xmlns:xlink="http://www.w3.org/1999/xlink">
 					<control>
 						<recordId/>
-						<publicationStmt>
-							<publisher/>
-							<createdBy/>
-							<date standardDateTime=""/>
-							<langUsage>
-								<language langcode=""/>
-							</langUsage>
-						</publicationStmt>
+						<publicationStatus>inProcess</publicationStatus>
+						<maintenanceStatus>new</maintenanceStatus>
+						<maintenanceAgency>
+							<agencyName/>
+						</maintenanceAgency>
+						<maintenanceHistory>
+							<maintenanceEvent>
+								<eventType>created</eventType>
+								<eventDateTime standardDateTime=""/>
+								<agentType>human</agentType>
+								<agent/>
+							</maintenanceEvent>
+						</maintenanceHistory>
 						<rightsStmt>
 							<copyrightHolder/>
-							<!--<date standardDateTime=""/>-->
 						</rightsStmt>
 					</control>
 					<descMeta>
-						<title/>
+						<title xml:lang="en"/>
 						<physDesc/>
 						<typeDesc>
 							<objectType xlink:href=""/>
@@ -90,10 +94,6 @@
 						<adminDesc/>
 					</descMeta>
 				</nuds>
-			</xforms:instance>
-
-			<xforms:instance id="test">
-				<test xmlns=""/>
 			</xforms:instance>
 
 			<!-- exist URL is stored in an XML file -->
@@ -109,7 +109,10 @@
 
 			<xforms:instance id="control-instance">
 				<controls xmlns="">
+					<id/>
 					<collection-name/>
+					<typeDesc_correct/>
+					<publicationStatus/>
 				</controls>
 			</xforms:instance>
 
@@ -133,14 +136,16 @@
 				<status/>
 			</xforms:instance>
 
-			<!-- solr response for id query -->
-			<xforms:instance id="is-published">
-				<response xmlns=""/>
-			</xforms:instance>
-
 			<!-- send to Solr -->
 			<xforms:instance id="addIndex">
 				<add xmlns=""/>
+			</xforms:instance>
+			
+			<!-- delete from Solr -->
+			<xforms:instance id="deleteId">
+				<delete xmlns="">
+					<query/>
+				</delete>
 			</xforms:instance>
 
 			<!-- Instance for Solr commit-->
@@ -169,14 +174,16 @@
 			<xforms:instance id="dump">
 				<dump xmlns=""/>
 			</xforms:instance>
-
-			<!--<xforms:instance id="findspot-temp">
-				<findspot-temp xmlns="">
-					<resource/>
-					<name/>
-					<coordinates/>
-				</findspot-temp>
-			</xforms:instance>-->
+			
+			<!-- control templates -->
+			<xforms:instance id="maintenanceEvent-template" xxforms:exclude-result-prefixes="#all">
+				<maintenanceEvent>
+					<eventType/>
+					<eventDateTime standardDateTime=""/>
+					<agentType>human</agentType>
+					<agent/>
+				</maintenanceEvent>
+			</xforms:instance>
 
 			<!-- commonly repeatable elements -->
 			<xforms:instance id="date-template" xxforms:exclude-result-prefixes="#all">
@@ -418,6 +425,7 @@
 				<xforms:insert context="instance('control-instance')" nodeset="collection-name" position="after"
 					origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/get-authentication.xpl', 'dump', instance('dump'), 'data')"/>
 				<xforms:send submission="load-collections"/>
+				<xforms:setvalue ref="instance('coin')/nuds:control/nuds:maintenanceHistory/nuds:maintenanceEvent[last()]/nuds:agent" value="instance('control-instance')/request-security/remote-user"/>
 			</xforms:action>
 
 			<!-- ********** XFORMS-READY ********** -->
@@ -427,37 +435,27 @@
 
 			<!-- ********** BINDING ********** -->
 			<xforms:bind nodeset="instance('coin')">
-				<!-- validate description anywhere -->
-				<xforms:bind nodeset="descendant::nuds:description" required="true()">
-					<xforms:bind nodeset="@xml:lang" constraint="string-length(.) &gt; 0"/>
+				<!-- recordType -->
+				<xforms:bind nodeset="@recordType" required="true()">
+					<xforms:bind constraint="string-length(.) &gt; 0"/>
 				</xforms:bind>
-				<!-- validate dates anywhere -->
-				<xforms:bind nodeset="//@standardDate" type="m.data.standardDate"/>
-				<xforms:bind nodeset="//@standardDateTime" type="m.data.standardDateTime"/>
-
 				<xforms:bind nodeset="nuds:control">
 					<xforms:bind nodeset="nuds:recordId" required="true()" type="xs:anyURI"/>
-					<xforms:bind nodeset="nuds:publicationStmt">
-						<xforms:bind nodeset="nuds:publisher" required="true()"/>
-						<xforms:bind nodeset="nuds:createdBy" required="true()"/>
-
-						<!--<xforms:bind nodeset="nuds:project"/>-->
-						<xforms:bind nodeset="nuds:langUsage">
-							<xforms:bind nodeset="nuds:language" required="true()">
-								<xforms:bind constraint="string-length(@langcode) &gt; 0"/>
+					<xforms:bind nodeset="nuds:maintenanceAgency/nuds:agencyName" constraint="string-length(.) &gt; 0"/>
+					<xforms:bind nodeset="nuds:maintenanceStatus" constraint="string-length(.) &gt; 0"/>
+					<xforms:bind nodeset="nuds:maintenanceHistory">
+						<xforms:bind nodeset="nuds:maintenanceEvent">
+							<xforms:bind nodeset="nuds:eventType" required="true()"/>
+							<xforms:bind nodeset="nuds:eventDateTime">
+								<xforms:bind nodeset="@standardDateTime" type="xs:dateTime" required="true()"/>
 							</xforms:bind>
+							<xforms:bind nodeset="nuds:agentType" required="true()"/>
+							<xforms:bind nodeset="nuds:agent" required="true()"/>
 						</xforms:bind>
 					</xforms:bind>
 					<xforms:bind nodeset="nuds:rightsStmt">
 						<xforms:bind nodeset="nuds:copyrightHolder" required="true()"/>
 					</xforms:bind>
-				</xforms:bind>
-				<xforms:bind nodeset="@recordType" required="true()">
-					<xforms:bind constraint="string-length(.) &gt; 0"/>
-				</xforms:bind>
-				<xforms:bind nodeset="//nuds:reference">
-					<xforms:bind nodeset="nuds:title" required="true()"/>
-					<!--<xforms:bind nodeset="nuds:identifier" required="true()"/>-->
 				</xforms:bind>
 				<xforms:bind nodeset="nuds:descMeta">
 					<xforms:bind nodeset="nuds:title" required="true()"/>
@@ -518,16 +516,10 @@
 						</xforms:bind>
 					</xforms:bind>
 					<xforms:bind nodeset="nuds:findspotDesc">
+						<xforms:bind nodeset="@xlink:href" required="true()" type="xs:anyURI"/>
 						<xforms:bind nodeset="nuds:findspot">
 							<xforms:bind nodeset="nuds:geogname" required="true()">
 								<xforms:bind nodeset="@xlink:href" type="xs:anyURI" required="true()"/>
-							</xforms:bind>
-							<xforms:bind nodeset="gml:Point">
-								<xforms:bind nodeset="gml:coordinates">
-									<xforms:bind
-										constraint="(number(tokenize(., ', ')[1]) &gt;= -180 and number(tokenize(., ', ')[1]) &lt;= 180) and (number(tokenize(., ', ')[2]) &gt;= -180 and number(tokenize(., ', ')[2]) &lt;= 180)"
-									/>
-								</xforms:bind>
 							</xforms:bind>
 						</xforms:bind>
 					</xforms:bind>
@@ -546,6 +538,18 @@
 					<xforms:bind nodeset="nuds:associatedObject">
 						<xforms:bind nodeset="@xlink:href" required="true()" type="xs:anyURI"/>
 					</xforms:bind>
+				</xforms:bind>
+				<!-- global -->
+				<!-- validate description anywhere -->
+				<xforms:bind nodeset="descendant::nuds:description" required="true()">
+					<xforms:bind nodeset="@xml:lang" constraint="string-length(.) &gt; 0"/>
+				</xforms:bind>
+				<!-- validate dates anywhere -->
+				<xforms:bind nodeset="//@standardDate" type="m.data.standardDate"/>
+				<xforms:bind nodeset="//@standardDateTime" type="m.data.standardDateTime"/>
+				<xforms:bind nodeset="//nuds:reference">
+					<xforms:bind nodeset="nuds:title" required="true()"/>
+					<!--<xforms:bind nodeset="nuds:identifier" required="true()"/>-->
 				</xforms:bind>
 			</xforms:bind>
 
@@ -568,39 +572,40 @@
 			</xforms:instance>
 
 			<!-- Load File -->
-			<xforms:submission id="load-submission" serialization="none" method="get"
-				action="{instance('exist-url')}{instance('control-instance')/collection-name}/objects/{instance('coin')/nuds:control/nuds:recordId}.xml" xxforms:username="admin" xxforms:password=""
+			<xforms:submission id="load-coin" serialization="none" method="get"
+				action="{instance('exist-url')}{instance('control-instance')/collection-name}/objects/{instance('control-instance')/id}.xml" xxforms:username="admin" xxforms:password=""
 				replace="instance" instance="coin">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Error loading file.</xforms:message>
+				<xforms:action ev:event="xforms-submit-done">
+					<!-- set publicationStatus in control-instance -->
+					<xforms:setvalue ref="instance('control-instance')/publicationStatus" value="instance('coin')/nuds:control/nuds:publicationStatus"/>
+					<!-- insert maintenanceEvent, set values -->
+					<xforms:insert context="instance('coin')/nuds:control/nuds:maintenanceHistory" nodeset="./child::node()[last()]" origin="instance('maintenanceEvent-template')"/>
+					<xforms:setvalue ref="instance('coin')/nuds:control/nuds:maintenanceHistory/nuds:maintenanceEvent[last()]/nuds:eventType">revised</xforms:setvalue>
+					<xforms:setvalue ref="instance('coin')/nuds:control/nuds:maintenanceHistory/nuds:maintenanceEvent[last()]/nuds:agent" value="instance('control-instance')/request-security/remote-user"/>
+				</xforms:action>
 			</xforms:submission>
 
 			<!-- Save File -->
-			<xforms:submission id="save-submission" ref="instance('coin')" xxforms:username="admin" xxforms:password=""
+			<xforms:submission id="save-coin" ref="instance('coin')" xxforms:username="admin" xxforms:password=""
 				action="{instance('exist-url')}{instance('control-instance')/collection-name}/objects/{instance('coin')/nuds:control/nuds:recordId}.xml" method="put" replace="none">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Save Error. Are all required inputs filled?</xforms:message>
 
 				<xforms:action ev:event="xforms-submit-done">
+					<xforms:setvalue ref="instance('control-instance')/id" value="instance('coin')/nuds:control/nuds:recordId"/>
 					<xforms:setvalue ref="instance('status')">Coin saved.</xforms:setvalue>
-					<!-- check to see if the document is already published to Solr -->
-					<xforms:send submission="query-solr-for-publication"/>
-
-					<!-- update the conceptual object, if applicable, to Solr, if the findspot has been changed -->
-					<!--<xforms:action
-						if="instance('findspot-temp')/resource != instance('coin')//nuds:findspot/@xlink:href or instance('findspot-temp')/name != instance('coin')//nuds:findspot/nuds:name or instance('findspot-temp')/coordinates != instance('coin')//nuds:findspot/gml:Point/gml:coordinates">
-						<xforms:action if="string(instance('typeDesc-resource')/nuds:control/nuds:recordId)">
-							<xforms:send submission="conceptual-query-solr-for-publication"/>
-						</xforms:action>
-					</xforms:action>-->
+					
+					<!-- publish coin if the publicationStatus is approved -->
+					<xforms:send submission="to-solr" if="instance('coin')/nuds:control/nuds:publicationStatus = 'approved'"/>
+					<!-- remove coin from Solr if the publicationStatus is inProcess on save but was approved on load.-->
+					<xforms:action if="instance('control-instance')/publicationStatus = 'approved' and instance('coin')/nuds:control/nuds:publicationStatus = 'inProcess'">
+						<xforms:setvalue ref="instance('deleteId')/query" value="concat('recordId:&#x022;', instance('coin')/nuds:control/nuds:recordId, '&#x022;')"/>		
+						<xforms:send submission="delete-solr-doc"/>
+						<xforms:setvalue ref="instance('control-instance')/publicationStatus">inProcess</xforms:setvalue>
+					</xforms:action>
 				</xforms:action>
 			</xforms:submission>
-
-			<!-- submission to query solr to see if the document is published -->
-			<xforms:submission id="query-solr-for-publication" serialization="none" method="get"
-				action="{instance('config')/solr_published}select/?q=collection-name:{instance('control-instance')/collection-name} AND recordId:&#x022;{instance('coin')/nuds:control/nuds:recordId}&#x022;"
-				replace="instance" instance="is-published">
-				<!-- if the document is found in solr, get the updated solr doc -->
-				<xforms:send ev:event="xforms-submit-done" if="instance('is-published')/result[@name='response']/@numFound = '1'" submission="to-solr"/>
-			</xforms:submission>
+			
 			<!-- access service to read in pre-transformed solr doc -->
 			<xforms:submission id="to-solr" method="get" replace="instance" instance="addIndex" serialization="none"
 				resource="{instance('config')/url}id/{instance('coin')/nuds:control/nuds:recordId}.solr">
@@ -611,12 +616,24 @@
 			</xforms:submission>
 			<!-- post instance to Solr -->
 			<xforms:submission id="publish-submission" action="{instance('config')/solr_published}update" ref="instance('addIndex')" instance="addIndex" replace="instance" method="post">
-				<xforms:send ev:event="xforms-submit-done" submission="submit-commit"/>
-				<xforms:setvalue ev:event="xforms-submit-done" ref="instance('status')">Object saved and updated to search index.</xforms:setvalue>
+				<xforms:action ev:event="xforms-submit-done">
+					<xforms:send submission="submit-commit"/>
+					<xforms:setvalue ref="instance('status')">Object saved and updated to search index.</xforms:setvalue>
+				</xforms:action>
 				<xforms:message ev:event="xforms-submit-error" level="modal">Data Failed to POST to Solr. Index may be offline or URL is incorrect.</xforms:message>
 			</xforms:submission>
+			<xforms:submission id="delete-solr-doc" action="{instance('config')/solr_published}update" ref="instance('deleteId')" instance="deleteId"
+				replace="none" method="post">
+				<xforms:action ev:event="xforms-submit-done">
+					<xforms:send submission="submit-commit"/>
+					<xforms:setvalue ref="instance('status')">Object saved, but removed from Solr index (publicationStatus set to 'inProcess').</xforms:setvalue>
+				</xforms:action>
+				<xforms:message ev:event="xforms-submit-error" level="modal">Data Failed to POST to Solr.</xforms:message>
+			</xforms:submission>
 			<!-- send commit -->
-			<xforms:submission id="submit-commit" action="{instance('config')/solr_published}update" ref="instance('sendCommit')" instance="sendCommit" replace="none" method="post"/>
+			<xforms:submission id="submit-commit" action="{instance('config')/solr_published}update" ref="instance('sendCommit')" instance="sendCommit" replace="none" method="post">
+				<xforms:message ev:event="xforms-submit-error" level="modal">Commit Failed to POST to Solr.</xforms:message>
+			</xforms:submission>
 
 			<!-- load site info -->
 			<xforms:submission id="load-config" serialization="none" method="get" action="{instance('exist-url')}{instance('control-instance')/collection-name}/config.xml" xxforms:username="admin"
@@ -625,11 +642,11 @@
 				<xforms:action ev:event="xforms-submit-done">
 
 					<!-- load object or create new one -->
-					<xforms:setvalue ref="instance('coin')/nuds:control/nuds:recordId" value="xxforms:get-request-parameter('id')"/>
+					<xforms:setvalue ref="instance('control-instance')/id" value="xxforms:get-request-parameter('id')"/>
 
 					<!-- if the id is successfully passed from a url parameter, load the document -->
-					<xforms:action if="string(instance('coin')/nuds:control/nuds:recordId)">
-						<xforms:send submission="load-submission"/>
+					<xforms:action if="string(instance('control-instance')/id)">
+						<xforms:send submission="load-coin"/>
 						<!-- if typeDesc is an xlink:href, set the resource case -->
 						<xforms:action if="instance('coin')/nuds:descMeta/nuds:typeDesc/@xlink:href">
 							<xforms:send submission="get-typeDesc"/>
@@ -643,14 +660,11 @@
 					</xforms:action>
 
 					<!-- generate unique id and populate adminDesc and control fields with required information -->
-					<xforms:action if="not(string(instance('coin')/nuds:control/nuds:recordId))">
+					<xforms:action if="not(string(instance('control-instance')/id))">
 						<xforms:setvalue ref="instance('coin')/nuds:control/nuds:recordId" value="substring(string(digest( string( random( true ) ), 'MD5', 'hex' )), 1, 10)"/>
 						<!-- set control data from config if it is a new document -->
-						<xforms:setvalue ref="instance('coin')/nuds:control/nuds:publicationStmt/nuds:publisher" value="instance('config')/template/publisher"/>
-						<xforms:setvalue ref="instance('coin')/nuds:control/nuds:publicationStmt/nuds:createdBy" value="instance('config')/template/createdBy"/>
-						<xforms:setvalue ref="instance('coin')/nuds:control/nuds:publicationStmt/nuds:project" value="instance('config')/template/project"/>
-						<xforms:setvalue ref="instance('coin')/nuds:control/nuds:publicationStmt/nuds:langUsage/nuds:language" value="instance('config')/template/language"/>
-						<xforms:setvalue ref="instance('coin')/nuds:control/nuds:publicationStmt/nuds:langUsage/nuds:language/@langcode" value="instance('config')/template/language/@langcode"/>
+						<xforms:setvalue ref="instance('coin')/nuds:descMeta/nuds:title/@xml:lang" value="instance('config')/template/language"/>
+						<xforms:setvalue ref="instance('coin')/nuds:control/nuds:maintenanceAgency/nuds:agencyName" value="instance('config')/template/agencyName"/>
 						<xforms:setvalue ref="instance('coin')/nuds:control/nuds:rightsStmt/nuds:copyrightHolder" value="instance('config')/template/copyrightHolder"/>
 						<!-- populate adminDesc -->
 						<xforms:action if="string(instance('config')/template/collection)">
@@ -695,15 +709,6 @@
 				instance="typeDesc-resource">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Unable to load typeDesc at specified URI.</xforms:message>
 			</xforms:submission>
-
-			<!-- always post the doc to the all-index -->
-			<xforms:submission id="post-to-all" action="{instance('config')/solr_all}update" ref="instance('addIndex')" instance="addIndex" replace="instance" method="post">
-				<xforms:send ev:event="xforms-submit-done" submission="sendCommit-to-all"/>
-				<xforms:setvalue ev:event="xforms-submit-done" ref="instance('status')">Coin saved.</xforms:setvalue>
-				<xforms:message ev:event="xforms-submit-error" level="modal">Data Failed to POST to Solr. Index may be offline or URL is incorrect.</xforms:message>
-			</xforms:submission>
-			<!-- send commit -->
-			<xforms:submission id="sendCommit-to-all" action="{instance('config')/solr_all}update" ref="instance('sendCommit')" instance="sendCommit" replace="none" method="post"/>
 		</xforms:model>
 
 		<!-- XBL components -->
@@ -745,14 +750,13 @@
 						<div class="submission">
 							<xforms:trigger appearance="minimal">
 								<xforms:action ev:event="DOMActivate">
-									<xforms:action if="not(string(instance('coin')/nuds:control/nuds:publicationStmt/nuds:date/@standardDateTime))">
-										<xforms:setvalue ref="instance('coin')/nuds:control/nuds:publicationStmt/nuds:date/@standardDateTime" value="current-dateTime()"/>
-									</xforms:action>
-									<xforms:send submission="save-submission"/>
+									<!-- set value of latest maintenanceEvent -->
+									<xforms:setvalue ref="instance('coin')/nuds:control/nuds:maintenanceHistory/nuds:maintenanceEvent[last()]/nuds:eventDateTime/@standardDateTime" value="current-dateTime()"/>
+									<xforms:send submission="save-coin"/>
 								</xforms:action>
 								<xforms:label class="file_control"><img src="{$display_path}images/save.gif" alt="Save"/>Save</xforms:label>
 							</xforms:trigger>
-							<xforms:submit submission="load-submission" appearance="minimal">
+							<xforms:submit submission="load-coin" appearance="minimal">
 								<xforms:label class="file_control"><img src="{$display_path}images/recycle-green.png" alt="Load"/> Load</xforms:label>
 							</xforms:submit>
 						</div>
@@ -801,6 +805,19 @@
 											<xforms:delete context="instance('coin')/nuds:digRep" nodeset="nuds:associatedObject"/>
 										</xforms:action>
 									</xforms:action>
+								</xforms:select1>
+							</div>
+							<div>
+								<xforms:select1 ref="nuds:control/nuds:publicationStatus">
+									<xforms:label>Publication Status</xforms:label>
+									<xforms:item>
+										<xforms:label>inProcess</xforms:label>
+										<xforms:value>inProcess</xforms:value>
+									</xforms:item>
+									<xforms:item>
+										<xforms:label>approved</xforms:label>
+										<xforms:value>approved</xforms:value>
+									</xforms:item>
 								</xforms:select1>
 							</div>
 							<div class="trigger_container">
@@ -1453,35 +1470,26 @@
 													<xforms:group ref=".[string-length(@xlink:href) &gt; 0]">
 														<xforms:trigger>
 															<xforms:action ev:event="DOMActivate">
+																<xforms:setvalue ref="instance('control-instance')/typeDesc_correct">false</xforms:setvalue>
 																<xforms:send submission="get-typeDesc"/>
 															</xforms:action>
 															<xforms:label>Search</xforms:label>
 														</xforms:trigger>
 														<xforms:group ref="instance('typeDesc-resource')/nuds:descMeta/nuds:typeDesc">
-															<!-- if the conceptual document already contains a reference to the current physical object, provide a button to disassociate it -->
 															<xforms:group
-																ref=".[instance('typeDesc-resource')/nuds:digRep/nuds:associatedObject[@xlink:href = concat(instance('config')/url, 'id/', instance('coin')/nuds:control/nuds:recordId)]]">
-																<xforms:trigger>
-																	<xforms:action ev:event="DOMActivate">
-																		<xforms:dispatch name="fr-show" target="disassociateObject-dialog"/>
-																	</xforms:action>
-																	<xforms:label>Disassociate Object</xforms:label>
-																</xforms:trigger>
-															</xforms:group>
-															<xforms:group
-																ref=".[not(instance('typeDesc-resource')/nuds:digRep/nuds:associatedObject[@xlink:href = concat(instance('config')/url, 'id/', instance('coin')/nuds:control/nuds:recordId)])]">
+																ref=".[instance('control-instance')/typeDesc_correct = 'false']">
 																<div>
 																	<span class="warning">Is the information displayed below correct?</span>
 																	<!-- if the typeDesc is correct, insert a reference to current nuds document into the conceptual document, otherwise remove the @xlink:href and typedesc instance -->
 																	<xforms:trigger>
 																		<xforms:action ev:event="DOMActivate">
-																			<xforms:dispatch name="fr-show" target="associateObject-dialog"
-																				if="contains(instance('coin')/nuds:descMeta/nuds:typeDesc/@xlink:href, instance('config')/url)"/>
+																			<xforms:setvalue ref="instance('control-instance')/typeDesc_correct">true</xforms:setvalue>
 																		</xforms:action>
 																		<xforms:label>Yes</xforms:label>
 																	</xforms:trigger>
 																	<xforms:trigger>
 																		<xforms:action ev:event="DOMActivate">
+																			<xforms:setvalue ref="instance('control-instance')/typeDesc_correct"/>
 																			<xforms:delete context="instance('typeDesc-resource')/*"/>
 																			<xforms:setvalue ref="instance('coin')/nuds:descMeta/nuds:typeDesc/@xlink:href"/>
 																		</xforms:action>
@@ -1489,38 +1497,6 @@
 																	</xforms:trigger>
 																</div>
 															</xforms:group>
-															<fr:alert-dialog id="associateObject-dialog">
-																<fr:label>Associate Object</fr:label>
-																<fr:message>Do you wish to associate this physical object with its source conceptual object?</fr:message>
-																<fr:negative-choice/>
-																<fr:positive-choice>
-																	<xforms:action ev:event="DOMActivate">
-																		<xforms:insert origin="instance('digRep-template')" context="instance('typeDesc-resource')" nodeset="./child::node()[last()]"
-																			if="count(instance('typeDesc-resource')/nuds:digRep) = 0"/>
-																		<xforms:insert origin="instance('associatedObject-template')" context="instance('typeDesc-resource')/nuds:digRep"
-																			nodeset="./child::node()[last()]"/>
-																		<xforms:setvalue ref="instance('typeDesc-resource')/nuds:digRep/nuds:associatedObject[last()]/@xlink:href"
-																			value="concat(instance('config')/url, 'id/', instance('coin')/nuds:control/nuds:recordId)"/>
-																		<xforms:send submission="save-conceptual"/>
-																	</xforms:action>
-																</fr:positive-choice>
-															</fr:alert-dialog>
-															<fr:alert-dialog id="disassociateObject-dialog">
-																<fr:label>Disassociate Object</fr:label>
-																<fr:message>Do you wish to disassociate this physical object with its source conceptual object?</fr:message>
-																<fr:negative-choice/>
-																<fr:positive-choice>
-																	<xforms:action ev:event="DOMActivate">
-																		<xforms:delete context="instance('typeDesc-resource')/nuds:digRep"
-																			nodeset="nuds:associatedObject[@xlink:href = concat(instance('config')/url, 'id/', instance('coin')/nuds:control/nuds:recordId)]"/>
-																		<xforms:delete context="instance('typeDesc-resource')" nodeset="nuds:digRep"
-																			if="count(instance('typeDesc-resource')/nuds:digRep/nuds:associatedObject) = 0"/>
-																		<xforms:send submission="save-conceptual"/>
-																		<xforms:setvalue ref="instance('coin')/nuds:descMeta/nuds:typeDesc/@xlink:href"/>
-																		<xforms:delete context="instance('typeDesc-resource')/*"/>
-																	</xforms:action>
-																</fr:positive-choice>
-															</fr:alert-dialog>
 															<numishare:output-typeDesc/>
 														</xforms:group>
 													</xforms:group>
