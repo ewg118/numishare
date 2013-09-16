@@ -11,7 +11,7 @@
 						<img src="{$display_path}images/uva-logo.jpg" alt="logo"/>
 					</td>
 					<td>
-						<span class="banner_text">The University of Virginia Art Museum <br/>Numismatic Collection</span>
+						<span class="banner_text">The Fralin | UVa Art Museum<br/>Numismatic Collection</span>
 					</td>
 					<td style="width:25%">
 						<form action="{$display_path}results" method="GET" id="qs_form" style="padding:10px 0">
