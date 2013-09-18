@@ -26,19 +26,12 @@
             <eventDescription>Migrated to new NUDS schema version; nudsHeader to control.</eventDescription>
          </maintenanceEvent>
       </maintenanceHistory>
-      <publicationStmt>
-         <publisher>The University of Virginia Library</publisher>
-         
-         
-      </publicationStmt>
       <rightsStmt>
          <license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/"/>
-         <date standardDate="2012"/>
       </rightsStmt>
    </control>
    <descMeta>
       <title xml:lang="en">Coin of Cleopatra, Damascus, A.D. 33-A.D. 32. FIC.50.13.</title>
-      
       <typeDesc>
          <objectType xlink:href="http://nomisma.org/id/coin">Coin</objectType>
          <material xlink:href="http://nomisma.org/id/ae">Bronze</material>

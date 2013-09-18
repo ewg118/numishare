@@ -26,19 +26,12 @@
             <eventDescription>Migrated to new NUDS schema version; nudsHeader to control.</eventDescription>
          </maintenanceEvent>
       </maintenanceHistory>
-      <publicationStmt>
-         <publisher>The University of Virginia Library</publisher>
-         
-         
-      </publicationStmt>
       <rightsStmt>
          <license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/"/>
-         <date standardDate="2012"/>
       </rightsStmt>
    </control>
    <descMeta>
       <title xml:lang="en">Coin of Hadrian, Jerusalem, A.D. 136. FIC.50.65.</title>
-      
       <description>Struck in Aelia Capitolina (Jerusalem) just after Bar Cocheba rebellion when an
 		Astarte temple had just been built on the site of the Holy Sepulchre. The hexastyle temple
 		depicted on the reverse of this coin my be the Temple of Astarte in Aelia

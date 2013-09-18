@@ -26,19 +26,12 @@
             <eventDescription>Migrated to new NUDS schema version; nudsHeader to control.</eventDescription>
          </maintenanceEvent>
       </maintenanceHistory>
-      <publicationStmt>
-         <publisher>The University of Virginia Library</publisher>
-         
-         
-      </publicationStmt>
       <rightsStmt>
          <license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/"/>
-         <date standardDate="2012"/>
       </rightsStmt>
    </control>
    <descMeta>
       <title xml:lang="en">Dupondius of Vespasian, Rome,   AD 71. 1994.10.3.</title>
-      
       <typeDesc xlink:type="simple"
                 xlink:href="http://numismatics.org/ocre/id/ric.2_1(2).ves.279"/>
       <physDesc>

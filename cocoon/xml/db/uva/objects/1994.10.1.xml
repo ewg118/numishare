@@ -26,19 +26,12 @@
             <eventDescription>Migrated to new NUDS schema version; nudsHeader to control.</eventDescription>
          </maintenanceEvent>
       </maintenanceHistory>
-      <publicationStmt>
-         <publisher>The University of Virginia Library</publisher>
-         
-         
-      </publicationStmt>
       <rightsStmt>
          <license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/"/>
-         <date standardDate="2012"/>
       </rightsStmt>
    </control>
    <descMeta>
       <title xml:lang="en">As of Tiberius, Rome,  A.D. 22-23. 1994.10.1.</title>
-      
       <typeDesc xlink:type="simple" xlink:href="http://numismatics.org/ocre/id/ric.1(2).tib.45"/>
       <physDesc>
          <axis>6</axis>

@@ -26,23 +26,16 @@
             <eventDescription>Migrated to new NUDS schema version; nudsHeader to control.</eventDescription>
          </maintenanceEvent>
       </maintenanceHistory>
-      <publicationStmt>
-         <publisher>The University of Virginia Library</publisher>
-         
-         
-      </publicationStmt>
       <rightsStmt>
          <license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/"/>
-         <date standardDate="2012"/>
       </rightsStmt>
    </control>
    <descMeta>
       <title xml:lang="en">Coin of Apamea on the Orontes, Apameia, 75 B.C. FIC.50.78.</title>
-      
       <typeDesc>
          <objectType xlink:href="http://nomisma.org/id/coin">Coin</objectType>
          <material xlink:href="http://nomisma.org/id/ae">Bronze</material>
-         <date standardDate="-0075">75 B.C.</date>
+         <date standardDate="-0074">75 B.C.</date>
          <authority>
             <corpname xlink:type="simple" xlink:role="authority">Apamea on the Orontes</corpname>
          </authority>

@@ -26,26 +26,19 @@
             <eventDescription>Migrated to new NUDS schema version; nudsHeader to control.</eventDescription>
          </maintenanceEvent>
       </maintenanceHistory>
-      <publicationStmt>
-         <publisher>The University of Virginia Library</publisher>
-         
-         
-      </publicationStmt>
       <rightsStmt>
          <license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/"/>
-         <date standardDate="2012"/>
       </rightsStmt>
    </control>
    <descMeta>
       <title xml:lang="en">Drachm of Philip III Arrhidaeus, 323 B.C.-317 B.C. 1990.18.4.</title>
-      
       <typeDesc>
          <objectType xlink:href="http://nomisma.org/id/coin">Coin</objectType>
          <denomination xlink:href="http://nomisma.org/id/drachma">Drachm</denomination>
          <material xlink:href="http://nomisma.org/id/ar">Silver</material>
          <dateRange>
-            <fromDate standardDate="-0323">323 B.C.</fromDate>
-            <toDate standardDate="-0317">317 B.C.</toDate>
+            <fromDate standardDate="-0322">323 B.C.</fromDate>
+            <toDate standardDate="-0316">317 B.C.</toDate>
          </dateRange>
          <authority>
             <persname xlink:type="simple" xlink:role="authority"

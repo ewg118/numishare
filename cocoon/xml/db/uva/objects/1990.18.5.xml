@@ -26,26 +26,19 @@
             <eventDescription>Migrated to new NUDS schema version; nudsHeader to control.</eventDescription>
          </maintenanceEvent>
       </maintenanceHistory>
-      <publicationStmt>
-         <publisher>The University of Virginia Library</publisher>
-         
-         
-      </publicationStmt>
       <rightsStmt>
          <license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/"/>
-         <date standardDate="2012"/>
       </rightsStmt>
    </control>
    <descMeta>
       <title xml:lang="en">Tetradrachm of Demetrius I Poliorcetes, Salamis, 306 B.C.-283 B.C. 1990.18.5.</title>
-      
       <typeDesc>
          <objectType xlink:href="http://nomisma.org/id/coin">Coin</objectType>
          <denomination xlink:href="http://nomisma.org/id/tetradrachm">Tetradrachm</denomination>
          <material xlink:href="http://nomisma.org/id/ar">Silver</material>
          <dateRange>
-            <fromDate standardDate="-0306">306 B.C.</fromDate>
-            <toDate standardDate="-0283">283 B.C.</toDate>
+            <fromDate standardDate="-0305">306 B.C.</fromDate>
+            <toDate standardDate="-0282">283 B.C.</toDate>
          </dateRange>
          <authority>
             <persname xlink:type="simple" xlink:role="authority"

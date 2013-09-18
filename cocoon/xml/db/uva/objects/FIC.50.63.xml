@@ -2,7 +2,7 @@
 <nuds xmlns="http://nomisma.org/nuds" xmlns:xlink="http://www.w3.org/1999/xlink"
       xmlns:mets="http://www.loc.gov/METS/"
       recordType="physical">
-	  <control>
+   <control>
       <recordId>FIC.50.63</recordId>
       <maintenanceStatus>revised</maintenanceStatus>
       <publicationStatus>approved</publicationStatus>
@@ -26,71 +26,64 @@
             <eventDescription>Migrated to new NUDS schema version; nudsHeader to control.</eventDescription>
          </maintenanceEvent>
       </maintenanceHistory>
-      <publicationStmt>
-			      <publisher>The University of Virginia Library</publisher>
-			
-			
-		    </publicationStmt>
       <rightsStmt>
-			      <license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/"/>
-			      <date standardDate="2012"/>
-		    </rightsStmt>
+         <license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/"/>
+      </rightsStmt>
    </control>
-	  <descMeta>
-		    <title xml:lang="en">lepton of Alexander Jannaeus, 103 B.C.-76 B.C. FIC.50.63.</title>
-		
-		    <typeDesc>
-			      <objectType xlink:type="simple" xlink:href="http://nomisma.org/id/coin">Coin</objectType>
-			      <denomination xlink:type="simple" xlink:href="http://nomisma.org/id/lepton">Lepton</denomination>
-			      <material xlink:type="simple" xlink:href="http://nomisma.org/id/ae">Bronze</material>
-			      <dateRange>
-				        <fromDate standardDate="-0103">103 B.C.</fromDate>
-				        <toDate standardDate="-0076">76 B.C.</toDate>
-			      </dateRange>
-			      <authority>
-				        <persname xlink:type="simple" xlink:role="authority"
+   <descMeta>
+      <title xml:lang="en">lepton of Alexander Jannaeus, 103 B.C.-76 B.C. FIC.50.63.</title>
+      <typeDesc>
+         <objectType xlink:type="simple" xlink:href="http://nomisma.org/id/coin">Coin</objectType>
+         <denomination xlink:type="simple" xlink:href="http://nomisma.org/id/lepton">Lepton</denomination>
+         <material xlink:type="simple" xlink:href="http://nomisma.org/id/ae">Bronze</material>
+         <dateRange>
+            <fromDate standardDate="-0102">103 B.C.</fromDate>
+            <toDate standardDate="-0075">76 B.C.</toDate>
+         </dateRange>
+         <authority>
+            <persname xlink:type="simple" xlink:role="authority"
                       xlink:href="http://nomisma.org/id/alexander_jannaeus">Alexander Jannaeus</persname>
-			      </authority>
-			      <obverse>
-				        <type>
-					          <description xml:lang="en">Inscription within a wreath.</description>
-				        </type>
-			      </obverse>
-			      <reverse>
-				        <type>
-					          <description xml:lang="en">Double cornucopiae, filleted, with a poppy-head between horns; border of dots.</description>
-				        </type>
-			      </reverse>
-		    </typeDesc>
-		    <physDesc>
-			      <measurementsSet>
-				        <diameter units="mm">13</diameter>
-			      </measurementsSet>
-		    </physDesc>
-		    <adminDesc>
+         </authority>
+         <obverse>
+            <type>
+               <description xml:lang="en">Inscription within a wreath.</description>
+            </type>
+         </obverse>
+         <reverse>
+            <type>
+               <description xml:lang="en">Double cornucopiae, filleted, with a poppy-head between horns; border of dots.</description>
+            </type>
+         </reverse>
+      </typeDesc>
+      <physDesc>
+         <measurementsSet>
+            <diameter units="mm">13</diameter>
+         </measurementsSet>
+      </physDesc>
+      <adminDesc>
          <identifier>FIC.50.63</identifier>
          <department>Jewish</department>
          <collection xlink:type="simple" xlink:href="http://nomisma.org/id/uva">The Fralin Museum of Art</collection>
       </adminDesc>
-	  </descMeta>
-	  <digRep>
-		    <mets:fileSec>
-			      <mets:fileGrp USE="obverse">
-				        <mets:file USE="reference" MIMETYPE="image/jpeg">
-					          <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/nfic_50_63_obv.jpg"/>
-				        </mets:file>
-				        <mets:file USE="thumbnail" MIMETYPE="image/jpeg">
-					          <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/nfic_50_63_obv.jpg"/>
-				        </mets:file>
-			      </mets:fileGrp>
-			      <mets:fileGrp USE="reverse">
-				        <mets:file USE="reference" MIMETYPE="image/jpeg">
-					          <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/nfic_50_63_rev.jpg"/>
-				        </mets:file>
-				        <mets:file USE="thumbnail" MIMETYPE="image/jpeg">
-					          <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/nfic_50_63_rev.jpg"/>
-				        </mets:file>
-			      </mets:fileGrp>
-		    </mets:fileSec>
-	  </digRep>
+   </descMeta>
+   <digRep>
+      <mets:fileSec>
+         <mets:fileGrp USE="obverse">
+            <mets:file USE="reference" MIMETYPE="image/jpeg">
+               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/nfic_50_63_obv.jpg"/>
+            </mets:file>
+            <mets:file USE="thumbnail" MIMETYPE="image/jpeg">
+               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/nfic_50_63_obv.jpg"/>
+            </mets:file>
+         </mets:fileGrp>
+         <mets:fileGrp USE="reverse">
+            <mets:file USE="reference" MIMETYPE="image/jpeg">
+               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/nfic_50_63_rev.jpg"/>
+            </mets:file>
+            <mets:file USE="thumbnail" MIMETYPE="image/jpeg">
+               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/nfic_50_63_rev.jpg"/>
+            </mets:file>
+         </mets:fileGrp>
+      </mets:fileSec>
+   </digRep>
 </nuds>

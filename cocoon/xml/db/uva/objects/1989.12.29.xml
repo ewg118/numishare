@@ -26,29 +26,22 @@
             <eventDescription>Migrated to new NUDS schema version; nudsHeader to control.</eventDescription>
          </maintenanceEvent>
       </maintenanceHistory>
-      <publicationStmt>
-         <publisher>The University of Virginia Library</publisher>
-         
-         
-      </publicationStmt>
       <rightsStmt>
          <license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/"/>
-         <date standardDate="2012"/>
       </rightsStmt>
    </control>
    <descMeta>
       <title xml:lang="en">Coin of Epirote League, Epirus, 238 B.C.-168 B.C. 1989.12.29.</title>
-      
       <typeDesc>
          <objectType xlink:href="http://nomisma.org/id/coin">Coin</objectType>
          <material xlink:href="http://nomisma.org/id/ae">Bronze</material>
          <dateRange>
-            <fromDate standardDate="-0238">238 B.C.</fromDate>
-            <toDate standardDate="-0168">168 B.C.</toDate>
+            <fromDate standardDate="-0237">238 B.C.</fromDate>
+            <toDate standardDate="-0167">168 B.C.</toDate>
          </dateRange>
          <authority>
             <corpname xlink:type="simple" xlink:role="authority"
-                      xlink:href="http://nomisma.org/id/epirote_league"/>
+                      xlink:href="http://nomisma.org/id/epirote_league">Epirote League</corpname>
          </authority>
          <geographic>
             <geogname xlink:type="simple" xlink:role="region"

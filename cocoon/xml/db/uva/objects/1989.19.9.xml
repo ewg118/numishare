@@ -26,19 +26,12 @@
             <eventDescription>Migrated to new NUDS schema version; nudsHeader to control.</eventDescription>
          </maintenanceEvent>
       </maintenanceHistory>
-      <publicationStmt>
-         <publisher>The University of Virginia Library</publisher>
-         
-         
-      </publicationStmt>
       <rightsStmt>
          <license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/"/>
-         <date standardDate="2012"/>
       </rightsStmt>
    </control>
    <descMeta>
       <title xml:lang="en">As of Gaius/Caligula, Rome,  A.D. 37-41. 1989.19.9.</title>
-      
       <typeDesc xlink:href="http://numismatics.org/ocre/id/ric.1(2).gai.58"/>
       <adminDesc>
          <identifier>1989.19.9</identifier>

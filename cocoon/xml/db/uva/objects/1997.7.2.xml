@@ -26,19 +26,12 @@
             <eventDescription>Migrated to new NUDS schema version; nudsHeader to control.</eventDescription>
          </maintenanceEvent>
       </maintenanceHistory>
-      <publicationStmt>
-         <publisher>The University of Virginia Library</publisher>
-         
-         
-      </publicationStmt>
       <rightsStmt>
          <license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/"/>
-         <date standardDate="2012"/>
       </rightsStmt>
    </control>
    <descMeta>
       <title xml:lang="en">Aureus of Hadrian, Rome,  A.D. 134-138. 1997.7.2.</title>
-      
       <typeDesc xlink:type="simple" xlink:href="http://numismatics.org/ocre/id/ric.2.hdn.271b"/>
       <physDesc>
          <axis>6</axis>

@@ -26,19 +26,12 @@
             <eventDescription>Migrated to new NUDS schema version; nudsHeader to control.</eventDescription>
          </maintenanceEvent>
       </maintenanceHistory>
-      <publicationStmt>
-         <publisher>The University of Virginia Library</publisher>
-         
-         
-      </publicationStmt>
       <rightsStmt>
          <license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/"/>
-         <date standardDate="2012"/>
       </rightsStmt>
    </control>
    <descMeta>
       <title xml:lang="en">Denarius of L Titurius Sabinus, Rome, 89 B.C. 1989.19.1.</title>
-      
       <typeDesc xlink:type="simple" xlink:href="http://nomisma.org/id/rrc-344.2b"/>
       <adminDesc>
          <identifier>1989.19.1</identifier>

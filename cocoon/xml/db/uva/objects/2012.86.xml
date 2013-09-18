@@ -2,7 +2,7 @@
 <nuds xmlns="http://nomisma.org/nuds" xmlns:xlink="http://www.w3.org/1999/xlink"
       xmlns:mets="http://www.loc.gov/METS/"
       recordType="physical">
-	  <control>
+   <control>
       <recordId>2012.86</recordId>
       <maintenanceStatus>revised</maintenanceStatus>
       <publicationStatus>approved</publicationStatus>
@@ -26,71 +26,64 @@
             <eventDescription>Migrated to new NUDS schema version; nudsHeader to control.</eventDescription>
          </maintenanceEvent>
       </maintenanceHistory>
-      <publicationStmt>
-			      <publisher>The University of Virginia Library</publisher>
-			
-			
-		    </publicationStmt>
       <rightsStmt>
-			      <license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/"/>
-			      <date standardDate="2012"/>
-		    </rightsStmt>
+         <license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/"/>
+      </rightsStmt>
    </control>
-	  <descMeta>
-		    <title xml:lang="en">Denarius of Anonymous, Rome, 157 B.C.-156 B.C. 2012.86.</title>
-		
-		    <typeDesc xlink:type="simple" xlink:href="http://nomisma.org/id/rrc-197.1a"/>
-		    <adminDesc>
+   <descMeta>
+      <title xml:lang="en">Denarius of Anonymous, Rome, 157 B.C.-156 B.C. 2012.86.</title>
+      <typeDesc xlink:type="simple" xlink:href="http://nomisma.org/id/rrc-197.1a"/>
+      <adminDesc>
          <identifier>2012.86</identifier>
          <provenance>
-				        <chronList>
-					          <chronItem>
-						            <acquisition>
-							              <date standardDate="2012">2012</date>
-							              <acquiredFrom>Purchased from the University of Virginia Art Museum</acquiredFrom>
-						            </acquisition>
-					          </chronItem>
-					          <chronItem>
-						            <date standardDate="1946">1946</date>
-						            <previousColl>Ex: Hermann Mosberg Collection. Appraised by Munzen und Medallen, Basel, Switzerland.</previousColl>
-					          </chronItem>
-					          <chronItem>
-						            <date standardDate="1933">1933</date>
-						            <previousColl>Haeberlin Auction, lot 1333.</previousColl>
-					          </chronItem>
-					          <chronItem>
-						            <previousColl>Noted as "49 Diverse Republik Denare" on an envelope addressed in Zurich. Some or all of these coins may have been
+            <chronList>
+               <chronItem>
+                  <acquisition>
+                     <date standardDate="2012">2012</date>
+                     <acquiredFrom>Purchased from the University of Virginia Art Museum</acquiredFrom>
+                  </acquisition>
+               </chronItem>
+               <chronItem>
+                  <date standardDate="1946">1946</date>
+                  <previousColl>Ex: Hermann Mosberg Collection. Appraised by Munzen und Medallen, Basel, Switzerland.</previousColl>
+               </chronItem>
+               <chronItem>
+                  <date standardDate="1933">1933</date>
+                  <previousColl>Haeberlin Auction, lot 1333.</previousColl>
+               </chronItem>
+               <chronItem>
+                  <previousColl>Noted as "49 Diverse Republik Denare" on an envelope addressed in Zurich. Some or all of these coins may have been
 							acquired by Hermann Mosberg at the Haeberlin Auction.</previousColl>
-					          </chronItem>
-					          <chronItem>
-						            <date standardDate="1989">1989</date>
-						            <previousColl>Acquired from the Worldwide Treasure Bureau, 1989, by the University of Virginia Art Museum for extended loan:
+               </chronItem>
+               <chronItem>
+                  <date standardDate="1989">1989</date>
+                  <previousColl>Acquired from the Worldwide Treasure Bureau, 1989, by the University of Virginia Art Museum for extended loan:
 							1989.EL.14.3.</previousColl>
-					          </chronItem>
-				        </chronList>
-			      </provenance>
+               </chronItem>
+            </chronList>
+         </provenance>
          <department>Roman</department>
          <collection xlink:type="simple" xlink:href="http://nomisma.org/id/vmfa">Virginia Museum of Fine Arts</collection>
       </adminDesc>
-	  </descMeta>
-	  <digRep>
-		    <mets:fileSec>
-			      <mets:fileGrp USE="obverse">
-				        <mets:file USE="reference" MIMETYPE="image/jpeg">
-					          <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n14_1989_3_obv.jpg"/>
-				        </mets:file>
-				        <mets:file USE="thumbnail" MIMETYPE="image/jpeg">
-					          <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n14_1989_3_obv.jpg"/>
-				        </mets:file>
-			      </mets:fileGrp>
-			      <mets:fileGrp USE="reverse">
-				        <mets:file USE="reference" MIMETYPE="image/jpeg">
-					          <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n14_1989_3_rev.jpg"/>
-				        </mets:file>
-				        <mets:file USE="thumbnail" MIMETYPE="image/jpeg">
-					          <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n14_1989_3_rev.jpg"/>
-				        </mets:file>
-			      </mets:fileGrp>
-		    </mets:fileSec>
-	  </digRep>
+   </descMeta>
+   <digRep>
+      <mets:fileSec>
+         <mets:fileGrp USE="obverse">
+            <mets:file USE="reference" MIMETYPE="image/jpeg">
+               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n14_1989_3_obv.jpg"/>
+            </mets:file>
+            <mets:file USE="thumbnail" MIMETYPE="image/jpeg">
+               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n14_1989_3_obv.jpg"/>
+            </mets:file>
+         </mets:fileGrp>
+         <mets:fileGrp USE="reverse">
+            <mets:file USE="reference" MIMETYPE="image/jpeg">
+               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n14_1989_3_rev.jpg"/>
+            </mets:file>
+            <mets:file USE="thumbnail" MIMETYPE="image/jpeg">
+               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n14_1989_3_rev.jpg"/>
+            </mets:file>
+         </mets:fileGrp>
+      </mets:fileSec>
+   </digRep>
 </nuds>

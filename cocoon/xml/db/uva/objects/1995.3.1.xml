@@ -26,26 +26,19 @@
             <eventDescription>Migrated to new NUDS schema version; nudsHeader to control.</eventDescription>
          </maintenanceEvent>
       </maintenanceHistory>
-      <publicationStmt>
-         <publisher>The University of Virginia Library</publisher>
-         
-         
-      </publicationStmt>
       <rightsStmt>
          <license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/"/>
-         <date standardDate="2012"/>
       </rightsStmt>
    </control>
    <descMeta>
       <title xml:lang="en">Decadrachm of Hicetas, Syracuse, 287 B.C.-278 B.C. 1995.3.1.</title>
-      
       <typeDesc>
          <objectType xlink:href="http://nomisma.org/id/coin">Coin</objectType>
          <denomination xlink:href="http://nomisma.org/id/decadrachm">Decadrachm</denomination>
          <material xlink:href="http://nomisma.org/id/av">Gold</material>
          <dateRange>
-            <fromDate standardDate="-0287">287 B.C.</fromDate>
-            <toDate standardDate="-0278">278 B.C.</toDate>
+            <fromDate standardDate="-0286">287 B.C.</fromDate>
+            <toDate standardDate="-0277">278 B.C.</toDate>
          </dateRange>
          <authority>
             <persname xlink:type="simple" xlink:role="authority"

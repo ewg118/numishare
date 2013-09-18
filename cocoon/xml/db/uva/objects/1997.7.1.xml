@@ -26,19 +26,12 @@
             <eventDescription>Migrated to new NUDS schema version; nudsHeader to control.</eventDescription>
          </maintenanceEvent>
       </maintenanceHistory>
-      <publicationStmt>
-         <publisher>The University of Virginia Library</publisher>
-         
-         
-      </publicationStmt>
       <rightsStmt>
          <license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/"/>
-         <date standardDate="2012"/>
       </rightsStmt>
    </control>
    <descMeta>
       <title xml:lang="en">Aureus of Trajan, Rome,  A.D. 98-117. 1997.7.1.</title>
-      
       <typeDesc xlink:type="simple" xlink:href="http://numismatics.org/ocre/id/ric.2.tr.821"/>
       <physDesc>
          <axis>7</axis>

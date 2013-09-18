@@ -26,19 +26,12 @@
             <eventDescription>Migrated to new NUDS schema version; nudsHeader to control.</eventDescription>
          </maintenanceEvent>
       </maintenanceHistory>
-      <publicationStmt>
-         <publisher>The University of Virginia Library</publisher>
-         
-         
-      </publicationStmt>
       <rightsStmt>
          <license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/"/>
-         <date standardDate="2012"/>
       </rightsStmt>
    </control>
    <descMeta>
       <title xml:lang="en">Sestertius of Antoninus Pius, Rome,   A.D. 141. 1994.10.6.</title>
-      
       <typeDesc xlink:type="simple" xlink:href="http://numismatics.org/ocre/id/ric.3.ant.1110"/>
       <physDesc>
          <axis>5</axis>

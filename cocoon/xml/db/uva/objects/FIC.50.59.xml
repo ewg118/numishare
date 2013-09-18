@@ -2,7 +2,7 @@
 <nuds xmlns="http://nomisma.org/nuds" xmlns:xlink="http://www.w3.org/1999/xlink"
       xmlns:mets="http://www.loc.gov/METS/"
       recordType="physical">
-	  <control>
+   <control>
       <recordId>FIC.50.59</recordId>
       <maintenanceStatus>revised</maintenanceStatus>
       <publicationStatus>approved</publicationStatus>
@@ -26,74 +26,67 @@
             <eventDescription>Migrated to new NUDS schema version; nudsHeader to control.</eventDescription>
          </maintenanceEvent>
       </maintenanceHistory>
-      <publicationStmt>
-			      <publisher>The University of Virginia Library</publisher>
-			
-			
-		    </publicationStmt>
       <rightsStmt>
-			      <license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/"/>
-			      <date standardDate="2012"/>
-		    </rightsStmt>
+         <license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/"/>
+      </rightsStmt>
    </control>
-	  <descMeta>
-		    <title xml:lang="en">Coin of Claudius, Caesareia Samariae, A.D. 54. FIC.50.59.</title>
-		
-		    <typeDesc>
-			      <objectType xlink:href="http://nomisma.org/id/coin">Coin</objectType>
-			      <material xlink:href="http://nomisma.org/id/ae">Bronze</material>
-			      <date standardDate="0054">A.D. 54</date>
-			      <authority>
-				        <persname xlink:type="simple" xlink:role="issuer"
+   <descMeta>
+      <title xml:lang="en">Coin of Claudius, Caesareia Samariae, A.D. 54. FIC.50.59.</title>
+      <typeDesc>
+         <objectType xlink:href="http://nomisma.org/id/coin">Coin</objectType>
+         <material xlink:href="http://nomisma.org/id/ae">Bronze</material>
+         <date standardDate="0054">A.D. 54</date>
+         <authority>
+            <persname xlink:type="simple" xlink:role="issuer"
                       xlink:href="http://nomisma.org/id/antonius_felix">Antonius Felix</persname>
-				        <persname xlink:type="simple" xlink:role="authority"
+            <persname xlink:type="simple" xlink:role="authority"
                       xlink:href="http://nomisma.org/id/claudius">Claudius</persname>
-				        <famname xlink:type="simple" xlink:role="dynasty">Julio-Claudian</famname>
-				        <corpname xlink:type="simple" xlink:role="state">Roman Empire</corpname>
-			      </authority>
-			      <geographic>
-				        <geogname xlink:type="simple" xlink:role="mint"
+            <famname xlink:type="simple" xlink:role="dynasty">Julio-Claudian</famname>
+            <corpname xlink:type="simple" xlink:role="state">Roman Empire</corpname>
+         </authority>
+         <geographic>
+            <geogname xlink:type="simple" xlink:role="mint"
                       xlink:href="http://nomisma.org/id/caesareia_samaria">Caesareia Samariae</geogname>
-				        <geogname xlink:type="simple" xlink:role="region"
+            <geogname xlink:type="simple" xlink:role="region"
                       xlink:href="http://nomisma.org/id/samaria">Samaria</geogname>
-			      </geographic>
-			      <obverse>
-				        <type>
-					          <description xml:lang="en">Two heads of wheat crossed. LIΔ below.</description>
-				        </type>
-				        <legend>ΤΙ ΚΛΑΥΔΙΟϹ ΚΑΙϹΑΡ ΓΕΡΜ</legend>
-			      </obverse>
-			      <reverse>
-				        <type>
-					          <description xml:lang="en">Olive wreath around legend.</description>
-				        </type>
-				        <legend>[...] ΑΓΡΙΠΠΙΝΑ</legend>
-			      </reverse>
-		    </typeDesc>
-		    <adminDesc>
+         </geographic>
+         <obverse>
+            <type>
+               <description xml:lang="en">Two heads of wheat crossed. LIΔ below.</description>
+            </type>
+            <legend>ΤΙ ΚΛΑΥΔΙΟϹ ΚΑΙϹΑΡ ΓΕΡΜ</legend>
+         </obverse>
+         <reverse>
+            <type>
+               <description xml:lang="en">Olive wreath around legend.</description>
+            </type>
+            <legend>[...] ΑΓΡΙΠΠΙΝΑ</legend>
+         </reverse>
+      </typeDesc>
+      <adminDesc>
          <identifier>FIC.50.59</identifier>
          <department>Roman</department>
          <collection xlink:type="simple" xlink:href="http://nomisma.org/id/uva">The Fralin Museum of Art</collection>
       </adminDesc>
-	  </descMeta>
-	  <digRep>
-		    <mets:fileSec>
-			      <mets:fileGrp USE="obverse">
-				        <mets:file USE="reference" MIMETYPE="image/jpeg">
-					          <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/nfic_50_59_obv.jpg"/>
-				        </mets:file>
-				        <mets:file USE="thumbnail" MIMETYPE="image/jpeg">
-					          <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/nfic_50_59_obv.jpg"/>
-				        </mets:file>
-			      </mets:fileGrp>
-			      <mets:fileGrp USE="reverse">
-				        <mets:file USE="reference" MIMETYPE="image/jpeg">
-					          <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/nfic_50_59_rev.jpg"/>
-				        </mets:file>
-				        <mets:file USE="thumbnail" MIMETYPE="image/jpeg">
-					          <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/nfic_50_59_rev.jpg"/>
-				        </mets:file>
-			      </mets:fileGrp>
-		    </mets:fileSec>
-	  </digRep>
+   </descMeta>
+   <digRep>
+      <mets:fileSec>
+         <mets:fileGrp USE="obverse">
+            <mets:file USE="reference" MIMETYPE="image/jpeg">
+               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/nfic_50_59_obv.jpg"/>
+            </mets:file>
+            <mets:file USE="thumbnail" MIMETYPE="image/jpeg">
+               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/nfic_50_59_obv.jpg"/>
+            </mets:file>
+         </mets:fileGrp>
+         <mets:fileGrp USE="reverse">
+            <mets:file USE="reference" MIMETYPE="image/jpeg">
+               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/nfic_50_59_rev.jpg"/>
+            </mets:file>
+            <mets:file USE="thumbnail" MIMETYPE="image/jpeg">
+               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/nfic_50_59_rev.jpg"/>
+            </mets:file>
+         </mets:fileGrp>
+      </mets:fileSec>
+   </digRep>
 </nuds>

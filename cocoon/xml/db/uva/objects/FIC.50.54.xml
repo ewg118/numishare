@@ -26,24 +26,17 @@
             <eventDescription>Migrated to new NUDS schema version; nudsHeader to control.</eventDescription>
          </maintenanceEvent>
       </maintenanceHistory>
-      <publicationStmt>
-         <publisher>The University of Virginia Library</publisher>
-         
-         
-      </publicationStmt>
       <rightsStmt>
          <license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/"/>
-         <date standardDate="2012"/>
       </rightsStmt>
    </control>
    <descMeta>
       <title xml:lang="en">Coin of Aretas IV, Petra, 9 B.C.-A.D. 40. FIC.50.54.</title>
-      
       <typeDesc>
          <objectType xlink:href="http://nomisma.org/id/coin">Coin</objectType>
          <material xlink:href="http://nomisma.org/id/ae">Bronze</material>
          <dateRange>
-            <fromDate standardDate="-0009">9 B.C.</fromDate>
+            <fromDate standardDate="-0008">9 B.C.</fromDate>
             <toDate standardDate="0040">A.D. 40</toDate>
          </dateRange>
          <authority>

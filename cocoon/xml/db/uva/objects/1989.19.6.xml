@@ -26,19 +26,12 @@
             <eventDescription>Migrated to new NUDS schema version; nudsHeader to control.</eventDescription>
          </maintenanceEvent>
       </maintenanceHistory>
-      <publicationStmt>
-         <publisher>The University of Virginia Library</publisher>
-         
-         
-      </publicationStmt>
       <rightsStmt>
          <license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/"/>
-         <date standardDate="2012"/>
       </rightsStmt>
    </control>
    <descMeta>
       <title xml:lang="en">Denarius of Julius Caesar, 49 B.C.-48 B.C. 1989.19.6.</title>
-      
       <typeDesc xlink:type="simple" xlink:href="http://nomisma.org/id/rrc-443.1"/>
       <adminDesc>
          <identifier>1989.19.6</identifier>
