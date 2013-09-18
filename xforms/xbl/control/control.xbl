@@ -17,6 +17,21 @@
 					<xxforms:variable name="display_path">../../</xxforms:variable>
 					<xforms:group ref="$binding">
 						<h2>Electronic Record Metadata: control</h2>
+						<div>
+							<xforms:select1 ref="nuds:maintenanceStatus">
+								<xforms:label>Maintenance Status</xforms:label>
+								<xforms:itemset nodeset="instance('maintenanceStatus-list')/item">
+									<xforms:label ref="."/>
+									<xforms:value ref="."/>
+								</xforms:itemset>
+								<xforms:action ev:event="xforms-value-changed">
+									<xforms:var name="value" select="."/>
+									<xforms:setvalue ref="../nuds:publicationStatus"
+										if="not($value='new') and not($value='revised') and not($value='derived')">inProcess</xforms:setvalue>
+								</xforms:action>
+
+							</xforms:select1>
+						</div>
 						<xforms:group ref="nuds:maintenanceAgency">
 							<div class="section">
 								<h3>Maintenance Agency</h3>
