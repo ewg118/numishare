@@ -443,6 +443,7 @@
 				</xforms:bind>
 				<xforms:bind nodeset="nuds:control">
 					<xforms:bind nodeset="nuds:recordId" required="true()" type="xs:anyURI"/>
+					<xforms:bind nodeset="nuds:otherRecordId" required="true()" type="xs:anyURI"/>
 					<xforms:bind nodeset="nuds:publicationStatus" readonly="../nuds:maintenanceStatus != 'new' and ../nuds:maintenanceStatus != 'revised' and ../nuds:maintenanceStatus != 'derived'"/>
 					<xforms:bind nodeset="nuds:maintenanceAgency/nuds:agencyName" constraint="string-length(.) &gt; 0"/>
 					<xforms:bind nodeset="nuds:maintenanceStatus" constraint="string-length(.) &gt; 0"/>
