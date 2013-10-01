@@ -15,8 +15,8 @@
 			<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
 		</h2>
 		<ul>
-			<xsl:apply-templates select="*[local-name()='reference'][not(child::*[local-name()='objectXMLWrap'])]" mode="descMeta"/>
-			<xsl:apply-templates select="*[local-name()='reference']/*[local-name()='objectXMLWrap']"/>
+			<xsl:apply-templates select="*:reference[not(child::*[local-name()='objectXMLWrap'])]|*:citation" mode="descMeta"/>
+			<xsl:apply-templates select="*:reference/*[local-name()='objectXMLWrap']"/>
 		</ul>
 	</xsl:template>
 
@@ -247,7 +247,7 @@
 	<xsl:template match="*[local-name()='objectXMLWrap']">
 		<xsl:variable name="label">
 			<xsl:choose>
-				<xsl:when test="parent::*[local-name()='reference']">
+				<xsl:when test="parent::*:reference">
 					<xsl:value-of select="numishare:regularize_node(parent::node()/local-name(), $lang)"/>
 				</xsl:when>
 			</xsl:choose>

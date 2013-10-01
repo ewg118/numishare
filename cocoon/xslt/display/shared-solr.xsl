@@ -207,6 +207,8 @@
 
 	<!-- generalize refDesc for NUDS and NUDS Hoard records -->
 	<xsl:template match="*[local-name()='refDesc']">
+		
+		<!-- references -->
 		<xsl:variable name="refs">
 			<refs>
 				<xsl:for-each select="*[local-name()='reference']">
@@ -234,6 +236,33 @@
 			</xsl:if>
 		</xsl:for-each>
 
+		<!-- citations -->
+		<xsl:variable name="citations">
+			<citations>
+				<xsl:for-each select="*[local-name()='citation']">
+					<citation>
+						<xsl:call-template name="get_ref"/>
+					</citation>
+				</xsl:for-each>
+			</citations>
+		</xsl:variable>
+		
+		<xsl:for-each select="exsl:node-set($citations)//citation">
+			<xsl:sort order="ascending"/>
+			<field name="citation_facet">
+				<xsl:value-of select="."/>
+			</field>
+			<xsl:if test="position() = 1">
+				<field name="citation_min">
+					<xsl:value-of select="."/>
+				</field>
+			</xsl:if>
+			<xsl:if test="position() = last()">
+				<field name="citation_max">
+					<xsl:value-of select="."/>
+				</field>
+			</xsl:if>
+		</xsl:for-each>
 	</xsl:template>
 
 	<xsl:template match="nuds:date">

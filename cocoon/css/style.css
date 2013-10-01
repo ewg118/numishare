@@ -86,14 +86,15 @@ table tr td {
 	border:0;
 }
 dt {
-	width:125px;
-	float:left;
+	float: left;
+	clear: left;
+	width: 100px;
+	text-align: right;
 	font-weight:bold;
 }
 dd {
-	float:left;
-	width:325px;
-	margin:0;
+	margin: 0 0 0 110px;
+	padding: 0 0 0.5em 0;
 }
 dt.ar {
 	width:125px;
@@ -105,7 +106,7 @@ dd.ar {
 	float:left;
 	width:325px;
 	margin:0;
-	text-align:right;	
+	text-align:right;
 }
 /*
   ***************************************
@@ -727,7 +728,7 @@ div.custominfostyle {
 	float:left;
 	width:20%;
 }
-/***SPARQL QUERY****/
+/* **SPARQL QUERY*** */
 .popupQuery {
 	width:700px;
 	padding:2px;
@@ -735,11 +736,11 @@ div.custominfostyle {
 #dateTemplate {
 	display:none;
 }
-.measurementTable{
-	display:none;	
+.measurementTable {
+	display:none;
 }
 .mr {
-	display:none;	
+	display:none;
 }
 /*
   ***************************************
