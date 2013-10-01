@@ -3,16 +3,9 @@
 	function: NUDS dynasty (famname xlink:role="dynasty") component
 -->
 <xbl:xbl xmlns="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xxforms="http://orbeon.org/oxf/xml/xforms"
-	xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:xbl="http://www.w3.org/ns/xbl" xmlns:xxbl="http://orbeon.org/oxf/xml/xbl" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+	xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:xbl="http://www.w3.org/ns/xbl" xmlns:xxbl="http://orbeon.org/oxf/xml/xbl" 
 	xmlns:oxf="http://www.orbeon.com/oxf/processors" xmlns:numishare="http://code.google.com/p/numishare/">
-
-
 	<xbl:binding id="numishare-dynasty" element="numishare|dynasty">
-		<xbl:resources>
-			<xbl:style src="/ops/yui/autocomplete/assets/skins/sam/autocomplete.css"/>
-			<xbl:style src="/xbl/orbeon/autocomplete/autocomplete.css"/>
-		</xbl:resources>
-
 		<xbl:template>
 			<xforms:group xbl:attr="model context ref bind" xxbl:scope="outer">
 				<xbl:content includes="xforms|label,xforms|help,xforms|hint,xforms|alert"/>
@@ -21,29 +14,31 @@
 						<xxforms:sequence select="." xxbl:scope="outer"/>
 					</xxforms:variable>
 					<xforms:action ev:event="xforms-enabled" ev:target="#observer">
-						<xforms:action if="string-length($binding/text()) = 0">
+						<xforms:action if="not(string($binding))">
 							<xforms:insert context="instance('control-instance')" nodeset="collection-name" position="after"
 								origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/get-authentication.xpl', 'dump', instance('dump'), 'data')"/>
 							<xforms:send submission="load-collections"/>
+							<xforms:setvalue ref="instance('control-instance')/typeof" value="$binding/@xlink:role"/>
+							<xforms:setvalue ref="instance('control-instance')/label"
+								value="concat(substring(upper-case($binding/@xlink:role), 1, 1), substring($binding/@xlink:role, 2))"/>
+							<xforms:setvalue ref="instance('control-instance')/facet" value="concat($binding/@xlink:role, '_facet')"/>
 						</xforms:action>
 					</xforms:action>
 
 					<xforms:group ref=".[string($binding)]">
 						<div>
 							<xforms:output ref="$binding">
-								<xforms:label>Dynasty</xforms:label>
+								<xforms:label ref="instance('control-instance')/label"/>
 							</xforms:output>
 							<xforms:trigger appearance="minimal">
 								<xforms:action ev:event="DOMActivate">
 									<!-- delete all holdover values before removing bind, possible orbeon bug -->
-									<xforms:setvalue ref="instance('suggest-query')"/>
+									<xforms:setvalue ref="instance('search-query')"/>
 									<xforms:setvalue ref="instance('temp')"/>
-									<xforms:delete context="instance('solr-respone')/*"/>
+									<xforms:delete context="instance('solr-response')/*"/>
 									<xforms:delete nodeset="$binding"/>
 								</xforms:action>
-								<xforms:label>
-									<img src="../../images/remove.gif"/>
-								</xforms:label>
+								<xforms:label><img src="../../images/remove.gif"/></xforms:label>
 							</xforms:trigger>
 							<xforms:group ref="$binding[not($binding/@title)]">
 								<xforms:trigger appearance="minimal">
@@ -56,44 +51,43 @@
 					</xforms:group>
 
 					<xforms:group ref=".[not(string($binding))]">
-						<div style="margin-top:10px;display:table;width:100%">
-							<fr:autocomplete ref="instance('temp')" dynamic-itemset="true" id="autocomplete-control">
-								<xforms:action ev:event="fr-search-changed">
-									<xxforms:variable name="search-value" select="event('fr-search-value')"/>
-									<xxforms:variable name="make-suggestion" select="string-length($search-value) >= 2"/>
-									<xforms:action if="$make-suggestion">
-										<xforms:setvalue ref="instance('suggest-query')" value="$search-value"/>
-										<xforms:send submission="suggest-dynasty"/>
-										<!-- always insert currently typed item into the itemset -->
-										<xforms:action ev:event="xforms-value-changed">
-											<xforms:insert context="instance('solr-response')//lst[@name='dynasty_facet']" origin="instance('facet-result-template')"/>
-											<xforms:setvalue ref="instance('solr-response')//lst[@name='dynasty_facet']/int[1]/@name" value="$search-value"/>
-										</xforms:action>
-									</xforms:action>
+						<div>
+							<xforms:input ref="instance('search-query')">
+								<xforms:label>Term</xforms:label>
+							</xforms:input>
+							<xforms:trigger>
+								<xforms:action ev:event="DOMActivate">
+									<xforms:send submission="suggest-term"/>
 								</xforms:action>
-								<xforms:label style="float:left">Dynasty</xforms:label>
-								<!-- get response from current position in suggestions-aggregate instance -->
-								<xforms:itemset nodeset="instance('solr-response')//lst[@name='dynasty_facet']/int">
+								<xforms:label>Search</xforms:label>
+							</xforms:trigger>
+							<xforms:trigger>
+								<xforms:label>Add New</xforms:label>
+								<xforms:action ev:event="DOMActivate">
+									<xforms:setvalue ref="$binding" value="instance('search-query')"/>
+								</xforms:action>
+							</xforms:trigger>
+						</div>
+						<xforms:group ref=".[count(instance('solr-response')/lst[@name='terms']//int) &gt; 0]">
+							<xforms:select1 ref="instance('temp')" appearance="compact" size="10">
+								<xforms:label>Location</xforms:label>
+								<xforms:itemset nodeset="instance('solr-response')/lst[@name='terms']//int">
 									<xforms:label ref="@name"/>
 									<xforms:value ref="@name"/>
 								</xforms:itemset>
-							</fr:autocomplete>
-							<xforms:group ref=".[string-length(instance('temp')) &gt; 0]">
-								<xforms:trigger>
-									<xforms:label>Select</xforms:label>
-									<xforms:action ev:event="DOMActivate">
-										<xforms:setvalue ref="$binding" value="instance('temp')"/>
-									</xforms:action>
-								</xforms:trigger>
-							</xforms:group>
-							<xforms:group ref="$binding[not($binding/@title)]">
-								<xforms:trigger appearance="minimal">
-									<xforms:insert if="not($binding/@title)" context="$binding" origin="xxforms:attribute('title', '')" ev:event="DOMActivate"/>
-									<xforms:label>
-										<img src="../../images/add.gif"/>Title</xforms:label>
-								</xforms:trigger>
-							</xforms:group>
-						</div>
+							</xforms:select1>
+							<xforms:trigger>
+								<xforms:label>Select</xforms:label>
+								<xforms:action ev:event="DOMActivate">
+									<xforms:setvalue ref="$binding" value="instance('temp')"/>
+								</xforms:action>
+							</xforms:trigger>
+						</xforms:group>
+						<xforms:group ref=".[string-length(instance('control-instance')/local-message) &gt; 0]">
+							<p>
+								<xforms:output ref="instance('control-instance')/local-message"/>
+							</p>
+						</xforms:group>
 					</xforms:group>
 					<xforms:group ref="$binding/@title">
 						<div>
@@ -103,9 +97,7 @@
 							</xforms:input>
 							<xforms:trigger appearance="minimal">
 								<xforms:delete ev:event="DOMActivate" nodeset="."/>
-								<xforms:label>
-									<img src="../../images/remove.gif"/>
-								</xforms:label>
+								<xforms:label><img src="../../images/remove.gif"/></xforms:label>
 							</xforms:trigger>
 						</div>
 					</xforms:group>
@@ -113,12 +105,16 @@
 					<!-- ***********************  DIALOG INTERNAL MODEL *********************** -->
 					<xforms:model id="dynasty-authorities-model" xmlns:xi="http://www.w3.org/2001/XInclude">
 						<xforms:instance id="exist-url">
-							<xi:include href="../../../apps/numishare/exist-url.xml"/>
+							<xi:include href="../../exist-url.xml"/>
 						</xforms:instance>
 
 						<xforms:instance id="control-instance">
 							<control xmlns="">
 								<collection-name/>
+								<local-message/>
+								<facet/>
+								<label/>
+								<typeof/>
 							</control>
 						</xforms:instance>
 
@@ -143,27 +139,15 @@
 						</xforms:instance>
 
 						<!-- Instance containing the query string -->
-						<xforms:instance id="suggest-query">
+						<xforms:instance id="search-query">
 							<query/>
 						</xforms:instance>
+						
 						<!-- Instance with the suggestions we get back from Solr -->
 						<xforms:instance id="solr-response">
-							<response xmlns="">
-								<lst name="responseHeader">
-									<int name="status">0</int>
-									<int name="QTime">0</int>
-								</lst>
-								<lst name="terms">
-									<lst name="dynasty_facet">
-										<int name="">1</int>
-									</lst>
-								</lst>
-							</response>
+							<response xmlns=""/>
 						</xforms:instance>
 						<!-- serves to aggregate current itemsets for each autocomplete in repetition -->
-						<xforms:instance id="facet-result-template">
-							<int name="" xmlns=""/>
-						</xforms:instance>
 
 						<xforms:submission id="load-collections" serialization="none" method="get" action="{instance('exist-url')}collections-list.xml" replace="instance" instance="collections-list"
 							xxforms:username="admin" xxforms:password="">
@@ -186,15 +170,23 @@
 							<xforms:message ev:event="xforms-submit-error" level="modal">Unable to load Numishare collections list.</xforms:message>
 						</xforms:submission>
 
-						<xforms:submission id="load-config" serialization="none" method="get" action="{instance('exist-url')}{instance('control-instance')/collection-name}/config.xml"
-							replace="instance" instance="config">
-							<xforms:message ev:event="xforms-submit-error" level="modal">Error loading config.</xforms:message>
+						<xforms:submission id="load-config" serialization="none" method="get"
+							action="{instance('exist-url')}{instance('control-instance')/collection-name}/config.xml" replace="instance" instance="config"
+							xxforms:username="admin" xxforms:password="">
+							<xforms:message ev:event="xforms-submit-error" level="modal">Unable to load Numishare config.</xforms:message>
 						</xforms:submission>
 
-						<xforms:submission id="suggest-dynasty" serialization="none" method="get"
-							action="{instance('config')/solr_published}terms?terms.fl=dynasty_facet&amp;terms.limit=10&amp;terms.sort=index&amp;terms.prefix={instance('suggest-query')}"
+						<xforms:submission id="suggest-term" serialization="none" method="get"
+							action="{instance('config')/solr_published}terms?terms.fl={instance('control-instance')/facet}&amp;terms.limit=25&amp;terms.sort=index&amp;terms.regex.flag=case_insensitive&amp;terms.regex=.*{instance('search-query')}.*"
 							instance="solr-response" replace="instance">
-							<xforms:message ev:event="xforms-submit-error" level="modal">Error querying Solr.</xforms:message>
+							<xforms:message ev:event="xforms-submit-error" level="modal">Unable to query Solr.</xforms:message>
+							<xforms:action ev:event="xforms-submit-done">
+								<!-- set or clear message based on number of results found -->
+								<xforms:setvalue ref="instance('control-instance')/local-message"
+									if="count(instance('solr-response')/lst[@name='terms']//int) = 0">No matching terms found.</xforms:setvalue>
+								<xforms:setvalue ref="instance('control-instance')/local-message"
+									if="count(instance('solr-response')/lst[@name='terms']//int) &gt; 0"/>
+							</xforms:action>
 						</xforms:submission>
 					</xforms:model>
 				</xforms:group>

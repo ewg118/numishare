@@ -399,24 +399,19 @@
 		</h2>
 		<xsl:choose>
 			<xsl:when test="string(@xlink:href)">
-				<xsl:variable name="href" select="@xlink:href"/>
-				<xsl:variable name="currentLang" select="if (string($lang)) then $lang else 'en'"/>
-				<xsl:variable name="label">
-					<xsl:choose>
-						<xsl:when test="contains($href, 'nomisma.org')">
-							<xsl:choose>
-								<xsl:when test="string(exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/skos:prefLabel[@xml:lang=$currentLang])">
-									<xsl:value-of select="exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/skos:prefLabel[@xml:lang=$currentLang]"/>
-								</xsl:when>
-								<xsl:otherwise>
-									<xsl:value-of select="$href"/>
-								</xsl:otherwise>
-							</xsl:choose>
-						</xsl:when>
-					</xsl:choose>
-				</xsl:variable>
-
-				<p>Source: <a href="{@xlink:href}"><xsl:value-of select="$label"/></a></p>
+				<xsl:choose>
+					<xsl:when test="contains(@xlink:href, 'nomisma.org')">
+						<xsl:variable name="elem" as="element()*">
+							<findspot xlink:href="{@xlink:href}"/>
+						</xsl:variable>
+						<ul>
+							<xsl:apply-templates select="$elem" mode="descMeta"/>
+						</ul>
+					</xsl:when>
+					<xsl:otherwise>
+						<p>Source: <a href="{@xlink:href}"><xsl:value-of select="@xlink:href"/></a></p>
+					</xsl:otherwise>
+				</xsl:choose>
 			</xsl:when>
 			<xsl:otherwise>
 				<ul>
@@ -545,11 +540,11 @@
 				</div>
 			</xsl:if>
 			<dl>
-				<xsl:if test="exsl:node-set($object)/nuds:nudsHeader/nuds:publicationStmt/nuds:publisher">
+				<xsl:if test="exsl:node-set($object)/nuds:control/nuds:maintenanceAgency/nuds:agencyName">
 					<div>
 						<dt><xsl:value-of select="numishare:regularize_node('publisher', $lang)"/>: </dt>
 						<dd style="margin-left:125px;">
-							<xsl:value-of select="exsl:node-set($object)/nuds:nudsHeader/nuds:publicationStmt/nuds:publisher"/>
+							<xsl:value-of select="exsl:node-set($object)/nuds:control/nuds:maintenanceAgency/nuds:agencyName"/>
 						</dd>
 					</div>
 				</xsl:if>

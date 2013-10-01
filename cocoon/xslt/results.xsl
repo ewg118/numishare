@@ -36,7 +36,7 @@
 	<xsl:variable name="sparqlResult" as="element()*">
 		<xsl:if test="string($sparql_endpoint)">
 			<xsl:variable name="identifiers">
-				<xsl:for-each select="descendant::str[@name='nudsid']">
+				<xsl:for-each select="descendant::str[@name='recordId']">
 					<xsl:value-of select="."/>
 					<xsl:if test="not(position()=last())">
 						<xsl:text>|</xsl:text>
@@ -50,7 +50,7 @@
 
 			<!-- process sparql into a manageable XML model -->
 			<response xmlns="http://www.w3.org/2005/sparql-results#">
-				<xsl:for-each select="descendant::str[@name='nudsid']">
+				<xsl:for-each select="descendant::str[@name='recordId']">
 					<xsl:variable name="uri" select="concat('http://numismatics.org/ocre/id/', .)"/>
 					<group>
 						<xsl:attribute name="id" select="."/>

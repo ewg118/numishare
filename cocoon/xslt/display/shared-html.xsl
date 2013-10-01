@@ -103,7 +103,14 @@
 										<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about=$href], $lang)"/>
 									</xsl:when>
 									<xsl:otherwise>
-										<xsl:value-of select="normalize-space(.)"/>
+										<xsl:choose>
+											<xsl:when test="not(string(.))">
+												<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about=$href], 'en')"/>
+											</xsl:when>
+											<xsl:otherwise>
+												<xsl:value-of select="normalize-space(.)"/>
+											</xsl:otherwise>
+										</xsl:choose>
 									</xsl:otherwise>
 								</xsl:choose>
 							</xsl:otherwise>

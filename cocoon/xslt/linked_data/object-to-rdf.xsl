@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" version="2.0">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:nm="http://nomisma.org/id/"
+	xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" version="2.0">
 	<xsl:include href="templates.xsl"/>
 
 	<!-- config variables -->
@@ -7,7 +8,34 @@
 
 	<xsl:template match="/">
 		<rdf:RDF>
-			<xsl:apply-templates select="/content/*[not(local-name()='config')]" mode="nomisma"/>
+			<xsl:choose>
+				<xsl:when
+					test="descendant::*:maintenanceStatus != 'new' and descendant::*:maintenanceStatus != 'derived' and descendant::*:maintenanceStatus != 'revised'">
+					<xsl:variable name="element">
+						<xsl:choose>
+							<xsl:when test="/content/*[not(self::config)]/local-name()='nudsHoard'">nm:hoard</xsl:when>
+							<xsl:otherwise>
+								<xsl:choose>
+									<xsl:when test="/content/*[not(self::config)]/@recordType='conceptual'">nm:type_series_item</xsl:when>
+									<xsl:when test="/content/*[not(self::config)]/@recordType='physical'">nm:coin</xsl:when>
+								</xsl:choose>
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:variable>
+					<xsl:element name="{$element}">
+						<xsl:attribute name="rdf:about">
+							<xsl:value-of select="concat($url, 'id/', descendant::*:recordId)"/>
+						</xsl:attribute>
+						<xsl:for-each select="descendant::*:otherRecordId">
+							<xsl:variable name="uri" select="if (contains(., 'http://')) then . else concat($url, 'id/', .)"/>
+							<dcterms:isReplacedBy rdf:resource="{$uri}"/>
+						</xsl:for-each>
+					</xsl:element>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:apply-templates select="/content/*[not(local-name()='config')]" mode="nomisma"/>
+				</xsl:otherwise>
+			</xsl:choose>
 		</rdf:RDF>
 	</xsl:template>
 

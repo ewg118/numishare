@@ -140,7 +140,7 @@
 					<!-- ***********************  DIALOG INTERNAL MODEL *********************** -->
 					<xforms:model id="banner-upload-model" xmlns:xi="http://www.w3.org/2001/XInclude">
 						<xforms:instance id="exist-url">
-							<xi:include href="../../../apps/numishare/exist-url.xml"/>
+							<xi:include href="../../exist-url.xml"/>
 						</xforms:instance>
 
 						<xforms:instance id="control-instance">

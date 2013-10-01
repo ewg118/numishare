@@ -38,7 +38,7 @@
 		</xsl:if>
 	</xsl:variable>
 
-	<xsl:variable name="id" select="normalize-space(//*[local-name()='nudsid'])"/>
+	<xsl:variable name="id" select="normalize-space(//*[local-name()='recordId'])"/>
 	<xsl:variable name="title" select="normalize-space(//*[local-name()='descMeta']/*[local-name()='title'])"/>
 
 	<xsl:variable name="contentsDesc" as="element()*">
@@ -47,7 +47,6 @@
 
 	<xsl:variable name="nudsGroup" as="element()*">
 		<nudsGroup>
-			<!-- get nomisma NUDS documents with get-nuds API -->
 			<xsl:variable name="id-param">
 				<xsl:for-each select="distinct-values(descendant::nuds:typeDesc[contains(@xlink:href, 'nomisma.org') and (boolean(index-of($codes, @certainty)) = false())]/@xlink:href)">
 					<xsl:value-of select="substring-after(., 'id/')"/>
@@ -58,8 +57,8 @@
 			</xsl:variable>
 
 			<xsl:if test="string-length($id-param) &gt; 0">
-				<xsl:for-each select="document(concat('http://admin.numismatics.org/nomisma/apis/getNuds?identifiers=', $id-param))//nuds:nuds">
-					<object xlink:href="http://nomisma.org/id/{nuds:nudsHeader/nuds:nudsid}">
+				<xsl:for-each select="document(concat('http://nomisma.org/apis/getNuds?identifiers=', $id-param))//nuds:nuds">
+					<object xlink:href="http://nomisma.org/id/{nuds:control/nuds:recordId}">
 						<xsl:copy-of select="."/>
 					</object>
 				</xsl:for-each>
@@ -84,7 +83,7 @@
 	<!-- get non-coin-type RDF in the document -->
 	<xsl:variable name="rdf" as="element()*">
 		<rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:nm="http://nomisma.org/id/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-			xmlns:rdfa="http://www.w3.org/ns/rdfa#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:gml="http://www.opengis.net/gml/">
+			xmlns:rdfa="http://www.w3.org/ns/rdfa#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#">
 			<xsl:variable name="id-param">
 				<xsl:for-each
 					select="distinct-values(descendant::*[not(local-name()='typeDesc') and not(local-name()='reference')][contains(@xlink:href, 'nomisma.org')]/@xlink:href|$nudsGroup/descendant::*[not(local-name()='object') and not(local-name()='typeDesc')][contains(@xlink:href, 'nomisma.org')]/@xlink:href)">
@@ -95,7 +94,7 @@
 				</xsl:for-each>
 			</xsl:variable>
 
-			<xsl:variable name="rdf_url" select="concat('http://admin.numismatics.org/nomisma/apis/getRdf?identifiers=', $id-param)"/>
+			<xsl:variable name="rdf_url" select="concat('http://nomisma.org/apis/getRdf?identifiers=', $id-param)"/>
 			<xsl:copy-of select="document($rdf_url)/rdf:RDF/*"/>
 		</rdf:RDF>
 	</xsl:variable>
@@ -268,7 +267,14 @@
 		<xsl:variable name="value">
 			<xsl:choose>
 				<xsl:when test="@standardDate">
-					<xsl:value-of select="@standardDate"/>
+					<xsl:choose>
+						<xsl:when test="number(@standardDate) &lt;= 0">
+							<xsl:value-of select="number(@standardDate) -1"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="number(@standardDate)"/>
+						</xsl:otherwise>
+					</xsl:choose>
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:choose>
@@ -276,7 +282,14 @@
 							<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about=$href], $defaultLang)"/>
 						</xsl:when>
 						<xsl:otherwise>
-							<xsl:value-of select="normalize-space(.)"/>
+							<xsl:choose>
+								<xsl:when test="not(string(.))">
+									<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about=$href], 'en')"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:value-of select="normalize-space(.)"/>
+								</xsl:otherwise>
+							</xsl:choose>
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:otherwise>

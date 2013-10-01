@@ -42,7 +42,7 @@
 		</xsl:choose>
 	</xsl:variable>
 
-	<!-- nudsHeader variables -->
+	<!-- control variables -->
 	<xsl:variable name="createdBy">
 		<xsl:choose>
 			<xsl:when test="string(exsl:node-set($config)/config/template/createdBy)">
@@ -53,7 +53,7 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:variable>
-	<xsl:variable name="publisher" select="exsl:node-set($config)/config/template/publisher"/>
+	<xsl:variable name="publisher" select="exsl:node-set($config)/config/template/agencyName"/>
 	<xsl:variable name="copyrightHolder" select="exsl:node-set($config)/config/template/copyrightHolder"/>
 	<xsl:variable name="language" select="exsl:node-set($config)/config/template/language"/>
 	<xsl:variable name="langcode" select="exsl:node-set($config)/config/template/language/@langcode"/>
@@ -83,10 +83,10 @@
 	<xsl:template match="row">
 		<nuds recordType="{elem[@mapping='recordType']}" xmlns="http://nomisma.org/nuds" xmlns:mets="http://www.loc.gov/METS/" xmlns:xlink="http://www.w3.org/1999/xlink"
 			xmlns:gml="http://www.opengis.net/gml">
-			<nudsHeader>
-				<nudsid>
-					<xsl:value-of select="normalize-space(elem[@mapping='nudsid'])"/>
-				</nudsid>
+			<control>
+				<recordId>
+					<xsl:value-of select="normalize-space(elem[@mapping='recordId'])"/>
+				</recordId>
 				<publicationStmt>
 					<publisher>
 						<xsl:value-of select="$publisher"/>
@@ -109,12 +109,12 @@
 						<xsl:value-of select="substring(datetime:dateTime(), 1, 4)"/>
 					</date>
 				</rightsStmt>
-			</nudsHeader>
+			</control>
 			<!-- descMeta -->
 			<descMeta>
 				<title>
 					<!-- create title from id for OCRE -->
-					<xsl:variable name="tokenized_id" select="tokenize(normalize-space(elem[@mapping='nudsid']), '\.')"/>
+					<xsl:variable name="tokenized_id" select="tokenize(normalize-space(elem[@mapping='recordId']), '\.')"/>
 					<xsl:variable name="authority-uri" select="normalize-space(translate(elem[@mapping='authority-personal-uri'], '?', ''))"/>
 					
 					<xsl:text>RIC </xsl:text>
@@ -239,7 +239,7 @@
 								<xsl:call-template name="date-string"/>
 								<xsl:text>, </xsl:text>
 							</xsl:if>
-							<xsl:value-of select="normalize-space(elem[@mapping='nudsid'])"/>
+							<xsl:value-of select="normalize-space(elem[@mapping='recordId'])"/>
 							<xsl:text>.</xsl:text>
 						</xsl:otherwise>
 					</xsl:choose>-->

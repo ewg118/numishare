@@ -13,7 +13,7 @@
 	<xsl:template match="nuds:nuds">
 		<doc>
 			<field name="id">
-				<xsl:value-of select="nuds:nudsHeader/nuds:nudsid"/>
+				<xsl:value-of select="nuds:control/nuds:recordId"/>
 			</field>
 			<field name="recordType">
 				<xsl:value-of select="@recordType"/>

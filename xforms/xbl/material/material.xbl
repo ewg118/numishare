@@ -1,12 +1,12 @@
 <!-- 	author: Ethan Gruber, American Numismatic Society 
 	last modified: January, 2012
-	function: Numishare denomination component: queries nomisma or accepts local vocabulary
+	function: Numishare material component: queries nomisma or accepts local vocabulary
 -->
 <xbl:xbl xmlns="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xxforms="http://orbeon.org/oxf/xml/xforms"
 	xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:xbl="http://www.w3.org/ns/xbl" xmlns:xxbl="http://orbeon.org/oxf/xml/xbl" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:oxf="http://www.orbeon.com/oxf/processors" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml"
 	xmlns:atom="http://www.w3.org/2005/Atom" xmlns:numishare="http://code.google.com/p/numishare/">
-	<xbl:binding id="numishare-denomination" element="numishare|denomination">
+	<xbl:binding id="numishare-material" element="numishare|material">
 		<xbl:template>
 			<xforms:group xbl:attr="model context ref bind" xxbl:scope="outer">
 				<xbl:content includes="xforms|label,xforms|help,xforms|hint,xforms|alert"/>
@@ -16,9 +16,9 @@
 					</xxforms:variable>
 					<xforms:action ev:event="xforms-enabled" ev:target="#observer">
 						<xforms:action if="string-length($binding/text()) = 0">
+							<xforms:send submission="load-collections"/>
 							<xforms:insert context="instance('control-instance')" nodeset="collection-name" position="after"
 								origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/get-authentication.xpl', 'dump', instance('dump'), 'data')"/>
-							<xforms:send submission="load-collections"/>
 							<xforms:setvalue ref="instance('interface-type')" value="'nomisma'"/>
 						</xforms:action>
 					</xforms:action>
@@ -27,7 +27,7 @@
 					<xforms:group ref=".[string($binding)]">
 						<div>
 							<xforms:output ref="$binding">
-								<xforms:label>Denomination</xforms:label>
+								<xforms:label>Material</xforms:label>
 							</xforms:output>
 							<xforms:group ref=".[string($binding/@xlink:href)]">
 								<xforms:trigger appearance="xxforms:link">
@@ -64,7 +64,7 @@
 					<!-- if $binding does not contain a value, display the interface for selecting a value -->
 					<xforms:group ref=".[not(string($binding))]">
 						<div style="display:table;width:100%;">
-							<h4>Denomination</h4>
+							<h4>Material</h4>
 							<xforms:trigger appearance="minimal">
 								<xforms:action ev:event="DOMActivate">
 									<!-- delete all holdover values before removing bind, possible orbeon bug -->
@@ -108,7 +108,7 @@
 												<!-- delete attributes, clear $binding text when applicable -->
 												<xforms:action if="not(string($binding/text()))">
 													<xforms:delete context="instance('solr-response')/*"/>
-													<xforms:dispatch target="denomination-autocomplete-control" name="fr-set-label">
+													<xforms:dispatch target="material-autocomplete-control" name="fr-set-label">
 														<xxforms:context name="label" select="''"/>
 													</xforms:dispatch>
 												</xforms:action>
@@ -154,19 +154,19 @@
 									</xforms:group>
 								</xforms:case>
 								<xforms:case id="local-autosuggest">
-									<fr:autocomplete ref="instance('temp')" dynamic-itemset="true" id="denomination-autocomplete-control">
+									<fr:autocomplete ref="instance('temp')" dynamic-itemset="true" id="material-autocomplete-control">
 										<xforms:action ev:event="fr-search-changed">
 											<xxforms:variable name="search-value" select="event('fr-search-value')"/>
 											<xxforms:variable name="make-suggestion" select="string-length($search-value) >= 2"/>
 											<xforms:action if="$make-suggestion">
 												<xforms:setvalue ref="instance('suggest-query')" value="$search-value"/>
-												<xforms:send submission="suggest-denomination"/>
+												<xforms:send submission="suggest-material"/>
 												<!-- always insert currently typed item into the itemset -->
 											</xforms:action>
 										</xforms:action>
 										<xforms:label style="float:left">Term</xforms:label>
 										<!-- get response from current position in suggestions-aggregate instance -->
-										<xforms:itemset nodeset="instance('solr-response')//lst[@name='denomination_facet']/int">
+										<xforms:itemset nodeset="instance('solr-response')//lst[@name='material_facet']/int">
 											<xforms:label ref="@name"/>
 											<xforms:value ref="@name"/>
 										</xforms:itemset>
@@ -200,9 +200,9 @@
 
 					<!-- ********************************************************************** -->
 					<!-- ***********************  DIALOG INTERNAL MODEL *********************** -->
-					<xforms:model id="denomination-model" xmlns:xi="http://www.w3.org/2001/XInclude">
+					<xforms:model id="material-model" xmlns:xi="http://www.w3.org/2001/XInclude">
 						<xforms:instance id="exist-url">
-							<xi:include href="../../../apps/numishare/exist-url.xml"/>
+							<xi:include href="../../exist-url.xml"/>
 						</xforms:instance>
 
 						<xforms:instance id="control-instance">
@@ -253,13 +253,13 @@
 						</xforms:instance>
 						<xforms:instance id="terms-temp">
 							<lst name="terms" xmlns="">
-								<lst name="denomination_facet">
+								<lst name="material_facet">
 									<int name="">1</int>
 								</lst>
 							</lst>
 						</xforms:instance>
 
-						<!-- denomination type radio button -->
+						<!-- material type radio button -->
 						<xforms:instance id="interface-type">
 							<interface/>
 						</xforms:instance>
@@ -288,19 +288,19 @@
 						<xforms:submission id="load-config" serialization="none" method="get" action="{instance('exist-url')}{instance('control-instance')/collection-name}/config.xml"
 							replace="instance" instance="config"/>
 
-						<!-- query nomisma for ancient denominations -->
-						<xforms:submission id="query-nomisma" serialization="none" method="get" action="http://nomisma.org/feed/?q=typeof:denomination+{instance('search-query')}" instance="feed"
+						<!-- query nomisma for ancient materials -->
+						<xforms:submission id="query-nomisma" serialization="none" method="get" action="http://nomisma.org/feed/?q=typeof:material+{instance('search-query')}" instance="feed"
 							replace="instance">
 							<xforms:message ev:event="xforms-submit-error" level="modal">Unable to communicate with nomisma.org Atom feed.</xforms:message>
 						</xforms:submission>
 
 						<!-- local vocabulary query -->
-						<xforms:submission id="suggest-denomination" serialization="none" method="get"
-							action="{instance('config')/solr_published}terms?terms.fl=denomination_facet&amp;terms.limit=10&amp;terms.sort=index&amp;terms.prefix={instance('suggest-query')}"
+						<xforms:submission id="suggest-material" serialization="none" method="get"
+							action="{instance('config')/solr_published}terms?terms.fl=material_facet&amp;terms.limit=10&amp;terms.sort=index&amp;terms.prefix={instance('suggest-query')}"
 							instance="solr-response" replace="instance">
 							<xforms:action ev:event="xforms-submit-done">
-								<xforms:insert context="instance('solr-response')/lst[@name='terms']/lst[@name='denomination_facet']" origin="instance('facet-result-template')"/>
-								<xforms:setvalue ref="instance('solr-response')/lst[@name='terms']/lst[@name='denomination_facet']/int[1]/@name" value="instance('suggest-query')"/>
+								<xforms:insert context="instance('solr-response')/lst[@name='terms']/lst[@name='material_facet']" origin="instance('facet-result-template')"/>
+								<xforms:setvalue ref="instance('solr-response')/lst[@name='terms']/lst[@name='material_facet']/int[1]/@name" value="instance('suggest-query')"/>
 							</xforms:action>
 						</xforms:submission>
 					</xforms:model>

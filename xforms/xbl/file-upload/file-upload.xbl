@@ -326,7 +326,7 @@
 					<xforms:model id="file-upload-model" xmlns:xi="http://www.w3.org/2001/XInclude">
 						<!-- exist URL is stored in an XML file -->
 						<xforms:instance id="exist-url">
-							<xi:include href="../../../apps/numishare/exist-url.xml"/>
+							<xi:include href="../../exist-url.xml"/>
 						</xforms:instance>
 
 						<xforms:instance id="control-instance">

@@ -3,7 +3,7 @@
 	<xsl:output method="xml" indent="yes" encoding="UTF-8"/>
 
 	<xsl:param name="contains_id">
-		<xsl:value-of select="count(//row[last()]//elem[@mapping='nudsid'])"/>
+		<xsl:value-of select="count(//row[last()]//elem[@mapping='recordId'])"/>
 	</xsl:param>
 
 	<xsl:template match="/">
@@ -18,7 +18,7 @@
 				<xsl:value-of select="//row[last()]/recordType"/>
 			</elem>
 			<xsl:if test="$contains_id = 0">
-				<elem name="nudsid" mapping="nudsid">
+				<elem name="recordId" mapping="recordId">
 					<xsl:value-of select="id"/>
 				</elem>
 			</xsl:if>

@@ -249,7 +249,6 @@
 										<img src="../../images/add.gif"/>Type Description</xforms:label>
 									<xforms:insert ev:event="DOMActivate" context="." origin="instance('obverse-template')" nodeset="./child::node()[last()]" if="count(nuds:obverse) = 0"/>
 									<xforms:insert ev:event="DOMActivate" context="nuds:obverse" origin="instance('type-template')" nodeset="./child::node()[last()]" if="count(nuds:type) = 0"/>
-									<xforms:insert ev:event="DOMActivate" context="nuds:obverse/nuds:type" origin="instance('description-template')" nodeset="./child::node()[last()]"/>
 									<xxforms:hide ev:event="DOMActivate" dialog="obverse-objects"/>
 								</xforms:trigger>
 								<xforms:group ref=".[count(nuds:obverse/nuds:typeSeries) = 0]">
@@ -328,6 +327,14 @@
 									</xforms:group>
 									<xforms:group ref="nuds:type">
 										<h4>Type</h4>
+										<span class="add">
+											<xforms:trigger appearance="minimal">
+												<xforms:label>
+													<img src="../../images/add.gif"/>
+												</xforms:label>
+												<xforms:insert context="." nodeset="./child::node()[last()]" origin="instance('descrption-template')"/>
+											</xforms:trigger>
+										</span>
 										<xforms:repeat nodeset="nuds:description">
 											<numishare:description/>
 										</xforms:repeat>
@@ -423,7 +430,6 @@
 										<img src="../../images/add.gif"/>Type Description</xforms:label>
 									<xforms:insert ev:event="DOMActivate" context="." origin="instance('reverse-template')" nodeset="./child::node()[last()]" if="count(nuds:reverse) = 0"/>
 									<xforms:insert ev:event="DOMActivate" context="nuds:reverse" origin="instance('type-template')" nodeset="./child::node()[last()]" if="count(nuds:type) = 0"/>
-									<xforms:insert ev:event="DOMActivate" context="nuds:reverse/nuds:type" origin="instance('description-template')" nodeset="./child::node()[last()]"/>
 									<xxforms:hide ev:event="DOMActivate" dialog="reverse-objects"/>
 								</xforms:trigger>
 								<xforms:group ref=".[count(nuds:reverse/nuds:typeSeries) = 0]">
@@ -501,6 +507,14 @@
 									</xforms:group>
 									<xforms:group ref="nuds:type">
 										<h4>Type</h4>
+										<span class="add">
+											<xforms:trigger appearance="minimal">
+												<xforms:label>
+													<img src="../../images/add.gif"/>
+												</xforms:label>
+												<xforms:insert context="." nodeset="./child::node()[last()]" origin="instance('descrption-template')"/>
+											</xforms:trigger>
+										</span>
 										<xforms:repeat nodeset="nuds:description">
 											<numishare:description/>
 										</xforms:repeat>
@@ -741,10 +755,10 @@
 							<xforms:group ref="nuds:geographic">
 								<div class="subsection">
 									<xforms:repeat nodeset="nuds:geogname[@xlink:role='mint']">
-										<numishare:mint/>
+										<numishare:geogname/>
 									</xforms:repeat>
 									<xforms:repeat nodeset="nuds:geogname[@xlink:role='region']">
-										<numishare:region/>
+										<numishare:geogname/>
 									</xforms:repeat>
 									<xforms:delete ev:event="xforms-value-changed" if="count(*) = 0" nodeset="."/>
 								</div>
@@ -757,97 +771,99 @@
 					<!-- ***********************  DIALOG INTERNAL MODEL *********************** -->
 					<xforms:model id="type-undertype-model" xmlns="http://nomisma.org/nuds">
 						<!-- typeDesc templates -->
-						<xforms:instance id="date-template">
+						<xforms:instance id="date-template" xxforms:exclude-result-prefixes="#all">
 							<date standardDate=""/>
 						</xforms:instance>
-						<xforms:instance id="dateRange-template">
+						<xforms:instance id="dateRange-template" xxforms:exclude-result-prefixes="#all">
 							<dateRange>
 								<fromDate standardDate=""/>
 								<toDate standardDate=""/>
 							</dateRange>
 						</xforms:instance>
-						<xforms:instance id="denomination-template">
+						<xforms:instance id="denomination-template" xxforms:exclude-result-prefixes="#all">
 							<denomination/>
 						</xforms:instance>
-						<xforms:instance id="manufacture-template">
-							<manufacture xlink:href=""/>
+						<xforms:instance id="manufacture-template" xxforms:exclude-result-prefixes="#all">
+							<manufacture xlink:type="simple" xlink:href=""/>
 						</xforms:instance>
-						<xforms:instance id="material-template">
-							<material xlink:href=""/>
+						<xforms:instance id="material-template" xxforms:exclude-result-prefixes="#all">
+							<material xlink:type="simple" xlink:href=""/>
 						</xforms:instance>
 						<!--geographic -->
-						<xforms:instance id="geographic-template">
+						<xforms:instance id="geographic-template" xxforms:exclude-result-prefixes="#all">
 							<geographic/>
 						</xforms:instance>
-						<xforms:instance id="mint-template">
-							<geogname xlink:role="mint"/>
+						<xforms:instance id="mint-template" xxforms:exclude-result-prefixes="#all">
+							<geogname xlink:type="simple" xlink:role="mint"/>
 						</xforms:instance>
-						<xforms:instance id="region-template">
-							<geogname xlink:role="region"/>
+						<xforms:instance id="region-template" xxforms:exclude-result-prefixes="#all">
+							<geogname xlink:type="simple" xlink:role="region"/>
 						</xforms:instance>
 						<!--authority/personal -->
-						<xforms:instance id="authpers-template">
+						<xforms:instance id="authpers-template" xxforms:exclude-result-prefixes="#all">
 							<authority/>
 						</xforms:instance>
-						<xforms:instance id="artist-template">
-							<persname xlink:role="artist"/>
+						<xforms:instance id="artist-template" xxforms:exclude-result-prefixes="#all">
+							<persname xlink:type="simple" xlink:role="artist"/>
 						</xforms:instance>
-						<xforms:instance id="authorityPersonal-template">
-							<persname xlink:role="authority"/>
+						<xforms:instance id="authorityPersonal-template" xxforms:exclude-result-prefixes="#all">
+							<persname xlink:type="simple" xlink:role="authority"/>
 						</xforms:instance>
-						<xforms:instance id="authorityCorporate-template">
-							<corpname xlink:role="authority"/>
+						<xforms:instance id="authorityCorporate-template" xxforms:exclude-result-prefixes="#all">
+							<corpname xlink:type="simple" xlink:role="authority"/>
 						</xforms:instance>
-						<xforms:instance id="dynasty-template">
-							<famname xlink:role="dynasty"/>
+						<xforms:instance id="dynasty-template" xxforms:exclude-result-prefixes="#all">
+							<famname xlink:type="simple" xlink:role="dynasty"/>
 						</xforms:instance>
-						<xforms:instance id="deity-template">
-							<persname xlink:role="deity"/>
+						<xforms:instance id="deity-template" xxforms:exclude-result-prefixes="#all">
+							<persname xlink:type="simple" xlink:role="deity"/>
 						</xforms:instance>
-						<xforms:instance id="engraver-template">
-							<persname xlink:role="engraver"/>
+						<xforms:instance id="engraver-template" xxforms:exclude-result-prefixes="#all">
+							<persname xlink:type="simple" xlink:role="engraver"/>
 						</xforms:instance>
-						<xforms:instance id="issuerPersonal-template">
-							<persname xlink:role="issuer"/>
+						<xforms:instance id="issuerPersonal-template" xxforms:exclude-result-prefixes="#all">
+							<persname xlink:type="simple" xlink:role="issuer"/>
 						</xforms:instance>
-						<xforms:instance id="issuerCorporate-template">
-							<corpname xlink:role="issuer"/>
+						<xforms:instance id="issuerCorporate-template" xxforms:exclude-result-prefixes="#all">
+							<corpname xlink:type="simple" xlink:role="issuer"/>
 						</xforms:instance>
-						<xforms:instance id="maker-template">
-							<persname xlink:role="maker"/>
+						<xforms:instance id="maker-template" xxforms:exclude-result-prefixes="#all">
+							<persname xlink:type="simple" xlink:role="maker"/>
 						</xforms:instance>
-						<xforms:instance id="state-template">
-							<corpname xlink:role="state"/>
+						<xforms:instance id="state-template" xxforms:exclude-result-prefixes="#all">
+							<corpname xlink:type="simple" xlink:role="state"/>
 						</xforms:instance>
 						<!-- obverse/reverse edge -->
-						<xforms:instance id="obverse-template">
+						<xforms:instance id="obverse-template" xxforms:exclude-result-prefixes="#all">
 							<obverse/>
 						</xforms:instance>
-						<xforms:instance id="reverse-template">
+						<xforms:instance id="reverse-template" xxforms:exclude-result-prefixes="#all">
 							<reverse/>
 						</xforms:instance>
-						<xforms:instance id="description-template">
+						<xforms:instance id="description-template" xxforms:exclude-result-prefixes="#all">
 							<description xml:lang=""/>
 						</xforms:instance>
-						<xforms:instance id="edge-template">
+						<xforms:instance id="edge-template" xxforms:exclude-result-prefixes="#all">
 							<edge/>
 						</xforms:instance>
-						<xforms:instance id="legend-template">
+						<xforms:instance id="legend-template" xxforms:exclude-result-prefixes="#all">
 							<legend/>
 						</xforms:instance>
-						<xforms:instance id="portrait-template">
-							<persname xlink:role="portrait"/>
+						<xforms:instance id="portrait-template" xxforms:exclude-result-prefixes="#all">
+							<persname xlink:type="simple" xlink:role="portrait"/>
 						</xforms:instance>
-						<xforms:instance id="symbol-template">
+						<xforms:instance id="symbol-template" xxforms:exclude-result-prefixes="#all">
 							<symbol/>
 						</xforms:instance>
-						<xforms:instance id="type-template">
-							<type/>
+						<xforms:instance id="type-template" xxforms:exclude-result-prefixes="#all">
+							<type>
+								<description xml:lang=""/>
+							</type>
 						</xforms:instance>
-						<xforms:instance id="typeSeries-template">
+						<xforms:instance id="typeSeries-template" xxforms:exclude-result-prefixes="#all">
 							<typeSeries/>
 						</xforms:instance>
-						<xforms:instance id="weightStandard-template">
+						<xforms:instance id="weightStandard-template" xxforms:exclude-result-prefixes="#all">
 							<weightStandard origin="" units="g"/>
 						</xforms:instance>
 

@@ -198,51 +198,53 @@
 		</h2>
 		<ul>
 			<xsl:apply-templates mode="descMeta"/>
-			<xsl:if test="not(nh:deposit/nh:date) and not(nh:deposit/nh:dateRange)">
-				<xsl:variable name="all-dates">
-					<dates>
-						<xsl:for-each select="parent::node()/nh:contentsDesc/nh:contents/descendant::nuds:typeDesc">
-							<xsl:choose>
-								<xsl:when test="string(@xlink:href)">
-									<xsl:variable name="href" select="@xlink:href"/>
-									<xsl:for-each select="exsl:node-set($nudsGroup)//object[@xlink:href=$href]/descendant::*/@standardDate">
-										<xsl:if test="number(.)">
-											<date>
-												<xsl:value-of select="number(.)"/>
-											</date>
-										</xsl:if>
-									</xsl:for-each>
-								</xsl:when>
-								<xsl:otherwise>
-									<xsl:for-each select="descendant::*/@standardDate">
-										<xsl:if test="number(.)">
-											<date>
-												<xsl:value-of select="number(.)"/>
-											</date>
-										</xsl:if>
-									</xsl:for-each>
-								</xsl:otherwise>
-							</xsl:choose>
-						</xsl:for-each>
-					</dates>
-				</xsl:variable>
-				<xsl:variable name="dates">
-					<dates>
-						<xsl:for-each select="distinct-values(exsl:node-set($all-dates)//date)">
-							<xsl:sort data-type="number"/>
-							<date>
-								<xsl:value-of select="number(.)"/>
-							</date>
-						</xsl:for-each>
-					</dates>
-				</xsl:variable>
-				
-				<li>
-					<b><xsl:value-of select="numishare:regularize_node('closing_date', $lang)"/>: </b>
-					<xsl:value-of select="nh:normalize_date(exsl:node-set($dates)/dates/date[last()], exsl:node-set($dates)/dates/date[last()])"/>
-				</li>
-			</xsl:if>
+			
 			<xsl:if test="$hasContents = 'true'">
+				<xsl:if test="not(nh:deposit/nh:date) and not(nh:deposit/nh:dateRange)">
+					<xsl:variable name="all-dates">
+						<dates>
+							<xsl:for-each select="parent::node()/nh:contentsDesc/nh:contents/descendant::nuds:typeDesc">
+								<xsl:choose>
+									<xsl:when test="string(@xlink:href)">
+										<xsl:variable name="href" select="@xlink:href"/>
+										<xsl:for-each select="exsl:node-set($nudsGroup)//object[@xlink:href=$href]/descendant::*/@standardDate">
+											<xsl:if test="number(.)">
+												<date>
+													<xsl:value-of select="number(.)"/>
+												</date>
+											</xsl:if>
+										</xsl:for-each>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:for-each select="descendant::*/@standardDate">
+											<xsl:if test="number(.)">
+												<date>
+													<xsl:value-of select="number(.)"/>
+												</date>
+											</xsl:if>
+										</xsl:for-each>
+									</xsl:otherwise>
+								</xsl:choose>
+							</xsl:for-each>
+						</dates>
+					</xsl:variable>
+					<xsl:variable name="dates">
+						<dates>
+							<xsl:for-each select="distinct-values(exsl:node-set($all-dates)//date)">
+								<xsl:sort data-type="number"/>
+								<date>
+									<xsl:value-of select="number(.)"/>
+								</date>
+							</xsl:for-each>
+						</dates>
+					</xsl:variable>
+					
+					<li>
+						<b><xsl:value-of select="numishare:regularize_node('closing_date', $lang)"/>: </b>
+						<xsl:value-of select="nh:normalize_date(exsl:node-set($dates)/dates/date[last()], exsl:node-set($dates)/dates/date[last()])"/>
+					</li>
+				</xsl:if>
+				
 				<xsl:variable name="total-counts" as="element()*">
 					<total-counts>
 						<xsl:for-each select="parent::node()/nh:contentsDesc/nh:contents/descendant::nuds:typeDesc">
@@ -388,15 +390,16 @@
 				<xsl:choose>
 					<xsl:when test="exsl:node-set($typeDesc)/nuds:typeDesc/nuds:date">
 						<xsl:value-of select="exsl:node-set($typeDesc)/nuds:typeDesc/nuds:date[1]"/>
-						<xsl:text> (RRC)</xsl:text>
 					</xsl:when>
 					<xsl:when test="exsl:node-set($typeDesc)/nuds:typeDesc/nuds:dateRange">
 						<xsl:value-of select="exsl:node-set($typeDesc)/nuds:typeDesc/nuds:dateRange/nuds:fromDate"/>
 						<xsl:text> - </xsl:text>
 						<xsl:value-of select="exsl:node-set($typeDesc)/nuds:typeDesc/nuds:dateRange/nuds:toDate"/>
-						<xsl:text> (RRC)</xsl:text>
 					</xsl:when>
 				</xsl:choose>
+				<xsl:if test="contains($typeDesc_resource, 'nomisma.org')">
+					<xsl:text> (RRC)</xsl:text>
+				</xsl:if>
 				<div class="coin-content" id="{$obj-id}-div" style="display:none">
 					<xsl:apply-templates select="nuds:physDesc"/>
 					<xsl:apply-templates select="exsl:node-set($typeDesc)/nuds:typeDesc">
@@ -427,7 +430,14 @@
 							<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about=$href], $lang)"/>
 						</xsl:when>
 						<xsl:otherwise>
-							<xsl:value-of select="normalize-space(.)"/>
+							<xsl:choose>
+								<xsl:when test="not(string(.))">
+									<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about=$href], 'en')"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:value-of select="normalize-space(.)"/>
+								</xsl:otherwise>
+							</xsl:choose>
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:otherwise>

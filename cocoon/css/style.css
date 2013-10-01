@@ -13,7 +13,8 @@ html {
 }
 body {
 	margin:auto;
-	width:972px;
+	min-width:972px;
+	width:90%;
 	border:1px solid gray;
 	margin-top:10px;
 	background-color:white;

@@ -2,7 +2,7 @@
 <xsl:stylesheet version="2.0" xmlns:nh="http://nomisma.org/nudsHoard" xmlns:nuds="http://nomisma.org/nuds" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:datetime="http://exslt.org/dates-and-times" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:exsl="http://exslt.org/common"
 	xmlns:mets="http://www.loc.gov/METS/" xmlns:math="http://exslt.org/math" xmlns:cinclude="http://apache.org/cocoon/include/1.0" xmlns:xlink="http://www.w3.org/1999/xlink"
-	xmlns:gml="http://www.opengis.net/gml/" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:numishare="http://code.google.com/p/numishare/" exclude-result-prefixes="#all">
+	xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:numishare="http://code.google.com/p/numishare/" exclude-result-prefixes="#all">
 	<xsl:output method="xml" encoding="UTF-8"/>
 
 	<xsl:template name="nudsHoard">
@@ -76,15 +76,15 @@
 			<field name="id">
 				<xsl:choose>
 					<xsl:when test="string($lang)">
-						<xsl:value-of select="concat(nh:nudsHeader/nh:nudsid, '-', $lang)"/>
+						<xsl:value-of select="concat(nh:control/nh:recordId, '-', $lang)"/>
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:value-of select="nh:nudsHeader/nh:nudsid"/>
+						<xsl:value-of select="nh:control/nh:recordId"/>
 					</xsl:otherwise>
 				</xsl:choose>
 			</field>
-			<field name="nudsid">
-				<xsl:value-of select="nh:nudsHeader/nh:nudsid"/>
+			<field name="recordId">
+				<xsl:value-of select="nh:control/nh:recordId"/>
 			</field>
 			<xsl:if test="string($lang)">
 				<field name="lang">
@@ -100,7 +100,7 @@
 						<xsl:value-of select="$title"/>
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:value-of select="nh:nudsHeader/nh:nudsid"/>
+						<xsl:value-of select="nh:control/nh:recordId"/>
 					</xsl:otherwise>
 				</xsl:choose>
 			</field>
@@ -251,7 +251,14 @@
 							<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about=$href], $lang)"/>
 						</xsl:when>
 						<xsl:otherwise>
-							<xsl:value-of select="normalize-space(.)"/>
+							<xsl:choose>
+								<xsl:when test="not(string(.))">
+									<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about=$href], 'en')"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:value-of select="normalize-space(.)"/>
+								</xsl:otherwise>
+							</xsl:choose>
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:otherwise>

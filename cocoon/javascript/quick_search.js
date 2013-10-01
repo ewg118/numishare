@@ -13,7 +13,7 @@ $(document).ready(function() {
 		var search_text = $('#qs_text') .attr('value');
 		var query = $('#qs_query').attr('value');
 		if (search_text != null && search_text != '') {
-			if (query == '*:*') {
+			if (query == '*:*' || query.length == 0) {
 				$('#qs_query') .attr('value', 'fulltext:' + search_text);
 			} else {
 				$('#qs_query') .attr('value', query + ' AND fulltext:' + search_text);
