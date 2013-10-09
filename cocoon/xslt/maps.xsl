@@ -102,7 +102,7 @@
 
 	<xsl:template name="maps">
 		<div class="yui3-g">
-			<div class="yui3-u-1">
+			<div class="yui3-u">
 				<div class="content">
 					<div id="backgroundPopup"/>
 					<h1>
@@ -172,13 +172,16 @@
 					<span style="display:none" id="path">
 						<xsl:value-of select="$display_path"/>						
 					</span>
+					<span style="display:none" id="pipeline">
+						<xsl:value-of select="$pipeline"/>
+					</span>
 				</div>
 			</div>
 		</div>
 	</xsl:template>
 
 	<xsl:template match="lst[@name='facet_fields']">
-		<xsl:for-each select="lst[not(@name='mint_geo') and not(@name='mint_facet')]">
+		<xsl:for-each select="lst[not(@name='mint_geo') and number(int[@name='numFacetTerms']) &gt; 0 and not(@name='mint_facet')]|lst[@name='mint_facet' and $collection_type='hoard']">
 			<li class="fl">
 				<xsl:variable name="val" select="@name"/>
 				<xsl:variable name="new_query">

@@ -9,19 +9,22 @@ $(document).ready(function () {
 	var popupStatus = 0;
 	
 	var langStr = getURLParameter('lang');
-	if (langStr == 'null'){
+	if (langStr == 'null') {
 		var lang = '';
 	} else {
 		var lang = langStr;
 	}
 	
+	var path = $('#path').text();
+	var pipeline = $('#pipeline').text();
+	
 	//set hierarchical labels on load
-	$('.hierarchical-facet').each(function(){
+	$('.hierarchical-facet').each(function () {
 		var field = $(this).attr('id').split('_hier')[0];
 		var title = $(this).attr('title');
 		hierarchyLabel(field, title);
 	});
-	if ($('#century_num').length > 0){
+	if ($('#century_num').length > 0) {
 		dateLabel();
 	}
 	
@@ -78,7 +81,7 @@ $(document).ready(function () {
 			new OpenLayers.Strategy.Fixed(),
 			new OpenLayers.Strategy.Cluster()],
 			protocol: new OpenLayers.Protocol.HTTP({
-				url: "findspots.kml?q=" + q + (lang.length > 0 ? '&lang=' + lang : ''),
+				url: path + "findspots.kml?q=" + q + (lang.length > 0? '&lang=' + lang: ''),
 				format: new OpenLayers.Format.KML({
 					extractStyles: false,
 					extractAttributes: true
@@ -94,7 +97,7 @@ $(document).ready(function () {
 			new OpenLayers.Strategy.Fixed(),
 			new OpenLayers.Strategy.Cluster()],
 			protocol: new OpenLayers.Protocol.HTTP({
-				url: "mints.kml?q=" + q + (lang.length > 0 ? '&lang=' + lang : ''),
+				url: path + "mints.kml?q=" + q + (lang.length > 0? '&lang=' + lang: ''),
 				format: new OpenLayers.Format.KML({
 					extractStyles: false,
 					extractAttributes: true
@@ -119,9 +122,11 @@ $(document).ready(function () {
 			isBaseLayer: true,
 			numZoomLevels: 12
 		});
-		
 		map.addLayer(imperium);
 		
+		map.addLayer(new OpenLayers.Layer.Google("Google Physical", {
+			type: google.maps.MapTypeId.TERRAIN
+		}));
 		map.addLayer(mintLayer);
 		map.addLayer(hoardLayer);
 		
@@ -175,7 +180,7 @@ $(document).ready(function () {
 			var category = id.split('-select')[0];
 			var mincount = $(this).attr('mincount');
 			
-			$.get('maps_get_facet_options', {
+			$.get(path + 'maps_get_facet_options', {
 				q: q, category: category, sort: 'index', limit: - 1, offset: 0, mincount: mincount, lang: lang
 			},
 			function (data) {
@@ -194,16 +199,16 @@ $(document).ready(function () {
 				$(this).next('button').children('span:nth-child(2)').text(title + ': ' + length + ' selected');
 			} else if (length > 0 && length <= 3) {
 				$(this).next('button').children('span:nth-child(2)').text(title + ': ' + array_of_checked_values.join(', '));
-			} else if (length == 0){
+			} else if (length == 0) {
 				$(this).next('button').children('span:nth-child(2)').text(title);
 			}
-
-			//refresh dynamically 
+			
+			//refresh dynamically
 			var q = getQuery();
 			if (q.length > 0) {
 				var category = id.split('-select')[0];
 				var mincount = $(this).attr('mincount');
-				$.get('maps_get_facet_options', {
+				$.get(path + 'maps_get_facet_options', {
 					q: q, category: category, sort: 'index', limit: - 1, offset: 0, mincount: mincount, lang: lang
 				},
 				function (data) {
@@ -218,16 +223,16 @@ $(document).ready(function () {
 				refreshMap();
 			}
 		},
-		uncheckAll: function () {	
+		uncheckAll: function () {
 			//reset title
 			var title = $(this).attr('title');
-			$(this).next('button').children('span:nth-child(2)').text(title);	
+			$(this).next('button').children('span:nth-child(2)').text(title);
 			
 			var id = $(this) .attr('id');
 			q = getQuery();
 			var category = id.split('-select')[0];
 			var mincount = $(this).attr('mincount');
-			$.get('maps_get_facet_options', {
+			$.get(path + 'maps_get_facet_options', {
 				q: q, category: category, sort: 'index', limit: - 1, offset: 0, mincount: mincount, lang: lang
 			},
 			function (data) {
@@ -250,14 +255,18 @@ $(document).ready(function () {
 		if (collection_type == 'hoard') {
 			$('#timemap').html('<div id="mapcontainer"><div id="map"/></div><div id="timelinecontainer"><div id="timeline"/></div>');
 			initialize_timemap(query);
-		} else {			
-			newUrl = "mints.kml?q=" + query + (lang.length > 0 ? '&lang=' + lang : '');
+		} else {
+			mintUrl = path + "mints.kml?q=" + query + (lang.length > 0? '&lang=' + lang: '');
+			hoardUrl = path + "findspots.kml?q=" + query + (lang.length > 0? '&lang=' + lang: '');
 			
 			mintLayer.loaded = false;
 			mintLayer.setVisibility(true);
 			//the refresh will force it to get the new KML data//
 			mintLayer.refresh({
-				force: true, url: newUrl
+				force: true, url: mintUrl
+			});
+			hoardLayer.refresh({
+				force: true, url: hoardUrl
 			});
 			map.zoomToExtent(mintLayer.getDataExtent());
 		}
@@ -266,6 +275,7 @@ $(document).ready(function () {
 	$('a.pagingBtn') .livequery('click', function (event) {
 		var href = 'results_ajax' + $(this) .attr('href');
 		$.get(href, {
+			pipeline: pipeline
 		},
 		function (data) {
 			$('#results') .html(data);
@@ -285,12 +295,12 @@ $(document).ready(function () {
 	},
 	function () {
 		$(this) .attr('class', 'ui-multiselect ui-widget ui-state-default ui-corner-all');
-	});	
+	});
 	
 	$('.hier-close') .click(function () {
 		disablePopup();
 		return false;
-	});	
+	});
 	
 	$('.hierarchical-facet').click(function () {
 		if (popupStatus == 0) {
@@ -301,8 +311,8 @@ $(document).ready(function () {
 		var field = $(this) .attr('id').split('_hier')[0];
 		var q = getQuery();
 		if ($('#' + list_id).html().indexOf('<li') < 0) {
-			$.get('get_hier', {
-				q: q, field: field, prefix: 'L1', fq: '*', section: 'collection', link: '', lang: lang
+			$.get(path + 'get_hier', {
+				q: q, field: field, prefix: 'L1', fq: '*', section: 'collection', link: '', lang: lang, pipeline: pipeline
 			},
 			function (data) {
 				$('#' + list_id) .html(data);
@@ -322,8 +332,8 @@ $(document).ready(function () {
 		var section = $(this) .attr('section');
 		var link = $(this) .attr('link');
 		if ($(this) .children('img') .attr('src') .indexOf('plus') >= 0) {
-			$.get('get_hier', {
-				q: q, field:field, prefix: prefix, fq: '"' +fq + '"', link: link, section: section, lang: lang
+			$.get(path + 'get_hier', {
+				q: q, field: field, prefix: prefix, fq: '"' + fq + '"', link: link, section: section, lang: lang, pipeline: pipeline
 			},
 			function (data) {
 				$('#' + list) .html(data);
@@ -353,7 +363,6 @@ $(document).ready(function () {
 			$('#' + field + '_hier_link').attr('title', title);
 			$('#' + field + '_hier_link').children('span:nth-child(2)').html(title);
 		}
-		
 	});
 	
 	/***************** DRILLDOWN FOR DATES ********************/
@@ -376,9 +385,9 @@ $(document).ready(function () {
 		
 		q = getQuery();
 		var list_id = $(this) .attr('id').split('_link')[0] + '-list';
-		if ($('#' + list_id).html().indexOf('<li') < 0){
-			$.get('get_centuries', {
-				q: q
+		if ($('#' + list_id).html().indexOf('<li') < 0) {
+			$.get(path + 'get_centuries', {
+				q: q, pipeline: pipeline
 			},
 			function (data) {
 				$('#century_num-list').html(data);
@@ -390,7 +399,7 @@ $(document).ready(function () {
 	
 	$('.expand_century').livequery('click', function (event) {
 		var century = $(this).attr('century');
-	
+		
 		//var q = $(this).attr('q');
 		var q = getQuery();
 		var expand_image = $(this).children('img').attr('src');
@@ -402,8 +411,8 @@ $(document).ready(function () {
 			$(this).children('img').attr('src', expand_image.replace('plus', 'minus'));
 			//perform ajax load on first click of expand button
 			if ($(this).parent('li').children('ul').html().indexOf('<li') < 0) {
-				$.get('get_decades', {
-					q: q, century: '"' + century + '"'
+				$.get(path + 'get_decades', {
+					q: q, century: '"' + century + '"', pipeline: pipeline
 				},
 				function (data) {
 					$('#century_' + century + '_list').html(data);
@@ -518,9 +527,8 @@ $(document).ready(function () {
 		$('.show_coins').livequery('click', function (event) {
 			var query = $(this).attr('q');
 			var lang = $('input[name=lang]').val();
-			$.get('results_ajax', {
-				q: query,
-				lang: lang
+			$.get(path + 'results_ajax', {
+				q: query, lang: lang, pipeline: pipeline
 			},
 			function (data) {
 				$('#results') .html(data);
@@ -534,9 +542,8 @@ $(document).ready(function () {
 	}
 	
 	function getURLParameter(name) {
-	    return decodeURI(
-	        (RegExp(name + '=' + '(.+?)(&|$)').exec(location.search)||[,null])[1]
-	    );
+		return decodeURI(
+		(RegExp(name + '=' + '(.+?)(&|$)').exec(location.search) ||[, null])[1]);
 	}
 	
 	/********************
@@ -555,7 +562,7 @@ $(document).ready(function () {
 				theme: "red",
 				type: "kml", // Data to be loaded in KML - must be a local URL
 				options: {
-					url: "hoards.kml?q=" + q + (lang.length > 0 ? '&lang=' + lang : '')// KML file to load
+					url: "hoards.kml?q=" + q + (lang.length > 0? '&lang=' + lang: '')// KML file to load
 				}
 			}],
 			bandIntervals:[
