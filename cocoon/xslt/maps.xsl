@@ -172,6 +172,9 @@
 					<span style="display:none" id="path">
 						<xsl:value-of select="$display_path"/>						
 					</span>
+					<span style="display:none" id="pipeline">
+						<xsl:value-of select="$pipeline"/>
+					</span>
 				</div>
 			</div>
 		</div>

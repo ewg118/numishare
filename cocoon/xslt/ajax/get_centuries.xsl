@@ -4,6 +4,16 @@
 	<xsl:include href="../functions.xsl"/>
 	<xsl:output method="xml" encoding="UTF-8"/>
 	<xsl:param name="q"/>
+	<xsl:param name="pipeline"/>
+	
+	<xsl:variable name="display_path">
+		<xsl:choose>
+			<xsl:when test="$pipeline='maps'">../</xsl:when>
+			<xsl:when test="$pipeline='maps_fullscreen'">../../</xsl:when>
+			<xsl:otherwise/>
+		</xsl:choose>
+	</xsl:variable>
+	
 	<xsl:variable name="centuries" as="element()*">
 		<xsl:variable name="all" as="element()*">
 			<centuries>
@@ -64,7 +74,7 @@
 						<xsl:when test="number(@name) &lt; 0">
 							<li>
 								<span class="expand_century" century="{@name}" q="{$q}">
-									<img src="images/{if (boolean(index-of($centuries//century, @name)) = true()) then 'minus' else 'plus'}.gif" alt="expand"/>
+									<img src="{$display_path}images/{if (boolean(index-of($centuries//century, @name)) = true()) then 'minus' else 'plus'}.gif" alt="expand"/>
 								</span>
 								<xsl:choose>
 									<xsl:when test="boolean(index-of($centuries//century, @name)) = true()">
@@ -87,7 +97,7 @@
 						<xsl:otherwise>
 							<li>
 								<span class="expand_century" century="{@name}" q="{$q}">
-									<img src="images/{if (boolean(index-of($centuries//century, @name)) = true()) then 'minus' else 'plus'}.gif" alt="expand"/>
+									<img src="{$display_path}images/{if (boolean(index-of($centuries//century, @name)) = true()) then 'minus' else 'plus'}.gif" alt="expand"/>
 								</span>
 								<xsl:choose>
 									<xsl:when test="boolean(index-of($centuries//century, @name)) = true()">

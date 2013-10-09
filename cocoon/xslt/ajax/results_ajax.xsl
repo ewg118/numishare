@@ -4,8 +4,17 @@
 	<xsl:include href="../functions.xsl"/>
 	<xsl:include href="../templates.xsl"/>
 	<xsl:include href="../results_generic.xsl"/>
-	<xsl:param name="display_path"/>	
+	<xsl:param name="pipeline"/>
 	<xsl:param name="lang"/>
+	
+	<xsl:variable name="display_path">
+		<xsl:choose>
+			<xsl:when test="$pipeline='maps'">../</xsl:when>
+			<xsl:when test="$pipeline='maps_fullscreen'">../../</xsl:when>
+			<xsl:otherwise/>
+		</xsl:choose>
+	</xsl:variable>
+	
 
 	<xsl:param name="q"/>
 	<xsl:param name="sort"/>

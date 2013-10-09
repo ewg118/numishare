@@ -6,6 +6,15 @@
 	<!-- globals -->
 	<xsl:param name="solr-url"/>
 	<xsl:param name="collection-name"/>
+	<xsl:param name="pipeline"/>
+	
+	<xsl:variable name="display_path">
+		<xsl:choose>
+			<xsl:when test="$pipeline='maps'">../</xsl:when>
+			<xsl:when test="$pipeline='maps_fullscreen'">../../</xsl:when>
+			<xsl:otherwise/>
+		</xsl:choose>
+	</xsl:variable>
 
 	<!-- solr query parameters -->
 	<xsl:param name="q"/>
@@ -40,7 +49,7 @@
 							<xsl:variable name="starter-space" select="if(contains(@name, 'L1|')) then '' else ' '"/>
 							<span class="expand_category" id="{replace(@name, ' ', '_')}__{$field}" field="{$field}" q="{$q}" next-prefix="{$next-prefix}"
 								link="{concat($link, $starter-space, '+&#x022;', @name, '&#x022;')}">
-								<img src="images/{if (contains($q, @name)) then 'minus' else 'plus'}.gif" alt="expand"/>
+								<img src="{$display_path}images/{if (contains($q, @name)) then 'minus' else 'plus'}.gif" alt="expand"/>
 							</span>
 						</xsl:if>
 
