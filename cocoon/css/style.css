@@ -86,8 +86,14 @@ table tr td {
 	border:0;
 }
 dt {
-	width:125px;
-	float:left;
+	float: left;
+	clear: left;
+	width: 100px;
+	text-align: right;
+	font-weight:bold;
+}
+dd {
+	margin: 0 0 0 110px;
 }
 /*
   ***************************************
@@ -670,7 +676,6 @@ div.custominfostyle {
 }
 .hierarchical-list ul {
 	padding-left:20px;
-		
 }
 .hierarchical-list {
 	display:table;
@@ -727,7 +732,7 @@ div.custominfostyle {
 	float:left;
 	width:20%;
 }
-/***SPARQL QUERY****/
+/* **SPARQL QUERY*** */
 .popupQuery {
 	width:700px;
 	padding:2px;
@@ -735,11 +740,11 @@ div.custominfostyle {
 #dateTemplate {
 	display:none;
 }
-.measurementTable{
-	display:none;	
+.measurementTable {
+	display:none;
 }
 .mr {
-	display:none;	
+	display:none;
 }
 /*
   ***************************************
