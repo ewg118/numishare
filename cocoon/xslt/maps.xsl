@@ -108,7 +108,7 @@
 					<h1>
 						<xsl:value-of select="numishare:normalizeLabel('header_maps', $lang)"/>
 					</h1>
-					<p>For usage instructions, see <a href="http://wiki.numismatics.org/numishare:maps">http://wiki.numismatics.org/numishare:maps</a>.  View in <a href="{$department}/fullscreen">fullscreen mode</a>.</p>
+					<p>For usage instructions, see <a href="http://wiki.numismatics.org/numishare:maps">http://wiki.numismatics.org/numishare:maps</a>.  View in <a href="maps/fullscreen">fullscreen mode</a>.</p>
 					
 					<div class="remove_facets"/>
 
