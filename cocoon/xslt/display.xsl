@@ -124,14 +124,14 @@
 	<xsl:template match="/">
 		<xsl:choose>
 			<xsl:when
-				test="count(descendant::*:otherRecordId) = 1 and (descendant::*:control/*:maintenanceStatus='deletedReplace' or descendant::*:control/*:maintenanceStatus='cancelled')">
+				test="count(descendant::*:otherRecordId[@semantic='dcterms:isReplacedBy']) = 1 and descendant::*:control/*:maintenanceStatus='cancelledReplaced'">
 				<xsl:variable name="uri">
 					<xsl:choose>
-						<xsl:when test="contains(descendant::*:otherRecordId[1], 'http://')">
+						<xsl:when test="contains(descendant::*:otherRecordId[@semantic='dcterms:isReplacedBy'][1], 'http://')">
 							<xsl:value-of select="descendant::*:otherRecordId[1]"/>
 						</xsl:when>
 						<xsl:otherwise>
-							<xsl:value-of select="concat($url, 'id/', descendant::*:otherRecordId[1])"/>
+							<xsl:value-of select="concat($url, 'id/', descendant::*:otherRecordId[@semantic='dcterms:isReplacedBy'][1])"/>
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:variable>
@@ -155,7 +155,7 @@
 					</body>
 				</html>
 			</xsl:when>
-			<xsl:when test="count(descendant::*:otherRecordId) &gt; 1 and descendant::*:control/*:maintenanceStatus='deletedSplit'">
+			<xsl:when test="count(descendant::*:otherRecordId[@semantic='dcterms:isReplacedBy']) &gt; 1 and descendant::*:control/*:maintenanceStatus='cancelledSplit'">
 				<html>
 					<head>
 						<xsl:call-template name="generic_head"/>
@@ -170,7 +170,7 @@
 									</h1>
 									<p>This resource has been split and supplanted by the following new URIs:</p>
 									<ul>
-										<xsl:for-each select="descendant::*:otherRecordId">
+										<xsl:for-each select="descendant::*:otherRecordId[@semantic='dcterms:isReplacedBy']">
 											<xsl:variable name="uri" select="if (contains(., 'http://')) then . else concat($url, 'id/', .)"/>
 											<li>
 												<a href="{$uri}">
