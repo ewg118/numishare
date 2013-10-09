@@ -97,6 +97,16 @@
 							<xsl:value-of select="."/>
 						</skos:definition>
 					</xsl:for-each>
+					
+					<!-- other ids -->
+					<xsl:for-each select="descendant::*:otherRecordId[string(@semantic)]">
+						<xsl:variable name="uri" select="if (contains(., 'http://')) then . else concat($url, 'id/', .)"/>
+						<xsl:variable name="prefix" select="substring-before(@semantic, ':')"/>
+						<xsl:variable name="namespace" select="ancestor::*:control/*:semanticDeclaration[*:prefix=$prefix]/*:namespace"/>
+						<xsl:element name="{@semantic}" namespace="{$namespace}">
+							<xsl:attribute name="rdf:resource" select="$uri"/>
+						</xsl:element>							
+					</xsl:for-each>
 
 					<!-- process typeDesc -->
 					<xsl:apply-templates select="nuds:descMeta/nuds:typeDesc" mode="nomisma"/>
@@ -105,6 +115,9 @@
 			<xsl:when test="@recordType='physical'">
 				<nm:coin rdf:about="{$url}id/{$id}">
 					<dcterms:title>
+						<xsl:if test="string(@xml:lang)">
+							<xsl:attribute name="xml:lang" select="@xml:lang"/>
+						</xsl:if>
 						<xsl:value-of select="nuds:descMeta/nuds:title"/>
 					</dcterms:title>
 					<xsl:if test="nuds:descMeta/nuds:adminDesc/nuds:identifier">
@@ -132,6 +145,17 @@
 					<xsl:if test="string(nuds:descMeta/nuds:typeDesc/@xlink:href)">
 						<nm:type_series_item rdf:resource="{nuds:descMeta/nuds:typeDesc/@xlink:href}"/>
 					</xsl:if>
+					
+					<!-- other ids -->
+					<xsl:for-each select="descendant::*:otherRecordId[string(@semantic)]">
+						<xsl:variable name="uri" select="if (contains(., 'http://')) then . else concat($url, 'id/', .)"/>
+						<xsl:variable name="prefix" select="substring-before(@semantic, ':')"/>
+						<xsl:variable name="namespace" select="ancestor::*:control/*:semanticDeclaration[*:prefix=$prefix]/*:namespace"/>
+						<xsl:element name="{@semantic}" namespace="{$namespace}">
+							<xsl:attribute name="rdf:resource" select="$uri"/>
+						</xsl:element>							
+					</xsl:for-each>
+					
 					<!-- physical attributes -->
 					<xsl:apply-templates select="nuds:descMeta/nuds:physDesc" mode="nomisma"/>
 					
@@ -185,7 +209,7 @@
 
 	<xsl:template match="nuds:typeDesc" mode="nomisma">
 		<xsl:if test="nuds:objectType[@xlink:href]">
-			<dc:format rdf:resource="{nuds:objectType/@xlink:href}"/>
+			<nm:object_type rdf:resource="{nuds:objectType/@xlink:href}"/>
 		</xsl:if>
 
 		<xsl:if test="nuds:obverse">
@@ -289,6 +313,15 @@
 			<dcterms:publisher>
 				<xsl:value-of select="descendant::nh:control/nh:maintenanceAgency/nh:agencyName"/>
 			</dcterms:publisher>
+			<!-- other ids -->
+			<xsl:for-each select="descendant::*:otherRecordId[string(@semantic)]">
+				<xsl:variable name="uri" select="if (contains(., 'http://')) then . else concat($url, 'id/', .)"/>
+				<xsl:variable name="prefix" select="substring-before(@semantic, ':')"/>
+				<xsl:variable name="namespace" select="ancestor::*:control/*:semanticDeclaration[*:prefix=$prefix]/*:namespace"/>
+				<xsl:element name="{@semantic}" namespace="{$namespace}">
+					<xsl:attribute name="rdf:resource" select="$uri"/>
+				</xsl:element>							
+			</xsl:for-each>
 			<xsl:for-each select="descendant::nh:geogname[@xlink:role='findspot'][string(@xlink:href)]">
 				<xsl:variable name="href" select="@xlink:href"/>
 				<nm:findspot>
