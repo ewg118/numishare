@@ -293,7 +293,7 @@ These only need to be changed if Solr and Orbeon are run on a different server o
 			<map:match pattern="nomisma.rdf">
 				<map:aggregate element="content">
 					<map:part
-						src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}+AND+{url-encode:coinType_uri:*}&amp;rows=100000&amp;fl=id,recordId,title_display,repository_facet,coinType_uri,recordType,publisher_display,axis_num,diameter_num,taq_num,weight_num,thumbnail_obv,reference_obv,thumbnail_rev,reference_rev,findspot_uri,findspot_geo"/>
+						src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}+AND+{url-encode:coinType_uri:*}&amp;rows=100000&amp;fl=id,recordId,title_display,repository_facet,coinType_uri,recordType,publisher_display,axis_num,diameter_num,taq_num,weight_num,thumbnail_obv,reference_obv,thumbnail_rev,reference_rev,findspot_uri,findspot_geo,collection_uri"/>
 					<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
 				</map:aggregate>
 				<map:transform src="xslt/linked_data/solr_to_rdf.xsl" label="basiccontent" type="xslt-saxon">
