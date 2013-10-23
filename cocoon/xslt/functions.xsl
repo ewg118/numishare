@@ -165,7 +165,7 @@
 					<xsl:when test="$label='grade'">Градус</xsl:when>
 					<xsl:when test="$label='height'">Височина</xsl:when>
 					<xsl:when test="$label='hoardDesc'">Описание на съкровището</xsl:when>
-					<xsl:when test="$label='identifieri'">Идентифицирано/ а от </xsl:when>
+					<xsl:when test="$label='identifier'">Идентифицирано/ а от </xsl:when>
 					<xsl:when test="$label='issuer'">Издател</xsl:when>
 					<xsl:when test="$label='landowner'">Собственик на земята</xsl:when>
 					<xsl:when test="$label='legend'">Легенда</xsl:when>
@@ -214,6 +214,9 @@
 					<xsl:when test="$label='weight'">Тегло</xsl:when>
 					<xsl:when test="$label='width'">Ширина</xsl:when>
 					<xsl:when test="$label='year'">Година</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="numishare:regularize_node($label, 'en')"/>
+					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
 			<xsl:when test="$lang='de'">
@@ -361,7 +364,7 @@
 					<xsl:when test="$label='grade'">Διαβάθμιση</xsl:when>
 					<xsl:when test="$label='height'">Ύψος</xsl:when>
 					<xsl:when test="$label='hoardDesc'">Περιγραφή «θησαυρού»</xsl:when>
-					<xsl:when test="$label='identifieri'">Υπεύθυνος ταύτισης</xsl:when>
+					<xsl:when test="$label='identifier'">Υπεύθυνος ταύτισης</xsl:when>
 					<xsl:when test="$label='issuer'">Υπεύθυνος έκδοσης</xsl:when>
 					<xsl:when test="$label='landowner'">Ιδιοκτήτης χώρου ανεύρεσης</xsl:when>
 					<xsl:when test="$label='legend'">Επιγραφή</xsl:when>
@@ -462,7 +465,7 @@
 					<xsl:when test="$label='grade'">Grado</xsl:when>
 					<xsl:when test="$label='height'">Altura</xsl:when>
 					<xsl:when test="$label='hoardDesc'">Descripción del tesoro</xsl:when>
-					<xsl:when test="$label='identifieri'">Clasificador</xsl:when>
+					<xsl:when test="$label='identifier'">Clasificador</xsl:when>
 					<xsl:when test="$label='issuer'">Emisor</xsl:when>
 					<xsl:when test="$label='landowner'">Propietario del terreno</xsl:when>
 					<xsl:when test="$label='legend'">Leyenda</xsl:when>
@@ -511,6 +514,9 @@
 					<xsl:when test="$label='weight'">Peso</xsl:when>
 					<xsl:when test="$label='width'">Ancho</xsl:when>
 					<xsl:when test="$label='year'">Año</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="numishare:regularize_node($label, 'en')"/>
+					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
 			<xsl:when test="$lang='fr'">
@@ -656,7 +662,7 @@
 					<xsl:when test="$label='grade'">Grado</xsl:when>
 					<xsl:when test="$label='height'">Altezza</xsl:when>
 					<xsl:when test="$label='hoardDesc'">Descrizione del ripostiglio</xsl:when>
-					<xsl:when test="$label='identifieri'">Numero identificativo</xsl:when>
+					<xsl:when test="$label='identifier'">Numero identificativo</xsl:when>
 					<xsl:when test="$label='issuer'">Emittente</xsl:when>
 					<xsl:when test="$label='landowner'">Proprietario del terreno</xsl:when>
 					<xsl:when test="$label='legend'">Legenda</xsl:when>
@@ -855,7 +861,7 @@
 					<xsl:when test="$label='grade'">Stadiu</xsl:when>
 					<xsl:when test="$label='height'">Înălţime</xsl:when>
 					<xsl:when test="$label='hoardDesc'">Descrierea tezaurului</xsl:when>
-					<xsl:when test="$label='identifieri'">Identificator</xsl:when>
+					<xsl:when test="$label='identifier'">Identificator</xsl:when>
 					<xsl:when test="$label='issuer'">Emitent</xsl:when>
 					<xsl:when test="$label='landowner'">Proprietarul locului de descoperire</xsl:when>
 					<xsl:when test="$label='legend'">Legenda</xsl:when>
@@ -1050,7 +1056,7 @@
 					<xsl:when test="$label='grade'">Kvalitet</xsl:when>
 					<xsl:when test="$label='height'">Höjd</xsl:when>
 					<xsl:when test="$label='hoardDesc'">Fynd beskrivning</xsl:when>
-					<xsl:when test="$label='identifieri'">Beskrivare</xsl:when>
+					<xsl:when test="$label='identifier'">Beskrivare</xsl:when>
 					<xsl:when test="$label='issuer'">Utgivare</xsl:when>
 					<xsl:when test="$label='landowner'">Markägare</xsl:when>
 					<xsl:when test="$label='legend'">Omskrift</xsl:when>
@@ -1099,6 +1105,9 @@
 					<xsl:when test="$label='weight'">Vikt</xsl:when>
 					<xsl:when test="$label='width'">Bredd</xsl:when>
 					<xsl:when test="$label='year'">År</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="numishare:regularize_node($label, 'en')"/>
+					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
 			<xsl:otherwise>
@@ -1126,6 +1135,7 @@
 					<xsl:when test="$label='obv_type'">Obverse Type</xsl:when>
 					<xsl:when test="$label='physDesc'">Physical Description</xsl:when>
 					<xsl:when test="$label='previousColl'">Previous Collection</xsl:when>
+					<xsl:when test="$label='recordId'">Accession</xsl:when>
 					<xsl:when test="$label='refDesc'">References</xsl:when>
 					<xsl:when test="$label='rev_leg'">Reverse Legend</xsl:when>
 					<xsl:when test="$label='rev_type'">Reverse Type</xsl:when>
@@ -1330,6 +1340,9 @@
 					<xsl:when test="$label='lang_it'">Италиански</xsl:when>
 					<xsl:when test="$label='lang_da'">Датски</xsl:when>
 					<xsl:when test="$label='lang_nn'">Норвежки</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="numishare:normalizeLabel($label, 'en')"/>
+					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
 			<xsl:when test="$lang='de'">
@@ -1505,6 +1518,9 @@
 					<xsl:when test="$label='lang_it'">Ιταλικά</xsl:when>
 					<xsl:when test="$label='lang_da'">Δανικά</xsl:when>
 					<xsl:when test="$label='lang_nn'">Νορβηγικά</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="numishare:normalizeLabel($label, 'en')"/>
+					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
 			<xsl:when test="$lang='es'">
@@ -1606,6 +1622,9 @@
 					<xsl:when test="$label='lang_it'">Italiano</xsl:when>
 					<xsl:when test="$label='lang_da'">Danés</xsl:when>
 					<xsl:when test="$label='lang_nn'">Noruego</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="numishare:normalizeLabel($label, 'en')"/>
+					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
 			<xsl:when test="$lang='fr'">
@@ -2045,6 +2064,9 @@
 					<xsl:when test="$label='lang_nn'">Norska</xsl:when>
 					<xsl:when test="$label='lang_es'">Spanska</xsl:when>
 					<xsl:when test="$label='lang_bg'">Bulgariska</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="numishare:normalizeLabel($label, 'en')"/>
+					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
 			<xsl:otherwise>

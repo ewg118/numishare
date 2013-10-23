@@ -272,15 +272,16 @@
 	<xsl:template name="icons">
 		<div class="yui3-u-1">
 			<div class="submenu">
+				<xsl:if test="$has_mint_geo = 'true' or $has_findspot_geo = 'true'">
+					<div class="icon">
+						<a href="{$id}.kml">KML</a>
+					</div>
+				</xsl:if>
 				<div class="icon">
-					<a href="{$id}.xml">
-						<img src="{$display_path}images/xml.png" title="XML" alt="XML"/>
-					</a>
+					<a href="{$id}.rdf">Nomisma RDF/XML</a>
 				</div>
 				<div class="icon">
-					<a href="{$id}.rdf">
-						<img src="{$display_path}images/rdf.gif" title="RDF" alt="RDF"/>
-					</a>
+					<a href="{$id}.xml">NUDS/XML</a>
 				</div>
 				<div class="icon">
 					<!-- AddThis Button BEGIN -->
@@ -292,7 +293,7 @@
 						<a class="addthis_button_compact"></a>
 						<a class="addthis_counter addthis_bubble_style"></a>
 					</div>
-					<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=xa-51e99fea6aac48e9"></script>
+					<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=xa-525d63ef6a07cd89"></script>
 					<!-- AddThis Button END -->
 				</div>
 			</div>

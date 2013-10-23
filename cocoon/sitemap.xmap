@@ -749,7 +749,7 @@ These only need to be changed if Solr and Orbeon are run on a different server o
 				</map:select>
 				<map:transform type="xslt-saxon" src="xslt/maps_fullscreen.xsl" label="basiccontent">
 					<map:parameter name="use-request-parameters" value="true"/>
-					<map:parameter name="pipeline" value="maps"/>
+					<map:parameter name="pipeline" value="maps_fullscreen"/>
 				</map:transform>
 				<map:transform type="cinclude"/>
 				<map:serialize type="html"/>

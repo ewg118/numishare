@@ -208,6 +208,9 @@
 			<field name="reference_facet">
 				<xsl:value-of select="."/>
 			</field>
+			<field name="reference_text">
+				<xsl:value-of select="."/>
+			</field>
 			<xsl:if test="position() = 1">
 				<field name="reference_min">
 					<xsl:value-of select="."/>

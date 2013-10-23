@@ -46,6 +46,7 @@
 	</images>
 	<languages>
 		<language code="ar" enabled="false"/>
+		<language code="bg" enabled="true"/>
 		<language code="de" enabled="true"/>
 		<language code="el" enabled="true"/>
 		<language code="en" enabled="true"/>		
@@ -54,6 +55,7 @@
 		<language code="nl" enabled="true"/>
 		<language code="ro" enabled="true"/>
 		<language code="ru" enabled="true"/>
+		<language code="sv" enabled="true"/>
 	</languages>
 	<theme>
 		<jquery_ui_theme>ui-lightness</jquery_ui_theme>

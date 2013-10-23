@@ -472,6 +472,9 @@
 							<xsl:text> - </xsl:text>
 						</xsl:if>
 						<xsl:apply-templates select="nuds:type"/>
+						<xsl:text> (</xsl:text>
+						<a href="{//mets:fileGrp[@USE='obverse']/mets:file[@USE='master']/mets:FLocat/@xlink:href}">Full View</a>
+						<xsl:text>)</xsl:text>
 					</div>
 				</xsl:for-each>
 			</xsl:when>
@@ -479,7 +482,15 @@
 				<!-- otherwise only display the image -->
 				<xsl:if test="string($obverse_image)">
 					<div class="reference_image">
-						<img src="{if (contains($obverse_image, 'flickr.com')) then $obverse_image else concat($display_path, $obverse_image)}" alt="obverse"/>
+						<img src="{if (contains($obverse_image, 'flickr.com') or contains($obverse_image, 'http://')) then $obverse_image else concat($display_path, $obverse_image)}" alt="obverse"/>
+						<br/>
+						<b>
+							<xsl:value-of select="numishare:regularize_node('obverse', $lang)"/>
+							<xsl:text>: </xsl:text>
+							<xsl:text> (</xsl:text>
+							<a href="{//mets:fileGrp[@USE='obverse']/mets:file[@USE='master']/mets:FLocat/@xlink:href}">Full View</a>
+							<xsl:text>)</xsl:text>
+						</b>
 					</div>
 				</xsl:if>
 			</xsl:otherwise>
@@ -529,6 +540,9 @@
 							<xsl:text> - </xsl:text>
 						</xsl:if>
 						<xsl:apply-templates select="nuds:type"/>
+						<xsl:text> (</xsl:text>
+						<a href="{//mets:fileGrp[@USE='reverse']/mets:file[@USE='master']/mets:FLocat/@xlink:href}">Full View</a>
+						<xsl:text>)</xsl:text>
 					</div>
 				</xsl:for-each>
 			</xsl:when>
@@ -536,8 +550,15 @@
 				<!-- otherwise only display the image -->
 				<xsl:if test="string($reverse_image)">
 					<div class="reference_image">
-						<img src="{if (contains($reverse_image, 'flickr.com')) then $reverse_image else concat($display_path, $reverse_image)}" alt="reverse"/>
+						<img src="{if (contains($reverse_image, 'flickr.com') or contains($obverse_image, 'http://')) then $reverse_image else concat($display_path, $reverse_image)}" alt="reverse"/>
 					</div>
+					<b>
+						<xsl:value-of select="numishare:regularize_node('reverse', $lang)"/>
+						<xsl:text>: </xsl:text>
+						<xsl:text> (</xsl:text>
+						<a href="{//mets:fileGrp[@USE='reverse']/mets:file[@USE='master']/mets:FLocat/@xlink:href}">Full View</a>
+						<xsl:text>)</xsl:text>
+					</b>
 				</xsl:if>
 			</xsl:otherwise>
 		</xsl:choose>

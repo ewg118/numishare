@@ -9,8 +9,8 @@
 	
 	<xsl:variable name="display_path">
 		<xsl:choose>
-			<xsl:when test="$pipeline='maps'">../</xsl:when>
-			<xsl:when test="$pipeline='maps_fullscreen'">../../</xsl:when>
+			<xsl:when test="$pipeline='maps'"/>
+			<xsl:when test="$pipeline='maps_fullscreen'">../</xsl:when>
 			<xsl:otherwise/>
 		</xsl:choose>
 	</xsl:variable>
@@ -232,13 +232,13 @@
 				<xsl:choose>
 					<xsl:when test="str[@name='recordType'] = 'physical'">
 						<xsl:if test="string(str[@name='thumbnail_obv'])">
-							<a class="thumbImage" href="{str[@name='reference_obv']}" title="Obverse of {str[@name='title_display']}">
-								<img src="{str[@name='thumbnail_obv']}"/>
+							<a class="thumbImage" href="{$display_path}{str[@name='reference_obv']}" title="Obverse of {str[@name='title_display']}">
+								<img src="{$display_path}{str[@name='thumbnail_obv']}"/>
 							</a>
 						</xsl:if>
 						<xsl:if test="string(str[@name='thumbnail_rev'])">
-							<a class="thumbImage" href="{str[@name='reference_rev']}" title="Reverse of {str[@name='title_display']}">
-								<img src="{str[@name='thumbnail_rev']}"/>
+							<a class="thumbImage" href="{$display_path}{str[@name='reference_rev']}" title="Reverse of {str[@name='title_display']}">
+								<img src="{$display_path}{str[@name='thumbnail_rev']}"/>
 							</a>
 						</xsl:if>
 					</xsl:when>

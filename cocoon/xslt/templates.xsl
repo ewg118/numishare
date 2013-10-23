@@ -715,7 +715,7 @@
 	<!-- ************** SEARCH DROP-DOWN MENUS ************** -->
 	<xsl:template name="search_options">
 		<xsl:variable name="fields">
-			<xsl:text>fulltext,authority_facet,coinType_facet,collection_facet,deity_facet,denomination_facet,department_facet,diameter_num,dynasty_facet,findspot_facet,id,issuer_facet,legend_text,obv_leg_text,rev_leg_text,manufacture_facet,material_facet,mint_facet,objectType_facet,portrait_facet,reference_text,region_facet,type_text,obv_type_text,rev_type_text,weight_num,year_num</xsl:text>
+			<xsl:text>fulltext,recordId,authority_facet,coinType_facet,collection_facet,deity_facet,denomination_facet,department_facet,diameter_num,dynasty_facet,findspot_facet,issuer_facet,legend_text,obv_leg_text,rev_leg_text,manufacture_facet,material_facet,mint_facet,objectType_facet,portrait_facet,reference_text,region_facet,type_text,obv_type_text,rev_type_text,weight_num,year_num</xsl:text>
 		</xsl:variable>
 
 		<xsl:for-each select="tokenize($fields, ',')">

@@ -62,7 +62,7 @@ $('.category_list') .livequery('change', function(event){
 	var field = $(this) .children("option:selected") .val();
 	
 	//TEXT FIELDS
-	if (field.indexOf('text') > 0 || field.indexOf('display') > 0 || field == 'id') {
+	if (field.indexOf('text') > 0 || field.indexOf('display') > 0 || field == 'recordId') {
 		if ($(this) .parent() .children('.option_container') .children('input') .attr('class') != 'search_text') {
 			$(this) .parent() .children('.option_container') .html('');
 			$(this) .parent() .children('.option_container') .html('<input type="text" id="search_text" class="search_text"/>');
