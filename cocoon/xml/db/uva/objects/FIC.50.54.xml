@@ -29,6 +29,11 @@
       <rightsStmt>
          <license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/"/>
       </rightsStmt>
+      <otherRecordId semantic="dcterms:replaces">http://coins.lib.virginia.edu/display-uva?id=nfic_50_54</otherRecordId>
+      <semanticDeclaration>
+         <prefix>dcterms</prefix>
+         <namespace>http://purl.org/dc/terms/</namespace>
+      </semanticDeclaration>
    </control>
    <descMeta>
       <title xml:lang="en">Coin of Aretas IV, Petra, 9 B.C.-A.D. 40. FIC.50.54.</title>
@@ -80,6 +85,9 @@
             <mets:file USE="thumbnail" MIMETYPE="image/jpeg">
                <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/nfic_50_54_obv.jpg"/>
             </mets:file>
+            <mets:file USE="master" MIMETYPE="image/jpeg">
+               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/master/nfic_50_54_obv.jpg"/>
+            </mets:file>
          </mets:fileGrp>
          <mets:fileGrp USE="reverse">
             <mets:file USE="reference" MIMETYPE="image/jpeg">
@@ -87,6 +95,9 @@
             </mets:file>
             <mets:file USE="thumbnail" MIMETYPE="image/jpeg">
                <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/nfic_50_54_rev.jpg"/>
+            </mets:file>
+            <mets:file USE="master" MIMETYPE="image/jpeg">
+               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/master/nfic_50_54_rev.jpg"/>
             </mets:file>
          </mets:fileGrp>
       </mets:fileSec>

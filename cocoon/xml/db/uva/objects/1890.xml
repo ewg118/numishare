@@ -29,6 +29,11 @@
       <rightsStmt>
          <license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/"/>
       </rightsStmt>
+      <otherRecordId semantic="dcterms:replaces">http://coins.lib.virginia.edu/display-uva?id=n1890</otherRecordId>
+      <semanticDeclaration>
+         <prefix>dcterms</prefix>
+         <namespace>http://purl.org/dc/terms/</namespace>
+      </semanticDeclaration>
    </control>
    <descMeta>
       <title xml:lang="en">Coin of Ptolemy IV Philopator, Alexandria, 221 B.C.-201 B.C. 1890.</title>
@@ -40,7 +45,8 @@
             <toDate standardDate="-0200">201 B.C.</toDate>
          </dateRange>
          <authority>
-         	<persname xlink:type="simple" xlink:role="authority" xlink:href="http://nomisma.org/id/ptolemy_iv">Ptolemy IV Philopator</persname>
+         	  <persname xlink:type="simple" xlink:role="authority"
+                      xlink:href="http://nomisma.org/id/ptolemy_iv">Ptolemy IV Philopator</persname>
             <famname xlink:type="simple" xlink:role="dynasty">Ptolemaic</famname>
             <corpname xlink:type="simple" xlink:role="state">Ptolemaic Kingdom</corpname>
          </authority>
@@ -81,6 +87,9 @@
             <mets:file USE="thumbnail" MIMETYPE="image/jpeg">
                <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1890_obv.jpg"/>
             </mets:file>
+            <mets:file USE="master" MIMETYPE="image/jpeg">
+               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/master/n1890_obv.jpg"/>
+            </mets:file>
          </mets:fileGrp>
          <mets:fileGrp USE="reverse">
             <mets:file USE="reference" MIMETYPE="image/jpeg">
@@ -88,6 +97,9 @@
             </mets:file>
             <mets:file USE="thumbnail" MIMETYPE="image/jpeg">
                <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1890_rev.jpg"/>
+            </mets:file>
+            <mets:file USE="master" MIMETYPE="image/jpeg">
+               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/master/n1890_rev.jpg"/>
             </mets:file>
          </mets:fileGrp>
       </mets:fileSec>

@@ -29,6 +29,11 @@
       <rightsStmt>
          <license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/"/>
       </rightsStmt>
+      <otherRecordId semantic="dcterms:replaces">http://coins.lib.virginia.edu/display-uva?id=n1989_19_7</otherRecordId>
+      <semanticDeclaration>
+         <prefix>dcterms</prefix>
+         <namespace>http://purl.org/dc/terms/</namespace>
+      </semanticDeclaration>
    </control>
    <descMeta>
       <title xml:lang="en">Denarius of Mark Antony/M Barbatius Pollio, 41 B.C. 1989.19.7.</title>
@@ -64,6 +69,9 @@
             <mets:file USE="thumbnail" MIMETYPE="image/jpeg">
                <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1989_19_7_obv.jpg"/>
             </mets:file>
+            <mets:file USE="master" MIMETYPE="image/jpeg">
+               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/master/n1989_19_7_obv.jpg"/>
+            </mets:file>
          </mets:fileGrp>
          <mets:fileGrp USE="reverse">
             <mets:file USE="reference" MIMETYPE="image/jpeg">
@@ -71,6 +79,9 @@
             </mets:file>
             <mets:file USE="thumbnail" MIMETYPE="image/jpeg">
                <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1989_19_7_rev.jpg"/>
+            </mets:file>
+            <mets:file USE="master" MIMETYPE="image/jpeg">
+               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/master/n1989_19_7_rev.jpg"/>
             </mets:file>
          </mets:fileGrp>
       </mets:fileSec>

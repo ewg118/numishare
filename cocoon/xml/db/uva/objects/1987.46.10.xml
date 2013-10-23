@@ -29,6 +29,11 @@
       <rightsStmt>
          <license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/"/>
       </rightsStmt>
+      <otherRecordId semantic="dcterms:replaces">http://coins.lib.virginia.edu/display-uva?id=n1987_46_10</otherRecordId>
+      <semanticDeclaration>
+         <prefix>dcterms</prefix>
+         <namespace>http://purl.org/dc/terms/</namespace>
+      </semanticDeclaration>
    </control>
    <descMeta>
       <title xml:lang="en">Antoninianus of Victorinus, 269-270. 1987.46.10.</title>
@@ -102,6 +107,9 @@
             <mets:file USE="thumbnail" MIMETYPE="image/jpeg">
                <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1987_46_10_obv.jpg"/>
             </mets:file>
+            <mets:file USE="master" MIMETYPE="image/jpeg">
+               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/master/n1987_46_10_obv.jpg"/>
+            </mets:file>
          </mets:fileGrp>
          <mets:fileGrp USE="reverse">
             <mets:file USE="reference" MIMETYPE="image/jpeg">
@@ -109,6 +117,9 @@
             </mets:file>
             <mets:file USE="thumbnail" MIMETYPE="image/jpeg">
                <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1987_46_10_rev.jpg"/>
+            </mets:file>
+            <mets:file USE="master" MIMETYPE="image/jpeg">
+               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/master/n1987_46_10_rev.jpg"/>
             </mets:file>
          </mets:fileGrp>
       </mets:fileSec>

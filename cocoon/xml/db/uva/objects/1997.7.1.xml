@@ -29,6 +29,11 @@
       <rightsStmt>
          <license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/"/>
       </rightsStmt>
+      <otherRecordId semantic="dcterms:replaces">http://coins.lib.virginia.edu/display-uva?id=n1997_7_1</otherRecordId>
+      <semanticDeclaration>
+         <prefix>dcterms</prefix>
+         <namespace>http://purl.org/dc/terms/</namespace>
+      </semanticDeclaration>
    </control>
    <descMeta>
       <title xml:lang="en">Aureus of Trajan, Rome,  A.D. 98-117. 1997.7.1.</title>
@@ -55,6 +60,9 @@
             <mets:file USE="thumbnail" MIMETYPE="image/jpeg">
                <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1997_7_1_obv.jpg"/>
             </mets:file>
+            <mets:file USE="master" MIMETYPE="image/jpeg">
+               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/master/n1997_7_1_obv.jpg"/>
+            </mets:file>
          </mets:fileGrp>
          <mets:fileGrp USE="reverse">
             <mets:file USE="reference" MIMETYPE="image/jpeg">
@@ -62,6 +70,9 @@
             </mets:file>
             <mets:file USE="thumbnail" MIMETYPE="image/jpeg">
                <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1997_7_1_rev.jpg"/>
+            </mets:file>
+            <mets:file USE="master" MIMETYPE="image/jpeg">
+               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/master/n1997_7_1_rev.jpg"/>
             </mets:file>
          </mets:fileGrp>
       </mets:fileSec>
