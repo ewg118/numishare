@@ -350,7 +350,7 @@
 	<xsl:template match="mets:fileSec">
 		<xsl:for-each select="mets:fileGrp[@USE='obverse' or @USE='reverse']">
 			<xsl:variable name="side" select="substring(@USE, 1, 3)"/>
-			<xsl:for-each select="mets:file">
+			<xsl:for-each select="mets:file[not(@USE='master')]">
 				<field name="{@USE}_{$side}">
 					<xsl:value-of select="mets:FLocat/@xlink:href"/>
 				</field>
