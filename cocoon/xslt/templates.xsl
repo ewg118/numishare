@@ -864,7 +864,8 @@
 					</div>
 					<div id="customSparqlQueryDiv">
 						<h3>
-							<xsl:text>4. <xsl:value-of select="numishare:normalizeLabel('visualize_add_queries', $lang)"/></xsl:text>
+							<xsl:text>4. </xsl:text>
+							<xsl:value-of select="numishare:normalizeLabel('visualize_add_queries', $lang)"/>
 							<span style="font-size:80%;margin-left:10px;">
 								<a href="#sparqlBox" id="addSparqlQuery">+ <span><xsl:value-of select="numishare:normalizeLabel('visualize_add_new', $lang)"
 										/></span></a>
@@ -892,7 +893,8 @@
 				<xsl:when test="$pipeline='visualize'">
 					<div id="customSparqlQueryDiv">
 						<h3>
-							<xsl:text>3. <xsl:value-of select="numishare:normalizeLabel('visualize_add_queries', $lang)"/></xsl:text>
+							<xsl:text>3. </xsl:text>
+							<xsl:value-of select="numishare:normalizeLabel('visualize_add_queries', $lang)"/>
 							<span style="font-size:80%;margin-left:10px;">
 								<a href="#sparqlBox" id="addSparqlQuery">+ <span><xsl:value-of select="numishare:normalizeLabel('visualize_add_new', $lang)"
 										/></span></a>

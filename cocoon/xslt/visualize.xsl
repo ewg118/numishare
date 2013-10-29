@@ -247,10 +247,12 @@
 			<h3>
 				<xsl:choose>
 					<xsl:when test="string($q)">
-						<xsl:text>4.<xsl:value-of select="numishare:normalizeLabel('visualize_compare_optional', $lang)"/></xsl:text>
+						<xsl:text>4.</xsl:text>
+						<xsl:value-of select="numishare:normalizeLabel('visualize_compare_optional', $lang)"/>
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:text>4. <xsl:value-of select="numishare:normalizeLabel('visualize_compare', $lang)"/></xsl:text>
+						<xsl:text>4. </xsl:text>
+						<xsl:value-of select="numishare:normalizeLabel('visualize_compare', $lang)"/>
 					</xsl:otherwise>
 				</xsl:choose>
 
