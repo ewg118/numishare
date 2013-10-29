@@ -227,6 +227,25 @@
 					</xsl:if>
 				</xsl:for-each>
 			</xsl:variable>
+			
+			<!-- date ranges -->
+			<h4><xsl:value-of select="numishare:normalize_fields('dateRange', $lang)"/></h4>
+			<xsl:value-of select="numishare:normalize_fields('fromDate', $lang)"/>
+			<xsl:text>: </xsl:text>
+			<input type="text" id="from_date"/>
+			<select id="from_era" class="ui-widget ui-widget-content ui-corner-all">
+				<option value="minus">B.C.</option>
+				<option value="" selected="selected">A.D.</option>
+			</select>
+			<br/>
+			<xsl:value-of select="numishare:normalize_fields('toDate', $lang)"/>
+			<xsl:text>: </xsl:text>
+			<input type="text" id="to_date"/>
+			<select id="to_era" class="ui-widget ui-widget-content ui-corner-all">
+				<option value="minus">B.C.</option>
+				<option value="" selected="selected">A.D.</option>
+			</select>
+			
 			<input type="hidden" name="q" id="facet_form_query" value="{if (string($imageavailable_stripped)) then $imageavailable_stripped else '*:*'}"/>
 			<xsl:if test="string($lang)">
 				<input type="hidden" name="lang" value="{$lang}"/>

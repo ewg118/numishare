@@ -375,15 +375,15 @@ li.h_item {
 	margin-left:15px;
 	margin-right:5px;
 }
-.from_date,.to_date {
-	width:30px;
-	margin-left:0px;
-	margin-right:5px;
+.from_date,.to_date, #from_date, #to_date {
+        width:30px;
+        margin-left:0px;
+        margin-right:5px;
 }
-.from_era,.to_era {
-	width:55px;
-	margin-right:5px;
-	margin-left:0px;
+.from_era,.to_era, #from_era, #to_era {
+        width:55px;
+        margin-right:5px;
+        margin-left:0px;
 }
 .year_range {
 	margin-left:15px;
