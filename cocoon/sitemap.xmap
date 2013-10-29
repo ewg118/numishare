@@ -65,6 +65,11 @@
 			<map:serializer name="text-utf" mime-type="text/plain" src="org.apache.cocoon.serialization.TextSerializer">
 				<encoding>UTF-8</encoding>
 			</map:serializer>
+			<map:serializer logger="sitemap.serializer.html" mime-type="text/html" name="html" pool-max="${html-serializer.pool-max}" src="org.apache.cocoon.serialization.HTMLSerializer">
+				<doctype-public>-//W3C//DTD HTML 4.01 Transitional//EN</doctype-public>
+				<doctype-system>http://www.w3.org/TR/html4/loose.dtd</doctype-system>
+				<encoding>UTF-8</encoding>
+			</map:serializer>
 		</map:serializers>
 	</map:components>
 
@@ -244,7 +249,7 @@ These only need to be changed if Solr and Orbeon are run on a different server o
 				<map:transform type="cinclude"/>
 				<map:serialize type="html"/>
 			</map:match>
-			
+
 			<!-- redirect from old display-uva pipeline -->
 			<map:match pattern="display-uva">
 				<map:generate src="xml/redirects.xml"/>
