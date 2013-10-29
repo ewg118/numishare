@@ -28,6 +28,7 @@ namespace :deploy do
     web_root = "#{current_path}/www"
     run "mkdir -p #{web_root}"
     run "cd #{web_root} && ln -snf #{current_path}/cocoon/css/style.css"
+    run "cd #{web_root} && ln -snf #{current_path}/cocoon/css/fullscreen.css"
     run "cd #{web_root} && ln -snf #{current_path}/cocoon/css/themes"
     run "cd #{web_root} && ln -snf #{current_path}/cocoon/css/jquery.fancybox-1.3.4.css"
     run "cd #{web_root} && ln -snf #{current_path}/cocoon/css/jquery.multiselect.css"
