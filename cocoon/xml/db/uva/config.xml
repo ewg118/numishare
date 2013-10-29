@@ -49,7 +49,8 @@
 		<language code="bg" enabled="true"/>
 		<language code="de" enabled="true"/>
 		<language code="el" enabled="true"/>
-		<language code="en" enabled="true"/>		
+		<language code="en" enabled="true"/>	
+		<language code="es" enabled="true"/>		
 		<language code="fr" enabled="true"/>
 		<language code="it" enabled="true"/>
 		<language code="nl" enabled="true"/>

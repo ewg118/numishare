@@ -41,7 +41,7 @@
 				</title>
 				<!-- alternates -->
 				<link rel="alternate" type="application/atom+xml" href="{concat(//config/url, 'feed/?q=', $q, if(string($lang)) then concat('&amp;lang=', $lang) else '')}"/>
-				<link rel="alternate" type="text/csv" href="{concat(//config/url, 'data.csv/?q=', $q, if(string($lang)) then concat('&amp;lang=', $lang) else '')}"/>
+				<link rel="alternate" type="text/csv" href="{concat(//config/url, 'data.csv/?q=', $q, if(string($lang)) then concat('&amp;lang=', $lang) else '', if (string($sort)) then concat('&amp;sort=', $sort) else '')}"/>
 				<link rel="alternate" type="application/application/vnd.google-earth.kml+xml" href="{concat(//config/url, 'query.kml/?q=', $q, if(string($lang)) then concat('&amp;lang=', $lang) else '')}"/>
 				<!-- opensearch compliance -->
 				<link rel="search" type="application/opensearchdescription+xml" href="{$url}opensearch.xml" title="Example Search for {$url}"/>
@@ -117,7 +117,7 @@
 						<a href="{$display_path}query.kml?q={$q}{if(string($lang)) then concat('&amp;lang=', $lang) else ''}">
 							<img src="{$display_path}images/googleearth.png" alt="KML" title="KML: Limit, 500 objects"/>
 						</a>
-						<a href="{$display_path}data.csv?q={$q}{if(string($lang)) then concat('&amp;lang=', $lang) else ''}">
+						<a href="{$display_path}data.csv?q={$q}{if(string($lang)) then concat('&amp;lang=', $lang) else ''}{if (string($sort)) then concat('&amp;sort=', $sort) else ''}">
 							<!-- the image below is copyright of Silvestre Herrera, available freely on wikimedia commons: http://commons.wikimedia.org/wiki/File:X-office-spreadsheet_Gion.svg -->
 							<img src="{$display_path}images/spreadsheet.png" title="CSV" alt="CSV"/>
 						</a>
