@@ -210,8 +210,6 @@
 								<field name="findspot_text">
 									<xsl:value-of select="."/>
 								</field>
-
-
 							</xsl:for-each>
 						</xsl:if>
 						<field name="findspot_facet">

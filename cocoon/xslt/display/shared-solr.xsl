@@ -148,16 +148,16 @@
 					<!-- insert hierarchical facets -->
 					<xsl:for-each select="tokenize(exsl:node-set($geonames)//place[@id=$href]/@hierarchy, '\|')">
 						<xsl:if test="not(. = $value)">
-							<field name="findspot_hier">
+							<field name="{@xlink:role}_hier">
 								<xsl:value-of select="concat('L', position(), '|', .)"/>
 							</field>
-							<field name="findspot_text">
+							<field name="{@xlink:role}_text">
 								<xsl:value-of select="."/>
 							</field>
 						</xsl:if>
 						<xsl:if test="position()=last()">
 							<xsl:variable name="level" select="if (.=$value) then position() else position() + 1"/>
-							<field name="findspot_hier">
+							<field name="{@xlink:role}_hier">
 								<xsl:value-of select="concat('L', $level, '|', $value)"/>
 							</field>
 						</xsl:if>
