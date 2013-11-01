@@ -72,24 +72,15 @@
 		<xsl:param name="lang"/>
 		<xsl:variable name="facet" select="if (local-name()='famname') then 'dynasty' else local-name()"/>
 		<xsl:variable name="href" select="@xlink:href"/>
+		
 
 		<field name="{$facet}_facet">
-			<xsl:choose>
-				<xsl:when test="string($lang) and contains($href, 'nomisma.org')">
-					<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about=$href], $lang)"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:choose>
-						<xsl:when test="not(string(.))">
-							<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about=$href], 'en')"/>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:value-of select="normalize-space(.)"/>
-						</xsl:otherwise>
-					</xsl:choose>
-				</xsl:otherwise>
-			</xsl:choose>
+			<xsl:value-of select="$value"/>
 		</field>
+		<field name="{$facet}_text">
+			<xsl:value-of select="$value"/>
+		</field>
+		
 		<xsl:if test="string($href)">
 			<field name="{$facet}_uri">
 				<xsl:value-of select="$href"/>
@@ -100,17 +91,7 @@
 	<xsl:template match="nuds:persname|nuds:corpname |*[local-name()='geogname']">
 		<xsl:param name="lang"/>
 		<xsl:variable name="href" select="@xlink:href"/>
-		<field name="{@xlink:role}_facet">
-			<xsl:choose>
-				<xsl:when test="string($lang) and contains($href, 'nomisma.org')">
-					<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about=$href], $lang)"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:value-of select="normalize-space(.)"/>
-				</xsl:otherwise>
-			</xsl:choose>
-		</field>
-		<field name="{@xlink:role}_text">
+		<xsl:variable name="value">
 			<xsl:choose>
 				<xsl:when test="string($lang) and contains($href, 'nomisma.org')">
 					<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about=$href], $lang)"/>
@@ -126,6 +107,13 @@
 					</xsl:choose>
 				</xsl:otherwise>
 			</xsl:choose>
+		</xsl:variable>
+		
+		<field name="{@xlink:role}_facet">
+			<xsl:value-of select="$value"/>
+		</field>
+		<field name="{@xlink:role}_text">
+			<xsl:value-of select="$value"/>
 		</field>
 		<xsl:if test="string(@xlink:href)">
 			<field name="{@xlink:role}_uri">
@@ -136,6 +124,7 @@
 			<xsl:choose>
 				<xsl:when test="contains(@xlink:href, 'geonames')">
 					<xsl:variable name="href" select="@xlink:href"/>
+					<xsl:variable name="role" select="@xlink:role"/>
 					<xsl:variable name="value" select="."/>
 					<!-- *_geo format is 'mint name|URI of resource|KML-compliant geographic coordinates' -->
 					<field name="{@xlink:role}_geo">
@@ -148,16 +137,16 @@
 					<!-- insert hierarchical facets -->
 					<xsl:for-each select="tokenize(exsl:node-set($geonames)//place[@id=$href]/@hierarchy, '\|')">
 						<xsl:if test="not(. = $value)">
-							<field name="{@xlink:role}_hier">
+							<field name="{$role}_hier">
 								<xsl:value-of select="concat('L', position(), '|', .)"/>
 							</field>
-							<field name="{@xlink:role}_text">
+							<field name="{$role}_text">
 								<xsl:value-of select="."/>
 							</field>
 						</xsl:if>
 						<xsl:if test="position()=last()">
 							<xsl:variable name="level" select="if (.=$value) then position() else position() + 1"/>
-							<field name="{@xlink:role}_hier">
+							<field name="{$role}_hier">
 								<xsl:value-of select="concat('L', $level, '|', $value)"/>
 							</field>
 						</xsl:if>
