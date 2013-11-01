@@ -4,12 +4,12 @@
 	xmlns:exsl="http://exslt.org/common" xmlns:numishare="http://code.google.com/p/numishare/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
 	xmlns:cinclude="http://apache.org/cocoon/include/1.0" xmlns:nuds="http://nomisma.org/nuds" exclude-result-prefixes="#all" version="2.0">
 
-	<xsl:param name="q"/>	
+	<xsl:param name="q"/>
 	<xsl:param name="start"/>
 	<xsl:param name="image"/>
 	<xsl:param name="side"/>
 	<xsl:param name="type"/>
-	
+
 	<!-- quantitative analysis parameters -->
 	<xsl:param name="measurement"/>
 	<xsl:param name="numericType"/>
@@ -302,6 +302,11 @@
 								<xsl:apply-templates select="nuds:descMeta/nuds:subjectSet"/>
 							</div>
 						</xsl:if>
+						<xsl:if test="nuds:descMeta/nuds:noteSet">
+							<div class="metadata_section">
+								<xsl:apply-templates select="nuds:descMeta/nuds:noteSet"/>
+							</div>
+						</xsl:if>
 						<xsl:if test="nuds:descMeta/nuds:findspotDesc">
 							<div class="metadata_section">
 								<xsl:apply-templates select="nuds:descMeta/nuds:findspotDesc"/>
@@ -312,7 +317,7 @@
 						<div id="mapTab">
 							<h2>Map This Object</h2>
 							<p>Use the layer control along the right edge of the map (the "plus" symbol) to toggle map layers.</p>
-							
+
 							<xsl:choose>
 								<xsl:when test="$recordType='conceptual'">
 									<div id="timemap">
@@ -430,31 +435,28 @@
 		</ul>
 	</xsl:template>
 
-	<xsl:template match="nuds:subjectSet">
+	<xsl:template match="nuds:subjectSet|nuds:noteSet">
 		<h2>
 			<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
 		</h2>
 		<ul>
-			<xsl:apply-templates select="subject"/>
+			<xsl:apply-templates/>
 		</ul>
 	</xsl:template>
 
 	<xsl:template match="nuds:subject">
 		<li>
-			<xsl:choose>
-				<xsl:when test="string(@type)">
-					<b><xsl:value-of select="@type"/>: </b>
-					<a href="{$display_path}results?q={@type}_facet:&#x022;{normalize-space(.)}&#x022;{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
-						<xsl:value-of select="."/>
-					</a>
-				</xsl:when>
-				<xsl:otherwise>
-					<b><xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>: </b>
-					<a href="{$display_path}results?q=subject_facet:&#x022;{normalize-space(.)}&#x022;{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
-						<xsl:value-of select="."/>
-					</a>
-				</xsl:otherwise>
-			</xsl:choose>
+			<b><xsl:value-of select="if (string(@localType)) then @localType else numishare:regularize_node(local-name(), $lang)"/>: </b>
+			<a
+				href="{$display_path}results?q={if (string(@localType)) then @localType else 'subject'}_facet:&#x022;{normalize-space(.)}&#x022;{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+				<xsl:value-of select="."/>
+			</a>
+		</li>
+	</xsl:template>
+
+	<xsl:template match="nuds:note">
+		<li>
+			<xsl:value-of select="."/>
 		</li>
 	</xsl:template>
 
@@ -711,11 +713,17 @@
 		<p>Average measurements for this coin type:</p>
 		<dl>
 			<dt><xsl:value-of select="numishare:regularize_node('axis', $lang)"/>:</dt>
-			<dd><cinclude:include src="cocoon:/widget?constraints=nm:type_series_item &lt;http://numismatics.org/ocre/id/{$id}&gt;&amp;template=avgMeasurement&amp;measurement=axis"/></dd>
+			<dd>
+				<cinclude:include src="cocoon:/widget?constraints=nm:type_series_item &lt;http://numismatics.org/ocre/id/{$id}&gt;&amp;template=avgMeasurement&amp;measurement=axis"/>
+			</dd>
 			<dt><xsl:value-of select="numishare:regularize_node('diameter', $lang)"/>:</dt>
-			<dd><cinclude:include src="cocoon:/widget?constraints=nm:type_series_item &lt;http://numismatics.org/ocre/id/{$id}&gt;&amp;template=avgMeasurement&amp;measurement=diameter"/></dd>
+			<dd>
+				<cinclude:include src="cocoon:/widget?constraints=nm:type_series_item &lt;http://numismatics.org/ocre/id/{$id}&gt;&amp;template=avgMeasurement&amp;measurement=diameter"/>
+			</dd>
 			<dt><xsl:value-of select="numishare:regularize_node('weight', $lang)"/>:</dt>
-			<dd><cinclude:include src="cocoon:/widget?constraints=nm:type_series_item &lt;http://numismatics.org/ocre/id/{$id}&gt;&amp;template=avgMeasurement&amp;measurement=weight"/></dd>
+			<dd>
+				<cinclude:include src="cocoon:/widget?constraints=nm:type_series_item &lt;http://numismatics.org/ocre/id/{$id}&gt;&amp;template=avgMeasurement&amp;measurement=weight"/>
+			</dd>
 		</dl>
 		<xsl:call-template name="measurementForm"/>
 	</xsl:template>
