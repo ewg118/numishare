@@ -21,7 +21,7 @@
 						<xforms:send submission="query-nomisma"/>
 						<xforms:setvalue ref="instance('control-instance')/typeof">material</xforms:setvalue>
 						<xforms:send submission="query-nomisma"/>
-						<xforms:setvalue ref="instance('control-instance')/typeof">numismatic_term</xforms:setvalue>
+						<xforms:setvalue ref="instance('control-instance')/typeof">object_type</xforms:setvalue>
 						<xforms:send submission="query-nomisma"/>
 					</xforms:action>
 
@@ -79,13 +79,13 @@
 												<xforms:label>Select...</xforms:label>
 												<xforms:value/>
 											</xforms:item>
-											<xforms:itemset nodeset="instance('numismatic_term-list')/*">
+											<xforms:itemset nodeset="instance('object_type-list')/*">
 												<xforms:value ref="@href"/>
 												<xforms:label ref="."/>
 											</xforms:itemset>
 											<xforms:action ev:event="xforms-value-changed">
 												<xxforms:variable name="href" select="."/>
-												<xforms:setvalue ref="parent::node()" value="instance('numismatic_term-list')/*[@href=$href]" if="string($href)"/>
+												<xforms:setvalue ref="parent::node()" value="instance('object_type-list')/*[@href=$href]" if="string($href)"/>
 												<xforms:setvalue ref="parent::node()" if="not(string($href))"/>
 											</xforms:action>
 										</xforms:select1>
@@ -888,7 +888,7 @@
 							<list/>
 						</xforms:instance>
 
-						<xforms:instance id="numismatic_term-list">
+						<xforms:instance id="object_type-list">
 							<list/>
 						</xforms:instance>
 
