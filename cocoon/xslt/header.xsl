@@ -2,16 +2,9 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:numishare="http://code.google.com/p/numishare/" xmlns:xlink="http://www.w3.org/1999/xlink" exclude-result-prefixes="#all"
 	version="2.0">
 	<xsl:template name="header">
-
 		<!-- if displaying a coin or artifact record, the path to the other sections should be {$display_path} ; otherwise nothing -->
 		<div id="hd">
-			<div class="banner align-right ui-widget-content" style="border:0">
-				<div style="float:left;width:400px;">
-					<form action="{$display_path}results" method="GET" id="qs_form" style="margin:20px 80px">
-						<input type="text" name="q" id="qs_text"/>
-						<input id="qs_button" type="submit" value="{numishare:normalizeLabel('header_search', $lang)}"/>
-					</form>
-				</div>
+			<div class="banner align-right ui-widget-content" style="border:0">				
 				<xsl:if test="string(/content/config/banner_text)">
 					<div class="banner_text">
 						<xsl:value-of select="/content/config/banner_text"/>

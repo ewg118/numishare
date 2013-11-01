@@ -176,7 +176,7 @@
 						<h2>
 							<xsl:value-of select="numishare:normalizeLabel('results_refine-results', $lang)"/>
 						</h2>
-						<!--<xsl:call-template name="quick_search"/>-->
+						<xsl:call-template name="quick_search"/>
 						<xsl:apply-templates select="descendant::lst[@name='facet_fields']"/>
 					</xsl:if>
 					<span style="display:none" id="collection_type">

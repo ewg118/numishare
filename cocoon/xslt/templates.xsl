@@ -715,7 +715,7 @@
 	<!-- ************** SEARCH DROP-DOWN MENUS ************** -->
 	<xsl:template name="search_options">
 		<xsl:variable name="fields">
-			<xsl:text>fulltext,artist_facet,authority_facet,taq_num,coinType_facet,color_text,deity_facet,denomination_facet,department_facet,diameter_num,dynasty_facet,findspot_text,id,issuer_facet,legend_text,obv_leg_text,rev_leg_text,maker_facet,manufacture_facet,material_facet,mint_facet,tpq_num,objectType_facet,portrait_facet,reference_text,region_face,type_text,obv_type_text,rev_type_text,weight_num,year_num</xsl:text>
+			<xsl:text>fulltext,artist_facet,authority_facet,taq_num,coinType_facet,color_text,deity_facet,denomination_facet,department_facet,diameter_num,dynasty_facet,findspot_text,recordId,issuer_facet,legend_text,obv_leg_text,rev_leg_text,maker_facet,manufacture_facet,material_facet,mint_facet,tpq_num,objectType_facet,portrait_facet,reference_text,region_facet,type_text,obv_type_text,rev_type_text,weight_num,year_num</xsl:text>
 		</xsl:variable>
 
 		<xsl:for-each select="tokenize($fields, ',')">
@@ -901,7 +901,8 @@
 					</div>
 					<div id="customSparqlQueryDiv">
 						<h3>
-							<xsl:text>4. <xsl:value-of select="numishare:normalizeLabel('visualize_add_queries', $lang)"/></xsl:text>
+							<xsl:text>4. </xsl:text>
+							<xsl:value-of select="numishare:normalizeLabel('visualize_add_queries', $lang)"/>
 							<span style="font-size:80%;margin-left:10px;">
 								<a href="#sparqlBox" id="addSparqlQuery">+ <span><xsl:value-of select="numishare:normalizeLabel('visualize_add_new', $lang)"
 										/></span></a>
@@ -929,7 +930,8 @@
 				<xsl:when test="$pipeline='visualize'">
 					<div id="customSparqlQueryDiv">
 						<h3>
-							<xsl:text>3. <xsl:value-of select="numishare:normalizeLabel('visualize_add_queries', $lang)"/></xsl:text>
+							<xsl:text>3. </xsl:text>
+							<xsl:value-of select="numishare:normalizeLabel('visualize_add_queries', $lang)"/>
 							<span style="font-size:80%;margin-left:10px;">
 								<a href="#sparqlBox" id="addSparqlQuery">+ <span><xsl:value-of select="numishare:normalizeLabel('visualize_add_new', $lang)"
 										/></span></a>
@@ -1156,7 +1158,7 @@
 
 	<xsl:template name="sparql_search_options">
 		<xsl:variable name="fields">
-			<xsl:text>authority,date,deity,denomination,issuer,manufacture,material,mint,region</xsl:text>
+			<xsl:text>authority,collection,date,deity,denomination,issuer,manufacture,material,mint,portrait,region</xsl:text>
 		</xsl:variable>
 		<xsl:for-each select="tokenize($fields, ',')">
 			<xsl:variable name="name" select="."/>
