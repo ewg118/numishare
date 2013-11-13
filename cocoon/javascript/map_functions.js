@@ -273,7 +273,7 @@ $(document).ready(function () {
 	}
 	
 	$('a.pagingBtn') .livequery('click', function (event) {
-		var href = 'results_ajax' + $(this) .attr('href');
+		var href = path + 'results_ajax' + $(this) .attr('href');
 		$.get(href, {
 			pipeline: pipeline
 		},
@@ -517,7 +517,7 @@ $(document).ready(function () {
 		var query = q + ' AND ' + place_query;
 		
 		message += '.<br/><br/>';
-		message += "<a href='#results' class='show_coins' q='" + query + "'>View</a> records that meet the search criteria from " + (event.feature.cluster.length > 1? 'these ' + name + 's': 'this ' + name) + " [<a href='#results' class='show_coins' q='" + query + " AND imagesavailable:true'>with images</a>]" + ' (results below map).';
+		message += "<a href='#results' class='show_coins' q='" + query + "'>View</a> records that meet the search criteria from " + (event.feature.cluster.length > 1? 'these ' + name + 's': 'this ' + name) + ' (results below map).';
 		message += '</div>';
 		
 		popup = new OpenLayers.Popup.FramedCloud("id", event.feature.geometry.bounds.getCenterLonLat(), null, message, null, true, onPopupClose);

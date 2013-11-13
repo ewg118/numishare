@@ -6,8 +6,7 @@
 	<xsl:include href="footer.xsl"/>
 	<xsl:include href="functions.xsl"/>
 
-	<xsl:param name="pipeline"/>
-	<xsl:param name="department"/>
+	<xsl:param name="pipeline"/>	
 	<xsl:variable name="display_path">../</xsl:variable>
 	<xsl:variable name="collection_type" select="/content//collection_type"/>
 

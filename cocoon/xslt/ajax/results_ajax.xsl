@@ -182,7 +182,7 @@
 								/>
 							</dd>
 						</xsl:if>
-						<xsl:if test="int[@name='axis_num']">
+						<!--<xsl:if test="int[@name='axis_num']">
 							<dt>
 								<xsl:if test="$lang='ar'">
 									<xsl:attribute name="class">ar</xsl:attribute>
@@ -223,7 +223,7 @@
 								</xsl:if>
 								<xsl:value-of select="float[@name='weight_num']"/>
 							</dd>
-						</xsl:if>
+						</xsl:if>-->
 					</xsl:otherwise>
 				</xsl:choose>
 			</dl>
