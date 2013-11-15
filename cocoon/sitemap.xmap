@@ -379,14 +379,14 @@ These only need to be changed if Solr and Orbeon are run on a different server o
 							<map:parameter name="parameter-selector-test" value="{request-param:lang}"/>
 							<map:when test="">
 								<map:aggregate element="content">
-									<map:part src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}&amp;sort={url-encode:{request-param:sort}}&amp;rows=500"/>
+									<map:part src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}&amp;sort={url-encode:{request-param:sort}}&amp;rows=1000"/>
 									<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
 								</map:aggregate>
 							</map:when>
 							<map:otherwise>
 								<map:aggregate element="content">
 									<map:part
-										src="{global:solr-url}select?q=lang:{request-param:lang}+AND+collection-name:{global:collection-name}&amp;sort={url-encode:{request-param:sort}}&amp;rows=500"/>
+										src="{global:solr-url}select?q=lang:{request-param:lang}+AND+collection-name:{global:collection-name}&amp;sort={url-encode:{request-param:sort}}&amp;rows=1000"/>
 									<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
 								</map:aggregate>
 							</map:otherwise>
@@ -398,14 +398,14 @@ These only need to be changed if Solr and Orbeon are run on a different server o
 							<map:when test="">
 								<map:aggregate element="content">
 									<map:part
-										src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}&amp;sort={url-encode:{request-param:sort}}&amp;rows=500"/>
+										src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}&amp;sort={url-encode:{request-param:sort}}&amp;rows=1000"/>
 									<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
 								</map:aggregate>
 							</map:when>
 							<map:otherwise>
 								<map:aggregate element="content">
 									<map:part
-										src="{global:solr-url}select?q=lang:{request-param:lang}+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}&amp;sort={url-encode:{request-param:sort}}&amp;rows=500"/>
+										src="{global:solr-url}select?q=lang:{request-param:lang}+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}&amp;sort={url-encode:{request-param:sort}}&amp;rows=1000"/>
 									<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
 								</map:aggregate>
 							</map:otherwise>

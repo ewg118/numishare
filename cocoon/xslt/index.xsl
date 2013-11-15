@@ -85,6 +85,17 @@
 			</div>
 			<div class="yui3-u-1-3" id="numishare-widget">
 				<div class="content">
+					<!-- AddThis Button BEGIN -->
+					<div class="addthis_toolbox addthis_default_style addthis_32x32_style">
+						<a class="addthis_button_preferred_1"/>
+						<a class="addthis_button_preferred_2"/>
+						<a class="addthis_button_preferred_3"/>
+						<a class="addthis_button_preferred_4"/>
+						<a class="addthis_button_compact"/>
+						<a class="addthis_counter addthis_bubble_style"/>
+					</div>
+					<script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid=xa-4ffc41710d8b692c"/>
+					<!-- AddThis Button END -->
 					<div id="linked_data" style="margin:10px 0;">
 						<div class="ui-widget-header ui-helper-clearfix ui-corner-all">Linked Data</div>
 						<!--<a href="{$display_path}rdf/">
