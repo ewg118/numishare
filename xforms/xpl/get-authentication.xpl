@@ -25,6 +25,7 @@
 				<role>ocre</role>
 				<role>mantis</role>
 				<role>electrum</role>
+				<role>rrc</role>
 			</config>
 		</p:input>
 		<p:output name="data" ref="data"/>
