@@ -77,17 +77,9 @@
 								<xsl:call-template name="nuds_content"/>
 
 								<!-- show associated objects, preferencing those from Metis first -->
-								<xsl:choose>
-									<xsl:when test="string($sparql_endpoint)">
-										<cinclude:include src="cocoon:/widget?uri={concat('http://numismatics.org/ocre/', 'id/', $id)}&amp;template=display"/>
-									</xsl:when>
-									<xsl:when test="count(nuds:digRep/nuds:associatedObject) &gt; 0">
-										<div class="objects">
-											<h2>Examples of this type</h2>
-											<xsl:apply-templates select="nuds:digRep/nuds:associatedObject"/>
-										</div>
-									</xsl:when>
-								</xsl:choose>
+								<xsl:if test="string($sparql_endpoint)">
+									<cinclude:include src="cocoon:/widget?uri={concat('http://nomisma.org/id/', $id)}&amp;template=display"/>
+								</xsl:if>
 							</div>
 						</div>
 					</xsl:when>
@@ -714,15 +706,15 @@
 		<dl>
 			<dt><xsl:value-of select="numishare:regularize_node('axis', $lang)"/>:</dt>
 			<dd>
-				<cinclude:include src="cocoon:/widget?constraints=nm:type_series_item &lt;http://numismatics.org/ocre/id/{$id}&gt;&amp;template=avgMeasurement&amp;measurement=axis"/>
+				<cinclude:include src="cocoon:/widget?constraints=nm:type_series_item &lt;http://nomisma.org/id/{$id}&gt;&amp;template=avgMeasurement&amp;measurement=axis"/>
 			</dd>
 			<dt><xsl:value-of select="numishare:regularize_node('diameter', $lang)"/>:</dt>
 			<dd>
-				<cinclude:include src="cocoon:/widget?constraints=nm:type_series_item &lt;http://numismatics.org/ocre/id/{$id}&gt;&amp;template=avgMeasurement&amp;measurement=diameter"/>
+				<cinclude:include src="cocoon:/widget?constraints=nm:type_series_item &lt;http://nomisma.org/id/{$id}&gt;&amp;template=avgMeasurement&amp;measurement=diameter"/>
 			</dd>
 			<dt><xsl:value-of select="numishare:regularize_node('weight', $lang)"/>:</dt>
 			<dd>
-				<cinclude:include src="cocoon:/widget?constraints=nm:type_series_item &lt;http://numismatics.org/ocre/id/{$id}&gt;&amp;template=avgMeasurement&amp;measurement=weight"/>
+				<cinclude:include src="cocoon:/widget?constraints=nm:type_series_item &lt;http://nomisma.org/id/{$id}&gt;&amp;template=avgMeasurement&amp;measurement=weight"/>
 			</dd>
 		</dl>
 		<xsl:call-template name="measurementForm"/>

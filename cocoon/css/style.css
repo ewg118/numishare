@@ -313,7 +313,7 @@ li.h_item {
 	width:100%;
 }
 .result_doc>td {
-	padding:15px 0 15px 0;
+	padding:15px 0;
 	margin-bottom:15px;
 }
 .result_image_left {
@@ -321,12 +321,11 @@ li.h_item {
 	border:0;
 }
 .result_image_right {
-	width:260px;
+	width:300px;
 	border:0;
 	text-align:right;
 }
 .result_metadata {
-	width:450px;
 	border:0;
 }
 .search_forms {

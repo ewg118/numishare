@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:numishare="http://code.google.com/p/numishare/"
-	xmlns:cinclude="http://apache.org/cocoon/include/1.0" exclude-result-prefixes="xs cinclude numishare" version="2.0">
+	xmlns:cinclude="http://apache.org/cocoon/include/1.0" xmlns:res="http://www.w3.org/2005/sparql-results#" exclude-result-prefixes="xs cinclude numishare res" version="2.0">
 
 	<xsl:template match="doc">
 		<xsl:variable name="sort_category" select="substring-before($sort, ' ')"/>

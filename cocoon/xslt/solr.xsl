@@ -91,7 +91,7 @@
 					<xsl:for-each select="descendant::nuds:recordId">
 						<group>
 							<xsl:attribute name="id" select="."/>	
-							<xsl:variable name="uri" select="concat('http://numismatics.org/ocre/id/', .)"/>
+							<xsl:variable name="uri" select="concat('http://nomisma.org/id/', .)"/>
 							<xsl:copy-of select="document(concat('cocoon:/widget?uri=', $uri, '&amp;template=solr'))/res:sparql/res:result"/>
 						</group>
 					</xsl:for-each>
@@ -102,7 +102,7 @@
 				<xsl:for-each select="descendant::nuds:recordId">
 					<group>
 						<xsl:attribute name="id" select="."/>	
-						<xsl:variable name="uri" select="concat('http://numismatics.org/ocre/id/', .)"/>
+						<xsl:variable name="uri" select="concat('http://nomisma.org/id/', .)"/>
 						<xsl:copy-of select="document(concat('cocoon:/widget?uri=', $uri, '&amp;template=solr'))//res:result"/>
 					</group>
 				</xsl:for-each>
@@ -111,7 +111,7 @@
 			<!-- process sparql into a manageable XML model -->
 			<!--<response xmlns="http://www.w3.org/2005/sparql-results#">
 				<xsl:for-each select="descendant::nuds:recordId">
-					<xsl:variable name="uri" select="concat('http://numismatics.org/ocre/id/', .)"/>
+					<xsl:variable name="uri" select="concat('http://nomisma.org/id/', .)"/>
 					<group>
 						<xsl:attribute name="id" select="."/>	
 						<xsl:for-each select="distinct-values($response/descendant::res:result[res:binding[@name='type']/res:uri=$uri]/res:binding[@name='object']/res:uri)">

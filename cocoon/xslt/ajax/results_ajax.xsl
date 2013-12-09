@@ -41,13 +41,13 @@
 			</xsl:variable>
 
 			<xsl:variable name="response" as="element()*">
-				<xsl:copy-of select="document(concat('cocoon:/widget?identifiers=', $identifiers, '&amp;template=results&amp;baseUri=http://numismatics.org/ocre/id/'))/res:sparql"/>
+				<xsl:copy-of select="document(concat('cocoon:/widget?identifiers=', $identifiers, '&amp;template=results&amp;baseUri=http://nomisma.org/id/'))/res:sparql"/>
 			</xsl:variable>
 
 			<!-- process sparql into a manageable XML model -->
 			<response xmlns="http://www.w3.org/2005/sparql-results#">
 				<xsl:for-each select="descendant::str[@name='recordId']">
-					<xsl:variable name="uri" select="concat('http://numismatics.org/ocre/id/', .)"/>
+					<xsl:variable name="uri" select="concat('http://nomisma.org/id/', .)"/>
 					<group>
 						<xsl:attribute name="id" select="."/>
 						<xsl:for-each select="distinct-values($response/descendant::res:result[res:binding[@name='type']/res:uri=$uri]/res:binding[@name='object']/res:uri)">

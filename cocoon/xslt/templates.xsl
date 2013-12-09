@@ -1243,7 +1243,7 @@
 						</th>
 						<td>
 							<cinclude:include
-								src="cocoon:/widget?constraints={encode-for-uri(concat('nm:type_series_item &lt;http://numismatics.org/ocre/id/', $id, '&gt;'))}&amp;template=avgMeasurement&amp;measurement={$measurement}"
+								src="cocoon:/widget?constraints={encode-for-uri(concat('nm:type_series_item &lt;http://nomisma.org/id/', $id, '&gt;'))}&amp;template=avgMeasurement&amp;measurement={$measurement}"
 							/>
 						</td>
 					</tr>
@@ -1265,7 +1265,7 @@
 								</th>
 								<td>
 									<cinclude:include
-										src="cocoon:/widget?constraints={encode-for-uri(concat('dcterms:isPartOf &lt;http://nomisma.org/id/ric&gt; AND ', .))}&amp;template=avgMeasurement&amp;measurement={$measurement}"
+										src="cocoon:/widget?constraints={encode-for-uri(concat('dcterms:isPartOf &lt;http://nomisma.org/id/rrc&gt; AND ', .))}&amp;template=avgMeasurement&amp;measurement={$measurement}"
 									/>
 								</td>
 							</tr>
@@ -1336,9 +1336,9 @@
 						<xsl:value-of select="$to"/>
 						<xsl:text>"^^xs:gYear )</xsl:text>
 					</xsl:variable>
-					<!--<xsl:value-of select="encode-for-uri(concat('dcterms:isPartOf &lt;http://nomisma.org/id/ric&gt; AND ', ., ' AND ', $filter))"/>-->
+					<!--<xsl:value-of select="encode-for-uri(concat('dcterms:isPartOf &lt;http://nomisma.org/id/rrc&gt; AND ', ., ' AND ', $filter))"/>-->
 					<cinclude:include
-						src="cocoon:/widget?constraints={encode-for-uri(concat('dcterms:isPartOf &lt;http://nomisma.org/id/ric&gt; AND ', ., ' AND ', $filter))}&amp;template=avgMeasurement&amp;measurement={$measurement}"
+						src="cocoon:/widget?constraints={encode-for-uri(concat('dcterms:isPartOf &lt;http://nomisma.org/id/rrc&gt; AND ', ., ' AND ', $filter))}&amp;template=avgMeasurement&amp;measurement={$measurement}"
 					/>
 				</td>
 			</xsl:for-each>
