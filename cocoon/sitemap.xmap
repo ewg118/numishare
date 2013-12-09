@@ -706,7 +706,7 @@
 				<map:transform type="xslt-saxon" src="xslt/geographic/findspots-to-kml.xsl" label="basiccontent">
 					<map:parameter name="use-request-parameters" value="true"/>
 				</map:transform>
-				<map:serialize type="xml"/>
+				<map:serialize type="kml"/>
 			</map:match>
 
 			<!-- MAPS PIPELINE -->

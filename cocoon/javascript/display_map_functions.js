@@ -1,6 +1,5 @@
 $(document).ready(function () {
 	var id = $('title').attr('id');
-	
 	initialize_timemap(id);
 });
 
@@ -58,8 +57,8 @@ function initialize_timemap(id) {
 		},
 		datasets: datasets,
 		bandIntervals:[
-		Timeline.DateTime.DECADE,
-		Timeline.DateTime.CENTURY]
+		Timeline.DateTime.YEAR,
+		Timeline.DateTime.DECADE]
 	});
 	
 	function toggleDataset(dsid, toggle) {
