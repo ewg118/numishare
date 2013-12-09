@@ -56,14 +56,16 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 			PREFIX rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 			PREFIX dcterms:  <http://purl.org/dc/terms/>
 			PREFIX nm:       <http://nomisma.org/id/>
+			PREFIX skos:      <http://www.w3.org/2004/02/skos/core#>
 			
-			SELECT ?object ?title ?publisher ?identifier ?collection ?weight ?axis ?diameter ?obvThumb ?revThumb ?obvRef ?revRef  WHERE {
+			SELECT ?object ?title ?identifier ?collection ?weight ?axis ?diameter ?obvThumb ?revThumb ?obvRef ?revRef  WHERE {
 			?object nm:type_series_item <typeUri>.
-			?object rdf:type <http://nomisma.org/id/coin>.
+			?object a nm:coin .
 			?object dcterms:title ?title .
-			?object dcterms:publisher ?publisher .
 			OPTIONAL { ?object dcterms:identifier ?identifier } .
-			OPTIONAL { ?object nm:collection ?collection } .
+			OPTIONAL { ?object nm:collection ?colUri .
+			?colUri skos:prefLabel ?collection 
+			FILTER(langMatches(lang(?collection), "EN"))}
 			OPTIONAL { ?object nm:weight ?weight }
 			OPTIONAL { ?object nm:axis ?axis }
 			OPTIONAL { ?object nm:diameter ?diameter }
@@ -71,7 +73,7 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 			OPTIONAL { ?object nm:reverseThumbnail ?revThumb }
 			OPTIONAL { ?object nm:obverseReference ?obvRef }
 			OPTIONAL { ?object nm:reverseReference ?revRef }}
-			ORDER BY ASC(?publisher)]]>
+			ORDER BY ASC(?collection)]]>
 		</xsl:variable>
 		<xsl:variable name="service" select="concat($endpoint, '?query=', encode-for-uri(normalize-space(replace($query, 'typeUri', $uri))), '&amp;output=xml')"/>
 
@@ -130,13 +132,15 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 			PREFIX rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 			PREFIX dcterms:  <http://purl.org/dc/terms/>
 			PREFIX nm:       <http://nomisma.org/id/>
+			PREFIX skos:      <http://www.w3.org/2004/02/skos/core#>
 			
-			SELECT ?object ?objectType ?identifier ?publisher ?collection ?obvThumb ?revThumb ?obvRef ?revRef ?type WHERE {
+			SELECT ?object ?objectType ?identifier ?collection ?obvThumb ?revThumb ?obvRef ?revRef ?type WHERE {
 			<typeUris>
-			?object dcterms:publisher ?publisher .
-			?object rdf:type ?objectType .
+			 ?object rdf:type ?objectType .
 			OPTIONAL { ?object dcterms:identifier ?identifier }
-			OPTIONAL { ?object nm:collection ?collection }			
+			OPTIONAL { ?object nm:collection ?colUri .
+			?colUri skos:prefLabel ?collection 
+			FILTER(langMatches(lang(?collection), "EN"))}		
 			OPTIONAL { ?object nm:obverseThumbnail ?obvThumb }
 			OPTIONAL { ?object nm:reverseThumbnail ?revThumb }
 			OPTIONAL { ?object nm:obverseReference ?obvRef }
@@ -249,13 +253,13 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 			?findspot geo:lat ?lat .
 			?findspot geo:long ?long }
 			]]>
-		</xsl:variable>		
-		
-		<xsl:variable name="service" select="concat($endpoint, '?query=', encode-for-uri(normalize-space(replace($query, 'typeUri', $uri))), '&amp;output=xml')"/>	
+		</xsl:variable>
+
+		<xsl:variable name="service" select="concat($endpoint, '?query=', encode-for-uri(normalize-space(replace($query, 'typeUri', $uri))), '&amp;output=xml')"/>
 		<xsl:copy-of select="document($service)/res:sparql"/>
 	</xsl:template>
 
-	<xsl:template name="numishare:avgMeasurement">	
+	<xsl:template name="numishare:avgMeasurement">
 		<xsl:variable name="api">
 			<xsl:choose>
 				<xsl:when test="$measurement='axis'">avgAxis</xsl:when>
@@ -263,30 +267,49 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 				<xsl:when test="$measurement='weight'">avgWeight</xsl:when>
 			</xsl:choose>
 		</xsl:variable>
-		
-		
-		<xsl:variable name="service" select="concat('http://nomisma.numismatics.org/apis/', $api, '?constraints=', encode-for-uri($constraints))"/>
-		<xsl:value-of select="format-number(document($service)//response, '#.00')"/>		
+
+
+		<xsl:variable name="service" select="concat('http://nomisma.org/apis/', $api, '?constraints=', encode-for-uri($constraints))"/>
+		<xsl:value-of select="format-number(document($service)//response, '#.00')"/>
 	</xsl:template>
-	
+
 	<xsl:template name="numishare:facets">
 		<xsl:variable name="query">
-			<![CDATA[
-			PREFIX rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-			PREFIX dcterms:  <http://purl.org/dc/terms/>
-			PREFIX nm:       <http://nomisma.org/id/>
-			PREFIX skos:      <http://www.w3.org/2004/02/skos/core#>						
-			SELECT DISTINCT ?val ?label WHERE {
-			?object dcterms:isPartOf <http://nomisma.org/id/rrc>.
-			?object FIELD ?val .
-			?val skos:prefLabel ?label
-			FILTER(langMatches(lang(?label), "LANG"))} 
-			ORDER BY asc(?label)
-			]]>
-		</xsl:variable>		
+			<xsl:choose>
+				<xsl:when test="$field = 'nm:collection'">
+					<![CDATA[
+					PREFIX rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+					PREFIX dcterms:  <http://purl.org/dc/terms/>
+					PREFIX nm:       <http://nomisma.org/id/>
+					PREFIX skos:      <http://www.w3.org/2004/02/skos/core#>						
+					SELECT DISTINCT ?val ?label WHERE {
+					?type dcterms:isPartOf <http://nomisma.org/id/rrc>.
+					?object nm:type_series_item ?type .
+					?object nm:collection ?val .
+					?val skos:prefLabel ?label
+					FILTER(langMatches(lang(?label), "LANG"))} 
+					ORDER BY asc(?label)
+					]]>
+				</xsl:when>
+				<xsl:otherwise>
+					<![CDATA[
+					PREFIX rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+					PREFIX dcterms:  <http://purl.org/dc/terms/>
+					PREFIX nm:       <http://nomisma.org/id/>
+					PREFIX skos:      <http://www.w3.org/2004/02/skos/core#>						
+					SELECT DISTINCT ?val ?label WHERE {
+					?object dcterms:isPartOf <http://nomisma.org/id/rrc>.
+					?object FIELD ?val .
+					?val skos:prefLabel ?label
+					FILTER(langMatches(lang(?label), "LANG"))} 
+					ORDER BY asc(?label)
+					]]>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
 		<xsl:variable name="langStr" select="if (string($lang)) then $lang else 'en'"/>
 		<xsl:variable name="service" select="concat($endpoint, '?query=', encode-for-uri(normalize-space(replace(replace($query, 'LANG', $langStr), 'FIELD', $field))), '&amp;output=xml')"/>
-		
+
 		<select class="search_text">
 			<option value="">Select option from list...</option>
 			<xsl:for-each select="document($service)//res:result">
@@ -295,7 +318,7 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 				</option>
 			</xsl:for-each>
 		</select>
-		
+
 	</xsl:template>
 
 	<!-- **************** PROCESS SPARQL RESPONSE ****************-->
@@ -306,7 +329,9 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 
 		<xsl:if test="$coin-count &gt; 0">
 			<div class="objects">
-				<h2>Examples of this type</h2>
+				<h2>
+					<xsl:value-of select="numishare:normalizeLabel('display_examples', $lang)"/>
+				</h2>
 
 				<!-- choose between between Metis (preferred) or internal links -->
 				<xsl:apply-templates select="descendant::res:result[not(contains(res:binding[@name='objectType'], 'hoard'))]" mode="display"/>
@@ -383,36 +408,36 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 			</span>
 			<dl>
 				<xsl:if test="res:binding[@name='collection']/res:literal">
-					<div>
-						<dt><xsl:value-of select="numishare:regularize_node('collection', $lang)"/>: </dt>
-						<dd style="margin-left:125px;">
-							<xsl:value-of select="res:binding[@name='collection']/res:literal"/>
-						</dd>
-					</div>
+					<dt>
+						<xsl:value-of select="numishare:regularize_node('collection', $lang)"/>
+					</dt>
+					<dd>
+						<xsl:value-of select="res:binding[@name='collection']/res:literal"/>
+					</dd>
 				</xsl:if>
 				<xsl:if test="string(res:binding[@name='axis']/res:literal)">
-					<div>
-						<dt><xsl:value-of select="numishare:regularize_node('axis', $lang)"/>: </dt>
-						<dd style="margin-left:125px;">
-							<xsl:value-of select="string(res:binding[@name='axis']/res:literal)"/>
-						</dd>
-					</div>
+					<dt>
+						<xsl:value-of select="numishare:regularize_node('axis', $lang)"/>
+					</dt>
+					<dd>
+						<xsl:value-of select="string(res:binding[@name='axis']/res:literal)"/>
+					</dd>
 				</xsl:if>
 				<xsl:if test="string(res:binding[@name='diameter']/res:literal)">
-					<div>
-						<dt><xsl:value-of select="numishare:regularize_node('diameter', $lang)"/>: </dt>
-						<dd style="margin-left:125px;">
-							<xsl:value-of select="string(res:binding[@name='diameter']/res:literal)"/>
-						</dd>
-					</div>
+					<dt>
+						<xsl:value-of select="numishare:regularize_node('diameter', $lang)"/>
+					</dt>
+					<dd>
+						<xsl:value-of select="string(res:binding[@name='diameter']/res:literal)"/>
+					</dd>
 				</xsl:if>
 				<xsl:if test="string(res:binding[@name='weight']/res:literal)">
-					<div>
-						<dt><xsl:value-of select="numishare:regularize_node('weight', $lang)"/>: </dt>
-						<dd style="margin-left:125px;">
-							<xsl:value-of select="string(res:binding[@name='weight']/res:literal)"/>
-						</dd>
-					</div>
+					<dt>
+						<xsl:value-of select="numishare:regularize_node('weight', $lang)"/>
+					</dt>
+					<dd>
+						<xsl:value-of select="string(res:binding[@name='weight']/res:literal)"/>
+					</dd>
 				</xsl:if>
 			</dl>
 			<div class="gi_c">

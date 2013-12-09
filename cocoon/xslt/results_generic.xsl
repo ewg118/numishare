@@ -110,6 +110,40 @@
 							</xsl:if>
 						</xsl:when>
 						<xsl:otherwise>
+							<xsl:if test="string(str[@name='date_display'])">
+								<dt>
+									<xsl:value-of select="numishare:regularize_node('date', $lang)"/>
+								</dt>
+								<dd>
+									<xsl:value-of select="str[@name='date_display']"/>
+								</dd>
+							</xsl:if>
+							<xsl:if test="string(arr[@name='denomination_facet']/str[1])">
+								<dt>
+									<xsl:value-of select="numishare:regularize_node('denomination', $lang)"/>
+								</dt>
+								<dd>
+									<xsl:for-each select="arr[@name='denomination_facet']/str">
+										<xsl:value-of select="."/>
+										<xsl:if test="not(position() = last())">
+											<xsl:text>, </xsl:text>
+										</xsl:if>
+									</xsl:for-each>
+								</dd>
+							</xsl:if>
+							<xsl:if test="string(arr[@name='mint_facet']/str[1])">
+								<dt>
+									<xsl:value-of select="numishare:regularize_node('mint', $lang)"/>
+								</dt>
+								<dd>
+									<xsl:for-each select="arr[@name='mint_facet']/str">
+										<xsl:value-of select="."/>
+										<xsl:if test="not(position() = last())">
+											<xsl:text>, </xsl:text>
+										</xsl:if>
+									</xsl:for-each>
+								</dd>
+							</xsl:if>
 							<xsl:if test="str[@name='obv_leg_display'] or str[@name='obv_type_display']">
 								<dt>
 									<xsl:if test="$lang='ar'">

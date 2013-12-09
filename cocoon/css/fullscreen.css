@@ -12,14 +12,14 @@ html, body {
   FACETS
   ***************************************
  */
- #map_filters{
- 	width:800px;
- 	height:400px;
- }
- ol li, ul li, dl li {
+#map_filters {
+	width:800px;
+	height:400px;
+}
+ol li, ul li, dl li {
 	list-style-type:none;
 }
- #filter_list {
+#filter_list {
 	margin:0;
 	padding:0;
 }
@@ -35,13 +35,13 @@ select {
 .category_list, .search_text {
 	width:175px;
 }
-button.ui-multiselect{
-	margin-bottom:10px;	
+button.ui-multiselect {
+	margin-bottom:10px;
 }
 #close {
 	position: absolute;
 	bottom: 1em;
-	right: 1em;	
+	right: 1em;
 }
 /*
   ***************************************
@@ -176,14 +176,15 @@ dl>div {
 	width:100%;
 }
 dt {
-	width:100px;
-	float:left;
+	float: left;
+	clear: left;
+	width: 125px;
+	text-align: right;
 	font-weight:bold;
 }
 dd {
-	float:left;
-	width:225px;
-	margin:0;
+	margin: 0 0 0 130px;
+	padding: 0 0 0.5em 0;
 }
 .g_doc {
 	width:33%;
@@ -202,6 +203,9 @@ dd {
 }
 .result_link {
 	font-size:120%;
+}
+.thumbImage>img {
+	max-width:120px;
 }
 /*
   ***************************************

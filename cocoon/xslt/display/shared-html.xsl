@@ -309,20 +309,32 @@
 		</div>
 	</xsl:template>
 	<!--***************************************** OPTIONS BAR **************************************** -->
+	<!--***************************************** OPTIONS BAR **************************************** -->
 	<xsl:template name="icons">
 		<div class="yui3-u-1">
 			<div class="submenu">
 				<div class="icon">
-					<a href="{$id}.xml">
-						<img src="{$display_path}images/xml.png" title="XML" alt="XML"/>
-					</a>
+					<a href="{$id}.kml">KML</a>
 				</div>
 				<div class="icon">
-					<a href="{$id}.rdf">
-						<img src="{$display_path}images/rdf.gif" title="RDF" alt="RDF"/>
-					</a>
+					<a href="{$id}.rdf">Nomisma RDF/XML</a>
 				</div>
-				<div class="icon">AddThis could go here...</div>
+				<div class="icon">
+					<a href="{$id}.xml">NUDS/XML</a>
+				</div>
+				<div class="icon">
+					<!-- AddThis Button BEGIN -->
+					<div class="addthis_toolbox addthis_default_style ">
+						<a class="addthis_button_preferred_1"></a>
+						<a class="addthis_button_preferred_2"></a>
+						<a class="addthis_button_preferred_3"></a>
+						<a class="addthis_button_preferred_4"></a>
+						<a class="addthis_button_compact"></a>
+						<a class="addthis_counter addthis_bubble_style"></a>
+					</div>
+					<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=xa-525d63ef6a07cd89"></script>
+					<!-- AddThis Button END -->
+				</div>
 			</div>
 		</div>
 	</xsl:template>
