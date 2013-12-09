@@ -88,12 +88,12 @@ table tr td {
 dt {
 	float: left;
 	clear: left;
-	width: 100px;
+	width: 125px;
 	text-align: right;
 	font-weight:bold;
 }
 dd {
-	margin: 0 0 0 110px;
+	margin: 0 0 0 130px;
 	padding: 0 0 0.5em 0;
 }
 dt.ar {
