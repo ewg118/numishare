@@ -1380,8 +1380,8 @@
 			<xsl:variable name="coin-count" select="$group/@coins"/>
 			<xsl:variable name="hoard-count" select="$group/@hoards"/>-->
 
-		<!-- get images -->
-		<xsl:apply-templates select="$group/res:result[res:binding[contains(@name, 'rev') or contains(@name, 'obv')]]" mode="results">
+		<!-- get images, only the first 5 -->
+		<xsl:apply-templates select="$group/res:result[res:binding[contains(@name, 'rev') or contains(@name, 'obv')]][position() &lt;=5]" mode="results">
 			<xsl:with-param name="id" select="tokenize($url, '/')[last()]"/>
 		</xsl:apply-templates>
 		<!-- object count -->
