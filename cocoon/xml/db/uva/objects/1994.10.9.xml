@@ -1,128 +1,132 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<nuds xmlns="http://nomisma.org/nuds" xmlns:xlink="http://www.w3.org/1999/xlink"
-      xmlns:mets="http://www.loc.gov/METS/"
-      recordType="physical">
-   <control>
-      <recordId>1994.10.9</recordId>
-      <maintenanceStatus>revised</maintenanceStatus>
-      <publicationStatus>approved</publicationStatus>
-      <maintenanceAgency>
-         <agencyName>University of Virginia Library</agencyName>
-         <agencyCode>US-viu</agencyCode>
-      </maintenanceAgency>
-      <maintenanceHistory>
-         <maintenanceEvent>
-            <eventType>derived</eventType>
-            <eventDateTime standardDateTime="2012-12-12T15:05:54.552-05:00Z">2012-12-12T15:05:54.552-05:00Z</eventDateTime>
-            <agentType>human</agentType>
-            <agent>Ethan Gruber and/or Carrie Sulosky</agent>
-            <eventDescription>Migrated from EAD to NUDS</eventDescription>
-         </maintenanceEvent>
-         <maintenanceEvent>
-            <eventType>revised</eventType>
-            <eventDateTime standardDateTime="2013-09-11T12:21:01.895-04:00Z">2013-09-11T12:21:01.895-04:00Z</eventDateTime>
-            <agentType>human</agentType>
-            <agent>XSLT</agent>
-            <eventDescription>Migrated to new NUDS schema version; nudsHeader to control.</eventDescription>
-         </maintenanceEvent>
-      </maintenanceHistory>
-      <rightsStmt>
-         <license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/"/>
-      </rightsStmt>
-      <otherRecordId semantic="dcterms:replaces">http://coins.lib.virginia.edu/display-uva?id=n1994_10_9</otherRecordId>
-      <semanticDeclaration>
-         <prefix>dcterms</prefix>
-         <namespace>http://purl.org/dc/terms/</namespace>
-      </semanticDeclaration>
-   </control>
-   <descMeta>
-      <title xml:lang="en">Sestertius of Septimius Severus, Rome, 211-217. 1994.10.9.</title>
-      <typeDesc>
-         <objectType xlink:href="http://nomisma.org/id/coin">Coin</objectType>
-         <denomination xlink:href="http://nomisma.org/id/sestertius">Sestertius</denomination>
-         <material xlink:href="http://nomisma.org/id/orichalcum">Orichalcum</material>
-         <dateRange>
-            <fromDate standardDate="0211">211</fromDate>
-            <toDate standardDate="0217">217</toDate>
-         </dateRange>
-         <authority>
-            <persname xlink:type="simple" xlink:role="authority"
-                      xlink:href="http://nomisma.org/id/septimius_severus">Septimius Severus</persname>
-            <famname xlink:type="simple" xlink:role="dynasty">Severan</famname>
-            <corpname xlink:type="simple" xlink:role="state">Roman Empire</corpname>
-         </authority>
-         <geographic>
-            <geogname xlink:type="simple" xlink:role="mint" xlink:href="http://nomisma.org/id/rome">Rome</geogname>
-            <geogname xlink:type="simple" xlink:role="region"
-                      xlink:href="http://nomisma.org/id/latium">Latium</geogname>
-         </geographic>
-         <obverse>
-            <type>
-               <description xml:lang="en">Bust, draped, right.</description>
-            </type>
-            <legend>IVLIA PIA FELIX AVG(VSTA)</legend>
-            <persname xlink:type="simple" xlink:role="portrait">Julia Domna</persname>
-         </obverse>
-         <reverse>
-            <type>
-               <description xml:lang="en">Felicitas standing left sacrificing from a patera held in her right hand and holding caduceus in her left.</description>
-            </type>
-            <legend>SAECVLI FELICITAS S(ENATVS) C(ONSVLTO)</legend>
-            <persname xlink:type="simple" xlink:role="deity">Felicitas</persname>
-         </reverse>
-      </typeDesc>
-      <physDesc>
-         <axis>1</axis>
-         <measurementsSet>
-            <diameter units="mm">24</diameter>
-            <weight units="g">10.64</weight>
-         </measurementsSet>
-      </physDesc>
-      <adminDesc>
-         <identifier>1994.10.9</identifier>
-         <provenance>
-            <chronList>
-               <chronItem>
-                  <acquisition>
-                     <acquiredFrom>Acquired from Rare Coins &amp; Classical Arts Ltd., 1994.</acquiredFrom>
-                  </acquisition>
-               </chronItem>
-            </chronList>
-         </provenance>
-         <department>Roman</department>
-         <collection xlink:type="simple" xlink:href="http://nomisma.org/id/uva">The Fralin Museum of Art</collection>
-      </adminDesc>
-      <refDesc>
-         <reference>
-            <title>RIC</title>
-            <identifier>590</identifier>
-         </reference>
-      </refDesc>
-   </descMeta>
-   <digRep>
-      <mets:fileSec>
-         <mets:fileGrp USE="obverse">
-            <mets:file USE="reference" MIMETYPE="image/jpeg">
-               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n1994_10_9_obv.jpg"/>
-            </mets:file>
-            <mets:file USE="thumbnail" MIMETYPE="image/jpeg">
-               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1994_10_9_obv.jpg"/>
-            </mets:file>
-            <mets:file USE="master" MIMETYPE="image/jpeg">
-               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/master/n1994_10_9_obv.jpg"/>
-            </mets:file>
-         </mets:fileGrp>
-         <mets:fileGrp USE="reverse">
-            <mets:file USE="reference" MIMETYPE="image/jpeg">
-               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n1994_10_9_rev.jpg"/>
-            </mets:file>
-            <mets:file USE="thumbnail" MIMETYPE="image/jpeg">
-               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1994_10_9_rev.jpg"/>
-            </mets:file>
-            <mets:file USE="master" MIMETYPE="image/jpeg">
-               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/master/n1994_10_9_rev.jpg"/>
-            </mets:file>
-         </mets:fileGrp>
-      </mets:fileSec>
-   </digRep>
+<nuds xmlns="http://nomisma.org/nuds" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mets="http://www.loc.gov/METS/" recordType="physical">
+	<control>
+		<recordId>1994.10.9</recordId>
+		<maintenanceStatus>revised</maintenanceStatus>
+		<publicationStatus>approved</publicationStatus>
+		<maintenanceAgency>
+			<agencyName>University of Virginia Library</agencyName>
+			<agencyCode>US-viu</agencyCode>
+		</maintenanceAgency>
+		<maintenanceHistory>
+			<maintenanceEvent>
+				<eventType>derived</eventType>
+				<eventDateTime standardDateTime="2012-12-12T15:05:54.552-05:00Z">2012-12-12T15:05:54.552-05:00Z</eventDateTime>
+				<agentType>human</agentType>
+				<agent>Ethan Gruber and/or Carrie Sulosky</agent>
+				<eventDescription>Migrated from EAD to NUDS</eventDescription>
+			</maintenanceEvent>
+			<maintenanceEvent>
+				<eventType>revised</eventType>
+				<eventDateTime standardDateTime="2013-09-11T12:21:01.895-04:00Z">2013-09-11T12:21:01.895-04:00Z</eventDateTime>
+				<agentType>human</agentType>
+				<agent>XSLT</agent>
+				<eventDescription>Migrated to new NUDS schema version; nudsHeader to control.</eventDescription>
+			</maintenanceEvent>
+		</maintenanceHistory>
+		<rightsStmt>
+			<license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/"/>
+		</rightsStmt>
+		<otherRecordId semantic="dcterms:replaces">http://coins.lib.virginia.edu/display-uva?id=n1994_10_9</otherRecordId>
+		<semanticDeclaration>
+			<prefix>dcterms</prefix>
+			<namespace>http://purl.org/dc/terms/</namespace>
+		</semanticDeclaration>
+	</control>
+	<descMeta>
+		<title xml:lang="en">As of Caracalla (Julia Domna), Rome, 211-217. 1994.10.9.</title>
+		<typeDesc>
+			<objectType xlink:href="http://nomisma.org/id/coin">Coin</objectType>
+			<denomination xlink:href="http://nomisma.org/id/as">As</denomination>
+			<material xlink:href="http://nomisma.org/id/ae">Bronze</material>
+			<dateRange>
+				<fromDate standardDate="0211">211</fromDate>
+				<toDate standardDate="0217">217</toDate>
+			</dateRange>
+			<authority>
+				<persname xlink:type="simple" xlink:role="authority" xlink:href="http://nomisma.org/id/caracalla">Caracalla</persname>
+				<famname xlink:type="simple" xlink:role="dynasty">Severan</famname>
+				<corpname xlink:type="simple" xlink:role="state">Roman Empire</corpname>
+			</authority>
+			<geographic>
+				<geogname xlink:type="simple" xlink:role="mint" xlink:href="http://nomisma.org/id/rome">Rome</geogname>
+				<geogname xlink:type="simple" xlink:role="region" xlink:href="http://nomisma.org/id/latium">Latium</geogname>
+			</geographic>
+			<obverse>
+				<type>
+					<description xml:lang="en">Bust, draped, right.</description>
+				</type>
+				<legend>IVLIA PIA FELIX AVG</legend>
+				<persname xlink:type="simple" xlink:role="portrait" xlink:href="http://nomisma.org/id/julia_domna">Julia Domna</persname>
+			</obverse>
+			<reverse>
+				<type>
+					<description xml:lang="en">Felicitas standing left sacrificing from a patera held in her right hand and holding caduceus in her left.</description>
+				</type>
+				<legend>SAECVLI FELICITAS SC</legend>
+				<persname xlink:type="simple" xlink:role="deity">Felicitas</persname>
+			</reverse>
+		</typeDesc>
+		<physDesc>
+			<axis>1</axis>
+			<measurementsSet>
+				<diameter units="mm">24</diameter>
+				<weight units="g">10.64</weight>
+			</measurementsSet>
+		</physDesc>
+		<adminDesc>
+			<identifier>1994.10.9</identifier>
+			<provenance>
+				<chronList>
+					<chronItem>
+						<acquisition>
+							<acquiredFrom>Acquired from Rare Coins &amp; Classical Arts Ltd., 1994.</acquiredFrom>
+						</acquisition>
+					</chronItem>
+				</chronList>
+			</provenance>
+			<department>Roman</department>
+			<collection xlink:type="simple" xlink:href="http://nomisma.org/id/uva">The Fralin Museum of Art</collection>
+		</adminDesc>
+		<refDesc>
+			<reference>
+				<title>RIC</title>
+				<identifier>603</identifier>
+			</reference>
+			<reference>
+				<title>BMC</title>
+				<identifier>228</identifier>
+			</reference>
+			<reference>
+				<title>Cohen</title>
+				<identifier>180</identifier>
+			</reference>
+		</refDesc>
+	</descMeta>
+	<digRep>
+		<mets:fileSec>
+			<mets:fileGrp USE="obverse">
+				<mets:file USE="reference" MIMETYPE="image/jpeg">
+					<mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n1994_10_9_obv.jpg"/>
+				</mets:file>
+				<mets:file USE="thumbnail" MIMETYPE="image/jpeg">
+					<mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1994_10_9_obv.jpg"/>
+				</mets:file>
+				<mets:file USE="master" MIMETYPE="image/jpeg">
+					<mets:FLocat LOCTYPE="URL" xlink:href="images/coins/master/n1994_10_9_obv.jpg"/>
+				</mets:file>
+			</mets:fileGrp>
+			<mets:fileGrp USE="reverse">
+				<mets:file USE="reference" MIMETYPE="image/jpeg">
+					<mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n1994_10_9_rev.jpg"/>
+				</mets:file>
+				<mets:file USE="thumbnail" MIMETYPE="image/jpeg">
+					<mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1994_10_9_rev.jpg"/>
+				</mets:file>
+				<mets:file USE="master" MIMETYPE="image/jpeg">
+					<mets:FLocat LOCTYPE="URL" xlink:href="images/coins/master/n1994_10_9_rev.jpg"/>
+				</mets:file>
+			</mets:fileGrp>
+		</mets:fileSec>
+	</digRep>
 </nuds>
