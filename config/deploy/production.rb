@@ -1,1 +1,1 @@
-server 'sds3.itc.virginia.edu', :app, :web, :primary => true
+server 'sdsv3.its.virginia.edu', :app, :web, :primary => true
