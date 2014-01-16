@@ -212,7 +212,7 @@
 							</xsl:if>
 							<xsl:call-template name="paging"/>
 							<xsl:call-template name="sort"/>
-							<table>
+							<table style="width:100%;border-collapse:collapse;">
 								<xsl:apply-templates select="descendant::doc"/>
 							</table>
 							<xsl:call-template name="paging"/>
