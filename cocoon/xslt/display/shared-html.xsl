@@ -81,7 +81,7 @@
 					<xsl:variable name="value">
 						<xsl:choose>							
 							<xsl:when test="string($lang) and contains($href, 'geonames.org')">
-								<xsl:variable name="geonameId" select="substring-before(substring-after($href, 'geonames.org/'), '/')"/>
+								<xsl:variable name="geonameId" select="tokenize($href, '/')[4]"/>
 								<xsl:variable name="geonames_data" select="document(concat($geonames-url, '/get?geonameId=', $geonameId, '&amp;username=', $geonames_api_key, '&amp;style=full'))"/>
 								<xsl:choose>
 									<xsl:when test="count(exsl:node-set($geonames_data)//alternateName[@lang=$lang]) &gt; 0">

@@ -10,19 +10,21 @@
 					<xsl:variable name="uri" select="tokenize(@name, '\|')[2]"/>
 					<xsl:variable name="coordinates" select="tokenize(@name, '\|')[3]"/>
 					
-					<Placemark>
-						<name>
-							<xsl:value-of select="$mint"/>
-						</name>
-						<description>
-							<xsl:value-of select="$uri"/>
-						</description>
-						<Point>
-							<coordinates>
-								<xsl:value-of select="$coordinates"/>
-							</coordinates>
-						</Point>
-					</Placemark>
+					<xsl:if test="string($coordinates)">
+						<Placemark>
+							<name>
+								<xsl:value-of select="$mint"/>
+							</name>
+							<description>
+								<xsl:value-of select="$uri"/>
+							</description>
+							<Point>
+								<coordinates>
+									<xsl:value-of select="$coordinates"/>
+								</coordinates>
+							</Point>
+						</Placemark>
+					</xsl:if>					
 				</xsl:for-each>
 			</Document>
 		</kml>

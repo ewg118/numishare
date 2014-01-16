@@ -234,7 +234,7 @@
 		<xsl:variable name="coordinates">
 			<xsl:choose>
 				<xsl:when test="contains($href, 'geonames')">
-					<xsl:variable name="geonameId" select="substring-before(substring-after($href, 'geonames.org/'), '/')"/>
+					<xsl:variable name="geonameId" select="tokenize($href, '/')[4]"/>
 					<xsl:variable name="geonames_data" select="document(concat($geonames-url, '/get?geonameId=', $geonameId, '&amp;username=', $geonames_api_key, '&amp;style=full'))"/>
 					<xsl:variable name="lat" select="exsl:node-set($geonames_data)//lat"/>
 					<xsl:variable name="lon" select="exsl:node-set($geonames_data)//lng"/>
@@ -272,7 +272,7 @@
 							<xsl:variable name="coordinates">
 								<xsl:choose>
 									<xsl:when test="contains($thisHref, 'geonames')">
-										<xsl:variable name="geonameId" select="substring-before(substring-after($href, 'geonames.org/'), '/')"/>
+										<xsl:variable name="geonameId" select="tokenize($href, '/')[4]"/>
 										<xsl:variable name="geonames_data" select="document(concat($geonames-url, '/get?geonameId=', $geonameId, '&amp;username=', $geonames_api_key, '&amp;style=full'))"/>
 										<xsl:variable name="lat" select="exsl:node-set($geonames_data)//lat"/>
 										<xsl:variable name="lon" select="exsl:node-set($geonames_data)//lng"/>
@@ -492,7 +492,7 @@
 			</styleUrl>
 			<xsl:choose>
 				<xsl:when test="contains($href, 'geonames')">
-					<xsl:variable name="geonameId" select="substring-before(substring-after($href, 'geonames.org/'), '/')"/>
+					<xsl:variable name="geonameId" select="tokenize($href, '/')[4]"/>
 					<xsl:variable name="geonames_data" select="document(concat($geonames-url, '/get?geonameId=', $geonameId, '&amp;username=', $geonames_api_key, '&amp;style=full'))"/>
 					<xsl:variable name="coordinates" select="concat(exsl:node-set($geonames_data)//lng, ',', exsl:node-set($geonames_data)//lat)"/>
 					<Point>
