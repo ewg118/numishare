@@ -655,7 +655,7 @@
 				<map:transform type="xslt-saxon" src="xslt/geographic/mints-to-kml.xsl" label="basiccontent">
 					<map:parameter name="use-request-parameters" value="true"/>
 				</map:transform>
-				<map:serialize type="xml"/>
+				<map:serialize type="kml"/>
 			</map:match>
 
 			<!-- KML of findspots for individual objects (hoards) given a Solr query, includes date ranges for hoards -->
