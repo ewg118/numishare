@@ -4,10 +4,16 @@
 	<xsl:include href="../functions.xsl"/>
 	<xsl:include href="../templates.xsl"/>
 	<xsl:include href="../results_generic.xsl"/>
-	<xsl:param name="display_path">
-		<xsl:text/>
-	</xsl:param>
+	<xsl:param name="pipeline"/>
 	<xsl:param name="lang"/>
+
+	<xsl:variable name="display_path">
+		<xsl:choose>
+			<xsl:when test="$pipeline='maps'"/>
+			<xsl:when test="$pipeline='maps_fullscreen'">../</xsl:when>
+			<xsl:otherwise/>
+		</xsl:choose>
+	</xsl:variable>
 
 	<xsl:param name="q"/>
 	<xsl:param name="sort"/>
@@ -25,7 +31,7 @@
 	<xsl:variable name="sparqlResult" as="element()*">
 		<xsl:if test="string($sparql_endpoint)">
 			<xsl:variable name="identifiers">
-				<xsl:for-each select="descendant::str[@name='nudsid']">
+				<xsl:for-each select="descendant::str[@name='recordId']">
 					<xsl:value-of select="."/>
 					<xsl:if test="not(position()=last())">
 						<xsl:text>|</xsl:text>
@@ -34,13 +40,13 @@
 			</xsl:variable>
 
 			<xsl:variable name="response" as="element()*">
-				<xsl:copy-of select="document(concat($url, '/widget?identifiers=', $identifiers, '&amp;template=results&amp;baseUri=http://numismatics.org/ocre/id/'))/res:sparql"/>
+				<xsl:copy-of select="document(concat('cocoon:/widget?identifiers=', $identifiers, '&amp;template=results&amp;baseUri=http://nomisma.org/id/'))/res:sparql"/>
 			</xsl:variable>
 
 			<!-- process sparql into a manageable XML model -->
 			<response xmlns="http://www.w3.org/2005/sparql-results#">
-				<xsl:for-each select="descendant::str[@name='nudsid']">
-					<xsl:variable name="uri" select="concat('http://numismatics.org/ocre/id/', .)"/>
+				<xsl:for-each select="descendant::str[@name='recordId']">
+					<xsl:variable name="uri" select="concat('http://nomisma.org/id/', .)"/>
 					<group>
 						<xsl:attribute name="id" select="."/>
 						<xsl:for-each select="distinct-values($response/descendant::res:result[res:binding[@name='type']/res:uri=$uri]/res:binding[@name='object']/res:uri)">
@@ -86,153 +92,170 @@
 
 		<div class="g_doc">
 			<span class="result_link">
-				<a href="id/{str[@name='nudsid']}{if (string($lang)) then concat('?lang=', $lang) else ''}" target="_blank">
+				<a href="{$display_path}id/{str[@name='recordId']}{if (string($lang)) then concat('?lang=', $lang) else ''}" target="_blank">
 					<xsl:value-of select="str[@name='title_display']"/>
 				</a>
 			</span>
 			<dl>
 				<xsl:choose>
 					<xsl:when test="str[@name='recordType'] = 'hoard'">
-						<div>
-							<dt>
-								<xsl:if test="$lang='ar'">
-									<xsl:attribute name="class">ar</xsl:attribute>
-								</xsl:if>
-								<xsl:value-of select="numishare:regularize_node('findspot', $lang)"/>
-							</dt>
-							<dd>
-								<xsl:if test="$lang='ar'">
-									<xsl:attribute name="class">ar</xsl:attribute>
-								</xsl:if>
-								<xsl:value-of select="arr[@name='findspot_facet']/str[1]"/>
-							</dd>
-
-						</div>
-						<div>
-							<dt>
-								<xsl:if test="$lang='ar'">
-									<xsl:attribute name="class">ar</xsl:attribute>
-								</xsl:if>
-								<xsl:value-of select="numishare:regularize_node('closing_date', $lang)"/>
-							</dt>
-							<dd>
-								<xsl:if test="$lang='ar'">
-									<xsl:attribute name="class">ar</xsl:attribute>
-								</xsl:if>
-								<xsl:value-of select="str[@name='closing_date_display']"/>
-							</dd>
-						</div>
+						<dt>
+							<xsl:if test="$lang='ar'">
+								<xsl:attribute name="class">ar</xsl:attribute>
+							</xsl:if>
+							<xsl:value-of select="numishare:regularize_node('findspot', $lang)"/>
+						</dt>
+						<dd>
+							<xsl:if test="$lang='ar'">
+								<xsl:attribute name="class">ar</xsl:attribute>
+							</xsl:if>
+							<xsl:value-of select="arr[@name='findspot_facet']/str[1]"/>
+						</dd>
+						<dt>
+							<xsl:if test="$lang='ar'">
+								<xsl:attribute name="class">ar</xsl:attribute>
+							</xsl:if>
+							<xsl:value-of select="numishare:regularize_node('closing_date', $lang)"/>
+						</dt>
+						<dd>
+							<xsl:if test="$lang='ar'">
+								<xsl:attribute name="class">ar</xsl:attribute>
+							</xsl:if>
+							<xsl:value-of select="str[@name='closing_date_display']"/>
+						</dd>
 						<xsl:if test="string(str[@name='description_display'])">
-							<div>
-								<dt>
-									<xsl:if test="$lang='ar'">
-										<xsl:attribute name="class">ar</xsl:attribute>
-									</xsl:if>
-									<xsl:value-of select="numishare:regularize_node('description', $lang)"/>
-								</dt>
-								<dd>
-									<xsl:if test="$lang='ar'">
-										<xsl:attribute name="class">ar</xsl:attribute>
-									</xsl:if>
-									<xsl:value-of select="str[@name='description_display']"/>
-								</dd>
-							</div>
+							<dt>
+								<xsl:if test="$lang='ar'">
+									<xsl:attribute name="class">ar</xsl:attribute>
+								</xsl:if>
+								<xsl:value-of select="numishare:regularize_node('description', $lang)"/>
+							</dt>
+							<dd>
+								<xsl:if test="$lang='ar'">
+									<xsl:attribute name="class">ar</xsl:attribute>
+								</xsl:if>
+								<xsl:value-of select="str[@name='description_display']"/>
+							</dd>
 						</xsl:if>
 					</xsl:when>
 					<xsl:otherwise>
+						<xsl:if test="string(str[@name='date_display'])">
+							<dt>
+								<xsl:value-of select="numishare:regularize_node('date', $lang)"/>
+							</dt>
+							<dd>
+								<xsl:value-of select="str[@name='date_display']"/>
+							</dd>
+						</xsl:if>
+						<xsl:if test="string(arr[@name='denomination_facet']/str[1])">
+							<dt>
+								<xsl:value-of select="numishare:regularize_node('denomination', $lang)"/>
+							</dt>
+							<dd>
+								<xsl:for-each select="arr[@name='denomination_facet']/str">
+									<xsl:value-of select="."/>
+									<xsl:if test="not(position() = last())">
+										<xsl:text>, </xsl:text>
+									</xsl:if>
+								</xsl:for-each>
+							</dd>
+						</xsl:if>
+						<xsl:if test="string(arr[@name='mint_facet']/str[1])">
+							<dt>
+								<xsl:value-of select="numishare:regularize_node('mint', $lang)"/>
+							</dt>
+							<dd>
+								<xsl:for-each select="arr[@name='mint_facet']/str">
+									<xsl:value-of select="."/>
+									<xsl:if test="not(position() = last())">
+										<xsl:text>, </xsl:text>
+									</xsl:if>
+								</xsl:for-each>
+							</dd>
+						</xsl:if>
 						<xsl:if test="str[@name='obv_leg_display'] or str[@name='obv_type_display']">
-							<div>
-								<dt>
-									<xsl:if test="$lang='ar'">
-										<xsl:attribute name="class">ar</xsl:attribute>
-									</xsl:if>
-									<xsl:value-of select="numishare:regularize_node('obverse', $lang)"/>
-								</dt>
-								<dd>
-									<xsl:if test="$lang='ar'">
-										<xsl:attribute name="class">ar</xsl:attribute>
-									</xsl:if>
-									<xsl:value-of
-										select="if (string-length(str[@name='obv_leg_display']) &gt; 30) then concat(substring(str[@name='obv_leg_display'], 1, 30), '...') else str[@name='obv_leg_display']"/>
-									<xsl:if test="str[@name='obv_leg_display'] and str[@name='obv_type_display']">
-										<xsl:text>: </xsl:text>
-									</xsl:if>
-									<xsl:value-of
-										select="if (string-length(str[@name='obv_type_display']) &gt; 30) then concat(substring(str[@name='obv_type_display'], 1, 30), '...') else str[@name='obv_type_display']"
-									/>
-								</dd>
-							</div>
+							<dt>
+								<xsl:if test="$lang='ar'">
+									<xsl:attribute name="class">ar</xsl:attribute>
+								</xsl:if>
+								<xsl:value-of select="numishare:regularize_node('obverse', $lang)"/>
+							</dt>
+							<dd>
+								<xsl:if test="$lang='ar'">
+									<xsl:attribute name="class">ar</xsl:attribute>
+								</xsl:if>
+								<xsl:value-of
+									select="if (string-length(str[@name='obv_leg_display']) &gt; 30) then concat(substring(str[@name='obv_leg_display'], 1, 30), '...') else str[@name='obv_leg_display']"/>
+								<xsl:if test="str[@name='obv_leg_display'] and str[@name='obv_type_display']">
+									<xsl:text>: </xsl:text>
+								</xsl:if>
+								<xsl:value-of
+									select="if (string-length(str[@name='obv_type_display']) &gt; 30) then concat(substring(str[@name='obv_type_display'], 1, 30), '...') else str[@name='obv_type_display']"
+								/>
+							</dd>
 						</xsl:if>
 						<xsl:if test="str[@name='rev_leg_display'] or str[@name='rev_type_display']">
-							<div>
-								<dt>
-									<xsl:if test="$lang='ar'">
-										<xsl:attribute name="class">ar</xsl:attribute>
-									</xsl:if>
-									<xsl:value-of select="numishare:regularize_node('reverse', $lang)"/>
-								</dt>
-								<dd>
-									<xsl:if test="$lang='ar'">
-										<xsl:attribute name="class">ar</xsl:attribute>
-									</xsl:if>
-									<xsl:value-of
-										select="if (string-length(str[@name='rev_leg_display']) &gt; 30) then concat(substring(str[@name='rev_leg_display'], 1, 30), '...') else str[@name='rev_leg_display']"/>
-									<xsl:if test="str[@name='rev_leg_display'] and str[@name='rev_type_display']">
-										<xsl:text>: </xsl:text>
-									</xsl:if>
-									<xsl:value-of
-										select="if (string-length(str[@name='rev_type_display']) &gt; 30) then concat(substring(str[@name='rev_type_display'], 1, 30), '...') else str[@name='rev_type_display']"
-									/>
-								</dd>
-							</div>
+							<dt>
+								<xsl:if test="$lang='ar'">
+									<xsl:attribute name="class">ar</xsl:attribute>
+								</xsl:if>
+								<xsl:value-of select="numishare:regularize_node('reverse', $lang)"/>
+							</dt>
+							<dd>
+								<xsl:if test="$lang='ar'">
+									<xsl:attribute name="class">ar</xsl:attribute>
+								</xsl:if>
+								<xsl:value-of
+									select="if (string-length(str[@name='rev_leg_display']) &gt; 30) then concat(substring(str[@name='rev_leg_display'], 1, 30), '...') else str[@name='rev_leg_display']"/>
+								<xsl:if test="str[@name='rev_leg_display'] and str[@name='rev_type_display']">
+									<xsl:text>: </xsl:text>
+								</xsl:if>
+								<xsl:value-of
+									select="if (string-length(str[@name='rev_type_display']) &gt; 30) then concat(substring(str[@name='rev_type_display'], 1, 30), '...') else str[@name='rev_type_display']"
+								/>
+							</dd>
 						</xsl:if>
 						<xsl:if test="int[@name='axis_num']">
-							<div>
-								<dt>
-									<xsl:if test="$lang='ar'">
-										<xsl:attribute name="class">ar</xsl:attribute>
-									</xsl:if>
-									<xsl:value-of select="numishare:regularize_node('diameter', $lang)"/>
-								</dt>
-								<dd>
-									<xsl:if test="$lang='ar'">
-										<xsl:attribute name="class">ar</xsl:attribute>
-									</xsl:if>
-									<xsl:value-of select="int[@name='axis_num']"/>
-								</dd>
-							</div>
+							<dt>
+								<xsl:if test="$lang='ar'">
+									<xsl:attribute name="class">ar</xsl:attribute>
+								</xsl:if>
+								<xsl:value-of select="numishare:regularize_node('diameter', $lang)"/>
+							</dt>
+							<dd>
+								<xsl:if test="$lang='ar'">
+									<xsl:attribute name="class">ar</xsl:attribute>
+								</xsl:if>
+								<xsl:value-of select="int[@name='axis_num']"/>
+							</dd>
 						</xsl:if>
 						<xsl:if test="float[@name='diameter_num']">
-							<div>
-								<dt>
-									<xsl:if test="$lang='ar'">
-										<xsl:attribute name="class">ar</xsl:attribute>
-									</xsl:if>
-									<xsl:value-of select="numishare:regularize_node('diameter', $lang)"/>
-								</dt>
-								<dd>
-									<xsl:if test="$lang='ar'">
-										<xsl:attribute name="class">ar</xsl:attribute>
-									</xsl:if>
-									<xsl:value-of select="float[@name='diameter_num']"/>
-								</dd>
-							</div>
+							<dt>
+								<xsl:if test="$lang='ar'">
+									<xsl:attribute name="class">ar</xsl:attribute>
+								</xsl:if>
+								<xsl:value-of select="numishare:regularize_node('diameter', $lang)"/>
+							</dt>
+							<dd>
+								<xsl:if test="$lang='ar'">
+									<xsl:attribute name="class">ar</xsl:attribute>
+								</xsl:if>
+								<xsl:value-of select="float[@name='diameter_num']"/>
+							</dd>
 						</xsl:if>
 						<xsl:if test="float[@name='weight_num']">
-							<div>
-								<dt>
-									<xsl:if test="$lang='ar'">
-										<xsl:attribute name="class">ar</xsl:attribute>
-									</xsl:if>
-									<xsl:value-of select="numishare:regularize_node('weight', $lang)"/>
-								</dt>
-								<dd>
-									<xsl:if test="$lang='ar'">
-										<xsl:attribute name="class">ar</xsl:attribute>
-									</xsl:if>
-									<xsl:value-of select="float[@name='weight_num']"/>
-								</dd>
-							</div>
+							<dt>
+								<xsl:if test="$lang='ar'">
+									<xsl:attribute name="class">ar</xsl:attribute>
+								</xsl:if>
+								<xsl:value-of select="numishare:regularize_node('weight', $lang)"/>
+							</dt>
+							<dd>
+								<xsl:if test="$lang='ar'">
+									<xsl:attribute name="class">ar</xsl:attribute>
+								</xsl:if>
+								<xsl:value-of select="float[@name='weight_num']"/>
+							</dd>
 						</xsl:if>
 					</xsl:otherwise>
 				</xsl:choose>
@@ -255,7 +278,7 @@
 					<xsl:when test="str[@name='recordType'] = 'conceptual'">
 						<xsl:choose>
 							<xsl:when test="string($sparql_endpoint)">
-								<xsl:variable name="id" select="str[@name='nudsid']"/>
+								<xsl:variable name="id" select="str[@name='recordId']"/>
 								<xsl:variable name="group" as="element()*">
 									<xsl:copy-of select="$sparqlResult//res:group[@id=$id]"/>
 								</xsl:variable>
@@ -267,22 +290,22 @@
 							<xsl:otherwise>
 								<xsl:variable name="count" select="count(arr[@name='ao_uri']/str)"/>
 								<xsl:variable name="title" select="str[@name='title_display']	"/>
-								<xsl:variable name="docId" select="str[@name='nudsid']"/>
+								<xsl:variable name="docId" select="str[@name='recordId']"/>
 
 								<xsl:if test="count(arr[@name='ao_thumbnail_obv']/str) &gt; 0">
-									<xsl:variable name="nudsid" select="substring-before(arr[@name='ao_thumbnail_obv']/str[1], '|')"/>
-									<a class="thumbImage" rel="{str[@name='nudsid']}-gallery" href="{substring-after(arr[@name='ao_reference_obv']/str[contains(., $nudsid)], '|')}"
-										title="Obverse of {$title}: {$nudsid}">
+									<xsl:variable name="recordId" select="substring-before(arr[@name='ao_thumbnail_obv']/str[1], '|')"/>
+									<a class="thumbImage" rel="{str[@name='recordId']}-gallery" href="{substring-after(arr[@name='ao_reference_obv']/str[contains(., $recordId)], '|')}"
+										title="Obverse of {$title}: {$recordId}">
 										<img src="{substring-after(arr[@name='ao_thumbnail_obv']/str[1], '|')}"/>
 									</a>
-									<xsl:if test="arr[@name='ao_thumbnail_rev']/str[contains(., $nudsid)]">
-										<a class="thumbImage" rel="{str[@name='nudsid']}-gallery" href="{substring-after(arr[@name='ao_reference_rev']/str[contains(., $nudsid)], '|')}"
-											title="Reverse of {$title}: {$nudsid}">
-											<img src="{substring-after(arr[@name='ao_thumbnail_rev']/str[contains(., $nudsid)], '|')}"/>
+									<xsl:if test="arr[@name='ao_thumbnail_rev']/str[contains(., $recordId)]">
+										<a class="thumbImage" rel="{str[@name='recordId']}-gallery" href="{substring-after(arr[@name='ao_reference_rev']/str[contains(., $recordId)], '|')}"
+											title="Reverse of {$title}: {$recordId}">
+											<img src="{substring-after(arr[@name='ao_thumbnail_rev']/str[contains(., $recordId)], '|')}"/>
 										</a>
 									</xsl:if>
 									<div style="display:none">
-										<xsl:for-each select="arr[@name='ao_thumbnail_obv']/str[not(contains(., $nudsid))]">
+										<xsl:for-each select="arr[@name='ao_thumbnail_obv']/str[not(contains(., $recordId))]">
 											<xsl:variable name="thisId" select="substring-before(., '|')"/>
 											<a class="thumbImage" rel="{$docId}-gallery" href="{substring-after(//arr[@name='ao_reference_obv']/str[contains(., $thisId)], '|')}"
 												title="Obverse of {$title}: {$thisId}">

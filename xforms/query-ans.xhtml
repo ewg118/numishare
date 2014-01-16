@@ -57,7 +57,7 @@
 			<!-- eXist queries -->
 			<xforms:instance id="eXist-xquery">
 				<exist:query xmlns:exist="http://exist.sourceforge.net/NS/exist">
-					<exist:text>&lt;report xmlns:nuds="http://nomisma.org/id/nuds"> { for $foo in collection() return &lt;item> { $foo//*[local-name()='nudsHeader']/*[local-name()='nudsid'] } &lt;/item> } &lt;/report></exist:text>
+					<exist:text>&lt;report xmlns:nuds="http://nomisma.org/id/nuds"> { for $foo in collection() return &lt;item> { $foo//*[local-name()='control']/*[local-name()='recordId'] } &lt;/item> } &lt;/report></exist:text>
 				</exist:query>
 			</xforms:instance>
 
@@ -115,7 +115,7 @@
 			</xforms:submission>
 			
 			<xforms:submission id="save-object" ref="instance('object')" xxforms:username="admin" xxforms:password=""
-				action="{instance('exist-url')}{instance('control-instance')/collection-name}/objects/{instance('object')/nuds:nudsHeader/nuds:nudsid}.xml" method="put" replace="none">
+				action="{instance('exist-url')}{instance('control-instance')/collection-name}/objects/{instance('object')/nuds:control/nuds:recordId}.xml" method="put" replace="none">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Save Error. Are all required inputs filled?</xforms:message>
 			</xforms:submission>
 
@@ -123,7 +123,7 @@
 			<xforms:submission id="xquery-collection" ref="instance('eXist-xquery')" action="{instance('exist-url')}{instance('control-instance')/collection-name}/objects" method="post"
 				replace="instance" instance="collection-result" xxforms:username="admin" xxforms:password="">
 				<xforms:setvalue ref="instance('control-instance')/error" ev:event="xforms-submit-error">Error querying eXist database.</xforms:setvalue>
-				<xforms:action ev:event="xforms-submit-done" xxforms:iterate="instance('collection-result')//nuds:nudsid">
+				<xforms:action ev:event="xforms-submit-done" xxforms:iterate="instance('collection-result')//nuds:recordId">
 					<xxforms:variable name="id" select="."/>
 					<xforms:setvalue ref="instance('identifier')" value="$id"/>
 					<xforms:send submission="query-mantis"/>

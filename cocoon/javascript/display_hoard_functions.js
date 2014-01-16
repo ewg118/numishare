@@ -5,10 +5,7 @@ Library: jQuery
 Description: Rendering graphics based on hoard counts
 ************************************/
 $(document).ready(function () {
-	/*$("#accordion").accordion({
-		//heightStyle: "content"
-	});*/
-	$("#quantTabs").tabs();
+	 $("#quantTabs").tabs();
 	
 	$('.toggle-coin').click(function () {
 		var id = $(this).attr('id').split('-')[0];
@@ -23,12 +20,20 @@ $(document).ready(function () {
 	
 	//initialize timemap
 	var id = $('title').attr('id');
+	
 	initialize_timemap(id);
 	
 	//enable basic query form
 });
 
 function initialize_timemap(id) {
+	var langStr = getURLParameter('lang');
+	if (langStr == 'null') {
+		var lang = '';
+	} else {
+		var lang = langStr;
+	}
+
 	var tm;
 	tm = TimeMap.init({
 		mapId: "map", // Id of map div element (required)
@@ -41,12 +46,16 @@ function initialize_timemap(id) {
 			//theme: "red",
 			type: "json", // Data to be loaded in KML - must be a local URL
 			options: {
-				infoTemplate: '<div><strong><a href="{{href}}" target="_blank">{{title}}</a></strong><br/><br/><em>{{description}}</em></div>',
-				url: "../apis/get?id=" + id + "&format=json"// KML file to load
+				url: "../apis/get?id=" + id + "&format=json&lang=" + lang// KML file to load
 			}
 		}],
 		bandIntervals:[
 		Timeline.DateTime.DECADE,
 		Timeline.DateTime.CENTURY]
 	});
+}
+
+function getURLParameter(name) {
+	return decodeURI(
+	(RegExp(name + '=' + '(.+?)(&|$)').exec(location.search) ||[, null])[1]);
 }

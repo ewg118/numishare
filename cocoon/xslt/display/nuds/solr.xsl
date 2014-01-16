@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="2.0" xmlns:nuds="http://nomisma.org/nuds" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:datetime="http://exslt.org/dates-and-times" xmlns:nm="http://nomisma.org/id/"
 	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:exsl="http://exslt.org/common" xmlns:mets="http://www.loc.gov/METS/"
-	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:res="http://www.w3.org/2005/sparql-results#" xmlns:gml="http://www.opengis.net/gml/" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:res="http://www.w3.org/2005/sparql-results#" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
 	xmlns:cinclude="http://apache.org/cocoon/include/1.0" exclude-result-prefixes="#all">
 
 	<xsl:template name="nuds">	
@@ -20,7 +20,7 @@
 
 	<xsl:template match="nuds:nuds">
 		<xsl:param name="lang"/>
-		<xsl:variable name="id" select="nuds:nudsHeader/nuds:nudsid"/>
+		<xsl:variable name="id" select="nuds:control/nuds:recordId"/>
 		<doc>
 			<field name="id">
 				<xsl:choose>
@@ -32,7 +32,7 @@
 					</xsl:otherwise>
 				</xsl:choose>				
 			</field>
-			<field name="nudsid">
+			<field name="recordId">
 				<xsl:value-of select="$id"/>
 			</field>
 			<xsl:if test="string($lang)">
@@ -73,13 +73,29 @@
 			
 			<xsl:choose>
 				<xsl:when test="string($sparql_endpoint)">
-					<!-- get findspots -->
+					<!-- get findspots -->				
 					<xsl:apply-templates select="$sparqlResult/descendant::res:group[@id=$id]/res:result"/>
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:apply-templates select="nuds:digRep"/>
 				</xsl:otherwise>
 			</xsl:choose>
+			
+			<!-- fulltext -->
+			<field name="fulltext">
+				<xsl:value-of select="nuds:control/nuds:recordId"/>
+				<xsl:text> </xsl:text>
+				<xsl:for-each select="nuds:descMeta/descendant-or-self::text()">
+					<xsl:value-of select="normalize-space(.)"/>
+					<xsl:text> </xsl:text>
+				</xsl:for-each>
+				<xsl:if test="string($lang)">
+					<xsl:for-each select="$rdf/descendant-or-self::node()[@xml:lang=$lang]/text()">
+						<xsl:value-of select="normalize-space(.)"/>
+						<xsl:text> </xsl:text>
+					</xsl:for-each>
+				</xsl:if>
+			</field>
 		</doc>
 	</xsl:template>
 
@@ -90,7 +106,7 @@
 		<field name="findspot_facet">
 			<xsl:value-of select="$title"/>
 		</field>
-		<xsl:if test="$geonames//place[@id=$uri]">
+		<xsl:if test="res:binding[@name='long']/res:literal and res:binding[@name='lat']/res:literal">
 			<field name="findspot_uri">
 				<xsl:value-of select="$uri"/>
 			</field>
@@ -99,7 +115,7 @@
 				<xsl:text>|</xsl:text>
 				<xsl:value-of select="$uri"/>
 				<xsl:text>|</xsl:text>
-				<xsl:value-of select="$geonames//place[@id=$uri]"/>
+				<xsl:value-of select="concat(res:binding[@name='long']/res:literal, ',', res:binding[@name='lat']/res:literal)"/>
 			</field>
 		</xsl:if>
 	</xsl:template>
@@ -140,11 +156,6 @@
 		<field name="title_display">
 			<xsl:value-of select="normalize-space(nuds:title)"/>
 		</field>
-		<xsl:if test="string(nuds:department)">
-			<field name="department_facet">
-				<xsl:value-of select="nuds:department"/>
-			</field>
-		</xsl:if>
 		<xsl:apply-templates select="nuds:subjectSet"/>
 		<xsl:apply-templates select="nuds:physDesc"/>
 		<xsl:apply-templates select="exsl:node-set($typeDesc)//nuds:typeDesc">
@@ -164,31 +175,25 @@
 					<xsl:when test="contains($href, 'nomisma.org')">
 						<xsl:variable name="label">
 							<xsl:choose>
-								<xsl:when test="string(exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/skos:prefLabel)">
-									<xsl:value-of select="exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/skos:prefLabel"/>
+								<xsl:when test="string($rdf/*[@rdf:about=$href]/skos:prefLabel)">
+									<xsl:value-of select="$rdf/*[@rdf:about=$href]/skos:prefLabel"/>
 								</xsl:when>
 								<xsl:otherwise>
 									<xsl:value-of select="$href"/>
 								</xsl:otherwise>
 							</xsl:choose>
 						</xsl:variable>
-						<xsl:if test="string(exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/descendant::gml:pos[1])">
-							<xsl:variable name="coordinates" select="exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/descendant::gml:pos[1]"/>
-							<xsl:if test="string($coordinates)">
-								<xsl:variable name="lat" select="substring-before($coordinates, ' ')"/>
-								<xsl:variable name="lon" select="substring-after($coordinates, ' ')"/>
-								<!-- *_geo format is 'mint name|URI of resource|KML-compliant geographic coordinates' -->
-								<field name="findspot_geo">
-									<xsl:value-of select="$label"/>
-									<xsl:text>|</xsl:text>
-									<xsl:value-of select="@xlink:href"/>
-									<xsl:text>|</xsl:text>
-									<xsl:value-of select="concat($lon, ',', $lat)"/>
-								</field>
-							</xsl:if>
+						<xsl:if test="$rdf/*[@rdf:about=$href]/descendant::geo:lat and $rdf/*[@rdf:about=$href]/descendant::geo:long">							
+							<field name="findspot_geo">
+								<xsl:value-of select="$label"/>
+								<xsl:text>|</xsl:text>
+								<xsl:value-of select="@xlink:href"/>
+								<xsl:text>|</xsl:text>
+								<xsl:value-of select="concat($rdf/*[@rdf:about=$href]/descendant::geo:long, ',', $rdf/*[@rdf:about=$href]/descendant::geo:lat)"/>
+							</field>
 						</xsl:if>
-						<xsl:if test="exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/descendant::nm:findspot[contains(@rdf:resource, 'geonames.org')]">
-							<xsl:variable name="geonamesUri" select="exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/descendant::nm:findspot[contains(@rdf:resource, 'geonames.org')][1]/@rdf:resource"/>
+						<xsl:if test="$rdf/*[@rdf:about=$href]/descendant::nm:findspot[contains(@rdf:resource, 'geonames.org')]">
+							<xsl:variable name="geonamesUri" select="$rdf/*[@rdf:about=$href]/descendant::nm:findspot[contains(@rdf:resource, 'geonames.org')][1]/@rdf:resource"/>
 							<field name="findspot_geo">
 								<xsl:value-of select="$label"/>
 								<xsl:text>|</xsl:text>
@@ -205,8 +210,6 @@
 								<field name="findspot_text">
 									<xsl:value-of select="."/>
 								</field>
-
-
 							</xsl:for-each>
 						</xsl:if>
 						<field name="findspot_facet">
@@ -219,9 +222,6 @@
 				</field>
 			</xsl:when>
 			<xsl:otherwise>
-				<!--<field name="findspot_geo">
-					<xsl:value-of select="concat(nuds:findspot/nuds:geogname[@xlink:role='findspot'], '|', tokenize(findspot/gml:Point/gml:coordinates, ', ')[2], ',', tokenize(findspot/gml:Point/gml:coordinates, ', ')[1])"/>
-					</field>-->
 				<field name="findspot_facet">
 					<xsl:value-of select="nuds:findspot/nuds:geoname[@xlink:role='findspot']"/>
 				</field>
@@ -298,14 +298,14 @@
 		<!-- thumbnails-->
 		<xsl:if test="string(exsl:node-set($objectDoc)//mets:fileGrp[@USE='obverse']/mets:file[@USE='thumbnail']/mets:FLocat/@xlink:href)">
 			<field name="ao_thumbnail_obv">
-				<xsl:value-of select="exsl:node-set($objectDoc)//nuds:nudsid"/>
+				<xsl:value-of select="exsl:node-set($objectDoc)//nuds:recordId"/>
 				<xsl:text>|</xsl:text>
 				<xsl:value-of select="exsl:node-set($objectDoc)//mets:fileGrp[@USE='obverse']/mets:file[@USE='thumbnail']/mets:FLocat/@xlink:href"/>
 			</field>
 		</xsl:if>
 		<xsl:if test="string(exsl:node-set($objectDoc)//mets:fileGrp[@USE='reverse']/mets:file[@USE='thumbnail']/mets:FLocat/@xlink:href)">
 			<field name="ao_thumbnail_rev">
-				<xsl:value-of select="exsl:node-set($objectDoc)//nuds:nudsid"/>
+				<xsl:value-of select="exsl:node-set($objectDoc)//nuds:recordId"/>
 				<xsl:text>|</xsl:text>
 				<xsl:value-of select="exsl:node-set($objectDoc)//mets:fileGrp[@USE='reverse']/mets:file[@USE='thumbnail']/mets:FLocat/@xlink:href"/>
 			</field>
@@ -313,14 +313,14 @@
 		<!-- reference-->
 		<xsl:if test="string(exsl:node-set($objectDoc)//mets:fileGrp[@USE='obverse']/mets:file[@USE='reference']/mets:FLocat/@xlink:href)">
 			<field name="ao_reference_obv">
-				<xsl:value-of select="exsl:node-set($objectDoc)//nuds:nudsid"/>
+				<xsl:value-of select="exsl:node-set($objectDoc)//nuds:recordId"/>
 				<xsl:text>|</xsl:text>
 				<xsl:value-of select="exsl:node-set($objectDoc)//mets:fileGrp[@USE='obverse']/mets:file[@USE='reference']/mets:FLocat/@xlink:href"/>
 			</field>
 		</xsl:if>
 		<xsl:if test="string(exsl:node-set($objectDoc)//mets:fileGrp[@USE='reverse']/mets:file[@USE='reference']/mets:FLocat/@xlink:href)">
 			<field name="ao_reference_rev">
-				<xsl:value-of select="exsl:node-set($objectDoc)//nuds:nudsid"/>
+				<xsl:value-of select="exsl:node-set($objectDoc)//nuds:recordId"/>
 				<xsl:text>|</xsl:text>
 				<xsl:value-of select="exsl:node-set($objectDoc)//mets:fileGrp[@USE='reverse']/mets:file[@USE='reference']/mets:FLocat/@xlink:href"/>
 			</field>
@@ -332,7 +332,7 @@
 		</xsl:if>
 
 		<!-- get findspot, if available -->
-		<xsl:if test="count(exsl:node-set($objectDoc)//nuds:findspot) &gt; 0">
+		<!--<xsl:if test="count(exsl:node-set($objectDoc)//nuds:findspot) &gt; 0">
 			<xsl:variable name="name" select="exsl:node-set($objectDoc)//nuds:findspot/nuds:name"/>
 			<xsl:variable name="gml-coordinates" select="exsl:node-set($objectDoc)//nuds:findspot/gml:coordinates"/>
 			<xsl:variable name="kml-coordinates" select="concat(tokenize($gml-coordinates, ', ')[2], ',', tokenize($gml-coordinates, ', ')[1])"/>
@@ -342,7 +342,7 @@
 					<xsl:value-of select="concat($name, '|', @xlink:href, '|', $kml-coordinates)"/>
 				</field>
 			</xsl:if>
-		</xsl:if>
+		</xsl:if>-->
 	</xsl:template>
 
 	<xsl:template match="mets:fileSec">
@@ -387,10 +387,15 @@
 	</xsl:template>
 
 	<xsl:template match="nuds:adminDesc">
-		<xsl:for-each select="nuds:collection | nuds:repository | nuds:owner">
+		<xsl:for-each select="nuds:collection | nuds:repository | nuds:owner | nuds:department">
 			<field name="{local-name()}_facet">
 				<xsl:value-of select="normalize-space(.)"/>
 			</field>
+			<xsl:if test="string(@xlink:href)">
+				<field name="{local-name()}_uri">
+					<xsl:value-of select="@xlink:href"/>
+				</field>
+			</xsl:if>
 		</xsl:for-each>
 
 		<xsl:if test="nuds:identifier">
@@ -432,7 +437,7 @@
 
 	<xsl:template name="sortid">
 		<field name="sortid">
-			<xsl:variable name="segs" select="tokenize(nuds:nudsHeader/nuds:nudsid, '\.')"/>
+			<xsl:variable name="segs" select="tokenize(nuds:control/nuds:recordId, '\.')"/>
 			<xsl:variable name="auth">
 				<xsl:choose>
 					<xsl:when test="$segs[3] = 'aug'">01</xsl:when>

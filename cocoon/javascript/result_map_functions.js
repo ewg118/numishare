@@ -44,16 +44,7 @@ function initialize_map(q, collection_type) {
 				return Math.min(feature.attributes.count, 7) + 3;
 			}
 		}
-	});
-	var imperium = new OpenLayers.Layer.XYZ(
-	"Imperium Romanum",[
-	"http://pelagios.dme.ait.ac.at/tilesets/imperium/${z}/${x}/${y}.png"], {
-		sphericalMercator: true,
-		isBaseLayer: true,
-		numZoomLevels: 12
-	});
-	
-	map.addLayer(imperium);
+	});	
 	var mintLayer = new OpenLayers.Layer.Vector("KML", {
 		styleMap: mintStyle,
 		
@@ -70,8 +61,7 @@ function initialize_map(q, collection_type) {
 				extractAttributes: true
 			})
 		})
-	});
-	map.addLayer(mintLayer);
+	});	
 	
 	//add findspot layer for hoards
 	var hoardLayer = new OpenLayers.Layer.Vector("KML", {
@@ -90,6 +80,9 @@ function initialize_map(q, collection_type) {
 			})
 		})
 	});
+	
+	map.addLayer(new OpenLayers.Layer.Google("Google Physical",{type: google.maps.MapTypeId.TERRAIN}));	
+	map.addLayer(mintLayer);
 	map.addLayer(hoardLayer);
 	
 	function kmlLoaded() {

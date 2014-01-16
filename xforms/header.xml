@@ -1,31 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xhtml:div id="hd" xmlns:xhtml="http://www.w3.org/1999/xhtml">
-	<xhtml:div id="header">NUMISHARE ADMINISTRATION<xhtml:a href="{instance('config')/url}" style="float:right;font-size:14px;letter-spacing:1px;" target="_blank">View Pubic Interface</xhtml:a></xhtml:div>
-	<xhtml:ul role="menubar" id="menu" class="menubar ui-menubar ui-widget-header ui-helper-clearfix">
-		<xhtml:li role="presentation" class="ui-menubar-item">
-			<xhtml:a aria-haspopup="true" role="menuitem" class="ui-button ui-widget ui-button-text-only ui-menubar-link " tabindex="-1" href="{$display_path}">
-				<xhtml:span class="ui-button-text">Objects</xhtml:span>
-			</xhtml:a>
-		</xhtml:li>
-		<xhtml:li role="presentation" class="ui-menubar-item">
-			<xhtml:a aria-haspopup="true" role="menuitem" class="ui-button ui-widget ui-button-text-only ui-menubar-link" tabindex="-1" href="{$display_path}pages/">
-				<xhtml:span class="ui-button-text">Pages</xhtml:span>
-			</xhtml:a>
-		</xhtml:li>
-		<xhtml:li role="presentation" class="ui-menubar-item">
-			<xhtml:a aria-haspopup="true" role="menuitem" class="ui-button ui-widget ui-button-text-only ui-menubar-link" tabindex="-1" href="{$display_path}imports/">
-				<xhtml:span class="ui-button-text">Imports</xhtml:span>
-			</xhtml:a>
-		</xhtml:li>
-		<xhtml:li role="presentation" class="ui-menubar-item">
-			<xhtml:a aria-haspopup="true" role="menuitem" class="ui-button ui-widget ui-button-text-only ui-menubar-link" href="{$display_path}edit/settings/">
-				<xhtml:span class="ui-button-text">Numishare Settings</xhtml:span>
-			</xhtml:a>
-		</xhtml:li>
-		<xhtml:li role="presentation" class="ui-menubar-item">
-			<xhtml:a aria-haspopup="true" role="menuitem" class="ui-button ui-widget ui-button-text-only ui-menubar-link" href="{$display_path}theme/">
-				<xhtml:span class="ui-button-text">Theme</xhtml:span>
-			</xhtml:a>
-		</xhtml:li>
-	</xhtml:ul>
-</xhtml:div>
+<div xmlns="http://www.w3.org/1999/xhtml">
+	<div id="header"> NUMISHARE ADMINISTRATION | <a href="{$display_path}">Objects</a> | <a href="{$display_path}pages/">Pages</a> | <a href="{$display_path}imports/">Imports</a> | <a
+		href="{$display_path}edit/settings/">Numishare Settings</a> | <a href="{$display_path}theme/">Theme</a>
+		<a href="{instance('config')/url}" style="float:right" target="_blank">View Pubic Interface</a>
+	</div>
+</div>

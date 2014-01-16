@@ -1,0 +1,262 @@
+<!-- 	author: Ethan Gruber, American Numismatic Society 
+	last modified: June, 2011
+	function: EAD state component; user taps into LCSH or local vocabulary for states
+-->
+<xbl:xbl xmlns:nuds="http://nomisma.org/nuds" xmlns="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms"
+	xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xxforms="http://orbeon.org/oxf/xml/xforms" xmlns:fr="http://orbeon.org/oxf/xml/form-runner"
+	xmlns:xbl="http://www.w3.org/ns/xbl" xmlns:xxbl="http://orbeon.org/oxf/xml/xbl" xmlns:oxf="http://www.orbeon.com/oxf/processors"
+	xmlns:numishare="http://code.google.com/p/numishare/" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<xbl:binding id="numishare-control" element="numishare|control">
+		<xbl:template>
+			<xforms:group xbl:attr="model context ref bind" xxbl:scope="outer">
+				<xbl:content includes="xforms|label,xforms|help,xforms|hint,xforms|alert"/>
+				<xforms:group xxbl:scope="inner">
+					<xxforms:variable name="binding" as="node()?">
+						<xxforms:sequence select="." xxbl:scope="outer"/>
+					</xxforms:variable>
+					<xxforms:variable name="display_path">../../</xxforms:variable>
+					<xforms:group ref="$binding">
+						<h2>Electronic Record Metadata: control</h2>
+						<xforms:trigger appearance="minimal">
+							<xforms:label>
+								<img src="{$display_path}images/add.gif"/>Other Record ID</xforms:label>
+							<xforms:action ev:event="DOMActivate">
+								<xforms:insert context="." nodeset="nuds:recordId" position="after" origin="instance('otherRecordId-template')"/>
+							</xforms:action>
+						</xforms:trigger>
+						<div>
+							<xforms:select1 ref="nuds:maintenanceStatus">
+								<xforms:label>Maintenance Status</xforms:label>
+								<xforms:itemset nodeset="instance('maintenanceStatus-list')/item">
+									<xforms:label ref="."/>
+									<xforms:value ref="."/>
+								</xforms:itemset>
+								<xforms:action ev:event="xforms-value-changed">
+									<xforms:var name="value" select="."/>
+									<xforms:setvalue ref="../nuds:publicationStatus"
+										if="not($value='new') and not($value='revised') and not($value='derived')">inProcess</xforms:setvalue>
+								</xforms:action>
+
+							</xforms:select1>
+						</div>
+						<xforms:repeat nodeset="nuds:otherRecordId">
+							<div>
+								<xforms:input ref=".">
+									<xforms:label>Other Record ID</xforms:label>
+									<xforms:alert>Must be a valid URI</xforms:alert>
+								</xforms:input>
+								<xforms:trigger appearance="minimal">
+									<xforms:delete ev:event="DOMActivate" nodeset="."/>
+									<xforms:label>
+										<img src="{$display_path}images/remove.gif"/>
+									</xforms:label>
+								</xforms:trigger>
+							</div>
+						</xforms:repeat>
+						<xforms:group ref="nuds:maintenanceAgency">
+							<div class="section">
+								<h3>Maintenance Agency</h3>
+								<div class="trigger_container">
+									<xforms:group ref=".[count(nuds:agencyCode) = 0]">
+										<xforms:trigger appearance="minimal">
+											<xforms:label>
+												<img src="{$display_path}images/add.gif"/>Agency Code</xforms:label>
+											<xforms:action ev:event="DOMActivate">
+												<xforms:insert context="." origin="instance('agencyCode-template')"/>
+											</xforms:action>
+										</xforms:trigger>
+									</xforms:group>
+									<xforms:trigger appearance="minimal">
+										<xforms:label>
+											<img src="{$display_path}images/add.gif"/> Other Agency Code</xforms:label>
+										<xforms:action ev:event="DOMActivate">
+											<xforms:insert context="." nodeset="./child::node()[last()]" origin="instance('otherAgencyCode-template')"/>
+										</xforms:action>
+									</xforms:trigger>
+								</div>
+								<div>
+									<xforms:input ref="nuds:agencyName">
+										<xforms:label>Agency Name</xforms:label>
+										<xforms:alert>Required</xforms:alert>
+									</xforms:input>
+								</div>
+								<xforms:group ref="nuds:agencyCode">
+									<div>
+										<xforms:input ref=".">
+											<xforms:label>Agency Code</xforms:label>
+										</xforms:input>
+										<xforms:trigger appearance="minimal">
+											<xforms:delete ev:event="DOMActivate" nodeset="."/>
+											<xforms:label>
+												<img src="{$display_path}images/remove.gif"/>
+											</xforms:label>
+										</xforms:trigger>
+									</div>
+								</xforms:group>
+								<xforms:repeat nodeset="nuds:otherAgencyCode">
+									<div>
+										<xforms:input ref=".">
+											<xforms:label>Other Agency Code</xforms:label>
+										</xforms:input>
+										<xforms:trigger appearance="minimal">
+											<xforms:delete ev:event="DOMActivate" nodeset="."/>
+											<xforms:label>
+												<img src="{$display_path}images/remove.gif"/>
+											</xforms:label>
+										</xforms:trigger>
+									</div>
+								</xforms:repeat>
+							</div>
+						</xforms:group>
+						<xforms:group ref="nuds:maintenanceHistory">
+							<div class="section">
+								<h3>Maintenance History</h3>
+								<div class="trigger_container">
+									<xforms:trigger appearance="minimal">
+										<xforms:label>
+											<img src="{$display_path}images/add.gif"/>Maintenance Event</xforms:label>
+										<xforms:action ev:event="DOMActivate">
+											<xforms:insert context="." origin="instance('maintenanceEvent-template')" nodeset="./child::node()[last()]"/>
+										</xforms:action>
+									</xforms:trigger>
+								</div>
+								<xforms:repeat nodeset="nuds:maintenanceEvent">
+									<div class="subsection">
+										<h4>Maintenance Event</h4>
+										<div class="trigger_container">
+											<xforms:group ref=".[count(nuds:eventDescription) = 0]">
+												<xforms:trigger appearance="minimal">
+													<xforms:label>
+														<img src="{$display_path}images/add.gif"/>Event Description</xforms:label>
+													<xforms:insert ev:event="DOMActivate" context="." origin="instance('eventDescription-template')"
+														nodeset="./child::node()[last()]"/>
+												</xforms:trigger>
+											</xforms:group>
+										</div>
+										<div>
+											<xforms:select1 ref="nuds:eventType">
+												<xforms:label>Event Type</xforms:label>
+												<xforms:alert>Required</xforms:alert>
+												<xforms:item>
+													<xforms:label>Select...</xforms:label>
+													<xforms:value/>
+												</xforms:item>
+												<xforms:itemset nodeset="instance('eventType-list')/item">
+													<xforms:label ref="."/>
+													<xforms:value ref="."/>
+												</xforms:itemset>
+											</xforms:select1>
+										</div>
+										<div>
+											<xforms:output ref="nuds:eventDateTime/@standardDateTime">
+												<xforms:label>Event Date/Time</xforms:label>
+											</xforms:output>
+										</div>
+										<div>
+											<xforms:select1 ref="nuds:agentType">
+												<xforms:label>Agent Type</xforms:label>
+												<xforms:alert>Required</xforms:alert>
+												<xforms:item>
+													<xforms:label>Select...</xforms:label>
+													<xforms:value/>
+												</xforms:item>
+												<xforms:itemset nodeset="instance('agentType-list')/item">
+													<xforms:label ref="."/>
+													<xforms:value ref="."/>
+												</xforms:itemset>
+											</xforms:select1>
+										</div>
+										<div>
+											<xforms:input ref="nuds:agent">
+												<xforms:label>Agent</xforms:label>
+												<xforms:alert>Required</xforms:alert>
+											</xforms:input>
+										</div>
+										<xforms:group ref="nuds:eventDescription">
+											<div>
+												<xforms:input ref=".">
+													<xforms:label>Event Description</xforms:label>
+												</xforms:input>
+												<xforms:trigger appearance="minimal">
+													<xforms:delete ev:event="DOMActivate" nodeset="."/>
+													<xforms:label>
+														<img src="{$display_path}images/remove.gif"/>
+													</xforms:label>
+												</xforms:trigger>
+											</div>
+										</xforms:group>
+									</div>
+								</xforms:repeat>
+							</div>
+						</xforms:group>
+						<xforms:group ref="nuds:rightsStmt">
+							<div class="section">
+								<h3>Rights Statement</h3>
+								<div>
+									<xforms:input ref="nuds:copyrightHolder">
+										<xforms:label>Copyright Holder</xforms:label>
+										<xforms:alert>Required</xforms:alert>
+									</xforms:input>
+								</div>
+								<div>
+									<xforms:input ref="nuds:license">
+										<xforms:label>License</xforms:label>
+										<xforms:alert>Required</xforms:alert>
+									</xforms:input>
+								</div>
+							</div>
+						</xforms:group>
+					</xforms:group>
+					<!-- ********************************************************************** -->
+					<!-- ***********************  DIALOG INTERNAL MODEL *********************** -->
+					<xforms:model id="control-model" xmlns="http://nomisma.org/nuds">
+						<xforms:instance id="project-template" xxforms:exclude-result-prefixes="#all">
+							<project/>
+						</xforms:instance>
+						<xforms:instance id="eventDescription-template" xxforms:exclude-result-prefixes="#all">
+							<eventDescription/>
+						</xforms:instance>
+						<xforms:instance id="otherRecordId-template" xxforms:exclude-result-prefixes="#all">
+							<otherRecordId/>
+						</xforms:instance>
+						<xforms:instance id="agencyCode-template" xxforms:exclude-result-prefixes="#all">
+							<agencyCode/>
+						</xforms:instance>
+						<xforms:instance id="otherAgencyCode-template" xxforms:exclude-result-prefixes="#all">
+							<otherAgencyCode/>
+						</xforms:instance>
+
+						<!-- select instances -->
+						<xforms:instance id="maintenanceStatus-list">
+							<list xmlns="">
+								<item>cancelled</item>
+								<item>deleted</item>
+								<item>deletedReplaced</item>
+								<item>deletedSplit</item>
+								<item>derived</item>
+								<item>new</item>
+								<item>revised</item>
+							</list>
+						</xforms:instance>
+						<xforms:instance id="eventType-list">
+							<list xmlns="">
+								<item>cancelled</item>
+								<item>created</item>
+								<item>deleted</item>
+								<item>derived</item>
+								<item>revised</item>
+								<item>updated</item>
+							</list>
+						</xforms:instance>
+						<xforms:instance id="agentType-list">
+							<list xmlns="">
+								<item>human</item>
+								<item>machine</item>
+							</list>
+						</xforms:instance>
+					</xforms:model>
+				</xforms:group>
+			</xforms:group>
+		</xbl:template>
+	</xbl:binding>
+</xbl:xbl>

@@ -13,7 +13,8 @@ html {
 }
 body {
 	margin:auto;
-	width:972px;
+	min-width:972px;
+	width:90%;
 	border:1px solid gray;
 	margin-top:10px;
 	background-color:white;
@@ -85,14 +86,15 @@ table tr td {
 	border:0;
 }
 dt {
-	width:125px;
-	float:left;
+	float: left;
+	clear: left;
+	width: 125px;
+	text-align: right;
 	font-weight:bold;
 }
 dd {
-	float:left;
-	width:325px;
-	margin:0;
+	margin: 0 0 0 130px;
+	padding: 0 0 0.5em 0;
 }
 dt.ar {
 	width:125px;
@@ -104,7 +106,7 @@ dd.ar {
 	float:left;
 	width:325px;
 	margin:0;
-	text-align:right;	
+	text-align:right;
 }
 /*
   ***************************************
@@ -311,7 +313,7 @@ li.h_item {
 	width:100%;
 }
 .result_doc>td {
-	padding:15px 0 15px 0;
+	padding:15px 0;
 	margin-bottom:15px;
 }
 .result_image_left {
@@ -319,12 +321,11 @@ li.h_item {
 	border:0;
 }
 .result_image_right {
-	width:260px;
+	width:300px;
 	border:0;
 	text-align:right;
 }
 .result_metadata {
-	width:450px;
 	border:0;
 }
 .search_forms {
@@ -410,7 +411,7 @@ li.h_item {
 #removeBtn_1 {
 	display:none;
 }
-#searchItemTemplate {
+#searchItemTemplate, #sparqlItemTemplate {
 	display:none;
 }
 .searchItemTemplate {
@@ -720,10 +721,25 @@ div.custominfostyle {
 }
 .removeFilter, .removeQuery {
 	font-size:80%;
+	margin-left:10px;
 }
 .anOption {
 	float:left;
 	width:20%;
+}
+/* **SPARQL QUERY*** */
+.popupQuery {
+	width:700px;
+	padding:2px;
+}
+#dateTemplate {
+	display:none;
+}
+.measurementTable {
+	display:none;
+}
+.mr {
+	display:none;
 }
 /*
   ***************************************

@@ -17,6 +17,14 @@ $(document).ready(function () {
 		    (RegExp(name + '=' + '(.+?)(&|$)').exec(location.search)||[,null])[1]
 		);
 	}
+	
+	var pipeline = $('#pipeline').text();
+	if (pipeline == 'display'){
+		var path = '../';
+	} else if (pipeline=='visualize') {
+		var path = './';
+	}
+	
 	//enable basic query form
 	
 	/**
@@ -227,21 +235,43 @@ $(document).ready(function () {
 	$('.sparql_facets') .livequery('change', function(event){
 		var field = $(this) .children("option:selected") .val();
 		var container = $(this) .parent('.searchItemTemplate') .children('.option_container');
+		var formId = $(this).closest('form').attr('id');
 		
 		//date
 		if (field == 'date') {
 			var tpl = $('#dateTemplate') .clone();		
-			//remove id to avoid duplication with the template
-			tpl.removeAttr('id');
+			//generate random id for validation
+			tpl.attr('id', makeid());
 			container.html(tpl);
+			
+			//disable the date option in other drop-downs
+			$(this).parent().siblings('.searchItemTemplate').each(function(){
+				$(this).find('option[value=date]').attr('disabled', true);	
+			});
 		} 
 		//sparql-based facets
 		else {
-			$.get('../widget', {
+			//set ajax loading image
+			container.html('<img src="' + path + 'images/ajax-loader.gif"/>');
+			//get sparql results from widget pipeline via ajax
+			$.get(path + 'widget', {
 				field: field, lang: lang, template: 'facets'
-			}, function (data) {	
+			}, function (data) {
 				container.html(data);
 			});
+			
+			//enable date in drop downs if there are no dates. remove error and active submit button
+			var count = countDate();
+			if (count == 0) {
+				//enable date
+				$(this).parent().siblings('.searchItemTemplate').each(function(){
+					$(this).find('option[value=date]').attr('disabled', false);	
+				});
+				//enable submit
+				$('#' + formId + ' input[type=submit]').attr('disabled', false);
+				//hide error				
+				$('#' + formId + '-alert').hide();
+			}
 		}
 	});
 	
@@ -257,7 +287,7 @@ $(document).ready(function () {
 				text: $(this).children('caption').text()
 			},
 			legend: {
-				enabled: false
+				enabled: true
 			},
 			xAxis: {
 				labels: {
@@ -292,62 +322,23 @@ $(document).ready(function () {
 		$('.weight-checkbox:checked').each(function(){
 			selection.push($(this).val());
 		});
-		$('.customSparqlQuery span').each(function(){
+		$('.customSparqlQuery .mr').each(function(){
 			selection.push($(this).text());
 		});
+		//set sparqlQuery
 		var q = selection.join('|');
-		//alert(q);
 		$('#sparqlQuery').attr('value', q);
-		//return false;
+		
+		//process interval/duration
+		if ($(this).closest('form').find('.from_date') .val().length > 0 && $(this).closest('form').find('.to_date') .val().length > 0 && $(this).closest('form').find('select[name=interval]') .val().length > 0){
+			var fromDate = ($(this).closest('form').find('.from_era') .val() == 'minus' ? '-' : '') + Math.abs($(this).closest('form').find('.from_date') .val());
+			var toDate = ($(this).closest('form').find('.to_era') .val() == 'minus' ? '-' : '') + Math.abs($(this).closest('form').find('.to_date') .val());
+			
+			//set values
+			$(this).closest('form').find('.from_date').attr('value', fromDate);
+			$(this).closest('form').find('.to_date').attr('value', toDate);
+		}
 	});
-	
-	/***** TOGGLING SPARQL FACET FORM*****/
-	$('.gateTypeBtn') .livequery('click', function(event){
-		gateTypeBtnClick($(this));
-		return false;
-	});
-	
-	// focus the text field after selecting the field to search on
-	$('.searchItemTemplate select').livequery('change', function(event){
-		$(this) .siblings('.search_text') .focus();
-	});
-	
-	$('.removeBtn').livequery('click', function(event){
-		// fade out the entire template
-		$(this) .parent() .fadeOut('fast', function () {
-			$(this) .remove();
-		});
-		return false;
-	});
-	
-	// copy the base template
-	function gateTypeBtnClick(btn) {
-		//clone the template
-		var tpl = cloneTemplate();
-		
-		// focus the text field after select
-		$(tpl) .children('select') .change(function () {
-			$(this) .siblings('input') .focus();
-		});
-		
-		// add the new template to the dom
-		$(btn) .parent() .after(tpl);
-		
-		tpl.children('.removeBtn').removeAttr('style');
-		tpl.children('.removeBtn') .before(' |&nbsp;');
-		
-		// display the entire new template
-		tpl.fadeIn('fast');
-	}
-	
-	function cloneTemplate (){
-		var tpl = $('#searchItemTemplate') .clone();
-		
-		//remove id to avoid duplication with the template
-		tpl.removeAttr('id');
-		
-		return tpl;
-	}
 	
 	$('#addSparqlQuery').fancybox();
 	
@@ -355,9 +346,14 @@ $(document).ready(function () {
 	//filter button activation
 	$('#sparqlForm').submit(function () {
 		var q = assembleSparqlQuery('sparqlForm');
+		var label = assembleSparqlLabel('sparqlForm');
+		
+		//create human and machine readable spans
+		var hr = '<span class="hr">' + label + '</span>';
+		var mr = '<span class="mr">' + q + '</span>';
 		
 		//insert new query
-		var newQuery = '<div class="customSparqlQuery"><b>Custom Query: </b><span>' + q + '</span><a href="#" class="removeQuery">Remove Query</a></div>';
+		var newQuery = '<div class="customSparqlQuery"><b>Query: </b>' + hr + mr + '<a href="#" class="removeQuery">Remove Query</a></div>';
 		$('#customSparqlQueryDiv').append(newQuery);
 			
 		//close fancybox
@@ -367,7 +363,7 @@ $(document).ready(function () {
 		$('#sparqlInputContainer').empty();
 		
 		//reset template
-		var tpl = cloneTemplate();
+		var tpl = cloneTemplate('sparqlForm');
 		$('#sparqlInputContainer') .html(tpl);
 		
 		// display the entire new template
@@ -375,6 +371,101 @@ $(document).ready(function () {
 		
 		return false;
 	});
+	/***** VALIDATION *****/
+	//lock bar and column charts for count in date visualization--line, spine, area, and areaspline for percentages
+	
+	//validate measurementsForm
+	$('#measurementsForm select[name=interval]').change(function () {
+		var formId = $(this).closest('form').attr('id');
+		validateForm(formId, formId);	
+	});
+	$('#measurementsForm input[name=fromDate]').change(function () {
+		var formId = $(this).closest('form').attr('id');
+		validateForm(formId, formId);	
+	});
+	$('#measurementsForm input[name=toDate]').change(function () {
+		var formId = $(this).closest('form').attr('id');
+		validateForm(formId, formId);	
+	});
+	$('#measurementsForm .from_era').change(function () {
+		var formId = $(this).closest('form').attr('id');
+		validateForm(formId, formId);	
+	});
+	$('#measurementsForm .to_era').change(function () {
+		var formId = $(this).closest('form').attr('id');
+		validateForm(formId, formId);	
+	});
+	
+	//validate sparqlForm
+	$('.option_container').find('input[name=fromDate]').livequery('change', function () {
+		var formId = $(this).closest('form').attr('id');
+		var spanId = $(this).parent('span').attr('id');
+		validateForm(spanId, formId);
+	});
+	$('.option_container').find('input[name=toDate]').livequery('change', function () {
+		var formId = $(this).closest('form').attr('id');
+		var spanId = $(this).parent('span').attr('id');
+		validateForm(spanId, formId);
+	});
+	$('.option_container').find('.from_era').livequery('change', function () {
+		var formId = $(this).closest('form').attr('id');
+		var spanId = $(this).parent('span').attr('id');
+		validateForm(spanId, formId);
+	});
+	$('.option_container').find('.to_era').livequery('change', function () {
+		var formId = $(this).closest('form').attr('id');
+		var spanId = $(this).parent('span').attr('id');
+		validateForm(spanId, formId);
+	});
+	
+	//validation function, works on both measurementsForm and sparqlForm
+	function validateForm(id, formId){	
+		if ($('#' + id + ' select[name=interval]').val()  > 0 && $('#' + id + ' input[name=fromDate]').val() > 0 && $('#' + id + ' input[name=toDate]').val() > 0 ) {
+			//enable linear options
+			if (pipeline=='visualize'){
+				$('#' + id).find('input[value=line]').attr('disabled', false);
+				$('#' + id).find('input[value=area]').attr('disabled', false);
+				$('#' + id).find('input[value=spline]').attr('disabled', false);
+				$('#' + id).find('input[value=areaspline]').attr('disabled', false);
+			}			
+			//make sure toDate is greater than fromDate
+			var from_era = $('#' + id + ' .from_era') .val() == 'minus' ? -1 : 1;
+			var to_era = $('#' + id + ' .to_era') .val() == 'minus' ? -1 : 1;
+			
+			var fromDate = Math.abs($('#' + id + ' input[name=fromDate]').val()) * from_era;
+			var toDate = Math.abs($('#' + id + ' input[name=toDate]').val()) * to_era;
+			if (toDate > fromDate){
+				//enable submit/hide error
+				$('#' + formId + ' input[type=submit]').attr('disabled', false);
+				$('#' + formId + '-alert').hide();
+			} else {
+				//disable submit/show error
+				$('#' + formId + ' input[type=submit]').attr('disabled', true);
+				$('#' + formId + '-alert span.validationError').text($('#visualize_error2').text());
+				$('#' + formId + '-alert').show();	
+			}			
+		} else if ($('#' + id + ' select[name=interval]').val().length == 0 && $('#' + id + ' input[name=fromDate]').val().length == 0 && $('#' + id + ' input[name=toDate]').val().length == 0) {
+			if (pipeline=='visualize'){
+				//enable submit
+				$('#' + formId + ' input[type=submit]').attr('disabled', false);			
+				$('#' + formId + '-alert').hide();
+			}
+		} else if ($('#' + id + ' select[name=interval]').val() == 1 && $('#' + id + ' input[name=fromDate]').val().length == 0 && $('#' + id + ' input[name=toDate]').val().length == 0) {
+			$('#' + formId + '-alert').hide();
+		} else {
+			if (pipeline=='visualize'){
+				$('#' + id).find('input[value=line]').attr('disabled', true);
+				$('#' + id).find('input[value=area]').attr('disabled', true);
+				$('#' + id).find('input[value=spline]').attr('disabled', true);
+				$('#' + id).find('input[value=areaspline]').attr('disabled', true);
+			}
+			//disable submit
+			$('#' + formId + ' input[type=submit]').attr('disabled', true);
+			//show error
+			$('#' + formId + '-alert span.validationError').text($('#visualize_error1').text());
+			$('#' + formId + '-alert').show();		
+		}
+	}
 	
 	function assembleSparqlQuery(formId){
 		var query = new Array();
@@ -402,10 +493,53 @@ $(document).ready(function () {
 		return q;
 	}
 	
+	function assembleSparqlLabel(formId){
+		var query = new Array();
+		$('#' + formId + ' .searchItemTemplate') .each(function () {
+			var selectVar = $(this) .children('.option_container') .children('.search_text') .val();
+			var field = $(this) .children('.sparql_facets') .val();
+			var fromDate = Math.abs($(this).find('.from_date') .val());
+			var toDate = Math.abs($(this).find('.to_date') .val());
+			
+			if ((field != 'date' && field != '') && selectVar.length > 0) {	
+				var termLabel = $(this) .children('.option_container').find('option:selected') .text();
+				query.push(termLabel);
+			}  else if (field == 'date' && Math.floor(fromDate) == fromDate && Math.floor(toDate) == toDate){
+				var from_era = $(this).find('.from_era') .children('option:selected').text();
+				var to_era = $(this).find('.to_era') .children('option:selected').text();				
+				query.push(fromDate + ' ' + from_era + '-' + toDate + ' ' + to_era);
+			}
+		});
+		label = query.join ('/');
+		return label;
+	}
+	
 	function pad(n, width, z) {
 		z = z || '0';
 		n = n + '';
 		return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
 	}
+	
+	//make random string, from http://stackoverflow.com/questions/1349404/generate-a-string-of-5-random-characters-in-javascript
+	function makeid()
+	{
+	    var text = "";
+	    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+	
+	    for( var i=0; i < 5; i++ )
+	        text += possible.charAt(Math.floor(Math.random() * possible.length));
+	
+	    return text;
+	}
 });
+
+function countDate (){
+	var count = 0;
+	$('.sparql_facets').each(function(){
+		if ($(this).val() == 'date'){
+			count++;
+		}
+	});
+	return count;
+}
 

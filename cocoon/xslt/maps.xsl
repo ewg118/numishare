@@ -5,15 +5,16 @@
 	<xsl:include href="header.xsl"/>
 	<xsl:include href="footer.xsl"/>
 	<xsl:include href="functions.xsl"/>
-
+	
 	<xsl:param name="pipeline"/>
-	<xsl:param name="display_path"/>
+	<xsl:param name="department"/>
+	<xsl:variable name="display_path"/>
 	<xsl:variable name="collection_type" select="/content//collection_type"/>
-
+	
 	<xsl:param name="q"/>
 	<xsl:param name="lang"/>
-	<xsl:param name="tokenized_q" select="tokenize($q, ' AND ')"/>
-
+	<xsl:variable name="tokenized_q" select="tokenize($q, ' AND ')"/>
+	
 	<xsl:template match="/">
 		<html>
 			<head>
@@ -25,15 +26,15 @@
 				<link rel="shortcut icon" type="image/x-icon" href="{$display_path}images/favicon.png"/>
 				<!-- YUI grids -->
 				<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.8.0/build/cssgrids/grids-min.css"/>
-
+				
 				<!-- local theme and styling -->
 				<link type="text/css" href="{$display_path}themes/{//config/theme/jquery_ui_theme}.css" rel="stylesheet"/>
 				<link type="text/css" href="{$display_path}style.css" rel="stylesheet"/>
-
+				
 				<!-- jquery -->
 				<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"/>
 				<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js"/>
-
+				
 				<!-- menu -->
 				<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.core.js"/>
 				<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.widget.js"/>
@@ -42,13 +43,13 @@
 				<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.menu.js"/>
 				<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.menubar.js"/>
 				<script type="text/javascript" src="{$display_path}javascript/numishare-menu.js"/>
-
+				
 				<!-- facet related js and css -->
 				<link type="text/css" href="{$display_path}jquery.multiselect.css" rel="stylesheet"/>
 				<script type="text/javascript" src="{$display_path}javascript/jquery.multiselect.min.js"/>
 				<script type="text/javascript" src="{$display_path}javascript/jquery.multiselectfilter.js"/>
 				<script type="text/javascript" src="{$display_path}javascript/jquery.livequery.js"/>
-
+				
 				<!-- display timemap for hoards, regular openlayers map for coin and coin type collections -->
 				<xsl:choose>
 					<xsl:when test="$collection_type='hoard'">
@@ -56,7 +57,8 @@
 						<script type="text/javascript" src="http://www.openlayers.org/api/OpenLayers.js"/>
 						<script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3.2&amp;sensor=false"/>
 						<script type="text/javascript" src="{$display_path}javascript/mxn.js"/>
-						<script type="text/javascript" src="http://static.simile.mit.edu/timeline/api-2.2.0/timeline-api.js?bundle=true"/>
+						<script type="text/javascript" src="{$display_path}javascript/timeline-2.3.0.js"/>
+						<link type="text/css" href="{$display_path}timeline-2.3.0.css" rel="stylesheet"/>
 						<script type="text/javascript" src="{$display_path}javascript/timemap_full.pack.js"/>
 						<script type="text/javascript" src="{$display_path}javascript/param.js"/>
 						<script type="text/javascript" src="{$display_path}javascript/loaders/xml.js"/>
@@ -74,20 +76,20 @@
 						<script type="text/javascript" src="{$display_path}javascript/map_functions.js"/>
 						<script type="text/javascript" src="{$display_path}javascript/facet_functions.js"/>
 						<script type="text/javascript">
-						$(document).ready(function(){
-							$('a.thumbImage').livequery(function(){
-								$(this).fancybox();
-							});
-						});
-						</script>
+                                                $(document).ready(function(){
+                                                        $('a.thumbImage').livequery(function(){
+                                                                $(this).fancybox();
+                                                        });
+                                                });
+                                                </script>
 					</xsl:otherwise>
 				</xsl:choose>
-
+				
 				<!-- Google Analytics -->
 				<xsl:if test="string(/config/google_analytics/script)">
 					<script type="text/javascript">
-						<xsl:value-of select="//config/google_analytics/script"/>
-					</script>
+                                                <xsl:value-of select="//config/google_analytics/script"/>
+                                        </script>
 				</xsl:if>
 			</head>
 			<body>
@@ -97,7 +99,7 @@
 			</body>
 		</html>
 	</xsl:template>
-
+	
 	<xsl:template name="maps">
 		<div class="yui3-g">
 			<div class="yui3-u-1">
@@ -106,9 +108,8 @@
 					<h1>
 						<xsl:value-of select="numishare:normalizeLabel('header_maps', $lang)"/>
 					</h1>
-					<p>For usage instructions, see <a href="http://wiki.numismatics.org/numishare:maps">http://wiki.numismatics.org/numishare:maps</a>.</p>
-					<div class="remove_facets"/>
-
+					<p>For usage instructions, see <a href="http://wiki.numismatics.org/numishare:maps">http://wiki.numismatics.org/numishare:maps</a>. View in <a href="maps/fullscreen">fullscreen mode</a>.</p>
+					
 					<xsl:choose>
 						<xsl:when test="//result[@name='response']/@numFound &gt; 0">
 							<div style="display:table;width:100%">
@@ -164,13 +165,19 @@
 						<input type="hidden" name="lang" value="{$lang}"/>
 					</xsl:if>
 					<span style="display:none" id="collection_type">
-						<xsl:value-of select="$collection_type"/>
+						<xsl:value-of select="$collection_type"/>                                                
+					</span>
+					<span style="display:none" id="path">
+						<xsl:value-of select="$display_path"/>                                                
+					</span>
+					<span style="display:none" id="pipeline">
+						<xsl:value-of select="$pipeline"/>
 					</span>
 				</div>
 			</div>
 		</div>
 	</xsl:template>
-
+	
 	<xsl:template match="lst[@name='facet_fields']">
 		<xsl:for-each select="lst[not(@name='mint_geo') and number(int[@name='numFacetTerms']) &gt; 0 and not(@name='mint_facet')]|lst[@name='mint_facet' and $collection_type='hoard']">
 			<li class="fl">
@@ -183,14 +190,14 @@
 						</xsl:if>
 					</xsl:for-each>
 				</xsl:variable>
-
+				
 				<xsl:variable name="title">
 					<xsl:value-of select="numishare:normalize_fields(@name, $lang)"/>
 				</xsl:variable>
 				<xsl:choose>
 					<xsl:when test="contains(@name, '_hier')">
 						<xsl:variable name="title" select="numishare:regularize_node(substring-before(@name, '_'), $lang)"/>
-
+						
 						<button class="ui-multiselect ui-widget ui-state-default ui-corner-all hierarchical-facet" type="button" title="{$title}" aria-haspopup="true" style="width: 180px;"
 							id="{@name}_link" label="{$q}">
 							<span class="ui-icon ui-icon-triangle-2-n-s"/>
@@ -198,7 +205,7 @@
 								<xsl:value-of select="$title"/>
 							</span>
 						</button>
-
+						
 						<div class="ui-multiselect-menu ui-widget ui-widget-content ui-corner-all hierarchical-div" id="{substring-before(@name, '_hier')}-container" style="width: 180px;">
 							<div class="ui-widget-header ui-corner-all ui-multiselect-header ui-helper-clearfix ui-multiselect-hasfilter">
 								<ul class="ui-helper-reset">

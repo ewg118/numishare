@@ -10,8 +10,8 @@
 				<xsl:when test="$mode='pelagios'">
 					<xsl:call-template name="pelagios"/>
 				</xsl:when>
-				<xsl:when test="$mode='ctype'">
-					<xsl:call-template name="ctype"/>
+				<xsl:when test="$mode='nomisma'">
+					<xsl:call-template name="nomisma"/>
 				</xsl:when>
 			</xsl:choose>
 		</rdf:RDF>
@@ -31,7 +31,7 @@
 		</void:dataSet>
 	</xsl:template>
 	
-	<xsl:template name="ctype">
+	<xsl:template name="nomisma">
 		<void:dataSet>
 			<dcterms:title>
 				<xsl:value-of select="title"/>
@@ -41,7 +41,7 @@
 			</dcterms:description>
 			<dcterms:license rdf:resource="{template/license}"/>
 			<dcterms:subject rdf:resource="http://dbpedia.org/resource/Annotation"/>
-			<void:dataDump rdf:resource="{url}ctype.rdf"/>
+			<void:dataDump rdf:resource="{url}nomisma.rdf"/>
 		</void:dataSet>
 	</xsl:template>
 </xsl:stylesheet>

@@ -12,7 +12,7 @@ function getQuery(){
 	var query_terms = $('#facet_form_query').attr('value').split(' AND ');	
 	var non_facet_terms = new Array();
 	for (i in query_terms){
-		if (query_terms[i].indexOf('_facet') < 0 && query_terms[i].indexOf('dob_num') < 0 && query_terms[i] != '*:*'){
+		if (query_terms[i].indexOf('_facet') < 0 && query_terms[i].indexOf('dob_num') < 0 && query_terms[i].indexOf('taq_num') < 0 && query_terms[i] != '*:*'){
 			non_facet_terms.push(query_terms[i]);				
 		}
 	}
@@ -59,7 +59,7 @@ function getQuery(){
 
 		if (segment[0] != null) {
 			if (segment.length > 1){
-				if (collection_type == 'hoard'){
+				if (collection_type == 'hoard' && (facet != 'taq_num' && facet != 'findspot_facet')){
 					query.push(segment.join(' AND '));
 				} else {
 					query.push('(' + segment.join(' OR ') + ')');
@@ -103,16 +103,10 @@ function getDate(){
 	var date_array = new Array();
 	$('.century_checkbox:checked').each(function(){
 		var val = $(this).val();
-		if (val < 0) {
-			val = '\\' + val;
-		}
-		var century = 'century_num:' + val;
+		var century = 'century_num:"' + val + '"';
 		var decades = new Array();
 		$(this).parent('li').children('ul').children('li').children('.decade_checkbox:checked').each(function(){
-			var dval = $(this).val();
-			if (dval < 0) {
-				dval = '\\' + dval;
-			}
+			var dval = '"' + $(this).val() + '"';
 			decades.push('decade_num:' + dval);
 		});
 		var decades_concat = '';
@@ -139,6 +133,9 @@ function getDate(){
 
 function dateLabel(){
 	var title = $('#century_num_link').attr('title');
+	if (title.indexOf(':') > 0){
+		title = title.split(':')[0];
+	}
 	dates = new Array();
 	$('.century_checkbox:checked').each(function(){
 		if ($(this).parent('li').children('ul').children('li').children('.decade_checkbox:checked').length == 0){
@@ -167,6 +164,7 @@ function dateLabel(){
 				dates.push($(this).val());
 		});				
 	});
+	
 	if (dates.length > 3) {
 		var date_string = title + ': ' + dates.length + ' selected';
 	} else if (dates.length > 0 && dates.length <= 3) {
@@ -174,6 +172,7 @@ function dateLabel(){
 	} else if (dates.length == 0){
 		var date_string = title;
 	}
+	
 	//set labels
 	$('#century_num_link').attr('title', date_string);
 	$('#century_num_link').children('span:nth-child(2)').text(date_string);

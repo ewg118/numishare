@@ -105,8 +105,8 @@
 							</a>
 						</xsl:if>
 						<xsl:if test="ctype_enabled=true()">
-							<a href="ctype.void.rdf">
-								<img src="{$display_path}images/rdf-large.gif" title="ctype VOiD" alt="ctype VOiD"/>
+							<a href="nomisma.void.rdf">
+								<img src="{$display_path}images/rdf-large.gif" title="nomisma VOiD" alt="nomisma VOiD"/>
 							</a>
 						</xsl:if>
 					</div>

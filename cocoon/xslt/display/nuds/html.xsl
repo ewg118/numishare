@@ -4,21 +4,24 @@
 	xmlns:exsl="http://exslt.org/common" xmlns:numishare="http://code.google.com/p/numishare/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
 	xmlns:cinclude="http://apache.org/cocoon/include/1.0" xmlns:nuds="http://nomisma.org/nuds" exclude-result-prefixes="#all" version="2.0">
 
-	<xsl:param name="q"/>	
+	<xsl:param name="q"/>
 	<xsl:param name="start"/>
 	<xsl:param name="image"/>
 	<xsl:param name="side"/>
 	<xsl:param name="type"/>
-	
+
 	<!-- quantitative analysis parameters -->
 	<xsl:param name="measurement"/>
 	<xsl:param name="numericType"/>
 	<xsl:param name="chartType"/>
+	<xsl:param name="interval"/>
+	<xsl:param name="fromDate"/>
+	<xsl:param name="toDate"/>
 	<xsl:param name="sparqlQuery"/>
-	<!--<xsl:variable name="tokenized_sparqlQuery" select="tokenize($sparqlQuery, '\|')"/>-->
 	<xsl:variable name="tokenized_sparqlQuery" as="item()*">
 		<xsl:sequence select="tokenize($sparqlQuery, '\|')"/>
 	</xsl:variable>
+	<xsl:variable name="duration" select="number($toDate) - number($fromDate)"/>
 
 	<xsl:variable name="recordType" select="/content/nuds:nuds/@recordType"/>
 
@@ -74,17 +77,9 @@
 								<xsl:call-template name="nuds_content"/>
 
 								<!-- show associated objects, preferencing those from Metis first -->
-								<xsl:choose>
-									<xsl:when test="string($sparql_endpoint)">
-										<cinclude:include src="cocoon:/widget?uri={concat('http://numismatics.org/ocre/', 'id/', $id)}&amp;template=display"/>
-									</xsl:when>
-									<xsl:when test="count(nuds:digRep/nuds:associatedObject) &gt; 0">
-										<div class="objects">
-											<h2>Examples of this type</h2>
-											<xsl:apply-templates select="nuds:digRep/nuds:associatedObject"/>
-										</div>
-									</xsl:when>
-								</xsl:choose>
+								<xsl:if test="string($sparql_endpoint)">
+									<cinclude:include src="cocoon:/widget?uri={concat('http://nomisma.org/id/', $id)}&amp;template=display"/>
+								</xsl:if>
 							</div>
 						</div>
 					</xsl:when>
@@ -299,6 +294,11 @@
 								<xsl:apply-templates select="nuds:descMeta/nuds:subjectSet"/>
 							</div>
 						</xsl:if>
+						<xsl:if test="nuds:descMeta/nuds:noteSet">
+							<div class="metadata_section">
+								<xsl:apply-templates select="nuds:descMeta/nuds:noteSet"/>
+							</div>
+						</xsl:if>
 						<xsl:if test="nuds:descMeta/nuds:findspotDesc">
 							<div class="metadata_section">
 								<xsl:apply-templates select="nuds:descMeta/nuds:findspotDesc"/>
@@ -309,7 +309,7 @@
 						<div id="mapTab">
 							<h2>Map This Object</h2>
 							<p>Use the layer control along the right edge of the map (the "plus" symbol) to toggle map layers.</p>
-							
+
 							<xsl:choose>
 								<xsl:when test="$recordType='conceptual'">
 									<div id="timemap">
@@ -396,24 +396,19 @@
 		</h2>
 		<xsl:choose>
 			<xsl:when test="string(@xlink:href)">
-				<xsl:variable name="href" select="@xlink:href"/>
-				<xsl:variable name="currentLang" select="if (string($lang)) then $lang else 'en'"/>
-				<xsl:variable name="label">
-					<xsl:choose>
-						<xsl:when test="contains($href, 'nomisma.org')">
-							<xsl:choose>
-								<xsl:when test="string(exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/skos:prefLabel[@xml:lang=$currentLang])">
-									<xsl:value-of select="exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/skos:prefLabel[@xml:lang=$currentLang]"/>
-								</xsl:when>
-								<xsl:otherwise>
-									<xsl:value-of select="$href"/>
-								</xsl:otherwise>
-							</xsl:choose>
-						</xsl:when>
-					</xsl:choose>
-				</xsl:variable>
-
-				<p>Source: <a href="{@xlink:href}"><xsl:value-of select="$label"/></a></p>
+				<xsl:choose>
+					<xsl:when test="contains(@xlink:href, 'nomisma.org')">
+						<xsl:variable name="elem" as="element()*">
+							<findspot xlink:href="{@xlink:href}"/>
+						</xsl:variable>
+						<ul>
+							<xsl:apply-templates select="$elem" mode="descMeta"/>
+						</ul>
+					</xsl:when>
+					<xsl:otherwise>
+						<p>Source: <a href="{@xlink:href}"><xsl:value-of select="@xlink:href"/></a></p>
+					</xsl:otherwise>
+				</xsl:choose>
 			</xsl:when>
 			<xsl:otherwise>
 				<ul>
@@ -432,31 +427,28 @@
 		</ul>
 	</xsl:template>
 
-	<xsl:template match="nuds:subjectSet">
+	<xsl:template match="nuds:subjectSet|nuds:noteSet">
 		<h2>
 			<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
 		</h2>
 		<ul>
-			<xsl:apply-templates select="subject"/>
+			<xsl:apply-templates/>
 		</ul>
 	</xsl:template>
 
 	<xsl:template match="nuds:subject">
 		<li>
-			<xsl:choose>
-				<xsl:when test="string(@type)">
-					<b><xsl:value-of select="@type"/>: </b>
-					<a href="{$display_path}results?q={@type}_facet:&#x022;{normalize-space(.)}&#x022;{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
-						<xsl:value-of select="."/>
-					</a>
-				</xsl:when>
-				<xsl:otherwise>
-					<b><xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>: </b>
-					<a href="{$display_path}results?q=subject_facet:&#x022;{normalize-space(.)}&#x022;{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
-						<xsl:value-of select="."/>
-					</a>
-				</xsl:otherwise>
-			</xsl:choose>
+			<b><xsl:value-of select="if (string(@localType)) then @localType else numishare:regularize_node(local-name(), $lang)"/>: </b>
+			<a
+				href="{$display_path}results?q={if (string(@localType)) then @localType else 'subject'}_facet:&#x022;{normalize-space(.)}&#x022;{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+				<xsl:value-of select="."/>
+			</a>
+		</li>
+	</xsl:template>
+
+	<xsl:template match="nuds:note">
+		<li>
+			<xsl:value-of select="."/>
 		</li>
 	</xsl:template>
 
@@ -542,11 +534,11 @@
 				</div>
 			</xsl:if>
 			<dl>
-				<xsl:if test="exsl:node-set($object)/nuds:nudsHeader/nuds:publicationStmt/nuds:publisher">
+				<xsl:if test="exsl:node-set($object)/nuds:control/nuds:maintenanceAgency/nuds:agencyName">
 					<div>
 						<dt><xsl:value-of select="numishare:regularize_node('publisher', $lang)"/>: </dt>
 						<dd style="margin-left:125px;">
-							<xsl:value-of select="exsl:node-set($object)/nuds:nudsHeader/nuds:publicationStmt/nuds:publisher"/>
+							<xsl:value-of select="exsl:node-set($object)/nuds:control/nuds:maintenanceAgency/nuds:agencyName"/>
 						</dd>
 					</div>
 				</xsl:if>
@@ -713,11 +705,17 @@
 		<p>Average measurements for this coin type:</p>
 		<dl>
 			<dt><xsl:value-of select="numishare:regularize_node('axis', $lang)"/>:</dt>
-			<dd><cinclude:include src="cocoon:/widget?constraints=nm:type_series_item &lt;http://numismatics.org/ocre/id/{$id}&gt;&amp;template=avgMeasurement&amp;measurement=axis"/></dd>
+			<dd>
+				<cinclude:include src="cocoon:/widget?constraints=nm:type_series_item &lt;http://nomisma.org/id/{$id}&gt;&amp;template=avgMeasurement&amp;measurement=axis"/>
+			</dd>
 			<dt><xsl:value-of select="numishare:regularize_node('diameter', $lang)"/>:</dt>
-			<dd><cinclude:include src="cocoon:/widget?constraints=nm:type_series_item &lt;http://numismatics.org/ocre/id/{$id}&gt;&amp;template=avgMeasurement&amp;measurement=diameter"/></dd>
+			<dd>
+				<cinclude:include src="cocoon:/widget?constraints=nm:type_series_item &lt;http://nomisma.org/id/{$id}&gt;&amp;template=avgMeasurement&amp;measurement=diameter"/>
+			</dd>
 			<dt><xsl:value-of select="numishare:regularize_node('weight', $lang)"/>:</dt>
-			<dd><cinclude:include src="cocoon:/widget?constraints=nm:type_series_item &lt;http://numismatics.org/ocre/id/{$id}&gt;&amp;template=avgMeasurement&amp;measurement=weight"/></dd>
+			<dd>
+				<cinclude:include src="cocoon:/widget?constraints=nm:type_series_item &lt;http://nomisma.org/id/{$id}&gt;&amp;template=avgMeasurement&amp;measurement=weight"/>
+			</dd>
 		</dl>
 		<xsl:call-template name="measurementForm"/>
 	</xsl:template>

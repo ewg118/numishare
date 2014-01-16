@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:nuds="http://nomisma.org/nuds" xmlns:nh="http://nomisma.org/nudsHoard" xmlns:xlink="http://www.w3.org/1999/xlink"
-	xmlns:exsl="http://exslt.org/common" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nm="http://nomisma.org/id/"
-	exclude-result-prefixes="#all" version="2.0">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:nuds="http://nomisma.org/nuds" xmlns:nh="http://nomisma.org/nudsHoard"
+	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:exsl="http://exslt.org/common" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nm="http://nomisma.org/id/" exclude-result-prefixes="#all" version="2.0">
 	<xsl:include href="header.xsl"/>
 	<xsl:include href="footer.xsl"/>
 	<xsl:include href="templates.xsl"/>
@@ -43,11 +43,10 @@
 		</xsl:choose>
 	</xsl:variable>
 
-	<xsl:variable name="id" select="normalize-space(//*[local-name()='nudsid'])"/>
+	<xsl:variable name="id" select="normalize-space(//*[local-name()='recordId'])"/>
 
 	<xsl:variable name="nudsGroup">
 		<nudsGroup>
-			<!-- get nomisma NUDS documents with get-nuds API -->
 			<xsl:variable name="id-param">
 				<xsl:for-each select="distinct-values(descendant::nuds:typeDesc[contains(@xlink:href, 'nomisma.org')]/@xlink:href)">
 					<xsl:value-of select="substring-after(., 'id/')"/>
@@ -58,8 +57,8 @@
 			</xsl:variable>
 
 			<xsl:if test="string-length($id-param) &gt; 0">
-				<xsl:for-each select="document(concat('http://nomisma.org/get-nuds?id=', $id-param))//nuds:nuds">
-					<object xlink:href="http://nomisma.org/id/{nuds:nudsHeader/nuds:nudsid}">
+				<xsl:for-each select="document(concat('http://nomisma.org/apis/getNuds?identifiers=', $id-param))//nuds:nuds">
+					<object xlink:href="http://nomisma.org/id/{nuds:control/nuds:recordId}">
 						<xsl:copy-of select="."/>
 					</object>
 				</xsl:for-each>
@@ -86,8 +85,10 @@
 	</xsl:variable>
 
 	<!-- get non-coin-type RDF in the document -->
-	<xsl:variable name="rdf">
-		<rdf:RDF>
+	<xsl:variable name="rdf" as="element()*">
+		<rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:nm="http://nomisma.org/id/"
+			xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfa="http://www.w3.org/ns/rdfa#" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+			xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#">
 			<xsl:variable name="id-param">
 				<xsl:for-each
 					select="distinct-values(descendant::*[not(local-name()='typeDesc') and not(local-name()='reference')][contains(@xlink:href, 'nomisma.org')]/@xlink:href|exsl:node-set($nudsGroup)/descendant::*[not(local-name()='object') and not(local-name()='typeDesc')][contains(@xlink:href, 'nomisma.org')]/@xlink:href)">
@@ -98,21 +99,22 @@
 				</xsl:for-each>
 			</xsl:variable>
 
-			<xsl:variable name="rdf_url" select="concat('http://www.w3.org/2012/pyRdfa/extract?format=xml&amp;uri=', encode-for-uri(concat('http://nomisma.org/get-ids?id=', $id-param)))"/>
-			<xsl:copy-of select="document($rdf_url)/descendant::*[string(@rdf:about) and not(local-name()='Description')]"/>
+			<xsl:variable name="rdf_url" select="concat('http://nomisma.org/apis/getRdf?identifiers=', $id-param)"/>
+			<xsl:copy-of select="document($rdf_url)/rdf:RDF/*"/>
 		</rdf:RDF>
 	</xsl:variable>
 
 
 	<xsl:variable name="has_mint_geo">
 		<xsl:choose>
-			<xsl:when test="count(exsl:node-set($rdf)/descendant::nm:mint) &gt; 0">true</xsl:when>
+			<xsl:when test="count($rdf/descendant::nm:mint) &gt; 0">true</xsl:when>
 			<xsl:otherwise>false</xsl:otherwise>
 		</xsl:choose>
 	</xsl:variable>
 	<xsl:variable name="has_findspot_geo">
 		<xsl:choose>
-			<xsl:when test="count(exsl:node-set($rdf)/descendant::nm:findspot) &gt; 0 or count(descendant::*[local-name()='geogname'][@xlink:role='findspot' and string(@xlink:href)]) &gt; 0"
+			<xsl:when
+				test="count($rdf/descendant::nm:findspot) &gt; 0 or count(descendant::*[local-name()='geogname'][@xlink:role='findspot' and string(@xlink:href)]) &gt; 0"
 				>true</xsl:when>
 			<xsl:when test="/content/response-findspot = 'true'">true</xsl:when>
 			<xsl:otherwise>false</xsl:otherwise>
@@ -121,38 +123,82 @@
 
 	<xsl:template match="/">
 		<xsl:choose>
+			<xsl:when
+				test="count(descendant::*:otherRecordId[@semantic='dcterms:isReplacedBy']) = 1 and descendant::*:control/*:maintenanceStatus='cancelledReplaced'">
+				<xsl:variable name="uri">
+					<xsl:choose>
+						<xsl:when test="contains(descendant::*:otherRecordId[@semantic='dcterms:isReplacedBy'][1], 'http://')">
+							<xsl:value-of select="descendant::*:otherRecordId[1]"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="concat($url, 'id/', descendant::*:otherRecordId[@semantic='dcterms:isReplacedBy'][1])"/>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:variable>
+
+				<html>
+					<head>
+						<xsl:call-template name="generic_head"/>
+						<meta http-equiv="refresh" content="0;URL={$uri}"/>
+					</head>
+					<body>
+						<xsl:call-template name="header"/>
+						<div class="yui3-g">
+							<div class="yui3-u-1">
+								<div class="content">
+									<h1>301: Moved Permanently</h1>
+									<p>This resource has been supplanted by <a href="{$uri}"><xsl:value-of select="$uri"/></a>.</p>
+								</div>
+							</div>
+						</div>
+						<xsl:call-template name="footer"/>
+					</body>
+				</html>
+			</xsl:when>
+			<xsl:when test="count(descendant::*:otherRecordId[@semantic='dcterms:isReplacedBy']) &gt; 1 and descendant::*:control/*:maintenanceStatus='cancelledSplit'">
+				<html>
+					<head>
+						<xsl:call-template name="generic_head"/>
+					</head>
+					<body>
+						<xsl:call-template name="header"/>
+						<div class="yui3-g">
+							<div class="yui3-u-1">
+								<div class="content">
+									<h1>
+										<xsl:value-of select="$id"/>
+									</h1>
+									<p>This resource has been split and supplanted by the following new URIs:</p>
+									<ul>
+										<xsl:for-each select="descendant::*:otherRecordId[@semantic='dcterms:isReplacedBy']">
+											<xsl:variable name="uri" select="if (contains(., 'http://')) then . else concat($url, 'id/', .)"/>
+											<li>
+												<a href="{$uri}">
+													<xsl:value-of select="$uri"/>
+												</a>
+											</li>
+										</xsl:for-each>
+									</ul>
+								</div>
+							</div>
+						</div>
+						<xsl:call-template name="footer"/>
+					</body>
+				</html>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:call-template name="contruct_page"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template name="contruct_page">
+		<xsl:choose>
 			<!-- regular HTML display mode-->
 			<xsl:when test="not(string($mode))">
 				<html>
 					<head>
-						<title id="{$id}">
-							<xsl:value-of select="//config/title"/>
-							<xsl:text>: </xsl:text>
-							<xsl:value-of
-								select="if (descendant::nuds:nuds) then descendant::nuds:nuds/nuds:descMeta/nuds:title else if (descendant::*[local-name()='nudsHoard']) then descendant::nuds:nudsid else ''"
-							/>
-						</title>
-						<!-- alternates -->
-						<link rel="alternate" type="text/xml" href="{concat(//config/url, 'id/', $id)}.xml"/>
-						<link rel="alternate" type="application/rdf+xml" href="{concat(//config/url, 'id/', $id)}.rdf"/>
-						<link rel="alternate" type="application/atom+xml" href="{concat(//config/url, 'id/', $id)}.atom"/>
-						<xsl:if test="$has_mint_geo = 'true' or $has_findspot_geo = 'true'">
-							<link rel="alternate" type="application/application/vnd.google-earth.kml+xml" href="{concat(//config/url, 'collection/', $id)}.kml"/>
-						</xsl:if>
-						<!-- CSS -->
-						<link rel="shortcut icon" type="image/x-icon" href="{$display_path}images/favicon.png"/>
-						<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.8.0/build/cssgrids/grids-min.css"/>
-						<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"/>
-						<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js"/>
-
-						<!-- menu -->
-						<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.core.js"/>
-						<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.widget.js"/>
-						<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.position.js"/>
-						<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.button.js"/>
-						<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.menu.js"/>
-						<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.menubar.js"/>
-						<script type="text/javascript" src="{$display_path}javascript/numishare-menu.js"/>
+						<xsl:call-template name="generic_head"/>
 
 						<xsl:choose>
 							<xsl:when test="$recordType='physical'">
@@ -185,12 +231,13 @@
 								<script type="text/javascript" src="{$display_path}javascript/jquery.livequery.js"/>
 								<script type="text/javascript" src="{$display_path}javascript/display_map_functions.js"/>
 								<script type="text/javascript" src="{$display_path}javascript/display_functions.js"/>
-								<script type="text/javascript" src="{$display_path}javascript/visualize_functions.js"/>								
-
+								<script type="text/javascript" src="{$display_path}javascript/visualize_functions.js"/>
+								
 								<!-- mapping -->
-								<script type="text/javascript" src="http://www.openlayers.org/api/OpenLayers.js"/>								
+								<script type="text/javascript" src="http://www.openlayers.org/api/OpenLayers.js"/>
 								<script type="text/javascript" src="{$display_path}javascript/mxn.js"/>
-								<script type="text/javascript" src="http://static.simile.mit.edu/timeline/api-2.2.0/timeline-api.js?bundle=true"/>
+								<script type="text/javascript" src="{$display_path}javascript/timeline-2.3.0.js"/>
+								<link type="text/css" href="{$display_path}timeline-2.3.0.css" rel="stylesheet"/>
 								<script type="text/javascript" src="{$display_path}javascript/timemap_full.pack.js"/>
 								<script type="text/javascript" src="{$display_path}javascript/param.js"/>
 							</xsl:when>
@@ -206,19 +253,14 @@
 								<script type="text/javascript" src="http://www.openlayers.org/api/OpenLayers.js"/>
 								<script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3.2&amp;sensor=false"/>
 								<script type="text/javascript" src="{$display_path}javascript/mxn.js"/>
-								<script type="text/javascript" src="http://static.simile.mit.edu/timeline/api-2.2.0/timeline-api.js?bundle=true"/>
+								<script type="text/javascript" src="{$display_path}javascript/timeline-2.3.0.js"/>
+								<link type="text/css" href="{$display_path}timeline-2.3.0.css" rel="stylesheet"/>
 								<script type="text/javascript" src="{$display_path}javascript/timemap_full.pack.js"/>
 								<script type="text/javascript" src="{$display_path}javascript/param.js"/>
+								<script type="text/javascript" src="{$display_path}javascript/loaders/xml.js"/>
+								<script type="text/javascript" src="{$display_path}javascript/loaders/kml.js"/>
 							</xsl:when>
 						</xsl:choose>
-
-						<link type="text/css" href="{$display_path}themes/{//config/theme/jquery_ui_theme}.css" rel="stylesheet"/>
-						<link type="text/css" href="{$display_path}style.css" rel="stylesheet"/>
-						<xsl:if test="string(//config/google_analytics/script)">
-							<script type="text/javascript">
-								<xsl:value-of select="//config/google_analytics/script"/>
-							</script>
-						</xsl:if>
 					</head>
 					<body>
 						<xsl:call-template name="header"/>
@@ -232,6 +274,44 @@
 				<xsl:call-template name="display"/>
 			</xsl:otherwise>
 		</xsl:choose>
+	</xsl:template>
+	
+	<xsl:template name="generic_head">
+		<title id="{$id}">
+			<xsl:value-of select="//config/title"/>
+			<xsl:text>: </xsl:text>
+			<xsl:value-of
+				select="if (descendant::nuds:nuds) then descendant::nuds:nuds/nuds:descMeta/nuds:title else if (descendant::*[local-name()='nudsHoard']) then descendant::nuds:recordId else ''"
+			/>
+		</title>
+		<!-- alternates -->
+		<link rel="alternate" type="text/xml" href="{concat($url, 'id/', $id)}.xml"/>
+		<link rel="alternate" type="application/rdf+xml" href="{concat($url, 'id/', $id)}.rdf"/>
+		<link rel="alternate" type="application/atom+xml" href="{concat($url, 'id/', $id)}.atom"/>
+		<xsl:if test="$has_mint_geo = 'true' or $has_findspot_geo = 'true'">
+			<link rel="alternate" type="application/vnd.google-earth.kml+xml" href="{concat($url, 'collection/', $id)}.kml"/>
+		</xsl:if>
+		<!-- CSS -->
+		<link rel="shortcut icon" type="image/x-icon" href="{$display_path}images/favicon.png"/>
+		<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.8.0/build/cssgrids/grids-min.css"/>
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"/>
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js"/>
+		
+		<!-- menu -->
+		<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.core.js"/>
+		<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.widget.js"/>
+		<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.position.js"/>
+		<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.button.js"/>
+		<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.menu.js"/>
+		<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.menubar.js"/>
+		<script type="text/javascript" src="{$display_path}javascript/numishare-menu.js"/>
+		<link type="text/css" href="{$display_path}themes/{//config/theme/jquery_ui_theme}.css" rel="stylesheet"/>
+		<link type="text/css" href="{$display_path}style.css" rel="stylesheet"/>
+		<xsl:if test="string(//config/google_analytics/script)">
+			<script type="text/javascript">
+								<xsl:value-of select="//config/google_analytics/script"/>
+							</script>
+		</xsl:if>
 	</xsl:template>
 
 	<xsl:template name="display">

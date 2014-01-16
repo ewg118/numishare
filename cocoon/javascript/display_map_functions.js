@@ -4,7 +4,14 @@ $(document).ready(function () {
 });
 
 function initialize_timemap(id) {
-	var url = "../apis/get?id=" + id + "&format=json";
+	var langStr = getURLParameter('lang');
+	if (langStr == 'null') {
+		var lang = '';
+	} else {
+		var lang = langStr;
+	}
+
+	var url = "../apis/get?id=" + id + "&format=json&lang=" + lang;
 	var datasets = new Array();
 	
 	//first dataset
@@ -21,17 +28,24 @@ function initialize_timemap(id) {
 	/*$('#term-list').children('li').each(function () {
 		var facet = $(this).attr('class');
 		var value = $(this).text();
-		obj = {};
+		obj = {
+		};
 		obj.id = facet.split('_')[0];
 		obj.title = facet.split('_')[0];
 		obj.type = 'kml';
 		obj.theme = 'green';
-		obj.optional = true;
+		obj.visible = false;
+		
+		var infoTemplate = '<div><strong>{{title}}</strong><br/><a href="../results?q=mint_uri:%22{{description}}%22 AND ' + facet + ':%22' + value + '%22" target="_blank">View</a> coins from {{title}} meeting the criterium: ' + facet.split('_')[0] + ': ' + value + '</div>';
+		
 		obj.options = {
-			url: '../mints.kml?q=' + facet + ':"' + value + '"'
+			url: '../mints.kml?q=' + facet + ':"' + value + '"',
+			infoTemplate: infoTemplate
 		};
 		datasets.push(obj);
 	});*/
+	
+	//console.log(datasets);
 	
 	var tm;
 	tm = TimeMap.init({
@@ -39,12 +53,21 @@ function initialize_timemap(id) {
 		timelineId: "timeline", // Id of timeline div element (required)
 		options: {
 			eventIconPath: "../images/timemap/"
+			//mapFilter:'true'
 		},
 		datasets: datasets,
 		bandIntervals:[
-		Timeline.DateTime.DECADE,
-		Timeline.DateTime.CENTURY]
+		Timeline.DateTime.YEAR,
+		Timeline.DateTime.DECADE]
 	});
+	
+	function toggleDataset(dsid, toggle) {
+		if (toggle) {
+			tm.datasets[dsid].show();
+		} else {
+			tm.datasets[dsid].hide();
+		}
+	}
 }
 
 
@@ -92,8 +115,7 @@ function initialize_map(id, path) {
 			visibility: false,
 			styleMap: new OpenLayers.Style({
 				pointRadius: "${radius}", fillColor: fillColor, fillOpacity: 0.8, strokeColor: strokeColor, strokeWidth: 2, strokeOpacity: 0.8
-			},
-			{
+			}, {
 				context: {
 					radius: function (feature) {
 						return Math.min(feature.attributes.count, 7) + 3;
@@ -252,4 +274,9 @@ function initialize_map(id, path) {
 		$('.show_coins').attr('href', '');
 		map.removePopup(map.popups[0]);
 	}
+}
+
+function getURLParameter(name) {
+	return decodeURI(
+	(RegExp(name + '=' + '(.+?)(&|$)').exec(location.search) ||[, null])[1]);
 }

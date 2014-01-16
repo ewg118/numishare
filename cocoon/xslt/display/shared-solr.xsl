@@ -7,7 +7,7 @@
 -->
 <xsl:stylesheet xmlns:nuds="http://nomisma.org/nuds" xmlns:nh="http://nomisma.org/nudsHoard" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:datetime="http://exslt.org/dates-and-times"
 	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:exsl="http://exslt.org/common" xmlns:mets="http://www.loc.gov/METS/"
-	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mods="http://www.loc.gov/mods/v3" xmlns:gml="http://www.opengis.net/gml/" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mods="http://www.loc.gov/mods/v3" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
 	xmlns:numishare="http://code.google.com/p/numishare/" exclude-result-prefixes="#all" version="2.0">
 
 	<xsl:template match="nuds:typeDesc">
@@ -72,17 +72,31 @@
 		<xsl:param name="lang"/>
 		<xsl:variable name="facet" select="if (local-name()='famname') then 'dynasty' else local-name()"/>
 		<xsl:variable name="href" select="@xlink:href"/>
-
-		<field name="{$facet}_facet">
+		<xsl:variable name="label">
 			<xsl:choose>
 				<xsl:when test="string($lang) and contains($href, 'nomisma.org')">
-					<xsl:value-of select="numishare:getNomismaLabel(exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href], $lang)"/>
+					<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about=$href], $lang)"/>
 				</xsl:when>
 				<xsl:otherwise>
-					<xsl:value-of select="normalize-space(.)"/>
+					<xsl:choose>
+						<xsl:when test="not(string(.))">
+							<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about=$href], 'en')"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="normalize-space(.)"/>
+						</xsl:otherwise>
+					</xsl:choose>
 				</xsl:otherwise>
 			</xsl:choose>
+		</xsl:variable>
+
+		<field name="{$facet}_facet">
+			<xsl:value-of select="$label"/>
 		</field>
+		<field name="{$facet}_text">
+			<xsl:value-of select="$label"/>
+		</field>
+		
 		<xsl:if test="string($href)">
 			<field name="{$facet}_uri">
 				<xsl:value-of select="$href"/>
@@ -93,45 +107,29 @@
 	<xsl:template match="nuds:persname|nuds:corpname |*[local-name()='geogname']">
 		<xsl:param name="lang"/>
 		<xsl:variable name="href" select="@xlink:href"/>
-		<field name="{@xlink:role}_facet">
+		<xsl:variable name="label">
 			<xsl:choose>
 				<xsl:when test="string($lang) and contains($href, 'nomisma.org')">
-					<xsl:value-of select="numishare:getNomismaLabel(exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href], $lang)"/>
+					<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about=$href], $lang)"/>
 				</xsl:when>
-				<xsl:when test="contains(@xlink:href, 'geonames')">
+				<xsl:otherwise>
 					<xsl:choose>
-						<xsl:when test="string($lang)">
-							<xsl:value-of select="$geonames//place[@id=$href]/attribute::*[name()=$lang]"/>
+						<xsl:when test="not(string(.))">
+							<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about=$href], 'en')"/>
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:value-of select="normalize-space(.)"/>
 						</xsl:otherwise>
-					</xsl:choose>	
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:value-of select="normalize-space(.)"/>
+					</xsl:choose>
 				</xsl:otherwise>
 			</xsl:choose>
+		</xsl:variable>
+		
+		<field name="{@xlink:role}_facet">
+			<xsl:value-of select="$label"/>
 		</field>
 		<field name="{@xlink:role}_text">
-			<xsl:choose>
-				<xsl:when test="string($lang) and contains($href, 'nomisma.org')">
-					<xsl:value-of select="numishare:getNomismaLabel(exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href], $lang)"/>
-				</xsl:when>
-				<xsl:when test="contains(@xlink:href, 'geonames')">
-					<xsl:choose>
-						<xsl:when test="string($lang)">
-							<xsl:value-of select="$geonames//place[@id=$href]/attribute::*[name()=$lang]"/>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:value-of select="normalize-space(.)"/>
-						</xsl:otherwise>
-					</xsl:choose>	
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:value-of select="normalize-space(.)"/>
-				</xsl:otherwise>
-			</xsl:choose>
+			<xsl:value-of select="$label"/>
 		</field>
 		<xsl:if test="string(@xlink:href)">
 			<field name="{@xlink:role}_uri">
@@ -142,55 +140,47 @@
 			<xsl:choose>
 				<xsl:when test="contains(@xlink:href, 'geonames')">
 					<xsl:variable name="href" select="@xlink:href"/>
+					<xsl:variable name="role" select="@xlink:role"/>
 					<xsl:variable name="value" select="."/>
-					<xsl:variable name="label">
-						<xsl:choose>
-							<xsl:when test="string($lang)">
-								<xsl:value-of select="$geonames//place[@id=$href]/attribute::*[name()=$lang]"/>
-							</xsl:when>
-							<xsl:otherwise>
-								<xsl:value-of select="$value"/>
-							</xsl:otherwise>
-						</xsl:choose>
-					</xsl:variable>
-					
 					<!-- *_geo format is 'mint name|URI of resource|KML-compliant geographic coordinates' -->
 					<field name="{@xlink:role}_geo">
-						<xsl:value-of select="$label"/>
+						<xsl:value-of select="."/>
 						<xsl:text>|</xsl:text>
 						<xsl:value-of select="$href"/>
 						<xsl:text>|</xsl:text>
-						<xsl:value-of select="$geonames//place[@id=$href]"/>
+						<xsl:value-of select="exsl:node-set($geonames)//place[@id=$href]"/>
 					</field>
 					<!-- insert hierarchical facets -->
-					<xsl:for-each select="tokenize($geonames//place[@id=$href]/@hierarchy, '\|')">
+					<xsl:for-each select="tokenize(exsl:node-set($geonames)//place[@id=$href]/@hierarchy, '\|')">
 						<xsl:if test="not(. = $value)">
-							<field name="findspot_hier">
+							<field name="{$role}_hier">
 								<xsl:value-of select="concat('L', position(), '|', .)"/>
 							</field>
-							<field name="findspot_text">
+							<field name="{$role}_text">
 								<xsl:value-of select="."/>
 							</field>
 						</xsl:if>
 						<xsl:if test="position()=last()">
 							<xsl:variable name="level" select="if (.=$value) then position() else position() + 1"/>
-							<field name="findspot_hier">
-								<xsl:value-of select="concat('L', $level, '|', .)"/>
+							<field name="{$role}_hier">
+								<xsl:value-of select="concat('L', $level, '|', $value)"/>
 							</field>
 						</xsl:if>
 					</xsl:for-each>
 				</xsl:when>
 				<xsl:when test="contains(@xlink:href, 'nomisma.org')">
 					<xsl:variable name="href" select="@xlink:href"/>
-					<xsl:variable name="coordinates" select="exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/gml:pos"/>
-					<xsl:if test="string($coordinates)">
-						<xsl:variable name="lat" select="substring-before($coordinates, ' ')"/>
-						<xsl:variable name="lon" select="substring-after($coordinates, ' ')"/>
+					<xsl:variable name="coordinates">
+						<xsl:if test="$rdf/*[@rdf:about=$href]/descendant::geo:lat and $rdf/*[@rdf:about=$href]/descendant::geo:long">
+							<xsl:text>true</xsl:text>
+						</xsl:if>
+					</xsl:variable>
+					<xsl:if test="$coordinates = 'true'">
 						<!-- *_geo format is 'mint name|URI of resource|KML-compliant geographic coordinates' -->
 						<field name="{@xlink:role}_geo">
 							<xsl:choose>
 								<xsl:when test="string($lang)">
-									<xsl:value-of select="numishare:getNomismaLabel(exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href], $lang)"/>
+									<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about=$href], $lang)"/>
 								</xsl:when>
 								<xsl:otherwise>
 									<xsl:value-of select="normalize-space(.)"/>
@@ -199,21 +189,31 @@
 							<xsl:text>|</xsl:text>
 							<xsl:value-of select="@xlink:href"/>
 							<xsl:text>|</xsl:text>
-							<xsl:value-of select="concat($lon, ',', $lat)"/>
+							<xsl:value-of select="concat($rdf/*[@rdf:about=$href]/descendant::geo:long, ',', $rdf/*[@rdf:about=$href]/descendant::geo:lat)"/>
 						</field>
 					</xsl:if>
-					<xsl:if test="exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/skos:related[contains(@rdf:resource, 'pleiades')]">
+					<xsl:for-each select="$rdf/*[@rdf:about=$href]/skos:related[contains(@rdf:resource, 'pleiades.stoa.org')]">
 						<field name="pleiades_uri">
-							<xsl:value-of select="exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/skos:related[contains(@rdf:resource, 'pleiades')]/@rdf:resource"/>
+							<xsl:value-of select="@rdf:resource"/>
 						</field>
-					</xsl:if>
+					</xsl:for-each>
 				</xsl:when>
 			</xsl:choose>
+		</xsl:if>
+		<xsl:if test="string(@xlink:href) and @xlink:role = 'region'">
+			<xsl:variable name="href" select="@xlink:href"/>
+			<xsl:for-each select="$rdf/*[@rdf:about=$href]/skos:related[contains(@rdf:resource, 'pleiades.stoa.org')]">
+				<field name="pleiades_uri">
+					<xsl:value-of select="@rdf:resource"/>
+				</field>
+			</xsl:for-each>
 		</xsl:if>
 	</xsl:template>
 
 	<!-- generalize refDesc for NUDS and NUDS Hoard records -->
 	<xsl:template match="*[local-name()='refDesc']">
+		
+		<!-- references -->
 		<xsl:variable name="refs">
 			<refs>
 				<xsl:for-each select="*[local-name()='reference']">
@@ -241,6 +241,33 @@
 			</xsl:if>
 		</xsl:for-each>
 
+		<!-- citations -->
+		<xsl:variable name="citations">
+			<citations>
+				<xsl:for-each select="*[local-name()='citation']">
+					<citation>
+						<xsl:call-template name="get_ref"/>
+					</citation>
+				</xsl:for-each>
+			</citations>
+		</xsl:variable>
+		
+		<xsl:for-each select="exsl:node-set($citations)//citation">
+			<xsl:sort order="ascending"/>
+			<field name="citation_facet">
+				<xsl:value-of select="."/>
+			</field>
+			<xsl:if test="position() = 1">
+				<field name="citation_min">
+					<xsl:value-of select="."/>
+				</field>
+			</xsl:if>
+			<xsl:if test="position() = last()">
+				<field name="citation_max">
+					<xsl:value-of select="."/>
+				</field>
+			</xsl:if>
+		</xsl:for-each>
 	</xsl:template>
 
 	<xsl:template match="nuds:date">
@@ -392,7 +419,7 @@
 						<xsl:when test="string($lang)">
 							<xsl:choose>
 								<xsl:when test="contains($href, 'nomisma.org')">
-									<xsl:value-of select="numishare:getNomismaLabel(exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href], $lang)"/>
+									<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about=$href], $lang)"/>
 								</xsl:when>
 								<xsl:otherwise>
 									<xsl:value-of select="normalize-space(.)"/>

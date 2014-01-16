@@ -17,7 +17,7 @@
 		
 		<doc>
 			<field name="id">
-				<xsl:value-of select="nh:nudsHeader/nh:nudsid"/>
+				<xsl:value-of select="nh:control/nh:recordId"/>
 			</field>
 			<field name="title_display">
 				<xsl:choose>
@@ -25,7 +25,7 @@
 						<xsl:value-of select="$title"/>
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:value-of select="nh:nudsHeader/nh:nudsid"/>
+						<xsl:value-of select="nh:control/nh:recordId"/>
 					</xsl:otherwise>
 				</xsl:choose>
 			</field>

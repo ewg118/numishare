@@ -15,8 +15,8 @@
 			<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
 		</h2>
 		<ul>
-			<xsl:apply-templates select="*[local-name()='reference'][not(child::*[local-name()='objectXMLWrap'])]" mode="descMeta"/>
-			<xsl:apply-templates select="*[local-name()='reference']/*[local-name()='objectXMLWrap']"/>
+			<xsl:apply-templates select="*:reference[not(child::*[local-name()='objectXMLWrap'])]|*:citation" mode="descMeta"/>
+			<xsl:apply-templates select="*:reference/*[local-name()='objectXMLWrap']"/>
 		</ul>
 	</xsl:template>
 
@@ -79,17 +79,7 @@
 
 					<!-- pull language from nomisma, if available -->
 					<xsl:variable name="value">
-						<xsl:choose>
-							<xsl:when test="string($lang) and contains($href, 'nomisma.org')">
-								<xsl:choose>
-									<xsl:when test="string(exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/skos:prefLabel[@xml:lang=$lang])">
-										<xsl:value-of select="exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/skos:prefLabel[@xml:lang=$lang]"/>
-									</xsl:when>
-									<xsl:otherwise>
-										<xsl:value-of select="exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/skos:prefLabel[@xml:lang='en']"/>
-									</xsl:otherwise>
-								</xsl:choose>
-							</xsl:when>
+						<xsl:choose>							
 							<xsl:when test="string($lang) and contains($href, 'geonames.org')">
 								<xsl:variable name="geonameId" select="substring-before(substring-after($href, 'geonames.org/'), '/')"/>
 								<xsl:variable name="geonames_data" select="document(concat($geonames-url, '/get?geonameId=', $geonameId, '&amp;username=', $geonames_api_key, '&amp;style=full'))"/>
@@ -108,13 +98,19 @@
 								</xsl:choose>
 							</xsl:when>
 							<xsl:otherwise>
-								<!-- if there is no text value and it points to nomisma.org, grab the prefLabel -->
 								<xsl:choose>
-									<xsl:when test="not(string(normalize-space(.))) and contains($href, 'nomisma.org')">
-										<xsl:value-of select="exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/skos:prefLabel[@xml:lang='en']"/>
+									<xsl:when test="string($lang) and contains($href, 'nomisma.org')">
+										<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about=$href], $lang)"/>
 									</xsl:when>
 									<xsl:otherwise>
-										<xsl:value-of select="."/>
+										<xsl:choose>
+											<xsl:when test="not(string(.))">
+												<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about=$href], 'en')"/>
+											</xsl:when>
+											<xsl:otherwise>
+												<xsl:value-of select="normalize-space(.)"/>
+											</xsl:otherwise>
+										</xsl:choose>
 									</xsl:otherwise>
 								</xsl:choose>
 							</xsl:otherwise>
@@ -169,7 +165,7 @@
 						</a>
 						<!-- parse nomisma RDFa, create links for pleiades and wikipedia -->
 						<!--<xsl:if test="contains($href, 'nomisma.org')">
-							<xsl:for-each select="exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/skos:related">
+							<xsl:for-each select="$rdf/*[@rdf:about=$href]/skos:related">
 								<xsl:variable name="source">
 									<xsl:choose>
 										<xsl:when test="contains(@rdf:resource, 'pleiades')">
@@ -251,7 +247,7 @@
 	<xsl:template match="*[local-name()='objectXMLWrap']">
 		<xsl:variable name="label">
 			<xsl:choose>
-				<xsl:when test="parent::*[local-name()='reference']">
+				<xsl:when test="parent::*:reference">
 					<xsl:value-of select="numishare:regularize_node(parent::node()/local-name(), $lang)"/>
 				</xsl:when>
 			</xsl:choose>
@@ -313,20 +309,32 @@
 		</div>
 	</xsl:template>
 	<!--***************************************** OPTIONS BAR **************************************** -->
+	<!--***************************************** OPTIONS BAR **************************************** -->
 	<xsl:template name="icons">
 		<div class="yui3-u-1">
 			<div class="submenu">
 				<div class="icon">
-					<a href="{$id}.xml">
-						<img src="{$display_path}images/xml.png" title="XML" alt="XML"/>
-					</a>
+					<a href="{$id}.kml">KML</a>
 				</div>
 				<div class="icon">
-					<a href="{$id}.rdf">
-						<img src="{$display_path}images/rdf.gif" title="RDF" alt="RDF"/>
-					</a>
+					<a href="{$id}.rdf">Nomisma RDF/XML</a>
 				</div>
-				<div class="icon">AddThis could go here...</div>
+				<div class="icon">
+					<a href="{$id}.xml">NUDS/XML</a>
+				</div>
+				<div class="icon">
+					<!-- AddThis Button BEGIN -->
+					<div class="addthis_toolbox addthis_default_style ">
+						<a class="addthis_button_preferred_1"></a>
+						<a class="addthis_button_preferred_2"></a>
+						<a class="addthis_button_preferred_3"></a>
+						<a class="addthis_button_preferred_4"></a>
+						<a class="addthis_button_compact"></a>
+						<a class="addthis_counter addthis_bubble_style"></a>
+					</div>
+					<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=xa-525d63ef6a07cd89"></script>
+					<!-- AddThis Button END -->
+				</div>
 			</div>
 		</div>
 	</xsl:template>
