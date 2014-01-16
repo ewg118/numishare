@@ -48,17 +48,17 @@
 			</xforms:instance>
 
 			<xforms:instance id="collections-list">
-				<collections xmlns="">
+				<collections xmlns="" xxforms:exclude-result-prefixes="#all">
 					<collection role="admin" name="numishare"/>
 				</collections>
 			</xforms:instance>
 
 			<xforms:instance id="collection-template">
-				<collection role="" name=""/>
+				<collection role="" name="" xxforms:exclude-result-prefixes="#all"/>
 			</xforms:instance>
 
 			<xforms:instance id="config-template">
-				<config xmlns:xlink="http://www.w3.org/1999/xlink" version="0.2">
+				<config xmlns="" xmlns:xlink="http://www.w3.org/1999/xlink" version="0.2">
 					<firstrun/>
 					<title>Numishare - Digital Artifactual Exhibition</title>
 					<description>Enter short description for collection.</description>
@@ -93,14 +93,17 @@
 					</images>
 					<languages>
 						<language code="ar" enabled="false"/>
+						<language code="bg" enabled="false"/>
 						<language code="de" enabled="false"/>
 						<language code="el" enabled="false"/>
 						<language code="en" enabled="false"/>
+						<language code="es" enabled="false"/>
 						<language code="fr" enabled="false"/>
 						<language code="it" enabled="false"/>
 						<language code="nl" enabled="false"/>
 						<language code="ro" enabled="false"/>
 						<language code="ru" enabled="false"/>
+						<language code="sv" enabled="false"/>
 					</languages>
 					<theme>
 						<jquery_ui_theme>smoothness</jquery_ui_theme>
@@ -903,7 +906,7 @@
 								<h1>No finding aids in collection.</h1>
 							</xforms:group>
 						</xforms:group>
-<!--						<fr:xforms-inspector/>-->
+						<!--<fr:xforms-inspector/>-->
 					</div>
 				</div>
 			</div>

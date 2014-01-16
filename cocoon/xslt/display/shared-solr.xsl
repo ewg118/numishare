@@ -242,7 +242,7 @@
 		</xsl:for-each>
 
 		<!-- citations -->
-		<xsl:variable name="citations">
+		<!--<xsl:variable name="citations">
 			<citations>
 				<xsl:for-each select="*[local-name()='citation']">
 					<citation>
@@ -267,7 +267,7 @@
 					<xsl:value-of select="."/>
 				</field>
 			</xsl:if>
-		</xsl:for-each>
+		</xsl:for-each>-->
 	</xsl:template>
 
 	<xsl:template match="nuds:date">

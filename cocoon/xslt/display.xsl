@@ -107,7 +107,7 @@
 
 	<xsl:variable name="has_mint_geo">
 		<xsl:choose>
-			<xsl:when test="count($rdf/descendant::nm:mint) &gt; 0">true</xsl:when>
+			<xsl:when test="count($rdf/descendant::nm:mint) &gt; 0 or count(descendant::*[local-name()='geogname'][contains(@xlink:href, 'geonames.org')]) &gt; 0">true</xsl:when>
 			<xsl:otherwise>false</xsl:otherwise>
 		</xsl:choose>
 	</xsl:variable>

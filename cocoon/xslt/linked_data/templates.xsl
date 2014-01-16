@@ -332,7 +332,7 @@
 							</xsl:variable>
 							<xsl:variable name="geonames_api_key" select="/content/config/geonames_api_key"/>
 
-							<xsl:variable name="geonameId" select="substring-before(substring-after($href, 'geonames.org/'), '/')"/>
+							<xsl:variable name="geonameId" select="tokenize($href, '/')[4]"/>
 							<xsl:variable name="geonames_data" as="element()*">
 								<xml>
 									<xsl:copy-of
