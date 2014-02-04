@@ -10,7 +10,14 @@
 	<xsl:template match="/">
 		<kml xmlns="http://earth.google.com/kml/2.0">
 			<Document>
-				<Style id="ANSStyle">
+				<Style id="mint">
+					<IconStyle>
+						<scale>1</scale>
+						<hotSpot x="0.5" y="0" xunits="fraction" yunits="fraction"/>
+						<Icon>
+							<href>http://maps.google.com/intl/en_us/mapfiles/ms/micons/blue-dot.png</href>
+						</Icon>
+					</IconStyle>
 					<BalloonStyle>
 						<bgColor>#F7F6ED</bgColor>
 						<text><![CDATA[
@@ -88,9 +95,9 @@
 				</xsl:if>
 				<![CDATA[</ul>
 				<![CDATA[<a href="]]><xsl:value-of select="str[@name='mint_uri']"/><![CDATA[">View Mint</a><br/>]]>
-				<![CDATA[<a href="]]><xsl:value-of select="concat($url, 'id/', str[@name='identifier_display'])"/><![CDATA[">View Item</a>]]>				
+				<![CDATA[<a href="]]><xsl:value-of select="concat($url, 'collection/', str[@name='identifier_display'])"/><![CDATA[">View Item</a>]]>				
 			</description>
-			<styleUrl>#ANSStyle</styleUrl>
+			<styleUrl>#mint</styleUrl>
 			<xsl:for-each select="arr[@name='mint_geo']/str">
 				<xsl:variable name="coordinates" select="tokenize(., '\|')[3]"/>
 				<Point>
