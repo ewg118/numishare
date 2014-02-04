@@ -11,9 +11,9 @@
 				<Style xmlns="" id="hoard">
 					<IconStyle>
 						<scale>1</scale>
-						<hotSpot x="0.5" y="0.5" xunits="fraction" yunits="fraction"/>
+						<hotSpot x="0.5" y="0" xunits="fraction" yunits="fraction"/>
 						<Icon>
-							<href>http://maps.google.com/mapfiles/kml/pal4/icon49.png</href>
+							<href>http://maps.google.com/intl/en_us/mapfiles/ms/micons/red-dot.png</href>
 						</Icon>
 					</IconStyle>
 				</Style>
