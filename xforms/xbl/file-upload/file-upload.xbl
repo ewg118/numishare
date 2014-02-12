@@ -250,10 +250,10 @@
 
 					</xforms:group>
 
-					<!-- obverse image -->
+					<!-- thumbnail -->
 					<xforms:group ref="$binding[string-length(mets:file[@USE='thumbnail']/mets:FLocat/@xlink:href) &gt; 0]">
 						<!-- concatonate thumbnail path -->
-						<xforms:var name="thumbnail-path" select="mets:file[@USE='thumbnail']/mets:FLocat/@xlink:href"/>
+						<xforms:var name="thumbnail-path" select="if (contains(mets:file[@USE='thumbnail']/mets:FLocat/@xlink:href, 'http://')) then mets:file[@USE='thumbnail']/mets:FLocat/@xlink:href else concat(instance('config')/url, mets:file[@USE='thumbnail']/mets:FLocat/@xlink:href)"/>
 						<div class="subsection">
 							<h4>Image</h4>
 							<xforms:trigger appearance="minimal">
@@ -267,7 +267,7 @@
 								</xforms:label>
 							</xforms:trigger>
 							<div>
-								<xforms:output mediatype="image/*" value="concat(instance('config')/url, $thumbnail-path)"/>
+								<xforms:output mediatype="image/*" value="$thumbnail-path"/>
 							</div>
 							<fr:alert-dialog id="delete-flickr-dialog">
 								<fr:label>Remove Image</fr:label>
