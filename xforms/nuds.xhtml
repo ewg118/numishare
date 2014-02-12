@@ -1,7 +1,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms"
 	xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xxforms="http://orbeon.org/oxf/xml/xforms"
 	xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:fr="http://orbeon.org/oxf/xml/form-runner"
-	xmlns:numishare="http://code.google.com/p/numishare/" xmlns:mets="http://www.loc.gov/METS/" xmlns:nuds="http://nomisma.org/nuds"
+	xmlns:numishare="https://github.com/ewg118/numishare" xmlns:mets="http://www.loc.gov/METS/" xmlns:nuds="http://nomisma.org/nuds"
 	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:atom="http://www.w3.org/2005/Atom"
 	xmlns:xbl="http://www.w3.org/ns/xbl" xmlns:xxbl="http://orbeon.org/oxf/xml/xbl" xmlns:oxf="http://www.orbeon.com/oxf/processors"
 	xmlns:saxon="http://saxon.sf.net/" xmlns:exf="http://www.exforms.org/exf/1-0" xmlns:xxi="http://orbeon.org/oxf/xml/xinclude">
@@ -479,8 +479,8 @@
 					</xforms:bind>
 					<xforms:bind nodeset="nuds:typeDesc">
 						<xforms:bind nodeset="@xlink:href" required="true()" type="xs:anyURI"/>
-						<xforms:bind nodeset="nuds:objectType">
-							<xforms:bind constraint="string-length(@xlink:href) &gt; 0"/>
+						<xforms:bind nodeset="nuds:objectType" required="true()">
+							<xforms:bind nodeset="@xlink:href" constraint="string-length(.) &gt; 0"/>							
 						</xforms:bind>
 						<xforms:bind nodeset="nuds:date" required="true()">
 							<xforms:bind nodeset="@standardDate" type="m.data.standardDate"/>
@@ -518,6 +518,9 @@
 							<xforms:bind nodeset="nuds:acquiredFrom" required="true()"/>
 							<xforms:bind nodeset="nuds:acquiredMethod" required="true()"/>
 						</xforms:bind>
+						<xforms:bind nodeset="nuds:owner" required="true()"/>
+						<xforms:bind nodeset="nuds:collection" required="true()"/>	
+						<xforms:bind nodeset="nuds:identifier" required="true()"/>						
 					</xforms:bind>
 					<xforms:bind nodeset="nuds:findspotDesc">
 						<xforms:bind nodeset="@xlink:href" required="true()" type="xs:anyURI"/>
@@ -743,8 +746,7 @@
 		<xi:include href="xbl/file-upload/file-upload.xbl" xi:omit-xml-base="true"/>
 		<xi:include href="xbl/findspot/findspot.xbl" xi:omit-xml-base="true"/>
 		<xi:include href="xbl/geogname/geogname.xbl" xi:omit-xml-base="true"/>
-		<xi:include href="xbl/mark/mark.xbl" xi:omit-xml-base="true"/>
-		<xi:include href="xbl/material/material.xbl" xi:omit-xml-base="true"/>
+		<xi:include href="xbl/mark/mark.xbl" xi:omit-xml-base="true"/>		
 		<xi:include href="xbl/control/control.xbl" xi:omit-xml-base="true"/>
 		<xi:include href="xbl/output-typeDesc/output-typeDesc.xbl" xi:omit-xml-base="true"/>
 		<xi:include href="xbl/reference/reference.xbl" xi:omit-xml-base="true"/>
@@ -753,7 +755,7 @@
 	</head>
 
 	<body>
-		<xxforms:variable name="display_path">../../</xxforms:variable>
+		<xforms:var name="display_path">../../</xforms:var>
 		<div class="yui3-g">
 			<div class="yui3-u-1">
 				<div class="content">
@@ -939,20 +941,20 @@
 											<xforms:trigger>
 												<xforms:label>Generate</xforms:label>
 												<xforms:action ev:event="DOMActivate">
-													<xxforms:variable name="material" select="instance('coin')/nuds:descMeta/nuds:typeDesc/nuds:material"/>
-													<xxforms:variable name="denomination"
+													<xforms:var name="material" select="instance('coin')/nuds:descMeta/nuds:typeDesc/nuds:material"/>
+													<xforms:var name="denomination"
 														select="if(string(instance('coin')/nuds:descMeta/nuds:typeDesc/nuds:denomination)) then concat(' ', instance('coin')/nuds:descMeta/nuds:typeDesc/nuds:denomination) else concat(' ', instance('coin')/nuds:descMeta/nuds:typeDesc/nuds:objectType)"/>
-													<xxforms:variable name="name-sep"
+													<xforms:var name="name-sep"
 														select="if(string(instance('coin')/nuds:descMeta/nuds:typeDesc/nuds:authority/nuds:persname[@xlink:role='issuer']) or string(instance('coin')/nuds:descMeta/nuds:typeDesc/nuds:authority/nuds:persname[@xlink:role='authority']) or string(instance('coin')/nuds:descMeta/nuds:typeDesc/nuds:geographic/nuds:geogname)) then ' of' else ''"/>
-													<xxforms:variable name="issuer"
+													<xforms:var name="issuer"
 														select="if(string(instance('coin')/nuds:descMeta/nuds:typeDesc/nuds:authority/nuds:persname[@xlink:role='authority'])) then concat(' ', instance('coin')/nuds:descMeta/nuds:typeDesc/nuds:authority/nuds:persname[@xlink:role='authority']) else if(string(instance('coin')/nuds:descMeta/nuds:typeDesc/nuds:authority/nuds:persname[@xlink:role='issuer'])) then concat(' ', instance('coin')/nuds:descMeta/nuds:typeDesc/nuds:authority/nuds:persname[@xlink:role='issuer']) else ''"/>
-													<xxforms:variable name="mint"
+													<xforms:var name="mint"
 														select="if(string(instance('coin')/nuds:descMeta/nuds:typeDesc/nuds:geographic/nuds:geogname[@xlink:role='mint'])) then concat(', ', instance('coin')/nuds:descMeta/nuds:typeDesc/nuds:geographic/nuds:geogname[@xlink:role='mint']) else ''"/>
-													<xxforms:variable name="region"
+													<xforms:var name="region"
 														select="if(string(instance('coin')/nuds:descMeta/nuds:typeDesc/nuds:geographic/nuds:geogname[@xlink:role='region'])) then concat(', ', instance('coin')/nuds:descMeta/nuds:typeDesc/nuds:geographic/nuds:geogname[@xlink:role='region']) else ''"/>
-													<xxforms:variable name="date"
+													<xforms:var name="date"
 														select="if(string(instance('coin')/nuds:descMeta/nuds:typeDesc/nuds:date)) then concat(', ', instance('coin')/nuds:descMeta/nuds:typeDesc/nuds:date) else ''"/>
-													<xxforms:variable name="identifier"
+													<xforms:var name="identifier"
 														select="if(string(instance('coin')/nuds:descMeta/nuds:adminDesc/nuds:identifier)) then concat('  ', instance('coin')/nuds:descMeta/nuds:adminDesc/nuds:identifier, '.') else ''"/>
 													<xforms:setvalue ref="title"
 														value="concat($material, $denomination, $name-sep, $issuer, $mint, $region, $date, if(substring($date, string-length($date)) = '.') then '' else '.', $identifier)"

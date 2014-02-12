@@ -6,15 +6,15 @@
 <xbl:xbl xmlns="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xxforms="http://orbeon.org/oxf/xml/xforms"
 	xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:xbl="http://www.w3.org/ns/xbl" xmlns:xxbl="http://orbeon.org/oxf/xml/xbl" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:oxf="http://www.orbeon.com/oxf/processors" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:georss="http://www.georss.org/georss"
-	xmlns:gml="http://www.opengis.net/gml" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:numishare="http://code.google.com/p/numishare/">
+	xmlns:gml="http://www.opengis.net/gml" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:numishare="https://github.com/ewg118/numishare">
 	<xbl:binding id="numishare-findspot" element="numishare|findspot">
 		<xbl:template>
 			<xforms:group xbl:attr="model context ref bind" xxbl:scope="outer">
 				<xbl:content includes="xforms|label,xforms|help,xforms|hint,xforms|alert"/>
 				<xforms:group xxbl:scope="inner">
-					<xxforms:variable name="binding" as="node()?">
+					<xforms:var name="binding" as="node()?">
 						<xxforms:sequence select="." xxbl:scope="outer"/>
-					</xxforms:variable>
+					</xforms:var>
 					<xforms:action ev:event="xforms-enabled" ev:target="#observer">
 						<xforms:insert context="instance('control-instance')" nodeset="collection-name" position="after"
 							origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/get-authentication.xpl', 'dump', instance('dump'), 'data')"/>
@@ -365,12 +365,12 @@
 								<xforms:message if="number(instance('geoname-temp')/totalResultsCount) = 0" level="modal">No results found for query.</xforms:message>
 								<!--<xforms:insert if="number(instance('geoname-temp')/totalResultsCount) &gt; 0" context="instance('geonames')" origin="instance('geoname-temp')"/>-->
 								<xforms:action xxforms:iterate="instance('geoname-temp')//geoname">
-									<xxforms:variable name="countryCode" select="countryCode"/>
-									<xxforms:variable name="countryName" select="countryName"/>
-									<xxforms:variable name="name" select="name"/>
-									<xxforms:variable name="adminName1" select="adminName1"/>
-									<xxforms:variable name="geonameId" select="geonameId"/>
-									<xxforms:variable name="fcode" select="fcode"/>
+									<xforms:var name="countryCode" select="countryCode"/>
+									<xforms:var name="countryName" select="countryName"/>
+									<xforms:var name="name" select="name"/>
+									<xforms:var name="adminName1" select="adminName1"/>
+									<xforms:var name="geonameId" select="geonameId"/>
+									<xforms:var name="fcode" select="fcode"/>
 									<!-- set a value equivalent to AACR2 standard for US, AU, CA, and GB.  This equation deviates from AACR2 for Malaysia since standard abbreviations for territories cannot be found -->
 									<xforms:setvalue ref="instance('geoname-template')/label"
 										value="if ($countryCode = 'US' or $countryCode = 'AU' or $countryCode = 'CA') then if ($fcode = 'ADM1') then $name else concat($name, ' (', instance('abbreviations')/country[@code=$countryCode]/place[. = $adminName1]/@abbr, ')') else if ($countryCode= 'GB') then  if ($fcode = 'ADM1') then $name else concat($name, ' (', $adminName1, ')') else if ($fcode = 'PCLI') then $name else concat($name, ' (', $countryName, ')')"/>
@@ -387,12 +387,12 @@
 							<xforms:action ev:event="xforms-submit-done">
 								<xforms:insert context="instance('geoname-temp')" origin="instance('geoname-query-response')"/>
 								<xforms:action xxforms:iterate="instance('geoname-temp')//geoname">
-									<xxforms:variable name="countryCode" select="countryCode"/>
-									<xxforms:variable name="countryName" select="countryName"/>
-									<xxforms:variable name="name" select="name"/>
-									<xxforms:variable name="adminName1" select="adminName1"/>
-									<xxforms:variable name="geonameId" select="geonameId"/>
-									<xxforms:variable name="fcode" select="fcode"/>
+									<xforms:var name="countryCode" select="countryCode"/>
+									<xforms:var name="countryName" select="countryName"/>
+									<xforms:var name="name" select="name"/>
+									<xforms:var name="adminName1" select="adminName1"/>
+									<xforms:var name="geonameId" select="geonameId"/>
+									<xforms:var name="fcode" select="fcode"/>
 									<!-- set a value equivalent to AACR2 standard for US, AU, CA, and GB.  This equation deviates from AACR2 for Malaysia since standard abbreviations for territories cannot be found -->
 									<xforms:setvalue ref="instance('geoname-template')/label"
 										value="if ($countryCode = 'US' or $countryCode = 'AU' or $countryCode = 'CA') then if ($fcode = 'ADM1') then $name else concat($name, ' (', instance('abbreviations')/country[@code=$countryCode]/place[. = $adminName1]/@abbr, ')') else if ($countryCode= 'GB') then  if ($fcode = 'ADM1') then $name else concat($name, ' (', $adminName1, ')') else if ($fcode = 'PCLI') then $name else concat($name, ' (', $countryName, ')')"/>

@@ -4,16 +4,16 @@
 -->
 <xbl:xbl xmlns="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xxforms="http://orbeon.org/oxf/xml/xforms"
 	xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:xbl="http://www.w3.org/ns/xbl" xmlns:xxbl="http://orbeon.org/oxf/xml/xbl" xmlns:oxf="http://www.orbeon.com/oxf/processors"
-	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:numishare="http://code.google.com/p/numishare/">
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:numishare="https://github.com/ewg118/numishare">
 	<xbl:binding id="numishare-date" element="numishare|date">
 		<xbl:template>
 			<xforms:group xbl:attr="model context ref bind" xxbl:scope="outer">
 				<xbl:content includes="xforms|label,xforms|help,xforms|hint,xforms|alert"/>
 				<xforms:group xxbl:scope="inner">
-					<xxforms:variable name="binding" as="node()?">
+					<xforms:var name="binding" as="node()?">
 						<xxforms:sequence select="." xxbl:scope="outer"/>
-					</xxforms:variable>
-					<xxforms:variable name="display_path">../../</xxforms:variable>
+					</xforms:var>
+					<xforms:var name="display_path">../../</xforms:var>
 					
 					<xforms:group ref="$binding">
 						<!-- edit @standardDate by default -->
@@ -24,17 +24,17 @@
 									<xforms:alert>Required; must meet ISO specification</xforms:alert>
 									<xforms:action ev:event="xforms-value-changed">
 										<xforms:action if="substring(., 1, 1) = '-'">
-											<xxforms:variable name="year" select="abs(number(tokenize(., '-')[2]))"/>
-											<xxforms:variable name="month" select="tokenize(., '-')[3]"/>
-											<xxforms:variable name="day" select="tokenize(., '-')[4]"/>
+											<xforms:var name="year" select="abs(number(tokenize(., '-')[2]))"/>
+											<xforms:var name="month" select="tokenize(., '-')[3]"/>
+											<xforms:var name="day" select="tokenize(., '-')[4]"/>
 											<xforms:setvalue ref="$binding"
 												value="concat(if (number($month)) then concat(instance('month-list')/item[@id=$month], ' ') else '', if (number($day)) then concat($day, ', ') else '', $year, ' B.C.')"
 											/>
 										</xforms:action>
 										<xforms:action if="substring(., 1, 1) != '-'">
-											<xxforms:variable name="year" select="abs(number(tokenize(., '-')[1]))"/>
-											<xxforms:variable name="month" select="tokenize(., '-')[2]"/>
-											<xxforms:variable name="day" select="tokenize(., '-')[3]"/>
+											<xforms:var name="year" select="abs(number(tokenize(., '-')[1]))"/>
+											<xforms:var name="month" select="tokenize(., '-')[2]"/>
+											<xforms:var name="day" select="tokenize(., '-')[3]"/>
 											<xforms:setvalue ref="$binding"
 												value="concat(if ($year &lt;= 300) then 'A.D. ' else '', if (number($month)) then concat(instance('month-list')/item[@id=$month], ' ') else '', if (number($day)) then concat($day, ', ') else '', $year)"
 											/>

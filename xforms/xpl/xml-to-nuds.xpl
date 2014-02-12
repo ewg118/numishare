@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 	Copyright (C) 2010 Ethan Gruber
-	Numishare: http://code.google.com/p/numishare/
+	Numishare: https://github.com/ewg118/numishare
 	Apache License 2.0: http://code.google.com/p/eaditor/
 	
 -->

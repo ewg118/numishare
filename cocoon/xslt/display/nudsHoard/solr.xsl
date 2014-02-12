@@ -2,7 +2,7 @@
 <xsl:stylesheet version="2.0" xmlns:nh="http://nomisma.org/nudsHoard" xmlns:nuds="http://nomisma.org/nuds" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:datetime="http://exslt.org/dates-and-times" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:exsl="http://exslt.org/common"
 	xmlns:mets="http://www.loc.gov/METS/" xmlns:math="http://exslt.org/math" xmlns:cinclude="http://apache.org/cocoon/include/1.0" xmlns:xlink="http://www.w3.org/1999/xlink"
-	xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:numishare="http://code.google.com/p/numishare/" exclude-result-prefixes="#all">
+	xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:numishare="https://github.com/ewg118/numishare" exclude-result-prefixes="#all">
 	<xsl:output method="xml" encoding="UTF-8"/>
 
 	<xsl:template name="nudsHoard">
