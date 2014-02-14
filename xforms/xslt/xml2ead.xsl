@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:datetime="http://exslt.org/dates-and-times"
-	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:numishare="http://code.google.com/p/numishare/" exclude-result-prefixes="xs" version="2.0" xmlns:exsl="http://exslt.org/common"
+	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:numishare="https://github.com/ewg118/numishare" exclude-result-prefixes="xs" version="2.0" xmlns:exsl="http://exslt.org/common"
 	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" extension-element-prefixes="exsl">
 	<xsl:output method="xml" indent="yes" encoding="UTF-8"/>
 

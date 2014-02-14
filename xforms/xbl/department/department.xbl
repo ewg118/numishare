@@ -4,7 +4,7 @@
 -->
 <xbl:xbl xmlns="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xxforms="http://orbeon.org/oxf/xml/xforms"
 	xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:xbl="http://www.w3.org/ns/xbl" xmlns:xxbl="http://orbeon.org/oxf/xml/xbl" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-	xmlns:oxf="http://www.orbeon.com/oxf/processors" xmlns:numishare="http://code.google.com/p/numishare/">
+	xmlns:oxf="http://www.orbeon.com/oxf/processors" xmlns:numishare="https://github.com/ewg118/numishare">
 	
 	
 	<xbl:binding id="numishare-department" element="numishare|department">
@@ -17,9 +17,9 @@
 			<xforms:group xbl:attr="model context ref bind" xxbl:scope="outer">
 				<xbl:content includes="xforms|label,xforms|help,xforms|hint,xforms|alert"/>
 				<xforms:group xxbl:scope="inner">
-					<xxforms:variable name="binding" as="node()?">
+					<xforms:var name="binding" as="node()?">
 						<xxforms:sequence select="." xxbl:scope="outer"/>
-					</xxforms:variable>
+					</xforms:var>
 					<xforms:action ev:event="xforms-enabled" ev:target="#observer">
 						<xforms:action if="string-length($binding/text()) = 0">
 							<xforms:insert context="instance('control-instance')" nodeset="collection-name" position="after"
@@ -52,8 +52,8 @@
 						<div style="margin-top:10px;display:table;width:100%">
 							<fr:autocomplete ref="instance('temp')" dynamic-itemset="true" id="autocomplete-control">
 								<xforms:action ev:event="fr-search-changed">
-									<xxforms:variable name="search-value" select="event('fr-search-value')"/>
-									<xxforms:variable name="make-suggestion" select="string-length($search-value) >= 2"/>
+									<xforms:var name="search-value" select="event('fr-search-value')"/>
+									<xforms:var name="make-suggestion" select="string-length($search-value) >= 2"/>
 									<xforms:action if="$make-suggestion">
 										<xforms:setvalue ref="instance('suggest-query')" value="$search-value"/>
 										<xforms:send submission="suggest-department"/>

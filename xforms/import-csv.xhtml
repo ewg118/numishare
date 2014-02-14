@@ -1,6 +1,6 @@
 <!--
 	Copyright (C) 2010 Ethan Gruber
-	Numishare: http://code.google.com/p/numishare/
+	Numishare: https://github.com/ewg118/numishare
 	Apache License 2.0
 	
 	Heavily modified from upload form developed by Orbeon	
@@ -296,7 +296,7 @@
 					<xforms:insert context="instance('xml-file')" origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/convert-csv.xpl', 'file', instance('url-generator'), 'data')"/>
 					<xforms:insert context="instance('xml-file')/root" nodeset="./child::node()[last()]" origin="instance('row-template')"/>
 					<xforms:action xxforms:iterate="instance('xml-file')//row[1]/elem">
-						<xxforms:variable name="name" select="@name"/>
+						<xforms:var name="name" select="@name"/>
 						<xforms:setvalue context="instance('elem-template')" nodeset="@name" value="$name"/>
 						<xforms:insert context="instance('xml-file')//row[last()]" nodeset="./child::node()[last()]" origin="instance('elem-template')"/>
 					</xforms:action>
@@ -355,7 +355,7 @@
 	</head>
 
 	<xhtml:body>
-		<xxforms:variable name="display_path">../../</xxforms:variable>
+		<xforms:var name="display_path">../../</xforms:var>
 		<div class="yui3-g">
 			<div class="yui3-u-1">
 				<div class="content">

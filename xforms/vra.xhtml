@@ -562,8 +562,8 @@
 			<!-- provenance: city -->
 			<xforms:action ev:event="xforms-ready">
 				<xforms:action xxforms:iterate="instance('vra')//location[@type='creation' or @type='discovery' or @type='performance' or @type='publication' or @type='site'][name/@extent='city']">
-					<xxforms:variable name="name" select="name/@extent"/>
-					<xxforms:variable name="facet" select="concat($name, '_facet')"/>
+					<xforms:var name="name" select="name/@extent"/>
+					<xforms:var name="facet" select="concat($name, '_facet')"/>
 					<xforms:insert context="instance(concat('suggestions-aggregate-', $name))" nodeset="response" origin="instance('response-temp')"/>
 					<xforms:setvalue ref="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst/@name" value="$facet"/>
 					<xforms:setvalue ref="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst[@name=$facet]/int/@name" value="normalize-space(context())"/>
@@ -574,8 +574,8 @@
 				</xforms:action>
 				<!-- corpname: political entity -->
 				<xforms:action xxforms:iterate="instance('vra')//name[@type='corporate']">
-					<xxforms:variable name="name" select="'corpname'"/>
-					<xxforms:variable name="facet" select="concat($name, '_facet')"/>
+					<xforms:var name="name" select="'corpname'"/>
+					<xforms:var name="facet" select="concat($name, '_facet')"/>
 					<xforms:insert context="instance(concat('suggestions-aggregate-', $name))" nodeset="response" origin="instance('response-temp')"/>
 					<xforms:setvalue ref="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst/@name" value="$facet"/>
 					<xforms:setvalue ref="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst[@name=$facet]/int/@name" value="normalize-space(context())"/>
@@ -586,8 +586,8 @@
 				</xforms:action>
 				<!-- famname -->
 				<xforms:action xxforms:iterate="instance('vra')//name[@type='family']">
-					<xxforms:variable name="name" select="'famname'"/>
-					<xxforms:variable name="facet" select="concat($name, '_facet')"/>
+					<xforms:var name="name" select="'famname'"/>
+					<xforms:var name="facet" select="concat($name, '_facet')"/>
 					<xforms:insert context="instance(concat('suggestions-aggregate-', $name))" nodeset="response" origin="instance('response-temp')"/>
 					<xforms:setvalue ref="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst/@name" value="$facet"/>
 					<xforms:setvalue ref="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst[@name=$facet]/int/@name" value="normalize-space(context())"/>
@@ -598,8 +598,8 @@
 				</xforms:action>
 				<!-- institution/collector -->
 				<xforms:action xxforms:iterate="instance('vra')//location[name/@extent='institution']">
-					<xxforms:variable name="name" select="'institution'"/>
-					<xxforms:variable name="facet" select="concat($name, '_facet')"/>
+					<xforms:var name="name" select="'institution'"/>
+					<xforms:var name="facet" select="concat($name, '_facet')"/>
 					<xforms:insert context="instance(concat('suggestions-aggregate-', $name))" nodeset="response" origin="instance('response-temp')"/>
 					<xforms:setvalue ref="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst/@name" value="$facet"/>
 					<xforms:setvalue ref="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst[@name=$facet]/int/@name" value="normalize-space(context())"/>
@@ -610,8 +610,8 @@
 				</xforms:action>
 				<!-- material -->
 				<xforms:action xxforms:iterate="instance('vra')//material">
-					<xxforms:variable name="name" select="name()"/>
-					<xxforms:variable name="facet" select="concat($name, '_facet')"/>
+					<xforms:var name="name" select="name()"/>
+					<xforms:var name="facet" select="concat($name, '_facet')"/>
 					<xforms:insert context="instance(concat('suggestions-aggregate-', $name))" nodeset="response" origin="instance('response-temp')"/>
 					<xforms:setvalue ref="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst/@name" value="$facet"/>
 					<xforms:setvalue ref="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst[@name=$facet]/int/@name" value="normalize-space(context())"/>
@@ -622,8 +622,8 @@
 				</xforms:action>
 				<!-- persname -->
 				<xforms:action xxforms:iterate="instance('vra')//name[@type='personal']">
-					<xxforms:variable name="name" select="'persname'"/>
-					<xxforms:variable name="facet" select="concat($name, '_facet')"/>
+					<xforms:var name="name" select="'persname'"/>
+					<xforms:var name="facet" select="concat($name, '_facet')"/>
 					<xforms:insert context="instance(concat('suggestions-aggregate-', $name))" nodeset="response" origin="instance('response-temp')"/>
 					<xforms:setvalue ref="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst/@name" value="$facet"/>
 					<xforms:setvalue ref="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst[@name=$facet]/int/@name" value="normalize-space(context())"/>
@@ -634,8 +634,8 @@
 				</xforms:action>
 				<!-- provenance: region -->
 				<xforms:action xxforms:iterate="instance('vra')//location[@type='creation' or @type='discovery' or @type='performance' or @type='publication' or @type='site'][name/@extent='region']">
-					<xxforms:variable name="name" select="name/@extent"/>
-					<xxforms:variable name="facet" select="concat($name, '_facet')"/>
+					<xforms:var name="name" select="name/@extent"/>
+					<xforms:var name="facet" select="concat($name, '_facet')"/>
 					<xforms:insert context="instance(concat('suggestions-aggregate-', $name))" nodeset="response" origin="instance('response-temp')"/>
 					<xforms:setvalue ref="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst/@name" value="$facet"/>
 					<xforms:setvalue ref="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst[@name=$facet]/int/@name" value="normalize-space(context())"/>
@@ -646,8 +646,8 @@
 				</xforms:action>
 				<!-- provenance: state -->
 				<xforms:action xxforms:iterate="instance('vra')//location[@type='creation' or @type='discovery' or @type='performance' or @type='publication' or @type='site'][name/@extent='state']">
-					<xxforms:variable name="name" select="name/@extent"/>
-					<xxforms:variable name="facet" select="concat($name, '_facet')"/>
+					<xforms:var name="name" select="name/@extent"/>
+					<xforms:var name="facet" select="concat($name, '_facet')"/>
 					<xforms:insert context="instance(concat('suggestions-aggregate-', $name))" nodeset="response" origin="instance('response-temp')"/>
 					<xforms:setvalue ref="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst/@name" value="$facet"/>
 					<xforms:setvalue ref="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst[@name=$facet]/int/@name" value="normalize-space(context())"/>
@@ -658,8 +658,8 @@
 				</xforms:action>
 				<!-- technique -->
 				<xforms:action xxforms:iterate="instance('vra')//technique">
-					<xxforms:variable name="name" select="name()"/>
-					<xxforms:variable name="facet" select="concat($name, '_facet')"/>
+					<xforms:var name="name" select="name()"/>
+					<xforms:var name="facet" select="concat($name, '_facet')"/>
 					<xforms:insert context="instance(concat('suggestions-aggregate-', $name))" nodeset="response" origin="instance('response-temp')"/>
 					<xforms:setvalue ref="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst/@name" value="$facet"/>
 					<xforms:setvalue ref="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst[@name=$facet]/int/@name" value="normalize-space(context())"/>
@@ -670,8 +670,8 @@
 				</xforms:action>
 				<!-- style -->
 				<xforms:action xxforms:iterate="instance('vra')//style">
-					<xxforms:variable name="name" select="name()"/>
-					<xxforms:variable name="facet" select="concat($name, '_facet')"/>
+					<xforms:var name="name" select="name()"/>
+					<xforms:var name="facet" select="concat($name, '_facet')"/>
 					<xforms:insert context="instance(concat('suggestions-aggregate-', $name))" nodeset="response" origin="instance('response-temp')"/>
 					<xforms:setvalue ref="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst/@name" value="$facet"/>
 					<xforms:setvalue ref="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst[@name=$facet]/int/@name" value="normalize-space(context())"/>
@@ -682,8 +682,8 @@
 				</xforms:action>
 				<!-- format -->
 				<xforms:action xxforms:iterate="instance('vra')//worktype">
-					<xxforms:variable name="name" select="'format'"/>
-					<xxforms:variable name="facet" select="concat($name, '_facet')"/>
+					<xforms:var name="name" select="'format'"/>
+					<xforms:var name="facet" select="concat($name, '_facet')"/>
 					<xforms:insert context="instance(concat('suggestions-aggregate-', $name))" nodeset="response" origin="instance('response-temp')"/>
 					<xforms:setvalue ref="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst/@name" value="$facet"/>
 					<xforms:setvalue ref="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst[@name=$facet]/int/@name" value="normalize-space(context())"/>
@@ -694,8 +694,8 @@
 				</xforms:action>
 				<!-- subject -->
 				<xforms:action xxforms:iterate="instance('vra')//subject">
-					<xxforms:variable name="name" select="name()"/>
-					<xxforms:variable name="facet" select="concat($name, '_facet')"/>
+					<xforms:var name="name" select="name()"/>
+					<xforms:var name="facet" select="concat($name, '_facet')"/>
 					<xforms:insert context="instance(concat('suggestions-aggregate-', $name))" nodeset="response" origin="instance('response-temp')"/>
 					<xforms:setvalue ref="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst/@name" value="$facet"/>
 					<xforms:setvalue ref="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst[@name=$facet]/int/@name" value="normalize-space(context())"/>

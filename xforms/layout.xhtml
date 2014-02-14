@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
     Copyright (C) 2010 Ethan Gruber
-    numishare: http://code.google.com/p/numishare/
-    Apache License 2.0: http://code.google.com/p/numishare/    
+    numishare: https://github.com/ewg118/numishare
+    Apache License 2.0: https://github.com/ewg118/numishare    
 -->
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ev="http://www.w3.org/2001/xml-events"
 	xmlns:xxforms="http://orbeon.org/oxf/xml/xforms" xmlns:widget="http://orbeon.org/oxf/xml/widget" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:fr="http://orbeon.org/oxf/xml/form-runner"
-	xmlns:exist="http://exist.sourceforge.net/NS/exist" xmlns:xxi="http://orbeon.org/oxf/xml/xinclude" xmlns:numishare="http://code.google.com/p/numishare/">
+	xmlns:exist="http://exist.sourceforge.net/NS/exist" xmlns:xxi="http://orbeon.org/oxf/xml/xinclude" xmlns:numishare="https://github.com/ewg118/numishare">
 	<head>
 		<title>Numishare: Administrative Interface</title>
 		<!-- Core + Skin CSS -->
@@ -94,14 +94,14 @@
 					origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/get-authentication.xpl', 'dump', instance('dump'), 'data')"/>
 				<xforms:send submission="load-collections"/>
 
-				<xxforms:variable name="display-layout"
+				<xforms:var name="display-layout"
 					select="concat(substring(instance('config')/theme/layouts/display/nuds/orientation, 1, 1), substring(instance('config')/theme/layouts/display/nuds/image_location, 1, 1))"/>
 				<xforms:setvalue ref="instance('control-instance')/display/*[name() = $display-layout]" value="'true'"/>
 			</xforms:action>
 		</xforms:model>
 	</head>
 	<body>
-		<xxforms:variable name="display_path">../../</xxforms:variable>
+		<xforms:var name="display_path">../../</xforms:var>
 		<div class="yui3-g">
 			<div class="yui3-u-1">
 				<div class="content">
@@ -147,7 +147,7 @@
 														<xforms:value>true</xforms:value>
 													</xforms:item>
 													<xforms:action ev:event="xforms-value-changed" if=".='true'">
-														<xxforms:variable name="name" select="name()"/>
+														<xforms:var name="name" select="name()"/>
 														<xforms:action xxforms:iterate="instance('control-instance')/display/*[not(name() = $name)]">
 															<xforms:setvalue ref="context()" value="''"/>
 														</xforms:action>
@@ -179,7 +179,7 @@
 														<xforms:value>true</xforms:value>
 													</xforms:item>
 													<xforms:action ev:event="xforms-value-changed" if=".='true'">
-														<xxforms:variable name="name" select="name()"/>
+														<xforms:var name="name" select="name()"/>
 														<xforms:setvalue xxforms:iterate="instance('control-instance')/display/*[not(name() = $name)]" value="''"/>
 														<!-- set the config values -->
 														<xforms:setvalue ref="instance('config')/theme/layouts/display/nuds/orientation">vertical</xforms:setvalue>
@@ -211,7 +211,7 @@
 														<xforms:value>true</xforms:value>
 													</xforms:item>
 													<xforms:action ev:event="xforms-value-changed" if=".='true'">
-														<xxforms:variable name="name" select="name()"/>
+														<xforms:var name="name" select="name()"/>
 														<xforms:setvalue xxforms:iterate="instance('control-instance')/display/*[not(name() = $name)]" value="''"/>
 														<!-- set the config values -->
 														<xforms:setvalue ref="instance('config')/theme/layouts/display/nuds/orientation">horizontal</xforms:setvalue>
@@ -241,7 +241,7 @@
 														<xforms:value>true</xforms:value>
 													</xforms:item>
 													<xforms:action ev:event="xforms-value-changed" if=".='true'">
-														<xxforms:variable name="name" select="name()"/>
+														<xforms:var name="name" select="name()"/>
 														<xforms:setvalue xxforms:iterate="instance('control-instance')/display/*[not(name() = $name)]" value="''"/>
 														<!-- set the config values -->
 														<xforms:setvalue ref="instance('config')/theme/layouts/display/nuds/orientation">horizontal</xforms:setvalue>

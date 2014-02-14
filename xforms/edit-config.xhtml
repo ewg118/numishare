@@ -1,6 +1,6 @@
 <xhtml:html xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	xmlns="http://www.w3.org/1999/xhtml" xmlns:xxforms="http://orbeon.org/oxf/xml/xforms" xmlns:p="http://www.orbeon.com/oxf/pipeline" xmlns:xi="http://www.w3.org/2001/XInclude"
-	xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:saxon="http://saxon.sf.net/" xmlns:numishare="http://code.google.com/p/numishare/">
+	xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:saxon="http://saxon.sf.net/" xmlns:numishare="https://github.com/ewg118/numishare">
 	<xhtml:head>
 		<title>Numishare: Edit Numishare Settings</title>
 		<!-- Core + Skin CSS -->
@@ -349,7 +349,7 @@
 	</xhtml:head>
 
 	<xhtml:body>
-		<xxforms:variable name="display_path">../../</xxforms:variable>
+		<xforms:var name="display_path">../../</xforms:var>
 		<div class="yui3-g">
 			<div class="yui3-u-1">
 				<div class="content">
@@ -506,7 +506,7 @@
 															<xforms:value ref="."/>
 														</xforms:itemset>
 														<xforms:alert>Required</xforms:alert>
-														<xxforms:variable name="language" select="."/>
+														<xforms:var name="language" select="."/>
 														<xforms:setvalue ref="@langcode" value="instance('languages')//language[. = $language]/@value" ev:event="xforms-value-changed"/>
 													</xforms:select1>
 												</div>

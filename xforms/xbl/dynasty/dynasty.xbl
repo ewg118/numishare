@@ -4,15 +4,15 @@
 -->
 <xbl:xbl xmlns="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xxforms="http://orbeon.org/oxf/xml/xforms"
 	xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:xbl="http://www.w3.org/ns/xbl" xmlns:xxbl="http://orbeon.org/oxf/xml/xbl" 
-	xmlns:oxf="http://www.orbeon.com/oxf/processors" xmlns:numishare="http://code.google.com/p/numishare/">
+	xmlns:oxf="http://www.orbeon.com/oxf/processors" xmlns:numishare="https://github.com/ewg118/numishare">
 	<xbl:binding id="numishare-dynasty" element="numishare|dynasty">
 		<xbl:template>
 			<xforms:group xbl:attr="model context ref bind" xxbl:scope="outer">
 				<xbl:content includes="xforms|label,xforms|help,xforms|hint,xforms|alert"/>
 				<xforms:group xxbl:scope="inner">
-					<xxforms:variable name="binding" as="node()?">
+					<xforms:var name="binding" as="node()?">
 						<xxforms:sequence select="." xxbl:scope="outer"/>
-					</xxforms:variable>
+					</xforms:var>
 					<xforms:action ev:event="xforms-enabled" ev:target="#observer">
 						<xforms:action if="not(string($binding))">
 							<xforms:insert context="instance('control-instance')" nodeset="collection-name" position="after"

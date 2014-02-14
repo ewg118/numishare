@@ -104,7 +104,7 @@
 				<xforms:message ev:event="xforms-submit-error" level="modal">Cannot load object: <xforms:output ref="instance('identifier')"/></xforms:message>
 				<xforms:action ev:event="xforms-submit-done">
 					<xforms:action xxforms:iterate="instance('atom-feed')/atom:entry">
-						<xxforms:variable name="href" select="atom:link[not(@rel)]/@href"/>
+						<xforms:var name="href" select="atom:link[not(@rel)]/@href"/>
 						<xforms:action if="not(instance('object')//nuds:associatedObject[@xlink:href=$href])">
 							<xforms:setvalue ref="instance('associatedObject-template')/@xlink:href" value="$href"/>							
 							<xforms:insert origin="instance('associatedObject-template')" context="instance('object')/nuds:digRep" nodeset="./child::node()[last()]"/>
@@ -124,7 +124,7 @@
 				replace="instance" instance="collection-result" xxforms:username="admin" xxforms:password="">
 				<xforms:setvalue ref="instance('control-instance')/error" ev:event="xforms-submit-error">Error querying eXist database.</xforms:setvalue>
 				<xforms:action ev:event="xforms-submit-done" xxforms:iterate="instance('collection-result')//nuds:recordId">
-					<xxforms:variable name="id" select="."/>
+					<xforms:var name="id" select="."/>
 					<xforms:setvalue ref="instance('identifier')" value="$id"/>
 					<xforms:send submission="query-mantis"/>
 				</xforms:action>
@@ -149,7 +149,7 @@
 
 	<xhtml:body class="yui-skin-sam">
 		<xhtml:div id="doc4" class="yui-t2 content ui-corner-all">
-			<xxforms:variable name="display_path">../</xxforms:variable>
+			<xforms:var name="display_path">../</xforms:var>
 			<xi:include href="header.xml"/>
 			<div id="bd">
 				<xhtml:div id="form">

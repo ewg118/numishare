@@ -1,7 +1,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms"
 	xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xxforms="http://orbeon.org/oxf/xml/xforms"
 	xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:fr="http://orbeon.org/oxf/xml/form-runner"
-	xmlns:numishare="http://code.google.com/p/numishare/" xmlns:mets="http://www.loc.gov/METS/" xmlns:nuds="http://nomisma.org/nuds"
+	xmlns:numishare="https://github.com/ewg118/numishare" xmlns:mets="http://www.loc.gov/METS/" xmlns:nuds="http://nomisma.org/nuds"
 	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:atom="http://www.w3.org/2005/Atom"
 	xmlns:xbl="http://www.w3.org/ns/xbl" xmlns:xxbl="http://orbeon.org/oxf/xml/xbl" xmlns:oxf="http://www.orbeon.com/oxf/processors"
 	xmlns:saxon="http://saxon.sf.net/" xmlns:exf="http://www.exforms.org/exf/1-0" xmlns:xxi="http://orbeon.org/oxf/xml/xinclude">
@@ -152,14 +152,6 @@
 			<!-- Instance for Solr commit-->
 			<xforms:instance id="sendCommit">
 				<commit/>
-			</xforms:instance>
-
-			<!-- temp identifier for storing the id and uri of physical objects associated with the conceptual object represented in instance('coin'), if they are part of the same numishare installation-->
-			<xforms:instance id="associatedObject-temp">
-				<temp xmlns="">
-					<id/>
-					<uri/>
-				</temp>
 			</xforms:instance>
 
 			<!-- delete config for XPL, used for removing associated image files -->
@@ -357,10 +349,7 @@
 			<!-- digital representations -->
 			<xforms:instance id="digRep-template" xxforms:exclude-result-prefixes="#all">
 				<digRep/>
-			</xforms:instance>
-			<xforms:instance id="associatedObject-template" xxforms:exclude-result-prefixes="#all">
-				<associatedObject xlink:href=""/>
-			</xforms:instance>
+			</xforms:instance>			
 
 			<!-- mets -->
 			<xforms:instance id="fileSec-template" xxforms:exclude-result-prefixes="#all">
@@ -479,8 +468,8 @@
 					</xforms:bind>
 					<xforms:bind nodeset="nuds:typeDesc">
 						<xforms:bind nodeset="@xlink:href" required="true()" type="xs:anyURI"/>
-						<xforms:bind nodeset="nuds:objectType">
-							<xforms:bind constraint="string-length(@xlink:href) &gt; 0"/>
+						<xforms:bind nodeset="nuds:objectType" required="true()">
+							<xforms:bind nodeset="@xlink:href" constraint="string-length(.) &gt; 0"/>							
 						</xforms:bind>
 						<xforms:bind nodeset="nuds:date" required="true()">
 							<xforms:bind nodeset="@standardDate" type="m.data.standardDate"/>
@@ -518,6 +507,9 @@
 							<xforms:bind nodeset="nuds:acquiredFrom" required="true()"/>
 							<xforms:bind nodeset="nuds:acquiredMethod" required="true()"/>
 						</xforms:bind>
+						<xforms:bind nodeset="nuds:owner" required="true()"/>
+						<xforms:bind nodeset="nuds:collection" required="true()"/>	
+						<xforms:bind nodeset="nuds:identifier" required="true()"/>						
 					</xforms:bind>
 					<xforms:bind nodeset="nuds:findspotDesc">
 						<xforms:bind nodeset="@xlink:href" required="true()" type="xs:anyURI"/>
@@ -538,10 +530,7 @@
 								</xforms:bind>
 							</xforms:bind>
 						</xforms:bind>
-					</xforms:bind>
-					<xforms:bind nodeset="nuds:associatedObject">
-						<xforms:bind nodeset="@xlink:href" required="true()" type="xs:anyURI"/>
-					</xforms:bind>
+					</xforms:bind>					
 				</xforms:bind>
 				<!-- global -->
 				<!-- validate description anywhere -->
@@ -743,8 +732,7 @@
 		<xi:include href="xbl/file-upload/file-upload.xbl" xi:omit-xml-base="true"/>
 		<xi:include href="xbl/findspot/findspot.xbl" xi:omit-xml-base="true"/>
 		<xi:include href="xbl/geogname/geogname.xbl" xi:omit-xml-base="true"/>
-		<xi:include href="xbl/mark/mark.xbl" xi:omit-xml-base="true"/>
-		<xi:include href="xbl/material/material.xbl" xi:omit-xml-base="true"/>
+		<xi:include href="xbl/mark/mark.xbl" xi:omit-xml-base="true"/>		
 		<xi:include href="xbl/control/control.xbl" xi:omit-xml-base="true"/>
 		<xi:include href="xbl/output-typeDesc/output-typeDesc.xbl" xi:omit-xml-base="true"/>
 		<xi:include href="xbl/reference/reference.xbl" xi:omit-xml-base="true"/>
@@ -753,7 +741,7 @@
 	</head>
 
 	<body>
-		<xxforms:variable name="display_path">../../</xxforms:variable>
+		<xforms:var name="display_path">../../</xforms:var>
 		<div class="yui3-g">
 			<div class="yui3-u-1">
 				<div class="content">
@@ -830,9 +818,7 @@
 											<xforms:insert context="instance('coin')/nuds:descMeta" nodeset="./child::node()[last()]"
 												origin="instance('adminDesc-template')" if="count(instance('coin')/nuds:descMeta/nuds:adminDesc) = 0"/>
 											<!-- insert fileSec back into digRep -->
-											<xforms:insert context="instance('coin')/nuds:digRep" origin="instance('fileSec-template')"/>
-											<!-- remove associatedObject -->
-											<xforms:delete context="instance('coin')/nuds:digRep" nodeset="nuds:associatedObject"/>
+											<xforms:insert context="instance('coin')/nuds:digRep" origin="instance('fileSec-template')"/>											
 										</xforms:action>
 									</xforms:action>
 								</xforms:select1>
@@ -939,20 +925,20 @@
 											<xforms:trigger>
 												<xforms:label>Generate</xforms:label>
 												<xforms:action ev:event="DOMActivate">
-													<xxforms:variable name="material" select="instance('coin')/nuds:descMeta/nuds:typeDesc/nuds:material"/>
-													<xxforms:variable name="denomination"
+													<xforms:var name="material" select="instance('coin')/nuds:descMeta/nuds:typeDesc/nuds:material"/>
+													<xforms:var name="denomination"
 														select="if(string(instance('coin')/nuds:descMeta/nuds:typeDesc/nuds:denomination)) then concat(' ', instance('coin')/nuds:descMeta/nuds:typeDesc/nuds:denomination) else concat(' ', instance('coin')/nuds:descMeta/nuds:typeDesc/nuds:objectType)"/>
-													<xxforms:variable name="name-sep"
+													<xforms:var name="name-sep"
 														select="if(string(instance('coin')/nuds:descMeta/nuds:typeDesc/nuds:authority/nuds:persname[@xlink:role='issuer']) or string(instance('coin')/nuds:descMeta/nuds:typeDesc/nuds:authority/nuds:persname[@xlink:role='authority']) or string(instance('coin')/nuds:descMeta/nuds:typeDesc/nuds:geographic/nuds:geogname)) then ' of' else ''"/>
-													<xxforms:variable name="issuer"
+													<xforms:var name="issuer"
 														select="if(string(instance('coin')/nuds:descMeta/nuds:typeDesc/nuds:authority/nuds:persname[@xlink:role='authority'])) then concat(' ', instance('coin')/nuds:descMeta/nuds:typeDesc/nuds:authority/nuds:persname[@xlink:role='authority']) else if(string(instance('coin')/nuds:descMeta/nuds:typeDesc/nuds:authority/nuds:persname[@xlink:role='issuer'])) then concat(' ', instance('coin')/nuds:descMeta/nuds:typeDesc/nuds:authority/nuds:persname[@xlink:role='issuer']) else ''"/>
-													<xxforms:variable name="mint"
+													<xforms:var name="mint"
 														select="if(string(instance('coin')/nuds:descMeta/nuds:typeDesc/nuds:geographic/nuds:geogname[@xlink:role='mint'])) then concat(', ', instance('coin')/nuds:descMeta/nuds:typeDesc/nuds:geographic/nuds:geogname[@xlink:role='mint']) else ''"/>
-													<xxforms:variable name="region"
+													<xforms:var name="region"
 														select="if(string(instance('coin')/nuds:descMeta/nuds:typeDesc/nuds:geographic/nuds:geogname[@xlink:role='region'])) then concat(', ', instance('coin')/nuds:descMeta/nuds:typeDesc/nuds:geographic/nuds:geogname[@xlink:role='region']) else ''"/>
-													<xxforms:variable name="date"
+													<xforms:var name="date"
 														select="if(string(instance('coin')/nuds:descMeta/nuds:typeDesc/nuds:date)) then concat(', ', instance('coin')/nuds:descMeta/nuds:typeDesc/nuds:date) else ''"/>
-													<xxforms:variable name="identifier"
+													<xforms:var name="identifier"
 														select="if(string(instance('coin')/nuds:descMeta/nuds:adminDesc/nuds:identifier)) then concat('  ', instance('coin')/nuds:descMeta/nuds:adminDesc/nuds:identifier, '.') else ''"/>
 													<xforms:setvalue ref="title"
 														value="concat($material, $denomination, $name-sep, $issuer, $mint, $region, $date, if(substring($date, string-length($date)) = '.') then '' else '.', $identifier)"
@@ -1970,18 +1956,7 @@
 										<xforms:label>
 											<img src="{$display_path}images/remove.gif"/>
 										</xforms:label>
-									</xforms:trigger>
-									<xforms:group ref=".[count(mets:fileSec) = 0]">
-										<div class="trigger_container">
-											<xforms:trigger appearance="minimal">
-												<xforms:label>
-													<img src="{$display_path}images/add.gif"/>Associated Object</xforms:label>
-												<xforms:action ev:event="DOMActivate">
-													<xforms:insert context="." origin="instance('associatedObject-template')"/>
-												</xforms:action>
-											</xforms:trigger>
-										</div>
-									</xforms:group>
+									</xforms:trigger>									
 									<xforms:group ref="mets:fileSec">
 										<div class="trigger_container">
 											<xforms:group ref=".[count(mets:fileGrp[@USE='obverse']) &lt; 1]">
@@ -2081,21 +2056,7 @@
 												</xforms:action>
 											</fr:positive-choice>
 										</fr:alert-dialog>
-									</xforms:group>
-									<xforms:repeat nodeset="nuds:associatedObject">
-										<div>
-											<xforms:input ref="@xlink:href">
-												<xforms:label>URI</xforms:label>
-												<xforms:alert>Required; Must be URI</xforms:alert>
-											</xforms:input>
-											<xforms:trigger appearance="minimal">
-												<xforms:delete ev:event="DOMActivate" nodeset="."/>
-												<xforms:label>
-													<img src="{$display_path}images/remove.gif"/>
-												</xforms:label>
-											</xforms:trigger>
-										</div>
-									</xforms:repeat>
+									</xforms:group>									
 								</fr:tab>
 								<!--**************************************** NUDS HEADER **********************************-->
 								<fr:tab bind="control-tab">

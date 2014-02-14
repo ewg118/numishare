@@ -5,7 +5,7 @@
 <xbl:xbl xmlns="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xxforms="http://orbeon.org/oxf/xml/xforms"
 	xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:xbl="http://www.w3.org/ns/xbl" xmlns:xxbl="http://orbeon.org/oxf/xml/xbl" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:oxf="http://www.orbeon.com/oxf/processors" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:date="http://exslt.org/dates-and-times"
-	xmlns:numishare="http://code.google.com/p/numishare/">
+	xmlns:numishare="https://github.com/ewg118/numishare">
 
 
 	<xbl:binding id="numishare-banner-upload" element="numishare|banner-upload">
@@ -13,15 +13,15 @@
 			<xforms:group xbl:attr="model context ref bind" xxbl:scope="outer">
 				<xbl:content includes="xforms|label,xforms|help,xforms|hint,xforms|alert"/>
 				<xforms:group xxbl:scope="inner">
-					<xxforms:variable name="binding" as="node()?">
+					<xforms:var name="binding" as="node()?">
 						<xxforms:sequence select="." xxbl:scope="outer"/>
-					</xxforms:variable>
+					</xforms:var>
 					<xforms:action ev:event="xforms-enabled" ev:target="#observer">
 						<xforms:insert context="instance('control-instance')" nodeset="collection-name" position="after"
 							origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/get-authentication.xpl', 'dump', instance('dump'), 'data')"/>
 						<xforms:send submission="load-collections"/>
 					</xforms:action>
-					<xxforms:variable name="created" select="current-dateTime()"/>
+					<xforms:var name="created" select="current-dateTime()"/>
 
 					<xforms:group ref="$binding[not(string(@xlink:href))]">
 						<h4>Upload Banner Image</h4>
@@ -43,8 +43,8 @@
 							<xforms:action ev:event="DOMActivate">
 								<xforms:send submission="upload-banner"/>
 								<xforms:action ev:event="xforms-submit-done" if="contains(instance('files-instance')/file/@mediatype, 'image/')">
-									<xxforms:variable name="mime-type" select="substring-after(instance('files-instance')/file/@mediatype, 'image/')"/>
-									<xxforms:variable name="filename" select="concat(substring-after(substring-before(instance('files-instance')/file, '.tmp'), 'xforms_upload_'), '.', $mime-type)"/>
+									<xforms:var name="mime-type" select="substring-after(instance('files-instance')/file/@mediatype, 'image/')"/>
+									<xforms:var name="filename" select="concat(substring-after(substring-before(instance('files-instance')/file, '.tmp'), 'xforms_upload_'), '.', $mime-type)"/>
 									<!-- set URL -->
 									<xforms:setvalue ref="@xlink:href" value="$filename"/>
 									<xforms:setvalue ref="instance('url-generator')/content-type" value="concat('image/', $mime-type)"/>
@@ -74,7 +74,7 @@
 
 					<xforms:group ref="$binding[string-length(@xlink:href) &gt; 0]">
 						<!-- concatonate thumbnail path -->
-						<xxforms:variable name="thumbnail-path" select="concat('file:', instance('config')/images/absolute_path, 'images/', @xlink:href)"/>
+						<xforms:var name="thumbnail-path" select="concat('file:', instance('config')/images/absolute_path, 'images/', @xlink:href)"/>
 						<h4>Banner Image</h4>
 						<xforms:trigger appearance="minimal">
 							<xforms:action ev:event="DOMActivate">
