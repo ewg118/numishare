@@ -18,7 +18,7 @@
 	</p:processor>
 	
 	<p:processor name="oxf:unsafe-xslt">
-		<p:input name="data" href="aggregate('content', #schematized, ../exist-url.xml)"/>
+		<p:input name="data" href="aggregate('content', #schematized, ../exist-config.xml)"/>
 		<p:input name="config" href="../xslt/xml2ead.xsl"/>
 		<p:output name="data" ref="finalized"/>
 	</p:processor>

@@ -5,9 +5,9 @@
 	<xsl:output method="xml" indent="yes" encoding="UTF-8"/>
 
 	<!-- change eXist URL if running on a server other than localhost -->
-	<xsl:variable name="exist-url" select="/content/exist-url"/>
+	<xsl:variable name="exist-config" select="/content/exist-config"/>
 	<!-- load config.xml from eXist into a variable which is later processed with exsl:node-set -->
-	<xsl:variable name="config" select="document(concat($exist-url, 'numishare/config.xml'))"/>
+	<xsl:variable name="config" select="document(concat($exist-config, 'numishare/config.xml'))"/>
 
 	<!-- template variables -->
 	<!-- adminDesc variables -->

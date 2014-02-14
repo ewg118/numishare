@@ -98,8 +98,8 @@
 			</xforms:instance>
 
 			<!-- exist URL is stored in an XML file -->
-			<xforms:instance id="exist-url">
-				<xi:include href="exist-url.xml"/>
+			<xforms:instance id="exist-config">
+				<xi:include href="exist-config.xml"/>
 			</xforms:instance>
 
 			<!-- load URLs from config.xml in eXist into form for Solr and CSS file -->
@@ -566,8 +566,8 @@
 
 			<!-- Load File -->
 			<xforms:submission id="load-coin" serialization="none" method="get"
-				action="{instance('exist-url')}{instance('control-instance')/collection-name}/objects/{instance('control-instance')/id}.xml"
-				xxforms:username="admin" xxforms:password="" replace="instance" instance="coin">
+				action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/objects/{instance('control-instance')/id}.xml"
+				xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}" replace="instance" instance="coin">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Error loading file.</xforms:message>
 				<xforms:action ev:event="xforms-submit-done">
 					<!-- set publicationStatus in control-instance -->
@@ -583,8 +583,8 @@
 			</xforms:submission>
 
 			<!-- Save File -->
-			<xforms:submission id="save-coin" ref="instance('coin')" xxforms:username="admin" xxforms:password=""
-				action="{instance('exist-url')}{instance('control-instance')/collection-name}/objects/{instance('coin')/nuds:control/nuds:recordId}.xml"
+			<xforms:submission id="save-coin" ref="instance('coin')" xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}"
+				action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/objects/{instance('coin')/nuds:control/nuds:recordId}.xml"
 				method="put" replace="none">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Save Error. Are all required inputs filled?</xforms:message>
 
@@ -640,7 +640,7 @@
 
 			<!-- load site info -->
 			<xforms:submission id="load-config" serialization="none" method="get"
-				action="{instance('exist-url')}{instance('control-instance')/collection-name}/config.xml" xxforms:username="admin" xxforms:password=""
+				action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/config.xml" xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}"
 				replace="instance" instance="config">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Unable to load Numishare configuration</xforms:message>
 				<xforms:action ev:event="xforms-submit-done">
@@ -692,8 +692,8 @@
 				</xforms:action>
 			</xforms:submission>
 
-			<xforms:submission id="load-collections" serialization="none" method="get" action="{instance('exist-url')}collections-list.xml" replace="instance"
-				instance="collections-list" xxforms:username="admin" xxforms:password="">
+			<xforms:submission id="load-collections" serialization="none" method="get" action="{instance('exist-config')/url}collections-list.xml" replace="instance"
+				instance="collections-list" xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}">
 				<!-- if the config loads successfully, set the collection names based on authentication -->
 				<xforms:action ev:event="xforms-submit-done">
 					<!-- set default if security is false -->
@@ -709,7 +709,7 @@
 					</xforms:action>
 					<xforms:send submission="load-config"/>
 				</xforms:action>
-				<!-- if the config has not been created (given that the URL in exist-url.xml is correct), create it -->
+				<!-- if the config has not been created (given that the URL in exist-config.xml is correct), create it -->
 				<xforms:message ev:event="xforms-submit-error" level="modal">Unable to load Numishare collections list.</xforms:message>
 			</xforms:submission>
 
