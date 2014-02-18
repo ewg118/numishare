@@ -52,9 +52,9 @@
          </authority>
          <geographic>
             <geogname xlink:type="simple" xlink:role="mint"
-                      xlink:href="http://nomisma.org/id/antiocheia_syria">Antioch</geogname>
+                      xlink:href="http://nomisma.org/id/rome">Rome</geogname>
             <geogname xlink:type="simple" xlink:role="region"
-                      xlink:href="http://nomisma.org/id/syria">Syria</geogname>
+                      xlink:href="http://nomisma.org/id/Latium">Latium</geogname>
          </geographic>
          <obverse>
             <type>
