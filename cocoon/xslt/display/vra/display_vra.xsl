@@ -7,7 +7,7 @@
 	<xsl:param name="q"/>
 	<xsl:param name="start"/>
 	<xsl:param name="mode"/>	
-	<xsl:param name="exist-url"/>
+	<xsl:param name="exist-config"/>
 
 	<xsl:param name="doc_id">
 		<xsl:value-of select="//work/@id"/>
@@ -34,7 +34,7 @@
 		<html>
 			<head>
 				<title>
-					<xsl:value-of select="document(concat($exist-url, '/config.xml'))/config/title"/>
+					<xsl:value-of select="document(concat($exist-config, '/config.xml'))/config/title"/>
 					<xsl:text>: </xsl:text>
 					<xsl:value-of
 						select="concat(upper-case(substring($format, 1, 1)), substring($format, 2))"/>

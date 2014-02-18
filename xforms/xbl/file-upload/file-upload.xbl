@@ -5,21 +5,21 @@
 <xbl:xbl xmlns="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xxforms="http://orbeon.org/oxf/xml/xforms"
 	xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:xbl="http://www.w3.org/ns/xbl" xmlns:xxbl="http://orbeon.org/oxf/xml/xbl" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:oxf="http://www.orbeon.com/oxf/processors" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:date="http://exslt.org/dates-and-times"
-	xmlns:numishare="http://code.google.com/p/numishare/">
+	xmlns:numishare="https://github.com/ewg118/numishare">
 	<xbl:binding id="numishare-file-upload" element="numishare|file-upload">
 		<xbl:template>
 			<xforms:group xbl:attr="model context ref bind" xxbl:scope="outer">
 				<xbl:content includes="xforms|label,xforms|help,xforms|hint,xforms|alert"/>
 				<xforms:group xxbl:scope="inner">
-					<xxforms:variable name="binding" as="node()?">
+					<xforms:var name="binding" as="node()?">
 						<xxforms:sequence select="." xxbl:scope="outer"/>
-					</xxforms:variable>
+					</xforms:var>
 					<xforms:action ev:event="xforms-enabled" ev:target="#observer">
 						<xforms:insert context="instance('control-instance')" nodeset="collection-name" position="after"
 							origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/get-authentication.xpl', 'dump', instance('dump'), 'data')"/>
 						<xforms:send submission="load-collections"/>
 					</xforms:action>
-					<xxforms:variable name="created" select="current-dateTime()"/>
+					<xforms:var name="created" select="current-dateTime()"/>
 					<!-- display warnings -->
 					<xforms:group ref="$binding[instance('flickr-response')/@stat='fail' and not(instance('control-instance')/remotemagick-available='false')]">
 						<div class="ui-widget">
@@ -250,10 +250,10 @@
 
 					</xforms:group>
 
-					<!-- obverse image -->
+					<!-- thumbnail -->
 					<xforms:group ref="$binding[string-length(mets:file[@USE='thumbnail']/mets:FLocat/@xlink:href) &gt; 0]">
 						<!-- concatonate thumbnail path -->
-						<xxforms:variable name="thumbnail-path" select="mets:file[@USE='thumbnail']/mets:FLocat/@xlink:href"/>
+						<xforms:var name="thumbnail-path" select="if (contains(mets:file[@USE='thumbnail']/mets:FLocat/@xlink:href, 'http://')) then mets:file[@USE='thumbnail']/mets:FLocat/@xlink:href else concat(instance('config')/url, mets:file[@USE='thumbnail']/mets:FLocat/@xlink:href)"/>
 						<div class="subsection">
 							<h4>Image</h4>
 							<xforms:trigger appearance="minimal">
@@ -267,7 +267,7 @@
 								</xforms:label>
 							</xforms:trigger>
 							<div>
-								<xforms:output mediatype="image/*" value="concat(instance('config')/url, $thumbnail-path)"/>
+								<xforms:output mediatype="image/*" value="$thumbnail-path"/>
 							</div>
 							<fr:alert-dialog id="delete-flickr-dialog">
 								<fr:label>Remove Image</fr:label>
@@ -325,8 +325,8 @@
 					<!-- ***********************  DIALOG INTERNAL MODEL *********************** -->
 					<xforms:model id="file-upload-model" xmlns:xi="http://www.w3.org/2001/XInclude">
 						<!-- exist URL is stored in an XML file -->
-						<xforms:instance id="exist-url">
-							<xi:include href="../../exist-url.xml"/>
+						<xforms:instance id="exist-config">
+							<xi:include href="../../exist-config.xml"/>
 						</xforms:instance>
 
 						<xforms:instance id="control-instance">
@@ -492,8 +492,8 @@
 							</xforms:action>
 						</xforms:submission>
 
-						<xforms:submission id="load-collections" serialization="none" method="get" action="{instance('exist-url')}collections-list.xml" replace="instance" instance="collections-list"
-							xxforms:username="admin" xxforms:password="">
+						<xforms:submission id="load-collections" serialization="none" method="get" action="{instance('exist-config')/url}collections-list.xml" replace="instance" instance="collections-list"
+							xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}">
 							<!-- if the config loads successfully, set the collection names based on authentication -->
 							<xforms:action ev:event="xforms-submit-done">
 								<!-- set default if security is false -->
@@ -509,13 +509,13 @@
 								</xforms:action>
 								<xforms:send submission="load-config"/>
 							</xforms:action>
-							<!-- if the config has not been created (given that the URL in exist-url.xml is correct), create it -->
+							<!-- if the config has not been created (given that the URL in exist-config.xml is correct), create it -->
 							<xforms:message ev:event="xforms-submit-error" level="modal">Unable to load Numishare collections list.</xforms:message>
 						</xforms:submission>
 
 						<!-- get image dimensions from config -->
-						<xforms:submission id="load-config" serialization="none" method="get" action="{instance('exist-url')}{instance('control-instance')/collection-name}/config.xml"
-							xxforms:username="admin" xxforms:password="" replace="instance" instance="config">
+						<xforms:submission id="load-config" serialization="none" method="get" action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/config.xml"
+							xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}" replace="instance" instance="config">
 							<xforms:message ev:event="xforms-submit-error" level="modal">Unable to load Numishare configuration</xforms:message>
 
 							<!-- if there is a string for flickr_api_key, execute the test API query to certify that the key is valid. -->

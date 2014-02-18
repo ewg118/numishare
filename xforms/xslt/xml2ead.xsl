@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:datetime="http://exslt.org/dates-and-times"
-	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:numishare="http://code.google.com/p/numishare/" exclude-result-prefixes="xs" version="2.0" xmlns:exsl="http://exslt.org/common"
+	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:numishare="https://github.com/ewg118/numishare" exclude-result-prefixes="xs" version="2.0" xmlns:exsl="http://exslt.org/common"
 	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" extension-element-prefixes="exsl">
 	<xsl:output method="xml" indent="yes" encoding="UTF-8"/>
 
 	<!-- change eXist URL if running on a server other than localhost -->
-	<xsl:variable name="exist-url" select="/content/exist-url"/>
+	<xsl:variable name="exist-config" select="/content/exist-config"/>
 	<!-- load config.xml from eXist into a variable which is later processed with exsl:node-set -->
-	<xsl:variable name="config" select="document(concat($exist-url, 'numishare/config.xml'))"/>
+	<xsl:variable name="config" select="document(concat($exist-config, 'numishare/config.xml'))"/>
 
 	<!-- template variables -->
 	<!-- adminDesc variables -->

@@ -5,16 +5,16 @@
 <xbl:xbl xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xxforms="http://orbeon.org/oxf/xml/xforms"
 	xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:xbl="http://www.w3.org/ns/xbl" xmlns:xxbl="http://orbeon.org/oxf/xml/xbl"
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:oxf="http://www.orbeon.com/oxf/processors"
-	xmlns="http://www.w3.org/1999/xhtml" xmlns:numishare="http://code.google.com/p/numishare/" xmlns:res="http://www.w3.org/2005/sparql-results#">
+	xmlns="http://www.w3.org/1999/xhtml" xmlns:numishare="https://github.com/ewg118/numishare" xmlns:res="http://www.w3.org/2005/sparql-results#">
 
 	<xbl:binding id="numishare-cp-name" element="numishare|cp-name">
 		<xbl:template>
 			<xforms:group xbl:attr="model context ref bind" xxbl:scope="outer">
 				<xbl:content includes="xforms|label,xforms|help,xforms|hint,xforms|alert"/>
 				<xforms:group xxbl:scope="inner">
-					<xxforms:variable name="binding" as="node()?">
+					<xforms:var name="binding" as="node()?">
 						<xxforms:sequence select="." xxbl:scope="outer"/>
-					</xxforms:variable>
+					</xforms:var>
 					<xforms:action ev:event="xforms-enabled" ev:target="#observer">
 						<xforms:action if="not(string($binding))">
 							<!-- load collections/config if no $binding-->
@@ -282,8 +282,8 @@
 					<!-- ********************************************************************** -->
 					<!-- ***********************  DIALOG INTERNAL MODEL *********************** -->
 					<xforms:model id="cp-name-model" xmlns:xi="http://www.w3.org/2001/XInclude">
-						<xforms:instance id="exist-url">
-							<xi:include href="../../exist-url.xml"/>
+						<xforms:instance id="exist-config">
+							<xi:include href="../../exist-config.xml"/>
 						</xforms:instance>
 
 						<xforms:instance id="control-instance">
@@ -373,8 +373,8 @@
 						<!-- require a value for temp, thus requiring a value for $binding -->
 						<xforms:bind nodeset="instance('temp')" required="true()"/>
 
-						<xforms:submission id="load-collections" serialization="none" method="get" action="{instance('exist-url')}collections-list.xml"
-							replace="instance" instance="collections-list" xxforms:username="admin" xxforms:password="">
+						<xforms:submission id="load-collections" serialization="none" method="get" action="{instance('exist-config')/url}collections-list.xml"
+							replace="instance" instance="collections-list" xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}">
 							<!-- if the config loads successfully, set the collection names based on authentication -->
 							<xforms:action ev:event="xforms-submit-done">
 								<!-- set default if security is false -->
@@ -391,13 +391,13 @@
 								</xforms:action>
 								<xforms:send submission="load-config"/>
 							</xforms:action>
-							<!-- if the config has not been created (given that the URL in exist-url.xml is correct), create it -->
+							<!-- if the config has not been created (given that the URL in exist-config.xml is correct), create it -->
 							<xforms:message ev:event="xforms-submit-error" level="modal">Unable to load Numishare collections list.</xforms:message>
 						</xforms:submission>
 
 						<xforms:submission id="load-config" serialization="none" method="get"
-							action="{instance('exist-url')}{instance('control-instance')/collection-name}/config.xml" replace="instance" instance="config"
-							xxforms:username="admin" xxforms:password="">
+							action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/config.xml" replace="instance" instance="config"
+							xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}">
 							<xforms:message ev:event="xforms-submit-error" level="modal">Unable to load Numishare config.</xforms:message>
 						</xforms:submission>
 

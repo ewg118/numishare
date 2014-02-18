@@ -1,6 +1,6 @@
 <!--
 	Copyright (C) 2010 Ethan Gruber
-	Numishare: http://code.google.com/p/numishare/
+	Numishare: https://github.com/ewg118/numishare
 	Apache License 2.0
 	
 	Heavily modified from upload form developed by Orbeon	
@@ -22,8 +22,8 @@
 		<xhtml:link rel="stylesheet" href="/apps/numishare/css/xforms.css"/>
 		<xforms:model>
 			<!-- exist URL is stored in an XML file -->
-			<xforms:instance id="exist-url">
-				<xi:include href="exist-url.xml"/>
+			<xforms:instance id="exist-config">
+				<xi:include href="exist-config.xml"/>
 			</xforms:instance>
 
 			<xforms:instance id="control-instance">
@@ -264,8 +264,8 @@
 				</xforms:bind>
 			</xforms:bind>
 
-			<xforms:submission id="load-collections" serialization="none" method="get" action="{instance('exist-url')}collections-list.xml" replace="instance" instance="collections-list"
-				xxforms:username="admin" xxforms:password="">
+			<xforms:submission id="load-collections" serialization="none" method="get" action="{instance('exist-config')/url}collections-list.xml" replace="instance" instance="collections-list"
+				xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}">
 				<!-- if the config loads successfully, set the collection names based on authentication -->
 				<xforms:action ev:event="xforms-submit-done">
 					<!-- set default if security is false -->
@@ -282,13 +282,13 @@
 					<xforms:send submission="load-imports"/>
 					<xforms:send submission="load-config"/>
 				</xforms:action>
-				<!-- if the config has not been created (given that the URL in exist-url.xml is correct), create it -->
+				<!-- if the config has not been created (given that the URL in exist-config.xml is correct), create it -->
 				<xforms:message ev:event="xforms-submit-error" level="modal">Unable to load Numishare collections list.</xforms:message>
 			</xforms:submission>
 
 			<!-- load site info -->
-			<xforms:submission id="load-config" serialization="none" method="get" action="{instance('exist-url')}{instance('control-instance')/collection-name}/config.xml" xxforms:username="admin"
-				xxforms:password="" replace="instance" instance="config"/>
+			<xforms:submission id="load-config" serialization="none" method="get" action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/config.xml" xxforms:username="{instance('exist-config')/username}"
+				xxforms:password="{instance('exist-config')/password}" replace="instance" instance="config"/>
 
 			<xforms:submission id="background-submission" method="post" replace="none" resource="test:">
 				<xforms:action ev:event="xforms-submit-done">
@@ -296,7 +296,7 @@
 					<xforms:insert context="instance('xml-file')" origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/convert-csv.xpl', 'file', instance('url-generator'), 'data')"/>
 					<xforms:insert context="instance('xml-file')/root" nodeset="./child::node()[last()]" origin="instance('row-template')"/>
 					<xforms:action xxforms:iterate="instance('xml-file')//row[1]/elem">
-						<xxforms:variable name="name" select="@name"/>
+						<xforms:var name="name" select="@name"/>
 						<xforms:setvalue context="instance('elem-template')" nodeset="@name" value="$name"/>
 						<xforms:insert context="instance('xml-file')//row[last()]" nodeset="./child::node()[last()]" origin="instance('elem-template')"/>
 					</xforms:action>
@@ -306,7 +306,7 @@
 			</xforms:submission>
 
 			<xforms:submission id="save-submission" ref="instance('processed-xml')/*[local-name()='nuds'][*[local-name()='control']/*[local-name()='recordId'] = instance('current-id')]"
-				xxforms:username="admin" xxforms:password="" action="{instance('exist-url')}{instance('control-instance')/collection-name}/objects/{instance('current-id')}.xml" method="put"
+				xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}" action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/objects/{instance('current-id')}.xml" method="put"
 				replace="none">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Save Error!</xforms:message>
 				<xforms:action ev:event="xforms-submit-done">
@@ -318,11 +318,11 @@
 				<!--<xforms:send ev:event="xforms-submit-done" submission="query-solr-for-publication"/>-->
 			</xforms:submission>
 
-			<xforms:submission id="load-imports" serialization="none" method="get" action="{instance('exist-url')}{instance('control-instance')/collection-name}/imports.xml" xxforms:username="admin"
-				xxforms:password="" replace="instance" instance="imports"/>
+			<xforms:submission id="load-imports" serialization="none" method="get" action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/imports.xml" xxforms:username="{instance('exist-config')/username}"
+				xxforms:password="{instance('exist-config')/password}" replace="instance" instance="imports"/>
 
-			<xforms:submission id="save-imports" ref="instance('imports')" xxforms:username="admin" xxforms:password=""
-				action="{instance('exist-url')}{instance('control-instance')/collection-name}/imports.xml" method="put" replace="none">
+			<xforms:submission id="save-imports" ref="instance('imports')" xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}"
+				action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/imports.xml" method="put" replace="none">
 				<xforms:action ev:event="xforms-submit-done">
 					<xforms:send submission="submit-commit"/>
 					<xforms:setvalue ref="instance('status')">CSV file succesfully imported.</xforms:setvalue>
@@ -355,7 +355,7 @@
 	</head>
 
 	<xhtml:body>
-		<xxforms:variable name="display_path">../../</xxforms:variable>
+		<xforms:var name="display_path">../../</xforms:var>
 		<div class="yui3-g">
 			<div class="yui3-u-1">
 				<div class="content">

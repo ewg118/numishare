@@ -4,13 +4,13 @@
 	xmlns:fo="http://www.w3.org/1999/XSL/Format">
 	<xsl:output method="xml" indent="yes" encoding="UTF-8"/>
 	<xsl:param name="id" select="descendant::work/@id"/>
-	<xsl:param name="exist-url"/>
+	<xsl:param name="exist-config"/>
 	<xsl:param name="url">
-		<xsl:value-of select="document(concat($exist-url, '/config.xml'))//url"/>
+		<xsl:value-of select="document(concat($exist-config, '/config.xml'))//url"/>
 	</xsl:param>
 	<xsl:param name="source">vra</xsl:param>
 	<xsl:param name="image_url">
-		<xsl:value-of select="document(concat($exist-url, '/config.xml'))//url"/>
+		<xsl:value-of select="document(concat($exist-config, '/config.xml'))//url"/>
 	</xsl:param>
 
 	<xsl:template match="/">
@@ -34,7 +34,7 @@
 						border-right="1px solid #696969" border-bottom="1px solid #696969"
 						border-left="1px solid #C8C8C8" border-top="1px solid #C8C8C8">Please cite:
 							<xsl:value-of select="$url"/>id/<xsl:value-of select="$source"
-							/>/<xsl:value-of select="@id"/>, <xsl:value-of select="document(concat($exist-url, '/config.xml'))/config/title"/>.</fo:block>
+							/>/<xsl:value-of select="@id"/>, <xsl:value-of select="document(concat($exist-config, '/config.xml'))/config/title"/>.</fo:block>
 				</fo:static-content>
 				<fo:static-content flow-name="xsl-region-after">
 					<fo:block font-size="10px" font-weight="bold" text-align="center">

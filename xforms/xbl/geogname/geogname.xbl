@@ -7,7 +7,7 @@
 <xbl:xbl xmlns="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events"
 	xmlns:xxforms="http://orbeon.org/oxf/xml/xforms" xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:xbl="http://www.w3.org/ns/xbl"
 	xmlns:xxbl="http://orbeon.org/oxf/xml/xbl" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:oxf="http://www.orbeon.com/oxf/processors"
-	xmlns:xlink="http://www.w3.org/1999/xlink"  xmlns:atom="http://www.w3.org/2005/Atom" xmlns:numishare="http://code.google.com/p/numishare/">
+	xmlns:xlink="http://www.w3.org/1999/xlink"  xmlns:atom="http://www.w3.org/2005/Atom" xmlns:numishare="https://github.com/ewg118/numishare">
 	<xbl:binding id="numishare-geogname" element="numishare|geogname">
 		<xbl:template>
 			<xforms:group xbl:attr="model context ref bind" xxbl:scope="outer">
@@ -138,7 +138,7 @@
 												<xforms:delete if="$binding/@xlink:href" context="$binding/@xlink:href"/>
 												<xforms:delete if="$binding/@rules" context="$binding/@rules"/>
 
-												<xforms:toggle case="local-autosuggest"/>
+												<xforms:toggle case="local-vocabulary"/>
 											</xforms:action>
 										</xforms:action>
 									</xforms:select1>
@@ -225,7 +225,7 @@
 										</div>
 									</xforms:group>
 								</xforms:case>
-								<xforms:case id="local-autosuggest">
+								<xforms:case id="local-vocabulary">
 									<div>
 										<xforms:input ref="instance('search-query')">
 											<xforms:label>Term</xforms:label>
@@ -285,8 +285,8 @@
 					<!-- ********************************************************************** -->
 					<!-- ***********************  DIALOG INTERNAL MODEL *********************** -->
 					<xforms:model id="geogname-authorities-model" xmlns:xi="http://www.w3.org/2001/XInclude">
-						<xforms:instance id="exist-url">
-							<xi:include href="../../exist-url.xml"/>
+						<xforms:instance id="exist-config">
+							<xi:include href="../../exist-config.xml"/>
 						</xforms:instance>
 
 						<xforms:instance id="control-instance">
@@ -478,8 +478,8 @@
 							</xforms:action>
 						</xforms:submission>
 
-						<xforms:submission id="load-collections" serialization="none" method="get" action="{instance('exist-url')}collections-list.xml"
-							replace="instance" instance="collections-list" xxforms:username="admin" xxforms:password="">
+						<xforms:submission id="load-collections" serialization="none" method="get" action="{instance('exist-config')/url}collections-list.xml"
+							replace="instance" instance="collections-list" xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}">
 							<!-- if the config loads successfully, set the collection names based on authentication -->
 							<xforms:action ev:event="xforms-submit-done">
 								<!-- set default if security is false -->
@@ -496,13 +496,13 @@
 								</xforms:action>
 								<xforms:send submission="load-config"/>
 							</xforms:action>
-							<!-- if the config has not been created (given that the URL in exist-url.xml is correct), create it -->
+							<!-- if the config has not been created (given that the URL in exist-config.xml is correct), create it -->
 							<xforms:message ev:event="xforms-submit-error" level="modal">Unable to load Numishare collections list.</xforms:message>
 						</xforms:submission>
 
 						<xforms:submission id="load-config" serialization="none" method="get"
-							action="{instance('exist-url')}{instance('control-instance')/collection-name}/config.xml" replace="instance" instance="config"
-							xxforms:username="admin" xxforms:password="">
+							action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/config.xml" replace="instance" instance="config"
+							xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}">
 							<xforms:message ev:event="xforms-submit-error" level="modal">Unable to load Numishare config.</xforms:message>
 						</xforms:submission>
 
