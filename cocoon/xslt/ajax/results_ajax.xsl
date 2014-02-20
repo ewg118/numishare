@@ -3,6 +3,7 @@
 	xmlns:res="http://www.w3.org/2005/sparql-results#" xmlns:cinclude="http://apache.org/cocoon/include/1.0" exclude-result-prefixes="#all" version="2.0">
 	<xsl:include href="../functions.xsl"/>
 	<xsl:include href="../templates.xsl"/>
+	<xsl:include href="../sparql/templates.xsl"/>
 	<xsl:include href="../results_generic.xsl"/>
 	<xsl:param name="pipeline"/>
 	<xsl:param name="lang"/>
@@ -75,12 +76,12 @@
 					<xsl:text>, </xsl:text>
 				</xsl:if>
 			</xsl:for-each>
-			<a id="clear_all" href="#">clear</a>
+			<small>
+				<a id="clear_all" href="#">clear</a>
+			</small>
 		</h1>
 		<xsl:call-template name="paging"/>
-		<div style="display:table;width:100%;">
-			<xsl:apply-templates select="descendant::doc" mode="map"/>
-		</div>
+		<xsl:apply-templates select="descendant::doc" mode="map"/>
 		<xsl:call-template name="paging"/>
 	</xsl:template>
 
@@ -90,7 +91,7 @@
 			<xsl:value-of select="numishare:normalize_fields($sort_category, $lang)"/>
 		</xsl:variable>
 
-		<div class="g_doc">
+		<div class="g_doc col-md-4">
 			<span class="result_link">
 				<a href="{$display_path}id/{str[@name='recordId']}{if (string($lang)) then concat('?lang=', $lang) else ''}" target="_blank">
 					<xsl:value-of select="str[@name='title_display']"/>

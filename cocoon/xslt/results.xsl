@@ -3,6 +3,7 @@
 	xmlns:numishare="https://github.com/ewg118/numishare" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:res="http://www.w3.org/2005/sparql-results#" exclude-result-prefixes="#all">
 	<xsl:include href="results_generic.xsl"/>
 	<xsl:include href="templates.xsl"/>
+	<xsl:include href="sparql/templates.xsl"/>
 	<xsl:include href="functions.xsl"/>
 	<xsl:include href="header.xsl"/>
 	<xsl:include href="footer.xsl"/>
@@ -63,6 +64,8 @@
 			</response>
 		</xsl:if>
 	</xsl:variable>
+	
+	
 
 	<xsl:template match="/">
 		<html>
@@ -88,38 +91,28 @@
 				<meta name="startIndex" content="{$start_var}"/>
 				<meta name="itemsPerPage" content="{$rows}"/>
 
-				<link rel="shortcut icon" type="image/x-icon" href="{$display_path}images/favicon.png"/>
-				<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.8.0/build/cssgrids/grids-min.css"/>
-				<!-- Core + Skin CSS -->
+				<link rel="shortcut icon" type="image/x-icon" href="{$display_path}images/favicon.png"/>				
+				<meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+				<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"/>
+				<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"/>
+				<!-- bootstrap -->
+				<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"/>
+				<script type="text/javascript" src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"/>
 				<link type="text/css" href="{$display_path}themes/{//config/theme/jquery_ui_theme}.css" rel="stylesheet"/>
 				<link type="text/css" href="{$display_path}style.css" rel="stylesheet"/>
-				<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"/>
-				<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js"/>
-
-				<!-- menu -->
-				<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.core.js"/>
-				<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.widget.js"/>
-				<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.position.js"/>
-				<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.button.js"/>
-				<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.menu.js"/>
-				<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.menubar.js"/>
-				<script type="text/javascript" src="{$display_path}javascript/numishare-menu.js"/>
 
 				<link type="text/css" href="{$display_path}jquery.multiselect.css" rel="stylesheet"/>
-				<link type="text/css" href="{$display_path}jquery.fancybox-1.3.4.css" rel="stylesheet"/>
+				<!-- Add fancyBox -->
+				<link rel="stylesheet" href="{$display_path}jquery.fancybox.css?v=2.1.5" type="text/css" media="screen" />
+				<script type="text/javascript" src="{$display_path}javascript/jquery.fancybox.pack.js?v=2.1.5"/>
 				<script type="text/javascript" src="{$display_path}javascript/jquery.multiselect.min.js"/>
-				<script type="text/javascript" src="{$display_path}javascript/jquery.multiselectfilter.js"/>
-				<script type="text/javascript" src="{$display_path}javascript/jquery.livequery.js"/>
-				<script type="text/javascript" src="{$display_path}javascript/jquery.fancybox-1.3.4.min.js"/>
+				<script type="text/javascript" src="{$display_path}javascript/jquery.multiselectfilter.js"/>				
 				<script type="text/javascript" src="{$display_path}javascript/get_facets.js"/>
 				<script type="text/javascript" src="{$display_path}javascript/facet_functions.js"/>
-				<script type="text/javascript" src="{$display_path}javascript/sort_results.js"/>
-				<script type="text/javascript" src="{$display_path}javascript/numishare-menu.js"/>
-				<script type="text/javascript">
-							$(document).ready(function(){
-								$('a.thumbImage').fancybox();
-							});
-						</script>
+				<script type="text/javascript" src="{$display_path}javascript/result_functions.js"/>
+				
+				<!-- call mapping information -->
 				<xsl:if test="//lst[@name='mint_geo']/int[@name='numFacetTerms'] &gt; 0">
 					<script src="http://www.openlayers.org/api/OpenLayers.js" type="text/javascript">//</script>
 					<script src="http://maps.google.com/maps/api/js?v=3.2&amp;sensor=false">//</script>
@@ -151,11 +144,11 @@
 		</html>
 	</xsl:template>
 
-	<xsl:template name="results">
+	<xsl:template name="results">		
 		<div id="backgroundPopup"/>
-		<div class="yui3-g">
-			<div class="yui3-u-1-4">
-				<div class="content">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-md-3">
 					<xsl:if test="//result[@name='response']/@numFound &gt; 0">
 						<div class="data_options">
 							<h2>
@@ -188,19 +181,21 @@
 								<img src="{$display_path}images/visualize.png" title="Visualize" alt="Visualize"/>
 							</a>
 						</div>
-						<h2>
-							<xsl:value-of select="numishare:normalizeLabel('results_refine-results', $lang)"/>
-						</h2>
-						<!--<xsl:call-template name="quick_search"/>-->
-						<xsl:apply-templates select="descendant::lst[@name='facet_fields']"/>
+						<div id="refine_results">
+							<h2>
+								<xsl:value-of select="numishare:normalizeLabel('results_refine-results', $lang)"/>
+							</h2>
+							<xsl:call-template name="quick_search"/>
+							<xsl:apply-templates select="descendant::lst[@name='facet_fields']"/>
+						</div>
+						
+						
 					</xsl:if>
 					<span style="display:none" id="collection_type">
 						<xsl:value-of select="$collection_type"/>
 					</span>
 				</div>
-			</div>
-			<div class="yui3-u-3-4">
-				<div class="content">
+				<div class="col-md-9">
 					<xsl:call-template name="remove_facets"/>
 					<xsl:choose>
 						<xsl:when test="$numFound &gt; 0">
@@ -221,6 +216,7 @@
 							<h2> No results found. <a href="results?q=*:*">Start over.</a></h2>
 						</xsl:otherwise>
 					</xsl:choose>
+
 				</div>
 			</div>
 		</div>

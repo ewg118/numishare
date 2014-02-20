@@ -392,10 +392,7 @@
 				</div>
 			</xsl:if>
 
-			<div class="submit_div">
-				<input type="submit" value="{numishare:normalizeLabel('results_refine-search', $lang)}" id="search_button"
-					class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only ui-state-focus"/>
-			</div>
+			<input type="submit" value="{numishare:normalizeLabel('results_refine-search', $lang)}" id="search_button" class="btn btn-default"/>
 		</form>
 	</xsl:template>
 
@@ -593,9 +590,11 @@
 					<h1>
 						<xsl:value-of select="numishare:normalizeLabel('results_all-terms', $lang)"/>
 						<xsl:if test="//lst[@name='mint_geo']/int[@name='numFacetTerms'] &gt; 0">
-							<a href="#resultMap" id="map_results">
-								<xsl:value-of select="numishare:normalizeLabel('results_map-results', $lang)"/>
-							</a>
+							<small>
+								<a href="#resultMap" id="map_results">
+									<xsl:value-of select="numishare:normalizeLabel('results_map-results', $lang)"/>
+								</a>
+							</small>
 						</xsl:if>
 					</h1>
 				</xsl:when>
@@ -603,9 +602,11 @@
 					<h1>
 						<xsl:value-of select="numishare:normalizeLabel('results_filters', $lang)"/>
 						<xsl:if test="//lst[@name='mint_geo']/int[@name='numFacetTerms'] &gt; 0">
-							<a href="#resultMap" id="map_results">
-								<xsl:value-of select="numishare:normalizeLabel('results_map-results', $lang)"/>
-							</a>
+							<small>
+								<a href="#resultMap" id="map_results">
+									<xsl:value-of select="numishare:normalizeLabel('results_map-results', $lang)"/>
+								</a>
+							</small>
 						</xsl:if>
 					</h1>
 				</xsl:otherwise>
@@ -1134,13 +1135,13 @@
 
 	<xsl:template name="sort">
 		<xsl:variable name="sort_categories_string">
-			<xsl:text>authority,axis_num,dob,timestamp,degree,deity,denomination,department,diameter_num,dynasty,findspot,issuer,manufacture,material,mint,obv_leg_display,portrait,region,rev_leg_display,weight_num,year</xsl:text>
+			<xsl:text>timestamp,deity,denomination,findspot,issuer,manufacture,material,mint,obv_leg_display,portrait,region,rev_leg_display,year</xsl:text>
 		</xsl:variable>
 		<xsl:variable name="sort_categories" select="tokenize(normalize-space($sort_categories_string), ',')"/>
 
 		<div class="sort_div">
-			<form class="sortForm" action="results">
-				<select class="sortForm_categories">
+			<form role="form" class="sortForm" action="results">
+				<select class="sortForm_categories form-control">
 					<option value="null">
 						<xsl:value-of select="numishare:normalizeLabel('results_select', $lang)"/>
 					</option>
@@ -1159,7 +1160,7 @@
 						</xsl:choose>
 					</xsl:for-each>
 				</select>
-				<select class="sortForm_order">
+				<select class="sortForm_order form-control">
 					<xsl:choose>
 						<xsl:when test="contains($sort, 'asc')">
 							<option value="asc" selected="selected">
@@ -1190,7 +1191,7 @@
 				<xsl:if test="string($lang)">
 					<input type="hidden" name="lang" value="{$lang}"/>
 				</xsl:if>
-				<input id="sort_button" type="submit" value="{numishare:normalizeLabel('results_sort-results', $lang)}"/>
+				<input id="sort_button" class="btn btn-default" type="submit" value="{numishare:normalizeLabel('results_sort-results', $lang)}"/>
 			</form>
 		</div>
 	</xsl:template>
@@ -1200,13 +1201,13 @@
 			<h3>
 				<xsl:value-of select="numishare:normalizeLabel('results_quick-search', $lang)"/>
 			</h3>
-			<form action="results" method="GET" id="qs_form">
-				<input type="text" id="qs_text"/>
+			<form role="form" action="results" method="GET" id="qs_form">
 				<input type="hidden" name="q" id="qs_query" value="{$q}"/>
 				<xsl:if test="string($lang)">
 					<input type="hidden" name="lang" value="{$lang}"/>
 				</xsl:if>
-				<input id="qs_button" type="submit" value="{numishare:normalizeLabel('header_search', $lang)}"/>
+				<input type="text" class="form-control" id="qs_text"/>
+				<input id="qs_button" type="submit" class="btn btn-default" value="{numishare:normalizeLabel('header_search', $lang)}"/>
 			</form>
 		</div>
 	</xsl:template>

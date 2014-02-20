@@ -61,31 +61,25 @@
 					<xsl:text>: </xsl:text>
 					<xsl:value-of select="numishare:normalizeLabel('header_visualize', $lang)"/>
 				</title>
-				<link rel="shortcut icon" type="image/x-icon" href="{$display_path}images/favicon.png"/>
-				<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.8.0/build/cssgrids/grids-min.css"/>
-				<!-- Core + Skin CSS -->
-				<link type="text/css" href="{$display_path}themes/{//config/theme/jquery_ui_theme}.css" rel="stylesheet"/>
-				<link type="text/css" href="{$display_path}jquery.fancybox-1.3.4.css" rel="stylesheet"/>
+				<link rel="shortcut icon" type="image/x-icon" href="{$display_path}images/favicon.png"/>	
+				<link type="text/css" href="{$display_path}themes/{//config/theme/jquery_ui_theme}.css" rel="stylesheet"/>				
+				<meta name="viewport" content="width=device-width, initial-scale=1"/>				
 				<link type="text/css" href="{$display_path}style.css" rel="stylesheet"/>
 				<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"/>
-				<script type="text/javascript" src="{$display_path}javascript/jquery-ui-1.8.10.custom.min.js"/>
-
-				<!-- menu -->
-				<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.core.js"/>
-				<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.widget.js"/>
-				<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.position.js"/>
-				<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.button.js"/>
-				<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.menu.js"/>
-				<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.menubar.js"/>
-				<script type="text/javascript" src="{$display_path}javascript/numishare-menu.js"/>
+				<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"/>
+				<!-- bootstrap -->
+				<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"/>
+				<script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"/>
+				<!-- Add fancyBox -->
+				<link rel="stylesheet" href="{$display_path}jquery.fancybox.css?v=2.1.5" type="text/css" media="screen" />
+				<script type="text/javascript" src="{$display_path}javascript/jquery.fancybox.pack.js?v=2.1.5"></script>
 				<script type="text/javascript">
 					$(document).ready (function(){
 						$("#tabs").tabs();
 					});
 				</script>
-				<!-- required libraries -->
-				<script type="text/javascript" src="{$display_path}javascript/jquery.fancybox-1.3.4.min.js"/>
-				<script type="text/javascript" src="{$display_path}javascript/jquery.livequery.js"/>
+				<!-- required libraries -->				
+				<!--<script type="text/javascript" src="{$display_path}javascript/jquery.livequery.js"/>-->
 				<!-- visualize functions -->
 				<script type="text/javascript" src="{$display_path}javascript/highcharts.js"/>
 				<script type="text/javascript" src="{$display_path}javascript/modules/exporting.js"/>
@@ -108,9 +102,9 @@
 	</xsl:template>
 
 	<xsl:template name="visualize">
-		<div class="yui3-g">
-			<div class="yui3-u-1">
-				<div class="content">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-md-12">
 					<h1>
 						<xsl:value-of select="numishare:normalizeLabel('header_visualize', $lang)"/>
 					</h1>
@@ -148,7 +142,6 @@
 				</div>
 			</div>
 		</div>
-
 	</xsl:template>
 
 	<xsl:template match="response">

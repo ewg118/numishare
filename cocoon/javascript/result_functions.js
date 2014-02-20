@@ -1,11 +1,9 @@
-/************************************
-SORT SEARCH RESULTS
-Written by Ethan Gruber, gruber@numismatics.org
-Library: jQuery
-Description: Used to generate the query for adding
-the sort parameter to solr.
-************************************/
-$(function () {
+/* generic result page functions:
+combines hard-coded fancybox call from XSLT, condenses sort_results and quick_search JS into single file 
+*/
+$(document).ready(function () {
+	$('a.thumbImage').fancybox();	
+	
 	$('.sortForm_categories') .change(function(){
 		var field = $(this).val();
 		var sort_order = $('.sortForm_order').val();
@@ -47,6 +45,24 @@ $(function () {
 		}
 		else {
 			$('#sort_button') .attr('disabled', 'disabled');
+		}
+	}
+	
+	$('#qs_form').submit(function() {
+		assembleQuery();
+	});
+
+	function assembleQuery() {
+		var search_text = $('#qs_text') .val();
+		var query = $('#qs_query').val();
+		if (search_text != null && search_text != '') {
+			if (query == '*:*' || query.length == 0) {
+				$('#qs_query') .attr('value', 'fulltext:' + search_text);
+			} else {
+				$('#qs_query') .attr('value', query + ' AND fulltext:' + search_text);
+			}
+		} else {
+			$('#qs_query') .attr('value', '*:*');
 		}
 	}
 });

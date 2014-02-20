@@ -220,7 +220,7 @@ $(document).ready(function () {
 	});
 	
 	//remove comparison or custom queries
-	$('.removeQuery').livequery('click', function () {
+	$('#customSparqlQueryDiv').on('click', '.customSparqlQuery .removeQuery', function () {
 		$(this).parent('div').remove();
 		return false;
 	});
@@ -232,7 +232,7 @@ $(document).ready(function () {
 	});
 	
 	/********************* SPARQL-BASED FACETS ***********************/	
-	$('.sparql_facets') .livequery('change', function(event){
+	$('#sparqlInputContainer') .on('change', '.searchItemTemplate .sparql_facets', function(event){
 		var field = $(this) .children("option:selected") .val();
 		var container = $(this) .parent('.searchItemTemplate') .children('.option_container');
 		var formId = $(this).closest('form').attr('id');
@@ -397,22 +397,23 @@ $(document).ready(function () {
 	});
 	
 	//validate sparqlForm
-	$('.option_container').find('input[name=fromDate]').livequery('change', function () {
+	
+	$('#sparqlInputContainer').on('change', '.searchItemTemplate .option_container span input[name=fromDate]', function () {
 		var formId = $(this).closest('form').attr('id');
 		var spanId = $(this).parent('span').attr('id');
 		validateForm(spanId, formId);
 	});
-	$('.option_container').find('input[name=toDate]').livequery('change', function () {
+	$('#sparqlInputContainer').on('change', '.searchItemTemplate .option_container span input[name=toDate]', function () {
 		var formId = $(this).closest('form').attr('id');
 		var spanId = $(this).parent('span').attr('id');
 		validateForm(spanId, formId);
 	});
-	$('.option_container').find('.from_era').livequery('change', function () {
+	$('#sparqlInputContainer').on('change', '.searchItemTemplate .option_container span .from_era', function () {
 		var formId = $(this).closest('form').attr('id');
 		var spanId = $(this).parent('span').attr('id');
 		validateForm(spanId, formId);
 	});
-	$('.option_container').find('.to_era').livequery('change', function () {
+	$('#sparqlInputContainer').on('change', '.searchItemTemplate .option_container span .to_era', function () {
 		var formId = $(this).closest('form').attr('id');
 		var spanId = $(this).parent('span').attr('id');
 		validateForm(spanId, formId);

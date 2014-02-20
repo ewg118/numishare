@@ -5,11 +5,10 @@ Library: jQuery
 Description: Rendering graphics based on hoard counts
 ************************************/
 $(document).ready(function () {
-	$('a.thumbImage').fancybox();	
-	$("#tabs").tabs();
+	$('a.thumbImage').fancybox();
 	
 	/***** TOGGLING FACET FORM*****/
-	$('.gateTypeBtn') .livequery('click', function(event){
+	$('#sparqlInputContainer') .on('click', '.searchItemTemplate .gateTypeBtn', function(event){
 		gateTypeBtnClick($(this));
 		
 		//disable date select option if there is already a date select option
@@ -29,7 +28,7 @@ $(document).ready(function () {
 		return false;
 	});
 	
-	$('.removeBtn').livequery('click', function(event){
+	$('#sparqlInputContainer') .on('click', '.searchItemTemplate .removeBtn', function(event){
 		//enable date option in sparql form if the date is being removed
 		if ($(this).closest('form').attr('id') == 'sparqlForm'){
 			$('#sparqlForm .searchItemTemplate').each(function(){

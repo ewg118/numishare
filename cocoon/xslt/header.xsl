@@ -2,8 +2,44 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:numishare="https://github.com/ewg118/numishare" xmlns:xlink="http://www.w3.org/1999/xlink" exclude-result-prefixes="#all"
 	version="2.0">
 	<xsl:template name="header">
-		<!-- if displaying a coin or artifact record, the path to the other sections should be {$display_path} ; otherwise nothing -->
-		<div id="hd">
+		<div class="navbar navbar-default navbar-static-top" role="navigation">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+						<span class="sr-only">Toggle navigation</span>
+						<span class="icon-bar"/>
+						<span class="icon-bar"/>
+						<span class="icon-bar"/>
+					</button>
+					<a class="navbar-brand" href="{$url}">RRC Online</a>
+				</div>
+				<div class="navbar-collapse collapse">
+					<xsl:if test="not($lang='ar')">
+						<ul class="nav navbar-nav">
+							<xsl:call-template name="menubar"/>
+						</ul>
+					</xsl:if>					
+					<!--<div class="col-sm-3 col-md-3 pull-right">
+						<form class="navbar-form" role="search" action="{$display_path}id/" method="get">
+							<div class="input-group">
+								<input type="text" class="form-control" placeholder="Search" name="q" id="srch-term"/>
+								<div class="input-group-btn">
+									<button class="btn btn-default" type="submit">
+										<i class="glyphicon glyphicon-search"/>
+									</button>
+								</div>
+							</div>
+						</form>
+					</div>-->
+					<xsl:if test="$lang='ar'">
+						<ul class="nav navbar-nav navbar-right">
+							<xsl:call-template name="menubar"/>
+						</ul>
+					</xsl:if>
+				</div>
+			</div>
+		</div>
+		<!--<div id="hd">
 			<div class="banner align-right ui-widget-content" style="border:0">				
 				<xsl:if test="string(/content/config/banner_text)">
 					<div class="banner_text">
@@ -18,7 +54,7 @@
 				<xsl:call-template name="menubar"/>
 			</ul>
 			<div id="log"/>
-		</div>
+		</div>-->
 	</xsl:template>
 
 	<xsl:template name="menubar">
@@ -26,98 +62,98 @@
 			<xsl:when test="$lang='ar'">
 				<xsl:call-template name="languages"/>
 				<xsl:for-each select="//config/pages/page[public = '1']">
-					<li role="presentation">
+					<li>
 						<a href="{$display_path}pages/{@stub}{if (string($lang)) then concat('?lang=', $lang) else ''}">
 							<xsl:value-of select="short-title"/>
 						</a>
 					</li>
 				</xsl:for-each>
 				<xsl:if test="//config/pages/visualize/@enabled= true()">
-					<li role="presentation">
+					<li>
 						<a href="{$display_path}visualize{if (string($lang)) then concat('?lang=', $lang) else ''}">
 							<xsl:value-of select="numishare:normalizeLabel('header_visualize', $lang)"/>
 						</a>
 					</li>
 				</xsl:if>
 				<xsl:if test="//config/pages/analyze/@enabled= true()">
-					<li role="presentation">
+					<li>
 						<a href="{$display_path}analyze{if (string($lang)) then concat('?lang=', $lang) else ''}">
 							<xsl:value-of select="numishare:normalizeLabel('header_analyze', $lang)"/>
 						</a>
 					</li>
 				</xsl:if>
 				<xsl:if test="//config/pages/compare/@enabled= true()">
-					<li role="presentation">
+					<li>
 						<a href="{$display_path}compare{if (string($lang)) then concat('?lang=', $lang) else ''}">
 							<xsl:value-of select="numishare:normalizeLabel('header_compare', $lang)"/>
 						</a>
 					</li>
 				</xsl:if>
-				<li role="presentation">
+				<li>
 					<a href="{$display_path}maps{if (string($lang)) then concat('?lang=', $lang) else ''}">
 						<xsl:value-of select="numishare:normalizeLabel('header_maps', $lang)"/>
 					</a>
 				</li>
-				<li role="presentation">
+				<li>
 					<a href="{$display_path}search{if (string($lang)) then concat('?lang=', $lang) else ''}">
 						<xsl:value-of select="numishare:normalizeLabel('header_search', $lang)"/>
 					</a>
 				</li>
-				<li role="presentation">
+				<li>
 					<a href="{$display_path}results?q=*:*{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
 						<xsl:value-of select="numishare:normalizeLabel('header_browse', $lang)"/>
 					</a>
 				</li>
-				<li role="presentation">
+				<li>
 					<a href="{$display_path}.{if (string($lang)) then concat('?lang=', $lang) else ''}">
 						<xsl:value-of select="numishare:normalizeLabel('header_home', $lang)"/>
 					</a>
 				</li>
 			</xsl:when>
 			<xsl:otherwise>
-				<li role="presentation">
+				<li>
 					<a href="{$display_path}.{if (string($lang)) then concat('?lang=', $lang) else ''}">
 						<xsl:value-of select="numishare:normalizeLabel('header_home', $lang)"/>
 					</a>
 				</li>
-				<li role="presentation">
+				<li>
 					<a href="{$display_path}results?q=*:*{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
 						<xsl:value-of select="numishare:normalizeLabel('header_browse', $lang)"/>
 					</a>
 				</li>
-				<li role="presentation">
+				<li>
 					<a href="{$display_path}search{if (string($lang)) then concat('?lang=', $lang) else ''}">
 						<xsl:value-of select="numishare:normalizeLabel('header_search', $lang)"/>
 					</a>
 				</li>
-				<li role="presentation">
+				<li>
 					<a href="{$display_path}maps{if (string($lang)) then concat('?lang=', $lang) else ''}">
 						<xsl:value-of select="numishare:normalizeLabel('header_maps', $lang)"/>
 					</a>
 				</li>
 				<xsl:if test="//config/pages/compare/@enabled= true()">
-					<li role="presentation">
+					<li>
 						<a href="{$display_path}compare{if (string($lang)) then concat('?lang=', $lang) else ''}">
 							<xsl:value-of select="numishare:normalizeLabel('header_compare', $lang)"/>
 						</a>
 					</li>
 				</xsl:if>
 				<xsl:if test="//config/pages/analyze/@enabled= true()">
-					<li role="presentation">
+					<li>
 						<a href="{$display_path}analyze{if (string($lang)) then concat('?lang=', $lang) else ''}">
 							<xsl:value-of select="numishare:normalizeLabel('header_analyze', $lang)"/>
 						</a>
 					</li>
 				</xsl:if>
 				<xsl:if test="//config/pages/visualize/@enabled= true()">
-					<li role="presentation">
+					<li>
 						<a href="{$display_path}visualize{if (string($lang)) then concat('?lang=', $lang) else ''}">
 							<xsl:value-of select="numishare:normalizeLabel('header_visualize', $lang)"/>
 						</a>
 					</li>
 				</xsl:if>
 				<xsl:for-each select="//config/pages/page[public = '1']">
-					<li role="presentation">
+					<li>
 						<a href="{$display_path}pages/{@stub}{if (string($lang)) then concat('?lang=', $lang) else ''}">
 							<xsl:value-of select="short-title"/>
 						</a>
@@ -132,21 +168,19 @@
 	
 	<xsl:template name="languages">
 		<xsl:if test="count(//config/descendant::language[@enabled='true']) &gt; 1">
-			<li role="presentation">
-				<a href="#Language">
-					<xsl:value-of select="numishare:normalizeLabel('header_language', $lang)"/>
-				</a>
-				<ul role="menu">
+			<li class="dropdown">
+				<a href="#" class="dropdown-toggle" data-toggle="dropdown">Language <b class="caret"></b></a>
+				<ul class="dropdown-menu">
 					<xsl:for-each select="//config/descendant::language[@enabled='true']">
 						<xsl:sort select="@code"/>
-						<li role="presentation">
-							<a role="menuitem" href="?lang={@code}">
+						<li>
+							<a href="?lang={@code}">
 								<xsl:value-of select="numishare:normalizeLabel(concat('lang_', @code), $lang)"/>
 							</a>
 						</li>
 					</xsl:for-each>
 				</ul>
-			</li>
+			</li>			
 		</xsl:if>
 	</xsl:template>
 </xsl:stylesheet>

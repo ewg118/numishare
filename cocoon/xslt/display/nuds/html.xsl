@@ -58,27 +58,31 @@
 		<!-- below is a series of conditionals for forming the image boxes and displaying obverse and reverse images, iconography, and legends if they are available within the EAD document -->
 		<xsl:choose>
 			<xsl:when test="not($mode = 'compare')">
-				<xsl:call-template name="icons"/>
 				<xsl:choose>
 					<xsl:when test="$recordType='conceptual'">
-						<div class="yui3-u-1">
-							<div class="content">
+						<div class="row">
+							<div class="col-md-12">
+								<xsl:call-template name="icons"/>
 								<h1 id="object_title">
 									<xsl:value-of select="normalize-space(nuds:descMeta/nuds:title)"/>
 								</h1>
-								<!--<div id="timemap">
-									<div id="mapcontainer">
-										<div id="map"/>
-									</div>
-									<div id="timelinecontainer">
-										<div id="timeline"/>
-									</div>
-								</div>-->
-								<xsl:call-template name="nuds_content"/>
-
-								<!-- show associated objects, preferencing those from Metis first -->
+								<a href="#examples"><xsl:value-of select="numishare:normalizeLabel('display_examples', $lang)"/></a> | <a href="#charts"><xsl:value-of
+										select="numishare:normalizeLabel('display_quantitative', $lang)"/></a>
+							</div>
+						</div>
+						<xsl:call-template name="nuds_content"/>
+						<div class="row">
+							<div class="col-md-12">
 								<xsl:if test="string($sparql_endpoint)">
+									<a name="examples"/>
 									<cinclude:include src="cocoon:/widget?uri={concat('http://nomisma.org/id/', $id)}&amp;template=display"/>
+								</xsl:if>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-12">
+								<xsl:if test="$recordType='conceptual' and (count(//nuds:associatedObject) &gt; 0 or string($sparql_endpoint))">
+									<xsl:call-template name="charts"/>
 								</xsl:if>
 							</div>
 						</div>
@@ -86,8 +90,8 @@
 					<xsl:when test="$recordType='physical'">
 						<xsl:choose>
 							<xsl:when test="$orientation = 'vertical'">
-								<div class="yui3-u-1">
-									<div class="content">
+								<div class="row">
+									<div class="col-md-12">
 										<h1 id="object_title">
 											<xsl:value-of select="normalize-space(nuds:descMeta/nuds:title)"/>
 										</h1>
@@ -96,16 +100,16 @@
 
 								<xsl:choose>
 									<xsl:when test="$image_location = 'left'">
-										<div class="yui3-u-5-12">
-											<div class="content">
+										<div class="row">
+											<div class="col-md-4">
 												<xsl:call-template name="obverse_image"/>
 												<xsl:call-template name="reverse_image"/>
 											</div>
 										</div>
 									</xsl:when>
 									<xsl:when test="$image_location = 'right'">
-										<div class="yui3-u-7-12">
-											<div class="content">
+										<div class="row">
+											<div class="col-md-8">
 												<xsl:call-template name="nuds_content"/>
 											</div>
 										</div>
@@ -114,15 +118,15 @@
 
 								<xsl:choose>
 									<xsl:when test="$image_location = 'left'">
-										<div class="yui3-u-7-12">
-											<div class="content">
+										<div class="row">
+											<div class="col-md-8">
 												<xsl:call-template name="nuds_content"/>
 											</div>
 										</div>
 									</xsl:when>
 									<xsl:when test="$image_location = 'right'">
-										<div class="yui3-u-5-12">
-											<div class="content">
+										<div class="row">
+											<div class="col-md-4">
 												<xsl:call-template name="obverse_image"/>
 												<xsl:call-template name="reverse_image"/>
 											</div>
@@ -131,61 +135,56 @@
 								</xsl:choose>
 							</xsl:when>
 							<xsl:when test="$orientation = 'horizontal'">
-								<div class="content">
-									<div class="yui3-u-1">
-										<div class="content">
-											<h1 id="object_title">
-												<xsl:value-of select="normalize-space(nuds:descMeta/nuds:title)"/>
-											</h1>
-										</div>
-									</div>
 
-									<xsl:choose>
-										<xsl:when test="$image_location = 'top'">
-											<div class="yui3-u-1-2">
-												<div class="content">
-													<xsl:call-template name="obverse_image"/>
-												</div>
-											</div>
-											<div class="yui3-u-1-2">
-												<div class="content">
-													<xsl:call-template name="reverse_image"/>
-												</div>
-											</div>
-											<div class="yui3-u-1">
-												<div class="content">
-													<xsl:call-template name="nuds_content"/>
-												</div>
-											</div>
-										</xsl:when>
-										<xsl:when test="$image_location = 'bottom'">
-											<div class="yui3-u-1">
-												<div class="content">
-													<xsl:call-template name="nuds_content"/>
-												</div>
-											</div>
-											<div class="yui3-u-1-2">
-												<div class="content">
-													<xsl:call-template name="obverse_image"/>
-												</div>
-											</div>
-											<div class="yui3-u-1-2">
-												<div class="content">
-													<xsl:call-template name="reverse_image"/>
-												</div>
-											</div>
-										</xsl:when>
-									</xsl:choose>
+								<div class="row">
+									<div class="col-md-12">
+										<h1 id="object_title">
+											<xsl:value-of select="normalize-space(nuds:descMeta/nuds:title)"/>
+										</h1>
+									</div>
 								</div>
+
+								<xsl:choose>
+									<xsl:when test="$image_location = 'top'">
+										<div class="row">
+											<div class="col-md-6">
+												<xsl:call-template name="obverse_image"/>
+											</div>
+											<div class="col-md-6">
+												<xsl:call-template name="reverse_image"/>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-md-12">
+												<xsl:call-template name="nuds_content"/>
+											</div>
+										</div>
+									</xsl:when>
+									<xsl:when test="$image_location = 'bottom'">
+										<div class="row">
+											<div class="col-md-6">
+												<xsl:call-template name="nuds_content"/>
+											</div>
+											<div class="col-md-6">
+												<xsl:call-template name="obverse_image"/>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-md-12">
+												<xsl:call-template name="reverse_image"/>
+											</div>
+										</div>
+									</xsl:when>
+								</xsl:choose>
+
 							</xsl:when>
 						</xsl:choose>
 					</xsl:when>
 				</xsl:choose>
-				<xsl:call-template name="icons"/>
 			</xsl:when>
 			<xsl:otherwise>
-				<div class="yui3-u-1-1">
-					<div class="content">
+				<div class="row">
+					<div class="col-md-12">
 						<xsl:call-template name="obverse_image"/>
 						<xsl:call-template name="reverse_image"/>
 						<xsl:call-template name="nuds_content"/>
@@ -230,44 +229,8 @@
 				</div>
 			</xsl:when>
 			<xsl:otherwise>
-				<div id="tabs">
-					<ul>
-						<li>
-							<a href="#summary">
-								<xsl:value-of select="numishare:normalizeLabel('display_summary', $lang)"/>
-							</a>
-						</li>
-						<xsl:if test="$has_mint_geo = 'true' or $has_findspot_geo = 'true'">
-							<li>
-								<a href="#mapTab">
-									<xsl:value-of select="numishare:normalizeLabel('display_map', $lang)"/>
-								</a>
-							</li>
-						</xsl:if>
-						<xsl:if test="$recordType='conceptual' and (count(//nuds:associatedObject) &gt; 0 or string($sparql_endpoint))">
-							<li>
-								<a href="#charts">
-									<xsl:value-of select="numishare:normalizeLabel('display_quantitative', $lang)"/>
-								</a>
-							</li>
-						</xsl:if>
-						<xsl:if test="nuds:descMeta/nuds:adminDesc/*">
-							<li>
-								<a href="#administrative">
-									<xsl:value-of select="numishare:normalizeLabel('display_administrative', $lang)"/>
-								</a>
-							</li>
-						</xsl:if>
-						<xsl:if test="nuds:description">
-							<li>
-								<a href="#commentary">
-									<xsl:value-of select="numishare:normalizeLabel('display_commentary', $lang)"/>
-								</a>
-							</li>
-						</xsl:if>
-
-					</ul>
-					<div id="summary">
+				<div class="row">
+					<div class="col-md-6">
 						<xsl:if test="nuds:descMeta/nuds:physDesc">
 							<div class="metadata_section">
 								<xsl:apply-templates select="nuds:descMeta/nuds:physDesc"/>
@@ -305,77 +268,56 @@
 							</div>
 						</xsl:if>
 					</div>
-					<xsl:if test="$has_mint_geo = 'true' or $has_findspot_geo = 'true'">
-						<div id="mapTab">
-							<h2>Map This Object</h2>
-							<p>Use the layer control along the right edge of the map (the "plus" symbol) to toggle map layers.</p>
-
-							<xsl:choose>
-								<xsl:when test="$recordType='conceptual'">
-									<div id="timemap">
-										<div id="mapcontainer">
-											<div id="map"/>
-										</div>
-										<div id="timelinecontainer">
-											<div id="timeline"/>
-										</div>
+					<div class="col-md-6">
+						<xsl:choose>
+							<xsl:when test="$recordType='conceptual'">
+								<div id="timemap">
+									<div id="mapcontainer">
+										<div id="map"/>
 									</div>
-								</xsl:when>
-								<xsl:otherwise>
-									<div id="mapcontainer"/>
-								</xsl:otherwise>
-							</xsl:choose>
-							<div class="legend">
-								<table>
-									<tbody>
-										<tr>
-											<th style="width:100px;background:none">
-												<xsl:value-of select="numishare:regularize_node('legend', $lang)"/>
-											</th>
-											<td style="background-color:#6992fd;border:2px solid black;width:50px;"/>
-											<td style="width:100px">
-												<xsl:value-of select="numishare:regularize_node('mint', $lang)"/>
-											</td>
-											<td style="background-color:#d86458;border:2px solid black;width:50px;"/>
-											<td style="width:100px">
-												<xsl:value-of select="numishare:regularize_node('findspot', $lang)"/>
-											</td>
-										</tr>
-									</tbody>
-								</table>
-							</div>
-							<ul id="term-list" style="display:none">
-								<xsl:for-each select="document(concat($solr-url, 'select?q=id:&#x022;', $id, '&#x022;'))//arr">
-									<xsl:if test="contains(@name, '_facet') and not(contains(@name, 'institution')) and not(contains(@name, 'collection')) and not(contains(@name, 'department'))">
-										<xsl:variable name="name" select="@name"/>
-										<xsl:for-each select="str">
-											<li class="{$name}">
-												<xsl:value-of select="."/>
-											</li>
-										</xsl:for-each>
+									<div id="timelinecontainer">
+										<div id="timeline"/>
+									</div>
+								</div>
+							</xsl:when>
+							<xsl:otherwise>
+								<div id="mapcontainer"/>
+							</xsl:otherwise>
+						</xsl:choose>
+						<div class="legend">
+							<table>
+								<tbody>
+									<tr>
+										<th style="width:100px;background:none">
+											<xsl:value-of select="numishare:regularize_node('legend', $lang)"/>
+										</th>
+										<td style="background-color:#6992fd;border:2px solid black;width:50px;"/>
+										<td style="width:100px">
+											<xsl:value-of select="numishare:regularize_node('mint', $lang)"/>
+										</td>
+										<td style="background-color:#d86458;border:2px solid black;width:50px;"/>
+										<td style="width:100px">
+											<xsl:value-of select="numishare:regularize_node('findspot', $lang)"/>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<p>Use the layer control along the right edge of the map (the "plus" symbol) to toggle map layers.</p>
+						<ul id="term-list" style="display:none">
+							<xsl:for-each select="document(concat($solr-url, 'select?q=id:&#x022;', $id, '&#x022;'))//arr">
+								<xsl:if test="contains(@name, '_facet') and not(contains(@name, 'institution')) and not(contains(@name, 'collection')) and not(contains(@name, 'department'))">
+									<xsl:variable name="name" select="@name"/>
+									<xsl:for-each select="str">
+										<li class="{$name}">
+											<xsl:value-of select="."/>
+										</li>
+									</xsl:for-each>
 
-									</xsl:if>
-								</xsl:for-each>
-							</ul>
-						</div>
-					</xsl:if>
-					<xsl:if test="$recordType='conceptual' and (count(//nuds:associatedObject) &gt; 0 or string($sparql_endpoint))">
-						<div id="charts">
-							<xsl:call-template name="charts"/>
-						</div>
-					</xsl:if>
-					<xsl:if test="nuds:descMeta/nuds:adminDesc/*">
-						<div id="administrative">
-							<div class="metadata_section">
-								<xsl:apply-templates select="nuds:descMeta/nuds:adminDesc"/>
-							</div>
-						</div>
-					</xsl:if>
-					<xsl:if test="nuds:description">
-						<div id="commentary">
-							<xsl:apply-templates select="nuds:description"/>
-						</div>
-					</xsl:if>
+								</xsl:if>
+							</xsl:for-each>
+						</ul>
+					</div>
 				</div>
 			</xsl:otherwise>
 		</xsl:choose>
@@ -471,7 +413,7 @@
 		<xsl:variable name="object">
 			<xsl:copy-of select="document(concat(@xlink:href, '.xml'))/nuds:nuds/*"/>
 		</xsl:variable>
-		<div class="g_doc">
+		<div class="g_doc col-md-4">
 			<span class="result_link">
 				<a href="{@xlink:href}" target="_blank">
 					<xsl:value-of select="exsl:node-set($object)/nuds:descMeta/nuds:title"/>
@@ -699,6 +641,7 @@
 
 	<!-- charts template -->
 	<xsl:template name="charts">
+		<a name="charts"/>
 		<h2>
 			<xsl:value-of select="numishare:normalizeLabel('display_quantitative', $lang)"/>
 		</h2>
@@ -719,25 +662,6 @@
 		</dl>
 		<xsl:call-template name="measurementForm"/>
 	</xsl:template>
-
-	<!--<xsl:when test="$field = 'category_facet'">
-		<xsl:variable name="tokenized-category" select="tokenize(normalize-space(.), '-/-')"/>
-		
-		<xsl:for-each select="$tokenized-category">
-			<xsl:variable name="category-query">
-				<xsl:call-template name="assemble_category_query">
-					<xsl:with-param name="level" as="xs:integer" select="position()"/>
-					<xsl:with-param name="tokenized-category" select="$tokenized-category"/>
-				</xsl:call-template>
-			</xsl:variable>
-			<a href="{$display_path}results?q=category_facet:({$category-query})">
-				<xsl:value-of select="."/>
-			</a>
-			<xsl:if test="not(position() = last())">
-				<xsl:text>-/-</xsl:text>
-			</xsl:if>
-		</xsl:for-each>
-	</xsl:when>-->
 
 	<xsl:template match="nuds:chronList | nuds:list">
 		<ul class="list">

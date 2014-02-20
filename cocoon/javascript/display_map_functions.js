@@ -24,29 +24,6 @@ function initialize_timemap(id) {
 		}
 	});
 	
-	//additional facets
-	/*$('#term-list').children('li').each(function () {
-		var facet = $(this).attr('class');
-		var value = $(this).text();
-		obj = {
-		};
-		obj.id = facet.split('_')[0];
-		obj.title = facet.split('_')[0];
-		obj.type = 'kml';
-		obj.theme = 'green';
-		obj.visible = false;
-		
-		var infoTemplate = '<div><strong>{{title}}</strong><br/><a href="../results?q=mint_uri:%22{{description}}%22 AND ' + facet + ':%22' + value + '%22" target="_blank">View</a> coins from {{title}} meeting the criterium: ' + facet.split('_')[0] + ': ' + value + '</div>';
-		
-		obj.options = {
-			url: '../mints.kml?q=' + facet + ':"' + value + '"',
-			infoTemplate: infoTemplate
-		};
-		datasets.push(obj);
-	});*/
-	
-	//console.log(datasets);
-	
 	var tm;
 	tm = TimeMap.init({
 		mapId: "map", // Id of map div element (required)

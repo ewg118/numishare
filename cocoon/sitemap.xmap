@@ -65,6 +65,11 @@
 			<map:serializer name="text" mime-type="text/plain" src="org.apache.cocoon.serialization.TextSerializer"  logger="sitemap.serializer.text">
 				<encoding>utf-8</encoding>
 			</map:serializer>
+			<map:serializer name="html5" mime-type="text/html" src="org.apache.cocoon.serialization.HTMLSerializer">
+				<encoding>UTF-8</encoding>
+				<indent>yes</indent>
+				<!--<doctype-public>html</doctype-public>-->									
+			</map:serializer>
 		</map:serializers>
 	</map:components>
 
@@ -105,7 +110,7 @@
 					These only need to be changed if Solr and Orbeon are run on a different server or Tomcat application than Cocoon -->
 				<solr-url>http://localhost:8080/solr/numishare-published/</solr-url>
 				<exist-url>http://localhost:8080/exist/rest/db/</exist-url>
-				<collection-name>numishare</collection-name>
+				<collection-name>rrc</collection-name>
 			</global-variables>
 		</map:component-configurations>
 
@@ -185,7 +190,7 @@
 					<map:parameter name="use-request-parameters" value="true"/>
 					<map:parameter name="pipeline" value="index"/>
 				</map:transform>
-				<map:serialize type="html"/>
+				<map:serialize type="html5"/>
 			</map:match>
 
 			<!-- pages -->
@@ -196,7 +201,7 @@
 					<map:parameter name="pipeline" value="pages"/>
 					<map:parameter name="stub" value="{1}"/>
 				</map:transform>
-				<map:serialize type="html"/>
+				<map:serialize type="html5"/>
 			</map:match>
 
 			<!-- display objects -->
@@ -241,7 +246,7 @@
 					<map:parameter name="pipeline" value="display"/>
 				</map:transform>
 				<map:transform type="cinclude"/>
-				<map:serialize type="html"/>
+				<map:serialize type="html5"/>
 			</map:match>
 
 			<!-- QUERY RESULTS/LINKED DATA -->
@@ -426,7 +431,7 @@
 					<map:parameter name="pipeline" value="visualize"/>
 				</map:transform>
 				<map:transform type="cinclude"/>
-				<map:serialize type="html"/>
+				<map:serialize type="html5"/>
 			</map:match>
 
 			<!-- produces the search form; needs to be generated as xml and serialized as xhtml -->
@@ -455,7 +460,7 @@
 					<map:parameter name="use-request-parameters" value="true"/>
 					<map:parameter name="pipeline" value="search"/>
 				</map:transform>
-				<map:serialize type="html"/>
+				<map:serialize type="html5"/>
 			</map:match>
 
 			<map:match pattern="results">
@@ -554,7 +559,7 @@
 					<map:parameter name="pipeline" value="results"/>
 				</map:transform>
 				<map:transform type="cinclude"/>
-				<map:serialize type="html"/>
+				<map:serialize type="html5"/>
 			</map:match>
 
 			<!-- COMPARE PAGE -->
@@ -729,15 +734,15 @@
 							<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
 						</map:aggregate>
 					</map:otherwise>
-				</map:select>
-				
+				</map:select>				
 				<map:transform type="xslt-saxon" src="xslt/maps_fullscreen.xsl" label="basiccontent">
 					<map:parameter name="use-request-parameters" value="true"/>
 					<map:parameter name="pipeline" value="maps_fullscreen"/>
 				</map:transform>
 				<map:transform type="cinclude"/>
-				<map:serialize type="html"/>
+				<map:serialize type="html5"/>
 			</map:match>
+			
 			<map:match pattern="maps">
 				<map:select type="parameter">
 					<map:parameter name="parameter-selector-test" value="{request-param:lang}"/>
@@ -764,7 +769,7 @@
 					<map:parameter name="pipeline" value="maps"/>
 				</map:transform>
 				<map:transform type="cinclude"/>
-				<map:serialize type="html"/>
+				<map:serialize type="html5"/>
 			</map:match>
 
 			<!-- APIS -->
@@ -1152,10 +1157,10 @@
 				<map:serialize type="xml"/>
 			</map:match>
 
-			<!-- METIS WIDGETS -->
+			<!-- SPARQL WIDGETS -->
 			<map:match pattern="widget">
 				<map:generate src="{global:exist-url}{global:collection-name}/config.xml"/>
-				<map:transform type="xslt-saxon" src="xslt/sparql/templates.xsl" label="basiccontent">
+				<map:transform type="xslt-saxon" src="xslt/sparql/widget.xsl" label="basiccontent">
 					<map:parameter name="use-request-parameters" value="true"/>
 				</map:transform>
 				<map:select type="parameter">

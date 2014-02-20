@@ -15,21 +15,12 @@
 					<xsl:value-of select="title"/>
 				</title>
 				<link rel="shortcut icon" type="image/x-icon" href="{$display_path}images/favicon.png"/>
-				<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.8.0/build/cssgrids/grids-min.css"/>
-				<link type="text/css" href="{$display_path}themes/{theme/jquery_ui_theme}.css" rel="stylesheet"/>
+				<meta name="viewport" content="width=device-width, initial-scale=1"/>
+				<!-- bootstrap -->
+				<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"/>
+				<script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"/>
 				<link type="text/css" href="{$display_path}style.css" rel="stylesheet"/>
-				<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"/>
-				<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js"/>
-
-				<!-- menu -->
-				<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.core.js"/>
-				<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.widget.js"/>
-				<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.position.js"/>
-				<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.button.js"/>
-				<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.menu.js"/>
-				<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.menubar.js"/>
-				<script type="text/javascript" src="{$display_path}javascript/numishare-menu.js"/>
-
+				<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"/>
 				<!-- index script -->
 				<script type="text/javascript" src="{$display_path}javascript/get_features.js"/>
 				<xsl:if test="string(/config/google_analytics/script)">
@@ -47,9 +38,9 @@
 	</xsl:template>
 
 	<xsl:template name="index">
-		<div class="yui3-g">
-			<div class="yui3-u-2-3">
-				<div class="content">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-md-9">
 					<xsl:choose>
 						<xsl:when test="string($lang)">
 							<xsl:choose>
@@ -65,7 +56,7 @@
 											<xsl:copy-of select="saxon:parse(concat('&lt;div&gt;', string(//pages/index), '&lt;/div&gt;'))"/>
 										</xsl:otherwise>
 									</xsl:choose>
-
+									
 								</xsl:otherwise>
 							</xsl:choose>
 						</xsl:when>
@@ -81,18 +72,16 @@
 						</xsl:otherwise>
 					</xsl:choose>
 				</div>
-			</div>
-			<div class="yui3-u-1-3" id="numishare-widget">
-				<div class="content">
-					<div id="quick_search" style="margin:10px 0;">
-						<div class="ui-widget-header ui-helper-clearfix ui-corner-all">Search the Collection</div>
-						<form action="results" method="GET" id="qs_form" style="padding:10px 0">							
+				<div class="col-md-3">
+					<div>
+						<h3>Search the Collection</h3>
+						<form action="results" method="GET" id="qs_form" style="padding:10px 0">
 							<input type="text" name="q"/>
 							<input id="qs_button" type="submit" value="{numishare:normalizeLabel('header_search', $lang)}"/>
 						</form>
 					</div>
-					<div id="linked_data" style="margin:10px 0;">
-						<div class="ui-widget-header ui-helper-clearfix ui-corner-all">Linked Data</div>
+					<div>
+						<h3>Linked Data</h3>
 						<!--<a href="{$display_path}rdf/">
 							<img src="{$display_path}images/rdf-large.gif" title="RDF" alt="PDF"/>
 							</a>-->
@@ -111,8 +100,8 @@
 						</xsl:if>
 					</div>
 					<xsl:if test="features_enabled = true()">
-						<div id="feature" style="margin:10px 0;">
-							<div class="ui-widget-header ui-helper-clearfix ui-corner-all">Featured Object</div>
+						<div id="feature">
+							<h3>Featured Object</h3>
 						</div>
 					</xsl:if>
 				</div>

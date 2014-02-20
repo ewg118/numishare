@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?cocoon-disable-caching?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:saxon="http://saxon.sf.net/" version="2.0">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" exclude-result-prefixes="#all" version="2.0">
 	<xsl:output method="xhtml" encoding="UTF-8"/>
 	<xsl:include href="header.xsl"/>
 	<xsl:include href="footer.xsl"/>
@@ -23,21 +22,12 @@
 					<xsl:value-of select="//page[@stub = $stub]/title"/>
 				</title>
 				<link rel="shortcut icon" type="image/x-icon" href="{$display_path}images/favicon.png"/>
-				<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.8.0/build/cssgrids/grids-min.css"/>
-				<link type="text/css" href="{$display_path}themes/{//config/theme/jquery_ui_theme}.css" rel="stylesheet"/>
+				<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"/>
+				<meta name="viewport" content="width=device-width, initial-scale=1"/>
+				<!-- bootstrap -->
+				<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"/>
+				<script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"/>
 				<link type="text/css" href="{$display_path}style.css" rel="stylesheet"/>
-				<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"/>
-				<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js"/>
-
-				<!-- menu -->
-				<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.core.js"/>
-				<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.widget.js"/>
-				<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.position.js"/>
-				<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.button.js"/>
-				<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.menu.js"/>
-				<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.menubar.js"/>
-				<script type="text/javascript" src="{$display_path}javascript/numishare-menu.js"/>
-
 				<xsl:if test="string(/config/google_analytics/script)">
 					<script type="text/javascript">
 						<xsl:value-of select="//config/google_analytics/script"/>
@@ -53,9 +43,9 @@
 	</xsl:template>
 
 	<xsl:template name="pages">
-		<div class="yui3-g">
-			<div class="yui3-u-1">
-				<div class="content">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-md-12">
 					<xsl:copy-of select="saxon:parse(concat('&lt;div&gt;', string(//page[@stub = $stub]/text), '&lt;/div&gt;'))"/>
 				</div>
 			</div>

@@ -32,8 +32,8 @@
 				<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.8.2r1/build/menu/assets/skins/sam/menu.css"/>
 				<link type="text/css" href="{$display_path}themes/{//config/theme/jquery_ui_theme}.css" rel="stylesheet"/>
 				<link type="text/css" href="{$display_path}style.css" rel="stylesheet"/>
-				<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"/>
-				<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js"/>
+				<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"/>
+				<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"/>
 
 				<!-- menu -->
 				<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.core.js"/>
@@ -45,7 +45,7 @@
 				<script type="text/javascript" src="{$display_path}javascript/numishare-menu.js"/>
 
 				<!-- search related functions -->
-				<script type="text/javascript" src="{$display_path}javascript/jquery.livequery.js"/>
+				<!--<script type="text/javascript" src="{$display_path}javascript/jquery.livequery.js"/>-->
 				<script type="text/javascript" src="{$display_path}javascript/search_functions.js"/>
 				<script type="text/javascript" src="{$display_path}javascript/compare.js"/>
 				<script type="text/javascript" src="{$display_path}javascript/compare_functions.js"/>

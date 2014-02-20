@@ -6,7 +6,7 @@
 	<xsl:param name="category"/>
 	
 	<xsl:template match="/">
-		<select class="search_text">
+		<select class="search_text form-control">
 			<option value="">Select option from list...</option>
 			<xsl:apply-templates select="descendant::lst[@name=$category]/int"/>
 		</select>

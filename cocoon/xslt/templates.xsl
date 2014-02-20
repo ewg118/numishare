@@ -667,11 +667,11 @@
 			<form id="advancedSearchForm" method="GET" action="results">
 				<div id="inputContainer">
 					<div class="searchItemTemplate">
-						<select class="category_list">
+						<select class="category_list form-control">
 							<xsl:call-template name="search_options"/>
 						</select>
 						<div style="display:inline;" class="option_container">
-							<input type="text" id="search_text" class="search_text" style="display: inline;"/>
+							<input type="text" id="search_text" class="search_text form-control" style="display: inline;"/>
 						</div>
 						<a class="gateTypeBtn" href="#">add »</a>
 						<!--<a class="removeBtn" href="#">« remove</a>-->
@@ -683,13 +683,13 @@
 				</xsl:if>
 				<xsl:choose>
 					<xsl:when test="$pipeline='analyze'">
-						<input type="submit" value="Filter" id="filterButton"/>
+						<input type="submit" value="Filter" id="filterButton" class="btn btn-default"/>
 					</xsl:when>
 					<xsl:when test="$pipeline='visualize'">
-						<input type="submit" value="{numishare:normalizeLabel('visualize_add_query', $lang)}" id="search_buttom"/>
+						<input type="submit" value="{numishare:normalizeLabel('visualize_add_query', $lang)}" id="search_buttom" class="btn btn-default"/>
 					</xsl:when>
 					<xsl:otherwise>
-						<input type="submit" value="{numishare:normalizeLabel('header_search', $lang)}" id="search_button"/>
+						<input type="submit" value="{numishare:normalizeLabel('header_search', $lang)}" id="search_button" class="btn btn-default"/>
 					</xsl:otherwise>
 				</xsl:choose>
 
@@ -701,11 +701,11 @@
 		</div>
 
 		<div id="searchItemTemplate" class="searchItemTemplate">
-			<select class="category_list">
+			<select class="category_list form-control">
 				<xsl:call-template name="search_options"/>
 			</select>
 			<div style="display:inline;" class="option_container">
-				<input type="text" class="search_text" style="display: inline;"/>
+				<input type="text" class="search_text form-control" style="display: inline;"/>
 			</div>
 			<a class="gateTypeBtn" href="#">add »</a>
 			<a class="removeBtn" href="#" style="display:none;">« remove</a>
@@ -715,9 +715,9 @@
 	<!-- ************** SEARCH DROP-DOWN MENUS ************** -->
 	<xsl:template name="search_options">
 		<xsl:variable name="fields">
-			<xsl:text>fulltext,artist_facet,authority_facet,taq_num,coinType_facet,color_text,deity_facet,denomination_facet,department_facet,diameter_num,dynasty_facet,findspot_text,recordId,issuer_facet,legend_text,obv_leg_text,rev_leg_text,maker_facet,manufacture_facet,material_facet,mint_facet,tpq_num,objectType_facet,portrait_facet,reference_text,region_facet,type_text,obv_type_text,rev_type_text,weight_num,year_num</xsl:text>
+			<xsl:text>fulltext,artist_facet,authority_facet,coinType_facet,deity_facet,denomination_facet,dynasty_facet,recordId,issuer_facet,legend_text,obv_leg_text,rev_leg_text,maker_facet,manufacture_facet,material_facet,mint_facet,objectType_facet,portrait_facet,region_facet,type_text,obv_type_text,rev_type_text,year_num</xsl:text>
 		</xsl:variable>
-
+		
 		<xsl:for-each select="tokenize($fields, ',')">
 			<xsl:variable name="name" select="."/>
 			<xsl:variable name="root" select="substring-before($name, '_')"/>
@@ -738,7 +738,7 @@
 								</option>
 							</xsl:when>
 						</xsl:choose>
-
+						
 					</xsl:if>
 				</xsl:when>
 				<xsl:otherwise>
@@ -1381,7 +1381,7 @@
 			<xsl:variable name="hoard-count" select="$group/@hoards"/>-->
 
 		<!-- get images, only the first 5 -->
-		<xsl:apply-templates select="$group/res:result[res:binding[contains(@name, 'rev') or contains(@name, 'obv')]][position() &lt;=5]" mode="results">
+		<xsl:apply-templates select="$group/res:result[res:binding[contains(@name, 'rev') or contains(@name, 'obv') or contains(@name,'com')]][position() &lt;=5]" mode="results">
 			<xsl:with-param name="id" select="tokenize($url, '/')[last()]"/>
 		</xsl:apply-templates>
 		<!-- object count -->
@@ -1418,69 +1418,7 @@
 			</xsl:if>
 		</xsl:if>
 	</xsl:template>
-
-	<xsl:template match="res:result" mode="results">
-		<xsl:variable name="position" select="position()"/>
-		<!-- obverse -->
-		<xsl:choose>
-			<xsl:when test="string(res:binding[@name='obvRef']/res:uri) and string(res:binding[@name='obvThumb']/res:uri)">
-				<a class="thumbImage" rel="gallery" href="{res:binding[@name='obvRef']/res:uri}"
-					title="Obverse of {res:binding[@name='identifier']/res:literal}: {res:binding[@name='collection']/res:literal}">
-					<xsl:if test="$position &gt; 1">
-						<xsl:attribute name="style">display:none</xsl:attribute>
-					</xsl:if>
-					<img src="{res:binding[@name='obvThumb']/res:uri}"/>
-				</a>
-			</xsl:when>
-			<xsl:when test="not(string(res:binding[@name='obvRef']/res:uri)) and string(res:binding[@name='obvThumb']/res:uri)">
-				<img src="{res:binding[@name='obvThumb']/res:uri}">
-					<xsl:if test="$position &gt; 1">
-						<xsl:attribute name="style">display:none</xsl:attribute>
-					</xsl:if>
-				</img>
-			</xsl:when>
-			<xsl:when test="string(res:binding[@name='obvRef']/res:uri) and not(string(res:binding[@name='obvThumb']/res:uri))">
-				<a class="thumbImage" rel="gallery" href="{res:binding[@name='obvRef']/res:uri}"
-					title="Obverse of {res:binding[@name='identifier']/res:literal}: {res:binding[@name='collection']/res:literal}">
-					<img src="{res:binding[@name='obvRef']/res:uri}" style="max-width:120px">
-						<xsl:if test="$position &gt; 1">
-							<xsl:attribute name="style">display:none</xsl:attribute>
-						</xsl:if>
-					</img>
-				</a>
-			</xsl:when>
-		</xsl:choose>
-		<!-- reverse-->
-		<xsl:choose>
-			<xsl:when test="string(res:binding[@name='revRef']/res:uri) and string(res:binding[@name='revThumb']/res:uri)">
-				<a class="thumbImage" rel="gallery" href="{res:binding[@name='revRef']/res:uri}"
-					title="Reverse of {res:binding[@name='identifier']/res:literal}: {res:binding[@name='collection']/res:literal}">
-					<xsl:if test="$position &gt; 1">
-						<xsl:attribute name="style">display:none</xsl:attribute>
-					</xsl:if>
-					<img src="{res:binding[@name='revThumb']/res:uri}"/>
-				</a>
-			</xsl:when>
-			<xsl:when test="not(string(res:binding[@name='revRef']/res:uri)) and string(res:binding[@name='revThumb']/res:uri)">
-				<img src="{res:binding[@name='revThumb']/res:uri}">
-					<xsl:if test="$position &gt; 1">
-						<xsl:attribute name="style">display:none</xsl:attribute>
-					</xsl:if>
-				</img>
-			</xsl:when>
-			<xsl:when test="string(res:binding[@name='revRef']/res:uri) and not(string(res:binding[@name='revThumb']/res:uri))">
-				<a class="thumbImage" rel="gallery" href="{res:binding[@name='revRef']/res:uri}"
-					title="Obverse of {res:binding[@name='identifier']/res:literal}: {res:binding[@name='collection']/res:literal}">
-					<img src="{res:binding[@name='revRef']/res:uri}" style="max-width:120px">
-						<xsl:if test="$position &gt; 1">
-							<xsl:attribute name="style">display:none</xsl:attribute>
-						</xsl:if>
-					</img>
-				</a>
-			</xsl:when>
-		</xsl:choose>
-	</xsl:template>
-
+	
 	<!-- ************** PROCESS MODS RECORD INTO CHICAGO MANUAL OF STYLE CITATION ************** -->
 	<xsl:template name="mods-citation">
 		<xsl:apply-templates select="mods:modsCollection"/>
