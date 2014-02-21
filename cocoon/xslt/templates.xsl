@@ -5,6 +5,7 @@
 	xmlns:nm="http://nomisma.org/id/" xmlns:math="http://exslt.org/math" xmlns:res="http://www.w3.org/2005/sparql-results#" exclude-result-prefixes=" #all" version="2.0">
 
 	<xsl:variable name="flickr-api-key" select="//config/flickr_api_key"/>
+	<xsl:variable name="type_series" select="//config/type_series"/>
 
 	<!-- ************** QUANTITATIVE ANALYSIS FUNCTIONS ************** -->
 	<!-- this template should only apply for hoards, hence the nh namespace -->
@@ -1289,7 +1290,7 @@
 								</th>
 								<td>
 									<cinclude:include
-										src="cocoon:/widget?constraints={encode-for-uri(concat('dcterms:isPartOf &lt;http://nomisma.org/id/rrc&gt; AND ', .))}&amp;template=avgMeasurement&amp;measurement={$measurement}"
+										src="cocoon:/widget?constraints={encode-for-uri(concat('dcterms:isPartOf &lt;', $type_series, '&gt; AND ', .))}&amp;template=avgMeasurement&amp;measurement={$measurement}"
 									/>
 								</td>
 							</tr>
@@ -1360,9 +1361,8 @@
 						<xsl:value-of select="$to"/>
 						<xsl:text>"^^xs:gYear )</xsl:text>
 					</xsl:variable>
-					<!--<xsl:value-of select="encode-for-uri(concat('dcterms:isPartOf &lt;http://nomisma.org/id/rrc&gt; AND ', ., ' AND ', $filter))"/>-->
 					<cinclude:include
-						src="cocoon:/widget?constraints={encode-for-uri(concat('dcterms:isPartOf &lt;http://nomisma.org/id/rrc&gt; AND ', ., ' AND ', $filter))}&amp;template=avgMeasurement&amp;measurement={$measurement}"
+						src="cocoon:/widget?constraints={encode-for-uri(concat('dcterms:isPartOf &lt;', $type_series, '&gt; AND ', ., ' AND ', $filter))}&amp;template=avgMeasurement&amp;measurement={$measurement}"
 					/>
 				</td>
 			</xsl:for-each>

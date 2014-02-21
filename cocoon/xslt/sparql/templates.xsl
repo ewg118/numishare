@@ -192,7 +192,7 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 					PREFIX nm:       <http://nomisma.org/id/>
 					PREFIX skos:      <http://www.w3.org/2004/02/skos/core#>						
 					SELECT DISTINCT ?val ?label WHERE {
-					?type dcterms:isPartOf <http://nomisma.org/id/rrc>.
+					?type dcterms:isPartOf <TYPE_SERIES>.
 					?object nm:type_series_item ?type .
 					?object nm:collection ?val .
 					?val skos:prefLabel ?label
@@ -207,7 +207,7 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 					PREFIX nm:       <http://nomisma.org/id/>
 					PREFIX skos:      <http://www.w3.org/2004/02/skos/core#>						
 					SELECT DISTINCT ?val ?label WHERE {
-					?object dcterms:isPartOf <http://nomisma.org/id/rrc>.
+					?object dcterms:isPartOf <TYPE_SERIES>.
 					?object FIELD ?val .
 					?val skos:prefLabel ?label
 					FILTER(langMatches(lang(?label), "LANG"))} 
@@ -217,7 +217,8 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 			</xsl:choose>
 		</xsl:variable>
 		<xsl:variable name="langStr" select="if (string($lang)) then $lang else 'en'"/>
-		<xsl:variable name="service" select="concat($endpoint, '?query=', encode-for-uri(normalize-space(replace(replace($query, 'LANG', $langStr), 'FIELD', $field))), '&amp;output=xml')"/>
+		<xsl:variable name="service"
+			select="concat($endpoint, '?query=', encode-for-uri(normalize-space(replace(replace(replace($query, 'TYPE_SERIES', //config/type_series), 'LANG', $langStr), 'FIELD', $field))), '&amp;output=xml')"/>
 
 		<select class="search_text form-control">
 			<option value="">Select option from list...</option>

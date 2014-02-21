@@ -271,6 +271,7 @@
 				<xforms:bind nodeset="description" required="true()"/>
 				<!--<xforms:bind nodeset="banner_text" required="true()"/>-->
 				<xforms:bind nodeset="sparql_endpoint" required="true()" relevant="../collection_type='cointype'" type="xs:anyURI"/>
+				<xforms:bind nodeset="type_series" required="true()" relevant="../collection_type='cointype'" type="xs:anyURI"/>
 				<xforms:bind nodeset="url" required="true()"/>
 				<xforms:bind nodeset="solr_published" required="true()"/>
 				<xforms:bind nodeset="features_enabled" readonly="../collection_type != 'object'" type="xs:boolean"/>
@@ -434,6 +435,13 @@
 													<xforms:label>SPARQL Endpoint</xforms:label>
 													<xforms:alert>Required</xforms:alert>
 												</xforms:input>											
+											</div>
+											<div>
+												<xforms:input ref="type_series">
+													<xforms:label>Type Series</xforms:label>
+													<xforms:alert>Required</xforms:alert>
+												</xforms:input>	
+												<p>A coin type project must have a binding corpus URI.</p>												
 											</div>
 										</div>
 																				
