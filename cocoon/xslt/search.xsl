@@ -32,9 +32,9 @@
 				<link type="text/css" href="{$display_path}style.css" rel="stylesheet"/>
 				<script type="text/javascript" src="{$display_path}javascript/search.js"/>
 				<script type="text/javascript" src="{$display_path}javascript/search_functions.js"/>
-				<xsl:if test="string(/config/google_analytics/script)">
+				<xsl:if test="string(/config/google_analytics)">
 					<script type="text/javascript">
-						<xsl:value-of select="//config/google_analytics/script"/>
+						<xsl:value-of select="//config/google_analytics"/>
 					</script>
 				</xsl:if>
 			</head>

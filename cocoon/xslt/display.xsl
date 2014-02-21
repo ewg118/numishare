@@ -236,7 +236,6 @@
 							<xsl:when test="$recordType='hoard'">
 								<script type="text/javascript" src="{$display_path}javascript/highcharts.js"/>
 								<script type="text/javascript" src="{$display_path}javascript/modules/exporting.js"/>
-								<!--<script type="text/javascript" src="{$display_path}javascript/jquery.livequery.js"/>-->
 								<script type="text/javascript" src="{$display_path}javascript/display_hoard_functions.js"/>
 								<script type="text/javascript" src="{$display_path}javascript/analysis_functions.js"/>
 
@@ -289,9 +288,9 @@
 		<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"/>
 		<script  type="text/javascript" src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"/>
 		<link type="text/css" href="{$display_path}style.css" rel="stylesheet"/>
-		<xsl:if test="string(//config/google_analytics/script)">
+		<xsl:if test="string(//config/google_analytics)">
 			<script type="text/javascript">
-								<xsl:value-of select="//config/google_analytics/script"/>
+								<xsl:value-of select="//config/google_analytics"/>
 							</script>
 		</xsl:if>
 	</xsl:template>

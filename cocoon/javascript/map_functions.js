@@ -48,7 +48,8 @@ $(document).ready(function () {
 			strokeColor: "#000072",
 			strokeWidth: 2,
 			strokeOpacity: 0.8
-		}, {
+		},
+		{
 			context: {
 				radius: function (feature) {
 					return Math.min(feature.attributes.count, 7) + 3;
@@ -63,8 +64,7 @@ $(document).ready(function () {
 			strokeColor: "#006100",
 			strokeWidth: 2,
 			strokeOpacity: 0.8
-		},
-		{
+		}, {
 			context: {
 				radius: function (feature) {
 					return Math.min(feature.attributes.count, 7) + 3;
@@ -523,9 +523,13 @@ $(document).ready(function () {
 			},
 			function (data) {
 				$('#results') .html(data);
-				
-			}).done(function(){
-				$('a.thumbImage').fancybox();
+			}).done(function () {
+				$('a.thumbImage').fancybox({ helpers: {
+						title: {
+							type: 'inside'
+						}
+					}
+				});
 			});
 			return false;
 		});

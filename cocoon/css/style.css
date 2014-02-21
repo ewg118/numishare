@@ -11,47 +11,17 @@ html {
 	font:13px arial, helvetica, sans-serif;
 	background-color:#ebebeb;
 }
-/*body {
-	margin:auto;
-	min-width:972px;
-	width:90%;
-	border:1px solid gray;
-	margin-top:10px;
-	background-color:white;
-}*/
-.content {
-	padding:5px;
+.navbar {
+	margin-bottom:0;
 }
 a > img {
 	border:none;
 }
-td {
-	border:1px solid silver;
-	padding:2px;
-}
-th {
-	border: 1px solid silver;
-	background-color:#DDDDDD;
-	padding:2px;
-	font-weight:bold;
-}
-/*input {
-	font:13px arial, helvetica, sans-serif;
-}
-select {
-	width:200px;
-	margin-left:15px;
-	margin-right:5px;
-	font:13px arial, helvetica, sans-serif;
-}*/
 #facet ol, ul, dl {
 	margin:0em;
 }
 ul li, dl li {
 	list-style-type:none;
-}
-table tr td {
-	border:0;
 }
 dt {
 	float: left;
@@ -75,30 +45,6 @@ dd.ar {
 	width:325px;
 	margin:0;
 	text-align:right;
-}
-/*
-  ***************************************
-  HEADER
-  ***************************************
- */
-.banner {
-	padding:5px;
-	background-color:#ebebeb;
-}
-#hd .align-left {
-	text-align:left;
-}
-#hd .align-right {
-	text-align:right;
-}
-#hd .align-center {
-	text-align:center;
-}
-.banner_text {
-	margin:20px;
-	font-size:24px;
-	font-weight:bold;
-	letter-spacing:4px;
 }
 /*
   ***************************************
@@ -178,11 +124,11 @@ dd.ar {
   SEARCH/COMPARE
   ***************************************
  */
- #qs_text {
- 	width:50%;
- 	display:inline;
- 	margin-right:20px;
- }
+#qs_text {
+	width:50%;
+	display:inline;
+	margin-right:20px;
+}
 .result_link {
 	font-size:120%;
 }
@@ -285,7 +231,7 @@ li.h_item {
 .compare-select {
 	width:400px;
 }
-.category_list, .search_text {
+.category_list, .sparql_facets, select[name="interval"], #stacking {
 	width:175px;
 	display:inline;
 }
@@ -299,11 +245,19 @@ li.h_item {
 	width:200px;
 	margin-left:15px;
 	margin-right:5px;
+	display:inline;
 }
-.from_date,.to_date,.from_era,.to_era  {
+.from_date,.to_date{
+	width:75px;
+	margin-left:0px;
+	margin-right:5px;
+	display:inline;
+}
+.from_era,.to_era {
 	width:100px;
 	margin-left:0px;
 	margin-right:5px;
+	display:inline;
 }
 .year_range, .weight_range, .dimensions_range {
 	margin-left:15px;
@@ -372,7 +326,7 @@ li.h_item {
 	position:relative;
 }
 .multiselect {
-	width:200px;	
+	width:200px;
 }
 button.ui-multiselect {
 	margin-bottom:10px;
@@ -502,7 +456,7 @@ div#mapcontainer {
 }
 .maps-page #mapcontainer {
 	height:600px;
-	width:100%;	
+	width:100%;
 }
 div.olFramedCloudPopupContent {
 	width: 300px;
@@ -569,13 +523,6 @@ div.custominfostyle {
   FEATURES/LINKED DATA SECTION
   ***************************************
  */
-#numishare-widget {
-	text-align:center;
-	margin-bottom:40px;
-}
-#numishare-widget img {
-	padding:10px;
-}
 /* Used for date (century/decade) facet */
 .date-div, .hierarchical-div {
 	margin-top:-10px;
@@ -634,10 +581,6 @@ div.custominfostyle {
 	font-size:80%;
 	margin-left:10px;
 }
-.anOption {
-	float:left;
-	width:20%;
-}
 /* **SPARQL QUERY*** */
 .popupQuery {
 	width:700px;
@@ -651,39 +594,4 @@ div.custominfostyle {
 }
 .mr {
 	display:none;
-}
-/*
-  ***************************************
-  jQuery UI Menubar @VERSION
-  ***************************************
-  * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)
-  * Dual licensed under the MIT or GPL Version 2 licenses.
-  * http://jquery.org/license
- */
-.ui-menubar {
-	list-style: none;
-	margin: 0;
-	padding-left: 0;
-	border-left:0px;
-	border-right:0px;
-}
-.ui-menubar-item {
-	float: left;
-}
-.ui-menubar .ui-button {
-	float: left;
-	font-weight: normal;
-	border-top-width: 0 !important;
-	border-bottom-width: 0 !important;
-	margin: 0;
-	outline: none;
-}
-.ui-menubar .ui-menubar-link {
-	border-right: 1px dashed transparent;
-	border-left: 1px dashed transparent;
-}
-.ui-menubar .ui-menu {
-	width: 200px;
-	position: absolute;
-	z-index: 9999;
 }

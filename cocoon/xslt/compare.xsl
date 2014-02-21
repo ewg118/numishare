@@ -49,9 +49,9 @@
 				<script type="text/javascript" src="{$display_path}javascript/search_functions.js"/>
 				<script type="text/javascript" src="{$display_path}javascript/compare.js"/>
 				<script type="text/javascript" src="{$display_path}javascript/compare_functions.js"/>
-				<xsl:if test="string(/config/google_analytics/script)">
+				<xsl:if test="string(/config/google_analytics)">
 					<script type="text/javascript">
-						<xsl:value-of select="//config/google_analytics/script"/>
+						<xsl:value-of select="//config/google_analytics"/>
 					</script>
 				</xsl:if>
 			</head>

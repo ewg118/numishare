@@ -219,7 +219,7 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 		<xsl:variable name="langStr" select="if (string($lang)) then $lang else 'en'"/>
 		<xsl:variable name="service" select="concat($endpoint, '?query=', encode-for-uri(normalize-space(replace(replace($query, 'LANG', $langStr), 'FIELD', $field))), '&amp;output=xml')"/>
 
-		<select class="search_text">
+		<select class="search_text form-control">
 			<option value="">Select option from list...</option>
 			<xsl:for-each select="document($service)//res:result">
 				<option value="{res:binding[@name='val']/res:uri}" class="term">

@@ -160,7 +160,7 @@
 									</li>
 								</ul>
 								<div id="visTab">
-									<xsl:call-template name="visualization">
+									<xsl:call-template name="hoard-visualization">
 										<xsl:with-param name="action" select="concat('./', $id, '#quantitative')"/>
 									</xsl:call-template>
 								</div>

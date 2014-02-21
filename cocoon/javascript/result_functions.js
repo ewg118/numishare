@@ -1,36 +1,40 @@
 /* generic result page functions:
-combines hard-coded fancybox call from XSLT, condenses sort_results and quick_search JS into single file 
+combines hard-coded fancybox call from XSLT, condenses sort_results and quick_search JS into single file
 */
 $(document).ready(function () {
-	$('a.thumbImage').fancybox();	
+	$('a.thumbImage').fancybox({ helpers: {
+			title: {
+				type: 'inside'
+			}
+		}
+	});
 	
-	$('.sortForm_categories') .change(function(){
+	$('.sortForm_categories') .change(function () {
 		var field = $(this).val();
 		var sort_order = $('.sortForm_order').val();
 		setValue(field, sort_order);
 	});
-	$('.sortForm_order') .change(function(){
-		var field = $('.sortForm_categories').val();		
+	$('.sortForm_order') .change(function () {
+		var field = $('.sortForm_categories').val();
 		var sort_order = $(this).val();
 		setValue(field, sort_order);
 	});
 	
-	function setValue(field, sort_order){
+	function setValue(field, sort_order) {
 		var category;
-		if (field.indexOf('_') > 0 || field == 'timestamp'){		
+		if (field.indexOf('_') > 0 || field == 'timestamp') {
 			category = field;
 		} else {
-			if (sort_order == 'asc'){
-				switch (field){
+			if (sort_order == 'asc') {
+				switch (field) {
 					case 'year':
 					category = field + '_minint';
 					break;
 					default:
 					category = field + '_min';
 				}
-				
 			} else if (sort_order == 'desc') {
-				switch (field){
+				switch (field) {
 					case 'year':
 					category = field + '_maxint';
 					break;
@@ -39,19 +43,18 @@ $(document).ready(function () {
 				}
 			}
 		}
-		if (field != null){
+		if (field != null) {
 			$('#sort_button') .removeAttr('disabled');
-			$('.sort_param') .attr('value', category + ' ' + sort_order);			
-		}
-		else {
+			$('.sort_param') .attr('value', category + ' ' + sort_order);
+		} else {
 			$('#sort_button') .attr('disabled', 'disabled');
 		}
 	}
 	
-	$('#qs_form').submit(function() {
+	$('#qs_form').submit(function () {
 		assembleQuery();
 	});
-
+	
 	function assembleQuery() {
 		var search_text = $('#qs_text') .val();
 		var query = $('#qs_query').val();

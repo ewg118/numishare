@@ -9,23 +9,21 @@
 	<xsl:param name="lang"/>
 
 	<xsl:template match="/">
-		<div>
-			<xsl:for-each select="//lst[@name='facet_fields']/lst[number(int[@name='numFacetTerms']) &gt; 0]">
-				<xsl:variable name="query_fragment" select="@name"/>
-				<span class="anOption">
-					<xsl:choose>
-						<xsl:when test="contains($category, $query_fragment)">
-							<input type="checkbox" id="{$query_fragment}-checkbox" checked="checked" value="{$query_fragment}" class="calculate-checkbox"/>
-						</xsl:when>
-						<xsl:otherwise>
-							<input type="checkbox" id="{$query_fragment}-checkbox" value="{$query_fragment}" class="calculate-checkbox"/>
-						</xsl:otherwise>
-					</xsl:choose>
-					<label for="{$query_fragment}-checkbox">
-						<xsl:value-of select="numishare:normalize_fields(@name, $lang)"/>
-					</label>
-				</span>
-			</xsl:for-each>
-		</div>
+		<xsl:for-each select="//lst[@name='facet_fields']/lst[number(int[@name='numFacetTerms']) &gt; 0]">
+			<xsl:variable name="query_fragment" select="@name"/>
+			<div class="col-md-2">
+				<xsl:choose>
+					<xsl:when test="contains($category, $query_fragment)">
+						<input type="checkbox" id="{$query_fragment}-checkbox" checked="checked" value="{$query_fragment}" class="calculate-checkbox"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<input type="checkbox" id="{$query_fragment}-checkbox" value="{$query_fragment}" class="calculate-checkbox"/>
+					</xsl:otherwise>
+				</xsl:choose>
+				<label for="{$query_fragment}-checkbox">
+					<xsl:value-of select="numishare:normalize_fields(@name, $lang)"/>
+				</label>
+			</div>
+		</xsl:for-each>
 	</xsl:template>
 </xsl:stylesheet>

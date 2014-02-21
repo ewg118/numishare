@@ -2222,7 +2222,7 @@
 					<xsl:when test="$label='visualize_filter_list'">Filter List</xsl:when>
 					<xsl:when test="$label='visualize_filter_query'">Filter Query</xsl:when>
 					<xsl:when test="$label='visualize_remove_filter'">Remove Filter</xsl:when>
-					<xsl:when test="$label='visualize_add_custom'">Add Custom Queries</xsl:when>
+					<xsl:when test="$label='visualize_add_custom'">Custom Queries</xsl:when>
 					<xsl:when test="$label='visualize_custom_query'">Custom Query</xsl:when>
 					<xsl:when test="$label='visualize_compare_optional'">Compare to other Queries (optional)</xsl:when>
 					<xsl:when test="$label='visualize_comparison_query'">Comparison Query</xsl:when>

@@ -11,16 +11,18 @@
 						<span class="icon-bar"/>
 						<span class="icon-bar"/>
 					</button>
-					<a class="navbar-brand" href="{$url}">RRC Online</a>
+					<a class="navbar-brand" href="{$url}">
+						<xsl:value-of select="//config/title"/>
+					</a>
 				</div>
 				<div class="navbar-collapse collapse">
 					<xsl:if test="not($lang='ar')">
 						<ul class="nav navbar-nav">
 							<xsl:call-template name="menubar"/>
 						</ul>
-					</xsl:if>					
-					<!--<div class="col-sm-3 col-md-3 pull-right">
-						<form class="navbar-form" role="search" action="{$display_path}id/" method="get">
+					</xsl:if>
+					<div class="col-sm-3 col-md-3 pull-right">
+						<form class="navbar-form" role="search" action="{$display_path}results" method="get">
 							<div class="input-group">
 								<input type="text" class="form-control" placeholder="Search" name="q" id="srch-term"/>
 								<div class="input-group-btn">
@@ -30,7 +32,7 @@
 								</div>
 							</div>
 						</form>
-					</div>-->
+					</div>
 					<xsl:if test="$lang='ar'">
 						<ul class="nav navbar-nav navbar-right">
 							<xsl:call-template name="menubar"/>
@@ -39,22 +41,6 @@
 				</div>
 			</div>
 		</div>
-		<!--<div id="hd">
-			<div class="banner align-right ui-widget-content" style="border:0">				
-				<xsl:if test="string(/content/config/banner_text)">
-					<div class="banner_text">
-						<xsl:value-of select="/content/config/banner_text"/>
-					</div>
-				</xsl:if>
-				<xsl:if test="string(//config/banner_image/@xlink:href)">
-					<img src="{$display_path}images/{//config/banner_image/@xlink:href}" alt="banner image"/>
-				</xsl:if>
-			</div>
-			<ul role="menubar" id="menu">
-				<xsl:call-template name="menubar"/>
-			</ul>
-			<div id="log"/>
-		</div>-->
 	</xsl:template>
 
 	<xsl:template name="menubar">
@@ -165,11 +151,11 @@
 		</xsl:choose>
 
 	</xsl:template>
-	
+
 	<xsl:template name="languages">
 		<xsl:if test="count(//config/descendant::language[@enabled='true']) &gt; 1">
 			<li class="dropdown">
-				<a href="#" class="dropdown-toggle" data-toggle="dropdown">Language <b class="caret"></b></a>
+				<a href="#" class="dropdown-toggle" data-toggle="dropdown">Language <b class="caret"/></a>
 				<ul class="dropdown-menu">
 					<xsl:for-each select="//config/descendant::language[@enabled='true']">
 						<xsl:sort select="@code"/>
@@ -180,7 +166,7 @@
 						</li>
 					</xsl:for-each>
 				</ul>
-			</li>			
+			</li>
 		</xsl:if>
 	</xsl:template>
 </xsl:stylesheet>

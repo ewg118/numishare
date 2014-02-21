@@ -65,9 +65,9 @@
 				<script type="text/javascript" src="{$display_path}javascript/search_functions.js"/>
 
 				<!-- google analytics -->
-				<xsl:if test="string(/config/google_analytics/script)">
+				<xsl:if test="string(/config/google_analytics)">
 					<script type="text/javascript">
-						<xsl:value-of select="//config/google_analytics/script"/>
+						<xsl:value-of select="//config/google_analytics"/>
 					</script>
 				</xsl:if>
 			</head>
@@ -108,7 +108,7 @@
 							</li>
 						</ul>
 						<div id="visualization" class="tab">
-							<xsl:call-template name="visualization">
+							<xsl:call-template name="hoard-visualization">
 								<xsl:with-param name="action">#visualization</xsl:with-param>
 							</xsl:call-template>
 						</div>
