@@ -365,9 +365,9 @@ button.ui-multiselect {
 #add_filter:first-letter {
 	font-size:140%;
 }
-/*.g_doc {
-	height:325px;
-}*/
+.g_doc {
+	height:350px;
+}
 /* gallery image container */
 .gi_c {
 	margin:5px 0;
