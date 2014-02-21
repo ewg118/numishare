@@ -530,7 +530,7 @@
 			<xsl:value-of select="numishare:normalizeLabel('display_quantitative', $lang)"/>
 		</h2>
 		<p>Average measurements for this coin type:</p>
-		<dl>
+		<dl class="dl-horizontal">
 			<dt><xsl:value-of select="numishare:regularize_node('axis', $lang)"/>:</dt>
 			<dd>
 				<cinclude:include src="cocoon:/widget?constraints=nm:type_series_item &lt;http://nomisma.org/id/{$id}&gt;&amp;template=avgMeasurement&amp;measurement=axis"/>

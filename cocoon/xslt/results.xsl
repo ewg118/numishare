@@ -204,12 +204,10 @@
 								<div style="display:none">
 									<div id="resultMap"/>
 								</div>
-							</xsl:if>
+							</xsl:if>							
 							<xsl:call-template name="paging"/>
 							<xsl:call-template name="sort"/>
-							<table style="width:100%;border-collapse:collapse;">
-								<xsl:apply-templates select="descendant::doc"/>
-							</table>
+							<xsl:apply-templates select="descendant::doc"/>
 							<xsl:call-template name="paging"/>
 						</xsl:when>
 						<xsl:otherwise>

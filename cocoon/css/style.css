@@ -20,19 +20,8 @@ a > img {
 #facet ol, ul, dl {
 	margin:0em;
 }
-ul li, dl li {
+ul li, ol li {
 	list-style-type:none;
-}
-dt {
-	float: left;
-	clear: left;
-	width: 125px;
-	text-align: right;
-	font-weight:bold;
-}
-dd {
-	margin: 0 0 0 130px;
-	padding: 0 0 0.5em 0;
 }
 dt.ar {
 	width:125px;
@@ -129,9 +118,6 @@ dd.ar {
 	display:inline;
 	margin-right:20px;
 }
-.result_link {
-	font-size:120%;
-}
 .stacked_term {
 	padding:2px;
 	margin-bottom:5px;
@@ -191,22 +177,6 @@ li.h_item {
 #search_options {
 	display:block;
 	width:100%;
-}
-.result_doc>td {
-	padding:15px 0;
-	margin-bottom:15px;
-}
-.result_image_left {
-	width:260px;
-	border:0;
-}
-.result_image_right {
-	width:300px;
-	border:0;
-	text-align:right;
-}
-.result_metadata {
-	border:0;
 }
 .search_forms {
 	display:table;
@@ -392,9 +362,9 @@ button.ui-multiselect {
 #add_filter:first-letter {
 	font-size:140%;
 }
-.g_doc {
+/*.g_doc {
 	height:325px;
-}
+}*/
 /* gallery image container */
 .gi_c {
 	margin:5px 0;
@@ -502,21 +472,14 @@ div.custominfostyle {
   ***************************************
  */
 .paging_div {
-	width:100%;
-	display:table;
-	padding-top:10px;
-	padding-bottom:10px;
+	padding:10px 0;
 }
-.paging li {
-	float: left;
-	list-style: none outside none;
-	margin: 2px;
-	position: relative;
-	width:30px;
-	text-align:center;
+.page-nos {
+	text-align:right;	
 }
-.paging li a {
-	width:100%;
+.pagingBtn {
+	margin:2px;
+	height:24px;
 }
 /*
   ****************************************

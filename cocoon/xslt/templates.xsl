@@ -274,15 +274,15 @@
 				<div>
 					<h3>
 						<xsl:value-of select="numishare:normalizeLabel('visualize_optional_settings', $lang)"/>
-						<span style="font-size:60%;margin-left:10px;">
+						<small style="margin-left:10px;">
 							<a href="#" class="optional-button" id="visualize-options">
 								<xsl:value-of select="numishare:normalizeLabel('visualize_hide-show', $lang)"/>
 							</a>
-						</span>
+						</small>
 					</h3>
 					<div class="optional-div" style="display:none">
 						<div>
-							<dl>
+							<dl class="dl-horizontal">
 								<dt>
 									<xsl:value-of select="numishare:normalizeLabel('visualize_exclude_certainty_codes', $lang)"/>
 								</dt>
@@ -292,7 +292,7 @@
 							</dl>
 						</div>
 						<div>
-							<dl>
+							<dl class="dl-horizontal">
 								<dt>
 									<xsl:value-of select="numishare:normalizeLabel('visualize_stacking_options', $lang)"/>
 								</dt>
@@ -320,8 +320,6 @@
 					</div>
 				</div>
 			</div>
-
-
 			<input type="hidden" name="calculate" id="calculate-input" value=""/>
 			<input type="hidden" name="compare" class="compare-input" value=""/>
 			<input type="hidden" name="exclude" class="exclude-input" value=""/>

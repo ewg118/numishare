@@ -315,7 +315,7 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 					<xsl:value-of select="res:binding[@name='title']/res:literal"/>
 				</a>
 			</span>
-			<dl>
+			<dl class="dl-horizontal">
 				<xsl:if test="res:binding[@name='collection']/res:literal">
 					<dt>
 						<xsl:value-of select="numishare:regularize_node('collection', $lang)"/>

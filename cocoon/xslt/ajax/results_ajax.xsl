@@ -81,7 +81,9 @@
 			</small>
 		</h1>
 		<xsl:call-template name="paging"/>
-		<xsl:apply-templates select="descendant::doc" mode="map"/>
+		<div class="row">
+			<xsl:apply-templates select="descendant::doc" mode="map"/>
+		</div>
 		<xsl:call-template name="paging"/>
 	</xsl:template>
 
@@ -92,12 +94,12 @@
 		</xsl:variable>
 
 		<div class="g_doc col-md-4">
-			<span class="result_link">
+			<h4>
 				<a href="{$display_path}id/{str[@name='recordId']}{if (string($lang)) then concat('?lang=', $lang) else ''}" target="_blank">
 					<xsl:value-of select="str[@name='title_display']"/>
 				</a>
-			</span>
-			<dl>
+			</h4>
+			<dl class="dl-horizontal">
 				<xsl:choose>
 					<xsl:when test="str[@name='recordType'] = 'hoard'">
 						<dt>
