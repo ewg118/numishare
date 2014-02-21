@@ -107,18 +107,6 @@ button.ui-multiselect {
 #add_filter:first-letter {
 	font-size:140%;
 }
-.filter_facet:hover {
-	color:gray;
-}
-.filter_heading {
-	width:100%;
-}
-.filter_terms {
-	position:absolute;
-	z-index:2002;
-	width:200px;
-	padding:3px;
-}
 /*
   ***************************************
   Timemap CSS

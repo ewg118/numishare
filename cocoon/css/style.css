@@ -239,6 +239,9 @@ li.h_item {
 	margin-left:0px;
 	margin-right:5px;
 }
+.right {
+	text-align:right;	
+}
 #removeBtn_1 {
 	display:none;
 }
@@ -375,29 +378,6 @@ button.ui-multiselect {
 	padding:0px 5px;
 	max-width:120px;
 }
-.filter_facet {
-	width:12%;
-	float:left;
-	padding:2px;
-	margin:2px 2px;
-	z-index:0;
-	background-color:#D9D4C8;
-	border:1px solid #C2B9A9;
-	cursor:pointer;
-}
-.filter_facet_selected {
-	width:12%;
-	float:left;
-	padding:2px;
-	margin:2px 2px;
-	z-index:0;
-	background-color:#C2B9A9;
-	border:1px solid #C2B9A9;
-	cursor:pointer;
-}
-.filter_facet:hover {
-	color:gray;
-}
 .filter_heading {
 	width:100%;
 }
@@ -406,10 +386,6 @@ button.ui-multiselect {
 	z-index:2002;
 	width:200px;
 	padding:3px;
-}
-.fl {
-	float:left;
-	width:20%;
 }
 /*
   ***************************************
@@ -436,11 +412,6 @@ div#help {
 	width: 45em;
 	padding: 1em;
 }
-/*
-  div#timemap {
-  padding: 1em;
-  }
- */
 div#timeline {
 	width: 100%;
 	height: 100%;

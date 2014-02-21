@@ -22,7 +22,7 @@
 						<xsl:attribute name="class">col-md-12</xsl:attribute>
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:attribute name="class">col-md-9</xsl:attribute>
+						<xsl:attribute name="class">col-md-8</xsl:attribute>
 					</xsl:otherwise>
 				</xsl:choose>
 
@@ -518,7 +518,7 @@
 
 	<xsl:template name="result_image">
 		<xsl:param name="alignment"/>
-		<div class="col-md-3">
+		<div class="col-md-4 {$alignment}">
 			<xsl:choose>
 				<xsl:when test="str[@name='recordType'] = 'physical'">
 					<xsl:if test="string(str[@name='thumbnail_obv'])">
