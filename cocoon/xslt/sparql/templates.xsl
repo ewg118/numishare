@@ -472,6 +472,7 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 	</xsl:template>
 
 	<xsl:template match="res:binding[@name='findspot']" mode="json">
+		<xsl:variable name="closing_date" select="parent::node()/res:binding[@name='burial']/res:literal"/>
 		<xsl:variable name="coordinates">
 			<!-- add placemark -->
 			<xsl:choose>
@@ -496,24 +497,17 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 			<xsl:value-of select="parent::node()/res:binding[@name='title']/res:literal"/>
 		</xsl:variable>
 		<xsl:variable name="description">
-			<![CDATA[
-          					<span><a href=']]><xsl:value-of select="parent::node()/res:binding[@name='object']/res:uri"/><![CDATA[' target='_blank'>]]><xsl:value-of
-				select="parent::node()/res:binding[@name='title']/res:literal"/><![CDATA[</a>]]>
-			<xsl:if test="string(parent::node()/res:binding[@name='burial']/res:literal)">
-				<![CDATA[- closing date: ]]><xsl:value-of select="number(parent::node()/res:binding[@name='burial']/res:literal)"/>
+			<![CDATA[<dl class='dl-horizontal'><dt>URL</dt><dd><a href=']]><xsl:value-of select="parent::node()/res:binding[@name='object']/res:uri"/><![CDATA['>]]><xsl:value-of
+				select="parent::node()/res:binding[@name='object']/res:uri"/><![CDATA[</a></dd>]]>
+			<xsl:if test="string($closing_date)">
+				<![CDATA[<dt>]]><xsl:value-of select="numishare:regularize_node('closing_date', $lang)"/><![CDATA[</dt><dd>]]><xsl:value-of select="numishare:normalizeYear(number($closing_date))"
+				/><![CDATA[</dd>]]>
 			</xsl:if>
-			<![CDATA[</span>
-        				]]>
+			<![CDATA[</dl>]]>
 		</xsl:variable>
 		<xsl:variable name="theme">red</xsl:variable>
-		<xsl:variable name="start">
-			<xsl:value-of select="number(parent::node()/res:binding[@name='burial']/res:literal)"/>
-		</xsl:variable>
-		<xsl:variable name="end">
-			<xsl:value-of select="number(parent::node()/res:binding[@name='burial']/res:literal)"/>
-		</xsl:variable>
 		<!-- output --> { <xsl:if test="string($coordinates)">"point": {"lon": <xsl:value-of select="tokenize($coordinates, ',')[1]"/>, "lat": <xsl:value-of select="tokenize($coordinates, ',')[2]"
-			/>},</xsl:if> "title": "<xsl:value-of select="$title"/>", "start": "<xsl:value-of select="$start"/>", <xsl:if test="string($end)">"end": "<xsl:value-of select="$end"/>",</xsl:if>
+			/>},</xsl:if> "title": "<xsl:value-of select="$title"/>", "start": "<xsl:value-of select="$closing_date"/>", <xsl:if test="string($end)">"end": "<xsl:value-of select="$closing_date"/>",</xsl:if>
 		"options": { "theme": "<xsl:value-of select="$theme"/>", "description": "<xsl:value-of select="normalize-space($description)"/>" } }<xsl:if test="not(position()=last())">
 			<xsl:text>,</xsl:text>
 		</xsl:if>

@@ -67,6 +67,7 @@ dd.ar {
 .adminhist_div, .phystech, .bibref, .metadata_section ul {
 	margin-left:20px;
 	margin-bottom:10px;
+	padding:0;
 }
 .submenu {
 	width:100%;

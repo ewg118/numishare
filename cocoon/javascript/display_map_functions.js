@@ -1,6 +1,12 @@
 $(document).ready(function () {
 	var id = $('title').attr('id');
-	initialize_timemap(id);
+	var collection_type = $('#collection_type').text();
+	var path = $('#path').text();
+	if (collection_type == 'object') {
+		initialize_map(id, path);
+	} else {	
+		initialize_timemap(id);
+	}
 });
 
 function initialize_timemap(id) {
@@ -10,7 +16,7 @@ function initialize_timemap(id) {
 	} else {
 		var lang = langStr;
 	}
-
+	
 	var url = "../apis/get?id=" + id + "&format=json&lang=" + lang;
 	var datasets = new Array();
 	
@@ -30,7 +36,6 @@ function initialize_timemap(id) {
 		timelineId: "timeline", // Id of timeline div element (required)
 		options: {
 			eventIconPath: "../images/timemap/"
-			//mapFilter:'true'
 		},
 		datasets: datasets,
 		bandIntervals:[
@@ -50,6 +55,21 @@ function initialize_timemap(id) {
 
 
 function initialize_map(id, path) {
+	/***** DECLARE BASELAYERS ******/
+	var google_physical = new OpenLayers.Layer.Google("Google Physical", {
+		type: google.maps.MapTypeId.TERRAIN
+	});
+	var imperium = new OpenLayers.Layer.XYZ(
+	"Imperium Romanum",[
+	"http://pelagios.dme.ait.ac.at/tilesets/imperium/${z}/${x}/${y}.png"], {
+		sphericalMercator: true,
+		isBaseLayer: true,
+		numZoomLevels: 12,
+		attribution: '<a href="http://imperium.ahlfeldt.se">Digital Atlas of the Roman Empire</a>, hosted by <a href="http://pelagios-project.blogspot.com">Pelagios</a>.'
+	});
+	var osm = new OpenLayers.Layer.OSM();
+	
+	var baselayers = $('#baselayers').text().split(',');
 	
 	map = new OpenLayers.Map('mapcontainer', {
 		controls:[
@@ -61,16 +81,11 @@ function initialize_map(id, path) {
 		})]
 	});
 	
-	//google physical
-	var imperium = new OpenLayers.Layer.XYZ(
-	"Imperium Romanum",[
-	"http://pelagios.dme.ait.ac.at/tilesets/imperium/${z}/${x}/${y}.png"], {
-		sphericalMercator: true,
-		isBaseLayer: true,
-		numZoomLevels: 12
-	});
-	
-	map.addLayer(imperium);
+	//add baselayers
+	var i;
+	for (i = 0; i < baselayers.length; i++) {
+		map.addLayer(eval(baselayers[i]));
+	}
 	
 	//point for coin or hoard KML
 	var kmlLayer = new OpenLayers.Layer.Vector($('#object_title').text(), {
@@ -100,7 +115,8 @@ function initialize_map(id, path) {
 			visibility: false,
 			styleMap: new OpenLayers.Style({
 				pointRadius: "${radius}", fillColor: fillColor, fillOpacity: 0.8, strokeColor: strokeColor, strokeWidth: 2, strokeOpacity: 0.8
-			}, {
+			},
+			{
 				context: {
 					radius: function (feature) {
 						return Math.min(feature.attributes.count, 7) + 3;

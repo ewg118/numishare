@@ -40,6 +40,23 @@ $(document).ready(function () {
 	if (collection_type == 'hoard') {
 		initialize_timemap(q);
 	} else {
+		/***** DECLARE BASELAYERS ******/
+		var google_physical = new OpenLayers.Layer.Google("Google Physical", {
+			type: google.maps.MapTypeId.TERRAIN
+		});
+		var imperium = new OpenLayers.Layer.XYZ(
+		"Imperium Romanum",[
+		"http://pelagios.dme.ait.ac.at/tilesets/imperium/${z}/${x}/${y}.png"], {
+			sphericalMercator: true,
+			isBaseLayer: true,
+			numZoomLevels: 12,
+			attribution: '<a href="http://imperium.ahlfeldt.se">Digital Atlas of the Roman Empire</a>, hosted by <a href="http://pelagios-project.blogspot.com">Pelagios</a>.'
+		});
+		var osm = new OpenLayers.Layer.OSM();
+		
+		var baselayers = $('#baselayers').text().split(',');
+		
+		
 		//initialize map
 		var mintStyle = new OpenLayers.Style({
 			pointRadius: "${radius}",
@@ -115,9 +132,12 @@ $(document).ready(function () {
 			})]
 		});
 		
-		map.addLayer(new OpenLayers.Layer.Google("Google Physical", {
-			type: google.maps.MapTypeId.TERRAIN
-		}));
+		//add baselayers
+		var i;
+		for (i = 0; i < baselayers.length; i++) {
+			map.addLayer(eval(baselayers[i]));
+		}
+		
 		map.addLayer(mintLayer);
 		map.addLayer(hoardLayer);
 		

@@ -10,20 +10,20 @@
 	<xsl:include href="display/nudsHoard/html.xsl"/>
 	<xsl:include href="display/shared-html.xsl"/>
 
+	<!-- URL params -->
 	<xsl:param name="pipeline"/>
 	<xsl:param name="solr-url"/>
 	<xsl:param name="mode"/>
 	<xsl:param name="lang"/>
 
+	<!-- config variables -->
 	<xsl:variable name="geonames-url">
 		<xsl:text>http://api.geonames.org</xsl:text>
 	</xsl:variable>
 	<xsl:variable name="geonames_api_key" select="/content/config/geonames_api_key"/>
 	<xsl:variable name="sparql_endpoint" select="/content/config/sparql_endpoint"/>
-	<xsl:variable name="url">
-		<xsl:value-of select="/content/config/url"/>
-	</xsl:variable>
-
+	<xsl:variable name="url" select="/content/config/url"/>
+	<xsl:variable name="collection_type" select="/content/config/collection_type"/>
 	<!-- get layout -->
 	<xsl:variable name="orientation" select="/content/config/theme/layouts/display/nuds/orientation"/>
 	<xsl:variable name="image_location" select="/content/config/theme/layouts/display/nuds/image_location"/>
@@ -194,19 +194,6 @@
 
 						<xsl:choose>
 							<xsl:when test="$recordType='physical'">
-								<!-- determine whether the document has published findspots or associated object findspots -->
-								<!--<script type="text/javascript" langage="javascript">
-			                                                        $(function () {
-			                                                                $("#tabs").tabs({
-			                                                                        show: function (event, ui) {
-			                                                                                if (ui.panel.id == "mapTab" &amp;&amp; $('#mapcontainer').html().length == 0) {
-			                                                                                        $('#mapcontainer').html('');
-			                                                                                        initialize_map('<xsl:value-of select="$id"/>', '<xsl:value-of select="$display_path"/>');
-			                                                                                }
-			                                                                        }
-			                                                                });
-			                                                        });
-							</script>-->
 								<xsl:if test="$has_mint_geo = 'true' or $has_findspot_geo = 'true'">
 									<script type="text/javascript" src="http://www.openlayers.org/api/OpenLayers.js"/>
 									<script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3.2&amp;sensor=false"/>
@@ -226,6 +213,7 @@
 
 								<!-- mapping -->
 								<script type="text/javascript" src="http://www.openlayers.org/api/OpenLayers.js"/>
+								<script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3.2&amp;sensor=false"/>
 								<script type="text/javascript" src="{$display_path}javascript/mxn.js"/>
 								<script type="text/javascript" src="{$display_path}javascript/timeline-2.3.0.js"/>
 								<link type="text/css" href="{$display_path}timeline-2.3.0.css" rel="stylesheet"/>
@@ -255,6 +243,17 @@
 						<xsl:call-template name="header"/>
 						<xsl:call-template name="display"/>
 						<xsl:call-template name="footer"/>
+						<div class="hidden">
+							<span id="baselayers">
+								<xsl:value-of select="string-join(//config/baselayers/layer[@enabled=true()], ',')"/>
+							</span>							
+							<span id="collection_type">
+								<xsl:value-of select="$collection_type"/>
+							</span>
+							<span id="path">
+								<xsl:value-of select="$display_path"/>
+							</span>
+						</div>
 					</body>
 				</html>
 			</xsl:when>

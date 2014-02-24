@@ -181,6 +181,9 @@
 					<xsl:value-of select="$pipeline"/>
 				</span>
 				<span id="section">maps</span>
+				<span id="baselayers">
+					<xsl:value-of select="string-join(//config/baselayers/layer[@enabled=true()], ',')"/>
+				</span>
 			</div>
 		</div>
 	</xsl:template>

@@ -114,21 +114,9 @@
 				
 				<!-- call mapping information -->
 				<xsl:if test="//lst[@name='mint_geo']/int[@name='numFacetTerms'] &gt; 0">
-					<script src="http://www.openlayers.org/api/OpenLayers.js" type="text/javascript">//</script>
-					<script src="http://maps.google.com/maps/api/js?v=3.2&amp;sensor=false">//</script>
-					<script type="text/javascript" src="{$display_path}javascript/result_map_functions.js"/>
-					<script type="text/javascript">
-								$(document).ready(function() {
-									$("#map_results").fancybox({
-										onComplete: function(){
-											if  ($('#resultMap').html().length == 0){								
-												$('#resultMap').html('');
-												initialize_map('<xsl:value-of select="$q"/>','<xsl:value-of select="$collection_type"/>');
-											}
-										}
-									});
-								});
-							</script>
+					<script src="http://www.openlayers.org/api/OpenLayers.js" type="text/javascript"/>
+					<script src="http://maps.google.com/maps/api/js?v=3.2&amp;sensor=false"/>
+					<script type="text/javascript" src="{$display_path}javascript/result_map_functions.js"/>					
 				</xsl:if>
 				<xsl:if test="string(/config/google_analytics)">
 					<script type="text/javascript">
@@ -144,8 +132,7 @@
 		</html>
 	</xsl:template>
 
-	<xsl:template name="results">		
-		<div id="backgroundPopup"/>
+	<xsl:template name="results">
 		<div class="container-fluid">
 			<div class="row">
 				<div class="col-md-3">
@@ -190,10 +177,7 @@
 						</div>
 						
 						
-					</xsl:if>
-					<span style="display:none" id="collection_type">
-						<xsl:value-of select="$collection_type"/>
-					</span>
+					</xsl:if>					
 				</div>
 				<div class="col-md-9">
 					<xsl:call-template name="remove_facets"/>
@@ -216,6 +200,18 @@
 					</xsl:choose>
 
 				</div>
+			</div>
+			<div id="backgroundPopup"/>
+			<div style="display:none">
+				<span id="collection_type">
+					<xsl:value-of select="$collection_type"/>
+				</span>
+				<span id="current-query">
+					<xsl:value-of select="$q"/>
+				</span>
+				<span id="baselayers">
+					<xsl:value-of select="string-join(//config/baselayers/layer[@enabled=true()], ',')"/>
+				</span>
 			</div>
 		</div>
 	</xsl:template>
