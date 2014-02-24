@@ -911,7 +911,7 @@
 							</div>
 						</xsl:for-each>
 					</div>
-					<div id="customSparqlQueryDiv">
+					<div id="customSparqlQueryDiv" class="row">
 						<h3>
 							<xsl:text>4. </xsl:text>
 							<xsl:value-of select="numishare:normalizeLabel('visualize_add_queries', $lang)"/>
@@ -943,7 +943,7 @@
 					</div>
 				</xsl:when>
 				<xsl:when test="$pipeline='visualize'">
-					<div id="customSparqlQueryDiv">
+					<div id="customSparqlQueryDiv" class="row">
 						<h3>
 							<xsl:text>3. </xsl:text>
 							<xsl:value-of select="numishare:normalizeLabel('visualize_add_queries', $lang)"/>

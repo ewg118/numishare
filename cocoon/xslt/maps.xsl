@@ -24,7 +24,7 @@
 					<xsl:value-of select="numishare:normalizeLabel('header_maps', $lang)"/>
 				</title>
 				<link rel="shortcut icon" type="image/x-icon" href="{$display_path}images/favicon.png"/>
-				<meta name="viewport" content="width=device-width, initial-scale=1"/>				
+				<meta name="viewport" content="width=device-width, initial-scale=1"/>
 
 				<!-- jquery -->
 				<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"/>
@@ -33,7 +33,7 @@
 				<!-- bootstrap -->
 				<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"/>
 				<script type="text/javascript" src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"/>
-				
+
 				<!-- local theme and styling -->
 				<link type="text/css" href="{$display_path}themes/{//config/theme/jquery_ui_theme}.css" rel="stylesheet"/>
 				<link type="text/css" href="{$display_path}style.css" rel="stylesheet"/>
@@ -61,13 +61,13 @@
 					</xsl:when>
 					<xsl:otherwise>
 						<!-- Add fancyBox -->
-						<link rel="stylesheet" href="{$display_path}jquery.fancybox.css?v=2.1.5" type="text/css" media="screen" />
-						<script type="text/javascript" src="{$display_path}javascript/jquery.fancybox.pack.js?v=2.1.5"></script>
+						<link rel="stylesheet" href="{$display_path}jquery.fancybox.css?v=2.1.5" type="text/css" media="screen"/>
+						<script type="text/javascript" src="{$display_path}javascript/jquery.fancybox.pack.js?v=2.1.5"/>
 						<!-- maps-->
 						<script type="text/javascript" src="http://www.openlayers.org/api/OpenLayers.js"/>
 						<script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3.2&amp;sensor=false"/>
 						<script type="text/javascript" src="{$display_path}javascript/map_functions.js"/>
-						<script type="text/javascript" src="{$display_path}javascript/facet_functions.js"/>						
+						<script type="text/javascript" src="{$display_path}javascript/facet_functions.js"/>
 					</xsl:otherwise>
 				</xsl:choose>
 
@@ -102,10 +102,8 @@
 				<xsl:when test="//result[@name='response']/@numFound &gt; 0">
 					<div class="row">
 						<div class="col-md-12">
-							<div style="display:table;width:100%">
-								<ul id="filter_list" section="maps">
-									<xsl:apply-templates select="//lst[@name='facet_fields']"/>
-								</ul>
+							<div class="row">
+								<xsl:apply-templates select="//lst[@name='facet_fields']"/>
 							</div>
 						</div>
 					</div>
@@ -159,26 +157,28 @@
 					</div>
 				</xsl:otherwise>
 			</xsl:choose>
-			<!--<input type="hidden" name="q" id="facet_form_query" value="{if (string($imageavailable_stripped)) then $imageavailable_stripped else '*:*'}"/>-->
-			<input id="facet_form_query" name="q" value="*:*" type="hidden"/>
-			<xsl:if test="string($lang)">
-				<input type="hidden" name="lang" value="{$lang}"/>
-			</xsl:if>
-			<span style="display:none" id="collection_type">
-				<xsl:value-of select="$collection_type"/>
-			</span>
-			<span style="display:none" id="path">
-				<xsl:value-of select="$display_path"/>
-			</span>
-			<span style="display:none" id="pipeline">
-				<xsl:value-of select="$pipeline"/>
-			</span>
+			<div style="display:none">
+				<input id="facet_form_query" name="q" value="*:*" type="hidden"/>
+				<xsl:if test="string($lang)">
+					<input type="hidden" name="lang" value="{$lang}"/>
+				</xsl:if>
+				<span id="collection_type">
+					<xsl:value-of select="$collection_type"/>
+				</span>
+				<span id="path">
+					<xsl:value-of select="$display_path"/>
+				</span>
+				<span id="pipeline">
+					<xsl:value-of select="$pipeline"/>
+				</span>
+				<span id="section">maps</span>
+			</div>
 		</div>
 	</xsl:template>
 
 	<xsl:template match="lst[@name='facet_fields']">
 		<xsl:for-each select="lst[not(@name='mint_geo') and number(int[@name='numFacetTerms']) &gt; 0 and not(@name='mint_facet')]|lst[@name='mint_facet' and $collection_type='hoard']">
-			<li class="fl">
+			<div class="col-md-3">
 				<xsl:variable name="val" select="@name"/>
 				<xsl:variable name="new_query">
 					<xsl:for-each select="$tokenized_q[not(contains(., $val))]">
@@ -263,7 +263,7 @@
 						<br/>
 					</xsl:otherwise>
 				</xsl:choose>
-			</li>
+			</div>
 		</xsl:for-each>
 	</xsl:template>
 </xsl:stylesheet>

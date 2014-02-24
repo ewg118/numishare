@@ -195,7 +195,7 @@
 						<xsl:choose>
 							<xsl:when test="$recordType='physical'">
 								<!-- determine whether the document has published findspots or associated object findspots -->
-								<script type="text/javascript" langage="javascript">
+								<!--<script type="text/javascript" langage="javascript">
 			                                                        $(function () {
 			                                                                $("#tabs").tabs({
 			                                                                        show: function (event, ui) {
@@ -206,7 +206,7 @@
 			                                                                        }
 			                                                                });
 			                                                        });
-							</script>
+							</script>-->
 								<xsl:if test="$has_mint_geo = 'true' or $has_findspot_geo = 'true'">
 									<script type="text/javascript" src="http://www.openlayers.org/api/OpenLayers.js"/>
 									<script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3.2&amp;sensor=false"/>
@@ -216,8 +216,8 @@
 							<!-- coin-type CSS and JS dependencies -->
 							<xsl:when test="$recordType='conceptual'">
 								<!-- Add fancyBox -->
-								<link rel="stylesheet" href="{$display_path}jquery.fancybox.css?v=2.1.5" type="text/css" media="screen" />
-								<script type="text/javascript" src="{$display_path}javascript/jquery.fancybox.pack.js?v=2.1.5"></script>
+								<link rel="stylesheet" href="{$display_path}jquery.fancybox.css?v=2.1.5" type="text/css" media="screen"/>
+								<script type="text/javascript" src="{$display_path}javascript/jquery.fancybox.pack.js?v=2.1.5"/>
 								<script type="text/javascript" src="{$display_path}javascript/highcharts.js"/>
 								<script type="text/javascript" src="{$display_path}javascript/modules/exporting.js"/>
 								<script type="text/javascript" src="{$display_path}javascript/display_map_functions.js"/>
@@ -281,17 +281,15 @@
 		<!-- CSS -->
 		<link rel="shortcut icon" type="image/x-icon" href="{$display_path}images/favicon.png"/>
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"/>
-		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"/>
-		<link type="text/css" href="{$display_path}themes/{//config/theme/jquery_ui_theme}.css" rel="stylesheet"/>
 		<meta name="viewport" content="width=device-width, initial-scale=1"/>
 		<!-- bootstrap -->
 		<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"/>
-		<script  type="text/javascript" src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"/>
+		<script type="text/javascript" src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"/>
 		<link type="text/css" href="{$display_path}style.css" rel="stylesheet"/>
 		<xsl:if test="string(//config/google_analytics)">
 			<script type="text/javascript">
-								<xsl:value-of select="//config/google_analytics"/>
-							</script>
+				<xsl:value-of select="//config/google_analytics"/>
+			</script>
 		</xsl:if>
 	</xsl:template>
 

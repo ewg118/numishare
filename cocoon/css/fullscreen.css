@@ -16,16 +16,8 @@ html, body {
 	width:800px;
 	height:400px;
 }
-ol li, ul li, dl li {
+ol li, ul li {
 	list-style-type:none;
-}
-#filter_list {
-	margin:0;
-	padding:0;
-}
-.fl {
-	float:left;
-	width:25%;
 }
 select {
 	width:175px;
@@ -199,19 +191,12 @@ dd {
   ***************************************
  */
 .paging_div {
-	width:100%;
-	display:table;
-	padding-top:10px;
-	padding-bottom:10px;
+	padding:10px 0;
 }
-.paging li {
-	float: left;
-	list-style: none outside none;
-	margin: 2px;
-	position: relative;
-	width:30px;
-	text-align:center;
+.page-nos {
+	text-align:right;	
 }
-.paging li a {
-	width:100%;
+.pagingBtn {
+	margin:2px;
+	height:24px;
 }

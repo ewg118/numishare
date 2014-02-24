@@ -123,10 +123,8 @@
 							<h2>
 								<xsl:value-of select="numishare:normalizeLabel('results_refine-results', $lang)"/>
 							</h2>
-							<ul id="filter_list" section="maps">
-								<xsl:apply-templates select="//lst[@name='facet_fields']"/>
-							</ul>
-							<input type="button" id="close" value="Close"/>
+							<xsl:apply-templates select="//lst[@name='facet_fields']"/>
+							<input type="button" class="btn btn-default" id="close" value="Close"/>							
 						</div>
 					</div>
 					<!-- display timemap divs for hoard records or regular map + ajax results div for non-hoard collections -->
@@ -168,27 +166,28 @@
 					</div>
 				</xsl:otherwise>
 			</xsl:choose>
-			<!--<input type="hidden" name="q" id="facet_form_query" value="{if (string($imageavailable_stripped)) then $imageavailable_stripped else '*:*'}"/>-->
-			<input id="facet_form_query" name="q" value="*:*" type="hidden"/>
-			<xsl:if test="string($lang)">
-				<input type="hidden" name="lang" value="{$lang}"/>
-			</xsl:if>
-			<span style="display:none" id="collection_type">
-				<xsl:value-of select="$collection_type"/>
-			</span>
-			<span style="display:none" id="path">
-				<xsl:value-of select="$display_path"/>
-			</span>
-			<span style="display:none" id="pipeline">
-				<xsl:value-of select="$pipeline"/>
-			</span>
-
+			<div style="display:none">
+				<input id="facet_form_query" name="q" value="*:*" type="hidden"/>
+				<xsl:if test="string($lang)">
+					<input type="hidden" name="lang" value="{$lang}"/>
+				</xsl:if>
+				<span id="collection_type">
+					<xsl:value-of select="$collection_type"/>
+				</span>
+				<span id="path">
+					<xsl:value-of select="$display_path"/>
+				</span>
+				<span id="pipeline">
+					<xsl:value-of select="$pipeline"/>
+				</span>
+				<span id="section">maps</span>
+			</div>
 		</div>
 	</xsl:template>
 
 	<xsl:template match="lst[@name='facet_fields']">
 		<xsl:for-each select="lst[not(@name='mint_geo') and number(int[@name='numFacetTerms']) &gt; 0 and not(@name='mint_facet')]|lst[@name='mint_facet' and $collection_type='hoard']">
-			<li class="fl">
+			<div class="col-md-4">
 				<xsl:variable name="val" select="@name"/>
 				<xsl:variable name="new_query">
 					<xsl:for-each select="$tokenized_q[not(contains(., $val))]">
@@ -276,7 +275,7 @@
 						<br/>
 					</xsl:otherwise>
 				</xsl:choose>
-			</li>
+			</div>
 		</xsl:for-each>
 	</xsl:template>
 </xsl:stylesheet>

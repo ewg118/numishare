@@ -62,10 +62,8 @@
 					<xsl:value-of select="numishare:normalizeLabel('header_visualize', $lang)"/>
 				</title>
 				<link rel="shortcut icon" type="image/x-icon" href="{$display_path}images/favicon.png"/>
-				<link type="text/css" href="{$display_path}themes/{//config/theme/jquery_ui_theme}.css" rel="stylesheet"/>
 				<meta name="viewport" content="width=device-width, initial-scale=1"/>
 				<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"/>
-				<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"/>
 				<!-- bootstrap -->
 				<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"/>
 				<script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"/>
@@ -73,11 +71,6 @@
 				<link rel="stylesheet" href="{$display_path}jquery.fancybox.css?v=2.1.5" type="text/css" media="screen"/>
 				<script type="text/javascript" src="{$display_path}javascript/jquery.fancybox.pack.js?v=2.1.5"/>
 				<link type="text/css" href="{$display_path}style.css" rel="stylesheet"/>
-				<script type="text/javascript">
-					$(document).ready (function(){
-						$("#tabs").tabs();
-					});
-				</script>
 				<!-- required libraries -->
 				<script type="text/javascript" src="{$display_path}javascript/highcharts.js"/>
 				<script type="text/javascript" src="{$display_path}javascript/modules/exporting.js"/>
@@ -110,23 +103,29 @@
 					<!-- display tabs for measurement analysis only if there is a sparql endpoint-->
 					<xsl:choose>
 						<xsl:when test="string(//config/sparql_endpoint)">
-							<div id="tabs">
-								<ul>
-									<li>
-										<a href="#typological">
-											<xsl:value-of select="numishare:normalizeLabel('visualize_typological', $lang)"/>
-										</a>
-									</li>
-									<li>
-										<a href="#measurements">
-											<xsl:value-of select="numishare:normalizeLabel('visualize_measurement', $lang)"/>
-										</a>
-									</li>
-								</ul>
-								<div id="typological">
+							<ul class="nav nav-pills">
+								<li>
+									<xsl:if test="not(string($measurement))">
+										<xsl:attribute name="class">active</xsl:attribute>
+									</xsl:if>
+									<a href="#typological" data-toggle="pill">
+										<xsl:value-of select="numishare:normalizeLabel('visualize_typological', $lang)"/>
+									</a>
+								</li>
+								<li>
+									<xsl:if test="string($measurement)">
+										<xsl:attribute name="class">active</xsl:attribute>
+									</xsl:if>
+									<a href="#measurements" data-toggle="pill">
+										<xsl:value-of select="numishare:normalizeLabel('visualize_measurement', $lang)"/>
+									</a>
+								</li>
+							</ul>
+							<div class="tab-content">
+								<div class="tab-pane {if (not(string($measurement))) then 'active' else ''}" id="typological">									
 									<xsl:apply-templates select="/content/response"/>
 								</div>
-								<div id="measurements">
+								<div class="tab-pane {if (string($measurement)) then 'active' else ''}" id="measurements">
 									<xsl:call-template name="measurementForm"/>
 								</div>
 							</div>
@@ -163,9 +162,25 @@
 
 	<!-- ************** SOLR-BASED VISUALIZATION ************** -->
 	<xsl:template name="solr-visualization">
+		<!-- display visualization over form -->
+		<!-- output charts and tables for facets -->
+		<xsl:if test="string($category) and (string($q) or string($compare))">
+			<xsl:for-each select="tokenize($category, '\|')">
+				<xsl:call-template name="quant">
+					<xsl:with-param name="facet" select="."/>
+				</xsl:call-template>
+			</xsl:for-each>
+		</xsl:if>
+		<xsl:if test="string($custom)">
+			<xsl:for-each select="tokenize($custom, '\|')">
+				<xsl:call-template name="quant">
+					<xsl:with-param name="customQuery" select="."/>
+				</xsl:call-template>
+			</xsl:for-each>
+		</xsl:if>
+		
 		<xsl:variable name="chartTypes">column,bar</xsl:variable>
-
-		<form action="#typological" id="visualize-form" style="margin-bottom:40px;">
+		<form action="#typological" id="visualize-form" style="margin:40px;">
 			<div class="row">
 				<h3>1. <xsl:value-of select="numishare:normalizeLabel('visualize_response_type', $lang)"/></h3>
 				<input type="radio" name="type" value="percentage">
@@ -318,22 +333,6 @@
 			<br/>
 			<input type="submit" value="{numishare:normalizeLabel('visualize_generate', $lang)}" id="submit-calculate" class="btn btn-default"/>
 		</form>
-
-		<!-- output charts and tables for facets -->
-		<xsl:if test="string($category) and (string($q) or string($compare))">
-			<xsl:for-each select="tokenize($category, '\|')">
-				<xsl:call-template name="quant">
-					<xsl:with-param name="facet" select="."/>
-				</xsl:call-template>
-			</xsl:for-each>
-		</xsl:if>
-		<xsl:if test="string($custom)">
-			<xsl:for-each select="tokenize($custom, '\|')">
-				<xsl:call-template name="quant">
-					<xsl:with-param name="customQuery" select="."/>
-				</xsl:call-template>
-			</xsl:for-each>
-		</xsl:if>
 	</xsl:template>
 
 	<xsl:template name="quant">
