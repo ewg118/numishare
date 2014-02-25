@@ -274,7 +274,7 @@ These only need to be changed if Solr and Orbeon are run on a different server o
 			<map:match pattern="pelagios.rdf">
 				<map:aggregate element="content">
 					<map:part
-						src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}+AND+{url-encode:pleiades_uri:*}&amp;rows=50000&amp;fl=id,recordId,title_display,pleiades_uri"/>
+						src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}+AND+{url-encode:pleiades_uri:*}&amp;rows=50000&amp;fl=id,recordId,title_display,pleiades_uri,findspot_uri,year_num,recordType,thumbnail_obv,reference_obv,thumbnail_rev,reference_rev,timestamp"/>
 					<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
 				</map:aggregate>
 				<map:transform src="xslt/linked_data/solr_to_rdf.xsl" label="basiccontent" type="xslt-saxon">
