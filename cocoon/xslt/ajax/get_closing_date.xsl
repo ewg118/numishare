@@ -20,7 +20,7 @@
 			</xsl:for-each>
 		</xsl:variable>
 		
-		<xsl:variable name="date" select="document(concat('http://nomisma.numismatics.org/apis/closingDate?identifiers=', $id-param))/response"/>
+		<xsl:variable name="date" select="document(concat('http://nomisma.org/apis/closingDate?identifiers=', $id-param))/response"/>
 			
 		<xsl:value-of select="nh:normalize_date($date, $date)"/>		
 	</xsl:template>

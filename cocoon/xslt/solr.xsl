@@ -178,7 +178,7 @@
 			</xsl:for-each>
 		</xsl:variable>
 
-		<xsl:variable name="rdf_url" select="concat('http://nomisma.numismatics.org/apis/getRdf?identifiers=', $id-param)"/>
+		<xsl:variable name="rdf_url" select="concat('http://nomisma.org/apis/getRdf?identifiers=', $id-param)"/>
 		<xsl:copy-of select="document($rdf_url)/rdf:RDF/*"/>
 
 		<xsl:if test="$end &lt; $count">
