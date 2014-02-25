@@ -507,7 +507,7 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 		</xsl:variable>
 		<xsl:variable name="theme">red</xsl:variable>
 		<!-- output --> { <xsl:if test="string($coordinates)">"point": {"lon": <xsl:value-of select="tokenize($coordinates, ',')[1]"/>, "lat": <xsl:value-of select="tokenize($coordinates, ',')[2]"
-			/>},</xsl:if> "title": "<xsl:value-of select="$title"/>", "start": "<xsl:value-of select="$closing_date"/>", <xsl:if test="string($end)">"end": "<xsl:value-of select="$closing_date"/>",</xsl:if>
+			/>},</xsl:if> "title": "<xsl:value-of select="$title"/>", "start": "<xsl:value-of select="$closing_date"/>", <xsl:if test="string($closing_date)">"end": "<xsl:value-of select="$closing_date"/>",</xsl:if>
 		"options": { "theme": "<xsl:value-of select="$theme"/>", "description": "<xsl:value-of select="normalize-space($description)"/>" } }<xsl:if test="not(position()=last())">
 			<xsl:text>,</xsl:text>
 		</xsl:if>
