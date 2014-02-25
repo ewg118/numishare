@@ -74,6 +74,7 @@
 					</xsl:if>
 					<xsl:value-of select="."/>
 				</dcterms:title>
+				<dcterms:identifier rdf:resource="{$url}id/{$id}"/>
 			</xsl:for-each>
 			<xsl:if test="string(@recordType)">
 				<!-- dates -->
@@ -109,7 +110,7 @@
 			</oac:Annotation>
 		</xsl:for-each>
 
-		<xsl:apply-templates select="descendant::*:geogname[@xlink:role='findspot'][string(@xlink:href)]" mode="pelagios">
+		<xsl:apply-templates select="descendant::*:geogname[@xlink:role='findspot'][string(@xlink:href)]|descendant::*:findspotDesc[string(@xlink:href)]" mode="pelagios">
 			<xsl:with-param name="id" select="$id"/>
 			<xsl:with-param name="count" select="count(distinct-values($rdf//skos:related[contains(@rdf:resource, 'pleiades')]/@rdf:resource))"/>
 		</xsl:apply-templates>
@@ -510,7 +511,7 @@
 		</xsl:for-each>
 	</xsl:template>
 
-	<xsl:template match="*:geogname[@xlink:role='findspot']" mode="pelagios">
+	<xsl:template match="*:geogname[@xlink:role='findspot']|nuds:findspotDesc" mode="pelagios">
 		<xsl:param name="id"/>
 		<xsl:param name="count"/>
 
@@ -813,6 +814,7 @@
 			<dcterms:title>
 				<xsl:value-of select="str[@name='title_display']"/>
 			</dcterms:title>
+			<dcterms:identifier rdf:resource="{$url}id/{$id}"/>
 
 			<!-- temporal -->
 			<xsl:choose>
@@ -825,6 +827,66 @@
 						/></dcterms:temporal>
 				</xsl:when>
 			</xsl:choose>
+			
+			<!-- images -->
+			<xsl:if test="str[@name='recordType'] = 'physical'">
+				<xsl:if test="string(str[@name='thumbnail_obv'])">
+					<xsl:variable name="href">
+						<xsl:choose>
+							<xsl:when test="contains(str[@name='thumbnail_obv'], 'http://')">
+								<xsl:value-of select="str[@name='thumbnail_obv']"/>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:value-of select="concat($url, str[@name='thumbnail_obv'])"/>
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:variable>
+					
+					<foaf:thumbnail rdf:resource="{$href}"/>
+				</xsl:if>
+				<xsl:if test="string(str[@name='reference_obv'])">
+					<xsl:variable name="href">
+						<xsl:choose>
+							<xsl:when test="contains(str[@name='reference_obv'], 'http://')">
+								<xsl:value-of select="str[@name='reference_obv']"/>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:value-of select="concat($url, str[@name='reference_obv'])"/>
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:variable>
+					
+					<foaf:depiction rdf:resource="{$href}"/>
+				</xsl:if>
+				<xsl:if test="string(str[@name='thumbnail_rev'])">
+					<xsl:variable name="href">
+						<xsl:choose>
+							<xsl:when test="contains(str[@name='thumbnail_rev'], 'http://')">
+								<xsl:value-of select="str[@name='thumbnail_rev']"/>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:value-of select="concat($url, str[@name='thumbnail_rev'])"/>
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:variable>
+					
+					<foaf:thumbnail rdf:resource="{$href}"/>
+				</xsl:if>
+				<xsl:if test="string(str[@name='reference_rev'])">
+					<xsl:variable name="href">
+						<xsl:choose>
+							<xsl:when test="contains(str[@name='reference_rev'], 'http://')">
+								<xsl:value-of select="str[@name='reference_rev']"/>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:value-of select="concat($url, str[@name='reference_rev'])"/>
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:variable>
+					
+					<foaf:depiction rdf:resource="{$href}"/>
+				</xsl:if>
+			</xsl:if>
 		</pelagios:AnnotatedThing>
 
 		<!-- create annotations from pleiades URIs found in nomisma RDF and from findspots -->
@@ -845,7 +907,7 @@
 			<xsl:variable name="count" select="count(distinct-values(arr[@name='pleiades_uri']/str))"/>
 			<xsl:for-each select="distinct-values(arr[@name='findspot_uri']/str)">
 				<oac:Annotation rdf:about="{$url}pelagios.rdf#{$id}/annotations/{format-number($count + 1, '000')}">
-					<oac:hasBody rdf:resource="{.}#this"/>
+					<oac:hasBody rdf:resource="{.}"/>
 					<oac:hasTarget rdf:resource="{$url}pelagios.rdf#{$id}"/>
 					<pelagios:relations rdf:resource="http://pelagios.github.io/vocab/relations#foundAt"/>
 					<oac:annotatedBy rdf:resource="{$url}pelagios.rdf#agents/me"/>
@@ -854,66 +916,6 @@
 					</oac:annotatedAt>
 				</oac:Annotation>
 			</xsl:for-each>
-		</xsl:if>
-		
-		<!-- images -->
-		<xsl:if test="str[@name='recordType'] = 'physical'">
-			<xsl:if test="string(str[@name='thumbnail_obv'])">
-				<xsl:variable name="href">
-					<xsl:choose>
-						<xsl:when test="contains(str[@name='thumbnail_obv'], 'http://')">
-							<xsl:value-of select="str[@name='thumbnail_obv']"/>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:value-of select="concat($url, str[@name='thumbnail_obv'])"/>
-						</xsl:otherwise>
-					</xsl:choose>
-				</xsl:variable>
-				
-				<foaf:thumbnail rdf:resource="{$href}"/>
-			</xsl:if>
-			<xsl:if test="string(str[@name='reference_obv'])">
-				<xsl:variable name="href">
-					<xsl:choose>
-						<xsl:when test="contains(str[@name='reference_obv'], 'http://')">
-							<xsl:value-of select="str[@name='reference_obv']"/>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:value-of select="concat($url, str[@name='reference_obv'])"/>
-						</xsl:otherwise>
-					</xsl:choose>
-				</xsl:variable>
-				
-				<foaf:depiction rdf:resource="{$href}"/>
-			</xsl:if>
-			<xsl:if test="string(str[@name='thumbnail_rev'])">
-				<xsl:variable name="href">
-					<xsl:choose>
-						<xsl:when test="contains(str[@name='thumbnail_rev'], 'http://')">
-							<xsl:value-of select="str[@name='thumbnail_rev']"/>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:value-of select="concat($url, str[@name='thumbnail_rev'])"/>
-						</xsl:otherwise>
-					</xsl:choose>
-				</xsl:variable>
-				
-				<foaf:thumbnail rdf:resource="{$href}"/>
-			</xsl:if>
-			<xsl:if test="string(str[@name='reference_rev'])">
-				<xsl:variable name="href">
-					<xsl:choose>
-						<xsl:when test="contains(str[@name='reference_rev'], 'http://')">
-							<xsl:value-of select="str[@name='reference_rev']"/>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:value-of select="concat($url, str[@name='reference_rev'])"/>
-						</xsl:otherwise>
-					</xsl:choose>
-				</xsl:variable>
-				
-				<foaf:depiction rdf:resource="{$href}"/>
-			</xsl:if>
 		</xsl:if>
 	</xsl:template>
 
