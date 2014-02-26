@@ -91,19 +91,6 @@ button.ui-multiselect {
 	display:none;
 }
 /*
-  .olLayerGoogleCopyright {
-  top:-1000px;
-  }
- */
-#add_filter {
-	font-weight:bold;
-	font-size:120%;
-	text-transform:capitalize;
-}
-#add_filter:first-letter {
-	font-size:140%;
-}
-/*
   ***************************************
   Timemap CSS
   ***************************************

@@ -10,7 +10,7 @@
 		<xsl:variable name="collection" select="substring-before(str[@name='identifier_display'], '.')"/>
 
 
-		<div class="row">
+		<div class="row result-doc">
 			<xsl:if test="not($mode='compare') and //config/theme/layouts/*[name()=$pipeline]/image_location = 'left'">
 				<xsl:call-template name="result_image">
 					<xsl:with-param name="alignment">left</xsl:with-param>
@@ -416,8 +416,7 @@
 			<xsl:when test="contains(@name, '_hier')">
 				<xsl:variable name="title" select="numishare:regularize_node(substring-before(@name, '_'), $lang)"/>
 
-				<button class="ui-multiselect ui-widget ui-state-default ui-corner-all hierarchical-facet" type="button" title="{$title}" aria-haspopup="true" style="width: 200px;" id="{@name}_link"
-					label="{$q}">
+				<button class="ui-multiselect hierarchical-facet" type="button" title="{$title}" aria-haspopup="true" style="width: 200px;" id="{@name}_link" label="{$q}">
 					<span class="ui-icon ui-icon-triangle-2-n-s"/>
 					<span>
 						<xsl:value-of select="$title"/>
@@ -547,7 +546,7 @@
 	</xsl:template>
 
 	<xsl:template name="remove_facets">
-		<div class="remove_facets">
+		<div class="row">
 			<xsl:choose>
 				<xsl:when test="$q = '*:*'">
 					<h1>
@@ -574,54 +573,58 @@
 					</h1>
 				</xsl:otherwise>
 			</xsl:choose>
+		</div>
 
+		<xsl:for-each select="$tokenized_q">
+			<xsl:variable name="val" select="."/>
+			<xsl:variable name="new_query">
+				<xsl:for-each select="$tokenized_q[not($val = .)]">
+					<xsl:value-of select="."/>
+					<xsl:if test="position() != last()">
+						<xsl:text> AND </xsl:text>
+					</xsl:if>
+				</xsl:for-each>
+			</xsl:variable>
 
-			<xsl:for-each select="$tokenized_q">
-				<xsl:variable name="val" select="."/>
-				<xsl:variable name="new_query">
-					<xsl:for-each select="$tokenized_q[not($val = .)]">
-						<xsl:value-of select="."/>
-						<xsl:if test="position() != last()">
-							<xsl:text> AND </xsl:text>
+			<!--<xsl:value-of select="."/>-->
+			<xsl:choose>
+				<xsl:when test="not(. = '*:*') and not(substring(., 1, 1) = '(')">
+					<xsl:variable name="field" select="substring-before(., ':')"/>
+					<xsl:variable name="name">
+						<xsl:choose>
+							<xsl:when test="string($field)">
+								<xsl:value-of select="numishare:normalize_fields($field, $lang)"/>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:value-of select="numishare:normalize_fields('fulltext', $lang)"/>
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:variable>
+					<xsl:variable name="term">
+						<xsl:choose>
+							<xsl:when test="string(substring-before(., ':'))">
+								<xsl:value-of select="replace(substring-after(., ':'), '&#x022;', '')"/>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:value-of select="replace(., '&#x022;', '')"/>
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:variable>
+
+					<div class="stacked_term bg-info row">
+						<xsl:if test="$lang='ar'">
+							<xsl:attribute name="style">text-align:right</xsl:attribute>
 						</xsl:if>
-					</xsl:for-each>
-				</xsl:variable>
 
-				<!--<xsl:value-of select="."/>-->
-				<xsl:choose>
-					<xsl:when test="not(. = '*:*') and not(substring(., 1, 1) = '(')">
-						<xsl:variable name="field" select="substring-before(., ':')"/>
-						<xsl:variable name="name">
-							<xsl:choose>
-								<xsl:when test="string($field)">
-									<xsl:value-of select="numishare:normalize_fields($field, $lang)"/>
-								</xsl:when>
-								<xsl:otherwise>
-									<xsl:value-of select="numishare:normalize_fields('fulltext', $lang)"/>
-								</xsl:otherwise>
-							</xsl:choose>
-						</xsl:variable>
-						<xsl:variable name="term">
-							<xsl:choose>
-								<xsl:when test="string(substring-before(., ':'))">
-									<xsl:value-of select="replace(substring-after(., ':'), '&#x022;', '')"/>
-								</xsl:when>
-								<xsl:otherwise>
-									<xsl:value-of select="replace(., '&#x022;', '')"/>
-								</xsl:otherwise>
-							</xsl:choose>
-						</xsl:variable>
-
-						<div class="ui-widget ui-state-default ui-corner-all stacked_term">
-							<xsl:if test="$lang='ar'">
-								<xsl:attribute name="style">text-align:right</xsl:attribute>
-							</xsl:if>
-
-							<!-- establish orientation based on language parameter -->
-							<xsl:choose>
-								<xsl:when test="$lang='ar'">
-									<a class="ui-icon ui-icon-closethick remove_filter_ar"
-										href="{$display_path}results?q={if (string($new_query)) then encode-for-uri($new_query) else '*:*'}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}"/>
+						<!-- establish orientation based on language parameter -->
+						<xsl:choose>
+							<xsl:when test="$lang='ar'">
+								<div class="col-md-2">
+									<a href="{$display_path}results?q={if (string($new_query)) then encode-for-uri($new_query) else '*:*'}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+										<span class="glyphicon glyphicon-remove"/>
+									</a>
+								</div>
+								<div class="col-md-10">
 									<span>
 										<xsl:choose>
 											<xsl:when test="$field='century_num'">
@@ -643,8 +646,10 @@
 										</xsl:choose>
 										<b>:<xsl:value-of select="$name"/></b>
 									</span>
-								</xsl:when>
-								<xsl:otherwise>
+								</div>
+							</xsl:when>
+							<xsl:otherwise>
+								<div class="col-md-10">
 									<span>
 										<b><xsl:value-of select="$name"/>: </b>
 										<xsl:choose>
@@ -666,24 +671,31 @@
 											</xsl:otherwise>
 										</xsl:choose>
 									</span>
-									<a class="ui-icon ui-icon-closethick remove_filter"
-										href="{$display_path}results?q={if (string($new_query)) then encode-for-uri($new_query) else '*:*'}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}"
-										>X</a>
-								</xsl:otherwise>
-							</xsl:choose>
-						</div>
+								</div>
+								<div class="col-md-2 right">
+									<a href="{$display_path}results?q={if (string($new_query)) then encode-for-uri($new_query) else '*:*'}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+										<span class="glyphicon glyphicon-remove"/>
+									</a>
+								</div>
+							</xsl:otherwise>
+						</xsl:choose>
+					</div>
 
-					</xsl:when>
-					<!-- if the token contains a parenthisis, then it was probably sent from the search widget and the token must be broken down further to remove other facets -->
-					<xsl:when test="substring(., 1, 1) = '('">
-						<xsl:variable name="tokenized-fragments" select="tokenize(., ' OR ')"/>
+				</xsl:when>
+				<!-- if the token contains a parenthisis, then it was probably sent from the search widget and the token must be broken down further to remove other facets -->
+				<xsl:when test="substring(., 1, 1) = '('">
+					<xsl:variable name="tokenized-fragments" select="tokenize(., ' OR ')"/>
 
-						<div class="ui-widget ui-state-default ui-corner-all stacked_term">
-							<xsl:if test="$lang='ar'">
-								<xsl:attribute name="style">text-align:right</xsl:attribute>
-								<a class="ui-icon ui-icon-closethick remove_filter_ar"
-									href="{$display_path}results?q={if (string($new_query)) then encode-for-uri($new_query) else '*:*'}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}"/>
-							</xsl:if>
+					<div class="stacked_term bg-info row">
+						<xsl:if test="$lang='ar'">
+							<xsl:attribute name="style">text-align:right</xsl:attribute>
+							<div class="col-md-2">
+								<a href="{$display_path}results?q={if (string($new_query)) then encode-for-uri($new_query) else '*:*'}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+									<span class="glyphicon glyphicon-remove"/>
+								</a>
+							</div>
+						</xsl:if>
+						<div class="col-md-10">
 							<span>
 								<xsl:for-each select="$tokenized-fragments">
 									<xsl:variable name="field" select="substring-before(translate(., '()', ''), ':')"/>
@@ -768,12 +780,12 @@
 									<!-- establish orientation based on language parameter -->
 									<xsl:choose>
 										<xsl:when test="$lang='ar'">
-											<xsl:text>[</xsl:text>
 											<!-- concatenate the query with the multicategory removed with the new multicategory, or if the multicategory is empty, display just the $new_query -->
 											<a
-												href="{$display_path}results?q={if (string($multicategory_query) and string($new_query)) then concat($new_query, ' AND ', $multicategory_query) else if (string($multicategory_query) and not(string($new_query))) then $multicategory_query else $new_query}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}"
-												>X</a>
-											<xsl:text>]</xsl:text>
+												href="{$display_path}results?q={if (string($multicategory_query) and string($new_query)) then concat($new_query, ' AND ', $multicategory_query) else if (string($multicategory_query) and not(string($new_query))) then $multicategory_query else $new_query}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+												<span class="glyphicon glyphicon-remove"/>
+											</a>
+
 
 											<xsl:choose>
 												<xsl:when test="$field='century_num'">
@@ -825,12 +837,12 @@
 												</xsl:otherwise>
 											</xsl:choose>
 
-											<xsl:text>[</xsl:text>
 											<!-- concatenate the query with the multicategory removed with the new multicategory, or if the multicategory is empty, display just the $new_query -->
 											<a
-												href="{$display_path}results?q={if (string($multicategory_query) and string($new_query)) then concat($new_query, ' AND ', $multicategory_query) else if (string($multicategory_query) and not(string($new_query))) then $multicategory_query else $new_query}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}"
-												>X</a>
-											<xsl:text>]</xsl:text>
+												href="{$display_path}results?q={if (string($multicategory_query) and string($new_query)) then concat($new_query, ' AND ', $multicategory_query) else if (string($multicategory_query) and not(string($new_query))) then $multicategory_query else $new_query}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+												<span class="glyphicon glyphicon-remove"/>
+											</a>
+
 											<xsl:if test="position() != last()">
 												<xsl:text> OR </xsl:text>
 											</xsl:if>
@@ -838,18 +850,22 @@
 									</xsl:choose>
 								</xsl:for-each>
 							</span>
-							<xsl:if test="not($lang='ar')">
-								<a class="ui-icon ui-icon-closethick remove_filter"
-									href="{$display_path}results?q={if (string($new_query)) then encode-for-uri($new_query) else '*:*'}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}"
-									>X</a>
-							</xsl:if>
 						</div>
-					</xsl:when>
-					<xsl:when test="not(contains(., ':'))">
-						<div class="stacked_term">
-							<xsl:if test="$lang='ar'">
-								<xsl:attribute name="style">text-align:right</xsl:attribute>
-							</xsl:if>
+						<xsl:if test="not($lang='ar')">
+							<div class="col-md-2 right">
+								<a href="{$display_path}results?q={if (string($new_query)) then encode-for-uri($new_query) else '*:*'}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+									<span class="glyphicon glyphicon-remove"/>
+								</a>
+							</div>
+						</xsl:if>
+					</div>
+				</xsl:when>
+				<xsl:when test="not(contains(., ':'))">
+					<div class="stacked_term bg-info row">
+						<xsl:if test="$lang='ar'">
+							<xsl:attribute name="style">text-align:right</xsl:attribute>
+						</xsl:if>
+						<div class="col-md-12">
 							<span>
 								<xsl:choose>
 									<xsl:when test="$lang='ar'">
@@ -866,34 +882,40 @@
 								</xsl:choose>
 							</span>
 						</div>
+					</div>
+				</xsl:when>
+			</xsl:choose>
+		</xsl:for-each>
+
+		<!-- remove sort term -->
+		<xsl:if test="string($sort)">
+			<xsl:variable name="field" select="substring-before($sort, ' ')"/>
+			<xsl:variable name="name">
+				<xsl:value-of select="numishare:normalize_fields($field, $lang)"/>
+			</xsl:variable>
+
+			<xsl:variable name="order">
+				<xsl:choose>
+					<xsl:when test="substring-after($sort, ' ') = 'asc'">
+						<xsl:value-of select="numishare:normalizeLabel('results_ascending', $lang)"/>
+					</xsl:when>
+					<xsl:when test="substring-after($sort, ' ') = 'desc'">
+						<xsl:value-of select="numishare:normalizeLabel('results_descending', $lang)"/>
 					</xsl:when>
 				</xsl:choose>
-			</xsl:for-each>
-
-			<!-- remove sort term -->
-			<xsl:if test="string($sort)">
-				<xsl:variable name="field" select="substring-before($sort, ' ')"/>
-				<xsl:variable name="name">
-					<xsl:value-of select="numishare:normalize_fields($field, $lang)"/>
-				</xsl:variable>
-
-				<xsl:variable name="order">
-					<xsl:choose>
-						<xsl:when test="substring-after($sort, ' ') = 'asc'">
-							<xsl:value-of select="numishare:normalizeLabel('results_ascending', $lang)"/>
-						</xsl:when>
-						<xsl:when test="substring-after($sort, ' ') = 'desc'">
-							<xsl:value-of select="numishare:normalizeLabel('results_descending', $lang)"/>
-						</xsl:when>
-					</xsl:choose>
-				</xsl:variable>
-				<div class="ui-widget ui-state-default ui-corner-all stacked_term">
-					<xsl:if test="$lang='ar'">
-						<xsl:attribute name="style">text-align:right</xsl:attribute>
-					</xsl:if>
-					<xsl:choose>
-						<xsl:when test="$lang='ar'">
-							<a class="ui-icon ui-icon-closethick remove_filter" href="?q={$q}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">X</a>
+			</xsl:variable>
+			<div class="stacked_term bg-info row">
+				<xsl:if test="$lang='ar'">
+					<xsl:attribute name="style">text-align:right</xsl:attribute>
+				</xsl:if>
+				<xsl:choose>
+					<xsl:when test="$lang='ar'">
+						<div class="col-md-2">
+							<a href="?q={$q}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+								<span class="glyphicon glyphicon-remove"/>
+							</a>
+						</div>
+						<div class="col-md-10">
 							<span>
 								<xsl:value-of select="$order"/>
 								<xsl:text>, </xsl:text>
@@ -903,30 +925,39 @@
 									<xsl:value-of select="numishare:normalizeLabel('results_sort-category', $lang)"/>
 								</b>
 							</span>
-						</xsl:when>
-						<xsl:otherwise>
+						</div>
+					</xsl:when>
+					<xsl:otherwise>
+						<div class="col-md-10">
 							<span>
 								<b><xsl:value-of select="numishare:normalizeLabel('results_sort-category', $lang)"/>: </b>
 								<xsl:value-of select="$name"/>
 								<xsl:text>, </xsl:text>
 								<xsl:value-of select="$order"/>
 							</span>
-							<a class="ui-icon ui-icon-closethick remove_filter" href="?q={$q}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">X</a>
-						</xsl:otherwise>
-					</xsl:choose>
-				</div>
-			</xsl:if>
-			<xsl:if test="string($tokenized_q[3])">
-				<div class="ui-widget ui-state-default ui-corner-all stacked_term">
-					<xsl:if test="$lang='ar'">
-						<xsl:attribute name="style">text-align:right</xsl:attribute>
-					</xsl:if>
+						</div>
+						<div class="col-md-2 right">
+							<a href="?q={$q}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+								<span class="glyphicon glyphicon-remove"/>
+							</a>
+						</div>
+					</xsl:otherwise>
+				</xsl:choose>
+			</div>
+		</xsl:if>
+		<xsl:if test="string($tokenized_q[3])">
+			<div class="stacked_term bg-info row">
+				<xsl:if test="$lang='ar'">
+					<xsl:attribute name="style">text-align:right</xsl:attribute>
+				</xsl:if>
+				<div class="col-md-12">
 					<a id="clear_all" href="?q=*:*">
 						<xsl:value-of select="numishare:normalizeLabel('results_clear-all', $lang)"/>
 					</a>
 				</div>
-			</xsl:if>
-		</div>
+			</div>
+		</xsl:if>
+
 
 	</xsl:template>
 
@@ -1002,7 +1033,9 @@
 				</xsl:choose>
 				<!-- current page -->
 				<span class="pagingBtn btn btn-primary btn-sm disabled">
-					<b><xsl:value-of select="$current"/></b>
+					<b>
+						<xsl:value-of select="$current"/>
+					</b>
 				</span>
 				<!-- next page -->
 				<xsl:choose>
@@ -1123,17 +1156,23 @@
 			</xsl:for-each>
 		</xsl:variable>
 
-		<div class="stacked_term">
-			<span class="term">
-				<b>Category: </b>
-				<xsl:call-template name="recompile_category">
-					<xsl:with-param name="category_fragment" select="$category_fragment"/>
-					<xsl:with-param name="tokenized_fragment" select="tokenize(substring-after(replace(replace(replace($category_fragment, '\)', ''), '\(', ''), '\+', ''), 'category_facet:'), ' ')"/>
-					<xsl:with-param name="level" as="xs:integer">1</xsl:with-param>
-				</xsl:call-template>
-			</span>
-			<a class="remove_filter" href="?q={if (string($new_query)) then encode-for-uri($new_query) else '*:*'}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">X</a>
-
+		<div class="stacked_term bg-info row">
+			<div class="col-md-10">
+				<span>
+					<b>Category: </b>
+					<xsl:call-template name="recompile_category">
+						<xsl:with-param name="category_fragment" select="$category_fragment"/>
+						<xsl:with-param name="tokenized_fragment"
+							select="tokenize(substring-after(replace(replace(replace($category_fragment, '\)', ''), '\(', ''), '\+', ''), 'category_facet:'), ' ')"/>
+						<xsl:with-param name="level" as="xs:integer">1</xsl:with-param>
+					</xsl:call-template>
+				</span>
+			</div>
+			<div class="col-md-2 right">
+				<a class="remove_filter" href="?q={if (string($new_query)) then encode-for-uri($new_query) else '*:*'}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+					<span class="glyphicon glyphicon-remove"/>
+				</a>
+			</div>
 		</div>
 	</xsl:template>
 
