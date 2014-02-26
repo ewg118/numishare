@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes="xs nuds nh xlink mets numishare datetime"
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes="nuds nh xlink mets numishare"
 	xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nm="http://nomisma.org/id/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
 	xmlns:nuds="http://nomisma.org/nuds" xmlns:nh="http://nomisma.org/nudsHoard" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns:georss="http://www.georss.org/georss" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:oa="http://www.w3.org/ns/oa#" xmlns:owl="http://www.w3.org/2002/07/owl#"
-	xmlns:dc="http://purl.org/dc/terms/" xmlns:pelagios="http://pelagios.github.io/vocab/terms#" xmlns:relations="http://pelagios.github.io/vocab/relations#" xmlns:foaf="http://xmlns.com/foaf/0.1/"
-	xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:mets="http://www.loc.gov/METS/" xmlns:numishare="https://github.com/ewg118/numishare" xmlns:datetime="http://exslt.org/dates-and-times"
-	version="2.0">
+	xmlns:pelagios="http://pelagios.github.io/vocab/terms#" xmlns:relations="http://pelagios.github.io/vocab/relations#" xmlns:foaf="http://xmlns.com/foaf/0.1/"
+	xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:mets="http://www.loc.gov/METS/" xmlns:numishare="https://github.com/ewg118/numishare" version="2.0">
 
 	<!-- ************** OBJECT-TO-RDF **************** -->
 	<xsl:template name="rdf">
@@ -804,7 +803,7 @@
 	<!-- ************************* SOLR-BASED RDF ********************** -->
 
 	<!-- PELAGIOS RDF -->
-	<xsl:template match="doc" mode="pelagios">
+	<xsl:template match="doc" mode="pelagios" exclude-result-prefixes="#all">
 		<xsl:variable name="id" select="str[@name='recordId']"/>
 		<xsl:variable name="date" select="substring-before(date[@name='timestamp'], 'T')"/>
 		<pelagios:AnnotatedThing rdf:about="{$url}pelagios.rdf#{$id}">
@@ -919,7 +918,7 @@
 		<xsl:variable name="id" select="str[@name='recordId']"/>
 		<xsl:variable name="recordType" select="str[@name='recordType']"/>
 
-		<xsl:element name="nm:{if ($recordType='hoard') then 'hoard' else 'coin'}">
+		<xsl:element name="nm:{if ($recordType='hoard') then 'hoard' else 'coin'}" namespace="http://nomisma.org/id/" exclude-result-prefixes="#all">			
 			<xsl:attribute name="rdf:about" select="concat($url, 'id/', $id)"/>
 			<dcterms:title xml:lang="{if (str[@name='lang']) then str[@name='lang'] else 'en'}">
 				<xsl:value-of select="str[@name='title_display']"/>
