@@ -30,30 +30,13 @@
 
 	<!-- get block of images from SPARQL endpoint -->
 	<xsl:variable name="sparqlResult" as="element()*">
-		<xsl:if test="string($sparql_endpoint)">
-			<xsl:variable name="identifiers">
-				<xsl:for-each select="descendant::str[@name='recordId']">
-					<xsl:value-of select="."/>
-					<xsl:if test="not(position()=last())">
-						<xsl:text>|</xsl:text>
-					</xsl:if>
-				</xsl:for-each>
-			</xsl:variable>
-
-			<xsl:variable name="response" as="element()*">
-				<xsl:copy-of select="document(concat('cocoon:/widget?identifiers=', $identifiers, '&amp;template=results&amp;baseUri=http://nomisma.org/id/'))/res:sparql"/>
-			</xsl:variable>
-
+		<xsl:if test="string($sparql_endpoint) and //config/collection_type='cointype'">
 			<!-- process sparql into a manageable XML model -->
 			<response xmlns="http://www.w3.org/2005/sparql-results#">
 				<xsl:for-each select="descendant::str[@name='recordId']">
 					<xsl:variable name="uri" select="concat('http://nomisma.org/id/', .)"/>
-					<group>
-						<xsl:attribute name="id" select="."/>
-						<xsl:for-each select="distinct-values($response/descendant::res:result[res:binding[@name='type']/res:uri=$uri]/res:binding[@name='object']/res:uri)">
-							<xsl:variable name="objectUri" select="."/>
-							<xsl:copy-of select="$response/descendant::res:result[res:binding[@name='object']/res:uri=$objectUri][1]"/>
-						</xsl:for-each>
+					<group id="{.}">						
+						<xsl:copy-of select="document(concat('cocoon:/widget?uri=', $uri, '&amp;template=results'))/res:sparql/res:results"/>
 					</group>
 				</xsl:for-each>
 			</response>
@@ -279,54 +262,16 @@
 						</xsl:if>
 					</xsl:when>
 					<xsl:when test="str[@name='recordType'] = 'conceptual'">
-						<xsl:choose>
-							<xsl:when test="string($sparql_endpoint)">
-								<xsl:variable name="id" select="str[@name='recordId']"/>
-								<xsl:variable name="group" as="element()*">
-									<xsl:copy-of select="$sparqlResult//res:group[@id=$id]"/>
-								</xsl:variable>
-
-								<xsl:call-template name="numishare:renderSparqlResults">
-									<xsl:with-param name="group" select="$group"/>
-								</xsl:call-template>
-							</xsl:when>
-							<xsl:otherwise>
-								<xsl:variable name="count" select="count(arr[@name='ao_uri']/str)"/>
-								<xsl:variable name="title" select="str[@name='title_display']	"/>
-								<xsl:variable name="docId" select="str[@name='recordId']"/>
-
-								<xsl:if test="count(arr[@name='ao_thumbnail_obv']/str) &gt; 0">
-									<xsl:variable name="recordId" select="substring-before(arr[@name='ao_thumbnail_obv']/str[1], '|')"/>
-									<a class="thumbImage" rel="{str[@name='recordId']}-gallery" href="{substring-after(arr[@name='ao_reference_obv']/str[contains(., $recordId)], '|')}"
-										title="Obverse of {$title}: {$recordId}">
-										<img src="{substring-after(arr[@name='ao_thumbnail_obv']/str[1], '|')}"/>
-									</a>
-									<xsl:if test="arr[@name='ao_thumbnail_rev']/str[contains(., $recordId)]">
-										<a class="thumbImage" rel="{str[@name='recordId']}-gallery" href="{substring-after(arr[@name='ao_reference_rev']/str[contains(., $recordId)], '|')}"
-											title="Reverse of {$title}: {$recordId}">
-											<img src="{substring-after(arr[@name='ao_thumbnail_rev']/str[contains(., $recordId)], '|')}"/>
-										</a>
-									</xsl:if>
-									<div style="display:none">
-										<xsl:for-each select="arr[@name='ao_thumbnail_obv']/str[not(contains(., $recordId))]">
-											<xsl:variable name="thisId" select="substring-before(., '|')"/>
-											<a class="thumbImage" rel="{$docId}-gallery" href="{substring-after(//arr[@name='ao_reference_obv']/str[contains(., $thisId)], '|')}"
-												title="Obverse of {$title}: {$thisId}">
-												<img src="{substring-after(., '|')}" alt="image"/>
-											</a>
-											<xsl:if test="//arr[@name='ao_thumbnail_rev']/str[contains(., $thisId)]">
-												<a class="thumbImage" rel="{$docId}-gallery" href="{substring-after(ancestor::doc/arr[@name='ao_reference_rev']/str[contains(., $thisId)], '|')}"
-													title="Reverse of {$title}: {$thisId}">
-													<img src="{substring-after(//arr[@name='ao_thumbnail_rev']/str[contains(., $thisId)], '|')}"/>
-												</a>
-											</xsl:if>
-										</xsl:for-each>
-									</div>
-								</xsl:if>
-								<br/>
-								<xsl:value-of select="concat($count, if($count = 1) then ' associated coin' else ' associated coins')"/>
-							</xsl:otherwise>
-						</xsl:choose>
+						<xsl:if test="string($sparql_endpoint)">
+							<xsl:variable name="id" select="str[@name='recordId']"/>
+							<xsl:variable name="group" as="element()*">
+								<xsl:copy-of select="$sparqlResult//res:group[@id=$id]"/>
+							</xsl:variable>
+							
+							<xsl:call-template name="numishare:renderSparqlResults">
+								<xsl:with-param name="group" select="$group"/>
+							</xsl:call-template>
+						</xsl:if>
 					</xsl:when>
 				</xsl:choose>
 			</div>

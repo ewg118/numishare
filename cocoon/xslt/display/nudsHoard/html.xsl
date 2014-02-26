@@ -82,8 +82,9 @@
 								</td>
 							</tr>
 						</tbody>
-					</table>
+					</table>					
 				</div>
+				<p>View map in <a href="{$display_path}map/{$id}">fullscreen</a>.</p>
 			</div>
 		</div>
 		<div class="yui3-u-1-2">

@@ -1,12 +1,3 @@
-html, body {
-	font-family: Verdana, Arial, Helvetica, sans-serif;
-	font-size: 11px;
-	line-height: 14px;
-	color: #333333;
-	margin:0;
-	height:100%;
-	width:100%;
-}
 /*
   ***************************************
   FACETS
@@ -48,8 +39,21 @@ button.ui-multiselect {
 	z-index: 1000;
 	background-color: white;
 	padding: 0.5em;
-	background-color:#F7F6ED;
-	border:5px solid #C2B9A9;
+	background-color:#ebebeb;
+	border:5px solid silver;	
+	border-radius:10px;
+}
+#timemap-legend {
+	position: absolute;
+	bottom: 25%;
+	left: 2em;
+	width: 300px;
+	z-index: 1000;
+	background-color: white;
+	padding: 0.5em;
+	background-color:#ebebeb;
+	border:5px solid silver;
+	border-radius:10px;
 }
 #show_filters {
 	font-size:80%;
@@ -106,11 +110,15 @@ button.ui-multiselect {
  */
 div#timelinecontainer {
 	width:100%;
-	height: 250px;
+	height: 20%;
 }
 div#mapcontainer {
 	width:100%;
 	height: 100%;
+}
+div#fullscreen-timemapcontainer {
+	height:80%;
+	width:100%;
 }
 div.olFramedCloudPopupContent {
 	width: 300px;
@@ -194,7 +202,7 @@ dd {
 	padding:10px 0;
 }
 .page-nos {
-	text-align:right;	
+	text-align:right;
 }
 .pagingBtn {
 	margin:2px;

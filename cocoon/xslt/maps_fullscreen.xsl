@@ -91,7 +91,7 @@
 
 			<xsl:choose>
 				<xsl:when test="//result[@name='response']/@numFound &gt; 0">
-					<div id="legend" class="ui-corner-all">
+					<div id="legend">
 						<h2>
 							<xsl:value-of select="numishare:regularize_node('legend', $lang)"/>
 							<small>
@@ -115,8 +115,11 @@
 										</td>
 									</tr>
 								</tbody>
-							</table>
+							</table>							
 						</div>
+						<small>
+							<a href="{$display_path}maps"><span class="glyphicon glyphicon-arrow-left"/>Return</a>
+						</small>
 					</div>
 					<div style="display:none">
 						<div id="map_filters">

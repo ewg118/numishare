@@ -11,7 +11,7 @@
 						<span class="icon-bar"/>
 						<span class="icon-bar"/>
 					</button>
-					<a class="navbar-brand" href="{$url}">
+					<a class="navbar-brand" href="{$display_path}./">
 						<xsl:value-of select="//config/title"/>
 					</a>
 				</div>
@@ -89,19 +89,9 @@
 					<a href="{$display_path}results?q=*:*{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
 						<xsl:value-of select="numishare:normalizeLabel('header_browse', $lang)"/>
 					</a>
-				</li>
-				<li>
-					<a href="{$display_path}.{if (string($lang)) then concat('?lang=', $lang) else ''}">
-						<xsl:value-of select="numishare:normalizeLabel('header_home', $lang)"/>
-					</a>
-				</li>
+				</li>				
 			</xsl:when>
-			<xsl:otherwise>
-				<li>
-					<a href="{$display_path}.{if (string($lang)) then concat('?lang=', $lang) else ''}">
-						<xsl:value-of select="numishare:normalizeLabel('header_home', $lang)"/>
-					</a>
-				</li>
+			<xsl:otherwise>				
 				<li>
 					<a href="{$display_path}results?q=*:*{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
 						<xsl:value-of select="numishare:normalizeLabel('header_browse', $lang)"/>

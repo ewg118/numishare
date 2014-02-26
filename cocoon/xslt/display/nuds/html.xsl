@@ -301,22 +301,9 @@
 										</td>
 									</tr>
 								</tbody>
-							</table>
-						</div>
-						<p>Use the layer control along the right edge of the map (the "plus" symbol) to toggle map layers.</p>
-						<ul id="term-list" style="display:none">
-							<xsl:for-each select="document(concat($solr-url, 'select?q=id:&#x022;', $id, '&#x022;'))//arr">
-								<xsl:if test="contains(@name, '_facet') and not(contains(@name, 'institution')) and not(contains(@name, 'collection')) and not(contains(@name, 'department'))">
-									<xsl:variable name="name" select="@name"/>
-									<xsl:for-each select="str">
-										<li class="{$name}">
-											<xsl:value-of select="."/>
-										</li>
-									</xsl:for-each>
-
-								</xsl:if>
-							</xsl:for-each>
-						</ul>
+							</table>							
+						</div>		
+						<p>View map in <a href="{$display_path}map/{$id}">fullscreen</a>.</p>						
 					</div>
 				</div>
 			</xsl:otherwise>

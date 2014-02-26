@@ -96,8 +96,8 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 			PREFIX foaf:	<http://xmlns.com/foaf/0.1/>
 			
 			SELECT ?object ?objectType ?identifier ?collection ?obvThumb ?revThumb ?obvRef ?revRef ?comThumb ?comRef ?type WHERE {
-			<typeUris>
-			 ?object rdf:type ?objectType .
+			?object nm:type_series_item <typeUri> .
+			?object rdf:type ?objectType .
 			OPTIONAL { ?object dcterms:identifier ?identifier }
 			OPTIONAL { ?object nm:collection ?colUri .
 			?colUri skos:prefLabel ?collection 
@@ -106,44 +106,12 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 			OPTIONAL { ?object nm:reverseThumbnail ?revThumb }
 			OPTIONAL { ?object nm:obverseReference ?obvRef }
 			OPTIONAL { ?object nm:reverseReference ?revRef }
-			OPTIONAL { ?object nm:type_series_item ?type }
 			OPTIONAL { ?object foaf:thumbnail ?comThumb }
 			OPTIONAL { ?object foaf:depiction ?comRef }
-			]]>
+			}]]>
 		</xsl:variable>
 
-		<xsl:variable name="template">
-			<xsl:text><![CDATA[ { ?object nm:type_series_item <typeUri> }]]></xsl:text>
-		</xsl:variable>
-
-		<xsl:variable name="union">
-			<xsl:for-each select="tokenize($identifiers, '\|')">
-				<xsl:if test="not(position()=1)">
-					<xsl:text>UNION </xsl:text>
-				</xsl:if>
-				<xsl:value-of select="replace($template, 'typeUri', concat($baseUri, .))"/>
-			</xsl:for-each>
-		</xsl:variable>
-
-		<xsl:variable name="filter">
-			<xsl:text> FILTER(</xsl:text>
-			<xsl:for-each select="tokenize($identifiers, '\|')">
-				<xsl:variable name="escapedId" select="replace(replace(replace(., '\)', '\\\\)'), '\(', '\\\\('), '\.', '\\\\.')"/>
-				<xsl:text>regex(str(?type), "</xsl:text>
-				<xsl:value-of select="$escapedId"/>
-				<xsl:text>", "i")</xsl:text>
-				<xsl:if test="not(position()=last())">
-					<xsl:text> || </xsl:text>
-				</xsl:if>
-			</xsl:for-each>
-			<xsl:text>)</xsl:text>
-		</xsl:variable>
-
-		<xsl:variable name="post">
-			<xsl:value-of select="normalize-space(concat(replace($query, '&lt;typeUris&gt;', $union), $filter, '}'))"/>
-		</xsl:variable>
-
-		<xsl:variable name="service" select="concat($endpoint, '?query=', encode-for-uri($post), '&amp;output=xml')"/>
+		<xsl:variable name="service" select="concat($endpoint, '?query=', encode-for-uri(normalize-space(replace($query, 'typeUri', $uri))), '&amp;output=xml')"/>
 		<xsl:copy-of select="document($service)/res:sparql"/>
 	</xsl:template>
 

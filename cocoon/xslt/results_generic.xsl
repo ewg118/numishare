@@ -1103,7 +1103,7 @@
 				<xsl:if test="string($lang)">
 					<input type="hidden" name="lang" value="{$lang}"/>
 				</xsl:if>
-				<input type="text" class="form-control" id="qs_text" placeholder="Search within query"/>
+				<input type="text" class="form-control" id="qs_text" placeholder="Search"/>
 				<button class="btn btn-default" type="submit">
 					<i class="glyphicon glyphicon-search"/>
 				</button>

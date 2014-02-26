@@ -35,37 +35,18 @@
 
 	<!-- get block of images from SPARQL endpoint -->
 	<xsl:variable name="sparqlResult" as="element()*">
-		<xsl:if test="string($sparql_endpoint)">
-			<xsl:variable name="identifiers">
-				<xsl:for-each select="descendant::str[@name='recordId']">
-					<xsl:value-of select="."/>
-					<xsl:if test="not(position()=last())">
-						<xsl:text>|</xsl:text>
-					</xsl:if>
-				</xsl:for-each>
-			</xsl:variable>
-
-			<xsl:variable name="response" as="element()*">
-				<xsl:copy-of select="document(concat('cocoon:/widget?identifiers=', $identifiers, '&amp;template=results&amp;baseUri=http://nomisma.org/id/'))/res:sparql"/>
-			</xsl:variable>
-
+		<xsl:if test="string($sparql_endpoint) and //config/collection_type='cointype'">
 			<!-- process sparql into a manageable XML model -->
 			<response xmlns="http://www.w3.org/2005/sparql-results#">
 				<xsl:for-each select="descendant::str[@name='recordId']">
 					<xsl:variable name="uri" select="concat('http://nomisma.org/id/', .)"/>
-					<group>
-						<xsl:attribute name="id" select="."/>
-						<xsl:for-each select="distinct-values($response/descendant::res:result[res:binding[@name='type']/res:uri=$uri]/res:binding[@name='object']/res:uri)">
-							<xsl:variable name="objectUri" select="."/>
-							<xsl:copy-of select="$response/descendant::res:result[res:binding[@name='object']/res:uri=$objectUri][1]"/>
-						</xsl:for-each>
+					<group id="{.}">						
+						<xsl:copy-of select="document(concat('cocoon:/widget?uri=', $uri, '&amp;template=results'))/res:sparql/res:results"/>
 					</group>
 				</xsl:for-each>
 			</response>
 		</xsl:if>
 	</xsl:variable>
-	
-	
 
 	<xsl:template match="/">
 		<html>
@@ -133,6 +114,7 @@
 	</xsl:template>
 
 	<xsl:template name="results">
+		<!--<xsl:copy-of select="$sparqlResult"/>-->
 		<div class="container-fluid">
 			<div class="row">
 				<div class="col-md-3">
