@@ -40,7 +40,9 @@ function initialize_map(q, collection_type) {
 		controls:[
 		new OpenLayers.Control.PanZoomBar(),
 		new OpenLayers.Control.Navigation(),
-		new OpenLayers.Control.ScaleLine(), new OpenLayers.Control.LayerSwitcher({
+		new OpenLayers.Control.ScaleLine(), 
+		new OpenLayers.Control.Attribution(),
+		new OpenLayers.Control.LayerSwitcher({
 			'ascending': true
 		})]
 	});
@@ -53,8 +55,7 @@ function initialize_map(q, collection_type) {
 		strokeColor: "#000072",
 		strokeWidth: 2,
 		strokeOpacity: 0.8
-	},
-	{
+	}, {
 		context: {
 			radius: function (feature) {
 				return Math.min(feature.attributes.count, 7) + 3;
@@ -69,8 +70,7 @@ function initialize_map(q, collection_type) {
 		strokeColor: "#006100",
 		strokeWidth: 2,
 		strokeOpacity: 0.8
-	},
-	{
+	}, {
 		context: {
 			radius: function (feature) {
 				return Math.min(feature.attributes.count, 7) + 3;

@@ -127,6 +127,7 @@ $(document).ready(function () {
 			new OpenLayers.Control.PanZoomBar(),
 			new OpenLayers.Control.Navigation(),
 			new OpenLayers.Control.ScaleLine(),
+			new OpenLayers.Control.Attribution(),
 			new OpenLayers.Control.LayerSwitcher({
 				'ascending': true
 			})]

@@ -92,6 +92,7 @@ mxn.register('openlayers', {
 			for (i = 0; i < baselayers.length; i++) {
 				map.addLayer(eval('this.layers.' + baselayers[i]));
 			}
+			map.addControl(new OpenLayers.Control.Attribution());
 			this.maps[api] = map;
 			this.loaded[api] = true;
 		},
@@ -115,7 +116,7 @@ mxn.register('openlayers', {
 		},
 		
 		addControls: function (args) {
-			var map = this.maps[ this.api];
+			var map = this.maps[ this.api];						
 			// FIXME: OpenLayers has a bug removing all the controls says crschmidt
 			for (var i = map.controls.length; i > 1; i--) {
 				map.controls[i - 1].deactivate();

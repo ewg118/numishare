@@ -76,6 +76,7 @@ function initialize_map(id, path) {
 		new OpenLayers.Control.PanZoomBar(),
 		new OpenLayers.Control.Navigation(),
 		new OpenLayers.Control.ScaleLine(),
+		new OpenLayers.Control.Attribution(),
 		new OpenLayers.Control.LayerSwitcher({
 			'ascending': true
 		})]
@@ -101,39 +102,6 @@ function initialize_map(id, path) {
 				extractAttributes: true
 			})
 		})
-	});
-	
-	//add other facets
-	$('#term-list').children('li').each(function () {
-		var facet = $(this).attr('class');
-		var value = $(this).text();
-		
-		var fillColor = '#' + Math.floor(Math.random() * 16777215).toString(16);
-		var strokeColor = '#' + Math.floor(Math.random() * 16777215).toString(16);
-		
-		map.addLayer(new OpenLayers.Layer.Vector(facet.split('_')[0] + ': ' + value, {
-			visibility: false,
-			styleMap: new OpenLayers.Style({
-				pointRadius: "${radius}", fillColor: fillColor, fillOpacity: 0.8, strokeColor: strokeColor, strokeWidth: 2, strokeOpacity: 0.8
-			},
-			{
-				context: {
-					radius: function (feature) {
-						return Math.min(feature.attributes.count, 7) + 3;
-					}
-				}
-			}),
-			strategies:[
-			new OpenLayers.Strategy.Fixed(),
-			new OpenLayers.Strategy.Cluster()],
-			protocol: new OpenLayers.Protocol.HTTP({
-				url: path + 'mints.kml?q=' + facet + ':"' + value + '"',
-				format: new OpenLayers.Format.KML({
-					extractStyles: false,
-					extractAttributes: true
-				})
-			})
-		}));
 	});
 	
 	//add origin point last
