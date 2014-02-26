@@ -803,7 +803,7 @@
 	<!-- ************************* SOLR-BASED RDF ********************** -->
 
 	<!-- PELAGIOS RDF -->
-	<xsl:template match="doc" mode="pelagios">
+	<xsl:template match="doc" mode="pelagios" exclude-result-prefixes="#all">
 		<xsl:variable name="id" select="str[@name='recordId']"/>
 		<xsl:variable name="date" select="substring-before(date[@name='timestamp'], 'T')"/>
 		<pelagios:AnnotatedThing rdf:about="{$url}pelagios.rdf#{$id}">
@@ -918,7 +918,7 @@
 		<xsl:variable name="id" select="str[@name='recordId']"/>
 		<xsl:variable name="recordType" select="str[@name='recordType']"/>
 
-		<xsl:element name="nm:{if ($recordType='hoard') then 'hoard' else 'coin'}">
+		<xsl:element name="nm:{if ($recordType='hoard') then 'hoard' else 'coin'}" namespace="http://nomisma.org/id/" exclude-result-prefixes="#all">			
 			<xsl:attribute name="rdf:about" select="concat($url, 'id/', $id)"/>
 			<dcterms:title xml:lang="{if (str[@name='lang']) then str[@name='lang'] else 'en'}">
 				<xsl:value-of select="str[@name='title_display']"/>
