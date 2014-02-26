@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	exclude-result-prefixes="xs nuds nh xlink mets numishare datetime" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"
-	xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nm="http://nomisma.org/id/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-	xmlns:nuds="http://nomisma.org/nuds" xmlns:nh="http://nomisma.org/nudsHoard" xmlns:dcterms="http://purl.org/dc/terms/"
-	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:georss="http://www.georss.org/georss" xmlns:atom="http://www.w3.org/2005/Atom"
-	xmlns:oac="http://www.openannotation.org/ns/" xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:dc="http://purl.org/dc/terms/"
-	xmlns:pelagios="http://pelagios.github.io/vocab/terms#" xmlns:relations="http://pelagios.github.io/vocab/relations#" xmlns:foaf="http://xmlns.com/foaf/0.1/"
-	xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:mets="http://www.loc.gov/METS/" xmlns:numishare="https://github.com/ewg118/numishare"
-	xmlns:datetime="http://exslt.org/dates-and-times" version="2.0">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes="xs nuds nh xlink mets numishare datetime"
+	xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nm="http://nomisma.org/id/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	xmlns:nuds="http://nomisma.org/nuds" xmlns:nh="http://nomisma.org/nudsHoard" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xlink="http://www.w3.org/1999/xlink"
+	xmlns:georss="http://www.georss.org/georss" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:oa="http://www.w3.org/ns/oa#" xmlns:owl="http://www.w3.org/2002/07/owl#"
+	xmlns:dc="http://purl.org/dc/terms/" xmlns:pelagios="http://pelagios.github.io/vocab/terms#" xmlns:relations="http://pelagios.github.io/vocab/relations#" xmlns:foaf="http://xmlns.com/foaf/0.1/"
+	xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:mets="http://www.loc.gov/METS/" xmlns:numishare="https://github.com/ewg118/numishare" xmlns:datetime="http://exslt.org/dates-and-times"
+	version="2.0">
 
 	<!-- ************** OBJECT-TO-RDF **************** -->
 	<xsl:template name="rdf">
@@ -80,12 +78,11 @@
 				<!-- dates -->
 				<xsl:choose>
 					<xsl:when test="$nudsGroup//nuds:typeDesc/nuds:date">
-						<dcterms:temporal>from=<xsl:value-of select="numishare:iso-to-digit($nudsGroup//nuds:typeDesc/nuds:date/@standardDate)"/>
-								to=<xsl:value-of select="numishare:iso-to-digit($nudsGroup//nuds:typeDesc/nuds:date/@standardDate)"/></dcterms:temporal>
+						<dcterms:temporal>from=<xsl:value-of select="numishare:iso-to-digit($nudsGroup//nuds:typeDesc/nuds:date/@standardDate)"/> to=<xsl:value-of
+								select="numishare:iso-to-digit($nudsGroup//nuds:typeDesc/nuds:date/@standardDate)"/></dcterms:temporal>
 					</xsl:when>
 					<xsl:when test="$nudsGroup//nuds:typeDesc/nuds:dateRange">
-						<dcterms:temporal>from=<xsl:value-of
-								select="numishare:iso-to-digit($nudsGroup//nuds:typeDesc/nuds:dateRange/nuds:fromDate/@standardDate)"/> to=<xsl:value-of
+						<dcterms:temporal>from=<xsl:value-of select="numishare:iso-to-digit($nudsGroup//nuds:typeDesc/nuds:dateRange/nuds:fromDate/@standardDate)"/> to=<xsl:value-of
 								select="numishare:iso-to-digit($nudsGroup//nuds:typeDesc/nuds:dateRange/nuds:toDate/@standardDate)"/></dcterms:temporal>
 					</xsl:when>
 				</xsl:choose>
@@ -99,15 +96,15 @@
 
 		<!-- create annotations from pleiades URIs found in nomisma RDF and from findspots -->
 		<xsl:for-each select="distinct-values($rdf//skos:related[contains(@rdf:resource, 'pleiades')]/@rdf:resource)">
-			<oac:Annotation rdf:about="{$url}pelagios.rdf#{$id}/annotations/{format-number(position(), '000')}">
-				<oac:hasBody rdf:resource="{.}#this"/>
-				<oac:hasTarget rdf:resource="{$url}pelagios.rdf#{$id}"/>
+			<oa:Annotation rdf:about="{$url}pelagios.rdf#{$id}/annotations/{format-number(position(), '000')}">
+				<oa:hasBody rdf:resource="{.}#this"/>
+				<oa:hasTarget rdf:resource="{$url}pelagios.rdf#{$id}"/>
 				<pelagios:relations rdf:resource="http://pelagios.github.io/vocab/relations#attestsTo"/>
-				<oac:annotatedBy rdf:resource="{$url}pelagios.rdf#agents/me"/>
-				<oac:annotatedAt rdf:datatype="xs:dateTime">
+				<oa:annotatedBy rdf:resource="{$url}pelagios.rdf#agents/me"/>
+				<oa:annotatedAt rdf:datatype="xs:dateTime">
 					<xsl:value-of select="concat(datetime:dateTime(), 'Z')"/>
-				</oac:annotatedAt>
-			</oac:Annotation>
+				</oa:annotatedAt>
+			</oa:Annotation>
 		</xsl:for-each>
 
 		<xsl:apply-templates select="descendant::*:geogname[@xlink:role='findspot'][string(@xlink:href)]|descendant::*:findspotDesc[string(@xlink:href)]" mode="pelagios">
@@ -383,9 +380,7 @@
 							<xsl:variable name="geonameId" select="tokenize($href, '/')[4]"/>
 							<xsl:variable name="geonames_data" as="element()*">
 								<xml>
-									<xsl:copy-of
-										select="document(concat($geonames-url, '/get?geonameId=', $geonameId, '&amp;username=', $geonames_api_key, '&amp;style=full'))"
-									/>
+									<xsl:copy-of select="document(concat($geonames-url, '/get?geonameId=', $geonameId, '&amp;username=', $geonames_api_key, '&amp;style=full'))"/>
 								</xml>
 							</xsl:variable>
 
@@ -515,15 +510,15 @@
 		<xsl:param name="id"/>
 		<xsl:param name="count"/>
 
-		<oac:Annotation rdf:about="{$url}pelagios.rdf#{$id}/annotations/{format-number($count + 1, '000')}">
-			<oac:hasBody rdf:resource="{@xlink:href}"/>
-			<oac:hasTarget rdf:resource="{$url}pelagios.rdf#{$id}"/>
+		<oa:Annotation rdf:about="{$url}pelagios.rdf#{$id}/annotations/{format-number($count + 1, '000')}">
+			<oa:hasBody rdf:resource="{@xlink:href}"/>
+			<oa:hasTarget rdf:resource="{$url}pelagios.rdf#{$id}"/>
 			<pelagios:relations rdf:resource="http://pelagios.github.io/vocab/relations#foundAt"/>
-			<oac:annotatedBy rdf:resource="{$url}pelagios.rdf#agents/me"/>
-			<oac:annotatedAt rdf:datatype="xs:dateTime">
+			<oa:annotatedBy rdf:resource="{$url}pelagios.rdf#agents/me"/>
+			<oa:annotatedAt rdf:datatype="xs:dateTime">
 				<xsl:value-of select="concat(datetime:dateTime(), 'Z')"/>
-			</oac:annotatedAt>
-		</oac:Annotation>
+			</oa:annotatedAt>
+		</oa:Annotation>
 	</xsl:template>
 
 	<!-- ************** SOLR-TO-XML **************** -->
@@ -553,8 +548,8 @@
 			</xsl:if>
 		</xsl:variable>
 
-		<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:georss="http://www.georss.org/georss"
-			xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns="http://www.w3.org/2005/Atom">
+		<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:georss="http://www.georss.org/georss" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"
+			xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns="http://www.w3.org/2005/Atom">
 			<title>
 				<xsl:value-of select="/content/config/title"/>
 			</title>
@@ -626,8 +621,7 @@
 				</link>
 				<xsl:if test="string(/content/config/template/copyrightHolder) or string(/content/config/template/license)">
 					<copyright>
-						<xsl:if test="string(/content/config/template/copyrightHolder)">Copyright: <xsl:value-of
-								select="/content/config/template/copyrightHolder"/></xsl:if>
+						<xsl:if test="string(/content/config/template/copyrightHolder)">Copyright: <xsl:value-of select="/content/config/template/copyrightHolder"/></xsl:if>
 						<xsl:if test="string(/content/config/template/copyrightHolder) and string(/content/config/template/license)">
 							<xsl:text>, </xsl:text>
 						</xsl:if>
@@ -659,8 +653,7 @@
 	</xsl:template>
 
 	<xsl:template match="doc" mode="atom">
-		<entry xmlns="http://www.w3.org/2005/Atom" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:georss="http://www.georss.org/georss"
-			xmlns:gx="http://www.google.com/kml/ext/2.2">
+		<entry xmlns="http://www.w3.org/2005/Atom" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:georss="http://www.georss.org/georss" xmlns:gx="http://www.google.com/kml/ext/2.2">
 			<title>
 				<xsl:choose>
 					<xsl:when test="string(str[@name='title_display'])">
@@ -809,7 +802,7 @@
 	<!-- PELAGIOS RDF -->
 	<xsl:template match="doc" mode="pelagios">
 		<xsl:variable name="id" select="str[@name='recordId']"/>
-		<xsl:variable name="timestamp" select="date[@name='timestamp']"/>
+		<xsl:variable name="date" select="substring-before(date[@name='timestamp'], 'T')"/>
 		<pelagios:AnnotatedThing rdf:about="{$url}pelagios.rdf#{$id}">
 			<dcterms:title>
 				<xsl:value-of select="str[@name='title_display']"/>
@@ -819,15 +812,13 @@
 			<!-- temporal -->
 			<xsl:choose>
 				<xsl:when test="count(arr[@name='year_num']/int) = 2">
-					<dcterms:temporal>from=<xsl:value-of select="min(arr[@name='year_num']/int)"/> to=<xsl:value-of select="max(arr[@name='year_num']/int)"
-						/></dcterms:temporal>
+					<dcterms:temporal>from=<xsl:value-of select="min(arr[@name='year_num']/int)"/> to=<xsl:value-of select="max(arr[@name='year_num']/int)"/></dcterms:temporal>
 				</xsl:when>
 				<xsl:when test="count(arr[@name='year_num']/int) = 1">
-					<dcterms:temporal>from=<xsl:value-of select="arr[@name='year_num']/int"/> to=<xsl:value-of select="arr[@name='year_num']/int"
-						/></dcterms:temporal>
+					<dcterms:temporal>from=<xsl:value-of select="arr[@name='year_num']/int"/> to=<xsl:value-of select="arr[@name='year_num']/int"/></dcterms:temporal>
 				</xsl:when>
 			</xsl:choose>
-			
+
 			<!-- images -->
 			<xsl:if test="str[@name='recordType'] = 'physical'">
 				<xsl:if test="string(str[@name='thumbnail_obv'])">
@@ -841,7 +832,7 @@
 							</xsl:otherwise>
 						</xsl:choose>
 					</xsl:variable>
-					
+
 					<foaf:thumbnail rdf:resource="{$href}"/>
 				</xsl:if>
 				<xsl:if test="string(str[@name='reference_obv'])">
@@ -855,7 +846,7 @@
 							</xsl:otherwise>
 						</xsl:choose>
 					</xsl:variable>
-					
+
 					<foaf:depiction rdf:resource="{$href}"/>
 				</xsl:if>
 				<xsl:if test="string(str[@name='thumbnail_rev'])">
@@ -869,7 +860,7 @@
 							</xsl:otherwise>
 						</xsl:choose>
 					</xsl:variable>
-					
+
 					<foaf:thumbnail rdf:resource="{$href}"/>
 				</xsl:if>
 				<xsl:if test="string(str[@name='reference_rev'])">
@@ -883,7 +874,7 @@
 							</xsl:otherwise>
 						</xsl:choose>
 					</xsl:variable>
-					
+
 					<foaf:depiction rdf:resource="{$href}"/>
 				</xsl:if>
 			</xsl:if>
@@ -891,30 +882,30 @@
 
 		<!-- create annotations from pleiades URIs found in nomisma RDF and from findspots -->
 		<xsl:for-each select="distinct-values(arr[@name='pleiades_uri']/str)">
-			<oac:Annotation rdf:about="{$url}pelagios.rdf#{$id}/annotations/{format-number(position(), '000')}">
-				<oac:hasBody rdf:resource="{.}#this"/>
-				<oac:hasTarget rdf:resource="{$url}pelagios.rdf#{$id}"/>
+			<oa:Annotation rdf:about="{$url}pelagios.rdf#{$id}/annotations/{format-number(position(), '000')}">
+				<oa:hasBody rdf:resource="{.}#this"/>
+				<oa:hasTarget rdf:resource="{$url}pelagios.rdf#{$id}"/>
 				<pelagios:relations rdf:resource="http://pelagios.github.io/vocab/relations#attestsTo"/>
-				<oac:annotatedBy rdf:resource="{$url}pelagios.rdf#agents/me"/>
-				<oac:annotatedAt rdf:datatype="xs:dateTime">
-					<xsl:value-of select="$timestamp"/>
-				</oac:annotatedAt>
-			</oac:Annotation>
+				<oa:annotatedBy rdf:resource="{$url}pelagios.rdf#agents/me"/>
+				<oa:annotatedAt rdf:datatype="xs:date">
+					<xsl:value-of select="$date"/>
+				</oa:annotatedAt>
+			</oa:Annotation>
 		</xsl:for-each>
 
 		<!-- create annotations for findspots, but not for coin types -->
 		<xsl:if test="not(str[@name='recordType'] = 'conceptual')">
 			<xsl:variable name="count" select="count(distinct-values(arr[@name='pleiades_uri']/str))"/>
 			<xsl:for-each select="distinct-values(arr[@name='findspot_uri']/str)">
-				<oac:Annotation rdf:about="{$url}pelagios.rdf#{$id}/annotations/{format-number($count + 1, '000')}">
-					<oac:hasBody rdf:resource="{.}"/>
-					<oac:hasTarget rdf:resource="{$url}pelagios.rdf#{$id}"/>
+				<oa:Annotation rdf:about="{$url}pelagios.rdf#{$id}/annotations/{format-number($count + 1, '000')}">
+					<oa:hasBody rdf:resource="{.}"/>
+					<oa:hasTarget rdf:resource="{$url}pelagios.rdf#{$id}"/>
 					<pelagios:relations rdf:resource="http://pelagios.github.io/vocab/relations#foundAt"/>
-					<oac:annotatedBy rdf:resource="{$url}pelagios.rdf#agents/me"/>
-					<oac:annotatedAt rdf:datatype="xs:dateTime">
-						<xsl:value-of select="$timestamp"/>
-					</oac:annotatedAt>
-				</oac:Annotation>
+					<oa:annotatedBy rdf:resource="{$url}pelagios.rdf#agents/me"/>
+					<oa:annotatedAt rdf:datatype="xs:date">
+						<xsl:value-of select="$date"/>
+					</oa:annotatedAt>
+				</oa:Annotation>
 			</xsl:for-each>
 		</xsl:if>
 	</xsl:template>
