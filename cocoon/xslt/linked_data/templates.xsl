@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes="xs nuds nh xlink mets numishare datetime"
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes="nuds nh xlink mets numishare"
 	xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nm="http://nomisma.org/id/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
 	xmlns:nuds="http://nomisma.org/nuds" xmlns:nh="http://nomisma.org/nudsHoard" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns:georss="http://www.georss.org/georss" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:oa="http://www.w3.org/ns/oa#" xmlns:owl="http://www.w3.org/2002/07/owl#"
-	xmlns:dc="http://purl.org/dc/terms/" xmlns:pelagios="http://pelagios.github.io/vocab/terms#" xmlns:relations="http://pelagios.github.io/vocab/relations#" xmlns:foaf="http://xmlns.com/foaf/0.1/"
-	xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:mets="http://www.loc.gov/METS/" xmlns:numishare="https://github.com/ewg118/numishare" xmlns:datetime="http://exslt.org/dates-and-times"
-	version="2.0">
+	xmlns:pelagios="http://pelagios.github.io/vocab/terms#" xmlns:relations="http://pelagios.github.io/vocab/relations#" xmlns:foaf="http://xmlns.com/foaf/0.1/"
+	xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:mets="http://www.loc.gov/METS/" xmlns:numishare="https://github.com/ewg118/numishare" version="2.0">
 
 	<!-- ************** OBJECT-TO-RDF **************** -->
 	<xsl:template name="rdf">
@@ -57,6 +56,8 @@
 
 	<xsl:template match="nuds:nuds|nh:nudsHoard" mode="pelagios">
 		<xsl:variable name="id" select="descendant::*[local-name()='recordId']"/>
+		<!-- get timestamp of last modification date of the NUDS record -->
+		<xsl:variable name="date" select="substring-before(descendant::*:maintenanceEvent[last()]/*:eventDateTime/@standardDateTime, 'T')"/>
 
 		<foaf:Organization rdf:about="{$url}pelagios.rdf#agents/me">
 			<foaf:name>
@@ -101,8 +102,8 @@
 				<oa:hasTarget rdf:resource="{$url}pelagios.rdf#{$id}"/>
 				<pelagios:relations rdf:resource="http://pelagios.github.io/vocab/relations#attestsTo"/>
 				<oa:annotatedBy rdf:resource="{$url}pelagios.rdf#agents/me"/>
-				<oa:annotatedAt rdf:datatype="xs:dateTime">
-					<xsl:value-of select="concat(datetime:dateTime(), 'Z')"/>
+				<oa:annotatedAt rdf:datatype="xs:date">
+					<xsl:value-of select="$date"/>
 				</oa:annotatedAt>
 			</oa:Annotation>
 		</xsl:for-each>
@@ -110,6 +111,7 @@
 		<xsl:apply-templates select="descendant::*:geogname[@xlink:role='findspot'][string(@xlink:href)]|descendant::*:findspotDesc[string(@xlink:href)]" mode="pelagios">
 			<xsl:with-param name="id" select="$id"/>
 			<xsl:with-param name="count" select="count(distinct-values($rdf//skos:related[contains(@rdf:resource, 'pleiades')]/@rdf:resource))"/>
+			<xsl:param name="date" select="$date"/>
 		</xsl:apply-templates>
 
 	</xsl:template>
@@ -506,17 +508,18 @@
 		</xsl:for-each>
 	</xsl:template>
 
-	<xsl:template match="*:geogname[@xlink:role='findspot']|nuds:findspotDesc" mode="pelagios">
+	<xsl:template match="*:geogname[@xlink:role='findspot']|*:findspotDesc" mode="pelagios">
 		<xsl:param name="id"/>
 		<xsl:param name="count"/>
+		<xsl:param name="date"/>
 
 		<oa:Annotation rdf:about="{$url}pelagios.rdf#{$id}/annotations/{format-number($count + 1, '000')}">
 			<oa:hasBody rdf:resource="{@xlink:href}"/>
 			<oa:hasTarget rdf:resource="{$url}pelagios.rdf#{$id}"/>
 			<pelagios:relations rdf:resource="http://pelagios.github.io/vocab/relations#foundAt"/>
 			<oa:annotatedBy rdf:resource="{$url}pelagios.rdf#agents/me"/>
-			<oa:annotatedAt rdf:datatype="xs:dateTime">
-				<xsl:value-of select="concat(datetime:dateTime(), 'Z')"/>
+			<oa:annotatedAt rdf:datatype="xs:date">
+				<xsl:value-of select="$date"/>
 			</oa:annotatedAt>
 		</oa:Annotation>
 	</xsl:template>
