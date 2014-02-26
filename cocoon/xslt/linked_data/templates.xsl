@@ -57,6 +57,8 @@
 
 	<xsl:template match="nuds:nuds|nh:nudsHoard" mode="pelagios">
 		<xsl:variable name="id" select="descendant::*[local-name()='recordId']"/>
+		<!-- get timestamp of last modification date of the NUDS record -->
+		<xsl:variable name="date" select="substring-before(descendant::*:maintenanceEvent[last()]/*:eventDateTime/@standardDateTime, 'T')"/>
 
 		<foaf:Organization rdf:about="{$url}pelagios.rdf#agents/me">
 			<foaf:name>
@@ -101,8 +103,8 @@
 				<oa:hasTarget rdf:resource="{$url}pelagios.rdf#{$id}"/>
 				<pelagios:relations rdf:resource="http://pelagios.github.io/vocab/relations#attestsTo"/>
 				<oa:annotatedBy rdf:resource="{$url}pelagios.rdf#agents/me"/>
-				<oa:annotatedAt rdf:datatype="xs:dateTime">
-					<xsl:value-of select="concat(datetime:dateTime(), 'Z')"/>
+				<oa:annotatedAt rdf:datatype="xs:date">
+					<xsl:value-of select="$date"/>
 				</oa:annotatedAt>
 			</oa:Annotation>
 		</xsl:for-each>
@@ -110,6 +112,7 @@
 		<xsl:apply-templates select="descendant::*:geogname[@xlink:role='findspot'][string(@xlink:href)]|descendant::*:findspotDesc[string(@xlink:href)]" mode="pelagios">
 			<xsl:with-param name="id" select="$id"/>
 			<xsl:with-param name="count" select="count(distinct-values($rdf//skos:related[contains(@rdf:resource, 'pleiades')]/@rdf:resource))"/>
+			<xsl:param name="date" select="$date"/>
 		</xsl:apply-templates>
 
 	</xsl:template>
@@ -506,17 +509,18 @@
 		</xsl:for-each>
 	</xsl:template>
 
-	<xsl:template match="*:geogname[@xlink:role='findspot']|nuds:findspotDesc" mode="pelagios">
+	<xsl:template match="*:geogname[@xlink:role='findspot']|*:findspotDesc" mode="pelagios">
 		<xsl:param name="id"/>
 		<xsl:param name="count"/>
+		<xsl:param name="date"/>
 
 		<oa:Annotation rdf:about="{$url}pelagios.rdf#{$id}/annotations/{format-number($count + 1, '000')}">
 			<oa:hasBody rdf:resource="{@xlink:href}"/>
 			<oa:hasTarget rdf:resource="{$url}pelagios.rdf#{$id}"/>
 			<pelagios:relations rdf:resource="http://pelagios.github.io/vocab/relations#foundAt"/>
 			<oa:annotatedBy rdf:resource="{$url}pelagios.rdf#agents/me"/>
-			<oa:annotatedAt rdf:datatype="xs:dateTime">
-				<xsl:value-of select="concat(datetime:dateTime(), 'Z')"/>
+			<oa:annotatedAt rdf:datatype="xs:date">
+				<xsl:value-of select="$date"/>
 			</oa:annotatedAt>
 		</oa:Annotation>
 	</xsl:template>

@@ -101,7 +101,7 @@
 					</xsl:choose>
 				</div>
 				<div class="col-md-3">
-					<div>
+					<div class="highlight data_options">
 						<h3>Linked Data</h3>
 						<a href="{$display_path}feed/?q=*:*">
 							<img src="{$display_path}images/atom-large.png" title="Atom" alt="Atom"/>

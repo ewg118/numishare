@@ -1,15 +1,23 @@
 /*
   Numishare styling: https://github.com/ewg118/numishare
-  Copyright 2010 Ethan Gruber
+  Copyright 2014 Ethan Gruber
  */
+/*
+  ***************************************
+  VARIABLES
+  ***************************************
+ */
+:root {
+	var-borderColor: #E7E7E7;
+	var-backgroundColor: #F8F8F8;
+}
 /*
   ***************************************
   GLOBAL
   ***************************************
  */
 html {
-	font:13px arial, helvetica, sans-serif;
-	background-color:#ebebeb;
+	background-color: #F8F8F8;
 }
 .navbar {
 	margin-bottom:0;
@@ -20,15 +28,23 @@ a > img {
 ul li, ol li {
 	list-style-type:none;
 }
+.highlight {
+	background-color: #F8F8F8;
+	border: 1px solid #E7E7E7;
+	border-radius: 4px;
+	margin-bottom: 14px;
+	padding: 9px 14px;
+}
 /*
   ***************************************
   FOOTER
   ***************************************
  */
-#ft {
-	background-color:#ebebeb;
-	border-top:1px solid silver;
+#footer {
+	background-color: #F8F8F8;
+	border-top:1px solid #E7E7E7;
 	padding:10px 0;
+	text-align:center;
 }
 /*
   ***************************************
@@ -62,7 +78,7 @@ ul li, ol li {
 	margin-top:3px;
 }
 .icon {
-	border-left:1px solid silver;
+	border-left:1px solid #E7E7E7;
 	float:right;
 	vertical-align:text-bottom;
 	padding-left:15px;
@@ -167,7 +183,6 @@ ul li, ol li {
 	margin-bottom:10px;
 	text-align:center;
 }
-
 /*
   ***************************************
   RESULTS PAGES
@@ -190,7 +205,7 @@ ul li, ol li {
 .stacked_term {
 	padding:2px;
 	margin-bottom:5px;
-	border:1px solid silver;
+	border:1px solid #E7E7E7;
 	border-radius:5px;
 	vertical-align:middle;
 }
@@ -218,7 +233,7 @@ ul li, ol li {
   FACET STYLING: RESULTS AND MAPS
   ***************************************
  */
- .category-multiselect-checkboxes {
+.category-multiselect-checkboxes {
 	overflow-y:scroll;
 	position:relative;
 }

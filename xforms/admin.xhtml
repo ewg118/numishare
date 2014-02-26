@@ -59,7 +59,7 @@
 			<xforms:instance id="config-template" xxforms:exclude-result-prefixes="#all">
 				<config xmlns="" version="0.51">
 					<title>Numishare</title>
-					<description>Enter short description for collection.</description>
+					<description>A short description of the collection.</description>
 					<banner_text/>
 					<banner_image/>
 					<url>http://localhost:8080/cocoon/numishare/</url>
@@ -121,10 +121,14 @@
 							</display>
 						</layouts>
 					</theme>
-					<footer>Powered by <a href="https://github.com/ewg118/numishare" target="_blank">Numishare</a></footer>
+					<footer>
+						<p>Powered by <a href="https://github.com/ewg118/numishare" target="_blank">Numishare</a></p>
+					</footer>
 					<pages>
-						<index>Numishare is a free, open source, modularized system of Tomcat applications for the web delivery of cultural heritage artifacts, with particular focus on coins and
-							medals. Metadata are edited with XForms and delivered with Cocoon and Solr.</index>
+						<index>
+							<p>Numishare is a free, open source, modularized system of Tomcat applications for the web delivery of cultural heritage artifacts, with particular focus on coins and
+								medals. Metadata are edited with XForms and delivered with Cocoon and Solr.</p>
+						</index>
 						<compare enabled="true"/>
 						<analyze enabled="false"/>
 						<visualize enabled="true"/>
