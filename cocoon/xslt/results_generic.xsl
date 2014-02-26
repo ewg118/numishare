@@ -280,78 +280,70 @@
 						test="string($sort) and not(contains($sort_category, 'year')) and not(contains($sort_category, 'department_facet')) and not(contains($sort_category, 'weight_num')) and not(contains($sort_category, 'dimensions_display'))">
 						<xsl:choose>
 							<xsl:when test="contains($sort, '_num')">
-								<div>
-									<dt>
-										<xsl:value-of select="$regularized_sort"/>
-										<xsl:text>:</xsl:text>
-									</dt>
-									<dd>
-										<xsl:for-each select="distinct-values(*[@name=$sort_category])">
-											<xsl:sort order="descending"/>
-											<xsl:value-of select="."/>
-											<xsl:if test="not(position() = last())">
-												<xsl:text>, </xsl:text>
-											</xsl:if>
-										</xsl:for-each>
-									</dd>
-								</div>
+								<dt>
+									<xsl:value-of select="$regularized_sort"/>
+									<xsl:text>:</xsl:text>
+								</dt>
+								<dd>
+									<xsl:for-each select="distinct-values(*[@name=$sort_category])">
+										<xsl:sort order="descending"/>
+										<xsl:value-of select="."/>
+										<xsl:if test="not(position() = last())">
+											<xsl:text>, </xsl:text>
+										</xsl:if>
+									</xsl:for-each>
+								</dd>
 							</xsl:when>
 							<xsl:when test="contains($sort, 'timestamp')">
-								<div>
-									<dt>
-										<xsl:value-of select="$regularized_sort"/>
-										<xsl:text>:</xsl:text>
-									</dt>
-									<dd>
-										<xsl:value-of select="date[@name='timestamp']"/>
-									</dd>
-								</div>
+								<dt>
+									<xsl:value-of select="$regularized_sort"/>
+									<xsl:text>:</xsl:text>
+								</dt>
+								<dd>
+									<xsl:value-of select="date[@name='timestamp']"/>
+								</dd>
 							</xsl:when>
 							<xsl:when test="contains($sort, '_facet') or contains($sort, 'reference_facet') or contains($sort, 'provenance_display')">
-								<div>
-									<xsl:choose>
-										<xsl:when test="matches($sort, 'objectType_facet')">
+								<xsl:choose>
+									<xsl:when test="matches($sort, 'objectType_facet')">
+										<dt>
+											<xsl:value-of select="numishare:regularize_node('objectType', $lang)"/>
+										</dt>
+										<dd>
+											<xsl:value-of select="str[@name='objectType_facet']"/>
+										</dd>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:if test="arr[@name=$sort_category]/str">
 											<dt>
-												<xsl:value-of select="numishare:regularize_node('objectType', $lang)"/>
+												<xsl:value-of select="$regularized_sort"/>
+												<xsl:text>:</xsl:text>
 											</dt>
 											<dd>
-												<xsl:value-of select="str[@name='objectType_facet']"/>
+												<xsl:for-each select="arr[@name=$sort_category]/str">
+													<xsl:sort order="descending"/>
+													<xsl:value-of select="."/>
+													<xsl:if test="not(position() = last())">
+														<xsl:text>, </xsl:text>
+													</xsl:if>
+												</xsl:for-each>
 											</dd>
-										</xsl:when>
-										<xsl:otherwise>
-											<xsl:if test="arr[@name=$sort_category]/str">
-												<dt>
-													<xsl:value-of select="$regularized_sort"/>
-													<xsl:text>:</xsl:text>
-												</dt>
-												<dd>
-													<xsl:for-each select="arr[@name=$sort_category]/str">
-														<xsl:sort order="descending"/>
-														<xsl:value-of select="."/>
-														<xsl:if test="not(position() = last())">
-															<xsl:text>, </xsl:text>
-														</xsl:if>
-													</xsl:for-each>
-												</dd>
-											</xsl:if>
-										</xsl:otherwise>
-									</xsl:choose>
-								</div>
+										</xsl:if>
+									</xsl:otherwise>
+								</xsl:choose>
 							</xsl:when>
 							<xsl:otherwise>
 								<xsl:if test="str[@name=$sort_category]">
-									<div>
-										<dt>
-											<xsl:value-of select="$regularized_sort"/>
-											<xsl:text>:</xsl:text>
-										</dt>
-										<dd>
-											<xsl:value-of select="substring(str[@name=$sort_category], 1, 25)"/>
-											<xsl:if test="string-length(str[@name=$sort_category]) &gt; 25">
-												<xsl:text>...</xsl:text>
-											</xsl:if>
-										</dd>
-									</div>
+									<dt>
+										<xsl:value-of select="$regularized_sort"/>
+										<xsl:text>:</xsl:text>
+									</dt>
+									<dd>
+										<xsl:value-of select="substring(str[@name=$sort_category], 1, 25)"/>
+										<xsl:if test="string-length(str[@name=$sort_category]) &gt; 25">
+											<xsl:text>...</xsl:text>
+										</xsl:if>
+									</dd>
 								</xsl:if>
 							</xsl:otherwise>
 						</xsl:choose>
