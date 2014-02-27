@@ -92,7 +92,6 @@ mxn.register('openlayers', {
 			for (i = 0; i < baselayers.length; i++) {
 				map.addLayer(eval('this.layers.' + baselayers[i]));
 			}
-			map.addControl(new OpenLayers.Control.Attribution());
 			this.maps[api] = map;
 			this.loaded[api] = true;
 		},
