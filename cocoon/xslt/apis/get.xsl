@@ -6,7 +6,6 @@
 	<xsl:include href="../geographic/templates.xsl"/>
 	<xsl:include href="../linked_data/templates.xsl"/>
 	<xsl:include href="../functions.xsl"/>
-	<xsl:output method="xml" encoding="UTF-8"/>
 
 	<!-- url params -->
 	<xsl:param name="id"/>

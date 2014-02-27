@@ -4,12 +4,12 @@ $(document).ready(function () {
 	var path = $('#path').text();
 	if (collection_type == 'object') {
 		initialize_map(id, path);
-	} else {	
-		initialize_timemap(id);
+	} else {
+		initialize_timemap(id, path);
 	}
 });
 
-function initialize_timemap(id) {
+function initialize_timemap(id, path) {
 	var langStr = getURLParameter('lang');
 	if (langStr == 'null') {
 		var lang = '';
@@ -17,7 +17,7 @@ function initialize_timemap(id) {
 		var lang = langStr;
 	}
 	
-	var url = "../apis/get?id=" + id + "&format=json&lang=" + lang;
+	var url = path + "apis/get?id=" + id + "&format=json&lang=" + lang;
 	var datasets = new Array();
 	
 	//first dataset
@@ -35,6 +35,7 @@ function initialize_timemap(id) {
 		mapId: "map", // Id of map div element (required)
 		timelineId: "timeline", // Id of timeline div element (required)
 		options: {
+			mapType: "physical",
 			eventIconPath: "../images/timemap/"
 		},
 		datasets: datasets,
@@ -51,8 +52,6 @@ function initialize_timemap(id) {
 		}
 	}
 }
-
-
 
 function initialize_map(id, path) {
 	/***** DECLARE BASELAYERS ******/
@@ -115,11 +114,8 @@ function initialize_map(id, path) {
 	/*************** OBJECT KML FEATURES ******************/
 	objectControl = new OpenLayers.Control.SelectFeature([kmlLayer], {
 		clickout: true,
-		//toggle: true,
 		multiple: false,
 		hover: false,
-		//toggleKey: "ctrlKey",
-		//multipleKey: "shiftKey"
 	});
 	
 	map.addControl(objectControl);
