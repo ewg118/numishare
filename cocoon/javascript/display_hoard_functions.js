@@ -5,7 +5,7 @@ Library: jQuery
 Description: Rendering graphics based on hoard counts
 ************************************/
 $(document).ready(function () {
-	 $("#quantTabs").tabs();
+	$("#quantTabs").tabs();
 	
 	$('.toggle-coin').click(function () {
 		var id = $(this).attr('id').split('-')[0];
@@ -22,8 +22,6 @@ $(document).ready(function () {
 	var id = $('title').attr('id');
 	
 	initialize_timemap(id);
-	
-	//enable basic query form
 });
 
 function initialize_timemap(id) {
@@ -33,7 +31,7 @@ function initialize_timemap(id) {
 	} else {
 		var lang = langStr;
 	}
-
+	
 	var tm;
 	tm = TimeMap.init({
 		mapId: "map", // Id of map div element (required)
@@ -43,7 +41,6 @@ function initialize_timemap(id) {
 		},
 		datasets:[ {
 			title: "Mints",
-			//theme: "red",
 			type: "json", // Data to be loaded in KML - must be a local URL
 			options: {
 				url: "../apis/get?id=" + id + "&format=json&lang=" + lang// KML file to load

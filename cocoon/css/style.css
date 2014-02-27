@@ -1,146 +1,50 @@
 /*
-  Numishare styling: http://code.google.com/p/numishare/
-  Copyright 2010 Ethan Gruber
+  Numishare styling: https://github.com/ewg118/numishare
+  Copyright 2014 Ethan Gruber
  */
+/*
+  ***************************************
+  VARIABLES
+  ***************************************
+ */
+:root {
+	var-borderColor: #E7E7E7;
+	var-backgroundColor: #F8F8F8;
+}
 /*
   ***************************************
   GLOBAL
   ***************************************
  */
 html {
-	font:13px arial, helvetica, sans-serif;
-	background-color:silver;
+	background-color: #F8F8F8;
 }
-body {
-	margin:auto;
-	min-width:972px;
-	width:90%;
-	border:1px solid gray;
-	margin-top:10px;
-	background-color:white;
-}
-.content {
-	padding:5px;
+.navbar {
+	margin-bottom:0;
 }
 a > img {
 	border:none;
 }
-td {
-	border:1px solid silver;
-	padding:2px;
-}
-th {
-	border: 1px solid silver;
-	background-color:#DDDDDD;
-	padding:2px;
-	font-weight:bold;
-}
-input {
-	font:13px arial, helvetica, sans-serif;
-}
-select {
-	width:200px;
-	margin-left:15px;
-	margin-right:5px;
-	font:13px arial, helvetica, sans-serif;
-}
-#facet ol, ul, dl {
-	margin:0em;
-}
-ul li, dl li {
+ul li, ol li {
 	list-style-type:none;
 }
-h4 {
-	margin:0;
-	padding:0;
-}
-.ui-widget-header {
-	border-left:0;
-	border-right:0;
-}
-/* Tabs */
-.yui-skin-sam .yui-navset .yui-content, .yui-skin-sam .yui-navset .yui-navset-top .yui-content {
-	border:0;
-	background-color:white;
-}
-.success {
-	width:50%;
-	padding:10px;
-	border:1px solid #3c803c;
-	margin:0 auto;
-	background-color:#47e547;
-	color:#3c803c;
-}
-.warning {
-	padding:25px;
-	margin:10px;
-	background-color:#ef8700;
-	border:2px solid #b76e0e;
-}
-.ui-state-error {
-	width:400px;
-	font-size:90%;
-	margin:10px auto;
-}
-table tr td {
-	border:0;
-}
-dt {
-	float: left;
-	clear: left;
-	width: 125px;
-	text-align: right;
-	font-weight:bold;
-}
-dd {
-	margin: 0 0 0 130px;
-	padding: 0 0 0.5em 0;
-}
-dt.ar {
-	width:125px;
-	float:right;
-	text-align:right;
-	font-weight:bold;
-}
-dd.ar {
-	float:left;
-	width:325px;
-	margin:0;
-	text-align:right;
-}
-/*
-  ***************************************
-  HEADER
-  ***************************************
- */
-.banner {
-	padding:5px;
-	background-color:#ebebeb;
-}
-#hd .align-left {
-	text-align:left;
-}
-#hd .align-right {
-	text-align:right;
-}
-#hd .align-center {
-	text-align:center;
-}
-.banner_text {
-	margin:20px;
-	font-size:24px;
-	font-weight:bold;
-	letter-spacing:4px;
+.highlight {
+	background-color: #F8F8F8;
+	border: 1px solid #E7E7E7;
+	border-radius: 4px;
+	margin-bottom: 14px;
+	padding: 9px 14px;
 }
 /*
   ***************************************
   FOOTER
   ***************************************
  */
-#ft {
+#footer {
+	background-color: #F8F8F8;
+	border-top:1px solid #E7E7E7;
 	padding:10px 0;
 	text-align:center;
-	background-color:#ebebeb;
 }
 /*
   ***************************************
@@ -164,6 +68,7 @@ dd.ar {
 .adminhist_div, .phystech, .bibref, .metadata_section ul {
 	margin-left:20px;
 	margin-bottom:10px;
+	padding:0;
 }
 .submenu {
 	width:100%;
@@ -173,7 +78,7 @@ dd.ar {
 	margin-top:3px;
 }
 .icon {
-	border-left:1px solid silver;
+	border-left:1px solid #E7E7E7;
 	float:right;
 	vertical-align:text-bottom;
 	padding-left:15px;
@@ -207,138 +112,11 @@ dd.ar {
 }
 /*
   ***************************************
-  SEARCH/COMPARE
+  SEARCH/COMPARE/VISUALIZATION FORMS
   ***************************************
  */
-/* Quick Search */
-.quick_search {
-	margin:5px 0;
-	padding:5px 0;
-}
-.collection_search {
-	margin:5px 0;
-}
-#cs_text {
-	border:1px solid silver;
-	margin-right:5%;
-	padding:2px;
-	width:200px;
-}
-#qs_text {
-	width:60%;
-	border:1px solid silver;
-	margin-right:5%;
-	padding:2px;
-}
-#qs_button {
-	width:25%;
-}
-.result_link {
-	font-size:120%;
-}
-.stacked_term {
-	padding:2px;
-	margin-bottom:5px;
-}
-.remove_filter {
-	float:right;
-}
-.remove_filter_ar {
-	float:left;
-}
-.remove_segment {
-	margin-left:2px;
-}
-.remove_segment:hover {
-	text-decoration:underline;
-}
-label {
-	margin-left:20px;
-}
-div.facet {
-	width:100%;
-	margin-bottom:10px;
-	border:1px solid silver;
-}
-li.h_item {
-	margin:2px 0;
-	display:table;
-	width:100%;
-}
-.fn {
-	float:left;
-	width:75%;
-}
-.ft {
-	float:left;
-	width:25%;
-	text-align:right;
-}
-.fn span, .category_term, .clear_terms, .ft span {
-	color:blue;
-}
-.fn span:hover, .category_term:hover, .clear_terms:hover {
-	color:#B5121B;
-	cursor:pointer;
-}
-.get_facets, .hide_facets {
-	float:right;
-	padding-right:5px;
-}
-.facet_list {
-	text-align:left;
-	font-weight:normal;
-	background:none repeat scroll 0 0 #efefef;
-	overflow:auto;
-	z-index:2002;
-}
-.facet_list_expanded {
-	width:500px;
-	max-height:400px;
-	z-index:2002;
-	position:absolute;
-}
-.category_level {
-	margin-left:15px;
-}
-.expand_category {
-	margin:1px;
-}
-.results {
-	margin-left:240px;
-	padding-left:10px;
-}
-#search_options {
-	display:block;
-	width:100%;
-}
-.result_doc>td {
-	padding:15px 0;
-	margin-bottom:15px;
-}
-.result_image_left {
-	width:260px;
-	border:0;
-}
-.result_image_right {
-	width:300px;
-	border:0;
-	text-align:right;
-}
-.result_metadata {
-	border:0;
-}
-.search_forms {
-	display:table;
-	width:100%;
-	padding:5px;
-}
 .compare-form {
 	height:100px;
-}
-#search1, #search2 {
-	padding-top:20px;
-	width:100%;
 }
 .compare_image {
 	margin-bottom:20px;
@@ -347,69 +125,51 @@ li.h_item {
 }
 .option_container {
 	width:200px;
+	vertical-align:bottom;
 }
-.compare-form select, .compare-form input[type="text"],.search-form select, .search-form input[type="text"] {
-	margin-left:0px;
-	margin-right:10px;
-	font-size:14px;
-	border:1px solid silver;
-	padding:2px;
+.option_container select, .option_container input {
+	display:inline;
 }
 .compare-select {
 	width:400px;
 }
-.category_list, .search_text {
+.category_list, .sparql_facets, select[name="interval"], #stacking {
 	width:175px;
+	display:inline;
 }
 .sortForm_categories, .sortForm_order {
 	width:175px;
 	margin-left:0px;
 	margin-right:10px;
-	border:1px solid silver;
-	padding:2px;
+	display:inline;
 }
 .search_text {
 	width:200px;
 	margin-left:15px;
 	margin-right:5px;
+	display:inline;
 }
 .from_date,.to_date {
-	width:30px;
+	width:75px;
 	margin-left:0px;
 	margin-right:5px;
+	display:inline;
 }
 .from_era,.to_era {
-	width:55px;
-	margin-right:5px;
+	width:100px;
 	margin-left:0px;
+	margin-right:5px;
+	display:inline;
 }
-.year_range {
+.year_range, .weight_range, .dimensions_range {
 	margin-left:15px;
 	margin-right:5px;
-	width:101px;
+	width:150px;
 }
-.weight_range {
-	margin-left:15px;
-	margin-right:5px;
-	width:125px;
-}
-.weight_int {
+.weight_int, .dimensions_int {
 	width:30px;
 	margin-left:0px;
 	margin-right:5px;
-}
-.dimensions_range {
-	margin-left:15px;
-	margin-right:5px;
-	width:139px;
-}
-.dimensions_int {
-	width:30px;
-	margin-left:0px;
-	margin-right:5px;
-}
-#removeBtn_1 {
-	display:none;
 }
 #searchItemTemplate, #sparqlItemTemplate {
 	display:none;
@@ -418,60 +178,17 @@ li.h_item {
 	padding-top:5px;
 	padding-bottom:5px;
 }
-#AsearchItemTemplate {
-	display:none;
-}
-#BsearchItemTemplate {
-	display:none;
-}
 .compare_options {
 	font-size:10px;
 	margin-bottom:10px;
 	text-align:center;
 }
-.sort_link {
-	text-decoration:underline;
-	color: #23235f;
-	cursor:pointer;
-}
-.sort_link:hover {
-	color:#656565;
-}
-.increase-facets {
-	float:right;
-}
-.sort_facet, .close_facets, .page-facets, .increase-facets {
-	cursor:pointer;
-	text-decoration:underline;
-	color: blue;
-}
-.sort_facet {
-	float:left;
-}
-.sort_facet:hover, .close_facets:hover, .page-facets:hover, .increase-facets:hover {
-	color:#B5121B;
-}
-.submit_div {
-	text-align:center;
-	padding-top:10px;
-	padding-bottom:10px;
-	width:100%;
-}
-#imagesavailable {
-	margin-left:10px;
-}
-.category-multiselect-checkboxes {
-	overflow-y:scroll;
-	position:relative;
-}
-button.ui-multiselect {
-	margin-bottom:10px;
-}
-.data_options img {
-	padding:2px;
-}
+/*
+  ***************************************
+  RESULTS PAGES
+  ***************************************
+ */
 #map_results {
-	font-size:11px;
 	margin-left:20px;
 }
 .thumbImage, .flickrthumb {
@@ -479,6 +196,73 @@ button.ui-multiselect {
 }
 .thumbImage>img {
 	max-width:120px;
+}
+#qs_text {
+	width:50%;
+	display:inline;
+	margin-right:20px;
+}
+.stacked_term {
+	padding:2px;
+	margin-bottom:5px;
+	border:1px solid #E7E7E7;
+	border-radius:5px;
+	vertical-align:middle;
+}
+.remove_segment {
+	margin-left:2px;
+}
+.remove_segment:hover {
+	text-decoration:underline;
+}
+#imagesavailable {
+	margin-left:10px;
+}
+.data_options img {
+	padding:2px;
+}
+.left {
+	vertical-align:middle;
+}
+.right {
+	text-align:right;
+	vertical-align:middle;
+}
+/*
+  ***************************************
+  FACET STYLING: RESULTS AND MAPS
+  ***************************************
+ */
+.category-multiselect-checkboxes {
+	overflow-y:scroll;
+	position:relative;
+}
+.multiselect {
+	width:200px;
+}
+button.ui-multiselect {
+	margin-bottom:10px;
+}
+.get_facets, .hide_facets {
+	float:right;
+	padding-right:5px;
+}
+.category_level {
+	margin-left:15px;
+}
+.expand_category {
+	margin:1px;
+}
+.category_level {
+	margin-left:15px;
+}
+.expand_category {
+	margin:1px;
+}
+li.h_item {
+	margin:2px 0;
+	display:table;
+	width:100%;
 }
 /*
   ***************************************
@@ -492,10 +276,6 @@ button.ui-multiselect {
 #clear_all {
 	font-size:80%;
 	margin-left:25px;
-}
-.ui-tabs .ui-tabs-hide {
-	position: absolute;
-	left: -10000px;
 }
 .departments {
 	margin:10px 0px;
@@ -516,22 +296,7 @@ button.ui-multiselect {
 .olLayerGooglePoweredBy {
 	display:none;
 }
-/*
-  .olLayerGoogleCopyright {
-  top:-1000px;
-  }
- */
-#add_filter {
-	font-weight:bold;
-	font-size:120%;
-	text-transform:capitalize;
-}
-#add_filter:first-letter {
-	font-size:140%;
-}
 .g_doc {
-	width:30%;
-	float:left;
 	height:325px;
 }
 /* gallery image container */
@@ -544,41 +309,21 @@ button.ui-multiselect {
 	padding:0px 5px;
 	max-width:120px;
 }
-.filter_facet {
-	width:12%;
-	float:left;
-	padding:2px;
-	margin:2px 2px;
-	z-index:0;
-	background-color:#D9D4C8;
-	border:1px solid #C2B9A9;
-	cursor:pointer;
+/*
+  ***************************************
+  PAGINATION
+  ***************************************
+ */
+.paging_div {
+	padding:10px 0;
+	vertical-align:top
 }
-.filter_facet_selected {
-	width:12%;
-	float:left;
-	padding:2px;
-	margin:2px 2px;
-	z-index:0;
-	background-color:#C2B9A9;
-	border:1px solid #C2B9A9;
-	cursor:pointer;
+.page-nos {
+	text-align:right;
+	
 }
-.filter_facet:hover {
-	color:gray;
-}
-.filter_heading {
-	width:100%;
-}
-.filter_terms {
-	position:absolute;
-	z-index:2002;
-	width:200px;
-	padding:3px;
-}
-.fl {
-	float:left;
-	width:20%;
+.pagination a, .pagination button {
+	height:32px;	
 }
 /*
   ***************************************
@@ -593,6 +338,10 @@ div#mapcontainer {
 	width:100%;
 	height: 400px;
 }
+.maps-page #mapcontainer {
+	height:600px;
+	width:100%;
+}
 div.olFramedCloudPopupContent {
 	width: 300px;
 }
@@ -601,11 +350,6 @@ div#help {
 	width: 45em;
 	padding: 1em;
 }
-/*
-  div#timemap {
-  padding: 1em;
-  }
- */
 div#timeline {
 	width: 100%;
 	height: 100%;
@@ -632,39 +376,10 @@ div.custominfostyle {
 	width: 20em;
 }
 /*
-  ***************************************
-  PAGINATION
-  ***************************************
- */
-.paging_div {
-	width:100%;
-	display:table;
-	padding-top:10px;
-	padding-bottom:10px;
-}
-.paging li {
-	float: left;
-	list-style: none outside none;
-	margin: 2px;
-	position: relative;
-	width:30px;
-	text-align:center;
-}
-.paging li a {
-	width:100%;
-}
-/*
   ****************************************
   FEATURES/LINKED DATA SECTION
   ***************************************
  */
-#numishare-widget {
-	text-align:center;
-	margin-bottom:40px;
-}
-#numishare-widget img {
-	padding:10px;
-}
 /* Used for date (century/decade) facet */
 .date-div, .hierarchical-div {
 	margin-top:-10px;
@@ -678,15 +393,6 @@ div.custominfostyle {
 }
 .decades-list {
 	margin:0 0 0 25px;
-}
-.close {
-	float:right;
-	text-decoration:underline;
-	padding-right:10px;
-}
-.close:hover {
-	font-weight:bold;
-	cursor:pointer;
 }
 /* background */
 #backgroundPopup {
@@ -723,10 +429,6 @@ div.custominfostyle {
 	font-size:80%;
 	margin-left:10px;
 }
-.anOption {
-	float:left;
-	width:20%;
-}
 /* **SPARQL QUERY*** */
 .popupQuery {
 	width:700px;
@@ -740,39 +442,4 @@ div.custominfostyle {
 }
 .mr {
 	display:none;
-}
-/*
-  ***************************************
-  jQuery UI Menubar @VERSION
-  ***************************************
-  * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)
-  * Dual licensed under the MIT or GPL Version 2 licenses.
-  * http://jquery.org/license
- */
-.ui-menubar {
-	list-style: none;
-	margin: 0;
-	padding-left: 0;
-	border-left:0px;
-	border-right:0px;
-}
-.ui-menubar-item {
-	float: left;
-}
-.ui-menubar .ui-button {
-	float: left;
-	font-weight: normal;
-	border-top-width: 0 !important;
-	border-bottom-width: 0 !important;
-	margin: 0;
-	outline: none;
-}
-.ui-menubar .ui-menubar-link {
-	border-right: 1px dashed transparent;
-	border-left: 1px dashed transparent;
-}
-.ui-menubar .ui-menu {
-	width: 200px;
-	position: absolute;
-	z-index: 9999;
 }

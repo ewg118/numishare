@@ -17,8 +17,8 @@
 		<xhtml:script type="text/javascript" src="/apps/numishare/javascript/numishare-menu.js"/>
 		<xforms:model>
 			<!-- exist URL is stored in an XML file -->
-			<xforms:instance id="exist-url">
-				<xi:include href="exist-url.xml"/>
+			<xforms:instance id="exist-config">
+				<xi:include href="exist-config.xml"/>
 			</xforms:instance>
 
 			<xforms:instance id="control-instance">
@@ -74,8 +74,8 @@
 			</xforms:instance>
 
 			<!-- submissions -->
-			<xforms:submission id="load-collections" serialization="none" method="get" action="{instance('exist-url')}collections-list.xml" replace="instance" instance="collections-list"
-				xxforms:username="admin" xxforms:password="">
+			<xforms:submission id="load-collections" serialization="none" method="get" action="{instance('exist-config')/url}collections-list.xml" replace="instance" instance="collections-list"
+				xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}">
 				<!-- if the config loads successfully, set the collection names based on authentication -->
 				<xforms:action ev:event="xforms-submit-done">
 					<!-- set default if security is false -->
@@ -91,16 +91,16 @@
 					</xforms:action>
 					<xforms:send submission="load-config"/>
 				</xforms:action>
-				<!-- if the config has not been created (given that the URL in exist-url.xml is correct), create it -->
+				<!-- if the config has not been created (given that the URL in exist-config.xml is correct), create it -->
 				<xforms:message ev:event="xforms-submit-error" level="modal">Unable to load Numishare collections list.</xforms:message>
 			</xforms:submission>
 
-			<xforms:submission id="load-config" serialization="none" method="get" action="{instance('exist-url')}{instance('control-instance')/collection-name}/config.xml" xxforms:username="admin"
-				xxforms:password="" replace="instance" instance="config"/>
+			<xforms:submission id="load-config" serialization="none" method="get" action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/config.xml" xxforms:username="{instance('exist-config')/username}"
+				xxforms:password="{instance('exist-config')/password}" replace="instance" instance="config"/>
 
 			<!-- load object temporarily -->
-			<xforms:submission id="load-object" serialization="none" method="get" action="{instance('exist-url')}{instance('control-instance')/collection-name}/objects/{instance('identifier')}.xml"
-				replace="instance" instance="object" xxforms:username="admin" xxforms:password="">
+			<xforms:submission id="load-object" serialization="none" method="get" action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/objects/{instance('identifier')}.xml"
+				replace="instance" instance="object" xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Cannot load object: <xforms:output ref="instance('identifier')"/></xforms:message>
 				<xforms:action ev:event="xforms-submit-done">
 					<xforms:action xxforms:iterate="instance('atom-feed')/atom:entry">
@@ -114,14 +114,14 @@
 				</xforms:action>
 			</xforms:submission>
 			
-			<xforms:submission id="save-object" ref="instance('object')" xxforms:username="admin" xxforms:password=""
-				action="{instance('exist-url')}{instance('control-instance')/collection-name}/objects/{instance('object')/nuds:control/nuds:recordId}.xml" method="put" replace="none">
+			<xforms:submission id="save-object" ref="instance('object')" xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}"
+				action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/objects/{instance('object')/nuds:control/nuds:recordId}.xml" method="put" replace="none">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Save Error. Are all required inputs filled?</xforms:message>
 			</xforms:submission>
 
 			<!-- queries -->
-			<xforms:submission id="xquery-collection" ref="instance('eXist-xquery')" action="{instance('exist-url')}{instance('control-instance')/collection-name}/objects" method="post"
-				replace="instance" instance="collection-result" xxforms:username="admin" xxforms:password="">
+			<xforms:submission id="xquery-collection" ref="instance('eXist-xquery')" action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/objects" method="post"
+				replace="instance" instance="collection-result" xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}">
 				<xforms:setvalue ref="instance('control-instance')/error" ev:event="xforms-submit-error">Error querying eXist database.</xforms:setvalue>
 				<xforms:action ev:event="xforms-submit-done" xxforms:iterate="instance('collection-result')//nuds:recordId">
 					<xforms:var name="id" select="."/>
@@ -131,7 +131,7 @@
 			</xforms:submission>
 
 			<xforms:submission id="query-mantis" serialization="none" method="get" action="http://numismatics.org/search/feed/?q=reference_display:&#x022;{instance('identifier')}&#x022;"
-				replace="instance" instance="atom-feed" xxforms:username="admin" xxforms:password="">
+				replace="instance" instance="atom-feed" xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}">
 				<xforms:action ev:event="xforms-submit-done" if="count(instance('atom-feed')/atom:entry) &gt; 0">					
 					<xforms:send submission="load-object"/>
 				</xforms:action>

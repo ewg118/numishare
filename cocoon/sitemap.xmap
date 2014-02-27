@@ -65,6 +65,11 @@
 			<map:serializer name="text" mime-type="text/plain" src="org.apache.cocoon.serialization.TextSerializer"  logger="sitemap.serializer.text">
 				<encoding>utf-8</encoding>
 			</map:serializer>
+			<map:serializer name="html5" mime-type="text/html" src="org.apache.cocoon.serialization.HTMLSerializer">
+				<encoding>UTF-8</encoding>
+				<indent>yes</indent>
+				<!--<doctype-public>html</doctype-public>-->									
+			</map:serializer>
 		</map:serializers>
 	</map:components>
 
@@ -185,7 +190,7 @@
 					<map:parameter name="use-request-parameters" value="true"/>
 					<map:parameter name="pipeline" value="index"/>
 				</map:transform>
-				<map:serialize type="html"/>
+				<map:serialize type="html5"/>
 			</map:match>
 
 			<!-- pages -->
@@ -196,7 +201,7 @@
 					<map:parameter name="pipeline" value="pages"/>
 					<map:parameter name="stub" value="{1}"/>
 				</map:transform>
-				<map:serialize type="html"/>
+				<map:serialize type="html5"/>
 			</map:match>
 
 			<!-- display objects -->
@@ -228,11 +233,23 @@
 				<map:transform type="cinclude"/>
 				<map:serialize type="kml"/>
 			</map:match>
+			
+			<map:match pattern="map/*">
+				<map:aggregate element="content">
+					<map:part src="{global:exist-url}{global:collection-name}/objects/{1}.xml"/>
+					<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
+				</map:aggregate>
+				<map:transform src="xslt/display_map.xsl" label="basiccontent" type="xslt-saxon">
+					<map:parameter name="use-request-parameters" value="true"/>
+					<map:parameter name="solr-url" value="{global:solr-url}"/>
+					<map:parameter name="pipeline" value="display"/>
+				</map:transform>				
+				<map:serialize type="html5"/>
+			</map:match>
 
 			<map:match pattern="id/*">
 				<map:aggregate element="content">
 					<map:part src="{global:exist-url}{global:collection-name}/objects/{1}.xml"/>
-					<map:part src="cocoon:/query_findspot_geo/{1}"/>
 					<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
 				</map:aggregate>
 				<map:transform src="xslt/display.xsl" label="basiccontent" type="xslt-saxon">
@@ -241,7 +258,7 @@
 					<map:parameter name="pipeline" value="display"/>
 				</map:transform>
 				<map:transform type="cinclude"/>
-				<map:serialize type="html"/>
+				<map:serialize type="html5"/>
 			</map:match>
 
 			<!-- QUERY RESULTS/LINKED DATA -->
@@ -258,7 +275,7 @@
 			<!-- returned results capped at 50,000 -->
 			<map:match pattern="pelagios.rdf">
 				<map:aggregate element="content">
-					<map:part src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}+AND+{url-encode:pleiades_uri:*}&amp;rows=50000&amp;fl=id,recordId,title_display,pleiades_uri"/>
+					<map:part src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}+AND+{url-encode:pleiades_uri:*}&amp;rows=50000&amp;fl=id,recordId,title_display,pleiades_uri,findspot_uri,year_num,recordType,thumbnail_obv,reference_obv,thumbnail_rev,reference_rev,timestamp"/>
 					<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
 				</map:aggregate>				
 				<map:transform src="xslt/linked_data/solr_to_rdf.xsl" label="basiccontent" type="xslt-saxon">
@@ -426,7 +443,7 @@
 					<map:parameter name="pipeline" value="visualize"/>
 				</map:transform>
 				<map:transform type="cinclude"/>
-				<map:serialize type="html"/>
+				<map:serialize type="html5"/>
 			</map:match>
 
 			<!-- produces the search form; needs to be generated as xml and serialized as xhtml -->
@@ -455,7 +472,7 @@
 					<map:parameter name="use-request-parameters" value="true"/>
 					<map:parameter name="pipeline" value="search"/>
 				</map:transform>
-				<map:serialize type="html"/>
+				<map:serialize type="html5"/>
 			</map:match>
 
 			<map:match pattern="results">
@@ -554,7 +571,7 @@
 					<map:parameter name="pipeline" value="results"/>
 				</map:transform>
 				<map:transform type="cinclude"/>
-				<map:serialize type="html"/>
+				<map:serialize type="html5"/>
 			</map:match>
 
 			<!-- COMPARE PAGE -->
@@ -729,15 +746,15 @@
 							<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
 						</map:aggregate>
 					</map:otherwise>
-				</map:select>
-				
+				</map:select>				
 				<map:transform type="xslt-saxon" src="xslt/maps_fullscreen.xsl" label="basiccontent">
 					<map:parameter name="use-request-parameters" value="true"/>
 					<map:parameter name="pipeline" value="maps_fullscreen"/>
 				</map:transform>
 				<map:transform type="cinclude"/>
-				<map:serialize type="html"/>
+				<map:serialize type="html5"/>
 			</map:match>
+			
 			<map:match pattern="maps">
 				<map:select type="parameter">
 					<map:parameter name="parameter-selector-test" value="{request-param:lang}"/>
@@ -764,7 +781,7 @@
 					<map:parameter name="pipeline" value="maps"/>
 				</map:transform>
 				<map:transform type="cinclude"/>
-				<map:serialize type="html"/>
+				<map:serialize type="html5"/>
 			</map:match>
 
 			<!-- APIS -->
@@ -1132,30 +1149,10 @@
 				<map:serialize type="text"/>
 			</map:match>
 
-			<!-- query solr for available geographic coordinates -->
-			<map:match pattern="query_findspot_geo/*">
-				<map:select type="parameter">
-					<map:parameter name="parameter-selector-test" value="{request-param:lang}"/>
-					<map:when test="">
-						<map:generate src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}+AND+{url-encode:id:&#x022;{1}&#x022; AND (findspot_geo:* OR ao_findspot_geo:*)}&amp;rows=0"
-							label="record"/>
-					</map:when>
-					<map:otherwise>
-						<map:generate src="{global:solr-url}select?q=lang:{request-param:lang}+AND+collection-name:{global:collection-name}+AND+{url-encode:id:&#x022;{1}&#x022; AND (findspot_geo:* OR ao_findspot_geo:*)}&amp;rows=0"
-							label="record"/>
-					</map:otherwise>
-				</map:select>
-				<map:transform type="xslt-saxon" src="xslt/ajax/query_geo.xsl" label="basiccontent">
-					<map:parameter name="use-request-parameters" value="true"/>
-					<map:parameter name="field" value="findspot"/>
-				</map:transform>
-				<map:serialize type="xml"/>
-			</map:match>
-
-			<!-- METIS WIDGETS -->
+			<!-- SPARQL WIDGETS -->
 			<map:match pattern="widget">
 				<map:generate src="{global:exist-url}{global:collection-name}/config.xml"/>
-				<map:transform type="xslt-saxon" src="xslt/sparql/templates.xsl" label="basiccontent">
+				<map:transform type="xslt-saxon" src="xslt/sparql/widget.xsl" label="basiccontent">
 					<map:parameter name="use-request-parameters" value="true"/>
 				</map:transform>
 				<map:select type="parameter">

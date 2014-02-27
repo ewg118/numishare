@@ -245,7 +245,7 @@ $(document).ready(function () {
 	});
 	
 	//when options changed
-	$('.compare-select').livequery('change', function (event) {
+	$('.compare-select').on('change', function (event) {
 		var pipeline = $('#vis-pipeline').html();
 		var formId = $(this).closest('form').attr('id').split('-')[0];
 		var errorId = '#' + formId + '-hoard-alert';

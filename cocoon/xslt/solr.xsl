@@ -78,26 +78,6 @@
 	<!-- get block of images from SPARQL endpoint -->
 	<xsl:variable name="sparqlResult" as="element()*">
 		<xsl:if test="string($sparql_endpoint)">
-			<!--<xsl:variable name="identifiers">
-				<xsl:for-each select="descendant::nuds:recordId">
-					<xsl:value-of select="."/>
-					<xsl:if test="not(position()=last())">
-						<xsl:text>|</xsl:text>
-					</xsl:if>
-				</xsl:for-each>
-			</xsl:variable>-->			
-			<!--<xsl:variable name="response" as="element()*">
-				<response xmlns="http://www.w3.org/2005/sparql-results#">
-					<xsl:for-each select="descendant::nuds:recordId">
-						<group>
-							<xsl:attribute name="id" select="."/>	
-							<xsl:variable name="uri" select="concat('http://nomisma.org/id/', .)"/>
-							<xsl:copy-of select="document(concat('cocoon:/widget?uri=', $uri, '&amp;template=solr'))/res:sparql/res:result"/>
-						</group>
-					</xsl:for-each>
-				</response>
-				</xsl:variable>-->	
-
 			<response xmlns="http://www.w3.org/2005/sparql-results#">
 				<xsl:for-each select="descendant::nuds:recordId">
 					<group>
@@ -107,20 +87,6 @@
 					</group>
 				</xsl:for-each>
 			</response>
-			
-			<!-- process sparql into a manageable XML model -->
-			<!--<response xmlns="http://www.w3.org/2005/sparql-results#">
-				<xsl:for-each select="descendant::nuds:recordId">
-					<xsl:variable name="uri" select="concat('http://nomisma.org/id/', .)"/>
-					<group>
-						<xsl:attribute name="id" select="."/>	
-						<xsl:for-each select="distinct-values($response/descendant::res:result[res:binding[@name='type']/res:uri=$uri]/res:binding[@name='object']/res:uri)">
-							<xsl:variable name="objectUri" select="."/>
-							<xsl:copy-of select="$response/descendant::res:result[res:binding[@name='object']/res:uri=$objectUri][1]"/>
-						</xsl:for-each>
-					</group>
-				</xsl:for-each>				
-			</response>-->
 		</xsl:if>
 	</xsl:variable>
 
@@ -178,7 +144,7 @@
 			</xsl:for-each>
 		</xsl:variable>
 
-		<xsl:variable name="rdf_url" select="concat('http://nomisma.numismatics.org/apis/getRdf?identifiers=', $id-param)"/>
+		<xsl:variable name="rdf_url" select="concat('http://nomisma.org/apis/getRdf?identifiers=', $id-param)"/>
 		<xsl:copy-of select="document($rdf_url)/rdf:RDF/*"/>
 
 		<xsl:if test="$end &lt; $count">

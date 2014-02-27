@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Repeated functions for regularization to be used through Numishare -->
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:nh="http://nomisma.org/nudsHoard" xmlns:numishare="http://code.google.com/p/numishare/"
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:nh="http://nomisma.org/nudsHoard" xmlns:numishare="https://github.com/ewg118/numishare"
 	xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes="#all" version="2.0">
 
 	<!-- ************** NORMALIZATION TEMPLATES ************** -->
@@ -2222,7 +2222,7 @@
 					<xsl:when test="$label='visualize_filter_list'">Filter List</xsl:when>
 					<xsl:when test="$label='visualize_filter_query'">Filter Query</xsl:when>
 					<xsl:when test="$label='visualize_remove_filter'">Remove Filter</xsl:when>
-					<xsl:when test="$label='visualize_add_custom'">Add Custom Queries</xsl:when>
+					<xsl:when test="$label='visualize_add_custom'">Custom Queries</xsl:when>
 					<xsl:when test="$label='visualize_custom_query'">Custom Query</xsl:when>
 					<xsl:when test="$label='visualize_compare_optional'">Compare to other Queries (optional)</xsl:when>
 					<xsl:when test="$label='visualize_comparison_query'">Comparison Query</xsl:when>

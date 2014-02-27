@@ -192,15 +192,15 @@ $(document).ready(function () {
 	
 	//filter button activation
 	$('#advancedSearchForm').submit(function () {
-		var q = assembleQuery('advancedSearchForm');
+		var q = assembleQuery('advancedSearchForm');		
 		var param = $('#paramName').text();
 		
 		//insert new query
 		if (param == 'customQuery') {
-			var newQuery = '<div class="customQuery"><b>Custom Query: </b><span>' + q + '</span><a href="#" class="removeQuery">Remove Query</a></div>'
+			var newQuery = '<div class="customQuery"><b>Custom Query: </b><span>' + q + '</span><a href="#" class="removeQuery"><span class="glyphicon glyphicon-remove"/>Remove Query</a></div>'
 			$('#' + param + 'Div').append(newQuery);
 		} else if (param == 'compareQuery') {
-			var newQuery = '<div class="compareQuery"><b>Comparison Query: </b><span>' + q + '</span><a href="#" class="removeQuery">Remove Query</a></div>'
+			var newQuery = '<div class="compareQuery"><b>Comparison Query: </b><span>' + q + '</span><a href="#" class="removeQuery"><span class="glyphicon glyphicon-remove"/>Remove Query</a></div>'
 			$('#' + param + 'Div').append(newQuery);
 		}
 		//close fancybox
@@ -220,7 +220,15 @@ $(document).ready(function () {
 	});
 	
 	//remove comparison or custom queries
-	$('.removeQuery').livequery('click', function () {
+	$('#customSparqlQueryDiv').on('click', '.customSparqlQuery .removeQuery', function () {
+		$(this).parent('div').remove();
+		return false;
+	});
+	$('#compareQueryDiv').on('click', '.compareQuery .removeQuery', function () {
+		$(this).parent('div').remove();
+		return false;
+	});
+	$('#customQueryDiv').on('click', '.customQuery .removeQuery', function () {
 		$(this).parent('div').remove();
 		return false;
 	});
@@ -232,7 +240,7 @@ $(document).ready(function () {
 	});
 	
 	/********************* SPARQL-BASED FACETS ***********************/	
-	$('.sparql_facets') .livequery('change', function(event){
+	$('#sparqlInputContainer') .on('change', '.searchItemTemplate .sparql_facets', function(event){
 		var field = $(this) .children("option:selected") .val();
 		var container = $(this) .parent('.searchItemTemplate') .children('.option_container');
 		var formId = $(this).closest('form').attr('id');
@@ -273,6 +281,45 @@ $(document).ready(function () {
 				$('#' + formId + '-alert').hide();
 			}
 		}
+	});
+	
+	/***** TOGGLING FACET FORM*****/
+	$('#sparqlInputContainer') .on('click', '.searchItemTemplate .gateTypeBtn', function (event) {
+		gateTypeBtnClick($(this));
+		
+		//disable date select option if there is already a date select option
+		if ($(this).closest('form').attr('id') == 'sparqlForm') {
+			var count = countDate();
+			if (count == 1) {
+				$('#sparqlForm .searchItemTemplate').each(function () {
+					//disable all new searchItemTemplates which are not already set to date
+					if ($(this).children('.sparql_facets').val() != 'date') {
+						$(this).find('option[value=date]').attr('disabled', true);
+					}
+				});
+			}
+		}
+		
+		return false;
+	});
+	
+	$('#sparqlInputContainer') .on('click', '.searchItemTemplate .removeBtn', function (event) {
+		//enable date option in sparql form if the date is being removed
+		if ($(this).closest('form').attr('id') == 'sparqlForm') {
+			$('#sparqlForm .searchItemTemplate').each(function () {
+				$(this).find('option[value=date]').attr('disabled', false);
+				//enable submit
+				$('#sparqlForm input[type=submit]').attr('disabled', false);
+				//hide error
+				$('#sparqlForm-alert').hide();
+			});
+		}
+		
+		// fade out the entire template
+		$(this) .parent() .fadeOut('fast', function () {
+			$(this) .remove();
+		});
+		return false;
 	});
 	
 	$('.measurementTable').each(function () {
@@ -331,12 +378,18 @@ $(document).ready(function () {
 		
 		//process interval/duration
 		if ($(this).closest('form').find('.from_date') .val().length > 0 && $(this).closest('form').find('.to_date') .val().length > 0 && $(this).closest('form').find('select[name=interval]') .val().length > 0){
-			var fromDate = ($(this).closest('form').find('.from_era') .val() == 'minus' ? '-' : '') + Math.abs($(this).closest('form').find('.from_date') .val());
-			var toDate = ($(this).closest('form').find('.to_era') .val() == 'minus' ? '-' : '') + Math.abs($(this).closest('form').find('.to_date') .val());
-			
-			//set values
-			$(this).closest('form').find('.from_date').attr('value', fromDate);
-			$(this).closest('form').find('.to_date').attr('value', toDate);
+			if ($(this).closest('form').find('.from_era') .val() == 'minus') {
+				fromDate = Math.abs($(this).closest('form').find('.from_date') .val()) * -1;
+			} else {
+				fromDate = Math.abs($(this).closest('form').find('.from_date') .val())
+			}
+			if ($(this).closest('form').find('.to_era') .val() == 'minus') {
+				toDate = Math.abs($(this).closest('form').find('.to_date') .val()) * -1;
+			} else {
+				toDate = Math.abs($(this).closest('form').find('.to_date') .val())
+			}
+			$(this).closest('form').find('.from_date').val(fromDate);
+			$(this).closest('form').find('.to_date').val(toDate);
 		}
 	});
 	
@@ -353,7 +406,7 @@ $(document).ready(function () {
 		var mr = '<span class="mr">' + q + '</span>';
 		
 		//insert new query
-		var newQuery = '<div class="customSparqlQuery"><b>Query: </b>' + hr + mr + '<a href="#" class="removeQuery">Remove Query</a></div>';
+		var newQuery = '<div class="customSparqlQuery"><b>Query: </b>' + hr + mr + '<a href="#" class="removeQuery"><span class="glyphicon glyphicon-remove"/>Remove Query</a></div>';
 		$('#customSparqlQueryDiv').append(newQuery);
 			
 		//close fancybox
@@ -397,22 +450,23 @@ $(document).ready(function () {
 	});
 	
 	//validate sparqlForm
-	$('.option_container').find('input[name=fromDate]').livequery('change', function () {
+	
+	$('#sparqlInputContainer').on('change', '.searchItemTemplate .option_container span input[name=fromDate]', function () {
 		var formId = $(this).closest('form').attr('id');
 		var spanId = $(this).parent('span').attr('id');
 		validateForm(spanId, formId);
 	});
-	$('.option_container').find('input[name=toDate]').livequery('change', function () {
+	$('#sparqlInputContainer').on('change', '.searchItemTemplate .option_container span input[name=toDate]', function () {
 		var formId = $(this).closest('form').attr('id');
 		var spanId = $(this).parent('span').attr('id');
 		validateForm(spanId, formId);
 	});
-	$('.option_container').find('.from_era').livequery('change', function () {
+	$('#sparqlInputContainer').on('change', '.searchItemTemplate .option_container span .from_era', function () {
 		var formId = $(this).closest('form').attr('id');
 		var spanId = $(this).parent('span').attr('id');
 		validateForm(spanId, formId);
 	});
-	$('.option_container').find('.to_era').livequery('change', function () {
+	$('#sparqlInputContainer').on('change', '.searchItemTemplate .option_container span .to_era', function () {
 		var formId = $(this).closest('form').attr('id');
 		var spanId = $(this).parent('span').attr('id');
 		validateForm(spanId, formId);
@@ -531,6 +585,8 @@ $(document).ready(function () {
 	
 	    return text;
 	}
+	
+	
 });
 
 function countDate (){

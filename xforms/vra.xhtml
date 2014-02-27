@@ -749,11 +749,11 @@
 			</xforms:bind>
 
 			<!-- Load File -->
-			<xforms:submission id="load-submission" serialization="none" method="get" action="{instance('exist-url')}{instance('control-instance')/collection-name}/vra/{instance('vra')/work/@id}.xml" xxforms:username="admin" xxforms:password=""
+			<xforms:submission id="load-submission" serialization="none" method="get" action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/vra/{instance('vra')/work/@id}.xml" xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}"
 				replace="instance" instance="vra"> </xforms:submission>
 
 			<!-- Save File -->
-			<xforms:submission id="save-submission" ref="instance('vra')" xxforms:username="admin" xxforms:password="" action="{instance('exist-url')}{instance('control-instance')/collection-name}/vra/{instance('vra')/work/@id}.xml"
+			<xforms:submission id="save-submission" ref="instance('vra')" xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}" action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/vra/{instance('vra')/work/@id}.xml"
 				method="put" replace="none">
 				<xforms:setvalue ev:event="xforms-submit-done" ref="instance('status')">Artifact saved.</xforms:setvalue>
 				<xforms:message ev:event="xforms-submit-error" level="modal">Save Error!</xforms:message>
@@ -783,7 +783,7 @@
 			<xforms:send ev:event="xforms-model-construct-done" submission="load-submission"/>
 
 			<!-- load site info -->
-			<xforms:submission id="load-config" serialization="none" method="get" action="{instance('exist-url')}{instance('control-instance')/collection-name}/config.xml" xxforms:username="admin" xxforms:password=""
+			<xforms:submission id="load-config" serialization="none" method="get" action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/config.xml" xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}"
 				replace="instance" instance="config"/>
 		</xforms:model>
 

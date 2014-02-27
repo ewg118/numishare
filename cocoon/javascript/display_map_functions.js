@@ -1,6 +1,12 @@
 $(document).ready(function () {
 	var id = $('title').attr('id');
-	initialize_timemap(id);
+	var collection_type = $('#collection_type').text();
+	var path = $('#path').text();
+	if (collection_type == 'object') {
+		initialize_map(id, path);
+	} else {	
+		initialize_timemap(id);
+	}
 });
 
 function initialize_timemap(id) {
@@ -10,7 +16,7 @@ function initialize_timemap(id) {
 	} else {
 		var lang = langStr;
 	}
-
+	
 	var url = "../apis/get?id=" + id + "&format=json&lang=" + lang;
 	var datasets = new Array();
 	
@@ -24,36 +30,12 @@ function initialize_timemap(id) {
 		}
 	});
 	
-	//additional facets
-	/*$('#term-list').children('li').each(function () {
-		var facet = $(this).attr('class');
-		var value = $(this).text();
-		obj = {
-		};
-		obj.id = facet.split('_')[0];
-		obj.title = facet.split('_')[0];
-		obj.type = 'kml';
-		obj.theme = 'green';
-		obj.visible = false;
-		
-		var infoTemplate = '<div><strong>{{title}}</strong><br/><a href="../results?q=mint_uri:%22{{description}}%22 AND ' + facet + ':%22' + value + '%22" target="_blank">View</a> coins from {{title}} meeting the criterium: ' + facet.split('_')[0] + ': ' + value + '</div>';
-		
-		obj.options = {
-			url: '../mints.kml?q=' + facet + ':"' + value + '"',
-			infoTemplate: infoTemplate
-		};
-		datasets.push(obj);
-	});*/
-	
-	//console.log(datasets);
-	
 	var tm;
 	tm = TimeMap.init({
 		mapId: "map", // Id of map div element (required)
 		timelineId: "timeline", // Id of timeline div element (required)
 		options: {
 			eventIconPath: "../images/timemap/"
-			//mapFilter:'true'
 		},
 		datasets: datasets,
 		bandIntervals:[
@@ -73,19 +55,38 @@ function initialize_timemap(id) {
 
 
 function initialize_map(id, path) {
+	/***** DECLARE BASELAYERS ******/
+	var google_physical = new OpenLayers.Layer.Google("Google Physical", {
+		type: google.maps.MapTypeId.TERRAIN
+	});
+	var imperium = new OpenLayers.Layer.XYZ(
+	"Imperium Romanum",[
+	"http://pelagios.dme.ait.ac.at/tilesets/imperium/${z}/${x}/${y}.png"], {
+		sphericalMercator: true,
+		isBaseLayer: true,
+		numZoomLevels: 12,
+		attribution: '<a href="http://imperium.ahlfeldt.se">Digital Atlas of the Roman Empire</a>, hosted by <a href="http://pelagios-project.blogspot.com">Pelagios</a>.'
+	});
+	var osm = new OpenLayers.Layer.OSM();
+	
+	var baselayers = $('#baselayers').text().split(',');
 	
 	map = new OpenLayers.Map('mapcontainer', {
 		controls:[
 		new OpenLayers.Control.PanZoomBar(),
 		new OpenLayers.Control.Navigation(),
 		new OpenLayers.Control.ScaleLine(),
+		new OpenLayers.Control.Attribution(),
 		new OpenLayers.Control.LayerSwitcher({
 			'ascending': true
 		})]
 	});
 	
-	//google physical
-	map.addLayer(new OpenLayers.Layer.Google("Google Physical",{type: google.maps.MapTypeId.TERRAIN}));
+	//add baselayers
+	var i;
+	for (i = 0; i < baselayers.length; i++) {
+		map.addLayer(eval(baselayers[i]));
+	}
 	
 	//point for coin or hoard KML
 	var kmlLayer = new OpenLayers.Layer.Vector($('#object_title').text(), {
@@ -101,38 +102,6 @@ function initialize_map(id, path) {
 				extractAttributes: true
 			})
 		})
-	});
-	
-	//add other facets
-	$('#term-list').children('li').each(function () {
-		var facet = $(this).attr('class');
-		var value = $(this).text();
-		
-		var fillColor = '#' + Math.floor(Math.random() * 16777215).toString(16);
-		var strokeColor = '#' + Math.floor(Math.random() * 16777215).toString(16);
-		
-		map.addLayer(new OpenLayers.Layer.Vector(facet.split('_')[0] + ': ' + value, {
-			visibility: false,
-			styleMap: new OpenLayers.Style({
-				pointRadius: "${radius}", fillColor: fillColor, fillOpacity: 0.8, strokeColor: strokeColor, strokeWidth: 2, strokeOpacity: 0.8
-			}, {
-				context: {
-					radius: function (feature) {
-						return Math.min(feature.attributes.count, 7) + 3;
-					}
-				}
-			}),
-			strategies:[
-			new OpenLayers.Strategy.Fixed(),
-			new OpenLayers.Strategy.Cluster()],
-			protocol: new OpenLayers.Protocol.HTTP({
-				url: path + 'mints.kml?q=' + facet + ':"' + value + '"',
-				format: new OpenLayers.Format.KML({
-					extractStyles: false,
-					extractAttributes: true
-				})
-			})
-		}));
 	});
 	
 	//add origin point last

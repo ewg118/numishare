@@ -26,24 +26,8 @@ $(document).ready(function () {
 		dateLabel();
 	}
 	
-	$("#backgroundPopup").livequery('click', function (event) {
+	$("#backgroundPopup").on('click', function (event) {
 		disablePopup();
-	});
-	
-	//hover over remove facet link
-	$(".remove_filter").hover(
-	function () {
-		$(this).parent().addClass("ui-state-hover");
-	},
-	function () {
-		$(this).parent().removeClass("ui-state-hover");
-	});
-	$("#clear_all").hover(
-	function () {
-		$(this).parent().addClass("ui-state-hover");
-	},
-	function () {
-		$(this).parent().removeClass("ui-state-hover");
 	});
 	
 	//enable multiselect
@@ -134,16 +118,16 @@ $(document).ready(function () {
 				});
 			}
 		}
-	}).multiselectfilter();
+	});
+	
+	/***** SEARCH *****/
+	$('#search_button') .click(function () {
+		var q = getQuery();
+		$('#facet_form_query').attr('value', q);
+	});
 	
 	/***************** DRILLDOWN HIERARCHICAL FACETS ********************/
-	$('.hierarchical-facet').hover(function () {
-		$(this) .attr('class', 'ui-multiselect ui-widget ui-state-default ui-corner-all ui-state-focus');
-	},
-	function () {
-		$(this) .attr('class', 'ui-multiselect ui-widget ui-state-default ui-corner-all');
-	});	
-	
+	/*
 	$('.hier-close') .click(function () {
 		disablePopup();
 		return false;
@@ -170,7 +154,7 @@ $(document).ready(function () {
 	});
 	
 	//expand category when expand/compact image pressed
-	$('.expand_category') .livequery('click', function (event) {
+	$('#refine_results') .on('click', '.expand_category', function (event) {
 		var fq = $(this).next('input').val();
 		var list = $(this) .attr('id').split('__')[0].split('|')[1] + '__list';
 		var field = $(this).attr('field');
@@ -194,7 +178,7 @@ $(document).ready(function () {
 	});
 	
 	//remove all ancestor or descendent checks on uncheck
-	$('.h_item input') .livequery('click', function (event) {
+	$('#refine_results') .on('click', '.h_item input', function (event) {
 		var field = $(this).closest('.ui-multiselect-menu').attr('id').split('-')[0];
 		var title = $('.' + field + '-multiselect-checkboxes').attr('title');
 		
@@ -210,21 +194,15 @@ $(document).ready(function () {
 			$('#' + field + '_hier_link').children('span:nth-child(2)').html(title);
 		}
 		
-	});	
+	});	*/
 	
 	/***************** DRILLDOWN FOR DATES ********************/
-	$('#century_num_link').hover(function () {
-		$(this) .attr('class', 'ui-multiselect ui-widget ui-state-default ui-corner-all ui-state-focus');
-	},
-	function () {
-		$(this) .attr('class', 'ui-multiselect ui-widget ui-state-default ui-corner-all');
-	});
-	
-	$('.century-close').livequery('click', function (event) {
+	/*	
+	$('.century-close').on('click', function (event) {
 		disablePopup();
 	});
 	
-	$('#century_num_link').livequery('click', function (event) {
+	$('#century_num_link').on('click', function (event) {
 		if (popupStatus == 0) {
 			$("#backgroundPopup").fadeIn("fast");
 			popupStatus = 1;
@@ -244,7 +222,7 @@ $(document).ready(function () {
 		$('#' + list_id).parent('div').attr('style', 'width: 192px;display:block;');
 	});
 	
-	$('.expand_century').livequery('click', function (event) {
+	$('.expand_century').on('click', function (event) {
 		var century = $(this).attr('century');
 		var q = getQuery();
 		var expand_image = $(this).children('img').attr('src');
@@ -268,7 +246,7 @@ $(document).ready(function () {
 	});
 	
 	//check parent century box when a decade box is checked
-	$('.decade_checkbox').livequery('click', function (event) {
+	$('.decade_checkbox').on('click', function (event) {
 		if ($(this) .is(':checked')) {
 			$(this) .parent('li').parent('ul').parent('li') .children('input') .attr('checked', true);
 		}
@@ -276,20 +254,13 @@ $(document).ready(function () {
 		dateLabel();
 	});
 	//uncheck child decades when century is unchecked
-	$('.century_checkbox').livequery('click', function (event) {
+	$('.century_checkbox').on('click', function (event) {
 		if ($(this).not(':checked')) {
 			$(this).parent('li').children('ul').children('li').children('.decade_checkbox').attr('checked', false);
 		}
 		//set label
 		dateLabel();
-	});
-	
-	
-	/***** SEARCH *****/
-	$('#search_button') .click(function () {
-		var q = getQuery();
-		$('#facet_form_query').attr('value', q);
-	});
+	});*/
 	
 	/***************************/
 	//@Author: Adrian "yEnS" Mato Gondelle

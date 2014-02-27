@@ -1,12 +1,3 @@
-html, body {
-	font-family: Verdana, Arial, Helvetica, sans-serif;
-	font-size: 11px;
-	line-height: 14px;
-	color: #333333;
-	margin:0;
-	height:100%;
-	width:100%;
-}
 /*
   ***************************************
   FACETS
@@ -16,16 +7,8 @@ html, body {
 	width:800px;
 	height:400px;
 }
-ol li, ul li, dl li {
+ol li, ul li {
 	list-style-type:none;
-}
-#filter_list {
-	margin:0;
-	padding:0;
-}
-.fl {
-	float:left;
-	width:25%;
 }
 select {
 	width:175px;
@@ -56,8 +39,21 @@ button.ui-multiselect {
 	z-index: 1000;
 	background-color: white;
 	padding: 0.5em;
-	background-color:#F7F6ED;
-	border:5px solid #C2B9A9;
+	background-color:#ebebeb;
+	border:5px solid silver;	
+	border-radius:10px;
+}
+#timemap-legend {
+	position: absolute;
+	bottom: 25%;
+	left: 2em;
+	width: 300px;
+	z-index: 1000;
+	background-color: white;
+	padding: 0.5em;
+	background-color:#ebebeb;
+	border:5px solid silver;
+	border-radius:10px;
 }
 #show_filters {
 	font-size:80%;
@@ -95,42 +91,21 @@ button.ui-multiselect {
 	display:none;
 }
 /*
-  .olLayerGoogleCopyright {
-  top:-1000px;
-  }
- */
-#add_filter {
-	font-weight:bold;
-	font-size:120%;
-	text-transform:capitalize;
-}
-#add_filter:first-letter {
-	font-size:140%;
-}
-.filter_facet:hover {
-	color:gray;
-}
-.filter_heading {
-	width:100%;
-}
-.filter_terms {
-	position:absolute;
-	z-index:2002;
-	width:200px;
-	padding:3px;
-}
-/*
   ***************************************
   Timemap CSS
   ***************************************
  */
 div#timelinecontainer {
 	width:100%;
-	height: 250px;
+	height: 20%;
 }
 div#mapcontainer {
 	width:100%;
 	height: 100%;
+}
+div#fullscreen-timemapcontainer {
+	height:80%;
+	width:100%;
 }
 div.olFramedCloudPopupContent {
 	width: 300px;
@@ -187,8 +162,6 @@ dd {
 	padding: 0 0 0.5em 0;
 }
 .g_doc {
-	width:33%;
-	float:left;
 	height:325px;
 }
 /* gallery image container */
@@ -213,19 +186,13 @@ dd {
   ***************************************
  */
 .paging_div {
-	width:100%;
-	display:table;
-	padding-top:10px;
-	padding-bottom:10px;
+	padding:10px 0;
+	vertical-align:top
 }
-.paging li {
-	float: left;
-	list-style: none outside none;
-	margin: 2px;
-	position: relative;
-	width:30px;
-	text-align:center;
+.page-nos {
+	text-align:right;
+	
 }
-.paging li a {
-	width:100%;
+.pagination a, .pagination button {
+	height:32px;	
 }

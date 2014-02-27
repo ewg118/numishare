@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:exsl="http://exslt.org/common"
-	xmlns:numishare="http://code.google.com/p/numishare/" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-	xmlns:cinclude="http://apache.org/cocoon/include/1.0" xmlns:nuds="http://nomisma.org/nuds" xmlns:mods="http://www.loc.gov/mods/v3"
-	xmlns:nh="http://nomisma.org/nudsHoard" xmlns:nm="http://nomisma.org/id/" xmlns:math="http://exslt.org/math"
-	xmlns:res="http://www.w3.org/2005/sparql-results#" exclude-result-prefixes=" #all" version="2.0">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:exsl="http://exslt.org/common" xmlns:numishare="https://github.com/ewg118/numishare" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+	xmlns:cinclude="http://apache.org/cocoon/include/1.0" xmlns:nuds="http://nomisma.org/nuds" xmlns:mods="http://www.loc.gov/mods/v3" xmlns:nh="http://nomisma.org/nudsHoard"
+	xmlns:nm="http://nomisma.org/id/" xmlns:math="http://exslt.org/math" xmlns:res="http://www.w3.org/2005/sparql-results#" exclude-result-prefixes=" #all" version="2.0">
 
 	<xsl:variable name="flickr-api-key" select="//config/flickr_api_key"/>
+	<xsl:variable name="type_series" select="//config/type_series"/>
 
 	<!-- ************** QUANTITATIVE ANALYSIS FUNCTIONS ************** -->
 	<!-- this template should only apply for hoards, hence the nh namespace -->
@@ -18,8 +17,7 @@
 				<!-- use get_hoard_quant to calculate -->
 				<xsl:if test="$pipeline = 'display'">
 					<xsl:copy-of
-						select="document(concat('cocoon:/get_hoard_quant?id=', $id, '&amp;calculate=', if (string($role)) then $role else $element, '&amp;type=', $type, '&amp;exclude=', $exclude))"
-					/>
+						select="document(concat('cocoon:/get_hoard_quant?id=', $id, '&amp;calculate=', if (string($role)) then $role else $element, '&amp;type=', $type, '&amp;exclude=', $exclude))"/>
 				</xsl:if>
 				<!-- if there is a compare parameter, load get_hoard_quant with document() function -->
 				<xsl:if test="string($compare) and string($calculate)">
@@ -157,36 +155,38 @@
 
 
 	<!-- ************** FORM TEMPLATES ************** -->
-	<xsl:template name="visualization">
+	<!-- ************** HOARD VISUALIZATION ************** -->
+	<xsl:template name="hoard-visualization">
 		<xsl:param name="action"/>
 		<xsl:variable name="queryOptions">authority,coinType,deity,denomination,dynasty,issuer,material,mint,portrait,region</xsl:variable>
 		<xsl:variable name="chartTypes">bar,column</xsl:variable>
 
 		<p><xsl:value-of select="numishare:normalizeLabel('visualize_type_desc', $lang)"/>.</p>
 		<form action="{$action}" id="visualize-form" style="margin-bottom:40px;">
-			<h2>1. <xsl:value-of select="numishare:normalizeLabel('visualize_response_type', $lang)"/></h2>
-			<input type="radio" name="type" value="percentage">
-				<xsl:if test="$type != 'count'">
-					<xsl:attribute name="checked">checked</xsl:attribute>
-				</xsl:if>
-			</input>
-			<label for="type-radio">
-				<xsl:value-of select="numishare:normalizeLabel('numeric_percentage', $lang)"/>
-			</label>
-			<br/>
-			<input type="radio" name="type" value="count">
-				<xsl:if test="$type = 'count'">
-					<xsl:attribute name="checked">checked</xsl:attribute>
-				</xsl:if>
-			</input>
-			<label for="type-radio">
-				<xsl:value-of select="numishare:normalizeLabel('numeric_count', $lang)"/>
-			</label>
-			<br/>
-			<div style="display:table;width:100%">
+			<div class="row">
+				<h2>1. <xsl:value-of select="numishare:normalizeLabel('visualize_response_type', $lang)"/></h2>
+				<input type="radio" name="type" value="percentage">
+					<xsl:if test="$type != 'count'">
+						<xsl:attribute name="checked">checked</xsl:attribute>
+					</xsl:if>
+				</input>
+				<label for="type-radio">
+					<xsl:value-of select="numishare:normalizeLabel('numeric_percentage', $lang)"/>
+				</label>
+				<br/>
+				<input type="radio" name="type" value="count">
+					<xsl:if test="$type = 'count'">
+						<xsl:attribute name="checked">checked</xsl:attribute>
+					</xsl:if>
+				</input>
+				<label for="type-radio">
+					<xsl:value-of select="numishare:normalizeLabel('numeric_count', $lang)"/>
+				</label>
+			</div>
+			<div class="row">
 				<h2>2. <xsl:value-of select="numishare:normalizeLabel('visualize_chart_type', $lang)"/></h2>
 				<xsl:for-each select="tokenize($chartTypes, ',')">
-					<span class="anOption">
+					<div class="col-md-2">
 						<input type="radio" name="chartType" value="{.}">
 							<xsl:if test="$chartType = . or (.='column' and not(string($chartType)))">
 								<xsl:attribute name="checked">checked</xsl:attribute>
@@ -195,11 +195,11 @@
 						<label for="chartType-radio">
 							<xsl:value-of select="numishare:normalizeLabel(concat('chart_', .), $lang)"/>
 						</label>
-					</span>
+					</div>
 
 				</xsl:for-each>
 			</div>
-			<div style="display:table;width:100%">
+			<div class="row">
 				<h2>3. <xsl:value-of select="numishare:normalizeLabel('visualize_categories', $lang)"/></h2>
 				<div style="height:30px">
 					<div class="ui-state-error ui-corner-all" id="visualize-cat-alert" style="display:none">
@@ -209,7 +209,7 @@
 				</div>
 				<xsl:for-each select="tokenize($queryOptions, ',')">
 					<xsl:variable name="query_fragment" select="."/>
-					<span class="anOption">
+					<div class="col-md-2">
 						<xsl:choose>
 							<xsl:when test="$pipeline='analyze'">
 								<xsl:call-template name="vis-checks">
@@ -217,109 +217,110 @@
 								</xsl:call-template>
 							</xsl:when>
 							<xsl:otherwise>
-								<xsl:if
-									test="count(exsl:node-set($nudsGroup)/descendant::*[local-name()=$query_fragment or @xlink:role=$query_fragment]) &gt; 0">
+								<xsl:if test="count(exsl:node-set($nudsGroup)/descendant::*[local-name()=$query_fragment or @xlink:role=$query_fragment]) &gt; 0">
 									<xsl:call-template name="vis-checks">
 										<xsl:with-param name="query_fragment" select="$query_fragment"/>
 									</xsl:call-template>
 								</xsl:if>
 							</xsl:otherwise>
 						</xsl:choose>
-					</span>
+					</div>
 				</xsl:for-each>
 			</div>
-			<xsl:choose>
-				<xsl:when test="$pipeline='analyze'">
-					<h2>
-						<xsl:text>4. </xsl:text>
-						<xsl:value-of select="numishare:normalizeLabel('visualize_select_hoards', $lang)"/>
-						<span style="font-size:60%;margin-left:10px;">
-							<a href="#filterHoards" class="showFilter" id="visualize-filter">
-								<xsl:value-of select="numishare:normalizeLabel('visualize_filter_list', $lang)"/>
+			<div class="row">
+				<xsl:choose>
+					<xsl:when test="$pipeline='analyze'">
+						<h2>
+							<xsl:text>4. </xsl:text>
+							<xsl:value-of select="numishare:normalizeLabel('visualize_select_hoards', $lang)"/>
+							<span style="font-size:60%;margin-left:10px;">
+								<a href="#filterHoards" class="showFilter" id="visualize-filter">
+									<xsl:value-of select="numishare:normalizeLabel('visualize_filter_list', $lang)"/>
+								</a>
+							</span>
+						</h2>
+
+						<div style="height:30px">
+							<div class="ui-state-error ui-corner-all" id="visualize-hoard-alert" style="display:none">
+								<span class="ui-icon ui-icon-alert" style="float:left"/>
+								<strong><xsl:value-of select="numishare:normalizeLabel('visualize_alert', $lang)"/>:</strong>
+								<xsl:value-of select="numishare:normalizeLabel('visualize_error4', $lang)"/>
+							</div>
+						</div>
+
+
+						<div class="filter-div" style="display:none">
+							<b><xsl:value-of select="numishare:normalizeLabel('visualize_filter_query', $lang)"/>:</b>
+							<span/>
+							<a href="#" class="removeFilter">
+								<span class="glyphicon glyphicon-remove"/>
+								<xsl:value-of select="numishare:normalizeLabel('visualize_remove_filter', $lang)"/>
 							</a>
-						</span>
-					</h2>
-
-					<div style="height:30px">
-						<div class="ui-state-error ui-corner-all" id="visualize-hoard-alert" style="display:none">
-							<span class="ui-icon ui-icon-alert" style="float:left"/>
-							<strong><xsl:value-of select="numishare:normalizeLabel('visualize_alert', $lang)"/>:</strong>
-							<xsl:value-of select="numishare:normalizeLabel('visualize_error4', $lang)"/>
 						</div>
-					</div>
-
-
-					<div class="filter-div" style="display:none">
-						<b><xsl:value-of select="numishare:normalizeLabel('visualize_filter_query', $lang)"/>:</b>
-						<span/>
-						<a href="#" class="removeFilter">
-							<xsl:value-of select="numishare:normalizeLabel('visualize_remove_filter', $lang)"/>
-						</a>
-					</div>
-					<xsl:call-template name="get-hoards"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<h2>4. <xsl:value-of select="numishare:normalizeLabel('visualize_select_hoards_optional', $lang)"/></h2>
-					<div style="height:30px">
-						<div class="ui-state-error ui-corner-all" id="visualize-hoard-alert" style="display:none">
-							<span class="ui-icon ui-icon-alert" style="float:left"/>
-							<strong><xsl:value-of select="numishare:normalizeLabel('visualize_alert', $lang)"/>:</strong>
-							<xsl:value-of select="numishare:normalizeLabel('visualize_error5', $lang)"/>
+						<xsl:call-template name="get-hoards"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<h2>4. <xsl:value-of select="numishare:normalizeLabel('visualize_select_hoards_optional', $lang)"/></h2>
+						<div style="height:30px">
+							<div class="ui-state-error ui-corner-all" id="visualize-hoard-alert" style="display:none">
+								<span class="ui-icon ui-icon-alert" style="float:left"/>
+								<strong><xsl:value-of select="numishare:normalizeLabel('visualize_alert', $lang)"/>:</strong>
+								<xsl:value-of select="numishare:normalizeLabel('visualize_error5', $lang)"/>
+							</div>
 						</div>
-					</div>
-					<xsl:call-template name="get-hoards"/>
-				</xsl:otherwise>
-			</xsl:choose>
+						<xsl:call-template name="get-hoards"/>
+					</xsl:otherwise>
+				</xsl:choose>
 
-			<div>
-				<h3>
-					<xsl:value-of select="numishare:normalizeLabel('visualize_optional_settings', $lang)"/>
-					<span style="font-size:60%;margin-left:10px;">
-						<a href="#" class="optional-button" id="visualize-options">
-							<xsl:value-of select="numishare:normalizeLabel('visualize_hide-show', $lang)"/>
-						</a>
-					</span>
-				</h3>
-				<div class="optional-div" style="display:none">
-					<div>
-						<dl>
-							<dt>
-								<xsl:value-of select="numishare:normalizeLabel('visualize_exclude_certainty_codes', $lang)"/>
-							</dt>
-							<dd>
-								<cinclude:include src="cocoon:/get_certainty_codes?exclude={$exclude}"/>
-							</dd>
-						</dl>
-					</div>
-					<div>
-						<dl>
-							<dt>
-								<xsl:value-of select="numishare:normalizeLabel('visualize_stacking_options', $lang)"/>
-							</dt>
-							<dd>
-								<select id="stacking">
-									<option value="">
-										<xsl:value-of select="numishare:normalizeLabel('results_select', $lang)"/>
-									</option>
-									<option value="stacking:normal">
-										<xsl:if test="contains($options, 'stacking:normal')">
-											<xsl:attribute name="selected">selected</xsl:attribute>
-										</xsl:if>
-										<xsl:text><xsl:value-of select="numishare:normalizeLabel('numeric_cumulative', $lang)"/></xsl:text>
-									</option>
-									<option value="stacking:percent">
-										<xsl:if test="contains($options, 'stacking:percent')">
-											<xsl:attribute name="selected">selected</xsl:attribute>
-										</xsl:if>
-										<xsl:text><xsl:value-of select="numishare:normalizeLabel('numeric_percentage', $lang)"/></xsl:text>
-									</option>
-								</select>
-							</dd>
-						</dl>
+				<div>
+					<h3>
+						<xsl:value-of select="numishare:normalizeLabel('visualize_optional_settings', $lang)"/>
+						<small style="margin-left:10px;">
+							<a href="#" class="optional-button" id="visualize-options">
+								<xsl:value-of select="numishare:normalizeLabel('visualize_hide-show', $lang)"/>
+							</a>
+						</small>
+					</h3>
+					<div class="optional-div" style="display:none">
+						<div>
+							<dl class="dl-horizontal">
+								<dt>
+									<xsl:value-of select="numishare:normalizeLabel('visualize_exclude_certainty_codes', $lang)"/>
+								</dt>
+								<dd>
+									<cinclude:include src="cocoon:/get_certainty_codes?exclude={$exclude}"/>
+								</dd>
+							</dl>
+						</div>
+						<div>
+							<dl class="dl-horizontal">
+								<dt>
+									<xsl:value-of select="numishare:normalizeLabel('visualize_stacking_options', $lang)"/>
+								</dt>
+								<dd>
+									<select id="stacking">
+										<option value="">
+											<xsl:value-of select="numishare:normalizeLabel('results_select', $lang)"/>
+										</option>
+										<option value="stacking:normal">
+											<xsl:if test="contains($options, 'stacking:normal')">
+												<xsl:attribute name="selected">selected</xsl:attribute>
+											</xsl:if>
+											<xsl:text><xsl:value-of select="numishare:normalizeLabel('numeric_cumulative', $lang)"/></xsl:text>
+										</option>
+										<option value="stacking:percent">
+											<xsl:if test="contains($options, 'stacking:percent')">
+												<xsl:attribute name="selected">selected</xsl:attribute>
+											</xsl:if>
+											<xsl:text><xsl:value-of select="numishare:normalizeLabel('numeric_percentage', $lang)"/></xsl:text>
+										</option>
+									</select>
+								</dd>
+							</dl>
+						</div>
 					</div>
 				</div>
 			</div>
-
 			<input type="hidden" name="calculate" id="calculate-input" value=""/>
 			<input type="hidden" name="compare" class="compare-input" value=""/>
 			<input type="hidden" name="exclude" class="exclude-input" value=""/>
@@ -361,44 +362,46 @@
 		</xsl:for-each>
 	</xsl:template>
 
+	<!-- ************** DATE ANALYSIS: HOARDS ************** -->
 	<xsl:template name="date-vis">
 		<xsl:param name="action"/>
 		<xsl:variable name="chartTypes">bar,column,area,line,spline,areaspline</xsl:variable>
 
 		<p><xsl:value-of select="numishare:normalizeLabel('visualize_date_desc', $lang)"/>.</p>
 		<form action="{$action}" id="date-form" style="margin-bottom:40px;">
-			<h2>1. <xsl:value-of select="numishare:normalizeLabel('visualize_response_type', $lang)"/></h2>
-			<input type="radio" name="type" value="percentage">
-				<xsl:if test="$type != 'count'">
-					<xsl:attribute name="checked">checked</xsl:attribute>
-				</xsl:if>
-			</input>
-			<label for="type-radio">
-				<xsl:value-of select="numishare:normalizeLabel('numeric_percentage', $lang)"/>
-			</label>
-			<br/>
-			<input type="radio" name="type" value="cumulative">
-				<xsl:if test="$type = 'cumulative'">
-					<xsl:attribute name="checked">checked</xsl:attribute>
-				</xsl:if>
-			</input>
-			<label for="type-radio">
-				<xsl:value-of select="numishare:normalizeLabel('numeric_cumulative_percentage', $lang)"/>
-			</label>
-			<br/>
-			<input type="radio" name="type" value="count">
-				<xsl:if test="$type = 'count'">
-					<xsl:attribute name="checked">checked</xsl:attribute>
-				</xsl:if>
-			</input>
-			<label for="type-radio">
-				<xsl:value-of select="numishare:normalizeLabel('numeric_count', $lang)"/>
-			</label>
-			<br/>
-			<div style="display:table;width:100%">
+			<div class="row">
+				<h2>1. <xsl:value-of select="numishare:normalizeLabel('visualize_response_type', $lang)"/></h2>
+				<input type="radio" name="type" value="percentage">
+					<xsl:if test="$type != 'count'">
+						<xsl:attribute name="checked">checked</xsl:attribute>
+					</xsl:if>
+				</input>
+				<label for="type-radio">
+					<xsl:value-of select="numishare:normalizeLabel('numeric_percentage', $lang)"/>
+				</label>
+				<br/>
+				<input type="radio" name="type" value="cumulative">
+					<xsl:if test="$type = 'cumulative'">
+						<xsl:attribute name="checked">checked</xsl:attribute>
+					</xsl:if>
+				</input>
+				<label for="type-radio">
+					<xsl:value-of select="numishare:normalizeLabel('numeric_cumulative_percentage', $lang)"/>
+				</label>
+				<br/>
+				<input type="radio" name="type" value="count">
+					<xsl:if test="$type = 'count'">
+						<xsl:attribute name="checked">checked</xsl:attribute>
+					</xsl:if>
+				</input>
+				<label for="type-radio">
+					<xsl:value-of select="numishare:normalizeLabel('numeric_count', $lang)"/>
+				</label>
+			</div>
+			<div class="row">
 				<h2>2. <xsl:value-of select="numishare:normalizeLabel('visualize_chart_type', $lang)"/></h2>
 				<xsl:for-each select="tokenize($chartTypes, ',')">
-					<span class="anOption">
+					<div class="col-md-2">
 						<input type="radio" name="chartType" value="{.}">
 							<xsl:if test="$chartType = . or (.='line' and not(string($chartType)))">
 								<xsl:attribute name="checked">checked</xsl:attribute>
@@ -413,71 +416,73 @@
 						<label for="chartType-radio">
 							<xsl:value-of select="numishare:normalizeLabel(concat('chart_', .), $lang)"/>
 						</label>
-					</span>
+					</div>
 
 				</xsl:for-each>
 			</div>
-			<xsl:choose>
-				<xsl:when test="$pipeline='analyze'">
-					<h2>
-						<xsl:text>3. </xsl:text>
-						<xsl:value-of select="numishare:normalizeLabel('visualize_select_hoards', $lang)"/>
-						<span style="font-size:60%;margin-left:10px;">
-							<a href="#filterHoards" class="showFilter" id="date-filter">
-								<xsl:value-of select="numishare:normalizeLabel('visualize_filter_list', $lang)"/>
+			<div class="row">
+				<xsl:choose>
+					<xsl:when test="$pipeline='analyze'">
+						<h2>
+							<xsl:text>3. </xsl:text>
+							<xsl:value-of select="numishare:normalizeLabel('visualize_select_hoards', $lang)"/>
+							<small style="margin-left:10px;">
+								<a href="#filterHoards" class="showFilter" id="date-filter">
+									<xsl:value-of select="numishare:normalizeLabel('visualize_filter_list', $lang)"/>
+								</a>
+							</small>
+						</h2>
+						<div style="height:30px">
+							<div class="ui-state-error ui-corner-all" id="date-hoard-alert" style="display:none">
+								<span class="ui-icon ui-icon-alert" style="float:left"/>
+								<strong><xsl:value-of select="numishare:normalizeLabel('visualize_alert', $lang)"/>:</strong>
+								<xsl:value-of select="numishare:normalizeLabel('visualize_error4', $lang)"/>
+							</div>
+						</div>
+						<div class="filter-div" style="display:none">
+							<b><xsl:value-of select="numishare:normalizeLabel('visualize_filter_query', $lang)"/>:</b>
+							<span/>
+							<a href="#" class="removeFilter">
+								<span class="glyphicon glyphicon-remove"/>
+								<xsl:value-of select="numishare:normalizeLabel('visualize_remove_filter', $lang)"/>
 							</a>
-						</span>
-					</h2>
-					<div style="height:30px">
-						<div class="ui-state-error ui-corner-all" id="date-hoard-alert" style="display:none">
-							<span class="ui-icon ui-icon-alert" style="float:left"/>
-							<strong><xsl:value-of select="numishare:normalizeLabel('visualize_alert', $lang)"/>:</strong>
-							<xsl:value-of select="numishare:normalizeLabel('visualize_error4', $lang)"/>
 						</div>
-					</div>
-					<div class="filter-div" style="display:none">
-						<b><xsl:value-of select="numishare:normalizeLabel('visualize_filter_query', $lang)"/>:</b>
-						<span/>
-						<a href="#" class="removeFilter">
-							<xsl:value-of select="numishare:normalizeLabel('visualize_remove_filter', $lang)"/>
-						</a>
-					</div>
-					<xsl:call-template name="get-hoards"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<h2>3. <xsl:value-of select="numishare:normalizeLabel('visualize_select_hoards_optional', $lang)"/></h2>
-					<div style="height:30px">
-						<div class="ui-state-error ui-corner-all" id="date-hoard-alert" style="display:none">
-							<span class="ui-icon ui-icon-alert" style="float:left"/>
-							<strong><xsl:value-of select="numishare:normalizeLabel('visualize_alert', $lang)"/>:</strong>
-							<xsl:value-of select="numishare:normalizeLabel('visualize_error5', $lang)"/>
+						<xsl:call-template name="get-hoards"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<h2>3. <xsl:value-of select="numishare:normalizeLabel('visualize_select_hoards_optional', $lang)"/></h2>
+						<div style="height:30px">
+							<div class="ui-state-error ui-corner-all" id="date-hoard-alert" style="display:none">
+								<span class="ui-icon ui-icon-alert" style="float:left"/>
+								<strong><xsl:value-of select="numishare:normalizeLabel('visualize_alert', $lang)"/>:</strong>
+								<xsl:value-of select="numishare:normalizeLabel('visualize_error5', $lang)"/>
+							</div>
 						</div>
+						<xsl:call-template name="get-hoards"/>
+					</xsl:otherwise>
+				</xsl:choose>
+				<div>
+					<h3>
+						<xsl:value-of select="numishare:normalizeLabel('visualize_optional_settings', $lang)"/>
+						<small style="margin-left:10px;">
+							<a href="#" class="optional-button" id="date-options">
+								<xsl:value-of select="numishare:normalizeLabel('visualize_hide-show', $lang)"/>
+							</a>
+						</small>
+					</h3>
+					<div class="optional-div" style="display:none">
+						<h4>
+							<xsl:value-of select="numishare:normalizeLabel('visualize_exclude_certainty_codes', $lang)"/>
+						</h4>
+						<cinclude:include src="cocoon:/get_certainty_codes?exclude={$exclude}"/>
 					</div>
-					<xsl:call-template name="get-hoards"/>
-				</xsl:otherwise>
-			</xsl:choose>
-			<div>
-				<h3>
-					<xsl:value-of select="numishare:normalizeLabel('visualize_optional_settings', $lang)"/>
-					<span style="font-size:60%;margin-left:10px;">
-						<a href="#" class="optional-button" id="date-options">
-							<xsl:value-of select="numishare:normalizeLabel('visualize_hide-show', $lang)"/>
-						</a>
-					</span>
-				</h3>
-				<div class="optional-div" style="display:none">
-					<h4>
-						<xsl:value-of select="numishare:normalizeLabel('visualize_exclude_certainty_codes', $lang)"/>
-					</h4>
-					<cinclude:include src="cocoon:/get_certainty_codes?exclude={$exclude}"/>
 				</div>
 			</div>
-
 			<input type="hidden" name="calculate" id="calculate-input" value=""/>
 			<input type="hidden" name="compare" class="compare-input" value=""/>
 			<input type="hidden" name="exclude" class="exclude-input" value=""/>
 			<br/>
-			<input type="submit" value="{numishare:normalizeLabel('visualize_calculate', $lang)}" class="submit-vis" id="date-submit"/>
+			<input type="submit" value="{numishare:normalizeLabel('visualize_calculate', $lang)}" class="submit-vis btn btn-default" id="date-submit"/>
 		</form>
 
 		<xsl:if test="$calculate='date'">
@@ -495,43 +500,43 @@
 		</xsl:if>
 	</xsl:template>
 
+	<!-- ************** DOWNLOAD: HOARD ANALYSIS ************** -->
 	<xsl:template name="data-download">
 		<xsl:variable name="queryOptions">authority,coinType,date,deity,denomination,dynasty,issuer,material,mint,portrait,region</xsl:variable>
 
 		<p><xsl:value-of select="numishare:normalizeLabel('visualize_csv_desc', $lang)"/>.</p>
 		<form action="{$display_path}hoards.csv" id="csv-form" style="margin-bottom:40px;">
-			<h2>1. <xsl:value-of select="numishare:normalizeLabel('visualize_response_type', $lang)"/></h2>
-			<input type="radio" name="type" value="percentage">
-				<xsl:if test="$type != 'count' and $type != 'cumulative'">
-					<xsl:attribute name="checked">checked</xsl:attribute>
-				</xsl:if>
-			</input>
-			<label for="type-radio">
-				<xsl:value-of select="numishare:normalizeLabel('numeric_percentage', $lang)"/>
-			</label>
-			<br/>
-			<input type="radio" name="type" value="count">
-				<xsl:if test="$type = 'count'">
-					<xsl:attribute name="checked">checked</xsl:attribute>
-				</xsl:if>
-			</input>
-			<label for="type-radio">
-				<xsl:value-of select="numishare:normalizeLabel('numeric_count', $lang)"/>
-			</label>
-			<br/>
-			<input type="radio" name="type" value="cumulative">
-				<xsl:if test="$type = 'cumulative'">
-					<xsl:attribute name="checked">checked</xsl:attribute>
-				</xsl:if>
-				<xsl:if test="$calculate != 'date'">
-					<xsl:attribute name="disabled">disabled</xsl:attribute>
-				</xsl:if>
-			</input>
-			<label for="type-radio">
-				<xsl:value-of select="numishare:normalizeLabel('numeric_cumulative_percentage', $lang)"/>
-			</label>
-			<br/>
-			<div style="width:100%;display:table">
+			<div class="row">
+				<h2>1. <xsl:value-of select="numishare:normalizeLabel('visualize_response_type', $lang)"/></h2>
+				<input type="radio" name="type" value="percentage">
+					<xsl:if test="$type != 'count' and $type != 'cumulative'">
+						<xsl:attribute name="checked">checked</xsl:attribute>
+					</xsl:if>
+				</input>
+				<label for="type-radio">
+					<xsl:value-of select="numishare:normalizeLabel('numeric_percentage', $lang)"/>
+				</label>
+				<input type="radio" name="type" value="count">
+					<xsl:if test="$type = 'count'">
+						<xsl:attribute name="checked">checked</xsl:attribute>
+					</xsl:if>
+				</input>
+				<label for="type-radio">
+					<xsl:value-of select="numishare:normalizeLabel('numeric_count', $lang)"/>
+				</label>
+				<input type="radio" name="type" value="cumulative">
+					<xsl:if test="$type = 'cumulative'">
+						<xsl:attribute name="checked">checked</xsl:attribute>
+					</xsl:if>
+					<xsl:if test="$calculate != 'date'">
+						<xsl:attribute name="disabled">disabled</xsl:attribute>
+					</xsl:if>
+				</input>
+				<label for="type-radio">
+					<xsl:value-of select="numishare:normalizeLabel('numeric_cumulative_percentage', $lang)"/>
+				</label>
+			</div>
+			<div class="row">
 				<h2>2. <xsl:value-of select="numishare:normalizeLabel('visualize_categories', $lang)"/></h2>
 				<div style="height:30px">
 					<div class="ui-state-error ui-corner-all" id="csv-cat-alert" style="display:none">
@@ -542,7 +547,7 @@
 				</div>
 				<xsl:for-each select="tokenize($queryOptions, ',')">
 					<xsl:variable name="query_fragment" select="."/>
-					<span class="anOption">
+					<div class="col-md-2">
 						<xsl:choose>
 							<xsl:when test="$pipeline='analyze'">
 								<xsl:call-template name="vis-radios">
@@ -550,74 +555,76 @@
 								</xsl:call-template>
 							</xsl:when>
 							<xsl:otherwise>
-								<xsl:if
-									test="count(exsl:node-set($nudsGroup)/descendant::*[local-name()=$query_fragment or @xlink:role=$query_fragment]) &gt; 0">
+								<xsl:if test="count(exsl:node-set($nudsGroup)/descendant::*[local-name()=$query_fragment or @xlink:role=$query_fragment]) &gt; 0">
 									<xsl:call-template name="vis-radios">
 										<xsl:with-param name="query_fragment" select="$query_fragment"/>
 									</xsl:call-template>
 								</xsl:if>
 							</xsl:otherwise>
 						</xsl:choose>
-					</span>
+					</div>
 				</xsl:for-each>
 			</div>
-
-			<xsl:choose>
-				<xsl:when test="$pipeline='analyze'">
-					<h2>
-						<xsl:text>3. </xsl:text>
-						<xsl:value-of select="numishare:normalizeLabel('visualize_select_hoards', $lang)"/>
-						<span style="font-size:60%;margin-left:10px;">
-							<a href="#filterHoards" class="showFilter" id="csv-filter">
-								<xsl:value-of select="numishare:normalizeLabel('visualize_filter_list', $lang)"/>
+			<div class="row">
+				<xsl:choose>
+					<xsl:when test="$pipeline='analyze'">
+						<h2>
+							<xsl:text>3. </xsl:text>
+							<xsl:value-of select="numishare:normalizeLabel('visualize_select_hoards', $lang)"/>
+							<small style="margin-left:10px;">
+								<a href="#filterHoards" class="showFilter" id="csv-filter">
+									<xsl:value-of select="numishare:normalizeLabel('visualize_filter_list', $lang)"/>
+								</a>
+							</small>
+						</h2>
+						<div style="height:30px">
+							<div class="ui-state-error ui-corner-all" id="csv-hoard-alert" style="display:none">
+								<span class="ui-icon ui-icon-alert" style="float:left"/>
+								<strong><xsl:value-of select="numishare:normalizeLabel('visualize_alert', $lang)"/>:</strong>
+								<xsl:value-of select="numishare:normalizeLabel('visualize_error6', $lang)"/>
+							</div>
+						</div>
+						<div class="filter-div" style="display:none">
+							<b><xsl:value-of select="numishare:normalizeLabel('visualize_filter_query', $lang)"/>:</b>
+							<span/>
+							<a href="#" class="removeFilter">
+								<span class="glyphicon glyphicon-remove"/>
+								<xsl:value-of select="numishare:normalizeLabel('visualize_remove_filter', $lang)"/>
 							</a>
-						</span>
-					</h2>
-					<div style="height:30px">
-						<div class="ui-state-error ui-corner-all" id="csv-hoard-alert" style="display:none">
-							<span class="ui-icon ui-icon-alert" style="float:left"/>
-							<strong><xsl:value-of select="numishare:normalizeLabel('visualize_alert', $lang)"/>:</strong>
-							<xsl:value-of select="numishare:normalizeLabel('visualize_error6', $lang)"/>
 						</div>
-					</div>
-					<div class="filter-div" style="display:none">
-						<b><xsl:value-of select="numishare:normalizeLabel('visualize_filter_query', $lang)"/>:</b>
-						<span/>
-						<a href="#" class="removeFilter">
-							<xsl:value-of select="numishare:normalizeLabel('visualize_remove_filter', $lang)"/>
-						</a>
-					</div>
-					<xsl:call-template name="get-hoards"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<h2>3. <xsl:value-of select="numishare:normalizeLabel('visualize_select_hoards_optional', $lang)"/></h2>
-					<div style="height:30px">
-						<div class="ui-state-error ui-corner-all" id="csv-hoard-alert" style="display:none">
-							<span class="ui-icon ui-icon-alert" style="float:left"/>
-							<strong><xsl:value-of select="numishare:normalizeLabel('visualize_alert', $lang)"/>:</strong>
-							<xsl:value-of select="numishare:normalizeLabel('visualize_error7', $lang)"/>
+						<xsl:call-template name="get-hoards"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<h2>3. <xsl:value-of select="numishare:normalizeLabel('visualize_select_hoards_optional', $lang)"/></h2>
+						<div style="height:30px">
+							<div class="ui-state-error ui-corner-all" id="csv-hoard-alert" style="display:none">
+								<span class="ui-icon ui-icon-alert" style="float:left"/>
+								<strong><xsl:value-of select="numishare:normalizeLabel('visualize_alert', $lang)"/>:</strong>
+								<xsl:value-of select="numishare:normalizeLabel('visualize_error7', $lang)"/>
+							</div>
 						</div>
+						<xsl:call-template name="get-hoards"/>
+					</xsl:otherwise>
+				</xsl:choose>
+				
+				<div>
+					<h3>
+						<xsl:value-of select="numishare:normalizeLabel('visualize_optional_settings', $lang)"/>
+						<small style="margin-left:10px;">
+							<a href="#" class="optional-button" id="csv-options">
+								<xsl:value-of select="numishare:normalizeLabel('visualize_hide-show', $lang)"/>
+							</a>
+						</small>
+					</h3>
+					<div class="optional-div" style="display:none">
+						<h4>
+							<xsl:value-of select="numishare:normalizeLabel('visualize_exclude_certainty_codes', $lang)"/>
+						</h4>
+						<cinclude:include src="cocoon:/get_certainty_codes?exclude={$exclude}"/>
 					</div>
-					<xsl:call-template name="get-hoards"/>
-				</xsl:otherwise>
-			</xsl:choose>
-
-			<div>
-				<h3>
-					<xsl:value-of select="numishare:normalizeLabel('visualize_optional_settings', $lang)"/>
-					<span style="font-size:60%;margin-left:10px;">
-						<a href="#" class="optional-button" id="csv-options">
-							<xsl:value-of select="numishare:normalizeLabel('visualize_hide-show', $lang)"/>
-						</a>
-					</span>
-				</h3>
-				<div class="optional-div" style="display:none">
-					<h4>
-						<xsl:value-of select="numishare:normalizeLabel('visualize_exclude_certainty_codes', $lang)"/>
-					</h4>
-					<cinclude:include src="cocoon:/get_certainty_codes?exclude={$exclude}"/>
 				</div>
 			</div>
+			
 			<xsl:if test="$pipeline='display'">
 				<input type="hidden" id="thisHoard" value="{$id}"/>
 			</xsl:if>
@@ -628,6 +635,7 @@
 		</form>
 	</xsl:template>
 
+	<!-- ************** CHECKBOXES ************** -->
 	<xsl:template name="vis-checks">
 		<xsl:param name="query_fragment"/>
 		<xsl:choose>
@@ -651,6 +659,7 @@
 		</label>
 	</xsl:template>
 
+	<!-- ************** HOARDS: GET HOARDS FOR COMPARISON ************** -->
 	<xsl:template name="get-hoards">
 		<div class="compare-div">
 			<cinclude:include src="cocoon:/get_hoards?compare={$compare}&amp;q=*&amp;ignore={$id}"/>
@@ -660,21 +669,21 @@
 	<!-- ************** SEARCH FORM ************** -->
 	<xsl:template name="search_forms">
 		<div class="search-form">
-			<p>To conduct a free text search select ‘Keyword’ on the drop-down menu above and enter the text for which you wish to search. The search allows
-				wildcard searches with the * and ? characters and exact string matches by surrounding phrases by double quotes (like Google). <a
-					href="http://lucene.apache.org/java/2_9_1/queryparsersyntax.html#Term%20Modifiers" target="_blank">See the Lucene query syntax</a>
-				documentation for more information.</p>
+			<p>To conduct a free text search select ‘Keyword’ on the drop-down menu above and enter the text for which you wish to search. The search allows wildcard searches with the * and ?
+				characters and exact string matches by surrounding phrases by double quotes (like Google). <a href="http://lucene.apache.org/java/2_9_1/queryparsersyntax.html#Term%20Modifiers"
+					target="_blank">See the Lucene query syntax</a> documentation for more information.</p>
 			<form id="advancedSearchForm" method="GET" action="results">
 				<div id="inputContainer">
 					<div class="searchItemTemplate">
-						<select class="category_list">
+						<select class="category_list form-control">
 							<xsl:call-template name="search_options"/>
 						</select>
 						<div style="display:inline;" class="option_container">
-							<input type="text" id="search_text" class="search_text" style="display: inline;"/>
+							<input type="text" id="search_text" class="search_text form-control" style="display: inline;"/>
 						</div>
-						<a class="gateTypeBtn" href="#">add »</a>
-						<!--<a class="removeBtn" href="#">« remove</a>-->
+						<a class="gateTypeBtn" href="#">
+							<span class="glyphicon glyphicon-plus"/>
+						</a>
 					</div>
 				</div>
 				<input name="q" id="q_input" type="hidden"/>
@@ -683,13 +692,13 @@
 				</xsl:if>
 				<xsl:choose>
 					<xsl:when test="$pipeline='analyze'">
-						<input type="submit" value="Filter" id="filterButton"/>
+						<input type="submit" value="Filter" id="filterButton" class="btn btn-default"/>
 					</xsl:when>
 					<xsl:when test="$pipeline='visualize'">
-						<input type="submit" value="{numishare:normalizeLabel('visualize_add_query', $lang)}" id="search_buttom"/>
+						<input type="submit" value="{numishare:normalizeLabel('visualize_add_query', $lang)}" class="btn btn-default"/>
 					</xsl:when>
 					<xsl:otherwise>
-						<input type="submit" value="{numishare:normalizeLabel('header_search', $lang)}" id="search_button"/>
+						<input type="submit" value="{numishare:normalizeLabel('header_search', $lang)}" class="btn btn-default"/>
 					</xsl:otherwise>
 				</xsl:choose>
 
@@ -701,21 +710,25 @@
 		</div>
 
 		<div id="searchItemTemplate" class="searchItemTemplate">
-			<select class="category_list">
+			<select class="category_list form-control">
 				<xsl:call-template name="search_options"/>
 			</select>
 			<div style="display:inline;" class="option_container">
-				<input type="text" class="search_text" style="display: inline;"/>
+				<input type="text" class="search_text form-control" style="display: inline;"/>
 			</div>
-			<a class="gateTypeBtn" href="#">add »</a>
-			<a class="removeBtn" href="#" style="display:none;">« remove</a>
+			<a class="gateTypeBtn" href="#">
+				<span class="glyphicon glyphicon-plus"/>
+			</a>
+			<a class="removeBtn" href="#" style="display:none;">
+				<span class="glyphicon glyphicon-remove"/>
+			</a>
 		</div>
 	</xsl:template>
 
 	<!-- ************** SEARCH DROP-DOWN MENUS ************** -->
 	<xsl:template name="search_options">
 		<xsl:variable name="fields">
-			<xsl:text>fulltext,artist_facet,authority_facet,taq_num,coinType_facet,color_text,deity_facet,denomination_facet,department_facet,diameter_num,dynasty_facet,findspot_text,recordId,issuer_facet,legend_text,obv_leg_text,rev_leg_text,maker_facet,manufacture_facet,material_facet,mint_facet,tpq_num,objectType_facet,portrait_facet,reference_text,region_facet,type_text,obv_type_text,rev_type_text,weight_num,year_num</xsl:text>
+			<xsl:text>fulltext,artist_facet,authority_facet,coinType_facet,deity_facet,denomination_facet,dynasty_facet,recordId,issuer_facet,legend_text,obv_leg_text,rev_leg_text,maker_facet,manufacture_facet,material_facet,mint_facet,objectType_facet,portrait_facet,region_facet,type_text,obv_type_text,rev_type_text,year_num</xsl:text>
 		</xsl:variable>
 
 		<xsl:for-each select="tokenize($fields, ',')">
@@ -763,6 +776,7 @@
 		</xsl:for-each>
 	</xsl:template>
 
+	<!-- ************** MEASUREMENT FORM FOR COIN TYPE ANALYSIS ************** -->
 	<xsl:template name="measurementForm">
 		<xsl:variable name="action">
 			<xsl:choose>
@@ -784,11 +798,11 @@
 			<xsl:call-template name="measurementTable"/>
 		</xsl:if>
 
-		<form id="measurementsForm" action="{$action}" style="margin:20px">
-			<div style="display:table;width:100%">
+		<form id="measurementsForm" action="{$action}" style="margin:40px">
+			<div class="row">
 				<h3>1. <xsl:value-of select="numishare:normalizeLabel('visualize_select_measurement', $lang)"/></h3>
 				<xsl:for-each select="tokenize($measurements, ',')">
-					<span class="anOption">
+					<div class="col-md-2">
 						<input type="radio" name="measurement" value="{.}">
 							<xsl:choose>
 								<xsl:when test="$measurement = .">
@@ -802,14 +816,14 @@
 						<label for="measurement-radio">
 							<xsl:value-of select="numishare:regularize_node(., $lang)"/>
 						</label>
-					</span>
+					</div>
 				</xsl:for-each>
 			</div>
 
-			<div style="display:table;width:100%">
+			<div class="row">
 				<h3>2. <xsl:value-of select="numishare:normalizeLabel('visualize_chart_type', $lang)"/></h3>
 				<xsl:for-each select="tokenize($chartTypes, ',')">
-					<span class="anOption">
+					<div class="col-md-2">
 						<input type="radio" name="chartType" value="{.}">
 							<xsl:if test="$chartType = . or (.='column' and not(string($chartType)))">
 								<xsl:attribute name="checked">checked</xsl:attribute>
@@ -821,11 +835,9 @@
 						<label for="chartType-radio">
 							<xsl:value-of select="numishare:normalizeLabel(concat('chart_', .), $lang)"/>
 						</label>
-					</span>
-
+					</div>
 				</xsl:for-each>
-			</div>
-
+			</div>			
 			<xsl:choose>
 				<xsl:when test="$pipeline='display'">
 					<!-- create categories as a variable -->
@@ -877,11 +889,11 @@
 							</xsl:for-each>
 						</categories>
 					</xsl:variable>
-					<div style="display:table;width:100%">
+					<div class="row">
 						<h3>3. <xsl:value-of select="numishare:normalizeLabel('visualize_compare_category', $lang)"/></h3>
 						<!-- create checkboxes for available facets -->
 						<xsl:for-each select="$typologicalCategories//category">
-							<span class="anOption">
+							<div class="col-md-2">
 								<xsl:variable name="query_fragment" select="@query"/>
 								<xsl:choose>
 									<xsl:when test="boolean(index-of($tokenized_sparqlQuery, $query_fragment)) = true()">
@@ -896,17 +908,19 @@
 									<xsl:text>: </xsl:text>
 									<xsl:value-of select="@value"/>
 								</label>
-							</span>
+							</div>
 						</xsl:for-each>
 					</div>
-					<div id="customSparqlQueryDiv">
+					<div id="customSparqlQueryDiv" class="row">
 						<h3>
 							<xsl:text>4. </xsl:text>
 							<xsl:value-of select="numishare:normalizeLabel('visualize_add_queries', $lang)"/>
-							<span style="font-size:80%;margin-left:10px;">
-								<a href="#sparqlBox" id="addSparqlQuery">+ <span><xsl:value-of select="numishare:normalizeLabel('visualize_add_new', $lang)"
-										/></span></a>
-							</span>
+							<small style="margin-left:10px;">
+								<a href="#sparqlBox" id="addSparqlQuery">
+									<span class="glyphicon glyphicon-plus"/>
+									<xsl:value-of select="numishare:normalizeLabel('visualize_add_new', $lang)"/>
+								</a>
+							</small>
 						</h3>
 						<xsl:for-each select="$tokenized_sparqlQuery">
 							<xsl:variable name="val" select="."/>
@@ -920,6 +934,7 @@
 										<xsl:value-of select="."/>
 									</span>
 									<a href="#" class="removeQuery">
+										<span class="glyphicon glyphicon-remove"/>
 										<xsl:value-of select="numishare:normalizeLabel('visualize_remove_query', $lang)"/>
 									</a>
 								</div>
@@ -928,14 +943,16 @@
 					</div>
 				</xsl:when>
 				<xsl:when test="$pipeline='visualize'">
-					<div id="customSparqlQueryDiv">
+					<div id="customSparqlQueryDiv" class="row">
 						<h3>
 							<xsl:text>3. </xsl:text>
 							<xsl:value-of select="numishare:normalizeLabel('visualize_add_queries', $lang)"/>
-							<span style="font-size:80%;margin-left:10px;">
-								<a href="#sparqlBox" id="addSparqlQuery">+ <span><xsl:value-of select="numishare:normalizeLabel('visualize_add_new', $lang)"
-										/></span></a>
-							</span>
+							<small style="margin-left:10px;">
+								<a href="#sparqlBox" id="addSparqlQuery">
+									<span class="glyphicon glyphicon-plus"/>
+									<xsl:value-of select="numishare:normalizeLabel('visualize_add_new', $lang)"/>
+								</a>
+							</small>
 						</h3>
 						<xsl:for-each select="$tokenized_sparqlQuery">
 							<div class="customSparqlQuery">
@@ -947,6 +964,7 @@
 									<xsl:value-of select="."/>
 								</span>
 								<a href="#" class="removeQuery">
+									<span class="glyphicon glyphicon-remove"/>
 									<xsl:value-of select="numishare:normalizeLabel('visualize_remove_query', $lang)"/>
 								</a>
 							</div>
@@ -957,7 +975,7 @@
 
 			<!-- only display duration in visualize page: doesn't work properly from coin type comparison -->
 			<xsl:if test="$pipeline='visualize'">
-				<div style="display:table;width:100%">
+				<div class="row">
 					<div style="height:30px">
 						<div class="ui-state-error ui-corner-all" id="measurementsForm-alert" style="display:none">
 							<span class="ui-icon ui-icon-alert" style="float:left"/>
@@ -976,7 +994,7 @@
 					<h4>
 						<xsl:value-of select="numishare:normalizeLabel('visualize_interval', $lang)"/>
 					</h4>
-					<select name="interval">
+					<select name="interval" class="form-control">
 						<option value="">
 							<xsl:value-of select="numishare:normalizeLabel('results_select', $lang)"/>
 						</option>
@@ -1015,10 +1033,11 @@
 					<h4>
 						<xsl:value-of select="numishare:normalizeLabel('visualize_duration', $lang)"/>
 					</h4>
+
 					<xsl:value-of select="numishare:normalize_fields('fromDate', $lang)"/>
 					<xsl:text>:</xsl:text>
-					<input type="text" class="from_date" name="fromDate" value="{if (string($fromDate)) then abs(number($fromDate)) else ''}"/>
-					<select class="from_era">
+					<input type="text" class="from_date form-control" name="fromDate" value="{if (string($fromDate)) then abs(number($fromDate)) else ''}"/>
+					<select class="from_era form-control">
 						<option value="minus">
 							<xsl:if test="number($fromDate) &lt; 0">
 								<xsl:attribute name="selected">selected</xsl:attribute>
@@ -1034,8 +1053,8 @@
 					</select>
 					<xsl:value-of select="numishare:normalize_fields('toDate', $lang)"/>
 					<xsl:text>: </xsl:text>
-					<input type="text" class="to_date" name="toDate" value="{if (string($toDate)) then abs(number($toDate)) else ''}"/>
-					<select class="to_era">
+					<input type="text" class="to_date form-control" name="toDate" value="{if (string($toDate)) then abs(number($toDate)) else ''}"/>
+					<select class="to_era form-control">
 						<option value="minus">
 							<xsl:if test="number($toDate) &lt; 0">
 								<xsl:attribute name="selected">selected</xsl:attribute>
@@ -1052,13 +1071,12 @@
 				</div>
 			</xsl:if>
 
-
 			<input type="hidden" name="sparqlQuery" id="sparqlQuery" value=""/>
 			<xsl:if test="string($lang)">
 				<input type="hidden" name="lang" value="{$lang}"/>
 			</xsl:if>
 			<br/>
-			<input type="submit" value="{numishare:normalizeLabel('visualize_generate', $lang)}" id="submit-measurements"/>
+			<input type="submit" class="btn btn-default" value="{numishare:normalizeLabel('visualize_generate', $lang)}" id="submit-measurements"/>
 		</form>
 
 		<div style="display:none">
@@ -1102,48 +1120,54 @@
 			<form id="sparqlForm" method="GET">
 				<div id="sparqlInputContainer">
 					<div class="searchItemTemplate">
-						<select class="sparql_facets">
+						<select class="sparql_facets form-control">
 							<option>
 								<xsl:value-of select="numishare:normalizeLabel('results_select', $lang)"/>
 							</option>
 							<xsl:call-template name="sparql_search_options"/>
 						</select>
 						<div class="option_container" style="display:inline"/>
-						<a class="gateTypeBtn" href="#">add »</a>
+						<a class="gateTypeBtn" href="#">
+							<span class="glyphicon glyphicon-plus"/>
+						</a>
 					</div>
 				</div>
 				<input name="q" id="q_input" type="hidden"/>
 				<xsl:if test="string($lang)">
 					<input name="lang" type="hidden" value="{$lang}"/>
 				</xsl:if>
-				<input type="submit" value="{numishare:normalizeLabel('visualize_add_query', $lang)}"/>
+				<input type="submit" class="btn btn-default" value="{numishare:normalizeLabel('visualize_add_query', $lang)}"/>
 			</form>
 		</div>
 
 		<div id="sparqlItemTemplate" class="searchItemTemplate">
-			<select class="sparql_facets">
+			<select class="sparql_facets form-control">
 				<option>
 					<xsl:value-of select="numishare:normalizeLabel('results_select', $lang)"/>
 				</option>
 				<xsl:call-template name="sparql_search_options"/>
 			</select>
 			<div style="display:inline;" class="option_container"/>
-			<a class="gateTypeBtn" href="#">add »</a>
-			<a class="removeBtn" href="#" style="display:none;">« remove</a>
+			<a class="gateTypeBtn" href="#">
+				<span class="glyphicon glyphicon-plus"/>
+			</a>
+			<a class="removeBtn" href="#" style="display:none;">
+				<span class="glyphicon glyphicon-remove"/>
+			</a>
 		</div>
 
 		<span id="dateTemplate">
 			<xsl:value-of select="numishare:normalize_fields('fromDate', $lang)"/>
 			<xsl:text>:</xsl:text>
-			<input type="text" class="from_date" name="fromDate"/>
-			<select class="from_era">
+			<input type="text" class="from_date form-control" name="fromDate"/>
+			<select class="from_era form-control">
 				<option value="minus">B.C.</option>
 				<option value="" selected="selected">A.D.</option>
 			</select>
 			<xsl:value-of select="numishare:normalize_fields('toDate', $lang)"/>
 			<xsl:text>: </xsl:text>
-			<input type="text" class="to_date" name="toDate"/>
-			<select class="to_era">
+			<input type="text" class="to_date form-control" name="toDate"/>
+			<select class="to_era form-control">
 				<option value="minus">B.C.</option>
 				<option value="" selected="selected">A.D.</option>
 			</select>
@@ -1226,7 +1250,8 @@
 						<xsl:otherwise>
 							<th/>
 							<th id="measurementUnits">
-								<xsl:choose>visualize_arrange <xsl:when test="$measurement='diameter'">mm</xsl:when>
+								<xsl:choose>
+									<xsl:when test="$measurement='diameter'">mm</xsl:when>
 									<xsl:when test="$measurement='weight'">g</xsl:when>
 								</xsl:choose>
 							</th>
@@ -1265,7 +1290,7 @@
 								</th>
 								<td>
 									<cinclude:include
-										src="cocoon:/widget?constraints={encode-for-uri(concat('dcterms:isPartOf &lt;http://nomisma.org/id/rrc&gt; AND ', .))}&amp;template=avgMeasurement&amp;measurement={$measurement}"
+										src="cocoon:/widget?constraints={encode-for-uri(concat('dcterms:isPartOf &lt;', $type_series, '&gt; AND ', .))}&amp;template=avgMeasurement&amp;measurement={$measurement}"
 									/>
 								</td>
 							</tr>
@@ -1336,9 +1361,8 @@
 						<xsl:value-of select="$to"/>
 						<xsl:text>"^^xs:gYear )</xsl:text>
 					</xsl:variable>
-					<!--<xsl:value-of select="encode-for-uri(concat('dcterms:isPartOf &lt;http://nomisma.org/id/rrc&gt; AND ', ., ' AND ', $filter))"/>-->
 					<cinclude:include
-						src="cocoon:/widget?constraints={encode-for-uri(concat('dcterms:isPartOf &lt;http://nomisma.org/id/rrc&gt; AND ', ., ' AND ', $filter))}&amp;template=avgMeasurement&amp;measurement={$measurement}"
+						src="cocoon:/widget?constraints={encode-for-uri(concat('dcterms:isPartOf &lt;', $type_series, '&gt; AND ', ., ' AND ', $filter))}&amp;template=avgMeasurement&amp;measurement={$measurement}"
 					/>
 				</td>
 			</xsl:for-each>
@@ -1366,119 +1390,6 @@
 				<xsl:with-param name="level" select="$level + 1"/>
 			</xsl:call-template>
 		</xsl:if>
-	</xsl:template>
-
-	<!-- ************** PROCESS GROUP OF SPARQL RESULTS FROM METIS TO DISPLAY IMAGES ************** -->
-	<xsl:template name="numishare:renderSparqlResults">
-		<xsl:param name="group"/>
-		<xsl:variable name="count" select="count($group/descendant::res:result)"/>
-		<xsl:variable name="coin-count" select="count($group/descendant::res:result[contains(res:binding[@name='objectType']/res:uri, 'coin')])"/>
-		<xsl:variable name="hoard-count" select="count($group/descendant::res:result[contains(res:binding[@name='objectType']/res:uri, 'hoard')])"/>
-
-
-		<!--<xsl:variable name="count" select="$group/@hoards + $group/@coins"/>
-			<xsl:variable name="coin-count" select="$group/@coins"/>
-			<xsl:variable name="hoard-count" select="$group/@hoards"/>-->
-
-		<!-- get images -->
-		<xsl:apply-templates select="$group/res:result[res:binding[contains(@name, 'rev') or contains(@name, 'obv')]]" mode="results">
-			<xsl:with-param name="id" select="tokenize($url, '/')[last()]"/>
-		</xsl:apply-templates>
-		<!-- object count -->
-		<xsl:if test="$count &gt; 0">
-			<br/>
-			<xsl:if test="$coin-count &gt; 0">
-				<xsl:value-of select="$coin-count"/>
-				<xsl:text> </xsl:text>
-				<xsl:choose>
-					<xsl:when test="$coin-count = 1">
-						<xsl:value-of select="numishare:normalizeLabel('results_coin', $lang)"/>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:value-of select="numishare:normalizeLabel('results_coins', $lang)"/>
-					</xsl:otherwise>
-				</xsl:choose>
-			</xsl:if>
-			<xsl:if test="$coin-count &gt; 0 and $hoard-count &gt; 0">
-				<xsl:text> </xsl:text>
-				<xsl:value-of select="numishare:normalizeLabel('results_and', $lang)"/>
-				<xsl:text> </xsl:text>
-			</xsl:if>
-			<xsl:if test="$hoard-count &gt; 0">
-				<xsl:value-of select="$hoard-count"/>
-				<xsl:text> </xsl:text>
-				<xsl:choose>
-					<xsl:when test="$hoard-count = 1">
-						<xsl:value-of select="numishare:normalizeLabel('results_hoard', $lang)"/>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:value-of select="numishare:normalizeLabel('results_hoards', $lang)"/>
-					</xsl:otherwise>
-				</xsl:choose>
-			</xsl:if>
-		</xsl:if>
-	</xsl:template>
-
-	<xsl:template match="res:result" mode="results">
-		<xsl:variable name="position" select="position()"/>
-		<!-- obverse -->
-		<xsl:choose>
-			<xsl:when test="string(res:binding[@name='obvRef']/res:uri) and string(res:binding[@name='obvThumb']/res:uri)">
-				<a class="thumbImage" rel="gallery" href="{res:binding[@name='obvRef']/res:uri}"
-					title="Obverse of {res:binding[@name='identifier']/res:literal}: {res:binding[@name='collection']/res:literal}">
-					<xsl:if test="$position &gt; 1">
-						<xsl:attribute name="style">display:none</xsl:attribute>
-					</xsl:if>
-					<img src="{res:binding[@name='obvThumb']/res:uri}"/>
-				</a>
-			</xsl:when>
-			<xsl:when test="not(string(res:binding[@name='obvRef']/res:uri)) and string(res:binding[@name='obvThumb']/res:uri)">
-				<img src="{res:binding[@name='obvThumb']/res:uri}">
-					<xsl:if test="$position &gt; 1">
-						<xsl:attribute name="style">display:none</xsl:attribute>
-					</xsl:if>
-				</img>
-			</xsl:when>
-			<xsl:when test="string(res:binding[@name='obvRef']/res:uri) and not(string(res:binding[@name='obvThumb']/res:uri))">
-				<a class="thumbImage" rel="gallery" href="{res:binding[@name='obvRef']/res:uri}"
-					title="Obverse of {res:binding[@name='identifier']/res:literal}: {res:binding[@name='collection']/res:literal}">
-					<img src="{res:binding[@name='obvRef']/res:uri}" style="max-width:120px">
-						<xsl:if test="$position &gt; 1">
-							<xsl:attribute name="style">display:none</xsl:attribute>
-						</xsl:if>
-					</img>
-				</a>
-			</xsl:when>
-		</xsl:choose>
-		<!-- reverse-->
-		<xsl:choose>
-			<xsl:when test="string(res:binding[@name='revRef']/res:uri) and string(res:binding[@name='revThumb']/res:uri)">
-				<a class="thumbImage" rel="gallery" href="{res:binding[@name='revRef']/res:uri}"
-					title="Reverse of {res:binding[@name='identifier']/res:literal}: {res:binding[@name='collection']/res:literal}">
-					<xsl:if test="$position &gt; 1">
-						<xsl:attribute name="style">display:none</xsl:attribute>
-					</xsl:if>
-					<img src="{res:binding[@name='revThumb']/res:uri}"/>
-				</a>
-			</xsl:when>
-			<xsl:when test="not(string(res:binding[@name='revRef']/res:uri)) and string(res:binding[@name='revThumb']/res:uri)">
-				<img src="{res:binding[@name='revThumb']/res:uri}">
-					<xsl:if test="$position &gt; 1">
-						<xsl:attribute name="style">display:none</xsl:attribute>
-					</xsl:if>
-				</img>
-			</xsl:when>
-			<xsl:when test="string(res:binding[@name='revRef']/res:uri) and not(string(res:binding[@name='revThumb']/res:uri))">
-				<a class="thumbImage" rel="gallery" href="{res:binding[@name='revRef']/res:uri}"
-					title="Obverse of {res:binding[@name='identifier']/res:literal}: {res:binding[@name='collection']/res:literal}">
-					<img src="{res:binding[@name='revRef']/res:uri}" style="max-width:120px">
-						<xsl:if test="$position &gt; 1">
-							<xsl:attribute name="style">display:none</xsl:attribute>
-						</xsl:if>
-					</img>
-				</a>
-			</xsl:when>
-		</xsl:choose>
 	</xsl:template>
 
 	<!-- ************** PROCESS MODS RECORD INTO CHICAGO MANUAL OF STYLE CITATION ************** -->

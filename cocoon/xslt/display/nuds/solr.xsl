@@ -4,12 +4,12 @@
 	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:res="http://www.w3.org/2005/sparql-results#" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
 	xmlns:cinclude="http://apache.org/cocoon/include/1.0" exclude-result-prefixes="#all">
 
-	<xsl:template name="nuds">	
+	<xsl:template name="nuds">
 		<!-- create default document -->
 		<xsl:apply-templates select="//nuds:nuds">
 			<xsl:with-param name="lang"/>
 		</xsl:apply-templates>
-		
+
 		<!-- create documents for each additional activated language -->
 		<xsl:for-each select="//config/descendant::language[@enabled='true']">
 			<xsl:apply-templates select="//nuds:nuds">
@@ -30,7 +30,7 @@
 					<xsl:otherwise>
 						<xsl:value-of select="$id"/>
 					</xsl:otherwise>
-				</xsl:choose>				
+				</xsl:choose>
 			</field>
 			<field name="recordId">
 				<xsl:value-of select="$id"/>
@@ -39,9 +39,9 @@
 				<field name="lang">
 					<xsl:value-of select="$lang"/>
 				</field>
-			</xsl:if>			
-			<xsl:if test="$collection-name = 'ocre'">
-				<xsl:call-template name="sortid"/>
+			</xsl:if>
+			<xsl:if test="$collection-name = 'rrc'">
+				<xsl:call-template name="sortid" mode="rrc"/>
 			</xsl:if>
 			<field name="collection-name">
 				<xsl:value-of select="$collection-name"/>
@@ -70,17 +70,17 @@
 			<xsl:apply-templates select="nuds:descMeta">
 				<xsl:with-param name="lang" select="$lang"/>
 			</xsl:apply-templates>
-			
+
 			<xsl:choose>
 				<xsl:when test="string($sparql_endpoint)">
-					<!-- get findspots -->				
+					<!-- get findspots -->
 					<xsl:apply-templates select="$sparqlResult/descendant::res:group[@id=$id]/res:result"/>
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:apply-templates select="nuds:digRep"/>
 				</xsl:otherwise>
 			</xsl:choose>
-			
+
 			<!-- fulltext -->
 			<field name="fulltext">
 				<xsl:value-of select="nuds:control/nuds:recordId"/>
@@ -183,7 +183,7 @@
 								</xsl:otherwise>
 							</xsl:choose>
 						</xsl:variable>
-						<xsl:if test="$rdf/*[@rdf:about=$href]/descendant::geo:lat and $rdf/*[@rdf:about=$href]/descendant::geo:long">							
+						<xsl:if test="$rdf/*[@rdf:about=$href]/descendant::geo:lat and $rdf/*[@rdf:about=$href]/descendant::geo:long">
 							<field name="findspot_geo">
 								<xsl:value-of select="$label"/>
 								<xsl:text>|</xsl:text>
@@ -267,82 +267,6 @@
 		<xsl:for-each select="nuds:associatedObject">
 			<xsl:call-template name="associatedObject"/>
 		</xsl:for-each>
-	</xsl:template>
-
-	<xsl:template name="associatedObject">
-		<xsl:variable name="objectDoc">
-			<xsl:copy-of select="document(concat(@xlink:href, '.xml'))/nuds:nuds"/>
-		</xsl:variable>
-
-		<field name="ao_uri">
-			<xsl:value-of select="@xlink:href"/>
-		</field>
-
-		<xsl:if test="number(exsl:node-set($objectDoc)//nuds:weight)">
-			<field name="ao_weight">
-				<xsl:value-of select="exsl:node-set($objectDoc)//nuds:weight"/>
-			</field>
-		</xsl:if>
-		<xsl:if test="number(exsl:node-set($objectDoc)//nuds:diameter)">
-			<field name="ao_diameter">
-				<xsl:value-of select="exsl:node-set($objectDoc)//nuds:diameter"/>
-			</field>
-		</xsl:if>
-		<xsl:if test="number(exsl:node-set($objectDoc)//nuds:axis)">
-			<field name="ao_axis">
-				<xsl:value-of select="exsl:node-set($objectDoc)//nuds:axis"/>
-			</field>
-		</xsl:if>
-
-		<!-- images -->
-		<!-- thumbnails-->
-		<xsl:if test="string(exsl:node-set($objectDoc)//mets:fileGrp[@USE='obverse']/mets:file[@USE='thumbnail']/mets:FLocat/@xlink:href)">
-			<field name="ao_thumbnail_obv">
-				<xsl:value-of select="exsl:node-set($objectDoc)//nuds:recordId"/>
-				<xsl:text>|</xsl:text>
-				<xsl:value-of select="exsl:node-set($objectDoc)//mets:fileGrp[@USE='obverse']/mets:file[@USE='thumbnail']/mets:FLocat/@xlink:href"/>
-			</field>
-		</xsl:if>
-		<xsl:if test="string(exsl:node-set($objectDoc)//mets:fileGrp[@USE='reverse']/mets:file[@USE='thumbnail']/mets:FLocat/@xlink:href)">
-			<field name="ao_thumbnail_rev">
-				<xsl:value-of select="exsl:node-set($objectDoc)//nuds:recordId"/>
-				<xsl:text>|</xsl:text>
-				<xsl:value-of select="exsl:node-set($objectDoc)//mets:fileGrp[@USE='reverse']/mets:file[@USE='thumbnail']/mets:FLocat/@xlink:href"/>
-			</field>
-		</xsl:if>
-		<!-- reference-->
-		<xsl:if test="string(exsl:node-set($objectDoc)//mets:fileGrp[@USE='obverse']/mets:file[@USE='reference']/mets:FLocat/@xlink:href)">
-			<field name="ao_reference_obv">
-				<xsl:value-of select="exsl:node-set($objectDoc)//nuds:recordId"/>
-				<xsl:text>|</xsl:text>
-				<xsl:value-of select="exsl:node-set($objectDoc)//mets:fileGrp[@USE='obverse']/mets:file[@USE='reference']/mets:FLocat/@xlink:href"/>
-			</field>
-		</xsl:if>
-		<xsl:if test="string(exsl:node-set($objectDoc)//mets:fileGrp[@USE='reverse']/mets:file[@USE='reference']/mets:FLocat/@xlink:href)">
-			<field name="ao_reference_rev">
-				<xsl:value-of select="exsl:node-set($objectDoc)//nuds:recordId"/>
-				<xsl:text>|</xsl:text>
-				<xsl:value-of select="exsl:node-set($objectDoc)//mets:fileGrp[@USE='reverse']/mets:file[@USE='reference']/mets:FLocat/@xlink:href"/>
-			</field>
-		</xsl:if>
-
-		<!-- set imagesavailable to true if there are associated images -->
-		<xsl:if test="exsl:node-set($objectDoc)//mets:FLocat/@xlink:href">
-			<field name="imagesavailable">true</field>
-		</xsl:if>
-
-		<!-- get findspot, if available -->
-		<!--<xsl:if test="count(exsl:node-set($objectDoc)//nuds:findspot) &gt; 0">
-			<xsl:variable name="name" select="exsl:node-set($objectDoc)//nuds:findspot/nuds:name"/>
-			<xsl:variable name="gml-coordinates" select="exsl:node-set($objectDoc)//nuds:findspot/gml:coordinates"/>
-			<xsl:variable name="kml-coordinates" select="concat(tokenize($gml-coordinates, ', ')[2], ',', tokenize($gml-coordinates, ', ')[1])"/>
-
-			<xsl:if test="string($kml-coordinates)">
-				<field name="ao_findspot_geo">
-					<xsl:value-of select="concat($name, '|', @xlink:href, '|', $kml-coordinates)"/>
-				</field>
-			</xsl:if>
-		</xsl:if>-->
 	</xsl:template>
 
 	<xsl:template match="mets:fileSec">
@@ -435,76 +359,19 @@
 		</xsl:if>
 	</xsl:template>
 
-	<xsl:template name="sortid">
+	<xsl:template name="sortid" mode="rrc">
 		<field name="sortid">
-			<xsl:variable name="segs" select="tokenize(nuds:control/nuds:recordId, '\.')"/>
-			<xsl:variable name="auth">
-				<xsl:choose>
-					<xsl:when test="$segs[3] = 'aug'">01</xsl:when>
-					<xsl:when test="$segs[3] = 'tib'">02</xsl:when>
-					<xsl:when test="$segs[3] = 'gai'">03</xsl:when>
-					<xsl:when test="$segs[3] = 'cl'">04</xsl:when>
-					<xsl:when test="$segs[3] = 'ner'">
-						<xsl:choose>
-							<xsl:when test="$segs[2]='1(2)'">05</xsl:when>
-							<xsl:when test="$segs[2]='2'">15</xsl:when>
-						</xsl:choose>
-					</xsl:when>
-					<xsl:when test="$segs[3] = 'clm'">06</xsl:when>
-					<xsl:when test="$segs[3] = 'cw'">07</xsl:when>
-					<xsl:when test="$segs[3] = 'gal'">08</xsl:when>
-					<xsl:when test="$segs[3] = 'ot'">09</xsl:when>
-					<xsl:when test="$segs[3] = 'vit'">10</xsl:when>
-					<xsl:when test="$segs[3] = 'ves'">11</xsl:when>
-					<xsl:when test="$segs[3] = 'tit'">12</xsl:when>
-					<xsl:when test="$segs[3] = 'dom'">13</xsl:when>
-					<xsl:when test="$segs[3] = 'anys'">14</xsl:when>
-					<xsl:when test="$segs[3] = 'tr'">16</xsl:when>
-					<xsl:when test="$segs[3] = 'hdn'">17</xsl:when>
-					<xsl:when test="$segs[3] = 'ant'">18</xsl:when>
-				</xsl:choose>
-			</xsl:variable>
-			<xsl:variable name="num">
-				<xsl:choose>
-					<xsl:when test="lower-case(substring($segs[4], string-length($segs[4]), 1)) = 'a'">
-						<xsl:value-of select="format-number(number(substring($segs[4], 1, string-length($segs[4]) - 1)), '0000')"/>
-						<xsl:text>.1</xsl:text>
-					</xsl:when>
-					<xsl:when test="lower-case(substring($segs[4], string-length($segs[4]), 1)) = 'b'">
-						<xsl:value-of select="format-number(number(substring($segs[4], 1, string-length($segs[4]) - 1)), '0000')"/>
-						<xsl:text>.2</xsl:text>
-					</xsl:when>
-					<xsl:when test="lower-case(substring($segs[4], string-length($segs[4]), 1)) = 'c'">
-						<xsl:value-of select="format-number(number(substring($segs[4], 1, string-length($segs[4]) - 1)), '0000')"/>
-						<xsl:text>.3</xsl:text>
-					</xsl:when>
-					<xsl:when test="lower-case(substring($segs[4], string-length($segs[4]), 1)) = 'd'">
-						<xsl:value-of select="format-number(number(substring($segs[4], 1, string-length($segs[4]) - 1)), '0000')"/>
-						<xsl:text>.4</xsl:text>
-					</xsl:when>
-					<xsl:when test="lower-case(substring($segs[4], string-length($segs[4]), 1)) = 'e'">
-						<xsl:value-of select="format-number(number(substring($segs[4], 1, string-length($segs[4]) - 1)), '0000')"/>
-						<xsl:text>.5</xsl:text>
-					</xsl:when>
-					<xsl:when test="lower-case(substring($segs[4], string-length($segs[4]), 1)) = 'f'">
-						<xsl:value-of select="format-number(number(substring($segs[4], 1, string-length($segs[4]) - 1)), '0000')"/>
-						<xsl:text>.6</xsl:text>
-					</xsl:when>
-					<xsl:when test="lower-case(substring($segs[4], string-length($segs[4]), 1)) = 'g'">
-						<xsl:value-of select="format-number(number(substring($segs[4], 1, string-length($segs[4]) - 1)), '0000')"/>
-						<xsl:text>.7</xsl:text>
-					</xsl:when>
-					<xsl:when test="lower-case(substring($segs[4], string-length($segs[4]), 1)) = 'h'">
-						<xsl:value-of select="format-number(number(substring($segs[4], 1, string-length($segs[4]) - 1)), '0000')"/>
-						<xsl:text>.8</xsl:text>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:value-of select="format-number(number($segs[4]), '0000')"/>
-					</xsl:otherwise>
-				</xsl:choose>
-			</xsl:variable>
-
-			<xsl:value-of select="concat($segs[1], '.', $segs[2], '.', $auth, '.', $num)"/>
+			<!--<xsl:variable name="segs" select="tokenize(substring-after(nuds:control/nuds:recordId, 'rrc-'), '\.')"/>-->
+			<xsl:analyze-string select="substring-after(nuds:control/nuds:recordId, 'rrc-')" regex="([0-9]+)(^[\.]+)?(\.)?([0-9]+)?([A-z]+)?">
+				<xsl:matching-substring>
+					<xsl:value-of
+						select="concat(format-number(number(regex-group(1)), '0000'), regex-group(2), regex-group(3), if (number(regex-group(4))) then format-number(number(regex-group(4)), '0000') else '', regex-group(5))"
+					/>
+				</xsl:matching-substring>
+				<xsl:non-matching-substring>
+					<xsl:value-of select="."/>
+				</xsl:non-matching-substring>
+			</xsl:analyze-string>
 		</field>
 	</xsl:template>
 

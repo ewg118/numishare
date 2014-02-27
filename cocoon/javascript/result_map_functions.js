@@ -1,16 +1,50 @@
+$(document).ready(function () {
+	var q = $('#current-query').text();
+	var collection_type = $('#collection_type').text();
+	
+	$("#map_results").fancybox({
+		beforeShow: function () {
+			if ($('#resultMap').html().length == 0) {
+				$('#resultMap').html('');
+				initialize_map(q, collection_type);
+			}
+		}
+	});
+});
+
 function initialize_map(q, collection_type) {
 	var langStr = getURLParameter('lang');
-	if (langStr == 'null'){
+	if (langStr == 'null') {
 		var lang = '';
 	} else {
 		var lang = langStr;
 	}
-
-	map = new OpenLayers.Map('resultMap', {
+	
+	/***** DECLARE BASELAYERS ******/
+	var google_physical = new OpenLayers.Layer.Google("Google Physical", {
+		type: google.maps.MapTypeId.TERRAIN
+	});
+	var imperium = new OpenLayers.Layer.XYZ(
+	"Imperium Romanum",[
+	"http://pelagios.dme.ait.ac.at/tilesets/imperium/${z}/${x}/${y}.png"], {
+		sphericalMercator: true,
+		isBaseLayer: true,
+		numZoomLevels: 12,
+		attribution: '<a href="http://imperium.ahlfeldt.se">Digital Atlas of the Roman Empire</a>, hosted by <a href="http://pelagios-project.blogspot.com">Pelagios</a>.'
+	});
+	var osm = new OpenLayers.Layer.OSM();
+	
+	var baselayers = $('#baselayers').text().split(',');
+	
+	var map = new OpenLayers.Map('resultMap', {
 		controls:[
 		new OpenLayers.Control.PanZoomBar(),
 		new OpenLayers.Control.Navigation(),
-		new OpenLayers.Control.ScaleLine(),]
+		new OpenLayers.Control.ScaleLine(), 
+		new OpenLayers.Control.Attribution(),
+		new OpenLayers.Control.LayerSwitcher({
+			'ascending': true
+		})]
 	});
 	
 	var mintStyle = new OpenLayers.Style({
@@ -21,8 +55,7 @@ function initialize_map(q, collection_type) {
 		strokeColor: "#000072",
 		strokeWidth: 2,
 		strokeOpacity: 0.8
-	},
-	{
+	}, {
 		context: {
 			radius: function (feature) {
 				return Math.min(feature.attributes.count, 7) + 3;
@@ -37,14 +70,13 @@ function initialize_map(q, collection_type) {
 		strokeColor: "#006100",
 		strokeWidth: 2,
 		strokeOpacity: 0.8
-	},
-	{
+	}, {
 		context: {
 			radius: function (feature) {
 				return Math.min(feature.attributes.count, 7) + 3;
 			}
 		}
-	});	
+	});
 	var mintLayer = new OpenLayers.Layer.Vector("KML", {
 		styleMap: mintStyle,
 		
@@ -55,13 +87,13 @@ function initialize_map(q, collection_type) {
 		new OpenLayers.Strategy.Fixed(),
 		new OpenLayers.Strategy.Cluster()],
 		protocol: new OpenLayers.Protocol.HTTP({
-			url: "mints.kml?q=" + q + (lang.length > 0 ? '&lang=' + lang : ''),
+			url: "mints.kml?q=" + q + (lang.length > 0? '&lang=' + lang: ''),
 			format: new OpenLayers.Format.KML({
 				extractStyles: false,
 				extractAttributes: true
 			})
 		})
-	});	
+	});
 	
 	//add findspot layer for hoards
 	var hoardLayer = new OpenLayers.Layer.Vector("KML", {
@@ -73,7 +105,7 @@ function initialize_map(q, collection_type) {
 		new OpenLayers.Strategy.Fixed(),
 		new OpenLayers.Strategy.Cluster()],
 		protocol: new OpenLayers.Protocol.HTTP({
-			url: "findspots.kml?q=" + q + (lang.length > 0 ? '&lang=' + lang : ''),
+			url: "findspots.kml?q=" + q + (lang.length > 0? '&lang=' + lang: ''),
 			format: new OpenLayers.Format.KML({
 				extractStyles: false,
 				extractAttributes: true
@@ -81,7 +113,12 @@ function initialize_map(q, collection_type) {
 		})
 	});
 	
-	map.addLayer(new OpenLayers.Layer.Google("Google Physical",{type: google.maps.MapTypeId.TERRAIN}));	
+	//add baselayers
+	var i;
+	for (i = 0; i < baselayers.length; i++) {
+		map.addLayer(eval(baselayers[i]));
+	}
+	
 	map.addLayer(mintLayer);
 	map.addLayer(hoardLayer);
 	
@@ -90,12 +127,6 @@ function initialize_map(q, collection_type) {
 			map.zoomToExtent(hoardLayer.getDataExtent());
 		} else {
 			map.zoomToExtent(mintLayer.getDataExtent());
-		}
-		
-		if (q == '*:*') {
-			map.zoomTo('3');
-		} else {
-			map.zoomTo('5');
 		}
 	}
 	
@@ -155,8 +186,7 @@ function initialize_map(q, collection_type) {
 	}
 	
 	function getURLParameter(name) {
-	    return decodeURI(
-	        (RegExp(name + '=' + '(.+?)(&|$)').exec(location.search)||[,null])[1]
-	    );
+		return decodeURI(
+		(RegExp(name + '=' + '(.+?)(&|$)').exec(location.search) ||[, null])[1]);
 	}
 }
