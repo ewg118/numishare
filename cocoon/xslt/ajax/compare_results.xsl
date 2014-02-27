@@ -3,7 +3,7 @@
 
 	<xsl:output method="xml" encoding="UTF-8"/>
 	<xsl:param name="collection_path" select="/content/config/url"/>
-	<xsl:include href="../results_generic.xsl"/>
+	<xsl:include href="../results_templates.xsl"/>
 	<xsl:include href="../functions.xsl"/>
 
 	<xsl:param name="display_path"/>

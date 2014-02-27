@@ -316,13 +316,14 @@ li.h_item {
  */
 .paging_div {
 	padding:10px 0;
+	vertical-align:top
 }
 .page-nos {
 	text-align:right;
+	
 }
-.pagingBtn {
-	margin:2px;
-	height:24px;
+.pagination a, .pagination button {
+	height:32px;	
 }
 /*
   ***************************************

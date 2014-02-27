@@ -284,8 +284,8 @@ $(document).ready(function () {
 		}
 	}
 	
-	$('#results') .on('click', 'a.pagingBtn', function (event) {
-		var href = 'results_ajax' + $(this) .attr('href');
+	$('#results') .on('click', '.paging_div .page-nos .btn-toolbar .pagination a.pagingBtn', function (event) {
+		var href = path + 'results_ajax' + $(this) .attr('href');
 		$.get(href, {
 			pipeline: pipeline
 		},
