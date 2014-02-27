@@ -190,14 +190,14 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 	</xsl:template>
 
 	<xsl:template match="res:sparql" mode="kml">
-		<xsl:apply-templates select="descendant::res:result/res:binding[@name='findspot']" mode="kml"/>
+		<xsl:apply-templates select="descendant::res:result" mode="kml"/>
 	</xsl:template>
 
 	<xsl:template match="res:sparql" mode="json">
 		<xsl:if test="count(descendant::res:result/res:binding[@name='findspot']) &gt; 0">
 			<xsl:text>,</xsl:text>
 		</xsl:if>
-		<xsl:apply-templates select="descendant::res:result/res:binding[@name='findspot']" mode="json"/>
+		<xsl:apply-templates select="descendant::res:result" mode="json"/>
 	</xsl:template>
 
 
@@ -290,34 +290,16 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 		</div>
 	</xsl:template>
 
-	<xsl:template match="res:binding[@name='findspot']" mode="json">
-		<xsl:variable name="closing_date" select="parent::node()/res:binding[@name='burial']/res:literal"/>
-		<xsl:variable name="coordinates">
-			<!-- add placemark -->
-			<xsl:choose>
-				<xsl:when test="contains(child::res:uri, 'geonames')">
-					<xsl:variable name="geonameId" select="substring-before(substring-after(child::res:uri, 'geonames.org/'), '/')"/>
-					<xsl:if test="number($geonameId)">
-						<xsl:variable name="geonames_data" as="element()*">
-							<xml><xsl:copy-of select="document(concat($geonames-url, '/get?geonameId=', $geonameId, '&amp;username=', $geonames_api_key, '&amp;style=full'))"/></xml>
-						</xsl:variable>
-						<xsl:if test="string($geonames_data//lng) and string($geonames_data//lng)">
-							<xsl:variable name="coords" select="concat($geonames_data//lng, ',', $geonames_data//lat)"/>
-							<xsl:value-of select="$coords"/>
-						</xsl:if>
-					</xsl:if>
-				</xsl:when>
-				<xsl:when test="string(res:literal)">
-					<xsl:value-of select="res:literal"/>
-				</xsl:when>
-			</xsl:choose>
-		</xsl:variable>
+	<xsl:template match="res:result" mode="json">
+		<xsl:variable name="closing_date" select="res:binding[@name='burial']/res:literal"/>
+		<xsl:variable name="lat" select="res:binding[@name='lat']/res:literal"/>
+		<xsl:variable name="long" select="res:binding[@name='long']/res:literal"/>
 		<xsl:variable name="title">
-			<xsl:value-of select="parent::node()/res:binding[@name='title']/res:literal"/>
+			<xsl:value-of select="res:binding[@name='title']/res:literal"/>
 		</xsl:variable>
 		<xsl:variable name="description">
-			<![CDATA[<dl class='dl-horizontal'><dt>URL</dt><dd><a href=']]><xsl:value-of select="parent::node()/res:binding[@name='object']/res:uri"/><![CDATA['>]]><xsl:value-of
-				select="parent::node()/res:binding[@name='object']/res:uri"/><![CDATA[</a></dd>]]>
+			<![CDATA[<dl class='dl-horizontal'><dt>URL</dt><dd><a href=']]><xsl:value-of select="res:binding[@name='object']/res:uri"/><![CDATA['>]]><xsl:value-of
+				select="res:binding[@name='object']/res:uri"/><![CDATA[</a></dd>]]>
 			<xsl:if test="string($closing_date)">
 				<![CDATA[<dt>]]><xsl:value-of select="numishare:regularize_node('closing_date', $lang)"/><![CDATA[</dt><dd>]]><xsl:value-of select="numishare:normalizeYear(number($closing_date))"
 				/><![CDATA[</dd>]]>
@@ -325,55 +307,42 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 			<![CDATA[</dl>]]>
 		</xsl:variable>
 		<xsl:variable name="theme">red</xsl:variable>
-		<!-- output --> { <xsl:if test="string($coordinates)">"point": {"lon": <xsl:value-of select="tokenize($coordinates, ',')[1]"/>, "lat": <xsl:value-of select="tokenize($coordinates, ',')[2]"
-			/>},</xsl:if> "title": "<xsl:value-of select="$title"/>", "start": "<xsl:value-of select="$closing_date"/>", <xsl:if test="string($closing_date)">"end": "<xsl:value-of select="$closing_date"/>",</xsl:if>
-		"options": { "theme": "<xsl:value-of select="$theme"/>", "description": "<xsl:value-of select="normalize-space($description)"/>" } }<xsl:if test="not(position()=last())">
+		<!-- output --> { <xsl:if test="string($lat) and string($long)">"point": {"lon": <xsl:value-of select="$long"/>, "lat": <xsl:value-of select="$lat"/>},</xsl:if> "title": "<xsl:value-of
+			select="$title"/>", "start": "<xsl:value-of select="$closing_date"/>", "options": { "theme":
+			"<xsl:value-of select="$theme"/>", "description": "<xsl:value-of select="normalize-space($description)"/>" } }<xsl:if test="not(position()=last())">
 			<xsl:text>,</xsl:text>
 		</xsl:if>
 	</xsl:template>
 
-	<xsl:template match="res:binding[@name='findspot']" mode="kml">
+	<xsl:template match="res:result" mode="kml">
+		<xsl:variable name="closing_date" select="res:binding[@name='burial']/res:literal"/>
 		<Placemark xmlns="http://earth.google.com/kml/2.0">
 			<name>
-				<xsl:value-of select="parent::node()/res:binding[@name='title']/res:literal"/>
+				<xsl:value-of select="res:binding[@name='title']/res:literal"/>
 			</name>
 			<description>
 				<![CDATA[
-          					<span><a href="]]><xsl:value-of select="parent::node()/res:binding[@name='uri']/res:uri"/><![CDATA[" target="_blank">]]><xsl:value-of
-					select="parent::node()/res:binding[@name='title']/res:literal"/><![CDATA[</a>]]>
-				<xsl:if test="string(parent::node()/res:binding[@name='burial']/res:literal)">
-					<![CDATA[- closing date: ]]><xsl:value-of select="number(parent::node()/res:binding[@name='burial']/res:literal)"/>
+          					<dl class='dl-horizontal'><dt>URL</dt><dd><a href="]]><xsl:value-of select="res:binding[@name='findspot']/res:uri"/><![CDATA[" target="_blank">]]><xsl:value-of
+					select="res:binding[@name='title']/res:literal"/><![CDATA[</a></dd>]]>
+				<xsl:if test="number($closing_date) castable as xs:integer">
+					<![CDATA[<dt>]]><xsl:value-of select="numishare:regularize_node('closing_date', $lang)"/><![CDATA[</dt><dd>]]><xsl:value-of select="number($closing_date)"/><![CDATA[</dd>]]>
 				</xsl:if>
-				<![CDATA[</span>
+				<![CDATA[</dl>
         				]]>
 			</description>
 
 			<styleUrl>#mapped</styleUrl>
 			<!-- add placemark -->
-			<xsl:choose>
-				<xsl:when test="contains(child::res:uri, 'geonames')">
-					<xsl:variable name="geonameId" select="substring-before(substring-after(child::res:uri, 'geonames.org/'), '/')"/>
-					<xsl:variable name="geonames_data" select="document(concat($geonames-url, '/get?geonameId=', $geonameId, '&amp;username=', $geonames_api_key, '&amp;style=full'))"/>
-					<xsl:variable name="coordinates" select="concat(exsl:node-set($geonames_data)//lng, ',', exsl:node-set($geonames_data)//lat)"/>
-					<Point>
-						<coordinates>
-							<xsl:value-of select="$coordinates"/>
-						</coordinates>
-					</Point>
-				</xsl:when>
-				<xsl:when test="string(res:literal)">
-					<Point>
-						<coordinates>
-							<xsl:value-of select="res:literal"/>
-						</coordinates>
-					</Point>
-				</xsl:when>
-			</xsl:choose>
+			<Point>
+				<coordinates>
+					<xsl:value-of select="concat(res:binding[@name='long']/res:literal, ',', res:binding[@name='lat']/res:literal)"/>
+				</coordinates>
+			</Point>
 			<!-- add timespan -->
-			<xsl:if test="string(parent::node()/res:binding[@name='burial']/res:literal)">
+			<xsl:if test="string($closing_date)">
 				<TimeStamp>
 					<when>
-						<xsl:value-of select="number(parent::node()/res:binding[@name='burial']/res:literal)"/>
+						<xsl:value-of select="number($closing_date)"/>
 					</when>
 				</TimeStamp>
 			</xsl:if>
