@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:numishare="https://github.com/ewg118/numishare" xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	xmlns:res="http://www.w3.org/2005/sparql-results#" xmlns:cinclude="http://apache.org/cocoon/include/1.0" exclude-result-prefixes="#all" version="2.0">
-	<xsl:include href="../functions.xsl"/>
-	<xsl:include href="../templates.xsl"/>
-	<xsl:include href="../sparql/templates.xsl"/>
-	<xsl:include href="../results_generic.xsl"/>
+	<xsl:include href="../functions.xsl"/>		
+	<xsl:include href="../results_templates.xsl"/>
 	<xsl:param name="pipeline"/>
 	<xsl:param name="lang"/>
 
@@ -28,18 +26,11 @@
 	<xsl:variable name="sparql_endpoint" select="/content//sparql_endpoint"/>
 	<xsl:variable name="url" select="/content//url"/>
 
-	<!-- get block of images from SPARQL endpoint -->
+	<!-- get block of images from SPARQL endpoint, via nomisma API -->
 	<xsl:variable name="sparqlResult" as="element()*">
 		<xsl:if test="string($sparql_endpoint) and //config/collection_type='cointype'">
-			<!-- process sparql into a manageable XML model -->
-			<response xmlns="http://www.w3.org/2005/sparql-results#">
-				<xsl:for-each select="descendant::str[@name='recordId']">
-					<xsl:variable name="uri" select="concat('http://nomisma.org/id/', .)"/>
-					<group id="{.}">						
-						<xsl:copy-of select="document(concat('cocoon:/widget?uri=', $uri, '&amp;template=results'))/res:sparql/res:results"/>
-					</group>
-				</xsl:for-each>
-			</response>
+			<xsl:variable name="service" select="concat('http://nomisma.org/apis/numishareResults?identifiers=', string-join(descendant::str[@name='recordId'], '|'), '&amp;baseUri=http://nomisma.org/id/')"/>
+			<xsl:copy-of select="document($service)/response"/>
 		</xsl:if>
 	</xsl:variable>
 
@@ -264,13 +255,7 @@
 					<xsl:when test="str[@name='recordType'] = 'conceptual'">
 						<xsl:if test="string($sparql_endpoint)">
 							<xsl:variable name="id" select="str[@name='recordId']"/>
-							<xsl:variable name="group" as="element()*">
-								<xsl:copy-of select="$sparqlResult//res:group[@id=$id]"/>
-							</xsl:variable>
-							
-							<xsl:call-template name="numishare:renderSparqlResults">
-								<xsl:with-param name="group" select="$group"/>
-							</xsl:call-template>
+							<xsl:apply-templates select="$sparqlResult//group[@id=$id]" mode="results"/>	
 						</xsl:if>
 					</xsl:when>
 				</xsl:choose>

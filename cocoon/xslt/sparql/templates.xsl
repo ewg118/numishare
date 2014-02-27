@@ -86,35 +86,6 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 		<xsl:apply-templates select="document($service)/res:sparql" mode="json"/>
 	</xsl:template>
 
-	<xsl:template name="numishare:getImages">
-		<xsl:variable name="query">
-			<![CDATA[ 
-			PREFIX rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-			PREFIX dcterms:  <http://purl.org/dc/terms/>
-			PREFIX nm:       <http://nomisma.org/id/>
-			PREFIX skos:      <http://www.w3.org/2004/02/skos/core#>
-			PREFIX foaf:	<http://xmlns.com/foaf/0.1/>
-			
-			SELECT ?object ?objectType ?identifier ?collection ?obvThumb ?revThumb ?obvRef ?revRef ?comThumb ?comRef ?type WHERE {
-			?object nm:type_series_item <typeUri> .
-			?object rdf:type ?objectType .
-			OPTIONAL { ?object dcterms:identifier ?identifier }
-			OPTIONAL { ?object nm:collection ?colUri .
-			?colUri skos:prefLabel ?collection 
-			FILTER(langMatches(lang(?collection), "EN"))}		
-			OPTIONAL { ?object nm:obverseThumbnail ?obvThumb }
-			OPTIONAL { ?object nm:reverseThumbnail ?revThumb }
-			OPTIONAL { ?object nm:obverseReference ?obvRef }
-			OPTIONAL { ?object nm:reverseReference ?revRef }
-			OPTIONAL { ?object foaf:thumbnail ?comThumb }
-			OPTIONAL { ?object foaf:depiction ?comRef }
-			}]]>
-		</xsl:variable>
-
-		<xsl:variable name="service" select="concat($endpoint, '?query=', encode-for-uri(normalize-space(replace($query, 'typeUri', $uri))), '&amp;output=xml')"/>
-		<xsl:copy-of select="document($service)/res:sparql"/>
-	</xsl:template>
-
 	<xsl:template name="numishare:solrFields">
 		<xsl:variable name="query">
 			<![CDATA[
@@ -218,52 +189,6 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 
 	</xsl:template>
 
-	<xsl:template match="res:sparql" mode="results">
-		<xsl:variable name="id" select="generate-id()"/>
-		<xsl:variable name="count" select="count(descendant::res:result)"/>
-		<xsl:variable name="coin-count"
-			select="count(descendant::res:result[contains(res:binding[@name='objectType']/res:uri, 'coin')]) + count(descendant::res:result[not(child::res:binding[@name='objectType'])])"/>
-		<xsl:variable name="hoard-count" select="count(descendant::res:result[contains(res:binding[@name='objectType']/res:uri, 'hoard')])"/>
-
-		<!-- get images -->
-		<xsl:apply-templates select="descendant::res:result[res:binding[contains(@name, 'rev') or contains(@name, 'obv')]]" mode="results">
-			<xsl:with-param name="id" select="tokenize($uri, '/')[last()]"/>
-		</xsl:apply-templates>
-		<!-- object count -->
-		<xsl:if test="$count &gt; 0">
-			<br/>
-			<xsl:if test="$coin-count &gt; 0">
-				<xsl:value-of select="$coin-count"/>
-				<xsl:text> </xsl:text>
-				<xsl:choose>
-					<xsl:when test="$coin-count = 1">
-						<xsl:value-of select="numishare:normalizeLabel('results_coin', $lang)"/>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:value-of select="numishare:normalizeLabel('results_coins', $lang)"/>
-					</xsl:otherwise>
-				</xsl:choose>
-			</xsl:if>
-			<xsl:if test="$coin-count &gt; 0 and $hoard-count &gt; 0">
-				<xsl:text> </xsl:text>
-				<xsl:value-of select="numishare:normalizeLabel('results_and', $lang)"/>
-				<xsl:text> </xsl:text>
-			</xsl:if>
-			<xsl:if test="$hoard-count &gt; 0">
-				<xsl:value-of select="$hoard-count"/>
-				<xsl:text> </xsl:text>
-				<xsl:choose>
-					<xsl:when test="$hoard-count = 1">
-						<xsl:value-of select="numishare:normalizeLabel('results_hoard', $lang)"/>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:value-of select="numishare:normalizeLabel('results_hoards', $lang)"/>
-					</xsl:otherwise>
-				</xsl:choose>
-			</xsl:if>
-		</xsl:if>
-	</xsl:template>
-
 	<xsl:template match="res:sparql" mode="kml">
 		<xsl:apply-templates select="descendant::res:result/res:binding[@name='findspot']" mode="kml"/>
 	</xsl:template>
@@ -363,80 +288,6 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 				</xsl:if>
 			</div>
 		</div>
-	</xsl:template>
-
-	<xsl:template match="res:result" mode="results">
-		<xsl:param name="id"/>
-		<xsl:variable name="position" select="position()"/>
-		<!-- obverse -->
-		<xsl:choose>
-			<xsl:when test="string(res:binding[@name='obvRef']/res:uri) and string(res:binding[@name='obvThumb']/res:uri)">
-				<a class="thumbImage" rel="gallery" href="{res:binding[@name='obvRef']/res:uri}"
-					title="Obverse of {res:binding[@name='identifier']/res:literal}: {res:binding[@name='collection']/res:literal}">
-					<xsl:if test="$position &gt; 1">
-						<xsl:attribute name="style">display:none</xsl:attribute>
-					</xsl:if>
-					<img src="{res:binding[@name='obvThumb']/res:uri}"/>
-				</a>
-			</xsl:when>
-			<xsl:when test="not(string(res:binding[@name='obvRef']/res:uri)) and string(res:binding[@name='obvThumb']/res:uri)">
-				<img src="{res:binding[@name='obvThumb']/res:uri}">
-					<xsl:if test="$position &gt; 1">
-						<xsl:attribute name="style">display:none</xsl:attribute>
-					</xsl:if>
-				</img>
-			</xsl:when>
-			<xsl:when test="string(res:binding[@name='obvRef']/res:uri) and not(string(res:binding[@name='obvThumb']/res:uri))">
-				<a class="thumbImage" rel="gallery" href="{res:binding[@name='obvRef']/res:uri}"
-					title="Obverse of {res:binding[@name='identifier']/res:literal}: {res:binding[@name='collection']/res:literal}">
-					<img src="{res:binding[@name='obvRef']/res:uri}" style="max-width:120px">
-						<xsl:if test="$position &gt; 1">
-							<xsl:attribute name="style">display:none</xsl:attribute>
-						</xsl:if>
-					</img>
-				</a>
-			</xsl:when>
-		</xsl:choose>
-		<!-- reverse-->
-		<xsl:choose>
-			<xsl:when test="string(res:binding[@name='revRef']/res:uri) and string(res:binding[@name='revThumb']/res:uri)">
-				<a class="thumbImage" rel="gallery" href="{res:binding[@name='revRef']/res:uri}"
-					title="Reverse of {res:binding[@name='identifier']/res:literal}: {res:binding[@name='collection']/res:literal}">
-					<xsl:if test="$position &gt; 1">
-						<xsl:attribute name="style">display:none</xsl:attribute>
-					</xsl:if>
-					<img src="{res:binding[@name='revThumb']/res:uri}"/>
-				</a>
-			</xsl:when>
-			<xsl:when test="not(string(res:binding[@name='revRef']/res:uri)) and string(res:binding[@name='revThumb']/res:uri)">
-				<img src="{res:binding[@name='revThumb']/res:uri}">
-					<xsl:if test="$position &gt; 1">
-						<xsl:attribute name="style">display:none</xsl:attribute>
-					</xsl:if>
-				</img>
-			</xsl:when>
-			<xsl:when test="string(res:binding[@name='revRef']/res:uri) and not(string(res:binding[@name='revThumb']/res:uri))">
-				<a class="thumbImage" rel="gallery" href="{res:binding[@name='revRef']/res:uri}"
-					title="Obverse of {res:binding[@name='identifier']/res:literal}: {res:binding[@name='collection']/res:literal}">
-					<img src="{res:binding[@name='revRef']/res:uri}" style="max-width:120px">
-						<xsl:if test="$position &gt; 1">
-							<xsl:attribute name="style">display:none</xsl:attribute>
-						</xsl:if>
-					</img>
-				</a>
-			</xsl:when>
-		</xsl:choose>
-		<!-- combined -->
-		<xsl:if test="string(res:binding[@name='comRef']/res:uri) and not(string(res:binding[@name='comThumb']/res:uri))">
-			<a class="thumbImage" rel="gallery" href="{res:binding[@name='comRef']/res:uri}"
-				title="Image of {res:binding[@name='identifier']/res:literal}: {res:binding[@name='collection']/res:literal}">
-				<img src="{res:binding[@name='comRef']/res:uri}" style="max-width:240px">
-					<xsl:if test="$position &gt; 1">
-						<xsl:attribute name="style">display:none</xsl:attribute>
-					</xsl:if>
-				</img>
-			</a>
-		</xsl:if>
 	</xsl:template>
 
 	<xsl:template match="res:binding[@name='findspot']" mode="json">

@@ -1392,52 +1392,6 @@
 		</xsl:if>
 	</xsl:template>
 
-	<!-- ************** PROCESS GROUP OF SPARQL RESULTS FROM METIS TO DISPLAY IMAGES ************** -->
-	<xsl:template name="numishare:renderSparqlResults">
-		<xsl:param name="group"/>
-		<xsl:variable name="count" select="count($group/descendant::res:result)"/>
-		<xsl:variable name="coin-count" select="count($group/descendant::res:result[contains(res:binding[@name='objectType']/res:uri, 'coin')])"/>
-		<xsl:variable name="hoard-count" select="count($group/descendant::res:result[contains(res:binding[@name='objectType']/res:uri, 'hoard')])"/>
-
-		<!-- get images, only the first 5 -->
-		<xsl:apply-templates select="$group//res:result[res:binding[contains(@name, 'rev') or contains(@name, 'obv') or contains(@name,'com')]][position() &lt;=5]" mode="results">
-			<xsl:with-param name="id" select="tokenize($url, '/')[last()]"/>
-		</xsl:apply-templates>
-		<!-- object count -->
-		<xsl:if test="$count &gt; 0">
-			<br/>
-			<xsl:if test="$coin-count &gt; 0">
-				<xsl:value-of select="$coin-count"/>
-				<xsl:text> </xsl:text>
-				<xsl:choose>
-					<xsl:when test="$coin-count = 1">
-						<xsl:value-of select="numishare:normalizeLabel('results_coin', $lang)"/>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:value-of select="numishare:normalizeLabel('results_coins', $lang)"/>
-					</xsl:otherwise>
-				</xsl:choose>
-			</xsl:if>
-			<xsl:if test="$coin-count &gt; 0 and $hoard-count &gt; 0">
-				<xsl:text> </xsl:text>
-				<xsl:value-of select="numishare:normalizeLabel('results_and', $lang)"/>
-				<xsl:text> </xsl:text>
-			</xsl:if>
-			<xsl:if test="$hoard-count &gt; 0">
-				<xsl:value-of select="$hoard-count"/>
-				<xsl:text> </xsl:text>
-				<xsl:choose>
-					<xsl:when test="$hoard-count = 1">
-						<xsl:value-of select="numishare:normalizeLabel('results_hoard', $lang)"/>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:value-of select="numishare:normalizeLabel('results_hoards', $lang)"/>
-					</xsl:otherwise>
-				</xsl:choose>
-			</xsl:if>
-		</xsl:if>
-	</xsl:template>
-
 	<!-- ************** PROCESS MODS RECORD INTO CHICAGO MANUAL OF STYLE CITATION ************** -->
 	<xsl:template name="mods-citation">
 		<xsl:apply-templates select="mods:modsCollection"/>

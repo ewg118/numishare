@@ -525,13 +525,7 @@
 				</xsl:when>
 				<xsl:when test="str[@name='recordType'] = 'conceptual'">
 					<xsl:variable name="id" select="str[@name='recordId']"/>
-					<xsl:variable name="group" as="element()*">
-						<xsl:copy-of select="$sparqlResult//res:group[@id=$id]"/>
-					</xsl:variable>
-
-					<xsl:call-template name="numishare:renderSparqlResults">
-						<xsl:with-param name="group" select="$group"/>
-					</xsl:call-template>
+					<xsl:apply-templates select="$sparqlResult//group[@id=$id]" mode="results"/>					
 				</xsl:when>
 			</xsl:choose>
 		</div>
@@ -999,59 +993,61 @@
 
 			<!-- paging functionality -->
 			<div class="col-md-6 page-nos">
-				<!-- first page -->
-				<!-- previous page -->
-				<xsl:choose>
-					<xsl:when test="$start_var &gt;= $rows">
-						<a class="pagingBtn btn btn-primary btn-sm" title="First"
-							href="?q={encode-for-uri($q)}{if (string($sort)) then concat('&amp;sort=', $sort) else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
-							<span class="glyphicon glyphicon-fast-backward"/>
-						</a>
-						<a class="pagingBtn btn btn-primary btn-sm" title="Previous"
-							href="?q={encode-for-uri($q)}&amp;start={$previous}{if (string($sort)) then concat('&amp;sort=', $sort) else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
-							<span class="glyphicon glyphicon-backward"/>
-						</a>
-					</xsl:when>
-					<xsl:otherwise>
-						<a class="pagingBtn btn btn-primary btn-sm disabled" title="First"
-							href="?q={encode-for-uri($q)}{if (string($sort)) then concat('&amp;sort=', $sort) else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
-							<span class="glyphicon glyphicon-fast-backward"/>
-						</a>
-						<a class="pagingBtn btn btn-primary btn-sm disabled" title="Previous"
-							href="?q={encode-for-uri($q)}&amp;start={$previous}{if (string($sort)) then concat('&amp;sort=', $sort) else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
-							<span class="glyphicon glyphicon-backward"/>
-						</a>
-					</xsl:otherwise>
-				</xsl:choose>
-				<!-- current page -->
-				<span class="pagingBtn btn btn-primary btn-sm disabled">
-					<b>
-						<xsl:value-of select="$current"/>
-					</b>
-				</span>
-				<!-- next page -->
-				<xsl:choose>
-					<xsl:when test="$numFound - $start_var &gt; $rows">
-						<a class="pagingBtn btn btn-primary btn-sm" title="Next"
-							href="?q={encode-for-uri($q)}&amp;start={$next}{if (string($sort)) then concat('&amp;sort=', $sort) else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
-							<span class="glyphicon glyphicon-forward"/>
-						</a>
-						<a class="pagingBtn btn btn-primary btn-sm"
-							href="?q={encode-for-uri($q)}&amp;start={($total * $rows) - $rows}{if (string($sort)) then concat('&amp;sort=', $sort) else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
-							<span class="glyphicon glyphicon-fast-forward"/>
-						</a>
-					</xsl:when>
-					<xsl:otherwise>
-						<a class="pagingBtn btn btn-primary btn-sm disabled" title="Next"
-							href="?q={encode-for-uri($q)}&amp;start={$next}{if (string($sort)) then concat('&amp;sort=', $sort) else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
-							<span class="glyphicon glyphicon-forward"/>
-						</a>
-						<a class="pagingBtn btn btn-primary btn-sm disabled"
-							href="?q={encode-for-uri($q)}&amp;start={($total * $rows) - $rows}{if (string($sort)) then concat('&amp;sort=', $sort) else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
-							<span class="glyphicon glyphicon-fast-forward"/>
-						</a>
-					</xsl:otherwise>
-				</xsl:choose>
+				<div class="btn-toolbar" role="toolbar">
+					<div class="btn-group pagination" style="float:right">
+						<xsl:choose>
+							<xsl:when test="$start_var &gt;= $rows">
+								<a class="btn btn-default pagingBtn" role="button" title="First"
+									href="?q={encode-for-uri($q)}{if (string($sort)) then concat('&amp;sort=', $sort) else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+									<span class="glyphicon glyphicon-fast-backward"/>
+								</a>
+								<a class="btn btn-default pagingBtn" role="button" title="Previous"
+									href="?q={encode-for-uri($q)}&amp;start={$previous}{if (string($sort)) then concat('&amp;sort=', $sort) else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+									<span class="glyphicon glyphicon-backward"/>
+								</a>
+							</xsl:when>
+							<xsl:otherwise>
+								<a class="btn btn-default disabled" role="button" title="First"
+									href="?q={encode-for-uri($q)}{if (string($sort)) then concat('&amp;sort=', $sort) else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+									<span class="glyphicon glyphicon-fast-backward"/>
+								</a>
+								<a class="btn btn-default disabled" role="button" title="Previous"
+									href="?q={encode-for-uri($q)}&amp;start={$previous}{if (string($sort)) then concat('&amp;sort=', $sort) else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+									<span class="glyphicon glyphicon-backward"/>
+								</a>
+							</xsl:otherwise>
+						</xsl:choose>
+						<!-- current page -->
+						<button type="button" class="btn btn-default active">
+							<b>
+								<xsl:value-of select="$current"/>
+							</b>
+						</button>
+						<!-- next page -->
+						<xsl:choose>
+							<xsl:when test="$numFound - $start_var &gt; $rows">
+								<a class="btn btn-default pagingBtn" role="button" title="Next"
+									href="?q={encode-for-uri($q)}&amp;start={$next}{if (string($sort)) then concat('&amp;sort=', $sort) else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+									<span class="glyphicon glyphicon-forward"/>
+								</a>
+								<a class="btn btn-default pagingBtn" role="button"
+									href="?q={encode-for-uri($q)}&amp;start={($total * $rows) - $rows}{if (string($sort)) then concat('&amp;sort=', $sort) else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+									<span class="glyphicon glyphicon-fast-forward"/>
+								</a>
+							</xsl:when>
+							<xsl:otherwise>
+								<a class="btn btn-default disabled" role="button" title="Next"
+									href="?q={encode-for-uri($q)}&amp;start={$next}{if (string($sort)) then concat('&amp;sort=', $sort) else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+									<span class="glyphicon glyphicon-forward"/>
+								</a>
+								<a class="btn btn-default disabled" role="button"
+									href="?q={encode-for-uri($q)}&amp;start={($total * $rows) - $rows}{if (string($sort)) then concat('&amp;sort=', $sort) else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+									<span class="glyphicon glyphicon-fast-forward"/>
+								</a>
+							</xsl:otherwise>
+						</xsl:choose>
+					</div>
+				</div>
 			</div>
 		</div>
 	</xsl:template>
@@ -1166,6 +1162,142 @@
 				</a>
 			</div>
 		</div>
+	</xsl:template>
+	
+	<!-- ************** PROCESS GROUP OF SPARQL RESULTS FROM NOMISMA TO DISPLAY IMAGES ************** -->
+	<xsl:template match="group" mode="results">
+		<xsl:param name="group"/>
+		<xsl:variable name="count" select="coin-count + hoard-count"/>
+		<xsl:variable name="coin-count" select="coin-count"/>
+		<xsl:variable name="hoard-count" select="hoard-count"/>
+		
+		<!-- display images -->
+		<xsl:apply-templates select="descendant::object" mode="results"/>		
+		
+		<!-- object count -->
+		<xsl:if test="$count &gt; 0">
+			<br/>
+			<xsl:if test="$coin-count &gt; 0">
+				<xsl:value-of select="$coin-count"/>
+				<xsl:text> </xsl:text>
+				<xsl:choose>
+					<xsl:when test="$coin-count = 1">
+						<xsl:value-of select="numishare:normalizeLabel('results_coin', $lang)"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="numishare:normalizeLabel('results_coins', $lang)"/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:if>
+			<xsl:if test="$coin-count &gt; 0 and $hoard-count &gt; 0">
+				<xsl:text> </xsl:text>
+				<xsl:value-of select="numishare:normalizeLabel('results_and', $lang)"/>
+				<xsl:text> </xsl:text>
+			</xsl:if>
+			<xsl:if test="$hoard-count &gt; 0">
+				<xsl:value-of select="$hoard-count"/>
+				<xsl:text> </xsl:text>
+				<xsl:choose>
+					<xsl:when test="$hoard-count = 1">
+						<xsl:value-of select="numishare:normalizeLabel('results_hoard', $lang)"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="numishare:normalizeLabel('results_hoards', $lang)"/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:if>
+		</xsl:if>
+	</xsl:template>
+	
+	<xsl:template match="object" mode="results">
+		<xsl:variable name="position" select="position()"/>
+		<!-- obverse -->
+		<xsl:choose>
+			<xsl:when test="string(obvRef) and string(obvThumb)">
+				<a class="thumbImage" rel="gallery" href="{obvRef}"
+					title="Obverse of {@identifier}: {@collection}">
+					<xsl:if test="$position &gt; 1">
+						<xsl:attribute name="style">display:none</xsl:attribute>
+					</xsl:if>
+					<img src="{obvThumb}"/>
+				</a>
+			</xsl:when>
+			<xsl:when test="not(string(obvRef)) and string(obvThumb)">
+				<img src="{obvThumb}">
+					<xsl:if test="$position &gt; 1">
+						<xsl:attribute name="style">display:none</xsl:attribute>
+					</xsl:if>
+				</img>
+			</xsl:when>
+			<xsl:when test="string(obvRef) and not(string(obvThumb))">
+				<a class="thumbImage" rel="gallery" href="{obvRef}"
+					title="Obverse of {@identifier}: {@collection}">
+					<img src="{obvRef}" style="max-width:120px">
+						<xsl:if test="$position &gt; 1">
+							<xsl:attribute name="style">display:none</xsl:attribute>
+						</xsl:if>
+					</img>
+				</a>
+			</xsl:when>
+		</xsl:choose>
+		<!-- reverse-->
+		<xsl:choose>
+			<xsl:when test="string(revRef) and string(revThumb)">
+				<a class="thumbImage" rel="gallery" href="{revRef}"
+					title="Reverse of {@identifier}: {@collection}">
+					<xsl:if test="$position &gt; 1">
+						<xsl:attribute name="style">display:none</xsl:attribute>
+					</xsl:if>
+					<img src="{revThumb}"/>
+				</a>
+			</xsl:when>
+			<xsl:when test="not(string(revRef)) and string(revThumb)">
+				<img src="{revThumb}">
+					<xsl:if test="$position &gt; 1">
+						<xsl:attribute name="style">display:none</xsl:attribute>
+					</xsl:if>
+				</img>
+			</xsl:when>
+			<xsl:when test="string(revRef) and not(string(revThumb))">
+				<a class="thumbImage" rel="gallery" href="{revRef}"
+					title="Obverse of {@identifier}: {@collection}">
+					<img src="{revRef}" style="max-width:120px">
+						<xsl:if test="$position &gt; 1">
+							<xsl:attribute name="style">display:none</xsl:attribute>
+						</xsl:if>
+					</img>
+				</a>
+			</xsl:when>
+		</xsl:choose>
+		<!-- combined -->
+		<xsl:choose>
+			<xsl:when test="string(comRef) and string(comThumb)">
+				<a class="thumbImage" rel="gallery" href="{comRef}"
+					title="Reverse of {@identifier}: {@collection}">
+					<xsl:if test="$position &gt; 1">
+						<xsl:attribute name="style">display:none</xsl:attribute>
+					</xsl:if>
+					<img src="{comThumb}"/>
+				</a>
+			</xsl:when>
+			<xsl:when test="not(string(comRef)) and string(comThumb)">
+				<img src="{comThumb}">
+					<xsl:if test="$position &gt; 1">
+						<xsl:attribute name="style">display:none</xsl:attribute>
+					</xsl:if>
+				</img>
+			</xsl:when>
+			<xsl:when test="string(comRef) and not(string(comThumb))">
+				<a class="thumbImage" rel="gallery" href="{comRef}"
+					title="Obverse of {@identifier}: {@collection}">
+					<img src="{comRef}" style="max-width:240px">
+						<xsl:if test="$position &gt; 1">
+							<xsl:attribute name="style">display:none</xsl:attribute>
+						</xsl:if>
+					</img>
+				</a>
+			</xsl:when>
+		</xsl:choose>		
 	</xsl:template>
 
 	<xsl:template name="compare_paging">
