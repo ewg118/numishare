@@ -1024,18 +1024,39 @@
 
 			<map:match pattern="get_search_facets">
 				<map:select type="parameter">
-					<map:parameter name="parameter-selector-test" value="{request-param:lang}"/>
-					<map:when test="">
-						<map:generate
-							src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}&amp;category={request-param:category}&amp;facet.field={request-param:category}&amp;facet.limit=-1&amp;facet.sort=index&amp;rows=0"
-							label="record"/>
+					<map:parameter name="parameter-selector-test" value="{request-param:pipeline}"/>
+					<map:when test="compare">
+						<map:select type="parameter">
+							<map:parameter name="parameter-selector-test" value="{request-param:lang}"/>
+							<map:when test="">
+								<map:generate
+									src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}+AND+imagesavailable:true&amp;category={request-param:category}&amp;facet.field={request-param:category}&amp;facet.limit=-1&amp;facet.sort=index&amp;rows=0"
+									label="record"/>
+							</map:when>
+							<map:otherwise>
+								<map:generate
+									src="{global:solr-url}select?q=lang:{request-param:lang}+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}+AND+imagesavailable:true&amp;category={request-param:category}&amp;facet.field={request-param:category}&amp;facet.limit=-1&amp;facet.sort=index&amp;rows=0"
+									label="record"/>
+							</map:otherwise>
+						</map:select>
 					</map:when>
 					<map:otherwise>
-						<map:generate
-							src="{global:solr-url}select?q=lang:{request-param:lang}+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}&amp;category={request-param:category}&amp;facet.field={request-param:category}&amp;facet.limit=-1&amp;facet.sort=index&amp;rows=0"
-							label="record"/>
+						<map:select type="parameter">
+							<map:parameter name="parameter-selector-test" value="{request-param:lang}"/>
+							<map:when test="">
+								<map:generate
+									src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}&amp;category={request-param:category}&amp;facet.field={request-param:category}&amp;facet.limit=-1&amp;facet.sort=index&amp;rows=0"
+									label="record"/>
+							</map:when>
+							<map:otherwise>
+								<map:generate
+									src="{global:solr-url}select?q=lang:{request-param:lang}+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}&amp;category={request-param:category}&amp;facet.field={request-param:category}&amp;facet.limit=-1&amp;facet.sort=index&amp;rows=0"
+									label="record"/>
+							</map:otherwise>
+						</map:select>
 					</map:otherwise>
-				</map:select>				
+				</map:select>
+								
 				<map:transform type="xslt-saxon" src="xslt/ajax/get_search_facets.xsl" label="basiccontent">
 					<map:parameter name="use-request-parameters" value="true"/>
 				</map:transform>

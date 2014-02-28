@@ -13,6 +13,8 @@ $(document).ready(function () {
 		var lang = langStr;
 	}
 	
+	var pipeline = $('#pipeline').text();
+	
 	function getURLParameter(name) {
 		return decodeURI(
 		(RegExp(name + '=' + '(.+?)(&|$)').exec(location.search) ||[, null])[1]);
@@ -80,7 +82,7 @@ $(document).ready(function () {
 			var query = assembleQuery('advancedSearchForm');
 			var q = query + ' AND ' + field + ':[* TO *]';
 			$.get('get_search_facets', {
-				q: q, category: field, lang: lang
+				q: q, category: field, lang: lang, pipeline: pipeline
 			},
 			function (data) {
 				container.html(data);

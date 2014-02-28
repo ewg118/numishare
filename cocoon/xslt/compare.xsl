@@ -48,6 +48,11 @@
 				<xsl:call-template name="header"/>
 				<xsl:call-template name="compare"/>
 				<xsl:call-template name="footer"/>
+				<div class="hidden">
+					<span id="pipeline">
+						<xsl:value-of select="$pipeline"/>
+					</span>
+				</div>
 			</body>
 		</html>
 	</xsl:template>
