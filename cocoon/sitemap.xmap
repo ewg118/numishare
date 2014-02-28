@@ -600,7 +600,7 @@
 					<map:parameter name="use-request-parameters" value="true"/>
 					<map:parameter name="pipeline" value="compare"/>
 				</map:transform>
-				<map:serialize type="html"/>
+				<map:serialize type="html5"/>
 			</map:match>
 
 			<!-- GEOGRAPHIC SERVICE -->
@@ -917,7 +917,7 @@
 				<map:transform type="xslt-saxon" src="xslt/ajax/compare_results.xsl" label="basiccontent">
 					<map:parameter name="use-request-parameters" value="true"/>
 				</map:transform>
-				<map:serialize type="html"/>
+				<map:serialize type="html5"/>
 			</map:match>
 
 			<map:match pattern="get_map_checkbox">

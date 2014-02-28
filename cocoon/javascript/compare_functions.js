@@ -5,16 +5,16 @@ Library: jQuery
 These are a series of functions for pagination, selection, and sorting of queries in the compare section.
 ************************************/
 $(document).ready(function () {
-
+	
 	var langStr = getURLParameter('lang');
-	if (langStr == 'null'){
+	if (langStr == 'null') {
 		var lang = '';
 	} else {
 		var lang = langStr;
 	}
 	
 	/*** return to search results from item record ***/
-	$(' #search1 .back_results') .livequery('click', function (event) {
+	$(' #search1') .on('click', '.compare_options small .back_results', function () {
 		var href = $(this) .attr('href');
 		$.get(href, {
 		},
@@ -23,7 +23,7 @@ $(document).ready(function () {
 		});
 		return false;
 	});
-	$(' #search2 .back_results') .livequery('click', function (event) {
+	$(' #search2') .on('click', '.compare_options small .back_results', function () {
 		var href = $(this) .attr('href');
 		$.get(href, {
 		},
@@ -34,36 +34,34 @@ $(document).ready(function () {
 	});
 	
 	/*** pagination ***/
-	$(' #search1 .comparepagingBtn') .livequery('click', function (event) {
-		var href = $(this) .attr('href');
-		$.get(href, {
-		},
+	$(' #search1') .on('click', '.paging_div .page-nos .btn-toolbar .pagination .pagingBtn', function () {
+		var href = 'compare_results' + $(this) .attr('href');
+		$.get(href,
 		function (data) {
 			$('#search1') .html(data);
 		});
 		return false;
 	});
-	$(' #search2 .comparepagingBtn') .livequery('click', function (event) {
-		var href = $(this) .attr('href');
-		$.get(href, {
-		},
+	$(' #search2') .on('click', '.paging_div .page-nos .btn-toolbar .pagination .pagingBtn', function () {
+		var href = 'compare_results' + $(this) .attr('href');
+		$.get(href,
 		function (data) {
 			$('#search2') .html(data);
 		});
 		return false;
 	});
 	/*** select record for comparison ***/
-	$(' #search1 .compare') .livequery('click', function (event) {
-		$.get($(this) .attr('href'), {
-		},
+	$(' #search1') .on('click', '.result-doc div h4 .compare', function () {
+		var href = $(this) .attr('href');
+		$.get(href,
 		function (data) {
 			$('#search1') .html(data);
 		});
 		return false;
 	});
-	$(' #search2 .compare') .livequery('click', function (event) {
-		$.get($(this) .attr('href'), {
-		},
+	$(' #search2') .on('click', '.result-doc div h4 .compare', function () {
+		var href = $(this) .attr('href');
+		$.get(href,
 		function (data) {
 			$('#search2') .html(data);
 		});
@@ -72,27 +70,21 @@ $(document).ready(function () {
 	
 	/*** sort results ***/
 	//column 1
-	$('#search1 .sortForm_categories') .livequery('change', function (event) {
-		var category = $(this) .attr('value');
-		var sort_order = $('#search1 .sortForm_order') .attr('value');
-		if (category != 'null') {
-			$('#search1 #sort_button') .removeAttr('disabled');
-			$('#search1 .sort_param') .attr('value', category + ' ' + sort_order);
-		} else {
-			$('#search1 #sort_button') .attr('disabled', 'disabled');
-		}
+	$(' #search1') .on('change', '.sort_div div .sortForm .sortForm_categories', function () {
+		var field = $(this).val();
+		var sort_order = $('.sortForm_order').val();
+		setValue(field, sort_order, 'search1');
+	});
+	$(' #search1') .on('change', '.sort_div div .sortForm .sortForm_order', function () {
+		var field = $('.sortForm_categories').val();
+		var sort_order = $(this).val();
+		setValue(field, sort_order, 'search1');
 	});
 	
-	$('#search1 .sortForm_order') .livequery('change', function (event) {
-		var sort_order = $(this) .attr('value');
-		var category = $('#search1 .sortForm_categories') .attr('value');
-		$('#search1 .sort_param') .attr('value', category + ' ' + sort_order);
-	});
-	
-	$('#search1 #sort_button') .livequery('click', function (event) {
-		var image = $('#image') .attr('value');
-		var query = $('#search1 input[name=q]') .attr('value');
-		var sort = $('#search1 .sortForm_categories') .attr('value') + ' ' + $('#search1 .sortForm_order') .attr('value');
+	$(' #search1') .on('click', '.sort_div div .sortForm .sort_button', function () {
+		var image = $('#image') .val();
+		var query = $('#search1 input[name=q]') .val();
+		var sort = $('#search1 input[name=sort]') .val();
 		$.get('compare_results', {
 			q: query, start: 0, image: image, side: '1', mode: 'compare', sort: sort, lang: lang
 		},
@@ -102,29 +94,23 @@ $(document).ready(function () {
 		return false;
 	});
 	//column 2
-	$('#search2 .sortForm_categories') .livequery('change', function (event) {
-		var category = $(this) .attr('value');
-		var sort_order = $('#search2 .sortForm_order') .attr('value');
-		if (category != 'null') {
-			$('#search2 #sort_button') .removeAttr('disabled');
-			$('#search2 .sort_param') .attr('value', category + ' ' + sort_order);
-		} else {
-			$('#search2 #sort_button') .attr('disabled', 'disabled');
-		}
+	$(' #search2') .on('change', '.sort_div div .sortForm .sortForm_categories', function () {
+		var field = $(this).val();
+		var sort_order = $('.sortForm_order').val();
+		setValue(field, sort_order, 'search2');
+	});
+	$(' #search2') .on('change', '.sort_div div .sortForm .sortForm_order', function () {
+		var field = $('.sortForm_categories').val();
+		var sort_order = $(this).val();
+		setValue(field, sort_order, 'search2');
 	});
 	
-	$('#search2 .sortForm_order') .livequery('change', function (event) {
-		var sort_order = $(this) .attr('value');
-		var category = $('#search2 .sortForm_categories') .attr('value');
-		$('#search2 .sort_param') .attr('value', category + ' ' + sort_order);
-	});
-	
-	$('#search2 #sort_button') .livequery('click', function (event) {
-		var image = $('#image') .attr('value');
-		var query = $('#search2 input[name=q]') .attr('value');
-		var sort = $('#search2 .sortForm_categories') .attr('value') + ' ' + $('#search2 .sortForm_order') .attr('value');
+	$(' #search2') .on('click', '.sort_div div .sortForm .sort_button', function () {
+		var image = $('#image') .val();
+		var query = $('#search2 input[name=q]') .val();
+		var sort = $('#search2 input[name=sort]') .val();
 		$.get('compare_results', {
-			q: query, start: 0, image: image, side: '1', mode: 'compare', sort: sort , lang: lang
+			q: query, start: 0, image: image, side: '1', mode: 'compare', sort: sort, lang: lang
 		},
 		function (data) {
 			$('#search2') .html(data);
@@ -132,9 +118,39 @@ $(document).ready(function () {
 		return false;
 	});
 	
+	function setValue(field, sort_order, id) {
+		var category;
+		if (field.indexOf('_') > 0 || field == 'timestamp') {
+			category = field;
+		} else {
+			if (sort_order == 'asc') {
+				switch (field) {
+					case 'year':
+					category = field + '_minint';
+					break;
+					default:
+					category = field + '_min';
+				}
+			} else if (sort_order == 'desc') {
+				switch (field) {
+					case 'year':
+					category = field + '_maxint';
+					break;
+					default:
+					category = field + '_max';
+				}
+			}
+		}
+		if (field != 'null') {
+			$('#' + id + ' .sort_button') .removeAttr('disabled');
+			$('#' + id + ' .sort_param') .attr('value', category + ' ' + sort_order);
+		} else {
+			$('#' + id + ' .sort_button') .attr('disabled', 'disabled');
+		}
+	}
+	
 	function getURLParameter(name) {
-	    return decodeURI(
-	        (RegExp(name + '=' + '(.+?)(&|$)').exec(location.search)||[,null])[1]
-	    );
+		return decodeURI(
+		(RegExp(name + '=' + '(.+?)(&|$)').exec(location.search) ||[, null])[1]);
 	}
 });

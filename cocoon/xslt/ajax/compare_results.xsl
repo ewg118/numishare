@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" version="2.0">
-
-	<xsl:output method="xml" encoding="UTF-8"/>
 	<xsl:param name="collection_path" select="/content/config/url"/>
 	<xsl:include href="../results_templates.xsl"/>
 	<xsl:include href="../functions.xsl"/>
@@ -34,10 +32,10 @@
 
 		<xsl:choose>
 			<xsl:when test="$numFound &gt; 0">
-				<xsl:call-template name="compare_paging"/>
+				<xsl:call-template name="paging"/>
 				<xsl:call-template name="sort"/>
 				<xsl:apply-templates select="//doc"/>
-				<xsl:call-template name="compare_paging"/>
+				<xsl:call-template name="paging"/>
 			</xsl:when>
 			<xsl:otherwise>
 				<p>No results found.</p>

@@ -23,6 +23,10 @@
 		</xsl:choose>
 	</xsl:variable>
 	<xsl:param name="tokenized_q" select="tokenize($q, ' AND ')"/>
+	
+	<!-- unused params in browse page that are necessary for compare paging -->
+	<xsl:param name="image"/>
+	<xsl:param name="side"/>
 	<xsl:param name="mode"/>
 
 	<xsl:variable name="numFound" select="//result[@name='response']/@numFound" as="xs:integer"/>

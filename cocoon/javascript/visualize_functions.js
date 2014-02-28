@@ -207,11 +207,11 @@ $(document).ready(function () {
 		$.fancybox.close();
 		
 		//clear searchBox for next addition
-		$('#inputContainer').empty();
+		$('.inputContainer').empty();
 		
 		//reset template
 		var tpl = cloneTemplate();
-		$('#inputContainer') .html(tpl);
+		$('.inputContainer') .html(tpl);
 		
 		// display the entire new template
 		tpl.fadeIn('fast');

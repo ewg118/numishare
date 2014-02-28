@@ -115,9 +115,6 @@ ul li, ol li {
   SEARCH/COMPARE/VISUALIZATION FORMS
   ***************************************
  */
-.compare-form {
-	height:100px;
-}
 .compare_image {
 	margin-bottom:20px;
 	padding:10px;
@@ -133,7 +130,7 @@ ul li, ol li {
 .compare-select {
 	width:400px;
 }
-.category_list, .sparql_facets, select[name="interval"], #stacking {
+.category_list, .sparql_facets, select[name="interval"], #stacking, #image {
 	width:175px;
 	display:inline;
 }
@@ -179,9 +176,11 @@ ul li, ol li {
 	padding-bottom:5px;
 }
 .compare_options {
-	font-size:10px;
 	margin-bottom:10px;
 	text-align:center;
+}
+#search1, #search2 {
+	margin-top:20px;	
 }
 /*
   ***************************************
@@ -227,6 +226,9 @@ ul li, ol li {
 .right {
 	text-align:right;
 	vertical-align:middle;
+}
+.sort_div {
+	margin-bottom:20px;
 }
 /*
   ***************************************
@@ -316,14 +318,17 @@ li.h_item {
  */
 .paging_div {
 	padding:10px 0;
-	vertical-align:top
+	vertical-align:baseline;
 }
 .page-nos {
 	text-align:right;
-	
+}
+.pagination {
+	margin:0;
+	padding:0;
 }
 .pagination a, .pagination button {
-	height:32px;	
+	height:32px;
 }
 /*
   ***************************************

@@ -25,7 +25,6 @@ $(document).ready(function() {
 		
 		var query1 = assembleQuery('dataset1');
 		var query2 = assembleQuery('dataset2');
-	
 		$.get('compare_results', {
 			q : query1, start:0, image:image,  side:'1', mode: 'compare', lang: lang
 		}, function (data) {

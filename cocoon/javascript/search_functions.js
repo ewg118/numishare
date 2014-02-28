@@ -19,7 +19,7 @@ $(document).ready(function () {
 	}
 	
 	/***** TOGGLING FACET FORM*****/
-	$('#inputContainer') .on('click', '.searchItemTemplate .gateTypeBtn', function () {
+	$('.inputContainer') .on('click', '.searchItemTemplate .gateTypeBtn', function () {
 		gateTypeBtnClick($(this));
 		//disable date select option if there is already a date select option
 		if ($(this).closest('form').attr('id') == 'sparqlForm') {
@@ -36,7 +36,7 @@ $(document).ready(function () {
 		
 		return false;
 	});
-	$('#inputContainer').on('click', '.searchItemTemplate .removeBtn', function () {
+	$('.inputContainer').on('click', '.searchItemTemplate .removeBtn', function () {
 		//enable date option in sparql form if the date is being removed
 		if ($(this).closest('form').attr('id') == 'sparqlForm') {
 			$('#sparqlForm .searchItemTemplate').each(function () {
@@ -55,7 +55,7 @@ $(document).ready(function () {
 		return false;
 	});
 	
-	$('#inputContainer').on('change', '.searchItemTemplate .category_list', function () {
+	$('.inputContainer').on('change', '.searchItemTemplate .category_list', function () {
 		var field = $(this) .children("option:selected") .val();
 		if (field.indexOf('text') > 0 || field.indexOf('display') > 0) {
 			if ($(this) .parent() .children('.option_container') .children('input') .attr('class') != 'search_text') {
