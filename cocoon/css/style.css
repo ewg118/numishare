@@ -90,7 +90,7 @@ ul li, ol li {
 	text-align:center;
 }
 .reference_image img {
-	max-width:400px;
+	max-width:100%;
 }
 .abstract {
 	margin-bottom:20px;
