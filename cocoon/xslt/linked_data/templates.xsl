@@ -100,7 +100,7 @@
 			<oa:Annotation rdf:about="{$url}pelagios.rdf#{$id}/annotations/{format-number(position(), '000')}">
 				<oa:hasBody rdf:resource="{.}#this"/>
 				<oa:hasTarget rdf:resource="{$url}pelagios.rdf#{$id}"/>
-				<pelagios:relations rdf:resource="http://pelagios.github.io/vocab/relations#attestsTo"/>
+				<pelagios:relation rdf:resource="http://pelagios.github.io/vocab/relations#attestsTo"/>
 				<oa:annotatedBy rdf:resource="{$url}pelagios.rdf#agents/me"/>
 				<oa:annotatedAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">
 					<xsl:value-of select="$date"/>
@@ -536,7 +536,7 @@
 		<oa:Annotation rdf:about="{$url}pelagios.rdf#{$id}/annotations/{format-number($count + 1, '000')}">
 			<oa:hasBody rdf:resource="{@xlink:href}"/>
 			<oa:hasTarget rdf:resource="{$url}pelagios.rdf#{$id}"/>
-			<pelagios:relations rdf:resource="http://pelagios.github.io/vocab/relations#foundAt"/>
+			<pelagios:relation rdf:resource="http://pelagios.github.io/vocab/relations#foundAt"/>
 			<oa:annotatedBy rdf:resource="{$url}pelagios.rdf#agents/me"/>
 			<oa:annotatedAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">
 				<xsl:value-of select="$date"/>
@@ -908,7 +908,7 @@
 			<oa:Annotation rdf:about="{$url}pelagios.rdf#{$id}/annotations/{format-number(position(), '000')}">
 				<oa:hasBody rdf:resource="{.}#this"/>
 				<oa:hasTarget rdf:resource="{$url}pelagios.rdf#{$id}"/>
-				<pelagios:relations rdf:resource="http://pelagios.github.io/vocab/relations#attestsTo"/>
+				<pelagios:relation rdf:resource="http://pelagios.github.io/vocab/relations#attestsTo"/>
 				<oa:annotatedBy rdf:resource="{$url}pelagios.rdf#agents/me"/>
 				<oa:annotatedAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">
 					<xsl:value-of select="$date"/>
@@ -923,7 +923,7 @@
 				<oa:Annotation rdf:about="{$url}pelagios.rdf#{$id}/annotations/{format-number($count + 1, '000')}">
 					<oa:hasBody rdf:resource="{.}"/>
 					<oa:hasTarget rdf:resource="{$url}pelagios.rdf#{$id}"/>
-					<pelagios:relations rdf:resource="http://pelagios.github.io/vocab/relations#foundAt"/>
+					<pelagios:relation rdf:resource="http://pelagios.github.io/vocab/relations#foundAt"/>
 					<oa:annotatedBy rdf:resource="{$url}pelagios.rdf#agents/me"/>
 					<oa:annotatedAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">
 						<xsl:value-of select="$date"/>
