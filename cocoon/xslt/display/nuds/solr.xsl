@@ -53,7 +53,14 @@
 				<xsl:value-of select="$publisher"/>
 			</field>
 			<field name="timestamp">
-				<xsl:value-of select="if(contains(datetime:dateTime(), 'Z')) then datetime:dateTime() else concat(datetime:dateTime(), 'Z')"/>
+				<xsl:choose>
+					<xsl:when test="string(descendant::*:maintenanceEvent[last()]/*:eventDateTime/@standardDateTime)">
+						<xsl:value-of select="descendant::*:maintenanceEvent[last()]/*:eventDateTime/@standardDateTime"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="if(contains(datetime:dateTime(), 'Z')) then datetime:dateTime() else concat(datetime:dateTime(), 'Z')"/>
+					</xsl:otherwise>
+				</xsl:choose>
 			</field>
 
 			<!-- insert coin type facets and URIs -->
