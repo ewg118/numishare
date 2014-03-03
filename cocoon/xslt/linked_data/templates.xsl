@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes="nuds nh xlink mets numishare"
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes="xs nuds nh xlink mets numishare"
 	xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nm="http://nomisma.org/id/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
 	xmlns:nuds="http://nomisma.org/nuds" xmlns:nh="http://nomisma.org/nudsHoard" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns:georss="http://www.georss.org/georss" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:oa="http://www.w3.org/ns/oa#" xmlns:owl="http://www.w3.org/2002/07/owl#"
@@ -57,7 +57,7 @@
 	<xsl:template match="nuds:nuds|nh:nudsHoard" mode="pelagios">
 		<xsl:variable name="id" select="descendant::*[local-name()='recordId']"/>
 		<!-- get timestamp of last modification date of the NUDS record -->
-		<xsl:variable name="date" select="substring-before(descendant::*:maintenanceEvent[last()]/*:eventDateTime/@standardDateTime, 'T')"/>
+		<xsl:variable name="date" select="descendant::*:maintenanceEvent[last()]/*:eventDateTime/@standardDateTime"/>
 
 		<foaf:Organization rdf:about="{$url}pelagios.rdf#agents/me">
 			<foaf:name>
@@ -79,11 +79,11 @@
 				<!-- dates -->
 				<xsl:choose>
 					<xsl:when test="$nudsGroup//nuds:typeDesc/nuds:date">
-						<dcterms:temporal>from=<xsl:value-of select="numishare:iso-to-digit($nudsGroup//nuds:typeDesc/nuds:date/@standardDate)"/> to=<xsl:value-of
+						<dcterms:temporal>start=<xsl:value-of select="numishare:iso-to-digit($nudsGroup//nuds:typeDesc/nuds:date/@standardDate)"/>; end=<xsl:value-of
 								select="numishare:iso-to-digit($nudsGroup//nuds:typeDesc/nuds:date/@standardDate)"/></dcterms:temporal>
 					</xsl:when>
 					<xsl:when test="$nudsGroup//nuds:typeDesc/nuds:dateRange">
-						<dcterms:temporal>from=<xsl:value-of select="numishare:iso-to-digit($nudsGroup//nuds:typeDesc/nuds:dateRange/nuds:fromDate/@standardDate)"/> to=<xsl:value-of
+						<dcterms:temporal>start=<xsl:value-of select="numishare:iso-to-digit($nudsGroup//nuds:typeDesc/nuds:dateRange/nuds:fromDate/@standardDate)"/>; end=<xsl:value-of
 								select="numishare:iso-to-digit($nudsGroup//nuds:typeDesc/nuds:dateRange/nuds:toDate/@standardDate)"/></dcterms:temporal>
 					</xsl:when>
 				</xsl:choose>
@@ -102,7 +102,7 @@
 				<oa:hasTarget rdf:resource="{$url}pelagios.rdf#{$id}"/>
 				<pelagios:relations rdf:resource="http://pelagios.github.io/vocab/relations#attestsTo"/>
 				<oa:annotatedBy rdf:resource="{$url}pelagios.rdf#agents/me"/>
-				<oa:annotatedAt rdf:datatype="xs:date">
+				<oa:annotatedAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">
 					<xsl:value-of select="$date"/>
 				</oa:annotatedAt>
 			</oa:Annotation>
@@ -220,22 +220,42 @@
 		<xsl:for-each select="mets:fileGrp">
 			<xsl:variable name="side" select="@USE"/>
 
-			<xsl:for-each select="mets:file">
-				<xsl:variable name="element" select="concat($side, concat(upper-case(substring(@USE, 1, 1)), substring(@USE, 2)))"/>
-
-				<xsl:element name="nm:{$element}">
-					<xsl:attribute name="rdf:resource">
+			<xsl:element name="nm:{$side}">
+				<rdf:Description>
+					<xsl:for-each select="mets:file">
 						<xsl:choose>
-							<xsl:when test="contains(mets:FLocat/@xlink:href, 'http://')">
-								<xsl:value-of select="mets:FLocat/@xlink:href"/>
+							<xsl:when test="@USE='thumbnail'">
+								<foaf:thumbnail>
+									<xsl:attribute name="rdf:resource">
+										<xsl:choose>
+											<xsl:when test="contains(mets:FLocat/@xlink:href, 'http://')">
+												<xsl:value-of select="mets:FLocat/@xlink:href"/>
+											</xsl:when>
+											<xsl:otherwise>
+												<xsl:value-of select="concat($url, mets:FLocat/@xlink:href)"/>
+											</xsl:otherwise>
+										</xsl:choose>
+									</xsl:attribute>
+								</foaf:thumbnail>
 							</xsl:when>
-							<xsl:otherwise>
-								<xsl:value-of select="concat($url, mets:FLocat/@xlink:href)"/>
-							</xsl:otherwise>
+							<xsl:when test="@USE='reference'">
+								<foaf:depiction>
+									<xsl:attribute name="rdf:resource">
+										<xsl:choose>
+											<xsl:when test="contains(mets:FLocat/@xlink:href, 'http://')">
+												<xsl:value-of select="mets:FLocat/@xlink:href"/>
+											</xsl:when>
+											<xsl:otherwise>
+												<xsl:value-of select="concat($url, mets:FLocat/@xlink:href)"/>
+											</xsl:otherwise>
+										</xsl:choose>
+									</xsl:attribute>
+								</foaf:depiction>
+							</xsl:when>
 						</xsl:choose>
-					</xsl:attribute>
-				</xsl:element>
-			</xsl:for-each>
+					</xsl:for-each>
+				</rdf:Description>				
+			</xsl:element>
 		</xsl:for-each>
 	</xsl:template>
 
@@ -518,7 +538,7 @@
 			<oa:hasTarget rdf:resource="{$url}pelagios.rdf#{$id}"/>
 			<pelagios:relations rdf:resource="http://pelagios.github.io/vocab/relations#foundAt"/>
 			<oa:annotatedBy rdf:resource="{$url}pelagios.rdf#agents/me"/>
-			<oa:annotatedAt rdf:datatype="xs:date">
+			<oa:annotatedAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">
 				<xsl:value-of select="$date"/>
 			</oa:annotatedAt>
 		</oa:Annotation>
@@ -805,7 +825,7 @@
 	<!-- PELAGIOS RDF -->
 	<xsl:template match="doc" mode="pelagios" exclude-result-prefixes="#all">
 		<xsl:variable name="id" select="str[@name='recordId']"/>
-		<xsl:variable name="date" select="substring-before(date[@name='timestamp'], 'T')"/>
+		<xsl:variable name="date" select="date[@name='timestamp']"/>
 		<pelagios:AnnotatedThing rdf:about="{$url}pelagios.rdf#{$id}">
 			<dcterms:title>
 				<xsl:value-of select="str[@name='title_display']"/>
@@ -815,10 +835,10 @@
 			<!-- temporal -->
 			<xsl:choose>
 				<xsl:when test="count(arr[@name='year_num']/int) = 2">
-					<dcterms:temporal>from=<xsl:value-of select="min(arr[@name='year_num']/int)"/> to=<xsl:value-of select="max(arr[@name='year_num']/int)"/></dcterms:temporal>
+					<dcterms:temporal>start=<xsl:value-of select="min(arr[@name='year_num']/int)"/>; end=<xsl:value-of select="max(arr[@name='year_num']/int)"/></dcterms:temporal>
 				</xsl:when>
 				<xsl:when test="count(arr[@name='year_num']/int) = 1">
-					<dcterms:temporal>from=<xsl:value-of select="arr[@name='year_num']/int"/> to=<xsl:value-of select="arr[@name='year_num']/int"/></dcterms:temporal>
+					<dcterms:temporal>start=<xsl:value-of select="arr[@name='year_num']/int"/>; end=<xsl:value-of select="arr[@name='year_num']/int"/></dcterms:temporal>
 				</xsl:when>
 			</xsl:choose>
 
@@ -890,7 +910,7 @@
 				<oa:hasTarget rdf:resource="{$url}pelagios.rdf#{$id}"/>
 				<pelagios:relations rdf:resource="http://pelagios.github.io/vocab/relations#attestsTo"/>
 				<oa:annotatedBy rdf:resource="{$url}pelagios.rdf#agents/me"/>
-				<oa:annotatedAt rdf:datatype="xs:date">
+				<oa:annotatedAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">
 					<xsl:value-of select="$date"/>
 				</oa:annotatedAt>
 			</oa:Annotation>
@@ -905,7 +925,7 @@
 					<oa:hasTarget rdf:resource="{$url}pelagios.rdf#{$id}"/>
 					<pelagios:relations rdf:resource="http://pelagios.github.io/vocab/relations#foundAt"/>
 					<oa:annotatedBy rdf:resource="{$url}pelagios.rdf#agents/me"/>
-					<oa:annotatedAt rdf:datatype="xs:date">
+					<oa:annotatedAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">
 						<xsl:value-of select="$date"/>
 					</oa:annotatedAt>
 				</oa:Annotation>
@@ -977,62 +997,72 @@
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:if>
-			<!-- images -->
-			<xsl:if test="string(str[@name='thumbnail_obv'])">
-				<xsl:variable name="href">
-					<xsl:choose>
-						<xsl:when test="contains(str[@name='thumbnail_obv'], 'http://')">
-							<xsl:value-of select="str[@name='thumbnail_obv']"/>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:value-of select="concat($url, str[@name='thumbnail_obv'])"/>
-						</xsl:otherwise>
-					</xsl:choose>
-				</xsl:variable>
-
-				<nm:obverseThumbnail rdf:resource="{$href}"/>
+			<!-- images -->	
+			<!-- obverse -->			
+			<xsl:if test="string(str[@name='reference_obv']) or string(str[@name='thumbnail_obv'])">
+				<nm:obverse>
+					<rdf:Description>
+						<xsl:if test="string(str[@name='reference_obv'])">
+							<xsl:variable name="href">
+								<xsl:choose>
+									<xsl:when test="contains(str[@name='reference_obv'], 'http://')">
+										<xsl:value-of select="str[@name='reference_obv']"/>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:value-of select="concat($url, str[@name='reference_obv'])"/>
+									</xsl:otherwise>
+								</xsl:choose>
+							</xsl:variable>							
+							<foaf:depiction rdf:resource="{$href}"/>
+						</xsl:if>
+						<xsl:if test="string(str[@name='thumbnail_obv'])">
+							<xsl:variable name="href">
+								<xsl:choose>
+									<xsl:when test="contains(str[@name='thumbnail_obv'], 'http://')">
+										<xsl:value-of select="str[@name='thumbnail_obv']"/>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:value-of select="concat($url, str[@name='thumbnail_obv'])"/>
+									</xsl:otherwise>
+								</xsl:choose>
+							</xsl:variable>						
+							<foaf:thumbnail rdf:resource="{$href}"/>
+						</xsl:if>
+					</rdf:Description>					
+				</nm:obverse>
 			</xsl:if>
-			<xsl:if test="string(str[@name='reference_obv'])">
-				<xsl:variable name="href">
-					<xsl:choose>
-						<xsl:when test="contains(str[@name='reference_obv'], 'http://')">
-							<xsl:value-of select="str[@name='reference_obv']"/>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:value-of select="concat($url, str[@name='reference_obv'])"/>
-						</xsl:otherwise>
-					</xsl:choose>
-				</xsl:variable>
-
-				<nm:obverseReference rdf:resource="{$href}"/>
-			</xsl:if>
-			<xsl:if test="string(str[@name='thumbnail_rev'])">
-				<xsl:variable name="href">
-					<xsl:choose>
-						<xsl:when test="contains(str[@name='thumbnail_rev'], 'http://')">
-							<xsl:value-of select="str[@name='thumbnail_rev']"/>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:value-of select="concat($url, str[@name='thumbnail_rev'])"/>
-						</xsl:otherwise>
-					</xsl:choose>
-				</xsl:variable>
-
-				<nm:reverseThumbnail rdf:resource="{$href}"/>
-			</xsl:if>
-			<xsl:if test="string(str[@name='reference_rev'])">
-				<xsl:variable name="href">
-					<xsl:choose>
-						<xsl:when test="contains(str[@name='reference_rev'], 'http://')">
-							<xsl:value-of select="str[@name='reference_rev']"/>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:value-of select="concat($url, str[@name='reference_rev'])"/>
-						</xsl:otherwise>
-					</xsl:choose>
-				</xsl:variable>
-
-				<nm:reverseReference rdf:resource="{$href}"/>
+			<!-- reverse -->
+			<xsl:if test="string(str[@name='reference_rev']) or string(str[@name='thumbnail_rev'])">
+				<nm:reverse>
+					<rdf:Description>
+						<xsl:if test="string(str[@name='reference_rev'])">
+							<xsl:variable name="href">
+								<xsl:choose>
+									<xsl:when test="contains(str[@name='reference_rev'], 'http://')">
+										<xsl:value-of select="str[@name='reference_rev']"/>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:value-of select="concat($url, str[@name='reference_rev'])"/>
+									</xsl:otherwise>
+								</xsl:choose>
+							</xsl:variable>							
+							<foaf:depiction rdf:resource="{$href}"/>
+						</xsl:if>
+						<xsl:if test="string(str[@name='thumbnail_rev'])">
+							<xsl:variable name="href">
+								<xsl:choose>
+									<xsl:when test="contains(str[@name='thumbnail_rev'], 'http://')">
+										<xsl:value-of select="str[@name='thumbnail_rev']"/>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:value-of select="concat($url, str[@name='thumbnail_rev'])"/>
+									</xsl:otherwise>
+								</xsl:choose>
+							</xsl:variable>							
+							<foaf:thumbnail rdf:resource="{$href}"/>
+						</xsl:if>
+					</rdf:Description>					
+				</nm:reverse>
 			</xsl:if>
 		</xsl:element>
 	</xsl:template>
