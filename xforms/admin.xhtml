@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
     Copyright (C) 2010 Ethan Gruber
-    numishare: http://code.google.com/p/numishare/
-    Apache License 2.0: http://code.google.com/p/numishare/    
+    numishare: https://github.com/ewg118/numishare
+    Apache License 2.0: https://github.com/ewg118/numishare    
 -->
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xxforms="http://orbeon.org/oxf/xml/xforms" xmlns:widget="http://orbeon.org/oxf/xml/widget"
-	xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:exist="http://exist.sourceforge.net/NS/exist"
-	xmlns:xxi="http://orbeon.org/oxf/xml/xinclude" xmlns:numishare="http://code.google.com/p/numishare/" xmlns:xlink="http://www.w3.org/1999/xlink"
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ev="http://www.w3.org/2001/xml-events"
+	xmlns:xxforms="http://orbeon.org/oxf/xml/xforms" xmlns:widget="http://orbeon.org/oxf/xml/widget" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:fr="http://orbeon.org/oxf/xml/form-runner"
+	xmlns:exist="http://exist.sourceforge.net/NS/exist" xmlns:xxi="http://orbeon.org/oxf/xml/xinclude" xmlns:numishare="https://github.com/ewg118/numishare" xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns:nuds="http://nomisma.org/nuds">
 	<head>
 		<title>Numishare: Administrative Interface</title>
@@ -23,8 +22,8 @@
 		<link rel="stylesheet" href="/apps/numishare/css/xforms.css"/>
 		<xforms:model xmlns="http://nomisma.org/nuds">
 			<!-- exist URL is stored in an XML file -->
-			<xforms:instance id="exist-url">
-				<xi:include href="exist-url.xml"/>
+			<xforms:instance id="exist-config">
+				<xi:include href="exist-config.xml"/>
 			</xforms:instance>
 
 			<xforms:instance id="control-instance">
@@ -48,35 +47,39 @@
 			</xforms:instance>
 
 			<xforms:instance id="collections-list">
-				<collections xmlns="">
+				<collections xmlns="" xxforms:exclude-result-prefixes="#all">
 					<collection role="admin" name="numishare"/>
 				</collections>
 			</xforms:instance>
 
 			<xforms:instance id="collection-template">
-				<collection role="" name=""/>
+				<collection role="" name="" xxforms:exclude-result-prefixes="#all"/>
 			</xforms:instance>
 
-			<xforms:instance id="config-template">
-				<config xmlns:xlink="http://www.w3.org/1999/xlink" version="0.2">
-					<firstrun/>
-					<title>Numishare - Digital Artifactual Exhibition</title>
-					<description>Enter short description for collection.</description>
+			<xforms:instance id="config-template" xxforms:exclude-result-prefixes="#all">
+				<config xmlns="" version="0.51">
+					<title>Numishare</title>
+					<description>A short description of the collection.</description>
 					<banner_text/>
-					<banner_image xlink:href="numishare-long.png"/>
+					<banner_image/>
 					<url>http://localhost:8080/cocoon/numishare/</url>
-					<sparql_endpoint/>
+					<sparql_endpoint>http://nomisma.org/query</sparql_endpoint>
+					<type_series/>
 					<solr_published>http://localhost:8080/solr/numishare-published/</solr_published>
 					<flickr_api_key/>
 					<geonames_api_key/>
 					<contact/>
-					<google_analytics>
-						<script type="text/javascript"/>
-					</google_analytics>
+					<google_analytics/>
 					<collection_type>object</collection_type>
 					<features_enabled>true</features_enabled>
 					<pelagios_enabled>false</pelagios_enabled>
 					<ctype_enabled>false</ctype_enabled>
+					<nomisma_namespace/>
+					<baselayers>
+						<layer enabled="true">google_physical</layer>
+						<layer enabled="true">osm</layer>
+						<layer enabled="true">imperium</layer>
+					</baselayers>
 					<template>
 						<agencyName/>
 						<copyrightHolder/>
@@ -93,23 +96,22 @@
 					</images>
 					<languages>
 						<language code="ar" enabled="false"/>
+						<language code="bg" enabled="false"/>
 						<language code="de" enabled="false"/>
 						<language code="el" enabled="false"/>
 						<language code="en" enabled="false"/>
+						<language code="es" enabled="false"/>
 						<language code="fr" enabled="false"/>
 						<language code="it" enabled="false"/>
 						<language code="nl" enabled="false"/>
 						<language code="ro" enabled="false"/>
 						<language code="ru" enabled="false"/>
+						<language code="sv" enabled="false"/>
 					</languages>
 					<theme>
 						<jquery_ui_theme>smoothness</jquery_ui_theme>
 						<layouts>
-							<index>
-								<yui_class>yui-t5</yui_class>
-							</index>
 							<results>
-								<yui_class>yui-t2</yui_class>
 								<image_location>right</image_location>
 							</results>
 							<display>
@@ -120,10 +122,14 @@
 							</display>
 						</layouts>
 					</theme>
-					<footer>Powered by &lt;a href="http://code.google.com/p/numishare/" target="_blank"&gt;Numishare&lt;/a&gt;.</footer>
+					<footer>
+						<p>Powered by <a href="https://github.com/ewg118/numishare" target="_blank">Numishare</a></p>
+					</footer>
 					<pages>
-						<index>Numishare is a free, open source, modularized system of Tomcat applications for the web delivery of cultural heritage artifacts,
-							with particular focus on coins and medals. Metadata are edited with XForms and delivered with Cocoon and Solr.</index>
+						<index>
+							<p>Numishare is a free, open source, modularized system of Tomcat applications for the web delivery of cultural heritage artifacts, with particular focus on coins and
+								medals. Metadata are edited with XForms and delivered with Cocoon and Solr.</p>
+						</index>
 						<compare enabled="true"/>
 						<analyze enabled="false"/>
 						<visualize enabled="true"/>
@@ -152,15 +158,14 @@
 			<xforms:instance id="xqueries">
 				<queries xmlns="">
 					<query id="collection-count">&lt;report&gt;{count(collection())}&lt;/report&gt;</query>
-					<query id="get-objects"> declare namespace nuds="http://nomisma.org/nuds"; declare namespace nh="http://nomisma.org/nudsHoard"; &lt;report>
-						{ for $record in subsequence(collection(), START, 20) let $type := $record/*/local-name() return if ($type='nuds') then &lt;record>
-						&lt;type>{ $type } &lt;/type>&lt;maintenanceStatus&gt; {$record/nuds:nuds/nuds:control/nuds:maintenanceStatus/text()}&lt;/maintenanceStatus&gt; &lt;recordType>{ string($record/nuds:nuds/@recordType) }&lt;/recordType> &lt;id>{
+					<query id="get-objects"> declare namespace nuds="http://nomisma.org/nuds"; declare namespace nh="http://nomisma.org/nudsHoard"; &lt;report> { for $record in
+						subsequence(collection(), START, 20) let $type := $record/*/local-name() return if ($type='nuds') then &lt;record> &lt;type>{ $type } &lt;/type>&lt;maintenanceStatus&gt;
+						{$record/nuds:nuds/nuds:control/nuds:maintenanceStatus/text()}&lt;/maintenanceStatus&gt; &lt;recordType>{ string($record/nuds:nuds/@recordType) }&lt;/recordType> &lt;id>{
 						$record//nuds:recordId/text() }&lt;/id> &lt;title>{ $record//nuds:descMeta/nuds:title[@xml:lang='en']/text() }&lt;/title> &lt;obverse> {
-						concat($record//nuds:typeDesc/nuds:obverse/nuds:type/nuds:description[@xml:lang='en'], '/',
-						$record//nuds:typeDesc/nuds:obverse/nuds:legend) } &lt;/obverse> &lt;reverse> {
-						concat($record//nuds:typeDesc/nuds:reverse/nuds:type/nuds:description[@xml:lang='en'], '/',
-						$record//nuds:typeDesc/nuds:reverse/nuds:legend) } &lt;/reverse> &lt;published/> &lt;/record> else if ($type='nudsHoard') then
-						&lt;record> &lt;type>{ $type } &lt;/type>&lt;maintenanceStatus&gt; {$record/nh:nudsHoard/nh:control/nh:maintenanceStatus/text()}&lt;/maintenanceStatus&gt; &lt;id>{ $record//nh:recordId/text() }&lt;/id> &lt;title>{
+						concat($record//nuds:typeDesc/nuds:obverse/nuds:type/nuds:description[@xml:lang='en'], '/', $record//nuds:typeDesc/nuds:obverse/nuds:legend) } &lt;/obverse> &lt;reverse> {
+						concat($record//nuds:typeDesc/nuds:reverse/nuds:type/nuds:description[@xml:lang='en'], '/', $record//nuds:typeDesc/nuds:reverse/nuds:legend) } &lt;/reverse> &lt;published/>
+						&lt;/record> else if ($type='nudsHoard') then &lt;record> &lt;type>{ $type } &lt;/type>&lt;maintenanceStatus&gt;
+						{$record/nh:nudsHoard/nh:control/nh:maintenanceStatus/text()}&lt;/maintenanceStatus&gt; &lt;id>{ $record//nh:recordId/text() }&lt;/id> &lt;title>{
 						$record//nh:descMeta/nh:title[@xml:lang='en']/text() }&lt;/title> &lt;published/> &lt;/record> else &lt;record/> } &lt;/report> </query>
 					<query id="create-collection"/>
 					<!--<query id="query-objects"> &lt;report> { for $record in collection()[contains(descendant::*[local-name()='unittitle'], 'QUERY') or
@@ -258,8 +263,8 @@
 				</xforms:bind>
 			</xforms:bind>
 			<!-- load collections/roles config -->
-			<xforms:submission id="load-collections" serialization="none" method="get" action="{instance('exist-url')}collections-list.xml" replace="instance"
-				instance="collections-list" xxforms:username="admin" xxforms:password="">
+			<xforms:submission id="load-collections" serialization="none" method="get" action="{instance('exist-config')/url}collections-list.xml" replace="instance" instance="collections-list"
+				xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}">
 				<!-- if the config loads successfully, set the collection names based on authentication -->
 				<xforms:action ev:event="xforms-submit-done">
 					<!--<xforms:message ev:event="xforms-submit-error" level="modal">test</xforms:message>-->
@@ -275,8 +280,7 @@
 						</xforms:action>
 						<xforms:action if="not(string(instance('collections-list')/collection[@role=instance('control-instance')/request-security/role]/@name))">
 							<xforms:insert context="instance('collections-list')" nodeset="./child::node()[last()]" origin="instance('collection-template')"/>
-							<xforms:setvalue ref="instance('collections-list')/collection[last()]/@role"
-								value="instance('control-instance')/request-security/role"/>
+							<xforms:setvalue ref="instance('collections-list')/collection[last()]/@role" value="instance('control-instance')/request-security/role"/>
 						</xforms:action>
 					</xforms:action>
 					<!-- set exist collection value for creating new collection-->
@@ -286,7 +290,7 @@
 					<xforms:setvalue ref="instance('deleteAll')/query" value="concat('collection-name:', instance('control-instance')/collection-name)"/>
 					<xforms:send submission="load-config"/>
 				</xforms:action>
-				<!-- if the config has not been created (given that the URL in exist-url.xml is correct), create it -->
+				<!-- if the config has not been created (given that the URL in exist-config.xml is correct), create it -->
 				<xforms:action ev:event="xforms-submit-error">
 					<!-- if there is no security, quietly save collections-list.xml -->
 					<xforms:action if="not(string(instance('control-instance')/request-security/role))">
@@ -296,24 +300,22 @@
 					<xforms:action if="string(instance('control-instance')/request-security/role)">
 						<xforms:action if="not(instance('control-instance')/request-security/role='admin')">
 							<xforms:insert context="instance('collections-list')" nodeset="./child::node()[last()]" origin="instance('collection-template')"/>
-							<xforms:setvalue ref="instance('collections-list')/collection[last()]/@role"
-								value="instance('control-instance')/request-security/role"/>
+							<xforms:setvalue ref="instance('collections-list')/collection[last()]/@role" value="instance('control-instance')/request-security/role"/>
 						</xforms:action>
 					</xforms:action>
 				</xforms:action>
 			</xforms:submission>
 
-			<xforms:submission id="save-collections" ref="instance('collections-list')" action="{instance('exist-url')}/collections-list.xml" method="put"
-				replace="none" xxforms:username="admin" xxforms:password="">
+			<xforms:submission id="save-collections" ref="instance('collections-list')" action="{instance('exist-config')/url}/collections-list.xml" method="put" replace="none"
+				xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Error Saving Collections List.</xforms:message>
 				<xforms:send submission="load-collections"/>
 			</xforms:submission>
 
 			<!--***************** XQUERY ******************-->
 			<!-- xquery for getting and processing query results into pages of items -->
-			<xforms:submission id="xquery-pagination" ref="instance('eXist-xquery')"
-				action="{instance('exist-url')}{instance('control-instance')/collection-name}/objects" method="post" replace="instance"
-				instance="pagination-result" xxforms:username="admin" xxforms:password="">
+			<xforms:submission id="xquery-pagination" ref="instance('eXist-xquery')" action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/objects" method="post"
+				replace="instance" instance="pagination-result" xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}">
 				<xforms:setvalue ref="instance('control-instance')/error" ev:event="xforms-submit-error">Error querying eXist database.</xforms:setvalue>
 				<xforms:action ev:event="xforms-submit-done">
 					<!--iterate through docs, check for publication -->
@@ -325,16 +327,14 @@
 				</xforms:action>
 			</xforms:submission>
 
-			<xforms:submission id="xquery-collection" ref="instance('eXist-xquery')"
-				action="{instance('exist-url')}{instance('control-instance')/collection-name}/objects" method="post" replace="instance" instance="xquery-result"
-				xxforms:username="admin" xxforms:password="">
+			<xforms:submission id="xquery-collection" ref="instance('eXist-xquery')" action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/objects" method="post"
+				replace="instance" instance="xquery-result" xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}">
 				<xforms:setvalue ref="instance('control-instance')/error" ev:event="xforms-submit-error">Error querying eXist database.</xforms:setvalue>
 			</xforms:submission>
 
 			<!-- submissions -->
-			<xforms:submission id="load-config" serialization="none" method="get"
-				action="{instance('exist-url')}{instance('control-instance')/collection-name}/config.xml" replace="instance" instance="config"
-				xxforms:username="admin" xxforms:password="">
+			<xforms:submission id="load-config" serialization="none" method="get" action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/config.xml" replace="instance"
+				instance="config" xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}">
 				<xforms:action ev:event="xforms-submit-done">
 					<!-- get the number of docs in the eXist collection() -->
 					<xforms:setvalue ref="instance('eXist-xquery')/exist:text" value="instance('xqueries')/query[@id='collection-count']"/>
@@ -354,33 +354,30 @@
 			</xforms:submission>
 
 			<!-- ******** SUBMISSIONS FOR CREATING NEW NUMISHARE COLLECTION ********* -->
-			<xforms:submission id="save-config" ref="instance('config-template')"
-				action="{instance('exist-url')}{instance('control-instance')/collection-name}/config.xml" method="put" replace="none" xxforms:username="admin"
-				xxforms:password="">
+			<xforms:submission id="save-config" ref="instance('config-template')" action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/config.xml" method="put"
+				replace="none" xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Error Saving Config.</xforms:message>
 				<xforms:send submission="load-config" ev:event="xforms-submit-done"/>
 			</xforms:submission>
 
-			<xforms:submission id="save-imports" ref="instance('imports-template')"
-				action="{instance('exist-url')}{instance('control-instance')/collection-name}/imports.xml" method="put" replace="none" xxforms:username="admin"
-				xxforms:password="">
+			<xforms:submission id="save-imports" ref="instance('imports-template')" action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/imports.xml" method="put"
+				replace="none" xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Error Saving Import XML.</xforms:message>
 			</xforms:submission>
 
-			<xforms:submission id="add-object-collection" ref="instance('eXist-xquery')" method="post" action="{instance('exist-url')}" replace="none"
-				xxforms:username="admin" xxforms:password=""/>
+			<xforms:submission id="add-object-collection" ref="instance('eXist-xquery')" method="post" action="{instance('exist-config')/url}" replace="none"
+				xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}"/>
 
 			<!-- delete coin -->
-			<xforms:submission id="delete-object"
-				action="{instance('exist-url')}{instance('control-instance')/collection-name}/objects/{instance('control-instance')/id}.xml" method="delete"
-				replace="none" xxforms:username="admin" xxforms:password="">
+			<xforms:submission id="delete-object" action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/objects/{instance('control-instance')/id}.xml" method="delete"
+				replace="none" xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}">
 				<xforms:setvalue ev:event="xforms-submit-done" ref="instance('control-instance')/status">Object successfully deleted.</xforms:setvalue>
 			</xforms:submission>
 
 			<!-- ************************* LOAD/SAVE RECORD TO UPDATE PUBLICATIONSTATUS ********************** -->
 			<xforms:submission id="load-object" serialization="none" method="get"
-				action="{instance('exist-url')}{instance('control-instance')/collection-name}/objects/{instance('control-instance')/id}.xml"
-				xxforms:username="admin" xxforms:password="" replace="instance" instance="object">
+				action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/objects/{instance('control-instance')/id}.xml"
+				xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}" replace="instance" instance="object">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Error loading file.</xforms:message>
 				<xforms:action ev:event="xforms-submit-done">
 					<xforms:setvalue ref="instance('object')/nuds:control/nuds:publicationStatus" value="instance('control-instance')/publicationStatus"/>
@@ -388,20 +385,18 @@
 				</xforms:action>
 			</xforms:submission>
 
-			<xforms:submission id="save-coin" ref="instance('object')" xxforms:username="admin" xxforms:password=""
-				action="{instance('exist-url')}{instance('control-instance')/collection-name}/objects/{instance('control-instance')/id}.xml" method="put"
-				replace="none"/>
+			<xforms:submission id="save-coin" ref="instance('object')" xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}"
+				action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/objects/{instance('control-instance')/id}.xml" method="put" replace="none"/>
 
 			<!-- ************************* SOLR SUBMISSIONS ************************** -->
 			<!-- query Solr for the id of all currently published documents and repost them to solr -->
 			<xforms:submission id="republish" serialization="none" method="get"
-				action="{instance('control-instance')/solr-core}select/?q=collection-name:{instance('control-instance')/collection-name}&amp;rows=100000&amp;start=0&amp;fl=id"
-				replace="instance" instance="list-published-response">
+				action="{instance('control-instance')/solr-core}select/?q=collection-name:{instance('control-instance')/collection-name}&amp;rows=100000&amp;start=0&amp;fl=id" replace="instance"
+				instance="list-published-response">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Solr is inaccessible. Please check Solr configuration. [ADM001]</xforms:message>
 				<xforms:action ev:event="xforms-submit-done">
 					<xforms:setvalue ref="instance('control-instance')/solr-core" value="instance('config')/solr_published"/>
-					<xforms:setvalue ref="instance('control-instance')/identifiers"
-						value="string-join(instance('list-published-response')//doc/str[@name='id'], '|')"/>
+					<xforms:setvalue ref="instance('control-instance')/identifiers" value="string-join(instance('list-published-response')//doc/str[@name='id'], '|')"/>
 
 					<!-- get Solr document -->
 					<xforms:send submission="generate-add-document"/>
@@ -414,27 +409,22 @@
 				</xforms:action>
 			</xforms:submission>
 			<!-- access service to read in pre-transformed solr doc -->
-			<xforms:submission id="nuds-to-solr" method="get" replace="instance" instance="addIndex" serialization="none"
-				resource="{instance('config')/url}id/{instance('control-instance')/id}.solr">
+			<xforms:submission id="nuds-to-solr" method="get" replace="instance" instance="addIndex" serialization="none" resource="{instance('config')/url}id/{instance('control-instance')/id}.solr">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Error transforming XML record to Solr document.</xforms:message>
 				<xforms:action ev:event="xforms-submit-done">
 					<xforms:send submission="post-solr-doc"/>
 				</xforms:action>
 			</xforms:submission>
 			<!-- post instance to Solr -->
-			<xforms:submission id="post-solr-doc" action="{instance('control-instance')/solr-core}update" ref="instance('addIndex')" instance="addIndex"
-				replace="instance" method="post">
-				<xforms:message ev:event="xforms-submit-error" level="modal">Data Failed to POST to Solr. Index may be offline or URL is
-					incorrect.</xforms:message>
+			<xforms:submission id="post-solr-doc" action="{instance('control-instance')/solr-core}update" ref="instance('addIndex')" instance="addIndex" replace="instance" method="post">
+				<xforms:message ev:event="xforms-submit-error" level="modal">Data Failed to POST to Solr. Index may be offline or URL is incorrect.</xforms:message>
 			</xforms:submission>
 			<!-- delete from Solr -->
-			<xforms:submission id="delete-solr-doc" action="{instance('control-instance')/solr-core}update" ref="instance('deleteId')" instance="deleteId"
-				replace="none" method="post">
+			<xforms:submission id="delete-solr-doc" action="{instance('control-instance')/solr-core}update" ref="instance('deleteId')" instance="deleteId" replace="none" method="post">
 				<xforms:send ev:event="xforms-submit-done" submission="submit-commit"/>
 				<xforms:message ev:event="xforms-submit-error" level="modal">Data Failed to POST to Solr.</xforms:message>
 			</xforms:submission>
-			<xforms:submission id="delete-all" action="{instance('control-instance')/solr-core}update" ref="instance('deleteAll')" instance="deleteAll"
-				replace="none" method="post">
+			<xforms:submission id="delete-all" action="{instance('control-instance')/solr-core}update" ref="instance('deleteAll')" instance="deleteAll" replace="none" method="post">
 				<xforms:send ev:event="xforms-submit-done" submission="submit-commit"/>
 				<xforms:setvalue ev:event="xforms-submit-done" ref="instance('control-instance')/status">Objects removed from search index.</xforms:setvalue>
 			</xforms:submission>
@@ -449,14 +439,12 @@
 			</xforms:submission>
 
 			<!-- send commit -->
-			<xforms:submission id="submit-commit" action="{instance('control-instance')/solr-core}update" ref="instance('sendCommit')" instance="sendCommit"
-				replace="none" method="post">
+			<xforms:submission id="submit-commit" action="{instance('control-instance')/solr-core}update" ref="instance('sendCommit')" instance="sendCommit" replace="none" method="post">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Failed to commit to Solr index.</xforms:message>
 			</xforms:submission>
 
 			<!-- send optimize -->
-			<xforms:submission id="optimize" action="{instance('control-instance')/solr-core}update" ref="instance('optimizeIndex')" instance="optimizeIndex"
-				replace="none" method="post">
+			<xforms:submission id="optimize" action="{instance('control-instance')/solr-core}update" ref="instance('optimizeIndex')" instance="optimizeIndex" replace="none" method="post">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Failed to optimize Solr index.</xforms:message>
 			</xforms:submission>
 
@@ -514,8 +502,7 @@
 									<xforms:setvalue ref="instance('create-object-collection')/exist:text"
 										value="concat(&quot;xmldb:create-collection(&#x0027;/db/&quot;, instance(&quot;control-instance&quot;)/collection-name, &quot;&#x0027;, &#x0027;objects&#x0027;)&quot;)"/>
 									<!-- set the delete all query -->
-									<xforms:setvalue ref="instance('deleteAll')/query"
-										value="concat('collection-name:', instance('control-instance')/collection-name)"/>
+									<xforms:setvalue ref="instance('deleteAll')/query" value="concat('collection-name:', instance('control-instance')/collection-name)"/>
 									<xforms:send submission="save-collections"/>
 									<xforms:send submission="load-config"/>
 									<xxforms:hide dialog="create-collection"/>
@@ -525,8 +512,7 @@
 						</xxforms:dialog>
 						<xxforms:dialog id="firstrun" appearance="full" level="modal" close="false" draggable="true" visible="false">
 							<xforms:label>Welcome to Numishare</xforms:label>
-							<p>This is the first time you have run Numishare.<br/>Please set the following fields (they can be changed later under
-								"Settings")</p>
+							<p>This is the first time you have run Numishare.<br/>Please set the following fields (they can be changed later under "Settings")</p>
 							<xforms:group ref="instance('config-template')">
 								<h3>Boilerplate</h3>
 								<div>
@@ -646,8 +632,8 @@
 								<!-- pagination -->
 								<xforms:group ref=".[string-length(instance('control-instance')/query_sent) = 0]">
 									<div class="paging_div">
-										<div style="float:left;"> Displaying records <b><xforms:output value="$start"/></b> to <b><xforms:output value="$end"
-												/></b> of <b><xforms:output value="$numFound"/>
+										<div style="float:left;"> Displaying records <b><xforms:output value="$start"/></b> to <b><xforms:output value="$end"/></b> of <b><xforms:output
+													value="$numFound"/>
 											</b> total results.</div>
 										<div style="float:right;">
 											<xforms:group ref=".[$page &gt; 1]">
@@ -670,8 +656,7 @@
 													<xforms:label>1</xforms:label>
 													<xforms:action ev:event="DOMActivate">
 														<xforms:setvalue ref="instance('control-instance')/page" value="1"/>
-														<xforms:setvalue ref="instance('eXist-xquery')/exist:text"
-															value="replace(instance('xqueries')/query[@id='get-objects'], 'START', '1')"/>
+														<xforms:setvalue ref="instance('eXist-xquery')/exist:text" value="replace(instance('xqueries')/query[@id='get-objects'], 'START', '1')"/>
 														<xforms:send submission="xquery-pagination"/>
 													</xforms:action>
 												</xforms:trigger>
@@ -681,8 +666,7 @@
 													<xforms:label>2</xforms:label>
 													<xforms:action ev:event="DOMActivate">
 														<xforms:setvalue ref="instance('control-instance')/page" value="2"/>
-														<xforms:setvalue ref="instance('eXist-xquery')/exist:text"
-															value="replace(instance('xqueries')/query[@id='get-objects'], 'START', '21')"/>
+														<xforms:setvalue ref="instance('eXist-xquery')/exist:text" value="replace(instance('xqueries')/query[@id='get-objects'], 'START', '21')"/>
 														<xforms:send submission="xquery-pagination"/>
 													</xforms:action>
 												</xforms:trigger>
@@ -857,8 +841,7 @@
 													</xforms:group>
 												</td>
 												<td class="{$class} center">
-													<a href="{instance('config')/url}id/{$id}.xml" target="_blank">xml</a> | <a
-														href="{instance('config')/url}id/{$id}" target="_blank">html</a>
+													<a href="{instance('config')/url}id/{$id}.xml" target="_blank">xml</a> | <a href="{instance('config')/url}id/{$id}" target="_blank">html</a>
 												</td>
 												<td class="{$class} center">
 													<!-- only enable publication if the maintenanceStatus allows it -->
@@ -903,7 +886,7 @@
 								<h1>No finding aids in collection.</h1>
 							</xforms:group>
 						</xforms:group>
-<!--						<fr:xforms-inspector/>-->
+						<!--<fr:xforms-inspector/>-->
 					</div>
 				</div>
 			</div>
@@ -926,8 +909,7 @@
 					<!-- reload table -->
 					<xforms:var name="page" select="number(instance('control-instance')/page)"/>
 					<xforms:var name="start" select="(($page - 1) * 20) + 1"/>
-					<xforms:setvalue ref="instance('eXist-xquery')/exist:text"
-						value="replace(instance('xqueries')/query[@id='get-objects'], 'START', string($start))"/>
+					<xforms:setvalue ref="instance('eXist-xquery')/exist:text" value="replace(instance('xqueries')/query[@id='get-objects'], 'START', string($start))"/>
 					<xforms:send submission="xquery-pagination"/>
 				</xforms:action>
 			</fr:positive-choice>
@@ -941,7 +923,7 @@
 					<!-- update publicationStatus -->
 					<xforms:setvalue ref="instance('control-instance')/publicationStatus">inProcess</xforms:setvalue>
 					<xforms:send submission="load-object"/>
-					
+
 					<!-- delete from Solr -->
 					<xforms:setvalue ref="instance('deleteId')/query" value="concat('recordId:&#x022;', instance('control-instance')/id, '&#x022;')"/>
 					<xforms:setvalue ref="instance('control-instance')/solr-core" value="instance('config')/solr_published"/>
@@ -949,8 +931,7 @@
 					<!-- reload table -->
 					<xforms:var name="page" select="number(instance('control-instance')/page)"/>
 					<xforms:var name="start" select="(($page - 1) * 20) + 1"/>
-					<xforms:setvalue ref="instance('eXist-xquery')/exist:text"
-						value="replace(instance('xqueries')/query[@id='get-objects'], 'START', string($start))"/>
+					<xforms:setvalue ref="instance('eXist-xquery')/exist:text" value="replace(instance('xqueries')/query[@id='get-objects'], 'START', string($start))"/>
 					<xforms:send submission="xquery-pagination"/>
 				</xforms:action>
 			</fr:positive-choice>
@@ -973,22 +954,19 @@
 					<xforms:var name="page" select="number(instance('control-instance')/page)"/>
 					<xforms:var name="start" select="(($page - 1) * 20) + 1"/>
 					<xforms:var name="end" select="$page * 20"/>
-					<xforms:setvalue ref="instance('eXist-xquery')/exist:text"
-						value="replace(instance('xqueries')/query[@id='get-objects'], 'START', string($start))"/>
+					<xforms:setvalue ref="instance('eXist-xquery')/exist:text" value="replace(instance('xqueries')/query[@id='get-objects'], 'START', string($start))"/>
 					<xforms:send submission="xquery-pagination"/>
 				</xforms:action>
 			</fr:positive-choice>
 		</fr:alert-dialog>
 		<!-- mass publication dialogs -->
 		<fr:alert-dialog id="publish-all">
-			<fr:label>Publish All</fr:label>lo
-			<fr:message>Do you want to publish all objects? This may take several minutes.</fr:message>
+			<fr:label>Publish All</fr:label>lo <fr:message>Do you want to publish all objects? This may take several minutes.</fr:message>
 			<fr:negative-choice/>
 			<fr:positive-choice>
 				<xforms:action ev:event="DOMActivate">
 					<xforms:setvalue ref="instance('eXist-xquery')/exist:text">&lt;report> { for $i at $position in collection()[descendant::*:publicationStatus='approved'] return
-						concat(substring-before(substring-after(document-uri($i), 'objects/'), '.xml'), if ($position mod 100 = 0) then ',' else '|') }
-						&lt;/report></xforms:setvalue>
+						concat(substring-before(substring-after(document-uri($i), 'objects/'), '.xml'), if ($position mod 100 = 0) then ',' else '|') } &lt;/report></xforms:setvalue>
 					<xforms:send submission="xquery-collection"/>
 					<xforms:var name="tokens" select="tokenize(replace(instance('xquery-result')/report, ' ', ''), ',')"/>
 					<xforms:action xxforms:iterate="$tokens">

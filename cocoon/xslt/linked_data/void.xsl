@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nm="http://nomisma.org/id/"
 	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:void="http://rdfs.org/ns/void#" xmlns:foaf="http://xmlns.com/foaf/0.1/"
-	xmlns:oa="http://www.w3.org/ns/oa#" xmlns:owl="http://www.w3.org/2002/07/owl#" exclude-result-prefixes="xs" version="2.0">
+	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:oa="http://www.w3.org/ns/oa#" xmlns:owl="http://www.w3.org/2002/07/owl#" exclude-result-prefixes="xs" version="2.0">
 	<xsl:param name="mode"/>
 
 	<xsl:template match="/config">
@@ -33,11 +33,13 @@
 	</xsl:template>
 
 	<xsl:template name="nomisma">
-		<void:dataSet>
+		<void:dataSet rdf:about="{url}">
 			<dcterms:title>
 				<xsl:value-of select="title"/>
-			</dcterms:title>			
-			<foaf:homepage rdf:resource="{url}"/>
+			</dcterms:title>
+			<xsl:if test="string(nomisma_namespace)">
+				<rdfs:seeAlso rdf:resource="{nomisma_namespace}"/>
+			</xsl:if>
 			<dcterms:description>
 				<xsl:value-of select="description"/>
 			</dcterms:description>

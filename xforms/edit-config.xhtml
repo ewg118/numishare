@@ -1,6 +1,6 @@
 <xhtml:html xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	xmlns="http://www.w3.org/1999/xhtml" xmlns:xxforms="http://orbeon.org/oxf/xml/xforms" xmlns:p="http://www.orbeon.com/oxf/pipeline" xmlns:xi="http://www.w3.org/2001/XInclude"
-	xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:saxon="http://saxon.sf.net/" xmlns:numishare="http://code.google.com/p/numishare/">
+	xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:saxon="http://saxon.sf.net/" xmlns:numishare="https://github.com/ewg118/numishare">
 	<xhtml:head>
 		<title>Numishare: Edit Numishare Settings</title>
 		<!-- Core + Skin CSS -->
@@ -15,8 +15,8 @@
 		<xhtml:link rel="stylesheet" href="/apps/numishare/css/xforms.css"/>
 		<xforms:model>
 			<!-- exist URL is stored in an XML file -->
-			<xforms:instance id="exist-url">
-				<xi:include href="exist-url.xml"/>
+			<xforms:instance id="exist-config">
+				<xi:include href="exist-config.xml"/>
 			</xforms:instance>
 
 			<!-- collections/authentication instances -->
@@ -270,11 +270,14 @@
 				<xforms:bind nodeset="title" required="true()"/>
 				<xforms:bind nodeset="description" required="true()"/>
 				<!--<xforms:bind nodeset="banner_text" required="true()"/>-->
+				<xforms:bind nodeset="sparql_endpoint" required="true()" relevant="../collection_type='cointype'" type="xs:anyURI"/>
+				<xforms:bind nodeset="type_series" required="true()" relevant="../collection_type='cointype'" type="xs:anyURI"/>
 				<xforms:bind nodeset="url" required="true()"/>
 				<xforms:bind nodeset="solr_published" required="true()"/>
-				<xforms:bind nodeset="features_enabled" type="xs:boolean"/>
+				<xforms:bind nodeset="features_enabled" readonly="../collection_type != 'object'" type="xs:boolean"/>
 				<xforms:bind nodeset="pelagios_enabled" type="xs:boolean"/>
-				<xforms:bind nodeset="ctype_enabled" type="xs:boolean"/>
+				<xforms:bind nodeset="ctype_enabled" readonly="../collection_type = 'cointype'" type="xs:boolean"/>
+				<xforms:bind nodeset="nomisma_namespace" readonly="../collection_type != 'cointype'" constraint="contains(., 'http://nomisma.org/project/')" type="xs:anyURI"/>
 				<xforms:bind nodeset="template">
 					<!-- about the electronic record -->
 					<xforms:bind nodeset="agencyName" required="true()"/>
@@ -295,8 +298,8 @@
 
 			<xforms:bind nodeset="instance('control-instance')/save-trigger" readonly="../api-key-accepted = 'false'"/>
 
-			<xforms:submission id="load-collections" serialization="none" method="get" action="{instance('exist-url')}collections-list.xml" replace="instance" instance="collections-list"
-				xxforms:username="admin" xxforms:password="">
+			<xforms:submission id="load-collections" serialization="none" method="get" action="{instance('exist-config')/url}collections-list.xml" replace="instance" instance="collections-list"
+				xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}">
 				<!-- if the config loads successfully, set the collection names based on authentication -->
 				<xforms:action ev:event="xforms-submit-done">
 					<!-- set default if security is false -->
@@ -312,19 +315,19 @@
 					</xforms:action>
 					<xforms:send submission="load-config"/>
 				</xforms:action>
-				<!-- if the config has not been created (given that the URL in exist-url.xml is correct), create it -->
+				<!-- if the config has not been created (given that the URL in exist-config.xml is correct), create it -->
 				<xforms:message ev:event="xforms-submit-error" level="modal">Unable to load Numishare collections list.</xforms:message>
 			</xforms:submission>
 
 			<!-- Load File -->
-			<xforms:submission id="load-config" serialization="none" method="get" action="{instance('exist-url')}{instance('control-instance')/collection-name}/config.xml" xxforms:username="admin"
-				xxforms:password="" replace="instance" instance="config">
+			<xforms:submission id="load-config" serialization="none" method="get" action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/config.xml" xxforms:username="{instance('exist-config')/username}"
+				xxforms:password="{instance('exist-config')/password}" replace="instance" instance="config">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Unable to load Numishare configuration file</xforms:message>
 			</xforms:submission>
 
 			<!-- Save File -->
-			<xforms:submission id="save-config" ref="instance('config')" xxforms:username="admin" xxforms:password=""
-				action="{instance('exist-url')}{instance('control-instance')/collection-name}/config.xml" method="put" replace="none">
+			<xforms:submission id="save-config" ref="instance('config')" xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}"
+				action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/config.xml" method="put" replace="none">
 				<xforms:setvalue ev:event="xforms-submit-done" ref="instance('status')">Numishare configuration saved.</xforms:setvalue>
 				<xforms:message ev:event="xforms-submit-error" level="modal">Error saving Numishare configuration file.</xforms:message>
 			</xforms:submission>
@@ -345,11 +348,11 @@
 
 			</xforms:submission>
 		</xforms:model>
-		<xi:include href="xbl/banner-upload/banner-upload.xbl" xi:omit-xml-base="true"/>
+		<!--<xi:include href="xbl/banner-upload/banner-upload.xbl" xi:omit-xml-base="true"/>-->
 	</xhtml:head>
 
 	<xhtml:body>
-		<xxforms:variable name="display_path">../../</xxforms:variable>
+		<xforms:var name="display_path">../../</xforms:var>
 		<div class="yui3-g">
 			<div class="yui3-u-1">
 				<div class="content">
@@ -365,100 +368,127 @@
 								<xforms:label class="file_control"><img src="{$display_path}images/save.gif" alt="Save"/> Save</xforms:label>
 								<xforms:send ev:event="DOMActivate" submission="save-config"/>
 							</xforms:trigger>
-						</div>
-						<h1>Edit Numishare Settings</h1>
-						<p>Edit Numishare titles, URLs, and index text.</p>
+						</div>						
+						<h1>Numishare Settings</h1>
 						<fr:tabview>
 							<fr:tab id="settings">
 								<fr:label>Settings</fr:label>
 								<xforms:group ref="instance('config')">
-									<div class="section">
-										<h3>Titles and URLs</h3>
-										<div>
-											<xforms:input ref="title">
-												<xforms:label>Title</xforms:label>
-												<xforms:alert>Required</xforms:alert>
-											</xforms:input>
-											<p>The title of the site to be displayed in all web page titles and citations in PDF files.</p>
+									<div class="section">										
+										<h2>System Settings</h2>
+										<div class="subsection">
+											<h3>Titles and URLs</h3>
+											<div>
+												<xforms:input ref="title">
+													<xforms:label>Title</xforms:label>
+													<xforms:alert>Required</xforms:alert>
+												</xforms:input>
+												<p>The title of the site to be displayed in all web page titles and citations in PDF files.</p>
+											</div>
+											<div>
+												<xforms:input ref="description">
+													<xforms:label>Description</xforms:label>
+													<xforms:alert>Required</xforms:alert>
+												</xforms:input>
+												<p>Enter a brief description of collection. This is used for VOiD RDF for data sharing.</p>
+											</div>
+											<div>
+												<xforms:input ref="contact">
+													<xforms:label>Contact Email</xforms:label>
+												</xforms:input>
+												<p>Optional contact email address for OpenSearch description.</p>
+											</div>
+											<div>
+												<xforms:input ref="url">
+													<xforms:label>URL</xforms:label>
+													<xforms:alert>Required</xforms:alert>
+												</xforms:input>												
+											</div>										
+											<div>
+												<xforms:input ref="banner_text">
+													<xforms:label>Banner Text</xforms:label>
+													<xforms:alert>Required</xforms:alert>
+												</xforms:input>
+												<p>Appears in the header banner. For more sophisticated control, edit header.xsl.</p>
+											</div>
 										</div>
-										<div>
-											<xforms:input ref="description">
-												<xforms:label>Description</xforms:label>
-												<xforms:alert>Required</xforms:alert>
-											</xforms:input>
-											<p>Enter a brief description of collection. This is used for VOiD RDF for data sharing.</p>
+										<div class="subsection">
+											<h3>Collection Type</h3>
+											<div>
+												<xforms:select1 ref="collection_type">
+													<xforms:label>Collection Type</xforms:label>
+													<xforms:item>
+														<xforms:label>cointype</xforms:label>
+														<xforms:value>cointype</xforms:value>
+													</xforms:item>
+													<xforms:item>
+														<xforms:label>hoard</xforms:label>
+														<xforms:value>hoard</xforms:value>
+													</xforms:item>
+													<xforms:item>
+														<xforms:label>object</xforms:label>
+														<xforms:value>object</xforms:value>
+													</xforms:item>												
+												</xforms:select1>											
+											</div>
+											<div>
+												<xforms:input ref="sparql_endpoint">
+													<xforms:label>SPARQL Endpoint</xforms:label>
+													<xforms:alert>Required</xforms:alert>
+												</xforms:input>											
+											</div>
+											<div>
+												<xforms:input ref="type_series">
+													<xforms:label>Type Series</xforms:label>
+													<xforms:alert>Required</xforms:alert>
+												</xforms:input>	
+												<p>A coin type project must have a binding corpus URI.</p>												
+											</div>
+											<div>
+												<xforms:input ref="nomisma_namespace">
+													<xforms:label>Nomisma Namespace</xforms:label>
+												</xforms:input>
+												<p>A data dump for a nomisma authorized namespace must link to this namespace on the VOiD description.</p>
+											</div>
 										</div>
-										<div>
-											<xforms:input ref="banner_text">
-												<xforms:label>Banner Text</xforms:label>
-												<xforms:alert>Required</xforms:alert>
-											</xforms:input>
-											<p>Appears in the header banner. For more sophisticated control, edit header.xsl.</p>
-										</div>
-										<div>
-											<xforms:input ref="url">
-												<xforms:label>URL</xforms:label>
-												<xforms:alert>Required</xforms:alert>
-											</xforms:input>
-											<p>Public URL of the site. Used in citations of and image references in PDF printouts. Changing this to an inactive URL will <b>not</b> break Numishare's
-												core functionality, but web forms may be style-less since the Orbeon applications point to this URL for embedding css files.</p>
-										</div>
-										<div>
-											<xforms:input ref="sparql_endpoint">
-												<xforms:label>SPARQL Endpoint</xforms:label>
-											</xforms:input>
-											<p>URL for query endpoint to incorporate SPARQL into coin type collections.</p>
-										</div>
-										<div>
-											<xforms:input ref="contact">
-												<xforms:label>Contact Email</xforms:label>
-											</xforms:input>
-											<p>Optional contact email address for OpenSearch description.</p>
-										</div>
-										<div>
-											<xforms:textarea ref="google_analytics/script">
-												<xforms:label>Google Analytics</xforms:label>
-											</xforms:textarea>
-											<p>Copy and paste the javascript code between <b>&lt;script type="text/javascript"&gt;&lt;/script&gt;</b> provided by Google.</p>
-										</div>
-										<div>
-											<xforms:select1 ref="collection_type">
-												<xforms:label>Collection Type</xforms:label>
-												<xforms:item>
-													<xforms:label>object</xforms:label>
-													<xforms:value>object</xforms:value>
-												</xforms:item>
-												<xforms:item>
-													<xforms:label>hoard</xforms:label>
-													<xforms:value>hoard</xforms:value>
-												</xforms:item>
-											</xforms:select1>
-											<p>Type of object collection: object (coins, non-coins, coin-type catalog) or hoard. This setting determines KML contents of maps page and the default
-												operator when selecting facets.</p>
-										</div>
-										<div>
-											<xforms:input ref="features_enabled">
-												<xforms:label>Featured Item</xforms:label>
-											</xforms:input>
-											<p>If enabled (the default), the Featured Object function will be displayed in the index page. It does not function correctly in coin-type catalogs.</p>
-										</div>
-										<div>
-											<xforms:input ref="pelagios_enabled">
-												<xforms:label>Expose to Pelagios</xforms:label>
-											</xforms:input>
-											<p>If enabled, records linked to Pleiades-defined ancient places will be exposed at <xforms:output ref="concat(url, 'pelagios.rdf')"/> with the VOiD defined
-												by <xforms:output ref="concat(url, 'pelagios.void.rdf')"/>.</p>
-										</div>
-										<div>
-											<xforms:input ref="ctype_enabled">
-												<xforms:label>Expose to Coin-Type Endpoint</xforms:label>
-											</xforms:input>
-											<p>If enabled, records linked to URI-defined coin types will be exposed at <xforms:output ref="concat(url, 'ctype.rdf')"/> with the VOiD defined by
+																				
+										
+										<div class="subsection">
+											<h3>Export</h3>
+											<div>
+												<xforms:input ref="features_enabled">
+													<xforms:label>Featured Item</xforms:label>
+												</xforms:input>
+												<p>If enabled (the default), the Featured Object function will be displayed in the index page. It does not function correctly in coin-type catalogs.</p>
+											</div>
+											<div>
+												<xforms:input ref="pelagios_enabled">
+													<xforms:label>Expose to Pelagios</xforms:label>
+												</xforms:input>
+												<p>If enabled, records linked to Pleiades-defined ancient places will be exposed at <xforms:output ref="concat(url, 'pelagios.rdf')"/> with the VOiD defined
+													by <xforms:output ref="concat(url, 'pelagios.void.rdf')"/>.</p>
+											</div>
+											<div>
+												<xforms:input ref="ctype_enabled">
+													<xforms:label>Expose to Coin-Type Endpoint</xforms:label>
+												</xforms:input>
+												<p>If enabled, records linked to URI-defined coin types will be exposed at <xforms:output ref="concat(url, 'ctype.rdf')"/> with the VOiD defined by
 													<xforms:output ref="concat(url, 'ctype.void.rdf')"/>.</p>
+											</div>
 										</div>
-										<xforms:group ref="banner_image">
+										<div class="subsection">
+											<h3>Google Analytics</h3>
+											<div>
+												<xforms:textarea ref="google_analytics">
+													<xforms:label>Google Analytics</xforms:label>
+												</xforms:textarea>
+												<p>Copy and paste the javascript code between <b>&lt;script type="text/javascript"&gt;&lt;/script&gt;</b> provided by Google.</p>
+											</div>
+										</div>
+										
+										<!--<xforms:group ref="banner_image">
 											<numishare:banner-upload/>
-										</xforms:group>
+										</xforms:group>-->
 									</div>
 									<div class="section">
 										<h2>About this Numishare collection</h2>
@@ -506,7 +536,7 @@
 															<xforms:value ref="."/>
 														</xforms:itemset>
 														<xforms:alert>Required</xforms:alert>
-														<xxforms:variable name="language" select="."/>
+														<xforms:var name="language" select="."/>
 														<xforms:setvalue ref="@langcode" value="instance('languages')//language[. = $language]/@value" ev:event="xforms-value-changed"/>
 													</xforms:select1>
 												</div>
