@@ -277,6 +277,7 @@
 				<xforms:bind nodeset="features_enabled" readonly="../collection_type != 'object'" type="xs:boolean"/>
 				<xforms:bind nodeset="pelagios_enabled" type="xs:boolean"/>
 				<xforms:bind nodeset="ctype_enabled" readonly="../collection_type = 'cointype'" type="xs:boolean"/>
+				<xforms:bind nodeset="nomisma_namespace" readonly="../collection_type != 'cointype'" constraint="contains(., 'http://nomisma.org/project/')" type="xs:anyURI"/>
 				<xforms:bind nodeset="template">
 					<!-- about the electronic record -->
 					<xforms:bind nodeset="agencyName" required="true()"/>
@@ -442,6 +443,12 @@
 													<xforms:alert>Required</xforms:alert>
 												</xforms:input>	
 												<p>A coin type project must have a binding corpus URI.</p>												
+											</div>
+											<div>
+												<xforms:input ref="nomisma_namespace">
+													<xforms:label>Nomisma Namespace</xforms:label>
+												</xforms:input>
+												<p>A data dump for a nomisma authorized namespace must link to this namespace on the VOiD description.</p>
 											</div>
 										</div>
 																				
