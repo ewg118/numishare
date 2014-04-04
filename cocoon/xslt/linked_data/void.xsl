@@ -16,7 +16,7 @@
 			</xsl:choose>
 		</rdf:RDF>
 	</xsl:template>
-	
+
 	<xsl:template name="pelagios">
 		<void:dataSet>
 			<dcterms:title>
@@ -30,17 +30,20 @@
 			<void:dataDump rdf:resource="{url}pelagios.rdf"/>
 		</void:dataSet>
 	</xsl:template>
-	
+
 	<xsl:template name="nomisma">
 		<void:dataSet>
 			<dcterms:title>
 				<xsl:value-of select="title"/>
 			</dcterms:title>
+			<dcterms:publisher rdf:resource="{url}"/>
 			<dcterms:description>
 				<xsl:value-of select="description"/>
 			</dcterms:description>
 			<dcterms:license rdf:resource="{template/license}"/>
-			<dcterms:subject rdf:resource="http://dbpedia.org/resource/Annotation"/>
+			<void:uriSpace>
+				<xsl:value-of select="concat(url, 'id/')"/>
+			</void:uriSpace>
 			<void:dataDump rdf:resource="{url}nomisma.rdf"/>
 		</void:dataSet>
 	</xsl:template>
