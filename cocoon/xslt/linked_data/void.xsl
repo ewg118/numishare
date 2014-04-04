@@ -22,6 +22,7 @@
 			<dcterms:title>
 				<xsl:value-of select="title"/>
 			</dcterms:title>
+			<foaf:homepage rdf:resource="{url}"/>
 			<dcterms:description>
 				<xsl:value-of select="description"/>
 			</dcterms:description>
@@ -35,8 +36,8 @@
 		<void:dataSet>
 			<dcterms:title>
 				<xsl:value-of select="title"/>
-			</dcterms:title>
-			<dcterms:publisher rdf:resource="{url}"/>
+			</dcterms:title>			
+			<foaf:homepage rdf:resource="{url}"/>
 			<dcterms:description>
 				<xsl:value-of select="description"/>
 			</dcterms:description>
