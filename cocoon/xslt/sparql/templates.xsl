@@ -8,33 +8,38 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 	<xsl:include href="../functions.xsl"/>
 
 	<xsl:template name="numishare:associatedObjects">
-		<xsl:variable name="query">
-			<![CDATA[ 
-			PREFIX rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-			PREFIX dcterms:  <http://purl.org/dc/terms/>
-			PREFIX nm:       <http://nomisma.org/id/>
-			PREFIX skos:      <http://www.w3.org/2004/02/skos/core#>
-			PREFIX foaf:	<http://xmlns.com/foaf/0.1/>
-			
-			SELECT ?object ?title ?identifier ?collection ?weight ?axis ?diameter ?obvThumb ?revThumb ?obvRef ?revRef ?comThumb ?comRef  WHERE {
-			?object nm:type_series_item <typeUri>.
-			?object a nm:coin .
-			?object dcterms:title ?title .
-			OPTIONAL { ?object dcterms:identifier ?identifier } .
-			OPTIONAL { ?object nm:collection ?colUri .
-			?colUri skos:prefLabel ?collection 
-			FILTER(langMatches(lang(?collection), "EN"))}
-			OPTIONAL { ?object nm:weight ?weight }
-			OPTIONAL { ?object nm:axis ?axis }
-			OPTIONAL { ?object nm:diameter ?diameter }
-			OPTIONAL { ?object nm:obverseThumbnail ?obvThumb }
-			OPTIONAL { ?object nm:reverseThumbnail ?revThumb }
-			OPTIONAL { ?object nm:obverseReference ?obvRef }
-			OPTIONAL { ?object nm:reverseReference ?revRef }
-			OPTIONAL { ?object foaf:thumbnail ?comThumb }
-			OPTIONAL { ?object foaf:depiction ?comRef }}
-			ORDER BY ASC(?collection)]]>
-		</xsl:variable>
+		<xsl:variable name="query"><![CDATA[PREFIX rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX dcterms:  <http://purl.org/dc/terms/>
+PREFIX nm:       <http://nomisma.org/id/>
+PREFIX skos:      <http://www.w3.org/2004/02/skos/core#>
+PREFIX foaf:	<http://xmlns.com/foaf/0.1/>
+
+SELECT ?object ?title ?identifier ?collection ?weight ?axis ?diameter ?obvThumb ?revThumb ?obvRef ?revRef ?comThumb ?comRef  WHERE {
+?object nm:type_series_item <typeUri>.
+?object a nm:coin .
+?object dcterms:title ?title .
+OPTIONAL { ?object dcterms:identifier ?identifier } .
+OPTIONAL { ?object nm:collection ?colUri .
+?colUri skos:prefLabel ?collection 
+FILTER(langMatches(lang(?collection), "EN"))}
+OPTIONAL { ?object nm:weight ?weight }
+OPTIONAL { ?object nm:axis ?axis }
+OPTIONAL { ?object nm:diameter ?diameter }
+OPTIONAL { ?object nm:obverseThumbnail ?obvThumb }
+OPTIONAL { ?object nm:reverseThumbnail ?revThumb }
+OPTIONAL { ?object nm:obverse ?obverse .
+?obverse foaf:thumbnail ?obvThumb }
+OPTIONAL { ?object nm:obverse ?obverse .
+?obverse foaf:depiction ?obvRef }
+OPTIONAL { ?object nm:reverse ?reverse .
+?reverse foaf:thumbnail ?revThumb }
+OPTIONAL { ?object nm:reverse ?reverse .
+?reverse foaf:depiction ?revRef }
+OPTIONAL { ?object nm:obverseReference ?obvRef }
+OPTIONAL { ?object nm:reverseReference ?revRef }
+OPTIONAL { ?object foaf:thumbnail ?comThumb }
+OPTIONAL { ?object foaf:depiction ?comRef }}
+ORDER BY ASC(?collection)]]></xsl:variable>
 		<xsl:variable name="service" select="concat($endpoint, '?query=', encode-for-uri(normalize-space(replace($query, 'typeUri', $uri))), '&amp;output=xml')"/>
 
 		<xsl:apply-templates select="document($service)/res:sparql" mode="display"/>
