@@ -242,7 +242,7 @@
 				<map:transform src="xslt/display_map.xsl" label="basiccontent" type="xslt-saxon">
 					<map:parameter name="use-request-parameters" value="true"/>
 					<map:parameter name="solr-url" value="{global:solr-url}"/>
-					<map:parameter name="pipeline" value="display"/>
+					<map:parameter name="pipeline" value="display_map"/>
 				</map:transform>				
 				<map:serialize type="html5"/>
 			</map:match>
