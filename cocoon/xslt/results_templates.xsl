@@ -406,7 +406,7 @@
 
 		<xsl:choose>
 			<xsl:when test="contains(@name, '_hier')">
-				<xsl:variable name="title" select="numishare:regularize_node(substring-before(@name, '_'), $lang)"/>
+				<!--<xsl:variable name="title" select="numishare:regularize_node(substring-before(@name, '_'), $lang)"/>
 
 				<button class="ui-multiselect hierarchical-facet" type="button" title="{$title}" aria-haspopup="true" style="width: 200px;" id="{@name}_link" label="{$q}">
 					<span class="ui-icon ui-icon-triangle-2-n-s"/>
@@ -446,11 +446,10 @@
 							<ul class="{substring-before(@name, '_hier')}-multiselect-checkboxes ui-helper-reset hierarchical-list" id="{@name}-list" style="height: 175px;" title="{$title}"/>
 						</div>
 					</xsl:otherwise>
-				</xsl:choose>
-				<br/>
+				</xsl:choose>-->
 			</xsl:when>
 			<xsl:when test="@name='century_num'">
-				<button class="ui-multiselect ui-widget ui-state-default ui-corner-all" type="button" title="{numishare:regularize_node('date', $lang)}" aria-haspopup="true" style="width: 200px;"
+				<!--<button class="ui-multiselect ui-widget ui-state-default ui-corner-all" type="button" title="{numishare:regularize_node('date', $lang)}" aria-haspopup="true" style="width: 200px;"
 					id="{@name}_link" label="{$q}">
 					<span class="ui-icon ui-icon-triangle-2-n-s"/>
 					<span>
@@ -472,7 +471,7 @@
 							<cinclude:include src="cocoon:/get_centuries?q={encode-for-uri($q)}"/>
 						</xsl:if>
 					</ul>
-				</div>
+				</div>-->
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:variable name="count" select="number(int[@name='numFacetTerms'])"/>
@@ -493,14 +492,13 @@
 							<xsl:text>*:*</xsl:text>
 						</xsl:otherwise>
 					</xsl:choose>
-				</xsl:variable>
-				<select id="{@name}-select" multiple="multiple" class="multiselect {@name}-button" size="10" title="{numishare:normalize_fields(@name, $lang)}" q="{$q}" mincount="{$mincount}"
+				</xsl:variable>				
+				<select id="{@name}-select" multiple="multiple" class="multiselect {@name}-button" title="{numishare:normalize_fields(@name, $lang)}" q="{$q}" mincount="{$mincount}"
 					new_query="{if (contains($q, @name)) then $select_new_query else ''}">
 					<xsl:if test="contains($q, @name)">
 						<cinclude:include src="cocoon:/get_facet_options?q={$q}&amp;category={@name}&amp;sort=index&amp;offset=0&amp;limit=-1&amp;rows=0&amp;mincount={$mincount}"/>
 					</xsl:if>
 				</select>
-				<br/>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
@@ -525,7 +523,7 @@
 				</xsl:when>
 				<xsl:when test="str[@name='recordType'] = 'conceptual'">
 					<xsl:variable name="id" select="str[@name='recordId']"/>
-					<xsl:apply-templates select="$sparqlResult//group[@id=$id]" mode="results"/>					
+					<xsl:apply-templates select="$sparqlResult//group[@id=$id]" mode="results"/>
 				</xsl:when>
 			</xsl:choose>
 		</div>
@@ -1163,17 +1161,17 @@
 			</div>
 		</div>
 	</xsl:template>
-	
+
 	<!-- ************** PROCESS GROUP OF SPARQL RESULTS FROM NOMISMA TO DISPLAY IMAGES ************** -->
 	<xsl:template match="group" mode="results">
 		<xsl:param name="group"/>
 		<xsl:variable name="count" select="coin-count + hoard-count"/>
 		<xsl:variable name="coin-count" select="coin-count"/>
 		<xsl:variable name="hoard-count" select="hoard-count"/>
-		
+
 		<!-- display images -->
-		<xsl:apply-templates select="descendant::object" mode="results"/>		
-		
+		<xsl:apply-templates select="descendant::object" mode="results"/>
+
 		<!-- object count -->
 		<xsl:if test="$count &gt; 0">
 			<br/>
@@ -1208,14 +1206,13 @@
 			</xsl:if>
 		</xsl:if>
 	</xsl:template>
-	
+
 	<xsl:template match="object" mode="results">
 		<xsl:variable name="position" select="position()"/>
 		<!-- obverse -->
 		<xsl:choose>
 			<xsl:when test="string(obvRef) and string(obvThumb)">
-				<a class="thumbImage" rel="gallery" href="{obvRef}"
-					title="Obverse of {@identifier}: {@collection}">
+				<a class="thumbImage" rel="gallery" href="{obvRef}" title="Obverse of {@identifier}: {@collection}">
 					<xsl:if test="$position &gt; 1">
 						<xsl:attribute name="style">display:none</xsl:attribute>
 					</xsl:if>
@@ -1230,8 +1227,7 @@
 				</img>
 			</xsl:when>
 			<xsl:when test="string(obvRef) and not(string(obvThumb))">
-				<a class="thumbImage" rel="gallery" href="{obvRef}"
-					title="Obverse of {@identifier}: {@collection}">
+				<a class="thumbImage" rel="gallery" href="{obvRef}" title="Obverse of {@identifier}: {@collection}">
 					<img src="{obvRef}" style="max-width:120px">
 						<xsl:if test="$position &gt; 1">
 							<xsl:attribute name="style">display:none</xsl:attribute>
@@ -1243,8 +1239,7 @@
 		<!-- reverse-->
 		<xsl:choose>
 			<xsl:when test="string(revRef) and string(revThumb)">
-				<a class="thumbImage" rel="gallery" href="{revRef}"
-					title="Reverse of {@identifier}: {@collection}">
+				<a class="thumbImage" rel="gallery" href="{revRef}" title="Reverse of {@identifier}: {@collection}">
 					<xsl:if test="$position &gt; 1">
 						<xsl:attribute name="style">display:none</xsl:attribute>
 					</xsl:if>
@@ -1259,8 +1254,7 @@
 				</img>
 			</xsl:when>
 			<xsl:when test="string(revRef) and not(string(revThumb))">
-				<a class="thumbImage" rel="gallery" href="{revRef}"
-					title="Obverse of {@identifier}: {@collection}">
+				<a class="thumbImage" rel="gallery" href="{revRef}" title="Obverse of {@identifier}: {@collection}">
 					<img src="{revRef}" style="max-width:120px">
 						<xsl:if test="$position &gt; 1">
 							<xsl:attribute name="style">display:none</xsl:attribute>
@@ -1272,8 +1266,7 @@
 		<!-- combined -->
 		<xsl:choose>
 			<xsl:when test="string(comRef) and string(comThumb)">
-				<a class="thumbImage" rel="gallery" href="{comRef}"
-					title="Reverse of {@identifier}: {@collection}">
+				<a class="thumbImage" rel="gallery" href="{comRef}" title="Reverse of {@identifier}: {@collection}">
 					<xsl:if test="$position &gt; 1">
 						<xsl:attribute name="style">display:none</xsl:attribute>
 					</xsl:if>
@@ -1288,8 +1281,7 @@
 				</img>
 			</xsl:when>
 			<xsl:when test="string(comRef) and not(string(comThumb))">
-				<a class="thumbImage" rel="gallery" href="{comRef}"
-					title="Obverse of {@identifier}: {@collection}">
+				<a class="thumbImage" rel="gallery" href="{comRef}" title="Obverse of {@identifier}: {@collection}">
 					<img src="{comRef}" style="max-width:240px">
 						<xsl:if test="$position &gt; 1">
 							<xsl:attribute name="style">display:none</xsl:attribute>
@@ -1297,7 +1289,7 @@
 					</img>
 				</a>
 			</xsl:when>
-		</xsl:choose>		
+		</xsl:choose>
 	</xsl:template>
 
 	<xsl:template name="compare_paging">

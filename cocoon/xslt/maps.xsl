@@ -27,21 +27,15 @@
 				<meta name="viewport" content="width=device-width, initial-scale=1"/>
 
 				<!-- jquery -->
-				<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"/>
-				<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"/>
+				<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"/>				
 
 				<!-- bootstrap -->
 				<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"/>
 				<script type="text/javascript" src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"/>
-
+				<script type="text/javascript" src="{$display_path}javascript/bootstrap-multiselect.js"/>
+				<link rel="stylesheet" href="{$display_path}bootstrap-multiselect.css" type="text/css"/>
 				<!-- local theme and styling -->
-				<link type="text/css" href="{$display_path}themes/{//config/theme/jquery_ui_theme}.css" rel="stylesheet"/>
 				<link type="text/css" href="{$display_path}style.css" rel="stylesheet"/>
-
-				<!-- facet related js and css -->
-				<link type="text/css" href="{$display_path}jquery.multiselect.css" rel="stylesheet"/>
-				<script type="text/javascript" src="{$display_path}javascript/jquery.multiselect.min.js"/>
-				<script type="text/javascript" src="{$display_path}javascript/jquery.multiselectfilter.js"/>
 
 				<!-- display timemap for hoards, regular openlayers map for coin and coin type collections -->
 				<xsl:choose>
@@ -181,23 +175,23 @@
 
 	<xsl:template match="lst[@name='facet_fields']">
 		<xsl:for-each select="lst[not(@name='mint_geo') and number(int[@name='numFacetTerms']) &gt; 0 and not(@name='mint_facet')]|lst[@name='mint_facet' and $collection_type='hoard']">
-			<div class="col-md-3">
-				<xsl:variable name="val" select="@name"/>
-				<xsl:variable name="new_query">
-					<xsl:for-each select="$tokenized_q[not(contains(., $val))]">
-						<xsl:value-of select="."/>
-						<xsl:if test="position() != last()">
-							<xsl:text> AND </xsl:text>
-						</xsl:if>
-					</xsl:for-each>
-				</xsl:variable>
 
-				<xsl:variable name="title">
-					<xsl:value-of select="numishare:normalize_fields(@name, $lang)"/>
-				</xsl:variable>
-				<xsl:choose>
-					<xsl:when test="contains(@name, '_hier')">
-						<xsl:variable name="title" select="numishare:regularize_node(substring-before(@name, '_'), $lang)"/>
+			<xsl:variable name="val" select="@name"/>
+			<xsl:variable name="new_query">
+				<xsl:for-each select="$tokenized_q[not(contains(., $val))]">
+					<xsl:value-of select="."/>
+					<xsl:if test="position() != last()">
+						<xsl:text> AND </xsl:text>
+					</xsl:if>
+				</xsl:for-each>
+			</xsl:variable>
+
+			<xsl:variable name="title">
+				<xsl:value-of select="numishare:normalize_fields(@name, $lang)"/>
+			</xsl:variable>
+			<xsl:choose>
+				<xsl:when test="contains(@name, '_hier')">
+					<!--<xsl:variable name="title" select="numishare:regularize_node(substring-before(@name, '_'), $lang)"/>
 
 						<button class="ui-multiselect ui-widget ui-state-default ui-corner-all hierarchical-facet" type="button" title="{$title}" aria-haspopup="true" style="width: 180px;"
 							id="{@name}_link" label="{$q}">
@@ -217,11 +211,10 @@
 								</ul>
 							</div>
 							<ul class="{substring-before(@name, '_hier')}-multiselect-checkboxes ui-helper-reset hierarchical-list" id="{@name}-list" style="height: 175px;" title="{$title}"/>
-						</div>
-						<br/>
-					</xsl:when>
-					<xsl:when test="@name='century_num'">
-						<button class="ui-multiselect ui-widget ui-state-default ui-corner-all" type="button" title="Date" aria-haspopup="true" style="width: 180px;" id="{@name}_link" label="{$q}">
+						</div>-->
+				</xsl:when>
+				<xsl:when test="@name='century_num'">
+					<!--<button class="ui-multiselect ui-widget ui-state-default ui-corner-all" type="button" title="Date" aria-haspopup="true" style="width: 180px;" id="{@name}_link" label="{$q}">
 							<span class="ui-icon ui-icon-triangle-2-n-s"/>
 							<span>Date</span>
 						</button>
@@ -235,38 +228,39 @@
 								</ul>
 							</div>
 							<ul class="century-multiselect-checkboxes ui-helper-reset" id="{@name}-list" style="height: 175px;"/>
-						</div>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:variable name="count" select="number(int[@name='numFacetTerms'])"/>
-						<xsl:variable name="mincount" as="xs:integer">
-							<xsl:choose>
-								<xsl:when test="$count &gt; 500">
-									<xsl:value-of select="ceiling($count div 500)"/>
-								</xsl:when>
-								<xsl:otherwise>1</xsl:otherwise>
-							</xsl:choose>
-						</xsl:variable>
-						<xsl:variable name="select_new_query">
-							<xsl:choose>
-								<xsl:when test="string($new_query)">
-									<xsl:value-of select="$new_query"/>
-								</xsl:when>
-								<xsl:otherwise>
-									<xsl:text>*:*</xsl:text>
-								</xsl:otherwise>
-							</xsl:choose>
-						</xsl:variable>
-						<select id="{@name}-select" multiple="multiple" class="multiselect" size="10" title="{$title}" q="{$q}" mincount="{$mincount}"
+						</div>-->
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:variable name="count" select="number(int[@name='numFacetTerms'])"/>
+					<xsl:variable name="mincount" as="xs:integer">
+						<xsl:choose>
+							<xsl:when test="$count &gt; 500">
+								<xsl:value-of select="ceiling($count div 500)"/>
+							</xsl:when>
+							<xsl:otherwise>1</xsl:otherwise>
+						</xsl:choose>
+					</xsl:variable>
+					<xsl:variable name="select_new_query">
+						<xsl:choose>
+							<xsl:when test="string($new_query)">
+								<xsl:value-of select="$new_query"/>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:text>*:*</xsl:text>
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:variable>
+					<div class="col-md-3">
+						<select id="{@name}-select" multiple="multiple" class="multiselect" title="{$title}" q="{$q}" mincount="{$mincount}"
 							new_query="{if (contains($q, @name)) then $select_new_query else ''}">
 							<xsl:if test="$pipeline='maps'">
 								<xsl:attribute name="style">width:180px</xsl:attribute>
 							</xsl:if>
 						</select>
-						<br/>
-					</xsl:otherwise>
-				</xsl:choose>
-			</div>
+					</div>
+				</xsl:otherwise>
+			</xsl:choose>
+
 		</xsl:for-each>
 	</xsl:template>
 </xsl:stylesheet>
