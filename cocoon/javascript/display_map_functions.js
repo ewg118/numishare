@@ -2,20 +2,30 @@ $(document).ready(function () {
 	var id = $('title').attr('id');
 	var collection_type = $('#collection_type').text();
 	var path = $('#path').text();
+	var pipeline = $('#pipeline').text();
 	
-	//automatically load map on coin type and hoard pages
-	if (collection_type != 'object') {
-		initialize_timemap(id, path);
+	if (pipeline == 'display') {
+		$('#mapButton').click(function(){
+			$('#tabs a:last').tab('show');
+			init();			
+		});	
+	} else {
+		init();
 	}
-	
 	//only load map upon tab click on object pages, due to bootstrap tabs glitch
-	$('#mapButton').click(function(){
-		$('#tabs a:last').tab('show');
-		//only initialize map if there is zero-length content within #mapcontainer
-		if ($('#mapcontainer').html().length == 0) {
-			initialize_map(id, path);
+	
+	
+	function init() {
+		if (collection_type != 'object') {		
+			if ($('#map').html().length == 0) {		
+				initialize_timemap(id, path);
+			}
+		} else {
+			if ($('#mapcontainer').html().length == 0) {
+				initialize_map(id, path);
+			}
 		}
-	});	 
+	}
 });
 
 function initialize_timemap(id, path) {
