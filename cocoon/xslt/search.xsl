@@ -25,8 +25,8 @@
 					<xsl:value-of select="numishare:normalizeLabel('header_search', $lang)"/>
 				</title>
 				<meta name="viewport" content="width=device-width, initial-scale=1"/>
-				<link rel="shortcut icon" type="image/x-icon" href="{$display_path}images/favicon.png"/>								
-				<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"/>				
+				<link rel="shortcut icon" type="image/x-icon" href="{$display_path}images/favicon.png"/>
+				<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"/>
 				<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"/>
 				<script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"/>
 				<link type="text/css" href="{$display_path}style.css" rel="stylesheet"/>
@@ -42,6 +42,11 @@
 				<xsl:call-template name="header"/>
 				<xsl:call-template name="search"/>
 				<xsl:call-template name="footer"/>
+				<div class="hidden">
+					<span id="pipeline">
+						<xsl:value-of select="$pipeline"/>
+					</span>
+				</div>
 			</body>
 		</html>
 	</xsl:template>

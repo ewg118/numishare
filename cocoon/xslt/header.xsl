@@ -4,7 +4,7 @@
 	<xsl:template name="header">
 		<div class="navbar navbar-default navbar-static-top" role="navigation">
 			<div class="container-fluid">
-				<div class="navbar-header">
+				<div class="navbar-header">					
 					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
 						<span class="sr-only">Toggle navigation</span>
 						<span class="icon-bar"/>
@@ -13,7 +13,7 @@
 					</button>
 					<a class="navbar-brand" href="{$display_path}./">
 						<xsl:value-of select="//config/title"/>
-					</a>
+					</a>					
 				</div>
 				<div class="navbar-collapse collapse">
 					<xsl:if test="not($lang='ar')">
@@ -21,15 +21,24 @@
 							<xsl:call-template name="menubar"/>
 						</ul>
 					</xsl:if>
-					<div class="col-sm-3 col-md-3 pull-right">
+					<div class="col-sm-3 col-md-3 pull-{if ($lang='ar') then 'left' else 'right'}">
 						<form class="navbar-form" role="search" action="{$display_path}results" method="get">
 							<div class="input-group">
-								<input type="text" class="form-control" placeholder="Search" name="q" id="srch-term"/>
-								<div class="input-group-btn">
-									<button class="btn btn-default" type="submit">
-										<i class="glyphicon glyphicon-search"/>
-									</button>
-								</div>
+								<xsl:if test="$lang='ar'">
+									<div class="input-group-btn">
+										<button class="btn btn-default" type="submit">
+											<i class="glyphicon glyphicon-search"/>
+										</button>
+									</div>
+								</xsl:if>
+								<input type="text" class="form-control" placeholder="{numishare:normalizeLabel('header_search', $lang)}" name="q" id="srch-term"/>
+								<xsl:if test="not($lang='ar')">
+									<div class="input-group-btn">
+										<button class="btn btn-default" type="submit">
+											<i class="glyphicon glyphicon-search"/>
+										</button>
+									</div>
+								</xsl:if>
 							</div>
 						</form>
 					</div>

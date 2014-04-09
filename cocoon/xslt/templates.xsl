@@ -606,7 +606,7 @@
 						<xsl:call-template name="get-hoards"/>
 					</xsl:otherwise>
 				</xsl:choose>
-				
+
 				<div>
 					<h3>
 						<xsl:value-of select="numishare:normalizeLabel('visualize_optional_settings', $lang)"/>
@@ -624,7 +624,7 @@
 					</div>
 				</div>
 			</div>
-			
+
 			<xsl:if test="$pipeline='display'">
 				<input type="hidden" id="thisHoard" value="{$id}"/>
 			</xsl:if>
@@ -673,7 +673,7 @@
 				characters and exact string matches by surrounding phrases by double quotes (like Google). <a href="http://lucene.apache.org/java/2_9_1/queryparsersyntax.html#Term%20Modifiers"
 					target="_blank">See the Lucene query syntax</a> documentation for more information.</p>
 			<form id="advancedSearchForm" method="GET" action="results">
-				<div id="inputContainer">
+				<div class="inputContainer">
 					<div class="searchItemTemplate">
 						<select class="category_list form-control">
 							<xsl:call-template name="search_options"/>
@@ -837,7 +837,7 @@
 						</label>
 					</div>
 				</xsl:for-each>
-			</div>			
+			</div>
 			<xsl:choose>
 				<xsl:when test="$pipeline='display'">
 					<!-- create categories as a variable -->

@@ -49,10 +49,12 @@
 	<xsl:template match="nuds:nuds">
 		<xsl:if test="$mode = 'compare'">
 			<div class="compare_options">
-				<a href="compare_results?q={$q}&amp;start={$start}&amp;image={$image}&amp;side={$side}&amp;mode=compare{if (string($lang)) then concat('&amp;lang=', $lang) else ''}"
-					class="back_results">« Search results</a>
-				<xsl:text> | </xsl:text>
-				<a href="id/{$id}">Full record »</a>
+				<small>
+					<a href="compare_results?q={$q}&amp;start={$start}&amp;image={$image}&amp;side={$side}&amp;mode=compare{if (string($lang)) then concat('&amp;lang=', $lang) else ''}"
+						class="back_results">« Search results</a>
+					<xsl:text> | </xsl:text>
+					<a href="id/{$id}">Full record »</a>
+				</small>
 			</div>
 		</xsl:if>
 		<!-- below is a series of conditionals for forming the image boxes and displaying obverse and reverse images, iconography, and legends if they are available within the EAD document -->
@@ -81,7 +83,7 @@
 						</div>
 						<div class="row">
 							<div class="col-md-12">
-								<xsl:if test="$recordType='conceptual' and (count(//nuds:associatedObject) &gt; 0 or string($sparql_endpoint))">
+								<xsl:if test="$recordType='conceptual' and string($sparql_endpoint) and //config/collection_type='cointype'">
 									<xsl:call-template name="charts"/>
 								</xsl:if>
 							</div>
@@ -98,41 +100,28 @@
 									</div>
 								</div>
 
-								<xsl:choose>
-									<xsl:when test="$image_location = 'left'">
-										<div class="row">
+								<div class="row">
+									<xsl:choose>
+										<xsl:when test="$image_location = 'left'">
 											<div class="col-md-4">
 												<xsl:call-template name="obverse_image"/>
 												<xsl:call-template name="reverse_image"/>
 											</div>
-										</div>
-									</xsl:when>
-									<xsl:when test="$image_location = 'right'">
-										<div class="row">
 											<div class="col-md-8">
 												<xsl:call-template name="nuds_content"/>
 											</div>
-										</div>
-									</xsl:when>
-								</xsl:choose>
-
-								<xsl:choose>
-									<xsl:when test="$image_location = 'left'">
-										<div class="row">
+										</xsl:when>
+										<xsl:when test="$image_location = 'right'">
 											<div class="col-md-8">
 												<xsl:call-template name="nuds_content"/>
 											</div>
-										</div>
-									</xsl:when>
-									<xsl:when test="$image_location = 'right'">
-										<div class="row">
 											<div class="col-md-4">
 												<xsl:call-template name="obverse_image"/>
 												<xsl:call-template name="reverse_image"/>
 											</div>
-										</div>
-									</xsl:when>
-								</xsl:choose>
+										</xsl:when>
+									</xsl:choose>
+								</div>
 							</xsl:when>
 							<xsl:when test="$orientation = 'horizontal'">
 
@@ -162,21 +151,20 @@
 									</xsl:when>
 									<xsl:when test="$image_location = 'bottom'">
 										<div class="row">
-											<div class="col-md-6">
+											<div class="col-md-12">
 												<xsl:call-template name="nuds_content"/>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-md-6">
+												<xsl:call-template name="reverse_image"/>
 											</div>
 											<div class="col-md-6">
 												<xsl:call-template name="obverse_image"/>
 											</div>
 										</div>
-										<div class="row">
-											<div class="col-md-12">
-												<xsl:call-template name="reverse_image"/>
-											</div>
-										</div>
 									</xsl:when>
 								</xsl:choose>
-
 							</xsl:when>
 						</xsl:choose>
 					</xsl:when>
@@ -230,80 +218,105 @@
 			</xsl:when>
 			<xsl:otherwise>
 				<div class="row">
-					<div class="col-md-6">
-						<xsl:if test="nuds:descMeta/nuds:physDesc">
-							<div class="metadata_section">
-								<xsl:apply-templates select="nuds:descMeta/nuds:physDesc"/>
-							</div>
-						</xsl:if>
-						<!-- process $nuds:typeDesc differently -->
-						<div class="metadata_section">
-							<xsl:apply-templates select="exsl:node-set($nuds:typeDesc)/*[local-name()='typeDesc']">
-								<xsl:with-param name="typeDesc_resource" select="$nuds:typeDesc_resource"/>
-							</xsl:apply-templates>
-						</div>
-						<xsl:if test="nuds:descMeta/nuds:undertypeDesc">
-							<div class="metadata_section">
-								<xsl:apply-templates select="nuds:descMeta/nuds:undertypeDesc"/>
-							</div>
-						</xsl:if>
-						<xsl:if test="nuds:descMeta/nuds:refDesc">
-							<div class="metadata_section">
-								<xsl:apply-templates select="nuds:descMeta/nuds:refDesc"/>
-							</div>
-						</xsl:if>
-						<xsl:if test="nuds:descMeta/nuds:subjectSet">
-							<div class="metadata_section">
-								<xsl:apply-templates select="nuds:descMeta/nuds:subjectSet"/>
-							</div>
-						</xsl:if>
-						<xsl:if test="nuds:descMeta/nuds:noteSet">
-							<div class="metadata_section">
-								<xsl:apply-templates select="nuds:descMeta/nuds:noteSet"/>
-							</div>
-						</xsl:if>
-						<xsl:if test="nuds:descMeta/nuds:findspotDesc">
-							<div class="metadata_section">
-								<xsl:apply-templates select="nuds:descMeta/nuds:findspotDesc"/>
-							</div>
-						</xsl:if>
-					</div>
-					<div class="col-md-6">
-						<xsl:choose>
-							<xsl:when test="$recordType='conceptual'">
-								<div id="timemap">
-									<div id="mapcontainer">
-										<div id="map"/>
+					<div class="col-md-12">
+						<ul class="nav nav-pills" id="tabs">
+							<li class="active">
+								<a href="#metadata" data-toggle="pill">
+									<xsl:value-of select="numishare:normalizeLabel('display_summary', $lang)"/>
+								</a>
+							</li>
+							<li>
+								<a href="#mapTab" id="mapButton" data-toggle="pill">
+									<xsl:value-of select="numishare:normalizeLabel('display_map', $lang)"/>
+								</a>
+							</li>
+						</ul>
+						<div class="tab-content">
+							<div class="tab-pane active" id="metadata">
+								<xsl:if test="nuds:descMeta/nuds:physDesc">
+									<div class="metadata_section">
+										<xsl:apply-templates select="nuds:descMeta/nuds:physDesc"/>
 									</div>
-									<div id="timelinecontainer">
-										<div id="timeline"/>
-									</div>
+								</xsl:if>
+								<!-- process $nuds:typeDesc differently -->
+								<div class="metadata_section">
+									<xsl:apply-templates select="exsl:node-set($nuds:typeDesc)/*[local-name()='typeDesc']">
+										<xsl:with-param name="typeDesc_resource" select="$nuds:typeDesc_resource"/>
+									</xsl:apply-templates>
 								</div>
-							</xsl:when>
-							<xsl:otherwise>
-								<div id="mapcontainer"/>
-							</xsl:otherwise>
-						</xsl:choose>
-						<div class="legend">
-							<table>
-								<tbody>
-									<tr>
-										<th style="width:100px;background:none">
-											<xsl:value-of select="numishare:regularize_node('legend', $lang)"/>
-										</th>
-										<td style="background-color:#6992fd;border:2px solid black;width:50px;"/>
-										<td style="width:100px">
-											<xsl:value-of select="numishare:regularize_node('mint', $lang)"/>
-										</td>
-										<td style="background-color:#d86458;border:2px solid black;width:50px;"/>
-										<td style="width:100px">
-											<xsl:value-of select="numishare:regularize_node('findspot', $lang)"/>
-										</td>
-									</tr>
-								</tbody>
-							</table>							
-						</div>		
-						<p>View map in <a href="{$display_path}map/{$id}">fullscreen</a>.</p>						
+								<xsl:if test="nuds:descMeta/nuds:undertypeDesc">
+									<div class="metadata_section">
+										<xsl:apply-templates select="nuds:descMeta/nuds:undertypeDesc"/>
+									</div>
+								</xsl:if>
+								<xsl:if test="nuds:descMeta/nuds:refDesc">
+									<div class="metadata_section">
+										<xsl:apply-templates select="nuds:descMeta/nuds:refDesc"/>
+									</div>
+								</xsl:if>
+								<xsl:if test="nuds:descMeta/nuds:adminDesc">
+									<div class="metadata_section">
+										<xsl:apply-templates select="nuds:descMeta/nuds:adminDesc"/>
+									</div>
+								</xsl:if>
+								<xsl:if test="nuds:descMeta/nuds:findspotDesc">
+									<div class="metadata_section">
+										<xsl:apply-templates select="nuds:descMeta/nuds:findspotDesc"/>
+									</div>
+								</xsl:if>
+								<xsl:if test="nuds:descMeta/nuds:subjectSet">
+									<div class="metadata_section">
+										<xsl:apply-templates select="nuds:descMeta/nuds:subjectSet"/>
+									</div>
+								</xsl:if>
+								<xsl:if test="nuds:descMeta/nuds:noteSet">
+									<div class="metadata_section">
+										<xsl:apply-templates select="nuds:descMeta/nuds:noteSet"/>
+									</div>
+								</xsl:if>
+							</div>
+							<div class="tab-pane" id="mapTab">
+								<h2>
+									<xsl:value-of select="numishare:normalizeLabel('display_map', $lang)"/>
+								</h2>
+								<xsl:choose>
+									<xsl:when test="$recordType='conceptual'">
+										<div id="timemap">
+											<div id="mapcontainer">
+												<div id="map"/>
+											</div>
+											<div id="timelinecontainer">
+												<div id="timeline"/>
+											</div>
+										</div>
+									</xsl:when>
+									<xsl:otherwise>
+										<div id="mapcontainer"/>
+									</xsl:otherwise>
+								</xsl:choose>
+								<div class="legend">
+									<table>
+										<tbody>
+											<tr>
+												<th style="width:100px;background:none">
+													<xsl:value-of select="numishare:regularize_node('legend', $lang)"/>
+												</th>
+												<td style="background-color:#6992fd;border:2px solid black;width:50px;"/>
+												<td style="width:100px">
+													<xsl:value-of select="numishare:regularize_node('mint', $lang)"/>
+												</td>
+												<td style="background-color:#d86458;border:2px solid black;width:50px;"/>
+												<td style="width:100px">
+													<xsl:value-of select="numishare:regularize_node('findspot', $lang)"/>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+								<p>View map in <a href="{$display_path}map/{$id}">fullscreen</a>.</p>
+							</div>
+						</div>
+
 					</div>
 				</div>
 			</xsl:otherwise>

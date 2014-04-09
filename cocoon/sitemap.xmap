@@ -110,7 +110,7 @@
 					These only need to be changed if Solr and Orbeon are run on a different server or Tomcat application than Cocoon -->
 				<solr-url>http://localhost:8080/solr/numishare-published/</solr-url>
 				<exist-url>http://localhost:8080/exist/rest/db/</exist-url>
-				<collection-name>rrc</collection-name>
+				<collection-name>numishare</collection-name>
 			</global-variables>
 		</map:component-configurations>
 
@@ -600,7 +600,7 @@
 					<map:parameter name="use-request-parameters" value="true"/>
 					<map:parameter name="pipeline" value="compare"/>
 				</map:transform>
-				<map:serialize type="html"/>
+				<map:serialize type="html5"/>
 			</map:match>
 
 			<!-- GEOGRAPHIC SERVICE -->
@@ -646,7 +646,7 @@
 				<map:transform type="xslt-saxon" src="xslt/geographic/solr-to-kml.xsl" label="basiccontent">
 					<map:parameter name="use-request-parameters" value="true"/>
 				</map:transform>
-				<map:serialize type="kml"/>
+				<map:serialize type="xml"/>
 			</map:match>
 
 			<!-- KML for unique mints given a Solr query -->
@@ -917,7 +917,7 @@
 				<map:transform type="xslt-saxon" src="xslt/ajax/compare_results.xsl" label="basiccontent">
 					<map:parameter name="use-request-parameters" value="true"/>
 				</map:transform>
-				<map:serialize type="html"/>
+				<map:serialize type="html5"/>
 			</map:match>
 
 			<map:match pattern="get_map_checkbox">
@@ -1024,18 +1024,39 @@
 
 			<map:match pattern="get_search_facets">
 				<map:select type="parameter">
-					<map:parameter name="parameter-selector-test" value="{request-param:lang}"/>
-					<map:when test="">
-						<map:generate
-							src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}&amp;category={request-param:category}&amp;facet.field={request-param:category}&amp;facet.limit=-1&amp;facet.sort=index&amp;rows=0"
-							label="record"/>
+					<map:parameter name="parameter-selector-test" value="{request-param:pipeline}"/>
+					<map:when test="compare">
+						<map:select type="parameter">
+							<map:parameter name="parameter-selector-test" value="{request-param:lang}"/>
+							<map:when test="">
+								<map:generate
+									src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}+AND+imagesavailable:true&amp;category={request-param:category}&amp;facet.field={request-param:category}&amp;facet.limit=-1&amp;facet.sort=index&amp;rows=0"
+									label="record"/>
+							</map:when>
+							<map:otherwise>
+								<map:generate
+									src="{global:solr-url}select?q=lang:{request-param:lang}+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}+AND+imagesavailable:true&amp;category={request-param:category}&amp;facet.field={request-param:category}&amp;facet.limit=-1&amp;facet.sort=index&amp;rows=0"
+									label="record"/>
+							</map:otherwise>
+						</map:select>
 					</map:when>
 					<map:otherwise>
-						<map:generate
-							src="{global:solr-url}select?q=lang:{request-param:lang}+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}&amp;category={request-param:category}&amp;facet.field={request-param:category}&amp;facet.limit=-1&amp;facet.sort=index&amp;rows=0"
-							label="record"/>
+						<map:select type="parameter">
+							<map:parameter name="parameter-selector-test" value="{request-param:lang}"/>
+							<map:when test="">
+								<map:generate
+									src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}&amp;category={request-param:category}&amp;facet.field={request-param:category}&amp;facet.limit=-1&amp;facet.sort=index&amp;rows=0"
+									label="record"/>
+							</map:when>
+							<map:otherwise>
+								<map:generate
+									src="{global:solr-url}select?q=lang:{request-param:lang}+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q}}&amp;category={request-param:category}&amp;facet.field={request-param:category}&amp;facet.limit=-1&amp;facet.sort=index&amp;rows=0"
+									label="record"/>
+							</map:otherwise>
+						</map:select>
 					</map:otherwise>
-				</map:select>				
+				</map:select>
+								
 				<map:transform type="xslt-saxon" src="xslt/ajax/get_search_facets.xsl" label="basiccontent">
 					<map:parameter name="use-request-parameters" value="true"/>
 				</map:transform>
