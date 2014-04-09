@@ -242,7 +242,7 @@ ul li, ol li {
 .multiselect {
 	width:200px;
 }
-button.ui-multiselect {
+button.multiselect {
 	margin-bottom:10px;
 }
 .get_facets, .hide_facets {

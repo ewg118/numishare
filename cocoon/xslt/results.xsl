@@ -23,10 +23,6 @@
 		</xsl:choose>
 	</xsl:variable>
 	<xsl:param name="tokenized_q" select="tokenize($q, ' AND ')"/>
-	
-	<!-- unused params in browse page that are necessary for compare paging -->
-	<xsl:param name="image"/>
-	<xsl:param name="side"/>
 	<xsl:param name="mode"/>
 
 	<xsl:variable name="numFound" select="//result[@name='response']/@numFound" as="xs:integer"/>
@@ -71,20 +67,17 @@
 				<link rel="shortcut icon" type="image/x-icon" href="{$display_path}images/favicon.png"/>				
 				<meta name="viewport" content="width=device-width, initial-scale=1"/>
 
-				<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"/>
-				<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"/>
+				<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"/>				
 				<!-- bootstrap -->
 				<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"/>
-				<script type="text/javascript" src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"/>
-				<link type="text/css" href="{$display_path}themes/{//config/theme/jquery_ui_theme}.css" rel="stylesheet"/>
+				<script type="text/javascript" src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"/>				
+				<script type="text/javascript" src="{$display_path}javascript/bootstrap-multiselect.js"/>
+				<link rel="stylesheet" href="{$display_path}bootstrap-multiselect.css" type="text/css"/>
 				<link type="text/css" href="{$display_path}style.css" rel="stylesheet"/>
-
-				<link type="text/css" href="{$display_path}jquery.multiselect.css" rel="stylesheet"/>
+				
 				<!-- Add fancyBox -->
 				<link rel="stylesheet" href="{$display_path}jquery.fancybox.css?v=2.1.5" type="text/css" media="screen" />
-				<script type="text/javascript" src="{$display_path}javascript/jquery.fancybox.pack.js?v=2.1.5"/>
-				<script type="text/javascript" src="{$display_path}javascript/jquery.multiselect.min.js"/>
-				<script type="text/javascript" src="{$display_path}javascript/jquery.multiselectfilter.js"/>				
+				<script type="text/javascript" src="{$display_path}javascript/jquery.fancybox.pack.js?v=2.1.5"/>			
 				<script type="text/javascript" src="{$display_path}javascript/get_facets.js"/>
 				<script type="text/javascript" src="{$display_path}javascript/facet_functions.js"/>
 				<script type="text/javascript" src="{$display_path}javascript/result_functions.js"/>

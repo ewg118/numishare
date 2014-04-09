@@ -38,7 +38,7 @@
 						</xsl:choose>
 					</xsl:variable>
 					<div style="text-align:center;">
-						<img src="{str[@name=$img_string]}" style="max-height:400px;"/>
+						<img src="{str[@name=$img_string]}" style="height:320px"/>
 					</div>
 				</xsl:if>
 				<h4>
@@ -55,6 +55,7 @@
 						</xsl:otherwise>
 					</xsl:choose>
 				</h4>
+				<br/>
 				<dl class="dl-horizontal">
 					<xsl:choose>
 						<xsl:when test="str[@name='recordType'] = 'hoard'">
@@ -374,7 +375,7 @@
 				<input type="hidden" name="lang" value="{$lang}"/>
 			</xsl:if>
 			<br/>
-			<xsl:if test="/content//collection_type = 'object'">
+			<xsl:if test="/content//collection_type != 'hoard'">
 				<div>
 					<b><xsl:value-of select="numishare:normalizeLabel('results_has-images', $lang)"/>:</b>
 					<xsl:choose>
@@ -405,7 +406,7 @@
 
 		<xsl:choose>
 			<xsl:when test="contains(@name, '_hier')">
-				<xsl:variable name="title" select="numishare:regularize_node(substring-before(@name, '_'), $lang)"/>
+				<!--<xsl:variable name="title" select="numishare:regularize_node(substring-before(@name, '_'), $lang)"/>
 
 				<button class="ui-multiselect hierarchical-facet" type="button" title="{$title}" aria-haspopup="true" style="width: 200px;" id="{@name}_link" label="{$q}">
 					<span class="ui-icon ui-icon-triangle-2-n-s"/>
@@ -445,11 +446,10 @@
 							<ul class="{substring-before(@name, '_hier')}-multiselect-checkboxes ui-helper-reset hierarchical-list" id="{@name}-list" style="height: 175px;" title="{$title}"/>
 						</div>
 					</xsl:otherwise>
-				</xsl:choose>
-				<br/>
+				</xsl:choose>-->
 			</xsl:when>
 			<xsl:when test="@name='century_num'">
-				<button class="ui-multiselect ui-widget ui-state-default ui-corner-all" type="button" title="{numishare:regularize_node('date', $lang)}" aria-haspopup="true" style="width: 200px;"
+				<!--<button class="ui-multiselect ui-widget ui-state-default ui-corner-all" type="button" title="{numishare:regularize_node('date', $lang)}" aria-haspopup="true" style="width: 200px;"
 					id="{@name}_link" label="{$q}">
 					<span class="ui-icon ui-icon-triangle-2-n-s"/>
 					<span>
@@ -471,7 +471,7 @@
 							<cinclude:include src="cocoon:/get_centuries?q={encode-for-uri($q)}"/>
 						</xsl:if>
 					</ul>
-				</div>
+				</div>-->
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:variable name="count" select="number(int[@name='numFacetTerms'])"/>
@@ -492,14 +492,13 @@
 							<xsl:text>*:*</xsl:text>
 						</xsl:otherwise>
 					</xsl:choose>
-				</xsl:variable>
-				<select id="{@name}-select" multiple="multiple" class="multiselect {@name}-button" size="10" title="{numishare:normalize_fields(@name, $lang)}" q="{$q}" mincount="{$mincount}"
+				</xsl:variable>				
+				<select id="{@name}-select" multiple="multiple" class="multiselect {@name}-button" title="{numishare:normalize_fields(@name, $lang)}" q="{$q}" mincount="{$mincount}"
 					new_query="{if (contains($q, @name)) then $select_new_query else ''}">
 					<xsl:if test="contains($q, @name)">
 						<cinclude:include src="cocoon:/get_facet_options?q={$q}&amp;category={@name}&amp;sort=index&amp;offset=0&amp;limit=-1&amp;rows=0&amp;mincount={$mincount}"/>
 					</xsl:if>
 				</select>
-				<br/>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
@@ -997,19 +996,21 @@
 						<xsl:choose>
 							<xsl:when test="$start_var &gt;= $rows">
 								<a class="btn btn-default pagingBtn" role="button" title="First"
-									href="?q={encode-for-uri($q)}{if (string($sort)) then concat('&amp;sort=', $sort) else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}{if ($mode='compare') then concat('&amp;mode=compare&amp;image=', $image, '&amp;side=', $side) else ''}">
+									href="?q={encode-for-uri($q)}{if (string($sort)) then concat('&amp;sort=', $sort) else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
 									<span class="glyphicon glyphicon-fast-backward"/>
 								</a>
 								<a class="btn btn-default pagingBtn" role="button" title="Previous"
-									href="?q={encode-for-uri($q)}&amp;start={$previous}{if (string($sort)) then concat('&amp;sort=', $sort) else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}{if ($mode='compare') then concat('&amp;mode=compare&amp;image=', $image, '&amp;side=', $side) else ''}">
+									href="?q={encode-for-uri($q)}&amp;start={$previous}{if (string($sort)) then concat('&amp;sort=', $sort) else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
 									<span class="glyphicon glyphicon-backward"/>
 								</a>
 							</xsl:when>
 							<xsl:otherwise>
-								<a class="btn btn-default disabled" role="button" title="First" href="#">
+								<a class="btn btn-default disabled" role="button" title="First"
+									href="?q={encode-for-uri($q)}{if (string($sort)) then concat('&amp;sort=', $sort) else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
 									<span class="glyphicon glyphicon-fast-backward"/>
 								</a>
-								<a class="btn btn-default disabled" role="button" title="Previous" href="#">
+								<a class="btn btn-default disabled" role="button" title="Previous"
+									href="?q={encode-for-uri($q)}&amp;start={$previous}{if (string($sort)) then concat('&amp;sort=', $sort) else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
 									<span class="glyphicon glyphicon-backward"/>
 								</a>
 							</xsl:otherwise>
@@ -1024,19 +1025,21 @@
 						<xsl:choose>
 							<xsl:when test="$numFound - $start_var &gt; $rows">
 								<a class="btn btn-default pagingBtn" role="button" title="Next"
-									href="?q={encode-for-uri($q)}&amp;start={$next}{if (string($sort)) then concat('&amp;sort=', $sort) else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}{if ($mode='compare') then concat('&amp;mode=compare&amp;image=', $image, '&amp;side=', $side) else ''}">
+									href="?q={encode-for-uri($q)}&amp;start={$next}{if (string($sort)) then concat('&amp;sort=', $sort) else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
 									<span class="glyphicon glyphicon-forward"/>
 								</a>
 								<a class="btn btn-default pagingBtn" role="button"
-									href="?q={encode-for-uri($q)}&amp;start={($total * $rows) - $rows}{if (string($sort)) then concat('&amp;sort=', $sort) else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}{if ($mode='compare') then concat('&amp;mode=compare&amp;image=', $image, '&amp;side=', $side) else ''}">
+									href="?q={encode-for-uri($q)}&amp;start={($total * $rows) - $rows}{if (string($sort)) then concat('&amp;sort=', $sort) else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
 									<span class="glyphicon glyphicon-fast-forward"/>
 								</a>
 							</xsl:when>
 							<xsl:otherwise>
-								<a class="btn btn-default disabled" role="button" title="Next" href="#">
+								<a class="btn btn-default disabled" role="button" title="Next"
+									href="?q={encode-for-uri($q)}&amp;start={$next}{if (string($sort)) then concat('&amp;sort=', $sort) else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
 									<span class="glyphicon glyphicon-forward"/>
 								</a>
-								<a class="btn btn-default disabled" role="button" href="#">
+								<a class="btn btn-default disabled" role="button"
+									href="?q={encode-for-uri($q)}&amp;start={($total * $rows) - $rows}{if (string($sort)) then concat('&amp;sort=', $sort) else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
 									<span class="glyphicon glyphicon-fast-forward"/>
 								</a>
 							</xsl:otherwise>
@@ -1053,7 +1056,7 @@
 		</xsl:variable>
 		<xsl:variable name="sort_categories" select="tokenize(normalize-space($sort_categories_string), ',')"/>
 
-		<div class="row sort_div">
+		<div class="row">
 			<div class="col-md-12">
 				<form role="form" class="sortForm" action="results">
 					<select class="sortForm_categories form-control">
@@ -1106,7 +1109,7 @@
 					<xsl:if test="string($lang)">
 						<input type="hidden" name="lang" value="{$lang}"/>
 					</xsl:if>
-					<input class="btn btn-default sort_button" disabled="disabled" type="submit" value="{numishare:normalizeLabel('results_sort-results', $lang)}"/>
+					<input id="sort_button" class="btn btn-default" type="submit" value="{numishare:normalizeLabel('results_sort-results', $lang)}"/>
 				</form>
 			</div>
 		</div>
@@ -1287,5 +1290,68 @@
 				</a>
 			</xsl:when>
 		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template name="compare_paging">
+		<xsl:variable name="start_var" as="xs:integer">
+			<xsl:choose>
+				<xsl:when test="string($start)">
+					<xsl:value-of select="$start"/>
+				</xsl:when>
+				<xsl:otherwise>0</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+
+		<xsl:variable name="next">
+			<xsl:value-of select="$start_var+$rows"/>
+		</xsl:variable>
+
+		<xsl:variable name="previous">
+			<xsl:choose>
+				<xsl:when test="$start_var &gt;= $rows">
+					<xsl:value-of select="$start_var - $rows"/>
+				</xsl:when>
+				<xsl:otherwise>0</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+
+		<xsl:variable name="current" select="$start_var div $rows + 1"/>
+		<xsl:variable name="total" select="ceiling($numFound div $rows)"/>
+
+		<div style="width:100%;display:table;">
+			<div style="float:left;">
+				<xsl:variable name="startRecord" select="$start_var + 1"/>
+				<xsl:variable name="endRecord">
+					<xsl:choose>
+						<xsl:when test="$numFound &gt; ($start_var + $rows)">
+							<xsl:value-of select="$start_var + $rows"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="$numFound"/>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:variable>
+
+				<xsl:value-of select="replace(replace(replace(numishare:normalizeLabel('results_result-desc', $lang), 'XX', string($startRecord)), 'YY', string($endRecord)), 'ZZ', string($numFound))"
+				/>
+			</div>
+			<div style="float:right;">
+				<xsl:choose>
+					<xsl:when test="$start_var &gt;= $rows">
+						<a class="comparepagingBtn" href="compare_results?q={$q}&amp;start={$previous}&amp;image={$image}&amp;side={$side}&amp;mode=compare">« Previous</a>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:text>« Previous</xsl:text>
+					</xsl:otherwise>
+				</xsl:choose> | <xsl:choose>
+					<xsl:when test="$numFound - $start_var &gt; $rows">
+						<a class="comparepagingBtn" href="compare_results?q={$q}&amp;start={$next}&amp;image={$image}&amp;side={$side}&amp;mode=compare">Next »</a>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:text>Next »</xsl:text>
+					</xsl:otherwise>
+				</xsl:choose>
+			</div>
+		</div>
 	</xsl:template>
 </xsl:stylesheet>

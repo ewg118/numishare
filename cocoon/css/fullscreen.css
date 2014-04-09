@@ -18,7 +18,7 @@ select {
 .category_list, .search_text {
 	width:175px;
 }
-button.ui-multiselect {
+button.multiselect {
 	margin-bottom:10px;
 }
 #close {
