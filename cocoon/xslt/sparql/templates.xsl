@@ -18,7 +18,6 @@ SELECT ?object ?title ?identifier ?collection ?weight ?axis ?diameter ?obvThumb 
 ?object nm:type_series_item <typeUri>.
 ?object a nm:coin .
 ?object dcterms:title ?title .
-OPTIONAL { ?object dcterms:identifier ?identifier } .
 OPTIONAL { ?object nm:collection ?colUri .
 ?colUri skos:prefLabel ?collection 
 FILTER(langMatches(lang(?collection), "EN"))}
@@ -27,6 +26,10 @@ OPTIONAL { ?object nm:axis ?axis }
 OPTIONAL { ?object nm:diameter ?diameter }
 OPTIONAL { ?object nm:obverseThumbnail ?obvThumb }
 OPTIONAL { ?object nm:reverseThumbnail ?revThumb }
+OPTIONAL { ?object nm:obverseReference ?obvRef }
+OPTIONAL { ?object nm:reverseReference ?revRef }
+OPTIONAL { ?object foaf:thumbnail ?comThumb }
+OPTIONAL { ?object foaf:depiction ?comRef }
 OPTIONAL { ?object nm:obverse ?obverse .
 ?obverse foaf:thumbnail ?obvThumb }
 OPTIONAL { ?object nm:obverse ?obverse .
@@ -34,11 +37,7 @@ OPTIONAL { ?object nm:obverse ?obverse .
 OPTIONAL { ?object nm:reverse ?reverse .
 ?reverse foaf:thumbnail ?revThumb }
 OPTIONAL { ?object nm:reverse ?reverse .
-?reverse foaf:depiction ?revRef }
-OPTIONAL { ?object nm:obverseReference ?obvRef }
-OPTIONAL { ?object nm:reverseReference ?revRef }
-OPTIONAL { ?object foaf:thumbnail ?comThumb }
-OPTIONAL { ?object foaf:depiction ?comRef }}
+?reverse foaf:depiction ?revRef }}
 ORDER BY ASC(?collection)]]></xsl:variable>
 		<xsl:variable name="service" select="concat($endpoint, '?query=', encode-for-uri(normalize-space(replace($query, 'typeUri', $uri))), '&amp;output=xml')"/>
 
@@ -176,7 +175,6 @@ ORDER BY ASC(?collection)]]></xsl:variable>
 	</xsl:template>
 
 	<!-- **************** PROCESS SPARQL RESPONSE ****************-->
-
 	<xsl:template match="res:sparql" mode="display">
 		<xsl:variable name="coin-count"
 			select="count(descendant::res:result[contains(res:binding[@name='objectType']/res:uri, 'coin')]) + count(descendant::res:result[not(child::res:binding[@name='objectType'])])"/>
@@ -222,7 +220,7 @@ ORDER BY ASC(?collection)]]></xsl:variable>
 					<dd>
 						<xsl:value-of select="res:binding[@name='collection']/res:literal"/>
 					</dd>
-				</xsl:if>
+				</xsl:if>				
 				<xsl:if test="string(res:binding[@name='axis']/res:literal)">
 					<dt>
 						<xsl:value-of select="numishare:regularize_node('axis', $lang)"/>
