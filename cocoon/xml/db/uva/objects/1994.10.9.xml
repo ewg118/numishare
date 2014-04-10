@@ -35,38 +35,7 @@
 	</control>
 	<descMeta>
 		<title xml:lang="en">As of Caracalla (Julia Domna), Rome, 211-217. 1994.10.9.</title>
-		<typeDesc>
-			<objectType xlink:href="http://nomisma.org/id/coin">Coin</objectType>
-			<denomination xlink:href="http://nomisma.org/id/as">As</denomination>
-			<material xlink:href="http://nomisma.org/id/ae">Bronze</material>
-			<dateRange>
-				<fromDate standardDate="0211">211</fromDate>
-				<toDate standardDate="0217">217</toDate>
-			</dateRange>
-			<authority>
-				<persname xlink:type="simple" xlink:role="authority" xlink:href="http://nomisma.org/id/caracalla">Caracalla</persname>
-				<famname xlink:type="simple" xlink:role="dynasty">Severan</famname>
-				<corpname xlink:type="simple" xlink:role="state">Roman Empire</corpname>
-			</authority>
-			<geographic>
-				<geogname xlink:type="simple" xlink:role="mint" xlink:href="http://nomisma.org/id/rome">Rome</geogname>
-				<geogname xlink:type="simple" xlink:role="region" xlink:href="http://nomisma.org/id/latium">Latium</geogname>
-			</geographic>
-			<obverse>
-				<type>
-					<description xml:lang="en">Bust, draped, right.</description>
-				</type>
-				<legend>IVLIA PIA FELIX AVG</legend>
-				<persname xlink:type="simple" xlink:role="portrait" xlink:href="http://nomisma.org/id/julia_domna">Julia Domna</persname>
-			</obverse>
-			<reverse>
-				<type>
-					<description xml:lang="en">Felicitas standing left sacrificing from a patera held in her right hand and holding caduceus in her left.</description>
-				</type>
-				<legend>SAECVLI FELICITAS SC</legend>
-				<persname xlink:type="simple" xlink:role="deity">Felicitas</persname>
-			</reverse>
-		</typeDesc>
+		<typeDesc xlink:href="http://numismatics.org/ocre/id/ric.4.crl.603a_as" xlink:type="simple"/>			
 		<physDesc>
 			<axis>1</axis>
 			<measurementsSet>

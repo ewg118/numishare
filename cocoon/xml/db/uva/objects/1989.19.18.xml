@@ -1,127 +1,89 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<nuds xmlns="http://nomisma.org/nuds" xmlns:xlink="http://www.w3.org/1999/xlink"
-      xmlns:mets="http://www.loc.gov/METS/"
-      recordType="physical">
-   <control>
-      <recordId>1989.19.18</recordId>
-      <maintenanceStatus>revised</maintenanceStatus>
-      <publicationStatus>approved</publicationStatus>
-      <maintenanceAgency>
-         <agencyName>University of Virginia Library</agencyName>
-         <agencyCode>US-viu</agencyCode>
-      </maintenanceAgency>
-      <maintenanceHistory>
-         <maintenanceEvent>
-            <eventType>derived</eventType>
-            <eventDateTime standardDateTime="2012-12-12T15:05:54.552-05:00Z">2012-12-12T15:05:54.552-05:00Z</eventDateTime>
-            <agentType>human</agentType>
-            <agent>Ethan Gruber and/or Carrie Sulosky</agent>
-            <eventDescription>Migrated from EAD to NUDS</eventDescription>
-         </maintenanceEvent>
-         <maintenanceEvent>
-            <eventType>revised</eventType>
-            <eventDateTime standardDateTime="2013-09-11T12:21:01.186-04:00Z">2013-09-11T12:21:01.186-04:00Z</eventDateTime>
-            <agentType>human</agentType>
-            <agent>XSLT</agent>
-            <eventDescription>Migrated to new NUDS schema version; nudsHeader to control.</eventDescription>
-         </maintenanceEvent>
-      </maintenanceHistory>
-      <rightsStmt>
-         <license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/"/>
-      </rightsStmt>
-      <otherRecordId semantic="dcterms:replaces">http://coins.lib.virginia.edu/display-uva?id=n1989_19_18</otherRecordId>
-      <semanticDeclaration>
-         <prefix>dcterms</prefix>
-         <namespace>http://purl.org/dc/terms/</namespace>
-      </semanticDeclaration>
-   </control>
-   <descMeta>
-      <title xml:lang="en">Quinarius of Elagabalus, Rome, 218-222. 1989.19.18.</title>
-      <typeDesc>
-         <objectType xlink:href="http://nomisma.org/id/coin">Coin</objectType>
-         <denomination xlink:href="http://nomisma.org/id/quinarius">Quinarius</denomination>
-         <material xlink:type="simple" xlink:href="http://nomisma.org/id/ar">Silver</material>
-         <dateRange>
-            <fromDate standardDate="0218">218</fromDate>
-            <toDate standardDate="0222">222</toDate>
-         </dateRange>
-         <authority>
-            <persname xlink:type="simple" xlink:role="authority"
-                      xlink:href="http://nomisma.org/id/elagabalus">Elagabalus</persname>
-            <famname xlink:type="simple" xlink:role="dynasty">Severan</famname>
-            <corpname xlink:type="simple" xlink:role="state">Roman Empire</corpname>
-         </authority>
-         <geographic>
-            <geogname xlink:type="simple" xlink:role="mint" xlink:href="http://nomisma.org/id/rome">Rome</geogname>
-            <geogname xlink:type="simple" xlink:role="region"
-                      xlink:href="http://nomisma.org/id/latium">Latium</geogname>
-         </geographic>
-         <obverse>
-            <type>
-               <description xml:lang="en">Head, laureate, right, draped.</description>
-            </type>
-            <legend>IMP(ERATOR) ANTONINVS PIVS AVG(VSTVS)</legend>
-            <persname xlink:type="simple" xlink:role="portrait"
-                      xlink:href="http://nomisma.org/id/elagabalus">Elagabalus</persname>
-         </obverse>
-         <reverse>
-            <type>
-               <description xml:lang="en">Elagabalus standing right, sacrificing over lighted altar, holding patera in right hand and upright club in left; a star in the right
-						field.</description>
-            </type>
-            <legend>SACERD(OS) DEI SOLIS ELAGAB(ALVS)</legend>
-            <persname xlink:type="simple" xlink:role="portrait"
-                      xlink:href="http://nomisma.org/id/elagabalus">Elagabalus</persname>
-         </reverse>
-      </typeDesc>
-      <adminDesc>
-         <identifier>1989.19.18</identifier>
-         <provenance>
-            <chronList>
-               <chronItem>
-                  <acquisition>
-                     <acquiredFrom>Acquired from the Worldwide Treasure Bureau, September, 1989.</acquiredFrom>
-                  </acquisition>
-               </chronItem>
-               <chronItem>
-                  <previousColl>Ex: Dr. Krinsky Collection, assembled from approximately 1935-1965.</previousColl>
-               </chronItem>
-            </chronList>
-         </provenance>
-         <department>Roman</department>
-         <collection xlink:type="simple" xlink:href="http://nomisma.org/id/uva">The Fralin Museum of Art</collection>
-      </adminDesc>
-      <refDesc>
-         <reference>
-            <title>RIC</title>
-            <identifier>132</identifier>
-         </reference>
-      </refDesc>
-   </descMeta>
-   <digRep>
-      <mets:fileSec>
-         <mets:fileGrp USE="obverse">
-            <mets:file USE="reference" MIMETYPE="image/jpeg">
-               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n1989_19_18_obv.jpg"/>
-            </mets:file>
-            <mets:file USE="thumbnail" MIMETYPE="image/jpeg">
-               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1989_19_18_obv.jpg"/>
-            </mets:file>
-            <mets:file USE="master" MIMETYPE="image/jpeg">
-               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/master/n1989_19_18_obv.jpg"/>
-            </mets:file>
-         </mets:fileGrp>
-         <mets:fileGrp USE="reverse">
-            <mets:file USE="reference" MIMETYPE="image/jpeg">
-               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n1989_19_18_rev.jpg"/>
-            </mets:file>
-            <mets:file USE="thumbnail" MIMETYPE="image/jpeg">
-               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1989_19_18_rev.jpg"/>
-            </mets:file>
-            <mets:file USE="master" MIMETYPE="image/jpeg">
-               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/master/n1989_19_18_rev.jpg"/>
-            </mets:file>
-         </mets:fileGrp>
-      </mets:fileSec>
-   </digRep>
+<nuds xmlns="http://nomisma.org/nuds" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mets="http://www.loc.gov/METS/" recordType="physical">
+	<control>
+		<recordId>1989.19.18</recordId>
+		<maintenanceStatus>revised</maintenanceStatus>
+		<publicationStatus>approved</publicationStatus>
+		<maintenanceAgency>
+			<agencyName>University of Virginia Library</agencyName>
+			<agencyCode>US-viu</agencyCode>
+		</maintenanceAgency>
+		<maintenanceHistory>
+			<maintenanceEvent>
+				<eventType>derived</eventType>
+				<eventDateTime standardDateTime="2012-12-12T15:05:54.552-05:00Z">2012-12-12T15:05:54.552-05:00Z</eventDateTime>
+				<agentType>human</agentType>
+				<agent>Ethan Gruber and/or Carrie Sulosky</agent>
+				<eventDescription>Migrated from EAD to NUDS</eventDescription>
+			</maintenanceEvent>
+			<maintenanceEvent>
+				<eventType>revised</eventType>
+				<eventDateTime standardDateTime="2013-09-11T12:21:01.186-04:00Z">2013-09-11T12:21:01.186-04:00Z</eventDateTime>
+				<agentType>human</agentType>
+				<agent>XSLT</agent>
+				<eventDescription>Migrated to new NUDS schema version; nudsHeader to control.</eventDescription>
+			</maintenanceEvent>
+		</maintenanceHistory>
+		<rightsStmt>
+			<license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/"/>
+		</rightsStmt>
+		<otherRecordId semantic="dcterms:replaces">http://coins.lib.virginia.edu/display-uva?id=n1989_19_18</otherRecordId>
+		<semanticDeclaration>
+			<prefix>dcterms</prefix>
+			<namespace>http://purl.org/dc/terms/</namespace>
+		</semanticDeclaration>
+	</control>
+	<descMeta>
+		<title xml:lang="en">Quinarius of Elagabalus, Rome, 218-222. 1989.19.18.</title>
+		<typeDesc xlink:type="simple" xlink:href="http://numismatics.org/ocre/id/ric.4.el.132"/>
+		<adminDesc>
+			<identifier>1989.19.18</identifier>
+			<provenance>
+				<chronList>
+					<chronItem>
+						<acquisition>
+							<acquiredFrom>Acquired from the Worldwide Treasure Bureau, September, 1989.</acquiredFrom>
+						</acquisition>
+					</chronItem>
+					<chronItem>
+						<previousColl>Ex: Dr. Krinsky Collection, assembled from approximately 1935-1965.</previousColl>
+					</chronItem>
+				</chronList>
+			</provenance>
+			<department>Roman</department>
+			<collection xlink:type="simple" xlink:href="http://nomisma.org/id/uva">The Fralin Museum of Art</collection>
+		</adminDesc>
+		<refDesc>
+			<reference>
+				<title>RIC</title>
+				<identifier>132</identifier>
+			</reference>
+		</refDesc>
+	</descMeta>
+	<digRep>
+		<mets:fileSec>
+			<mets:fileGrp USE="obverse">
+				<mets:file USE="reference" MIMETYPE="image/jpeg">
+					<mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n1989_19_18_obv.jpg"/>
+				</mets:file>
+				<mets:file USE="thumbnail" MIMETYPE="image/jpeg">
+					<mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1989_19_18_obv.jpg"/>
+				</mets:file>
+				<mets:file USE="master" MIMETYPE="image/jpeg">
+					<mets:FLocat LOCTYPE="URL" xlink:href="images/coins/master/n1989_19_18_obv.jpg"/>
+				</mets:file>
+			</mets:fileGrp>
+			<mets:fileGrp USE="reverse">
+				<mets:file USE="reference" MIMETYPE="image/jpeg">
+					<mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n1989_19_18_rev.jpg"/>
+				</mets:file>
+				<mets:file USE="thumbnail" MIMETYPE="image/jpeg">
+					<mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1989_19_18_rev.jpg"/>
+				</mets:file>
+				<mets:file USE="master" MIMETYPE="image/jpeg">
+					<mets:FLocat LOCTYPE="URL" xlink:href="images/coins/master/n1989_19_18_rev.jpg"/>
+				</mets:file>
+			</mets:fileGrp>
+		</mets:fileSec>
+	</digRep>
 </nuds>
