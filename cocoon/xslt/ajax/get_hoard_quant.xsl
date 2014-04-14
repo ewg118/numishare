@@ -48,7 +48,8 @@
 	<xsl:variable name="nudsGroup" as="element()*">
 		<nudsGroup>
 			<xsl:variable name="id-param">
-				<xsl:for-each select="distinct-values(descendant::nuds:typeDesc[contains(@xlink:href, 'nomisma.org') and (boolean(index-of($codes, @certainty)) = false())]/@xlink:href)">
+				<xsl:for-each
+					select="distinct-values(descendant::nuds:typeDesc[contains(@xlink:href, 'nomisma.org') and (if (@certainty) then boolean(index-of($codes, nuds:typeDesc/@certainty)) = false() else *)]/@xlink:href)">
 					<xsl:value-of select="substring-after(., 'id/')"/>
 					<xsl:if test="not(position()=last())">
 						<xsl:text>|</xsl:text>
@@ -65,7 +66,7 @@
 			</xsl:if>
 
 			<!-- incorporate other typeDescs which do not point to nomisma.org -->
-			<xsl:for-each select="descendant::nuds:typeDesc[not(contains(@xlink:href, 'nomisma.org')) and (boolean(index-of($codes, @certainty)) = false())]">
+			<xsl:for-each select="descendant::nuds:typeDesc[not(contains(@xlink:href, 'nomisma.org')) and (if (@certainty) then boolean(index-of($codes, nuds:typeDesc/@certainty)) = false() else *)]">
 				<xsl:choose>
 					<xsl:when test="string(@xlink:href)">
 						<object xlink:href="{@xlink:href}">
@@ -112,7 +113,7 @@
 
 	<xsl:template name="generateJs">
 		<xsl:variable name="total"
-			select="sum($contentsDesc//nh:coinGrp[boolean(index-of($codes, nuds:typeDesc/@certainty)) = false()]/@count) + count($contentsDesc//nh:coin[boolean(index-of($codes, nuds:typeDesc/@certainty)) = false()])"/>
+			select="sum($contentsDesc//nh:coinGrp[if (nuds:typeDesc/@certainty) then boolean(index-of($codes, nuds:typeDesc/@certainty)) = false() else *]/@count) + count($contentsDesc//nh:coin[if (nuds:typeDesc/@certainty) then boolean(index-of($codes, nuds:typeDesc/@certainty)) = false() else *])"/>
 		<xsl:variable name="total-counts" as="element()*">
 			<total-counts>
 				<xsl:choose>
@@ -179,14 +180,14 @@
 
 	<xsl:template name="generateXml">
 		<xsl:variable name="total"
-			select="sum($contentsDesc//nh:coinGrp[boolean(index-of($codes, nuds:typeDesc/@certainty)) = false()]/@count) + count($contentsDesc//nh:coin[boolean(index-of($codes, nuds:typeDesc/@certainty)) = false()])"/>
+			select="sum($contentsDesc//nh:coinGrp[if (@certainty) then boolean(index-of($codes, nuds:typeDesc/@certainty)) = false() else *]/@count) + count($contentsDesc//nh:coin[if (@certainty) then boolean(index-of($codes, nuds:typeDesc/@certainty)) = false() else *])"/>
 		<hoard id="{$id}" total="{$total}" title="{$title}">
 
 			<xsl:variable name="total-counts" as="element()*">
 				<total-counts>
 					<xsl:choose>
 						<xsl:when test="string($role)">
-							<xsl:apply-templates select="$nudsGroup//*[local-name()=$element][@xlink:role=$role]"/>
+							<xsl:apply-templates select="$nudsGroup//*[local-name()=$element and @xlink:role=$role]"/>
 						</xsl:when>
 						<xsl:when test="$calculate='date'">
 							<xsl:apply-templates select="$nudsGroup//nuds:typeDesc/nuds:date|$nudsGroup//nuds:typeDesc/nuds:dateRange/nuds:toDate"/>
@@ -201,6 +202,7 @@
 				</total-counts>
 			</xsl:variable>
 
+			<xsl:copy-of select="$total-counts"/>			
 			<xsl:choose>
 				<xsl:when test="$calculate='date'">
 					<!-- preprocess date counts into counts per distinct value -->
@@ -243,7 +245,7 @@
 						<xsl:variable name="name" select="."/>
 						<name>
 							<xsl:attribute name="count">
-								<xsl:variable name="count" select="sum($total-counts//name[.=$name]/@count)"/>
+								<xsl:variable name="count" select="$total-counts//name[.=$name][1]/@count"/>
 								<xsl:choose>
 									<xsl:when test="$type='count'">
 										<xsl:value-of select="$count"/>
@@ -263,7 +265,7 @@
 	</xsl:template>
 
 	<xsl:template match="*">
-		<xsl:variable name="href" select="@xlink:href"/>
+		<xsl:variable name="href" select="@xlink:href"/>		
 		<xsl:variable name="value">
 			<xsl:choose>
 				<xsl:when test="@standardDate">
@@ -310,15 +312,13 @@
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:value-of
-						select="count($contentsDesc//nh:coin/nuds:typeDesc/*[local-name()=$element][.=$value]) + sum($contentsDesc//nh:coinGrp[nuds:typeDesc/*[local-name()=$element][.=$value]]/@count)"
+						select="count($contentsDesc//nh:coin/nuds:typeDesc//*[local-name()=$element][if (@xlink:href) then @xlink:href=$href else $value = .]) + sum($contentsDesc//nh:coinGrp[nuds:typeDesc//*[local-name()=$element][if (@xlink:href) then @xlink:href=$href else $value = .]]/@count)"
 					/>
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-		<name>
-			<xsl:attribute name="count">
-				<xsl:value-of select="$count"/>
-			</xsl:attribute>
+		<name>						
+			<xsl:attribute name="count" select="$count"/>			
 			<xsl:value-of select="$value"/>
 		</name>
 	</xsl:template>

@@ -4,7 +4,7 @@
 	<xsl:variable name="tokens" select="tokenize($exclude, ',')"/>
 	
 	<xsl:template match="/">
-		<select multiple="multiple" size="10" class="certainty-select">
+		<select multiple="multiple" size="10" class="certainty-select form-control">
 			<xsl:apply-templates select="descendant::code">
 				<xsl:sort/>
 			</xsl:apply-templates>

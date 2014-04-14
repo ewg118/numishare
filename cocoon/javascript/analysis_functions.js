@@ -7,8 +7,6 @@ for manipulating forms and rendering tables in the form of highcharts
 ********************/
 
 $(document).ready(function () {
-	$("#tabs").tabs();
-	
 	/**
 	* Visualize an HTML table using Highcharts. The top (horizontal) header
 	* is used for series names, and the left (vertical) header is used

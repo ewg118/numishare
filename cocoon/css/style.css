@@ -130,7 +130,7 @@ ul li, ol li {
 .compare-select {
 	width:400px;
 }
-.category_list, .sparql_facets, select[name="interval"], #stacking, #image {
+.category_list, .sparql_facets, select[name="interval"], #stacking, #image, .certainty-select {
 	width:175px;
 	display:inline;
 }
@@ -447,4 +447,7 @@ div.custominfostyle {
 }
 .mr {
 	display:none;
+}
+.center-block {
+	width:50%;	
 }

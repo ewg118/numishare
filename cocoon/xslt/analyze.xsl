@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:exsl="http://exslt.org/common" xmlns:numishare="https://github.com/ewg118/numishare"
-	xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:cinclude="http://apache.org/cocoon/include/1.0" xmlns:nuds="http://nomisma.org/nuds"
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:exsl="http://exslt.org/common"
+	xmlns:numishare="https://github.com/ewg118/numishare" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:cinclude="http://apache.org/cocoon/include/1.0" xmlns:nuds="http://nomisma.org/nuds"
 	xmlns:nh="http://nomisma.org/nudsHoard" xmlns:nm="http://nomisma.org/id/" xmlns:math="http://exslt.org/math" exclude-result-prefixes="#all" version="2.0">
 	<xsl:include href="header.xsl"/>
 	<xsl:include href="footer.xsl"/>
@@ -38,30 +37,23 @@
 					<xsl:text>: <xsl:value-of select="numishare:normalizeLabel('header_analyze', $lang)"/></xsl:text>
 				</title>
 				<link rel="shortcut icon" type="image/x-icon" href="{$display_path}images/favicon.png"/>
-				<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.8.0/build/cssgrids/grids-min.css"/>
-				<!-- Core + Skin CSS -->
-				<link type="text/css" href="{$display_path}themes/{//config/theme/jquery_ui_theme}.css" rel="stylesheet"/>				
-				<link type="text/css" href="{$display_path}style.css" rel="stylesheet"/>
+				<meta name="viewport" content="width=device-width, initial-scale=1"/>
 				<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"/>
-				<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"/>
-
-				<!-- menu -->
-				<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.core.js"/>
-				<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.widget.js"/>
-				<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.position.js"/>
-				<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.button.js"/>
-				<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.menu.js"/>
-				<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.menubar.js"/>
-				<script type="text/javascript" src="{$display_path}javascript/numishare-menu.js"/>
-
+				<!-- bootstrap -->
+				<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"/>
+				<script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"/>
+				<!-- Add fancyBox -->
+				<link rel="stylesheet" href="{$display_path}jquery.fancybox.css?v=2.1.5" type="text/css" media="screen"/>
+				<script type="text/javascript" src="{$display_path}javascript/jquery.fancybox.pack.js?v=2.1.5"/>
+				<link type="text/css" href="{$display_path}style.css" rel="stylesheet"/>
 				<!-- analysis scripts -->
 				<script type="text/javascript" src="{$display_path}javascript/highcharts.js"/>
 				<script type="text/javascript" src="{$display_path}javascript/modules/exporting.js"/>
-				<!--<script type="text/javascript" src="{$display_path}javascript/jquery.livequery.js"/>-->
+				<script type="text/javascript" src="{$display_path}javascript/analyze.js"/>
 				<script type="text/javascript" src="{$display_path}javascript/analysis_functions.js"/>
 				<!-- Add fancyBox -->
-				<link rel="stylesheet" href="{$display_path}jquery.fancybox.css?v=2.1.5" type="text/css" media="screen" />
-				<script type="text/javascript" src="{$display_path}javascript/jquery.fancybox.pack.js?v=2.1.5"></script>
+				<link rel="stylesheet" href="{$display_path}jquery.fancybox.css?v=2.1.5" type="text/css" media="screen"/>
+				<script type="text/javascript" src="{$display_path}javascript/jquery.fancybox.pack.js?v=2.1.5"/>
 				<script type="text/javascript" src="{$display_path}javascript/search_functions.js"/>
 
 				<!-- google analytics -->
@@ -80,44 +72,45 @@
 	</xsl:template>
 
 	<xsl:template name="body">
-		<div class="yui3-g">
-			<div class="yui3-u-1">
-				<div class="content">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-md-12">
 					<h1>
 						<xsl:value-of select="numishare:normalizeLabel('header_analyze', $lang)"/>
 					</h1>
 					<span style="display:none" id="vis-pipeline">
 						<xsl:value-of select="$pipeline"/>
 					</span>
-					<div id="tabs">
-						<ul>
-							<li>
-								<a href="#visualization">
-									<xsl:value-of select="numishare:normalizeLabel('display_visualization', $lang)"/>
-								</a>
-							</li>
-							<li>
-								<a href="#date-analysis">
-									<xsl:value-of select="numishare:normalizeLabel('display_date-analysis', $lang)"/>
-								</a>
-							</li>
-							<li>
-								<a href="#data-download">
-									<xsl:value-of select="numishare:normalizeLabel('display_data-download', $lang)"/>
-								</a>
-							</li>
-						</ul>
-						<div id="visualization" class="tab">
+
+					<ul class="nav nav-pills" id="tabs">
+						<li class="active">
+							<a href="#visualization" data-toggle="pill">
+								<xsl:value-of select="numishare:normalizeLabel('display_visualization', $lang)"/>
+							</a>
+						</li>
+						<li>
+							<a href="#date-analysis" data-toggle="pill">
+								<xsl:value-of select="numishare:normalizeLabel('display_date-analysis', $lang)"/>
+							</a>
+						</li>
+						<li>
+							<a href="#data-download" data-toggle="pill">
+								<xsl:value-of select="numishare:normalizeLabel('display_data-download', $lang)"/>
+							</a>
+						</li>
+					</ul>
+					<div class="tab-content">
+						<div class="tab-pane active" id="visualization">
 							<xsl:call-template name="hoard-visualization">
 								<xsl:with-param name="action">#visualization</xsl:with-param>
 							</xsl:call-template>
 						</div>
-						<div id="date-analysis" class="tab">
+						<div class="tab-pane" id="date-analysis">
 							<xsl:call-template name="date-vis">
 								<xsl:with-param name="action">#date-analysis</xsl:with-param>
 							</xsl:call-template>
 						</div>
-						<div id="data-download" class="tab">
+						<div class="tab-pane" id="data-download">
 							<xsl:call-template name="data-download"/>
 						</div>
 					</div>
