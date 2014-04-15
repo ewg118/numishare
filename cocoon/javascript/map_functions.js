@@ -215,7 +215,7 @@ $(document).ready(function () {
 	$('button.multiselect').on('click', function () {
 		var q = getQuery();
 		var id = $(this).parent('div').prev('select').attr('id');
-		var mincount =$(this).parent('div').prev('select').attr('mincount');
+		var mincount = $(this).parent('div').prev('select').attr('mincount');
 		var category = id.split('-select')[0];
 		$.get(path + 'maps_get_facet_options', {
 			q: q, category: category, sort: 'index', limit: - 1, offset: 0, mincount: mincount, lang: lang
@@ -248,7 +248,10 @@ $(document).ready(function () {
 			hoardLayer.refresh({
 				force: true, url: hoardUrl
 			});
-			map.zoomToExtent(mintLayer.getDataExtent());
+			var bounds = new OpenLayers.Bounds();
+			bounds.extend(mintLayer.getDataExtent());
+			bounds.extend(hoardLayer.getDataExtent());
+			map.zoomToExtent(bounds);
 		}
 	}
 	
@@ -444,7 +447,10 @@ $(document).ready(function () {
 	OpenLayers functions for object collections
 	********************/
 	function kmlLoaded() {
-		map.zoomToExtent(mintLayer.getDataExtent());
+		var bounds = new OpenLayers.Bounds();
+		bounds.extend(mintLayer.getDataExtent());
+		bounds.extend(hoardLayer.getDataExtent());
+		map.zoomToExtent(bounds);
 	}
 	
 	function onPopupClose(evt) {

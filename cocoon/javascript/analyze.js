@@ -8,7 +8,7 @@ $(document).ready(function () {
 	var calculate = getURLParameter('calculate');
 	if (calculate != null) {
 		if (calculate == 'date') {
-			$('#quant-tabs a[href="#dateTab"]').tab('show');
+			$('#tabs a[href="#date-analysis"]').tab('show');
 		}
 	}
 });
