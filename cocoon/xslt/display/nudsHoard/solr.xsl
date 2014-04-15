@@ -27,29 +27,40 @@
 
 		<xsl:variable name="all-dates">
 			<dates>
-				<xsl:for-each select="descendant::nuds:typeDesc">
-					<xsl:choose>
-						<xsl:when test="string(@xlink:href)">
-							<xsl:variable name="href" select="@xlink:href"/>
-							<xsl:for-each select="exsl:node-set($nudsGroup)//object[@xlink:href=$href]/descendant::*/@standardDate">
-								<xsl:if test="number(.)">
-									<date>
-										<xsl:value-of select="number(.)"/>
-									</date>
-								</xsl:if>
-							</xsl:for-each>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:for-each select="descendant::*/@standardDate">
-								<xsl:if test="number(.)">
-									<date>
-										<xsl:value-of select="number(.)"/>
-									</date>
-								</xsl:if>
-							</xsl:for-each>
-						</xsl:otherwise>
-					</xsl:choose>
-				</xsl:for-each>
+				<xsl:choose>
+					<xsl:when test="descendant::nh:deposit//@standardDate">
+						<xsl:for-each select="descendant::nh:deposit//@standardDate">
+							<date>
+								<xsl:value-of select="number(.)"/>
+							</date>
+						</xsl:for-each>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:for-each select="descendant::nuds:typeDesc">
+							<xsl:choose>
+								<xsl:when test="string(@xlink:href)">
+									<xsl:variable name="href" select="@xlink:href"/>
+									<xsl:for-each select="exsl:node-set($nudsGroup)//object[@xlink:href=$href]/descendant::*/@standardDate">
+										<xsl:if test="number(.)">
+											<date>
+												<xsl:value-of select="number(.)"/>
+											</date>
+										</xsl:if>
+									</xsl:for-each>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:for-each select="descendant::*/@standardDate">
+										<xsl:if test="number(.)">
+											<date>
+												<xsl:value-of select="number(.)"/>
+											</date>
+										</xsl:if>
+									</xsl:for-each>
+								</xsl:otherwise>
+							</xsl:choose>
+						</xsl:for-each>
+					</xsl:otherwise>
+				</xsl:choose>
 			</dates>
 		</xsl:variable>
 		<xsl:variable name="dates">
@@ -159,13 +170,13 @@
 						</xsl:for-each>
 					</total-counts>
 				</xsl:variable>
-				
+
 				<xsl:variable name="denominations" as="element()*">
 					<denominations>
 						<xsl:for-each select="distinct-values($total-counts//name)">
 							<xsl:variable name="name" select="."/>
 							<name>
-								<xsl:attribute name="count">									
+								<xsl:attribute name="count">
 									<xsl:value-of select="sum($total-counts//name[.=$name]/@count)"/>
 								</xsl:attribute>
 								<xsl:value-of select="$name"/>

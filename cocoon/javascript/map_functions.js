@@ -7,7 +7,6 @@ If the list is populated and then hidden, when it is re-activated, it fades in r
 ************************************/
 $(document).ready(function () {
 	var popupStatus = 0;
-	
 	var langStr = getURLParameter('lang');
 	if (langStr == 'null') {
 		var lang = '';
@@ -234,7 +233,7 @@ $(document).ready(function () {
 		
 		//refresh maps.
 		if (collection_type == 'hoard') {
-			$('#timemap').html('<div id="mapcontainer"><div id="map"/></div><div id="timelinecontainer"><div id="timeline"/></div>');
+			$('#timemap').html('<div id="mapcontainer" class="fullscreen"><div id="map"/></div><div id="timelinecontainer"><div id="timeline"/></div>');
 			initialize_timemap(query);
 		} else {
 			mintUrl = path + "mints.kml?q=" + query + (lang.length > 0? '&lang=' + lang: '');
@@ -548,9 +547,9 @@ $(document).ready(function () {
 			datasets:[ {
 				title: "Title",
 				theme: "red",
-				type: "kml", // Data to be loaded in KML - must be a local URL
+				type: "json", // Data to be loaded in KML - must be a local URL
 				options: {
-					url: "hoards.kml?q=" + q + (lang.length > 0? '&lang=' + lang: '')// KML file to load
+					url: path + "hoards.json?q=" + q + (lang.length > 0? '&lang=' + lang: '')// KML file to load
 				}
 			}],
 			bandIntervals:[

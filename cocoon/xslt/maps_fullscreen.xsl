@@ -16,7 +16,7 @@
 	<xsl:variable name="tokenized_q" select="tokenize($q, ' AND ')"/>
 
 	<xsl:template match="/">
-		<html lang="en">
+		<html>
 			<head>
 				<title>
 					<xsl:value-of select="//config/title"/>
@@ -42,6 +42,9 @@
 				<!-- display timemap for hoards, regular openlayers map for coin and coin type collections -->
 				<xsl:choose>
 					<xsl:when test="$collection_type='hoard'">
+						<!-- Add fancyBox -->
+						<link rel="stylesheet" href="{$display_path}jquery.fancybox.css?v=2.1.5" type="text/css" media="screen"/>
+						<script type="text/javascript" src="{$display_path}javascript/jquery.fancybox.pack.js?v=2.1.5"/>
 						<!-- timemap dependencies -->
 						<script type="text/javascript" src="http://www.openlayers.org/api/OpenLayers.js"/>
 						<script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3.2&amp;sensor=false"/>
@@ -50,7 +53,6 @@
 						<link type="text/css" href="{$display_path}timeline-2.3.0.css" rel="stylesheet"/>
 						<script type="text/javascript" src="{$display_path}javascript/timemap_full.pack.js"/>
 						<script type="text/javascript" src="{$display_path}javascript/param.js"/>
-						<script type="text/javascript" src="{$display_path}javascript/loaders/kml.js"/>
 						<script type="text/javascript" src="{$display_path}javascript/map_fullscreen_functions.js"/>
 						<script type="text/javascript" src="{$display_path}javascript/map_functions.js"/>
 						<script type="text/javascript" src="{$display_path}javascript/facet_functions.js"/>
@@ -132,7 +134,7 @@
 							<div class="row">
 								<div class="col-md-12">
 									<div id="timemap">
-										<div id="mapcontainer">
+										<div id="mapcontainer" class="fullscreen">
 											<div id="map"/>
 										</div>
 										<div id="timelinecontainer">

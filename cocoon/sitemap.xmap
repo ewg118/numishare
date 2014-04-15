@@ -699,6 +699,30 @@
 				</map:transform>
 				<map:serialize type="kml"/>
 			</map:match>
+			
+			<map:match pattern="hoards.json">
+				<map:select type="parameter">
+					<map:parameter name="parameter-selector-test" value="{request-param:lang}"/>
+					<map:when test="">
+						<map:aggregate element="content">
+							<map:part
+								src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q} AND findspot_geo:*}&amp;rows=10000&amp;fl=id,recordId,title_display,findspot_geo,tpq_num,taq_num,closing_date_display"/>
+							<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
+						</map:aggregate>
+					</map:when>
+					<map:otherwise>
+						<map:aggregate element="content">
+							<map:part
+								src="{global:solr-url}select?q=lang:{request-param:lang}+AND+collection-name:{global:collection-name}+AND+{url-encode:{request-param:q} AND findspot_geo:*}&amp;rows=10000&amp;fl=id,recordId,title_display,findspot_geo,tpq_num,taq_num,closing_date_display"/>
+							<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
+						</map:aggregate>
+					</map:otherwise>
+				</map:select>
+				<map:transform type="xslt-saxon" src="xslt/geographic/hoards-to-json.xsl" label="basiccontent">
+					<map:parameter name="use-request-parameters" value="true"/>
+				</map:transform>
+				<map:serialize type="text"/>
+			</map:match>
 
 			<!-- KML of unique findspots given a Solr query -->
 			<map:match pattern="findspots.kml">

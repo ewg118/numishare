@@ -399,6 +399,16 @@
 						</xsl:when>
 					</xsl:choose>
 				</xsl:when>
+				<xsl:when test="$type='findspot'">
+					<xsl:choose>
+						<xsl:when test="ancestor::nh:findspot/nh:deposit/nh:date/@standardDate">
+							<xsl:value-of select="number(ancestor::nh:findspot/nh:deposit/nh:date/@standardDate)"/>
+						</xsl:when>
+						<xsl:when test="ancestor::nh:findspot/nh:deposit/nh:dateRange/nh:fromDate/@standardDate">
+							<xsl:value-of select="number(ancestor::nh:findspot/nh:deposit/nh:dateRange/nh:fromDate/@standardDate)"/>							
+						</xsl:when>
+					</xsl:choose>
+				</xsl:when>
 			</xsl:choose>
 		</xsl:variable>
 		<xsl:variable name="end">
@@ -413,6 +423,16 @@
 					<xsl:if test="nuds:dateRange/nuds:toDate/@standardDate">
 						<xsl:value-of select="number(nuds:dateRange/nuds:toDate/@standardDate)"/>
 					</xsl:if>
+				</xsl:when>
+				<xsl:when test="$type='findspot'">
+					<xsl:choose>
+						<xsl:when test="ancestor::nh:findspot/nh:deposit/nh:date/@standardDate">
+							<xsl:value-of select="number(ancestor::nh:findspot/nh:deposit/nh:date/@standardDate)"/>
+						</xsl:when>
+						<xsl:when test="number(ancestor::nh:findspot/nh:deposit/nh:dateRange/nh:toDate/@standardDate)">
+							<xsl:value-of select="number(ancestor::nh:findspot/nh:deposit/nh:dateRange/nh:toDate/@standardDate)"/>							
+						</xsl:when>
+					</xsl:choose>
 				</xsl:when>
 			</xsl:choose>
 		</xsl:variable>
@@ -516,24 +536,49 @@
 			</xsl:choose>
 			<!-- display timespan -->
 			<xsl:choose>
-				<xsl:when test="ancestor::nuds:typeDesc/nuds:date/@standardDate">
-					<TimeStamp>
-						<when>
-							<xsl:value-of select="number(ancestor::nuds:typeDesc/nuds:date/@standardDate)"/>
-						</when>
-					</TimeStamp>
+				<xsl:when test="$styleUrl='#hoard'">
+					<xsl:choose>
+						<xsl:when test="ancestor::nh:findspot/nh:deposit/nh:date/@standardDate">
+							<TimeStamp>
+								<when>
+									<xsl:value-of select="number(ancestor::nh:findspot/nh:deposit/nh:date/@standardDate)"/>
+								</when>
+							</TimeStamp>
+						</xsl:when>
+						<xsl:when test="ancestor::nh:findspot/nh:deposit/nh:dateRange/nh:fromDate/@standardDate and ancestor::nh:findspot/nh:deposit/nh:dateRange/nh:toDate/@standardDate">
+							<TimeSpan>
+								<begin>
+									<xsl:value-of select="number(ancestor::nh:findspot/nh:deposit/nh:dateRange/nh:fromDate/@standardDate)"/>
+								</begin>
+								<end>
+									<xsl:value-of select="number(ancestor::nh:findspot/nh:deposit/nh:dateRange/nh:toDate/@standardDate)"/>
+								</end>
+							</TimeSpan>
+						</xsl:when>
+					</xsl:choose>					
 				</xsl:when>
-				<xsl:when test="ancestor::nuds:typeDesc/nuds:dateRange/nuds:fromDate/@standardDate and ancestor::nuds:typeDesc/nuds:dateRange/nuds:toDate/@standardDate">
-					<TimeSpan>
-						<begin>
-							<xsl:value-of select="number(ancestor::nuds:typeDesc/nuds:dateRange/nuds:fromDate/@standardDate)"/>
-						</begin>
-						<end>
-							<xsl:value-of select="number(ancestor::nuds:typeDesc/nuds:dateRange/nuds:toDate/@standardDate)"/>
-						</end>
-					</TimeSpan>
-				</xsl:when>
-			</xsl:choose>
+				<xsl:otherwise>
+					<xsl:choose>
+						<xsl:when test="ancestor::nuds:typeDesc/nuds:date/@standardDate">
+							<TimeStamp>
+								<when>
+									<xsl:value-of select="number(ancestor::nuds:typeDesc/nuds:date/@standardDate)"/>
+								</when>
+							</TimeStamp>
+						</xsl:when>
+						<xsl:when test="ancestor::nuds:typeDesc/nuds:dateRange/nuds:fromDate/@standardDate and ancestor::nuds:typeDesc/nuds:dateRange/nuds:toDate/@standardDate">
+							<TimeSpan>
+								<begin>
+									<xsl:value-of select="number(ancestor::nuds:typeDesc/nuds:dateRange/nuds:fromDate/@standardDate)"/>
+								</begin>
+								<end>
+									<xsl:value-of select="number(ancestor::nuds:typeDesc/nuds:dateRange/nuds:toDate/@standardDate)"/>
+								</end>
+							</TimeSpan>
+						</xsl:when>
+					</xsl:choose>
+				</xsl:otherwise>
+			</xsl:choose>			
 		</Placemark>
 	</xsl:template>
 </xsl:stylesheet>
