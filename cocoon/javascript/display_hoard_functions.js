@@ -17,7 +17,7 @@ $(document).ready(function () {
 	});
 	
 	var calculate = getURLParameter('calculate');
-	if (calculate != null) {
+	if (calculate != 'null') {
 		$('#tabs a[href="#quantitative"]').tab('show');
 		if (calculate == 'date') {
 			$('#quant-tabs a[href="#dateTab"]').tab('show');
