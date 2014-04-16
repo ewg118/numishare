@@ -206,17 +206,19 @@
 					</denominations>
 				</xsl:variable>
 
-				<field name="description_display">
-					<xsl:for-each select="$denominations//*[local-name()='name']">
-						<xsl:sort select="@count" order="descending" data-type="number"/>
-						<xsl:value-of select="."/>
-						<xsl:text>: </xsl:text>
-						<xsl:value-of select="@count"/>
-						<xsl:if test="not(position()=last())">
-							<xsl:text>, </xsl:text>
-						</xsl:if>
-					</xsl:for-each>
-				</field>
+				<xsl:if test="count($denominations//*[local-name()='name']) &gt; 0">
+					<field name="description_display">
+						<xsl:for-each select="$denominations//*[local-name()='name']">
+							<xsl:sort select="@count" order="descending" data-type="number"/>
+							<xsl:value-of select="."/>
+							<xsl:text>: </xsl:text>
+							<xsl:value-of select="@count"/>
+							<xsl:if test="not(position()=last())">
+								<xsl:text>, </xsl:text>
+							</xsl:if>
+						</xsl:for-each>
+					</field>
+				</xsl:if>				
 			</xsl:if>
 
 
@@ -281,23 +283,16 @@
 		<xsl:variable name="href" select="@xlink:href"/>
 		<xsl:variable name="value">
 			<xsl:choose>
-				<xsl:when test="@standardDate">
-					<xsl:value-of select="@standardDate"/>
+				<xsl:when test="string($lang) and contains($href, 'nomisma.org')">
+					<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about=$href], $lang)"/>
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:choose>
-						<xsl:when test="string($lang) and contains($href, 'nomisma.org')">
-							<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about=$href], $lang)"/>
+						<xsl:when test="not(string(.))">
+							<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about=$href], 'en')"/>
 						</xsl:when>
 						<xsl:otherwise>
-							<xsl:choose>
-								<xsl:when test="not(string(.))">
-									<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about=$href], 'en')"/>
-								</xsl:when>
-								<xsl:otherwise>
-									<xsl:value-of select="normalize-space(.)"/>
-								</xsl:otherwise>
-							</xsl:choose>
+							<xsl:value-of select="normalize-space(.)"/>
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:otherwise>
@@ -318,7 +313,7 @@
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:value-of
-						select="count($contentsDesc//nh:coin/nuds:typeDesc/*[local-name()='denomination'][.=$value]) + sum($contentsDesc//nh:coinGrp[nuds:typeDesc/*[local-name()='denomination'][.=$value]]/@count)"
+						select="count($contentsDesc//nh:coin[nuds:typeDesc/nuds:denomination[@xlink:href=$href]]) + sum($contentsDesc//nh:coinGrp[nuds:typeDesc/nuds:denomination[@xlink:href=$href]]/@count)"
 					/>
 				</xsl:otherwise>
 			</xsl:choose>
@@ -330,8 +325,4 @@
 			<xsl:value-of select="$value"/>
 		</name>
 	</xsl:template>
-
-	<!--<xsl:template match="nh:contentsDesc">
-		<xsl:apply-templates select="descendant::nuds:typeDesc"/>
-	</xsl:template>-->
 </xsl:stylesheet>
