@@ -59,18 +59,20 @@
 				<dl class="dl-horizontal">
 					<xsl:choose>
 						<xsl:when test="str[@name='recordType'] = 'hoard'">
-							<dt>
-								<xsl:if test="$lang='ar'">
-									<xsl:attribute name="class">ar</xsl:attribute>
-								</xsl:if>
-								<xsl:value-of select="numishare:regularize_node('findspot', $lang)"/>
-							</dt>
-							<dd>
-								<xsl:if test="$lang='ar'">
-									<xsl:attribute name="class">ar</xsl:attribute>
-								</xsl:if>
-								<xsl:value-of select="arr[@name='findspot_facet']/str[1]"/>
-							</dd>
+							<xsl:if test="string(str[@name='findspot_display'])">
+								<dt>
+									<xsl:if test="$lang='ar'">
+										<xsl:attribute name="class">ar</xsl:attribute>
+									</xsl:if>
+									<xsl:value-of select="numishare:regularize_node('findspot', $lang)"/>
+								</dt>
+								<dd>
+									<xsl:if test="$lang='ar'">
+										<xsl:attribute name="class">ar</xsl:attribute>
+									</xsl:if>
+									<xsl:value-of select="str[@name='findspot_display']"/>
+								</dd>
+							</xsl:if>							
 							<dt>
 								<xsl:if test="$lang='ar'">
 									<xsl:attribute name="class">ar</xsl:attribute>

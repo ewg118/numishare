@@ -413,8 +413,7 @@
 							</xsl:choose>
 						</xsl:for-each>
 					</xsl:when>
-				</xsl:choose>
-				
+				</xsl:choose>				
 				
 				<xsl:choose>
 					<xsl:when test="exsl:node-set($typeDesc)/nuds:typeDesc/nuds:date">
