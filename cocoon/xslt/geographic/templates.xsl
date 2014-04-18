@@ -357,7 +357,9 @@
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:when>
-				<xsl:when test="$type='mint' or $type='object-mint'"/>
+				<xsl:when test="$type='mint' or $type='object-mint'">
+					<![CDATA[<a href=']]><xsl:value-of select="$href"/><![CDATA['>]]><xsl:value-of select="$href"/><![CDATA[</a><br/>See <a href=']]><xsl:value-of select="concat($url, 'results?q=mint_facet:\&#x022;', $title, '\&#x022;')"/><![CDATA['>other objects</a> from this mint.]]>
+				</xsl:when>
 				<xsl:when test="$type='findspot'">
 					<![CDATA[Findspot - Lat: ]]><xsl:value-of select="tokenize($coordinates, '\|')[1]"/><![CDATA[, Lon: ]]><xsl:value-of select="tokenize($coordinates, '\|')[2]"/>
 				</xsl:when>
@@ -436,11 +438,17 @@
 				</xsl:when>
 			</xsl:choose>
 		</xsl:variable>
-		<!-- output -->  { <xsl:if test="string($coordinates) and not($coordinates='NULL')">"point": {"lon": <xsl:value-of select="tokenize($coordinates, '\|')[2]"/>, "lat": <xsl:value-of
-			select="tokenize($coordinates, '\|')[1]"/>},</xsl:if> "title": "<xsl:value-of select="$title"/>", <xsl:if test="string($start)">"start": "<xsl:value-of select="$start"/>",</xsl:if>
-		<xsl:if test="string($end)">"end": "<xsl:value-of select="$end"/>",</xsl:if> "options": { "theme": "<xsl:value-of select="$theme"/>"<xsl:if test="string($description)">, "description":
-			"<xsl:value-of select="normalize-space($description)"/>"</xsl:if><xsl:if test="string($href) or string(@xlink:href)">, "href": "<xsl:value-of
-				select="if (string($href)) then $href else @xlink:href"/>"</xsl:if> } }  </xsl:template>
+		<!-- output -->  
+		<xsl:variable name="json">
+			{ <xsl:if test="string($coordinates) and not($coordinates='NULL')">"point": {"lon": <xsl:value-of select="tokenize($coordinates, '\|')[2]"/>, "lat": <xsl:value-of
+				select="tokenize($coordinates, '\|')[1]"/>},</xsl:if> "title": "<xsl:value-of select="$title"/>", <xsl:if test="string($start)">"start": "<xsl:value-of select="$start"/>",</xsl:if>
+			<xsl:if test="string($end)">"end": "<xsl:value-of select="$end"/>",</xsl:if> "options": { "theme": "<xsl:value-of select="$theme"/>"<xsl:if test="string($description)">, "description":
+				"<xsl:value-of select="normalize-space($description)"/>"</xsl:if><xsl:if test="string($href) or string(@xlink:href)">, "href": "<xsl:value-of
+					select="if (string($href)) then $href else @xlink:href"/>"</xsl:if> } }  
+		</xsl:variable>
+		
+		<xsl:value-of select="normalize-space($json)"/>
+		</xsl:template>
 
 	<xsl:template name="getPlacemark">
 		<xsl:param name="href"/>
