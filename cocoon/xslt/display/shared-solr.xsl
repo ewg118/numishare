@@ -59,10 +59,10 @@
 
 		<!-- *********** FACETS ************** -->
 
-		<xsl:apply-templates select="nuds:objectType | nuds:denomination | nuds:manufacture | nuds:material">
+		<xsl:apply-templates select="nuds:objectType | nuds:denomination[string(.) or string(@xlink:href)] | nuds:manufacture[string(.) or string(@xlink:href)] | nuds:material[string(.) or string(@xlink:href)]">
 			<xsl:with-param name="lang" select="$lang"/>
 		</xsl:apply-templates>
-		<xsl:apply-templates select="descendant::nuds:persname | descendant::nuds:corpname | descendant::nuds:geogname|descendant::nuds:famname">
+		<xsl:apply-templates select="descendant::nuds:persname[string(.) or string(@xlink:href)] | descendant::nuds:corpname[string(.) or string(@xlink:href)] | descendant::nuds:geogname[string(.) or string(@xlink:href)]|descendant::nuds:famname[string(.) or string(@xlink:href)]">
 			<xsl:with-param name="lang" select="$lang"/>
 		</xsl:apply-templates>
 
@@ -253,7 +253,7 @@
 			</refs>
 		</xsl:variable>
 
-		<xsl:for-each select="$refs//ref">
+		<xsl:for-each select="$refs//ref[string-length(normalize-space(.)) &gt; 0]">
 			<xsl:sort order="ascending"/>
 			<field name="reference_facet">
 				<xsl:value-of select="."/>

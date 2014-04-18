@@ -194,7 +194,7 @@
 
 				<xsl:variable name="denominations" as="element()*">
 					<denominations>
-						<xsl:for-each select="distinct-values($total-counts//name)">
+						<xsl:for-each select="distinct-values($total-counts//name[string-length(.) &gt; 0])">
 							<xsl:variable name="name" select="."/>
 							<name>
 								<xsl:attribute name="count">
