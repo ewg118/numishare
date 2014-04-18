@@ -141,7 +141,17 @@
 			</field>
 		</xsl:if>
 		<field name="{@xlink:role}_text">
-			<xsl:value-of select="$label"/>
+			<xsl:choose>
+				<xsl:when test="@xlink:role='findspot' and contains(@xlink:href, 'geonames.org')">
+					<!-- combine the text with the label -->
+					<xsl:value-of select="$label"/>
+					<xsl:text> </xsl:text>
+					<xsl:value-of select="$geonames//place[@id=$href]/@label"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="$label"/>
+				</xsl:otherwise>
+			</xsl:choose>
 		</field>
 		<xsl:if test="string(@xlink:href)">
 			<field name="{@xlink:role}_uri">
