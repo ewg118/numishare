@@ -414,7 +414,7 @@
 				<input type="hidden" name="lang" value="{$lang}"/>
 			</xsl:if>
 			<br/>
-			<xsl:if test="/content//collection_type != 'hoard'">
+			<xsl:if test="$collection_type = 'object'">
 				<div>
 					<b><xsl:value-of select="numishare:normalizeLabel('results_has-images', $lang)"/>:</b>
 					<xsl:choose>
