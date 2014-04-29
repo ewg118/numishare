@@ -146,13 +146,13 @@ ul li, ol li {
 	margin-right:5px;
 	display:inline;
 }
-.from_date,.to_date {
+.from_date,.to_date, #from_date, #to_date {
 	width:75px;
 	margin-left:0px;
 	margin-right:5px;
 	display:inline;
 }
-.from_era,.to_era {
+.from_era,.to_era, #from_era, #to_era {
 	width:100px;
 	margin-left:0px;
 	margin-right:5px;

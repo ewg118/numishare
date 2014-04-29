@@ -72,7 +72,7 @@
 									</xsl:if>
 									<xsl:value-of select="str[@name='findspot_display']"/>
 								</dd>
-							</xsl:if>							
+							</xsl:if>
 							<dt>
 								<xsl:if test="$lang='ar'">
 									<xsl:attribute name="class">ar</xsl:attribute>
@@ -363,7 +363,7 @@
 	<xsl:template match="lst[@name='facet_fields']">
 		<!-- ignore mint_geo-->
 		<xsl:apply-templates select="lst[not(@name='mint_geo') and number(int[@name='numFacetTerms']) &gt; 0]" mode="facet"/>
-		<form action="results" id="facet_form">
+		<form action="results" role="form" id="facet_form">
 			<xsl:variable name="imageavailable_stripped">
 				<xsl:for-each select="$tokenized_q[not(contains(., 'imagesavailable'))]">
 					<xsl:value-of select="."/>
@@ -372,6 +372,43 @@
 					</xsl:if>
 				</xsl:for-each>
 			</xsl:variable>
+
+			<!-- date ranges -->
+			<h4>
+				<xsl:choose>
+					<xsl:when test="$collection_type='hoard'">
+						<xsl:value-of select="numishare:normalize_fields('closing_date', $lang)"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="numishare:normalize_fields('dateRange', $lang)"/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</h4>
+			<div class="form-group">
+				<div>
+					<label>
+						<xsl:value-of select="numishare:normalize_fields('fromDate', $lang)"/>
+					</label>
+				</div>
+				<input type="text" id="from_date" class="form-control"/>
+				<select id="from_era" class="form-control">
+					<option value="minus">B.C.</option>
+					<option value="" selected="selected">A.D.</option>
+				</select>
+			</div>
+			<div class="form-group">
+				<div>
+					<label>
+						<xsl:value-of select="numishare:normalize_fields('toDate', $lang)"/>
+					</label>
+				</div>
+				<input type="text" id="to_date" class="form-control"/>
+				<select id="to_era" class="form-control">
+					<option value="minus">B.C.</option>
+					<option value="" selected="selected">A.D.</option>
+				</select>
+			</div>
+			<!-- hidden params -->
 			<input type="hidden" name="q" id="facet_form_query" value="{if (string($imageavailable_stripped)) then $imageavailable_stripped else '*:*'}"/>
 			<xsl:if test="string($lang)">
 				<input type="hidden" name="lang" value="{$lang}"/>
@@ -494,7 +531,7 @@
 							<xsl:text>*:*</xsl:text>
 						</xsl:otherwise>
 					</xsl:choose>
-				</xsl:variable>				
+				</xsl:variable>
 				<select id="{@name}-select" multiple="multiple" class="multiselect {@name}-button" title="{numishare:normalize_fields(@name, $lang)}" q="{$q}" mincount="{$mincount}"
 					new_query="{if (contains($q, @name)) then $select_new_query else ''}">
 					<xsl:if test="contains($q, @name)">

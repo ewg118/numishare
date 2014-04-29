@@ -67,30 +67,43 @@ function getQuery() {
 		}
 	});
 	
+	//date range search
+	if ($('#from_date') .length > 0 || $('#to_date') .length > 0) {
+		if ($('#from_date') .val().length > 0 || $('#to_date') .val().length > 0) {
+			var dateRange = getDateRange(collection_type);
+			if (dateRange.length > 0) {
+				query.push(dateRange);
+			}
+		}
+	}
+	
 	if ($('#imagesavailable') .is(':checked')) {
 		query.push('imagesavailable:true');
 	}
 	
-	//add department from collection page
-	if ($('#collection-widget').length != 0) {
-		var department = 'department_facet:"' + $('#collection-widget').attr('title') + '"';
-		query.push(department);
-	}
-	
-	//add keyword search from collection page
-	if ($('#cs_text').length != 0) {
-		if ($('#cs_text').val().length > 0) {
-			var fulltext = 'fulltext:' + $('#cs_text').val();
-			query.push(fulltext);
-		}
-	}
-	
-	//set the value attribute of the q param to the query assembled by javascript	
+	//set the value attribute of the q param to the query assembled by javascript
 	if (query.length > 0) {
 		return query.join(' AND ');
 	} else {
 		return '*:*';
 	}
+}
+
+//get the date range
+function getDateRange(collection_type) {
+	if (collection_type == 'hoard') {
+		var string = 'tpq_num:';
+	} else {
+		var string = 'year_num:';
+	}
+	var from_date = $('#from_date') .val().length > 0? $('#from_date') .val(): '*';
+	var from_era = $('#from_era') .val() == 'minus'? '-': '';
+	
+	var to_date = $('#to_date') .val().length > 0? $('#to_date') .val(): '*';
+	var to_era = $('#to_era') .val() == 'minus'? '-': '';
+	
+	string += '[' + (from_date == '*'? '': from_era) + from_date + ' TO ' + (to_date == '*'? '': to_era) + to_date + ']';
+	return string;
 }
 
 //function for assembling the Lucene syntax string for querying on centuries and decades

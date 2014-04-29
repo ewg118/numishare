@@ -49,13 +49,13 @@
 				</title>
 				<!-- alternates -->
 				<link rel="alternate" type="application/atom+xml" href="{concat(//config/url, 'feed/?q=', $q)}"/>
-				<link rel="alternate" type="text/csv" href="{concat(//config/url, 'data.csv/?q=', $q)}"/>
+				<link rel="alternate" type="text/csv" href="{concat(//config/url, 'data.csv/?q=', $q, if (string($sort)) then concat('&amp;sort=', $sort) else ''}"/>
 				<xsl:choose>
 					<xsl:when test="/content/config/collection_type = 'hoard'">
-						<link rel="alternate" type="application/application/vnd.google-earth.kml+xml" href="{concat(//config/url, 'findspots.kml/?q=', $q)}"/>
+						<link rel="alternate" type="application/application/vnd.google-earth.kml+xml" href="{concat(//config/url, 'findspots.kml/?q=', $q, if(string($lang)) then concat('&amp;lang=', $lang) else '')}"/>
 					</xsl:when>
 					<xsl:otherwise>
-						<link rel="alternate" type="application/application/vnd.google-earth.kml+xml" href="{concat(//config/url, 'query.kml/?q=', $q)}"/>
+						<link rel="alternate" type="application/application/vnd.google-earth.kml+xml" href="{concat(//config/url, 'query.kml/?q=', $q, if(string($lang)) then concat('&amp;lang=', $lang) else '')}"/>
 					</xsl:otherwise>
 				</xsl:choose>
 				<!-- opensearch compliance -->
@@ -112,29 +112,29 @@
 							<h2>
 								<xsl:value-of select="numishare:normalizeLabel('results_data-options', $lang)"/>
 							</h2>
-							<a href="{$display_path}feed/?q={$q}">
+							<a href="{$display_path}feed/?q={$q}{if(string($lang)) then concat('&amp;lang=', $lang) else ''}">
 								<img src="{$display_path}images/atom-medium.png" title="Atom" alt="Atom"/>
 							</a>
 							<xsl:if test="//lst[@name='mint_geo']/int[@name='numFacetTerms'] &gt; 0">
 								<xsl:choose>
 									<xsl:when test="/content/config/collection_type = 'hoard'">
-										<a href="{$display_path}findspots.kml?q={$q}">
+										<a href="{$display_path}findspots.kml?q={$q}{if(string($lang)) then concat('&amp;lang=', $lang) else ''}">
 											<img src="{$display_path}images/googleearth.png" alt="KML" title="KML: Limit, 500 objects"/>
 										</a>
 									</xsl:when>
 									<xsl:otherwise>
-										<a href="{$display_path}query.kml?q={$q}">
+										<a href="{$display_path}query.kml?q={$q}{if(string($lang)) then concat('&amp;lang=', $lang) else ''}">
 											<img src="{$display_path}images/googleearth.png" alt="KML" title="KML: Limit, 500 objects"/>
 										</a>
 									</xsl:otherwise>
 								</xsl:choose>
 
 							</xsl:if>
-							<a href="{$display_path}data.csv?q={$q}">
+							<a href="{$display_path}data.csv?q={$q}{if(string($lang)) then concat('&amp;lang=', $lang) else ''}{if (string($sort)) then concat('&amp;sort=', $sort) else ''}">
 								<!-- the image below is copyright of Silvestre Herrera, available freely on wikimedia commons: http://commons.wikimedia.org/wiki/File:X-office-spreadsheet_Gion.svg -->
 								<img src="{$display_path}images/spreadsheet.png" title="CSV" alt="CSV"/>
 							</a>
-							<a href="{$display_path}visualize?compare={$q}">
+							<a href="{$display_path}visualize?compare={$q}{if(string($lang)) then concat('&amp;lang=', $lang) else ''}">
 								<!-- the image below is copyright of Mark James, available freely on wikimedia commons: http://commons.wikimedia.org/wiki/File:Chart_bar.png -->
 								<img src="{$display_path}images/visualize.png" title="Visualize" alt="Visualize"/>
 							</a>
