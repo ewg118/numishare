@@ -191,7 +191,6 @@
 				<html>
 					<head>
 						<xsl:call-template name="generic_head"/>
-
 						<xsl:choose>
 							<xsl:when test="$recordType='physical'">
 								<xsl:if test="$has_mint_geo = 'true' or $has_findspot_geo = 'true'">
@@ -234,10 +233,10 @@
 								<script type="text/javascript" src="{$display_path}javascript/timeline-2.3.0.js"/>
 								<link type="text/css" href="{$display_path}timeline-2.3.0.css" rel="stylesheet"/>
 								<script type="text/javascript" src="{$display_path}javascript/timemap_full.pack.js"/>
-								<script type="text/javascript" src="{$display_path}javascript/param.js"/>
-								<script type="text/javascript" src="{$display_path}javascript/loaders/kml.js"/>
+								<script type="text/javascript" src="{$display_path}javascript/param.js"/>								
 							</xsl:when>
 						</xsl:choose>
+						<link type="text/css" href="{$display_path}style.css" rel="stylesheet"/>
 					</head>
 					<body>
 						<xsl:call-template name="header"/>
@@ -271,8 +270,14 @@
 		<title id="{$id}">
 			<xsl:value-of select="//config/title"/>
 			<xsl:text>: </xsl:text>
-			<xsl:value-of
-				select="if (descendant::nuds:nuds) then descendant::nuds:nuds/nuds:descMeta/nuds:title else if (descendant::*[local-name()='nudsHoard']) then descendant::nuds:recordId else ''"/>
+			<xsl:choose>
+				<xsl:when test="descendant::*:descMeta/*:title[@xml:lang=$lang]">
+					<xsl:value-of select="descendant::*:descMeta/*:title[@xml:lang=$lang]"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="descendant::*:descMeta/*:title[@xml:lang='en']"/>
+				</xsl:otherwise>
+			</xsl:choose>
 		</title>
 		<!-- alternates -->
 		<link rel="alternate" type="application/xml" href="{concat($url, 'id/', $id)}.xml"/>
@@ -287,7 +292,6 @@
 		<!-- bootstrap -->
 		<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"/>
 		<script type="text/javascript" src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"/>
-		<link type="text/css" href="{$display_path}style.css" rel="stylesheet"/>
 		<xsl:if test="string(//config/google_analytics)">
 			<script type="text/javascript">
 				<xsl:value-of select="//config/google_analytics"/>

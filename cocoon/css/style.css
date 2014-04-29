@@ -130,7 +130,7 @@ ul li, ol li {
 .compare-select {
 	width:400px;
 }
-.category_list, .sparql_facets, select[name="interval"], #stacking, #image {
+.category_list, .sparql_facets, select[name="interval"], #stacking, #image, .certainty-select {
 	width:175px;
 	display:inline;
 }
@@ -146,13 +146,13 @@ ul li, ol li {
 	margin-right:5px;
 	display:inline;
 }
-.from_date,.to_date {
+.from_date,.to_date, #from_date, #to_date {
 	width:75px;
 	margin-left:0px;
 	margin-right:5px;
 	display:inline;
 }
-.from_era,.to_era {
+.from_era,.to_era, #from_era, #to_era {
 	width:100px;
 	margin-left:0px;
 	margin-right:5px;
@@ -337,14 +337,14 @@ li.h_item {
  */
 div#timelinecontainer {
 	width:100%;
-	height: 250px;
+	height: 200px;
 }
 div#mapcontainer {
 	width:100%;
 	height: 400px;
 }
 .maps-page #mapcontainer {
-	height:600px;
+	height:500px;
 	width:100%;
 }
 div.olFramedCloudPopupContent {
@@ -447,4 +447,7 @@ div.custominfostyle {
 }
 .mr {
 	display:none;
+}
+.center-block {
+	width:50%;	
 }

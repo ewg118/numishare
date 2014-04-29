@@ -59,10 +59,10 @@
 
 		<!-- *********** FACETS ************** -->
 
-		<xsl:apply-templates select="nuds:objectType | nuds:denomination | nuds:manufacture | nuds:material">
+		<xsl:apply-templates select="nuds:objectType | nuds:denomination[string(.) or string(@xlink:href)] | nuds:manufacture[string(.) or string(@xlink:href)] | nuds:material[string(.) or string(@xlink:href)]">
 			<xsl:with-param name="lang" select="$lang"/>
 		</xsl:apply-templates>
-		<xsl:apply-templates select="descendant::nuds:persname | descendant::nuds:corpname | descendant::nuds:geogname|descendant::nuds:famname">
+		<xsl:apply-templates select="descendant::nuds:persname[string(.) or string(@xlink:href)] | descendant::nuds:corpname[string(.) or string(@xlink:href)] | descendant::nuds:geogname[string(.) or string(@xlink:href)]|descendant::nuds:famname[string(.) or string(@xlink:href)]">
 			<xsl:with-param name="lang" select="$lang"/>
 		</xsl:apply-templates>
 
@@ -126,10 +126,32 @@
 		</xsl:variable>
 		
 		<field name="{@xlink:role}_facet">
-			<xsl:value-of select="$label"/>
+			<xsl:choose>
+				<xsl:when test="@xlink:role='findspot' and contains(@xlink:href, 'geonames.org')">
+					<xsl:value-of select="$geonames//place[@id=$href]/@label"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="$label"/>
+				</xsl:otherwise>
+			</xsl:choose>			
 		</field>
+		<xsl:if test="@xlink:role='findspot'">
+			<field name="findspot_display">
+				<xsl:value-of select="$label"/>
+			</field>
+		</xsl:if>
 		<field name="{@xlink:role}_text">
-			<xsl:value-of select="$label"/>
+			<xsl:choose>
+				<xsl:when test="@xlink:role='findspot' and contains(@xlink:href, 'geonames.org')">
+					<!-- combine the text with the label -->
+					<xsl:value-of select="$label"/>
+					<xsl:text> </xsl:text>
+					<xsl:value-of select="$geonames//place[@id=$href]/@label"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="$label"/>
+				</xsl:otherwise>
+			</xsl:choose>
 		</field>
 		<xsl:if test="string(@xlink:href)">
 			<field name="{@xlink:role}_uri">
@@ -144,14 +166,14 @@
 					<xsl:variable name="value" select="."/>
 					<!-- *_geo format is 'mint name|URI of resource|KML-compliant geographic coordinates' -->
 					<field name="{@xlink:role}_geo">
-						<xsl:value-of select="."/>
+						<xsl:value-of select="$geonames//place[@id=$href]/@label"/>
 						<xsl:text>|</xsl:text>
 						<xsl:value-of select="$href"/>
 						<xsl:text>|</xsl:text>
-						<xsl:value-of select="exsl:node-set($geonames)//place[@id=$href]"/>
+						<xsl:value-of select="$geonames//place[@id=$href]"/>
 					</field>
 					<!-- insert hierarchical facets -->
-					<xsl:for-each select="tokenize(exsl:node-set($geonames)//place[@id=$href]/@hierarchy, '\|')">
+					<xsl:for-each select="tokenize($geonames//place[@id=$href]/@hierarchy, '\|')">
 						<xsl:if test="not(. = $value)">
 							<field name="{$role}_hier">
 								<xsl:value-of select="concat('L', position(), '|', .)"/>
@@ -183,7 +205,14 @@
 									<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about=$href], $lang)"/>
 								</xsl:when>
 								<xsl:otherwise>
-									<xsl:value-of select="normalize-space(.)"/>
+									<xsl:choose>
+										<xsl:when test="not(string(.))">
+											<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about=$href], 'en')"/>
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:value-of select="normalize-space(.)"/>
+										</xsl:otherwise>
+									</xsl:choose>
 								</xsl:otherwise>
 							</xsl:choose>
 							<xsl:text>|</xsl:text>
@@ -214,7 +243,7 @@
 	<xsl:template match="*[local-name()='refDesc']">
 		
 		<!-- references -->
-		<xsl:variable name="refs">
+		<xsl:variable name="refs" as="element()*">
 			<refs>
 				<xsl:for-each select="*[local-name()='reference']">
 					<ref>
@@ -224,7 +253,7 @@
 			</refs>
 		</xsl:variable>
 
-		<xsl:for-each select="exsl:node-set($refs)//ref">
+		<xsl:for-each select="$refs//ref[string-length(normalize-space(.)) &gt; 0]">
 			<xsl:sort order="ascending"/>
 			<field name="reference_facet">
 				<xsl:value-of select="."/>

@@ -4,7 +4,7 @@
 	<xsl:variable name="tokens" select="tokenize($compare, ',')"/>
 	
 	<xsl:template match="/">
-		<select multiple="multiple" size="10" class="compare-select">
+		<select multiple="multiple" size="10" class="compare-select form-control">
 			<xsl:apply-templates select="descendant::doc"/>
 		</select>
 	</xsl:template>

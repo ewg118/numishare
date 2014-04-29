@@ -16,7 +16,7 @@
 	<xsl:variable name="tokenized_q" select="tokenize($q, ' AND ')"/>
 
 	<xsl:template match="/">
-		<html lang="en">
+		<html>
 			<head>
 				<title>
 					<xsl:value-of select="//config/title"/>
@@ -42,6 +42,9 @@
 				<!-- display timemap for hoards, regular openlayers map for coin and coin type collections -->
 				<xsl:choose>
 					<xsl:when test="$collection_type='hoard'">
+						<!-- Add fancyBox -->
+						<link rel="stylesheet" href="{$display_path}jquery.fancybox.css?v=2.1.5" type="text/css" media="screen"/>
+						<script type="text/javascript" src="{$display_path}javascript/jquery.fancybox.pack.js?v=2.1.5"/>
 						<!-- timemap dependencies -->
 						<script type="text/javascript" src="http://www.openlayers.org/api/OpenLayers.js"/>
 						<script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3.2&amp;sensor=false"/>
@@ -50,7 +53,6 @@
 						<link type="text/css" href="{$display_path}timeline-2.3.0.css" rel="stylesheet"/>
 						<script type="text/javascript" src="{$display_path}javascript/timemap_full.pack.js"/>
 						<script type="text/javascript" src="{$display_path}javascript/param.js"/>
-						<script type="text/javascript" src="{$display_path}javascript/loaders/kml.js"/>
 						<script type="text/javascript" src="{$display_path}javascript/map_fullscreen_functions.js"/>
 						<script type="text/javascript" src="{$display_path}javascript/map_functions.js"/>
 						<script type="text/javascript" src="{$display_path}javascript/facet_functions.js"/>
@@ -87,36 +89,53 @@
 
 			<xsl:choose>
 				<xsl:when test="//result[@name='response']/@numFound &gt; 0">
-					<div id="legend">
-						<h2>
-							<xsl:value-of select="numishare:regularize_node('legend', $lang)"/>
-							<small>
-								<a href="#map_filters" id="show_filters">
-									<xsl:value-of select="numishare:normalizeLabel('results_refine-results', $lang)"/>
-								</a>
-							</small>
-						</h2>
-
-						<div class="legend">
-							<table>
-								<tbody>
-									<tr>
-										<td style="background-color:#0000ff;border:2px solid #000072;width:50px;"/>
-										<td style="width:100px">
-											<xsl:value-of select="numishare:regularize_node('mint', $lang)"/>
-										</td>
-										<td style="background-color:#00a000;border:2px solid #006100;width:50px;"/>
-										<td style="width:100px">
-											<xsl:value-of select="numishare:regularize_node('findspot', $lang)"/>
-										</td>
-									</tr>
-								</tbody>
-							</table>
-						</div>
-						<small>
-							<a href="{$display_path}maps"><span class="glyphicon glyphicon-arrow-left"/>Return</a>
-						</small>
-					</div>
+					<xsl:choose>
+						<xsl:when test="$collection_type='hoard'">
+							<div id="timemap-legend">
+								<h3>
+									<a href="#map_filters" id="show_filters">
+										<xsl:value-of select="numishare:normalizeLabel('results_refine-results', $lang)"/>
+									</a>
+								</h3>
+								<small>
+									<a href="{$display_path}maps"><span class="glyphicon glyphicon-arrow-left"/>Return</a>
+								</small>
+							</div>
+						</xsl:when>
+						<xsl:otherwise>
+							<div id="legend">
+								<h2>
+									<xsl:value-of select="numishare:regularize_node('legend', $lang)"/>
+									<small>
+										<a href="#map_filters" id="show_filters">
+											<xsl:value-of select="numishare:normalizeLabel('results_refine-results', $lang)"/>
+										</a>
+									</small>
+								</h2>
+								
+								<div class="legend">
+									<table>
+										<tbody>
+											<tr>
+												<td style="background-color:#0000ff;border:2px solid #000072;width:50px;"/>
+												<td style="width:100px">
+													<xsl:value-of select="numishare:regularize_node('mint', $lang)"/>
+												</td>
+												<td style="background-color:#00a000;border:2px solid #006100;width:50px;"/>
+												<td style="width:100px">
+													<xsl:value-of select="numishare:regularize_node('findspot', $lang)"/>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+								<small>
+									<a href="{$display_path}maps"><span class="glyphicon glyphicon-arrow-left"/>Return</a>
+								</small>
+							</div>
+						</xsl:otherwise>
+					</xsl:choose>
+					
 					<div style="display:none">
 						<div id="map_filters">
 							<h2>
@@ -132,7 +151,7 @@
 							<div class="row">
 								<div class="col-md-12">
 									<div id="timemap">
-										<div id="mapcontainer">
+										<div id="mapcontainer" class="fullscreen">
 											<div id="map"/>
 										</div>
 										<div id="timelinecontainer">

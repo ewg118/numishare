@@ -27,29 +27,61 @@
 
 		<xsl:variable name="all-dates">
 			<dates>
-				<xsl:for-each select="descendant::nuds:typeDesc">
-					<xsl:choose>
-						<xsl:when test="string(@xlink:href)">
-							<xsl:variable name="href" select="@xlink:href"/>
-							<xsl:for-each select="exsl:node-set($nudsGroup)//object[@xlink:href=$href]/descendant::*/@standardDate">
-								<xsl:if test="number(.)">
-									<date>
+				<xsl:choose>
+					<xsl:when test="descendant::nh:deposit//@standardDate">
+						<xsl:for-each select="descendant::nh:deposit//@standardDate">
+							<date>
+								<xsl:choose>
+									<xsl:when test="number(.) &lt;= 0">
+										<xsl:value-of select="number(.) - 1"/>
+									</xsl:when>
+									<xsl:otherwise>
 										<xsl:value-of select="number(.)"/>
-									</date>
-								</xsl:if>
-							</xsl:for-each>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:for-each select="descendant::*/@standardDate">
-								<xsl:if test="number(.)">
-									<date>
-										<xsl:value-of select="number(.)"/>
-									</date>
-								</xsl:if>
-							</xsl:for-each>
-						</xsl:otherwise>
-					</xsl:choose>
-				</xsl:for-each>
+									</xsl:otherwise>
+								</xsl:choose>
+							</date>
+						</xsl:for-each>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:for-each select="descendant::nuds:typeDesc">
+							<xsl:choose>
+								<xsl:when test="string(@xlink:href)">
+									<xsl:variable name="href" select="@xlink:href"/>
+									<xsl:for-each select="exsl:node-set($nudsGroup)//object[@xlink:href=$href]/descendant::*/@standardDate">
+										<xsl:if test="number(.)">
+											<date>
+												<xsl:choose>
+													<xsl:when test="number(.) &lt;= 0">
+														<xsl:value-of select="number(.) - 1"/>
+													</xsl:when>
+													<xsl:otherwise>
+														<xsl:value-of select="number(.)"/>
+													</xsl:otherwise>
+												</xsl:choose>
+											</date>
+										</xsl:if>
+									</xsl:for-each>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:for-each select="descendant::*/@standardDate">
+										<xsl:if test="number(.)">
+											<date>
+												<xsl:choose>
+													<xsl:when test="number(.) &lt;= 0">
+														<xsl:value-of select="number(.) - 1"/>
+													</xsl:when>
+													<xsl:otherwise>
+														<xsl:value-of select="number(.)"/>
+													</xsl:otherwise>
+												</xsl:choose>
+											</date>
+										</xsl:if>
+									</xsl:for-each>
+								</xsl:otherwise>
+							</xsl:choose>
+						</xsl:for-each>
+					</xsl:otherwise>
+				</xsl:choose>
 			</dates>
 		</xsl:variable>
 		<xsl:variable name="dates">
@@ -159,13 +191,13 @@
 						</xsl:for-each>
 					</total-counts>
 				</xsl:variable>
-				
+
 				<xsl:variable name="denominations" as="element()*">
 					<denominations>
-						<xsl:for-each select="distinct-values($total-counts//name)">
+						<xsl:for-each select="distinct-values($total-counts//name[string-length(.) &gt; 0])">
 							<xsl:variable name="name" select="."/>
 							<name>
-								<xsl:attribute name="count">									
+								<xsl:attribute name="count">
 									<xsl:value-of select="sum($total-counts//name[.=$name]/@count)"/>
 								</xsl:attribute>
 								<xsl:value-of select="$name"/>
@@ -174,17 +206,19 @@
 					</denominations>
 				</xsl:variable>
 
-				<field name="description_display">
-					<xsl:for-each select="$denominations//*[local-name()='name']">
-						<xsl:sort select="@count" order="descending" data-type="number"/>
-						<xsl:value-of select="."/>
-						<xsl:text>: </xsl:text>
-						<xsl:value-of select="@count"/>
-						<xsl:if test="not(position()=last())">
-							<xsl:text>, </xsl:text>
-						</xsl:if>
-					</xsl:for-each>
-				</field>
+				<xsl:if test="count($denominations//*[local-name()='name']) &gt; 0">
+					<field name="description_display">
+						<xsl:for-each select="$denominations//*[local-name()='name']">
+							<xsl:sort select="@count" order="descending" data-type="number"/>
+							<xsl:value-of select="."/>
+							<xsl:text>: </xsl:text>
+							<xsl:value-of select="@count"/>
+							<xsl:if test="not(position()=last())">
+								<xsl:text>, </xsl:text>
+							</xsl:if>
+						</xsl:for-each>
+					</field>
+				</xsl:if>				
 			</xsl:if>
 
 
@@ -249,23 +283,16 @@
 		<xsl:variable name="href" select="@xlink:href"/>
 		<xsl:variable name="value">
 			<xsl:choose>
-				<xsl:when test="@standardDate">
-					<xsl:value-of select="@standardDate"/>
+				<xsl:when test="string($lang) and contains($href, 'nomisma.org')">
+					<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about=$href], $lang)"/>
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:choose>
-						<xsl:when test="string($lang) and contains($href, 'nomisma.org')">
-							<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about=$href], $lang)"/>
+						<xsl:when test="not(string(.))">
+							<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about=$href], 'en')"/>
 						</xsl:when>
 						<xsl:otherwise>
-							<xsl:choose>
-								<xsl:when test="not(string(.))">
-									<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about=$href], 'en')"/>
-								</xsl:when>
-								<xsl:otherwise>
-									<xsl:value-of select="normalize-space(.)"/>
-								</xsl:otherwise>
-							</xsl:choose>
+							<xsl:value-of select="normalize-space(.)"/>
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:otherwise>
@@ -286,7 +313,7 @@
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:value-of
-						select="count($contentsDesc//nh:coin/nuds:typeDesc/*[local-name()='denomination'][.=$value]) + sum($contentsDesc//nh:coinGrp[nuds:typeDesc/*[local-name()='denomination'][.=$value]]/@count)"
+						select="count($contentsDesc//nh:coin[nuds:typeDesc/nuds:denomination[@xlink:href=$href]]) + sum($contentsDesc//nh:coinGrp[nuds:typeDesc/nuds:denomination[@xlink:href=$href]]/@count)"
 					/>
 				</xsl:otherwise>
 			</xsl:choose>
@@ -298,8 +325,4 @@
 			<xsl:value-of select="$value"/>
 		</name>
 	</xsl:template>
-
-	<!--<xsl:template match="nh:contentsDesc">
-		<xsl:apply-templates select="descendant::nuds:typeDesc"/>
-	</xsl:template>-->
 </xsl:stylesheet>

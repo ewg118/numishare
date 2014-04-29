@@ -123,11 +123,10 @@ function initialize_map(q, collection_type) {
 	map.addLayer(hoardLayer);
 	
 	function kmlLoaded() {
-		if (collection_type == 'hoard') {
-			map.zoomToExtent(hoardLayer.getDataExtent());
-		} else {
-			map.zoomToExtent(mintLayer.getDataExtent());
-		}
+		var bounds = new OpenLayers.Bounds();
+		bounds.extend(mintLayer.getDataExtent());
+		bounds.extend(hoardLayer.getDataExtent());
+		map.zoomToExtent(bounds);
 	}
 	
 	//enable events for mint selection

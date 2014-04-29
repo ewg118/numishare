@@ -5,8 +5,6 @@ Library: jQuery
 Description: Rendering graphics based on hoard counts
 ************************************/
 $(document).ready(function () {
-	$("#quantTabs").tabs();
-	
 	$('.toggle-coin').click(function () {
 		var id = $(this).attr('id').split('-')[0];
 		$('#' + id + '-div').toggle('slow');
@@ -18,9 +16,16 @@ $(document).ready(function () {
 		return false;
 	});
 	
-	//initialize timemap
-	var id = $('title').attr('id');
+	var calculate = getURLParameter('calculate');
+	if (calculate != 'null') {
+		$('#tabs a[href="#quantitative"]').tab('show');
+		if (calculate == 'date') {
+			$('#quant-tabs a[href="#dateTab"]').tab('show');
+		}
+	}
 	
+	//initialize timemap
+	var id = $('title').attr('id');	
 	initialize_timemap(id);
 });
 

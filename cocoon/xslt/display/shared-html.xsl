@@ -48,7 +48,7 @@
 		</xsl:variable>
 
 		<xsl:choose>
-			<xsl:when test="not(child::*)">
+			<xsl:when test="not(child::*) and (string(.) or string(@xlink:href))">
 				<xsl:variable name="href" select="@xlink:href"/>
 
 				<!-- the facet field is the @xlink:role if it exists, otherwise it is the name of the nuds element -->
@@ -80,22 +80,35 @@
 					<!-- pull language from nomisma, if available -->
 					<xsl:variable name="value">
 						<xsl:choose>							
-							<xsl:when test="string($lang) and contains($href, 'geonames.org')">
+							<xsl:when test="contains($href, 'geonames.org')">
 								<xsl:variable name="geonameId" select="tokenize($href, '/')[4]"/>
-								<xsl:variable name="geonames_data" select="document(concat($geonames-url, '/get?geonameId=', $geonameId, '&amp;username=', $geonames_api_key, '&amp;style=full'))"/>
+								
 								<xsl:choose>
-									<xsl:when test="count(exsl:node-set($geonames_data)//alternateName[@lang=$lang]) &gt; 0">
-										<xsl:for-each select="exsl:node-set($geonames_data)//alternateName[@lang=$lang]">
-											<xsl:value-of select="."/>
-											<xsl:if test="not(position()=last())">
-												<xsl:text>/</xsl:text>
-											</xsl:if>
-										</xsl:for-each>
+									<xsl:when test="number($geonameId)">
+										<xsl:variable name="geonames_data" as="element()*">
+											<results>
+												<xsl:copy-of select="document(concat($geonames-url, '/get?geonameId=', $geonameId, '&amp;username=', $geonames_api_key, '&amp;style=full'))"/>
+											</results>
+										</xsl:variable>
+										<xsl:variable name="label">
+											<xsl:variable name="countryCode" select="$geonames_data//countryCode"/>
+											<xsl:variable name="countryName" select="$geonames_data//countryName"/>
+											<xsl:variable name="name" select="$geonames_data//name"/>
+											<xsl:variable name="adminName1" select="$geonames_data//adminName1"/>						
+											<xsl:variable name="fcode" select="$geonames_data//fcode"/>
+											<!-- set a value equivalent to AACR2 standard for US, AU, CA, and GB.  This equation deviates from AACR2 for Malaysia since standard abbreviations for territories cannot be found -->
+											<xsl:value-of
+												select="if ($countryCode = 'US' or $countryCode = 'AU' or $countryCode = 'CA') then if ($fcode = 'ADM1') then $name else concat($name, ' (', $abbreviations//country[@code=$countryCode]/place[. = $adminName1]/@abbr, ')') else if ($countryCode= 'GB') then  if ($fcode = 'ADM1') then $name else concat($name, ' (', $adminName1, ')') else if ($fcode = 'PCLI') then $name else concat($name, ' (', $countryName, ')')"
+											/>
+										</xsl:variable>
+										
+										<xsl:value-of select="$label"/>
 									</xsl:when>
 									<xsl:otherwise>
-										<xsl:value-of select="exsl:node-set($geonames_data)//name"/>
+										<xsl:value-of select="normalize-space(.)"/>
 									</xsl:otherwise>
 								</xsl:choose>
+																
 							</xsl:when>
 							<xsl:otherwise>
 								<xsl:choose>
@@ -120,11 +133,25 @@
 					<xsl:choose>
 						<xsl:when test="contains($facets, $field)">
 							<a href="{$display_path}results?q={$field}_facet:&#x022;{$value}&#x022;{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
-								<xsl:value-of select="$value"/>
+								<xsl:choose>							
+									<xsl:when test="contains($href, 'geonames.org')">
+										<xsl:choose>
+											<xsl:when test="string(.)">
+												<xsl:value-of select="normalize-space(.)"/>
+											</xsl:when>
+											<xsl:otherwise>
+												<xsl:value-of select="$value"/>
+											</xsl:otherwise>
+										</xsl:choose>										
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:value-of select="$value"/>
+									</xsl:otherwise>
+								</xsl:choose>								
 							</a>
 						</xsl:when>
 						<xsl:otherwise>
-							<xsl:value-of select="$value"/>
+							<xsl:value-of select="$value"/>							
 						</xsl:otherwise>
 					</xsl:choose>
 
@@ -309,34 +336,118 @@
 		</div>
 	</xsl:template>
 	<!--***************************************** OPTIONS BAR **************************************** -->
-	<!--***************************************** OPTIONS BAR **************************************** -->
 	<xsl:template name="icons">
-		<div class="yui3-u-1">
-			<div class="submenu">
-				<div class="icon">
+		<div class="row pull-right">
+			<div class="col-md-12">
+				<!-- AddThis Button BEGIN -->
+				<div class="addthis_toolbox addthis_default_style">
+					<a class="addthis_button_preferred_1"></a>
+					<a class="addthis_button_preferred_2"></a>
+					<a class="addthis_button_preferred_3"></a>
+					<a class="addthis_button_preferred_4"></a>
+					<a class="addthis_button_compact"></a>
+					<a class="addthis_counter addthis_bubble_style"></a>
+					<xsl:text> | </xsl:text>
+					<a href="{$id}.xml">NUDS/XML</a>
+					<xsl:text> | </xsl:text>
+					<a href="{$id}.rdf">Nomisma RDF/XML</a>
+					<xsl:text> | </xsl:text>
 					<a href="{$id}.kml">KML</a>
 				</div>
-				<div class="icon">
-					<a href="{$id}.rdf">Nomisma RDF/XML</a>
-				</div>
-				<div class="icon">
-					<a href="{$id}.xml">NUDS/XML</a>
-				</div>
-				<div class="icon">
-					<!-- AddThis Button BEGIN -->
-					<div class="addthis_toolbox addthis_default_style ">
-						<a class="addthis_button_preferred_1"></a>
-						<a class="addthis_button_preferred_2"></a>
-						<a class="addthis_button_preferred_3"></a>
-						<a class="addthis_button_preferred_4"></a>
-						<a class="addthis_button_compact"></a>
-						<a class="addthis_counter addthis_bubble_style"></a>
-					</div>
-					<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=xa-525d63ef6a07cd89"></script>
-					<!-- AddThis Button END -->
-				</div>
+				<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=xa-525d63ef6a07cd89"></script>
+				<!-- AddThis Button END -->
 			</div>
 		</div>
 	</xsl:template>
+	
+	<xsl:variable name="abbreviations" as="element()*">
+		<abbreviations>
+			<country code="US">
+				<place abbr="Ala.">Alabama</place>
+				<place abbr="Alaska">Alaska</place>
+				<place abbr="Ariz.">Arizona</place>
+				<place abbr="Ark.">Arkansas</place>
+				<place abbr="Calif.">California</place>
+				<place abbr="Colo.">Colorado</place>
+				<place abbr="Conn.">Connecticut</place>
+				<place abbr="Del.">Delaware</place>
+				<place abbr="D.C.">Washington, D.C.</place>
+				<place abbr="Fla.">Florida</place>
+				<place abbr="Ga.">Georgia</place>
+				<place abbr="Hawaii">Hawaii</place>
+				<place abbr="Idaho">Idaho</place>
+				<place abbr="Ill.">Illinois</place>
+				<place abbr="Ind.">Indiana</place>
+				<place abbr="Iowa">Iowa</place>
+				<place abbr="Kans.">Kansas</place>
+				<place abbr="Ky.">Kentucky</place>
+				<place abbr="La.">Louisiana</place>
+				<place abbr="Maine">Maine</place>
+				<place abbr="Md.">Maryland</place>
+				<place abbr="Mass.">Massachusetts</place>
+				<place abbr="Mich.">Michigan</place>
+				<place abbr="Minn.">Minnesota</place>
+				<place abbr="Miss.">Mississippi</place>
+				<place abbr="Mo.">Missouri</place>
+				<place abbr="Mont.">Montana</place>
+				<place abbr="Nebr.">Nebraska</place>
+				<place abbr="Nev.">Nevada</place>
+				<place abbr="N.H.">New Hampshire</place>
+				<place abbr="N.J.">New Jersey</place>
+				<place abbr="N.M.">New Mexico</place>
+				<place abbr="N.Y.">New York</place>
+				<place abbr="N.C.">North Carolina</place>
+				<place abbr="N.D.">North Dakota</place>
+				<place abbr="Ohio">Ohio</place>
+				<place abbr="Okla.">Oklahoma</place>
+				<place abbr="Oreg.">Oregon</place>
+				<place abbr="Pa.">Pennsylvania</place>
+				<place abbr="R.I.">Rhode Island</place>
+				<place abbr="S.C.">South Carolina</place>
+				<place abbr="S.D">South Dakota</place>
+				<place abbr="Tenn.">Tennessee</place>
+				<place abbr="Tex.">Texas</place>
+				<place abbr="Utah">Utah</place>
+				<place abbr="Vt.">Vermont</place>
+				<place abbr="Va.">Virginia</place>
+				<place abbr="Wash.">Washington</place>
+				<place abbr="W.Va.">West Virginia</place>
+				<place abbr="Wis.">Wisconsin</place>
+				<place abbr="Wyo.">Wyoming</place>
+				<place abbr="A.S.">American Samoa</place>
+				<place abbr="Guam">Guam</place>
+				<place abbr="M.P.">Northern Mariana Islands</place>
+				<place abbr="P.R.">Puerto Rico</place>
+				<place abbr="V.I.">U.S. Virgin Islands</place>
+			</country>
+			<country code="CA">
+				<place abbr="Alta.">Alberta</place>
+				<place abbr="B.C.">British Columbia</place>
+				<place abbr="Alta.">Manitoba</place>
+				<place abbr="Man.">Alberta</place>
+				<place abbr="N.B.">New Brunswick</place>
+				<place abbr="Nfld.">Newfoundland and Labrador</place>
+				<place abbr="N.W.T.">Northwest Territories</place>
+				<place abbr="N.S.">Nova Scotia</place>
+				<place abbr="NU">Nunavut</place>
+				<place abbr="Ont.">Ontario</place>
+				<place abbr="P.E.I.">Prince Edward Island</place>
+				<place abbr="Que.">Quebec</place>
+				<place abbr="Sask.">Saskatchewan</place>
+				<place abbr="Y.T.">Yukon</place>
+			</country>
+			<country code="AU">
+				<place abbr="A.C.T.">Australian Capital Territory</place>
+				<place abbr="J.B.T.">Jervis Bay Territory</place>
+				<place abbr="N.S.W.">New South Wales</place>
+				<place abbr="N.T.">Northern Territory</place>
+				<place abbr="Qld.">Queensland</place>
+				<place abbr="S.A.">South Australia</place>
+				<place abbr="Tas.">Tasmania</place>
+				<place abbr="Vic.">Victoria</place>
+				<place abbr="W.A.">Western Australia</place>
+			</country>
+		</abbreviations>
+	</xsl:variable>
 
 </xsl:stylesheet>

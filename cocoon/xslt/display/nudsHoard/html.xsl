@@ -41,8 +41,9 @@
 			</xsl:choose>
 		</xsl:variable>
 
-		<div class="yui3-u-1">
-			<div class="content">
+
+		<div class="row">
+			<div class="col-md-12">
 				<h1>
 					<xsl:choose>
 						<xsl:when test="string($title)">
@@ -55,8 +56,32 @@
 				</h1>
 			</div>
 		</div>
-		<div class="yui3-u-1-2">
-			<div class="content">
+		<div class="row">
+			<div class="col-md-6">
+				<div class="content">
+					<xsl:if test="nh:descMeta/nh:hoardDesc">
+						<div class="metadata_section">
+							<xsl:apply-templates select="nh:descMeta/nh:hoardDesc"/>
+						</div>
+					</xsl:if>
+					<xsl:if test="nh:descMeta/nh:refDesc">
+						<div class="metadata_section">
+							<xsl:apply-templates select="nh:descMeta/nh:refDesc"/>
+						</div>
+					</xsl:if>
+					<xsl:if test="nh:descMeta/nh:noteSet">
+						<div class="metadata_section">
+							<h2>
+								<xsl:value-of select="numishare:regularize_node('noteSet', $lang)"/>
+							</h2>
+							<ul>
+								<xsl:apply-templates select="nh:descMeta/nh:noteSet/nh:note" mode="descMeta"/>
+							</ul>
+						</div>
+					</xsl:if>
+				</div>
+			</div>
+			<div class="col-md-6">
 				<div id="timemap">
 					<div id="mapcontainer">
 						<div id="map"/>
@@ -82,99 +107,75 @@
 								</td>
 							</tr>
 						</tbody>
-					</table>					
+					</table>
 				</div>
 				<p>View map in <a href="{$display_path}map/{$id}">fullscreen</a>.</p>
 			</div>
 		</div>
-		<div class="yui3-u-1-2">
-			<div class="content">
-				<xsl:if test="nh:descMeta/nh:hoardDesc">
-					<div class="metadata_section">
-						<xsl:apply-templates select="nh:descMeta/nh:hoardDesc"/>
-					</div>
-				</xsl:if>
-				<xsl:if test="nh:descMeta/nh:refDesc">
-					<div class="metadata_section">
-						<xsl:apply-templates select="nh:descMeta/nh:refDesc"/>
-					</div>
-				</xsl:if>
-				<xsl:if test="nh:descMeta/nh:noteSet">
-					<div class="metadata_section">
-						<h2>
-							<xsl:value-of select="numishare:regularize_node('noteSet', $lang)"/>
-						</h2>
-						<ul>
-							<xsl:apply-templates select="nh:descMeta/nh:noteSet/nh:note" mode="descMeta"/>
-						</ul>
-					</div>
-				</xsl:if>
-			</div>
-		</div>
-		<div class="yui3-u-1">
-			<div class="content">
+		<div class="row">
+			<div class="col-md-12">
 				<!--********************************* MENU ******************************************* -->
 				<xsl:if test="count(nh:descMeta/nh:contentsDesc/nh:contents/*) &gt; 0">
-					<div id="tabs">
-						<ul>
-							<li>
-								<a href="#contents">
-									<xsl:value-of select="numishare:normalizeLabel('display_contents', $lang)"/>
-								</a>
-							</li>
-							<li>
-								<a href="#quantitative">
-									<xsl:value-of select="numishare:normalizeLabel('display_quantitative', $lang)"/>
-								</a>
-							</li>
-						</ul>
-						<div id="contents">
+					<ul class="nav nav-pills" id="tabs">
+						<li class="active">
+							<a href="#contents" data-toggle="pill">
+								<xsl:value-of select="numishare:normalizeLabel('display_contents', $lang)"/>
+							</a>
+						</li>
+						<li>
+							<a href="#quantitative" data-toggle="pill">
+								<xsl:value-of select="numishare:normalizeLabel('display_quantitative', $lang)"/>
+							</a>
+						</li>
+					</ul>
+					<div class="tab-content">
+						<div class="tab-pane active" id="contents">
 							<xsl:if test="nh:descMeta/nh:contentsDesc">
 								<div class="metadata_section">
 									<xsl:call-template name="nh:contents"/>
 								</div>
 							</xsl:if>
 						</div>
-						<div id="quantitative">
+						<div class="tab-pane" id="quantitative">
 							<h1>
 								<xsl:value-of select="numishare:normalizeLabel('display_quantitative', $lang)"/>
 							</h1>
 							<span style="display:none" id="vis-pipeline">
 								<xsl:value-of select="$pipeline"/>
 							</span>
-							<div id="quantTabs">
-								<ul>
-									<li>
-										<a href="#visTab">
-											<xsl:value-of select="numishare:normalizeLabel('display_visualization', $lang)"/>
-										</a>
-									</li>
-									<li>
-										<a href="#dateTab">
-											<xsl:value-of select="numishare:normalizeLabel('display_date-analysis', $lang)"/>
-										</a>
-									</li>
-									<li>
-										<a href="#csvTab">
-											<xsl:value-of select="numishare:normalizeLabel('display_data-download', $lang)"/>
-										</a>
-									</li>
-								</ul>
-								<div id="visTab">
+							<ul class="nav nav-pills" id="quant-tabs">
+								<li class="active">
+									<a href="#visTab" data-toggle="pill">
+										<xsl:value-of select="numishare:normalizeLabel('display_visualization', $lang)"/>
+									</a>
+								</li>
+								<li>
+									<a href="#dateTab" data-toggle="pill">
+										<xsl:value-of select="numishare:normalizeLabel('display_date-analysis', $lang)"/>
+									</a>
+								</li>
+								<li>
+									<a href="#csvTab" data-toggle="pill">
+										<xsl:value-of select="numishare:normalizeLabel('display_data-download', $lang)"/>
+									</a>
+								</li>
+							</ul>
+							<div class="tab-content">
+								<div class="tab-pane active" id="visTab">
 									<xsl:call-template name="hoard-visualization">
 										<xsl:with-param name="action" select="concat('./', $id, '#quantitative')"/>
 									</xsl:call-template>
 								</div>
-								<div id="dateTab">
+								<div class="tab-pane" id="dateTab">
 									<xsl:call-template name="date-vis">
 										<xsl:with-param name="action" select="concat('./', $id, '#quantitative')"/>
 									</xsl:call-template>
 								</div>
-								<div id="csvTab">
+								<div class="tab-pane" id="csvTab">
 									<xsl:call-template name="data-download"/>
 								</div>
+								<span id="formId" style="display:none"/>
 							</div>
-							<span id="formId" style="display:none"/>
 						</div>
 					</div>
 				</xsl:if>
@@ -192,14 +193,14 @@
 		<xsl:variable name="contentsDesc" as="element()*">
 			<xsl:copy-of select="parent::node()/nh:contentsDesc/nh:contents"/>
 		</xsl:variable>
-		
+
 
 		<h2>
 			<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
 		</h2>
 		<ul>
 			<xsl:apply-templates mode="descMeta"/>
-			
+
 			<xsl:if test="$hasContents = 'true'">
 				<xsl:if test="not(nh:deposit/nh:date) and not(nh:deposit/nh:dateRange)">
 					<xsl:variable name="all-dates">
@@ -239,13 +240,13 @@
 							</xsl:for-each>
 						</dates>
 					</xsl:variable>
-					
+
 					<li>
 						<b><xsl:value-of select="numishare:regularize_node('closing_date', $lang)"/>: </b>
 						<xsl:value-of select="nh:normalize_date(exsl:node-set($dates)/dates/date[last()], exsl:node-set($dates)/dates/date[last()])"/>
 					</li>
 				</xsl:if>
-				
+
 				<xsl:variable name="total-counts" as="element()*">
 					<total-counts>
 						<xsl:for-each select="parent::node()/nh:contentsDesc/nh:contents/descendant::nuds:typeDesc">
@@ -267,14 +268,14 @@
 						</xsl:for-each>
 					</total-counts>
 				</xsl:variable>
-				
+
 				<xsl:variable name="denominations" as="element()*">
 					<denominations>
-						<xsl:for-each select="distinct-values($total-counts//name)">
+						<xsl:for-each select="distinct-values($total-counts//*[local-name()='name' and string-length(normalize-space(.)) &gt; 0])">
 							<xsl:variable name="name" select="."/>
 							<name>
-								<xsl:attribute name="count">									
-									<xsl:value-of select="sum($total-counts//name[.=$name]/@count)"/>
+								<xsl:attribute name="count">
+									<xsl:value-of select="sum($total-counts//*[local-name()='name'][.=$name]/@count)"/>
 								</xsl:attribute>
 								<xsl:value-of select="$name"/>
 							</name>
@@ -282,18 +283,20 @@
 					</denominations>
 				</xsl:variable>
 
-				<li>
-					<b><xsl:value-of select="numishare:regularize_node('description', $lang)"/>: </b>
-					<xsl:for-each select="$denominations//*[local-name()='name']">
-						<xsl:sort select="@count" order="descending" data-type="number"/>
-						<xsl:value-of select="."/>
-						<xsl:text>: </xsl:text>
-						<xsl:value-of select="@count"/>
-						<xsl:if test="not(position()=last())">
-							<xsl:text>, </xsl:text>
-						</xsl:if>
-					</xsl:for-each>
-				</li>
+				<xsl:if test="count($denominations//*[local-name()='name']) &gt; 0">
+					<li>
+						<b><xsl:value-of select="numishare:regularize_node('description', $lang)"/>: </b>
+						<xsl:for-each select="$denominations//*[local-name()='name']">
+							<xsl:sort select="@count" order="descending" data-type="number"/>
+							<xsl:value-of select="."/>
+							<xsl:text>: </xsl:text>
+							<xsl:value-of select="@count"/>
+							<xsl:if test="not(position()=last())">
+								<xsl:text>, </xsl:text>
+							</xsl:if>
+						</xsl:for-each>
+					</li>
+				</xsl:if>				
 			</xsl:if>
 		</ul>
 	</xsl:template>
@@ -303,7 +306,7 @@
 			<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
 		</h2>
 
-		<table style="width:100%">
+		<table class="table table-striped">
 			<thead>
 				<tr>
 					<th style="width:10%;text-align:center">Count</th>
@@ -342,52 +345,76 @@
 				<xsl:value-of select="if(@count) then @count else 1"/>
 			</td>
 			<td>
-				<xsl:choose>
-					<xsl:when test="nuds:typeDesc/@certainty='2'">
-						<xsl:text>As </xsl:text>
-					</xsl:when>
-					<xsl:when test="nuds:typeDesc/@certainty='3'">
-						<xsl:text>Copy of </xsl:text>
-					</xsl:when>
-					<xsl:when test="nuds:typeDesc/@certainty='4'">
-						<xsl:text>Copy as </xsl:text>
-					</xsl:when>
-					<xsl:when test="nuds:typeDesc/@certainty='5'">
-						<xsl:text>As issue </xsl:text>
-					</xsl:when>
-					<xsl:when test="nuds:typeDesc/@certainty='9'">
-						<xsl:text>At least one of </xsl:text>
-					</xsl:when>
-				</xsl:choose>
-				<a href="{$typeDesc_resource}" target="_blank">
-					<xsl:value-of select="exsl:node-set($nudsGroup)/nudsGroup/object[@xlink:href = $typeDesc_resource]/nuds:nuds/nuds:descMeta/nuds:title"/>
-				</a>
-				<xsl:if test="nuds:typeDesc/@certainty='7'">
-					<xsl:text> (extraneous)</xsl:text>
+				<xsl:if test="string($typeDesc_resource)">
+					<h3>
+						<a href="{$typeDesc_resource}" target="_blank">
+							<xsl:value-of select="exsl:node-set($nudsGroup)/nudsGroup/object[@xlink:href = $typeDesc_resource]/nuds:nuds/nuds:descMeta/nuds:title"/>
+						</a>
+					</h3>
 				</xsl:if>
-				<br/>
-				<!--<xsl:copy-of select="$typeDesc"/>-->
-				<xsl:for-each select="exsl:node-set($typeDesc)/nuds:typeDesc/nuds:denomination">
-					<xsl:variable name="href" select="@xlink:href"/>
-					<xsl:choose>
-						<xsl:when test="string($lang) and contains($href, 'nomisma.org')">
-							<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about=$href], $lang)"/>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:value-of select="normalize-space(.)"/>
-						</xsl:otherwise>
-					</xsl:choose>
-					<xsl:choose>
-						<xsl:when test="not(position()=last())">
-							<xsl:text>, </xsl:text>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:if test="parent::nuds:typeDesc/nuds:date or parent::nuds:typeDesc/nuds:dateRange">
-								<xsl:text>, </xsl:text>
-							</xsl:if>
-						</xsl:otherwise>
-					</xsl:choose>
-				</xsl:for-each>
+				<xsl:choose>
+					<xsl:when test="exsl:node-set($typeDesc)/nuds:typeDesc/nuds:denomination">
+						<xsl:for-each select="exsl:node-set($typeDesc)/nuds:typeDesc/nuds:denomination">
+							<xsl:variable name="href" select="@xlink:href"/>
+							<xsl:choose>
+								<xsl:when test="string($lang) and contains($href, 'nomisma.org')">
+									<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about=$href], $lang)"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:choose>
+										<xsl:when test="not(string(.))">
+											<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about=$href], 'en')"/>
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:value-of select="normalize-space(.)"/>
+										</xsl:otherwise>
+									</xsl:choose>
+								</xsl:otherwise>
+							</xsl:choose>
+							<xsl:choose>
+								<xsl:when test="not(position()=last())">
+									<xsl:text>, </xsl:text>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:if test="parent::nuds:typeDesc/nuds:date or parent::nuds:typeDesc/nuds:dateRange">
+										<xsl:text>, </xsl:text>
+									</xsl:if>
+								</xsl:otherwise>
+							</xsl:choose>
+						</xsl:for-each>
+					</xsl:when>
+					<xsl:when test="exsl:node-set($typeDesc)/nuds:typeDesc/nuds:geographic/nuds:geogname">
+						<xsl:for-each select="exsl:node-set($typeDesc)/nuds:typeDesc/nuds:geographic/nuds:geogname">
+							<xsl:variable name="href" select="@xlink:href"/>
+							<xsl:choose>
+								<xsl:when test="string($lang) and contains($href, 'nomisma.org')">
+									<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about=$href], $lang)"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:choose>
+										<xsl:when test="not(string(.))">
+											<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about=$href], 'en')"/>
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:value-of select="normalize-space(.)"/>
+										</xsl:otherwise>
+									</xsl:choose>
+								</xsl:otherwise>
+							</xsl:choose>
+							<xsl:choose>
+								<xsl:when test="not(position()=last())">
+									<xsl:text>, </xsl:text>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:if test="parent::nuds:typeDesc/nuds:date or parent::nuds:typeDesc/nuds:dateRange">
+										<xsl:text>, </xsl:text>
+									</xsl:if>
+								</xsl:otherwise>
+							</xsl:choose>
+						</xsl:for-each>
+					</xsl:when>
+				</xsl:choose>				
+				
 				<xsl:choose>
 					<xsl:when test="exsl:node-set($typeDesc)/nuds:typeDesc/nuds:date">
 						<xsl:value-of select="exsl:node-set($typeDesc)/nuds:typeDesc/nuds:date[1]"/>
@@ -398,9 +425,6 @@
 						<xsl:value-of select="exsl:node-set($typeDesc)/nuds:typeDesc/nuds:dateRange/nuds:toDate"/>
 					</xsl:when>
 				</xsl:choose>
-				<xsl:if test="contains($typeDesc_resource, 'nomisma.org')">
-					<xsl:text> (RRC)</xsl:text>
-				</xsl:if>
 				<div class="coin-content" id="{$obj-id}-div" style="display:none">
 					<xsl:apply-templates select="nuds:physDesc"/>
 					<xsl:apply-templates select="exsl:node-set($typeDesc)/nuds:typeDesc">
@@ -414,31 +438,24 @@
 			</td>
 		</tr>
 	</xsl:template>
-	
+
 	<xsl:template match="nuds:denomination" mode="den">
 		<xsl:param name="contentsDesc"/>
 		<xsl:param name="lang"/>
-		
+
 		<xsl:variable name="href" select="@xlink:href"/>
 		<xsl:variable name="value">
 			<xsl:choose>
-				<xsl:when test="@standardDate">
-					<xsl:value-of select="@standardDate"/>
+				<xsl:when test="string($lang) and contains($href, 'nomisma.org')">
+					<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about=$href], $lang)"/>
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:choose>
-						<xsl:when test="string($lang) and contains($href, 'nomisma.org')">
-							<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about=$href], $lang)"/>
+						<xsl:when test="not(string(.))">
+							<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about=$href], 'en')"/>
 						</xsl:when>
 						<xsl:otherwise>
-							<xsl:choose>
-								<xsl:when test="not(string(.))">
-									<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about=$href], 'en')"/>
-								</xsl:when>
-								<xsl:otherwise>
-									<xsl:value-of select="normalize-space(.)"/>
-								</xsl:otherwise>
-							</xsl:choose>
+							<xsl:value-of select="normalize-space(.)"/>
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:otherwise>
@@ -459,7 +476,7 @@
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:value-of
-						select="count($contentsDesc//nh:coin/nuds:typeDesc/*[local-name()='denomination'][.=$value]) + sum($contentsDesc//nh:coinGrp[nuds:typeDesc/*[local-name()='denomination'][.=$value]]/@count)"
+						select="count($contentsDesc//nh:coin[nuds:typeDesc/nuds:denomination[@xlink:href=$href]]) + sum($contentsDesc//nh:coinGrp[nuds:typeDesc/nuds:denomination[@xlink:href=$href]]/@count)"
 					/>
 				</xsl:otherwise>
 			</xsl:choose>
