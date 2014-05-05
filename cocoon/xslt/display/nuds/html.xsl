@@ -217,110 +217,131 @@
 				</div>
 			</xsl:when>
 			<xsl:otherwise>
-				<div class="row">
-					<div class="col-md-12">
-						<ul class="nav nav-pills" id="tabs">
-							<li class="active">
-								<a href="#metadata" data-toggle="pill">
-									<xsl:value-of select="numishare:normalizeLabel('display_summary', $lang)"/>
-								</a>
-							</li>
-							<li>
-								<a href="#mapTab" id="mapButton" data-toggle="pill">
-									<xsl:value-of select="numishare:normalizeLabel('display_map', $lang)"/>
-								</a>
-							</li>
-						</ul>
-						<div class="tab-content">
-							<div class="tab-pane active" id="metadata">
-								<xsl:if test="nuds:descMeta/nuds:physDesc">
-									<div class="metadata_section">
-										<xsl:apply-templates select="nuds:descMeta/nuds:physDesc"/>
-									</div>
-								</xsl:if>
-								<!-- process $nuds:typeDesc differently -->
-								<div class="metadata_section">
-									<xsl:apply-templates select="exsl:node-set($nuds:typeDesc)/*[local-name()='typeDesc']">
-										<xsl:with-param name="typeDesc_resource" select="$nuds:typeDesc_resource"/>
-									</xsl:apply-templates>
-								</div>
-								<xsl:if test="nuds:descMeta/nuds:undertypeDesc">
-									<div class="metadata_section">
-										<xsl:apply-templates select="nuds:descMeta/nuds:undertypeDesc"/>
-									</div>
-								</xsl:if>
-								<xsl:if test="nuds:descMeta/nuds:refDesc">
-									<div class="metadata_section">
-										<xsl:apply-templates select="nuds:descMeta/nuds:refDesc"/>
-									</div>
-								</xsl:if>
-								<xsl:if test="nuds:descMeta/nuds:adminDesc">
-									<div class="metadata_section">
-										<xsl:apply-templates select="nuds:descMeta/nuds:adminDesc"/>
-									</div>
-								</xsl:if>
-								<xsl:if test="nuds:descMeta/nuds:findspotDesc">
-									<div class="metadata_section">
-										<xsl:apply-templates select="nuds:descMeta/nuds:findspotDesc"/>
-									</div>
-								</xsl:if>
-								<xsl:if test="nuds:descMeta/nuds:subjectSet">
-									<div class="metadata_section">
-										<xsl:apply-templates select="nuds:descMeta/nuds:subjectSet"/>
-									</div>
-								</xsl:if>
-								<xsl:if test="nuds:descMeta/nuds:noteSet">
-									<div class="metadata_section">
-										<xsl:apply-templates select="nuds:descMeta/nuds:noteSet"/>
-									</div>
-								</xsl:if>
+				<xsl:choose>
+					<xsl:when test="$recordType='conceptual'">
+						<div class="row">
+							<div class="col-md-6">
+								<xsl:call-template name="metadata-container"/>
 							</div>
-							<div class="tab-pane" id="mapTab">
-								<h2>
-									<xsl:value-of select="numishare:normalizeLabel('display_map', $lang)"/>
-								</h2>
-								<xsl:choose>
-									<xsl:when test="$recordType='conceptual'">
-										<div id="timemap">
-											<div id="mapcontainer">
-												<div id="map"/>
-											</div>
-											<div id="timelinecontainer">
-												<div id="timeline"/>
-											</div>
-										</div>
-									</xsl:when>
-									<xsl:otherwise>
-										<div id="mapcontainer"/>
-									</xsl:otherwise>
-								</xsl:choose>
-								<div class="legend">
-									<table>
-										<tbody>
-											<tr>
-												<th style="width:100px;background:none">
-													<xsl:value-of select="numishare:regularize_node('legend', $lang)"/>
-												</th>
-												<td style="background-color:#6992fd;border:2px solid black;width:50px;"/>
-												<td style="width:100px">
-													<xsl:value-of select="numishare:regularize_node('mint', $lang)"/>
-												</td>
-												<td style="background-color:#d86458;border:2px solid black;width:50px;"/>
-												<td style="width:100px">
-													<xsl:value-of select="numishare:regularize_node('findspot', $lang)"/>
-												</td>
-											</tr>
-										</tbody>
-									</table>
-								</div>
-								<p>View map in <a href="{$display_path}map/{$id}">fullscreen</a>.</p>
+							<div class="col-md-6">
+								<xsl:call-template name="map-container"/>
 							</div>
 						</div>
-
-					</div>
-				</div>
+					</xsl:when>
+					<xsl:otherwise>
+						<div class="row">
+							<div class="col-md-12">
+								<ul class="nav nav-pills" id="tabs">
+									<li class="active">
+										<a href="#metadata" data-toggle="pill">
+											<xsl:value-of select="numishare:normalizeLabel('display_summary', $lang)"/>
+										</a>
+									</li>
+									<li>
+										<a href="#mapTab" id="mapButton" data-toggle="pill">
+											<xsl:value-of select="numishare:normalizeLabel('display_map', $lang)"/>
+										</a>
+									</li>
+								</ul>
+								<div class="tab-content">
+									<div class="tab-pane active" id="metadata">
+										<xsl:call-template name="metadata-container"/>
+									</div>
+									<div class="tab-pane" id="mapTab">
+										<xsl:call-template name="map-container"/>
+									</div>
+								</div>
+							</div>
+						</div>
+					</xsl:otherwise>
+				</xsl:choose>
 			</xsl:otherwise>
 		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template name="metadata-container">
+		<xsl:if test="nuds:descMeta/nuds:physDesc">
+			<div class="metadata_section">
+				<xsl:apply-templates select="nuds:descMeta/nuds:physDesc"/>
+			</div>
+		</xsl:if>
+		<!-- process $nuds:typeDesc differently -->
+		<div class="metadata_section">
+			<xsl:apply-templates select="exsl:node-set($nuds:typeDesc)/*[local-name()='typeDesc']">
+				<xsl:with-param name="typeDesc_resource" select="$nuds:typeDesc_resource"/>
+			</xsl:apply-templates>
+		</div>
+		<xsl:if test="nuds:descMeta/nuds:undertypeDesc">
+			<div class="metadata_section">
+				<xsl:apply-templates select="nuds:descMeta/nuds:undertypeDesc"/>
+			</div>
+		</xsl:if>
+		<xsl:if test="nuds:descMeta/nuds:refDesc">
+			<div class="metadata_section">
+				<xsl:apply-templates select="nuds:descMeta/nuds:refDesc"/>
+			</div>
+		</xsl:if>
+		<xsl:if test="nuds:descMeta/nuds:adminDesc">
+			<div class="metadata_section">
+				<xsl:apply-templates select="nuds:descMeta/nuds:adminDesc"/>
+			</div>
+		</xsl:if>
+		<xsl:if test="nuds:descMeta/nuds:findspotDesc">
+			<div class="metadata_section">
+				<xsl:apply-templates select="nuds:descMeta/nuds:findspotDesc"/>
+			</div>
+		</xsl:if>
+		<xsl:if test="nuds:descMeta/nuds:subjectSet">
+			<div class="metadata_section">
+				<xsl:apply-templates select="nuds:descMeta/nuds:subjectSet"/>
+			</div>
+		</xsl:if>
+		<xsl:if test="nuds:descMeta/nuds:noteSet">
+			<div class="metadata_section">
+				<xsl:apply-templates select="nuds:descMeta/nuds:noteSet"/>
+			</div>
+		</xsl:if>
+	</xsl:template>
+
+	<xsl:template name="map-container">
+		<h2>
+			<xsl:value-of select="numishare:normalizeLabel('display_map', $lang)"/>
+		</h2>
+		<xsl:choose>
+			<xsl:when test="$recordType='conceptual'">
+				<div id="timemap">
+					<div id="mapcontainer">
+						<div id="map"/>
+					</div>
+					<div id="timelinecontainer">
+						<div id="timeline"/>
+					</div>
+				</div>
+			</xsl:when>
+			<xsl:otherwise>
+				<div id="mapcontainer"/>
+			</xsl:otherwise>
+		</xsl:choose>
+		<div class="legend">
+			<table>
+				<tbody>
+					<tr>
+						<th style="width:100px;background:none">
+							<xsl:value-of select="numishare:regularize_node('legend', $lang)"/>
+						</th>
+						<td style="background-color:#6992fd;border:2px solid black;width:50px;"/>
+						<td style="width:100px">
+							<xsl:value-of select="numishare:regularize_node('mint', $lang)"/>
+						</td>
+						<td style="background-color:#d86458;border:2px solid black;width:50px;"/>
+						<td style="width:100px">
+							<xsl:value-of select="numishare:regularize_node('findspot', $lang)"/>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<p>View map in <a href="{$display_path}map/{$id}">fullscreen</a>.</p>
 	</xsl:template>
 
 	<xsl:template match="nuds:undertypeDesc">
