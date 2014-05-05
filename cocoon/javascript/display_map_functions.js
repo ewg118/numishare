@@ -4,7 +4,7 @@ $(document).ready(function () {
 	var path = $('#path').text();
 	var pipeline = $('#pipeline').text();
 	
-	if (pipeline == 'display') {
+	if (collection_type == 'object') {
 		$('#mapButton').click(function(){
 			$('#tabs a:last').tab('show');
 			init();			
