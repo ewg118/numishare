@@ -6,10 +6,10 @@ let $identifiers:= request:get-parameter("identifiers",0)
 let $sequence:= tokenize($identifiers, '\|')
 
 return
-<results>
+<nudsGroup xmlns="http://nomisma.org/nuds" xmlns:xlink="http://www.w3.org/1999/xlink">
    {
          for $doc in $sequence
          let $path:= concat('/db/numishare/objects/', $doc, ".xml")
          return doc($path)/* 
       }
-</results>
+</nudsGroup>

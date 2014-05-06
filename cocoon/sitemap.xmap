@@ -131,7 +131,7 @@
 			<map:match pattern="ingest">
 				<map:aggregate element="content">
 					<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
-					<map:part src="{global:exist-url}{global:collection-name}/ingest.xql?identifiers={request-param:identifiers}"/>
+					<map:part src="{global:exist-url}{global:collection-name}/aggregate-ids.xql?identifiers={request-param:identifiers}"/>
 				</map:aggregate>
 				<map:transform src="xslt/solr.xsl" type="xslt-saxon">
 					<map:parameter name="use-request-parameters" value="true"/>
@@ -830,6 +830,11 @@
 						<map:serialize type="xml"/>
 					</map:otherwise>
 				</map:select>
+			</map:match>
+			
+			<map:match pattern="apis/getNuds">
+				<map:read src="{global:exist-url}{global:collection-name}/aggregate-ids.xql?identifiers={request-param:identifiers}"/>
+				<map:serialize type="xml"/>
 			</map:match>
 
 			<!-- search API  XML results conform to OpenSearch -->
