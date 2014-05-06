@@ -5,9 +5,9 @@
 	specific stylesheets
 	Modification date: Febrary 2012
 -->
-<xsl:stylesheet xmlns:nuds="http://nomisma.org/nuds" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:exsl="http://exslt.org/common" xmlns:numishare="https://github.com/ewg118/numishare"
-	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:xlink="http://www.w3.org/1999/xlink"
-	xmlns:nm="http://nomisma.org/id/" exclude-result-prefixes="#all" version="2.0">
+<xsl:stylesheet xmlns:nuds="http://nomisma.org/nuds" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:numishare="https://github.com/ewg118/numishare" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:nm="http://nomisma.org/id/"
+	exclude-result-prefixes="#all" version="2.0">
 
 	<!--***************************************** ELEMENT TEMPLATES **************************************** -->
 	<xsl:template match="*[local-name()='refDesc']">
@@ -35,7 +35,7 @@
 			<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
 		</h2>
 		<xsl:if test="string($typeDesc_resource)">
-			<p>Source: <a href="{$typeDesc_resource}"><xsl:value-of select="exsl:node-set($nudsGroup)/nudsGroup/object[@xlink:href = $typeDesc_resource]/nuds:nuds/nuds:descMeta/nuds:title"/></a></p>
+			<p>Source: <a href="{$typeDesc_resource}"><xsl:value-of select="$nudsGroup//object[@xlink:href = $typeDesc_resource]/nuds:nuds/nuds:descMeta/nuds:title"/></a></p>
 		</xsl:if>
 		<ul>
 			<xsl:apply-templates mode="descMeta"/>
@@ -79,10 +79,10 @@
 
 					<!-- pull language from nomisma, if available -->
 					<xsl:variable name="value">
-						<xsl:choose>							
+						<xsl:choose>
 							<xsl:when test="contains($href, 'geonames.org')">
 								<xsl:variable name="geonameId" select="tokenize($href, '/')[4]"/>
-								
+
 								<xsl:choose>
 									<xsl:when test="number($geonameId)">
 										<xsl:variable name="geonames_data" as="element()*">
@@ -94,21 +94,21 @@
 											<xsl:variable name="countryCode" select="$geonames_data//countryCode"/>
 											<xsl:variable name="countryName" select="$geonames_data//countryName"/>
 											<xsl:variable name="name" select="$geonames_data//name"/>
-											<xsl:variable name="adminName1" select="$geonames_data//adminName1"/>						
+											<xsl:variable name="adminName1" select="$geonames_data//adminName1"/>
 											<xsl:variable name="fcode" select="$geonames_data//fcode"/>
 											<!-- set a value equivalent to AACR2 standard for US, AU, CA, and GB.  This equation deviates from AACR2 for Malaysia since standard abbreviations for territories cannot be found -->
 											<xsl:value-of
 												select="if ($countryCode = 'US' or $countryCode = 'AU' or $countryCode = 'CA') then if ($fcode = 'ADM1') then $name else concat($name, ' (', $abbreviations//country[@code=$countryCode]/place[. = $adminName1]/@abbr, ')') else if ($countryCode= 'GB') then  if ($fcode = 'ADM1') then $name else concat($name, ' (', $adminName1, ')') else if ($fcode = 'PCLI') then $name else concat($name, ' (', $countryName, ')')"
 											/>
 										</xsl:variable>
-										
+
 										<xsl:value-of select="$label"/>
 									</xsl:when>
 									<xsl:otherwise>
 										<xsl:value-of select="normalize-space(.)"/>
 									</xsl:otherwise>
 								</xsl:choose>
-																
+
 							</xsl:when>
 							<xsl:otherwise>
 								<xsl:choose>
@@ -133,7 +133,7 @@
 					<xsl:choose>
 						<xsl:when test="contains($facets, $field)">
 							<a href="{$display_path}results?q={$field}_facet:&#x022;{$value}&#x022;{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
-								<xsl:choose>							
+								<xsl:choose>
 									<xsl:when test="contains($href, 'geonames.org')">
 										<xsl:choose>
 											<xsl:when test="string(.)">
@@ -142,16 +142,16 @@
 											<xsl:otherwise>
 												<xsl:value-of select="$value"/>
 											</xsl:otherwise>
-										</xsl:choose>										
+										</xsl:choose>
 									</xsl:when>
 									<xsl:otherwise>
 										<xsl:value-of select="$value"/>
 									</xsl:otherwise>
-								</xsl:choose>								
+								</xsl:choose>
 							</a>
 						</xsl:when>
 						<xsl:otherwise>
-							<xsl:value-of select="$value"/>							
+							<xsl:value-of select="$value"/>
 						</xsl:otherwise>
 					</xsl:choose>
 
@@ -270,7 +270,7 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
-	
+
 	<xsl:template match="*[local-name()='objectXMLWrap']">
 		<xsl:variable name="label">
 			<xsl:choose>
@@ -278,8 +278,8 @@
 					<xsl:value-of select="numishare:regularize_node(parent::node()/local-name(), $lang)"/>
 				</xsl:when>
 			</xsl:choose>
-		</xsl:variable>	
-		
+		</xsl:variable>
+
 		<li>
 			<b><xsl:value-of select="$label"/>: </b>
 			<!-- determine which template to process -->
@@ -341,12 +341,12 @@
 			<div class="col-md-12">
 				<!-- AddThis Button BEGIN -->
 				<div class="addthis_toolbox addthis_default_style">
-					<a class="addthis_button_preferred_1"></a>
-					<a class="addthis_button_preferred_2"></a>
-					<a class="addthis_button_preferred_3"></a>
-					<a class="addthis_button_preferred_4"></a>
-					<a class="addthis_button_compact"></a>
-					<a class="addthis_counter addthis_bubble_style"></a>
+					<a class="addthis_button_preferred_1"/>
+					<a class="addthis_button_preferred_2"/>
+					<a class="addthis_button_preferred_3"/>
+					<a class="addthis_button_preferred_4"/>
+					<a class="addthis_button_compact"/>
+					<a class="addthis_counter addthis_bubble_style"/>
 					<xsl:text> | </xsl:text>
 					<a href="{$id}.xml">NUDS/XML</a>
 					<xsl:text> | </xsl:text>
@@ -354,12 +354,12 @@
 					<xsl:text> | </xsl:text>
 					<a href="{$id}.kml">KML</a>
 				</div>
-				<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=xa-525d63ef6a07cd89"></script>
+				<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=xa-525d63ef6a07cd89"/>
 				<!-- AddThis Button END -->
 			</div>
 		</div>
 	</xsl:template>
-	
+
 	<xsl:variable name="abbreviations" as="element()*">
 		<abbreviations>
 			<country code="US">

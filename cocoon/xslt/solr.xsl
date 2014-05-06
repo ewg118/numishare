@@ -4,7 +4,7 @@
 	Function: This stylesheet reads the incoming object model (nuds or nudsHoard)
 -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:nuds="http://nomisma.org/nuds" xmlns:nh="http://nomisma.org/nudsHoard" xmlns:nm="http://nomisma.org/id/"
-	xmlns:exsl="http://exslt.org/common" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:cinclude="http://apache.org/cocoon/include/1.0"
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:cinclude="http://apache.org/cocoon/include/1.0"
 	xmlns:res="http://www.w3.org/2005/sparql-results#" exclude-result-prefixes="#all" version="2.0">
 	<xsl:output method="xml" encoding="UTF-8"/>
 	<xsl:include href="functions.xsl"/>
@@ -23,33 +23,45 @@
 	<xsl:variable name="sparql_endpoint" select="/content/config/sparql_endpoint"/>
 	<xsl:variable name="publisher" select="/content/config/template/agencyName"/>
 
-	<xsl:variable name="nudsGroup">
+	<xsl:variable name="nudsGroup" as="element()*">
 		<nudsGroup>
-			<!-- get nomisma NUDS documents with get-nuds API -->
-			<xsl:variable name="id-param">
-				<xsl:for-each select="distinct-values(descendant::nuds:typeDesc[contains(@xlink:href, 'nomisma.org')]/@xlink:href)">
-					<xsl:value-of select="substring-after(., 'id/')"/>
-					<xsl:if test="not(position()=last())">
-						<xsl:text>|</xsl:text>
-					</xsl:if>
-				</xsl:for-each>
+			<xsl:variable name="type_series" as="element()*">
+				<list>
+					<xsl:for-each select="distinct-values(descendant::nuds:typeDesc[string(@xlink:href)]/substring-before(@xlink:href, 'id/'))">
+						<type_series>
+							<xsl:value-of select="."/>
+						</type_series>
+					</xsl:for-each>
+				</list>
+			</xsl:variable>
+			<xsl:variable name="type_list" as="element()*">
+				<list>
+					<xsl:for-each select="distinct-values(descendant::nuds:typeDesc[string(@xlink:href)]/@xlink:href)">
+						<type_series_item>
+							<xsl:value-of select="."/>
+						</type_series_item>
+					</xsl:for-each>
+				</list>
 			</xsl:variable>
 
-			<xsl:if test="string-length($id-param) &gt; 0">
-				<xsl:for-each select="document(concat('http://nomisma.org/get-nuds?id=', encode-for-uri($id-param)))//nuds:nuds">
-					<object xlink:href="http://nomisma.org/id/{nuds:control/nuds:recordId}">
-						<xsl:copy-of select="."/>
-					</object>
-				</xsl:for-each>
-			</xsl:if>
+			<xsl:for-each select="$type_series//type_series">
+				<xsl:variable name="type_series_uri" select="."/>
 
-			<!-- incorporate other typeDescs which do not point to nomisma.org -->
-			<xsl:for-each select="distinct-values(descendant::nuds:typeDesc[string(@xlink:href) and not(contains(@xlink:href, 'nomisma.org'))]/@xlink:href)">
-				<xsl:variable name="href" select="."/>
-				<xsl:if test="boolean(document(concat($href, '.xml')))">
-					<object xlink:href="{$href}">
-						<xsl:copy-of select="document(concat($href, '.xml'))/nuds:nuds"/>
-					</object>
+				<xsl:variable name="id-param">
+					<xsl:for-each select="$type_list//type_series_item[contains(., $type_series_uri)]">
+						<xsl:value-of select="substring-after(., 'id/')"/>
+						<xsl:if test="not(position()=last())">
+							<xsl:text>|</xsl:text>
+						</xsl:if>
+					</xsl:for-each>
+				</xsl:variable>
+
+				<xsl:if test="string-length($id-param) &gt; 0">
+					<xsl:for-each select="document(concat($type_series_uri, 'apis/getNuds?identifiers=', $id-param))//nuds:nuds">
+						<object xlink:href="{$type_series_uri}id/{nuds:control/nuds:recordId}">
+							<xsl:copy-of select="."/>
+						</object>
+					</xsl:for-each>
 				</xsl:if>
 			</xsl:for-each>
 			<xsl:for-each select="descendant::nuds:typeDesc[not(string(@xlink:href))]">
@@ -65,7 +77,7 @@
 		<rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:nm="http://nomisma.org/id/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
 			xmlns:rdfa="http://www.w3.org/ns/rdfa#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#">
 			<xsl:variable name="count"
-				select="count(distinct-values(descendant::*[not(local-name()='typeDesc') and not(local-name()='reference')][contains(@xlink:href, 'nomisma.org')]/@xlink:href | exsl:node-set($nudsGroup)/descendant::*[not(local-name()='typeDesc')][contains(@xlink:href, 'nomisma.org')]/@xlink:href))"/>
+				select="count(distinct-values(descendant::*[not(local-name()='typeDesc') and not(local-name()='reference')][contains(@xlink:href, 'nomisma.org')]/@xlink:href | $nudsGroup/descendant::*[not(local-name()='typeDesc')][contains(@xlink:href, 'nomisma.org')]/@xlink:href))"/>
 
 			<xsl:call-template name="get-ids">
 				<xsl:with-param name="start">1</xsl:with-param>
@@ -110,7 +122,7 @@
 						<xsl:variable name="countryCode" select="$geonames_data//countryCode"/>
 						<xsl:variable name="countryName" select="$geonames_data//countryName"/>
 						<xsl:variable name="name" select="$geonames_data//name"/>
-						<xsl:variable name="adminName1" select="$geonames_data//adminName1"/>						
+						<xsl:variable name="adminName1" select="$geonames_data//adminName1"/>
 						<xsl:variable name="fcode" select="$geonames_data//fcode"/>
 						<!-- set a value equivalent to AACR2 standard for US, AU, CA, and GB.  This equation deviates from AACR2 for Malaysia since standard abbreviations for territories cannot be found -->
 						<xsl:value-of
@@ -140,7 +152,7 @@
 			</xsl:for-each>
 		</places>
 	</xsl:variable>
-	
+
 	<xsl:variable name="abbreviations" as="element()*">
 		<abbreviations>
 			<country code="US">
@@ -238,7 +250,7 @@
 
 		<xsl:variable name="id-param">
 			<xsl:for-each
-				select="distinct-values(descendant::*[not(local-name()='typeDesc') and not(local-name()='reference')][contains(@xlink:href, 'nomisma.org')]/@xlink:href | exsl:node-set($nudsGroup)/descendant::*[not(local-name()='typeDesc') and not(local-name()='object')][contains(@xlink:href, 'nomisma.org')]/@xlink:href)">
+				select="distinct-values(descendant::*[not(local-name()='typeDesc') and not(local-name()='reference')][contains(@xlink:href, 'nomisma.org')]/@xlink:href | $nudsGroup/descendant::*[not(local-name()='typeDesc') and not(local-name()='object')][contains(@xlink:href, 'nomisma.org')]/@xlink:href)">
 				<xsl:if test="position() &gt;= $start and position() &lt;= $end">
 					<xsl:value-of select="substring-after(., 'id/')"/>
 					<xsl:if test="not(position()=$count)">

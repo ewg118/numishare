@@ -6,9 +6,9 @@
 	Modification date: April 2012
 -->
 <xsl:stylesheet xmlns:nuds="http://nomisma.org/nuds" xmlns:nh="http://nomisma.org/nudsHoard" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:datetime="http://exslt.org/dates-and-times"
-	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:exsl="http://exslt.org/common" xmlns:mets="http://www.loc.gov/METS/"
-	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mods="http://www.loc.gov/mods/v3" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-	xmlns:numishare="https://github.com/ewg118/numishare" exclude-result-prefixes="#all" version="2.0">
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:mets="http://www.loc.gov/METS/" xmlns:xlink="http://www.w3.org/1999/xlink"
+	xmlns:mods="http://www.loc.gov/mods/v3" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:numishare="https://github.com/ewg118/numishare"
+	exclude-result-prefixes="#all" version="2.0">
 
 	<xsl:template match="nuds:typeDesc">
 		<xsl:param name="recordType"/>
@@ -59,10 +59,12 @@
 
 		<!-- *********** FACETS ************** -->
 
-		<xsl:apply-templates select="nuds:objectType | nuds:denomination[string(.) or string(@xlink:href)] | nuds:manufacture[string(.) or string(@xlink:href)] | nuds:material[string(.) or string(@xlink:href)]">
+		<xsl:apply-templates
+			select="nuds:objectType | nuds:denomination[string(.) or string(@xlink:href)] | nuds:manufacture[string(.) or string(@xlink:href)] | nuds:material[string(.) or string(@xlink:href)]">
 			<xsl:with-param name="lang" select="$lang"/>
 		</xsl:apply-templates>
-		<xsl:apply-templates select="descendant::nuds:persname[string(.) or string(@xlink:href)] | descendant::nuds:corpname[string(.) or string(@xlink:href)] | descendant::nuds:geogname[string(.) or string(@xlink:href)]|descendant::nuds:famname[string(.) or string(@xlink:href)]">
+		<xsl:apply-templates
+			select="descendant::nuds:persname[string(.) or string(@xlink:href)] | descendant::nuds:corpname[string(.) or string(@xlink:href)] | descendant::nuds:geogname[string(.) or string(@xlink:href)]|descendant::nuds:famname[string(.) or string(@xlink:href)]">
 			<xsl:with-param name="lang" select="$lang"/>
 		</xsl:apply-templates>
 
@@ -96,7 +98,7 @@
 		<field name="{$facet}_text">
 			<xsl:value-of select="$label"/>
 		</field>
-		
+
 		<xsl:if test="string($href)">
 			<field name="{$facet}_uri">
 				<xsl:value-of select="$href"/>
@@ -124,7 +126,7 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-		
+
 		<field name="{@xlink:role}_facet">
 			<xsl:choose>
 				<xsl:when test="@xlink:role='findspot' and contains(@xlink:href, 'geonames.org')">
@@ -133,7 +135,7 @@
 				<xsl:otherwise>
 					<xsl:value-of select="$label"/>
 				</xsl:otherwise>
-			</xsl:choose>			
+			</xsl:choose>
 		</field>
 		<xsl:if test="@xlink:role='findspot'">
 			<field name="findspot_display">
@@ -241,7 +243,7 @@
 
 	<!-- generalize refDesc for NUDS and NUDS Hoard records -->
 	<xsl:template match="*[local-name()='refDesc']">
-		
+
 		<!-- references -->
 		<xsl:variable name="refs" as="element()*">
 			<refs>
@@ -269,34 +271,6 @@
 				</field>
 			</xsl:if>
 		</xsl:for-each>
-
-		<!-- citations -->
-		<!--<xsl:variable name="citations">
-			<citations>
-				<xsl:for-each select="*[local-name()='citation']">
-					<citation>
-						<xsl:call-template name="get_ref"/>
-					</citation>
-				</xsl:for-each>
-			</citations>
-		</xsl:variable>
-		
-		<xsl:for-each select="exsl:node-set($citations)//citation">
-			<xsl:sort order="ascending"/>
-			<field name="citation_facet">
-				<xsl:value-of select="."/>
-			</field>
-			<xsl:if test="position() = 1">
-				<field name="citation_min">
-					<xsl:value-of select="."/>
-				</field>
-			</xsl:if>
-			<xsl:if test="position() = last()">
-				<field name="citation_max">
-					<xsl:value-of select="."/>
-				</field>
-			</xsl:if>
-		</xsl:for-each>-->
 	</xsl:template>
 
 	<xsl:template match="nuds:date">
@@ -385,34 +359,17 @@
 	</xsl:template>
 
 	<xsl:template name="get_hoard_sort_fields">
+		<xsl:param name="lang"/>
+		<xsl:variable name="localLang" select="if (string($lang)) then $lang else 'en'"/>
 		<!-- sortable fields -->
 		<xsl:variable name="sort-fields">
 			<xsl:text>artist,authority,deity,denomination,dynasty,issuer,magistrate,maker,manufacture,material,mint,portrait,region</xsl:text>
 		</xsl:variable>
-
-		<xsl:variable name="temp-nudsGroup">
-			<nudsGroup>
-				<xsl:for-each select="descendant::nuds:typeDesc">
-					<xsl:choose>
-						<xsl:when test="string(@xlink:href)">
-							<xsl:variable name="href" select="@xlink:href"/>
-							<xsl:copy-of select="exsl:node-set($nudsGroup)//nuds:typeDesc[@xlink:href=$href]"/>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:copy-of select="."/>
-						</xsl:otherwise>
-					</xsl:choose>
-				</xsl:for-each>
-			</nudsGroup>
-		</xsl:variable>
-
-
 		<xsl:for-each select="tokenize($sort-fields, ',')">
 			<xsl:variable name="field" select="."/>
 
 			<!-- for each sortable field which is a multiValued field in Solr (a facet), grab the min and max values -->
-			<xsl:for-each
-				select="exsl:node-set($temp-nudsGroup)/descendant::*[local-name()=$field and local-name() !='authority'][string(.)]|exsl:node-set($temp-nudsGroup)/descendant::*[@xlink:role=$field][string(.)]">
+			<xsl:for-each select="$rdf/descendant::*[local-name()=$field]/skos:prefLabel[@xml:lang=$localLang]">
 				<xsl:sort order="ascending"/>
 				<xsl:if test="position()=1">
 					<field name="{$field}_min">
@@ -439,7 +396,7 @@
 		<xsl:for-each select="tokenize($sort-fields, ',')">
 			<xsl:variable name="field" select="."/>
 			<!-- for each sortable field which is a multiValued field in Solr (a facet), grab the min and max values -->
-			<xsl:for-each select="exsl:node-set($typeDesc)/descendant::*[local-name()=$field and local-name() !='authority']|exsl:node-set($typeDesc)/descendant::*[@xlink:role=$field]">
+			<xsl:for-each select="$typeDesc/descendant::*[local-name()=$field and local-name() !='authority']|$typeDesc/descendant::*[@xlink:role=$field]">
 				<xsl:sort order="ascending" select="if (@xlink:href) then @xlink:href else ."/>
 				<xsl:variable name="href" select="@xlink:href"/>
 				<xsl:variable name="name" select="if(@xlink:role) then @xlink:role else local-name()"/>
@@ -453,7 +410,7 @@
 								<xsl:otherwise>
 									<xsl:value-of select="normalize-space(.)"/>
 								</xsl:otherwise>
-							</xsl:choose>							
+							</xsl:choose>
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:value-of select="normalize-space(.)"/>

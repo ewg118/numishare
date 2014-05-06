@@ -3,8 +3,8 @@
 for example pulling data from the coin-type triplestore and SPARQL endpoint, Metis -->
 
 
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0" xmlns:exsl="http://exslt.org/common" xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	xmlns:numishare="https://github.com/ewg118/numishare" xmlns:res="http://www.w3.org/2005/sparql-results#" exclude-result-prefixes="#all">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:numishare="https://github.com/ewg118/numishare"
+	xmlns:res="http://www.w3.org/2005/sparql-results#" exclude-result-prefixes="#all">
 	<xsl:include href="../functions.xsl"/>
 
 	<xsl:template name="numishare:associatedObjects">
@@ -220,7 +220,7 @@ ORDER BY ASC(?collection)]]></xsl:variable>
 					<dd>
 						<xsl:value-of select="res:binding[@name='collection']/res:literal"/>
 					</dd>
-				</xsl:if>				
+				</xsl:if>
 				<xsl:if test="string(res:binding[@name='axis']/res:literal)">
 					<dt>
 						<xsl:value-of select="numishare:regularize_node('axis', $lang)"/>
@@ -311,8 +311,8 @@ ORDER BY ASC(?collection)]]></xsl:variable>
 		</xsl:variable>
 		<xsl:variable name="theme">red</xsl:variable>
 		<!-- output --> { <xsl:if test="string($lat) and string($long)">"point": {"lon": <xsl:value-of select="$long"/>, "lat": <xsl:value-of select="$lat"/>},</xsl:if> "title": "<xsl:value-of
-			select="$title"/>", "start": "<xsl:value-of select="$closing_date"/>", "options": { "theme":
-			"<xsl:value-of select="$theme"/>", "description": "<xsl:value-of select="normalize-space($description)"/>" } }<xsl:if test="not(position()=last())">
+			select="$title"/>", "start": "<xsl:value-of select="$closing_date"/>", "options": { "theme": "<xsl:value-of select="$theme"/>", "description": "<xsl:value-of
+			select="normalize-space($description)"/>" } }<xsl:if test="not(position()=last())">
 			<xsl:text>,</xsl:text>
 		</xsl:if>
 	</xsl:template>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="2.0" xmlns:nh="http://nomisma.org/nudsHoard" xmlns:nuds="http://nomisma.org/nuds" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-	xmlns:datetime="http://exslt.org/dates-and-times" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:exsl="http://exslt.org/common"
+	xmlns:datetime="http://exslt.org/dates-and-times" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xs="http://www.w3.org/2001/XMLSchema" 
 	xmlns:mets="http://www.loc.gov/METS/" xmlns:math="http://exslt.org/math" xmlns:cinclude="http://apache.org/cocoon/include/1.0" xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:numishare="https://github.com/ewg118/numishare" exclude-result-prefixes="#all">
 	<xsl:output method="xml" encoding="UTF-8"/>
@@ -25,7 +25,7 @@
 			<xsl:copy-of select="descendant::nh:contents"/>
 		</xsl:variable>
 
-		<xsl:variable name="all-dates">
+		<xsl:variable name="all-dates" as="element()*">
 			<dates>
 				<xsl:choose>
 					<xsl:when test="descendant::nh:deposit//@standardDate">
@@ -47,7 +47,7 @@
 							<xsl:choose>
 								<xsl:when test="string(@xlink:href)">
 									<xsl:variable name="href" select="@xlink:href"/>
-									<xsl:for-each select="exsl:node-set($nudsGroup)//object[@xlink:href=$href]/descendant::*/@standardDate">
+									<xsl:for-each select="$nudsGroup//object[@xlink:href=$href]/descendant::*/@standardDate">
 										<xsl:if test="number(.)">
 											<date>
 												<xsl:choose>
@@ -84,9 +84,9 @@
 				</xsl:choose>
 			</dates>
 		</xsl:variable>
-		<xsl:variable name="dates">
+		<xsl:variable name="dates" as="element()*">
 			<dates>
-				<xsl:for-each select="distinct-values(exsl:node-set($all-dates)//date)">
+				<xsl:for-each select="distinct-values($all-dates//date)">
 					<xsl:sort data-type="number"/>
 					<date>
 						<xsl:value-of select="number(.)"/>
@@ -145,14 +145,14 @@
 			</field>
 			<xsl:if test="$hasContents='true'">
 				<field name="closing_date_display">
-					<xsl:value-of select="nh:normalize_date(exsl:node-set($dates)/dates/date[last()], exsl:node-set($dates)/dates/date[last()])"/>
+					<xsl:value-of select="nh:normalize_date($dates/date[last()], $dates/date[last()])"/>
 				</field>
-				<xsl:if test="count(exsl:node-set($dates)/dates/date) &gt; 0">
+				<xsl:if test="count($dates/date) &gt; 0">
 					<field name="tpq_num">
-						<xsl:value-of select="exsl:node-set($dates)/dates/date[1]"/>
+						<xsl:value-of select="$dates/date[1]"/>
 					</field>
 					<field name="taq_num">
-						<xsl:value-of select="exsl:node-set($dates)/dates/date[last()]"/>
+						<xsl:value-of select="$dates/date[last()]"/>
 					</field>
 				</xsl:if>
 
@@ -176,7 +176,7 @@
 							<xsl:choose>
 								<xsl:when test="string(@xlink:href)">
 									<xsl:variable name="href" select="@xlink:href"/>
-									<xsl:apply-templates select="exsl:node-set($nudsGroup)//object[@xlink:href=$href]/descendant::nuds:typeDesc/nuds:denomination" mode="den">
+									<xsl:apply-templates select="$nudsGroup//object[@xlink:href=$href]/descendant::nuds:typeDesc/nuds:denomination" mode="den">
 										<xsl:with-param name="contentsDesc" select="$contentsDesc"/>
 										<xsl:with-param name="lang" select="$lang"/>
 									</xsl:apply-templates>
@@ -229,7 +229,7 @@
 				<xsl:choose>
 					<xsl:when test="string(@xlink:href)">
 						<xsl:variable name="href" select="@xlink:href"/>
-						<xsl:apply-templates select="exsl:node-set($nudsGroup)//object[@xlink:href=$href]/descendant::nuds:typeDesc">
+						<xsl:apply-templates select="$nudsGroup//object[@xlink:href=$href]/descendant::nuds:typeDesc">
 							<xsl:with-param name="recordType">hoard</xsl:with-param>
 							<xsl:with-param name="lang" select="$lang"/>
 						</xsl:apply-templates>
@@ -250,12 +250,14 @@
 					<xsl:value-of select="$href"/>
 				</field>
 				<field name="coinType_facet">
-					<xsl:value-of select="exsl:node-set($nudsGroup)//object[@xlink:href=$href]/descendant::nuds:title"/>
+					<xsl:value-of select="$nudsGroup//object[@xlink:href=$href]/descendant::nuds:title"/>
 				</field>
 			</xsl:for-each>
 
 			<!-- get sortable fields: distinct values in $nudsGroup -->
-			<xsl:call-template name="get_hoard_sort_fields"/>
+			<xsl:call-template name="get_hoard_sort_fields">
+				<xsl:with-param name="lang" select="$lang"/>
+			</xsl:call-template>
 
 			<field name="fulltext">
 				<xsl:for-each select="descendant-or-self::text()">

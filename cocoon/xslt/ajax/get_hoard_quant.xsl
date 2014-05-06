@@ -47,36 +47,49 @@
 
 	<xsl:variable name="nudsGroup" as="element()*">
 		<nudsGroup>
-			<xsl:variable name="id-param">
-				<xsl:for-each
-					select="distinct-values(descendant::nuds:typeDesc[contains(@xlink:href, 'nomisma.org') and (if (@certainty) then boolean(index-of($codes, nuds:typeDesc/@certainty)) = false() else *)]/@xlink:href)">
-					<xsl:value-of select="substring-after(., 'id/')"/>
-					<xsl:if test="not(position()=last())">
-						<xsl:text>|</xsl:text>
-					</xsl:if>
-				</xsl:for-each>
+			<xsl:variable name="type_series" as="element()*">
+				<list>
+					<xsl:for-each select="distinct-values(descendant::nuds:typeDesc[string(@xlink:href)]/substring-before(@xlink:href, 'id/'))">
+						<type_series>
+							<xsl:value-of select="."/>
+						</type_series>
+					</xsl:for-each>
+				</list>
 			</xsl:variable>
-
-			<xsl:if test="string-length($id-param) &gt; 0">
-				<xsl:for-each select="document(concat('http://nomisma.org/apis/getNuds?identifiers=', $id-param))//nuds:nuds">
-					<object xlink:href="http://nomisma.org/id/{nuds:control/nuds:recordId}">
-						<xsl:copy-of select="."/>
-					</object>
-				</xsl:for-each>
-			</xsl:if>
-
-			<!-- incorporate other typeDescs which do not point to nomisma.org -->
-			<xsl:for-each select="descendant::nuds:typeDesc[not(contains(@xlink:href, 'nomisma.org')) and (if (@certainty) then boolean(index-of($codes, nuds:typeDesc/@certainty)) = false() else *)]">
-				<xsl:choose>
-					<xsl:when test="string(@xlink:href)">
-						<object xlink:href="{@xlink:href}">
-							<xsl:copy-of select="document(concat(@xlink:href, '.xml'))/nuds:nuds"/>
+			<xsl:variable name="type_list" as="element()*">
+				<list>
+					<xsl:for-each select="distinct-values(descendant::nuds:typeDesc[string(@xlink:href)]/@xlink:href)">
+						<type_series_item>
+							<xsl:value-of select="."/>
+						</type_series_item>
+					</xsl:for-each>
+				</list>
+			</xsl:variable>
+			
+			<xsl:for-each select="$type_series//type_series">
+				<xsl:variable name="type_series_uri" select="."/>
+				
+				<xsl:variable name="id-param">
+					<xsl:for-each select="$type_list//type_series_item[contains(., $type_series_uri)]">
+						<xsl:value-of select="substring-after(., 'id/')"/>
+						<xsl:if test="not(position()=last())">
+							<xsl:text>|</xsl:text>
+						</xsl:if>
+					</xsl:for-each>
+				</xsl:variable>
+				
+				<xsl:if test="string-length($id-param) &gt; 0">
+					<xsl:for-each select="document(concat($type_series_uri, 'apis/getNuds?identifiers=', $id-param))//nuds:nuds">
+						<object xlink:href="{$type_series_uri}id/{nuds:control/nuds:recordId}">
+							<xsl:copy-of select="."/>
 						</object>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:copy-of select="."/>
-					</xsl:otherwise>
-				</xsl:choose>
+					</xsl:for-each>
+				</xsl:if>				
+			</xsl:for-each>
+			<xsl:for-each select="descendant::nuds:typeDesc[not(string(@xlink:href))]">
+				<object>
+					<xsl:copy-of select="."/>
+				</object>
 			</xsl:for-each>
 		</nudsGroup>
 	</xsl:variable>

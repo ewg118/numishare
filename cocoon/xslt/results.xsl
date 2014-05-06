@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0" xmlns:exsl="http://exslt.org/common" xmlns:cinclude="http://apache.org/cocoon/include/1.0"
-	xmlns:numishare="https://github.com/ewg118/numishare" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:res="http://www.w3.org/2005/sparql-results#" exclude-result-prefixes="#all">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0" xmlns:cinclude="http://apache.org/cocoon/include/1.0" xmlns:numishare="https://github.com/ewg118/numishare"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:res="http://www.w3.org/2005/sparql-results#" exclude-result-prefixes="#all">
 	<xsl:include href="results_templates.xsl"/>
-	<xsl:include href="templates.xsl"/>	
+	<xsl:include href="templates.xsl"/>
 	<xsl:include href="functions.xsl"/>
 	<xsl:include href="header.xsl"/>
 	<xsl:include href="footer.xsl"/>
@@ -35,7 +35,8 @@
 	<!-- get block of images from SPARQL endpoint, via nomisma API -->
 	<xsl:variable name="sparqlResult" as="element()*">
 		<xsl:if test="string($sparql_endpoint) and //config/collection_type='cointype'">
-			<xsl:variable name="service" select="concat('http://nomisma.org/apis/numishareResults?identifiers=', string-join(descendant::str[@name='recordId'], '|'), '&amp;baseUri=http://nomisma.org/id/')"/>
+			<xsl:variable name="service"
+				select="concat('http://nomisma.org/apis/numishareResults?identifiers=', string-join(descendant::str[@name='recordId'], '|'), '&amp;baseUri=http://nomisma.org/id/')"/>
 			<xsl:copy-of select="document($service)/response"/>
 		</xsl:if>
 	</xsl:variable>
@@ -52,10 +53,12 @@
 				<link rel="alternate" type="text/csv" href="{concat(//config/url, 'data.csv/?q=', $q, if (string($sort)) then concat('&amp;sort=', $sort) else ''}"/>
 				<xsl:choose>
 					<xsl:when test="/content/config/collection_type = 'hoard'">
-						<link rel="alternate" type="application/application/vnd.google-earth.kml+xml" href="{concat(//config/url, 'findspots.kml/?q=', $q, if(string($lang)) then concat('&amp;lang=', $lang) else '')}"/>
+						<link rel="alternate" type="application/application/vnd.google-earth.kml+xml"
+							href="{concat(//config/url, 'findspots.kml/?q=', $q, if(string($lang)) then concat('&amp;lang=', $lang) else '')}"/>
 					</xsl:when>
 					<xsl:otherwise>
-						<link rel="alternate" type="application/application/vnd.google-earth.kml+xml" href="{concat(//config/url, 'query.kml/?q=', $q, if(string($lang)) then concat('&amp;lang=', $lang) else '')}"/>
+						<link rel="alternate" type="application/application/vnd.google-earth.kml+xml"
+							href="{concat(//config/url, 'query.kml/?q=', $q, if(string($lang)) then concat('&amp;lang=', $lang) else '')}"/>
 					</xsl:otherwise>
 				</xsl:choose>
 				<!-- opensearch compliance -->
@@ -64,29 +67,29 @@
 				<meta name="startIndex" content="{$start_var}"/>
 				<meta name="itemsPerPage" content="{$rows}"/>
 
-				<link rel="shortcut icon" type="image/x-icon" href="{$display_path}images/favicon.png"/>				
+				<link rel="shortcut icon" type="image/x-icon" href="{$display_path}images/favicon.png"/>
 				<meta name="viewport" content="width=device-width, initial-scale=1"/>
 
-				<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"/>				
+				<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"/>
 				<!-- bootstrap -->
 				<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"/>
-				<script type="text/javascript" src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"/>				
+				<script type="text/javascript" src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"/>
 				<script type="text/javascript" src="{$display_path}javascript/bootstrap-multiselect.js"/>
 				<link rel="stylesheet" href="{$display_path}bootstrap-multiselect.css" type="text/css"/>
 				<link type="text/css" href="{$display_path}style.css" rel="stylesheet"/>
-				
+
 				<!-- Add fancyBox -->
-				<link rel="stylesheet" href="{$display_path}jquery.fancybox.css?v=2.1.5" type="text/css" media="screen" />
-				<script type="text/javascript" src="{$display_path}javascript/jquery.fancybox.pack.js?v=2.1.5"/>			
+				<link rel="stylesheet" href="{$display_path}jquery.fancybox.css?v=2.1.5" type="text/css" media="screen"/>
+				<script type="text/javascript" src="{$display_path}javascript/jquery.fancybox.pack.js?v=2.1.5"/>
 				<script type="text/javascript" src="{$display_path}javascript/get_facets.js"/>
 				<script type="text/javascript" src="{$display_path}javascript/facet_functions.js"/>
 				<script type="text/javascript" src="{$display_path}javascript/result_functions.js"/>
-				
+
 				<!-- call mapping information -->
 				<xsl:if test="//lst[@name='mint_geo']/int[@name='numFacetTerms'] &gt; 0">
 					<script src="http://www.openlayers.org/api/OpenLayers.js" type="text/javascript"/>
 					<script src="http://maps.google.com/maps/api/js?v=3.2&amp;sensor=false"/>
-					<script type="text/javascript" src="{$display_path}javascript/result_map_functions.js"/>					
+					<script type="text/javascript" src="{$display_path}javascript/result_map_functions.js"/>
 				</xsl:if>
 				<xsl:if test="string(/config/google_analytics)">
 					<script type="text/javascript">
@@ -146,9 +149,9 @@
 							<xsl:call-template name="quick_search"/>
 							<xsl:apply-templates select="descendant::lst[@name='facet_fields']"/>
 						</div>
-						
-						
-					</xsl:if>					
+
+
+					</xsl:if>
 				</div>
 				<div class="col-md-9">
 					<div class="container-fluid">
@@ -160,7 +163,7 @@
 									<div style="display:none">
 										<div id="resultMap"/>
 									</div>
-								</xsl:if>							
+								</xsl:if>
 								<xsl:call-template name="paging"/>
 								<xsl:call-template name="sort"/>
 								<xsl:apply-templates select="descendant::doc"/>

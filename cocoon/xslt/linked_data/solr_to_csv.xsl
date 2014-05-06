@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:numishare="https://github.com/ewg118/numishare" xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes="xs exsl numishare" version="2.0" xmlns="http://www.w3.org/2005/Atom" xmlns:exsl="http://exslt.org/common">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:numishare="https://github.com/ewg118/numishare" xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes="#all"
+	version="2.0">
 	<xsl:output method="text" encoding="UTF-8"/>
 	<xsl:include href="../functions.xsl"/>
 
-	<xsl:param name="q"/>	
+	<xsl:param name="q"/>
 	<xsl:param name="rows" as="xs:integer">100</xsl:param>
 	<xsl:param name="start"/>
 	<xsl:param name="lang"/>
@@ -15,8 +16,8 @@
 			<xsl:otherwise>0</xsl:otherwise>
 		</xsl:choose>
 	</xsl:variable>
-	
-	
+
+
 	<xsl:param name="url">
 		<xsl:value-of select="/content/config/url"/>
 	</xsl:param>
@@ -27,34 +28,36 @@
 	<xsl:variable name="tokenized_fields" select="tokenize($fields, ',')"/>
 	<xsl:variable name="field_count" select="count($tokenized_fields)"/>
 
-	<xsl:template match="/">		
+	<xsl:template match="/">
 		<!-- display human-readable field names in header row -->
 		<xsl:for-each select="$tokenized_fields">
 			<xsl:text>"</xsl:text>
 			<xsl:value-of select="numishare:normalize_fields(., $lang)"/>
 			<xsl:text>"</xsl:text>
-			<xsl:text>,</xsl:text>			
+			<xsl:text>,</xsl:text>
 		</xsl:for-each>
 		<!-- add URL manually -->
 		<xsl:text>"URL"</xsl:text>
 		<xsl:text>
 </xsl:text>
 		<xsl:for-each select="descendant::doc">
-			<xsl:variable name="doc" select="."/>
+			<xsl:variable name="doc" as="element()*">
+				<xsl:copy-of select="."/>
+			</xsl:variable>
 			<xsl:for-each select="$tokenized_fields">
 				<xsl:variable name="field" select="."/>
 				<xsl:text>"</xsl:text>
-				<xsl:apply-templates select="exsl:node-set($doc)/*[@name=$field]"/>
+				<xsl:apply-templates select="$doc/*[@name=$field]"/>
 				<xsl:text>"</xsl:text>
-				<xsl:text>,</xsl:text>				
+				<xsl:text>,</xsl:text>
 			</xsl:for-each>
-			<xsl:value-of select="concat($url, 'id/', str[@name='recordId'])"/>						
+			<xsl:value-of select="concat($url, 'id/', str[@name='recordId'])"/>
 			<xsl:text>
 </xsl:text>
 		</xsl:for-each>
 	</xsl:template>
-	
-	<xsl:template match="doc/*">		
+
+	<xsl:template match="doc/*">
 		<xsl:choose>
 			<xsl:when test="child::node()">
 				<xsl:for-each select="distinct-values(child::node())">
@@ -67,6 +70,6 @@
 			<xsl:otherwise>
 				<xsl:value-of select="."/>
 			</xsl:otherwise>
-		</xsl:choose>			
+		</xsl:choose>
 	</xsl:template>
 </xsl:stylesheet>

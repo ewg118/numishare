@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:nh="http://nomisma.org/nudsHoard" xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	xmlns:cinclude="http://apache.org/cocoon/include/1.0" xmlns:exsl="http://exslt.org/common" exclude-result-prefixes="#all" version="2.0">
+	xmlns:cinclude="http://apache.org/cocoon/include/1.0" exclude-result-prefixes="#all" version="2.0">
 	<xsl:output method="text" encoding="UTF-8"/>
 
 	<!-- params -->
@@ -94,7 +94,7 @@
 			<xsl:value-of select="$name"/>
 			<xsl:text>",</xsl:text>
 			<!-- display the value per hoard -->
-			<xsl:for-each select="exsl:node-set($counts)//hoard">
+			<xsl:for-each select="$counts//hoard">
 				<xsl:sort select="@id"/>
 				<xsl:text>"</xsl:text>
 				<xsl:value-of select="if (number(name[.=$name]/@count)) then name[.=$name]/@count else 0"/>

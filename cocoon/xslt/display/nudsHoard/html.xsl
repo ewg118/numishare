@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" version="2.0"
-	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:exsl="http://exslt.org/common" xmlns:numishare="https://github.com/ewg118/numishare" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:numishare="https://github.com/ewg118/numishare" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
 	xmlns:cinclude="http://apache.org/cocoon/include/1.0" xmlns:nuds="http://nomisma.org/nuds" xmlns:nh="http://nomisma.org/nudsHoard" xmlns:nm="http://nomisma.org/id/"
-	xmlns:math="http://exslt.org/math" exclude-result-prefixes="xsl xs rdf xlink exsl numishare skos nuds nh nm math">
+	xmlns:math="http://exslt.org/math" exclude-result-prefixes="xsl xs rdf xlink numishare skos nuds nh nm math">
 
 	<!-- use the calculate URI parameter to output tables/charts for counts of material, denomination, issuer, etc. -->
 	<xsl:param name="calculate"/>
@@ -203,13 +203,13 @@
 
 			<xsl:if test="$hasContents = 'true'">
 				<xsl:if test="not(nh:deposit/nh:date) and not(nh:deposit/nh:dateRange)">
-					<xsl:variable name="all-dates">
+					<xsl:variable name="all-dates" as="element()*">
 						<dates>
 							<xsl:for-each select="parent::node()/nh:contentsDesc/nh:contents/descendant::nuds:typeDesc">
 								<xsl:choose>
 									<xsl:when test="string(@xlink:href)">
 										<xsl:variable name="href" select="@xlink:href"/>
-										<xsl:for-each select="exsl:node-set($nudsGroup)//object[@xlink:href=$href]/descendant::*/@standardDate">
+										<xsl:for-each select="$nudsGroup//object[@xlink:href=$href]/descendant::*/@standardDate">
 											<xsl:if test="number(.)">
 												<date>
 													<xsl:value-of select="number(.)"/>
@@ -230,9 +230,9 @@
 							</xsl:for-each>
 						</dates>
 					</xsl:variable>
-					<xsl:variable name="dates">
+					<xsl:variable name="dates" as="element()*">
 						<dates>
-							<xsl:for-each select="distinct-values(exsl:node-set($all-dates)//date)">
+							<xsl:for-each select="distinct-values($all-dates//date)">
 								<xsl:sort data-type="number"/>
 								<date>
 									<xsl:value-of select="number(.)"/>
@@ -243,7 +243,7 @@
 
 					<li>
 						<b><xsl:value-of select="numishare:regularize_node('closing_date', $lang)"/>: </b>
-						<xsl:value-of select="nh:normalize_date(exsl:node-set($dates)/dates/date[last()], exsl:node-set($dates)/dates/date[last()])"/>
+						<xsl:value-of select="nh:normalize_date($dates//date[last()], $dates//date[last()])"/>
 					</li>
 				</xsl:if>
 
@@ -253,7 +253,7 @@
 							<xsl:choose>
 								<xsl:when test="string(@xlink:href)">
 									<xsl:variable name="href" select="@xlink:href"/>
-									<xsl:apply-templates select="exsl:node-set($nudsGroup)//object[@xlink:href=$href]/descendant::nuds:typeDesc/nuds:denomination" mode="den">
+									<xsl:apply-templates select="$nudsGroup//object[@xlink:href=$href]/descendant::nuds:typeDesc/nuds:denomination" mode="den">
 										<xsl:with-param name="contentsDesc" select="$contentsDesc"/>
 										<xsl:with-param name="lang" select="$lang"/>
 									</xsl:apply-templates>
@@ -329,10 +329,10 @@
 				<xsl:value-of select="nuds:typeDesc/@xlink:href"/>
 			</xsl:if>
 		</xsl:variable>
-		<xsl:variable name="typeDesc">
+		<xsl:variable name="typeDesc" as="element()*">
 			<xsl:choose>
 				<xsl:when test="string($typeDesc_resource)">
-					<xsl:copy-of select="exsl:node-set($nudsGroup)/nudsGroup/object[@xlink:href = $typeDesc_resource]/nuds:nuds/nuds:descMeta/nuds:typeDesc"/>
+					<xsl:copy-of select="$nudsGroup//object[@xlink:href = $typeDesc_resource]/nuds:nuds/nuds:descMeta/nuds:typeDesc"/>
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:copy-of select="nuds:typeDesc"/>
@@ -348,13 +348,13 @@
 				<xsl:if test="string($typeDesc_resource)">
 					<h3>
 						<a href="{$typeDesc_resource}" target="_blank">
-							<xsl:value-of select="exsl:node-set($nudsGroup)/nudsGroup/object[@xlink:href = $typeDesc_resource]/nuds:nuds/nuds:descMeta/nuds:title"/>
+							<xsl:value-of select="$nudsGroup//object[@xlink:href = $typeDesc_resource]/nuds:nuds/nuds:descMeta/nuds:title"/>
 						</a>
 					</h3>
 				</xsl:if>
 				<xsl:choose>
-					<xsl:when test="exsl:node-set($typeDesc)/nuds:typeDesc/nuds:denomination">
-						<xsl:for-each select="exsl:node-set($typeDesc)/nuds:typeDesc/nuds:denomination">
+					<xsl:when test="$typeDesc/nuds:typeDesc/nuds:denomination">
+						<xsl:for-each select="$typeDesc/nuds:typeDesc/nuds:denomination">
 							<xsl:variable name="href" select="@xlink:href"/>
 							<xsl:choose>
 								<xsl:when test="string($lang) and contains($href, 'nomisma.org')">
@@ -383,8 +383,8 @@
 							</xsl:choose>
 						</xsl:for-each>
 					</xsl:when>
-					<xsl:when test="exsl:node-set($typeDesc)/nuds:typeDesc/nuds:geographic/nuds:geogname">
-						<xsl:for-each select="exsl:node-set($typeDesc)/nuds:typeDesc/nuds:geographic/nuds:geogname">
+					<xsl:when test="$typeDesc/nuds:typeDesc/nuds:geographic/nuds:geogname">
+						<xsl:for-each select="$typeDesc/nuds:typeDesc/nuds:geographic/nuds:geogname">
 							<xsl:variable name="href" select="@xlink:href"/>
 							<xsl:choose>
 								<xsl:when test="string($lang) and contains($href, 'nomisma.org')">
@@ -416,18 +416,18 @@
 				</xsl:choose>				
 				
 				<xsl:choose>
-					<xsl:when test="exsl:node-set($typeDesc)/nuds:typeDesc/nuds:date">
-						<xsl:value-of select="exsl:node-set($typeDesc)/nuds:typeDesc/nuds:date[1]"/>
+					<xsl:when test="$typeDesc/nuds:typeDesc/nuds:date">
+						<xsl:value-of select="$typeDesc/nuds:typeDesc/nuds:date[1]"/>
 					</xsl:when>
-					<xsl:when test="exsl:node-set($typeDesc)/nuds:typeDesc/nuds:dateRange">
-						<xsl:value-of select="exsl:node-set($typeDesc)/nuds:typeDesc/nuds:dateRange/nuds:fromDate"/>
+					<xsl:when test="$typeDesc/nuds:typeDesc/nuds:dateRange">
+						<xsl:value-of select="$typeDesc/nuds:typeDesc/nuds:dateRange/nuds:fromDate"/>
 						<xsl:text> - </xsl:text>
-						<xsl:value-of select="exsl:node-set($typeDesc)/nuds:typeDesc/nuds:dateRange/nuds:toDate"/>
+						<xsl:value-of select="$typeDesc/nuds:typeDesc/nuds:dateRange/nuds:toDate"/>
 					</xsl:when>
 				</xsl:choose>
 				<div class="coin-content" id="{$obj-id}-div" style="display:none">
 					<xsl:apply-templates select="nuds:physDesc"/>
-					<xsl:apply-templates select="exsl:node-set($typeDesc)/nuds:typeDesc">
+					<xsl:apply-templates select="$typeDesc/nuds:typeDesc">
 						<xsl:with-param name="typeDesc_resource" select="$typeDesc_resource"/>
 					</xsl:apply-templates>
 					<xsl:apply-templates select="nuds:refDesc"/>
