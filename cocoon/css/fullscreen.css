@@ -171,14 +171,11 @@ dd {
 }
 /* gallery image */
 .gi {
-	padding:0px 5px;
+	padding:2px 2px;
 	max-width:120px;
 }
 .result_link {
 	font-size:120%;
-}
-.thumbImage>img {
-	max-width:120px;
 }
 /*
   ***************************************
