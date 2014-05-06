@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:nuds="http://nomisma.org/nuds" xmlns:nh="http://nomisma.org/nudsHoard"
-	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:exsl="http://exslt.org/common" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-	xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nm="http://nomisma.org/id/" exclude-result-prefixes="#all" version="2.0">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:nuds="http://nomisma.org/nuds" xmlns:nh="http://nomisma.org/nudsHoard" xmlns:xlink="http://www.w3.org/1999/xlink"
+	xmlns:exsl="http://exslt.org/common" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nm="http://nomisma.org/id/"
+	exclude-result-prefixes="#all" version="2.0">
 	<xsl:include href="header.xsl"/>
 	<xsl:include href="footer.xsl"/>
 	<xsl:include href="templates.xsl"/>
@@ -47,48 +47,57 @@
 
 	<xsl:variable name="nudsGroup">
 		<nudsGroup>
-			<xsl:variable name="id-param">
-				<xsl:for-each select="distinct-values(descendant::nuds:typeDesc[contains(@xlink:href, 'nomisma.org')]/@xlink:href)">
-					<xsl:value-of select="substring-after(., 'id/')"/>
-					<xsl:if test="not(position()=last())">
-						<xsl:text>|</xsl:text>
-					</xsl:if>
-				</xsl:for-each>
+			<xsl:variable name="type_series" as="element()*">
+				<list>
+					<xsl:for-each select="distinct-values(descendant::nuds:typeDesc[string(@xlink:href)]/substring-before(@xlink:href, 'id/'))">
+						<type_series>
+							<xsl:value-of select="."/>
+						</type_series>
+					</xsl:for-each>
+				</list>
+			</xsl:variable>
+			<xsl:variable name="type_list" as="element()*">
+				<list>
+					<xsl:for-each select="distinct-values(descendant::nuds:typeDesc[string(@xlink:href)]/@xlink:href)">
+						<type_series_item>
+							<xsl:value-of select="."/>
+						</type_series_item>
+					</xsl:for-each>
+				</list>
 			</xsl:variable>
 
-			<xsl:if test="string-length($id-param) &gt; 0">
-				<xsl:for-each select="document(concat('http://nomisma.org/apis/getNuds?identifiers=', $id-param))//nuds:nuds">
-					<object xlink:href="http://nomisma.org/id/{nuds:control/nuds:recordId}">
-						<xsl:copy-of select="."/>
-					</object>
-				</xsl:for-each>
-			</xsl:if>
+			<xsl:for-each select="$type_series//type_series">
+				<xsl:variable name="type_series_uri" select="."/>
 
-			<!-- incorporate other typeDescs which do not point to nomisma.org -->
-			<xsl:for-each select="descendant::nuds:typeDesc[not(contains(@xlink:href, 'nomisma.org'))]">
-				<xsl:choose>
-					<xsl:when test="string(@xlink:href)">
-						<xsl:if test="boolean(document(concat(@xlink:href, '.xml')))">
-							<object xlink:href="{@xlink:href}">
-								<xsl:copy-of select="document(concat(@xlink:href, '.xml'))/nuds:nuds"/>
-							</object>
+				<xsl:variable name="id-param">
+					<xsl:for-each select="$type_list//type_series_item[contains(., $type_series_uri)]">
+						<xsl:value-of select="substring-after(., 'id/')"/>
+						<xsl:if test="not(position()=last())">
+							<xsl:text>|</xsl:text>
 						</xsl:if>
-					</xsl:when>
-					<xsl:otherwise>
-						<object>
+					</xsl:for-each>
+				</xsl:variable>
+				
+				<xsl:if test="string-length($id-param) &gt; 0">
+					<xsl:for-each select="document(concat($type_series_uri, 'apis/getNuds?identifiers=', $id-param))//nuds:nuds">
+						<object xlink:href="{$type_series_uri}id/{nuds:control/nuds:recordId}">
 							<xsl:copy-of select="."/>
 						</object>
-					</xsl:otherwise>
-				</xsl:choose>
+					</xsl:for-each>
+				</xsl:if>				
+			</xsl:for-each>
+			<xsl:for-each select="descendant::nuds:typeDesc[not(string(@xlink:href))]">
+				<object>
+					<xsl:copy-of select="."/>
+				</object>
 			</xsl:for-each>
 		</nudsGroup>
 	</xsl:variable>
 
 	<!-- get non-coin-type RDF in the document -->
 	<xsl:variable name="rdf" as="element()*">
-		<rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:nm="http://nomisma.org/id/"
-			xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfa="http://www.w3.org/ns/rdfa#" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-			xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#">
+		<rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:nm="http://nomisma.org/id/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+			xmlns:rdfa="http://www.w3.org/ns/rdfa#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#">
 			<xsl:variable name="id-param">
 				<xsl:for-each
 					select="distinct-values(descendant::*[not(local-name()='typeDesc') and not(local-name()='reference')][contains(@xlink:href, 'nomisma.org')]/@xlink:href|exsl:node-set($nudsGroup)/descendant::*[not(local-name()='object') and not(local-name()='typeDesc')][contains(@xlink:href, 'nomisma.org')]/@xlink:href)">
@@ -113,9 +122,7 @@
 	</xsl:variable>
 	<xsl:variable name="has_findspot_geo">
 		<xsl:choose>
-			<xsl:when
-				test="count($rdf/descendant::nm:findspot) &gt; 0 or count(descendant::*[local-name()='geogname'][@xlink:role='findspot' and string(@xlink:href)]) &gt; 0"
-				>true</xsl:when>
+			<xsl:when test="count($rdf/descendant::nm:findspot) &gt; 0 or count(descendant::*[local-name()='geogname'][@xlink:role='findspot' and string(@xlink:href)]) &gt; 0">true</xsl:when>
 			<xsl:when test="/content/response-findspot = 'true'">true</xsl:when>
 			<xsl:otherwise>false</xsl:otherwise>
 		</xsl:choose>
@@ -123,8 +130,7 @@
 
 	<xsl:template match="/">
 		<xsl:choose>
-			<xsl:when
-				test="count(descendant::*:otherRecordId[@semantic='dcterms:isReplacedBy']) = 1 and descendant::*:control/*:maintenanceStatus='cancelledReplaced'">
+			<xsl:when test="count(descendant::*:otherRecordId[@semantic='dcterms:isReplacedBy']) = 1 and descendant::*:control/*:maintenanceStatus='cancelledReplaced'">
 				<xsl:variable name="uri">
 					<xsl:choose>
 						<xsl:when test="contains(descendant::*:otherRecordId[@semantic='dcterms:isReplacedBy'][1], 'http://')">
@@ -270,7 +276,7 @@
 						</xsl:choose>
 					</head>
 					<body>
-						<xsl:call-template name="header"/>
+						<xsl:call-template name="header"/>						
 						<xsl:call-template name="display"/>
 						<xsl:call-template name="footer"/>
 					</body>
@@ -282,14 +288,13 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
-	
+
 	<xsl:template name="generic_head">
 		<title id="{$id}">
 			<xsl:value-of select="//config/title"/>
 			<xsl:text>: </xsl:text>
 			<xsl:value-of
-				select="if (descendant::nuds:nuds) then descendant::nuds:nuds/nuds:descMeta/nuds:title else if (descendant::*[local-name()='nudsHoard']) then descendant::nuds:recordId else ''"
-			/>
+				select="if (descendant::nuds:nuds) then descendant::nuds:nuds/nuds:descMeta/nuds:title else if (descendant::*[local-name()='nudsHoard']) then descendant::nuds:recordId else ''"/>
 		</title>
 		<!-- alternates -->
 		<link rel="alternate" type="text/xml" href="{concat($url, 'id/', $id)}.xml"/>
@@ -303,7 +308,7 @@
 		<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.8.0/build/cssgrids/grids-min.css"/>
 		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"/>
 		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js"/>
-		
+
 		<!-- menu -->
 		<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.core.js"/>
 		<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.widget.js"/>

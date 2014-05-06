@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:exsl="http://exslt.org/common" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"
 	xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nm="http://nomisma.org/id/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:nuds="http://nomisma.org/nuds"
 	xmlns:nh="http://nomisma.org/nudsHoard" xmlns:cinclude="http://apache.org/cocoon/include/1.0" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:numishare="http://code.google.com/p/numishare/"
-	xmlns:res="http://www.w3.org/2005/sparql-results#" exclude-result-prefixes="exsl geo skos nm rdf nuds nh cinclude xlink numishare res" version="2.0">
+	xmlns:res="http://www.w3.org/2005/sparql-results#" exclude-result-prefixes="geo skos nm rdf nuds nh cinclude xlink numishare res" version="2.0">
 	<xsl:template name="kml">
 		<kml xmlns="http://earth.google.com/kml/2.0">
 			<Document>
@@ -58,16 +58,16 @@
 		<xsl:text> ] </xsl:text>
 	</xsl:template>
 
-	<xsl:template match="nuds:nuds" mode="kml">
+	<xsl:template match="nuds:nuds" mode="kml">		
 		<!-- create mint points -->
-		<xsl:for-each select="exsl:node-set($nudsGroup)/descendant::nuds:geogname[@xlink:role='mint'][string(@xlink:href)]">
+		<xsl:for-each select="$nudsGroup/descendant::nuds:geogname[@xlink:role='mint'][string(@xlink:href)]">
 			<xsl:call-template name="getPlacemark">
 				<xsl:with-param name="href" select="@xlink:href"/>
 				<xsl:with-param name="styleUrl">#mint</xsl:with-param>
 			</xsl:call-template>
 		</xsl:for-each>
 		<!-- create findspot points (for physical coins -->
-		<xsl:for-each select="exsl:node-set($nudsGroup)/descendant::nuds:geogname[@xlink:role='findspot'][string(@xlink:href)]|descendant::nuds:findspotDesc[string(@xlink:href)]">
+		<xsl:for-each select="$nudsGroup/descendant::nuds:geogname[@xlink:role='findspot'][string(@xlink:href)]|descendant::nuds:findspotDesc[string(@xlink:href)]">
 			<xsl:call-template name="getPlacemark">
 				<xsl:with-param name="href" select="@xlink:href"/>
 				<xsl:with-param name="styleUrl">#hoard</xsl:with-param>
@@ -81,7 +81,7 @@
 	</xsl:template>
 
 	<xsl:template match="nuds:nuds" mode="json">
-		<xsl:for-each select="exsl:node-set($nudsGroup)/descendant::nuds:geogname[@xlink:role='mint'][string(@xlink:href)]">
+		<xsl:for-each select="$nudsGroup/descendant::nuds:geogname[@xlink:role='mint'][string(@xlink:href)]">
 			<xsl:variable name="href" select="@xlink:href"/>
 			<xsl:call-template name="getJsonPoint">
 				<xsl:with-param name="href" select="$href"/>
@@ -100,7 +100,7 @@
 				<cinclude:include src="cocoon:/widget?uri={concat('http://numismatics.org/ocre/', 'id/', $id)}&amp;template=json"/>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:for-each select="exsl:node-set($nudsGroup)/descendant::nuds:geogname[@xlink:role='findspot'][string(@xlink:href)]|descendant::nuds:findspotDesc[string(@xlink:href)]">
+				<xsl:for-each select="$nudsGroup/descendant::nuds:geogname[@xlink:role='findspot'][string(@xlink:href)]|descendant::nuds:findspotDesc[string(@xlink:href)]">
 					<xsl:call-template name="getJsonPoint">
 						<xsl:with-param name="href" select="@xlink:href"/>
 						<xsl:with-param name="type">findspot</xsl:with-param>
@@ -117,7 +117,7 @@
 				<xsl:with-param name="styleUrl">#hoard</xsl:with-param>
 			</xsl:call-template>
 		</xsl:for-each>
-		<xsl:for-each select="exsl:node-set($nudsGroup)/descendant::nuds:geogname[@xlink:role='mint'][string(@xlink:href)]">
+		<xsl:for-each select="$nudsGroup/descendant::nuds:geogname[@xlink:role='mint'][string(@xlink:href)]">
 			<!-- commenting out unique portion: [not(.=preceding::nuds:geogname)] -->
 			<xsl:call-template name="getPlacemark">
 				<xsl:with-param name="href" select="@xlink:href"/>
@@ -135,13 +135,13 @@
 				<xsl:with-param name="type">findspot</xsl:with-param>
 				<xsl:with-param name="title" select="."/>
 			</xsl:call-template>
-			<xsl:if test="count(distinct-values(exsl:node-set($nudsGroup)/descendant::nuds:geogname[@xlink:role='mint']/@xlink:href)) &gt; 0">
+			<xsl:if test="count(distinct-values($nudsGroup/descendant::nuds:geogname[@xlink:role='mint']/@xlink:href)) &gt; 0">
 				<xsl:text>,</xsl:text>
 			</xsl:if>
 		</xsl:for-each>
-		
+
 		<!-- display map points for mints only -->
-		<xsl:for-each select="distinct-values(exsl:node-set($nudsGroup)/descendant::nuds:geogname[@xlink:role='mint']/@xlink:href)">
+		<xsl:for-each select="distinct-values($nudsGroup/descendant::nuds:geogname[@xlink:role='mint']/@xlink:href)">
 			<xsl:call-template name="getJsonPoint">
 				<xsl:with-param name="href" select="."/>
 				<xsl:with-param name="type">mint</xsl:with-param>
@@ -168,11 +168,11 @@
 				<xsl:text>,</xsl:text>
 			</xsl:if>
 		</xsl:for-each>
-		<xsl:if test="count(exsl:node-set($nudsGroup)//nuds:typeDesc) &gt; 0">
+		<xsl:if test="count($nudsGroup//nuds:typeDesc) &gt; 0">
 			<xsl:text>,</xsl:text>
 		</xsl:if>
 		<!-- create timeline only events for associated coin types -->
-		<xsl:for-each select="exsl:node-set($nudsGroup)/descendant::nuds:typeDesc">
+		<xsl:for-each select="$nudsGroup/descendant::nuds:typeDesc">
 			<xsl:call-template name="getJsonPoint">
 				<xsl:with-param name="href"/>
 				<xsl:with-param name="type">coinType</xsl:with-param>
@@ -235,9 +235,11 @@
 			<xsl:choose>
 				<xsl:when test="contains($href, 'geonames')">
 					<xsl:variable name="geonameId" select="substring-before(substring-after($href, 'geonames.org/'), '/')"/>
-					<xsl:variable name="geonames_data" select="document(concat($geonames-url, '/get?geonameId=', $geonameId, '&amp;username=', $geonames_api_key, '&amp;style=full'))"/>
-					<xsl:variable name="lat" select="exsl:node-set($geonames_data)//lat"/>
-					<xsl:variable name="lon" select="exsl:node-set($geonames_data)//lng"/>
+					<xsl:variable name="geonames_data">
+						<xsl:copy-of select="document(concat($geonames-url, '/get?geonameId=', $geonameId, '&amp;username=', $geonames_api_key, '&amp;style=full'))/*"/>
+					</xsl:variable>
+					<xsl:variable name="lat" select="$geonames_data//lat"/>
+					<xsl:variable name="lon" select="$geonames_data//lng"/>
 					<xsl:choose>
 						<xsl:when test="string($lat) and string($lon)">
 							<xsl:value-of select="$lat"/>
@@ -261,7 +263,7 @@
 					</xsl:choose>
 				</xsl:when>
 			</xsl:choose>
-		</xsl:variable>		
+		</xsl:variable>
 		<xsl:variable name="description">
 			<xsl:choose>
 				<xsl:when test="$type='coinType'">
@@ -273,9 +275,11 @@
 								<xsl:choose>
 									<xsl:when test="contains($thisHref, 'geonames')">
 										<xsl:variable name="geonameId" select="substring-before(substring-after($href, 'geonames.org/'), '/')"/>
-										<xsl:variable name="geonames_data" select="document(concat($geonames-url, '/get?geonameId=', $geonameId, '&amp;username=', $geonames_api_key, '&amp;style=full'))"/>
-										<xsl:variable name="lat" select="exsl:node-set($geonames_data)//lat"/>
-										<xsl:variable name="lon" select="exsl:node-set($geonames_data)//lng"/>
+										<xsl:variable name="geonames_data">
+											<xsl:copy-of select="document(concat($geonames-url, '/get?geonameId=', $geonameId, '&amp;username=', $geonames_api_key, '&amp;style=full'))/*"/>
+										</xsl:variable>										
+										<xsl:variable name="lat" select="$geonames_data//lat"/>
+										<xsl:variable name="lon" select="$geonames_data//lng"/>
 										<xsl:choose>
 											<xsl:when test="string($lat) and string($lon)">
 												<xsl:value-of select="$lat"/>
@@ -302,12 +306,10 @@
 							</xsl:variable>
 							<![CDATA[<table style='width:100%'><tr><td style='width:50%'>]]>
 							<xsl:if test="$coordinates != 'NULL'">
-								<![CDATA[<<img src='http://maps.google.com/maps/api/staticmap?size=120x120&zoom=4&markers=color:blue%7C]]><xsl:value-of select="replace($coordinates, '\|', ',')"
-								/>
+								<![CDATA[<<img src='http://maps.google.com/maps/api/staticmap?size=120x120&zoom=4&markers=color:blue%7C]]><xsl:value-of select="replace($coordinates, '\|', ',')"/>
 								<![CDATA[&sensor=false&maptype=terrain'/>]]>
 							</xsl:if>
 							<![CDATA[</td>]]>
-							
 							<!-- display date -->
 							<![CDATA[<td style='width:50%'>]]>
 							<xsl:choose>
@@ -325,7 +327,7 @@
 									<xsl:value-of select="nuds:geographic/nuds:geogname[@xlink:role='mint'][@xlink:href][1]"/>
 								</xsl:otherwise>
 							</xsl:choose>
-							<![CDATA[<br/>]]>	
+							<![CDATA[<br/>]]>
 							<xsl:if test="nuds:date or nuds:dateRange">
 								<xsl:choose>
 									<xsl:when test="string(nuds:date)">
@@ -416,11 +418,11 @@
 				</xsl:when>
 			</xsl:choose>
 		</xsl:variable>
-		<!-- output -->  { <xsl:if test="string($coordinates) and not($coordinates='NULL')">"point": {"lon": <xsl:value-of select="tokenize($coordinates, '\|')[2]"/>, "lat": <xsl:value-of
-			select="tokenize($coordinates, '\|')[1]"/>},</xsl:if> "title": "<xsl:value-of select="$title"/>", <xsl:if test="string($start)">"start": "<xsl:value-of select="$start"/>",</xsl:if>
+		<!-- output --> { <xsl:if test="string($coordinates) and not($coordinates='NULL')">"point": {"lon": <xsl:value-of select="tokenize($coordinates, '\|')[2]"/>, "lat": <xsl:value-of
+				select="tokenize($coordinates, '\|')[1]"/>},</xsl:if> "title": "<xsl:value-of select="$title"/>", <xsl:if test="string($start)">"start": "<xsl:value-of select="$start"/>",</xsl:if>
 		<xsl:if test="string($end)">"end": "<xsl:value-of select="$end"/>",</xsl:if> "options": { "theme": "<xsl:value-of select="$theme"/>"<xsl:if test="string($description)">, "description":
-			"<xsl:value-of select="normalize-space($description)"/>"</xsl:if><xsl:if test="string($href) or string(@xlink:href)">, "href": "<xsl:value-of
-				select="if (string($href)) then $href else @xlink:href"/>"</xsl:if> } }  </xsl:template>
+				"<xsl:value-of select="normalize-space($description)"/>"</xsl:if><xsl:if test="string($href) or string(@xlink:href)">, "href": "<xsl:value-of
+				select="if (string($href)) then $href else @xlink:href"/>"</xsl:if> } } </xsl:template>
 
 	<xsl:template name="getPlacemark">
 		<xsl:param name="href"/>
@@ -493,8 +495,10 @@
 			<xsl:choose>
 				<xsl:when test="contains($href, 'geonames')">
 					<xsl:variable name="geonameId" select="substring-before(substring-after($href, 'geonames.org/'), '/')"/>
-					<xsl:variable name="geonames_data" select="document(concat($geonames-url, '/get?geonameId=', $geonameId, '&amp;username=', $geonames_api_key, '&amp;style=full'))"/>
-					<xsl:variable name="coordinates" select="concat(exsl:node-set($geonames_data)//lng, ',', exsl:node-set($geonames_data)//lat)"/>
+					<xsl:variable name="geonames_data">
+						<xsl:copy-of select="document(concat($geonames-url, '/get?geonameId=', $geonameId, '&amp;username=', $geonames_api_key, '&amp;style=full'))/*"/>
+					</xsl:variable>
+					<xsl:variable name="coordinates" select="concat($geonames_data//lng, ',', $geonames_data//lat)"/>
 					<Point>
 						<coordinates>
 							<xsl:value-of select="$coordinates"/>

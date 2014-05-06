@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:exsl="http://exslt.org/common" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
 	xmlns:nm="http://nomisma.org/id/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:nuds="http://nomisma.org/nuds" xmlns:nh="http://nomisma.org/nudsHoard"
-	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes="xs geo exsl skos rdf xlink nuds" xmlns="http://earth.google.com/kml/2.0"
-	version="2.0">
+	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes="#all" version="2.0">
 	<xsl:include href="templates.xsl"/>
 	<xsl:output method="xml" encoding="UTF-8"/>
 
@@ -16,41 +15,51 @@
 	</xsl:variable>
 	<xsl:variable name="geonames_api_key" select="/content/config/geonames_api_key"/>
 
-	<xsl:variable name="nudsGroup">
+	<xsl:variable name="nudsGroup" as="element()*">
 		<nudsGroup>
-			<xsl:variable name="id-param">
-				<xsl:for-each select="distinct-values(descendant::nuds:typeDesc[contains(@xlink:href, 'nomisma.org')]/@xlink:href)">
-					<xsl:value-of select="substring-after(., 'id/')"/>
-					<xsl:if test="not(position()=last())">
-						<xsl:text>|</xsl:text>
-					</xsl:if>
-				</xsl:for-each>
+			<xsl:variable name="type_series" as="element()*">
+				<list>
+					<xsl:for-each select="distinct-values(descendant::nuds:typeDesc[string(@xlink:href)]/substring-before(@xlink:href, 'id/'))">
+						<type_series>
+							<xsl:value-of select="."/>
+						</type_series>
+					</xsl:for-each>
+				</list>
 			</xsl:variable>
+			<xsl:variable name="type_list" as="element()*">
+				<list>
+					<xsl:for-each select="distinct-values(descendant::nuds:typeDesc[string(@xlink:href)]/@xlink:href)">
+						<type_series_item>
+							<xsl:value-of select="."/>
+						</type_series_item>
+					</xsl:for-each>
+				</list>
+			</xsl:variable>
+			<xsl:copy-of select="$type_series"/>
+			<xsl:for-each select="$type_series//type_series">
+				<xsl:variable name="type_series_uri" select="."/>
 
-			<xsl:if test="string-length($id-param) &gt; 0">
-				<xsl:for-each select="document(concat('http://nomisma.org/apis/getNuds?identifiers=', $id-param))//nuds:nuds">
-					<object xlink:href="http://nomisma.org/id/{nuds:control/nuds:recordId}">
-						<xsl:copy-of select="."/>
-					</object>
-				</xsl:for-each>
-			</xsl:if>
-
-			<!-- incorporate other typeDescs which do not point to nomisma.org -->
-			<xsl:for-each select="descendant::nuds:typeDesc[not(contains(@xlink:href, 'nomisma.org'))]">
-				<xsl:choose>
-					<xsl:when test="string(@xlink:href)">
-						<xsl:if test="boolean(document(concat(@xlink:href, '.xml')))">
-							<object xlink:href="{@xlink:href}">
-								<xsl:copy-of select="document(concat(@xlink:href, '.xml'))/nuds:nuds"/>
-							</object>
+				<xsl:variable name="id-param">
+					<xsl:for-each select="$type_list//type_series_item[contains(., $type_series_uri)]">
+						<xsl:value-of select="substring-after(., 'id/')"/>
+						<xsl:if test="not(position()=last())">
+							<xsl:text>|</xsl:text>
 						</xsl:if>
-					</xsl:when>
-					<xsl:otherwise>
-						<object>
+					</xsl:for-each>
+				</xsl:variable>
+
+				<xsl:if test="string-length($id-param) &gt; 0">
+					<xsl:for-each select="document(concat($type_series_uri, 'apis/getNuds?identifiers=', $id-param))//nuds:nuds">
+						<object xlink:href="{$type_series_uri}id/{nuds:control/nuds:recordId}">
 							<xsl:copy-of select="."/>
 						</object>
-					</xsl:otherwise>
-				</xsl:choose>
+					</xsl:for-each>
+				</xsl:if>
+			</xsl:for-each>
+			<xsl:for-each select="descendant::nuds:typeDesc[not(string(@xlink:href))]">
+				<object>
+					<xsl:copy-of select="."/>
+				</object>
 			</xsl:for-each>
 		</nudsGroup>
 	</xsl:variable>
@@ -61,14 +70,14 @@
 			xmlns:rdfa="http://www.w3.org/ns/rdfa#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#">
 			<xsl:variable name="id-param">
 				<xsl:for-each
-					select="distinct-values(descendant::*[not(local-name()='typeDesc') and not(local-name()='reference')][contains(@xlink:href, 'nomisma.org')]/@xlink:href|exsl:node-set($nudsGroup)/descendant::*[not(local-name()='object') and not(local-name()='typeDesc')][contains(@xlink:href, 'nomisma.org')]/@xlink:href)">
+					select="distinct-values(descendant::*[not(local-name()='typeDesc') and not(local-name()='reference')][contains(@xlink:href, 'nomisma.org')]/@xlink:href|$nudsGroup/descendant::*[not(local-name()='object') and not(local-name()='typeDesc')][contains(@xlink:href, 'nomisma.org')]/@xlink:href)">
 					<xsl:value-of select="substring-after(., 'id/')"/>
 					<xsl:if test="not(position()=last())">
 						<xsl:text>|</xsl:text>
 					</xsl:if>
 				</xsl:for-each>
 			</xsl:variable>
-			
+
 			<xsl:variable name="rdf_url" select="concat('http://nomisma.org/apis/getRdf?identifiers=', $id-param)"/>
 			<xsl:copy-of select="document($rdf_url)/rdf:RDF/*"/>
 		</rdf:RDF>
