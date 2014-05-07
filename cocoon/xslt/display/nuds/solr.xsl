@@ -167,7 +167,7 @@
 		</field>
 		<xsl:apply-templates select="nuds:subjectSet"/>
 		<xsl:apply-templates select="nuds:physDesc"/>
-		<xsl:apply-templates select="$typeDesc/nuds:typeDesc">
+		<xsl:apply-templates select="$typeDesc">
 			<xsl:with-param name="recordType" select="$recordType"/>
 			<xsl:with-param name="lang" select="$lang"/>
 		</xsl:apply-templates>
