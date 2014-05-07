@@ -41,7 +41,9 @@
 				</field>
 			</xsl:if>
 			<xsl:if test="$collection-name = 'rrc'">
-				<xsl:call-template name="sortid" mode="rrc"/>
+				<xsl:call-template name="sortid">
+					<xsl:with-param name="collection-name" select="$collection-name"/>
+				</xsl:call-template>
 			</xsl:if>
 			<field name="collection-name">
 				<xsl:value-of select="$collection-name"/>
@@ -365,21 +367,4 @@
 			</field>
 		</xsl:if>
 	</xsl:template>
-
-	<xsl:template name="sortid" mode="rrc">
-		<field name="sortid">
-			<!--<xsl:variable name="segs" select="tokenize(substring-after(nuds:control/nuds:recordId, 'rrc-'), '\.')"/>-->
-			<xsl:analyze-string select="substring-after(nuds:control/nuds:recordId, 'rrc-')" regex="([0-9]+)(^[\.]+)?(\.)?([0-9]+)?([A-z]+)?">
-				<xsl:matching-substring>
-					<xsl:value-of
-						select="concat(format-number(number(regex-group(1)), '0000'), regex-group(2), regex-group(3), if (number(regex-group(4))) then format-number(number(regex-group(4)), '0000') else '', regex-group(5))"
-					/>
-				</xsl:matching-substring>
-				<xsl:non-matching-substring>
-					<xsl:value-of select="."/>
-				</xsl:non-matching-substring>
-			</xsl:analyze-string>
-		</field>
-	</xsl:template>
-
 </xsl:stylesheet>

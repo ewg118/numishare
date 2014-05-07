@@ -452,4 +452,33 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
+	
+	<!-- sortid -->
+	<xsl:template name="sortid">
+		<xsl:param name="collection-name"/>
+		
+		<xsl:choose>
+			<xsl:when test="$collection-name='rrc'">
+				<field name="sortid">
+					<!--<xsl:variable name="segs" select="tokenize(substring-after(nuds:control/nuds:recordId, 'rrc-'), '\.')"/>-->
+					<xsl:analyze-string select="substring-after(nuds:control/nuds:recordId, 'rrc-')" regex="([0-9]+)(^[\.]+)?(\.)?([0-9]+)?([A-z]+)?">
+						<xsl:matching-substring>
+							<xsl:value-of
+								select="concat(format-number(number(regex-group(1)), '0000'), regex-group(2), regex-group(3), if (number(regex-group(4))) then format-number(number(regex-group(4)), '0000') else '', regex-group(5))"
+							/>
+						</xsl:matching-substring>
+						<xsl:non-matching-substring>
+							<xsl:value-of select="."/>
+						</xsl:non-matching-substring>
+					</xsl:analyze-string>
+				</field>
+			</xsl:when>
+			<xsl:when test="$collection-name='igch'">
+				<field name="sortid">
+					<xsl:value-of select="nh:control/nh:recordId"/>
+				</field>
+			</xsl:when>
+		</xsl:choose>
+		
+	</xsl:template>
 </xsl:stylesheet>

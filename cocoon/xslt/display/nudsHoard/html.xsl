@@ -132,7 +132,7 @@
 						<div class="tab-pane active" id="contents">
 							<xsl:if test="nh:descMeta/nh:contentsDesc">
 								<div class="metadata_section">
-									<xsl:call-template name="nh:contents"/>
+									<xsl:apply-templates select="nh:descMeta/nh:contentsDesc/nh:contents"/>
 								</div>
 							</xsl:if>
 						</div>
@@ -262,6 +262,7 @@
 									<xsl:apply-templates select="nuds:denomination" mode="den">
 										<xsl:with-param name="contentsDesc" select="$contentsDesc"/>
 										<xsl:with-param name="lang" select="$lang"/>
+										<xsl:with-param name="num" select="if (ancestor::nh:coin) then 1 else ancestor::nh:coinGrp/@count"/>
 									</xsl:apply-templates>
 								</xsl:otherwise>
 							</xsl:choose>
@@ -301,7 +302,7 @@
 		</ul>
 	</xsl:template>
 
-	<xsl:template name="nh:contents">
+	<xsl:template match="nh:contents">
 		<h2>
 			<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
 		</h2>
@@ -353,8 +354,8 @@
 					</h3>
 				</xsl:if>
 				<xsl:choose>
-					<xsl:when test="$typeDesc/nuds:typeDesc/nuds:denomination">
-						<xsl:for-each select="$typeDesc/nuds:typeDesc/nuds:denomination">
+					<xsl:when test="$typeDesc/nuds:denomination">
+						<xsl:for-each select="$typeDesc/nuds:denomination">
 							<xsl:variable name="href" select="@xlink:href"/>
 							<xsl:choose>
 								<xsl:when test="string($lang) and contains($href, 'nomisma.org')">
@@ -383,8 +384,8 @@
 							</xsl:choose>
 						</xsl:for-each>
 					</xsl:when>
-					<xsl:when test="$typeDesc/nuds:typeDesc/nuds:geographic/nuds:geogname">
-						<xsl:for-each select="$typeDesc/nuds:typeDesc/nuds:geographic/nuds:geogname">
+					<xsl:when test="$typeDesc/nuds:geographic/nuds:geogname">
+						<xsl:for-each select="$typeDesc/nuds:geographic/nuds:geogname">
 							<xsl:variable name="href" select="@xlink:href"/>
 							<xsl:choose>
 								<xsl:when test="string($lang) and contains($href, 'nomisma.org')">
@@ -416,18 +417,18 @@
 				</xsl:choose>				
 				
 				<xsl:choose>
-					<xsl:when test="$typeDesc/nuds:typeDesc/nuds:date">
-						<xsl:value-of select="$typeDesc/nuds:typeDesc/nuds:date[1]"/>
+					<xsl:when test="$typeDesc/nuds:date">
+						<xsl:value-of select="$typeDesc/nuds:date[1]"/>
 					</xsl:when>
-					<xsl:when test="$typeDesc/nuds:typeDesc/nuds:dateRange">
-						<xsl:value-of select="$typeDesc/nuds:typeDesc/nuds:dateRange/nuds:fromDate"/>
+					<xsl:when test="$typeDesc/nuds:dateRange">
+						<xsl:value-of select="$typeDesc/nuds:dateRange/nuds:fromDate"/>
 						<xsl:text> - </xsl:text>
-						<xsl:value-of select="$typeDesc/nuds:typeDesc/nuds:dateRange/nuds:toDate"/>
+						<xsl:value-of select="$typeDesc/nuds:dateRange/nuds:toDate"/>
 					</xsl:when>
 				</xsl:choose>
 				<div class="coin-content" id="{$obj-id}-div" style="display:none">
 					<xsl:apply-templates select="nuds:physDesc"/>
-					<xsl:apply-templates select="$typeDesc/nuds:typeDesc">
+					<xsl:apply-templates select="$typeDesc">
 						<xsl:with-param name="typeDesc_resource" select="$typeDesc_resource"/>
 					</xsl:apply-templates>
 					<xsl:apply-templates select="nuds:refDesc"/>
@@ -442,6 +443,7 @@
 	<xsl:template match="nuds:denomination" mode="den">
 		<xsl:param name="contentsDesc"/>
 		<xsl:param name="lang"/>
+		<xsl:param name="num"/>
 
 		<xsl:variable name="href" select="@xlink:href"/>
 		<xsl:variable name="value">
@@ -475,9 +477,7 @@
 					</xsl:choose>
 				</xsl:when>
 				<xsl:otherwise>
-					<xsl:value-of
-						select="count($contentsDesc//nh:coin[nuds:typeDesc/nuds:denomination[@xlink:href=$href]]) + sum($contentsDesc//nh:coinGrp[nuds:typeDesc/nuds:denomination[@xlink:href=$href]]/@count)"
-					/>
+					<xsl:value-of select="$num"/>
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>

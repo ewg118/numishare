@@ -115,6 +115,11 @@
 					</xsl:otherwise>
 				</xsl:choose>
 			</field>
+			<xsl:if test="$collection-name = 'igch'">
+				<xsl:call-template name="sortid">
+					<xsl:with-param name="collection-name" select="$collection-name"/>
+				</xsl:call-template>
+			</xsl:if>
 			<field name="recordId">
 				<xsl:value-of select="nh:control/nh:recordId"/>
 			</field>
@@ -185,6 +190,7 @@
 									<xsl:apply-templates select="nuds:denomination" mode="den">
 										<xsl:with-param name="contentsDesc" select="$contentsDesc"/>
 										<xsl:with-param name="lang" select="$lang"/>
+										<xsl:with-param name="num" select="if (ancestor::nh:coin) then 1 else ancestor::nh:coinGrp/@count"/>
 									</xsl:apply-templates>
 								</xsl:otherwise>
 							</xsl:choose>
@@ -281,6 +287,7 @@
 	<xsl:template match="nuds:denomination" mode="den">
 		<xsl:param name="contentsDesc"/>
 		<xsl:param name="lang"/>
+		<xsl:param name="num"/>
 
 		<xsl:variable name="href" select="@xlink:href"/>
 		<xsl:variable name="value">
@@ -314,9 +321,7 @@
 					</xsl:choose>
 				</xsl:when>
 				<xsl:otherwise>
-					<xsl:value-of
-						select="count($contentsDesc//nh:coin[nuds:typeDesc/nuds:denomination[@xlink:href=$href]]) + sum($contentsDesc//nh:coinGrp[nuds:typeDesc/nuds:denomination[@xlink:href=$href]]/@count)"
-					/>
+					<xsl:value-of select="$num"/>
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
