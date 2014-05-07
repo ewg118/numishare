@@ -195,7 +195,7 @@
 					</xsl:if>
 					<!-- process $typeDesc differently -->
 					<div class="metadata_section">
-						<xsl:apply-templates select="$typeDesc/nuds:typeDesc">
+						<xsl:apply-templates select="$typeDesc">
 							<xsl:with-param name="typeDesc_resource" select="$typeDesc_resource"/>
 						</xsl:apply-templates>
 					</div>
@@ -266,8 +266,8 @@
 			</div>
 		</xsl:if>
 		<!-- process $typeDesc differently -->
-		<div class="metadata_section">
-			<xsl:apply-templates select="$typeDesc/*[local-name()='typeDesc']">
+		<div class="metadata_section">			
+			<xsl:apply-templates select="$typeDesc">
 				<xsl:with-param name="typeDesc_resource" select="$typeDesc_resource"/>
 			</xsl:apply-templates>
 		</div>
@@ -439,8 +439,8 @@
 
 		<!-- display legend and type and image if available -->
 		<xsl:choose>
-			<xsl:when test="$typeDesc/nuds:typeDesc/nuds:obverse">
-				<xsl:for-each select="$typeDesc/nuds:typeDesc/nuds:obverse">
+			<xsl:when test="$typeDesc//nuds:typeDesc/nuds:obverse">
+				<xsl:for-each select="$typeDesc//nuds:typeDesc/nuds:obverse">
 					<xsl:variable name="side" select="local-name()"/>
 					<div class="reference_image">
 						<xsl:if test="string($obverse_image)">
@@ -496,8 +496,8 @@
 
 		<!-- display legend and type and image if available -->
 		<xsl:choose>
-			<xsl:when test="$typeDesc/nuds:typeDesc/nuds:reverse">
-				<xsl:for-each select="$typeDesc/nuds:typeDesc/nuds:reverse">
+			<xsl:when test="$typeDesc//nuds:typeDesc/nuds:reverse">
+				<xsl:for-each select="$typeDesc//nuds:typeDesc/nuds:reverse">
 					<xsl:variable name="side" select="local-name()"/>
 					<div class="reference_image">
 						<xsl:if test="string($reverse_image)">

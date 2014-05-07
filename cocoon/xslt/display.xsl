@@ -249,7 +249,7 @@
 						<link type="text/css" href="{$display_path}style.css" rel="stylesheet"/>
 					</head>
 					<body>
-						<xsl:call-template name="header"/>
+						<xsl:call-template name="header"/>						
 						<xsl:call-template name="display"/>
 						<xsl:call-template name="footer"/>
 						<div class="hidden">
