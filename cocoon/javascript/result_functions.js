@@ -2,7 +2,11 @@
 combines hard-coded fancybox call from XSLT, condenses sort_results and quick_search JS into single file
 */
 $(document).ready(function () {
-	$('a.thumbImage').fancybox({ helpers: {
+	$('a.thumbImage').fancybox({
+		beforeShow: function () {
+			this.title = '<a href="' + this.element.attr('id') + '">' + this.element.attr('title') + '</a>'
+		},
+		helpers: {
 			title: {
 				type: 'inside'
 			}

@@ -1251,7 +1251,7 @@
 		<!-- obverse -->
 		<xsl:choose>
 			<xsl:when test="string(obvRef) and string(obvThumb)">
-				<a class="thumbImage" rel="gallery" href="{obvRef}" title="Obverse of {@identifier}: {@collection}">
+				<a class="thumbImage" rel="gallery" href="{obvRef}" title="Obverse of {@identifier}: {@collection}" id="{@uri}">
 					<xsl:if test="$position &gt; 1">
 						<xsl:attribute name="style">display:none</xsl:attribute>
 					</xsl:if>
@@ -1266,7 +1266,7 @@
 				</img>
 			</xsl:when>
 			<xsl:when test="string(obvRef) and not(string(obvThumb))">
-				<a class="thumbImage" rel="gallery" href="{obvRef}" title="Obverse of {@identifier}: {@collection}">
+				<a class="thumbImage" rel="gallery" href="{obvRef}" title="Obverse of {@identifier}: {@collection}" id="{@uri}">
 					<img src="{obvRef}" style="max-width:120px">
 						<xsl:if test="$position &gt; 1">
 							<xsl:attribute name="style">display:none</xsl:attribute>
@@ -1278,7 +1278,7 @@
 		<!-- reverse-->
 		<xsl:choose>
 			<xsl:when test="string(revRef) and string(revThumb)">
-				<a class="thumbImage" rel="gallery" href="{revRef}" title="Reverse of {@identifier}: {@collection}">
+				<a class="thumbImage" rel="gallery" href="{revRef}" title="Reverse of {@identifier}: {@collection}" id="{@uri}">
 					<xsl:if test="$position &gt; 1">
 						<xsl:attribute name="style">display:none</xsl:attribute>
 					</xsl:if>
@@ -1293,7 +1293,7 @@
 				</img>
 			</xsl:when>
 			<xsl:when test="string(revRef) and not(string(revThumb))">
-				<a class="thumbImage" rel="gallery" href="{revRef}" title="Obverse of {@identifier}: {@collection}">
+				<a class="thumbImage" rel="gallery" href="{revRef}" title="Obverse of {@identifier}: {@collection}" id="{@uri}">
 					<img src="{revRef}" style="max-width:120px">
 						<xsl:if test="$position &gt; 1">
 							<xsl:attribute name="style">display:none</xsl:attribute>
@@ -1305,7 +1305,7 @@
 		<!-- combined -->
 		<xsl:choose>
 			<xsl:when test="string(comRef) and string(comThumb)">
-				<a class="thumbImage" rel="gallery" href="{comRef}" title="Reverse of {@identifier}: {@collection}">
+				<a class="thumbImage" rel="gallery" href="{comRef}" title="Reverse of {@identifier}: {@collection}" id="{@uri}">
 					<xsl:if test="$position &gt; 1">
 						<xsl:attribute name="style">display:none</xsl:attribute>
 					</xsl:if>
@@ -1320,7 +1320,7 @@
 				</img>
 			</xsl:when>
 			<xsl:when test="string(comRef) and not(string(comThumb))">
-				<a class="thumbImage" rel="gallery" href="{comRef}" title="Obverse of {@identifier}: {@collection}">
+				<a class="thumbImage" rel="gallery" href="{comRef}" title="Obverse of {@identifier}: {@collection}" id="{@uri}">
 					<img src="{comRef}" style="max-width:240px">
 						<xsl:if test="$position &gt; 1">
 							<xsl:attribute name="style">display:none</xsl:attribute>

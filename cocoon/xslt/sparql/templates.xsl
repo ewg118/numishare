@@ -18,6 +18,7 @@ SELECT ?object ?title ?identifier ?collection ?weight ?axis ?diameter ?obvThumb 
 ?object nm:type_series_item <typeUri>.
 ?object a nm:coin .
 ?object dcterms:title ?title .
+OPTIONAL { ?object dcterms:identifier ?identifier}
 OPTIONAL { ?object nm:collection ?colUri .
 ?colUri skos:prefLabel ?collection 
 FILTER(langMatches(lang(?collection), "EN"))}
@@ -185,7 +186,7 @@ ORDER BY ASC(?collection)]]></xsl:variable>
 					<xsl:value-of select="numishare:normalizeLabel('display_examples', $lang)"/>
 				</h2>
 
-				<!-- choose between between Metis (preferred) or internal links -->
+				<!-- choose between between nomisma (preferred) or internal links -->
 				<xsl:apply-templates select="descendant::res:result[not(contains(res:binding[@name='objectType'], 'hoard'))]" mode="display"/>
 			</div>
 		</xsl:if>
@@ -250,7 +251,7 @@ ORDER BY ASC(?collection)]]></xsl:variable>
 				<xsl:choose>
 					<xsl:when test="string(res:binding[@name='obvRef']/res:uri) and string(res:binding[@name='obvThumb']/res:uri)">
 						<a class="thumbImage" rel="gallery" href="{res:binding[@name='obvRef']/res:uri}"
-							title="Obverse of {res:binding[@name='identifier']/res:literal}: {res:binding[@name='collection']/res:literal}">
+							title="Obverse of {res:binding[@name='identifier']/res:literal}: {res:binding[@name='collection']/res:literal}" id="{res:binding[@name='object']/res:uri}">
 							<img class="gi" src="{res:binding[@name='obvThumb']/res:uri}"/>
 						</a>
 					</xsl:when>
@@ -259,7 +260,7 @@ ORDER BY ASC(?collection)]]></xsl:variable>
 					</xsl:when>
 					<xsl:when test="string(res:binding[@name='obvRef']/res:uri) and not(string(res:binding[@name='obvThumb']/res:uri))">
 						<a class="thumbImage" rel="gallery" href="{res:binding[@name='obvRef']/res:uri}"
-							title="Obverse of {res:binding[@name='identifier']/res:literal}: {res:binding[@name='collection']/res:literal}">
+							title="Obverse of {res:binding[@name='identifier']/res:literal}: {res:binding[@name='collection']/res:literal}" id="{res:binding[@name='object']/res:uri}">
 							<img class="gi" src="{res:binding[@name='obvRef']/res:uri}" style="max-width:120px"/>
 						</a>
 					</xsl:when>
@@ -268,7 +269,7 @@ ORDER BY ASC(?collection)]]></xsl:variable>
 				<xsl:choose>
 					<xsl:when test="string(res:binding[@name='revRef']/res:uri) and string(res:binding[@name='revThumb']/res:uri)">
 						<a class="thumbImage" rel="gallery" href="{res:binding[@name='revRef']/res:uri}"
-							title="Reverse of {res:binding[@name='identifier']/res:literal}: {res:binding[@name='collection']/res:literal}">
+							title="Reverse of {res:binding[@name='identifier']/res:literal}: {res:binding[@name='collection']/res:literal}" id="{res:binding[@name='object']/res:uri}">
 							<img class="gi" src="{res:binding[@name='revThumb']/res:uri}"/>
 						</a>
 					</xsl:when>
@@ -277,7 +278,7 @@ ORDER BY ASC(?collection)]]></xsl:variable>
 					</xsl:when>
 					<xsl:when test="string(res:binding[@name='revRef']/res:uri) and not(string(res:binding[@name='revThumb']/res:uri))">
 						<a class="thumbImage" rel="gallery" href="{res:binding[@name='revRef']/res:uri}"
-							title="Reverse of {res:binding[@name='identifier']/res:literal}: {res:binding[@name='collection']/res:literal}">
+							title="Reverse of {res:binding[@name='identifier']/res:literal}: {res:binding[@name='collection']/res:literal}" id="{res:binding[@name='object']/res:uri}">
 							<img class="gi" src="{res:binding[@name='revRef']/res:uri}" style="max-width:120px"/>
 						</a>
 					</xsl:when>
@@ -285,7 +286,7 @@ ORDER BY ASC(?collection)]]></xsl:variable>
 				<!-- combined -->
 				<xsl:if test="string(res:binding[@name='comRef']/res:uri) and not(string(res:binding[@name='comThumb']/res:uri))">
 					<a class="thumbImage" rel="gallery" href="{res:binding[@name='comRef']/res:uri}"
-						title="Image of {res:binding[@name='identifier']/res:literal}: {res:binding[@name='collection']/res:literal}">
+						title="Image of {res:binding[@name='identifier']/res:literal}: {res:binding[@name='collection']/res:literal}" id="{res:binding[@name='object']/res:uri}">
 						<img class="gi" src="{res:binding[@name='comRef']/res:uri}" style="max-width:240px"/>
 					</a>
 				</xsl:if>
