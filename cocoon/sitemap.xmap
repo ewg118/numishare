@@ -298,14 +298,13 @@
 			<!-- returned results capped at 50,000 -->
 			<map:match pattern="nomisma.rdf">
 				<map:aggregate element="content">
-					<map:part
-						src="{global:solr-url}select?q=NOT(lang:*)+AND+collection-name:{global:collection-name}+AND+{url-encode:coinType_uri:*}&amp;rows=100000&amp;fl=id,recordId,title_display,coinType_uri,recordType,publisher_display,axis_num,diameter_num,taq_num,weight_num,thumbnail_obv,reference_obv,thumbnail_rev,reference_rev,findspot_uri,findspot_geo"/>
 					<map:part src="{global:exist-url}{global:collection-name}/config.xml"/>
+					<map:part src="{global:exist-url}{global:collection-name}/aggregate-all.xql"/>
 				</map:aggregate>
-				<map:transform src="xslt/linked_data/solr_to_rdf.xsl" label="basiccontent" type="xslt-saxon">
+				<map:transform src="xslt/linked_data/object-to-rdf.xsl" type="xslt-saxon">
 					<map:parameter name="use-request-parameters" value="true"/>
-					<map:parameter name="mode" value="nomisma"/>
-				</map:transform>
+					<map:parameter name="collection-name" value="{global:collection-name}"/>
+				</map:transform>				
 				<map:serialize type="rdf"/>
 			</map:match>
 
