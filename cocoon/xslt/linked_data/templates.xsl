@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes="xs nuds nh xlink mets numishare"
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes="#all"
 	xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nm="http://nomisma.org/id/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
 	xmlns:nuds="http://nomisma.org/nuds" xmlns:nh="http://nomisma.org/nudsHoard" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns:georss="http://www.georss.org/georss" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:oa="http://www.w3.org/ns/oa#" xmlns:owl="http://www.w3.org/2002/07/owl#"
@@ -122,30 +122,26 @@
 		<xsl:text>(not yet developed)</xsl:text>
 	</xsl:template>
 
-	<!-- PROCESS NUDS RECORDS INTO NOMISMA/METIS COMPLIANT RDF MODELS -->
+	<!-- PROCESS NUDS RECORDS INTO NOMISMA COMPLIANT RDF MODELS -->
 	<xsl:template match="nuds:nuds" mode="nomisma">
 		<xsl:variable name="id" select="descendant::*[local-name()='recordId']"/>
 
 		<xsl:choose>
-			<xsl:when test="@recordType='conceptual'">
-				<nm:type_series_item rdf:about="{$url}id/{$id}">
-					<!-- insert titles -->
-					<xsl:for-each select="descendant::nuds:descMeta/nuds:title">
-						<skos:prefLabel>
-							<xsl:if test="string(@xml:lang)">
-								<xsl:attribute name="xml:lang" select="@xml:lang"/>
-							</xsl:if>
-							<xsl:value-of select="."/>
-						</skos:prefLabel>
-						<skos:definition>
-							<xsl:if test="string(@xml:lang)">
-								<xsl:attribute name="xml:lang" select="@xml:lang"/>
-							</xsl:if>
-							<xsl:value-of select="."/>
-						</skos:definition>
+			<xsl:when test="descendant::*:maintenanceStatus != 'new' and descendant::*:maintenanceStatus != 'derived' and descendant::*:maintenanceStatus != 'revised'">
+				<xsl:variable name="element">
+					<xsl:choose>
+						<xsl:when test="@recordType='conceptual'">nm:type_series_item</xsl:when>
+						<xsl:when test="@recordType='physical'">nm:coin</xsl:when>
+					</xsl:choose>
+				</xsl:variable>
+				
+				<xsl:element name="{$element}">
+					<xsl:attribute name="rdf:about">
+						<xsl:value-of select="concat($url, 'id/', $id)"/>
+					</xsl:attribute>
+					<xsl:for-each select="descendant::*:semanticDeclaration">
+						<xsl:namespace name="{*:prefix}" select="*:namespace"/>
 					</xsl:for-each>
-
-					<!-- other ids -->
 					<xsl:for-each select="descendant::*:otherRecordId[string(@semantic)]">
 						<xsl:variable name="uri" select="if (contains(., 'http://')) then . else concat($url, 'id/', .)"/>
 						<xsl:variable name="prefix" select="substring-before(@semantic, ':')"/>
@@ -154,65 +150,101 @@
 							<xsl:attribute name="rdf:resource" select="$uri"/>
 						</xsl:element>
 					</xsl:for-each>
-
-					<!-- process typeDesc -->
-					<xsl:apply-templates select="nuds:descMeta/nuds:typeDesc" mode="nomisma"/>
-				</nm:type_series_item>
+				</xsl:element>
 			</xsl:when>
-			<xsl:when test="@recordType='physical'">
-				<nm:coin rdf:about="{$url}id/{$id}">
-					<dcterms:title>
-						<xsl:if test="string(@xml:lang)">
-							<xsl:attribute name="xml:lang" select="@xml:lang"/>
-						</xsl:if>
-						<xsl:value-of select="nuds:descMeta/nuds:title"/>
-					</dcterms:title>
-					<xsl:if test="nuds:descMeta/nuds:adminDesc/nuds:identifier">
-						<dcterms:identifier>
-							<xsl:value-of select="nuds:descMeta/nuds:adminDesc/nuds:identifier"/>
-						</dcterms:identifier>
-					</xsl:if>
-					<xsl:if test="nuds:control/nuds:maintenanceAgency/nuds:agencyName">
-						<dcterms:publisher>
-							<xsl:value-of select="nuds:control/nuds:maintenanceAgency/nuds:agencyName"/>
-						</dcterms:publisher>
-					</xsl:if>
-					<xsl:for-each select="descendant::nuds:collection">
-						<nm:collection>
-							<xsl:choose>
-								<xsl:when test="string(@xlink:href)">
-									<xsl:attribute name="rdf:resource" select="@xlink:href"/>
-								</xsl:when>
-								<xsl:otherwise>
+			<xsl:otherwise>
+				<xsl:choose>
+					<xsl:when test="@recordType='conceptual'">
+						<nm:type_series_item rdf:about="{$url}id/{$id}">					
+							<!-- insert titles -->
+							<xsl:for-each select="descendant::nuds:descMeta/nuds:title">
+								<skos:prefLabel>
+									<xsl:if test="string(@xml:lang)">
+										<xsl:attribute name="xml:lang" select="@xml:lang"/>
+									</xsl:if>
 									<xsl:value-of select="."/>
-								</xsl:otherwise>
-							</xsl:choose>
-						</nm:collection>
-					</xsl:for-each>
-					<xsl:if test="string(nuds:descMeta/nuds:typeDesc/@xlink:href)">
-						<nm:type_series_item rdf:resource="{nuds:descMeta/nuds:typeDesc/@xlink:href}"/>
-					</xsl:if>
-
-					<!-- other ids -->
-					<xsl:for-each select="descendant::*:otherRecordId[string(@semantic)]">
-						<xsl:variable name="uri" select="if (contains(., 'http://')) then . else concat($url, 'id/', .)"/>
-						<xsl:variable name="prefix" select="substring-before(@semantic, ':')"/>
-						<xsl:variable name="namespace" select="ancestor::*:control/*:semanticDeclaration[*:prefix=$prefix]/*:namespace"/>
-						<xsl:element name="{@semantic}" namespace="{$namespace}">
-							<xsl:attribute name="rdf:resource" select="$uri"/>
-						</xsl:element>
-					</xsl:for-each>
-
-					<!-- physical attributes -->
-					<xsl:apply-templates select="nuds:descMeta/nuds:physDesc" mode="nomisma"/>
-
-					<!-- findspot-->
-					<xsl:apply-templates select="nuds:descMeta/nuds:findspotDesc" mode="nomisma"/>
-
-					<!-- images -->
-					<xsl:apply-templates select="nuds:digRep/mets:fileSec" mode="nomisma"/>
-				</nm:coin>
-			</xsl:when>
+								</skos:prefLabel>
+								<skos:definition>
+									<xsl:if test="string(@xml:lang)">
+										<xsl:attribute name="xml:lang" select="@xml:lang"/>
+									</xsl:if>
+									<xsl:value-of select="."/>
+								</skos:definition>
+							</xsl:for-each>
+							
+							<!-- isPartOf nm:type_series -->
+							<dcterms:isPartOf rdf:resource="{//config/type_series}"/>
+							
+							<!-- other ids -->
+							<xsl:for-each select="descendant::*:otherRecordId[string(@semantic)]">
+								<xsl:variable name="uri" select="if (contains(., 'http://')) then . else concat($url, 'id/', .)"/>
+								<xsl:variable name="prefix" select="substring-before(@semantic, ':')"/>
+								<xsl:variable name="namespace" select="ancestor::*:control/*:semanticDeclaration[*:prefix=$prefix]/*:namespace"/>
+								<xsl:element name="{@semantic}" namespace="{$namespace}">
+									<xsl:attribute name="rdf:resource" select="$uri"/>
+								</xsl:element>
+							</xsl:for-each>
+							
+							<!-- process typeDesc -->
+							<xsl:apply-templates select="nuds:descMeta/nuds:typeDesc" mode="nomisma"/>
+						</nm:type_series_item>
+					</xsl:when>
+					<xsl:when test="@recordType='physical'">
+						<nm:coin rdf:about="{$url}id/{$id}">					
+							<dcterms:title>
+								<xsl:if test="string(@xml:lang)">
+									<xsl:attribute name="xml:lang" select="@xml:lang"/>
+								</xsl:if>
+								<xsl:value-of select="nuds:descMeta/nuds:title"/>
+							</dcterms:title>
+							<xsl:if test="nuds:descMeta/nuds:adminDesc/nuds:identifier">
+								<dcterms:identifier>
+									<xsl:value-of select="nuds:descMeta/nuds:adminDesc/nuds:identifier"/>
+								</dcterms:identifier>
+							</xsl:if>
+							<xsl:if test="nuds:control/nuds:maintenanceAgency/nuds:agencyName">
+								<dcterms:publisher>
+									<xsl:value-of select="nuds:control/nuds:maintenanceAgency/nuds:agencyName"/>
+								</dcterms:publisher>
+							</xsl:if>
+							<xsl:for-each select="descendant::nuds:collection">
+								<nm:collection>
+									<xsl:choose>
+										<xsl:when test="string(@xlink:href)">
+											<xsl:attribute name="rdf:resource" select="@xlink:href"/>
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:value-of select="."/>
+										</xsl:otherwise>
+									</xsl:choose>
+								</nm:collection>
+							</xsl:for-each>
+							<xsl:if test="string(nuds:descMeta/nuds:typeDesc/@xlink:href)">
+								<nm:type_series_item rdf:resource="{nuds:descMeta/nuds:typeDesc/@xlink:href}"/>
+							</xsl:if>
+							
+							<!-- other ids -->
+							<xsl:for-each select="descendant::*:otherRecordId[string(@semantic)]">
+								<xsl:variable name="uri" select="if (contains(., 'http://')) then . else concat($url, 'id/', .)"/>
+								<xsl:variable name="prefix" select="substring-before(@semantic, ':')"/>
+								<xsl:variable name="namespace" select="ancestor::*:control/*:semanticDeclaration[*:prefix=$prefix]/*:namespace"/>
+								<xsl:element name="{@semantic}" namespace="{$namespace}">
+									<xsl:attribute name="rdf:resource" select="$uri"/>
+								</xsl:element>
+							</xsl:for-each>
+							
+							<!-- physical attributes -->
+							<xsl:apply-templates select="nuds:descMeta/nuds:physDesc" mode="nomisma"/>
+							
+							<!-- findspot-->
+							<xsl:apply-templates select="nuds:descMeta/nuds:findspotDesc" mode="nomisma"/>
+							
+							<!-- images -->
+							<xsl:apply-templates select="nuds:digRep/mets:fileSec" mode="nomisma"/>
+						</nm:coin>
+					</xsl:when>
+				</xsl:choose>
+			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
 
@@ -363,139 +395,161 @@
 	<!-- PROCESS NUDS-HOARD RECORDS INTO NOMISMA/METIS COMPLIANT RDF MODELS -->
 	<xsl:template match="nh:nudsHoard" mode="nomisma">
 		<xsl:variable name="id" select="descendant::*[local-name()='recordId']"/>
-
-		<nm:hoard rdf:about="{$url}id/{$id}">
-			<xsl:choose>
-				<xsl:when test="lang('en', descendant::nh:descMeta/nh:title)">
-					<dcterms:title xml:lang="en">
-						<xsl:value-of select="descendant::nh:descMeta/nh:title[@xml:lang='en']"/>
-					</dcterms:title>
-				</xsl:when>
-				<xsl:otherwise>
-					<dcterms:title xml:lang="en">
-						<xsl:value-of select="descendant::nh:descMeta/nh:title[1]"/>
-					</dcterms:title>
-				</xsl:otherwise>
-			</xsl:choose>
-			<dcterms:publisher>
-				<xsl:value-of select="descendant::nh:control/nh:maintenanceAgency/nh:agencyName"/>
-			</dcterms:publisher>
-			<!-- other ids -->
-			<xsl:for-each select="descendant::*:otherRecordId[string(@semantic)]">
-				<xsl:variable name="uri" select="if (contains(., 'http://')) then . else concat($url, 'id/', .)"/>
-				<xsl:variable name="prefix" select="substring-before(@semantic, ':')"/>
-				<xsl:variable name="namespace" select="ancestor::*:control/*:semanticDeclaration[*:prefix=$prefix]/*:namespace"/>
-				<xsl:element name="{@semantic}" namespace="{$namespace}">
-					<xsl:attribute name="rdf:resource" select="$uri"/>
+		
+		<xsl:choose>
+			<xsl:when test="descendant::*:maintenanceStatus != 'new' and descendant::*:maintenanceStatus != 'derived' and descendant::*:maintenanceStatus != 'revised'">
+				<xsl:element name="nm:hoard">
+					<xsl:attribute name="rdf:about">
+						<xsl:value-of select="concat($url, 'id/', $id)"/>
+					</xsl:attribute>
+					<xsl:for-each select="descendant::*:semanticDeclaration">
+						<xsl:namespace name="{*:prefix}" select="*:namespace"/>
+					</xsl:for-each>
+					<xsl:for-each select="descendant::*:otherRecordId[string(@semantic)]">
+						<xsl:variable name="uri" select="if (contains(., 'http://')) then . else concat($url, 'id/', .)"/>
+						<xsl:variable name="prefix" select="substring-before(@semantic, ':')"/>
+						<xsl:variable name="namespace" select="ancestor::*:control/*:semanticDeclaration[*:prefix=$prefix]/*:namespace"/>
+						<xsl:element name="{@semantic}" namespace="{$namespace}">
+							<xsl:attribute name="rdf:resource" select="$uri"/>
+						</xsl:element>
+					</xsl:for-each>
 				</xsl:element>
-			</xsl:for-each>
-			<xsl:for-each select="descendant::nh:geogname[@xlink:role='findspot'][string(@xlink:href)]">
-				<xsl:variable name="href" select="@xlink:href"/>
-				<nm:findspot>
-					<rdf:Description rdf:about="{@xlink:href}">
-						<xsl:if test="contains(@xlink:href, 'geonames.org')">
-							<xsl:variable name="geonames-url">
-								<xsl:text>http://api.geonames.org</xsl:text>
-							</xsl:variable>
-							<xsl:variable name="geonames_api_key" select="/content/config/geonames_api_key"/>
-
-							<xsl:variable name="geonameId" select="tokenize($href, '/')[4]"/>
-							<xsl:variable name="geonames_data" as="element()*">
-								<xml>
-									<xsl:copy-of select="document(concat($geonames-url, '/get?geonameId=', $geonameId, '&amp;username=', $geonames_api_key, '&amp;style=full'))"/>
-								</xml>
-							</xsl:variable>
-
-							<geo:lat>
-								<xsl:value-of select="$geonames_data//lat"/>
-							</geo:lat>
-							<geo:long>
-								<xsl:value-of select="$geonames_data//lng"/>
-							</geo:long>
-						</xsl:if>
-					</rdf:Description>
-
-				</nm:findspot>
-			</xsl:for-each>
-			<!-- closing date -->
-			<xsl:choose>
-				<xsl:when test="not(descendant::nh:deposit/nh:date) and not(descendant::nh:deposit/nh:dateRange)">
-					<xsl:variable name="nudsGroup" as="element()*">
-						<nudsGroup>
-							<xsl:variable name="type_series" as="element()*">
-								<list>
-									<xsl:for-each select="distinct-values(descendant::nuds:typeDesc[string(@xlink:href)]/substring-before(@xlink:href, 'id/'))">
-										<type_series>
-											<xsl:value-of select="."/>
-										</type_series>
-									</xsl:for-each>
-								</list>
-							</xsl:variable>
-							<xsl:variable name="type_list" as="element()*">
-								<list>
-									<xsl:for-each select="distinct-values(descendant::nuds:typeDesc[string(@xlink:href)]/@xlink:href)">
-										<type_series_item>
-											<xsl:value-of select="."/>
-										</type_series_item>
-									</xsl:for-each>
-								</list>
-							</xsl:variable>
+			</xsl:when>
+			<xsl:otherwise>
+				<nm:hoard rdf:about="{$url}id/{$id}">
+					<xsl:choose>
+						<xsl:when test="lang('en', descendant::nh:descMeta/nh:title)">
+							<dcterms:title xml:lang="en">
+								<xsl:value-of select="descendant::nh:descMeta/nh:title[@xml:lang='en']"/>
+							</dcterms:title>
+						</xsl:when>
+						<xsl:otherwise>
+							<dcterms:title xml:lang="en">
+								<xsl:value-of select="descendant::nh:descMeta/nh:title[1]"/>
+							</dcterms:title>
+						</xsl:otherwise>
+					</xsl:choose>
+					<dcterms:publisher>
+						<xsl:value-of select="descendant::nh:control/nh:maintenanceAgency/nh:agencyName"/>
+					</dcterms:publisher>
+					<!-- other ids -->
+					<xsl:for-each select="descendant::*:otherRecordId[string(@semantic)]">
+						<xsl:variable name="uri" select="if (contains(., 'http://')) then . else concat($url, 'id/', .)"/>
+						<xsl:variable name="prefix" select="substring-before(@semantic, ':')"/>
+						<xsl:variable name="namespace" select="ancestor::*:control/*:semanticDeclaration[*:prefix=$prefix]/*:namespace"/>
+						<xsl:element name="{@semantic}" namespace="{$namespace}">
+							<xsl:attribute name="rdf:resource" select="$uri"/>
+						</xsl:element>
+					</xsl:for-each>
+					<xsl:for-each select="descendant::nh:geogname[@xlink:role='findspot'][string(@xlink:href)]">
+						<xsl:variable name="href" select="@xlink:href"/>
+						<nm:findspot>
+							<rdf:Description rdf:about="{@xlink:href}">
+								<xsl:if test="contains(@xlink:href, 'geonames.org')">
+									<xsl:variable name="geonames-url">
+										<xsl:text>http://api.geonames.org</xsl:text>
+									</xsl:variable>
+									<xsl:variable name="geonames_api_key" select="/content/config/geonames_api_key"/>
+									
+									<xsl:variable name="geonameId" select="tokenize($href, '/')[4]"/>
+									<xsl:variable name="geonames_data" as="element()*">
+										<xml>
+											<xsl:copy-of select="document(concat($geonames-url, '/get?geonameId=', $geonameId, '&amp;username=', $geonames_api_key, '&amp;style=full'))"/>
+										</xml>
+									</xsl:variable>
+									
+									<geo:lat>
+										<xsl:value-of select="$geonames_data//lat"/>
+									</geo:lat>
+									<geo:long>
+										<xsl:value-of select="$geonames_data//lng"/>
+									</geo:long>
+								</xsl:if>
+							</rdf:Description>
 							
-							<xsl:for-each select="$type_series//type_series">
-								<xsl:variable name="type_series_uri" select="."/>
-								
-								<xsl:variable name="id-param">
-									<xsl:for-each select="$type_list//type_series_item[contains(., $type_series_uri)]">
-										<xsl:value-of select="substring-after(., 'id/')"/>
-										<xsl:if test="not(position()=last())">
-											<xsl:text>|</xsl:text>
-										</xsl:if>
+						</nm:findspot>
+					</xsl:for-each>
+					<!-- closing date -->
+					<xsl:choose>
+						<xsl:when test="not(descendant::nh:deposit/nh:date) and not(descendant::nh:deposit/nh:dateRange)">
+							<xsl:variable name="nudsGroup" as="element()*">
+								<nudsGroup>
+									<xsl:variable name="type_series" as="element()*">
+										<list>
+											<xsl:for-each select="distinct-values(descendant::nuds:typeDesc[string(@xlink:href)]/substring-before(@xlink:href, 'id/'))">
+												<type_series>
+													<xsl:value-of select="."/>
+												</type_series>
+											</xsl:for-each>
+										</list>
+									</xsl:variable>
+									<xsl:variable name="type_list" as="element()*">
+										<list>
+											<xsl:for-each select="distinct-values(descendant::nuds:typeDesc[string(@xlink:href)]/@xlink:href)">
+												<type_series_item>
+													<xsl:value-of select="."/>
+												</type_series_item>
+											</xsl:for-each>
+										</list>
+									</xsl:variable>
+									
+									<xsl:for-each select="$type_series//type_series">
+										<xsl:variable name="type_series_uri" select="."/>
+										
+										<xsl:variable name="id-param">
+											<xsl:for-each select="$type_list//type_series_item[contains(., $type_series_uri)]">
+												<xsl:value-of select="substring-after(., 'id/')"/>
+												<xsl:if test="not(position()=last())">
+													<xsl:text>|</xsl:text>
+												</xsl:if>
+											</xsl:for-each>
+										</xsl:variable>
+										
+										<xsl:if test="string-length($id-param) &gt; 0">
+											<xsl:for-each select="document(concat($type_series_uri, 'apis/getNuds?identifiers=', $id-param))//nuds:nuds">
+												<object xlink:href="{$type_series_uri}id/{nuds:control/nuds:recordId}">
+													<xsl:copy-of select="."/>
+												</object>
+											</xsl:for-each>
+										</xsl:if>				
 									</xsl:for-each>
-								</xsl:variable>
-								
-								<xsl:if test="string-length($id-param) &gt; 0">
-									<xsl:for-each select="document(concat($type_series_uri, 'apis/getNuds?identifiers=', $id-param))//nuds:nuds">
-										<object xlink:href="{$type_series_uri}id/{nuds:control/nuds:recordId}">
+									<xsl:for-each select="descendant::nuds:typeDesc[not(string(@xlink:href))]">
+										<object>
 											<xsl:copy-of select="."/>
 										</object>
 									</xsl:for-each>
-								</xsl:if>				
-							</xsl:for-each>
-							<xsl:for-each select="descendant::nuds:typeDesc[not(string(@xlink:href))]">
-								<object>
-									<xsl:copy-of select="."/>
-								</object>
-							</xsl:for-each>
-						</nudsGroup>
-					</xsl:variable>
-
-					<!-- get date values for closing date -->
-					<xsl:variable name="dates" as="element()*">
-						<dates>
-							<xsl:for-each select="distinct-values($nudsGroup/descendant::nuds:typeDesc/descendant::*/@standardDate)">
-								<xsl:sort data-type="number"/>
-								<xsl:if test="number(.)">
-									<date>
-										<xsl:value-of select="number(.)"/>
-									</date>
-								</xsl:if>
-							</xsl:for-each>
-						</dates>
-					</xsl:variable>
-					<xsl:if test="count($dates//date) &gt; 0">
-						<nm:closing_date rdf:datatype="xs:gYear">
-							<xsl:value-of select="format-number($dates//date[last()], '0000')"/>
-						</nm:closing_date>
-					</xsl:if>
-				</xsl:when>
-				<xsl:otherwise> </xsl:otherwise>
-			</xsl:choose>
-
-
-			<xsl:for-each select="descendant::nuds:typeDesc/@xlink:href|descendant::nuds:undertypeDesc/@xlink:href">
-				<nm:type_series_item rdf:resource="{.}"/>
-			</xsl:for-each>
-		</nm:hoard>
+								</nudsGroup>
+							</xsl:variable>
+							
+							<!-- get date values for closing date -->
+							<xsl:variable name="dates" as="element()*">
+								<dates>
+									<xsl:for-each select="distinct-values($nudsGroup/descendant::nuds:typeDesc/descendant::*/@standardDate)">
+										<xsl:sort data-type="number"/>
+										<xsl:if test="number(.)">
+											<date>
+												<xsl:value-of select="number(.)"/>
+											</date>
+										</xsl:if>
+									</xsl:for-each>
+								</dates>
+							</xsl:variable>
+							<xsl:if test="count($dates//date) &gt; 0">
+								<nm:closing_date rdf:datatype="xs:gYear">
+									<xsl:value-of select="format-number($dates//date[last()], '0000')"/>
+								</nm:closing_date>
+							</xsl:if>
+						</xsl:when>
+						<xsl:otherwise> </xsl:otherwise>
+					</xsl:choose>
+					
+					
+					<xsl:for-each select="descendant::nuds:typeDesc/@xlink:href|descendant::nuds:undertypeDesc/@xlink:href">
+						<nm:type_series_item rdf:resource="{.}"/>
+					</xsl:for-each>
+				</nm:hoard>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 	<!-- *************** PELAGIOS OBJECT TEMPLATES ************** -->

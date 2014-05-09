@@ -276,7 +276,7 @@
 				<xforms:bind nodeset="solr_published" required="true()"/>
 				<xforms:bind nodeset="features_enabled" readonly="../collection_type != 'object'" type="xs:boolean"/>
 				<xforms:bind nodeset="pelagios_enabled" type="xs:boolean"/>
-				<xforms:bind nodeset="ctype_enabled" readonly="../collection_type = 'cointype'" type="xs:boolean"/>
+				<xforms:bind nodeset="ctype_enabled" type="xs:boolean"/>
 				<xforms:bind nodeset="nomisma_namespace" readonly="../collection_type != 'cointype'" constraint="contains(., 'http://nomisma.org/project/')" type="xs:anyURI"/>
 				<xforms:bind nodeset="template">
 					<!-- about the electronic record -->
