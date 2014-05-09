@@ -42,6 +42,9 @@
 			<xsl:when test="$template = 'facets'">
 				<xsl:call-template name="numishare:facets"/>
 			</xsl:when>
+			<xsl:when test="$template = 'contributors'">
+				<xsl:call-template name="numishare:contributors"/>
+			</xsl:when>
 		</xsl:choose>
 		
 	</xsl:template>
