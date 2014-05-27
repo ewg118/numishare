@@ -80,9 +80,11 @@
 					<!-- pull language from nomisma, if available -->
 					<xsl:variable name="value">
 						<xsl:choose>
-							<xsl:when test="contains($href, 'geonames.org')">
+							<xsl:when test="string($lang) and contains($href, 'nomisma.org')">
+								<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about=$href], $lang)"/>
+							</xsl:when>
+							<xsl:when test="contains($href, 'geonames.org') and not(string(.))">
 								<xsl:variable name="geonameId" select="tokenize($href, '/')[4]"/>
-
 								<xsl:choose>
 									<xsl:when test="number($geonameId)">
 										<xsl:variable name="geonames_data" as="element()*">
@@ -101,29 +103,21 @@
 												select="if ($countryCode = 'US' or $countryCode = 'AU' or $countryCode = 'CA') then if ($fcode = 'ADM1') then $name else concat($name, ' (', $abbreviations//country[@code=$countryCode]/place[. = $adminName1]/@abbr, ')') else if ($countryCode= 'GB') then  if ($fcode = 'ADM1') then $name else concat($name, ' (', $adminName1, ')') else if ($fcode = 'PCLI') then $name else concat($name, ' (', $countryName, ')')"
 											/>
 										</xsl:variable>
-
+										
 										<xsl:value-of select="$label"/>
 									</xsl:when>
 									<xsl:otherwise>
 										<xsl:value-of select="normalize-space(.)"/>
 									</xsl:otherwise>
 								</xsl:choose>
-
 							</xsl:when>
 							<xsl:otherwise>
 								<xsl:choose>
-									<xsl:when test="string($lang) and contains($href, 'nomisma.org')">
-										<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about=$href], $lang)"/>
+									<xsl:when test="not(string(.))">
+										<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about=$href], 'en')"/>
 									</xsl:when>
 									<xsl:otherwise>
-										<xsl:choose>
-											<xsl:when test="not(string(.))">
-												<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about=$href], 'en')"/>
-											</xsl:when>
-											<xsl:otherwise>
-												<xsl:value-of select="normalize-space(.)"/>
-											</xsl:otherwise>
-										</xsl:choose>
+										<xsl:value-of select="normalize-space(.)"/>
 									</xsl:otherwise>
 								</xsl:choose>
 							</xsl:otherwise>
