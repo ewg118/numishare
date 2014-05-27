@@ -418,11 +418,11 @@
 
 		<xsl:for-each select="nuds:provenance/nuds:chronList/nuds:chronItem/nuds:previousColl|nuds:provenance/nuds:chronList/nuds:chronItem/nuds:auction/nuds:saleCatalog">
 			<field name="provenance_text">
-				<xsl:value-of select="."/>
+				<xsl:value-of select="normalize-space(.)"/>
 			</field>
-			<field name="provenance_facet">
+			<!--<field name="provenance_facet">
 				<xsl:value-of select="."/>
-			</field>
+			</field>-->
 		</xsl:for-each>
 	</xsl:template>
 
