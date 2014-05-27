@@ -3,11 +3,17 @@ $(document).ready(function () {
 	var collection_type = $('#collection_type').text();
 	var path = $('#path').text();
 	var pipeline = $('#pipeline').text();
+	var langStr = getURLParameter('lang');
+	if (langStr == 'null') {
+		var lang = '';
+	} else {
+		var lang = langStr;
+	}
 	
-	if (collection_type == 'object') {
+	if (collection_type == 'object' && pipeline == 'display') {
 		$('#mapButton').click(function(){
 			$('#tabs a:last').tab('show');
-			init();			
+			init();		
 		});	
 	} else {
 		init();
@@ -18,24 +24,17 @@ $(document).ready(function () {
 	function init() {
 		if (collection_type != 'object') {		
 			if ($('#map').html().length == 0) {		
-				initialize_timemap(id, path);
+				initialize_timemap(id, path, lang);
 			}
 		} else {
 			if ($('#mapcontainer').html().length == 0) {
-				initialize_map(id, path);
+				initialize_map(id, path, lang);
 			}
 		}
 	}
 });
 
-function initialize_timemap(id, path) {
-	var langStr = getURLParameter('lang');
-	if (langStr == 'null') {
-		var lang = '';
-	} else {
-		var lang = langStr;
-	}
-	
+function initialize_timemap(id, path, lang) {
 	var url = path + "apis/get?id=" + id + "&format=json&lang=" + lang;
 	var datasets = new Array();
 	
@@ -72,7 +71,7 @@ function initialize_timemap(id, path) {
 	}
 }
 
-function initialize_map(id, path) {
+function initialize_map(id, path, lang) {
 	/***** DECLARE BASELAYERS ******/
 	var google_physical = new OpenLayers.Layer.Google("Google Physical", {
 		type: google.maps.MapTypeId.TERRAIN
@@ -88,6 +87,9 @@ function initialize_map(id, path) {
 	var osm = new OpenLayers.Layer.OSM();
 	
 	var baselayers = $('#baselayers').text().split(',');
+
+	/***** KML PATH *****/
+	var url = path + "apis/get?id=" + id + "&format=kml&lang=" + lang;
 	
 	map = new OpenLayers.Map('mapcontainer', {
 		controls:[
@@ -114,7 +116,7 @@ function initialize_map(id, path) {
 		strategies:[
 		new OpenLayers.Strategy.Fixed()],
 		protocol: new OpenLayers.Protocol.HTTP({
-			url: id + '.kml',
+			url: url,
 			format: new OpenLayers.Format.KML({
 				extractStyles: true,
 				extractAttributes: true

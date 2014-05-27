@@ -130,7 +130,6 @@
 						<link type="text/css" href="{$display_path}timeline-2.3.0.css" rel="stylesheet"/>
 						<script type="text/javascript" src="{$display_path}javascript/timemap_full.pack.js"/>
 						<script type="text/javascript" src="{$display_path}javascript/param.js"/>
-						<script type="text/javascript" src="{$display_path}javascript/loaders/kml.js"/>
 						<script type="text/javascript" src="{$display_path}javascript/display_hoard_functions.js"/>
 					</xsl:when>
 				</xsl:choose>
@@ -194,6 +193,10 @@
 					</span>
 					<span id="pipeline">
 						<xsl:value-of select="$pipeline"/>
+					</span>
+					<span id="object_title">
+						<xsl:value-of
+							select="if (descendant::nuds:nuds) then descendant::nuds:nuds/nuds:descMeta/nuds:title else if (descendant::*[local-name()='nudsHoard']) then descendant::nuds:recordId else ''"/>
 					</span>
 				</div>
 			</body>
