@@ -72,9 +72,9 @@
 						<xsl:attribute name="xml:lang" select="@xml:lang"/>
 					</xsl:if>
 					<xsl:value-of select="."/>
-				</dcterms:title>
-				<dcterms:identifier rdf:resource="{$url}id/{$id}"/>
+				</dcterms:title>				
 			</xsl:for-each>
+			<foaf:homepage rdf:resource="{$url}id/{$id}"/>
 			<xsl:if test="string(@recordType)">
 				<!-- dates -->
 				<xsl:choose>
@@ -840,7 +840,7 @@
 			<dcterms:title>
 				<xsl:value-of select="str[@name='title_display']"/>
 			</dcterms:title>
-			<dcterms:identifier rdf:resource="{$url}id/{$id}"/>
+			<foaf:homepage rdf:resource="{$url}id/{$id}"/>
 
 			<!-- temporal -->
 			<xsl:choose>
