@@ -49,7 +49,7 @@
 				</xsl:variable>
 
 				<xsl:if test="string-length($id-param) &gt; 0">
-					<xsl:for-each select="document(concat($type_series_uri, 'apis/getNuds?identifiers=', $id-param))//nuds:nuds">
+					<xsl:for-each select="document(concat($type_series_uri, 'apis/getNuds?identifiers=', encode-for-uri($id-param)))//nuds:nuds">
 						<object xlink:href="{$type_series_uri}id/{nuds:control/nuds:recordId}">
 							<xsl:copy-of select="."/>
 						</object>
