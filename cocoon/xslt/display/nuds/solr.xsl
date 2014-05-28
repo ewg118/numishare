@@ -40,11 +40,9 @@
 					<xsl:value-of select="$lang"/>
 				</field>
 			</xsl:if>
-			<xsl:if test="$collection-name = 'rrc'">
-				<xsl:call-template name="sortid">
-					<xsl:with-param name="collection-name" select="$collection-name"/>
-				</xsl:call-template>
-			</xsl:if>
+			<xsl:call-template name="sortid">
+				<xsl:with-param name="collection-name" select="$collection-name"/>
+			</xsl:call-template>
 			<field name="collection-name">
 				<xsl:value-of select="$collection-name"/>
 			</field>

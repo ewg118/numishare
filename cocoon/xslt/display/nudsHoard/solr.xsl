@@ -115,11 +115,9 @@
 					</xsl:otherwise>
 				</xsl:choose>
 			</field>
-			<xsl:if test="$collection-name = 'igch'">
-				<xsl:call-template name="sortid">
-					<xsl:with-param name="collection-name" select="$collection-name"/>
-				</xsl:call-template>
-			</xsl:if>
+			<xsl:call-template name="sortid">
+				<xsl:with-param name="collection-name" select="$collection-name"/>
+			</xsl:call-template>
 			<field name="recordId">
 				<xsl:value-of select="nh:control/nh:recordId"/>
 			</field>
