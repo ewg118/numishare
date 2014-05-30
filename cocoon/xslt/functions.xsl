@@ -2169,6 +2169,7 @@
 					<xsl:when test="$label='header_search'">Search</xsl:when>
 					<xsl:when test="$label='header_browse'">Browse</xsl:when>
 					<xsl:when test="$label='header_maps'">Maps</xsl:when>
+					<xsl:when test="$label='header_contributors'">Contributors</xsl:when>
 					<xsl:when test="$label='header_compare'">Compare</xsl:when>
 					<xsl:when test="$label='header_analyze'">Analyze Hoards</xsl:when>
 					<xsl:when test="$label='header_visualize'">Visualize Queries</xsl:when>

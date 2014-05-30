@@ -94,7 +94,7 @@
 				<xsl:for-each select="descendant::nuds:recordId">
 					<group>
 						<xsl:attribute name="id" select="."/>
-						<xsl:variable name="uri" select="concat('http://nomisma.org/id/', .)"/>
+						<xsl:variable name="uri" select="concat(//config/uri_space, .)"/>
 						<xsl:copy-of select="document(concat('cocoon:/widget?uri=', $uri, '&amp;template=solr'))//res:result"/>
 					</group>
 				</xsl:for-each>

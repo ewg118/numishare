@@ -76,7 +76,7 @@
 
 		<!-- gather associated hoards from Nomisma is available -->
 		<xsl:if test="string($sparql_endpoint)">
-			<cinclude:include src="cocoon:/widget?uri={concat('http://nomisma.org/id/', $id)}&amp;template=kml"/>
+			<cinclude:include src="cocoon:/widget?uri={concat(//config/uri_space, $id)}&amp;template=kml"/>
 		</xsl:if>
 	</xsl:template>
 
@@ -97,7 +97,7 @@
 		<!-- gather associated hoards from Nomisma is available -->
 		<xsl:choose>
 			<xsl:when test="string($sparql_endpoint)">
-				<cinclude:include src="cocoon:/widget?uri={concat('http://nomisma.org/id/', $id)}&amp;template=json"/>
+				<cinclude:include src="cocoon:/widget?uri={concat(//config/uri_space, $id)}&amp;template=json"/>
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:for-each select="$nudsGroup/descendant::nuds:geogname[@xlink:role='findspot'][string(@xlink:href)]|descendant::nuds:findspotDesc[string(@xlink:href)]">

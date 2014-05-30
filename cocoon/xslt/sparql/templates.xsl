@@ -4,7 +4,8 @@ for example pulling data from the coin-type triplestore and SPARQL endpoint, Met
 
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:numishare="https://github.com/ewg118/numishare"
-	xmlns:res="http://www.w3.org/2005/sparql-results#" exclude-result-prefixes="#all">
+	xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:res="http://www.w3.org/2005/sparql-results#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	exclude-result-prefixes="#all">
 	<xsl:include href="../functions.xsl"/>
 
 	<xsl:template name="numishare:associatedObjects">
@@ -173,6 +174,36 @@ ORDER BY ASC(?collection)]]></xsl:variable>
 			</xsl:for-each>
 		</select>
 
+	</xsl:template>
+
+	<xsl:template name="numishare:contributors">
+		<xsl:variable name="query">
+			<![CDATA[PREFIX rdf:	<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX dcterms:	<http://purl.org/dc/terms/>
+PREFIX skos:	<http://www.w3.org/2004/02/skos/core#>
+PREFIX owl:	<http://www.w3.org/2002/07/owl#>
+PREFIX foaf:	<http://xmlns.com/foaf/0.1/>
+PREFIX ecrm:	<http://erlangen-crm.org/current/>
+PREFIX geo:	<http://www.w3.org/2003/01/geo/wgs84_pos#>
+PREFIX nm:	<http://nomisma.org/id/>
+PREFIX xsd:	<http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?collection (COUNT(?collection) AS ?count) WHERE {
+?type dcterms:isPartOf <TYPE_SERIES> .
+?object nm:type_series_item ?type ;
+nm:collection ?collection .
+} GROUP BY ?collection ORDER BY ?collection]]>
+		</xsl:variable>
+		<xsl:variable name="service" select="concat($endpoint, '?query=', encode-for-uri(normalize-space(replace($query, 'TYPE_SERIES', //config/type_series))), '&amp;output=xml')"/>
+
+		<table class="table table-striped">
+			<tr>
+				<th/>
+				<th>Count</th>
+				<th>Collection</th>
+			</tr>
+			<xsl:apply-templates select="document($service)/descendant::res:result" mode="contributors"/>
+		</table>
 	</xsl:template>
 
 	<!-- **************** PROCESS SPARQL RESPONSE ****************-->
@@ -351,5 +382,60 @@ ORDER BY ASC(?collection)]]></xsl:variable>
 				</TimeStamp>
 			</xsl:if>
 		</Placemark>
+	</xsl:template>
+
+	<xsl:template match="res:result" mode="contributors">
+		<xsl:variable name="rdf" as="element()*">
+			<xsl:copy-of select="document(concat(res:binding[@name='collection']/res:uri, '.rdf'))/*"/>
+		</xsl:variable>
+
+		<tr>
+			<td>
+				<xsl:if test="string($rdf//foaf:thumbnail/@rdf:resource)">
+					<a href="{if (string($rdf//foaf:homepage/@rdf:resource)) then $rdf//foaf:homepage/@rdf:resource else res:binding[@name='collection']/res:uri}">
+						<img src="{$rdf//foaf:thumbnail/@rdf:resource}" alt="logo"/>
+					</a>
+				</xsl:if>
+			</td>
+			<td>
+				<h2>
+					<xsl:value-of select="res:binding[@name='count']/res:literal"/>
+				</h2>
+			</td>
+			<td>
+				<h2>
+					<a href="{if (string($rdf//foaf:homepage/@rdf:resource)) then $rdf//foaf:homepage/@rdf:resource else res:binding[@name='collection']/res:uri}">
+						<xsl:choose>
+							<xsl:when test="$rdf//skos:prefLabel[@xml:lang=$lang]">
+								<xsl:value-of select="$rdf//skos:prefLabel[@xml:lang=$lang]"/>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:value-of select="$rdf//skos:prefLabel[@xml:lang='en']"/>
+							</xsl:otherwise>
+						</xsl:choose>
+					</a>
+				</h2>
+				<dl class="dl-horizontal">
+					<dt>Nomisma URI</dt>
+					<dd>
+						<a href="{res:binding[@name='collection']/res:uri}">
+							<xsl:value-of select="res:binding[@name='collection']/res:uri"/>
+						</a>
+					</dd>
+					<dt>Definition</dt>
+					<dd>
+						<xsl:choose>
+							<xsl:when test="$rdf//skos:prefLabel[@xml:lang=$lang]">
+								<xsl:value-of select="$rdf//skos:definition[@xml:lang=$lang]"/>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:value-of select="$rdf//skos:definition[@xml:lang='en']"/>
+							</xsl:otherwise>
+						</xsl:choose>
+					</dd>
+				</dl>
+			</td>
+
+		</tr>
 	</xsl:template>
 </xsl:stylesheet>

@@ -110,7 +110,7 @@
 					These only need to be changed if Solr and Orbeon are run on a different server or Tomcat application than Cocoon -->
 				<solr-url>http://localhost:8080/solr/numishare-published/</solr-url>
 				<exist-url>http://localhost:8080/exist/rest/db/</exist-url>
-				<collection-name>numishare</collection-name>
+				<collection-name>ocre</collection-name>
 			</global-variables>
 		</map:component-configurations>
 
@@ -201,6 +201,17 @@
 					<map:parameter name="pipeline" value="pages"/>
 					<map:parameter name="stub" value="{1}"/>
 				</map:transform>
+				<map:serialize type="html5"/>
+			</map:match>
+			
+			<!-- CONTRIBUTORS -->
+			<map:match pattern="contributors">
+				<map:generate src="{global:exist-url}{global:collection-name}/config.xml" label="record"/>
+				<map:transform src="xslt/pages.xsl" type="xslt-saxon">
+					<map:parameter name="use-request-parameters" value="true"/>
+					<map:parameter name="pipeline" value="contributors"/>
+				</map:transform>
+				<map:transform type="cinclude"/>
 				<map:serialize type="html5"/>
 			</map:match>
 
