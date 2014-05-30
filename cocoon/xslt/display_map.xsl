@@ -53,7 +53,7 @@
 						<meta http-equiv="refresh" content="0;URL={$uri}"/>
 					</head>
 					<body>
-						<div class="container-fluid">
+						<div class="container-fluid" id="content">
 							<div class="row">
 								<div class="col-md-12">
 									<h1>301: Moved Permanently</h1>
@@ -70,7 +70,7 @@
 						<xsl:call-template name="generic_head"/>
 					</head>
 					<body>
-						<div class="container-fluid">
+						<div class="container-fluid" id="content">
 							<div class="row">
 								<div class="col-md-12">
 									<h1>
@@ -135,7 +135,7 @@
 				</xsl:choose>
 			</head>
 			<body>
-				<div class="container-fluid">
+				<div class="container-fluid" id="content">
 					<div class="row">
 						<div class="col-md-12">
 							<div id="timemap-legend">

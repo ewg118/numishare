@@ -81,7 +81,7 @@
 	</xsl:template>
 
 	<xsl:template name="maps">
-		<div class="container-fluid">
+		<div class="container-fluid" id="content">
 			<div class="row">
 				<div class="col-md-12">
 					<div id="backgroundPopup"/>

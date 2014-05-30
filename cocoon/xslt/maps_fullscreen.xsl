@@ -85,7 +85,7 @@
 
 	<xsl:template name="maps">
 		<div id="backgroundPopup"/>
-		<div class="container-fluid">
+		<div class="container-fluid" id="content">
 
 			<xsl:choose>
 				<xsl:when test="//result[@name='response']/@numFound &gt; 0">

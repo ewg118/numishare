@@ -16,11 +16,22 @@
   GLOBAL
   ***************************************
  */
-html {
-	background-color: #F8F8F8;
+body {
+	background-color:#3383BB;
+}
+#content {
+	background-color: white;
+	margin: 0 40px;
+	border-left:1px solid #E7E7E7;
+	border-right:1px solid #E7E7E7;
+}
+.jumbotron {
+	margin: 0 40px 0 40px;
+	border:1px solid #E7E7E7;
 }
 .navbar {
 	margin-bottom:0;
+	border-bottom:4px solid #0b205c;
 }
 a > img {
 	border:none;
@@ -32,7 +43,7 @@ ul li, ol li {
 	background-color: #F8F8F8;
 	border: 1px solid #E7E7E7;
 	border-radius: 4px;
-	margin-bottom: 14px;
+	margin: 10px 0;
 	padding: 9px 14px;
 }
 /*
@@ -42,9 +53,11 @@ ul li, ol li {
  */
 #footer {
 	background-color: #F8F8F8;
-	border-top:1px solid #E7E7E7;
+	border:1px solid #E7E7E7;
 	padding:10px 0;
 	text-align:center;
+	border-radius: 0 0 10px 10px;
+	margin: 0 40px 20px 40px;
 }
 /*
   ***************************************
@@ -180,7 +193,7 @@ ul li, ol li {
 	text-align:center;
 }
 #search1, #search2 {
-	margin-top:20px;	
+	margin-top:20px;
 }
 /*
   ***************************************
@@ -449,5 +462,5 @@ div.custominfostyle {
 	display:none;
 }
 .center-block {
-	width:50%;	
+	width:50%;
 }

@@ -145,7 +145,7 @@
 					</head>
 					<body>
 						<xsl:call-template name="header"/>
-						<div class="container-fluid">
+						<div class="container-fluid" id="content">
 							<div class="row">
 								<div class="col-md-12">
 									<h1>301: Moved Permanently</h1>
@@ -164,7 +164,7 @@
 					</head>
 					<body>
 						<xsl:call-template name="header"/>
-						<div class="container-fluid">
+						<div class="container-fluid" id="content">
 							<div class="row">
 								<div class="col-md-12">
 									<h1>
@@ -320,7 +320,7 @@
 				</xsl:choose>
 			</xsl:when>
 			<xsl:otherwise>
-				<div class="container-fluid">
+				<div class="container-fluid" id="content">
 					<xsl:choose>
 						<xsl:when test="count(/content/*[local-name()='nuds']) &gt; 0">
 							<xsl:call-template name="nuds"/>

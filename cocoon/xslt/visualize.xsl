@@ -91,7 +91,7 @@
 	</xsl:template>
 
 	<xsl:template name="visualize">
-		<div class="container-fluid">
+		<div class="container-fluid" id="content">
 			<div class="row">
 				<div class="col-md-12">
 					<h1>
