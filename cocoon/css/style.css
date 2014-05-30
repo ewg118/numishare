@@ -224,6 +224,10 @@ ul li, ol li {
 .remove_segment:hover {
 	text-decoration:underline;
 }
+.result-doc {
+	margin-top:10px;
+	border-bottom:1px solid #E7E7E7;
+}
 #imagesavailable {
 	margin-left:10px;
 }
