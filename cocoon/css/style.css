@@ -21,13 +21,10 @@ body {
 }
 #content {
 	background-color: white;
-	margin: 0 40px;
-	border-left:1px solid #E7E7E7;
-	border-right:1px solid #E7E7E7;
 }
 .jumbotron {
-	margin: 0 40px 0 40px;
-	border:1px solid #E7E7E7;
+	margin: 0;
+	border-bottom:1px solid #E7E7E7;
 }
 .navbar {
 	margin-bottom:0;
@@ -53,11 +50,11 @@ ul li, ol li {
  */
 #footer {
 	background-color: #F8F8F8;
-	border:1px solid #E7E7E7;
+	border-top:1px solid #E7E7E7;
+	border-bottom:4px solid #0b205c;
 	padding:10px 0;
 	text-align:center;
-	border-radius: 0 0 10px 10px;
-	margin: 0 40px 40px 40px;
+	margin-bottom: 40px;
 }
 /*
   ***************************************
