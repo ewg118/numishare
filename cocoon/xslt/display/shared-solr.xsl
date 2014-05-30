@@ -478,6 +478,57 @@
 					<xsl:value-of select="nh:control/nh:recordId"/>
 				</field>
 			</xsl:when>
+			<xsl:when test="$collection-name='ocre'">
+				<field name="sortid">
+					<xsl:variable name="segs" select="tokenize(nuds:control/nuds:recordId, '\.')"/>
+					<xsl:variable name="auth">
+						<xsl:choose>
+							<xsl:when test="$segs[3] = 'aug'">01</xsl:when>
+							<xsl:when test="$segs[3] = 'tib'">02</xsl:when>
+							<xsl:when test="$segs[3] = 'gai'">03</xsl:when>
+							<xsl:when test="$segs[3] = 'cl'">04</xsl:when>
+							<xsl:when test="$segs[3] = 'ner'">
+								<xsl:choose>
+									<xsl:when test="$segs[2]='1(2)'">05</xsl:when>
+									<xsl:when test="$segs[2]='2'">15</xsl:when>
+								</xsl:choose>
+							</xsl:when>
+							<xsl:when test="$segs[3] = 'clm'">06</xsl:when>
+							<xsl:when test="$segs[3] = 'cw'">07</xsl:when>
+							<xsl:when test="$segs[3] = 'gal'">08</xsl:when>
+							<xsl:when test="$segs[3] = 'ot'">09</xsl:when>
+							<xsl:when test="$segs[3] = 'vit'">10</xsl:when>
+							<xsl:when test="$segs[3] = 'ves'">11</xsl:when>
+							<xsl:when test="$segs[3] = 'tit'">12</xsl:when>
+							<xsl:when test="$segs[3] = 'dom'">13</xsl:when>
+							<xsl:when test="$segs[3] = 'anys'">14</xsl:when>
+							<xsl:when test="$segs[3] = 'tr'">16</xsl:when>
+							<xsl:when test="$segs[3] = 'hdn'">17</xsl:when>
+							<xsl:when test="$segs[3] = 'ant'">18</xsl:when>
+							<xsl:when test="$segs[3] = 'm_aur'">19</xsl:when>
+							<xsl:when test="$segs[3] = 'com'">20</xsl:when>
+							<xsl:when test="$segs[3] = 'pert'">21</xsl:when>
+							<xsl:when test="$segs[3] = 'dj'">22</xsl:when>
+							<xsl:when test="$segs[3] = 'pn'">23</xsl:when>
+							<xsl:when test="$segs[3] = 'ca'">24</xsl:when>
+							<xsl:when test="$segs[3] = 'ss'">25</xsl:when>
+							<xsl:when test="$segs[3] = 'crl'">26</xsl:when>
+							<xsl:when test="$segs[3] = 'ge'">27</xsl:when>
+							<xsl:when test="$segs[3] = 'mcs'">28</xsl:when>
+							<xsl:when test="$segs[3] = 'el'">29</xsl:when>
+						</xsl:choose>
+					</xsl:variable>
+					
+					<xsl:variable name="num">
+						<xsl:analyze-string regex="([0-9]+)(.*)" select="$segs[4]">
+							<xsl:matching-substring>
+								<xsl:value-of select="concat(format-number(number(regex-group(1)), '0000'), regex-group(2))"/>
+							</xsl:matching-substring>	
+						</xsl:analyze-string>
+					</xsl:variable>	
+					<xsl:value-of select="concat($auth, '.', $num)"/>
+				</field>
+			</xsl:when>
 		</xsl:choose>
 		
 	</xsl:template>

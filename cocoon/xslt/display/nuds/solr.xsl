@@ -40,11 +40,9 @@
 					<xsl:value-of select="$lang"/>
 				</field>
 			</xsl:if>
-			<xsl:if test="$collection-name = 'rrc'">
-				<xsl:call-template name="sortid">
-					<xsl:with-param name="collection-name" select="$collection-name"/>
-				</xsl:call-template>
-			</xsl:if>
+			<xsl:call-template name="sortid">
+				<xsl:with-param name="collection-name" select="$collection-name"/>
+			</xsl:call-template>
 			<field name="collection-name">
 				<xsl:value-of select="$collection-name"/>
 			</field>
@@ -57,7 +55,14 @@
 			<field name="timestamp">
 				<xsl:choose>
 					<xsl:when test="string(descendant::*:maintenanceEvent[last()]/*:eventDateTime/@standardDateTime)">
-						<xsl:value-of select="descendant::*:maintenanceEvent[last()]/*:eventDateTime/@standardDateTime"/>
+						<xsl:choose>
+							<xsl:when test="contains(descendant::*:maintenanceEvent[last()]/*:eventDateTime/@standardDateTime, 'Z')">
+								<xsl:value-of select="descendant::*:maintenanceEvent[last()]/*:eventDateTime/@standardDateTime"/>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:value-of select="concat(descendant::*:maintenanceEvent[last()]/*:eventDateTime/@standardDateTime, 'Z')"/>
+							</xsl:otherwise>
+						</xsl:choose>						
 					</xsl:when>
 					<xsl:otherwise>
 						<xsl:value-of select="if(contains(datetime:dateTime(), 'Z')) then datetime:dateTime() else concat(datetime:dateTime(), 'Z')"/>

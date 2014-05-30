@@ -209,7 +209,7 @@
 				<map:generate src="{global:exist-url}{global:collection-name}/config.xml" label="record"/>
 				<map:transform src="xslt/pages.xsl" type="xslt-saxon">
 					<map:parameter name="use-request-parameters" value="true"/>
-					<map:parameter name="pipeline" value="contributors"/>					
+					<map:parameter name="pipeline" value="contributors"/>
 				</map:transform>
 				<map:transform type="cinclude"/>
 				<map:serialize type="html5"/>

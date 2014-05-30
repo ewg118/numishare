@@ -77,7 +77,7 @@
 							<div class="col-md-12">
 								<xsl:if test="string($sparql_endpoint)">
 									<a name="examples"/>
-									<cinclude:include src="cocoon:/widget?uri={concat('http://nomisma.org/id/', $id)}&amp;template=display"/>
+									<cinclude:include src="cocoon:/widget?uri={concat(//config/uri_space, $id)}&amp;template=display"/>
 								</xsl:if>
 							</div>
 						</div>
@@ -554,15 +554,15 @@
 		<dl class="dl-horizontal">
 			<dt><xsl:value-of select="numishare:regularize_node('axis', $lang)"/>:</dt>
 			<dd>
-				<cinclude:include src="cocoon:/widget?constraints=nm:type_series_item &lt;http://nomisma.org/id/{$id}&gt;&amp;template=avgMeasurement&amp;measurement=axis"/>
+				<cinclude:include src="cocoon:/widget?constraints=nm:type_series_item &lt;{concat(//config/uri_space, $id)}&gt;&amp;template=avgMeasurement&amp;measurement=axis"/>
 			</dd>
 			<dt><xsl:value-of select="numishare:regularize_node('diameter', $lang)"/>:</dt>
 			<dd>
-				<cinclude:include src="cocoon:/widget?constraints=nm:type_series_item &lt;http://nomisma.org/id/{$id}&gt;&amp;template=avgMeasurement&amp;measurement=diameter"/>
+				<cinclude:include src="cocoon:/widget?constraints=nm:type_series_item &lt;{concat(//config/uri_space, $id)}&gt;&amp;template=avgMeasurement&amp;measurement=diameter"/>
 			</dd>
 			<dt><xsl:value-of select="numishare:regularize_node('weight', $lang)"/>:</dt>
 			<dd>
-				<cinclude:include src="cocoon:/widget?constraints=nm:type_series_item &lt;http://nomisma.org/id/{$id}&gt;&amp;template=avgMeasurement&amp;measurement=weight"/>
+				<cinclude:include src="cocoon:/widget?constraints=nm:type_series_item &lt;{concat(//config/uri_space, $id)}&gt;&amp;template=avgMeasurement&amp;measurement=weight"/>
 			</dd>
 		</dl>
 		<xsl:call-template name="measurementForm"/>

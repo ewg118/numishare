@@ -23,13 +23,13 @@
 	<xsl:variable name="numFound" select="//result[@name='response']/@numFound" as="xs:integer"/>
 
 	<!-- config variables -->
-	<xsl:variable name="sparql_endpoint" select="/content//sparql_endpoint"/>
-	<xsl:variable name="url" select="/content//url"/>
+	<xsl:variable name="sparql_endpoint" select="/content/config/sparql_endpoint"/>
+	<xsl:variable name="url" select="/content/config/url"/>
 
 	<!-- get block of images from SPARQL endpoint, via nomisma API -->
 	<xsl:variable name="sparqlResult" as="element()*">
 		<xsl:if test="string($sparql_endpoint) and //config/collection_type='cointype'">
-			<xsl:variable name="service" select="concat('http://nomisma.org/apis/numishareResults?identifiers=', string-join(descendant::str[@name='recordId'], '|'), '&amp;baseUri=http://nomisma.org/id/')"/>
+			<xsl:variable name="service" select="concat('http://nomisma.org/apis/numishareResults?identifiers=', string-join(descendant::str[@name='recordId'], '|'), '&amp;baseUri=', /content/config/uri_space)"/>
 			<xsl:copy-of select="document($service)/response"/>
 		</xsl:if>
 	</xsl:variable>

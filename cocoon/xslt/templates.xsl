@@ -1289,7 +1289,7 @@
 						</th>
 						<td>
 							<cinclude:include
-								src="cocoon:/widget?constraints={encode-for-uri(concat('nm:type_series_item &lt;http://nomisma.org/id/', $id, '&gt;'))}&amp;template=avgMeasurement&amp;measurement={$measurement}"
+								src="cocoon:/widget?constraints={encode-for-uri(concat('nm:type_series_item &lt;', //config/uri_space, $id, '&gt;'))}&amp;template=avgMeasurement&amp;measurement={$measurement}"
 							/>
 						</td>
 					</tr>

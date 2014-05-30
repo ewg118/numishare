@@ -55,7 +55,6 @@
 						</xsl:otherwise>
 					</xsl:choose>
 				</h4>
-				<br/>
 				<dl class="dl-horizontal">
 					<xsl:choose>
 						<xsl:when test="str[@name='recordType'] = 'hoard'">
