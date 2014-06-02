@@ -26,6 +26,9 @@
 			<dcterms:description>
 				<xsl:value-of select="description"/>
 			</dcterms:description>
+			<dcterms:publisher>
+				<xsl:value-of select="template/agencyName"/>
+			</dcterms:publisher>
 			<dcterms:license rdf:resource="{template/license}"/>
 			<dcterms:subject rdf:resource="http://dbpedia.org/resource/Annotation"/>
 			<void:dataDump rdf:resource="{url}pelagios.rdf"/>
@@ -43,6 +46,9 @@
 			<dcterms:description>
 				<xsl:value-of select="description"/>
 			</dcterms:description>
+			<dcterms:publisher>
+				<xsl:value-of select="template/agencyName"/>
+			</dcterms:publisher>
 			<dcterms:license rdf:resource="{template/license}"/>
 			<void:uriSpace>
 				<xsl:value-of select="concat(url, 'id/')"/>
