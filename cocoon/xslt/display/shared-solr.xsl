@@ -516,6 +516,16 @@
 							<xsl:when test="$segs[3] = 'ge'">27</xsl:when>
 							<xsl:when test="$segs[3] = 'mcs'">28</xsl:when>
 							<xsl:when test="$segs[3] = 'el'">29</xsl:when>
+							<xsl:when test="$segs[3] = 'sa'">30</xsl:when>
+							<xsl:when test="$segs[3] = 'max_i'">31</xsl:when>
+							<xsl:when test="$segs[3] = 'pa'">32</xsl:when>
+							<xsl:when test="$segs[3] = 'mxs'">33</xsl:when>
+							<xsl:when test="$segs[3] = 'gor_i'">34</xsl:when>
+							<xsl:when test="$segs[3] = 'gor_ii'">35</xsl:when>
+							<xsl:when test="$segs[3] = 'balb'">36</xsl:when>
+							<xsl:when test="$segs[3] = 'pup'">37</xsl:when>
+							<xsl:when test="$segs[3] = 'gor_iii_caes'">38</xsl:when>
+							<xsl:when test="$segs[3] = 'gor_iii'">39</xsl:when>
 						</xsl:choose>
 					</xsl:variable>
 					

@@ -1,6 +1,6 @@
 <?php 
 
-$data = generate_json('/home/komet/ans_migration/ocre/geta.csv');
+$data = generate_json('/home/komet/ans_migration/ocre/09.csv');
 $nomismaUris = array();
 $errors = array();
 $records = array();
@@ -405,6 +405,36 @@ function get_title($nudsid){
 			break;
 		case 'el':
 			$auth = 'Elagabalus';
+			break;
+		case 'sa':
+			$auth = 'Severus Alexander';
+			break;
+		case 'max_i':
+			$auth = 'Maximinus Thrax';
+			break;
+		case 'pa':
+			$auth = 'Caecilia Paulina';
+			break;
+		case 'mxs':
+			$auth = 'Maximus';
+			break;
+		case 'gor_i':
+			$auth = 'Gordian I';
+			break;
+		case 'gor_ii':
+			$auth = 'Gordian II';
+			break;
+		case 'balb':
+			$auth = 'Balbinus';
+			break;
+		case 'pup':
+			$auth = 'Pupienus';
+			break;
+		case 'gord_iii_caes':
+			$auth = 'Gordian III (Caesar)';
+			break;
+		case 'gord_iii':
+			$auth = 'Gordian III';
 			break;
 	}
 	
