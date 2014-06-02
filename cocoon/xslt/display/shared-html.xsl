@@ -331,7 +331,7 @@
 	</xsl:template>
 	<!--***************************************** OPTIONS BAR **************************************** -->
 	<xsl:template name="icons">
-		<div class="row pull-right">
+		<div class="row pull-right icons">
 			<div class="col-md-12">
 				<!-- AddThis Button BEGIN -->
 				<div class="addthis_toolbox addthis_default_style">

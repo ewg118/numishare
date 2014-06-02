@@ -77,13 +77,8 @@ ul li, ol li {
 	text-align:right;
 	margin-top:3px;
 }
-.icon {
-	border-left:1px solid #E7E7E7;
-	float:right;
-	vertical-align:text-bottom;
-	padding-left:15px;
-	padding-right:15px;
-	font-size:12px;
+.icons {
+	margin:5px 0;
 }
 .reference_image {
 	margin-bottom:20px;
