@@ -12,7 +12,21 @@
 						<span class="icon-bar"/>
 					</button>
 					<a class="navbar-brand" href="{$display_path}./">
-						<xsl:value-of select="//config/title"/>
+						<xsl:choose>
+							<xsl:when test="string-length(//config/logo) &gt; 0">
+								<xsl:choose>
+									<xsl:when test="contains(//config/logo, 'http://')">
+										<img src="{//config/logo}"/>
+									</xsl:when>
+									<xsl:otherwise>
+										<img src="{$display_path}images/{//config/logo}"/>
+									</xsl:otherwise>
+								</xsl:choose>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:value-of select="//config/title"/>
+							</xsl:otherwise>
+						</xsl:choose>
 					</a>					
 				</div>
 				<div class="navbar-collapse collapse">

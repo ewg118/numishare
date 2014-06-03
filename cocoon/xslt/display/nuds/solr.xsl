@@ -114,7 +114,7 @@
 	</xsl:template>
 
 	<xsl:template match="res:result">
-		<xsl:variable name="title" select="res:binding[@name='title']/res:literal"/>
+		<xsl:variable name="title" select="if (string(res:binding[@name='findspotLabel']/res:literal)) then res:binding[@name='findspotLabel']/res:literal else res:binding[@name='title']/res:literal"/>
 		<xsl:variable name="uri" select="res:binding[@name='findspot']/res:uri"/>
 
 		<field name="findspot_facet">

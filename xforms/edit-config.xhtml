@@ -269,7 +269,7 @@
 			<xforms:bind nodeset="instance('config')">
 				<xforms:bind nodeset="title" required="true()"/>
 				<xforms:bind nodeset="description" required="true()"/>
-				<!--<xforms:bind nodeset="banner_text" required="true()"/>-->
+				<xforms:bind nodeset="logo"/>
 				<xforms:bind nodeset="sparql_endpoint" required="true()" relevant="../collection_type='cointype'" type="xs:anyURI"/>
 				<xforms:bind nodeset="type_series" required="true()" relevant="../collection_type='cointype'" type="xs:anyURI"/>
 				<xforms:bind nodeset="url" required="true()"/>
@@ -405,9 +405,8 @@
 												</xforms:input>												
 											</div>										
 											<div>
-												<xforms:input ref="banner_text">
-													<xforms:label>Banner Text</xforms:label>
-													<xforms:alert>Required</xforms:alert>
+												<xforms:input ref="logo">
+													<xforms:label>Logo URL</xforms:label>
 												</xforms:input>
 												<p>Appears in the header banner. For more sophisticated control, edit header.xsl.</p>
 											</div>
