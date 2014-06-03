@@ -7,10 +7,6 @@
   VARIABLES
   ***************************************
  */
-:root {
-	var-borderColor: #E7E7E7;
-	var-backgroundColor: #F8F8F8;
-}
 /*
   ***************************************
   GLOBAL
@@ -26,10 +22,6 @@ body {
 	margin: 0;
 	border-bottom:1px solid #E7E7E7;
 }
-.navbar {
-	margin-bottom:0;
-	border-bottom:4px solid #0b205c;
-}
 a > img {
 	border:none;
 }
@@ -43,6 +35,69 @@ ul li, ol li {
 	margin: 10px 0;
 	padding: 9px 14px;
 }
+
+/* custom navbar */
+.navbar-default {
+	background-color: #3383bb;
+	border-color: #0b205c;
+	margin-bottom:0;
+	border-bottom:4px solid #0b205c;
+}
+.navbar-default .navbar-brand {
+	color: #ecf0f1;
+}
+.navbar-default .navbar-brand:hover, .navbar-default .navbar-brand:focus {
+	color: #ffffff;
+}
+.navbar-default .navbar-text {
+	color: #ecf0f1;
+}
+.navbar-default .navbar-nav > li > a {
+	color: #ecf0f1;
+}
+.navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus {
+	color: #ffffff;
+}
+.navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active > a:hover, .navbar-default .navbar-nav > .active > a:focus {
+	color: #ffffff;
+	background-color: #0b205c;
+}
+.navbar-default .navbar-nav > .open > a, .navbar-default .navbar-nav > .open > a:hover, .navbar-default .navbar-nav > .open > a:focus {
+	color: #ffffff;
+	background-color: #0b205c;
+}
+.navbar-default .navbar-toggle {
+	border-color: #0b205c;
+}
+.navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus {
+	background-color: #0b205c;
+}
+.navbar-default .navbar-toggle .icon-bar {
+	background-color: #ecf0f1;
+}
+.navbar-default .navbar-collapse,
+.navbar-default .navbar-form {
+	border-color: #ecf0f1;
+}
+.navbar-default .navbar-link {
+	color: #ecf0f1;
+}
+.navbar-default .navbar-link:hover {
+	color: #ffffff;
+}
+
+@media (max-width: 767px) {
+	.navbar-default .navbar-nav .open .dropdown-menu > li > a {
+		color: #ecf0f1;
+	}
+	.navbar-default .navbar-nav .open .dropdown-menu > li > a:hover, .navbar-default .navbar-nav .open .dropdown-menu > li > a:focus {
+		color: #ffffff;
+	}
+	.navbar-default .navbar-nav .open .dropdown-menu > .active > a, .navbar-default .navbar-nav .open .dropdown-menu > .active > a:hover, .navbar-default .navbar-nav .open .dropdown-menu > .active > a:focus {
+		color: #ffffff;
+		background-color: #0b205c;
+	}
+}
 /*
   ***************************************
   FOOTER
@@ -52,9 +107,10 @@ ul li, ol li {
 	background-color: #F8F8F8;
 	border-top:1px solid #E7E7E7;
 	border-bottom:4px solid #0b205c;
-	padding:10px 0;
-	text-align:center;
+	padding-top:10px;
+	padding-bottom:10px;
 	margin-bottom: 40px;
+	vertical-align:bottom;
 }
 /*
   ***************************************
