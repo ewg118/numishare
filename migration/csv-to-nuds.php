@@ -645,6 +645,7 @@ function put_to_exist($filename, $nudsid){
 
 function processUri($uri, $concept, $isUncertain){
 	GLOBAL $nomismaUris;
+	$uri = trim($uri);
 	$certainty = $isUncertain == true ? ' certainty="uncertain"' : '';
 
 	if (in_array($uri, $nomismaUris)){
