@@ -54,15 +54,22 @@ ORDER BY ASC(?collection)]]></xsl:variable>
 			PREFIX nm:       <http://nomisma.org/id/>
 			PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>
 			
-			SELECT ?object ?uri ?title ?publisher ?findspot ?lat ?long ?objectType ?burial WHERE {
+			SELECT ?object ?title ?findspot ?lat ?long ?objectType ?burial WHERE {
 			?object nm:type_series_item <typeUri>.
-			?object dcterms:title ?title .
-			?object dcterms:publisher ?publisher .
+			?object dcterms:title ?title .			
 			?object nm:findspot ?findspot .
-			?findspot geo:lat ?lat .
-			?findspot geo:long ?long .
+			{?findspot geo:lat ?lat .
+			?findspot geo:long ?long }
+			UNION {
+			 ?findspot nm:findspot ?loc .
+			 ?loc geo:lat ?lat.
+			 ?loc geo:long ?long			 
+			 OPTIONAL { ?findspot nm:closing_date ?burial }
+			 OPTIONAL { ?findspot nm:closing_date_end ?burial }
+			}
 			OPTIONAL { ?object rdf:type ?objectType }
-			OPTIONAL { ?object nm:closing_date ?burial }}]]>
+			OPTIONAL { ?object nm:closing_date ?burial }
+			OPTIONAL { ?object nm:closing_date_end ?burial }}]]>
 		</xsl:variable>
 		<xsl:variable name="service" select="concat($endpoint, '?query=', encode-for-uri(normalize-space(replace($query, 'typeUri', $uri))), '&amp;output=xml')"/>
 
@@ -77,15 +84,22 @@ ORDER BY ASC(?collection)]]></xsl:variable>
 			PREFIX nm:       <http://nomisma.org/id/>
 			PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>
 			
-			SELECT ?object ?uri ?title ?publisher ?findspot ?objectType ?burial ?lat ?long WHERE {
+			SELECT ?object ?title ?findspot ?objectType ?burial ?lat ?long WHERE {
 			?object nm:type_series_item <typeUri>.
 			?object dcterms:title ?title .
-			?object dcterms:publisher ?publisher .
 			?object nm:findspot ?findspot .
-			?findspot geo:lat ?lat .
-			?findspot geo:long ?long .
+			{?findspot geo:lat ?lat .
+			?findspot geo:long ?long }
+			UNION {
+			 ?findspot nm:findspot ?loc .
+			 ?loc geo:lat ?lat.
+			 ?loc geo:long ?long
+			 OPTIONAL { ?findspot nm:closing_date ?burial }
+			 OPTIONAL { ?findspot nm:closing_date_end ?burial }
+			}
 			OPTIONAL { ?object rdf:type ?objectType }
-			OPTIONAL { ?object nm:closing_date ?burial }}]]>
+			OPTIONAL { ?object nm:closing_date ?burial }
+			OPTIONAL { ?object nm:closing_date_end ?burial }}]]>
 		</xsl:variable>
 		<xsl:variable name="service" select="concat($endpoint, '?query=', encode-for-uri(normalize-space(replace($query, 'typeUri', $uri))), '&amp;output=xml')"/>
 
@@ -99,14 +113,19 @@ ORDER BY ASC(?collection)]]></xsl:variable>
 			PREFIX dcterms:  <http://purl.org/dc/terms/>
 			PREFIX nm:       <http://nomisma.org/id/>
 			PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>
+			PREFIX skos:      <http://www.w3.org/2004/02/skos/core#>	
 			
-			SELECT ?object ?title ?findspot ?lat ?long WHERE {
+			SELECT ?object ?title ?findspotLabel ?findspot ?lat ?long WHERE {
 			?object nm:type_series_item <typeUri> .
 			?object dcterms:title ?title .			
 			?object nm:findspot ?findspot .
-			?findspot geo:lat ?lat .
+			OPTIONAL {?findspot skos:prefLabel ?findspotLabel}
+			{?findspot geo:lat ?lat .
 			?findspot geo:long ?long }
-			]]>
+			UNION {
+			 ?findspot nm:findspot ?loc .
+			 ?loc geo:lat ?lat.
+			 ?loc geo:long ?long}}]]>
 		</xsl:variable>
 
 		<xsl:variable name="service" select="concat($endpoint, '?query=', encode-for-uri(normalize-space(replace($query, 'typeUri', $uri))), '&amp;output=xml')"/>
