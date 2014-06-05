@@ -45,27 +45,35 @@
 					<xsl:choose>
 						<xsl:when test="features_enabled = true()">
 							<div class="col-md-9">
-								<h1><xsl:value-of select="title"/></h1>
-								<p><xsl:value-of select="description"/></p>
+								<h1>
+									<xsl:value-of select="title"/>
+								</h1>
+								<p>
+									<xsl:value-of select="description"/>
+								</p>
 							</div>
 							<div class="col-md-3">
 								<xsl:if test="features_enabled = true()">
 									<div id="feature">
 										<h3>Featured Object</h3>
 									</div>
-								</xsl:if>	
+								</xsl:if>
 							</div>
 						</xsl:when>
 						<xsl:otherwise>
 							<div class="col-md-12">
-								<h1><xsl:value-of select="title"/></h1>
-								<p><xsl:value-of select="description"/></p>
+								<h1>
+									<xsl:value-of select="title"/>
+								</h1>
+								<p>
+									<xsl:value-of select="description"/>
+								</p>
 							</div>
 						</xsl:otherwise>
 					</xsl:choose>
 				</div>
 			</div>
-		</div>	
+		</div>
 		<div class="container-fluid" id="content">
 			<div class="row">
 				<div class="col-md-9">
@@ -84,7 +92,7 @@
 											<xsl:copy-of select="//pages/index/*"/>
 										</xsl:otherwise>
 									</xsl:choose>
-									
+
 								</xsl:otherwise>
 							</xsl:choose>
 						</xsl:when>
@@ -99,6 +107,30 @@
 							</xsl:choose>
 						</xsl:otherwise>
 					</xsl:choose>
+					<div class="row">
+						<div class="col-md-6">
+							<h3>Collaborators</h3>
+							<p>
+								<a href="http://numismatics.org" title="American Numismatic Society" style="margin:0 10px;">
+									<img src="{$display_path}images/logo_ans.jpg" alt="ANS"/>
+								</a>
+								<a href="http://isaw.nyu.edu/" title="Institute for the Study of the Ancient World" style="margin:0 10px;">
+									<img src="{$display_path}images/logo_isaw.jpg" alt="ISAW"/>
+								</a>
+							</p>
+						</div>
+						<div class="col-md-6">
+							<h3>Support</h3>
+							<p>
+								<a href="http://www.neh.gov/">
+									<img src="{$display_path}images/neh_logo_horizontal_rgb.jpg" style="max-width:100%"/>
+								</a>
+							</p>
+							<p>In May 2014, the National Endowment for the Humanities awarded OCRE $300,000 as part of the <a
+									href="http://www.neh.gov/grants/preservation/humanities-collections-and-reference-resources">Humanities Collections and Reference Resources</a> program, to be
+								dispersed over three years, to complete the project. <a href="http://numismatics.org/wikiuploads/NewsEvents/2014_0404_PR_major-grant-NEH-.pdf">Press release</a></p>
+						</div>
+					</div>
 				</div>
 				<div class="col-md-3">
 					<div class="highlight">
@@ -115,7 +147,7 @@
 						<script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid=xa-4ffc41710d8b692c"/>
 						<!-- AddThis Button END -->
 					</div>
-					
+
 					<div class="highlight data_options">
 						<h3>Linked Data</h3>
 						<a href="{$display_path}feed/?q=*:*">
@@ -132,20 +164,9 @@
 							</a>
 						</xsl:if>
 					</div>
-					
-					<div class="highlight">
-						<h3>Collaborators</h3>
-						<div style="text-align:right">
-							<a href="http://numismatics.org" title="American Numismatic Society">
-								<img src="{$display_path}images/logo_ans.jpg" alt="ANS"/>
-							</a>
-							<a href="http://isaw.nyu.edu/" title="Institute for the Study of the Ancient World">
-								<img src="{$display_path}images/logo_isaw.jpg" alt="ISAW"/>
-							</a>
-						</div>
-					</div>
 				</div>
 			</div>
+
 		</div>
 	</xsl:template>
 

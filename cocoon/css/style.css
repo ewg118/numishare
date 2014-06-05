@@ -17,6 +17,7 @@ body {
 }
 #content {
 	background-color: white;
+	padding-top:10px
 }
 .jumbotron {
 	margin: 0;
