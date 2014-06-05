@@ -66,7 +66,7 @@
 				</xsl:choose>
 
 				<!-- Google Analytics -->
-				<xsl:if test="string(/config/google_analytics)">
+				<xsl:if test="string(//config/google_analytics)">
 					<script type="text/javascript">
                                                 <xsl:value-of select="//config/google_analytics"/>
                                         </script>
