@@ -3,13 +3,13 @@
 require_once( "sparqllib.php" );
 error_reporting(0);
 
-$ric1 = generate_json('ric1.csv', false);
-$ric2_1 = generate_json('ric2.1.csv', false);
-$ric2 = generate_json('ric2.csv', false);
-$ric3 = generate_json('ric3.csv', false);
-$ric4 = generate_json('ric4.csv', false);
+$ric1 = generate_json('/home/komet/ans_migration/ocre/bm-data/ric1.csv', false);
+$ric2_1 = generate_json('/home/komet/ans_migration/ocre/bm-data/ric2.1.csv', false);
+$ric2 = generate_json('/home/komet/ans_migration/ocre/bm-data/ric2.csv', false);
+$ric3 = generate_json('/home/komet/ans_migration/ocre/bm-data/ric3.csv', false);
+$ric4 = generate_json('/home/komet/ans_migration/ocre/bm-data/ric4.csv', false);
 $data = array_merge($ric1, $ric2_1, $ric2, $ric3, $ric4);
-$lookup = generate_json('concordances.csv', false);
+$lookup = generate_json('/home/komet/ans_migration/ocre/bm-data/concordances.csv', false);
 
 $open = '<rdf:RDF xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xmlns:nm="http://nomisma.org/id/"
          xmlns:dcterms="http://purl.org/dc/terms/" xmlns:foaf="http://xmlns.com/foaf/0.1/" 
@@ -63,7 +63,7 @@ function query_bm($id){
 	sparql_ns( "ecrm","http://erlangen-crm.org/current/" );
 	sparql_ns( "object","http://collection.britishmuseum.org/id/object/" );
 	
-	$sparql = "SELECT ?image ?weight ?axis ?diameter WHERE {
+	$sparql = "SELECT ?image ?weight ?axis ?diameter ?objectId WHERE {
   OPTIONAL {object:OBJECT bmo:PX_has_main_representation ?image }
   OPTIONAL { object:OBJECT ecrm:P43_has_dimension ?wDim .
            ?wDim ecrm:P2_has_type thesDimension:weight .
@@ -77,6 +77,11 @@ function query_bm($id){
      object:OBJECT ecrm:P43_has_dimension ?wDiameter .
            ?wDiameter ecrm:P2_has_type thesDimension:diameter .
            ?wDiameter ecrm:P90_has_value ?diameter
+    }
+  OPTIONAL {
+     object:CGR279727 ecrm:P1_is_identified_by ?identifier.
+     ?identifier ecrm:P2_has_type <http://collection.britishmuseum.org/id/thesauri/identifier/codexid> ;
+        rdfs:label ?objectId
     }
   }";
 	
@@ -95,6 +100,9 @@ function query_bm($id){
 				switch ($field) {
 					case 'image':
 						$xml .= '<foaf:depiction rdf:resource="' . $row[$field] . '"/>';
+						break;
+					case 'objectId':
+						$xml .= '<foaf:homepage rdf:resource="http://www.britishmuseum.org/research/collection_online/collection_object_details.aspx?objectId=' . $row[$field] . '&amp;partId=1"/>';
 						break;
 					case 'axis':
 						$xml .= '<nm:' . $field . ' rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">' . $row[$field] . '</nm:' . $field . '>';

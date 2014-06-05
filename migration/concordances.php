@@ -1,5 +1,5 @@
 <?php
-error_reporting(0);
+//error_reporting(0);
 $data = generate_json('/home/komet/ans_migration/ocre/bm-data/ric4.csv', false);
 $ref_array = array();
 $num_array = array();
@@ -7,16 +7,18 @@ $type_array = array();
 $vol = 'RIC4';
 
 //generate concordance list
-$count == 0;
+$count = 0;
 foreach ($data as $row){	
 	//if ($count < 10){
 		$about = 'http://collection.britishmuseum.org/id/object/' . $row['PRN'];
 		$refs = explode('~', $row['Bib Xref']);
-		$nums = explode('~', $row['Bib Spec']);
+		$nums = explode('~', $row['Bib Spec']);		
 		$authority = parse_authority($row['Authority'], $row['Authority Comment']);
-		if ($authority == 'RECALCULATE') {
-			preg_match('/p\.([0-9]+)/', $num[$vol], $matches);
-			if (is_int($matches[1])){
+		//calculating the authority for Volume 4
+		$key = array_search($vol, $refs);
+		if ($authority == 'RECALCULATE') {		
+			preg_match('/p\.([0-9]+)/', $nums[$key], $matches);
+			if (is_numeric($matches[1])){
 				if ($matches[1] >= 92 && $matches[1] <= 211){
 					$authority = 'ss';
 				} else if ($matches[1] >= 212 && $matches[1] <= 313){
@@ -24,6 +26,8 @@ foreach ($data as $row){
 				} else if ($matches[1] >= 314 && $matches[1] <= 343){
 					$authority = 'ge';
 				}
+			} else {
+				$authority = '';
 			}
 		}
 		
@@ -37,6 +41,8 @@ foreach ($data as $row){
 			$tarray[$refs[$k]] = $v;
 		}
 		$num_array[$about] = array($authority, $tarray);
+	
+		
 	//}	
 	$count++;
 }
@@ -77,7 +83,7 @@ foreach($num_array as $k=>$array){
 	$csv .= "\n";	
 }
 //var_dump($type_array);
-file_put_contents($vol . '-con.csv', $csv);
+file_put_contents($vol . '-con-new.csv', $csv);
 
 function parse_ref($ref, $vol, $authority){
 	switch ($vol){
@@ -140,10 +146,11 @@ function parse_ref($ref, $vol, $authority){
 }
 
 function parse_authority($authority, $comment){
+	$auth = '';
 	if ($comment == 'Civil Wars'){
 		$auth = 'cw';
 	}  
-	/*else if (strpos($auth, 'Septimius') >= 0 || strpos($auth, 'Caracalla') >= 0 || strpos($auth, 'Geta') >= 0){
+	/*else if (strpos($authority, 'Septimius') >= 0 || strpos($authority, 'Caracalla') >= 0 || strpos($authority, 'Geta') >= 0){
 		$auth = 'RECALCULATE';
 	}*/
 	else {
@@ -217,24 +224,52 @@ function parse_authority($authority, $comment){
 			case stristr($authority, 'Clodius Albinus'):
 				$auth = 'ca';
 				break;
-			case stristr($authority, 'Septimius Severus'):
-				$auth = 'ss';
-				break;
-			case stristr($authority, 'Caracalla'):
-				$auth = 'crl';
-				break;
-			case stristr($authority, 'Geta'):
-				$auth = 'ge';
-				break;
 			case stristr($authority, 'Macrinus'):
 				$auth = 'mcs';
 				break;
+			case stristr($authority, 'Septimius'):
+				$auth = 'RECALCULATE';
+				break;
+			case stristr($authority, 'Caracalla'):
+				$auth = 'RECALCULATE';
+				break;
+			case stristr($authority, 'Geta'):
+				$auth = 'RECALCULATE';
+				break;
 			case stristr($authority, 'Elagabalus'):
 				$auth = 'el';
-				break;			
-		}
-		return $auth;
+				break;
+			case $authority == 'Severus Alexander':
+				$auth = 'sa';
+				break;
+			case $authority == 'Maximinus I':
+				$auth = 'max_i';
+				break;
+			case $authority == 'Paulina':
+				$auth = 'pa';
+				break;
+			case $authority == 'Maximus':
+				$auth = 'mxs';
+				break;
+			case $authority == 'Gordian I':
+				$auth = 'gor_i';
+				break;
+			case $authority == 'Gordian II':
+				$auth = 'gor_ii';
+				break;
+			case $authority == 'Balbinus':
+				$auth = 'balb';
+				break;
+			case $authority == 'Pupienus':
+				$auth = 'pup';
+				break;
+			case $authority == 'Balbinus~Pupienus':
+				$auth = 'gor_iii_caes';
+				break;
+				
+		}		
 	}
+	return $auth;
 }
 
 function generate_json($doc){
