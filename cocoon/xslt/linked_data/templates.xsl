@@ -73,8 +73,8 @@
 					</xsl:if>
 					<xsl:value-of select="."/>
 				</dcterms:title>
-				<dcterms:identifier rdf:resource="{$url}id/{$id}"/>
 			</xsl:for-each>
+			<foaf:homepage rdf:resource="{$url}id/{$id}"/>
 			<xsl:if test="string(@recordType)">
 				<!-- dates -->
 				<xsl:choose>
@@ -894,16 +894,25 @@
 			<dcterms:title>
 				<xsl:value-of select="str[@name='title_display']"/>
 			</dcterms:title>
-			<dcterms:identifier rdf:resource="{$url}id/{$id}"/>
+			<foaf:homepage rdf:resource="{$url}id/{$id}"/>
 
 			<!-- temporal -->
 			<xsl:choose>
-				<xsl:when test="count(arr[@name='year_num']/int) = 2">
-					<dcterms:temporal>start=<xsl:value-of select="min(arr[@name='year_num']/int)"/>; end=<xsl:value-of select="max(arr[@name='year_num']/int)"/></dcterms:temporal>
+				<xsl:when test="str[@name='recordType'] = 'hoard'">
+					<xsl:if test="int[@name='taq_num'] or int[@name='tpq_num']">
+						<dcterms:temporal>start=<xsl:value-of select="if (int[@name='tpq_num']) then int[@name='tpq_num'] else int[@name='taq_num']"/>; end=<xsl:value-of select="if (int[@name='taq_num']) then int[@name='taq_num'] else int[@name='tpq_num']"/></dcterms:temporal>
+					</xsl:if>
 				</xsl:when>
-				<xsl:when test="count(arr[@name='year_num']/int) = 1">
-					<dcterms:temporal>start=<xsl:value-of select="arr[@name='year_num']/int"/>; end=<xsl:value-of select="arr[@name='year_num']/int"/></dcterms:temporal>
-				</xsl:when>
+				<xsl:otherwise>
+					<xsl:choose>
+						<xsl:when test="count(arr[@name='year_num']/int) = 2">
+							<dcterms:temporal>start=<xsl:value-of select="min(arr[@name='year_num']/int)"/>; end=<xsl:value-of select="max(arr[@name='year_num']/int)"/></dcterms:temporal>
+						</xsl:when>
+						<xsl:when test="count(arr[@name='year_num']/int) = 1">
+							<dcterms:temporal>start=<xsl:value-of select="arr[@name='year_num']/int"/>; end=<xsl:value-of select="arr[@name='year_num']/int"/></dcterms:temporal>
+						</xsl:when>
+					</xsl:choose>
+				</xsl:otherwise>
 			</xsl:choose>
 
 			<!-- images -->
