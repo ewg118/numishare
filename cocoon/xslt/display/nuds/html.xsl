@@ -337,6 +337,12 @@
 						<td style="width:100px">
 							<xsl:value-of select="numishare:regularize_node('findspot', $lang)"/>
 						</td>
+						<xsl:if test="descendant::nuds:subject[contains(@xlink:href, 'geonames.org')]">
+							<td style="background-color:#00e64d;border:2px solid black;width:50px;"/>
+							<td style="width:100px">
+								<xsl:value-of select="numishare:regularize_node('subject', $lang)"/>
+							</td>
+						</xsl:if>
 					</tr>
 				</tbody>
 			</table>

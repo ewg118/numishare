@@ -103,7 +103,7 @@ div#mapcontainer {
 	width:100%;
 	height: 100%;
 }
-div#mapcontainer.fullscreen {
+div#fullscreen-mapcontainer {
 	height:80%;
 	width:100%;
 }

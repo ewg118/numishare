@@ -109,6 +109,21 @@
 			</xsl:if>
 		</xsl:for-each>
 
+		<xsl:for-each select="descendant::nuds:subject[contains(@xlink:href, 'geonames.org')]">
+			<xsl:variable name="href" select="@xlink:href"/>			
+			<xsl:if test="$nudsGroup/descendant::nuds:geogname[@xlink:role='mint'][string(@xlink:href)]">
+				<xsl:text>,</xsl:text>
+			</xsl:if>
+			
+			<xsl:call-template name="getJsonPoint">
+				<xsl:with-param name="href" select="$href"/>
+				<xsl:with-param name="type">subject</xsl:with-param>
+				<xsl:with-param name="title" select="."/>
+			</xsl:call-template>
+			<xsl:if test="not(position()=last())">
+				<xsl:text>,</xsl:text>
+			</xsl:if>
+		</xsl:for-each>
 
 		<!-- gather associated hoards from Nomisma is available -->
 		<xsl:choose>
@@ -124,18 +139,6 @@
 				</xsl:for-each>
 			</xsl:otherwise>
 		</xsl:choose>
-		
-		<xsl:for-each select="descendant::nuds:subject[contains(@xlink:href, 'geonames.org')]">
-			<xsl:variable name="href" select="@xlink:href"/>
-			<xsl:call-template name="getJsonPoint">
-				<xsl:with-param name="href" select="$href"/>
-				<xsl:with-param name="type">subject</xsl:with-param>
-				<xsl:with-param name="title" select="."/>
-			</xsl:call-template>
-			<xsl:if test="not(position()=last())">
-				<xsl:text>,</xsl:text>
-			</xsl:if>
-		</xsl:for-each>
 	</xsl:template>
 
 	<xsl:template match="nh:nudsHoard" mode="kml">

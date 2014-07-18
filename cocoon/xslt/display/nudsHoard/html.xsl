@@ -104,7 +104,7 @@
 								<td style="background-color:#d86458;border:2px solid black;width:50px;"/>
 								<td style="width:100px">
 									<xsl:value-of select="numishare:regularize_node('findspot', $lang)"/>
-								</td>
+								</td>								
 							</tr>
 						</tbody>
 					</table>

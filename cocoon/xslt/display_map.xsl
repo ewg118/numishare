@@ -140,21 +140,33 @@
 						<div class="col-md-12">
 							<div id="timemap-legend">
 								<h2>
-									<xsl:value-of select="numishare:regularize_node('legend', $lang)"/>									
+									<xsl:value-of select="numishare:regularize_node('legend', $lang)"/>
 								</h2>
 
 								<div class="legend">
 									<table>
 										<tbody>
 											<tr>
-												<td style="background-color:#6992fd;border:2px solid black;width:50px;"/>
-												<td style="width:100px">
-													<xsl:value-of select="numishare:regularize_node('mint', $lang)"/>
-												</td>
-												<td style="background-color:#d86458;border:2px solid black;width:50px;"/>
-												<td style="width:100px">
-													<xsl:value-of select="numishare:regularize_node('findspot', $lang)"/>
-												</td>
+												<tr>
+													<td style="background-color:#6992fd;border:2px solid black;width:50px;"/>
+													<td style="width:100px">
+														<xsl:value-of select="numishare:regularize_node('mint', $lang)"/>
+													</td>
+												</tr>
+												<tr>
+													<td style="background-color:#d86458;border:2px solid black;width:50px;"/>
+													<td style="width:100px">
+														<xsl:value-of select="numishare:regularize_node('findspot', $lang)"/>
+													</td>
+												</tr>
+												<xsl:if test="descendant::nuds:subject[contains(@xlink:href, 'geonames.org')]">
+													<tr>
+														<td style="background-color:#00e64d;border:2px solid black;width:50px;"/>
+														<td style="width:100px">
+															<xsl:value-of select="numishare:regularize_node('subject', $lang)"/>
+														</td>
+													</tr>
+												</xsl:if>
 											</tr>
 										</tbody>
 									</table>
@@ -196,7 +208,8 @@
 					</span>
 					<span id="object_title">
 						<xsl:value-of
-							select="if (descendant::nuds:nuds) then descendant::nuds:nuds/nuds:descMeta/nuds:title else if (descendant::*[local-name()='nudsHoard']) then descendant::nuds:recordId else ''"/>
+							select="if (descendant::nuds:nuds) then descendant::nuds:nuds/nuds:descMeta/nuds:title else if (descendant::*[local-name()='nudsHoard']) then descendant::nuds:recordId else ''"
+						/>
 					</span>
 				</div>
 			</body>
