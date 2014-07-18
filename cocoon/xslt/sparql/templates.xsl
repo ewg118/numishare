@@ -221,7 +221,7 @@ nm:collection ?collection .
 				<th>Count</th>
 				<th>Collection</th>
 			</tr>
-			<xsl:apply-templates select="document($service)/descendant::res:result" mode="contributors"/>
+			<xsl:apply-templates select="document($service)/descendant::res:result[res:binding[@name='collection']/res:uri]" mode="contributors"/>
 		</table>
 	</xsl:template>
 

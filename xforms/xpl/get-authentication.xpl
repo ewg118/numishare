@@ -27,6 +27,7 @@
 				<role>electrum</role>
 				<role>rrc</role>
 				<role>egypt</role>
+				<role>aod</role>
 			</config>
 		</p:input>
 		<p:output name="data" ref="data"/>

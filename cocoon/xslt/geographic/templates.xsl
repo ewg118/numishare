@@ -33,6 +33,15 @@
 						</Icon>
 					</IconStyle>
 				</Style>
+				<Style id="subject">
+					<IconStyle>
+						<scale>1</scale>
+						<hotSpot x="0.5" y="0" xunits="fraction" yunits="fraction"/>
+						<Icon>
+							<href>http://maps.google.com/intl/en_us/mapfiles/ms/micons/green-dot.png</href>
+						</Icon>
+					</IconStyle>
+				</Style>
 				<xsl:choose>
 					<xsl:when test="count(/content/*[local-name()='nuds']) &gt; 0">
 						<xsl:apply-templates select="/content/nuds:nuds" mode="kml"/>
@@ -74,6 +83,13 @@
 			</xsl:call-template>
 		</xsl:for-each>
 
+		<xsl:for-each select="descendant::nuds:subject[contains(@xlink:href, 'geonames.org')]">
+			<xsl:call-template name="getPlacemark">
+				<xsl:with-param name="href" select="@xlink:href"/>
+				<xsl:with-param name="styleUrl">#subject</xsl:with-param>
+			</xsl:call-template>
+		</xsl:for-each>
+
 		<!-- gather associated hoards from Nomisma is available -->
 		<xsl:if test="string($sparql_endpoint)">
 			<cinclude:include src="cocoon:/widget?uri={concat(//config/uri_space, $id)}&amp;template=kml"/>
@@ -108,6 +124,15 @@
 				</xsl:for-each>
 			</xsl:otherwise>
 		</xsl:choose>
+		
+		<xsl:for-each select="descendant::nuds:subject[contains(@xlink:href, 'geonames.org')]">
+			<xsl:variable name="href" select="@xlink:href"/>
+			<xsl:call-template name="getJsonPoint">
+				<xsl:with-param name="href" select="$href"/>
+				<xsl:with-param name="type">subject</xsl:with-param>
+				<xsl:with-param name="title" select="."/>
+			</xsl:call-template>
+		</xsl:for-each>
 	</xsl:template>
 
 	<xsl:template match="nh:nudsHoard" mode="kml">
@@ -363,6 +388,9 @@
 					<![CDATA[<a href=']]><xsl:value-of select="$href"/><![CDATA['>]]><xsl:value-of select="$href"/><![CDATA[</a><br/>See <a href=']]><xsl:value-of
 						select="concat($url, 'results?q=mint_facet:\&#x022;', $title, '\&#x022;')"/><![CDATA['>other objects</a> from this mint.]]>
 				</xsl:when>
+				<xsl:when test="$type='subject'">
+					<![CDATA[<a href=']]><xsl:value-of select="$href"/><![CDATA['>]]><xsl:value-of select="$href"/><![CDATA[</a>]]>
+				</xsl:when>
 				<xsl:when test="$type='findspot'">
 					<![CDATA[Findspot - Lat: ]]><xsl:value-of select="tokenize($coordinates, '\|')[1]"/><![CDATA[, Lon: ]]><xsl:value-of select="tokenize($coordinates, '\|')[2]"/>
 				</xsl:when>
@@ -376,6 +404,7 @@
 				<xsl:when test="$type='coinType'">
 					<xsl:text>ltblue</xsl:text>
 				</xsl:when>
+				<xsl:when test="$type='subject'">green</xsl:when>
 				<xsl:otherwise>
 					<xsl:text>red</xsl:text>
 				</xsl:otherwise>
@@ -383,7 +412,7 @@
 		</xsl:variable>
 		<xsl:variable name="start">
 			<xsl:choose>
-				<xsl:when test="$type='mint'"/>
+				<xsl:when test="$type='mint' or $type='subject'"/>
 				<xsl:when test="$type='object-mint'">
 					<xsl:choose>
 						<xsl:when test="ancestor::nuds:typeDesc/nuds:date/@standardDate">
@@ -418,7 +447,7 @@
 		</xsl:variable>
 		<xsl:variable name="end">
 			<xsl:choose>
-				<xsl:when test="$type='mint'"/>
+				<xsl:when test="$type='mint' or $type='subject'"/>
 				<xsl:when test="$type='object-mint'">
 					<xsl:if test="ancestor::nuds:typeDesc/nuds:dateRange/nuds:toDate/@standardDate">
 						<xsl:value-of select="number(ancestor::nuds:typeDesc/nuds:dateRange/nuds:toDate/@standardDate)"/>

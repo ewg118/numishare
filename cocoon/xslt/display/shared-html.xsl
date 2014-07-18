@@ -180,29 +180,9 @@
 
 					<!-- create links to resources -->
 					<xsl:if test="string($href)">
-
 						<a href="{$href}" target="_blank" title="{if (contains($href, 'geonames')) then 'geonames' else if (contains($href, 'nomisma')) then 'nomisma' else ''}">
 							<img src="{$display_path}images/external.png" alt="external link" class="external_link"/>
 						</a>
-						<!-- parse nomisma RDFa, create links for pleiades and wikipedia -->
-						<!--<xsl:if test="contains($href, 'nomisma.org')">
-							<xsl:for-each select="$rdf/*[@rdf:about=$href]/skos:related">
-								<xsl:variable name="source">
-									<xsl:choose>
-										<xsl:when test="contains(@rdf:resource, 'pleiades')">
-											<xsl:text>pleiades</xsl:text>
-										</xsl:when>
-										<xsl:when test="contains(@rdf:resource, 'wikipedia')">
-											<xsl:text>wikipedia</xsl:text>
-										</xsl:when>
-									</xsl:choose>
-								</xsl:variable>
-
-								<a href="{@rdf:resource}" target="_blank" title="{$source}">
-									<img src="{$display_path}images/{$source}.png" alt="{$source}" class="external_link"/>
-								</a>
-							</xsl:for-each>
-						</xsl:if>-->
 					</xsl:if>
 
 					<!-- display label on right for right-to-left scripts -->

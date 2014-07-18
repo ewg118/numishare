@@ -246,9 +246,9 @@
 	<xsl:template match="nuds:subjectSet">
 		<xsl:for-each select="nuds:subject">
 			<xsl:choose>
-				<xsl:when test="string(@type)">
+				<xsl:when test="string(@localType)">
 					<xsl:choose>
-						<xsl:when test="@type='category'">
+						<xsl:when test="@localType='category'">
 							<field name="category_display">
 								<xsl:value-of select="."/>
 							</field>
@@ -260,7 +260,7 @@
 							</xsl:for-each>
 						</xsl:when>
 						<xsl:otherwise>
-							<field name="{@type}_facet">
+							<field name="{@localType}_facet">
 								<xsl:value-of select="normalize-space(.)"/>
 							</field>
 						</xsl:otherwise>

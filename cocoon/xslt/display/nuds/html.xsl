@@ -406,6 +406,11 @@
 				href="{$display_path}results?q={if (string(@localType)) then @localType else 'subject'}_facet:&#x022;{normalize-space(.)}&#x022;{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
 				<xsl:value-of select="."/>
 			</a>
+			<xsl:if test="string(@xlink:href)">
+				<a href="{@xlink:href}" target="_blank">
+					<img src="{$display_path}images/external.png" alt="external link" class="external_link"/>
+				</a>
+			</xsl:if>
 		</li>
 	</xsl:template>
 
