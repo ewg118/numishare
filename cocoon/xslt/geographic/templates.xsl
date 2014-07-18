@@ -132,6 +132,9 @@
 				<xsl:with-param name="type">subject</xsl:with-param>
 				<xsl:with-param name="title" select="."/>
 			</xsl:call-template>
+			<xsl:if test="not(position()=last())">
+				<xsl:text>,</xsl:text>
+			</xsl:if>
 		</xsl:for-each>
 	</xsl:template>
 
