@@ -1202,11 +1202,9 @@
 
 	<!-- ************** PROCESS GROUP OF SPARQL RESULTS FROM NOMISMA TO DISPLAY IMAGES ************** -->
 	<xsl:template match="group" mode="results">
-		<xsl:param name="group"/>
-		<xsl:variable name="count" select="coin-count + hoard-count"/>
-		<xsl:variable name="coin-count" select="coin-count"/>
-		<xsl:variable name="hoard-count" select="hoard-count"/>
-
+		<xsl:variable name="coin-count" select="number(coin-count)" as="xs:integer"/>
+		<xsl:variable name="hoard-count" select="number(hoard-count)" as="xs:integer"/>		
+		<xsl:variable name="count" select="$coin-count + $hoard-count" as="xs:integer"/>
 		<!-- display images -->
 		<xsl:apply-templates select="descendant::object" mode="results"/>
 
