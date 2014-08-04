@@ -23,7 +23,7 @@
 		<xforms:model xmlns="http://nomisma.org/nuds">
 			<!-- exist URL is stored in an XML file -->
 			<xforms:instance id="exist-config">
-				<xi:include href="exist-config.xml"/>
+				<xi:include href="../exist-config.xml"/>
 			</xforms:instance>
 
 			<xforms:instance id="control-instance">
@@ -289,7 +289,7 @@
 					<xforms:setvalue ref="instance('deleteAll')/query" value="concat('collection-name:', instance('control-instance')/collection-name)"/>
 					<xforms:send submission="load-config"/>
 				</xforms:action>
-				<!-- if the config has not been created (given that the URL in exist-config.xml is correct), create it -->
+				<!-- if the config has not been created (given that the URL in ../exist-config.xml is correct), create it -->
 				<xforms:action ev:event="xforms-submit-error">
 					<!-- if there is no security, quietly save collections-list.xml -->
 					<xforms:action if="not(string(instance('control-instance')/request-security/role))">

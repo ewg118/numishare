@@ -1,0 +1,42 @@
+<config xmlns="http://www.orbeon.com/oxf/controller" xmlns:oxf="http://www.orbeon.com/oxf/processors">	
+	
+	<!-- ****************
+	* ADMIN INTERFACE *
+	***************** -->	
+	<page path="/numishare/admin/" view="xforms/admin.xhtml" id="admin"/>	
+	<page path="/numishare/admin/edit/coin/" view="xforms/nuds.xhtml"/>
+	<page path="/numishare/admin/edit/object/" view="xforms/vra.xhtml"/>	
+	<page path="/numishare/admin/edit/settings/" view="xforms/edit-config.xhtml"/>
+	<page path="/numishare/admin/edit/page/" view="xforms/page.xhtml"/>	
+	<page path="/numishare/admin/pages/" view="xforms/pages.xhtml"/>
+	<page path="/numishare/admin/imports/new/" view="xforms/import-csv.xhtml"/>
+	<page path="/numishare/admin/imports/" view="xforms/manage-imports.xhtml"/>
+	<page path="/numishare/admin/theme/" view="xforms/theme.xhtml"/>
+	<page path="/numishare/admin/templates/" view="xforms/templates.xhtml"/>
+	<page path="/numishare/admin/theme/jquery-ui/" view="xforms/jquery-ui.xhtml"/>
+	<page path="/numishare/admin/theme/layout/" view="xforms/layout.xhtml"/>
+	<page path="/numishare/admin/ingest/" view="xforms/query-ans.xhtml"/>
+	<!--<page path="/numishare/logout">
+		<action action="xpl/logout.xpl">
+			<result page="admin"/>
+		</action>
+	</page>-->
+	
+	<!-- ****************
+	* PUBLIC INTERFACE *
+	***************** -->
+	<!-- **** SERIALIZATIONS **** -->	
+	
+	<!-- Solr -->
+	<page path="/numishare/[^\/]+/results" matcher="oxf:perl5-matcher" model="xpl/models/solr/results.xpl" view="xpl/views/serializations/solr/html.xpl"/>
+	<page path="/numishare/[^\/]+/feed" matcher="oxf:perl5-matcher" model="xpl/models/solr/results.xpl" view="xpl/views/serializations/solr/atom.xpl"/>
+	
+	<!-- **** PAGES **** -->	
+	<page path="/numishare/[^\/]+/search" matcher="oxf:perl5-matcher" model="xpl/models/solr/search.xpl" view="xpl/views/pages/search.xpl"/>
+	<page path="/numishare/[^\/]+/" matcher="oxf:perl5-matcher" model="xpl/models/config.xpl" view="xpl/views/pages/index.xpl"/>
+
+	<!-- **** AJAX **** -->	
+	<page path="/numishare/[^\/]+/get_search_facets" matcher="oxf:perl5-matcher" model="xpl/models/solr/get_search_facets.xpl" view="xpl/views/ajax/get_search_facets.xpl"/>
+
+	<epilogue url="oxf:/config/epilogue.xpl"/>
+</config>
