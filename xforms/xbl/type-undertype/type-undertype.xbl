@@ -751,6 +751,9 @@
 									<xforms:repeat nodeset="nuds:corpname[@xlink:role='issuer']">
 										<numishare:cp-name/>
 									</xforms:repeat>
+									<xforms:repeat nodeset="nuds:corpname[@xlink:role='maker']">
+										<numishare:cp-name/>
+									</xforms:repeat>
 									<xforms:repeat nodeset="nuds:persname[@xlink:role='maker']">
 										<numishare:cp-name/>
 									</xforms:repeat>

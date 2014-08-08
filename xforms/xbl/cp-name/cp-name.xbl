@@ -78,7 +78,7 @@
 							</h4>
 							<xforms:trigger appearance="minimal">
 								<xforms:delete ev:event="DOMActivate" nodeset="$binding"/>
-								<xforms:label><img src="/apps/numishare/images/remove.gif"/></xforms:label>
+								<xforms:label><span class="glyphicon glyphicon-remove"/></xforms:label>
 							</xforms:trigger>
 							<xforms:group ref="$binding[not($binding/@title)]">
 								<xforms:trigger appearance="minimal">
