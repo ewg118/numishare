@@ -311,43 +311,33 @@
 			<nm:object_type rdf:resource="{nuds:objectType/@xlink:href}"/>
 		</xsl:if>
 
-		<xsl:if test="nuds:obverse">
-			<nm:obverse>
-				<rdf:Description>
-					<xsl:apply-templates select="nuds:obverse" mode="nomisma"/>
-				</rdf:Description>
-			</nm:obverse>
-		</xsl:if>
-		<xsl:if test="nuds:reverse">
-			<nm:obverse>
-				<rdf:Description>
-					<xsl:apply-templates select="nuds:reverse" mode="nomisma"/>
-				</rdf:Description>
-			</nm:obverse>
-		</xsl:if>
-
 		<xsl:apply-templates select="nuds:material|nuds:denomination|nuds:manufacture" mode="nomisma"/>
 		<xsl:apply-templates select="descendant::nuds:geogname|descendant::nuds:persname|descendant::nuds:corpname" mode="nomisma"/>
 		<xsl:apply-templates select="nuds:date[@standardDate]|nuds:dateRange[child::node()/@standardDate]" mode="nomisma"/>
+		<xsl:apply-templates select="nuds:obverse|nuds:reverse" mode="nomisma"/>
 	</xsl:template>
 
 	<xsl:template match="nuds:obverse|nuds:reverse" mode="nomisma">
-		<xsl:if test="nuds:legend">
-			<nm:legend>
-				<xsl:if test="string(@xml:lang)">
-					<xsl:attribute name="xml:lang" select="@xml:lang"/>
+		<xsl:element name="nm:{local-name()}" namespace="http://nomisma.org/id/">
+			<rdf:Description>
+				<xsl:if test="nuds:legend">
+					<nm:legend>
+						<xsl:if test="string(@xml:lang)">
+							<xsl:attribute name="xml:lang" select="@xml:lang"/>
+						</xsl:if>
+						<xsl:value-of select="nuds:legend"/>
+					</nm:legend>
 				</xsl:if>
-				<xsl:value-of select="nuds:legend"/>
-			</nm:legend>
-		</xsl:if>
-		<xsl:for-each select="nuds:type/nuds:description">
-			<nm:description>
-				<xsl:if test="string(@xml:lang)">
-					<xsl:attribute name="xml:lang" select="@xml:lang"/>
-				</xsl:if>
-				<xsl:value-of select="."/>
-			</nm:description>
-		</xsl:for-each>
+				<xsl:for-each select="nuds:type/nuds:description">
+					<nm:description>
+						<xsl:if test="string(@xml:lang)">
+							<xsl:attribute name="xml:lang" select="@xml:lang"/>
+						</xsl:if>
+						<xsl:value-of select="."/>
+					</nm:description>
+				</xsl:for-each>
+			</rdf:Description>			
+		</xsl:element>
 	</xsl:template>
 
 	<xsl:template match="nuds:material|nuds:denomination|nuds:manufacture|nuds:geogname|nuds:persname|nuds:corpname" mode="nomisma">
