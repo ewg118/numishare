@@ -187,7 +187,7 @@ ORDER BY ASC(?collection)]]></xsl:variable>
 					PREFIX dcterms:  <http://purl.org/dc/terms/>
 					PREFIX nm:       <http://nomisma.org/id/>
 					PREFIX skos:      <http://www.w3.org/2004/02/skos/core#>						
-					SELECT DISTINCT ?val ?label WHERE {
+					SELECT DISTINCT ?val WHERE {
 					?object dcterms:isPartOf <TYPE_SERIES>.
 					{?object nm:obverse ?obverse .
 					?obverse FIELD ?val}
@@ -219,9 +219,18 @@ ORDER BY ASC(?collection)]]></xsl:variable>
 		<select class="search_text form-control">
 			<option value="">Select option from list...</option>
 			<xsl:for-each select="document($service)//res:result">
-				<option value="{res:binding[@name='val']/res:uri}" class="term">
-					<xsl:value-of select="res:binding[@name='label']/res:literal"/>
-				</option>
+				<xsl:choose>
+					<xsl:when test="$field='nm:deity'">
+						<option value="{res:binding[@name='val']/res:literal}" class="term">
+							<xsl:value-of select="res:binding[@name='val']/res:literal"/>
+						</option>
+					</xsl:when>
+					<xsl:otherwise>
+						<option value="{res:binding[@name='val']/res:uri}" class="term">
+							<xsl:value-of select="res:binding[@name='label']/res:literal"/>
+						</option>
+					</xsl:otherwise>
+				</xsl:choose>				
 			</xsl:for-each>
 		</select>
 
