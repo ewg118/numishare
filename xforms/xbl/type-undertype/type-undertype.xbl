@@ -646,7 +646,7 @@
 							</xforms:group>
 						</div>
 						<div class="subsection">
-							<h3>Authority and Personal</h3>
+							<h3>Authority</h3>
 							<span class="add">
 								<xforms:trigger appearance="minimal">
 									<xforms:label>
