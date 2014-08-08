@@ -708,9 +708,16 @@
 								</xforms:trigger>
 								<xforms:trigger appearance="minimal">
 									<xforms:label>
-										<span class="glyphicon glyphicon-plus"/>Maker</xforms:label>
+										<span class="glyphicon glyphicon-plus"/>Maker--Corporate</xforms:label>
 									<xforms:insert ev:event="DOMActivate" context="." origin="instance('authpers-template')" nodeset="./child::node()[last()]" if="count(nuds:authority) = 0"/>
-									<xforms:insert ev:event="DOMActivate" context="nuds:authority" origin="instance('maker-template')" nodeset="./child::node()[last()]"/>
+									<xforms:insert ev:event="DOMActivate" context="nuds:authority" origin="instance('makerCorporate-template')" nodeset="./child::node()[last()]"/>
+									<xxforms:hide ev:event="DOMActivate" dialog="authority-objects"/>
+								</xforms:trigger>
+								<xforms:trigger appearance="minimal">
+									<xforms:label>
+										<span class="glyphicon glyphicon-plus"/>Maker--Personal</xforms:label>
+									<xforms:insert ev:event="DOMActivate" context="." origin="instance('authpers-template')" nodeset="./child::node()[last()]" if="count(nuds:authority) = 0"/>
+									<xforms:insert ev:event="DOMActivate" context="nuds:authority" origin="instance('makerPersonal-template')" nodeset="./child::node()[last()]"/>
 									<xxforms:hide ev:event="DOMActivate" dialog="authority-objects"/>
 								</xforms:trigger>
 								<xforms:trigger appearance="minimal">
@@ -846,7 +853,10 @@
 						<xforms:instance id="issuerCorporate-template" xxforms:exclude-result-prefixes="#all">
 							<corpname xlink:type="simple" xlink:role="issuer"/>
 						</xforms:instance>
-						<xforms:instance id="maker-template" xxforms:exclude-result-prefixes="#all">
+						<xforms:instance id="makerCorporate-template" xxforms:exclude-result-prefixes="#all">
+							<corpname xlink:type="simple" xlink:role="maker"/>
+						</xforms:instance>
+						<xforms:instance id="makerPersonal-template" xxforms:exclude-result-prefixes="#all">
 							<persname xlink:type="simple" xlink:role="maker"/>
 						</xforms:instance>
 						<xforms:instance id="state-template" xxforms:exclude-result-prefixes="#all">
