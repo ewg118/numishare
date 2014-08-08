@@ -73,7 +73,7 @@
 								<xforms:group ref=".[string(nuds:geogname/@xlink:href)]">
 									<xforms:trigger appearance="xxforms:link">
 										<xforms:label>
-											<img src="../../images/external.png"/>
+											<img src="/apps/numishare/xforms/images/external.png"/>
 										</xforms:label>
 										<xforms:load ev:event="DOMActivate" ref="nuds:geogname/@xlink:href" show="new"/>
 									</xforms:trigger>
