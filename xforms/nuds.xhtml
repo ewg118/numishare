@@ -14,7 +14,7 @@
 		<script type="text/javascript" src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"/>
 		<link rel="shortcut icon" href="/ops/images/orbeon-icon-16.ico"/>
 		<link rel="icon" href="/ops/images/orbeon-icon-16.png" type="image/png"/>
-		<link rel="stylesheet" href="/apps/numishare/xforms/css/xforms.css"/>
+		<link rel="stylesheet" href="css/xforms.css"/>
 
 		<!-- numishare styling -->
 		<link rel="stylesheet" href="/apps/numishare/css/xforms.css"/>
@@ -756,7 +756,7 @@
 						<p>
 							<a href="../../"><span class="glyphicon glyphicon-arrow-left"/> Return</a>
 						</p>
-						<div class="submission">
+						<div class="submission text-center">
 							<xforms:trigger appearance="minimal">
 								<xforms:action ev:event="DOMActivate">
 									<!-- set value of latest maintenanceEvent -->
@@ -769,7 +769,7 @@
 										>revised</xforms:setvalue>
 									<xforms:send submission="save-coin"/>
 								</xforms:action>
-								<xforms:label class="file_control"><span class="glyphicon glyphicon-floppy-disk"/>Save</xforms:label>
+								<xforms:label><span class="glyphicon glyphicon-floppy-disk"/>Save</xforms:label>
 							</xforms:trigger>							
 						</div>
 						<h1>Create/Edit Coin</h1>
