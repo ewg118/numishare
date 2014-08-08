@@ -115,6 +115,7 @@
 					<collection-name/>
 					<typeDesc_correct/>
 					<publicationStatus/>
+					<status/>
 				</controls>
 			</xforms:instance>
 
@@ -132,10 +133,6 @@
 
 			<xforms:instance id="typeDesc-resource">
 				<nuds xmlns=""/>
-			</xforms:instance>
-
-			<xforms:instance id="status">
-				<status/>
 			</xforms:instance>
 
 			<!-- send to Solr -->
@@ -591,7 +588,7 @@
 
 				<xforms:action ev:event="xforms-submit-done">
 					<xforms:setvalue ref="instance('control-instance')/id" value="instance('coin')/nuds:control/nuds:recordId"/>
-					<xforms:setvalue ref="instance('status')">Coin saved.</xforms:setvalue>
+					<xforms:setvalue ref="instance('control-instance')/status">Coin saved.</xforms:setvalue>
 
 					<!-- publish coin if the publicationStatus is approved -->
 					<xforms:send submission="to-solr" if="instance('coin')/nuds:control/nuds:publicationStatus = 'approved'"/>
@@ -619,7 +616,7 @@
 				replace="instance" method="post">
 				<xforms:action ev:event="xforms-submit-done">
 					<xforms:send submission="submit-commit"/>
-					<xforms:setvalue ref="instance('status')">Object saved and updated to search index.</xforms:setvalue>
+					<xforms:setvalue ref="instance('control-instance')/status">Object saved and updated to search index.</xforms:setvalue>
 				</xforms:action>
 				<xforms:message ev:event="xforms-submit-error" level="modal">Data Failed to POST to Solr. Index may be offline or URL is
 					incorrect.</xforms:message>
@@ -628,7 +625,7 @@
 				replace="none" method="post">
 				<xforms:action ev:event="xforms-submit-done">
 					<xforms:send submission="submit-commit"/>
-					<xforms:setvalue ref="instance('status')">Object saved, but removed from Solr index (publicationStatus set to
+					<xforms:setvalue ref="instance('control-instance')/status">Object saved, but removed from Solr index (publicationStatus set to
 						'inProcess').</xforms:setvalue>
 				</xforms:action>
 				<xforms:message ev:event="xforms-submit-error" level="modal">Data Failed to POST to Solr.</xforms:message>
@@ -748,7 +745,7 @@
 				<div class="col-md-12">
 					<xi:include href="header.xml"/>
 					<div id="form">
-						<xforms:group ref="instance('status')/text()">
+						<xforms:group ref="instance('control-instance')/status/text()">
 							<div class="bg-info alert">
 								<p><span class="glyphicon glyphicon-info-sign"/>
 									<strong>Status:</strong>

@@ -1,17 +1,5 @@
 /*
   ****************************************
-  GLOBAL
-  ****************************************
- */
-.pair_div {
-	width:75%;
-	display:table;
-	border:1px solid silver;
-	padding:5px;
-	margin:2px 0;
-}
-/*
-  ****************************************
   LAYOUT
   ****************************************
  */
@@ -21,13 +9,20 @@
 	text-align:center;
 	width:50%;
 }
-.alert {
+.alert, .submission {
 	width:50%;
 	margin:20px auto;
 	padding:5px;
 }
 .subsection {
 	margin-bottom:20px;
+}
+.pair_div {
+	width:75%;
+	display:table;
+	border:1px solid silver;
+	padding:5px;
+	margin:2px 0;
 }
 /*
   ****************************************
