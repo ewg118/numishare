@@ -1203,7 +1203,7 @@
 
 	<xsl:template name="sparql_search_options">
 		<xsl:variable name="fields">
-			<xsl:text>authority,collection,date,deity,denomination,issuer,manufacture,material,mint,portrait,region</xsl:text>
+			<xsl:text>authority,collection,date,denomination,issuer,manufacture,material,mint,region</xsl:text>
 		</xsl:variable>
 		<xsl:for-each select="tokenize($fields, ',')">
 			<xsl:variable name="name" select="."/>
