@@ -3,12 +3,6 @@
   LAYOUT
   ****************************************
  */
-.submission {
-	margin-left:auto;
-	margin-right:auto;
-	text-align:center;
-	width:50%;
-}
 .alert, .submission {
 	width:50%;
 	margin:20px auto;
