@@ -164,6 +164,38 @@ ORDER BY ASC(?collection)]]></xsl:variable>
 					ORDER BY asc(?label)
 					]]>
 				</xsl:when>
+				<xsl:when test="$field='nm:portrait'">
+					<![CDATA[
+					PREFIX rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+					PREFIX dcterms:  <http://purl.org/dc/terms/>
+					PREFIX nm:       <http://nomisma.org/id/>
+					PREFIX skos:      <http://www.w3.org/2004/02/skos/core#>						
+					SELECT DISTINCT ?val ?label WHERE {
+					?object dcterms:isPartOf <TYPE_SERIES>.
+					{?object nm:obverse ?obverse .
+					?obverse FIELD ?val}
+					UNION { ?object nm:reverse ?reverse .
+					?reverse FIELD ?val}
+					?val skos:prefLabel ?label
+					FILTER(langMatches(lang(?label), "LANG"))} 
+					ORDER BY asc(?label)
+					]]>
+				</xsl:when>
+				<xsl:when test="$field='nm:deity'">
+					<![CDATA[
+					PREFIX rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+					PREFIX dcterms:  <http://purl.org/dc/terms/>
+					PREFIX nm:       <http://nomisma.org/id/>
+					PREFIX skos:      <http://www.w3.org/2004/02/skos/core#>						
+					SELECT DISTINCT ?val ?label WHERE {
+					?object dcterms:isPartOf <TYPE_SERIES>.
+					{?object nm:obverse ?obverse .
+					?obverse FIELD ?val}
+					UNION { ?object nm:reverse ?reverse .
+					?reverse FIELD ?val}} 
+					ORDER BY asc(?val)
+					]]>
+				</xsl:when>
 				<xsl:otherwise>
 					<![CDATA[
 					PREFIX rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
