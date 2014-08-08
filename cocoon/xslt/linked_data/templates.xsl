@@ -310,13 +310,13 @@
 		<xsl:if test="nuds:objectType[@xlink:href]">
 			<nm:object_type rdf:resource="{nuds:objectType/@xlink:href}"/>
 		</xsl:if>
-
+		
 		<xsl:apply-templates select="nuds:material|nuds:denomination|nuds:manufacture" mode="nomisma"/>
-		<xsl:apply-templates select="descendant::nuds:geogname|descendant::nuds:persname|descendant::nuds:corpname" mode="nomisma"/>
+		<xsl:apply-templates select="descendant::nuds:geogname|nuds:authority/nuds:persname|nuds:authority/nuds:corpname" mode="nomisma"/>
 		<xsl:apply-templates select="nuds:date[@standardDate]|nuds:dateRange[child::node()/@standardDate]" mode="nomisma"/>
 		<xsl:apply-templates select="nuds:obverse|nuds:reverse" mode="nomisma"/>
 	</xsl:template>
-
+	
 	<xsl:template match="nuds:obverse|nuds:reverse" mode="nomisma">
 		<xsl:element name="nm:{local-name()}" namespace="http://nomisma.org/id/">
 			<rdf:Description>
@@ -336,6 +336,7 @@
 						<xsl:value-of select="."/>
 					</nm:description>
 				</xsl:for-each>
+				<xsl:apply-templates select="nuds:persname|nuds:corpname" mode="nomisma"/>
 			</rdf:Description>			
 		</xsl:element>
 	</xsl:template>
