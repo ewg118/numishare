@@ -18,7 +18,7 @@
 						<xforms:trigger appearance="minimal">
 							<xforms:delete ev:event="DOMActivate" nodeset="."/>
 							<xforms:label>
-								<img src="../../images/remove.gif"/>
+								<span class="glyphicon glyphicon-remove"/>
 							</xforms:label>
 						</xforms:trigger>
 
@@ -26,7 +26,7 @@
 							<xforms:group ref=".[count(nuds:salePrice) = 0]">
 								<xforms:trigger appearance="minimal">
 									<xforms:label>
-										<img src="../../images/add.gif"/>Price</xforms:label>
+										<span class="glyphicon glyphicon-plus"/>Price</xforms:label>
 									<xforms:action ev:event="DOMActivate">
 										<xforms:insert context="." origin="instance('salePrice-template')" nodeset="$binding/child::node()[last()]"/>
 									</xforms:action>
@@ -54,7 +54,7 @@
 								<xforms:trigger appearance="minimal">
 									<xforms:delete ev:event="DOMActivate" nodeset="."/>
 									<xforms:label>
-										<img src="../../images/remove.gif"/>
+										<span class="glyphicon glyphicon-remove"/>
 									</xforms:label>
 								</xforms:trigger>
 							</div>

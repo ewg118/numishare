@@ -19,7 +19,7 @@
 						<h2>Electronic Record Metadata: control</h2>
 						<xforms:trigger appearance="minimal">
 							<xforms:label>
-								<img src="{$display_path}images/add.gif"/>Other Record ID</xforms:label>
+								<span class="glyphicon glyphicon-plus"/>Other Record ID</xforms:label>
 							<xforms:action ev:event="DOMActivate">
 								<xforms:insert context="." nodeset="nuds:recordId" position="after" origin="instance('otherRecordId-template')"/>
 							</xforms:action>
@@ -48,7 +48,7 @@
 								<xforms:trigger appearance="minimal">
 									<xforms:delete ev:event="DOMActivate" nodeset="."/>
 									<xforms:label>
-										<img src="{$display_path}images/remove.gif"/>
+										<span class="glyphicon glyphicon-remove"/>
 									</xforms:label>
 								</xforms:trigger>
 							</div>
@@ -60,7 +60,7 @@
 									<xforms:group ref=".[count(nuds:agencyCode) = 0]">
 										<xforms:trigger appearance="minimal">
 											<xforms:label>
-												<img src="{$display_path}images/add.gif"/>Agency Code</xforms:label>
+												<span class="glyphicon glyphicon-plus"/>Agency Code</xforms:label>
 											<xforms:action ev:event="DOMActivate">
 												<xforms:insert context="." origin="instance('agencyCode-template')"/>
 											</xforms:action>
@@ -68,7 +68,7 @@
 									</xforms:group>
 									<xforms:trigger appearance="minimal">
 										<xforms:label>
-											<img src="{$display_path}images/add.gif"/> Other Agency Code</xforms:label>
+											<span class="glyphicon glyphicon-plus"/> Other Agency Code</xforms:label>
 										<xforms:action ev:event="DOMActivate">
 											<xforms:insert context="." nodeset="./child::node()[last()]" origin="instance('otherAgencyCode-template')"/>
 										</xforms:action>
@@ -88,7 +88,7 @@
 										<xforms:trigger appearance="minimal">
 											<xforms:delete ev:event="DOMActivate" nodeset="."/>
 											<xforms:label>
-												<img src="{$display_path}images/remove.gif"/>
+												<span class="glyphicon glyphicon-remove"/>
 											</xforms:label>
 										</xforms:trigger>
 									</div>
@@ -101,7 +101,7 @@
 										<xforms:trigger appearance="minimal">
 											<xforms:delete ev:event="DOMActivate" nodeset="."/>
 											<xforms:label>
-												<img src="{$display_path}images/remove.gif"/>
+												<span class="glyphicon glyphicon-remove"/>
 											</xforms:label>
 										</xforms:trigger>
 									</div>
@@ -114,7 +114,7 @@
 								<div class="trigger_container">
 									<xforms:trigger appearance="minimal">
 										<xforms:label>
-											<img src="{$display_path}images/add.gif"/>Maintenance Event</xforms:label>
+											<span class="glyphicon glyphicon-plus"/>Maintenance Event</xforms:label>
 										<xforms:action ev:event="DOMActivate">
 											<xforms:insert context="." origin="instance('maintenanceEvent-template')" nodeset="./child::node()[last()]"/>
 										</xforms:action>
@@ -127,7 +127,7 @@
 											<xforms:group ref=".[count(nuds:eventDescription) = 0]">
 												<xforms:trigger appearance="minimal">
 													<xforms:label>
-														<img src="{$display_path}images/add.gif"/>Event Description</xforms:label>
+														<span class="glyphicon glyphicon-plus"/>Event Description</xforms:label>
 													<xforms:insert ev:event="DOMActivate" context="." origin="instance('eventDescription-template')"
 														nodeset="./child::node()[last()]"/>
 												</xforms:trigger>
@@ -180,7 +180,7 @@
 												<xforms:trigger appearance="minimal">
 													<xforms:delete ev:event="DOMActivate" nodeset="."/>
 													<xforms:label>
-														<img src="{$display_path}images/remove.gif"/>
+														<span class="glyphicon glyphicon-remove"/>
 													</xforms:label>
 												</xforms:trigger>
 											</div>

@@ -82,7 +82,7 @@
 							</xforms:action>
 
 							<xforms:label>
-								<img src="../../images/remove.gif"/>
+								<span class="glyphicon glyphicon-remove"/>
 							</xforms:label>
 						</xforms:trigger>
 						<div>

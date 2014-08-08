@@ -47,7 +47,7 @@
 								<xforms:trigger appearance="minimal">
 									<xforms:delete ev:event="DOMActivate" nodeset="."/>
 									<xforms:label>
-										<img src="{$display_path}images/remove.gif"/>
+										<span class="glyphicon glyphicon-remove"/>
 									</xforms:label>
 								</xforms:trigger>
 							</div>
@@ -60,14 +60,14 @@
 								<xforms:trigger appearance="minimal">
 									<xforms:insert  ev:event="DOMActivate"  context="." origin="xxforms:attribute('standardDate', '')" if="not(@standardDate)"/>
 									<xforms:label>
-										<img src="{$display_path}images/add.gif"/>Standard Date
+										<span class="glyphicon glyphicon-plus"/>Standard Date
 									</xforms:label>
 								</xforms:trigger>
 								
 								<xforms:trigger appearance="minimal">
 									<xforms:delete ev:event="DOMActivate" nodeset="."/>
 									<xforms:label>
-										<img src="{$display_path}images/remove.gif"/>
+										<span class="glyphicon glyphicon-remove"/>
 									</xforms:label>
 								</xforms:trigger>
 							</div>

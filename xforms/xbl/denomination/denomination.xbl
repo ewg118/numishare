@@ -46,14 +46,14 @@
 									<xforms:delete nodeset="$binding"/>
 								</xforms:action>
 								<xforms:label>
-									<img src="../../images/remove.gif"/>
+									<span class="glyphicon glyphicon-remove"/>
 								</xforms:label>
 							</xforms:trigger>
 							<xforms:group ref="$binding[not($binding/@certainty)]">
 								<xforms:trigger appearance="minimal">
 									<xforms:insert if="not($binding/@certainty)" context="$binding" origin="xxforms:attribute('certainty', '')" ev:event="DOMActivate"/>
 									<xforms:label>
-										<img src="../../images/add.gif"/>Certainty</xforms:label>
+										<span class="glyphicon glyphicon-plus"/>Certainty</xforms:label>
 								</xforms:trigger>
 							</xforms:group>
 						</div>
@@ -73,13 +73,13 @@
 									<xforms:delete context="instance('feed')/*"/>
 									<xforms:delete nodeset="$binding"/>
 								</xforms:action>
-								<xforms:label><img src="../../images/remove.gif"/></xforms:label>
+								<xforms:label><span class="glyphicon glyphicon-remove"/></xforms:label>
 							</xforms:trigger>
 							<xforms:group ref="$binding[not($binding/@certainty)]">
 								<xforms:trigger appearance="minimal">
 									<xforms:insert if="not($binding/@certainty)" context="$binding" origin="xxforms:attribute('certainty', '')" ev:event="DOMActivate"/>
 									<xforms:label>
-										<img src="../../images/add.gif"/>Certainty </xforms:label>
+										<span class="glyphicon glyphicon-plus"/>Certainty </xforms:label>
 								</xforms:trigger>
 							</xforms:group>
 							<div>
@@ -200,7 +200,7 @@
 							<xforms:trigger appearance="minimal">
 								<xforms:delete ev:event="DOMActivate" nodeset="."/>
 								<xforms:label>
-									<img src="../../images/remove.gif"/>
+									<span class="glyphicon glyphicon-remove"/>
 								</xforms:label>
 							</xforms:trigger>
 						</div>

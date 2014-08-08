@@ -3,69 +3,6 @@
   GLOBAL
   ****************************************
  */
-.content {
-	padding:5px;
-}
-.center {
-	text-align:center;
-}
-table {
-	margin-left:auto;
-	margin-right:auto;
-	width:90%;
-}
-td {
-	border:1px solid silver;
-	padding:2px;
-}
-th {
-	border: 1px solid silver;
-	background-color:#DDDDDD;
-	padding:2px;
-	font-weight:bold;
-}
-dt {
-	width:125px;
-	float:left;
-}
-.result_metadata {
-	border:0;
-	float:left;
-}
-#form h1, #form h2, #form h3, #form h4, #form h5, #form h6 {
-	display:inline;
-}
-.section {
-	margin-bottom:25px;
-	width:100%;
-	display:table;
-}
-.section>h2 {
-	display:inline;
-}
-.subsection {
-	padding:10px 0 10px 25px;
-	width:95%;
-}
-.success {
-	width:50%;
-	padding:10px;
-	border:1px solid #3c803c;
-	margin:0 auto;
-	background-color:#47e547;
-	color:#3c803c;
-}
-.warning {
-	padding:5px;
-	color:#ef8700;
-	font-weight:bold;
-}
-.error {
-	padding:25px;
-	margin:10px;
-	background-color:red;
-	border:2px solid #8d0000;
-}
 .pair_div {
 	width:75%;
 	display:table;
@@ -73,8 +10,24 @@ dt {
 	padding:5px;
 	margin:2px 0;
 }
-.ui-menubar-item {
-	list-style-type:none;
+/*
+  ****************************************
+  LAYOUT
+  ****************************************
+ */
+.submission {
+	margin-left:auto;
+	margin-right:auto;
+	text-align:center;
+	width:50%;
+}
+.alert {
+	width:50%;
+	margin:20px auto;
+	padding:5px;
+}
+.subsection {
+	margin-bottom:20px;
 }
 /*
   ****************************************
@@ -126,11 +79,8 @@ dt {
 .xbl-component {
 	margin:5px 0;
 }
-.ui-state-error, .ui-state-highlight {
-	padding: 0pt 0.7em;
-	margin:20px auto;
-	width:400px;
-	font-size:12px;
+h1, h2, h3, h4, h5, h6 {
+	display:inline;
 }
 /*
   ****************************************
@@ -153,40 +103,6 @@ dt {
 .pagingBtn:hover {
 	background-color:#DDDDDD;
 	text-decoration:underline;
-}
-/*
-  * jQuery UI Menubar @VERSION
-  *
-  * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)
-  * Dual licensed under the MIT or GPL Version 2 licenses.
-  * http://jquery.org/license
- */
-.ui-menubar {
-	list-style: none;
-	margin: 0;
-	padding-left: 0;
-	border-left:0px;
-	border-right:0px;
-}
-.ui-menubar-item {
-	float: left;
-}
-.ui-menubar .ui-button {
-	float: left;
-	font-weight: normal;
-	border-top-width: 0 !important;
-	border-bottom-width: 0 !important;
-	margin: 0;
-	outline: none;
-}
-.ui-menubar .ui-menubar-link {
-	border-right: 1px dashed transparent;
-	border-left: 1px dashed transparent;
-}
-.ui-menubar .ui-menu {
-	width: 200px;
-	position: absolute;
-	z-index: 9999;
 }
 /*
   ****************************************
