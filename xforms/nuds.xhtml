@@ -63,6 +63,7 @@
 					</xs:union>
 				</xs:simpleType>
 			</xs:schema>
+			
 			<xforms:instance id="coin" xxforms:exclude-result-prefixes="#all">
 				<nuds recordType="physical" xmlns="http://nomisma.org/nuds" xmlns:mets="http://www.loc.gov/METS/" xmlns:xlink="http://www.w3.org/1999/xlink">
 					<control>
@@ -94,6 +95,11 @@
 					</descMeta>
 				</nuds>
 			</xforms:instance>
+			
+			<xforms:instance id="parent-type" xxforms:exclude-result-prefixes="#all">
+				<nuds xmlns="http://nomisma.org/nuds" xmlns:mets="http://www.loc.gov/METS/" xmlns:xlink="http://www.w3.org/1999/xlink"/>
+			</xforms:instance>
+			
 			<!-- exist URL is stored in an XML file -->
 			<xforms:instance id="exist-config">
 				<xi:include href="../exist-config.xml"></xi:include>
@@ -105,10 +111,11 @@
 			<xforms:instance id="control-instance">
 				<controls xmlns="">
 					<id></id>
+					<solr-id/>
 					<collection-name></collection-name>
 					<typeDesc_correct></typeDesc_correct>
 					<publicationStatus></publicationStatus>
-					<status></status>
+					<status></status>					
 				</controls>
 			</xforms:instance>
 			<!-- collections/authentication instances -->
@@ -572,12 +579,20 @@
 						value="instance('control-instance')/request-security/remote-user"></xforms:setvalue>
 				</xforms:action>
 			</xforms:submission>
+			
+			<xforms:submission id="load-parent-type" serialization="none" method="get"
+				action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/objects/{instance('control-instance')/solr-id}.xml"
+				xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}" replace="instance" instance="parent-type">
+				<xforms:message ev:event="xforms-submit-error" level="modal">Error loading parent type.</xforms:message>
+				<xforms:send submission="to-solr" ev:event="xforms-submit-done" if="instance('parent-type')/nuds:control/nuds:publicationStatus='approved'"/>
+			</xforms:submission>
 			<!-- Save File -->
 			<xforms:submission id="save-coin" ref="instance('coin')" xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}"
 				action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/objects/{instance('coin')/nuds:control/nuds:recordId}.xml" method="put" replace="none">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Save Error. Are all required inputs filled?</xforms:message>
 				<xforms:action ev:event="xforms-submit-done">
 					<xforms:setvalue ref="instance('control-instance')/id" value="instance('coin')/nuds:control/nuds:recordId"></xforms:setvalue>
+					<xforms:setvalue ref="instance('control-instance')/solr-id" value="instance('coin')/nuds:control/nuds:recordId"></xforms:setvalue>
 					<xforms:setvalue ref="instance('control-instance')/status">Coin saved.</xforms:setvalue>
 					<!-- publish coin if the publicationStatus is approved -->
 					<xforms:send submission="to-solr" if="instance('coin')/nuds:control/nuds:publicationStatus = 'approved'"></xforms:send>
@@ -587,11 +602,17 @@
 						<xforms:send submission="delete-solr-doc"></xforms:send>
 						<xforms:setvalue ref="instance('control-instance')/publicationStatus">inProcess</xforms:setvalue>
 					</xforms:action>
+					<!-- if the object is an approvedSubtype then load the parent and post to Solr, if it is approved -->
+					<xforms:action if="instance('coin')/nuds:control/nuds:publicationStatus='approvedSubtype'">
+						<xforms:setvalue ref="instance('control-instance')/solr-id" value="instance('coin')/nuds:control/nuds:otherRecordId[@semantic='skos:broader']"/>
+						<!-- load object into temp instance -->
+						<xforms:send submission="load-parent-type"/>						
+					</xforms:action>
 				</xforms:action>
 			</xforms:submission>
 			<!-- access service to read in pre-transformed solr doc -->
 			<xforms:submission id="to-solr" method="get" replace="instance" instance="addIndex" serialization="none"
-				resource="{instance('config')/url}id/{instance('coin')/nuds:control/nuds:recordId}.solr">
+				resource="{instance('config')/url}id/{instance('control-instance')/solr-id}.solr">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Error transforming NUDS document to Solr document.</xforms:message>
 				<xforms:action ev:event="xforms-submit-done">
 					<xforms:send submission="publish-submission"></xforms:send>
@@ -600,8 +621,7 @@
 			<!-- post instance to Solr -->
 			<xforms:submission id="publish-submission" action="{instance('config')/solr_published}update" ref="instance('addIndex')" instance="addIndex" replace="instance" method="post">
 				<xforms:action ev:event="xforms-submit-done">
-					<xforms:send submission="submit-commit"></xforms:send>
-					<xforms:setvalue ref="instance('control-instance')/status">Object saved and updated to search index.</xforms:setvalue>
+					<xforms:send submission="submit-commit"></xforms:send>					
 				</xforms:action>
 				<xforms:message ev:event="xforms-submit-error" level="modal">Data Failed to POST to Solr. Index may be offline or URL is incorrect.</xforms:message>
 			</xforms:submission>
@@ -615,6 +635,7 @@
 			<!-- send commit -->
 			<xforms:submission id="submit-commit" action="{instance('config')/solr_published}update" ref="instance('sendCommit')" instance="sendCommit" replace="none" method="post">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Commit Failed to POST to Solr.</xforms:message>
+				<xforms:setvalue ev:event="xforms-submit-done" ref="instance('control-instance')/status" value="concat(instance('control-instance')/solr-id, ' updated to search index.')"></xforms:setvalue>
 			</xforms:submission>
 			<!-- load site info -->
 			<xforms:submission id="load-config" serialization="none" method="get" action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/config.xml"
