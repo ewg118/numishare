@@ -1,8 +1,8 @@
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events"
-	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xxforms="http://orbeon.org/oxf/xml/xforms" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:numishare="https://github.com/ewg118/numishare" xmlns:mets="http://www.loc.gov/METS/" xmlns:nuds="http://nomisma.org/nuds"
-	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:xbl="http://www.w3.org/ns/xbl"
-	xmlns:xxbl="http://orbeon.org/oxf/xml/xbl" xmlns:oxf="http://www.orbeon.com/oxf/processors" xmlns:saxon="http://saxon.sf.net/" xmlns:exf="http://www.exforms.org/exf/1-0"
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:xxforms="http://orbeon.org/oxf/xml/xforms" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:fr="http://orbeon.org/oxf/xml/form-runner"
+	xmlns:numishare="https://github.com/ewg118/numishare" xmlns:mets="http://www.loc.gov/METS/" xmlns:nuds="http://nomisma.org/nuds" xmlns:xlink="http://www.w3.org/1999/xlink"
+	xmlns:gml="http://www.opengis.net/gml" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:xbl="http://www.w3.org/ns/xbl" xmlns:xxbl="http://orbeon.org/oxf/xml/xbl"
+	xmlns:exist="http://exist.sourceforge.net/NS/exist" xmlns:oxf="http://www.orbeon.com/oxf/processors" xmlns:saxon="http://saxon.sf.net/" xmlns:exf="http://www.exforms.org/exf/1-0"
 	xmlns:xxi="http://orbeon.org/oxf/xml/xinclude">
 	<head>
 		<title>Numishare: Edit Coin</title>
@@ -14,7 +14,6 @@
 		<link rel="shortcut icon" href="/ops/images/orbeon-icon-16.ico" />
 		<link rel="icon" href="/ops/images/orbeon-icon-16.png" type="image/png" />
 		<link rel="stylesheet" href="../../../xforms/css/xforms.css" />
-
 		<!-- numishare styling -->
 		<link rel="stylesheet" href="/apps/numishare/css/xforms.css" />
 		<xforms:model xmlns="http://nomisma.org/nuds">
@@ -64,7 +63,6 @@
 					</xs:union>
 				</xs:simpleType>
 			</xs:schema>
-
 			<xforms:instance id="coin" xxforms:exclude-result-prefixes="#all">
 				<nuds recordType="physical" xmlns="http://nomisma.org/nuds" xmlns:mets="http://www.loc.gov/METS/" xmlns:xlink="http://www.w3.org/1999/xlink">
 					<control>
@@ -96,18 +94,14 @@
 					</descMeta>
 				</nuds>
 			</xforms:instance>
-
 			<!-- exist URL is stored in an XML file -->
 			<xforms:instance id="exist-config">
 				<xi:include href="../exist-config.xml"></xi:include>
 			</xforms:instance>
-
 			<!-- load URLs from config.xml in eXist into form for Solr and CSS file -->
 			<xforms:instance id="config">
 				<config xmlns=""></config>
 			</xforms:instance>
-
-
 			<xforms:instance id="control-instance">
 				<controls xmlns="">
 					<id></id>
@@ -117,40 +111,50 @@
 					<status></status>
 				</controls>
 			</xforms:instance>
-
 			<!-- collections/authentication instances -->
 			<xforms:instance id="collections-list">
-				<collections xmlns="">
-					<collection roll="admin" name="numishare"></collection>
-				</collections>
+				<collections xmlns=""></collections>
 			</xforms:instance>
-
+			<!-- list of localTypes -->
+			<xforms:instance id="localTypes">
+				<localTypes xmlns=""></localTypes>
+			</xforms:instance>
+			<!-- XQuery -->
+			<xforms:instance id="eXist-xquery">
+				<exist:query xmlns="">
+					<exist:text></exist:text>
+				</exist:query>
+			</xforms:instance>
+			<xforms:instance id="xqueries">
+				<xqueries xmlns="">
+					<query id="localTypes">declare namespace nuds="http://nomisma.org/nuds"; declare namespace nh="http://nomisma.org/nudsHoard"; &lt;report> { for $term in
+						distinct-values(collection()//descendant::nuds:subject/@localType) order by $term return &lt;term> { data($term) } &lt;/term> } &lt;/report></query>
+				</xqueries>
+			</xforms:instance>
+			<xforms:instance id="xquery-result">
+				<exist:result></exist:result>
+			</xforms:instance>
 			<!-- nuds instances -->
 			<xforms:instance id="typedesc-type">
 				<type xmlns="">manual</type>
 			</xforms:instance>
-
 			<xforms:instance id="typeDesc-resource">
 				<nuds xmlns=""></nuds>
 			</xforms:instance>
-
 			<!-- send to Solr -->
 			<xforms:instance id="addIndex">
 				<add xmlns=""></add>
 			</xforms:instance>
-
 			<!-- delete from Solr -->
 			<xforms:instance id="deleteId">
 				<delete xmlns="">
 					<query></query>
 				</delete>
 			</xforms:instance>
-
 			<!-- Instance for Solr commit-->
 			<xforms:instance id="sendCommit">
 				<commit></commit>
 			</xforms:instance>
-
 			<!-- delete config for XPL, used for removing associated image files -->
 			<xforms:instance id="delete-config">
 				<config xmlns="">
@@ -160,11 +164,9 @@
 					</delete>
 				</config>
 			</xforms:instance>
-
 			<xforms:instance id="dump">
 				<dump xmlns=""></dump>
 			</xforms:instance>
-
 			<!-- control templates -->
 			<xforms:instance id="maintenanceEvent-template" xxforms:exclude-result-prefixes="#all">
 				<maintenanceEvent>
@@ -174,7 +176,6 @@
 					<agent></agent>
 				</maintenanceEvent>
 			</xforms:instance>
-
 			<!-- commonly repeatable elements -->
 			<xforms:instance id="date-template" xxforms:exclude-result-prefixes="#all">
 				<date standardDate=""></date>
@@ -185,6 +186,9 @@
 			<xforms:instance id="identifier-template" xxforms:exclude-result-prefixes="#all">
 				<identifier></identifier>
 			</xforms:instance>
+			<xforms:instance id="noteSet-template" xxforms:exclude-result-prefixes="#all">
+				<noteSet></noteSet>
+			</xforms:instance>
 			<xforms:instance id="note-template" xxforms:exclude-result-prefixes="#all">
 				<note></note>
 			</xforms:instance>
@@ -194,7 +198,6 @@
 			<xforms:instance id="reverse-template" xxforms:exclude-result-prefixes="#all">
 				<reverse></reverse>
 			</xforms:instance>
-
 			<!-- descMeta templates -->
 			<xforms:instance id="abstract-template" xxforms:exclude-result-prefixes="#all">
 				<abstract title="" author=""></abstract>
@@ -202,7 +205,6 @@
 			<xforms:instance id="department-template" xxforms:exclude-result-prefixes="#all">
 				<department></department>
 			</xforms:instance>
-
 			<!-- physDesc templates -->
 			<xforms:instance id="physDesc-template" xxforms:exclude-result-prefixes="#all">
 				<physDesc></physDesc>
@@ -257,18 +259,14 @@
 			<xforms:instance id="width-template" xxforms:exclude-result-prefixes="#all">
 				<width></width>
 			</xforms:instance>
-
 			<!-- objecttype -->
 			<xforms:instance id="objectType-template" xxforms:exclude-result-prefixes="#all">
 				<objectType></objectType>
 			</xforms:instance>
-
 			<!-- undertypeDesc -->
 			<xforms:instance id="undertypeDesc-template" xxforms:exclude-result-prefixes="#all">
 				<undertypeDesc></undertypeDesc>
 			</xforms:instance>
-
-
 			<!-- adminDesc -->
 			<xforms:instance id="adminDesc-template" xxforms:exclude-result-prefixes="#all">
 				<adminDesc></adminDesc>
@@ -323,7 +321,6 @@
 			<xforms:instance id="repository-template" xxforms:exclude-result-prefixes="#all">
 				<repository></repository>
 			</xforms:instance>
-
 			<!-- references -->
 			<xforms:instance id="refDesc-template" xxforms:exclude-result-prefixes="#all">
 				<refDesc></refDesc>
@@ -333,7 +330,12 @@
 					<title></title>
 				</reference>
 			</xforms:instance>
-
+			<xforms:instance id="subjectSet-template" xxforms:exclude-result-prefixes="#all">
+				<subjectSet></subjectSet>
+			</xforms:instance>
+			<xforms:instance id="subject-template" xxforms:exclude-result-prefixes="#all">
+				<subject xlink:type="simple"></subject>
+			</xforms:instance>
 			<!-- findspotDesc -->
 			<xforms:instance id="findspotDesc-template" xxforms:exclude-result-prefixes="#all">
 				<findspotDesc>
@@ -342,12 +344,10 @@
 					</findspot>
 				</findspotDesc>
 			</xforms:instance>
-
 			<!-- digital representations -->
 			<xforms:instance id="digRep-template" xxforms:exclude-result-prefixes="#all">
 				<digRep></digRep>
 			</xforms:instance>
-
 			<!-- mets -->
 			<xforms:instance id="fileSec-template" xxforms:exclude-result-prefixes="#all">
 				<mets:fileSec xmlns=""></mets:fileSec>
@@ -378,16 +378,12 @@
 					</mets:file>
 				</mets:fileGrp>
 			</xforms:instance>
-
 			<xforms:instance id="color-template" xxforms:exclude-result-prefixes="#all">
 				<physfacet type="color"></physfacet>
 			</xforms:instance>
-
-
 			<xforms:instance id="dob-template" xxforms:exclude-result-prefixes="#all">
 				<physfacet type="dob"></physfacet>
 			</xforms:instance>
-
 			<xforms:instance id="script-template" xxforms:exclude-result-prefixes="#all">
 				<materialspec type="script"></materialspec>
 			</xforms:instance>
@@ -397,30 +393,28 @@
 			<xforms:instance id="signature-template" xxforms:exclude-result-prefixes="#all">
 				<physfacet type="signature"></physfacet>
 			</xforms:instance>
-
-			<xforms:instance id="subject-template" xxforms:exclude-result-prefixes="#all">
-				<subject></subject>
-			</xforms:instance>
-
 			<xforms:instance id="watermark-template" xxforms:exclude-result-prefixes="#all">
 				<physfacet type="watermark"></physfacet>
 			</xforms:instance>
-
-
 			<!-- ********** XFORMS-MODEL-CONSTRUCT-DONE ********** -->
 			<xforms:action ev:event="xforms-model-construct-done">
 				<xforms:insert context="instance('control-instance')" nodeset="collection-name" position="after"
 					origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/get-authentication.xpl', 'dump', instance('dump'), 'data')"></xforms:insert>
 				<xforms:send submission="load-collections"></xforms:send>
-				<xforms:setvalue ref="instance('coin')/nuds:control/nuds:maintenanceHistory/nuds:maintenanceEvent[last()]/nuds:agent" value="instance('control-instance')/request-security/remote-user"
-				></xforms:setvalue>
+				<xforms:setvalue ref="instance('coin')/nuds:control/nuds:maintenanceHistory/nuds:maintenanceEvent[last()]/nuds:agent" value="instance('control-instance')/request-security/remote-user"></xforms:setvalue>
+				<!-- get subject localTypes -->
+				<xforms:setvalue ref="instance('eXist-xquery')/exist:text" value="instance('xqueries')/query[@id='localTypes']"></xforms:setvalue>
+				<xforms:send submission="xquery-collection"></xforms:send>
+				<!-- populate localTypes instance -->
+				<xforms:action ev:event="xforms-submit-done" xxforms:iterate="instance('xquery-result')//term">
+					<xforms:var name="label" select="context()"></xforms:var>
+					<xforms:insert context="instance('localTypes')" nodeset="./child::node()[last()]" origin="xforms:element('localType', $label)"></xforms:insert>
+				</xforms:action>
 			</xforms:action>
-
 			<!-- ********** XFORMS-READY ********** -->
 			<xforms:action ev:event="xforms-ready" if="instance('coin')/nuds:descMeta/nuds:typeDesc/@xlink:href">
 				<xforms:toggle case="resource-type"></xforms:toggle>
 			</xforms:action>
-
 			<!-- ********** BINDING ********** -->
 			<xforms:bind nodeset="instance('coin')">
 				<!-- recordType -->
@@ -428,7 +422,7 @@
 					<xforms:bind constraint="string-length(.) &gt; 0"></xforms:bind>
 				</xforms:bind>
 				<xforms:bind nodeset="nuds:control">
-					<xforms:bind nodeset="nuds:recordId" required="true()" type="xs:anyURI"></xforms:bind>
+					<xforms:bind nodeset="nuds:recordId" required="true()" type="xs:anyURI" readonly="string(instance('control-instance')/id)"></xforms:bind>
 					<xforms:bind nodeset="nuds:otherRecordId" required="true()" type="xs:anyURI"></xforms:bind>
 					<xforms:bind nodeset="nuds:publicationStatus" readonly="../nuds:maintenanceStatus != 'new' and ../nuds:maintenanceStatus != 'revised' and ../nuds:maintenanceStatus != 'derived'"></xforms:bind>
 					<xforms:bind nodeset="nuds:maintenanceAgency/nuds:agencyName" constraint="string-length(.) &gt; 0"></xforms:bind>
@@ -449,6 +443,12 @@
 				</xforms:bind>
 				<xforms:bind nodeset="nuds:descMeta">
 					<xforms:bind nodeset="nuds:title" required="true()"></xforms:bind>
+					<xforms:bind nodeset="nuds:subjectSet">
+						<xforms:bind nodeset="nuds:subject" required="true()">
+							<xforms:bind nodeset="@xlink:href" constraint="string-length(.) &gt; 0" type="xs:anyURI"></xforms:bind>
+							<xforms:bind nodeset="@localType" constraint="string-length(.) &gt; 0"></xforms:bind>
+						</xforms:bind>
+					</xforms:bind>
 					<xforms:bind nodeset="nuds:physDesc">
 						<xforms:bind nodeset="nuds:measurementsSet">
 							<xforms:bind nodeset="nuds:diameter" type="xs:decimal" required="true()"></xforms:bind>
@@ -542,7 +542,6 @@
 					<!--<xforms:bind nodeset="nuds:identifier" required="true()"/>-->
 				</xforms:bind>
 			</xforms:bind>
-
 			<!-- bind physDesc tab existence of elements -->
 			<xforms:bind id="control-tab" nodeset="instance('coin')/nuds:control"></xforms:bind>
 			<xforms:bind id="admindesc-tab" nodeset="instance('coin')/nuds:descMeta/nuds:adminDesc"></xforms:bind>
@@ -551,16 +550,13 @@
 			<xforms:bind id="undertypedesc-tab" nodeset="instance('coin')/nuds:descMeta/nuds:undertypeDesc"></xforms:bind>
 			<xforms:bind id="findspotdesc-tab" nodeset="instance('coin')/nuds:descMeta/nuds:findspotDesc"></xforms:bind>
 			<xforms:bind id="digrep-tab" nodeset="instance('coin')/nuds:digRep"></xforms:bind>
-
 			<xforms:bind nodeset="instance('control-instance')">
 				<xforms:bind nodeset="add-upload-trigger" readonly="false()"></xforms:bind>
 				<xforms:bind nodeset="remove-upload-trigger" readonly="count(instance('files-instance')/file) le 1"></xforms:bind>
 			</xforms:bind>
-
 			<xforms:instance id="temp">
 				<temp xmlns=""></temp>
 			</xforms:instance>
-
 			<!-- Load File -->
 			<xforms:submission id="load-coin" serialization="none" method="get"
 				action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/objects/{instance('control-instance')/id}.xml"
@@ -576,16 +572,13 @@
 						value="instance('control-instance')/request-security/remote-user"></xforms:setvalue>
 				</xforms:action>
 			</xforms:submission>
-
 			<!-- Save File -->
 			<xforms:submission id="save-coin" ref="instance('coin')" xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}"
 				action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/objects/{instance('coin')/nuds:control/nuds:recordId}.xml" method="put" replace="none">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Save Error. Are all required inputs filled?</xforms:message>
-
 				<xforms:action ev:event="xforms-submit-done">
 					<xforms:setvalue ref="instance('control-instance')/id" value="instance('coin')/nuds:control/nuds:recordId"></xforms:setvalue>
 					<xforms:setvalue ref="instance('control-instance')/status">Coin saved.</xforms:setvalue>
-
 					<!-- publish coin if the publicationStatus is approved -->
 					<xforms:send submission="to-solr" if="instance('coin')/nuds:control/nuds:publicationStatus = 'approved'"></xforms:send>
 					<!-- remove coin from Solr if the publicationStatus is inProcess on save but was approved on load.-->
@@ -596,7 +589,6 @@
 					</xforms:action>
 				</xforms:action>
 			</xforms:submission>
-
 			<!-- access service to read in pre-transformed solr doc -->
 			<xforms:submission id="to-solr" method="get" replace="instance" instance="addIndex" serialization="none"
 				resource="{instance('config')/url}id/{instance('coin')/nuds:control/nuds:recordId}.solr">
@@ -624,16 +616,13 @@
 			<xforms:submission id="submit-commit" action="{instance('config')/solr_published}update" ref="instance('sendCommit')" instance="sendCommit" replace="none" method="post">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Commit Failed to POST to Solr.</xforms:message>
 			</xforms:submission>
-
 			<!-- load site info -->
 			<xforms:submission id="load-config" serialization="none" method="get" action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/config.xml"
 				xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}" replace="instance" instance="config">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Unable to load Numishare configuration</xforms:message>
 				<xforms:action ev:event="xforms-submit-done">
-
 					<!-- load object or create new one -->
 					<xforms:setvalue ref="instance('control-instance')/id" value="xxforms:get-request-parameter('id')"></xforms:setvalue>
-
 					<!-- if the id is successfully passed from a url parameter, load the document -->
 					<xforms:action if="string(instance('control-instance')/id)">
 						<xforms:send submission="load-coin"></xforms:send>
@@ -642,13 +631,11 @@
 							<xforms:send submission="get-typeDesc"></xforms:send>
 							<xforms:setvalue ref="instance('typedesc-type')" value="'resource'"></xforms:setvalue>
 						</xforms:action>
-
 						<!-- populate the findspot-temp instance with current values -->
 						<xforms:setvalue ref="instance('findspot-temp')/resource" value="instance('coin')//nuds:findspot/@xlink:href"></xforms:setvalue>
 						<xforms:setvalue ref="instance('findspot-temp')/name" value="instance('coin')//nuds:findspot/nuds:name"></xforms:setvalue>
 						<xforms:setvalue ref="instance('findspot-temp')/coordinates" value="instance('coin')//nuds:findspot/gml:Point/gml:coordinates"></xforms:setvalue>
 					</xforms:action>
-
 					<!-- generate unique id and populate adminDesc and control fields with required information -->
 					<xforms:action if="not(string(instance('control-instance')/id))">
 						<xforms:setvalue ref="instance('coin')/nuds:control/nuds:recordId" value="substring(string(digest( string( random( true ) ), 'MD5', 'hex' )), 1, 10)"></xforms:setvalue>
@@ -672,7 +659,6 @@
 					</xforms:action>
 				</xforms:action>
 			</xforms:submission>
-
 			<xforms:submission id="load-collections" serialization="none" method="get" action="{instance('exist-config')/url}collections-list.xml" replace="instance" instance="collections-list"
 				xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}">
 				<!-- if the config loads successfully, set the collection names based on authentication -->
@@ -693,14 +679,17 @@
 				<!-- if the config has not been created (given that the URL in ../exist-config.xml is correct), create it -->
 				<xforms:message ev:event="xforms-submit-error" level="modal">Unable to load Numishare collections list.</xforms:message>
 			</xforms:submission>
-
 			<!-- load typeDesc resource -->
 			<xforms:submission id="get-typeDesc" serialization="none" method="get" action="{instance('coin')/nuds:descMeta/nuds:typeDesc/@xlink:href}.xml" replace="instance"
 				instance="typeDesc-resource">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Unable to load typeDesc at specified URI.</xforms:message>
 			</xforms:submission>
+			<!-- xquery -->
+			<xforms:submission id="xquery-collection" ref="instance('eXist-xquery')" action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/objects" method="post"
+				replace="instance" instance="xquery-result" xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}">
+				<xforms:setvalue ref="instance('control-instance')/error" ev:event="xforms-submit-error">Error querying eXist database.</xforms:setvalue>
+			</xforms:submission>
 		</xforms:model>
-
 		<!-- XBL components -->
 		<xi:include href="xbl/cp-name/cp-name.xbl" xi:omit-xml-base="true"></xi:include>
 		<xi:include href="xbl/conservationState/conservationState.xbl" xi:omit-xml-base="true"></xi:include>
@@ -720,7 +709,6 @@
 		<xi:include href="xbl/sale/sale.xbl" xi:omit-xml-base="true"></xi:include>
 		<xi:include href="xbl/type-undertype/type-undertype.xbl" xi:omit-xml-base="true"></xi:include>
 	</head>
-
 	<body>
 		<xforms:var name="display_path">../../</xforms:var>
 		<div class="container-fluid">
@@ -887,7 +875,18 @@
 											<xforms:trigger appearance="minimal">
 												<xforms:label>
 													<span class="glyphicon glyphicon-plus"></span>Note</xforms:label>
-												<xforms:insert ev:event="DOMActivate" context="." origin="instance('note-template')" nodeset="./child::node()[last()]"></xforms:insert>
+												<xforms:action ev:event="DOMActivate">
+													<xforms:insert context="." nodeset="./child::node()[last()]" origin="instance('noteSet-template')" if="not(nuds:noteSet)"></xforms:insert>
+													<xforms:insert context="nuds:noteSet" origin="instance('note-template')" nodeset="./child::node()[last()]"></xforms:insert>
+												</xforms:action>
+											</xforms:trigger>
+											<xforms:trigger appearance="minimal">
+												<xforms:label>
+													<span class="glyphicon glyphicon-plus"></span>Subject</xforms:label>
+												<xforms:action ev:event="DOMActivate">
+													<xforms:insert context="." nodeset="./child::node()[last()]" origin="instance('subjectSet-template')" if="not(nuds:subjectSet)"></xforms:insert>
+													<xforms:insert context="nuds:subjectSet" origin="instance('subject-template')" nodeset="./child::node()[last()]"></xforms:insert>
+												</xforms:action>
 											</xforms:trigger>
 										</div>
 										<div>
@@ -925,19 +924,100 @@
 										<xforms:group ref="nuds:description">
 											<numishare:description></numishare:description>
 										</xforms:group>
-										<xforms:repeat nodeset="nuds:note">
-											<div>
-												<xforms:textarea ref=".">
-													<xforms:label>Note</xforms:label>
-												</xforms:textarea>
-												<xforms:trigger appearance="minimal">
-													<xforms:delete ev:event="DOMActivate" nodeset="."></xforms:delete>
-													<xforms:label>
-														<span class="glyphicon glyphicon-remove"></span>
-													</xforms:label>
-												</xforms:trigger>
-											</div>
-										</xforms:repeat>
+										<xforms:group ref="nuds:noteSet">
+											<h3>Notes</h3>
+											<xforms:repeat nodeset="nuds:note">
+												<div>
+													<xforms:textarea ref=".">
+														<xforms:label>Note</xforms:label>
+													</xforms:textarea>
+													<xforms:trigger appearance="minimal">
+														<xforms:action ev:event="DOMActivate">
+															<xforms:delete nodeset="."></xforms:delete>
+															<xforms:delete nodeset="parent::nuds:noteSet" if="count(parent::node()/*) = 0"></xforms:delete>
+														</xforms:action>
+														<xforms:label>
+															<span class="glyphicon glyphicon-remove"></span>
+														</xforms:label>
+													</xforms:trigger>
+												</div>
+											</xforms:repeat>
+										</xforms:group>
+										<xforms:group ref="nuds:subjectSet">
+											<h3>Subjects</h3>
+											<xforms:repeat nodeset="nuds:subject">
+												<div class="subsection">
+													<h4>Subject</h4>
+													<xforms:trigger appearance="minimal">
+														<xforms:action ev:event="DOMActivate">
+															<xforms:delete nodeset="."></xforms:delete>
+															<xforms:delete nodeset="parent::nuds:subjectSet" if="count(parent::node()/*) = 0"></xforms:delete>
+														</xforms:action>
+														<xforms:label>
+															<span class="glyphicon glyphicon-remove"></span>
+														</xforms:label>
+													</xforms:trigger>
+													<div class="trigger_container">
+														<xforms:group ref=".[not(@xlink:href)]">
+															<xforms:trigger appearance="minimal">
+																<xforms:label>
+																	<span class="glyphicon glyphicon-plus"></span>URL</xforms:label>
+																<xforms:insert ev:event="DOMActivate" context="." origin="xxforms:attribute('xlink:href', '')" if="not(@xlink:href)"></xforms:insert>
+															</xforms:trigger>
+														</xforms:group>
+														<xforms:group ref=".[not(@localType)]">
+															<xforms:trigger appearance="minimal">
+																<xforms:label>
+																	<span class="glyphicon glyphicon-plus"></span>Type</xforms:label>
+																<xforms:insert ev:event="DOMActivate" context="." origin="xxforms:attribute('localType', '')" if="not(@localType)"></xforms:insert>
+															</xforms:trigger>
+														</xforms:group>
+													</div>
+													<div>
+														<xforms:input ref=".">
+															<xforms:label>Term</xforms:label>
+															<xforms:alert>Required</xforms:alert>
+														</xforms:input>
+													</div>
+													<xforms:group ref="@localType">
+														<div>
+															<xforms:select1 ref=".">
+																<xforms:label>Type</xforms:label>
+																<xforms:alert>Required</xforms:alert>
+																<xforms:item>
+																	<xforms:label>Select...</xforms:label>
+																	<xforms:value></xforms:value>
+																</xforms:item>
+																<xforms:itemset nodeset="instance('localTypes')//localType">
+																	<xforms:label ref="."></xforms:label>
+																	<xforms:value ref="."></xforms:value>
+																</xforms:itemset>
+															</xforms:select1>
+															<xforms:trigger appearance="minimal">
+																<xforms:delete ev:event="DOMActivate" nodeset="."></xforms:delete>
+																<xforms:label>
+																	<span class="glyphicon glyphicon-remove"></span>
+																</xforms:label>
+															</xforms:trigger>
+														</div>
+													</xforms:group>
+													<xforms:group ref="@xlink:href">
+														<div>
+															<xforms:input ref=".">
+																<xforms:label>URL</xforms:label>
+																<xforms:alert>Required</xforms:alert>
+															</xforms:input>
+															<xforms:trigger appearance="minimal">
+																<xforms:delete ev:event="DOMActivate" nodeset="."></xforms:delete>
+																<xforms:label>
+																	<span class="glyphicon glyphicon-remove"></span>
+																</xforms:label>
+															</xforms:trigger>
+														</div>
+													</xforms:group>
+												</div>
+											</xforms:repeat>
+										</xforms:group>
 									</xforms:group>
 								</fr:tab>
 								<!--**************************************** PHYSICAL DESCRIPTION **********************************-->
@@ -1993,10 +2073,10 @@
 									<fr:label>Record Metadata</fr:label>
 									<numishare:control></numishare:control>
 								</fr:tab>
-								<!--<fr:tab>
+								<fr:tab>
 									<fr:label>Inspector</fr:label>
-									<fr:xforms-inspector/>
-								</fr:tab>-->
+									<fr:xforms-inspector></fr:xforms-inspector>
+								</fr:tab>
 							</fr:tabview>
 						</xforms:group>
 					</div>

@@ -5,8 +5,6 @@
 <xbl:xbl xmlns:nuds="http://nomisma.org/nuds" xmlns="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events"
 	xmlns:xxforms="http://orbeon.org/oxf/xml/xforms" xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:xbl="http://www.w3.org/ns/xbl" xmlns:xxbl="http://orbeon.org/oxf/xml/xbl"
 	xmlns:oxf="http://www.orbeon.com/oxf/processors" xmlns:numishare="https://github.com/ewg118/numishare" xmlns:xlink="http://www.w3.org/1999/xlink">
-
-
 	<xbl:binding id="numishare-type-undertype" element="numishare|type-undertype">
 		<xbl:template>
 			<xforms:group xbl:attr="model context ref bind" xxbl:scope="outer">
@@ -24,7 +22,6 @@
 						<xforms:setvalue ref="instance('control-instance')/typeof">object_type</xforms:setvalue>
 						<xforms:send submission="query-nomisma"/>
 					</xforms:action>
-
 					<xforms:group ref="$binding">
 						<div class="trigger_container">
 							<xforms:group ref=".[count(nuds:date) = 0 and count(nuds:dateRange) = 0]">
@@ -278,7 +275,6 @@
 												<strong>Alert:</strong> Type Description languages must be unique. </p>
 										</div>
 									</xforms:group>
-
 									<xforms:repeat nodeset="nuds:persname[@xlink:role='artist']">
 										<numishare:cp-name/>
 									</xforms:repeat>
@@ -432,8 +428,7 @@
 											<xforms:insert context="nuds:reverse" origin="instance('symbol-template')" nodeset="./child::node()[last()]"/>
 											<xxforms:hide dialog="reverse-objects"/>
 										</xforms:action>
-									</xforms:trigger>l
-								</xforms:group>
+									</xforms:trigger>l </xforms:group>
 								<xforms:trigger appearance="minimal">
 									<xforms:label>
 										<span class="glyphicon glyphicon-plus"/>Type Description</xforms:label>
@@ -566,7 +561,7 @@
 									<xforms:trigger appearance="minimal">
 										<xforms:label>
 											<span class="glyphicon glyphicon-plus"/>Description</xforms:label>
-										<xforms:action ev:event="DOMActivate">											
+										<xforms:action ev:event="DOMActivate">
 											<xforms:insert context="." origin="instance('edge-template')" nodeset="./child::node()[last()]" if="count(nuds:edge) = 0"/>
 											<xforms:insert context="nuds:edge" origin="instance('description-template')" nodeset="./child::node()[last()]"/>
 											<xxforms:hide dialog="edge-objects"/>
@@ -581,7 +576,7 @@
 											<xforms:insert context="." origin="instance('edge-template')" nodeset="./child::node()[last()]" if="count(nuds:edge) = 0"/>
 											<xforms:insert context="nuds:edge" origin="instance('legend-template')" nodeset="./child::node()[last()]"/>
 											<xxforms:hide dialog="edge-objects"/>
-										</xforms:action>										
+										</xforms:action>
 									</xforms:trigger>
 								</xforms:group>
 								<xforms:group ref=".[count(nuds:edge/nuds:type) = 0]">
@@ -593,7 +588,7 @@
 											<xforms:insert context="nuds:edge" origin="instance('type-template')" nodeset="./child::node()[last()]" if="count(nuds:type) = 0"/>
 											<xforms:insert context="nuds:edge/nuds:type" origin="instance('description-template')" nodeset="./child::node()[last()]"/>
 											<xxforms:hide dialog="edge-objects"/>
-										</xforms:action>										
+										</xforms:action>
 									</xforms:trigger>
 								</xforms:group>
 							</xxforms:dialog>
@@ -793,7 +788,6 @@
 								</div>
 							</xforms:group>
 						</div>
-
 						<!--<fr:xforms-inspector id="orbeon-xforms-inspector"/>-->
 					</xforms:group>
 					<!-- ********************************************************************** -->
@@ -896,36 +890,29 @@
 						<xforms:instance id="weightStandard-template" xxforms:exclude-result-prefixes="#all">
 							<weightStandard origin="" units="g"/>
 						</xforms:instance>
-
 						<!-- controlled vocabulary instances -->
 						<xforms:instance id="feed">
 							<feed xmlns=""/>
 						</xforms:instance>
-
 						<xforms:instance id="control-instance">
 							<controls xmlns="">
 								<typeof/>
 							</controls>
 						</xforms:instance>
-
 						<!-- manufacture -->
 						<xforms:instance id="manufacture-list">
 							<list/>
 						</xforms:instance>
-
 						<!-- material -->
 						<xforms:instance id="material-list">
 							<list/>
 						</xforms:instance>
-
 						<xforms:instance id="object_type-list">
 							<list/>
 						</xforms:instance>
-
 						<xforms:instance id="listItem-template">
 							<item href=""/>
 						</xforms:instance>
-
 						<!-- nomisma query -->
 						<xforms:submission id="query-nomisma" serialization="none" method="get" action="http://nomisma.org/feed/?q=typeof:{instance('control-instance')/typeof}" instance="feed"
 							replace="instance">

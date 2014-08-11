@@ -3,7 +3,6 @@
 	function: mint/region component; user selects local vocabulary (ties to solr for autosuggest), nomisma.org
 	or geonames (refers to geonames.org APIs)
 -->
-
 <xbl:xbl xmlns="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xxforms="http://orbeon.org/oxf/xml/xforms"
 	xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:xbl="http://www.w3.org/ns/xbl" xmlns:xxbl="http://orbeon.org/oxf/xml/xbl" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:oxf="http://www.orbeon.com/oxf/processors" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:numishare="https://github.com/ewg118/numishare"
@@ -19,8 +18,8 @@
 					<xforms:action ev:event="xforms-enabled" ev:target="#observer">
 						<xforms:action if="not(string($binding))">
 							<!-- load collection and config to get solr core -->
-							<xforms:insert context="instance('control-instance')" nodeset="collection-name" position="after"
-								origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/get-authentication.xpl', 'dump', instance('dump'), 'data')"/>
+							<xforms:insert context="instance('control-instance')" nodeset="collection-name" position="after" origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/get-authentication.xpl',
+								'dump', instance('dump'), 'data')"/>
 							<xforms:send submission="load-collections"/>
 							<!-- otherwise active search interfaces -->
 							<xforms:setvalue ref="instance('interface-type')" value="'geonames'"/>
@@ -30,7 +29,6 @@
 							<xforms:setvalue ref="instance('control-instance')/role" value="$binding/@xlink:role"/>
 						</xforms:action>
 					</xforms:action>
-
 					<!-- display only outputted value and link to nomisma id, if applicable -->
 					<xforms:group ref=".[string($binding)]">
 						<div>
@@ -67,7 +65,6 @@
 							</xforms:group>
 						</div>
 					</xforms:group>
-
 					<!-- if $binding does not contain a value, display the interface for selecting a value -->
 					<xforms:group ref=".[not(string($binding))]">
 						<div style="display:table;width:100%;">
@@ -107,7 +104,6 @@
 											<xforms:action if=". = 'geonames'">
 												<!-- remove temporary values, applicable when switching back to geonames from local -->
 												<xforms:delete context="instance('feed')/*"/>
-
 												<!-- create attributes, clear $binding text when applicable -->
 												<xforms:setvalue ref="$binding" value="''" if="not($binding/@xlink:href) or contains($binding/@xlink:href, 'nomisma')"/>
 												<xforms:setvalue ref="$binding/@xlink:href" value="''" if="contains($binding/@xlink:href, 'nomisma')"/>
@@ -118,7 +114,6 @@
 											<xforms:action if=". = 'nomisma'">
 												<!-- remove temporary values, applicable when switching back to geonames from local -->
 												<xforms:delete context="instance('geonames')/*"/>
-
 												<!-- create attributes, clear $binding text when applicable, delete @rules -->
 												<xforms:setvalue ref="$binding" value="''" if="not($binding/@xlink:href) or contains($binding/@xlink:href, 'geonames')"/>
 												<xforms:setvalue ref="$binding/@xlink:href" value="''" if="contains($binding/@xlink:href, 'geonames')"/>
@@ -133,14 +128,12 @@
 												<xforms:setvalue if="$binding/@xlink:href" ref="$binding" value="''"/>
 												<xforms:delete if="$binding/@xlink:href" context="$binding/@xlink:href"/>
 												<xforms:delete if="$binding/@rules" context="$binding/@rules"/>
-
 												<xforms:toggle case="local-vocabulary"/>
 											</xforms:action>
 										</xforms:action>
 									</xforms:select1>
 								</radiogroup>
 							</div>
-
 							<xforms:switch>
 								<xforms:case id="geonames-search">
 									<div>
@@ -155,7 +148,6 @@
 											<xforms:label>Search</xforms:label>
 										</xforms:trigger>
 									</div>
-
 									<xforms:group ref=".[count(instance('geonames')//geoname) &gt; 0]">
 										<xforms:select1 ref="instance('temp')/@href" appearance="compact" id="geonames-list">
 											<xforms:label>Location</xforms:label>
@@ -186,7 +178,6 @@
 											<xforms:label>Search</xforms:label>
 										</xforms:trigger>
 									</div>
-
 									<xforms:group ref=".[count(instance('feed')//*[local-name()='entry']) &gt; 0]">
 										<xforms:select1 ref="instance('temp')/@href" appearance="compact" id="nomisma-list">
 											<xforms:label ref="instance('control-instance')/label"/>
@@ -197,20 +188,19 @@
 											<xforms:output ref="instance('control-instance')/label"/>
 											<xforms:action ev:event="xforms-value-changed">
 												<!--<xforms:setvalue ref="instance('nomisma-definition')"/>-->
-												<xforms:setvalue ref="instance('nomisma-definition')"
-													value="instance('feed')//*[local-name()='entry'][*[local-name()='link'][1]/@href = instance('temp')/@href]/*[local-name()='content']"/>
+												<xforms:setvalue ref="instance('nomisma-definition')" value="instance('feed')//*[local-name()='entry'][*[local-name()='link'][1]/@href =
+													instance('temp')/@href]/*[local-name()='content']"/>
 											</xforms:action>
 										</xforms:select1>
 										<xforms:trigger>
 											<xforms:label>Select</xforms:label>
 											<xforms:action ev:event="DOMActivate">
 												<xforms:setvalue ref="$binding/@xlink:href" value="instance('temp')/@href"/>
-												<xforms:setvalue ref="$binding"
-													value="instance('feed')//*[local-name()='entry'][*[local-name()='link'][1]/@href = instance('temp')/@href]/*[local-name()='title']"/>
+												<xforms:setvalue ref="$binding" value="instance('feed')//*[local-name()='entry'][*[local-name()='link'][1]/@href =
+													instance('temp')/@href]/*[local-name()='title']"/>
 											</xforms:action>
 										</xforms:trigger>
 									</xforms:group>
-
 									<xforms:group ref=".[string($binding/@xlink:href)]">
 										<div>
 											<xforms:output ref="instance('nomisma-definition')">
@@ -226,7 +216,8 @@
 										</xforms:input>
 										<xforms:trigger>
 											<xforms:action ev:event="DOMActivate">
-												<xforms:setvalue ref="instance('eXist-xquery')/exist:text" value="replace(replace(replace(instance('xquery'), 'QUERY', instance('search-query')), 'ELEMENT', instance('control-instance')/element), 'ROLE', instance('control-instance')/role)"/>
+												<xforms:setvalue ref="instance('eXist-xquery')/exist:text" value="replace(replace(replace(instance('xquery'), 'QUERY', instance('search-query')),
+													'ELEMENT', instance('control-instance')/element), 'ROLE', instance('control-instance')/role)"/>
 												<xforms:send submission="xquery-collection"/>
 											</xforms:action>
 											<xforms:label>Search</xforms:label>
@@ -252,12 +243,11 @@
 												<xforms:setvalue ref="$binding" value="instance('temp')"/>
 											</xforms:action>
 										</xforms:trigger>
-									</xforms:group>									
+									</xforms:group>
 								</xforms:case>
 							</xforms:switch>
 						</div>
 					</xforms:group>
-
 					<xforms:group ref="$binding/@certainty">
 						<div>
 							<xforms:input ref=".">
@@ -277,7 +267,6 @@
 						<xforms:instance id="exist-config">
 							<xi:include href="../../../exist-config.xml"/>
 						</xforms:instance>
-
 						<xforms:instance id="control-instance">
 							<control xmlns="">
 								<collection-name/>
@@ -289,27 +278,22 @@
 								<error/>
 							</control>
 						</xforms:instance>
-
 						<!-- collections/authentication instances -->
 						<xforms:instance id="collections-list">
 							<collections xmlns="">
 								<collection roll="admin" name="numishare"/>
 							</collections>
 						</xforms:instance>
-
 						<xforms:instance id="dump">
 							<dump/>
 						</xforms:instance>
-
 						<!-- site info -->
 						<xforms:instance id="config">
 							<config xmlns=""/>
 						</xforms:instance>
-
 						<xforms:instance id="temp">
 							<temp href="" xmlns=""/>
 						</xforms:instance>
-
 						<!-- instance of standard abbreviations for AACR2 Chapter 23 compliance-->
 						<xforms:instance id="abbreviations">
 							<abbreviations xmlns="">
@@ -400,12 +384,10 @@
 								</country>
 							</abbreviations>
 						</xforms:instance>
-
 						<!-- Instances containing the query string -->
 						<xforms:instance id="search-query">
 							<query/>
 						</xforms:instance>
-
 						<!-- geonames specific instances -->
 						<xforms:instance id="geoname-query-response">
 							<geoname/>
@@ -425,38 +407,31 @@
 								<geonameId/>
 							</geoname>
 						</xforms:instance>
-
 						<!-- instances for nomisma -->
 						<xforms:instance id="feed">
 							<feed xmlns=""/>
 						</xforms:instance>
-
 						<xforms:instance id="nomisma-definition">
 							<definition xmlns=""/>
 						</xforms:instance>
-
 						<!-- XQuery -->
 						<xforms:instance id="eXist-xquery">
 							<exist:query xmlns="">
 								<exist:text/>
 							</exist:query>
 						</xforms:instance>
-
 						<xforms:instance id="xquery">
 							<query xmlns="">declare namespace nuds="http://nomisma.org/nuds"; declare namespace nh="http://nomisma.org/nudsHoard"; &lt;report> { for $term in
-								distinct-values(collection()//descendant::*[local-name()='ELEMENT'][@xlink:role='ROLE'][contains(lower-case(.), lower-case('QUERY'))]) return &lt;term> { data($term) } &lt;/term> }
-							&lt;/report></query>
+								distinct-values(collection()//descendant::*[local-name()='ELEMENT'][@xlink:role='ROLE'][contains(lower-case(.), lower-case('QUERY'))]) return &lt;term> { data($term) }
+								&lt;/term> } &lt;/report></query>
 						</xforms:instance>
-
 						<xforms:instance id="xquery-result">
 							<exist:result/>
 						</xforms:instance>
-
 						<!-- geogname type radio button -->
 						<xforms:instance id="interface-type">
 							<interface/>
 						</xforms:instance>
-
 						<!-- search for matching keywords -->
 						<xforms:submission id="query-geonames" serialization="none" method="get"
 							action="http://api.geonames.org/search?q={instance('search-query')}&amp;maxRows=100&amp;lang=en&amp;username={instance('config')/geonames_api_key}&amp;style=full&amp;minChars=2"
@@ -472,14 +447,14 @@
 									<xforms:var name="geonameId" select="geonameId"/>
 									<xforms:var name="fcode" select="fcode"/>
 									<!-- set a value equivalent to AACR2 standard for US, AU, CA, and GB.  This equation deviates from AACR2 for Malaysia since standard abbreviations for territories cannot be found -->
-									<xforms:setvalue ref="instance('geoname-template')/label"
-										value="if ($countryCode = 'US' or $countryCode = 'AU' or $countryCode = 'CA') then if ($fcode = 'ADM1') then $name else concat($name, ' (', instance('abbreviations')/country[@code=$countryCode]/place[. = $adminName1]/@abbr, ')') else if ($countryCode= 'GB') then  if ($fcode = 'ADM1') then $name else concat($name, ' (', $adminName1, ')') else if ($fcode = 'PCLI') then $name else concat($name, ' (', $countryName, ')')"/>
+									<xforms:setvalue ref="instance('geoname-template')/label" value="if ($countryCode = 'US' or $countryCode = 'AU' or $countryCode = 'CA') then if ($fcode = 'ADM1')
+										then $name else concat($name, ' (', instance('abbreviations')/country[@code=$countryCode]/place[. = $adminName1]/@abbr, ')') else if ($countryCode= 'GB') then
+										if ($fcode = 'ADM1') then $name else concat($name, ' (', $adminName1, ')') else if ($fcode = 'PCLI') then $name else concat($name, ' (', $countryName, ')')"/>
 									<xforms:setvalue ref="instance('geoname-template')/geonameId" value="$geonameId"/>
 									<xforms:insert context="instance('geonames')" origin="instance('geoname-template')" nodeset="./child::node()[last()]"/>
 								</xforms:action>
 							</xforms:action>
 						</xforms:submission>
-
 						<xforms:submission id="load-collections" serialization="none" method="get" action="{instance('exist-config')/url}collections-list.xml" replace="instance"
 							instance="collections-list" xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}">
 							<!-- if the config loads successfully, set the collection names based on authentication -->
@@ -499,16 +474,14 @@
 							<!-- if the config has not been created (given that the URL in ../exist-config.xml is correct), create it -->
 							<xforms:message ev:event="xforms-submit-error" level="modal">Unable to load Numishare collections list.</xforms:message>
 						</xforms:submission>
-
 						<!-- query nomisma for ancient geognames -->
 						<xforms:submission id="query-nomisma" serialization="none" method="get"
 							action="http://nomisma.org/feed/?q=typeof:{instance('control-instance')/typeof}+{instance('search-query')}" instance="feed" replace="instance">
 							<xforms:message ev:event="xforms-submit-error" level="modal">Unable to communicate with nomisma.org Atom feed.</xforms:message>
 						</xforms:submission>
-
 						<!-- local vocabulary query -->
-						<xforms:submission id="xquery-collection" ref="instance('eXist-xquery')" action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/objects" method="post"
-							replace="instance" instance="xquery-result" xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}">
+						<xforms:submission id="xquery-collection" ref="instance('eXist-xquery')" action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/objects"
+							method="post" replace="instance" instance="xquery-result" xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}">
 							<xforms:setvalue ref="instance('control-instance')/error" ev:event="xforms-submit-error">Error querying eXist database.</xforms:setvalue>
 						</xforms:submission>
 					</xforms:model>
@@ -516,5 +489,4 @@
 			</xforms:group>
 		</xbl:template>
 	</xbl:binding>
-
 </xbl:xbl>
