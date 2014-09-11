@@ -2,17 +2,17 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:numishare="https://github.com/ewg118/numishare" exclude-result-prefixes="#all"
 	version="2.0">
 	<!-- includes -->
-	<xsl:include href="header.xsl"/>
-	<xsl:include href="footer.xsl"/>
-	<xsl:include href="functions.xsl"/>
+	<xsl:include href="../header.xsl"/>
+	<xsl:include href="../footer.xsl"/>
+	<xsl:include href="../functions.xsl"/>
 
-	<xsl:param name="pipeline"/>
-	<xsl:param name="department"/>
+	<xsl:param name="pipeline">maps_fullscreen</xsl:param>
 	<xsl:variable name="display_path">../</xsl:variable>
+	<xsl:variable name="include_path">../../</xsl:variable>
 	<xsl:variable name="collection_type" select="/content//collection_type"/>
 
-	<xsl:param name="q"/>
-	<xsl:param name="lang"/>
+	<xsl:param name="q" select="doc('input:request')/request/parameters/parameter[name='q']/value"/>
+	<xsl:param name="lang" select="doc('input:request')/request/parameters/parameter[name='lang']/value"/>
 	<xsl:variable name="tokenized_q" select="tokenize($q, ' AND ')"/>
 
 	<xsl:template match="/">
@@ -23,7 +23,7 @@
 					<xsl:text>: </xsl:text>
 					<xsl:value-of select="numishare:normalizeLabel('header_maps', $lang)"/>
 				</title>
-				<link rel="shortcut icon" type="image/x-icon" href="{$display_path}images/favicon.png"/>
+				<link rel="shortcut icon" type="image/x-icon" href="{$include_path}ui/images/favicon.png"/>
 				<meta name="viewport" content="width=device-width, initial-scale=1"/>
 
 				<!-- jquery -->
@@ -32,41 +32,40 @@
 				<!-- bootstrap -->
 				<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"/>
 				<script type="text/javascript" src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"/>
-				<script type="text/javascript" src="{$display_path}javascript/bootstrap-multiselect.js"/>
-				<link rel="stylesheet" href="{$display_path}bootstrap-multiselect.css" type="text/css"/>
+				<script type="text/javascript" src="{$include_path}ui/javascript/bootstrap-multiselect.js"/>
+				<link rel="stylesheet" href="{$include_path}ui/css/bootstrap-multiselect.css" type="text/css"/>
 
 				<!-- local theme and styling -->
-				<link type="text/css" href="{$display_path}themes/{//config/theme/jquery_ui_theme}.css" rel="stylesheet"/>
-				<link type="text/css" href="{$display_path}fullscreen.css" rel="stylesheet"/>
+				<link type="text/css" href="{$include_path}ui/css/fullscreen.css" rel="stylesheet"/>
 
 				<!-- display timemap for hoards, regular openlayers map for coin and coin type collections -->
 				<xsl:choose>
 					<xsl:when test="$collection_type='hoard'">
 						<!-- Add fancyBox -->
-						<link rel="stylesheet" href="{$display_path}jquery.fancybox.css?v=2.1.5" type="text/css" media="screen"/>
-						<script type="text/javascript" src="{$display_path}javascript/jquery.fancybox.pack.js?v=2.1.5"/>
+						<link rel="stylesheet" href="{$include_path}ui/css/jquery.fancybox.css?v=2.1.5" type="text/css" media="screen"/>
+						<script type="text/javascript" src="{$include_path}ui/javascript/jquery.fancybox.pack.js?v=2.1.5"/>
 						<!-- timemap dependencies -->
 						<script type="text/javascript" src="http://www.openlayers.org/api/OpenLayers.js"/>
 						<script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3.2&amp;sensor=false"/>
-						<script type="text/javascript" src="{$display_path}javascript/mxn.js"/>
-						<script type="text/javascript" src="{$display_path}javascript/timeline-2.3.0.js"/>
-						<link type="text/css" href="{$display_path}timeline-2.3.0.css" rel="stylesheet"/>
-						<script type="text/javascript" src="{$display_path}javascript/timemap_full.pack.js"/>
-						<script type="text/javascript" src="{$display_path}javascript/param.js"/>
-						<script type="text/javascript" src="{$display_path}javascript/map_fullscreen_functions.js"/>
-						<script type="text/javascript" src="{$display_path}javascript/map_functions.js"/>
-						<script type="text/javascript" src="{$display_path}javascript/facet_functions.js"/>
+						<script type="text/javascript" src="{$include_path}ui/javascript/mxn.js"/>
+						<script type="text/javascript" src="{$include_path}ui/javascript/timeline-2.3.0.js"/>
+						<link type="text/css" href="{$include_path}ui/css/timeline-2.3.0.css" rel="stylesheet"/>
+						<script type="text/javascript" src="{$include_path}ui/javascript/timemap_full.pack.js"/>
+						<script type="text/javascript" src="{$include_path}ui/javascript/param.js"/>
+						<script type="text/javascript" src="{$include_path}ui/javascript/map_fullscreen_functions.js"/>
+						<script type="text/javascript" src="{$include_path}ui/javascript/map_functions.js"/>
+						<script type="text/javascript" src="{$include_path}ui/javascript/facet_functions.js"/>
 					</xsl:when>
 					<xsl:otherwise>
 						<!-- Add fancyBox -->
-						<link rel="stylesheet" href="{$display_path}jquery.fancybox.css?v=2.1.5" type="text/css" media="screen"/>
-						<script type="text/javascript" src="{$display_path}javascript/jquery.fancybox.pack.js?v=2.1.5"/>
+						<link rel="stylesheet" href="{$include_path}ui/css/jquery.fancybox.css?v=2.1.5" type="text/css" media="screen"/>
+						<script type="text/javascript" src="{$include_path}ui/javascript/jquery.fancybox.pack.js?v=2.1.5"/>
 						<!-- maps-->
 						<script type="text/javascript" src="http://www.openlayers.org/api/OpenLayers.js"/>
 						<script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3.2&amp;sensor=false"/>
-						<script type="text/javascript" src="{$display_path}javascript/map_fullscreen_functions.js"/>
-						<script type="text/javascript" src="{$display_path}javascript/map_functions.js"/>
-						<script type="text/javascript" src="{$display_path}javascript/facet_functions.js"/>
+						<script type="text/javascript" src="{$include_path}ui/javascript/map_fullscreen_functions.js"/>
+						<script type="text/javascript" src="{$include_path}ui/javascript/map_functions.js"/>
+						<script type="text/javascript" src="{$include_path}ui/javascript/facet_functions.js"/>
 					</xsl:otherwise>
 				</xsl:choose>
 

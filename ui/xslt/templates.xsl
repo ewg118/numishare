@@ -4,7 +4,6 @@
 	xmlns:cinclude="http://apache.org/cocoon/include/1.0" xmlns:nuds="http://nomisma.org/nuds" xmlns:mods="http://www.loc.gov/mods/v3" xmlns:nh="http://nomisma.org/nudsHoard"
 	xmlns:nm="http://nomisma.org/id/" xmlns:math="http://exslt.org/math" xmlns:res="http://www.w3.org/2005/sparql-results#" exclude-result-prefixes=" #all" version="2.0">
 
-	<xsl:variable name="flickr-api-key" select="//config/flickr_api_key"/>
 	<xsl:variable name="type_series" select="//config/type_series"/>
 
 	<!-- ************** QUANTITATIVE ANALYSIS FUNCTIONS ************** -->
@@ -306,13 +305,13 @@
 										<xsl:if test="contains($options, 'stacking:normal')">
 											<xsl:attribute name="selected">selected</xsl:attribute>
 										</xsl:if>
-										<xsl:text><xsl:value-of select="numishare:normalizeLabel('numeric_cumulative', $lang)"/></xsl:text>
+										<xsl:value-of select="numishare:normalizeLabel('numeric_cumulative', $lang)"/>
 									</option>
 									<option value="stacking:percent">
 										<xsl:if test="contains($options, 'stacking:percent')">
 											<xsl:attribute name="selected">selected</xsl:attribute>
 										</xsl:if>
-										<xsl:text><xsl:value-of select="numishare:normalizeLabel('numeric_percentage', $lang)"/></xsl:text>
+										<xsl:value-of select="numishare:normalizeLabel('numeric_percentage', $lang)"/>
 									</option>
 								</select>
 							</div>

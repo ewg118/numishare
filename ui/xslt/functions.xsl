@@ -2297,7 +2297,7 @@
 	</xsl:function>
 
 	<xsl:function name="numishare:normalizeYear">
-		<xsl:param name="year" as="xs:integer"/>
+		<xsl:param name="year" as="xs:double"/>
 
 		<xsl:choose>
 			<xsl:when test="$year &lt; 0">

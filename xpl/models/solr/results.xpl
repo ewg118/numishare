@@ -46,12 +46,7 @@
 
 				<!-- config variables -->
 				<xsl:variable name="solr-url" select="concat(/config/solr_published, 'select/')"/>
-				<xsl:variable name="facets">
-					<xsl:for-each select="tokenize(/config/theme/facets, ',')">
-						<xsl:text>&amp;facet.field=</xsl:text>
-						<xsl:value-of select="."/>
-					</xsl:for-each>
-				</xsl:variable>
+				<xsl:variable name="facets" select="concat('&amp;facet.field=', string-join(/config/facets/facet, '&amp;facet.field='))"/>
 
 				<xsl:variable name="service">
 					<xsl:choose>

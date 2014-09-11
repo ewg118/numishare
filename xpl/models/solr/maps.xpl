@@ -34,19 +34,27 @@
 				<xsl:param name="lang" select="doc('input:request')/request/parameters/parameter[name='lang']/value"/>
 				<xsl:param name="q" select="doc('input:request')/request/parameters/parameter[name='q']/value"/>
 				<xsl:param name="sort" select="doc('input:request')/request/parameters/parameter[name='sort']/value"/>
-				<xsl:param name="rows">0</xsl:param>
+				<xsl:param name="rows">20</xsl:param>
+				<xsl:param name="start">
+					<xsl:choose>
+						<xsl:when test="string(doc('input:request')/request/parameters/parameter[name='start']/value)">
+							<xsl:value-of select="doc('input:request')/request/parameters/parameter[name='start']/value"/>
+						</xsl:when>
+						<xsl:otherwise>0</xsl:otherwise>
+					</xsl:choose>
+				</xsl:param>
+
 				<!-- config variables -->
 				<xsl:variable name="solr-url" select="concat(/config/solr_published, 'select/')"/>
-				<xsl:variable name="facets" select="concat('&amp;facet.field=', string-join(/config/facets/facet, '&amp;facet.field='))"/>
+				<xsl:variable name="facets" select="concat('&amp;facet.field=', string-join(/config/facets/facet, '&amp;facet.field='))"/>				
 
 				<xsl:variable name="service">
 					<xsl:choose>
-						<!-- handle the value of the q parameter or pass *:* as a default when q is not specified -->
 						<xsl:when test="string($lang)">
-							<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+lang:', $lang, '&amp;rows=0', $facets, '&amp;facet.field=mint_geo&amp;facet.numFacetTerms=1')"/>
+							<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+lang:', $lang, '+AND+mint_geo:*+OR+findspot_geo:*&amp;start=', $start, $facets, '&amp;facet.field=mint_geo&amp;facet.numFacetTerms=1&amp;facet.sort=index&amp;facet=true')"/>
 						</xsl:when>
 						<xsl:otherwise>
-							<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+NOT(lang:*)&amp;rows=0', $facets, '&amp;facet.field=mint_geo&amp;facet.numFacetTerms=1')"/>
+							<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+NOT(lang:*)+AND+mint_geo:*+OR+findspot_geo:*&amp;start=', $start, $facets, '&amp;facet.field=mint_geo&amp;facet.numFacetTerms=1&amp;facet.sort=index&amp;facet=true')"/>
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:variable>
