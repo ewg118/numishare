@@ -28,8 +28,8 @@
 					<xsl:variable name="collection-name" select="substring-before(substring-after(doc('input:request')/request/servlet-path, 'numishare/'), '/')"/>
 					<xsl:choose>
 						<!-- handle id/ pipeline in the public interface -->
-						<xsl:when test="contains(doc('input:request')/request/request-url, 'id/')">							
-							<xsl:variable name="doc" select="substring-after(doc('input:request')/request/request-url, 'id/')"/>
+						<xsl:when test="contains(doc('input:request')/request/request-url, 'id/') or contains(doc('input:request')/request/request-url, 'map/')">							
+							<xsl:variable name="doc" select="tokenize(doc('input:request')/request/request-url, '/')[last()]"/>
 							<xsl:variable name="id">
 								<xsl:choose>
 									<xsl:when test="contains($doc, '.xml')">

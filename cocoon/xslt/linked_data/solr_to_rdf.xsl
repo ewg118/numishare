@@ -11,19 +11,12 @@
 
 	<xsl:template match="/">
 		<rdf:RDF>
-			<xsl:choose>
-				<xsl:when test="$mode='pelagios'">
-					<foaf:Organization rdf:about="{$url}pelagios.rdf#agents/me">
-						<foaf:name>
-							<xsl:value-of select="/content/config/template/agencyName"/>
-						</foaf:name>
-					</foaf:Organization>
-					<xsl:apply-templates select="//doc" mode="pelagios"/>
-				</xsl:when>
-				<xsl:when test="$mode='nomisma'">
-					<xsl:apply-templates select="//doc" mode="nomisma"/>
-				</xsl:when>
-			</xsl:choose>
+			<foaf:Organization rdf:about="{$url}pelagios.rdf#agents/me">
+				<foaf:name>
+					<xsl:value-of select="/content/config/template/agencyName"/>
+				</foaf:name>
+			</foaf:Organization>
+			<xsl:apply-templates select="//doc" mode="pelagios"/>
 		</rdf:RDF>
 	</xsl:template>
 </xsl:stylesheet>

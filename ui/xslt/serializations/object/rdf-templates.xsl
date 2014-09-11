@@ -112,6 +112,7 @@
 		<xsl:variable name="id" select="descendant::*[local-name()='recordId']"/>
 		<xsl:text>(not yet developed)</xsl:text>
 	</xsl:template>
+	
 	<!-- PROCESS NUDS RECORDS INTO NOMISMA COMPLIANT RDF MODELS -->
 	<xsl:template match="nuds:nuds" mode="nomisma">
 		<xsl:variable name="id" select="descendant::*[local-name()='recordId']"/>

@@ -3,91 +3,93 @@
   FACETS
   ***************************************
  */
-#map_filters {
+#map_filters{
 	width:800px;
 	height:400px;
 }
-ol li, ul li {
+ol li,
+ul li{
 	list-style-type:none;
 }
-select {
+select{
 	width:175px;
 	margin-left:15px;
 	margin-right:5px;
 }
-.category_list, .search_text {
+.category_list,
+.search_text{
 	width:175px;
 }
-button.multiselect {
+button.multiselect{
 	margin-bottom:10px;
 }
-#close {
-	position: absolute;
-	bottom: 1em;
-	right: 1em;
+#close{
+	position:absolute;
+	bottom:1em;
+	right:1em;
 }
 /*
   ***************************************
   MAPS/LEGEND
   ***************************************
  */
-#legend {
-	position: absolute;
-	bottom: 2em;
-	left: 2em;
-	width: 300px;
-	z-index: 1000;
-	background-color: white;
-	padding: 0.5em;
-	background-color:#ebebeb;
-	border:5px solid silver;	
-	border-radius:10px;
-}
-#timemap-legend {
-	position: absolute;
-	bottom: 25%;
-	left: 2em;
-	width: 200px;
-	z-index: 1000;
-	background-color: white;
-	padding: 0.5em;
+#legend{
+	position:absolute;
+	bottom:2em;
+	left:2em;
+	width:300px;
+	z-index:1000;
+	background-color:white;
+	padding:0.5em;
 	background-color:#ebebeb;
 	border:5px solid silver;
 	border-radius:10px;
 }
-#show_filters {
+#timemap-legend{
+	position:absolute;
+	bottom:25%;
+	left:2em;
+	width:200px;
+	z-index:1000;
+	background-color:white;
+	padding:0.5em;
+	background-color:#ebebeb;
+	border:5px solid silver;
+	border-radius:10px;
+}
+#show_filters{
 	font-size:80%;
 	margin-left:25px;
 }
-#resultMap {
+#resultMap{
 	width:600px;
 	height:400px;
 }
-#clear_all {
+#clear_all{
 	font-size:80%;
 	margin-left:25px;
 }
-.ui-tabs .ui-tabs-hide {
-	position: absolute;
-	left: -10000px;
+.ui-tabs .ui-tabs-hide{
+	position:absolute;
+	left:-10000px;
 }
-.departments {
+.departments{
 	margin:10px 0px;
 }
-.departments>input {
+.departments > input{
 	vertical-align:bottom;
 }
-.legend {
+.legend{
 	margin:25px 0;
 }
-.legend td {
+.legend td{
 	border:0;
 }
-.legend th {
+.legend th{
 	background:inherit;
-	border: 0;
+	border:0;
 }
-.olLayerGooglePoweredBy {
+.olLayerGooglePoweredBy{
 	display:none;
 }
 /*
@@ -95,86 +97,86 @@ button.multiselect {
   Timemap CSS
   ***************************************
  */
-div#timelinecontainer {
+div#timelinecontainer{
 	width:100%;
-	height: 20%;
+	height:20%;
 }
-div#mapcontainer {
+div#mapcontainer{
 	width:100%;
-	height: 100%;
+	height:100%;
 }
-div#fullscreen-mapcontainer {
+div#mapcontainer.fullscreen{
 	height:80%;
 	width:100%;
 }
-div.olFramedCloudPopupContent {
-	width: 300px;
+div.olFramedCloudPopupContent{
+	width:300px;
 }
-div#help {
-	font-size: 12px;
-	width: 45em;
-	padding: 1em;
+div#help{
+	font-size:12px;
+	width:45em;
+	padding:1em;
 }
-div#timeline {
-	width: 100%;
-	height: 100%;
-	font-size: 12px;
-	background: #CCCCCC;
+div#timeline{
+	width:100%;
+	height:100%;
+	font-size:12px;
+	background:#CCCCCC;
 }
-div#map {
-	width: 100%;
-	height: 100%;
-	background: #EEEEEE;
+div#map{
+	width:100%;
+	height:100%;
+	background:#EEEEEE;
 }
-div.infotitle {
-	font-size: 14px;
-	font-weight: bold;
+div.infotitle{
+	font-size:14px;
+	font-weight:bold;
 }
-div.infodescription {
-	font-size: 14px;
-	font-style: italic;
+div.infodescription{
+	font-size:14px;
+	font-style:italic;
 }
-div.custominfostyle {
-	font-family: Georgia, Garamond, serif;
-	font-size: 1.5em;
-	font-style: italic;
-	width: 20em;
+div.custominfostyle{
+	font-family:Georgia, Garamond, serif;
+	font-size:1.5em;
+	font-style:italic;
+	width:20em;
 }
 /*
   ***************************************
   AJAX RESULTS
   ***************************************
  */
-dl>div {
+dl > div{
 	display:table;
 	margin-left:10px;
 	width:100%;
 }
-dt {
-	float: left;
-	clear: left;
-	width: 125px;
-	text-align: right;
+dt{
+	float:left;
+	clear:left;
+	width:125px;
+	text-align:right;
 	font-weight:bold;
 }
-dd {
-	margin: 0 0 0 130px;
-	padding: 0 0 0.5em 0;
+dd{
+	margin:0 0 0 130px;
+	padding:0 0 0.5em 0;
 }
-.g_doc {
+.g_doc{
 	height:325px;
 }
 /* gallery image container */
-.gi_c {
+.gi_c{
 	margin:5px 0;
 	text-align:center;
 }
 /* gallery image */
-.gi {
+.gi{
 	padding:2px 2px;
 	max-width:120px;
 }
-.result_link {
+.result_link{
 	font-size:120%;
 }
 /*
@@ -182,14 +184,15 @@ dd {
   PAGINATION
   ***************************************
  */
-.paging_div {
+.paging_div{
 	padding:10px 0;
 	vertical-align:top
 }
-.page-nos {
+.page-nos{
 	text-align:right;
-	
+
 }
-.pagination a, .pagination button {
-	height:32px;	
+.pagination a,
+.pagination button{
+	height:32px;
 }

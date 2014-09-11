@@ -45,15 +45,18 @@
 	<page path="/numishare/[^\/]+/" matcher="oxf:perl5-matcher" model="xpl/models/config.xpl" view="xpl/views/pages/index.xpl"/>
 	
 	<!-- **** APIs **** -->
-	<page path="/numishare/[^\/]+/apis/get" matcher="oxf:perl5-matcher" model="xpl/models/object/get-id.xpl" view="xpl/views/apis/get.xpl"/>	
+	<page path="/numishare/[^\/]+/apis/get" matcher="oxf:perl5-matcher" model="xpl/models/object/get-id.xpl" view="xpl/views/apis/get.xpl"/>
 	<page path="/numishare/[^\/]+/apis/getNuds" matcher="oxf:perl5-matcher" view="xpl/models/object/aggregate-ids.xpl"/>
 
 	<!-- **** AJAX **** -->	
 	<page path="/numishare/[^\/]+/get_search_facets" matcher="oxf:perl5-matcher" model="xpl/models/solr/get_search_facets.xpl" view="xpl/views/ajax/get_search_facets.xpl"/>
 	
 	<!-- **** AGGREGATED OBJECTS/DUMPS **** -->
-	<page path="/numishare/[^\/]+/ingest" matcher="oxf:perl5-matcher" view="xpl/models/object/aggregate-ids.xpl" />
-	<page path="/numishare/[^\/]+/nomisma.rdf" matcher="oxf:perl5-matcher" model="xpl/models/object/aggregate-all.xpl" view="xpl/views/serializations/object/rdf.xpl"/>
+	<page path="/numishare/[^\/]+/ingest" matcher="oxf:perl5-matcher" model="xpl/models/object/aggregate-ids.xpl" view="xpl/views/serializations/object/solr.xpl"/>
+	<page path="/numishare/[^\/]+/nomisma.rdf" matcher="oxf:perl5-matcher" view="xpl/controllers/nomisma.xpl"/>
+	<!--<page path="/numishare/[^\/]+/pelagios.void.rdf" matcher="oxf:perl5-matcher" model="xpl/models/config.xpl" view="xpl/views/serializations/solr/rdf.xpl"/>-->
+	<page path="/numishare/[^\/]+/pelagios.rdf" matcher="oxf:perl5-matcher" model="xpl/models/solr/pelagios.xpl" view="xpl/views/serializations/solr/rdf.xpl"/>
+	
 
 	<epilogue url="oxf:/config/epilogue.xpl"/>
 </config>

@@ -61,7 +61,6 @@ function initialize_timemap(id, path, lang) {
 		Timeline.DateTime.YEAR,
 		Timeline.DateTime.DECADE]
 	});
-	
 	function toggleDataset(dsid, toggle) {
 		if (toggle) {
 			tm.datasets[dsid].show();
@@ -101,6 +100,8 @@ function initialize_map(id, path, lang) {
 			'ascending': true
 		})]
 	});
+	
+	
 	
 	//add baselayers
 	var i;
@@ -155,6 +156,7 @@ function initialize_map(id, path, lang) {
 	function onFeatureUnselect(event) {
 		map.removePopup(map.popups[0]);		
 	}
+	
 }
 
 function getURLParameter(name) {

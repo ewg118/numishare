@@ -1,15 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes="#all"
-	xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nm="http://nomisma.org/id/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-	xmlns:nuds="http://nomisma.org/nuds" xmlns:nh="http://nomisma.org/nudsHoard" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xlink="http://www.w3.org/1999/xlink"
-	xmlns:georss="http://www.georss.org/georss" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:oa="http://www.w3.org/ns/oa#" xmlns:owl="http://www.w3.org/2002/07/owl#"
-	xmlns:pelagios="http://pelagios.github.io/vocab/terms#" xmlns:relations="http://pelagios.github.io/vocab/relations#" xmlns:foaf="http://xmlns.com/foaf/0.1/"
-	xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:mets="http://www.loc.gov/METS/" xmlns:numishare="https://github.com/ewg118/numishare" version="2.0">
-
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes="xs"
+	xmlns:pelagios="http://pelagios.github.io/vocab/terms#" xmlns:relations="http://pelagios.github.io/vocab/relations#" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"
+	xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nm="http://nomisma.org/id/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/"
+	xmlns:oa="http://www.w3.org/ns/oa#" xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:foaf="http://xmlns.com/foaf/0.1/" version="2.0">
 	
+	<xsl:param name="mode" select="//lst[@name='params']/str[@name='mode']"/>
+	<xsl:param name="url" select="/content/config/url"/>
 
+	<xsl:template match="/">
+		<rdf:RDF>
+			<xsl:choose>
+				<xsl:when test="$mode='pelagios'">
+					<foaf:Organization rdf:about="{$url}pelagios.rdf#agents/me">
+						<foaf:name>
+							<xsl:value-of select="/content/config/template/agencyName"/>
+						</foaf:name>
+					</foaf:Organization>
+					<xsl:apply-templates select="//doc" mode="pelagios"/>
+				</xsl:when>
+				<xsl:when test="$mode='nomisma'">
+					<xsl:apply-templates select="//doc" mode="nomisma"/>
+				</xsl:when>
+			</xsl:choose>
+		</rdf:RDF>
+	</xsl:template>
+	
 	<!-- ************************* SOLR-BASED RDF ********************** -->
-
 	<!-- PELAGIOS RDF -->
 	<xsl:template match="doc" mode="pelagios" exclude-result-prefixes="#all">
 		<xsl:variable name="id" select="str[@name='recordId']"/>
@@ -19,7 +35,7 @@
 				<xsl:value-of select="str[@name='title_display']"/>
 			</dcterms:title>
 			<foaf:homepage rdf:resource="{$url}id/{$id}"/>
-
+			
 			<!-- temporal -->
 			<xsl:choose>
 				<xsl:when test="str[@name='recordType'] = 'hoard'">
@@ -38,7 +54,7 @@
 					</xsl:choose>
 				</xsl:otherwise>
 			</xsl:choose>
-
+			
 			<!-- images -->
 			<xsl:if test="str[@name='recordType'] = 'physical'">
 				<xsl:if test="string(str[@name='thumbnail_obv'])">
@@ -52,7 +68,7 @@
 							</xsl:otherwise>
 						</xsl:choose>
 					</xsl:variable>
-
+					
 					<foaf:thumbnail rdf:resource="{$href}"/>
 				</xsl:if>
 				<xsl:if test="string(str[@name='reference_obv'])">
@@ -66,7 +82,7 @@
 							</xsl:otherwise>
 						</xsl:choose>
 					</xsl:variable>
-
+					
 					<foaf:depiction rdf:resource="{$href}"/>
 				</xsl:if>
 				<xsl:if test="string(str[@name='thumbnail_rev'])">
@@ -80,7 +96,7 @@
 							</xsl:otherwise>
 						</xsl:choose>
 					</xsl:variable>
-
+					
 					<foaf:thumbnail rdf:resource="{$href}"/>
 				</xsl:if>
 				<xsl:if test="string(str[@name='reference_rev'])">
@@ -94,12 +110,12 @@
 							</xsl:otherwise>
 						</xsl:choose>
 					</xsl:variable>
-
+					
 					<foaf:depiction rdf:resource="{$href}"/>
 				</xsl:if>
 			</xsl:if>
 		</pelagios:AnnotatedThing>
-
+		
 		<!-- create annotations from pleiades URIs found in nomisma RDF and from findspots -->
 		<xsl:for-each select="distinct-values(arr[@name='pleiades_uri']/str)">
 			<oa:Annotation rdf:about="{$url}pelagios.rdf#{$id}/annotations/{format-number(position(), '000')}">
@@ -112,7 +128,7 @@
 				</oa:annotatedAt>
 			</oa:Annotation>
 		</xsl:for-each>
-
+		
 		<!-- create annotations for findspots, but not for coin types -->
 		<xsl:if test="not(str[@name='recordType'] = 'conceptual')">
 			<xsl:variable name="count" select="count(distinct-values(arr[@name='pleiades_uri']/str))"/>
@@ -129,12 +145,12 @@
 			</xsl:for-each>
 		</xsl:if>
 	</xsl:template>
-
+	
 	<!-- NOMISMA COIN TYPE RDF -->
 	<xsl:template match="doc" mode="nomisma">
 		<xsl:variable name="id" select="str[@name='recordId']"/>
 		<xsl:variable name="recordType" select="str[@name='recordType']"/>
-
+		
 		<xsl:element name="nm:{if ($recordType='hoard') then 'hoard' else 'coin'}" namespace="http://nomisma.org/id/" exclude-result-prefixes="#all">			
 			<xsl:attribute name="rdf:about" select="concat($url, 'id/', $id)"/>
 			<dcterms:title xml:lang="{if (str[@name='lang']) then str[@name='lang'] else 'en'}">
@@ -263,6 +279,4 @@
 			</xsl:if>
 		</xsl:element>
 	</xsl:template>
-
-	
 </xsl:stylesheet>
