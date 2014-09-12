@@ -53,10 +53,11 @@
 	
 	<!-- **** AGGREGATED OBJECTS/DUMPS **** -->
 	<page path="/numishare/[^\/]+/ingest" matcher="oxf:perl5-matcher" model="xpl/models/object/aggregate-ids.xpl" view="xpl/views/serializations/object/solr.xpl"/>
-	<page path="/numishare/[^\/]+/nomisma.rdf" matcher="oxf:perl5-matcher" view="xpl/controllers/nomisma.xpl"/>
-	<!--<page path="/numishare/[^\/]+/pelagios.void.rdf" matcher="oxf:perl5-matcher" model="xpl/models/config.xpl" view="xpl/views/serializations/solr/rdf.xpl"/>-->
+	<page path="/numishare/[^\/]+/nomisma.rdf" matcher="oxf:perl5-matcher" view="xpl/controllers/nomisma.xpl"/>	
 	<page path="/numishare/[^\/]+/pelagios.rdf" matcher="oxf:perl5-matcher" model="xpl/models/solr/pelagios.xpl" view="xpl/views/serializations/solr/rdf.xpl"/>
-	
+	<page path="/numishare/[^\/]+/pelagios.void.rdf" matcher="oxf:perl5-matcher" model="xpl/models/config.xpl" view="xpl/views/serializations/config/rdf-void.xpl"/>
+	<page path="/numishare/[^\/]+/nomisma.void.rdf" matcher="oxf:perl5-matcher" model="xpl/models/config.xpl" view="xpl/views/serializations/config/rdf-void.xpl"/>
+	<page path="/numishare/[^\/]+/opensearch.xml" matcher="oxf:perl5-matcher" model="xpl/models/config.xpl" view="xpl/views/serializations/config/opensearch.xpl"/>
 
 	<epilogue url="oxf:/config/epilogue.xpl"/>
 </config>
