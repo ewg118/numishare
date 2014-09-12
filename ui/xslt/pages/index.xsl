@@ -9,7 +9,7 @@
 	<xsl:variable name="display_path"/>
 	<xsl:variable name="include_path">../</xsl:variable>
 
-	<xsl:template match="/config">
+	<xsl:template match="/content/config">
 		<html lang="en">
 			<head>
 				<title>
@@ -22,8 +22,6 @@
 				<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"/>
 				<script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"/>
 				<link type="text/css" href="{$include_path}ui/css/style.css" rel="stylesheet"/>
-				<!-- index script -->
-				<script type="text/javascript" src="{$include_path}ui/javascript/get_features.js"/>
 				<xsl:if test="string(google_analytics)">
 					<script type="text/javascript">
 						<xsl:value-of select="google_analytics"/>
@@ -50,11 +48,7 @@
 								<p><xsl:value-of select="description"/></p>
 							</div>
 							<div class="col-md-3">
-								<xsl:if test="features_enabled = true()">
-									<div id="feature">
-										<h3>Featured Object</h3>
-									</div>
-								</xsl:if>	
+								<xsl:copy-of select="/content/div[@id='feature']"/>	
 							</div>
 						</xsl:when>
 						<xsl:otherwise>

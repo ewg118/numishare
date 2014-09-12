@@ -47,9 +47,6 @@
 	<!-- **** APIs **** -->
 	<page path="/numishare/[^\/]+/apis/get" matcher="oxf:perl5-matcher" model="xpl/models/object/get-id.xpl" view="xpl/views/apis/get.xpl"/>
 	<page path="/numishare/[^\/]+/apis/getNuds" matcher="oxf:perl5-matcher" view="xpl/models/object/aggregate-ids.xpl"/>
-
-	<!-- **** AJAX **** -->	
-	<page path="/numishare/[^\/]+/get_search_facets" matcher="oxf:perl5-matcher" model="xpl/models/solr/get_search_facets.xpl" view="xpl/views/ajax/get_search_facets.xpl"/>
 	
 	<!-- **** AGGREGATED OBJECTS/DUMPS **** -->
 	<page path="/numishare/[^\/]+/ingest" matcher="oxf:perl5-matcher" model="xpl/models/object/aggregate-ids.xpl" view="xpl/views/serializations/object/solr.xpl"/>
@@ -58,6 +55,9 @@
 	<page path="/numishare/[^\/]+/pelagios.void.rdf" matcher="oxf:perl5-matcher" model="xpl/models/config.xpl" view="xpl/views/serializations/config/rdf-void.xpl"/>
 	<page path="/numishare/[^\/]+/nomisma.void.rdf" matcher="oxf:perl5-matcher" model="xpl/models/config.xpl" view="xpl/views/serializations/config/rdf-void.xpl"/>
 	<page path="/numishare/[^\/]+/opensearch.xml" matcher="oxf:perl5-matcher" model="xpl/models/config.xpl" view="xpl/views/serializations/config/opensearch.xpl"/>
-
+	
+	<!-- **** AJAX **** -->	
+	<page path="/numishare/[^\/]+/get_search_facets" matcher="oxf:perl5-matcher" model="xpl/models/solr/get_search_facets.xpl" view="xpl/views/ajax/get_search_facets.xpl"/>
+	<page path="/numishare/[^\/]+/get_feature" matcher="oxf:perl5-matcher" model="xpl/models/solr/get_feature.xpl" view="xpl/views/ajax/get_feature.xpl"/>
 	<epilogue url="oxf:/config/epilogue.xpl"/>
 </config>
