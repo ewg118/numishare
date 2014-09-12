@@ -48,7 +48,7 @@
 	<page path="/numishare/[^\/]+/apis/get" matcher="oxf:perl5-matcher" model="xpl/models/object/get-id.xpl" view="xpl/views/apis/get.xpl"/>
 	<page path="/numishare/[^\/]+/apis/getNuds" matcher="oxf:perl5-matcher" view="xpl/models/object/aggregate-ids.xpl"/>
 	
-	<!-- **** AGGREGATED OBJECTS/DUMPS **** -->
+	<!-- **** AGGREGATED OBJECTS / RDF EXPORT **** -->
 	<page path="/numishare/[^\/]+/ingest" matcher="oxf:perl5-matcher" model="xpl/models/object/aggregate-ids.xpl" view="xpl/views/serializations/object/solr.xpl"/>
 	<page path="/numishare/[^\/]+/nomisma.rdf" matcher="oxf:perl5-matcher" view="xpl/controllers/nomisma.xpl"/>	
 	<page path="/numishare/[^\/]+/pelagios.rdf" matcher="oxf:perl5-matcher" model="xpl/models/solr/pelagios.xpl" view="xpl/views/serializations/solr/rdf.xpl"/>
@@ -56,8 +56,16 @@
 	<page path="/numishare/[^\/]+/nomisma.void.rdf" matcher="oxf:perl5-matcher" model="xpl/models/config.xpl" view="xpl/views/serializations/config/rdf-void.xpl"/>
 	<page path="/numishare/[^\/]+/opensearch.xml" matcher="oxf:perl5-matcher" model="xpl/models/config.xpl" view="xpl/views/serializations/config/opensearch.xpl"/>
 	
+	<!-- **** GEOGRAPHIC EXPORT **** -->
+	<page path="/numishare/[^\/]+/findspots.kml" matcher="oxf:perl5-matcher" model="xpl/models/solr/geographic-facets.xpl" view="xpl/views/serializations/solr/kml.xpl"/>	
+	<page path="/numishare/[^\/]+/hoards.kml" matcher="oxf:perl5-matcher" model="xpl/models/solr/geographic-docs.xpl" view="xpl/views/serializations/solr/kml.xpl"/>
+	<page path="/numishare/[^\/]+/mints.kml" matcher="oxf:perl5-matcher" model="xpl/models/solr/geographic-facets.xpl" view="xpl/views/serializations/solr/kml.xpl"/>
+	<page path="/numishare/[^\/]+/query.kml" matcher="oxf:perl5-matcher" model="xpl/models/solr/geographic-docs.xpl" view="xpl/views/serializations/solr/kml.xpl"/>
+	<page path="/numishare/[^\/]+/subjects.kml" matcher="oxf:perl5-matcher" model="xpl/models/solr/geographic-facets.xpl" view="xpl/views/serializations/solr/kml.xpl"/>
+	
 	<!-- **** AJAX **** -->	
 	<page path="/numishare/[^\/]+/get_search_facets" matcher="oxf:perl5-matcher" model="xpl/models/solr/get_search_facets.xpl" view="xpl/views/ajax/get_search_facets.xpl"/>
-	<page path="/numishare/[^\/]+/get_feature" matcher="oxf:perl5-matcher" model="xpl/models/solr/get_feature.xpl" view="xpl/views/ajax/get_feature.xpl"/>
+	<page path="/numishare/[^\/]+/results_ajax" matcher="oxf:perl5-matcher" model="xpl/models/solr/results_ajax.xpl" view="xpl/views/ajax/results_ajax.xpl"/>
+	
 	<epilogue url="oxf:/config/epilogue.xpl"/>
 </config>

@@ -33,30 +33,52 @@
 				<!-- url params -->
 				<xsl:param name="lang" select="doc('input:request')/request/parameters/parameter[name='lang']/value"/>
 				<xsl:param name="q" select="doc('input:request')/request/parameters/parameter[name='q']/value"/>
-				<xsl:param name="sort" select="doc('input:request')/request/parameters/parameter[name='sort']/value"/>
-				<xsl:param name="rows">20</xsl:param>
-				<xsl:param name="start">
+				<xsl:param name="rows">10000</xsl:param>
+				
+				<!-- facet variable -->
+				<xsl:variable name="facet">
 					<xsl:choose>
-						<xsl:when test="string(doc('input:request')/request/parameters/parameter[name='start']/value)">
-							<xsl:value-of select="doc('input:request')/request/parameters/parameter[name='start']/value"/>
-						</xsl:when>
-						<xsl:otherwise>0</xsl:otherwise>
+						<xsl:when test="contains(doc('input:request')/request/request-url, 'query.kml')">mint_geo</xsl:when>
+						<xsl:when test="contains(doc('input:request')/request/request-url, 'hoards.kml')">findspot_geo</xsl:when>
+						<xsl:when test="contains(doc('input:request')/request/request-url, 'hoards.json')">findspot_geo</xsl:when>
 					</xsl:choose>
-				</xsl:param>
+				</xsl:variable>
+				
+				<xsl:variable name="mode">
+					<xsl:choose>
+						<xsl:when test="contains(doc('input:request')/request/request-url, 'query.kml')">query</xsl:when>
+						<xsl:when test="contains(doc('input:request')/request/request-url, 'hoards.kml')">hoard</xsl:when>
+						<xsl:when test="contains(doc('input:request')/request/request-url, 'hoards.json')">hoard</xsl:when>
+					</xsl:choose>
+				</xsl:variable>
 
 				<!-- config variables -->
 				<xsl:variable name="solr-url" select="concat(/config/solr_published, 'select/')"/>
-				<xsl:variable name="facets" select="concat('&amp;facet.field=', string-join(/config/facets/facet, '&amp;facet.field='))"/>				
 
 				<xsl:variable name="service">
 					<xsl:choose>
-						<xsl:when test="string($lang)">
-							<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+lang:', $lang, '+AND+(mint_geo:*+OR+findspot_geo:*)&amp;start=', $start, $facets, '&amp;facet.field=mint_geo&amp;facet.numFacetTerms=1&amp;facet.sort=index&amp;facet=true')"/>
+						<xsl:when test="string($q)">
+							<xsl:choose>
+								<xsl:when test="string($lang)">
+									<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+lang:', $lang, '+AND+', $facet, ':*+AND+', encode-for-uri($q), '&amp;facet=false&amp;rows=', $rows, '&amp;mode=', $mode)"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+NOT(lang:*)+AND+', $facet, ':*+AND+', encode-for-uri($q), '&amp;facet=false&amp;rows=', $rows, '&amp;mode=', $mode)"/>
+								</xsl:otherwise>
+							</xsl:choose>
 						</xsl:when>
 						<xsl:otherwise>
-							<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+NOT(lang:*)+AND+(mint_geo:*+OR+findspot_geo:*)&amp;start=', $start, $facets, '&amp;facet.field=mint_geo&amp;facet.numFacetTerms=1&amp;facet.sort=index&amp;facet=true')"/>
+							<xsl:choose>
+								<xsl:when test="string($lang)">
+									<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+lang:', $lang, '+AND+', $facet, ':*&amp;facet=false&amp;rows=', $rows, '&amp;mode=', $mode)"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+NOT(lang:*)+AND+', $facet, ':*&amp;facet=false&amp;rows=', $rows, '&amp;mode=', $mode)"/>
+								</xsl:otherwise>
+							</xsl:choose>
 						</xsl:otherwise>
 					</xsl:choose>
+					
 				</xsl:variable>
 
 				<xsl:template match="/">
