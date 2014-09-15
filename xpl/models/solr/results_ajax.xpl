@@ -6,10 +6,8 @@
 	
 -->
 <p:config xmlns:p="http://www.orbeon.com/oxf/pipeline" xmlns:oxf="http://www.orbeon.com/oxf/processors">
-
 	<p:param type="input" name="data"/>
 	<p:param type="output" name="data"/>
-
 	<p:processor name="oxf:request">
 		<p:input name="config">
 			<config>
@@ -18,21 +16,20 @@
 		</p:input>
 		<p:output name="data" id="request"/>
 	</p:processor>
-
 	<p:processor name="oxf:pipeline">
-		<p:input name="config" href="config.xpl"/>
+		<p:input name="config" href="../config.xpl"/>
 		<p:output name="data" id="config"/>
 	</p:processor>
-
 	<p:processor name="oxf:unsafe-xslt">
 		<p:input name="request" href="#request"/>
 		<p:input name="data" href="#config"/>
 		<p:input name="config">
 			<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-				<xsl:variable name="collection-name" select="substring-before(substring-after(doc('input:request')/request/servlet-path, 'eaditor/'), '/')"/>
+				<xsl:variable name="collection-name" select="substring-before(substring-after(doc('input:request')/request/servlet-path, 'numishare/'), '/')"/>
 				<!-- url params -->
 				<xsl:param name="lang" select="doc('input:request')/request/parameters/parameter[name='lang']/value"/>
 				<xsl:param name="q" select="doc('input:request')/request/parameters/parameter[name='q']/value"/>
+				<xsl:param name="sort" select="doc('input:request')/request/parameters/parameter[name='sort']/value"/>
 				<xsl:param name="rows" as="xs:integer">24</xsl:param>
 				<xsl:param name="start" as="xs:integer">
 					<xsl:choose>
@@ -42,21 +39,20 @@
 						<xsl:otherwise>0</xsl:otherwise>
 					</xsl:choose>
 				</xsl:param>
-
 				<!-- config variables -->
 				<xsl:variable name="solr-url" select="concat(/config/solr_published, 'select/')"/>
-
 				<xsl:variable name="service">
 					<xsl:choose>
 						<xsl:when test="string($lang)">
-							<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+lang:', $lang, '+AND+', encode-for-uri($q), '&amp;start=', $start, '&amp;rows=', $rows, '&amp;sort=', encode-for-uri($sort))"/>
+							<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+lang:', $lang, '+AND+', encode-for-uri($q), '&amp;start=', $start, '&amp;rows=',
+								$rows, '&amp;sort=', encode-for-uri($sort))"/>
 						</xsl:when>
 						<xsl:otherwise>
-							<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+NOT(lang:*)+AND+', encode-for-uri($q), '&amp;start=', $start, '&amp;rows=', $rows, '&amp;sort=', encode-for-uri($sort))"/>
+							<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+NOT(lang:*)+AND+', encode-for-uri($q), '&amp;start=', $start, '&amp;rows=', $rows,
+								'&amp;sort=', encode-for-uri($sort))"/>
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:variable>
-
 				<xsl:template match="/">
 					<config>
 						<url>
@@ -70,7 +66,6 @@
 		</p:input>
 		<p:output name="data" id="generator-config"/>
 	</p:processor>
-	
 	<p:processor name="oxf:url-generator">
 		<p:input name="config" href="#generator-config"/>
 		<p:output name="data" ref="data"/>

@@ -3,7 +3,9 @@
 	xmlns:res="http://www.w3.org/2005/sparql-results#" xmlns:cinclude="http://apache.org/cocoon/include/1.0" exclude-result-prefixes="#all" version="2.0">
 	<xsl:include href="../functions.xsl"/>		
 	<xsl:include href="../serializations/solr/html-templates.xsl"/>
-	<xsl:param name="pipeline"/>
+	
+	<!-- params -->
+	<xsl:param name="pipeline" select="doc('input:request')/request/parameters/parameter[name='pipeline']/value"/>
 	<xsl:param name="lang" select="doc('input:request')/request/parameters/parameter[name='lang']/value"/>
 
 	<xsl:variable name="display_path">
@@ -13,13 +15,20 @@
 			<xsl:otherwise/>
 		</xsl:choose>
 	</xsl:variable>
+	
+	<!-- empty variables -->
+	<xsl:variable name="mode"/>
+	<xsl:variable name="image"/>
+	<xsl:variable name="collection_type"/>
+	<xsl:variable name="side"/>
 
-	<xsl:param name="q"/>
-	<xsl:param name="sort"/>
+	<!-- solr params -->
+	<xsl:param name="q" select="doc('input:request')/request/parameters/parameter[name='q']/value"/>
+	<xsl:param name="sort" select="doc('input:request')/request/parameters/parameter[name='sort']/value"/>
 	<xsl:param name="rows">24</xsl:param>
-	<xsl:param name="start"/>
-	<xsl:param name="tokenized_q" select="tokenize($q, ' AND ')"/>
-
+	<xsl:param name="start" select="doc('input:request')/request/parameters/parameter[name='start']/value"/>
+	
+	<xsl:variable name="tokenized_q" select="tokenize($q, ' AND ')"/>
 	<xsl:variable name="numFound" select="//result[@name='response']/@numFound" as="xs:integer"/>
 
 	<!-- config variables -->
@@ -61,7 +70,7 @@
 		<xsl:call-template name="paging"/>
 	</xsl:template>
 
-	<xsl:template match="doc" mode="map">
+	<xsl:template match="doc" mode="map">		
 		<xsl:variable name="sort_category" select="substring-before($sort, ' ')"/>
 		<xsl:variable name="regularized_sort">
 			<xsl:value-of select="numishare:normalize_fields($sort_category, $lang)"/>

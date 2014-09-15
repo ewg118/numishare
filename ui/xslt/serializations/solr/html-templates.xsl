@@ -1098,7 +1098,7 @@
 
 		<div class="row">
 			<div class="col-md-12">
-				<form role="form" class="sortForm" action="results">
+				<form role="form" class="sortForm" action="results" method="GET">
 					<select class="sortForm_categories form-control">
 						<option value="null">
 							<xsl:value-of select="numishare:normalizeLabel('results_select', $lang)"/>

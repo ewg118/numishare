@@ -260,7 +260,7 @@ $(document).ready(function () {
 		$.get(href, {
 			pipeline: pipeline
 		},
-		function (data) {
+		function (data) {			
 			$('#results') .html(data);
 		});
 		return false;
@@ -512,8 +512,8 @@ $(document).ready(function () {
 		
 		$('.show_coins').on('click', function (event) {
 			var query = $(this).attr('q');
-			var lang = $('input[name=lang]').val();
-			$.get(path + 'results_ajax', {
+			var lang = $('input[name=lang]').val();			
+			$.get(path + 'results_ajax', {				
 				q: query, lang: lang, pipeline: pipeline
 			},
 			function (data) {
