@@ -60,6 +60,7 @@
 	<!-- **** GEOGRAPHIC EXPORT **** -->
 	<page path="/numishare/[^\/]+/findspots.kml" matcher="oxf:perl5-matcher" model="xpl/models/solr/geographic-facets.xpl" view="xpl/views/serializations/solr/kml.xpl"/>	
 	<page path="/numishare/[^\/]+/hoards.kml" matcher="oxf:perl5-matcher" model="xpl/models/solr/geographic-docs.xpl" view="xpl/views/serializations/solr/kml.xpl"/>
+	<page path="/numishare/[^\/]+/hoards.json" matcher="oxf:perl5-matcher" model="xpl/models/solr/geographic-docs.xpl" view="xpl/views/serializations/solr/json-timemap.xpl"/>
 	<page path="/numishare/[^\/]+/mints.kml" matcher="oxf:perl5-matcher" model="xpl/models/solr/geographic-facets.xpl" view="xpl/views/serializations/solr/kml.xpl"/>
 	<page path="/numishare/[^\/]+/query.kml" matcher="oxf:perl5-matcher" model="xpl/models/solr/geographic-docs.xpl" view="xpl/views/serializations/solr/kml.xpl"/>
 	<page path="/numishare/[^\/]+/subjects.kml" matcher="oxf:perl5-matcher" model="xpl/models/solr/geographic-facets.xpl" view="xpl/views/serializations/solr/kml.xpl"/>
