@@ -61,7 +61,7 @@ $(document).ready(function () {
 					var category = id.split('-select')[0];
 					var mincount = $(this).attr('mincount');
 					$.get('get_facet_options', {
-						q: q, category: category, sort: 'index', limit: - 1, offset: 0, mincount: mincount, lang: lang
+						q: q, category: category, mincount: mincount, lang: lang, pipeline: 'results'
 					},
 					function (data) {
 						$('#' + id) .html('');
@@ -81,7 +81,7 @@ $(document).ready(function () {
 		var category = id.split('-select')[0];
 		var mincount =$(this).parent('div').prev('select').attr('mincount');
 		$.get('get_facet_options', {
-			q: q, category: category, sort: 'index', limit: - 1, offset: 0, mincount: mincount, lang: lang
+			q: q, category: category, mincount: mincount, lang: lang, pipeline: 'results'
 		},
 		function (data) {
 			$('#' + id) .html('');

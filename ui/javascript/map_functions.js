@@ -194,8 +194,8 @@ $(document).ready(function () {
 				var q = getQuery();
 				var category = id.split('-select')[0];
 				var mincount = $(this).attr('mincount');
-				$.get(path + 'maps_get_facet_options', {
-					q: q, category: category, sort: 'index', limit: - 1, offset: 0, mincount: mincount, lang: lang
+				$.get(path + 'get_facet_options', {
+					q: q, category: category, mincount: mincount, lang: lang, pipeline: pipeline
 				},
 				function (data) {
 					$('#' + id) .html('');
@@ -217,8 +217,8 @@ $(document).ready(function () {
 		var id = $(this).parent('div').prev('select').attr('id');
 		var mincount = $(this).parent('div').prev('select').attr('mincount');
 		var category = id.split('-select')[0];
-		$.get(path + 'maps_get_facet_options', {
-			q: q, category: category, sort: 'index', limit: - 1, offset: 0, mincount: mincount, lang: lang
+		$.get(path + 'get_facet_options', {
+			q: q, category: category, mincount: mincount, lang: lang, pipeline: pipeline
 		},
 		function (data) {
 			$('#' + id) .attr('new_query', '');

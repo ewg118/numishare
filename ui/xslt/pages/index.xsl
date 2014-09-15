@@ -98,7 +98,7 @@
 				<div class="col-md-3">
 					<div class="highlight data_options">
 						<h3>Linked Data</h3>
-						<a href="{$include_path}ui/feed/?q=*:*">
+						<a href="{$display_path}feed/?q=*:*">
 							<img src="{$include_path}ui/images/atom-large.png" title="Atom" alt="Atom"/>
 						</a>
 						<xsl:if test="pelagios_enabled=true()">

@@ -28,7 +28,7 @@
 	<!-- **** SERIALIZATIONS **** -->	
 	<!-- Solr -->
 	<page path="/numishare/[^\/]+/results" matcher="oxf:perl5-matcher" model="xpl/models/solr/results.xpl" view="xpl/views/serializations/solr/html.xpl"/>
-	<page path="/numishare/[^\/]+/feed" matcher="oxf:perl5-matcher" model="xpl/models/solr/results.xpl" view="xpl/views/serializations/solr/atom.xpl"/>
+	<page path="/numishare/[^\/]+/feed/" matcher="oxf:perl5-matcher" model="xpl/models/solr/results.xpl" view="xpl/views/serializations/solr/atom.xpl"/>
 	
 	<!-- id -->
 	<page path="/numishare/[^\/]+/id/(.*)\.xml" matcher="oxf:perl5-matcher" view="xpl/models/object/get-id.xpl"/>
@@ -64,7 +64,8 @@
 	<page path="/numishare/[^\/]+/subjects.kml" matcher="oxf:perl5-matcher" model="xpl/models/solr/geographic-facets.xpl" view="xpl/views/serializations/solr/kml.xpl"/>
 	
 	<!-- **** AJAX **** -->	
-	<page path="/numishare/[^\/]+/get_search_facets" matcher="oxf:perl5-matcher" model="xpl/models/solr/get_search_facets.xpl" view="xpl/views/ajax/get_search_facets.xpl"/>
+	<page path="/numishare/[^\/]+/get_facet_options" matcher="oxf:perl5-matcher" model="xpl/models/solr/get_facet_options.xpl" view="xpl/views/ajax/get_facet_options.xpl"/>
+	<page path="/numishare/[^\/]+/get_search_facets" matcher="oxf:perl5-matcher" model="xpl/models/solr/get_search_facets.xpl" view="xpl/views/ajax/get_search_facets.xpl"/>	
 	<page path="/numishare/[^\/]+/results_ajax" matcher="oxf:perl5-matcher" model="xpl/models/solr/results_ajax.xpl" view="xpl/views/ajax/results_ajax.xpl"/>
 	
 	<epilogue url="oxf:/config/epilogue.xpl"/>

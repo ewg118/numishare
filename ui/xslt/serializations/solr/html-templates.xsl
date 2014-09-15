@@ -362,7 +362,7 @@
 	<xsl:template match="lst[@name='facet_fields']">
 		<!-- ignore mint_geo-->
 		<xsl:apply-templates select="lst[not(@name='mint_geo') and number(int[@name='numFacetTerms']) &gt; 0]" mode="facet"/>
-		<form action="results" role="form" id="facet_form">
+		<form action="results" method="GET"  role="form" id="facet_form">
 			<xsl:variable name="imageavailable_stripped">
 				<xsl:for-each select="$tokenized_q[not(contains(., 'imagesavailable'))]">
 					<xsl:value-of select="."/>
