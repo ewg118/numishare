@@ -2,15 +2,18 @@
 <?cocoon-disable-caching?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:numishare="https://github.com/ewg118/numishare" exclude-result-prefixes="#all" version="2.0">
 	<xsl:output method="xml" indent="yes" encoding="UTF-8" media-type="text/html"/>
-	<xsl:include href="header.xsl"/>
-	<xsl:include href="footer.xsl"/>
-	<xsl:include href="templates.xsl"/>
-	<xsl:include href="functions.xsl"/>
+	
+	<xsl:include href="../header.xsl"/>
+	<xsl:include href="../footer.xsl"/>
+	<xsl:include href="../functions.xsl"/>
+	<xsl:include href="../templates_search.xsl"/>
 
-	<xsl:param name="pipeline"/>
-	<xsl:param name="lang"/>
-	<xsl:param name="mode"/>
-	<xsl:param name="display_path"/>
+	<xsl:param name="pipeline">compare</xsl:param>
+	<xsl:param name="lang" select="doc('input:request')/request/parameters/parameter[name='lang']/value"/>
+	<xsl:param name="mode" select="doc('input:request')/request/parameters/parameter[name='mode']/value"/>
+	
+	<xsl:variable name="display_path"/>
+	<xsl:variable name="include_path">../</xsl:variable>
 
 	<!-- config variables-->
 	<xsl:variable name="collection_type" select="//config/collection_type"/>
@@ -26,18 +29,18 @@
 					<xsl:text>: </xsl:text>
 					<xsl:value-of select="numishare:normalizeLabel('header_compare', $lang)"/>
 				</title>
-				<link rel="shortcut icon" type="image/x-icon" href="{$display_path}images/favicon.png"/>
+				<link rel="shortcut icon" type="image/x-icon" href="{$include_path}ui/images/favicon.png"/>
 				<meta name="viewport" content="width=device-width, initial-scale=1"/>
 				<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"/>
 				<!-- bootstrap -->
 				<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"/>
 				<script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"/>
-				<link type="text/css" href="{$display_path}style.css" rel="stylesheet"/>
+				<link type="text/css" href="{$include_path}ui/css/style.css" rel="stylesheet"/>
 
 				<!-- search related functions -->
-				<script type="text/javascript" src="{$display_path}javascript/search_functions.js"/>
-				<script type="text/javascript" src="{$display_path}javascript/compare.js"/>
-				<script type="text/javascript" src="{$display_path}javascript/compare_functions.js"/>
+				<script type="text/javascript" src="{$include_path}ui/javascript/search_functions.js"/>
+				<script type="text/javascript" src="{$include_path}ui/javascript/compare.js"/>
+				<script type="text/javascript" src="{$include_path}ui/javascript/compare_functions.js"/>
 				<xsl:if test="string(//config/google_analytics)">
 					<script type="text/javascript">
 						<xsl:value-of select="//config/google_analytics"/>

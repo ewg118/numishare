@@ -1,19 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" version="2.0">
-	<xsl:param name="collection_path" select="/content/config/url"/>
-	<xsl:include href="../results_templates.xsl"/>
+	<xsl:include href="../serializations/solr/html-templates.xsl"/>
 	<xsl:include href="../functions.xsl"/>
-
-	<xsl:param name="display_path"/>
-	<xsl:param name="pipeline"/>
-	<xsl:param name="q"/>
+	
+	<!-- URL params -->	
+	<xsl:param name="q" select="doc('input:request')/request/parameters/parameter[name='q']/value"/>
 	<xsl:param name="rows">20</xsl:param>
-	<xsl:param name="start"/>
-	<xsl:param name="mode"/>
-	<xsl:param name="image"/>
-	<xsl:param name="side"/>
-	<xsl:param name="sort"/>
-	<xsl:param name="lang"/>
+	<xsl:param name="start" select="doc('input:request')/request/parameters/parameter[name='start']/value"/>
+	<xsl:param name="mode" select="doc('input:request')/request/parameters/parameter[name='mode']/value"/>
+	<xsl:param name="image" select="doc('input:request')/request/parameters/parameter[name='image']/value"/>
+	<xsl:param name="side" select="doc('input:request')/request/parameters/parameter[name='side']/value"/>
+	<xsl:param name="sort" select="doc('input:request')/request/parameters/parameter[name='sort']/value"/>
+	<xsl:param name="lang" select="doc('input:request')/request/parameters/parameter[name='lang']/value"/>
 	<xsl:variable name="start_var" as="xs:integer">
 		<xsl:choose>
 			<xsl:when test="number($start)">
@@ -22,19 +20,28 @@
 			<xsl:otherwise>0</xsl:otherwise>
 		</xsl:choose>
 	</xsl:variable>
-
 	<xsl:variable name="numFound">
 		<xsl:value-of select="//result[@name='response']/@numFound"/>
 	</xsl:variable>
-
+	
+	<!-- empty variables -->
+	<xsl:variable name="collection_type"/>
+	<xsl:variable name="tokenized_q"/>
+	<xsl:variable name="sparqlResult" as="element()*">
+		<empty/>
+	</xsl:variable>
+	
+	<!-- misc -->
+	<xsl:variable name="display_path"/>
+	<xsl:param name="pipeline">compare</xsl:param>
+	
 	<xsl:template match="/">
 		<!-- this is for returning search results from the search pipeline -->
-
 		<xsl:choose>
 			<xsl:when test="$numFound &gt; 0">
 				<xsl:call-template name="paging"/>
 				<xsl:call-template name="sort"/>
-				<xsl:apply-templates select="//doc"/>
+				<xsl:apply-templates select="descendant::doc"/>
 				<xsl:call-template name="paging"/>
 			</xsl:when>
 			<xsl:otherwise>
