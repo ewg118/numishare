@@ -46,7 +46,7 @@ function initialize_timemap(id) {
 		},
 		datasets:[ {
 			title: "Mints",
-			type: "json", // Data to be loaded in KML - must be a local URL
+			type: "json", 
 			options: {
 				url: "../apis/get?id=" + id + "&format=json&lang=" + lang// KML file to load
 			}

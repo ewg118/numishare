@@ -688,13 +688,10 @@
 	<!-- ************** HOARDS: GET HOARDS FOR COMPARISON ************** -->
 	<xsl:template name="get-hoards">
 		<div class="compare-div">
-			<cinclude:include src="cocoon:/get_hoards?compare={$compare}&amp;q=*&amp;ignore={$id}"/>
+			<!--<cinclude:include src="cocoon:/get_hoards?compare={$compare}&amp;q=*&amp;ignore={$id}"/>-->
+			<xsl:copy-of select="/content/select[@id='get_hoards-control']"/>
 		</div>
 	</xsl:template>
-
-	
-
-	
 
 	<!-- ************** MEASUREMENT FORM FOR COIN TYPE ANALYSIS ************** -->
 	<xsl:template name="measurementForm">
