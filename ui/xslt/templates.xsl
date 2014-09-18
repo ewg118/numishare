@@ -290,7 +290,7 @@
 									<h4>
 										<xsl:value-of select="numishare:normalizeLabel('visualize_exclude_certainty_codes', $lang)"/>
 									</h4>
-									<cinclude:include src="cocoon:/get_certainty_codes?exclude={$exclude}"/>
+									<xsl:copy-of select="/content/select[@id='get_certainty_codes']"/>								
 								</dl>
 							</div>
 							<div>
@@ -484,7 +484,7 @@
 							<h4>
 								<xsl:value-of select="numishare:normalizeLabel('visualize_exclude_certainty_codes', $lang)"/>
 							</h4>
-							<cinclude:include src="cocoon:/get_certainty_codes?exclude={$exclude}"/>
+							<xsl:copy-of select="/content/select[@id='get_certainty_codes']"/>
 						</div>
 					</div>
 				</div>
@@ -637,7 +637,7 @@
 							<h4>
 								<xsl:value-of select="numishare:normalizeLabel('visualize_exclude_certainty_codes', $lang)"/>
 							</h4>
-							<cinclude:include src="cocoon:/get_certainty_codes?exclude={$exclude}"/>
+							<xsl:copy-of select="/content/select[@id='get_certainty_codes']"/>
 						</div>
 					</div>
 				</div>
@@ -688,7 +688,6 @@
 	<!-- ************** HOARDS: GET HOARDS FOR COMPARISON ************** -->
 	<xsl:template name="get-hoards">
 		<div class="compare-div">
-			<!--<cinclude:include src="cocoon:/get_hoards?compare={$compare}&amp;q=*&amp;ignore={$id}"/>-->
 			<xsl:copy-of select="/content/select[@id='get_hoards-control']"/>
 		</div>
 	</xsl:template>

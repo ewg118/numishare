@@ -50,9 +50,20 @@
 				<p:output name="data" id="get_hoards-view"/>
 			</p:processor>
 			
+			<p:processor name="oxf:pipeline">
+				<p:input name="config" href="../../../models/xquery/get_certainty_codes.xpl"/>
+				<p:output name="data" id="codes-model"/>
+			</p:processor>
+			
+			<p:processor name="oxf:pipeline">
+				<p:input name="data" href="#codes-model"/>
+				<p:input name="config" href="../../../views/ajax/get_certainty_codes.xpl"/>
+				<p:output name="data" id="codes-view"/>
+			</p:processor>
+			
 			<p:processor name="oxf:unsafe-xslt">
 				<p:input name="request" href="#request"/>
-				<p:input name="data" href="aggregate('content', #data, #config, #get_hoards-view)"/>
+				<p:input name="data" href="aggregate('content', #data, #config, #get_hoards-view, #codes-view)"/>
 				<p:input name="config" href="../../../../ui/xslt/serializations/object/html.xsl"/>
 				<p:output name="data" id="model"/>				
 			</p:processor>

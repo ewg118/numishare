@@ -493,32 +493,7 @@
 							<xsl:copy-of select="document(concat($request-uri, 'get_centuries?q=', encode-for-uri($q)))//ul[@id='root']/li"/>
 						</xsl:if>
 					</ul>
-				</div>
-				<!--<button class="ui-multiselect ui-widget ui-state-default ui-corner-all" type="button" title="{numishare:regularize_node('date', $lang)}" aria-haspopup="true" style="width: 200px;"
-					id="{@name}_link" label="{$q}">
-					<span class="ui-icon ui-icon-triangle-2-n-s"/>
-					<span>
-						<xsl:value-of select="numishare:regularize_node('date', $lang)"/>
-					</span>
-				</button>
-				<div class="ui-multiselect-menu ui-widget ui-widget-content ui-corner-all date-div" style="width: 200px;">
-					<div class="ui-widget-header ui-corner-all ui-multiselect-header ui-helper-clearfix ui-multiselect-hasfilter">
-						<ul class="ui-helper-reset">
-							<li class="ui-multiselect-close">
-								<a class="ui-multiselect-close century-close" href="#">
-									<span class="ui-icon ui-icon-circle-close"/>
-								</a>
-							</li>
-						</ul>
-					</div>
-					<ul class="century-multiselect-checkboxes ui-helper-reset" id="{@name}-list" style="height: 175px;">
-						<xsl:if test="contains($q, @name)">
-						<xsl:copy-of
-							select="document(concat($request-uri, 'get_centuries?q=', encode-for-uri($q)))//ul[@id='root']/li"
-						/>
-						</xsl:if>
-					</ul>
-				</div>-->
+				</div>				
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:variable name="count" select="number(int[@name='numFacetTerms'])"/>
