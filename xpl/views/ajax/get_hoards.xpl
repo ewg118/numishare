@@ -24,12 +24,10 @@
 		<p:input name="request" href="#request"/>
 		<p:input name="data" href="#data"/>		
 		<p:input name="config" href="../../../ui/xslt/ajax/get_hoards.xsl"/>
-		<!--<p:output name="data" id="model"/>-->	
-		<p:output name="data" ref="data"/>
-		
+		<p:output name="data" id="model"/>		
 	</p:processor>
 	
-	<!--<p:processor name="oxf:html-converter">
+	<p:processor name="oxf:html-converter">
 		<p:input name="data" href="#model"/>
 		<p:input name="config">
 			<config>
@@ -38,7 +36,7 @@
 			</config>
 		</p:input>
 		<p:output name="data" ref="data"/>
-	</p:processor>-->
+	</p:processor>
 	
 
 </p:config>

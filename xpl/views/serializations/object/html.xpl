@@ -43,9 +43,10 @@
 				<p:output name="data" id="get_hoards-model"/>
 			</p:processor>
 			
-			<p:processor name="oxf:pipeline">
-				<p:input name="data" href="#get_hoards-model"/>
-				<p:input name="config" href="../../ajax/get_hoards.xpl"/>
+			<p:processor name="oxf:unsafe-xslt">
+				<p:input name="request" href="#request"/>
+				<p:input name="data" href="#get_hoards-model"/>		
+				<p:input name="config" href="../../../../ui/xslt/ajax/get_hoards.xsl"/>
 				<p:output name="data" id="get_hoards-view"/>
 			</p:processor>
 			
@@ -53,7 +54,7 @@
 				<p:input name="request" href="#request"/>
 				<p:input name="data" href="aggregate('content', #data, #config, #get_hoards-view)"/>
 				<p:input name="config" href="../../../../ui/xslt/serializations/object/html.xsl"/>
-				<p:output name="data" id="model"/>
+				<p:output name="data" id="model"/>				
 			</p:processor>
 		</p:when>
 		<p:otherwise>

@@ -54,7 +54,7 @@ function initialize_timemap(id, path, lang) {
 		timelineId: "timeline", // Id of timeline div element (required)
 		options: {
 			mapType: "physical",
-			eventIconPath: "../images/timemap/"
+			eventIconPath: "../../ui/images/timemap/"
 		},
 		datasets: datasets,
 		bandIntervals:[
@@ -88,7 +88,7 @@ function initialize_map(id, path, lang) {
 	var baselayers = $('#baselayers').text().split(',');
 
 	/***** KML PATH *****/
-	var url = path + "apis/get?id=" + id + "&format=kml&lang=" + lang;
+	var url = path + "apis/get?id=" + id + "&format=json&lang=" + lang;
 	
 	map = new OpenLayers.Map('mapcontainer', {
 		controls:[

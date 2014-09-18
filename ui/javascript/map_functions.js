@@ -552,7 +552,7 @@ $(document).ready(function () {
 			mapId: "map", // Id of map div element (required)
 			timelineId: "timeline", // Id of timeline div element (required)
 			options: {
-				eventIconPath: "images/timemap/"
+				eventIconPath: "../ui/images/timemap/"
 			},
 			datasets:[ {
 				title: "Title",
