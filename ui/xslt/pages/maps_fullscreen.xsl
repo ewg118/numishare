@@ -201,6 +201,7 @@
 				<span id="baselayers">
 					<xsl:value-of select="string-join(//config/baselayers/layer[@enabled=true()], ',')"/>
 				</span>
+				<div id="ajax-temp"/>
 			</div>
 		</div>
 	</xsl:template>

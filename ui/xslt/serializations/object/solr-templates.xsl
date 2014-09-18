@@ -319,26 +319,17 @@
 		<xsl:if test="number(.)">
 			<xsl:variable name="year_string" select="string(abs(number(.)))"/>
 			<xsl:variable name="century" select="if(number(.) &gt; 0) then ceiling(number(.) div 100) else floor(number(.) div 100)"/>
-			<xsl:variable name="decade_digit" select="floor(number(substring($year_string, string-length($year_string) - 1, string-length($year_string))) div 10) * 10"/>
-			<xsl:variable name="decade" select="if($decade_digit = 0) then '00' else $decade_digit"/>
+			<xsl:variable name="decade_digit" select="floor(number(substring($year_string, (string-length($year_string) - 1), 2)) div 10)"/>
+			<xsl:variable name="decade" select="(($century - 1) * 100) + $decade_digit"/>
 
 			<xsl:if test="number($century)">
 				<field name="century_num">
 					<xsl:value-of select="$century"/>
 				</field>
 			</xsl:if>
-			<xsl:if test="number($decade)">
-				<field name="decade_num">
-					<xsl:choose>
-						<xsl:when test="$century &gt; 0">
-							<xsl:value-of select="concat($century -1, $decade)"/>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:value-of select="($century * 100) + 100 - $decade_digit"/>
-						</xsl:otherwise>
-					</xsl:choose>
-				</field>
-			</xsl:if>
+			<field name="decade_num">
+				<xsl:value-of select="$decade"/>
+			</field>
 			<xsl:if test="number(.)">
 				<field name="year_num">
 					<xsl:value-of select="number(.)"/>

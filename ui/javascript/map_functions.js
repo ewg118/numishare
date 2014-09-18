@@ -4,7 +4,7 @@ Written by Ethan Gruber, gruber@numismatics.org
 Library: jQuery
 Description: This utilizes ajax to populate the list of terms in the facet category in the results page.
 If the list is populated and then hidden, when it is re-activated, it fades in rather than executing the ajax call again.
-************************************/
+ ************************************/
 $(document).ready(function () {
 	var popupStatus = 0;
 	var langStr = getURLParameter('lang');
@@ -64,8 +64,7 @@ $(document).ready(function () {
 			strokeColor: "#000072",
 			strokeWidth: 2,
 			strokeOpacity: 0.8
-		},
-		{
+		}, {
 			context: {
 				radius: function (feature) {
 					return Math.min(feature.attributes.count, 7) + 3;
@@ -80,7 +79,8 @@ $(document).ready(function () {
 			strokeColor: "#006100",
 			strokeWidth: 2,
 			strokeOpacity: 0.8
-		}, {
+		},
+		{
 			context: {
 				radius: function (feature) {
 					return Math.min(feature.attributes.count, 7) + 3;
@@ -97,7 +97,7 @@ $(document).ready(function () {
 			new OpenLayers.Strategy.Fixed(),
 			new OpenLayers.Strategy.Cluster()],
 			protocol: new OpenLayers.Protocol.HTTP({
-				url: path + "findspots.kml?q=" + q + (lang.length > 0? '&lang=' + lang: ''),
+				url: path + "findspots.kml?q=" + q + (lang.length > 0 ? '&lang=' + lang: ''),
 				format: new OpenLayers.Format.KML({
 					extractStyles: false,
 					extractAttributes: true
@@ -113,7 +113,7 @@ $(document).ready(function () {
 			new OpenLayers.Strategy.Fixed(),
 			new OpenLayers.Strategy.Cluster()],
 			protocol: new OpenLayers.Protocol.HTTP({
-				url: path + "mints.kml?q=" + q + (lang.length > 0? '&lang=' + lang: ''),
+				url: path + "mints.kml?q=" + q + (lang.length > 0 ? '&lang=' + lang: ''),
 				format: new OpenLayers.Format.KML({
 					extractStyles: false,
 					extractAttributes: true
@@ -198,9 +198,12 @@ $(document).ready(function () {
 					q: q, category: category, mincount: mincount, lang: lang, pipeline: pipeline
 				},
 				function (data) {
-					$('#' + id) .html('');
-					$('#' + id) .attr('new_query', '');
-					$('#' + id) .html(data);
+					$('#ajax-temp').html(data);
+					$('#' + id).html('');
+					$('#' + id).attr('new_query', '');
+					$('#ajax-temp option').each(function () {
+						$(this).clone().appendTo('#' + id);
+					});
 					$("#" + id).multiselect('rebuild');
 				});
 			}
@@ -221,9 +224,12 @@ $(document).ready(function () {
 			q: q, category: category, mincount: mincount, lang: lang, pipeline: pipeline
 		},
 		function (data) {
-			$('#' + id) .attr('new_query', '');
-			$('#' + id) .html('');
-			$('#' + id) .html(data);
+			$('#ajax-temp').html(data);
+			$('#' + id).attr('new_query', '');
+			$('#' + id).html('');
+			$('#ajax-temp option').each(function () {
+				$(this).clone().appendTo('#' + id);
+			});
 			$("#" + id).multiselect('rebuild');
 		});
 	});
@@ -236,8 +242,8 @@ $(document).ready(function () {
 			$('#timemap').html('<div id="mapcontainer" class="fullscreen"><div id="map"/></div><div id="timelinecontainer"><div id="timeline"/></div>');
 			initialize_timemap(query);
 		} else {
-			mintUrl = path + "mints.kml?q=" + query + (lang.length > 0? '&lang=' + lang: '');
-			hoardUrl = path + "findspots.kml?q=" + query + (lang.length > 0? '&lang=' + lang: '');
+			mintUrl = path + "mints.kml?q=" + query + (lang.length > 0 ? '&lang=' + lang: '');
+			hoardUrl = path + "findspots.kml?q=" + query + (lang.length > 0 ? '&lang=' + lang: '');
 			
 			mintLayer.loaded = false;
 			mintLayer.setVisibility(true);
@@ -255,13 +261,13 @@ $(document).ready(function () {
 		}
 	}
 	
-	$('#results') .on('click', '.paging_div .page-nos .btn-toolbar .pagination a.pagingBtn', function (event) {
-		var href = path + 'results_ajax' + $(this) .attr('href');
+	$('#results').on('click', '.paging_div .page-nos .btn-toolbar .pagination a.pagingBtn', function (event) {
+		var href = path + 'results_ajax' + $(this).attr('href');
 		$.get(href, {
 			pipeline: pipeline
 		},
-		function (data) {			
-			$('#results') .html(data);
+		function (data) {
+			$('#results').html(data);
 		});
 		return false;
 	});
@@ -436,16 +442,16 @@ $(document).ready(function () {
 		//disables popup only if it is enabled
 		if (popupStatus == 1) {
 			$("#backgroundPopup").fadeOut("fast");
-			$('#category_hier-list') .parent('div').attr('style', 'width: 192px;');
-			$('#findspot_hier-list') .parent('div').attr('style', 'width: 192px;');
-			$('#century_num-list') .parent('div').attr('style', 'width: 192px;');
+			$('#category_hier-list').parent('div').attr('style', 'width: 192px;');
+			$('#findspot_hier-list').parent('div').attr('style', 'width: 192px;');
+			$('#century_num-list').parent('div').attr('style', 'width: 192px;');
 			popupStatus = 0;
 		}
 	}
 	
 	/********************
 	OpenLayers functions for object collections
-	********************/
+	 ********************/
 	function kmlLoaded() {
 		var bounds = new OpenLayers.Bounds();
 		bounds.extend(mintLayer.getDataExtent());
@@ -503,7 +509,7 @@ $(document).ready(function () {
 		var query = q + ' AND ' + place_query;
 		
 		message += '.<br/><br/>';
-		message += "<a href='#results' class='show_coins' q='" + query + "'>View</a> records that meet the search criteria from " + (event.feature.cluster.length > 1? 'these ' + name + 's': 'this ' + name) + ' (results below map).';
+		message += "<a href='#results' class='show_coins' q='" + query + "'>View</a> records that meet the search criteria from " + (event.feature.cluster.length > 1 ? 'these ' + name + 's': 'this ' + name) + ' (results below map).';
 		message += '</div>';
 		
 		popup = new OpenLayers.Popup.FramedCloud("id", event.feature.geometry.bounds.getCenterLonLat(), null, message, null, true, onPopupClose);
@@ -512,12 +518,12 @@ $(document).ready(function () {
 		
 		$('.show_coins').on('click', function (event) {
 			var query = $(this).attr('q');
-			var lang = $('input[name=lang]').val();			
-			$.get(path + 'results_ajax', {				
+			var lang = $('input[name=lang]').val();
+			$.get(path + 'results_ajax', {
 				q: query, lang: lang, pipeline: pipeline
 			},
 			function (data) {
-				$('#results') .html(data);
+				$('#results').html(data);
 			}).done(function () {
 				$('a.thumbImage').fancybox({
 					beforeShow: function () {
@@ -545,7 +551,7 @@ $(document).ready(function () {
 	
 	/********************
 	TimeMap function for hoard collections
-	********************/
+	 ********************/
 	function initialize_timemap(q) {
 		var tm;
 		tm = TimeMap.init({
@@ -559,7 +565,7 @@ $(document).ready(function () {
 				theme: "red",
 				type: "json", // Data to be loaded in KML - must be a local URL
 				options: {
-					url: path + "hoards.json?q=" + q + (lang.length > 0? '&lang=' + lang: '')// KML file to load
+					url: path + "hoards.json?q=" + q + (lang.length > 0 ? '&lang=' + lang: '')// KML file to load
 				}
 			}],
 			bandIntervals:[

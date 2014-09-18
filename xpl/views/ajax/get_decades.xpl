@@ -23,7 +23,7 @@
 	<p:processor name="oxf:unsafe-xslt">
 		<p:input name="request" href="#request"/>
 		<p:input name="data" href="#data"/>		
-		<p:input name="config" href="../../../ui/xslt/ajax/get_facet_options.xsl"/>
+		<p:input name="config" href="../../../ui/xslt/ajax/get_decades.xsl"/>
 		<p:output name="data" ref="data"/>
 	</p:processor>
 </p:config>

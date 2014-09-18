@@ -21,7 +21,7 @@ function getQuery() {
 	}
 	
 	//hierarchical facets
-	$('.hierarchical-list').each(function () {
+	/*$('.hierarchical-list').each(function () {
 		var field = $(this).attr('id').split('-list')[0];
 		var categories = new Array();
 		$(this).find('input:checked') .each(function () {
@@ -42,7 +42,7 @@ function getQuery() {
 				query.push(categories[0]);
 			}
 		}
-	});
+	});*/
 	
 	//get century/decades
 	var date = getDate();
@@ -182,7 +182,8 @@ function dateLabel() {
 	
 	//set labels
 	$('#century_num_link').attr('title', date_string);
-	$('#century_num_link').children('span:nth-child(2)').text(date_string);
+	$('#century_num_link').text(date_string);
+	
 }
 
 function hierarchyLabel(field, title) {

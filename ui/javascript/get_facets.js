@@ -4,7 +4,7 @@ Written by Ethan Gruber, gruber@numismatics.org
 Library: jQuery
 Description: This utilizes ajax to populate the list of terms in the facet category in the results page.
 If the list is populated and then hidden, when it is re-activated, it fades in rather than executing the ajax call again.
-************************************/
+ ************************************/
 $(document).ready(function () {
 	var popupStatus = 0;
 	var pipeline = 'results';
@@ -22,7 +22,7 @@ $(document).ready(function () {
 		hierarchyLabel(field, title);
 	});
 	
-	if ($('#century_num').length > 0) {
+	if ($('#century_num-list').html().indexOf('<li') > 0) {
 		dateLabel();
 	}
 	
@@ -64,9 +64,12 @@ $(document).ready(function () {
 						q: q, category: category, mincount: mincount, lang: lang, pipeline: 'results'
 					},
 					function (data) {
-						$('#' + id) .html('');
-						$('#' + id) .attr('new_query', '');
-						$('#' + id) .html(data);
+						$('#ajax-temp').html(data);
+						$('#' + id).html('');
+						$('#' + id).attr('new_query', '');
+						$('#ajax-temp option').each(function () {
+							$(this).clone().appendTo('#' + id);
+						});
 						$('#' + id).multiselect('rebuild');
 					});
 				}
@@ -79,20 +82,23 @@ $(document).ready(function () {
 		var q = getQuery();
 		var id = $(this).parent('div').prev('select').attr('id');
 		var category = id.split('-select')[0];
-		var mincount =$(this).parent('div').prev('select').attr('mincount');
+		var mincount = $(this).parent('div').prev('select').attr('mincount');
 		$.get('get_facet_options', {
 			q: q, category: category, mincount: mincount, lang: lang, pipeline: 'results'
 		},
 		function (data) {
-			$('#' + id) .html('');
-			$('#' + id) .attr('new_query', '');
-			$('#' + id) .html(data);
+			$('#ajax-temp').html(data);
+			$('#' + id).html('');
+			$('#' + id).attr('new_query', '');
+			$('#ajax-temp option').each(function () {
+				$(this).clone().appendTo('#' + id);
+			});
 			$('#' + id).multiselect('rebuild');
 		});
 	});
 	
 	/***** SEARCH *****/
-	$('#search_button') .click(function () {
+	$('#search_button').click(function () {
 		var q = getQuery();
 		$('#facet_form_query').attr('value', q);
 	});
@@ -168,70 +174,79 @@ $(document).ready(function () {
 	});	*/
 	
 	/***************** DRILLDOWN FOR DATES ********************/
-	/*
+	
 	$('.century-close').on('click', function (event) {
-	disablePopup();
+		disablePopup();
+		return false;
 	});
 	
 	$('#century_num_link').on('click', function (event) {
-	if (popupStatus == 0) {
-	$("#backgroundPopup").fadeIn("fast");
-	popupStatus = 1;
-	}
-	
-	q = getQuery();
-	var list_id = $(this) .attr('id').split('_link')[0] + '-list';
-	if ($('#' + list_id).html().indexOf('<li') < 0){
-	$.get('get_centuries', {
-	q: q
-	},
-	function (data) {
-	$('#century_num-list').html(data);
+		if (popupStatus == 0) {
+			$("#backgroundPopup").fadeIn("fast");
+			popupStatus = 1;
+		}
+		
+		q = getQuery();
+		var list_id = $(this).attr('id').split('_link')[0] + '-list';
+		if ($('#' + list_id).html().indexOf('<li') < 0) {
+			$.get('get_centuries', {
+				q: q
+			},
+			function (data) {
+				$('#ajax-temp').html(data);
+				$('#ajax-temp li').each(function () {
+					$(this).clone().appendTo('#century_num-list');
+				});
+			});
+		}
+		
+		$('#' + list_id).parent('div').addClass('open');
+		$('#' + list_id).show();
 	});
-	}
 	
-	$('#' + list_id).parent('div').attr('style', 'width: 192px;display:block;');
-	});
-	
-	$('.expand_century').on('click', function (event) {
-	var century = $(this).attr('century');
-	var q = getQuery();
-	var expand_image = $(this).children('img').attr('src');
-	//hide list if it is expanded
-	if (expand_image.indexOf('minus') > 0) {
-	$(this).children('img').attr('src', expand_image.replace('minus', 'plus'));
-	$('#century_' + century + '_list') .hide();
-	} else {
-	$(this).children('img').attr('src', expand_image.replace('plus', 'minus'));
-	//perform ajax load on first click of expand button
-	if ($(this).parent('li').children('ul').html().indexOf('<li') < 0) {
-	$.get('get_decades', {
-	q: q, century: '"' + century + '"'
-	},
-	function (data) {
-	$('#century_' + century + '_list').html(data);
-	});
-	}
-	$('#century_' + century + '_list') .show();
-	}
+	$('#century_num-list').on('click', 'li .expand_century', function () {
+		var century = $(this).attr('century');
+		var q = getQuery();
+		//hide list if it is expanded
+		if ($(this).attr('class').indexOf('minus') > 0) {
+			$(this).removeClass('glyphicon-minus');
+			$(this).addClass('glyphicon-plus');
+			$('#century_' + century + '_list').hide();
+		} else {
+			$(this).removeClass('glyphicon-plus');
+			$(this).addClass('glyphicon-minus');
+			//perform ajax load on first click of expand button
+			if ($(this).parent('li').children('ul').html().indexOf('<li') < 0) {
+				$.get('get_decades', {
+					q: q, century: century
+				},
+				function (data) {
+					$('#ajax-temp').html(data);
+					$('#ajax-temp li').each(function () {
+						$(this).clone().appendTo('#century_' + century + '_list');
+					});
+				});
+			}
+			$('#century_' + century + '_list').show();
+		}
 	});
 	
 	//check parent century box when a decade box is checked
-	$('.decade_checkbox').on('click', function (event) {
-	if ($(this) .is(':checked')) {
-	$(this) .parent('li').parent('ul').parent('li') .children('input') .attr('checked', true);
-	}
-	//set label
-	dateLabel();
+	$('#century_num-list').on('click', 'li ul li .decade_checkbox', function () {
+		if ($(this).is(':checked')) {
+			$(this).parent('li').parent('ul').parent('li').children('input').attr('checked', true);
+		}
+		//set label
+		dateLabel();
 	});
 	//uncheck child decades when century is unchecked
-	$('.century_checkbox').on('click', function (event) {
-	if ($(this).not(':checked')) {
-	$(this).parent('li').children('ul').children('li').children('.decade_checkbox').attr('checked', false);
-	}
-	//set label
-	dateLabel();
-	});*/
+	$('#century_num-list').on('click', 'li .century_checkbox', function () {
+		if ($(this).not(':checked')) {
+			$(this).parent('li').children('ul').children('li').children('.decade_checkbox').attr('checked', false);
+		}
+		//set label
+		dateLabel();
+	});
 	
 	/***************************/
 	//@Author: Adrian "yEnS" Mato Gondelle
@@ -245,9 +260,9 @@ $(document).ready(function () {
 		//disables popup only if it is enabled
 		if (popupStatus == 1) {
 			$("#backgroundPopup").fadeOut("fast");
-			$('#category_hier-list') .parent('div').attr('style', 'width: 192px;');
-			$('#findspot_hier-list') .parent('div').attr('style', 'width: 192px;');
-			$('#century_num-list') .parent('div').attr('style', 'width: 192px;');
+			/*$('#category_hier-list').parent('div').attr('style', 'width: 192px;');
+			$('#findspot_hier-list').parent('div').attr('style', 'width: 192px;');*/
+			$('#century_num-list').parent('div').removeClass('open');
 			popupStatus = 0;
 		}
 	}

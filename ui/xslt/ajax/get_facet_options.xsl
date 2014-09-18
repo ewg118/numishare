@@ -1,16 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:numishare="https://github.com/ewg118/numishare" xmlns:nh="http://nomisma.org/nudsHoard"
-	xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes=" numishare xs nh" version="2.0">
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes="#all" version="2.0">	
 	<xsl:include href="../functions.xsl"/>
-
 	<xsl:param name="q" select="doc('input:request')/request/parameters/parameter[name='q']/value"/>
 	<xsl:param name="category" select="doc('input:request')/request/parameters/parameter[name='category']/value"/>
 	<xsl:param name="tokenized_q" select="tokenize($q, ' AND ')"/>
-
 	<xsl:template match="/">
-		<xsl:apply-templates select="descendant::lst[@name='facet_fields']/lst[@name=$category]"/>
+		<html>
+			<head>
+				<title/>
+			</head>
+			<body>
+				<select>
+					<xsl:apply-templates select="descendant::lst[@name='facet_fields']/lst[@name=$category]"/>
+				</select>
+			</body>
+		</html>
 	</xsl:template>
-
 	<xsl:template match="lst[@name=$category]">
 		<xsl:if test="$category != 'category_facet'">
 			<xsl:choose>

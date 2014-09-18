@@ -1,15 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:numishare="https://github.com/ewg118/numishare"
 	xmlns:cinclude="http://apache.org/cocoon/include/1.0" xmlns:res="http://www.w3.org/2005/sparql-results#" exclude-result-prefixes="xs cinclude numishare res" version="2.0">
-
 	<xsl:template match="doc">
 		<xsl:variable name="sort_category" select="substring-before($sort, ' ')"/>
 		<xsl:variable name="regularized_sort">
 			<xsl:value-of select="numishare:normalize_fields($sort_category, $lang)"/>
 		</xsl:variable>
-		<xsl:variable name="collection" select="substring-before(str[@name='identifier_display'], '.')"/>	
-
-
+		<xsl:variable name="collection" select="substring-before(str[@name='identifier_display'], '.')"/>
 		<div class="row result-doc">
 			<xsl:if test="not($mode='compare') and //config/theme/layouts/*[name()=$pipeline]/image_location = 'left'">
 				<xsl:call-template name="result_image">
@@ -25,7 +22,6 @@
 						<xsl:attribute name="class">col-md-8</xsl:attribute>
 					</xsl:otherwise>
 				</xsl:choose>
-
 				<xsl:if test="$mode='compare'">
 					<xsl:variable name="img_string">
 						<xsl:choose>
@@ -277,8 +273,8 @@
 						</xsl:otherwise>
 					</xsl:choose>
 					<!-- display appropriate sort category if it isn't one of the default display fields -->
-					<xsl:if
-						test="string($sort) and not(contains($sort_category, 'year')) and not(contains($sort_category, 'department_facet')) and not(contains($sort_category, 'weight_num')) and not(contains($sort_category, 'dimensions_display'))">
+					<xsl:if test="string($sort) and not(contains($sort_category, 'year')) and not(contains($sort_category, 'department_facet')) and not(contains($sort_category, 'weight_num')) and
+						not(contains($sort_category, 'dimensions_display'))">
 						<xsl:choose>
 							<xsl:when test="contains($sort, '_num')">
 								<dt>
@@ -358,11 +354,10 @@
 			</xsl:if>
 		</div>
 	</xsl:template>
-
 	<xsl:template match="lst[@name='facet_fields']">
 		<!-- ignore mint_geo-->
 		<xsl:apply-templates select="lst[not(@name='mint_geo') and number(int[@name='numFacetTerms']) &gt; 0]" mode="facet"/>
-		<form action="results" method="GET"  role="form" id="facet_form">
+		<form action="results" method="GET" role="form" id="facet_form">
 			<xsl:variable name="imageavailable_stripped">
 				<xsl:for-each select="$tokenized_q[not(contains(., 'imagesavailable'))]">
 					<xsl:value-of select="."/>
@@ -371,7 +366,6 @@
 					</xsl:if>
 				</xsl:for-each>
 			</xsl:variable>
-
 			<!-- date ranges -->
 			<h4>
 				<xsl:choose>
@@ -426,11 +420,9 @@
 					</xsl:choose>
 				</div>
 			</xsl:if>
-
 			<input type="submit" value="{numishare:normalizeLabel('results_refine-search', $lang)}" id="search_button" class="btn btn-default"/>
 		</form>
 	</xsl:template>
-
 	<xsl:template match="lst" mode="facet">
 		<xsl:variable name="val" select="@name"/>
 		<xsl:variable name="new_query">
@@ -441,7 +433,6 @@
 				</xsl:if>
 			</xsl:for-each>
 		</xsl:variable>
-
 		<xsl:choose>
 			<xsl:when test="contains(@name, '_hier')">
 				<!--<xsl:variable name="title" select="numishare:regularize_node(substring-before(@name, '_'), $lang)"/>
@@ -487,6 +478,22 @@
 				</xsl:choose>-->
 			</xsl:when>
 			<xsl:when test="@name='century_num'">
+				<div class="btn-group">
+					<button class="dropdown-toggle btn btn-default" type="button" style="width:250px;margin-bottom:10px;" title="{numishare:regularize_node('date', $lang)}" id="{@name}_link"
+						label="{$q}">
+						<xsl:value-of select="numishare:regularize_node('date', $lang)"/>
+						<xsl:text> </xsl:text>
+						<b class="caret"/>
+					</button>
+					<ul class="dropdown-menu" id="{@name}-list">
+						<div class="text-right">
+							<a href="#" class="century-close">close <span class="glyphicon glyphicon-remove"/></a>
+						</div>
+						<xsl:if test="contains($q, @name)">
+							<xsl:copy-of select="document(concat($request-uri, 'get_centuries?q=', encode-for-uri($q)))//ul[@id='root']/li"/>
+						</xsl:if>
+					</ul>
+				</div>
 				<!--<button class="ui-multiselect ui-widget ui-state-default ui-corner-all" type="button" title="{numishare:regularize_node('date', $lang)}" aria-haspopup="true" style="width: 200px;"
 					id="{@name}_link" label="{$q}">
 					<span class="ui-icon ui-icon-triangle-2-n-s"/>
@@ -506,7 +513,9 @@
 					</div>
 					<ul class="century-multiselect-checkboxes ui-helper-reset" id="{@name}-list" style="height: 175px;">
 						<xsl:if test="contains($q, @name)">
-							<cinclude:include src="cocoon:/get_centuries?q={encode-for-uri($q)}"/>
+						<xsl:copy-of
+							select="document(concat($request-uri, 'get_centuries?q=', encode-for-uri($q)))//ul[@id='root']/li"
+						/>
 						</xsl:if>
 					</ul>
 				</div>-->
@@ -531,32 +540,31 @@
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:variable>
-				<select id="{@name}-select" multiple="multiple" class="multiselect {@name}-button" title="{numishare:normalize_fields(@name, $lang)}" q="{$q}" mincount="{$mincount}"
-					new_query="{if (contains($q, @name)) then $select_new_query else ''}">
+				<select id="{@name}-select" multiple="multiple" class="multiselect {@name}-button" title="{numishare:normalize_fields(@name, $lang)}" q="{$q}" mincount="{$mincount}" new_query="{if
+					(contains($q, @name)) then $select_new_query else ''}">
 					<xsl:if test="contains($q, @name)">
-						<cinclude:include src="cocoon:/get_facet_options?q={$q}&amp;category={@name}&amp;sort=index&amp;offset=0&amp;limit=-1&amp;rows=0&amp;mincount={$mincount}"/>
+						<xsl:copy-of select="document(concat($request-uri, 'get_facet_options?q=', encode-for-uri($q), '&amp;category=', @name, '&amp;pipeline=', $pipeline, '&amp;lang=', $lang,
+							'&amp;mincount=', $mincount))//option"/>
 					</xsl:if>
 				</select>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
-
 	<xsl:template match="lst[@name='mint_geo' or number(int[@name='numFacetTerms']) = 0]" mode="facet"/>
-
 	<xsl:template name="result_image">
 		<xsl:param name="alignment"/>
 		<div class="col-md-4 {$alignment}">
 			<xsl:choose>
 				<xsl:when test="str[@name='recordType'] = 'physical'">
 					<xsl:if test="string(str[@name='thumbnail_obv'])">
-						<a class="thumbImage" href="{str[@name='reference_obv']}" title="Obverse of {str[@name='title_display']}"
-							id="{$display_path}id/{str[@name='recordId']}{if (string($lang)) then concat('?lang=', $lang) else ''}">
+						<a class="thumbImage" href="{str[@name='reference_obv']}" title="Obverse of {str[@name='title_display']}" id="{$display_path}id/{str[@name='recordId']}{if (string($lang)) then
+							concat('?lang=', $lang) else ''}">
 							<img src="{str[@name='thumbnail_obv']}"/>
 						</a>
 					</xsl:if>
 					<xsl:if test="string(str[@name='thumbnail_rev'])">
-						<a class="thumbImage" href="{str[@name='reference_rev']}" title="Reverse of {str[@name='title_display']}"
-							id="{$display_path}id/{str[@name='recordId']}{if (string($lang)) then concat('?lang=', $lang) else ''}">
+						<a class="thumbImage" href="{str[@name='reference_rev']}" title="Reverse of {str[@name='title_display']}" id="{$display_path}id/{str[@name='recordId']}{if (string($lang)) then
+							concat('?lang=', $lang) else ''}">
 							<img src="{str[@name='thumbnail_rev']}"/>
 						</a>
 					</xsl:if>
@@ -568,7 +576,6 @@
 			</xsl:choose>
 		</div>
 	</xsl:template>
-
 	<xsl:template name="remove_facets">
 		<div class="row">
 			<xsl:choose>
@@ -598,7 +605,6 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</div>
-
 		<xsl:for-each select="$tokenized_q">
 			<xsl:variable name="val" select="."/>
 			<xsl:variable name="new_query">
@@ -609,7 +615,6 @@
 					</xsl:if>
 				</xsl:for-each>
 			</xsl:variable>
-
 			<!--<xsl:value-of select="."/>-->
 			<xsl:choose>
 				<xsl:when test="not(. = '*:*') and not(substring(., 1, 1) = '(')">
@@ -634,12 +639,10 @@
 							</xsl:otherwise>
 						</xsl:choose>
 					</xsl:variable>
-
 					<div class="stacked_term bg-info row">
 						<xsl:if test="$lang='ar'">
 							<xsl:attribute name="style">text-align:right</xsl:attribute>
 						</xsl:if>
-
 						<!-- establish orientation based on language parameter -->
 						<xsl:choose>
 							<xsl:when test="$lang='ar'">
@@ -704,12 +707,10 @@
 							</xsl:otherwise>
 						</xsl:choose>
 					</div>
-
 				</xsl:when>
 				<!-- if the token contains a parenthisis, then it was probably sent from the search widget and the token must be broken down further to remove other facets -->
 				<xsl:when test="substring(., 1, 1) = '('">
 					<xsl:variable name="tokenized-fragments" select="tokenize(., ' OR ')"/>
-
 					<div class="stacked_term bg-info row">
 						<xsl:if test="$lang='ar'">
 							<xsl:attribute name="style">text-align:right</xsl:attribute>
@@ -724,7 +725,6 @@
 								<xsl:for-each select="$tokenized-fragments">
 									<xsl:variable name="field" select="substring-before(translate(., '()', ''), ':')"/>
 									<xsl:variable name="after-colon" select="substring-after(., ':')"/>
-
 									<xsl:variable name="value">
 										<xsl:choose>
 											<xsl:when test="substring($after-colon, 1, 1) = '&#x022;'">
@@ -750,15 +750,12 @@
 											</xsl:otherwise>
 										</xsl:choose>
 									</xsl:variable>
-
 									<xsl:variable name="q_string" select="concat($field, ':', $value)"/>
-
 									<!--<xsl:variable name="value" select="."/>-->
 									<xsl:variable name="new_multicategory">
 										<xsl:for-each select="$tokenized-fragments[not(contains(.,$q_string))]">
 											<xsl:variable name="other_field" select="substring-before(translate(., '()', ''), ':')"/>
 											<xsl:variable name="after-colon" select="substring-after(., ':')"/>
-
 											<xsl:variable name="other_value">
 												<xsl:choose>
 													<xsl:when test="substring($after-colon, 1, 1) = '&#x022;'">
@@ -800,17 +797,15 @@
 											</xsl:otherwise>
 										</xsl:choose>
 									</xsl:variable>
-
 									<!-- establish orientation based on language parameter -->
 									<xsl:choose>
 										<xsl:when test="$lang='ar'">
 											<!-- concatenate the query with the multicategory removed with the new multicategory, or if the multicategory is empty, display just the $new_query -->
-											<a
-												href="{$display_path}results?q={if (string($multicategory_query) and string($new_query)) then concat($new_query, ' AND ', $multicategory_query) else if (string($multicategory_query) and not(string($new_query))) then $multicategory_query else $new_query}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+											<a href="{$display_path}results?q={if (string($multicategory_query) and string($new_query)) then concat($new_query, ' AND ', $multicategory_query) else if
+												(string($multicategory_query) and not(string($new_query))) then $multicategory_query else $new_query}{if (string($lang)) then concat('&amp;lang=',
+												$lang) else ''}">
 												<span class="glyphicon glyphicon-remove"/>
 											</a>
-
-
 											<xsl:choose>
 												<xsl:when test="$field='century_num'">
 													<xsl:value-of select="numishare:normalize_century($value)"/>
@@ -829,7 +824,6 @@
 													<xsl:value-of select="$value"/>
 												</xsl:otherwise>
 											</xsl:choose>
-
 											<b>
 												<xsl:text>: </xsl:text>
 												<xsl:value-of select="numishare:normalize_fields($field, $lang)"/>
@@ -841,7 +835,6 @@
 												<xsl:value-of select="numishare:normalize_fields($field, $lang)"/>
 												<xsl:text>: </xsl:text>
 											</b>
-
 											<xsl:choose>
 												<xsl:when test="$field='century_num'">
 													<xsl:value-of select="numishare:normalize_century($value)"/>
@@ -860,13 +853,12 @@
 													<xsl:value-of select="$value"/>
 												</xsl:otherwise>
 											</xsl:choose>
-
 											<!-- concatenate the query with the multicategory removed with the new multicategory, or if the multicategory is empty, display just the $new_query -->
-											<a
-												href="{$display_path}results?q={if (string($multicategory_query) and string($new_query)) then concat($new_query, ' AND ', $multicategory_query) else if (string($multicategory_query) and not(string($new_query))) then $multicategory_query else $new_query}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+											<a href="{$display_path}results?q={if (string($multicategory_query) and string($new_query)) then concat($new_query, ' AND ', $multicategory_query) else if
+												(string($multicategory_query) and not(string($new_query))) then $multicategory_query else $new_query}{if (string($lang)) then concat('&amp;lang=',
+												$lang) else ''}">
 												<span class="glyphicon glyphicon-remove"/>
 											</a>
-
 											<xsl:if test="position() != last()">
 												<xsl:text> OR </xsl:text>
 											</xsl:if>
@@ -910,14 +902,12 @@
 				</xsl:when>
 			</xsl:choose>
 		</xsl:for-each>
-
 		<!-- remove sort term -->
 		<xsl:if test="string($sort)">
 			<xsl:variable name="field" select="substring-before($sort, ' ')"/>
 			<xsl:variable name="name">
 				<xsl:value-of select="numishare:normalize_fields($field, $lang)"/>
 			</xsl:variable>
-
 			<xsl:variable name="order">
 				<xsl:choose>
 					<xsl:when test="substring-after($sort, ' ') = 'asc'">
@@ -981,10 +971,7 @@
 				</div>
 			</div>
 		</xsl:if>
-
-
 	</xsl:template>
-
 	<xsl:template name="paging">
 		<xsl:variable name="start_var" as="xs:integer">
 			<xsl:choose>
@@ -994,11 +981,9 @@
 				<xsl:otherwise>0</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-
 		<xsl:variable name="next">
 			<xsl:value-of select="$start_var+$rows"/>
 		</xsl:variable>
-
 		<xsl:variable name="previous">
 			<xsl:choose>
 				<xsl:when test="$start_var &gt;= $rows">
@@ -1007,10 +992,8 @@
 				<xsl:otherwise>0</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-
 		<xsl:variable name="current" select="$start_var div $rows + 1"/>
 		<xsl:variable name="total" select="ceiling($numFound div $rows)"/>
-
 		<div class="paging_div row">
 			<div class="col-md-6">
 				<xsl:variable name="startRecord" select="$start_var + 1"/>
@@ -1024,33 +1007,31 @@
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:variable>
-
 				<xsl:value-of select="replace(replace(replace(numishare:normalizeLabel('results_result-desc', $lang), 'XX', string($startRecord)), 'YY', string($endRecord)), 'ZZ', string($numFound))"
 				/>
 			</div>
-
 			<!-- paging functionality -->
 			<div class="col-md-6 page-nos">
 				<div class="btn-toolbar" role="toolbar">
 					<div class="btn-group pagination" style="float:right">
 						<xsl:choose>
 							<xsl:when test="$start_var &gt;= $rows">
-								<a class="btn btn-default pagingBtn" role="button" title="First"
-									href="?q={encode-for-uri($q)}{if (string($sort)) then concat('&amp;sort=', $sort) else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+								<a class="btn btn-default pagingBtn" role="button" title="First" href="?q={encode-for-uri($q)}{if (string($sort)) then concat('&amp;sort=', $sort) else ''}{if
+									(string($lang)) then concat('&amp;lang=', $lang) else ''}">
 									<span class="glyphicon glyphicon-fast-backward"/>
 								</a>
-								<a class="btn btn-default pagingBtn" role="button" title="Previous"
-									href="?q={encode-for-uri($q)}&amp;start={$previous}{if (string($sort)) then concat('&amp;sort=', $sort) else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+								<a class="btn btn-default pagingBtn" role="button" title="Previous" href="?q={encode-for-uri($q)}&amp;start={$previous}{if (string($sort)) then concat('&amp;sort=',
+									$sort) else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
 									<span class="glyphicon glyphicon-backward"/>
 								</a>
 							</xsl:when>
 							<xsl:otherwise>
-								<a class="btn btn-default disabled" role="button" title="First"
-									href="?q={encode-for-uri($q)}{if (string($sort)) then concat('&amp;sort=', $sort) else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+								<a class="btn btn-default disabled" role="button" title="First" href="?q={encode-for-uri($q)}{if (string($sort)) then concat('&amp;sort=', $sort) else ''}{if
+									(string($lang)) then concat('&amp;lang=', $lang) else ''}">
 									<span class="glyphicon glyphicon-fast-backward"/>
 								</a>
-								<a class="btn btn-default disabled" role="button" title="Previous"
-									href="?q={encode-for-uri($q)}&amp;start={$previous}{if (string($sort)) then concat('&amp;sort=', $sort) else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+								<a class="btn btn-default disabled" role="button" title="Previous" href="?q={encode-for-uri($q)}&amp;start={$previous}{if (string($sort)) then concat('&amp;sort=',
+									$sort) else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
 									<span class="glyphicon glyphicon-backward"/>
 								</a>
 							</xsl:otherwise>
@@ -1064,22 +1045,22 @@
 						<!-- next page -->
 						<xsl:choose>
 							<xsl:when test="$numFound - $start_var &gt; $rows">
-								<a class="btn btn-default pagingBtn" role="button" title="Next"
-									href="?q={encode-for-uri($q)}&amp;start={$next}{if (string($sort)) then concat('&amp;sort=', $sort) else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+								<a class="btn btn-default pagingBtn" role="button" title="Next" href="?q={encode-for-uri($q)}&amp;start={$next}{if (string($sort)) then concat('&amp;sort=', $sort) else
+									''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
 									<span class="glyphicon glyphicon-forward"/>
 								</a>
-								<a class="btn btn-default pagingBtn" role="button"
-									href="?q={encode-for-uri($q)}&amp;start={($total * $rows) - $rows}{if (string($sort)) then concat('&amp;sort=', $sort) else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+								<a class="btn btn-default pagingBtn" role="button" href="?q={encode-for-uri($q)}&amp;start={($total * $rows) - $rows}{if (string($sort)) then concat('&amp;sort=',
+									$sort) else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
 									<span class="glyphicon glyphicon-fast-forward"/>
 								</a>
 							</xsl:when>
 							<xsl:otherwise>
-								<a class="btn btn-default disabled" role="button" title="Next"
-									href="?q={encode-for-uri($q)}&amp;start={$next}{if (string($sort)) then concat('&amp;sort=', $sort) else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+								<a class="btn btn-default disabled" role="button" title="Next" href="?q={encode-for-uri($q)}&amp;start={$next}{if (string($sort)) then concat('&amp;sort=', $sort) else
+									''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
 									<span class="glyphicon glyphicon-forward"/>
 								</a>
-								<a class="btn btn-default disabled" role="button"
-									href="?q={encode-for-uri($q)}&amp;start={($total * $rows) - $rows}{if (string($sort)) then concat('&amp;sort=', $sort) else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+								<a class="btn btn-default disabled" role="button" href="?q={encode-for-uri($q)}&amp;start={($total * $rows) - $rows}{if (string($sort)) then concat('&amp;sort=', $sort)
+									else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
 									<span class="glyphicon glyphicon-fast-forward"/>
 								</a>
 							</xsl:otherwise>
@@ -1089,13 +1070,11 @@
 			</div>
 		</div>
 	</xsl:template>
-
 	<xsl:template name="sort">
 		<xsl:variable name="sort_categories_string">
 			<xsl:text>timestamp,deity,denomination,findspot,issuer,manufacture,material,mint,obv_leg_display,portrait,region,rev_leg_display,year</xsl:text>
 		</xsl:variable>
 		<xsl:variable name="sort_categories" select="tokenize(normalize-space($sort_categories_string), ',')"/>
-
 		<div class="row">
 			<div class="col-md-12">
 				<form role="form" class="sortForm" action="results" method="GET">
@@ -1154,7 +1133,6 @@
 			</div>
 		</div>
 	</xsl:template>
-
 	<xsl:template name="quick_search">
 		<div class="quick_search">
 			<form role="form" action="results" method="GET" id="qs_form">
@@ -1169,10 +1147,8 @@
 			</form>
 		</div>
 	</xsl:template>
-
 	<xsl:template name="render_categories">
 		<xsl:param name="category_fragment"/>
-
 		<xsl:variable name="new_query">
 			<xsl:for-each select="$tokenized_q[not(. = $category_fragment)]">
 				<xsl:value-of select="."/>
@@ -1181,14 +1157,12 @@
 				</xsl:if>
 			</xsl:for-each>
 		</xsl:variable>
-
 		<div class="stacked_term bg-info row">
 			<div class="col-md-10">
 				<span>
 					<b>Category: </b>
-					<xsl:value-of
-						select="numishare:recompile_category($category_fragment, tokenize(substring-after(replace(replace(replace($category_fragment, '\)', ''), '\(', ''), '\+', ''), 'category_facet:'), ' '), 1)"
-					/>
+					<xsl:value-of select="numishare:recompile_category($category_fragment, tokenize(substring-after(replace(replace(replace($category_fragment, '\)', ''), '\(', ''), '\+', ''),
+						'category_facet:'), ' '), 1)"/>
 				</span>
 			</div>
 			<div class="col-md-2 right">
@@ -1198,16 +1172,13 @@
 			</div>
 		</div>
 	</xsl:template>
-
 	<!-- ************** PROCESS GROUP OF SPARQL RESULTS FROM NOMISMA TO DISPLAY IMAGES ************** -->
 	<xsl:template match="group" mode="results">
 		<xsl:variable name="coin-count" select="number(coin-count)" as="xs:double"/>
 		<xsl:variable name="hoard-count" select="number(hoard-count)" as="xs:double"/>
 		<xsl:variable name="count" select="$coin-count + $hoard-count" as="xs:double"/>
-
 		<!-- display images -->
 		<xsl:apply-templates select="descendant::object" mode="results"/>
-
 		<!-- object count -->
 		<xsl:if test="$count &gt; 0">
 			<br/>
@@ -1242,7 +1213,6 @@
 			</xsl:if>
 		</xsl:if>
 	</xsl:template>
-
 	<xsl:template match="object" mode="results">
 		<xsl:variable name="position" select="position()"/>
 		<!-- obverse -->
@@ -1327,7 +1297,6 @@
 			</xsl:when>
 		</xsl:choose>
 	</xsl:template>
-
 	<!--<xsl:template name="compare_paging">
 		<xsl:variable name="start_var" as="xs:integer">
 			<xsl:choose>

@@ -7,41 +7,42 @@
   VARIABLES
   ***************************************
  */
-:root {
-	var-borderColor: #E7E7E7;
-	var-backgroundColor: #F8F8F8;
+:root{
+	var-borderColor:#E7E7E7;
+	var-backgroundColor:#F8F8F8;
 }
 /*
   ***************************************
   GLOBAL
   ***************************************
  */
-html {
-	background-color: #F8F8F8;
+html{
+	background-color:#F8F8F8;
 }
-.navbar {
+.navbar{
 	margin-bottom:0;
 }
-a > img {
+a > img{
 	border:none;
 }
-ul li, ol li {
+ul li,
+ol li{
 	list-style-type:none;
 }
-.highlight {
-	background-color: #F8F8F8;
-	border: 1px solid #E7E7E7;
-	border-radius: 4px;
-	margin-bottom: 14px;
-	padding: 9px 14px;
+.highlight{
+	background-color:#F8F8F8;
+	border:1px solid #E7E7E7;
+	border-radius:4px;
+	margin-bottom:14px;
+	padding:9px 14px;
 }
 /*
   ***************************************
   FOOTER
   ***************************************
  */
-#footer {
-	background-color: #F8F8F8;
+#footer{
+	background-color:#F8F8F8;
 	border-top:1px solid #E7E7E7;
 	padding:10px 0;
 	text-align:center;
@@ -51,57 +52,60 @@ ul li, ol li {
   DISPLAY CONTENT
   ***************************************
  */
-.hidden {
+.hidden{
 	display:none;
 }
-.thumbnail_container {
+.thumbnail_container{
 	margin-top:25px;
 }
-.display_thumb {
+.display_thumb{
 	width:80px;
 	padding:2px;
 	cursor:pointer;
 }
-.metadata_section {
+.metadata_section{
 	margin-bottom:20px;
 }
-.adminhist_div, .phystech, .bibref, .metadata_section ul {
+.adminhist_div,
+.phystech,
+.bibref,
+.metadata_section ul{
 	margin-left:20px;
 	margin-bottom:10px;
 	padding:0;
 }
-.submenu {
+.submenu{
 	width:100%;
 	vertical-align:bottom;
 	display:table;
 	text-align:right;
 	margin-top:3px;
 }
-.icons {
+.icons{
 	margin:5px 0;
 }
-.reference_image {
+.reference_image{
 	margin-bottom:20px;
 	text-align:center;
 }
-.reference_image img {
+.reference_image img{
 	max-width:100%;
 }
-.abstract {
+.abstract{
 	margin-bottom:20px;
 }
-.external_link {
+.external_link{
 	margin-left:10px;
 }
-.objects {
+.objects{
 	display:table;
 	width:100%;
 	margin:20px 0;
 }
-.legend-icon {
+.legend-icon{
 	width:40px;
 }
-.calculate {
+.calculate{
 	display:none;
 	margin-top:20px;
 }
@@ -110,203 +114,230 @@ ul li, ol li {
   SEARCH/COMPARE/VISUALIZATION FORMS
   ***************************************
  */
-.compare_image {
+.compare_image{
 	margin-bottom:20px;
 	padding:10px;
 	border-bottom:1px dashed #696969;
 }
-.option_container {
+.option_container{
 	width:200px;
 	vertical-align:bottom;
 }
-.option_container select, .option_container input {
+.option_container select,
+.option_container input{
 	display:inline;
 }
-.compare-select {
+.compare-select{
 	width:400px;
 }
-.category_list, .sparql_facets, select[name="interval"], #stacking, #image, .certainty-select {
+.category_list,
+.sparql_facets,
+select[name = "interval"],
+#stacking,
+#image,
+.certainty-select{
 	width:175px;
 	display:inline;
 }
-.sortForm_categories, .sortForm_order {
+.sortForm_categories,
+.sortForm_order{
 	width:175px;
 	margin-left:0px;
 	margin-right:10px;
 	display:inline;
 }
-.search_text {
+.search_text{
 	width:200px;
 	margin-left:15px;
 	margin-right:5px;
 	display:inline;
 }
-.from_date,.to_date, #from_date, #to_date {
+.from_date,
+.to_date,
+#from_date,
+#to_date{
 	width:75px;
 	margin-left:0px;
 	margin-right:5px;
 	display:inline;
 }
-.from_era,.to_era, #from_era, #to_era {
+.from_era,
+.to_era,
+#from_era,
+#to_era{
 	width:100px;
 	margin-left:0px;
 	margin-right:5px;
 	display:inline;
 }
-.year_range, .weight_range, .dimensions_range {
+.year_range,
+.weight_range,
+.dimensions_range{
 	margin-left:15px;
 	margin-right:5px;
 	width:150px;
 }
-.weight_int, .dimensions_int {
+.weight_int,
+.dimensions_int{
 	width:30px;
 	margin-left:0px;
 	margin-right:5px;
 }
-#searchItemTemplate, #sparqlItemTemplate {
+#searchItemTemplate,
+#sparqlItemTemplate{
 	display:none;
 }
-.searchItemTemplate {
+.searchItemTemplate{
 	padding-top:5px;
 	padding-bottom:5px;
 }
-.compare_options {
+.compare_options{
 	margin-bottom:10px;
 	text-align:center;
 }
-#search1, #search2 {
-	margin-top:20px;	
+#search1,
+#search2{
+	margin-top:20px;
 }
 /*
   ***************************************
   RESULTS PAGES
   ***************************************
  */
- .result-doc {
+.result-doc{
 	margin-top:10px;
 	border-bottom:1px solid #E7E7E7;
 }
-#map_results {
+#map_results{
 	margin-left:20px;
 }
-.thumbImage, .flickrthumb {
+.thumbImage,
+.flickrthumb{
 	margin:5px;
 }
-.thumbImage>img {
+.thumbImage > img{
 	max-width:120px;
 }
-#qs_text {
+#qs_text{
 	width:50%;
 	display:inline;
 	margin-right:20px;
 }
-.stacked_term {
+.stacked_term{
 	padding:2px;
 	margin-bottom:5px;
 	border:1px solid #E7E7E7;
 	border-radius:5px;
 	vertical-align:middle;
 }
-.remove_segment {
+.remove_segment{
 	margin-left:2px;
 }
-.remove_segment:hover {
+.remove_segment:hover{
 	text-decoration:underline;
 }
-#imagesavailable {
+#imagesavailable{
 	margin-left:10px;
 }
-.data_options img {
+.data_options img{
 	padding:2px;
 }
-.left {
+.left{
 	vertical-align:middle;
 }
-.right {
+.right{
 	text-align:right;
 	vertical-align:middle;
 }
-.sort_div {
+.sort_div{
 	margin-bottom:20px;
 }
+
 /*
   ***************************************
   FACET STYLING: RESULTS AND MAPS
   ***************************************
  */
-.category-multiselect-checkboxes {
+.category-multiselect-checkboxes{
 	overflow-y:scroll;
 	position:relative;
 }
-.multiselect {
+.multiselect{
 	width:200px;
 }
-button.multiselect {
+button.multiselect{
 	margin-bottom:10px;
 }
-.get_facets, .hide_facets {
+.get_facets,
+.hide_facets{
 	float:right;
 	padding-right:5px;
 }
-.category_level {
+.category_level{
 	margin-left:15px;
 }
-.expand_category {
+.expand_category{
 	margin:1px;
 }
-.category_level {
+.category_level{
 	margin-left:15px;
 }
-.expand_category {
+.expand_category{
 	margin:1px;
 }
-li.h_item {
-	margin:2px 0;
-	display:table;
+#century_num-list{
+	max-height:250px;
+	width:250px;
+	overflow-y:auto;
+	overflow-x:hidden;
 	width:100%;
+	z-index:3000;
+}
+.expand_century {
+	cursor:pointer;
 }
 /*
   ***************************************
   MAPS
   ***************************************
  */
-#resultMap {
+#resultMap{
 	width:600px;
 	height:400px;
 }
-#clear_all {
+#clear_all{
 	font-size:80%;
 	margin-left:25px;
 }
-.departments {
+.departments{
 	margin:10px 0px;
 }
-.departments>input {
+.departments > input{
 	vertical-align:bottom;
 }
-.legend {
+.legend{
 	margin:25px 0;
 }
-.legend td {
+.legend td{
 	border:0;
 }
-.legend th {
+.legend th{
 	background-color:white;
-	border: 0;
+	border:0;
 }
-.olLayerGooglePoweredBy {
+.olLayerGooglePoweredBy{
 	display:none;
 }
-.g_doc {
+.g_doc{
 	height:325px;
 }
 /* gallery image container */
-.gi_c {
+.gi_c{
 	margin:5px 0;
 	text-align:center;
 }
 /* gallery image */
-.gi {
+.gi{
 	padding:0px 5px;
 	max-width:120px;
 }
@@ -315,18 +346,19 @@ li.h_item {
   PAGINATION
   ***************************************
  */
-.paging_div {
+.paging_div{
 	padding:10px 0;
 	vertical-align:baseline;
 }
-.page-nos {
+.page-nos{
 	text-align:right;
 }
-.pagination {
+.pagination{
 	margin:0;
 	padding:0;
 }
-.pagination a, .pagination button {
+.pagination a,
+.pagination button{
 	height:32px;
 }
 /*
@@ -334,50 +366,50 @@ li.h_item {
   Timemap CSS
   ***************************************
  */
-div#timelinecontainer {
+div#timelinecontainer{
 	width:100%;
-	height: 200px;
+	height:200px;
 }
-div#mapcontainer {
+div#mapcontainer{
 	width:100%;
-	height: 400px;
+	height:400px;
 }
-.maps-page #mapcontainer {
+.maps-page #mapcontainer{
 	height:500px;
 	width:100%;
 }
-div.olFramedCloudPopupContent {
-	width: 300px;
+div.olFramedCloudPopupContent{
+	width:300px;
 }
-div#help {
-	font-size: 12px;
-	width: 45em;
-	padding: 1em;
+div#help{
+	font-size:12px;
+	width:45em;
+	padding:1em;
 }
-div#timeline {
-	width: 100%;
-	height: 100%;
-	font-size: 12px;
-	background: #CCCCCC;
+div#timeline{
+	width:100%;
+	height:100%;
+	font-size:12px;
+	background:#CCCCCC;
 }
-div#map {
-	width: 100%;
-	height: 100%;
-	background: #EEEEEE;
+div#map{
+	width:100%;
+	height:100%;
+	background:#EEEEEE;
 }
-div.infotitle {
-	font-size: 14px;
-	font-weight: bold;
+div.infotitle{
+	font-size:14px;
+	font-weight:bold;
 }
-div.infodescription {
-	font-size: 14px;
-	font-style: italic;
+div.infodescription{
+	font-size:14px;
+	font-style:italic;
 }
-div.custominfostyle {
-	font-family: Georgia, Garamond, serif;
-	font-size: 1.5em;
-	font-style: italic;
-	width: 20em;
+div.custominfostyle{
+	font-family:Georgia, Garamond, serif;
+	font-size:1.5em;
+	font-style:italic;
+	width:20em;
 }
 /*
   ****************************************
@@ -385,25 +417,26 @@ div.custominfostyle {
   ***************************************
  */
 /* Used for date (century/decade) facet */
-.date-div, .hierarchical-div {
+.date-div,
+.hierarchical-div{
 	margin-top:-10px;
 }
-.hierarchical-list {
+.hierarchical-list{
 	display:table;
 }
-.century-multiselect-checkboxes {
+.century-multiselect-checkboxes{
 	display:table;
 	width:100%;
 }
-.decades-list {
+.decades-list{
 	margin:0 0 0 25px;
 }
 /* background */
-#backgroundPopup {
+#backgroundPopup{
 	display:none;
 	position:fixed;
 	_position:absolute;
-/* hack for internet explorer 6 */
+	/* hack for internet explorer 6 */
 	height:100%;
 	width:100%;
 	top:0;
@@ -415,38 +448,44 @@ div.custominfostyle {
   VISUALIZATION/ANALYSIS
   ***************************************
  */
-#filterHoards, #searchBox {
+#filterHoards,
+#searchBox{
 	width:600px;
 	text-align:left;
 }
-#customQueryDiv {
+#customQueryDiv{
 	width:100%;
 	display:table;
 }
-.filter-div, .customQuery, .compareQuery {
+.filter-div,
+.customQuery,
+.compareQuery{
 	padding:10px 0;
 }
-.filter-div span, .customQuery span, .compareQuery span {
+.filter-div span,
+.customQuery span,
+.compareQuery span{
 	padding:0 5px;
 }
-.removeFilter, .removeQuery {
+.removeFilter,
+.removeQuery{
 	font-size:80%;
 	margin-left:10px;
 }
 /* **SPARQL QUERY*** */
-.popupQuery {
+.popupQuery{
 	width:700px;
 	padding:2px;
 }
-#dateTemplate {
+#dateTemplate{
 	display:none;
 }
-.measurementTable {
+.measurementTable{
 	display:none;
 }
-.mr {
+.mr{
 	display:none;
 }
-.center-block {
-	width:50%;	
+.center-block{
+	width:50%;
 }

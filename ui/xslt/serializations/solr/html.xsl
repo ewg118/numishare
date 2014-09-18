@@ -16,6 +16,7 @@
 	<xsl:param name="sort" select="doc('input:request')/request/parameters/parameter[name='sort']/value"/>
 	<xsl:param name="rows">20</xsl:param>
 	<xsl:param name="start" select="doc('input:request')/request/parameters/parameter[name='start']/value"/>	
+	<xsl:variable name="request-uri" select="concat('http://localhost:8080', substring-before(doc('input:request')/request/request-uri, 'results'))"/>
 	
 	<!-- blank params -->
 	<xsl:param name="mode"/>
@@ -194,6 +195,7 @@
 				<span id="baselayers">
 					<xsl:value-of select="string-join(//config/baselayers/layer[@enabled=true()], ',')"/>
 				</span>
+				<div id="ajax-temp"/>
 			</div>
 		</div>
 	</xsl:template>
