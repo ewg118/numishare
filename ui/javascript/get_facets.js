@@ -104,74 +104,73 @@ $(document).ready(function () {
 	});
 	
 	/***************** DRILLDOWN HIERARCHICAL FACETS ********************/
-	/*
-	$('.hier-close') .click(function () {
-	disablePopup();
-	return false;
+	
+	/*$('.hier-close').click(function () {
+		disablePopup();
+		return false;
 	});
 	
 	$('.hierarchical-facet').click(function () {
-	if (popupStatus == 0) {
-	$("#backgroundPopup").fadeIn("fast");
-	popupStatus = 1;
-	}
-	var list_id = $(this) .attr('id').split('_link')[0] + '-list';
-	var field = $(this) .attr('id').split('_hier')[0];
-	var q = getQuery();
-	if ($('#' + list_id).html().indexOf('<li') < 0) {
-	$.get('get_hier', {
-	q: q, field: field, prefix: 'L1', fq: '*', section: 'collection', link: '', lang: lang
-	},
-	function (data) {
-	$('#' + list_id) .html(data);
-	});
-	}
-	$('#' + list_id).parent('div').attr('style', 'width: 192px;display:block;');
-	return false;
+		if (popupStatus == 0) {
+			$("#backgroundPopup").fadeIn("fast");
+			popupStatus = 1;
+		}
+		var list_id = $(this).attr('id').split('_link')[0] + '-list';
+		var field = $(this).attr('id').split('_hier')[0];
+		var q = getQuery();
+		if ($('#' + list_id).html().indexOf('<li') < 0) {
+			$.get('get_hier', {
+				q: q, field: field, prefix: 'L1', fq: '*', link: '', lang: lang
+			},
+			function (data) {
+				$('#' + list_id).html(data);
+			});
+		}
+		$('#' + list_id).parent('div').attr('style', 'width: 192px;display:block;');
+		return false;
 	});
 	
 	//expand category when expand/compact image pressed
-	$('#refine_results') .on('click', '.expand_category', function (event) {
-	var fq = $(this).next('input').val();
-	var list = $(this) .attr('id').split('__')[0].split('|')[1] + '__list';
-	var field = $(this).attr('field');
-	var prefix = $(this).attr('next-prefix');
-	var q = getQuery();
-	var section = $(this) .attr('section');
-	var link = $(this) .attr('link');
-	if ($(this) .children('img') .attr('src') .indexOf('plus') >= 0) {
-	$.get('get_hier', {
-	q: q, field:field, prefix: prefix, fq: '"' +fq + '"', link: link, section: section, lang: lang
-	},
-	function (data) {
-	$('#' + list) .html(data);
-	});
-	$(this) .parent('li') .children('.' + field + '_level') .show();
-	$(this) .children('img') .attr('src', $(this) .children('img').attr('src').replace('plus', 'minus'));
-	} else {
-	$(this) .parent('li') .children('.' + field + '_level') .hide();
-	$(this) .children('img') .attr('src', $(this) .children('img').attr('src').replace('minus', 'plus'));
-	}
+	$('#refine_results').on('click', '.expand_category', function (event) {
+		var fq = $(this).next('input').val();
+		var list = $(this).attr('id').split('__')[0].split('|')[1] + '__list';
+		var field = $(this).attr('field');
+		var prefix = $(this).attr('next-prefix');
+		var q = getQuery();
+		var section = $(this).attr('section');
+		var link = $(this).attr('link');
+		if ($(this).children('img').attr('src').indexOf('plus') >= 0) {
+			$.get('get_hier', {
+				q: q, field: field, prefix: prefix, fq: '"' + fq + '"', link: link, section: section, lang: lang
+			},
+			function (data) {
+				$('#' + list).html(data);
+			});
+			$(this).parent('li').children('.' + field + '_level').show();
+			$(this).children('img').attr('src', $(this).children('img').attr('src').replace('plus', 'minus'));
+		} else {
+			$(this).parent('li').children('.' + field + '_level').hide();
+			$(this).children('img').attr('src', $(this).children('img').attr('src').replace('minus', 'plus'));
+		}
 	});
 	
 	//remove all ancestor or descendent checks on uncheck
-	$('#refine_results') .on('click', '.h_item input', function (event) {
-	var field = $(this).closest('.ui-multiselect-menu').attr('id').split('-')[0];
-	var title = $('.' + field + '-multiselect-checkboxes').attr('title');
-	
-	var count_checked = 0;
-	$('#' + field + '_hier-list input:checked').each(function () {
-	count_checked++;
-	});
-	
-	if (count_checked > 0) {
-	hierarchyLabel(field, title);
-	} else {
-	$('#' + field + '_hier_link').attr('title', title);
-	$('#' + field + '_hier_link').children('span:nth-child(2)').html(title);
-	}
-	
-	});	*/
+	$('#refine_results').on('click', '.h_item input', function (event) {
+		var field = $(this).closest('.ui-multiselect-menu').attr('id').split('-')[0];
+		var title = $('.' + field + '-multiselect-checkboxes').attr('title');
+		
+		var count_checked = 0;
+		$('#' + field + '_hier-list input:checked').each(function () {
+			count_checked++;
+		});
+		
+		if (count_checked > 0) {
+			hierarchyLabel(field, title);
+		} else {
+			$('#' + field + '_hier_link').attr('title', title);
+			$('#' + field + '_hier_link').children('span:nth-child(2)').html(title);
+		}
+	});*/
 	
 	/***************** DRILLDOWN FOR DATES ********************/
 	
