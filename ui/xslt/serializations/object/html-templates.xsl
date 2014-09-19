@@ -7,8 +7,7 @@
 -->
 <xsl:stylesheet xmlns:nuds="http://nomisma.org/nuds" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:numishare="https://github.com/ewg118/numishare" xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:nm="http://nomisma.org/id/"
-	exclude-result-prefixes="#all" version="2.0">
-
+	xmlns:mods="http://www.loc.gov/mods/v3" exclude-result-prefixes="#all" version="2.0">
 	<!--***************************************** ELEMENT TEMPLATES **************************************** -->
 	<xsl:template match="*[local-name()='refDesc']">
 		<h2>
@@ -19,7 +18,6 @@
 			<xsl:apply-templates select="*:reference/*[local-name()='objectXMLWrap']"/>
 		</ul>
 	</xsl:template>
-
 	<xsl:template match="nuds:physDesc[child::*]">
 		<h2>
 			<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
@@ -28,7 +26,6 @@
 			<xsl:apply-templates mode="descMeta"/>
 		</ul>
 	</xsl:template>
-
 	<xsl:template match="nuds:typeDesc">
 		<xsl:param name="typeDesc_resource"/>
 		<h2>
@@ -41,16 +38,13 @@
 			<xsl:apply-templates mode="descMeta"/>
 		</ul>
 	</xsl:template>
-
 	<xsl:template match="*" mode="descMeta">
 		<xsl:variable name="facets">
 			<xsl:text>artist,authority,category,collection,decoration,deity,degree,denomination,department,dynasty,engraver,era,findspot,grade,institution,issuer,portrait,manufacture,maker,material,mint,objectType,owner,region,repository,script,state,subject</xsl:text>
 		</xsl:variable>
-
 		<xsl:choose>
 			<xsl:when test="not(child::*) and (string(.) or string(@xlink:href))">
 				<xsl:variable name="href" select="@xlink:href"/>
-
 				<!-- the facet field is the @xlink:role if it exists, otherwise it is the name of the nuds element -->
 				<xsl:variable name="field">
 					<xsl:choose>
@@ -73,10 +67,7 @@
 							<xsl:text>: </xsl:text>
 						</b>
 					</xsl:if>
-
-
 					<!-- create link from facet, if applicable -->
-
 					<!-- pull language from nomisma, if available -->
 					<xsl:variable name="value">
 						<xsl:choose>
@@ -99,11 +90,10 @@
 											<xsl:variable name="adminName1" select="$geonames_data//adminName1"/>
 											<xsl:variable name="fcode" select="$geonames_data//fcode"/>
 											<!-- set a value equivalent to AACR2 standard for US, AU, CA, and GB.  This equation deviates from AACR2 for Malaysia since standard abbreviations for territories cannot be found -->
-											<xsl:value-of
-												select="if ($countryCode = 'US' or $countryCode = 'AU' or $countryCode = 'CA') then if ($fcode = 'ADM1') then $name else concat($name, ' (', $abbreviations//country[@code=$countryCode]/place[. = $adminName1]/@abbr, ')') else if ($countryCode= 'GB') then  if ($fcode = 'ADM1') then $name else concat($name, ' (', $adminName1, ')') else if ($fcode = 'PCLI') then $name else concat($name, ' (', $countryName, ')')"
-											/>
+											<xsl:value-of select="if ($countryCode = 'US' or $countryCode = 'AU' or $countryCode = 'CA') then if ($fcode = 'ADM1') then $name else concat($name, ' (',
+												$abbreviations//country[@code=$countryCode]/place[. = $adminName1]/@abbr, ')') else if ($countryCode= 'GB') then  if ($fcode = 'ADM1') then $name else
+												concat($name, ' (', $adminName1, ')') else if ($fcode = 'PCLI') then $name else concat($name, ' (', $countryName, ')')"/>
 										</xsl:variable>
-										
 										<xsl:value-of select="$label"/>
 									</xsl:when>
 									<xsl:otherwise>
@@ -123,7 +113,6 @@
 							</xsl:otherwise>
 						</xsl:choose>
 					</xsl:variable>
-
 					<xsl:choose>
 						<xsl:when test="contains($facets, $field)">
 							<a href="{$display_path}results?q={$field}_facet:&#x022;{$value}&#x022;{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
@@ -148,7 +137,6 @@
 							<xsl:value-of select="$value"/>
 						</xsl:otherwise>
 					</xsl:choose>
-
 					<!-- display title -->
 					<xsl:if test="string(@title)">
 						<i>
@@ -157,7 +145,6 @@
 							<xsl:text>)</xsl:text>
 						</i>
 					</xsl:if>
-
 					<!-- display certainty -->
 					<xsl:if test="string(@certainty)">
 						<i>
@@ -166,31 +153,26 @@
 							<xsl:text>)</xsl:text>
 						</i>
 					</xsl:if>
-
 					<xsl:if test="string(@calendar)">
 						<i> (calendar: <xsl:value-of select="@calendar"/>)</i>
 					</xsl:if>
-
 					<!-- display language -->
 					<!--<xsl:if test="string(@xml:lang)">
 						<xsl:text> (</xsl:text>
 						<xsl:value-of select="@xml:lang"/>
 						<xsl:text>)</xsl:text>
 					</xsl:if>-->
-
 					<!-- create links to resources -->
 					<xsl:if test="string($href)">
 						<a href="{$href}" target="_blank" title="{if (contains($href, 'geonames')) then 'geonames' else if (contains($href, 'nomisma')) then 'nomisma' else ''}">
 							<img src="{$include_path}ui/images/external.png" alt="external link" class="external_link"/>
 						</a>
 					</xsl:if>
-
 					<!-- display label on right for right-to-left scripts -->
 					<xsl:if test="$lang='ar'">
 						<b>
 							<xsl:text> : </xsl:text>
 							<xsl:value-of select="numishare:regularize_node($field, $lang)"/>
-
 						</b>
 					</xsl:if>
 				</li>
@@ -244,7 +226,6 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
-
 	<xsl:template match="*[local-name()='objectXMLWrap']">
 		<xsl:variable name="label">
 			<xsl:choose>
@@ -253,7 +234,6 @@
 				</xsl:when>
 			</xsl:choose>
 		</xsl:variable>
-
 		<li>
 			<b><xsl:value-of select="$label"/>: </b>
 			<!-- determine which template to process -->
@@ -265,16 +245,108 @@
 			</xsl:choose>
 		</li>
 	</xsl:template>
-
+	<!-- ************** PROCESS MODS RECORD INTO CHICAGO MANUAL OF STYLE CITATION ************** -->
+	<xsl:template name="mods-citation">
+		<xsl:apply-templates select="mods:modsCollection"/>
+	</xsl:template>
+	<xsl:template match="mods:modsCollection">
+		<xsl:apply-templates select="mods:mods"/>
+	</xsl:template>
+	<xsl:template match="mods:mods">
+		<!-- name -->
+		<xsl:for-each select="mods:name[@type='personal']">
+			<xsl:choose>
+				<xsl:when test="position() = 1">
+					<xsl:value-of select="mods:namePart[@type='family']"/>
+					<xsl:text>, </xsl:text>
+					<xsl:value-of select="mods:namePart[@type='given']"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<!-- create separator -->
+					<xsl:choose>
+						<xsl:when test="position()=last()"> and </xsl:when>
+						<xsl:otherwise>, </xsl:otherwise>
+					</xsl:choose>
+					<xsl:value-of select="mods:namePart[@type='given']"/>
+					<xsl:text> </xsl:text>
+					<xsl:value-of select="mods:namePart[@type='family']"/>
+				</xsl:otherwise>
+			</xsl:choose>
+			<xsl:if test="position()=last()">
+				<xsl:text>. </xsl:text>
+			</xsl:if>
+		</xsl:for-each>
+		<!-- title -->
+		<xsl:choose>
+			<!-- when it is a journal article -->
+			<xsl:when test="mods:relatedItem[@type='host']">
+				<!-- article title -->
+				<xsl:text>"</xsl:text>
+				<xsl:apply-templates select="mods:titleInfo"/>
+				<xsl:text>." </xsl:text>
+				<!-- journal title and publication -->
+				<i>
+					<xsl:apply-templates select="mods:relatedItem[@type='host']/mods:titleInfo"/>
+				</i>
+				<xsl:apply-templates select="mods:part"/>
+				<xsl:text>.</xsl:text>
+			</xsl:when>
+			<!-- when it is a monograph -->
+			<xsl:otherwise>
+				<i>
+					<xsl:apply-templates select="mods:titleInfo"/>
+				</i>
+				<xsl:text>. </xsl:text>
+				<xsl:apply-templates select="mods:originInfo"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+	<xsl:template match="mods:titleInfo">
+		<xsl:value-of select="mods:title"/>
+		<xsl:if test="mods:subTitle">
+			<xsl:text>: </xsl:text>
+			<xsl:value-of select="mods:subTitle"/>
+		</xsl:if>
+	</xsl:template>
+	<xsl:template match="mods:part">
+		<xsl:if test="mods:detail[@type='volume']">
+			<xsl:text> </xsl:text>
+			<xsl:value-of select="mods:detail[@type='volume']/mods:number"/>
+		</xsl:if>
+		<xsl:if test="mods:date">
+			<xsl:text> (</xsl:text>
+			<xsl:value-of select="mods:date"/>
+			<xsl:text>)</xsl:text>
+		</xsl:if>
+		<xsl:apply-templates select="mods:extent[@unit='page']"/>
+	</xsl:template>
+	<xsl:template match="mods:extent[@unit='page']">
+		<xsl:text>: </xsl:text>
+		<xsl:value-of select="mods:start"/>
+		<xsl:text>-</xsl:text>
+		<xsl:value-of select="mods:end"/>
+	</xsl:template>
+	<xsl:template match="mods:originInfo">
+		<xsl:if test="mods:place/mods:placeTerm">
+			<xsl:value-of select="mods:place/mods:placeTerm"/>
+			<xsl:text>: </xsl:text>
+		</xsl:if>
+		<xsl:if test="mods:publisher">
+			<xsl:value-of select="mods:publisher"/>
+		</xsl:if>
+		<xsl:if test="mods:dateIssued">
+			<xsl:text>, </xsl:text>
+			<xsl:value-of select="mods:dateIssued"/>
+		</xsl:if>
+		<xsl:text>.</xsl:text>
+	</xsl:template>
 	<!--***************************************** CREATE LINK FROM CATEGORY **************************************** -->
 	<xsl:template name="assemble_category_query">
 		<xsl:param name="level"/>
 		<xsl:param name="tokenized-category"/>
-
 		<xsl:for-each select="$tokenized-category[position() &lt;= $level]">
 			<xsl:value-of select="concat('+&#x022;L', position(), '|', ., '&#x022;')"/>
 		</xsl:for-each>
-
 		<xsl:if test="position() &lt;= $level">
 			<xsl:call-template name="assemble_category_query">
 				<xsl:with-param name="level" as="xs:integer" select="$level + 1"/>
@@ -282,7 +354,6 @@
 			</xsl:call-template>
 		</xsl:if>
 	</xsl:template>
-	
 	<!--***************************************** OPTIONS BAR **************************************** -->
 	<xsl:template name="icons">
 		<div class="row pull-right icons">
@@ -307,7 +378,6 @@
 			</div>
 		</div>
 	</xsl:template>
-
 	<xsl:variable name="abbreviations" as="element()*">
 		<abbreviations>
 			<country code="US">
@@ -397,5 +467,4 @@
 			</country>
 		</abbreviations>
 	</xsl:variable>
-
 </xsl:stylesheet>

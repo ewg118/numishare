@@ -1,10 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-	Copyright (C) 2010 Ethan Gruber
-	EADitor: https://github.com/ewg118/eaditor
-	Apache License 2.0: https://github.com/ewg118/eaditor
-	
--->
 <p:config xmlns:p="http://www.orbeon.com/oxf/pipeline" xmlns:oxf="http://www.orbeon.com/oxf/processors">
 
 	<p:param type="input" name="data"/>
@@ -46,21 +40,47 @@
 							<xsl:choose>
 								<!-- handle the value of the q parameter or pass *:* as a default when q is not specified -->
 								<xsl:when test="string($lang)">
-									<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+lang:', $lang, '+AND+imagesavailable:true&amp;rows=0', $facets, '&amp;facet.field=mint_geo&amp;facet.numFacetTerms=1')"/>
+									<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+lang:', $lang, '+AND+imagesavailable:true&amp;rows=0', $facets, '&amp;facet.numFacetTerms=1')"/>
 								</xsl:when>
 								<xsl:otherwise>
-									<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+NOT(lang:*)+AND+imagesavailable:true&amp;rows=0', $facets, '&amp;facet.field=mint_geo&amp;facet.numFacetTerms=1')"/>
+									<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+NOT(lang:*)+AND+imagesavailable:true&amp;rows=0', $facets, '&amp;facet.numFacetTerms=1')"/>
 								</xsl:otherwise>
 							</xsl:choose>
 						</xsl:when>
-						<xsl:otherwise>
+						<xsl:when test="contains(doc('input:request')/request/request-url, 'visualize')">
+							<xsl:choose>
+								<xsl:when test="string($q)">
+									<xsl:choose>
+										<!-- handle the value of the q parameter or pass *:* as a default when q is not specified -->
+										<xsl:when test="string($lang)">
+											<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+lang:', $lang, '+AND+', encode-for-uri($q), '&amp;rows=0', $facets, '&amp;facet.numFacetTerms=1')"/>
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+NOT(lang:*)+AND+', encode-for-uri($q), '&amp;rows=0', $facets, '&amp;facet.numFacetTerms=1')"/>
+										</xsl:otherwise>
+									</xsl:choose>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:choose>
+										<!-- handle the value of the q parameter or pass *:* as a default when q is not specified -->
+										<xsl:when test="string($lang)">
+											<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+lang:', $lang, '&amp;rows=0', $facets, '&amp;facet.numFacetTerms=1')"/>
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+NOT(lang:*)&amp;rows=0', $facets, '&amp;facet.numFacetTerms=1')"/>
+										</xsl:otherwise>
+									</xsl:choose>
+								</xsl:otherwise>
+							</xsl:choose>							
+						</xsl:when>
+						<xsl:otherwise>							
 							<xsl:choose>
 								<!-- handle the value of the q parameter or pass *:* as a default when q is not specified -->
 								<xsl:when test="string($lang)">
-									<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+lang:', $lang, '&amp;rows=0', $facets, '&amp;facet.field=mint_geo&amp;facet.numFacetTerms=1')"/>
+									<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+lang:', $lang, '&amp;rows=0', $facets, '&amp;facet.numFacetTerms=1')"/>
 								</xsl:when>
 								<xsl:otherwise>
-									<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+NOT(lang:*)&amp;rows=0', $facets, '&amp;facet.field=mint_geo&amp;facet.numFacetTerms=1')"/>
+									<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+NOT(lang:*)&amp;rows=0', $facets, '&amp;facet.numFacetTerms=1')"/>
 								</xsl:otherwise>
 							</xsl:choose>
 						</xsl:otherwise>

@@ -4,7 +4,8 @@
 	exclude-result-prefixes="#all" version="2.0">
 	<xsl:include href="../../header.xsl"/>
 	<xsl:include href="../../footer.xsl"/>
-	<xsl:include href="../../templates.xsl"/>	
+	<xsl:include href="../../templates-visualize.xsl"/>
+	<xsl:include href="../../templates-analyze.xsl"/>
 	<xsl:include href="../../functions.xsl"/>
 	<xsl:include href="html-templates.xsl"/>
 	<xsl:include href="../nuds/html.xsl"/>

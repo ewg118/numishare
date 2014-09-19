@@ -6,7 +6,7 @@
 	<xsl:include href="../header.xsl"/>
 	<xsl:include href="../footer.xsl"/>
 	<xsl:include href="../functions.xsl"/>
-	<xsl:include href="../templates_search.xsl"/>
+	<xsl:include href="../templates-search.xsl"/>
 
 	<xsl:param name="pipeline">compare</xsl:param>
 	<xsl:param name="lang" select="doc('input:request')/request/parameters/parameter[name='lang']/value"/>

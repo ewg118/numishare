@@ -3,7 +3,7 @@
 	<xsl:output method="xml" encoding="UTF-8"/>
 	<xsl:include href="../header.xsl"/>
 	<xsl:include href="../footer.xsl"/>
-	<xsl:include href="../templates_search.xsl"/>
+	<xsl:include href="../templates-search.xsl"/>
 	<xsl:include href="../functions.xsl"/>
 
 	<xsl:param name="pipeline">search</xsl:param>
