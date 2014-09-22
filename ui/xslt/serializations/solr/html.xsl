@@ -58,7 +58,7 @@
 				</title>
 				<!-- alternates -->
 				<link rel="alternate" type="application/atom+xml" href="{concat(//config/url, 'feed/?q=', $q)}"/>
-				<link rel="alternate" type="text/csv" href="{concat(//config/url, 'data.csv/?q=', $q, if (string($sort)) then concat('&amp;sort=', $sort) else '')}"/>
+				<link rel="alternate" type="text/csv" href="{concat(//config/url, 'query.csv/?q=', $q, if (string($sort)) then concat('&amp;sort=', $sort) else '', if(string($lang)) then concat('&amp;lang=', $lang) else '')}"/>
 				<xsl:choose>
 					<xsl:when test="/content/config/collection_type = 'hoard'">
 						<link rel="alternate" type="application/vnd.google-earth.kml+xml"
@@ -141,7 +141,7 @@
 								</xsl:choose>
 
 							</xsl:if>
-							<a href="{$display_path}data.csv?q={$q}{if(string($lang)) then concat('&amp;lang=', $lang) else ''}{if (string($sort)) then concat('&amp;sort=', $sort) else ''}">
+							<a href="{$display_path}query.csv?q={$q}{if(string($lang)) then concat('&amp;lang=', $lang) else ''}{if (string($sort)) then concat('&amp;sort=', $sort) else ''}">
 								<!-- the image below is copyright of Silvestre Herrera, available freely on wikimedia commons: http://commons.wikimedia.org/wiki/File:X-office-spreadsheet_Gion.svg -->
 								<img src="{$include_path}ui/images/spreadsheet.png" title="CSV" alt="CSV"/>
 							</a>

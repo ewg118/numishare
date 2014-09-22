@@ -69,6 +69,7 @@
 	
 	<!-- **** CSV EXPORT **** -->
 	<page path="/numishare/[^\/]+/hoards.csv" matcher="oxf:perl5-matcher" model="xpl/models/config.xpl" view="xpl/views/apis/csv-hoards.xpl"/>
+	<page path="/numishare/[^\/]+/query.csv" matcher="oxf:perl5-matcher" model="xpl/models/solr/csv.xpl" view="xpl/views/serializations/solr/csv.xpl"/>
 	
 	<!-- **** AJAX **** -->	
 	<page path="/numishare/[^\/]+/compare_results" matcher="oxf:perl5-matcher" model="xpl/models/solr/compare_results.xpl" view="xpl/views/ajax/compare_results.xpl"/>
