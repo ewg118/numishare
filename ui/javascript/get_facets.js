@@ -5,7 +5,7 @@ Library: jQuery
 Description: This utilizes ajax to populate the list of terms in the facet category in the results page.
 If the list is populated and then hidden, when it is re-activated, it fades in rather than executing the ajax call again.
  ************************************/
-$(document).ready(function () {
+$(document).ready(function () {	
 	var popupStatus = 0;
 	var pipeline = 'results';
 	var langStr = getURLParameter('lang');
@@ -22,8 +22,10 @@ $(document).ready(function () {
 		hierarchyLabel(field, title);
 	});
 	
-	if ($('#century_num-list').html().indexOf('<li') > 0) {
-		dateLabel();
+	if ($('#century_num').length > 0){
+		if ($('#century_num-list').html().indexOf('<li') > 0) {
+			dateLabel();
+		}
 	}
 	
 	$("#backgroundPopup").on('click', function (event) {

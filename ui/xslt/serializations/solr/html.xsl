@@ -61,11 +61,11 @@
 				<link rel="alternate" type="text/csv" href="{concat(//config/url, 'data.csv/?q=', $q, if (string($sort)) then concat('&amp;sort=', $sort) else '')}"/>
 				<xsl:choose>
 					<xsl:when test="/content/config/collection_type = 'hoard'">
-						<link rel="alternate" type="application/application/vnd.google-earth.kml+xml"
+						<link rel="alternate" type="application/vnd.google-earth.kml+xml"
 							href="{concat(//config/url, 'findspots.kml/?q=', $q, if(string($lang)) then concat('&amp;lang=', $lang) else '')}"/>
 					</xsl:when>
 					<xsl:otherwise>
-						<link rel="alternate" type="application/application/vnd.google-earth.kml+xml"
+						<link rel="alternate" type="application/vnd.google-earth.kml+xml"
 							href="{concat(//config/url, 'query.kml/?q=', $q, if(string($lang)) then concat('&amp;lang=', $lang) else '')}"/>
 					</xsl:otherwise>
 				</xsl:choose>

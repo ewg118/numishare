@@ -1,7 +1,6 @@
 $(document).ready(function () {
 	var q = $('#current-query').text();
 	var collection_type = $('#collection_type').text();
-	
 	$("#map_results").fancybox({
 		beforeShow: function () {
 			if ($('#resultMap').html().length == 0) {
