@@ -1,25 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" version="2.0"
-	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:numishare="https://github.com/ewg118/numishare" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-	xmlns:cinclude="http://apache.org/cocoon/include/1.0" xmlns:nuds="http://nomisma.org/nuds" xmlns:nh="http://nomisma.org/nudsHoard" xmlns:nm="http://nomisma.org/id/"
-	xmlns:math="http://exslt.org/math" exclude-result-prefixes="xsl xs rdf xlink numishare skos nuds nh nm math">
-
+	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:numishare="https://github.com/ewg118/numishare" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nuds="http://nomisma.org/nuds"
+	xmlns:nh="http://nomisma.org/nudsHoard" xmlns:nm="http://nomisma.org/id/" exclude-result-prefixes="#all">
 	<!-- use the calculate URI parameter to output tables/charts for counts of material, denomination, issuer, etc. -->
-	<xsl:param name="calculate"/>
-	<xsl:param name="compare"/>		
-	<xsl:param name="exclude"/>
-	<xsl:param name="options"/>
-
+	<xsl:param name="calculate" select="doc('input:request')/request/parameters/parameter[name='calculate']/value"/>
+	<xsl:param name="compare" select="doc('input:request')/request/parameters/parameter[name='compare']/value"/>
+	<xsl:param name="exclude" select="doc('input:request')/request/parameters/parameter[name='exclude']/value"/>
+	<xsl:param name="options" select="doc('input:request')/request/parameters/parameter[name='options']/value"/>
 	<xsl:template name="nudsHoard">
 		<xsl:apply-templates select="/content/nh:nudsHoard"/>
 	</xsl:template>
-
 	<xsl:template match="nh:nudsHoard">
 		<xsl:call-template name="icons"/>
 		<xsl:call-template name="nudsHoard_content"/>
 		<xsl:call-template name="icons"/>
 	</xsl:template>
-
 	<xsl:template name="nudsHoard_content">
 		<xsl:variable name="title">
 			<xsl:choose>
@@ -38,8 +33,6 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-
-
 		<div class="row">
 			<div class="col-md-12">
 				<h1>
@@ -102,7 +95,7 @@
 								<td style="background-color:#d86458;border:2px solid black;width:50px;"/>
 								<td style="width:100px">
 									<xsl:value-of select="numishare:regularize_node('findspot', $lang)"/>
-								</td>								
+								</td>
 							</tr>
 						</tbody>
 					</table>
@@ -180,7 +173,6 @@
 			</div>
 		</div>
 	</xsl:template>
-
 	<xsl:template match="nh:hoardDesc">
 		<xsl:variable name="hasContents">
 			<xsl:choose>
@@ -191,14 +183,11 @@
 		<xsl:variable name="contentsDesc" as="element()*">
 			<xsl:copy-of select="parent::node()/nh:contentsDesc/nh:contents"/>
 		</xsl:variable>
-
-
 		<h2>
 			<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
 		</h2>
 		<ul>
 			<xsl:apply-templates mode="descMeta"/>
-
 			<xsl:if test="$hasContents = 'true'">
 				<xsl:if test="not(nh:deposit/nh:date) and not(nh:deposit/nh:dateRange)">
 					<xsl:variable name="all-dates" as="element()*">
@@ -238,13 +227,11 @@
 							</xsl:for-each>
 						</dates>
 					</xsl:variable>
-
 					<li>
 						<b><xsl:value-of select="numishare:regularize_node('closing_date', $lang)"/>: </b>
 						<xsl:value-of select="nh:normalize_date($dates//date[last()], $dates//date[last()])"/>
 					</li>
 				</xsl:if>
-
 				<xsl:variable name="total-counts" as="element()*">
 					<total-counts>
 						<xsl:for-each select="parent::node()/nh:contentsDesc/nh:contents/descendant::nuds:typeDesc">
@@ -267,7 +254,6 @@
 						</xsl:for-each>
 					</total-counts>
 				</xsl:variable>
-
 				<xsl:variable name="denominations" as="element()*">
 					<denominations>
 						<xsl:for-each select="distinct-values($total-counts//*[local-name()='name' and string-length(normalize-space(.)) &gt; 0])">
@@ -281,7 +267,6 @@
 						</xsl:for-each>
 					</denominations>
 				</xsl:variable>
-
 				<xsl:if test="count($denominations//*[local-name()='name']) &gt; 0">
 					<li>
 						<b><xsl:value-of select="numishare:regularize_node('description', $lang)"/>: </b>
@@ -295,16 +280,14 @@
 							</xsl:if>
 						</xsl:for-each>
 					</li>
-				</xsl:if>				
+				</xsl:if>
 			</xsl:if>
 		</ul>
 	</xsl:template>
-
 	<xsl:template match="nh:contents">
 		<h2>
 			<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
 		</h2>
-
 		<table class="table table-striped">
 			<thead>
 				<tr>
@@ -313,16 +296,13 @@
 					<th style="width:10%;text-align:center"/>
 				</tr>
 			</thead>
-
 			<tbody>
 				<xsl:apply-templates select="descendant::nh:coin|descendant::nh:coinGrp"/>
 			</tbody>
 		</table>
 	</xsl:template>
-
 	<xsl:template match="nh:coin|nh:coinGrp">
 		<xsl:variable name="obj-id" select="generate-id()"/>
-
 		<xsl:variable name="typeDesc_resource">
 			<xsl:if test="string(nuds:typeDesc/@xlink:href)">
 				<xsl:value-of select="nuds:typeDesc/@xlink:href"/>
@@ -338,7 +318,6 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-
 		<tr>
 			<td style="width:10%;text-align:center">
 				<xsl:value-of select="if(@count) then @count else 1"/>
@@ -412,8 +391,7 @@
 							</xsl:choose>
 						</xsl:for-each>
 					</xsl:when>
-				</xsl:choose>				
-				
+				</xsl:choose>
 				<xsl:choose>
 					<xsl:when test="$typeDesc/nuds:date">
 						<xsl:value-of select="$typeDesc/nuds:date[1]"/>
@@ -437,12 +415,10 @@
 			</td>
 		</tr>
 	</xsl:template>
-
 	<xsl:template match="nuds:denomination" mode="den">
 		<xsl:param name="contentsDesc"/>
 		<xsl:param name="lang"/>
 		<xsl:param name="num"/>
-
 		<xsl:variable name="href" select="@xlink:href"/>
 		<xsl:variable name="value">
 			<xsl:choose>

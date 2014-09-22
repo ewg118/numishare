@@ -5,12 +5,12 @@
 	xmlns:cinclude="http://apache.org/cocoon/include/1.0" xmlns:nuds="http://nomisma.org/nuds" exclude-result-prefixes="#all" version="2.0">
 
 	<!-- quantitative analysis parameters -->
-	<xsl:param name="measurement"/>
-	<xsl:param name="numericType"/>	
-	<xsl:param name="interval"/>
-	<xsl:param name="fromDate"/>
-	<xsl:param name="toDate"/>
-	<xsl:param name="sparqlQuery"/>
+	<xsl:param name="measurement" select="doc('input:request')/request/parameters/parameter[name='measurement']/value"/>
+	<xsl:param name="numericType" select="doc('input:request')/request/parameters/parameter[name='numericType']/value"/>	
+	<xsl:param name="interval" select="doc('input:request')/request/parameters/parameter[name='interval']/value"/>
+	<xsl:param name="fromDate" select="doc('input:request')/request/parameters/parameter[name='fromDate']/value"/>
+	<xsl:param name="toDate" select="doc('input:request')/request/parameters/parameter[name='toDate']/value"/>
+	<xsl:param name="sparqlQuery" select="doc('input:request')/request/parameters/parameter[name='sparqlQuery']/value"/>
 	<xsl:variable name="tokenized_sparqlQuery" as="item()*">
 		<xsl:sequence select="tokenize($sparqlQuery, '\|')"/>
 	</xsl:variable>

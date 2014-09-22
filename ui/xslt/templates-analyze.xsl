@@ -355,7 +355,7 @@
 					<xsl:with-param name="element" select="$element"/>
 					<xsl:with-param name="role" select="$role"/>
 				</xsl:call-template>
-			</xsl:if>
+			</xsl:if>			
 		</xsl:for-each>
 	</xsl:template>
 
