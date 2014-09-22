@@ -1,30 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xlink="http://www.w3.org/1999/xlink"
-	xmlns:numishare="https://github.com/ewg118/numishare" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:cinclude="http://apache.org/cocoon/include/1.0" xmlns:nuds="http://nomisma.org/nuds"
+	xmlns:numishare="https://github.com/ewg118/numishare" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nuds="http://nomisma.org/nuds"
 	xmlns:nh="http://nomisma.org/nudsHoard" xmlns:nm="http://nomisma.org/id/" xmlns:math="http://exslt.org/math" exclude-result-prefixes="#all" version="2.0">
-	<xsl:include href="header.xsl"/>
-	<xsl:include href="footer.xsl"/>
-	<xsl:include href="templates.xsl"/>
-	<xsl:include href="functions.xsl"/>
+	<xsl:include href="../header.xsl"/>
+	<xsl:include href="../footer.xsl"/>
+	<xsl:include href="../templates-analyze.xsl"/>
+	<xsl:include href="../templates-search.xsl"/>
+	<xsl:include href="../functions.xsl"/>
 
-	<xsl:param name="pipeline"/>
-	<xsl:param name="display_path"/>
-	<xsl:param name="lang"/>
+	<xsl:variable name="pipeline">analyze</xsl:variable>
+	<xsl:variable name="display_path"/>
+	<xsl:variable name="include_path">../</xsl:variable>
+	
+	<!-- request parameters -->
+	<xsl:param name="request-uri" select="concat('http://localhost:8080', substring-before(doc('input:request')/request/request-uri, 'analyze'))"/>
+	<xsl:param name="lang" select="doc('input:request')/request/parameters/parameter[name='lang']/value"/>
 
 	<!-- use the calculate URI parameter to output tables/charts for counts of material, denomination, issuer, etc. -->
-	<xsl:param name="calculate"/>
-	<xsl:param name="compare"/>
-	<xsl:param name="type"/>
-	<xsl:param name="chartType"/>
-	<xsl:param name="exclude"/>
-	<xsl:param name="options"/>
+	<xsl:param name="calculate" select="doc('input:request')/request/parameters/parameter[name='calculate']/value"/>
+	<xsl:param name="compare" select="doc('input:request')/request/parameters/parameter[name='compare']/value"/>
+	<xsl:param name="type" select="doc('input:request')/request/parameters/parameter[name='type']/value"/>
+	<xsl:param name="chartType" select="doc('input:request')/request/parameters/parameter[name='chartType']/value"/>
+	<xsl:param name="exclude" select="doc('input:request')/request/parameters/parameter[name='exclude']/value"/>
+	<xsl:param name="options" select="doc('input:request')/request/parameters/parameter[name='options']/value"/>
+	
+	<!-- empty variables -->
+	<xsl:variable name="nudsGroup" as="node()*">
+		<empty/>
+	</xsl:variable>
+	<xsl:variable name="id"/>
 
 	<!-- config variables -->
-	<xsl:variable name="url">
-		<xsl:value-of select="//config/url"/>
-	</xsl:variable>
+	<xsl:variable name="url" select="//config/url"/>
 	<xsl:variable name="collection_type" select="//config/collection_type"/>
-	<xsl:variable name="id"/>
 
 	<!-- load facets into variable -->
 	<xsl:variable name="facets" as="element()*">
@@ -36,27 +44,27 @@
 			<head>
 				<title>
 					<xsl:value-of select="//config/title"/>
-					<xsl:text>: <xsl:value-of select="numishare:normalizeLabel('header_analyze', $lang)"/></xsl:text>
+					<xsl:text>: </xsl:text><xsl:value-of select="numishare:normalizeLabel('header_analyze', $lang)"/>
 				</title>
-				<link rel="shortcut icon" type="image/x-icon" href="{$display_path}images/favicon.png"/>
+				<link rel="shortcut icon" type="image/x-icon" href="{$include_path}ui/images/favicon.png"/>
 				<meta name="viewport" content="width=device-width, initial-scale=1"/>
 				<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"/>
 				<!-- bootstrap -->
 				<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"/>
 				<script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"/>
 				<!-- Add fancyBox -->
-				<link rel="stylesheet" href="{$display_path}jquery.fancybox.css?v=2.1.5" type="text/css" media="screen"/>
-				<script type="text/javascript" src="{$display_path}javascript/jquery.fancybox.pack.js?v=2.1.5"/>
-				<link type="text/css" href="{$display_path}style.css" rel="stylesheet"/>
+				<link rel="stylesheet" href="{$include_path}ui/css/jquery.fancybox.css?v=2.1.5" type="text/css" media="screen"/>
+				<script type="text/javascript" src="{$include_path}ui/javascript/jquery.fancybox.pack.js?v=2.1.5"/>
+				<link type="text/css" href="{$include_path}ui/css/style.css" rel="stylesheet"/>
 				<!-- analysis scripts -->
-				<script type="text/javascript" src="{$display_path}javascript/highcharts.js"/>
-				<script type="text/javascript" src="{$display_path}javascript/modules/exporting.js"/>
-				<script type="text/javascript" src="{$display_path}javascript/analyze.js"/>
-				<script type="text/javascript" src="{$display_path}javascript/analysis_functions.js"/>
+				<script type="text/javascript" src="{$include_path}ui/javascript/highcharts.js"/>
+				<script type="text/javascript" src="{$include_path}ui/javascript/modules/exporting.js"/>
+				<script type="text/javascript" src="{$include_path}ui/javascript/analyze.js"/>
+				<script type="text/javascript" src="{$include_path}ui/javascript/analysis_functions.js"/>
 				<!-- Add fancyBox -->
-				<link rel="stylesheet" href="{$display_path}jquery.fancybox.css?v=2.1.5" type="text/css" media="screen"/>
-				<script type="text/javascript" src="{$display_path}javascript/jquery.fancybox.pack.js?v=2.1.5"/>
-				<script type="text/javascript" src="{$display_path}javascript/search_functions.js"/>
+				<link rel="stylesheet" href="{$include_path}ui/css/jquery.fancybox.css?v=2.1.5" type="text/css" media="screen"/>
+				<script type="text/javascript" src="{$include_path}ui/javascript/jquery.fancybox.pack.js?v=2.1.5"/>
+				<script type="text/javascript" src="{$include_path}ui/javascript/search_functions.js"/>
 
 				<!-- google analytics -->
 				<xsl:if test="string(/config/google_analytics)">

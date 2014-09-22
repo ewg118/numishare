@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
 	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:numishare="https://github.com/ewg118/numishare" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-	xmlns:cinclude="http://apache.org/cocoon/include/1.0" xmlns:nuds="http://nomisma.org/nuds" xmlns:mods="http://www.loc.gov/mods/v3" xmlns:nh="http://nomisma.org/nudsHoard"
+	xmlns:nuds="http://nomisma.org/nuds" xmlns:mods="http://www.loc.gov/mods/v3" xmlns:nh="http://nomisma.org/nudsHoard"
 	xmlns:nm="http://nomisma.org/id/" xmlns:math="http://exslt.org/math" xmlns:res="http://www.w3.org/2005/sparql-results#" exclude-result-prefixes=" #all" version="2.0">
 
 	<!--<xsl:variable name="type_series" select="//config/type_series"/>-->
@@ -14,21 +14,20 @@
 		<xsl:variable name="counts" as="element()*">
 			<counts>
 				<!-- use get_hoard_quant to calculate -->
-				<xsl:if test="$pipeline = 'display'">
+				<xsl:if test="$pipeline = 'display'">					
 					<xsl:copy-of
-						select="document(concat('cocoon:/get_hoard_quant?id=', $id, '&amp;calculate=', if (string($role)) then $role else $element, '&amp;type=', $type, '&amp;exclude=', $exclude))"/>
+						select="document(concat($request-uri, 'get_hoard_quant?id=', $id, '&amp;calculate=', if (string($role)) then $role else $element, '&amp;type=', $type, '&amp;exclude=', $exclude))"/>
 				</xsl:if>
 				<!-- if there is a compare parameter, load get_hoard_quant with document() function -->
 				<xsl:if test="string($compare) and string($calculate)">
 					<xsl:for-each select="tokenize($compare, ',')">
 						<xsl:copy-of
-							select="document(concat('cocoon:/get_hoard_quant?id=', ., '&amp;calculate=', if (string($role)) then $role else $element, '&amp;type=', $type, '&amp;exclude=', $exclude))"
+							select="document(concat($request-uri, 'get_hoard_quant?id=', ., '&amp;calculate=', if (string($role)) then $role else $element, '&amp;type=', $type, '&amp;exclude=', $exclude))"
 						/>
 					</xsl:for-each>
 				</xsl:if>
 			</counts>
 		</xsl:variable>
-
 		<div id="{if (string($role)) then $role else $element}-container" style="min-width: 400px; height: 400px; margin: 0 auto"/>
 		<table class="calculate" id="{if (string($role)) then $role else $element}-table">
 			<caption>
@@ -131,7 +130,7 @@
 
 			<xsl:text>[</xsl:text>
 			<xsl:if test="$pipeline = 'display'">
-				<cinclude:include src="cocoon:/get_hoard_quant?id={$id}&amp;type={$type}&amp;format=js&amp;calculate=date&amp;exclude={$exclude}"/>
+				<xsl:value-of select="document(concat($request-uri, 'get_hoard_quant?id=', $id, '&amp;format=js&amp;calculate=date&amp;exclude=', $exclude, '&amp;type=', $type))"/>
 			</xsl:if>
 			<!-- if there is a compare parameter, load get_hoard_quant with document() function -->
 			<xsl:if test="string($compare) and string($calculate)">
@@ -139,7 +138,7 @@
 					<xsl:text>,</xsl:text>
 				</xsl:if>
 				<xsl:for-each select="tokenize($compare, ',')">
-					<cinclude:include src="cocoon:/get_hoard_quant?id={.}&amp;type={$type}&amp;format=js&amp;calculate=date&amp;exclude={$exclude}"/>
+					<xsl:value-of select="document(concat($request-uri, 'get_hoard_quant?id=', ., '&amp;format=js&amp;calculate=date&amp;exclude=', $exclude, '&amp;type=', $type))"/>
 					<xsl:if test="not(position()=last())">
 						<!-- threre must be a line break between objects or there will be Javascript eval problems! -->
 						<xsl:text>,
@@ -161,7 +160,7 @@
 		<xsl:variable name="chartTypes">bar,column</xsl:variable>
 
 		<p><xsl:value-of select="numishare:normalizeLabel('visualize_type_desc', $lang)"/>.</p>
-		<form action="{$action}" id="visualize-form" role="form">
+		<form action="{$action}" id="visualize-form" role="form" method="get">
 			<div class="row">
 				<div class="col-md-12">
 					<h2>1. <xsl:value-of select="numishare:normalizeLabel('visualize_response_type', $lang)"/></h2>
@@ -169,7 +168,7 @@
 						<div class="radio">
 							<label class="radio-inline">
 								<input type="radio" name="type" value="percentage">
-									<xsl:if test="$type != 'count'">
+									<xsl:if test="$type = 'percentage' or not(string($type))">
 										<xsl:attribute name="checked">checked</xsl:attribute>
 									</xsl:if>
 								</input>
@@ -366,7 +365,7 @@
 		<xsl:variable name="chartTypes">bar,column,area,line,spline,areaspline</xsl:variable>
 
 		<p><xsl:value-of select="numishare:normalizeLabel('visualize_date_desc', $lang)"/>.</p>
-		<form action="{$action}" id="date-form" role="form">
+		<form action="{$action}" id="date-form" role="form" method="get">
 			<div class="row">
 				<div class="col-md-12">
 					<h2>1. <xsl:value-of select="numishare:normalizeLabel('visualize_response_type', $lang)"/></h2>
@@ -374,7 +373,7 @@
 						<div class="radio">
 							<label class="radio-inline">
 								<input type="radio" name="type" value="percentage">
-									<xsl:if test="$type != 'count'">
+									<xsl:if test="$type = 'percentage' or not(string($type))">
 										<xsl:attribute name="checked">checked</xsl:attribute>
 									</xsl:if>
 								</input>
@@ -516,7 +515,7 @@
 		<xsl:variable name="queryOptions">authority,coinType,date,deity,denomination,dynasty,issuer,material,mint,portrait,region</xsl:variable>
 
 		<p><xsl:value-of select="numishare:normalizeLabel('visualize_csv_desc', $lang)"/>.</p>
-		<form action="{$display_path}hoards.csv" id="csv-form" style="margin-bottom:40px;" role="form">
+		<form action="{$display_path}hoards.csv" id="csv-form" style="margin-bottom:40px;" role="form" method="get">
 			<div class="row">
 				<div class="col-md-12">
 					<h2>1. <xsl:value-of select="numishare:normalizeLabel('visualize_response_type', $lang)"/></h2>
@@ -524,7 +523,7 @@
 						<div class="radio">
 							<label class="radio-inline">
 								<input type="radio" name="type" value="percentage">
-									<xsl:if test="$type != 'count' and $type != 'cumulative'">
+									<xsl:if test="$type = 'percentage' or not(string($type))">
 										<xsl:attribute name="checked">checked</xsl:attribute>
 									</xsl:if>
 								</input>
@@ -657,6 +656,37 @@
 	<xsl:template name="get-hoards">
 		<div class="compare-div">
 			<xsl:copy-of select="/content/select[@id='get_hoards-control']"/>
+		</div>
+	</xsl:template>
+	
+	<!-- ************** CHECKBOXES ************** -->
+	<xsl:template name="vis-checks">
+		<xsl:param name="query_fragment"/>
+		<div class="col-md-2">
+			<div class="checkbox">
+				<label class="checkbox-inline">
+					<xsl:choose>
+						<xsl:when test="contains($calculate, $query_fragment)">
+							<input type="checkbox" id="{$query_fragment}-checkbox" checked="checked" value="{$query_fragment}" class="calculate-checkbox"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<input type="checkbox" id="{$query_fragment}-checkbox" value="{$query_fragment}" class="calculate-checkbox"/>
+						</xsl:otherwise>
+					</xsl:choose>
+					<xsl:value-of select="numishare:normalize_fields($query_fragment, $lang)"/>
+				</label>
+			</div>
+		</div>
+	</xsl:template>
+	<xsl:template name="vis-radios">
+		<xsl:param name="query_fragment"/>
+		<div class="col-md-2">
+			<div class="radio">
+				<label class="radio-inline">
+					<input type="radio" name="calculate" id="{$query_fragment}-radio" value="{$query_fragment}" class="calculate-checkbox"/>
+					<xsl:value-of select="numishare:normalize_fields($query_fragment, $lang)"/>
+				</label>
+			</div>
 		</div>
 	</xsl:template>
 </xsl:stylesheet>

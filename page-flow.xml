@@ -67,12 +67,16 @@
 	<page path="/numishare/[^\/]+/query.kml" matcher="oxf:perl5-matcher" model="xpl/models/solr/geographic-docs.xpl" view="xpl/views/serializations/solr/kml.xpl"/>
 	<page path="/numishare/[^\/]+/subjects.kml" matcher="oxf:perl5-matcher" model="xpl/models/solr/geographic-facets.xpl" view="xpl/views/serializations/solr/kml.xpl"/>
 	
+	<!-- **** CSV EXPORT **** -->
+	<page path="/numishare/[^\/]+/hoards.csv" matcher="oxf:perl5-matcher" model="xpl/models/config.xpl" view="xpl/views/apis/csv-hoards.xpl"/>
+	
 	<!-- **** AJAX **** -->	
 	<page path="/numishare/[^\/]+/compare_results" matcher="oxf:perl5-matcher" model="xpl/models/solr/compare_results.xpl" view="xpl/views/ajax/compare_results.xpl"/>
 	<page path="/numishare/[^\/]+/get_centuries" matcher="oxf:perl5-matcher" model="xpl/models/solr/get_centuries.xpl" view="xpl/views/ajax/get_centuries.xpl"/>
 	<page path="/numishare/[^\/]+/get_decades" matcher="oxf:perl5-matcher" model="xpl/models/solr/get_decades.xpl"  view="xpl/views/ajax/get_decades.xpl"/>
 	<page path="/numishare/[^\/]+/get_facet_options" matcher="oxf:perl5-matcher" model="xpl/models/solr/get_facet_options.xpl" view="xpl/views/ajax/get_facet_options.xpl"/>
 	<page path="/numishare/[^\/]+/get_hier" matcher="oxf:perl5-matcher" model="xpl/models/solr/get_hier.xpl" view="xpl/views/ajax/get_hier.xpl"/>
+	<page path="/numishare/[^\/]+/get_hoard_quant" matcher="oxf:perl5-matcher" model="xpl/models/object/get-id.xpl" view="xpl/views/ajax/get_hoard_quant.xpl"/>
 	<page path="/numishare/[^\/]+/get_hoards" matcher="oxf:perl5-matcher" model="xpl/models/solr/get_hoards.xpl" view="xpl/views/ajax/get_hoards.xpl"/>	
 	<page path="/numishare/[^\/]+/get_search_facets" matcher="oxf:perl5-matcher" model="xpl/models/solr/get_search_facets.xpl" view="xpl/views/ajax/get_search_facets.xpl"/>	
 	<page path="/numishare/[^\/]+/get_vis_custom" matcher="oxf:perl5-matcher" model="xpl/models/solr/get_vis_custom.xpl" view="xpl/views/ajax/get_vis_custom.xpl"/>

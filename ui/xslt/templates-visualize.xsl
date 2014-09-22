@@ -3,36 +3,7 @@
 	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:numishare="https://github.com/ewg118/numishare" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nuds="http://nomisma.org/nuds"
 	xmlns:nm="http://nomisma.org/id/" xmlns:math="http://exslt.org/math" xmlns:res="http://www.w3.org/2005/sparql-results#" exclude-result-prefixes=" #all" version="2.0">
 	<xsl:variable name="type_series" select="//config/type_series"/>
-	<!-- ************** CHECKBOXES ************** -->
-	<xsl:template name="vis-checks">
-		<xsl:param name="query_fragment"/>
-		<div class="col-md-2">
-			<div class="checkbox">
-				<label class="checkbox-inline">
-					<xsl:choose>
-						<xsl:when test="contains($calculate, $query_fragment)">
-							<input type="checkbox" id="{$query_fragment}-checkbox" checked="checked" value="{$query_fragment}" class="calculate-checkbox"/>
-						</xsl:when>
-						<xsl:otherwise>
-							<input type="checkbox" id="{$query_fragment}-checkbox" value="{$query_fragment}" class="calculate-checkbox"/>
-						</xsl:otherwise>
-					</xsl:choose>
-					<xsl:value-of select="numishare:normalize_fields($query_fragment, $lang)"/>
-				</label>
-			</div>
-		</div>
-	</xsl:template>
-	<xsl:template name="vis-radios">
-		<xsl:param name="query_fragment"/>
-		<div class="col-md-2">
-			<div class="radio">
-				<label class="radio-inline">
-					<input type="radio" name="calculate" id="{$query_fragment}-radio" value="{$query_fragment}" class="calculate-checkbox"/>
-					<xsl:value-of select="numishare:normalize_fields($query_fragment, $lang)"/>
-				</label>
-			</div>
-		</div>
-	</xsl:template>
+	
 	<!-- ************** MEASUREMENT FORM FOR COIN TYPE ANALYSIS ************** -->
 	<xsl:template name="measurementForm">
 		<xsl:variable name="action">
