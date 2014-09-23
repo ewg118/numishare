@@ -75,8 +75,8 @@
 		</xsl:for-each>
 		<!-- gather associated hoards from Nomisma is available -->
 		<xsl:if test="string($sparql_endpoint)">
-			<!--<xsl:variable name="service" select="concat(//config/url, 'widget?uri=', //config/uri_space, $id, '&amp;template=kml')"/>
-			<xsl:copy-of select="document($service)//*:Placemark"/>-->
+			<xsl:variable name="service" select="concat($request-uri, 'sparql?uri=', //config/uri_space, $id, '&amp;template=kml')"/>
+			<xsl:copy-of select="document($service)//*:Placemark"/>
 		</xsl:if>
 	</xsl:template>
 	<xsl:template match="nh:nudsHoard" mode="kml">

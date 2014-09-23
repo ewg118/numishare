@@ -12,6 +12,7 @@
 	<xsl:variable name="format" select="doc('input:request')/request/parameters/parameter[name='format']/value"/>
 	<xsl:variable name="mode" select="doc('input:request')/request/parameters/parameter[name='mode']/value"/>
 	<xsl:variable name="lang" select="doc('input:request')/request/parameters/parameter[name='lang']/value"/>
+	<xsl:variable name="request-uri" select="concat('http://localhost:8080', substring-before(doc('input:request')/request/request-uri, 'apis/'))"/>
 	
 	<!-- config variables -->
 	<xsl:variable name="url" select="/content/config/url"/>

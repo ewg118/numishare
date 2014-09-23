@@ -43,8 +43,9 @@
 		<!-- gather associated hoards from Nomisma is available -->
 		<xsl:choose>
 			<xsl:when test="string($sparql_endpoint)">
-				<!--<xsl:variable name="service" select="concat(//config/url, 'widget?uri=', //config/uri_space, $id, '&amp;template=json')"/>
-				<xsl:value-of select="document($service)//*"/>--></xsl:when>
+				<xsl:variable name="service" select="concat($request-uri, 'sparql?uri=', //config/uri_space, $id, '&amp;template=json')"/>
+				<xsl:value-of select="document($service)/response"/>
+			</xsl:when>
 			<xsl:otherwise>
 				<xsl:for-each select="$nudsGroup/descendant::nuds:geogname[@xlink:role='findspot'][string(@xlink:href)]|descendant::nuds:findspotDesc[string(@xlink:href)]">
 					<xsl:call-template name="getJsonPoint">

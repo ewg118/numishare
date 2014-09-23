@@ -86,5 +86,8 @@
 	<page path="/numishare/[^\/]+/get_vis_quant" matcher="oxf:perl5-matcher" model="xpl/models/solr/get_vis_quant.xpl" view="xpl/views/ajax/get_vis_quant.xpl"/>
 	<page path="/numishare/[^\/]+/results_ajax" matcher="oxf:perl5-matcher" model="xpl/models/solr/results_ajax.xpl" view="xpl/views/ajax/results_ajax.xpl"/>
 	
+	<!-- **** SPARQL widget **** -->
+	<page path="/numishare/[^\/]+/sparql" matcher="oxf:perl5-matcher" model="xpl/models/sparql/widget.xpl" view="xpl/views/serializations/sparql/widget.xpl"/>
+	
 	<epilogue url="oxf:/config/epilogue.xpl"/>
 </config>

@@ -21,9 +21,9 @@
 	
 	<xsl:template match="/">
 		<xsl:choose>
-			<xsl:when test="$template = 'results'">
+			<!--<xsl:when test="$template = 'results'">
 				<xsl:call-template name="numishare:getImages"/>
-			</xsl:when>
+			</xsl:when>-->
 			<xsl:when test="$template = 'display'">
 				<xsl:call-template name="numishare:associatedObjects"/>
 			</xsl:when>

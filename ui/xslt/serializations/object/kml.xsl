@@ -4,8 +4,9 @@
 	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes="#all" version="2.0">	
 	<xsl:include href="kml-templates.xsl"/>
 	
-	<xsl:variable name="id" select="doc('input:request')/request/parameters/parameter[name='id']/value"/>
+	<xsl:variable name="id" select="descendant::*:recordId"/>
 	<xsl:variable name="lang" select="doc('input:request')/request/parameters/parameter[name='lang']/value"/>
+	<xsl:variable name="request-uri" select="concat('http://localhost:8080', substring-before(doc('input:request')/request/request-uri, 'id/'))"/>
 	
 	<!-- config variables -->
 	<xsl:variable name="url" select="/content/config/url"/>
