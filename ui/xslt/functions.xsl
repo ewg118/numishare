@@ -2,12 +2,10 @@
 <!-- Repeated functions for regularization to be used through Numishare -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:nh="http://nomisma.org/nudsHoard" xmlns:numishare="https://github.com/ewg118/numishare"
 	xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes="#all" version="2.0">
-
 	<!-- ************** NORMALIZATION TEMPLATES ************** -->
 	<xsl:function name="nh:normalize_date">
 		<xsl:param name="start_date"/>
 		<xsl:param name="end_date"/>
-
 		<xsl:choose>
 			<xsl:when test="number($start_date) = number($end_date)">
 				<xsl:if test="number($start_date) &lt; 500 and number($start_date) &gt; 0">
@@ -20,7 +18,6 @@
 			</xsl:when>
 			<xsl:otherwise>
 				<!-- start date -->
-
 				<xsl:if test="number($start_date) &lt; 500 and number($start_date) &gt; 0">
 					<xsl:text>A.D. </xsl:text>
 				</xsl:if>
@@ -29,7 +26,6 @@
 					<xsl:text> B.C.</xsl:text>
 				</xsl:if>
 				<xsl:text> - </xsl:text>
-
 				<!-- end date -->
 				<xsl:if test="number($end_date) &lt; 500 and number($end_date) &gt; 0">
 					<xsl:text>A.D. </xsl:text>
@@ -41,7 +37,6 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:function>
-	
 	<!-- ************** RE-ASSEMBLE CATEGORY SOLR FIELDS INTO HUMAN-READABLE CATEGORY ************** -->
 	<xsl:function name="numishare:recompile_category">
 		<xsl:param name="level" as="xs:integer"/>
@@ -50,10 +45,9 @@
 		<xsl:value-of select="substring-after(replace($tokenized_fragment[contains(., concat('L', $level, '|'))], '&#x022;', ''), '|')"/>
 		<xsl:if test="contains($category_fragment, concat('L', $level + 1, '|'))">
 			<xsl:text>--</xsl:text>
-			<xsl:value-of select="numishare:recompile_category($tokenized_fragment, $category_fragment, $level+1)"/>			
+			<xsl:value-of select="numishare:recompile_category($tokenized_fragment, $category_fragment, $level+1)"/>
 		</xsl:if>
 	</xsl:function>
-
 	<!-- normalize NUDS element -->
 	<!-- Google spreadsheet regular expressions
 		find: ([^\s]+)\t.*\t(.*)
@@ -1166,7 +1160,6 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:function>
-
 	<!-- normalize solr fields -->
 	<xsl:function name="numishare:normalize_fields">
 		<xsl:param name="field"/>
@@ -1206,7 +1199,6 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:function>
-
 	<xsl:function name="numishare:normalizeLabel">
 		<xsl:param name="label"/>
 		<xsl:param name="lang"/>
@@ -1394,9 +1386,11 @@
 					<xsl:when test="$label='results_and'">und</xsl:when>
 					<xsl:when test="$label='visualize_typological'">Typologische Analyse</xsl:when>
 					<xsl:when test="$label='visualize_measurement'">Analyse der Dimensionen</xsl:when>
-					<xsl:when test="$label='visualize_desc'">Verwenden Sie die Datenauswahl- und Visualisierungsoptionen, um eine auf ausgewählten Parametern basierte Grafik zu erzeugen. Eine Gebrauchsanleitung dafür finden Sie hier</xsl:when>
+					<xsl:when test="$label='visualize_desc'">Verwenden Sie die Datenauswahl- und Visualisierungsoptionen, um eine auf ausgewählten Parametern basierte Grafik zu erzeugen. Eine
+						Gebrauchsanleitung dafür finden Sie hier</xsl:when>
 					<xsl:when test="$label='visualize_type_desc'">Verwenden Sie diese Option, um Prozent- bzw. absolute Zahlen der folgenden Typologien zu visualisieren</xsl:when>
-					<xsl:when test="$label='visualize_date_desc'">Verwenden Sie diese Option, um das Vorkommen von Münzen eines bestimmten Datums in Schtazfunden als Prozent- bzw. absolute Zahlen zu erhalten</xsl:when>
+					<xsl:when test="$label='visualize_date_desc'">Verwenden Sie diese Option, um das Vorkommen von Münzen eines bestimmten Datums in Schtazfunden als Prozent- bzw. absolute Zahlen zu
+						erhalten</xsl:when>
 					<xsl:when test="$label='visualize_csv_desc'">Verwenden Sie diese Option, um eine CSV-Datei für die Abfrage und die ausgewählten Schatzfunde zu downloaden</xsl:when>
 					<xsl:when test="$label='visualize_select_measurement'">Dimensionen auswählen</xsl:when>
 					<xsl:when test="$label='visualize_chart_type'">Grafikart auswählen</xsl:when>
@@ -1417,7 +1411,8 @@
 					<xsl:when test="$label='visualize_filter_list'">Filterliste</xsl:when>
 					<xsl:when test="$label='visualize_filter_query'">Filterabfrage</xsl:when>
 					<xsl:when test="$label='visualize_remove_filter'">Filter entfernen</xsl:when>
-					<xsl:when test="$label='visualize_add_query_desc'">Verwenden Sie die Ausklappmenüs unten, um Ihre Dimensionsabfrage zu formulieren. Ein Datumsbereich kann für jede Abfrage nur einmal angegeben werden</xsl:when>
+					<xsl:when test="$label='visualize_add_query_desc'">Verwenden Sie die Ausklappmenüs unten, um Ihre Dimensionsabfrage zu formulieren. Ein Datumsbereich kann für jede Abfrage nur
+						einmal angegeben werden</xsl:when>
 					<xsl:when test="$label='visualize_optional_settings'">Optionale Einstellungen</xsl:when>
 					<xsl:when test="$label='visualize_hide-show'">Optionen ausblenden/zeigen</xsl:when>
 					<xsl:when test="$label='visualize_stacking_options'">Stapeloptionen</xsl:when>
@@ -1723,9 +1718,11 @@
 					<xsl:when test="$label='results_and'">et</xsl:when>
 					<xsl:when test="$label='visualize_typological'">Analyse typologique</xsl:when>
 					<xsl:when test="$label='visualize_measurement'">Analyse des mesures</xsl:when>
-					<xsl:when test="$label='visualize_desc'">Utilisez la sélection des informations et les options de visualisation ci-dessous pour créer un graphique basés sur les paramètres sélectionnés. Les instructions d'utilisation de cette fonction peuvent être trouvés ici.</xsl:when>
+					<xsl:when test="$label='visualize_desc'">Utilisez la sélection des informations et les options de visualisation ci-dessous pour créer un graphique basés sur les paramètres
+						sélectionnés. Les instructions d'utilisation de cette fonction peuvent être trouvés ici.</xsl:when>
 					<xsl:when test="$label='visualize_type_desc'">Utilisez cette fonctionalité pour visualiser les pourcentages ou le nombre de fois où cette typologie apparaît</xsl:when>
-					<xsl:when test="$label='visualize_date_desc'">Utilisez cette fonctionalité pour obtenir le pourcentage ou le nombre de fois où cette monnaie apparaît à une date particulière au sein des trésors</xsl:when>
+					<xsl:when test="$label='visualize_date_desc'">Utilisez cette fonctionalité pour obtenir le pourcentage ou le nombre de fois où cette monnaie apparaît à une date particulière au
+						sein des trésors</xsl:when>
 					<xsl:when test="$label='visualize_csv_desc'">Utilisez cette fonctionalité pour télécharger un CSV correspondant à la recherche et les trésors sélectionnés</xsl:when>
 					<xsl:when test="$label='visualize_select_measurement'">Selectionnez Mesure</xsl:when>
 					<xsl:when test="$label='visualize_chart_type'">Sélectionnez Type de graphe.</xsl:when>
@@ -1746,7 +1743,8 @@
 					<xsl:when test="$label='visualize_filter_list'">Filtre de liste</xsl:when>
 					<xsl:when test="$label='visualize_filter_query'">Demande de filtre</xsl:when>
 					<xsl:when test="$label='visualize_remove_filter'">Enlevez le filtre</xsl:when>
-					<xsl:when test="$label='visualize_add_query_desc'">Utilisez les fonctions de défilement ci-dessous pour fromuler votre demande de mesure. Une période entre deux dates ne peut être spécifiée qu'une seule fois par demande</xsl:when>
+					<xsl:when test="$label='visualize_add_query_desc'">Utilisez les fonctions de défilement ci-dessous pour fromuler votre demande de mesure. Une période entre deux dates ne peut être
+						spécifiée qu'une seule fois par demande</xsl:when>
 					<xsl:when test="$label='visualize_optional_settings'">Cadre de travail optionnel</xsl:when>
 					<xsl:when test="$label='visualize_hide-show'">Options de Cacher/Afficher</xsl:when>
 					<xsl:when test="$label='visualize_stacking_options'">Options de mise en ordre</xsl:when>
@@ -2295,10 +2293,8 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:function>
-
 	<xsl:function name="numishare:normalizeYear">
 		<xsl:param name="year" as="xs:double"/>
-
 		<xsl:choose>
 			<xsl:when test="$year &lt; 0">
 				<xsl:value-of select="abs($year)"/>
@@ -2312,7 +2308,6 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:function>
-
 	<xsl:function name="numishare:normalize_century">
 		<xsl:param name="name"/>
 		<xsl:variable name="cleaned" select="number(translate($name, '\', ''))"/>
@@ -2333,17 +2328,14 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-
 		<xsl:value-of select="concat($century, $suffix)"/>
 		<xsl:if test="$cleaned &lt; 0">
 			<xsl:text> B.C.</xsl:text>
 		</xsl:if>
 	</xsl:function>
-
 	<xsl:function name="numishare:getNomismaLabel">
 		<xsl:param name="rdf" as="element()*"/>
 		<xsl:param name="lang"/>
-
 		<xsl:choose>
 			<xsl:when test="string($lang)">
 				<xsl:choose>
@@ -2359,7 +2351,5 @@
 				<xsl:value-of select="$rdf/skos:prefLabel[@xml:lang='en']"/>
 			</xsl:otherwise>
 		</xsl:choose>
-
 	</xsl:function>
-
 </xsl:stylesheet>

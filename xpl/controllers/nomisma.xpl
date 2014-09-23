@@ -41,7 +41,7 @@
 	<p:choose href="#collection-type-config">
 		<p:when test="collection-type='cointype'">			
 			<p:processor name="oxf:pipeline">
-				<p:input name="config" href="../models/object/aggregate-all.xpl"/>
+				<p:input name="config" href="../models/xquery/aggregate-all.xpl"/>
 				<p:output name="data" id="model"/>
 			</p:processor>
 			

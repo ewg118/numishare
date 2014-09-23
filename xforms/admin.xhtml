@@ -39,7 +39,6 @@
 					<page>1</page>
 					<query_input/>
 					<query_sent/>
-					<solr-core/>
 				</controls>
 			</xforms:instance>
 
@@ -344,8 +343,7 @@
 				<xforms:setvalue ref="instance('control-instance')/error" ev:event="xforms-submit-error">Error querying eXist database.</xforms:setvalue>
 				<xforms:action ev:event="xforms-submit-done">
 					<!--iterate through docs, check for publication -->
-					<xforms:action xxforms:iterate="instance('pagination-result')//record">
-						<xforms:setvalue ref="instance('control-instance')/solr-core" value="instance('config')/solr_published"/>
+					<xforms:action xxforms:iterate="instance('pagination-result')//record">						
 						<xforms:setvalue ref="instance('control-instance')/id" value="context()/id"/>
 						<xforms:send submission="query-solr-for-publication"/>
 					</xforms:action>
@@ -416,19 +414,17 @@
 			<!-- ************************* SOLR SUBMISSIONS ************************** -->
 			<!-- query Solr for the id of all currently published documents and repost them to solr -->
 			<xforms:submission id="republish" serialization="none" method="get"
-				action="{instance('control-instance')/solr-core}select/?q=collection-name:{instance('control-instance')/collection-name}&amp;rows=100000&amp;start=0&amp;fl=id" replace="instance"
+				action="{instance('config')/solr_published}select/?q=collection-name:{instance('control-instance')/collection-name}&amp;rows=100000&amp;start=0&amp;fl=id" replace="instance"
 				instance="list-published-response">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Solr is inaccessible. Please check Solr configuration. [ADM001]</xforms:message>
-				<xforms:action ev:event="xforms-submit-done">
-					<xforms:setvalue ref="instance('control-instance')/solr-core" value="instance('config')/solr_published"/>
+				<xforms:action ev:event="xforms-submit-done">					
 					<xforms:setvalue ref="instance('control-instance')/identifiers" value="string-join(instance('list-published-response')//doc/str[@name='id'], '|')"/>
 
 					<!-- get Solr document -->
 					<xforms:send submission="generate-add-document"/>
 					<!-- optimize index -->
 					<xforms:send submission="optimize"/>
-					<!-- reload table -->
-					<xforms:setvalue ref="instance('control-instance')/solr-core" value="instance('config')/solr_all"/>
+					<!-- reload table -->					
 					<xforms:delete nodeset="instance('list')/*"/>
 					<xforms:send submission="query-solr"/>
 				</xforms:action>
@@ -441,15 +437,15 @@
 				</xforms:action>
 			</xforms:submission>
 			<!-- post instance to Solr -->
-			<xforms:submission id="post-solr-doc" action="{instance('control-instance')/solr-core}update" ref="instance('addIndex')" instance="addIndex" replace="instance" method="post">
+			<xforms:submission id="post-solr-doc" action="{instance('config')/solr_published}update" ref="instance('addIndex')" instance="addIndex" replace="instance" method="post">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Data Failed to POST to Solr. Index may be offline or URL is incorrect.</xforms:message>
 			</xforms:submission>
 			<!-- delete from Solr -->
-			<xforms:submission id="delete-solr-doc" action="{instance('control-instance')/solr-core}update" ref="instance('deleteId')" instance="deleteId" replace="none" method="post">
+			<xforms:submission id="delete-solr-doc" action="{instance('config')/solr_published}update" ref="instance('deleteId')" instance="deleteId" replace="none" method="post">
 				<xforms:send ev:event="xforms-submit-done" submission="submit-commit"/>
 				<xforms:message ev:event="xforms-submit-error" level="modal">Data Failed to POST to Solr.</xforms:message>
 			</xforms:submission>
-			<xforms:submission id="delete-all" action="{instance('control-instance')/solr-core}update" ref="instance('deleteAll')" instance="deleteAll" replace="none" method="post">
+			<xforms:submission id="delete-all" action="{instance('config')/solr_published}update" ref="instance('deleteAll')" instance="deleteAll" replace="none" method="post">
 				<xforms:send ev:event="xforms-submit-done" submission="submit-commit"/>
 				<xforms:setvalue ev:event="xforms-submit-done" ref="instance('control-instance')/status">Objects removed from search index.</xforms:setvalue>
 			</xforms:submission>
@@ -464,18 +460,18 @@
 			</xforms:submission>
 
 			<!-- send commit -->
-			<xforms:submission id="submit-commit" action="{instance('control-instance')/solr-core}update" ref="instance('sendCommit')" instance="sendCommit" replace="none" method="post">
+			<xforms:submission id="submit-commit" action="{instance('config')/solr_published}update" ref="instance('sendCommit')" instance="sendCommit" replace="none" method="post">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Failed to commit to Solr index.</xforms:message>
 			</xforms:submission>
 
 			<!-- send optimize -->
-			<xforms:submission id="optimize" action="{instance('control-instance')/solr-core}update" ref="instance('optimizeIndex')" instance="optimizeIndex" replace="none" method="post">
+			<xforms:submission id="optimize" action="{instance('config')/solr_published}update" ref="instance('optimizeIndex')" instance="optimizeIndex" replace="none" method="post">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Failed to optimize Solr index.</xforms:message>
 			</xforms:submission>
 
 			<!-- submission to query solr to see if the document is published -->
 			<xforms:submission id="query-solr-for-publication" serialization="none" method="get"
-				action="{instance('control-instance')/solr-core}select/?q=collection-name:{instance('control-instance')/collection-name} AND id:&#x022;{instance('control-instance')/id}&#x022;"
+				action="{instance('config')/solr_published}select/?q=collection-name:{instance('control-instance')/collection-name} AND id:&#x022;{instance('control-instance')/id}&#x022;"
 				replace="instance" instance="published-response">
 				<!-- if the document is found in solr, get the updated solr doc -->
 				<xforms:setvalue ev:event="xforms-submit-done" if="instance('published-response')/result[@name='response']/@numFound = '1'"
@@ -771,7 +767,8 @@
 								<h1>No objects in collection.</h1>
 							</xforms:group>
 						</xforms:group>
-						<!--<fr:xforms-inspector/>-->
+						<xforms:output ref="instance('control-instance')/identifiers"/>
+						<fr:xforms-inspector/>
 					</div>
 				</div>
 			</div>
@@ -786,9 +783,7 @@
 					<!-- update publicationStatus -->
 					<xforms:setvalue ref="instance('control-instance')/publicationStatus">approved</xforms:setvalue>
 					<xforms:send submission="load-object"/>
-
-					<!-- publish to solr -->
-					<xforms:setvalue ref="instance('control-instance')/solr-core" value="instance('config')/solr_published"/>
+					<!-- publish to solr -->					
 					<xforms:send submission="nuds-to-solr"/>
 					<xforms:send submission="submit-commit"/>
 					<!-- reload table -->
@@ -810,8 +805,7 @@
 					<xforms:send submission="load-object"/>
 
 					<!-- delete from Solr -->
-					<xforms:setvalue ref="instance('deleteId')/query" value="concat('recordId:&#x022;', instance('control-instance')/id, '&#x022;')"/>
-					<xforms:setvalue ref="instance('control-instance')/solr-core" value="instance('config')/solr_published"/>
+					<xforms:setvalue ref="instance('deleteId')/query" value="concat('recordId:&#x022;', instance('control-instance')/id, '&#x022;')"/>					
 					<xforms:send submission="delete-solr-doc"/>
 					<!-- reload table -->
 					<xforms:var name="page" select="number(instance('control-instance')/page)"/>
@@ -828,8 +822,7 @@
 			<fr:positive-choice>
 				<xforms:action ev:event="DOMActivate">
 					<xforms:send submission="delete-object"/>
-					<xforms:setvalue ref="instance('deleteId')/query" value="concat('recordId:&#x022;', instance('control-instance')/id, '&#x022;')"/>
-					<xforms:setvalue ref="instance('control-instance')/solr-core" value="instance('config')/solr_published"/>
+					<xforms:setvalue ref="instance('deleteId')/query" value="concat('recordId:&#x022;', instance('control-instance')/id, '&#x022;')"/>					
 					<xforms:send submission="delete-solr-doc"/>
 					<!-- get new numCount -->
 					<xforms:setvalue ref="instance('eXist-xquery')/exist:text" value="instance('xqueries')/query[@id='collection-count']"/>
@@ -855,8 +848,7 @@
 					<xforms:send submission="xquery-collection"/>
 					<xforms:var name="tokens" select="tokenize(replace(instance('xquery-result')/report, ' ', ''), ',')"/>
 					<xforms:action xxforms:iterate="$tokens">
-						<xforms:setvalue ref="instance('control-instance')/identifiers" value="context()"/>
-						<xforms:setvalue ref="instance('control-instance')/solr-core" value="instance('config')/solr_published"/>
+						<xforms:setvalue ref="instance('control-instance')/identifiers" value="context()"/>						
 						<!-- get Solr document -->
 						<xforms:send submission="generate-add-document"/>
 						<xforms:send submission="submit-commit"/>
@@ -874,8 +866,7 @@
 			<fr:message>Do you want to unpublish all objects?</fr:message>
 			<fr:negative-choice/>
 			<fr:positive-choice>
-				<xforms:action ev:event="DOMActivate">
-					<xforms:setvalue ref="instance('control-instance')/solr-core" value="instance('config')/solr_published"/>
+				<xforms:action ev:event="DOMActivate">					
 					<xforms:setvalue ref="instance('deleteAll')/query" value="concat('collection-name:', instance('control-instance')/collection-name)"/>
 					<xforms:send submission="delete-all" ev:event="DOMActivate"/>
 
@@ -892,8 +883,7 @@
 			<fr:message>Do you want to reindex currently published objects?</fr:message>
 			<fr:negative-choice/>
 			<fr:positive-choice>
-				<xforms:action ev:event="DOMActivate">
-					<xforms:setvalue ref="instance('control-instance')/solr-core" value="instance('config')/solr_published"/>
+				<xforms:action ev:event="DOMActivate">					
 					<xforms:send submission="republish"/>
 					<xforms:send submission="optimize" ev:event="xforms-submit-done"/>
 				</xforms:action>

@@ -2,7 +2,7 @@
 <xsl:stylesheet version="2.0" xmlns:nuds="http://nomisma.org/nuds" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:datetime="http://exslt.org/dates-and-times" xmlns:nm="http://nomisma.org/id/"
 	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:mets="http://www.loc.gov/METS/" xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns:res="http://www.w3.org/2005/sparql-results#" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-	xmlns:cinclude="http://apache.org/cocoon/include/1.0" exclude-result-prefixes="#all">
+	exclude-result-prefixes="#all">
 
 	<xsl:template name="nuds">
 		<!-- create default document -->
