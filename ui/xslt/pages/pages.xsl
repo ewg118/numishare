@@ -1,41 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:cinclude="http://apache.org/cocoon/include/1.0" xmlns:numishare="https://github.com/ewg118/numishare"
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:numishare="https://github.com/ewg118/numishare"
 	exclude-result-prefixes="#all" version="2.0">
-	<xsl:output method="xhtml" encoding="UTF-8"/>
-	<xsl:include href="header.xsl"/>
-	<xsl:include href="footer.xsl"/>
-	<xsl:include href="functions.xsl"/>
+	<xsl:include href="../header.xsl"/>
+	<xsl:include href="../footer.xsl"/>
+	<xsl:include href="../functions.xsl"/>
 
-	<xsl:param name="stub"/>
-	<xsl:param name="pipeline"/>
-	<xsl:param name="lang"/>
+	<xsl:param name="stub" select="substring-after(doc('input:request')/request/request-url, 'pages/')"/>	
+	<xsl:param name="lang" select="doc('input:request')/request/parameters/parameter[name='lang']/value"/>
 
-	<xsl:param name="display_path">
-		<xsl:if test="$pipeline!='contributors'">../</xsl:if>
-	</xsl:param>
+	<xsl:variable name="display_path">../</xsl:variable>
+	<xsl:variable name="include_path">../../</xsl:variable>
 
 	<xsl:template match="/">
 		<html>
 			<head>
 				<title>
-					<xsl:value-of select="//config/title"/>
+					<xsl:value-of select="/config/title"/>
 					<xsl:text>: </xsl:text>
-					<xsl:choose>
-						<xsl:when test="$pipeline='contributors'">
-							<xsl:value-of select="numishare:normalizeLabel('header_contributors', $lang)"/>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:value-of select="//page[@stub = $stub]/title"/>
-						</xsl:otherwise>
-					</xsl:choose>
+					<xsl:value-of select="//page[@stub = $stub]/title"/>
 				</title>
-				<link rel="shortcut icon" type="image/x-icon" href="{$display_path}images/favicon.png"/>
+				<link rel="shortcut icon" type="image/x-icon" href="{$include_path}ui/images/favicon.png"/>
 				<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"/>
 				<meta name="viewport" content="width=device-width, initial-scale=1"/>
 				<!-- bootstrap -->
 				<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"/>
 				<script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"/>
-				<link type="text/css" href="{$display_path}style.css" rel="stylesheet"/>
+				
+				<link type="text/css" href="{$include_path}ui/css/style.css" rel="stylesheet"/>
 				<xsl:if test="string(/config/google_analytics)">
 					<script type="text/javascript">
 						<xsl:value-of select="//config/google_analytics"/>
@@ -54,17 +45,7 @@
 		<div class="container-fluid">
 			<div class="row">
 				<div class="col-md-12">
-					<xsl:choose>
-						<xsl:when test="$pipeline='contributors'">
-							<h1>
-								<xsl:value-of select="numishare:normalizeLabel('header_contributors', $lang)"/>
-							</h1>
-							<cinclude:include src="cocoon:/widget?template=contributors{if (string($lang)) then concat('&amp;lang=', $lang) else ''}"/>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:copy-of select="//page[@stub = $stub]/text"/>
-						</xsl:otherwise>
-					</xsl:choose>
+					<xsl:copy-of select="//page[@stub = $stub]/text"/>
 				</div>
 			</div>
 		</div>

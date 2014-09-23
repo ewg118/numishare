@@ -40,8 +40,10 @@
 	<!-- **** PAGES **** -->	
 	<page path="/numishare/[^\/]+/analyze" matcher="oxf:perl5-matcher" model="xpl/models/solr/search.xpl" view="xpl/views/pages/analyze.xpl"/>
 	<page path="/numishare/[^\/]+/compare" matcher="oxf:perl5-matcher" model="xpl/models/solr/search.xpl" view="xpl/views/pages/compare.xpl"/>
+	<page path="/numishare/[^\/]+/contributors" matcher="oxf:perl5-matcher" model="xpl/models/sparql/contributors.xpl" view="xpl/views/pages/contributors.xpl"/>	
 	<page path="/numishare/[^\/]+/maps" matcher="oxf:perl5-matcher" model="xpl/models/solr/maps.xpl" view="xpl/views/pages/maps.xpl"/>
 	<page path="/numishare/[^\/]+/maps/fullscreen" matcher="oxf:perl5-matcher" model="xpl/models/solr/maps.xpl" view="xpl/views/pages/maps_fullscreen.xpl"/>
+	<page path="/numishare/[^\/]+/pages/(.*)" matcher="oxf:perl5-matcher" model="xpl/models/config.xpl" view="xpl/views/pages/pages.xpl"/>
 	<page path="/numishare/[^\/]+/search" matcher="oxf:perl5-matcher" model="xpl/models/solr/search.xpl" view="xpl/views/pages/search.xpl"/>
 	<page path="/numishare/[^\/]+/visualize" matcher="oxf:perl5-matcher" model="xpl/models/solr/search.xpl" view="xpl/views/pages/visualize.xpl"/>
 	<page path="/numishare/[^\/]+/" matcher="oxf:perl5-matcher" model="xpl/models/config.xpl" view="xpl/views/pages/index.xpl"/>
