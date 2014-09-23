@@ -160,6 +160,28 @@
 					</pages>
 				</config>
 			</xforms:instance>
+			
+			<xforms:instance id="aggregate-ids-template">
+				<xquery><![CDATA[
+				xquery version "1.0";
+				declare namespace request="http://exist-db.org/xquery/request";
+				declare namespace xs="http://www.w3.org/2001/XMLSchema";
+				
+				let $collection-name:= substring-before(substring-after(request:get-uri(), '/exist/rest/db/'), '/')
+				let $identifiers:= request:get-parameter("identifiers",0)
+				let $sequence:= tokenize($identifiers, '\|')
+				
+				return
+				<nudsGroup xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:nuds="http://nomisma.org/nuds" xmlns:mods="http://www.loc.gov/mods/v3"
+					xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mets="http://www.loc.gov/METS/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+					{
+					for $doc in $sequence
+					let $path:= concat('/db/', $collection-name, '/objects/', $doc, ".xml")
+					return doc($path)/* 
+					}
+				</nudsGroup>]]>
+				</xquery>
+			</xforms:instance>
 
 			<xforms:instance id="object" xxforms:exclude-result-prefixes="#all">
 				<nuds xmlns=""/>
@@ -190,7 +212,7 @@
 						concat($record//nuds:typeDesc/nuds:reverse/nuds:type/nuds:description[@xml:lang='en'], '/', $record//nuds:typeDesc/nuds:reverse/nuds:legend) } &lt;/reverse> &lt;published/>
 						&lt;/record> else if ($type='nudsHoard') then &lt;record> &lt;type>{ $type } &lt;/type>&lt;maintenanceStatus&gt;
 						{$record/nh:nudsHoard/nh:control/nh:maintenanceStatus/text()}&lt;/maintenanceStatus&gt; &lt;id>{ $record//nh:recordId/text() }&lt;/id> &lt;title>{
-						$record//nh:descMeta/nh:title[@xml:lang='en']/text() }&lt;/title> &lt;published/> &lt;/record> else &lt;record/> } &lt;/report> </query>
+						$record//nh:descMeta/nh:title[@xml:lang='en']/text() }&lt;/title> &lt;published/> &lt;/record> else &lt;record/> } &lt;/report></query>
 					<query id="create-collection"/>
 					<query id="query-objects">declare namespace nuds="http://nomisma.org/nuds"; declare namespace nh="http://nomisma.org/nudsHoard";
 						&lt;report> { for $record in collection()[contains(descendant::*[local-name()='recordId'], 'QUERY') or
@@ -202,7 +224,10 @@
 						&lt;/record> else if ($type='nudsHoard') then &lt;record> &lt;type>{ $type } &lt;/type>&lt;maintenanceStatus&gt;
 						{$record/nh:nudsHoard/nh:control/nh:maintenanceStatus/text()}&lt;/maintenanceStatus&gt; &lt;id>{ $record//nh:recordId/text() }&lt;/id> &lt;title>{
 						$record//nh:descMeta/nh:title[@xml:lang='en']/text() }&lt;/title> &lt;published/> &lt;/record> else &lt;record/> }
-						&lt;/report> </query>
+						&lt;/report></query>
+					<query id="publish-all">
+						&lt;report> { for $i at $position in collection()[descendant::*:publicationStatus='approved'] return
+						concat(data($i//*:recordId), if ($position mod COUNT = 0) then ',' else '|') } &lt;/report></query>
 				</queries>
 			</xforms:instance>
 
@@ -843,11 +868,11 @@
 			<fr:negative-choice/>
 			<fr:positive-choice>
 				<xforms:action ev:event="DOMActivate">
-					<xforms:setvalue ref="instance('eXist-xquery')/exist:text">&lt;report> { for $i at $position in collection()[descendant::*:publicationStatus='approved'] return
-						concat(substring-before(substring-after(document-uri($i), 'objects/'), '.xml'), if ($position mod 100 = 0) then ',' else '|') } &lt;/report></xforms:setvalue>
+					<xforms:var name="count" select="if (instance('config')/collection_type='hoard') then '25' else '100'"/>
+					<xforms:setvalue ref="instance('eXist-xquery')/exist:text" value="replace(instance('xqueries')/query[@id='publish-all'], 'COUNT', $count)"/>
 					<xforms:send submission="xquery-collection"/>
 					<xforms:var name="tokens" select="tokenize(replace(instance('xquery-result')/report, ' ', ''), ',')"/>
-					<xforms:action xxforms:iterate="$tokens">
+					<xforms:action xxforms:iterate="$tokens[not(position()=last())]">
 						<xforms:setvalue ref="instance('control-instance')/identifiers" value="context()"/>						
 						<!-- get Solr document -->
 						<xforms:send submission="generate-add-document"/>

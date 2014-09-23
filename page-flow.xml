@@ -48,6 +48,7 @@
 	
 	<!-- **** APIs **** -->
 	<page path="/numishare/[^\/]+/apis/get" matcher="oxf:perl5-matcher" model="xpl/models/object/get-id.xpl" view="xpl/views/apis/get.xpl"/>
+	<page path="/numishare/[^\/]+/apis/getClosingDate" matcher="oxf:perl5-matcher" model="xpl/models/object/get-id.xpl" view="xpl/views/apis/getClosingDate.xpl"/>
 	<page path="/numishare/[^\/]+/apis/getNuds" matcher="oxf:perl5-matcher" view="xpl/models/xquery/aggregate-ids.xpl"/>
 	
 	<!-- **** AGGREGATED OBJECTS / RDF EXPORT **** -->
@@ -72,8 +73,7 @@
 	
 	<!-- **** AJAX **** -->	
 	<page path="/numishare/[^\/]+/compare_results" matcher="oxf:perl5-matcher" model="xpl/models/solr/compare_results.xpl" view="xpl/views/ajax/compare_results.xpl"/>
-	<page path="/numishare/[^\/]+/get_centuries" matcher="oxf:perl5-matcher" model="xpl/models/solr/get_centuries.xpl" view="xpl/views/ajax/get_centuries.xpl"/>
-	<page path="/numishare/[^\/]+/get_closing_date" matcher="oxf:perl5-matcher" model="xpl/models/object/get-id.xpl" view="xpl/views/ajax/get_centuries.xpl"/>
+	<page path="/numishare/[^\/]+/get_centuries" matcher="oxf:perl5-matcher" model="xpl/models/solr/get_centuries.xpl" view="xpl/views/ajax/get_centuries.xpl"/>	
 	<page path="/numishare/[^\/]+/get_decades" matcher="oxf:perl5-matcher" model="xpl/models/solr/get_decades.xpl"  view="xpl/views/ajax/get_decades.xpl"/>
 	<page path="/numishare/[^\/]+/get_facet_options" matcher="oxf:perl5-matcher" model="xpl/models/solr/get_facet_options.xpl" view="xpl/views/ajax/get_facet_options.xpl"/>
 	<page path="/numishare/[^\/]+/get_hier" matcher="oxf:perl5-matcher" model="xpl/models/solr/get_hier.xpl" view="xpl/views/ajax/get_hier.xpl"/>

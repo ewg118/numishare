@@ -9,7 +9,7 @@
 	<xsl:param name="pipeline">maps_fullscreen</xsl:param>
 	<xsl:variable name="display_path">../</xsl:variable>
 	<xsl:variable name="include_path">../../</xsl:variable>
-	<xsl:variable name="collection_type" select="/content//collection_type"/>
+	<xsl:variable name="collection_type" select="/content/config/collection_type"/>
 
 	<xsl:param name="q" select="doc('input:request')/request/parameters/parameter[name='q']/value"/>
 	<xsl:param name="lang" select="doc('input:request')/request/parameters/parameter[name='lang']/value"/>
@@ -34,16 +34,14 @@
 				<script type="text/javascript" src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"/>
 				<script type="text/javascript" src="{$include_path}ui/javascript/bootstrap-multiselect.js"/>
 				<link rel="stylesheet" href="{$include_path}ui/css/bootstrap-multiselect.css" type="text/css"/>
-
-				<!-- local theme and styling -->
-				<link type="text/css" href="{$include_path}ui/css/fullscreen.css" rel="stylesheet"/>
+				
+				<!-- Add fancyBox -->
+				<link rel="stylesheet" href="{$include_path}ui/css/jquery.fancybox.css?v=2.1.5" type="text/css" media="screen"/>
+				<script type="text/javascript" src="{$include_path}ui/javascript/jquery.fancybox.pack.js?v=2.1.5"/>
 
 				<!-- display timemap for hoards, regular openlayers map for coin and coin type collections -->
 				<xsl:choose>
-					<xsl:when test="$collection_type='hoard'">
-						<!-- Add fancyBox -->
-						<link rel="stylesheet" href="{$include_path}ui/css/jquery.fancybox.css?v=2.1.5" type="text/css" media="screen"/>
-						<script type="text/javascript" src="{$include_path}ui/javascript/jquery.fancybox.pack.js?v=2.1.5"/>
+					<xsl:when test="$collection_type='hoard'">						
 						<!-- timemap dependencies -->
 						<script type="text/javascript" src="http://www.openlayers.org/api/OpenLayers.js"/>
 						<script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3.2&amp;sensor=false"/>
@@ -56,10 +54,7 @@
 						<script type="text/javascript" src="{$include_path}ui/javascript/map_functions.js"/>
 						<script type="text/javascript" src="{$include_path}ui/javascript/facet_functions.js"/>
 					</xsl:when>
-					<xsl:otherwise>
-						<!-- Add fancyBox -->
-						<link rel="stylesheet" href="{$include_path}ui/css/jquery.fancybox.css?v=2.1.5" type="text/css" media="screen"/>
-						<script type="text/javascript" src="{$include_path}ui/javascript/jquery.fancybox.pack.js?v=2.1.5"/>
+					<xsl:otherwise>						
 						<!-- maps-->
 						<script type="text/javascript" src="http://www.openlayers.org/api/OpenLayers.js"/>
 						<script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3.2&amp;sensor=false"/>
@@ -68,9 +63,12 @@
 						<script type="text/javascript" src="{$include_path}ui/javascript/facet_functions.js"/>
 					</xsl:otherwise>
 				</xsl:choose>
+				
+				<!-- local theme and styling -->
+				<link type="text/css" href="{$include_path}ui/css/fullscreen.css" rel="stylesheet"/>
 
 				<!-- Google Analytics -->
-				<xsl:if test="string(/config/google_analytics)">
+				<xsl:if test="string(//config/google_analytics)">
 					<script type="text/javascript">
 						<xsl:value-of select="//config/google_analytics"/>
 					</script>
@@ -84,7 +82,7 @@
 
 	<xsl:template name="maps">
 		<div id="backgroundPopup"/>
-		<div class="container-fluid">
+		<div class="container-fluid" style="height:100%">
 
 			<xsl:choose>
 				<xsl:when test="//result[@name='response']/@numFound &gt; 0">
@@ -147,9 +145,9 @@
 					<!-- display timemap divs for hoard records or regular map + ajax results div for non-hoard collections -->
 					<xsl:choose>
 						<xsl:when test="$collection_type='hoard'">
-							<div class="row">
-								<div class="col-md-12">
-									<div id="timemap">
+							<div class="row" style="height:100%">
+								<div class="col-md-12" style="height:100%">
+									<div id="timemap" style="height:100%">
 										<div id="mapcontainer" class="fullscreen">
 											<div id="map"/>
 										</div>
@@ -161,8 +159,8 @@
 							</div>
 						</xsl:when>
 						<xsl:otherwise>
-							<div class="row">
-								<div class="col-md-12">
+							<div class="row" style="height:100%">
+								<div class="col-md-12" style="height:100%">
 									<div id="mapcontainer"/>
 								</div>
 							</div>

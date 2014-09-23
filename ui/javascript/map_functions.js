@@ -548,7 +548,6 @@ $(document).ready(function () {
 		return decodeURI(
 		(RegExp(name + '=' + '(.+?)(&|$)').exec(location.search) ||[, null])[1]);
 	}
-	
 	/********************
 	TimeMap function for hoard collections
 	 ********************/
@@ -565,7 +564,7 @@ $(document).ready(function () {
 				theme: "red",
 				type: "json", // Data to be loaded in KML - must be a local URL
 				options: {
-					url: path + "hoards.json?q=" + q + (lang.length > 0 ? '&lang=' + lang: '')// KML file to load
+					url: path + "hoards.json?q=" + q + (lang.length > 0 ? '&lang=' + lang: '')
 				}
 			}],
 			bandIntervals:[

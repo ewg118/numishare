@@ -119,9 +119,9 @@
 				</xsl:choose>
 			</head>
 			<body>
-				<div class="container-fluid">
-					<div class="row">
-						<div class="col-md-12">
+				<div class="container-fluid" style="height:100%">
+					<div class="row" style="height:100%">
+						<div class="col-md-12" style="height:100%">
 							<div id="timemap-legend">
 								<h2>
 									<xsl:value-of select="numishare:regularize_node('legend', $lang)"/>
@@ -158,10 +158,10 @@
 							</div>
 							<xsl:choose>
 								<xsl:when test="$recordType='physical'">
-									<div id="mapcontainer"/>
+									<div id="mapcontainer" style="height:100%"/>
 								</xsl:when>
 								<xsl:otherwise>
-									<div id="timemap">
+									<div id="timemap" style="height:100%">
 										<div id="mapcontainer" class="fullscreen">
 											<div id="map"/>
 										</div>

@@ -88,7 +88,7 @@ function initialize_map(id, path, lang) {
 	var baselayers = $('#baselayers').text().split(',');
 
 	/***** KML PATH *****/
-	var url = path + "apis/get?id=" + id + "&format=json&lang=" + lang;
+	var url = path + "apis/get?id=" + id + "&format=kml&lang=" + lang;
 	
 	map = new OpenLayers.Map('mapcontainer', {
 		controls:[
