@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:georss="http://www.georss.org/georss"
 	xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" version="2.0" exclude-result-prefixes="#all">
-	<xsl:include href="../linked_data/templates.xsl"/>
-	<xsl:output method="xml" encoding="UTF-8" indent="yes"/>
+	<xsl:include href="../serializations/solr/atom-templates.xsl"/>
 
 	<!-- url params -->
-	<xsl:param name="q"/>
-	<xsl:param name="start"/>
-	<xsl:param name="format"/>
-	<xsl:param name="sort"/>
+	<xsl:param name="q" select="doc('input:request')/request/parameters/parameter[name='q']/value"/>
+	<xsl:param name="start" select="doc('input:request')/request/parameters/parameter[name='start']/value"/>
+	<xsl:param name="format" select="doc('input:request')/request/parameters/parameter[name='format']/value"/>
+	<xsl:param name="sort" select="doc('input:request')/request/parameters/parameter[name='sort']/value"/>
 
 	<!-- config variables -->
 	<xsl:variable name="url" select="/content/config/url"/>

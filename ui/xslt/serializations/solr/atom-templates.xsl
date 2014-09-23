@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes="#all"
-	xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nm="http://nomisma.org/id/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-	xmlns:nuds="http://nomisma.org/nuds" xmlns:nh="http://nomisma.org/nudsHoard" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xlink="http://www.w3.org/1999/xlink"
-	xmlns:georss="http://www.georss.org/georss" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:oa="http://www.w3.org/ns/oa#" xmlns:owl="http://www.w3.org/2002/07/owl#"
-	xmlns:pelagios="http://pelagios.github.io/vocab/terms#" xmlns:relations="http://pelagios.github.io/vocab/relations#" xmlns:foaf="http://xmlns.com/foaf/0.1/"
-	xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:mets="http://www.loc.gov/METS/" xmlns:numishare="https://github.com/ewg118/numishare" version="2.0">
-
-
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes="#all" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"
+	xmlns:nm="http://nomisma.org/id/" xmlns:georss="http://www.georss.org/georss" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:gx="http://www.google.com/kml/ext/2.2"
+	xmlns:numishare="https://github.com/ewg118/numishare" version="2.0">
 	<!-- ************** SOLR-TO-XML **************** -->
 	<xsl:template name="atom">
 		<xsl:param name="section"/>
@@ -25,7 +20,6 @@
 		</xsl:variable>
 		<xsl:variable name="last" select="number($numFound - ($numFound mod 100))"/>
 		<xsl:variable name="next" select="$start_var + 100"/>
-
 		<!-- create sort parameter if there is string($sort) -->
 		<xsl:variable name="sortParam">
 			<xsl:if test="string($sort)">
@@ -33,12 +27,18 @@
 				<xsl:value-of select="$sort"/>
 			</xsl:if>
 		</xsl:variable>
-
 		<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:georss="http://www.georss.org/georss" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"
 			xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns="http://www.w3.org/2005/Atom">
 			<title>
 				<xsl:value-of select="/content/config/title"/>
 			</title>
+			<xsl:if test="//config/templates/agencyName">
+				<author>
+					<name>
+						<xsl:value-of select="//config/templates/agencyName"/>
+					</name>
+				</author>
+			</xsl:if>
 			<id>
 				<xsl:value-of select="$url"/>
 			</id>
@@ -49,11 +49,6 @@
 			</xsl:if>
 			<link rel="last" type="application/atom+xml" href="{$url}{$path}?q={$q}&amp;start={$last}{$sortParam}"/>
 			<link rel="search" type="application/opensearchdescription+xml" href="{$url}opensearch.xml"/>
-			<author>
-				<name>
-					<xsl:value-of select="//config/templates/agencyName"/>
-				</name>
-			</author>
 			<!-- opensearch results -->
 			<opensearch:totalResults>
 				<xsl:value-of select="$numFound"/>
@@ -65,11 +60,9 @@
 				<xsl:value-of select="$rows"/>
 			</opensearch:itemsPerPage>
 			<opensearch:Query role="request" searchTerms="{$q}" startPage="{$start_var}"/>
-
 			<xsl:apply-templates select="descendant::doc" mode="atom"/>
 		</feed>
 	</xsl:template>
-
 	<xsl:template name="rss">
 		<xsl:param name="section"/>
 		<xsl:variable name="path">
@@ -87,7 +80,6 @@
 		</xsl:variable>
 		<xsl:variable name="last" select="number($numFound - ($numFound mod 100))"/>
 		<xsl:variable name="next" select="$start_var + 100"/>
-
 		<!-- create sort parameter if there is string($sort) -->
 		<xsl:variable name="sortParam">
 			<xsl:if test="string($sort)">
@@ -95,7 +87,6 @@
 				<xsl:value-of select="$sort"/>
 			</xsl:if>
 		</xsl:variable>
-
 		<rss version="2.0" xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:atom="http://www.w3.org/2005/Atom">
 			<channel>
 				<title>
@@ -132,12 +123,10 @@
 					<xsl:value-of select="$rows"/>
 				</opensearch:itemsPerPage>
 				<opensearch:Query role="request" searchTerms="{$q}" startPage="{$start_var}"/>
-
 				<xsl:apply-templates select="descendant::doc" mode="rss"/>
 			</channel>
 		</rss>
 	</xsl:template>
-
 	<xsl:template match="doc" mode="atom">
 		<entry xmlns="http://www.w3.org/2005/Atom" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:georss="http://www.georss.org/georss" xmlns:gx="http://www.google.com/kml/ext/2.2">
 			<title>
@@ -157,17 +146,14 @@
 			<updated>
 				<xsl:value-of select="date[@name='timestamp']"/>
 			</updated>
-
 			<link rel="alternate xml" type="text/xml" href="{$url}id/{str[@name='recordId']}.xml"/>
 			<link rel="alternate rdf" type="application/rdf+xml" href="{$url}id/{str[@name='recordId']}.rdf"/>
-
 			<!-- treat hoard and non-hoard documents differently -->
 			<xsl:choose>
 				<xsl:when test="str[@name='recordType'] = 'hoard'">
 					<xsl:if test="str[@name='findspot_geo']">
 						<link rel="alternate kml" type="application/vnd.google-earth.kml+xml" href="{$url}id/{str[@name='recordId']}.kml"/>
 					</xsl:if>
-
 					<xsl:call-template name="geotemp">
 						<xsl:with-param name="recordType" select="str[@name='recordType']"/>
 					</xsl:call-template>
@@ -183,7 +169,6 @@
 			</xsl:choose>
 		</entry>
 	</xsl:template>
-
 	<xsl:template match="doc" mode="rss">
 		<item>
 			<title>
@@ -216,10 +201,8 @@
 			</xsl:choose>
 		</item>
 	</xsl:template>
-
 	<xsl:template name="geotemp">
 		<xsl:param name="recordType"/>
-
 		<xsl:choose>
 			<xsl:when test="str[@name='recordType'] = 'hoard'">
 				<xsl:if test="string(str[@name='findspot_geo'])">

@@ -872,7 +872,7 @@
 					<xforms:setvalue ref="instance('eXist-xquery')/exist:text" value="replace(instance('xqueries')/query[@id='publish-all'], 'COUNT', $count)"/>
 					<xforms:send submission="xquery-collection"/>
 					<xforms:var name="tokens" select="tokenize(replace(instance('xquery-result')/report, ' ', ''), ',')"/>
-					<xforms:action xxforms:iterate="$tokens[not(position()=last())]">
+					<xforms:action xxforms:iterate="$tokens">
 						<xforms:setvalue ref="instance('control-instance')/identifiers" value="context()"/>						
 						<!-- get Solr document -->
 						<xforms:send submission="generate-add-document"/>
