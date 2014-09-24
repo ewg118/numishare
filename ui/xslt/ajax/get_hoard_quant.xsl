@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:nuds="http://nomisma.org/nuds" xmlns:nh="http://nomisma.org/nudsHoard" xmlns:xlink="http://www.w3.org/1999/xlink"
-	xmlns:cinclude="http://apache.org/cocoon/include/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-	xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nm="http://nomisma.org/id/" xmlns:numishare="https://github.com/ewg118/numishare" exclude-result-prefixes="#all" version="2.0">
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nm="http://nomisma.org/id/"
+	xmlns:numishare="https://github.com/ewg118/numishare" exclude-result-prefixes="#all" version="2.0">
 	<xsl:include href="../functions.xsl"/>
 
 	<!-- use the calculate URI parameter to output tables/charts for counts of material, denomination, issuer, etc. -->
@@ -64,10 +64,10 @@
 					</xsl:for-each>
 				</list>
 			</xsl:variable>
-			
+
 			<xsl:for-each select="$type_series//type_series">
 				<xsl:variable name="type_series_uri" select="."/>
-				
+
 				<xsl:variable name="id-param">
 					<xsl:for-each select="$type_list//type_series_item[contains(., $type_series_uri)]">
 						<xsl:value-of select="substring-after(., 'id/')"/>
@@ -76,14 +76,14 @@
 						</xsl:if>
 					</xsl:for-each>
 				</xsl:variable>
-				
+
 				<xsl:if test="string-length($id-param) &gt; 0">
 					<xsl:for-each select="document(concat($type_series_uri, 'apis/getNuds?identifiers=', encode-for-uri($id-param)))//nuds:nuds">
 						<object xlink:href="{$type_series_uri}id/{nuds:control/nuds:recordId}">
 							<xsl:copy-of select="."/>
 						</object>
 					</xsl:for-each>
-				</xsl:if>				
+				</xsl:if>
 			</xsl:for-each>
 			<xsl:for-each select="descendant::nuds:typeDesc[not(string(@xlink:href))]">
 				<object>
@@ -98,8 +98,8 @@
 		<rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:nm="http://nomisma.org/id/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
 			xmlns:rdfa="http://www.w3.org/ns/rdfa#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#">
 			<xsl:variable name="id-param">
-				<xsl:for-each
-					select="distinct-values(descendant::*[not(local-name()='typeDesc') and not(local-name()='reference')][contains(@xlink:href, 'nomisma.org')]/@xlink:href|$nudsGroup/descendant::*[not(local-name()='object') and not(local-name()='typeDesc')][contains(@xlink:href, 'nomisma.org')]/@xlink:href)">
+				<xsl:for-each select="distinct-values(descendant::*[not(local-name()='typeDesc') and not(local-name()='reference')][contains(@xlink:href,
+					'nomisma.org')]/@xlink:href|$nudsGroup/descendant::*[not(local-name()='object') and not(local-name()='typeDesc')][contains(@xlink:href, 'nomisma.org')]/@xlink:href)">
 					<xsl:value-of select="substring-after(., 'id/')"/>
 					<xsl:if test="not(position()=last())">
 						<xsl:text>|</xsl:text>
@@ -126,8 +126,8 @@
 	</xsl:template>
 
 	<xsl:template name="generateJs">
-		<xsl:variable name="total"
-			select="sum($contentsDesc//nh:coinGrp[if (nuds:typeDesc/@certainty) then boolean(index-of($codes, nuds:typeDesc/@certainty)) = false() else *]/@count) + count($contentsDesc//nh:coin[if (nuds:typeDesc/@certainty) then boolean(index-of($codes, nuds:typeDesc/@certainty)) = false() else *])"/>
+		<xsl:variable name="total" select="sum($contentsDesc//nh:coinGrp[if (nuds:typeDesc/@certainty) then boolean(index-of($codes, nuds:typeDesc/@certainty)) = false() else *]/@count) +
+			count($contentsDesc//nh:coin[if (nuds:typeDesc/@certainty) then boolean(index-of($codes, nuds:typeDesc/@certainty)) = false() else *])"/>
 		<xsl:variable name="total-counts" as="element()*">
 			<total-counts>
 				<xsl:choose>
@@ -193,8 +193,8 @@
 	</xsl:template>
 
 	<xsl:template name="generateXml">
-		<xsl:variable name="total"
-			select="sum($contentsDesc//nh:coinGrp[if (@certainty) then boolean(index-of($codes, nuds:typeDesc/@certainty)) = false() else *]/@count) + count($contentsDesc//nh:coin[if (@certainty) then boolean(index-of($codes, nuds:typeDesc/@certainty)) = false() else *])"/>
+		<xsl:variable name="total" select="sum($contentsDesc//nh:coinGrp[if (@certainty) then boolean(index-of($codes, nuds:typeDesc/@certainty)) = false() else *]/@count) +
+			count($contentsDesc//nh:coin[if (@certainty) then boolean(index-of($codes, nuds:typeDesc/@certainty)) = false() else *])"/>
 		<hoard id="{$id}" total="{$total}" title="{$title}">
 
 			<xsl:variable name="total-counts" as="element()*">
@@ -214,7 +214,7 @@
 						</xsl:otherwise>
 					</xsl:choose>
 				</total-counts>
-			</xsl:variable>			
+			</xsl:variable>
 			<xsl:choose>
 				<xsl:when test="$calculate='date'">
 					<!-- preprocess date counts into counts per distinct value -->
@@ -277,7 +277,7 @@
 	</xsl:template>
 
 	<xsl:template match="*">
-		<xsl:variable name="href" select="@xlink:href"/>		
+		<xsl:variable name="href" select="@xlink:href"/>
 		<xsl:variable name="value">
 			<xsl:choose>
 				<xsl:when test="@standardDate">
@@ -323,14 +323,13 @@
 					</xsl:choose>
 				</xsl:when>
 				<xsl:otherwise>
-					<xsl:value-of
-						select="count($contentsDesc//nh:coin/nuds:typeDesc//*[local-name()=$element][if (@xlink:href) then @xlink:href=$href else $value = .]) + sum($contentsDesc//nh:coinGrp[nuds:typeDesc//*[local-name()=$element][if (@xlink:href) then @xlink:href=$href else $value = .]]/@count)"
-					/>
+					<xsl:value-of select="count($contentsDesc//nh:coin/nuds:typeDesc//*[local-name()=$element][if (@xlink:href) then @xlink:href=$href else $value = .]) +
+						sum($contentsDesc//nh:coinGrp[nuds:typeDesc//*[local-name()=$element][if (@xlink:href) then @xlink:href=$href else $value = .]]/@count)"/>
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-		<name>						
-			<xsl:attribute name="count" select="$count"/>			
+		<name>
+			<xsl:attribute name="count" select="$count"/>
 			<xsl:value-of select="$value"/>
 		</name>
 	</xsl:template>

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?cocoon-disable-caching?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mets="http://www.loc.gov/METS/"
-	xmlns:numishare="https://github.com/ewg118/numishare" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-	xmlns:cinclude="http://apache.org/cocoon/include/1.0" xmlns:nuds="http://nomisma.org/nuds" exclude-result-prefixes="#all" version="2.0">
+	xmlns:numishare="https://github.com/ewg118/numishare" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nuds="http://nomisma.org/nuds"
+	exclude-result-prefixes="#all" version="2.0">
 
 	<!-- quantitative analysis parameters -->
 	<xsl:param name="measurement" select="doc('input:request')/request/parameters/parameter[name='measurement']/value"/>
-	<xsl:param name="numericType" select="doc('input:request')/request/parameters/parameter[name='numericType']/value"/>	
+	<xsl:param name="numericType" select="doc('input:request')/request/parameters/parameter[name='numericType']/value"/>
 	<xsl:param name="interval" select="doc('input:request')/request/parameters/parameter[name='interval']/value"/>
 	<xsl:param name="fromDate" select="doc('input:request')/request/parameters/parameter[name='fromDate']/value"/>
 	<xsl:param name="toDate" select="doc('input:request')/request/parameters/parameter[name='toDate']/value"/>
@@ -50,8 +50,7 @@
 						<div class="row">
 							<div class="col-md-12">
 								<xsl:if test="string($sparql_endpoint)">
-									<a name="examples"/>
-									<cinclude:include src="cocoon:/widget?uri={concat(//config/uri_space, $id)}&amp;template=display"/>
+									<xsl:copy-of select="document(concat($request-uri, 'sparql?uri=', //config/uri_space, $id, '&amp;template=display'))/div[@id='objects']"/>
 								</xsl:if>
 							</div>
 						</div>
@@ -240,7 +239,7 @@
 			</div>
 		</xsl:if>
 		<!-- process $typeDesc differently -->
-		<div class="metadata_section">			
+		<div class="metadata_section">
 			<xsl:apply-templates select="$nudsGroup//nuds:typeDesc">
 				<xsl:with-param name="typeDesc_resource" select="@xlink:href"/>
 			</xsl:apply-templates>
@@ -382,8 +381,8 @@
 	<xsl:template match="nuds:subject">
 		<li>
 			<b><xsl:value-of select="if (string(@localType)) then @localType else numishare:regularize_node(local-name(), $lang)"/>: </b>
-			<a
-				href="{$display_path}results?q={if (string(@localType)) then @localType else 'subject'}_facet:&#x022;{normalize-space(.)}&#x022;{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+			<a href="{$display_path}results?q={if (string(@localType)) then @localType else 'subject'}_facet:&#x022;{normalize-space(.)}&#x022;{if (string($lang)) then concat('&amp;lang=', $lang) else
+				''}">
 				<xsl:value-of select="."/>
 			</a>
 			<xsl:if test="string(@xlink:href)">
@@ -429,7 +428,7 @@
 					<xsl:variable name="side" select="local-name()"/>
 					<div class="reference_image">
 						<xsl:if test="string($obverse_image)">
-							<xsl:choose>								
+							<xsl:choose>
 								<xsl:when test="contains($obverse_image, 'http://')">
 									<img src="{$obverse_image}" alt="{$side}"/>
 								</xsl:when>
@@ -479,7 +478,7 @@
 					<xsl:variable name="side" select="local-name()"/>
 					<div class="reference_image">
 						<xsl:if test="string($reverse_image)">
-							<xsl:choose>								
+							<xsl:choose>
 								<xsl:when test="contains($reverse_image, 'http://')">
 									<img src="{$reverse_image}" alt="{$side}"/>
 								</xsl:when>
@@ -517,25 +516,42 @@
 
 	<!-- charts template -->
 	<xsl:template name="charts">
+		<xsl:variable name="axis" select="document(concat($request-uri, 'sparql?constraints=', encode-for-uri(concat('nm:type_series_item &lt;', //config/uri_space, $id, '&gt;')),
+			'&amp;template=avgMeasurement&amp;measurement=axis'))"/>
+		<xsl:variable name="diameter" select="document(concat($request-uri, 'sparql?constraints=', encode-for-uri(concat('nm:type_series_item &lt;', //config/uri_space, $id, '&gt;')),
+			'&amp;template=avgMeasurement&amp;measurement=diameter'))"/>
+		<xsl:variable name="weight" select="document(concat($request-uri, 'sparql?constraints=', encode-for-uri(concat('nm:type_series_item &lt;', //config/uri_space, $id, '&gt;')),
+			'&amp;template=avgMeasurement&amp;measurement=weight'))"/>
+		
 		<a name="charts"/>
 		<h2>
 			<xsl:value-of select="numishare:normalizeLabel('display_quantitative', $lang)"/>
 		</h2>
-		<p>Average measurements for this coin type:</p>
-		<dl class="dl-horizontal">
-			<dt><xsl:value-of select="numishare:regularize_node('axis', $lang)"/>:</dt>
-			<dd>
-				<cinclude:include src="cocoon:/widget?constraints=nm:type_series_item &lt;{concat(//config/uri_space, $id)}&gt;&amp;template=avgMeasurement&amp;measurement=axis"/>
-			</dd>
-			<dt><xsl:value-of select="numishare:regularize_node('diameter', $lang)"/>:</dt>
-			<dd>
-				<cinclude:include src="cocoon:/widget?constraints=nm:type_series_item &lt;{concat(//config/uri_space, $id)}&gt;&amp;template=avgMeasurement&amp;measurement=diameter"/>
-			</dd>
-			<dt><xsl:value-of select="numishare:regularize_node('weight', $lang)"/>:</dt>
-			<dd>
-				<cinclude:include src="cocoon:/widget?constraints=nm:type_series_item &lt;{concat(//config/uri_space, $id)}&gt;&amp;template=avgMeasurement&amp;measurement=weight"/>
-			</dd>
-		</dl>
+		
+		<xsl:if test="number($axis) &gt; 0 or number($diameter) &gt; 0 or number($weight) &gt; 0">
+			<p>Average measurements for this coin type:</p>
+			<dl class="dl-horizontal">
+				<xsl:if test="number($axis) &gt; 0">
+					<dt><xsl:value-of select="numishare:regularize_node('axis', $lang)"/>:</dt>
+					<dd>
+						<xsl:value-of select="$axis"/>
+					</dd>
+				</xsl:if>
+				<xsl:if test="number($diameter) &gt; 0">
+					<dt><xsl:value-of select="numishare:regularize_node('diameter', $lang)"/>:</dt>
+					<dd>
+						<xsl:value-of select="$diameter"/>
+					</dd>
+				</xsl:if>
+				<xsl:if test="number($weight) &gt; 0">
+					<dt><xsl:value-of select="numishare:regularize_node('weight', $lang)"/>:</dt>
+					<dd>
+						<xsl:value-of select="$weight"/>
+					</dd>
+				</xsl:if>
+			</dl>
+		</xsl:if>
+		
 		<xsl:call-template name="measurementForm"/>
 	</xsl:template>
 

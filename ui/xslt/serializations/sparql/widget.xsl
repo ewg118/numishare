@@ -8,9 +8,9 @@
 
 	<xsl:template match="/">
 		<xsl:choose>
-			<!--<xsl:when test="$template = 'display'">
-				<xsl:apply-templates select="descendant::res:sparql" mode="display"/>			
-			</xsl:when>-->
+			<xsl:when test="$template = 'display'">
+				<xsl:apply-templates select="descendant::res:sparql" mode="display"/>
+			</xsl:when>
 			<xsl:when test="$template = 'kml'">
 				<xsl:apply-templates select="descendant::res:sparql" mode="kml"/>
 			</xsl:when>
@@ -21,7 +21,9 @@
 				<xsl:copy-of select="descendant::res:sparql"/>
 			</xsl:when>
 			<xsl:when test="$template = 'avgMeasurement'">
-				<xsl:copy-of select="/content/response"/>
+				<response>
+					<xsl:value-of select="format-number(number(/content/response), '#.00')"/>
+				</response>
 			</xsl:when>
 			<xsl:when test="$template = 'facets'">
 				<xsl:apply-templates select="descendant::res:sparql" mode="facets"/>
@@ -113,17 +115,17 @@
 		<xsl:variable name="coin-count" select="count(descendant::res:result[contains(res:binding[@name='objectType']/res:uri, 'coin')]) +
 			count(descendant::res:result[not(child::res:binding[@name='objectType'])])"/>
 
-		<xsl:if test="$coin-count &gt; 0">
-			<div class="objects">
+		<div id="objects" class="row">
+			<a name="examples"/>
+			<xsl:if test="$coin-count &gt; 0">
 				<h2>
 					<xsl:value-of select="numishare:normalizeLabel('display_examples', $lang)"/>
 				</h2>
 
 				<!-- choose between between nomisma (preferred) or internal links -->
 				<xsl:apply-templates select="descendant::res:result[not(contains(res:binding[@name='objectType'], 'hoard'))]" mode="display"/>
-			</div>
-		</xsl:if>
-
+			</xsl:if>
+		</div>
 	</xsl:template>
 
 	<xsl:template match="res:result" mode="display">
@@ -216,14 +218,21 @@
 
 	<!-- **************** SPARQL FACETS FOR VISUALIZATION ****************-->
 	<xsl:template match="res:sparql" mode="facets">
-		<select class="search_text form-control">
-			<option value="">Select option from list...</option>
-			<xsl:for-each select="descendant::res:result">
-				<option value="{res:binding[@name='val']/res:uri}" class="term">
-					<xsl:value-of select="res:binding[@name='label']/res:literal"/>
-				</option>
-			</xsl:for-each>
-		</select>
+		<html>
+			<head>
+				<title/>
+			</head>
+			<body>
+				<select class="search_text form-control">
+					<option value="">Select option from list...</option>
+					<xsl:for-each select="descendant::res:result">
+						<option value="{res:binding[@name='val']/res:uri}" class="term">
+							<xsl:value-of select="res:binding[@name='label']/res:literal"/>
+						</option>
+					</xsl:for-each>
+				</select>
+			</body>
+		</html>
 	</xsl:template>
 
 </xsl:stylesheet>

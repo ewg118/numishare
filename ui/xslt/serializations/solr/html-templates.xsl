@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:numishare="https://github.com/ewg118/numishare"
-	xmlns:cinclude="http://apache.org/cocoon/include/1.0" xmlns:res="http://www.w3.org/2005/sparql-results#" exclude-result-prefixes="xs cinclude numishare res" version="2.0">
+	xmlns:res="http://www.w3.org/2005/sparql-results#" exclude-result-prefixes="#all" version="2.0">
 	<xsl:template match="doc">
 		<xsl:variable name="sort_category" select="substring-before($sort, ' ')"/>
 		<xsl:variable name="regularized_sort">
@@ -457,7 +457,7 @@
 							</div>
 							<ul class="{substring-before(@name, '_hier')}-multiselect-checkboxes ui-helper-reset hierarchical-list" id="{@name}-list" style="height: 175px;" title="{$title}">
 								<xsl:if test="contains($q, @name)">
-									<cinclude:include src="cocoon:/get_hier?q={$q}&amp;fq=*&amp;prefix=L1&amp;link=&amp;field={substring-before(@name, '_hier')}"/>
+									<xsl:copy-of select="document(concat($request-uri, 'get_hier?q=', encode-for-uri($q), '&amp;fq=*&amp;prefix=L1&amp;link=&amp;field=', substring-before(@name, '_hier')))//ul[@id='root']/li"/>
 								</xsl:if>
 							</ul>
 						</div>
@@ -493,7 +493,7 @@
 							<xsl:copy-of select="document(concat($request-uri, 'get_centuries?q=', encode-for-uri($q)))//ul[@id='root']/li"/>
 						</xsl:if>
 					</ul>
-				</div>				
+				</div>
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:variable name="count" select="number(int[@name='numFacetTerms'])"/>

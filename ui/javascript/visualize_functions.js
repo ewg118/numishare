@@ -260,12 +260,14 @@ $(document).ready(function () {
 		//sparql-based facets
 		else {
 			//set ajax loading image
-			container.html('<img src="' + path + 'images/ajax-loader.gif"/>');
-			//get sparql results from widget pipeline via ajax
-			$.get(path + 'widget', {
+			container.html('<img src="' + path + '../ui/images/ajax-loader.gif"/>');
+			//get sparql facets via ajax
+			$.get(path + 'sparql', {
 				field: field, lang: lang, template: 'facets'
 			}, function (data) {
-				container.html(data);
+				$('#ajax-temp').html(data);
+				container.html('');
+				$('#ajax-temp select').clone().appendTo(container);
 			});
 			
 			//enable date in drop downs if there are no dates. remove error and active submit button

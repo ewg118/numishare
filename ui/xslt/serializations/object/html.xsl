@@ -12,6 +12,7 @@
 	<xsl:include href="../nudsHoard/html.xsl"/>
 
 	<!-- URL params -->
+	<xsl:variable name="collection-name" select="substring-before(substring-after(doc('input:request')/request/servlet-path, 'numishare/'), '/')"/>
 	<xsl:variable name="request-uri" select="concat('http://localhost:8080', substring-before(doc('input:request')/request/request-uri, 'id/'))"/>
 	<xsl:param name="lang" select="doc('input:request')/request/parameters/parameter[name='lang']/value"/>	
 	<xsl:param name="mode" select="doc('input:request')/request/parameters/parameter[name='mode']/value"/>

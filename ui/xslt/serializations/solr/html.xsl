@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0" xmlns:cinclude="http://apache.org/cocoon/include/1.0" xmlns:numishare="https://github.com/ewg118/numishare"
-	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:res="http://www.w3.org/2005/sparql-results#" exclude-result-prefixes="#all">
-	<xsl:include href="html-templates.xsl"/>	
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0" xmlns:numishare="https://github.com/ewg118/numishare" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:res="http://www.w3.org/2005/sparql-results#" exclude-result-prefixes="#all">
+	<xsl:include href="html-templates.xsl"/>
 	<xsl:include href="../../functions.xsl"/>
 	<xsl:include href="../../header.xsl"/>
 	<xsl:include href="../../footer.xsl"/>
@@ -15,9 +15,9 @@
 	<xsl:param name="q" select="doc('input:request')/request/parameters/parameter[name='q']/value"/>
 	<xsl:param name="sort" select="doc('input:request')/request/parameters/parameter[name='sort']/value"/>
 	<xsl:param name="rows">20</xsl:param>
-	<xsl:param name="start" select="doc('input:request')/request/parameters/parameter[name='start']/value"/>	
+	<xsl:param name="start" select="doc('input:request')/request/parameters/parameter[name='start']/value"/>
 	<xsl:variable name="request-uri" select="concat('http://localhost:8080', substring-before(doc('input:request')/request/request-uri, 'results'))"/>
-	
+
 	<!-- blank params -->
 	<xsl:param name="mode"/>
 	<xsl:param name="image"/>
@@ -43,8 +43,8 @@
 	<!-- get block of images from SPARQL endpoint, via nomisma API -->
 	<xsl:variable name="sparqlResult" as="element()*">
 		<xsl:if test="string($sparql_endpoint) and //config/collection_type='cointype'">
-			<xsl:variable name="service"
-				select="concat('http://nomisma.org/apis/numishareResults?identifiers=', string-join(descendant::str[@name='recordId'], '|'), '&amp;baseUri=', /content/config/uri_space)"/>
+			<xsl:variable name="service" select="concat('http://nomisma.org/apis/numishareResults?identifiers=', string-join(descendant::str[@name='recordId'], '|'), '&amp;baseUri=',
+				/content/config/uri_space)"/>
 			<xsl:copy-of select="document($service)/response"/>
 		</xsl:if>
 	</xsl:variable>
@@ -58,15 +58,16 @@
 				</title>
 				<!-- alternates -->
 				<link rel="alternate" type="application/atom+xml" href="{concat(//config/url, 'feed/?q=', $q)}"/>
-				<link rel="alternate" type="text/csv" href="{concat(//config/url, 'query.csv/?q=', $q, if (string($sort)) then concat('&amp;sort=', $sort) else '', if(string($lang)) then concat('&amp;lang=', $lang) else '')}"/>
+				<link rel="alternate" type="text/csv" href="{concat(//config/url, 'query.csv/?q=', $q, if (string($sort)) then concat('&amp;sort=', $sort) else '', if(string($lang)) then
+					concat('&amp;lang=', $lang) else '')}"/>
 				<xsl:choose>
 					<xsl:when test="/content/config/collection_type = 'hoard'">
-						<link rel="alternate" type="application/vnd.google-earth.kml+xml"
-							href="{concat(//config/url, 'findspots.kml/?q=', $q, if(string($lang)) then concat('&amp;lang=', $lang) else '')}"/>
+						<link rel="alternate" type="application/vnd.google-earth.kml+xml" href="{concat(//config/url, 'findspots.kml/?q=', $q, if(string($lang)) then concat('&amp;lang=', $lang) else
+							'')}"/>
 					</xsl:when>
 					<xsl:otherwise>
-						<link rel="alternate" type="application/vnd.google-earth.kml+xml"
-							href="{concat(//config/url, 'query.kml/?q=', $q, if(string($lang)) then concat('&amp;lang=', $lang) else '')}"/>
+						<link rel="alternate" type="application/vnd.google-earth.kml+xml" href="{concat(//config/url, 'query.kml/?q=', $q, if(string($lang)) then concat('&amp;lang=', $lang) else '')}"
+						/>
 					</xsl:otherwise>
 				</xsl:choose>
 				<!-- opensearch compliance -->

@@ -3,7 +3,7 @@
 	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:numishare="https://github.com/ewg118/numishare" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nuds="http://nomisma.org/nuds"
 	xmlns:nm="http://nomisma.org/id/" xmlns:math="http://exslt.org/math" xmlns:res="http://www.w3.org/2005/sparql-results#" exclude-result-prefixes=" #all" version="2.0">
 	<xsl:variable name="type_series" select="//config/type_series"/>
-	
+
 	<!-- ************** MEASUREMENT FORM FOR COIN TYPE ANALYSIS ************** -->
 	<xsl:template name="measurementForm">
 		<xsl:variable name="action">
@@ -24,7 +24,7 @@
 		<xsl:if test="string($sparqlQuery)">
 			<xsl:call-template name="measurementTable"/>
 		</xsl:if>
-		<form id="measurementsForm" action="{$action}" style="margin:40px">
+		<form id="measurementsForm" action="{$action}" style="margin:40px" method="get">
 			<div class="row">
 				<h3>1. <xsl:value-of select="numishare:normalizeLabel('visualize_select_measurement', $lang)"/></h3>
 				<xsl:for-each select="tokenize($measurements, ',')">
@@ -317,9 +317,12 @@
 				<xsl:value-of select="numishare:normalizeLabel('visualize_error2', $lang)"/>
 			</span>
 		</div>
-		<span id="pipeline" style="display:none">
-			<xsl:value-of select="$pipeline"/>
-		</span>
+		<div style="display:none">
+			<span id="pipeline">
+				<xsl:value-of select="$pipeline"/>
+			</span>
+			<div id="ajax-temp"/>
+		</div>
 	</xsl:template>
 	<!-- ************** SEARCH INTERFACE FOR CUSTOM WEIGHT QUERIES FROM SPARQL **************** -->
 	<xsl:template name="sparql_form">
@@ -328,7 +331,7 @@
 				<span class="glyphicon glyphicon-warning-sign"/>
 				<span class="validationError"/>
 			</div>
-			<form id="sparqlForm" method="GET">
+			<form id="sparqlForm" method="get">
 				<div id="sparqlInputContainer">
 					<div class="searchItemTemplate">
 						<select class="sparql_facets form-control">
@@ -469,8 +472,8 @@
 							<xsl:value-of select="$id"/>
 						</th>
 						<td>
-							<!--<cinclude:include src="cocoon:/widget?constraints={encode-for-uri(concat('nm:type_series_item &lt;', //config/uri_space, $id,
-								'&gt;'))}&amp;template=avgMeasurement&amp;measurement={$measurement}"/>-->
+							<xsl:value-of select="document(concat($request-uri, 'sparql?constraints=', encode-for-uri(concat('nm:type_series_item &lt;', //config/uri_space, $id,'&gt;')),
+								'&amp;template=avgMeasurement&amp;measurement=', $measurement))"/>
 						</td>
 					</tr>
 				</xsl:if>
@@ -489,8 +492,8 @@
 									<xsl:call-template name="sparqlLabel"/>
 								</th>
 								<td>
-									<!--<cinclude:include src="cocoon:/widget?constraints={encode-for-uri(concat('dcterms:isPartOf &lt;', $type_series, '&gt; AND ',
-										.))}&amp;template=avgMeasurement&amp;measurement={$measurement}"/>-->
+									<xsl:value-of select="document(concat($request-uri, 'sparql?constraints=', encode-for-uri(concat('dcterms:isPartOf &lt;', $type_series, '&gt; AND ',.)),
+										'&amp;template=avgMeasurement&amp;measurement=', $measurement))"/>
 								</td>
 							</tr>
 						</xsl:for-each>
@@ -556,8 +559,8 @@
 						<xsl:value-of select="$to"/>
 						<xsl:text>"^^xs:gYear )</xsl:text>
 					</xsl:variable>
-					<!--<cinclude:include src="cocoon:/widget?constraints={encode-for-uri(concat('dcterms:isPartOf &lt;', $type_series, '&gt; AND ', ., ' AND ',
-						$filter))}&amp;template=avgMeasurement&amp;measurement={$measurement}"/>-->
+					<xsl:value-of select="document(concat($request-uri, 'sparql?constraints=', encode-for-uri(concat('dcterms:isPartOf &lt;', $type_series, '&gt; AND ', ., ' AND ',       $filter)),
+						'&amp;template=avgMeasurement&amp;measurement=', $measurement))"/>
 				</td>
 			</xsl:for-each>
 		</tr>

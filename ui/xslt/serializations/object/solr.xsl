@@ -13,6 +13,7 @@
 	<xsl:include href="solr-templates.xsl"/>
 
 	<xsl:variable name="collection-name" select="substring-before(substring-after(doc('input:request')/request/servlet-path, 'numishare/'), '/')"/>
+	<xsl:variable name="request-uri" select="concat('http://localhost:8080/orbeon/numishare/', $collection-name)"/>
 
 	<!-- config variables -->
 	<xsl:variable name="geonames-url">http://api.geonames.org</xsl:variable>
@@ -89,13 +90,13 @@
 	<xsl:variable name="sparqlResult" as="element()*">
 		<xsl:if test="string($sparql_endpoint)">
 			<response xmlns="http://www.w3.org/2005/sparql-results#">
-				<!--<xsl:for-each select="descendant::nuds:recordId">
+				<xsl:for-each select="descendant::nuds:recordId">
 					<group>
 						<xsl:attribute name="id" select="."/>
 						<xsl:variable name="uri" select="concat(//config/uri_space, .)"/>
-						<xsl:copy-of select="document(concat('cocoon:/widget?uri=', $uri, '&amp;template=solr'))//res:result"/>
+						<xsl:copy-of select="document(concat($request-uri, '/sparql?uri=', $uri, '&amp;template=solr'))//res:result"/>
 					</group>
-				</xsl:for-each>-->
+				</xsl:for-each>
 			</response>
 		</xsl:if>
 	</xsl:variable>
