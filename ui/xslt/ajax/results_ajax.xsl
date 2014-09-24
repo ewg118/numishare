@@ -38,7 +38,7 @@
 	<!-- get block of images from SPARQL endpoint, via nomisma API -->
 	<xsl:variable name="sparqlResult" as="element()*">
 		<xsl:if test="string($sparql_endpoint) and //config/collection_type='cointype'">
-			<xsl:variable name="service" select="concat('http://nomisma.org/apis/numishareResults?identifiers=', string-join(descendant::str[@name='recordId'], '|'), '&amp;baseUri=', /content/config/uri_space)"/>
+			<xsl:variable name="service" select="concat('http://nomisma.org/apis/numishareResults?identifiers=', encode-for-uri(string-join(descendant::str[@name='recordId'], '|')), '&amp;baseUri=', encode-for-uri(/content/config/uri_space))"/>
 			<xsl:copy-of select="document($service)/response"/>
 		</xsl:if>
 	</xsl:variable>
