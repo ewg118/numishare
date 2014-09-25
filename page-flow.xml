@@ -13,13 +13,12 @@
 	<page path="/numishare/admin/imports/" view="xforms/manage-imports.xhtml"/>
 	<page path="/numishare/admin/theme/" view="xforms/theme.xhtml"/>
 	<page path="/numishare/admin/templates/" view="xforms/templates.xhtml"/>	
-	<page path="/numishare/admin/theme/layout/" view="xforms/layout.xhtml"/>
-	
-	<!--<page path="/numishare/logout">
+	<page path="/numishare/admin/theme/layout/" view="xforms/layout.xhtml"/>	
+	<page path="/numishare/admin/logout">
 		<action action="xpl/logout.xpl">
-			<result page="admin"/>
+			<result page="index"/>
 		</action>
-	</page>-->
+	</page>
 	
 	<!-- ****************
 	* PUBLIC INTERFACE *
@@ -46,7 +45,7 @@
 	<page path="/numishare/[^\/]+/pages/(.*)" matcher="oxf:perl5-matcher" model="xpl/models/config.xpl" view="xpl/views/pages/pages.xpl"/>
 	<page path="/numishare/[^\/]+/search" matcher="oxf:perl5-matcher" model="xpl/models/solr/search.xpl" view="xpl/views/pages/search.xpl"/>
 	<page path="/numishare/[^\/]+/visualize" matcher="oxf:perl5-matcher" model="xpl/models/solr/search.xpl" view="xpl/views/pages/visualize.xpl"/>
-	<page path="/numishare/[^\/]+/" id="index" matcher="oxf:perl5-matcher" model="xpl/models/config.xpl" view="xpl/views/pages/index.xpl"/>
+	<page path="/numishare/[^\/]+/" matcher="oxf:perl5-matcher" model="xpl/models/config.xpl" view="xpl/views/pages/index.xpl"/>
 	
 	<!-- **** APIs **** -->
 	<page path="/numishare/[^\/]+/apis/get" matcher="oxf:perl5-matcher" model="xpl/models/object/get-id.xpl" view="xpl/views/apis/get.xpl"/>	
@@ -86,8 +85,11 @@
 	<page path="/numishare/[^\/]+/get_vis_quant" matcher="oxf:perl5-matcher" model="xpl/models/solr/get_vis_quant.xpl" view="xpl/views/ajax/get_vis_quant.xpl"/>
 	<page path="/numishare/[^\/]+/results_ajax" matcher="oxf:perl5-matcher" model="xpl/models/solr/results_ajax.xpl" view="xpl/views/ajax/results_ajax.xpl"/>
 	
-	<!-- **** SPARQL widget **** -->
+	<!-- **** SPARQL WIDGET **** -->
 	<page path="/numishare/[^\/]+/sparql" matcher="oxf:perl5-matcher" model="xpl/models/sparql/widget.xpl" view="xpl/views/serializations/sparql/widget.xpl"/>
+	
+	<!-- **** ROOT **** -->
+	<page path="/numishare/" view="xpl/root.xpl" id="index"/>
 	
 	<epilogue url="oxf:/config/epilogue.xpl"/>
 </config>
