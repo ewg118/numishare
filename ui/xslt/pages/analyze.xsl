@@ -2,8 +2,7 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns:numishare="https://github.com/ewg118/numishare" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nuds="http://nomisma.org/nuds"
 	xmlns:nh="http://nomisma.org/nudsHoard" xmlns:nm="http://nomisma.org/id/" xmlns:math="http://exslt.org/math" exclude-result-prefixes="#all" version="2.0">
-	<xsl:include href="../header.xsl"/>
-	<xsl:include href="../footer.xsl"/>
+	<xsl:include href="../templates.xsl"/>
 	<xsl:include href="../templates-analyze.xsl"/>
 	<xsl:include href="../templates-search.xsl"/>
 	<xsl:include href="../functions.xsl"/>

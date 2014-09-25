@@ -3,8 +3,7 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:numishare="https://github.com/ewg118/numishare" exclude-result-prefixes="#all" version="2.0">
 	<xsl:output method="xml" indent="yes" encoding="UTF-8" media-type="text/html"/>
 	
-	<xsl:include href="../header.xsl"/>
-	<xsl:include href="../footer.xsl"/>
+	<xsl:include href="../templates.xsl"/>
 	<xsl:include href="../functions.xsl"/>
 	<xsl:include href="../templates-search.xsl"/>
 

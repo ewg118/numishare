@@ -46,7 +46,7 @@
 	<page path="/numishare/[^\/]+/pages/(.*)" matcher="oxf:perl5-matcher" model="xpl/models/config.xpl" view="xpl/views/pages/pages.xpl"/>
 	<page path="/numishare/[^\/]+/search" matcher="oxf:perl5-matcher" model="xpl/models/solr/search.xpl" view="xpl/views/pages/search.xpl"/>
 	<page path="/numishare/[^\/]+/visualize" matcher="oxf:perl5-matcher" model="xpl/models/solr/search.xpl" view="xpl/views/pages/visualize.xpl"/>
-	<page path="/numishare/[^\/]+/" matcher="oxf:perl5-matcher" model="xpl/models/config.xpl" view="xpl/views/pages/index.xpl"/>
+	<page path="/numishare/[^\/]+/" id="index" matcher="oxf:perl5-matcher" model="xpl/models/config.xpl" view="xpl/views/pages/index.xpl"/>
 	
 	<!-- **** APIs **** -->
 	<page path="/numishare/[^\/]+/apis/get" matcher="oxf:perl5-matcher" model="xpl/models/object/get-id.xpl" view="xpl/views/apis/get.xpl"/>	

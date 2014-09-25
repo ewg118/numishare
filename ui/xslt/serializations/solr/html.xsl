@@ -2,9 +2,8 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0" xmlns:numishare="https://github.com/ewg118/numishare" xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	xmlns:res="http://www.w3.org/2005/sparql-results#" exclude-result-prefixes="#all">
 	<xsl:include href="html-templates.xsl"/>
+	<xsl:include href="../../templates.xsl"/>
 	<xsl:include href="../../functions.xsl"/>
-	<xsl:include href="../../header.xsl"/>
-	<xsl:include href="../../footer.xsl"/>
 
 	<xsl:variable name="display_path"/>
 	<xsl:variable name="include_path">../</xsl:variable>
