@@ -79,6 +79,7 @@
 											<div class="col-md-4">
 												<xsl:call-template name="obverse_image"/>
 												<xsl:call-template name="reverse_image"/>
+												<xsl:call-template name="legend_image"/>
 											</div>
 											<div class="col-md-8">
 												<xsl:call-template name="nuds_content"/>
@@ -91,6 +92,7 @@
 											<div class="col-md-4">
 												<xsl:call-template name="obverse_image"/>
 												<xsl:call-template name="reverse_image"/>
+												<xsl:call-template name="legend_image"/>
 											</div>
 										</xsl:when>
 									</xsl:choose>
@@ -512,6 +514,16 @@
 				</xsl:if>
 			</xsl:otherwise>
 		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template name="legend_image">
+		<xsl:if test="string(//mets:fileGrp[@USE='legend']/mets:file[@USE='reference']/mets:FLocat/@xlink:href)">
+			<xsl:variable name="src" select="//mets:fileGrp[@USE='legend']/mets:file[@USE='reference']/mets:FLocat/@xlink:href"/>
+			
+			<div class="reference_image">
+				<img src="{if (contains($src, 'http://')) then $src else concat($display_path, $src)}" alt="legend"/>
+			</div>
+		</xsl:if>
 	</xsl:template>
 
 	<!-- charts template -->
