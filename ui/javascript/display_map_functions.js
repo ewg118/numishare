@@ -11,10 +11,10 @@ $(document).ready(function () {
 	}
 	
 	if (collection_type == 'object' && pipeline == 'display') {
-		$('#mapButton').click(function(){
+		$('#mapButton').click(function () {
 			$('#tabs a:last').tab('show');
-			init();		
-		});	
+			init();
+		});
 	} else {
 		init();
 	}
@@ -22,8 +22,8 @@ $(document).ready(function () {
 	
 	
 	function init() {
-		if (collection_type != 'object') {		
-			if ($('#map').html().length == 0) {		
+		if (collection_type != 'object') {
+			if ($('#map').html().length == 0) {
 				initialize_timemap(id, path, lang);
 			}
 		} else {
@@ -86,7 +86,7 @@ function initialize_map(id, path, lang) {
 	var osm = new OpenLayers.Layer.OSM();
 	
 	var baselayers = $('#baselayers').text().split(',');
-
+	
 	/***** KML PATH *****/
 	var url = path + "apis/get?id=" + id + "&format=kml&lang=" + lang;
 	
@@ -130,6 +130,11 @@ function initialize_map(id, path, lang) {
 	
 	function kmlLoaded() {
 		map.zoomToExtent(kmlLayer.getDataExtent());
+		var zoom = map.getZoom();
+		//only change the zoom if the zoom is too great on a single or densely clusered points
+		if (zoom > 6) {
+			map.zoomTo(6);
+		}
 	}
 	
 	/*************** OBJECT KML FEATURES ******************/
@@ -151,12 +156,11 @@ function initialize_map(id, path, lang) {
 		popup = new OpenLayers.Popup.FramedCloud("id", event.feature.geometry.bounds.getCenterLonLat(), null, message, null, true, onPopupClose);
 		event.popup = popup;
 		map.addPopup(popup);
-	}	
-	
-	function onFeatureUnselect(event) {
-		map.removePopup(map.popups[0]);		
 	}
 	
+	function onFeatureUnselect(event) {
+		map.removePopup(map.popups[0]);
+	}
 }
 
 function getURLParameter(name) {

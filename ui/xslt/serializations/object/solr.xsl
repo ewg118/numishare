@@ -105,7 +105,7 @@
 	<xsl:variable name="geonames" as="element()*">
 		<places>
 			<xsl:for-each
-				select="distinct-values(descendant::*[local-name()='geogname'][contains(@xlink:href, 'geonames.org')]/@xlink:href|$rdf/descendant::*[contains(@rdf:resource, 'geonames.org')]/@rdf:resource)">
+				select="distinct-values(descendant::*[local-name()='geogname'][contains(@xlink:href, 'geonames.org')]/@xlink:href|$rdf/descendant::*[contains(@rdf:resource, 'geonames.org')]/@rdf:resource|descendant::*[local-name()='subject'][contains(@xlink:href, 'geonames.org')]/@xlink:href)">
 				<xsl:variable name="geonameId" select="tokenize(., '/')[4]"/>
 
 				<xsl:if test="number($geonameId)">

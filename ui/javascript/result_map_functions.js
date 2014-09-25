@@ -49,9 +49,9 @@ function initialize_map(q, collection_type) {
 	var mintStyle = new OpenLayers.Style({
 		pointRadius: "${radius}",
 		//pointRadius: "5",
-		fillColor: "#0000ff",
+		fillColor: "#6992fd",
 		fillOpacity: 0.8,
-		strokeColor: "#000072",
+		strokeColor: "#000000",
 		strokeWidth: 2,
 		strokeOpacity: 0.8
 	}, {
@@ -64,9 +64,9 @@ function initialize_map(q, collection_type) {
 	var hoardStyle = new OpenLayers.Style({
 		pointRadius: "${radius}",
 		//pointRadius: "5",
-		fillColor: "#00a000",
+		fillColor: "#d86458",
 		fillOpacity: 0.8,
-		strokeColor: "#006100",
+		strokeColor: "#000000",
 		strokeWidth: 2,
 		strokeOpacity: 0.8
 	}, {
@@ -76,6 +76,22 @@ function initialize_map(q, collection_type) {
 			}
 		}
 	});
+	var subjectStyle = new OpenLayers.Style({
+			pointRadius: "${radius}",
+			//pointRadius: "5",
+			fillColor: "#00e64d",
+			fillOpacity: 0.8,
+			strokeColor: "#000000",
+			strokeWidth: 2,
+			strokeOpacity: 0.8
+		},
+		{
+			context: {
+				radius: function (feature) {
+					return Math.min(feature.attributes.count, 7) + 3;
+				}
+			}
+		});
 	var mintLayer = new OpenLayers.Layer.Vector("KML", {
 		styleMap: mintStyle,
 		
@@ -93,6 +109,22 @@ function initialize_map(q, collection_type) {
 			})
 		})
 	});
+	var subjectLayer = new OpenLayers.Layer.Vector("subject", {
+			styleMap: subjectStyle,
+			eventListeners: {
+				'loadend': kmlLoaded
+			},
+			strategies:[
+			new OpenLayers.Strategy.Fixed(),
+			new OpenLayers.Strategy.Cluster()],
+			protocol: new OpenLayers.Protocol.HTTP({
+				url: path + "subjects.kml?q=" + q + (lang.length > 0 ? '&lang=' + lang: ''),
+				format: new OpenLayers.Format.KML({
+					extractStyles: false,
+					extractAttributes: true
+				})
+			})
+		});
 	
 	//add findspot layer for hoards
 	var hoardLayer = new OpenLayers.Layer.Vector("KML", {
@@ -120,6 +152,7 @@ function initialize_map(q, collection_type) {
 	
 	map.addLayer(mintLayer);
 	map.addLayer(hoardLayer);
+	map.addLayer(subjectLayer);
 	
 	function kmlLoaded() {
 		var bounds = new OpenLayers.Bounds();
@@ -129,20 +162,22 @@ function initialize_map(q, collection_type) {
 	}
 	
 	//enable events for mint selection
-	SelectControl = new OpenLayers.Control.SelectFeature([mintLayer, hoardLayer], {
+	SelectControl = new OpenLayers.Control.SelectFeature([mintLayer, hoardLayer, subjectLayer], {
 		clickout: true,
 		multiple: false,
 		hover: false
 	});
 	
-	map.addControl(SelectControl);
-	
+	map.addControl(SelectControl);	
 	SelectControl.activate();
 	
 	mintLayer.events.on({
 		"featureselected": onFeatureSelect, "featureunselected": onFeatureUnselect
 	});
 	hoardLayer.events.on({
+		"featureselected": onFeatureSelect, "featureunselected": onFeatureUnselect
+	});
+	subjectLayer.events.on({
 		"featureselected": onFeatureSelect, "featureunselected": onFeatureUnselect
 	});
 	

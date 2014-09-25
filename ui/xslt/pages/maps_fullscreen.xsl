@@ -113,13 +113,17 @@
 									<table>
 										<tbody>
 											<tr>
-												<td style="background-color:#0000ff;border:2px solid #000072;width:50px;"/>
+												<td style="background-color:#6992fd;border:2px solid black;width:50px;"/>
 												<td style="width:100px">
 													<xsl:value-of select="numishare:regularize_node('mint', $lang)"/>
 												</td>
-												<td style="background-color:#00a000;border:2px solid #006100;width:50px;"/>
+												<td style="background-color:#d86458;border:2px solid black;width:50px;"/>
 												<td style="width:100px">
 													<xsl:value-of select="numishare:regularize_node('findspot', $lang)"/>
+												</td>
+												<td style="background-color:#00e64d;border:2px solid black;width:50px;"/>
+												<td style="width:100px">
+													<xsl:value-of select="numishare:regularize_node('subject', $lang)"/>
 												</td>
 											</tr>
 										</tbody>
