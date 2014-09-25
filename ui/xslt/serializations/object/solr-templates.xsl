@@ -467,11 +467,13 @@
 					</xsl:analyze-string>
 				</field>
 			</xsl:when>
+			
 			<xsl:when test="$collection-name='igch'">
 				<field name="sortid">
 					<xsl:value-of select="nh:control/nh:recordId"/>
 				</field>
 			</xsl:when>
+			
 			<xsl:when test="$collection-name='ocre'">
 				<field name="sortid">
 					<xsl:variable name="segs" select="tokenize(nuds:control/nuds:recordId, '\.')"/>
@@ -510,9 +512,18 @@
 							<xsl:when test="$segs[3] = 'ge'">27</xsl:when>
 							<xsl:when test="$segs[3] = 'mcs'">28</xsl:when>
 							<xsl:when test="$segs[3] = 'el'">29</xsl:when>
+							<xsl:when test="$segs[3] = 'sa'">30</xsl:when>
+							<xsl:when test="$segs[3] = 'max_i'">31</xsl:when>
+							<xsl:when test="$segs[3] = 'pa'">32</xsl:when>
+							<xsl:when test="$segs[3] = 'mxs'">33</xsl:when>
+							<xsl:when test="$segs[3] = 'gor_i'">34</xsl:when>
+							<xsl:when test="$segs[3] = 'gor_ii'">35</xsl:when>
+							<xsl:when test="$segs[3] = 'balb'">36</xsl:when>
+							<xsl:when test="$segs[3] = 'pup'">37</xsl:when>
+							<xsl:when test="$segs[3] = 'gor_iii_caes'">38</xsl:when>
+							<xsl:when test="$segs[3] = 'gor_iii'">39</xsl:when>
 						</xsl:choose>
 					</xsl:variable>
-					
 					<xsl:variable name="num">
 						<xsl:analyze-string regex="([0-9]+)(.*)" select="$segs[4]">
 							<xsl:matching-substring>

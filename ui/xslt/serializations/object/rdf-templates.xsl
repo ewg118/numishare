@@ -52,6 +52,7 @@
 			</xsl:choose>
 		</rdf:RDF>
 	</xsl:template>
+
 	
 	<xsl:template match="nuds:nuds|nh:nudsHoard" mode="pelagios">
 		<xsl:variable name="id" select="descendant::*[local-name()='recordId']"/>
@@ -108,10 +109,12 @@
 			<xsl:with-param name="date" select="$date"/>
 		</xsl:apply-templates>
 	</xsl:template>
+
 	<xsl:template match="nuds:nuds|nh:nudsHoard" mode="cidoc">
 		<xsl:variable name="id" select="descendant::*[local-name()='recordId']"/>
 		<xsl:text>(not yet developed)</xsl:text>
 	</xsl:template>
+
 	
 	<!-- PROCESS NUDS RECORDS INTO NOMISMA COMPLIANT RDF MODELS -->
 	<xsl:template match="nuds:nuds" mode="nomisma">
@@ -229,6 +232,7 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
+
 	<xsl:template match="mets:fileSec" mode="nomisma">
 		<xsl:for-each select="mets:fileGrp">
 			<xsl:variable name="side" select="@USE"/>
@@ -270,6 +274,7 @@
 			</xsl:element>
 		</xsl:for-each>
 	</xsl:template>
+
 	<xsl:template match="nuds:physDesc" mode="nomisma">
 		<xsl:if test="nuds:axis">
 			<nm:axis rdf:datatype="xs:integer">
@@ -283,46 +288,41 @@
 			</xsl:element>
 		</xsl:for-each>
 	</xsl:template>
+
 	<xsl:template match="nuds:typeDesc" mode="nomisma">
 		<xsl:if test="nuds:objectType[@xlink:href]">
 			<nm:object_type rdf:resource="{nuds:objectType/@xlink:href}"/>
 		</xsl:if>
-		<xsl:if test="nuds:obverse">
-			<nm:obverse>
-				<rdf:Description>
-					<xsl:apply-templates select="nuds:obverse" mode="nomisma"/>
-				</rdf:Description>
-			</nm:obverse>
-		</xsl:if>
-		<xsl:if test="nuds:reverse">
-			<nm:obverse>
-				<rdf:Description>
-					<xsl:apply-templates select="nuds:reverse" mode="nomisma"/>
-				</rdf:Description>
-			</nm:obverse>
-		</xsl:if>
+		
 		<xsl:apply-templates select="nuds:material|nuds:denomination|nuds:manufacture" mode="nomisma"/>
 		<xsl:apply-templates select="descendant::nuds:geogname|descendant::nuds:persname|descendant::nuds:corpname" mode="nomisma"/>
 		<xsl:apply-templates select="nuds:date[@standardDate]|nuds:dateRange[child::node()/@standardDate]" mode="nomisma"/>
+		<xsl:apply-templates select="nuds:obverse|nuds:reverse" mode="nomisma"/>
 	</xsl:template>
+	
 	<xsl:template match="nuds:obverse|nuds:reverse" mode="nomisma">
-		<xsl:if test="nuds:legend">
-			<nm:legend>
-				<xsl:if test="string(@xml:lang)">
-					<xsl:attribute name="xml:lang" select="@xml:lang"/>
+		<xsl:element name="nm:{local-name()}" namespace="http://nomisma.org/id/">
+			<rdf:Description>
+				<xsl:if test="nuds:legend">
+					<nm:legend>
+						<xsl:if test="string(@xml:lang)">
+							<xsl:attribute name="xml:lang" select="@xml:lang"/>
+						</xsl:if>
+						<xsl:value-of select="nuds:legend"/>
+					</nm:legend>
 				</xsl:if>
-				<xsl:value-of select="nuds:legend"/>
-			</nm:legend>
-		</xsl:if>
-		<xsl:for-each select="nuds:type/nuds:description">
-			<nm:description>
-				<xsl:if test="string(@xml:lang)">
-					<xsl:attribute name="xml:lang" select="@xml:lang"/>
-				</xsl:if>
-				<xsl:value-of select="."/>
-			</nm:description>
-		</xsl:for-each>
+				<xsl:for-each select="nuds:type/nuds:description">
+					<nm:description>
+						<xsl:if test="string(@xml:lang)">
+							<xsl:attribute name="xml:lang" select="@xml:lang"/>
+						</xsl:if>
+						<xsl:value-of select="."/>
+					</nm:description>
+				</xsl:for-each>
+			</rdf:Description>	
+		</xsl:element>
 	</xsl:template>
+	
 	<xsl:template match="nuds:material|nuds:denomination|nuds:manufacture|nuds:geogname|nuds:persname|nuds:corpname" mode="nomisma">
 		<xsl:variable name="element" select="if (@xlink:role) then @xlink:role else local-name()"/>
 		<xsl:choose>
@@ -338,6 +338,7 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
+
 	<xsl:template match="nuds:date" mode="nomisma">
 		<nm:start_date rdf:datatype="http://www.w3.org/2001/XMLSchema#gYear">
 			<xsl:value-of select="@standardDate"/>
@@ -346,6 +347,7 @@
 			<xsl:value-of select="@standardDate"/>
 		</nm:end_date>
 	</xsl:template>
+
 	<xsl:template match="nuds:dateRange" mode="nomisma">
 		<nm:start_date rdf:datatype="http://www.w3.org/2001/XMLSchema#gYear">
 			<xsl:value-of select="nuds:fromDate/@standardDate"/>
@@ -354,11 +356,13 @@
 			<xsl:value-of select="nuds:toDate/@standardDate"/>
 		</nm:end_date>
 	</xsl:template>
+
 	<xsl:template match="nuds:findspotDesc" mode="nomisma">
 		<xsl:if test="string(@xlink:href)">
 			<nm:findspot rdf:resource="{@xlink:href}"/>
 		</xsl:if>
 	</xsl:template>
+
 	<!-- PROCESS NUDS-HOARD RECORDS INTO NOMISMA/METIS COMPLIANT RDF MODELS -->
 	<xsl:template match="nh:nudsHoard" mode="nomisma">
 		<xsl:variable name="id" select="descendant::*[local-name()='recordId']"/>
@@ -508,6 +512,7 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
+
 	<!-- *************** PELAGIOS OBJECT TEMPLATES ************** -->
 	<xsl:template match="mets:fileSec" mode="pelagios">
 		<xsl:for-each select="mets:fileGrp">
@@ -546,6 +551,7 @@
 			</xsl:for-each>
 		</xsl:for-each>
 	</xsl:template>
+
 	<xsl:template match="*:geogname[@xlink:role='findspot']|*:findspotDesc" mode="pelagios">
 		<xsl:param name="id"/>
 		<xsl:param name="count"/>
@@ -560,6 +566,7 @@
 			</oa:annotatedAt>
 		</oa:Annotation>
 	</xsl:template>
+
 	<!-- ********************** FUNCTIONS ********************** -->
 	<xsl:function name="numishare:iso-to-digit">
 		<xsl:param name="year"/>
