@@ -387,7 +387,7 @@
 			</a>
 			<xsl:if test="string(@xlink:href)">
 				<a href="{@xlink:href}" target="_blank">
-					<img src="{$display_path}images/external.png" alt="external link" class="external_link"/>
+					<img src="{$include_path}ui/images/external.png" alt="external link" class="external_link"/>
 				</a>
 			</xsl:if>
 		</li>
