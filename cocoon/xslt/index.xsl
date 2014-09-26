@@ -117,6 +117,9 @@
 								<a href="http://isaw.nyu.edu/" title="Institute for the Study of the Ancient World" style="margin:0 10px;">
 									<img src="{$display_path}images/logo_isaw.jpg" alt="ISAW"/>
 								</a>
+								<a href="http://www.dainst.org/" title="Deutsches Archäologisches Institut" style="margin:0 10px;">
+									<img src="{$display_path}images/logo_dai.jpg" alt="DAI"/>
+								</a>
 							</p>
 						</div>
 						<div class="col-md-6">
