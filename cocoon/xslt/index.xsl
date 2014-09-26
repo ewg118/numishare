@@ -118,7 +118,7 @@
 									<img src="{$display_path}images/logo_isaw.jpg" alt="ISAW"/>
 								</a>
 								<a href="http://www.dainst.org/" title="Deutsches Archäologisches Institut" style="margin:0 10px;">
-									<img src="{$display_path}images/logo_dai.jpg" alt="DAI"/>
+									<img src="{$display_path}images/logo_dai.png" alt="DAI"/>
 								</a>
 							</p>
 						</div>
