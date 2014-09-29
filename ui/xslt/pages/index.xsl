@@ -63,6 +63,7 @@
 		<div class="container-fluid">
 			<div class="row">
 				<div class="col-md-9">
+					<xsl:copy-of select="doc('input:request')/request"/>
 					<xsl:choose>
 						<xsl:when test="string($lang)">
 							<xsl:choose>
@@ -82,8 +83,7 @@
 								</xsl:otherwise>
 							</xsl:choose>
 						</xsl:when>
-						<xsl:otherwise>
-							<xsl:copy-of select="doc('input:request')/request"/>
+						<xsl:otherwise>							
 							<xsl:choose>
 								<xsl:when test="count(//pages/index/description) &gt; 0">
 									<xsl:copy-of select="//pages/index/description[1]/*"/>
