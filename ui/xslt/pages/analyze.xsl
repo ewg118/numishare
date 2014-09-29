@@ -9,7 +9,7 @@
 
 	<xsl:variable name="pipeline">analyze</xsl:variable>
 	<xsl:variable name="display_path"/>
-	<xsl:variable name="include_path">../</xsl:variable>
+	<xsl:variable name="include_path" select="concat('http://', doc('input:request')/request/server-name, ':8080/', tokenize(doc('input:request')/request/request-uri, '/')[2], '/',tokenize(doc('input:request')/request/request-uri, '/')[3], '/')"/>
 	
 	<!-- request parameters -->
 	<xsl:param name="request-uri" select="concat('http://localhost:8080', substring-before(doc('input:request')/request/request-uri, 'analyze'))"/>

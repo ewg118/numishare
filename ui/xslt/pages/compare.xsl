@@ -12,7 +12,7 @@
 	<xsl:param name="mode" select="doc('input:request')/request/parameters/parameter[name='mode']/value"/>
 	
 	<xsl:variable name="display_path"/>
-	<xsl:variable name="include_path">../</xsl:variable>
+	<xsl:variable name="include_path" select="concat('http://', doc('input:request')/request/server-name, ':8080/', tokenize(doc('input:request')/request/request-uri, '/')[2], '/',tokenize(doc('input:request')/request/request-uri, '/')[3], '/')"/>
 
 	<!-- config variables-->
 	<xsl:variable name="collection_type" select="//config/collection_type"/>

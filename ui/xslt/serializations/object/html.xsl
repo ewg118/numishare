@@ -45,12 +45,7 @@
 		</xsl:if>
 	</xsl:variable>
 	
-	<xsl:variable name="include_path">
-		<xsl:choose>
-			<xsl:when test="string($mode)">../</xsl:when>
-			<xsl:otherwise>../../</xsl:otherwise>
-		</xsl:choose>
-	</xsl:variable>
+	<xsl:variable name="include_path" select="concat('http://', doc('input:request')/request/server-name, ':8080/', tokenize(doc('input:request')/request/request-uri, '/')[2], '/',tokenize(doc('input:request')/request/request-uri, '/')[3], '/')"/>
 
 	<xsl:variable name="recordType">
 		<xsl:choose>

@@ -6,7 +6,8 @@
 	<xsl:param name="pipeline">display</xsl:param>
 	<xsl:param name="lang" select="doc('input:request')/request/parameters/parameter[name='lang']/value"/>
 	<xsl:variable name="display_path"/>
-	<xsl:variable name="include_path">../</xsl:variable>
+	<xsl:variable name="include_path" select="concat('http://', doc('input:request')/request/server-name, ':8080/', tokenize(doc('input:request')/request/request-uri, '/')[2], '/',tokenize(doc('input:request')/request/request-uri, '/')[3], '/')"/>
+	
 
 	<xsl:template match="/content/config">
 		<html lang="en">
@@ -62,8 +63,7 @@
 		</div>	
 		<div class="container-fluid">
 			<div class="row">
-				<div class="col-md-9">
-					<xsl:copy-of select="doc('input:request')/request"/>
+				<div class="col-md-9">					
 					<xsl:choose>
 						<xsl:when test="string($lang)">
 							<xsl:choose>
