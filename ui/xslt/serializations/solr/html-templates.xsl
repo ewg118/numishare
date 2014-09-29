@@ -991,22 +991,22 @@
 					<div class="btn-group pagination" style="float:right">
 						<xsl:choose>
 							<xsl:when test="$start_var &gt;= $rows">
-								<a class="btn btn-default pagingBtn" role="button" title="First" href="{$display_path}results?q={encode-for-uri($q)}{if (string($sort)) then concat('&amp;sort=', $sort) else ''}{if
-									(string($lang)) then concat('&amp;lang=', $lang) else ''}">
+								<a class="btn btn-default pagingBtn" role="button" title="First" href="{$display_path}results?q={encode-for-uri($q)}{if (string($sort)) then concat('&amp;sort=', $sort)
+									else ''}{if          (string($lang)) then concat('&amp;lang=', $lang) else ''}">
 									<span class="glyphicon glyphicon-fast-backward"/>
 								</a>
-								<a class="btn btn-default pagingBtn" role="button" title="Previous" href="{$display_path}results?q={encode-for-uri($q)}&amp;start={$previous}{if (string($sort)) then concat('&amp;sort=',
-									$sort) else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+								<a class="btn btn-default pagingBtn" role="button" title="Previous" href="{$display_path}results?q={encode-for-uri($q)}&amp;start={$previous}{if (string($sort)) then
+									concat('&amp;sort=',          $sort) else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
 									<span class="glyphicon glyphicon-backward"/>
 								</a>
 							</xsl:when>
 							<xsl:otherwise>
-								<a class="btn btn-default disabled" role="button" title="First" href="{$display_path}results?q={encode-for-uri($q)}{if (string($sort)) then concat('&amp;sort=', $sort) else ''}{if
-									(string($lang)) then concat('&amp;lang=', $lang) else ''}">
+								<a class="btn btn-default disabled" role="button" title="First" href="{$display_path}results?q={encode-for-uri($q)}{if (string($sort)) then concat('&amp;sort=', $sort)
+									else ''}{if          (string($lang)) then concat('&amp;lang=', $lang) else ''}">
 									<span class="glyphicon glyphicon-fast-backward"/>
 								</a>
-								<a class="btn btn-default disabled" role="button" title="Previous" href="{$display_path}results?q={encode-for-uri($q)}&amp;start={$previous}{if (string($sort)) then concat('&amp;sort=',
-									$sort) else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+								<a class="btn btn-default disabled" role="button" title="Previous" href="{$display_path}results?q={encode-for-uri($q)}&amp;start={$previous}{if (string($sort)) then
+									concat('&amp;sort=',          $sort) else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
 									<span class="glyphicon glyphicon-backward"/>
 								</a>
 							</xsl:otherwise>
@@ -1020,22 +1020,22 @@
 						<!-- next page -->
 						<xsl:choose>
 							<xsl:when test="$numFound - $start_var &gt; $rows">
-								<a class="btn btn-default pagingBtn" role="button" title="Next" href="{$display_path}results?q={encode-for-uri($q)}&amp;start={$next}{if (string($sort)) then concat('&amp;sort=', $sort) else
-									''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+								<a class="btn btn-default pagingBtn" role="button" title="Next" href="{$display_path}results?q={encode-for-uri($q)}&amp;start={$next}{if (string($sort)) then
+									concat('&amp;sort=', $sort) else          ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
 									<span class="glyphicon glyphicon-forward"/>
 								</a>
-								<a class="btn btn-default pagingBtn" role="button" href="{$display_path}results?q={encode-for-uri($q)}&amp;start={($total * $rows) - $rows}{if (string($sort)) then concat('&amp;sort=',
-									$sort) else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+								<a class="btn btn-default pagingBtn" role="button" href="{$display_path}results?q={encode-for-uri($q)}&amp;start={($total * $rows) - $rows}{if (string($sort)) then
+									concat('&amp;sort=',          $sort) else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
 									<span class="glyphicon glyphicon-fast-forward"/>
 								</a>
 							</xsl:when>
 							<xsl:otherwise>
-								<a class="btn btn-default disabled" role="button" title="Next" href="{$display_path}results?q={encode-for-uri($q)}&amp;start={$next}{if (string($sort)) then concat('&amp;sort=', $sort) else
-									''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+								<a class="btn btn-default disabled" role="button" title="Next" href="{$display_path}results?q={encode-for-uri($q)}&amp;start={$next}{if (string($sort)) then
+									concat('&amp;sort=', $sort) else          ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
 									<span class="glyphicon glyphicon-forward"/>
 								</a>
-								<a class="btn btn-default disabled" role="button" href="{$display_path}results?q={encode-for-uri($q)}&amp;start={($total * $rows) - $rows}{if (string($sort)) then concat('&amp;sort=', $sort)
-									else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+								<a class="btn btn-default disabled" role="button" href="{$display_path}results?q={encode-for-uri($q)}&amp;start={($total * $rows) - $rows}{if (string($sort)) then
+									concat('&amp;sort=', $sort)          else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
 									<span class="glyphicon glyphicon-fast-forward"/>
 								</a>
 							</xsl:otherwise>
@@ -1110,15 +1110,22 @@
 	</xsl:template>
 	<xsl:template name="quick_search">
 		<div class="quick_search">
+			<h3>
+				<xsl:value-of select="numishare:regularize_node('keyword', $lang)"/>
+			</h3>
 			<form role="form" action="results" method="GET" id="qs_form">
 				<input type="hidden" name="q" id="qs_query" value="{$q}"/>
 				<xsl:if test="string($lang)">
 					<input type="hidden" name="lang" value="{$lang}"/>
 				</xsl:if>
-				<input type="text" class="form-control" id="qs_text" placeholder="Search"/>
-				<button class="btn btn-default" type="submit">
-					<i class="glyphicon glyphicon-search"/>
-				</button>
+				<div class="input-group">
+					<input type="text" class="form-control" id="qs_text" placeholder="Search"/>
+					<div class="input-group-btn">
+						<button class="btn btn-default" type="submit">
+							<i class="glyphicon glyphicon-search"/>
+						</button>
+					</div>
+				</div>
 			</form>
 		</div>
 	</xsl:template>

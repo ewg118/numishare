@@ -39,7 +39,7 @@ function initialize_map(q, collection_type) {
 		controls:[
 		new OpenLayers.Control.PanZoomBar(),
 		new OpenLayers.Control.Navigation(),
-		new OpenLayers.Control.ScaleLine(), 
+		new OpenLayers.Control.ScaleLine(),
 		new OpenLayers.Control.Attribution(),
 		new OpenLayers.Control.LayerSwitcher({
 			'ascending': true
@@ -54,7 +54,8 @@ function initialize_map(q, collection_type) {
 		strokeColor: "#000000",
 		strokeWidth: 2,
 		strokeOpacity: 0.8
-	}, {
+	},
+	{
 		context: {
 			radius: function (feature) {
 				return Math.min(feature.attributes.count, 7) + 3;
@@ -69,7 +70,8 @@ function initialize_map(q, collection_type) {
 		strokeColor: "#000000",
 		strokeWidth: 2,
 		strokeOpacity: 0.8
-	}, {
+	},
+	{
 		context: {
 			radius: function (feature) {
 				return Math.min(feature.attributes.count, 7) + 3;
@@ -77,22 +79,21 @@ function initialize_map(q, collection_type) {
 		}
 	});
 	var subjectStyle = new OpenLayers.Style({
-			pointRadius: "${radius}",
-			//pointRadius: "5",
-			fillColor: "#00e64d",
-			fillOpacity: 0.8,
-			strokeColor: "#000000",
-			strokeWidth: 2,
-			strokeOpacity: 0.8
-		},
-		{
-			context: {
-				radius: function (feature) {
-					return Math.min(feature.attributes.count, 7) + 3;
-				}
+		pointRadius: "${radius}",
+		//pointRadius: "5",
+		fillColor: "#00e64d",
+		fillOpacity: 0.8,
+		strokeColor: "#000000",
+		strokeWidth: 2,
+		strokeOpacity: 0.8
+	}, {
+		context: {
+			radius: function (feature) {
+				return Math.min(feature.attributes.count, 7) + 3;
 			}
-		});
-	var mintLayer = new OpenLayers.Layer.Vector("KML", {
+		}
+	});
+	var mintLayer = new OpenLayers.Layer.Vector("Mints", {
 		styleMap: mintStyle,
 		
 		eventListeners: {
@@ -102,32 +103,32 @@ function initialize_map(q, collection_type) {
 		new OpenLayers.Strategy.Fixed(),
 		new OpenLayers.Strategy.Cluster()],
 		protocol: new OpenLayers.Protocol.HTTP({
-			url: "mints.kml?q=" + q + (lang.length > 0? '&lang=' + lang: ''),
+			url: "mints.kml?q=" + q + (lang.length > 0 ? '&lang=' + lang: ''),
 			format: new OpenLayers.Format.KML({
 				extractStyles: false,
 				extractAttributes: true
 			})
 		})
 	});
-	var subjectLayer = new OpenLayers.Layer.Vector("subject", {
-			styleMap: subjectStyle,
-			eventListeners: {
-				'loadend': kmlLoaded
-			},
-			strategies:[
-			new OpenLayers.Strategy.Fixed(),
-			new OpenLayers.Strategy.Cluster()],
-			protocol: new OpenLayers.Protocol.HTTP({
-				url: path + "subjects.kml?q=" + q + (lang.length > 0 ? '&lang=' + lang: ''),
-				format: new OpenLayers.Format.KML({
-					extractStyles: false,
-					extractAttributes: true
-				})
+	var subjectLayer = new OpenLayers.Layer.Vector("Subjects", {
+		styleMap: subjectStyle,
+		eventListeners: {
+			'loadend': kmlLoaded
+		},
+		strategies:[
+		new OpenLayers.Strategy.Fixed(),
+		new OpenLayers.Strategy.Cluster()],
+		protocol: new OpenLayers.Protocol.HTTP({
+			url: "subjects.kml?q=" + q + (lang.length > 0 ? '&lang=' + lang: ''),
+			format: new OpenLayers.Format.KML({
+				extractStyles: false,
+				extractAttributes: true
 			})
-		});
+		})
+	});
 	
 	//add findspot layer for hoards
-	var hoardLayer = new OpenLayers.Layer.Vector("KML", {
+	var hoardLayer = new OpenLayers.Layer.Vector("Findspots", {
 		styleMap: hoardStyle,
 		eventListeners: {
 			'loadend': kmlLoaded
@@ -136,7 +137,7 @@ function initialize_map(q, collection_type) {
 		new OpenLayers.Strategy.Fixed(),
 		new OpenLayers.Strategy.Cluster()],
 		protocol: new OpenLayers.Protocol.HTTP({
-			url: "findspots.kml?q=" + q + (lang.length > 0? '&lang=' + lang: ''),
+			url: "findspots.kml?q=" + q + (lang.length > 0 ? '&lang=' + lang: ''),
 			format: new OpenLayers.Format.KML({
 				extractStyles: false,
 				extractAttributes: true
@@ -152,12 +153,13 @@ function initialize_map(q, collection_type) {
 	
 	map.addLayer(mintLayer);
 	map.addLayer(hoardLayer);
-	map.addLayer(subjectLayer);
+	//map.addLayer(subjectLayer);
 	
 	function kmlLoaded() {
 		var bounds = new OpenLayers.Bounds();
 		bounds.extend(mintLayer.getDataExtent());
 		bounds.extend(hoardLayer.getDataExtent());
+		bounds.extend(subjectLayer.getDataExtent());
 		map.zoomToExtent(bounds);
 	}
 	
@@ -168,7 +170,7 @@ function initialize_map(q, collection_type) {
 		hover: false
 	});
 	
-	map.addControl(SelectControl);	
+	map.addControl(SelectControl);
 	SelectControl.activate();
 	
 	mintLayer.events.on({

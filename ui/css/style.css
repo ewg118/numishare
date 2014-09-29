@@ -214,10 +214,9 @@ select[name = "interval"],
 .thumbImage > img{
 	max-width:120px;
 }
-#qs_text{
-	width:50%;
-	display:inline;
-	margin-right:20px;
+.quick_search {
+	width:250px;
+	padding:10px 0;
 }
 .stacked_term{
 	padding:2px;

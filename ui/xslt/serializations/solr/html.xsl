@@ -120,9 +120,9 @@
 				<div class="col-md-3">
 					<xsl:if test="//result[@name='response']/@numFound &gt; 0">
 						<div class="data_options">
-							<h2>
+							<h3>
 								<xsl:value-of select="numishare:normalizeLabel('results_data-options', $lang)"/>
-							</h2>
+							</h3>
 							<a href="{$display_path}feed/?q={$q}{if(string($lang)) then concat('&amp;lang=', $lang) else ''}">
 								<img src="{$include_path}ui/images/atom-medium.png" title="Atom" alt="Atom"/>
 							</a>
@@ -150,11 +150,11 @@
 								<img src="{$include_path}ui/images/visualize.png" title="Visualize" alt="Visualize"/>
 							</a>
 						</div>
-						<div id="refine_results">
-							<h2>
-								<xsl:value-of select="numishare:normalizeLabel('results_refine-results', $lang)"/>
-							</h2>
+						<div id="refine_results">							
 							<xsl:call-template name="quick_search"/>
+							<h3>
+								<xsl:value-of select="numishare:normalizeLabel('results_refine-results', $lang)"/>
+							</h3>
 							<xsl:apply-templates select="descendant::lst[@name='facet_fields']"/>
 						</div>
 
