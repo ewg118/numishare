@@ -457,7 +457,7 @@
 							</div>
 							<ul class="{substring-before(@name, '_hier')}-multiselect-checkboxes ui-helper-reset hierarchical-list" id="{@name}-list" style="height: 175px;" title="{$title}">
 								<xsl:if test="contains($q, @name)">
-									<xsl:copy-of select="document(concat($request-uri, 'get_hier?q=', encode-for-uri($q), '&amp;fq=*&amp;prefix=L1&amp;link=&amp;field=', substring-before(@name, '_hier')))//ul[@id='root']/li"/>
+									<xsl:copy-of select="document(concat($request-uri, 'get_hier./?q=', encode-for-uri($q), '&amp;fq=*&amp;prefix=L1&amp;link=&amp;field=', substring-before(@name, '_hier')))//ul[@id='root']/li"/>
 								</xsl:if>
 							</ul>
 						</div>
@@ -490,7 +490,7 @@
 							<a href="#" class="century-close">close <span class="glyphicon glyphicon-remove"/></a>
 						</div>
 						<xsl:if test="contains($q, @name)">
-							<xsl:copy-of select="document(concat($request-uri, 'get_centuries?q=', encode-for-uri($q)))//ul[@id='root']/li"/>
+							<xsl:copy-of select="document(concat($request-uri, 'get_centuries./?q=', encode-for-uri($q)))//ul[@id='root']/li"/>
 						</xsl:if>
 					</ul>
 				</div>
@@ -518,7 +518,7 @@
 				<select id="{@name}-select" multiple="multiple" class="multiselect {@name}-button" title="{numishare:normalize_fields(@name, $lang)}" q="{$q}" mincount="{$mincount}" new_query="{if
 					(contains($q, @name)) then $select_new_query else ''}">
 					<xsl:if test="contains($q, @name)">
-						<xsl:copy-of select="document(concat($request-uri, 'get_facet_options?q=', encode-for-uri($q), '&amp;category=', @name, '&amp;pipeline=', $pipeline, '&amp;lang=', $lang,
+						<xsl:copy-of select="document(concat($request-uri, 'get_facet_options./?q=', encode-for-uri($q), '&amp;category=', @name, '&amp;pipeline=', $pipeline, '&amp;lang=', $lang,
 							'&amp;mincount=', $mincount))//option"/>
 					</xsl:if>
 				</select>
@@ -622,7 +622,7 @@
 						<xsl:choose>
 							<xsl:when test="$lang='ar'">
 								<div class="col-md-2">
-									<a href="{$display_path}results?q={if (string($new_query)) then encode-for-uri($new_query) else '*:*'}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+									<a href="{$display_path}results./?q={if (string($new_query)) then encode-for-uri($new_query) else '*:*'}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
 										<span class="glyphicon glyphicon-remove"/>
 									</a>
 								</div>
@@ -675,7 +675,7 @@
 									</span>
 								</div>
 								<div class="col-md-2 right">
-									<a href="{$display_path}results?q={if (string($new_query)) then encode-for-uri($new_query) else '*:*'}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+									<a href="{$display_path}results./?q={if (string($new_query)) then encode-for-uri($new_query) else '*:*'}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
 										<span class="glyphicon glyphicon-remove"/>
 									</a>
 								</div>
@@ -690,7 +690,7 @@
 						<xsl:if test="$lang='ar'">
 							<xsl:attribute name="style">text-align:right</xsl:attribute>
 							<div class="col-md-2">
-								<a href="{$display_path}results?q={if (string($new_query)) then encode-for-uri($new_query) else '*:*'}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+								<a href="{$display_path}results./?q={if (string($new_query)) then encode-for-uri($new_query) else '*:*'}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
 									<span class="glyphicon glyphicon-remove"/>
 								</a>
 							</div>
@@ -776,7 +776,7 @@
 									<xsl:choose>
 										<xsl:when test="$lang='ar'">
 											<!-- concatenate the query with the multicategory removed with the new multicategory, or if the multicategory is empty, display just the $new_query -->
-											<a href="{$display_path}results?q={if (string($multicategory_query) and string($new_query)) then concat($new_query, ' AND ', $multicategory_query) else if
+											<a href="{$display_path}results./?q={if (string($multicategory_query) and string($new_query)) then concat($new_query, ' AND ', $multicategory_query) else if
 												(string($multicategory_query) and not(string($new_query))) then $multicategory_query else $new_query}{if (string($lang)) then concat('&amp;lang=',
 												$lang) else ''}">
 												<span class="glyphicon glyphicon-remove"/>
@@ -829,7 +829,7 @@
 												</xsl:otherwise>
 											</xsl:choose>
 											<!-- concatenate the query with the multicategory removed with the new multicategory, or if the multicategory is empty, display just the $new_query -->
-											<a href="{$display_path}results?q={if (string($multicategory_query) and string($new_query)) then concat($new_query, ' AND ', $multicategory_query) else if
+											<a href="{$display_path}results./?q={if (string($multicategory_query) and string($new_query)) then concat($new_query, ' AND ', $multicategory_query) else if
 												(string($multicategory_query) and not(string($new_query))) then $multicategory_query else $new_query}{if (string($lang)) then concat('&amp;lang=',
 												$lang) else ''}">
 												<span class="glyphicon glyphicon-remove"/>
@@ -844,7 +844,7 @@
 						</div>
 						<xsl:if test="not($lang='ar')">
 							<div class="col-md-2 right">
-								<a href="{$display_path}results?q={if (string($new_query)) then encode-for-uri($new_query) else '*:*'}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+								<a href="{$display_path}results./?q={if (string($new_query)) then encode-for-uri($new_query) else '*:*'}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
 									<span class="glyphicon glyphicon-remove"/>
 								</a>
 							</div>
@@ -900,7 +900,7 @@
 				<xsl:choose>
 					<xsl:when test="$lang='ar'">
 						<div class="col-md-2">
-							<a href="?q={$q}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+							<a href="./?q={$q}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
 								<span class="glyphicon glyphicon-remove"/>
 							</a>
 						</div>
@@ -926,7 +926,7 @@
 							</span>
 						</div>
 						<div class="col-md-2 right">
-							<a href="?q={$q}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+							<a href="./?q={$q}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
 								<span class="glyphicon glyphicon-remove"/>
 							</a>
 						</div>
@@ -940,7 +940,7 @@
 					<xsl:attribute name="style">text-align:right</xsl:attribute>
 				</xsl:if>
 				<div class="col-md-12">
-					<a id="clear_all" href="?q=*:*">
+					<a id="clear_all" href="./?q=*:*">
 						<xsl:value-of select="numishare:normalizeLabel('results_clear-all', $lang)"/>
 					</a>
 				</div>
@@ -991,21 +991,21 @@
 					<div class="btn-group pagination" style="float:right">
 						<xsl:choose>
 							<xsl:when test="$start_var &gt;= $rows">
-								<a class="btn btn-default pagingBtn" role="button" title="First" href="?q={encode-for-uri($q)}{if (string($sort)) then concat('&amp;sort=', $sort) else ''}{if
+								<a class="btn btn-default pagingBtn" role="button" title="First" href="./?q={encode-for-uri($q)}{if (string($sort)) then concat('&amp;sort=', $sort) else ''}{if
 									(string($lang)) then concat('&amp;lang=', $lang) else ''}">
 									<span class="glyphicon glyphicon-fast-backward"/>
 								</a>
-								<a class="btn btn-default pagingBtn" role="button" title="Previous" href="?q={encode-for-uri($q)}&amp;start={$previous}{if (string($sort)) then concat('&amp;sort=',
+								<a class="btn btn-default pagingBtn" role="button" title="Previous" href="./?q={encode-for-uri($q)}&amp;start={$previous}{if (string($sort)) then concat('&amp;sort=',
 									$sort) else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
 									<span class="glyphicon glyphicon-backward"/>
 								</a>
 							</xsl:when>
 							<xsl:otherwise>
-								<a class="btn btn-default disabled" role="button" title="First" href="?q={encode-for-uri($q)}{if (string($sort)) then concat('&amp;sort=', $sort) else ''}{if
+								<a class="btn btn-default disabled" role="button" title="First" href="./?q={encode-for-uri($q)}{if (string($sort)) then concat('&amp;sort=', $sort) else ''}{if
 									(string($lang)) then concat('&amp;lang=', $lang) else ''}">
 									<span class="glyphicon glyphicon-fast-backward"/>
 								</a>
-								<a class="btn btn-default disabled" role="button" title="Previous" href="?q={encode-for-uri($q)}&amp;start={$previous}{if (string($sort)) then concat('&amp;sort=',
+								<a class="btn btn-default disabled" role="button" title="Previous" href="./?q={encode-for-uri($q)}&amp;start={$previous}{if (string($sort)) then concat('&amp;sort=',
 									$sort) else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
 									<span class="glyphicon glyphicon-backward"/>
 								</a>
@@ -1020,21 +1020,21 @@
 						<!-- next page -->
 						<xsl:choose>
 							<xsl:when test="$numFound - $start_var &gt; $rows">
-								<a class="btn btn-default pagingBtn" role="button" title="Next" href="?q={encode-for-uri($q)}&amp;start={$next}{if (string($sort)) then concat('&amp;sort=', $sort) else
+								<a class="btn btn-default pagingBtn" role="button" title="Next" href="./?q={encode-for-uri($q)}&amp;start={$next}{if (string($sort)) then concat('&amp;sort=', $sort) else
 									''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
 									<span class="glyphicon glyphicon-forward"/>
 								</a>
-								<a class="btn btn-default pagingBtn" role="button" href="?q={encode-for-uri($q)}&amp;start={($total * $rows) - $rows}{if (string($sort)) then concat('&amp;sort=',
+								<a class="btn btn-default pagingBtn" role="button" href="./?q={encode-for-uri($q)}&amp;start={($total * $rows) - $rows}{if (string($sort)) then concat('&amp;sort=',
 									$sort) else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
 									<span class="glyphicon glyphicon-fast-forward"/>
 								</a>
 							</xsl:when>
 							<xsl:otherwise>
-								<a class="btn btn-default disabled" role="button" title="Next" href="?q={encode-for-uri($q)}&amp;start={$next}{if (string($sort)) then concat('&amp;sort=', $sort) else
+								<a class="btn btn-default disabled" role="button" title="Next" href="./?q={encode-for-uri($q)}&amp;start={$next}{if (string($sort)) then concat('&amp;sort=', $sort) else
 									''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
 									<span class="glyphicon glyphicon-forward"/>
 								</a>
-								<a class="btn btn-default disabled" role="button" href="?q={encode-for-uri($q)}&amp;start={($total * $rows) - $rows}{if (string($sort)) then concat('&amp;sort=', $sort)
+								<a class="btn btn-default disabled" role="button" href="./?q={encode-for-uri($q)}&amp;start={($total * $rows) - $rows}{if (string($sort)) then concat('&amp;sort=', $sort)
 									else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
 									<span class="glyphicon glyphicon-fast-forward"/>
 								</a>
@@ -1141,7 +1141,7 @@
 				</span>
 			</div>
 			<div class="col-md-2 right">
-				<a class="remove_filter" href="?q={if (string($new_query)) then encode-for-uri($new_query) else '*:*'}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+				<a class="remove_filter" href="./?q={if (string($new_query)) then encode-for-uri($new_query) else '*:*'}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
 					<span class="glyphicon glyphicon-remove"/>
 				</a>
 			</div>
@@ -1272,6 +1272,7 @@
 			</xsl:when>
 		</xsl:choose>
 	</xsl:template>
+	
 	<!--<xsl:template name="compare_paging">
 		<xsl:variable name="start_var" as="xs:integer">
 			<xsl:choose>
@@ -1318,14 +1319,14 @@
 			<div style="float:right;">
 				<xsl:choose>
 					<xsl:when test="$start_var &gt;= $rows">
-						<a class="comparepagingBtn" href="compare_results?q={$q}&amp;start={$previous}&amp;image={$image}&amp;side={$side}&amp;mode=compare">« Previous</a>
+						<a class="comparepagingBtn" href="compare_results./?q={$q}&amp;start={$previous}&amp;image={$image}&amp;side={$side}&amp;mode=compare">« Previous</a>
 					</xsl:when>
 					<xsl:otherwise>
 						<xsl:text>« Previous</xsl:text>
 					</xsl:otherwise>
 				</xsl:choose> | <xsl:choose>
 					<xsl:when test="$numFound - $start_var &gt; $rows">
-						<a class="comparepagingBtn" href="compare_results?q={$q}&amp;start={$next}&amp;image={$image}&amp;side={$side}&amp;mode=compare">Next »</a>
+						<a class="comparepagingBtn" href="compare_results./?q={$q}&amp;start={$next}&amp;image={$image}&amp;side={$side}&amp;mode=compare">Next »</a>
 					</xsl:when>
 					<xsl:otherwise>
 						<xsl:text>Next »</xsl:text>
