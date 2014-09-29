@@ -47,8 +47,6 @@
 						<link type="text/css" href="{$include_path}ui/css/timeline-2.3.0.css" rel="stylesheet"/>
 						<script type="text/javascript" src="{$include_path}ui/javascript/timemap_full.pack.js"/>
 						<script type="text/javascript" src="{$include_path}ui/javascript/param.js"/>
-						<script type="text/javascript" src="{$include_path}ui/javascript/loaders/xml.js"/>
-						<script type="text/javascript" src="{$include_path}ui/javascript/loaders/kml.js"/>
 						<script type="text/javascript" src="{$include_path}ui/javascript/map_functions.js"/>
 						<script type="text/javascript" src="{$include_path}ui/javascript/facet_functions.js"/>
 					</xsl:when>
