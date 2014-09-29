@@ -8,7 +8,7 @@
 	<xsl:param name="pipeline">search</xsl:param>
 	<xsl:param name="lang" select="doc('input:request')/request/parameters/parameter[name='lang']/value"/>
 	<xsl:param name="display_path"/>
-	<xsl:param name="include_path">../</xsl:param>
+	<xsl:variable name="include_path" select="concat('http://', doc('input:request')/request/server-name, ':8080/', tokenize(doc('input:request')/request/request-uri, '/')[2], '/',tokenize(doc('input:request')/request/request-uri, '/')[3], '/')"/>
 
 	<!-- config variables-->
 	<xsl:variable name="collection_type" select="//config/collection_type"/>

@@ -9,7 +9,7 @@
 	<xsl:variable name="url" select="/content/config/url"/>
 	<xsl:variable name="collection_type" select="/content/config/collection_type"/>
 	<xsl:variable name="display_path">../</xsl:variable>
-	<xsl:variable name="include_path">../../</xsl:variable>
+	<xsl:variable name="include_path" select="concat('http://', doc('input:request')/request/server-name, ':8080/', tokenize(doc('input:request')/request/request-uri, '/')[2], '/',tokenize(doc('input:request')/request/request-uri, '/')[3], '/')"/>
 	<xsl:variable name="recordType">
 		<xsl:choose>
 			<xsl:when test="descendant::nuds:nuds">
