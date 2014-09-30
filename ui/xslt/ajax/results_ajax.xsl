@@ -256,15 +256,27 @@
 				<xsl:choose>
 					<xsl:when test="str[@name='recordType'] = 'physical'">
 						<xsl:if test="string(str[@name='thumbnail_obv'])">
-							<a class="thumbImage" href="{str[@name='reference_obv']}" title="Obverse of {str[@name='title_display']}" id="{$display_path}id/{str[@name='recordId']}{if (string($lang))
+							<xsl:variable name="path">
+								<xsl:if test="not(contains(str[@name='thumbnail_obv'], 'http://'))">
+									<xsl:value-of select="$display_path"/>
+								</xsl:if>
+							</xsl:variable>
+							
+							<a class="thumbImage" href="{$path}{str[@name='reference_obv']}" title="Obverse of {str[@name='title_display']}" id="{$display_path}id/{str[@name='recordId']}{if (string($lang))
 								then concat('?lang=', $lang) else ''}">
-								<img src="{str[@name='thumbnail_obv']}"/>
+								<img src="{$path}{str[@name='thumbnail_obv']}"/>
 							</a>
 						</xsl:if>
 						<xsl:if test="string(str[@name='thumbnail_rev'])">
-							<a class="thumbImage" href="{str[@name='reference_rev']}" title="Reverse of {str[@name='title_display']}" id="{$display_path}id/{str[@name='recordId']}{if (string($lang))
+							<xsl:variable name="path">
+								<xsl:if test="not(contains(str[@name='thumbnail_rev'], 'http://'))">
+									<xsl:value-of select="$display_path"/>
+								</xsl:if>
+							</xsl:variable>
+							
+							<a class="thumbImage" href="{$path}{str[@name='reference_rev']}" title="Reverse of {str[@name='title_display']}" id="{$display_path}id/{str[@name='recordId']}{if (string($lang))
 								then concat('?lang=', $lang) else ''}">
-								<img src="{str[@name='thumbnail_rev']}"/>
+								<img src="{$path}{str[@name='thumbnail_rev']}"/>
 							</a>
 						</xsl:if>
 					</xsl:when>
