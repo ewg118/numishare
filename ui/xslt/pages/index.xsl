@@ -6,7 +6,7 @@
 	<xsl:param name="pipeline">display</xsl:param>
 	<xsl:param name="lang" select="doc('input:request')/request/parameters/parameter[name='lang']/value"/>
 	<xsl:variable name="display_path"/>
-	<xsl:variable name="include_path" select="concat('http://', doc('input:request')/request/server-name, ':8080/', tokenize(doc('input:request')/request/request-uri, '/')[2], '/',tokenize(doc('input:request')/request/request-uri, '/')[3], '/')"/>
+	<xsl:variable name="include_path" select="concat('http://', doc('input:request')/request/server-name, ':8080/orbeon/themes/', //config/theme)"/>
 	
 
 	<xsl:template match="/content/config">
@@ -15,13 +15,13 @@
 				<title>
 					<xsl:value-of select="title"/>
 				</title>
-				<link rel="shortcut icon" type="image/x-icon" href="/themes/{theme/orbeon_theme}/images/favicon.png"/>
+				<link rel="shortcut icon" type="image/x-icon" href="{$include_path}/images/favicon.png"/>
 				<meta name="viewport" content="width=device-width, initial-scale=1"/>
 				<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"/>
 				<!-- bootstrap -->
 				<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"/>
 				<script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"/>
-				<link type="text/css" href="/themes/{theme/orbeon_theme}/css/style.css" rel="stylesheet"/>
+				<link type="text/css" href="{$include_path}/css/style.css" rel="stylesheet"/>
 				<xsl:if test="string(google_analytics)">
 					<script type="text/javascript">
 						<xsl:value-of select="google_analytics"/>
@@ -99,16 +99,16 @@
 					<div class="highlight data_options">
 						<h3>Linked Data</h3>
 						<a href="{$display_path}feed/?q=*:*">
-							<img src="{$include_path}ui/images/atom-large.png" title="Atom" alt="Atom"/>
+							<img src="{$include_path}/images/atom-large.png" title="Atom" alt="Atom"/>
 						</a>
 						<xsl:if test="pelagios_enabled=true()">
 							<a href="pelagios.void.rdf">
-								<img src="{$include_path}ui/images/pelagios_icon.png" title="Pelagios VOiD" alt="Pelagios VOiD"/>
+								<img src="{$include_path}/images/pelagios_icon.png" title="Pelagios VOiD" alt="Pelagios VOiD"/>
 							</a>
 						</xsl:if>
 						<xsl:if test="ctype_enabled=true()">
 							<a href="nomisma.void.rdf">
-								<img src="{$include_path}ui/images/nomisma.png" title="nomisma VOiD" alt="nomisma VOiD"/>
+								<img src="{$include_path}/images/nomisma.png" title="nomisma VOiD" alt="nomisma VOiD"/>
 							</a>
 						</xsl:if>
 					</div>
