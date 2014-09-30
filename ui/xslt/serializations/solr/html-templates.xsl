@@ -991,21 +991,21 @@
 					<div class="btn-group pagination" style="float:right">
 						<xsl:choose>
 							<xsl:when test="$start_var &gt;= $rows">
-								<a class="btn btn-default pagingBtn" role="button" title="First" href="results?q={encode-for-uri($q)}{if (string($sort)) then concat('&amp;sort=', $sort)
+								<a class="btn btn-default pagingBtn" role="button" title="First" href="{if($pipeline='results') then 'results' else ''}?q={encode-for-uri($q)}{if (string($sort)) then concat('&amp;sort=', $sort)
 									else ''}{if(string($lang)) then concat('&amp;lang=', $lang) else ''}">
 									<span class="glyphicon glyphicon-fast-backward"/>
 								</a>
-								<a class="btn btn-default pagingBtn" role="button" title="Previous" href="results?q={encode-for-uri($q)}&amp;start={$previous}{if (string($sort)) then
+								<a class="btn btn-default pagingBtn" role="button" title="Previous" href="{if($pipeline='results') then 'results' else ''}?q={encode-for-uri($q)}&amp;start={$previous}{if (string($sort)) then
 									concat('&amp;sort=',          $sort) else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
 									<span class="glyphicon glyphicon-backward"/>
 								</a>
 							</xsl:when>
 							<xsl:otherwise>
-								<a class="btn btn-default disabled" role="button" title="First" href="results?q={encode-for-uri($q)}{if (string($sort)) then concat('&amp;sort=', $sort)
+								<a class="btn btn-default disabled" role="button" title="First" href="{if($pipeline='results') then 'results' else ''}?q={encode-for-uri($q)}{if (string($sort)) then concat('&amp;sort=', $sort)
 									else ''}{if(string($lang)) then concat('&amp;lang=', $lang) else ''}">
 									<span class="glyphicon glyphicon-fast-backward"/>
 								</a>
-								<a class="btn btn-default disabled" role="button" title="Previous" href="results?q={encode-for-uri($q)}&amp;start={$previous}{if (string($sort)) then
+								<a class="btn btn-default disabled" role="button" title="Previous" href="{if($pipeline='results') then 'results' else ''}?q={encode-for-uri($q)}&amp;start={$previous}{if (string($sort)) then
 									concat('&amp;sort=', $sort) else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
 									<span class="glyphicon glyphicon-backward"/>
 								</a>
@@ -1020,21 +1020,21 @@
 						<!-- next page -->
 						<xsl:choose>
 							<xsl:when test="$numFound - $start_var &gt; $rows">
-								<a class="btn btn-default pagingBtn" role="button" title="Next" href="results?q={encode-for-uri($q)}&amp;start={$next}{if (string($sort)) then
+								<a class="btn btn-default pagingBtn" role="button" title="Next" href="{if($pipeline='results') then 'results' else ''}?q={encode-for-uri($q)}&amp;start={$next}{if (string($sort)) then
 									concat('&amp;sort=', $sort) else          ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
 									<span class="glyphicon glyphicon-forward"/>
 								</a>
-								<a class="btn btn-default pagingBtn" role="button" href="results?q={encode-for-uri($q)}&amp;start={($total * $rows) - $rows}{if (string($sort)) then
+								<a class="btn btn-default pagingBtn" role="button" href="{if($pipeline='results') then 'results' else ''}?q={encode-for-uri($q)}&amp;start={($total * $rows) - $rows}{if (string($sort)) then
 									concat('&amp;sort=',          $sort) else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
 									<span class="glyphicon glyphicon-fast-forward"/>
 								</a>
 							</xsl:when>
 							<xsl:otherwise>
-								<a class="btn btn-default disabled" role="button" title="Next" href="results?q={encode-for-uri($q)}&amp;start={$next}{if (string($sort)) then
+								<a class="btn btn-default disabled" role="button" title="Next" href="{if($pipeline='results') then 'results' else ''}?q={encode-for-uri($q)}&amp;start={$next}{if (string($sort)) then
 									concat('&amp;sort=', $sort) else          ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
 									<span class="glyphicon glyphicon-forward"/>
 								</a>
-								<a class="btn btn-default disabled" role="button" href="results?q={encode-for-uri($q)}&amp;start={($total * $rows) - $rows}{if (string($sort)) then
+								<a class="btn btn-default disabled" role="button" href="{if($pipeline='results') then 'results' else ''}?q={encode-for-uri($q)}&amp;start={($total * $rows) - $rows}{if (string($sort)) then
 									concat('&amp;sort=', $sort)          else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
 									<span class="glyphicon glyphicon-fast-forward"/>
 								</a>
