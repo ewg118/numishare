@@ -44,12 +44,28 @@
 				<xsl:variable name="service">
 					<xsl:choose>
 						<xsl:when test="string($lang)">
-							<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+lang:', $lang, '+AND+', encode-for-uri($q), '&amp;start=', $start, '&amp;rows=',
-								$rows, '&amp;sort=', encode-for-uri($sort))"/>
+							<xsl:choose>
+								<xsl:when test="string($sort)">
+									<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+lang:', $lang, '+AND+', encode-for-uri($q), '&amp;start=', $start,
+										'&amp;rows=', $rows, '&amp;sort=', encode-for-uri($sort), '&amp;facet.field=mint_geo&amp;facet.field=subject_geo&amp;facet.field=findspot_geo&amp;facet.limit=-1')"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+lang:', $lang, '+AND+', encode-for-uri($q), '&amp;start=', $start,
+										'&amp;rows=', $rows, '&amp;facet.field=mint_geo&amp;facet.field=subject_geo&amp;facet.field=findspot_geo&amp;facet.limit=-1')"/>
+								</xsl:otherwise>
+							</xsl:choose>
 						</xsl:when>
 						<xsl:otherwise>
-							<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+NOT(lang:*)+AND+', encode-for-uri($q), '&amp;start=', $start, '&amp;rows=', $rows,
-								'&amp;sort=', encode-for-uri($sort))"/>
+							<xsl:choose>
+								<xsl:when test="string($sort)">
+									<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+NOT(lang:*)+AND+', encode-for-uri($q), '&amp;start=', $start, '&amp;rows=',
+										$rows, '&amp;sort=', encode-for-uri($sort), '&amp;facet.field=mint_geo&amp;facet.field=subject_geo&amp;facet.field=findspot_geo&amp;facet.limit=-1')"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+NOT(lang:*)+AND+', encode-for-uri($q), '&amp;start=', $start, '&amp;rows=',
+										$rows, '&amp;facet.field=mint_geo&amp;facet.field=subject_geo&amp;facet.field=findspot_geo&amp;facet.limit=-1')"/>
+								</xsl:otherwise>
+							</xsl:choose>
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:variable>

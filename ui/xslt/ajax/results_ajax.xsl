@@ -48,36 +48,33 @@
 	<xsl:template match="/">
 		<xsl:variable name="place_string" select="replace(translate($tokenized_q[contains(., '_uri')], '&#x022;()', ''), '[a-z]+_uri:', '')"/>
 		<xsl:variable name="places" select="tokenize($place_string, ' OR ')"/>
-		<html>
-			<head>
-				<title/>
-			</head>
-			<body>
-				<div id="root">
-					<h1>
-						<xsl:text>Place</xsl:text>
-						<xsl:if test="contains($place_string, ' OR ')">
-							<xsl:text>s</xsl:text>
-						</xsl:if>
-						<xsl:text>: </xsl:text>
-						<xsl:for-each select="$places">
-							<xsl:value-of select="."/>
-							<xsl:if test="not(position() = last())">
-								<xsl:text>, </xsl:text>
-							</xsl:if>
-						</xsl:for-each>
-						<small>
-							<a id="clear_all" href="#">clear</a>
-						</small>
-					</h1>
-					<xsl:call-template name="paging"/>
-					<div class="row">
-						<xsl:apply-templates select="descendant::doc" mode="map"/>
-					</div>
-					<xsl:call-template name="paging"/>
-				</div>
-			</body>
-		</html>
+		<xsl:variable name="facets" as="element()*">
+			<xsl:copy-of select="descendant::lst[@name='facet_fields']"/>
+		</xsl:variable>
+		<h1>
+			<xsl:text>Place</xsl:text>
+			<xsl:if test="contains($place_string, ' OR ')">
+				<xsl:text>s</xsl:text>
+			</xsl:if>
+			<xsl:text>: </xsl:text>			
+			<small>
+				<a id="clear_all" href="#">clear</a>
+			</small>
+		</h1>
+		<h2>
+			<xsl:for-each select="$places">
+				<xsl:variable name="value" select="."/>
+				<xsl:value-of select="tokenize($facets/descendant::int[contains(@name, $value)]/@name, '\|')[1]"/>
+				<xsl:if test="not(position() = last())">
+					<xsl:text>, </xsl:text>
+				</xsl:if>
+			</xsl:for-each>
+		</h2>
+		<xsl:call-template name="paging"/>
+		<div class="row">
+			<xsl:apply-templates select="descendant::doc" mode="map"/>
+		</div>
+		<xsl:call-template name="paging"/>
 	</xsl:template>
 
 	<xsl:template match="doc" mode="map">
