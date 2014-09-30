@@ -42,7 +42,7 @@ function initialize_timemap(id) {
 		mapId: "map", // Id of map div element (required)
 		timelineId: "timeline", // Id of timeline div element (required)
 		options: {
-			eventIconPath: "../../ui/images/timemap/"
+			eventIconPath: $('#include_path').text() + "/images/timemap/"
 		},
 		datasets:[ {
 			title: "Mints",

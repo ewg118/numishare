@@ -7,7 +7,7 @@
 
 	<xsl:param name="pipeline">maps_fullscreen</xsl:param>
 	<xsl:variable name="display_path">../</xsl:variable>
-	<xsl:variable name="include_path" select="concat('http://', doc('input:request')/request/server-name, ':8080/', tokenize(doc('input:request')/request/request-uri, '/')[2], '/',tokenize(doc('input:request')/request/request-uri, '/')[3], '/')"/>
+	<xsl:variable name="include_path" select="concat('http://', doc('input:request')/request/server-name, ':8080/orbeon/themes/', //config/theme/orbeon_theme)"/>
 	<xsl:variable name="collection_type" select="/content/config/collection_type"/>
 
 	<xsl:param name="q" select="doc('input:request')/request/parameters/parameter[name='q']/value"/>
@@ -22,7 +22,7 @@
 					<xsl:text>: </xsl:text>
 					<xsl:value-of select="numishare:normalizeLabel('header_maps', $lang)"/>
 				</title>
-				<link rel="shortcut icon" type="image/x-icon" href="{$include_path}ui/images/favicon.png"/>
+				<link rel="shortcut icon" type="image/x-icon" href="{$include_path}/images/favicon.png"/>
 				<meta name="viewport" content="width=device-width, initial-scale=1"/>
 
 				<!-- jquery -->
@@ -31,12 +31,12 @@
 				<!-- bootstrap -->
 				<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"/>
 				<script type="text/javascript" src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"/>
-				<script type="text/javascript" src="{$include_path}ui/javascript/bootstrap-multiselect.js"/>
-				<link rel="stylesheet" href="{$include_path}ui/css/bootstrap-multiselect.css" type="text/css"/>
+				<script type="text/javascript" src="{$include_path}/javascript/bootstrap-multiselect.js"/>
+				<link rel="stylesheet" href="{$include_path}/css/bootstrap-multiselect.css" type="text/css"/>
 				
 				<!-- Add fancyBox -->
-				<link rel="stylesheet" href="{$include_path}ui/css/jquery.fancybox.css?v=2.1.5" type="text/css" media="screen"/>
-				<script type="text/javascript" src="{$include_path}ui/javascript/jquery.fancybox.pack.js?v=2.1.5"/>
+				<link rel="stylesheet" href="{$include_path}/css/jquery.fancybox.css?v=2.1.5" type="text/css" media="screen"/>
+				<script type="text/javascript" src="{$include_path}/javascript/jquery.fancybox.pack.js?v=2.1.5"/>
 
 				<!-- display timemap for hoards, regular openlayers map for coin and coin type collections -->
 				<xsl:choose>
@@ -44,27 +44,27 @@
 						<!-- timemap dependencies -->
 						<script type="text/javascript" src="http://www.openlayers.org/api/OpenLayers.js"/>
 						<script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3.2&amp;sensor=false"/>
-						<script type="text/javascript" src="{$include_path}ui/javascript/mxn.js"/>
-						<script type="text/javascript" src="{$include_path}ui/javascript/timeline-2.3.0.js"/>
-						<link type="text/css" href="{$include_path}ui/css/timeline-2.3.0.css" rel="stylesheet"/>
-						<script type="text/javascript" src="{$include_path}ui/javascript/timemap_full.pack.js"/>
-						<script type="text/javascript" src="{$include_path}ui/javascript/param.js"/>
-						<script type="text/javascript" src="{$include_path}ui/javascript/map_fullscreen_functions.js"/>
-						<script type="text/javascript" src="{$include_path}ui/javascript/map_functions.js"/>
-						<script type="text/javascript" src="{$include_path}ui/javascript/facet_functions.js"/>
+						<script type="text/javascript" src="{$include_path}/javascript/mxn.js"/>
+						<script type="text/javascript" src="{$include_path}/javascript/timeline-2.3.0.js"/>
+						<link type="text/css" href="{$include_path}/css/timeline-2.3.0.css" rel="stylesheet"/>
+						<script type="text/javascript" src="{$include_path}/javascript/timemap_full.pack.js"/>
+						<script type="text/javascript" src="{$include_path}/javascript/param.js"/>
+						<script type="text/javascript" src="{$include_path}/javascript/map_fullscreen_functions.js"/>
+						<script type="text/javascript" src="{$include_path}/javascript/map_functions.js"/>
+						<script type="text/javascript" src="{$include_path}/javascript/facet_functions.js"/>
 					</xsl:when>
 					<xsl:otherwise>						
 						<!-- maps-->
 						<script type="text/javascript" src="http://www.openlayers.org/api/OpenLayers.js"/>
 						<script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3.2&amp;sensor=false"/>
-						<script type="text/javascript" src="{$include_path}ui/javascript/map_fullscreen_functions.js"/>
-						<script type="text/javascript" src="{$include_path}ui/javascript/map_functions.js"/>
-						<script type="text/javascript" src="{$include_path}ui/javascript/facet_functions.js"/>
+						<script type="text/javascript" src="{$include_path}/javascript/map_fullscreen_functions.js"/>
+						<script type="text/javascript" src="{$include_path}/javascript/map_functions.js"/>
+						<script type="text/javascript" src="{$include_path}/javascript/facet_functions.js"/>
 					</xsl:otherwise>
 				</xsl:choose>
 				
 				<!-- local theme and styling -->
-				<link type="text/css" href="{$include_path}ui/css/fullscreen.css" rel="stylesheet"/>
+				<link type="text/css" href="{$include_path}/css/fullscreen.css" rel="stylesheet"/>
 
 				<!-- Google Analytics -->
 				<xsl:if test="string(//config/google_analytics)">
@@ -194,6 +194,9 @@
 				</span>
 				<span id="path">
 					<xsl:value-of select="$display_path"/>
+				</span>
+				<span id="include_path">
+					<xsl:value-of select="$include_path"/>
 				</span>
 				<span id="pipeline">
 					<xsl:value-of select="$pipeline"/>

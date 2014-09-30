@@ -11,7 +11,7 @@
 				<!-- bootstrap -->
 				<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"/>
 				<script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"/>
-				<link rel="stylesheet" href="{$include_path}ui/css/style.css"/>
+				<link rel="stylesheet" href="{$include_path}/css/style.css"/>
 			</head>
 			<body>
 				<xsl:call-template name="content"/>

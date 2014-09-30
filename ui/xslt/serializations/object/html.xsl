@@ -45,7 +45,7 @@
 		</xsl:if>
 	</xsl:variable>
 	
-	<xsl:variable name="include_path" select="concat('http://', doc('input:request')/request/server-name, ':8080/', tokenize(doc('input:request')/request/request-uri, '/')[2], '/',tokenize(doc('input:request')/request/request-uri, '/')[3], '/')"/>
+	<xsl:variable name="include_path" select="concat('http://', doc('input:request')/request/server-name, ':8080/orbeon/themes/', //config/theme/orbeon_theme)"/>
 
 	<xsl:variable name="recordType">
 		<xsl:choose>
@@ -219,47 +219,47 @@
 								<xsl:if test="$has_mint_geo = 'true' or $has_findspot_geo = 'true'">
 									<script type="text/javascript" src="http://www.openlayers.org/api/OpenLayers.js"/>
 									<script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3.2&amp;sensor=false"/>
-									<script type="text/javascript" src="{$include_path}ui/javascript/display_map_functions.js"/>
+									<script type="text/javascript" src="{$include_path}/javascript/display_map_functions.js"/>
 								</xsl:if>
 							</xsl:when>
 							<!-- coin-type CSS and JS dependencies -->
 							<xsl:when test="$recordType='conceptual'">
 								<!-- Add fancyBox -->
-								<link rel="stylesheet" href="{$include_path}ui/css/jquery.fancybox.css?v=2.1.5" type="text/css" media="screen"/>
-								<script type="text/javascript" src="{$include_path}ui/javascript/jquery.fancybox.pack.js?v=2.1.5"/>
-								<script type="text/javascript" src="{$include_path}ui/javascript/highcharts.js"/>
-								<script type="text/javascript" src="{$include_path}ui/javascript/modules/exporting.js"/>
-								<script type="text/javascript" src="{$include_path}ui/javascript/display_map_functions.js"/>
-								<script type="text/javascript" src="{$include_path}ui/javascript/display_functions.js"/>
-								<script type="text/javascript" src="{$include_path}ui/javascript/visualize_functions.js"/>
+								<link rel="stylesheet" href="{$include_path}/css/jquery.fancybox.css?v=2.1.5" type="text/css" media="screen"/>
+								<script type="text/javascript" src="{$include_path}/javascript/jquery.fancybox.pack.js?v=2.1.5"/>
+								<script type="text/javascript" src="{$include_path}/javascript/highcharts.js"/>
+								<script type="text/javascript" src="{$include_path}/javascript/modules/exporting.js"/>
+								<script type="text/javascript" src="{$include_path}/javascript/display_map_functions.js"/>
+								<script type="text/javascript" src="{$include_path}/javascript/display_functions.js"/>
+								<script type="text/javascript" src="{$include_path}/javascript/visualize_functions.js"/>
 
 								<!-- mapping -->
 								<script type="text/javascript" src="http://www.openlayers.org/api/OpenLayers.js"/>
 								<script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3.2&amp;sensor=false"/>
-								<script type="text/javascript" src="{$include_path}ui/javascript/mxn.js"/>
-								<script type="text/javascript" src="{$include_path}ui/javascript/timeline-2.3.0.js"/>
-								<link type="text/css" href="{$include_path}ui/css/timeline-2.3.0.css" rel="stylesheet"/>
-								<script type="text/javascript" src="{$include_path}ui/javascript/timemap_full.pack.js"/>
-								<script type="text/javascript" src="{$include_path}ui/javascript/param.js"/>
+								<script type="text/javascript" src="{$include_path}/javascript/mxn.js"/>
+								<script type="text/javascript" src="{$include_path}/javascript/timeline-2.3.0.js"/>
+								<link type="text/css" href="{$include_path}/css/timeline-2.3.0.css" rel="stylesheet"/>
+								<script type="text/javascript" src="{$include_path}/javascript/timemap_full.pack.js"/>
+								<script type="text/javascript" src="{$include_path}/javascript/param.js"/>
 							</xsl:when>
 							<!-- hoard CSS and JS dependencies -->
 							<xsl:when test="$recordType='hoard'">
-								<script type="text/javascript" src="{$include_path}ui/javascript/highcharts.js"/>
-								<script type="text/javascript" src="{$include_path}ui/javascript/modules/exporting.js"/>
-								<script type="text/javascript" src="{$include_path}ui/javascript/display_hoard_functions.js"/>
-								<script type="text/javascript" src="{$include_path}ui/javascript/analysis_functions.js"/>
+								<script type="text/javascript" src="{$include_path}/javascript/highcharts.js"/>
+								<script type="text/javascript" src="{$include_path}/javascript/modules/exporting.js"/>
+								<script type="text/javascript" src="{$include_path}/javascript/display_hoard_functions.js"/>
+								<script type="text/javascript" src="{$include_path}/javascript/analysis_functions.js"/>
 
 								<!-- mapping -->
 								<script type="text/javascript" src="http://www.openlayers.org/api/OpenLayers.js"/>
 								<script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3.2&amp;sensor=false"/>
-								<script type="text/javascript" src="{$include_path}ui/javascript/mxn.js"/>
-								<script type="text/javascript" src="{$include_path}ui/javascript/timeline-2.3.0.js"/>
-								<link type="text/css" href="{$include_path}ui/css/timeline-2.3.0.css" rel="stylesheet"/>
-								<script type="text/javascript" src="{$include_path}ui/javascript/timemap_full.pack.js"/>
-								<script type="text/javascript" src="{$include_path}ui/javascript/param.js"/>								
+								<script type="text/javascript" src="{$include_path}/javascript/mxn.js"/>
+								<script type="text/javascript" src="{$include_path}/javascript/timeline-2.3.0.js"/>
+								<link type="text/css" href="{$include_path}/css/timeline-2.3.0.css" rel="stylesheet"/>
+								<script type="text/javascript" src="{$include_path}/javascript/timemap_full.pack.js"/>
+								<script type="text/javascript" src="{$include_path}/javascript/param.js"/>								
 							</xsl:when>
 						</xsl:choose>
-						<link type="text/css" href="{$include_path}ui/css/style.css" rel="stylesheet"/>
+						<link type="text/css" href="{$include_path}/css/style.css" rel="stylesheet"/>
 					</head>
 					<body>
 						<xsl:call-template name="header"/>						
@@ -274,6 +274,9 @@
 							</span>
 							<span id="path">
 								<xsl:value-of select="$display_path"/>
+							</span>
+							<span id="include_path">
+								<xsl:value-of select="$include_path"/>
 							</span>
 							<span id="pipeline">
 								<xsl:value-of select="$pipeline"/>
@@ -309,7 +312,7 @@
 			<link rel="alternate" type="application/vnd.google-earth.kml+xml" href="{concat($url, 'collection/', $id)}.kml"/>
 		</xsl:if>
 		<!-- CSS -->
-		<link rel="shortcut icon" type="image/x-icon" href="{$include_path}ui/images/favicon.png"/>
+		<link rel="shortcut icon" type="image/x-icon" href="{$include_path}/images/favicon.png"/>
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"/>
 		<meta name="viewport" content="width=device-width, initial-scale=1"/>
 		<!-- bootstrap -->

@@ -6,7 +6,7 @@
 	<xsl:include href="../../functions.xsl"/>
 
 	<xsl:variable name="display_path"/>
-	<xsl:variable name="include_path" select="concat('http://', doc('input:request')/request/server-name, ':8080/', tokenize(doc('input:request')/request/request-uri, '/')[2], '/',tokenize(doc('input:request')/request/request-uri, '/')[3], '/')"/>
+	<xsl:variable name="include_path" select="concat('http://', doc('input:request')/request/server-name, ':8080/orbeon/themes/', //config/theme/orbeon_theme)"/>
 
 	<!-- request params -->
 	<xsl:param name="pipeline">results</xsl:param>
@@ -75,29 +75,29 @@
 				<meta name="startIndex" content="{$start_var}"/>
 				<meta name="itemsPerPage" content="{$rows}"/>
 
-				<link rel="shortcut icon" type="image/x-icon" href="{$include_path}ui/images/favicon.png"/>
+				<link rel="shortcut icon" type="image/x-icon" href="{$include_path}/images/favicon.png"/>
 				<meta name="viewport" content="width=device-width, initial-scale=1"/>
 
 				<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"/>
 				<!-- bootstrap -->
 				<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"/>
 				<script type="text/javascript" src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"/>
-				<script type="text/javascript" src="{$include_path}ui/javascript/bootstrap-multiselect.js"/>
-				<link rel="stylesheet" href="{$include_path}ui/css/bootstrap-multiselect.css" type="text/css"/>
-				<link type="text/css" href="{$include_path}ui/css/style.css" rel="stylesheet"/>
+				<script type="text/javascript" src="{$include_path}/javascript/bootstrap-multiselect.js"/>
+				<link rel="stylesheet" href="{$include_path}/css/bootstrap-multiselect.css" type="text/css"/>
+				<link type="text/css" href="{$include_path}/css/style.css" rel="stylesheet"/>
 
 				<!-- Add fancyBox -->
-				<link rel="stylesheet" href="{$include_path}ui/css/jquery.fancybox.css?v=2.1.5" type="text/css" media="screen"/>
-				<script type="text/javascript" src="{$include_path}ui/javascript/jquery.fancybox.pack.js?v=2.1.5"/>
-				<script type="text/javascript" src="{$include_path}ui/javascript/get_facets.js"/>
-				<script type="text/javascript" src="{$include_path}ui/javascript/facet_functions.js"/>
-				<script type="text/javascript" src="{$include_path}ui/javascript/result_functions.js"/>
+				<link rel="stylesheet" href="{$include_path}/css/jquery.fancybox.css?v=2.1.5" type="text/css" media="screen"/>
+				<script type="text/javascript" src="{$include_path}/javascript/jquery.fancybox.pack.js?v=2.1.5"/>
+				<script type="text/javascript" src="{$include_path}/javascript/get_facets.js"/>
+				<script type="text/javascript" src="{$include_path}/javascript/facet_functions.js"/>
+				<script type="text/javascript" src="{$include_path}/javascript/result_functions.js"/>
 
 				<!-- call mapping information -->
 				<xsl:if test="//lst[@name='mint_geo']/int[@name='numFacetTerms'] &gt; 0">
 					<script src="http://www.openlayers.org/api/OpenLayers.js" type="text/javascript"/>
 					<script src="http://maps.google.com/maps/api/js?v=3.2&amp;sensor=false"/>
-					<script type="text/javascript" src="{$include_path}ui/javascript/result_map_functions.js"/>
+					<script type="text/javascript" src="{$include_path}/javascript/result_map_functions.js"/>
 				</xsl:if>
 				<xsl:if test="string(/config/google_analytics)">
 					<script type="text/javascript">
@@ -124,18 +124,18 @@
 								<xsl:value-of select="numishare:normalizeLabel('results_data-options', $lang)"/>
 							</h3>
 							<a href="{$display_path}feed/?q={$q}{if(string($lang)) then concat('&amp;lang=', $lang) else ''}">
-								<img src="{$include_path}ui/images/atom-medium.png" title="Atom" alt="Atom"/>
+								<img src="{$include_path}/images/atom-medium.png" title="Atom" alt="Atom"/>
 							</a>
 							<xsl:if test="//lst[@name='mint_geo']/int[@name='numFacetTerms'] &gt; 0">
 								<xsl:choose>
 									<xsl:when test="/content/config/collection_type = 'hoard'">
 										<a href="{$display_path}findspots.kml?q={$q}{if(string($lang)) then concat('&amp;lang=', $lang) else ''}">
-											<img src="{$include_path}ui/images/googleearth.png" alt="KML" title="KML: Limit, 500 objects"/>
+											<img src="{$include_path}/images/googleearth.png" alt="KML" title="KML: Limit, 500 objects"/>
 										</a>
 									</xsl:when>
 									<xsl:otherwise>
 										<a href="{$display_path}query.kml?q={$q}{if(string($lang)) then concat('&amp;lang=', $lang) else ''}">
-											<img src="{$include_path}ui/images/googleearth.png" alt="KML" title="KML: Limit, 500 objects"/>
+											<img src="{$include_path}/images/googleearth.png" alt="KML" title="KML: Limit, 500 objects"/>
 										</a>
 									</xsl:otherwise>
 								</xsl:choose>
@@ -143,11 +143,11 @@
 							</xsl:if>
 							<a href="{$display_path}query.csv?q={$q}{if(string($lang)) then concat('&amp;lang=', $lang) else ''}{if (string($sort)) then concat('&amp;sort=', $sort) else ''}">
 								<!-- the image below is copyright of Silvestre Herrera, available freely on wikimedia commons: http://commons.wikimedia.org/wiki/File:X-office-spreadsheet_Gion.svg -->
-								<img src="{$include_path}ui/images/spreadsheet.png" title="CSV" alt="CSV"/>
+								<img src="{$include_path}/images/spreadsheet.png" title="CSV" alt="CSV"/>
 							</a>
 							<a href="{$display_path}visualize?compare={$q}{if(string($lang)) then concat('&amp;lang=', $lang) else ''}">
 								<!-- the image below is copyright of Mark James, available freely on wikimedia commons: http://commons.wikimedia.org/wiki/File:Chart_bar.png -->
-								<img src="{$include_path}ui/images/visualize.png" title="Visualize" alt="Visualize"/>
+								<img src="{$include_path}/images/visualize.png" title="Visualize" alt="Visualize"/>
 							</a>
 						</div>
 						<div id="refine_results">							

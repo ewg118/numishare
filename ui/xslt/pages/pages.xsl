@@ -8,7 +8,7 @@
 	<xsl:param name="lang" select="doc('input:request')/request/parameters/parameter[name='lang']/value"/>
 
 	<xsl:variable name="display_path">../</xsl:variable>
-	<xsl:variable name="include_path" select="concat('http://', doc('input:request')/request/server-name, ':8080/', tokenize(doc('input:request')/request/request-uri, '/')[2], '/',tokenize(doc('input:request')/request/request-uri, '/')[3], '/')"/>
+	<xsl:variable name="include_path" select="concat('http://', doc('input:request')/request/server-name, ':8080/orbeon/themes/', //config/theme/orbeon_theme)"/>
 
 	<xsl:template match="/">
 		<html>
@@ -18,14 +18,14 @@
 					<xsl:text>: </xsl:text>
 					<xsl:value-of select="//page[@stub = $stub]/title"/>
 				</title>
-				<link rel="shortcut icon" type="image/x-icon" href="{$include_path}ui/images/favicon.png"/>
+				<link rel="shortcut icon" type="image/x-icon" href="{$include_path}/images/favicon.png"/>
 				<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"/>
 				<meta name="viewport" content="width=device-width, initial-scale=1"/>
 				<!-- bootstrap -->
 				<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"/>
 				<script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"/>
 				
-				<link type="text/css" href="{$include_path}ui/css/style.css" rel="stylesheet"/>
+				<link type="text/css" href="{$include_path}/css/style.css" rel="stylesheet"/>
 				<xsl:if test="string(/config/google_analytics)">
 					<script type="text/javascript">
 						<xsl:value-of select="//config/google_analytics"/>

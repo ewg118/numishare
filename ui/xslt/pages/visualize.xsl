@@ -7,7 +7,8 @@
 	<xsl:include href="../functions.xsl"/>
 	<xsl:variable name="pipeline">visualize</xsl:variable>
 	<xsl:variable name="display_path"/>
-	<xsl:variable name="include_path" select="concat('http://', doc('input:request')/request/server-name, ':8080/', tokenize(doc('input:request')/request/request-uri, '/')[2], '/',tokenize(doc('input:request')/request/request-uri, '/')[3], '/')"/>
+	<xsl:variable name="include_path" select="concat('http://', doc('input:request')/request/server-name, ':8080/orbeon/themes/', //config/theme/orbeon_theme)"/>
+	
 	<!-- request parameters -->
 	<xsl:variable name="request-uri" select="concat('http://localhost:8080', substring-before(doc('input:request')/request/request-uri, 'visualize'))"/>
 	<xsl:param name="lang" select="doc('input:request')/request/parameters/parameter[name='lang']/value"/>
@@ -58,21 +59,21 @@
 					<xsl:text>: </xsl:text>
 					<xsl:value-of select="numishare:normalizeLabel('header_visualize', $lang)"/>
 				</title>
-				<link rel="shortcut icon" type="image/x-icon" href="{$include_path}ui/images/favicon.png"/>
+				<link rel="shortcut icon" type="image/x-icon" href="{$include_path}/images/favicon.png"/>
 				<meta name="viewport" content="width=device-width, initial-scale=1"/>
 				<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"/>
 				<!-- bootstrap -->
 				<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"/>
 				<script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"/>
 				<!-- Add fancyBox -->
-				<link rel="stylesheet" href="{$include_path}ui/css/jquery.fancybox.css?v=2.1.5" type="text/css" media="screen"/>
-				<script type="text/javascript" src="{$include_path}ui/javascript/jquery.fancybox.pack.js?v=2.1.5"/>
-				<link type="text/css" href="{$include_path}ui/css/style.css" rel="stylesheet"/>
+				<link rel="stylesheet" href="{$include_path}/css/jquery.fancybox.css?v=2.1.5" type="text/css" media="screen"/>
+				<script type="text/javascript" src="{$include_path}/javascript/jquery.fancybox.pack.js?v=2.1.5"/>
+				<link type="text/css" href="{$include_path}/css/style.css" rel="stylesheet"/>
 				<!-- required libraries -->
-				<script type="text/javascript" src="{$include_path}ui/javascript/highcharts.js"/>
-				<script type="text/javascript" src="{$include_path}ui/javascript/modules/exporting.js"/>
-				<script type="text/javascript" src="{$include_path}ui/javascript/search_functions.js"/>
-				<script type="text/javascript" src="{$include_path}ui/javascript/visualize_functions.js"/>
+				<script type="text/javascript" src="{$include_path}/javascript/highcharts.js"/>
+				<script type="text/javascript" src="{$include_path}/javascript/modules/exporting.js"/>
+				<script type="text/javascript" src="{$include_path}/javascript/search_functions.js"/>
+				<script type="text/javascript" src="{$include_path}/javascript/visualize_functions.js"/>
 				<xsl:if test="string(//config/google_analytics)">
 					<script type="text/javascript">
 						<xsl:value-of select="//config/google_analytics"/>

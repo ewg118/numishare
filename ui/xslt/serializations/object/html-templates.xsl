@@ -165,7 +165,7 @@
 					<!-- create links to resources -->
 					<xsl:if test="string($href)">
 						<a href="{$href}" target="_blank" title="{if (contains($href, 'geonames')) then 'geonames' else if (contains($href, 'nomisma')) then 'nomisma' else ''}">
-							<img src="{$include_path}ui/images/external.png" alt="external link" class="external_link"/>
+							<img src="{$include_path}/images/external.png" alt="external link" class="external_link"/>
 						</a>
 					</xsl:if>
 					<!-- display label on right for right-to-left scripts -->

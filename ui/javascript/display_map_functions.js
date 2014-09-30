@@ -54,7 +54,7 @@ function initialize_timemap(id, path, lang) {
 		timelineId: "timeline", // Id of timeline div element (required)
 		options: {
 			mapType: "physical",
-			eventIconPath: "../../ui/images/timemap/"
+			eventIconPath: $('#include_path').text() + "/images/timemap/"
 		},
 		datasets: datasets,
 		bandIntervals:[
