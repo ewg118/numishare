@@ -304,7 +304,9 @@ $(document).ready(function () {
 			pipeline: pipeline
 		},
 		function (data) {
-			$('#results').html(data);
+			$('#ajax-temp').html(data);
+			$('#results').html('');
+			
 		});
 		return false;
 	});

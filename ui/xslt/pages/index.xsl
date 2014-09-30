@@ -15,13 +15,13 @@
 				<title>
 					<xsl:value-of select="title"/>
 				</title>
-				<link rel="shortcut icon" type="image/x-icon" href="{$include_path}ui/images/favicon.png"/>
+				<link rel="shortcut icon" type="image/x-icon" href="/themes/{theme/orbeon_theme}/images/favicon.png"/>
 				<meta name="viewport" content="width=device-width, initial-scale=1"/>
 				<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"/>
 				<!-- bootstrap -->
 				<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"/>
 				<script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"/>
-				<link type="text/css" href="{$include_path}ui/css/style.css" rel="stylesheet"/>
+				<link type="text/css" href="/themes/{theme/orbeon_theme}/css/style.css" rel="stylesheet"/>
 				<xsl:if test="string(google_analytics)">
 					<script type="text/javascript">
 						<xsl:value-of select="google_analytics"/>

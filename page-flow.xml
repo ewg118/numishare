@@ -1,4 +1,4 @@
-<config xmlns="http://www.orbeon.com/oxf/controller" xmlns:oxf="http://www.orbeon.com/oxf/processors">	
+<controller xmlns="http://www.orbeon.com/oxf/controller" xmlns:oxf="http://www.orbeon.com/oxf/processors" matcher="oxf:perl5-matcher">	
 	
 	<!-- ****************
 	* ADMIN INTERFACE *
@@ -23,73 +23,83 @@
 	<!-- ****************
 	* PUBLIC INTERFACE *
 	***************** -->
+	<!-- *** For multiple projects that employ different XSLT, JS, or CSS:
+		Files, Serializations and Pages should be copied and pasted above the generic regex pages, with models and views given absolute paths with the file:// protocol, e.g.,
+		<page path="/numishare/project1/" matcher="oxf:perl5-matcher" model="xpl/models/config.xpl" view="file:///usr/local/projects/project1/xpl/views/pages/index.xpl"/>
+		Model paths are unlikely to require changing. Other ajax pages may need to be copied if alterations in format are required.
+	*** -->
+	
+	<!-- **** FILES **** -->	
+	<!--<files path="/numishare/[^\/]+/javascript/.+\.js"/>-->
+	<!--<page path="/numishare/[^\/]+/images/.+\.png" view="xpl/files/jpg.xpl"/>-->
+	
 	<!-- **** SERIALIZATIONS **** -->	
 	<!-- Solr -->
-	<page path="/numishare/[^\/]+/results" matcher="oxf:perl5-matcher" model="xpl/models/solr/results.xpl" view="xpl/views/serializations/solr/html.xpl"/>
-	<page path="/numishare/[^\/]+/feed/" matcher="oxf:perl5-matcher" model="xpl/models/solr/feed.xpl" view="xpl/views/serializations/solr/atom.xpl"/>
+	<page path="/numishare/[^\/]+/results" model="xpl/models/solr/results.xpl" view="xpl/views/serializations/solr/html.xpl"/>
+	<page path="/numishare/[^\/]+/feed/" model="xpl/models/solr/feed.xpl" view="xpl/views/serializations/solr/atom.xpl"/>
 	
 	<!-- id -->
-	<page path="/numishare/[^\/]+/id/(.*)\.xml" matcher="oxf:perl5-matcher" view="xpl/models/object/get-id.xpl"/>
-	<page path="/numishare/[^\/]+/id/(.*)\.rdf" matcher="oxf:perl5-matcher" model="xpl/models/object/get-id.xpl" view="xpl/views/serializations/object/rdf.xpl"/>
-	<page path="/numishare/[^\/]+/id/(.*)\.kml" matcher="oxf:perl5-matcher" model="xpl/models/object/get-id.xpl" view="xpl/views/serializations/object/kml.xpl"/>
-	<page path="/numishare/[^\/]+/id/(.*)\.solr" matcher="oxf:perl5-matcher" model="xpl/models/object/get-id.xpl" view="xpl/views/serializations/object/solr.xpl"/>
-	<page path="/numishare/[^\/]+/id/(.*)" matcher="oxf:perl5-matcher" model="xpl/models/object/get-id.xpl" view="xpl/views/serializations/object/html.xpl"/>
-	<page path="/numishare/[^\/]+/map/(.*)" matcher="oxf:perl5-matcher" model="xpl/models/object/get-id.xpl" view="xpl/views/serializations/object/html-map.xpl"/>
+	<page path="/numishare/[^\/]+/id/(.*)\.xml" view="xpl/models/object/get-id.xpl"/>
+	<page path="/numishare/[^\/]+/id/(.*)\.rdf" model="xpl/models/object/get-id.xpl" view="xpl/views/serializations/object/rdf.xpl"/>
+	<page path="/numishare/[^\/]+/id/(.*)\.kml" model="xpl/models/object/get-id.xpl" view="xpl/views/serializations/object/kml.xpl"/>
+	<page path="/numishare/[^\/]+/id/(.*)\.solr" model="xpl/models/object/get-id.xpl" view="xpl/views/serializations/object/solr.xpl"/>
+	<page path="/numishare/[^\/]+/id/(.*)" model="xpl/models/object/get-id.xpl" view="xpl/views/serializations/object/html.xpl"/>
+	<page path="/numishare/[^\/]+/map/(.*)" model="xpl/models/object/get-id.xpl" view="xpl/views/serializations/object/html-map.xpl"/>
 	
 	<!-- **** PAGES **** -->	
-	<page path="/numishare/[^\/]+/analyze" matcher="oxf:perl5-matcher" model="xpl/models/solr/search.xpl" view="xpl/views/pages/analyze.xpl"/>
-	<page path="/numishare/[^\/]+/compare" matcher="oxf:perl5-matcher" model="xpl/models/solr/search.xpl" view="xpl/views/pages/compare.xpl"/>
-	<page path="/numishare/[^\/]+/contributors" matcher="oxf:perl5-matcher" model="xpl/models/sparql/contributors.xpl" view="xpl/views/pages/contributors.xpl"/>	
-	<page path="/numishare/[^\/]+/maps" matcher="oxf:perl5-matcher" model="xpl/models/solr/maps.xpl" view="xpl/views/pages/maps.xpl"/>
-	<page path="/numishare/[^\/]+/maps/fullscreen" matcher="oxf:perl5-matcher" model="xpl/models/solr/maps.xpl" view="xpl/views/pages/maps_fullscreen.xpl"/>
-	<page path="/numishare/[^\/]+/pages/(.*)" matcher="oxf:perl5-matcher" model="xpl/models/config.xpl" view="xpl/views/pages/pages.xpl"/>
-	<page path="/numishare/[^\/]+/search" matcher="oxf:perl5-matcher" model="xpl/models/solr/search.xpl" view="xpl/views/pages/search.xpl"/>
-	<page path="/numishare/[^\/]+/visualize" matcher="oxf:perl5-matcher" model="xpl/models/solr/search.xpl" view="xpl/views/pages/visualize.xpl"/>
-	<page path="/numishare/[^\/]+/" matcher="oxf:perl5-matcher" model="xpl/models/config.xpl" view="xpl/views/pages/index.xpl"/>
+	<page path="/numishare/[^\/]+/analyze" model="xpl/models/solr/search.xpl" view="xpl/views/pages/analyze.xpl"/>
+	<page path="/numishare/[^\/]+/compare" model="xpl/models/solr/search.xpl" view="xpl/views/pages/compare.xpl"/>
+	<page path="/numishare/[^\/]+/contributors" model="xpl/models/sparql/contributors.xpl" view="xpl/views/pages/contributors.xpl"/>	
+	<page path="/numishare/[^\/]+/maps" model="xpl/models/solr/maps.xpl" view="xpl/views/pages/maps.xpl"/>
+	<page path="/numishare/[^\/]+/maps/fullscreen" model="xpl/models/solr/maps.xpl" view="xpl/views/pages/maps_fullscreen.xpl"/>
+	<page path="/numishare/[^\/]+/pages/(.*)" model="xpl/models/config.xpl" view="xpl/views/pages/pages.xpl"/>
+	<page path="/numishare/[^\/]+/search" model="xpl/models/solr/search.xpl" view="xpl/views/pages/search.xpl"/>
+	<page path="/numishare/[^\/]+/visualize" model="xpl/models/solr/search.xpl" view="xpl/views/pages/visualize.xpl"/>
+	<page path="/numishare/[^\/]+/" model="xpl/models/config.xpl" view="xpl/views/pages/index.xpl"/>
 	
 	<!-- **** APIs **** -->
-	<page path="/numishare/[^\/]+/apis/get" matcher="oxf:perl5-matcher" model="xpl/models/object/get-id.xpl" view="xpl/views/apis/get.xpl"/>	
-	<page path="/numishare/[^\/]+/apis/getNuds" matcher="oxf:perl5-matcher" view="xpl/models/xquery/aggregate-ids.xpl"/>
-	<page path="/numishare/[^\/]+/apis/search" matcher="oxf:perl5-matcher" model="xpl/models/solr/feed.xpl" view="xpl/views/apis/search.xpl"/>
+	<page path="/numishare/[^\/]+/apis/get" model="xpl/models/object/get-id.xpl" view="xpl/views/apis/get.xpl"/>	
+	<page path="/numishare/[^\/]+/apis/getNuds" view="xpl/models/xquery/aggregate-ids.xpl"/>
+	<page path="/numishare/[^\/]+/apis/search" model="xpl/models/solr/feed.xpl" view="xpl/views/apis/search.xpl"/>
 	
 	<!-- **** AGGREGATED OBJECTS / RDF EXPORT **** -->
-	<page path="/numishare/[^\/]+/ingest" matcher="oxf:perl5-matcher" model="xpl/models/xquery/aggregate-ids.xpl" view="xpl/views/serializations/object/solr.xpl"/>
-	<page path="/numishare/[^\/]+/nomisma.rdf" matcher="oxf:perl5-matcher" view="xpl/controllers/nomisma.xpl"/>	
-	<page path="/numishare/[^\/]+/pelagios.rdf" matcher="oxf:perl5-matcher" model="xpl/models/solr/pelagios.xpl" view="xpl/views/serializations/solr/rdf.xpl"/>
-	<page path="/numishare/[^\/]+/pelagios.void.rdf" matcher="oxf:perl5-matcher" model="xpl/models/config.xpl" view="xpl/views/serializations/config/rdf-void.xpl"/>
-	<page path="/numishare/[^\/]+/nomisma.void.rdf" matcher="oxf:perl5-matcher" model="xpl/models/config.xpl" view="xpl/views/serializations/config/rdf-void.xpl"/>
-	<page path="/numishare/[^\/]+/opensearch.xml" matcher="oxf:perl5-matcher" model="xpl/models/config.xpl" view="xpl/views/serializations/config/opensearch.xpl"/>
+	<page path="/numishare/[^\/]+/ingest" model="xpl/models/xquery/aggregate-ids.xpl" view="xpl/views/serializations/object/solr.xpl"/>
+	<page path="/numishare/[^\/]+/nomisma.rdf" view="xpl/controllers/nomisma.xpl"/>	
+	<page path="/numishare/[^\/]+/pelagios.rdf" model="xpl/models/solr/pelagios.xpl" view="xpl/views/serializations/solr/rdf.xpl"/>
+	<page path="/numishare/[^\/]+/pelagios.void.rdf" model="xpl/models/config.xpl" view="xpl/views/serializations/config/rdf-void.xpl"/>
+	<page path="/numishare/[^\/]+/nomisma.void.rdf" model="xpl/models/config.xpl" view="xpl/views/serializations/config/rdf-void.xpl"/>
+	<page path="/numishare/[^\/]+/opensearch.xml" model="xpl/models/config.xpl" view="xpl/views/serializations/config/opensearch.xpl"/>
 	
 	<!-- **** GEOGRAPHIC EXPORT **** -->
-	<page path="/numishare/[^\/]+/findspots.kml" matcher="oxf:perl5-matcher" model="xpl/models/solr/geographic-facets.xpl" view="xpl/views/serializations/solr/kml.xpl"/>	
-	<page path="/numishare/[^\/]+/hoards.kml" matcher="oxf:perl5-matcher" model="xpl/models/solr/geographic-docs.xpl" view="xpl/views/serializations/solr/kml.xpl"/>
-	<page path="/numishare/[^\/]+/hoards.json" matcher="oxf:perl5-matcher" model="xpl/models/solr/geographic-docs.xpl" view="xpl/views/serializations/solr/json-timemap.xpl"/>
-	<page path="/numishare/[^\/]+/mints.kml" matcher="oxf:perl5-matcher" model="xpl/models/solr/geographic-facets.xpl" view="xpl/views/serializations/solr/kml.xpl"/>
-	<page path="/numishare/[^\/]+/query.kml" matcher="oxf:perl5-matcher" model="xpl/models/solr/geographic-docs.xpl" view="xpl/views/serializations/solr/kml.xpl"/>
-	<page path="/numishare/[^\/]+/subjects.kml" matcher="oxf:perl5-matcher" model="xpl/models/solr/geographic-facets.xpl" view="xpl/views/serializations/solr/kml.xpl"/>
+	<page path="/numishare/[^\/]+/findspots.kml" model="xpl/models/solr/geographic-facets.xpl" view="xpl/views/serializations/solr/kml.xpl"/>	
+	<page path="/numishare/[^\/]+/hoards.kml" model="xpl/models/solr/geographic-docs.xpl" view="xpl/views/serializations/solr/kml.xpl"/>
+	<page path="/numishare/[^\/]+/hoards.json" model="xpl/models/solr/geographic-docs.xpl" view="xpl/views/serializations/solr/json-timemap.xpl"/>
+	<page path="/numishare/[^\/]+/mints.kml" model="xpl/models/solr/geographic-facets.xpl" view="xpl/views/serializations/solr/kml.xpl"/>
+	<page path="/numishare/[^\/]+/query.kml" model="xpl/models/solr/geographic-docs.xpl" view="xpl/views/serializations/solr/kml.xpl"/>
+	<page path="/numishare/[^\/]+/subjects.kml" model="xpl/models/solr/geographic-facets.xpl" view="xpl/views/serializations/solr/kml.xpl"/>
 	
 	<!-- **** CSV EXPORT **** -->
-	<page path="/numishare/[^\/]+/hoards.csv" matcher="oxf:perl5-matcher" model="xpl/models/config.xpl" view="xpl/views/apis/csv-hoards.xpl"/>
-	<page path="/numishare/[^\/]+/query.csv" matcher="oxf:perl5-matcher" model="xpl/models/solr/csv.xpl" view="xpl/views/serializations/solr/csv.xpl"/>
+	<page path="/numishare/[^\/]+/hoards.csv" model="xpl/models/config.xpl" view="xpl/views/apis/csv-hoards.xpl"/>
+	<page path="/numishare/[^\/]+/query.csv" model="xpl/models/solr/csv.xpl" view="xpl/views/serializations/solr/csv.xpl"/>
 	
 	<!-- **** AJAX **** -->	
-	<page path="/numishare/[^\/]+/compare_results" matcher="oxf:perl5-matcher" model="xpl/models/solr/compare_results.xpl" view="xpl/views/ajax/compare_results.xpl"/>
-	<page path="/numishare/[^\/]+/get_centuries" matcher="oxf:perl5-matcher" model="xpl/models/solr/get_centuries.xpl" view="xpl/views/ajax/get_centuries.xpl"/>	
-	<page path="/numishare/[^\/]+/get_decades" matcher="oxf:perl5-matcher" model="xpl/models/solr/get_decades.xpl"  view="xpl/views/ajax/get_decades.xpl"/>
-	<page path="/numishare/[^\/]+/get_facet_options" matcher="oxf:perl5-matcher" model="xpl/models/solr/get_facet_options.xpl" view="xpl/views/ajax/get_facet_options.xpl"/>
-	<page path="/numishare/[^\/]+/get_hier" matcher="oxf:perl5-matcher" model="xpl/models/solr/get_hier.xpl" view="xpl/views/ajax/get_hier.xpl"/>
-	<page path="/numishare/[^\/]+/get_hoard_quant" matcher="oxf:perl5-matcher" model="xpl/models/object/get-id.xpl" view="xpl/views/ajax/get_hoard_quant.xpl"/>
-	<page path="/numishare/[^\/]+/get_hoards" matcher="oxf:perl5-matcher" model="xpl/models/solr/get_hoards.xpl" view="xpl/views/ajax/get_hoards.xpl"/>	
-	<page path="/numishare/[^\/]+/get_search_facets" matcher="oxf:perl5-matcher" model="xpl/models/solr/get_search_facets.xpl" view="xpl/views/ajax/get_search_facets.xpl"/>	
-	<page path="/numishare/[^\/]+/get_vis_custom" matcher="oxf:perl5-matcher" model="xpl/models/solr/get_vis_custom.xpl" view="xpl/views/ajax/get_vis_custom.xpl"/>
-	<page path="/numishare/[^\/]+/get_vis_quant" matcher="oxf:perl5-matcher" model="xpl/models/solr/get_vis_quant.xpl" view="xpl/views/ajax/get_vis_quant.xpl"/>
-	<page path="/numishare/[^\/]+/results_ajax" matcher="oxf:perl5-matcher" model="xpl/models/solr/results_ajax.xpl" view="xpl/views/ajax/results_ajax.xpl"/>
+	<page path="/numishare/[^\/]+/compare_results" model="xpl/models/solr/compare_results.xpl" view="xpl/views/ajax/compare_results.xpl"/>
+	<page path="/numishare/[^\/]+/get_centuries" model="xpl/models/solr/get_centuries.xpl" view="xpl/views/ajax/get_centuries.xpl"/>	
+	<page path="/numishare/[^\/]+/get_decades" model="xpl/models/solr/get_decades.xpl"  view="xpl/views/ajax/get_decades.xpl"/>
+	<page path="/numishare/[^\/]+/get_facet_options" model="xpl/models/solr/get_facet_options.xpl" view="xpl/views/ajax/get_facet_options.xpl"/>
+	<page path="/numishare/[^\/]+/get_hier" model="xpl/models/solr/get_hier.xpl" view="xpl/views/ajax/get_hier.xpl"/>
+	<page path="/numishare/[^\/]+/get_hoard_quant" model="xpl/models/object/get-id.xpl" view="xpl/views/ajax/get_hoard_quant.xpl"/>
+	<page path="/numishare/[^\/]+/get_hoards" model="xpl/models/solr/get_hoards.xpl" view="xpl/views/ajax/get_hoards.xpl"/>	
+	<page path="/numishare/[^\/]+/get_search_facets" model="xpl/models/solr/get_search_facets.xpl" view="xpl/views/ajax/get_search_facets.xpl"/>	
+	<page path="/numishare/[^\/]+/get_vis_custom" model="xpl/models/solr/get_vis_custom.xpl" view="xpl/views/ajax/get_vis_custom.xpl"/>
+	<page path="/numishare/[^\/]+/get_vis_quant" model="xpl/models/solr/get_vis_quant.xpl" view="xpl/views/ajax/get_vis_quant.xpl"/>
+	<page path="/numishare/[^\/]+/results_ajax" model="xpl/models/solr/results_ajax.xpl" view="xpl/views/ajax/results_ajax.xpl"/>
 	
 	<!-- **** SPARQL WIDGET **** -->
-	<page path="/numishare/[^\/]+/sparql" matcher="oxf:perl5-matcher" model="xpl/models/sparql/widget.xpl" view="xpl/views/serializations/sparql/widget.xpl"/>
+	<page path="/numishare/[^\/]+/sparql" model="xpl/models/sparql/widget.xpl" view="xpl/views/serializations/sparql/widget.xpl"/>
 	
 	<!-- **** ROOT **** -->
 	<page path="/numishare/" view="xpl/root.xpl" id="index"/>
 	
 	<epilogue url="oxf:/config/epilogue.xpl"/>
-</config>
+</controller>
