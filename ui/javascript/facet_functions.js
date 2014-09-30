@@ -92,7 +92,7 @@ function getQuery() {
 //get the date range
 function getDateRange(collection_type) {
 	if (collection_type == 'hoard') {
-		var string = 'tpq_num:';
+		var string = 'taq_num:';
 	} else {
 		var string = 'year_num:';
 	}

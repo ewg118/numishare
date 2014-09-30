@@ -62,51 +62,38 @@
 	<!-- ************** SEARCH DROP-DOWN MENUS ************** -->
 	<xsl:template name="search_options">
 		<xsl:variable name="fields">
-			<xsl:text>fulltext,artist_facet,authority_facet,coinType_facet,deity_facet,denomination_facet,dynasty_facet,recordId,issuer_facet,legend_text,obv_leg_text,rev_leg_text,maker_facet,manufacture_facet,material_facet,mint_facet,objectType_facet,portrait_facet,reference_text,region_facet,type_text,obv_type_text,rev_type_text,year_num</xsl:text>
+			<xsl:choose>
+				<xsl:when test="$collection_type='hoard'">
+					<xsl:text>fulltext,artist_facet,authority_facet,taq_num,coinType_facet,deity_facet,denomination_facet,dynasty_facet,issuer_facet,legend_text,obv_leg_text,rev_leg_text,maker_facet,manufacture_facet,material_facet,mint_facet,objectType_facet,tpq_num,portrait_facet,recordId,reference_facet,region_facet,type_text,obv_type_text,rev_type_text,year_num</xsl:text>
+				</xsl:when>
+				<xsl:when test="$collection_type='cointype'">
+					<xsl:text>fulltext,artist_facet,authority_facet,coinType_facet,deity_facet,denomination_facet,dynasty_facet,issuer_facet,legend_text,obv_leg_text,rev_leg_text,maker_facet,manufacture_facet,material_facet,mint_facet,objectType_facet,portrait_facet,recordId,reference_facet,region_facet,type_text,obv_type_text,rev_type_text,year_num</xsl:text>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:text>fulltext,artist_facet,authority_facet,coinType_facet,deity_facet,denomination_facet,diameter_num,dynasty_facet,issuer_facet,legend_text,obv_leg_text,rev_leg_text,maker_facet,manufacture_facet,material_facet,mint_facet,objectType_facet,portrait_facet,recordId,reference_facet,region_facet,type_text,obv_type_text,rev_type_text,weight_num,year_num</xsl:text>
+				</xsl:otherwise>
+			</xsl:choose>
+			
 		</xsl:variable>
 
 		<xsl:for-each select="tokenize($fields, ',')">
-			<xsl:variable name="name" select="."/>
-			<xsl:variable name="root" select="substring-before($name, '_')"/>
+			<xsl:variable name="name" select="."/>	
 			<xsl:choose>
-				<xsl:when test="$collection_type='hoard'">
-					<xsl:if test="not($name='diameter_num') and not($name='weight_num') and not($name='year_num')">
-						<xsl:choose>
-							<!-- display only those search options when their facet equivalent has hits -->
-							<xsl:when test="$facets//lst[starts-with(@name, $root)][number(int[@name='numFacetTerms']) &gt; 0]">
-								<option value="{$name}" class="search_option">
-									<xsl:value-of select="numishare:normalize_fields($name, $lang)"/>
-								</option>
-							</xsl:when>
-							<!-- display those search options when they aren't connected to facets -->
-							<xsl:when test="not($facets//lst[starts-with(@name, $root)])">
-								<option value="{$name}" class="search_option">
-									<xsl:value-of select="numishare:normalize_fields($name, $lang)"/>
-								</option>
-							</xsl:when>
-						</xsl:choose>
-
+				<xsl:when test="contains($name, '_facet')">
+					<!-- display only those search options when their facet equivalent has hits -->
+					<xsl:if test="$facets//lst[@name=$name][number(int[@name='numFacetTerms']) &gt; 0]">
+						<option value="{$name}" class="search_option">
+							<xsl:value-of select="numishare:normalize_fields($name, $lang)"/>
+						</option>
 					</xsl:if>
 				</xsl:when>
 				<xsl:otherwise>
-					<xsl:if test="not($name='taq_num') and not($name='tpq_num')">
-						<xsl:choose>
-							<!-- display only those search options when their facet equivalent has hits -->
-							<xsl:when test="$facets//lst[starts-with(@name, $root)][number(int[@name='numFacetTerms']) &gt; 0]">
-								<option value="{$name}" class="search_option">
-									<xsl:value-of select="numishare:normalize_fields($name, $lang)"/>
-								</option>
-							</xsl:when>
-							<!-- display those search options when they aren't connected to facets -->
-							<xsl:when test="not($facets//lst[starts-with(@name, $root)])">
-								<option value="{$name}" class="search_option">
-									<xsl:value-of select="numishare:normalize_fields($name, $lang)"/>
-								</option>
-							</xsl:when>
-						</xsl:choose>
-					</xsl:if>
+					<!-- display those search options when they aren't connected to facets -->
+					<option value="{$name}" class="search_option">
+						<xsl:value-of select="numishare:normalize_fields($name, $lang)"/>
+					</option>
 				</xsl:otherwise>
-			</xsl:choose>
+			</xsl:choose>			
 		</xsl:for-each>
 	</xsl:template>
 </xsl:stylesheet>
