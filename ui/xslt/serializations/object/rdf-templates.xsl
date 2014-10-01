@@ -4,7 +4,7 @@
 	xmlns:nh="http://nomisma.org/nudsHoard" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:oa="http://www.w3.org/ns/oa#"
 	xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:pelagios="http://pelagios.github.io/vocab/terms#" xmlns:relations="http://pelagios.github.io/vocab/relations#"
 	xmlns:numishare="https://github.com/ewg118/numishare" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:mets="http://www.loc.gov/METS/" version="2.0">
-	
+
 	<!-- ************** OBJECT-TO-RDF **************** -->
 	<xsl:template name="rdf">
 		<rdf:RDF>
@@ -53,7 +53,7 @@
 		</rdf:RDF>
 	</xsl:template>
 
-	
+
 	<xsl:template match="nuds:nuds|nh:nudsHoard" mode="pelagios">
 		<xsl:variable name="id" select="descendant::*[local-name()='recordId']"/>
 		<!-- get timestamp of last modification date of the NUDS record -->
@@ -115,7 +115,7 @@
 		<xsl:text>(not yet developed)</xsl:text>
 	</xsl:template>
 
-	
+
 	<!-- PROCESS NUDS RECORDS INTO NOMISMA COMPLIANT RDF MODELS -->
 	<xsl:template match="nuds:nuds" mode="nomisma">
 		<xsl:variable name="id" select="descendant::*[local-name()='recordId']"/>
@@ -175,8 +175,13 @@
 								</xsl:element>
 							</xsl:for-each>
 							<!-- process typeDesc -->
-							<xsl:apply-templates select="nuds:descMeta/nuds:typeDesc" mode="nomisma"/>
+							<xsl:apply-templates select="nuds:descMeta/nuds:typeDesc" mode="nomisma">
+								<xsl:with-param name="id" select="$id"/>
+							</xsl:apply-templates>
 						</nm:type_series_item>
+						<xsl:apply-templates select="nuds:descMeta/nuds:typeDesc/nuds:obverse|nuds:descMeta/nuds:typeDesc/nuds:reverse" mode="nomisma">
+							<xsl:with-param name="id" select="$id"/>
+						</xsl:apply-templates>
 					</xsl:when>
 					<xsl:when test="@recordType='physical'">
 						<nm:coin rdf:about="{$url}id/{$id}">
@@ -290,39 +295,44 @@
 	</xsl:template>
 
 	<xsl:template match="nuds:typeDesc" mode="nomisma">
+		<xsl:param name="id"/>
 		<xsl:if test="nuds:objectType[@xlink:href]">
 			<nm:object_type rdf:resource="{nuds:objectType/@xlink:href}"/>
 		</xsl:if>
-		
+
 		<xsl:apply-templates select="nuds:material|nuds:denomination|nuds:manufacture" mode="nomisma"/>
 		<xsl:apply-templates select="descendant::nuds:geogname|descendant::nuds:persname|descendant::nuds:corpname" mode="nomisma"/>
 		<xsl:apply-templates select="nuds:date[@standardDate]|nuds:dateRange[child::node()/@standardDate]" mode="nomisma"/>
-		<xsl:apply-templates select="nuds:obverse|nuds:reverse" mode="nomisma"/>
+		<xsl:if test="nuds:obverse">
+			<nm:obverse rdf:resource="{$url}id/{$id}#obverse"/>
+		</xsl:if>
+		<xsl:if test="nuds:reverse">
+			<nm:reverse rdf:resource="{$url}id/{$id}#reverse"/>
+		</xsl:if>
 	</xsl:template>
-	
+
 	<xsl:template match="nuds:obverse|nuds:reverse" mode="nomisma">
-		<xsl:element name="nm:{local-name()}" namespace="http://nomisma.org/id/">
-			<rdf:Description>
-				<xsl:if test="nuds:legend">
-					<nm:legend>
-						<xsl:if test="string(@xml:lang)">
-							<xsl:attribute name="xml:lang" select="@xml:lang"/>
-						</xsl:if>
-						<xsl:value-of select="nuds:legend"/>
-					</nm:legend>
-				</xsl:if>
-				<xsl:for-each select="nuds:type/nuds:description">
-					<nm:description>
-						<xsl:if test="string(@xml:lang)">
-							<xsl:attribute name="xml:lang" select="@xml:lang"/>
-						</xsl:if>
-						<xsl:value-of select="."/>
-					</nm:description>
-				</xsl:for-each>
-			</rdf:Description>	
-		</xsl:element>
+		<xsl:param name="id"/>
+		<rdf:Description rdf:about="{$url}id/{$id}#{local-name()}">
+			<xsl:if test="nuds:legend">
+				<nm:legend>
+					<xsl:if test="string(@xml:lang)">
+						<xsl:attribute name="xml:lang" select="@xml:lang"/>
+					</xsl:if>
+					<xsl:value-of select="nuds:legend"/>
+				</nm:legend>
+			</xsl:if>
+			<xsl:for-each select="nuds:type/nuds:description">
+				<nm:description>
+					<xsl:if test="string(@xml:lang)">
+						<xsl:attribute name="xml:lang" select="@xml:lang"/>
+					</xsl:if>
+					<xsl:value-of select="."/>
+				</nm:description>
+			</xsl:for-each>
+		</rdf:Description>
 	</xsl:template>
-	
+
 	<xsl:template match="nuds:material|nuds:denomination|nuds:manufacture|nuds:geogname|nuds:persname|nuds:corpname" mode="nomisma">
 		<xsl:variable name="element" select="if (@xlink:role) then @xlink:role else local-name()"/>
 		<xsl:choose>
@@ -411,30 +421,8 @@
 							<xsl:attribute name="rdf:resource" select="$uri"/>
 						</xsl:element>
 					</xsl:for-each>
-					<xsl:for-each select="descendant::nh:geogname[@xlink:role='findspot'][string(@xlink:href)]">
-						<xsl:variable name="href" select="@xlink:href"/>
-						<nm:findspot>
-							<rdf:Description rdf:about="{@xlink:href}">
-								<xsl:if test="contains(@xlink:href, 'geonames.org')">
-									<xsl:variable name="geonames-url">
-										<xsl:text>http://api.geonames.org</xsl:text>
-									</xsl:variable>
-									<xsl:variable name="geonames_api_key" select="/content/config/geonames_api_key"/>
-									<xsl:variable name="geonameId" select="tokenize($href, '/')[4]"/>
-									<xsl:variable name="geonames_data" as="element()*">
-										<xml>
-											<xsl:copy-of select="document(concat($geonames-url, '/get?geonameId=', $geonameId, '&amp;username=', $geonames_api_key, '&amp;style=full'))"/>
-										</xml>
-									</xsl:variable>
-									<geo:lat>
-										<xsl:value-of select="$geonames_data//lat"/>
-									</geo:lat>
-									<geo:long>
-										<xsl:value-of select="$geonames_data//lng"/>
-									</geo:long>
-								</xsl:if>
-							</rdf:Description>
-						</nm:findspot>
+					<xsl:for-each select="descendant::nh:geogname[@xlink:role='findspot'][string(@xlink:href)]">						
+						<nm:findspot rdf:resource="{@xlink:href}"/>
 					</xsl:for-each>
 					<!-- closing date -->
 					<xsl:choose>
@@ -509,6 +497,30 @@
 						<nm:type_series_item rdf:resource="{.}"/>
 					</xsl:for-each>
 				</nm:hoard>
+
+				<xsl:for-each select="descendant::nh:geogname[@xlink:role='findspot'][string(@xlink:href)]">
+					<xsl:variable name="href" select="@xlink:href"/>
+					<rdf:Description rdf:about="{@xlink:href}">
+						<xsl:if test="contains(@xlink:href, 'geonames.org')">
+							<xsl:variable name="geonames-url">
+								<xsl:text>http://api.geonames.org</xsl:text>
+							</xsl:variable>
+							<xsl:variable name="geonames_api_key" select="/content/config/geonames_api_key"/>
+							<xsl:variable name="geonameId" select="tokenize($href, '/')[4]"/>
+							<xsl:variable name="geonames_data" as="element()*">
+								<xml>
+									<xsl:copy-of select="document(concat($geonames-url, '/get?geonameId=', $geonameId, '&amp;username=', $geonames_api_key, '&amp;style=full'))"/>
+								</xml>
+							</xsl:variable>
+							<geo:lat>
+								<xsl:value-of select="$geonames_data//lat"/>
+							</geo:lat>
+							<geo:long>
+								<xsl:value-of select="$geonames_data//lng"/>
+							</geo:long>
+						</xsl:if>
+					</rdf:Description>
+				</xsl:for-each>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
