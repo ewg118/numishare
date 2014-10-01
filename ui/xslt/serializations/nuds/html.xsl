@@ -34,12 +34,12 @@
 		<!-- below is a series of conditionals for forming the image boxes and displaying obverse and reverse images, iconography, and legends if they are available within the EAD document -->
 		<xsl:choose>
 			<xsl:when test="not($mode = 'compare')">
+				<xsl:call-template name="icons"/>
 				<xsl:choose>
 					<xsl:when test="$recordType='conceptual'">
 						<div class="row">
-							<div class="col-md-12">
-								<xsl:call-template name="icons"/>
-								<h1 id="object_title">
+							<div class="col-md-12">								
+								<h1 id="object_title" property="skos:prefLabel" lang="{$lang}">
 									<xsl:value-of select="normalize-space(nuds:descMeta/nuds:title)"/>
 								</h1>
 								<a href="#examples"><xsl:value-of select="numishare:normalizeLabel('display_examples', $lang)"/></a> | <a href="#charts"><xsl:value-of
@@ -47,13 +47,9 @@
 							</div>
 						</div>
 						<xsl:call-template name="nuds_content"/>
-						<div class="row">
-							<div class="col-md-12">
-								<xsl:if test="string($sparql_endpoint)">
-									<xsl:copy-of select="document(concat($request-uri, 'sparql?uri=', //config/uri_space, $id, '&amp;template=display'))/div[@id='objects']"/>
-								</xsl:if>
-							</div>
-						</div>
+						<xsl:if test="string($sparql_endpoint)">
+							<xsl:copy-of select="document(concat($request-uri, 'sparql?uri=', //config/uri_space, $id, '&amp;template=display'))/div[@id='examples']"/>
+						</xsl:if>
 						<div class="row">
 							<div class="col-md-12">
 								<xsl:if test="$recordType='conceptual' and string($sparql_endpoint) and //config/collection_type='cointype'">
@@ -67,7 +63,7 @@
 							<xsl:when test="$orientation = 'vertical'">
 								<div class="row">
 									<div class="col-md-12">
-										<h1 id="object_title">
+										<h1 id="object_title" property="dcterms:title">
 											<xsl:value-of select="normalize-space(nuds:descMeta/nuds:title)"/>
 										</h1>
 									</div>

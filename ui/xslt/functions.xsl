@@ -2333,6 +2333,20 @@
 			<xsl:text> B.C.</xsl:text>
 		</xsl:if>
 	</xsl:function>
+	
+	<!-- this function will normalize a NUDS element into a nomisma property for RDFa -->
+	<xsl:function name="numishare:normalizeProperty">
+		<xsl:param name="name"/>
+		
+		<xsl:choose>
+			<xsl:when test="$name='fromDate'">nm:start_date</xsl:when>
+			<xsl:when test="$name='toDate'">nm:end_date</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="concat('nm:', $name)"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:function>
+	
 	<xsl:function name="numishare:getNomismaLabel">
 		<xsl:param name="rdf" as="element()*"/>
 		<xsl:param name="lang"/>

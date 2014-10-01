@@ -115,13 +115,13 @@
 		<xsl:variable name="coin-count" select="count(descendant::res:result[contains(res:binding[@name='objectType']/res:uri, 'coin')]) +
 			count(descendant::res:result[not(child::res:binding[@name='objectType'])])"/>
 
-		<div id="objects" class="row">
-			<a name="examples"/>
+		<div class="row" id="examples" >			
 			<xsl:if test="$coin-count &gt; 0">
-				<h2>
-					<xsl:value-of select="numishare:normalizeLabel('display_examples', $lang)"/>
-				</h2>
-
+				<div class="col-md-12">
+					<h2>
+						<xsl:value-of select="numishare:normalizeLabel('display_examples', $lang)"/>
+					</h2>
+				</div>
 				<!-- choose between between nomisma (preferred) or internal links -->
 				<xsl:apply-templates select="descendant::res:result[not(contains(res:binding[@name='objectType'], 'hoard'))]" mode="display"/>
 			</xsl:if>

@@ -113,30 +113,46 @@
 							</xsl:otherwise>
 						</xsl:choose>
 					</xsl:variable>
-					<xsl:choose>
-						<xsl:when test="contains($facets, $field)">
-							<a href="{$display_path}results?q={$field}_facet:&#x022;{$value}&#x022;{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
-								<xsl:choose>
-									<xsl:when test="contains($href, 'geonames.org')">
-										<xsl:choose>
-											<xsl:when test="string(.)">
-												<xsl:value-of select="normalize-space(.)"/>
-											</xsl:when>
-											<xsl:otherwise>
-												<xsl:value-of select="$value"/>
-											</xsl:otherwise>
-										</xsl:choose>
-									</xsl:when>
-									<xsl:otherwise>
-										<xsl:value-of select="$value"/>
-									</xsl:otherwise>
-								</xsl:choose>
-							</a>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:value-of select="$value"/>
-						</xsl:otherwise>
-					</xsl:choose>
+					<span>
+						<xsl:if test="not($recordType='hoard')">
+							<xsl:attribute name="property" select="numishare:normalizeProperty($field)"/>
+							<xsl:if test="string($href)">
+								<xsl:attribute name="resource" select="$href"/>
+							</xsl:if>
+							<xsl:if test="@xml:lang">
+								<xsl:attribute name="lang" select="@xml:lang"/>
+							</xsl:if>
+							<xsl:if test="@standardDate">
+								<xsl:attribute name="content" select="@standardDate"/>
+								<xsl:attribute name="datatype">xsd:gYear</xsl:attribute>
+							</xsl:if>
+						</xsl:if>
+						<xsl:choose>
+							<xsl:when test="contains($facets, $field)">
+								<a href="{$display_path}results?q={$field}_facet:&#x022;{$value}&#x022;{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+									<xsl:choose>
+										<xsl:when test="contains($href, 'geonames.org')">
+											<xsl:choose>
+												<xsl:when test="string(.)">
+													<xsl:value-of select="normalize-space(.)"/>
+												</xsl:when>
+												<xsl:otherwise>
+													<xsl:value-of select="$value"/>
+												</xsl:otherwise>
+											</xsl:choose>
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:value-of select="$value"/>
+										</xsl:otherwise>
+									</xsl:choose>
+								</a>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:value-of select="$value"/>
+							</xsl:otherwise>
+						</xsl:choose>
+					</span>
+					
 					<!-- display title -->
 					<xsl:if test="string(@title)">
 						<i>
@@ -164,7 +180,7 @@
 					</xsl:if>-->
 					<!-- create links to resources -->
 					<xsl:if test="string($href)">
-						<a href="{$href}" target="_blank" title="{if (contains($href, 'geonames')) then 'geonames' else if (contains($href, 'nomisma')) then 'nomisma' else ''}">
+						<a href="{$href}" target="_blank" title="{$href}">							
 							<img src="{$include_path}/images/external.png" alt="external link" class="external_link"/>
 						</a>
 					</xsl:if>
@@ -195,6 +211,10 @@
 									</xsl:otherwise>
 								</xsl:choose>
 								<ul>
+									<xsl:if test="local-name()='obverse' or local-name()='reverse'">
+										<xsl:attribute name="rel" select="concat('nm:', local-name())"/>
+										<xsl:attribute name="resource" select="concat($url, 'id/', $id, '#', local-name())"/>
+									</xsl:if>
 									<xsl:apply-templates select="*" mode="descMeta"/>
 								</ul>
 							</li>
@@ -358,23 +378,41 @@
 	<xsl:template name="icons">
 		<div class="row pull-right icons">
 			<div class="col-md-12">
-				<!-- AddThis Button BEGIN -->
-				<div class="addthis_toolbox addthis_default_style">
-					<a class="addthis_button_preferred_1"/>
-					<a class="addthis_button_preferred_2"/>
-					<a class="addthis_button_preferred_3"/>
-					<a class="addthis_button_preferred_4"/>
-					<a class="addthis_button_compact"/>
-					<a class="addthis_counter addthis_bubble_style"/>
-					<xsl:text> | </xsl:text>
-					<a href="{$id}.xml">NUDS/XML</a>
-					<xsl:text> | </xsl:text>
-					<a href="{$id}.rdf">Nomisma RDF/XML</a>
-					<xsl:text> | </xsl:text>
-					<a href="{$id}.kml">KML</a>
-				</div>
-				<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=xa-525d63ef6a07cd89"/>
-				<!-- AddThis Button END -->
+				<ul class="list-inline">
+					<li>
+						<strong>SHARE:</strong>
+					</li>
+					<li>
+						<!-- AddThis Button BEGIN -->
+						<div class="addthis_toolbox addthis_default_style">
+							<a class="addthis_button_preferred_1"/>
+							<a class="addthis_button_preferred_2"/>
+							<a class="addthis_button_preferred_3"/>
+							<a class="addthis_button_preferred_4"/>
+							<a class="addthis_button_compact"/>
+							<a class="addthis_counter addthis_bubble_style"/>
+						</div>
+						<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=xa-525d63ef6a07cd89"/>
+					</li>
+					<li>
+						<strong>EXPORT:</strong>
+					</li>
+					<li>
+						<a href="{$id}.xml">NUDS/XML</a>
+					</li>
+					<li>
+						<a href="{$id}.rdf">RDF/XML</a>
+					</li>
+					<li>
+						<a href="{$id}.ttl">TTL</a>
+					</li>
+					<li>
+						<a href="{$id}.json">JSON-LD</a>
+					</li>
+					<li>
+						<a href="{$id}.kml">KML</a>
+					</li>					
+				</ul>
 			</div>
 		</div>
 	</xsl:template>

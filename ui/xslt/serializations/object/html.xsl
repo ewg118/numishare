@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:nuds="http://nomisma.org/nuds" xmlns:nh="http://nomisma.org/nudsHoard" xmlns:xlink="http://www.w3.org/1999/xlink"
-	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nm="http://nomisma.org/id/"
-	exclude-result-prefixes="#all" version="2.0">
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nm="http://nomisma.org/id/" exclude-result-prefixes="#all" version="2.0">
 	<xsl:include href="../../templates.xsl"/>
 	<xsl:include href="../../templates-visualize.xsl"/>
 	<xsl:include href="../../templates-analyze.xsl"/>
@@ -13,16 +12,16 @@
 	<!-- URL params -->
 	<xsl:variable name="collection-name" select="substring-before(substring-after(doc('input:request')/request/servlet-path, 'numishare/'), '/')"/>
 	<xsl:variable name="request-uri" select="concat('http://localhost:8080', substring-before(doc('input:request')/request/request-uri, 'id/'))"/>
-	<xsl:param name="lang" select="doc('input:request')/request/parameters/parameter[name='lang']/value"/>	
+	<xsl:param name="lang" select="doc('input:request')/request/parameters/parameter[name='lang']/value"/>
 	<xsl:param name="mode" select="doc('input:request')/request/parameters/parameter[name='mode']/value"/>
-	<xsl:param name="pipeline">display</xsl:param>	
-	
+	<xsl:param name="pipeline">display</xsl:param>
+
 	<!-- compare page params -->
 	<xsl:param name="q" select="doc('input:request')/request/parameters/parameter[name='q']/value"/>
 	<xsl:param name="start" select="doc('input:request')/request/parameters/parameter[name='start']/value"/>
 	<xsl:param name="image" select="doc('input:request')/request/parameters/parameter[name='image']/value"/>
 	<xsl:param name="side" select="doc('input:request')/request/parameters/parameter[name='side']/value"/>
-	
+
 	<!-- shared visualization/analysis params -->
 	<xsl:param name="type" select="doc('input:request')/request/parameters/parameter[name='type']/value"/>
 	<xsl:param name="chartType" select="doc('input:request')/request/parameters/parameter[name='chartType']/value"/>
@@ -44,7 +43,7 @@
 			<xsl:text>../</xsl:text>
 		</xsl:if>
 	</xsl:variable>
-	
+
 	<xsl:variable name="include_path" select="concat('http://', doc('input:request')/request/server-name, ':8080/orbeon/themes/', //config/theme/orbeon_theme)"/>
 
 	<xsl:variable name="recordType">
@@ -78,10 +77,10 @@
 					</xsl:for-each>
 				</list>
 			</xsl:variable>
-			
+
 			<xsl:for-each select="$type_series//type_series">
 				<xsl:variable name="type_series_uri" select="."/>
-				
+
 				<xsl:variable name="id-param">
 					<xsl:for-each select="$type_list//type_series_item[contains(., $type_series_uri)]">
 						<xsl:value-of select="substring-after(., 'id/')"/>
@@ -90,14 +89,14 @@
 						</xsl:if>
 					</xsl:for-each>
 				</xsl:variable>
-				
+
 				<xsl:if test="string-length($id-param) &gt; 0">
 					<xsl:for-each select="document(concat($type_series_uri, 'apis/getNuds?identifiers=', encode-for-uri($id-param)))//nuds:nuds">
 						<object xlink:href="{$type_series_uri}id/{nuds:control/nuds:recordId}">
 							<xsl:copy-of select="."/>
 						</object>
 					</xsl:for-each>
-				</xsl:if>				
+				</xsl:if>
 			</xsl:for-each>
 			<xsl:for-each select="descendant::nuds:typeDesc[not(string(@xlink:href))]">
 				<object>
@@ -112,8 +111,8 @@
 		<rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:nm="http://nomisma.org/id/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
 			xmlns:rdfa="http://www.w3.org/ns/rdfa#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#">
 			<xsl:variable name="id-param">
-				<xsl:for-each
-					select="distinct-values(descendant::*[not(local-name()='typeDesc') and not(local-name()='reference')][contains(@xlink:href, 'nomisma.org')]/@xlink:href|$nudsGroup/descendant::*[not(local-name()='object') and not(local-name()='typeDesc')][contains(@xlink:href, 'nomisma.org')]/@xlink:href)">
+				<xsl:for-each select="distinct-values(descendant::*[not(local-name()='typeDesc') and not(local-name()='reference')][contains(@xlink:href,
+					'nomisma.org')]/@xlink:href|$nudsGroup/descendant::*[not(local-name()='object') and not(local-name()='typeDesc')][contains(@xlink:href, 'nomisma.org')]/@xlink:href)">
 					<xsl:value-of select="substring-after(., 'id/')"/>
 					<xsl:if test="not(position()=last())">
 						<xsl:text>|</xsl:text>
@@ -211,7 +210,11 @@
 		<xsl:choose>
 			<!-- regular HTML display mode-->
 			<xsl:when test="not(string($mode))">
-				<html>
+				<html prefix="geo: http://www.w3.org/2003/01/geo/wgs84_pos# foaf: http://xmlns.com/foaf/0.1/ dcterms: http://purl.org/dc/terms/ xsd: http://www.w3.org/2001/XMLSchema# nm:
+					http://nomisma.org/id/ ecrm: http://erlangen-crm.org/current/ rdf: http://www.w3.org/1999/02/22-rdf-syntax-ns# skos: http://www.w3.org/2004/02/skos/core#">
+					<xsl:if test="string($lang)">
+						<xsl:attribute name="lang" select="$lang"/>
+					</xsl:if>
 					<head>
 						<xsl:call-template name="generic_head"/>
 						<xsl:choose>
@@ -256,13 +259,13 @@
 								<script type="text/javascript" src="{$include_path}/javascript/timeline-2.3.0.js"/>
 								<link type="text/css" href="{$include_path}/css/timeline-2.3.0.css" rel="stylesheet"/>
 								<script type="text/javascript" src="{$include_path}/javascript/timemap_full.pack.js"/>
-								<script type="text/javascript" src="{$include_path}/javascript/param.js"/>								
+								<script type="text/javascript" src="{$include_path}/javascript/param.js"/>
 							</xsl:when>
 						</xsl:choose>
 						<link type="text/css" href="{$include_path}/css/style.css" rel="stylesheet"/>
 					</head>
 					<body>
-						<xsl:call-template name="header"/>						
+						<xsl:call-template name="header"/>
 						<xsl:call-template name="display"/>
 						<xsl:call-template name="footer"/>
 						<div class="hidden">
@@ -308,9 +311,9 @@
 		<!-- alternates -->
 		<link rel="alternate" type="application/xml" href="{concat($url, 'id/', $id)}.xml"/>
 		<link rel="alternate" type="application/rdf+xml" href="{concat($url, 'id/', $id)}.rdf"/>
-		<xsl:if test="$has_mint_geo = 'true' or $has_findspot_geo = 'true'">
-			<link rel="alternate" type="application/vnd.google-earth.kml+xml" href="{concat($url, 'collection/', $id)}.kml"/>
-		</xsl:if>
+		<link rel="alternate" type="application/json" href="{concat($url, 'id/', $id)}.json"/>
+		<link rel="alternate" type="text/turtle" href="{concat($url, 'id/', $id)}.ttl"/>
+		<link rel="alternate" type="application/vnd.google-earth.kml+xml" href="{concat($url, 'collection/', $id)}.kml"/>
 		<!-- CSS -->
 		<link rel="shortcut icon" type="image/x-icon" href="{$include_path}/images/favicon.png"/>
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"/>
@@ -336,7 +339,14 @@
 				</xsl:choose>
 			</xsl:when>
 			<xsl:otherwise>
-				<div class="container-fluid">
+				<xsl:variable name="typeof">
+					<xsl:choose>
+						<xsl:when test="$recordType='hoard'">nm:hoard</xsl:when>
+						<xsl:when test="$recordType='conceptual'">nm:type_series_item</xsl:when>
+						<xsl:when test="$recordType='physical'">nm:coin</xsl:when>
+					</xsl:choose>
+				</xsl:variable>
+				<div class="container-fluid" typeof="{$typeof}" about="{concat($url, 'id/', $id)}">
 					<xsl:choose>
 						<xsl:when test="count(/content/*[local-name()='nuds']) &gt; 0">
 							<xsl:call-template name="nuds"/>

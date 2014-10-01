@@ -229,9 +229,17 @@
 							<xsl:apply-templates select="nuds:descMeta/nuds:physDesc" mode="nomisma"/>
 							<!-- findspot-->
 							<xsl:apply-templates select="nuds:descMeta/nuds:findspotDesc" mode="nomisma"/>
-							<!-- images -->
-							<xsl:apply-templates select="nuds:digRep/mets:fileSec" mode="nomisma"/>
+							<xsl:if test="descendant::mets:fileGrp[@USE='obverse']">
+								<nm:obverse rdf:resource="{$url}id/{$id}#obverse"/>
+							</xsl:if>
+							<xsl:if test="descendant::mets:fileGrp[@USE='reverse']">
+								<nm:reverse rdf:resource="{$url}id/{$id}#reverse"/>
+							</xsl:if>							
 						</nm:coin>
+						<!-- images -->
+						<xsl:apply-templates select="nuds:digRep/mets:fileSec" mode="nomisma">
+							<xsl:with-param name="id" select="$id"/>
+						</xsl:apply-templates>
 					</xsl:when>
 				</xsl:choose>
 			</xsl:otherwise>
@@ -239,44 +247,47 @@
 	</xsl:template>
 
 	<xsl:template match="mets:fileSec" mode="nomisma">
+		<xsl:param name="id"/>
+
 		<xsl:for-each select="mets:fileGrp">
 			<xsl:variable name="side" select="@USE"/>
-			<xsl:element name="nm:{$side}">
-				<rdf:Description>
-					<xsl:for-each select="mets:file">
-						<xsl:choose>
-							<xsl:when test="@USE='thumbnail'">
-								<foaf:thumbnail>
-									<xsl:attribute name="rdf:resource">
-										<xsl:choose>
-											<xsl:when test="contains(mets:FLocat/@xlink:href, 'http://')">
-												<xsl:value-of select="mets:FLocat/@xlink:href"/>
-											</xsl:when>
-											<xsl:otherwise>
-												<xsl:value-of select="concat($url, mets:FLocat/@xlink:href)"/>
-											</xsl:otherwise>
-										</xsl:choose>
-									</xsl:attribute>
-								</foaf:thumbnail>
-							</xsl:when>
-							<xsl:when test="@USE='reference'">
-								<foaf:depiction>
-									<xsl:attribute name="rdf:resource">
-										<xsl:choose>
-											<xsl:when test="contains(mets:FLocat/@xlink:href, 'http://')">
-												<xsl:value-of select="mets:FLocat/@xlink:href"/>
-											</xsl:when>
-											<xsl:otherwise>
-												<xsl:value-of select="concat($url, mets:FLocat/@xlink:href)"/>
-											</xsl:otherwise>
-										</xsl:choose>
-									</xsl:attribute>
-								</foaf:depiction>
-							</xsl:when>
-						</xsl:choose>
-					</xsl:for-each>
-				</rdf:Description>
-			</xsl:element>
+			<rdf:Description rdf:about="{$url}id/{$id}#{$side}">
+				<xsl:for-each select="mets:file">
+					<xsl:choose>
+						<xsl:when test="@USE='thumbnail'">
+							<foaf:thumbnail>
+								<xsl:attribute name="rdf:resource">
+									<xsl:choose>
+										<xsl:when test="contains(mets:FLocat/@xlink:href, 'http://')">
+											<xsl:value-of select="mets:FLocat/@xlink:href"/>
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:value-of select="concat($url, mets:FLocat/@xlink:href)"/>
+										</xsl:otherwise>
+									</xsl:choose>
+								</xsl:attribute>
+							</foaf:thumbnail>
+						</xsl:when>
+						<xsl:when test="@USE='reference'">
+							<foaf:depiction>
+								<xsl:attribute name="rdf:resource">
+									<xsl:choose>
+										<xsl:when test="contains(mets:FLocat/@xlink:href, 'http://')">
+											<xsl:value-of select="mets:FLocat/@xlink:href"/>
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:value-of select="concat($url, mets:FLocat/@xlink:href)"/>
+										</xsl:otherwise>
+									</xsl:choose>
+								</xsl:attribute>
+							</foaf:depiction>
+						</xsl:when>
+					</xsl:choose>
+				</xsl:for-each>
+			</rdf:Description>
+			<!--<xsl:element name="nm:{$side}">
+				
+			</xsl:element>-->
 		</xsl:for-each>
 	</xsl:template>
 
@@ -421,7 +432,7 @@
 							<xsl:attribute name="rdf:resource" select="$uri"/>
 						</xsl:element>
 					</xsl:for-each>
-					<xsl:for-each select="descendant::nh:geogname[@xlink:role='findspot'][string(@xlink:href)]">						
+					<xsl:for-each select="descendant::nh:geogname[@xlink:role='findspot'][string(@xlink:href)]">
 						<nm:findspot rdf:resource="{@xlink:href}"/>
 					</xsl:for-each>
 					<!-- closing date -->

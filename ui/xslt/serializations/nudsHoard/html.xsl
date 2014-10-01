@@ -12,8 +12,7 @@
 	</xsl:template>
 	<xsl:template match="nh:nudsHoard">
 		<xsl:call-template name="icons"/>
-		<xsl:call-template name="nudsHoard_content"/>
-		<xsl:call-template name="icons"/>
+		<xsl:call-template name="nudsHoard_content"/>		
 	</xsl:template>
 	<xsl:template name="nudsHoard_content">
 		<xsl:variable name="title">
@@ -35,7 +34,7 @@
 		</xsl:variable>
 		<div class="row">
 			<div class="col-md-12">
-				<h1>
+				<h1 property="dcterms:title">
 					<xsl:choose>
 						<xsl:when test="string($title)">
 							<xsl:value-of select="$title"/>
