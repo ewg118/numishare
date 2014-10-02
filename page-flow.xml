@@ -31,7 +31,7 @@
 	
 	<!-- **** SERIALIZATIONS **** -->	
 	<!-- Solr -->
-	<page path="/numishare/[^\/]+/results" model="xpl/models/solr/results.xpl" view="xpl/views/serializations/solr/html.xpl"/>
+	<page path="/numishare/[^\/]+/results" model="xpl/models/solr/results.xpl" view="xpl/controllers/conneg-results.xpl"/>
 	<page path="/numishare/[^\/]+/feed/" model="xpl/models/solr/feed.xpl" view="xpl/views/serializations/solr/atom.xpl"/>
 	
 	<!-- id -->

@@ -39,7 +39,10 @@
 					<xsl:when test="$recordType='conceptual'">
 						<div class="row">
 							<div class="col-md-12">								
-								<h1 id="object_title" property="skos:prefLabel" lang="{$lang}">
+								<h1 id="object_title" property="skos:prefLabel">
+									<xsl:if test="string(nuds:descMeta/nuds:title/@xml:lang)">
+										<xsl:attribute name="lang" select="nuds:descMeta/nuds:title/@xml:lang"/>
+									</xsl:if>
 									<xsl:value-of select="normalize-space(nuds:descMeta/nuds:title)"/>
 								</h1>
 								<a href="#examples"><xsl:value-of select="numishare:normalizeLabel('display_examples', $lang)"/></a> | <a href="#charts"><xsl:value-of
@@ -64,6 +67,9 @@
 								<div class="row">
 									<div class="col-md-12">
 										<h1 id="object_title" property="dcterms:title">
+											<xsl:if test="string(nuds:descMeta/nuds:title/@xml:lang)">
+												<xsl:attribute name="lang" select="nuds:descMeta/nuds:title/@xml:lang"/>
+											</xsl:if>
 											<xsl:value-of select="normalize-space(nuds:descMeta/nuds:title)"/>
 										</h1>
 									</div>
@@ -98,7 +104,10 @@
 
 								<div class="row">
 									<div class="col-md-12">
-										<h1 id="object_title">
+										<h1 id="object_title" property="dcterms:title">
+											<xsl:if test="string(nuds:descMeta/nuds:title/@xml:lang)">
+												<xsl:attribute name="lang" select="nuds:descMeta/nuds:title/@xml:lang"/>
+											</xsl:if>
 											<xsl:value-of select="normalize-space(nuds:descMeta/nuds:title)"/>
 										</h1>
 									</div>
