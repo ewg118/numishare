@@ -83,7 +83,7 @@
 						<div>
 							<h3>Individual Records</h3>
 							<p>Numishare supports delivery of individual records in a variety of models and serializations through both REST and content negotiation. Content negotiation (with the
-								accept header) requests should be sent to the URI space <xsl:value-of select="//uri_space"/>. Requesting an unsupported content type will result in an HTTP 406: Not
+								accept header) requests should be sent to the URI space <xsl:value-of select="concat(/content/config/url, 'id/')"/>. Requesting an unsupported content type will result in an HTTP 406: Not
 								Acceptable error.</p>
 							<table class="table">
 								<thead>
@@ -98,7 +98,7 @@
 									<tr>
 										<td>HTML</td>
 										<td>
-											<xsl:value-of select="concat(//uri_space, '{$id}')"/>
+											<xsl:value-of select="concat(/content/config/url, 'id/{$id}')"/>
 										</td>
 										<td>
 											<code>text/html</code>
@@ -107,7 +107,7 @@
 									<tr>
 										<td>NUDS/XML</td>
 										<td>
-											<xsl:value-of select="concat(//uri_space, '{$id}.xml')"/>
+											<xsl:value-of select="concat(/content/config/url, 'id/{$id}.xml')"/>
 										</td>
 										<td>
 											<code>application/xml</code>
@@ -116,7 +116,7 @@
 									<tr>
 										<td>KML</td>
 										<td>
-											<xsl:value-of select="concat(//uri_space, '{$id}.kml')"/>
+											<xsl:value-of select="concat(/content/config/url, 'id/{$id}.kml')"/>
 										</td>
 										<td>
 											<code>application/vnd.google-earth.kml+xml</code>
@@ -125,7 +125,7 @@
 									<tr>
 										<td>RDF/XML</td>
 										<td>
-											<xsl:value-of select="concat(//uri_space, '{$id}.rdf')"/>
+											<xsl:value-of select="concat(/content/config/url, 'id/{$id}.rdf')"/>
 										</td>
 										<td>
 											<code>application/rdf+xml</code>
@@ -134,7 +134,7 @@
 									<tr>
 										<td>Turtle</td>
 										<td>
-											<xsl:value-of select="concat(//uri_space, '{$id}.ttl')"/>
+											<xsl:value-of select="concat(/content/config/url, 'id/{$id}.ttl')"/>
 										</td>
 										<td>
 											<code>text/turtle</code>
@@ -143,7 +143,7 @@
 									<tr>
 										<td>JSON-LD</td>
 										<td>
-											<xsl:value-of select="concat(//uri_space, '{$id}.json')"/>
+											<xsl:value-of select="concat(/content/config/url, 'id/{$id}.json')"/>
 										</td>
 										<td>
 											<code>application/json</code>
