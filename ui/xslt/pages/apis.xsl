@@ -70,7 +70,7 @@
 							<h3>Get NUDS</h3>
 							<p>Get an aggregated NUDS/XML serialization based on the recordIds in the collection.<br/>
 								<b>Webservice Type</b> : REST<br/>
-								<b>Url</b>: <xsl:value-of select="concat(/content/config/url, 'getNuds?')"/><br/>
+								<b>Url</b>: <xsl:value-of select="concat(/content/config/url, 'apis/getNuds?')"/><br/>
 								<b>Parameters</b> : identifiers (recordIds divided by a pipe '|')<br/>
 								<b>Result</b> : returns NUDS/XML records aggregated in a nudsGroup root element.<br/>
 								<b>Example</b>: <a href="apis/getNuds?identifiers={string-join(//doc/str[@name='recordId'], '|')}">apis/getNuds?identifiers=<xsl:value-of
