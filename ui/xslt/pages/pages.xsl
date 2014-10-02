@@ -28,7 +28,7 @@
 				<link type="text/css" href="{$include_path}/css/style.css" rel="stylesheet"/>
 				<xsl:if test="string(/config/google_analytics)">
 					<script type="text/javascript">
-						<xsl:value-of select="//config/google_analytics"/>
+						<xsl:value-of select="/config/google_analytics"/>
 					</script>
 				</xsl:if>
 			</head>

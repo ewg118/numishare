@@ -46,6 +46,7 @@
 	
 	<!-- **** PAGES **** -->	
 	<page path="/numishare/[^\/]+/analyze" model="xpl/models/solr/search.xpl" view="xpl/views/pages/analyze.xpl"/>
+	<page path="/numishare/[^\/]+/apis" model="xpl/models/solr/apis.xpl" view="xpl/views/pages/apis.xpl"/>
 	<page path="/numishare/[^\/]+/compare" model="xpl/models/solr/search.xpl" view="xpl/views/pages/compare.xpl"/>
 	<page path="/numishare/[^\/]+/contributors" model="xpl/models/sparql/contributors.xpl" view="xpl/views/pages/contributors.xpl"/>	
 	<page path="/numishare/[^\/]+/maps" model="xpl/models/solr/maps.xpl" view="xpl/views/pages/maps.xpl"/>
