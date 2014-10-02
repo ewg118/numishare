@@ -49,14 +49,14 @@
 		</p:when>
 		<p:when test="content-type='json-ld'">
 			<p:processor name="oxf:pipeline">
-				<p:input name="config" href="../serializations/rdf/json-ld.xpl"/>	
+				<p:input name="config" href="../views/serializations/rdf/json-ld.xpl"/>	
 				<p:input name="data" href="#data"/>				
 				<p:output name="data" ref="data"/>
 			</p:processor>
 		</p:when>
 		<p:when test="content-type='turtle'">
 			<p:processor name="oxf:pipeline">
-				<p:input name="config" href="../serializations/rdf/ttl.xpl"/>
+				<p:input name="config" href="../views/serializations/rdf/ttl.xpl"/>
 				<p:input name="data" href="#data"/>				
 				<p:output name="data" ref="data"/>
 			</p:processor>
