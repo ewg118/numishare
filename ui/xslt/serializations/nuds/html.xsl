@@ -346,7 +346,7 @@
 						</ul>
 					</xsl:when>
 					<xsl:otherwise>
-						<p>Source: <a href="{@xlink:href}"><xsl:value-of select="@xlink:href"/></a></p>
+						<p>Source: <a rel="nm:findspot" href="{@xlink:href}"><xsl:value-of select="@xlink:href"/></a></p>
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
@@ -384,7 +384,7 @@
 				<xsl:value-of select="."/>
 			</a>
 			<xsl:if test="string(@xlink:href)">
-				<a href="{@xlink:href}" target="_blank">
+				<a rel="dcterms:subject" href="{@xlink:href}" target="_blank">
 					<img src="{$include_path}/images/external.png" alt="external link" class="external_link"/>
 				</a>
 			</xsl:if>
@@ -411,6 +411,15 @@
 			</ul>
 		</li>
 	</xsl:template>
+	
+	<xsl:template match="nuds:descripton|nuds:legend" mode="physical">
+		<span property="{numishare:normalizeProperty(local-name())}">
+			<xsl:if test="@xml:lang">
+				<xsl:attribute name="lang" select="@xml:lang"/>
+			</xsl:if>
+			<xsl:value-of select="."/>
+		</span>
+	</xsl:template>
 
 	<xsl:template name="obverse_image">
 		<xsl:variable name="obverse_image">
@@ -424,14 +433,14 @@
 			<xsl:when test="$nudsGroup//nuds:typeDesc/nuds:obverse">
 				<xsl:for-each select="$nudsGroup//nuds:typeDesc/nuds:obverse">
 					<xsl:variable name="side" select="local-name()"/>
-					<div class="reference_image">
+					<div class="reference_image" rel="nm:obverse">
 						<xsl:if test="string($obverse_image)">
 							<xsl:choose>
 								<xsl:when test="contains($obverse_image, 'http://')">
-									<img src="{$obverse_image}" alt="{$side}"/>
+									<img src="{$obverse_image}" property="foaf:depiction" alt="{$side}"/>
 								</xsl:when>
 								<xsl:otherwise>
-									<img src="{$display_path}{$obverse_image}" alt="{$side}"/>
+									<img src="{$display_path}{$obverse_image}" property="foaf:depiction" alt="{$side}"/>
 								</xsl:otherwise>
 							</xsl:choose>
 							<br/>
@@ -443,11 +452,11 @@
 								<xsl:text>: </xsl:text>
 							</xsl:if>
 						</b>
-						<xsl:apply-templates select="nuds:legend"/>
+						<xsl:apply-templates select="nuds:legend" mode="physical"/>
 						<xsl:if test="string(nuds:legend) and string(nuds:type)">
 							<xsl:text> - </xsl:text>
 						</xsl:if>
-						<xsl:apply-templates select="nuds:type"/>
+						<xsl:apply-templates select="nuds:type/nuds:description" mode="physical"/>
 					</div>
 				</xsl:for-each>
 			</xsl:when>
@@ -455,7 +464,7 @@
 				<!-- otherwise only display the image -->
 				<xsl:if test="string($obverse_image)">
 					<div class="reference_image">
-						<img src="{if (contains($obverse_image, 'http://')) then $obverse_image else concat($display_path, $obverse_image)}" alt="obverse"/>
+						<img src="{if (contains($obverse_image, 'http://')) then $obverse_image else concat($display_path, $obverse_image)}" property="foaf:depiction" alt="{$side}"/>
 					</div>
 				</xsl:if>
 			</xsl:otherwise>
@@ -474,14 +483,14 @@
 			<xsl:when test="$nudsGroup//nuds:typeDesc/nuds:reverse">
 				<xsl:for-each select="$nudsGroup//nuds:typeDesc/nuds:reverse">
 					<xsl:variable name="side" select="local-name()"/>
-					<div class="reference_image">
+					<div class="reference_image" rel="nm:reverse">
 						<xsl:if test="string($reverse_image)">
 							<xsl:choose>
 								<xsl:when test="contains($reverse_image, 'http://')">
-									<img src="{$reverse_image}" alt="{$side}"/>
+									<img src="{$reverse_image}" property="foaf:depiction" alt="{$side}"/>
 								</xsl:when>
 								<xsl:otherwise>
-									<img src="{$display_path}{$reverse_image}" alt="{$side}"/>
+									<img src="{$display_path}{$reverse_image}" property="foaf:depiction" alt="{$side}"/>
 								</xsl:otherwise>
 							</xsl:choose>
 							<br/>
@@ -493,11 +502,11 @@
 								<xsl:text>: </xsl:text>
 							</xsl:if>
 						</b>
-						<xsl:apply-templates select="nuds:legend"/>
+						<xsl:apply-templates select="nuds:legend" mode="physical"/>
 						<xsl:if test="string(nuds:legend) and string(nuds:type)">
 							<xsl:text> - </xsl:text>
 						</xsl:if>
-						<xsl:apply-templates select="nuds:type"/>
+						<xsl:apply-templates select="nuds:type/nuds:description" mode="physical"/>
 					</div>
 				</xsl:for-each>
 			</xsl:when>
@@ -505,7 +514,7 @@
 				<!-- otherwise only display the image -->
 				<xsl:if test="string($reverse_image)">
 					<div class="reference_image">
-						<img src="{if (contains($reverse_image, 'http://')) then $reverse_image else concat($display_path, $reverse_image)}" alt="reverse"/>
+						<img src="{if (contains($reverse_image, 'http://')) then $reverse_image else concat($display_path, $reverse_image)}" property="foaf:depiction" alt="{$side}"/>
 					</div>
 				</xsl:if>
 			</xsl:otherwise>

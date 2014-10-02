@@ -12,7 +12,7 @@
 	</xsl:template>
 	<xsl:template match="nh:nudsHoard">
 		<xsl:call-template name="icons"/>
-		<xsl:call-template name="nudsHoard_content"/>		
+		<xsl:call-template name="nudsHoard_content"/>
 	</xsl:template>
 	<xsl:template name="nudsHoard_content">
 		<xsl:variable name="title">
@@ -228,7 +228,16 @@
 					</xsl:variable>
 					<li>
 						<b><xsl:value-of select="numishare:regularize_node('closing_date', $lang)"/>: </b>
-						<xsl:value-of select="nh:normalize_date($dates//date[last()], $dates//date[last()])"/>
+						<span property="nm:closing_date" content="{format-number($dates//date[last()], '0000')}" datatype="xsd:gYear">
+							<xsl:choose>
+								<xsl:when test="$dates//date[last()] &lt; 1">
+									<xsl:value-of select="nh:normalize_date($dates//date[last()]-1, $dates//date[last()]-1)"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:value-of select="nh:normalize_date($dates//date[last()], $dates//date[last()])"/>
+								</xsl:otherwise>
+							</xsl:choose>
+						</span>
 					</li>
 				</xsl:if>
 				<xsl:variable name="total-counts" as="element()*">
@@ -269,15 +278,17 @@
 				<xsl:if test="count($denominations//*[local-name()='name']) &gt; 0">
 					<li>
 						<b><xsl:value-of select="numishare:regularize_node('description', $lang)"/>: </b>
-						<xsl:for-each select="$denominations//*[local-name()='name']">
-							<xsl:sort select="@count" order="descending" data-type="number"/>
-							<xsl:value-of select="."/>
-							<xsl:text>: </xsl:text>
-							<xsl:value-of select="@count"/>
-							<xsl:if test="not(position()=last())">
-								<xsl:text>, </xsl:text>
-							</xsl:if>
-						</xsl:for-each>
+						<span property="dcterms:description">
+							<xsl:for-each select="$denominations//*[local-name()='name']">
+								<xsl:sort select="@count" order="descending" data-type="number"/>
+								<xsl:value-of select="."/>
+								<xsl:text>: </xsl:text>
+								<xsl:value-of select="@count"/>
+								<xsl:if test="not(position()=last())">
+									<xsl:text>, </xsl:text>
+								</xsl:if>
+							</xsl:for-each>
+						</span>
 					</li>
 				</xsl:if>
 			</xsl:if>
@@ -324,7 +335,7 @@
 			<td>
 				<xsl:if test="string($typeDesc_resource)">
 					<h3>
-						<a href="{$typeDesc_resource}" target="_blank">
+						<a rel="nm:type_series_item" href="{$typeDesc_resource}" target="_blank">
 							<xsl:value-of select="$nudsGroup//object[@xlink:href = $typeDesc_resource]/nuds:nuds/nuds:descMeta/nuds:title"/>
 						</a>
 					</h3>

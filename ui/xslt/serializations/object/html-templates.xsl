@@ -32,7 +32,7 @@
 			<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
 		</h2>
 		<xsl:if test="string($typeDesc_resource)">
-			<p>Source: <a href="{$typeDesc_resource}"><xsl:value-of select="$nudsGroup//object[@xlink:href = $typeDesc_resource]/nuds:nuds/nuds:descMeta/nuds:title"/></a></p>
+			<p>Source: <a href="{$typeDesc_resource}" rel="nm:type_series_item"><xsl:value-of select="$nudsGroup//object[@xlink:href = $typeDesc_resource]/nuds:nuds/nuds:descMeta/nuds:title"/></a></p>
 		</xsl:if>
 		<ul>
 			<xsl:apply-templates mode="descMeta"/>
@@ -113,46 +113,38 @@
 							</xsl:otherwise>
 						</xsl:choose>
 					</xsl:variable>
-					<span>
-						<xsl:if test="not($recordType='hoard')">
-							<xsl:attribute name="property" select="numishare:normalizeProperty($field)"/>
-							<xsl:if test="string($href)">
-								<xsl:attribute name="resource" select="$href"/>
-							</xsl:if>
-							<xsl:if test="@xml:lang">
-								<xsl:attribute name="lang" select="@xml:lang"/>
-							</xsl:if>
-							<xsl:if test="@standardDate">
-								<xsl:attribute name="content" select="@standardDate"/>
-								<xsl:attribute name="datatype">xsd:gYear</xsl:attribute>
-							</xsl:if>
-						</xsl:if>
-						<xsl:choose>
-							<xsl:when test="contains($facets, $field)">
-								<a href="{$display_path}results?q={$field}_facet:&#x022;{$value}&#x022;{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
-									<xsl:choose>
-										<xsl:when test="contains($href, 'geonames.org')">
-											<xsl:choose>
-												<xsl:when test="string(.)">
-													<xsl:value-of select="normalize-space(.)"/>
-												</xsl:when>
-												<xsl:otherwise>
-													<xsl:value-of select="$value"/>
-												</xsl:otherwise>
-											</xsl:choose>
-										</xsl:when>
-										<xsl:otherwise>
-											<xsl:value-of select="$value"/>
-										</xsl:otherwise>
-									</xsl:choose>
-								</a>
-							</xsl:when>
-							<xsl:otherwise>
-								<xsl:value-of select="$value"/>
-							</xsl:otherwise>
-						</xsl:choose>
-					</span>
 					
+					<xsl:choose>
+						<xsl:when test="not(ancestor::nuds:typeDesc/@xlink:href) and not(ancestor::nuds:refDesc) and not(@xlink:href)">
+							<span>			
+								<xsl:attribute name="property" select="numishare:normalizeProperty(if(@xlink:role) then @xlink:role else local-name())"/>
+								<xsl:if test="@xml:lang">
+									<xsl:attribute name="lang" select="@xml:lang"/>
+								</xsl:if>
+								<xsl:if test="@standardDate">
+									<xsl:attribute name="content" select="@standardDate"/>
+									<xsl:attribute name="datatype">xsd:gYear</xsl:attribute>
+								</xsl:if>							
+								<xsl:call-template name="display-label">
+									<xsl:with-param name="facets" select="$facets"/>
+									<xsl:with-param name="field" select="$field"/>
+									<xsl:with-param name="value" select="$value"/>
+									<xsl:with-param name="href" select="$href"/>
+								</xsl:call-template>
+							</span>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:call-template name="display-label">
+								<xsl:with-param name="facets" select="$facets"/>
+								<xsl:with-param name="field" select="$field"/>
+								<xsl:with-param name="value" select="$value"/>
+								<xsl:with-param name="href" select="$href"/>
+							</xsl:call-template>
+						</xsl:otherwise>
+					</xsl:choose>
+					
+					
+
 					<!-- display title -->
 					<xsl:if test="string(@title)">
 						<i>
@@ -180,7 +172,7 @@
 					</xsl:if>-->
 					<!-- create links to resources -->
 					<xsl:if test="string($href)">
-						<a href="{$href}" target="_blank" title="{$href}">							
+						<a href="{$href}" target="_blank" rel="{numishare:normalizeProperty(if(@xlink:role) then @xlink:role else local-name())}">
 							<img src="{$include_path}/images/external.png" alt="external link" class="external_link"/>
 						</a>
 					</xsl:if>
@@ -264,6 +256,37 @@
 				</xsl:when>
 			</xsl:choose>
 		</li>
+	</xsl:template>
+	<xsl:template name="display-label">
+		<xsl:param name="facets"/>
+		<xsl:param name="field"/>
+		<xsl:param name="value"/>
+		<xsl:param name="href"/>
+		
+		<xsl:choose>
+			<xsl:when test="contains($facets, $field)">
+				<a href="{$display_path}results?q={$field}_facet:&#x022;{$value}&#x022;{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+					<xsl:choose>
+						<xsl:when test="contains($href, 'geonames.org')">
+							<xsl:choose>
+								<xsl:when test="string(.)">
+									<xsl:value-of select="normalize-space(.)"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:value-of select="$value"/>
+								</xsl:otherwise>
+							</xsl:choose>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="$value"/>
+						</xsl:otherwise>
+					</xsl:choose>
+				</a>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="$value"/>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 	<!-- ************** PROCESS MODS RECORD INTO CHICAGO MANUAL OF STYLE CITATION ************** -->
 	<xsl:template name="mods-citation">
@@ -411,7 +434,7 @@
 					</li>
 					<li>
 						<a href="{$id}.kml">KML</a>
-					</li>					
+					</li>
 				</ul>
 			</div>
 		</div>

@@ -2341,6 +2341,8 @@
 		<xsl:choose>
 			<xsl:when test="$name='fromDate'">nm:start_date</xsl:when>
 			<xsl:when test="$name='toDate'">nm:end_date</xsl:when>
+			<xsl:when test="$name='subject'">dcterms:subject</xsl:when>
+			<xsl:when test="$name='description'">dcterms:description</xsl:when>
 			<xsl:otherwise>
 				<xsl:value-of select="concat('nm:', $name)"/>
 			</xsl:otherwise>
