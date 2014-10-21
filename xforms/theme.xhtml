@@ -24,7 +24,7 @@
 		<xforms:model>
 			<!-- exist URL is stored in an XML file -->
 			<xforms:instance id="exist-config">
-				<xi:include href="exist-config.xml"/>
+				<xi:include href="../exist-config.xml"/>
 			</xforms:instance>
 
 			<xforms:instance id="control-instance">
@@ -65,7 +65,7 @@
 					</xforms:action>
 					<xforms:send submission="load-config"/>
 				</xforms:action>
-				<!-- if the config has not been created (given that the URL in exist-config.xml is correct), create it -->
+				<!-- if the config has not been created (given that the URL in ../exist-config.xml is correct), create it -->
 				<xforms:message ev:event="xforms-submit-error" level="modal">Unable to load Numishare collections list.</xforms:message>
 			</xforms:submission>
 
@@ -91,10 +91,7 @@
 			</div>
 			<div class="yui3-u-1-5">
 				<div class="content">
-					<ul>
-						<li>
-							<a href="jquery-ui/">jQuery UI Theme</a>
-						</li>
+					<ul>						
 						<li>
 							<a href="layout/">Layout and Displayable Content</a>
 						</li>

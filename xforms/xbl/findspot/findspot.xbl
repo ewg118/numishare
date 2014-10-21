@@ -73,7 +73,7 @@
 								<xforms:group ref=".[string(nuds:geogname/@xlink:href)]">
 									<xforms:trigger appearance="xxforms:link">
 										<xforms:label>
-											<img src="../../images/external.png"/>
+											<img src="../../../xforms/images/external.png"/>
 										</xforms:label>
 										<xforms:load ev:event="DOMActivate" ref="nuds:geogname/@xlink:href" show="new"/>
 									</xforms:trigger>
@@ -82,7 +82,7 @@
 									<xforms:trigger appearance="minimal">
 										<xforms:insert if="not($binding/@certainty)" context="$binding" origin="xxforms:attribute('certainty', '')" ev:event="DOMActivate"/>
 										<xforms:label>
-											<img src="../../images/add.gif"/>Certainty</xforms:label>
+											<span class="glyphicon glyphicon-plus"/>Certainty</xforms:label>
 									</xforms:trigger>
 								</xforms:group>-->
 							</div>
@@ -96,7 +96,7 @@
 									<xforms:trigger appearance="minimal">
 										<xforms:insert if="not(nuds:geogname/@certainty)" nodeset="nuds:geogname" origin="xxforms:attribute('certainty', '')" ev:event="DOMActivate"/>
 										<xforms:label>
-											<img src="../../images/add.gif"/>Certainty </xforms:label>
+											<span class="glyphicon glyphicon-plus"/>Certainty </xforms:label>
 									</xforms:trigger>
 								</xforms:group>-->
 								<xforms:switch>
@@ -170,7 +170,7 @@
 								<xforms:trigger appearance="minimal">
 									<xforms:delete ev:event="DOMActivate" nodeset="."/>
 									<xforms:label>
-										<img src="../../images/remove.gif"/>
+										<span class="glyphicon glyphicon-remove"/>
 									</xforms:label>
 								</xforms:trigger>
 							</div>
@@ -182,7 +182,7 @@
 					<!-- ***********************  DIALOG INTERNAL MODEL *********************** -->
 					<xforms:model id="findspot-authorities-model" xmlns:xi="http://www.w3.org/2001/XInclude">
 						<xforms:instance id="exist-config">
-							<xi:include href="../../exist-config.xml"/>
+							<xi:include href="../../../exist-config.xml"/>
 						</xforms:instance>
 
 						<xforms:instance id="coordinates-template">
@@ -419,7 +419,7 @@
 								</xforms:action>
 								<xforms:send submission="load-config"/>
 							</xforms:action>
-							<!-- if the config has not been created (given that the URL in exist-config.xml is correct), create it -->
+							<!-- if the config has not been created (given that the URL in ../exist-config.xml is correct), create it -->
 							<xforms:message ev:event="xforms-submit-error" level="modal">Unable to load Numishare collections list.</xforms:message>
 						</xforms:submission>
 

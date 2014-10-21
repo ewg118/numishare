@@ -12,7 +12,6 @@ Architecture
 
 Numishare's codebase is open source, and is built upon a modularized set of open source applications that run within Apache Tomcat, including:
 
-    Cocoon: delivery of HTML, XML Linked data (RDF, Atom)
-    Solr: Advanced search index based on Apache Lucene which provides faceted browsing
-    Orbeon: Enterprise-level server-side XForms processor
-    eXist: XML datastore 
+  * [Orbeon](http://www.orbeon.com): Enterprise-level server-side XForms processor which manages back-end workflows as well as produces the fully modern public user interface in HTML5 and provides access to alternate models in KML, RDF/XML, Turtle, JSON-LD, Atom, etc. through both REST and content negotation.
+  * [Apache Solr](http://lucene.apache.org/solr/) Advanced search index based on Lucene which provides faceted browsing
+  * [eXist-db](http://exist-db.org/exist/apps/homepage/index.html): XML database

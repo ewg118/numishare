@@ -29,7 +29,6 @@
 		If 'null' (or absent), cores will not be manageable via REST
 	-->
 	<cores adminPath="/admin/cores">
-		<core name="numishare-published" instanceDir="published"/>	
-		<core name="numishare-all" instanceDir="all"/>		
+		<core name="numishare-published" instanceDir="published"/>
 	</cores>
 </solr>

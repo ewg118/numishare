@@ -3,8 +3,8 @@
 	function: NUDS dynasty (famname xlink:role="dynasty") component
 -->
 <xbl:xbl xmlns="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xxforms="http://orbeon.org/oxf/xml/xforms"
-	xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:xbl="http://www.w3.org/ns/xbl" xmlns:xxbl="http://orbeon.org/oxf/xml/xbl" 
-	xmlns:oxf="http://www.orbeon.com/oxf/processors" xmlns:numishare="https://github.com/ewg118/numishare">
+	xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:xbl="http://www.w3.org/ns/xbl" xmlns:xxbl="http://orbeon.org/oxf/xml/xbl" xmlns:oxf="http://www.orbeon.com/oxf/processors"
+	xmlns:numishare="https://github.com/ewg118/numishare" xmlns:exist="http://exist.sourceforge.net/NS/exist">
 	<xbl:binding id="numishare-dynasty" element="numishare|dynasty">
 		<xbl:template>
 			<xforms:group xbl:attr="model context ref bind" xxbl:scope="outer">
@@ -19,9 +19,9 @@
 								origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/get-authentication.xpl', 'dump', instance('dump'), 'data')"/>
 							<xforms:send submission="load-collections"/>
 							<xforms:setvalue ref="instance('control-instance')/typeof" value="$binding/@xlink:role"/>
-							<xforms:setvalue ref="instance('control-instance')/label"
-								value="concat(substring(upper-case($binding/@xlink:role), 1, 1), substring($binding/@xlink:role, 2))"/>
-							<xforms:setvalue ref="instance('control-instance')/facet" value="concat($binding/@xlink:role, '_facet')"/>
+							<xforms:setvalue ref="instance('control-instance')/element" value="$binding/local-name()"/>
+							<xforms:setvalue ref="instance('control-instance')/role" value="$binding/@xlink:role"/>
+							<xforms:setvalue ref="instance('control-instance')/label" value="concat(substring(upper-case($binding/@xlink:role), 1, 1), substring($binding/@xlink:role, 2))"/>							
 						</xforms:action>
 					</xforms:action>
 
@@ -38,13 +38,15 @@
 									<xforms:delete context="instance('solr-response')/*"/>
 									<xforms:delete nodeset="$binding"/>
 								</xforms:action>
-								<xforms:label><img src="../../images/remove.gif"/></xforms:label>
+								<xforms:label>
+									<span class="glyphicon glyphicon-remove"/>
+								</xforms:label>
 							</xforms:trigger>
 							<xforms:group ref="$binding[not($binding/@title)]">
 								<xforms:trigger appearance="minimal">
 									<xforms:insert if="not($binding/title)" context="$binding" origin="xxforms:attribute('title', '')" ev:event="DOMActivate"/>
 									<xforms:label>
-										<img src="../../images/add.gif"/>Title</xforms:label>
+										<span class="glyphicon glyphicon-plus"/>Title</xforms:label>
 								</xforms:trigger>
 							</xforms:group>
 						</div>
@@ -57,7 +59,9 @@
 							</xforms:input>
 							<xforms:trigger>
 								<xforms:action ev:event="DOMActivate">
-									<xforms:send submission="suggest-term"/>
+									<xforms:setvalue ref="instance('eXist-xquery')/exist:text"
+										value="replace(replace(replace(instance('xquery'), 'QUERY', instance('search-query')), 'ELEMENT', instance('control-instance')/element), 'ROLE', instance('control-instance')/role)"/>
+									<xforms:send submission="xquery-collection"/>
 								</xforms:action>
 								<xforms:label>Search</xforms:label>
 							</xforms:trigger>
@@ -68,12 +72,12 @@
 								</xforms:action>
 							</xforms:trigger>
 						</div>
-						<xforms:group ref=".[count(instance('solr-response')/lst[@name='terms']//int) &gt; 0]">
+						<xforms:group ref=".[count(instance('xquery-result')//*[local-name()='term']) &gt; 0]">
 							<xforms:select1 ref="instance('temp')" appearance="compact" size="10">
 								<xforms:label>Location</xforms:label>
-								<xforms:itemset nodeset="instance('solr-response')/lst[@name='terms']//int">
-									<xforms:label ref="@name"/>
-									<xforms:value ref="@name"/>
+								<xforms:itemset nodeset="instance('xquery-result')//*[local-name()='term']">
+									<xforms:label ref="."/>
+									<xforms:value ref="."/>
 								</xforms:itemset>
 							</xforms:select1>
 							<xforms:trigger>
@@ -82,11 +86,6 @@
 									<xforms:setvalue ref="$binding" value="instance('temp')"/>
 								</xforms:action>
 							</xforms:trigger>
-						</xforms:group>
-						<xforms:group ref=".[string-length(instance('control-instance')/local-message) &gt; 0]">
-							<p>
-								<xforms:output ref="instance('control-instance')/local-message"/>
-							</p>
 						</xforms:group>
 					</xforms:group>
 					<xforms:group ref="$binding/@title">
@@ -97,7 +96,9 @@
 							</xforms:input>
 							<xforms:trigger appearance="minimal">
 								<xforms:delete ev:event="DOMActivate" nodeset="."/>
-								<xforms:label><img src="../../images/remove.gif"/></xforms:label>
+								<xforms:label>
+									<span class="glyphicon glyphicon-remove"/>
+								</xforms:label>
 							</xforms:trigger>
 						</div>
 					</xforms:group>
@@ -105,7 +106,7 @@
 					<!-- ***********************  DIALOG INTERNAL MODEL *********************** -->
 					<xforms:model id="dynasty-authorities-model" xmlns:xi="http://www.w3.org/2001/XInclude">
 						<xforms:instance id="exist-config">
-							<xi:include href="../../exist-config.xml"/>
+							<xi:include href="../../../exist-config.xml"/>
 						</xforms:instance>
 
 						<xforms:instance id="control-instance">
@@ -115,6 +116,8 @@
 								<facet/>
 								<label/>
 								<typeof/>
+								<role/>
+								<element/>
 							</control>
 						</xforms:instance>
 
@@ -133,7 +136,7 @@
 						<xforms:instance id="config">
 							<config xmlns=""/>
 						</xforms:instance>
-						
+
 						<xforms:instance id="temp">
 							<temp xmlns=""/>
 						</xforms:instance>
@@ -143,19 +146,36 @@
 							<query/>
 						</xforms:instance>
 						
+						<!-- XQuery -->
+						<xforms:instance id="eXist-xquery">
+							<exist:query xmlns="">
+								<exist:text/>
+							</exist:query>
+						</xforms:instance>
+						
+						<xforms:instance id="xquery">
+							<query xmlns="">declare namespace nuds="http://nomisma.org/nuds"; declare namespace nh="http://nomisma.org/nudsHoard"; &lt;report> { for $term in
+								distinct-values(collection()//descendant::*[local-name()='ELEMENT'][@xlink:role='ROLE'][contains(lower-case(.), lower-case('QUERY'))]) return &lt;term> { data($term) }
+								&lt;/term> } &lt;/report></query>
+						</xforms:instance>
+						
+						<xforms:instance id="xquery-result">
+							<exist:result/>
+						</xforms:instance>
+
 						<!-- Instance with the suggestions we get back from Solr -->
 						<xforms:instance id="solr-response">
 							<response xmlns=""/>
 						</xforms:instance>
 						<!-- serves to aggregate current itemsets for each autocomplete in repetition -->
 
-						<xforms:submission id="load-collections" serialization="none" method="get" action="{instance('exist-config')/url}collections-list.xml" replace="instance" instance="collections-list"
-							xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}">
+						<xforms:submission id="load-collections" serialization="none" method="get" action="{instance('exist-config')/url}collections-list.xml" replace="instance"
+							instance="collections-list" xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}">
 							<!-- if the config loads successfully, set the collection names based on authentication -->
 							<xforms:action ev:event="xforms-submit-done">
 								<!-- set default if security is false -->
 								<xforms:action if="not(string(instance('control-instance')/request-security/role))">
-									<xforms:setvalue ref="instance('control-instance')/collection-name">numishare</xforms:setvalue>									
+									<xforms:setvalue ref="instance('control-instance')/collection-name">numishare</xforms:setvalue>
 								</xforms:action>
 								<!-- if there is a security role, set the collection-name value if it is in the list, otherwise set new collection name -->
 								<xforms:action if="string(instance('control-instance')/request-security/role)">
@@ -163,30 +183,16 @@
 										<xforms:setvalue ref="instance('control-instance')/collection-name"
 											value="instance('collections-list')/collection[@role=instance('control-instance')/request-security/role]/@name"/>
 									</xforms:action>
-								</xforms:action>
-								<xforms:send submission="load-config"/>
+								</xforms:action>								
 							</xforms:action>
-							<!-- if the config has not been created (given that the URL in exist-config.xml is correct), create it -->
+							<!-- if the config has not been created (given that the URL in ../exist-config.xml is correct), create it -->
 							<xforms:message ev:event="xforms-submit-error" level="modal">Unable to load Numishare collections list.</xforms:message>
 						</xforms:submission>
-
-						<xforms:submission id="load-config" serialization="none" method="get"
-							action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/config.xml" replace="instance" instance="config"
-							xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}">
-							<xforms:message ev:event="xforms-submit-error" level="modal">Unable to load Numishare config.</xforms:message>
-						</xforms:submission>
-
-						<xforms:submission id="suggest-term" serialization="none" method="get"
-							action="{instance('config')/solr_published}terms?terms.fl={instance('control-instance')/facet}&amp;terms.limit=25&amp;terms.sort=index&amp;terms.regex.flag=case_insensitive&amp;terms.regex=.*{instance('search-query')}.*"
-							instance="solr-response" replace="instance">
-							<xforms:message ev:event="xforms-submit-error" level="modal">Unable to query Solr.</xforms:message>
-							<xforms:action ev:event="xforms-submit-done">
-								<!-- set or clear message based on number of results found -->
-								<xforms:setvalue ref="instance('control-instance')/local-message"
-									if="count(instance('solr-response')/lst[@name='terms']//int) = 0">No matching terms found.</xforms:setvalue>
-								<xforms:setvalue ref="instance('control-instance')/local-message"
-									if="count(instance('solr-response')/lst[@name='terms']//int) &gt; 0"/>
-							</xforms:action>
+						
+						<!-- local vocabulary query -->
+						<xforms:submission id="xquery-collection" ref="instance('eXist-xquery')" action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/objects"
+							method="post" replace="instance" instance="xquery-result" xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}">
+							<xforms:setvalue ref="instance('control-instance')/error" ev:event="xforms-submit-error">Error querying eXist database.</xforms:setvalue>
 						</xforms:submission>
 					</xforms:model>
 				</xforms:group>

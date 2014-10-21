@@ -18,14 +18,14 @@
 						<xforms:trigger appearance="minimal">
 							<xforms:delete ev:event="DOMActivate" nodeset="."/>
 							<xforms:label>
-								<img src="../../images/remove.gif"/>
+								<span class="glyphicon glyphicon-remove"/>
 							</xforms:label>
 						</xforms:trigger>
 						<div class="trigger_container">
 							<xforms:group ref=".[count(nuds:identifier) = 0]">
 								<xforms:trigger appearance="minimal">
 									<xforms:label>
-										<img src="../../images/add.gif"/>Identifier</xforms:label>
+										<span class="glyphicon glyphicon-plus"/>Identifier</xforms:label>
 									<xforms:insert ev:event="DOMActivate" context="." origin="instance('identifier-template')" nodeset="./child::node()[last()]"/>
 								</xforms:trigger>
 							</xforms:group>
@@ -45,7 +45,7 @@
 								<xforms:trigger appearance="minimal">
 									<xforms:delete ev:event="DOMActivate" nodeset="."/>
 									<xforms:label>
-										<img src="../../images/remove.gif"/>
+										<span class="glyphicon glyphicon-remove"/>
 									</xforms:label>
 								</xforms:trigger>
 							</div>
