@@ -19,7 +19,7 @@
 										<img src="{//config/logo}"/>
 									</xsl:when>
 									<xsl:otherwise>
-										<img src="{$display_path}images/{//config/logo}"/>
+										<img src="{$include_path}/images/{//config/logo}"/>
 									</xsl:otherwise>
 								</xsl:choose>
 							</xsl:when>

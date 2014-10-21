@@ -29,6 +29,9 @@
 		Model paths are unlikely to require changing. Other ajax pages may need to be copied if alterations in format are required.
 	*** -->
 	
+	<!-- OCRE -->
+	<page path="/numishare/ocre/" model="xpl/models/config.xpl" view="file:///usr/local/projects/ocre/xpl/views/pages/index.xpl"/>
+	
 	<!-- **** SERIALIZATIONS **** -->	
 	<!-- Solr -->
 	<page path="/numishare/[^\/]+/results" model="xpl/models/solr/results.xpl" view="xpl/controllers/conneg-results.xpl"/>
