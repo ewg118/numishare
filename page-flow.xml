@@ -34,6 +34,7 @@
 	
 	<!-- AoD -->
 	<page path="/numishare/aod/" model="xpl/models/config.xpl" view="file:///usr/local/projects/aod/xpl/views/pages/index.xpl"/>
+	<page path="/numishare/aod/id/(.*)" model="xpl/models/object/get-id.xpl" view="file:///usr/local/projects/aod/xpl/controllers/conneg-id.xpl"/>
 	
 	<!-- **** SERIALIZATIONS **** -->	
 	<!-- Solr -->
