@@ -13,6 +13,20 @@
 					<xsl:with-param name="alignment">left</xsl:with-param>
 				</xsl:call-template>
 			</xsl:if>
+			<h4>
+				<xsl:choose>
+					<xsl:when test="$mode = 'compare'">
+						<a href="{$display_path}id/{str[@name='recordId']}?mode=compare&amp;q={$q}&amp;start={$start}&amp;image={$image}&amp;side={$side}" class="compare">
+							<xsl:value-of select="str[@name='title_display']"/>
+						</a>
+					</xsl:when>
+					<xsl:otherwise>
+						<a href="{$display_path}id/{str[@name='recordId']}{if (string($lang)) then concat('?lang=', $lang) else ''}">
+							<xsl:value-of select="str[@name='title_display']"/>
+						</a>
+					</xsl:otherwise>
+				</xsl:choose>
+			</h4>
 			<div>
 				<xsl:choose>
 					<xsl:when test="$mode='compare'">
@@ -36,21 +50,7 @@
 					<div style="text-align:center;">
 						<img src="{str[@name=$img_string]}" style="height:320px"/>
 					</div>
-				</xsl:if>
-				<h4>
-					<xsl:choose>
-						<xsl:when test="$mode = 'compare'">
-							<a href="{$display_path}id/{str[@name='recordId']}?mode=compare&amp;q={$q}&amp;start={$start}&amp;image={$image}&amp;side={$side}" class="compare">
-								<xsl:value-of select="str[@name='title_display']"/>
-							</a>
-						</xsl:when>
-						<xsl:otherwise>
-							<a href="{$display_path}id/{str[@name='recordId']}{if (string($lang)) then concat('?lang=', $lang) else ''}">
-								<xsl:value-of select="str[@name='title_display']"/>
-							</a>
-						</xsl:otherwise>
-					</xsl:choose>
-				</h4>
+				</xsl:if>				
 				<dl class="dl-horizontal">
 					<xsl:choose>
 						<xsl:when test="str[@name='recordType'] = 'hoard'">
