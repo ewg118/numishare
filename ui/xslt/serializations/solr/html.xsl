@@ -99,7 +99,7 @@
 					<script src="http://maps.google.com/maps/api/js?v=3.2&amp;sensor=false"/>
 					<script type="text/javascript" src="{$include_path}/javascript/result_map_functions.js"/>
 				</xsl:if>
-				<xsl:if test="string(/config/google_analytics)">
+				<xsl:if test="string(//config/google_analytics)">
 					<script type="text/javascript">
 						<xsl:value-of select="//config/google_analytics"/>
 					</script>
@@ -115,7 +115,7 @@
 
 	<xsl:template name="results">
 		<!--<xsl:copy-of select="$sparqlResult"/>-->
-		<div class="container-fluid">
+		<div class="container-fluid" id="content">
 			<div class="row">
 				<div class="col-md-3">
 					<xsl:if test="//result[@name='response']/@numFound &gt; 0">
@@ -162,26 +162,24 @@
 					</xsl:if>
 				</div>
 				<div class="col-md-9">
-					<div class="container-fluid">
-						<xsl:call-template name="remove_facets"/>
-						<xsl:choose>
-							<xsl:when test="$numFound &gt; 0">
-								<!-- include resultMap div when there are geographical results-->
-								<xsl:if test="//lst[@name='mint_geo']/int[@name='numFacetTerms'] &gt; 0">
-									<div style="display:none">
-										<div id="resultMap"/>
-									</div>
-								</xsl:if>
-								<xsl:call-template name="paging"/>
-								<xsl:call-template name="sort"/>
-								<xsl:apply-templates select="descendant::doc"/>
-								<xsl:call-template name="paging"/>
-							</xsl:when>
-							<xsl:otherwise>
-								<h2> No results found. <a href="results?q=*:*">Start over.</a></h2>
-							</xsl:otherwise>
-						</xsl:choose>
-					</div>
+					<xsl:call-template name="remove_facets"/>
+					<xsl:choose>
+						<xsl:when test="$numFound &gt; 0">
+							<!-- include resultMap div when there are geographical results-->
+							<xsl:if test="//lst[@name='mint_geo']/int[@name='numFacetTerms'] &gt; 0">
+								<div style="display:none">
+									<div id="resultMap"/>
+								</div>
+							</xsl:if>
+							<xsl:call-template name="paging"/>
+							<xsl:call-template name="sort"/>
+							<xsl:apply-templates select="descendant::doc"/>
+							<xsl:call-template name="paging"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<h2> No results found. <a href="results?q=*:*">Start over.</a></h2>
+						</xsl:otherwise>
+					</xsl:choose>
 				</div>
 			</div>
 			<div id="backgroundPopup"/>

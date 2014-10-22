@@ -7,7 +7,7 @@
 	<xsl:param name="lang" select="doc('input:request')/request/parameters/parameter[name='lang']/value"/>
 	<xsl:variable name="display_path"/>
 	<xsl:variable name="include_path" select="concat('http://', doc('input:request')/request/server-name, ':8080/orbeon/themes/', //config/theme/orbeon_theme)"/>
-	
+
 
 	<xsl:template match="/content/config">
 		<html lang="en">
@@ -44,26 +44,34 @@
 					<xsl:choose>
 						<xsl:when test="features_enabled = true()">
 							<div class="col-md-9">
-								<h1><xsl:value-of select="title"/></h1>
-								<p><xsl:value-of select="description"/></p>
+								<h1>
+									<xsl:value-of select="title"/>
+								</h1>
+								<p>
+									<xsl:value-of select="description"/>
+								</p>
 							</div>
 							<div class="col-md-3">
-								<xsl:copy-of select="/content/div[@id='feature']"/>	
+								<xsl:copy-of select="/content/div[@id='feature']"/>
 							</div>
 						</xsl:when>
 						<xsl:otherwise>
 							<div class="col-md-12">
-								<h1><xsl:value-of select="title"/></h1>
-								<p><xsl:value-of select="description"/></p>
+								<h1>
+									<xsl:value-of select="title"/>
+								</h1>
+								<p>
+									<xsl:value-of select="description"/>
+								</p>
 							</div>
 						</xsl:otherwise>
 					</xsl:choose>
 				</div>
 			</div>
-		</div>	
+		</div>
 		<div class="container-fluid">
 			<div class="row">
-				<div class="col-md-9">					
+				<div class="col-md-9">
 					<xsl:choose>
 						<xsl:when test="string($lang)">
 							<xsl:choose>
@@ -79,11 +87,11 @@
 											<xsl:copy-of select="//pages/index/*"/>
 										</xsl:otherwise>
 									</xsl:choose>
-									
+
 								</xsl:otherwise>
 							</xsl:choose>
 						</xsl:when>
-						<xsl:otherwise>							
+						<xsl:otherwise>
 							<xsl:choose>
 								<xsl:when test="count(//pages/index/description) &gt; 0">
 									<xsl:copy-of select="//pages/index/description[1]/*"/>
@@ -94,8 +102,50 @@
 							</xsl:choose>
 						</xsl:otherwise>
 					</xsl:choose>
+					<div class="row">
+						<div class="col-md-6">
+							<h3>Collaborators</h3>
+							<p>
+								<a href="http://numismatics.org" title="American Numismatic Society" style="margin:0 10px;">
+									<img src="{$include_path}/images/logo_ans.jpg" alt="ANS"/>
+								</a>
+								<a href="http://isaw.nyu.edu/" title="Institute for the Study of the Ancient World" style="margin:0 10px;">
+									<img src="{$include_path}/images/logo_isaw.jpg" alt="ISAW"/>
+								</a>
+								<a href="http://www.dainst.org/" title="Deutsches Archäologisches Institut" style="margin:0 10px;">
+									<img src="{$include_path}/images/logo_dai.png" alt="DAI"/>
+								</a>
+							</p>
+						</div>
+						<div class="col-md-6">
+							<h3>Support</h3>
+							<p>
+								<a href="http://www.neh.gov/">
+									<img src="{$include_path}/images/neh_logo_horizontal_rgb.jpg" style="max-width:100%"/>
+								</a>
+							</p>
+							<p>In May 2014, the National Endowment for the Humanities awarded OCRE $300,000 as part of the <a
+									href="http://www.neh.gov/grants/preservation/humanities-collections-and-reference-resources">Humanities Collections and Reference Resources</a> program, to be
+								dispersed over three years, to complete the project. <a href="http://numismatics.org/wikiuploads/NewsEvents/2014_0404_PR_major-grant-NEH-.pdf">Press release</a></p>
+						</div>
+					</div>
 				</div>
 				<div class="col-md-3">
+					<div class="highlight">
+						<h3>Share</h3>
+						<!-- AddThis Button BEGIN -->
+						<div class="addthis_toolbox addthis_default_style addthis_32x32_style">
+							<a class="addthis_button_preferred_1"/>
+							<a class="addthis_button_preferred_2"/>
+							<a class="addthis_button_preferred_3"/>
+							<a class="addthis_button_preferred_4"/>
+							<a class="addthis_button_compact"/>
+							<a class="addthis_counter addthis_bubble_style"/>
+						</div>
+						<script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid=xa-4ffc41710d8b692c"/>
+						<!-- AddThis Button END -->
+					</div>
+					
 					<div class="highlight data_options">
 						<h3>Linked Data</h3>
 						<a href="{$display_path}feed/?q=*:*">

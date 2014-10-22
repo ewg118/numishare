@@ -1,0 +1,314 @@
+<?php
+//error_reporting(0);
+$data = generate_json('/home/komet/ans_migration/ocre/bm-data/ric4.csv', false);
+$ref_array = array();
+$num_array = array();
+$type_array = array();
+$vol = 'RIC4';
+
+//generate concordance list
+$count = 0;
+foreach ($data as $row){	
+	//if ($count < 10){
+		$about = 'http://collection.britishmuseum.org/id/object/' . $row['PRN'];
+		$refs = explode('~', $row['Bib Xref']);
+		$nums = explode('~', $row['Bib Spec']);		
+		$authority = parse_authority($row['Authority'], $row['Authority Comment']);
+		//calculating the authority for Volume 4
+		$key = array_search($vol, $refs);
+		if ($authority == 'RECALCULATE') {		
+			preg_match('/p\.([0-9]+)/', $nums[$key], $matches);
+			if (is_numeric($matches[1])){
+				if ($matches[1] >= 92 && $matches[1] <= 211){
+					$authority = 'ss';
+				} else if ($matches[1] >= 212 && $matches[1] <= 313){
+					$authority = 'crl';
+				} else if ($matches[1] >= 314 && $matches[1] <= 343){
+					$authority = 'ge';
+				}
+			} else {
+				$authority = '';
+			}
+		}
+		
+		foreach ($refs as $ref){
+			if (!in_array($ref, $ref_array)){
+				$ref_array[] = $ref;
+			}
+		}
+		$tarray = array();
+		foreach ($nums as $k=>$v){
+			$tarray[$refs[$k]] = $v;
+		}
+		$num_array[$about] = array($authority, $tarray);
+	
+		
+	//}	
+	$count++;
+}
+
+//parse ids
+//var_dump($num_array);
+foreach ($num_array as $array){
+	$authority = $array[0];
+	$nums = $array[1];
+	if (strlen($nums[$vol]) > 0){			
+		if (!array_key_exists($nums[$vol], $type_array) && strlen($authority) > 0){
+			$type_array[$nums[$vol]] = parse_ref($nums[$vol], $vol, $authority);
+		}
+	}
+	
+}
+
+/********* CSV OUTPUT **********/
+//create CSV labels
+$csv = '"key","nomisma_id",';
+foreach ($ref_array as $ref){
+	$csv .= '"' . $ref . '",';
+}
+$csv .= "\n";
+
+//process arrays
+foreach($num_array as $k=>$array){
+	$refs = $array[1];
+	$csv .= '"' . $k . '",';
+	if (strlen($refs[$vol]) > 0){
+		$csv .= '"' . $type_array[$refs[$vol]] . '",';
+	} else {
+		$csv .= '"",';
+	}
+	foreach ($ref_array as $ref){
+		$csv .= '"' . $refs[$ref] . '",';
+	}
+	$csv .= "\n";	
+}
+//var_dump($type_array);
+file_put_contents($vol . '-con-new.csv', $csv);
+
+function parse_ref($ref, $vol, $authority){
+	switch ($vol){
+		case 'RIC1':
+			$prefix = 'ric.1(2).' . $authority . '.';
+			break;
+		case 'RIC2.1':
+			$prefix = 'ric.2_1(2).' . $authority . '.';
+			break;
+		case 'RIC2':
+			$prefix = 'ric.2.' . $authority . '.';
+			break;
+		case 'RIC3':
+			$prefix = 'ric.3.' . $authority . '.';
+			break;
+		case 'RIC4':
+			$prefix = 'ric.4.' . $authority . '.';
+			break;
+	}
+	
+	$pieces = explode(',', $ref);
+	foreach ($pieces as $piece){
+		if (strpos(trim($piece), '-') === FALSE && strpos(trim($piece), '.') === FALSE){
+			$num = trim($piece);
+		}
+	}
+	
+	//only process when the num is a string
+	if (strlen($num) > 0){
+		if (preg_match('/[a-zA-Z]/', $num)){
+			//try uppercase first
+			$upper = strtoupper($num);
+			$url = "http://numismatics.org/ocre/id/{$prefix}" . urlencode($upper);
+			$file_headers = @get_headers($url);
+			if ($file_headers[0] == 'HTTP/1.1 200 OK'){
+				echo "Pass: {$url}\n";
+				return $url;
+			} else {
+				//then try lower
+				$url = "http://numismatics.org/ocre/id/{$prefix}" . urlencode($num);
+				$file_headers = @get_headers($url);
+				if ($file_headers[0] == 'HTTP/1.1 200 OK'){
+					echo "Pass: {$url}\n";
+					return $url;
+				} else {
+					return '';
+				}
+			}
+		} else {
+			$url = "http://numismatics.org/ocre/id/{$prefix}" . urlencode($num); 
+			$file_headers = @get_headers($url);
+			if ($file_headers[0] == 'HTTP/1.1 200 OK'){
+				echo "Pass: {$url}\n";
+				return $url;
+			} else {
+				return '';
+			}
+		}
+	}
+}
+
+function parse_authority($authority, $comment){
+	$auth = '';
+	if ($comment == 'Civil Wars'){
+		$auth = 'cw';
+	}  
+	/*else if (strpos($authority, 'Septimius') >= 0 || strpos($authority, 'Caracalla') >= 0 || strpos($authority, 'Geta') >= 0){
+		$auth = 'RECALCULATE';
+	}*/
+	else {
+		switch (true) {
+			case stristr($authority, 'Augustus'):
+				$auth = 'aug';
+				break;
+			case stristr($authority, 'Tiberius'):
+				$auth = 'tib';
+				break;
+			case stristr($authority, 'Gaius'):
+				$auth = 'gai';
+				break;
+			case stristr($authority, 'Claudius'):
+				$auth = 'cl';
+				break;
+			case stristr($authority, 'Nero'):
+				$auth = 'ner';
+				break;
+			case stristr($authority, 'Macer'):
+				$auth = 'clm';
+				break;
+			case stristr($authority, 'Galba'):
+				$auth = 'gal';
+				break;
+			case stristr($authority, 'Otho'):
+				$auth = 'ot';
+				break;
+			case stristr($authority, 'Vitellius'):
+				$auth = 'vit';
+				break;
+			case stristr($authority, 'Vespasian'):
+				$auth = 'ves';
+				break;
+			case stristr($authority, 'Titus'):
+				$auth = 'tit';
+				break;
+			case stristr($authority, 'Domitian'):
+				$auth = 'dom';
+				break;
+			case stristr($authority, 'Anonymous'):
+				$auth = 'anys';
+				break;
+			case stristr($authority, 'Nerva'):
+				$auth = 'ner';
+				break;
+			case stristr($authority, 'Trajan'):
+				$auth = 'tr';
+				break;
+			case stristr($authority, 'Hadrian'):
+				$auth = 'hdn';
+				break;
+			case stristr($authority, 'Antoninus Pius'):
+				$auth = 'ant';
+				break;
+			case stristr($authority, 'Marcus Aurelius'):
+				$auth = 'm_aur';
+				break;
+			case stristr($authority, 'Commodus'):
+				$auth = 'com';
+				break;
+			case stristr($authority, 'Pertinax'):
+				$auth = 'pert';
+				break;
+			case stristr($authority, 'Didius Julianus'):
+				$auth = 'dj';			
+				break;
+			case stristr($authority, 'Pescennius Niger'):
+				$auth = 'pn';
+				break;
+			case stristr($authority, 'Clodius Albinus'):
+				$auth = 'ca';
+				break;
+			case stristr($authority, 'Macrinus'):
+				$auth = 'mcs';
+				break;
+			case stristr($authority, 'Septimius'):
+				$auth = 'RECALCULATE';
+				break;
+			case stristr($authority, 'Caracalla'):
+				$auth = 'RECALCULATE';
+				break;
+			case stristr($authority, 'Geta'):
+				$auth = 'RECALCULATE';
+				break;
+			case stristr($authority, 'Elagabalus'):
+				$auth = 'el';
+				break;
+			case $authority == 'Severus Alexander':
+				$auth = 'sa';
+				break;
+			case $authority == 'Maximinus I':
+				$auth = 'max_i';
+				break;
+			case $authority == 'Paulina':
+				$auth = 'pa';
+				break;
+			case $authority == 'Maximus':
+				$auth = 'mxs';
+				break;
+			case $authority == 'Gordian I':
+				$auth = 'gor_i';
+				break;
+			case $authority == 'Gordian II':
+				$auth = 'gor_ii';
+				break;
+			case $authority == 'Balbinus':
+				$auth = 'balb';
+				break;
+			case $authority == 'Pupienus':
+				$auth = 'pup';
+				break;
+			case $authority == 'Balbinus~Pupienus':
+				$auth = 'gor_iii_caes';
+				break;
+				
+		}		
+	}
+	return $auth;
+}
+
+function generate_json($doc){
+	$keys = array();
+	$geoData = array();
+
+	$data = csvToArray($doc, ',');
+
+	// Set number of elements (minus 1 because we shift off the first row)
+	$count = count($data) - 1;
+
+	//Use first row for names
+	$labels = array_shift($data);
+
+	foreach ($labels as $label) {
+		$keys[] = $label;
+	}
+
+	// Bring it all together
+	for ($j = 0; $j < $count; $j++) {
+		$d = array_combine($keys, $data[$j]);
+		$geoData[$j] = $d;
+	}
+	return $geoData;
+}
+
+// Function to convert CSV into associative array
+function csvToArray($file, $delimiter) {
+	if (($handle = fopen($file, 'r')) !== FALSE) {
+		$i = 0;
+		while (($lineArray = fgetcsv($handle, 4000, $delimiter, '"')) !== FALSE) {
+			for ($j = 0; $j < count($lineArray); $j++) {
+				$arr[$i][$j] = $lineArray[$j];
+			}
+			$i++;
+		}
+		fclose($handle);
+	}
+	return $arr;
+}
+
+?>

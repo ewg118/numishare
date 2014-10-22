@@ -532,7 +532,7 @@ $(document).ready(function () {
 			var toDate = Math.abs($(this).find('.to_date') .val());
 			
 			if ((field != 'date' && field != '') && selectVar.length > 0) {
-				query.push (field + ' &lt;' + selectVar + '&gt;');
+				query.push (field + ' &lt;' + selectVar + '&gt;');			
 			} else if (field == 'date' && Math.floor(fromDate) == fromDate && Math.floor(toDate) == toDate){
 				var string = 'nm:end_date ?date';
 				var from_era = $(this).find('.from_era') .val() == 'minus' ? '-' : '';

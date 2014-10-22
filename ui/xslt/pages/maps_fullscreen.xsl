@@ -81,7 +81,11 @@
 
 	<xsl:template name="maps">
 		<div id="backgroundPopup"/>
+<<<<<<< HEAD:cocoon/xslt/maps_fullscreen.xsl
+		<div class="container-fluid" id="content">
+=======
 		<div class="container-fluid" style="height:100%">
+>>>>>>> master:ui/xslt/pages/maps_fullscreen.xsl
 
 			<xsl:choose>
 				<xsl:when test="//result[@name='response']/@numFound &gt; 0">

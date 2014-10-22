@@ -66,7 +66,7 @@
 				<script type="text/javascript" src="{$include_path}/javascript/search_functions.js"/>
 
 				<!-- google analytics -->
-				<xsl:if test="string(/config/google_analytics)">
+				<xsl:if test="string(//config/google_analytics)">
 					<script type="text/javascript">
 						<xsl:value-of select="//config/google_analytics"/>
 					</script>
@@ -81,7 +81,7 @@
 	</xsl:template>
 
 	<xsl:template name="body">
-		<div class="container-fluid">
+		<div class="container-fluid" id="content">
 			<div class="row">
 				<div class="col-md-12">
 					<h1>

@@ -29,10 +29,17 @@
 				<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"/>
 				<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"/>
 				<script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"/>
+<<<<<<< HEAD:cocoon/xslt/search.xsl
+				<link type="text/css" href="{$display_path}style.css" rel="stylesheet"/>
+				<script type="text/javascript" src="{$display_path}javascript/search.js"/>
+				<script type="text/javascript" src="{$display_path}javascript/search_functions.js"/>
+				<xsl:if test="string(//config/google_analytics)">
+=======
 				<link type="text/css" href="{$include_path}/css/style.css" rel="stylesheet"/>
 				<script type="text/javascript" src="{$include_path}/javascript/search.js"/>
 				<script type="text/javascript" src="{$include_path}/javascript/search_functions.js"/>
 				<xsl:if test="string(/config/google_analytics)">
+>>>>>>> master:ui/xslt/pages/search.xsl
 					<script type="text/javascript">
 						<xsl:value-of select="//config/google_analytics"/>
 					</script>
@@ -52,7 +59,7 @@
 	</xsl:template>
 
 	<xsl:template name="search">
-		<div class="container-fluid">
+		<div class="container-fluid" id="content">
 			<div class="row">
 				<div class="col-md-12">
 					<h1>

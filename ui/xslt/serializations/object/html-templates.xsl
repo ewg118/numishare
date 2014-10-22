@@ -443,6 +443,33 @@
 						</div>
 						<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=xa-525d63ef6a07cd89"/>
 					</li>
+<<<<<<< HEAD:cocoon/xslt/display/shared-html.xsl
+				</xsl:for-each>
+			</ul>
+		</div>
+	</xsl:template>
+	<!--***************************************** OPTIONS BAR **************************************** -->
+	<xsl:template name="icons">
+		<div class="row pull-right icons">
+			<div class="col-md-12">
+				<!-- AddThis Button BEGIN -->
+				<div class="addthis_toolbox addthis_default_style">
+					<a class="addthis_button_preferred_1"/>
+					<a class="addthis_button_preferred_2"/>
+					<a class="addthis_button_preferred_3"/>
+					<a class="addthis_button_preferred_4"/>
+					<a class="addthis_button_compact"/>
+					<a class="addthis_counter addthis_bubble_style"/>
+					<xsl:text> | </xsl:text>
+					<a href="{$id}.xml">NUDS/XML</a>
+					<xsl:text> | </xsl:text>
+					<a href="{$id}.rdf">Nomisma RDF/XML</a>
+					<xsl:text> | </xsl:text>
+					<a href="{$id}.kml">KML</a>
+				</div>
+				<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=xa-525d63ef6a07cd89"/>
+				<!-- AddThis Button END -->
+=======
 					<li>
 						<strong>EXPORT:</strong>
 					</li>
@@ -462,6 +489,7 @@
 						<a href="{$id}.kml">KML</a>
 					</li>
 				</ul>
+>>>>>>> master:ui/xslt/serializations/object/html-templates.xsl
 			</div>
 		</div>
 	</xsl:template>

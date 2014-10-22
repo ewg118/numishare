@@ -39,7 +39,7 @@
 						<meta http-equiv="refresh" content="0;URL={$uri}"/>
 					</head>
 					<body>
-						<div class="container-fluid">
+						<div class="container-fluid" id="content">
 							<div class="row">
 								<div class="col-md-12">
 									<h1>301: Moved Permanently</h1>
@@ -56,7 +56,7 @@
 						<xsl:call-template name="generic_head"/>
 					</head>
 					<body>
-						<div class="container-fluid">
+						<div class="container-fluid" id="content">
 							<div class="row">
 								<div class="col-md-12">
 									<h1>
@@ -119,9 +119,15 @@
 				</xsl:choose>
 			</head>
 			<body>
+<<<<<<< HEAD:cocoon/xslt/display_map.xsl
+				<div class="container-fluid" id="content">
+					<div class="row">
+						<div class="col-md-12">
+=======
 				<div class="container-fluid" style="height:100%">
 					<div class="row" style="height:100%">
 						<div class="col-md-12" style="height:100%">
+>>>>>>> master:ui/xslt/serializations/object/html-map.xsl
 							<div id="timemap-legend">
 								<h2>
 									<xsl:value-of select="numishare:regularize_node('legend', $lang)"/>
