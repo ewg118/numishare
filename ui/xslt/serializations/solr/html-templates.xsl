@@ -1155,18 +1155,17 @@
 		</div>
 	</xsl:template>
 	<!-- ************** PROCESS GROUP OF SPARQL RESULTS FROM NOMISMA TO DISPLAY IMAGES ************** -->
-	<xsl:template match="group" mode="results">
+	<xsl:template match="group" mode="results">		
 		<xsl:variable name="coin-count" select="number(coin-count)" as="xs:double"/>
 		<xsl:variable name="hoard-count" select="number(hoard-count)" as="xs:double"/>
-		<xsl:variable name="count" select="$coin-count + $hoard-count" as="xs:double"/>
+		<xsl:variable name="object-count" select="number(object-count)" as="xs:double"/>	
+		<xsl:variable name="count" select="$coin-count + $hoard-count + $object-count"/>
 		<!-- display images -->
 		<xsl:apply-templates select="descendant::object" mode="results"/>
 		<!-- object count -->
 		<xsl:if test="$count &gt; 0">
 			<br/>
 			<xsl:if test="$coin-count &gt; 0">
-				<xsl:value-of select="$coin-count"/>
-				<xsl:text> </xsl:text>
 				<xsl:choose>
 					<xsl:when test="$coin-count = 1">
 						<xsl:value-of select="numishare:normalizeLabel('results_coin', $lang)"/>
@@ -1175,15 +1174,25 @@
 						<xsl:value-of select="numishare:normalizeLabel('results_coins', $lang)"/>
 					</xsl:otherwise>
 				</xsl:choose>
+				<xsl:text>: </xsl:text>
+				<xsl:value-of select="$coin-count"/>
+				<xsl:if test="$object-count &gt; 0 or $hoard-count &gt; 0">
+					<xsl:text>; </xsl:text>
+				</xsl:if>
 			</xsl:if>
-			<xsl:if test="$coin-count &gt; 0 and $hoard-count &gt; 0">
-				<xsl:text> </xsl:text>
-				<xsl:value-of select="numishare:normalizeLabel('results_and', $lang)"/>
-				<xsl:text> </xsl:text>
+			<xsl:if test="$object-count &gt; 0">
+				<xsl:choose>
+					<xsl:when test="$object-count = 1">object</xsl:when>
+					<xsl:otherwise>objects</xsl:otherwise>
+				</xsl:choose>
+				<xsl:text>: </xsl:text>
+				<xsl:value-of select="$object-count"/>
+				<xsl:if test="$hoard-count &gt; 0">
+					<xsl:text>; </xsl:text>
+				</xsl:if>
 			</xsl:if>
+			
 			<xsl:if test="$hoard-count &gt; 0">
-				<xsl:value-of select="$hoard-count"/>
-				<xsl:text> </xsl:text>
 				<xsl:choose>
 					<xsl:when test="$hoard-count = 1">
 						<xsl:value-of select="numishare:normalizeLabel('results_hoard', $lang)"/>
@@ -1192,9 +1201,12 @@
 						<xsl:value-of select="numishare:normalizeLabel('results_hoards', $lang)"/>
 					</xsl:otherwise>
 				</xsl:choose>
+				<xsl:text>: </xsl:text>
+				<xsl:value-of select="$hoard-count"/>
 			</xsl:if>
 		</xsl:if>
 	</xsl:template>
+	
 	<xsl:template match="object" mode="results">
 		<xsl:variable name="position" select="position()"/>
 		<!-- obverse -->
@@ -1216,11 +1228,10 @@
 			</xsl:when>
 			<xsl:when test="string(obvRef) and not(string(obvThumb))">
 				<a class="thumbImage" rel="gallery" href="{obvRef}" title="Obverse of {@identifier}: {@collection}" id="{@uri}">
-					<img src="{obvRef}" style="max-width:120px">
-						<xsl:if test="$position &gt; 1">
-							<xsl:attribute name="style">display:none</xsl:attribute>
-						</xsl:if>
-					</img>
+					<xsl:if test="$position &gt; 1">
+						<xsl:attribute name="style">display:none</xsl:attribute>
+					</xsl:if>
+					<img src="{obvRef}" style="max-width:120px"/>
 				</a>
 			</xsl:when>
 		</xsl:choose>
@@ -1243,11 +1254,10 @@
 			</xsl:when>
 			<xsl:when test="string(revRef) and not(string(revThumb))">
 				<a class="thumbImage" rel="gallery" href="{revRef}" title="Obverse of {@identifier}: {@collection}" id="{@uri}">
-					<img src="{revRef}" style="max-width:120px">
-						<xsl:if test="$position &gt; 1">
-							<xsl:attribute name="style">display:none</xsl:attribute>
-						</xsl:if>
-					</img>
+					<xsl:if test="$position &gt; 1">
+						<xsl:attribute name="style">display:none</xsl:attribute>
+					</xsl:if>
+					<img src="{revRef}" style="max-width:120px"/>
 				</a>
 			</xsl:when>
 		</xsl:choose>
@@ -1270,15 +1280,15 @@
 			</xsl:when>
 			<xsl:when test="string(comRef) and not(string(comThumb))">
 				<a class="thumbImage" rel="gallery" href="{comRef}" title="Obverse of {@identifier}: {@collection}" id="{@uri}">
-					<img src="{comRef}" style="max-width:240px">
-						<xsl:if test="$position &gt; 1">
-							<xsl:attribute name="style">display:none</xsl:attribute>
-						</xsl:if>
-					</img>
+					<xsl:if test="$position &gt; 1">
+						<xsl:attribute name="style">display:none</xsl:attribute>
+					</xsl:if>
+					<img src="{comRef}" style="max-width:240px"/>
 				</a>
 			</xsl:when>
 		</xsl:choose>
 	</xsl:template>
+	
 	<!--<xsl:template name="compare_paging">
 		<xsl:variable name="start_var" as="xs:integer">
 			<xsl:choose>
