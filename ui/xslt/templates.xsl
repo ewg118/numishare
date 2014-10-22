@@ -179,7 +179,7 @@
 					</li>
 				</xsl:for-each>
 				<!-- navbar addendum -->
-				<xsl:for-each slect="//config/header/li">
+				<xsl:for-each select="//config/header/li">
 					<xsl:copy-of select="."/>
 				</xsl:for-each>
 				<!-- display the language switching menu when 2 or more languages are enabled -->
