@@ -5,6 +5,7 @@
 
 	<xsl:param name="template" select="doc('input:request')/request/parameters/parameter[name='template']/value"/>
 	<xsl:param name="lang" select="doc('input:request')/request/parameters/parameter[name='lang']/value"/>
+	<xsl:param name="subtype" select="doc('input:request')/request/parameters/parameter[name='subtype']/value"/>
 
 	<xsl:template match="/">
 		<xsl:choose>
@@ -112,18 +113,19 @@
 
 	<!-- **************** DISPLAY TEMPLATES ****************-->
 	<xsl:template match="res:sparql" mode="display">
-		<xsl:variable name="coin-count" select="count(descendant::res:result[contains(res:binding[@name='objectType']/res:uri, 'coin')]) +
-			count(descendant::res:result[not(child::res:binding[@name='objectType'])])"/>
+		<xsl:variable name="count" select="count(descendant::res:result)"/>
 
-		<div class="row" id="examples" >			
-			<xsl:if test="$coin-count &gt; 0">
+		<div class="row">
+			<xsl:if test="not($subtype='true')">
+				<xsl:attribute name="id">examples</xsl:attribute>
+			</xsl:if>
+			<xsl:if test="$count &gt; 0">
 				<div class="col-md-12">
-					<h2>
+					<xsl:element name="{if($subtype='true') then 'h4' else 'h3'}">
 						<xsl:value-of select="numishare:normalizeLabel('display_examples', $lang)"/>
-					</h2>
+					</xsl:element>
 				</div>
-				<!-- choose between between nomisma (preferred) or internal links -->
-				<xsl:apply-templates select="descendant::res:result[not(contains(res:binding[@name='objectType'], 'hoard'))]" mode="display"/>
+				<xsl:apply-templates select="descendant::res:result" mode="display"/>
 			</xsl:if>
 		</div>
 	</xsl:template>

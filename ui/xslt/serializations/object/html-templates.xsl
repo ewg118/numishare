@@ -10,38 +10,45 @@
 	xmlns:mods="http://www.loc.gov/mods/v3" exclude-result-prefixes="#all" version="2.0">
 	<!--***************************************** ELEMENT TEMPLATES **************************************** -->
 	<xsl:template match="*[local-name()='refDesc']">
-		<h2>
+		<xsl:element name="{if (ancestor::subtype) then 'h4' else 'h3'}">
 			<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
-		</h2>
+		</xsl:element>
 		<ul>
 			<xsl:apply-templates select="*:reference[not(child::*[local-name()='objectXMLWrap'])]|*:citation" mode="descMeta"/>
 			<xsl:apply-templates select="*:reference/*[local-name()='objectXMLWrap']"/>
 		</ul>
 	</xsl:template>
 	<xsl:template match="nuds:physDesc[child::*]">
-		<h2>
+		<xsl:element name="{if (ancestor::subtype) then 'h4' else 'h3'}">
 			<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
-		</h2>
+		</xsl:element>
 		<ul>
 			<xsl:apply-templates mode="descMeta"/>
 		</ul>
 	</xsl:template>
+
 	<xsl:template match="nuds:typeDesc">
 		<xsl:param name="typeDesc_resource"/>
-		<h2>
+		<xsl:element name="{if (ancestor::subtype) then 'h4' else 'h3'}">
 			<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
-		</h2>
+		</xsl:element>
 		<xsl:if test="string($typeDesc_resource)">
 			<p>Source: <a href="{$typeDesc_resource}" rel="nm:type_series_item"><xsl:value-of select="$nudsGroup//object[@xlink:href = $typeDesc_resource]/nuds:nuds/nuds:descMeta/nuds:title"/></a></p>
 		</xsl:if>
 		<ul>
-			<xsl:apply-templates mode="descMeta"/>
+			<xsl:choose>
+				<xsl:when test="ancestor::subtype">
+					<xsl:apply-templates select="*[not(local-name()='obverse' or local-name()='reverse' or local-name()='authority' or local-name()='geographic' or local-name()='date' or
+						local-name()='dateRange')]" mode="descMeta"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:apply-templates select="*" mode="descMeta"/>
+				</xsl:otherwise>
+			</xsl:choose>
 		</ul>
 	</xsl:template>
+
 	<xsl:template match="*" mode="descMeta">
-		<xsl:variable name="facets">
-			<xsl:text>artist,authority,category,collection,decoration,deity,degree,denomination,department,dynasty,engraver,era,findspot,grade,institution,issuer,portrait,manufacture,maker,material,mint,objectType,owner,region,repository,script,state,subject</xsl:text>
-		</xsl:variable>
 		<xsl:choose>
 			<xsl:when test="not(child::*) and (string(.) or string(@xlink:href))">
 				<xsl:variable name="href" select="@xlink:href"/>
@@ -113,10 +120,10 @@
 							</xsl:otherwise>
 						</xsl:choose>
 					</xsl:variable>
-					
+
 					<xsl:choose>
 						<xsl:when test="not(ancestor::nuds:typeDesc/@xlink:href) and not(ancestor::nuds:refDesc) and not(@xlink:href)">
-							<span>			
+							<span>
 								<xsl:attribute name="property" select="numishare:normalizeProperty(if(@xlink:role) then @xlink:role else local-name())"/>
 								<xsl:if test="@xml:lang">
 									<xsl:attribute name="lang" select="@xml:lang"/>
@@ -124,9 +131,8 @@
 								<xsl:if test="@standardDate">
 									<xsl:attribute name="content" select="@standardDate"/>
 									<xsl:attribute name="datatype">xsd:gYear</xsl:attribute>
-								</xsl:if>							
+								</xsl:if>
 								<xsl:call-template name="display-label">
-									<xsl:with-param name="facets" select="$facets"/>
 									<xsl:with-param name="field" select="$field"/>
 									<xsl:with-param name="value" select="$value"/>
 									<xsl:with-param name="href" select="$href"/>
@@ -135,15 +141,14 @@
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:call-template name="display-label">
-								<xsl:with-param name="facets" select="$facets"/>
 								<xsl:with-param name="field" select="$field"/>
 								<xsl:with-param name="value" select="$value"/>
 								<xsl:with-param name="href" select="$href"/>
 							</xsl:call-template>
 						</xsl:otherwise>
 					</xsl:choose>
-					
-					
+
+
 
 					<!-- display title -->
 					<xsl:if test="string(@title)">
@@ -164,12 +169,6 @@
 					<xsl:if test="string(@calendar)">
 						<i> (calendar: <xsl:value-of select="@calendar"/>)</i>
 					</xsl:if>
-					<!-- display language -->
-					<!--<xsl:if test="string(@xml:lang)">
-						<xsl:text> (</xsl:text>
-						<xsl:value-of select="@xml:lang"/>
-						<xsl:text>)</xsl:text>
-					</xsl:if>-->
 					<!-- create links to resources -->
 					<xsl:if test="string($href)">
 						<a href="{$href}" target="_blank" rel="{numishare:normalizeProperty(if(@xlink:role) then @xlink:role else local-name())}">
@@ -258,11 +257,10 @@
 		</li>
 	</xsl:template>
 	<xsl:template name="display-label">
-		<xsl:param name="facets"/>
 		<xsl:param name="field"/>
 		<xsl:param name="value"/>
 		<xsl:param name="href"/>
-		
+
 		<xsl:choose>
 			<xsl:when test="contains($facets, $field)">
 				<a href="{$display_path}results?q={$field}_facet:&#x022;{$value}&#x022;{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
@@ -288,6 +286,34 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
+
+	<!-- *************** HANDLE SUBTYPES DELIVERED FROM XQUERY ******************-->
+	<xsl:template match="subtype">
+		<xsl:param name="uri_space"/>
+		<xsl:variable name="subtypeId" select="@recordId"/>
+		<div class="row">
+			<div class="col-md-3" about="{concat($uri_space, $subtypeId)}" typeof="nm:type_series_item">
+				<h3 property="dcterms:title">
+					<a href="{concat($uri_space, $subtypeId)}">
+						<xsl:value-of select="nuds:descMeta/nuds:title"/>
+					</a>
+				</h3>
+				<span class="hidden" property="skos:broader">
+					<xsl:value-of select="concat($uri_space, $id)"/>
+				</span>
+				<ul>
+					<xsl:apply-templates select="nuds:descMeta/*[not(local-name()='title')]"/>
+				</ul>
+			</div>
+			<div class="col-md-9">
+				<xsl:if test="string($sparql_endpoint)">
+					<xsl:copy-of select="document(concat($request-uri, 'sparql?uri=', $uri_space, $subtypeId, '&amp;template=display&amp;subtype=true'))/div[@class='row']"/>
+				</xsl:if>
+			</div>
+		</div>
+		<hr/>
+	</xsl:template>
+
 	<!-- ************** PROCESS MODS RECORD INTO CHICAGO MANUAL OF STYLE CITATION ************** -->
 	<xsl:template name="mods-citation">
 		<xsl:apply-templates select="mods:modsCollection"/>

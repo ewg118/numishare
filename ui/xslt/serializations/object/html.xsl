@@ -105,6 +105,15 @@
 			</xsl:for-each>
 		</nudsGroup>
 	</xsl:variable>
+	
+	<!-- get subtypes -->
+	<xsl:variable name="subtypes" as="element()*">
+		<xsl:if test="$recordType='conceptual' and //config/collection_type='cointype'">
+			<xsl:copy-of select="document(concat($request-uri, 'get_subtypes?identifiers=', $id))/*"/>
+		</xsl:if>
+	</xsl:variable>
+	
+	<xsl:variable name="facets" select="string-join(//config//facet, ',')"/>
 
 	<!-- get non-coin-type RDF in the document -->
 	<xsl:variable name="rdf" as="element()*">
@@ -123,17 +132,6 @@
 			<xsl:variable name="rdf_url" select="concat('http://nomisma.org/apis/getRdf?identifiers=', encode-for-uri($id-param))"/>
 			<xsl:copy-of select="document($rdf_url)/rdf:RDF/*"/>
 		</rdf:RDF>
-	</xsl:variable>
-
-
-	<xsl:variable name="has_mint_geo">true</xsl:variable>
-
-	<xsl:variable name="has_findspot_geo">
-		<xsl:choose>
-			<xsl:when test="count($rdf/descendant::nm:findspot) &gt; 0 or descendant::*:geogname[@xlink:role='findspot' and string(@xlink:href)] or descendant::*:findspotDesc[@xlink:href]"
-				>true</xsl:when>
-			<xsl:otherwise>false</xsl:otherwise>
-		</xsl:choose>
 	</xsl:variable>
 
 	<xsl:template match="/">
@@ -219,11 +217,9 @@
 						<xsl:call-template name="generic_head"/>
 						<xsl:choose>
 							<xsl:when test="$recordType='physical'">
-								<xsl:if test="$has_mint_geo = 'true' or $has_findspot_geo = 'true'">
-									<script type="text/javascript" src="http://www.openlayers.org/api/OpenLayers.js"/>
-									<script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3.2&amp;sensor=false"/>
-									<script type="text/javascript" src="{$include_path}/javascript/display_map_functions.js"/>
-								</xsl:if>
+								<script type="text/javascript" src="http://www.openlayers.org/api/OpenLayers.js"/>
+								<script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3.2&amp;sensor=false"/>
+								<script type="text/javascript" src="{$include_path}/javascript/display_map_functions.js"/>
 							</xsl:when>
 							<!-- coin-type CSS and JS dependencies -->
 							<xsl:when test="$recordType='conceptual'">

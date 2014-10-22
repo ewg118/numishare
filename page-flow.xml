@@ -32,6 +32,9 @@
 	<!-- OCRE -->
 	<page path="/numishare/ocre/" model="xpl/models/config.xpl" view="file:///usr/local/projects/ocre/xpl/views/pages/index.xpl"/>
 	
+	<!-- AoD -->
+	<page path="/numishare/aod/" model="xpl/models/config.xpl" view="file:///usr/local/projects/aod/xpl/views/pages/index.xpl"/>
+	
 	<!-- **** SERIALIZATIONS **** -->	
 	<!-- Solr -->
 	<page path="/numishare/[^\/]+/results" model="xpl/models/solr/results.xpl" view="xpl/controllers/conneg-results.xpl"/>
@@ -93,6 +96,7 @@
 	<page path="/numishare/[^\/]+/get_hoard_quant" model="xpl/models/object/get-id.xpl" view="xpl/views/ajax/get_hoard_quant.xpl"/>
 	<page path="/numishare/[^\/]+/get_hoards" model="xpl/models/solr/get_hoards.xpl" view="xpl/views/ajax/get_hoards.xpl"/>	
 	<page path="/numishare/[^\/]+/get_search_facets" model="xpl/models/solr/get_search_facets.xpl" view="xpl/views/ajax/get_search_facets.xpl"/>	
+	<page path="/numishare/[^\/]+/get_subtypes" view="xpl/models/xquery/get-subtypes.xpl"/>
 	<page path="/numishare/[^\/]+/get_vis_custom" model="xpl/models/solr/get_vis_custom.xpl" view="xpl/views/ajax/get_vis_custom.xpl"/>
 	<page path="/numishare/[^\/]+/get_vis_quant" model="xpl/models/solr/get_vis_quant.xpl" view="xpl/views/ajax/get_vis_quant.xpl"/>
 	<page path="/numishare/[^\/]+/results_ajax" model="xpl/models/solr/results_ajax.xpl" view="xpl/views/ajax/results_ajax.xpl"/>

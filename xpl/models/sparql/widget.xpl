@@ -38,6 +38,7 @@
 				<xsl:param name="constraints" select="doc('input:request')/request/parameters/parameter[name='constraints']/value"/>
 				<xsl:param name="field" select="doc('input:request')/request/parameters/parameter[name='field']/value"/>
 				<xsl:param name="measurement" select="doc('input:request')/request/parameters/parameter[name='measurement']/value"/>
+				<xsl:param name="subtype" select="doc('input:request')/request/parameters/parameter[name='subtype']/value"/>
 				<xsl:variable name="api">
 					<xsl:choose>
 						<xsl:when test="$measurement='axis'">avgAxis</xsl:when>
@@ -57,10 +58,12 @@ PREFIX dcterms:  <http://purl.org/dc/terms/>
 PREFIX nm:       <http://nomisma.org/id/>
 PREFIX skos:      <http://www.w3.org/2004/02/skos/core#>
 PREFIX foaf:	<http://xmlns.com/foaf/0.1/>
+PREFIX ecrm: <http://erlangen-crm.org/current/>
 
 SELECT ?object ?title ?identifier ?collection ?weight ?axis ?diameter ?obvThumb ?revThumb ?obvRef ?revRef ?comThumb ?comRef  WHERE {
 ?object nm:type_series_item <typeUri>.
-?object a nm:coin .
+{?object a nm:coin}
+UNION {?object a ecrm:E18_Physical_Thing}
 ?object dcterms:title ?title .
 OPTIONAL { ?object dcterms:identifier ?identifier}
 OPTIONAL { ?object nm:collection ?colUri .

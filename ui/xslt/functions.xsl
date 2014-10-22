@@ -803,7 +803,7 @@
 					<xsl:when test="$label='shape'">Vorm</xsl:when>
 					<xsl:when test="$label='state'">Staat</xsl:when>
 					<xsl:when test="$label='subject'">Onderwerp</xsl:when>
-					<xsl:when test="$label='subjectSet'">Onderwerpen</xsl:when>
+					<xsl:when test="$label='subjectSet'">Onderwerpen</xsl:when>				
 					<xsl:when test="$label='symbol'">Symbool</xsl:when>
 					<xsl:when test="$label='testmark'">Testmerk</xsl:when>
 					<xsl:when test="$label='timestamp'">Wijzigingsdatum record</xsl:when>
@@ -1147,6 +1147,10 @@
 					<xsl:when test="$label='saleItem'">Sale Item</xsl:when>
 					<xsl:when test="$label='salePrice'">Sale Price</xsl:when>
 					<xsl:when test="$label='subjectSet'">SubjectSet</xsl:when>
+					<xsl:when test="$label='subjectEvent'">Associated Subject</xsl:when>
+					<xsl:when test="$label='subjectIssuer'">Associated Issuer</xsl:when>
+					<xsl:when test="$label='subjectPerson'">Associated Person</xsl:when>
+					<xsl:when test="$label='subjectPlace'">Associated Place</xsl:when>
 					<xsl:when test="$label='tpq'">Opening Date</xsl:when>
 					<xsl:when test="$label='taq'">Closing Date</xsl:when>
 					<xsl:when test="$label='testmark'">Test Mark</xsl:when>

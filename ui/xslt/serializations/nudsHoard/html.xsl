@@ -64,9 +64,9 @@
 					</xsl:if>
 					<xsl:if test="nh:descMeta/nh:noteSet">
 						<div class="metadata_section">
-							<h2>
+							<h3>
 								<xsl:value-of select="numishare:regularize_node('noteSet', $lang)"/>
-							</h2>
+							</h3>
 							<ul>
 								<xsl:apply-templates select="nh:descMeta/nh:noteSet/nh:note" mode="descMeta"/>
 							</ul>
@@ -185,9 +185,9 @@
 		<xsl:variable name="contentsDesc" as="element()*">
 			<xsl:copy-of select="parent::node()/nh:contentsDesc/nh:contents"/>
 		</xsl:variable>
-		<h2>
+		<h3>
 			<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
-		</h2>
+		</h3>
 		<ul>
 			<xsl:apply-templates mode="descMeta"/>
 			<xsl:if test="$hasContents = 'true'">
@@ -298,9 +298,9 @@
 		</ul>
 	</xsl:template>
 	<xsl:template match="nh:contents">
-		<h2>
+		<h3>
 			<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
-		</h2>
+		</h3>
 		<table class="table table-striped">
 			<thead>
 				<tr>

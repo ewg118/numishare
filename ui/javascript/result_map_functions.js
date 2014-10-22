@@ -153,7 +153,7 @@ function initialize_map(q, collection_type) {
 	
 	map.addLayer(mintLayer);
 	map.addLayer(hoardLayer);
-	//map.addLayer(subjectLayer);
+	map.addLayer(subjectLayer);
 	
 	function kmlLoaded() {
 		var bounds = new OpenLayers.Bounds();

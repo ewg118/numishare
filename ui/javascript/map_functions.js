@@ -281,6 +281,7 @@ $(document).ready(function () {
 		} else {
 			mintUrl = path + "mints.kml?q=" + query + (lang.length > 0 ? '&lang=' + lang: '');
 			hoardUrl = path + "findspots.kml?q=" + query + (lang.length > 0 ? '&lang=' + lang: '');
+			subjectUrl = path + "subjects.kml?q=" + query + (lang.length > 0 ? '&lang=' + lang: '');
 			
 			mintLayer.loaded = false;
 			mintLayer.setVisibility(true);
@@ -291,9 +292,13 @@ $(document).ready(function () {
 			hoardLayer.refresh({
 				force: true, url: hoardUrl
 			});
+			subjectLayer.refresh({
+				force: true, url: subjectUrl
+			});
 			var bounds = new OpenLayers.Bounds();
 			bounds.extend(mintLayer.getDataExtent());
 			bounds.extend(hoardLayer.getDataExtent());
+			bounds.extend(subjectLayer.getDataExtent());
 			map.zoomToExtent(bounds);
 		}
 	}
@@ -305,7 +310,6 @@ $(document).ready(function () {
 		},
 		function (data) {
 			$('#results').html(data);
-			
 		});
 		return false;
 	});
@@ -494,6 +498,7 @@ $(document).ready(function () {
 		var bounds = new OpenLayers.Bounds();
 		bounds.extend(mintLayer.getDataExtent());
 		bounds.extend(hoardLayer.getDataExtent());
+		bounds.extend(subjectLayer.getDataExtent());
 		map.zoomToExtent(bounds);
 	}
 	

@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?cocoon-disable-caching?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mets="http://www.loc.gov/METS/"
 	xmlns:numishare="https://github.com/ewg118/numishare" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nuds="http://nomisma.org/nuds"
 	exclude-result-prefixes="#all" version="2.0">
@@ -50,9 +49,24 @@
 							</div>
 						</div>
 						<xsl:call-template name="nuds_content"/>
-						<xsl:if test="string($sparql_endpoint)">
-							<xsl:copy-of select="document(concat($request-uri, 'sparql?uri=', //config/uri_space, $id, '&amp;template=display'))/div[@id='examples']"/>
-						</xsl:if>
+						<!-- handle subtypes if they exist -->
+						<xsl:choose>
+							<xsl:when test="count($subtypes//subtype) &gt; 0">
+								<hr/>
+								<a name="examples"/>
+								<h3>Variants</h3>
+								<xsl:apply-templates select="$subtypes//subtype">
+									<xsl:with-param name="uri_space" select="//config/uri_space"/>
+								</xsl:apply-templates>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:if test="string($sparql_endpoint)">
+									<xsl:if test="string($sparql_endpoint)">
+										<xsl:copy-of select="document(concat($request-uri, 'sparql?uri=', //config/uri_space, $id, '&amp;template=display'))/div[@id='examples']"/>
+									</xsl:if>
+								</xsl:if>
+							</xsl:otherwise>
+						</xsl:choose>	
 						<div class="row">
 							<div class="col-md-12">
 								<xsl:if test="$recordType='conceptual' and string($sparql_endpoint) and //config/collection_type='cointype'">
@@ -284,9 +298,9 @@
 	</xsl:template>
 
 	<xsl:template name="map-container">
-		<h2>
+		<h3>
 			<xsl:value-of select="numishare:normalizeLabel('display_map', $lang)"/>
-		</h2>
+		</h3>
 		<xsl:choose>
 			<xsl:when test="$recordType='conceptual'">
 				<div id="timemap">
@@ -331,18 +345,18 @@
 	</xsl:template>
 
 	<xsl:template match="nuds:undertypeDesc">
-		<h2>
+		<h3>
 			<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
-		</h2>
+		</h3>
 		<ul>
 			<xsl:apply-templates mode="descMeta"/>
 		</ul>
 	</xsl:template>
 
 	<xsl:template match="nuds:findspotDesc">
-		<h2>
+		<h3>
 			<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
-		</h2>
+		</h3>
 		<xsl:choose>
 			<xsl:when test="string(@xlink:href)">
 				<xsl:choose>
@@ -368,18 +382,18 @@
 	</xsl:template>
 
 	<xsl:template match="nuds:adminDesc">
-		<h2>
+		<h3>
 			<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
-		</h2>
+		</h3>
 		<ul>
 			<xsl:apply-templates mode="descMeta"/>
 		</ul>
 	</xsl:template>
 
 	<xsl:template match="nuds:subjectSet|nuds:noteSet">
-		<h2>
+		<h3>
 			<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
-		</h2>
+		</h3>
 		<ul>
 			<xsl:apply-templates/>
 		</ul>
@@ -550,9 +564,9 @@
 			'&amp;template=avgMeasurement&amp;measurement=weight'))"/>
 		
 		<a name="charts"/>
-		<h2>
+		<h3>
 			<xsl:value-of select="numishare:normalizeLabel('display_quantitative', $lang)"/>
-		</h2>
+		</h3>
 		
 		<xsl:if test="number($axis) &gt; 0 or number($diameter) &gt; 0 or number($weight) &gt; 0">
 			<p>Average measurements for this coin type:</p>
