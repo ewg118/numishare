@@ -54,10 +54,10 @@
 						<xsl:otherwise>
 							<xsl:choose>
 								<xsl:when test="string($lang)">
-									<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+lang:', $lang, '+AND+', encode-for-uri($q), '+AND+(mint_uri:*+OR+findspot_uri:*)&amp;category=', $category, '&amp;facet.field=', $category, '&amp;facet.sort=index&amp;facet.limit=-1&amp;facet.mincount=', $mincount, '&amp;rows=0')"/>
+									<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+lang:', $lang, '+AND+', encode-for-uri($q), '+AND+(mint_geo:*+OR+findspot_geo:*+OR+subject_geo:*)&amp;category=', $category, '&amp;facet.field=', $category, '&amp;facet.sort=index&amp;facet.limit=-1&amp;facet.mincount=', $mincount, '&amp;rows=0')"/>
 								</xsl:when>
 								<xsl:otherwise>
-									<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+NOT(lang:*)+AND+', encode-for-uri($q), '+AND+(mint_uri:*+OR+findspot_uri:*)&amp;category=', $category, '&amp;facet.field=', $category, '&amp;facet.sort=index&amp;facet.limit=-1&amp;facet.mincount=', $mincount, '&amp;rows=0')"/>
+									<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+NOT(lang:*)+AND+', encode-for-uri($q), '+AND+(mint_geo:*+OR+findspot_geo:*+OR+subject_geo:*)&amp;category=', $category, '&amp;facet.field=', $category, '&amp;facet.sort=index&amp;facet.limit=-1&amp;facet.mincount=', $mincount, '&amp;rows=0')"/>
 								</xsl:otherwise>
 							</xsl:choose>
 						</xsl:otherwise>
