@@ -467,47 +467,6 @@
 						</xsl:if>
 					</ul>
 				</div>
-				<!--<xsl:variable name="title" select="numishare:regularize_node(substring-before(@name, '_'), $lang)"/>
-
-				<button class="ui-multiselect hierarchical-facet" type="button" title="{$title}" aria-haspopup="true" style="width: 200px;" id="{@name}_link" label="{$q}">
-					<span class="ui-icon ui-icon-triangle-2-n-s"/>
-					<span>
-						<xsl:value-of select="$title"/>
-					</span>
-				</button>
-
-				<xsl:choose>
-					<xsl:when test="contains($q, @name)">
-						<div class="ui-multiselect-menu ui-widget ui-widget-content ui-corner-all hierarchical-div" id="{substring-before(@name, '_hier')}-container" style="width: 200px">
-							<div class="ui-widget-header ui-corner-all ui-multiselect-header ui-helper-clearfix ui-multiselect-hasfilter">
-								<ul class="ui-helper-reset">
-									<li class="ui-multiselect-close">
-										<a class="ui-multiselect-close hier-close" href="#"> close<span class="ui-icon ui-icon-circle-close"/>
-										</a>
-									</li>
-								</ul>
-							</div>
-							<ul class="{substring-before(@name, '_hier')}-multiselect-checkboxes ui-helper-reset hierarchical-list" id="{@name}-list" style="height: 175px;" title="{$title}">
-								<xsl:if test="contains($q, @name)">
-									<xsl:copy-of select="document(concat($request-uri, 'get_hier?q=', encode-for-uri($q), '&amp;fq=*&amp;prefix=L1&amp;link=&amp;field=', substring-before(@name, '_hier')))//ul[@id='root']/li"/>
-								</xsl:if>
-							</ul>
-						</div>
-					</xsl:when>
-					<xsl:otherwise>
-						<div class="ui-multiselect-menu ui-widget ui-widget-content ui-corner-all hierarchical-div" id="{substring-before(@name, '_hier')}-container" style="width: 200px;">
-							<div class="ui-widget-header ui-corner-all ui-multiselect-header ui-helper-clearfix ui-multiselect-hasfilter">
-								<ul class="ui-helper-reset">
-									<li class="ui-multiselect-close">
-										<a class="ui-multiselect-close hier-close" href="#"> close<span class="ui-icon ui-icon-circle-close"/>
-										</a>
-									</li>
-								</ul>
-							</div>
-							<ul class="{substring-before(@name, '_hier')}-multiselect-checkboxes ui-helper-reset hierarchical-list" id="{@name}-list" style="height: 175px;" title="{$title}"/>
-						</div>
-					</xsl:otherwise>
-				</xsl:choose>-->
 			</xsl:when>
 			<xsl:when test="@name='century_num'">
 				<div class="btn-group">
