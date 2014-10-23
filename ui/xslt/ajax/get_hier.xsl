@@ -5,7 +5,7 @@
 	<!-- globals -->
 	<xsl:variable name="solr-url" select="concat(/content/config/solr_published, 'select/')"/>
 	<xsl:variable name="collection-name" select="substring-before(substring-after(doc('input:request')/request/servlet-path, 'numishare/'), '/')"/>	
-	<xsl:variable name="request-uri" select="concat('http://localhost:8080', substring-before(doc('input:request')/request/request-uri, 'get_centuries'))"/>
+	<xsl:variable name="request-uri" select="concat('http://localhost:8080', substring-before(doc('input:request')/request/request-uri, 'get_hier'))"/>
 	
 
 	<!-- solr query parameters -->
@@ -68,14 +68,14 @@
 
 						<xsl:choose>
 							<xsl:when test="contains($q, @name)">
-								<input type="checkbox" value="{@name}" checked="checked">
+								<input type="checkbox" value="{@name}" checked="checked" field="{$field}">
 									<xsl:if test="$next-prefix-count = 0">
 										<xsl:attribute name="style">margin-left:12px;</xsl:attribute>
 									</xsl:if>
 								</input>
 							</xsl:when>
 							<xsl:otherwise>
-								<input type="checkbox" value="{@name}">
+								<input type="checkbox" value="{@name}" field="{$field}">
 									<xsl:if test="$next-prefix-count = 0">
 										<xsl:attribute name="style">margin-left:12px;</xsl:attribute>
 									</xsl:if>
@@ -88,9 +88,9 @@
 							<xsl:choose>
 								<xsl:when test="contains($q, @name)">
 									<xsl:variable name="starter-space" select="if(contains(@name, 'L1|')) then '' else ' '"/>
-									<ul class="{$field}_level" id="{substring-after(replace(@name, ' ', '_'), '|')}__list">
+									<ul class="{$field}_level" id="{substring-after(replace(@name, ' ', '_'), '|')}__list">										
 										<xsl:copy-of
-											select="document(concat($request-uri, 'get_hier?q=', if (string($q)) then encode-for-uri($q) else '*:*', '&amp;fq=', @name, '&amp;prefix=', $next-prefix, '&amp;link=', concat($link, $starter-space, '%2B&#x022;', @name, '&#x022;'), '&amp;field=', $field))//li"
+											select="document(concat($request-uri, 'get_hier?q=', if (string($q)) then encode-for-uri($q) else '*:*', '&amp;fq=', encode-for-uri(@name), '&amp;prefix=', $next-prefix, '&amp;link=', encode-for-uri(concat($link, $starter-space, '+&#x022;', @name, '&#x022;')), '&amp;field=', $field))//ul[@id='root']/li"
 										/>										
 									</ul>
 								</xsl:when>

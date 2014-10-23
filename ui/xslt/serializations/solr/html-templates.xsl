@@ -50,7 +50,7 @@
 					<div style="text-align:center;">
 						<img src="{str[@name=$img_string]}" style="height:320px"/>
 					</div>
-				</xsl:if>				
+				</xsl:if>
 				<dl class="dl-horizontal">
 					<xsl:choose>
 						<xsl:when test="str[@name='recordType'] = 'hoard'">
@@ -356,7 +356,19 @@
 	</xsl:template>
 	<xsl:template match="lst[@name='facet_fields']">
 		<!-- ignore mint_geo-->
-		<xsl:apply-templates select="lst[not(@name='mint_geo') and number(int[@name='numFacetTerms']) &gt; 0]" mode="facet"/>
+		<xsl:choose>
+			<xsl:when test="$collection_type = 'hoard'">
+				<h4>Hoard</h4>
+				<xsl:apply-templates select="lst[(@name='taq_num' or @name='findspot_hier' or @name='reference_facet') and number(int[@name='numFacetTerms']) &gt; 0]" mode="facet"/>
+				<h4>Contents</h4>
+				<xsl:apply-templates select="lst[(@name='authority_facet'or @name='coinType_facet' or @name='deity_facet' or @name='denomination_facet' or @name='issuer_facet' or
+					@name='manufacture_facet' or @name='material_facet' or @name='mint_facet' or @name='objectType_facet' or @name='portrait_facet' or @name='region_facet') and
+					number(int[@name='numFacetTerms']) &gt; 0]" mode="facet"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:apply-templates select="lst[not(@name='mint_geo') and number(int[@name='numFacetTerms']) &gt; 0]" mode="facet"/>
+			</xsl:otherwise>
+		</xsl:choose>
 		<form action="results" method="GET" role="form" id="facet_form">
 			<xsl:variable name="imageavailable_stripped">
 				<xsl:for-each select="$tokenized_q[not(contains(., 'imagesavailable'))]">
@@ -435,6 +447,26 @@
 		</xsl:variable>
 		<xsl:choose>
 			<xsl:when test="contains(@name, '_hier')">
+				<xsl:variable name="title" select="numishare:regularize_node(substring-before(@name, '_'), $lang)"/>
+
+				<div class="btn-group">
+					<button class="dropdown-toggle btn btn-default hierarchical-facet" type="button" style="width:250px;margin-bottom:10px;" title="{$title}" id="{@name}-btn" label="{$q}">
+						<span>
+							<xsl:value-of select="$title"/>
+						</span>
+						<xsl:text> </xsl:text>
+						<b class="caret"/>
+					</button>
+					<ul class="dropdown-menu hier-list" id="{@name}-list">
+						<div class="text-right">
+							<a href="#" class="hier-close">close <span class="glyphicon glyphicon-remove"/></a>
+						</div>
+						<xsl:if test="contains($q, @name)">
+							<xsl:copy-of select="document(concat($request-uri, 'get_hier?q=', encode-for-uri($q), '&amp;fq=*&amp;prefix=L1&amp;link=&amp;field=', substring-before(@name,
+								'_hier')))//ul[@id='root']/li"/>
+						</xsl:if>
+					</ul>
+				</div>
 				<!--<xsl:variable name="title" select="numishare:regularize_node(substring-before(@name, '_'), $lang)"/>
 
 				<button class="ui-multiselect hierarchical-facet" type="button" title="{$title}" aria-haspopup="true" style="width: 200px;" id="{@name}_link" label="{$q}">
@@ -991,22 +1023,24 @@
 					<div class="btn-group pagination" style="float:right">
 						<xsl:choose>
 							<xsl:when test="$start_var &gt;= $rows">
-								<a class="btn btn-default pagingBtn" role="button" title="First" href="{if($pipeline='results') then 'results' else ''}?q={encode-for-uri($q)}{if (string($sort)) then concat('&amp;sort=', $sort)
-									else ''}{if(string($lang)) then concat('&amp;lang=', $lang) else ''}">
+								<a class="btn btn-default pagingBtn" role="button" title="First" href="{if($pipeline='results') then 'results' else ''}?q={encode-for-uri($q)}{if (string($sort)) then
+									concat('&amp;sort=', $sort)          else ''}{if(string($lang)) then concat('&amp;lang=', $lang) else ''}">
 									<span class="glyphicon glyphicon-fast-backward"/>
 								</a>
-								<a class="btn btn-default pagingBtn" role="button" title="Previous" href="{if($pipeline='results') then 'results' else ''}?q={encode-for-uri($q)}&amp;start={$previous}{if (string($sort)) then
-									concat('&amp;sort=',          $sort) else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+								<a class="btn btn-default pagingBtn" role="button" title="Previous" href="{if($pipeline='results') then 'results' else
+									''}?q={encode-for-uri($q)}&amp;start={$previous}{if (string($sort)) then          concat('&amp;sort=',          $sort) else ''}{if (string($lang)) then
+									concat('&amp;lang=', $lang) else ''}">
 									<span class="glyphicon glyphicon-backward"/>
 								</a>
 							</xsl:when>
 							<xsl:otherwise>
-								<a class="btn btn-default disabled" role="button" title="First" href="{if($pipeline='results') then 'results' else ''}?q={encode-for-uri($q)}{if (string($sort)) then concat('&amp;sort=', $sort)
-									else ''}{if(string($lang)) then concat('&amp;lang=', $lang) else ''}">
+								<a class="btn btn-default disabled" role="button" title="First" href="{if($pipeline='results') then 'results' else ''}?q={encode-for-uri($q)}{if (string($sort)) then
+									concat('&amp;sort=', $sort)          else ''}{if(string($lang)) then concat('&amp;lang=', $lang) else ''}">
 									<span class="glyphicon glyphicon-fast-backward"/>
 								</a>
-								<a class="btn btn-default disabled" role="button" title="Previous" href="{if($pipeline='results') then 'results' else ''}?q={encode-for-uri($q)}&amp;start={$previous}{if (string($sort)) then
-									concat('&amp;sort=', $sort) else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+								<a class="btn btn-default disabled" role="button" title="Previous" href="{if($pipeline='results') then 'results' else
+									''}?q={encode-for-uri($q)}&amp;start={$previous}{if (string($sort)) then          concat('&amp;sort=', $sort) else ''}{if (string($lang)) then concat('&amp;lang=',
+									$lang) else ''}">
 									<span class="glyphicon glyphicon-backward"/>
 								</a>
 							</xsl:otherwise>
@@ -1020,22 +1054,22 @@
 						<!-- next page -->
 						<xsl:choose>
 							<xsl:when test="$numFound - $start_var &gt; $rows">
-								<a class="btn btn-default pagingBtn" role="button" title="Next" href="{if($pipeline='results') then 'results' else ''}?q={encode-for-uri($q)}&amp;start={$next}{if (string($sort)) then
-									concat('&amp;sort=', $sort) else          ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+								<a class="btn btn-default pagingBtn" role="button" title="Next" href="{if($pipeline='results') then 'results' else ''}?q={encode-for-uri($q)}&amp;start={$next}{if
+									(string($sort)) then          concat('&amp;sort=', $sort) else          ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
 									<span class="glyphicon glyphicon-forward"/>
 								</a>
-								<a class="btn btn-default pagingBtn" role="button" href="{if($pipeline='results') then 'results' else ''}?q={encode-for-uri($q)}&amp;start={($total * $rows) - $rows}{if (string($sort)) then
-									concat('&amp;sort=',          $sort) else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+								<a class="btn btn-default pagingBtn" role="button" href="{if($pipeline='results') then 'results' else ''}?q={encode-for-uri($q)}&amp;start={($total * $rows) - $rows}{if
+									(string($sort)) then          concat('&amp;sort=',          $sort) else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
 									<span class="glyphicon glyphicon-fast-forward"/>
 								</a>
 							</xsl:when>
 							<xsl:otherwise>
-								<a class="btn btn-default disabled" role="button" title="Next" href="{if($pipeline='results') then 'results' else ''}?q={encode-for-uri($q)}&amp;start={$next}{if (string($sort)) then
-									concat('&amp;sort=', $sort) else          ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+								<a class="btn btn-default disabled" role="button" title="Next" href="{if($pipeline='results') then 'results' else ''}?q={encode-for-uri($q)}&amp;start={$next}{if
+									(string($sort)) then          concat('&amp;sort=', $sort) else          ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
 									<span class="glyphicon glyphicon-forward"/>
 								</a>
-								<a class="btn btn-default disabled" role="button" href="{if($pipeline='results') then 'results' else ''}?q={encode-for-uri($q)}&amp;start={($total * $rows) - $rows}{if (string($sort)) then
-									concat('&amp;sort=', $sort)          else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+								<a class="btn btn-default disabled" role="button" href="{if($pipeline='results') then 'results' else ''}?q={encode-for-uri($q)}&amp;start={($total * $rows) - $rows}{if
+									(string($sort)) then          concat('&amp;sort=', $sort)          else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
 									<span class="glyphicon glyphicon-fast-forward"/>
 								</a>
 							</xsl:otherwise>
@@ -1155,10 +1189,10 @@
 		</div>
 	</xsl:template>
 	<!-- ************** PROCESS GROUP OF SPARQL RESULTS FROM NOMISMA TO DISPLAY IMAGES ************** -->
-	<xsl:template match="group" mode="results">		
+	<xsl:template match="group" mode="results">
 		<xsl:variable name="coin-count" select="number(coin-count)" as="xs:double"/>
 		<xsl:variable name="hoard-count" select="number(hoard-count)" as="xs:double"/>
-		<xsl:variable name="object-count" select="number(object-count)" as="xs:double"/>	
+		<xsl:variable name="object-count" select="number(object-count)" as="xs:double"/>
 		<xsl:variable name="count" select="$coin-count + $hoard-count + $object-count"/>
 		<!-- display images -->
 		<xsl:apply-templates select="descendant::object" mode="results"/>
@@ -1191,7 +1225,7 @@
 					<xsl:text>; </xsl:text>
 				</xsl:if>
 			</xsl:if>
-			
+
 			<xsl:if test="$hoard-count &gt; 0">
 				<xsl:choose>
 					<xsl:when test="$hoard-count = 1">
@@ -1206,7 +1240,7 @@
 			</xsl:if>
 		</xsl:if>
 	</xsl:template>
-	
+
 	<xsl:template match="object" mode="results">
 		<xsl:variable name="position" select="position()"/>
 		<!-- obverse -->
@@ -1288,7 +1322,7 @@
 			</xsl:when>
 		</xsl:choose>
 	</xsl:template>
-	
+
 	<!--<xsl:template name="compare_paging">
 		<xsl:variable name="start_var" as="xs:integer">
 			<xsl:choose>

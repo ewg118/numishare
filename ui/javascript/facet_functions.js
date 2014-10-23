@@ -21,13 +21,13 @@ function getQuery() {
 	}
 	
 	//hierarchical facets
-	/*$('.hierarchical-list').each(function () {
+	$('.hier-list').each(function () {
 		var field = $(this).attr('id').split('-list')[0];
 		var categories = new Array();
 		$(this).find('input:checked') .each(function () {
-			if ($(this) .parent('.h_item') .html() .indexOf('category_level') < 0 || $(this) .parent('.h_item') .children('ul') .html() .indexOf('<li') < 0 || $(this) .parent('.h_item') .children('.category_level').find('input:checked').length == 0) {
+			if ($(this) .parent('li') .html() .indexOf('category_level') < 0 || $(this) .parent('li') .children('ul') .html() .indexOf('<li') < 0 || $(this) .parent('li') .children('.category_level').find('input:checked').length == 0) {
 				segment = new Array();
-				$(this) .parents('.h_item').each(function () {
+				$(this) .parents('li').each(function () {
 					segment.push('+"' + $(this).children('input').val() + '"');
 				});
 				var joined = field + ':(' + segment.join(' ') + ')';
@@ -42,7 +42,7 @@ function getQuery() {
 				query.push(categories[0]);
 			}
 		}
-	});*/
+	});
 	
 	//get century/decades
 	var date = getDate();
@@ -189,20 +189,19 @@ function dateLabel() {
 function hierarchyLabel(field, title) {
 	categories = new Array();
 	$('#' + field + '_hier-list input:checked') .each(function () {
-		if ($(this) .parent('.h_item') .html() .indexOf('category_level') < 0 || $(this) .parent('.h_item') .children('ul') .html() .indexOf('<li') < 0 || $(this) .parent('.h_item') .children('.category_level').find('input:checked').length == 0) {
+		if ($(this) .parent('li') .html() .indexOf('category_level') < 0 || $(this) .parent('li') .children('ul') .html() .indexOf('<li') < 0 || $(this) .parent('li') .children('.category_level').find('input:checked').length == 0) {
 			segment = new Array();
-			$(this) .parents('.h_item').each(function () {
+			$(this) .parents('li').each(function () {
 				segment.push($(this).children('input').val().split('|')[1]);
 			});
 			var joined = segment.reverse().join('--');
 			categories.push(joined);
-			if (categories.length > 0 && categories.length <= 3) {
-				$('#' + field + '_hier_link').attr('title', title + ': ' + categories.join(', '));
-				$('#' + field + '_hier_link').children('span:nth-child(2)').text(title + ': ' + categories.join(', '));
-			} else if (categories.length > 3) {
-				$('#' + field + '_hier_link').attr('title', title + ': ' + categories.length + ' selected');
-				$('#' + field + '_hier_link').children('span:nth-child(2)').text(title + ': ' + categories.length + ' selected');
-			}
 		}
 	});
+	
+	if (categories.length > 0) {
+		$('#' + field + '_hier-btn').children('span').text(title + ': ' + categories.length + ' selected');
+	} else {
+		$('#' + field + '_hier-btn').children('span').text(title);
+	}
 }
