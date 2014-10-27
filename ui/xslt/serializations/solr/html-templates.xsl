@@ -33,7 +33,7 @@
 						<xsl:attribute name="class">col-md-12</xsl:attribute>
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:attribute name="class">col-md-8</xsl:attribute>
+						<xsl:attribute name="class">col-md-7 col-lg-8</xsl:attribute>
 					</xsl:otherwise>
 				</xsl:choose>
 				<xsl:if test="$mode='compare'">
@@ -519,7 +519,7 @@
 	<xsl:template match="lst[@name='mint_geo' or number(int[@name='numFacetTerms']) = 0]" mode="facet"/>
 	<xsl:template name="result_image">
 		<xsl:param name="alignment"/>
-		<div class="col-md-4 {$alignment}">
+		<div class="col-md-5 col-lg-4 {$alignment}">
 			<xsl:choose>
 				<xsl:when test="str[@name='recordType'] = 'physical'">
 					<xsl:if test="string(str[@name='thumbnail_obv'])">
