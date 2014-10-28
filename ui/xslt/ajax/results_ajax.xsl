@@ -205,49 +205,7 @@
 								<xsl:value-of select="if (string-length(str[@name='rev_type_display']) &gt; 30) then concat(substring(str[@name='rev_type_display'], 1, 30), '...') else
 									str[@name='rev_type_display']"/>
 							</dd>
-						</xsl:if>
-						<xsl:if test="int[@name='axis_num']">
-							<dt>
-								<xsl:if test="$lang='ar'">
-									<xsl:attribute name="class">ar</xsl:attribute>
-								</xsl:if>
-								<xsl:value-of select="numishare:regularize_node('diameter', $lang)"/>
-							</dt>
-							<dd>
-								<xsl:if test="$lang='ar'">
-									<xsl:attribute name="class">ar</xsl:attribute>
-								</xsl:if>
-								<xsl:value-of select="int[@name='axis_num']"/>
-							</dd>
-						</xsl:if>
-						<xsl:if test="float[@name='diameter_num']">
-							<dt>
-								<xsl:if test="$lang='ar'">
-									<xsl:attribute name="class">ar</xsl:attribute>
-								</xsl:if>
-								<xsl:value-of select="numishare:regularize_node('diameter', $lang)"/>
-							</dt>
-							<dd>
-								<xsl:if test="$lang='ar'">
-									<xsl:attribute name="class">ar</xsl:attribute>
-								</xsl:if>
-								<xsl:value-of select="float[@name='diameter_num']"/>
-							</dd>
-						</xsl:if>
-						<xsl:if test="float[@name='weight_num']">
-							<dt>
-								<xsl:if test="$lang='ar'">
-									<xsl:attribute name="class">ar</xsl:attribute>
-								</xsl:if>
-								<xsl:value-of select="numishare:regularize_node('weight', $lang)"/>
-							</dt>
-							<dd>
-								<xsl:if test="$lang='ar'">
-									<xsl:attribute name="class">ar</xsl:attribute>
-								</xsl:if>
-								<xsl:value-of select="float[@name='weight_num']"/>
-							</dd>
-						</xsl:if>
+						</xsl:if>						
 					</xsl:otherwise>
 				</xsl:choose>
 			</dl>

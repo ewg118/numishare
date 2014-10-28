@@ -30,6 +30,7 @@
 	<xsl:variable name="sparqlResult" as="element()*">
 		<empty/>
 	</xsl:variable>
+	<xsl:variable name="request-uri"/>
 	
 	<!-- misc -->
 	<xsl:variable name="display_path"/>

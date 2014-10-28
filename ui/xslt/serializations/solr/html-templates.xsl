@@ -13,20 +13,22 @@
 					<xsl:with-param name="alignment">left</xsl:with-param>
 				</xsl:call-template>
 			</xsl:if>
-			<h4>
-				<xsl:choose>
-					<xsl:when test="$mode = 'compare'">
-						<a href="{$display_path}id/{str[@name='recordId']}?mode=compare&amp;q={$q}&amp;start={$start}&amp;image={$image}&amp;side={$side}" class="compare">
-							<xsl:value-of select="str[@name='title_display']"/>
-						</a>
-					</xsl:when>
-					<xsl:otherwise>
-						<a href="{$display_path}id/{str[@name='recordId']}{if (string($lang)) then concat('?lang=', $lang) else ''}">
-							<xsl:value-of select="str[@name='title_display']"/>
-						</a>
-					</xsl:otherwise>
-				</xsl:choose>
-			</h4>
+			<div class="col-md-12">
+				<h4>
+					<xsl:choose>
+						<xsl:when test="$mode = 'compare'">
+							<a href="{$display_path}id/{str[@name='recordId']}?mode=compare&amp;q={$q}&amp;start={$start}&amp;image={$image}&amp;side={$side}" class="compare">
+								<xsl:value-of select="str[@name='title_display']"/>
+							</a>
+						</xsl:when>
+						<xsl:otherwise>
+							<a href="{$display_path}id/{str[@name='recordId']}{if (string($lang)) then concat('?lang=', $lang) else ''}">
+								<xsl:value-of select="str[@name='title_display']"/>
+							</a>
+						</xsl:otherwise>
+					</xsl:choose>
+				</h4>
+			</div>			
 			<div>
 				<xsl:choose>
 					<xsl:when test="$mode='compare'">
@@ -1096,7 +1098,11 @@
 					<xsl:if test="string($lang)">
 						<input type="hidden" name="lang" value="{$lang}"/>
 					</xsl:if>
-					<input id="sort_button" class="btn btn-default" type="submit" value="{numishare:normalizeLabel('results_sort-results', $lang)}"/>
+					<input class="btn btn-default sort_button" type="submit" value="{numishare:normalizeLabel('results_sort-results', $lang)}">
+						<xsl:if test="not(string($sort))">
+							<xsl:attribute name="disabled"/>
+						</xsl:if>
+					</input>
 				</form>
 			</div>
 		</div>

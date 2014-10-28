@@ -70,18 +70,18 @@ $(document).ready(function () {
 	
 	/*** sort results ***/
 	//column 1
-	$(' #search1') .on('change', '.sort_div div .sortForm .sortForm_categories', function () {
+	$(' #search1') .on('change', 'div div .sortForm .sortForm_categories', function () {
 		var field = $(this).val();
-		var sort_order = $('.sortForm_order').val();
+		var sort_order = $(this).next('.sortForm_order').val();
 		setValue(field, sort_order, 'search1');
 	});
-	$(' #search1') .on('change', '.sort_div div .sortForm .sortForm_order', function () {
-		var field = $('.sortForm_categories').val();
+	$(' #search1') .on('change', 'div div .sortForm .sortForm_order', function () {
+		var field = $(this).prev('.sortForm_categories').val();
 		var sort_order = $(this).val();
 		setValue(field, sort_order, 'search1');
 	});
 	
-	$(' #search1') .on('click', '.sort_div div .sortForm .sort_button', function () {
+	$(' #search1') .on('click', 'div div .sortForm .sort_button', function () {
 		var image = $('#image') .val();
 		var query = $('#search1 input[name=q]') .val();
 		var sort = $('#search1 input[name=sort]') .val();
@@ -94,18 +94,18 @@ $(document).ready(function () {
 		return false;
 	});
 	//column 2
-	$(' #search2') .on('change', '.sort_div div .sortForm .sortForm_categories', function () {
+	$(' #search2') .on('change', 'div div .sortForm .sortForm_categories', function () {
 		var field = $(this).val();
-		var sort_order = $('.sortForm_order').val();
+		var sort_order = $(this).next('.sortForm_order').val();
 		setValue(field, sort_order, 'search2');
 	});
-	$(' #search2') .on('change', '.sort_div div .sortForm .sortForm_order', function () {
-		var field = $('.sortForm_categories').val();
+	$(' #search2') .on('change', 'div div .sortForm .sortForm_order', function () {
+		var field = $(this).prev('.sortForm_categories').val();
 		var sort_order = $(this).val();
 		setValue(field, sort_order, 'search2');
 	});
 	
-	$(' #search2') .on('click', '.sort_div div .sortForm .sort_button', function () {
+	$(' #search2') .on('click', 'div div .sortForm .sort_button', function () {
 		var image = $('#image') .val();
 		var query = $('#search2 input[name=q]') .val();
 		var sort = $('#search2 input[name=sort]') .val();
@@ -142,10 +142,10 @@ $(document).ready(function () {
 			}
 		}
 		if (field != 'null') {
-			$('#' + id + ' .sort_button') .removeAttr('disabled');
+			$('#' + id + ' .sort_button') .prop('disabled', false);
 			$('#' + id + ' .sort_param') .attr('value', category + ' ' + sort_order);
 		} else {
-			$('#' + id + ' .sort_button') .attr('disabled', 'disabled');
+			$('#' + id + ' .sort_button') .prop('disabled', true);
 		}
 	}
 	

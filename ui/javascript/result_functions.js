@@ -48,10 +48,10 @@ $(document).ready(function () {
 			}
 		}
 		if (field != 'null') {
-			$('.sort_button') .removeAttr('disabled');
+			$('.sort_button') .prop('disabled', false);
 			$('.sort_param') .attr('value', category + ' ' + sort_order);
 		} else {
-			$('.sort_button') .attr('disabled', 'disabled');
+			$('.sort_button') .prop('disabled', true);
 		}
 	}
 	
