@@ -21,7 +21,7 @@ $(document).ready(function() {
 	
 	// activates the advanced search action
 	$('.compare_button') .click(function () {
-		var image = $('#image') .attr('value');
+		var image = $('#image') .val();
 		
 		var query1 = assembleQuery('dataset1');
 		var query2 = assembleQuery('dataset2');

@@ -36,6 +36,13 @@
 	<!-- CHRR -->
 	<page path="/numishare/chrr/" model="xpl/models/config.xpl" view="file:///usr/local/projects/chrr/xpl/views/pages/index.xpl"/>	
 	
+	<!-- MANTIS -->
+	<!-- pages -->
+	<page path="/numishare/mantis/" model="xpl/models/config.xpl" view="file:///usr/local/projects/mantis/xpl/views/pages/index.xpl"/>
+	<page path="/numishare/mantis/maps" model="file:///usr/local/projects/mantis/xpl/models/solr/maps.xpl" view="file:///usr/local/projects/mantis/xpl/views/pages/maps.xpl"/>
+	<page path="/numishare/mantis/maps/fullscreen" model="file:///usr/local/projects/mantis/xpl/models/solr/maps.xpl" view="file:///usr/local/projects/mantis/xpl/views/pages/maps_fullscreen.xpl"/>
+	<page path="/numishare/mantis/department/[^\/]+" model="file:///usr/local/projects/mantis/xpl/models/solr/department.xpl" view="file:///usr/local/projects/mantis/xpl/views/pages/department.xpl"/>
+	
 	<!-- OCRE -->
 	<page path="/numishare/ocre/" model="xpl/models/config.xpl" view="file:///usr/local/projects/ocre/xpl/views/pages/index.xpl"/>	
 	
