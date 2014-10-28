@@ -12,6 +12,7 @@
 
 	<xsl:param name="q" select="doc('input:request')/request/parameters/parameter[name='q']/value"/>
 	<xsl:param name="lang" select="doc('input:request')/request/parameters/parameter[name='lang']/value"/>
+	<xsl:param name="department" select="doc('input:request')/request/parameters/parameter[name='department']/value"/>
 	<xsl:variable name="tokenized_q" select="tokenize($q, ' AND ')"/>
 
 	<xsl:template match="/">
@@ -21,26 +22,31 @@
 					<xsl:value-of select="//config/title"/>
 					<xsl:text>: </xsl:text>
 					<xsl:value-of select="numishare:normalizeLabel('header_maps', $lang)"/>
+					<xsl:if test="string($department)">
+						<xsl:text> (</xsl:text>
+						<xsl:value-of select="$department"/>
+						<xsl:text>)</xsl:text>
+					</xsl:if>
 				</title>
 				<link rel="shortcut icon" type="image/x-icon" href="{$include_path}/images/favicon.png"/>
 				<meta name="viewport" content="width=device-width, initial-scale=1"/>
 
 				<!-- jquery -->
-				<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"/>				
+				<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"/>
 
 				<!-- bootstrap -->
 				<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"/>
 				<script type="text/javascript" src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"/>
 				<script type="text/javascript" src="{$include_path}/javascript/bootstrap-multiselect.js"/>
 				<link rel="stylesheet" href="{$include_path}/css/bootstrap-multiselect.css" type="text/css"/>
-				
+
 				<!-- Add fancyBox -->
 				<link rel="stylesheet" href="{$include_path}/css/jquery.fancybox.css?v=2.1.5" type="text/css" media="screen"/>
 				<script type="text/javascript" src="{$include_path}/javascript/jquery.fancybox.pack.js?v=2.1.5"/>
 
 				<!-- display timemap for hoards, regular openlayers map for coin and coin type collections -->
 				<xsl:choose>
-					<xsl:when test="$collection_type='hoard'">						
+					<xsl:when test="$collection_type='hoard'">
 						<!-- timemap dependencies -->
 						<script type="text/javascript" src="http://www.openlayers.org/api/OpenLayers.js"/>
 						<script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3.2&amp;sensor=false"/>
@@ -53,7 +59,7 @@
 						<script type="text/javascript" src="{$include_path}/javascript/map_functions.js"/>
 						<script type="text/javascript" src="{$include_path}/javascript/facet_functions.js"/>
 					</xsl:when>
-					<xsl:otherwise>						
+					<xsl:otherwise>
 						<!-- maps-->
 						<script type="text/javascript" src="http://www.openlayers.org/api/OpenLayers.js"/>
 						<script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3.2&amp;sensor=false"/>
@@ -62,7 +68,7 @@
 						<script type="text/javascript" src="{$include_path}/javascript/facet_functions.js"/>
 					</xsl:otherwise>
 				</xsl:choose>
-				
+
 				<!-- local theme and styling -->
 				<link type="text/css" href="{$include_path}/css/fullscreen.css" rel="stylesheet"/>
 
@@ -108,7 +114,7 @@
 										</a>
 									</small>
 								</h2>
-								
+
 								<div class="legend">
 									<table>
 										<tbody>
@@ -135,7 +141,7 @@
 							</div>
 						</xsl:otherwise>
 					</xsl:choose>
-					
+
 					<div style="display:none">
 						<div id="map_filters">
 							<h2>
@@ -201,6 +207,11 @@
 				<span id="pipeline">
 					<xsl:value-of select="$pipeline"/>
 				</span>
+				<xsl:if test="string($department)">
+					<span id="department">
+						<xsl:value-of select="$department"/>
+					</span>
+				</xsl:if>
 				<span id="section">maps</span>
 				<span id="baselayers">
 					<xsl:value-of select="string-join(//config/baselayers/layer[@enabled=true()], ',')"/>
@@ -211,7 +222,8 @@
 	</xsl:template>
 
 	<xsl:template match="lst[@name='facet_fields']">
-		<xsl:for-each select="lst[not(@name='mint_geo') and number(int[@name='numFacetTerms']) &gt; 0 and not(@name='mint_facet')]|lst[@name='mint_facet' and $collection_type='hoard']">
+		<xsl:for-each select="lst[not(@name='mint_geo') and number(int[@name='numFacetTerms']) &gt; 0 and not(@name='mint_facet') and not(@name='department_facet')]|lst[@name='mint_facet' and
+			$collection_type='hoard']">
 
 			<xsl:variable name="val" select="@name"/>
 			<xsl:variable name="new_query">
@@ -291,8 +303,8 @@
 						</xsl:choose>
 					</xsl:variable>
 					<div class="col-md-4">
-						<select id="{@name}-select" multiple="multiple" class="multiselect" title="{$title}" q="{$q}" mincount="{$mincount}"
-							new_query="{if (contains($q, @name)) then $select_new_query else ''}">
+						<select id="{@name}-select" multiple="multiple" class="multiselect" title="{$title}" q="{$q}" mincount="{$mincount}" new_query="{if (contains($q, @name)) then $select_new_query
+							else ''}">
 							<xsl:if test="$pipeline='maps'">
 								<xsl:attribute name="style">width:180px</xsl:attribute>
 							</xsl:if>

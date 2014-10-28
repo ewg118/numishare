@@ -33,6 +33,7 @@
 	<xsl:variable name="geonames_api_key" select="/content/config/geonames_api_key"/>
 	<xsl:variable name="sparql_endpoint" select="/content/config/sparql_endpoint"/>
 	<xsl:variable name="url" select="/content/config/url"/>
+	<xsl:variable name="uri_space" select="/content/config/uri_space"/>
 	<xsl:variable name="collection_type" select="/content/config/collection_type"/>
 	<!-- get layout -->
 	<xsl:variable name="orientation" select="/content/config/theme/layouts/display/nuds/orientation"/>
@@ -305,10 +306,10 @@
 			</xsl:choose>
 		</title>
 		<!-- alternates -->
-		<link rel="alternate" type="application/xml" href="{concat($url, 'id/', $id)}.xml"/>
-		<link rel="alternate" type="application/rdf+xml" href="{concat($url, 'id/', $id)}.rdf"/>
-		<link rel="alternate" type="application/json" href="{concat($url, 'id/', $id)}.json"/>
-		<link rel="alternate" type="text/turtle" href="{concat($url, 'id/', $id)}.ttl"/>
+		<link rel="alternate" type="application/xml" href="{concat($uri_space, $id)}.xml"/>
+		<link rel="alternate" type="application/rdf+xml" href="{concat($uri_space, $id)}.rdf"/>
+		<link rel="alternate" type="application/json" href="{concat($uri_space, $id)}.json"/>
+		<link rel="alternate" type="text/turtle" href="{concat($uri_space, $id)}.ttl"/>
 		<link rel="alternate" type="application/vnd.google-earth.kml+xml" href="{concat($url, 'collection/', $id)}.kml"/>
 		<!-- CSS -->
 		<link rel="shortcut icon" type="image/x-icon" href="{$include_path}/images/favicon.png"/>
@@ -342,7 +343,7 @@
 						<xsl:when test="$recordType='physical'">nm:coin</xsl:when>
 					</xsl:choose>
 				</xsl:variable>
-				<div class="container-fluid" typeof="{$typeof}" about="{concat($url, 'id/', $id)}">
+				<div class="container-fluid" typeof="{$typeof}" about="{concat($uri_space, $id)}">
 					<xsl:choose>
 						<xsl:when test="count(/content/*[local-name()='nuds']) &gt; 0">
 							<xsl:call-template name="nuds"/>

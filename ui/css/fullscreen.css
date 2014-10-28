@@ -142,22 +142,6 @@ div.custominfostyle{
   AJAX RESULTS
   ***************************************
  */
-dl > div{
-	display:table;
-	margin-left:10px;
-	width:100%;
-}
-dt{
-	float:left;
-	clear:left;
-	width:125px;
-	text-align:right;
-	font-weight:bold;
-}
-dd{
-	margin:0 0 0 130px;
-	padding:0 0 0.5em 0;
-}
 .g_doc{
 	height:325px;
 }
@@ -170,9 +154,6 @@ dd{
 .gi{
 	padding:2px 2px;
 	max-width:120px;
-}
-.result_link{
-	font-size:120%;
 }
 /*
   ***************************************

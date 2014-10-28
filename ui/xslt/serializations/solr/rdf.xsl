@@ -5,7 +5,8 @@
 	xmlns:oa="http://www.w3.org/ns/oa#" xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:foaf="http://xmlns.com/foaf/0.1/" version="2.0">
 	
 	<xsl:param name="mode" select="//lst[@name='params']/str[@name='mode']"/>
-	<xsl:param name="url" select="/content/config/url"/>
+	<xsl:variable name="url" select="/content/config/url"/>
+	<xsl:variable name="uri_space" select="/content/config/uri_space"/>
 
 	<xsl:template match="/">
 		<rdf:RDF>
@@ -34,7 +35,7 @@
 			<dcterms:title>
 				<xsl:value-of select="str[@name='title_display']"/>
 			</dcterms:title>
-			<foaf:homepage rdf:resource="{$url}id/{$id}"/>
+			<foaf:homepage rdf:resource="{$uri_space}{$id}"/>
 			
 			<!-- temporal -->
 			<xsl:choose>
@@ -152,7 +153,7 @@
 		<xsl:variable name="recordType" select="str[@name='recordType']"/>
 		
 		<xsl:element name="nm:{if ($recordType='hoard') then 'hoard' else 'coin'}" namespace="http://nomisma.org/id/" exclude-result-prefixes="#all">			
-			<xsl:attribute name="rdf:about" select="concat($url, 'id/', $id)"/>
+			<xsl:attribute name="rdf:about" select="concat($uri_space, $id)"/>
 			<dcterms:title xml:lang="{if (str[@name='lang']) then str[@name='lang'] else 'en'}">
 				<xsl:value-of select="str[@name='title_display']"/>
 			</dcterms:title>

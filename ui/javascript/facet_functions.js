@@ -77,8 +77,52 @@ function getQuery() {
 		}
 	}
 	
+	//keyword search (only implemented on collection page)
+	if ($('#keyword').length > 0) {
+		if ($('#keyword').val().length > 0) {
+			query.push($('#keyword').val());
+		}
+	}
+	
+	//weight, diameter (only implemented on collection page)
+	if ($('#weight_int').length > 0) {
+		if ($('#weight_int').val().length > 0 && $('#weight_int').val() > 0) {
+			var weightString = '';
+			var weight = $('#weight_int') .val();
+			var range_value = $('#weight_range') .val();
+			if (range_value == 'lessequal') {
+				weightString += 'weight_num:[* TO ' + weight + ']';
+			} else if (range_value == 'greaterequal') {
+				weightString += 'weight_num:[' + weight + ' TO *]';
+			} else if (range_value == 'equal') {
+				weightString += 'weight_num:' + weight;
+			}
+			query.push(weightString);
+		}
+	}
+	if ($('#diameter_int').length > 0) {
+		if ($('#diameter_int').val().length > 0 && $('#diameter_int').val() > 0) {
+			var diameterString = '';
+			var diameter = $('#diameter_int') .val();
+			var range_value = $('#diameter_range') .val();
+			if (range_value == 'lessequal') {
+				diameterString += 'diameter_num:[* TO ' + diameter + ']';
+			} else if (range_value == 'greaterequal') {
+				diameterString += 'diameter_num:[' + diameter + ' TO *]';
+			} else if (range_value == 'equal') {
+				diameterString += 'diameter_num:' + diameter;
+			}
+			query.push(diameterString);
+		}
+	}
+	
 	if ($('#imagesavailable') .is(':checked')) {
 		query.push('imagesavailable:true');
+	}
+	
+	//add department from collection page
+	if ($('#department').length > 0) {		
+		query.push('department_facet:"' + $('#department').text() + '"');
 	}
 	
 	//set the value attribute of the q param to the query assembled by javascript

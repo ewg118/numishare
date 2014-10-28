@@ -72,7 +72,7 @@
 					<xsl:value-of select="."/>
 				</dcterms:title>
 			</xsl:for-each>
-			<foaf:homepage rdf:resource="{$url}id/{$id}"/>
+			<foaf:homepage rdf:resource="{$uri_space}{$id}"/>
 			<xsl:if test="string(@recordType)">
 				<!-- dates -->
 				<xsl:choose>
@@ -129,7 +129,7 @@
 				</xsl:variable>
 				<xsl:element name="{$element}">
 					<xsl:attribute name="rdf:about">
-						<xsl:value-of select="concat($url, 'id/', $id)"/>
+						<xsl:value-of select="concat($uri_space, $id)"/>
 					</xsl:attribute>
 					<xsl:for-each select="descendant::*:semanticDeclaration">
 						<xsl:namespace name="{*:prefix}" select="*:namespace"/>
@@ -147,7 +147,7 @@
 			<xsl:otherwise>
 				<xsl:choose>
 					<xsl:when test="@recordType='conceptual'">
-						<nm:type_series_item rdf:about="{$url}id/{$id}">
+						<nm:type_series_item rdf:about="{$uri_space}{$id}">
 							<!-- insert titles -->
 							<xsl:for-each select="descendant::nuds:descMeta/nuds:title">
 								<skos:prefLabel>
@@ -184,7 +184,7 @@
 						</xsl:apply-templates>
 					</xsl:when>
 					<xsl:when test="@recordType='physical'">
-						<nm:coin rdf:about="{$url}id/{$id}">
+						<nm:coin rdf:about="{$uri_space}{$id}">
 							<dcterms:title>
 								<xsl:if test="string(@xml:lang)">
 									<xsl:attribute name="xml:lang" select="@xml:lang"/>
@@ -230,10 +230,10 @@
 							<!-- findspot-->
 							<xsl:apply-templates select="nuds:descMeta/nuds:findspotDesc" mode="nomisma"/>
 							<xsl:if test="descendant::mets:fileGrp[@USE='obverse']">
-								<nm:obverse rdf:resource="{$url}id/{$id}#obverse"/>
+								<nm:obverse rdf:resource="{$uri_space}{$id}#obverse"/>
 							</xsl:if>
 							<xsl:if test="descendant::mets:fileGrp[@USE='reverse']">
-								<nm:reverse rdf:resource="{$url}id/{$id}#reverse"/>
+								<nm:reverse rdf:resource="{$uri_space}{$id}#reverse"/>
 							</xsl:if>							
 						</nm:coin>
 						<!-- images -->
@@ -251,7 +251,7 @@
 
 		<xsl:for-each select="mets:fileGrp">
 			<xsl:variable name="side" select="@USE"/>
-			<rdf:Description rdf:about="{$url}id/{$id}#{$side}">
+			<rdf:Description rdf:about="{$uri_space}{$id}#{$side}">
 				<xsl:for-each select="mets:file">
 					<xsl:choose>
 						<xsl:when test="@USE='thumbnail'">
@@ -315,16 +315,16 @@
 		<xsl:apply-templates select="descendant::nuds:geogname|descendant::nuds:persname|descendant::nuds:corpname" mode="nomisma"/>
 		<xsl:apply-templates select="nuds:date[@standardDate]|nuds:dateRange[child::node()/@standardDate]" mode="nomisma"/>
 		<xsl:if test="nuds:obverse">
-			<nm:obverse rdf:resource="{$url}id/{$id}#obverse"/>
+			<nm:obverse rdf:resource="{$uri_space}{$id}#obverse"/>
 		</xsl:if>
 		<xsl:if test="nuds:reverse">
-			<nm:reverse rdf:resource="{$url}id/{$id}#reverse"/>
+			<nm:reverse rdf:resource="{$uri_space}{$id}#reverse"/>
 		</xsl:if>
 	</xsl:template>
 
 	<xsl:template match="nuds:obverse|nuds:reverse" mode="nomisma">
 		<xsl:param name="id"/>
-		<rdf:Description rdf:about="{$url}id/{$id}#{local-name()}">
+		<rdf:Description rdf:about="{$uri_space}{$id}#{local-name()}">
 			<xsl:if test="nuds:legend">
 				<nm:legend>
 					<xsl:if test="string(@xml:lang)">
@@ -391,7 +391,7 @@
 			<xsl:when test="descendant::*:maintenanceStatus != 'new' and descendant::*:maintenanceStatus != 'derived' and descendant::*:maintenanceStatus != 'revised'">
 				<xsl:element name="nm:hoard">
 					<xsl:attribute name="rdf:about">
-						<xsl:value-of select="concat($url, 'id/', $id)"/>
+						<xsl:value-of select="concat($uri_space, $id)"/>
 					</xsl:attribute>
 					<xsl:for-each select="descendant::*:semanticDeclaration">
 						<xsl:namespace name="{*:prefix}" select="*:namespace"/>
@@ -407,7 +407,7 @@
 				</xsl:element>
 			</xsl:when>
 			<xsl:otherwise>
-				<nm:hoard rdf:about="{$url}id/{$id}">
+				<nm:hoard rdf:about="{$uri_space}{$id}">
 					<xsl:choose>
 						<xsl:when test="lang('en', descendant::nh:descMeta/nh:title)">
 							<dcterms:title xml:lang="en">

@@ -16,6 +16,7 @@ $(document).ready(function () {
 	
 	var path = $('#path').text();
 	var pipeline = $('#pipeline').text();
+	var department = $('#department').text();
 	
 	//set hierarchical labels on load
 	$('.hierarchical-facet').each(function () {
@@ -53,8 +54,7 @@ $(document).ready(function () {
 		});
 		var osm = new OpenLayers.Layer.OSM();
 		
-		var baselayers = $('#baselayers').text().split(',');
-		
+		var baselayers = $('#baselayers').text().split(',');		
 		
 		//initialize map
 		var mintStyle = new OpenLayers.Style({
@@ -166,17 +166,13 @@ $(document).ready(function () {
 		});
 		
 		//add baselayers
-		var i;
-		for (i = 0; i < baselayers.length; i++) {
-			map.addLayer(eval(baselayers[i]));
+		if (department == 'Roman' || department == 'Greek' || department == 'Byzantine') {
+			map.addLayers([imperium, google_physical, osm]);
+		} else {
+			map.addLayers([google_physical, osm]);
 		}
 		
-		map.addLayer(mintLayer);
-		map.addLayer(hoardLayer);
-		map.addLayer(subjectLayer);
-		
-		//zoom to extent of world
-		map.zoomTo('2');
+		map.addLayers([mintLayer, hoardLayer, subjectLayer]);
 		
 		//enable events for mint selection
 		SelectControl = new OpenLayers.Control.SelectFeature([mintLayer, hoardLayer, subjectLayer], {

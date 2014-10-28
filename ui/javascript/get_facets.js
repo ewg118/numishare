@@ -8,6 +8,9 @@ If the list is populated and then hidden, when it is re-activated, it fades in r
 $(document).ready(function () {	
 	var popupStatus = 0;
 	var pipeline = 'results';
+	var path = $('#path').text();
+	
+	
 	var langStr = getURLParameter('lang');
 	if (langStr == 'null') {
 		var lang = '';
@@ -31,7 +34,6 @@ $(document).ready(function () {
 	$("#backgroundPopup").on('click', function (event) {
 		disablePopup();
 	});
-	
 	//multiselect facets
 	$('.multiselect').multiselect({
 		buttonWidth: '250px',
@@ -62,7 +64,7 @@ $(document).ready(function () {
 				if (q.length > 0) {
 					var category = id.split('-select')[0];
 					var mincount = $(this).attr('mincount');
-					$.get('get_facet_options', {
+					$.get(path + 'get_facet_options', {
 						q: q, category: category, mincount: mincount, lang: lang, pipeline: 'results'
 					},
 					function (data) {
@@ -85,7 +87,7 @@ $(document).ready(function () {
 		var id = $(this).parent('div').prev('select').attr('id');
 		var category = id.split('-select')[0];
 		var mincount = $(this).parent('div').prev('select').attr('mincount');
-		$.get('get_facet_options', {
+		$.get(path + 'get_facet_options', {
 			q: q, category: category, mincount: mincount, lang: lang, pipeline: 'results'
 		},
 		function (data) {
@@ -122,7 +124,7 @@ $(document).ready(function () {
 		var field = $(this).attr('id').split('_hier')[0];
 		var list_id = $(this).attr('id').split('-btn')[0] + '-list';
 		if ($('#' + list_id).html().indexOf('<li') < 0) {
-			$.get('get_hier', {
+			$.get(path + 'get_hier', {
 				q: q, field: field, prefix: 'L1', fq: '*', link: '', lang: lang
 			},
 			function (data) {
@@ -156,7 +158,7 @@ $(document).ready(function () {
 			$(this).addClass('glyphicon-minus');
 			//perform ajax load on first click of expand button
 			if ($(this).parent('li').children('ul').html().indexOf('<li') < 0) {
-				$.get('get_hier', {
+				$.get(path + 'get_hier', {
 					q: q, field: field, prefix: prefix, fq: '"' + fq + '"', link: link, section: section, lang: lang
 				},
 				function (data) {
@@ -203,7 +205,7 @@ $(document).ready(function () {
 		q = getQuery();
 		var list_id = $(this).attr('id').split('_link')[0] + '-list';
 		if ($('#' + list_id).html().indexOf('<li') < 0) {
-			$.get('get_centuries', {
+			$.get(path + 'get_centuries', {
 				q: q
 			},
 			function (data) {
@@ -231,7 +233,7 @@ $(document).ready(function () {
 			$(this).addClass('glyphicon-minus');
 			//perform ajax load on first click of expand button
 			if ($(this).parent('li').children('ul').html().indexOf('<li') < 0) {
-				$.get('get_decades', {
+				$.get(path + 'get_decades', {
 					q: q, century: century
 				},
 				function (data) {

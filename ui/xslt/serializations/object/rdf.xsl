@@ -7,6 +7,7 @@
 	<xsl:include href="rdf-templates.xsl"/>
 	<!-- config variables -->
 	<xsl:variable name="url" select="/content/config/url"/>
+	<xsl:variable name="uri_space" select="/content/config/uri_space"/>
 	<xsl:variable name="mode"/>
 	<xsl:variable name="nudsGroup" as="element()*">
 		<blank/>

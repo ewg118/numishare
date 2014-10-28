@@ -192,6 +192,9 @@
 				<span id="current-query">
 					<xsl:value-of select="$q"/>
 				</span>
+				<span id="path">
+					<xsl:value-of select="$display_path"/>
+				</span>
 				<span id="baselayers">
 					<xsl:value-of select="string-join(//config/baselayers/layer[@enabled=true()], ',')"/>
 				</span>

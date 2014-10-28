@@ -11,6 +11,7 @@
 
 	<!-- config variables -->
 	<xsl:variable name="url" select="/content/config/url"/>
+	<xsl:variable name="uri_space" select="/content/config/uri_space"/>
 
 	<!-- other variables -->
 	<xsl:variable name="rows" as="xs:integer">100</xsl:variable>
