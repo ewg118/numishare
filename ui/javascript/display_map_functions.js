@@ -2,8 +2,7 @@ $(document).ready(function () {
 	var id = $('title').attr('id');
 	var collection_type = $('#collection_type').text();
 	var path = $('#path').text();
-	var pipeline = $('#pipeline').text();
-	var department = $('#department').text();
+	var pipeline = $('#pipeline').text();	
 	var langStr = getURLParameter('lang');
 	if (langStr == 'null') {
 		var lang = '';
@@ -102,9 +101,8 @@ function initialize_map(id, path, lang) {
 		})]
 	});
 	
-	
-	
 	//add baselayers
+	var department = $('#department').text();
 	if (department == 'Roman' || department == 'Greek' || department == 'Byzantine') {
 		map.addLayers([imperium, google_physical, osm]);
 	} else {
