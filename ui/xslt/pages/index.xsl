@@ -40,38 +40,25 @@
 		<div class="jumbotron">
 			<div class="container">
 				<div class="row">
-					<!-- display title and description in the jumbotron, including featured object, if available -->
-					<xsl:choose>
-						<xsl:when test="features_enabled = true()">
-							<div class="col-md-9">
-								<h1>
-									<xsl:value-of select="title"/>
-								</h1>
-								<p>
-									<xsl:value-of select="description"/>
-								</p>
-							</div>
-							<div class="col-md-3">
-								<xsl:copy-of select="/content/div[@id='feature']"/>
-							</div>
-						</xsl:when>
-						<xsl:otherwise>
-							<div class="col-md-12">
-								<h1>
-									<xsl:value-of select="title"/>
-								</h1>
-								<p>
-									<xsl:value-of select="description"/>
-								</p>
-							</div>
-						</xsl:otherwise>
-					</xsl:choose>
+					<div class="col-md-12">
+						<h1>
+							<xsl:value-of select="title"/>
+						</h1>
+						<p>
+							<xsl:value-of select="description"/>
+						</p>
+					</div>
 				</div>
 			</div>
 		</div>
 		<div class="container-fluid">
 			<div class="row">
-				<div class="col-md-9">
+				<div class="col-md-3">
+					<div class="highlight">
+						<h3>Sidebar Navigation</h3>
+					</div>					
+				</div>
+				<div class="col-md-6">
 					<!-- index -->
 					<p>The ANS collections database contains information on more than 600,000 objects in the Society’s collections. These include, coins, paper money, tokens, ‘primitive’ money, medals and decorations, from all parts of the world, and all periods in which such objects have been produced. </p>
 					<p>
@@ -117,6 +104,9 @@
 					<p>ANS policies on the acquisition and deacquisition of numismatic items are available <a class="wikilink" href="/About/AcquisitionDeacquisition">online</a>. </p>
 				</div>
 				<div class="col-md-3">
+					<div class="highlight">
+						<xsl:copy-of select="/content/div[@id='feature']"/>
+					</div>
 					<div class="highlight data_options">
 						<h3>Linked Data</h3>
 						<a href="{$display_path}feed/?q=*:*">
@@ -132,7 +122,7 @@
 								<img src="{$include_path}/images/nomisma.png" title="nomisma VOiD" alt="nomisma VOiD"/>
 							</a>
 						</xsl:if>
-					</div>
+					</div>					
 				</div>
 			</div>
 		</div>

@@ -4,23 +4,28 @@
  */
 /*
   ***************************************
-  VARIABLES
-  ***************************************
- */
-:root{
-	var-borderColor:#E7E7E7;
-	var-backgroundColor:#F8F8F8;
-}
-/*
-  ***************************************
   GLOBAL
   ***************************************
  */
 html{
 	background-color:#F8F8F8;
+	background-attachment:scroll;
+	background-image:url("http://numismatics.org/authorities/ui/images/pattern.gif");
+	background-position:center top;
+	background-repeat:repeat;
+}
+body{
+	color:#535e70;
+	font-family:Georgia, "Times New Roman", Times, serif;
+	font-size:14px;
+	line-height:18px;
 }
 .navbar{
 	margin-bottom:0;
+	border-bottom:4px solid black;
+}
+.navbar-brand {
+	padding:5px;
 }
 a > img{
 	border:none;
@@ -41,11 +46,16 @@ ul li{
   ***************************************
  */
 #footer{
-	background-color:#F8F8F8;
-	border-top:1px solid #E7E7E7;
+	background-color:#535e70;
+	border-top:1px solid #F8F8F8;
 	padding-top:10px;
 	padding-bottom:10px;
 	text-align:center;
+	font-size:80%;
+}
+#footer a{
+	color:white;
+	text-decoration:underline;
 }
 /*
   ***************************************
@@ -199,11 +209,11 @@ select[name = "interval"],
   DEPARTMENT PAGES
   ***************************************
  */
- .technical-control {
- 	width:40%;
- 	margin:0 5%;
- 	display:inline;
- }
+.technical-control{
+	width:40%;
+	margin:0 5%;
+	display:inline;
+}
 /*
   ***************************************
   RESULTS PAGES
@@ -223,7 +233,7 @@ select[name = "interval"],
 .thumbImage > img{
 	max-width:120px;
 }
-.quick_search {
+.quick_search{
 	width:250px;
 	padding:10px 0;
 }
@@ -277,11 +287,13 @@ button.multiselect{
 	float:right;
 	padding-right:5px;
 }
-.category_level, .findspot_level{
+.category_level,
+.findspot_level{
 	margin-left:20px;
 	padding:0;
 }
-#century_num-list, .hier-list{
+#century_num-list,
+.hier-list{
 	max-height:250px;
 	width:250px;
 	overflow-y:auto;
@@ -289,7 +301,8 @@ button.multiselect{
 	width:100%;
 	z-index:3000;
 }
-.expand_century, .expand_category {
+.expand_century,
+.expand_category{
 	cursor:pointer;
 	margin:1px;
 }
