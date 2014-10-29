@@ -221,7 +221,7 @@ select[name = "interval"],
   ***************************************
  */
 .result-doc{
-	margin-top:10px 0;
+	margin:10px 0;
 	border-bottom:1px solid #E7E7E7;
 }
 #map_results{
