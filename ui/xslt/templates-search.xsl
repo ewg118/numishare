@@ -70,7 +70,7 @@
 					<xsl:text>fulltext,artist_facet,authority_facet,coinType_facet,deity_facet,denomination_facet,dynasty_facet,issuer_facet,legend_text,obv_leg_text,rev_leg_text,maker_facet,manufacture_facet,material_facet,mint_facet,objectType_facet,portrait_facet,recordId,reference_facet,region_facet,type_text,obv_type_text,rev_type_text,year_num</xsl:text>
 				</xsl:when>
 				<xsl:otherwise>
-					<xsl:text>fulltext,artist_facet,authority_facet,coinType_facet,deity_facet,denomination_facet,diameter_num,dynasty_facet,issuer_facet,legend_text,obv_leg_text,rev_leg_text,maker_facet,manufacture_facet,material_facet,mint_facet,objectType_facet,portrait_facet,recordId,reference_facet,region_facet,type_text,obv_type_text,rev_type_text,weight_num,year_num</xsl:text>
+					<xsl:text>fulltext,artist_facet,authority_facet,coinType_facet,deity_facet,denomination_facet,department_facet,diameter_num,dynasty_facet,issuer_facet,legend_text,obv_leg_text,rev_leg_text,maker_facet,manufacture_facet,material_facet,mint_facet,objectType_facet,portrait_facet,recordId,reference_facet,region_facet,type_text,obv_type_text,rev_type_text,weight_num,year_num</xsl:text>
 				</xsl:otherwise>
 			</xsl:choose>
 			
