@@ -38,10 +38,29 @@
 	
 	<!-- MANTIS -->
 	<!-- pages -->
-	<page path="/numishare/mantis/" model="xpl/models/config.xpl" view="file:///usr/local/projects/mantis/xpl/views/pages/index.xpl"/>
+	<page path="/numishare/mantis/apis" model="xpl/models/solr/apis.xpl" view="file:///usr/local/projects/mantis/xpl/views/pages/apis.xpl"/>
+	<page path="/numishare/mantis/compare" model="xpl/models/solr/search.xpl" view="file:///usr/local/projects/mantis/xpl/views/pages/compare.xpl"/>
+	<page path="/numishare/mantis/department/[^\/]+" model="file:///usr/local/projects/mantis/xpl/models/solr/department.xpl" view="file:///usr/local/projects/mantis/xpl/views/pages/department.xpl"/>
 	<page path="/numishare/mantis/maps" model="file:///usr/local/projects/mantis/xpl/models/solr/maps.xpl" view="file:///usr/local/projects/mantis/xpl/views/pages/maps.xpl"/>
 	<page path="/numishare/mantis/maps/fullscreen" model="file:///usr/local/projects/mantis/xpl/models/solr/maps.xpl" view="file:///usr/local/projects/mantis/xpl/views/pages/maps_fullscreen.xpl"/>
-	<page path="/numishare/mantis/department/[^\/]+" model="file:///usr/local/projects/mantis/xpl/models/solr/department.xpl" view="file:///usr/local/projects/mantis/xpl/views/pages/department.xpl"/>
+	<page path="/numishare/mantis/search" model="xpl/models/solr/search.xpl" view="file:///usr/local/projects/mantis/xpl/views/pages/search.xpl"/>
+	<page path="/numishare/mantis/visualize" model="xpl/models/solr/search.xpl" view="file:///usr/local/projects/mantis/xpl/views/pages/visualize.xpl"/>
+	<page path="/numishare/mantis/" model="xpl/models/config.xpl" view="file:///usr/local/projects/mantis/xpl/views/pages/index.xpl"/>
+	
+	<!-- serializations -->
+	<!-- Solr -->
+	<page path="/numishare/mantis/results" model="xpl/models/solr/results.xpl" view="file:///usr/local/projects/mantis/xpl/controllers/conneg-results.xpl"/>
+	<page path="/numishare/mantis/feed/" model="xpl/models/solr/feed.xpl" view="file:///usr/local/projects/mantis/xpl/views/serializations/solr/atom.xpl"/>
+	
+	<!-- id -->
+	<page path="/numishare/mantis/id/(.*)\.xml" view="file:///usr/local/projects/mantis/xpl/models/object/get-id.xpl"/>
+	<page path="/numishare/mantis/id/(.*)\.rdf" model="file:///usr/local/projects/mantis/xpl/models/object/get-id.xpl" view="file:///usr/local/projects/mantis/xpl/views/serializations/object/rdf.xpl"/>
+	<page path="/numishare/mantis/id/(.*)\.json" model="file:///usr/local/projects/mantis/xpl/models/object/get-id.xpl" view="xpl/views/serializations/rdf/json-ld.xpl"/>
+	<page path="/numishare/mantis/id/(.*)\.kml" model="file:///usr/local/projects/mantis/xpl/models/object/get-id.xpl" view="xpl/views/serializations/object/kml.xpl"/>
+	<page path="/numishare/mantis/id/(.*)\.ttl" model="file:///usr/local/projects/mantis/xpl/models/object/get-id.xpl" view="xpl/views/serializations/rdf/ttl.xpl"/>
+	<page path="/numishare/mantis/id/(.*)\.solr" model="file:///usr/local/projects/mantis/xpl/models/object/get-id.xpl" view="xpl/views/serializations/object/solr.xpl"/>
+	<page path="/numishare/mantis/id/(.*)" model="file:///usr/local/projects/mantis/xpl/models/object/get-id.xpl" view="file:///usr/local/projects/mantis/xpl/controllers/conneg-id.xpl"/>
+	<page path="/numishare/mantis/map/(.*)" model="file:///usr/local/projects/mantis/xpl/models/object/get-id.xpl" view="xpl/views/serializations/object/html-map.xpl"/>
 	
 	<!-- OCRE -->
 	<page path="/numishare/ocre/" model="xpl/models/config.xpl" view="file:///usr/local/projects/ocre/xpl/views/pages/index.xpl"/>	
