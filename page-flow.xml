@@ -62,6 +62,9 @@
 	<page path="/numishare/mantis/id/(.*)" model="file:///usr/local/projects/mantis/xpl/models/object/get-id.xpl" view="file:///usr/local/projects/mantis/xpl/controllers/conneg-id.xpl"/>
 	<page path="/numishare/mantis/map/(.*)" model="file:///usr/local/projects/mantis/xpl/models/object/get-id.xpl" view="xpl/views/serializations/object/html-map.xpl"/>
 	
+	<!-- apis -->
+	<page path="/numishare/mantis/apis/get" model="file:///usr/local/projects/mantis/xpl/models/object/get-id.xpl" view="xpl/views/apis/get.xpl"/>	
+	
 	<!-- OCRE -->
 	<page path="/numishare/ocre/" model="xpl/models/config.xpl" view="file:///usr/local/projects/ocre/xpl/views/pages/index.xpl"/>	
 	
