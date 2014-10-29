@@ -51,7 +51,7 @@
 		<xsl:variable name="facets" as="element()*">
 			<xsl:copy-of select="descendant::lst[@name='facet_fields']"/>
 		</xsl:variable>
-		<xsl:variable name="places">
+		<xsl:variable name="places" as="item()*">
 			<xsl:analyze-string select="$q" regex="_uri:&#x022;([^&#x022;]+)&#x022;">
 				<xsl:matching-substring>
 					<xsl:variable name="value" select="regex-group(1)"/>
