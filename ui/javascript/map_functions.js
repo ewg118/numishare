@@ -33,7 +33,12 @@ $(document).ready(function () {
 	});
 	
 	/* INITIALIZE MAP */
-	var q = '*:*';
+	if (department.length > 0){
+		var q = 'department_facet:"' + department + '"';
+	} else {
+		var q = '*:*';
+	}
+	
 	var collection_type = $('#collection_type').text();
 	
 	//initialize timemap if hoard
