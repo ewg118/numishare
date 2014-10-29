@@ -100,7 +100,7 @@
 									</a>
 								</h3>
 								<small>
-									<a href="{$display_path}maps"><span class="glyphicon glyphicon-arrow-left"/>Return</a>
+									<a href="{$display_path}maps{if(string($department)) then concat('?department=', $department) else ''}"><span class="glyphicon glyphicon-arrow-left"/>Return</a>
 								</small>
 							</div>
 						</xsl:when>
