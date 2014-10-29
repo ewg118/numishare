@@ -65,7 +65,7 @@
 			<xsl:analyze-string select="$q" regex="_uri:&#x022;([^&#x022;]+)&#x022;">
 				<xsl:matching-substring>
 					<xsl:variable name="value" select="regex-group(1)"/>
-					<xsl:value-of select="tokenize($facets/descendant::int[contains(@name, $value)]/@name, '\|')[1]"/>
+					<xsl:value-of select="tokenize($facets/descendant::int[contains(@name, $value)][1]/@name, '\|')[1]"/>
 					<xsl:if test="not(position() = last())">
 						<xsl:text>, </xsl:text>
 					</xsl:if>
