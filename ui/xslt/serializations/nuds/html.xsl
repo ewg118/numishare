@@ -190,7 +190,7 @@
 					<!-- process $typeDesc differently -->
 					<div class="metadata_section">
 						<xsl:apply-templates select="$nudsGroup//nuds:typeDesc">
-							<xsl:with-param name="typeDesc_resource" select="@xlink:href"/>
+							<xsl:with-param name="typeDesc_resource" select="$nudsGroup//*:object/@xlink:href"/>
 						</xsl:apply-templates>
 					</div>
 					<xsl:if test="nuds:descMeta/nuds:undertypeDesc">
@@ -245,8 +245,8 @@
 										<xsl:call-template name="map-container"/>
 									</div>
 								</div>
-							</div>
-						</div>
+							</div>														
+						</div>						
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:otherwise>
@@ -254,47 +254,51 @@
 	</xsl:template>
 
 	<xsl:template name="metadata-container">
-		<xsl:if test="nuds:descMeta/nuds:physDesc">
-			<div class="metadata_section">
-				<xsl:apply-templates select="nuds:descMeta/nuds:physDesc"/>
+		<div class="col-md-6">
+			<xsl:if test="nuds:descMeta/nuds:physDesc">
+				<div class="metadata_section">
+					<xsl:apply-templates select="nuds:descMeta/nuds:physDesc"/>
+				</div>
+			</xsl:if>
+			<!-- process $typeDesc differently -->
+			<div class="metadata_section">			
+				<xsl:apply-templates select="$nudsGroup//nuds:typeDesc">
+					<xsl:with-param name="typeDesc_resource" select="$nudsGroup//*:object/@xlink:href"/>
+				</xsl:apply-templates>
 			</div>
-		</xsl:if>
-		<!-- process $typeDesc differently -->
-		<div class="metadata_section">
-			<xsl:apply-templates select="$nudsGroup//nuds:typeDesc">
-				<xsl:with-param name="typeDesc_resource" select="@xlink:href"/>
-			</xsl:apply-templates>
+			<xsl:if test="nuds:descMeta/nuds:undertypeDesc">
+				<div class="metadata_section">
+					<xsl:apply-templates select="nuds:descMeta/nuds:undertypeDesc"/>
+				</div>
+			</xsl:if>
 		</div>
-		<xsl:if test="nuds:descMeta/nuds:undertypeDesc">
-			<div class="metadata_section">
-				<xsl:apply-templates select="nuds:descMeta/nuds:undertypeDesc"/>
-			</div>
-		</xsl:if>
-		<xsl:if test="nuds:descMeta/nuds:refDesc">
-			<div class="metadata_section">
-				<xsl:apply-templates select="nuds:descMeta/nuds:refDesc"/>
-			</div>
-		</xsl:if>
-		<xsl:if test="nuds:descMeta/nuds:adminDesc">
-			<div class="metadata_section">
-				<xsl:apply-templates select="nuds:descMeta/nuds:adminDesc"/>
-			</div>
-		</xsl:if>
-		<xsl:if test="nuds:descMeta/nuds:findspotDesc">
-			<div class="metadata_section">
-				<xsl:apply-templates select="nuds:descMeta/nuds:findspotDesc"/>
-			</div>
-		</xsl:if>
-		<xsl:if test="nuds:descMeta/nuds:subjectSet">
-			<div class="metadata_section">
-				<xsl:apply-templates select="nuds:descMeta/nuds:subjectSet"/>
-			</div>
-		</xsl:if>
-		<xsl:if test="nuds:descMeta/nuds:noteSet">
-			<div class="metadata_section">
-				<xsl:apply-templates select="nuds:descMeta/nuds:noteSet"/>
-			</div>
-		</xsl:if>
+		<div class="col-md-6">
+			<xsl:if test="nuds:descMeta/nuds:refDesc">
+				<div class="metadata_section">
+					<xsl:apply-templates select="nuds:descMeta/nuds:refDesc"/>
+				</div>
+			</xsl:if>
+			<xsl:if test="nuds:descMeta/nuds:adminDesc">
+				<div class="metadata_section">
+					<xsl:apply-templates select="nuds:descMeta/nuds:adminDesc"/>
+				</div>
+			</xsl:if>
+			<xsl:if test="nuds:descMeta/nuds:findspotDesc">
+				<div class="metadata_section">
+					<xsl:apply-templates select="nuds:descMeta/nuds:findspotDesc"/>
+				</div>
+			</xsl:if>
+			<xsl:if test="nuds:descMeta/nuds:subjectSet">
+				<div class="metadata_section">
+					<xsl:apply-templates select="nuds:descMeta/nuds:subjectSet"/>
+				</div>
+			</xsl:if>
+			<xsl:if test="nuds:descMeta/nuds:noteSet">
+				<div class="metadata_section">
+					<xsl:apply-templates select="nuds:descMeta/nuds:noteSet"/>
+				</div>
+			</xsl:if>
+		</div>
 	</xsl:template>
 
 	<xsl:template name="map-container">
