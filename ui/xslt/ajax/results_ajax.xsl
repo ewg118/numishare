@@ -61,16 +61,16 @@
 		</xsl:variable>
 		<h1>
 			<xsl:text>Place</xsl:text>
-			<!--<xsl:if test="contains($place_string, ' OR ')">
+			<xsl:if test="count($places) &gt; 0">
 				<xsl:text>s</xsl:text>
-			</xsl:if>-->
+			</xsl:if>
 			<xsl:text>: </xsl:text>
 			<small>
 				<a id="clear_all" href="#">clear</a>
 			</small>
 		</h1>
 		<h2>
-			<xsl:for-each select="$places">
+			<xsl:for-each select="$places[string-length(.) &gt; 0]">
 				<xsl:value-of select="."/>
 				<xsl:if test="not(position() = last())">
 					<xsl:text>, </xsl:text>
