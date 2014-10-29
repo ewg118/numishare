@@ -23,7 +23,7 @@ function initialize_map(q, collection_type) {
 	var google_physical = new OpenLayers.Layer.Google("Google Physical", {
 		type: google.maps.MapTypeId.TERRAIN
 	});
-	var imperium = new OpenLayers.Layer.XYZ(
+	/*var imperium = new OpenLayers.Layer.XYZ(
 	"Imperium Romanum",[
 	"http://pelagios.dme.ait.ac.at/tilesets/imperium/${z}/${x}/${y}.png"], {
 		sphericalMercator: true,
@@ -33,7 +33,7 @@ function initialize_map(q, collection_type) {
 	});
 	var osm = new OpenLayers.Layer.OSM();
 	
-	var baselayers = $('#baselayers').text().split(',');
+	var baselayers = $('#baselayers').text().split(',');*/
 	
 	var map = new OpenLayers.Map('resultMap', {
 		controls:[
@@ -146,14 +146,11 @@ function initialize_map(q, collection_type) {
 	});
 	
 	//add baselayers
-	var i;
+	/*var i;
 	for (i = 0; i < baselayers.length; i++) {
 		map.addLayer(eval(baselayers[i]));
-	}
-	
-	map.addLayer(mintLayer);
-	map.addLayer(hoardLayer);
-	map.addLayer(subjectLayer);
+	}*/
+	map.addLayers([google_physical, mintLayer, hoardLayer, subjectLayer]);
 	
 	function kmlLoaded() {
 		var bounds = new OpenLayers.Bounds();

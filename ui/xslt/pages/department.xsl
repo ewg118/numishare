@@ -8,6 +8,7 @@
 	<xsl:param name="lang" select="doc('input:request')/request/parameters/parameter[name='lang']/value"/>
 	<xsl:param name="department" select="substring-after(doc('input:request')/request/request-url, 'department/')"/>
 	<xsl:variable name="request-uri" select="concat('http://localhost:8080', substring-before(doc('input:request')/request/request-uri, 'department'))"/>
+	<xsl:variable name="uri_space"/>
 
 	<xsl:variable name="display_path">../</xsl:variable>
 	<xsl:variable name="include_path" select="concat('http://', doc('input:request')/request/server-name, ':8080/orbeon/themes/', //config/theme/orbeon_theme)"/>

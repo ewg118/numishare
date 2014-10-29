@@ -3,6 +3,7 @@ $(document).ready(function () {
 	var collection_type = $('#collection_type').text();
 	var path = $('#path').text();
 	var pipeline = $('#pipeline').text();
+	var department = $('#department').text();
 	var langStr = getURLParameter('lang');
 	if (langStr == 'null') {
 		var lang = '';
@@ -104,9 +105,10 @@ function initialize_map(id, path, lang) {
 	
 	
 	//add baselayers
-	var i;
-	for (i = 0; i < baselayers.length; i++) {
-		map.addLayer(eval(baselayers[i]));
+	if (department == 'Roman' || department == 'Greek' || department == 'Byzantine') {
+		map.addLayers([imperium, google_physical, osm]);
+	} else {
+		map.addLayers([google_physical, osm]);
 	}
 	
 	//point for coin or hoard KML

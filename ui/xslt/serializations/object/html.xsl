@@ -278,6 +278,9 @@
 							<span id="include_path">
 								<xsl:value-of select="$include_path"/>
 							</span>
+							<span id="department">
+								<xsl:value-of select="descendant::nuds:department"/>
+							</span>
 							<span id="pipeline">
 								<xsl:value-of select="$pipeline"/>
 							</span>

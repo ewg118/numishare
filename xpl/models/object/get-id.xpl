@@ -55,9 +55,10 @@
 									</xsl:otherwise>
 								</xsl:choose>
 							</xsl:variable>
+							<xsl:variable name="accessionYear" select="tokenize($id, '\.')[1]"/>							
 							<config>
 								<url>
-									<xsl:value-of select="concat(/exist-config/url, $collection-name, '/objects/', $id, '.xml')"/>
+									<xsl:value-of select="concat(/exist-config/url, $collection-name, '/objects/', $accessionYear, '/', $id, '.xml')"/>
 								</url>
 								<content-type>application/xml</content-type>
 								<encoding>utf-8</encoding>
@@ -65,9 +66,10 @@
 						</xsl:when>
 						<xsl:otherwise>							
 							<xsl:variable name="id" select="doc('input:request')/request/parameters/parameter[name='id']/value"/>
+							<xsl:variable name="accessionYear" select="tokenize($id, '\.')[1]"/>
 							<config>
 								<url>
-									<xsl:value-of select="concat(/exist-config/url, $collection-name, '/objects/', $id, '.xml')"/>
+									<xsl:value-of select="concat(/exist-config/url, $collection-name, '/objects/', $accessionYear, '/', $id, '.xml')"/>
 								</url>
 								<content-type>application/xml</content-type>
 								<encoding>utf-8</encoding>

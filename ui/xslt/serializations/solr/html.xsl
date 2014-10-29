@@ -38,6 +38,7 @@
 	<xsl:variable name="collection_type" select="/content/config/collection_type"/>
 	<xsl:variable name="sparql_endpoint" select="/content/config/sparql_endpoint"/>
 	<xsl:variable name="url" select="/content/config/url"/>
+	<xsl:variable name="uri_space" select="/content/config/uri_space"/>
 
 	<!-- get block of images from SPARQL endpoint, via nomisma API -->
 	<xsl:variable name="sparqlResult" as="element()*">

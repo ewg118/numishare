@@ -4,7 +4,7 @@
 	<xsl:template name="header">
 		<div class="navbar navbar-default navbar-static-top" role="navigation">
 			<div class="container-fluid">
-				<div class="navbar-header">					
+				<div class="navbar-header">
 					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
 						<span class="sr-only">Toggle navigation</span>
 						<span class="icon-bar"/>
@@ -27,7 +27,7 @@
 								<xsl:value-of select="//config/title"/>
 							</xsl:otherwise>
 						</xsl:choose>
-					</a>					
+					</a>
 				</div>
 				<div class="navbar-collapse collapse">
 					<xsl:if test="not($lang='ar')">
@@ -65,7 +65,7 @@
 			</div>
 		</div>
 	</xsl:template>
-	
+
 	<xsl:template name="menubar">
 		<xsl:choose>
 			<xsl:when test="$lang='ar'">
@@ -122,9 +122,10 @@
 					<a href="{$display_path}results?q=*:*{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
 						<xsl:value-of select="numishare:normalizeLabel('header_browse', $lang)"/>
 					</a>
-				</li>				
+				</li>
 			</xsl:when>
-			<xsl:otherwise>				
+			<xsl:otherwise>
+				<xsl:call-template name="department-dropdown"/>
 				<li>
 					<a href="{$display_path}results?q=*:*{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
 						<xsl:value-of select="numishare:normalizeLabel('header_browse', $lang)"/>
@@ -135,11 +136,7 @@
 						<xsl:value-of select="numishare:normalizeLabel('header_search', $lang)"/>
 					</a>
 				</li>
-				<li>
-					<a href="{$display_path}maps{if (string($lang)) then concat('?lang=', $lang) else ''}">
-						<xsl:value-of select="numishare:normalizeLabel('header_maps', $lang)"/>
-					</a>
-				</li>
+				<xsl:call-template name="maps-dropdown"/>
 				<xsl:if test="//config/collection_type= 'cointype' and string(//config/sparql_endpoint)">
 					<li>
 						<a href="{$display_path}contributors{if (string($lang)) then concat('?lang=', $lang) else ''}">
@@ -171,6 +168,9 @@
 				<li>
 					<a href="{$display_path}apis{if (string($lang)) then concat('?lang=', $lang) else ''}">APIs</a>
 				</li>
+				<li>
+					<a href="http://numismatics.org/">ANS Home</a>
+				</li>
 				<xsl:for-each select="//config/pages/page[public = '1']">
 					<li>
 						<a href="{$display_path}pages/{@stub}{if (string($lang)) then concat('?lang=', $lang) else ''}">
@@ -184,9 +184,40 @@
 				<xsl:call-template name="languages"/>
 			</xsl:otherwise>
 		</xsl:choose>
-		
+	</xsl:template>
+
+	<xsl:template name="department-dropdown">
+		<xsl:variable name="departments">Byzantine,East Asian,Greek,Islamic,Latin American,Medals And Decorations,Medieval,Modern,Roman,South Asian,United States</xsl:variable>
+		<li class="dropdown">
+			<a href="#" class="dropdown-toggle" data-toggle="dropdown"><xsl:value-of select="numishare:regularize_node('department', $lang)"/> <b class="caret"/></a>
+			<ul class="dropdown-menu">
+				<xsl:for-each select="tokenize($departments, ',')">
+					<li>
+						<a href="{$display_path}department/{replace(., ' ', '')}">
+							<xsl:value-of select="."/>
+						</a>
+					</li>
+				</xsl:for-each>
+			</ul>
+		</li>
 	</xsl:template>
 	
+	<xsl:template name="maps-dropdown">
+		<xsl:variable name="departments">Byzantine,East Asian,Greek,Islamic,Latin American,Medal,Medieval,Modern,Roman,South Asian,United States</xsl:variable>
+		<li class="dropdown">
+			<a href="#" class="dropdown-toggle" data-toggle="dropdown"><xsl:value-of select="numishare:normalizeLabel('header_maps', $lang)"/> <b class="caret"/></a>
+			<ul class="dropdown-menu">
+				<xsl:for-each select="tokenize($departments, ',')">
+					<li>
+						<a href="{$display_path}maps?department={.}">
+							<xsl:value-of select="."/>
+						</a>
+					</li>
+				</xsl:for-each>
+			</ul>
+		</li>
+	</xsl:template>
+
 	<xsl:template name="languages">
 		<xsl:if test="count(//config/descendant::language[@enabled='true']) &gt; 1">
 			<li class="dropdown">
@@ -204,10 +235,10 @@
 			</li>
 		</xsl:if>
 	</xsl:template>
-	
-	<xsl:template name="footer">		
+
+	<xsl:template name="footer">
 		<div id="footer" class="container-fluid">
 			<xsl:copy-of select="//config/footer/*"/>
-		</div>		
+		</div>
 	</xsl:template>
 </xsl:stylesheet>

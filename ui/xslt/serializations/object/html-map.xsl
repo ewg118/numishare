@@ -187,6 +187,9 @@
 					<span id="pipeline">
 						<xsl:value-of select="$pipeline"/>
 					</span>
+					<span id="department">
+						<xsl:value-of select="descendant::nuds:department"/>
+					</span>
 					<span id="object_title">
 						<xsl:value-of select="descendant::*:descMeta/*:title"/>
 					</span>
