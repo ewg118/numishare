@@ -8,7 +8,7 @@
 	<xsl:param name="pipeline" select="doc('input:request')/request/parameters/parameter[name='pipeline']/value"/>
 	<xsl:param name="lang" select="doc('input:request')/request/parameters/parameter[name='lang']/value"/>
 	<xsl:param name="request-uri" select="concat('http://localhost:8080', substring-before(doc('input:request')/request/request-uri, 'results_ajax'))"/>
-	
+
 	<xsl:variable name="display_path">
 		<xsl:choose>
 			<xsl:when test="$pipeline='maps'"/>
@@ -46,29 +46,38 @@
 	</xsl:variable>
 
 	<xsl:template match="/">
-		<xsl:variable name="place_string" select="replace(translate($tokenized_q[contains(., '_uri')], '&#x022;()', ''), '[a-z]+_uri:', '')"/>
-		<xsl:variable name="places" select="tokenize($place_string, ' OR ')"/>
+		<!--<xsl:variable name="place_string" select="replace(translate($tokenized_q[contains(., '_uri')], '&#x022;()', ''), '[a-z]+_uri:', '')"/>
+		<xsl:variable name="places" select="tokenize($place_string, ' OR ')"/>-->
 		<xsl:variable name="facets" as="element()*">
 			<xsl:copy-of select="descendant::lst[@name='facet_fields']"/>
 		</xsl:variable>
 		<h1>
 			<xsl:text>Place</xsl:text>
-			<xsl:if test="contains($place_string, ' OR ')">
+			<!--<xsl:if test="contains($place_string, ' OR ')">
 				<xsl:text>s</xsl:text>
-			</xsl:if>
-			<xsl:text>: </xsl:text>			
+			</xsl:if>-->
+			<xsl:text>: </xsl:text>
 			<small>
 				<a id="clear_all" href="#">clear</a>
 			</small>
 		</h1>
 		<h2>
-			<xsl:for-each select="$places">
+			<xsl:analyze-string select="$q" regex="_uri:&#x022;([^&#x022;+0])&#x022;">
+				<xsl:matching-substring>
+					<xsl:variable name="value" select="regex-group(1)"/>
+					<xsl:value-of select="tokenize($facets/descendant::int[contains(@name, $value)]/@name, '\|')[1]"/>
+					<xsl:if test="not(position() = last())">
+						<xsl:text>, </xsl:text>
+					</xsl:if>
+				</xsl:matching-substring>
+			</xsl:analyze-string>
+			<!--<xsl:for-each select="$places">
 				<xsl:variable name="value" select="."/>
 				<xsl:value-of select="tokenize($facets/descendant::int[contains(@name, $value)]/@name, '\|')[1]"/>
 				<xsl:if test="not(position() = last())">
 					<xsl:text>, </xsl:text>
 				</xsl:if>
-			</xsl:for-each>
+			</xsl:for-each>-->
 		</h2>
 		<xsl:call-template name="paging"/>
 		<div class="row">
@@ -205,7 +214,7 @@
 								<xsl:value-of select="if (string-length(str[@name='rev_type_display']) &gt; 30) then concat(substring(str[@name='rev_type_display'], 1, 30), '...') else
 									str[@name='rev_type_display']"/>
 							</dd>
-						</xsl:if>						
+						</xsl:if>
 					</xsl:otherwise>
 				</xsl:choose>
 			</dl>
@@ -219,9 +228,9 @@
 									<xsl:value-of select="$display_path"/>
 								</xsl:if>
 							</xsl:variable>
-							
-							<a class="thumbImage" href="{$path}{str[@name='reference_obv']}" title="Obverse of {str[@name='title_display']}" id="{$display_path}id/{str[@name='recordId']}{if (string($lang))
-								then concat('?lang=', $lang) else ''}">
+
+							<a class="thumbImage" href="{$path}{str[@name='reference_obv']}" title="Obverse of {str[@name='title_display']}" id="{$display_path}id/{str[@name='recordId']}{if
+								(string($lang))         then concat('?lang=', $lang) else ''}">
 								<img src="{$path}{str[@name='thumbnail_obv']}"/>
 							</a>
 						</xsl:if>
@@ -231,9 +240,9 @@
 									<xsl:value-of select="$display_path"/>
 								</xsl:if>
 							</xsl:variable>
-							
-							<a class="thumbImage" href="{$path}{str[@name='reference_rev']}" title="Reverse of {str[@name='title_display']}" id="{$display_path}id/{str[@name='recordId']}{if (string($lang))
-								then concat('?lang=', $lang) else ''}">
+
+							<a class="thumbImage" href="{$path}{str[@name='reference_rev']}" title="Reverse of {str[@name='title_display']}" id="{$display_path}id/{str[@name='recordId']}{if
+								(string($lang))         then concat('?lang=', $lang) else ''}">
 								<img src="{$path}{str[@name='thumbnail_rev']}"/>
 							</a>
 						</xsl:if>
