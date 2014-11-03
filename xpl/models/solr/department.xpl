@@ -36,7 +36,7 @@
 						<xsl:when test="$department = 'SouthAsian'">
 							<xsl:text>South Asian</xsl:text>
 						</xsl:when>
-						<xsl:when test="$department = 'LatinAmerica'">
+						<xsl:when test="$department = 'LatinAmerican'">
 							<xsl:text>Latin American</xsl:text>
 						</xsl:when>
 						<xsl:when test="$department = 'MedalsAndDecorations'">
