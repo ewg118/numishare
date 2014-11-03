@@ -56,7 +56,6 @@ $labels = array("accnum","department","objtype","material","manufacture",
 		"OrigIntenUse","Authenticity","PostManAlt","diameter","height","width","depth","privateinfo");
 $errors = array();
 $warnings = array();
-$deityMatchArray = get_deity_array();
 
 /*$csv = '"1979.38.312","ME","MEDAL","AE","Cast","","","89","12","","","1919","1919","1919","K.229|||||||||||||||||||","","","","Germany","","","","","","|||||||||||||||||||","","|||||||||","","Goetz","","The Good Samaritan","","","","","","","DER . BARMHERZIGE . SAMARITER! (=""The good Samaritan"")/ in exergue: 1919","Figure of Uncle Sam in center, to l., holding long scroll; figure of ""Michel"" (Germans) laying injured on floor reading the long scroll; to r. of Uncle Sam: mule shown from back packed with suitcases and large sack.   ","ENGLAND\'S . SCHANDTAT (=""England\'s deed of shame"")/ in exergue: AUFGEHOBEN . AM/ 12. JULI 1919! (=Lifted on July 12, 1919"")","5 figures and an infant laying on ground in front of large wall, behind which there is the sea with 7 vessels.","","","","","","","K.GOETZ","","","","","","","",""';
 $temp = str_getcsv($csv, ',', '"');
@@ -75,6 +74,9 @@ $Modern_array = generate_json('https://docs.google.com/spreadsheet/pub?hl=en_US&
 $Roman_array = generate_json('https://docs.google.com/spreadsheet/pub?hl=en_US&hl=en_US&key=0Avp6BVZhfwHAdHNMSmFWdXRkWnVxRy1sOTR1Z09HQnc&single=true&gid=0&output=csv');
 $South_Asian_array = generate_json('https://docs.google.com/spreadsheet/pub?hl=en_US&hl=en_US&key=0Avp6BVZhfwHAdFpxbjVsc25rblIyZy1OSngtVy15VGc&single=true&gid=0&output=csv');
 $United_States_array = generate_json('https://docs.google.com/spreadsheet/pub?hl=en_US&hl=en_US&key=0Avp6BVZhfwHAdEZ3VU1JeThGVHJiNEJsUkptbTFTRGc&single=true&gid=0&output=csv');
+
+//deities
+$deities_array = generate_json('https://docs.google.com/spreadsheet/pub?hl=en_US&hl=en_US&key=0Avp6BVZhfwHAdHk2ZXBuX0RYMEZzUlNJUkZOLXRUTmc&single=true&gid=0&output=csv');
 
 if (($handle = fopen("/tmp/" . $csv_id . ".csv", "r")) !== FALSE) {	
 	error_log(date(DATE_W3C) . ": {$csv_id}.csv successfully opened for processing.\n", 3, "/var/log/numishare/process.log");
@@ -221,7 +223,6 @@ if (($handle = fopen("/tmp/" . $csv_id . ".csv", "r")) !== FALSE) {
 
 /****** GENERATE NUDS ******/
 function generate_nuds($row, $count){
-	GLOBAL $deityMatchArray;
 	GLOBAL $warnings;
 
 	//generate collection year for images
@@ -619,7 +620,7 @@ function generate_nuds($row, $count){
 }
 
 function generate_typeDesc($row, $department){
-	GLOBAL $deityMatchArray;
+	GLOBAL $deities_array;
 	GLOBAL $warnings;
 	
 	$geogAuthorities = array();
@@ -769,16 +770,19 @@ function generate_typeDesc($row, $department){
 		}
 		if ($department == 'Greek' || $department == 'Roman'){
 			$haystack = strtolower($row['obversetype']);
-			foreach($deityMatchArray as $match=>$name){
-				if ($name != 'Hera' && $name != 'Sol' && strlen(strstr($haystack,strtolower($match)))>0) {
-					$xml .= '<persname xlink:type="simple" xlink:role="deity">' . $name . '</persname>';
+			foreach($deities_array as $deity){				
+				if ($deity['name'] != 'Hera' && $deity['name'] != 'Sol' && strlen(strstr($haystack,strtolower($deity['matches'])))>0) {
+					$bm_uri = strlen($deity['bm_uri']) > 0 ? ' xlink:href="' . $deity['bm_uri'] . '"' : '';
+					$xml .= '<persname xlink:type="simple" xlink:role="deity"' . $bm_uri . '>' . $deity['name'] . '</persname>';
 				}
 				//Hera and Sol need special cases because they are commonly part of other works, eg Herakles, soldiers
-				elseif ($name == 'Hera' && strlen(strstr($haystack,strtolower($match . ' ')))>0){
-					$xml .= '<persname xlink:type="simple" xlink:role="deity">' . $name . '</persname>';
+				elseif ($deity['name'] == 'Hera' && strlen(strstr($haystack,strtolower($deity['matches'] . ' ')))>0){
+					$bm_uri = strlen($deity['bm_uri']) > 0 ? ' xlink:href="' . $deity['bm_uri'] . '"' : '';
+					$xml .= '<persname xlink:type="simple" xlink:role="deity"' . $bm_uri . '>' . $deity['name'] . '</persname>';
 				}
-				elseif ($name == 'Sol' && strlen(strstr($haystack,strtolower($match . ' ')))>0){
-					$xml .= '<persname xlink:type="simple" xlink:role="deity">' . $name . '</persname>';
+				elseif ($deity['name'] == 'Sol' && strlen(strstr($haystack,strtolower($deity['matches'] . ' ')))>0){
+					$bm_uri = strlen($deity['bm_uri']) > 0 ? ' xlink:href="' . $deity['bm_uri'] . '"' : '';
+					$xml .= '<persname xlink:type="simple" xlink:role="deity"' . $bm_uri . '>' . $deity['name'] . '</persname>';
 				}
 			}
 		}
@@ -806,18 +810,22 @@ function generate_typeDesc($row, $department){
 			$certainty = substr($artist, -1) == '?' ? ' certainty="uncertain"' : '';
 			$xml .= '<persname xlink:role="artist"' . $certainty . '>' . str_replace('?', '', $artist) . '</persname>';
 		}
+		
 		if ($department == 'Greek' || $department == 'Roman'){
 			$haystack = strtolower($row['reversetype']);
-			foreach($deityMatchArray as $match=>$name){
-				if ($name != 'Hera' && $name != 'Sol' && strlen(strstr($haystack,strtolower($match)))>0) {
-					$xml .= '<persname xlink:type="simple" xlink:role="deity">' . $name . '</persname>';
+			foreach($deities_array as $deity){
+				if ($deity['name'] != 'Hera' && $deity['name'] != 'Sol' && strlen(strstr($haystack,strtolower($deity['matches'])))>0) {
+					$bm_uri = strlen($deity['bm_uri']) > 0 ? ' xlink:href="' . $deity['bm_uri'] . '"' : '';
+					$xml .= '<persname xlink:type="simple" xlink:role="deity"' . $bm_uri . '>' . $deity['name'] . '</persname>';
 				}
 				//Hera and Sol need special cases because they are commonly part of other works, eg Herakles, soldiers
-				elseif ($name == 'Hera' && strlen(strstr($haystack,strtolower($match . ' ')))>0){
-					$xml .= '<persname xlink:type="simple" xlink:role="deity">' . $name . '</persname>';
+				elseif ($deity['name'] == 'Hera' && strlen(strstr($haystack,strtolower($deity['matches'] . ' ')))>0){
+					$bm_uri = strlen($deity['bm_uri']) > 0 ? ' xlink:href="' . $deity['bm_uri'] . '"' : '';
+					$xml .= '<persname xlink:type="simple" xlink:role="deity"' . $bm_uri . '>' . $deity['name'] . '</persname>';
 				}
-				elseif ($name == 'Sol' && strlen(strstr($haystack,strtolower($match . ' ')))>0){
-					$xml .= '<persname xlink:type="simple" xlink:role="deity">' . $name . '</persname>';
+				elseif ($deity['name'] == 'Sol' && strlen(strstr($haystack,strtolower($deity['matches'] . ' ')))>0){
+					$bm_uri = strlen($deity['bm_uri']) > 0 ? ' xlink:href="' . $deity['bm_uri'] . '"' : '';
+					$xml .= '<persname xlink:type="simple" xlink:role="deity"' . $bm_uri . '>' . $deity['name'] . '</persname>';
 				}
 			}
 		}
@@ -935,10 +943,10 @@ function generate_typeDesc($row, $department){
 		if (count($persons) > 0){			
 			foreach ($persons as $person){
 				$certainty = substr(trim(str_replace('"', '', $person)), -1) == '?' ? ' certainty="uncertain"' : '';
-				if ($department != 'Medieval'){
+				if ($department == 'Roman' || $department == 'Byzantine' || $department == 'Modern' || $department == 'Medal' || $department == 'United States' || $department == 'Latin American' || $department == 'Decoration'){
 					$xml .= '<persname xlink:type="simple" xlink:role="portrait"' . $certainty . '>' . str_replace('?', '', $person) . '</persname>';
 				}				
-				if ($department == 'Roman' || $department == 'Medieval'){
+				if ($department == 'Roman' || $department == 'Byzantine' || $department == 'Medieval' || $department == 'Islamic' || $department == 'East Asian' || $department == 'South Asian' || $department == 'Greek'){
 					$xml .= '<persname xlink:type="simple" xlink:role="authority"' . $certainty . '>' . str_replace('?', '', $person) . '</persname>';
 				}
 			}
@@ -1071,7 +1079,7 @@ function normalize_material($material){
 	return $mat_array;
 }
 
-function get_deity_array(){
+/*function get_deity_array(){
 	//load deities DOM document from Google Docs
 	$deityUrl = 'https://spreadsheets.google.com/feeds/list/0Avp6BVZhfwHAdHk2ZXBuX0RYMEZzUlNJUkZOLXRUTmc/od6/public/values';
 	$deityDoc = new DOMDocument();
@@ -1093,7 +1101,7 @@ function get_deity_array(){
 	}
 
 	return $deityMatchArray;
-}
+}*/
 
 function get_title_date($fromDate, $toDate){
 	if ($fromDate == 0 && $toDate != 0){
