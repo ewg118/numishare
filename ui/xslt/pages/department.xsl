@@ -23,7 +23,7 @@
 			<xsl:when test="$department = 'SouthAsian'">
 				<xsl:text>South Asian</xsl:text>
 			</xsl:when>
-			<xsl:when test="$department = 'LatinAmerica'">
+			<xsl:when test="$department = 'LatinAmerican'">
 				<xsl:text>Latin American</xsl:text>
 			</xsl:when>
 			<xsl:when test="$department = 'MedalsAndDecorations'">
@@ -158,7 +158,7 @@
 								the modern cabinet is approximately 100,000 pieces.</p>
 							<p>To learn more about the collection please click here.</p>
 						</xsl:when>
-						<xsl:when test="$department_facet = 'Latin America'">
+						<xsl:when test="$department_facet = 'Latin American'">
 							<p>The Latin American Department contains coins and paper money of Central America, South American and the Caribbean. The total figure for the Latin American cabinet is
 								approximately 30,000 pieces.</p>
 							<p>To learn more about the collection please click here.</p>
@@ -272,7 +272,7 @@
 			<div class="col-md-4">
 				<h3>General Information</h3>
 				<xsl:choose>
-					<xsl:when test="$department='Greek'">
+					<xsl:when test="$department_facet='Greek'">
 						<xsl:apply-templates select="lst[@name='region_facet']" mode="facet"/>
 						<xsl:apply-templates select="lst[@name='locality_facet']" mode="facet"/>
 						<xsl:apply-templates select="lst[@name='mint_facet']" mode="facet"/>
@@ -282,7 +282,7 @@
 						<xsl:apply-templates select="lst[@name='artist_facet']" mode="facet"/>
 						<!--<xsl:apply-templates select="lst[@name='century_num']" mode="facet"/>-->
 					</xsl:when>
-					<xsl:when test="$department='Roman'">
+					<xsl:when test="$department_facet='Roman'">
 						<xsl:apply-templates select="lst[@name='category_hier']" mode="facet"/>
 						<xsl:apply-templates select="lst[@name='authority_facet']" mode="facet"/>
 						<xsl:apply-templates select="lst[@name='issuer_facet']" mode="facet"/>
@@ -290,7 +290,7 @@
 						<xsl:apply-templates select="lst[@name='mint_facet']" mode="facet"/>
 						<!--<xsl:apply-templates select="lst[@name='century_num']" mode="facet"/>-->
 					</xsl:when>
-					<xsl:when test="$department='Byzantine'">
+					<xsl:when test="$department_facet='Byzantine'">
 						<xsl:apply-templates select="lst[@name='region_facet']" mode="facet"/>
 						<xsl:apply-templates select="lst[@name='mint_facet']" mode="facet"/>
 						<xsl:apply-templates select="lst[@name='dynasty_facet']" mode="facet"/>
@@ -299,15 +299,14 @@
 						<xsl:apply-templates select="lst[@name='category_hier']" mode="facet"/>
 						<!--<xsl:apply-templates select="lst[@name='century_num']" mode="facet"/>-->
 					</xsl:when>
-					<xsl:when test="$department='Islamic' or $department = 'East Asian' or $department = 'South Asian' or $department='Modern' or $department='United States' or $department='Latin
-						American'">
+					<xsl:when test="$department_facet='Islamic' or $department_facet = 'East Asian' or $department_facet = 'South Asian' or $department_facet='Modern' or $department_facet='United States' or $department_facet='Latin American'">
 						<xsl:apply-templates select="lst[@name='region_facet']" mode="facet"/>
 						<xsl:apply-templates select="lst[@name='locality_facet']" mode="facet"/>
 						<xsl:apply-templates select="lst[@name='mint_facet']" mode="facet"/>
-						<xsl:if test="$department='United States' or $department='Latin American'">
+						<xsl:if test="$department_facet='United States' or $department_facet='Latin American'">
 							<xsl:apply-templates select="lst[@name='category_hier']" mode="facet"/>
 						</xsl:if>
-						<xsl:if test="$department!='United States'">
+						<xsl:if test="$department_facet!='United States'">
 							<xsl:apply-templates select="lst[@name='dynasty_facet']" mode="facet"/>
 						</xsl:if>
 						<xsl:apply-templates select="lst[@name='state_facet']" mode="facet"/>
@@ -317,7 +316,7 @@
 						<xsl:apply-templates select="lst[@name='artist_facet']" mode="facet"/>
 						<!--<xsl:apply-templates select="lst[@name='century_num']" mode="facet"/>-->
 					</xsl:when>
-					<xsl:when test="$department='Medieval'">
+					<xsl:when test="$department_facet='Medieval'">
 						<xsl:apply-templates select="lst[@name='region_facet']" mode="facet"/>
 						<xsl:apply-templates select="lst[@name='locality_facet']" mode="facet"/>
 						<xsl:apply-templates select="lst[@name='mint_facet']" mode="facet"/>
@@ -327,7 +326,7 @@
 						<xsl:apply-templates select="lst[@name='issuer_facet']" mode="facet"/>
 						<!--<xsl:apply-templates select="lst[@name='century_num']" mode="facet"/>-->
 					</xsl:when>
-					<xsl:when test="$department='Medal'">
+					<xsl:when test="$department_facet='Medal'">
 						<!--<xsl:apply-templates select="lst[@name='century_num']" mode="facet"/>-->
 						<xsl:apply-templates select="lst[@name='region_facet']" mode="facet"/>
 						<xsl:apply-templates select="lst[@name='locality_facet']" mode="facet"/>
@@ -344,50 +343,50 @@
 			</div>
 			<div class="col-md-4">
 				<h3>Object Description</h3>
-				<xsl:if test="$department != 'Medal'">
+				<xsl:if test="$department_facet != 'Medal'">
 					<xsl:apply-templates select="lst[@name='denomination_facet']" mode="facet"/>
 					<xsl:apply-templates select="lst[@name='material_facet']" mode="facet"/>
 				</xsl:if>
 				<xsl:choose>
-					<xsl:when test="$department='Modern' or $department = 'United States'">
-						<xsl:if test="$department='Modern'">
+					<xsl:when test="$department_facet='Modern' or $department_facet = 'United States'">
+						<xsl:if test="$department_facet='Modern'">
 							<xsl:apply-templates select="lst[@name='era_facet']" mode="facet"/>
 						</xsl:if>
 						<xsl:apply-templates select="lst[@name='dob_num']" mode="facet"/>
 						<xsl:apply-templates select="lst[@name='portrait_facet']" mode="facet"/>
 						<xsl:apply-templates select="lst[@name='subjectPlace_facet']" mode="facet"/>
 						<xsl:apply-templates select="lst[@name='subjectEvent_facet']" mode="facet"/>
-						<xsl:if test="$department='Modern'">
+						<xsl:if test="$department_facet='Modern'">
 							<xsl:apply-templates select="lst[@name='category_hier']" mode="facet"/>
 						</xsl:if>
 						<xsl:apply-templates select="lst[@name='objectType_facet']" mode="facet"/>
 					</xsl:when>
-					<xsl:when test="$department='Greek'">
+					<xsl:when test="$department_facet='Greek'">
 						<xsl:apply-templates select="lst[@name='era_facet']" mode="facet"/>
 						<xsl:apply-templates select="lst[@name='dob_num']" mode="facet"/>
 						<xsl:apply-templates select="lst[@name='portrait_facet']" mode="facet"/>
 						<xsl:apply-templates select="lst[@name='deity_facet']" mode="facet"/>
 						<xsl:apply-templates select="lst[@name='objectType_facet']" mode="facet"/>
 					</xsl:when>
-					<xsl:when test="$department='Roman'">
+					<xsl:when test="$department_facet='Roman'">
 						<xsl:apply-templates select="lst[@name='portrait_facet']" mode="facet"/>
 						<xsl:apply-templates select="lst[@name='deity_facet']" mode="facet"/>
 						<xsl:apply-templates select="lst[@name='objectType_facet']" mode="facet"/>
 						<xsl:apply-templates select="lst[@name='coinType_facet']" mode="facet"/>
 					</xsl:when>
-					<xsl:when test="$department='Byzantine' or $department='Medieval' or $department='Latin American'">
+					<xsl:when test="$department_facet='Byzantine' or $department_facet='Medieval' or $department_facet='Latin American'">
 						<xsl:apply-templates select="lst[@name='portrait_facet']" mode="facet"/>
 						<xsl:apply-templates select="lst[@name='dob_num']" mode="facet"/>
 						<xsl:apply-templates select="lst[@name='objectType_facet']" mode="facet"/>
 					</xsl:when>
-					<xsl:when test="$department='Islamic' or $department = 'South Asian'">
+					<xsl:when test="$department_facet='Islamic' or $department_facet = 'South Asian'">
 						<xsl:apply-templates select="lst[@name='era_facet']" mode="facet"/>
 						<xsl:apply-templates select="lst[@name='dob_num']" mode="facet"/>
 						<xsl:apply-templates select="lst[@name='portrait_facet']" mode="facet"/>
 						<xsl:apply-templates select="lst[@name='deity_facet']" mode="facet"/>
 						<xsl:apply-templates select="lst[@name='objectType_facet']" mode="facet"/>
 					</xsl:when>
-					<xsl:when test="$department='East Asian'">
+					<xsl:when test="$department_facet='East Asian'">
 						<xsl:apply-templates select="lst[@name='era_facet']" mode="facet"/>
 						<xsl:apply-templates select="lst[@name='dob_num']" mode="facet"/>
 						<xsl:apply-templates select="lst[@name='portrait_facet']" mode="facet"/>
@@ -395,7 +394,7 @@
 						<xsl:apply-templates select="lst[@name='subjectEvent_facet']" mode="facet"/>
 						<xsl:apply-templates select="lst[@name='objectType_facet']" mode="facet"/>
 					</xsl:when>
-					<xsl:when test="$department='Medal'">
+					<xsl:when test="$department_facet='Medal'">
 						<xsl:apply-templates select="lst[@name='portrait_facet']" mode="facet"/>
 						<xsl:apply-templates select="lst[@name='subjectPerson_facet']" mode="facet"/>
 						<xsl:apply-templates select="lst[@name='subjectPlace_facet']" mode="facet"/>
@@ -442,7 +441,7 @@
 				</div>
 				<form action="{$display_path}results" method="GET" role="form" id="facet_form">
 					<!-- hidden params -->
-					<input type="hidden" name="q" id="facet_form_query" value="*:*"/>					
+					<input type="hidden" name="q" id="facet_form_query" value="*:*"/>
 					<xsl:if test="string($lang)">
 						<input type="hidden" name="lang" value="{$lang}"/>
 					</xsl:if>
