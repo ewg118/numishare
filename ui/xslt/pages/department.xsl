@@ -223,7 +223,7 @@
 					<xsl:value-of select="$pipeline"/>
 				</span>
 				<span id="department">
-					<xsl:value-of select="$department"/>
+					<xsl:value-of select="$department_facet"/>
 				</span>
 				<div id="ajax-temp"/>
 			</div>
