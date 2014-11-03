@@ -943,10 +943,10 @@ function generate_typeDesc($row, $department){
 		if (count($persons) > 0){			
 			foreach ($persons as $person){
 				$certainty = substr(trim(str_replace('"', '', $person)), -1) == '?' ? ' certainty="uncertain"' : '';
-				if ($department == 'Roman' || $department == 'Byzantine' || $department == 'Modern' || $department == 'Medal' || $department == 'United States' || $department == 'Latin American' || $department == 'Decoration'){
+				if ($department == 'Roman' || $department == 'Byzantine' || $department == 'Medal' || $department == 'United States' || $department == 'Decoration'){
 					$xml .= '<persname xlink:type="simple" xlink:role="portrait"' . $certainty . '>' . str_replace('?', '', $person) . '</persname>';
 				}				
-				if ($department == 'Roman' || $department == 'Byzantine' || $department == 'Medieval' || $department == 'Islamic' || $department == 'East Asian' || $department == 'South Asian' || $department == 'Greek'){
+				if ($department == 'Roman' || $department == 'Byzantine' || $department == 'Medieval' || $department == 'Islamic' || $department == 'East Asian' || $department == 'South Asian' || $department == 'Greek' || $department == 'Modern' || $department == 'Latin American'){
 					$xml .= '<persname xlink:type="simple" xlink:role="authority"' . $certainty . '>' . str_replace('?', '', $person) . '</persname>';
 				}
 			}
