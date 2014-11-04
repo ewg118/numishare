@@ -195,9 +195,18 @@
 					<xsl:for-each select="//config/descendant::language[@enabled='true']">
 						<xsl:sort select="@code"/>
 						<li>
-							<a href="{$display_path}{substring-after(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/')}?lang={@code}">
-								<xsl:value-of select="numishare:normalizeLabel(concat('lang_', @code), $lang)"/>
-							</a>
+							<xsl:choose>
+								<xsl:when test="string-length(substring-after(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/')) = 0">
+									<a href="{//config/url}?lang={@code}">
+										<xsl:value-of select="numishare:normalizeLabel(concat('lang_', @code), $lang)"/>
+									</a>
+								</xsl:when> 
+								<xsl:otherwise>
+									<a href="{$display_path}{substring-after(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/')}?lang={@code}">
+										<xsl:value-of select="numishare:normalizeLabel(concat('lang_', @code), $lang)"/>
+									</a>
+								</xsl:otherwise>
+							</xsl:choose>
 						</li>
 					</xsl:for-each>
 				</ul>
