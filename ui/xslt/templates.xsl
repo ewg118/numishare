@@ -195,7 +195,7 @@
 					<xsl:for-each select="//config/descendant::language[@enabled='true']">
 						<xsl:sort select="@code"/>
 						<li>
-							<a href="?lang={@code}">
+							<a href="{$display_path}{substring-after(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/')}?lang={@code}">
 								<xsl:value-of select="numishare:normalizeLabel(concat('lang_', @code), $lang)"/>
 							</a>
 						</li>
