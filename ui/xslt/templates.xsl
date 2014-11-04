@@ -11,7 +11,7 @@
 						<span class="icon-bar"/>
 						<span class="icon-bar"/>
 					</button>
-					<a class="navbar-brand" href="{$display_path}./">
+					<a class="navbar-brand" href="{//config/url}{if (string($lang)) then concat('?lang=', $lang) else ''}">
 						<xsl:choose>
 							<xsl:when test="string-length(//config/logo) &gt; 0">
 								<xsl:choose>
