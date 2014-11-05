@@ -1,6 +1,7 @@
 <?php 
 
-$data = generate_json('/home/komet/ans_migration/ocre/09.csv');
+$data = generate_json('/home/komet/ans_migration/ocre/10.csv');
+$deities_array = generate_json('deities.csv');
 $nomismaUris = array();
 $errors = array();
 $records = array();
@@ -208,8 +209,40 @@ function generate_nuds($row){
 		if (strlen($row['Obverse Deity']) > 0){
 			$vals = explode('|', $row['Obverse Deity']);
 			foreach ($vals as $val){
-				$xml .= '<persname xlink:type="simple" xlink:role="deity">' . trim($val) . '</persname>';
+				if (substr($val, -1) == '?'){
+					$val = substr($val, 0, -1);
+					$deity_uri = '';
+					foreach($deities_array as $deity){
+						if ($deity['OCRE Value'] == $val) {
+							if (strlen($deity['BM URI']) > 0){
+								$deity_uri = ' xlink:href="' . $deity['BM URI'] . '"';
+							}
+							if (strlen($deity['Should be']) > 0){
+								$val = $deity['Should be'];
+							}
+						}
+					}
+					$xml .= '<persname xlink:type="simple" xlink:role="deity" certainty="uncertain"' . $deity_uri . '>' . trim($val) . '</persname>';
+				} else {
+					$deity_uri = '';
+					foreach($deities_array as $deity){
+						if ($deity['OCRE Value'] == $val) {
+							if (strlen($deity['BM URI']) > 0){
+								$deity_uri = 'xlink:href="' . $deity['BM URI'] . '"';
+							}
+							if (strlen($deity['Should be']) > 0){
+								$val = $deity['Should be'];
+							}
+						}
+					}
+					$xml .= '<persname xlink:type="simple" xlink:role="deity"' . $deity_uri . '>' . trim($val) . '</persname>';
+				}
 			}
+		}
+		
+		//obverse control mark
+		if (strlen($row['Control Mark']) > 0){
+			$xml .= '<symbol localType="controlMark">' . $row['Control Mark'] . '</symbol>';
 		}
 		$xml .= '</obverse>';
 	}
@@ -235,8 +268,47 @@ function generate_nuds($row){
 	if (strlen($row['Reverse Deity']) > 0){
 			$vals = explode('|', $row['Reverse Deity']);
 			foreach ($vals as $val){
-				$xml .= '<persname xlink:type="simple" xlink:role="deity">' . trim($val) . '</persname>';
+				if (substr($val, -1) == '?'){
+					$val = substr($val, 0, -1);
+					$deity_uri = '';
+					foreach($deities_array as $deity){
+						if ($deity['OCRE Value'] == $val) {
+							if (strlen($deity['BM URI']) > 0){
+								$deity_uri = 'xlink:href="' . $deity['BM URI'] . '"';
+							}
+							if (strlen($deity['Should be']) > 0){
+								$val = $deity['Should be'];
+							}
+						}
+					}
+					$xml .= '<persname xlink:type="simple" xlink:role="deity" certainty="uncertain"' . $deity_uri . '>' . trim($val) . '</persname>';
+				} else {
+					$deity_uri = '';
+					foreach($deities_array as $deity){
+						if ($deity['OCRE Value'] == $val) {
+							if (strlen($deity['BM URI']) > 0){
+								$deity_uri = ' xlink:href="' . $deity['BM URI'] . '"';
+							}
+							if (strlen($deity['Should be']) > 0){
+								$val = $deity['Should be'];
+							}
+						}
+					}
+					$xml .= '<persname xlink:type="simple" xlink:role="deity"' . $deity_uri . '>' . trim($val) . '</persname>';
+				}
 			}
+		}
+		if (strlen($row['Mint Mark(s) Left']) > 0){
+			$xml .= '<symbol position="left">' . $row['Mint Mark(s) Left'] . '</symbol>';
+		}
+		if (strlen($row['Mint Mark(s) Center']) > 0){
+			$xml .= '<symbol position="center">' . $row['Mint Mark(s) Center'] . '</symbol>';
+		}
+		if (strlen($row['Mint Mark(s) Right']) > 0){
+			$xml .= '<symbol position="right">' . $row['Mint Mark(s) Right'] . '</symbol>';
+		}
+		if (strlen($row['Mint Mark(s) Exergue']) > 0){
+			$xml .= '<symbol position="exergue">' . $row['Mint Mark(s) Exergue'] . '</symbol>';
 		}
 		$xml .= '</reverse>';
 	}
@@ -430,11 +502,26 @@ function get_title($nudsid){
 		case 'pup':
 			$auth = 'Pupienus';
 			break;
-		case 'gord_iii_caes':
+		case 'gor_iii_caes':
 			$auth = 'Gordian III (Caesar)';
 			break;
-		case 'gord_iii':
-			$auth = 'Gordian III';
+		case 'ph_i':
+			$auth = 'Philip I';
+			break;
+		case 'pac':
+			$auth = 'Pacatianus';
+			break;
+		case 'jot':
+			$auth = 'Jotapianus';
+			break;
+		case 'mar_s':
+			$auth = 'Mar. Silbannacus';
+			break;
+		case 'spon':
+			$auth = 'Sponsianus';
+			break;
+		case 'tr_d':
+			$auth = 'Trajan Decius';
 			break;
 	}
 	
