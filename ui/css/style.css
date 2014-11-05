@@ -60,6 +60,17 @@ ul li{
 }
 /*
   ***************************************
+  INDEX
+  ***************************************
+ */
+  .navigation-ul{
+  	padding:0;
+  }
+  .navigation-ul ul {
+  	padding-left:25px;
+  }
+/*
+  ***************************************
   DISPLAY CONTENT
   ***************************************
  */
@@ -211,12 +222,13 @@ select[name = "interval"],
   ***************************************
  */
 .technical-dropdown{
-	width:150px;
-	margin-right:50px;
+	width:175px;
+	margin-right:25px;
 	display:inline;
 }
 .technical-input {
 	width:50px;
+	display:inline;
 }
 /*
   ***************************************

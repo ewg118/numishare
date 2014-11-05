@@ -55,7 +55,8 @@
 			<div class="row">
 				<div class="col-md-3">
 					<div class="highlight">
-						<h3>Sidebar Navigation</h3>
+						<h3>Navigation</h3>
+						<xsl:call-template name="navigation"/>
 					</div>					
 				</div>
 				<div class="col-md-6">
@@ -65,43 +66,43 @@
 						<b>Click an image below to search a department.</b>
 					</p>
 					<div class="row text-center">
-						<div class="col-md-3">
+						<div class="col-md-6 col-lg-3">
 							<a href="department/Greek">
 								<img title="Greek" alt="Greek" src="{$include_path}/images/greek.jpg"/><br/>Greek</a>
 						</div>
-						<div class="col-md-3">
+						<div class="col-md-6 col-lg-3">
 							<a href="department/Roman"><img title="Roman" alt="Roman" src="{$include_path}/images/roman.jpg"/><br/>Roman</a>
 						</div>
-						<div class="col-md-3">
+						<div class="col-md-6 col-lg-3">
 							<a href="department/Byzantine"><img title="Byzantine" alt="Byzantine" src="{$include_path}/images/byzantine.jpg"/><br/>Byzantine</a>
 						</div>
-						<div class="col-md-3">
+						<div class="col-md-6 col-lg-3">
 							<a href="department/Islamic"><img title="Islamic" alt="Islamic" src="{$include_path}/images/islamic.jpg"/><br/>Islamic</a>
 						</div>
-						<div class="col-md-3">
+						<div class="col-md-6 col-lg-3">
 							<a href="department/EastAsian"><img title="East Asian" alt="East Asian" src="{$include_path}/images/east_asian.jpg"/><br/>East Asian</a>
 						</div>
-						<div class="col-md-3">
+						<div class="col-md-6 col-lg-3">
 							<a href="department/SouthAsian"><img title="South Asian" alt="South Asian" src="{$include_path}/images/south_asian.jpg"/><br/>South Asian</a>
 						</div>
-						<div class="col-md-3">
+						<div class="col-md-6 col-lg-3">
 							<a href="department/Medieval"><img title="Medieval" alt="Medieval" src="{$include_path}/images/medieval.jpg"/><br/>Medieval</a>
 						</div>
-						<div class="col-md-3">
+						<div class="col-md-6 col-lg-3">
 							<a href="department/Modern"><img title="Modern" alt="Modern" src="{$include_path}/images/modern.jpg"/><br/>Modern</a>
 						</div>
-						<div class="col-md-3">
+						<div class="col-md-6 col-lg-3">
 							<a href="department/UnitedStates"><img title="United States" alt="United States" src="{$include_path}/images/united_states.jpg"/><br/>United States</a>
 						</div>
-						<div class="col-md-3">
+						<div class="col-md-6 col-lg-3">
 							<a href="department/LatinAmerican"><img title="Latin American" alt="Latin American" src="{$include_path}/images/latin_american.jpg"/><br/>Latin American</a>
 						</div>
-						<div class="col-md-3">
+						<div class="col-md-6 col-lg-3">
 							<a href="department/MedalsAndDecorations"><img title="Medals And Decorations" alt="Medals And Decorations" src="{$include_path}/images/medal.jpg"/><br/>Medals And
 								Decorations</a>
 						</div>
 					</div>
-					<p>ANS policies on the acquisition and deacquisition of numismatic items are available <a class="wikilink" href="/About/AcquisitionDeacquisition">online</a>. </p>
+					<p>ANS policies on the acquisition and deacquisition of numismatic items are available <a href="/About/AcquisitionDeacquisition">online</a>. </p>
 				</div>
 				<div class="col-md-3">
 					<div class="highlight">
@@ -140,6 +141,99 @@
 				</div>
 			</div>
 		</div>
+	</xsl:template>
+	
+	<xsl:template name="navigation">
+		<ul class="navigation-ul">
+			<li>
+				<a href="http://numismatics.org/">Home</a>
+			</li>
+			<li>
+				<a href="http://numismatics.org/About/About">About the ANS</a>
+			</li>
+			<li>
+				<a href="http://numismatics.org/search/">Collections</a>
+				<ul>
+					<li>
+						<a href="http://numismatics.org/Collections/RecentAcquisitions">Recent Acquisitions</a>
+					</li>
+					<li>
+						<a href="http://numismatics.org/Collections/Photography">Photography</a>
+					</li>
+					<li>
+						<i>Departments</i>
+						<ul>
+							<li>
+								<a href="http://numismatics.org/Collections/Greek">Greek</a>
+							</li>
+							<li>
+								<a href="http://numismatics.org/Collections/Roman">Roman</a>
+							</li>
+							<li>
+								<a href="http://numismatics.org/Collections/Byzantine">Byzantine</a>
+							</li>
+							<li>
+								<a href="http://numismatics.org/Collections/Islamic">Islamic</a>
+							</li>
+							<li>
+								<a href="http://numismatics.org/Collections/EastAsian">East Asian</a>
+							</li>
+							<li>
+								<a href="http://numismatics.org/Collections/SouthAsian">South Asian</a>
+							</li>
+							<li>
+								<a href="http://numismatics.org/Collections/Medieval">Medieval</a>
+							</li>
+							<li>
+								<a href="http://numismatics.org/Collections/UnitedStates">United States</a>
+							</li>
+							<li>
+								<a href="http://numismatics.org/Collections/LatinAmerica">Latin America</a>
+							</li>
+							<li>
+								<a href="http://numismatics.org/Collections/Modern">Modern</a>
+							</li>
+							<li>
+								<a href="http://numismatics.org/Collections/MedalsAndDecorations">Medals and Decorations</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</li>
+			<li>
+				<a href="http://numismatics.org/Library/Library">Library</a>
+			</li>
+			<li>
+				<a href="http://numismatics.org/archives/">Archives</a>
+			</li>
+			<li>
+				<a href="http://numismatics.org/Publications/Publications">Publications</a>
+			</li>
+			<li>
+				<a href="http://numismatics.org/Membership/Membership">Membership</a>
+			</li>
+			<li>
+				<a href="http://numismatics.org/EventsExhibitions/EventsExhibitions">Events and Exhibitions</a>
+			</li>
+			<li>
+				<a href="http://numismatics.org/Education/Education">Education</a>
+			</li>
+			<li>
+				<a href="http://numismatics.org/OnlineResources/OnlineResources">Online Resources</a>
+			</li>
+			<li>
+				<a href="http://numismatics.org/Development/Development">Support the ANS</a>
+			</li>
+			<li>
+				<a href="http://numismatics.org/About/Contact">Contact</a>
+			</li>
+			<li>
+				<a target="_blank" href="http://ansmagazine.com" title="" rel="nofollow">ANS Magazine</a>
+			</li>
+			<li>
+				<a target="_blank" href="http://numismatics.org/Store/Store">The ANS Store</a>
+			</li>
+		</ul>
 	</xsl:template>
 
 </xsl:stylesheet>
