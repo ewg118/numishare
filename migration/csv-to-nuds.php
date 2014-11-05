@@ -1,6 +1,6 @@
 <?php 
 
-$data = generate_json('/home/komet/ans_migration/ocre/10.csv');
+$data = generate_json('/home/komet/ans_migration/ocre/12.csv');
 $deities_array = generate_json('deities.csv');
 $nomismaUris = array();
 $errors = array();
@@ -44,6 +44,7 @@ foreach ($errors as $error){
 
 /****** GENERATE NUDS ******/
 function generate_nuds($row){
+	GLOBAL $deities_array;
 	$nudsid = trim($row['Nomisma.org id']);
 	$pieces = explode('.', $nudsid);
 	//develop date
@@ -228,7 +229,7 @@ function generate_nuds($row){
 					foreach($deities_array as $deity){
 						if ($deity['OCRE Value'] == $val) {
 							if (strlen($deity['BM URI']) > 0){
-								$deity_uri = 'xlink:href="' . $deity['BM URI'] . '"';
+								$deity_uri = ' xlink:href="' . $deity['BM URI'] . '"';
 							}
 							if (strlen($deity['Should be']) > 0){
 								$val = $deity['Should be'];
@@ -274,7 +275,7 @@ function generate_nuds($row){
 					foreach($deities_array as $deity){
 						if ($deity['OCRE Value'] == $val) {
 							if (strlen($deity['BM URI']) > 0){
-								$deity_uri = 'xlink:href="' . $deity['BM URI'] . '"';
+								$deity_uri = ' xlink:href="' . $deity['BM URI'] . '"';
 							}
 							if (strlen($deity['Should be']) > 0){
 								$val = $deity['Should be'];
@@ -504,6 +505,9 @@ function get_title($nudsid){
 			break;
 		case 'gor_iii_caes':
 			$auth = 'Gordian III (Caesar)';
+			break;
+		case 'gor_iii':
+			$auth = 'Gordian III';
 			break;
 		case 'ph_i':
 			$auth = 'Philip I';
