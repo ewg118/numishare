@@ -118,7 +118,7 @@
 		<!--<xsl:copy-of select="$sparqlResult"/>-->
 		<div class="container-fluid">
 			<div class="row">
-				<div class="col-md-3">
+				<div class="col-md-3 col-sm-4">
 					<xsl:if test="//result[@name='response']/@numFound &gt; 0">
 						<div class="data_options">
 							<h3>
@@ -162,7 +162,7 @@
 
 					</xsl:if>
 				</div>
-				<div class="col-md-9">
+				<div class="col-md-9 col-sm-8">
 					<div class="container-fluid">
 						<xsl:call-template name="remove_facets"/>
 						<xsl:choose>

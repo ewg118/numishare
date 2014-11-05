@@ -160,9 +160,7 @@
 				</xsl:if>
 				<xsl:if test="//config/pages/visualize/@enabled= true()">
 					<li>
-						<a href="{$display_path}visualize{if (string($lang)) then concat('?lang=', $lang) else ''}">
-							<xsl:value-of select="numishare:normalizeLabel('header_visualize', $lang)"/>
-						</a>
+						<a href="{$display_path}visualize{if (string($lang)) then concat('?lang=', $lang) else ''}">Charts</a>
 					</li>
 				</xsl:if>
 				<li>

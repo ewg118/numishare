@@ -53,13 +53,13 @@
 		</div>
 		<div class="container-fluid">
 			<div class="row">
-				<div class="col-md-3">
+				<div class="col-md-3 col-lg-2">
 					<div class="highlight">
 						<h3>Navigation</h3>
 						<xsl:call-template name="navigation"/>
 					</div>					
 				</div>
-				<div class="col-md-6">
+				<div class="col-md-6 col-lg-7">
 					<!-- index -->
 					<p>The ANS collections database contains information on more than 600,000 objects in the Society’s collections. These include, coins, paper money, tokens, ‘primitive’ money, medals and decorations, from all parts of the world, and all periods in which such objects have been produced. </p>
 					<p>
@@ -104,7 +104,7 @@
 					</div>
 					<p>ANS policies on the acquisition and deacquisition of numismatic items are available <a href="/About/AcquisitionDeacquisition">online</a>. </p>
 				</div>
-				<div class="col-md-3">
+				<div class="col-md-3 col-lg-3">
 					<div class="highlight">
 						<h3>Share</h3>
 						<!-- AddThis Button BEGIN -->
