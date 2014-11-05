@@ -210,10 +210,13 @@ select[name = "interval"],
   DEPARTMENT PAGES
   ***************************************
  */
-.technical-control{
-	width:40%;
-	margin:0 5%;
+.technical-dropdown{
+	width:150px;
+	margin-right:50px;
 	display:inline;
+}
+.technical-input {
+	width:50px;
 }
 /*
   ***************************************

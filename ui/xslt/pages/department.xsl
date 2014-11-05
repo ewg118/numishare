@@ -417,12 +417,12 @@
 						<xsl:text> (g)</xsl:text>
 					</label>
 					<div>
-						<select id="weight_range" class="form-control technical-control">
+						<select id="weight_range" class="form-control technical-dropdown">
 							<option value="lessequal">Less/Equal to</option>
 							<option value="equal">Equal to</option>
 							<option value="greaterequal">Greater/Equal to</option>
 						</select>
-						<input type="text" id="weight_int" class="form-control technical-control"/>
+						<input type="text" id="weight_int" class="form-control technical-input"/>
 					</div>
 				</div>
 				<div class="form-group">
@@ -431,12 +431,12 @@
 						<xsl:text> (mm)</xsl:text>
 					</label>
 					<div>
-						<select id="diameter_range" class="form-control technical-control">
+						<select id="diameter_range" class="form-control technical-dropdown">
 							<option value="lessequal">Less/Equal to</option>
 							<option value="equal">Equal to</option>
 							<option value="greaterequal">Greater/Equal to</option>
 						</select>
-						<input type="text" id="diameter_int" class="form-control technical-control"/>
+						<input type="text" id="diameter_int" class="form-control technical-input"/>
 					</div>
 				</div>
 				<form action="{$display_path}results" method="GET" role="form" id="facet_form">
