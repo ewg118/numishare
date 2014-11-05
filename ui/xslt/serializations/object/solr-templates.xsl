@@ -522,6 +522,12 @@
 							<xsl:when test="$segs[3] = 'pup'">37</xsl:when>
 							<xsl:when test="$segs[3] = 'gor_iii_caes'">38</xsl:when>
 							<xsl:when test="$segs[3] = 'gor_iii'">39</xsl:when>
+							<xsl:when test="$segs[3] = 'ph_i'">40</xsl:when>
+							<xsl:when test="$segs[3] = 'pac'">41</xsl:when>
+							<xsl:when test="$segs[3] = 'jot'">42</xsl:when>
+							<xsl:when test="$segs[3] = 'mar_s'">43</xsl:when>
+							<xsl:when test="$segs[3] = 'spon'">44</xsl:when>
+							<xsl:when test="$segs[3] = 'tr_d'">45</xsl:when>							
 						</xsl:choose>
 					</xsl:variable>
 					<xsl:variable name="num">
