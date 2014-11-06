@@ -69,7 +69,7 @@
 						and decorations, from all parts of the world, and all periods in which such objects have been produced. </p>
 					
 					<h3>Departments</h3>
-					<div class="row text-center">
+					<div class="row text-center" id="departments">
 						<div class="col-md-6 col-lg-3">
 							<a href="department/Greek">
 								<img title="Greek" alt="Greek" src="{$include_path}/images/greek.jpg"/><br/>Greek</a>
