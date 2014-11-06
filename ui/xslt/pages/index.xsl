@@ -37,7 +37,8 @@
 	</xsl:template>
 
 	<xsl:template name="index">
-		<div class="jumbotron">
+		<img src="{$include_path}/images/jumbotron.jpg" style="width:100%;border-bottom:4px solid black; margin-bottom:15px;"/>
+		<!--<div class="jumbotron">
 			<div class="container">
 				<div class="row">
 					<div class="col-md-12">
@@ -50,18 +51,22 @@
 					</div>
 				</div>
 			</div>
-		</div>
+		</div>-->
 		<div class="container-fluid">
 			<div class="row">
 				<div class="col-md-3 col-lg-2">
 					<div class="highlight">
 						<h3>Navigation</h3>
 						<xsl:call-template name="navigation"/>
-					</div>					
+					</div>
 				</div>
 				<div class="col-md-6 col-lg-7">
 					<!-- index -->
-					<p>The ANS collections database contains information on more than 600,000 objects in the Society’s collections. These include, coins, paper money, tokens, ‘primitive’ money, medals and decorations, from all parts of the world, and all periods in which such objects have been produced. </p>
+					<h2>
+						<xsl:value-of select="description"/>
+					</h2>
+					<p>The ANS collections database contains information on more than 600,000 objects in the Society’s collections. These include, coins, paper money, tokens, ‘primitive’ money, medals
+						and decorations, from all parts of the world, and all periods in which such objects have been produced. </p>
 					<p>
 						<b>Click an image below to search a department.</b>
 					</p>
@@ -137,12 +142,12 @@
 								<img src="{$include_path}/images/nomisma.png" title="nomisma VOiD" alt="nomisma VOiD"/>
 							</a>
 						</xsl:if>
-					</div>					
+					</div>
 				</div>
 			</div>
 		</div>
 	</xsl:template>
-	
+
 	<xsl:template name="navigation">
 		<ul class="navigation-ul">
 			<li>
