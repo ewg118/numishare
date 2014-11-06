@@ -1,132 +1,98 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<nuds xmlns="http://nomisma.org/nuds" xmlns:xlink="http://www.w3.org/1999/xlink"
-      xmlns:mets="http://www.loc.gov/METS/"
-      recordType="physical">
-   <control>
-      <recordId>1991.17.12</recordId>
-      <maintenanceStatus>revised</maintenanceStatus>
-      <publicationStatus>approved</publicationStatus>
-      <maintenanceAgency>
-         <agencyName>University of Virginia Library</agencyName>
-         <agencyCode>US-viu</agencyCode>
-      </maintenanceAgency>
-      <maintenanceHistory>
-         <maintenanceEvent>
-            <eventType>derived</eventType>
-            <eventDateTime standardDateTime="2012-12-12T15:05:54.552-05:00Z">2012-12-12T15:05:54.552-05:00Z</eventDateTime>
-            <agentType>human</agentType>
-            <agent>Ethan Gruber and/or Carrie Sulosky</agent>
-            <eventDescription>Migrated from EAD to NUDS</eventDescription>
-         </maintenanceEvent>
-         <maintenanceEvent>
-            <eventType>revised</eventType>
-            <eventDateTime standardDateTime="2013-09-11T12:20:51.425-04:00Z">2013-09-11T12:20:51.425-04:00Z</eventDateTime>
-            <agentType>human</agentType>
-            <agent>XSLT</agent>
-            <eventDescription>Migrated to new NUDS schema version; nudsHeader to control.</eventDescription>
-         </maintenanceEvent>
-      </maintenanceHistory>
-      <rightsStmt>
-         <license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/"/>
-      </rightsStmt>
-      <otherRecordId semantic="dcterms:replaces">http://coins.lib.virginia.edu/display-uva?id=n1991_17_12</otherRecordId>
-      <semanticDeclaration>
-         <prefix>dcterms</prefix>
-         <namespace>http://purl.org/dc/terms/</namespace>
-      </semanticDeclaration>
-   </control>
-   <descMeta>
-      <title xml:lang="en">Antoninianus of Gordian III, Rome, 238-239. 1991.17.12.</title>
-      <typeDesc>
-         <objectType xlink:href="http://nomisma.org/id/coin">Coin</objectType>
-         <denomination xlink:href="http://nomisma.org/id/antoninianus">Antoninianus</denomination>
-         <material xlink:type="simple" xlink:href="http://nomisma.org/id/ar">Silver</material>
-         <dateRange>
-            <fromDate standardDate="0238">238</fromDate>
-            <toDate standardDate="0239">239</toDate>
-         </dateRange>
-         <authority>
-            <persname xlink:type="simple" xlink:role="authority"
-                      xlink:href="http://nomisma.org/id/gordian_iii">Gordian III</persname>
-            <corpname xlink:type="simple" xlink:role="state">Roman Empire</corpname>
-         </authority>
-         <geographic>
-            <geogname xlink:type="simple" xlink:role="mint" xlink:href="http://nomisma.org/id/rome">Rome</geogname>
-            <geogname xlink:type="simple" xlink:role="region"
-                      xlink:href="http://nomisma.org/id/latium">Latium</geogname>
-         </geographic>
-         <obverse>
-            <type>
-               <description xml:lang="en">Radiate bust, right, draped, cuirassed.</description>
-            </type>
-            <legend>IMP(ERATOR) CAES(AR) M(ARCVS) ANT(ONIVS) GORDIANVS AVG(VSTVS)</legend>
-            <persname xlink:type="simple" xlink:role="portrait"
-                      xlink:href="http://nomisma.org/id/gordian_iii">Gordian III</persname>
-         </obverse>
-         <reverse>
-            <type>
-               <description xml:lang="en">Pax standing front, head left, holding branch up in right hand and transverse sceptre in left.</description>
-            </type>
-            <legend>PAX AVGVSTI</legend>
-            <persname xlink:type="simple" xlink:role="deity">Pax</persname>
-         </reverse>
-      </typeDesc>
-      <physDesc>
-         <axis>6</axis>
-         <measurementsSet>
-            <diameter units="mm">21</diameter>
-            <weight units="g">4.28</weight>
-         </measurementsSet>
-      </physDesc>
-      <findspotDesc xlink:type="simple" xlink:href="http://nomisma.org/id/olivers_orchard_hoards"/>
-      <adminDesc>
-         <identifier>1991.17.12</identifier>
-         <provenance>
-            <chronList>
-               <chronItem>
-                  <acquisition>
-                     <acquiredFrom>Three hundred and two coins were acquired in 1991 from a cross section of 1,025 coins belonging to the Worldwide Treasure Bureau.</acquiredFrom>
-                  </acquisition>
-               </chronItem>
-               <chronItem>
-                  <description xml:lang="en">The Oliver's Orchard Hoard was discovered near Colchester, England (ancient Camulodunum) in 1983.</description>
-               </chronItem>
-            </chronList>
-         </provenance>
-         <department>Roman</department>
-         <collection xlink:type="simple" xlink:href="http://nomisma.org/id/uva">The Fralin Museum of Art</collection>
-      </adminDesc>
-      <refDesc>
-         <reference>
-            <title>RIC</title>
-            <identifier>3</identifier>
-         </reference>
-      </refDesc>
-   </descMeta>
-   <digRep>
-      <mets:fileSec>
-         <mets:fileGrp USE="obverse">
-            <mets:file USE="reference" MIMETYPE="image/jpeg">
-               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n1991_17_12_obv.jpg"/>
-            </mets:file>
-            <mets:file USE="thumbnail" MIMETYPE="image/jpeg">
-               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1991_17_12_obv.jpg"/>
-            </mets:file>
-            <mets:file USE="master" MIMETYPE="image/jpeg">
-               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/master/n1991_17_12_obv.jpg"/>
-            </mets:file>
-         </mets:fileGrp>
-         <mets:fileGrp USE="reverse">
-            <mets:file USE="reference" MIMETYPE="image/jpeg">
-               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n1991_17_12_rev.jpg"/>
-            </mets:file>
-            <mets:file USE="thumbnail" MIMETYPE="image/jpeg">
-               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1991_17_12_rev.jpg"/>
-            </mets:file>
-            <mets:file USE="master" MIMETYPE="image/jpeg">
-               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/master/n1991_17_12_rev.jpg"/>
-            </mets:file>
-         </mets:fileGrp>
-      </mets:fileSec>
-   </digRep>
+<nuds xmlns="http://nomisma.org/nuds" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mets="http://www.loc.gov/METS/" recordType="physical">
+	<control>
+		<recordId>1991.17.12</recordId>
+		<maintenanceStatus>revised</maintenanceStatus>
+		<publicationStatus>approved</publicationStatus>
+		<maintenanceAgency>
+			<agencyName>University of Virginia Library</agencyName>
+			<agencyCode>US-viu</agencyCode>
+		</maintenanceAgency>
+		<maintenanceHistory>
+			<maintenanceEvent>
+				<eventType>derived</eventType>
+				<eventDateTime standardDateTime="2012-12-12T15:05:54.552-05:00Z">2012-12-12T15:05:54.552-05:00Z</eventDateTime>
+				<agentType>human</agentType>
+				<agent>Ethan Gruber and/or Carrie Sulosky</agent>
+				<eventDescription>Migrated from EAD to NUDS</eventDescription>
+			</maintenanceEvent>
+			<maintenanceEvent>
+				<eventType>revised</eventType>
+				<eventDateTime standardDateTime="2013-09-11T12:20:51.425-04:00Z">2013-09-11T12:20:51.425-04:00Z</eventDateTime>
+				<agentType>human</agentType>
+				<agent>XSLT</agent>
+				<eventDescription>Migrated to new NUDS schema version; nudsHeader to control.</eventDescription>
+			</maintenanceEvent>
+		</maintenanceHistory>
+		<rightsStmt>
+			<license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/"/>
+		</rightsStmt>
+		<otherRecordId semantic="dcterms:replaces">http://coins.lib.virginia.edu/display-uva?id=n1991_17_12</otherRecordId>
+		<semanticDeclaration>
+			<prefix>dcterms</prefix>
+			<namespace>http://purl.org/dc/terms/</namespace>
+		</semanticDeclaration>
+	</control>
+	<descMeta>
+		<title xml:lang="en">Antoninianus of Gordian III, Rome, 238-239. 1991.17.12.</title>
+		<typeDesc xlink:type="simple" xlink:href="http://numismatics.org/ocre/id/ric.4.gor_iii.3"/>
+
+		<physDesc>
+			<axis>6</axis>
+			<measurementsSet>
+				<diameter units="mm">21</diameter>
+				<weight units="g">4.28</weight>
+			</measurementsSet>
+		</physDesc>
+		<findspotDesc xlink:type="simple" xlink:href="http://nomisma.org/id/olivers_orchard_hoards"/>
+		<adminDesc>
+			<identifier>1991.17.12</identifier>
+			<provenance>
+				<chronList>
+					<chronItem>
+						<acquisition>
+							<acquiredFrom>Three hundred and two coins were acquired in 1991 from a cross section of 1,025 coins belonging to the Worldwide Treasure Bureau.</acquiredFrom>
+						</acquisition>
+					</chronItem>
+					<chronItem>
+						<description xml:lang="en">The Oliver's Orchard Hoard was discovered near Colchester, England (ancient Camulodunum) in 1983.</description>
+					</chronItem>
+				</chronList>
+			</provenance>
+			<department>Roman</department>
+			<collection xlink:type="simple" xlink:href="http://nomisma.org/id/uva">The Fralin Museum of Art</collection>
+		</adminDesc>
+		<refDesc>
+			<reference>
+				<title>RIC</title>
+				<identifier>3</identifier>
+			</reference>
+		</refDesc>
+	</descMeta>
+	<digRep>
+		<mets:fileSec>
+			<mets:fileGrp USE="obverse">
+				<mets:file USE="reference" MIMETYPE="image/jpeg">
+					<mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n1991_17_12_obv.jpg"/>
+				</mets:file>
+				<mets:file USE="thumbnail" MIMETYPE="image/jpeg">
+					<mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1991_17_12_obv.jpg"/>
+				</mets:file>
+				<mets:file USE="master" MIMETYPE="image/jpeg">
+					<mets:FLocat LOCTYPE="URL" xlink:href="images/coins/master/n1991_17_12_obv.jpg"/>
+				</mets:file>
+			</mets:fileGrp>
+			<mets:fileGrp USE="reverse">
+				<mets:file USE="reference" MIMETYPE="image/jpeg">
+					<mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n1991_17_12_rev.jpg"/>
+				</mets:file>
+				<mets:file USE="thumbnail" MIMETYPE="image/jpeg">
+					<mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1991_17_12_rev.jpg"/>
+				</mets:file>
+				<mets:file USE="master" MIMETYPE="image/jpeg">
+					<mets:FLocat LOCTYPE="URL" xlink:href="images/coins/master/n1991_17_12_rev.jpg"/>
+				</mets:file>
+			</mets:fileGrp>
+		</mets:fileSec>
+	</digRep>
 </nuds>

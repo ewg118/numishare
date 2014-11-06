@@ -37,40 +37,9 @@
    </control>
    <descMeta>
       <title xml:lang="en">Antoninianus of Gordian III, Rome, 243-244. 1991.17.24.</title>
-      <typeDesc>
-         <objectType xlink:href="http://nomisma.org/id/coin">Coin</objectType>
-         <denomination xlink:href="http://nomisma.org/id/antoninianus">Antoninianus</denomination>
-         <material xlink:type="simple" xlink:href="http://nomisma.org/id/ar">Silver</material>
-         <dateRange>
-            <fromDate standardDate="0243">243</fromDate>
-            <toDate standardDate="0244">244</toDate>
-         </dateRange>
-         <authority>
-            <persname xlink:type="simple" xlink:role="authority"
-                      xlink:href="http://nomisma.org/id/gordian_iii">Gordian III</persname>
-            <corpname xlink:type="simple" xlink:role="state">Roman Empire</corpname>
-         </authority>
-         <geographic>
-            <geogname xlink:type="simple" xlink:role="mint" xlink:href="http://nomisma.org/id/rome">Rome</geogname>
-            <geogname xlink:type="simple" xlink:role="region"
-                      xlink:href="http://nomisma.org/id/latium">Latium</geogname>
-         </geographic>
-         <obverse>
-            <type>
-               <description xml:lang="en">Radiate bust, right, draped, cuirassed.</description>
-            </type>
-            <legend>IMP(ERATOR) GORDIANVS PIVS FEL(IX) AVG(VSTVS)</legend>
-            <persname xlink:type="simple" xlink:role="portrait"
-                      xlink:href="http://nomisma.org/id/gordian_iii">Gordian III</persname>
-         </obverse>
-         <reverse>
-            <type>
-               <description xml:lang="en">Fortuna seated left, holding rudder and cornucopiae; wheel under her seat.</description>
-            </type>
-            <legend>FORTVNA REDVX</legend>
-            <persname xlink:type="simple" xlink:role="deity">Fortuna</persname>
-         </reverse>
-      </typeDesc>
+   	<typeDesc xlink:type="simple" xlink:href="http://numismatics.org/ocre/id/ric.4.gor_iii.144"/>
+      
+      
       <physDesc>
          <axis>6</axis>
          <measurementsSet>
