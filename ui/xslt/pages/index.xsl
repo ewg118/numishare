@@ -47,7 +47,7 @@
 						</div>
 						<div class="col-lg-8">
 							<h1>MANTIS</h1>
-							<h2>A Numismatic Technologies Integration Service</h2>
+							<h3>A Numismatic Technologies Integration Service</h3>
 						</div>
 					</div>					
 				</div>

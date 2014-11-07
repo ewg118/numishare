@@ -39,7 +39,10 @@ body{
 	max-height:150px;
 	
 }
-.banner-background h1, .banner-background h2 {
+.banner-background h1 {
+	font-size:72px;
+}
+.banner-background h1, .banner-background h2,  .banner-background h3  {
 	margin-top:0;
 }
 .navbar{
