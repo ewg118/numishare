@@ -118,51 +118,7 @@
 		<!--<xsl:copy-of select="$sparqlResult"/>-->
 		<div class="container-fluid">
 			<div class="row">
-				<div class="col-md-3 col-sm-4 .col-sm-offset-8">
-					<xsl:if test="//result[@name='response']/@numFound &gt; 0">
-						<div class="data_options">
-							<h3>
-								<xsl:value-of select="numishare:normalizeLabel('results_data-options', $lang)"/>
-							</h3>
-							<a href="{$display_path}feed/?q={$q}{if(string($lang)) then concat('&amp;lang=', $lang) else ''}">
-								<img src="{$include_path}/images/atom-medium.png" title="Atom" alt="Atom"/>
-							</a>
-							<xsl:if test="//lst[@name='mint_geo']/int[@name='numFacetTerms'] &gt; 0">
-								<xsl:choose>
-									<xsl:when test="/content/config/collection_type = 'hoard'">
-										<a href="{$display_path}findspots.kml?q={$q}{if(string($lang)) then concat('&amp;lang=', $lang) else ''}">
-											<img src="{$include_path}/images/googleearth.png" alt="KML" title="KML: Limit, 500 objects"/>
-										</a>
-									</xsl:when>
-									<xsl:otherwise>
-										<a href="{$display_path}query.kml?q={$q}{if(string($lang)) then concat('&amp;lang=', $lang) else ''}">
-											<img src="{$include_path}/images/googleearth.png" alt="KML" title="KML: Limit, 500 objects"/>
-										</a>
-									</xsl:otherwise>
-								</xsl:choose>
-
-							</xsl:if>
-							<a href="{$display_path}query.csv?q={$q}{if(string($lang)) then concat('&amp;lang=', $lang) else ''}{if (string($sort)) then concat('&amp;sort=', $sort) else ''}">
-								<!-- the image below is copyright of Silvestre Herrera, available freely on wikimedia commons: http://commons.wikimedia.org/wiki/File:X-office-spreadsheet_Gion.svg -->
-								<img src="{$include_path}/images/spreadsheet.png" title="CSV" alt="CSV"/>
-							</a>
-							<a href="{$display_path}visualize?compare={$q}{if(string($lang)) then concat('&amp;lang=', $lang) else ''}">
-								<!-- the image below is copyright of Mark James, available freely on wikimedia commons: http://commons.wikimedia.org/wiki/File:Chart_bar.png -->
-								<img src="{$include_path}/images/visualize.png" title="Visualize" alt="Visualize"/>
-							</a>
-						</div>
-						<div id="refine_results">							
-							<xsl:call-template name="quick_search"/>
-							<h3>
-								<xsl:value-of select="numishare:normalizeLabel('results_refine-results', $lang)"/>
-							</h3>
-							<xsl:apply-templates select="descendant::lst[@name='facet_fields']"/>
-						</div>
-
-
-					</xsl:if>
-				</div>
-				<div class="col-md-9 col-sm-8">
+				<div class="col-md-9 col-md-push-3">
 					<div class="container-fluid">
 						<xsl:call-template name="remove_facets"/>
 						<xsl:choose>
@@ -184,7 +140,52 @@
 						</xsl:choose>
 					</div>
 				</div>
+				<div class="col-md-3 col-md-pull-9">
+					<xsl:if test="//result[@name='response']/@numFound &gt; 0">
+						<div class="data_options">
+							<h3>
+								<xsl:value-of select="numishare:normalizeLabel('results_data-options', $lang)"/>
+							</h3>
+							<a href="{$display_path}feed/?q={$q}{if(string($lang)) then concat('&amp;lang=', $lang) else ''}">
+								<img src="{$include_path}/images/atom-medium.png" title="Atom" alt="Atom"/>
+							</a>
+							<xsl:if test="//lst[@name='mint_geo']/int[@name='numFacetTerms'] &gt; 0">
+								<xsl:choose>
+									<xsl:when test="/content/config/collection_type = 'hoard'">
+										<a href="{$display_path}findspots.kml?q={$q}{if(string($lang)) then concat('&amp;lang=', $lang) else ''}">
+											<img src="{$include_path}/images/googleearth.png" alt="KML" title="KML: Limit, 500 objects"/>
+										</a>
+									</xsl:when>
+									<xsl:otherwise>
+										<a href="{$display_path}query.kml?q={$q}{if(string($lang)) then concat('&amp;lang=', $lang) else ''}">
+											<img src="{$include_path}/images/googleearth.png" alt="KML" title="KML: Limit, 500 objects"/>
+										</a>
+									</xsl:otherwise>
+								</xsl:choose>
+								
+							</xsl:if>
+							<a href="{$display_path}query.csv?q={$q}{if(string($lang)) then concat('&amp;lang=', $lang) else ''}{if (string($sort)) then concat('&amp;sort=', $sort) else ''}">
+								<!-- the image below is copyright of Silvestre Herrera, available freely on wikimedia commons: http://commons.wikimedia.org/wiki/File:X-office-spreadsheet_Gion.svg -->
+								<img src="{$include_path}/images/spreadsheet.png" title="CSV" alt="CSV"/>
+							</a>
+							<a href="{$display_path}visualize?compare={$q}{if(string($lang)) then concat('&amp;lang=', $lang) else ''}">
+								<!-- the image below is copyright of Mark James, available freely on wikimedia commons: http://commons.wikimedia.org/wiki/File:Chart_bar.png -->
+								<img src="{$include_path}/images/visualize.png" title="Visualize" alt="Visualize"/>
+							</a>
+						</div>
+						<div id="refine_results">							
+							<xsl:call-template name="quick_search"/>
+							<h3>
+								<xsl:value-of select="numishare:normalizeLabel('results_refine-results', $lang)"/>
+							</h3>
+							<xsl:apply-templates select="descendant::lst[@name='facet_fields']"/>
+						</div>
+						
+						
+					</xsl:if>
+				</div>
 			</div>
+			
 			<div id="backgroundPopup"/>
 			<div style="display:none">
 				<span id="collection_type">
