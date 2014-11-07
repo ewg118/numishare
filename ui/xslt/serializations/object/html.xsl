@@ -45,7 +45,7 @@
 		</xsl:if>
 	</xsl:variable>-->
 	
-	<xsl:variable  name="display_path"/>
+	<xsl:variable  name="display_path">../search/</xsl:variable>
 
 	<xsl:variable name="include_path" select="concat('http://', doc('input:request')/request/server-name, ':8080/orbeon/themes/', //config/theme/orbeon_theme)"/>
 
