@@ -37,7 +37,22 @@
 	</xsl:template>
 
 	<xsl:template name="index">
-		<img src="{$include_path}/images/jumbotron.jpg" style="width:100%;border-bottom:4px solid black; margin-bottom:15px;"/>
+		<div class="container-fluid test">
+			<!--<img src="{$include_path}/images/jumbotron.jpg" style="width:100%;border-bottom:4px solid black; margin-bottom:15px;"/>-->
+			<div class="row">
+				<div class="col-md-6 col-md-offset-6">
+					<div class="row banner-background">
+						<div class="col-lg-4 text-right">
+							<img src="{$include_path}/images/ans_large.png" alt="logo"/>
+						</div>
+						<div class="col-lg-8">
+							<h1>MANTIS</h1>
+							<h2>A Numismatic Technologies Integration Service</h2>
+						</div>
+					</div>					
+				</div>
+			</div>
+		</div>
 		<!--<div class="jumbotron">
 			<div class="container">
 				<div class="row">
@@ -67,7 +82,7 @@
 					</h2>
 					<p>The ANS collections database contains information on more than 600,000 objects in the Society’s collections. These include, coins, paper money, tokens, ‘primitive’ money, medals
 						and decorations, from all parts of the world, and all periods in which such objects have been produced. </p>
-					
+
 					<h3>Departments</h3>
 					<div class="row text-center" id="departments">
 						<div class="col-md-6 col-lg-3">

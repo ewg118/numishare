@@ -20,11 +20,32 @@ body{
 	font-size:14px;
 	line-height:18px;
 }
+.test{
+	border-bottom:4px solid black;
+	color:white;
+	background-image:url("http://numismatics.org:8080/orbeon/themes/mantis/images/jumbotron.jpg");
+	background-size:100%;
+	background-repeat:no-repeat;
+}
+.banner-background {
+	margin:20px 0;
+	background-color:black;
+	border-radius:20px;
+	padding:20px 0;
+	background-color:rgba(0,0,0,0.5);
+}
+.banner-background img {
+	max-height:150px;
+	
+}
+.banner-background h1, .banner-background h2 {
+	margin-top:0;
+}
 .navbar{
 	margin-bottom:0;
 	border-bottom:4px solid black;
 }
-.navbar-brand {
+.navbar-brand{
 	padding:5px;
 }
 a > img{
@@ -63,12 +84,12 @@ ul li{
   INDEX
   ***************************************
  */
-  .navigation-ul{
-  	padding:0;
-  }
-  .navigation-ul ul {
-  	padding-left:25px;
-  }
+.navigation-ul{
+	padding:0;
+}
+.navigation-ul ul{
+	padding-left:25px;
+}
 /*
   ***************************************
   DISPLAY CONTENT
@@ -226,7 +247,7 @@ select[name = "interval"],
 	margin-right:25px;
 	display:inline;
 }
-.technical-input {
+.technical-input{
 	width:50px;
 	display:inline;
 }
