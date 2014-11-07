@@ -37,7 +37,7 @@
 	</xsl:template>
 
 	<xsl:template name="index">
-		<div class="container-fluid test">
+		<div class="container-fluid banner">
 			<!--<img src="{$include_path}/images/jumbotron.jpg" style="width:100%;border-bottom:4px solid black; margin-bottom:15px;"/>-->
 			<div class="row">
 				<div class="col-md-6 col-md-offset-6">

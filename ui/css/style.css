@@ -20,12 +20,13 @@ body{
 	font-size:14px;
 	line-height:18px;
 }
-.test{
+.banner{
 	border-bottom:4px solid black;
 	color:white;
 	background-image:url("http://numismatics.org:8080/orbeon/themes/mantis/images/jumbotron.jpg");
 	background-size:100%;
 	background-repeat:no-repeat;
+	margin-bottom:15px;
 }
 .banner-background {
 	margin:20px 0;
