@@ -8,7 +8,7 @@
 	<xsl:template match="doc">
 		<h3>Featured Object</h3>
 		<div>
-			<a href="collection/{str[@name='recordId']}">
+			<a href="../collection/{str[@name='recordId']}">
 				<img src="{str[@name='thumbnail_obv']}"/>
 			</a>
 			<br/>
