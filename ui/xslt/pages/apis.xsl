@@ -98,7 +98,7 @@
 									<tr>
 										<td>HTML</td>
 										<td>
-											<xsl:value-of select="concat(/content/config/url, 'id/{$id}')"/>
+											<xsl:value-of select="concat(/content/config/uri_space, 'id/{$id}')"/>
 										</td>
 										<td>
 											<code>text/html</code>
@@ -107,7 +107,7 @@
 									<tr>
 										<td>NUDS/XML</td>
 										<td>
-											<xsl:value-of select="concat(/content/config/url, 'id/{$id}.xml')"/>
+											<xsl:value-of select="concat(/content/config/uri_space, 'id/{$id}.xml')"/>
 										</td>
 										<td>
 											<code>application/xml</code>
@@ -116,7 +116,7 @@
 									<tr>
 										<td>KML</td>
 										<td>
-											<xsl:value-of select="concat(/content/config/url, 'id/{$id}.kml')"/>
+											<xsl:value-of select="concat(/content/config/uri_space, 'id/{$id}.kml')"/>
 										</td>
 										<td>
 											<code>application/vnd.google-earth.kml+xml</code>
@@ -125,7 +125,7 @@
 									<tr>
 										<td>RDF/XML</td>
 										<td>
-											<xsl:value-of select="concat(/content/config/url, 'id/{$id}.rdf')"/>
+											<xsl:value-of select="concat(/content/config/uri_space, 'id/{$id}.rdf')"/>
 										</td>
 										<td>
 											<code>application/rdf+xml</code>
@@ -134,7 +134,7 @@
 									<tr>
 										<td>Turtle</td>
 										<td>
-											<xsl:value-of select="concat(/content/config/url, 'id/{$id}.ttl')"/>
+											<xsl:value-of select="concat(/content/config/uri_space, 'id/{$id}.ttl')"/>
 										</td>
 										<td>
 											<code>text/turtle</code>
@@ -143,7 +143,7 @@
 									<tr>
 										<td>JSON-LD</td>
 										<td>
-											<xsl:value-of select="concat(/content/config/url, 'id/{$id}.json')"/>
+											<xsl:value-of select="concat(/content/config/uri_space, 'id/{$id}.json')"/>
 										</td>
 										<td>
 											<code>application/json</code>
