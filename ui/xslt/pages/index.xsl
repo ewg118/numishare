@@ -77,9 +77,9 @@
 				</div>
 				<div class="col-md-6 col-lg-7 col-sm-9">
 					<!-- index -->
-					<h2>
+					<!--<h2>
 						<xsl:value-of select="description"/>
-					</h2>
+					</h2>-->
 					<p>The ANS collections database contains information on more than 600,000 objects in the Society’s collections. These include, coins, paper money, tokens, ‘primitive’ money, medals
 						and decorations, from all parts of the world, and all periods in which such objects have been produced. </p>
 
