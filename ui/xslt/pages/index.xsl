@@ -37,8 +37,8 @@
 	</xsl:template>
 
 	<xsl:template name="index">
-		<img src="{$include_path}/images/jumbotron.jpg" style="width:100%;border-bottom:4px solid black; margin-bottom:15px;"/>
-		<!--<div class="container-fluid banner">			
+		<!--<img src="{$include_path}/images/jumbotron.jpg" style="width:100%;border-bottom:4px solid black; margin-bottom:15px;"/>-->
+		<div class="container-fluid banner">			
 			<div class="row">
 				<div class="col-md-6 col-md-offset-6">
 					<div class="row banner-background">
@@ -52,7 +52,7 @@
 					</div>					
 				</div>
 			</div>
-		</div>-->
+		</div>
 		<div class="container-fluid">
 			<div class="row">
 				<div class="col-md-3 col-lg-2 hidden-xs hidden-sm">
