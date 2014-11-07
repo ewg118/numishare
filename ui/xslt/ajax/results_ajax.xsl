@@ -9,6 +9,7 @@
 	<xsl:param name="lang" select="doc('input:request')/request/parameters/parameter[name='lang']/value"/>
 	<xsl:param name="request-uri" select="concat('http://localhost:8080', substring-before(doc('input:request')/request/request-uri, 'results_ajax'))"/>
 	
+	
 	<xsl:variable name="display_path">
 		<xsl:choose>
 			<xsl:when test="$pipeline='maps'"/>
@@ -35,6 +36,7 @@
 	<!-- config variables -->
 	<xsl:variable name="sparql_endpoint" select="/content/config/sparql_endpoint"/>
 	<xsl:variable name="url" select="/content/config/url"/>
+	<xsl:variable name="uri_space" select="/content/config/uri_space"/>
 
 	<!-- get block of images from SPARQL endpoint, via nomisma API -->
 	<xsl:variable name="sparqlResult" as="element()*">
@@ -85,7 +87,7 @@
 
 		<div class="g_doc col-md-4">
 			<h4>
-				<a href="{$display_path}id/{str[@name='recordId']}{if (string($lang)) then concat('?lang=', $lang) else ''}" target="_blank">
+				<a href="{$uri_space}{str[@name='recordId']}{if (string($lang)) then concat('?lang=', $lang) else ''}" target="_blank">
 					<xsl:value-of select="str[@name='title_display']"/>
 				</a>
 			</h4>

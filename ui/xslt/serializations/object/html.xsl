@@ -39,11 +39,13 @@
 	<xsl:variable name="orientation" select="/content/config/theme/layouts/display/nuds/orientation"/>
 	<xsl:variable name="image_location" select="/content/config/theme/layouts/display/nuds/image_location"/>
 
-	<xsl:variable name="display_path">
+	<!--<xsl:variable name="display_path">
 		<xsl:if test="not(string($mode))">
 			<xsl:text>../</xsl:text>
 		</xsl:if>
-	</xsl:variable>
+	</xsl:variable>-->
+	
+	<xsl:variable  name="display_path"/>
 
 	<xsl:variable name="include_path" select="concat('http://', doc('input:request')/request/server-name, ':8080/orbeon/themes/', //config/theme/orbeon_theme)"/>
 
