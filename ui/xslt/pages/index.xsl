@@ -42,7 +42,7 @@
 			<div class="row">
 				<div class="col-md-6 col-md-offset-6">
 					<div class="row banner-background">
-						<div class="col-lg-4 text-right">
+						<div class="col-lg-4 text-center">
 							<img src="{$include_path}/images/ans_large.png" alt="logo"/>
 						</div>
 						<div class="col-lg-8">
