@@ -42,7 +42,7 @@
 			<div class="row">
 				<div class="col-md-12">
 					<h1>Documentation</h1>
-					<div>
+					<!--<div>
 						<h2>APIs</h2>
 						<table class="table">
 							<thead>
@@ -77,7 +77,7 @@
 										select="string-join(//doc/str[@name='recordId'], '|')"/></a>
 							</p>
 						</div>
-					</div>
+					</div>-->
 					<div>
 						<h2>Data Access</h2>
 						<div>
