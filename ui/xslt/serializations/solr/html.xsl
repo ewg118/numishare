@@ -116,8 +116,30 @@
 	<xsl:template name="results">
 		<!--<xsl:copy-of select="$sparqlResult"/>-->
 		<div class="container-fluid">
-			<div class="row">
-				<div class="col-md-3">
+			<div class="row">				
+				<div class="col-md-9 col-md-push-3">
+					<div class="container-fluid">
+						<xsl:call-template name="remove_facets"/>
+						<xsl:choose>
+							<xsl:when test="$numFound &gt; 0">
+								<!-- include resultMap div when there are geographical results-->
+								<xsl:if test="//lst[@name='mint_geo']/int[@name='numFacetTerms'] &gt; 0">
+									<div style="display:none">
+										<div id="resultMap"/>
+									</div>
+								</xsl:if>
+								<xsl:call-template name="paging"/>
+								<xsl:call-template name="sort"/>
+								<xsl:apply-templates select="descendant::doc"/>
+								<xsl:call-template name="paging"/>
+							</xsl:when>
+							<xsl:otherwise>
+								<h2> No results found. <a href="results?q=*:*">Start over.</a></h2>
+							</xsl:otherwise>
+						</xsl:choose>
+					</div>
+				</div>
+				<div class="col-md-3 col-md-pull-9">
 					<xsl:if test="//result[@name='response']/@numFound &gt; 0">
 						<div class="data_options">
 							<h3>
@@ -139,7 +161,7 @@
 										</a>
 									</xsl:otherwise>
 								</xsl:choose>
-
+								
 							</xsl:if>
 							<a href="{$display_path}query.csv?q={$q}{if(string($lang)) then concat('&amp;lang=', $lang) else ''}{if (string($sort)) then concat('&amp;sort=', $sort) else ''}">
 								<!-- the image below is copyright of Silvestre Herrera, available freely on wikimedia commons: http://commons.wikimedia.org/wiki/File:X-office-spreadsheet_Gion.svg -->
@@ -157,31 +179,9 @@
 							</h3>
 							<xsl:apply-templates select="descendant::lst[@name='facet_fields']"/>
 						</div>
-
-
+						
+						
 					</xsl:if>
-				</div>
-				<div class="col-md-9">
-					<div class="container-fluid">
-						<xsl:call-template name="remove_facets"/>
-						<xsl:choose>
-							<xsl:when test="$numFound &gt; 0">
-								<!-- include resultMap div when there are geographical results-->
-								<xsl:if test="//lst[@name='mint_geo']/int[@name='numFacetTerms'] &gt; 0">
-									<div style="display:none">
-										<div id="resultMap"/>
-									</div>
-								</xsl:if>
-								<xsl:call-template name="paging"/>
-								<xsl:call-template name="sort"/>
-								<xsl:apply-templates select="descendant::doc"/>
-								<xsl:call-template name="paging"/>
-							</xsl:when>
-							<xsl:otherwise>
-								<h2> No results found. <a href="results?q=*:*">Start over.</a></h2>
-							</xsl:otherwise>
-						</xsl:choose>
-					</div>
 				</div>
 			</div>
 			<div id="backgroundPopup"/>
