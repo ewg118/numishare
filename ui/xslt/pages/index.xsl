@@ -37,8 +37,8 @@
 	</xsl:template>
 
 	<xsl:template name="index">
-		<div class="container-fluid banner">
-			<!--<img src="{$include_path}/images/jumbotron.jpg" style="width:100%;border-bottom:4px solid black; margin-bottom:15px;"/>-->
+		<img src="{$include_path}/images/jumbotron.jpg" style="width:100%;border-bottom:4px solid black; margin-bottom:15px;"/>
+		<!--<div class="container-fluid banner">			
 			<div class="row">
 				<div class="col-md-6 col-md-offset-6">
 					<div class="row banner-background">
@@ -50,20 +50,6 @@
 							<h2>A Numismatic Technologies Integration Service</h2>
 						</div>
 					</div>					
-				</div>
-			</div>
-		</div>
-		<!--<div class="jumbotron">
-			<div class="container">
-				<div class="row">
-					<div class="col-md-12">
-						<h1>
-							<xsl:value-of select="title"/>
-						</h1>
-						<p>
-							<xsl:value-of select="description"/>
-						</p>
-					</div>
 				</div>
 			</div>
 		</div>-->
