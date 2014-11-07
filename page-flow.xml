@@ -65,6 +65,9 @@
 	<!-- apis -->
 	<page path="/numishare/mantis/apis/get" model="file:///usr/local/projects/mantis/xpl/models/object/get-id.xpl" view="xpl/views/apis/get.xpl"/>	
 	
+	<!-- results ajax -->
+	<page path="/numishare/mantis/results_ajax" model="xpl/models/solr/results_ajax.xpl" view="file:///usr/local/projects/mantis/xpl/views/ajax/results_ajax.xpl"/>
+	
 	<!-- OCRE -->
 	<page path="/numishare/ocre/" model="xpl/models/config.xpl" view="file:///usr/local/projects/ocre/xpl/views/pages/index.xpl"/>	
 	
