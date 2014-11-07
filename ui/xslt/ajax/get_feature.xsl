@@ -7,12 +7,12 @@
 	</xsl:template>
 	<xsl:template match="doc">
 		<h3>Featured Object</h3>
-		<div>
+		<div style="text-center">
 			<a href="../collection/{str[@name='recordId']}">
 				<img src="{str[@name='thumbnail_obv']}"/>
 			</a>
 			<br/>
-			<a href="id/{str[@name='recordId']}">
+			<a href="../collection/{str[@name='recordId']}">
 				<xsl:value-of select="str[@name='title_display']"/>
 			</a>
 			<xsl:if test="string(str[@name='imagesponsor'])">
