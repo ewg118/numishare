@@ -456,7 +456,7 @@
 						<a href="{$id}.ttl">TTL</a>
 					</li>
 					<li>
-						<a href="{$id}.json">JSON-LD</a>
+						<a href="{$id}.jsonld">JSON-LD</a>
 					</li>
 					<li>
 						<a href="{$id}.kml">KML</a>
