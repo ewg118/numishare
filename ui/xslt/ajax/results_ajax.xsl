@@ -46,8 +46,6 @@
 	</xsl:variable>
 
 	<xsl:template match="/">
-		<!--<xsl:variable name="place_string" select="replace(translate($tokenized_q[contains(., '_uri')], '&#x022;()', ''), '[a-z]+_uri:', '')"/>
-		<xsl:variable name="places" select="tokenize($place_string, ' OR ')"/>-->
 		<xsl:variable name="facets" as="element()*">
 			<xsl:copy-of select="descendant::lst[@name='facet_fields']"/>
 		</xsl:variable>
