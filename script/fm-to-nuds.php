@@ -4,7 +4,7 @@ AUTHOR: Ethan Gruber
 MODIFIED: September, 2013
 DESCRIPTION: Receive and interpret escaped CSV sent from Filemaker Pro database
 to public server, transform to Numishare-compliant NUDS XML (performing cleanup of data),
-post to eXist XML database via cURL, and get Solr add document from Cocoon and post to Solr.
+post to eXist XML database via cURL, and get Solr add document from Orbeon and post to Solr.
 REQUIRED LIBRARIES: php5, php5-curl, php5-cgi
 ************************/
 
@@ -1438,7 +1438,7 @@ function csvToArray($file, $delimiter) {
 
 function generate_solr_shell_script($array){
 	$uniqid = uniqid();
-	$solrDocUrl = 'http://localhost:8080/cocoon/mantis/ingest?identifiers=' . implode('\|', $array);
+	$solrDocUrl = 'http://localhost:8080/orbeon/numishare/mantis/ingest?identifiers=' . implode('\|', $array);
 	$solrUrl = 'http://localhost:8080/solr/numishare-published/update';
 
 	//generate content of bash script
