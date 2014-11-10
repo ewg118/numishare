@@ -307,7 +307,7 @@
 		<!-- alternates -->
 		<link rel="alternate" type="application/xml" href="{concat($url, 'id/', $id)}.xml"/>
 		<link rel="alternate" type="application/rdf+xml" href="{concat($url, 'id/', $id)}.rdf"/>
-		<link rel="alternate" type="application/json" href="{concat($url, 'id/', $id)}.json"/>
+		<link rel="alternate" type="application/ld+json" href="{concat($url, 'id/', $id)}.jsonld"/>
 		<link rel="alternate" type="text/turtle" href="{concat($url, 'id/', $id)}.ttl"/>
 		<link rel="alternate" type="application/vnd.google-earth.kml+xml" href="{concat($url, 'collection/', $id)}.kml"/>
 		<!-- CSS -->
