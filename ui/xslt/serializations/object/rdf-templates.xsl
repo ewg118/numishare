@@ -98,7 +98,7 @@
 				<oa:hasTarget rdf:resource="{$url}pelagios.rdf#{$id}"/>
 				<pelagios:relation rdf:resource="http://pelagios.github.io/vocab/relations#attestsTo"/>
 				<oa:annotatedBy rdf:resource="{$url}pelagios.rdf#agents/me"/>
-				<oa:annotatedAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">
+				<oa:annotatedAt rdf:datatype="xsd:dateTime">
 					<xsl:value-of select="$date"/>
 				</oa:annotatedAt>
 			</oa:Annotation>
@@ -361,19 +361,19 @@
 	</xsl:template>
 
 	<xsl:template match="nuds:date" mode="nomisma">
-		<nm:start_date rdf:datatype="http://www.w3.org/2001/XMLSchema#gYear">
+		<nm:start_date rdf:datatype="xsd:gYear">
 			<xsl:value-of select="@standardDate"/>
 		</nm:start_date>
-		<nm:end_date rdf:datatype="http://www.w3.org/2001/XMLSchema#gYear">
+		<nm:end_date rdf:datatype="xsd:gYear">
 			<xsl:value-of select="@standardDate"/>
 		</nm:end_date>
 	</xsl:template>
 
 	<xsl:template match="nuds:dateRange" mode="nomisma">
-		<nm:start_date rdf:datatype="http://www.w3.org/2001/XMLSchema#gYear">
+		<nm:start_date rdf:datatype="xsd:gYear">
 			<xsl:value-of select="nuds:fromDate/@standardDate"/>
 		</nm:start_date>
-		<nm:end_date rdf:datatype="http://www.w3.org/2001/XMLSchema#gYear">
+		<nm:end_date rdf:datatype="xsd:gYear">
 			<xsl:value-of select="nuds:toDate/@standardDate"/>
 		</nm:end_date>
 	</xsl:template>
@@ -584,7 +584,7 @@
 			<oa:hasTarget rdf:resource="{$url}pelagios.rdf#{$id}"/>
 			<pelagios:relation rdf:resource="http://pelagios.github.io/vocab/relations#foundAt"/>
 			<oa:annotatedBy rdf:resource="{$url}pelagios.rdf#agents/me"/>
-			<oa:annotatedAt rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">
+			<oa:annotatedAt rdf:datatype="xsd:dateTime">
 				<xsl:value-of select="$date"/>
 			</oa:annotatedAt>
 		</oa:Annotation>
