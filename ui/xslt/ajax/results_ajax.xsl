@@ -48,25 +48,30 @@
 	</xsl:variable>
 
 	<xsl:template match="/">
-		<xsl:variable name="place_string" select="replace(translate($tokenized_q[contains(., '_uri')], '&#x022;()', ''), '[a-z]+_uri:', '')"/>
-		<xsl:variable name="places" select="tokenize($place_string, ' OR ')"/>
 		<xsl:variable name="facets" as="element()*">
 			<xsl:copy-of select="descendant::lst[@name='facet_fields']"/>
 		</xsl:variable>
+		<xsl:variable name="places" as="item()*">
+			<xsl:analyze-string select="$q" regex="_uri:&#x022;([^&#x022;]+)&#x022;">
+				<xsl:matching-substring>
+					<xsl:variable name="value" select="regex-group(1)"/>
+					<xsl:value-of select="tokenize($facets/descendant::int[contains(@name, $value)][1]/@name, '\|')[1]"/>					
+				</xsl:matching-substring>
+			</xsl:analyze-string>
+		</xsl:variable>
 		<h1>
 			<xsl:text>Place</xsl:text>
-			<xsl:if test="contains($place_string, ' OR ')">
+			<xsl:if test="count($places) &gt; 0">
 				<xsl:text>s</xsl:text>
 			</xsl:if>
-			<xsl:text>: </xsl:text>			
+			<xsl:text>: </xsl:text>
 			<small>
 				<a id="clear_all" href="#">clear</a>
 			</small>
 		</h1>
 		<h2>
-			<xsl:for-each select="$places">
-				<xsl:variable name="value" select="."/>
-				<xsl:value-of select="tokenize($facets/descendant::int[contains(@name, $value)]/@name, '\|')[1]"/>
+			<xsl:for-each select="$places[string-length(.) &gt; 0]">
+				<xsl:value-of select="."/>
 				<xsl:if test="not(position() = last())">
 					<xsl:text>, </xsl:text>
 				</xsl:if>
