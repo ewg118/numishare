@@ -893,7 +893,7 @@
 				<xsl:choose>
 					<xsl:when test="$lang='ar'">
 						<div class="col-md-2">
-							<a href="?q={$q}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+							<a href="{$display_path}results?q={$q}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
 								<span class="glyphicon glyphicon-remove"/>
 							</a>
 						</div>
@@ -919,7 +919,7 @@
 							</span>
 						</div>
 						<div class="col-md-2 right">
-							<a href="?q={$q}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+							<a href="{$display_path}results?q={$q}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
 								<span class="glyphicon glyphicon-remove"/>
 							</a>
 						</div>
@@ -933,7 +933,7 @@
 					<xsl:attribute name="style">text-align:right</xsl:attribute>
 				</xsl:if>
 				<div class="col-md-12">
-					<a id="clear_all" href="?q=*:*">
+					<a id="clear_all" href="{$display_path}results?q=*:*">
 						<xsl:value-of select="numishare:normalizeLabel('results_clear-all', $lang)"/>
 					</a>
 				</div>
@@ -1161,7 +1161,7 @@
 				</span>
 			</div>
 			<div class="col-md-2 right">
-				<a class="remove_filter" href="?q={if (string($new_query)) then encode-for-uri($new_query) else '*:*'}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+				<a class="remove_filter" href="{$display_path}results?q={if (string($new_query)) then encode-for-uri($new_query) else '*:*'}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
 					<span class="glyphicon glyphicon-remove"/>
 				</a>
 			</div>
