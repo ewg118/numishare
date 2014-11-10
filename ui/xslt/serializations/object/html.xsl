@@ -313,7 +313,7 @@
 		<!-- alternates -->
 		<link rel="alternate" type="application/xml" href="{concat($uri_space, $id)}.xml"/>
 		<link rel="alternate" type="application/rdf+xml" href="{concat($uri_space, $id)}.rdf"/>
-		<link rel="alternate" type="application/json" href="{concat($uri_space, $id)}.json"/>
+		<link rel="alternate" type="application/ld+json" href="{concat($uri_space, $id)}.jsonld"/>
 		<link rel="alternate" type="text/turtle" href="{concat($uri_space, $id)}.ttl"/>
 		<link rel="alternate" type="application/vnd.google-earth.kml+xml" href="{concat($url, 'collection/', $id)}.kml"/>
 		<!-- CSS -->

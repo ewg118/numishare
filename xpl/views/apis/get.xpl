@@ -56,7 +56,7 @@
 				<p:input name="data" href="#model"/>
 				<p:input name="config">
 					<config>
-						<content-type>application/json</content-type>
+						<content-type>application/ld+json</content-type>
 					</config>
 				</p:input>
 				<p:output name="data" ref="data"/>

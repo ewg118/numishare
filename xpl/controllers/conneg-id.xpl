@@ -25,7 +25,7 @@
 				<xsl:template match="/">
 					<content-type>
 						<xsl:choose>
-							<xsl:when test="$content-type='application/json'">json-ld</xsl:when>
+							<xsl:when test="$content-type='application/ld+json'">json-ld</xsl:when>
 							<xsl:when test="$content-type='application/vnd.google-earth.kml+xml'">kml</xsl:when>
 							<xsl:when test="$content-type='application/xml' or $content-type='text/xml'">xml</xsl:when>
 							<xsl:when test="$content-type='application/rdf+xml'">rdfxml</xsl:when>

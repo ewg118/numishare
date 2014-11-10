@@ -51,7 +51,7 @@
 							<xsl:when test="string-length(substring-after(/request/request-url, 'id/')) &gt; 0">
 								<header>
 									<name>Accept</name>
-									<value>text/html, application/xml, application/rdf+xml, text/turtle, application/vnd.google-earth.kml+xml, application/json</value>
+									<value>text/html, application/xml, application/rdf+xml, text/turtle, application/vnd.google-earth.kml+xml, application/ld+json</value>
 								</header>
 							</xsl:when>							
 							<xsl:otherwise>
