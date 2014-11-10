@@ -185,7 +185,7 @@
 				</xsl:choose>
 			</title>
 			<link>
-				<xsl:value-of select="concat($url, 'id/', str[@name='recordId'])"/>
+				<xsl:value-of select="concat($uri_space, str[@name='recordId'])"/>
 			</link>
 			<pubDate>
 				<xsl:value-of select="date[@name='timestamp']"/>
