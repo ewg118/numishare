@@ -146,13 +146,16 @@
 			<updated>
 				<xsl:value-of select="date[@name='timestamp']"/>
 			</updated>
-			<link rel="alternate xml" type="text/xml" href="{$uri_space}{str[@name='recordId']}.xml"/>
-			<link rel="alternate rdf" type="application/rdf+xml" href="{$uri_space}{str[@name='recordId']}.rdf"/>
+			<link rel="alternate" type="application/xml" href="{$uri_space}{str[@name='recordId']}.xml"/>
+			<link rel="alternate" type="application/rdf+xml" href="{$uri_space}{str[@name='recordId']}.rdf"/>
+			<link rel="alternate" type="application/ld+json" href="{$uri_space}{str[@name='recordId']}.jsonld"/>
+			<link rel="alternate" type="text/turtle" href="{$uri_space}{str[@name='recordId']}.ttl"/>
+			
 			<!-- treat hoard and non-hoard documents differently -->
 			<xsl:choose>
 				<xsl:when test="str[@name='recordType'] = 'hoard'">
 					<xsl:if test="str[@name='findspot_geo']">
-						<link rel="alternate kml" type="application/vnd.google-earth.kml+xml" href="{$uri_space}{str[@name='recordId']}.kml"/>
+						<link rel="alternate" type="application/vnd.google-earth.kml+xml" href="{$uri_space}{str[@name='recordId']}.kml"/>
 					</xsl:if>
 					<xsl:call-template name="geotemp">
 						<xsl:with-param name="recordType" select="str[@name='recordType']"/>
@@ -160,7 +163,7 @@
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:if test="str[@name='mint_geo']">
-						<link rel="alternate kml" type="application/vnd.google-earth.kml+xml" href="{$uri_space}{str[@name='recordId']}.kml"/>
+						<link rel="alternate" type="application/vnd.google-earth.kml+xml" href="{$uri_space}{str[@name='recordId']}.kml"/>
 					</xsl:if>
 					<xsl:call-template name="geotemp">
 						<xsl:with-param name="recordType" select="str[@name='recordType']"/>
