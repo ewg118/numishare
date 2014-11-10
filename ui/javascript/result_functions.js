@@ -34,6 +34,13 @@ $(document).ready(function () {
 					case 'year':
 					category = field + '_minint';
 					break;
+					case 'axis':
+					case 'diameter':
+					case 'taq':
+					case 'tpq':					
+					case 'weight':
+					category = field + '_num';
+					break;
 					default:
 					category = field + '_min';
 				}
@@ -41,6 +48,13 @@ $(document).ready(function () {
 				switch (field) {
 					case 'year':
 					category = field + '_maxint';
+					break;
+					case 'axis':
+					case 'diameter':
+					case 'taq':
+					case 'tpq':					
+					case 'weight':
+					category = field + '_num';
 					break;
 					default:
 					category = field + '_max';

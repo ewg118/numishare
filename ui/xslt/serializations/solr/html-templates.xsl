@@ -28,7 +28,7 @@
 						</xsl:otherwise>
 					</xsl:choose>
 				</h4>
-			</div>			
+			</div>
 			<div>
 				<xsl:choose>
 					<xsl:when test="$mode='compare'">
@@ -1042,57 +1042,71 @@
 	</xsl:template>
 	<xsl:template name="sort">
 		<xsl:variable name="sort_categories_string">
-			<xsl:text>timestamp,deity,denomination,findspot,issuer,manufacture,material,mint,obv_leg_display,portrait,region,rev_leg_display,year</xsl:text>
+			<xsl:choose>
+				<xsl:when test="$collection_type='hoard'">
+					<xsl:text>authority,taq,timestamp,deity,denomination,dynasty,findspot,issuer,manufacture,material,mint,tqp_num,obv_leg_display,portrait,region,rev_leg_display</xsl:text>
+				</xsl:when>
+				<xsl:when test="$collection_type='cointype'">
+					<xsl:text>authority,timestamp,deity,denomination,findspot,issuer,manufacture,material,mint,obv_leg_display,portrait,region,rev_leg_display,year</xsl:text>					
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:text>authority,axis,timestamp,deity,denomination,diameter,findspot,issuer,manufacture,material,mint,obv_leg_display,portrait,region,rev_leg_display,weight,year</xsl:text>					
+				</xsl:otherwise>
+			</xsl:choose>
 		</xsl:variable>
 		<xsl:variable name="sort_categories" select="tokenize(normalize-space($sort_categories_string), ',')"/>
 		<div class="row">
 			<div class="col-md-12">
-				<form role="form" class="sortForm" action="results" method="GET">
-					<select class="sortForm_categories form-control">
-						<option value="null">
-							<xsl:value-of select="numishare:normalizeLabel('results_select', $lang)"/>
-						</option>
-						<xsl:for-each select="$sort_categories">
+				<form role="form" class="sortForm form-inline" action="results" method="GET">
+					<div class="form-group">						
+						<select class="sortForm_categories form-control">
+							<option value="null">
+								<xsl:value-of select="numishare:normalizeLabel('results_select', $lang)"/>
+							</option>
+							<xsl:for-each select="$sort_categories">
+								<xsl:choose>
+									<xsl:when test="contains($sort, .)">
+										<option value="{.}" selected="selected">
+											<xsl:value-of select="numishare:normalize_fields(., $lang)"/>
+										</option>
+									</xsl:when>
+									<xsl:otherwise>
+										<option value="{.}">
+											<xsl:value-of select="numishare:normalize_fields(., $lang)"/>
+										</option>
+									</xsl:otherwise>
+								</xsl:choose>
+							</xsl:for-each>
+						</select>
+					</div>
+					<div class="form-group">
+						<select class="sortForm_order form-control">
 							<xsl:choose>
-								<xsl:when test="contains($sort, .)">
-									<option value="{.}" selected="selected">
-										<xsl:value-of select="numishare:normalize_fields(., $lang)"/>
+								<xsl:when test="contains($sort, 'asc')">
+									<option value="asc" selected="selected">
+										<xsl:value-of select="numishare:normalizeLabel('results_ascending', $lang)"/>
 									</option>
 								</xsl:when>
 								<xsl:otherwise>
-									<option value="{.}">
-										<xsl:value-of select="numishare:normalize_fields(., $lang)"/>
+									<option value="asc">
+										<xsl:value-of select="numishare:normalizeLabel('results_ascending', $lang)"/>
 									</option>
 								</xsl:otherwise>
 							</xsl:choose>
-						</xsl:for-each>
-					</select>
-					<select class="sortForm_order form-control">
-						<xsl:choose>
-							<xsl:when test="contains($sort, 'asc')">
-								<option value="asc" selected="selected">
-									<xsl:value-of select="numishare:normalizeLabel('results_ascending', $lang)"/>
-								</option>
-							</xsl:when>
-							<xsl:otherwise>
-								<option value="asc">
-									<xsl:value-of select="numishare:normalizeLabel('results_ascending', $lang)"/>
-								</option>
-							</xsl:otherwise>
-						</xsl:choose>
-						<xsl:choose>
-							<xsl:when test="contains($sort, 'desc')">
-								<option value="desc" selected="selected">
-									<xsl:value-of select="numishare:normalizeLabel('results_descending', $lang)"/>
-								</option>
-							</xsl:when>
-							<xsl:otherwise>
-								<option value="desc">
-									<xsl:value-of select="numishare:normalizeLabel('results_descending', $lang)"/>
-								</option>
-							</xsl:otherwise>
-						</xsl:choose>
-					</select>
+							<xsl:choose>
+								<xsl:when test="contains($sort, 'desc')">
+									<option value="desc" selected="selected">
+										<xsl:value-of select="numishare:normalizeLabel('results_descending', $lang)"/>
+									</option>
+								</xsl:when>
+								<xsl:otherwise>
+									<option value="desc">
+										<xsl:value-of select="numishare:normalizeLabel('results_descending', $lang)"/>
+									</option>
+								</xsl:otherwise>
+							</xsl:choose>
+						</select>
+					</div>
 					<input type="hidden" name="q" value="{$q}"/>
 					<input type="hidden" name="sort" value="" class="sort_param"/>
 					<xsl:if test="string($lang)">
