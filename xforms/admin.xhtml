@@ -794,8 +794,8 @@
 								<h1>No objects in collection.</h1>
 							</xforms:group>
 						</xforms:group>
-						<xforms:output ref="instance('control-instance')/identifiers"></xforms:output>
-						<fr:xforms-inspector></fr:xforms-inspector>
+						<!--<xforms:output ref="instance('control-instance')/identifiers"></xforms:output>
+						<fr:xforms-inspector></fr:xforms-inspector>-->
 					</div>
 				</div>
 			</div>
@@ -813,11 +813,6 @@
 					<!-- publish to solr -->
 					<xforms:send submission="nuds-to-solr"></xforms:send>
 					<xforms:send submission="submit-commit"></xforms:send>
-					<!-- reload table -->
-					<xforms:var name="page" select="number(instance('control-instance')/page)"></xforms:var>
-					<xforms:var name="start" select="(($page - 1) * 20) + 1"></xforms:var>
-					<xforms:setvalue ref="instance('eXist-xquery')/exist:text" value="replace(instance('xqueries')/query[@id='get-objects'], 'START', string($start))"></xforms:setvalue>
-					<xforms:send submission="xquery-pagination"></xforms:send>
 				</xforms:action>
 			</fr:positive-choice>
 		</fr:alert-dialog>
@@ -834,11 +829,6 @@
 					<!-- delete from Solr -->
 					<xforms:setvalue ref="instance('deleteId')/query" value="concat('recordId:&#x022;', instance('control-instance')/id, '&#x022;')"></xforms:setvalue>
 					<xforms:send submission="delete-solr-doc"></xforms:send>
-					<!-- reload table -->
-					<xforms:var name="page" select="number(instance('control-instance')/page)"></xforms:var>
-					<xforms:var name="start" select="(($page - 1) * 20) + 1"></xforms:var>
-					<xforms:setvalue ref="instance('eXist-xquery')/exist:text" value="replace(instance('xqueries')/query[@id='get-objects'], 'START', string($start))"></xforms:setvalue>
-					<xforms:send submission="xquery-pagination"></xforms:send>
 				</xforms:action>
 			</fr:positive-choice>
 		</fr:alert-dialog>
