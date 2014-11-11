@@ -42,7 +42,7 @@
 			<div class="container">
 				<div class="row">
 					<div class="col-md-4 text-center">
-						<img src="{$include_path}/images/ans_large.png" alt="logo"/>
+						<img src="{$include_path}/images/ans_large.png" alt="logo" style="max-height:150px;"/>
 					</div>
 					<div class="col-md-8">
 						<h1>MANTIS</h1>
