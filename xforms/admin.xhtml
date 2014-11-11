@@ -313,6 +313,14 @@
 					<xforms:bind nodeset="screen" required="true()" type="xs:integer"></xforms:bind>
 				</xforms:bind>
 			</xforms:bind>
+			
+			<xforms:bind nodeset="instance('pagination-result')">
+				<xforms:bind nodeset="record">
+					<xforms:bind nodeset="published" type="xs:boolean"/>
+				</xforms:bind>
+			</xforms:bind>
+			
+			<!-- ************************* SUBMISSIONS ************************** -->
 			<!-- load collections/roles config -->
 			<xforms:submission id="load-collections" serialization="none" method="get" action="{instance('exist-config')/url}collections-list.xml" replace="instance" instance="collections-list"
 				xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}">
@@ -502,7 +510,7 @@
 				replace="instance" instance="published-response">
 				<!-- if the document is found in solr, get the updated solr doc -->
 				<xforms:setvalue ev:event="xforms-submit-done" if="instance('published-response')/result[@name='response']/@numFound = '1'"
-					ref="instance('pagination-result')//record[id=instance('control-instance')/id]/published" value="'true'"></xforms:setvalue>
+					ref="instance('pagination-result')//record[id=instance('control-instance')/id]/published" value="true()"></xforms:setvalue>
 			</xforms:submission>
 
 			<!-- ************************* MODEL CONSTRUCTION ************************** -->
@@ -813,6 +821,8 @@
 					<!-- publish to solr -->
 					<xforms:send submission="nuds-to-solr"></xforms:send>
 					<xforms:send submission="submit-commit"></xforms:send>
+					
+					<xforms:setvalue ref="instance('pagination-result')//record[id=instance('control-instance')/id]/published" value="true()"/>
 				</xforms:action>
 			</fr:positive-choice>
 		</fr:alert-dialog>
@@ -829,6 +839,8 @@
 					<!-- delete from Solr -->
 					<xforms:setvalue ref="instance('deleteId')/query" value="concat('recordId:&#x022;', instance('control-instance')/id, '&#x022;')"></xforms:setvalue>
 					<xforms:send submission="delete-solr-doc"></xforms:send>
+					
+					<xforms:setvalue ref="instance('pagination-result')//record[id=instance('control-instance')/id]/published" value="false()"/>
 				</xforms:action>
 			</fr:positive-choice>
 		</fr:alert-dialog>
