@@ -38,14 +38,27 @@
 
 	<xsl:template name="index">
 		<!--<img src="{$include_path}/images/jumbotron.jpg" style="width:100%;border-bottom:4px solid black; margin-bottom:15px;"/>-->
-		<div class="container-fluid banner">			
+		<div class="jumbotron visible-xs visible-sm  visible-md">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-4 text-center">
+						<img src="{$include_path}/images/ans_large.png" alt="logo"/>
+					</div>
+					<div class="col-md-8">
+						<h1>MANTIS</h1>
+						<h3>A Numismatic Technologies Integration Service</h3>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="container-fluid banner hidden-xs hidden-sm hidden-md">			
 			<div class="row">
 				<div class="col-md-6 col-md-offset-6">
 					<div class="row banner-background">
-						<div class="col-lg-4 text-center">
+						<div class="col-lg-4 col-md-12 text-center">
 							<img src="{$include_path}/images/ans_large.png" alt="logo"/>
 						</div>
-						<div class="col-lg-8">
+						<div class="col-lg-8 col-md-12">
 							<h1>MANTIS</h1>
 							<h3>A Numismatic Technologies Integration Service</h3>
 						</div>
@@ -71,38 +84,38 @@
 
 					<h3>Departments</h3>
 					<div class="row text-center" id="departments">
-						<div class="col-md-6 col-lg-3">
+						<div class="col-sm-6 col-lg-3">
 							<a href="department/Greek">
 								<img title="Greek" alt="Greek" src="{$include_path}/images/greek.jpg"/><br/>Greek</a>
 						</div>
-						<div class="col-md-6 col-lg-3">
+						<div class="col-sm-6 col-lg-3">
 							<a href="department/Roman"><img title="Roman" alt="Roman" src="{$include_path}/images/roman.jpg"/><br/>Roman</a>
 						</div>
-						<div class="col-md-6 col-lg-3">
+						<div class="col-sm-6 col-lg-3">
 							<a href="department/Byzantine"><img title="Byzantine" alt="Byzantine" src="{$include_path}/images/byzantine.jpg"/><br/>Byzantine</a>
 						</div>
-						<div class="col-md-6 col-lg-3">
+						<div class="col-sm-6 col-lg-3">
 							<a href="department/Islamic"><img title="Islamic" alt="Islamic" src="{$include_path}/images/islamic.jpg"/><br/>Islamic</a>
 						</div>
-						<div class="col-md-6 col-lg-3">
+						<div class="col-sm-6 col-lg-3">
 							<a href="department/EastAsian"><img title="East Asian" alt="East Asian" src="{$include_path}/images/east_asian.jpg"/><br/>East Asian</a>
 						</div>
-						<div class="col-md-6 col-lg-3">
+						<div class="col-sm-6 col-lg-3">
 							<a href="department/SouthAsian"><img title="South Asian" alt="South Asian" src="{$include_path}/images/south_asian.jpg"/><br/>South Asian</a>
 						</div>
-						<div class="col-md-6 col-lg-3">
+						<div class="col-sm-6 col-lg-3">
 							<a href="department/Medieval"><img title="Medieval" alt="Medieval" src="{$include_path}/images/medieval.jpg"/><br/>Medieval</a>
 						</div>
-						<div class="col-md-6 col-lg-3">
+						<div class="col-sm-6 col-lg-3">
 							<a href="department/Modern"><img title="Modern" alt="Modern" src="{$include_path}/images/modern.jpg"/><br/>Modern</a>
 						</div>
-						<div class="col-md-6 col-lg-3">
+						<div class="col-sm-6 col-lg-3">
 							<a href="department/UnitedStates"><img title="United States" alt="United States" src="{$include_path}/images/united_states.jpg"/><br/>United States</a>
 						</div>
-						<div class="col-md-6 col-lg-3">
+						<div class="col-sm-6 col-lg-3">
 							<a href="department/LatinAmerican"><img title="Latin American" alt="Latin American" src="{$include_path}/images/latin_american.jpg"/><br/>Latin American</a>
 						</div>
-						<div class="col-md-6 col-lg-3">
+						<div class="col-sm-6 col-lg-3">
 							<a href="department/MedalsAndDecorations"><img title="Medals And Decorations" alt="Medals And Decorations" src="{$include_path}/images/medal.jpg"/><br/>Medals And
 								Decorations</a>
 						</div>
