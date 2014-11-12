@@ -83,7 +83,7 @@
 						<div>
 							<h3>Individual Records</h3>
 							<p>Numishare supports delivery of individual records in a variety of models and serializations through both REST and content negotiation. Content negotiation (with the
-								accept header) requests should be sent to the URI space <xsl:value-of select="concat(/content/config/url, 'id/')"/>. Requesting an unsupported content type will result in an HTTP 406: Not
+								accept header) requests should be sent to the URI space <xsl:value-of select="/content/config/uri_space"/>. Requesting an unsupported content type will result in an HTTP 406: Not
 								Acceptable error.</p>
 							<table class="table">
 								<thead>
