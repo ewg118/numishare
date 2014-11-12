@@ -143,7 +143,7 @@
 									<tr>
 										<td>JSON-LD</td>
 										<td>
-											<xsl:value-of select="concat(/content/config/uri_space, 'id/{$id}.jsonld')"/>
+											<xsl:value-of select="concat(/content/config/uri_space, '{$id}.jsonld')"/>
 										</td>
 										<td>
 											<code>application/ld+json</code>
