@@ -81,8 +81,8 @@
 					</h2>-->
 					<p>The ANS collections database contains information on more than 600,000 objects in the Society’s collections. These include coins, paper money, tokens, ‘primitive’ money, medals
 						and decorations, from all parts of the world, and all periods in which such objects have been produced. </p>
-
-					<h3>Departments</h3>
+					<p>Use the menu at the top of the page to navigate the site or click on the links below for customized departmental search pages.</p>
+					<h3>Departments <small><a href="{$display_path}results?q=*:*">Browse All</a></small></h3>
 					<div class="row text-center" id="departments">
 						<div class="col-sm-6 col-lg-3">
 							<a href="department/Greek">
