@@ -207,6 +207,9 @@
 										<xsl:attribute name="resource" select="concat($url, 'id/', $id, '#', local-name())"/>
 									</xsl:if>
 									<xsl:apply-templates select="*" mode="descMeta"/>
+									<xsl:if test="nuds:symbol[@position='left'] or nuds:symbol[@position='center'] or nuds:symbol[@position='right'] or nuds:symbol[@position='exergue']">
+										<xsl:call-template name="format-control-marks"/>
+									</xsl:if>
 								</ul>
 							</li>
 						</xsl:if>

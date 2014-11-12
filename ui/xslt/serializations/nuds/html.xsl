@@ -443,6 +443,31 @@
 			<xsl:value-of select="."/>
 		</span>
 	</xsl:template>
+	
+	<!-- hide symbols with left/right/center/exerque positions, format elsewhere -->
+	<xsl:template match="nuds:symbol[@position='left']|nuds:symbol[@position='center']|nuds:symbol[@position='right']|nuds:symbol[@position='exergue']" mode="descMeta"/>
+
+	<xsl:template name="format-control-marks">
+		<li>
+			<b>Control Marks: </b>
+			<xsl:choose>
+				<xsl:when test="nuds:symbol[@position='center']">
+					<xsl:value-of select="nuds:symbol[@position='center']"/>
+					<xsl:text>//</xsl:text>
+					<xsl:value-of select="if (nuds:symbol[@position='exergue']) then nuds:symbol[@position='exergue'] else '-'"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:if test="nuds:symbol[@position='left'] or nuds:symbol[@position='right']">
+						<xsl:value-of select="if (nuds:symbol[@position='left']) then nuds:symbol[@position='left'] else '-'"/>
+						<xsl:text>/</xsl:text>
+						<xsl:value-of select="if (nuds:symbol[@position='right']) then nuds:symbol[@position='right'] else '-'"/>
+					</xsl:if>
+					<xsl:text>//</xsl:text>
+					<xsl:value-of select="if (nuds:symbol[@position='exergue']) then nuds:symbol[@position='exergue'] else '-'"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</li>
+	</xsl:template>
 
 	<xsl:template name="obverse_image">
 		<xsl:variable name="obverse_image">

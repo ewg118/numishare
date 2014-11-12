@@ -29,6 +29,7 @@
 		Model paths are unlikely to require changing. Other ajax pages may need to be copied if alterations in format are required.
 	*** -->
 	
+	<!-- ************** PROJECT NUMISHARE PAGES *************-->	
 	<!-- AoD -->
 	<page path="/numishare/aod/" model="xpl/models/config.xpl" view="file:///usr/local/projects/aod/xpl/views/pages/index.xpl"/>
 	<page path="/numishare/aod/id/(.*)" model="xpl/models/object/get-id.xpl" view="file:///usr/local/projects/aod/xpl/controllers/conneg-id.xpl"/>
@@ -72,6 +73,7 @@
 	<!-- OCRE -->
 	<page path="/numishare/ocre/" model="xpl/models/config.xpl" view="file:///usr/local/projects/ocre/xpl/views/pages/index.xpl"/>	
 	
+	<!-- ************** GENERIC NUMISHARE PAGES *************-->	
 	<!-- **** SERIALIZATIONS **** -->	
 	<!-- Solr -->
 	<page path="/numishare/[^\/]+/results" model="xpl/models/solr/results.xpl" view="xpl/controllers/conneg-results.xpl"/>
