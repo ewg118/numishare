@@ -457,11 +457,9 @@
 					<xsl:value-of select="if (nuds:symbol[@position='exergue']) then nuds:symbol[@position='exergue'] else '-'"/>
 				</xsl:when>
 				<xsl:otherwise>
-					<xsl:if test="nuds:symbol[@position='left'] or nuds:symbol[@position='right']">
-						<xsl:value-of select="if (nuds:symbol[@position='left']) then nuds:symbol[@position='left'] else '-'"/>
-						<xsl:text>/</xsl:text>
-						<xsl:value-of select="if (nuds:symbol[@position='right']) then nuds:symbol[@position='right'] else '-'"/>
-					</xsl:if>
+					<xsl:value-of select="if (nuds:symbol[@position='left']) then nuds:symbol[@position='left'] else '-'"/>
+					<xsl:text>/</xsl:text>
+					<xsl:value-of select="if (nuds:symbol[@position='right']) then nuds:symbol[@position='right'] else '-'"/>
 					<xsl:text>//</xsl:text>
 					<xsl:value-of select="if (nuds:symbol[@position='exergue']) then nuds:symbol[@position='exergue'] else '-'"/>
 				</xsl:otherwise>
