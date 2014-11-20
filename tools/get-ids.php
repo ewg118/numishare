@@ -8,13 +8,13 @@ DIRECTIONS: edit the $format, $searchUrl, and $q variables and execute the PHP s
 
 /************************
  * DEFINITION OF VARIABLES
- * $format = data format to return as a response; options are 'xml' (default), 'kml', and 'rdf'
+ * $format = data format to return as a response; options are 'xml' (default), 'kml', 'rdf', 'ttl', 'jsonld'
  * $searchURL = URL to the search API
  * $q = query, conforming to Lucene query syntax
  * $sort = sort field and direction, 'timestamp+desc' default.  this will not have to be changed under most circumstances
  ************************/
 $format = 'xml';
-$searchUrl = 'http://localhost:8080/cocoon/numishare/apis/search';
+$searchUrl = 'http://localhost:8080/orbeon/numishare/apis/search';
 $q = '*:*';
 $sort = 'timestamp desc';
 $feed = "{$searchUrl}?q={$q}&sort={$sort}&format=atom";
