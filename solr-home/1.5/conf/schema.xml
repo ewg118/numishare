@@ -55,10 +55,10 @@
 	<field name="sortid" type="string" indexed="true" stored="true"/>
 	
 	<!-- collection-name token -->
-	<field name="collection-name" type="string" index="true" stored="true" required="true"/>
+	<field name="collection-name" type="string" indexed="true" stored="true" required="true"/>
 	
 	<!-- language of the solr document for multi-lingual interfaces -->
-	<field name="lang" type="string" index="true" stored="true"/>
+	<field name="lang" type="string" indexed="true" stored="true"/>
 	
 	<!-- record type -->
 	<field name="recordType" type="string" indexed="true" stored="true"/>
@@ -142,7 +142,7 @@
 
 	<uniqueKey>id</uniqueKey>
 	<!-- field for the QueryParser to use when an explicit fieldname is absent -->
-	<defaultSearchField>text</defaultSearchField>
+	<defaultSearchField>fulltext</defaultSearchField>
 
 	<!-- SolrQueryParser configuration: defaultOperator="AND|OR" -->
 	<solrQueryParser defaultOperator="AND"/>
