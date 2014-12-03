@@ -38,8 +38,7 @@
 		<ul>
 			<xsl:choose>
 				<xsl:when test="ancestor::subtype">
-					<xsl:apply-templates select="*[not(local-name()='obverse' or local-name()='reverse' or local-name()='authority' or local-name()='geographic' or local-name()='date' or
-						local-name()='dateRange')]" mode="descMeta"/>
+					<xsl:apply-templates select="nuds:obverse|nuds:reverse" mode="descMeta"/>
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:apply-templates select="*" mode="descMeta"/>
@@ -296,11 +295,11 @@
 		<xsl:variable name="subtypeId" select="@recordId"/>
 		<div class="row">
 			<div class="col-md-3" about="{concat($uri_space, $subtypeId)}" typeof="nm:type_series_item">
-				<h3 property="dcterms:title">
+				<h4 property="dcterms:title">
 					<a href="{concat($uri_space, $subtypeId)}">
 						<xsl:value-of select="nuds:descMeta/nuds:title"/>
 					</a>
-				</h3>
+				</h4>
 				<span class="hidden" property="skos:broader">
 					<xsl:value-of select="concat($uri_space, $id)"/>
 				</span>
