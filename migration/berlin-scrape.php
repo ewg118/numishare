@@ -3,8 +3,7 @@
 $ids = array("18207926","18207928","18207929","18207922","18207919","18207924","18207925","18207655","18202547","18207653","18207654","18207656","18207657","18207658","18207649","18207650","18207651","18207652","18207648","18202546","18207659","18207660","18207661","18207662","18200444","18207586","18202551","18207589","18207590","18207536","18207537","18207534","18207535","18207553","18207554","18207555","18207538","18207552","18202566","18202552","18207511","18207512","18207513","18207514","18202554","18207515","18200525","18207516","18207336","18207337","18207584","18207585","18207587","18207588","18207578","18207580","18207582","18207583","18207579","18206797","18207574","18207575","18207576","18207577","18207591","18202549","18207531","18207532","18207533","18207527","18207529","18202559","18207530","18207485","18207486","18207487","18207489","18207488","18207483","18206798","18207490","18207491","18207492","18207493","18207496","18207495","18207497","18207499","18207498","18206801","18207520","18202553","18207519","18207521","18207500","18207502","18207503","18207504","18207505","18207506");
 
 $xml = "<?xml version='1.0' encoding='utf-8'?>";
-$xml .= '<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/"
-xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nm="http://nomisma.org/id/">';
+$xml .= '<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:nm="http://nomisma.org/id/" xmlns:foaf="http://xmlns.com/foaf/0.1/">';
 
 foreach ($ids as $id){
 	$url = 'http://www.smb.museum/ikmk/object.php?id=' . $id;
@@ -148,9 +147,9 @@ foreach ($ids as $id){
 		$src = $img->getAttribute('src');
 		$resource = 'http://www.smb.museum/' . substr($src, 3);
 		if (strpos($src,'vs_') !== FALSE){
-			$xml .= '<nm:obverseReference rdf:resource="' . $resource . '"/>';
+			$xml .= '<nm:obverse><rdf:Description><foaf:depiction rdf:resource="' . $resource . '"/></rdf:Description></nm:obverse>';
 		} elseif (strpos($src,'rs_') !== FALSE){
-			$xml .= '<nm:reverseReference rdf:resource="' . $resource . '"/>';
+			$xml .= '<nm:reverse><rdf:Description><foaf:depiction rdf:resource="' . $resource . '"/></rdf:Description></nm:reverse>';
 		}
 	}
 	//close description

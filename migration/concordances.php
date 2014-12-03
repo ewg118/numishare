@@ -265,6 +265,33 @@ function parse_authority($authority, $comment){
 				break;
 			case $authority == 'Balbinus~Pupienus':
 				$auth = 'gor_iii_caes';
+				break;	
+			case $authority == 'Gordian III':
+				$auth = 'gor_iii';
+				break;
+			case stristr($authority, 'Philip I'):
+				$auth = 'ph_i';
+				break;
+			case stristr($authority, 'Otacilia'):
+				$auth = 'ph_i';
+				break;
+			case $authority == 'Pacatian':
+				$auth = 'pac';
+				break;
+			case $authority == 'Jotapian':
+				$auth = 'jot';
+				break;
+			case $authority == 'Trajan Decius':
+				$auth = 'tr_d';
+				break;
+			case $authority == 'Hostilian':
+				$auth = 'tr_d';
+				break;
+			case $authority == 'Herennia Etruscilla':
+				$auth = 'tr_d';
+				break;
+			case $authority == 'Herennius Etruscus':
+				$auth = 'tr_d';
 				break;
 				
 		}		

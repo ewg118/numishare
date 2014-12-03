@@ -3,13 +3,13 @@
 require_once( "sparqllib.php" );
 error_reporting(0);
 
-$ric1 = generate_json('/home/komet/ans_migration/ocre/bm-data/ric1.csv', false);
+/*$ric1 = generate_json('/home/komet/ans_migration/ocre/bm-data/ric1.csv', false);
 $ric2_1 = generate_json('/home/komet/ans_migration/ocre/bm-data/ric2.1.csv', false);
 $ric2 = generate_json('/home/komet/ans_migration/ocre/bm-data/ric2.csv', false);
-$ric3 = generate_json('/home/komet/ans_migration/ocre/bm-data/ric3.csv', false);
-$ric4 = generate_json('/home/komet/ans_migration/ocre/bm-data/ric4.csv', false);
-$data = array_merge($ric1, $ric2_1, $ric2, $ric3, $ric4);
-$lookup = generate_json('/home/komet/ans_migration/ocre/bm-data/concordances.csv', false);
+$ric3 = generate_json('/home/komet/ans_migration/ocre/bm-data/ric3.csv', false);*/
+$data = generate_json('/home/komet/ans_migration/ocre/bm-data/ric4.csv', false);
+//$data = array_merge($ric1, $ric2_1, $ric2, $ric3, $ric4);
+$lookup = generate_json('/home/komet/ans_migration/ocre/bm-data/RIC4-con.csv', false);
 
 $open = '<rdf:RDF xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xmlns:nm="http://nomisma.org/id/"
          xmlns:dcterms="http://purl.org/dc/terms/" xmlns:foaf="http://xmlns.com/foaf/0.1/" 

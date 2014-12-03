@@ -27,14 +27,8 @@
 		Serializations and Pages should be copied and pasted above the generic regex pages, with models and views given absolute paths with the file:// protocol, e.g.,
 		<page path="/numishare/project1/" matcher="oxf:perl5-matcher" model="xpl/models/config.xpl" view="file:///usr/local/projects/project1/xpl/views/pages/index.xpl"/>
 		Model paths are unlikely to require changing. Other ajax pages may need to be copied if alterations in format are required.
+		
 	*** -->
-	
-	<!-- OCRE -->
-	<page path="/numishare/ocre/" model="xpl/models/config.xpl" view="file:///usr/local/projects/ocre/xpl/views/pages/index.xpl"/>
-	
-	<!-- AoD -->
-	<page path="/numishare/aod/" model="xpl/models/config.xpl" view="file:///usr/local/projects/aod/xpl/views/pages/index.xpl"/>
-	<page path="/numishare/aod/id/(.*)" model="xpl/models/object/get-id.xpl" view="file:///usr/local/projects/aod/xpl/controllers/conneg-id.xpl"/>
 	
 	<!-- **** SERIALIZATIONS **** -->	
 	<!-- Solr -->

@@ -223,7 +223,9 @@ function generate_nuds($row){
 							}
 						}
 					}
-					$xml .= '<persname xlink:type="simple" xlink:role="deity" certainty="uncertain"' . $deity_uri . '>' . trim($val) . '</persname>';
+					if ($val != '[delete]'){
+						$xml .= '<persname xlink:type="simple" xlink:role="deity" certainty="uncertain"' . $deity_uri . '>' . trim($val) . '</persname>';
+					}					
 				} else {
 					$deity_uri = '';
 					foreach($deities_array as $deity){
@@ -236,7 +238,9 @@ function generate_nuds($row){
 							}
 						}
 					}
-					$xml .= '<persname xlink:type="simple" xlink:role="deity"' . $deity_uri . '>' . trim($val) . '</persname>';
+					if ($val != '[delete]'){
+						$xml .= '<persname xlink:type="simple" xlink:role="deity"' . $deity_uri . '>' . trim($val) . '</persname>';
+					}
 				}
 			}
 		}
@@ -282,7 +286,9 @@ function generate_nuds($row){
 							}
 						}
 					}
-					$xml .= '<persname xlink:type="simple" xlink:role="deity" certainty="uncertain"' . $deity_uri . '>' . trim($val) . '</persname>';
+					if ($val != '[delete]'){
+						$xml .= '<persname xlink:type="simple" xlink:role="deity" certainty="uncertain"' . $deity_uri . '>' . trim($val) . '</persname>';
+					}
 				} else {
 					$deity_uri = '';
 					foreach($deities_array as $deity){
@@ -295,7 +301,9 @@ function generate_nuds($row){
 							}
 						}
 					}
-					$xml .= '<persname xlink:type="simple" xlink:role="deity"' . $deity_uri . '>' . trim($val) . '</persname>';
+					if ($val != '[delete]'){
+						$xml .= '<persname xlink:type="simple" xlink:role="deity"' . $deity_uri . '>' . trim($val) . '</persname>';
+					}					
 				}
 			}
 		}
