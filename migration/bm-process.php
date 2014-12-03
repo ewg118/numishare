@@ -18,9 +18,16 @@ $open = '<rdf:RDF xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xmlns:nm="http:/
 file_put_contents('bm-ric.rdf', $open);
 
 $count = 1;
-foreach ($data as $row){
+foreach ($data as $row){	
+	/*
+	//reprocess entire spreadsheet
 	process_csv($row, $count);
 	$count++;
+	*/
+	if ($row['Authority'] == 'Aemilian' || $row['Authority'] == 'Volusian' || $row['Authority'] == 'Uranius Antoninus' || stristr($row['Authority'], 'Trebonianus Gallus')){
+		process_csv($row, $count);
+		$count++;
+	}
 }
 
 file_put_contents('bm-ric.rdf', '</rdf:RDF>', FILE_APPEND);
