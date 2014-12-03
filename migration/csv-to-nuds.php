@@ -1,6 +1,6 @@
 <?php 
 
-$data = generate_json('/home/komet/ans_migration/ocre/12.csv');
+$data = generate_json('/home/komet/ans_migration/ocre/14.csv');
 $deities_array = generate_json('deities.csv');
 $nomismaUris = array();
 $errors = array();
@@ -144,18 +144,21 @@ function generate_nuds($row){
 			$xml .= processUri($uri, 'authority', false);
 		}
 	}
-	if (strlen($row['Issuer URI']) > 0){
-		$vals = explode('|', $row['Issuer URI']);
-		foreach ($vals as $val){
-			if (substr($val, -1) == '?'){
-				$uri = substr($val, 0, -1);
-				$xml .= processUri($uri, 'issuer', true);
-			} else {
-				$uri = $val;
-				$xml .= processUri($uri, 'issuer', false);
+	if (array_key_exists('Issuer URI',$row)){
+		if (strlen($row['Issuer URI']) > 0){
+			$vals = explode('|', $row['Issuer URI']);
+			foreach ($vals as $val){
+				if (substr($val, -1) == '?'){
+					$uri = substr($val, 0, -1);
+					$xml .= processUri($uri, 'issuer', true);
+				} else {
+					$uri = $val;
+					$xml .= processUri($uri, 'issuer', false);
+				}
 			}
 		}
 	}
+	
 	$xml .= '</authority>';
 	
 	//geography
@@ -534,6 +537,18 @@ function get_title($nudsid){
 			break;
 		case 'tr_d':
 			$auth = 'Trajan Decius';
+			break;
+		case 'tr_g':
+			$auth = 'Trebonianus Gallus';
+			break;
+		case 'vo':
+			$auth = 'Volusian';
+			break;
+		case 'aem':
+			$auth = 'Aemilian';
+			break;
+		case 'uran_ant':
+			$auth = 'Uranius Antoninus';
 			break;
 	}
 	

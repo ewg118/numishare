@@ -293,7 +293,18 @@ function parse_authority($authority, $comment){
 			case $authority == 'Herennius Etruscus':
 				$auth = 'tr_d';
 				break;
-				
+			case stristr($authority, 'Trebonianus Gallus'):
+				$auth = 'tr_g';
+				break;
+			case $authority == 'Volusian':
+				$auth = 'vo';
+				break;
+			case $authority == 'Aemilian':
+				$auth = 'aem';
+				break;
+			case $authority == 'Uranius Antoninus':
+				$auth = 'uran_an';
+				break;
 		}		
 	}
 	return $auth;
