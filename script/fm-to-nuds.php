@@ -1192,10 +1192,16 @@ function parse_mint($department, $mint, $regions, $localities){
 	$mint_uri = '';
 
 	//create boolean variable to pass to get_mintNode
-	$isUncertain = substr($mint, -1) == '?' ? true : false;
-	//strip '?' from $mint
-	$mint = str_replace('?', '', $mint);
-
+	if (substr($mint, -1) == '?'){
+		$certaintyType = 'uncertain';
+		$mint = str_replace('?', '', $mint);
+	} else if (substr($mint, -1) == "'" && substr($mint, 0, 1) == "'"){
+		$certaintyType = 'attributed';
+		$mint = str_replace("'", '', $mint);
+	} else {
+		$certaintyType = false;
+	}
+	
 	foreach ($regions as $region){
 		$regions_array[] = trim(str_replace('?', '', str_replace('"', '', $region)));
 	}
@@ -1269,17 +1275,33 @@ function parse_mint($department, $mint, $regions, $localities){
 		} else {
 			$label = $mint;
 		}
-		$geography = get_mintNode($mint_uri, $label, $isUncertain);
+		$geography = get_mintNode($mint_uri, $label, $certaintyType);
 	} else {
-		$certainty = $isUncertain == true ? ' certainty="uncertain"' : '';
+		
+		if ($certaintyType == 'uncertain'){
+			$certainty = ' certainty="uncertain"';
+		} else if ($certaintyType == 'attributed'){
+			$certainty = ' certainty="attributed"';
+		} else {
+			$certainty = '';
+		}
+		
 		$geography['mint'] = '<geogname xlink:type="simple" xlink:role="mint"' . $certainty . '>' . $mint . '</geogname>';
 	}
 	return $geography;
 }
 
-function get_mintNode($mint_uri, $label, $isUncertain){
+function get_mintNode($mint_uri, $label, $certaintyType){
 	if (strpos($mint_uri, 'nomisma.org') > 0){
-		$certainty = $isUncertain == true ? ' certainty="uncertain"' : '';
+		
+		if ($certaintyType == 'uncertain'){
+			$certainty = ' certainty="uncertain"';
+		} else if ($certaintyType == 'attributed'){
+			$certainty = ' certainty="attributed"';
+		} else {
+			$certainty = '';
+		}
+		
 		$geography['mint'] = '<geogname xlink:type="simple" xlink:role="mint" xlink:href="' . $mint_uri . '"' . $certainty . '>' . $label . '</geogname>';
 	} elseif (strpos($mint_uri, 'geonames.org') > 0){
 		//explode the geonames id, particularly necessary for Latin American coins where the mint varies from country of issue
@@ -1288,7 +1310,7 @@ function get_mintNode($mint_uri, $label, $isUncertain){
 		$regionUri = trim($uris[1]);
 		$localityUri = trim($uris[2]);
 
-		$geography['mint'] = process_label($mintUri, $label, 'mint', $isUncertain, 0);
+		$geography['mint'] = process_label($mintUri, $label, 'mint', $certaintyType, 0);
 		if (strlen($regionUri) > 0){
 			$geography['state'] = process_label($regionUri, $label, 'state', null, 1);
 		}
@@ -1300,11 +1322,18 @@ function get_mintNode($mint_uri, $label, $isUncertain){
 }
 
 /* process_label */
-function process_label ($uri, $label, $role, $isUncertain, $pos){
+function process_label ($uri, $label, $role, $certaintyType, $pos){
 	$uriPieces = explode('/', $uri);
 	$geonameId = $uriPieces[3];
 	$geonameUri = 'http://www.geonames.org/' . $geonameId . '/';
-	$certainty = $isUncertain == true ? ' certainty="uncertain"' : '';
+	
+	if ($certaintyType == 'uncertain'){
+		$certainty = ' certainty="uncertain"';
+	} else if ($certaintyType == 'attributed'){
+		$certainty = ' certainty="attributed"';
+	} else {
+		$certainty = '';
+	}
 	
 	//explode label pieces, display correct one
 	$labelPieces = explode('|', trim($label));
