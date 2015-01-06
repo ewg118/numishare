@@ -1,6 +1,6 @@
 <?php 
 
-$data = generate_json('/home/komet/ans_migration/ocre/14.csv');
+$data = generate_json('/home/komet/ans_migration/ocre/13.csv');
 $deities_array = generate_json('deities.csv');
 $nomismaUris = array();
 $errors = array();
@@ -62,8 +62,15 @@ function generate_nuds($row){
 		$xml .= get_other_ids($nudsid);
 	}*/
 	
+	//handle subtypes
+	if (isset($pieces[4])){
+		$new = array_slice($pieces, 0, 4);		
+		$xml .= '<otherRecordId semantic="skos:broader">' . implode('.', $new) . '</otherRecordId>';
+		$xml .= '<publicationStatus>appprovedSubtype</publicationStatus>';
+	} else {
+		$xml .= '<publicationStatus>approved</publicationStatus>';
+	}
 	
-	$xml .= '<publicationStatus>approved</publicationStatus>';
 	$xml .= '<maintenanceAgency><agencyName>American Numismatic Society</agencyName></maintenanceAgency>';
 	$xml .= '<maintenanceStatus>derived</maintenanceStatus>';
 	$xml .= '<maintenanceHistory><maintenanceEvent>';
@@ -71,6 +78,7 @@ function generate_nuds($row){
 	$xml .= '</maintenanceEvent></maintenanceHistory>';
 	$xml .= '<rightsStmt><copyrightHolder>American Numismatic Society</copyrightHolder><license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/"/></rightsStmt>';
 	$xml .= '<semanticDeclaration><prefix>dcterms</prefix><namespace>http://purl.org/dc/terms/</namespace></semanticDeclaration>';
+	$xml .= '<semanticDeclaration><prefix>skos</prefix><namespace>http://www.w3.org/2004/02/skos/core#</namespace></semanticDeclaration>';
 	$xml .= "</control>";
 	$xml .= '<descMeta>';
 	
@@ -561,7 +569,13 @@ function get_title($nudsid){
 		$num .= ' (' . implode(' ', $tokens) . ')';
 	}
 	
-	$title = 'RIC ' . $vol . ' ' . $auth . ' ' . $num;
+	//subtypes
+	$subtype = '';
+	if (isset($pieces[4])){
+		$subtype = ': Subtype ' . $pieces[4];
+	}
+	
+	$title = 'RIC ' . $vol . ' ' . $auth . ' ' . $num . $subtype;
 	return $title;	
 }
 
