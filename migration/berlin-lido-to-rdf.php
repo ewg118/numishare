@@ -68,16 +68,16 @@ function process_row($row, $count){
 				$image_id = $pieces[5];
 				
 				//obverse
-				$rdf .= '<nm:obverse>';
+				$rdf .= '<nm:obverse><rdf:Description>';
 				$rdf .= '<foaf:thumbnail rdf:resource="http://ww2.smb.museum/mk_edit/images/' . $image_id . '/vs_thumb.jpg"/>';
 				$rdf .= '<foaf:depiction rdf:resource="http://ww2.smb.museum/mk_edit/images/' . $image_id . '/vs_opt.jpg"/>';
-				$rdf .='</nm:obverse>';
+				$rdf .='</rdf:Description></nm:obverse>';
 				
 				//reverse
-				$rdf .= '<nm:reverse>';
+				$rdf .= '<nm:reverse><rdf:Description>';
 				$rdf .= '<foaf:thumbnail rdf:resource="http://ww2.smb.museum/mk_edit/images/' . $image_id . '/rs_thumb.jpg"/>';
 				$rdf .= '<foaf:depiction rdf:resource="http://ww2.smb.museum/mk_edit/images/' . $image_id . '/rs_opt.jpg"/>';
-				$rdf .='</nm:reverse>';
+				$rdf .='</rdf:Description></nm:reverse>';
 			}
 			
 			$rdf .= '</nm:coin>';

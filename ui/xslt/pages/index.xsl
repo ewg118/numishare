@@ -115,6 +115,10 @@
 								<a href="http://www.dainst.org/" title="Deutsches Archäologisches Institut" style="margin:0 10px;">
 									<img src="{$include_path}/images/logo_dai.png" alt="DAI"/>
 								</a>
+								<br/>
+								<a href="http://ww2.smb.museum/ikmk/" title="Münzkabinett Berlin">
+									<img src="{$include_path}/images/logo_berlin.jpg" alt="Berlin"/>
+								</a>
 							</p>
 						</div>
 						<div class="col-md-6">
