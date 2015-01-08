@@ -79,7 +79,7 @@
 			</td>
 			<td>
 				<h2>
-					<xsl:value-of select="res:binding[@name='count']/res:literal"/>
+					<xsl:value-of select="format-number(res:binding[@name='count']/res:literal, '###,###')"/>
 				</h2>
 			</td>
 			<td>

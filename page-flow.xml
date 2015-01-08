@@ -41,7 +41,10 @@
 	<page path="/numishare/aod/id/(.*)" model="xpl/models/object/get-id.xpl" view="file:///usr/local/projects/aod/xpl/controllers/conneg-id.xpl"/>
 	
 	<!-- CHRR -->
-	<page path="/numishare/chrr/" model="xpl/models/config.xpl" view="file:///usr/local/projects/chrr/xpl/views/pages/index.xpl"/>	
+	<page path="/numishare/chrr/" model="xpl/models/config.xpl" view="file:///usr/local/projects/chrr/xpl/views/pages/index.xpl"/>
+
+	<!-- RRC -->
+	<page path="/numishare/rrc/" model="xpl/models/config.xpl" view="file:///usr/local/projects/rrc/xpl/views/pages/index.xpl"/>
 	
 	<!-- MANTIS -->
 	<!-- pages -->
