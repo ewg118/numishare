@@ -17,9 +17,14 @@
   ***************************************
  */
 html{
-	background-color:#F8F8F8;
+	background-color:black;
 }
 .navbar{
+	margin-bottom:0;
+}
+.jumbotron {
+	background-color:black;
+	color:white;
 	margin-bottom:0;
 }
 a > img{
@@ -35,17 +40,89 @@ ul li{
 	margin-bottom:14px;
 	padding:9px 14px;
 }
+.content {
+	padding:10px 0;
+	border:2px solid white;
+}
+/*
+  ***************************************
+  BOOTSTRAP NAVBAR
+  ***************************************
+ */
+.navbar-default {
+	background-color: #000000;
+	border-color: black;
+}
+.navbar-default .navbar-brand {
+	color: #ffffff;
+}
+.navbar-default .navbar-brand:hover, .navbar-default .navbar-brand:focus {
+	color: #d6d6d6;
+}
+.navbar-default .navbar-text {
+	color: #ffffff;
+}
+.navbar-default .navbar-nav > li > a {
+	color: #ffffff;
+}
+.navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus {
+	color: #d6d6d6;
+}
+.navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active > a:hover, .navbar-default .navbar-nav > .active > a:focus {
+	color: #d6d6d6;
+	background-color: #7f7f7f;
+}
+.navbar-default .navbar-nav > .open > a, .navbar-default .navbar-nav > .open > a:hover, .navbar-default .navbar-nav > .open > a:focus {
+	color: #d6d6d6;
+	background-color: #7f7f7f;
+}
+.navbar-default .navbar-toggle {
+	border-color: #7f7f7f;
+}
+.navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus {
+	background-color: #7f7f7f;
+}
+.navbar-default .navbar-toggle .icon-bar {
+	background-color: #ffffff;
+}
+.navbar-default .navbar-collapse,
+.navbar-default .navbar-form {
+	border-color: #ffffff;
+}
+.navbar-default .navbar-link {
+	color: #ffffff;
+}
+.navbar-default .navbar-link:hover {
+	color: #d6d6d6;
+}
+
+@media (max-width: 767px) {
+	.navbar-default .navbar-nav .open .dropdown-menu > li > a {
+		color: #ffffff;
+	}
+	.navbar-default .navbar-nav .open .dropdown-menu > li > a:hover, .navbar-default .navbar-nav .open .dropdown-menu > li > a:focus {
+		color: #d6d6d6;
+	}
+	.navbar-default .navbar-nav .open .dropdown-menu > .active > a, .navbar-default .navbar-nav .open .dropdown-menu > .active > a:hover, .navbar-default .navbar-nav .open .dropdown-menu > .active > a:focus {
+		color: #d6d6d6;
+		background-color: #7f7f7f;
+	}
+}
 /*
   ***************************************
   FOOTER
   ***************************************
  */
 #footer{
-	background-color:#F8F8F8;
-	border-top:1px solid #E7E7E7;
+	background-color:black;
+	border-top:2px solid #E7E7E7;
 	padding-top:10px;
 	padding-bottom:10px;
 	text-align:center;
+	color:white;
+}
+#nomisma-logo {
+	background-color:white;
 }
 /*
   ***************************************

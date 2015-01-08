@@ -7,7 +7,7 @@
 	<xsl:param name="lang" select="doc('input:request')/request/parameters/parameter[name='lang']/value"/>
 	<xsl:variable name="display_path"/>
 	<xsl:variable name="include_path" select="concat('http://', doc('input:request')/request/server-name, ':8080/orbeon/themes/', //config/theme/orbeon_theme)"/>
-	
+
 
 	<xsl:template match="/content/config">
 		<html lang="en">
@@ -44,26 +44,34 @@
 					<xsl:choose>
 						<xsl:when test="features_enabled = true()">
 							<div class="col-md-9">
-								<h1><xsl:value-of select="title"/></h1>
-								<p><xsl:value-of select="description"/></p>
+								<h1>
+									<xsl:value-of select="title"/>
+								</h1>
+								<!--<p>
+									<xsl:value-of select="description"/>
+								</p>-->
 							</div>
 							<div class="col-md-3">
-								<xsl:copy-of select="/content/div[@id='feature']"/>	
+								<xsl:copy-of select="/content/div[@id='feature']"/>
 							</div>
 						</xsl:when>
 						<xsl:otherwise>
-							<div class="col-md-12">
-								<h1><xsl:value-of select="title"/></h1>
-								<p><xsl:value-of select="description"/></p>
+							<div class="col-md-12 text-center">
+								<h1>
+									<xsl:value-of select="title"/>
+								</h1>
+								<!--<p>
+									<xsl:value-of select="description"/>
+								</p>-->
 							</div>
 						</xsl:otherwise>
 					</xsl:choose>
 				</div>
 			</div>
-		</div>	
-		<div class="container-fluid">
+		</div>
+		<div class="container content">			
 			<div class="row">
-				<div class="col-md-9">					
+				<div class="col-md-12">
 					<xsl:choose>
 						<xsl:when test="string($lang)">
 							<xsl:choose>
@@ -79,11 +87,11 @@
 											<xsl:copy-of select="//pages/index/*"/>
 										</xsl:otherwise>
 									</xsl:choose>
-									
+
 								</xsl:otherwise>
 							</xsl:choose>
 						</xsl:when>
-						<xsl:otherwise>							
+						<xsl:otherwise>
 							<xsl:choose>
 								<xsl:when test="count(//pages/index/description) &gt; 0">
 									<xsl:copy-of select="//pages/index/description[1]/*"/>
@@ -95,23 +103,50 @@
 						</xsl:otherwise>
 					</xsl:choose>
 				</div>
-				<div class="col-md-3">
-					<div class="highlight data_options">
-						<h3>Linked Data</h3>
-						<a href="{$display_path}feed/?q=*:*">
-							<img src="{$include_path}/images/atom-large.png" title="Atom" alt="Atom"/>
+			</div>
+			<div class="row">
+				<div class="col-md-4">
+					<h3>Collaborators</h3>
+					<a href="http://numismatics.org" title="American Numismatic Society" style="margin:0 10px;">
+						<img src="{$include_path}/images/logo_ans.jpg" alt="ANS"/>
+					</a>					
+					<a href="http://www.britishmuseum.org/" title="British Museum" style="margin:0 10px;">
+						<img src="{$include_path}/images/logo_bm.png" alt="BM"/>
+					</a>
+					<br/>
+					<a href="http://ww2.smb.museum/ikmk/" title="Münzkabinett Berlin">
+						<img src="{$include_path}/images/logo_berlin.jpg" alt="Berlin"/>
+					</a>
+				</div>
+				<div class="col-md-4 data_options">
+					<h3>Data Export</h3>
+					<a href="{$display_path}feed/?q=*:*">
+						<img src="{$include_path}/images/atom-large.png" title="Atom" alt="Atom"/>
+					</a>
+					<xsl:if test="pelagios_enabled=true()">
+						<a href="pelagios.void.rdf">
+							<img src="{$include_path}/images/pelagios_icon.png" title="Pelagios VOiD" alt="Pelagios VOiD"/>
 						</a>
-						<xsl:if test="pelagios_enabled=true()">
-							<a href="pelagios.void.rdf">
-								<img src="{$include_path}/images/pelagios_icon.png" title="Pelagios VOiD" alt="Pelagios VOiD"/>
-							</a>
-						</xsl:if>
-						<xsl:if test="ctype_enabled=true()">
-							<a href="nomisma.void.rdf">
-								<img src="{$include_path}/images/nomisma.png" title="nomisma VOiD" alt="nomisma VOiD"/>
-							</a>
-						</xsl:if>
+					</xsl:if>
+					<xsl:if test="ctype_enabled=true()">
+						<a href="nomisma.void.rdf">
+							<img src="{$include_path}/images/nomisma.png" title="nomisma VOiD" alt="nomisma VOiD"/>
+						</a>
+					</xsl:if>
+				</div>
+				<div class="col-md-4">
+					<h3>Share</h3>
+					<!-- AddThis Button BEGIN -->
+					<div class="addthis_toolbox addthis_default_style addthis_32x32_style">
+						<a class="addthis_button_preferred_1"/>
+						<a class="addthis_button_preferred_2"/>
+						<a class="addthis_button_preferred_3"/>
+						<a class="addthis_button_preferred_4"/>
+						<a class="addthis_button_compact"/>
+						<a class="addthis_counter addthis_bubble_style"/>
 					</div>
+					<script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid=xa-4ffc41710d8b692c"/>
+					<!-- AddThis Button END -->
 				</div>
 			</div>
 		</div>
