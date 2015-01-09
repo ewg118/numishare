@@ -27,7 +27,7 @@
 					<xsl:variable name="collection-name" select="substring-before(substring-after(doc('input:request')/request/servlet-path, 'numishare/'), '/')"/>
 					<config>
 						<url>
-							<xsl:value-of select="concat(/exist-config/url, $collection-name, '/aggregate-all.xql)"/>
+							<xsl:value-of select="concat(/exist-config/url, $collection-name, '/aggregate-all.xql')"/>
 						</url>
 						<content-type>application/xml</content-type>
 						<encoding>utf-8</encoding>
@@ -35,13 +35,13 @@
 				</xsl:template>
 			</xsl:stylesheet>
 		</p:input>
-		<p:output name="data" ref="data"/>
+		<p:output name="data" id="generator-config"/>
 	</p:processor>
 	
-	<!--<p:processor name="oxf:url-generator">
+	<p:processor name="oxf:url-generator">
 		<p:input name="config" href="#generator-config"/>
 		<p:output name="data" ref="data"/>
-	</p:processor>-->
+	</p:processor>
 	
 	<!--<p:processor name="oxf:unsafe-xslt">
 		<p:input name="request" href="#request"/>
