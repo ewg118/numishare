@@ -44,7 +44,7 @@
 	<page path="/numishare/chrr/" model="xpl/models/config.xpl" view="file:///usr/local/projects/chrr/xpl/views/pages/index.xpl"/>
 
 	<!-- RRC -->
-	<page path="/numishare/rrc/" model="xpl/models/config.xpl" view="file:///usr/local/projects/rrc/xpl/views/pages/index.xpl"/>
+	<page path="/numishare/crro/" model="xpl/models/config.xpl" view="file:///usr/local/projects/crro/xpl/views/pages/index.xpl"/>
 	
 	<!-- MANTIS -->
 	<!-- pages -->
