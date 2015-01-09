@@ -452,7 +452,7 @@
 		<xsl:param name="collection-name"/>
 		
 		<xsl:choose>
-			<xsl:when test="$collection-name='rrc'">
+			<xsl:when test="$collection-name='crro'">
 				<field name="sortid">
 					<!--<xsl:variable name="segs" select="tokenize(substring-after(nuds:control/nuds:recordId, 'rrc-'), '\.')"/>-->
 					<xsl:analyze-string select="substring-after(nuds:control/nuds:recordId, 'rrc-')" regex="([0-9]+)(^[\.]+)?(\.)?([0-9]+)?([A-z]+)?">
