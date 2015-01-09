@@ -25,7 +25,7 @@
 				<role>ocre</role>
 				<role>mantis</role>
 				<role>electrum</role>
-				<role>rrc</role>
+				<role>crro</role>
 				<role>egypt</role>
 				<role>aod</role>
 			</config>
