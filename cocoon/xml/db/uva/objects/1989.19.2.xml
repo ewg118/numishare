@@ -37,7 +37,7 @@
    </control>
    <descMeta>
       <title xml:lang="en">Victoriatus of Anonymous, 211 B.C.-208 B.C. 1989.19.2.</title>
-      <typeDesc xlink:type="simple" xlink:href="http://nomisma.org/id/rrc-95.1a"/>
+      <typeDesc xlink:type="simple" xlink:href="http://numismatics.org/crro/id/rrc-95.1a"/>
       <adminDesc>
          <identifier>1989.19.2</identifier>
          <provenance>
@@ -56,7 +56,7 @@
          <collection xlink:type="simple" xlink:href="http://nomisma.org/id/uva">The Fralin Museum of Art</collection>
       </adminDesc>
       <refDesc>
-         <reference xlink:href="http://nomisma.org/id/rrc-95.1a"/>
+         <reference xlink:href="http://numismatics.org/crro/id/rrc-95.1a"/>
       </refDesc>
    </descMeta>
    <digRep>

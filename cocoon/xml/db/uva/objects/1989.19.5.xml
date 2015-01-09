@@ -37,7 +37,7 @@
    </control>
    <descMeta>
       <title xml:lang="en">Denarius of M Sergius Silus, Rome, 116 B.C.-115 B.C. 1989.19.5.</title>
-      <typeDesc xlink:type="simple" xlink:href="http://nomisma.org/id/rrc-286.1"/>
+      <typeDesc xlink:type="simple" xlink:href="http://numismatics.org/crro/id/rrc-286.1"/>
       <adminDesc>
          <identifier>1989.19.5</identifier>
          <provenance>
@@ -56,7 +56,7 @@
          <collection xlink:type="simple" xlink:href="http://nomisma.org/id/uva">The Fralin Museum of Art</collection>
       </adminDesc>
       <refDesc>
-         <reference xlink:href="http://nomisma.org/id/rrc-286.1"/>
+         <reference xlink:href="http://numismatics.org/crro/id/rrc-286.1"/>
       </refDesc>
    </descMeta>
    <digRep>

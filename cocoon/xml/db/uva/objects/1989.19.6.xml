@@ -37,7 +37,7 @@
    </control>
    <descMeta>
       <title xml:lang="en">Denarius of Julius Caesar, 49 B.C.-48 B.C. 1989.19.6.</title>
-      <typeDesc xlink:type="simple" xlink:href="http://nomisma.org/id/rrc-443.1"/>
+      <typeDesc xlink:type="simple" xlink:href="http://numismatics.org/crro/id/rrc-443.1"/>
       <adminDesc>
          <identifier>1989.19.6</identifier>
          <provenance>
@@ -57,7 +57,7 @@
          <collection xlink:type="simple" xlink:href="http://nomisma.org/id/uva">The Fralin Museum of Art</collection>
       </adminDesc>
       <refDesc>
-         <reference xlink:href="http://nomisma.org/id/rrc-443.1"/>
+         <reference xlink:href="http://numismatics.org/crro/id/rrc-443.1"/>
       </refDesc>
    </descMeta>
    <digRep>

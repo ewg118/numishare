@@ -37,7 +37,7 @@
    </control>
    <descMeta>
       <title xml:lang="en">Denarius of Q Pomponius Musa, Rome, 66 B.C. 1989.19.3.</title>
-      <typeDesc xlink:type="simple" xlink:href="http://nomisma.org/id/rrc-410.5"/>
+      <typeDesc xlink:type="simple" xlink:href="http://numismatics.org/crro/id/rrc-410.5"/>
       <adminDesc>
          <identifier>1989.19.3</identifier>
          <provenance>
@@ -56,7 +56,7 @@
          <collection xlink:type="simple" xlink:href="http://nomisma.org/id/uva">The Fralin Museum of Art</collection>
       </adminDesc>
       <refDesc>
-         <reference xlink:href="http://nomisma.org/id/rrc-410.5"/>
+         <reference xlink:href="http://numismatics.org/crro/id/rrc-410.5"/>
       </refDesc>
    </descMeta>
    <digRep>
