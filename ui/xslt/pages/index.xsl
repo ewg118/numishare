@@ -37,38 +37,8 @@
 	</xsl:template>
 
 	<xsl:template name="index">
-		<div class="jumbotron">
-			<div class="container">
-				<div class="row">
-					<!-- display title and description in the jumbotron, including featured object, if available -->
-					<xsl:choose>
-						<xsl:when test="features_enabled = true()">
-							<div class="col-md-9">
-								<h1>
-									<xsl:value-of select="title"/>
-								</h1>
-								<!--<p>
-									<xsl:value-of select="description"/>
-								</p>-->
-							</div>
-							<div class="col-md-3">
-								<xsl:copy-of select="/content/div[@id='feature']"/>
-							</div>
-						</xsl:when>
-						<xsl:otherwise>
-							<div class="col-md-12 text-center">
-								<h1>
-									<xsl:value-of select="title"/>
-								</h1>
-								<!--<p>
-									<xsl:value-of select="description"/>
-								</p>-->
-							</div>
-						</xsl:otherwise>
-					</xsl:choose>
-				</div>
-			</div>
-		</div>
+		<!-- jumbotron scaling image -->
+		<img src="{$include_path}/images/banner.jpg" style="width:100%"/>		
 		<div class="container content">			
 			<div class="row">
 				<div class="col-md-12">
