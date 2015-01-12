@@ -107,7 +107,7 @@ $(document).ready(function () {
 	
 	/***************** DRILLDOWN HIERARCHICAL FACETS ********************/
 	
-	/*$('.hier-close').click(function () {
+	$('.hier-close').click(function () {
 		disablePopup();
 		return false;
 	});
@@ -117,49 +117,63 @@ $(document).ready(function () {
 			$("#backgroundPopup").fadeIn("fast");
 			popupStatus = 1;
 		}
-		var list_id = $(this).attr('id').split('_link')[0] + '-list';
+		
+		var q = getQuery();		
 		var field = $(this).attr('id').split('_hier')[0];
-		var q = getQuery();
+		var list_id = $(this).attr('id').split('-btn')[0] + '-list';
 		if ($('#' + list_id).html().indexOf('<li') < 0) {
 			$.get('get_hier', {
 				q: q, field: field, prefix: 'L1', fq: '*', link: '', lang: lang
 			},
 			function (data) {
-				$('#' + list_id).html(data);
+				$('#ajax-temp').html(data);
+				$('#ajax-temp li').each(function () {
+					$(this).clone().appendTo('#' + list_id);
+				});
 			});
 		}
-		$('#' + list_id).parent('div').attr('style', 'width: 192px;display:block;');
-		return false;
+		
+		$('#' + list_id).parent('div').addClass('open');
+		$('#' + list_id).show();
 	});
 	
 	//expand category when expand/compact image pressed
-	$('#refine_results').on('click', '.expand_category', function (event) {
+	$('.hier-list').on('click', 'li .expand_category', function () {
 		var fq = $(this).next('input').val();
-		var list = $(this).attr('id').split('__')[0].split('|')[1] + '__list';
+		var list = $(this).attr('id').split('__')[0].split('/')[1] + '__list';
 		var field = $(this).attr('field');
 		var prefix = $(this).attr('next-prefix');
 		var q = getQuery();
 		var section = $(this).attr('section');
 		var link = $(this).attr('link');
-		if ($(this).children('img').attr('src').indexOf('plus') >= 0) {
-			$.get('get_hier', {
-				q: q, field: field, prefix: prefix, fq: '"' + fq + '"', link: link, section: section, lang: lang
-			},
-			function (data) {
-				$('#' + list).html(data);
-			});
-			$(this).parent('li').children('.' + field + '_level').show();
-			$(this).children('img').attr('src', $(this).children('img').attr('src').replace('plus', 'minus'));
+		
+		if ($(this).attr('class').indexOf('minus') > 0) {
+			$(this).removeClass('glyphicon-minus');
+			$(this).addClass('glyphicon-plus');
+			$('#' + list).hide();
 		} else {
-			$(this).parent('li').children('.' + field + '_level').hide();
-			$(this).children('img').attr('src', $(this).children('img').attr('src').replace('minus', 'plus'));
+			$(this).removeClass('glyphicon-plus');
+			$(this).addClass('glyphicon-minus');
+			//perform ajax load on first click of expand button
+			if ($(this).parent('li').children('ul').html().indexOf('<li') < 0) {
+				$.get('get_hier', {
+					q: q, field: field, prefix: prefix, fq: '"' + fq + '"', link: link, section: section, lang: lang
+				},
+				function (data) {
+					$('#ajax-temp').html(data);
+					$('#ajax-temp li').each(function () {
+						$(this).clone().appendTo('#' + list);
+					});
+				});
+			}
+			$('#' + list).show();
 		}
 	});
 	
 	//remove all ancestor or descendent checks on uncheck
-	$('#refine_results').on('click', '.h_item input', function (event) {
-		var field = $(this).closest('.ui-multiselect-menu').attr('id').split('-')[0];
-		var title = $('.' + field + '-multiselect-checkboxes').attr('title');
+	$('.hier-list').on('click', 'li input', function () {
+		var field = $(this).attr('field');
+		var title = $(this).closest('#' + field + '_hier-list').prev('button').attr('title');
 		
 		var count_checked = 0;
 		$('#' + field + '_hier-list input:checked').each(function () {
@@ -169,10 +183,9 @@ $(document).ready(function () {
 		if (count_checked > 0) {
 			hierarchyLabel(field, title);
 		} else {
-			$('#' + field + '_hier_link').attr('title', title);
-			$('#' + field + '_hier_link').children('span:nth-child(2)').html(title);
+			$('#' + field + '_hier-btn').children('span').text(title);
 		}
-	});*/
+	});
 	
 	/***************** DRILLDOWN FOR DATES ********************/
 	
@@ -196,7 +209,7 @@ $(document).ready(function () {
 			function (data) {
 				$('#ajax-temp').html(data);
 				$('#ajax-temp li').each(function () {
-					$(this).clone().appendTo('#century_num-list');
+					$(this).clone().appendTo('#' + list_id);
 				});
 			});
 		}
@@ -261,9 +274,9 @@ $(document).ready(function () {
 		//disables popup only if it is enabled
 		if (popupStatus == 1) {
 			$("#backgroundPopup").fadeOut("fast");
-			/*$('#category_hier-list').parent('div').attr('style', 'width: 192px;');
-			$('#findspot_hier-list').parent('div').attr('style', 'width: 192px;');*/
 			$('#century_num-list').parent('div').removeClass('open');
+			$('#findspot_hier-list').parent('div').removeClass('open');
+			$('#category_hier-list').parent('div').removeClass('open');
 			popupStatus = 0;
 		}
 	}
