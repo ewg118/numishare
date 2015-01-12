@@ -12,6 +12,7 @@
 
 	<xsl:param name="q" select="doc('input:request')/request/parameters/parameter[name='q']/value"/>
 	<xsl:param name="lang" select="doc('input:request')/request/parameters/parameter[name='lang']/value"/>
+	<xsl:variable name="request-uri" select="concat('http://localhost:8080', substring-before(doc('input:request')/request/request-uri, 'maps'))"/>
 	<xsl:variable name="tokenized_q" select="tokenize($q, ' AND ')"/>
 
 	<xsl:template match="/">
@@ -229,26 +230,25 @@
 			<xsl:choose>
 				<xsl:when test="contains(@name, '_hier')">
 					<!--<xsl:variable name="title" select="numishare:regularize_node(substring-before(@name, '_'), $lang)"/>
-
-						<button class="ui-multiselect ui-widget ui-state-default ui-corner-all hierarchical-facet" type="button" title="{$title}" aria-haspopup="true" style="width: 180px;"
-							id="{@name}_link" label="{$q}">
-							<span class="ui-icon ui-icon-triangle-2-n-s"/>
+					
+					<div class="btn-group">
+						<button class="dropdown-toggle btn btn-default hierarchical-facet" type="button" style="width:250px;margin-bottom:10px;" title="{$title}" id="{@name}-btn" label="{$q}">
 							<span>
 								<xsl:value-of select="$title"/>
 							</span>
+							<xsl:text> </xsl:text>
+							<b class="caret"/>
 						</button>
-
-						<div class="ui-multiselect-menu ui-widget ui-widget-content ui-corner-all hierarchical-div" id="{substring-before(@name, '_hier')}-container" style="width: 180px;">
-							<div class="ui-widget-header ui-corner-all ui-multiselect-header ui-helper-clearfix ui-multiselect-hasfilter">
-								<ul class="ui-helper-reset">
-									<li class="ui-multiselect-close">
-										<a class="ui-multiselect-close hier-close" href="#"> close<span class="ui-icon ui-icon-circle-close"/>
-										</a>
-									</li>
-								</ul>
+						<ul class="dropdown-menu hier-list" id="{@name}-list">
+							<div class="text-right">
+								<a href="#" class="hier-close">close <span class="glyphicon glyphicon-remove"/></a>
 							</div>
-							<ul class="{substring-before(@name, '_hier')}-multiselect-checkboxes ui-helper-reset hierarchical-list" id="{@name}-list" style="height: 175px;" title="{$title}"/>
-						</div>-->
+							<xsl:if test="contains($q, @name)">
+								<xsl:copy-of select="document(concat($request-uri, 'get_hier?q=', encode-for-uri($q), '&amp;fq=*&amp;prefix=L1&amp;link=&amp;field=', substring-before(@name,
+									'_hier')))//ul[@id='root']/li"/>
+							</xsl:if>
+						</ul>
+					</div>-->
 				</xsl:when>
 				<xsl:when test="@name='century_num'">
 					<!--<button class="ui-multiselect ui-widget ui-state-default ui-corner-all" type="button" title="{numishare:regularize_node('date', $lang)}" aria-haspopup="true"
