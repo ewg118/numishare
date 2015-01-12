@@ -140,7 +140,7 @@ $(document).ready(function () {
 	//expand category when expand/compact image pressed
 	$('.hier-list').on('click', 'li .expand_category', function () {
 		var fq = $(this).next('input').val();
-		var list = $(this).attr('id').split('__')[0].split('|')[1] + '__list';
+		var list = $(this).attr('id').split('__')[0].split('/')[1] + '__list';
 		var field = $(this).attr('field');
 		var prefix = $(this).attr('next-prefix');
 		var q = getQuery();
