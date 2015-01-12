@@ -14,6 +14,7 @@ $(document).ready(function () {
 	} else {
 		var lang = langStr;
 	}
+	
 	//set hierarchical labels on load
 	$('.hierarchical-facet').each(function () {
 		var field = $(this).attr('id').split('_hier')[0];
@@ -117,7 +118,7 @@ $(document).ready(function () {
 			popupStatus = 1;
 		}
 		
-		var q = getQuery();	
+		var q = getQuery();		
 		var field = $(this).attr('id').split('_hier')[0];
 		var list_id = $(this).attr('id').split('-btn')[0] + '-list';
 		if ($('#' + list_id).html().indexOf('<li') < 0) {
@@ -139,7 +140,7 @@ $(document).ready(function () {
 	//expand category when expand/compact image pressed
 	$('.hier-list').on('click', 'li .expand_category', function () {
 		var fq = $(this).next('input').val();
-		var list = $(this).attr('id').split('__')[0].split('|')[1] + '__list';
+		var list = $(this).attr('id').split('__')[0].split('/')[1] + '__list';
 		var field = $(this).attr('field');
 		var prefix = $(this).attr('next-prefix');
 		var q = getQuery();
