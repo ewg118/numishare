@@ -60,7 +60,7 @@ PREFIX skos:      <http://www.w3.org/2004/02/skos/core#>
 PREFIX foaf:	<http://xmlns.com/foaf/0.1/>
 PREFIX ecrm: <http://erlangen-crm.org/current/>
 
-SELECT ?object ?title ?identifier ?collection ?weight ?axis ?diameter ?obvThumb ?revThumb ?obvRef ?revRef ?comThumb ?comRef  WHERE {
+SELECT ?object ?title ?identifier ?findspot ?collection ?weight ?axis ?diameter ?obvThumb ?revThumb ?obvRef ?revRef ?comThumb ?comRef  WHERE {
 ?object nm:type_series_item <typeUri>.
 {?object a nm:coin}
 UNION {?object a ecrm:E18_Physical_Thing}
@@ -69,6 +69,8 @@ OPTIONAL { ?object dcterms:identifier ?identifier}
 OPTIONAL { ?object nm:collection ?colUri .
 ?colUri skos:prefLabel ?collection 
 FILTER(langMatches(lang(?collection), "EN"))}
+OPTIONAL {?object nm:findspot ?findUri .
+?findUri foaf:name ?findspot }
 OPTIONAL { ?object nm:weight ?weight }
 OPTIONAL { ?object nm:axis ?axis }
 OPTIONAL { ?object nm:diameter ?diameter }
