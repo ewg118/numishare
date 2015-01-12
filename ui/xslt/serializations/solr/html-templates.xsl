@@ -628,7 +628,7 @@
 											<xsl:when test="contains($field, '_hier')">
 												<xsl:variable name="tokens" select="tokenize(substring($term, 2, string-length($term)-2), '\+')"/>
 												<xsl:for-each select="$tokens[position() &gt; 1]">
-													<xsl:sort/>
+													<xsl:sort select="position()" order="descending"/>
 													<xsl:value-of select="normalize-space(substring-after(substring-before(., '/'), '|'))"/>
 													<xsl:if test="not(position()=last())">
 														<xsl:text>--</xsl:text>
@@ -654,7 +654,7 @@
 											<xsl:when test="contains($field, '_hier')">
 												<xsl:variable name="tokens" select="tokenize(substring($term, 2, string-length($term)-2), '\+')"/>
 												<xsl:for-each select="$tokens[position() &gt; 1]">
-													<xsl:sort/>
+													<xsl:sort select="position()" order="descending"/>
 													<xsl:value-of select="normalize-space(substring-after(substring-before(., '/'), '|'))"/>
 													<xsl:if test="not(position()=last())">
 														<xsl:text>--</xsl:text>
@@ -781,7 +781,7 @@
 												<xsl:when test="contains($field, '_hier')">
 													<xsl:variable name="tokens" select="tokenize(substring($value, 2, string-length($value)-2), '\+')"/>
 													<xsl:for-each select="$tokens[position() &gt; 1]">
-														<xsl:sort/>
+														<xsl:sort select="position()" order="descending"/>
 														<xsl:value-of select="normalize-space(replace(substring-after(substring-before(., '/'), '|'), '&#x022;', ''))"/>
 														<xsl:if test="not(position()=last())">
 															<xsl:text>--</xsl:text>
@@ -810,7 +810,7 @@
 												<xsl:when test="contains($field, '_hier')">
 													<xsl:variable name="tokens" select="tokenize(substring($value, 2, string-length($value)-2), '\+')"/>
 													<xsl:for-each select="$tokens[position() &gt; 1]">
-														<xsl:sort/>
+														<xsl:sort select="position()" order="descending"/>
 														<xsl:value-of select="normalize-space(replace(substring-after(substring-before(., '/'), '|'), '&#x022;', ''))"/>
 														<xsl:if test="not(position()=last())">
 															<xsl:text>--</xsl:text>
