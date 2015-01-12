@@ -124,12 +124,11 @@ function process_row($row, $count){
 				$coords = query_geonames($service);
 				
 				$rdf .= '<geo:SpatialThing rdf:about="' . $findspotUri . '">';
+				$rdf .= '<foaf:name>' . $coords['name'] . '</foaf:name>';
 				$rdf .= '<geo:lat rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">' . $coords['lat'] . '</geo:lat>';
 				$rdf .= '<geo:long rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">' . $coords['long'] . '</geo:long>';
-				$rdf .= '</geo:SpatialThing>
+				$rdf .= '</geo:SpatialThing>';
 			}
-			
-			
 		}			
 	}
 	return $rdf;
@@ -143,7 +142,8 @@ function query_geonames($service){
 		$xpath = new DOMXpath($dom);
 		
 		$coords = array();
-		
+		$name = $xpath->query('descendant::name')->item(0)->nodeValue . ' (' . $xpath->query('descendant::countryName')->item(0)->nodeValue . ')';
+		$coords['name'] = $name;
 		$coords['lat'] = $xpath->query('descendant::lat')->item(0)->nodeValue;
 		$coords['long'] = $xpath->query('descendant::lng')->item(0)->nodeValue;
 		
