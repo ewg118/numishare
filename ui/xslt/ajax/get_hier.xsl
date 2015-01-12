@@ -39,9 +39,8 @@
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:for-each select="int[starts-with(@name, $prefix)]">
-					
-					<xsl:variable name="next-level" select="number(substring-after($prefix, 'L')) + 1"/>
-					<xsl:variable name="next-prefix" select="concat('L', $next-level)"/>					
+					<xsl:variable name="label" select="substring-before(substring-after(@name, '|'), '/')"/>	
+					<xsl:variable name="next-prefix" select="substring-after(@name, '/')"/>		
 					<xsl:variable name="next-prefix-count">
 						<xsl:choose>
 							<xsl:when test="string($lang)">
@@ -82,20 +81,21 @@
 								</input>
 							</xsl:otherwise>
 						</xsl:choose>
-						<xsl:value-of select="substring-after(@name, '|')"/>
+						
+						<xsl:value-of select="$label"/>
 
 						<xsl:if test="$next-prefix-count &gt; 0">
 							<xsl:choose>
 								<xsl:when test="contains($q, @name)">
 									<xsl:variable name="starter-space" select="if(contains(@name, 'L1|')) then '' else ' '"/>
-									<ul class="{$field}_level" id="{substring-after(replace(@name, ' ', '_'), '|')}__list">										
+									<ul class="{$field}_level" id="{substring-after(@name, '/')}__list">										
 										<xsl:copy-of
 											select="document(concat($request-uri, 'get_hier?q=', if (string($q)) then encode-for-uri($q) else '*:*', '&amp;fq=', encode-for-uri(@name), '&amp;prefix=', $next-prefix, '&amp;link=', encode-for-uri(concat($link, $starter-space, '+&#x022;', @name, '&#x022;')), '&amp;field=', $field))//ul[@id='root']/li"
 										/>										
 									</ul>
 								</xsl:when>
 								<xsl:otherwise>
-									<ul class="{$field}_level" id="{substring-after(replace(@name, ' ', '_'), '|')}__list" style="display:none"/>
+									<ul class="{$field}_level" id="{substring-after(@name, '/')}__list" style="display:none"/>
 								</xsl:otherwise>
 							</xsl:choose>
 						</xsl:if>

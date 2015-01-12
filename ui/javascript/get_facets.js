@@ -14,7 +14,6 @@ $(document).ready(function () {
 	} else {
 		var lang = langStr;
 	}
-	
 	//set hierarchical labels on load
 	$('.hierarchical-facet').each(function () {
 		var field = $(this).attr('id').split('_hier')[0];
@@ -118,7 +117,7 @@ $(document).ready(function () {
 			popupStatus = 1;
 		}
 		
-		var q = getQuery();		
+		var q = getQuery();	
 		var field = $(this).attr('id').split('_hier')[0];
 		var list_id = $(this).attr('id').split('-btn')[0] + '-list';
 		if ($('#' + list_id).html().indexOf('<li') < 0) {

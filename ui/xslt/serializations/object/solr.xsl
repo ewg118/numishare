@@ -105,7 +105,7 @@
 	<xsl:variable name="geonames" as="element()*">
 		<places>
 			<xsl:for-each
-				select="distinct-values(descendant::*[local-name()='geogname'][contains(@xlink:href, 'geonames.org')]/@xlink:href|$rdf/descendant::*[contains(@rdf:resource, 'geonames.org')]/@rdf:resource|descendant::*[local-name()='subject'][contains(@xlink:href, 'geonames.org')]/@xlink:href)">
+				select="distinct-values(descendant::*[local-name()='geogname'][contains(@xlink:href, 'geonames.org')]/@xlink:href|$rdf/descendant::*[contains(@rdf:resource, 'geonames.org')]/@rdf:resource|descendant::*[local-name()='subject'][contains(@xlink:href, 'geonames.org')]/@xlink:href|$sparqlResult/descendant::res:binding[@name='findspot'][contains(res:uri, 'geonames.org')]/res:uri)">
 				<xsl:variable name="geonameId" select="tokenize(., '/')[4]"/>
 
 				<xsl:if test="number($geonameId)">
@@ -130,18 +130,20 @@
 					</xsl:variable>
 
 
+					<xsl:variable name="geonames_hier" as="element()*">
+						<results>
+							<xsl:copy-of select="document(concat($geonames-url, '/hierarchy?geonameId=', $geonameId, '&amp;username=', $geonames_api_key))"/>
+						</results>
+					</xsl:variable>
+
 					<!-- create facetRegion hierarchy -->
-					<xsl:variable name="hierarchy">
-						<xsl:value-of select="$geonames_data//countryName"/>
-						<xsl:for-each select="$geonames_data//*[starts-with(local-name(), 'adminName')]">
-							<xsl:sort select="local-name()"/>
-							<xsl:if test="string-length(.) &gt; 0">
+					<xsl:variable name="hierarchy">				
+						<xsl:for-each select="$geonames_hier//geoname[position() &gt;= 3]">							
+							<xsl:value-of select="concat(geonameId, '/', name)"/>
+							<xsl:if test="not(position()=last())">
 								<xsl:text>|</xsl:text>
-								<xsl:value-of select="."/>
 							</xsl:if>
 						</xsl:for-each>
-						<xsl:text>|</xsl:text>
-						<xsl:value-of select="$geonames_data//name"/>
 					</xsl:variable>
 
 					<place id="{.}" label="{$label}" hierarchy="{$hierarchy}">
@@ -273,6 +275,7 @@
 
 	<xsl:template match="/">
 		<add>
+			<!--<xsl:copy-of select="$geonames"/>-->
 			<xsl:choose>
 				<xsl:when test="count(descendant::nuds:nuds) &gt; 0">
 					<xsl:call-template name="nuds"/>

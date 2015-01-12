@@ -174,22 +174,30 @@
 						<xsl:text>|</xsl:text>
 						<xsl:value-of select="$geonames//place[@id=$href]"/>
 					</field>
+					
 					<!-- insert hierarchical facets -->
-					<xsl:for-each select="tokenize($geonames//place[@id=$href]/@hierarchy, '\|')">
-						<xsl:if test="not(. = $value)">
-							<field name="{$role}_hier">
-								<xsl:value-of select="concat('L', position(), '|', .)"/>
-							</field>
-							<field name="{$role}_text">
-								<xsl:value-of select="."/>
-							</field>
-						</xsl:if>
-						<xsl:if test="position()=last()">
-							<xsl:variable name="level" select="if (.=$value) then position() else position() + 1"/>
-							<field name="{$role}_hier">
-								<xsl:value-of select="concat('L', $level, '|', $value)"/>
-							</field>
-						</xsl:if>
+					<xsl:variable name="hierarchy_pieces" select="tokenize($geonames//place[@id=$href]/@hierarchy, '\|')"/>
+					<xsl:variable name="count" select="count($hierarchy_pieces)"/>
+					
+					<xsl:for-each select="$hierarchy_pieces">
+						<xsl:variable name="position" select="position()"/>				
+						
+						<xsl:choose>
+							<xsl:when test="$position = 1">
+								<field name="{$role}_hier">
+									<xsl:value-of select="concat('L', position(), '|', substring-after(., '/'), '/', substring-before(., '/'))"/>						
+								</field>						
+							</xsl:when>
+							<xsl:otherwise>
+								<field name="{$role}_hier">
+									<xsl:value-of select="concat(substring-before($hierarchy_pieces[$position - 1], '/'), '|', substring-after(., '/'), '/', substring-before(., '/'))"/>
+								</field>
+							</xsl:otherwise>
+						</xsl:choose>
+						
+						<field name="{$role}_text">
+							<xsl:value-of select="substring-after(., '/')"/>
+						</field>
 					</xsl:for-each>
 				</xsl:when>
 				<xsl:when test="contains(@xlink:href, 'nomisma.org')">

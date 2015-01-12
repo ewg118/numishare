@@ -89,6 +89,7 @@ PREFIX dcterms:  <http://purl.org/dc/terms/>
 PREFIX nm:       <http://nomisma.org/id/>
 PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>
 
+
 SELECT ?object ?title ?findspot ?lat ?long ?objectType ?burial WHERE {
 ?object nm:type_series_item <typeUri>.
 ?object dcterms:title ?title .			
@@ -110,11 +111,13 @@ OPTIONAL { ?object nm:closing_date_end ?burial }}]]>
 PREFIX dcterms:  <http://purl.org/dc/terms/>
 PREFIX nm:       <http://nomisma.org/id/>
 PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>
+PREFIX foaf:	<http://xmlns.com/foaf/0.1/>
 
-SELECT ?object ?title ?findspot ?objectType ?burial ?lat ?long WHERE {
-?object nm:type_series_item <typeUri>.
-?object dcterms:title ?title .
-?object nm:findspot ?findspot .
+SELECT ?object ?title ?findspot ?name ?type ?burial ?lat ?long WHERE {
+?object nm:type_series_item <typeUri>;
+ dcterms:title ?title ;
+ nm:findspot ?findspot .
+OPTIONAL {?findspot foaf:name ?name}
 {?findspot geo:lat ?lat .
 ?findspot geo:long ?long }
 UNION {
@@ -124,7 +127,7 @@ UNION {
  OPTIONAL { ?findspot nm:closing_date ?burial }
  OPTIONAL { ?findspot nm:closing_date_end ?burial }
 }
-OPTIONAL { ?object rdf:type ?objectType }
+OPTIONAL { ?object rdf:type ?type }
 OPTIONAL { ?object nm:closing_date ?burial }
 OPTIONAL { ?object nm:closing_date_end ?burial }}]]>
 						</xsl:when>

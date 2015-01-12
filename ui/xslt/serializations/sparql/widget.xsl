@@ -86,13 +86,12 @@
 		</response>
 	</xsl:template>
 
-	<xsl:template match="res:result" mode="json">
+	<xsl:template match="res:result" mode="json">		
 		<xsl:variable name="closing_date" select="res:binding[@name='burial']/res:literal"/>
 		<xsl:variable name="lat" select="res:binding[@name='lat']/res:literal"/>
 		<xsl:variable name="long" select="res:binding[@name='long']/res:literal"/>
-		<xsl:variable name="title">
-			<xsl:value-of select="res:binding[@name='title']/res:literal"/>
-		</xsl:variable>
+		<xsl:variable name="title" select="if (res:binding[@name='type']/res:uri = 'http://nomisma.org/id/hoard') then res:binding[@name='title']/res:literal else res:binding[@name='name']/res:literal"/>
+		
 		<xsl:variable name="description">
 			<![CDATA[<dl class='dl-horizontal'><dt>URL</dt><dd><a href=']]><xsl:value-of select="res:binding[@name='object']/res:uri"/><![CDATA['>]]><xsl:value-of
 				select="res:binding[@name='object']/res:uri"/><![CDATA[</a></dd>]]>

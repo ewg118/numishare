@@ -132,6 +132,34 @@
 				<xsl:value-of select="concat(res:binding[@name='long']/res:literal, ',', res:binding[@name='lat']/res:literal)"/>
 			</field>
 		</xsl:if>
+		
+		<xsl:if test="contains($uri, 'geonames.org')">
+			<!-- if the findspot is a geonamesId, then establish the findspot_hier facet -->
+			<xsl:variable name="hierarchy_pieces" select="tokenize($geonames//place[@id=$uri]/@hierarchy, '\|')"/>
+			<xsl:variable name="count" select="count($hierarchy_pieces)"/>
+			
+			<xsl:for-each select="$hierarchy_pieces">
+				<xsl:variable name="position" select="position()"/>				
+				
+				<xsl:choose>
+					<xsl:when test="$position = 1">
+						<field name="findspot_hier">
+							<xsl:value-of select="concat('L', position(), '|', substring-after(., '/'), '/', substring-before(., '/'))"/>						
+						</field>						
+					</xsl:when>
+					<xsl:otherwise>
+						<field name="findspot_hier">
+							<xsl:value-of select="concat(substring-before($hierarchy_pieces[$position - 1], '/'), '|', substring-after(., '/'), '/', substring-before(., '/'))"/>
+						</field>
+					</xsl:otherwise>
+				</xsl:choose>
+				
+				<field name="findspot_text">
+					<xsl:value-of select="substring-after(., '/')"/>
+				</field>
+			</xsl:for-each>
+		</xsl:if>
+		
 	</xsl:template>
 
 	<xsl:template match="nuds:descMeta">
@@ -217,12 +245,27 @@
 							</field>
 
 							<!-- insert hierarchical facets -->
-							<xsl:for-each select="tokenize($geonames//place[@id=$geonamesUri]/@hierarchy, '\|')">
-								<field name="findspot_hier">
-									<xsl:value-of select="concat('L', position(), '|', .)"/>
-								</field>
+							<xsl:variable name="hierarchy_pieces" select="tokenize($geonames//place[@id=$geonamesUri]/@hierarchy, '\|')"/>
+							<xsl:variable name="count" select="count($hierarchy_pieces)"/>
+							
+							<xsl:for-each select="$hierarchy_pieces">
+								<xsl:variable name="position" select="position()"/>				
+								
+								<xsl:choose>
+									<xsl:when test="$position = 1">
+										<field name="findspot_hier">
+											<xsl:value-of select="concat('L', position(), '|', substring-after(., '/'), '/', substring-before(., '/'))"/>						
+										</field>						
+									</xsl:when>
+									<xsl:otherwise>
+										<field name="findspot_hier">
+											<xsl:value-of select="concat(substring-before($hierarchy_pieces[$position - 1], '/'), '|', substring-after(., '/'), '/', substring-before(., '/'))"/>
+										</field>
+									</xsl:otherwise>
+								</xsl:choose>
+								
 								<field name="findspot_text">
-									<xsl:value-of select="."/>
+									<xsl:value-of select="substring-after(., '/')"/>
 								</field>
 							</xsl:for-each>
 						</xsl:if>
