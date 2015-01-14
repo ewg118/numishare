@@ -47,14 +47,15 @@
 				<!-- config variables -->
 				<xsl:variable name="solr-url" select="concat(/config/solr_published, 'select/')"/>
 				<xsl:variable name="facets">
-					<xsl:choose>
+					<xsl:value-of select="concat('&amp;facet.field=', string-join(/config/facets/facet, '&amp;facet.field='))"/>
+					<!--<xsl:choose>
 						<xsl:when test="/config/collection_type='cointype'">
 							<xsl:value-of select="concat('&amp;facet.field=coinType_facet&amp;facet.field=', string-join(/config/facets/facet, '&amp;facet.field='))"/>
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:value-of select="concat('&amp;facet.field=', string-join(/config/facets/facet, '&amp;facet.field='))"/>
 						</xsl:otherwise>
-					</xsl:choose>
+					</xsl:choose>-->
 				</xsl:variable>				
 
 				<xsl:variable name="service">

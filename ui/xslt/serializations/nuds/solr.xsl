@@ -82,11 +82,11 @@
 			</xsl:for-each>
 			
 			<!-- insert the coinType_facet for the conceptual record -->
-			<xsl:if test="@recordType='conceptual'">
+			<!--<xsl:if test="@recordType='conceptual'">
 				<field name="coinType_facet">
 					<xsl:value-of select="descendant::nuds:title"/>
 				</field>
-			</xsl:if>
+			</xsl:if>-->
 			
 
 			<xsl:apply-templates select="nuds:descMeta">
