@@ -838,26 +838,26 @@
 						<xforms:group ref=".[count(//textrefSet) &lt; 1]">
 							<xforms:trigger appearance="minimal">
 								<xforms:label>
-									<img src="{$display_path}images/add.gif"/>Bibliography</xforms:label>
+									<span class="glyphicon glyphicon-plus"/>Bibliography</xforms:label>
 								<xforms:insert ev:event="DOMActivate" context="work" origin="instance('textrefSet-template')"/>
 							</xforms:trigger>
 						</xforms:group>
 						<xforms:trigger appearance="minimal">
 							<xforms:label>
-								<img src="{$display_path}images/add.gif"/>Image</xforms:label>
+								<span class="glyphicon glyphicon-plus"/>Image</xforms:label>
 							<xforms:insert ev:event="DOMActivate" context="." nodeset="./child::node()[last()]" origin="instance('imageSet-template')"/>
 						</xforms:trigger>
 						<xforms:group ref=".[count(//subjectSet) &lt; 1]">
 							<xforms:trigger appearance="minimal">
 								<xforms:label>
-									<img src="{$display_path}images/add.gif"/>Subjects</xforms:label>
+									<span class="glyphicon glyphicon-plus"/>Subjects</xforms:label>
 								<xforms:insert ev:event="DOMActivate" context="work" origin="instance('subjectSet-template')"/>
 							</xforms:trigger>
 						</xforms:group>
 						<xforms:group ref=".[count(//descriptionSet) &lt; 1]">
 							<xforms:trigger appearance="minimal">
 								<xforms:label>
-									<img src="{$display_path}images/add.gif"/>Commentary</xforms:label>
+									<span class="glyphicon glyphicon-plus"/>Commentary</xforms:label>
 								<xforms:insert ev:event="DOMActivate" context="work" origin="instance('descriptionSet-template')"/>
 							</xforms:trigger>
 						</xforms:group>
@@ -869,7 +869,7 @@
 								<xforms:group ref=".[count(//dateSet) &lt; 1]">
 									<xforms:trigger appearance="minimal">
 										<xforms:label>
-											<img src="{$display_path}images/add.gif"/>Date</xforms:label>
+											<span class="glyphicon glyphicon-plus"/>Date</xforms:label>
 										<xforms:insert ev:event="DOMActivate" context="." origin="instance('dateSet-template')"/>
 									</xforms:trigger>
 								</xforms:group>
@@ -907,7 +907,7 @@
 										<xforms:trigger appearance="minimal">
 											<xforms:delete ev:event="DOMActivate" nodeset="." at="index('date')"/>
 											<xforms:label>
-												<img src="{$display_path}images/remove.gif"/>
+												<span class="glyphicon glyphicon-remove"/>
 											</xforms:label>
 										</xforms:trigger>
 									</div>
@@ -920,35 +920,35 @@
 								<xforms:group ref=".[count(//inscriptionSet) &lt; 1]">
 									<xforms:trigger appearance="minimal">
 										<xforms:label>
-											<img src="{$display_path}images/add.gif"/>Inscription Set</xforms:label>
+											<span class="glyphicon glyphicon-plus"/>Inscription Set</xforms:label>
 										<xforms:insert ev:event="DOMActivate" context="." origin="instance('inscriptionSet-template')"/>
 									</xforms:trigger>
 								</xforms:group>
 								<xforms:group ref=".[count(//materialSet) &lt; 1]">
 									<xforms:trigger appearance="minimal">
 										<xforms:label>
-											<img src="{$display_path}images/add.gif"/>Material Set</xforms:label>
+											<span class="glyphicon glyphicon-plus"/>Material Set</xforms:label>
 										<xforms:insert ev:event="DOMActivate" context="." origin="instance('materialSet-template')"/>
 									</xforms:trigger>
 								</xforms:group>
 								<xforms:group ref=".[count(//measurementsSet) &lt; 1]">
 									<xforms:trigger appearance="minimal">
 										<xforms:label>
-											<img src="{$display_path}images/add.gif"/>Measurements Set</xforms:label>
+											<span class="glyphicon glyphicon-plus"/>Measurements Set</xforms:label>
 										<xforms:insert ev:event="DOMActivate" context="." origin="instance('measurementsSet-template')"/>
 									</xforms:trigger>
 								</xforms:group>
 								<xforms:group ref=".[count(//styleSet) &lt; 1]">
 									<xforms:trigger appearance="minimal">
 										<xforms:label>
-											<img src="{$display_path}images/add.gif"/>Style Set</xforms:label>
+											<span class="glyphicon glyphicon-plus"/>Style Set</xforms:label>
 										<xforms:insert ev:event="DOMActivate" context="." origin="instance('styleSet-template')"/>
 									</xforms:trigger>
 								</xforms:group>
 								<xforms:group ref=".[count(//techniqueSet) &lt; 1]">
 									<xforms:trigger appearance="minimal">
 										<xforms:label>
-											<img src="{$display_path}images/add.gif"/>Technique Set</xforms:label>
+											<span class="glyphicon glyphicon-plus"/>Technique Set</xforms:label>
 										<xforms:insert ev:event="DOMActivate" context="." origin="instance('techniqueSet-template')"/>
 									</xforms:trigger>
 								</xforms:group>
@@ -961,20 +961,20 @@
 									<xforms:trigger appearance="minimal">
 										<xforms:delete ev:event="DOMActivate" nodeset="." at="index('inscriptionSet')"/>
 										<xforms:label>
-											<img src="{$display_path}images/remove.gif"/>
+											<span class="glyphicon glyphicon-remove"/>
 										</xforms:label>
 									</xforms:trigger>
 									<div class="trigger_container">
 										<xforms:group ref=".[count(display) &lt; 1]">
 											<xforms:trigger appearance="minimal">
 												<xforms:label>
-													<img src="{$display_path}images/add.gif"/>Summary Line</xforms:label>
+													<span class="glyphicon glyphicon-plus"/>Summary Line</xforms:label>
 												<xforms:insert ev:event="DOMActivate" context="." origin="instance('display-template')"/>
 											</xforms:trigger>
 										</xforms:group>
 										<xforms:trigger appearance="minimal">
 											<xforms:label>
-												<img src="{$display_path}images/add.gif"/>Inscription</xforms:label>
+												<span class="glyphicon glyphicon-plus"/>Inscription</xforms:label>
 											<xforms:insert ev:event="DOMActivate" context="." nodeset="./child::node()[last()]" origin="instance('inscription-template')"/>
 										</xforms:trigger>
 									</div>
@@ -986,7 +986,7 @@
 											<xforms:trigger appearance="minimal">
 												<xforms:delete ev:event="DOMActivate" nodeset="." at="index('inscriptiondisplay')"/>
 												<xforms:label>
-													<img src="{$display_path}images/remove.gif"/>
+													<span class="glyphicon glyphicon-remove"/>
 												</xforms:label>
 											</xforms:trigger>
 										</div>
@@ -997,27 +997,27 @@
 											<xforms:trigger appearance="minimal">
 												<xforms:delete ev:event="DOMActivate" nodeset="." at="index('inscriptionSet')"/>
 												<xforms:label>
-													<img src="{$display_path}images/remove.gif"/>
+													<span class="glyphicon glyphicon-remove"/>
 												</xforms:label>
 											</xforms:trigger>
 											<div class="trigger_container">
 												<xforms:group ref=".[count(author) &lt; 1]">
 													<xforms:trigger appearance="minimal">
 														<xforms:label>
-															<img src="{$display_path}images/add.gif"/>Author</xforms:label>
+															<span class="glyphicon glyphicon-plus"/>Author</xforms:label>
 														<xforms:insert ev:event="DOMActivate" context="." origin="instance('inscriptionauthor-template')"/>
 													</xforms:trigger>
 												</xforms:group>
 												<xforms:group ref=".[count(position) &lt; 1]">
 													<xforms:trigger appearance="minimal">
 														<xforms:label>
-															<img src="{$display_path}images/add.gif"/>Position</xforms:label>
+															<span class="glyphicon glyphicon-plus"/>Position</xforms:label>
 														<xforms:insert ev:event="DOMActivate" context="." origin="instance('inscriptionposition-template')"/>
 													</xforms:trigger>
 												</xforms:group>
 												<xforms:trigger appearance="minimal">
 													<xforms:label>
-														<img src="{$display_path}images/add.gif"/>Text</xforms:label>
+														<span class="glyphicon glyphicon-plus"/>Text</xforms:label>
 													<xforms:insert ev:event="DOMActivate" context="." nodeset="./child::node()[last()]" origin="instance('inscriptiontext-template')"/>
 												</xforms:trigger>
 											</div>
@@ -1029,7 +1029,7 @@
 													<xforms:trigger appearance="minimal">
 														<xforms:delete ev:event="DOMActivate" nodeset="."/>
 														<xforms:label>
-															<img src="{$display_path}images/remove.gif"/>
+															<span class="glyphicon glyphicon-remove"/>
 														</xforms:label>
 													</xforms:trigger>
 												</div>
@@ -1042,7 +1042,7 @@
 													<xforms:trigger appearance="minimal">
 														<xforms:delete ev:event="DOMActivate" nodeset="."/>
 														<xforms:label>
-															<img src="{$display_path}images/remove.gif"/>
+															<span class="glyphicon glyphicon-remove"/>
 														</xforms:label>
 													</xforms:trigger>
 												</div>
@@ -1061,7 +1061,7 @@
 													<xforms:trigger appearance="minimal">
 														<xforms:delete ev:event="DOMActivate" nodeset="." at="index('inscriptiontext')"/>
 														<xforms:label>
-															<img src="{$display_path}images/remove.gif"/>
+															<span class="glyphicon glyphicon-remove"/>
 														</xforms:label>
 													</xforms:trigger>
 												</div>
@@ -1077,13 +1077,13 @@
 									<xforms:trigger appearance="minimal">
 										<xforms:delete ev:event="DOMActivate" nodeset="."/>
 										<xforms:label>
-											<img src="{$display_path}images/remove.gif"/>
+											<span class="glyphicon glyphicon-remove"/>
 										</xforms:label>
 									</xforms:trigger>
 									<div class="trigger_container">
 										<xforms:trigger appearance="minimal">
 											<xforms:label>
-												<img src="{$display_path}images/add.gif"/>Material</xforms:label>
+												<span class="glyphicon glyphicon-plus"/>Material</xforms:label>
 											<xforms:insert ev:event="DOMActivate" context="." nodeset="./child::node()[last()]" origin="instance('material-template')"/>
 										</xforms:trigger>
 									</div>
@@ -1098,26 +1098,26 @@
 									<xforms:trigger appearance="minimal">
 										<xforms:delete ev:event="DOMActivate" nodeset="." at="index('measurementsSet')"/>
 										<xforms:label>
-											<img src="{$display_path}images/remove.gif"/>
+											<span class="glyphicon glyphicon-remove"/>
 										</xforms:label>
 									</xforms:trigger>
 									<div class="trigger_container">
 										<xforms:group ref=".[count(display) &lt; 1]">
 											<xforms:trigger appearance="minimal">
 												<xforms:label>
-													<img src="{$display_path}images/add.gif"/>Summary Line</xforms:label>
+													<span class="glyphicon glyphicon-plus"/>Summary Line</xforms:label>
 												<xforms:insert ev:event="DOMActivate" context="." origin="instance('display-template')"/>
 											</xforms:trigger>
 										</xforms:group>
 										<xforms:trigger appearance="minimal">
 											<xforms:label>
-												<img src="{$display_path}images/add.gif"/>Dimension</xforms:label>
+												<span class="glyphicon glyphicon-plus"/>Dimension</xforms:label>
 											<xforms:insert ev:event="DOMActivate" context="." nodeset="./child::node()[last()]" origin="instance('measurement-template')"/>
 										</xforms:trigger>
 										<xforms:group ref=".[count(measurements[@type='weight']) &lt; 1]">
 											<xforms:trigger appearance="minimal">
 												<xforms:label>
-													<img src="{$display_path}images/add.gif"/>Weight</xforms:label>
+													<span class="glyphicon glyphicon-plus"/>Weight</xforms:label>
 												<xforms:insert ev:event="DOMActivate" context="." nodeset="./child::node()[last()]" origin="instance('weight-template')"/>
 											</xforms:trigger>
 										</xforms:group>
@@ -1130,7 +1130,7 @@
 											<xforms:trigger appearance="minimal">
 												<xforms:delete ev:event="DOMActivate" nodeset="."/>
 												<xforms:label>
-													<img src="{$display_path}images/remove.gif"/>
+													<span class="glyphicon glyphicon-remove"/>
 												</xforms:label>
 											</xforms:trigger>
 										</div>
@@ -1155,7 +1155,7 @@
 											<xforms:trigger appearance="minimal">
 												<xforms:delete ev:event="DOMActivate" nodeset="." at="index('measurement')"/>
 												<xforms:label>
-													<img src="{$display_path}images/remove.gif"/>
+													<span class="glyphicon glyphicon-remove"/>
 												</xforms:label>
 											</xforms:trigger>
 										</div>
@@ -1174,7 +1174,7 @@
 											<xforms:trigger appearance="minimal">
 												<xforms:delete ev:event="DOMActivate" nodeset="."/>
 												<xforms:label>
-													<img src="{$display_path}images/remove.gif"/>
+													<span class="glyphicon glyphicon-remove"/>
 												</xforms:label>
 											</xforms:trigger>
 										</div>
@@ -1188,13 +1188,13 @@
 									<xforms:trigger appearance="minimal">
 										<xforms:delete ev:event="DOMActivate" nodeset="." at="index('styleSet')"/>
 										<xforms:label>
-											<img src="{$display_path}images/remove.gif"/>
+											<span class="glyphicon glyphicon-remove"/>
 										</xforms:label>
 									</xforms:trigger>
 									<div class="trigger_container">
 										<xforms:trigger appearance="minimal">
 											<xforms:label>
-												<img src="{$display_path}images/add.gif"/>Style</xforms:label>
+												<span class="glyphicon glyphicon-plus"/>Style</xforms:label>
 											<xforms:insert ev:event="DOMActivate" context="." nodeset="./child::node()[last()]" origin="instance('style-template')"/>
 										</xforms:trigger>
 									</div>
@@ -1209,13 +1209,13 @@
 									<xforms:trigger appearance="minimal">
 										<xforms:delete ev:event="DOMActivate" nodeset="." at="index('techniqueSet')"/>
 										<xforms:label>
-											<img src="{$display_path}images/remove.gif"/>
+											<span class="glyphicon glyphicon-remove"/>
 										</xforms:label>
 									</xforms:trigger>
 									<div class="trigger_container">
 										<xforms:trigger appearance="minimal">
 											<xforms:label>
-												<img src="{$display_path}images/add.gif"/>Technique</xforms:label>
+												<span class="glyphicon glyphicon-plus"/>Technique</xforms:label>
 											<xforms:insert ev:event="DOMActivate" context="." nodeset="./child::node()[last()]" origin="instance('technique-template')"/>
 										</xforms:trigger>
 									</div>
@@ -1229,32 +1229,32 @@
 							<div class="trigger_container">
 								<xforms:trigger appearance="minimal">
 									<xforms:label>
-										<img src="{$display_path}images/add.gif"/>Creator Corporate Name</xforms:label>
+										<span class="glyphicon glyphicon-plus"/>Creator Corporate Name</xforms:label>
 									<xforms:insert ev:event="DOMActivate" context="." nodeset="agentSet/child::node()[last()]" origin="instance('agentcorpname-template')"/>
 								</xforms:trigger>
 								<xforms:trigger appearance="minimal">
 									<xforms:label>
-										<img src="{$display_path}images/add.gif"/>Creator Family Name</xforms:label>
+										<span class="glyphicon glyphicon-plus"/>Creator Family Name</xforms:label>
 									<xforms:insert ev:event="DOMActivate" context="." nodeset="agentSet/child::node()[last()]" origin="instance('agentfamname-template')"/>
 								</xforms:trigger>
 								<xforms:trigger appearance="minimal">
 									<xforms:label>
-										<img src="{$display_path}images/add.gif"/>Creator Personal Name</xforms:label>
+										<span class="glyphicon glyphicon-plus"/>Creator Personal Name</xforms:label>
 									<xforms:insert ev:event="DOMActivate" context="." nodeset="agentSet/child::node()[last()]" origin="instance('agentpersname-template')"/>
 								</xforms:trigger>
 								<xforms:trigger appearance="minimal">
 									<xforms:label>
-										<img src="{$display_path}images/add.gif"/>City</xforms:label>
+										<span class="glyphicon glyphicon-plus"/>City</xforms:label>
 									<xforms:insert ev:event="DOMActivate" context="locationSet" nodeset="child::node()[last()]" origin="instance('city-template')"/>
 								</xforms:trigger>
 								<xforms:trigger appearance="minimal">
 									<xforms:label>
-										<img src="{$display_path}images/add.gif"/>Region</xforms:label>
+										<span class="glyphicon glyphicon-plus"/>Region</xforms:label>
 									<xforms:insert ev:event="DOMActivate" context="locationSet" nodeset="child::node()[last()]" origin="instance('region-template')"/>
 								</xforms:trigger>
 								<xforms:trigger appearance="minimal">
 									<xforms:label>
-										<img src="{$display_path}images/add.gif"/>State</xforms:label>
+										<span class="glyphicon glyphicon-plus"/>State</xforms:label>
 									<xforms:insert ev:event="DOMActivate" context="locationSet" nodeset="child::node()[last()]" origin="instance('state-template')"/>
 								</xforms:trigger>
 							</div>
@@ -1278,20 +1278,20 @@
 							<div class="trigger_container">
 								<xforms:trigger appearance="minimal">
 									<xforms:label>
-										<img src="{$display_path}images/add.gif"/>Collector/Institution</xforms:label>
+										<span class="glyphicon glyphicon-plus"/>Collector/Institution</xforms:label>
 									<xforms:insert ev:event="DOMActivate" context="locationSet" nodeset="child::node()[last()]" origin="instance('institution-template')"/>
 								</xforms:trigger>
 								<xforms:group ref=".[count(//rightsSet) &lt; 1]">
 									<xforms:trigger appearance="minimal">
 										<xforms:label>
-											<img src="{$display_path}images/add.gif"/>Rights Set</xforms:label>
+											<span class="glyphicon glyphicon-plus"/>Rights Set</xforms:label>
 										<xforms:insert ev:event="DOMActivate" context="." origin="instance('rightsSet-template')"/>
 									</xforms:trigger>
 								</xforms:group>
 								<xforms:group ref=".[count(//stateEditionSet) &lt; 1]">
 									<xforms:trigger appearance="minimal">
 										<xforms:label>
-											<img src="{$display_path}images/add.gif"/>State Edition Set</xforms:label>
+											<span class="glyphicon glyphicon-plus"/>State Edition Set</xforms:label>
 										<xforms:insert ev:event="DOMActivate" context="." origin="instance('stateEditionSet-template')"/>
 									</xforms:trigger>
 								</xforms:group>
@@ -1312,13 +1312,13 @@
 									<xforms:trigger appearance="minimal">
 										<xforms:delete ev:event="DOMActivate" nodeset="."/>
 										<xforms:label>
-											<img src="{$display_path}images/remove.gif"/>
+											<span class="glyphicon glyphicon-remove"/>
 										</xforms:label>
 									</xforms:trigger>
 									<div class="trigger_container">
 										<xforms:trigger appearance="minimal">
 											<xforms:label>
-												<img src="{$display_path}images/add.gif"/>Rights</xforms:label>
+												<span class="glyphicon glyphicon-plus"/>Rights</xforms:label>
 											<xforms:insert ev:event="DOMActivate" context="." nodeset="./child::node()[last()]" origin="instance('rights-template')"/>
 										</xforms:trigger>
 									</div>
@@ -1338,7 +1338,7 @@
 												<xforms:trigger appearance="minimal" style="float:right">
 													<xforms:delete ev:event="DOMActivate" nodeset="."/>
 													<xforms:label>
-														<img src="{$display_path}images/remove.gif"/>
+														<span class="glyphicon glyphicon-remove"/>
 													</xforms:label>
 												</xforms:trigger>
 											</xforms:group>
@@ -1352,13 +1352,13 @@
 									<xforms:trigger appearance="minimal">
 										<xforms:delete ev:event="DOMActivate" nodeset="."/>
 										<xforms:label>
-											<img src="{$display_path}images/remove.gif"/>
+											<span class="glyphicon glyphicon-remove"/>
 										</xforms:label>
 									</xforms:trigger>
 									<div class="trigger_container">
 										<xforms:trigger appearance="minimal">
 											<xforms:label>
-												<img src="{$display_path}images/add.gif"/>State Edition</xforms:label>
+												<span class="glyphicon glyphicon-plus"/>State Edition</xforms:label>
 											<xforms:insert ev:event="DOMActivate" context="." nodeset="./child::node()[last()]" origin="instance('stateEdition-template')"/>
 										</xforms:trigger>
 									</div>
@@ -1378,7 +1378,7 @@
 												<xforms:trigger appearance="minimal" style="float:right">
 													<xforms:delete ev:event="DOMActivate" nodeset="."/>
 													<xforms:label>
-														<img src="{$display_path}images/remove.gif"/>
+														<span class="glyphicon glyphicon-remove"/>
 													</xforms:label>
 												</xforms:trigger>
 											</xforms:group>
@@ -1393,13 +1393,13 @@
 								<xforms:trigger appearance="minimal">
 									<xforms:delete ev:event="DOMActivate" nodeset="." at="index('textrefSet')"/>
 									<xforms:label>
-										<img src="{$display_path}images/remove.gif"/>
+										<span class="glyphicon glyphicon-remove"/>
 									</xforms:label>
 								</xforms:trigger>
 								<div class="trigger_container">
 									<xforms:trigger appearance="minimal">
 										<xforms:label>
-											<img src="{$display_path}images/add.gif"/>Reference</xforms:label>
+											<span class="glyphicon glyphicon-plus"/>Reference</xforms:label>
 										<xforms:insert ev:event="DOMActivate" context="." nodeset="./child::node()[last()]" origin="instance('textref-template')"/>
 									</xforms:trigger>
 								</div>
@@ -1428,7 +1428,7 @@
 												<xforms:trigger appearance="minimal">
 													<xforms:delete ev:event="DOMActivate" nodeset="." at="index('description')"/>
 													<xforms:label>
-														<img src="{$display_path}images/remove.gif"/>
+														<span class="glyphicon glyphicon-remove"/>
 													</xforms:label>
 												</xforms:trigger>
 											</div>
@@ -1444,13 +1444,13 @@
 								<xforms:trigger appearance="minimal">
 									<xforms:delete ev:event="DOMActivate" nodeset="." at="index('subjectSet')"/>
 									<xforms:label>
-										<img src="{$display_path}images/remove.gif"/>
+										<span class="glyphicon glyphicon-remove"/>
 									</xforms:label>
 								</xforms:trigger>
 								<div class="trigger_container">
 									<xforms:trigger appearance="minimal">
 										<xforms:label>
-											<img src="{$display_path}images/add.gif"/>Subject Term</xforms:label>
+											<span class="glyphicon glyphicon-plus"/>Subject Term</xforms:label>
 										<xforms:insert ev:event="DOMActivate" context="." nodeset="./child::node()[last()]" origin="instance('subject-template')"/>
 									</xforms:trigger>
 								</div>
@@ -1465,13 +1465,13 @@
 								<xforms:trigger appearance="minimal">
 									<xforms:delete ev:event="DOMActivate" nodeset="." at="index('descriptionSet')"/>
 									<xforms:label>
-										<img src="{$display_path}images/remove.gif"/>
+										<span class="glyphicon glyphicon-remove"/>
 									</xforms:label>
 								</xforms:trigger>
 								<div class="trigger_container">
 									<xforms:trigger appearance="minimal">
 										<xforms:label>
-											<img src="{$display_path}images/add.gif"/>Description Section</xforms:label>
+											<span class="glyphicon glyphicon-plus"/>Description Section</xforms:label>
 										<xforms:insert ev:event="DOMActivate" context="." nodeset="./child::node()[last()]" origin="instance('description-template')"/>
 									</xforms:trigger>
 								</div>
@@ -1498,7 +1498,7 @@
 												<xforms:trigger appearance="minimal">
 													<xforms:delete ev:event="DOMActivate" nodeset="." at="index('description')"/>
 													<xforms:label>
-														<img src="{$display_path}images/remove.gif"/>
+														<span class="glyphicon glyphicon-remove"/>
 													</xforms:label>
 												</xforms:trigger>
 											</div>
@@ -1514,23 +1514,23 @@
 							<xforms:trigger appearance="minimal">
 								<xforms:delete ev:event="DOMActivate" nodeset="." at="index('imageSet')"/>
 								<xforms:label>
-									<img src="{$display_path}images/remove.gif"/>
+									<span class="glyphicon glyphicon-remove"/>
 								</xforms:label>
 							</xforms:trigger>
 							<div class="trigger_container">
 								<xforms:trigger appearance="minimal">
 									<xforms:label>
-										<img src="{$display_path}images/add.gif"/>Thumbnail</xforms:label>
+										<span class="glyphicon glyphicon-plus"/>Thumbnail</xforms:label>
 									<xforms:insert ev:event="DOMActivate" context="." nodeset="./child::node()[last()]" origin="instance('thumb-template')"/>
 								</xforms:trigger>
 								<xforms:trigger appearance="minimal">
 									<xforms:label>
-										<img src="{$display_path}images/add.gif"/>Screen</xforms:label>
+										<span class="glyphicon glyphicon-plus"/>Screen</xforms:label>
 									<xforms:insert ev:event="DOMActivate" context="." nodeset="./child::node()[last()]" origin="instance('screen-template')"/>
 								</xforms:trigger>
 								<xforms:trigger appearance="minimal">
 									<xforms:label>
-										<img src="{$display_path}images/add.gif"/>Large</xforms:label>
+										<span class="glyphicon glyphicon-plus"/>Large</xforms:label>
 									<xforms:insert ev:event="DOMActivate" context="." nodeset="./child::node()[last()]" origin="instance('large-template')"/>
 								</xforms:trigger>
 							</div>
@@ -1548,7 +1548,7 @@
 									<xforms:trigger appearance="minimal">
 										<xforms:delete ev:event="DOMActivate" nodeset="." at="index('thumb')"/>
 										<xforms:label>
-											<img src="{$display_path}images/remove.gif"/>
+											<span class="glyphicon glyphicon-remove"/>
 										</xforms:label>
 									</xforms:trigger>
 								</div>
@@ -1561,7 +1561,7 @@
 									<xforms:trigger appearance="minimal">
 										<xforms:delete ev:event="DOMActivate" nodeset="." at="index('screen')"/>
 										<xforms:label>
-											<img src="{$display_path}images/remove.gif"/>
+											<span class="glyphicon glyphicon-remove"/>
 										</xforms:label>
 									</xforms:trigger>
 								</div>
@@ -1574,7 +1574,7 @@
 									<xforms:trigger appearance="minimal">
 										<xforms:delete ev:event="DOMActivate" nodeset="." at="index('large')"/>
 										<xforms:label>
-											<img src="{$display_path}images/remove.gif"/>
+											<span class="glyphicon glyphicon-remove"/>
 										</xforms:label>
 									</xforms:trigger>
 								</div>

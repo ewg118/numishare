@@ -24,7 +24,7 @@
 							<xforms:trigger appearance="minimal">
 								<xforms:delete ev:event="DOMActivate" nodeset="."/>
 								<xforms:label>
-									<img src="../../images/remove.gif"/>
+									<span class="glyphicon glyphicon-remove"/>
 								</xforms:label>
 							</xforms:trigger>
 						</div>
@@ -37,7 +37,7 @@
 							<xforms:trigger appearance="minimal">
 								<xforms:delete ev:event="DOMActivate" nodeset="."/>
 								<xforms:label>
-									<img src="../../images/remove.gif"/>
+									<span class="glyphicon glyphicon-remove"/>
 								</xforms:label>
 							</xforms:trigger>
 						</div>
@@ -59,7 +59,7 @@
 							<xforms:trigger appearance="minimal">
 								<xforms:delete ev:event="DOMActivate" nodeset="."/>
 								<xforms:label>
-									<img src="../../images/remove.gif"/>
+									<span class="glyphicon glyphicon-remove"/>
 								</xforms:label>
 							</xforms:trigger>
 						</div>
@@ -72,7 +72,7 @@
 							<xforms:trigger appearance="minimal">
 								<xforms:delete ev:event="DOMActivate" nodeset="."/>
 								<xforms:label>
-									<img src="../../images/remove.gif"/>
+									<span class="glyphicon glyphicon-remove"/>
 								</xforms:label>
 							</xforms:trigger>
 						</div>

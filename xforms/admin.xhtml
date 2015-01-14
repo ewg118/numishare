@@ -11,83 +11,82 @@
 	<head>
 		<title>Numishare: Administrative Interface</title>
 		<!-- Core + Skin CSS -->
-		<link rel="stylesheet" href="/fr/style/bootstrap/css/bootstrap.css" type="text/css"/>
-		<link rel="stylesheet" href="/fr/style/form-runner-bootstrap-override.css" type="text/css"/>
-		<link rel="stylesheet" href="/config/theme/examples.css" type="text/css" media="all"/>
-		<link rel="shortcut icon" href="/ops/images/orbeon-icon-16.ico"/>
-		<link rel="icon" href="/ops/images/orbeon-icon-16.png" type="image/png"/>
-		<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.8.0/build/cssgrids/grids-min.css"/>
+		<link rel="stylesheet" href="/fr/style/bootstrap/css/bootstrap.css" type="text/css" />
+		<link rel="stylesheet" href="/fr/style/form-runner-bootstrap-override.css" type="text/css" />
+		<link rel="shortcut icon" href="/ops/images/orbeon-icon-16.ico" />
+		<link rel="icon" href="/ops/images/orbeon-icon-16.png" type="image/png" />
+		<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" />
+		<script type="text/javascript" src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+		<link rel="stylesheet" href="/apps/numishare/xforms/css/xforms.css" />
 
 		<!-- numishare styling -->
-		<link rel="stylesheet" href="/apps/numishare/css/xforms.css"/>
+		<link rel="stylesheet" href="/apps/numishare/css/xforms.css" />
 		<xforms:model xmlns="http://nomisma.org/nuds">
 			<!-- exist URL is stored in an XML file -->
 			<xforms:instance id="exist-config">
-				<xi:include href="exist-config.xml"/>
+				<xi:include href="../exist-config.xml"></xi:include>
 			</xforms:instance>
 
 			<xforms:instance id="control-instance">
 				<controls xmlns="">
-					<id/>
-					<identifiers/>
-					<publicationStatus/>
-					<collection-name/>
-					<status/>
-					<error/>
-					<numFound/>
+					<id></id>
+					<identifiers></identifiers>
+					<publicationStatus></publicationStatus>
+					<collection-name></collection-name>
+					<status></status>
+					<error></error>
+					<numFound></numFound>
 					<page>1</page>
-					<query_input/>
-					<query_sent/>
-					<solr-core/>
+					<query_input></query_input>
+					<query_sent></query_sent>
 				</controls>
 			</xforms:instance>
 
 			<xforms:instance id="config">
-				<config xmlns=""/>
+				<config xmlns=""></config>
 			</xforms:instance>
 
 			<xforms:instance id="collections-list">
 				<collections xmlns="" xxforms:exclude-result-prefixes="#all">
-					<collection role="admin" name="numishare"/>
+					<collection role="admin" name="numishare"></collection>
 				</collections>
 			</xforms:instance>
 
 			<xforms:instance id="collection-template">
-				<collection role="" name="" xxforms:exclude-result-prefixes="#all"/>
+				<collection role="" name="" xxforms:exclude-result-prefixes="#all"></collection>
 			</xforms:instance>
 
 			<xforms:instance id="config-template" xxforms:exclude-result-prefixes="#all">
 				<config xmlns="" version="0.51">
 					<title>Numishare</title>
 					<description>A short description of the collection.</description>
-					<banner_text/>
-					<banner_image/>
+					<logo></logo>
 					<url>http://localhost:8080/cocoon/numishare/</url>
 					<sparql_endpoint>http://nomisma.org/query</sparql_endpoint>
-					<type_series/>
+					<type_series></type_series>
 					<solr_published>http://localhost:8080/solr/numishare-published/</solr_published>
-					<flickr_api_key/>
-					<geonames_api_key/>
-					<contact/>
-					<google_analytics/>
+					<flickr_api_key></flickr_api_key>
+					<geonames_api_key></geonames_api_key>
+					<contact></contact>
+					<google_analytics></google_analytics>
 					<collection_type>object</collection_type>
 					<features_enabled>true</features_enabled>
 					<pelagios_enabled>false</pelagios_enabled>
 					<ctype_enabled>false</ctype_enabled>
-					<nomisma_namespace/>
+					<nomisma_namespace></nomisma_namespace>
 					<baselayers>
 						<layer enabled="true">google_physical</layer>
 						<layer enabled="true">osm</layer>
 						<layer enabled="true">imperium</layer>
 					</baselayers>
 					<template>
-						<agencyName/>
-						<copyrightHolder/>
-						<collection/>
-						<language/>
+						<agencyName></agencyName>
+						<copyrightHolder></copyrightHolder>
+						<collection></collection>
+						<language></language>
 						<license>http://opendatacommons.org/licenses/odbl/</license>
-						<owner/>
-						<repository/>
+						<owner></owner>
+						<repository></repository>
 					</template>
 					<images>
 						<absolute_path>/usr/local/projects/numishare/cocoon/</absolute_path>
@@ -95,21 +94,47 @@
 						<reference>400</reference>
 					</images>
 					<languages>
-						<language code="ar" enabled="false"/>
-						<language code="bg" enabled="false"/>
-						<language code="de" enabled="false"/>
-						<language code="el" enabled="false"/>
-						<language code="en" enabled="false"/>
-						<language code="es" enabled="false"/>
-						<language code="fr" enabled="false"/>
-						<language code="it" enabled="false"/>
-						<language code="nl" enabled="false"/>
-						<language code="ro" enabled="false"/>
-						<language code="ru" enabled="false"/>
-						<language code="sv" enabled="false"/>
+						<language code="ar" enabled="false"></language>
+						<language code="bg" enabled="false"></language>
+						<language code="de" enabled="false"></language>
+						<language code="el" enabled="false"></language>
+						<language code="en" enabled="false"></language>
+						<language code="es" enabled="false"></language>
+						<language code="fr" enabled="false"></language>
+						<language code="it" enabled="false"></language>
+						<language code="nl" enabled="false"></language>
+						<language code="ro" enabled="false"></language>
+						<language code="ru" enabled="false"></language>
+						<language code="sv" enabled="false"></language>
 					</languages>
+					<facets>
+						<facet>artist_facet</facet>
+						<facet>authority_facet</facet>
+						<facet>citation_facet</facet>
+						<facet>coinType_facet</facet>
+						<facet>collection_facet</facet>
+						<facet>degree_facet</facet>
+						<facet>deity_facet</facet>
+						<facet>denomination_facet</facet>
+						<facet>department_facet</facet>
+						<facet>engraver_facet</facet>
+						<facet>era_facet</facet>
+						<facet>findspot_facet</facet>
+						<facet>issuer_facet</facet>
+						<facet>maker_facet</facet>
+						<facet>manufacture_facet</facet>
+						<facet>material_facet</facet>
+						<facet>mint_facet</facet>
+						<facet>objectType_facet</facet>
+						<facet>portrait_facet</facet>
+						<facet>reference_facet</facet>
+						<facet>region_facet</facet>
+						<facet>script_facet</facet>
+						<facet>state_facet</facet>
+						<facet>subject_facet</facet>
+					</facets>
 					<theme>
-						<jquery_ui_theme>smoothness</jquery_ui_theme>
+						<orbeon_theme>default</orbeon_theme>
 						<layouts>
 							<results>
 								<image_location>right</image_location>
@@ -123,35 +148,61 @@
 						</layouts>
 					</theme>
 					<footer>
-						<p>Powered by <a href="https://github.com/ewg118/numishare" target="_blank">Numishare</a></p>
+						<div class="row">
+							<p>Powered by <a href="https://github.com/ewg118/numishare" target="_blank">Numishare</a></p>
+						</div>
 					</footer>
 					<pages>
 						<index>
-							<p>Numishare is a free, open source, modularized system of Tomcat applications for the web delivery of cultural heritage artifacts, with particular focus on coins and
-								medals. Metadata are edited with XForms and delivered with Cocoon and Solr.</p>
+							<p>
+								<a href="https://github.com/ewg118/numishare/">Numishare</a> is a free, open source, modularized system of Tomcat applications for the web delivery of cultural heritage
+								artifacts, with particular focus on coins and medals. Metadata are edited with XForms and delivered with <a href="http://www.orbeon.com">Orbeon</a>, <a
+									href="http://exist-db.org/exist/apps/homepage/index.html">eXist-db</a>, and <a href="http://lucene.apache.org/solr/">Apache Solr</a>.</p>
 						</index>
-						<compare enabled="true"/>
-						<analyze enabled="false"/>
-						<visualize enabled="true"/>
+						<compare enabled="true"></compare>
+						<analyze enabled="false"></analyze>
+						<visualize enabled="true"></visualize>
 					</pages>
 				</config>
 			</xforms:instance>
 
+			<xforms:instance id="aggregate-ids-template">
+				<xquery><![CDATA[
+				xquery version "1.0";
+				declare namespace request="http://exist-db.org/xquery/request";
+				declare namespace xs="http://www.w3.org/2001/XMLSchema";
+				
+				let $collection-name:= substring-before(substring-after(request:get-uri(), '/exist/rest/db/'), '/')
+				let $identifiers:= request:get-parameter("identifiers",0)
+				let $sequence:= tokenize($identifiers, '\|')
+				
+				return
+				<nudsGroup xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:nuds="http://nomisma.org/nuds" xmlns:mods="http://www.loc.gov/mods/v3"
+					xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mets="http://www.loc.gov/METS/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+					{
+					for $doc in $sequence
+					let $path:= concat('/db/', $collection-name, '/objects/', $doc, ".xml")
+					return doc($path)/* 
+					}
+				</nudsGroup>]]>
+				</xquery>
+			</xforms:instance>
+
 			<xforms:instance id="object" xxforms:exclude-result-prefixes="#all">
-				<nuds xmlns=""/>
+				<nuds xmlns=""></nuds>
 			</xforms:instance>
 
 			<xforms:instance id="imports-template">
-				<imports/>
+				<imports></imports>
 			</xforms:instance>
 
 			<xforms:instance id="languages">
-				<xi:include href="instances/languages.xml"/>
+				<xi:include href="instances/languages.xml"></xi:include>
 			</xforms:instance>
 
 			<xforms:instance id="eXist-xquery">
 				<exist:query xmlns="">
-					<exist:text/>
+					<exist:text></exist:text>
 				</exist:query>
 			</xforms:instance>
 
@@ -166,102 +217,110 @@
 						concat($record//nuds:typeDesc/nuds:reverse/nuds:type/nuds:description[@xml:lang='en'], '/', $record//nuds:typeDesc/nuds:reverse/nuds:legend) } &lt;/reverse> &lt;published/>
 						&lt;/record> else if ($type='nudsHoard') then &lt;record> &lt;type>{ $type } &lt;/type>&lt;maintenanceStatus&gt;
 						{$record/nh:nudsHoard/nh:control/nh:maintenanceStatus/text()}&lt;/maintenanceStatus&gt; &lt;id>{ $record//nh:recordId/text() }&lt;/id> &lt;title>{
-						$record//nh:descMeta/nh:title[@xml:lang='en']/text() }&lt;/title> &lt;published/> &lt;/record> else &lt;record/> } &lt;/report> </query>
-					<query id="create-collection"/>
-					<!--<query id="query-objects"> &lt;report> { for $record in collection()[contains(descendant::*[local-name()='unittitle'], 'QUERY') or
-						descendant::*[local-name()='eadid'] = 'QUERY' or descendant::*[local-name()='identifier'] = 'QUERY' or
-						descendant::*[local-name()='recordIdentifier'] = 'QUERY' or contains(descendant::*[local-name()='title'], 'QUERY')] let $type :=
-						$record/*/local-name() return if ($type='ead') then &lt;record> &lt;type>{ $type }&lt;/type> &lt;id>{
-						$record//*[local-name()='eadid']/text() }&lt;/id> &lt;title>{
-						$record//*[local-name()='archdesc']/*[local-name()='did']/*[local-name()='unittitle']/text() }&lt;/title> &lt;components>{ if
-						(count($record//*[local-name()='c']) &gt; 0) then 'true' else 'false' }&lt;/components> &lt;published/> &lt;/record> else &lt;record>
-						&lt;type>{ $type }&lt;/type> &lt;id>{
-						$record//*[local-name()='mods']/*[local-name()='recordInfo']/*[local-name()='recordIdentifier']/text() }&lt;/id> &lt;title>{
-						$record//*[local-name()='mods']/*[local-name()='titleInfo']/*[local-name()='title']/text() }&lt;/title> &lt;published/> &lt;/record> }
-						&lt;/report> </query>-->
+						$record//nh:descMeta/nh:title[@xml:lang='en']/text() }&lt;/title> &lt;published/> &lt;/record> else &lt;record/> } &lt;/report></query>
+					<query id="create-collection"></query>
+					<query id="query-objects">declare namespace nuds="http://nomisma.org/nuds"; declare namespace nh="http://nomisma.org/nudsHoard"; &lt;report> { for $record in
+						collection()[contains(descendant::*[local-name()='recordId'], 'QUERY') or descendant::*[local-name()='title'] = 'QUERY'] let $type := $record/*/local-name() return if
+						($type='nuds') then &lt;record> &lt;type>{ $type } &lt;/type>&lt;maintenanceStatus&gt; {$record/nuds:nuds/nuds:control/nuds:maintenanceStatus/text()}&lt;/maintenanceStatus&gt;
+						&lt;recordType>{ string($record/nuds:nuds/@recordType) }&lt;/recordType> &lt;id>{ $record//nuds:recordId/text() }&lt;/id> &lt;title>{
+						$record//nuds:descMeta/nuds:title[@xml:lang='en']/text() }&lt;/title> &lt;obverse> { concat($record//nuds:typeDesc/nuds:obverse/nuds:type/nuds:description[@xml:lang='en'], '/',
+						$record//nuds:typeDesc/nuds:obverse/nuds:legend) } &lt;/obverse> &lt;reverse> { concat($record//nuds:typeDesc/nuds:reverse/nuds:type/nuds:description[@xml:lang='en'], '/',
+						$record//nuds:typeDesc/nuds:reverse/nuds:legend) } &lt;/reverse> &lt;published/> &lt;/record> else if ($type='nudsHoard') then &lt;record> &lt;type>{ $type }
+						&lt;/type>&lt;maintenanceStatus&gt; {$record/nh:nudsHoard/nh:control/nh:maintenanceStatus/text()}&lt;/maintenanceStatus&gt; &lt;id>{ $record//nh:recordId/text() }&lt;/id>
+						&lt;title>{ $record//nh:descMeta/nh:title[@xml:lang='en']/text() }&lt;/title> &lt;published/> &lt;/record> else &lt;record/> } &lt;/report></query>
+					<query id="publish-all"> &lt;report> { for $i at $position in collection()[descendant::*:publicationStatus='approved'] return concat(data($i//*:recordId), if ($position mod COUNT =
+						0) then ',' else '|') } &lt;/report></query>
 				</queries>
 			</xforms:instance>
 
 			<xforms:instance id="pagination-result">
-				<exist:result/>
+				<exist:result></exist:result>
 			</xforms:instance>
 
 			<xforms:instance id="xquery-result">
-				<exist:result/>
+				<exist:result></exist:result>
 			</xforms:instance>
 
 			<!-- solr response for id query -->
 			<xforms:instance id="published-response">
-				<response xmlns=""/>
+				<response xmlns=""></response>
 			</xforms:instance>
 			<xforms:instance id="list-published-response">
-				<response xmlns=""/>
+				<response xmlns=""></response>
 			</xforms:instance>
 			<xforms:instance id="is-published">
-				<response xmlns=""/>
+				<response xmlns=""></response>
 			</xforms:instance>
 
 			<!-- send to Solr -->
 			<xforms:instance id="addIndex" xxforms:exclude-result-prefixes="#all">
-				<add xmlns=""/>
+				<add xmlns=""></add>
 			</xforms:instance>
 			<xforms:instance id="collection-field" xxforms:exclude-result-prefixes="#all">
-				<field name="collection-name" xmlns=""/>
+				<field name="collection-name" xmlns=""></field>
 			</xforms:instance>
 			<!-- Instance for Solr commit-->
 			<xforms:instance id="sendCommit">
-				<commit/>
+				<commit></commit>
 			</xforms:instance>
 
 			<!-- Solr optimize -->
 			<xforms:instance id="optimizeIndex">
-				<optimize/>
+				<optimize></optimize>
 			</xforms:instance>
 
 			<!-- delete from Solr -->
 			<xforms:instance id="deleteId">
 				<delete xmlns="">
-					<query/>
+					<query></query>
 				</delete>
 			</xforms:instance>
 			<xforms:instance id="deleteAll">
 				<delete xmlns="">
-					<query/>
+					<query></query>
 				</delete>
 			</xforms:instance>
 
 			<xforms:instance id="dump">
-				<dump xmlns=""/>
+				<dump xmlns=""></dump>
 			</xforms:instance>
 
 			<!-- ************************* BINDINGS ************************** -->
 			<xforms:bind nodeset="instance('collections-list')">
 				<xforms:bind nodeset="collection">
-					<xforms:bind nodeset="@name" required="true()" type="xs:ID"/>
+					<xforms:bind nodeset="@name" required="true()" type="xs:ID"></xforms:bind>
 				</xforms:bind>
 			</xforms:bind>
 
 			<xforms:bind nodeset="instance('config-template')">
-				<xforms:bind nodeset="title" required="true()"/>
-				<xforms:bind nodeset="banner_text"/>
-				<xforms:bind nodeset="url" required="true()"/>
-				<xforms:bind nodeset="solr_published" required="true()"/>
-				<xforms:bind nodeset="solr_all" required="true()"/>
+				<xforms:bind nodeset="title" required="true()"></xforms:bind>
+				<xforms:bind nodeset="banner_text"></xforms:bind>
+				<xforms:bind nodeset="url" required="true()"></xforms:bind>
+				<xforms:bind nodeset="solr_published" required="true()"></xforms:bind>
+				<xforms:bind nodeset="solr_all" required="true()"></xforms:bind>
 				<xforms:bind nodeset="template">
 					<!-- about the electronic record -->
-					<xforms:bind nodeset="agencyName" required="true()"/>
-					<xforms:bind nodeset="copyrightHolder" required="true()"/>
-					<xforms:bind nodeset="language" required="true()"/>
+					<xforms:bind nodeset="agencyName" required="true()"></xforms:bind>
+					<xforms:bind nodeset="copyrightHolder" required="true()"></xforms:bind>
+					<xforms:bind nodeset="language" required="true()"></xforms:bind>
 					<!-- about the physical item -->
-					<xforms:bind nodeset="repository"/>
-					<xforms:bind nodeset="owner"/>
-					<xforms:bind nodeset="collection"/>
+					<xforms:bind nodeset="repository"></xforms:bind>
+					<xforms:bind nodeset="owner"></xforms:bind>
+					<xforms:bind nodeset="collection"></xforms:bind>
 				</xforms:bind>
 				<xforms:bind nodeset="images">
-					<xforms:bind nodeset="thumbnail" required="true()" type="xs:integer"/>
-					<xforms:bind nodeset="screen" required="true()" type="xs:integer"/>
+					<xforms:bind nodeset="thumbnail" required="true()" type="xs:integer"></xforms:bind>
+					<xforms:bind nodeset="screen" required="true()" type="xs:integer"></xforms:bind>
 				</xforms:bind>
 			</xforms:bind>
+			
+			<xforms:bind nodeset="instance('pagination-result')">
+				<xforms:bind nodeset="record">
+					<xforms:bind nodeset="published" type="xs:boolean"/>
+				</xforms:bind>
+			</xforms:bind>
+			
+			<!-- ************************* SUBMISSIONS ************************** -->
 			<!-- load collections/roles config -->
 			<xforms:submission id="load-collections" serialization="none" method="get" action="{instance('exist-config')/url}collections-list.xml" replace="instance" instance="collections-list"
 				xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}">
@@ -276,31 +335,31 @@
 					<xforms:action if="string(instance('control-instance')/request-security/role)">
 						<xforms:action if="string(instance('collections-list')/collection[@role=instance('control-instance')/request-security/role]/@name)">
 							<xforms:setvalue ref="instance('control-instance')/collection-name"
-								value="instance('collections-list')/collection[@role=instance('control-instance')/request-security/role]/@name"/>
+								value="instance('collections-list')/collection[@role=instance('control-instance')/request-security/role]/@name"></xforms:setvalue>
 						</xforms:action>
 						<xforms:action if="not(string(instance('collections-list')/collection[@role=instance('control-instance')/request-security/role]/@name))">
-							<xforms:insert context="instance('collections-list')" nodeset="./child::node()[last()]" origin="instance('collection-template')"/>
-							<xforms:setvalue ref="instance('collections-list')/collection[last()]/@role" value="instance('control-instance')/request-security/role"/>
+							<xforms:insert context="instance('collections-list')" nodeset="./child::node()[last()]" origin="instance('collection-template')"></xforms:insert>
+							<xforms:setvalue ref="instance('collections-list')/collection[last()]/@role" value="instance('control-instance')/request-security/role"></xforms:setvalue>
 						</xforms:action>
 					</xforms:action>
 					<!-- set exist collection value for creating new collection-->
 					<xforms:setvalue ref="instance('xqueries')/query[@id='create-collection']"
-						value="concat(&quot;xmldb:create-collection(&#x0027;/db/&quot;, instance(&quot;control-instance&quot;)/collection-name, &quot;&#x0027;, &#x0027;objects&#x0027;)&quot;)"/>
+						value="concat(&quot;xmldb:create-collection(&#x0027;/db/&quot;, instance(&quot;control-instance&quot;)/collection-name, &quot;&#x0027;, &#x0027;objects&#x0027;)&quot;)"></xforms:setvalue>
 					<!-- set the delete all query -->
-					<xforms:setvalue ref="instance('deleteAll')/query" value="concat('collection-name:', instance('control-instance')/collection-name)"/>
-					<xforms:send submission="load-config"/>
+					<xforms:setvalue ref="instance('deleteAll')/query" value="concat('collection-name:', instance('control-instance')/collection-name)"></xforms:setvalue>
+					<xforms:send submission="load-config"></xforms:send>
 				</xforms:action>
-				<!-- if the config has not been created (given that the URL in exist-config.xml is correct), create it -->
+				<!-- if the config has not been created (given that the URL in ../exist-config.xml is correct), create it -->
 				<xforms:action ev:event="xforms-submit-error">
 					<!-- if there is no security, quietly save collections-list.xml -->
 					<xforms:action if="not(string(instance('control-instance')/request-security/role))">
 						<xforms:setvalue ref="instance('control-instance')/collection-name">numishare</xforms:setvalue>
-						<xforms:send submission="save-collections"/>
+						<xforms:send submission="save-collections"></xforms:send>
 					</xforms:action>
 					<xforms:action if="string(instance('control-instance')/request-security/role)">
 						<xforms:action if="not(instance('control-instance')/request-security/role='admin')">
-							<xforms:insert context="instance('collections-list')" nodeset="./child::node()[last()]" origin="instance('collection-template')"/>
-							<xforms:setvalue ref="instance('collections-list')/collection[last()]/@role" value="instance('control-instance')/request-security/role"/>
+							<xforms:insert context="instance('collections-list')" nodeset="./child::node()[last()]" origin="instance('collection-template')"></xforms:insert>
+							<xforms:setvalue ref="instance('collections-list')/collection[last()]/@role" value="instance('control-instance')/request-security/role"></xforms:setvalue>
 						</xforms:action>
 					</xforms:action>
 				</xforms:action>
@@ -309,7 +368,7 @@
 			<xforms:submission id="save-collections" ref="instance('collections-list')" action="{instance('exist-config')/url}/collections-list.xml" method="put" replace="none"
 				xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Error Saving Collections List.</xforms:message>
-				<xforms:send submission="load-collections"/>
+				<xforms:send submission="load-collections"></xforms:send>
 			</xforms:submission>
 
 			<!--***************** XQUERY ******************-->
@@ -320,9 +379,8 @@
 				<xforms:action ev:event="xforms-submit-done">
 					<!--iterate through docs, check for publication -->
 					<xforms:action xxforms:iterate="instance('pagination-result')//record">
-						<xforms:setvalue ref="instance('control-instance')/solr-core" value="instance('config')/solr_published"/>
-						<xforms:setvalue ref="instance('control-instance')/id" value="context()/id"/>
-						<xforms:send submission="query-solr-for-publication"/>
+						<xforms:setvalue ref="instance('control-instance')/id" value="context()/id"></xforms:setvalue>
+						<xforms:send submission="query-solr-for-publication"></xforms:send>
 					</xforms:action>
 				</xforms:action>
 			</xforms:submission>
@@ -337,15 +395,15 @@
 				instance="config" xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}">
 				<xforms:action ev:event="xforms-submit-done">
 					<!-- get the number of docs in the eXist collection() -->
-					<xforms:setvalue ref="instance('eXist-xquery')/exist:text" value="instance('xqueries')/query[@id='collection-count']"/>
-					<xforms:send submission="xquery-collection"/>
-					<xforms:setvalue ref="instance('control-instance')/numFound" value="number(instance('xquery-result'))"/>
+					<xforms:setvalue ref="instance('eXist-xquery')/exist:text" value="instance('xqueries')/query[@id='collection-count']"></xforms:setvalue>
+					<xforms:send submission="xquery-collection"></xforms:send>
+					<xforms:setvalue ref="instance('control-instance')/numFound" value="number(instance('xquery-result'))"></xforms:setvalue>
 					<!-- set value in control instance -->
 
-					<xforms:var name="end" select="if(instance('control-instance')/numFound &gt; 20) then 20 else instance('control-instance')/numFound"/>
+					<xforms:var name="end" select="if(instance('control-instance')/numFound &gt; 20) then 20 else instance('control-instance')/numFound"></xforms:var>
 					<!-- get list of files for page 1, replacing START and END -->
-					<xforms:setvalue ref="instance('eXist-xquery')/exist:text" value="replace(instance('xqueries')/query[@id='get-objects'], 'START', '1')"/>
-					<xforms:send submission="xquery-pagination"/>
+					<xforms:setvalue ref="instance('eXist-xquery')/exist:text" value="replace(instance('xqueries')/query[@id='get-objects'], 'START', '1')"></xforms:setvalue>
+					<xforms:send submission="xquery-pagination"></xforms:send>
 				</xforms:action>
 				<!-- if config.xml doesn't exist, then create the exist collection with necessary files -->
 				<xforms:action ev:event="xforms-submit-error">
@@ -357,7 +415,7 @@
 			<xforms:submission id="save-config" ref="instance('config-template')" action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/config.xml" method="put"
 				replace="none" xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Error Saving Config.</xforms:message>
-				<xforms:send submission="load-config" ev:event="xforms-submit-done"/>
+				<xforms:send submission="load-config" ev:event="xforms-submit-done"></xforms:send>
 			</xforms:submission>
 
 			<xforms:submission id="save-imports" ref="instance('imports-template')" action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/imports.xml" method="put"
@@ -366,7 +424,7 @@
 			</xforms:submission>
 
 			<xforms:submission id="add-object-collection" ref="instance('eXist-xquery')" method="post" action="{instance('exist-config')/url}" replace="none"
-				xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}"/>
+				xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}"></xforms:submission>
 
 			<!-- delete coin -->
 			<xforms:submission id="delete-object" action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/objects/{instance('control-instance')/id}.xml" method="delete"
@@ -380,52 +438,50 @@
 				xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}" replace="instance" instance="object">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Error loading file.</xforms:message>
 				<xforms:action ev:event="xforms-submit-done">
-					<xforms:setvalue ref="instance('object')/nuds:control/nuds:publicationStatus" value="instance('control-instance')/publicationStatus"/>
-					<xforms:send submission="save-coin"/>
+					<xforms:setvalue ref="instance('object')/nuds:control/nuds:publicationStatus" value="instance('control-instance')/publicationStatus"></xforms:setvalue>
+					<xforms:send submission="save-coin"></xforms:send>
 				</xforms:action>
 			</xforms:submission>
 
 			<xforms:submission id="save-coin" ref="instance('object')" xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}"
-				action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/objects/{instance('control-instance')/id}.xml" method="put" replace="none"/>
+				action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/objects/{instance('control-instance')/id}.xml" method="put" replace="none"></xforms:submission>
 
 			<!-- ************************* SOLR SUBMISSIONS ************************** -->
 			<!-- query Solr for the id of all currently published documents and repost them to solr -->
 			<xforms:submission id="republish" serialization="none" method="get"
-				action="{instance('control-instance')/solr-core}select/?q=collection-name:{instance('control-instance')/collection-name}&amp;rows=100000&amp;start=0&amp;fl=id" replace="instance"
+				action="{instance('config')/solr_published}select/?q=collection-name:{instance('control-instance')/collection-name}&amp;rows=100000&amp;start=0&amp;fl=id" replace="instance"
 				instance="list-published-response">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Solr is inaccessible. Please check Solr configuration. [ADM001]</xforms:message>
 				<xforms:action ev:event="xforms-submit-done">
-					<xforms:setvalue ref="instance('control-instance')/solr-core" value="instance('config')/solr_published"/>
-					<xforms:setvalue ref="instance('control-instance')/identifiers" value="string-join(instance('list-published-response')//doc/str[@name='id'], '|')"/>
+					<xforms:setvalue ref="instance('control-instance')/identifiers" value="string-join(instance('list-published-response')//doc/str[@name='id'], '|')"></xforms:setvalue>
 
 					<!-- get Solr document -->
-					<xforms:send submission="generate-add-document"/>
+					<xforms:send submission="generate-add-document"></xforms:send>
 					<!-- optimize index -->
-					<xforms:send submission="optimize"/>
+					<xforms:send submission="optimize"></xforms:send>
 					<!-- reload table -->
-					<xforms:setvalue ref="instance('control-instance')/solr-core" value="instance('config')/solr_all"/>
-					<xforms:delete nodeset="instance('list')/*"/>
-					<xforms:send submission="query-solr"/>
+					<xforms:delete nodeset="instance('list')/*"></xforms:delete>
+					<xforms:send submission="query-solr"></xforms:send>
 				</xforms:action>
 			</xforms:submission>
 			<!-- access service to read in pre-transformed solr doc -->
 			<xforms:submission id="nuds-to-solr" method="get" replace="instance" instance="addIndex" serialization="none" resource="{instance('config')/url}id/{instance('control-instance')/id}.solr">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Error transforming XML record to Solr document.</xforms:message>
 				<xforms:action ev:event="xforms-submit-done">
-					<xforms:send submission="post-solr-doc"/>
+					<xforms:send submission="post-solr-doc"></xforms:send>
 				</xforms:action>
 			</xforms:submission>
 			<!-- post instance to Solr -->
-			<xforms:submission id="post-solr-doc" action="{instance('control-instance')/solr-core}update" ref="instance('addIndex')" instance="addIndex" replace="instance" method="post">
+			<xforms:submission id="post-solr-doc" action="{instance('config')/solr_published}update" ref="instance('addIndex')" instance="addIndex" replace="instance" method="post">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Data Failed to POST to Solr. Index may be offline or URL is incorrect.</xforms:message>
 			</xforms:submission>
 			<!-- delete from Solr -->
-			<xforms:submission id="delete-solr-doc" action="{instance('control-instance')/solr-core}update" ref="instance('deleteId')" instance="deleteId" replace="none" method="post">
-				<xforms:send ev:event="xforms-submit-done" submission="submit-commit"/>
+			<xforms:submission id="delete-solr-doc" action="{instance('config')/solr_published}update" ref="instance('deleteId')" instance="deleteId" replace="none" method="post">
+				<xforms:send ev:event="xforms-submit-done" submission="submit-commit"></xforms:send>
 				<xforms:message ev:event="xforms-submit-error" level="modal">Data Failed to POST to Solr.</xforms:message>
 			</xforms:submission>
-			<xforms:submission id="delete-all" action="{instance('control-instance')/solr-core}update" ref="instance('deleteAll')" instance="deleteAll" replace="none" method="post">
-				<xforms:send ev:event="xforms-submit-done" submission="submit-commit"/>
+			<xforms:submission id="delete-all" action="{instance('config')/solr_published}update" ref="instance('deleteAll')" instance="deleteAll" replace="none" method="post">
+				<xforms:send ev:event="xforms-submit-done" submission="submit-commit"></xforms:send>
 				<xforms:setvalue ev:event="xforms-submit-done" ref="instance('control-instance')/status">Objects removed from search index.</xforms:setvalue>
 			</xforms:submission>
 
@@ -434,159 +490,61 @@
 				resource="{instance('config')/url}ingest?identifiers={instance('control-instance')/identifiers}">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Error getting Solr document from Cocoon xquery pipeline.</xforms:message>
 				<xforms:action ev:event="xforms-submit-done">
-					<xforms:send submission="post-solr-doc"/>
+					<xforms:send submission="post-solr-doc"></xforms:send>
 				</xforms:action>
 			</xforms:submission>
 
 			<!-- send commit -->
-			<xforms:submission id="submit-commit" action="{instance('control-instance')/solr-core}update" ref="instance('sendCommit')" instance="sendCommit" replace="none" method="post">
+			<xforms:submission id="submit-commit" action="{instance('config')/solr_published}update" ref="instance('sendCommit')" instance="sendCommit" replace="none" method="post">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Failed to commit to Solr index.</xforms:message>
 			</xforms:submission>
 
 			<!-- send optimize -->
-			<xforms:submission id="optimize" action="{instance('control-instance')/solr-core}update" ref="instance('optimizeIndex')" instance="optimizeIndex" replace="none" method="post">
+			<xforms:submission id="optimize" action="{instance('config')/solr_published}update" ref="instance('optimizeIndex')" instance="optimizeIndex" replace="none" method="post">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Failed to optimize Solr index.</xforms:message>
 			</xforms:submission>
 
 			<!-- submission to query solr to see if the document is published -->
 			<xforms:submission id="query-solr-for-publication" serialization="none" method="get"
-				action="{instance('control-instance')/solr-core}select/?q=collection-name:{instance('control-instance')/collection-name} AND id:&#x022;{instance('control-instance')/id}&#x022;"
+				action="{instance('config')/solr_published}select/?q=collection-name:{instance('control-instance')/collection-name} AND id:&#x022;{instance('control-instance')/id}&#x022;"
 				replace="instance" instance="published-response">
 				<!-- if the document is found in solr, get the updated solr doc -->
 				<xforms:setvalue ev:event="xforms-submit-done" if="instance('published-response')/result[@name='response']/@numFound = '1'"
-					ref="instance('pagination-result')//record[id=instance('control-instance')/id]/published" value="'true'"/>
+					ref="instance('pagination-result')//record[id=instance('control-instance')/id]/published" value="true()"></xforms:setvalue>
 			</xforms:submission>
 
 			<!-- ************************* MODEL CONSTRUCTION ************************** -->
 			<xforms:action ev:event="xforms-model-construct-done">
 				<!-- load numishare config file on xforms construction -->
 				<xforms:insert context="instance('control-instance')" nodeset="collection-name" position="after"
-					origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/get-authentication.xpl', 'dump', instance('dump'), 'data')"/>
-				<xforms:send submission="load-collections"/>
+					origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/get-authentication.xpl', 'dump', instance('dump'), 'data')"></xforms:insert>
+				<xforms:send submission="load-collections"></xforms:send>
+			</xforms:action>
+
+			<xforms:action ev:event="xforms-enabled" if="not(string(instance('control-instance')/collection-name))">
+				<xxforms:show dialog="create-collection"></xxforms:show>
+			</xforms:action>
+
+			<xforms:action ev:event="xforms-enabled" if="instance('config-template')/firstrun = 'true'">
+				<xxforms:show dialog="firstrun"></xxforms:show>
 			</xforms:action>
 		</xforms:model>
 	</head>
 	<body>
 		<xforms:var name="display_path">./</xforms:var>
-		<div class="yui3-g">
-			<div class="yui3-u-1">
-				<div class="content">
-					<xi:include href="header.xml"/>
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-md-12">
+					<xi:include href="header.xml"></xi:include>
 					<div id="form">
-						<xforms:action ev:event="xforms-enabled" if="not(string(instance('control-instance')/collection-name))">
-							<xxforms:show dialog="create-collection"/>
-						</xforms:action>
-						<xforms:action ev:event="xforms-enabled" if="instance('config-template')/firstrun = 'true'">
-							<xxforms:show dialog="firstrun"/>
-						</xforms:action>
-						<xxforms:dialog id="create-collection" appearance="full" level="modal" close="false" draggable="true" visible="false">
-							<xforms:label>Welcome to Numishare</xforms:label>
-							<p>Please create a collection for your authenticated group.</p>
-							<xforms:group ref="instance('collections-list')">
-								<h3>
-									<xforms:output ref="instance('control-instance')/request-security/role"/>
-								</h3>
-								<div>
-									<xforms:input ref="collection[@role=instance('control-instance')/request-security/role]/@name">
-										<xforms:label>Collection Name</xforms:label>
-										<xforms:alert>Required</xforms:alert>
-									</xforms:input>
-								</div>
-							</xforms:group>
-							<xforms:trigger>
-								<xforms:label>Save</xforms:label>
-								<xforms:action ev:event="DOMActivate">
-									<xforms:setvalue ref="instance('control-instance')/collection-name"
-										value="instance('collections-list')/collection[@role=instance('control-instance')/request-security/role]/@name"/>
-									<!-- set exist collection value for creating new collection-->
-									<xforms:setvalue ref="instance('create-object-collection')/exist:text"
-										value="concat(&quot;xmldb:create-collection(&#x0027;/db/&quot;, instance(&quot;control-instance&quot;)/collection-name, &quot;&#x0027;, &#x0027;objects&#x0027;)&quot;)"/>
-									<!-- set the delete all query -->
-									<xforms:setvalue ref="instance('deleteAll')/query" value="concat('collection-name:', instance('control-instance')/collection-name)"/>
-									<xforms:send submission="save-collections"/>
-									<xforms:send submission="load-config"/>
-									<xxforms:hide dialog="create-collection"/>
-									<xxforms:show dialog="firstrun" if="instance('config-template')/firstrun = 'true'"/>
-								</xforms:action>
-							</xforms:trigger>
-						</xxforms:dialog>
-						<xxforms:dialog id="firstrun" appearance="full" level="modal" close="false" draggable="true" visible="false">
-							<xforms:label>Welcome to Numishare</xforms:label>
-							<p>This is the first time you have run Numishare.<br/>Please set the following fields (they can be changed later under "Settings")</p>
-							<xforms:group ref="instance('config-template')">
-								<h3>Boilerplate</h3>
-								<div>
-									<xforms:input ref="title">
-										<xforms:label>Site Title</xforms:label>
-										<xforms:alert>Required</xforms:alert>
-									</xforms:input>
-								</div>
-								<div>
-									<xforms:input ref="description">
-										<xforms:label>Site Description</xforms:label>
-										<xforms:alert>Required</xforms:alert>
-									</xforms:input>
-								</div>
-								<div>
-									<xforms:input ref="template/agencyName">
-										<xforms:label>Maintenance Agency</xforms:label>
-										<xforms:alert>Required</xforms:alert>
-									</xforms:input>
-								</div>
-								<div>
-									<xforms:input ref="template/copyrightHolder">
-										<xforms:label>Copyright Holder</xforms:label>
-										<xforms:alert>Required</xforms:alert>
-									</xforms:input>
-								</div>
-								<div>
-									<xforms:select1 ref="template/language">
-										<xforms:label>Default Language</xforms:label>
-										<xforms:item>
-											<xforms:label>Select Language...</xforms:label>
-											<xforms:value/>
-										</xforms:item>
-										<xforms:itemset nodeset="instance('languages')/language">
-											<xforms:label ref="."/>
-											<xforms:value ref="@value"/>
-										</xforms:itemset>
-										<xforms:alert>Required</xforms:alert>
-									</xforms:select1>
-								</div>
-								<h3>URLS</h3>
-								<div>
-									<xforms:input ref="url">
-										<xforms:label>Public Site</xforms:label>
-										<xforms:alert>Required, must be a URL</xforms:alert>
-									</xforms:input>
-								</div>
-								<div>
-									<xforms:input ref="solr_published">
-										<xforms:label>Solr Published</xforms:label>
-										<xforms:alert>Required, must be a URL</xforms:alert>
-									</xforms:input>
-								</div>
-							</xforms:group>
-							<xforms:trigger>
-								<xforms:label>Save</xforms:label>
-								<xforms:action ev:event="DOMActivate">
-									<xforms:setvalue ref="instance('config-template')/firstrun" value="'false'"/>
-									<xforms:send submission="save-imports"/>
-									<xforms:setvalue ref="instance('eXist-xquery')/exist:text" value="instance('xqueries')/query[@id='create-collection']"/>
-									<xforms:send submission="add-object-collection"/>
-									<xforms:send submission="save-config"/>
-									<xxforms:hide dialog="firstrun"/>
-								</xforms:action>
-							</xforms:trigger>
-						</xxforms:dialog>
 						<xforms:group ref="instance('control-instance')/status/text()">
 							<div class="success">
-								<xforms:output ref="instance('control-instance')/status"/>
+								<xforms:output ref="instance('control-instance')/status"></xforms:output>
 							</div>
 						</xforms:group>
 						<xforms:group ref="instance('control-instance')/error/text()">
 							<div class="error">
-								<xforms:output ref="instance('control-instance')/error"/>
+								<xforms:output ref="instance('control-instance')/error"></xforms:output>
 							</div>
 						</xforms:group>
 						<h2>Object Management</h2>
@@ -603,186 +561,145 @@
 							<li>
 								<xforms:trigger appearance="minimal">
 									<xforms:label>Publish All Objects</xforms:label>
-									<xforms:dispatch target="publish-all" name="fr-show" ev:event="DOMActivate"/>
+									<xforms:dispatch target="publish-all" name="fr-show" ev:event="DOMActivate"></xforms:dispatch>
 								</xforms:trigger>
 							</li>
 							<li>
 								<xforms:trigger appearance="minimal">
 									<xforms:label>Reindex Published Objects</xforms:label>
-									<xforms:dispatch target="republish-dialog" name="fr-show" ev:event="DOMActivate"/>
+									<xforms:dispatch target="republish-dialog" name="fr-show" ev:event="DOMActivate"></xforms:dispatch>
 								</xforms:trigger>
 							</li>
 							<li>
 								<xforms:trigger appearance="minimal">
 									<xforms:label>Unpublish All Objects</xforms:label>
-									<xforms:dispatch target="unpublish-all" name="fr-show" ev:event="DOMActivate"/>
+									<xforms:dispatch target="unpublish-all" name="fr-show" ev:event="DOMActivate"></xforms:dispatch>
 								</xforms:trigger>
 							</li>
 						</ul>
+						<!-- search -->
+						<xforms:group ref="instance('control-instance')[number(numFound) &gt; 0]">
+							<div>
+								<h3>Search</h3>
+								<xforms:input ref="query_input" />
+								<xforms:trigger>
+									<xforms:label>Search</xforms:label>
+									<xforms:action ev:event="DOMActivate">
+										<xforms:setvalue ref="instance('control-instance')/query_sent" value="instance('control-instance')/query_input"></xforms:setvalue>
+										<xforms:setvalue ref="instance('eXist-xquery')/exist:text"
+											value="replace(instance('xqueries')/query[@id='query-objects'], 'QUERY', instance('control-instance')/query_sent)"></xforms:setvalue>
+										<xforms:send submission="xquery-pagination"></xforms:send>
+									</xforms:action>
+								</xforms:trigger>
+								<xforms:group ref=".[string(query_sent)]">
+									<xforms:trigger>
+										<xforms:label>Clear</xforms:label>
+										<xforms:action ev:event="DOMActivate">
+											<!-- clear queries-->
+											<xforms:setvalue ref="instance('control-instance')/query_input"></xforms:setvalue>
+											<xforms:setvalue ref="instance('control-instance')/query_sent"></xforms:setvalue>
+											<!-- re-establish pagination query on page 1 -->
+											<xforms:setvalue ref="instance('control-instance')/page" value="1"></xforms:setvalue>
+											<xforms:setvalue ref="instance('eXist-xquery')/exist:text" value="replace(instance('xqueries')/query[@id='get-objects'], 'START', '1')"></xforms:setvalue>
+											<xforms:send submission="xquery-pagination"></xforms:send>
+										</xforms:action>
+									</xforms:trigger>
+								</xforms:group>
+							</div>
+						</xforms:group>
 						<xforms:group ref="instance('pagination-result')">
 							<xforms:group ref=".[count(//record) &gt; 0]">
 								<h3>List of Guides</h3>
 								<!-- pagination variables -->
-								<xforms:var name="numFound" select="number(instance('control-instance')/numFound)"/>
-								<xforms:var name="page" select="number(instance('control-instance')/page)"/>
-								<xforms:var name="start" select="(($page - 1) * 20) + 1"/>
-								<xforms:var name="end" select="if ($numFound &lt; $page * 20) then $numFound else $page * 20"/>
-								<xforms:var name="next" select="($page * 20) + 1"/>
-								<xforms:var name="total" select="ceiling($numFound div 20)"/>
+								<xforms:var name="numFound" select="number(instance('control-instance')/numFound)"></xforms:var>
+								<xforms:var name="page" select="number(instance('control-instance')/page)"></xforms:var>
+								<xforms:var name="current" select="$page"></xforms:var>
+								<xforms:var name="rows" select="number(20)"></xforms:var>
+								<xforms:var name="start" select="(($page - 1) * 20) + 1"></xforms:var>
+								<xforms:var name="end" select="if ($numFound &lt; $page * 20) then $numFound else $page * 20"></xforms:var>
+								<xforms:var name="next" select="($page * 20) + 1"></xforms:var>
+								<xforms:var name="total" select="ceiling($numFound div 20)"></xforms:var>
 								<!-- pagination -->
 								<xforms:group ref=".[string-length(instance('control-instance')/query_sent) = 0]">
-									<div class="paging_div">
-										<div style="float:left;"> Displaying records <b><xforms:output value="$start"/></b> to <b><xforms:output value="$end"/></b> of <b><xforms:output
-													value="$numFound"/>
+									<!-- pagination -->
+									<div class="paging_div row">
+										<div class="col-md-6"> Displaying records <b>
+												<xforms:output value="(($page - 1) * $rows) + 1"></xforms:output>
+											</b> to <b>
+												<xforms:output value="if ($numFound &gt; $page * $rows) then $page * $rows else $numFound"></xforms:output>
+											</b> of <b>
+												<xforms:output value="$numFound"></xforms:output>
 											</b> total results.</div>
-										<div style="float:right;">
+										<div class="col-md-6 text-right">
+											<!-- previous -->
 											<xforms:group ref=".[$page &gt; 1]">
-												<xforms:trigger appearance="minimal">
-													<xforms:label>«Previous</xforms:label>
+												<xforms:trigger>
+													<xforms:label><span class="glyphicon glyphicon-fast-backward"></span></xforms:label>
 													<xforms:action ev:event="DOMActivate">
-														<xforms:setvalue ref="instance('control-instance')/page" value="$page - 1"/>
+														<xforms:setvalue ref="instance('control-instance')/page" value="1"></xforms:setvalue>
+														<xforms:setvalue ref="instance('eXist-xquery')/exist:text" value="replace(instance('xqueries')/query[@id='get-objects'], 'START', '1')"></xforms:setvalue>
+														<xforms:send submission="xquery-pagination"></xforms:send>
+													</xforms:action>
+												</xforms:trigger>
+												<xforms:trigger>
+													<xforms:label><span class="glyphicon glyphicon-backward"></span></xforms:label>
+													<xforms:action ev:event="DOMActivate">
+														<xforms:setvalue ref="instance('control-instance')/page" value="$page - 1"></xforms:setvalue>
 														<xforms:setvalue ref="instance('eXist-xquery')/exist:text"
-															value="replace(instance('xqueries')/query[@id='get-objects'], 'START', string($start - 20))"/>
-														<xforms:send submission="xquery-pagination"/>
+															value="replace(instance('xqueries')/query[@id='get-objects'], 'START', string($start - 20))"></xforms:setvalue>
+														<xforms:send submission="xquery-pagination"></xforms:send>
 													</xforms:action>
 												</xforms:trigger>
 											</xforms:group>
 											<xforms:group ref=".[$page = 1]">
-												<span class="pagingSep">«Previous</span>
+												<a class="btn btn-default disabled" title="First" href="#">
+													<span class="glyphicon glyphicon-fast-backward"></span>
+												</a>
+												<a class="btn btn-default disabled" title="Previous" href="#">
+													<span class="glyphicon glyphicon-backward"></span>
+												</a>
 											</xforms:group>
-											<!-- always display links to the first two pages -->
-											<xforms:group ref=".[$page &gt; 3]">
-												<xforms:trigger appearance="minimal">
-													<xforms:label>1</xforms:label>
+											<!-- current-->
+											<button type="button" class="btn btn-default">
+												<b>
+													<xforms:output value="$current"></xforms:output>
+												</b>
+											</button>
+											<!-- next -->
+											<xforms:group ref=".[$total &gt; $current]">
+												<xforms:trigger>
+													<xforms:label><span class="glyphicon glyphicon-forward"></span></xforms:label>
 													<xforms:action ev:event="DOMActivate">
-														<xforms:setvalue ref="instance('control-instance')/page" value="1"/>
-														<xforms:setvalue ref="instance('eXist-xquery')/exist:text" value="replace(instance('xqueries')/query[@id='get-objects'], 'START', '1')"/>
-														<xforms:send submission="xquery-pagination"/>
+														<xforms:setvalue ref="instance('control-instance')/page" value="$page + 1"></xforms:setvalue>
+														<xforms:setvalue ref="instance('eXist-xquery')/exist:text"
+															value="replace(instance('xqueries')/query[@id='get-objects'], 'START', string($next))"></xforms:setvalue>
+														<xforms:send submission="xquery-pagination"></xforms:send>
 													</xforms:action>
 												</xforms:trigger>
-											</xforms:group>
-											<xforms:group ref=".[$page &gt; 4]">
-												<xforms:trigger appearance="minimal">
-													<xforms:label>2</xforms:label>
-													<xforms:action ev:event="DOMActivate">
-														<xforms:setvalue ref="instance('control-instance')/page" value="2"/>
-														<xforms:setvalue ref="instance('eXist-xquery')/exist:text" value="replace(instance('xqueries')/query[@id='get-objects'], 'START', '21')"/>
-														<xforms:send submission="xquery-pagination"/>
-													</xforms:action>
-												</xforms:trigger>
-											</xforms:group>
-											<!-- display only if you are on page 6 or greater -->
-											<xforms:group ref=".[$page &gt; 5]">
-												<span class="pagingSep">...</span>
-											</xforms:group>
-											<!-- always display links to the previous two pages -->
-											<xforms:group ref=".[$page &gt; 2]">
-												<xforms:trigger appearance="minimal">
+												<xforms:trigger>
 													<xforms:label>
-														<xforms:output value="$page - 2"/>
+														<span class="glyphicon glyphicon-fast-forward"></span>
 													</xforms:label>
 													<xforms:action ev:event="DOMActivate">
-														<xforms:setvalue ref="instance('control-instance')/page" value="$page - 2"/>
+														<xforms:setvalue ref="instance('control-instance')/page" value="$total"></xforms:setvalue>
 														<xforms:setvalue ref="instance('eXist-xquery')/exist:text"
-															value="replace(instance('xqueries')/query[@id='get-objects'], 'START', string((($page - 3) * 20) + 1))"/>
-														<xforms:send submission="xquery-pagination"/>
+															value="replace(instance('xqueries')/query[@id='get-objects'], 'START', string((($total - 1) * 20) + 1))"></xforms:setvalue>
+														<xforms:send submission="xquery-pagination"></xforms:send>
 													</xforms:action>
 												</xforms:trigger>
 											</xforms:group>
-											<xforms:group ref=".[$page &gt; 1]">
-												<xforms:trigger appearance="minimal">
-													<xforms:label>
-														<xforms:output value="$page - 1"/>
-													</xforms:label>
-													<xforms:action ev:event="DOMActivate">
-														<xforms:setvalue ref="instance('control-instance')/page" value="$page - 1"/>
-														<xforms:setvalue ref="instance('eXist-xquery')/exist:text"
-															value="replace(instance('xqueries')/query[@id='get-objects'], 'START', string((($page - 2) * 20) + 1))"/>
-														<xforms:send submission="xquery-pagination"/>
-													</xforms:action>
-												</xforms:trigger>
-											</xforms:group>
-											<!-- current page -->
-											<span class="pagingBtn">
-												<xforms:output value="$page"/>
-											</span>
-											<!-- next two pages -->
-											<xforms:group ref=".[$page + 1 &lt;= $total]">
-												<xforms:trigger appearance="minimal">
-													<xforms:label>
-														<xforms:output value="$page + 1"/>
-													</xforms:label>
-													<xforms:action ev:event="DOMActivate">
-														<xforms:setvalue ref="instance('control-instance')/page" value="$page + 1"/>
-														<xforms:setvalue ref="instance('eXist-xquery')/exist:text"
-															value="replace(instance('xqueries')/query[@id='get-objects'], 'START', string(($page * 20) + 1))"/>
-														<xforms:send submission="xquery-pagination"/>
-													</xforms:action>
-												</xforms:trigger>
-											</xforms:group>
-											<xforms:group ref=".[$page + 2 &lt;= $total]">
-												<xforms:trigger appearance="minimal">
-													<xforms:label>
-														<xforms:output value="$page + 2"/>
-													</xforms:label>
-													<xforms:action ev:event="DOMActivate">
-														<xforms:setvalue ref="instance('control-instance')/page" value="$page + 2"/>
-														<xforms:setvalue ref="instance('eXist-xquery')/exist:text"
-															value="replace(instance('xqueries')/query[@id='get-objects'], 'START', string((($page +1) * 20) + 1))"/>
-														<xforms:send submission="xquery-pagination"/>
-													</xforms:action>
-												</xforms:trigger>
-											</xforms:group>
-											<!-- separator -->
-											<xforms:group ref=".[$page &lt;= $total - 4]">
-												<span class="pagingSep">...</span>
-											</xforms:group>
-											<!-- last two pages -->
-											<xforms:group ref=".[$page &lt;= $total - 4]">
-												<xforms:trigger appearance="minimal">
-													<xforms:label>
-														<xforms:output value="$total - 1"/>
-													</xforms:label>
-													<xforms:action ev:event="DOMActivate">
-														<xforms:setvalue ref="instance('control-instance')/page" value="$total - 1"/>
-														<xforms:setvalue ref="instance('eXist-xquery')/exist:text"
-															value="replace(instance('xqueries')/query[@id='get-objects'], 'START', string((($total - 2) * 20) + 1))"/>
-														<xforms:send submission="xquery-pagination"/>
-													</xforms:action>
-												</xforms:trigger>
-											</xforms:group>
-											<xforms:group ref=".[$page &lt;= $total - 3]">
-												<xforms:trigger appearance="minimal">
-													<xforms:label>
-														<xforms:output value="$total"/>
-													</xforms:label>
-													<xforms:action ev:event="DOMActivate">
-														<xforms:setvalue ref="instance('control-instance')/page" value="$total"/>
-														<xforms:setvalue ref="instance('eXist-xquery')/exist:text"
-															value="replace(instance('xqueries')/query[@id='get-objects'], 'START', string((($total - 1) * 20) + 1))"/>
-														<xforms:send submission="xquery-pagination"/>
-													</xforms:action>
-												</xforms:trigger>
-											</xforms:group>
-											<!-- next page -->
-											<xforms:group ref=".[$total &gt; $page]">
-												<xforms:trigger appearance="minimal">
-													<xforms:label>Next»</xforms:label>
-													<xforms:action ev:event="DOMActivate">
-														<xforms:setvalue ref="instance('control-instance')/page" value="$page + 1"/>
-														<xforms:setvalue ref="instance('eXist-xquery')/exist:text"
-															value="replace(instance('xqueries')/query[@id='get-objects'], 'START', string($next))"/>
-														<xforms:send submission="xquery-pagination"/>
-													</xforms:action>
-												</xforms:trigger>
-											</xforms:group>
-											<xforms:group ref=".[not($total &gt; $page)]">
-												<span class="pagingSep">Next»</span>
+											<xforms:group ref=".[not($total &gt; $current)]">
+												<a class="btn btn-default disabled" title="Next" href="#">
+													<span class="glyphicon glyphicon-forward"></span>
+												</a>
+												<a class="btn btn-default disabled" href="#">
+													<span class="glyphicon glyphicon-fast-forward"></span>
+												</a>
 											</xforms:group>
 										</div>
 									</div>
 								</xforms:group>
-								<table style="width:100%">
+								<table class="table">
 									<thead>
 										<tr>
 											<th style="width:5%">Type</th>
@@ -794,23 +711,22 @@
 									</thead>
 									<tbody>
 										<xforms:repeat nodeset="instance('pagination-result')//record">
-											<xforms:var name="id" select="id"/>
-											<xforms:var name="class" select="if (position() mod 2 = 0) then 'even-row' else 'odd-row'"/>
+											<xforms:var name="id" select="id"></xforms:var>
 											<tr>
-												<td class="{$class} center">
-													<xforms:output ref="type"/>
+												<td class="text-center">
+													<xforms:output ref="type"></xforms:output>
 												</td>
-												<td class="{$class}">
+												<td>
 													<h4>
 														<xforms:group ref=".[type='nuds']">
 															<a href="edit/coin/?id={$id}">
-																<xforms:output ref="title"/>
-																<xforms:output ref="concat('(', $id, ')')"/>
+																<xforms:output ref="title"></xforms:output>
+																<xforms:output ref="concat('(', $id, ')')"></xforms:output>
 															</a>
 														</xforms:group>
 														<xforms:group ref=".[type!='nuds']">
-															<xforms:output ref="title"/>
-															<xforms:output ref="concat('(', $id, ')')"/>
+															<xforms:output ref="title"></xforms:output>
+															<xforms:output ref="concat('(', $id, ')')"></xforms:output>
 														</xforms:group>
 													</h4>
 													<div>
@@ -840,18 +756,18 @@
 														</div>
 													</xforms:group>
 												</td>
-												<td class="{$class} center">
+												<td class="text-center">
 													<a href="{instance('config')/url}id/{$id}.xml" target="_blank">xml</a> | <a href="{instance('config')/url}id/{$id}" target="_blank">html</a>
 												</td>
-												<td class="{$class} center">
+												<td class="text-center">
 													<!-- only enable publication if the maintenanceStatus allows it -->
 													<xforms:group ref=".[maintenanceStatus='new' or maintenanceStatus='revised' or maintenanceStatus='derived']">
 														<xforms:group ref=".[published = 'true']">
 															<xforms:trigger appearance="minimal">
 																<xforms:label>unpublish</xforms:label>
 																<xforms:action ev:event="DOMActivate">
-																	<xforms:setvalue ref="instance('control-instance')/id" value="$id"/>
-																	<xforms:dispatch target="unpublish" name="fr-show"/>
+																	<xforms:setvalue ref="instance('control-instance')/id" value="$id"></xforms:setvalue>
+																	<xforms:dispatch target="unpublish" name="fr-show"></xforms:dispatch>
 																</xforms:action>
 															</xforms:trigger>
 														</xforms:group>
@@ -859,21 +775,21 @@
 															<xforms:trigger appearance="minimal">
 																<xforms:label>publish</xforms:label>
 																<xforms:action ev:event="DOMActivate">
-																	<xforms:setvalue ref="instance('control-instance')/id" value="$id"/>
-																	<xforms:dispatch target="publish" name="fr-show"/>
+																	<xforms:setvalue ref="instance('control-instance')/id" value="$id"></xforms:setvalue>
+																	<xforms:dispatch target="publish" name="fr-show"></xforms:dispatch>
 																</xforms:action>
 															</xforms:trigger>
 														</xforms:group>
 													</xforms:group>
 												</td>
-												<td class="{$class} center">
+												<td class="text-center">
 													<xforms:trigger appearance="minimal">
 														<xforms:label>
-															<img src="/numishare/images/remove.gif"/>
+															<span class="glyphicon glyphicon-remove"></span>
 														</xforms:label>
 														<xforms:action ev:event="DOMActivate">
-															<xforms:setvalue ref="instance('control-instance')/id" value="$id"/>
-															<xforms:dispatch target="delete" name="fr-show"/>
+															<xforms:setvalue ref="instance('control-instance')/id" value="$id"></xforms:setvalue>
+															<xforms:dispatch target="delete" name="fr-show"></xforms:dispatch>
 														</xforms:action>
 													</xforms:trigger>
 												</td>
@@ -886,7 +802,8 @@
 								<h1>No objects in collection.</h1>
 							</xforms:group>
 						</xforms:group>
-						<!--<fr:xforms-inspector/>-->
+						<!--<xforms:output ref="instance('control-instance')/identifiers"></xforms:output>
+						<fr:xforms-inspector></fr:xforms-inspector>-->
 					</div>
 				</div>
 			</div>
@@ -895,124 +812,210 @@
 		<fr:alert-dialog id="publish">
 			<fr:label>Publish</fr:label>
 			<fr:message>Do you want to publish this object to the search index?</fr:message>
-			<fr:negative-choice/>
+			<fr:negative-choice></fr:negative-choice>
 			<fr:positive-choice>
 				<xforms:action ev:event="DOMActivate">
 					<!-- update publicationStatus -->
 					<xforms:setvalue ref="instance('control-instance')/publicationStatus">approved</xforms:setvalue>
-					<xforms:send submission="load-object"/>
-
+					<xforms:send submission="load-object"></xforms:send>
 					<!-- publish to solr -->
-					<xforms:setvalue ref="instance('control-instance')/solr-core" value="instance('config')/solr_published"/>
-					<xforms:send submission="nuds-to-solr"/>
-					<xforms:send submission="submit-commit"/>
-					<!-- reload table -->
-					<xforms:var name="page" select="number(instance('control-instance')/page)"/>
-					<xforms:var name="start" select="(($page - 1) * 20) + 1"/>
-					<xforms:setvalue ref="instance('eXist-xquery')/exist:text" value="replace(instance('xqueries')/query[@id='get-objects'], 'START', string($start))"/>
-					<xforms:send submission="xquery-pagination"/>
+					<xforms:send submission="nuds-to-solr"></xforms:send>
+					<xforms:send submission="submit-commit"></xforms:send>
+					
+					<xforms:setvalue ref="instance('pagination-result')//record[id=instance('control-instance')/id]/published" value="true()"/>
 				</xforms:action>
 			</fr:positive-choice>
 		</fr:alert-dialog>
 		<fr:alert-dialog id="unpublish">
 			<fr:label>Unpublish</fr:label>
 			<fr:message>Do you want to remove this object from the search index?</fr:message>
-			<fr:negative-choice/>
+			<fr:negative-choice></fr:negative-choice>
 			<fr:positive-choice>
 				<xforms:action ev:event="DOMActivate">
 					<!-- update publicationStatus -->
 					<xforms:setvalue ref="instance('control-instance')/publicationStatus">inProcess</xforms:setvalue>
-					<xforms:send submission="load-object"/>
+					<xforms:send submission="load-object"></xforms:send>
 
 					<!-- delete from Solr -->
-					<xforms:setvalue ref="instance('deleteId')/query" value="concat('recordId:&#x022;', instance('control-instance')/id, '&#x022;')"/>
-					<xforms:setvalue ref="instance('control-instance')/solr-core" value="instance('config')/solr_published"/>
-					<xforms:send submission="delete-solr-doc"/>
-					<!-- reload table -->
-					<xforms:var name="page" select="number(instance('control-instance')/page)"/>
-					<xforms:var name="start" select="(($page - 1) * 20) + 1"/>
-					<xforms:setvalue ref="instance('eXist-xquery')/exist:text" value="replace(instance('xqueries')/query[@id='get-objects'], 'START', string($start))"/>
-					<xforms:send submission="xquery-pagination"/>
+					<xforms:setvalue ref="instance('deleteId')/query" value="concat('recordId:&#x022;', instance('control-instance')/id, '&#x022;')"></xforms:setvalue>
+					<xforms:send submission="delete-solr-doc"></xforms:send>
+					
+					<xforms:setvalue ref="instance('pagination-result')//record[id=instance('control-instance')/id]/published" value="false()"/>
 				</xforms:action>
 			</fr:positive-choice>
 		</fr:alert-dialog>
 		<fr:alert-dialog id="delete">
 			<fr:label>Delete</fr:label>
 			<fr:message>Are you sure you want to delete this object?</fr:message>
-			<fr:negative-choice/>
+			<fr:negative-choice></fr:negative-choice>
 			<fr:positive-choice>
 				<xforms:action ev:event="DOMActivate">
-					<xforms:send submission="delete-object"/>
-					<xforms:setvalue ref="instance('deleteId')/query" value="concat('recordId:&#x022;', instance('control-instance')/id, '&#x022;')"/>
-					<xforms:setvalue ref="instance('control-instance')/solr-core" value="instance('config')/solr_published"/>
-					<xforms:send submission="delete-solr-doc"/>
+					<xforms:send submission="delete-object"></xforms:send>
+					<xforms:setvalue ref="instance('deleteId')/query" value="concat('recordId:&#x022;', instance('control-instance')/id, '&#x022;')"></xforms:setvalue>
+					<xforms:send submission="delete-solr-doc"></xforms:send>
 					<!-- get new numCount -->
-					<xforms:setvalue ref="instance('eXist-xquery')/exist:text" value="instance('xqueries')/query[@id='collection-count']"/>
-					<xforms:send submission="xquery-collection"/>
+					<xforms:setvalue ref="instance('eXist-xquery')/exist:text" value="instance('xqueries')/query[@id='collection-count']"></xforms:setvalue>
+					<xforms:send submission="xquery-collection"></xforms:send>
 
 					<!-- reload table -->
-					<xforms:var name="page" select="number(instance('control-instance')/page)"/>
-					<xforms:var name="start" select="(($page - 1) * 20) + 1"/>
-					<xforms:var name="end" select="$page * 20"/>
-					<xforms:setvalue ref="instance('eXist-xquery')/exist:text" value="replace(instance('xqueries')/query[@id='get-objects'], 'START', string($start))"/>
-					<xforms:send submission="xquery-pagination"/>
+					<xforms:var name="page" select="number(instance('control-instance')/page)"></xforms:var>
+					<xforms:var name="start" select="(($page - 1) * 20) + 1"></xforms:var>
+					<xforms:var name="end" select="$page * 20"></xforms:var>
+					<xforms:setvalue ref="instance('eXist-xquery')/exist:text" value="replace(instance('xqueries')/query[@id='get-objects'], 'START', string($start))"></xforms:setvalue>
+					<xforms:send submission="xquery-pagination"></xforms:send>
 				</xforms:action>
 			</fr:positive-choice>
 		</fr:alert-dialog>
 		<!-- mass publication dialogs -->
 		<fr:alert-dialog id="publish-all">
 			<fr:label>Publish All</fr:label>lo <fr:message>Do you want to publish all objects? This may take several minutes.</fr:message>
-			<fr:negative-choice/>
+			<fr:negative-choice></fr:negative-choice>
 			<fr:positive-choice>
 				<xforms:action ev:event="DOMActivate">
-					<xforms:setvalue ref="instance('eXist-xquery')/exist:text">&lt;report> { for $i at $position in collection()[descendant::*:publicationStatus='approved'] return
-						concat(substring-before(substring-after(document-uri($i), 'objects/'), '.xml'), if ($position mod 100 = 0) then ',' else '|') } &lt;/report></xforms:setvalue>
-					<xforms:send submission="xquery-collection"/>
-					<xforms:var name="tokens" select="tokenize(replace(instance('xquery-result')/report, ' ', ''), ',')"/>
+					<xforms:var name="count" select="if (instance('config')/collection_type='hoard') then '25' else '100'"></xforms:var>
+					<xforms:setvalue ref="instance('eXist-xquery')/exist:text" value="replace(instance('xqueries')/query[@id='publish-all'], 'COUNT', $count)"></xforms:setvalue>
+					<xforms:send submission="xquery-collection"></xforms:send>
+					<xforms:var name="tokens" select="tokenize(replace(instance('xquery-result')/report, ' ', ''), ',')"></xforms:var>
 					<xforms:action xxforms:iterate="$tokens">
-						<xforms:setvalue ref="instance('control-instance')/identifiers" value="context()"/>
-						<xforms:setvalue ref="instance('control-instance')/solr-core" value="instance('config')/solr_published"/>
+						<xforms:setvalue ref="instance('control-instance')/identifiers" value="context()"></xforms:setvalue>
 						<!-- get Solr document -->
-						<xforms:send submission="generate-add-document"/>
-						<xforms:send submission="submit-commit"/>
+						<xforms:send submission="generate-add-document"></xforms:send>
+						<xforms:send submission="submit-commit"></xforms:send>
 					</xforms:action>
 					<!-- optimize index -->
-					<xforms:send submission="optimize"/>
+					<xforms:send submission="optimize"></xforms:send>
 					<!-- reload table -->
-					<xforms:setvalue ref="instance('eXist-xquery')/exist:text" value="replace(instance('xqueries')/query[@id='get-objects'], 'START', '1')"/>
-					<xforms:send submission="xquery-pagination"/>
+					<xforms:setvalue ref="instance('eXist-xquery')/exist:text" value="replace(instance('xqueries')/query[@id='get-objects'], 'START', '1')"></xforms:setvalue>
+					<xforms:send submission="xquery-pagination"></xforms:send>
 				</xforms:action>
 			</fr:positive-choice>
 		</fr:alert-dialog>
 		<fr:alert-dialog id="unpublish-all">
 			<fr:label>Unpublish All</fr:label>
 			<fr:message>Do you want to unpublish all objects?</fr:message>
-			<fr:negative-choice/>
+			<fr:negative-choice></fr:negative-choice>
 			<fr:positive-choice>
 				<xforms:action ev:event="DOMActivate">
-					<xforms:setvalue ref="instance('control-instance')/solr-core" value="instance('config')/solr_published"/>
-					<xforms:setvalue ref="instance('deleteAll')/query" value="concat('collection-name:', instance('control-instance')/collection-name)"/>
-					<xforms:send submission="delete-all" ev:event="DOMActivate"/>
+					<xforms:setvalue ref="instance('deleteAll')/query" value="concat('collection-name:', instance('control-instance')/collection-name)"></xforms:setvalue>
+					<xforms:send submission="delete-all" ev:event="DOMActivate"></xforms:send>
 
 					<!-- optimize index -->
-					<xforms:send submission="optimize"/>
+					<xforms:send submission="optimize"></xforms:send>
 					<!-- reload table -->
-					<xforms:setvalue ref="instance('eXist-xquery')/exist:text" value="replace(instance('xqueries')/query[@id='get-objects'], 'START', '1')"/>
-					<xforms:send submission="xquery-pagination"/>
+					<xforms:setvalue ref="instance('eXist-xquery')/exist:text" value="replace(instance('xqueries')/query[@id='get-objects'], 'START', '1')"></xforms:setvalue>
+					<xforms:send submission="xquery-pagination"></xforms:send>
 				</xforms:action>
 			</fr:positive-choice>
 		</fr:alert-dialog>
 		<fr:alert-dialog id="republish-dialog">
 			<fr:label>Republish</fr:label>
 			<fr:message>Do you want to reindex currently published objects?</fr:message>
-			<fr:negative-choice/>
+			<fr:negative-choice></fr:negative-choice>
 			<fr:positive-choice>
 				<xforms:action ev:event="DOMActivate">
-					<xforms:setvalue ref="instance('control-instance')/solr-core" value="instance('config')/solr_published"/>
-					<xforms:send submission="republish"/>
-					<xforms:send submission="optimize" ev:event="xforms-submit-done"/>
+					<xforms:send submission="republish"></xforms:send>
+					<xforms:send submission="optimize" ev:event="xforms-submit-done"></xforms:send>
 				</xforms:action>
 			</fr:positive-choice>
 		</fr:alert-dialog>
+		<xxforms:dialog id="create-collection" appearance="full" level="modal" close="false" draggable="true" visible="false">
+			<xforms:label>Welcome to Numishare</xforms:label>
+			<p>Please create a collection for your authenticated group.</p>
+			<xforms:group ref="instance('collections-list')">
+				<h3>
+					<xforms:output ref="instance('control-instance')/request-security/role"></xforms:output>
+				</h3>
+				<div>
+					<xforms:input ref="collection[@role=instance('control-instance')/request-security/role]/@name">
+						<xforms:label>Collection Name</xforms:label>
+						<xforms:alert>Required</xforms:alert>
+					</xforms:input>
+				</div>
+			</xforms:group>
+			<xforms:trigger>
+				<xforms:label>Save</xforms:label>
+				<xforms:action ev:event="DOMActivate">
+					<xforms:setvalue ref="instance('control-instance')/collection-name" value="instance('collections-list')/collection[@role=instance('control-instance')/request-security/role]/@name"></xforms:setvalue>
+					<!-- set exist collection value for creating new collection-->
+					<xforms:setvalue ref="instance('create-object-collection')/exist:text"
+						value="concat(&quot;xmldb:create-collection(&#x0027;/db/&quot;, instance(&quot;control-instance&quot;)/collection-name, &quot;&#x0027;, &#x0027;objects&#x0027;)&quot;)"></xforms:setvalue>
+					<!-- set the delete all query -->
+					<xforms:setvalue ref="instance('deleteAll')/query" value="concat('collection-name:', instance('control-instance')/collection-name)"></xforms:setvalue>
+					<xforms:send submission="save-collections"></xforms:send>
+					<xforms:send submission="load-config"></xforms:send>
+					<xxforms:hide dialog="create-collection"></xxforms:hide>
+					<xxforms:show dialog="firstrun" if="instance('config-template')/firstrun = 'true'"></xxforms:show>
+				</xforms:action>
+			</xforms:trigger>
+		</xxforms:dialog>
+		<xxforms:dialog id="firstrun" appearance="full" level="modal" close="false" draggable="true" visible="false">
+			<xforms:label>Welcome to Numishare</xforms:label>
+			<p>This is the first time you have run Numishare.<br />Please set the following fields (they can be changed later under "Settings")</p>
+			<xforms:group ref="instance('config-template')">
+				<h3>Boilerplate</h3>
+				<div>
+					<xforms:input ref="title">
+						<xforms:label>Site Title</xforms:label>
+						<xforms:alert>Required</xforms:alert>
+					</xforms:input>
+				</div>
+				<div>
+					<xforms:input ref="description">
+						<xforms:label>Site Description</xforms:label>
+						<xforms:alert>Required</xforms:alert>
+					</xforms:input>
+				</div>
+				<div>
+					<xforms:input ref="template/agencyName">
+						<xforms:label>Maintenance Agency</xforms:label>
+						<xforms:alert>Required</xforms:alert>
+					</xforms:input>
+				</div>
+				<div>
+					<xforms:input ref="template/copyrightHolder">
+						<xforms:label>Copyright Holder</xforms:label>
+						<xforms:alert>Required</xforms:alert>
+					</xforms:input>
+				</div>
+				<div>
+					<xforms:select1 ref="template/language">
+						<xforms:label>Default Language</xforms:label>
+						<xforms:item>
+							<xforms:label>Select Language...</xforms:label>
+							<xforms:value></xforms:value>
+						</xforms:item>
+						<xforms:itemset nodeset="instance('languages')/language">
+							<xforms:label ref="."></xforms:label>
+							<xforms:value ref="@value"></xforms:value>
+						</xforms:itemset>
+						<xforms:alert>Required</xforms:alert>
+					</xforms:select1>
+				</div>
+				<h3>URLS</h3>
+				<div>
+					<xforms:input ref="url">
+						<xforms:label>Public Site</xforms:label>
+						<xforms:alert>Required, must be a URL</xforms:alert>
+					</xforms:input>
+				</div>
+				<div>
+					<xforms:input ref="solr_published">
+						<xforms:label>Solr Published</xforms:label>
+						<xforms:alert>Required, must be a URL</xforms:alert>
+					</xforms:input>
+				</div>
+			</xforms:group>
+			<xforms:trigger>
+				<xforms:label>Save</xforms:label>
+				<xforms:action ev:event="DOMActivate">
+					<xforms:setvalue ref="instance('config-template')/firstrun" value="'false'"></xforms:setvalue>
+					<xforms:send submission="save-imports"></xforms:send>
+					<xforms:setvalue ref="instance('eXist-xquery')/exist:text" value="instance('xqueries')/query[@id='create-collection']"></xforms:setvalue>
+					<xforms:send submission="add-object-collection"></xforms:send>
+					<xforms:send submission="save-config"></xforms:send>
+					<xxforms:hide dialog="firstrun"></xxforms:hide>
+				</xforms:action>
+			</xforms:trigger>
+		</xxforms:dialog>
 	</body>
 </html>

@@ -16,7 +16,7 @@
 		<xforms:model>
 			<!-- exist URL is stored in an XML file -->
 			<xforms:instance id="exist-config">
-				<xi:include href="exist-config.xml"/>
+				<xi:include href="../exist-config.xml"/>
 			</xforms:instance>
 
 			<!-- collections/authentication instances -->
@@ -269,7 +269,7 @@
 			<xforms:bind nodeset="instance('config')">
 				<xforms:bind nodeset="title" required="true()"/>
 				<xforms:bind nodeset="description" required="true()"/>
-				<!--<xforms:bind nodeset="banner_text" required="true()"/>-->
+				<xforms:bind nodeset="logo"/>
 				<xforms:bind nodeset="sparql_endpoint" required="true()" relevant="../collection_type='cointype'" type="xs:anyURI"/>
 				<xforms:bind nodeset="type_series" required="true()" relevant="../collection_type='cointype'" type="xs:anyURI"/>
 				<xforms:bind nodeset="url" required="true()"/>
@@ -315,7 +315,7 @@
 					</xforms:action>
 					<xforms:send submission="load-config"/>
 				</xforms:action>
-				<!-- if the config has not been created (given that the URL in exist-config.xml is correct), create it -->
+				<!-- if the config has not been created (given that the URL in ../exist-config.xml is correct), create it -->
 				<xforms:message ev:event="xforms-submit-error" level="modal">Unable to load Numishare collections list.</xforms:message>
 			</xforms:submission>
 
@@ -365,7 +365,7 @@
 						</xforms:group>
 						<div class="submission">
 							<xforms:trigger ref="instance('control-instance')/save-trigger" appearance="minimal">
-								<xforms:label class="file_control"><img src="{$display_path}images/save.gif" alt="Save"/> Save</xforms:label>
+								<xforms:label class="file_control"><span class="glyphicon glyphicon-floppy-disk"/> Save</xforms:label>
 								<xforms:send ev:event="DOMActivate" submission="save-config"/>
 							</xforms:trigger>
 						</div>						
@@ -405,9 +405,8 @@
 												</xforms:input>												
 											</div>										
 											<div>
-												<xforms:input ref="banner_text">
-													<xforms:label>Banner Text</xforms:label>
-													<xforms:alert>Required</xforms:alert>
+												<xforms:input ref="logo">
+													<xforms:label>Logo URL</xforms:label>
 												</xforms:input>
 												<p>Appears in the header banner. For more sophisticated control, edit header.xsl.</p>
 											</div>

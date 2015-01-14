@@ -42,7 +42,7 @@
 									<xforms:delete nodeset="$binding"/>
 								</xforms:action>
 								<xforms:label>
-									<img src="../../images/remove.gif"/>
+									<span class="glyphicon glyphicon-remove"/>
 								</xforms:label>
 							</xforms:trigger>
 						</div>
@@ -80,13 +80,25 @@
 								</xforms:trigger>
 							</xforms:group>
 						</div>
+						<xforms:trigger appearance="minimal">
+							<xforms:action ev:event="DOMActivate">
+								<!-- delete all holdover values before removing bind, possible orbeon bug -->
+								<xforms:setvalue ref="instance('suggest-query')"/>
+								<xforms:setvalue ref="instance('temp')"/>
+								<xforms:delete context="instance('solr-respone')/*"/>
+								<xforms:delete nodeset="$binding"/>
+							</xforms:action>
+							<xforms:label>
+								<span class="glyphicon glyphicon-remove"/>
+							</xforms:label>
+						</xforms:trigger>
 					</xforms:group>
 					
 					<!-- ********************************************************************** -->
 					<!-- ***********************  DIALOG INTERNAL MODEL *********************** -->
 					<xforms:model id="department-authorities-model" xmlns:xi="http://www.w3.org/2001/XInclude">
 						<xforms:instance id="exist-config">
-							<xi:include href="../../exist-config.xml"/>
+							<xi:include href="../../../exist-config.xml"/>
 						</xforms:instance>
 						
 						<xforms:instance id="control-instance">
@@ -155,7 +167,7 @@
 								</xforms:action>
 								<xforms:send submission="load-config"/>
 							</xforms:action>
-							<!-- if the config has not been created (given that the URL in exist-config.xml is correct), create it -->
+							<!-- if the config has not been created (given that the URL in ../exist-config.xml is correct), create it -->
 							<xforms:message ev:event="xforms-submit-error" level="modal">Unable to load Numishare collections list.</xforms:message>
 						</xforms:submission>
 						
