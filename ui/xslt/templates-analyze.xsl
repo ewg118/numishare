@@ -289,7 +289,7 @@
 									<h4>
 										<xsl:value-of select="numishare:normalizeLabel('visualize_exclude_certainty_codes', $lang)"/>
 									</h4>
-									<xsl:copy-of select="/content/select[@id='get_certainty_codes']"/>								
+									<xsl:apply-templates select="//config/certainty_codes"/>								
 								</dl>
 							</div>
 							<div>
@@ -657,6 +657,22 @@
 		<div class="compare-div">
 			<xsl:copy-of select="/content/select[@id='get_hoards-control']"/>
 		</div>
+	</xsl:template>
+	
+	<!-- ************** CERTAINTY CODES, GENERATED FROM CONFIG ************** -->
+	<xsl:template match="certainty_codes">
+		<select multiple="multiple" size="10" class="certainty-select">
+			<xsl:apply-templates select="descendant::code"/>
+		</select>
+	</xsl:template>
+	
+	<xsl:template match="code">		
+		<option value="{.}" class="exclude-option">
+			<xsl:if test="@accept='false'">
+				<xsl:attribute name="selected">selected</xsl:attribute>
+			</xsl:if>
+			<xsl:value-of select="."/>
+		</option>
 	</xsl:template>
 	
 	<!-- ************** CHECKBOXES ************** -->

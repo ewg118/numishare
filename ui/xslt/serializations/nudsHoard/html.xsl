@@ -309,8 +309,8 @@
 					<th style="width:10%;text-align:center"/>
 				</tr>
 			</thead>
-			<tbody>
-				<xsl:apply-templates select="descendant::nh:coin|descendant::nh:coinGrp"/>
+			<tbody>				
+				<xsl:apply-templates select="descendant::nh:coin|descendant::nh:coinGrp"/>				
 			</tbody>
 		</table>
 	</xsl:template>
@@ -332,16 +332,47 @@
 			</xsl:choose>
 		</xsl:variable>
 		<tr>
-			<td style="width:10%;text-align:center">
+			<td class="text-center">
 				<xsl:value-of select="if(@count) then @count else 1"/>
 			</td>
-			<td>
+			<td>				
 				<xsl:if test="string($typeDesc_resource)">
-					<h3>
-						<a rel="nm:type_series_item" href="{$typeDesc_resource}" target="_blank">
-							<xsl:value-of select="$nudsGroup//object[@xlink:href = $typeDesc_resource]/nuds:nuds/nuds:descMeta/nuds:title"/>
-						</a>
-					</h3>
+					<!-- display labels for certainty codes -->
+					<xsl:variable name="code" select="nuds:typeDesc/@certainty"/>
+					<xsl:variable name="codeNode" as="element()*">
+						<xsl:copy-of select="//config/certainty_codes/code[. = $code]"/>
+					</xsl:variable>
+					
+					<xsl:choose>
+						<xsl:when test="string($code) and string($codeNode)">
+							
+							<xsl:choose>
+								<xsl:when test="$codeNode/@position='before'">
+									<h3>
+										<xsl:value-of select="$codeNode/@label"/>
+										<a rel="nm:type_series_item" href="{$typeDesc_resource}" target="_blank">
+											<xsl:value-of select="$nudsGroup//object[@xlink:href = $typeDesc_resource]/nuds:nuds/nuds:descMeta/nuds:title"/>
+										</a>
+									</h3>									
+								</xsl:when>
+								<xsl:when test="$codeNode/@position='after'">
+									<h3>										
+										<a rel="nm:type_series_item" href="{$typeDesc_resource}" target="_blank">
+											<xsl:value-of select="$nudsGroup//object[@xlink:href = $typeDesc_resource]/nuds:nuds/nuds:descMeta/nuds:title"/>
+										</a>
+										<xsl:value-of select="$codeNode/@label"/>
+									</h3>
+								</xsl:when>
+							</xsl:choose>
+						</xsl:when>
+						<xsl:otherwise>
+							<h3>
+								<a rel="nm:type_series_item" href="{$typeDesc_resource}" target="_blank">
+									<xsl:value-of select="$nudsGroup//object[@xlink:href = $typeDesc_resource]/nuds:nuds/nuds:descMeta/nuds:title"/>
+								</a>
+							</h3>
+						</xsl:otherwise>
+					</xsl:choose>
 				</xsl:if>
 				<xsl:choose>
 					<xsl:when test="$typeDesc/nuds:denomination">

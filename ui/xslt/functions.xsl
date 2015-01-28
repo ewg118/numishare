@@ -2249,6 +2249,7 @@
 					<xsl:when test="$label='visualize_add_query_desc'">Use the drop-down menus below to formulate your measurement query. A date range can only be specified once per query.</xsl:when>
 					<xsl:when test="$label='visualize_optional_settings'">Optional Settings</xsl:when>
 					<xsl:when test="$label='visualize_hide-show'">Hide/Show Options</xsl:when>
+					<xsl:when test="$label='visualize_exclude_certainty_codes'">Exclude Certainty Codes</xsl:when>
 					<xsl:when test="$label='visualize_stacking_options'">Stacking Options</xsl:when>
 					<xsl:when test="$label='visualize_remove_certainty_codes'">Remove Certainty Codes</xsl:when>
 					<xsl:when test="$label='visualize_arrange'">Arrange by Interval (optional)</xsl:when>
