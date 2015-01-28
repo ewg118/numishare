@@ -550,7 +550,7 @@
 				<xsl:when test="$q = '*:*'">
 					<h1>
 						<xsl:value-of select="numishare:normalizeLabel('results_all-terms', $lang)"/>
-						<xsl:if test="//lst[@name='mint_geo']/int[@name='numFacetTerms'] &gt; 0">
+						<xsl:if test="//lst[@name='mint_geo']/int[@name='numFacetTerms'] &gt; 0 or //lst[@name='findspot_geo']/int[@name='numFacetTerms'] &gt; 0">
 							<small>
 								<a href="#resultMap" id="map_results">
 									<xsl:value-of select="numishare:normalizeLabel('results_map-results', $lang)"/>
@@ -562,7 +562,7 @@
 				<xsl:otherwise>
 					<h1>
 						<xsl:value-of select="numishare:normalizeLabel('results_filters', $lang)"/>
-						<xsl:if test="//lst[@name='mint_geo']/int[@name='numFacetTerms'] &gt; 0">
+						<xsl:if test="//lst[@name='mint_geo']/int[@name='numFacetTerms'] &gt; 0 or //lst[@name='findspot_geo']/int[@name='numFacetTerms'] &gt; 0">
 							<small>
 								<a href="#resultMap" id="map_results">
 									<xsl:value-of select="numishare:normalizeLabel('results_map-results', $lang)"/>

@@ -73,7 +73,7 @@
 			<td>
 				<xsl:if test="string($rdf//foaf:thumbnail/@rdf:resource)">
 					<a href="{if (string($rdf//foaf:homepage/@rdf:resource)) then $rdf//foaf:homepage/@rdf:resource else res:binding[@name='collection']/res:uri}">
-						<img src="{$rdf//foaf:thumbnail/@rdf:resource}" alt="logo"/>
+						<img src="{$rdf//foaf:thumbnail/@rdf:resource}" alt="logo" style="max-width:100%"/>
 					</a>
 				</xsl:if>
 			</td>

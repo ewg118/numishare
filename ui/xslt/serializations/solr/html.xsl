@@ -123,7 +123,7 @@
 						<xsl:choose>
 							<xsl:when test="$numFound &gt; 0">
 								<!-- include resultMap div when there are geographical results-->
-								<xsl:if test="//lst[@name='mint_geo']/int[@name='numFacetTerms'] &gt; 0">
+								<xsl:if test="//lst[@name='mint_geo']/int[@name='numFacetTerms'] &gt; 0 or //lst[@name='findspot_geo']/int[@name='numFacetTerms'] &gt; 0">
 									<div style="display:none">
 										<div id="resultMap"/>
 									</div>

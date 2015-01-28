@@ -71,7 +71,7 @@
 			</field>
 
 			<!-- insert coin type facets and URIs -->
-			<xsl:for-each select="descendant::nuds:typeDesc[string(@xlink:href)]">
+			<xsl:for-each select="descendant::nuds:typeDesc[string(@xlink:href)]|descendant::nuds:undertypeDesc[string(@xlink:href)]">
 				<xsl:variable name="href" select="@xlink:href"/>
 				<field name="coinType_uri">
 					<xsl:value-of select="$href"/>
@@ -80,6 +80,14 @@
 					<xsl:value-of select="$nudsGroup//object[@xlink:href=$href]/descendant::nuds:title"/>
 				</field>
 			</xsl:for-each>
+			
+			<!-- insert the coinType_facet for the conceptual record -->
+			<!--<xsl:if test="@recordType='conceptual'">
+				<field name="coinType_facet">
+					<xsl:value-of select="descendant::nuds:title"/>
+				</field>
+			</xsl:if>-->
+			
 
 			<xsl:apply-templates select="nuds:descMeta">
 				<xsl:with-param name="lang" select="$lang"/>

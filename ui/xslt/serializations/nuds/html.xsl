@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mets="http://www.loc.gov/METS/"
-	xmlns:numishare="https://github.com/ewg118/numishare" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nuds="http://nomisma.org/nuds"
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mets="http://www.loc.gov/METS/"
+	xmlns:numishare="https://github.com/ewg118/numishare" xmlns:nm="http://nomisma.org/id/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nuds="http://nomisma.org/nuds"
 	exclude-result-prefixes="#all" version="2.0">
 
 	<!-- quantitative analysis parameters -->
@@ -14,6 +14,24 @@
 		<xsl:sequence select="tokenize($sparqlQuery, '\|')"/>
 	</xsl:variable>
 	<xsl:variable name="duration" select="number($toDate) - number($fromDate)"/>
+	
+	<!-- check if there are findspots -->
+	<xsl:variable name="hasFindspots">
+		<xsl:if test="$recordType='conceptual' and string(//config/sparql_endpoint)">
+			<xsl:variable name="query">
+				<![CDATA[PREFIX nm:       <http://nomisma.org/id/>
+ASK {?object nm:type_series_item <URI> ;
+  nm:findspot ?findspot }]]>
+			</xsl:variable>
+			
+			<xsl:variable name="service">
+				<xsl:value-of select="concat(//config/sparql_endpoint, '?query=', encode-for-uri(normalize-space(replace($query, 'URI', concat(//config/uri_space, $id)))), '&amp;output=xml')"/>
+			</xsl:variable>
+			
+			<xsl:value-of select="document($service)//*:boolean"/>			
+		</xsl:if>
+	</xsl:variable>
+	
 
 	<xsl:template name="nuds">
 		<xsl:apply-templates select="/content/nuds:nuds"/>
@@ -214,12 +232,23 @@
 				<xsl:choose>
 					<xsl:when test="$recordType='conceptual'">
 						<div class="row">
-							<div class="col-md-6">
-								<xsl:call-template name="metadata-container"/>
-							</div>
-							<div class="col-md-6">
-								<xsl:call-template name="map-container"/>
-							</div>
+							
+							<!-- if there are no mint coordinates and no findspots (from SPARQL), then do not show the map -->							
+							<xsl:choose>
+								<xsl:when test="$hasFindspots = 'false' and not($rdf//nm:mint[geo:lat and geo:long])">
+									<div class="col-md-12">
+										<xsl:call-template name="metadata-container"/>
+									</div>
+								</xsl:when>
+								<xsl:otherwise>
+									<div class="col-md-6">
+										<xsl:call-template name="metadata-container"/>
+									</div>
+									<div class="col-md-6">
+										<xsl:call-template name="map-container"/>
+									</div>
+								</xsl:otherwise>
+							</xsl:choose>
 						</div>
 					</xsl:when>
 					<xsl:otherwise>
