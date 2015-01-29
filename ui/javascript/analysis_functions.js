@@ -392,7 +392,7 @@ $(document).ready(function () {
 	$(".showFilter").each(function () {
 		var tthis = this;
 		$(this).fancybox({
-			onStart: function () {
+			beforeLoad: function () {
 				var formId = tthis.id.split('-')[0] + '-form';
 				$('#formId').html(formId);
 			}
