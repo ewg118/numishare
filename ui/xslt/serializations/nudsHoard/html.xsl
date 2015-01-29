@@ -188,34 +188,39 @@
 		<h3>
 			<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
 		</h3>
+		
+		
 		<ul>
 			<xsl:apply-templates mode="descMeta"/>
 			<xsl:if test="$hasContents = 'true'">
+				<!-- display the closing date, handling only those types which are approved certainty codes -->
 				<xsl:if test="not(nh:deposit/nh:date) and not(nh:deposit/nh:dateRange)">
 					<xsl:variable name="all-dates" as="element()*">
 						<dates>
 							<xsl:for-each select="parent::node()/nh:contentsDesc/nh:contents/descendant::nuds:typeDesc">
-								<xsl:choose>
-									<xsl:when test="string(@xlink:href)">
-										<xsl:variable name="href" select="@xlink:href"/>
-										<xsl:for-each select="$nudsGroup//object[@xlink:href=$href]/descendant::*/@standardDate">
-											<xsl:if test="number(.)">
-												<date>
-													<xsl:value-of select="number(.)"/>
-												</date>
-											</xsl:if>
-										</xsl:for-each>
-									</xsl:when>
-									<xsl:otherwise>
-										<xsl:for-each select="descendant::*/@standardDate">
-											<xsl:if test="number(.)">
-												<date>
-													<xsl:value-of select="number(.)"/>
-												</date>
-											</xsl:if>
-										</xsl:for-each>
-									</xsl:otherwise>
-								</xsl:choose>
+								<xsl:if test="index-of(//config/certainty_codes/code[@accept='true'], @certainty)">
+									<xsl:choose>
+										<xsl:when test="string(@xlink:href)">
+											<xsl:variable name="href" select="@xlink:href"/>
+											<xsl:for-each select="$nudsGroup//object[@xlink:href=$href]/descendant::*/@standardDate">
+												<xsl:if test="number(.)">
+													<date>
+														<xsl:value-of select="number(.)"/>
+													</date>
+												</xsl:if>
+											</xsl:for-each>
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:for-each select="descendant::*/@standardDate">
+												<xsl:if test="number(.)">
+													<date>
+														<xsl:value-of select="number(.)"/>
+													</date>
+												</xsl:if>
+											</xsl:for-each>
+										</xsl:otherwise>
+									</xsl:choose>
+								</xsl:if>								
 							</xsl:for-each>
 						</dates>
 					</xsl:variable>
@@ -243,6 +248,8 @@
 						</span>
 					</li>
 				</xsl:if>
+				
+				<!-- display total counts of distint denominations -->
 				<xsl:variable name="total-counts" as="element()*">
 					<total-counts>
 						<xsl:for-each select="parent::node()/nh:contentsDesc/nh:contents/descendant::nuds:typeDesc">

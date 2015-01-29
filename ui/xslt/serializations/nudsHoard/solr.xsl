@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="2.0" xmlns:nh="http://nomisma.org/nudsHoard" xmlns:nuds="http://nomisma.org/nuds" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-	xmlns:datetime="http://exslt.org/dates-and-times" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xs="http://www.w3.org/2001/XMLSchema" 
-	xmlns:math="http://exslt.org/math" xmlns:xlink="http://www.w3.org/1999/xlink"	xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" 
-	xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:numishare="https://github.com/ewg118/numishare" exclude-result-prefixes="#all">
+	xmlns:datetime="http://exslt.org/dates-and-times" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:math="http://exslt.org/math"
+	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+	xmlns:numishare="https://github.com/ewg118/numishare" exclude-result-prefixes="#all">
 	<xsl:output method="xml" encoding="UTF-8"/>
 
 	<xsl:template name="nudsHoard">
@@ -44,41 +44,43 @@
 					</xsl:when>
 					<xsl:otherwise>
 						<xsl:for-each select="descendant::nuds:typeDesc">
-							<xsl:choose>
-								<xsl:when test="string(@xlink:href)">
-									<xsl:variable name="href" select="@xlink:href"/>
-									<xsl:for-each select="$nudsGroup//object[@xlink:href=$href]/descendant::*/@standardDate">
-										<xsl:if test="number(.)">
-											<date>
-												<xsl:choose>
-													<xsl:when test="number(.) &lt;= 0">
-														<xsl:value-of select="number(.) - 1"/>
-													</xsl:when>
-													<xsl:otherwise>
-														<xsl:value-of select="number(.)"/>
-													</xsl:otherwise>
-												</xsl:choose>
-											</date>
-										</xsl:if>
-									</xsl:for-each>
-								</xsl:when>
-								<xsl:otherwise>
-									<xsl:for-each select="descendant::*/@standardDate">
-										<xsl:if test="number(.)">
-											<date>
-												<xsl:choose>
-													<xsl:when test="number(.) &lt;= 0">
-														<xsl:value-of select="number(.) - 1"/>
-													</xsl:when>
-													<xsl:otherwise>
-														<xsl:value-of select="number(.)"/>
-													</xsl:otherwise>
-												</xsl:choose>
-											</date>
-										</xsl:if>
-									</xsl:for-each>
-								</xsl:otherwise>
-							</xsl:choose>
+							<xsl:if test="index-of(//config/certainty_codes/code[@accept='true'], @certainty)">
+								<xsl:choose>
+									<xsl:when test="string(@xlink:href)">
+										<xsl:variable name="href" select="@xlink:href"/>
+										<xsl:for-each select="$nudsGroup//object[@xlink:href=$href]/descendant::*/@standardDate">
+											<xsl:if test="number(.)">
+												<date>
+													<xsl:choose>
+														<xsl:when test="number(.) &lt;= 0">
+															<xsl:value-of select="number(.) - 1"/>
+														</xsl:when>
+														<xsl:otherwise>
+															<xsl:value-of select="number(.)"/>
+														</xsl:otherwise>
+													</xsl:choose>
+												</date>
+											</xsl:if>
+										</xsl:for-each>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:for-each select="descendant::*/@standardDate">
+											<xsl:if test="number(.)">
+												<date>
+													<xsl:choose>
+														<xsl:when test="number(.) &lt;= 0">
+															<xsl:value-of select="number(.) - 1"/>
+														</xsl:when>
+														<xsl:otherwise>
+															<xsl:value-of select="number(.)"/>
+														</xsl:otherwise>
+													</xsl:choose>
+												</date>
+											</xsl:if>
+										</xsl:for-each>
+									</xsl:otherwise>
+								</xsl:choose>
+							</xsl:if>
 						</xsl:for-each>
 					</xsl:otherwise>
 				</xsl:choose>
@@ -170,7 +172,7 @@
 							<xsl:otherwise>
 								<xsl:value-of select="concat(descendant::*:maintenanceEvent[last()]/*:eventDateTime/@standardDateTime, 'Z')"/>
 							</xsl:otherwise>
-						</xsl:choose>						
+						</xsl:choose>
 					</xsl:when>
 					<xsl:otherwise>
 						<xsl:value-of select="if(contains(datetime:dateTime(), 'Z')) then datetime:dateTime() else concat(datetime:dateTime(), 'Z')"/>
@@ -229,7 +231,7 @@
 							</xsl:if>
 						</xsl:for-each>
 					</field>
-				</xsl:if>				
+				</xsl:if>
 			</xsl:if>
 
 

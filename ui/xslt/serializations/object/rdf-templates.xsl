@@ -435,9 +435,11 @@
 					<xsl:for-each select="descendant::nh:geogname[@xlink:role='findspot'][string(@xlink:href)]">
 						<nm:findspot rdf:resource="{@xlink:href}"/>
 					</xsl:for-each>
+					
 					<!-- closing date -->
 					<xsl:choose>
 						<xsl:when test="not(descendant::nh:deposit/nh:date) and not(descendant::nh:deposit/nh:dateRange)">
+							<!-- get the nudsGroup to determine the closing date -->
 							<xsl:variable name="nudsGroup" as="element()*">
 								<nudsGroup>
 									<xsl:variable name="type_series" as="element()*">
@@ -482,27 +484,80 @@
 										</object>
 									</xsl:for-each>
 								</nudsGroup>
-							</xsl:variable>
-							<!-- get date values for closing date -->
-							<xsl:variable name="dates" as="element()*">
+							</xsl:variable>							
+							
+							<xsl:variable name="all-dates" as="element()*">
 								<dates>
-									<xsl:for-each select="distinct-values($nudsGroup/descendant::nuds:typeDesc/descendant::*/@standardDate)">
-										<xsl:sort data-type="number"/>
-										<xsl:if test="number(.)">
-											<date>
-												<xsl:value-of select="number(.)"/>
-											</date>
+									<xsl:for-each select="descendant::nuds:typeDesc">
+										<xsl:if test="index-of(//config/certainty_codes/code[@accept='true'], @certainty)">
+											<xsl:choose>
+												<xsl:when test="string(@xlink:href)">
+													<xsl:variable name="href" select="@xlink:href"/>
+													<xsl:for-each select="$nudsGroup//object[@xlink:href=$href]/descendant::*/@standardDate">
+														<xsl:if test="number(.)">
+															<date>
+																<xsl:choose>
+																	<xsl:when test="number(.) &lt;= 0">
+																		<xsl:value-of select="number(.) - 1"/>
+																	</xsl:when>
+																	<xsl:otherwise>
+																		<xsl:value-of select="number(.)"/>
+																	</xsl:otherwise>
+																</xsl:choose>
+															</date>
+														</xsl:if>
+													</xsl:for-each>
+												</xsl:when>
+												<xsl:otherwise>
+													<xsl:for-each select="descendant::*/@standardDate">
+														<xsl:if test="number(.)">
+															<date>
+																<xsl:choose>
+																	<xsl:when test="number(.) &lt;= 0">
+																		<xsl:value-of select="number(.) - 1"/>
+																	</xsl:when>
+																	<xsl:otherwise>
+																		<xsl:value-of select="number(.)"/>
+																	</xsl:otherwise>
+																</xsl:choose>
+															</date>
+														</xsl:if>
+													</xsl:for-each>
+												</xsl:otherwise>
+											</xsl:choose>
 										</xsl:if>
 									</xsl:for-each>
 								</dates>
 							</xsl:variable>
+							
+							<!-- get date values for closing date -->
+							<xsl:variable name="dates" as="element()*">
+								<dates>
+									<xsl:for-each select="distinct-values($all-dates//date)">
+										<xsl:sort data-type="number"/>
+										<date>
+											<xsl:value-of select="number(.)"/>
+										</date>
+									</xsl:for-each>
+								</dates>
+							</xsl:variable>
+							
 							<xsl:if test="count($dates//date) &gt; 0">
 								<nm:closing_date rdf:datatype="xsd:gYear">
 									<xsl:value-of select="format-number($dates//date[last()], '0000')"/>
 								</nm:closing_date>
 							</xsl:if>
 						</xsl:when>
-						<xsl:otherwise> </xsl:otherwise>
+						<xsl:otherwise>
+							<xsl:choose>
+								<xsl:when test="number(descendant::nh:deposit//@standardDate) &lt;= 0">
+									<xsl:value-of select="number(descendant::nh:deposit//@standardDate) - 1"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:value-of select="number(descendant::nh:deposit//@standardDate)"/>
+								</xsl:otherwise>
+							</xsl:choose>
+						</xsl:otherwise>
 					</xsl:choose>
 					<xsl:for-each select="descendant::nuds:typeDesc/@xlink:href|descendant::nuds:undertypeDesc/@xlink:href">
 						<nm:type_series_item rdf:resource="{.}"/>
