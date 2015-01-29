@@ -99,7 +99,7 @@
 		
 		<Placemark>
 			<name>
-				<xsl:value-of select="$value"/>
+				<xsl:value-of select="str[@name='title_display']"/>
 			</name>
 			<description>
 				<xsl:value-of select="$description"/>

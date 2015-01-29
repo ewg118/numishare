@@ -57,28 +57,55 @@
 
 				<xsl:variable name="service">
 					<xsl:choose>
-						<xsl:when test="string($q)">
+						<xsl:when test="$mode='hoard'">
 							<xsl:choose>
-								<xsl:when test="string($lang)">
-									<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+lang:', $lang, '+AND+', $facet, ':*+AND+', encode-for-uri($q), '&amp;facet=false&amp;rows=', $rows, '&amp;mode=', $mode)"/>
+								<xsl:when test="string($q)">
+									<xsl:choose>
+										<xsl:when test="string($lang)">
+											<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+lang:', $lang, '+AND+', $facet, ':*+AND+', encode-for-uri($q), '&amp;facet=false&amp;fl=findspot_geo,recordId,title_display,taq_num,tpq_num,closing_date_display&amp;rows=', $rows, '&amp;mode=', $mode)"/>
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+NOT(lang:*)+AND+', $facet, ':*+AND+', encode-for-uri($q), '&amp;facet=false&amp;fl=findspot_geo,recordId,title_display,taq_num,tpq_num,closing_date_display&amp;rows=', $rows, '&amp;mode=', $mode)"/>
+										</xsl:otherwise>
+									</xsl:choose>
 								</xsl:when>
 								<xsl:otherwise>
-									<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+NOT(lang:*)+AND+', $facet, ':*+AND+', encode-for-uri($q), '&amp;facet=false&amp;rows=', $rows, '&amp;mode=', $mode)"/>
+									<xsl:choose>
+										<xsl:when test="string($lang)">
+											<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+lang:', $lang, '+AND+', $facet, ':*&amp;facet=false&amp;fl=findspot_geo,recordId,title_display,taq_num,tpq_num,closing_date_display&amp;rows=', $rows, '&amp;mode=', $mode)"/>
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+NOT(lang:*)+AND+', $facet, ':*&amp;facet=false&amp;fl=findspot_geo,recordId,title_display,taq_num,tpq_num,closing_date_display&amp;rows=', $rows, '&amp;mode=', $mode)"/>
+										</xsl:otherwise>
+									</xsl:choose>
 								</xsl:otherwise>
 							</xsl:choose>
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:choose>
-								<xsl:when test="string($lang)">
-									<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+lang:', $lang, '+AND+', $facet, ':*&amp;facet=false&amp;rows=', $rows, '&amp;mode=', $mode)"/>
+								<xsl:when test="string($q)">
+									<xsl:choose>
+										<xsl:when test="string($lang)">
+											<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+lang:', $lang, '+AND+', $facet, ':*+AND+', encode-for-uri($q), '&amp;facet=false&amp;rows=', $rows, '&amp;mode=', $mode)"/>
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+NOT(lang:*)+AND+', $facet, ':*+AND+', encode-for-uri($q), '&amp;facet=false&amp;rows=', $rows, '&amp;mode=', $mode)"/>
+										</xsl:otherwise>
+									</xsl:choose>
 								</xsl:when>
 								<xsl:otherwise>
-									<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+NOT(lang:*)+AND+', $facet, ':*&amp;facet=false&amp;rows=', $rows, '&amp;mode=', $mode)"/>
+									<xsl:choose>
+										<xsl:when test="string($lang)">
+											<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+lang:', $lang, '+AND+', $facet, ':*&amp;facet=false&amp;rows=', $rows, '&amp;mode=', $mode)"/>
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+NOT(lang:*)+AND+', $facet, ':*&amp;facet=false&amp;rows=', $rows, '&amp;mode=', $mode)"/>
+										</xsl:otherwise>
+									</xsl:choose>
 								</xsl:otherwise>
 							</xsl:choose>
 						</xsl:otherwise>
 					</xsl:choose>
-					
 				</xsl:variable>
 
 				<xsl:template match="/">
