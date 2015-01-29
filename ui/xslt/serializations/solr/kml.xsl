@@ -104,7 +104,7 @@
 			<description>
 				<xsl:value-of select="$description"/>
 			</description>
-			<styleUrl>#hoard</styleUrl>
+			<styleUrl>#findspot</styleUrl>
 			<Point>
 				<coordinates>
 					<xsl:value-of select="$coordinates"/>
