@@ -185,9 +185,18 @@
 						</xsl:apply-templates>
 					</xsl:when>
 					<xsl:when test="@recordType='physical'">
-						<xsl:variable name="objectType" select="descendant::nuds:objectType/@xlink:href"/>
-						
 						<xsl:variable name="element">
+							<xsl:variable name="objectType">
+								<xsl:choose>
+									<xsl:when test="string(nuds:descMeta/nuds:typeDesc/@xlink:href)">
+										<xsl:value-of select="document(concat(nuds:descMeta/nuds:typeDesc/@xlink:href, '.xml'))/descendant::nuds:objectType/@xlink:href"/>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:value-of select="descendant::nuds:objectType/@xlink:href"/>
+									</xsl:otherwise>
+								</xsl:choose>								
+							</xsl:variable>
+							
 							<xsl:choose>
 								<xsl:when test="$objectType = 'http://nomisma.org/id/coin'">nmo:Coin</xsl:when>
 								<xsl:when test="$objectType = 'http://nomisma.org/id/medal'">nmo:Medal</xsl:when>
