@@ -5,8 +5,7 @@
 	xmlns:oa="http://www.w3.org/ns/oa#" xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:foaf="http://xmlns.com/foaf/0.1/" version="2.0">
 	
 	<xsl:param name="mode" select="//lst[@name='params']/str[@name='mode']"/>
-	<xsl:variable name="url" select="/content/config/url"/>
-	<xsl:variable name="uri_space" select="/content/config/uri_space"/>
+	<xsl:param name="url" select="/content/config/url"/>
 
 	<xsl:template match="/">
 		<rdf:RDF>
@@ -35,7 +34,7 @@
 			<dcterms:title>
 				<xsl:value-of select="str[@name='title_display']"/>
 			</dcterms:title>
-			<foaf:homepage rdf:resource="{$uri_space}{$id}"/>
+			<foaf:homepage rdf:resource="{$url}id/{$id}"/>
 			
 			<!-- temporal -->
 			<xsl:choose>
@@ -153,7 +152,7 @@
 		<xsl:variable name="recordType" select="str[@name='recordType']"/>
 		
 		<xsl:element name="nm:{if ($recordType='hoard') then 'hoard' else 'coin'}" namespace="http://nomisma.org/id/" exclude-result-prefixes="#all">			
-			<xsl:attribute name="rdf:about" select="concat($uri_space, $id)"/>
+			<xsl:attribute name="rdf:about" select="concat($url, 'id/', $id)"/>
 			<dcterms:title xml:lang="{if (str[@name='lang']) then str[@name='lang'] else 'en'}">
 				<xsl:value-of select="str[@name='title_display']"/>
 			</dcterms:title>
@@ -193,23 +192,7 @@
 			</xsl:if>
 			<xsl:if test="arr[@name='findspot_geo']/str">
 				<xsl:variable name="findspot" select="tokenize(arr[@name='findspot_geo']/str, '\|')"/>
-				<xsl:choose>
-					<xsl:when test="contains($findspot[2], 'nomisma.org')">
-						<nm:findspot rdf:resource="{$findspot[2]}"/>
-					</xsl:when>
-					<xsl:otherwise>
-						<nm:findspot>
-							<rdf:Description rdf:about="{$findspot[2]}">
-								<geo:lat>
-									<xsl:value-of select="substring-after($findspot[3], ',')"/>
-								</geo:lat>
-								<geo:long>
-									<xsl:value-of select="substring-before($findspot[3], ',')"/>
-								</geo:long>
-							</rdf:Description>
-						</nm:findspot>
-					</xsl:otherwise>
-				</xsl:choose>
+				<nm:findspot rdf:resource="{$findspot[2]}"/>
 			</xsl:if>
 			<!-- images -->	
 			<!-- obverse -->			
@@ -279,5 +262,23 @@
 				</nm:reverse>
 			</xsl:if>
 		</xsl:element>
+		
+		<xsl:if test="arr[@name='findspot_geo']/str">
+			<xsl:variable name="findspot" select="tokenize(arr[@name='findspot_geo']/str, '\|')"/>
+			<xsl:choose>
+				<xsl:when test="contains($findspot[2], 'nomisma.org')"/>
+				<xsl:otherwise>
+					<geo:SpatialThing rdf:about="{$findspot[2]}">
+						<geo:lat>
+							<xsl:value-of select="substring-after($findspot[3], ',')"/>
+						</geo:lat>
+						<geo:long>
+							<xsl:value-of select="substring-before($findspot[3], ',')"/>
+						</geo:long>
+						<foaf:name><xsl:value-of select="$findspot[1]"/></foaf:name>
+					</geo:SpatialThing>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:if>
 	</xsl:template>
 </xsl:stylesheet>
