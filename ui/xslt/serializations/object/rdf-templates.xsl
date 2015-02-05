@@ -185,7 +185,23 @@
 						</xsl:apply-templates>
 					</xsl:when>
 					<xsl:when test="@recordType='physical'">
-						<ecrm:E18_Physical_Thing rdf:about="{$url}id/{$id}">
+						<xsl:variable name="objectType" select="descendant::nuds:objectType/@xlink:href"/>
+						
+						<xsl:variable name="element">
+							<xsl:choose>
+								<xsl:when test="$objectType = 'http://nomisma.org/id/coin'">nmo:Coin</xsl:when>
+								<xsl:when test="$objectType = 'http://nomisma.org/id/medal'">nmo:Medal</xsl:when>
+								<xsl:when test="$objectType = 'http://nomisma.org/id/roman_medallian'">nmo:Medallion</xsl:when>
+								<xsl:when test="$objectType = 'http://nomisma.org/id/tessera'">nmo:Tessera</xsl:when>
+								<xsl:when test="$objectType = 'http://nomisma.org/id/token'">nmo:Token</xsl:when>
+								<xsl:otherwise>ecrm:E18_Physical_Thing</xsl:otherwise>
+							</xsl:choose>
+						</xsl:variable>
+						
+						<xsl:element name="{$element}">
+							<xsl:attribute name="rdf:about">
+								<xsl:value-of select="concat($url, 'id/', $id)"/>
+							</xsl:attribute>
 							<dcterms:title>
 								<xsl:if test="string(@xml:lang)">
 									<xsl:attribute name="xml:lang" select="@xml:lang"/>
@@ -236,7 +252,7 @@
 							<xsl:if test="descendant::mets:fileGrp[@USE='reverse']">
 								<nmo:hasReverse rdf:resource="{$url}id/{$id}#reverse"/>
 							</xsl:if>
-						</ecrm:E18_Physical_Thing>
+						</xsl:element>
 						<!-- images -->
 						<xsl:apply-templates select="nuds:digRep/mets:fileSec" mode="nomisma">
 							<xsl:with-param name="id" select="$id"/>
