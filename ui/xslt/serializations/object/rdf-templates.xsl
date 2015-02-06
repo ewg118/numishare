@@ -377,24 +377,29 @@
 		<xsl:variable name="element">
 			<xsl:choose>
 				<xsl:when test="parent::nuds:obverse or parent::nuds:reverse">hasPortrait</xsl:when>
+				<!-- ignore maker and artist -->
+				<xsl:when test="@xlink:role='artist' or @xlink:role='maker'"/>
 				<xsl:otherwise>
 					<xsl:variable name="role" select="if (@xlink:role) then @xlink:role else local-name()"/>
 					<xsl:value-of select="concat('has', concat(upper-case(substring($role, 1, 1)), substring($role, 2)))"/>
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-		<xsl:choose>
-			<xsl:when test="string(@xlink:href)">
-				<xsl:element name="nmo:{$element}">
-					<xsl:attribute name="rdf:resource" select="@xlink:href"/>
-				</xsl:element>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:element name="nmo:{$element}">
-					<xsl:value-of select="."/>
-				</xsl:element>
-			</xsl:otherwise>
-		</xsl:choose>
+		
+		<xsl:if test="string-length($element) &gt; 0">
+			<xsl:choose>
+				<xsl:when test="string(@xlink:href)">
+					<xsl:element name="nmo:{$element}">
+						<xsl:attribute name="rdf:resource" select="@xlink:href"/>
+					</xsl:element>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:element name="nmo:{$element}">
+						<xsl:value-of select="."/>
+					</xsl:element>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:if>		
 	</xsl:template>
 
 	<xsl:template match="nuds:date" mode="nomisma">
