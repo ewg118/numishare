@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mets="http://www.loc.gov/METS/"
-	xmlns:numishare="https://github.com/ewg118/numishare" xmlns:nm="http://nomisma.org/id/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nuds="http://nomisma.org/nuds"
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"
+	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mets="http://www.loc.gov/METS/" xmlns:numishare="https://github.com/ewg118/numishare" xmlns:nm="http://nomisma.org/id/"
+	xmlns:nmo="http://nomisma.org/ontology#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nuds="http://nomisma.org/nuds"
 	exclude-result-prefixes="#all" version="2.0">
 
 	<!-- quantitative analysis parameters -->
@@ -14,24 +15,25 @@
 		<xsl:sequence select="tokenize($sparqlQuery, '\|')"/>
 	</xsl:variable>
 	<xsl:variable name="duration" select="number($toDate) - number($fromDate)"/>
-	
+
 	<!-- check if there are findspots -->
 	<xsl:variable name="hasFindspots">
 		<xsl:if test="$recordType='conceptual' and string(//config/sparql_endpoint)">
 			<xsl:variable name="query">
 				<![CDATA[PREFIX nm:       <http://nomisma.org/id/>
-ASK {?object nm:type_series_item <URI> ;
-  nm:findspot ?findspot }]]>
+PREFIX nmo:	<http://nomisma.org/ontology#>
+ASK {?object nmo:hasTypeSeriesItem <URI> ;
+  nmo:hasFindspot ?findspot }]]>
 			</xsl:variable>
-			
+
 			<xsl:variable name="service">
 				<xsl:value-of select="concat(//config/sparql_endpoint, '?query=', encode-for-uri(normalize-space(replace($query, 'URI', concat(//config/uri_space, $id)))), '&amp;output=xml')"/>
 			</xsl:variable>
-			
-			<xsl:value-of select="document($service)//*:boolean"/>			
+
+			<xsl:value-of select="document($service)//*:boolean"/>
 		</xsl:if>
 	</xsl:variable>
-	
+
 
 	<xsl:template name="nuds">
 		<xsl:apply-templates select="/content/nuds:nuds"/>
@@ -55,7 +57,7 @@ ASK {?object nm:type_series_item <URI> ;
 				<xsl:choose>
 					<xsl:when test="$recordType='conceptual'">
 						<div class="row">
-							<div class="col-md-12">								
+							<div class="col-md-12">
 								<h1 id="object_title" property="skos:prefLabel">
 									<xsl:if test="string(nuds:descMeta/nuds:title/@xml:lang)">
 										<xsl:attribute name="lang" select="nuds:descMeta/nuds:title/@xml:lang"/>
@@ -84,7 +86,7 @@ ASK {?object nm:type_series_item <URI> ;
 									</xsl:if>
 								</xsl:if>
 							</xsl:otherwise>
-						</xsl:choose>	
+						</xsl:choose>
 						<div class="row">
 							<div class="col-md-12">
 								<xsl:if test="$recordType='conceptual' and string($sparql_endpoint) and //config/collection_type='cointype'">
@@ -232,10 +234,10 @@ ASK {?object nm:type_series_item <URI> ;
 				<xsl:choose>
 					<xsl:when test="$recordType='conceptual'">
 						<div class="row">
-							
-							<!-- if there are no mint coordinates and no findspots (from SPARQL), then do not show the map -->							
+
+							<!-- if there are no mint coordinates and no findspots (from SPARQL), then do not show the map -->
 							<xsl:choose>
-								<xsl:when test="$hasFindspots = 'false' and not($rdf//nm:mint[geo:lat and geo:long])">
+								<xsl:when test="$hasFindspots = 'false' and not($rdf//nmo:Mint[geo:location])">
 									<div class="col-md-12">
 										<xsl:call-template name="metadata-container"/>
 									</div>
@@ -398,7 +400,7 @@ ASK {?object nm:type_series_item <URI> ;
 						</ul>
 					</xsl:when>
 					<xsl:otherwise>
-						<p>Source: <a rel="nm:findspot" href="{@xlink:href}"><xsl:value-of select="@xlink:href"/></a></p>
+						<p>Source: <a rel="nmo:hasFindspot" href="{@xlink:href}"><xsl:value-of select="@xlink:href"/></a></p>
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
@@ -463,7 +465,7 @@ ASK {?object nm:type_series_item <URI> ;
 			</ul>
 		</li>
 	</xsl:template>
-	
+
 	<xsl:template match="nuds:descripton|nuds:legend" mode="physical">
 		<span property="{numishare:normalizeProperty(local-name())}">
 			<xsl:if test="@xml:lang">
@@ -472,7 +474,7 @@ ASK {?object nm:type_series_item <URI> ;
 			<xsl:value-of select="."/>
 		</span>
 	</xsl:template>
-	
+
 	<!-- hide symbols with left/right/center/exerque positions, format elsewhere -->
 	<xsl:template match="nuds:symbol[@position='left']|nuds:symbol[@position='center']|nuds:symbol[@position='right']|nuds:symbol[@position='exergue']" mode="descMeta"/>
 
@@ -508,7 +510,7 @@ ASK {?object nm:type_series_item <URI> ;
 			<xsl:when test="$nudsGroup//nuds:typeDesc/nuds:obverse">
 				<xsl:for-each select="$nudsGroup//nuds:typeDesc/nuds:obverse">
 					<xsl:variable name="side" select="local-name()"/>
-					<div class="reference_image" rel="nm:obverse">
+					<div class="reference_image" rel="nmo:hasObverse">
 						<xsl:if test="string($obverse_image)">
 							<xsl:choose>
 								<xsl:when test="contains($obverse_image, 'http://')">
@@ -558,7 +560,7 @@ ASK {?object nm:type_series_item <URI> ;
 			<xsl:when test="$nudsGroup//nuds:typeDesc/nuds:reverse">
 				<xsl:for-each select="$nudsGroup//nuds:typeDesc/nuds:reverse">
 					<xsl:variable name="side" select="local-name()"/>
-					<div class="reference_image" rel="nm:reverse">
+					<div class="reference_image" rel="nmo:hasReverse">
 						<xsl:if test="string($reverse_image)">
 							<xsl:choose>
 								<xsl:when test="contains($reverse_image, 'http://')">
@@ -599,7 +601,7 @@ ASK {?object nm:type_series_item <URI> ;
 	<xsl:template name="legend_image">
 		<xsl:if test="string(//mets:fileGrp[@USE='legend']/mets:file[@USE='reference']/mets:FLocat/@xlink:href)">
 			<xsl:variable name="src" select="//mets:fileGrp[@USE='legend']/mets:file[@USE='reference']/mets:FLocat/@xlink:href"/>
-			
+
 			<div class="reference_image">
 				<img src="{if (contains($src, 'http://')) then $src else concat($display_path, $src)}" alt="legend"/>
 			</div>
@@ -608,18 +610,18 @@ ASK {?object nm:type_series_item <URI> ;
 
 	<!-- charts template -->
 	<xsl:template name="charts">
-		<xsl:variable name="axis" select="document(concat($request-uri, 'sparql?constraints=', encode-for-uri(concat('nm:type_series_item &lt;', //config/uri_space, $id, '&gt;')),
+		<xsl:variable name="axis" select="document(concat($request-uri, 'sparql?constraints=', encode-for-uri(concat('nmo:hasTypeSeriesItem &lt;', //config/uri_space, $id, '&gt;')),
 			'&amp;template=avgMeasurement&amp;measurement=axis'))"/>
-		<xsl:variable name="diameter" select="document(concat($request-uri, 'sparql?constraints=', encode-for-uri(concat('nm:type_series_item &lt;', //config/uri_space, $id, '&gt;')),
+		<xsl:variable name="diameter" select="document(concat($request-uri, 'sparql?constraints=', encode-for-uri(concat('nmo:hasTypeSeriesItem &lt;', //config/uri_space, $id, '&gt;')),
 			'&amp;template=avgMeasurement&amp;measurement=diameter'))"/>
-		<xsl:variable name="weight" select="document(concat($request-uri, 'sparql?constraints=', encode-for-uri(concat('nm:type_series_item &lt;', //config/uri_space, $id, '&gt;')),
+		<xsl:variable name="weight" select="document(concat($request-uri, 'sparql?constraints=', encode-for-uri(concat('nmo:hasTypeSeriesItem &lt;', //config/uri_space, $id, '&gt;')),
 			'&amp;template=avgMeasurement&amp;measurement=weight'))"/>
-		
+
 		<a name="charts"/>
 		<h3>
 			<xsl:value-of select="numishare:normalizeLabel('display_quantitative', $lang)"/>
 		</h3>
-		
+
 		<xsl:if test="number($axis) &gt; 0 or number($diameter) &gt; 0 or number($weight) &gt; 0">
 			<p>Average measurements for this coin type:</p>
 			<dl class="dl-horizontal">
@@ -643,7 +645,7 @@ ASK {?object nm:type_series_item <URI> ;
 				</xsl:if>
 			</dl>
 		</xsl:if>
-		
+
 		<xsl:call-template name="measurementForm"/>
 	</xsl:template>
 

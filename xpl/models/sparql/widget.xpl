@@ -56,111 +56,112 @@
 						<xsl:when test="$template = 'display'"><![CDATA[PREFIX rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX dcterms:  <http://purl.org/dc/terms/>
 PREFIX nm:       <http://nomisma.org/id/>
+PREFIX nmo:	<http://nomisma.org/ontology#>
 PREFIX skos:      <http://www.w3.org/2004/02/skos/core#>
 PREFIX foaf:	<http://xmlns.com/foaf/0.1/>
 PREFIX ecrm: <http://erlangen-crm.org/current/>
 
 SELECT ?object ?title ?identifier ?findspot ?collection ?weight ?axis ?diameter ?obvThumb ?revThumb ?obvRef ?revRef ?comThumb ?comRef  WHERE {
-?object nm:type_series_item <typeUri>.
+?object nmo:hasTypeSeriesItem <typeUri>.
 {?object a nm:coin}
 UNION {?object a ecrm:E18_Physical_Thing}
 ?object dcterms:title ?title .
 OPTIONAL { ?object dcterms:identifier ?identifier}
-OPTIONAL { ?object nm:collection ?colUri .
+OPTIONAL { ?object nmo:hasCollection ?colUri .
 ?colUri skos:prefLabel ?collection 
 FILTER(langMatches(lang(?collection), "EN"))}
-OPTIONAL {?object nm:findspot ?findUri .
+OPTIONAL {?object nmo:hasFindspot ?findUri .
 ?findUri foaf:name ?findspot }
-OPTIONAL { ?object nm:weight ?weight }
-OPTIONAL { ?object nm:axis ?axis }
-OPTIONAL { ?object nm:diameter ?diameter }
+OPTIONAL { ?object nmo:hasWeight ?weight }
+OPTIONAL { ?object nmo:hasAxis ?axis }
+OPTIONAL { ?object nmo:hasDiameter ?diameter }
 OPTIONAL { ?object foaf:thumbnail ?comThumb }
 OPTIONAL { ?object foaf:depiction ?comRef }
-OPTIONAL { ?object nm:obverse ?obverse .
+OPTIONAL { ?object nmo:hasObverse ?obverse .
 ?obverse foaf:thumbnail ?obvThumb }
-OPTIONAL { ?object nm:obverse ?obverse .
+OPTIONAL { ?object nmo:hasObverse ?obverse .
 ?obverse foaf:depiction ?obvRef }
-OPTIONAL { ?object nm:reverse ?reverse .
+OPTIONAL { ?object nmo:hasReverse ?reverse .
 ?reverse foaf:thumbnail ?revThumb }
-OPTIONAL { ?object nm:reverse ?reverse .
+OPTIONAL { ?object nmo:hasReverse ?reverse .
 ?reverse foaf:depiction ?revRef }}
 ORDER BY ASC(?collection)]]>
 						</xsl:when>
 						<xsl:when test="$template = 'kml'"><![CDATA[ PREFIX rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX dcterms:  <http://purl.org/dc/terms/>
 PREFIX nm:       <http://nomisma.org/id/>
+PREFIX nmo:	<http://nomisma.org/ontology#>
 PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>
 
 
 SELECT ?object ?title ?findspot ?lat ?long ?objectType ?burial WHERE {
-?object nm:type_series_item <typeUri>.
+?object nmo:hasTypeSeriesItem <typeUri>.
 ?object dcterms:title ?title .			
-?object nm:findspot ?findspot .
+?object nmo:hasFindspot ?findspot .
 {?findspot geo:lat ?lat .
 ?findspot geo:long ?long }
 UNION {
- ?findspot nm:findspot ?loc .
+ ?findspot nmo:hasFindspot ?loc .
  ?loc geo:lat ?lat.
  ?loc geo:long ?long			 
- OPTIONAL { ?findspot nm:closing_date ?burial }
- OPTIONAL { ?findspot nm:closing_date_end ?burial }
+ OPTIONAL { ?findspot nmo:hasClosingDate ?burial }
 }
 OPTIONAL { ?object rdf:type ?objectType }
-OPTIONAL { ?object nm:closing_date ?burial }
-OPTIONAL { ?object nm:closing_date_end ?burial }}]]>
+OPTIONAL { ?object nmo:hasClosingDate ?burial }}]]>
 						</xsl:when>
 						<xsl:when test="$template = 'json'"><![CDATA[PREFIX rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX dcterms:  <http://purl.org/dc/terms/>
 PREFIX nm:       <http://nomisma.org/id/>
+PREFIX nmo:	<http://nomisma.org/ontology#>
 PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>
 PREFIX foaf:	<http://xmlns.com/foaf/0.1/>
 
 SELECT ?object ?title ?findspot ?name ?type ?burial ?lat ?long WHERE {
-?object nm:type_series_item <typeUri>;
+?object nmo:hasTypeSeriesItem <typeUri>;
  dcterms:title ?title ;
- nm:findspot ?findspot .
+ nmo:hasFindspot ?findspot .
 OPTIONAL {?findspot foaf:name ?name}
 {?findspot geo:lat ?lat .
 ?findspot geo:long ?long }
 UNION {
- ?findspot nm:findspot ?loc .
+ ?findspot nmo:hasFindspot ?loc .
  ?loc geo:lat ?lat.
  ?loc geo:long ?long
- OPTIONAL { ?findspot nm:closing_date ?burial }
- OPTIONAL { ?findspot nm:closing_date_end ?burial }
+ OPTIONAL { ?findspot nmo:hasClosingDate ?burial }
 }
 OPTIONAL { ?object rdf:type ?type }
-OPTIONAL { ?object nm:closing_date ?burial }
-OPTIONAL { ?object nm:closing_date_end ?burial }}]]>
+OPTIONAL { ?object nmo:hasClosingDate ?burial }}]]>
 						</xsl:when>
 						<xsl:when test="$template = 'solr'"><![CDATA[PREFIX rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX dcterms:  <http://purl.org/dc/terms/>
 PREFIX nm:       <http://nomisma.org/id/>
+PREFIX nmo:	<http://nomisma.org/ontology#>
 PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>
 PREFIX skos:      <http://www.w3.org/2004/02/skos/core#>	
 
 SELECT ?object ?title ?findspotLabel ?findspot ?lat ?long WHERE {
-?object nm:type_series_item <typeUri> .
+?object nmo:hasTypeSeriesItem <typeUri> .
 ?object dcterms:title ?title .			
-?object nm:findspot ?findspot .
-OPTIONAL {?findspot skos:prefLabel ?findspotLabel}
+?object nmo:hasFindspot ?findspot .
+OPTIONAL {?findspot dcterms:title ?findspotLabel}
 {?findspot geo:lat ?lat .
 ?findspot geo:long ?long }
 UNION {
- ?findspot nm:findspot ?loc .
+ ?findspot nmo:hasFindspot ?loc .
  ?loc geo:lat ?lat.
  ?loc geo:long ?long}}]]>
 						</xsl:when>
 						<xsl:when test="$template = 'facets'">
 							<xsl:choose>
-								<xsl:when test="$field = 'nm:collection'"><![CDATA[PREFIX rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+								<xsl:when test="$field = 'nmo:hasCollection'"><![CDATA[PREFIX rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX dcterms:  <http://purl.org/dc/terms/>
 PREFIX nm:       <http://nomisma.org/id/>
+PREFIX nmo:	<http://nomisma.org/ontology#>
 PREFIX skos:      <http://www.w3.org/2004/02/skos/core#>						
 SELECT DISTINCT ?val ?label WHERE {
-?type dcterms:isPartOf <TYPE_SERIES>.
-?object nm:type_series_item ?type .
-?object nm:collection ?val .
+?type dcterms:source <TYPE_SERIES>.
+?object nmo:hasTypeSeriesItem ?type .
+?object nmo:hasCollection ?val .
 ?val skos:prefLabel ?label
 FILTER(langMatches(lang(?label), "LANG"))} 
 ORDER BY asc(?label)
@@ -169,9 +170,10 @@ ORDER BY asc(?label)
 								<xsl:otherwise><![CDATA[PREFIX rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX dcterms:  <http://purl.org/dc/terms/>
 PREFIX nm:       <http://nomisma.org/id/>
+PREFIX nmo:	<http://nomisma.org/ontology#>
 PREFIX skos:      <http://www.w3.org/2004/02/skos/core#>						
 SELECT DISTINCT ?val ?label WHERE {
-?object dcterms:isPartOf <TYPE_SERIES>.
+?object dcterms:source <TYPE_SERIES>.
 ?object FIELD ?val .
 ?val skos:prefLabel ?label
 FILTER(langMatches(lang(?label), "LANG"))} 
@@ -186,7 +188,7 @@ ORDER BY asc(?label)
 				<xsl:variable name="service">
 					<xsl:choose>
 						<xsl:when test="$template = 'avgMeasurement'">
-							<xsl:value-of select="concat('http://nomisma.org/apis/', $api, '?constraints=', encode-for-uri($constraints))"/>
+							<xsl:value-of select="concat('http://admin.numismatics.org/nomisma/apis/', $api, '?constraints=', encode-for-uri($constraints))"/>
 						</xsl:when>
 						<xsl:when test="$template = 'facets'">
 							<xsl:value-of select="concat($endpoint, '?query=', encode-for-uri(normalize-space(replace(replace(replace($query, 'TYPE_SERIES', /config/type_series), 'LANG', $langStr), 'FIELD', $field))), '&amp;output=xml')"/>

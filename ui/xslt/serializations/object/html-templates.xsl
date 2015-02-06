@@ -33,7 +33,7 @@
 			<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
 		</xsl:element>
 		<xsl:if test="string($typeDesc_resource)">
-			<p>Source: <a href="{$typeDesc_resource}" rel="nm:type_series_item"><xsl:value-of select="$nudsGroup//object[@xlink:href = $typeDesc_resource]/nuds:nuds/nuds:descMeta/nuds:title"/></a></p>
+			<p>Source: <a href="{$typeDesc_resource}" rel="nmo:hasTypeSeriesItem"><xsl:value-of select="$nudsGroup//object[@xlink:href = $typeDesc_resource]/nuds:nuds/nuds:descMeta/nuds:title"/></a></p>
 		</xsl:if>
 		<ul>
 			<xsl:choose>
@@ -202,7 +202,7 @@
 								</xsl:choose>
 								<ul>
 									<xsl:if test="local-name()='obverse' or local-name()='reverse'">
-										<xsl:attribute name="rel" select="concat('nm:', local-name())"/>
+										<xsl:attribute name="rel" select="concat('nmo:', concat(upper-case(substring(local-name(), 1, 1)), substring(local-name(), 2)))"/>
 										<xsl:attribute name="resource" select="concat($url, 'id/', $id, '#', local-name())"/>
 									</xsl:if>
 									<xsl:apply-templates select="*" mode="descMeta"/>
@@ -294,7 +294,7 @@
 		<xsl:param name="uri_space"/>
 		<xsl:variable name="subtypeId" select="@recordId"/>
 		<div class="row">
-			<div class="col-md-3" about="{concat($uri_space, $subtypeId)}" typeof="nm:type_series_item">
+			<div class="col-md-3" about="{concat($uri_space, $subtypeId)}" typeof="nmo:TypeSeriesItem">
 				<h4 property="dcterms:title">
 					<a href="{concat($uri_space, $subtypeId)}">
 						<xsl:value-of select="nuds:descMeta/nuds:title"/>

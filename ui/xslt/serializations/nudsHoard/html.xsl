@@ -236,7 +236,7 @@
 					</xsl:variable>
 					<li>
 						<b><xsl:value-of select="numishare:regularize_node('closing_date', $lang)"/>: </b>
-						<span property="nm:closing_date" content="{format-number($dates//date[last()], '0000')}" datatype="xsd:gYear">
+						<span property="nmo:hasClosing_date" content="{format-number($dates//date[last()], '0000')}" datatype="xsd:gYear">
 							<xsl:choose>
 								<xsl:when test="$dates//date[last()] &lt; 1">
 									<xsl:value-of select="nh:normalize_date($dates//date[last()]-1, $dates//date[last()]-1)"/>
@@ -357,14 +357,14 @@
 								<xsl:when test="$codeNode/@position='before'">
 									<h3>
 										<xsl:value-of select="$codeNode/@label"/>
-										<a rel="nm:type_series_item" href="{$typeDesc_resource}" target="_blank">
+										<a rel="nmo:hasTypeSeriesItem" href="{$typeDesc_resource}" target="_blank">
 											<xsl:value-of select="$nudsGroup//object[@xlink:href = $typeDesc_resource]/nuds:nuds/nuds:descMeta/nuds:title"/>
 										</a>
 									</h3>									
 								</xsl:when>
 								<xsl:when test="$codeNode/@position='after'">
 									<h3>										
-										<a rel="nm:type_series_item" href="{$typeDesc_resource}" target="_blank">
+										<a rel="nmo:hasTypeSeriesItem" href="{$typeDesc_resource}" target="_blank">
 											<xsl:value-of select="$nudsGroup//object[@xlink:href = $typeDesc_resource]/nuds:nuds/nuds:descMeta/nuds:title"/>
 										</a>
 										<xsl:value-of select="$codeNode/@label"/>
@@ -374,7 +374,7 @@
 						</xsl:when>
 						<xsl:otherwise>
 							<h3>
-								<a rel="nm:type_series_item" href="{$typeDesc_resource}" target="_blank">
+								<a rel="nmo:hasTypeSeriesItem" href="{$typeDesc_resource}" target="_blank">
 									<xsl:value-of select="$nudsGroup//object[@xlink:href = $typeDesc_resource]/nuds:nuds/nuds:descMeta/nuds:title"/>
 								</a>
 							</h3>

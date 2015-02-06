@@ -178,13 +178,13 @@
 				</xsl:when>
 				<xsl:when test="contains($href, 'nomisma')">
 					<xsl:variable name="coords">
-						<xsl:if test="$rdf/*[@rdf:about=$href]/geo:lat and $rdf/*[@rdf:about=$href]/geo:long">
+						<xsl:if test="$rdf/*[@rdf:about=concat($href, '#this')]/geo:lat and $rdf/*[@rdf:about=concat($href, '#this')]/geo:long">
 							<xsl:text>true</xsl:text>
 						</xsl:if>
 					</xsl:variable>
 					<xsl:choose>
 						<xsl:when test="$coords = 'true'">
-							<xsl:value-of select="concat($rdf/*[@rdf:about=$href]/geo:lat, '|', $rdf/*[@rdf:about=$href]/geo:long)"/>
+							<xsl:value-of select="concat($rdf/*[@rdf:about=concat($href, '#this')]/geo:lat, '|', $rdf/*[@rdf:about=concat($href, '#this')]/geo:long)"/>
 						</xsl:when>
 						<xsl:otherwise>NULL</xsl:otherwise>
 					</xsl:choose>

@@ -164,7 +164,7 @@
 									<xsl:value-of select="."/>
 								</skos:definition>
 							</xsl:for-each>
-							<!-- isPartOf nm:type_series -->
+							<!-- source nmo:TypeSeries -->
 							<dcterms:source rdf:resource="{//config/type_series}"/>
 							<!-- other ids -->
 							<xsl:for-each select="descendant::*:otherRecordId[string(@semantic)]">
@@ -369,6 +369,9 @@
 			<xsl:value-of select="."/>
 		</dcterms:description>
 	</xsl:template>
+	
+	<!-- ignore symbol for now -->
+	<xsl:template match="nuds:symbol" mode="nomisma"/>
 
 	<xsl:template match="nuds:material|nuds:denomination|nuds:manufacture|nuds:geogname|nuds:persname|nuds:corpname" mode="nomisma">		
 		<xsl:variable name="element">

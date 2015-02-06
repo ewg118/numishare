@@ -534,7 +534,7 @@ $(document).ready(function () {
 			if ((field != 'date' && field != '') && selectVar.length > 0) {
 				query.push (field + ' &lt;' + selectVar + '&gt;');
 			} else if (field == 'date' && Math.floor(fromDate) == fromDate && Math.floor(toDate) == toDate){
-				var string = 'nm:end_date ?date';
+				var string = 'nmo:hasEndDate ?date';
 				var from_era = $(this).find('.from_era') .val() == 'minus' ? '-' : '';
 				var to_era = $(this).find('.to_era') .val() == 'minus' ? '-' : '';
 				fromDate = from_era + pad(fromDate, 4);

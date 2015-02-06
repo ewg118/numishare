@@ -110,7 +110,7 @@
 										</xsl:otherwise>
 									</xsl:choose>
 								</xsl:variable>
-								<category name="{$name}" href="{$href}" value="{$value}" query="{concat('nm:', $name, ' &lt;', $href, '&gt;')}"/>
+								<category name="{$name}" href="{$href}" value="{$value}" query="{concat('nmo:has', upper-case(substring($name, 1, 1)), substring($name, 2), ' &lt;', $href, '&gt;')}"/>
 							</xsl:for-each>
 						</categories>
 					</xsl:variable>
@@ -393,11 +393,11 @@
 	</xsl:template>
 	<xsl:template name="sparql_search_options">
 		<xsl:variable name="fields">
-			<xsl:text>authority,collection,date,deity,denomination,issuer,manufacture,material,mint,portrait,region</xsl:text>
+			<xsl:text>authority,collection,date,denomination,issuer,manufacture,material,mint,portrait,region</xsl:text>
 		</xsl:variable>
 		<xsl:for-each select="tokenize($fields, ',')">
 			<xsl:variable name="name" select="."/>
-			<option value="{if ($name = 'date') then 'date' else concat('nm:', $name)}" class="search_option">
+			<option value="{if ($name = 'date') then 'date' else concat('nmo:has', upper-case(substring($name, 1, 1)), substring($name, 2))}" class="search_option">
 				<xsl:value-of select="numishare:normalize_fields($name, $lang)"/>
 			</option>
 		</xsl:for-each>
@@ -407,7 +407,7 @@
 		<xsl:variable name="hrefs" as="item()*">
 			<xsl:analyze-string select="." regex="&lt;([^>]+)&gt;">
 				<xsl:matching-substring>
-					<xsl:value-of select="document(concat('http://nomisma.org/apis/getLabel?uri=', regex-group(1), '&amp;lang=', $lang))/response"/>
+					<xsl:value-of select="document(concat('http://admin.numismatics.org/nomisma/apis/getLabel?uri=', regex-group(1), '&amp;lang=', $lang))/response"/>
 				</xsl:matching-substring>
 			</xsl:analyze-string>
 		</xsl:variable>
@@ -472,7 +472,7 @@
 							<xsl:value-of select="$id"/>
 						</th>
 						<td>
-							<xsl:value-of select="document(concat($request-uri, 'sparql?constraints=', encode-for-uri(concat('nm:type_series_item &lt;', //config/uri_space, $id,'&gt;')),
+							<xsl:value-of select="document(concat($request-uri, 'sparql?constraints=', encode-for-uri(concat('nmo:hasTypeSeriesItem &lt;', //config/uri_space, $id,'&gt;')),
 								'&amp;template=avgMeasurement&amp;measurement=', $measurement))"/>
 						</td>
 					</tr>
@@ -540,7 +540,7 @@
 				<xsl:variable name="hrefs" as="item()*">
 					<xsl:analyze-string select="." regex="&lt;([^>]+)&gt;">
 						<xsl:matching-substring>
-							<xsl:value-of select="document(concat('http://nomisma.org/apis/getLabel?uri=', regex-group(1), '&amp;lang=', $lang))/response"/>
+							<xsl:value-of select="document(concat('http://admin.numismatics.org/nomisma/apis/getLabel?uri=', regex-group(1), '&amp;lang=', $lang))/response"/>
 						</xsl:matching-substring>
 					</xsl:analyze-string>
 				</xsl:variable>
@@ -553,7 +553,7 @@
 				</xsl:variable>
 				<td>
 					<xsl:variable name="filter">
-						<xsl:text>nm:end_date ?date FILTER ( ?date &gt;= "</xsl:text>
+						<xsl:text>nmo:hasEndDate ?date FILTER ( ?date &gt;= "</xsl:text>
 						<xsl:value-of select="$from"/>
 						<xsl:text>"^^xs:gYear \\and ?date &lt; "</xsl:text>
 						<xsl:value-of select="$to"/>
