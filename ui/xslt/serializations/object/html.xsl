@@ -33,16 +33,19 @@
 	<xsl:variable name="geonames_api_key" select="/content/config/geonames_api_key"/>
 	<xsl:variable name="sparql_endpoint" select="/content/config/sparql_endpoint"/>
 	<xsl:variable name="url" select="/content/config/url"/>
+	<xsl:variable name="uri_space" select="/content/config/uri_space"/>
 	<xsl:variable name="collection_type" select="/content/config/collection_type"/>
 	<!-- get layout -->
 	<xsl:variable name="orientation" select="/content/config/theme/layouts/display/nuds/orientation"/>
 	<xsl:variable name="image_location" select="/content/config/theme/layouts/display/nuds/image_location"/>
 
-	<xsl:variable name="display_path">
+	<!--<xsl:variable name="display_path">
 		<xsl:if test="not(string($mode))">
 			<xsl:text>../</xsl:text>
 		</xsl:if>
-	</xsl:variable>
+	</xsl:variable>-->
+	
+	<xsl:variable  name="display_path">../search/</xsl:variable>
 
 	<xsl:variable name="include_path" select="concat('http://', doc('input:request')/request/server-name, ':8080/orbeon/themes/', //config/theme/orbeon_theme)"/>
 
@@ -105,21 +108,20 @@
 			</xsl:for-each>
 		</nudsGroup>
 	</xsl:variable>
-
+	
 	<!-- get subtypes -->
 	<xsl:variable name="subtypes" as="element()*">
 		<xsl:if test="$recordType='conceptual' and //config/collection_type='cointype'">
 			<xsl:copy-of select="document(concat($request-uri, 'get_subtypes?identifiers=', $id))/*"/>
 		</xsl:if>
 	</xsl:variable>
-
+	
 	<xsl:variable name="facets" select="string-join(//config//facet, ',')"/>
 
 	<!-- get non-coin-type RDF in the document -->
 	<xsl:variable name="rdf" as="element()*">
-		<rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:nm="http://nomisma.org/id/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
-			xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:org="http://www.w3.org/ns/org#"
-			xmlns:nomisma="http://nomisma.org/" xmlns:nmo="http://nomisma.org/ontology#">
+		<rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:nm="http://nomisma.org/id/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+			xmlns:rdfa="http://www.w3.org/ns/rdfa#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#">
 			<xsl:variable name="id-param">
 				<xsl:for-each select="distinct-values(descendant::*[not(local-name()='typeDesc') and not(local-name()='reference')][contains(@xlink:href,
 					'nomisma.org')]/@xlink:href|$nudsGroup/descendant::*[not(local-name()='object') and not(local-name()='typeDesc')][contains(@xlink:href, 'nomisma.org')]/@xlink:href)">
@@ -130,7 +132,7 @@
 				</xsl:for-each>
 			</xsl:variable>
 
-			<xsl:variable name="rdf_url" select="concat('http://admin.numismatics.org/nomisma/apis/getRdf?identifiers=', encode-for-uri($id-param))"/>
+			<xsl:variable name="rdf_url" select="concat('http://nomisma.org/apis/getRdf?identifiers=', encode-for-uri($id-param))"/>
 			<xsl:copy-of select="document($rdf_url)/rdf:RDF/*"/>
 		</rdf:RDF>
 	</xsl:variable>
@@ -278,6 +280,9 @@
 							<span id="include_path">
 								<xsl:value-of select="$include_path"/>
 							</span>
+							<span id="department">
+								<xsl:value-of select="descendant::nuds:department"/>
+							</span>
 							<span id="pipeline">
 								<xsl:value-of select="$pipeline"/>
 							</span>
@@ -306,11 +311,11 @@
 			</xsl:choose>
 		</title>
 		<!-- alternates -->
-		<link rel="alternate" type="application/xml" href="{concat($url, 'id/', $id)}.xml"/>
-		<link rel="alternate" type="application/rdf+xml" href="{concat($url, 'id/', $id)}.rdf"/>
-		<link rel="alternate" type="application/ld+json" href="{concat($url, 'id/', $id)}.jsonld"/>
-		<link rel="alternate" type="text/turtle" href="{concat($url, 'id/', $id)}.ttl"/>
-		<link rel="alternate" type="application/vnd.google-earth.kml+xml" href="{concat($url, 'collection/', $id)}.kml"/>
+		<link rel="alternate" type="application/xml" href="{concat($uri_space, $id)}.xml"/>
+		<link rel="alternate" type="application/rdf+xml" href="{concat($uri_space, $id)}.rdf"/>
+		<link rel="alternate" type="application/ld+json" href="{concat($uri_space, $id)}.jsonld"/>
+		<link rel="alternate" type="text/turtle" href="{concat($uri_space, $id)}.ttl"/>
+		<link rel="alternate" type="application/vnd.google-earth.kml+xml" href="{concat($uri_space, $id)}.kml"/>
 		<!-- CSS -->
 		<link rel="shortcut icon" type="image/x-icon" href="{$include_path}/images/favicon.png"/>
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"/>
@@ -340,10 +345,10 @@
 					<xsl:choose>
 						<xsl:when test="$recordType='hoard'">nmo:Hoard</xsl:when>
 						<xsl:when test="$recordType='conceptual'">nmo:TypeSeriesItem</xsl:when>
-						<xsl:when test="$recordType='physical'">ecrm:E18_Physical_Thing</xsl:when>
+						<xsl:when test="$recordType='physical'">nmo:NumismaticObject</xsl:when>
 					</xsl:choose>
 				</xsl:variable>
-				<div class="container-fluid" typeof="{$typeof}" about="{concat($url, 'id/', $id)}">
+				<div class="container-fluid" typeof="{$typeof}" about="{concat($uri_space, $id)}">
 					<xsl:choose>
 						<xsl:when test="count(/content/*[local-name()='nuds']) &gt; 0">
 							<xsl:call-template name="nuds"/>

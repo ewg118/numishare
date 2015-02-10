@@ -233,13 +233,13 @@
 								</xsl:otherwise>
 							</xsl:choose>
 						</xsl:variable>
-						<xsl:if test="$rdf/*[@rdf:about=$href]/descendant::geo:lat and $rdf/*[@rdf:about=$href]/descendant::geo:long">
+						<xsl:if test="$rdf/*[@rdf:about=concat($href, '#this')]/geo:lat and $rdf/*[@rdf:about=concat($href, '#this')]/geo:long">
 							<field name="findspot_geo">
 								<xsl:value-of select="$label"/>
 								<xsl:text>|</xsl:text>
 								<xsl:value-of select="@xlink:href"/>
 								<xsl:text>|</xsl:text>
-								<xsl:value-of select="concat($rdf/*[@rdf:about=$href]/descendant::geo:long, ',', $rdf/*[@rdf:about=$href]/descendant::geo:lat)"/>
+								<xsl:value-of select="concat($rdf/*[@rdf:about=concat($href, '#this')]/geo:long, ',', $rdf/*[@rdf:about=concat($href, '#this')]/geo:lat)"/>
 							</field>
 						</xsl:if>
 						<xsl:if test="$rdf/*[@rdf:about=$href]/nmo:hasFindspot[contains(@rdf:resource, 'geonames.org')]">

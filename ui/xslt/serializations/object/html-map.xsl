@@ -7,6 +7,7 @@
 	<xsl:param name="lang" select="doc('input:request')/request/parameters/parameter[name='lang']/value"/>
 	<!-- config variables -->
 	<xsl:variable name="url" select="/content/config/url"/>
+	<xsl:variable name="uri_space" select="/content/config/uri_space"/>
 	<xsl:variable name="collection_type" select="/content/config/collection_type"/>
 	<xsl:variable name="display_path">../</xsl:variable>
 	<xsl:variable name="include_path" select="concat('http://', doc('input:request')/request/server-name, ':8080/orbeon/themes/', //config/theme/orbeon_theme)"/>
@@ -153,7 +154,7 @@
 									</table>
 								</div>
 								<small>
-									<a href="{$display_path}id/{$id}"><span class="glyphicon glyphicon-arrow-left"/>Return</a>
+									<a href="{$uri_space}{$id}"><span class="glyphicon glyphicon-arrow-left"/>Return</a>
 								</small>
 							</div>
 							<xsl:choose>
@@ -186,6 +187,9 @@
 					</span>
 					<span id="pipeline">
 						<xsl:value-of select="$pipeline"/>
+					</span>
+					<span id="department">
+						<xsl:value-of select="descendant::nuds:department"/>
 					</span>
 					<span id="object_title">
 						<xsl:value-of select="descendant::*:descMeta/*:title"/>

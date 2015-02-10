@@ -46,7 +46,7 @@ ASK {?object nmo:hasTypeSeriesItem <URI> ;
 					<a href="compare_results?q={$q}&amp;start={$start}&amp;image={$image}&amp;side={$side}&amp;mode=compare{if (string($lang)) then concat('&amp;lang=', $lang) else ''}"
 						class="back_results">« Search results</a>
 					<xsl:text> | </xsl:text>
-					<a href="id/{$id}">Full record »</a>
+					<a href="{$uri_space}{$id}">Full record »</a>
 				</small>
 			</div>
 		</xsl:if>
