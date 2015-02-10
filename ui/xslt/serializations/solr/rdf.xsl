@@ -160,10 +160,7 @@
 			</dcterms:title>
 			<dcterms:identifier>
 				<xsl:value-of select="$id"/>
-			</dcterms:identifier>
-			<dcterms:publisher>
-				<xsl:value-of select="str[@name='publisher_display']"/>
-			</dcterms:publisher>
+			</dcterms:identifier>			
 			<xsl:for-each select="arr[@name='collection_uri']/str">
 				<nmo:hasCollection rdf:resource="{.}"/>
 			</xsl:for-each>
