@@ -492,7 +492,7 @@
 									<xsl:call-template name="sparqlLabel"/>
 								</th>
 								<td>
-									<xsl:value-of select="document(concat($request-uri, 'sparql?constraints=', encode-for-uri(concat('dcterms:isPartOf &lt;', $type_series, '&gt; AND ',.)),
+									<xsl:value-of select="document(concat($request-uri, 'sparql?constraints=', encode-for-uri(concat('dcterms:source &lt;', $type_series, '&gt; AND ',.)),
 										'&amp;template=avgMeasurement&amp;measurement=', $measurement))"/>
 								</td>
 							</tr>
@@ -501,6 +501,8 @@
 				</xsl:choose>
 			</tbody>
 		</table>
+		<!--<xsl:value-of select="concat($request-uri, 'sparql?constraints=', encode-for-uri(concat('dcterms:source &lt;', $type_series, '&gt; AND ', )),
+			'&amp;template=avgMeasurement&amp;measurement=', $measurement)"/>-->
 	</xsl:template>
 	<xsl:template name="processInterval">
 		<xsl:param name="start"/>
@@ -555,11 +557,11 @@
 					<xsl:variable name="filter">
 						<xsl:text>nmo:hasEndDate ?date FILTER ( ?date &gt;= "</xsl:text>
 						<xsl:value-of select="$from"/>
-						<xsl:text>"^^xs:gYear \\and ?date &lt; "</xsl:text>
+						<xsl:text>"^^xsd:gYear \\and ?date &lt; "</xsl:text>
 						<xsl:value-of select="$to"/>
-						<xsl:text>"^^xs:gYear )</xsl:text>
+						<xsl:text>"^^xsd:gYear )</xsl:text>
 					</xsl:variable>
-					<xsl:value-of select="document(concat($request-uri, 'sparql?constraints=', encode-for-uri(concat('dcterms:isPartOf &lt;', $type_series, '&gt; AND ', ., ' AND ',       $filter)),
+					<xsl:value-of select="document(concat($request-uri, 'sparql?constraints=', encode-for-uri(concat('dcterms:source &lt;', $type_series, '&gt; AND ', ., ' AND ',       $filter)),
 						'&amp;template=avgMeasurement&amp;measurement=', $measurement))"/>
 				</td>
 			</xsl:for-each>

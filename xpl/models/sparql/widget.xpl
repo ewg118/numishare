@@ -94,7 +94,7 @@ PREFIX nmo:	<http://nomisma.org/ontology#>
 PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>
 
 
-SELECT ?object ?title ?findspot ?lat ?long ?objectType ?burial WHERE {
+SELECT ?object ?title ?findspot ?lat ?long ?type ?burial WHERE {
 ?object nmo:hasTypeSeriesItem <typeUri>.
 ?object dcterms:title ?title .			
 ?object nmo:hasFindspot ?findspot .
@@ -106,7 +106,7 @@ UNION {
  ?loc geo:long ?long			 
  OPTIONAL { ?findspot nmo:hasClosingDate ?burial }
 }
-OPTIONAL { ?object rdf:type ?objectType }
+OPTIONAL { ?object rdf:type ?type }
 OPTIONAL { ?object nmo:hasClosingDate ?burial }}]]>
 						</xsl:when>
 						<xsl:when test="$template = 'json'"><![CDATA[PREFIX rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#>

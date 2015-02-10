@@ -541,7 +541,7 @@ $(document).ready(function () {
 				toDate = to_era + pad(toDate, 4);
 				
 				//create gYear compliant format from year integers
-				string += ' FILTER ( ?date >= "' + fromDate +'"^^xs:gYear \\\\and ?date <= "' + toDate + '"^^xs:gYear )';
+				string += ' FILTER ( ?date >= "' + fromDate +'"^^xsd:gYear \\\\and ?date <= "' + toDate + '"^^xsd:gYear )';
 				query.push(string);
 			}
 		});

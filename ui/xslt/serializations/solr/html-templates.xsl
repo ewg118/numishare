@@ -368,7 +368,7 @@
 					number(int[@name='numFacetTerms']) &gt; 0]" mode="facet"/>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:apply-templates select="lst[not(@name='mint_geo') and number(int[@name='numFacetTerms']) &gt; 0]" mode="facet"/>
+				<xsl:apply-templates select="lst[not(contains(@name, '_geo')) and number(int[@name='numFacetTerms']) &gt; 0]" mode="facet"/>
 			</xsl:otherwise>
 		</xsl:choose>
 		<form action="results" method="GET" role="form" id="facet_form">
@@ -1168,31 +1168,15 @@
 		</div>
 	</xsl:template>
 	<!-- ************** PROCESS GROUP OF SPARQL RESULTS FROM NOMISMA TO DISPLAY IMAGES ************** -->
-	<xsl:template match="group" mode="results">
-		<xsl:variable name="coin-count" select="number(coin-count)" as="xs:double"/>
-		<xsl:variable name="hoard-count" select="number(hoard-count)" as="xs:double"/>
-		<xsl:variable name="object-count" select="number(object-count)" as="xs:double"/>
-		<xsl:variable name="count" select="$coin-count + $hoard-count + $object-count"/>
+	<xsl:template match="group" mode="results">		
+		<xsl:variable name="hoard-count" select="number(hoard-count)"/>
+		<xsl:variable name="object-count" select="number(object-count)"/>
+		<xsl:variable name="count" select="$hoard-count + $object-count"/>
 		<!-- display images -->
 		<xsl:apply-templates select="descendant::object" mode="results"/>
 		<!-- object count -->
 		<xsl:if test="$count &gt; 0">
-			<br/>
-			<xsl:if test="$coin-count &gt; 0">
-				<xsl:choose>
-					<xsl:when test="$coin-count = 1">
-						<xsl:value-of select="numishare:normalizeLabel('results_coin', $lang)"/>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:value-of select="numishare:normalizeLabel('results_coins', $lang)"/>
-					</xsl:otherwise>
-				</xsl:choose>
-				<xsl:text>: </xsl:text>
-				<xsl:value-of select="$coin-count"/>
-				<xsl:if test="$object-count &gt; 0 or $hoard-count &gt; 0">
-					<xsl:text>; </xsl:text>
-				</xsl:if>
-			</xsl:if>
+			<br/>			
 			<xsl:if test="$object-count &gt; 0">
 				<xsl:choose>
 					<xsl:when test="$object-count = 1">object</xsl:when>
