@@ -306,10 +306,10 @@
 			</xsl:choose>
 		</title>
 		<!-- alternates -->
-		<link rel="alternate" type="application/xml" href="{concat($url, 'id/', $id)}.xml"/>
-		<link rel="alternate" type="application/rdf+xml" href="{concat($url, 'id/', $id)}.rdf"/>
-		<link rel="alternate" type="application/ld+json" href="{concat($url, 'id/', $id)}.jsonld"/>
-		<link rel="alternate" type="text/turtle" href="{concat($url, 'id/', $id)}.ttl"/>
+		<link rel="alternate" type="application/xml" href="{concat($url, 'collection/', $id)}.xml"/>
+		<link rel="alternate" type="application/rdf+xml" href="{concat($url, 'collection/', $id)}.rdf"/>
+		<link rel="alternate" type="application/ld+json" href="{concat($url, 'collection/', $id)}.jsonld"/>
+		<link rel="alternate" type="text/turtle" href="{concat($url, 'collection/', $id)}.ttl"/>
 		<link rel="alternate" type="application/vnd.google-earth.kml+xml" href="{concat($url, 'collection/', $id)}.kml"/>
 		<!-- CSS -->
 		<link rel="shortcut icon" type="image/x-icon" href="{$include_path}/images/favicon.png"/>
@@ -340,10 +340,10 @@
 					<xsl:choose>
 						<xsl:when test="$recordType='hoard'">nmo:Hoard</xsl:when>
 						<xsl:when test="$recordType='conceptual'">nmo:TypeSeriesItem</xsl:when>
-						<xsl:when test="$recordType='physical'">ecrm:E18_Physical_Thing</xsl:when>
+						<xsl:when test="$recordType='physical'">nmo:NumismaticObject</xsl:when>
 					</xsl:choose>
 				</xsl:variable>
-				<div class="container-fluid" typeof="{$typeof}" about="{concat($url, 'id/', $id)}">
+				<div class="container-fluid" typeof="{$typeof}" about="{concat($url, 'collection/', $id)}">
 					<xsl:choose>
 						<xsl:when test="count(/content/*[local-name()='nuds']) &gt; 0">
 							<xsl:call-template name="nuds"/>

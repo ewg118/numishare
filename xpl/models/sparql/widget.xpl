@@ -59,13 +59,11 @@ PREFIX nm:       <http://nomisma.org/id/>
 PREFIX nmo:	<http://nomisma.org/ontology#>
 PREFIX skos:      <http://www.w3.org/2004/02/skos/core#>
 PREFIX foaf:	<http://xmlns.com/foaf/0.1/>
-PREFIX ecrm: <http://erlangen-crm.org/current/>
 
 SELECT ?object ?title ?identifier ?findspot ?collection ?weight ?axis ?diameter ?obvThumb ?revThumb ?obvRef ?revRef ?comThumb ?comRef  WHERE {
-?object nmo:hasTypeSeriesItem <typeUri>.
-{?object a nm:coin}
-UNION {?object a ecrm:E18_Physical_Thing}
-?object dcterms:title ?title .
+?object nmo:hasTypeSeriesItem <typeUri> ;
+  rdf:type nmo:NumismaticObject ;
+  dcterms:title ?title .
 OPTIONAL { ?object dcterms:identifier ?identifier}
 OPTIONAL { ?object nmo:hasCollection ?colUri .
 ?colUri skos:prefLabel ?collection 
@@ -92,7 +90,6 @@ PREFIX dcterms:  <http://purl.org/dc/terms/>
 PREFIX nm:       <http://nomisma.org/id/>
 PREFIX nmo:	<http://nomisma.org/ontology#>
 PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>
-
 
 SELECT ?object ?title ?findspot ?lat ?long ?type ?burial WHERE {
 ?object nmo:hasTypeSeriesItem <typeUri>.

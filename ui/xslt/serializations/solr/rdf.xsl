@@ -151,25 +151,9 @@
 	<!-- NOMISMA COIN TYPE RDF -->
 	<xsl:template match="doc" mode="nomisma">
 		<xsl:variable name="id" select="str[@name='recordId']"/>
-		<xsl:variable name="recordType" select="str[@name='recordType']"/>
-		<xsl:variable name="element">
-			<xsl:choose>
-				<xsl:when test="$recordType='hoard'">nmo:Hoard</xsl:when>
-				<xsl:otherwise>
-					<xsl:variable name="objectType" select="arr[@name='objectType_uri']/str[1]"/>
-					<xsl:choose>
-						<xsl:when test="$objectType = 'http://nomisma.org/id/coin'">nmo:Coin</xsl:when>
-						<xsl:when test="$objectType = 'http://nomisma.org/id/medal'">nmo:Medal</xsl:when>
-						<xsl:when test="$objectType = 'http://nomisma.org/id/roman_medallian'">nmo:Medallion</xsl:when>
-						<xsl:when test="$objectType = 'http://nomisma.org/id/tessera'">nmo:Tessera</xsl:when>
-						<xsl:when test="$objectType = 'http://nomisma.org/id/token'">nmo:Token</xsl:when>
-						<xsl:otherwise>ecrm:E18_Physical_Thing</xsl:otherwise>
-					</xsl:choose>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:variable>
+		<xsl:variable name="recordType" select="str[@name='recordType']"/>		
 
-		<xsl:element name="{$element}"  exclude-result-prefixes="#all">
+		<xsl:element name="nmo:NumismaticObject"  exclude-result-prefixes="#all">
 			<xsl:attribute name="rdf:about" select="concat($url, 'id/', $id)"/>
 			<dcterms:title xml:lang="{if (str[@name='lang']) then str[@name='lang'] else 'en'}">
 				<xsl:value-of select="str[@name='title_display']"/>

@@ -203,7 +203,7 @@
 								<ul>
 									<xsl:if test="local-name()='obverse' or local-name()='reverse'">
 										<xsl:attribute name="rel" select="concat('nmo:', concat(upper-case(substring(local-name(), 1, 1)), substring(local-name(), 2)))"/>
-										<xsl:attribute name="resource" select="concat($url, 'id/', $id, '#', local-name())"/>
+										<xsl:attribute name="resource" select="concat($url, 'collection/', $id, '#', local-name())"/>
 									</xsl:if>
 									<xsl:apply-templates select="*" mode="descMeta"/>
 									<xsl:if test="nuds:symbol[@position='left'] or nuds:symbol[@position='center'] or nuds:symbol[@position='right'] or nuds:symbol[@position='exergue']">
