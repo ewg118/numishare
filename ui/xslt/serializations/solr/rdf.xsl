@@ -7,6 +7,7 @@
 
 	<xsl:param name="mode" select="//lst[@name='params']/str[@name='mode']"/>
 	<xsl:param name="url" select="/content/config/url"/>
+	<xsl:variable name="uri_space" select="/content/config/uri_space"/>
 
 	<xsl:template match="/">
 		<rdf:RDF>
@@ -35,7 +36,7 @@
 			<dcterms:title>
 				<xsl:value-of select="str[@name='title_display']"/>
 			</dcterms:title>
-			<foaf:homepage rdf:resource="{$url}id/{$id}"/>
+			<foaf:homepage rdf:resource="{$uri_space}{$id}"/>
 
 			<!-- temporal -->
 			<xsl:choose>
@@ -155,22 +156,12 @@
 		<xsl:variable name="element">
 			<xsl:choose>
 				<xsl:when test="$recordType='hoard'">nmo:Hoard</xsl:when>
-				<xsl:otherwise>
-					<xsl:variable name="objectType" select="arr[@name='objectType_uri']/str[1]"/>
-					<xsl:choose>
-						<xsl:when test="$objectType = 'http://nomisma.org/id/coin'">nmo:Coin</xsl:when>
-						<xsl:when test="$objectType = 'http://nomisma.org/id/medal'">nmo:Medal</xsl:when>
-						<xsl:when test="$objectType = 'http://nomisma.org/id/roman_medallian'">nmo:Medallion</xsl:when>
-						<xsl:when test="$objectType = 'http://nomisma.org/id/tessera'">nmo:Tessera</xsl:when>
-						<xsl:when test="$objectType = 'http://nomisma.org/id/token'">nmo:Token</xsl:when>
-						<xsl:otherwise>ecrm:E18_Physical_Thing</xsl:otherwise>
-					</xsl:choose>
-				</xsl:otherwise>
+				<xsl:otherwise>nmo:NumismaticObject</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
 
 		<xsl:element name="{$element}"  exclude-result-prefixes="#all">
-			<xsl:attribute name="rdf:about" select="concat($url, 'id/', $id)"/>
+			<xsl:attribute name="rdf:about" select="concat($uri_space, $id)"/>
 			<dcterms:title xml:lang="{if (str[@name='lang']) then str[@name='lang'] else 'en'}">
 				<xsl:value-of select="str[@name='title_display']"/>
 			</dcterms:title>
@@ -217,7 +208,7 @@
 			<xsl:if test="string(str[@name='reference_obv']) or string(str[@name='thumbnail_obv'])">
 				<nmo:hasObverse>
 					<rdf:Description>
-						<xsl:attribute name="rdf:about" select="concat($url, 'id/', $id, '#obverse')"/>
+						<xsl:attribute name="rdf:about" select="concat($uri_space, $id, '#obverse')"/>
 						<xsl:if test="string(str[@name='reference_obv'])">
 							<xsl:variable name="href">
 								<xsl:choose>
@@ -251,7 +242,7 @@
 			<xsl:if test="string(str[@name='reference_rev']) or string(str[@name='thumbnail_rev'])">
 				<nmo:hasReverse>
 					<rdf:Description>
-						<xsl:attribute name="rdf:about" select="concat($url, 'id/', $id, '#reverse')"/>
+						<xsl:attribute name="rdf:about" select="concat($uri_space, $id, '#reverse')"/>
 						<xsl:if test="string(str[@name='reference_rev'])">
 							<xsl:variable name="href">
 								<xsl:choose>
