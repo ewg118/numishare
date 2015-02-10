@@ -153,7 +153,7 @@
 									</table>
 								</div>
 								<small>
-									<a href="{$url}collection/{$id}"><span class="glyphicon glyphicon-arrow-left"/>Return</a>
+									<a href="{$url}id/{$id}"><span class="glyphicon glyphicon-arrow-left"/>Return</a>
 								</small>
 							</div>
 							<xsl:choose>

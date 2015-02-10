@@ -186,7 +186,7 @@
 				</xsl:if>
 				<![CDATA[</ul>
 				<![CDATA[<a href="]]><xsl:value-of select="arr[@name='mint_uri']/str"/><![CDATA[">View Mint</a><br/>]]>
-				<![CDATA[<a href="]]><xsl:value-of select="concat($url, 'collection/', str[@name='identifier_display'])"/><![CDATA[">View Item</a>]]>				
+				<![CDATA[<a href="]]><xsl:value-of select="concat($url, 'id/', str[@name='identifier_display'])"/><![CDATA[">View Item</a>]]>				
 			</description>
 			<styleUrl>#mint</styleUrl>
 			<xsl:for-each select="arr[@name='mint_geo']/str">

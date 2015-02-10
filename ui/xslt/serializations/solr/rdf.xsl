@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes="xs" xmlns:pelagios="http://pelagios.github.io/vocab/terms#"
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes="xs xsl" xmlns:pelagios="http://pelagios.github.io/vocab/terms#"
 	xmlns:relations="http://pelagios.github.io/vocab/relations#" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:nmo="http://nomisma.org/ontology#"
-	xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nm="http://nomisma.org/id/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/"
-	xmlns:ecrm="http://erlangen-crm.org/current/" xmlns:oa="http://www.w3.org/ns/oa#" xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
-	xmlns:foaf="http://xmlns.com/foaf/0.1/" version="2.0">
+	xmlns:dcmitype="http://purl.org/dc/dcmitype/" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nm="http://nomisma.org/id/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	xmlns:dcterms="http://purl.org/dc/terms/" xmlns:ecrm="http://erlangen-crm.org/current/" xmlns:oa="http://www.w3.org/ns/oa#" xmlns:owl="http://www.w3.org/2002/07/owl#"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xmlns:foaf="http://xmlns.com/foaf/0.1/" version="2.0">
 
 	<xsl:param name="mode" select="//lst[@name='params']/str[@name='mode']"/>
 	<xsl:param name="url" select="/content/config/url"/>
@@ -151,9 +151,9 @@
 	<!-- NOMISMA COIN TYPE RDF -->
 	<xsl:template match="doc" mode="nomisma">
 		<xsl:variable name="id" select="str[@name='recordId']"/>
-		<xsl:variable name="recordType" select="str[@name='recordType']"/>		
+		<xsl:variable name="recordType" select="str[@name='recordType']"/>
 
-		<xsl:element name="nmo:NumismaticObject"  exclude-result-prefixes="#all">
+		<xsl:element name="{if ($recordType = 'hoard') then 'nmo:Hoard' else 'nmo:NumismaticObject'}" exclude-result-prefixes="#all">
 			<xsl:attribute name="rdf:about" select="concat($url, 'id/', $id)"/>
 			<dcterms:title xml:lang="{if (str[@name='lang']) then str[@name='lang'] else 'en'}">
 				<xsl:value-of select="str[@name='title_display']"/>
@@ -167,28 +167,39 @@
 			<xsl:for-each select="arr[@name='collection_uri']/str">
 				<nmo:hasCollection rdf:resource="{.}"/>
 			</xsl:for-each>
-			<xsl:for-each select="arr[@name='coinType_uri']/str">
-				<nmo:hasTypeSeriesItem rdf:resource="{.}"/>
-			</xsl:for-each>
+			
+			<xsl:if test="count(arr[@name='coinType_uri']/str) &gt; 0">
+				<xsl:choose>
+					<xsl:when test="$recordType='hoard'">
+						<dcterms:tableOfContents rdf:resource="{concat($url, 'id/', $id, '#contents')}"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:for-each select="arr[@name='coinType_uri']/str">
+							<nmo:hasTypeSeriesItem rdf:resource="{.}"/>
+						</xsl:for-each>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:if>
+			
 			<!-- measurements for physical coins -->
 			<xsl:if test="int[@name='axis_num']">
-				<nmo:hasAxis rdf:datatype="xsd:integer">
+				<nmo:hasAxis rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">
 					<xsl:value-of select="int[@name='axis_num']"/>
 				</nmo:hasAxis>
 			</xsl:if>
 			<xsl:if test="float[@name='diameter_num']">
-				<nmo:hasDiameter rdf:datatype="xsd:decimal">
+				<nmo:hasDiameter rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">
 					<xsl:value-of select="float[@name='diameter_num']"/>
 				</nmo:hasDiameter>
 			</xsl:if>
 			<xsl:if test="float[@name='weight_num']">
-				<nmo:hasWeight rdf:datatype="xsd:decimal">
+				<nmo:hasWeight rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">
 					<xsl:value-of select="float[@name='weight_num']"/>
 				</nmo:hasWeight>
 			</xsl:if>
 			<!-- findspot information -->
 			<xsl:if test="int[@name='taq_num']">
-				<nmo:hasClosingDate rdf:datatype="xsd:gYear">
+				<nmo:hasClosingDate rdf:datatype="http://www.w3.org/2001/XMLSchema#gYear">
 					<xsl:value-of select="format-number(int[@name='taq_num'], '0000')"/>
 				</nmo:hasClosingDate>
 			</xsl:if>
@@ -266,6 +277,14 @@
 				</nmo:hasReverse>
 			</xsl:if>
 		</xsl:element>
+		
+		<xsl:if test="count(arr[@name='coinType_uri']/str) &gt; 0 and $recordType = 'hoard'">
+			<dcmitype:Collection rdf:about="{concat($url, 'id/', $id, '#contents')}">
+				<xsl:for-each select="arr[@name='coinType_uri']/str">
+					<nmo:hasTypeSeriesItem rdf:resource="{.}"/>
+				</xsl:for-each>
+			</dcmitype:Collection>
+		</xsl:if>
 
 		<xsl:if test="arr[@name='findspot_geo']/str">
 			<xsl:variable name="findspot" select="tokenize(arr[@name='findspot_geo']/str, '\|')"/>

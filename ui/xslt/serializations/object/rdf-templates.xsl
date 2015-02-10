@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes="#all" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"
 	xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nm="http://nomisma.org/id/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:nuds="http://nomisma.org/nuds"
-	xmlns:nh="http://nomisma.org/nudsHoard" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:oa="http://www.w3.org/ns/oa#" xmlns:ecrm="http://erlangen-crm.org/current/"
-	xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:pelagios="http://pelagios.github.io/vocab/terms#" xmlns:relations="http://pelagios.github.io/vocab/relations#"  xmlns:nmo="http://nomisma.org/ontology#"
+	xmlns:nh="http://nomisma.org/nudsHoard" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:oa="http://www.w3.org/ns/oa#"
+	xmlns:ecrm="http://erlangen-crm.org/current/" xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:pelagios="http://pelagios.github.io/vocab/terms#"
+	xmlns:relations="http://pelagios.github.io/vocab/relations#" xmlns:nmo="http://nomisma.org/ontology#" xmlns:dcmitype="http://purl.org/dc/dcmitype/"
 	xmlns:numishare="https://github.com/ewg118/numishare" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:mets="http://www.loc.gov/METS/" xmlns:xsd="http://www.w3.org/2001/XMLSchema#" version="2.0">
 
 	<!-- ************** OBJECT-TO-RDF **************** -->
@@ -72,7 +73,7 @@
 					<xsl:value-of select="."/>
 				</dcterms:title>
 			</xsl:for-each>
-			<foaf:homepage rdf:resource="{$url}collection/{$id}"/>
+			<foaf:homepage rdf:resource="{$url}id/{$id}"/>
 			<xsl:if test="string(@recordType)">
 				<!-- dates -->
 				<xsl:choose>
@@ -129,13 +130,13 @@
 				</xsl:variable>
 				<xsl:element name="{$element}">
 					<xsl:attribute name="rdf:about">
-						<xsl:value-of select="concat($url, 'collection/', $id)"/>
+						<xsl:value-of select="concat($url, 'id/', $id)"/>
 					</xsl:attribute>
 					<xsl:for-each select="descendant::*:semanticDeclaration">
 						<xsl:namespace name="{*:prefix}" select="*:namespace"/>
 					</xsl:for-each>
 					<xsl:for-each select="descendant::*:otherRecordId[string(@semantic)]">
-						<xsl:variable name="uri" select="if (contains(., 'http://')) then . else concat($url, 'collection/', .)"/>
+						<xsl:variable name="uri" select="if (contains(., 'http://')) then . else concat($url, 'id/', .)"/>
 						<xsl:variable name="prefix" select="substring-before(@semantic, ':')"/>
 						<xsl:variable name="namespace" select="ancestor::*:control/*:semanticDeclaration[*:prefix=$prefix]/*:namespace"/>
 						<xsl:element name="{@semantic}" namespace="{$namespace}">
@@ -147,7 +148,7 @@
 			<xsl:otherwise>
 				<xsl:choose>
 					<xsl:when test="@recordType='conceptual'">
-						<nmo:TypeSeriesItem rdf:about="{$url}collection/{$id}">
+						<nmo:TypeSeriesItem rdf:about="{$url}id/{$id}">
 							<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 							<!-- insert titles -->
 							<xsl:for-each select="descendant::nuds:descMeta/nuds:title">
@@ -168,7 +169,7 @@
 							<dcterms:source rdf:resource="{//config/type_series}"/>
 							<!-- other ids -->
 							<xsl:for-each select="descendant::*:otherRecordId[string(@semantic)]">
-								<xsl:variable name="uri" select="if (contains(., 'http://')) then . else concat($url, 'collection/', .)"/>
+								<xsl:variable name="uri" select="if (contains(., 'http://')) then . else concat($url, 'id/', .)"/>
 								<xsl:variable name="prefix" select="substring-before(@semantic, ':')"/>
 								<xsl:variable name="namespace" select="ancestor::*:control/*:semanticDeclaration[*:prefix=$prefix]/*:namespace"/>
 								<xsl:element name="{@semantic}" namespace="{$namespace}">
@@ -187,7 +188,7 @@
 					<xsl:when test="@recordType='physical'">
 						<xsl:element name="nmo:NumismaticObject">
 							<xsl:attribute name="rdf:about">
-								<xsl:value-of select="concat($url, 'collection/', $id)"/>
+								<xsl:value-of select="concat($url, 'id/', $id)"/>
 							</xsl:attribute>
 							<dcterms:title>
 								<xsl:if test="string(@xml:lang)">
@@ -222,7 +223,7 @@
 							</xsl:if>
 							<!-- other ids -->
 							<xsl:for-each select="descendant::*:otherRecordId[string(@semantic)]">
-								<xsl:variable name="uri" select="if (contains(., 'http://')) then . else concat($url, 'collection/', .)"/>
+								<xsl:variable name="uri" select="if (contains(., 'http://')) then . else concat($url, 'id/', .)"/>
 								<xsl:variable name="prefix" select="substring-before(@semantic, ':')"/>
 								<xsl:variable name="namespace" select="ancestor::*:control/*:semanticDeclaration[*:prefix=$prefix]/*:namespace"/>
 								<xsl:element name="{@semantic}" namespace="{$namespace}">
@@ -234,10 +235,10 @@
 							<!-- findspot-->
 							<xsl:apply-templates select="nuds:descMeta/nuds:findspotDesc" mode="nomisma"/>
 							<xsl:if test="descendant::mets:fileGrp[@USE='obverse']">
-								<nmo:hasObverse rdf:resource="{$url}collection/{$id}#obverse"/>
+								<nmo:hasObverse rdf:resource="{$url}id/{$id}#obverse"/>
 							</xsl:if>
 							<xsl:if test="descendant::mets:fileGrp[@USE='reverse']">
-								<nmo:hasReverse rdf:resource="{$url}collection/{$id}#reverse"/>
+								<nmo:hasReverse rdf:resource="{$url}id/{$id}#reverse"/>
 							</xsl:if>
 						</xsl:element>
 						<!-- images -->
@@ -255,7 +256,7 @@
 
 		<xsl:for-each select="mets:fileGrp">
 			<xsl:variable name="side" select="@USE"/>
-			<rdf:Description rdf:about="{$url}collection/{$id}#{$side}">
+			<rdf:Description rdf:about="{$url}id/{$id}#{$side}">
 				<xsl:for-each select="mets:file">
 					<xsl:choose>
 						<xsl:when test="@USE='thumbnail'">
@@ -316,20 +317,20 @@
 		<xsl:apply-templates select="nuds:geographic/nuds:geogname|nuds:authority/nuds:persname|nuds:authority/nuds:corpname" mode="nomisma"/>
 		<xsl:apply-templates select="nuds:date[@standardDate]|nuds:dateRange[child::node()/@standardDate]" mode="nomisma"/>
 		<xsl:if test="nuds:obverse">
-			<nmo:hasObverse rdf:resource="{$url}collection/{$id}#obverse"/>
+			<nmo:hasObverse rdf:resource="{$url}id/{$id}#obverse"/>
 		</xsl:if>
 		<xsl:if test="nuds:reverse">
-			<nmo:hasReverse rdf:resource="{$url}collection/{$id}#reverse"/>
+			<nmo:hasReverse rdf:resource="{$url}id/{$id}#reverse"/>
 		</xsl:if>
 	</xsl:template>
 
 	<xsl:template match="nuds:obverse|nuds:reverse" mode="nomisma">
 		<xsl:param name="id"/>
-		<rdf:Description rdf:about="{$url}collection/{$id}#{local-name()}">			
+		<rdf:Description rdf:about="{$url}id/{$id}#{local-name()}">
 			<xsl:apply-templates mode="nomisma"/>
 		</rdf:Description>
 	</xsl:template>
-	
+
 	<xsl:template match="nuds:legend" mode="nomisma">
 		<nmo:hasLegend>
 			<xsl:if test="string(@xml:lang)">
@@ -338,7 +339,7 @@
 			<xsl:value-of select="."/>
 		</nmo:hasLegend>
 	</xsl:template>
-	
+
 	<xsl:template match="nuds:type/nuds:description" mode="nomisma">
 		<dcterms:description>
 			<xsl:if test="string(@xml:lang)">
@@ -347,11 +348,11 @@
 			<xsl:value-of select="."/>
 		</dcterms:description>
 	</xsl:template>
-	
+
 	<!-- ignore symbol for now -->
 	<xsl:template match="nuds:symbol" mode="nomisma"/>
 
-	<xsl:template match="nuds:material|nuds:denomination|nuds:manufacture|nuds:geogname|nuds:persname|nuds:corpname" mode="nomisma">		
+	<xsl:template match="nuds:material|nuds:denomination|nuds:manufacture|nuds:geogname|nuds:persname|nuds:corpname" mode="nomisma">
 		<xsl:variable name="element">
 			<xsl:choose>
 				<xsl:when test="parent::nuds:obverse or parent::nuds:reverse">hasPortrait</xsl:when>
@@ -363,7 +364,7 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-		
+
 		<xsl:if test="string-length($element) &gt; 0">
 			<xsl:choose>
 				<xsl:when test="string(@xlink:href)">
@@ -377,7 +378,7 @@
 					</xsl:element>
 				</xsl:otherwise>
 			</xsl:choose>
-		</xsl:if>		
+		</xsl:if>
 	</xsl:template>
 
 	<xsl:template match="nuds:date" mode="nomisma">
@@ -409,15 +410,15 @@
 		<xsl:variable name="id" select="descendant::*[local-name()='recordId']"/>
 		<xsl:choose>
 			<xsl:when test="descendant::*:maintenanceStatus != 'new' and descendant::*:maintenanceStatus != 'derived' and descendant::*:maintenanceStatus != 'revised'">
-				<xsl:element name="nmo:Hoard">					
+				<xsl:element name="nmo:Hoard">
 					<xsl:attribute name="rdf:about">
-						<xsl:value-of select="concat($url, 'collection/', $id)"/>
+						<xsl:value-of select="concat($url, 'id/', $id)"/>
 					</xsl:attribute>
 					<xsl:for-each select="descendant::*:semanticDeclaration">
 						<xsl:namespace name="{*:prefix}" select="*:namespace"/>
 					</xsl:for-each>
 					<xsl:for-each select="descendant::*:otherRecordId[string(@semantic)]">
-						<xsl:variable name="uri" select="if (contains(., 'http://')) then . else concat($url, 'collection/', .)"/>
+						<xsl:variable name="uri" select="if (contains(., 'http://')) then . else concat($url, 'id/', .)"/>
 						<xsl:variable name="prefix" select="substring-before(@semantic, ':')"/>
 						<xsl:variable name="namespace" select="ancestor::*:control/*:semanticDeclaration[*:prefix=$prefix]/*:namespace"/>
 						<xsl:element name="{@semantic}" namespace="{$namespace}">
@@ -427,7 +428,7 @@
 				</xsl:element>
 			</xsl:when>
 			<xsl:otherwise>
-				<nmo:Hoard rdf:about="{$url}collection/{$id}">					
+				<nmo:Hoard rdf:about="{$url}id/{$id}">
 					<xsl:choose>
 						<xsl:when test="lang('en', descendant::nh:descMeta/nh:title)">
 							<dcterms:title xml:lang="en">
@@ -445,7 +446,7 @@
 					</dcterms:publisher>
 					<!-- other ids -->
 					<xsl:for-each select="descendant::*:otherRecordId[string(@semantic)]">
-						<xsl:variable name="uri" select="if (contains(., 'http://')) then . else concat($url, 'collection/', .)"/>
+						<xsl:variable name="uri" select="if (contains(., 'http://')) then . else concat($url, 'id/', .)"/>
 						<xsl:variable name="prefix" select="substring-before(@semantic, ':')"/>
 						<xsl:variable name="namespace" select="ancestor::*:control/*:semanticDeclaration[*:prefix=$prefix]/*:namespace"/>
 						<xsl:element name="{@semantic}" namespace="{$namespace}">
@@ -455,7 +456,7 @@
 					<xsl:for-each select="descendant::nh:geogname[@xlink:role='findspot'][string(@xlink:href)]">
 						<nmo:hasFindspot rdf:resource="{@xlink:href}"/>
 					</xsl:for-each>
-					
+
 					<!-- closing date -->
 					<xsl:choose>
 						<xsl:when test="not(descendant::nh:deposit/nh:date) and not(descendant::nh:deposit/nh:dateRange)">
@@ -504,8 +505,8 @@
 										</object>
 									</xsl:for-each>
 								</nudsGroup>
-							</xsl:variable>							
-							
+							</xsl:variable>
+
 							<xsl:variable name="all-dates" as="element()*">
 								<dates>
 									<xsl:for-each select="descendant::nuds:typeDesc">
@@ -549,7 +550,7 @@
 									</xsl:for-each>
 								</dates>
 							</xsl:variable>
-							
+
 							<!-- get date values for closing date -->
 							<xsl:variable name="dates" as="element()*">
 								<dates>
@@ -561,7 +562,7 @@
 									</xsl:for-each>
 								</dates>
 							</xsl:variable>
-							
+
 							<xsl:if test="count($dates//date) &gt; 0">
 								<nmo:hasClosingDate rdf:datatype="http://www.w3.org/2001/XMLSchema#gYear">
 									<xsl:value-of select="format-number($dates//date[last()], '0000')"/>
@@ -579,10 +580,18 @@
 							</xsl:choose>
 						</xsl:otherwise>
 					</xsl:choose>
+					
+					<xsl:if test="count(descendant::nuds:typeDesc/@xlink:href|descendant::nuds:undertypeDesc/@xlink:href) &gt; 0">
+						<dcterms:tableOfContents rdf:resource="{$url}id/{$id}#contents"/>
+					</xsl:if>
+				</nmo:Hoard>
+
+				<dcmitype:Collection rdf:about="{$url}id/{$id}#contents">
 					<xsl:for-each select="descendant::nuds:typeDesc/@xlink:href|descendant::nuds:undertypeDesc/@xlink:href">
 						<nmo:hasTypeSeriesItem rdf:resource="{.}"/>
 					</xsl:for-each>
-				</nmo:Hoard>
+				</dcmitype:Collection>
+
 
 				<xsl:for-each select="descendant::nh:geogname[@xlink:role='findspot'][string(@xlink:href)]">
 					<xsl:variable name="href" select="@xlink:href"/>
@@ -604,7 +613,7 @@
 							<geo:long>
 								<xsl:value-of select="$geonames_data//lng"/>
 							</geo:long>
-							
+
 							<!-- using foaf:name for the name of place -->
 							<!-- generate AACR2 label -->
 							<xsl:variable name="label">
@@ -614,12 +623,14 @@
 								<xsl:variable name="adminName1" select="$geonames_data//adminName1"/>
 								<xsl:variable name="fcode" select="$geonames_data//fcode"/>
 								<!-- set a value equivalent to AACR2 standard for US, AU, CA, and GB.  This equation deviates from AACR2 for Malaysia since standard abbreviations for territories cannot be found -->
-								<xsl:value-of
-									select="if ($countryCode = 'US' or $countryCode = 'AU' or $countryCode = 'CA') then if ($fcode = 'ADM1') then $name else concat($name, ' (', $abbreviations//country[@code=$countryCode]/place[. = $adminName1]/@abbr, ')') else if ($countryCode= 'GB') then  if ($fcode = 'ADM1') then $name else concat($name, ' (', $adminName1, ')') else if ($fcode = 'PCLI') then $name else concat($name, ' (', $countryName, ')')"
-								/>
+								<xsl:value-of select="if ($countryCode = 'US' or $countryCode = 'AU' or $countryCode = 'CA') then if ($fcode = 'ADM1') then $name else concat($name, ' (',
+									$abbreviations//country[@code=$countryCode]/place[. = $adminName1]/@abbr, ')') else if ($countryCode= 'GB') then  if ($fcode = 'ADM1') then $name else concat($name,
+									' (', $adminName1, ')') else if ($fcode = 'PCLI') then $name else concat($name, ' (', $countryName, ')')"/>
 							</xsl:variable>
-							
-							<foaf:name><xsl:value-of select="$label"/></foaf:name>
+
+							<foaf:name>
+								<xsl:value-of select="$label"/>
+							</foaf:name>
 						</xsl:if>
 					</geo:SpatialThing>
 				</xsl:for-each>
@@ -693,7 +704,7 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:function>
-	
+
 	<!-- place normalization variable -->
 	<xsl:variable name="abbreviations" as="element()*">
 		<abbreviations>

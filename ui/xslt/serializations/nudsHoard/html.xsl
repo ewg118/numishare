@@ -301,6 +301,7 @@
 						</span>
 					</li>
 				</xsl:if>
+				<span style="display:none" property="dcterms:tableOfContents" rel="{concat($url, 'id/', $id, '#contents')}"/>
 			</xsl:if>
 		</ul>
 	</xsl:template>
@@ -308,7 +309,7 @@
 		<h3>
 			<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
 		</h3>
-		<table class="table table-striped">
+		<table class="table table-striped" typeof="dcmitype:Collection" about="{concat($url, 'id/', $id, '#contents')}" id="contents">
 			<thead>
 				<tr>
 					<th style="width:10%;text-align:center">Count</th>

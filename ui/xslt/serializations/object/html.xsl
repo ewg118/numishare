@@ -210,7 +210,8 @@
 			<!-- regular HTML display mode-->
 			<xsl:when test="not(string($mode))">
 				<html prefix="geo: http://www.w3.org/2003/01/geo/wgs84_pos# foaf: http://xmlns.com/foaf/0.1/ dcterms: http://purl.org/dc/terms/ xsd: http://www.w3.org/2001/XMLSchema# nm:
-					http://nomisma.org/id/ ecrm: http://erlangen-crm.org/current/ rdf: http://www.w3.org/1999/02/22-rdf-syntax-ns# skos: http://www.w3.org/2004/02/skos/core# nmo: http://nomisma.org/ontology#">
+					http://nomisma.org/id/ ecrm: http://erlangen-crm.org/current/ rdf: http://www.w3.org/1999/02/22-rdf-syntax-ns# skos: http://www.w3.org/2004/02/skos/core# nmo:
+					http://nomisma.org/ontology# dcmitype: http://purl.org/dc/dcmitype/">
 					<xsl:if test="string($lang)">
 						<xsl:attribute name="lang" select="$lang"/>
 					</xsl:if>
@@ -306,11 +307,11 @@
 			</xsl:choose>
 		</title>
 		<!-- alternates -->
-		<link rel="alternate" type="application/xml" href="{concat($url, 'collection/', $id)}.xml"/>
-		<link rel="alternate" type="application/rdf+xml" href="{concat($url, 'collection/', $id)}.rdf"/>
-		<link rel="alternate" type="application/ld+json" href="{concat($url, 'collection/', $id)}.jsonld"/>
-		<link rel="alternate" type="text/turtle" href="{concat($url, 'collection/', $id)}.ttl"/>
-		<link rel="alternate" type="application/vnd.google-earth.kml+xml" href="{concat($url, 'collection/', $id)}.kml"/>
+		<link rel="alternate" type="application/xml" href="{concat($url, 'id/', $id)}.xml"/>
+		<link rel="alternate" type="application/rdf+xml" href="{concat($url, 'id/', $id)}.rdf"/>
+		<link rel="alternate" type="application/ld+json" href="{concat($url, 'id/', $id)}.jsonld"/>
+		<link rel="alternate" type="text/turtle" href="{concat($url, 'id/', $id)}.ttl"/>
+		<link rel="alternate" type="application/vnd.google-earth.kml+xml" href="{concat($url, 'id/', $id)}.kml"/>
 		<!-- CSS -->
 		<link rel="shortcut icon" type="image/x-icon" href="{$include_path}/images/favicon.png"/>
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"/>
@@ -343,7 +344,7 @@
 						<xsl:when test="$recordType='physical'">nmo:NumismaticObject</xsl:when>
 					</xsl:choose>
 				</xsl:variable>
-				<div class="container-fluid" typeof="{$typeof}" about="{concat($url, 'collection/', $id)}">
+				<div class="container-fluid" typeof="{$typeof}" about="{concat($url, 'id/', $id)}">
 					<xsl:choose>
 						<xsl:when test="count(/content/*[local-name()='nuds']) &gt; 0">
 							<xsl:call-template name="nuds"/>
