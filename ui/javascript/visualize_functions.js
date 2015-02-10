@@ -534,14 +534,14 @@ $(document).ready(function () {
 			if ((field != 'date' && field != '') && selectVar.length > 0) {
 				query.push (field + ' &lt;' + selectVar + '&gt;');
 			} else if (field == 'date' && Math.floor(fromDate) == fromDate && Math.floor(toDate) == toDate){
-				var string = 'nm:end_date ?date';
+				var string = 'nmo:hasEndDate ?date';
 				var from_era = $(this).find('.from_era') .val() == 'minus' ? '-' : '';
 				var to_era = $(this).find('.to_era') .val() == 'minus' ? '-' : '';
 				fromDate = from_era + pad(fromDate, 4);
 				toDate = to_era + pad(toDate, 4);
 				
 				//create gYear compliant format from year integers
-				string += ' FILTER ( ?date >= "' + fromDate +'"^^xs:gYear \\\\and ?date <= "' + toDate + '"^^xs:gYear )';
+				string += ' FILTER ( ?date >= "' + fromDate +'"^^xsd:gYear \\\\and ?date <= "' + toDate + '"^^xsd:gYear )';
 				query.push(string);
 			}
 		});
