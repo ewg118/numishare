@@ -2249,6 +2249,7 @@
 					<xsl:when test="$label='visualize_add_query_desc'">Use the drop-down menus below to formulate your measurement query. A date range can only be specified once per query.</xsl:when>
 					<xsl:when test="$label='visualize_optional_settings'">Optional Settings</xsl:when>
 					<xsl:when test="$label='visualize_hide-show'">Hide/Show Options</xsl:when>
+					<xsl:when test="$label='visualize_exclude_certainty_codes'">Exclude Certainty Codes</xsl:when>
 					<xsl:when test="$label='visualize_stacking_options'">Stacking Options</xsl:when>
 					<xsl:when test="$label='visualize_remove_certainty_codes'">Remove Certainty Codes</xsl:when>
 					<xsl:when test="$label='visualize_arrange'">Arrange by Interval (optional)</xsl:when>
@@ -2343,13 +2344,13 @@
 		<xsl:param name="name"/>
 		
 		<xsl:choose>
-			<xsl:when test="$name='fromDate'">nm:start_date</xsl:when>
-			<xsl:when test="$name='toDate'">nm:end_date</xsl:when>
+			<xsl:when test="$name='fromDate'">nmo:hasStartDate</xsl:when>
+			<xsl:when test="$name='toDate'">nmo:hasEndDate</xsl:when>
 			<xsl:when test="$name='subject'">dcterms:subject</xsl:when>
 			<xsl:when test="$name='description'">dcterms:description</xsl:when>
-			<xsl:when test="$name='objectType'">nm:object_type</xsl:when>
+			<xsl:when test="$name='objectType'">nmo:hasObjectType</xsl:when>
 			<xsl:otherwise>
-				<xsl:value-of select="concat('nm:', $name)"/>
+				<xsl:value-of select="concat('nmo:has', upper-case(substring($name, 1, 1)), substring($name, 2))"/>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:function>

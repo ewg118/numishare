@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes="#all" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"
 	xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nm="http://nomisma.org/id/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:nuds="http://nomisma.org/nuds"
-	xmlns:nh="http://nomisma.org/nudsHoard" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:oa="http://www.w3.org/ns/oa#"
-	xmlns:ecrm="http://erlangen-crm.org/current/" xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:pelagios="http://pelagios.github.io/vocab/terms#"
-	xmlns:relations="http://pelagios.github.io/vocab/relations#" xmlns:nmo="http://nomisma.org/ontology#" xmlns:numishare="https://github.com/ewg118/numishare" xmlns:foaf="http://xmlns.com/foaf/0.1/"
-	xmlns:mets="http://www.loc.gov/METS/" xmlns:xsd="http://www.w3.org/2001/XMLSchema#" version="2.0">
+	xmlns:nh="http://nomisma.org/nudsHoard" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:oa="http://www.w3.org/ns/oa#" xmlns:ecrm="http://erlangen-crm.org/current/"
+	xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:pelagios="http://pelagios.github.io/vocab/terms#" xmlns:relations="http://pelagios.github.io/vocab/relations#"  xmlns:nmo="http://nomisma.org/ontology#"
+	xmlns:numishare="https://github.com/ewg118/numishare" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:mets="http://www.loc.gov/METS/" xmlns:xsd="http://www.w3.org/2001/XMLSchema#" version="2.0">
 
 	<!-- ************** OBJECT-TO-RDF **************** -->
 	<xsl:template name="rdf">
@@ -165,7 +164,7 @@
 									<xsl:value-of select="."/>
 								</skos:definition>
 							</xsl:for-each>
-							<!-- isPartOf nm:type_series -->
+							<!-- source nmo:TypeSeries -->
 							<dcterms:source rdf:resource="{//config/type_series}"/>
 							<!-- other ids -->
 							<xsl:for-each select="descendant::*:otherRecordId[string(@semantic)]">
@@ -197,7 +196,7 @@
 									</xsl:otherwise>
 								</xsl:choose>								
 							</xsl:variable>
-
+							
 							<xsl:choose>
 								<xsl:when test="$objectType = 'http://nomisma.org/id/coin'">nmo:Coin</xsl:when>
 								<xsl:when test="$objectType = 'http://nomisma.org/id/medal'">nmo:Medal</xsl:when>
@@ -207,7 +206,7 @@
 								<xsl:otherwise>ecrm:E18_Physical_Thing</xsl:otherwise>
 							</xsl:choose>
 						</xsl:variable>
-
+						
 						<xsl:element name="{$element}">
 							<xsl:attribute name="rdf:about">
 								<xsl:value-of select="concat($url, 'id/', $id)"/>
@@ -348,11 +347,11 @@
 
 	<xsl:template match="nuds:obverse|nuds:reverse" mode="nomisma">
 		<xsl:param name="id"/>
-		<rdf:Description rdf:about="{$url}id/{$id}#{local-name()}">
+		<rdf:Description rdf:about="{$url}id/{$id}#{local-name()}">			
 			<xsl:apply-templates mode="nomisma"/>
 		</rdf:Description>
 	</xsl:template>
-
+	
 	<xsl:template match="nuds:legend" mode="nomisma">
 		<nmo:hasLegend>
 			<xsl:if test="string(@xml:lang)">
@@ -361,7 +360,7 @@
 			<xsl:value-of select="."/>
 		</nmo:hasLegend>
 	</xsl:template>
-
+	
 	<xsl:template match="nuds:type/nuds:description" mode="nomisma">
 		<dcterms:description>
 			<xsl:if test="string(@xml:lang)">
@@ -370,29 +369,37 @@
 			<xsl:value-of select="."/>
 		</dcterms:description>
 	</xsl:template>
+	
+	<!-- ignore symbol for now -->
+	<xsl:template match="nuds:symbol" mode="nomisma"/>
 
-	<xsl:template match="nuds:material|nuds:denomination|nuds:manufacture|nuds:geogname|nuds:persname|nuds:corpname" mode="nomisma">
+	<xsl:template match="nuds:material|nuds:denomination|nuds:manufacture|nuds:geogname|nuds:persname|nuds:corpname" mode="nomisma">		
 		<xsl:variable name="element">
 			<xsl:choose>
 				<xsl:when test="parent::nuds:obverse or parent::nuds:reverse">hasPortrait</xsl:when>
+				<!-- ignore maker and artist -->
+				<xsl:when test="@xlink:role='artist' or @xlink:role='maker'"/>
 				<xsl:otherwise>
 					<xsl:variable name="role" select="if (@xlink:role) then @xlink:role else local-name()"/>
 					<xsl:value-of select="concat('has', concat(upper-case(substring($role, 1, 1)), substring($role, 2)))"/>
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-		<xsl:choose>
-			<xsl:when test="string(@xlink:href)">
-				<xsl:element name="nmo:{$element}">
-					<xsl:attribute name="rdf:resource" select="@xlink:href"/>
-				</xsl:element>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:element name="nmo:{$element}">
-					<xsl:value-of select="."/>
-				</xsl:element>
-			</xsl:otherwise>
-		</xsl:choose>
+		
+		<xsl:if test="string-length($element) &gt; 0">
+			<xsl:choose>
+				<xsl:when test="string(@xlink:href)">
+					<xsl:element name="nmo:{$element}">
+						<xsl:attribute name="rdf:resource" select="@xlink:href"/>
+					</xsl:element>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:element name="nmo:{$element}">
+						<xsl:value-of select="."/>
+					</xsl:element>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:if>		
 	</xsl:template>
 
 	<xsl:template match="nuds:date" mode="nomisma">
@@ -424,7 +431,7 @@
 		<xsl:variable name="id" select="descendant::*[local-name()='recordId']"/>
 		<xsl:choose>
 			<xsl:when test="descendant::*:maintenanceStatus != 'new' and descendant::*:maintenanceStatus != 'derived' and descendant::*:maintenanceStatus != 'revised'">
-				<xsl:element name="nmo:Hoard">
+				<xsl:element name="nmo:Hoard">					
 					<xsl:attribute name="rdf:about">
 						<xsl:value-of select="concat($url, 'id/', $id)"/>
 					</xsl:attribute>
@@ -442,7 +449,7 @@
 				</xsl:element>
 			</xsl:when>
 			<xsl:otherwise>
-				<nmo:Hoard rdf:about="{$url}id/{$id}">
+				<nmo:Hoard rdf:about="{$url}id/{$id}">					
 					<xsl:choose>
 						<xsl:when test="lang('en', descendant::nh:descMeta/nh:title)">
 							<dcterms:title xml:lang="en">
@@ -470,7 +477,7 @@
 					<xsl:for-each select="descendant::nh:geogname[@xlink:role='findspot'][string(@xlink:href)]">
 						<nmo:hasFindspot rdf:resource="{@xlink:href}"/>
 					</xsl:for-each>
-
+					
 					<!-- closing date -->
 					<xsl:choose>
 						<xsl:when test="not(descendant::nh:deposit/nh:date) and not(descendant::nh:deposit/nh:dateRange)">
@@ -519,8 +526,8 @@
 										</object>
 									</xsl:for-each>
 								</nudsGroup>
-							</xsl:variable>
-
+							</xsl:variable>							
+							
 							<xsl:variable name="all-dates" as="element()*">
 								<dates>
 									<xsl:for-each select="descendant::nuds:typeDesc">
@@ -564,7 +571,7 @@
 									</xsl:for-each>
 								</dates>
 							</xsl:variable>
-
+							
 							<!-- get date values for closing date -->
 							<xsl:variable name="dates" as="element()*">
 								<dates>
@@ -576,7 +583,7 @@
 									</xsl:for-each>
 								</dates>
 							</xsl:variable>
-
+							
 							<xsl:if test="count($dates//date) &gt; 0">
 								<nmo:hasClosingDate rdf:datatype="http://www.w3.org/2001/XMLSchema#gYear">
 									<xsl:value-of select="format-number($dates//date[last()], '0000')"/>
@@ -619,7 +626,7 @@
 							<geo:long>
 								<xsl:value-of select="$geonames_data//lng"/>
 							</geo:long>
-
+							
 							<!-- using foaf:name for the name of place -->
 							<!-- generate AACR2 label -->
 							<xsl:variable name="label">
@@ -629,14 +636,12 @@
 								<xsl:variable name="adminName1" select="$geonames_data//adminName1"/>
 								<xsl:variable name="fcode" select="$geonames_data//fcode"/>
 								<!-- set a value equivalent to AACR2 standard for US, AU, CA, and GB.  This equation deviates from AACR2 for Malaysia since standard abbreviations for territories cannot be found -->
-								<xsl:value-of select="if ($countryCode = 'US' or $countryCode = 'AU' or $countryCode = 'CA') then if ($fcode = 'ADM1') then $name else concat($name, ' (',
-									$abbreviations//country[@code=$countryCode]/place[. = $adminName1]/@abbr, ')') else if ($countryCode= 'GB') then  if ($fcode = 'ADM1') then $name else concat($name,
-									' (', $adminName1, ')') else if ($fcode = 'PCLI') then $name else concat($name, ' (', $countryName, ')')"/>
+								<xsl:value-of
+									select="if ($countryCode = 'US' or $countryCode = 'AU' or $countryCode = 'CA') then if ($fcode = 'ADM1') then $name else concat($name, ' (', $abbreviations//country[@code=$countryCode]/place[. = $adminName1]/@abbr, ')') else if ($countryCode= 'GB') then  if ($fcode = 'ADM1') then $name else concat($name, ' (', $adminName1, ')') else if ($fcode = 'PCLI') then $name else concat($name, ' (', $countryName, ')')"
+								/>
 							</xsl:variable>
-
-							<foaf:name>
-								<xsl:value-of select="$label"/>
-							</foaf:name>
+							
+							<foaf:name><xsl:value-of select="$label"/></foaf:name>
 						</xsl:if>
 					</geo:SpatialThing>
 				</xsl:for-each>
@@ -710,7 +715,7 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:function>
-
+	
 	<!-- place normalization variable -->
 	<xsl:variable name="abbreviations" as="element()*">
 		<abbreviations>

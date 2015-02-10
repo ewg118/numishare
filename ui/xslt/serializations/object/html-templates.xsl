@@ -33,13 +33,12 @@
 			<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
 		</xsl:element>
 		<xsl:if test="string($typeDesc_resource)">
-			<p>Source: <a href="{$typeDesc_resource}" rel="nm:type_series_item"><xsl:value-of select="$nudsGroup//object[@xlink:href = $typeDesc_resource]/nuds:nuds/nuds:descMeta/nuds:title"/></a></p>
+			<p>Source: <a href="{$typeDesc_resource}" rel="nmo:hasTypeSeriesItem"><xsl:value-of select="$nudsGroup//object[@xlink:href = $typeDesc_resource]/nuds:nuds/nuds:descMeta/nuds:title"/></a></p>
 		</xsl:if>
 		<ul>
 			<xsl:choose>
 				<xsl:when test="ancestor::subtype">
-					<xsl:apply-templates select="*[not(local-name()='obverse' or local-name()='reverse' or local-name()='authority' or local-name()='geographic' or local-name()='date' or
-						local-name()='dateRange')]" mode="descMeta"/>
+					<xsl:apply-templates select="nuds:obverse|nuds:reverse" mode="descMeta"/>
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:apply-templates select="*" mode="descMeta"/>
@@ -203,10 +202,13 @@
 								</xsl:choose>
 								<ul>
 									<xsl:if test="local-name()='obverse' or local-name()='reverse'">
-										<xsl:attribute name="rel" select="concat('nm:', local-name())"/>
+										<xsl:attribute name="rel" select="concat('nmo:', concat(upper-case(substring(local-name(), 1, 1)), substring(local-name(), 2)))"/>
 										<xsl:attribute name="resource" select="concat($url, 'id/', $id, '#', local-name())"/>
 									</xsl:if>
 									<xsl:apply-templates select="*" mode="descMeta"/>
+									<xsl:if test="nuds:symbol[@position='left'] or nuds:symbol[@position='center'] or nuds:symbol[@position='right'] or nuds:symbol[@position='exergue']">
+										<xsl:call-template name="format-control-marks"/>
+									</xsl:if>
 								</ul>
 							</li>
 						</xsl:if>
@@ -292,12 +294,12 @@
 		<xsl:param name="uri_space"/>
 		<xsl:variable name="subtypeId" select="@recordId"/>
 		<div class="row">
-			<div class="col-md-3" about="{concat($uri_space, $subtypeId)}" typeof="nm:type_series_item">
-				<h3 property="dcterms:title">
+			<div class="col-md-3" about="{concat($uri_space, $subtypeId)}" typeof="nmo:TypeSeriesItem">
+				<h4 property="dcterms:title">
 					<a href="{concat($uri_space, $subtypeId)}">
 						<xsl:value-of select="nuds:descMeta/nuds:title"/>
 					</a>
-				</h3>
+				</h4>
 				<span class="hidden" property="skos:broader">
 					<xsl:value-of select="concat($uri_space, $id)"/>
 				</span>

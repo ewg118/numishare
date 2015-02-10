@@ -174,22 +174,30 @@
 						<xsl:text>|</xsl:text>
 						<xsl:value-of select="$geonames//place[@id=$href]"/>
 					</field>
+					
 					<!-- insert hierarchical facets -->
-					<xsl:for-each select="tokenize($geonames//place[@id=$href]/@hierarchy, '\|')">
-						<xsl:if test="not(. = $value)">
-							<field name="{$role}_hier">
-								<xsl:value-of select="concat('L', position(), '|', .)"/>
-							</field>
-							<field name="{$role}_text">
-								<xsl:value-of select="."/>
-							</field>
-						</xsl:if>
-						<xsl:if test="position()=last()">
-							<xsl:variable name="level" select="if (.=$value) then position() else position() + 1"/>
-							<field name="{$role}_hier">
-								<xsl:value-of select="concat('L', $level, '|', $value)"/>
-							</field>
-						</xsl:if>
+					<xsl:variable name="hierarchy_pieces" select="tokenize($geonames//place[@id=$href]/@hierarchy, '\|')"/>
+					<xsl:variable name="count" select="count($hierarchy_pieces)"/>
+					
+					<xsl:for-each select="$hierarchy_pieces">
+						<xsl:variable name="position" select="position()"/>				
+						
+						<xsl:choose>
+							<xsl:when test="$position = 1">
+								<field name="{$role}_hier">
+									<xsl:value-of select="concat('L', position(), '|', substring-after(., '/'), '/', substring-before(., '/'))"/>						
+								</field>						
+							</xsl:when>
+							<xsl:otherwise>
+								<field name="{$role}_hier">
+									<xsl:value-of select="concat(substring-before($hierarchy_pieces[$position - 1], '/'), '|', substring-after(., '/'), '/', substring-before(., '/'))"/>
+								</field>
+							</xsl:otherwise>
+						</xsl:choose>
+						
+						<field name="{$role}_text">
+							<xsl:value-of select="substring-after(., '/')"/>
+						</field>
 					</xsl:for-each>
 				</xsl:when>
 				<xsl:when test="contains(@xlink:href, 'nomisma.org')">
@@ -223,7 +231,7 @@
 							<xsl:value-of select="concat($rdf/*[@rdf:about=concat($href, '#this')]/geo:long, ',', $rdf/*[@rdf:about=concat($href, '#this')]/geo:lat)"/>
 						</field>
 					</xsl:if>
-					<xsl:for-each select="$rdf/*[@rdf:about=$href]/skos:related[contains(@rdf:resource, 'pleiades.stoa.org')]">
+					<xsl:for-each select="$rdf/*[@rdf:about=$href]/skos:relatedMatch[contains(@rdf:resource, 'pleiades.stoa.org')]">
 						<field name="pleiades_uri">
 							<xsl:value-of select="@rdf:resource"/>
 						</field>
@@ -233,7 +241,7 @@
 		</xsl:if>
 		<xsl:if test="string(@xlink:href) and @xlink:role = 'region'">
 			<xsl:variable name="href" select="@xlink:href"/>
-			<xsl:for-each select="$rdf/*[@rdf:about=$href]/skos:related[contains(@rdf:resource, 'pleiades.stoa.org')]">
+			<xsl:for-each select="$rdf/*[@rdf:about=$href]/skos:relatedMatch[contains(@rdf:resource, 'pleiades.stoa.org')]">
 				<field name="pleiades_uri">
 					<xsl:value-of select="@rdf:resource"/>
 				</field>
@@ -452,7 +460,7 @@
 		<xsl:param name="collection-name"/>
 		
 		<xsl:choose>
-			<xsl:when test="$collection-name='rrc'">
+			<xsl:when test="$collection-name='crro'">
 				<field name="sortid">
 					<!--<xsl:variable name="segs" select="tokenize(substring-after(nuds:control/nuds:recordId, 'rrc-'), '\.')"/>-->
 					<xsl:analyze-string select="substring-after(nuds:control/nuds:recordId, 'rrc-')" regex="([0-9]+)(^[\.]+)?(\.)?([0-9]+)?([A-z]+)?">
@@ -522,6 +530,16 @@
 							<xsl:when test="$segs[3] = 'pup'">37</xsl:when>
 							<xsl:when test="$segs[3] = 'gor_iii_caes'">38</xsl:when>
 							<xsl:when test="$segs[3] = 'gor_iii'">39</xsl:when>
+							<xsl:when test="$segs[3] = 'ph_i'">40</xsl:when>
+							<xsl:when test="$segs[3] = 'pac'">41</xsl:when>
+							<xsl:when test="$segs[3] = 'jot'">42</xsl:when>
+							<xsl:when test="$segs[3] = 'mar_s'">43</xsl:when>
+							<xsl:when test="$segs[3] = 'spon'">44</xsl:when>
+							<xsl:when test="$segs[3] = 'tr_d'">45</xsl:when>	
+							<xsl:when test="$segs[3] = 'tr_g'">46</xsl:when>
+							<xsl:when test="$segs[3] = 'vo'">47</xsl:when>
+							<xsl:when test="$segs[3] = 'aem'">48</xsl:when>
+							<xsl:when test="$segs[3] = 'uran_ant'">49</xsl:when>
 						</xsl:choose>
 					</xsl:variable>
 					<xsl:variable name="num">
