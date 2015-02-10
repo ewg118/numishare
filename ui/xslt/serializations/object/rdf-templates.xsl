@@ -200,12 +200,7 @@
 								<dcterms:identifier>
 									<xsl:value-of select="nuds:descMeta/nuds:adminDesc/nuds:identifier"/>
 								</dcterms:identifier>
-							</xsl:if>
-							<xsl:if test="nuds:control/nuds:maintenanceAgency/nuds:agencyName">
-								<dcterms:publisher>
-									<xsl:value-of select="nuds:control/nuds:maintenanceAgency/nuds:agencyName"/>
-								</dcterms:publisher>
-							</xsl:if>
+							</xsl:if>							
 							<xsl:for-each select="descendant::nuds:collection">
 								<nmo:hasCollection>
 									<xsl:choose>
@@ -440,10 +435,7 @@
 								<xsl:value-of select="descendant::nh:descMeta/nh:title[1]"/>
 							</dcterms:title>
 						</xsl:otherwise>
-					</xsl:choose>
-					<dcterms:publisher>
-						<xsl:value-of select="descendant::nh:control/nh:maintenanceAgency/nh:agencyName"/>
-					</dcterms:publisher>
+					</xsl:choose>					
 					<!-- other ids -->
 					<xsl:for-each select="descendant::*:otherRecordId[string(@semantic)]">
 						<xsl:variable name="uri" select="if (contains(., 'http://')) then . else concat($url, 'id/', .)"/>
