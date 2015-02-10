@@ -22,8 +22,10 @@
 			<xsl:variable name="query">
 				<![CDATA[PREFIX nm:       <http://nomisma.org/id/>
 PREFIX nmo:	<http://nomisma.org/ontology#>
-ASK {?object nmo:hasTypeSeriesItem <URI> ;
-  nmo:hasFindspot ?findspot }]]>
+PREFIX dcterms:  <http://purl.org/dc/terms/>
+ASK {?contents nmo:hasTypeSeriesItem <URI> .
+?object dcterms:tableOfContents ?contents .
+?object nmo:hasFindspot ?findspot }]]>
 			</xsl:variable>
 
 			<xsl:variable name="service">

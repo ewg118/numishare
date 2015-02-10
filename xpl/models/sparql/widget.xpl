@@ -92,7 +92,9 @@ PREFIX nmo:	<http://nomisma.org/ontology#>
 PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>
 
 SELECT ?object ?title ?findspot ?lat ?long ?type ?burial WHERE {
-?object nmo:hasTypeSeriesItem <typeUri>.
+{ ?object nmo:hasTypeSeriesItem <typeUri> }
+UNION { ?contents nmo:hasTypeSeriesItem <typeUri> .
+?object dcterms:tableOfContents ?contents }
 ?object dcterms:title ?title .			
 ?object nmo:hasFindspot ?findspot .
 {?findspot geo:lat ?lat .
@@ -114,8 +116,10 @@ PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>
 PREFIX foaf:	<http://xmlns.com/foaf/0.1/>
 
 SELECT ?object ?title ?findspot ?name ?type ?burial ?lat ?long WHERE {
-?object nmo:hasTypeSeriesItem <typeUri>;
- dcterms:title ?title ;
+{ ?object nmo:hasTypeSeriesItem <typeUri> }
+UNION { ?contents nmo:hasTypeSeriesItem <typeUri> .
+?object dcterms:tableOfContents ?contents }
+?object dcterms:title ?title ;
  nmo:hasFindspot ?findspot .
 OPTIONAL {?findspot foaf:name ?name}
 {?findspot geo:lat ?lat .
@@ -137,7 +141,9 @@ PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>
 PREFIX skos:      <http://www.w3.org/2004/02/skos/core#>	
 
 SELECT ?object ?title ?findspotLabel ?findspot ?lat ?long WHERE {
-?object nmo:hasTypeSeriesItem <typeUri> .
+{ ?object nmo:hasTypeSeriesItem <typeUri> }
+UNION { ?contents nmo:hasTypeSeriesItem <typeUri> .
+?object dcterms:tableOfContents ?contents }
 ?object dcterms:title ?title .			
 ?object nmo:hasFindspot ?findspot .
 OPTIONAL {?findspot dcterms:title ?findspotLabel}
