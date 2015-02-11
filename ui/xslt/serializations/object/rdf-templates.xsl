@@ -305,7 +305,7 @@
 	<xsl:template match="nuds:typeDesc" mode="nomisma">
 		<xsl:param name="id"/>
 		<xsl:if test="nuds:objectType[@xlink:href]">
-			<nmo:hasObjectType rdf:resource="{nuds:objectType/@xlink:href}"/>
+			<nmo:representsObjectType rdf:resource="{nuds:objectType/@xlink:href}"/>
 		</xsl:if>
 
 		<xsl:apply-templates select="nuds:material|nuds:denomination|nuds:manufacture" mode="nomisma"/>
