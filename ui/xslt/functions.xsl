@@ -2341,6 +2341,7 @@
 	
 	<!-- this function will normalize a NUDS element into a nomisma property for RDFa -->
 	<xsl:function name="numishare:normalizeProperty">
+		<xsl:param name="recordType"/>
 		<xsl:param name="name"/>
 		
 		<xsl:choose>
@@ -2348,7 +2349,12 @@
 			<xsl:when test="$name='toDate'">nmo:hasEndDate</xsl:when>
 			<xsl:when test="$name='subject'">dcterms:subject</xsl:when>
 			<xsl:when test="$name='description'">dcterms:description</xsl:when>
-			<xsl:when test="$name='objectType'">nmo:representsObjectType</xsl:when>
+			<xsl:when test="$name='objectType'">
+				<xsl:choose>
+					<xsl:when test="$recordType='conceptual'">nmo:representsObjectType</xsl:when>
+					<xsl:otherwise>nmo:hasObjectType</xsl:otherwise>
+				</xsl:choose>
+			</xsl:when>
 			<xsl:otherwise>
 				<xsl:value-of select="concat('nmo:has', upper-case(substring($name, 1, 1)), substring($name, 2))"/>
 			</xsl:otherwise>

@@ -123,7 +123,7 @@
 					<xsl:choose>
 						<xsl:when test="not(ancestor::nuds:typeDesc/@xlink:href) and not(ancestor::nuds:refDesc) and not(@xlink:href)">
 							<span>
-								<xsl:attribute name="property" select="numishare:normalizeProperty(if(@xlink:role) then @xlink:role else local-name())"/>
+								<xsl:attribute name="property" select="numishare:normalizeProperty($recordType, if(@xlink:role) then @xlink:role else local-name())"/>
 								<xsl:if test="@xml:lang">
 									<xsl:attribute name="lang" select="@xml:lang"/>
 								</xsl:if>
@@ -170,7 +170,7 @@
 					</xsl:if>
 					<!-- create links to resources -->
 					<xsl:if test="string($href)">
-						<a href="{$href}" target="_blank" rel="{numishare:normalizeProperty(if(@xlink:role) then @xlink:role else local-name())}">
+						<a href="{$href}" target="_blank" rel="{numishare:normalizeProperty($recordType, if(@xlink:role) then @xlink:role else local-name())}">
 							<img src="{$include_path}/images/external.png" alt="external link" class="external_link"/>
 						</a>
 					</xsl:if>

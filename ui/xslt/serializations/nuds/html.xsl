@@ -469,7 +469,7 @@ ASK {?contents nmo:hasTypeSeriesItem <URI> .
 	</xsl:template>
 
 	<xsl:template match="nuds:descripton|nuds:legend" mode="physical">
-		<span property="{numishare:normalizeProperty(local-name())}">
+		<span property="{numishare:normalizeProperty($recordType, local-name())}">
 			<xsl:if test="@xml:lang">
 				<xsl:attribute name="lang" select="@xml:lang"/>
 			</xsl:if>
