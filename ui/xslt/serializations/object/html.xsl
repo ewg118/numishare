@@ -68,7 +68,7 @@
 						<type_series>
 							<xsl:choose>
 								<xsl:when test="contains(., 'nomisma')">
-									<xsl:value-of select="replace(., 'nomisma\.org', 'numismatics\.org/crro')"/>
+									<xsl:value-of select="replace(., 'nomisma\.org', 'numismatics.org/crro')"/>
 								</xsl:when>
 								<xsl:otherwise>
 									<xsl:value-of select="."/>
@@ -102,7 +102,7 @@
 
 				<xsl:if test="string-length($id-param) &gt; 0">
 					<xsl:for-each select="document(concat($type_series_uri, 'apis/getNuds?identifiers=', encode-for-uri($id-param)))//nuds:nuds">
-						<object xlink:href="{replace($type_series_uri, 'numismatics\.org/crro', 'nomisma\.org')}id/{nuds:control/nuds:recordId}">
+						<object xlink:href="{replace($type_series_uri, 'numismatics\.org/crro', 'nomisma.org')}id/{nuds:control/nuds:recordId}">
 							<xsl:copy-of select="."/>
 						</object>
 					</xsl:for-each>
