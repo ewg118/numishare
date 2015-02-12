@@ -32,7 +32,7 @@
 							<type_series>
 								<xsl:choose>
 									<xsl:when test="contains(., 'nomisma')">
-										<xsl:value-of select="replace(., 'nomisma\.org', 'numismatics\.org\/crro')"/>
+										<xsl:value-of select="replace(., 'nomisma.org', 'numismatics.org/crro')"/>
 									</xsl:when>
 									<xsl:otherwise>
 										<xsl:value-of select="."/>
