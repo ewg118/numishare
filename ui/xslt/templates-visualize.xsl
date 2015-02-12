@@ -407,7 +407,7 @@
 		<xsl:variable name="hrefs" as="item()*">
 			<xsl:analyze-string select="." regex="&lt;([^>]+)&gt;">
 				<xsl:matching-substring>
-					<xsl:value-of select="document(concat('http://admin.numismatics.org/nomisma/apis/getLabel?uri=', regex-group(1), '&amp;lang=', $lang))/response"/>
+					<xsl:value-of select="document(concat('http://nomisma.org/apis/getLabel?uri=', regex-group(1), '&amp;lang=', $lang))/response"/>
 				</xsl:matching-substring>
 			</xsl:analyze-string>
 		</xsl:variable>
@@ -542,7 +542,7 @@
 				<xsl:variable name="hrefs" as="item()*">
 					<xsl:analyze-string select="." regex="&lt;([^>]+)&gt;">
 						<xsl:matching-substring>
-							<xsl:value-of select="document(concat('http://admin.numismatics.org/nomisma/apis/getLabel?uri=', regex-group(1), '&amp;lang=', $lang))/response"/>
+							<xsl:value-of select="document(concat('http://nomisma.org/apis/getLabel?uri=', regex-group(1), '&amp;lang=', $lang))/response"/>
 						</xsl:matching-substring>
 					</xsl:analyze-string>
 				</xsl:variable>
