@@ -100,7 +100,7 @@
 
 				<xsl:if test="string-length($id-param) &gt; 0">
 					<xsl:for-each select="document(concat($type_series_uri, 'apis/getNuds?identifiers=', encode-for-uri($id-param)))//nuds:nuds">
-						<object xlink:href="{if (contains($type_series_uri, 'crro')) then 'http://nomisma.org/' else $type_series_uri))}id/{nuds:control/nuds:recordId}">
+						<object xlink:href="{if (contains($type_series_uri, 'crro')) then 'http://nomisma.org/' else $type_series_uri}id/{nuds:control/nuds:recordId}">
 							<xsl:copy-of select="."/>
 						</object>
 					</xsl:for-each>
