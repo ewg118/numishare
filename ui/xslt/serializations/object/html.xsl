@@ -89,7 +89,7 @@
 			</xsl:variable>
 
 			<xsl:for-each select="$type_series//type_series">
-				<xsl:variable name="type_series_uri" select="."/>
+				<xsl:variable name="type_series_uri" select="replace(., 'numismatics.org/crro', 'nomisma.org')"/>
 
 				<xsl:variable name="id-param">
 					<xsl:for-each select="$type_list//type_series_item[contains(., $type_series_uri)]">
