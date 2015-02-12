@@ -30,6 +30,7 @@ PREFIX foaf:	<http://xmlns.com/foaf/0.1/>
 PREFIX ecrm:	<http://erlangen-crm.org/current/>
 PREFIX geo:	<http://www.w3.org/2003/01/geo/wgs84_pos#>
 PREFIX nm:	<http://nomisma.org/id/>
+PREFIX nmo:	<http://nomisma.org/ontology#>
 PREFIX xsd:	<http://www.w3.org/2001/XMLSchema#>
 
 SELECT ?collection (COUNT(?collection) AS ?count) WHERE {
