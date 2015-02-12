@@ -33,9 +33,9 @@ PREFIX nm:	<http://nomisma.org/id/>
 PREFIX xsd:	<http://www.w3.org/2001/XMLSchema#>
 
 SELECT ?collection (COUNT(?collection) AS ?count) WHERE {
-?type dcterms:isPartOf <TYPE_SERIES> .
-?object nm:type_series_item ?type ;
-nm:collection ?collection .
+?type dcterms:source <TYPE_SERIES> .
+?object nmo:hasTypeSeriesItem ?type ;
+nmo:hasCollection ?collection .
 } GROUP BY ?collection ORDER BY ?collection]]>
 				</xsl:variable>
 				
