@@ -209,8 +209,6 @@ ASK {?object nmo:hasTypeSeriesItem <URI> ;
 					</xsl:if>
 					<!-- process $typeDesc differently -->
 					<div class="metadata_section">
-						<xsl:copy-of select="$nudsGroup"/>
-						test
 						<xsl:apply-templates select="$nudsGroup//nuds:typeDesc">
 							<xsl:with-param name="typeDesc_resource" select="@xlink:href"/>
 						</xsl:apply-templates>

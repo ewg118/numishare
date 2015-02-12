@@ -359,6 +359,7 @@
 					<xsl:choose>
 						<xsl:when test="count(/content/*[local-name()='nuds']) &gt; 0">
 							<xsl:call-template name="nuds"/>
+							<xsl:copy-of select="$nudsGroup"/>
 						</xsl:when>
 						<xsl:when test="count(/content/*[local-name()='nudsHoard']) &gt; 0">
 							<xsl:call-template name="nudsHoard"/>
