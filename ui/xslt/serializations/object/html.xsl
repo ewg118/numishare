@@ -80,7 +80,14 @@
 				<list>
 					<xsl:for-each select="distinct-values(descendant::nuds:typeDesc[string(@xlink:href)]/@xlink:href)">
 						<type_series_item>
-							<xsl:value-of select="."/>
+							<xsl:choose>
+								<xsl:when test="contains(., 'nomisma')">
+									<xsl:value-of select="replace(., 'nomisma.org', 'numismatics.org/crro')"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:value-of select="."/>
+								</xsl:otherwise>
+							</xsl:choose>
 						</type_series_item>
 					</xsl:for-each>
 				</list>

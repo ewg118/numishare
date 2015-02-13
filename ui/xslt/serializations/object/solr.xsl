@@ -28,7 +28,12 @@
 				<list>
 					<xsl:for-each select="distinct-values(descendant::nuds:typeDesc[string(@xlink:href)]/substring-before(@xlink:href, 'id/'))">
 						<type_series>
-							<xsl:value-of select="."/>
+							<xsl:choose>
+								<xsl:when test="contains(., 'nomisma')">http://numismatics.org/crro/</xsl:when>
+								<xsl:otherwise>
+									<xsl:value-of select="."/>
+								</xsl:otherwise>
+							</xsl:choose>
 						</type_series>
 					</xsl:for-each>
 				</list>
@@ -37,15 +42,22 @@
 				<list>
 					<xsl:for-each select="distinct-values(descendant::nuds:typeDesc[string(@xlink:href)]/@xlink:href)">
 						<type_series_item>
-							<xsl:value-of select="."/>
+							<xsl:choose>
+								<xsl:when test="contains(., 'nomisma')">
+									<xsl:value-of select="replace(., 'nomisma.org', 'numismatics.org/crro')"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:value-of select="."/>
+								</xsl:otherwise>
+							</xsl:choose>
 						</type_series_item>
 					</xsl:for-each>
 				</list>
 			</xsl:variable>
-
+			
 			<xsl:for-each select="$type_series//type_series">
 				<xsl:variable name="type_series_uri" select="."/>
-
+				
 				<xsl:variable name="id-param">
 					<xsl:for-each select="$type_list//type_series_item[contains(., $type_series_uri)]">
 						<xsl:value-of select="substring-after(., 'id/')"/>
@@ -54,10 +66,10 @@
 						</xsl:if>
 					</xsl:for-each>
 				</xsl:variable>
-
+				
 				<xsl:if test="string-length($id-param) &gt; 0">
 					<xsl:for-each select="document(concat($type_series_uri, 'apis/getNuds?identifiers=', encode-for-uri($id-param)))//nuds:nuds">
-						<object xlink:href="{$type_series_uri}id/{nuds:control/nuds:recordId}">
+						<object xlink:href="{if (contains($type_series_uri, 'crro')) then 'http://nomisma.org/' else $type_series_uri}id/{nuds:control/nuds:recordId}">
 							<xsl:copy-of select="."/>
 						</object>
 					</xsl:for-each>
