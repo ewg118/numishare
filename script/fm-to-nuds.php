@@ -328,7 +328,7 @@ function generate_nuds($row, $count){
 					$certainty = substr(trim($v), -1) == '?' ? ' certainty="uncertain"' : '';
 				}
 			}
-			$url = 'http://numismatics.org/ocre/id/' . $id . '.xml';
+			$url = 'http://numismatics.org/ocre/id/' . $id;
 			$file_headers = @get_headers($url);		
 			if ($file_headers[0] == 'HTTP/1.1 200 OK'){
 				$currentUri = get_current_ocre_uri($url);
@@ -362,7 +362,7 @@ function generate_nuds($row, $count){
 				$certainty = substr(trim($v), -1) == '?' ? ' certainty="uncertain"' : '';
 			}
 		}
-		$url = 'http://numismatics.org/crro/id/' . str_replace('C.', 'rrc-', $id) . '.xml';
+		$url = 'http://numismatics.org/crro/id/' . str_replace('C.', 'rrc-', $id);
 		$file_headers = @get_headers($url);
 		if ($file_headers[0] == 'HTTP/1.1 200 OK'){
 			$title = get_title_from_rdf($url, $accnum);
@@ -380,8 +380,7 @@ function generate_nuds($row, $count){
 		$citations = array_filter(explode('|', trim($row['published'])));
 		$url = 'http://numismatics.org/aod/id/' . $citations[0];
 		$file_headers = @get_headers($url);
-		$rdf_headers = @get_headers($url . '.rdf');
-		if ($file_headers[0] == 'HTTP/1.1 200 OK' && $rdf_headers[0] == 'HTTP/1.1 200 OK'){
+		if ($file_headers[0] == 'HTTP/1.1 200 OK'){
 			$title = get_title_from_rdf($url, $accnum);
 			if ($title != 'FAIL'){
 				$xml .= $title;
