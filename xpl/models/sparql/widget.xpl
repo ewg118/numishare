@@ -191,7 +191,7 @@ ORDER BY asc(?label)
 				<xsl:variable name="service">
 					<xsl:choose>
 						<xsl:when test="$template = 'avgMeasurement'">
-							<xsl:value-of select="concat('http://admin.numismatics.org/nomisma/apis/', $api, '?constraints=', encode-for-uri($constraints))"/>
+							<xsl:value-of select="concat('http://nomisma.org/apis/', $api, '?constraints=', encode-for-uri($constraints))"/>
 						</xsl:when>
 						<xsl:when test="$template = 'facets'">
 							<xsl:value-of select="concat($endpoint, '?query=', encode-for-uri(normalize-space(replace(replace(replace($query, 'TYPE_SERIES', /config/type_series), 'LANG', $langStr), 'FIELD', $field))), '&amp;output=xml')"/>
