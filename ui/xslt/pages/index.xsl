@@ -38,7 +38,7 @@
 
 	<xsl:template name="index">
 		<!-- jumbotron scaling image -->
-		<img src="{$include_path}/images/banner.jpg" style="width:100%"/>
+		<img src="{$include_path}/images/banner2.jpg" style="width:100%"/>
 				
 		<div class="container content">			
 			<div class="row">
