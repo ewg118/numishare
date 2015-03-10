@@ -22,9 +22,8 @@ html {
 body {
 	background-color:white;
 }
-#content {
-	background-color: white;
-	padding-top:10px
+.content {
+	padding-top:20px
 }
 .jumbotron {
 	margin: 0 0 15px 0;

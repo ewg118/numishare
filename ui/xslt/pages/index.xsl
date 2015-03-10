@@ -37,10 +37,10 @@
 	</xsl:template>
 
 	<xsl:template name="index">
-		<div class="jumbotron">
+		<!--<div class="jumbotron">
 			<div class="container">
 				<div class="row">
-					<!-- display title and description in the jumbotron, including featured object, if available -->
+					<!-\- display title and description in the jumbotron, including featured object, if available -\->
 					<xsl:choose>
 						<xsl:when test="features_enabled = true()">
 							<div class="col-md-9">
@@ -68,8 +68,11 @@
 					</xsl:choose>
 				</div>
 			</div>
-		</div>
-		<div class="container-fluid">
+		</div>-->
+		
+		<!-- jumbotron scaling image -->
+		<img src="{$include_path}/images/banner.jpg" style="width:100%"/>
+		<div class="container-fluid content">
 			<div class="row">
 				<div class="col-md-9">
 					<xsl:choose>
