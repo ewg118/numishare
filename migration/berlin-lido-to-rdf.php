@@ -37,12 +37,12 @@ function process_row($row, $count){
 			$measurements = $xpath->query("descendant::lido:measurementsSet");
 			
 			
-			$rdf = '<nm:coin rdf:about="http://ww2.smb.museum/ikmk/object.php?id=' . $id . '">';
+			$rdf = '<nmo:NumismaticObject rdf:about="http://ww2.smb.museum/ikmk/object.php?id=' . $id . '">';
 			$rdf .= '<dcterms:title xml:lang="de">' . $title . '</dcterms:title>';
 			$rdf .= '<dcterms:identifier>' . $id . '</dcterms:identifier>';
 			$rdf .= '<dcterms:publisher rdf:resource="http://nomisma.org/id/mk_berlin"/>';
-			$rdf .= '<nm:collection rdf:resource="http://nomisma.org/id/mk_berlin"/>';
-			$rdf .= '<nm:type_series_item rdf:resource="' . $row['URI'] . '"/>';
+			$rdf .= '<nmo:hasCollection rdf:resource="http://nomisma.org/id/mk_berlin"/>';
+			$rdf .= '<nmo:hasTypeSeriesItem rdf:resource="' . $row['URI'] . '"/>';
 			
 			//measurements			
 			foreach($measurements as $measurement){
@@ -51,11 +51,13 @@ function process_row($row, $count){
 				
 				switch ($type){
 					case 'diameter':
+						$rdf .= '<nmo:hasDiameter rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">' . $value . '</nmo:hasDiameter>';
+						break;
 					case 'weight':
-						$rdf .= '<nm:' . $type . ' rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">' . $value . '</nm:' . $type . '>';
+						$rdf .= '<nmo:hasWeight rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">' . $value . '</nmo:hasWeight>';
 						break;
 					case 'orientation':
-						$rdf .= '<nm:axis rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">' . $value . '</nm:axis>';
+						$rdf .= '<nmo:hasAxis rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">' . $value . '</nmo:hasAxis>';
 						break;
 				}
 				
@@ -68,19 +70,19 @@ function process_row($row, $count){
 				$image_id = $pieces[5];
 				
 				//obverse
-				$rdf .= '<nm:obverse><rdf:Description>';
+				$rdf .= '<nmo:hasObverse><rdf:Description>';
 				$rdf .= '<foaf:thumbnail rdf:resource="http://ww2.smb.museum/mk_edit/images/' . $image_id . '/vs_thumb.jpg"/>';
 				$rdf .= '<foaf:depiction rdf:resource="http://ww2.smb.museum/mk_edit/images/' . $image_id . '/vs_opt.jpg"/>';
-				$rdf .='</rdf:Description></nm:obverse>';
+				$rdf .='</rdf:Description></nmo:hasObverse>';
 				
 				//reverse
-				$rdf .= '<nm:reverse><rdf:Description>';
+				$rdf .= '<nmo:hasReverse><rdf:Description>';
 				$rdf .= '<foaf:thumbnail rdf:resource="http://ww2.smb.museum/mk_edit/images/' . $image_id . '/rs_thumb.jpg"/>';
 				$rdf .= '<foaf:depiction rdf:resource="http://ww2.smb.museum/mk_edit/images/' . $image_id . '/rs_opt.jpg"/>';
-				$rdf .='</rdf:Description></nm:reverse>';
+				$rdf .='</rdf:Description></nmo:hasReverse>';
 			}
 			
-			$rdf .= '</nm:coin>';
+			$rdf .= '</nmo:NumismaticObject>';
 		}			
 	}
 	return $rdf;

@@ -13,7 +13,7 @@ $lookup = generate_json('/home/komet/ans_migration/ocre/bm-data/RIC4-con.csv', f
 
 $open = '<rdf:RDF xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xmlns:nm="http://nomisma.org/id/"
          xmlns:dcterms="http://purl.org/dc/terms/" xmlns:foaf="http://xmlns.com/foaf/0.1/" 
-         xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">';
+         xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:nmo="http://nomisma.org/ontology#">';
 
 file_put_contents('bm-ric.rdf', $open);
 
@@ -48,14 +48,14 @@ function process_csv($row, $count){
 	}
 	$rdf = '';
 	if (strlen($coinType) > 0){
-		$rdf .= '<nm:coin rdf:about="' . $about . '">';
+		$rdf .= '<nmo:NumismaticTerm rdf:about="' . $about . '">';
 		$rdf .= '<dcterms:title xml:lang="en">British Museum: ' . $accessions[0] . '</dcterms:title>';
 		$rdf .= '<dcterms:identifier>' . $accessions[0] . '</dcterms:identifier>';
 		$rdf .= '<dcterms:publisher rdf:resource="http://nomisma.org/id/bm"/>';
-		$rdf .= '<nm:collection rdf:resource="http://nomisma.org/id/bm"/>';
-		$rdf .= '<nm:type_series_item rdf:resource="' . $coinType . '"/>';
+		$rdf .= '<nmo:hasCollection rdf:resource="http://nomisma.org/id/bm"/>';
+		$rdf .= '<nmo:hasTypeSeriesItem rdf:resource="' . $coinType . '"/>';
 		$rdf .= query_bm($id);
-		$rdf .= '</nm:coin>';
+		$rdf .= '</nmo:NumismaticTerm>';
 	}
 	file_put_contents('bm-ric.rdf', $rdf, FILE_APPEND);
 }
@@ -112,10 +112,14 @@ function query_bm($id){
 						$xml .= '<foaf:homepage rdf:resource="http://www.britishmuseum.org/research/collection_online/collection_object_details.aspx?objectId=' . $row[$field] . '&amp;partId=1"/>';
 						break;
 					case 'axis':
-						$xml .= '<nm:' . $field . ' rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">' . $row[$field] . '</nm:' . $field . '>';
+						$xml .= '<nmo:hasAxis rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">' . $row[$field] . '</nmo:hasAxis>';
 						break;
-					default:
-						$xml .= '<nm:' . $field . ' rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">' . $row[$field] . '</nm:' . $field . '>';
+					case 'weight':
+						$xml .= '<nmo:hasWeight rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">' . $row[$field] . '</nmo:hasWeight>';
+						break;
+					case 'diameter':
+						$xml .= '<nmo:hasDiameter rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">' . $row[$field] . '</nmo:hasDiameter>';
+						break;
 				}
 			}
 		}

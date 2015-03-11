@@ -558,6 +558,21 @@ function get_title($nudsid){
 		case 'uran_ant':
 			$auth = 'Uranius Antoninus';
 			break;
+		case 'val_i':
+			$auth = 'Valerian';
+			break;
+		case 'val_gall(1)':
+			$auth = 'Valerian and Gallienus (1)';
+			break;
+		case 'val_i-gall-val_ii-sal':
+			$auth = 'Valerian, Gallienus, Valerian II, and Salonina';
+			break;
+		case 'mar':
+			$auth = 'Mariniana';
+			break;
+		case 'val_gall(2)':
+			$auth = 'Valerian and Gallienus (2)';
+			break;
 	}
 	
 	if (strpos($pieces[3], '_') === FALSE){

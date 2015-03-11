@@ -47,6 +47,9 @@ foreach ($files as $file){
 					case 'IV-3':
 						$nomismaId[] = '4';
 						break;
+					case 'V-1':
+						$nomismaId[] = '5';
+						break;
 					default:
 						$nomismaId[null];
 				}
