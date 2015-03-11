@@ -316,7 +316,7 @@ function generate_nuds($row, $count){
 	/************ typeDesc ***************/
 	//if the coin is Roman and contains 'ric.' as a reference, point the typeDesc to OCRE
 	//supported nomisma-style strings are: ric.1., ric.1(2)., ric.2_1(2)., ric.3.
-	if (count(preg_grep('/ric\.1\./', $refs)) == 1 || count(preg_grep('/ric\.1\(2\)\./', $refs)) == 1 || count(preg_grep('/ric\.2_1\(2\)\./', $refs)) == 1 || count(preg_grep('/ric\.2\./', $refs)) == 1 || count(preg_grep('/ric\.3\./', $refs)) == 1 || count(preg_grep('/ric\.4\./', $refs)) == 1){
+	if (count(preg_grep('/ric\.1\./', $refs)) == 1 || count(preg_grep('/ric\.1\(2\)\./', $refs)) == 1 || count(preg_grep('/ric\.2_1\(2\)\./', $refs)) == 1 || count(preg_grep('/ric\.2\./', $refs)) == 1 || count(preg_grep('/ric\.3\./', $refs)) == 1 || count(preg_grep('/ric\.4\./', $refs)) == 1 || count(preg_grep('/ric\.5\./', $refs)) == 1){
 		//only continue process if the reference is not variant
 		if (strpos($row['info'], 'variant') === FALSE){
 			$matches = preg_grep('/ric\./', $refs);
