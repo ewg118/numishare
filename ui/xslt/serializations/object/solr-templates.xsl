@@ -540,6 +540,11 @@
 							<xsl:when test="$segs[3] = 'vo'">47</xsl:when>
 							<xsl:when test="$segs[3] = 'aem'">48</xsl:when>
 							<xsl:when test="$segs[3] = 'uran_ant'">49</xsl:when>
+							<xsl:when test="$segs[3] = 'val_i'">50</xsl:when>
+							<xsl:when test="$segs[3] = 'val_gall(1)'">51</xsl:when>
+							<xsl:when test="$segs[3] = 'val_i-gall-val_ii-sal'">52</xsl:when>
+							<xsl:when test="$segs[3] = 'mar'">53</xsl:when>
+							<xsl:when test="$segs[3] = 'val_gall(2)'">54</xsl:when>
 						</xsl:choose>
 					</xsl:variable>
 					<xsl:variable name="num">
