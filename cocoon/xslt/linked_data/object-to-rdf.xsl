@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:nm="http://nomisma.org/id/"
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:nm="http://nomisma.org/id/" xmlns:nmo="http://nomisma.org/ontology#"
 	 xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" version="2.0">
 	<xsl:include href="templates.xsl"/>
 
@@ -16,11 +16,11 @@
 					test="descendant::*:maintenanceStatus != 'new' and descendant::*:maintenanceStatus != 'derived' and descendant::*:maintenanceStatus != 'revised'">
 					<xsl:variable name="element">
 						<xsl:choose>
-							<xsl:when test="/content/*[not(self::config)]/local-name()='nudsHoard'">nm:hoard</xsl:when>
+							<xsl:when test="/content/*[not(self::config)]/local-name()='nudsHoard'">nmo:Hoard</xsl:when>
 							<xsl:otherwise>
 								<xsl:choose>
-									<xsl:when test="/content/*[not(self::config)]/@recordType='conceptual'">nm:type_series_item</xsl:when>
-									<xsl:when test="/content/*[not(self::config)]/@recordType='physical'">nm:coin</xsl:when>
+									<xsl:when test="/content/*[not(self::config)]/@recordType='conceptual'">nmo:TypeSeriesItem</xsl:when>
+									<xsl:when test="/content/*[not(self::config)]/@recordType='physical'">nmo:NumismaticObject</xsl:when>
 								</xsl:choose>
 							</xsl:otherwise>
 						</xsl:choose>
