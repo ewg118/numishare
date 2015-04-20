@@ -14,24 +14,6 @@
 
 	<xsl:variable name="recordType" select="/content/nuds:nuds/@recordType"/>
 
-	<xsl:variable name="nuds:typeDesc_resource">
-		<xsl:if test="string(/content/nuds:nuds/nuds:descMeta/nuds:typeDesc/@xlink:href)">
-			<xsl:value-of select="/content/nuds:nuds/nuds:descMeta/nuds:typeDesc/@xlink:href"/>
-		</xsl:if>
-	</xsl:variable>
-	
-	<xsl:variable name="nuds:typeDesc" as="element()*">
-		<xsl:choose>
-			<xsl:when test="string($nuds:typeDesc_resource)">
-				<xsl:copy-of select="$nudsGroup/nudsGroup/object[@xlink:href = $nuds:typeDesc_resource]/nuds:nuds/nuds:descMeta/nuds:typeDesc"/>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:copy-of select="/content/nuds:nuds/nuds:descMeta/nuds:typeDesc"/>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:variable>
-
-
 	<xsl:template name="nuds">
 		<xsl:apply-templates select="/content/nuds:nuds"/>
 	</xsl:template>
@@ -179,17 +161,17 @@
 		<!--********************************* MENU ******************************************* -->
 		<xsl:choose>
 			<xsl:when test="$mode = 'compare'">
-				<!-- process $nuds:typeDesc differently -->
+				<!-- process nuds:typeDesc differently -->
 				<div>
 					<xsl:if test="nuds:descMeta/nuds:physDesc">
 						<div class="metadata_section">
 							<xsl:apply-templates select="nuds:descMeta/nuds:physDesc"/>
 						</div>
 					</xsl:if>
-					<!-- process $nuds:typeDesc differently -->
+					<!-- process nuds:typeDesc differently -->
 					<div class="metadata_section">
-						<xsl:apply-templates select="$nuds:typeDesc/nuds:typeDesc">
-							<xsl:with-param name="typeDesc_resource" select="$nuds:typeDesc_resource"/>
+						<xsl:apply-templates select="$nudsGroup//nuds:typeDesc">
+							<xsl:with-param name="typeDesc_resource" select="@xlink:href"/>
 						</xsl:apply-templates>
 					</div>
 					<xsl:if test="nuds:descMeta/nuds:undertypeDesc">
@@ -253,10 +235,10 @@
 								<xsl:apply-templates select="nuds:descMeta/nuds:physDesc"/>
 							</div>
 						</xsl:if>
-						<!-- process $nuds:typeDesc differently -->
+						<!-- process nuds:typeDesc differently -->
 						<div class="metadata_section">
-							<xsl:apply-templates select="$nuds:typeDesc/*[local-name()='typeDesc']">
-								<xsl:with-param name="typeDesc_resource" select="$nuds:typeDesc_resource"/>
+							<xsl:apply-templates select="$nudsGroup//nuds:typeDesc">
+								<xsl:with-param name="typeDesc_resource" select="@xlink:href"/>
 							</xsl:apply-templates>
 						</div>
 						<xsl:if test="nuds:descMeta/nuds:undertypeDesc">
@@ -444,8 +426,8 @@
 
 		<!-- display legend and type and image if available -->
 		<xsl:choose>
-			<xsl:when test="$nuds:typeDesc/nuds:typeDesc/nuds:obverse">
-				<xsl:for-each select="$nuds:typeDesc/nuds:typeDesc/nuds:obverse">
+			<xsl:when test="$nudsGroup//nuds:typeDesc/nuds:obverse">
+				<xsl:for-each select="$nudsGroup//nuds:typeDesc/nuds:obverse">
 					<xsl:variable name="side" select="local-name()"/>
 					<div class="reference_image">
 						<xsl:if test="string($obverse_image)">
@@ -517,8 +499,8 @@
 
 		<!-- display legend and type and image if available -->
 		<xsl:choose>
-			<xsl:when test="$nuds:typeDesc/nuds:typeDesc/nuds:reverse">
-				<xsl:for-each select="$nuds:typeDesc/nuds:typeDesc/nuds:reverse">
+			<xsl:when test="$nudsGroup//nuds:typeDesc/nuds:reverse">
+				<xsl:for-each select="$nudsGroup//nuds:typeDesc/nuds:reverse">
 					<xsl:variable name="side" select="local-name()"/>
 					<div class="reference_image">
 						<xsl:if test="string($reverse_image)">
