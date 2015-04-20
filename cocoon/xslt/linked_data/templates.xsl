@@ -109,7 +109,7 @@
 		</pelagios:AnnotatedThing>
 		<!-- create annotations from pleiades URIs found in nomisma RDF and from findspots -->
 		<xsl:for-each
-			select="distinct-values($rdf//skos:related[contains(@rdf:resource, 'pleiades')]/@rdf:resource)">
+			select="distinct-values($rdf//skos:relatedMatch[contains(@rdf:resource, 'pleiades')]/@rdf:resource)">
 			<oa:Annotation
 				rdf:about="{$url}pelagios.rdf#{$id}/annotations/{format-number(position(), '000')}">
 				<oa:hasBody rdf:resource="{.}#this"/>
@@ -127,7 +127,7 @@
 			mode="pelagios">
 			<xsl:with-param name="id" select="$id"/>
 			<xsl:with-param name="count"
-				select="count(distinct-values($rdf//skos:related[contains(@rdf:resource, 'pleiades')]/@rdf:resource))"/>
+				select="count(distinct-values($rdf//skos:relatedMatch[contains(@rdf:resource, 'pleiades')]/@rdf:resource))"/>
 			<xsl:with-param name="date" select="$date"/>
 		</xsl:apply-templates>
 	</xsl:template>
@@ -1207,6 +1207,9 @@
 			<xsl:for-each select="arr[@name='collection_uri']/str">
 				<nmo:hasCollection rdf:resource="{.}"/>
 			</xsl:for-each>
+			<xsl:if test="arr[@name='findspot_uri']/str">
+				<nmo:hasFindspot rdf:resource="{arr[@name='findspot_uri']/str[1]}"/>
+			</xsl:if>
 			
 			<xsl:if test="count(arr[@name='coinType_uri']/str) &gt; 0">
 				<xsl:choose>
