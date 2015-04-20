@@ -182,21 +182,23 @@
 					<xsl:when test="contains($href, 'nomisma.org')">
 						<xsl:variable name="label">
 							<xsl:choose>
-								<xsl:when test="string($rdf/*[@rdf:about=$href]/skos:prefLabel)">
-									<xsl:value-of select="$rdf/*[@rdf:about=$href]/skos:prefLabel"/>
+								<xsl:when test="string($rdf/*[@rdf:about=$href]/skos:prefLabel[@xml:lang='en'])">
+									<xsl:value-of select="$rdf/*[@rdf:about=$href]/skos:prefLabel[@xml:lang='en']"/>
 								</xsl:when>
 								<xsl:otherwise>
 									<xsl:value-of select="$href"/>
 								</xsl:otherwise>
 							</xsl:choose>
 						</xsl:variable>
-						<xsl:if test="$rdf/*[@rdf:about=concat($href, '#this')]/geo:lat and $rdf/*[@rdf:about=concat($href, '#this')]/geo:long">
+						<xsl:if test="$rdf/*[@rdf:about=$href]/nmo:hasFindspot">
+							<xsl:variable name="findspot_uri" select="$rdf/*[@rdf:about=$href]/nmo:hasFindspot/@rdf:resource"/>
+							
 							<field name="findspot_geo">
 								<xsl:value-of select="$label"/>
 								<xsl:text>|</xsl:text>
-								<xsl:value-of select="@xlink:href"/>
+								<xsl:value-of select="$href"/>
 								<xsl:text>|</xsl:text>
-								<xsl:value-of select="concat($rdf/*[@rdf:about=concat($href, '#this')]/geo:long, ',', $rdf/*[@rdf:about=concat($href, '#this')]/geo:lat)"/>
+								<xsl:value-of select="concat($rdf/*[@rdf:about=$findspot_uri]/geo:long, ',', $rdf/*[@rdf:about=$findspot_uri]/geo:lat)"/>
 							</field>
 						</xsl:if>
 						<xsl:if test="$rdf/*[@rdf:about=$href]/descendant::nmo:hasFindspot[contains(@rdf:resource, 'geonames.org')]">

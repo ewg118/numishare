@@ -507,12 +507,14 @@
 				</xsl:when>
 				<xsl:when test="contains($href, 'nomisma')">
 					<xsl:variable name="coordinates">
-						<xsl:if test="$rdf//*[@rdf:about=concat($href, '#this')]/geo:long and $rdf//*[@rdf:about=concat($href, '#this')]/geo:lat">true</xsl:if>
+						<xsl:if test="$rdf/*[@rdf:about=$href]/nmo:hasFindspot">true</xsl:if>
 					</xsl:variable>
 					<xsl:if test="$coordinates='true'">
+						<xsl:variable name="findspot_uri" select="$rdf/*[@rdf:about=$href]/nmo:hasFindspot/@rdf:resource"/>
+						
 						<Point>
 							<coordinates>
-								<xsl:value-of select="concat($rdf//*[@rdf:about=concat($href, '#this')]/geo:long, ',', $rdf//*[@rdf:about=concat($href, '#this')]/geo:lat)"/>
+								<xsl:value-of select="concat($rdf/*[@rdf:about=$findspot_uri]/geo:long, ',', $rdf/*[@rdf:about=$findspot_uri]/geo:lat)"/>
 							</coordinates>
 						</Point>
 					</xsl:if>
