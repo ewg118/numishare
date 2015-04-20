@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0" xmlns:exsl="http://exslt.org/common" xmlns:cinclude="http://apache.org/cocoon/include/1.0"
-	xmlns:numishare="http://code.google.com/p/numishare/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0" xmlns:cinclude="http://apache.org/cocoon/include/1.0" xmlns:numishare="http://code.google.com/p/numishare/"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema">
 	<xsl:include href="results_generic.xsl"/>
 	<xsl:include href="templates.xsl"/>
 	<xsl:include href="functions.xsl"/>
@@ -41,8 +41,10 @@
 				</title>
 				<!-- alternates -->
 				<link rel="alternate" type="application/atom+xml" href="{concat(//config/url, 'feed/?q=', $q, if(string($lang)) then concat('&amp;lang=', $lang) else '')}"/>
-				<link rel="alternate" type="text/csv" href="{concat(//config/url, 'data.csv/?q=', $q, if(string($lang)) then concat('&amp;lang=', $lang) else '', if (string($sort)) then concat('&amp;sort=', $sort) else '')}"/>
-				<link rel="alternate" type="application/application/vnd.google-earth.kml+xml" href="{concat(//config/url, 'query.kml/?q=', $q, if(string($lang)) then concat('&amp;lang=', $lang) else '')}"/>
+				<link rel="alternate" type="text/csv" href="{concat(//config/url, 'data.csv/?q=', $q, if(string($lang)) then concat('&amp;lang=', $lang) else '', if (string($sort)) then
+					concat('&amp;sort=', $sort) else '')}"/>
+				<link rel="alternate" type="application/application/vnd.google-earth.kml+xml" href="{concat(//config/url, 'query.kml/?q=', $q, if(string($lang)) then concat('&amp;lang=', $lang) else
+					'')}"/>
 				<!-- opensearch compliance -->
 				<link rel="search" type="application/opensearchdescription+xml" href="{$url}opensearch.xml" title="Example Search for {$url}"/>
 				<meta name="totalResults" content="{$numFound}"/>

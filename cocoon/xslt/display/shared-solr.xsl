@@ -5,10 +5,10 @@
 	specific stylesheets for creating Solr documents
 	Modification date: April 2012
 -->
-<xsl:stylesheet xmlns:nuds="http://nomisma.org/nuds" xmlns:nh="http://nomisma.org/nudsHoard" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:datetime="http://exslt.org/dates-and-times"
-	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:exsl="http://exslt.org/common" xmlns:mets="http://www.loc.gov/METS/"
-	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mods="http://www.loc.gov/mods/v3" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-	xmlns:numishare="http://code.google.com/p/numishare/" xmlns:nmo="http://nomisma.org/ontology#" exclude-result-prefixes="#all" version="2.0">
+<xsl:stylesheet xmlns:nuds="http://nomisma.org/nuds" xmlns:nh="http://nomisma.org/nudsHoard" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:mets="http://www.loc.gov/METS/" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mods="http://www.loc.gov/mods/v3"
+	xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:numishare="http://code.google.com/p/numishare/"
+	xmlns:nmo="http://nomisma.org/ontology#" exclude-result-prefixes="#all" version="2.0">
 
 	<xsl:template match="nuds:typeDesc">
 		<xsl:param name="recordType"/>
@@ -129,10 +129,10 @@
 						<xsl:text>|</xsl:text>
 						<xsl:value-of select="$href"/>
 						<xsl:text>|</xsl:text>
-						<xsl:value-of select="exsl:node-set($geonames)//place[@id=$href]"/>
+						<xsl:value-of select="$geonames//place[@id=$href]"/>
 					</field>
 					<!-- insert hierarchical facets -->
-					<xsl:for-each select="tokenize(exsl:node-set($geonames)//place[@id=$href]/@hierarchy, '\|')">
+					<xsl:for-each select="tokenize($geonames//place[@id=$href]/@hierarchy, '\|')">
 						<xsl:if test="not(. = $value)">
 							<field name="findspot_hier">
 								<xsl:value-of select="concat('L', position(), '|', .)"/>
@@ -186,7 +186,6 @@
 						</field>
 					</xsl:for-each>
 				</xsl:when>
-				</xsl:when>
 			</xsl:choose>
 		</xsl:if>
 		<xsl:if test="string(@xlink:href) and @xlink:role = 'region'">
@@ -201,7 +200,7 @@
 
 	<!-- generalize refDesc for NUDS and NUDS Hoard records -->
 	<xsl:template match="*[local-name()='refDesc']">
-		<xsl:variable name="refs">
+		<xsl:variable name="refs" as="element()*">
 			<refs>
 				<xsl:for-each select="*[local-name()='reference']">
 					<ref>
@@ -211,7 +210,7 @@
 			</refs>
 		</xsl:variable>
 
-		<xsl:for-each select="exsl:node-set($refs)//ref">
+		<xsl:for-each select="$refs//ref">
 			<xsl:sort order="ascending"/>
 			<field name="reference_facet">
 				<xsl:value-of select="."/>
@@ -325,12 +324,12 @@
 		</xsl:variable>
 
 		<xsl:variable name="temp-nudsGroup">
-			<nudsGroup>
+			<nudsGroup as="element()*">
 				<xsl:for-each select="descendant::nuds:typeDesc">
 					<xsl:choose>
 						<xsl:when test="string(@xlink:href)">
 							<xsl:variable name="href" select="@xlink:href"/>
-							<xsl:copy-of select="exsl:node-set($nudsGroup)//nuds:typeDesc[@xlink:href=$href]"/>
+							<xsl:copy-of select="$nudsGroup//nuds:typeDesc[@xlink:href=$href]"/>
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:copy-of select="."/>
@@ -345,8 +344,7 @@
 			<xsl:variable name="field" select="."/>
 
 			<!-- for each sortable field which is a multiValued field in Solr (a facet), grab the min and max values -->
-			<xsl:for-each
-				select="exsl:node-set($temp-nudsGroup)/descendant::*[local-name()=$field and local-name() !='authority'][string(.)]|exsl:node-set($temp-nudsGroup)/descendant::*[@xlink:role=$field][string(.)]">
+			<xsl:for-each select="$temp-nudsGroup/descendant::*[local-name()=$field and local-name()     !='authority'][string(.)]|$temp-nudsGroup/descendant::*[@xlink:role=$field][string(.)]">
 				<xsl:sort order="ascending"/>
 				<xsl:if test="position()=1">
 					<field name="{$field}_min">
@@ -373,7 +371,7 @@
 		<xsl:for-each select="tokenize($sort-fields, ',')">
 			<xsl:variable name="field" select="."/>
 			<!-- for each sortable field which is a multiValued field in Solr (a facet), grab the min and max values -->
-			<xsl:for-each select="exsl:node-set($typeDesc)/descendant::*[local-name()=$field and local-name() !='authority']|exsl:node-set($typeDesc)/descendant::*[@xlink:role=$field]">
+			<xsl:for-each select="($typeDesc/descendant::*[local-name()=$field and local-name() !='authority']|$typeDesc/descendant::*[@xlink:role=$field]">
 				<xsl:sort order="ascending" select="if (@xlink:href) then @xlink:href else ."/>
 				<xsl:variable name="href" select="@xlink:href"/>
 				<xsl:variable name="name" select="if(@xlink:role) then @xlink:role else local-name()"/>
@@ -387,7 +385,7 @@
 								<xsl:otherwise>
 									<xsl:value-of select="normalize-space(.)"/>
 								</xsl:otherwise>
-							</xsl:choose>							
+							</xsl:choose>
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:value-of select="normalize-space(.)"/>

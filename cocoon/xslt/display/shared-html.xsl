@@ -5,7 +5,7 @@
 	specific stylesheets
 	Modification date: Febrary 2012
 -->
-<xsl:stylesheet xmlns:nuds="http://nomisma.org/nuds" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:exsl="http://exslt.org/common" xmlns:numishare="http://code.google.com/p/numishare/"
+<xsl:stylesheet xmlns:nuds="http://nomisma.org/nuds" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:numishare="http://code.google.com/p/numishare/"
 	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns:nm="http://nomisma.org/id/" exclude-result-prefixes="#all" version="2.0">
 
@@ -34,7 +34,7 @@
 			<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
 		</h2>
 		<xsl:if test="string($typeDesc_resource)">
-			<p>Source: <a href="{$typeDesc_resource}"><xsl:value-of select="exsl:node-set($nudsGroup)/nudsGroup/object[@xlink:href = $typeDesc_resource]/nuds:nuds/nuds:descMeta/nuds:title"/></a></p>
+			<p>Source: <a href="{$typeDesc_resource}"><xsl:value-of select="$nudsGroup//object[@xlink:href = $typeDesc_resource]/nuds:nuds/nuds:descMeta/nuds:title"/></a></p>
 		</xsl:if>
 		<ul>
 			<xsl:apply-templates mode="descMeta"/>
@@ -88,10 +88,12 @@
 							</xsl:when>
 							<xsl:when test="string($lang) and contains($href, 'geonames.org')">
 								<xsl:variable name="geonameId" select="substring-before(substring-after($href, 'geonames.org/'), '/')"/>
-								<xsl:variable name="geonames_data" select="document(concat($geonames-url, '/get?geonameId=', $geonameId, '&amp;username=', $geonames_api_key, '&amp;style=full'))"/>
+								<xsl:variable name="geonames_data" as="element()*">
+									<xsl:copy-of select="document(concat($geonames-url, '/get?geonameId=', $geonameId, '&amp;username=', $geonames_api_key, '&amp;style=full'))"/>
+								</xsl:variable>
 								<xsl:choose>
-									<xsl:when test="count(exsl:node-set($geonames_data)//alternateName[@lang=$lang]) &gt; 0">
-										<xsl:for-each select="exsl:node-set($geonames_data)//alternateName[@lang=$lang]">
+									<xsl:when test="count($geonames_data//alternateName[@lang=$lang]) &gt; 0">
+										<xsl:for-each select="$geonames_data//alternateName[@lang=$lang]">
 											<xsl:value-of select="."/>
 											<xsl:if test="not(position()=last())">
 												<xsl:text>/</xsl:text>
@@ -99,7 +101,7 @@
 										</xsl:for-each>
 									</xsl:when>
 									<xsl:otherwise>
-										<xsl:value-of select="exsl:node-set($geonames_data)//name"/>
+										<xsl:value-of select="$geonames_data//name"/>
 									</xsl:otherwise>
 								</xsl:choose>
 							</xsl:when>

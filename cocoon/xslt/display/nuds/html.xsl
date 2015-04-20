@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?cocoon-disable-caching?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mets="http://www.loc.gov/METS/"
-	xmlns:exsl="http://exslt.org/common" xmlns:numishare="http://code.google.com/p/numishare/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+	xmlns:numishare="http://code.google.com/p/numishare/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
 	xmlns:cinclude="http://apache.org/cocoon/include/1.0" xmlns:nuds="http://nomisma.org/nuds" exclude-result-prefixes="#all" version="2.0">
 
 	<xsl:param name="q"/>
@@ -19,10 +19,11 @@
 			<xsl:value-of select="/content/nuds:nuds/nuds:descMeta/nuds:typeDesc/@xlink:href"/>
 		</xsl:if>
 	</xsl:variable>
+	
 	<xsl:variable name="nuds:typeDesc">
 		<xsl:choose>
 			<xsl:when test="string($nuds:typeDesc_resource)">
-				<xsl:copy-of select="exsl:node-set($nudsGroup)/nudsGroup/object[@xlink:href = $nuds:typeDesc_resource]/nuds:nuds/nuds:descMeta/nuds:typeDesc"/>
+				<xsl:copy-of select="$nudsGroup/nudsGroup/object[@xlink:href = $nuds:typeDesc_resource]/nuds:nuds/nuds:descMeta/nuds:typeDesc"/>
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:copy-of select="/content/nuds:nuds/nuds:descMeta/nuds:typeDesc"/>
@@ -187,7 +188,7 @@
 					</xsl:if>
 					<!-- process $nuds:typeDesc differently -->
 					<div class="metadata_section">
-						<xsl:apply-templates select="exsl:node-set($nuds:typeDesc)/nuds:typeDesc">
+						<xsl:apply-templates select="$nuds:typeDesc/nuds:typeDesc">
 							<xsl:with-param name="typeDesc_resource" select="$nuds:typeDesc_resource"/>
 						</xsl:apply-templates>
 					</div>
@@ -254,9 +255,9 @@
 						</xsl:if>
 						<!-- process $nuds:typeDesc differently -->
 						<div class="metadata_section">
-							<xsl:apply-templates select="exsl:node-set($nuds:typeDesc)/*[local-name()='typeDesc']">
+							<xsl:apply-templates select="$nuds:typeDesc/*[local-name()='typeDesc']">
 								<xsl:with-param name="typeDesc_resource" select="$nuds:typeDesc_resource"/>
-							</xsl:apply-templates>							
+							</xsl:apply-templates>
 						</div>
 						<xsl:if test="nuds:descMeta/nuds:undertypeDesc">
 							<div class="metadata_section">
@@ -428,7 +429,7 @@
 			</ul>
 		</li>
 		</xsl:template>-->
-	
+
 	<xsl:template name="obverse_image">
 		<xsl:variable name="obverse_image">
 			<xsl:if test="string(//mets:fileGrp[@USE='obverse']/mets:file[@USE='reference']/mets:FLocat/@xlink:href)">
@@ -443,8 +444,8 @@
 
 		<!-- display legend and type and image if available -->
 		<xsl:choose>
-			<xsl:when test="exsl:node-set($nuds:typeDesc)/nuds:typeDesc/nuds:obverse">
-				<xsl:for-each select="exsl:node-set($nuds:typeDesc)/nuds:typeDesc/nuds:obverse">
+			<xsl:when test="$nuds:typeDesc/nuds:typeDesc/nuds:obverse">
+				<xsl:for-each select="$nuds:typeDesc/nuds:typeDesc/nuds:obverse">
 					<xsl:variable name="side" select="local-name()"/>
 					<div class="reference_image">
 						<xsl:if test="string($obverse_image)">
@@ -516,8 +517,8 @@
 
 		<!-- display legend and type and image if available -->
 		<xsl:choose>
-			<xsl:when test="exsl:node-set($nuds:typeDesc)/nuds:typeDesc/nuds:reverse">
-				<xsl:for-each select="exsl:node-set($nuds:typeDesc)/nuds:typeDesc/nuds:reverse">
+			<xsl:when test="$nuds:typeDesc/nuds:typeDesc/nuds:reverse">
+				<xsl:for-each select="$nuds:typeDesc/nuds:typeDesc/nuds:reverse">
 					<xsl:variable name="side" select="local-name()"/>
 					<div class="reference_image">
 						<xsl:if test="string($reverse_image)">
@@ -624,11 +625,11 @@
 					<xsl:choose>
 						<xsl:when test="string($lang) and contains($href, 'nomisma.org')">
 							<xsl:choose>
-								<xsl:when test="string(exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/skos:prefLabel[@xml:lang=$lang])">
-									<xsl:value-of select="exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/skos:prefLabel[@xml:lang=$lang]"/>
+								<xsl:when test="string($rdf//*[@rdf:about=$href]/skos:prefLabel[@xml:lang=$lang])">
+									<xsl:value-of select="$rdf//*[@rdf:about=$href]/skos:prefLabel[@xml:lang=$lang]"/>
 								</xsl:when>
 								<xsl:otherwise>
-									<xsl:value-of select="exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/skos:prefLabel[@xml:lang='en']"/>
+									<xsl:value-of select="$rdf//*[@rdf:about=$href]/skos:prefLabel[@xml:lang='en']"/>
 								</xsl:otherwise>
 							</xsl:choose>
 						</xsl:when>
@@ -636,8 +637,8 @@
 							<xsl:variable name="geonameId" select="substring-before(substring-after($href, 'geonames.org/'), '/')"/>
 							<xsl:variable name="geonames_data" select="document(concat($geonames-url, '/get?geonameId=', $geonameId, '&amp;username=', $geonames_api_key, '&amp;style=full'))"/>
 							<xsl:choose>
-								<xsl:when test="count(exsl:node-set($geonames_data)//alternateName[@lang=$lang]) &gt; 0">
-									<xsl:for-each select="exsl:node-set($geonames_data)//alternateName[@lang=$lang]">
+								<xsl:when test="count($geonames_data//alternateName[@lang=$lang]) &gt; 0">
+									<xsl:for-each select="$geonames_data//alternateName[@lang=$lang]">
 										<xsl:value-of select="."/>
 										<xsl:if test="not(position()=last())">
 											<xsl:text>/</xsl:text>
@@ -645,7 +646,7 @@
 									</xsl:for-each>
 								</xsl:when>
 								<xsl:otherwise>
-									<xsl:value-of select="exsl:node-set($geonames_data)//name"/>
+									<xsl:value-of select="$geonames_data//name"/>
 								</xsl:otherwise>
 							</xsl:choose>
 						</xsl:when>
@@ -653,7 +654,7 @@
 							<!-- if there is no text value and it points to nomisma.org, grab the prefLabel -->
 							<xsl:choose>
 								<xsl:when test="not(string(normalize-space(.))) and contains($href, 'nomisma.org')">
-									<xsl:value-of select="exsl:node-set($rdf)/rdf:RDF/*[@rdf:about=$href]/skos:prefLabel[@xml:lang='en']"/>
+									<xsl:value-of select="$rdf//*[@rdf:about=$href]/skos:prefLabel[@xml:lang='en']"/>
 								</xsl:when>
 								<xsl:otherwise>
 									<xsl:value-of select="."/>

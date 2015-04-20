@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:exsl="http://exslt.org/common"
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xlink="http://www.w3.org/1999/xlink" 
 	xmlns:numishare="http://code.google.com/p/numishare/" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
 	xmlns:cinclude="http://apache.org/cocoon/include/1.0" xmlns:nuds="http://nomisma.org/nuds" xmlns:mods="http://www.loc.gov/mods/v3"
 	xmlns:nh="http://nomisma.org/nudsHoard" xmlns:nm="http://nomisma.org/id/" xmlns:math="http://exslt.org/math"
@@ -218,7 +218,7 @@
 							</xsl:when>
 							<xsl:otherwise>
 								<xsl:if
-									test="count(exsl:node-set($nudsGroup)/descendant::*[local-name()=$query_fragment or @xlink:role=$query_fragment]) &gt; 0">
+									test="count($nudsGroup/descendant::*[local-name()=$query_fragment or @xlink:role=$query_fragment]) &gt; 0">
 									<xsl:call-template name="vis-checks">
 										<xsl:with-param name="query_fragment" select="$query_fragment"/>
 									</xsl:call-template>
@@ -551,7 +551,7 @@
 							</xsl:when>
 							<xsl:otherwise>
 								<xsl:if
-									test="count(exsl:node-set($nudsGroup)/descendant::*[local-name()=$query_fragment or @xlink:role=$query_fragment]) &gt; 0">
+									test="count($nudsGroup/descendant::*[local-name()=$query_fragment or @xlink:role=$query_fragment]) &gt; 0">
 									<xsl:call-template name="vis-radios">
 										<xsl:with-param name="query_fragment" select="$query_fragment"/>
 									</xsl:call-template>
