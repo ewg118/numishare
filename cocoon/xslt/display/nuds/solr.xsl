@@ -58,7 +58,7 @@
 						<xsl:value-of select="descendant::*:maintenanceEvent[last()]/*:eventDateTime/@standardDateTime"/>
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:value-of select="if(contains(string(current-dateTime()), 'Z')) then datetime:dateTime() else concat(current-dateTime(), 'Z')"/>
+						<xsl:value-of select="if(contains(string(current-dateTime()), 'Z')) then current-dateTime() else concat(current-dateTime(), 'Z')"/>
 					</xsl:otherwise>
 				</xsl:choose>
 			</field>

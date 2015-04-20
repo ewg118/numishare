@@ -371,7 +371,7 @@
 		<xsl:for-each select="tokenize($sort-fields, ',')">
 			<xsl:variable name="field" select="."/>
 			<!-- for each sortable field which is a multiValued field in Solr (a facet), grab the min and max values -->
-			<xsl:for-each select="($typeDesc/descendant::*[local-name()=$field and local-name() !='authority']|$typeDesc/descendant::*[@xlink:role=$field]">
+			<xsl:for-each select="$typeDesc/descendant::*[local-name()=$field and local-name() !='authority']|$typeDesc/descendant::*[@xlink:role=$field]">
 				<xsl:sort order="ascending" select="if (@xlink:href) then @xlink:href else ."/>
 				<xsl:variable name="href" select="@xlink:href"/>
 				<xsl:variable name="name" select="if(@xlink:role) then @xlink:role else local-name()"/>
