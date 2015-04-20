@@ -13,6 +13,8 @@
 	<xsl:param name="type"/>
 
 	<xsl:variable name="recordType" select="/content/nuds:nuds/@recordType"/>
+	
+	<xsl:variable name="typeDesc_resource" select="descendant::nuds:typeDesc/@xlink:href"/>
 
 	<xsl:template name="nuds">
 		<xsl:apply-templates select="/content/nuds:nuds"/>
@@ -171,7 +173,7 @@
 					<!-- process nuds:typeDesc differently -->
 					<div class="metadata_section">
 						<xsl:apply-templates select="$nudsGroup//nuds:typeDesc">
-							<xsl:with-param name="typeDesc_resource" select="@xlink:href"/>
+							<xsl:with-param name="typeDesc_resource" select="$typeDesc_resource"/>
 						</xsl:apply-templates>
 					</div>
 					<xsl:if test="nuds:descMeta/nuds:undertypeDesc">
@@ -238,7 +240,7 @@
 						<!-- process nuds:typeDesc differently -->
 						<div class="metadata_section">
 							<xsl:apply-templates select="$nudsGroup//nuds:typeDesc">
-								<xsl:with-param name="typeDesc_resource" select="@xlink:href"/>
+								<xsl:with-param name="typeDesc_resource" select="$typeDesc_resource"/>
 							</xsl:apply-templates>
 						</div>
 						<xsl:if test="nuds:descMeta/nuds:undertypeDesc">
