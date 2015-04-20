@@ -20,7 +20,7 @@
 		</xsl:if>
 	</xsl:variable>
 	
-	<xsl:variable name="nuds:typeDesc">
+	<xsl:variable name="nuds:typeDesc" as="element()*">
 		<xsl:choose>
 			<xsl:when test="string($nuds:typeDesc_resource)">
 				<xsl:copy-of select="$nudsGroup/nudsGroup/object[@xlink:href = $nuds:typeDesc_resource]/nuds:nuds/nuds:descMeta/nuds:typeDesc"/>
