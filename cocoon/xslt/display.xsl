@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:nuds="http://nomisma.org/nuds" xmlns:nh="http://nomisma.org/nudsHoard" xmlns:xlink="http://www.w3.org/1999/xlink"
-	 xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nm="http://nomisma.org/id/"
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nm="http://nomisma.org/id/" xmlns:nmo="http://nomisma.org/ontology#"
 	exclude-result-prefixes="#all" version="2.0">
 	<xsl:include href="header.xsl"/>
 	<xsl:include href="footer.xsl"/>
@@ -65,10 +65,10 @@
 					</xsl:for-each>
 				</list>
 			</xsl:variable>
-			
+
 			<xsl:for-each select="$type_series//type_series">
 				<xsl:variable name="type_series_uri" select="."/>
-				
+
 				<xsl:variable name="id-param">
 					<xsl:for-each select="$type_list//type_series_item[contains(., $type_series_uri)]">
 						<xsl:value-of select="substring-after(., 'id/')"/>
@@ -77,7 +77,7 @@
 						</xsl:if>
 					</xsl:for-each>
 				</xsl:variable>
-				
+
 				<xsl:if test="string-length($id-param) &gt; 0">
 					<xsl:for-each select="document(concat($type_series_uri, 'apis/getNuds?identifiers=', encode-for-uri($id-param)))//nuds:nuds">
 						<object xlink:href="{$type_series_uri}id/{nuds:control/nuds:recordId}">
@@ -108,7 +108,7 @@
 					</xsl:if>
 				</xsl:for-each>
 			</xsl:variable>
-			
+
 			<xsl:variable name="rdf_url" select="concat('http://nomisma.org/apis/getRdf?identifiers=', encode-for-uri($id-param))"/>
 			<xsl:copy-of select="document($rdf_url)/rdf:RDF/*"/>
 		</rdf:RDF>
@@ -123,7 +123,7 @@
 	</xsl:variable>
 	<xsl:variable name="has_findspot_geo">
 		<xsl:choose>
-			<xsl:when test="count($rdf/descendant::nmo:hasFindspot) &gt; 0 or count(descendant::*[local-name()='geogname'][@xlink:role='findspot' and string(@xlink:href)]) &gt; 0">true</xsl:when>			
+			<xsl:when test="count($rdf/descendant::nmo:hasFindspot) &gt; 0 or count(descendant::*[local-name()='geogname'][@xlink:role='findspot' and string(@xlink:href)]) &gt; 0">true</xsl:when>
 			<xsl:otherwise>false</xsl:otherwise>
 		</xsl:choose>
 	</xsl:variable>
@@ -276,7 +276,7 @@
 						</xsl:choose>
 					</head>
 					<body>
-						<xsl:call-template name="header"/>						
+						<xsl:call-template name="header"/>
 						<xsl:call-template name="display"/>
 						<xsl:call-template name="footer"/>
 					</body>
@@ -293,8 +293,8 @@
 		<title id="{$id}">
 			<xsl:value-of select="//config/title"/>
 			<xsl:text>: </xsl:text>
-			<xsl:value-of
-				select="if (descendant::nuds:nuds) then descendant::nuds:nuds/nuds:descMeta/nuds:title else if (descendant::*[local-name()='nudsHoard']) then descendant::nuds:recordId else ''"/>
+			<xsl:value-of select="if (descendant::nuds:nuds) then descendant::nuds:nuds/nuds:descMeta/nuds:title else if (descendant::*[local-name()='nudsHoard']) then descendant::nuds:recordId else
+				''"/>
 		</title>
 		<!-- alternates -->
 		<link rel="alternate" type="text/xml" href="{concat($url, 'id/', $id)}.xml"/>

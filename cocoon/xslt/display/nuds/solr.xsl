@@ -200,29 +200,7 @@
 								<xsl:text>|</xsl:text>
 								<xsl:value-of select="concat($rdf/*[@rdf:about=$findspot_uri]/geo:long, ',', $rdf/*[@rdf:about=$findspot_uri]/geo:lat)"/>
 							</field>
-						</xsl:if>
-						<xsl:if test="$rdf/*[@rdf:about=$href]/descendant::nmo:hasFindspot[contains(@rdf:resource, 'geonames.org')]">
-							<xsl:variable name="geonamesUri" select="$rdf/*[@rdf:about=$href]/descendant::nmo:hasFindspot[contains(@rdf:resource, 'geonames.org')][1]/@rdf:resource"/>
-							<field name="findspot_geo">
-								<xsl:value-of select="$label"/>
-								<xsl:text>|</xsl:text>
-								<xsl:value-of select="$href"/>
-								<xsl:text>|</xsl:text>
-								<xsl:value-of select="$geonames//place[@id=$geonamesUri]"/>
-							</field>
-
-							<!-- insert hierarchical facets -->
-							<xsl:for-each select="tokenize($geonames//place[@id=$geonamesUri]/@hierarchy, '\|')">
-								<field name="findspot_hier">
-									<xsl:value-of select="concat('L', position(), '|', .)"/>
-								</field>
-								<field name="findspot_text">
-									<xsl:value-of select="."/>
-								</field>
-
-
-							</xsl:for-each>
-						</xsl:if>
+						</xsl:if>						
 						<field name="findspot_facet">
 							<xsl:value-of select="$label"/>
 						</field>
