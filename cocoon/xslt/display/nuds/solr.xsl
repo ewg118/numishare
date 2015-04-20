@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="2.0" xmlns:nuds="http://nomisma.org/nuds" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:datetime="http://exslt.org/dates-and-times" xmlns:nm="http://nomisma.org/id/"
 	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:exsl="http://exslt.org/common" xmlns:mets="http://www.loc.gov/METS/"
-	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:res="http://www.w3.org/2005/sparql-results#" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:res="http://www.w3.org/2005/sparql-results#" xmlns:nmo="http://nomisma.org/ontology#" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
 	xmlns:cinclude="http://apache.org/cocoon/include/1.0" exclude-result-prefixes="#all">
 
 	<xsl:template name="nuds">	
@@ -190,17 +190,17 @@
 								</xsl:otherwise>
 							</xsl:choose>
 						</xsl:variable>
-						<xsl:if test="$rdf/*[@rdf:about=$href]/descendant::geo:lat and $rdf/*[@rdf:about=$href]/descendant::geo:long">							
+						<xsl:if test="$rdf/*[@rdf:about=concat($href, '#this')]/geo:lat and $rdf/*[@rdf:about=concat($href, '#this')]/geo:long">
 							<field name="findspot_geo">
 								<xsl:value-of select="$label"/>
 								<xsl:text>|</xsl:text>
 								<xsl:value-of select="@xlink:href"/>
 								<xsl:text>|</xsl:text>
-								<xsl:value-of select="concat($rdf/*[@rdf:about=$href]/descendant::geo:long, ',', $rdf/*[@rdf:about=$href]/descendant::geo:lat)"/>
+								<xsl:value-of select="concat($rdf/*[@rdf:about=concat($href, '#this')]/geo:long, ',', $rdf/*[@rdf:about=concat($href, '#this')]/geo:lat)"/>
 							</field>
 						</xsl:if>
-						<xsl:if test="$rdf/*[@rdf:about=$href]/descendant::nm:findspot[contains(@rdf:resource, 'geonames.org')]">
-							<xsl:variable name="geonamesUri" select="$rdf/*[@rdf:about=$href]/descendant::nm:findspot[contains(@rdf:resource, 'geonames.org')][1]/@rdf:resource"/>
+						<xsl:if test="$rdf/*[@rdf:about=$href]/descendant::nmo:hasFindspot[contains(@rdf:resource, 'geonames.org')]">
+							<xsl:variable name="geonamesUri" select="$rdf/*[@rdf:about=$href]/descendant::nmo:hasFindspot[contains(@rdf:resource, 'geonames.org')][1]/@rdf:resource"/>
 							<field name="findspot_geo">
 								<xsl:value-of select="$label"/>
 								<xsl:text>|</xsl:text>

@@ -8,7 +8,7 @@
 <xsl:stylesheet xmlns:nuds="http://nomisma.org/nuds" xmlns:nh="http://nomisma.org/nudsHoard" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:datetime="http://exslt.org/dates-and-times"
 	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:exsl="http://exslt.org/common" xmlns:mets="http://www.loc.gov/METS/"
 	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mods="http://www.loc.gov/mods/v3" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-	xmlns:numishare="http://code.google.com/p/numishare/" exclude-result-prefixes="#all" version="2.0">
+	xmlns:numishare="http://code.google.com/p/numishare/" xmlns:nmo="http://nomisma.org/ontology#" exclude-result-prefixes="#all" version="2.0">
 
 	<xsl:template match="nuds:typeDesc">
 		<xsl:param name="recordType"/>
@@ -152,7 +152,7 @@
 				<xsl:when test="contains(@xlink:href, 'nomisma.org')">
 					<xsl:variable name="href" select="@xlink:href"/>
 					<xsl:variable name="coordinates">
-						<xsl:if test="$rdf/*[@rdf:about=$href]/descendant::geo:lat and $rdf/*[@rdf:about=$href]/descendant::geo:long">
+						<xsl:if test="$rdf/*[@rdf:about=concat($href, '#this')]/geo:lat and $rdf/*[@rdf:about=concat($href, '#this')]/geo:long">
 							<xsl:text>true</xsl:text>
 						</xsl:if>
 					</xsl:variable>
@@ -164,20 +164,28 @@
 									<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about=$href], $lang)"/>
 								</xsl:when>
 								<xsl:otherwise>
-									<xsl:value-of select="normalize-space(.)"/>
+									<xsl:choose>
+										<xsl:when test="not(string(.))">
+											<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about=$href], 'en')"/>
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:value-of select="normalize-space(.)"/>
+										</xsl:otherwise>
+									</xsl:choose>
 								</xsl:otherwise>
 							</xsl:choose>
 							<xsl:text>|</xsl:text>
 							<xsl:value-of select="@xlink:href"/>
 							<xsl:text>|</xsl:text>
-							<xsl:value-of select="concat($rdf/*[@rdf:about=$href]/descendant::geo:long, ',', $rdf/*[@rdf:about=$href]/descendant::geo:lat)"/>
+							<xsl:value-of select="concat($rdf/*[@rdf:about=concat($href, '#this')]/geo:long, ',', $rdf/*[@rdf:about=concat($href, '#this')]/geo:lat)"/>
 						</field>
 					</xsl:if>
-					<xsl:for-each select="$rdf/*[@rdf:about=$href]/skos:related[contains(@rdf:resource, 'pleiades.stoa.org')]">
+					<xsl:for-each select="$rdf/*[@rdf:about=$href]/skos:relatedMatch[contains(@rdf:resource, 'pleiades.stoa.org')]">
 						<field name="pleiades_uri">
 							<xsl:value-of select="@rdf:resource"/>
 						</field>
 					</xsl:for-each>
+				</xsl:when>
 				</xsl:when>
 			</xsl:choose>
 		</xsl:if>

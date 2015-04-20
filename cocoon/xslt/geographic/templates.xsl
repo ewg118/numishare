@@ -2,7 +2,7 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"
 	xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nm="http://nomisma.org/id/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:nuds="http://nomisma.org/nuds"
 	xmlns:nh="http://nomisma.org/nudsHoard" xmlns:cinclude="http://apache.org/cocoon/include/1.0" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:numishare="http://code.google.com/p/numishare/"
-	xmlns:res="http://www.w3.org/2005/sparql-results#" exclude-result-prefixes="geo skos nm rdf nuds nh cinclude xlink numishare res" version="2.0">
+	xmlns:res="http://www.w3.org/2005/sparql-results#" xmlns:nmo="http://nomisma.org/ontology#" exclude-result-prefixes="geo skos nm rdf nuds nh cinclude xlink numishare res" version="2.0">
 	<xsl:template name="kml">
 		<kml xmlns="http://earth.google.com/kml/2.0">
 			<Document>
@@ -507,12 +507,12 @@
 				</xsl:when>
 				<xsl:when test="contains($href, 'nomisma')">
 					<xsl:variable name="coordinates">
-						<xsl:if test="$rdf//*[@rdf:about=$href]/descendant::geo:long and $rdf//*[@rdf:about=$href]/descendant::geo:lat">true</xsl:if>
+						<xsl:if test="$rdf//*[@rdf:about=concat($href, '#this')]/geo:long and $rdf//*[@rdf:about=concat($href, '#this')]/geo:lat">true</xsl:if>
 					</xsl:variable>
 					<xsl:if test="$coordinates='true'">
 						<Point>
 							<coordinates>
-								<xsl:value-of select="concat($rdf//*[@rdf:about=$href]/descendant::geo:long[1], ',', $rdf//*[@rdf:about=$href]/descendant::geo:lat[1])"/>
+								<xsl:value-of select="concat($rdf//*[@rdf:about=concat($href, '#this')]/geo:long, ',', $rdf//*[@rdf:about=concat($href, '#this')]/geo:lat)"/>
 							</coordinates>
 						</Point>
 					</xsl:if>
