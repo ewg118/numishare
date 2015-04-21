@@ -1331,7 +1331,7 @@
 				</xsl:for-each>
 			</dcmitype:Collection>
 		</xsl:if>
-		<xsl:if test="arr[@name='findspot_geo']/str">
+		<xsl:if test="arr[@name='findspot_geo']/str and not(arr[@name='hoard_uri']/str)">
 			<xsl:variable name="findspot" select="tokenize(arr[@name='findspot_geo']/str, '\|')"/>
 			<xsl:choose>
 				<xsl:when test="contains($findspot[2], 'nomisma.org')"/>
