@@ -109,28 +109,7 @@
 		<xsl:variable name="lat" select="res:binding[@name='lat']/res:literal"/>
 		<xsl:variable name="long" select="res:binding[@name='long']/res:literal"/>
 		<xsl:variable name="description">
-			<![CDATA[
-          					<dl class='dl-horizontal'><dt>URL</dt><dd><a href="]]><xsl:value-of select="res:binding[@name='object']/res:uri"/><![CDATA[">]]><xsl:value-of
-				select="res:binding[@name='title']/res:literal"/><![CDATA[</a></dd>]]>
-			<xsl:if test="res:binding[@name='hoard']/res:uri">
-				<![CDATA[<dt>Hoard</dt><dd><a href="]]><xsl:value-of select="res:binding[@name='hoard']/res:uri"/><![CDATA[">]]><xsl:value-of
-					select="res:binding[@name='hoardLabel']/res:literal"/><![CDATA[</a></dd>]]>
-			</xsl:if>
-			<xsl:if test="res:binding[@name='findspot']/res:uri">
-				<![CDATA[<dt>Findspot</dt><dd><a href="]]><xsl:value-of select="res:binding[@name='findspot']/res:uri"/><![CDATA[">]]>
-				<xsl:choose>
-					<xsl:when test="res:binding[@name='placeName']/res:literal">
-						<xsl:value-of select="res:binding[@name='placeName']/res:literal"/>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:value-of select="res:binding[@name='findspot']/res:uri"/>
-					</xsl:otherwise>
-				</xsl:choose><![CDATA[</a></dd>]]>
-			</xsl:if>
-			<xsl:if test="number($closing_date) castable as xs:integer">
-				<![CDATA[<dt>]]><xsl:value-of select="numishare:regularize_node('closing_date', $lang)"/><![CDATA[</dt><dd>]]><xsl:value-of select="number($closing_date)"/><![CDATA[</dd>]]>
-			</xsl:if>
-			<![CDATA[</dl>]]>
+			test
 		</xsl:variable>
 		<xsl:variable name="theme">red</xsl:variable>
 		<!-- output --> { <xsl:if test="string($lat) and string($long)">"point": {"lon": <xsl:value-of select="$long"/>, "lat": <xsl:value-of select="$lat"/>},</xsl:if> "title": "<xsl:value-of
