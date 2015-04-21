@@ -101,9 +101,7 @@ SELECT ?object ?title ?findspot ?hoard ?placeName ?hoardLabel ?lat ?long ?type ?
 UNION { ?contents nmo:hasTypeSeriesItem <typeUri> .
 ?object dcterms:tableOfContents ?contents }
 ?object dcterms:title ?title .			
-{?object nmo:hasFindspot ?findspot}
-UNION {?object dcterms:isPartOf ?hoard .
-?hoard nmo:hasFindspot ?findspot }
+?object nmo:hasFindspot ?findspot
 ?findspot geo:lat ?lat .
 ?findspot geo:long ?long .
 OPTIONAL {?findspot foaf:name ?placeName}
@@ -114,6 +112,10 @@ OPTIONAL { ?hoard nmo:hasClosingDate ?close .
 OPTIONAL { ?hoard nmo:hasClosingDate ?burial }
 OPTIONAL { ?object nmo:hasClosingDate ?burial }}]]>
 						</xsl:when>
+						
+						<!-- UNION {?object dcterms:isPartOf ?hoard .
+?hoard nmo:hasFindspot ?findspot } -->
+						
 						<xsl:when test="$template = 'json'"><![CDATA[PREFIX rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX dcterms:  <http://purl.org/dc/terms/>
 PREFIX nm:       <http://nomisma.org/id/>
@@ -127,9 +129,7 @@ SELECT ?object ?title ?findspot ?hoard ?placeName ?hoardLabel ?lat ?long ?type ?
 UNION { ?contents nmo:hasTypeSeriesItem <typeUri> .
 ?object dcterms:tableOfContents ?contents }
 ?object dcterms:title ?title .			
-{?object nmo:hasFindspot ?findspot}
-UNION {?object dcterms:isPartOf ?hoard .
-?hoard nmo:hasFindspot ?findspot }
+?object nmo:hasFindspot ?findspot .
 ?findspot geo:lat ?lat .
 ?findspot geo:long ?long .
 OPTIONAL {?findspot foaf:name ?placeName}
