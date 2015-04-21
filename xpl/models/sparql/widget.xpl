@@ -122,7 +122,7 @@ UNION { ?contents nmo:hasTypeSeriesItem <typeUri> .
 ?object dcterms:title ?title .			
 {?object nmo:hasFindspot ?findspot}
 UNION {?object dcterms:isPartOf ?hoard .
-?object nmo:hasFindspot ?findspot }
+?hoard nmo:hasFindspot ?findspot }
 ?findspot geo:lat ?lat .
 ?findspot geo:long ?long .
 OPTIONAL { ?object rdf:type ?type }
