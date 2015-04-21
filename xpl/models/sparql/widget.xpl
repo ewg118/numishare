@@ -93,8 +93,10 @@ PREFIX dcterms:  <http://purl.org/dc/terms/>
 PREFIX nm:       <http://nomisma.org/id/>
 PREFIX nmo:	<http://nomisma.org/ontology#>
 PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>
+PREFIX foaf:	<http://xmlns.com/foaf/0.1/>
+PREFIX skos:      <http://www.w3.org/2004/02/skos/core#>
 
-SELECT ?object ?title ?findspot ?lat ?long ?type ?burial WHERE {
+SELECT ?object ?title ?findspot ?hoard ?placeName ?hoardLabel ?lat ?long ?type ?burial WHERE {
 { ?object nmo:hasTypeSeriesItem <typeUri> }
 UNION { ?contents nmo:hasTypeSeriesItem <typeUri> .
 ?object dcterms:tableOfContents ?contents }
@@ -104,7 +106,11 @@ UNION {?object dcterms:isPartOf ?hoard .
 ?hoard nmo:hasFindspot ?findspot }
 ?findspot geo:lat ?lat .
 ?findspot geo:long ?long .
+OPTIONAL {?findspot foaf:name ?placeName}
+OPTIONAL { ?hoard skos:prefLabel ?hoardLabel}
 OPTIONAL { ?object rdf:type ?type }
+OPTIONAL { ?hoard nmo:hasClosingDate ?close .
+?close nmo:hasEndDate ?burial}
 OPTIONAL { ?hoard nmo:hasClosingDate ?burial }
 OPTIONAL { ?object nmo:hasClosingDate ?burial }}]]>
 						</xsl:when>
@@ -114,8 +120,9 @@ PREFIX nm:       <http://nomisma.org/id/>
 PREFIX nmo:	<http://nomisma.org/ontology#>
 PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>
 PREFIX foaf:	<http://xmlns.com/foaf/0.1/>
+PREFIX skos:      <http://www.w3.org/2004/02/skos/core#>
 
-SELECT ?object ?title ?findspot ?lat ?long ?type ?burial WHERE {
+SELECT ?object ?title ?findspot ?hoard ?placeName ?hoardLabel ?lat ?long ?type ?burial WHERE {
 { ?object nmo:hasTypeSeriesItem <typeUri> }
 UNION { ?contents nmo:hasTypeSeriesItem <typeUri> .
 ?object dcterms:tableOfContents ?contents }
@@ -125,7 +132,11 @@ UNION {?object dcterms:isPartOf ?hoard .
 ?hoard nmo:hasFindspot ?findspot }
 ?findspot geo:lat ?lat .
 ?findspot geo:long ?long .
+OPTIONAL {?findspot foaf:name ?placeName}
+OPTIONAL { ?hoard skos:prefLabel ?hoardLabel}
 OPTIONAL { ?object rdf:type ?type }
+OPTIONAL { ?hoard nmo:hasClosingDate ?close .
+?close nmo:hasEndDate ?burial}
 OPTIONAL { ?hoard nmo:hasClosingDate ?burial }
 OPTIONAL { ?object nmo:hasClosingDate ?burial }}]]>
 						</xsl:when>
