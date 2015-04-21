@@ -178,41 +178,81 @@
 		<xsl:choose>
 			<xsl:when test="string(@xlink:href)">
 				<xsl:variable name="href" select="@xlink:href"/>
+				
+				<!-- the @xlink:href of a findspotDesc is presumed to a a hoard URI -->
+				<field name="hoard_uri">
+					<xsl:value-of select="$href"/>
+				</field>
+				
 				<xsl:choose>
 					<xsl:when test="contains($href, 'nomisma.org')">
 						<xsl:variable name="label">
 							<xsl:choose>
-								<xsl:when test="string($rdf/*[@rdf:about=$href]/skos:prefLabel[@xml:lang='en'])">
-									<xsl:value-of select="$rdf/*[@rdf:about=$href]/skos:prefLabel[@xml:lang='en']"/>
+								<xsl:when test="string($rdf/*[@rdf:about=$href]/skos:prefLabel)">
+									<xsl:value-of select="$rdf/*[@rdf:about=$href]/skos:prefLabel"/>
 								</xsl:when>
 								<xsl:otherwise>
 									<xsl:value-of select="$href"/>
 								</xsl:otherwise>
 							</xsl:choose>
-						</xsl:variable>
+						</xsl:variable>						
+						
+						<field name="findspot_facet">
+							<xsl:value-of select="$label"/>
+						</field>
+						
 						<xsl:if test="$rdf/*[@rdf:about=$href]/nmo:hasFindspot">
 							<xsl:variable name="findspot_uri" select="$rdf/*[@rdf:about=$href]/nmo:hasFindspot/@rdf:resource"/>
 							
 							<field name="findspot_geo">
 								<xsl:value-of select="$label"/>
 								<xsl:text>|</xsl:text>
-								<xsl:value-of select="$href"/>
+								<xsl:value-of select="$findspot_uri"/>
 								<xsl:text>|</xsl:text>
 								<xsl:value-of select="concat($rdf/*[@rdf:about=$findspot_uri]/geo:long, ',', $rdf/*[@rdf:about=$findspot_uri]/geo:lat)"/>
 							</field>
-						</xsl:if>						
-						<field name="findspot_facet">
-							<xsl:value-of select="$label"/>
-						</field>
+							
+							<field name="findspot_uri">
+								<xsl:value-of select="$findspot_uri"/>
+							</field>
+							
+							<!-- if the findspot URI is from geonames, then insert geographic hierarchy -->
+							<xsl:if test="contains($findspot_uri, 'geonames.org')">
+								<xsl:variable name="geonamesUri" select="$findspot_uri"/>
+								
+								
+								<!-- insert hierarchical facets -->
+								<xsl:variable name="hierarchy_pieces" select="tokenize($geonames//place[@id=$geonamesUri]/@hierarchy, '\|')"/>
+								<xsl:variable name="count" select="count($hierarchy_pieces)"/>
+								
+								<xsl:for-each select="$hierarchy_pieces">
+									<xsl:variable name="position" select="position()"/>
+									
+									<xsl:choose>
+										<xsl:when test="$position = 1">
+											<field name="findspot_hier">
+												<xsl:value-of select="concat('L', position(), '|', substring-after(., '/'), '/', substring-before(., '/'))"/>
+											</field>
+										</xsl:when>
+										<xsl:otherwise>
+											<field name="findspot_hier">
+												<xsl:value-of select="concat(substring-before($hierarchy_pieces[$position - 1], '/'), '|', substring-after(., '/'), '/', substring-before(., '/'))"/>
+											</field>
+										</xsl:otherwise>
+									</xsl:choose>
+									
+									<field name="findspot_text">
+										<xsl:value-of select="substring-after(., '/')"/>
+									</field>
+								</xsl:for-each>
+							</xsl:if>
+						</xsl:if>
 					</xsl:when>
 				</xsl:choose>
-				<field name="findspot_uri">
-					<xsl:value-of select="$href"/>
-				</field>
 			</xsl:when>
 			<xsl:otherwise>
 				<field name="findspot_facet">
-					<xsl:value-of select="nuds:findspot/nuds:geoname[@xlink:role='findspot']"/>
+					<xsl:value-of select="nuds:findspot/nuds:geogname[@xlink:role='findspot']"/>
 				</field>
 			</xsl:otherwise>
 		</xsl:choose>
