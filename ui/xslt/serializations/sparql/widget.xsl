@@ -108,8 +108,6 @@
 		<xsl:variable name="closing_date" select="res:binding[@name='burial']/res:literal"/>
 		<xsl:variable name="lat" select="res:binding[@name='lat']/res:literal"/>
 		<xsl:variable name="long" select="res:binding[@name='long']/res:literal"/>
-		<xsl:variable name="title" select="if (res:binding[@name='type']/res:uri = 'http://nomisma.org/id/hoard') then res:binding[@name='title']/res:literal else
-			res:binding[@name='name']/res:literal"/>
 		<xsl:variable name="description">
 			<xsl:variable name="description">
 				<![CDATA[
@@ -138,7 +136,7 @@
 		</xsl:variable>
 		<xsl:variable name="theme">red</xsl:variable>
 		<!-- output --> { <xsl:if test="string($lat) and string($long)">"point": {"lon": <xsl:value-of select="$long"/>, "lat": <xsl:value-of select="$lat"/>},</xsl:if> "title": "<xsl:value-of
-			select="$title"/>", "start": "<xsl:value-of select="$closing_date"/>", "options": { "theme": "<xsl:value-of select="$theme"/>", "description": "<xsl:value-of
+			select="res:binding[@name='title']/res:literal"/>", "start": "<xsl:value-of select="$closing_date"/>", "options": { "theme": "<xsl:value-of select="$theme"/>", "description": "<xsl:value-of
 			select="normalize-space($description)"/>" } }<xsl:if test="not(position()=last())">
 			<xsl:text>,</xsl:text>
 		</xsl:if>
