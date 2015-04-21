@@ -396,7 +396,7 @@
 
 	<xsl:template match="nuds:findspotDesc" mode="nomisma">
 		<xsl:if test="string(@xlink:href)">
-			<nmo:hasFindspot rdf:resource="{@xlink:href}"/>
+			<dcterms:isPartOf rdf:resource="{@xlink:href}"/>
 		</xsl:if>
 	</xsl:template>
 

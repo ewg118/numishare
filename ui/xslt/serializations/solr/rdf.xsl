@@ -200,7 +200,13 @@
 					<xsl:value-of select="format-number(int[@name='taq_num'], '0000')"/>
 				</nmo:hasClosingDate>
 			</xsl:if>
-			<xsl:if test="arr[@name='findspot_geo']/str">
+			
+			<xsl:if test="arr[@name='hoard_uri']/str">
+				<dcterms:isPartOf rdf:resource="{arr[@name='hoard_uri']/str[1]}"/>
+			</xsl:if>
+			
+			<!-- only include findspot if the coin is not part of a hoard -->
+			<xsl:if test="arr[@name='findspot_geo']/str and not(arr[@name='hoard_uri'])">
 				<xsl:variable name="findspot" select="tokenize(arr[@name='findspot_geo']/str, '\|')"/>
 				<nmo:hasFindspot rdf:resource="{$findspot[2]}"/>
 			</xsl:if>
