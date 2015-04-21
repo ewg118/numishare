@@ -105,14 +105,24 @@ UNION { ?contents nmo:hasTypeSeriesItem <typeUri> .
 ?findspot geo:lat ?lat .
 ?findspot geo:long ?long .
 OPTIONAL {?findspot foaf:name ?placeName}
+OPTIONAL { ?object rdf:type ?type }
+OPTIONAL { ?object nmo:hasClosingDate ?burial }}]]>
+						</xsl:when>
+						<!-- SELECT ?object ?title ?findspot ?hoard ?placeName ?hoardLabel ?lat ?long ?type ?burial WHERE {
+{ ?object nmo:hasTypeSeriesItem <typeUri> }
+UNION { ?contents nmo:hasTypeSeriesItem <typeUri> .
+?object dcterms:tableOfContents ?contents }
+?object dcterms:title ?title .			
+?object nmo:hasFindspot ?findspot .
+?findspot geo:lat ?lat .
+?findspot geo:long ?long .
+OPTIONAL {?findspot foaf:name ?placeName}
 OPTIONAL { ?hoard skos:prefLabel ?hoardLabel}
 OPTIONAL { ?object rdf:type ?type }
 OPTIONAL { ?hoard nmo:hasClosingDate ?close .
 ?close nmo:hasEndDate ?burial}
 OPTIONAL { ?hoard nmo:hasClosingDate ?burial }
-OPTIONAL { ?object nmo:hasClosingDate ?burial }}]]>
-						</xsl:when>
-						
+OPTIONAL { ?object nmo:hasClosingDate ?burial }} -->
 						<!-- UNION {?object dcterms:isPartOf ?hoard .
 ?hoard nmo:hasFindspot ?findspot } -->
 						
@@ -133,11 +143,7 @@ UNION { ?contents nmo:hasTypeSeriesItem <typeUri> .
 ?findspot geo:lat ?lat .
 ?findspot geo:long ?long .
 OPTIONAL {?findspot foaf:name ?placeName}
-OPTIONAL { ?hoard skos:prefLabel ?hoardLabel}
 OPTIONAL { ?object rdf:type ?type }
-OPTIONAL { ?hoard nmo:hasClosingDate ?close .
-?close nmo:hasEndDate ?burial}
-OPTIONAL { ?hoard nmo:hasClosingDate ?burial }
 OPTIONAL { ?object nmo:hasClosingDate ?burial }}]]>
 						</xsl:when>
 						<xsl:when test="$template = 'solr'"><![CDATA[PREFIX rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
