@@ -70,7 +70,7 @@ OPTIONAL { ?object nmo:hasCollection ?colUri .
 FILTER(langMatches(lang(?collection), "EN"))}
 OPTIONAL {?object nmo:hasFindspot ?findUri .
 ?findUri foaf:name ?findspot }
-OPTIONAL {?object dcterms:isPartOf ?hoard ;
+OPTIONAL {?object dcterms:isPartOf ?hoard .
  ?hoard a nmo:Hoard ;
  	skos:prefLabel ?findspot }
 OPTIONAL { ?object nmo:hasWeight ?weight }
