@@ -110,14 +110,14 @@
 		<xsl:variable name="long" select="res:binding[@name='long']/res:literal"/>
 		<xsl:variable name="description">
 			<![CDATA[
-          					<dl class='dl-horizontal'><dt>URL</dt><dd><a href="]]><xsl:value-of select="res:binding[@name='object']/res:uri"/><![CDATA[">]]><xsl:value-of
+          					<dl class='dl-horizontal'><dt>URL</dt><dd><a href=']]><xsl:value-of select="res:binding[@name='object']/res:uri"/><![CDATA['>]]><xsl:value-of
 				select="res:binding[@name='title']/res:literal"/><![CDATA[</a></dd>]]>
 			<xsl:if test="res:binding[@name='hoard']/res:uri">
-				<![CDATA[<dt>Hoard</dt><dd><a href="]]><xsl:value-of select="res:binding[@name='hoard']/res:uri"/><![CDATA[">]]><xsl:value-of
+				<![CDATA[<dt>Hoard</dt><dd><a href=']]><xsl:value-of select="res:binding[@name='hoard']/res:uri"/><![CDATA['>]]><xsl:value-of
 					select="res:binding[@name='hoardLabel']/res:literal"/><![CDATA[</a></dd>]]>
 			</xsl:if>
 			<xsl:if test="res:binding[@name='findspot']/res:uri">
-				<![CDATA[<dt>Findspot</dt><dd><a href="]]><xsl:value-of select="res:binding[@name='findspot']/res:uri"/><![CDATA[">]]>
+				<![CDATA[<dt>Findspot</dt><dd><a href=']]><xsl:value-of select="res:binding[@name='findspot']/res:uri"/><![CDATA['>]]>
 				<xsl:choose>
 					<xsl:when test="res:binding[@name='placeName']/res:literal">
 						<xsl:value-of select="res:binding[@name='placeName']/res:literal"/>
