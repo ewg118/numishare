@@ -71,8 +71,7 @@ FILTER(langMatches(lang(?collection), "EN"))}
 OPTIONAL {?object nmo:hasFindspot ?findUri .
 ?findUri foaf:name ?findspot }
 OPTIONAL {?object dcterms:isPartOf ?hoard .
- ?hoard a nmo:Hoard ;
- 	skos:prefLabel ?findspot }
+ ?hoard skos:prefLabel ?findspot }
 OPTIONAL {?hoard dcterms:title ?findspot}}
 OPTIONAL { ?object nmo:hasWeight ?weight }
 OPTIONAL { ?object nmo:hasAxis ?axis }
