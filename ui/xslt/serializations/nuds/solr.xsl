@@ -71,13 +71,20 @@
 			</field>
 
 			<!-- insert coin type facets and URIs -->
-			<xsl:for-each select="descendant::nuds:typeDesc[string(@xlink:href)]|descendant::nuds:undertypeDesc[string(@xlink:href)]">
+			<xsl:for-each select="descendant::nuds:typeDesc[string(@xlink:href)]|descendant::nuds:undertypeDesc[string(@xlink:href)]|descendant::nuds:reference[@xlink:arcrole='nmo:hasTypeSeriesItem'][string(@xlink:href)]">
 				<xsl:variable name="href" select="@xlink:href"/>
 				<field name="coinType_uri">
 					<xsl:value-of select="$href"/>
 				</field>
-				<field name="coinType_facet">
-					<xsl:value-of select="$nudsGroup//object[@xlink:href=$href]/descendant::nuds:title"/>
+				<field name="coinType_facet">					
+					<xsl:choose>
+						<xsl:when test="local-name()='reference'">
+							<xsl:value-of select="."/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="$nudsGroup//object[@xlink:href=$href]/descendant::nuds:title"/>
+						</xsl:otherwise>
+					</xsl:choose>					
 				</field>
 			</xsl:for-each>
 
