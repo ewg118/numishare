@@ -230,9 +230,13 @@
 									</xsl:choose>
 								</nmo:hasCollection>
 							</xsl:for-each>
+							<!-- type series items -->
 							<xsl:if test="string(nuds:descMeta/nuds:typeDesc/@xlink:href)">
 								<nmo:hasTypeSeriesItem rdf:resource="{nuds:descMeta/nuds:typeDesc/@xlink:href}"/>
 							</xsl:if>
+							<xsl:for-each select="descendant::nuds:reference[@xlink:arcrole='nmo:hasTypeSeriesItem'][@xlink:href]">
+								<nmo:hasTypeSeriesItem rdf:resource="{@xlink:href}"/>
+							</xsl:for-each>
 							<!-- other ids -->
 							<xsl:for-each select="descendant::*:otherRecordId[string(@semantic)]">
 								<xsl:variable name="uri" select="if (contains(., 'http://')) then . else concat($url, 'id/', .)"/>
