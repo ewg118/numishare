@@ -60,7 +60,7 @@ PREFIX nmo:	<http://nomisma.org/ontology#>
 PREFIX skos:      <http://www.w3.org/2004/02/skos/core#>
 PREFIX foaf:	<http://xmlns.com/foaf/0.1/>
 
-SELECT ?object ?title ?identifier ?findspot ?collection ?weight ?axis ?diameter ?obvThumb ?revThumb ?obvRef ?revRef ?comThumb ?comRef  WHERE {
+SELECT ?object ?title ?identifier ?findspot ?hoard ?collection ?weight ?axis ?diameter ?obvThumb ?revThumb ?obvRef ?revRef ?comThumb ?comRef  WHERE {
 ?object nmo:hasTypeSeriesItem <typeUri> ;
   rdf:type nmo:NumismaticObject ;
   dcterms:title ?title .
@@ -70,6 +70,9 @@ OPTIONAL { ?object nmo:hasCollection ?colUri .
 FILTER(langMatches(lang(?collection), "EN"))}
 OPTIONAL {?object nmo:hasFindspot ?findUri .
 ?findUri foaf:name ?findspot }
+OPTIONAL {?object dcterms:isPartOf ?hoard .
+ ?hoard a nmo:Hoard ;
+ 	skos:prefLabel ?findspot }
 OPTIONAL { ?object nmo:hasWeight ?weight }
 OPTIONAL { ?object nmo:hasAxis ?axis }
 OPTIONAL { ?object nmo:hasDiameter ?diameter }
@@ -90,69 +93,75 @@ PREFIX dcterms:  <http://purl.org/dc/terms/>
 PREFIX nm:       <http://nomisma.org/id/>
 PREFIX nmo:	<http://nomisma.org/ontology#>
 PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>
+PREFIX foaf:	<http://xmlns.com/foaf/0.1/>
+PREFIX skos:      <http://www.w3.org/2004/02/skos/core#>
 
-SELECT ?object ?title ?findspot ?lat ?long ?type ?burial WHERE {
+SELECT ?object ?title ?findspot ?hoard ?placeName ?hoardLabel ?lat ?long ?type ?burial WHERE {
 { ?object nmo:hasTypeSeriesItem <typeUri> }
 UNION { ?contents nmo:hasTypeSeriesItem <typeUri> .
 ?object dcterms:tableOfContents ?contents }
 ?object dcterms:title ?title .			
-?object nmo:hasFindspot ?findspot .
-{?findspot geo:lat ?lat .
-?findspot geo:long ?long }
-UNION {
- ?findspot nmo:hasFindspot ?loc .
- ?loc geo:lat ?lat.
- ?loc geo:long ?long			 
- OPTIONAL { ?findspot nmo:hasClosingDate ?burial }
-}
-OPTIONAL { ?object rdf:type ?type }
-OPTIONAL { ?object nmo:hasClosingDate ?burial }}]]>
-						</xsl:when>
+{ ?object nmo:hasFindspot ?findspot }
+  UNION { ?object dcterms:isPartOf ?hoard .
+        ?hoard a nmo:Hoard ;
+        skos:prefLabel ?hoardLabel ;
+        nmo:hasFindspot ?findspot .
+   		OPTIONAL {?hoard nmo:hasClosingDate ?burial . FILTER isLiteral(?burial)}
+        OPTIONAL {?hoard nmo:hasClosingDate ?closing .
+                 ?closing nmo:hasEndDate ?burial}}
+?findspot geo:lat ?lat .
+?findspot geo:long ?long .
+OPTIONAL {?findspot foaf:name ?placeName}
+OPTIONAL { ?object rdf:type ?type } 
+OPTIONAL { ?object nmo:hasClosingDate ?burial . FILTER isLiteral(?burial) }}]]>
+						</xsl:when>						
 						<xsl:when test="$template = 'json'"><![CDATA[PREFIX rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX dcterms:  <http://purl.org/dc/terms/>
 PREFIX nm:       <http://nomisma.org/id/>
 PREFIX nmo:	<http://nomisma.org/ontology#>
 PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>
 PREFIX foaf:	<http://xmlns.com/foaf/0.1/>
+PREFIX skos:      <http://www.w3.org/2004/02/skos/core#>
 
-SELECT ?object ?title ?findspot ?name ?type ?burial ?lat ?long WHERE {
+SELECT ?object ?title ?findspot ?hoard ?placeName ?hoardLabel ?lat ?long ?type ?burial WHERE {
 { ?object nmo:hasTypeSeriesItem <typeUri> }
 UNION { ?contents nmo:hasTypeSeriesItem <typeUri> .
 ?object dcterms:tableOfContents ?contents }
-?object dcterms:title ?title ;
- nmo:hasFindspot ?findspot .
-OPTIONAL {?findspot foaf:name ?name}
-{?findspot geo:lat ?lat .
-?findspot geo:long ?long }
-UNION {
- ?findspot nmo:hasFindspot ?loc .
- ?loc geo:lat ?lat.
- ?loc geo:long ?long
- OPTIONAL { ?findspot nmo:hasClosingDate ?burial }
-}
-OPTIONAL { ?object rdf:type ?type }
-OPTIONAL { ?object nmo:hasClosingDate ?burial }}]]>
+?object dcterms:title ?title .			
+{ ?object nmo:hasFindspot ?findspot }
+  UNION { ?object dcterms:isPartOf ?hoard .
+        ?hoard a nmo:Hoard ;
+        skos:prefLabel ?hoardLabel ;
+        nmo:hasFindspot ?findspot .
+   		OPTIONAL {?hoard nmo:hasClosingDate ?burial . FILTER isLiteral(?burial)}
+        OPTIONAL {?hoard nmo:hasClosingDate ?closing .
+                 ?closing nmo:hasEndDate ?burial}}
+?findspot geo:lat ?lat .
+?findspot geo:long ?long .
+OPTIONAL {?findspot foaf:name ?placeName}
+OPTIONAL { ?object rdf:type ?type } 
+OPTIONAL { ?object nmo:hasClosingDate ?burial . FILTER isLiteral(?burial) }}]]>
 						</xsl:when>
 						<xsl:when test="$template = 'solr'"><![CDATA[PREFIX rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX dcterms:  <http://purl.org/dc/terms/>
 PREFIX nm:       <http://nomisma.org/id/>
 PREFIX nmo:	<http://nomisma.org/ontology#>
 PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>
-PREFIX skos:      <http://www.w3.org/2004/02/skos/core#>	
+PREFIX skos:      <http://www.w3.org/2004/02/skos/core#>
+PREFIX foaf:	<http://xmlns.com/foaf/0.1/>
 
 SELECT ?object ?title ?findspotLabel ?findspot ?lat ?long WHERE {
 { ?object nmo:hasTypeSeriesItem <typeUri> }
 UNION { ?contents nmo:hasTypeSeriesItem <typeUri> .
 ?object dcterms:tableOfContents ?contents }
 ?object dcterms:title ?title .			
-?object nmo:hasFindspot ?findspot .
-OPTIONAL {?findspot dcterms:title ?findspotLabel}
-{?findspot geo:lat ?lat .
-?findspot geo:long ?long }
-UNION {
- ?findspot nmo:hasFindspot ?loc .
- ?loc geo:lat ?lat.
- ?loc geo:long ?long}}]]>
+{ ?object nmo:hasFindspot ?findspot }
+UNION {?object dcterms:isPartOf ?hoard .
+?hoard nmo:hasFindspot ?findspot }
+OPTIONAL {?findspot foaf:name ?findspotLabel}
+OPTIONAL {?hoard skos:prefLabel ?findspotLabel}
+?findspot geo:lat ?lat .
+?findspot geo:long ?long }]]>
 						</xsl:when>
 						<xsl:when test="$template = 'facets'">
 							<xsl:choose>

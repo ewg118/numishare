@@ -43,19 +43,37 @@
 
 	<xsl:template match="res:result" mode="kml">
 		<xsl:variable name="closing_date" select="res:binding[@name='burial']/res:literal"/>
+		<xsl:variable name="description">
+			<![CDATA[
+          					<dl class='dl-horizontal'><dt>URL</dt><dd><a href="]]><xsl:value-of select="res:binding[@name='object']/res:uri"/><![CDATA[">]]><xsl:value-of
+				select="res:binding[@name='title']/res:literal"/><![CDATA[</a></dd>]]>
+			<xsl:if test="res:binding[@name='hoard']/res:uri">
+				<![CDATA[<dt>Hoard</dt><dd><a href="]]><xsl:value-of select="res:binding[@name='hoard']/res:uri"/><![CDATA[">]]><xsl:value-of
+					select="res:binding[@name='hoardLabel']/res:literal"/><![CDATA[</a></dd>]]>
+			</xsl:if>
+			<xsl:if test="res:binding[@name='findspot']/res:uri">
+				<![CDATA[<dt>Findspot</dt><dd><a href="]]><xsl:value-of select="res:binding[@name='findspot']/res:uri"/><![CDATA[">]]>
+				<xsl:choose>
+					<xsl:when test="res:binding[@name='placeName']/res:literal">
+						<xsl:value-of select="res:binding[@name='placeName']/res:literal"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="res:binding[@name='findspot']/res:uri"/>
+					</xsl:otherwise>
+				</xsl:choose><![CDATA[</a></dd>]]>
+			</xsl:if>
+			<xsl:if test="number($closing_date) castable as xs:integer">
+				<![CDATA[<dt>]]><xsl:value-of select="numishare:regularize_node('closing_date', $lang)"/><![CDATA[</dt><dd>]]><xsl:value-of select="number($closing_date)"/><![CDATA[</dd>]]>
+			</xsl:if>
+			<![CDATA[</dl>]]>
+		</xsl:variable>
+		
 		<Placemark xmlns="http://earth.google.com/kml/2.0">
 			<name>
 				<xsl:value-of select="res:binding[@name='title']/res:literal"/>
 			</name>
 			<description>
-				<![CDATA[
-          					<dl class='dl-horizontal'><dt>URL</dt><dd><a href="]]><xsl:value-of select="res:binding[@name='findspot']/res:uri"/><![CDATA[" target="_blank">]]><xsl:value-of
-					select="res:binding[@name='title']/res:literal"/><![CDATA[</a></dd>]]>
-				<xsl:if test="number($closing_date) castable as xs:integer">
-					<![CDATA[<dt>]]><xsl:value-of select="numishare:regularize_node('closing_date', $lang)"/><![CDATA[</dt><dd>]]><xsl:value-of select="number($closing_date)"/><![CDATA[</dd>]]>
-				</xsl:if>
-				<![CDATA[</dl>
-        				]]>
+				<xsl:value-of select="normalize-space($description)"/>
 			</description>
 
 			<styleUrl>#mapped</styleUrl>
@@ -90,20 +108,33 @@
 		<xsl:variable name="closing_date" select="res:binding[@name='burial']/res:literal"/>
 		<xsl:variable name="lat" select="res:binding[@name='lat']/res:literal"/>
 		<xsl:variable name="long" select="res:binding[@name='long']/res:literal"/>
-		<xsl:variable name="title" select="if (res:binding[@name='type']/res:uri = 'http://nomisma.org/id/hoard') then res:binding[@name='title']/res:literal else
-			res:binding[@name='name']/res:literal"/>
 		<xsl:variable name="description">
-			<![CDATA[<dl class='dl-horizontal'><dt>URL</dt><dd><a href=']]><xsl:value-of select="res:binding[@name='object']/res:uri"/><![CDATA['>]]><xsl:value-of
-				select="res:binding[@name='object']/res:uri"/><![CDATA[</a></dd>]]>
-			<xsl:if test="string($closing_date)">
-				<![CDATA[<dt>]]><xsl:value-of select="numishare:regularize_node('closing_date', $lang)"/><![CDATA[</dt><dd>]]><xsl:value-of select="numishare:normalizeYear(number($closing_date))"
-				/><![CDATA[</dd>]]>
+			<![CDATA[
+          					<ul><li><b>URL: </b><a href=']]><xsl:value-of select="res:binding[@name='object']/res:uri"/><![CDATA['>]]><xsl:value-of
+				select="res:binding[@name='title']/res:literal"/><![CDATA[</a></li>]]>
+			<xsl:if test="res:binding[@name='hoard']/res:uri">
+				<![CDATA[<li><b>Hoard: </b><a href=']]><xsl:value-of select="res:binding[@name='hoard']/res:uri"/><![CDATA['>]]><xsl:value-of
+					select="res:binding[@name='hoardLabel']/res:literal"/><![CDATA[</a></li>]]>
 			</xsl:if>
-			<![CDATA[</dl>]]>
+			<xsl:if test="res:binding[@name='findspot']/res:uri">
+				<![CDATA[<li><b>Findspot: </b><a href=']]><xsl:value-of select="res:binding[@name='findspot']/res:uri"/><![CDATA['>]]>
+				<xsl:choose>
+					<xsl:when test="res:binding[@name='placeName']/res:literal">
+						<xsl:value-of select="res:binding[@name='placeName']/res:literal"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="res:binding[@name='findspot']/res:uri"/>
+					</xsl:otherwise>
+				</xsl:choose><![CDATA[</a></li>]]>
+			</xsl:if>
+			<xsl:if test="number($closing_date) castable as xs:integer">
+				<![CDATA[<li><b>]]><xsl:value-of select="numishare:regularize_node('closing_date', $lang)"/><![CDATA[: </b>]]><xsl:value-of select="number($closing_date)"/><![CDATA[</li>]]>
+			</xsl:if>
+			<![CDATA[</ul>]]>
 		</xsl:variable>
 		<xsl:variable name="theme">red</xsl:variable>
 		<!-- output --> { <xsl:if test="string($lat) and string($long)">"point": {"lon": <xsl:value-of select="$long"/>, "lat": <xsl:value-of select="$lat"/>},</xsl:if> "title": "<xsl:value-of
-			select="$title"/>", "start": "<xsl:value-of select="$closing_date"/>", "options": { "theme": "<xsl:value-of select="$theme"/>", "description": "<xsl:value-of
+			select="res:binding[@name='title']/res:literal"/>", "start": "<xsl:value-of select="$closing_date"/>", "options": { "theme": "<xsl:value-of select="$theme"/>", "description": "<xsl:value-of
 			select="normalize-space($description)"/>" } }<xsl:if test="not(position()=last())">
 			<xsl:text>,</xsl:text>
 		</xsl:if>
