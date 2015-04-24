@@ -40,6 +40,7 @@ set_time_limit(0);
 //the line below is for passing request parameters from the command line.
 parse_str(implode('&', array_slice($argv, 1)), $_GET);
 $csv_id = $_GET['id'];
+//$csv_id = 'rictest01';
 error_log(date(DATE_W3C) . ": {$csv_id}.csv now entering fm-to-nuds.php.\n", 3, "/var/log/numishare/process.log");
 
 //create an array with pre-defined labels and values passed from the Filemaker POST
@@ -57,11 +58,7 @@ $labels = array("accnum","department","objtype","material","manufacture",
 $errors = array();
 $warnings = array();
 
-/*$csv = '"1979.38.312","ME","MEDAL","AE","Cast","","","89","12","","","1919","1919","1919","K.229|||||||||||||||||||","","","","Germany","","","","","","|||||||||||||||||||","","|||||||||","","Goetz","","The Good Samaritan","","","","","","","DER . BARMHERZIGE . SAMARITER! (=""The good Samaritan"")/ in exergue: 1919","Figure of Uncle Sam in center, to l., holding long scroll; figure of ""Michel"" (Germans) laying injured on floor reading the long scroll; to r. of Uncle Sam: mule shown from back packed with suitcases and large sack.   ","ENGLAND\'S . SCHANDTAT (=""England\'s deed of shame"")/ in exergue: AUFGEHOBEN . AM/ 12. JULI 1919! (=Lifted on July 12, 1919"")","5 figures and an infant laying on ground in front of large wall, behind which there is the sea with 7 vessels.","","","","","","","K.GOETZ","","","","","","","",""';
-$temp = str_getcsv($csv, ',', '"');
-var_dump($temp);*/
 //load Google Spreadsheets
-//mints
 $Byzantine_array = generate_json('https://docs.google.com/spreadsheet/pub?hl=en_US&hl=en_US&key=0Avp6BVZhfwHAdGJSRFhnR3ZKbHo2bG5oV0pDSzBBRnc&single=true&gid=0&output=csv');
 $Decoration_array = generate_json('https://docs.google.com/spreadsheet/pub?hl=en_US&hl=en_US&key=0Avp6BVZhfwHAdFdTVy1UWGp6bFZvbTlsQWJyWmtlR1E&single=true&gid=0&output=csv');
 $East_Asian_array = generate_json('https://docs.google.com/spreadsheet/pub?hl=en_US&hl=en_US&key=0Avp6BVZhfwHAdFdONnhna3RpNGxwTjJ1M3RiSkxfTUE&single=true&gid=0&output=csv');
@@ -132,8 +129,8 @@ if (($handle = fopen("/tmp/" . $csv_id . ".csv", "r")) !== FALSE) {
 						
 							//read file back into memory for PUT to eXist
 							if (($readFile = fopen($fileName, 'r')) === FALSE){
-								error_log($accnum . ' (' . $department . ') failed to open temporary file (accnum likely broken) at ' . date(DATE_W3C) . "\n", 3, "/var/log/numishare/error.log");
-								$errors[] = $accnum . ' (' . $department . ') failed to open temporary file (accnum likely broken).';
+								//error_log($accnum . ' (' . $department . ') failed to open temporary file (accnum likely broken) at ' . date(DATE_W3C) . "\n", 3, "/var/log/numishare/error.log");
+								//$errors[] = $accnum . ' (' . $department . ') failed to open temporary file (accnum likely broken).';
 							} else {
 								//PUT xml to eXist
 								$putToExist=curl_init();
@@ -245,73 +242,9 @@ function generate_nuds($row, $count){
 	$xml .= '<maintenanceHistory><maintenanceEvent>';
 	$xml .= '<eventType>derived</eventType><eventDateTime standardDateTime="' . date(DATE_W3C) . '">' . date(DATE_W3C) . '</eventDateTime><agentType>machine</agentType><agent>PHP</agent><eventDescription>Exported from Filemaker</eventDescription>';
 	$xml .= '</maintenanceEvent></maintenanceHistory>';
-	$xml .= '<rightsStmt><copyrightHolder>American Numismatic Society</copyrightHolder></rightsStmt>';
+	$xml .= '<rightsStmt><copyrightHolder>American Numismatic Society</copyrightHolder></rightsStmt><semanticDeclaration><prefix>nmo</prefix><namespace>http://nomisma.org/ontology#</namespace></semanticDeclaration>';
 	$xml .= "</control>";
 	$xml .= '<descMeta>';
-
-	//subjects
-	if (strlen(trim($row['category'])) > 0 || strlen(trim($row['series'])) > 0 || strlen(trim($row['subjevent'])) > 0 || strlen(trim($row['subjissuer'])) > 0 || strlen(trim($row['subjperson'])) > 0 || strlen(trim($row['subjplace'])) > 0 || strlen(trim($row['degree'])) > 0 || strlen(trim($row['era'])) > 0){
-		$xml .= '<subjectSet>';
-		if (strlen(trim($row['category'])) > 0){
-			$categories = array_filter(explode('|', trim($row['category'])));
-			foreach ($categories as $category){
-				$xml .= '<subject localType="category">' . trim($category) . '</subject>';
-			}
-		}
-		if (strlen(trim($row['series'])) > 0){
-			$serieses = array_filter(explode('|', $row['series']));
-			foreach ($serieses as $series){
-				$xml .= '<subject localType="series">' . trim($series) . '</subject>';
-			}
-		}
-		if (strlen(trim($row['subjevent'])) > 0){
-			$subjEvents = array_filter(explode('|', $row['subjevent']));
-			foreach ($subjEvents as $subjEvent){
-				$xml .= '<subject localType="subjectEvent">' . trim($subjEvent) . '</subject>';
-			}
-		}
-		if (strlen(trim($row['subjissuer'])) > 0){
-			$subjIssuers = array_filter(explode('|', $row['subjissuer']));
-			foreach ($subjIssuers as $subjIssuer){
-				$xml .= '<subject localType="subjectIssuer">' . trim($subjIssuer) . '</subject>';
-			}
-		}
-		if (strlen(trim($row['subjperson'])) > 0){
-			$subjPersons = array_filter(explode('|', $row['subjperson']));
-			foreach ($subjPersons as $subjPerson){
-				$xml .= '<subject localType="subjectPerson">' . trim($subjPerson) . '</subject>';
-			}
-		}
-		if (strlen(trim($row['subjplace'])) > 0){
-			$subjPlaces = array_filter(explode('|', $row['subjplace']));
-			foreach ($subjPlaces as $subjPlace){
-				$xml .= '<subject localType="subjectPlace">' . trim($subjPlace) . '</subject>';
-			}
-		}
-		if (strlen(trim($row['era'])) > 0){
-			$eras = array_filter(explode('|', $row['era']));
-			foreach ($eras as $era){
-				$xml .= '<subject localType="era">' . trim($era) . '</subject>';
-			}
-		}
-		//degree
-		if (strlen(trim($row['degree'])) > 0){
-			$degrees = array_filter(explode('|', $row['degree']));
-			foreach ($degrees as $degree){
-				$xml .= '<subject localType="degree">' . trim($degree) . '</subject>';
-			}
-		}
-		$xml .= '</subjectSet>';
-	}
-	//notes
-	if (strlen(trim($row['info'])) > 0){
-		$infos = array_filter(explode('|', $row['info']));
-		$xml .= '<noteSet>';
-		foreach ($infos as $info){
-			$xml .= '<note>' . trim($info) . '</note>';
-		}
-		$xml .= '</noteSet>';
-	}
 
 	/************ typeDesc ***************/
 	//if the coin is Roman and contains 'ric.' as a reference, point the typeDesc to OCRE
@@ -320,12 +253,11 @@ function generate_nuds($row, $count){
 		//only continue process if the reference is not variant
 		if (strpos($row['info'], 'variant') === FALSE){
 			$matches = preg_grep('/ric\./', $refs);
-			$certainty = '';
 			foreach ($matches as $k=>$v){
 				if (strlen(trim($v)) > 0){
 					//account for ? used as uncertainty
 					$id = substr(trim($v), -1) == '?' ? str_replace('?', '', trim($v)) : trim($v);
-					$certainty = substr(trim($v), -1) == '?' ? ' certainty="uncertain"' : '';
+					$certainty = substr(trim($v), -1) == '?' ? false : true;
 				}
 			}
 			$url = 'http://numismatics.org/ocre/id/' . $id;
@@ -336,7 +268,8 @@ function generate_nuds($row, $count){
 					$title = get_title_from_rdf($currentUri, $accnum);
 					if ($title != 'FAIL'){
 						$xml .= $title;
-						$xml .= '<typeDesc xlink:type="simple" xlink:href="' . $currentUri . '"' . $certainty . '/>';
+						//$xml .= '<typeDesc xlink:type="simple" xlink:href="' . $currentUri . '"' . $certainty . '/>';
+						$xml .= generate_typeDesc_from_OCRE($row, $currentUri, $certainty);
 					} else {
 						$xml .= generate_typeDesc($row, $department);
 					}
@@ -551,14 +484,43 @@ function generate_nuds($row, $count){
 	$citations = array_filter(explode('|', trim($row['published'])));
 	if (count($refs) > 0 || count($citations) > 0){		
 		$xml .= '<refDesc>';
-		//reference
+		//reference		
 		if (count($refs) > 0){
-			foreach ($refs as $val){				
+			foreach ($refs as $val){		
 				$certainty = substr($val, -1) == '?' ? ' certainty="uncertain"' : '';
-				$label = str_replace('?', '', trim($val));
-				$xml .= '<reference' . $certainty . '>' . $label . '</reference>';
-			}
+				//insert OCRE URIs into a normalized reference field
+				if (strstr($val, 'ric.1(2).') !== FALSE  || strstr($val, 'ric.2_1(2).') !== FALSE || strstr($val, 'ric.2.') !== FALSE  || strstr($val, 'ric.3.') !== FALSE  || strstr($val, 'ric.4.') !== FALSE || strstr($val, 'ric.5.') !== FALSE){
+					$id = substr(trim($val), -1) == '?' ? str_replace('?', '', trim($val)) : trim($val);
+					$url = 'http://numismatics.org/ocre/id/' . $id;
+					$file_headers = @get_headers($url);
+					if ($file_headers[0] == 'HTTP/1.1 200 OK'){
+						$currentUri = get_current_ocre_uri($url);
+						if ($currentUri != 'FAIL'){
+							$title = get_title_from_rdf($currentUri, null);
+							if ($title != 'FAIL'){
+								$label = $title;
+								$xml .= '<reference' . $certainty . ' xlink:type="simple" xlink:arcrole="nmo:hasTypeSeriesItem" xlink:href="' . $url . '">' . $label . '</reference>';
+							} else {
+								$label = str_replace('?', '', trim($val));
+								$xml .= '<reference' . $certainty . '>' . $label . '</reference>';
+							}
+						} else {
+							$label = str_replace('?', '', trim($val));
+							$xml .= '<reference' . $certainty . '>' . $label . '</reference>';
+						}				
+					}
+					else {
+						$label = str_replace('?', '', trim($val));
+						$xml .= '<reference' . $certainty . '>' . $label . '</reference>';
+					}
+				}
+				else {
+					$label = str_replace('?', '', trim($val));
+					$xml .= '<reference' . $certainty . '>' . $label . '</reference>';
+				}
+			}			
 		}
+		
 		//citation
 		if (count($citations) > 0){
 			foreach ($citations as $val){				
@@ -568,6 +530,71 @@ function generate_nuds($row, $count){
 			}
 		}
 		$xml .= '</refDesc>';
+	}
+	
+	/***** SUBJECTS *****/
+	if (strlen(trim($row['category'])) > 0 || strlen(trim($row['series'])) > 0 || strlen(trim($row['subjevent'])) > 0 || strlen(trim($row['subjissuer'])) > 0 || strlen(trim($row['subjperson'])) > 0 || strlen(trim($row['subjplace'])) > 0 || strlen(trim($row['degree'])) > 0 || strlen(trim($row['era'])) > 0){
+		$xml .= '<subjectSet>';
+		//suppressing categories: no longer useful or controlled in Filemaker
+		/*if (strlen(trim($row['category'])) > 0){
+		 $categories = array_filter(explode('|', trim($row['category'])));
+		foreach ($categories as $category){
+		$xml .= '<subject localType="category">' . trim($category) . '</subject>';
+		}
+		}*/
+		if (strlen(trim($row['series'])) > 0){
+			$serieses = array_filter(explode('|', $row['series']));
+			foreach ($serieses as $series){
+				$xml .= '<subject localType="series">' . trim($series) . '</subject>';
+			}
+		}
+		if (strlen(trim($row['subjevent'])) > 0){
+			$subjEvents = array_filter(explode('|', $row['subjevent']));
+			foreach ($subjEvents as $subjEvent){
+				$xml .= '<subject localType="subjectEvent">' . trim($subjEvent) . '</subject>';
+			}
+		}
+		if (strlen(trim($row['subjissuer'])) > 0){
+			$subjIssuers = array_filter(explode('|', $row['subjissuer']));
+			foreach ($subjIssuers as $subjIssuer){
+				$xml .= '<subject localType="subjectIssuer">' . trim($subjIssuer) . '</subject>';
+			}
+		}
+		if (strlen(trim($row['subjperson'])) > 0){
+			$subjPersons = array_filter(explode('|', $row['subjperson']));
+			foreach ($subjPersons as $subjPerson){
+				$xml .= '<subject localType="subjectPerson">' . trim($subjPerson) . '</subject>';
+			}
+		}
+		if (strlen(trim($row['subjplace'])) > 0){
+			$subjPlaces = array_filter(explode('|', $row['subjplace']));
+			foreach ($subjPlaces as $subjPlace){
+				$xml .= '<subject localType="subjectPlace">' . trim($subjPlace) . '</subject>';
+			}
+		}
+		if (strlen(trim($row['era'])) > 0){
+			$eras = array_filter(explode('|', $row['era']));
+			foreach ($eras as $era){
+				$xml .= '<subject localType="era">' . trim($era) . '</subject>';
+			}
+		}
+		//degree
+		if (strlen(trim($row['degree'])) > 0){
+			$degrees = array_filter(explode('|', $row['degree']));
+			foreach ($degrees as $degree){
+				$xml .= '<subject localType="degree">' . trim($degree) . '</subject>';
+			}
+		}
+		$xml .= '</subjectSet>';
+	}
+	//notes
+	if (strlen(trim($row['info'])) > 0){
+		$infos = array_filter(explode('|', $row['info']));
+		$xml .= '<noteSet>';
+		foreach ($infos as $info){
+			$xml .= '<note>' . trim($info) . '</note>';
+		}
+		$xml .= '</noteSet>';
 	}
 
 	/***** FINDSPOT DESCRIPTION *****/
@@ -1419,8 +1446,136 @@ function get_title_from_rdf($url, $accnum){
 		$xpath->registerNamespace('skos', 'http://www.w3.org/2004/02/skos/core#');
 		$xpath->registerNamespace('dcterms', 'http://purl.org/dc/terms/');
 		$titles = $xpath->query("descendant::skos:prefLabel[@xml:lang='en']|descendant::dcterms:title");
-		return '<title xml:lang="en">' . $titles->item(0)->nodeValue . '. ' . $accnum . '</title>';
+		if ($accnum != null){
+			return '<title xml:lang="en">' . $titles->item(0)->nodeValue . '. ' . $accnum . '</title>';
+		} else {
+			return $titles->item(0)->nodeValue;
+		}
+		
 	}	
+}
+
+//generate the typeDesc for RIC by pulling some fields from OCRE, but carry on the obverse/reverse types, legends and symbols
+function generate_typeDesc_from_OCRE($row, $currentUri, $certainty) {
+	$doc = new DOMDocument('1.0', 'UTF-8');
+	$doc->load($currentUri . '.xml');
+	$xpath = new DOMXpath($doc);
+	$xpath->registerNamespace('nuds', 'http://nomisma.org/nuds');
+	$xpath->registerNamespace('xlink', 'http://www.w3.org/1999/xlink');	
+	
+	//$xml = '<typeDesc>';
+	$writer = new XMLWriter();
+	$writer->openURI('php://output');
+	$writer->startDocument('1.0','UTF-8');
+	$writer->openMemory();
+	//$writer->setIndent(4);
+	$writer->startElement('typeDesc');
+	if ($certainty == false){
+		$writer->writeAttribute('certainty', 'uncertain');
+	}
+	$fields = $xpath->query("descendant::nuds:typeDesc/*");
+	foreach ($fields as $field){
+		if ($field->nodeName != 'authority' && $field->nodeName != 'geographic' && $field->nodeName != 'dateRange' && $field->nodeName != 'obverse' && $field->nodeName != 'reverse'){
+			$writer->startElement($field->nodeName);			
+			if ($field->getAttribute('xlink:href')){
+				$writer->writeAttribute('xlink:href', $field->getAttribute('xlink:href'));
+			}
+			if ($field->getAttribute('xlink:type')){
+				$writer->writeAttribute('xlink:type', 'simple');
+			}
+			if ($field->getAttribute('xlink:role')){
+				$writer->writeAttribute('xlink:role', $field->getAttribute('xlink:role'));
+			}
+			if ($field->getAttribute('standardDate')){
+				$writer->writeAttribute('standardDate', $field->getAttribute('standardDate'));
+			}
+			$writer->text($field->nodeValue);
+			$writer->endElement();
+		} elseif ($field->nodeName == 'authority' || $field->nodeName == 'geographic'){	
+			$writer->startElement($field->nodeName);
+			foreach ($field->childNodes as $child){
+				//if an element XML_ELEMENT_NODE
+				if ($child->nodeType == 1){
+					$writer->startElement($child->nodeName);
+					if ($child->getAttribute('xlink:href')){
+						$writer->writeAttribute('xlink:href', $child->getAttribute('xlink:href'));
+					}
+					if ($child->getAttribute('xlink:type')){
+						$writer->writeAttribute('xlink:type', 'simple');
+					}
+					if ($child->getAttribute('xlink:role')){
+						$writer->writeAttribute('xlink:role', $child->getAttribute('xlink:role'));
+					}
+					$writer->text($child->nodeValue);
+					$writer->endElement();
+				}					
+			}
+			$writer->endElement();
+		} elseif ($field->nodeName == 'dateRange'){
+			$writer->startElement('dateRange');	
+			foreach ($field->childNodes as $child){
+				//if an element XML_ELEMENT_NODE
+				if ($child->nodeType == 1){
+					$writer->startElement($child->nodeName);
+					if ($child->getAttribute('standardDate')){
+						$writer->writeAttribute('standardDate', $child->getAttribute('standardDate'));
+					}
+					$writer->text($child->nodeValue);
+					$writer->endElement();
+				}				
+			}	
+			$writer->endElement();
+		} elseif ($field->nodeName == 'obverse' || $field->nodeName == 'reverse') {
+			$nodeName = $field->nodeName;
+			$writer->startElement($nodeName);
+			//insert legend, description, and symbol from filemaker
+			if (strlen(trim($row[$nodeName . 'legend'])) > 0){
+				$writer->startElement('legend');
+				$writer->writeAttribute('scriptCode', 'Latn');
+				$writer->text(trim($row[$nodeName. 'legend']));
+				$writer->endElement();
+				
+			}
+			if (strlen(trim($row[$nodeName . 'type'])) > 0){
+				$writer->startElement('description');
+				$writer->writeAttribute('xml:lang', 'en');
+				$writer->text(trim($row[$nodeName. 'type']));
+				$writer->endElement();
+			}
+			if (strlen(trim($row[$nodeName . 'symbol'])) > 0){
+				$writer->startElement('symbol');
+				$writer->text(trim($row[$nodeName. 'symbol']));
+				$writer->endElement();
+			}
+			
+			//pluck out entities
+			foreach ($field->childNodes as $child){
+				if ($child->nodeName == 'persname' || $child->nodeName == 'corpnamne' || $child->nodeName == 'famname'){
+					$writer->startElement($child->nodeName);
+					if ($child->getAttribute('xlink:href')){
+						$writer->writeAttribute('xlink:href', $child->getAttribute('xlink:href'));
+					}
+					if ($child->getAttribute('xlink:type')){
+						$writer->writeAttribute('xlink:type', 'simple');
+					}
+					if ($child->getAttribute('xlink:role')){
+						$writer->writeAttribute('xlink:role', $child->getAttribute('xlink:role'));
+					}
+					$writer->text($child->nodeValue);
+					$writer->endElement();					
+				}
+			}
+			$writer->endElement();
+		}
+	}
+	$writer->endElement();
+	
+	$string = $writer->outputMemory(true);
+	
+	//strip XML declaration from $string
+	$string = str_replace('<?xml version="1.0" encoding="UTF-8"?>', '', $string);
+	
+	return $string;
 }
 
 function generate_json($doc){
