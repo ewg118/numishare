@@ -1,6 +1,6 @@
 <?php 
 
-$data = generate_json('/home/komet/ans_migration/ocre/13.csv');
+$data = generate_json('/home/komet/ans_migration/ocre/15.csv');
 $deities_array = generate_json('deities.csv');
 $nomismaUris = array();
 $errors = array();
@@ -62,10 +62,15 @@ function generate_nuds($row){
 		$xml .= get_other_ids($nudsid);
 	}*/
 	
-	//handle subtypes
+	//handle subtypes		
 	if (isset($pieces[4])){
+		//first, deal with ids with an additional subtype number
 		$new = array_slice($pieces, 0, 4);		
 		$xml .= '<otherRecordId semantic="skos:broader">' . implode('.', $new) . '</otherRecordId>';
+		$xml .= '<publicationStatus>appprovedSubtype</publicationStatus>';
+	} elseif (strlen(trim($row['Parent Nomisma id'])) > 0) {
+		//then look for content in $row['Parent Nomisma id']
+		$xml .= '<otherRecordId semantic="skos:broader">' . trim($row['Parent Nomisma id']) . '</otherRecordId>';
 		$xml .= '<publicationStatus>appprovedSubtype</publicationStatus>';
 	} else {
 		$xml .= '<publicationStatus>approved</publicationStatus>';
@@ -79,6 +84,7 @@ function generate_nuds($row){
 	$xml .= '<rightsStmt><copyrightHolder>American Numismatic Society</copyrightHolder><license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/"/></rightsStmt>';
 	$xml .= '<semanticDeclaration><prefix>dcterms</prefix><namespace>http://purl.org/dc/terms/</namespace></semanticDeclaration>';
 	$xml .= '<semanticDeclaration><prefix>skos</prefix><namespace>http://www.w3.org/2004/02/skos/core#</namespace></semanticDeclaration>';
+	$xml .= '<semanticDeclaration><prefix>nmo</prefix><namespace>http://nomisma.org/ontology#</namespace></semanticDeclaration>';
 	$xml .= "</control>";
 	$xml .= '<descMeta>';
 	
@@ -407,6 +413,9 @@ function get_title($nudsid){
 		case '4':
 			$vol = 'IV';
 			break;
+		case '5':
+			$vol = 'V';
+			break;
 	}
 	
 	switch ($pieces[2]) {
@@ -561,17 +570,35 @@ function get_title($nudsid){
 		case 'val_i':
 			$auth = 'Valerian';
 			break;
-		case 'val_gall(1)':
-			$auth = 'Valerian and Gallienus (1)';
+		case 'val_i-gall':
+			$auth = 'Valerian and Gallienus';
 			break;
-		case 'val_i-gall-val_ii-sal':
+		case 'val_i-gall-val_ii-sala':
 			$auth = 'Valerian, Gallienus, Valerian II, and Salonina';
 			break;
 		case 'mar':
 			$auth = 'Mariniana';
 			break;
-		case 'val_gall(2)':
-			$auth = 'Valerian and Gallienus (2)';
+		case 'gall(1)':
+			$auth = 'Gallienus (joint reign)';
+			break;
+		case 'gall_sala(1)':
+			$auth = 'Gallienus and Salonina';
+			break;
+		case 'gall_sals':
+			$auth = 'Gallienus and Saloninus';
+			break;
+		case 'sala(1)':
+			$auth = 'Salonina';
+			break;
+		case 'val_ii':
+			$auth = 'Valerian II';
+			break;
+		case 'sals':
+			$auth = 'Saloninus';
+			break;
+		case 'qjg':
+			$auth = 'Quintus Julius Gallienus';
 			break;
 	}
 	
@@ -709,6 +736,7 @@ function deprecate_id($old_id, $nudsid, $status){
 		$dom = new DOMDocument('1.0', 'UTF-8');
 		$dom->preserveWhiteSpace = FALSE;
 		$dom->formatOutput = TRUE;
+		//echo $dom->saveXML();
 		if ($dom->loadXML($xml) === FALSE){
 			echo "Deprecated {$old_id}.xml failed to validate.\n";
 			$errors[] = "Deprecated {$old_id}.xml failed to validate.";
