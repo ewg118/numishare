@@ -215,7 +215,7 @@
 													<xsl:value-of select="numishare:regularize_node('description', $lang)"/>	
 													<xsl:text>: </xsl:text>
 												</b>
-												<xsl:for-each select="$subtypes//subtype/descendant::*[local-name()=$side]/nuds:type/nuds:description">
+												<xsl:for-each select="distinct-values($subtypes//subtype/descendant::*[local-name()=$side]/nuds:type/nuds:description[if (string($lang)) then @xml:lang=$lang else @xml:lang='en'])">
 													<xsl:value-of select="."/>
 													<xsl:if test="not(position()=last())"> | </xsl:if>
 												</xsl:for-each>
@@ -228,7 +228,7 @@
 													<xsl:value-of select="numishare:regularize_node('legend', $lang)"/>	
 													<xsl:text>: </xsl:text>
 												</b>
-												<xsl:for-each select="$subtypes//subtype/descendant::*[local-name()=$side]/nuds:legend">
+												<xsl:for-each select="distinct-values($subtypes//subtype/descendant::*[local-name()=$side]/nuds:legend)">
 													<xsl:value-of select="."/>
 													<xsl:if test="not(position()=last())"> | </xsl:if>
 												</xsl:for-each>

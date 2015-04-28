@@ -120,7 +120,7 @@
 					<xsl:variable name="sideAbbr" select="substring($side, 1, 3)"/>
 					<xsl:if test="not($typeDesc/*[local-name()=$side]/nuds:type) and count($subtypes//subtype) &gt; 0">
 						<xsl:variable name="pieces" as="item()*">
-							<xsl:for-each select="$subtypes//subtype/descendant::*[local-name()=$side]/nuds:type/nuds:description[if (string($lang)) then @xml:lang=$lang else @xml:lang='en']">
+							<xsl:for-each select="distinct-values($subtypes//subtype/descendant::*[local-name()=$side]/nuds:type/nuds:description[if (string($lang)) then @xml:lang=$lang else @xml:lang='en'])">
 								<xsl:value-of select="."/>								
 							</xsl:for-each>
 						</xsl:variable>
@@ -137,7 +137,7 @@
 					</xsl:if>
 					<xsl:if test="not($typeDesc/*[local-name()=$side]/nuds:legend) and count($subtypes//subtype) &gt; 0">
 						<xsl:variable name="pieces" as="item()*">
-							<xsl:for-each select="$subtypes//subtype/descendant::*[local-name()=$side]/nuds:legend">
+							<xsl:for-each select="distinct-values($subtypes//subtype/descendant::*[local-name()=$side]/nuds:legend)">
 								<xsl:value-of select="."/>								
 							</xsl:for-each>
 						</xsl:variable>
