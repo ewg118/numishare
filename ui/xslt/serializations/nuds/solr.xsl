@@ -25,7 +25,7 @@
 		<!-- get subtypes -->
 		<xsl:variable name="subtypes" as="element()*">
 			<xsl:if test="@recordType='conceptual' and //config/collection_type='cointype'">
-				<xsl:copy-of select="document(concat($request-uri, 'get_subtypes?identifiers=', $id))/*"/>
+				<xsl:copy-of select="document(concat($request-uri, '/get_subtypes?identifiers=', $id))/*"/>
 			</xsl:if>
 		</xsl:variable>
 

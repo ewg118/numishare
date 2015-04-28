@@ -13,8 +13,7 @@
 	<xsl:include href="solr-templates.xsl"/>
 
 	<xsl:variable name="collection-name" select="substring-before(substring-after(doc('input:request')/request/servlet-path, 'numishare/'), '/')"/>
-	<!--<xsl:variable name="request-uri" select="concat('http://localhost:8080/orbeon/numishare/', $collection-name)"/>-->
-	<xsl:variable name="request-uri" select="concat('http://localhost:8080', substring-before(doc('input:request')/request/request-uri, 'id/'))"/>
+	<xsl:variable name="request-uri" select="concat('http://localhost:8080/orbeon/numishare/', $collection-name)"/>
 
 	<!-- config variables -->
 	<xsl:variable name="geonames-url">http://api.geonames.org</xsl:variable>
@@ -278,7 +277,6 @@
 
 	<xsl:template match="/">
 		<add>
-			<!--<xsl:copy-of select="$geonames"/>-->
 			<xsl:choose>
 				<xsl:when test="count(descendant::nuds:nuds) &gt; 0">
 					<xsl:call-template name="nuds"/>
