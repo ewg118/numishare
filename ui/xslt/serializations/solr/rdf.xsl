@@ -7,6 +7,7 @@
 
 	<xsl:param name="mode" select="//lst[@name='params']/str[@name='mode']"/>
 	<xsl:param name="url" select="/content/config/url"/>
+	<xsl:param name="uri_space" select="/content/config/uri_space"/>
 
 	<xsl:template match="/">
 		<rdf:RDF>
@@ -35,7 +36,7 @@
 			<dcterms:title>
 				<xsl:value-of select="str[@name='title_display']"/>
 			</dcterms:title>
-			<foaf:homepage rdf:resource="{$url}id/{$id}"/>
+			<foaf:homepage rdf:resource="{if (string($uri_space)) then concat($uri_space, $id) else concat($url, 'id/', $id)}"/>
 
 			<!-- temporal -->
 			<xsl:choose>
@@ -154,7 +155,7 @@
 		<xsl:variable name="recordType" select="str[@name='recordType']"/>
 
 		<xsl:element name="{if ($recordType = 'hoard') then 'nmo:Hoard' else 'nmo:NumismaticObject'}" exclude-result-prefixes="#all">
-			<xsl:attribute name="rdf:about" select="concat($url, 'id/', $id)"/>
+			<xsl:attribute name="rdf:about" select="if (string($uri_space)) then concat($uri_space, $id) else concat($url, 'id/', $id)"/>
 			<dcterms:title xml:lang="{if (str[@name='lang']) then str[@name='lang'] else 'en'}">
 				<xsl:value-of select="str[@name='title_display']"/>
 			</dcterms:title>
