@@ -130,7 +130,7 @@
 				</xsl:variable>
 				<xsl:element name="{$element}">
 					<xsl:attribute name="rdf:about">
-						<xsl:value-of select="if (string($uri_space)) then concat($uri_space, $id) else concat($url, 'id/', $id"/>
+						<xsl:value-of select="if (string($uri_space)) then concat($uri_space, $id) else concat($url, 'id/', $id)"/>
 					</xsl:attribute>
 					<xsl:for-each select="descendant::*:semanticDeclaration">
 						<xsl:namespace name="{*:prefix}" select="*:namespace"/>
@@ -190,7 +190,7 @@
 					<xsl:when test="@recordType='physical'">
 						<xsl:element name="nmo:NumismaticObject">
 							<xsl:attribute name="rdf:about">
-								<xsl:value-of select="if (string($uri_space)) then concat($uri_space, $id) else concat($url, 'id/', $id"/>
+								<xsl:value-of select="if (string($uri_space)) then concat($uri_space, $id) else concat($url, 'id/', $id)"/>
 							</xsl:attribute>
 							<dcterms:title>
 								<xsl:if test="string(@xml:lang)">
@@ -414,7 +414,7 @@
 			<xsl:when test="descendant::*:maintenanceStatus != 'new' and descendant::*:maintenanceStatus != 'derived' and descendant::*:maintenanceStatus != 'revised'">
 				<xsl:element name="nmo:Hoard">
 					<xsl:attribute name="rdf:about">
-						<xsl:value-of select="if (string($uri_space)) then concat($uri_space, $id) else concat($url, 'id/', $id"/>
+						<xsl:value-of select="if (string($uri_space)) then concat($uri_space, $id) else concat($url, 'id/', $id)"/>
 					</xsl:attribute>
 					<xsl:for-each select="descendant::*:semanticDeclaration">
 						<xsl:namespace name="{*:prefix}" select="*:namespace"/>
