@@ -161,7 +161,7 @@ if (($handle = fopen("/tmp/" . $csv_id . ".csv", "r")) !== FALSE) {
 										//if file was successfully PUT to eXist, add the accession number to the array for Solr indexing.
 										$accnums[] = trim($row['accnum']);
 											
-										//index records into Solr in increments of 5,000
+										//index records into Solr in increments of 1,000
 										if (count($accnums) > 0 && count($accnums) % 1000 == 0 ){
 											$start = count($accnums) - 1000;
 											$toIndex = array_slice($accnums, $start, 1000);
