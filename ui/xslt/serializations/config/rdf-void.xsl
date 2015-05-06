@@ -24,7 +24,7 @@
 	</xsl:template>
 
 	<xsl:template name="pelagios">
-		<void:dataSet>
+		<void:dataSet rdf:about="{url}">
 			<dcterms:title>
 				<xsl:value-of select="title"/>
 			</dcterms:title>
