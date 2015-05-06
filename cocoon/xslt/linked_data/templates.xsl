@@ -1327,6 +1327,7 @@
 					</rdf:Description>
 				</nmo:hasReverse>
 			</xsl:if>
+			<void:inDataset rdf:resource="{$url}"/>
 		</xsl:element>
 		
 		<xsl:if test="count(arr[@name='coinType_uri']/str) &gt; 0 and $recordType = 'hoard'">
