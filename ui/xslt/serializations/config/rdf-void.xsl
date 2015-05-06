@@ -57,7 +57,7 @@
 			</dcterms:publisher>
 			<dcterms:license rdf:resource="{template/license}"/>
 			<void:uriSpace>
-				<xsl:value-of select="concat(url, 'id/')"/>
+				<xsl:value-of select="if (string(uri_space)) then uri_space else concat(url, 'id/')"/>
 			</void:uriSpace>
 			<void:dataDump rdf:resource="{url}nomisma.rdf"/>
 		</void:dataSet>
