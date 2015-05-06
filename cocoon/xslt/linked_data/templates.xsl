@@ -10,7 +10,7 @@
 	xmlns:atom="http://www.w3.org/2005/Atom" xmlns:oa="http://www.w3.org/ns/oa#"
 	xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:dcmitype="http://purl.org/dc/dcmitype/"
 	xmlns:pelagios="http://pelagios.github.io/vocab/terms#"
-	xmlns:relations="http://pelagios.github.io/vocab/relations#"
+	xmlns:relations="http://pelagios.github.io/vocab/relations#" xmlns:void="http://rdfs.org/ns/void#"
 	xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:nmo="http://nomisma.org/ontology#"
 	xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:mets="http://www.loc.gov/METS/"
 	xmlns:numishare="https://github.com/ewg118/numishare" version="2.0">
@@ -167,6 +167,7 @@
 							<xsl:attribute name="rdf:resource" select="$uri"/>
 						</xsl:element>
 					</xsl:for-each>
+					<void:inDataset rdf:resource="{$url}"/>
 				</xsl:element>
 			</xsl:when>
 			<xsl:otherwise>
@@ -207,6 +208,7 @@
 							<xsl:apply-templates select="nuds:descMeta/nuds:typeDesc" mode="nomisma">
 								<xsl:with-param name="id" select="$id"/>
 							</xsl:apply-templates>
+							<void:inDataset rdf:resource="{$url}"/>
 						</nmo:TypeSeriesItem>
 						<xsl:apply-templates
 							select="nuds:descMeta/nuds:typeDesc/nuds:obverse|nuds:descMeta/nuds:typeDesc/nuds:reverse"
@@ -271,6 +273,7 @@
 							<xsl:if test="descendant::mets:fileGrp[@USE='reverse']">
 								<nmo:hasReverse rdf:resource="{$url}id/{$id}#reverse"/>
 							</xsl:if>
+							<void:inDataset rdf:resource="{$url}"/>
 						</xsl:element>
 						<!-- images -->
 						<xsl:apply-templates select="nuds:digRep/mets:fileSec" mode="nomisma">
@@ -474,6 +477,7 @@
 							<xsl:attribute name="rdf:resource" select="$uri"/>
 						</xsl:element>
 					</xsl:for-each>
+					<void:inDataset rdf:resource="{$url}"/>
 				</xsl:element>
 			</xsl:when>
 			<xsl:otherwise>
@@ -649,6 +653,7 @@
 						test="count(descendant::nuds:typeDesc/@xlink:href|descendant::nuds:undertypeDesc/@xlink:href) &gt; 0">
 						<dcterms:tableOfContents rdf:resource="{$url}id/{$id}#contents"/>
 					</xsl:if>
+					<void:inDataset rdf:resource="{$url}"/>
 				</nmo:Hoard>
 
 				<dcmitype:Collection rdf:about="{$url}id/{$id}#contents">

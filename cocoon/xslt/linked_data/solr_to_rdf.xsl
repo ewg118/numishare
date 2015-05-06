@@ -8,6 +8,7 @@
 	<xsl:param name="mode"/>
 
 	<xsl:param name="url" select="/content/config/url"/>
+	<xsl:param name="uri_space" select="/content/config/uri_space"/>
 
 	<xsl:template match="/">
 		<rdf:RDF>
