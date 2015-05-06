@@ -73,7 +73,7 @@
 					<xsl:value-of select="."/>
 				</dcterms:title>
 			</xsl:for-each>
-			<foaf:homepage rdf:resource="{$url}id/{$id}"/>
+			<foaf:homepage rdf:resource="{if (string($uri_space)) then concat($uri_space, $id) else concat($url, 'id/', $id)}"/>
 			<xsl:if test="string(@recordType)">
 				<!-- dates -->
 				<xsl:choose>
@@ -149,7 +149,7 @@
 			<xsl:otherwise>
 				<xsl:choose>
 					<xsl:when test="@recordType='conceptual'">
-						<nmo:TypeSeriesItem rdf:about="{$url}id/{$id}">
+						<nmo:TypeSeriesItem rdf:about="{if (string($uri_space)) then concat($uri_space, $id) else concat($url, 'id/', $id)}">
 							<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 							<!-- insert titles -->
 							<xsl:for-each select="descendant::nuds:descMeta/nuds:title">
@@ -236,10 +236,10 @@
 							<!-- findspot-->
 							<xsl:apply-templates select="nuds:descMeta/nuds:findspotDesc" mode="nomisma"/>
 							<xsl:if test="descendant::mets:fileGrp[@USE='obverse']">
-								<nmo:hasObverse rdf:resource="{$url}id/{$id}#obverse"/>
+								<nmo:hasObverse rdf:resource="{if (string($uri_space)) then concat($uri_space, $id) else concat($url, 'id/', $id)}#obverse"/>
 							</xsl:if>
 							<xsl:if test="descendant::mets:fileGrp[@USE='reverse']">
-								<nmo:hasReverse rdf:resource="{$url}id/{$id}#reverse"/>
+								<nmo:hasReverse rdf:resource="{if (string($uri_space)) then concat($uri_space, $id) else concat($url, 'id/', $id)}#reverse"/>
 							</xsl:if>
 							<void:inDataset rdf:resource="{$url}"/>
 						</xsl:element>
@@ -258,7 +258,7 @@
 
 		<xsl:for-each select="mets:fileGrp">
 			<xsl:variable name="side" select="@USE"/>
-			<rdf:Description rdf:about="{$url}id/{$id}#{$side}">
+			<rdf:Description rdf:about="{if (string($uri_space)) then concat($uri_space, $id) else concat($url, 'id/', $id)}#{$side}">
 				<xsl:for-each select="mets:file">
 					<xsl:choose>
 						<xsl:when test="@USE='thumbnail'">
@@ -319,16 +319,16 @@
 		<xsl:apply-templates select="nuds:geographic/nuds:geogname|nuds:authority/nuds:persname|nuds:authority/nuds:corpname" mode="nomisma"/>
 		<xsl:apply-templates select="nuds:date[@standardDate]|nuds:dateRange[child::node()/@standardDate]" mode="nomisma"/>
 		<xsl:if test="nuds:obverse">
-			<nmo:hasObverse rdf:resource="{$url}id/{$id}#obverse"/>
+			<nmo:hasObverse rdf:resource="{if (string($uri_space)) then concat($uri_space, $id) else concat($url, 'id/', $id)}#obverse"/>
 		</xsl:if>
 		<xsl:if test="nuds:reverse">
-			<nmo:hasReverse rdf:resource="{$url}id/{$id}#reverse"/>
+			<nmo:hasReverse rdf:resource="{if (string($uri_space)) then concat($uri_space, $id) else concat($url, 'id/', $id)}#reverse"/>
 		</xsl:if>
 	</xsl:template>
 
 	<xsl:template match="nuds:obverse|nuds:reverse" mode="nomisma">
 		<xsl:param name="id"/>
-		<rdf:Description rdf:about="{$url}id/{$id}#{local-name()}">
+		<rdf:Description rdf:about="{if (string($uri_space)) then concat($uri_space, $id) else concat($url, 'id/', $id)}#{local-name()}">
 			<xsl:apply-templates mode="nomisma"/>
 		</rdf:Description>
 	</xsl:template>
@@ -431,7 +431,7 @@
 				</xsl:element>
 			</xsl:when>
 			<xsl:otherwise>
-				<nmo:Hoard rdf:about="{$url}id/{$id}">
+				<nmo:Hoard rdf:about="{if (string($uri_space)) then concat($uri_space, $id) else concat($url, 'id/', $id)}">
 					<xsl:choose>
 						<xsl:when test="lang('en', descendant::nh:descMeta/nh:title)">
 							<dcterms:title xml:lang="en">
@@ -582,12 +582,12 @@
 					</xsl:choose>
 
 					<xsl:if test="count(descendant::nuds:typeDesc/@xlink:href|descendant::nuds:undertypeDesc/@xlink:href) &gt; 0">
-						<dcterms:tableOfContents rdf:resource="{$url}id/{$id}#contents"/>
+						<dcterms:tableOfContents rdf:resource="{if (string($uri_space)) then concat($uri_space, $id) else concat($url, 'id/', $id)}#contents"/>
 					</xsl:if>
 					<void:inDataset rdf:resource="{$url}"/>
 				</nmo:Hoard>
 
-				<dcmitype:Collection rdf:about="{$url}id/{$id}#contents">
+				<dcmitype:Collection rdf:about="{if (string($uri_space)) then concat($uri_space, $id) else concat($url, 'id/', $id)}#contents">
 					<xsl:for-each select="descendant::nuds:typeDesc/@xlink:href|descendant::nuds:undertypeDesc/@xlink:href">
 						<nmo:hasTypeSeriesItem rdf:resource="{.}"/>
 					</xsl:for-each>
