@@ -18,7 +18,7 @@
 	</xsl:template>
 
 	<xsl:template name="pelagios">
-		<void:dataSet>
+		<void:Dataset>
 			<dcterms:title>
 				<xsl:value-of select="title"/>
 			</dcterms:title>
@@ -32,11 +32,11 @@
 			<dcterms:license rdf:resource="{template/license}"/>
 			<dcterms:subject rdf:resource="http://dbpedia.org/resource/Annotation"/>
 			<void:dataDump rdf:resource="{url}pelagios.rdf"/>
-		</void:dataSet>
+		</void:Dataset>
 	</xsl:template>
 
 	<xsl:template name="nomisma">
-		<void:dataSet rdf:about="{url}">
+		<void:Dataset rdf:about="{url}">
 			<dcterms:title>
 				<xsl:value-of select="title"/>
 			</dcterms:title>
@@ -54,6 +54,6 @@
 				<xsl:value-of select="concat(url, 'id/')"/>
 			</void:uriSpace>
 			<void:dataDump rdf:resource="{url}nomisma.rdf"/>
-		</void:dataSet>
+		</void:Dataset>
 	</xsl:template>
 </xsl:stylesheet>
