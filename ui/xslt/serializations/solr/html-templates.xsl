@@ -234,25 +234,6 @@
 									</xsl:for-each>
 								</dd>
 							</xsl:if>
-							<xsl:if test="arr[@name='citation_facet']">
-								<dt>
-									<xsl:if test="$lang='ar'">
-										<xsl:attribute name="class">ar</xsl:attribute>
-									</xsl:if>
-									<xsl:value-of select="numishare:regularize_node('citation', $lang)"/>
-								</dt>
-								<dd>
-									<xsl:if test="$lang='ar'">
-										<xsl:attribute name="class">ar</xsl:attribute>
-									</xsl:if>
-									<xsl:for-each select="arr[@name='citation_facet']/str">
-										<xsl:value-of select="."/>
-										<xsl:if test="not(position() = last())">
-											<xsl:text>, </xsl:text>
-										</xsl:if>
-									</xsl:for-each>
-								</dd>
-							</xsl:if>
 							<xsl:if test="arr[@name='provenance_facet']">
 								<dt>
 									<xsl:if test="$lang='ar'">
@@ -361,14 +342,14 @@
 		<xsl:choose>
 			<xsl:when test="$collection_type = 'hoard'">
 				<h4>Hoard</h4>
-				<xsl:apply-templates select="lst[(@name='taq_num' or @name='findspot_hier' or @name='reference_facet') and number(int[@name='numFacetTerms']) &gt; 0]" mode="facet"/>
+				<xsl:apply-templates select="lst[(@name='taq_num' or @name='findspot_hier' or @name='reference_facet') and number(int) &gt; 0]" mode="facet"/>
 				<h4>Contents</h4>
 				<xsl:apply-templates select="lst[(@name='authority_facet'or @name='coinType_facet' or @name='deity_facet' or @name='denomination_facet' or @name='issuer_facet' or
 					@name='manufacture_facet' or @name='material_facet' or @name='mint_facet' or @name='objectType_facet' or @name='portrait_facet' or @name='region_facet') and
-					number(int[@name='numFacetTerms']) &gt; 0]" mode="facet"/>
+					number(int) &gt; 0]" mode="facet"/>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:apply-templates select="lst[not(contains(@name, '_geo')) and number(int[@name='numFacetTerms']) &gt; 0]" mode="facet"/>
+				<xsl:apply-templates select="lst[not(contains(@name, '_geo')) and number(int) &gt; 0]" mode="facet"/>
 			</xsl:otherwise>
 		</xsl:choose>
 		<form action="results" method="GET" role="form" id="facet_form">
@@ -437,6 +418,7 @@
 			<input type="submit" value="{numishare:normalizeLabel('results_refine-search', $lang)}" id="search_button" class="btn btn-default"/>
 		</form>
 	</xsl:template>
+	
 	<xsl:template match="lst" mode="facet">
 		<xsl:variable name="val" select="@name"/>
 		<xsl:variable name="new_query">
@@ -489,11 +471,10 @@
 				</div>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:variable name="count" select="number(int[@name='numFacetTerms'])"/>
 				<xsl:variable name="mincount" as="xs:integer">
 					<xsl:choose>
-						<xsl:when test="$count &gt; 500">
-							<xsl:value-of select="ceiling($count div 500)"/>
+						<xsl:when test="$numFound &gt; 200000">
+							<xsl:value-of select="ceiling($numFound div 200000)"/>
 						</xsl:when>
 						<xsl:otherwise>1</xsl:otherwise>
 					</xsl:choose>
@@ -518,7 +499,9 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
-	<xsl:template match="lst[@name='mint_geo' or number(int[@name='numFacetTerms']) = 0]" mode="facet"/>
+	
+	<xsl:template match="lst[@name='mint_geo']" mode="facet"/>
+	
 	<xsl:template name="result_image">
 		<xsl:param name="alignment"/>
 		<div class="col-md-5 col-lg-4 {$alignment}">
@@ -550,7 +533,7 @@
 				<xsl:when test="$q = '*:*'">
 					<h1>
 						<xsl:value-of select="numishare:normalizeLabel('results_all-terms', $lang)"/>
-						<xsl:if test="//lst[@name='mint_geo']/int[@name='numFacetTerms'] &gt; 0 or //lst[@name='findspot_geo']/int[@name='numFacetTerms'] &gt; 0">
+						<xsl:if test="count(//lst[@name='mint_geo']/int) &gt; 0 or count(//lst[@name='findspot_geo']/int) &gt; 0">
 							<small>
 								<a href="#resultMap" id="map_results">
 									<xsl:value-of select="numishare:normalizeLabel('results_map-results', $lang)"/>
@@ -562,7 +545,7 @@
 				<xsl:otherwise>
 					<h1>
 						<xsl:value-of select="numishare:normalizeLabel('results_filters', $lang)"/>
-						<xsl:if test="//lst[@name='mint_geo']/int[@name='numFacetTerms'] &gt; 0 or //lst[@name='findspot_geo']/int[@name='numFacetTerms'] &gt; 0">
+						<xsl:if test="count(//lst[@name='mint_geo']/int) &gt; 0 or count(//lst[@name='findspot_geo']/int) &gt; 0">
 							<small>
 								<a href="#resultMap" id="map_results">
 									<xsl:value-of select="numishare:normalizeLabel('results_map-results', $lang)"/>

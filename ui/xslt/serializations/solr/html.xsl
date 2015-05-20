@@ -94,7 +94,7 @@
 				<script type="text/javascript" src="{$include_path}/javascript/result_functions.js"/>
 
 				<!-- call mapping information -->
-				<xsl:if test="//lst[contains(@name, '_geo')]/int[@name='numFacetTerms'] &gt; 0">
+				<xsl:if test="count(//lst[contains(@name, '_geo')]/int) &gt; 0">
 					<script src="http://www.openlayers.org/api/OpenLayers.js" type="text/javascript"/>
 					<script src="http://maps.google.com/maps/api/js?v=3.2&amp;sensor=false"/>
 					<script type="text/javascript" src="{$include_path}/javascript/result_map_functions.js"/>
@@ -123,7 +123,7 @@
 						<xsl:choose>
 							<xsl:when test="$numFound &gt; 0">
 								<!-- include resultMap div when there are geographical results-->
-								<xsl:if test="//lst[@name='mint_geo']/int[@name='numFacetTerms'] &gt; 0 or //lst[@name='findspot_geo']/int[@name='numFacetTerms'] &gt; 0">
+								<xsl:if test="count(//lst[@name='mint_geo']/int) &gt; 0 or count(//lst[@name='findspot_geo']/int) &gt; 0">
 									<div style="display:none">
 										<div id="resultMap"/>
 									</div>
@@ -148,7 +148,7 @@
 							<a href="{$display_path}feed/?q={$q}{if(string($lang)) then concat('&amp;lang=', $lang) else ''}">
 								<img src="{$include_path}/images/atom-medium.png" title="Atom" alt="Atom"/>
 							</a>
-							<xsl:if test="//lst[@name='mint_geo']/int[@name='numFacetTerms'] &gt; 0">
+							<xsl:if test="count(//lst[@name='mint_geo']/int) &gt; 0">
 								<xsl:choose>
 									<xsl:when test="/content/config/collection_type = 'hoard'">
 										<a href="{$display_path}findspots.kml?q={$q}{if(string($lang)) then concat('&amp;lang=', $lang) else ''}">

@@ -46,25 +46,15 @@
 
 				<!-- config variables -->
 				<xsl:variable name="solr-url" select="concat(/config/solr_published, 'select/')"/>
-				<xsl:variable name="facets">
-					<xsl:value-of select="concat('&amp;facet.field=', string-join(/config/facets/facet, '&amp;facet.field='))"/>
-					<!--<xsl:choose>
-						<xsl:when test="/config/collection_type='cointype'">
-							<xsl:value-of select="concat('&amp;facet.field=coinType_facet&amp;facet.field=', string-join(/config/facets/facet, '&amp;facet.field='))"/>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:value-of select="concat('&amp;facet.field=', string-join(/config/facets/facet, '&amp;facet.field='))"/>
-						</xsl:otherwise>
-					</xsl:choose>-->
-				</xsl:variable>				
+				<xsl:variable name="facets" select="concat('&amp;facet.field=', string-join(/config/facets/facet, '&amp;facet.field='))"/>
 
 				<xsl:variable name="service">
 					<xsl:choose>
 						<xsl:when test="string($lang)">
-							<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+lang:', $lang, '+AND+(mint_geo:*+OR+findspot_geo:*+OR+subject_geo:*)&amp;start=', $start, $facets, '&amp;facet.field=mint_geo&amp;facet.numFacetTerms=1&amp;facet.sort=index&amp;facet=true')"/>
+							<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+lang:', $lang, '+AND+(mint_geo:*+OR+findspot_geo:*+OR+subject_geo:*)&amp;start=', $start, $facets, '&amp;facet.field=mint_geo&amp;facet.limit=1&amp;facet.sort=index&amp;facet=true&amp;rows=0')"/>
 						</xsl:when>
 						<xsl:otherwise>
-							<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+NOT(lang:*)+AND+(mint_geo:*+OR+findspot_geo:*+OR+subject_geo:*)&amp;start=', $start, $facets, '&amp;facet.field=mint_geo&amp;facet.numFacetTerms=1&amp;facet.sort=index&amp;facet=true')"/>
+							<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+NOT(lang:*)+AND+(mint_geo:*+OR+findspot_geo:*+OR+subject_geo:*)&amp;start=', $start, $facets, '&amp;facet.field=mint_geo&amp;facet.limit=1&amp;facet.sort=index&amp;facet=true&amp;rows=0')"/>
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:variable>

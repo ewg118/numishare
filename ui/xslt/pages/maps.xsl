@@ -13,6 +13,7 @@
 	<xsl:param name="q" select="doc('input:request')/request/parameters/parameter[name='q']/value"/>
 	<xsl:param name="lang" select="doc('input:request')/request/parameters/parameter[name='lang']/value"/>
 	<xsl:variable name="request-uri" select="concat('http://localhost:8080', substring-before(doc('input:request')/request/request-uri, 'maps'))"/>
+	<xsl:variable name="numFound" select="//result[@name='response']/@numFound"/>
 	<xsl:variable name="tokenized_q" select="tokenize($q, ' AND ')"/>
 
 	<xsl:template match="/">
@@ -91,7 +92,7 @@
 				</div>
 			</div>
 			<xsl:choose>
-				<xsl:when test="//result[@name='response']/@numFound &gt; 0">
+				<xsl:when test="$numFound &gt; 0">
 					<div class="row">
 						<div class="col-md-12">
 							<div class="row">
@@ -180,7 +181,7 @@
 	</xsl:template>
 
 	<xsl:template match="lst[@name='facet_fields']">
-		<xsl:for-each select="lst[not(@name='mint_geo') and number(int[@name='numFacetTerms']) &gt; 0 and not(@name='mint_facet')]|lst[@name='mint_facet' and $collection_type='hoard']">
+		<xsl:for-each select="lst[not(@name='mint_geo') and not(@name='mint_facet')]|lst[@name='mint_facet' and $collection_type='hoard']">
 
 			<xsl:variable name="val" select="@name"/>
 			<xsl:variable name="new_query">
@@ -235,12 +236,11 @@
 							<ul class="century-multiselect-checkboxes ui-helper-reset" id="{@name}-list" style="height: 175px;"/>
 						</div>-->
 				</xsl:when>
-				<xsl:otherwise>
-					<xsl:variable name="count" select="number(int[@name='numFacetTerms'])"/>
+				<xsl:otherwise>					
 					<xsl:variable name="mincount" as="xs:integer">
 						<xsl:choose>
-							<xsl:when test="$count &gt; 500">
-								<xsl:value-of select="ceiling($count div 500)"/>
+							<xsl:when test="$numFound &gt; 200000">
+								<xsl:value-of select="ceiling($numFound div 200000)"/>
 							</xsl:when>
 							<xsl:otherwise>1</xsl:otherwise>
 						</xsl:choose>
