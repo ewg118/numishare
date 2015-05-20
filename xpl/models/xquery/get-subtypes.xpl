@@ -26,7 +26,7 @@
 				<xsl:output indent="yes"/>
 				<xsl:template match="/">
 					<xsl:param name="identifiers" select="doc('input:request')/request/parameters/parameter[name='identifiers']/value"/>
-					<xsl:variable name="collection-name" select="substring-before(substring-after(doc('input:request')/request/servlet-path, 'numishare/'), '/')"/>
+					<xsl:variable name="collection-name" select="substring-before(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/')"/>
 					<xsl:variable name="pieces" select="tokenize(/exist-config/url, '/')"/>
 					<xsl:variable name="xquery">
 						<![CDATA[xquery version "1.0";

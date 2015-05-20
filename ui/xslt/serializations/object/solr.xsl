@@ -12,7 +12,7 @@
 	<xsl:include href="../nudsHoard/solr.xsl"/>
 	<xsl:include href="solr-templates.xsl"/>
 
-	<xsl:variable name="collection-name" select="substring-before(substring-after(doc('input:request')/request/servlet-path, 'numishare/'), '/')"/>
+	<xsl:variable name="collection-name" select="substring-before(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/')"/>
 	<xsl:variable name="request-uri" select="concat('http://localhost:8080/orbeon/numishare/', $collection-name)"/>
 
 	<!-- config variables -->

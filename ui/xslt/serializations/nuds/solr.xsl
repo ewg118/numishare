@@ -103,8 +103,8 @@
 				</xsl:otherwise>
 			</xsl:choose>
 
-			<!-- fulltext -->
-			<field name="fulltext">
+			<!-- text -->
+			<field name="text">
 				<xsl:value-of select="nuds:control/nuds:recordId"/>
 				<xsl:text> </xsl:text>
 				<xsl:for-each select="nuds:descMeta/descendant-or-self::text()">

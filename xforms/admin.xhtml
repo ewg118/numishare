@@ -23,11 +23,11 @@
 		<link rel="stylesheet" href="/apps/numishare/css/xforms.css" />
 		<xforms:model xmlns="http://nomisma.org/nuds">
 			<!-- exist URL is stored in an XML file -->
-			<xforms:instance id="exist-config">
+			<xforms:instance id="exist-config" xxforms:exclude-result-prefixes="#all">
 				<xi:include href="../exist-config.xml"></xi:include>
 			</xforms:instance>
 
-			<xforms:instance id="control-instance">
+			<xforms:instance id="control-instance" xxforms:exclude-result-prefixes="#all">
 				<controls xmlns="">
 					<id></id>
 					<identifiers></identifiers>
@@ -42,18 +42,18 @@
 				</controls>
 			</xforms:instance>
 
-			<xforms:instance id="config">
+			<xforms:instance id="config" xxforms:exclude-result-prefixes="#all">
 				<config xmlns=""></config>
 			</xforms:instance>
 
-			<xforms:instance id="collections-list">
-				<collections xmlns="" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="collections-list" xxforms:exclude-result-prefixes="#all">
+				<collections xmlns="">
 					<collection role="admin" name="numishare"></collection>
 				</collections>
 			</xforms:instance>
 
-			<xforms:instance id="collection-template">
-				<collection role="" name="" xxforms:exclude-result-prefixes="#all"></collection>
+			<xforms:instance id="collection-template" xxforms:exclude-result-prefixes="#all">
+				<collection role="" name=""></collection>
 			</xforms:instance>
 
 			<xforms:instance id="config-template" xxforms:exclude-result-prefixes="#all">
@@ -61,7 +61,7 @@
 					<title>Numishare</title>
 					<description>A short description of the collection.</description>
 					<logo></logo>
-					<url>http://localhost:8080/cocoon/numishare/</url>
+					<url>http://localhost:8080/orbeon/numishare/</url>
 					<sparql_endpoint>http://nomisma.org/query</sparql_endpoint>
 					<type_series></type_series>
 					<solr_published>http://localhost:8080/solr/numishare-published/</solr_published>
@@ -256,9 +256,11 @@
 			<xforms:instance id="addIndex" xxforms:exclude-result-prefixes="#all">
 				<add xmlns=""></add>
 			</xforms:instance>
+			
 			<xforms:instance id="collection-field" xxforms:exclude-result-prefixes="#all">
 				<field name="collection-name" xmlns=""></field>
 			</xforms:instance>
+			
 			<!-- Instance for Solr commit-->
 			<xforms:instance id="sendCommit">
 				<commit></commit>
@@ -322,7 +324,7 @@
 			
 			<!-- ************************* SUBMISSIONS ************************** -->
 			<!-- load collections/roles config -->
-			<xforms:submission id="load-collections" serialization="none" method="get" action="{instance('exist-config')/url}collections-list.xml" replace="instance" instance="collections-list"
+			<xforms:submission id="load-collections" serialization="none" method="get" resource="{instance('exist-config')/url}collections-list.xml" replace="instance" instance="collections-list"
 				xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}">
 				<!-- if the config loads successfully, set the collection names based on authentication -->
 				<xforms:action ev:event="xforms-submit-done">
@@ -365,7 +367,7 @@
 				</xforms:action>
 			</xforms:submission>
 
-			<xforms:submission id="save-collections" ref="instance('collections-list')" action="{instance('exist-config')/url}/collections-list.xml" method="put" replace="none"
+			<xforms:submission id="save-collections" ref="instance('collections-list')" resource="{instance('exist-config')/url}/collections-list.xml" method="put" replace="none"
 				xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Error Saving Collections List.</xforms:message>
 				<xforms:send submission="load-collections"></xforms:send>
@@ -373,7 +375,7 @@
 
 			<!--***************** XQUERY ******************-->
 			<!-- xquery for getting and processing query results into pages of items -->
-			<xforms:submission id="xquery-pagination" ref="instance('eXist-xquery')" action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/objects" method="post"
+			<xforms:submission id="xquery-pagination" ref="instance('eXist-xquery')" resource="{instance('exist-config')/url}{instance('control-instance')/collection-name}/objects" method="post"
 				replace="instance" instance="pagination-result" xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}">
 				<xforms:setvalue ref="instance('control-instance')/error" ev:event="xforms-submit-error">Error querying eXist database.</xforms:setvalue>
 				<xforms:action ev:event="xforms-submit-done">
@@ -385,13 +387,13 @@
 				</xforms:action>
 			</xforms:submission>
 
-			<xforms:submission id="xquery-collection" ref="instance('eXist-xquery')" action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/objects" method="post"
+			<xforms:submission id="xquery-collection" ref="instance('eXist-xquery')" resource="{instance('exist-config')/url}{instance('control-instance')/collection-name}/objects" method="post"
 				replace="instance" instance="xquery-result" xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}">
 				<xforms:setvalue ref="instance('control-instance')/error" ev:event="xforms-submit-error">Error querying eXist database.</xforms:setvalue>
 			</xforms:submission>
 
 			<!-- submissions -->
-			<xforms:submission id="load-config" serialization="none" method="get" action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/config.xml" replace="instance"
+			<xforms:submission id="load-config" serialization="none" method="get" resource="{instance('exist-config')/url}{instance('control-instance')/collection-name}/config.xml" replace="instance"
 				instance="config" xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}">
 				<xforms:action ev:event="xforms-submit-done">
 					<!-- get the number of docs in the eXist collection() -->
@@ -412,29 +414,29 @@
 			</xforms:submission>
 
 			<!-- ******** SUBMISSIONS FOR CREATING NEW NUMISHARE COLLECTION ********* -->
-			<xforms:submission id="save-config" ref="instance('config-template')" action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/config.xml" method="put"
+			<xforms:submission id="save-config" ref="instance('config-template')" resource="{instance('exist-config')/url}{instance('control-instance')/collection-name}/config.xml" method="put"
 				replace="none" xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Error Saving Config.</xforms:message>
 				<xforms:send submission="load-config" ev:event="xforms-submit-done"></xforms:send>
 			</xforms:submission>
 
-			<xforms:submission id="save-imports" ref="instance('imports-template')" action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/imports.xml" method="put"
+			<xforms:submission id="save-imports" ref="instance('imports-template')" resource="{instance('exist-config')/url}{instance('control-instance')/collection-name}/imports.xml" method="put"
 				replace="none" xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Error Saving Import XML.</xforms:message>
 			</xforms:submission>
 
-			<xforms:submission id="add-object-collection" ref="instance('eXist-xquery')" method="post" action="{instance('exist-config')/url}" replace="none"
+			<xforms:submission id="add-object-collection" ref="instance('eXist-xquery')" method="post" resource="{instance('exist-config')/url}" replace="none"
 				xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}"></xforms:submission>
 
 			<!-- delete coin -->
-			<xforms:submission id="delete-object" action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/objects/{instance('control-instance')/id}.xml" method="delete"
+			<xforms:submission id="delete-object" resource="{instance('exist-config')/url}{instance('control-instance')/collection-name}/objects/{instance('control-instance')/id}.xml" method="delete"
 				replace="none" xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}">
 				<xforms:setvalue ev:event="xforms-submit-done" ref="instance('control-instance')/status">Object successfully deleted.</xforms:setvalue>
 			</xforms:submission>
 
 			<!-- ************************* LOAD/SAVE RECORD TO UPDATE PUBLICATIONSTATUS ********************** -->
 			<xforms:submission id="load-object" serialization="none" method="get"
-				action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/objects/{instance('control-instance')/id}.xml"
+				resource="{instance('exist-config')/url}{instance('control-instance')/collection-name}/objects/{instance('control-instance')/id}.xml"
 				xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}" replace="instance" instance="object">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Error loading file.</xforms:message>
 				<xforms:action ev:event="xforms-submit-done">
@@ -444,12 +446,12 @@
 			</xforms:submission>
 
 			<xforms:submission id="save-coin" ref="instance('object')" xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}"
-				action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/objects/{instance('control-instance')/id}.xml" method="put" replace="none"></xforms:submission>
+				resource="{instance('exist-config')/url}{instance('control-instance')/collection-name}/objects/{instance('control-instance')/id}.xml" method="put" replace="none"></xforms:submission>
 
 			<!-- ************************* SOLR SUBMISSIONS ************************** -->
 			<!-- query Solr for the id of all currently published documents and repost them to solr -->
 			<xforms:submission id="republish" serialization="none" method="get"
-				action="{instance('config')/solr_published}select/?q=collection-name:{instance('control-instance')/collection-name}&amp;rows=100000&amp;start=0&amp;fl=id" replace="instance"
+				resource="{instance('config')/solr_published}select/?q=collection-name:{instance('control-instance')/collection-name}&amp;rows=100000&amp;start=0&amp;fl=id" replace="instance"
 				instance="list-published-response">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Solr is inaccessible. Please check Solr configuration. [ADM001]</xforms:message>
 				<xforms:action ev:event="xforms-submit-done">
@@ -472,15 +474,15 @@
 				</xforms:action>
 			</xforms:submission>
 			<!-- post instance to Solr -->
-			<xforms:submission id="post-solr-doc" action="{instance('config')/solr_published}update" ref="instance('addIndex')" instance="addIndex" replace="instance" method="post">
+			<xforms:submission id="post-solr-doc" resource="{instance('config')/solr_published}update" ref="instance('addIndex')" instance="addIndex" replace="instance" method="post">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Data Failed to POST to Solr. Index may be offline or URL is incorrect.</xforms:message>
 			</xforms:submission>
 			<!-- delete from Solr -->
-			<xforms:submission id="delete-solr-doc" action="{instance('config')/solr_published}update" ref="instance('deleteId')" instance="deleteId" replace="none" method="post">
+			<xforms:submission id="delete-solr-doc" resource="{instance('config')/solr_published}update" ref="instance('deleteId')" instance="deleteId" replace="none" method="post">
 				<xforms:send ev:event="xforms-submit-done" submission="submit-commit"></xforms:send>
 				<xforms:message ev:event="xforms-submit-error" level="modal">Data Failed to POST to Solr.</xforms:message>
 			</xforms:submission>
-			<xforms:submission id="delete-all" action="{instance('config')/solr_published}update" ref="instance('deleteAll')" instance="deleteAll" replace="none" method="post">
+			<xforms:submission id="delete-all" resource="{instance('config')/solr_published}update" ref="instance('deleteAll')" instance="deleteAll" replace="none" method="post">
 				<xforms:send ev:event="xforms-submit-done" submission="submit-commit"></xforms:send>
 				<xforms:setvalue ev:event="xforms-submit-done" ref="instance('control-instance')/status">Objects removed from search index.</xforms:setvalue>
 			</xforms:submission>
@@ -488,25 +490,25 @@
 			<!-- pass identifiers URL parameter to xquery process in Cocoon to generate large Solr add document -->
 			<xforms:submission id="generate-add-document" method="get" replace="instance" instance="addIndex" serialization="none"
 				resource="{instance('config')/url}ingest?identifiers={instance('control-instance')/identifiers}">
-				<xforms:message ev:event="xforms-submit-error" level="modal">Error getting Solr document from Cocoon xquery pipeline.</xforms:message>
+				<xforms:message ev:event="xforms-submit-error" level="modal">Error getting Solr document from XQuery ingestion pipeline.</xforms:message>
 				<xforms:action ev:event="xforms-submit-done">
 					<xforms:send submission="post-solr-doc"></xforms:send>
 				</xforms:action>
 			</xforms:submission>
 
 			<!-- send commit -->
-			<xforms:submission id="submit-commit" action="{instance('config')/solr_published}update" ref="instance('sendCommit')" instance="sendCommit" replace="none" method="post">
+			<xforms:submission id="submit-commit" resource="{instance('config')/solr_published}update" ref="instance('sendCommit')" instance="sendCommit" replace="none" method="post">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Failed to commit to Solr index.</xforms:message>
 			</xforms:submission>
 
 			<!-- send optimize -->
-			<xforms:submission id="optimize" action="{instance('config')/solr_published}update" ref="instance('optimizeIndex')" instance="optimizeIndex" replace="none" method="post">
+			<xforms:submission id="optimize" resource="{instance('config')/solr_published}update" ref="instance('optimizeIndex')" instance="optimizeIndex" replace="none" method="post">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Failed to optimize Solr index.</xforms:message>
 			</xforms:submission>
 
 			<!-- submission to query solr to see if the document is published -->
 			<xforms:submission id="query-solr-for-publication" serialization="none" method="get"
-				action="{instance('config')/solr_published}select/?q=collection-name:{instance('control-instance')/collection-name} AND id:&#x022;{instance('control-instance')/id}&#x022;"
+				resource="{instance('config')/solr_published}select/?q=collection-name:{instance('control-instance')/collection-name} AND id:&#x022;{instance('control-instance')/id}&#x022;"
 				replace="instance" instance="published-response">
 				<!-- if the document is found in solr, get the updated solr doc -->
 				<xforms:setvalue ev:event="xforms-submit-done" if="instance('published-response')/result[@name='response']/@numFound = '1'"
@@ -802,7 +804,7 @@
 								<h1>No objects in collection.</h1>
 							</xforms:group>
 						</xforms:group>
-						<!--<xforms:output ref="instance('control-instance')/identifiers"></xforms:output>
+						<!--<xforms:output value="concat(instance('config')/url, 'id/', instance('control-instance')/id, '.solr')"/>
 						<fr:xforms-inspector></fr:xforms-inspector>-->
 					</div>
 				</div>

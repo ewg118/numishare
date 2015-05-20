@@ -272,7 +272,7 @@
 				<xsl:with-param name="lang" select="$lang"/>
 			</xsl:call-template>
 
-			<field name="fulltext">
+			<field name="text">
 				<xsl:for-each select="descendant-or-self::text()">
 					<xsl:value-of select="normalize-space(.)"/>
 					<xsl:text> </xsl:text>

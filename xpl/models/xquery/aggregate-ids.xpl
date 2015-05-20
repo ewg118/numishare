@@ -24,7 +24,7 @@
 			<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 				<xsl:output indent="yes"/>
 				<xsl:template match="/">
-					<xsl:variable name="collection-name" select="substring-before(substring-after(doc('input:request')/request/servlet-path, 'numishare/'), '/')"/>
+					<xsl:variable name="collection-name" select="substring-before(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/')"/>
 					<xsl:variable name="identifiers" select="doc('input:request')/request/parameters/parameter[name='identifiers']/value"/>
 					<xsl:variable name="identifiers-clean" select="string-join(tokenize($identifiers, '\|')[string-length(.) &gt; 0], '|')"/>
 					<config>
@@ -53,7 +53,7 @@
 				<xsl:output indent="yes"/>
 				<xsl:template match="/">
 					<xsl:param name="identifiers" select="doc('input:request')/request/parameters/parameter[name='identifiers']/value"/>
-					<xsl:variable name="collection-name" select="substring-before(substring-after(doc('input:request')/request/servlet-path, 'numishare/'), '/')"/>
+					<xsl:variable name="collection-name" select="substring-before(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/')"/>
 					<xsl:variable name="pieces" select="tokenize(/exist-config/url, '/')"/>
 					<xsl:variable name="xquery">
 						<![CDATA[xquery version "1.0";

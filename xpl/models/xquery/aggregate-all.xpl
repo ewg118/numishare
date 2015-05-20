@@ -24,7 +24,7 @@
 			<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 				<xsl:output indent="yes"/>
 				<xsl:template match="/">
-					<xsl:variable name="collection-name" select="substring-before(substring-after(doc('input:request')/request/servlet-path, 'numishare/'), '/')"/>
+					<xsl:variable name="collection-name" select="substring-before(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/')"/>
 					<config>
 						<url>
 							<xsl:value-of select="concat(/exist-config/url, $collection-name, '/aggregate-all.xql')"/>
@@ -51,7 +51,7 @@
 				<xsl:output indent="yes"/>
 				<xsl:template match="/">
 					<xsl:param name="identifiers" select="doc('input:request')/request/parameters/parameter[name='identifiers']/value"/>
-					<xsl:variable name="collection-name" select="substring-before(substring-after(doc('input:request')/request/servlet-path, 'numishare/'), '/')"/>
+					<xsl:variable name="collection-name" select="substring-before(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/')"/>
 					<xsl:variable name="pieces" select="tokenize(/exist-config/url, '/')"/>
 					<xsl:variable name="xquery">
 						<![CDATA[xquery version "1.0";

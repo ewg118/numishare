@@ -27,11 +27,11 @@
 				<xsl:template match="/">
 					<xsl:variable name="collection-name">
 						<xsl:choose>
-							<xsl:when test="contains(doc('input:request')/request/servlet-path, 'admin/')">
-								<xsl:value-of select="substring-before(substring-after(doc('input:request')/request/servlet-path, 'numishare/admin/'), '/')"/>
+							<xsl:when test="contains(doc('input:request')/request/request-uri, 'admin/')">
+								<xsl:value-of select="substring-before(substring-after(doc('input:request')/request/request-uri, 'numishare/admin/'), '/')"/>
 							</xsl:when>
 							<xsl:otherwise>
-								<xsl:value-of select="substring-before(substring-after(doc('input:request')/request/servlet-path, 'numishare/'), '/')"/>
+								<xsl:value-of select="substring-before(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/')"/>
 							</xsl:otherwise>
 						</xsl:choose>
 					</xsl:variable>	
