@@ -277,7 +277,6 @@
 
 	<xsl:template match="/">
 		<add>
-			<!--<xsl:copy-of select="$geonames"/>-->
 			<xsl:choose>
 				<xsl:when test="count(descendant::nuds:nuds) &gt; 0">
 					<xsl:call-template name="nuds"/>

@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes="xs xsl" xmlns:pelagios="http://pelagios.github.io/vocab/terms#"
-	xmlns:relations="http://pelagios.github.io/vocab/relations#" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:nmo="http://nomisma.org/ontology#"
+	xmlns:relations="http://pelagios.github.io/vocab/relations#" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:nmo="http://nomisma.org/ontology#" xmlns:void="http://rdfs.org/ns/void#"
 	xmlns:dcmitype="http://purl.org/dc/dcmitype/" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nm="http://nomisma.org/id/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
 	xmlns:dcterms="http://purl.org/dc/terms/" xmlns:ecrm="http://erlangen-crm.org/current/" xmlns:oa="http://www.w3.org/ns/oa#" xmlns:owl="http://www.w3.org/2002/07/owl#"
 	xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xmlns:foaf="http://xmlns.com/foaf/0.1/" version="2.0">
 
 	<xsl:param name="mode" select="//lst[@name='params']/str[@name='mode']"/>
 	<xsl:param name="url" select="/content/config/url"/>
+	<xsl:param name="uri_space" select="/content/config/uri_space"/>
 
 	<xsl:template match="/">
 		<rdf:RDF>
@@ -35,7 +36,7 @@
 			<dcterms:title>
 				<xsl:value-of select="str[@name='title_display']"/>
 			</dcterms:title>
-			<foaf:homepage rdf:resource="{$url}id/{$id}"/>
+			<foaf:homepage rdf:resource="{if (string($uri_space)) then concat($uri_space, $id) else concat($url, 'id/', $id)}"/>
 
 			<!-- temporal -->
 			<xsl:choose>
@@ -154,17 +155,17 @@
 		<xsl:variable name="recordType" select="str[@name='recordType']"/>
 
 		<xsl:element name="{if ($recordType = 'hoard') then 'nmo:Hoard' else 'nmo:NumismaticObject'}" exclude-result-prefixes="#all">
-			<xsl:attribute name="rdf:about" select="concat($url, 'id/', $id)"/>
+			<xsl:attribute name="rdf:about" select="if (string($uri_space)) then concat($uri_space, $id) else concat($url, 'id/', $id)"/>
 			<dcterms:title xml:lang="{if (str[@name='lang']) then str[@name='lang'] else 'en'}">
 				<xsl:value-of select="str[@name='title_display']"/>
 			</dcterms:title>
 			<dcterms:identifier>
 				<xsl:value-of select="$id"/>
-			</dcterms:identifier>			
+			</dcterms:identifier>
 			<xsl:for-each select="arr[@name='collection_uri']/str">
 				<nmo:hasCollection rdf:resource="{.}"/>
 			</xsl:for-each>
-			
+
 			<xsl:if test="count(arr[@name='coinType_uri']/str) &gt; 0">
 				<xsl:choose>
 					<xsl:when test="$recordType='hoard'">
@@ -177,7 +178,7 @@
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:if>
-			
+
 			<!-- measurements for physical coins -->
 			<xsl:if test="int[@name='axis_num']">
 				<nmo:hasAxis rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">
@@ -200,11 +201,11 @@
 					<xsl:value-of select="format-number(int[@name='taq_num'], '0000')"/>
 				</nmo:hasClosingDate>
 			</xsl:if>
-			
+
 			<xsl:if test="arr[@name='hoard_uri']/str">
 				<dcterms:isPartOf rdf:resource="{arr[@name='hoard_uri']/str[1]}"/>
 			</xsl:if>
-			
+
 			<!-- only include findspot if the coin is not part of a hoard -->
 			<xsl:if test="arr[@name='findspot_geo']/str and not(arr[@name='hoard_uri'])">
 				<xsl:variable name="findspot" select="tokenize(arr[@name='findspot_geo']/str, '\|')"/>
@@ -279,8 +280,9 @@
 					</rdf:Description>
 				</nmo:hasReverse>
 			</xsl:if>
+			<void:inDataset rdf:resource="{$url}"/>
 		</xsl:element>
-		
+
 		<xsl:if test="count(arr[@name='coinType_uri']/str) &gt; 0 and $recordType = 'hoard'">
 			<dcmitype:Collection rdf:about="{concat($url, 'id/', $id, '#contents')}">
 				<xsl:for-each select="arr[@name='coinType_uri']/str">

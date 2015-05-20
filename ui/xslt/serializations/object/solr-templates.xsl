@@ -22,28 +22,16 @@
 			<xsl:variable name="side" select="substring(local-name(), 1, 3)"/>
 
 			<!-- get correct type description based on lang, default to english -->
-			<xsl:choose>
-				<xsl:when test="nuds:type/nuds:description[@xml:lang=$lang]">
-					<xsl:if test="$recordType != 'hoard'">
-						<field name="{$side}_type_display">
-							<xsl:value-of select="normalize-space(nuds:type/nuds:description[@xml:lang=$lang])"/>
-						</field>
-					</xsl:if>
-					<field name="{$side}_type_text">
-						<xsl:value-of select="normalize-space(nuds:type/nuds:description[@xml:lang=$lang])"/>
+			<xsl:if test="nuds:type/nuds:description">
+				<xsl:if test="$recordType != 'hoard'">
+					<field name="{$side}_type_display">
+						<xsl:value-of select="normalize-space(nuds:type/nuds:description[if (string($lang)) then @xml:lang=$lang else @xml:lang='en'])"/>
 					</field>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:if test="$recordType != 'hoard'">
-						<field name="{$side}_type_display">
-							<xsl:value-of select="normalize-space(nuds:type/nuds:description[@xml:lang='en'])"/>
-						</field>
-					</xsl:if>
-					<field name="{$side}_type_text">
-						<xsl:value-of select="normalize-space(nuds:type/nuds:description[@xml:lang='en'])"/>
-					</field>
-				</xsl:otherwise>
-			</xsl:choose>
+				</xsl:if>
+				<field name="{$side}_type_text">
+					<xsl:value-of select="normalize-space(nuds:type/nuds:description[if (string($lang)) then @xml:lang=$lang else @xml:lang='en'])"/>
+				</field>
+			</xsl:if>
 
 			<xsl:if test="nuds:legend">
 				<xsl:if test="$recordType != 'hoard'">
@@ -541,10 +529,16 @@
 							<xsl:when test="$segs[3] = 'aem'">48</xsl:when>
 							<xsl:when test="$segs[3] = 'uran_ant'">49</xsl:when>
 							<xsl:when test="$segs[3] = 'val_i'">50</xsl:when>
-							<xsl:when test="$segs[3] = 'val_gall(1)'">51</xsl:when>
-							<xsl:when test="$segs[3] = 'val_i-gall-val_ii-sal'">52</xsl:when>
+							<xsl:when test="$segs[3] = 'val_i-gall'">51</xsl:when>
+							<xsl:when test="$segs[3] = 'val_i-gall-val_ii-sala'">52</xsl:when>
 							<xsl:when test="$segs[3] = 'mar'">53</xsl:when>
-							<xsl:when test="$segs[3] = 'val_gall(2)'">54</xsl:when>
+							<xsl:when test="$segs[3] = 'gall(1)'">54</xsl:when>
+							<xsl:when test="$segs[3] = 'gall_sala(1)'">55</xsl:when>
+							<xsl:when test="$segs[3] = 'gall_sals'">56</xsl:when>
+							<xsl:when test="$segs[3] = 'sala(1)'">57</xsl:when>
+							<xsl:when test="$segs[3] = 'val_ii'">58</xsl:when>
+							<xsl:when test="$segs[3] = 'sals'">59</xsl:when>
+							<xsl:when test="$segs[3] = 'qjg'">60</xsl:when>
 						</xsl:choose>
 					</xsl:variable>
 					<xsl:variable name="num">

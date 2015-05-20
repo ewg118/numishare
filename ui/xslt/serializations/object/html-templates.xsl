@@ -202,10 +202,39 @@
 								</xsl:choose>
 								<ul>
 									<xsl:if test="local-name()='obverse' or local-name()='reverse'">
-										<xsl:attribute name="rel" select="concat('nmo:', concat(upper-case(substring(local-name(), 1, 1)), substring(local-name(), 2)))"/>
+										<xsl:attribute name="rel" select="concat('nmo:has', concat(upper-case(substring(local-name(), 1, 1)), substring(local-name(), 2)))"/>
 										<xsl:attribute name="resource" select="concat($url, 'id/', $id, '#', local-name())"/>
 									</xsl:if>
 									<xsl:apply-templates select="*" mode="descMeta"/>
+									<!-- if the $recordType is 'conceptual' and there is no legend or description, and thee are subtypes, display the subtype data -->
+									<xsl:if test="$recordType='conceptual' and count($subtypes//subtype) &gt; 0">										
+										<xsl:if test="(local-name() = 'obverse' or local-name()='reverse' ) and not(nuds:type)">
+											<xsl:variable name="side" select="local-name()"/>
+											<li>
+												<b>													
+													<xsl:value-of select="numishare:regularize_node('description', $lang)"/>	
+													<xsl:text>: </xsl:text>
+												</b>
+												<xsl:for-each select="distinct-values($subtypes//subtype/descendant::*[local-name()=$side]/nuds:type/nuds:description[if (string($lang)) then @xml:lang=$lang else @xml:lang='en'])">
+													<xsl:value-of select="."/>
+													<xsl:if test="not(position()=last())"> | </xsl:if>
+												</xsl:for-each>
+											</li>
+										</xsl:if>
+										<xsl:if test="(local-name() = 'obverse' or local-name()='reverse' ) and not(nuds:legend)">
+											<xsl:variable name="side" select="local-name()"/>
+											<li>
+												<b>													
+													<xsl:value-of select="numishare:regularize_node('legend', $lang)"/>	
+													<xsl:text>: </xsl:text>
+												</b>
+												<xsl:for-each select="distinct-values($subtypes//subtype/descendant::*[local-name()=$side]/nuds:legend)">
+													<xsl:value-of select="."/>
+													<xsl:if test="not(position()=last())"> | </xsl:if>
+												</xsl:for-each>
+											</li>
+										</xsl:if>
+									</xsl:if>
 									<xsl:if test="nuds:symbol[@position='left'] or nuds:symbol[@position='center'] or nuds:symbol[@position='right'] or nuds:symbol[@position='exergue']">
 										<xsl:call-template name="format-control-marks"/>
 									</xsl:if>
