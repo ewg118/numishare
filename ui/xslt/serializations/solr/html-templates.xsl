@@ -566,7 +566,6 @@
 					</xsl:if>
 				</xsl:for-each>
 			</xsl:variable>
-			<!--<xsl:value-of select="."/>-->
 			<xsl:choose>
 				<xsl:when test="not(. = '*:*') and not(substring(., 1, 1) = '(')">
 					<xsl:variable name="field" select="substring-before(., ':')"/>

@@ -60,7 +60,11 @@ function getQuery() {
 				segments.push(facet + ':"' + val[i] + '"');
 			}
 			if (segments.length > 1) {
-				query.push('(' + segments.join(' OR ') + ')');
+				if (collection_type == 'hoard' && (facet != 'taq_num' && facet != 'findspot_facet')){
+					query.push(segments.join(' AND '));
+				} else {
+					query.push('(' + segments.join(' OR ') + ')');
+				}
 			} else {
 				query.push(segments[0]);
 			}
