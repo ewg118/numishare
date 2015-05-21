@@ -163,6 +163,10 @@
 						<xsl:value-of select="$geonames//place[@id=$href]"/>
 					</field>
 					
+					<field name="{@xlink:role}_loc">
+						<xsl:value-of select="concat(tokenize($geonames//place[@id=$href], ',')[2], ',', tokenize($geonames//place[@id=$href], ',')[1])"/>
+					</field>
+					
 					<!-- insert hierarchical facets -->
 					<xsl:variable name="hierarchy_pieces" select="tokenize($geonames//place[@id=$href]/@hierarchy, '\|')"/>
 					<xsl:variable name="count" select="count($hierarchy_pieces)"/>
@@ -217,6 +221,10 @@
 							<xsl:value-of select="@xlink:href"/>
 							<xsl:text>|</xsl:text>
 							<xsl:value-of select="concat($rdf/*[@rdf:about=concat($href, '#this')]/geo:long, ',', $rdf/*[@rdf:about=concat($href, '#this')]/geo:lat)"/>
+						</field>
+						
+						<field name="{@xlink:role}_loc">
+							<xsl:value-of select="concat($rdf/*[@rdf:about=concat($href, '#this')]/geo:lat, ',', $rdf/*[@rdf:about=concat($href, '#this')]/geo:long)"/>
 						</field>
 					</xsl:if>
 					<xsl:for-each select="$rdf/*[@rdf:about=$href]/skos:relatedMatch[contains(@rdf:resource, 'pleiades.stoa.org')]">
