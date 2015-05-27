@@ -35,6 +35,7 @@ AddHandler cgi-script cgi php py
 error_reporting(0);
 ignore_user_abort(true);
 set_time_limit(0);
+ini_set("auto_detect_line_endings", "1");
 
 //get unique id of recently uploaded Filemaker CSV from request parameter
 //the line below is for passing request parameters from the command line.
