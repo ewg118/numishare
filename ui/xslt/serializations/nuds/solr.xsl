@@ -176,7 +176,7 @@
 			</xsl:choose>
 
 			<!-- text -->
-			<field name="text">
+			<field name="fulltext">
 				<xsl:value-of select="nuds:control/nuds:recordId"/>
 				<xsl:text> </xsl:text>
 				<xsl:for-each select="nuds:descMeta/descendant-or-self::text()">

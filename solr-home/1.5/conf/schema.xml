@@ -74,7 +74,7 @@
 	
 	<!-- all of the actual search categories -->
 	<!-- text -->
-	<field name="text" type="text_general" indexed="true" stored="false" multiValued="true"/>
+	<field name="fulltext" type="text_general" indexed="true" stored="false" multiValued="true"/>
 	<dynamicField name="*_text" type="text_general" indexed="true" stored="false" multiValued="true"/>
 	<copyField source="obv_type_text" dest="type_text"/>
 	<copyField source="rev_type_text" dest="type_text"/>
@@ -142,7 +142,7 @@
 
 	<uniqueKey>id</uniqueKey>
 	<!-- field for the QueryParser to use when an explicit fieldname is absent -->
-	<defaultSearchField>text</defaultSearchField>
+	<defaultSearchField>fulltext</defaultSearchField>
 
 	<!-- SolrQueryParser configuration: defaultOperator="AND|OR" -->
 	<solrQueryParser defaultOperator="AND"/>
