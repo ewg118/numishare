@@ -81,7 +81,7 @@
 			<xsl:choose>
 				<xsl:when test="contains($name, '_facet')">
 					<!-- display only those search options when their facet equivalent has hits -->
-					<xsl:if test="$facets//lst[@name=$name][number(int[@name='numFacetTerms']) &gt; 0]">
+					<xsl:if test="$facets//lst[@name=$name]">
 						<option value="{$name}" class="search_option">
 							<xsl:value-of select="numishare:normalize_fields($name, $lang)"/>
 						</option>
