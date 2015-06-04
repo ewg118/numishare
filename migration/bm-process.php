@@ -86,7 +86,7 @@ function query_bm($id){
            ?wDiameter ecrm:P90_has_value ?diameter
     }
   OPTIONAL {
-     object:CGR279727 ecrm:P1_is_identified_by ?identifier.
+     object:OBJECT ecrm:P1_is_identified_by ?identifier.
      ?identifier ecrm:P2_has_type <http://collection.britishmuseum.org/id/thesauri/identifier/codexid> ;
         rdfs:label ?objectId
     }
@@ -115,10 +115,10 @@ function query_bm($id){
 						$xml .= '<nmo:hasAxis rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">' . $row[$field] . '</nmo:hasAxis>';
 						break;
 					case 'weight':
-						$xml .= '<nmo:hasWeight rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">' . $row[$field] . '</nmo:hasWeight>';
+						$xml .= '<nmo:hasWeight rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">' . $row[$field] . '</nmo:hasWeight>';
 						break;
 					case 'diameter':
-						$xml .= '<nmo:hasDiameter rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">' . $row[$field] . '</nmo:hasDiameter>';
+						$xml .= '<nmo:hasDiameter rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">' . $row[$field] . '</nmo:hasDiameter>';
 						break;
 				}
 			}
