@@ -367,7 +367,7 @@
 				<h4><xsl:value-of select="numishare:normalize_fields('typeNumber', $lang)"/></h4>
 				<input type="text" id="typeNumber" class="form-control">
 					<xsl:if test="$tokenized_q[contains(., 'typeNumber')]">
-						<xsl:attribute name="value" select="substring-after($tokenized_q[contains(., 'typeNumber')], ':')"/>
+						<xsl:attribute name="value" select="substring-after($tokenized_q[contains(., 'typeNumber')][1], ':')"/>
 					</xsl:if>
 				</input>
 			</xsl:if>
