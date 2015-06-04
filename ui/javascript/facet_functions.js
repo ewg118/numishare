@@ -12,7 +12,7 @@ function getQuery() {
 	var query_terms = $('#facet_form_query').attr('value').split(' AND ');
 	var non_facet_terms = new Array();
 	for (i in query_terms) {
-		if (query_terms[i].indexOf('_facet') < 0 && query_terms[i].indexOf('dob_num') < 0 && query_terms[i].indexOf('taq_num') < 0 && query_terms[i] != '*:*') {
+		if (query_terms[i].indexOf('_facet') < 0 && query_terms[i].indexOf('dob_num') < 0 && query_terms[i].indexOf('taq_num') < 0 && query_terms[i] != '*:*' && query_terms[i].indexOf('typeNumber') < 0) {
 			non_facet_terms.push(query_terms[i]);
 		}
 	}
