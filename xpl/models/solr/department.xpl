@@ -59,10 +59,10 @@
 					<xsl:choose>
 						<!-- handle the value of the q parameter or pass *:* as a default when q is not specified -->
 						<xsl:when test="string($lang)">
-							<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+lang:', $lang, '+AND+department_facet:', encode-for-uri(concat('&#x022;', $department_facet, '&#x022;')), '&amp;rows=0', $facets, '&amp;facet.limit=1&amp;facet.sort=index&amp;facet=true')"/>
+							<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+lang:', $lang, '+AND+department_facet:', encode-for-uri(concat('&#x022;', $department_facet, '&#x022;')), '&amp;rows=0', $facets, '&amp;facet.numFacetTerms=1')"/>
 						</xsl:when>
 						<xsl:otherwise>
-							<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+NOT(lang:*)+AND+department_facet:', encode-for-uri(concat('&#x022;', $department_facet, '&#x022;')), '&amp;rows=0', $facets, '&amp;facet.limit=1&amp;facet.sort=index&amp;facet=true')"/>
+							<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+NOT(lang:*)+AND+department_facet:', encode-for-uri(concat('&#x022;', $department_facet, '&#x022;')), '&amp;rows=0', $facets, '&amp;facet.numFacetTerms=1')"/>
 						</xsl:otherwise>
 					</xsl:choose>	
 				</xsl:variable>
