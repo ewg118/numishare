@@ -28,7 +28,7 @@
 						</xsl:otherwise>
 					</xsl:choose>
 				</h4>
-			</div>			
+			</div>
 			<div>
 				<xsl:choose>
 					<xsl:when test="$mode='compare'">
@@ -345,8 +345,8 @@
 				<xsl:apply-templates select="lst[(@name='taq_num' or @name='findspot_hier' or @name='reference_facet') and number(int) &gt; 0]" mode="facet"/>
 				<h4>Contents</h4>
 				<xsl:apply-templates select="lst[(@name='authority_facet'or @name='coinType_facet' or @name='deity_facet' or @name='denomination_facet' or @name='issuer_facet' or
-					@name='manufacture_facet' or @name='material_facet' or @name='mint_facet' or @name='objectType_facet' or @name='portrait_facet' or @name='region_facet') and
-					number(int) &gt; 0]" mode="facet"/>
+					@name='manufacture_facet' or @name='material_facet' or @name='mint_facet' or @name='objectType_facet' or @name='portrait_facet' or @name='region_facet') and      number(int) &gt;
+					0]" mode="facet"/>
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:apply-templates select="lst[not(contains(@name, '_geo')) and number(int) &gt; 0]" mode="facet"/>
@@ -361,17 +361,20 @@
 					</xsl:if>
 				</xsl:for-each>
 			</xsl:variable>
-			
+
 			<!-- coin type number -->
 			<xsl:if test="$collection_type = 'cointype'">
-				<h4><xsl:value-of select="numishare:normalize_fields('typeNumber', $lang)"/></h4>
+				<h4>
+					<xsl:value-of select="numishare:normalize_fields('typeNumber', $lang)"/>
+				</h4>
+				<p><a href="https://lucene.apache.org/core/2_9_4/queryparsersyntax.html#Wildcard%20Searches">Wildcards</a><xsl:text> </xsl:text><b>*</b> and <b>?</b> are supported.</p>
 				<input type="text" id="typeNumber" class="form-control">
 					<xsl:if test="$tokenized_q[contains(., 'typeNumber')]">
 						<xsl:attribute name="value" select="substring-after($tokenized_q[contains(., 'typeNumber')][1], ':')"/>
 					</xsl:if>
 				</input>
 			</xsl:if>
-			
+
 			<!-- date ranges -->
 			<h4>
 				<xsl:choose>
@@ -406,8 +409,8 @@
 					<option value="minus">B.C.</option>
 					<option value="" selected="selected">A.D.</option>
 				</select>
-			</div>		
-			
+			</div>
+
 			<!-- hidden params -->
 			<input type="hidden" name="q" id="facet_form_query" value="{if (string($imageavailable_stripped)) then $imageavailable_stripped else '*:*'}"/>
 			<xsl:if test="string($lang)">
@@ -430,7 +433,7 @@
 			<input type="submit" value="{numishare:normalizeLabel('results_refine-search', $lang)}" id="search_button" class="btn btn-default"/>
 		</form>
 	</xsl:template>
-	
+
 	<xsl:template match="lst" mode="facet">
 		<xsl:variable name="val" select="@name"/>
 		<xsl:variable name="new_query">
@@ -511,9 +514,9 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
-	
+
 	<xsl:template match="lst[@name='mint_geo']" mode="facet"/>
-	
+
 	<xsl:template name="result_image">
 		<xsl:param name="alignment"/>
 		<div class="col-md-5 col-lg-4 {$alignment}">
@@ -1041,10 +1044,10 @@
 					<xsl:text>authority,taq_num,timestamp,deity,denomination,dynasty,findspot,issuer,manufacture,material,mint,obv_leg_display,portrait,region,rev_leg_display</xsl:text>
 				</xsl:when>
 				<xsl:when test="$collection_type='cointype'">
-					<xsl:text>authority,timestamp,deity,denomination,findspot,issuer,manufacture,material,mint,obv_leg_display,portrait,region,rev_leg_display,year</xsl:text>					
+					<xsl:text>authority,timestamp,deity,denomination,findspot,issuer,manufacture,material,mint,obv_leg_display,portrait,region,rev_leg_display,year</xsl:text>
 				</xsl:when>
 				<xsl:otherwise>
-					<xsl:text>authority,axis,timestamp,deity,denomination,diameter,findspot,issuer,manufacture,material,mint,obv_leg_display,portrait,region,rev_leg_display,weight,year</xsl:text>					
+					<xsl:text>authority,axis,timestamp,deity,denomination,diameter,findspot,issuer,manufacture,material,mint,obv_leg_display,portrait,region,rev_leg_display,weight,year</xsl:text>
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
@@ -1052,7 +1055,7 @@
 		<div class="row">
 			<div class="col-md-12">
 				<form role="form" class="sortForm form-inline" action="results" method="GET">
-					<div class="form-group">						
+					<div class="form-group">
 						<select class="sortForm_categories form-control">
 							<option value="null">
 								<xsl:value-of select="numishare:normalizeLabel('results_select', $lang)"/>
@@ -1155,14 +1158,15 @@
 				</span>
 			</div>
 			<div class="col-md-2 right">
-				<a class="remove_filter" href="{$display_path}results?q={if (string($new_query)) then encode-for-uri($new_query) else '*:*'}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+				<a class="remove_filter" href="{$display_path}results?q={if (string($new_query)) then encode-for-uri($new_query) else '*:*'}{if (string($lang)) then concat('&amp;lang=', $lang) else
+					''}">
 					<span class="glyphicon glyphicon-remove"/>
 				</a>
 			</div>
 		</div>
 	</xsl:template>
 	<!-- ************** PROCESS GROUP OF SPARQL RESULTS FROM NOMISMA TO DISPLAY IMAGES ************** -->
-	<xsl:template match="group" mode="results">		
+	<xsl:template match="group" mode="results">
 		<xsl:variable name="hoard-count" select="number(hoard-count)"/>
 		<xsl:variable name="object-count" select="number(object-count)"/>
 		<xsl:variable name="count" select="$hoard-count + $object-count"/>
@@ -1170,7 +1174,7 @@
 		<xsl:apply-templates select="descendant::object" mode="results"/>
 		<!-- object count -->
 		<xsl:if test="$count &gt; 0">
-			<br/>			
+			<br/>
 			<xsl:if test="$object-count &gt; 0">
 				<xsl:choose>
 					<xsl:when test="$object-count = 1">object</xsl:when>
