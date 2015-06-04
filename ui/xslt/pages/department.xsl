@@ -45,7 +45,7 @@
 	<xsl:param name="rows" as="xs:integer"/>
 	<xsl:param name="pipeline"/>
 	<xsl:param name="side"/>
-	<xsl:param name="numFound" as="xs:integer"/>
+	<xsl:variable name="numFound" select="//result[@name='response']/@numFound" as="xs:integer"/>
 	<xsl:variable name="tokenized_q"/>
 	<xsl:variable name="collection_type" select="/content//collection_type"/>
 	<xsl:variable name="sparqlResult" as="item()*">
@@ -299,7 +299,8 @@
 						<xsl:apply-templates select="lst[@name='category_hier']" mode="facet"/>
 						<!--<xsl:apply-templates select="lst[@name='century_num']" mode="facet"/>-->
 					</xsl:when>
-					<xsl:when test="$department_facet='Islamic' or $department_facet = 'East Asian' or $department_facet = 'South Asian' or $department_facet='Modern' or $department_facet='United States' or $department_facet='Latin American'">
+					<xsl:when test="$department_facet='Islamic' or $department_facet = 'East Asian' or $department_facet = 'South Asian' or $department_facet='Modern' or $department_facet='United
+						States' or $department_facet='Latin American'">
 						<xsl:apply-templates select="lst[@name='region_facet']" mode="facet"/>
 						<xsl:apply-templates select="lst[@name='locality_facet']" mode="facet"/>
 						<xsl:apply-templates select="lst[@name='mint_facet']" mode="facet"/>
