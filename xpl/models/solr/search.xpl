@@ -23,7 +23,7 @@
 		<p:input name="data" href="#config"/>
 		<p:input name="config">
 			<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-				<xsl:variable name="collection-name" select="substring-before(substring-after(doc('input:request')/request/servlet-path, 'numishare/'), '/')"/>
+				<xsl:variable name="collection-name" select="substring-before(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/')"/>
 				<!-- url params -->
 				<xsl:param name="lang" select="doc('input:request')/request/parameters/parameter[name='lang']/value"/>
 				<xsl:param name="q" select="doc('input:request')/request/parameters/parameter[name='q']/value"/>
@@ -40,10 +40,10 @@
 							<xsl:choose>
 								<!-- handle the value of the q parameter or pass *:* as a default when q is not specified -->
 								<xsl:when test="string($lang)">
-									<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+lang:', $lang, '+AND+imagesavailable:true&amp;rows=0', $facets, '&amp;facet.numFacetTerms=1')"/>
+									<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+lang:', $lang, '+AND+imagesavailable:true&amp;rows=0', $facets, '&amp;facet.limit=1')"/>
 								</xsl:when>
 								<xsl:otherwise>
-									<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+NOT(lang:*)+AND+imagesavailable:true&amp;rows=0', $facets, '&amp;facet.numFacetTerms=1')"/>
+									<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+NOT(lang:*)+AND+imagesavailable:true&amp;rows=0', $facets, '&amp;facet.limit=1')"/>
 								</xsl:otherwise>
 							</xsl:choose>
 						</xsl:when>
@@ -53,10 +53,10 @@
 									<xsl:choose>
 										<!-- handle the value of the q parameter or pass *:* as a default when q is not specified -->
 										<xsl:when test="string($lang)">
-											<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+lang:', $lang, '+AND+', encode-for-uri($q), '&amp;rows=0', $facets, '&amp;facet.numFacetTerms=1')"/>
+											<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+lang:', $lang, '+AND+', encode-for-uri($q), '&amp;rows=0', $facets, '&amp;facet.limit=1')"/>
 										</xsl:when>
 										<xsl:otherwise>
-											<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+NOT(lang:*)+AND+', encode-for-uri($q), '&amp;rows=0', $facets, '&amp;facet.numFacetTerms=1')"/>
+											<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+NOT(lang:*)+AND+', encode-for-uri($q), '&amp;rows=0', $facets, '&amp;facet.limit=1')"/>
 										</xsl:otherwise>
 									</xsl:choose>
 								</xsl:when>
@@ -64,10 +64,10 @@
 									<xsl:choose>
 										<!-- handle the value of the q parameter or pass *:* as a default when q is not specified -->
 										<xsl:when test="string($lang)">
-											<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+lang:', $lang, '&amp;rows=0', $facets, '&amp;facet.numFacetTerms=1')"/>
+											<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+lang:', $lang, '&amp;rows=0', $facets, '&amp;facet.limit=1')"/>
 										</xsl:when>
 										<xsl:otherwise>
-											<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+NOT(lang:*)&amp;rows=0', $facets, '&amp;facet.numFacetTerms=1')"/>
+											<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+NOT(lang:*)&amp;rows=0', $facets, '&amp;facet.limit=1')"/>
 										</xsl:otherwise>
 									</xsl:choose>
 								</xsl:otherwise>
@@ -77,10 +77,10 @@
 							<xsl:choose>
 								<!-- handle the value of the q parameter or pass *:* as a default when q is not specified -->
 								<xsl:when test="string($lang)">
-									<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+lang:', $lang, '&amp;rows=0', $facets, '&amp;facet.numFacetTerms=1')"/>
+									<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+lang:', $lang, '&amp;rows=0', $facets, '&amp;facet.limit=1')"/>
 								</xsl:when>
 								<xsl:otherwise>
-									<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+NOT(lang:*)&amp;rows=0', $facets, '&amp;facet.numFacetTerms=1')"/>
+									<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+NOT(lang:*)&amp;rows=0', $facets, '&amp;facet.limit=1')"/>
 								</xsl:otherwise>
 							</xsl:choose>
 						</xsl:otherwise>

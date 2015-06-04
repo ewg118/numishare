@@ -14,6 +14,7 @@
 	<xsl:param name="lang" select="doc('input:request')/request/parameters/parameter[name='lang']/value"/>
 	<xsl:param name="department" select="doc('input:request')/request/parameters/parameter[name='department']/value"/>
 	<xsl:variable name="tokenized_q" select="tokenize($q, ' AND ')"/>
+	<xsl:variable name="numFound" select="//result[@name='response']/@numFound" as="xs:integer"/>
 
 	<xsl:template match="/">
 		<html>
@@ -222,8 +223,7 @@
 	</xsl:template>
 
 	<xsl:template match="lst[@name='facet_fields']">
-		<xsl:for-each select="lst[not(@name='mint_geo') and number(int[@name='numFacetTerms']) &gt; 0 and not(@name='mint_facet') and not(@name='department_facet')]|lst[@name='mint_facet' and
-			$collection_type='hoard']">
+		<xsl:for-each select="lst[not(@name='mint_geo') and count(int) &gt; 0 and not(@name='mint_facet') and not(@name='department_facet')]|lst[@name='mint_facet' and    $collection_type='hoard']">
 
 			<xsl:variable name="val" select="@name"/>
 			<xsl:variable name="new_query">
@@ -283,11 +283,10 @@
 						</div>-->
 				</xsl:when>
 				<xsl:otherwise>
-					<xsl:variable name="count" select="number(int[@name='numFacetTerms'])"/>
 					<xsl:variable name="mincount" as="xs:integer">
 						<xsl:choose>
-							<xsl:when test="$count &gt; 500">
-								<xsl:value-of select="ceiling($count div 500)"/>
+							<xsl:when test="$numFound &gt; 200000">
+								<xsl:value-of select="ceiling($numFound div 200000)"/>
 							</xsl:when>
 							<xsl:otherwise>1</xsl:otherwise>
 						</xsl:choose>

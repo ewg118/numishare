@@ -196,7 +196,7 @@
 			<!-- include checkbox categories -->
 			<div class="row">
 				<h3>3. <xsl:value-of select="numishare:normalizeLabel('visualize_categories', $lang)"/></h3>
-				<xsl:for-each select="//lst[@name='facet_fields']/lst[number(int[@name='numFacetTerms']) &gt; 0]">
+				<xsl:for-each select="//lst[@name='facet_fields']/lst[count(int) &gt; 0]">
 					<xsl:variable name="query_fragment" select="@name"/>
 					<div class="col-md-2">
 						<xsl:choose>
