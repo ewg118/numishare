@@ -47,10 +47,20 @@
 				<field name="lang">
 					<xsl:value-of select="$lang"/>
 				</field>
-			</xsl:if>
-			<xsl:call-template name="sortid">
-				<xsl:with-param name="collection-name" select="$collection-name"/>
-			</xsl:call-template>
+			</xsl:if>			
+			
+			<xsl:if test="@recordType='conceptual'">
+				<!-- get the sort id for coin type records, used for ordering by type number -->
+				<xsl:call-template name="sortid">
+					<xsl:with-param name="collection-name" select="$collection-name"/>
+				</xsl:call-template>
+				
+				<!-- index the type number for specific query -->
+				<xsl:call-template name="typeNumber">
+					<xsl:with-param name="collection-name" select="$collection-name"/>
+				</xsl:call-template>
+			</xsl:if>			
+			
 			<field name="collection-name">
 				<xsl:value-of select="$collection-name"/>
 			</field>

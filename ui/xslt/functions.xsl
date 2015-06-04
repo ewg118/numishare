@@ -1156,6 +1156,7 @@
 					<xsl:when test="$label='testmark'">Test Mark</xsl:when>
 					<xsl:when test="$label='typeDesc'">Typological Description</xsl:when>
 					<xsl:when test="$label = 'timestamp'">Date Record Modified</xsl:when>
+					<xsl:when test="$label='typeNumber'">Coin Type Number</xsl:when>
 					<xsl:when test="$label='undertypeDesc'">Undertype Description</xsl:when>
 					<xsl:otherwise>
 						<xsl:value-of select="concat(upper-case(substring($label, 1, 1)), substring($label, 2))"/>

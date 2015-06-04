@@ -6,9 +6,9 @@
 	Modification date: April 2012
 -->
 <xsl:stylesheet xmlns:nuds="http://nomisma.org/nuds" xmlns:nh="http://nomisma.org/nudsHoard" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:datetime="http://exslt.org/dates-and-times"
-	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink"
-	xmlns:mods="http://www.loc.gov/mods/v3" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:numishare="https://github.com/ewg118/numishare"
-	exclude-result-prefixes="#all" version="2.0">
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mods="http://www.loc.gov/mods/v3"
+	xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:numishare="https://github.com/ewg118/numishare" exclude-result-prefixes="#all"
+	version="2.0">
 
 	<xsl:template match="nuds:typeDesc">
 		<xsl:param name="recordType"/>
@@ -47,12 +47,12 @@
 
 		<!-- *********** FACETS ************** -->
 
-		<xsl:apply-templates
-			select="nuds:objectType | nuds:denomination[string(.) or string(@xlink:href)] | nuds:manufacture[string(.) or string(@xlink:href)] | nuds:material[string(.) or string(@xlink:href)]">
+		<xsl:apply-templates select="nuds:objectType | nuds:denomination[string(.) or string(@xlink:href)] | nuds:manufacture[string(.) or string(@xlink:href)] | nuds:material[string(.) or
+			string(@xlink:href)]">
 			<xsl:with-param name="lang" select="$lang"/>
 		</xsl:apply-templates>
-		<xsl:apply-templates
-			select="descendant::nuds:persname[string(.) or string(@xlink:href)] | descendant::nuds:corpname[string(.) or string(@xlink:href)] | descendant::nuds:geogname[string(.) or string(@xlink:href)]|descendant::nuds:famname[string(.) or string(@xlink:href)]">
+		<xsl:apply-templates select="descendant::nuds:persname[string(.) or string(@xlink:href)] | descendant::nuds:corpname[string(.) or string(@xlink:href)] | descendant::nuds:geogname[string(.) or
+			string(@xlink:href)]|descendant::nuds:famname[string(.) or string(@xlink:href)]">
 			<xsl:with-param name="lang" select="$lang"/>
 		</xsl:apply-templates>
 
@@ -162,23 +162,23 @@
 						<xsl:text>|</xsl:text>
 						<xsl:value-of select="$geonames//place[@id=$href]"/>
 					</field>
-					
+
 					<field name="{@xlink:role}_loc">
 						<xsl:value-of select="concat(tokenize($geonames//place[@id=$href], ',')[2], ',', tokenize($geonames//place[@id=$href], ',')[1])"/>
 					</field>
-					
+
 					<!-- insert hierarchical facets -->
 					<xsl:variable name="hierarchy_pieces" select="tokenize($geonames//place[@id=$href]/@hierarchy, '\|')"/>
 					<xsl:variable name="count" select="count($hierarchy_pieces)"/>
-					
+
 					<xsl:for-each select="$hierarchy_pieces">
-						<xsl:variable name="position" select="position()"/>				
-						
+						<xsl:variable name="position" select="position()"/>
+
 						<xsl:choose>
 							<xsl:when test="$position = 1">
 								<field name="{$role}_hier">
-									<xsl:value-of select="concat('L', position(), '|', substring-after(., '/'), '/', substring-before(., '/'))"/>						
-								</field>						
+									<xsl:value-of select="concat('L', position(), '|', substring-after(., '/'), '/', substring-before(., '/'))"/>
+								</field>
 							</xsl:when>
 							<xsl:otherwise>
 								<field name="{$role}_hier">
@@ -186,7 +186,7 @@
 								</field>
 							</xsl:otherwise>
 						</xsl:choose>
-						
+
 						<field name="{$role}_text">
 							<xsl:value-of select="substring-after(., '/')"/>
 						</field>
@@ -222,7 +222,7 @@
 							<xsl:text>|</xsl:text>
 							<xsl:value-of select="concat($rdf/*[@rdf:about=concat($href, '#this')]/geo:long, ',', $rdf/*[@rdf:about=concat($href, '#this')]/geo:lat)"/>
 						</field>
-						
+
 						<field name="{@xlink:role}_loc">
 							<xsl:value-of select="concat($rdf/*[@rdf:about=concat($href, '#this')]/geo:lat, ',', $rdf/*[@rdf:about=concat($href, '#this')]/geo:long)"/>
 						</field>
@@ -450,20 +450,40 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
-	
+
+	<!-- typeNumber -->
+	<xsl:template name="typeNumber">
+		<xsl:param name="collection-name"/>
+
+		<xsl:choose>
+			<xsl:when test="$collection-name='crro'">
+				<field name="typeNumber">
+					<xsl:value-of select="substring-after(nuds:control/nuds:recordId, 'rrc-')"/>
+				</field>
+			</xsl:when>
+			<xsl:when test="$collection-name='ocre'">
+				<xsl:variable name="pieces" select="tokenize(nuds:control/nuds:recordId, '\.')"></xsl:variable>
+				
+				<field name="typeNumber">
+					<xsl:value-of select="if(count($pieces) = 4) then $pieces[4] else concat($pieces[4], '.', $pieces[5])"/>
+				</field>
+			</xsl:when>
+		</xsl:choose>
+
+	</xsl:template>
+
 	<!-- sortid -->
 	<xsl:template name="sortid">
 		<xsl:param name="collection-name"/>
-		
+
 		<xsl:choose>
 			<xsl:when test="$collection-name='crro'">
 				<field name="sortid">
 					<!--<xsl:variable name="segs" select="tokenize(substring-after(nuds:control/nuds:recordId, 'rrc-'), '\.')"/>-->
 					<xsl:analyze-string select="substring-after(nuds:control/nuds:recordId, 'rrc-')" regex="([0-9]+)(^[\.]+)?(\.)?([0-9]+)?([A-z]+)?">
 						<xsl:matching-substring>
-							<xsl:value-of
-								select="concat(format-number(number(regex-group(1)), '0000'), regex-group(2), regex-group(3), if (number(regex-group(4))) then format-number(number(regex-group(4)), '0000') else '', regex-group(5))"
-							/>
+							<xsl:value-of select="concat(format-number(number(regex-group(1)), '0000'), regex-group(2), regex-group(3), if (number(regex-group(4))) then
+								format-number(number(regex-group(4)), '0000') else '', regex-group(5))"/>
 						</xsl:matching-substring>
 						<xsl:non-matching-substring>
 							<xsl:value-of select="."/>
@@ -471,13 +491,13 @@
 					</xsl:analyze-string>
 				</field>
 			</xsl:when>
-			
+
 			<xsl:when test="$collection-name='igch'">
 				<field name="sortid">
 					<xsl:value-of select="nh:control/nh:recordId"/>
 				</field>
 			</xsl:when>
-			
+
 			<xsl:when test="$collection-name='ocre'">
 				<field name="sortid">
 					<xsl:variable name="segs" select="tokenize(nuds:control/nuds:recordId, '\.')"/>
@@ -531,7 +551,7 @@
 							<xsl:when test="$segs[3] = 'jot'">42</xsl:when>
 							<xsl:when test="$segs[3] = 'mar_s'">43</xsl:when>
 							<xsl:when test="$segs[3] = 'spon'">44</xsl:when>
-							<xsl:when test="$segs[3] = 'tr_d'">45</xsl:when>	
+							<xsl:when test="$segs[3] = 'tr_d'">45</xsl:when>
 							<xsl:when test="$segs[3] = 'tr_g'">46</xsl:when>
 							<xsl:when test="$segs[3] = 'vo'">47</xsl:when>
 							<xsl:when test="$segs[3] = 'aem'">48</xsl:when>
@@ -553,13 +573,13 @@
 						<xsl:analyze-string regex="([0-9]+)(.*)" select="$segs[4]">
 							<xsl:matching-substring>
 								<xsl:value-of select="concat(format-number(number(regex-group(1)), '0000'), regex-group(2))"/>
-							</xsl:matching-substring>	
+							</xsl:matching-substring>
 						</xsl:analyze-string>
-					</xsl:variable>	
+					</xsl:variable>
 					<xsl:value-of select="concat($auth, '.', $num)"/>
 				</field>
 			</xsl:when>
 		</xsl:choose>
-		
+
 	</xsl:template>
 </xsl:stylesheet>

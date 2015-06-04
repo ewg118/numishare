@@ -66,8 +66,8 @@
 	<!-- field for if a hoard has contents: used for comparisons -->
 	<field name="hasContents" type="string" indexed="true" stored="true"/>
 	
-	<!-- parent document codes -->
-	<field name="institution_code" type="string" indexed="true" stored="true"/>
+	<!-- index typeNumber for coin types -->
+	<field name="typeNumber" type="string" indexed="true" stored="true"/>
 	
 	<!-- index timestamp -->
 	<field name="timestamp" type="date" stored="true"/>
