@@ -322,7 +322,9 @@ select[name = "interval"],
 .sort_div{
 	margin-bottom:20px;
 }
-
+#typeNumber {
+	width:250px;
+}
 /*
   ***************************************
   FACET STYLING: RESULTS AND MAPS
