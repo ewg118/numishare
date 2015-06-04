@@ -81,6 +81,13 @@ function getQuery() {
 		}
 	}
 	
+	//get typeNumber
+	if ($('#typeNumber').length > 0) {
+		if ($('#typeNumber').val().length > 0) {
+			query.push('typeNumber:' + $('#typeNumber').val());
+		}
+	}
+	
 	if ($('#imagesavailable') .is(':checked')) {
 		query.push('imagesavailable:true');
 	}

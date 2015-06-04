@@ -361,6 +361,13 @@
 					</xsl:if>
 				</xsl:for-each>
 			</xsl:variable>
+			
+			<!-- coin type number -->
+			<xsl:if test="$collection_type = 'cointype'">
+				<h4><xsl:value-of select="numishare:normalize_fields('typeNumber', $lang)"/></h4>
+				<input type="text" id="typeNumber" class="form-control"/>
+			</xsl:if>
+			
 			<!-- date ranges -->
 			<h4>
 				<xsl:choose>
@@ -395,7 +402,8 @@
 					<option value="minus">B.C.</option>
 					<option value="" selected="selected">A.D.</option>
 				</select>
-			</div>
+			</div>		
+			
 			<!-- hidden params -->
 			<input type="hidden" name="q" id="facet_form_query" value="{if (string($imageavailable_stripped)) then $imageavailable_stripped else '*:*'}"/>
 			<xsl:if test="string($lang)">
