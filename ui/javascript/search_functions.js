@@ -59,7 +59,7 @@ $(document).ready(function () {
 	
 	$('.inputContainer').on('change', '.searchItemTemplate .category_list', function () {
 		var field = $(this) .children("option:selected") .val();
-		if (field.indexOf('text') > 0 || field.indexOf('display') > 0 || field=='recordId') {
+		if (field.indexOf('text') > 0 || field.indexOf('display') > 0 || field=='recordId' || field=='typeNumber') {
 			if ($(this) .parent() .children('.option_container') .children('input') .attr('class') != 'search_text') {
 				$(this) .parent() .children('.option_container') .html('');
 				$(this) .parent() .children('.option_container') .html('<input type="text" id="search_text" class="search_text form-control"/>');
