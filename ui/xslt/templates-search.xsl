@@ -3,7 +3,7 @@
 	<!-- ************** SEARCH FORM ************** -->
 	<xsl:template name="search_forms">
 		<div class="search-form">
-			<p>To conduct a free text search select ‘Keyword’ on the drop-down menu above and enter the text for which you wish to search. The search allows wildcard searches with the * and ?
+			<p>To conduct a free text search select ‘Keyword’ on the drop-down menu and enter the text for which you wish to search. The search allows wildcard searches with the <b>*</b> and <b>?</b>
 				characters and exact string matches by surrounding phrases by double quotes (like Google). <a href="http://lucene.apache.org/java/2_9_1/queryparsersyntax.html#Term%20Modifiers"
 					target="_blank">See the Lucene query syntax</a> documentation for more information.</p>
 			<form id="advancedSearchForm" method="GET" action="results">
@@ -73,11 +73,11 @@
 					<xsl:text>fulltext,artist_facet,authority_facet,coinType_facet,deity_facet,denomination_facet,diameter_num,dynasty_facet,issuer_facet,legend_text,obv_leg_text,rev_leg_text,maker_facet,manufacture_facet,material_facet,mint_facet,objectType_facet,portrait_facet,recordId,reference_facet,region_facet,type_text,obv_type_text,rev_type_text,weight_num,year_num</xsl:text>
 				</xsl:otherwise>
 			</xsl:choose>
-			
+
 		</xsl:variable>
 
 		<xsl:for-each select="tokenize($fields, ',')">
-			<xsl:variable name="name" select="."/>	
+			<xsl:variable name="name" select="."/>
 			<xsl:choose>
 				<xsl:when test="contains($name, '_facet')">
 					<!-- display only those search options when their facet equivalent has hits -->
@@ -93,7 +93,7 @@
 						<xsl:value-of select="numishare:normalize_fields($name, $lang)"/>
 					</option>
 				</xsl:otherwise>
-			</xsl:choose>			
+			</xsl:choose>
 		</xsl:for-each>
 	</xsl:template>
 </xsl:stylesheet>
