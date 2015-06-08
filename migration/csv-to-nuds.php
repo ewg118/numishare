@@ -1,6 +1,6 @@
 <?php 
 
-$data = generate_json('/home/komet/ans_migration/ocre/15.csv');
+$data = generate_json('/home/komet/ans_migration/ocre/17.csv');
 $deities_array = generate_json('deities.csv');
 $nomismaUris = array();
 $errors = array();
@@ -599,6 +599,9 @@ function get_title($nudsid){
 			break;
 		case 'qjg':
 			$auth = 'Quintus Julius Gallienus';
+			break;
+		case 'gall(2)':
+			$auth = 'Gallienus';
 			break;
 	}
 	
