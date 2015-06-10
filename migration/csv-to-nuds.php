@@ -1,6 +1,6 @@
 <?php 
 
-$data = generate_json('/home/komet/ans_migration/ocre/17.csv');
+$data = generate_json('/home/komet/ans_migration/ocre/15.csv');
 $deities_array = generate_json('deities.csv');
 $nomismaUris = array();
 $errors = array();
@@ -67,11 +67,11 @@ function generate_nuds($row){
 		//first, deal with ids with an additional subtype number
 		$new = array_slice($pieces, 0, 4);		
 		$xml .= '<otherRecordId semantic="skos:broader">' . implode('.', $new) . '</otherRecordId>';
-		$xml .= '<publicationStatus>appprovedSubtype</publicationStatus>';
+		$xml .= '<publicationStatus>approvedSubtype</publicationStatus>';
 	} elseif (strlen(trim($row['Parent Nomisma id'])) > 0) {
 		//then look for content in $row['Parent Nomisma id']
 		$xml .= '<otherRecordId semantic="skos:broader">' . trim($row['Parent Nomisma id']) . '</otherRecordId>';
-		$xml .= '<publicationStatus>appprovedSubtype</publicationStatus>';
+		$xml .= '<publicationStatus>approvedSubtype</publicationStatus>';
 	} else {
 		$xml .= '<publicationStatus>approved</publicationStatus>';
 	}
