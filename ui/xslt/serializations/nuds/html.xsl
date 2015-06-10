@@ -66,29 +66,43 @@ ASK {?contents nmo:hasTypeSeriesItem <URI> .
 									</xsl:if>
 									<xsl:value-of select="normalize-space(nuds:descMeta/nuds:title)"/>
 								</h1>
-								<a href="#examples"><xsl:value-of select="numishare:normalizeLabel('display_examples', $lang)"/></a> | <a href="#charts"><xsl:value-of
-										select="numishare:normalizeLabel('display_quantitative', $lang)"/></a>
+								<p>
+									<xsl:if test="string($sparql_endpoint)">
+										<a href="#examples">
+											<xsl:value-of select="numishare:normalizeLabel('display_examples', $lang)"/>
+										</a>
+										<xsl:text> | </xsl:text>
+									</xsl:if>
+									<xsl:if test="count($subtypes//subtype) &gt; 0">
+										<a href="#subtypes">Subtypes</a>
+										<xsl:text> | </xsl:text>
+									</xsl:if>
+									<a href="#charts">
+										<xsl:value-of select="numishare:normalizeLabel('display_quantitative', $lang)"/>
+									</a>
+								</p>
+								<xsl:if test="nuds:control/nuds:otherRecordId[@semantic='skos:broader']">
+									<xsl:variable name="broader" select="nuds:control/nuds:otherRecordId[@semantic='skos:broader']"/>
+									<p>Parent Type: <a href="{concat(//config/uri_space, $broader)}" rel="skos:broader"><xsl:value-of select="$broader"/></a></p>
+								</xsl:if>
 							</div>
 						</div>
 						<xsl:call-template name="nuds_content"/>
+
+						<!-- examples and subtypes -->
+						<xsl:if test="string($sparql_endpoint)">
+							<xsl:copy-of select="document(concat($request-uri, 'sparql?uri=', //config/uri_space, $id, '&amp;template=display'))/div[@id='examples']"/>
+						</xsl:if>
+
 						<!-- handle subtypes if they exist -->
-						<xsl:choose>
-							<xsl:when test="count($subtypes//subtype) &gt; 0">
-								<hr/>
-								<a name="examples"/>
-								<h3>Variants</h3>
-								<xsl:apply-templates select="$subtypes//subtype">
-									<xsl:with-param name="uri_space" select="//config/uri_space"/>
-								</xsl:apply-templates>
-							</xsl:when>
-							<xsl:otherwise>
-								<xsl:if test="string($sparql_endpoint)">
-									<xsl:if test="string($sparql_endpoint)">
-										<xsl:copy-of select="document(concat($request-uri, 'sparql?uri=', //config/uri_space, $id, '&amp;template=display'))/div[@id='examples']"/>
-									</xsl:if>
-								</xsl:if>
-							</xsl:otherwise>
-						</xsl:choose>
+						<xsl:if test="count($subtypes//subtype) &gt; 0">
+							<hr/>
+							<a name="subtypes"/>
+							<h3>Subtypes</h3>
+							<xsl:apply-templates select="$subtypes//subtype">
+								<xsl:with-param name="uri_space" select="//config/uri_space"/>
+							</xsl:apply-templates>
+						</xsl:if>
 						<div class="row">
 							<div class="col-md-12">
 								<xsl:if test="$recordType='conceptual' and string($sparql_endpoint) and //config/collection_type='cointype'">
