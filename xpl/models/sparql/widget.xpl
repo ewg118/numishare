@@ -89,6 +89,7 @@ OPTIONAL { ?object nmo:hasReverse ?reverse .
 ORDER BY ASC(?collection)]]>
 						</xsl:when>
 						<xsl:when test="$template = 'kml'"><![CDATA[ PREFIX rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX dcmitype:	<http://purl.org/dc/dcmitype/>
 PREFIX dcterms:  <http://purl.org/dc/terms/>
 PREFIX nm:       <http://nomisma.org/id/>
 PREFIX nmo:	<http://nomisma.org/ontology#>
@@ -97,8 +98,13 @@ PREFIX foaf:	<http://xmlns.com/foaf/0.1/>
 PREFIX skos:      <http://www.w3.org/2004/02/skos/core#>
 
 SELECT ?object ?title ?findspot ?hoard ?placeName ?hoardLabel ?lat ?long ?type ?burial WHERE {
-{ ?object nmo:hasTypeSeriesItem <typeUri> }
-UNION { ?contents nmo:hasTypeSeriesItem <typeUri> .
+{ ?object a nmo:NumismaticObject ;
+ nmo:hasTypeSeriesItem <typeUri>}
+UNION { ?broader skos:broader+ <typeUri> .
+?object nmo:hasTypeSeriesItem ?broader ;
+  a nmo:NumismaticObject }
+UNION { ?contents a dcmitype:Collection ; 
+  nmo:hasTypeSeriesItem <typeUri> .
 ?object dcterms:tableOfContents ?contents }
 ?object dcterms:title ?title .			
 { ?object nmo:hasFindspot ?findspot }
