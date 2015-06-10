@@ -157,8 +157,13 @@ PREFIX skos:      <http://www.w3.org/2004/02/skos/core#>
 PREFIX foaf:	<http://xmlns.com/foaf/0.1/>
 
 SELECT ?object ?title ?findspotLabel ?findspot ?lat ?long WHERE {
-{ ?object nmo:hasTypeSeriesItem <typeUri> }
-UNION { ?contents nmo:hasTypeSeriesItem <typeUri> .
+{ ?object a nmo:NumismaticObject ;
+ nmo:hasTypeSeriesItem <typeUri>}
+UNION { ?broader skos:broader+ <typeUri> .
+?object nmo:hasTypeSeriesItem ?broader ;
+  a nmo:NumismaticObject }
+UNION { ?contents a dcmitype:Collection ; 
+  nmo:hasTypeSeriesItem <typeUri> .
 ?object dcterms:tableOfContents ?contents }
 ?object dcterms:title ?title .			
 { ?object nmo:hasFindspot ?findspot }
