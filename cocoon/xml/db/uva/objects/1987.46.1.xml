@@ -1,137 +1,102 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<nuds xmlns="http://nomisma.org/nuds" xmlns:xlink="http://www.w3.org/1999/xlink"
-      xmlns:mets="http://www.loc.gov/METS/"
-      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      recordType="physical"
-      xsi:schemaLocation="http://nomisma.org/nuds http://nomisma.org/nuds/nuds.xsd">
-   <control>
-      <recordId>1987.46.1</recordId>
-      <maintenanceStatus>revised</maintenanceStatus>
-      <publicationStatus>approved</publicationStatus>
-      <maintenanceAgency>
-         <agencyName>University of Virginia Library</agencyName>
-         <agencyCode>US-viu</agencyCode>
-      </maintenanceAgency>
-      <maintenanceHistory>
-         <maintenanceEvent>
-            <eventType>derived</eventType>
-            <eventDateTime standardDateTime=""/>
-            <agentType>human</agentType>
-            <agent>Ethan Gruber and/or Carrie Sulosky</agent>
-            <eventDescription>Migrated from EAD to NUDS</eventDescription>
-         </maintenanceEvent>
-         <maintenanceEvent>
-            <eventType>revised</eventType>
-            <eventDateTime standardDateTime="2013-09-11T12:20:59.011-04:00Z">2013-09-11T12:20:59.011-04:00Z</eventDateTime>
-            <agentType>human</agentType>
-            <agent>XSLT</agent>
-            <eventDescription>Migrated to new NUDS schema version; nudsHeader to control.</eventDescription>
-         </maintenanceEvent>
-      </maintenanceHistory>
-      <rightsStmt>
-         <copyrightHolder>University of Virginia Library</copyrightHolder>
-         <license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/"/>
-      </rightsStmt>
-      <otherRecordId semantic="dcterms:replaces">http://coins.lib.virginia.edu/display-uva?id=n1987_46_1</otherRecordId>
-      <semanticDeclaration>
-         <prefix>dcterms</prefix>
-         <namespace>http://purl.org/dc/terms/</namespace>
-      </semanticDeclaration>
-   </control>
-   <descMeta>
-      <title xml:lang="en">Antoninianus of Gallienus, Rome, 257-268. 1987.46.1.</title>
-      <typeDesc>
-         <objectType xlink:href="http://nomisma.org/id/coin">Coin</objectType>
-         <dateRange>
-            <fromDate standardDate="0257">257</fromDate>
-            <toDate standardDate="0268">268</toDate>
-         </dateRange>
-         <denomination xlink:href="http://nomisma.org/id/antoninianus">Antoninianus</denomination>
-         <material xlink:type="simple" xlink:href="http://nomisma.org/id/ar">Silver</material>
-         <authority>
-            <persname xlink:type="simple" xlink:role="authority"
-                      xlink:href="http://nomisma.org/id/gallienus">Gallienus</persname>
-            <corpname xlink:type="simple" xlink:role="state">Roman Empire</corpname>
-         </authority>
-         <geographic>
-            <geogname xlink:type="simple" xlink:role="mint" xlink:href="http://nomisma.org/id/rome">Rome</geogname>
-            <geogname xlink:type="simple" xlink:role="region"
-                      xlink:href="http://nomisma.org/id/latium">Latium</geogname>
-         </geographic>
-         <obverse>
-            <legend>GALLIENVS AVG(VSTVS)</legend>
-            <type>
-               <description xml:lang="en">Radiate bust, right.</description>
-            </type>
-            <persname xlink:type="simple" xlink:role="portrait"
-                      xlink:href="http://nomisma.org/id/gallienus">Gallienus</persname>
-         </obverse>
-         <reverse>
-            <legend>IOVI CONSERVAT(ORI)</legend>
-            <type>
-               <description xml:lang="en">Jupiter standing left, holding thunderbolt in right hand and sceptre in left.</description>
-            </type>
-            <persname xlink:type="simple" xlink:role="deity">Jupiter</persname>
-         </reverse>
-      </typeDesc>
-      <findspotDesc xlink:type="simple" xlink:href="http://nomisma.org/id/normanby_hoard"/>
-      <refDesc>
-         <reference>
-            <title>RIC</title>
-            <identifier>210</identifier>
-         </reference>
-         <reference>
-            <title>The Cunetio Treasure</title>
-            <identifier>1271</identifier>
-         </reference>
-         <reference>
-            <title>The Normanby Hoard</title>
-            <identifier>256</identifier>
-         </reference>
-      </refDesc>
-      <adminDesc>
-         <identifier>1987.46.1</identifier>
-         <provenance>
-            <chronList>
-               <chronItem>
-                  <acquisition>
-                     <acquiredFrom>Fifty-one coins were purchased from the Worldwide Treasure Bureau in 1987. According to Samuel E. Cox of the WTB, this selection of coins represents the top 2% of the
-					hoard in terms of condition.</acquiredFrom>
-                  </acquisition>
-               </chronItem>
-               <chronItem>
-                  <description xml:lang="en">A hoard of third century antoniniani numbering about 47,000 was discovered near Normanby, Lincolnshire, England in December of 1985. From 1985-1987, the hoard was processed by The British Museum under the direction of Roger Bland.</description>
-               </chronItem>
-            </chronList>
-         </provenance>
-         <department>Roman</department>
-         <collection xlink:type="simple" xlink:href="http://nomisma.org/id/uva">The Fralin Museum of Art</collection>
-      </adminDesc>
-   </descMeta>
-   <digRep>
-      <mets:fileSec>
-         <mets:fileGrp USE="obverse">
-            <mets:file USE="reference" MIMETYPE="image/jpeg">
-               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n1987_46_1_obv.jpg"/>
-            </mets:file>
-            <mets:file USE="thumbnail" MIMETYPE="image/jpeg">
-               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1987_46_1_obv.jpg"/>
-            </mets:file>
-            <mets:file USE="master" MIMETYPE="image/jpeg">
-               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/master/n1987_46_1_obv.jpg"/>
-            </mets:file>
-         </mets:fileGrp>
-         <mets:fileGrp USE="reverse">
-            <mets:file USE="reference" MIMETYPE="image/jpeg">
-               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n1987_46_1_rev.jpg"/>
-            </mets:file>
-            <mets:file USE="thumbnail" MIMETYPE="image/jpeg">
-               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1987_46_1_rev.jpg"/>
-            </mets:file>
-            <mets:file USE="master" MIMETYPE="image/jpeg">
-               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/master/n1987_46_1_rev.jpg"/>
-            </mets:file>
-         </mets:fileGrp>
-      </mets:fileSec>
-   </digRep>
+<nuds xmlns="http://nomisma.org/nuds" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mets="http://www.loc.gov/METS/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" recordType="physical"
+	xsi:schemaLocation="http://nomisma.org/nuds http://nomisma.org/nuds/nuds.xsd">
+	<control>
+		<recordId>1987.46.1</recordId>
+		<maintenanceStatus>revised</maintenanceStatus>
+		<publicationStatus>approved</publicationStatus>
+		<maintenanceAgency>
+			<agencyName>University of Virginia Library</agencyName>
+			<agencyCode>US-viu</agencyCode>
+		</maintenanceAgency>
+		<maintenanceHistory>
+			<maintenanceEvent>
+				<eventType>derived</eventType>
+				<eventDateTime standardDateTime=""/>
+				<agentType>human</agentType>
+				<agent>Ethan Gruber and/or Carrie Sulosky</agent>
+				<eventDescription>Migrated from EAD to NUDS</eventDescription>
+			</maintenanceEvent>
+			<maintenanceEvent>
+				<eventType>revised</eventType>
+				<eventDateTime standardDateTime="2013-09-11T12:20:59.011-04:00Z">2013-09-11T12:20:59.011-04:00Z</eventDateTime>
+				<agentType>human</agentType>
+				<agent>XSLT</agent>
+				<eventDescription>Migrated to new NUDS schema version; nudsHeader to control.</eventDescription>
+			</maintenanceEvent>
+		</maintenanceHistory>
+		<rightsStmt>
+			<copyrightHolder>University of Virginia Library</copyrightHolder>
+			<license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/"/>
+		</rightsStmt>
+		<otherRecordId semantic="dcterms:replaces">http://coins.lib.virginia.edu/display-uva?id=n1987_46_1</otherRecordId>
+		<semanticDeclaration>
+			<prefix>dcterms</prefix>
+			<namespace>http://purl.org/dc/terms/</namespace>
+		</semanticDeclaration>
+	</control>
+	<descMeta>
+		<title xml:lang="en">Antoninianus of Gallienus, Rome, 260-268. 1987.46.1.</title>
+		<typeDesc xlink:href="http://numismatics.org/ocre/id/ric.5.gall(2).210k.2" xlink:type="simple"/>
+		<findspotDesc xlink:type="simple" xlink:href="http://nomisma.org/id/normanby_hoard"/>
+		<refDesc>
+			<reference>
+				<title>RIC</title>
+				<identifier>210</identifier>
+			</reference>
+			<reference>
+				<title>The Cunetio Treasure</title>
+				<identifier>1271</identifier>
+			</reference>
+			<reference>
+				<title>The Normanby Hoard</title>
+				<identifier>256</identifier>
+			</reference>
+		</refDesc>
+		<adminDesc>
+			<identifier>1987.46.1</identifier>
+			<provenance>
+				<chronList>
+					<chronItem>
+						<acquisition>
+							<acquiredFrom>Fifty-one coins were purchased from the Worldwide Treasure Bureau in 1987. According to Samuel E. Cox of the WTB, this selection of coins represents the top
+								2% of the hoard in terms of condition.</acquiredFrom>
+						</acquisition>
+					</chronItem>
+					<chronItem>
+						<description xml:lang="en">A hoard of third century antoniniani numbering about 47,000 was discovered near Normanby, Lincolnshire, England in December of 1985. From 1985-1987,
+							the hoard was processed by The British Museum under the direction of Roger Bland.</description>
+					</chronItem>
+				</chronList>
+			</provenance>
+			<department>Roman</department>
+			<collection xlink:type="simple" xlink:href="http://nomisma.org/id/uva">The Fralin Museum of Art</collection>
+		</adminDesc>
+	</descMeta>
+	<digRep>
+		<mets:fileSec>
+			<mets:fileGrp USE="obverse">
+				<mets:file USE="reference" MIMETYPE="image/jpeg">
+					<mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n1987_46_1_obv.jpg"/>
+				</mets:file>
+				<mets:file USE="thumbnail" MIMETYPE="image/jpeg">
+					<mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1987_46_1_obv.jpg"/>
+				</mets:file>
+				<mets:file USE="master" MIMETYPE="image/jpeg">
+					<mets:FLocat LOCTYPE="URL" xlink:href="images/coins/master/n1987_46_1_obv.jpg"/>
+				</mets:file>
+			</mets:fileGrp>
+			<mets:fileGrp USE="reverse">
+				<mets:file USE="reference" MIMETYPE="image/jpeg">
+					<mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n1987_46_1_rev.jpg"/>
+				</mets:file>
+				<mets:file USE="thumbnail" MIMETYPE="image/jpeg">
+					<mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1987_46_1_rev.jpg"/>
+				</mets:file>
+				<mets:file USE="master" MIMETYPE="image/jpeg">
+					<mets:FLocat LOCTYPE="URL" xlink:href="images/coins/master/n1987_46_1_rev.jpg"/>
+				</mets:file>
+			</mets:fileGrp>
+		</mets:fileSec>
+	</digRep>
 </nuds>

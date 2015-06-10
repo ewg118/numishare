@@ -36,41 +36,8 @@
       </semanticDeclaration>
    </control>
    <descMeta>
-      <title xml:lang="en">Antoninianus of Gallienus, Mediolanum, 253-268. 1991.17.163.</title>
-      <typeDesc>
-         <objectType xlink:href="http://nomisma.org/id/coin">Coin</objectType>
-         <denomination xlink:href="http://nomisma.org/id/antoninianus">Antoninianus</denomination>
-         <material xlink:type="simple" xlink:href="http://nomisma.org/id/ar">Silver</material>
-         <dateRange>
-            <fromDate standardDate="0253">253</fromDate>
-            <toDate standardDate="0268">268</toDate>
-         </dateRange>
-         <authority>
-            <persname xlink:type="simple" xlink:role="authority"
-                      xlink:href="http://nomisma.org/id/gallienus">Gallienus</persname>
-            <corpname xlink:type="simple" xlink:role="state">Roman Empire</corpname>
-         </authority>
-         <geographic>
-            <geogname xlink:type="simple" xlink:role="mint"
-                      xlink:href="http://nomisma.org/id/mediolanum">Mediolanum</geogname>
-            <geogname xlink:type="simple" xlink:role="region"
-                      xlink:href="http://nomisma.org/id/gallia_cisalpina">Gallia</geogname>
-         </geographic>
-         <obverse>
-            <type>
-               <description xml:lang="en">Diademed bust, right, draped.</description>
-            </type>
-            <legend>CORN(ELIA) SALONINA AVG(VSTA)</legend>
-            <persname xlink:type="simple" xlink:role="portrait">Salonina</persname>
-         </obverse>
-         <reverse>
-            <type>
-               <description xml:lang="en">Venus standing left, holding apple in right hand and sceptre in left hand; cupid at right foot.</description>
-            </type>
-            <legend>VENVS VICTRIX</legend>
-            <persname xlink:type="simple" xlink:role="deity">Venus Victrix</persname>
-         </reverse>
-      </typeDesc>
+      <title xml:lang="en">Antoninianus of Salonina, Asia, 256-257. 1991.17.163.</title>
+   	<typeDesc xlink:type="simple" xlink:href="http://numismatics.org/ocre/id/ric.5.sala(1).68"/>
       <physDesc>
          <axis>6</axis>
          <measurementsSet>
@@ -99,6 +66,7 @@
       <refDesc>
          <reference>
             <title>RIC</title>
+         	<identifier>68</identifier>
          </reference>
       </refDesc>
    </descMeta>

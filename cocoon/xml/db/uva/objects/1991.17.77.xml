@@ -37,40 +37,9 @@
    </control>
    <descMeta>
       <title xml:lang="en">Antoninianus of Gallienus, Rome, 253-268. 1991.17.77.</title>
-      <typeDesc>
-         <objectType xlink:href="http://nomisma.org/id/coin">Coin</objectType>
-         <denomination xlink:href="http://nomisma.org/id/antoninianus">Antoninianus</denomination>
-         <material xlink:type="simple" xlink:href="http://nomisma.org/id/ar">Silver</material>
-         <dateRange>
-            <fromDate standardDate="0253">253</fromDate>
-            <toDate standardDate="0268">268</toDate>
-         </dateRange>
-         <authority>
-            <persname xlink:type="simple" xlink:role="authority"
-                      xlink:href="http://nomisma.org/id/gallienus">Gallienus</persname>
-            <corpname xlink:type="simple" xlink:role="state">Roman Empire</corpname>
-         </authority>
-         <geographic>
-            <geogname xlink:type="simple" xlink:role="mint" xlink:href="http://nomisma.org/id/rome">Rome</geogname>
-            <geogname xlink:type="simple" xlink:role="region"
-                      xlink:href="http://nomisma.org/id/latium">Latium</geogname>
-         </geographic>
-         <obverse>
-            <type>
-               <description xml:lang="en">Radiate bust, right.</description>
-            </type>
-            <legend>GALLIENVS AVG(VSTVS)</legend>
-            <persname xlink:type="simple" xlink:role="portrait"
-                      xlink:href="http://nomisma.org/id/gallienus">Gallienus</persname>
-         </obverse>
-         <reverse>
-            <type>
-               <description xml:lang="en">Sol walking left, right hand raised and left hand holding a whip.</description>
-            </type>
-            <legend>ORIENS AVG(VSTI)</legend>
-            <persname xlink:type="simple" xlink:role="deity">Sol</persname>
-         </reverse>
-      </typeDesc>
+   	<typeDesc xlink:href="http://numismatics.org/ocre/id/ric.5.gall(2).249f.1" xlink:type="simple"/>
+       
+      
       <physDesc>
          <axis>12</axis>
          <measurementsSet>

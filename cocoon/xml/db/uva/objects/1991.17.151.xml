@@ -36,7 +36,7 @@
       </semanticDeclaration>
    </control>
    <descMeta>
-      <title xml:lang="en">Antoninianus of Gallienus, Rome, 253-268. 1991.17.151.</title>
+      <title xml:lang="en">Antoninianus of Salonina, Rome, 253-268. 1991.17.151.</title>
       <typeDesc>
          <objectType xlink:href="http://nomisma.org/id/coin">Coin</objectType>
          <denomination xlink:href="http://nomisma.org/id/antoninianus">Antoninianus</denomination>
@@ -48,6 +48,8 @@
          <authority>
             <persname xlink:type="simple" xlink:role="authority"
                       xlink:href="http://nomisma.org/id/gallienus">Gallienus</persname>
+         	<persname xlink:type="simple" xlink:role="authority"
+         		xlink:href="http://nomisma.org/id/valerian">Valerian</persname>
             <corpname xlink:type="simple" xlink:role="state">Roman Empire</corpname>
          </authority>
          <geographic>
@@ -60,11 +62,11 @@
                <description xml:lang="en">Diademed bust, right, draped.</description>
             </type>
             <legend>COR(NELIA) SALONINA AVG(VSTA)</legend>
-            <persname xlink:type="simple" xlink:role="portrait">Salonina</persname>
+            <persname xlink:type="simple" xlink:role="portrait" xlink:href="http://nomisma.org/id/salonina">Cornelia Salonina</persname>
          </obverse>
          <reverse>
             <type>
-               <description xml:lang="en">Doe walking left.</description>
+               <description xml:lang="en">Stag walking left.</description>
             </type>
             <legend>IVNONI CONS(ERVATORI) AVG(VSTI)</legend>
             <persname xlink:type="simple" xlink:role="deity">Juno</persname>
@@ -96,10 +98,6 @@
          <collection xlink:type="simple" xlink:href="http://nomisma.org/id/uva">The Fralin Museum of Art</collection>
       </adminDesc>
       <refDesc>
-         <reference>
-            <title>RIC</title>
-            <identifier>16</identifier>
-         </reference>
          <reference>
             <title>The Cunetio Treasure</title>
             <identifier>1418</identifier>

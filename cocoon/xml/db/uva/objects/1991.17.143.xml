@@ -95,13 +95,7 @@
          </provenance>
          <department>Roman</department>
          <collection xlink:type="simple" xlink:href="http://nomisma.org/id/uva">The Fralin Museum of Art</collection>
-      </adminDesc>
-      <refDesc>
-         <reference>
-            <title>RIC</title>
-            <identifier>159</identifier>
-         </reference>
-      </refDesc>
+      </adminDesc>      
    </descMeta>
    <digRep>
       <mets:fileSec>
