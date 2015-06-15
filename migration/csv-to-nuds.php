@@ -1,6 +1,6 @@
 <?php 
 
-$data = generate_json('/home/komet/ans_migration/ocre/15.csv');
+$data = generate_json('/home/komet/ans_migration/ocre/18.csv');
 $deities_array = generate_json('deities.csv');
 $nomismaUris = array();
 $errors = array();
@@ -336,6 +336,12 @@ function generate_nuds($row){
 		if (strlen($row['Mint Mark(s) Exergue']) > 0){
 			$xml .= '<symbol position="exergue">' . $row['Mint Mark(s) Exergue'] . '</symbol>';
 		}
+		if (strlen($row['Parent Mint Mark']) > 0){
+			$symbols = explode('or', $row['Parent Mint Mark']);
+			foreach ($symbols as $symbol){
+				$xml .= '<symbol localType="mintMark">' . trim($symbol) . '</symbol>';
+			}
+		}
 		$xml .= '</reverse>';
 	}
 	
@@ -602,6 +608,18 @@ function get_title($nudsid){
 			break;
 		case 'gall(2)':
 			$auth = 'Gallienus';
+			break;
+		case 'gall_sala(2)':
+			$auth = 'Gallienus and Salonina (2)';
+			break;
+		case 'sala(2)':
+			$auth = 'Salonina (2)';
+			break;
+		case 'cg':
+			$auth = 'Claudius Gothicus';
+			break;
+		case 'qu':
+			$auth = 'Quintillus';
 			break;
 	}
 	
