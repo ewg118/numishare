@@ -568,6 +568,10 @@
 							<xsl:when test="$segs[3] = 'sals'">59</xsl:when>
 							<xsl:when test="$segs[3] = 'qjg'">60</xsl:when>
 							<xsl:when test="$segs[3] = 'gall(2)'">61</xsl:when>
+							<xsl:when test="$segs[3] = 'gall_sala(2)'">62</xsl:when>
+							<xsl:when test="$segs[3] = 'sala(2)'">63</xsl:when>
+							<xsl:when test="$segs[3] = 'cg'">64</xsl:when>
+							<xsl:when test="$segs[3] = 'qu'">65</xsl:when>
 						</xsl:choose>
 					</xsl:variable>
 					<xsl:variable name="num">
