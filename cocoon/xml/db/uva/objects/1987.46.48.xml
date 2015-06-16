@@ -70,6 +70,7 @@
             </type>
             <legend>SPES PVBLICA</legend>
             <persname xlink:type="simple" xlink:role="deity">Spes</persname>
+         	<symbol localType="mintMark">-/-//P</symbol>
          </reverse>
       </typeDesc>
       <findspotDesc xlink:type="simple" xlink:href="http://nomisma.org/id/normanby_hoard"/>
@@ -92,10 +93,7 @@
          <collection xlink:type="simple" xlink:href="http://nomisma.org/id/uva">The Fralin Museum of Art</collection>
       </adminDesc>
       <refDesc>
-         <reference>
-            <title>RIC</title>
-            <identifier>168</identifier>
-         </reference>
+      	<reference xlink:type="simple" xlink:arcrole="nmo:hasTypeSeriesItem" xlink:href="http://numismatics.org/ocre/id/ric.5.cg.168">RIC V Claudius Gothicus 168</reference>
          <reference>
             <title>The Normanby Hoard</title>
             <identifier>1004</identifier>

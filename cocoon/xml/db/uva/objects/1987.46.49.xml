@@ -69,6 +69,7 @@
             </type>
             <legend>VICTORIA AVG(VSTI)</legend>
             <persname xlink:type="simple" xlink:role="deity">Victory</persname>
+         	<symbol localType="mintMark">-/-//S</symbol>
          </reverse>
       </typeDesc>
       <findspotDesc xlink:type="simple" xlink:href="http://nomisma.org/id/normanby_hoard"/>
@@ -91,10 +92,7 @@
          <collection xlink:type="simple" xlink:href="http://nomisma.org/id/uva">The Fralin Museum of Art</collection>
       </adminDesc>
       <refDesc>
-         <reference>
-            <title>RIC</title>
-            <identifier>171</identifier>
-         </reference>
+      	<reference xlink:type="simple" xlink:arcrole="nmo:hasTypeSeriesItem" xlink:href="http://numismatics.org/ocre/id/ric.5.cg.171">RIC V Claudius Gothicus 171</reference>
       </refDesc>
    </descMeta>
    <digRep>

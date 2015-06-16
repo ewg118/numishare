@@ -70,6 +70,7 @@
             </type>
             <legend>FIDES MILI(TVM)</legend>
             <persname xlink:type="simple" xlink:role="deity">Fides</persname>
+         	<symbol localType="mintMark">-/-//S</symbol>
          </reverse>
       </typeDesc>
       <physDesc>
@@ -98,10 +99,7 @@
          <collection xlink:type="simple" xlink:href="http://nomisma.org/id/uva">The Fralin Museum of Art</collection>
       </adminDesc>
       <refDesc>
-         <reference>
-            <title>RIC</title>
-            <identifier>149</identifier>
-         </reference>
+      	<reference xlink:type="simple" xlink:arcrole="nmo:hasTypeSeriesItem" xlink:href="http://numismatics.org/ocre/id/ric.5.cg.149">RIC V Claudius Gothicus 149</reference>
          <reference>
             <title>The Cunetio Treasure</title>
             <identifier>2259</identifier>
