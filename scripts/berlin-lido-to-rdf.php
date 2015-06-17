@@ -6,7 +6,7 @@ $data = generate_json('berlin-concordances.csv', false);
 //start RDF/XML file
 $open = '<rdf:RDF xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xmlns:nm="http://nomisma.org/id/" xmlns:nmo="http://nomisma.org/ontology#"
 xmlns:dcterms="http://purl.org/dc/terms/" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"
-xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">';
+xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:void="http://rdfs.org/ns/void#">';
 
 file_put_contents('berlin-rrc.rdf', $open);
 $count = 1;
@@ -35,17 +35,17 @@ function process_row($row, $count){
 			$xpath->registerNamespace("lido", "http://www.lido-schema.org");
 			$title = $xpath->query("descendant::lido:titleSet/lido:appellationValue")->item(0)->nodeValue;
 			if (strlen($xpath->query("descendant::lido:displayDate")->item(0)->nodeValue) > 0){
-				$title .= ', ' . $xpath->query("descendant::lido:displayDate")->item(0)->nodeValue;
+				$title .= ', ' . $xpath->query("descendant::lido:eventDate/lido:displayDate")->item(0)->nodeValue;
 			}		
 			$measurements = $xpath->query("descendant::lido:measurementsSet");
 			
 			
-			$rdf = '<nm:coin rdf:about="http://ww2.smb.museum/ikmk/object.php?id=' . $id . '">';
+			$rdf = '<nmo:NumismaticObject rdf:about="http://ww2.smb.museum/ikmk/object.php?id=' . $id . '">';
 			$rdf .= '<dcterms:title xml:lang="de">' . $title . '</dcterms:title>';
 			$rdf .= '<dcterms:identifier>' . $id . '</dcterms:identifier>';
 			$rdf .= '<dcterms:publisher rdf:resource="http://nomisma.org/id/mk_berlin"/>';
-			$rdf .= '<nm:collection rdf:resource="http://nomisma.org/id/mk_berlin"/>';
-			$rdf .= '<nm:type_series_item rdf:resource="' . $row['URI'] . '"/>';
+			$rdf .= '<nmo:hasCollection rdf:resource="http://nomisma.org/id/mk_berlin"/>';
+			$rdf .= '<nmo:hasTypeSeriesItem rdf:resource="' . $row['URI'] . '"/>';
 			
 			//measurements			
 			foreach($measurements as $measurement){
@@ -54,14 +54,15 @@ function process_row($row, $count){
 				
 				switch ($type){
 					case 'diameter':
+						$rdf .= '<nmo:hasDiameter rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">' . $value . '</nmo:hasDiameter>';
+						break;
 					case 'weight':
-						$rdf .= '<nm:' . $type . ' rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">' . $value . '</nm:' . $type . '>';
+						$rdf .= '<nmo:hasWeight rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">' . $value . '</nmo:hasWeight>';
 						break;
 					case 'orientation':
-						$rdf .= '<nm:axis rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">' . $value . '</nm:axis>';
+						$rdf .= '<nmo:hasAxis rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">' . $value . '</nmo:hasAxis>';
 						break;
-				}
-				
+				}				
 			}
 			
 			//images
@@ -71,25 +72,25 @@ function process_row($row, $count){
 				$image_id = $pieces[5];
 				
 				//obverse
-				$rdf .= '<nm:obverse><rdf:Description>';
+				$rdf .= '<nmo:hasObverse><rdf:Description>';
 				$rdf .= '<foaf:thumbnail rdf:resource="http://ww2.smb.museum/mk_edit/images/' . $image_id . '/vs_thumb.jpg"/>';
 				$rdf .= '<foaf:depiction rdf:resource="http://ww2.smb.museum/mk_edit/images/' . $image_id . '/vs_opt.jpg"/>';
-				$rdf .='</rdf:Description></nm:obverse>';
+				$rdf .='</rdf:Description></nmo:hasObverse>';
 				
 				//reverse
-				$rdf .= '<nm:reverse><rdf:Description>';
+				$rdf .= '<nmo:hasReverse><rdf:Description>';
 				$rdf .= '<foaf:thumbnail rdf:resource="http://ww2.smb.museum/mk_edit/images/' . $image_id . '/rs_thumb.jpg"/>';
 				$rdf .= '<foaf:depiction rdf:resource="http://ww2.smb.museum/mk_edit/images/' . $image_id . '/rs_opt.jpg"/>';
-				$rdf .='</rdf:Description></nm:reverse>';
+				$rdf .='</rdf:Description></nmo:hasReverse>';
 			}
 			
 			//findspots
 			$geonameId = '';
 			$findspotUri = '';
 			if ($id == '18202297'){
-				$rdf .= '<nm:findspot rdf:resource="http://numismatics.org/chrr/id/CTO"/>';
+				$rdf .= '<dcterms:isPartOf rdf:resource="http://numismatics.org/chrr/id/CTO"/>';
 			} elseif ($id == '18214947'){
-				$rdf .= '<nm:findspot rdf:resource="http://numismatics.org/chrr/id/CAI"/>';
+				$rdf .= '<dcterms:isPartOf rdf:resource="http://numismatics.org/chrr/id/CAI"/>';
 			} else {
 				$places = $xpath->query("descendant::lido:place");
 				foreach ($places as $place){
@@ -101,14 +102,14 @@ function process_row($row, $count){
 						echo "Found {$findspotUri}\n";
 						
 						if (strstr($findspotUri, 'nomisma') !== FALSE){
-							$rdf .= '<nm:findspot rdf:resource="' . $findspotUri . '"/>';
+							$rdf .= '<nmo:hasFindspot rdf:resource="' . $findspotUri . '"/>';
 						} elseif (strstr($findspotUri, 'geonames') != FALSE){
 							$ffrags = explode('/', $findspotUri);
 							$geonameId = $ffrags[3];
 							
 							//if the id is valid
 							if ($geonameId != '0'){
-								$rdf .= '<nm:findspot rdf:resource="' . $findspotUri . '"/>';
+								$rdf .= '<nmo:hasFindspot rdf:resource="' . $findspotUri . '"/>';
 							}
 							
 						}
@@ -116,7 +117,8 @@ function process_row($row, $count){
 				}				
 			}
 			
-			$rdf .= '</nm:coin>';
+			$rdf .= '<void:inDataset rdf:resource="http://ww2.smb.museum/ikmk/"/>';
+			$rdf .= '</nmo:NumismaticObject>';
 			
 			//get coordinates
 			if (strlen($geonameId) > 0 && $geonameId != '0'){

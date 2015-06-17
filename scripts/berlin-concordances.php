@@ -36,15 +36,17 @@ foreach ($files as $file){
 					//test which number matches in OCRE
 					$csv .= '"' . $objectNumber . '","';
 					
-					$url = 'http://admin.numismatics.org/rrc/id/' . $id . '.xml';
+					$url = 'http://numismatics.org/crro/id/' . $id . '.xml';
 					$file_headers = @get_headers($url);
 					if ($file_headers[0] == 'HTTP/1.1 200 OK'){
 						//create line in CSV
-						$uri = 'http://numismatics.org/rrc/id/' . $id;
+						$uri = 'http://numismatics.org/crro/id/' . $id;
 						$csv .= $uri;
 						echo "{$count}: {$objectNumber} - {$uri}\n";
+					} else {
+						echo "{$count}: {$objectNumber} - no match for {$ref}.\n";
 					}
-						$csv .= '","' . $ref .'"' . "\n";
+					$csv .= '","' . $ref .'"' . "\n";
 				}
 				
 			}			
