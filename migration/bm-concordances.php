@@ -1,6 +1,6 @@
 <?php
 //error_reporting(0);
-$data = generate_json('/home/komet/ans_migration/ocre/bm-data/ric4.csv', false);
+$data = generate_json('/home/komet/ans_migration/ocre/bm-data/ric5.csv', false);
 $ref_array = array();
 $num_array = array();
 $type_array = array();
@@ -25,6 +25,41 @@ foreach ($data as $row){
 					$authority = 'crl';
 				} else if ($matches[1] >= 314 && $matches[1] <= 343){
 					$authority = 'ge';
+				}
+			} else {
+				$authority = '';
+			}
+		} else if ($authority == 'RECALCULATE-VAL'){
+			preg_match('/p\.([0-9]+)/', $nums[$key], $matches);
+			if (is_numeric($matches[1])){
+				if ($matches[1] >= 37 && $matches[1] <= 60){
+					$authority = 'val_i';
+				} else if ($matches[1] >= 61 && $matches[1] <= 62){
+					$authority = 'val_i-gall';
+				} else if ($matches[1] == 63){
+					$authority = 'val_i-gall-val_ii-sala';
+				} else if ($matches[1] >= 64 && $matches[1] <= 65){
+					$authority = 'mar';
+				} else if ($matches[1] >= 66 && $matches[1] <= 104){
+					$authority = 'gall(1)';
+				} else if ($matches[1] == 105){
+					$authority = 'gall_sala(1)';
+				} else if ($matches[1] == 106){
+					$authority = 'gall_sals';
+				} else if ($matches[1] >= 107 && $matches[1] <= 115){
+					$authority = 'sala(1)';
+				} else if ($matches[1] >= 116 && $matches[1] <= 122){
+					$authority = 'val_ii';
+				} else if ($matches[1] >= 123 && $matches[1] <= 127){
+					$authority = 'sals';
+				} else if ($matches[1] == 128){
+					$authority = 'qjg';
+				} else if ($matches[1] >= 129 && $matches[1] <= 190){
+					$authority = 'gall(2)';
+				} else if ($matches[1] == 191){
+					$authority = 'gall_sala(2)';
+				} else if ($matches[1] >= 192 && $matches[1] <= 200){
+					$authority = 'sala(2)';
 				}
 			} else {
 				$authority = '';
@@ -101,6 +136,9 @@ function parse_ref($ref, $vol, $authority){
 			break;
 		case 'RIC4':
 			$prefix = 'ric.4.' . $authority . '.';
+			break;
+		case 'RIC5':
+			$prefix = 'ric.5.' . $authority . '.';
 			break;
 	}
 	
@@ -304,6 +342,27 @@ function parse_authority($authority, $comment){
 				break;
 			case $authority == 'Uranius Antoninus':
 				$auth = 'uran_an';
+				break;
+			case stristr($authority, 'Valerian'):
+				$auth = 'RECALCULATE-VAL';
+				break;
+			case stristr($authority, 'Gallienus'):
+				$auth = 'RECALCULATE-VAL';
+				break;
+			case stristr($authority, 'Salonina'):
+				$auth = 'RECALCULATE-VAL';
+				break;
+			case stristr($authority, 'Saloninus'):
+				$auth = 'RECALCULATE-VAL';
+				break;
+			case stristr($authority, 'Mariniana'):
+				$auth = 'RECALCULATE-VAL';
+				break;
+			case $authority == 'Claudius II':
+				$auth = 'cg';
+				break;
+			case $authority == 'Quintillus':
+				$auth = 'qu';
 				break;
 		}		
 	}

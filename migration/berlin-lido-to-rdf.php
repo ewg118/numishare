@@ -5,7 +5,7 @@ $data = generate_json('berlin-concordances.csv', false);
 
 //start RDF/XML file
 $open = '<rdf:RDF xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xmlns:nm="http://nomisma.org/id/" xmlns:nmo="http://nomisma.org/ontology#"
-xmlns:dcterms="http://purl.org/dc/terms/" xmlns:foaf="http://xmlns.com/foaf/0.1/"
+xmlns:dcterms="http://purl.org/dc/terms/" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:void="http://rdfs.org/ns/void#"
 xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">';
 
 file_put_contents('berlin-ric.rdf', $open);
@@ -33,7 +33,7 @@ function process_row($row, $count){
 		} else {
 			$xpath = new DOMXpath($dom);
 			$xpath->registerNamespace("lido", "http://www.lido-schema.org");
-			$title = $xpath->query("descendant::lido:titleSet/lido:appellationValue")->item(0)->nodeValue . ', ' . $xpath->query("descendant::lido:verbalDate")->item(0)->nodeValue;
+			$title = $xpath->query("descendant::lido:titleSet/lido:appellationValue")->item(0)->nodeValue . ', ' . $xpath->query("descendant::lido:eventDate/lido:displayDate")->item(0)->nodeValue;
 			$measurements = $xpath->query("descendant::lido:measurementsSet");
 			
 			
@@ -81,7 +81,7 @@ function process_row($row, $count){
 				$rdf .= '<foaf:depiction rdf:resource="http://ww2.smb.museum/mk_edit/images/' . $image_id . '/rs_opt.jpg"/>';
 				$rdf .='</rdf:Description></nmo:hasReverse>';
 			}
-			
+			$rdf .= '<void:inDataset rdf:resource="http://ww2.smb.museum/ikmk/"/>';
 			$rdf .= '</nmo:NumismaticObject>';
 		}			
 	}

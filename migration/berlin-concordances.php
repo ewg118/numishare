@@ -193,6 +193,36 @@ foreach ($files as $file){
 					case 'Uranus':
 						$nomismaId[] = 'uran_ant';
 						break;
+					case 'Valerianus':
+						$nomismaId[] = 'val_i';
+						break;
+					case 'Mariniana':
+						$nomismaId[] = 'mar';
+						break;
+					case 'Gallienus Mitherrscher':
+						$nomismaId[] = 'gall(1)';
+						break;
+					case 'Salonina Mitherrscher':
+						$nomismaId[] = 'sala(1)';
+						break;
+					case 'Saloninus':
+						$nomismaId[] = 'sals';
+						break;
+					case 'Valerianus II.':
+						$nomismaId[] = 'val_ii';
+						break;
+					case 'Gallienus':
+						$nomismaId[] = 'gall(2)';
+						break;
+					case 'Salonina':
+						$nomismaId[] = 'sala(2)';
+						break;
+					case 'Claudius Gothicus':
+						$nomismaId[] = 'cg';
+						break;
+					case 'Quintillus':
+						$nomismaId[] = 'qu';
+						break;
 					default:
 						$nomismaId[] = null;
 				}
@@ -215,10 +245,16 @@ foreach ($files as $file){
 						}
 					}
 				
-					//create line in CSV
-					$uri = 'http://numismatics.org/ocre/id/' . implode('.', $nomismaId);
-					$csv .= $uri;
-					echo "{$count}: {$objectNumber} - {$uri}\n";
+					if (isset($nomismaId[3])){
+						//create line in CSV
+						$uri = 'http://numismatics.org/ocre/id/' . implode('.', $nomismaId);
+						$csv .= $uri;
+						echo "{$count}: {$objectNumber} - {$uri}\n";
+					} else {
+						echo "{$count}: {$objectNumber} - no match for {$ref}.\n";
+					}
+					
+					
 				}
 				$csv .= '","' . $ref .'"' . "\n";
 			}			
