@@ -105,7 +105,8 @@
 	<!-- accumulate unique geonames IDs -->
 	<xsl:variable name="geonames" as="element()*">
 		<places>
-			<xsl:for-each select="distinct-values(descendant::*[local-name()='geogname'][contains(@xlink:href, 'geonames.org')]/@xlink:href|$rdf/descendant::*[contains(@rdf:resource,
+			<xsl:for-each select="distinct-values(descendant::*[local-name()='geogname'][contains(@xlink:href,
+				'geonames.org')]/@xlink:href|$nudsGroup/descendant::*[local-name()='geogname'][contains(@xlink:href, 'geonames.org')]/@xlink:href|$rdf/descendant::*[contains(@rdf:resource,
 				'geonames.org')]/@rdf:resource|descendant::*[local-name()='subject'][contains(@xlink:href,
 				'geonames.org')]/@xlink:href|$sparqlResult/descendant::res:binding[@name='findspot'][contains(res:uri, 'geonames.org')]/res:uri)">
 				<xsl:variable name="geonameId" select="tokenize(., '/')[4]"/>
