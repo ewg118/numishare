@@ -155,17 +155,19 @@
 					<xsl:variable name="role" select="@xlink:role"/>
 					<xsl:variable name="value" select="."/>
 					<!-- *_geo format is 'mint name|URI of resource|KML-compliant geographic coordinates' -->
-					<field name="{@xlink:role}_geo">
-						<xsl:value-of select="$geonames//place[@id=$href]/@label"/>
-						<xsl:text>|</xsl:text>
-						<xsl:value-of select="$href"/>
-						<xsl:text>|</xsl:text>
-						<xsl:value-of select="$geonames//place[@id=$href]"/>
-					</field>
 
-					<field name="{@xlink:role}_loc">
-						<xsl:value-of select="concat(tokenize($geonames//place[@id=$href], ',')[2], ',', tokenize($geonames//place[@id=$href], ',')[1])"/>
-					</field>
+					<xsl:if test="string-length($geonames//place[@id=$href]) &gt; 0">
+						<field name="{@xlink:role}_geo">
+							<xsl:value-of select="$geonames//place[@id=$href]/@label"/>
+							<xsl:text>|</xsl:text>
+							<xsl:value-of select="$href"/>
+							<xsl:text>|</xsl:text>
+							<xsl:value-of select="$geonames//place[@id=$href]"/>
+						</field>
+						<field name="{@xlink:role}_loc">
+							<xsl:value-of select="concat(tokenize($geonames//place[@id=$href], ',')[2], ',', tokenize($geonames//place[@id=$href], ',')[1])"/>
+						</field>
+					</xsl:if>
 
 					<!-- insert hierarchical facets -->
 					<xsl:variable name="hierarchy_pieces" select="tokenize($geonames//place[@id=$href]/@hierarchy, '\|')"/>
