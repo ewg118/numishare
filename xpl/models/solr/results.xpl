@@ -57,7 +57,7 @@
 					</xsl:choose>
 					<xsl:if test="string($sort)">
 						<xsl:text>,</xsl:text>
-						<xsl:value-of select="substring-before($sort, '_')"/>
+						<xsl:value-of select="substring-before($sort, ' ')"/>
 					</xsl:if>
 				</xsl:variable>
 
