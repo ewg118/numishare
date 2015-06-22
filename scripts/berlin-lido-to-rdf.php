@@ -112,7 +112,7 @@ function process_row($row, $count){
 									break;
 								}
 							} elseif (strstr($findspotUri, 'nomisma') !== FALSE){
-								$rdf .= '<nmo:hasFindspot rdf:resource="' . $findspotUri . '"/>';
+								$rdf .= '<nmo:hasFindspot rdf:resource="' . $findspotUri . '#this"/>';
 							}
 						}
 					}					
