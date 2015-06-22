@@ -97,21 +97,23 @@ function process_row($row, $count){
 					$attr = $place->getAttribute('lido:politicalEntity');
 					
 					if ($attr == 'finding_place'){						
-						$findspotUri = $place->getElementsByTagNameNS('http://www.lido-schema.org', 'placeID')->item(0)->nodeValue;
+						$findspots = $place->getElementsByTagNameNS('http://www.lido-schema.org', 'placeID');
 						
-						echo "Found {$findspotUri}\n";
-						
-						if (strstr($findspotUri, 'nomisma') !== FALSE){
-							$rdf .= '<nmo:hasFindspot rdf:resource="' . $findspotUri . '"/>';
-						} elseif (strstr($findspotUri, 'geonames') != FALSE){
-							$ffrags = explode('/', $findspotUri);
-							$geonameId = $ffrags[3];
-							
-							//if the id is valid
-							if ($geonameId != '0'){
+						foreach ($findspots as $findspot){
+							$findspotUri = $findspot->nodeValue;
+							if (strstr($findspotUri, 'geonames') != FALSE) {
+								$ffrags = explode('/', $findspotUri);
+								$geonameId = $ffrags[3];
+									
+								//if the id is valid
+								if ($geonameId != '0'){
+									echo "Found {$findspotUri}\n";
+									$rdf .= '<nmo:hasFindspot rdf:resource="' . $findspotUri . '"/>';
+									break;
+								}
+							} elseif (strstr($findspotUri, 'nomisma') !== FALSE){
 								$rdf .= '<nmo:hasFindspot rdf:resource="' . $findspotUri . '"/>';
 							}
-							
 						}
 					}					
 				}				
