@@ -23,9 +23,13 @@
 				<![CDATA[PREFIX nm:       <http://nomisma.org/id/>
 PREFIX nmo:	<http://nomisma.org/ontology#>
 PREFIX dcterms:  <http://purl.org/dc/terms/>
-ASK {?contents nmo:hasTypeSeriesItem <URI> .
-?object dcterms:tableOfContents ?contents .
-?object nmo:hasFindspot ?findspot }]]>
+PREFIX dcmitype:	<http://purl.org/dc/dcmitype/>
+
+ASK {
+    { ?object nmo:hasTypeSeriesItem <URI> ; a nmo:NumismaticObject ; nmo:hasFindspot ?findspot }
+  UNION { ?contents a dcmitype:Collection ; nmo:hasTypeSeriesItem <URI> .
+        ?object dcterms:tableOfContents ?contents ; nmo:hasFindspot ?findspot }
+}]]>
 			</xsl:variable>
 
 			<xsl:variable name="service">

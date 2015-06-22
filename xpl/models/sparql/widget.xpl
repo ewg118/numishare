@@ -118,6 +118,7 @@ UNION { ?contents a dcmitype:Collection ;
 ?findspot geo:lat ?lat .
 ?findspot geo:long ?long .
 OPTIONAL {?findspot foaf:name ?placeName}
+OPTIONAL {?findspot skos:prefLabel ?placeName FILTER(langMatches(lang(?placeName), "en"))}
 OPTIONAL { ?object rdf:type ?type } 
 OPTIONAL { ?object nmo:hasClosingDate ?burial . FILTER isLiteral(?burial) }}]]>
 						</xsl:when>						
@@ -151,6 +152,7 @@ UNION { ?contents a dcmitype:Collection ;
 ?findspot geo:lat ?lat .
 ?findspot geo:long ?long .
 OPTIONAL {?findspot foaf:name ?placeName}
+OPTIONAL {?findspot skos:prefLabel ?placeName FILTER(langMatches(lang(?placeName), "en"))}
 OPTIONAL { ?object rdf:type ?type } 
 OPTIONAL { ?object nmo:hasClosingDate ?burial . FILTER isLiteral(?burial) }}]]>
 						</xsl:when>
