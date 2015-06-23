@@ -168,14 +168,25 @@
 				</a>
 			</span>
 			<dl class="dl-horizontal">
-				<xsl:if test="res:binding[@name='collection']/res:literal">
-					<dt>
-						<xsl:value-of select="numishare:regularize_node('collection', $lang)"/>
-					</dt>
-					<dd>
-						<xsl:value-of select="res:binding[@name='collection']/res:literal"/>
-					</dd>
-				</xsl:if>
+				<xsl:choose>
+					<xsl:when test="res:binding[@name='collection']/res:literal">
+						<dt>
+							<xsl:value-of select="numishare:regularize_node('collection', $lang)"/>
+						</dt>
+						<dd>
+							<xsl:value-of select="res:binding[@name='collection']/res:literal"/>
+						</dd>
+					</xsl:when>
+					<xsl:when test="res:binding[@name='publisher']/res:literal">
+						<dt>
+							<xsl:value-of select="numishare:regularize_node('publisher', $lang)"/>
+						</dt>
+						<dd>
+							<xsl:value-of select="res:binding[@name='publisher']/res:literal"/>
+						</dd>
+					</xsl:when>
+				</xsl:choose>
+				
 				<xsl:if test="string(res:binding[@name='axis']/res:literal)">
 					<dt>
 						<xsl:value-of select="numishare:regularize_node('axis', $lang)"/>
