@@ -90,7 +90,7 @@ OPTIONAL { ?object nmo:hasReverse ?reverse .
 ?reverse foaf:thumbnail ?revThumb }
 OPTIONAL { ?object nmo:hasReverse ?reverse .
 ?reverse foaf:depiction ?revRef }}
-ORDER BY ASC(?collection)]]>
+ORDER BY ASC(?publisher) ASC(?collection)]]>
 						</xsl:when>
 						<xsl:when test="$template = 'kml'"><![CDATA[ PREFIX rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX dcmitype:	<http://purl.org/dc/dcmitype/>
