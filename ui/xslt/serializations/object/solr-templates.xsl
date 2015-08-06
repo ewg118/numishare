@@ -17,6 +17,9 @@
 		<xsl:apply-templates select="nuds:date|nuds:dateRange">
 			<xsl:with-param name="recordType" select="$recordType"/>
 		</xsl:apply-templates>
+		
+		<!-- AH dates -->
+		<xsl:apply-templates select="nuds:dateOnObject[@calendar='ah']"/>
 
 		<xsl:for-each select="nuds:obverse | nuds:reverse">
 			<xsl:variable name="side" select="substring(local-name(), 1, 3)"/>
@@ -97,6 +100,7 @@
 	<xsl:template match="nuds:persname|nuds:corpname |*[local-name()='geogname']">
 		<xsl:param name="lang"/>
 		<xsl:variable name="href" select="@xlink:href"/>
+		<xsl:variable name="role" select="@xlink:role"/>
 		<xsl:variable name="label">
 			<xsl:choose>
 				<xsl:when test="string($lang) and contains($href, 'nomisma.org')">
@@ -115,9 +119,9 @@
 			</xsl:choose>
 		</xsl:variable>
 
-		<field name="{@xlink:role}_facet">
+		<field name="{$role}_facet">
 			<xsl:choose>
-				<xsl:when test="@xlink:role='findspot' and contains(@xlink:href, 'geonames.org')">
+				<xsl:when test="$role='findspot' and contains(@xlink:href, 'geonames.org')">
 					<xsl:value-of select="$geonames//place[@id=$href]/@label"/>
 				</xsl:when>
 				<xsl:otherwise>
@@ -125,14 +129,14 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</field>
-		<xsl:if test="@xlink:role='findspot'">
+		<xsl:if test="$role='findspot'">
 			<field name="findspot_display">
 				<xsl:value-of select="$label"/>
 			</field>
 		</xsl:if>
-		<field name="{@xlink:role}_text">
+		<field name="{$role}_text">
 			<xsl:choose>
-				<xsl:when test="@xlink:role='findspot' and contains(@xlink:href, 'geonames.org')">
+				<xsl:when test="$role='findspot' and contains(@xlink:href, 'geonames.org')">
 					<!-- combine the text with the label -->
 					<xsl:value-of select="$label"/>
 					<xsl:text> </xsl:text>
@@ -144,27 +148,35 @@
 			</xsl:choose>
 		</field>
 		<xsl:if test="string(@xlink:href)">
-			<field name="{@xlink:role}_uri">
+			<field name="{$role}_uri">
 				<xsl:value-of select="@xlink:href"/>
 			</field>
 		</xsl:if>
-		<xsl:if test="string(@xlink:href) and (@xlink:role = 'mint' or @xlink:role = 'findspot')">
+		<xsl:if test="contains($href, 'nomisma.org')">
+			<!-- ingest alternate labels -->
+			<xsl:for-each select="$rdf/*[@rdf:about=$href]/skos:altLabel[if (string($lang)) then @xml:lang=$lang else @xml:lang='en']">
+				<field name="{$role}_text">
+					<xsl:value-of select="."/>
+				</field>
+			</xsl:for-each>
+		</xsl:if>
+		
+		<xsl:if test="string(@xlink:href) and ($role = 'mint' or $role = 'findspot')">
 			<xsl:choose>
 				<xsl:when test="contains(@xlink:href, 'geonames')">
 					<xsl:variable name="href" select="@xlink:href"/>
-					<xsl:variable name="role" select="@xlink:role"/>
 					<xsl:variable name="value" select="."/>
 					<!-- *_geo format is 'mint name|URI of resource|KML-compliant geographic coordinates' -->
 
 					<xsl:if test="string-length($geonames//place[@id=$href]) &gt; 0">
-						<field name="{@xlink:role}_geo">
+						<field name="{$role}_geo">
 							<xsl:value-of select="$geonames//place[@id=$href]/@label"/>
 							<xsl:text>|</xsl:text>
 							<xsl:value-of select="$href"/>
 							<xsl:text>|</xsl:text>
 							<xsl:value-of select="$geonames//place[@id=$href]"/>
 						</field>
-						<field name="{@xlink:role}_loc">
+						<field name="{$role}_loc">
 							<xsl:value-of select="concat(tokenize($geonames//place[@id=$href], ',')[2], ',', tokenize($geonames//place[@id=$href], ',')[1])"/>
 						</field>
 					</xsl:if>
@@ -203,7 +215,7 @@
 					</xsl:variable>
 					<xsl:if test="$coordinates = 'true'">
 						<!-- *_geo format is 'mint name|URI of resource|KML-compliant geographic coordinates' -->
-						<field name="{@xlink:role}_geo">
+						<field name="{$role}_geo">
 							<xsl:choose>
 								<xsl:when test="string($lang)">
 									<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about=$href], $lang)"/>
@@ -225,7 +237,7 @@
 							<xsl:value-of select="concat($rdf/*[@rdf:about=concat($href, '#this')]/geo:long, ',', $rdf/*[@rdf:about=concat($href, '#this')]/geo:lat)"/>
 						</field>
 
-						<field name="{@xlink:role}_loc">
+						<field name="{$role}_loc">
 							<xsl:value-of select="concat($rdf/*[@rdf:about=concat($href, '#this')]/geo:lat, ',', $rdf/*[@rdf:about=concat($href, '#this')]/geo:long)"/>
 						</field>
 					</xsl:if>
@@ -237,13 +249,27 @@
 				</xsl:when>
 			</xsl:choose>
 		</xsl:if>
-		<xsl:if test="string(@xlink:href) and @xlink:role = 'region'">
+		<xsl:if test="string(@xlink:href) and $role = 'region'">
 			<xsl:variable name="href" select="@xlink:href"/>
 			<xsl:for-each select="$rdf/*[@rdf:about=$href]/skos:relatedMatch[contains(@rdf:resource, 'pleiades.stoa.org')]">
 				<field name="pleiades_uri">
 					<xsl:value-of select="@rdf:resource"/>
 				</field>
 			</xsl:for-each>
+		</xsl:if>
+	</xsl:template>
+
+	<xsl:template match="nuds:dateOnObject[@calendar='ah']">
+		<xsl:if test="normalize-space(.) castable as xs:integer">
+			<field name="ah_num">
+				<xsl:value-of select="normalize-space(.)"/>
+			</field>
+			<field name="ah_minint">
+				<xsl:value-of select="normalize-space(.)"/>
+			</field>
+			<field name="ah_maxint">
+				<xsl:value-of select="normalize-space(.)"/>
+			</field>
 		</xsl:if>
 	</xsl:template>
 

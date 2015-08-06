@@ -65,10 +65,16 @@ ASK {
 						<div class="row">
 							<div class="col-md-12">
 								<h1 id="object_title" property="skos:prefLabel">
-									<xsl:if test="string(nuds:descMeta/nuds:title/@xml:lang)">
-										<xsl:attribute name="lang" select="nuds:descMeta/nuds:title/@xml:lang"/>
-									</xsl:if>
-									<xsl:value-of select="normalize-space(nuds:descMeta/nuds:title)"/>
+									<xsl:choose>
+										<xsl:when test="descendant::*:descMeta/*:title[@xml:lang=$lang]">
+											<xsl:attribute name="lang" select="$lang"/>
+											<xsl:value-of select="descendant::*:descMeta/*:title[@xml:lang=$lang]"/>
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:attribute name="lang">en</xsl:attribute>
+											<xsl:value-of select="descendant::*:descMeta/*:title[@xml:lang='en']"/>
+										</xsl:otherwise>
+									</xsl:choose>
 								</h1>
 								<p>
 									<xsl:if test="string($sparql_endpoint)">
@@ -121,10 +127,16 @@ ASK {
 								<div class="row">
 									<div class="col-md-12">
 										<h1 id="object_title" property="dcterms:title">
-											<xsl:if test="string(nuds:descMeta/nuds:title/@xml:lang)">
-												<xsl:attribute name="lang" select="nuds:descMeta/nuds:title/@xml:lang"/>
-											</xsl:if>
-											<xsl:value-of select="normalize-space(nuds:descMeta/nuds:title)"/>
+											<xsl:choose>
+												<xsl:when test="descendant::*:descMeta/*:title[@xml:lang=$lang]">
+													<xsl:attribute name="lang" select="$lang"/>
+													<xsl:value-of select="descendant::*:descMeta/*:title[@xml:lang=$lang]"/>
+												</xsl:when>
+												<xsl:otherwise>
+													<xsl:attribute name="lang">en</xsl:attribute>
+													<xsl:value-of select="descendant::*:descMeta/*:title[@xml:lang='en']"/>
+												</xsl:otherwise>
+											</xsl:choose>
 										</h1>
 									</div>
 								</div>
@@ -159,10 +171,16 @@ ASK {
 								<div class="row">
 									<div class="col-md-12">
 										<h1 id="object_title" property="dcterms:title">
-											<xsl:if test="string(nuds:descMeta/nuds:title/@xml:lang)">
-												<xsl:attribute name="lang" select="nuds:descMeta/nuds:title/@xml:lang"/>
-											</xsl:if>
-											<xsl:value-of select="normalize-space(nuds:descMeta/nuds:title)"/>
+											<xsl:choose>
+												<xsl:when test="descendant::*:descMeta/*:title[@xml:lang=$lang]">
+													<xsl:attribute name="lang" select="$lang"/>
+													<xsl:value-of select="descendant::*:descMeta/*:title[@xml:lang=$lang]"/>
+												</xsl:when>
+												<xsl:otherwise>
+													<xsl:attribute name="lang">en</xsl:attribute>
+													<xsl:value-of select="descendant::*:descMeta/*:title[@xml:lang='en']"/>
+												</xsl:otherwise>
+											</xsl:choose>
 										</h1>
 									</div>
 								</div>

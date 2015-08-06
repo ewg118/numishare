@@ -281,7 +281,21 @@
 		</xsl:call-template>
 
 		<field name="title_display">
-			<xsl:value-of select="normalize-space(nuds:title)"/>
+			<xsl:choose>
+				<xsl:when test="nuds:title[@xml:lang=$lang]">
+					<xsl:value-of select="nuds:title[@xml:lang=$lang]"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:choose>
+						<xsl:when test="nuds:title[@xml:lang='en']">
+							<xsl:value-of select="nuds:title[@xml:lang='en']"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="nuds:title[1]"/>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:otherwise>
+			</xsl:choose>
 		</field>
 		<xsl:apply-templates select="nuds:subjectSet"/>
 		<xsl:apply-templates select="nuds:physDesc"/>
@@ -512,14 +526,7 @@
 			</xsl:if>
 		</xsl:for-each>
 
-		<xsl:if test="nuds:identifier">
-			<field name="identifier_display">
-				<xsl:value-of select="normalize-space(nuds:identifier)"/>
-			</field>
-			<field name="identifier_text">
-				<xsl:value-of select="normalize-space(nuds:identifier)"/>
-			</field>
-		</xsl:if>
+		<xsl:apply-templates select="nuds:identifier"/>
 
 		<xsl:for-each select="nuds:provenance/nuds:chronList/nuds:chronItem/nuds:previousColl|nuds:provenance/nuds:chronList/nuds:chronItem/nuds:auction/nuds:saleCatalog">
 			<field name="provenance_text">
@@ -529,6 +536,15 @@
 				<xsl:value-of select="."/>
 			</field>
 		</xsl:for-each>
+	</xsl:template>
+
+	<xsl:template match="nuds:identifer">
+		<field name="identifier_display">
+			<xsl:value-of select="normalize-space(.)"/>
+		</field>
+		<field name="identifier_text">
+			<xsl:value-of select="normalize-space(.)"/>
+		</field>
 	</xsl:template>
 
 	<xsl:template match="nuds:measurementsSet">

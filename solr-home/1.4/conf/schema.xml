@@ -469,6 +469,7 @@
 		<field name="weight_num" type="sfloat" indexed="true" stored="true"/>
 		<field name="width_num" type="sfloat" indexed="true" stored="true"/>
 		<field name="year_num" type="sint" indexed="true" stored="true" multiValued="true"/>
+		<field name="ah_num" type="sint" indexed="true" stored="true" multiValued="true"/>
 		<!-- date on object, sortable date string -->
 		<field name="dob_num" type="string" indexed="true" stored="true" multiValued="true"/>
 		
