@@ -59,8 +59,9 @@ PREFIX nm:       <http://nomisma.org/id/>
 PREFIX nmo:	<http://nomisma.org/ontology#>
 PREFIX skos:      <http://www.w3.org/2004/02/skos/core#>
 PREFIX foaf:	<http://xmlns.com/foaf/0.1/>
+PREFIX rdfs:	<http://www.w3.org/2000/01/rdf-schema#>
 
-SELECT ?object ?title ?identifier ?findspot ?hoard ?collection ?weight ?axis ?diameter ?obvThumb ?revThumb ?obvRef ?revRef ?comThumb ?comRef  WHERE {
+SELECT ?object ?title ?identifier ?findspot ?hoard ?collection ?publisher ?weight ?axis ?diameter ?obvThumb ?revThumb ?obvRef ?revRef ?comThumb ?comRef  WHERE {
 ?object nmo:hasTypeSeriesItem <typeUri> ;
   rdf:type nmo:NumismaticObject ;
   dcterms:title ?title .
@@ -68,8 +69,11 @@ OPTIONAL { ?object dcterms:identifier ?identifier}
 OPTIONAL { ?object nmo:hasCollection ?colUri .
 ?colUri skos:prefLabel ?collection 
 FILTER(langMatches(lang(?collection), "EN"))}
+OPTIONAL {?object dcterms:publisher ?publisher }
 OPTIONAL {?object nmo:hasFindspot ?findUri .
 ?findUri foaf:name ?findspot }
+OPTIONAL {?object nmo:hasFindspot ?findUri .
+?findUri rdfs:label ?findspot }
 OPTIONAL {?object dcterms:isPartOf ?hoard .
  ?hoard a nmo:Hoard ;
  	skos:prefLabel ?findspot }
@@ -86,7 +90,7 @@ OPTIONAL { ?object nmo:hasReverse ?reverse .
 ?reverse foaf:thumbnail ?revThumb }
 OPTIONAL { ?object nmo:hasReverse ?reverse .
 ?reverse foaf:depiction ?revRef }}
-ORDER BY ASC(?collection)]]>
+ORDER BY ASC(?publisher) ASC(?collection)]]>
 						</xsl:when>
 						<xsl:when test="$template = 'kml'"><![CDATA[ PREFIX rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX dcmitype:	<http://purl.org/dc/dcmitype/>
@@ -96,6 +100,7 @@ PREFIX nmo:	<http://nomisma.org/ontology#>
 PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>
 PREFIX foaf:	<http://xmlns.com/foaf/0.1/>
 PREFIX skos:      <http://www.w3.org/2004/02/skos/core#>
+PREFIX rdfs:	<http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT ?object ?title ?findspot ?hoard ?placeName ?hoardLabel ?lat ?long ?type ?burial WHERE {
 { ?object a nmo:NumismaticObject ;
@@ -118,6 +123,7 @@ UNION { ?contents a dcmitype:Collection ;
 ?findspot geo:lat ?lat .
 ?findspot geo:long ?long .
 OPTIONAL {?findspot foaf:name ?placeName}
+OPTIONAL {?findspot rdfs:label ?placeName}
 OPTIONAL {?findspot skos:prefLabel ?placeName FILTER(langMatches(lang(?placeName), "en"))}
 OPTIONAL { ?object rdf:type ?type } 
 OPTIONAL { ?object nmo:hasClosingDate ?burial . FILTER isLiteral(?burial) }}]]>
@@ -130,6 +136,7 @@ PREFIX nmo:	<http://nomisma.org/ontology#>
 PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>
 PREFIX foaf:	<http://xmlns.com/foaf/0.1/>
 PREFIX skos:      <http://www.w3.org/2004/02/skos/core#>
+PREFIX rdfs:	<http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT ?object ?title ?findspot ?hoard ?placeName ?hoardLabel ?lat ?long ?type ?burial WHERE {
 { ?object a nmo:NumismaticObject ;
@@ -152,6 +159,7 @@ UNION { ?contents a dcmitype:Collection ;
 ?findspot geo:lat ?lat .
 ?findspot geo:long ?long .
 OPTIONAL {?findspot foaf:name ?placeName}
+OPTIONAL {?findspot rdfs:label ?placeName}
 OPTIONAL {?findspot skos:prefLabel ?placeName FILTER(langMatches(lang(?placeName), "en"))}
 OPTIONAL { ?object rdf:type ?type } 
 OPTIONAL { ?object nmo:hasClosingDate ?burial . FILTER isLiteral(?burial) }}]]>
@@ -164,6 +172,7 @@ PREFIX nmo:	<http://nomisma.org/ontology#>
 PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>
 PREFIX skos:      <http://www.w3.org/2004/02/skos/core#>
 PREFIX foaf:	<http://xmlns.com/foaf/0.1/>
+PREFIX rdfs:	<http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT ?object ?title ?findspotLabel ?findspot ?lat ?long WHERE {
 { ?object a nmo:NumismaticObject ;
@@ -179,6 +188,7 @@ UNION { ?contents a dcmitype:Collection ;
 UNION {?object dcterms:isPartOf ?hoard .
 ?hoard nmo:hasFindspot ?findspot }
 OPTIONAL {?findspot foaf:name ?findspotLabel}
+OPTIONAL {?findspot rdfs:label ?findspotLabel}
 OPTIONAL {?hoard skos:prefLabel ?findspotLabel}
 ?findspot geo:lat ?lat .
 ?findspot geo:long ?long }]]>
