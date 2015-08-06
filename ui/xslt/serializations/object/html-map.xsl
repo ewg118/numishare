@@ -40,6 +40,9 @@
 					</head>
 					<body>
 						<div class="container-fluid">
+							<xsl:if test="$lang='ar'">
+								<xsl:attribute name="style">direction: rtl;</xsl:attribute>							
+							</xsl:if>
 							<div class="row">
 								<div class="col-md-12">
 									<h1>301: Moved Permanently</h1>
@@ -57,6 +60,9 @@
 					</head>
 					<body>
 						<div class="container-fluid">
+							<xsl:if test="$lang='ar'">
+								<xsl:attribute name="style">direction: rtl;</xsl:attribute>							
+							</xsl:if>
 							<div class="row">
 								<div class="col-md-12">
 									<h1>
@@ -120,6 +126,9 @@
 			</head>
 			<body>
 				<div class="container-fluid" style="height:100%">
+					<xsl:if test="$lang='ar'">
+						<xsl:attribute name="style">direction: rtl;</xsl:attribute>							
+					</xsl:if>
 					<div class="row" style="height:100%">
 						<div class="col-md-12" style="height:100%">
 							<div id="timemap-legend">

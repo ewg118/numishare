@@ -84,7 +84,9 @@
 	<xsl:template name="maps">
 		<div id="backgroundPopup"/>
 		<div class="container-fluid" style="height:100%">
-
+			<xsl:if test="$lang='ar'">
+				<xsl:attribute name="style">direction: rtl;</xsl:attribute>							
+			</xsl:if>
 			<xsl:choose>
 				<xsl:when test="$numFound &gt; 0">
 					<xsl:choose>

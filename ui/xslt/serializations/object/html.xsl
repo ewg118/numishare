@@ -157,6 +157,9 @@
 					<body>
 						<xsl:call-template name="header"/>
 						<div class="container-fluid">
+							<xsl:if test="$lang='ar'">
+								<xsl:attribute name="style">direction: rtl;</xsl:attribute>							
+							</xsl:if>
 							<div class="row">
 								<div class="col-md-12">
 									<h1>301: Moved Permanently</h1>
@@ -176,6 +179,9 @@
 					<body>
 						<xsl:call-template name="header"/>
 						<div class="container-fluid">
+							<xsl:if test="$lang='ar'">
+								<xsl:attribute name="style">direction: rtl;</xsl:attribute>							
+							</xsl:if>
 							<div class="row">
 								<div class="col-md-12">
 									<h1>
@@ -214,7 +220,7 @@
 					http://nomisma.org/ontology# dcmitype: http://purl.org/dc/dcmitype/">
 					<xsl:if test="string($lang)">
 						<xsl:attribute name="lang" select="$lang"/>
-					</xsl:if>
+					</xsl:if>					
 					<head>
 						<xsl:call-template name="generic_head"/>
 						<xsl:choose>
@@ -345,6 +351,9 @@
 					</xsl:choose>
 				</xsl:variable>
 				<div class="container-fluid" typeof="{$typeof}" about="{concat($url, 'id/', $id)}">
+					<xsl:if test="$lang='ar'">
+						<xsl:attribute name="style">direction: rtl;</xsl:attribute>							
+					</xsl:if>
 					<xsl:choose>
 						<xsl:when test="count(/content/*[local-name()='nuds']) &gt; 0">
 							<xsl:call-template name="nuds"/>

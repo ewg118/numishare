@@ -56,23 +56,36 @@
 					<xsl:choose>
 						<xsl:when test="string(@xlink:role)">
 							<xsl:value-of select="@xlink:role"/>
-						</xsl:when>
-						<xsl:when test="string(@localType)">
-							<xsl:value-of select="@localType"/>
-						</xsl:when>
+						</xsl:when>						
 						<xsl:otherwise>
 							<xsl:value-of select="local-name()"/>
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:variable>
+				
 				<li>
 					<!-- display label first for non-Arabic languages -->
-					<xsl:if test="not($lang='ar')">
-						<b>
-							<xsl:value-of select="numishare:regularize_node($field, $lang)"/>
-							<xsl:text>: </xsl:text>
-						</b>
-					</xsl:if>
+					<b>
+						<xsl:choose>
+							<xsl:when test="string(@localType)">
+								<xsl:variable name="langParam" select="if(string($lang)) then $lang else 'en'"/>
+								<xsl:variable name="localType" select="@localType"/>
+								<xsl:choose>
+									<xsl:when test="string(//config/localTypes/localType[@value=$localType]/label[@lang=$langParam])">
+										<xsl:value-of select="//config/localTypes/localType[@value=$localType]/label[@lang=$langParam]"/>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:value-of select="numishare:regularize_node($field, $lang)"/>
+									</xsl:otherwise>
+								</xsl:choose>
+							</xsl:when>
+							<xsl:otherwise>								
+								<xsl:value-of select="numishare:regularize_node($field, $lang)"/>
+							</xsl:otherwise>
+						</xsl:choose>
+						
+						<xsl:text>: </xsl:text>
+					</b>
 					<!-- create link from facet, if applicable -->
 					<!-- pull language from nomisma, if available -->
 					<xsl:variable name="value">
@@ -173,13 +186,6 @@
 						<a href="{$href}" target="_blank" rel="{numishare:normalizeProperty($recordType, if(@xlink:role) then @xlink:role else local-name())}">
 							<img src="{$include_path}/images/external.png" alt="external link" class="external_link"/>
 						</a>
-					</xsl:if>
-					<!-- display label on right for right-to-left scripts -->
-					<xsl:if test="$lang='ar'">
-						<b>
-							<xsl:text> : </xsl:text>
-							<xsl:value-of select="numishare:regularize_node($field, $lang)"/>
-						</b>
 					</xsl:if>
 				</li>
 			</xsl:when>

@@ -62,18 +62,21 @@
 			</div>
 		</div>	
 		<div class="container-fluid">
+			<xsl:if test="$lang='ar'">
+				<xsl:attribute name="style">direction: rtl;</xsl:attribute>							
+			</xsl:if>
 			<div class="row">
 				<div class="col-md-9">					
 					<xsl:choose>
 						<xsl:when test="string($lang)">
 							<xsl:choose>
-								<xsl:when test="string(//pages/index/description[@xml:lang=$lang])">
-									<xsl:copy-of select="//pages/index/description[@xml:lang=$lang]/*"/>
+								<xsl:when test="string(//pages/index/content[@xml:lang=$lang])">
+									<xsl:copy-of select="//pages/index/content[@xml:lang=$lang]/*"/>
 								</xsl:when>
 								<xsl:otherwise>
 									<xsl:choose>
-										<xsl:when test="count(//pages/index/description) &gt; 0">
-											<xsl:copy-of select="//pages/index/description[1]/*"/>
+										<xsl:when test="count(//pages/index/content) &gt; 0">
+											<xsl:copy-of select="//pages/index/content[1]/*"/>
 										</xsl:when>
 										<xsl:otherwise>
 											<xsl:copy-of select="//pages/index/*"/>
@@ -85,8 +88,8 @@
 						</xsl:when>
 						<xsl:otherwise>							
 							<xsl:choose>
-								<xsl:when test="count(//pages/index/description) &gt; 0">
-									<xsl:copy-of select="//pages/index/description[1]/*"/>
+								<xsl:when test="count(//pages/index/content) &gt; 0">
+									<xsl:copy-of select="//pages/index/content[1]/*"/>
 								</xsl:when>
 								<xsl:otherwise>
 									<xsl:copy-of select="//pages/index/*"/>

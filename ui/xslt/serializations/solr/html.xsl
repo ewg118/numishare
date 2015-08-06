@@ -50,6 +50,12 @@
 
 	<xsl:template match="/">
 		<html>
+			<xsl:if test="string($lang)">
+				<xsl:attribute name="lang" select="$lang"/>
+			</xsl:if>
+			<xsl:if test="$lang='ar'">
+				<xsl:attribute name="class">rtl</xsl:attribute>
+			</xsl:if>
 			<head profile="http://a9.com/-/spec/opensearch/1.1/">
 				<title>
 					<xsl:value-of select="//config/title"/>
@@ -116,6 +122,9 @@
 	<xsl:template name="results">
 		<!--<xsl:copy-of select="$sparqlResult"/>-->
 		<div class="container-fluid">
+			<xsl:if test="$lang='ar'">
+				<xsl:attribute name="style">direction: rtl;</xsl:attribute>							
+			</xsl:if>
 			<div class="row">				
 				<div class="col-md-9 col-md-push-3">
 					<div class="container-fluid">

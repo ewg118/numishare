@@ -65,6 +65,9 @@ ASK {
 						<div class="row">
 							<div class="col-md-12">
 								<h1 id="object_title" property="skos:prefLabel">
+									<xsl:if test="$lang='ar'">
+										<xsl:attribute name="style">direction: ltr; text-align:right</xsl:attribute>
+									</xsl:if>
 									<xsl:choose>
 										<xsl:when test="descendant::*:descMeta/*:title[@xml:lang=$lang]">
 											<xsl:attribute name="lang" select="$lang"/>
@@ -127,6 +130,9 @@ ASK {
 								<div class="row">
 									<div class="col-md-12">
 										<h1 id="object_title" property="dcterms:title">
+											<xsl:if test="$lang='ar'">
+												<xsl:attribute name="style">direction: ltr; text-align:right</xsl:attribute>
+											</xsl:if>
 											<xsl:choose>
 												<xsl:when test="descendant::*:descMeta/*:title[@xml:lang=$lang]">
 													<xsl:attribute name="lang" select="$lang"/>
@@ -171,6 +177,9 @@ ASK {
 								<div class="row">
 									<div class="col-md-12">
 										<h1 id="object_title" property="dcterms:title">
+											<xsl:if test="$lang='ar'">
+												<xsl:attribute name="style">direction: ltr; text-align:right</xsl:attribute>
+											</xsl:if>
 											<xsl:choose>
 												<xsl:when test="descendant::*:descMeta/*:title[@xml:lang=$lang]">
 													<xsl:attribute name="lang" select="$lang"/>

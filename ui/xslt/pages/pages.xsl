@@ -16,7 +16,21 @@
 				<title>
 					<xsl:value-of select="/config/title"/>
 					<xsl:text>: </xsl:text>
-					<xsl:value-of select="//page[@stub = $stub]/title"/>
+					<xsl:choose>
+						<xsl:when test="//page[@stub = $stub]/content[@lang=$lang]">
+							<xsl:value-of select="//page[@stub = $stub]/content[@lang=$lang]/title"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:choose>
+								<xsl:when test="//page[@stub = $stub]/content[@lang='en']">
+									<xsl:value-of select="//page[@stub = $stub]/content[@lang='en']/title"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:value-of select="//page[@stub = $stub]/title"/>
+								</xsl:otherwise>
+							</xsl:choose>
+						</xsl:otherwise>
+					</xsl:choose>
 				</title>
 				<link rel="shortcut icon" type="image/x-icon" href="{$include_path}/images/favicon.png"/>
 				<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"/>
@@ -42,9 +56,26 @@
 
 	<xsl:template name="pages">
 		<div class="container-fluid">
+			<xsl:if test="$lang='ar'">
+				<xsl:attribute name="style">direction: rtl;</xsl:attribute>							
+			</xsl:if>
 			<div class="row">
 				<div class="col-md-12">
-					<xsl:copy-of select="//page[@stub = $stub]/text"/>
+					<xsl:choose>
+						<xsl:when test="//page[@stub = $stub]/content[@lang=$lang]">
+							<xsl:copy-of select="//page[@stub = $stub]/content[@lang=$lang]/text"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:choose>
+								<xsl:when test="//page[@stub = $stub]/content[@lang='en']">
+									<xsl:copy-of select="//page[@stub = $stub]/content[@lang='en']/text"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:copy-of select="//page[@stub = $stub]/text"/>
+								</xsl:otherwise>
+							</xsl:choose>
+						</xsl:otherwise>
+					</xsl:choose>
 				</div>
 			</div>
 		</div>

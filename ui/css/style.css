@@ -11,6 +11,9 @@
 	var-borderColor:#E7E7E7;
 	var-backgroundColor:#F8F8F8;
 }
+.rtl {
+	direction: rtl;
+}
 /*
   ***************************************
   GLOBAL
@@ -238,6 +241,7 @@ select[name = "interval"],
 }
 .left{
 	vertical-align:middle;
+	text-align:left;
 }
 .right{
 	text-align:right;

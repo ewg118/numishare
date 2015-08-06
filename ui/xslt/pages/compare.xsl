@@ -61,6 +61,9 @@
 
 	<xsl:template name="compare">
 		<div class="container-fluid">
+			<xsl:if test="$lang='ar'">
+				<xsl:attribute name="style">direction: rtl;</xsl:attribute>							
+			</xsl:if>
 			<div class="row">
 				<div class="col-md-12">
 					<h1>

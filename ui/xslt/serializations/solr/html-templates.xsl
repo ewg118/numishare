@@ -15,6 +15,9 @@
 			</xsl:if>
 			<div class="col-md-12">
 				<h4>
+					<xsl:if test="$lang='ar'">
+						<xsl:attribute name="style">direction: ltr; text-align:right</xsl:attribute>
+					</xsl:if>
 					<xsl:choose>
 						<xsl:when test="$mode = 'compare'">
 							<a href="{$display_path}id/{str[@name='recordId']}?mode=compare&amp;q={$q}&amp;start={$start}&amp;image={$image}&amp;side={$side}" class="compare">
@@ -58,55 +61,32 @@
 						<xsl:when test="str[@name='recordType'] = 'hoard'">
 							<xsl:if test="string(str[@name='findspot_display'])">
 								<dt>
-									<xsl:if test="$lang='ar'">
-										<xsl:attribute name="class">ar</xsl:attribute>
-									</xsl:if>
 									<xsl:value-of select="numishare:regularize_node('findspot', $lang)"/>
 								</dt>
 								<dd>
-									<xsl:if test="$lang='ar'">
-										<xsl:attribute name="class">ar</xsl:attribute>
-									</xsl:if>
 									<xsl:value-of select="str[@name='findspot_display']"/>
 								</dd>
 							</xsl:if>
 							<dt>
-								<xsl:if test="$lang='ar'">
-									<xsl:attribute name="class">ar</xsl:attribute>
-								</xsl:if>
 								<xsl:value-of select="numishare:regularize_node('closing_date', $lang)"/>
 							</dt>
 							<dd>
-								<xsl:if test="$lang='ar'">
-									<xsl:attribute name="class">ar</xsl:attribute>
-								</xsl:if>
 								<xsl:value-of select="str[@name='closing_date_display']"/>
 							</dd>
 							<xsl:if test="string(str[@name='description_display'])">
 								<dt>
-									<xsl:if test="$lang='ar'">
-										<xsl:attribute name="class">ar</xsl:attribute>
-									</xsl:if>
 									<xsl:value-of select="numishare:regularize_node('description', $lang)"/>
 								</dt>
 								<dd>
-									<xsl:if test="$lang='ar'">
-										<xsl:attribute name="class">ar</xsl:attribute>
-									</xsl:if>
 									<xsl:value-of select="str[@name='description_display']"/>
 								</dd>
 							</xsl:if>
 							<xsl:if test="arr[@name='reference_facet']">
 								<dt>
-									<xsl:if test="$lang='ar'">
-										<xsl:attribute name="class">ar</xsl:attribute>
-									</xsl:if>
 									<xsl:value-of select="numishare:regularize_node('reference', $lang)"/>
 								</dt>
 								<dd>
-									<xsl:if test="$lang='ar'">
-										<xsl:attribute name="class">ar</xsl:attribute>
-									</xsl:if>
+									
 									<xsl:for-each select="arr[@name='reference_facet']/str">
 										<xsl:value-of select="."/>
 										<xsl:if test="not(position() = last())">
@@ -153,15 +133,10 @@
 							</xsl:if>
 							<xsl:if test="str[@name='obv_leg_display'] or str[@name='obv_type_display']">
 								<dt>
-									<xsl:if test="$lang='ar'">
-										<xsl:attribute name="class">ar</xsl:attribute>
-									</xsl:if>
 									<xsl:value-of select="numishare:regularize_node('obverse', $lang)"/>
 								</dt>
 								<dd>
-									<xsl:if test="$lang='ar'">
-										<xsl:attribute name="class">ar</xsl:attribute>
-									</xsl:if>
+								
 									<xsl:value-of select="str[@name='obv_leg_display']"/>
 									<xsl:if test="str[@name='obv_leg_display'] and str[@name='obv_type_display']">
 										<xsl:text>: </xsl:text>
@@ -171,15 +146,9 @@
 							</xsl:if>
 							<xsl:if test="str[@name='rev_leg_display'] or str[@name='rev_type_display']">
 								<dt>
-									<xsl:if test="$lang='ar'">
-										<xsl:attribute name="class">ar</xsl:attribute>
-									</xsl:if>
 									<xsl:value-of select="numishare:regularize_node('reverse', $lang)"/>
 								</dt>
 								<dd>
-									<xsl:if test="$lang='ar'">
-										<xsl:attribute name="class">ar</xsl:attribute>
-									</xsl:if>
 									<xsl:value-of select="str[@name='rev_leg_display']"/>
 									<xsl:if test="str[@name='rev_leg_display'] and str[@name='rev_type_display']">
 										<xsl:text>: </xsl:text>
@@ -189,9 +158,6 @@
 							</xsl:if>
 							<xsl:if test="float[@name='diameter_num']">
 								<dt>
-									<xsl:if test="$lang='ar'">
-										<xsl:attribute name="class">ar</xsl:attribute>
-									</xsl:if>
 									<xsl:value-of select="numishare:regularize_node('diameter', $lang)"/>
 								</dt>
 								<dd>
@@ -203,29 +169,17 @@
 							</xsl:if>
 							<xsl:if test="float[@name='weight_num']">
 								<dt>
-									<xsl:if test="$lang='ar'">
-										<xsl:attribute name="class">ar</xsl:attribute>
-									</xsl:if>
 									<xsl:value-of select="numishare:regularize_node('weight', $lang)"/>
 								</dt>
 								<dd>
-									<xsl:if test="$lang='ar'">
-										<xsl:attribute name="class">ar</xsl:attribute>
-									</xsl:if>
 									<xsl:value-of select="float[@name='weight_num']"/>
 								</dd>
 							</xsl:if>
 							<xsl:if test="arr[@name='reference_facet']">
 								<dt>
-									<xsl:if test="$lang='ar'">
-										<xsl:attribute name="class">ar</xsl:attribute>
-									</xsl:if>
 									<xsl:value-of select="numishare:regularize_node('reference', $lang)"/>
 								</dt>
 								<dd>
-									<xsl:if test="$lang='ar'">
-										<xsl:attribute name="class">ar</xsl:attribute>
-									</xsl:if>
 									<xsl:for-each select="arr[@name='reference_facet']/str">
 										<xsl:value-of select="."/>
 										<xsl:if test="not(position() = last())">
@@ -236,15 +190,9 @@
 							</xsl:if>
 							<xsl:if test="arr[@name='provenance_facet']">
 								<dt>
-									<xsl:if test="$lang='ar'">
-										<xsl:attribute name="class">ar</xsl:attribute>
-									</xsl:if>
 									<xsl:value-of select="numishare:regularize_node('provenance', $lang)"/>
 								</dt>
 								<dd>
-									<xsl:if test="$lang='ar'">
-										<xsl:attribute name="class">ar</xsl:attribute>
-									</xsl:if>
 									<xsl:for-each select="arr[@name='provenance_facet']/str">
 										<xsl:value-of select="."/>
 										<xsl:if test="not(position() = last())">
@@ -604,82 +552,54 @@
 							</xsl:otherwise>
 						</xsl:choose>
 					</xsl:variable>
-					<div class="stacked_term bg-info row">
+					<div class="stacked_term bg-info row">						
 						<xsl:if test="$lang='ar'">
-							<xsl:attribute name="style">text-align:right</xsl:attribute>
+							<div class="col-md-2 left">
+								<a href="{$display_path}results?q={if (string($new_query)) then encode-for-uri($new_query) else '*:*'}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+									<span class="glyphicon glyphicon-remove"/>
+								</a>
+							</div>
 						</xsl:if>
 						<!-- establish orientation based on language parameter -->
-						<xsl:choose>
-							<xsl:when test="$lang='ar'">
-								<div class="col-md-2">
-									<a href="{$display_path}results?q={if (string($new_query)) then encode-for-uri($new_query) else '*:*'}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
-										<span class="glyphicon glyphicon-remove"/>
-									</a>
-								</div>
-								<div class="col-md-10">
-									<span>
-										<xsl:choose>
-											<xsl:when test="$field='century_num'">
-												<xsl:value-of select="numishare:normalize_century($term)"/>
-											</xsl:when>
-											<xsl:when test="contains($field, '_hier')">
-												<xsl:variable name="tokens" select="tokenize(substring($term, 2, string-length($term)-2), '\+')"/>
-												<xsl:for-each select="$tokens[position() &gt; 1]">
-													<xsl:sort select="position()" order="descending"/>
-													<xsl:value-of select="normalize-space(substring-after(substring-before(., '/'), '|'))"/>
-													<xsl:if test="not(position()=last())">
-														<xsl:text>--</xsl:text>
-													</xsl:if>
-												</xsl:for-each>
-											</xsl:when>
-											<xsl:otherwise>
-												<xsl:value-of select="$term"/>
-											</xsl:otherwise>
-										</xsl:choose>
-										<b>:<xsl:value-of select="$name"/></b>
-									</span>
-								</div>
-							</xsl:when>
-							<xsl:otherwise>
-								<div class="col-md-10">
-									<span>
-										<b><xsl:value-of select="$name"/>: </b>
-										<xsl:choose>
-											<xsl:when test="$field='century_num'">
-												<xsl:value-of select="numishare:normalize_century($term)"/>
-											</xsl:when>
-											<xsl:when test="contains($field, '_hier')">
-												<xsl:variable name="tokens" select="tokenize(substring($term, 2, string-length($term)-2), '\+')"/>
-												<xsl:for-each select="$tokens[position() &gt; 1]">
-													<xsl:sort select="position()" order="descending"/>
-													<xsl:value-of select="normalize-space(substring-after(substring-before(., '/'), '|'))"/>
-													<xsl:if test="not(position()=last())">
-														<xsl:text>--</xsl:text>
-													</xsl:if>
-												</xsl:for-each>
-											</xsl:when>
-											<xsl:otherwise>
-												<xsl:value-of select="$term"/>
-											</xsl:otherwise>
-										</xsl:choose>
-									</span>
-								</div>
-								<div class="col-md-2 right">
-									<a href="{$display_path}results?q={if (string($new_query)) then encode-for-uri($new_query) else '*:*'}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
-										<span class="glyphicon glyphicon-remove"/>
-									</a>
-								</div>
-							</xsl:otherwise>
-						</xsl:choose>
+						<div class="col-md-10">
+							<span>
+								<b><xsl:value-of select="$name"/>: </b>
+								<xsl:choose>
+									<xsl:when test="$field='century_num'">
+										<xsl:value-of select="numishare:normalize_century($term)"/>
+									</xsl:when>
+									<xsl:when test="contains($field, '_hier')">
+										<xsl:variable name="tokens" select="tokenize(substring($term, 2, string-length($term)-2), '\+')"/>
+										<xsl:for-each select="$tokens[position() &gt; 1]">
+											<xsl:sort select="position()" order="descending"/>
+											<xsl:value-of select="normalize-space(substring-after(substring-before(., '/'), '|'))"/>
+											<xsl:if test="not(position()=last())">
+												<xsl:text>--</xsl:text>
+											</xsl:if>
+										</xsl:for-each>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:value-of select="$term"/>
+									</xsl:otherwise>
+								</xsl:choose>
+							</span>
+						</div>
+						<xsl:if test="not($lang='ar')">
+							<div class="col-md-2 right">
+								<a href="{$display_path}results?q={if (string($new_query)) then encode-for-uri($new_query) else '*:*'}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+									<span class="glyphicon glyphicon-remove"/>
+								</a>
+							</div>
+						</xsl:if>
+						
 					</div>
 				</xsl:when>
 				<!-- if the token contains a parenthisis, then it was probably sent from the search widget and the token must be broken down further to remove other facets -->
 				<xsl:when test="substring(., 1, 1) = '('">
 					<xsl:variable name="tokenized-fragments" select="tokenize(., ' OR ')"/>
 					<div class="stacked_term bg-info row">
-						<xsl:if test="$lang='ar'">
-							<xsl:attribute name="style">text-align:right</xsl:attribute>
-							<div class="col-md-2">
+						<xsl:if test="$lang='ar'">							
+							<div class="col-md-2 left">
 								<a href="{$display_path}results?q={if (string($new_query)) then encode-for-uri($new_query) else '*:*'}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
 									<span class="glyphicon glyphicon-remove"/>
 								</a>
@@ -762,73 +682,38 @@
 											</xsl:otherwise>
 										</xsl:choose>
 									</xsl:variable>
-									<!-- establish orientation based on language parameter -->
+									<!-- display either the term or the regularized name for the century -->
+									<b>
+										<xsl:value-of select="numishare:normalize_fields($field, $lang)"/>
+										<xsl:text>: </xsl:text>
+									</b>
 									<xsl:choose>
-										<xsl:when test="$lang='ar'">
-											<!-- concatenate the query with the multicategory removed with the new multicategory, or if the multicategory is empty, display just the $new_query -->
-											<a href="{$display_path}results?q={if (string($multicategory_query) and string($new_query)) then concat($new_query, ' AND ', $multicategory_query) else if
-												(string($multicategory_query) and not(string($new_query))) then $multicategory_query else $new_query}{if (string($lang)) then concat('&amp;lang=',
-												$lang) else ''}">
-												<span class="glyphicon glyphicon-remove"/>
-											</a>
-											<xsl:choose>
-												<xsl:when test="$field='century_num'">
-													<xsl:value-of select="numishare:normalize_century($value)"/>
-												</xsl:when>
-												<xsl:when test="contains($field, '_hier')">
-													<xsl:variable name="tokens" select="tokenize(substring($value, 2, string-length($value)-2), '\+')"/>
-													<xsl:for-each select="$tokens[position() &gt; 1]">
-														<xsl:sort select="position()" order="descending"/>
-														<xsl:value-of select="normalize-space(replace(substring-after(substring-before(., '/'), '|'), '&#x022;', ''))"/>
-														<xsl:if test="not(position()=last())">
-															<xsl:text>--</xsl:text>
-														</xsl:if>
-													</xsl:for-each>
-												</xsl:when>
-												<xsl:otherwise>
-													<xsl:value-of select="$value"/>
-												</xsl:otherwise>
-											</xsl:choose>
-											<b>
-												<xsl:text>: </xsl:text>
-												<xsl:value-of select="numishare:normalize_fields($field, $lang)"/>
-											</b>
+										<xsl:when test="$field='century_num'">
+											<xsl:value-of select="numishare:normalize_century($value)"/>
+										</xsl:when>
+										<xsl:when test="contains($field, '_hier')">
+											<xsl:variable name="tokens" select="tokenize(substring($value, 2, string-length($value)-2), '\+')"/>
+											<xsl:for-each select="$tokens[position() &gt; 1]">
+												<xsl:sort select="position()" order="descending"/>
+												<xsl:value-of select="normalize-space(replace(substring-after(substring-before(., '/'), '|'), '&#x022;', ''))"/>
+												<xsl:if test="not(position()=last())">
+													<xsl:text>--</xsl:text>
+												</xsl:if>
+											</xsl:for-each>
 										</xsl:when>
 										<xsl:otherwise>
-											<!-- display either the term or the regularized name for the century -->
-											<b>
-												<xsl:value-of select="numishare:normalize_fields($field, $lang)"/>
-												<xsl:text>: </xsl:text>
-											</b>
-											<xsl:choose>
-												<xsl:when test="$field='century_num'">
-													<xsl:value-of select="numishare:normalize_century($value)"/>
-												</xsl:when>
-												<xsl:when test="contains($field, '_hier')">
-													<xsl:variable name="tokens" select="tokenize(substring($value, 2, string-length($value)-2), '\+')"/>
-													<xsl:for-each select="$tokens[position() &gt; 1]">
-														<xsl:sort select="position()" order="descending"/>
-														<xsl:value-of select="normalize-space(replace(substring-after(substring-before(., '/'), '|'), '&#x022;', ''))"/>
-														<xsl:if test="not(position()=last())">
-															<xsl:text>--</xsl:text>
-														</xsl:if>
-													</xsl:for-each>
-												</xsl:when>
-												<xsl:otherwise>
-													<xsl:value-of select="$value"/>
-												</xsl:otherwise>
-											</xsl:choose>
-											<!-- concatenate the query with the multicategory removed with the new multicategory, or if the multicategory is empty, display just the $new_query -->
-											<a href="{$display_path}results?q={if (string($multicategory_query) and string($new_query)) then concat($new_query, ' AND ', $multicategory_query) else if
-												(string($multicategory_query) and not(string($new_query))) then $multicategory_query else $new_query}{if (string($lang)) then concat('&amp;lang=',
-												$lang) else ''}">
-												<span class="glyphicon glyphicon-remove"/>
-											</a>
-											<xsl:if test="position() != last()">
-												<xsl:text> OR </xsl:text>
-											</xsl:if>
+											<xsl:value-of select="$value"/>
 										</xsl:otherwise>
 									</xsl:choose>
+									<!-- concatenate the query with the multicategory removed with the new multicategory, or if the multicategory is empty, display just the $new_query -->
+									<a href="{$display_path}results?q={if (string($multicategory_query) and string($new_query)) then concat($new_query, ' AND ', $multicategory_query) else if
+										(string($multicategory_query) and not(string($new_query))) then $multicategory_query else $new_query}{if (string($lang)) then concat('&amp;lang=',
+										$lang) else ''}">
+										<span class="glyphicon glyphicon-remove"/>
+									</a>
+									<xsl:if test="position() != last()">
+										<xsl:text> OR </xsl:text>
+									</xsl:if>
 								</xsl:for-each>
 							</span>
 						</div>
@@ -1129,7 +1014,7 @@
 					<input type="hidden" name="lang" value="{$lang}"/>
 				</xsl:if>
 				<div class="input-group">
-					<input type="text" class="form-control" id="qs_text" placeholder="Search"/>
+					<input type="text" class="form-control" id="qs_text" placeholder="{numishare:normalizeLabel('header_search', $lang)}"/>
 					<div class="input-group-btn">
 						<button class="btn btn-default" type="submit">
 							<i class="glyphicon glyphicon-search"/>
