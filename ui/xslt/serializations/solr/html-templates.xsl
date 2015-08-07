@@ -334,6 +334,17 @@
 					</xsl:otherwise>
 				</xsl:choose>
 			</h4>
+			
+			<!-- if AH date range searching is enabled, then display that form first -->
+			<xsl:if test="/content/config/ah_enabled='true'">
+				<div class="form-group" id="ah_dateRange">
+					<span>AH </span>
+					<input type="text" id="ah_fromDate" class="form-control" placeholder="{numishare:normalize_fields('fromDate', $lang)}"/>
+					<span> - </span>
+					<input type="text" id="ah_toDate" class="form-control" placeholder="{numishare:normalize_fields('toDate', $lang)}"/>					
+				</div>
+			</xsl:if>
+			
 			<div class="form-group">
 				<div>
 					<label>

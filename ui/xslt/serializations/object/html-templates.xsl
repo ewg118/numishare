@@ -33,7 +33,8 @@
 			<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
 		</xsl:element>
 		<xsl:if test="string($typeDesc_resource)">
-			<p>Source: <a href="{$typeDesc_resource}" rel="nmo:hasTypeSeriesItem"><xsl:value-of select="$nudsGroup//object[@xlink:href = $typeDesc_resource]/nuds:nuds/nuds:descMeta/nuds:title"/></a></p>
+			<p>Source: <a href="{$typeDesc_resource}" rel="nmo:hasTypeSeriesItem"><xsl:value-of select="$nudsGroup//object[@xlink:href = $typeDesc_resource]/nuds:nuds/nuds:descMeta/nuds:title"
+				/></a></p>
 		</xsl:if>
 		<ul>
 			<xsl:choose>
@@ -56,13 +57,13 @@
 					<xsl:choose>
 						<xsl:when test="string(@xlink:role)">
 							<xsl:value-of select="@xlink:role"/>
-						</xsl:when>						
+						</xsl:when>
 						<xsl:otherwise>
 							<xsl:value-of select="local-name()"/>
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:variable>
-				
+
 				<li>
 					<!-- display label first for non-Arabic languages -->
 					<b>
@@ -79,11 +80,11 @@
 									</xsl:otherwise>
 								</xsl:choose>
 							</xsl:when>
-							<xsl:otherwise>								
+							<xsl:otherwise>
 								<xsl:value-of select="numishare:regularize_node($field, $lang)"/>
 							</xsl:otherwise>
 						</xsl:choose>
-						
+
 						<xsl:text>: </xsl:text>
 					</b>
 					<!-- create link from facet, if applicable -->
@@ -164,22 +165,15 @@
 
 					<!-- display title -->
 					<xsl:if test="string(@title)">
-						<i>
-							<xsl:text> (</xsl:text>
-							<xsl:value-of select="@title"/>
-							<xsl:text>)</xsl:text>
-						</i>
+						<i> (<xsl:value-of select="@title"/>)</i>
 					</xsl:if>
 					<!-- display certainty -->
 					<xsl:if test="string(@certainty)">
-						<i>
-							<xsl:text> (</xsl:text>
-							<xsl:value-of select="@certainty"/>
-							<xsl:text>)</xsl:text>
-						</i>
+						<i> (<xsl:value-of select="@certainty"/>)</i>
 					</xsl:if>
+					<!-- display calendar -->
 					<xsl:if test="string(@calendar)">
-						<i> (calendar: <xsl:value-of select="@calendar"/>)</i>
+						<i> (<xsl:value-of select="@calendar"/>)</i>
 					</xsl:if>
 					<!-- create links to resources -->
 					<xsl:if test="string($href)">
@@ -213,15 +207,16 @@
 									</xsl:if>
 									<xsl:apply-templates select="*" mode="descMeta"/>
 									<!-- if the $recordType is 'conceptual' and there is no legend or description, and thee are subtypes, display the subtype data -->
-									<xsl:if test="$recordType='conceptual' and count($subtypes//subtype) &gt; 0">										
+									<xsl:if test="$recordType='conceptual' and count($subtypes//subtype) &gt; 0">
 										<xsl:if test="(local-name() = 'obverse' or local-name()='reverse' ) and not(nuds:type)">
 											<xsl:variable name="side" select="local-name()"/>
 											<li>
-												<b>													
-													<xsl:value-of select="numishare:regularize_node('description', $lang)"/>	
+												<b>
+													<xsl:value-of select="numishare:regularize_node('description', $lang)"/>
 													<xsl:text>: </xsl:text>
 												</b>
-												<xsl:for-each select="distinct-values($subtypes//subtype/descendant::*[local-name()=$side]/nuds:type/nuds:description[if (string($lang)) then @xml:lang=$lang else @xml:lang='en'])">
+												<xsl:for-each select="distinct-values($subtypes//subtype/descendant::*[local-name()=$side]/nuds:type/nuds:description[if (string($lang)) then
+													@xml:lang=$lang else @xml:lang='en'])">
 													<xsl:value-of select="."/>
 													<xsl:if test="not(position()=last())"> | </xsl:if>
 												</xsl:for-each>
@@ -230,8 +225,8 @@
 										<xsl:if test="(local-name() = 'obverse' or local-name()='reverse' ) and not(nuds:legend)">
 											<xsl:variable name="side" select="local-name()"/>
 											<li>
-												<b>													
-													<xsl:value-of select="numishare:regularize_node('legend', $lang)"/>	
+												<b>
+													<xsl:value-of select="numishare:regularize_node('legend', $lang)"/>
 													<xsl:text>: </xsl:text>
 												</b>
 												<xsl:for-each select="distinct-values($subtypes//subtype/descendant::*[local-name()=$side]/nuds:legend)">

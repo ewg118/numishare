@@ -11,8 +11,8 @@
 	var-borderColor:#E7E7E7;
 	var-backgroundColor:#F8F8F8;
 }
-.rtl {
-	direction: rtl;
+.rtl{
+	direction:rtl;
 }
 /*
   ***************************************
@@ -159,6 +159,13 @@ select[name = "interval"],
 	margin-right:5px;
 	display:inline;
 }
+#ah_fromDate,
+#ah_toDate{
+	width:100px;
+	margin-left:0px;
+	margin-right:5px;
+	display:inline;
+}
 .from_era,
 .to_era,
 #from_era,
@@ -216,7 +223,7 @@ select[name = "interval"],
 .thumbImage > img{
 	max-width:120px;
 }
-.quick_search {
+.quick_search{
 	width:250px;
 	padding:10px 0;
 }
@@ -250,7 +257,7 @@ select[name = "interval"],
 .sort_div{
 	margin-bottom:20px;
 }
-#typeNumber {
+#typeNumber{
 	width:250px;
 }
 /*
@@ -273,11 +280,13 @@ button.multiselect{
 	float:right;
 	padding-right:5px;
 }
-.category_level, .findspot_level{
+.category_level,
+.findspot_level{
 	margin-left:20px;
 	padding:0;
 }
-#century_num-list, .hier-list{
+#century_num-list,
+.hier-list{
 	max-height:250px;
 	width:250px;
 	overflow-y:auto;
@@ -285,7 +294,8 @@ button.multiselect{
 	width:100%;
 	z-index:3000;
 }
-.expand_century, .expand_category {
+.expand_century,
+.expand_category{
 	cursor:pointer;
 	margin:1px;
 }

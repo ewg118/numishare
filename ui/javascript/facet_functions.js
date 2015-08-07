@@ -81,6 +81,15 @@ function getQuery() {
 		}
 	}
 	
+	if ($('#ah_dateRange').length > 0){
+		if ($('#ah_fromDate').val().length > 0 || $('#ah_toDate').val().length > 0){
+			var dateRange = getAhDateRange();
+			if (dateRange.length > 0) {
+				query.push(dateRange);
+			}
+		}		
+	}
+	
 	//get typeNumber
 	if ($('#typeNumber').length > 0) {
 		if ($('#typeNumber').val().length > 0) {
@@ -114,6 +123,16 @@ function getDateRange(collection_type) {
 	var to_era = $('#to_era') .val() == 'minus'? '-': '';
 	
 	string += '[' + (from_date == '*'? '': from_era) + from_date + ' TO ' + (to_date == '*'? '': to_era) + to_date + ']';
+	return string;
+}
+
+//get the date range for AH dates
+function getAhDateRange(){
+	var string = 'ah_num:';
+	var from_date = $('#ah_fromDate') .val().length > 0? $('#ah_fromDate') .val(): '*';
+	var to_date = $('#ah_toDate') .val().length > 0? $('#ah_toDate') .val(): '*';
+	string += '[' + from_date + ' TO ' + to_date + ']';
+	alert(string);
 	return string;
 }
 
