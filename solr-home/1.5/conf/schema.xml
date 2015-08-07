@@ -81,7 +81,7 @@
 	<copyField source="obv_leg_text" dest="legend_text"/>
 	<copyField source="rev_leg_text" dest="legend_text"/>
 	<!-- copy text fields -->
-	<copyField source="*_text" dest="text"/>
+	<copyField source="*_text" dest="fulltext"/>
 	
 	<!-- numeric data types, often used for sorting.  century_num is basically a facet and year_num is also used for range searches -->
 	<field name="axis_num" type="tint" indexed="true" stored="true"/>
