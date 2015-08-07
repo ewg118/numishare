@@ -132,7 +132,6 @@ function getAhDateRange(){
 	var from_date = $('#ah_fromDate') .val().length > 0? $('#ah_fromDate') .val(): '*';
 	var to_date = $('#ah_toDate') .val().length > 0? $('#ah_toDate') .val(): '*';
 	string += '[' + from_date + ' TO ' + to_date + ']';
-	alert(string);
 	return string;
 }
 
