@@ -33,7 +33,7 @@ foreach ($labels[0] as $k=>$v){
 	if ($k != 'field'){
 		$text = '<xsl:when test="$lang=\'' . $k . '\'"><xsl:choose>';
 		foreach ($$k as $row){
-			$text .= '<xsl:when test="$label=\'' . $row[0] . '\'">' . $row[1] . '</xsl:when>' . "\n";
+			$text .= '<xsl:when test="$label=\'' . $row[0] . '\'">' . trim($row[1]) . '</xsl:when>' . "\n";
 		}
 		$text .= '</xsl:choose></xsl:when>';
 		file_put_contents($k . '.txt', $text);
