@@ -160,10 +160,7 @@
 								<dt>
 									<xsl:value-of select="numishare:regularize_node('diameter', $lang)"/>
 								</dt>
-								<dd>
-									<xsl:if test="$lang='ar'">
-										<xsl:attribute name="class">ar</xsl:attribute>
-									</xsl:if>
+								<dd>									
 									<xsl:value-of select="float[@name='diameter_num']"/>
 								</dd>
 							</xsl:if>
@@ -209,8 +206,7 @@
 						<xsl:choose>
 							<xsl:when test="contains($sort, '_num')">
 								<dt>
-									<xsl:value-of select="$regularized_sort"/>
-									<xsl:text>:</xsl:text>
+									<xsl:value-of select="$regularized_sort"/>									
 								</dt>
 								<dd>
 									<xsl:for-each select="distinct-values(*[@name=$sort_category])">
@@ -224,8 +220,7 @@
 							</xsl:when>
 							<xsl:when test="contains($sort, 'timestamp')">
 								<dt>
-									<xsl:value-of select="$regularized_sort"/>
-									<xsl:text>:</xsl:text>
+									<xsl:value-of select="$regularized_sort"/>									
 								</dt>
 								<dd>
 									<xsl:value-of select="date[@name='timestamp']"/>
@@ -245,7 +240,6 @@
 										<xsl:if test="arr[@name=$sort_category]/str">
 											<dt>
 												<xsl:value-of select="$regularized_sort"/>
-												<xsl:text>:</xsl:text>
 											</dt>
 											<dd>
 												<xsl:for-each select="arr[@name=$sort_category]/str">
@@ -263,8 +257,7 @@
 							<xsl:otherwise>
 								<xsl:if test="str[@name=$sort_category]">
 									<dt>
-										<xsl:value-of select="$regularized_sort"/>
-										<xsl:text>:</xsl:text>
+										<xsl:value-of select="$regularized_sort"/>										
 									</dt>
 									<dd>
 										<xsl:value-of select="substring(str[@name=$sort_category], 1, 25)"/>
