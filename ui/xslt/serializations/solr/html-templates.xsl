@@ -20,7 +20,7 @@
 					</xsl:if>
 					<xsl:choose>
 						<xsl:when test="$mode = 'compare'">
-							<a href="{$display_path}id/{str[@name='recordId']}?mode=compare&amp;q={$q}&amp;start={$start}&amp;image={$image}&amp;side={$side}" class="compare">
+							<a href="{$display_path}id/{str[@name='recordId']}?mode=compare&amp;q={$q}&amp;start={$start}&amp;image={$image}&amp;side={$side}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}" class="compare">
 								<xsl:value-of select="str[@name='title_display']"/>
 							</a>
 						</xsl:when>
@@ -56,7 +56,7 @@
 						<img src="{str[@name=$img_string]}" style="height:320px"/>
 					</div>
 				</xsl:if>
-				<dl class="dl-horizontal">
+				<dl class=" {if($lang='ar') then 'dl-horizontal ar' else 'dl-horizontal'}">
 					<xsl:choose>
 						<xsl:when test="str[@name='recordType'] = 'hoard'">
 							<xsl:if test="string(str[@name='findspot_display'])">
@@ -86,7 +86,7 @@
 									<xsl:value-of select="numishare:regularize_node('reference', $lang)"/>
 								</dt>
 								<dd>
-									
+
 									<xsl:for-each select="arr[@name='reference_facet']/str">
 										<xsl:value-of select="."/>
 										<xsl:if test="not(position() = last())">
@@ -136,7 +136,7 @@
 									<xsl:value-of select="numishare:regularize_node('obverse', $lang)"/>
 								</dt>
 								<dd>
-								
+
 									<xsl:value-of select="str[@name='obv_leg_display']"/>
 									<xsl:if test="str[@name='obv_leg_display'] and str[@name='obv_type_display']">
 										<xsl:text>: </xsl:text>
@@ -334,17 +334,17 @@
 					</xsl:otherwise>
 				</xsl:choose>
 			</h4>
-			
+
 			<!-- if AH date range searching is enabled, then display that form first -->
 			<xsl:if test="/content/config/ah_enabled='true'">
 				<div class="form-group" id="ah_dateRange">
 					<span>AH </span>
 					<input type="text" id="ah_fromDate" class="form-control" placeholder="{numishare:normalize_fields('fromDate', $lang)}"/>
 					<span> - </span>
-					<input type="text" id="ah_toDate" class="form-control" placeholder="{numishare:normalize_fields('toDate', $lang)}"/>					
+					<input type="text" id="ah_toDate" class="form-control" placeholder="{numishare:normalize_fields('toDate', $lang)}"/>
 				</div>
 			</xsl:if>
-			
+
 			<div class="form-group">
 				<div>
 					<label>
@@ -563,7 +563,7 @@
 							</xsl:otherwise>
 						</xsl:choose>
 					</xsl:variable>
-					<div class="stacked_term bg-info row">						
+					<div class="stacked_term bg-info row">
 						<xsl:if test="$lang='ar'">
 							<div class="col-md-2 left">
 								<a href="{$display_path}results?q={if (string($new_query)) then encode-for-uri($new_query) else '*:*'}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
@@ -602,14 +602,14 @@
 								</a>
 							</div>
 						</xsl:if>
-						
+
 					</div>
 				</xsl:when>
 				<!-- if the token contains a parenthisis, then it was probably sent from the search widget and the token must be broken down further to remove other facets -->
 				<xsl:when test="substring(., 1, 1) = '('">
 					<xsl:variable name="tokenized-fragments" select="tokenize(., ' OR ')"/>
 					<div class="stacked_term bg-info row">
-						<xsl:if test="$lang='ar'">							
+						<xsl:if test="$lang='ar'">
 							<div class="col-md-2 left">
 								<a href="{$display_path}results?q={if (string($new_query)) then encode-for-uri($new_query) else '*:*'}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
 									<span class="glyphicon glyphicon-remove"/>
@@ -856,7 +856,7 @@
 		<xsl:variable name="current" select="$start_var div $rows + 1"/>
 		<xsl:variable name="total" select="ceiling($numFound div $rows)"/>
 		<div class="paging_div row">
-			<div class="col-md-6">
+			<div class="col-md-6 {if ($lang='ar') then 'pull-right' else ''}">
 				<xsl:variable name="startRecord" select="$start_var + 1"/>
 				<xsl:variable name="endRecord">
 					<xsl:choose>
@@ -868,37 +868,73 @@
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:variable>
-				<xsl:value-of select="replace(replace(replace(numishare:normalizeLabel('results_result-desc', $lang), 'XX', string($startRecord)), 'YY', string($endRecord)), 'ZZ', string($numFound))"
-				/>
+				<xsl:choose>
+					<xsl:when test="$lang='ar'">
+						<xsl:value-of select="replace(replace(replace(numishare:normalizeLabel('results_result-desc', $lang), 'أ أ', string($startRecord)), 'ب ب', string($endRecord)), 'ج ج',
+							string($numFound))"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="replace(replace(replace(numishare:normalizeLabel('results_result-desc', $lang), 'XX', string($startRecord)), 'YY', string($endRecord)), 'ZZ',
+							string($numFound))"/>
+					</xsl:otherwise>
+				</xsl:choose>
+
 			</div>
 			<!-- paging functionality -->
 			<div class="col-md-6 page-nos">
 				<div class="btn-toolbar" role="toolbar">
-					<div class="btn-group pagination" style="float:right">
+					<div class="btn-group pagination {if (not($lang='ar')) then 'pull-right' else ''}">
 						<xsl:choose>
-							<xsl:when test="$start_var &gt;= $rows">
-								<a class="btn btn-default pagingBtn" role="button" title="First" href="{if($pipeline='results') then 'results' else ''}?q={encode-for-uri($q)}{if (string($sort)) then
-									concat('&amp;sort=', $sort)          else ''}{if(string($lang)) then concat('&amp;lang=', $lang) else ''}">
-									<span class="glyphicon glyphicon-fast-backward"/>
-								</a>
-								<a class="btn btn-default pagingBtn" role="button" title="Previous" href="{if($pipeline='results') then 'results' else
-									''}?q={encode-for-uri($q)}&amp;start={$previous}{if (string($sort)) then          concat('&amp;sort=',          $sort) else ''}{if (string($lang)) then
-									concat('&amp;lang=', $lang) else ''}">
-									<span class="glyphicon glyphicon-backward"/>
-								</a>
+							<xsl:when test="$lang='ar'">
+								<xsl:choose>
+									<xsl:when test="$numFound - $start_var &gt; $rows">
+										<xsl:call-template name="last-button">
+											<xsl:with-param name="class">pagingBtn</xsl:with-param>
+											<xsl:with-param name="total" select="$total"/>
+										</xsl:call-template>
+										<xsl:call-template name="next-button">
+											<xsl:with-param name="class">pagingBtn</xsl:with-param>
+											<xsl:with-param name="next" select="$next"/>
+										</xsl:call-template>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:call-template name="last-button">
+											<xsl:with-param name="class">disabled</xsl:with-param>
+											<xsl:with-param name="total" select="$total"/>
+										</xsl:call-template>
+										<xsl:call-template name="next-button">
+											<xsl:with-param name="class">disabled</xsl:with-param>
+											<xsl:with-param name="next" select="$next"/>
+										</xsl:call-template>
+									</xsl:otherwise>
+								</xsl:choose>
+
 							</xsl:when>
 							<xsl:otherwise>
-								<a class="btn btn-default disabled" role="button" title="First" href="{if($pipeline='results') then 'results' else ''}?q={encode-for-uri($q)}{if (string($sort)) then
-									concat('&amp;sort=', $sort)          else ''}{if(string($lang)) then concat('&amp;lang=', $lang) else ''}">
-									<span class="glyphicon glyphicon-fast-backward"/>
-								</a>
-								<a class="btn btn-default disabled" role="button" title="Previous" href="{if($pipeline='results') then 'results' else
-									''}?q={encode-for-uri($q)}&amp;start={$previous}{if (string($sort)) then          concat('&amp;sort=', $sort) else ''}{if (string($lang)) then concat('&amp;lang=',
-									$lang) else ''}">
-									<span class="glyphicon glyphicon-backward"/>
-								</a>
+								<xsl:choose>
+									<xsl:when test="$start_var &gt;= $rows">
+										<xsl:call-template name="first-button">
+											<xsl:with-param name="class">pagingBtn</xsl:with-param>
+										</xsl:call-template>
+										<xsl:call-template name="prev-button">
+											<xsl:with-param name="class">pagingBtn</xsl:with-param>
+											<xsl:with-param name="previous" select="$previous"/>
+										</xsl:call-template>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:call-template name="first-button">
+											<xsl:with-param name="class">disabled</xsl:with-param>
+										</xsl:call-template>
+										<xsl:call-template name="prev-button">
+											<xsl:with-param name="class">disabled</xsl:with-param>
+											<xsl:with-param name="previous" select="$previous"/>
+										</xsl:call-template>
+									</xsl:otherwise>
+								</xsl:choose>
 							</xsl:otherwise>
 						</xsl:choose>
+
+
 						<!-- current page -->
 						<button type="button" class="btn btn-default active">
 							<b>
@@ -907,32 +943,105 @@
 						</button>
 						<!-- next page -->
 						<xsl:choose>
-							<xsl:when test="$numFound - $start_var &gt; $rows">
-								<a class="btn btn-default pagingBtn" role="button" title="Next" href="{if($pipeline='results') then 'results' else ''}?q={encode-for-uri($q)}&amp;start={$next}{if
-									(string($sort)) then          concat('&amp;sort=', $sort) else          ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
-									<span class="glyphicon glyphicon-forward"/>
-								</a>
-								<a class="btn btn-default pagingBtn" role="button" href="{if($pipeline='results') then 'results' else ''}?q={encode-for-uri($q)}&amp;start={($total * $rows) - $rows}{if
-									(string($sort)) then          concat('&amp;sort=',          $sort) else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
-									<span class="glyphicon glyphicon-fast-forward"/>
-								</a>
+							<xsl:when test="$lang='ar'">
+								<xsl:choose>
+									<xsl:when test="$start_var &gt;= $rows">
+										<xsl:call-template name="prev-button">
+											<xsl:with-param name="class">pagingBtn</xsl:with-param>
+											<xsl:with-param name="previous" select="$previous"/>
+										</xsl:call-template>
+										<xsl:call-template name="first-button">
+											<xsl:with-param name="class">pagingBtn</xsl:with-param>
+										</xsl:call-template>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:call-template name="prev-button">
+											<xsl:with-param name="class">disabled</xsl:with-param>
+											<xsl:with-param name="previous" select="$previous"/>
+										</xsl:call-template>
+										<xsl:call-template name="first-button">
+											<xsl:with-param name="class">disabled</xsl:with-param>
+										</xsl:call-template>
+									</xsl:otherwise>
+								</xsl:choose>
 							</xsl:when>
 							<xsl:otherwise>
-								<a class="btn btn-default disabled" role="button" title="Next" href="{if($pipeline='results') then 'results' else ''}?q={encode-for-uri($q)}&amp;start={$next}{if
-									(string($sort)) then          concat('&amp;sort=', $sort) else          ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
-									<span class="glyphicon glyphicon-forward"/>
-								</a>
-								<a class="btn btn-default disabled" role="button" href="{if($pipeline='results') then 'results' else ''}?q={encode-for-uri($q)}&amp;start={($total * $rows) - $rows}{if
-									(string($sort)) then          concat('&amp;sort=', $sort)          else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
-									<span class="glyphicon glyphicon-fast-forward"/>
-								</a>
+								<xsl:choose>
+									<xsl:when test="$numFound - $start_var &gt; $rows">
+										<xsl:call-template name="next-button">
+											<xsl:with-param name="class">pagingBtn</xsl:with-param>
+											<xsl:with-param name="next" select="$next"/>
+										</xsl:call-template>
+										<xsl:call-template name="last-button">
+											<xsl:with-param name="class">pagingBtn</xsl:with-param>
+											<xsl:with-param name="total" select="$total"/>
+										</xsl:call-template>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:call-template name="next-button">
+											<xsl:with-param name="class">disabled</xsl:with-param>
+											<xsl:with-param name="next" select="$next"/>
+										</xsl:call-template>
+										<xsl:call-template name="last-button">
+											<xsl:with-param name="class">disabled</xsl:with-param>
+											<xsl:with-param name="total" select="$total"/>
+										</xsl:call-template>
+									</xsl:otherwise>
+								</xsl:choose>
 							</xsl:otherwise>
 						</xsl:choose>
+
+
 					</div>
 				</div>
 			</div>
 		</div>
 	</xsl:template>
+
+	<!-- button templates (for arranging RTL in Arabic -->
+	<xsl:template name="first-button">
+		<xsl:param name="class"/>
+
+		<a class="btn btn-default {$class}" role="button" title="First" href="{if($pipeline='results') then 'results' else ''}?q={encode-for-uri($q)}{if (string($sort)) then    concat('&amp;sort=',
+			$sort)          else ''}{if(string($lang)) then concat('&amp;lang=', $lang) else ''}{if(string($side)) then concat('&amp;side=', $side) else ''}{if(string($mode)) then concat('&amp;mode=',
+			$mode) else ''}{if(string($image)) then concat('&amp;image=', $image) else ''}">
+			<span class="glyphicon glyphicon-fast-{if ($lang='ar') then 'forward' else 'backward'}"/>
+		</a>
+	</xsl:template>
+
+	<xsl:template name="prev-button">
+		<xsl:param name="class"/>
+		<xsl:param name="previous"/>
+
+		<a class="btn btn-default {$class}" role="button" title="Previous" href="{if($pipeline='results') then 'results' else    ''}?q={encode-for-uri($q)}&amp;start={$previous}{if (string($sort))
+			then          concat('&amp;sort=',          $sort) else ''}{if (string($lang)) then    concat('&amp;lang=', $lang) else ''}{if(string($side)) then concat('&amp;side=', $side) else ''}{if(string($mode)) then concat('&amp;mode=',
+			$mode) else ''}{if(string($image)) then concat('&amp;image=', $image) else ''}">
+			<span class="glyphicon glyphicon-{if ($lang='ar') then 'forward' else 'backward'}"/>
+		</a>
+	</xsl:template>
+
+	<xsl:template name="next-button">
+		<xsl:param name="class"/>
+		<xsl:param name="next"/>
+
+		<a class="btn btn-default {$class}" role="button" title="Next" href="{if($pipeline='results') then 'results' else ''}?q={encode-for-uri($q)}&amp;start={$next}{if    (string($sort)) then
+			concat('&amp;sort=', $sort) else          ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}{if(string($side)) then concat('&amp;side=', $side) else ''}{if(string($mode)) then concat('&amp;mode=',
+			$mode) else ''}{if(string($image)) then concat('&amp;image=', $image) else ''}">
+			<span class="glyphicon glyphicon-{if ($lang='ar') then 'backward' else 'forward'}"/>
+		</a>
+	</xsl:template>
+
+	<xsl:template name="last-button">
+		<xsl:param name="class"/>
+		<xsl:param name="total"/>
+
+		<a class="btn btn-default {$class}" role="button" href="{if($pipeline='results') then 'results' else ''}?q={encode-for-uri($q)}&amp;start={($total * $rows) - $rows}{if    (string($sort)) then
+			concat('&amp;sort=',          $sort) else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}{if(string($side)) then concat('&amp;side=', $side) else ''}{if(string($mode)) then concat('&amp;mode=',
+			$mode) else ''}{if(string($image)) then concat('&amp;image=', $image) else ''}">
+			<span class="glyphicon glyphicon-fast-{if ($lang='ar') then 'backward' else 'forward'}"/>
+		</a>
+	</xsl:template>
+
 	<xsl:template name="sort">
 		<xsl:variable name="sort_categories_string">
 			<xsl:choose>
@@ -1179,67 +1288,4 @@
 			</xsl:when>
 		</xsl:choose>
 	</xsl:template>
-
-	<!--<xsl:template name="compare_paging">
-		<xsl:variable name="start_var" as="xs:integer">
-			<xsl:choose>
-				<xsl:when test="string($start)">
-					<xsl:value-of select="$start"/>
-				</xsl:when>
-				<xsl:otherwise>0</xsl:otherwise>
-			</xsl:choose>
-		</xsl:variable>
-
-		<xsl:variable name="next">
-			<xsl:value-of select="$start_var+$rows"/>
-		</xsl:variable>
-
-		<xsl:variable name="previous">
-			<xsl:choose>
-				<xsl:when test="$start_var &gt;= $rows">
-					<xsl:value-of select="$start_var - $rows"/>
-				</xsl:when>
-				<xsl:otherwise>0</xsl:otherwise>
-			</xsl:choose>
-		</xsl:variable>
-
-		<xsl:variable name="current" select="$start_var div $rows + 1"/>
-		<xsl:variable name="total" select="ceiling($numFound div $rows)"/>
-
-		<div style="width:100%;display:table;">
-			<div style="float:left;">
-				<xsl:variable name="startRecord" select="$start_var + 1"/>
-				<xsl:variable name="endRecord">
-					<xsl:choose>
-						<xsl:when test="$numFound &gt; ($start_var + $rows)">
-							<xsl:value-of select="$start_var + $rows"/>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:value-of select="$numFound"/>
-						</xsl:otherwise>
-					</xsl:choose>
-				</xsl:variable>
-
-				<xsl:value-of select="replace(replace(replace(numishare:normalizeLabel('results_result-desc', $lang), 'XX', string($startRecord)), 'YY', string($endRecord)), 'ZZ', string($numFound))"
-				/>
-			</div>
-			<div style="float:right;">
-				<xsl:choose>
-					<xsl:when test="$start_var &gt;= $rows">
-						<a class="comparepagingBtn" href="compare_results?q={$q}&amp;start={$previous}&amp;image={$image}&amp;side={$side}&amp;mode=compare">« Previous</a>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:text>« Previous</xsl:text>
-					</xsl:otherwise>
-				</xsl:choose> | <xsl:choose>
-					<xsl:when test="$numFound - $start_var &gt; $rows">
-						<a class="comparepagingBtn" href="compare_results?q={$q}&amp;start={$next}&amp;image={$image}&amp;side={$side}&amp;mode=compare">Next »</a>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:text>Next »</xsl:text>
-					</xsl:otherwise>
-				</xsl:choose>
-			</div>
-		</div>
-	</xsl:template>-->
 </xsl:stylesheet>

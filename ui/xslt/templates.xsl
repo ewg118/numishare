@@ -216,7 +216,7 @@
 	<xsl:template name="languages">
 		<xsl:if test="count(//config/descendant::language[@enabled='true']) &gt; 1">
 			<li class="dropdown">
-				<a href="#" class="dropdown-toggle" data-toggle="dropdown">Language <b class="caret"/></a>
+				<a href="#" class="dropdown-toggle" data-toggle="dropdown"><xsl:value-of select="numishare:normalizeLabel('header_language', $lang)"/> <b class="caret"/></a>
 				<ul class="dropdown-menu">
 					<xsl:for-each select="//config/descendant::language[@enabled='true']">
 						<xsl:sort select="@code"/>

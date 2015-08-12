@@ -95,7 +95,7 @@
 						</xsl:choose>
 					</a>
 				</h2>
-				<dl class="dl-horizontal">
+				<dl class=" {if($lang='ar') then 'dl-horizontal ar' else 'dl-horizontal'}">
 					<dt>Nomisma URI</dt>
 					<dd>
 						<a href="{res:binding[@name='collection']/res:uri}">

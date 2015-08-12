@@ -97,7 +97,7 @@
 					<xsl:value-of select="str[@name='title_display']"/>
 				</a>
 			</h4>
-			<dl class="dl-horizontal">
+			<dl class=" {if($lang='ar') then 'dl-horizontal ar' else 'dl-horizontal'}">
 				<xsl:choose>
 					<xsl:when test="str[@name='recordType'] = 'hoard'">
 						<dt>							

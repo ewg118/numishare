@@ -167,7 +167,7 @@
 					<xsl:value-of select="res:binding[@name='title']/res:literal"/>
 				</a>
 			</span>
-			<dl class="dl-horizontal">
+			<dl class=" {if($lang='ar') then 'dl-horizontal ar' else 'dl-horizontal'}">
 				<xsl:choose>
 					<xsl:when test="res:binding[@name='collection']/res:literal">
 						<dt>

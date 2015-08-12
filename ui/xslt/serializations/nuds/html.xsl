@@ -52,7 +52,7 @@ ASK {
 					<a href="compare_results?q={$q}&amp;start={$start}&amp;image={$image}&amp;side={$side}&amp;mode=compare{if (string($lang)) then concat('&amp;lang=', $lang) else ''}"
 						class="back_results">« Search results</a>
 					<xsl:text> | </xsl:text>
-					<a href="id/{$id}">Full record »</a>
+					<a href="id/{$id}{if (string($lang)) then concat('?lang=', $lang) else ''}">Full record »</a>
 				</small>
 			</div>
 		</xsl:if>
@@ -671,7 +671,7 @@ ASK {
 
 		<xsl:if test="number($axis) &gt; 0 or number($diameter) &gt; 0 or number($weight) &gt; 0">
 			<p>Average measurements for this coin type:</p>
-			<dl class="dl-horizontal">
+			<dl class=" {if($lang='ar') then 'dl-horizontal ar' else 'dl-horizontal'}">
 				<xsl:if test="number($axis) &gt; 0">
 					<dt><xsl:value-of select="numishare:regularize_node('axis', $lang)"/>:</dt>
 					<dd>

@@ -285,12 +285,10 @@
 						</h3>
 						<div class="optional-div" style="display:none">
 							<div>
-								<dl class="dl-horizontal">
-									<h4>
-										<xsl:value-of select="numishare:normalizeLabel('visualize_exclude_certainty_codes', $lang)"/>
-									</h4>
-									<xsl:apply-templates select="//config/certainty_codes"/>								
-								</dl>
+								<h4>
+									<xsl:value-of select="numishare:normalizeLabel('visualize_exclude_certainty_codes', $lang)"/>
+								</h4>
+								<xsl:apply-templates select="//config/certainty_codes"/>	
 							</div>
 							<div>
 								<h4>

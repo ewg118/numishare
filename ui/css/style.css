@@ -11,9 +11,6 @@
 	var-borderColor:#E7E7E7;
 	var-backgroundColor:#F8F8F8;
 }
-.rtl{
-	direction:rtl;
-}
 /*
   ***************************************
   GLOBAL
@@ -37,6 +34,17 @@ ul li{
 	border-radius:4px;
 	margin-bottom:14px;
 	padding:9px 14px;
+}
+.rtl{
+	direction:rtl;
+}
+dl.ar dt {
+	float:right;
+	text-align:left;
+}
+dl.ar dd {
+	margin-right:180px;
+	margin-left:0;
 }
 /*
   ***************************************
@@ -352,9 +360,6 @@ button.multiselect{
 .paging_div{
 	padding:10px 0;
 	vertical-align:baseline;
-}
-.page-nos{
-	text-align:right;
 }
 .pagination{
 	margin:0;
