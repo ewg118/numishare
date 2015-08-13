@@ -55,15 +55,15 @@
 			<xsl:with-param name="lang" select="$lang"/>
 		</xsl:apply-templates>
 		<xsl:apply-templates select="descendant::nuds:persname[string(.) or string(@xlink:href)] | descendant::nuds:corpname[string(.) or string(@xlink:href)] | descendant::nuds:geogname[string(.) or
-			string(@xlink:href)]|descendant::nuds:famname[string(.) or string(@xlink:href)]">
+			string(@xlink:href)]|descendant::nuds:famname[string(.) or string(@xlink:href)]|descendant::nuds:periodname[string(.) or string(@xlink:href)]">
 			<xsl:with-param name="lang" select="$lang"/>
 		</xsl:apply-templates>
 
 	</xsl:template>
 
-	<xsl:template match="nuds:objectType|nuds:denomination|nuds:manufacture|nuds:material|nuds:famname">
+	<xsl:template match="nuds:objectType|nuds:denomination|nuds:manufacture|nuds:material">
 		<xsl:param name="lang"/>
-		<xsl:variable name="facet" select="if (local-name()='famname') then 'dynasty' else local-name()"/>
+		<xsl:variable name="facet" select="local-name()"/>
 		<xsl:variable name="href" select="@xlink:href"/>
 		<xsl:variable name="label">
 			<xsl:choose>
@@ -97,10 +97,10 @@
 		</xsl:if>
 	</xsl:template>
 
-	<xsl:template match="nuds:persname|nuds:corpname |*[local-name()='geogname']">
+	<xsl:template match="nuds:persname|nuds:corpname |*[local-name()='geogname']|nuds:famname|nuds:periodname">
 		<xsl:param name="lang"/>
 		<xsl:variable name="href" select="@xlink:href"/>
-		<xsl:variable name="role" select="@xlink:role"/>
+		<xsl:variable name="role" select="if (string(@xlink:role)) then @xlink:role else local-name()"/>
 		<xsl:variable name="label">
 			<xsl:choose>
 				<xsl:when test="string($lang) and contains($href, 'nomisma.org')">
