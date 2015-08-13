@@ -29,13 +29,22 @@
 		<p:input name="data" href="#config"/>
 		<p:input name="config">
 			<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+				<xsl:param name="lang" select="doc('input:request')/request/parameters/parameter[name='lang']/value"/>				
 				<xsl:variable name="collection-name" select="substring-before(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/')"/>
+				
 				<!-- config variables -->
 				<xsl:variable name="solr-url" select="concat(/config/solr_published, 'select/')"/>
 				
 
 				<xsl:variable name="service">
-					<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+NOT(lang:*)+AND+imagesavailable:true&amp;facet.limit=1&amp;rows=0')"/>					
+					<xsl:choose>
+						<xsl:when test="string($lang)">
+							<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+lang:', $lang, '+AND+imagesavailable:true&amp;facet.limit=1&amp;rows=0')"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+NOT(lang:*)+AND+imagesavailable:true&amp;facet.limit=1&amp;rows=0')"/>
+						</xsl:otherwise>
+					</xsl:choose>										
 				</xsl:variable>
 
 				<xsl:template match="/">
@@ -62,6 +71,7 @@
 		<p:input name="data" href="aggregate('content', #numFound, #config)"/>
 		<p:input name="config">
 			<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:math="http://exslt.org/math">
+				<xsl:param name="lang" select="doc('input:request')/request/parameters/parameter[name='lang']/value"/>
 				<xsl:variable name="collection-name" select="substring-before(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/')"/>
 				<!-- config variables -->
 				<xsl:variable name="solr-url" select="concat(/content/config/solr_published, 'select/')"/>
@@ -76,7 +86,14 @@
 				</xsl:variable>				
 				
 				<xsl:variable name="service">
-					<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+NOT(lang:*)+AND+imagesavailable:true&amp;facet.limit=1&amp;rows=1&amp;start=', $start)"/>					
+					<xsl:choose>
+						<xsl:when test="string($lang)">
+							<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+lang:', $lang, '+AND+imagesavailable:true&amp;facet.limit=1&amp;rows=1&amp;start=', $start)"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+NOT(lang:*)+AND+imagesavailable:true&amp;facet.limit=1&amp;rows=1&amp;start=', $start)"/>
+						</xsl:otherwise>
+					</xsl:choose>			
 				</xsl:variable>
 				
 				<xsl:template match="/">
