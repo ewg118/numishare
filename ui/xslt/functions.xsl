@@ -152,6 +152,8 @@
 					<xsl:when test="$label='weight'">الوزن</xsl:when>
 					<xsl:when test="$label='width'">العرض</xsl:when>
 					<xsl:when test="$label='year'">السنة</xsl:when>
+					<!-- egypt project only-->
+					<xsl:when test="$label='authorizingEntity'">الفترة الزمنية</xsl:when>
 				</xsl:choose>
 			</xsl:when>
 			<xsl:when test="$lang='bg'">
@@ -1188,6 +1190,8 @@
 					<xsl:when test="$label = 'timestamp'">Date Record Modified</xsl:when>
 					<xsl:when test="$label='typeNumber'">Coin Type Number</xsl:when>
 					<xsl:when test="$label='undertypeDesc'">Undertype Description</xsl:when>
+					<!-- egypt project only-->
+					<xsl:when test="$label='authorizingEntity'">Political/Dynastic Entity</xsl:when>
 					<xsl:otherwise>
 						<xsl:value-of select="concat(upper-case(substring($label, 1, 1)), substring($label, 2))"/>
 					</xsl:otherwise>

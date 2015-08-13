@@ -46,6 +46,9 @@
 	<!-- RRC -->
 	<page path="/numishare/crro/" model="xpl/models/config.xpl" view="file:///usr/local/projects/crro/xpl/views/pages/index.xpl"/>
 	
+	<!-- EGYPT -->
+	<page path="/numishare/egypt/id/(.*)\.solr" model="xpl/models/object/get-id.xpl" view="file:///usr/local/projects/egypt/xpl/views/serializations/object/solr.xpl"/>
+	
 	<!-- MANTIS -->
 	<!-- pages -->
 	<page path="/numishare/mantis/apis" model="xpl/models/solr/apis.xpl" view="file:///usr/local/projects/mantis/xpl/views/pages/apis.xpl"/>
