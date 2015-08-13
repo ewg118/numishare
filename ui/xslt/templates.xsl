@@ -65,6 +65,7 @@
 			<xsl:when test="$lang='ar'">
 				<xsl:call-template name="languages"/>
 				<xsl:for-each select="//config/pages/page[@public = '1']">
+					<xsl:sort select="position()" order="descending"/>
 					<xsl:variable name="stub" select="@stub"/>
 					
 					<li>
