@@ -5,8 +5,7 @@
 		<xsl:variable name="sort_category" select="substring-before($sort, ' ')"/>
 		<xsl:variable name="regularized_sort">
 			<xsl:value-of select="numishare:normalize_fields($sort_category, $lang)"/>
-		</xsl:variable>
-		<xsl:variable name="collection" select="substring-before(str[@name='identifier_display'], '.')"/>
+		</xsl:variable>		
 		<div class="row result-doc">
 			<xsl:if test="not($mode='compare') and //config/theme/layouts/*[name()=$pipeline]/image_location = 'left'">
 				<xsl:call-template name="result_image">
