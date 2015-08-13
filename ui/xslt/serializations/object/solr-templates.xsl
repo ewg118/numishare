@@ -63,7 +63,19 @@
 
 	<xsl:template match="nuds:objectType|nuds:denomination|nuds:manufacture|nuds:material|nuds:famname">
 		<xsl:param name="lang"/>
-		<xsl:variable name="facet" select="if (local-name()='famname') then 'dynasty' else local-name()"/>
+		
+		<!-- ****** CUSTOM FOR EGYPT
+			Replace dynasty facet with 'authorizingEntity' ******-->
+		<!--<xsl:variable name="facet" select="if (local-name()='famname') then 'dynasty' else local-name()"/>-->
+		<xsl:variable name="facet">
+			<xsl:choose>
+				<xsl:when test="local-name()='famname'">authorizingEntity</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="local-name()"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		
 		<xsl:variable name="href" select="@xlink:href"/>
 		<xsl:variable name="label">
 			<xsl:choose>
@@ -100,7 +112,20 @@
 	<xsl:template match="nuds:persname|nuds:corpname |*[local-name()='geogname']">
 		<xsl:param name="lang"/>
 		<xsl:variable name="href" select="@xlink:href"/>
-		<xsl:variable name="role" select="@xlink:role"/>
+		
+		<!--<xsl:variable name="role" select="@xlink:role"/>-->
+		<!-- ****** CUSTOM FOR EGYPT 
+				Index corpname as 'dynasty'		****** -->
+		
+		<xsl:variable name="role">
+			<xsl:choose>
+				<xsl:when test="local-name()='corpname'">authorizingEntity</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="@xlink:role"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		
 		<xsl:variable name="label">
 			<xsl:choose>
 				<xsl:when test="string($lang) and contains($href, 'nomisma.org')">
