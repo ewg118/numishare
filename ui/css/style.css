@@ -4,19 +4,14 @@
  */
 /*
   ***************************************
-  VARIABLES
-  ***************************************
- */
-:root{
-	var-borderColor:#E7E7E7;
-	var-backgroundColor:#F8F8F8;
-}
-/*
-  ***************************************
   GLOBAL
   ***************************************
  */
 html{
+	background-color:#F8F8F8;
+	font-family: Verdana, Geneva, sans-serif;
+}
+body {
 	background-color:#F8F8F8;
 }
 .navbar{
@@ -29,11 +24,12 @@ ul li{
 	list-style-type:none;
 }
 .highlight{
-	background-color:#F8F8F8;
-	border:1px solid #E7E7E7;
+	background-color:#E7E7E7;
+	border:1px solid #ccc;
 	border-radius:4px;
 	margin-bottom:14px;
 	padding:9px 14px;
+	color:black;
 }
 .rtl{
 	direction:rtl;
@@ -46,6 +42,91 @@ dl.ar dd {
 	margin-right:180px;
 	margin-left:0;
 }
+a:link {
+	color:#537900;
+}
+a:visited {
+	color:#2E3C10;
+}
+a:hover {
+	color:#324900
+}
+.bg-info {
+	background-color:#E7E7E7;
+}
+/*
+  ***************************************
+  BOOTSTRAP NAVBAR
+  ***************************************
+ */
+.navbar-default {
+	background-color: #000000;
+	border-color: black;
+}
+.navbar-default .navbar-brand {
+	color: #ffffff;
+}
+.navbar-default .navbar-brand:hover, .navbar-default .navbar-brand:focus {
+	color: #d6d6d6;
+}
+.navbar-default .navbar-text {
+	color: #ffffff;
+}
+.navbar-default .navbar-nav > li > a {
+	color: #ffffff;
+}
+.navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus {
+	color: #d6d6d6;
+}
+.navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active > a:hover, .navbar-default .navbar-nav > .active > a:focus {
+	color: #d6d6d6;
+	background-color: #7f7f7f;
+}
+.navbar-default .navbar-nav > .open > a, .navbar-default .navbar-nav > .open > a:hover, .navbar-default .navbar-nav > .open > a:focus {
+	color: #d6d6d6;
+	background-color: #7f7f7f;
+}
+.navbar-default .navbar-toggle {
+	border-color: #7f7f7f;
+}
+.navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus {
+	background-color: #7f7f7f;
+}
+.navbar-default .navbar-toggle .icon-bar {
+	background-color: #ffffff;
+}
+.navbar-default .navbar-collapse,
+.navbar-default .navbar-form {
+	border-color: #ffffff;
+}
+.navbar-default .navbar-link {
+	color: #ffffff;
+}
+.navbar-default .navbar-link:hover {
+	color: #d6d6d6;
+}
+
+@media (max-width: 767px) {
+	.navbar-default .navbar-nav .open .dropdown-menu > li > a {
+		color: #ffffff;
+	}
+	.navbar-default .navbar-nav .open .dropdown-menu > li > a:hover, .navbar-default .navbar-nav .open .dropdown-menu > li > a:focus {
+		color: #d6d6d6;
+	}
+	.navbar-default .navbar-nav .open .dropdown-menu > .active > a, .navbar-default .navbar-nav .open .dropdown-menu > .active > a:hover, .navbar-default .navbar-nav .open .dropdown-menu > .active > a:focus {
+		color: #d6d6d6;
+		background-color: #7f7f7f;
+	}
+}
+/*
+  ***************************************
+  JUMBOTRON
+  ***************************************
+ */
+ .jumbotron {
+ 	background-color:black;
+ 	color:white;
+ }
 /*
   ***************************************
   FOOTER
@@ -53,7 +134,6 @@ dl.ar dd {
  */
 #footer{
 	background-color:#F8F8F8;
-	border-top:1px solid #E7E7E7;
 	padding-top:10px;
 	padding-bottom:10px;
 	text-align:center;
@@ -218,7 +298,7 @@ select[name = "interval"],
   ***************************************
  */
 .result-doc{
-	margin-top:10px;
+	padding-bottom:10px;
 	border-bottom:1px solid #E7E7E7;
 }
 #map_results{

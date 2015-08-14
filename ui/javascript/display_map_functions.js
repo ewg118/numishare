@@ -10,16 +10,7 @@ $(document).ready(function () {
 		var lang = langStr;
 	}
 	
-	if (collection_type == 'object' && pipeline == 'display') {
-		$('#mapButton').click(function () {
-			$('#tabs a:last').tab('show');
-			init();
-		});
-	} else {
-		init();
-	}
-	//only load map upon tab click on object pages, due to bootstrap tabs glitch
-	
+	init();
 	
 	function init() {
 		if (collection_type != 'object') {

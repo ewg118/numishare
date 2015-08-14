@@ -7,7 +7,7 @@
 	<xsl:param name="lang" select="doc('input:request')/request/parameters/parameter[name='lang']/value"/>
 	<xsl:variable name="display_path"/>
 	<xsl:variable name="include_path" select="concat('http://', doc('input:request')/request/server-name, ':8080/orbeon/themes/', //config/theme/orbeon_theme)"/>
-	
+
 
 	<xsl:template match="/content/config">
 		<html lang="en">
@@ -48,7 +48,9 @@
 								<p><xsl:value-of select="description"/></p>
 							</div>
 							<div class="col-md-3">
-								<xsl:copy-of select="/content/div[@id='feature']"/>	
+								<div id="feature" class="highlight text-center">
+									<xsl:copy-of select="/content/div[@id='feature']/*"/>
+								</div>
 							</div>
 						</xsl:when>
 						<xsl:otherwise>
@@ -60,13 +62,13 @@
 					</xsl:choose>
 				</div>
 			</div>
-		</div>	
+		</div>
 		<div class="container-fluid">
 			<xsl:if test="$lang='ar'">
-				<xsl:attribute name="style">direction: rtl;</xsl:attribute>							
+				<xsl:attribute name="style">direction: rtl;</xsl:attribute>
 			</xsl:if>
 			<div class="row">
-				<div class="col-md-9">					
+				<div class="col-md-9">
 					<xsl:choose>
 						<xsl:when test="string($lang)">
 							<xsl:choose>
@@ -82,11 +84,11 @@
 											<xsl:copy-of select="//pages/index/*"/>
 										</xsl:otherwise>
 									</xsl:choose>
-									
+
 								</xsl:otherwise>
 							</xsl:choose>
 						</xsl:when>
-						<xsl:otherwise>							
+						<xsl:otherwise>
 							<xsl:choose>
 								<xsl:when test="count(//pages/index/content) &gt; 0">
 									<xsl:copy-of select="//pages/index/content[1]/*"/>
@@ -98,7 +100,22 @@
 						</xsl:otherwise>
 					</xsl:choose>
 				</div>
-				<div class="col-md-3">
+				<div class="col-md-3">			
+					<div class="highlight">
+						<h3>Share</h3>
+						<!-- AddThis Button BEGIN -->
+						<div class="addthis_toolbox addthis_default_style addthis_32x32_style">
+							<a class="addthis_button_preferred_1"/>
+							<a class="addthis_button_preferred_2"/>
+							<a class="addthis_button_preferred_3"/>
+							<a class="addthis_button_preferred_4"/>
+							<a class="addthis_button_compact"/>
+							<a class="addthis_counter addthis_bubble_style"/>
+						</div>
+						<script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid=xa-4ffc41710d8b692c"/>
+						<!-- AddThis Button END -->
+					</div>
+					
 					<div class="highlight data_options">
 						<h3>Linked Data</h3>
 						<a href="{$display_path}feed/?q=*:*">
