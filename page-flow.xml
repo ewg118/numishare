@@ -47,6 +47,7 @@
 	<page path="/numishare/crro/" model="xpl/models/config.xpl" view="file:///usr/local/projects/crro/xpl/views/pages/index.xpl"/>
 	
 	<!-- EGYPT -->
+	<page path="/numishare/egypt/" model="xpl/models/config.xpl" view="file:///usr/local/projects/egypt/xpl/views/pages/index.xpl"/>
 	
 	<!-- MANTIS -->
 	<!-- pages -->
