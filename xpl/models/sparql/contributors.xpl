@@ -44,7 +44,7 @@ SELECT ?dataset ?publisher ?collection ?collectionLabel ?thumbnail ?homepage ?ti
            OPTIONAL {?collection foaf:homepage ?homepage}}
   ?dataset dcterms:publisher ?publisher ;
            dcterms:title ?title;
-           dcterms:description ?description} GROUP BY ?dataset ?publisher ?collection ?collectionLabel ?title ?thumbnail ?homepage ?description]]>
+           dcterms:description ?description} GROUP BY ?dataset ?publisher ?collection ?collectionLabel ?title ?thumbnail ?homepage ?description ORDER BY ?publisher]]>
 				</xsl:variable>
 				
 				<xsl:variable name="service" select="concat($endpoint, '?query=', encode-for-uri(normalize-space(replace($query, 'TYPE_SERIES', /config/type_series))), '&amp;output=xml')"/>
