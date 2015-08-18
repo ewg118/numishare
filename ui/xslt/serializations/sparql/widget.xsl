@@ -224,7 +224,7 @@
 				<xsl:choose>
 					<xsl:when test="string(res:binding[@name='obvRef']/res:uri) and string(res:binding[@name='obvThumb']/res:uri)">
 						<a class="thumbImage" rel="gallery" href="{res:binding[@name='obvRef']/res:uri}" title="Obverse of {res:binding[@name='identifier']/res:literal}:
-							{res:binding[@name='collection']/res:literal}" id="{res:binding[@name='object']/res:uri}">
+							{if (string(res:binding[@name='collection']/res:literal)) then res:binding[@name='collection']/res:literal else res:binding[@name='publisher']/res:literal}" id="{res:binding[@name='object']/res:uri}">
 							<img class="gi" src="{res:binding[@name='obvThumb']/res:uri}"/>
 						</a>
 					</xsl:when>
@@ -233,7 +233,7 @@
 					</xsl:when>
 					<xsl:when test="string(res:binding[@name='obvRef']/res:uri) and not(string(res:binding[@name='obvThumb']/res:uri))">
 						<a class="thumbImage" rel="gallery" href="{res:binding[@name='obvRef']/res:uri}" title="Obverse of {res:binding[@name='identifier']/res:literal}:
-							{res:binding[@name='collection']/res:literal}" id="{res:binding[@name='object']/res:uri}">
+							{if (string(res:binding[@name='collection']/res:literal)) then res:binding[@name='collection']/res:literal else res:binding[@name='publisher']/res:literal}" id="{res:binding[@name='object']/res:uri}">
 							<img class="gi" src="{res:binding[@name='obvRef']/res:uri}" style="max-width:120px"/>
 						</a>
 					</xsl:when>
@@ -242,7 +242,7 @@
 				<xsl:choose>
 					<xsl:when test="string(res:binding[@name='revRef']/res:uri) and string(res:binding[@name='revThumb']/res:uri)">
 						<a class="thumbImage" rel="gallery" href="{res:binding[@name='revRef']/res:uri}" title="Reverse of {res:binding[@name='identifier']/res:literal}:
-							{res:binding[@name='collection']/res:literal}" id="{res:binding[@name='object']/res:uri}">
+							{if (string(res:binding[@name='collection']/res:literal)) then res:binding[@name='collection']/res:literal else res:binding[@name='publisher']/res:literal}" id="{res:binding[@name='object']/res:uri}">
 							<img class="gi" src="{res:binding[@name='revThumb']/res:uri}"/>
 						</a>
 					</xsl:when>
@@ -251,18 +251,26 @@
 					</xsl:when>
 					<xsl:when test="string(res:binding[@name='revRef']/res:uri) and not(string(res:binding[@name='revThumb']/res:uri))">
 						<a class="thumbImage" rel="gallery" href="{res:binding[@name='revRef']/res:uri}" title="Reverse of {res:binding[@name='identifier']/res:literal}:
-							{res:binding[@name='collection']/res:literal}" id="{res:binding[@name='object']/res:uri}">
+							{if (string(res:binding[@name='collection']/res:literal)) then res:binding[@name='collection']/res:literal else res:binding[@name='publisher']/res:literal}" id="{res:binding[@name='object']/res:uri}">
 							<img class="gi" src="{res:binding[@name='revRef']/res:uri}" style="max-width:120px"/>
 						</a>
 					</xsl:when>
 				</xsl:choose>
 				<!-- combined -->
-				<xsl:if test="string(res:binding[@name='comRef']/res:uri) and not(string(res:binding[@name='comThumb']/res:uri))">
-					<a class="thumbImage" rel="gallery" href="{res:binding[@name='comRef']/res:uri}" title="Image of {res:binding[@name='identifier']/res:literal}:
-						{res:binding[@name='collection']/res:literal}" id="{res:binding[@name='object']/res:uri}">
-						<img class="gi" src="{res:binding[@name='comRef']/res:uri}" style="max-width:240px"/>
-					</a>
-				</xsl:if>
+				<xsl:choose>
+					<xsl:when test="string(res:binding[@name='comRef']/res:uri) and string(res:binding[@name='comThumb']/res:uri)">
+						<a class="thumbImage" rel="gallery" href="{res:binding[@name='comRef']/res:uri}" title="Image of {res:binding[@name='identifier']/res:literal}:
+							{if (string(res:binding[@name='collection']/res:literal)) then res:binding[@name='collection']/res:literal else res:binding[@name='publisher']/res:literal}" id="{res:binding[@name='object']/res:uri}">
+							<img class="gi" src="{res:binding[@name='comThumb']/res:uri}" style="max-width:240px"/>
+						</a>
+					</xsl:when>
+					<xsl:when test="string(res:binding[@name='comRef']/res:uri) and not(string(res:binding[@name='comThumb']/res:uri))">
+						<a class="thumbImage" rel="gallery" href="{res:binding[@name='comRef']/res:uri}" title="Image of {res:binding[@name='identifier']/res:literal}:
+							{if (string(res:binding[@name='collection']/res:literal)) then res:binding[@name='collection']/res:literal else res:binding[@name='publisher']/res:literal}" id="{res:binding[@name='object']/res:uri}">
+							<img class="gi" src="{res:binding[@name='comRef']/res:uri}" style="max-width:240px"/>
+						</a>
+					</xsl:when>
+				</xsl:choose>				
 			</div>
 		</div>
 	</xsl:template>
