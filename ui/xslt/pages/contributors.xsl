@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:numishare="https://github.com/ewg118/numishare" xmlns:foaf="http://xmlns.com/foaf/0.1/"
+	<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:numishare="https://github.com/ewg118/numishare" xmlns:foaf="http://xmlns.com/foaf/0.1/"
 	xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:res="http://www.w3.org/2005/sparql-results#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" exclude-result-prefixes="#all"
 	version="2.0">
 	<xsl:include href="../templates.xsl"/>
@@ -50,13 +50,15 @@
 					<table class="table table-striped">
 						<thead>
 							<tr>
-								<th/>
+								<xsl:if test="descendant::res:binding[@name='thumbnail']">
+									<th/>
+								</xsl:if>								
 								<th>Count</th>
 								<th>Collection</th>
 							</tr>
 						</thead>
 						<tbody>
-							<xsl:apply-templates select="descendant::res:result[res:binding[@name='collection']/res:uri]" mode="contributors"/>
+							<xsl:apply-templates select="descendant::res:result" mode="contributors"/>
 						</tbody>						
 					</table>
 				</div>
@@ -65,15 +67,12 @@
 	</xsl:template>
 
 	<xsl:template match="res:result" mode="contributors">
-		<xsl:variable name="rdf" as="element()*">
-			<xsl:copy-of select="document(concat(res:binding[@name='collection']/res:uri, '.rdf'))/*"/>
-		</xsl:variable>
-
 		<tr>
 			<td>
-				<xsl:if test="string($rdf//foaf:thumbnail/@rdf:resource)">
-					<a href="{if (string($rdf//foaf:homepage/@rdf:resource)) then $rdf//foaf:homepage/@rdf:resource else res:binding[@name='collection']/res:uri}">
-						<img src="{$rdf//foaf:thumbnail/@rdf:resource}" alt="logo" style="max-width:100%"/>
+				
+				<xsl:if test="string(res:binding[@name='thumbnail']/res:uri)">
+					<a href="{if (string(res:binding[@name='homepage']/res:uri)) then res:binding[@name='homepage']/res:uri else res:binding[@name='dataset']/res:uri}">
+						<img src="{res:binding[@name='thumbnail']/res:uri}" alt="logo" style="max-width:100%"/>
 					</a>
 				</xsl:if>
 			</td>
@@ -84,34 +83,38 @@
 			</td>
 			<td>
 				<h2>
-					<a href="{if (string($rdf//foaf:homepage/@rdf:resource)) then $rdf//foaf:homepage/@rdf:resource else res:binding[@name='collection']/res:uri}">
-						<xsl:choose>
-							<xsl:when test="$rdf//skos:prefLabel[@xml:lang=$lang]">
-								<xsl:value-of select="$rdf//skos:prefLabel[@xml:lang=$lang]"/>
-							</xsl:when>
-							<xsl:otherwise>
-								<xsl:value-of select="$rdf//skos:prefLabel[@xml:lang='en']"/>
-							</xsl:otherwise>
-						</xsl:choose>
-					</a>
+					<xsl:choose>
+						<xsl:when test="res:binding[@name='collection']">
+							<a href="{if (string(res:binding[@name='homepage']/res:uri)) then res:binding[@name='homepage']/res:uri else res:binding[@name='dataset']/res:uri}">
+								<xsl:value-of select="res:binding[@name='collectionLabel']/res:literal"/>
+							</a>
+						</xsl:when>
+						<xsl:otherwise>
+							<a href="{res:binding[@name='dataset']/res:uri}">
+								<xsl:value-of select="res:binding[@name='title']/res:literal"/>
+							</a>
+						</xsl:otherwise>
+					</xsl:choose>
+					
 				</h2>
 				<dl class=" {if($lang='ar') then 'dl-horizontal ar' else 'dl-horizontal'}">
-					<dt>Nomisma URI</dt>
+					<xsl:if test="res:binding[@name='collection']">
+						<dt>Nomisma URI</dt>
+						<dd>
+							<a href="{res:binding[@name='collection']/res:uri}">
+								<xsl:value-of select="res:binding[@name='collection']/res:uri"/>
+							</a>
+						</dd>
+					</xsl:if>	
+					<xsl:if test="res:binding[@name='publisher']">
+						<dt>Publisher</dt>
+						<dd>
+							<xsl:value-of select="res:binding[@name='publisher']/res:literal"/>
+						</dd>
+					</xsl:if>
+					<dt>Description</dt>
 					<dd>
-						<a href="{res:binding[@name='collection']/res:uri}">
-							<xsl:value-of select="res:binding[@name='collection']/res:uri"/>
-						</a>
-					</dd>
-					<dt>Definition</dt>
-					<dd>
-						<xsl:choose>
-							<xsl:when test="$rdf//skos:prefLabel[@xml:lang=$lang]">
-								<xsl:value-of select="$rdf//skos:definition[@xml:lang=$lang]"/>
-							</xsl:when>
-							<xsl:otherwise>
-								<xsl:value-of select="$rdf//skos:definition[@xml:lang='en']"/>
-							</xsl:otherwise>
-						</xsl:choose>
+						<xsl:value-of select="res:binding[@name='description']/res:literal"/>
 					</dd>
 				</dl>
 			</td>

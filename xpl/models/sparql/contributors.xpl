@@ -31,13 +31,20 @@ PREFIX ecrm:	<http://erlangen-crm.org/current/>
 PREFIX geo:	<http://www.w3.org/2003/01/geo/wgs84_pos#>
 PREFIX nm:	<http://nomisma.org/id/>
 PREFIX nmo:	<http://nomisma.org/ontology#>
+PREFIX void:	<http://rdfs.org/ns/void#>
 PREFIX xsd:	<http://www.w3.org/2001/XMLSchema#>
 
-SELECT ?collection (COUNT(?collection) AS ?count) WHERE {
-?type dcterms:source <TYPE_SERIES> .
-?object nmo:hasTypeSeriesItem ?type ;
-nmo:hasCollection ?collection .
-} GROUP BY ?collection ORDER BY ?collection]]>
+SELECT ?dataset ?publisher ?collection ?collectionLabel ?thumbnail ?homepage ?title ?description (COUNT(?dataset) AS ?count) {
+    ?type dcterms:source <TYPE_SERIES> .
+    ?object nmo:hasTypeSeriesItem ?type ;
+            void:inDataset ?dataset .
+  OPTIONAL {?object nmo:hasCollection ?collection .
+           ?collection skos:prefLabel ?collectionLabel . FILTER langMatches(lang(?collectionLabel), "en")
+           OPTIONAL {?collection foaf:thumbnail ?thumbnail}
+           OPTIONAL {?collection foaf:homepage ?homepage}}
+  ?dataset dcterms:publisher ?publisher ;
+           dcterms:title ?title;
+           dcterms:description ?description} GROUP BY ?dataset ?publisher ?collection ?collectionLabel ?title ?thumbnail ?homepage ?description]]>
 				</xsl:variable>
 				
 				<xsl:variable name="service" select="concat($endpoint, '?query=', encode-for-uri(normalize-space(replace($query, 'TYPE_SERIES', /config/type_series))), '&amp;output=xml')"/>
