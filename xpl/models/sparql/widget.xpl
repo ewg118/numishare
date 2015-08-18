@@ -60,6 +60,7 @@ PREFIX nmo:	<http://nomisma.org/ontology#>
 PREFIX skos:      <http://www.w3.org/2004/02/skos/core#>
 PREFIX foaf:	<http://xmlns.com/foaf/0.1/>
 PREFIX rdfs:	<http://www.w3.org/2000/01/rdf-schema#>
+PREFIX void:	<http://rdfs.org/ns/void#>
 
 SELECT ?object ?title ?identifier ?findspot ?hoard ?collection ?publisher ?weight ?axis ?diameter ?obvThumb ?revThumb ?obvRef ?revRef ?comThumb ?comRef  WHERE {
 ?object nmo:hasTypeSeriesItem <typeUri> ;
@@ -69,7 +70,8 @@ OPTIONAL { ?object dcterms:identifier ?identifier}
 OPTIONAL { ?object nmo:hasCollection ?colUri .
 ?colUri skos:prefLabel ?collection 
 FILTER(langMatches(lang(?collection), "EN"))}
-OPTIONAL {?object dcterms:publisher ?publisher }
+?object void:inDataset ?dataset .
+?dataset dcterms:publisher ?publisher .
 OPTIONAL {?object nmo:hasFindspot ?findUri .
 ?findUri foaf:name ?findspot }
 OPTIONAL {?object nmo:hasFindspot ?findUri .
