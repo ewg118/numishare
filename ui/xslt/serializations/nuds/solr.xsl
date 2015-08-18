@@ -202,9 +202,11 @@
 		<xsl:variable name="title" select="if (string(res:binding[@name='findspotLabel']/res:literal)) then res:binding[@name='findspotLabel']/res:literal else res:binding[@name='findspot']/res:uri"/>
 		<xsl:variable name="uri" select="res:binding[@name='findspot']/res:uri"/>
 
-		<field name="findspot_facet">
-			<xsl:value-of select="$title"/>
-		</field>
+		<xsl:if test="string(res:binding[@name='findspotLabel']/res:literal)">
+			<field name="findspot_facet">
+				<xsl:value-of select="$title"/>
+			</field>
+		</xsl:if>		
 		<xsl:if test="res:binding[@name='long']/res:literal and res:binding[@name='lat']/res:literal">
 			<field name="findspot_uri">
 				<xsl:value-of select="$uri"/>
