@@ -176,7 +176,7 @@ PREFIX skos:      <http://www.w3.org/2004/02/skos/core#>
 PREFIX foaf:	<http://xmlns.com/foaf/0.1/>
 PREFIX rdfs:	<http://www.w3.org/2000/01/rdf-schema#>
 
-SELECT ?object ?title ?findspotLabel ?findspot ?lat ?long WHERE {
+SELECT DISTINCT ?findspot ?findspotLabel  ?lat ?long WHERE {
 { ?object a nmo:NumismaticObject ;
  nmo:hasTypeSeriesItem <typeUri>}
 UNION { ?broader skos:broader+ <typeUri> .
@@ -188,10 +188,9 @@ UNION { ?contents a dcmitype:Collection ;
 ?object dcterms:title ?title .			
 { ?object nmo:hasFindspot ?findspot }
 UNION {?object dcterms:isPartOf ?hoard .
-?hoard nmo:hasFindspot ?findspot }
+ ?hoard a nmo:Hoard ; nmo:hasFindspot ?findspot }
 OPTIONAL {?findspot foaf:name ?findspotLabel}
 OPTIONAL {?findspot rdfs:label ?findspotLabel}
-OPTIONAL {?hoard skos:prefLabel ?findspotLabel}
 ?findspot geo:lat ?lat .
 ?findspot geo:long ?long }]]>
 						</xsl:when>
