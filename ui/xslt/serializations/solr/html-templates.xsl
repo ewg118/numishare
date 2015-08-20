@@ -1044,7 +1044,7 @@
 					<xsl:text>authority,timestamp,deity,denomination,findspot,issuer,manufacture,material,mint,obv_leg_display,portrait,region,rev_leg_display,year</xsl:text>
 				</xsl:when>
 				<xsl:otherwise>
-					<xsl:text>authority,axis,timestamp,deity,denomination,diameter,findspot,issuer,manufacture,material,mint,obv_leg_display,portrait,region,rev_leg_display,weight,year</xsl:text>
+					<xsl:text>authority,axis,timestamp,deity,denomination,diameter,findspot,issuer,manufacture,material,mint,obv_leg_display,portrait,region,recordId,rev_leg_display,weight,year</xsl:text>
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
