@@ -339,7 +339,7 @@
 			</div>
 			<div class="col-md-9">
 				<xsl:if test="string($sparql_endpoint)">
-					<xsl:copy-of select="document(concat($request-uri, 'sparql?uri=', $uri_space, $subtypeId, '&amp;template=display&amp;subtype=true'))/div[@class='row']"/>
+					<xsl:copy-of select="document(concat($request-uri, 'sparql?uri=', $uri_space, $subtypeId, '&amp;template=display&amp;subtype=true&amp;lang=', $lang))/div[@class='row']"/>
 				</xsl:if>
 			</div>
 		</div>

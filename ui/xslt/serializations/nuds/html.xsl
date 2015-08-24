@@ -104,7 +104,7 @@ ASK {
 
 						<!-- examples and subtypes -->
 						<xsl:if test="string($sparql_endpoint)">
-							<xsl:copy-of select="document(concat($request-uri, 'sparql?uri=', //config/uri_space, $id, '&amp;template=display'))/div[@id='examples']"/>
+							<xsl:copy-of select="document(concat($request-uri, 'sparql?uri=', //config/uri_space, $id, '&amp;template=display&amp;lang=', $lang))/div[@id='examples']"/>
 						</xsl:if>
 
 						<!-- handle subtypes if they exist -->
