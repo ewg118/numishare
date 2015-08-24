@@ -34,6 +34,11 @@
 	<xsl:variable name="sparql_endpoint" select="/content/config/sparql_endpoint"/>
 	<xsl:variable name="url" select="/content/config/url"/>
 	<xsl:variable name="collection_type" select="/content/config/collection_type"/>
+	<xsl:variable name="localTypes" as="node()*">
+		<config>
+			<xsl:copy-of select="/content/config/localTypes"/>
+		</config>
+	</xsl:variable>
 	<!-- get layout -->
 	<xsl:variable name="orientation" select="/content/config/theme/layouts/display/nuds/orientation"/>
 	<xsl:variable name="image_location" select="/content/config/theme/layouts/display/nuds/image_location"/>
