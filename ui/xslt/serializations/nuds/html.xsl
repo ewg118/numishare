@@ -712,19 +712,19 @@ ASK {
 			<p>Average measurements for this coin type:</p>
 			<dl class=" {if($lang='ar') then 'dl-horizontal ar' else 'dl-horizontal'}">
 				<xsl:if test="number($axis) &gt; 0">
-					<dt><xsl:value-of select="numishare:regularize_node('axis', $lang)"/>:</dt>
+					<dt><xsl:value-of select="numishare:regularize_node('axis', $lang)"/></dt>
 					<dd>
 						<xsl:value-of select="$axis"/>
 					</dd>
 				</xsl:if>
 				<xsl:if test="number($diameter) &gt; 0">
-					<dt><xsl:value-of select="numishare:regularize_node('diameter', $lang)"/>:</dt>
+					<dt><xsl:value-of select="numishare:regularize_node('diameter', $lang)"/></dt>
 					<dd>
 						<xsl:value-of select="$diameter"/>
 					</dd>
 				</xsl:if>
 				<xsl:if test="number($weight) &gt; 0">
-					<dt><xsl:value-of select="numishare:regularize_node('weight', $lang)"/>:</dt>
+					<dt><xsl:value-of select="numishare:regularize_node('weight', $lang)"/></dt>
 					<dd>
 						<xsl:value-of select="$weight"/>
 					</dd>
