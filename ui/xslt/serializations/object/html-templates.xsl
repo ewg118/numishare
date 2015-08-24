@@ -72,11 +72,11 @@
 								<xsl:variable name="langParam" select="if(string($lang)) then $lang else 'en'"/>
 								<xsl:variable name="localType" select="@localType"/>
 								<xsl:choose>
-									<xsl:when test="string(//config/localTypes/localType[@value=$localType]/label[@lang=$langParam])">
+									<xsl:when test="//config/localTypes/localType[@value=$localType]/label[@lang=$langParam]">
 										<xsl:value-of select="//config/localTypes/localType[@value=$localType]/label[@lang=$langParam]"/>
 									</xsl:when>
 									<xsl:otherwise>
-										<xsl:value-of select="numishare:regularize_node($field, $lang)"/>
+										<xsl:value-of select="concat(upper-case(substring(@localType, 1, 1)), substring(@localType, 2))"/>
 									</xsl:otherwise>
 								</xsl:choose>
 							</xsl:when>
