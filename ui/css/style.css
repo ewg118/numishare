@@ -157,14 +157,6 @@ a:hover {
 .metadata_section{
 	margin-bottom:20px;
 }
-.adminhist_div,
-.phystech,
-.bibref,
-.metadata_section ul{
-	margin-left:20px;
-	margin-bottom:10px;
-	padding:0;
-}
 .submenu{
 	width:100%;
 	vertical-align:bottom;
@@ -182,11 +174,8 @@ a:hover {
 .reference_image img{
 	max-width:100%;
 }
-.abstract{
-	margin-bottom:20px;
-}
 .external_link{
-	margin-left:10px;
+	margin:0px 10px;
 }
 .legend-icon{
 	width:40px;
