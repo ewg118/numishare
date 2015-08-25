@@ -5,7 +5,7 @@
 		<xsl:variable name="sort_category" select="substring-before($sort, ' ')"/>
 		<xsl:variable name="regularized_sort">
 			<xsl:value-of select="numishare:normalize_fields($sort_category, $lang)"/>
-		</xsl:variable>		
+		</xsl:variable>
 		<div class="row result-doc">
 			<xsl:if test="not($mode='compare') and //config/theme/layouts/*[name()=$pipeline]/image_location = 'left'">
 				<xsl:call-template name="result_image">
@@ -19,7 +19,8 @@
 					</xsl:if>
 					<xsl:choose>
 						<xsl:when test="$mode = 'compare'">
-							<a href="{$display_path}id/{str[@name='recordId']}?mode=compare&amp;q={$q}&amp;start={$start}&amp;image={$image}&amp;side={$side}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}" class="compare">
+							<a href="{$display_path}id/{str[@name='recordId']}?mode=compare&amp;q={$q}&amp;start={$start}&amp;image={$image}&amp;side={$side}{if (string($lang)) then
+								concat('&amp;lang=', $lang) else ''}" class="compare">
 								<xsl:value-of select="str[@name='title_display']"/>
 							</a>
 						</xsl:when>
@@ -135,12 +136,22 @@
 									<xsl:value-of select="numishare:regularize_node('obverse', $lang)"/>
 								</dt>
 								<dd>
-
-									<xsl:value-of select="str[@name='obv_leg_display']"/>
-									<xsl:if test="str[@name='obv_leg_display'] and str[@name='obv_type_display']">
-										<xsl:text>: </xsl:text>
-									</xsl:if>
-									<xsl:value-of select="str[@name='obv_type_display']"/>
+									<xsl:choose>
+										<xsl:when test="$lang='ar'">
+											<xsl:value-of select="str[@name='obv_type_display']"/>
+											<xsl:if test="str[@name='obv_leg_display'] and str[@name='obv_type_display']">
+												<xsl:text> :</xsl:text>
+											</xsl:if>
+											<xsl:value-of select="str[@name='obv_leg_display']"/>
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:value-of select="str[@name='obv_leg_display']"/>
+											<xsl:if test="str[@name='obv_leg_display'] and str[@name='obv_type_display']">
+												<xsl:text>: </xsl:text>
+											</xsl:if>
+											<xsl:value-of select="str[@name='obv_type_display']"/>
+										</xsl:otherwise>
+									</xsl:choose>
 								</dd>
 							</xsl:if>
 							<xsl:if test="str[@name='rev_leg_display'] or str[@name='rev_type_display']">
@@ -148,18 +159,29 @@
 									<xsl:value-of select="numishare:regularize_node('reverse', $lang)"/>
 								</dt>
 								<dd>
-									<xsl:value-of select="str[@name='rev_leg_display']"/>
-									<xsl:if test="str[@name='rev_leg_display'] and str[@name='rev_type_display']">
-										<xsl:text>: </xsl:text>
-									</xsl:if>
-									<xsl:value-of select="str[@name='rev_type_display']"/>
+									<xsl:choose>
+										<xsl:when test="$lang='ar'">
+											<xsl:value-of select="str[@name='rev_type_display']"/>
+											<xsl:if test="str[@name='rev_leg_display'] and str[@name='rev_type_display']">
+												<xsl:text> :</xsl:text>
+											</xsl:if>
+											<xsl:value-of select="str[@name='rev_leg_display']"/>
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:value-of select="str[@name='rev_leg_display']"/>
+											<xsl:if test="str[@name='rev_leg_display'] and str[@name='rev_type_display']">
+												<xsl:text>: </xsl:text>
+											</xsl:if>
+											<xsl:value-of select="str[@name='rev_type_display']"/>
+										</xsl:otherwise>
+									</xsl:choose>
 								</dd>
 							</xsl:if>
 							<xsl:if test="float[@name='diameter_num']">
 								<dt>
 									<xsl:value-of select="numishare:regularize_node('diameter', $lang)"/>
 								</dt>
-								<dd>									
+								<dd>
 									<xsl:value-of select="float[@name='diameter_num']"/>
 								</dd>
 							</xsl:if>
@@ -205,7 +227,7 @@
 						<xsl:choose>
 							<xsl:when test="contains($sort, '_num')">
 								<dt>
-									<xsl:value-of select="$regularized_sort"/>									
+									<xsl:value-of select="$regularized_sort"/>
 								</dt>
 								<dd>
 									<xsl:for-each select="distinct-values(*[@name=$sort_category])">
@@ -219,7 +241,7 @@
 							</xsl:when>
 							<xsl:when test="contains($sort, 'timestamp')">
 								<dt>
-									<xsl:value-of select="$regularized_sort"/>									
+									<xsl:value-of select="$regularized_sort"/>
 								</dt>
 								<dd>
 									<xsl:value-of select="date[@name='timestamp']"/>
@@ -256,7 +278,7 @@
 							<xsl:otherwise>
 								<xsl:if test="str[@name=$sort_category]">
 									<dt>
-										<xsl:value-of select="$regularized_sort"/>										
+										<xsl:value-of select="$regularized_sort"/>
 									</dt>
 									<dd>
 										<xsl:value-of select="substring(str[@name=$sort_category], 1, 25)"/>
@@ -496,7 +518,7 @@
 	<xsl:template name="remove_facets">
 		<div class="row">
 			<xsl:choose>
-				<xsl:when test="$q = '*:*'">
+				<xsl:when test="$q = '*:*' or not(string($q))">
 					<h1>
 						<xsl:value-of select="numishare:normalizeLabel('results_all-terms', $lang)"/>
 						<xsl:if test="count(//lst[@name='mint_geo']/int) &gt; 0 or count(//lst[@name='findspot_geo']/int) &gt; 0">
@@ -532,6 +554,17 @@
 					</xsl:if>
 				</xsl:for-each>
 			</xsl:variable>
+			<xsl:variable name="params" as="node()*">
+				<params>
+					<xsl:if test="string($new_query)">
+						<param>q=<xsl:value-of select="encode-for-uri($new_query)"/></param>
+					</xsl:if>
+					<xsl:if test="string($lang)">
+						<param>lang=<xsl:value-of select="$lang"/></param>
+					</xsl:if>
+				</params>
+			</xsl:variable>
+			
 			<xsl:choose>
 				<xsl:when test="not(. = '*:*') and not(substring(., 1, 1) = '(')">
 					<xsl:variable name="field" select="substring-before(., ':')"/>
@@ -554,11 +587,12 @@
 								<xsl:value-of select="replace(., '&#x022;', '')"/>
 							</xsl:otherwise>
 						</xsl:choose>
-					</xsl:variable>
+					</xsl:variable>					
+					
 					<div class="stacked_term bg-info row">
-						<xsl:if test="$lang='ar'">
+						<xsl:if test="$lang='ar'">							
 							<div class="col-md-2 left">
-								<a href="{$display_path}results?q={if (string($new_query)) then encode-for-uri($new_query) else '*:*'}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+								<a href="{$display_path}results{if (count($params//param) &gt; 0) then concat('?', string-join($params//param, '&amp;')) else ''}">
 									<span class="glyphicon glyphicon-remove"/>
 								</a>
 							</div>
@@ -589,7 +623,7 @@
 						</div>
 						<xsl:if test="not($lang='ar')">
 							<div class="col-md-2 right">
-								<a href="{$display_path}results?q={if (string($new_query)) then encode-for-uri($new_query) else '*:*'}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+								<a href="{$display_path}results{if (count($params//param) &gt; 0) then concat('?', string-join($params//param, '&amp;')) else ''}">
 									<span class="glyphicon glyphicon-remove"/>
 								</a>
 							</div>
@@ -603,7 +637,7 @@
 					<div class="stacked_term bg-info row">
 						<xsl:if test="$lang='ar'">
 							<div class="col-md-2 left">
-								<a href="{$display_path}results?q={if (string($new_query)) then encode-for-uri($new_query) else '*:*'}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+								<a href="{$display_path}results{if (count($params//param) &gt; 0) then concat('?', string-join($params//param, '&amp;')) else ''}">
 									<span class="glyphicon glyphicon-remove"/>
 								</a>
 							</div>
@@ -722,7 +756,7 @@
 						</div>
 						<xsl:if test="not($lang='ar')">
 							<div class="col-md-2 right">
-								<a href="{$display_path}results?q={if (string($new_query)) then encode-for-uri($new_query) else '*:*'}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+								<a href="{$display_path}results{if (count($params//param) &gt; 0) then concat('?', string-join($params//param, '&amp;')) else ''}">
 									<span class="glyphicon glyphicon-remove"/>
 								</a>
 							</div>
@@ -818,7 +852,7 @@
 					<xsl:attribute name="style">text-align:right</xsl:attribute>
 				</xsl:if>
 				<div class="col-md-12">
-					<a id="clear_all" href="{$display_path}results?q=*:*">
+					<a id="clear_all" href="{$display_path}results">
 						<xsl:value-of select="numishare:normalizeLabel('results_clear-all', $lang)"/>
 					</a>
 				</div>
@@ -1006,8 +1040,8 @@
 		<xsl:param name="previous"/>
 
 		<a class="btn btn-default {$class}" role="button" title="Previous" href="{if($pipeline='results') then 'results' else    ''}?q={encode-for-uri($q)}&amp;start={$previous}{if (string($sort))
-			then          concat('&amp;sort=',          $sort) else ''}{if (string($lang)) then    concat('&amp;lang=', $lang) else ''}{if(string($side)) then concat('&amp;side=', $side) else ''}{if(string($mode)) then concat('&amp;mode=',
-			$mode) else ''}{if(string($image)) then concat('&amp;image=', $image) else ''}">
+			then          concat('&amp;sort=',          $sort) else ''}{if (string($lang)) then    concat('&amp;lang=', $lang) else ''}{if(string($side)) then concat('&amp;side=', $side) else
+			''}{if(string($mode)) then concat('&amp;mode=',    $mode) else ''}{if(string($image)) then concat('&amp;image=', $image) else ''}">
 			<span class="glyphicon glyphicon-{if ($lang='ar') then 'forward' else 'backward'}"/>
 		</a>
 	</xsl:template>
@@ -1017,8 +1051,8 @@
 		<xsl:param name="next"/>
 
 		<a class="btn btn-default {$class}" role="button" title="Next" href="{if($pipeline='results') then 'results' else ''}?q={encode-for-uri($q)}&amp;start={$next}{if    (string($sort)) then
-			concat('&amp;sort=', $sort) else          ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}{if(string($side)) then concat('&amp;side=', $side) else ''}{if(string($mode)) then concat('&amp;mode=',
-			$mode) else ''}{if(string($image)) then concat('&amp;image=', $image) else ''}">
+			concat('&amp;sort=', $sort) else          ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}{if(string($side)) then concat('&amp;side=', $side) else ''}{if(string($mode))
+			then concat('&amp;mode=',    $mode) else ''}{if(string($image)) then concat('&amp;image=', $image) else ''}">
 			<span class="glyphicon glyphicon-{if ($lang='ar') then 'backward' else 'forward'}"/>
 		</a>
 	</xsl:template>
@@ -1028,8 +1062,8 @@
 		<xsl:param name="total"/>
 
 		<a class="btn btn-default {$class}" role="button" href="{if($pipeline='results') then 'results' else ''}?q={encode-for-uri($q)}&amp;start={($total * $rows) - $rows}{if    (string($sort)) then
-			concat('&amp;sort=',          $sort) else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}{if(string($side)) then concat('&amp;side=', $side) else ''}{if(string($mode)) then concat('&amp;mode=',
-			$mode) else ''}{if(string($image)) then concat('&amp;image=', $image) else ''}">
+			concat('&amp;sort=',          $sort) else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}{if(string($side)) then concat('&amp;side=', $side) else ''}{if(string($mode))
+			then concat('&amp;mode=',    $mode) else ''}{if(string($image)) then concat('&amp;image=', $image) else ''}">
 			<span class="glyphicon glyphicon-fast-{if ($lang='ar') then 'backward' else 'forward'}"/>
 		</a>
 	</xsl:template>
@@ -1146,6 +1180,17 @@
 				</xsl:if>
 			</xsl:for-each>
 		</xsl:variable>
+		<xsl:variable name="params" as="node()*">
+			<params>
+				<xsl:if test="string($new_query)">
+					<param>q=<xsl:value-of select="encode-for-uri($new_query)"/></param>
+				</xsl:if>
+				<xsl:if test="string($lang)">
+					<param>lang=<xsl:value-of select="$lang"/></param>
+				</xsl:if>
+			</params>
+		</xsl:variable>
+		
 		<div class="stacked_term bg-info row">
 			<div class="col-md-10">
 				<span>
@@ -1155,8 +1200,7 @@
 				</span>
 			</div>
 			<div class="col-md-2 right">
-				<a class="remove_filter" href="{$display_path}results?q={if (string($new_query)) then encode-for-uri($new_query) else '*:*'}{if (string($lang)) then concat('&amp;lang=', $lang) else
-					''}">
+				<a class="remove_filter" href="{$display_path}results{if (count($params//param) &gt; 0) then concat('?', string-join($params//param, '&amp;')) else ''}">
 					<span class="glyphicon glyphicon-remove"/>
 				</a>
 			</div>

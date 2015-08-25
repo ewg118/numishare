@@ -26,14 +26,28 @@
 
 			<!-- get correct type description based on lang, default to english -->
 			<xsl:if test="nuds:type/nuds:description">
-				<xsl:if test="$recordType != 'hoard'">
-					<field name="{$side}_type_display">
-						<xsl:value-of select="normalize-space(nuds:type/nuds:description[if (string($lang)) then @xml:lang=$lang else @xml:lang='en'])"/>
-					</field>
-				</xsl:if>
-				<field name="{$side}_type_text">
-					<xsl:value-of select="normalize-space(nuds:type/nuds:description[if (string($lang)) then @xml:lang=$lang else @xml:lang='en'])"/>
-				</field>
+				<xsl:choose>
+					<xsl:when test="nuds:type/nuds:description[@xml:lang=$lang]">
+						<xsl:if test="$recordType != 'hoard'">
+							<field name="{$side}_type_display">
+								<xsl:value-of select="normalize-space(nuds:type/nuds:description[@xml:lang=$lang])"/>
+							</field>
+						</xsl:if>
+						<field name="{$side}_type_text">
+							<xsl:value-of select="normalize-space(nuds:type/nuds:description[@xml:lang=$lang])"/>
+						</field>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:if test="$recordType != 'hoard'">
+							<field name="{$side}_type_display">
+								<xsl:value-of select="normalize-space(nuds:type/nuds:description[@xml:lang='en'])"/>
+							</field>
+						</xsl:if>
+						<field name="{$side}_type_text">
+							<xsl:value-of select="normalize-space(nuds:type/nuds:description[@xml:lang='en'])"/>
+						</field>
+					</xsl:otherwise>
+				</xsl:choose>
 			</xsl:if>
 
 			<xsl:if test="nuds:legend">

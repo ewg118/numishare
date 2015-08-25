@@ -290,7 +290,7 @@ ASK {
 									</div>
 								</xsl:when>
 								<xsl:otherwise>
-									<div class="col-md-6">
+									<div class="col-md-6 {if($lang='ar') then 'pull-right' else ''}">
 										<xsl:call-template name="metadata-container"/>
 									</div>
 									<div class="col-md-6">
@@ -302,28 +302,6 @@ ASK {
 					</xsl:when>
 					<xsl:otherwise>
 						<div class="row">
-							<!--<ul class="nav nav-pills" id="tabs">
-									<li class="active">
-										<a href="#metadata" data-toggle="pill">
-											<xsl:value-of select="numishare:normalizeLabel('display_summary', $lang)"/>
-										</a>
-									</li>
-									<li>
-										<a href="#mapTab" id="mapButton" data-toggle="pill">
-											<xsl:value-of select="numishare:normalizeLabel('display_map', $lang)"/>
-										</a>
-									</li>
-								</ul>
-								<div class="tab-content">
-									<div class="tab-pane active" id="metadata">
-										<xsl:call-template name="metadata-container"/>
-									</div>
-									<div class="tab-pane" id="mapTab">
-										<xsl:call-template name="map-container"/>
-									</div>
-								</div>-->
-
-							<!-- removed tabs -->
 							<xsl:call-template name="metadata-container"/>
 						</div>
 						<xsl:if test="$rdf//nmo:Mint">
