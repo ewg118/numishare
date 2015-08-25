@@ -26,7 +26,7 @@ $(document).ready(function () {
 	
 	function setValue(field, sort_order) {
 		var category;
-		if (field.indexOf('_') > 0 || field == 'timestamp') {
+		if (field.indexOf('_') > 0 || field == 'timestamp' || field == 'recordId') {
 			category = field;
 		} else {
 			if (sort_order == 'asc') {
