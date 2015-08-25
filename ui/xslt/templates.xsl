@@ -65,6 +65,7 @@
 			<xsl:when test="$lang='ar'">
 				<xsl:call-template name="languages"/>
 				<xsl:for-each select="//config/pages/page[@public = '1']">
+					<xsl:sort select="position()" order="descending"/>
 					<xsl:variable name="stub" select="@stub"/>
 					
 					<li>
@@ -87,9 +88,11 @@
 						</a>
 					</li>
 				</xsl:for-each>
-				<li>
-					<a href="{$display_path}apis{if (string($lang)) then concat('?lang=', $lang) else ''}">APIs</a>
-				</li>
+				<xsl:if test="not(//config/pages/apis/@enabled=false())">
+					<li>
+						<a href="{$display_path}apis{if (string($lang)) then concat('?lang=', $lang) else ''}">APIs</a>
+					</li>
+				</xsl:if>				
 				<xsl:if test="//config/pages/visualize/@enabled= true()">
 					<li>
 						<a href="{$display_path}visualize{if (string($lang)) then concat('?lang=', $lang) else ''}">
@@ -178,9 +181,11 @@
 						</a>
 					</li>
 				</xsl:if>
-				<li>
-					<a href="{$display_path}apis{if (string($lang)) then concat('?lang=', $lang) else ''}">APIs</a>
-				</li>
+				<xsl:if test="not(//config/pages/apis/@enabled=false())">
+					<li>
+						<a href="{$display_path}apis{if (string($lang)) then concat('?lang=', $lang) else ''}">APIs</a>
+					</li>
+				</xsl:if>
 				<xsl:for-each select="//config/pages/page[@public='1']">
 					<xsl:variable name="stub" select="@stub"/>
 					
