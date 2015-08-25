@@ -4,7 +4,7 @@ $data = generate_json('/home/komet/ans_migration/ocre/bm-data/ric5.csv', false);
 $ref_array = array();
 $num_array = array();
 $type_array = array();
-$vol = 'RIC4';
+$vol = 'RIC5';
 
 //generate concordance list
 $count = 0;
