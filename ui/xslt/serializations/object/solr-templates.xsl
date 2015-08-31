@@ -331,7 +331,7 @@
 			</field>
 		</xsl:if>
 
-		<xsl:if test="string(normalize-space(@standardDate))">
+		<xsl:if test="@standardDate">
 			<xsl:call-template name="get_date_hierarchy">
 				<xsl:with-param name="standardDate" select="@standardDate"/>
 				<xsl:with-param name="recordType" select="$recordType"/>
