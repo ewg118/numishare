@@ -309,6 +309,29 @@ function generate_nuds($row, $count){
 		} else {
 			$xml .= generate_typeDesc($row, $department);
 		}
+	} elseif ($department=='Greek' && count(preg_grep('/Price\.[1-9]/', $refs)) > 0){
+		//handle Price references for Pella
+		$matches = preg_grep('/Price\.[1-9]/', $refs);
+		foreach ($matches as $k=>$v){
+			if (strlen(trim($v)) > 0){
+				$id = substr(trim($v), -1) == '?' ? str_replace('?', '', trim($v)) : trim($v);
+				$certainty = substr(trim($v), -1) == '?' ? ' certainty="uncertain"' : '';
+			}
+		}
+		$url = 'http://numismatics.org/pella/id/' . str_replace('Price.', 'price.', $id);
+		$file_headers = @get_headers($url);
+		if ($file_headers[0] == 'HTTP/1.1 200 OK'){
+			$title = get_title_from_rdf($url, $accnum);
+			if ($title != 'FAIL'){
+				$xml .= $title;
+				$xml .= '<typeDesc xlink:type="simple" xlink:href="' . $url . '"' . $certainty . '/>';
+			} else {
+				$xml .= generate_typeDesc($row, $department);
+			}
+		} else {
+			$xml .= generate_typeDesc($row, $department);
+		}
+		
 	} elseif ($row['privateinfo'] == 'WW I project ready') {
 		//handle AoD
 		$citations = array_filter(explode('|', trim($row['published'])));
@@ -1189,7 +1212,7 @@ function number_pad($number,$n) {
 	if ($number > 0){
 		$gYear = str_pad((int) $number,$n,"0",STR_PAD_LEFT);
 	} elseif ($number < 0) {
-		$bcNum = (int)abs($number) - 1;
+		$bcNum = (int)abs($number);
 		$gYear = '-' . str_pad($bcNum,$n,"0",STR_PAD_LEFT);
 	}
 	return $gYear;
