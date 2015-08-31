@@ -369,16 +369,8 @@ function get_date_textual($year){
 
 function get_date($fromDate, $toDate){
 	//validate dates, compliant to ISO
-	if ($fromDate < 0){
-		$start_gYear = number_pad($fromDate + 1, 4);
-	} else {
-		$start_gYear = number_pad($fromDate, 4);
-	}
-	if ($toDate < 0){
-		$end_gYear = number_pad($toDate + 1, 4);
-	} else {
-		$end_gYear = number_pad($toDate, 4);
-	}
+	$start_gYear = number_pad($fromDate, 4);
+	$end_gYear = number_pad($toDate, 4);
 
 	if ($fromDate == $toDate){
 		$node = '<date standardDate="' . $start_gYear . '">' . get_date_textual($fromDate) . '</date>';
