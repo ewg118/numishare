@@ -331,12 +331,12 @@
 			</field>
 		</xsl:if>
 
-		<xsl:if test="@standardDate">
+		<xsl:for-each select="@standardDate">
 			<xsl:call-template name="get_date_hierarchy">
-				<xsl:with-param name="standardDate" select="@standardDate"/>
+				<xsl:with-param name="standardDate" select="."/>
 				<xsl:with-param name="recordType" select="$recordType"/>
 			</xsl:call-template>
-		</xsl:if>
+		</xsl:for-each>
 	</xsl:template>
 
 	<xsl:template match="nuds:dateRange">
