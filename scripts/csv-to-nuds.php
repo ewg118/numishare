@@ -241,7 +241,7 @@ function get_date_textual($year){
 	$textual_date = '';
 	//display start date
 	if($year <= 0){
-		$textual_date .= (abs($year) + 1) . ' B.C.';
+		$textual_date .= abs($year) . ' B.C.';
 	} else {
 		if ($year <= 600){
 			$textual_date .= 'A.D. ';
