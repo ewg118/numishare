@@ -237,14 +237,7 @@
 					<li>
 						<b><xsl:value-of select="numishare:regularize_node('closing_date', $lang)"/>: </b>
 						<span property="nmo:hasClosing_date" content="{format-number($dates//date[last()], '0000')}" datatype="xsd:gYear">
-							<xsl:choose>
-								<xsl:when test="$dates//date[last()] &lt; 1">
-									<xsl:value-of select="nh:normalize_date($dates//date[last()]-1, $dates//date[last()]-1)"/>
-								</xsl:when>
-								<xsl:otherwise>
-									<xsl:value-of select="nh:normalize_date($dates//date[last()], $dates//date[last()])"/>
-								</xsl:otherwise>
-							</xsl:choose>
+							<xsl:value-of select="nh:normalize_date($dates//date[last()], $dates//date[last()])"/>
 						</span>
 					</li>
 				</xsl:if>

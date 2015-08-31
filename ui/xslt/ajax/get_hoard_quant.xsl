@@ -282,14 +282,7 @@
 		<xsl:variable name="value">
 			<xsl:choose>
 				<xsl:when test="@standardDate">
-					<xsl:choose>
-						<xsl:when test="number(@standardDate) &lt;= 0">
-							<xsl:value-of select="number(@standardDate) -1"/>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:value-of select="number(@standardDate)"/>
-						</xsl:otherwise>
-					</xsl:choose>
+					<xsl:value-of select="number(@standardDate)"/>
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:choose>

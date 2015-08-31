@@ -570,14 +570,7 @@
 							</xsl:if>
 						</xsl:when>
 						<xsl:otherwise>
-							<xsl:choose>
-								<xsl:when test="number(descendant::nh:deposit//@standardDate) &lt;= 0">
-									<xsl:value-of select="number(descendant::nh:deposit//@standardDate) - 1"/>
-								</xsl:when>
-								<xsl:otherwise>
-									<xsl:value-of select="number(descendant::nh:deposit//@standardDate)"/>
-								</xsl:otherwise>
-							</xsl:choose>
+							<xsl:value-of select="number(descendant::nh:deposit//@standardDate)"/>
 						</xsl:otherwise>
 					</xsl:choose>
 

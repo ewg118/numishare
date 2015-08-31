@@ -31,14 +31,7 @@
 					<xsl:when test="descendant::nh:deposit//@standardDate">
 						<xsl:for-each select="descendant::nh:deposit//@standardDate">
 							<date>
-								<xsl:choose>
-									<xsl:when test="number(.) &lt;= 0">
-										<xsl:value-of select="number(.) - 1"/>
-									</xsl:when>
-									<xsl:otherwise>
-										<xsl:value-of select="number(.)"/>
-									</xsl:otherwise>
-								</xsl:choose>
+								<xsl:value-of select="number(.)"/>
 							</date>
 						</xsl:for-each>
 					</xsl:when>
@@ -51,14 +44,7 @@
 										<xsl:for-each select="$nudsGroup//object[@xlink:href=$href]/descendant::*/@standardDate">
 											<xsl:if test="number(.)">
 												<date>
-													<xsl:choose>
-														<xsl:when test="number(.) &lt;= 0">
-															<xsl:value-of select="number(.) - 1"/>
-														</xsl:when>
-														<xsl:otherwise>
-															<xsl:value-of select="number(.)"/>
-														</xsl:otherwise>
-													</xsl:choose>
+													<xsl:value-of select="number(.)"/>
 												</date>
 											</xsl:if>
 										</xsl:for-each>
@@ -67,14 +53,7 @@
 										<xsl:for-each select="descendant::*/@standardDate">
 											<xsl:if test="number(.)">
 												<date>
-													<xsl:choose>
-														<xsl:when test="number(.) &lt;= 0">
-															<xsl:value-of select="number(.) - 1"/>
-														</xsl:when>
-														<xsl:otherwise>
-															<xsl:value-of select="number(.)"/>
-														</xsl:otherwise>
-													</xsl:choose>
+													<xsl:value-of select="number(.)"/>
 												</date>
 											</xsl:if>
 										</xsl:for-each>
