@@ -60,6 +60,20 @@
 					<xsl:value-of select="normalize-space(nuds:legend)"/>
 				</field>
 			</xsl:if>
+
+			<!-- handle symbols as facets -->
+			<xsl:if test="$recordType='conceptual'">
+				<xsl:for-each select="nuds:symbol[@localType]">
+					<field name="{@localType}_facet">
+						<xsl:value-of select="."/>
+					</field>
+					<xsl:if test="string(@xlink:href)">
+						<field name="{@localType}_uri">
+							<xsl:value-of select="."/>
+						</field>
+					</xsl:if>
+				</xsl:for-each>
+			</xsl:if>
 		</xsl:for-each>
 
 		<!-- *********** FACETS ************** -->
