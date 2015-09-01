@@ -48,6 +48,30 @@
 		</ul>
 	</xsl:template>
 
+	<!-- handle type descriptions in various languages -->
+	<xsl:template match="nuds:type" mode="descMeta">
+		<xsl:choose>
+			<xsl:when test="nuds:description[@xml:lang=$lang]">
+				<li>
+					<b>
+						<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
+						<xsl:text>: </xsl:text>
+					</b>
+					<xsl:value-of select="nuds:description[@xml:lang=$lang]"/>
+				</li>
+			</xsl:when>
+			<xsl:otherwise>
+				<li>
+					<b>
+						<xsl:value-of select="numishare:regularize_node(local-name(), 'en')"/>
+						<xsl:text>: </xsl:text>
+					</b>
+					<xsl:value-of select="nuds:description[@xml:lang='en']"/>
+				</li>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
 	<xsl:template match="*" mode="descMeta">
 		<xsl:choose>
 			<xsl:when test="not(child::*) and (string(.) or string(@xlink:href))">

@@ -17,7 +17,7 @@
 		<xsl:apply-templates select="nuds:date|nuds:dateRange">
 			<xsl:with-param name="recordType" select="$recordType"/>
 		</xsl:apply-templates>
-		
+
 		<!-- AH dates -->
 		<xsl:apply-templates select="nuds:dateOnObject[@calendar='ah']"/>
 
@@ -174,7 +174,7 @@
 				</field>
 			</xsl:for-each>
 		</xsl:if>
-		
+
 		<xsl:if test="string(@xlink:href) and ($role = 'mint' or $role = 'findspot')">
 			<xsl:choose>
 				<xsl:when test="contains(@xlink:href, 'geonames')">
@@ -504,10 +504,15 @@
 				</field>
 			</xsl:when>
 			<xsl:when test="$collection-name='ocre'">
-				<xsl:variable name="pieces" select="tokenize(nuds:control/nuds:recordId, '\.')"></xsl:variable>
-				
+				<xsl:variable name="pieces" select="tokenize(nuds:control/nuds:recordId, '\.')"/>
+
 				<field name="typeNumber">
 					<xsl:value-of select="if(count($pieces) = 4) then $pieces[4] else concat($pieces[4], '.', $pieces[5])"/>
+				</field>
+			</xsl:when>
+			<xsl:when test="$collection-name='pella'">
+				<field name="typeNumber">
+					<xsl:value-of select="substring-after(nuds:control/nuds:recordId, 'price.')"/>
 				</field>
 			</xsl:when>
 		</xsl:choose>
@@ -526,6 +531,19 @@
 						<xsl:matching-substring>
 							<xsl:value-of select="concat(format-number(number(regex-group(1)), '0000'), regex-group(2), regex-group(3), if (number(regex-group(4))) then
 								format-number(number(regex-group(4)), '0000') else '', regex-group(5))"/>
+						</xsl:matching-substring>
+						<xsl:non-matching-substring>
+							<xsl:value-of select="."/>
+						</xsl:non-matching-substring>
+					</xsl:analyze-string>
+				</field>
+			</xsl:when>
+
+			<xsl:when test="$collection-name='pella'">
+				<field name="sortid">
+					<xsl:analyze-string select="substring-after(nuds:control/nuds:recordId, 'price.')" regex="([A-Z])?([0-9]+)([A-z]+)?">
+						<xsl:matching-substring>
+							<xsl:value-of select="concat(regex-group(1), format-number(number(regex-group(2)), '0000'), regex-group(3))"/>
 						</xsl:matching-substring>
 						<xsl:non-matching-substring>
 							<xsl:value-of select="."/>

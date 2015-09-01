@@ -28,6 +28,7 @@
 				<role>crro</role>
 				<role>egypt</role>
 				<role>aod</role>
+				<role>pella</role>
 			</config>
 		</p:input>
 		<p:output name="data" ref="data"/>
