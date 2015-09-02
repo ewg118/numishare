@@ -323,11 +323,11 @@
 						<xsl:if test="not(contains($q, 'symbol_'))">
 							<xsl:attribute name="style">display:none</xsl:attribute>
 						</xsl:if>
-						<xsl:if test="lst[contains(@name, 'symbol_obv_')]">
+						<xsl:if test="lst[contains(@name, 'symbol_obv_') and number(int) &gt; 0]">
 							<h5><xsl:value-of select="numishare:normalize_fields('obverse', $lang)"/></h5>
 							<xsl:apply-templates select="lst[contains(@name, 'symbol_obv') and number(int) &gt; 0]" mode="facet"/>
 						</xsl:if>
-						<xsl:if test="lst[contains(@name, 'symbol_rev_')]">
+						<xsl:if test="lst[contains(@name, 'symbol_rev_') and number(int) &gt; 0]">
 							<h5><xsl:value-of select="numishare:normalize_fields('reverse', $lang)"/></h5>
 							<xsl:apply-templates select="lst[contains(@name, 'symbol_rev') and number(int) &gt; 0]" mode="facet"/>
 						</xsl:if>	
