@@ -81,7 +81,7 @@
 					<xsl:choose>
 						<xsl:when test="string(@xlink:role)">
 							<xsl:value-of select="@xlink:role"/>
-						</xsl:when>
+						</xsl:when>						
 						<xsl:otherwise>
 							<xsl:value-of select="local-name()"/>
 						</xsl:otherwise>
@@ -173,6 +173,7 @@
 									<xsl:with-param name="field" select="$field"/>
 									<xsl:with-param name="value" select="$value"/>
 									<xsl:with-param name="href" select="$href"/>
+									<xsl:with-param name="position" select="@position"/>
 								</xsl:call-template>
 							</span>
 						</xsl:when>
@@ -181,6 +182,7 @@
 								<xsl:with-param name="field" select="$field"/>
 								<xsl:with-param name="value" select="$value"/>
 								<xsl:with-param name="href" select="$href"/>
+								<xsl:with-param name="position" select="@position"/>
 							</xsl:call-template>
 						</xsl:otherwise>
 					</xsl:choose>
@@ -190,6 +192,18 @@
 					<!-- display title -->
 					<xsl:if test="string(@title)">
 						<i> (<xsl:value-of select="@title"/>)</i>
+					</xsl:if>
+					<xsl:if test="string(@position)">
+						<xsl:variable name="langParam" select="if(string($lang)) then $lang else 'en'"/>
+						<xsl:variable name="position" select="@position"/>
+						<xsl:choose>
+							<xsl:when test="$positions//position[@value=$position]/label[@lang=$langParam]">
+								<i> (<xsl:value-of select="$positions//position[@value=$position]/label[@lang=$langParam]"/>)</i>
+							</xsl:when>
+							<xsl:otherwise>
+								<i> (<xsl:value-of select="concat(upper-case(substring(@position, 1, 1)), substring(@position, 2))"/>)</i>
+							</xsl:otherwise>
+						</xsl:choose>
 					</xsl:if>
 					<!-- display certainty -->
 					<xsl:if test="string(@certainty)">
@@ -229,7 +243,17 @@
 										<xsl:attribute name="rel" select="concat('nmo:has', concat(upper-case(substring(local-name(), 1, 1)), substring(local-name(), 2)))"/>
 										<xsl:attribute name="resource" select="concat($url, 'id/', $id, '#', local-name())"/>
 									</xsl:if>
-									<xsl:apply-templates select="*" mode="descMeta"/>
+									
+									<!-- ignore symbols in OCRE -->
+									<xsl:choose>
+										<xsl:when test="$collection-name='ocre'">
+											<xsl:apply-templates select="*[not(self::nuds:symbol[@position])]" mode="descMeta"/>
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:apply-templates select="*" mode="descMeta"/>
+										</xsl:otherwise>
+									</xsl:choose>
+									
 									<!-- if the $recordType is 'conceptual' and there is no legend or description, and thee are subtypes, display the subtype data -->
 									<xsl:if test="$recordType='conceptual' and count($subtypes//subtype) &gt; 0">
 										<xsl:if test="(local-name() = 'obverse' or local-name()='reverse' ) and not(nuds:type)">
@@ -260,7 +284,9 @@
 											</li>
 										</xsl:if>
 									</xsl:if>
-									<xsl:if test="nuds:symbol[@position='left'] or nuds:symbol[@position='center'] or nuds:symbol[@position='right'] or nuds:symbol[@position='exergue']">
+									
+									<!-- display Roman style mint marks for OCRE -->
+									<xsl:if test="$collection-name = 'ocre' and (nuds:symbol[@position='left'] or nuds:symbol[@position='center'] or nuds:symbol[@position='right'] or nuds:symbol[@position='exergue'])">
 										<xsl:call-template name="format-control-marks"/>
 									</xsl:if>
 								</ul>
@@ -316,8 +342,15 @@
 		<xsl:param name="field"/>
 		<xsl:param name="value"/>
 		<xsl:param name="href"/>
+		<xsl:param name="position"/>
 
 		<xsl:choose>
+			<xsl:when test="string($position) and $positions//position[@value=$position]">
+				<xsl:variable name="side" select="substring(parent::node()/name(), 1, 3)"/>
+				<a href="{$display_path}results?q=symbol_{$side}_{$position}_facet:&#x022;{$value}&#x022;{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+					<xsl:value-of select="$value"/>
+				</a>
+			</xsl:when>
 			<xsl:when test="contains($facets, $field)">
 				<a href="{$display_path}results?q={$field}_facet:&#x022;{$value}&#x022;{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
 					<xsl:choose>

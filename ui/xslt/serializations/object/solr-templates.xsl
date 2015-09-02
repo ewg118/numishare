@@ -63,12 +63,12 @@
 
 			<!-- handle symbols as facets -->
 			<xsl:if test="$recordType='conceptual'">
-				<xsl:for-each select="nuds:symbol[@localType]">
-					<field name="{@localType}_facet">
+				<xsl:for-each select="nuds:symbol[@position]">
+					<field name="symbol_{$side}_{@position}_facet">
 						<xsl:value-of select="."/>
 					</field>
 					<xsl:if test="string(@xlink:href)">
-						<field name="{@localType}_uri">
+						<field name="symbol_{$side}_{@position}_uri">
 							<xsl:value-of select="."/>
 						</field>
 					</xsl:if>

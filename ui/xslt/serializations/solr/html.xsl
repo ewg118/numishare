@@ -38,6 +38,11 @@
 	<xsl:variable name="collection_type" select="/content/config/collection_type"/>
 	<xsl:variable name="sparql_endpoint" select="/content/config/sparql_endpoint"/>
 	<xsl:variable name="url" select="/content/config/url"/>
+	<xsl:variable name="positions" as="node()*">
+		<config>
+			<xsl:copy-of select="/content/config/positions"/>
+		</config>
+	</xsl:variable>
 
 	<!-- get block of images from SPARQL endpoint, via nomisma API -->
 	<xsl:variable name="sparqlResult" as="element()*">
@@ -86,8 +91,8 @@
 
 				<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"/>
 				<!-- bootstrap -->
-				<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"/>
-				<script type="text/javascript" src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"/>
+				<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"/>
+				<script type="text/javascript" src="http://netdna.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"/>
 				<script type="text/javascript" src="{$include_path}/javascript/bootstrap-multiselect.js"/>
 				<link rel="stylesheet" href="{$include_path}/css/bootstrap-multiselect.css" type="text/css"/>
 				<link type="text/css" href="{$include_path}/css/style.css" rel="stylesheet"/>

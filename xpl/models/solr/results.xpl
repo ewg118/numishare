@@ -46,7 +46,23 @@
 
 				<!-- config variables -->
 				<xsl:variable name="solr-url" select="concat(/config/solr_published, 'select/')"/>
-				<xsl:variable name="facets" select="concat('&amp;facet.field=', string-join(/config/facets/facet, '&amp;facet.field='))"/>
+				<xsl:variable name="facets">
+					<xsl:text>&amp;facet.field=</xsl:text>
+					<xsl:value-of select="string-join(/config/facets/facet, '&amp;facet.field=')"/>
+					<xsl:if test="count(/config/positions/position) &gt; 0">
+						<xsl:for-each select="/config/positions/position">
+							<xsl:choose>
+								<xsl:when test="@side='both'">
+									<xsl:value-of select="concat('&amp;facet.field=symbol_obv_', @value, '_facet')"/>
+									<xsl:value-of select="concat('&amp;facet.field=symbol_rev_', @value, '_facet')"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:value-of select="concat('&amp;facet.field=symbol_', @side, '_', @value, '_facet')"/>
+								</xsl:otherwise>
+							</xsl:choose>
+						</xsl:for-each>
+					</xsl:if>
+				</xsl:variable>				
 				
 				<!-- set field filters dependent on the type of collection -->
 				<xsl:variable name="fl">

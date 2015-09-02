@@ -303,15 +303,39 @@
 		<!-- ignore mint_geo-->
 		<xsl:choose>
 			<xsl:when test="$collection_type = 'hoard'">
-				<h4>Hoard</h4>
+				<h4><xsl:value-of select="numishare:normalize_fields('hoard', $lang)"/></h4>
 				<xsl:apply-templates select="lst[(@name='taq_num' or @name='findspot_hier' or @name='reference_facet') and number(int) &gt; 0]" mode="facet"/>
-				<h4>Contents</h4>
+				<h4><xsl:value-of select="numishare:normalize_fields('contents', $lang)"/></h4>
 				<xsl:apply-templates select="lst[(@name='authority_facet'or @name='coinType_facet' or @name='deity_facet' or @name='denomination_facet' or @name='issuer_facet' or
 					@name='manufacture_facet' or @name='material_facet' or @name='mint_facet' or @name='objectType_facet' or @name='portrait_facet' or @name='region_facet') and      number(int) &gt;
 					0]" mode="facet"/>
 			</xsl:when>
+			<xsl:when test="$collection_type='cointype'">
+				<xsl:apply-templates select="lst[not(contains(@name, '_geo')) and not(contains(@name, 'symbol_')) and number(int) &gt; 0]" mode="facet"/>
+				<xsl:if test="lst[contains(@name, 'symbol_')]">
+					<h4>
+						<xsl:value-of select="numishare:normalize_fields('symbol', $lang)"/>
+						<small>
+							<a href="#" id="toggle-symbols" title="Hide/Show Symbol Facets"><span class="glyphicon glyphicon-{if(contains($q, 'symbol_')) then 'triangle-bottom' else 'triangle-right'}"/></a>
+						</small>
+					</h4>
+					<div id="symbol-container">
+						<xsl:if test="not(contains($q, 'symbol_'))">
+							<xsl:attribute name="style">display:none</xsl:attribute>
+						</xsl:if>
+						<xsl:if test="lst[contains(@name, 'symbol_obv_')]">
+							<h5><xsl:value-of select="numishare:normalize_fields('obverse', $lang)"/></h5>
+							<xsl:apply-templates select="lst[contains(@name, 'symbol_obv') and number(int) &gt; 0]" mode="facet"/>
+						</xsl:if>
+						<xsl:if test="lst[contains(@name, 'symbol_rev_')]">
+							<h5><xsl:value-of select="numishare:normalize_fields('reverse', $lang)"/></h5>
+							<xsl:apply-templates select="lst[contains(@name, 'symbol_rev') and number(int) &gt; 0]" mode="facet"/>
+						</xsl:if>	
+					</div>				
+				</xsl:if>
+			</xsl:when>
 			<xsl:otherwise>
-				<xsl:apply-templates select="lst[not(contains(@name, '_geo')) and number(int) &gt; 0]" mode="facet"/>
+				<xsl:apply-templates select="lst[not(contains(@name, '_geo')) and not(contains(@name, 'symbol_')) and number(int) &gt; 0]" mode="facet"/>
 			</xsl:otherwise>
 		</xsl:choose>
 		<form action="results" method="GET" role="form" id="facet_form">
@@ -459,6 +483,28 @@
 				</div>
 			</xsl:when>
 			<xsl:otherwise>
+				<xsl:variable name="title">
+					<xsl:choose>
+						<xsl:when test="contains(@name, 'symbol_')">
+							<xsl:variable name="position" select="tokenize(@name, '_')[3]"/>
+							<xsl:variable name="langParam" select="if(string($lang)) then $lang else 'en'"/>
+							
+							<xsl:choose>
+								<xsl:when test="$positions//position[@value=$position]/label[@lang=$langParam]">
+									<xsl:value-of select="$positions//position[@value=$position]/label[@lang=$langParam]"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:value-of select="concat(upper-case(substring($position, 1, 1)), substring($position, 2))"/>
+								</xsl:otherwise>
+							</xsl:choose>
+							
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="numishare:normalize_fields(@name, $lang)"/>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:variable>
+				
 				<xsl:variable name="mincount" as="xs:integer">
 					<xsl:choose>
 						<xsl:when test="$numFound &gt; 200000">
@@ -477,7 +523,7 @@
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:variable>
-				<select id="{@name}-select" multiple="multiple" class="multiselect {@name}-button" title="{numishare:normalize_fields(@name, $lang)}" q="{$q}" mincount="{$mincount}" new_query="{if
+				<select id="{@name}-select" multiple="multiple" class="multiselect {@name}-button" title="{$title}" q="{$q}" mincount="{$mincount}" new_query="{if
 					(contains($q, @name)) then $select_new_query else ''}">
 					<xsl:if test="contains($q, @name)">
 						<xsl:copy-of select="document(concat($request-uri, 'get_facet_options?q=', encode-for-uri($q), '&amp;category=', @name, '&amp;pipeline=', $pipeline, '&amp;lang=', $lang,
@@ -571,7 +617,25 @@
 					<xsl:variable name="name">
 						<xsl:choose>
 							<xsl:when test="string($field)">
-								<xsl:value-of select="numishare:normalize_fields($field, $lang)"/>
+								<xsl:choose>
+									<xsl:when test="contains($field, 'symbol_')">
+										<xsl:variable name="position" select="tokenize($field, '_')[3]"/>
+										<xsl:variable name="langParam" select="if(string($lang)) then $lang else 'en'"/>
+										
+										<xsl:choose>
+											<xsl:when test="$positions//position[@value=$position]/label[@lang=$langParam]">
+												<xsl:value-of select="$positions//position[@value=$position]/label[@lang=$langParam]"/>
+											</xsl:when>
+											<xsl:otherwise>
+												<xsl:value-of select="concat(upper-case(substring($position, 1, 1)), substring($position, 2))"/>
+											</xsl:otherwise>
+										</xsl:choose>
+										
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:value-of select="numishare:normalize_fields($field, $lang)"/>
+									</xsl:otherwise>
+								</xsl:choose>								
 							</xsl:when>
 							<xsl:otherwise>
 								<xsl:value-of select="numishare:normalize_fields('fulltext', $lang)"/>
@@ -721,7 +785,25 @@
 									</xsl:variable>
 									<!-- display either the term or the regularized name for the century -->
 									<b>
-										<xsl:value-of select="numishare:normalize_fields($field, $lang)"/>
+										<xsl:choose>
+											<xsl:when test="contains($field, 'symbol_')">
+												<xsl:variable name="position" select="tokenize($field, '_')[3]"/>
+												<xsl:variable name="langParam" select="if(string($lang)) then $lang else 'en'"/>
+												
+												<xsl:choose>
+													<xsl:when test="$positions//position[@value=$position]/label[@lang=$langParam]">
+														<xsl:value-of select="$positions//position[@value=$position]/label[@lang=$langParam]"/>
+													</xsl:when>
+													<xsl:otherwise>
+														<xsl:value-of select="concat(upper-case(substring($position, 1, 1)), substring($position, 2))"/>
+													</xsl:otherwise>
+												</xsl:choose>
+												
+											</xsl:when>
+											<xsl:otherwise>
+												<xsl:value-of select="numishare:normalize_fields($field, $lang)"/>
+											</xsl:otherwise>
+										</xsl:choose>
 										<xsl:text>: </xsl:text>
 									</b>
 									<xsl:choose>
