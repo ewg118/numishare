@@ -274,6 +274,24 @@
 							<xsl:value-of select="@rdf:resource"/>
 						</field>
 					</xsl:for-each>
+					
+					<!--index region hierarchy -->
+					<xsl:for-each select="$regions//hierarchy[@uri=$href]/region">
+						<xsl:sort select="position()" order="descending"/>
+						<xsl:variable name="id" select="substring-after(@uri, 'id/')"/>
+						
+						<field name="region_hier">
+							<xsl:choose>
+								<xsl:when test="position()=1">
+									<xsl:value-of select="concat('L',position(), '|', ., '/', $id)"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:value-of select="concat(substring-after(following-sibling::node()[1]/@uri, 'id/'), '|', ., '/', $id)"/>
+								</xsl:otherwise>
+							</xsl:choose>
+							
+						</field>
+					</xsl:for-each>
 				</xsl:when>
 			</xsl:choose>
 		</xsl:if>
@@ -284,6 +302,31 @@
 					<xsl:value-of select="@rdf:resource"/>
 				</field>
 			</xsl:for-each>
+			<xsl:if test="contains($href, 'nomisma.org')">
+				<!--index region hierarchy -->
+				<xsl:for-each select="$regions//hierarchy[@uri=$href]/region">
+					<xsl:sort select="position()" order="descending"/>
+					<xsl:variable name="id" select="substring-after(@uri, 'id/')"/>
+					
+					<field name="region_hier">
+						<xsl:choose>
+							<xsl:when test="position()=1">
+								<xsl:value-of select="concat('L',position(), '|', ., '/', $id)"/>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:value-of select="concat(substring-after(following-sibling::node()[1]/@uri, 'id/'), '|', ., '/', $id)"/>
+							</xsl:otherwise>
+						</xsl:choose>
+						
+					</field>
+					<!-- manually insert lowest region hierarchy for self -->
+					<xsl:if test="position()=last()">
+						<field name="region_hier">
+							<xsl:value-of select="concat(substring-after(@uri, 'id/'), '|', $label, '/', substring-after($href, 'id/'))"/>
+						</field>
+					</xsl:if>
+				</xsl:for-each>
+			</xsl:if>
 		</xsl:if>
 	</xsl:template>
 
