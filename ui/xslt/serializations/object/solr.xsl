@@ -21,6 +21,7 @@
 	<xsl:variable name="geonames_api_key" select="/content/config/geonames_api_key"/>
 	<xsl:variable name="sparql_endpoint" select="/content/config/sparql_endpoint"/>
 	<xsl:variable name="publisher" select="/content/config/template/agencyName"/>
+	<xsl:variable name="regionHierarchy" select="boolean(/content/config/facets/facet[text()='region_hier'])" as="xs:boolean"/>
 
 	<xsl:variable name="nudsGroup" as="element()*">
 		<nudsGroup>
@@ -163,10 +164,12 @@
 	
 	<xsl:variable name="regions" as="element()*">
 		<node>
-			<xsl:variable name="mints" select="distinct-values($rdf//nmo:Mint/@rdf:about[contains(., 'nomisma.org')]|$rdf//nmo:Region/@rdf:about[contains(., 'nomisma.org')])"/>
-			<xsl:variable name="identifiers" select="replace(string-join($mints, '|'), 'http://nomisma.org/id/', '')"></xsl:variable>
-			
-			<xsl:copy-of select="document(concat('http://nomisma.org/apis/regionHierarchy?identifiers=', encode-for-uri($identifiers)))"/>
+			<xsl:if test="$regionHierarchy = true()">
+				<xsl:variable name="mints" select="distinct-values($rdf//nmo:Mint/@rdf:about[contains(., 'nomisma.org')]|$rdf//nmo:Region/@rdf:about[contains(., 'nomisma.org')])"/>
+				<xsl:variable name="identifiers" select="replace(string-join($mints, '|'), 'http://nomisma.org/id/', '')"></xsl:variable>
+				
+				<xsl:copy-of select="document(concat('http://nomisma.org/apis/regionHierarchy?identifiers=', encode-for-uri($identifiers)))"/>
+			</xsl:if>
 		</node>
 	</xsl:variable>
 

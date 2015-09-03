@@ -175,15 +175,53 @@
 									<xsl:with-param name="href" select="$href"/>
 									<xsl:with-param name="position" select="@position"/>
 								</xsl:call-template>
+								
 							</span>
 						</xsl:when>
 						<xsl:otherwise>
-							<xsl:call-template name="display-label">
-								<xsl:with-param name="field" select="$field"/>
-								<xsl:with-param name="value" select="$value"/>
-								<xsl:with-param name="href" select="$href"/>
-								<xsl:with-param name="position" select="@position"/>
-							</xsl:call-template>
+							<xsl:choose>
+								<xsl:when test="$field = 'region' and $regionHierarchy = true() and contains($href, 'nomisma.org')">
+									<xsl:call-template name="assemble_hierarchy_query">
+										<xsl:with-param name="href" select="$href"/>
+									</xsl:call-template>
+									<xsl:text>--</xsl:text>
+									<!-- add self -->
+									
+									<xsl:variable name="selfQuery">
+										<xsl:for-each select="$regions//hierarchy[@uri=$href]/region">
+											<xsl:sort select="position()" order="descending"/>
+											<xsl:variable name="id" select="substring-after(@uri, 'id/')"/>
+											
+											<xsl:choose>
+												<xsl:when test="position()=1">
+													<xsl:value-of select="concat('+&#x022;L',position(), '|', ., '/', $id, '&#x022;')"/>
+												</xsl:when>
+												<xsl:otherwise>
+													<xsl:value-of select="concat('+&#x022;', substring-after(following-sibling::node()[1]/@uri, 'id/'), '|', ., '/', $id, '&#x022;')"/>
+													<xsl:for-each select="following-sibling::node()">
+														<xsl:text> </xsl:text>
+														<xsl:value-of select="concat('+&#x022;', if (position()=last()) then 'L1' else substring-after(following-sibling::node()[1]/@uri, 'id/'), '|', ., '/', substring-after(@uri, 'id/'), '&#x022;')"/>
+													</xsl:for-each>								
+												</xsl:otherwise>
+											</xsl:choose>
+										</xsl:for-each>
+										<xsl:text> </xsl:text>
+										<xsl:value-of select="concat('+&#x022;', substring-after($regions//hierarchy[@uri=$href]/region[1]/@uri, 'id/'), '|', $value, '/', substring-after($href, 'id/'), '&#x022;')"/>
+									</xsl:variable>
+									
+									<a href="{$display_path}results?q=region_hier:({encode-for-uri($selfQuery)}){if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+										<xsl:value-of select="$value"/>
+									</a>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:call-template name="display-label">
+										<xsl:with-param name="field" select="$field"/>
+										<xsl:with-param name="value" select="$value"/>
+										<xsl:with-param name="href" select="$href"/>
+										<xsl:with-param name="position" select="@position"/>
+									</xsl:call-template>
+								</xsl:otherwise>
+							</xsl:choose>
 						</xsl:otherwise>
 					</xsl:choose>
 
@@ -220,6 +258,20 @@
 						</a>
 					</xsl:if>
 				</li>
+				
+				<!-- display region hierarchy if region_hier is a facet -->
+				<xsl:if test="$field = 'mint' and $regionHierarchy=true() and contains($href, 'nomisma.org')">
+					<li>
+						<b>
+							<xsl:value-of select="numishare:regularize_node('region', $lang)"/>
+							<xsl:text>: </xsl:text>
+						</b>
+						
+						<xsl:call-template name="assemble_hierarchy_query">
+							<xsl:with-param name="href" select="$href"/>
+						</xsl:call-template>
+					</li>
+				</xsl:if>
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:choose>
@@ -511,6 +563,38 @@
 				<xsl:with-param name="tokenized-category" select="$tokenized-category"/>
 			</xsl:call-template>
 		</xsl:if>
+	</xsl:template>
+	
+	<!--***************************************** CREATE LINKS FROM NOMISMA REGION HIERARCHY **************************************** -->
+	<xsl:template name="assemble_hierarchy_query">
+		<xsl:param name="href"/>
+		
+		<xsl:for-each select="$regions//hierarchy[@uri=$href]/region">
+			<xsl:sort select="position()" order="descending"/>
+			<xsl:variable name="id" select="substring-after(@uri, 'id/')"/>
+			
+			<xsl:variable name="fragment">
+				<xsl:choose>
+					<xsl:when test="position()=1">
+						<xsl:value-of select="concat('+&#x022;L',position(), '|', ., '/', $id, '&#x022;')"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="concat('+&#x022;', substring-after(following-sibling::node()[1]/@uri, 'id/'), '|', ., '/', $id, '&#x022;')"/>
+						<xsl:for-each select="following-sibling::node()">
+							<xsl:text> </xsl:text>
+							<xsl:value-of select="concat('+&#x022;', if (position()=last()) then 'L1' else substring-after(following-sibling::node()[1]/@uri, 'id/'), '|', ., '/', substring-after(@uri, 'id/'), '&#x022;')"/>
+						</xsl:for-each>								
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:variable>
+			
+			<a href="{$display_path}results?q=region_hier:({encode-for-uri($fragment)}){if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+				<xsl:value-of select="."/>
+			</a>
+			<xsl:if test="not(position()=last())">
+				<xsl:text>--</xsl:text>
+			</xsl:if>
+		</xsl:for-each>
 	</xsl:template>
 	<!--***************************************** OPTIONS BAR **************************************** -->
 	<xsl:template name="icons">

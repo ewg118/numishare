@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:nuds="http://nomisma.org/nuds" xmlns:nh="http://nomisma.org/nudsHoard" xmlns:xlink="http://www.w3.org/1999/xlink"
-	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nm="http://nomisma.org/id/" exclude-result-prefixes="#all" version="2.0">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:nuds="http://nomisma.org/nuds" xmlns:nh="http://nomisma.org/nudsHoard" xmlns:xlink="http://www.w3.org/1999/xlink"  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nm="http://nomisma.org/id/" xmlns:nmo="http://nomisma.org/ontology#"
+	exclude-result-prefixes="#all" version="2.0">
 	<xsl:include href="../../templates.xsl"/>
 	<xsl:include href="../../templates-visualize.xsl"/>
 	<xsl:include href="../../templates-analyze.xsl"/>
@@ -44,6 +45,8 @@
 			<xsl:copy-of select="/content/config/positions"/>
 		</config>
 	</xsl:variable>
+	<xsl:variable name="regionHierarchy" select="boolean(/content/config/facets/facet[text()='region_hier'])" as="xs:boolean"/>
+	
 	<!-- get layout -->
 	<xsl:variable name="orientation" select="/content/config/theme/layouts/display/nuds/orientation"/>
 	<xsl:variable name="image_location" select="/content/config/theme/layouts/display/nuds/image_location"/>
@@ -145,6 +148,17 @@
 		</rdf:RDF>
 	</xsl:variable>
 
+	<xsl:variable name="regions" as="element()*">
+		<node>
+			<xsl:if test="$regionHierarchy = true()">
+				<xsl:variable name="mints" select="distinct-values($rdf//nmo:Mint/@rdf:about[contains(., 'nomisma.org')]|$rdf//nmo:Region/@rdf:about[contains(., 'nomisma.org')])"/>
+				<xsl:variable name="identifiers" select="replace(string-join($mints, '|'), 'http://nomisma.org/id/', '')"/>
+
+				<xsl:copy-of select="document(concat('http://nomisma.org/apis/regionHierarchy?identifiers=', encode-for-uri($identifiers)))"/>
+			</xsl:if>
+		</node>
+	</xsl:variable>
+
 	<xsl:template match="/">
 		<xsl:choose>
 			<xsl:when test="count(descendant::*:otherRecordId[@semantic='dcterms:isReplacedBy']) = 1 and descendant::*:control/*:maintenanceStatus='cancelledReplaced'">
@@ -168,7 +182,7 @@
 						<xsl:call-template name="header"/>
 						<div class="container-fluid">
 							<xsl:if test="$lang='ar'">
-								<xsl:attribute name="style">direction: rtl;</xsl:attribute>							
+								<xsl:attribute name="style">direction: rtl;</xsl:attribute>
 							</xsl:if>
 							<div class="row">
 								<div class="col-md-12">
@@ -190,7 +204,7 @@
 						<xsl:call-template name="header"/>
 						<div class="container-fluid">
 							<xsl:if test="$lang='ar'">
-								<xsl:attribute name="style">direction: rtl;</xsl:attribute>							
+								<xsl:attribute name="style">direction: rtl;</xsl:attribute>
 							</xsl:if>
 							<div class="row">
 								<div class="col-md-12">
@@ -230,7 +244,7 @@
 					http://nomisma.org/ontology# dcmitype: http://purl.org/dc/dcmitype/">
 					<xsl:if test="string($lang)">
 						<xsl:attribute name="lang" select="$lang"/>
-					</xsl:if>					
+					</xsl:if>
 					<head>
 						<xsl:call-template name="generic_head"/>
 						<xsl:choose>
@@ -362,7 +376,7 @@
 				</xsl:variable>
 				<div class="container-fluid" typeof="{$typeof}" about="{concat($url, 'id/', $id)}">
 					<xsl:if test="$lang='ar'">
-						<xsl:attribute name="style">direction: rtl;</xsl:attribute>							
+						<xsl:attribute name="style">direction: rtl;</xsl:attribute>
 					</xsl:if>
 					<xsl:choose>
 						<xsl:when test="count(/content/*[local-name()='nuds']) &gt; 0">
