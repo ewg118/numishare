@@ -273,10 +273,13 @@ $(document).ready(function () {
 	function disablePopup() {
 		//disables popup only if it is enabled
 		if (popupStatus == 1) {
+			alert('test2');
 			$("#backgroundPopup").fadeOut("fast");
 			$('#century_num-list').parent('div').removeClass('open');
 			$('#findspot_hier-list').parent('div').removeClass('open');
 			$('#category_hier-list').parent('div').removeClass('open');
+			$('#region_hier-list').parent('div').removeClass('open');
+
 			popupStatus = 0;
 		}
 	}
