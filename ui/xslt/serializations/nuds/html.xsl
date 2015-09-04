@@ -587,7 +587,7 @@ ASK {?object nmo:hasTypeSeriesItem <URI> ;
 						<xsl:if test="string(nuds:legend) and string(nuds:type)">
 							<xsl:text> - </xsl:text>
 						</xsl:if>
-						<xsl:apply-templates select="nuds:type/nuds:description@xml:lang='en']" mode="physical"/>
+						<xsl:apply-templates select="nuds:type/nuds:description[@xml:lang='en']" mode="physical"/>
 					</div>
 				</xsl:for-each>
 			</xsl:when>
