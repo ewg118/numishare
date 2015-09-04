@@ -50,7 +50,7 @@ function process_csv($row, $count){
 	}
 	$rdf = '';
 	if (strlen($coinType) > 0){
-		$rdf .= '<nmo:NumismaticTerm rdf:about="' . $about . '">';
+		$rdf .= '<nmo:NumismaticObject rdf:about="' . $about . '">';
 		$rdf .= '<dcterms:title xml:lang="en">British Museum: ' . $accessions[0] . '</dcterms:title>';
 		$rdf .= '<dcterms:identifier>' . $accessions[0] . '</dcterms:identifier>';
 		$rdf .= '<dcterms:publisher rdf:resource="http://nomisma.org/id/bm"/>';
@@ -58,7 +58,7 @@ function process_csv($row, $count){
 		$rdf .= '<nmo:hasTypeSeriesItem rdf:resource="' . $coinType . '"/>';
 		$rdf .= query_bm($id);
 		$rdf .= '<void:inDataset rdf:resource="http://www.britishmuseum.org/"/>';
-		$rdf .= '</nmo:NumismaticTerm>';
+		$rdf .= '</nmo:NumismaticObject>';
 	}
 	file_put_contents('bm-ric.rdf', $rdf, FILE_APPEND);
 }
