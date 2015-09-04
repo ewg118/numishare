@@ -227,7 +227,13 @@
 	<xsl:template match="nuds:findspotDesc">
 		<xsl:choose>
 			<xsl:when test="string(@xlink:href)">
-				<xsl:variable name="href" select="@xlink:href"/>
+				<xsl:variable name="href" select="@xlink:href"/>				
+				
+				<!-- the @xlink:href of a findspotDesc is presumed to a a hoard URI -->
+				<field name="hoard_uri">
+					<xsl:value-of select="$href"/>
+				</field>
+				
 				<xsl:choose>
 					<xsl:when test="contains($href, 'nomisma.org')">
 						<xsl:variable name="label">
