@@ -556,15 +556,6 @@ function generate_nuds($row, $count){
 		$xml .= '</refDesc>';
 	}
 	
-	/***** FINDSPOT *****/
-	if (strpos($row['privateinfo'], 'coinhoards.org') !== FALSE){
-		$url = trim($row['privateinfo']);
-		$file_headers = @get_headers($url);
-		if ($file_headers[0] == 'HTTP/1.1 200 OK'){
-			$xml.= '<findspotDesc xlink:type="simple" xlink:href="' . $url . '"/>';
-		}
-	}
-	
 	/***** SUBJECTS *****/
 	if (strlen(trim($row['category'])) > 0 || strlen(trim($row['series'])) > 0 || strlen(trim($row['subjevent'])) > 0 || strlen(trim($row['subjissuer'])) > 0 || strlen(trim($row['subjperson'])) > 0 || strlen(trim($row['subjplace'])) > 0 || strlen(trim($row['degree'])) > 0 || strlen(trim($row['era'])) > 0){
 		$xml .= '<subjectSet>';
@@ -631,7 +622,13 @@ function generate_nuds($row, $count){
 	}
 
 	/***** FINDSPOT DESCRIPTION *****/
-	if (strlen(trim($row['findspot'])) > 0){
+	if (strpos($row['privateinfo'], 'coinhoards.org') !== FALSE){
+		$url = trim($row['privateinfo']);
+		$file_headers = @get_headers($url);
+		if ($file_headers[0] == 'HTTP/1.1 200 OK'){
+			$xml.= '<findspotDesc xlink:type="simple" xlink:href="' . $url . '"/>';
+		}
+	} elseif (strlen(trim($row['findspot'])) > 0){
 		$xml .= '<findspotDesc><findspot><geogname xlink:type="simple" xlink:role="findspot">' . trim($row['findspot']) . '</geogname></findspot></findspotDesc>';
 	}
 	
