@@ -49,6 +49,9 @@
 	<!-- EGYPT -->
 	<page path="/numishare/egypt/" model="xpl/models/config.xpl" view="file:///usr/local/projects/egypt/xpl/views/pages/index.xpl"/>
 	
+	<!-- PELLA -->
+	<page path="/numishare/pella/" model="xpl/models/config.xpl" view="file:///usr/local/projects/pella/xpl/views/pages/index.xpl"/>
+	
 	<!-- MANTIS -->
 	<!-- pages -->
 	<page path="/numishare/mantis/apis" model="xpl/models/solr/apis.xpl" view="file:///usr/local/projects/mantis/xpl/views/pages/apis.xpl"/>
