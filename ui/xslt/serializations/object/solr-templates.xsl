@@ -269,7 +269,7 @@
 							<xsl:value-of select="concat($rdf/*[@rdf:about=concat($href, '#this')]/geo:lat, ',', $rdf/*[@rdf:about=concat($href, '#this')]/geo:long)"/>
 						</field>
 					</xsl:if>
-					<xsl:for-each select="$rdf/*[@rdf:about=$href]/skos:relatedMatch[contains(@rdf:resource, 'pleiades.stoa.org')]">
+					<xsl:for-each select="$rdf/*[@rdf:about=$href]/skos:closeMatch[contains(@rdf:resource, 'pleiades.stoa.org')]">
 						<field name="pleiades_uri">
 							<xsl:value-of select="@rdf:resource"/>
 						</field>
@@ -297,7 +297,7 @@
 		</xsl:if>
 		<xsl:if test="string(@xlink:href) and $role = 'region'">
 			<xsl:variable name="href" select="@xlink:href"/>
-			<xsl:for-each select="$rdf/*[@rdf:about=$href]/skos:relatedMatch[contains(@rdf:resource, 'pleiades.stoa.org')]">
+			<xsl:for-each select="$rdf/*[@rdf:about=$href]/skos:closeMatch[contains(@rdf:resource, 'pleiades.stoa.org')]">
 				<field name="pleiades_uri">
 					<xsl:value-of select="@rdf:resource"/>
 				</field>
