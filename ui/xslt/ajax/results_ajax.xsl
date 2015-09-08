@@ -22,6 +22,9 @@
 	<xsl:variable name="image"/>
 	<xsl:variable name="collection_type"/>
 	<xsl:variable name="side"/>
+	<xsl:variable name="positions" as="node()*">
+		<empty/>
+	</xsl:variable>
 
 	<!-- solr params -->
 	<xsl:param name="q" select="doc('input:request')/request/parameters/parameter[name='q']/value"/>
