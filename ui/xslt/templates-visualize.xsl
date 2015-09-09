@@ -392,11 +392,10 @@
 		</span>
 	</xsl:template>
 	<xsl:template name="sparql_search_options">
-		<xsl:variable name="fields">
-			<xsl:text>authority,collection,date,denomination,issuer,manufacture,material,mint,portrait,region</xsl:text>
-		</xsl:variable>
+		<xsl:variable name="fields" select="concat(string-join(//config/facets/facet[contains(., '_facet')], ','), ',date')"/>
+		
 		<xsl:for-each select="tokenize($fields, ',')">
-			<xsl:variable name="name" select="."/>
+			<xsl:variable name="name" select="replace(., '_facet', '')"/>
 			<option value="{if ($name = 'date') then 'date' else concat('nmo:has', upper-case(substring($name, 1, 1)), substring($name, 2))}" class="search_option">
 				<xsl:value-of select="numishare:normalize_fields($name, $lang)"/>
 			</option>
