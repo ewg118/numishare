@@ -558,6 +558,17 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
+	
+	<xsl:template match="nuds:type">
+		<xsl:choose>
+			<xsl:when test="nuds:description[@xml:lang=$lang]">
+				<xsl:value-of select="nuds:description[@xml:lang=$lang]"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="nuds:description[@xml:lang='en']"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
 
 	<!-- charts template -->
 	<xsl:template name="charts">
