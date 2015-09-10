@@ -1,123 +1,90 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<nuds xmlns="http://nomisma.org/nuds" xmlns:xlink="http://www.w3.org/1999/xlink"
-      xmlns:mets="http://www.loc.gov/METS/"
-      recordType="physical">
-   <control>
-      <recordId>1990.18.3</recordId>
-      <maintenanceStatus>revised</maintenanceStatus>
-      <publicationStatus>approved</publicationStatus>
-      <maintenanceAgency>
-         <agencyName>University of Virginia Library</agencyName>
-         <agencyCode>US-viu</agencyCode>
-      </maintenanceAgency>
-      <maintenanceHistory>
-         <maintenanceEvent>
-            <eventType>derived</eventType>
-            <eventDateTime standardDateTime="2012-12-12T15:05:54.552-05:00Z">2012-12-12T15:05:54.552-05:00Z</eventDateTime>
-            <agentType>human</agentType>
-            <agent>Ethan Gruber and/or Carrie Sulosky</agent>
-            <eventDescription>Migrated from EAD to NUDS</eventDescription>
-         </maintenanceEvent>
-         <maintenanceEvent>
-            <eventType>revised</eventType>
-            <eventDateTime standardDateTime="2013-09-11T12:20:51.318-04:00Z">2013-09-11T12:20:51.318-04:00Z</eventDateTime>
-            <agentType>human</agentType>
-            <agent>XSLT</agent>
-            <eventDescription>Migrated to new NUDS schema version; nudsHeader to control.</eventDescription>
-         </maintenanceEvent>
-      </maintenanceHistory>
-      <rightsStmt>
-         <license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/"/>
-      </rightsStmt>
-      <otherRecordId semantic="dcterms:replaces">http://coins.lib.virginia.edu/display-uva?id=n1990_18_3</otherRecordId>
-      <semanticDeclaration>
-         <prefix>dcterms</prefix>
-         <namespace>http://purl.org/dc/terms/</namespace>
-      </semanticDeclaration>
-   </control>
-   <descMeta>
-      <title xml:lang="en">Tetradrachm of Alexander the Great, Amphipolis, 336 B.C.-323 B.C. 1990.18.3.</title>
-      <typeDesc>
-         <objectType xlink:href="http://nomisma.org/id/coin">Coin</objectType>
-         <denomination xlink:href="http://nomisma.org/id/tetradrachm">Tetradrachm</denomination>
-         <material xlink:href="http://nomisma.org/id/ar">Silver</material>
-         <dateRange>
-            <fromDate standardDate="-0335">336 B.C.</fromDate>
-            <toDate standardDate="-0322">323 B.C.</toDate>
-         </dateRange>
-         <authority>
-            <persname xlink:type="simple" xlink:role="authority"
-                      xlink:href="http://nomisma.org/id/alexander_iii">Alexander the Great</persname>
-            <famname xlink:type="simple" xlink:role="dynasty">Argead</famname>
-            <corpname xlink:type="simple" xlink:role="state">Macedonian Kingdom</corpname>
-         </authority>
-         <geographic>
-            <geogname xlink:type="simple" xlink:role="mint"
-                      xlink:href="http://nomisma.org/id/amphipolis">Amphipolis</geogname>
-         </geographic>
-         <obverse>
-            <type>
-               <description xml:lang="en">Head of Herakles, right, in Nemean lion skin.</description>
-            </type>
-            <persname xlink:type="simple" xlink:role="deity">Herakles</persname>
-         </obverse>
-         <reverse>
-            <type>
-               <description xml:lang="en">Zeus enthroned, seated left, holding eagle in right hand and sceptre in left hand; ear of wheat in left field.</description>
-            </type>
-            <legend>AΛEΞANΔPOY</legend>
-            <persname xlink:type="simple" xlink:role="deity">Zeus</persname>
-         </reverse>
-      </typeDesc>
-      <adminDesc>
-         <identifier>1990.18.3</identifier>
-         <provenance>
-            <chronList>
-               <chronItem>
-                  <acquisition>
-                     <acquiredFrom>Acquired from the Worldwide Treasure Bureau, 1990.</acquiredFrom>
-                  </acquisition>
-               </chronItem>
-               <chronItem>
-                  <date standardDate="1946">1946</date>
-                  <previousColl>Ex: Hermann Mosberg Collection. Appraised by Münzen und Medallen, Basel, Switzerland.</previousColl>
-               </chronItem>
-            </chronList>
-         </provenance>
-         <department>Greek</department>
-         <collection xlink:type="simple" xlink:href="http://nomisma.org/id/uva">The Fralin Museum of Art</collection>
-      </adminDesc>
-      <refDesc>
-         <reference>
-            <title>Price</title>
-            <identifier>39</identifier>
-         </reference>
-      </refDesc>
-   </descMeta>
-   <digRep>
-      <mets:fileSec>
-         <mets:fileGrp USE="obverse">
-            <mets:file USE="reference" MIMETYPE="image/jpeg">
-               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n1990_18_3_obv.jpg"/>
-            </mets:file>
-            <mets:file USE="thumbnail" MIMETYPE="image/jpeg">
-               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1990_18_3_obv.jpg"/>
-            </mets:file>
-            <mets:file USE="master" MIMETYPE="image/jpeg">
-               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/master/n1990_18_3_obv.jpg"/>
-            </mets:file>
-         </mets:fileGrp>
-         <mets:fileGrp USE="reverse">
-            <mets:file USE="reference" MIMETYPE="image/jpeg">
-               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n1990_18_3_rev.jpg"/>
-            </mets:file>
-            <mets:file USE="thumbnail" MIMETYPE="image/jpeg">
-               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1990_18_3_rev.jpg"/>
-            </mets:file>
-            <mets:file USE="master" MIMETYPE="image/jpeg">
-               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/master/n1990_18_3_rev.jpg"/>
-            </mets:file>
-         </mets:fileGrp>
-      </mets:fileSec>
-   </digRep>
+<nuds xmlns="http://nomisma.org/nuds" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mets="http://www.loc.gov/METS/" recordType="physical">
+	<control>
+		<recordId>1990.18.3</recordId>
+		<maintenanceStatus>revised</maintenanceStatus>
+		<publicationStatus>approved</publicationStatus>
+		<maintenanceAgency>
+			<agencyName>University of Virginia Library</agencyName>
+			<agencyCode>US-viu</agencyCode>
+		</maintenanceAgency>
+		<maintenanceHistory>
+			<maintenanceEvent>
+				<eventType>derived</eventType>
+				<eventDateTime standardDateTime="2012-12-12T15:05:54.552-05:00Z">2012-12-12T15:05:54.552-05:00Z</eventDateTime>
+				<agentType>human</agentType>
+				<agent>Ethan Gruber and/or Carrie Sulosky</agent>
+				<eventDescription>Migrated from EAD to NUDS</eventDescription>
+			</maintenanceEvent>
+			<maintenanceEvent>
+				<eventType>revised</eventType>
+				<eventDateTime standardDateTime="2013-09-11T12:20:51.318-04:00Z">2013-09-11T12:20:51.318-04:00Z</eventDateTime>
+				<agentType>human</agentType>
+				<agent>XSLT</agent>
+				<eventDescription>Migrated to new NUDS schema version; nudsHeader to control.</eventDescription>
+			</maintenanceEvent>
+		</maintenanceHistory>
+		<rightsStmt>
+			<license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/"/>
+		</rightsStmt>
+		<otherRecordId semantic="dcterms:replaces">http://coins.lib.virginia.edu/display-uva?id=n1990_18_3</otherRecordId>
+		<semanticDeclaration>
+			<prefix>dcterms</prefix>
+			<namespace>http://purl.org/dc/terms/</namespace>
+		</semanticDeclaration>
+	</control>
+	<descMeta>
+		<title xml:lang="en">Tetradrachm of Alexander the Great, Amphipolis, 336 B.C.-323 B.C. 1990.18.3.</title>
+		<typeDesc xlink:type="simple" xlink:href="http://numismatics.org/pella/id/price.39"/>
+		<adminDesc>
+			<identifier>1990.18.3</identifier>
+			<provenance>
+				<chronList>
+					<chronItem>
+						<acquisition>
+							<acquiredFrom>Acquired from the Worldwide Treasure Bureau, 1990.</acquiredFrom>
+						</acquisition>
+					</chronItem>
+					<chronItem>
+						<date standardDate="1946">1946</date>
+						<previousColl>Ex: Hermann Mosberg Collection. Appraised by Münzen und Medallen, Basel, Switzerland.</previousColl>
+					</chronItem>
+				</chronList>
+			</provenance>
+			<department>Greek</department>
+			<collection xlink:type="simple" xlink:href="http://nomisma.org/id/uva">The Fralin Museum of Art</collection>
+		</adminDesc>
+		<refDesc>
+			<reference>
+				<title>Price</title>
+				<identifier>39</identifier>
+			</reference>
+		</refDesc>
+	</descMeta>
+	<digRep>
+		<mets:fileSec>
+			<mets:fileGrp USE="obverse">
+				<mets:file USE="reference" MIMETYPE="image/jpeg">
+					<mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n1990_18_3_obv.jpg"/>
+				</mets:file>
+				<mets:file USE="thumbnail" MIMETYPE="image/jpeg">
+					<mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1990_18_3_obv.jpg"/>
+				</mets:file>
+				<mets:file USE="master" MIMETYPE="image/jpeg">
+					<mets:FLocat LOCTYPE="URL" xlink:href="images/coins/master/n1990_18_3_obv.jpg"/>
+				</mets:file>
+			</mets:fileGrp>
+			<mets:fileGrp USE="reverse">
+				<mets:file USE="reference" MIMETYPE="image/jpeg">
+					<mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n1990_18_3_rev.jpg"/>
+				</mets:file>
+				<mets:file USE="thumbnail" MIMETYPE="image/jpeg">
+					<mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1990_18_3_rev.jpg"/>
+				</mets:file>
+				<mets:file USE="master" MIMETYPE="image/jpeg">
+					<mets:FLocat LOCTYPE="URL" xlink:href="images/coins/master/n1990_18_3_rev.jpg"/>
+				</mets:file>
+			</mets:fileGrp>
+		</mets:fileSec>
+	</digRep>
 </nuds>
