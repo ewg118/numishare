@@ -120,7 +120,7 @@
 								Decorations</a>
 						</div>
 					</div>
-					<p>ANS policies on the acquisition and deacquisition of numismatic items are available <a href="/About/AcquisitionDeacquisition">online</a>. </p>
+					<p>ANS policies on the acquisition and deacquisition of numismatic items are available <a href="http://numismatics.org/About/AcquisitionDeacquisition">online</a>. </p>
 				</div>
 				<div class="col-md-3 col-lg-3 col-sm-3">
 					<div class="highlight">
