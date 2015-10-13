@@ -9,8 +9,8 @@
 	<page path="/numishare/admin/edit/settings/" view="xforms/edit-config.xhtml"/>
 	<page path="/numishare/admin/edit/page/" view="xforms/page.xhtml"/>	
 	<page path="/numishare/admin/pages/" view="xforms/pages.xhtml"/>
-	<page path="/numishare/admin/imports/new/" view="xforms/import-csv.xhtml"/>
-	<page path="/numishare/admin/imports/" view="xforms/manage-imports.xhtml"/>
+	<!--<page path="/numishare/admin/imports/new/" view="xforms/import-csv.xhtml"/>
+	<page path="/numishare/admin/imports/" view="xforms/manage-imports.xhtml"/>-->
 	<page path="/numishare/admin/theme/" view="xforms/theme.xhtml"/>
 	<page path="/numishare/admin/templates/" view="xforms/templates.xhtml"/>	
 	<page path="/numishare/admin/theme/layout/" view="xforms/layout.xhtml"/>	

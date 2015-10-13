@@ -15,11 +15,11 @@
 					</xforms:var>
 					<xforms:action ev:event="xforms-enabled" ev:target="#observer">
 						<!-- load controlled vocabulary instances by querying nomisma -->
-						<xforms:setvalue ref="instance('control-instance')/typeof">manufacture</xforms:setvalue>
+						<xforms:setvalue ref="instance('control-instance')/type">Manufacture</xforms:setvalue>
 						<xforms:send submission="query-nomisma"/>
-						<xforms:setvalue ref="instance('control-instance')/typeof">material</xforms:setvalue>
+						<xforms:setvalue ref="instance('control-instance')/type">Material</xforms:setvalue>
 						<xforms:send submission="query-nomisma"/>
-						<xforms:setvalue ref="instance('control-instance')/typeof">object_type</xforms:setvalue>
+						<xforms:setvalue ref="instance('control-instance')/type">ObjectType</xforms:setvalue>
 						<xforms:send submission="query-nomisma"/>
 					</xforms:action>
 					<xforms:group ref="$binding">
@@ -76,13 +76,13 @@
 												<xforms:label>Select...</xforms:label>
 												<xforms:value/>
 											</xforms:item>
-											<xforms:itemset nodeset="instance('object_type-list')/*">
+											<xforms:itemset nodeset="instance('ObjectType-list')/*">
 												<xforms:value ref="@href"/>
 												<xforms:label ref="."/>
 											</xforms:itemset>
 											<xforms:action ev:event="xforms-value-changed">
 												<xforms:var name="href" select="."/>
-												<xforms:setvalue ref="parent::node()" value="instance('object_type-list')/*[@href=$href]" if="string($href)"/>
+												<xforms:setvalue ref="parent::node()" value="instance('ObjectType-list')/*[@href=$href]" if="string($href)"/>
 												<xforms:setvalue ref="parent::node()" if="not(string($href))"/>
 											</xforms:action>
 										</xforms:select1>
@@ -101,13 +101,13 @@
 											<xforms:label>Select...</xforms:label>
 											<xforms:value/>
 										</xforms:item>
-										<xforms:itemset nodeset="instance('manufacture-list')/*">
+										<xforms:itemset nodeset="instance('Manufacture-list')/*">
 											<xforms:value ref="@href"/>
 											<xforms:label ref="."/>
 										</xforms:itemset>
 										<xforms:action ev:event="xforms-value-changed">
 											<xforms:var name="href" select="."/>
-											<xforms:setvalue ref="parent::node()" value="instance('manufacture-list')/*[@href=$href]" if="string($href)"/>
+											<xforms:setvalue ref="parent::node()" value="instance('Manufacture-list')/*[@href=$href]" if="string($href)"/>
 											<xforms:setvalue ref="parent::node()" if="not(string($href))"/>
 										</xforms:action>
 									</xforms:select1>
@@ -128,13 +128,13 @@
 											<xforms:label>Select...</xforms:label>
 											<xforms:value/>
 										</xforms:item>
-										<xforms:itemset nodeset="instance('material-list')/*">
+										<xforms:itemset nodeset="instance('Material-list')/*">
 											<xforms:value ref="@href"/>
 											<xforms:label ref="."/>
 										</xforms:itemset>
 										<xforms:action ev:event="xforms-value-changed">
 											<xforms:var name="href" select="."/>
-											<xforms:setvalue ref="parent::node()" value="instance('material-list')/*[@href=$href]" if="string($href)"/>
+											<xforms:setvalue ref="parent::node()" value="instance('Material-list')/*[@href=$href]" if="string($href)"/>
 											<xforms:setvalue ref="parent::node()" if="not(string($href))"/>
 										</xforms:action>
 									</xforms:select1>
@@ -763,18 +763,22 @@
 						<div class="subsection">
 							<h3>Geographic</h3>
 							<div class="trigger_container">
-								<xforms:trigger appearance="minimal">
-									<xforms:label>
-										<span class="glyphicon glyphicon-plus"/>Mint</xforms:label>
-									<xforms:insert ev:event="DOMActivate" context="." origin="instance('geographic-template')" nodeset="./child::node()[last()]" if="count(nuds:geographic) = 0"/>
-									<xforms:insert ev:event="DOMActivate" context="nuds:geographic" origin="instance('mint-template')" nodeset="./child::node()[last()]"/>
-								</xforms:trigger>
-								<xforms:trigger appearance="minimal">
-									<xforms:label>
-										<span class="glyphicon glyphicon-plus"/>Region</xforms:label>
-									<xforms:insert ev:event="DOMActivate" context="." origin="instance('geographic-template')" nodeset="./child::node()[last()]" if="count(nuds:geographic) = 0"/>
-									<xforms:insert ev:event="DOMActivate" context="nuds:geographic" origin="instance('region-template')" nodeset="./child::node()[last()]"/>
-								</xforms:trigger>
+								<xforms:group ref=".[count(nuds:geographic/nuds:geogname[@xlink:role='region']) = 0]">
+									<xforms:trigger appearance="minimal">
+										<xforms:label>
+											<span class="glyphicon glyphicon-plus"/>Mint</xforms:label>
+										<xforms:insert ev:event="DOMActivate" context="." origin="instance('geographic-template')" nodeset="./child::node()[last()]" if="count(nuds:geographic) = 0"/>
+										<xforms:insert ev:event="DOMActivate" context="nuds:geographic" origin="instance('mint-template')" nodeset="./child::node()[last()]"/>
+									</xforms:trigger>
+								</xforms:group>
+								<xforms:group ref=".[count(nuds:geographic/nuds:geogname[@xlink:role='mint']) = 0]">
+									<xforms:trigger appearance="minimal">
+										<xforms:label>
+											<span class="glyphicon glyphicon-plus"/>Region</xforms:label>
+										<xforms:insert ev:event="DOMActivate" context="." origin="instance('geographic-template')" nodeset="./child::node()[last()]" if="count(nuds:geographic) = 0"/>
+										<xforms:insert ev:event="DOMActivate" context="nuds:geographic" origin="instance('region-template')" nodeset="./child::node()[last()]"/>
+									</xforms:trigger>
+								</xforms:group>
 							</div>
 							<xforms:group ref="nuds:geographic">
 								<div class="subsection">
@@ -804,7 +808,7 @@
 							</dateRange>
 						</xforms:instance>
 						<xforms:instance id="denomination-template" xxforms:exclude-result-prefixes="#all">
-							<denomination/>
+							<denomination xlink:type="simple" xlink:href=""/>
 						</xforms:instance>
 						<xforms:instance id="manufacture-template" xxforms:exclude-result-prefixes="#all">
 							<manufacture xlink:type="simple" xlink:href=""/>
@@ -817,47 +821,47 @@
 							<geographic/>
 						</xforms:instance>
 						<xforms:instance id="mint-template" xxforms:exclude-result-prefixes="#all">
-							<geogname xlink:type="simple" xlink:role="mint"/>
+							<geogname xlink:type="simple" xlink:role="mint" xlink:href=""/>
 						</xforms:instance>
 						<xforms:instance id="region-template" xxforms:exclude-result-prefixes="#all">
-							<geogname xlink:type="simple" xlink:role="region"/>
+							<geogname xlink:type="simple" xlink:role="region" xlink:href=""/>
 						</xforms:instance>
 						<!--authority/personal -->
 						<xforms:instance id="authpers-template" xxforms:exclude-result-prefixes="#all">
 							<authority/>
 						</xforms:instance>
 						<xforms:instance id="artist-template" xxforms:exclude-result-prefixes="#all">
-							<persname xlink:type="simple" xlink:role="artist"/>
+							<persname xlink:type="simple" xlink:role="artist" xlink:href=""/>
 						</xforms:instance>
 						<xforms:instance id="authorityPersonal-template" xxforms:exclude-result-prefixes="#all">
-							<persname xlink:type="simple" xlink:role="authority"/>
+							<persname xlink:type="simple" xlink:role="authority" xlink:href=""/>
 						</xforms:instance>
 						<xforms:instance id="authorityCorporate-template" xxforms:exclude-result-prefixes="#all">
-							<corpname xlink:type="simple" xlink:role="authority"/>
+							<corpname xlink:type="simple" xlink:role="authority" xlink:href=""/>
 						</xforms:instance>
 						<xforms:instance id="dynasty-template" xxforms:exclude-result-prefixes="#all">
-							<famname xlink:type="simple" xlink:role="dynasty"/>
+							<famname xlink:type="simple" xlink:role="dynasty" xlink:href=""/>
 						</xforms:instance>
 						<xforms:instance id="deity-template" xxforms:exclude-result-prefixes="#all">
-							<persname xlink:type="simple" xlink:role="deity"/>
+							<persname xlink:type="simple" xlink:role="deity" xlink:href=""/>
 						</xforms:instance>
 						<xforms:instance id="engraver-template" xxforms:exclude-result-prefixes="#all">
-							<persname xlink:type="simple" xlink:role="engraver"/>
+							<persname xlink:type="simple" xlink:role="engraver" xlink:href=""/>
 						</xforms:instance>
 						<xforms:instance id="issuerPersonal-template" xxforms:exclude-result-prefixes="#all">
-							<persname xlink:type="simple" xlink:role="issuer"/>
+							<persname xlink:type="simple" xlink:role="issuer" xlink:href=""/>
 						</xforms:instance>
 						<xforms:instance id="issuerCorporate-template" xxforms:exclude-result-prefixes="#all">
-							<corpname xlink:type="simple" xlink:role="issuer"/>
+							<corpname xlink:type="simple" xlink:role="issuer" xlink:href=""/>
 						</xforms:instance>
 						<xforms:instance id="makerCorporate-template" xxforms:exclude-result-prefixes="#all">
-							<corpname xlink:type="simple" xlink:role="maker"/>
+							<corpname xlink:type="simple" xlink:role="maker" xlink:href=""/>
 						</xforms:instance>
 						<xforms:instance id="makerPersonal-template" xxforms:exclude-result-prefixes="#all">
-							<persname xlink:type="simple" xlink:role="maker"/>
+							<persname xlink:type="simple" xlink:role="maker" xlink:href=""/>
 						</xforms:instance>
 						<xforms:instance id="state-template" xxforms:exclude-result-prefixes="#all">
-							<corpname xlink:type="simple" xlink:role="state"/>
+							<corpname xlink:type="simple" xlink:role="state" xlink:href=""/>
 						</xforms:instance>
 						<!-- obverse/reverse edge -->
 						<xforms:instance id="obverse-template" xxforms:exclude-result-prefixes="#all">
@@ -891,37 +895,38 @@
 							<weightStandard origin="" units="g"/>
 						</xforms:instance>
 						<!-- controlled vocabulary instances -->
-						<xforms:instance id="feed">
+						<xforms:instance id="feed" xxforms:exclude-result-prefixes="#all">
 							<feed xmlns=""/>
 						</xforms:instance>
-						<xforms:instance id="control-instance">
+						<xforms:instance id="control-instance" xxforms:exclude-result-prefixes="#all">
 							<controls xmlns="">
-								<typeof/>
+								<type/>
 							</controls>
 						</xforms:instance>
+
 						<!-- manufacture -->
-						<xforms:instance id="manufacture-list">
-							<list/>
+						<xforms:instance id="Manufacture-list" xxforms:exclude-result-prefixes="#all">
+							<list xmlns=""/>
 						</xforms:instance>
 						<!-- material -->
-						<xforms:instance id="material-list">
-							<list/>
+						<xforms:instance id="Material-list" xxforms:exclude-result-prefixes="#all">
+							<list xmlns=""/>
 						</xforms:instance>
-						<xforms:instance id="object_type-list">
-							<list/>
+						<xforms:instance id="ObjectType-list" xxforms:exclude-result-prefixes="#all">
+							<list xmlns=""/>
 						</xforms:instance>
-						<xforms:instance id="listItem-template">
-							<item href=""/>
+						<xforms:instance id="listItem-template" xxforms:exclude-result-prefixes="#all">
+							<item href="" xmlns=""/>
 						</xforms:instance>
 						<!-- nomisma query -->
-						<xforms:submission id="query-nomisma" serialization="none" method="get" action="http://nomisma.org/feed/?q=typeof:{instance('control-instance')/typeof}" instance="feed"
-							replace="instance">
+						<xforms:submission id="query-nomisma" serialization="none" method="get"
+							action="http://nomisma.org/feed/?q=type:&#x022;nmo:{instance('control-instance')/type}&#x022;&amp;sort=prefLabel%20asc" instance="feed" replace="instance">
 							<xforms:message ev:event="xforms-submit-error" level="modal">Unable to communicate with nomisma.org Atom feed.</xforms:message>
 							<!-- iterate through Atom feed, populating select list -->
 							<xforms:action ev:event="xforms-submit-done" xxforms:iterate="instance('feed')//atom:entry">
 								<xforms:setvalue ref="instance('listItem-template')" value="context()/atom:title"/>
-								<xforms:setvalue ref="instance('listItem-template')/@href" value="context()/atom:link/@href"/>
-								<xforms:insert origin="instance('listItem-template')" context="instance(concat(instance('control-instance')/typeof, '-list'))" nodeset="./child::node()[last()]"/>
+								<xforms:setvalue ref="instance('listItem-template')/@href" value="context()/atom:link[not(@rel)]/@href"/>
+								<xforms:insert origin="instance('listItem-template')" context="instance(concat(instance('control-instance')/type, '-list'))" nodeset="./child::node()[last()]"/>
 							</xforms:action>
 						</xforms:submission>
 					</xforms:model>

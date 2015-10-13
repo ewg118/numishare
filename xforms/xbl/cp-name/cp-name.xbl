@@ -95,13 +95,13 @@
 									<xforms:select1 ref="instance('interface-type')" appearance="full">
 										<xforms:label>Interface Type</xforms:label>
 										<xforms:item>
-											<xforms:label>VIAF</xforms:label>
-											<xforms:value>viaf</xforms:value>
-										</xforms:item>
-										<xforms:item>
 											<xforms:label>Nomisma</xforms:label>
 											<xforms:value>nomisma</xforms:value>
 										</xforms:item>
+										<xforms:item>
+											<xforms:label>VIAF</xforms:label>
+											<xforms:value>viaf</xforms:value>
+										</xforms:item>										
 										<xforms:item>
 											<xforms:label>Local Vocabulary</xforms:label>
 											<xforms:value>local</xforms:value>

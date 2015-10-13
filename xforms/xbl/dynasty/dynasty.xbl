@@ -15,84 +15,121 @@
 					</xforms:var>
 					<xforms:action ev:event="xforms-enabled" ev:target="#observer">
 						<xforms:action if="not(string($binding))">
-							<xforms:insert context="instance('control-instance')" nodeset="collection-name" position="after"
-								origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/get-authentication.xpl', 'dump', instance('dump'), 'data')"/>
-							<xforms:send submission="load-collections"/>
-							<xforms:setvalue ref="instance('control-instance')/typeof" value="$binding/@xlink:role"/>
+							<xforms:setvalue ref="instance('control-instance')/type">rdac:Family</xforms:setvalue>
 							<xforms:setvalue ref="instance('control-instance')/element" value="$binding/local-name()"/>
 							<xforms:setvalue ref="instance('control-instance')/role" value="$binding/@xlink:role"/>
 							<xforms:setvalue ref="instance('control-instance')/label" value="concat(substring(upper-case($binding/@xlink:role), 1, 1), substring($binding/@xlink:role, 2))"/>							
 						</xforms:action>
 					</xforms:action>
 
+					<!-- display only outputted value and link to nomisma id, if applicable -->
 					<xforms:group ref=".[string($binding)]">
 						<div>
 							<xforms:output ref="$binding">
 								<xforms:label ref="instance('control-instance')/label"/>
 							</xforms:output>
+							<xforms:group ref=".[string($binding/@xlink:href)]">
+								<xforms:trigger appearance="minimal">
+									<xforms:label><span class="glyphicon glyphicon-new-window"/></xforms:label>
+									<xforms:load ev:event="DOMActivate" ref="$binding/@xlink:href" show="new"/>
+								</xforms:trigger>
+							</xforms:group>
 							<xforms:trigger appearance="minimal">
 								<xforms:action ev:event="DOMActivate">
 									<!-- delete all holdover values before removing bind, possible orbeon bug -->
-									<xforms:setvalue ref="instance('search-query')"/>
 									<xforms:setvalue ref="instance('temp')"/>
-									<xforms:delete context="instance('solr-response')/*"/>
+									<xforms:setvalue ref="instance('temp')/@href"/>
+									<xforms:setvalue ref="instance('search-query')"/>
+									<xforms:delete context="instance('feed')/*"/>
 									<xforms:delete nodeset="$binding"/>
 								</xforms:action>
 								<xforms:label>
 									<span class="glyphicon glyphicon-remove"/>
 								</xforms:label>
 							</xforms:trigger>
-							<xforms:group ref="$binding[not($binding/@title)]">
+							<xforms:group ref="$binding[not($binding/@certainty)]">
 								<xforms:trigger appearance="minimal">
-									<xforms:insert if="not($binding/title)" context="$binding" origin="xxforms:attribute('title', '')" ev:event="DOMActivate"/>
+									<xforms:insert if="not($binding/@certainty)" context="$binding" origin="xxforms:attribute('certainty', '')" ev:event="DOMActivate"/>
 									<xforms:label>
-										<span class="glyphicon glyphicon-plus"/>Title</xforms:label>
+										<span class="glyphicon glyphicon-plus"/>Certainty </xforms:label>
 								</xforms:trigger>
 							</xforms:group>
 						</div>
 					</xforms:group>
-
+					<!-- if $binding does not contain a value, display the interface for selecting a value -->
 					<xforms:group ref=".[not(string($binding))]">
-						<div>
-							<xforms:input ref="instance('search-query')">
-								<xforms:label>Term</xforms:label>
-							</xforms:input>
-							<xforms:trigger>
-								<xforms:action ev:event="DOMActivate">
-									<xforms:setvalue ref="instance('eXist-xquery')/exist:text"
-										value="replace(replace(replace(instance('xquery'), 'QUERY', instance('search-query')), 'ELEMENT', instance('control-instance')/element), 'ROLE', instance('control-instance')/role)"/>
-									<xforms:send submission="xquery-collection"/>
-								</xforms:action>
-								<xforms:label>Search</xforms:label>
+						<div style="display:table;width:100%;">
+							<h4>
+								<xforms:output ref="instance('control-instance')/label"/>
+							</h4>
+							<xforms:trigger appearance="minimal">
+								<xforms:delete ev:event="DOMActivate" nodeset="$binding"/>
+								<xforms:label>
+									<span class="glyphicon glyphicon-remove"/>
+								</xforms:label>
 							</xforms:trigger>
-							<xforms:trigger>
-								<xforms:label>Add New</xforms:label>
-								<xforms:action ev:event="DOMActivate">
-									<xforms:setvalue ref="$binding" value="instance('search-query')"/>
-								</xforms:action>
-							</xforms:trigger>
+							<xforms:group ref="$binding[not($binding/@certainty)]">
+								<xforms:trigger appearance="minimal">
+									<xforms:insert if="not($binding/@certainty)" context="$binding" origin="xxforms:attribute('certainty', '')" ev:event="DOMActivate"/>
+									<xforms:label>
+										<span class="glyphicon glyphicon-plus"/>Certainty </xforms:label>
+								</xforms:trigger>
+							</xforms:group>
+							
+							<div>
+								<xforms:input ref="instance('search-query')">
+									<xforms:label>Search</xforms:label>
+								</xforms:input>
+								<xforms:trigger>
+									<xforms:action ev:event="DOMActivate">
+										<xforms:delete context="instance('feed')/*"/>
+										<xforms:send submission="query-nomisma"/>
+									</xforms:action>
+									<xforms:label>Search</xforms:label>
+								</xforms:trigger>
+							</div>
+							
+							<xforms:group ref=".[count(instance('feed')//atom:entry) &gt; 0]">
+								<xforms:select1 ref="instance('temp')/@href" appearance="compact" id="nomisma-list">
+									<xforms:label>Term</xforms:label>
+									<xforms:itemset nodeset="instance('feed')//atom:entry">
+										<xforms:label ref="atom:title"/>
+										<xforms:value ref="atom:link[not(@rel)]/@href"/>
+									</xforms:itemset>
+									<xforms:action ev:event="xforms-value-changed">
+										<xforms:var name="id" select="tokenize(instance('temp')/@href, '/')[last()]"/>
+										<xforms:setvalue ref="instance('control-instance')/description" value="instance('feed')//atom:entry[atom:id = $id]/atom:summary"/>
+									</xforms:action>
+								</xforms:select1>
+								<xforms:trigger>
+									<xforms:label>Select</xforms:label>
+									<xforms:action ev:event="DOMActivate">
+										<xforms:setvalue ref="$binding/@xlink:href" value="instance('temp')/@href"/>
+										<xforms:setvalue ref="$binding"
+											value="instance('feed')//atom:entry[atom:link[not(@rel)]/@href = instance('temp')/@href]/atom:title"/>
+									</xforms:action>
+								</xforms:trigger>
+							</xforms:group>
+							<xforms:group ref=".[string(instance('temp')/@href)]">
+								<div>
+									<xforms:output ref="instance('control-instance')/description">
+										<xforms:label>Description</xforms:label>
+									</xforms:output>
+									<xforms:trigger appearance="minimal">
+										<xforms:label>
+											<span class="glyphicon glyphicon-new-window"/>
+										</xforms:label>
+										<xforms:load ev:event="DOMActivate" show="new" ref="instance('temp')/@href"/>
+									</xforms:trigger>
+								</div>
+							</xforms:group>
+							
 						</div>
-						<xforms:group ref=".[count(instance('xquery-result')//*[local-name()='term']) &gt; 0]">
-							<xforms:select1 ref="instance('temp')" appearance="compact" size="10">
-								<xforms:label>Location</xforms:label>
-								<xforms:itemset nodeset="instance('xquery-result')//*[local-name()='term']">
-									<xforms:label ref="."/>
-									<xforms:value ref="."/>
-								</xforms:itemset>
-							</xforms:select1>
-							<xforms:trigger>
-								<xforms:label>Select</xforms:label>
-								<xforms:action ev:event="DOMActivate">
-									<xforms:setvalue ref="$binding" value="instance('temp')"/>
-								</xforms:action>
-							</xforms:trigger>
-						</xforms:group>
 					</xforms:group>
-					<xforms:group ref="$binding/@title">
+					<xforms:group ref="$binding/@certainty">
 						<div>
 							<xforms:input ref=".">
-								<xforms:label>Title</xforms:label>
-								<xforms:alert>Required</xforms:alert>
+								<xforms:label>Certainty</xforms:label>
 							</xforms:input>
 							<xforms:trigger appearance="minimal">
 								<xforms:delete ev:event="DOMActivate" nodeset="."/>
@@ -111,88 +148,33 @@
 
 						<xforms:instance id="control-instance">
 							<control xmlns="">
-								<collection-name/>
-								<local-message/>
-								<facet/>
+								<description/>
 								<label/>
-								<typeof/>
+								<type/>
 								<role/>
 								<element/>
 							</control>
 						</xforms:instance>
 
-						<!-- collections/authentication instances -->
-						<xforms:instance id="collections-list">
-							<collections xmlns="">
-								<collection roll="admin" name="numishare"/>
-							</collections>
-						</xforms:instance>
-
-						<xforms:instance id="dump">
-							<dump/>
-						</xforms:instance>
-
-						<!-- site info -->
-						<xforms:instance id="config">
-							<config xmlns=""/>
-						</xforms:instance>
-
 						<xforms:instance id="temp">
-							<temp xmlns=""/>
-						</xforms:instance>
-
-						<!-- Instance containing the query string -->
+							<temp href="" xmlns=""/>
+						</xforms:instance>						
+						
+						<!-- Instances containing the query string -->
 						<xforms:instance id="search-query">
 							<query/>
 						</xforms:instance>
 						
-						<!-- XQuery -->
-						<xforms:instance id="eXist-xquery">
-							<exist:query xmlns="">
-								<exist:text/>
-							</exist:query>
+						<!-- instances for nomisma -->
+						<xforms:instance id="feed">
+							<feed xmlns=""/>
 						</xforms:instance>
 						
-						<xforms:instance id="xquery">
-							<query xmlns="">declare namespace nuds="http://nomisma.org/nuds"; declare namespace nh="http://nomisma.org/nudsHoard"; &lt;report> { for $term in
-								distinct-values(collection()//descendant::*[local-name()='ELEMENT'][@xlink:role='ROLE'][contains(lower-case(.), lower-case('QUERY'))]) return &lt;term> { data($term) }
-								&lt;/term> } &lt;/report></query>
-						</xforms:instance>
-						
-						<xforms:instance id="xquery-result">
-							<exist:result/>
-						</xforms:instance>
-
-						<!-- Instance with the suggestions we get back from Solr -->
-						<xforms:instance id="solr-response">
-							<response xmlns=""/>
-						</xforms:instance>
-						<!-- serves to aggregate current itemsets for each autocomplete in repetition -->
-
-						<xforms:submission id="load-collections" serialization="none" method="get" action="{instance('exist-config')/url}collections-list.xml" replace="instance"
-							instance="collections-list" xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}">
-							<!-- if the config loads successfully, set the collection names based on authentication -->
-							<xforms:action ev:event="xforms-submit-done">
-								<!-- set default if security is false -->
-								<xforms:action if="not(string(instance('control-instance')/request-security/role))">
-									<xforms:setvalue ref="instance('control-instance')/collection-name">numishare</xforms:setvalue>
-								</xforms:action>
-								<!-- if there is a security role, set the collection-name value if it is in the list, otherwise set new collection name -->
-								<xforms:action if="string(instance('control-instance')/request-security/role)">
-									<xforms:action if="string(instance('collections-list')/collection[@role=instance('control-instance')/request-security/role]/@name)">
-										<xforms:setvalue ref="instance('control-instance')/collection-name"
-											value="instance('collections-list')/collection[@role=instance('control-instance')/request-security/role]/@name"/>
-									</xforms:action>
-								</xforms:action>								
-							</xforms:action>
-							<!-- if the config has not been created (given that the URL in ../exist-config.xml is correct), create it -->
-							<xforms:message ev:event="xforms-submit-error" level="modal">Unable to load Numishare collections list.</xforms:message>
-						</xforms:submission>
-						
-						<!-- local vocabulary query -->
-						<xforms:submission id="xquery-collection" ref="instance('eXist-xquery')" action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/objects"
-							method="post" replace="instance" instance="xquery-result" xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}">
-							<xforms:setvalue ref="instance('control-instance')/error" ev:event="xforms-submit-error">Error querying eXist database.</xforms:setvalue>
+						<!-- query nomisma for ancient geognames -->
+						<xforms:submission id="query-nomisma" serialization="none" method="get"
+							action="http://nomisma.org/feed/?q=type:&#x022;{instance('control-instance')/type}&#x022;+AND+{instance('search-query')}&amp;sort=score+desc" instance="feed"
+							replace="instance">
+							<xforms:message ev:event="xforms-submit-error" level="modal">Unable to communicate with nomisma.org Atom feed.</xforms:message>
 						</xforms:submission>
 					</xforms:model>
 				</xforms:group>
