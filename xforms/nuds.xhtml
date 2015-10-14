@@ -5,7 +5,7 @@
 	xmlns:exist="http://exist.sourceforge.net/NS/exist" xmlns:oxf="http://www.orbeon.com/oxf/processors" xmlns:saxon="http://saxon.sf.net/" xmlns:exf="http://www.exforms.org/exf/1-0"
 	xmlns:xxi="http://orbeon.org/oxf/xml/xinclude">
 	<head>
-		<title>Numishare: Edit Coin</title>
+		<title>Numishare: Edit Numismatic Object</title>
 		<!-- Core + Skin CSS -->
 		<link rel="stylesheet" href="/fr/style/bootstrap/css/bootstrap.css" type="text/css" />
 		<link rel="stylesheet" href="/fr/style/form-runner-bootstrap-override.css" type="text/css" />
@@ -110,6 +110,7 @@
 			<xforms:instance id="config">
 				<config xmlns=""></config>
 			</xforms:instance>
+
 			<xforms:instance id="control-instance">
 				<controls xmlns="">
 					<id></id>
@@ -272,7 +273,7 @@
 				<thickness></thickness>
 			</xforms:instance>
 			<xforms:instance id="wear-template" xxforms:exclude-result-prefixes="#all">
-				<wear></wear>
+				<wear xlink:type="simple" xlink:href=""></wear>
 			</xforms:instance>
 			<xforms:instance id="weight-template" xxforms:exclude-result-prefixes="#all">
 				<weight units="g"></weight>
@@ -565,7 +566,7 @@
 					<xforms:bind nodeset="nuds:title" required="true()"></xforms:bind>
 					<!--<xforms:bind nodeset="nuds:identifier" required="true()"/>-->
 				</xforms:bind>
-				<xforms:bind nodeset="//@xlink:href" required="true()"/>
+				<xforms:bind nodeset="//@xlink:href" required="true()"></xforms:bind>
 			</xforms:bind>
 			<!-- bind physDesc tab existence of elements -->
 			<xforms:bind id="control-tab" nodeset="instance('object')/nuds:control"></xforms:bind>
@@ -2073,7 +2074,8 @@
 												<h3>Reverse</h3>
 												<numishare:file-upload></numishare:file-upload>
 											</div>
-										</xforms:group> <fr:alert-dialog id="delete-digRep-dialog">
+										</xforms:group>
+										<fr:alert-dialog id="delete-digRep-dialog">
 											<fr:label>Delete Digital Representations</fr:label>
 											<fr:message>Confirm the deletion of image files associated with this object.</fr:message>
 											<fr:negative-choice></fr:negative-choice>
@@ -2134,7 +2136,8 @@
 									<fr:label>Inspector</fr:label>
 									<fr:xforms-inspector></fr:xforms-inspector>
 								</fr:tab>
-							</fr:tabview> <fr:alert-dialog id="subtype-dialog">
+							</fr:tabview>
+							<fr:alert-dialog id="subtype-dialog">
 								<fr:label>Remove Parent Type</fr:label>
 								<fr:message>Removing the subtype designation for this record will eliminate the link to the parent type. Proceed?</fr:message>
 								<fr:negative-choice>

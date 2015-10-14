@@ -15,70 +15,103 @@
 					<xforms:var name="binding" as="node()?">
 						<xxforms:sequence select="." xxbl:scope="outer"/>
 					</xforms:var>
+					<xforms:action ev:event="xforms-enabled" ev:target="#observer">
+						<!-- load controlled vocabulary instances by querying nomisma -->
+						<xforms:setvalue ref="instance('control-instance')/type">CoinWear</xforms:setvalue>
+						<xforms:send submission="query-nomisma"/>
+					</xforms:action>
 					
-					<xforms:group ref="$binding/nuds:completeness">
-						<div>
-							<xforms:input ref=".">
-								<xforms:label>Completeness</xforms:label>
-							</xforms:input>
-							<xforms:trigger appearance="minimal">
-								<xforms:delete ev:event="DOMActivate" nodeset="."/>
-								<xforms:label>
-									<span class="glyphicon glyphicon-remove"/>
-								</xforms:label>
-							</xforms:trigger>
-						</div>
-					</xforms:group>
-					<xforms:group ref="$binding/nuds:condition">
-						<div>
-							<xforms:input ref=".">
-								<xforms:label>Condition</xforms:label>
-							</xforms:input>
-							<xforms:trigger appearance="minimal">
-								<xforms:delete ev:event="DOMActivate" nodeset="."/>
-								<xforms:label>
-									<span class="glyphicon glyphicon-remove"/>
-								</xforms:label>
-							</xforms:trigger>
-						</div>
-					</xforms:group>									
-					<xforms:group ref="$binding/nuds:grade">
-						<div>
-							<xforms:select1 ref=".">
-								<xforms:label>Grade</xforms:label>
-								<xforms:alert>Required</xforms:alert>
-								<xforms:item>
-									<xforms:label>Select Grade...</xforms:label>
-									<xforms:value/>
-								</xforms:item>
-								<xforms:itemset nodeset="instance('grades')/grade">
-									<xforms:label ref="@label"/>
-									<xforms:value ref="@value"/>
-								</xforms:itemset>
-							</xforms:select1>
-							<xforms:trigger appearance="minimal">
-								<xforms:delete ev:event="DOMActivate" nodeset="."/>
-								<xforms:label>
-									<span class="glyphicon glyphicon-remove"/>
-								</xforms:label>
-							</xforms:trigger>
-						</div>
-					</xforms:group>
-					<xforms:group ref="$binding/nuds:wear">
-						<div>
-							<xforms:input ref=".">
-								<xforms:label>Wear</xforms:label>
-							</xforms:input>
-							<xforms:trigger appearance="minimal">
-								<xforms:delete ev:event="DOMActivate" nodeset="."/>
-								<xforms:label>
-									<span class="glyphicon glyphicon-remove"/>
-								</xforms:label>
-							</xforms:trigger>
-						</div>
+					<xforms:group ref="$binding">
+						<xforms:group ref="nuds:completeness">
+							<div>
+								<xforms:input ref=".">
+									<xforms:label>Completeness</xforms:label>
+								</xforms:input>
+								<xforms:trigger appearance="minimal">
+									<xforms:delete ev:event="DOMActivate" nodeset="."/>
+									<xforms:label>
+										<span class="glyphicon glyphicon-remove"/>
+									</xforms:label>
+								</xforms:trigger>
+							</div>
+						</xforms:group>
+						<xforms:group ref="nuds:condition">
+							<div>
+								<xforms:input ref=".">
+									<xforms:label>Condition</xforms:label>
+								</xforms:input>
+								<xforms:trigger appearance="minimal">
+									<xforms:delete ev:event="DOMActivate" nodeset="."/>
+									<xforms:label>
+										<span class="glyphicon glyphicon-remove"/>
+									</xforms:label>
+								</xforms:trigger>
+							</div>
+						</xforms:group>									
+						<xforms:group ref="nuds:grade">
+							<div>
+								<xforms:select1 ref=".">
+									<xforms:label>Grade</xforms:label>
+									<xforms:alert>Required</xforms:alert>
+									<xforms:item>
+										<xforms:label>Select Grade...</xforms:label>
+										<xforms:value/>
+									</xforms:item>
+									<xforms:itemset nodeset="instance('grades')/grade">
+										<xforms:label ref="@label"/>
+										<xforms:value ref="@value"/>
+									</xforms:itemset>
+								</xforms:select1>
+								<xforms:trigger appearance="minimal">
+									<xforms:delete ev:event="DOMActivate" nodeset="."/>
+									<xforms:label>
+										<span class="glyphicon glyphicon-remove"/>
+									</xforms:label>
+								</xforms:trigger>
+							</div>
+						</xforms:group>
+						
+						<xforms:group ref="nuds:wear">
+							<div>
+								<xforms:select1 ref="@xlink:href">
+									<xforms:label>Wear</xforms:label>
+									<xforms:alert>Required</xforms:alert>
+									<xforms:item>
+										<xforms:label>Select...</xforms:label>
+										<xforms:value/>
+									</xforms:item>
+									<xforms:itemset nodeset="instance('CoinWear-list')/*">
+										<xforms:value ref="@href"/>
+										<xforms:label ref="."/>
+									</xforms:itemset>
+									<xforms:action ev:event="xforms-value-changed">
+										<xforms:var name="href" select="."/>
+										<xforms:setvalue ref="parent::node()" value="instance('CoinWear-list')/*[@href=$href]" if="string($href)"/>
+										<xforms:setvalue ref="parent::node()" if="not(string($href))"/>
+									</xforms:action>
+								</xforms:select1>
+								<xforms:trigger appearance="minimal">
+									<xforms:delete ev:event="DOMActivate" nodeset="."/>
+									<xforms:label>
+										<span class="glyphicon glyphicon-remove"/>
+									</xforms:label>
+								</xforms:trigger>
+							</div>
+						</xforms:group>
 					</xforms:group>
 					<!-- ***********************  DIALOG INTERNAL MODEL *********************** -->
-					<xforms:model>
+					<xforms:model id="conservationState-model">
+						<xforms:instance id="feed" xxforms:exclude-result-prefixes="#all">
+							<feed xmlns=""/>
+						</xforms:instance>
+						
+						<xforms:instance id="control-instance" xxforms:exclude-result-prefixes="#all">
+							<controls xmlns="">
+								<type/>
+							</controls>
+						</xforms:instance>
+						
+						<!-- lists -->
 						<xforms:instance id="grades">
 							<grades xmlns="">
 								<grade label="Poor (PO)" value="PO"/>
@@ -94,6 +127,25 @@
 								<grade label="Brilliant Uncirculated (BU)" value="BU"/>
 							</grades>
 						</xforms:instance>
+						
+						<xforms:instance id="CoinWear-list" xxforms:exclude-result-prefixes="#all">
+							<list xmlns=""/>
+						</xforms:instance>
+						
+						<xforms:instance id="listItem-template" xxforms:exclude-result-prefixes="#all">
+							<item href="" xmlns=""/>
+						</xforms:instance>
+						
+						<xforms:submission id="query-nomisma" serialization="none" method="get"
+							action="http://nomisma.org/feed/?q=type:&#x022;nmo:{instance('control-instance')/type}&#x022;&amp;sort=prefLabel%20asc" instance="feed" replace="instance">
+							<xforms:message ev:event="xforms-submit-error" level="modal">Unable to communicate with nomisma.org Atom feed.</xforms:message>
+							<!-- iterate through Atom feed, populating select list -->
+							<xforms:action ev:event="xforms-submit-done" xxforms:iterate="instance('feed')//atom:entry">
+								<xforms:setvalue ref="instance('listItem-template')" value="context()/atom:title"/>
+								<xforms:setvalue ref="instance('listItem-template')/@href" value="context()/atom:link[not(@rel)]/@href"/>
+								<xforms:insert origin="instance('listItem-template')" context="instance(concat(instance('control-instance')/type, '-list'))" nodeset="./child::node()[last()]"/>
+							</xforms:action>
+						</xforms:submission>
 					</xforms:model>
 				</xforms:group>
 			</xforms:group>

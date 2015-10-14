@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<materials xmlns="">	
-	<material label="billon" value="billon" resource="http://nomisma.org/id/bi"/>
-	<material label="bronze" value="bronze" resource="http://nomisma.org/id/ae"/>	
-	<material label="copper" value="copper" resource="http://nomisma.org/id/cu"/>
-	<material label="gold" value="gold" resource="http://nomisma.org/id/au"/>
-	<material label="silver" value="silver" resource="http://nomisma.org/id/ar"/>
-	<material label="zinc" value="zinc" resource="http://nomisma.org/id/zn"/>
-</materials>
