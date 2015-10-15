@@ -254,7 +254,7 @@
 										<xxforms:hide dialog="obverse-objects"/>
 									</xforms:action>
 								</xforms:trigger>
-								<xforms:group ref=".[count(nuds:obverse/nuds:typeSeries) = 0]">
+								<!--<xforms:group ref=".[count(nuds:obverse/nuds:typeSeries) = 0]">
 									<xforms:trigger appearance="minimal">
 										<xforms:label>
 											<span class="glyphicon glyphicon-plus"/>Type Series</xforms:label>
@@ -264,7 +264,7 @@
 											<xxforms:hide dialog="obverse-objects"/>
 										</xforms:action>
 									</xforms:trigger>
-								</xforms:group>
+								</xforms:group>-->
 							</xxforms:dialog>
 							<xforms:group ref="nuds:obverse">
 								<div class="subsection">
@@ -439,7 +439,7 @@
 										<xxforms:hide dialog="reverse-objects"/>
 									</xforms:action>
 								</xforms:trigger>
-								<xforms:group ref=".[count(nuds:reverse/nuds:typeSeries) = 0]">
+								<!--<xforms:group ref=".[count(nuds:reverse/nuds:typeSeries) = 0]">
 									<xforms:trigger appearance="minimal">
 										<xforms:label>
 											<span class="glyphicon glyphicon-plus"/>Type Series</xforms:label>
@@ -449,7 +449,7 @@
 											<xxforms:hide dialog="reverse-objects"/>
 										</xforms:action>
 									</xforms:trigger>
-								</xforms:group>
+								</xforms:group>-->
 							</xxforms:dialog>
 							<xforms:group ref="nuds:reverse">
 								<div class="subsection">

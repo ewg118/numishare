@@ -16,48 +16,27 @@
 						<xxforms:sequence select="." xxbl:scope="outer"/>
 					</xforms:var>
 					<xforms:group ref="$binding">
-						<h2>Reference</h2>
+						<h3>Type Series Item</h3>
 						<div class="section">
-							<xforms:group ref="nuds:date">
+							<xforms:repeat nodeset="nuds:date|nuds:denomination|nuds:manufacture|nuds:material|nuds:objectType|nuds:weightStandard">
 								<div>
 									<xforms:output ref=".">
-										<xforms:label>Date</xforms:label>
+										<xforms:label value="concat(upper-case(substring(local-name(), 1, 1)), substring(local-name(), 2))"/>
 									</xforms:output>
+									<xforms:group ref=".[string(@xlink:href)]">
+										<xforms:trigger appearance="minimal">
+											<xforms:label><span class="glyphicon glyphicon-new-window"/></xforms:label>
+											<xforms:load ev:event="DOMActivate" ref="@xlink:href" show="new"/>
+										</xforms:trigger>
+									</xforms:group>
+									<xforms:group ref=".[string(@standardDate)]">
+										<span class="text-muted"><xforms:output ref="concat('(', @standardDate, ')')"/></span>
+									</xforms:group>
 								</div>
-							</xforms:group>
-							<xforms:group ref="nuds:denomination">
-								<div>
-									<xforms:output ref=".">
-										<xforms:label>Denomination</xforms:label>
-									</xforms:output>
-
-								</div>
-							</xforms:group>
-							<xforms:group ref="nuds:manufacture">
-								<div>
-									<xforms:output ref=".">
-										<xforms:label>Manufacture</xforms:label>
-									</xforms:output>
-
-								</div>
-							</xforms:group>
-							<xforms:group ref="nuds:material">
-								<div>
-									<xforms:output ref=".">
-										<xforms:label>Material</xforms:label>
-									</xforms:output>
-								</div>
-							</xforms:group>
-							<xforms:group ref="nuds:weightStandard">
-								<div>
-									<xforms:output ref=".">
-										<xforms:label>Material</xforms:label>
-									</xforms:output>
-								</div>
-							</xforms:group>							
+							</xforms:repeat>		
 						</div>
 						<div class="subsection">
-							<h3>Obverse</h3>
+							<h4>Obverse</h4>
 							<xforms:group ref="nuds:obverse">
 								<xforms:repeat nodeset="nuds:persname[@xlink:role='artist']">
 									<div>
@@ -118,7 +97,7 @@
 							</xforms:group>
 						</div>
 						<div class="subsection">
-							<h3>Reverse</h3>
+							<h4>Reverse</h4>
 							<xforms:group ref="nuds:reverse">
 								<xforms:repeat nodeset="nuds:persname[@xlink:role='artist']">
 									<div>
@@ -179,7 +158,7 @@
 							</xforms:group>
 						</div>
 						<div class="subsection">
-							<h3>Edge</h3>
+							<h4>Edge</h4>
 
 							<xforms:group ref="nuds:obverse">
 								<xforms:group ref="nuds:description">
@@ -206,7 +185,7 @@
 							</xforms:group>
 						</div>
 						<div class="subsection">
-							<h3>Authority and Personal</h3>
+							<h4>Authority</h4>
 							<xforms:group ref="nuds:authority">
 								<xforms:repeat nodeset="nuds:persname[@xlink:role='artist']">
 									<div>
@@ -275,7 +254,7 @@
 						</div>
 						<!-- geographic -->
 						<div class="subsection">
-							<h3>Geographic</h3>
+							<h4>Geographic</h4>
 							<xforms:group ref="nuds:geographic">
 								<div>
 									<xforms:repeat nodeset="nuds:geogname[@xlink:role='mint']">

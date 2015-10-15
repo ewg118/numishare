@@ -36,9 +36,7 @@
 							</xforms:output>
 							<xforms:group ref=".[string($binding/@xlink:href)]">
 								<xforms:trigger appearance="minimal">
-									<xforms:label>
-										<img src="../../../xforms/images/external.png"/>
-									</xforms:label>
+									<xforms:label><span class="glyphicon glyphicon-new-window"/></xforms:label>
 									<xforms:load ev:event="DOMActivate" ref="$binding/@xlink:href" show="new"/>
 								</xforms:trigger>
 							</xforms:group>

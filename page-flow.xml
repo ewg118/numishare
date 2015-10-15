@@ -14,11 +14,17 @@
 	<page path="/numishare/admin/theme/" view="xforms/theme.xhtml"/>
 	<page path="/numishare/admin/templates/" view="xforms/templates.xhtml"/>	
 	<page path="/numishare/admin/theme/layout/" view="xforms/layout.xhtml"/>	
+	
+	<!-- authentication -->
+	<page path="/numishare/login" view="xforms/login.html" id="login"/>
+	<page path="/numishare/login-failed" view="xforms/login-failed.html"/>
 	<page path="/numishare/admin/logout">
-		<action action="xpl/logout.xpl">
-			<result page="index"/>
+		<action action="xpl/xforms/logout.xpl">
+			<result page="login"/>
 		</action>
 	</page>
+	
+	<page path="/numishare/auth" view="xpl/get-authentication.xpl"/>	
 	
 	<!-- ****************
 	* PUBLIC INTERFACE *

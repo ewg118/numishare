@@ -1,0 +1,41 @@
+<html>
+	<head>
+		<title>Login</title>
+		<link rel="shortcut icon" href="/ops/images/orbeon-icon-16.ico" />
+		<link rel="icon" href="/ops/images/orbeon-icon-16.png" type="image/png" />
+		<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" />
+		<script type="text/javascript" src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js">//</script>
+		<style type="text/css">
+			.login{
+				margin:100px auto;
+				width:50%;
+				background-color:#ebebeb;
+				padding:20px;
+				border:1px solid silver;
+				border-radius:10px;
+			}</style>
+	</head>
+	<body>
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-md-12">
+					<div class="login">
+						<form role="form" method="post" action="j_security_check">
+							<div class="text-right"><h2>Login</h2></div>
+							<div class="form-group">
+								<label for="username">Username</label>
+								<input type="text" class="form-control" name="j_username" id="username" />
+							</div>
+							<div class="form-group">
+								<label for="password">Password</label>
+								<input type="password" class="form-control" id="password" name="j_password" />
+							</div>
+							<button type="submit" class="btn btn-default">Login</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</body>
+</html>
