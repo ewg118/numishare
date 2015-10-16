@@ -20,12 +20,9 @@
 	<page path="/numishare/login-failed" view="xforms/login-failed.html"/>
 	<page path="/numishare/admin/logout">
 		<action action="xpl/xforms/logout.xpl">
-			<result page="login"/>
+			<result page="admin"/>
 		</action>
 	</page>
-	
-	<page path="/numishare/auth" view="xpl/get-authentication.xpl"/>	
-	
 	<!-- ****************
 	* PUBLIC INTERFACE *
 	***************** -->
