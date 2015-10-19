@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <div xmlns="http://www.w3.org/1999/xhtml">
-	<div id="header"> NUMISHARE ADMINISTRATION | <a href="{$display_path}">Objects</a> | <a href="{$display_path}pages/">Pages</a> | <a href="{$display_path}imports/">Imports</a> | <a
+	<div id="header"> NUMISHARE ADMINISTRATION | <a href="{$display_path}">Objects</a> | <a href="{$display_path}pages/">Pages</a> | <!--<a href="{$display_path}imports/">Imports</a> |--> <a
 		href="{$display_path}edit/settings/">Numishare Settings</a> | <a href="{$display_path}theme/">Theme</a> | <a href="{$display_path}logout">Logout</a>
 		<a href="{instance('config')/url}" style="float:right" target="_blank">View Pubic Interface</a>
 	</div>

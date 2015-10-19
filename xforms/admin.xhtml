@@ -239,9 +239,10 @@
 						<![CDATA[xquery version "1.0";
 							declare namespace xmldb="http://exist-db.org/xquery/xmldb";
 							let $collection := '%COLLECTION%'
-							return
-							xmldb:create-collection(concat('/db/', $collection), 'objects')							
-							xmldb:store-files-from-pattern(concat('/db/', $collection),'%PATH%/xforms/xquery/', '*.xql', 'application/xquery')
+							let $path := '%PATH%'
+							let $create-collection := xmldb:create-collection(concat('/db/', $collection), 'objects')
+							return														
+								xmldb:store-files-from-pattern(concat('/db/', $collection), concat($path, '/xforms/xquery'), '*.xql', 'application/xquery')
 						]]>
 					</query>
 					<query id="query-objects">
@@ -334,11 +335,11 @@
 			</xforms:instance>
 
 			<!-- ************************* BINDINGS ************************** -->
-			<!--<xforms:bind nodeset="instance('control-instance')">
+			<xforms:bind nodeset="instance('control-instance')">
 				<xforms:bind id="create-collection-trigger" nodeset="create-collection-trigger" type="xs:boolean" readonly=". != true()"></xforms:bind>
-			</xforms:bind>-->
+			</xforms:bind>
 
-			<xforms:bind nodeset="instance('collections-list')">
+			<xforms:bind nodeset="instance('collections-list')" constraint="count(//@name) = count(distinct-values(//@name)) and count(//@role) = count(distinct-values(//@role))">
 				<xforms:bind nodeset="collection">
 					<xforms:bind nodeset="@name" required="true()" type="xs:ID"></xforms:bind>
 					<xforms:bind nodeset="@role" required="true()" type="xs:ID"></xforms:bind>
@@ -368,13 +369,21 @@
 			</xforms:bind>
 
 			<!-- **************** DYNAMIC VALIDATION CONTROLS ********************** -->
-			<!--<xforms:action ev:event="xxforms-invalid" ev:observer="collections-list">
-				<xforms:setvalue ref="instance('control-instance')/save-trigger" value="false()"></xforms:setvalue>
+			<xforms:action ev:event="xxforms-invalid" ev:observer="collections-list">
+				<xforms:setvalue ref="instance('control-instance')/create-collection-trigger" value="false()"></xforms:setvalue>
 			</xforms:action>
 
-			<xforms:action ev:event="xxforms-valid" ev:observer="doc">
-				<xforms:setvalue ref="instance('control-instance')/save-trigger" value="true()"></xforms:setvalue>
-			</xforms:action>-->
+			<xforms:action ev:event="xxforms-valid" ev:observer="collections-list">
+				<xforms:setvalue ref="instance('control-instance')/create-collection-trigger" value="true()" if="xxforms:valid(instance('config-template'), true())"></xforms:setvalue>
+			</xforms:action>
+			
+			<xforms:action ev:event="xxforms-invalid" ev:observer="config-template">
+				<xforms:setvalue ref="instance('control-instance')/create-collection-trigger" value="false()"></xforms:setvalue>
+			</xforms:action>
+			
+			<xforms:action ev:event="xxforms-valid" ev:observer="config-template">
+				<xforms:setvalue ref="instance('control-instance')/create-collection-trigger" value="true()" if="xxforms:valid(instance('collections-list'), true())"></xforms:setvalue>
+			</xforms:action>
 
 			<!-- ************************* SUBMISSIONS ************************** -->
 			<!-- load collections/roles config -->
@@ -452,6 +461,13 @@
 					<xforms:setvalue ref="instance('eXist-xquery')/exist:text"
 						value="replace(replace(instance('xqueries')/query[@id='create-collection'], '%COLLECTION%', instance('control-instance')/collection-name), '%PATH%', instance('config-template')/images/absolute_path)"></xforms:setvalue>
 					<xforms:send submission="xquery-db"></xforms:send>
+					
+					<!-- submit collection metadata once again before switching the interface -->
+					<xforms:action ev:event="xforms-submit-done">
+						<xforms:setvalue ref="instance('eXist-xquery')/exist:text"
+							value="replace(instance('xqueries')/query[@id='collection-metadata'], '%SEQUENCE%', string-join(instance('collections-list')/collection/@name, ','))"></xforms:setvalue>
+						<xforms:send submission="xquery-db"></xforms:send>						
+					</xforms:action>
 				</xforms:action>
 			</xforms:submission>
 
@@ -602,15 +618,15 @@
 						<xforms:case id="numishare-admin">
 							<xi:include href="header.xml"></xi:include>
 							<div id="form">
-								<xforms:group ref="instance('control-instance')/status/text()">
-									<div class="success">
-										<xforms:output ref="instance('control-instance')/status"></xforms:output>
-									</div>
+								<xforms:group ref=".[count(distinct-values(instance('collections-list')/collection/@name)) != count(instance('collections-list')/collection/@name)]">
+									<div class="bg-danger alert-box">
+										<span class="glyphicon glyphicon-exclamation-sign"></span>
+										<strong>Alert:</strong> Collection of this name already exists.</div>
 								</xforms:group>
-								<xforms:group ref="instance('control-instance')/error/text()">
-									<div class="error">
-										<xforms:output ref="instance('control-instance')/error"></xforms:output>
-									</div>
+								<xforms:group ref=".[count(distinct-values(instance('collections-list')/collection/@role)) != count(instance('collections-list')/collection/@role)]">
+									<div class="bg-danger alert-box">
+										<span class="glyphicon glyphicon-exclamation-sign"></span>
+										<strong>Alert:</strong>A role cannot be bound to more than one collection.</div>
 								</xforms:group>
 								<h2>Numishare Administration</h2>
 								<xforms:switch>
@@ -631,7 +647,7 @@
 																<th>Role</th>
 																<th>Title</th>
 																<th style="width:50%">Description</th>
-																<th>URL</th>
+																<th>Actions</th>
 															</tr>
 														</thead>
 														<tbody>
@@ -645,14 +661,15 @@
 																		<xforms:output ref="@role"></xforms:output>
 																	</td>
 																	<td>
-																		<xforms:output ref="instance('xquery-result')//collection[@id=$name]/title"></xforms:output>
+																		<xforms:trigger appearance="minimal">
+																			<xforms:label value="instance('xquery-result')//collection[@id=$name]/title"></xforms:label>
+																			<xforms:load ev:event="DOMActivate" ref="	instance('xquery-result')//collection[@id=$name]/url" show="new"/>
+																		</xforms:trigger>
 																	</td>
 																	<td>
 																		<xforms:output ref="instance('xquery-result')//collection[@id=$name]/description"></xforms:output>
 																	</td>
-																	<td>
-																		<xforms:output ref="instance('xquery-result')//collection[@id=$name]/url"></xforms:output>
-																	</td>
+																	<td></td>
 																</tr>
 															</xforms:repeat>
 														</tbody>
@@ -747,12 +764,11 @@
 														<xforms:toggle case="collections-list-interface"></xforms:toggle>
 													</xforms:action>
 												</xforms:trigger>
-												<xforms:trigger>
+												<xforms:trigger bind="create-collection-trigger">
 													<xforms:label>Create</xforms:label>
 													<xforms:action ev:event="DOMActivate">
-														<!-- save collections list and config -->
+														<!-- save collections list, config, and XQL files -->
 														<xforms:send submission="save-collections"></xforms:send>
-														<!-- save the collections-list -->
 														<xforms:toggle case="collections-list-interface"></xforms:toggle>
 													</xforms:action>
 												</xforms:trigger>
@@ -1033,7 +1049,7 @@
 							</div>
 						</xforms:case>
 					</xforms:switch>
-					<fr:xforms-inspector></fr:xforms-inspector>
+					<!--<fr:xforms-inspector></fr:xforms-inspector>-->
 				</div>
 			</div>
 		</div>
