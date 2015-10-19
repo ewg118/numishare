@@ -14,10 +14,7 @@
 		<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" />
 		<script type="text/javascript" src="http://netdna.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 		<link rel="stylesheet" href="/apps/numishare/xforms/css/xforms.css" />
-
-		<!-- numishare styling -->
-		<link rel="stylesheet" href="/apps/numishare/css/xforms.css" />
-
+		
 		<xforms:model xmlns="http://nomisma.org/nuds">
 			<!-- date/time formats courtesy EAC-CPF schema -->
 			<xs:schema elementFormDefault="qualified" attributeFormDefault="unqualified">
@@ -422,29 +419,8 @@
 			<xforms:instance id="watermark-template" xxforms:exclude-result-prefixes="#all">
 				<physfacet type="watermark"></physfacet>
 			</xforms:instance>
-
-			<!-- ********** XFORMS-MODEL-CONSTRUCT-DONE ********** -->
-			<xforms:action ev:event="xforms-model-construct-done">
-				<xforms:insert context="instance('control-instance')" origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/get-authentication.xpl', 'dump', instance('dump'), 'data')"></xforms:insert>
-				<xforms:send submission="load-collections"></xforms:send>
-				<xforms:setvalue ref="instance('object')/nuds:control/nuds:maintenanceHistory/nuds:maintenanceEvent[last()]/nuds:agent"
-					value="instance('control-instance')/request-security/remote-user"></xforms:setvalue>
-				<!-- get subject localTypes -->
-				<xforms:setvalue ref="instance('eXist-xquery')/exist:text" value="instance('xqueries')/query[@id='localTypes']"></xforms:setvalue>
-				<xforms:send submission="xquery-collection"></xforms:send>
-				<!-- populate localTypes instance -->
-				<xforms:action ev:event="xforms-submit-done" xxforms:iterate="instance('xquery-result')//term">
-					<xforms:var name="label" select="context()"></xforms:var>
-					<xforms:insert context="instance('localTypes')" nodeset="./child::node()[last()]" origin="xforms:element('localType', $label)"></xforms:insert>
-				</xforms:action>
-			</xforms:action>
-
-			<!-- ********** XFORMS-READY ********** -->
-			<xforms:action ev:event="xforms-ready" if="instance('object')/nuds:descMeta/nuds:typeDesc/@xlink:href">
-				<xforms:toggle case="resource-type"></xforms:toggle>
-			</xforms:action>
-
-			<!-- ********** BINDING ********** -->
+			
+			<!-- ********** BINDINGS ********** -->
 			<xforms:bind nodeset="instance('object')">
 				<!-- recordType -->
 				<xforms:bind nodeset="@recordType" required="true()">
@@ -584,15 +560,16 @@
 				<xforms:bind nodeset="add-upload-trigger" readonly="false()"></xforms:bind>
 				<xforms:bind nodeset="remove-upload-trigger" readonly="count(instance('files-instance')/file) le 1"></xforms:bind>
 			</xforms:bind>
+			
 			<xforms:instance id="temp">
 				<temp xmlns=""></temp>
 			</xforms:instance>
 
 			<!-- ****************** SUBMISSIONS *******************-->
 			<!-- Load File -->
-			<xforms:submission id="load-coin" serialization="none" method="get"
+			<xforms:submission id="load-object" serialization="none" method="get"
 				action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/objects/{encode-for-uri(instance('control-instance')/id)}.xml"
-				xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}" replace="instance" instance="coin">
+				xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}" replace="instance" instance="object">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Error loading file.</xforms:message>
 				<xforms:action ev:event="xforms-submit-done">
 					<!-- set publicationStatus in control-instance -->
@@ -601,7 +578,17 @@
 					<xforms:insert context="instance('object')/nuds:control/nuds:maintenanceHistory" nodeset="./child::node()[last()]" origin="instance('maintenanceEvent-template')"></xforms:insert>
 					<xforms:setvalue ref="instance('object')/nuds:control/nuds:maintenanceHistory/nuds:maintenanceEvent[last()]/nuds:eventType">revised</xforms:setvalue>
 					<xforms:setvalue ref="instance('object')/nuds:control/nuds:maintenanceHistory/nuds:maintenanceEvent[last()]/nuds:agent"
-						value="instance('control-instance')/request-security/remote-user"></xforms:setvalue>
+						value="xxforms:get-remote-user()"></xforms:setvalue>
+					
+					<!-- if typeDesc is an xlink:href, set the resource case -->
+					<xforms:action if="instance('object')/nuds:descMeta/nuds:typeDesc/@xlink:href">
+						<xforms:setvalue ref="instance('typedesc-type')">resource</xforms:setvalue>
+						<xforms:send submission="get-typeDesc"></xforms:send>
+					</xforms:action>
+					<!-- populate the findspot-temp instance with current values -->
+					<!--<xforms:setvalue ref="instance('findspot-temp')/resource" value="instance('object')//nuds:findspot/@xlink:href"></xforms:setvalue>
+					<xforms:setvalue ref="instance('findspot-temp')/name" value="instance('object')//nuds:findspot/nuds:name"></xforms:setvalue>
+					<xforms:setvalue ref="instance('findspot-temp')/coordinates" value="instance('object')//nuds:findspot/gml:Point/gml:coordinates"></xforms:setvalue>-->
 				</xforms:action>
 			</xforms:submission>
 
@@ -611,8 +598,9 @@
 				<xforms:message ev:event="xforms-submit-error" level="modal">Error loading parent type.</xforms:message>
 				<xforms:send submission="to-solr" ev:event="xforms-submit-done" if="instance('parent-type')/nuds:control/nuds:publicationStatus='approved'"></xforms:send>
 			</xforms:submission>
-			<!-- Save File -->
-			<xforms:submission id="save-coin" ref="instance('object')" xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}"
+			
+			<!-- Save File -->			
+			<xforms:submission id="save-object" ref="instance('object')" xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}"
 				action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/objects/{instance('object')/nuds:control/nuds:recordId}.xml" method="put" replace="none">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Save Error. Are all required inputs filled?</xforms:message>
 				<xforms:action ev:event="xforms-submit-done">
@@ -635,7 +623,8 @@
 					</xforms:action>
 				</xforms:action>
 			</xforms:submission>
-			<!-- access service to read in pre-transformed solr doc -->
+			
+			<!-- ***** SOLR ***** -->
 			<xforms:submission id="to-solr" method="get" replace="instance" instance="addIndex" serialization="none" resource="{instance('config')/url}id/{instance('control-instance')/solr-id}.solr">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Error transforming NUDS document to Solr document.</xforms:message>
 				<xforms:action ev:event="xforms-submit-done">
@@ -666,28 +655,17 @@
 				></xforms:setvalue>
 			</xforms:submission>
 
-			<!-- load site info -->
+			<!-- ***** LOADING COLLECTIONS/CONFIG *****-->
 			<xforms:submission id="load-config" serialization="none" method="get" action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/config.xml"
 				xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}" replace="instance" instance="config">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Unable to load Numishare configuration</xforms:message>
 				<xforms:action ev:event="xforms-submit-done">
 					<!-- load object or create new one -->
-					<xforms:setvalue ref="instance('control-instance')/id" value="xxforms:get-request-parameter('id')"></xforms:setvalue>
-					<!-- if the id is successfully passed from a url parameter, load the document -->
-					<xforms:action if="string(instance('control-instance')/id)">
-						<xforms:send submission="load-coin"></xforms:send>
-						<!-- if typeDesc is an xlink:href, set the resource case -->
-						<xforms:action if="instance('object')/nuds:descMeta/nuds:typeDesc/@xlink:href">
-							<xforms:send submission="get-typeDesc"></xforms:send>
-							<xforms:setvalue ref="instance('typedesc-type')" value="'resource'"></xforms:setvalue>
-						</xforms:action>
-						<!-- populate the findspot-temp instance with current values -->
-						<xforms:setvalue ref="instance('findspot-temp')/resource" value="instance('object')//nuds:findspot/@xlink:href"></xforms:setvalue>
-						<xforms:setvalue ref="instance('findspot-temp')/name" value="instance('object')//nuds:findspot/nuds:name"></xforms:setvalue>
-						<xforms:setvalue ref="instance('findspot-temp')/coordinates" value="instance('object')//nuds:findspot/gml:Point/gml:coordinates"></xforms:setvalue>
+					<xforms:action if="string(xxforms:get-request-parameter('id'))">
+						<xforms:setvalue ref="instance('control-instance')/id" value="xxforms:get-request-parameter('id')"></xforms:setvalue>
+						<xforms:send submission="load-object"></xforms:send>
 					</xforms:action>
-					<!-- generate unique id and populate adminDesc and control fields with required information -->
-					<xforms:action if="not(string(instance('control-instance')/id))">
+					<xforms:action if="not(string(xxforms:get-request-parameter('id')))">
 						<xforms:setvalue ref="instance('object')/nuds:control/nuds:recordId" value="substring(string(digest( string( random( true ) ), 'MD5', 'hex' )), 1, 10)"></xforms:setvalue>
 						<!-- set control data from config if it is a new document -->
 						<xforms:setvalue ref="instance('object')/nuds:descMeta/nuds:title/@xml:lang" value="instance('config')/template/language"></xforms:setvalue>
@@ -706,6 +684,10 @@
 							<xforms:insert context="instance('object')/nuds:descMeta/nuds:adminDesc" origin="instance('repository-template')"></xforms:insert>
 							<xforms:setvalue ref="instance('object')/nuds:descMeta/nuds:adminDesc/nuds:repository" value="instance('config')/template/repository"></xforms:setvalue>
 						</xforms:action>
+						
+						<!-- set the maintenanceEvent Agent -->
+						<xforms:setvalue ref="instance('object')/nuds:control/nuds:maintenanceHistory/nuds:maintenanceEvent[last()]/nuds:agent"
+							value="xxforms:get-remote-user()"></xforms:setvalue>
 					</xforms:action>
 				</xforms:action>
 			</xforms:submission>
@@ -714,18 +696,21 @@
 				xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}">
 				<!-- if the config loads successfully, set the collection names based on authentication -->
 				<xforms:action ev:event="xforms-submit-done">
-					<!-- set default if security is false -->
-					<xforms:action if="not(string(instance('control-instance')/request-security/role))">
-						<xforms:setvalue ref="instance('control-instance')/collection-name">numishare</xforms:setvalue>
+					<!-- otherwise if the role is numishare-admin, set the collection name from a request parameter -->					
+					<xforms:action if="xxforms:is-user-in-role('numishare-admin')">
+						<xforms:action if="string(xxforms:get-request-parameter('collection'))">
+							<xforms:setvalue ref="instance('control-instance')/collection-name" value="xxforms:get-request-parameter('collection')"></xforms:setvalue>
+							<xforms:send submission="load-config"></xforms:send>
+						</xforms:action>
 					</xforms:action>
-					<!-- if there is a security role, set the collection-name value if it is in the list, otherwise set new collection name -->
-					<xforms:action if="string(instance('control-instance')/request-security/role)">
+					<!-- by default set the collection-name from the security role -->
+					<xforms:action if="not(xxforms:is-user-in-role('numishare-admin'))">
 						<xforms:action if="string(instance('collections-list')/collection[@role=instance('control-instance')/request-security/role]/@name)">
 							<xforms:setvalue ref="instance('control-instance')/collection-name"
 								value="instance('collections-list')/collection[@role=instance('control-instance')/request-security/role]/@name"></xforms:setvalue>
+							<xforms:send submission="load-config"></xforms:send>
 						</xforms:action>
 					</xforms:action>
-					<xforms:send submission="load-config"></xforms:send>
 				</xforms:action>
 				<!-- if the config has not been created (given that the URL in ../exist-config.xml is correct), create it -->
 				<xforms:message ev:event="xforms-submit-error" level="modal">Unable to load Numishare collections list.</xforms:message>
@@ -737,12 +722,33 @@
 				<xforms:message ev:event="xforms-submit-error" level="modal">Unable to load typeDesc at specified URI.</xforms:message>
 			</xforms:submission>
 
-			<!-- xquery -->
+			<!-- ***** XQUERY *****-->
 			<xforms:submission id="xquery-collection" ref="instance('eXist-xquery')" action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/objects" method="post"
 				replace="instance" instance="xquery-result" xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}">
 				<xforms:setvalue ref="instance('control-instance')/error" ev:event="xforms-submit-error">Error querying eXist database.</xforms:setvalue>
 			</xforms:submission>
+			
+			<!-- ********** XFORMS-MODEL-CONSTRUCT-DONE ********** -->
+			<xforms:action ev:event="xforms-model-construct-done">
+				<xforms:insert context="instance('control-instance')" nodeset="collection-name" position="after"
+					origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/get-authentication.xpl', 'dump', instance('dump'), 'data')"></xforms:insert>
+				<xforms:send submission="load-collections"></xforms:send>
+				<!-- get subject localTypes -->
+				<!--<xforms:setvalue ref="instance('eXist-xquery')/exist:text" value="instance('xqueries')/query[@id='localTypes']"></xforms:setvalue>
+				<xforms:send submission="xquery-collection"></xforms:send>-->
+				<!-- populate localTypes instance -->
+				<!--<xforms:action ev:event="xforms-submit-done" xxforms:iterate="instance('xquery-result')//term">
+					<xforms:var name="label" select="context()"></xforms:var>
+					<xforms:insert context="instance('localTypes')" nodeset="./child::node()[last()]" origin="xforms:element('localType', $label)"></xforms:insert>
+				</xforms:action>-->
+			</xforms:action>
+			
+			<!-- ********** XFORMS-READY ********** -->
+			<xforms:action ev:event="xforms-ready" if="instance('object')/nuds:descMeta/nuds:typeDesc/@xlink:href">
+				<xforms:toggle case="resource-type"></xforms:toggle>
+			</xforms:action>
 		</xforms:model>
+		
 		<!-- XBL components -->
 		<xi:include href="xbl/cp-name/cp-name.xbl" xi:omit-xml-base="true"></xi:include>
 		<xi:include href="xbl/conservationState/conservationState.xbl" xi:omit-xml-base="true"></xi:include>
@@ -790,7 +796,7 @@
 										<!-- set maintenanceStatus to 'revised', if it is both 'new' and file was loaded from eXist, i.e., not newly created -->
 										<xforms:setvalue ref="instance('object')/nuds:control/nuds:maintenanceStatus"
 											if="string(instance('control-instance')/id) and instance('object')/nuds:control/nuds:maintenanceStatus = 'new'">revised</xforms:setvalue>
-										<xforms:send submission="save-coin"></xforms:send>
+										<xforms:send submission="save-object"></xforms:send>
 									</xforms:action>
 									<xforms:label><span class="glyphicon glyphicon-floppy-disk"></span>Save</xforms:label>
 								</xforms:trigger>

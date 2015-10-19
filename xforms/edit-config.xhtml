@@ -3,16 +3,14 @@
 	xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:saxon="http://saxon.sf.net/" xmlns:numishare="https://github.com/ewg118/numishare">
 	<xhtml:head>
 		<title>Numishare: Edit Numishare Settings</title>
-		<!-- Core + Skin CSS -->
-		<xhtml:link rel="stylesheet" href="/fr/style/bootstrap/css/bootstrap.css" type="text/css"/>
-		<xhtml:link rel="stylesheet" href="/fr/style/form-runner-bootstrap-override.css" type="text/css"/>
-		<xhtml:link rel="stylesheet" href="/config/theme/examples.css" type="text/css" media="all"/>
-		<xhtml:link rel="shortcut icon" href="/ops/images/orbeon-icon-16.ico"/>
-		<xhtml:link rel="icon" href="/ops/images/orbeon-icon-16.png" type="image/png"/>
-		<xhtml:link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.8.0/build/cssgrids/grids-min.css"/>
-
-		<!-- numishare styling -->
-		<xhtml:link rel="stylesheet" href="/apps/numishare/css/xforms.css"/>
+		<link rel="stylesheet" href="/fr/style/bootstrap/css/bootstrap.css" type="text/css" />
+		<link rel="stylesheet" href="/fr/style/form-runner-bootstrap-override.css" type="text/css" />
+		<link rel="shortcut icon" href="/ops/images/orbeon-icon-16.ico" />
+		<link rel="icon" href="/ops/images/orbeon-icon-16.png" type="image/png" />
+		<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" />
+		<script type="text/javascript" src="http://netdna.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+		<link rel="stylesheet" href="/apps/numishare/xforms/css/xforms.css" />
+		
 		<xforms:model>
 			<!-- exist URL is stored in an XML file -->
 			<xforms:instance id="exist-config">
@@ -57,12 +55,6 @@
 			<!--<xforms:instance id="serialized-footer">
 				<div xmlns=""/>
 			</xforms:instance>-->
-
-			<xforms:action ev:event="xforms-model-construct-done">
-				<xforms:insert context="instance('control-instance')" nodeset="collection-name" position="after"
-					origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/get-authentication.xpl', 'dump', instance('dump'), 'data')"/>
-				<xforms:send submission="load-collections"/>
-			</xforms:action>
 
 			<!--<xforms:action ev:event="xforms-ready">
 				<xforms:setvalue ref="instance('serialized-footer')"
@@ -298,6 +290,7 @@
 
 			<xforms:bind nodeset="instance('control-instance')/save-trigger" readonly="../api-key-accepted = 'false'"/>
 
+			<!-- ************************* SUBMISSIONS ************************** -->
 			<xforms:submission id="load-collections" serialization="none" method="get" action="{instance('exist-config')/url}collections-list.xml" replace="instance" instance="collections-list"
 				xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}">
 				<!-- if the config loads successfully, set the collection names based on authentication -->
@@ -345,268 +338,287 @@
 					<xforms:setvalue ref="instance('control-instance')/api-key-accepted" if="instance('flickr-response')/@stat = 'ok'" value="'true'"/>
 					<xforms:setvalue ref="instance('control-instance')/api-key-accepted" if="string-length(instance('config')/flickr_api_key) = 0" value="'true'"/>
 				</xforms:action>
-
 			</xforms:submission>
+			
+			<!-- ********** XFORMS-MODEL-CONSTRUCT-DONE ********** -->
+			<xforms:action ev:event="xforms-model-construct-done">
+				<xforms:insert context="instance('control-instance')" nodeset="collection-name" position="after"
+					origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/get-authentication.xpl', 'dump', instance('dump'), 'data')"/>
+				<xforms:send submission="load-collections"/>
+			</xforms:action>			
 		</xforms:model>
 		<!--<xi:include href="xbl/banner-upload/banner-upload.xbl" xi:omit-xml-base="true"/>-->
 	</xhtml:head>
 
 	<xhtml:body>
 		<xforms:var name="display_path">../../</xforms:var>
-		<div class="yui3-g">
-			<div class="yui3-u-1">
-				<div class="content">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-md-12">
 					<xi:include href="header.xml"/>
+					<xforms:group ref="instance('status')/text()">
+						<div class="success">
+							<xforms:output ref="instance('status')"/>
+						</div>
+					</xforms:group>
+					<div class="submission">
+						<xforms:trigger ref="instance('control-instance')/save-trigger" appearance="minimal">
+							<xforms:label><span class="glyphicon glyphicon-floppy-disk"/> Save</xforms:label>
+							<xforms:send ev:event="DOMActivate" submission="save-config"/>
+						</xforms:trigger>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-3">
+					
+				</div>
+				<div class="col-md-9">
 					<div id="form">
-						<xforms:group ref="instance('status')/text()">
-							<div class="success">
-								<xforms:output ref="instance('status')"/>
-							</div>
-						</xforms:group>
-						<div class="submission">
-							<xforms:trigger ref="instance('control-instance')/save-trigger" appearance="minimal">
-								<xforms:label class="file_control"><span class="glyphicon glyphicon-floppy-disk"/> Save</xforms:label>
-								<xforms:send ev:event="DOMActivate" submission="save-config"/>
-							</xforms:trigger>
-						</div>						
 						<h1>Numishare Settings</h1>
+					</div>
+					<xforms:group ref="instance('config')">
+						<div class="section">										
+							<h2>System Settings</h2>
+							<div class="subsection">
+								<h3>Titles and URLs</h3>
+								<div>
+									<xforms:input ref="title">
+										<xforms:label>Title</xforms:label>
+										<xforms:alert>Required</xforms:alert>
+									</xforms:input>
+									<p>The title of the site to be displayed in all web page titles and citations in PDF files.</p>
+								</div>
+								<div>
+									<xforms:input ref="description">
+										<xforms:label>Description</xforms:label>
+										<xforms:alert>Required</xforms:alert>
+									</xforms:input>
+									<p>Enter a brief description of collection. This is used for VOiD RDF for data sharing.</p>
+								</div>
+								<div>
+									<xforms:input ref="contact">
+										<xforms:label>Contact Email</xforms:label>
+									</xforms:input>
+									<p>Optional contact email address for OpenSearch description.</p>
+								</div>
+								<div>
+									<xforms:input ref="url">
+										<xforms:label>URL</xforms:label>
+										<xforms:alert>Required</xforms:alert>
+									</xforms:input>												
+								</div>										
+								<div>
+									<xforms:input ref="logo">
+										<xforms:label>Logo URL</xforms:label>
+									</xforms:input>
+									<p>Appears in the header banner. For more sophisticated control, edit header.xsl.</p>
+								</div>
+							</div>
+							<div class="subsection">
+								<h3>Collection Type</h3>
+								<div>
+									<xforms:select1 ref="collection_type">
+										<xforms:label>Collection Type</xforms:label>
+										<xforms:item>
+											<xforms:label>cointype</xforms:label>
+											<xforms:value>cointype</xforms:value>
+										</xforms:item>
+										<xforms:item>
+											<xforms:label>hoard</xforms:label>
+											<xforms:value>hoard</xforms:value>
+										</xforms:item>
+										<xforms:item>
+											<xforms:label>object</xforms:label>
+											<xforms:value>object</xforms:value>
+										</xforms:item>												
+									</xforms:select1>											
+								</div>
+								<div>
+									<xforms:input ref="sparql_endpoint">
+										<xforms:label>SPARQL Endpoint</xforms:label>
+										<xforms:alert>Required</xforms:alert>
+									</xforms:input>											
+								</div>
+								<div>
+									<xforms:input ref="type_series">
+										<xforms:label>Type Series</xforms:label>
+										<xforms:alert>Required</xforms:alert>
+									</xforms:input>	
+									<p>A coin type project must have a binding corpus URI.</p>												
+								</div>
+								<div>
+									<xforms:input ref="nomisma_namespace">
+										<xforms:label>Nomisma Namespace</xforms:label>
+									</xforms:input>
+									<p>A data dump for a nomisma authorized namespace must link to this namespace on the VOiD description.</p>
+								</div>
+							</div>
+							
+							
+							<div class="subsection">
+								<h3>Export</h3>
+								<div>
+									<xforms:input ref="features_enabled">
+										<xforms:label>Featured Item</xforms:label>
+									</xforms:input>
+									<p>If enabled (the default), the Featured Object function will be displayed in the index page. It does not function correctly in coin-type catalogs.</p>
+								</div>
+								<div>
+									<xforms:input ref="pelagios_enabled">
+										<xforms:label>Expose to Pelagios</xforms:label>
+									</xforms:input>
+									<p>If enabled, records linked to Pleiades-defined ancient places will be exposed at <xforms:output ref="concat(url, 'pelagios.rdf')"/> with the VOiD defined
+										by <xforms:output ref="concat(url, 'pelagios.void.rdf')"/>.</p>
+								</div>
+								<div>
+									<xforms:input ref="ctype_enabled">
+										<xforms:label>Expose to Coin-Type Endpoint</xforms:label>
+									</xforms:input>
+									<p>If enabled, records linked to URI-defined coin types will be exposed at <xforms:output ref="concat(url, 'ctype.rdf')"/> with the VOiD defined by
+										<xforms:output ref="concat(url, 'ctype.void.rdf')"/>.</p>
+								</div>
+							</div>
+							<div class="subsection">
+								<h3>Google Analytics</h3>
+								<div>
+									<xforms:textarea ref="google_analytics">
+										<xforms:label>Google Analytics</xforms:label>
+									</xforms:textarea>
+									<p>Copy and paste the javascript code between <b>&lt;script type="text/javascript"&gt;&lt;/script&gt;</b> provided by Google.</p>
+								</div>
+							</div>
+							
+							<!--<xforms:group ref="banner_image">
+											<numishare:banner-upload/>
+										</xforms:group>-->
+						</div>
+						<div class="section">
+							<h2>About this Numishare collection</h2>
+							<xforms:group ref="template">
+								<div class="subsection">
+									<h3>Electronic Records</h3>
+									<p>The following fields pertain to electronic records and will be populated automatically into each new object record. They can be changed on a
+										per-document bases from within the object editing form. The maintenance agency is the entity responsible for the web site which provides access to the
+										electronic record. The copyright holder maintains the intellectual property (and may differ from the repository or physical custodian). The project
+										field pertains to the project responsible for the creation of the record. CreatedBy denotes the individual responsible for entering metadata. The
+										language refers to the language of the electronic record.</p>
+									<p>Publisher, copyright holder, and language are required. Project and createdBy may be left blank.</p>
+									<div>
+										<xforms:input ref="agencyName">
+											<xforms:label>Maintenance Agency</xforms:label>
+											<xforms:alert>Required</xforms:alert>
+										</xforms:input>
+									</div>
+									<div>
+										<xforms:input ref="copyrightHolder">
+											<xforms:label>Copyright Holder</xforms:label>
+											<xforms:alert>Required</xforms:alert>
+										</xforms:input>
+									</div>
+									<div>
+										<xforms:input ref="createdBy">
+											<xforms:label>Created By</xforms:label>
+											<xforms:alert>Required</xforms:alert>
+										</xforms:input>
+									</div>
+									<div>
+										<xforms:input ref="project">
+											<xforms:label>Project</xforms:label>
+										</xforms:input>
+									</div>
+									<div>
+										<xforms:select1 ref="language">
+											<xforms:label>Language</xforms:label>
+											<xforms:item>
+												<xforms:label>Select Language...</xforms:label>
+												<xforms:value/>
+											</xforms:item>
+											<xforms:itemset nodeset="instance('languages')//language">
+												<xforms:label ref="."/>
+												<xforms:value ref="."/>
+											</xforms:itemset>
+											<xforms:alert>Required</xforms:alert>
+											<xforms:var name="language" select="."/>
+											<xforms:setvalue ref="@langcode" value="instance('languages')//language[. = $language]/@value" ev:event="xforms-value-changed"/>
+										</xforms:select1>
+									</div>
+									<div>
+										<xforms:select1 ref="license">
+											<xforms:label>License</xforms:label>
+											<xforms:item>
+												<xforms:label>Select License...</xforms:label>
+												<xforms:value/>
+											</xforms:item>
+											<xforms:itemset nodeset="instance('licenseselect-template')//license">
+												<xforms:label ref="."/>
+												<xforms:value ref="href"/>
+											</xforms:itemset>
+										</xforms:select1>
+									</div>
+								</div>
+								<div class="subsection">
+									<h3>Physical Objects</h3>
+									<p>The following fields pertain to attributes of the physical objects themselves. The collection is the public name of the physical collection. The
+										owner field is an individual or corporate body which legally controls the object, and repository is the entity which serves as physical custodian.
+										Objects on loan may have a different owner than repository.</p>
+									<div>
+										<xforms:input ref="collection">
+											<xforms:label>Collection</xforms:label>
+										</xforms:input>
+									</div>
+									<div>
+										<xforms:input ref="owner">
+											<xforms:label>Owner</xforms:label>
+										</xforms:input>
+									</div>
+									<div>
+										<xforms:input ref="repository">
+											<xforms:label>Repository</xforms:label>
+										</xforms:input>
+									</div>
+								</div>
+							</xforms:group>
+						</div>
+						<div class="section">
+							<h2>API Keys</h2>
+							<h3>flickr</h3>
+							<xforms:group ref=".[instance('flickr-response')/@stat='fail' and string-length(flickr_api_key) &gt; 0]">
+								<div class="ui-widget">
+									<div class="ui-state-error ui-corner-all">
+										<p>
+											<span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"/>
+											<strong>Alert:</strong>
+											<xforms:output ref="instance('flickr-response')/err/@msg"/>
+										</p>
+									</div>
+								</div>
+							</xforms:group>
+							<div>
+								<xforms:input ref="flickr_api_key" incremental="true">
+									<xforms:label>Key</xforms:label>
+									<xforms:send submission="test-for-echo" ev:event="xforms-value-changed"/>
+								</xforms:input>
+								<p>A <a href="http://www.flickr.com/services/api/misc.api_keys.html">flickr API key</a> is required in order to take advantage of flickr image linking in
+									Numishare.</p>
+							</div>
+							<h3>geonames</h3>
+							<div>
+								<xforms:input ref="geonames_api_key" incremental="true">
+									<xforms:label>Key</xforms:label>
+								</xforms:input>
+								<p>A <a href="http://www.geonames.org/export/web-services.html">geonames API key</a> is required in order to link geographical places to geonames ids.</p>
+							</div>
+						</div>
+					</xforms:group>
+					
+				</div>
+			</div>
+					
 						<fr:tabview>
 							<fr:tab id="settings">
 								<fr:label>Settings</fr:label>
-								<xforms:group ref="instance('config')">
-									<div class="section">										
-										<h2>System Settings</h2>
-										<div class="subsection">
-											<h3>Titles and URLs</h3>
-											<div>
-												<xforms:input ref="title">
-													<xforms:label>Title</xforms:label>
-													<xforms:alert>Required</xforms:alert>
-												</xforms:input>
-												<p>The title of the site to be displayed in all web page titles and citations in PDF files.</p>
-											</div>
-											<div>
-												<xforms:input ref="description">
-													<xforms:label>Description</xforms:label>
-													<xforms:alert>Required</xforms:alert>
-												</xforms:input>
-												<p>Enter a brief description of collection. This is used for VOiD RDF for data sharing.</p>
-											</div>
-											<div>
-												<xforms:input ref="contact">
-													<xforms:label>Contact Email</xforms:label>
-												</xforms:input>
-												<p>Optional contact email address for OpenSearch description.</p>
-											</div>
-											<div>
-												<xforms:input ref="url">
-													<xforms:label>URL</xforms:label>
-													<xforms:alert>Required</xforms:alert>
-												</xforms:input>												
-											</div>										
-											<div>
-												<xforms:input ref="logo">
-													<xforms:label>Logo URL</xforms:label>
-												</xforms:input>
-												<p>Appears in the header banner. For more sophisticated control, edit header.xsl.</p>
-											</div>
-										</div>
-										<div class="subsection">
-											<h3>Collection Type</h3>
-											<div>
-												<xforms:select1 ref="collection_type">
-													<xforms:label>Collection Type</xforms:label>
-													<xforms:item>
-														<xforms:label>cointype</xforms:label>
-														<xforms:value>cointype</xforms:value>
-													</xforms:item>
-													<xforms:item>
-														<xforms:label>hoard</xforms:label>
-														<xforms:value>hoard</xforms:value>
-													</xforms:item>
-													<xforms:item>
-														<xforms:label>object</xforms:label>
-														<xforms:value>object</xforms:value>
-													</xforms:item>												
-												</xforms:select1>											
-											</div>
-											<div>
-												<xforms:input ref="sparql_endpoint">
-													<xforms:label>SPARQL Endpoint</xforms:label>
-													<xforms:alert>Required</xforms:alert>
-												</xforms:input>											
-											</div>
-											<div>
-												<xforms:input ref="type_series">
-													<xforms:label>Type Series</xforms:label>
-													<xforms:alert>Required</xforms:alert>
-												</xforms:input>	
-												<p>A coin type project must have a binding corpus URI.</p>												
-											</div>
-											<div>
-												<xforms:input ref="nomisma_namespace">
-													<xforms:label>Nomisma Namespace</xforms:label>
-												</xforms:input>
-												<p>A data dump for a nomisma authorized namespace must link to this namespace on the VOiD description.</p>
-											</div>
-										</div>
-																				
-										
-										<div class="subsection">
-											<h3>Export</h3>
-											<div>
-												<xforms:input ref="features_enabled">
-													<xforms:label>Featured Item</xforms:label>
-												</xforms:input>
-												<p>If enabled (the default), the Featured Object function will be displayed in the index page. It does not function correctly in coin-type catalogs.</p>
-											</div>
-											<div>
-												<xforms:input ref="pelagios_enabled">
-													<xforms:label>Expose to Pelagios</xforms:label>
-												</xforms:input>
-												<p>If enabled, records linked to Pleiades-defined ancient places will be exposed at <xforms:output ref="concat(url, 'pelagios.rdf')"/> with the VOiD defined
-													by <xforms:output ref="concat(url, 'pelagios.void.rdf')"/>.</p>
-											</div>
-											<div>
-												<xforms:input ref="ctype_enabled">
-													<xforms:label>Expose to Coin-Type Endpoint</xforms:label>
-												</xforms:input>
-												<p>If enabled, records linked to URI-defined coin types will be exposed at <xforms:output ref="concat(url, 'ctype.rdf')"/> with the VOiD defined by
-													<xforms:output ref="concat(url, 'ctype.void.rdf')"/>.</p>
-											</div>
-										</div>
-										<div class="subsection">
-											<h3>Google Analytics</h3>
-											<div>
-												<xforms:textarea ref="google_analytics">
-													<xforms:label>Google Analytics</xforms:label>
-												</xforms:textarea>
-												<p>Copy and paste the javascript code between <b>&lt;script type="text/javascript"&gt;&lt;/script&gt;</b> provided by Google.</p>
-											</div>
-										</div>
-										
-										<!--<xforms:group ref="banner_image">
-											<numishare:banner-upload/>
-										</xforms:group>-->
-									</div>
-									<div class="section">
-										<h2>About this Numishare collection</h2>
-										<xforms:group ref="template">
-											<div class="subsection">
-												<h3>Electronic Records</h3>
-												<p>The following fields pertain to electronic records and will be populated automatically into each new object record. They can be changed on a
-													per-document bases from within the object editing form. The maintenance agency is the entity responsible for the web site which provides access to the
-													electronic record. The copyright holder maintains the intellectual property (and may differ from the repository or physical custodian). The project
-													field pertains to the project responsible for the creation of the record. CreatedBy denotes the individual responsible for entering metadata. The
-													language refers to the language of the electronic record.</p>
-												<p>Publisher, copyright holder, and language are required. Project and createdBy may be left blank.</p>
-												<div>
-													<xforms:input ref="agencyName">
-														<xforms:label>Maintenance Agency</xforms:label>
-														<xforms:alert>Required</xforms:alert>
-													</xforms:input>
-												</div>
-												<div>
-													<xforms:input ref="copyrightHolder">
-														<xforms:label>Copyright Holder</xforms:label>
-														<xforms:alert>Required</xforms:alert>
-													</xforms:input>
-												</div>
-												<div>
-													<xforms:input ref="createdBy">
-														<xforms:label>Created By</xforms:label>
-														<xforms:alert>Required</xforms:alert>
-													</xforms:input>
-												</div>
-												<div>
-													<xforms:input ref="project">
-														<xforms:label>Project</xforms:label>
-													</xforms:input>
-												</div>
-												<div>
-													<xforms:select1 ref="language">
-														<xforms:label>Language</xforms:label>
-														<xforms:item>
-															<xforms:label>Select Language...</xforms:label>
-															<xforms:value/>
-														</xforms:item>
-														<xforms:itemset nodeset="instance('languages')//language">
-															<xforms:label ref="."/>
-															<xforms:value ref="."/>
-														</xforms:itemset>
-														<xforms:alert>Required</xforms:alert>
-														<xforms:var name="language" select="."/>
-														<xforms:setvalue ref="@langcode" value="instance('languages')//language[. = $language]/@value" ev:event="xforms-value-changed"/>
-													</xforms:select1>
-												</div>
-												<div>
-													<xforms:select1 ref="license">
-														<xforms:label>License</xforms:label>
-														<xforms:item>
-															<xforms:label>Select License...</xforms:label>
-															<xforms:value/>
-														</xforms:item>
-														<xforms:itemset nodeset="instance('licenseselect-template')//license">
-															<xforms:label ref="."/>
-															<xforms:value ref="href"/>
-														</xforms:itemset>
-													</xforms:select1>
-												</div>
-											</div>
-											<div class="subsection">
-												<h3>Physical Objects</h3>
-												<p>The following fields pertain to attributes of the physical objects themselves. The collection is the public name of the physical collection. The
-													owner field is an individual or corporate body which legally controls the object, and repository is the entity which serves as physical custodian.
-													Objects on loan may have a different owner than repository.</p>
-												<div>
-													<xforms:input ref="collection">
-														<xforms:label>Collection</xforms:label>
-													</xforms:input>
-												</div>
-												<div>
-													<xforms:input ref="owner">
-														<xforms:label>Owner</xforms:label>
-													</xforms:input>
-												</div>
-												<div>
-													<xforms:input ref="repository">
-														<xforms:label>Repository</xforms:label>
-													</xforms:input>
-												</div>
-											</div>
-										</xforms:group>
-									</div>
-									<div class="section">
-										<h2>API Keys</h2>
-										<h3>flickr</h3>
-										<xforms:group ref=".[instance('flickr-response')/@stat='fail' and string-length(flickr_api_key) &gt; 0]">
-											<div class="ui-widget">
-												<div class="ui-state-error ui-corner-all">
-													<p>
-														<span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"/>
-														<strong>Alert:</strong>
-														<xforms:output ref="instance('flickr-response')/err/@msg"/>
-													</p>
-												</div>
-											</div>
-										</xforms:group>
-										<div>
-											<xforms:input ref="flickr_api_key" incremental="true">
-												<xforms:label>Key</xforms:label>
-												<xforms:send submission="test-for-echo" ev:event="xforms-value-changed"/>
-											</xforms:input>
-											<p>A <a href="http://www.flickr.com/services/api/misc.api_keys.html">flickr API key</a> is required in order to take advantage of flickr image linking in
-												Numishare.</p>
-										</div>
-										<h3>geonames</h3>
-										<div>
-											<xforms:input ref="geonames_api_key" incremental="true">
-												<xforms:label>Key</xforms:label>
-											</xforms:input>
-											<p>A <a href="http://www.geonames.org/export/web-services.html">geonames API key</a> is required in order to link geographical places to geonames ids.</p>
-										</div>
-									</div>
-								</xforms:group>
+								
 							</fr:tab>
 							<fr:tab id="index">
 								<fr:label>Edit Index</fr:label>
