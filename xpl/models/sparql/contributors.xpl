@@ -34,7 +34,7 @@ PREFIX nmo:	<http://nomisma.org/ontology#>
 PREFIX void:	<http://rdfs.org/ns/void#>
 PREFIX xsd:	<http://www.w3.org/2001/XMLSchema#>
 
-SELECT ?dataset ?publisher ?collection ?collectionLabel ?thumbnail ?homepage ?title ?description (COUNT(?dataset) AS ?count) {
+SELECT ?dataset ?publisher ?collection ?collectionLabel ?thumbnail ?homepage ?title ?description ?license (COUNT(?dataset) AS ?count) {
     ?type dcterms:source <TYPE_SERIES> .
     ?object nmo:hasTypeSeriesItem ?type ;
             void:inDataset ?dataset .
@@ -44,7 +44,8 @@ SELECT ?dataset ?publisher ?collection ?collectionLabel ?thumbnail ?homepage ?ti
            OPTIONAL {?collection foaf:homepage ?homepage}}
   ?dataset dcterms:publisher ?publisher ;
            dcterms:title ?title;
-           dcterms:description ?description
+           dcterms:description ?description ;
+           dcterms:license ?license 
   OPTIONAL {?dataset foaf:thumbnail ?thumbnail}} GROUP BY ?dataset ?publisher ?collection ?collectionLabel ?title ?thumbnail ?homepage ?description ORDER BY ?publisher]]>
 				</xsl:variable>
 				

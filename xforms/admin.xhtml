@@ -15,12 +15,10 @@
 		<link rel="stylesheet" href="/fr/style/form-runner-bootstrap-override.css" type="text/css" />
 		<link rel="shortcut icon" href="/ops/images/orbeon-icon-16.ico" />
 		<link rel="icon" href="/ops/images/orbeon-icon-16.png" type="image/png" />
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"/>
 		<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" />
 		<script type="text/javascript" src="http://netdna.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 		<link rel="stylesheet" href="/apps/numishare/xforms/css/xforms.css" />
-
-		<!-- numishare styling -->
-		<link rel="stylesheet" href="/apps/numishare/css/xforms.css" />
 		<xforms:model xmlns="http://nomisma.org/nuds">
 			<!-- exist URL is stored in an XML file -->
 			<xforms:instance id="exist-config" xxforms:exclude-result-prefixes="#all">
@@ -41,6 +39,7 @@
 					<query_sent></query_sent>
 					<interface></interface>
 					<create-collection-trigger>false</create-collection-trigger>
+					<version>0.55</version>
 				</controls>
 			</xforms:instance>
 
@@ -79,7 +78,7 @@
 						<agencyName></agencyName>
 						<copyrightHolder></copyrightHolder>
 						<collection></collection>
-						<language></language>
+						<language>en</language>
 						<license>http://opendatacommons.org/licenses/odbl/</license>
 						<owner></owner>
 						<repository></repository>
@@ -147,7 +146,7 @@
 					</theme>
 					<footer>
 						<div class="row">
-							<p>Powered by <a href="https://github.com/ewg118/numishare" target="_blank">Numishare</a></p>
+							<div class="col-md-12"><p>Powered by <a href="https://github.com/ewg118/numishare" target="_blank">Numishare</a></p></div>
 						</div>
 					</footer>
 					<pages>
@@ -170,6 +169,14 @@
 
 			<xforms:instance id="languages">
 				<xi:include href="instances/languages.xml"></xi:include>
+			</xforms:instance>
+
+			<xforms:instance id="licenseselect-template">
+				<licenses xmlns="">
+					<license href="http://opendatacommons.org/licenses/odbl/">Open Data Commons Open Database License (ODbL)</license>
+					<license href="http://opendatacommons.org/licenses/by/">Open Data Commons Attribution License</license>
+					<license href="http://opendatacommons.org/licenses/pddl/">Open Data Commons Public Domain Dedication and License (PDDL)</license>
+				</licenses>
 			</xforms:instance>
 
 			<xforms:instance id="request" xxforms:exclude-result-prefixes="#all">
@@ -350,12 +357,14 @@
 			<xforms:bind nodeset="instance('config-template')">
 				<xforms:bind nodeset="title" required="true()"></xforms:bind>
 				<xforms:bind nodeset="description" required="true()"></xforms:bind>
-				<xforms:bind nodeset="url" required="true()"></xforms:bind>
-				<xforms:bind nodeset="solr_published" required="true()"></xforms:bind>
+				<xforms:bind nodeset="url" required="true()" type="custom.httpURL"></xforms:bind>
+				<xforms:bind nodeset="solr_published" required="true()" type="custom.httpURL"></xforms:bind>
 				<xforms:bind nodeset="template">
 					<!-- about the electronic record -->
 					<xforms:bind nodeset="agencyName" required="true()"></xforms:bind>
 					<xforms:bind nodeset="copyrightHolder" required="true()"></xforms:bind>
+					<xforms:bind nodeset="language" required="true()"></xforms:bind>
+					<xforms:bind nodeset="license" required="true()"></xforms:bind>
 				</xforms:bind>
 				<xforms:bind nodeset="images">
 					<!-- about the electronic record -->
@@ -368,6 +377,17 @@
 					<xforms:bind nodeset="published" type="xs:boolean"></xforms:bind>
 				</xforms:bind>
 			</xforms:bind>
+			
+			<!-- **************** CUSTOM DATATYPES ********************** -->
+			<!-- URL validation. Example from http://stackoverflow.com/questions/3381507/xml-validation-validating-a-uri-type -->
+			<xs:schema elementFormDefault="qualified" attributeFormDefault="unqualified">
+				<xs:simpleType name="custom.httpURL">
+					<xs:restriction base="xs:anyURI">
+						<!-- accepts only http:// or https:// URIs. -->
+						<xs:pattern value="https?://.+"></xs:pattern>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:schema>
 
 			<!-- **************** DYNAMIC VALIDATION CONTROLS ********************** -->
 			<xforms:action ev:event="xxforms-invalid" ev:observer="collections-list">
@@ -629,9 +649,7 @@
 										<span class="glyphicon glyphicon-exclamation-sign"></span>
 										<strong>Alert:</strong>A role cannot be bound to more than one collection.</div>
 								</xforms:group>
-								
 								<h2>Numishare Administration</h2>
-								
 								<xforms:switch>
 									<xforms:case id="collections-list-interface">
 										<div>
@@ -704,9 +722,12 @@
 														<xforms:input ref="@name">
 															<xforms:label>Collection Name</xforms:label>
 															<xforms:alert>Must conform to xs:ID</xforms:alert>
-															<xforms:setvalue ref="instance('config-template')/url"
-																value="concat('http://localhost:8080/orbeon/numishare/', instance('collections-list')/collection[last()]/@name, '/')"
-																ev:event="xforms-value-changed"></xforms:setvalue>
+															<xforms:action ev:event="xforms-value-changed">
+																<xforms:var name="name" select="."></xforms:var>
+																<xforms:setvalue ref="instance('config-template')/url" value="concat('http://localhost:8080/orbeon/numishare/', $name, '/')"></xforms:setvalue>
+																<xforms:setvalue ref="instance('config-template')/uri_space" value="concat('http://localhost:8080/orbeon/numishare/', $name, '/id/')"
+																></xforms:setvalue>
+															</xforms:action>
 														</xforms:input>
 													</div>
 												</xforms:group>
@@ -738,11 +759,43 @@
 															<xforms:hint>The individual or organization that owns the copyright.</xforms:hint>
 														</xforms:input>
 													</div>
+													<div>
+														<xforms:select1 ref="template/language">
+															<xforms:label>Default Language</xforms:label>
+															<xforms:item>
+																<xforms:label>Select Language...</xforms:label>
+																<xforms:value></xforms:value>
+															</xforms:item>
+															<xforms:itemset nodeset="instance('languages')//language">
+																<xforms:label ref="."></xforms:label>
+																<xforms:value ref="@value"></xforms:value>
+															</xforms:itemset>
+															<xforms:alert>Required</xforms:alert>
+														</xforms:select1>
+													</div>
+													<div>
+														<xforms:select1 ref="template/license">
+															<xforms:label>License</xforms:label>
+															<xforms:alert>Required</xforms:alert>
+															<xforms:item>
+																<xforms:label>Select License...</xforms:label>
+																<xforms:value></xforms:value>
+															</xforms:item>
+															<xforms:itemset nodeset="instance('licenseselect-template')//license">
+																<xforms:label ref="."></xforms:label>
+																<xforms:value ref="@href"></xforms:value>
+															</xforms:itemset>
+														</xforms:select1>
+													</div>
 													<h4>URLS</h4>
 													<div>
 														<xforms:input ref="url">
 															<xforms:label>Public Site</xforms:label>
 															<xforms:alert>Required, must be a URL</xforms:alert>
+															<xforms:action ev:event="xforms-value-changed">
+																<xforms:var name="uri" select="."></xforms:var>
+																<xforms:setvalue ref="instance('config-template')/uri_space" value="concat($uri, 'id/')"></xforms:setvalue>
+															</xforms:action>
 														</xforms:input>
 													</div>
 													<div>
@@ -856,7 +909,7 @@
 								</xforms:group>
 								<xforms:group ref="instance('pagination-result')">
 									<xforms:group ref=".[count(//record) &gt; 0]">
-										<h3>List of Guides</h3>
+										<h3>List of Objects</h3>
 										<!-- pagination variables -->
 										<xforms:var name="numFound" select="number(instance('control-instance')/numFound)"></xforms:var>
 										<xforms:var name="page" select="number(instance('control-instance')/page)"></xforms:var>
@@ -1135,7 +1188,6 @@
 						<xforms:setvalue ref="instance('eXist-xquery')/exist:text" value="replace(instance('xqueries')/query[@id='get-objects'], 'START', '1')"></xforms:setvalue>
 						<xforms:send submission="xquery-pagination"></xforms:send>
 					</xforms:action>
-					
 				</xforms:action>
 			</fr:positive-choice>
 		</fr:alert-dialog>
