@@ -16,6 +16,8 @@
 						<xxforms:sequence select="." xxbl:scope="outer"/>
 					</xforms:var>
 					<xforms:action ev:event="xforms-enabled" ev:target="#observer">
+						<xforms:setvalue ref="instance('control-instance')/label"
+							value="concat(substring(upper-case($binding/@xlink:role), 1, 1), substring($binding/@xlink:role, 2), if($binding/local-name()='persname') then '--Personal' else '--Corporate')"/>
 						<xforms:action if="not(string($binding))">
 							<xforms:setvalue ref="instance('control-instance')/type" value="if ($binding/@xlink:role='mint') then 'nmo:Mint' else 'nmo:Region'"/>
 							<xforms:setvalue ref="instance('control-instance')/label" value="concat(substring(upper-case($binding/@xlink:role), 1, 1), substring($binding/@xlink:role, 2))"/>

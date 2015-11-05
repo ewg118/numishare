@@ -21,7 +21,7 @@
 							<div>
 								<xforms:input ref="@standardDate">
 									<xforms:label>Date - Standard</xforms:label>
-									<xforms:alert>Required; must meet ISO specification</xforms:alert>
+									<xforms:alert>Required; must meet XML schema specification</xforms:alert>
 									<xforms:action ev:event="xforms-value-changed">
 										<xforms:action if="substring(., 1, 1) = '-'">
 											<xforms:var name="year" select="abs(number(tokenize(., '-')[2]))"/>
