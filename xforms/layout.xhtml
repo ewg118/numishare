@@ -16,6 +16,7 @@
 		<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" />
 		<script type="text/javascript" src="http://netdna.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 		<link rel="stylesheet" href="/apps/numishare/xforms/css/xforms.css" />
+		
 		<xforms:model>
 			<!-- exist URL is stored in an XML file -->
 			<xforms:instance id="exist-config">
@@ -31,6 +32,7 @@
 						<hb></hb>
 					</display>
 					<collection-name></collection-name>
+					<status/>
 				</controls>
 			</xforms:instance>
 
@@ -47,10 +49,6 @@
 
 			<xforms:instance id="config">
 				<config xmlns=""></config>
-			</xforms:instance>
-
-			<xforms:instance id="status">
-				<status></status>
 			</xforms:instance>
 
 			<!-- ************************* SUBMISSIONS ************************** -->
@@ -78,7 +76,7 @@
 			<xforms:submission id="save-config" ref="instance('config')" action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/config.xml" method="put" replace="none"
 				xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Error Saving Config.</xforms:message>
-				<xforms:setvalue ref="instance('status')" ev:event="xforms-submit-done">Numishare configuration saved.</xforms:setvalue>
+				<xforms:setvalue ref="instance('control-instance')/status" ev:event="xforms-submit-done">Numishare configuration saved.</xforms:setvalue>
 			</xforms:submission>
 
 			<!-- ********** XFORMS-MODEL-CONSTRUCT-DONE ********** -->
@@ -95,22 +93,25 @@
 	</head>
 	<body>
 		<xforms:var name="display_path">../../</xforms:var>
+		<xi:include href="header.xml"></xi:include>
 		<div class="container-fluid">
 			<div class="row">
-				<div class="col-md-12">
-					<xi:include href="header.xml"></xi:include>
+				<div class="col-md-12">						
 					<div id="form">
-						<xforms:group ref="instance('status')/text()">
-							<div class="success">
-								<xforms:output ref="instance('status')"></xforms:output>
+						<xforms:group ref="instance('control-instance')/status/text()">
+							<div class="bg-info alert-box">
+								<p><span class="glyphicon glyphicon-info-sign"></span>
+									<strong>Status:</strong>
+									<xforms:output ref="instance('control-instance')/status"></xforms:output>
+								</p>
 							</div>
 						</xforms:group>
 						<p>
-							<a href="../">&lt; Return</a>
+							<a href="{$display_path}"><span class="glyphicon glyphicon-arrow-left"></span> Return</a>
 						</p>
 						<div class="submission">
-							<xforms:trigger ref="instance('control-instance')/save-trigger" appearance="minimal">
-								<xforms:label class="file_control"><span class="glyphicon glyphicon-floppy-disk"></span> Save</xforms:label>
+							<xforms:trigger appearance="minimal">
+								<xforms:label><span class="glyphicon glyphicon-floppy-disk"></span> Save</xforms:label>
 								<xforms:send ev:event="DOMActivate" submission="save-config"></xforms:send>
 							</xforms:trigger>
 						</div>
@@ -124,18 +125,16 @@
 					<p>Select a page layout from the following four choices. Note that these layouts apply to physical--not conceptual--record types.</p>
 				</div>
 				<div class="col-md-3">
-					<div class="layout-image-container">
-						<div class="layout-image ui-corner-all">
-							<xforms:trigger appearance="minimal">
-								<xforms:label>
-									<img src="/apps/numishare/xforms/images/alignment_display_vl.png" />
-								</xforms:label>
-								<xforms:action ev:event="DOMActivate">
-									<!--<xforms:setvalue xxforms:iterate="instance('control-instance')/display/*" value="''"/>-->
-									<xforms:setvalue ref="instance('control-instance')/display/vl">true</xforms:setvalue>
-								</xforms:action>
-							</xforms:trigger>
-						</div>
+					<div class="highlight text-center">
+						<xforms:trigger appearance="minimal">
+							<xforms:label>
+								<img src="/apps/numishare/xforms/images/alignment_display_vl.png" />
+							</xforms:label>
+							<xforms:action ev:event="DOMActivate">
+								<!--<xforms:setvalue xxforms:iterate="instance('control-instance')/display/*" value="''"/>-->
+								<xforms:setvalue ref="instance('control-instance')/display/vl">true</xforms:setvalue>
+							</xforms:action>
+						</xforms:trigger>
 						<radiogroup>
 							<xforms:select1 ref="instance('control-instance')/display/vl" appearance="full">
 								<xforms:item>
@@ -156,18 +155,16 @@
 					</div>
 				</div>
 				<div class="col-md-3">
-					<div class="layout-image-container">
-						<div class="layout-image ui-corner-all">
-							<xforms:trigger appearance="minimal">
-								<xforms:label>
-									<img src="/apps/numishare/xforms/images/alignment_display_vr.png" />
-								</xforms:label>
-								<xforms:action ev:event="DOMActivate">
-									<!--<xforms:setvalue xxforms:iterate="instance('control-instance')/display/*" value="''"/>-->
-									<xforms:setvalue ref="instance('control-instance')/display/vr">true</xforms:setvalue>
-								</xforms:action>
-							</xforms:trigger>
-						</div>
+					<div class="highlight text-center">
+						<xforms:trigger appearance="minimal">
+							<xforms:label>
+								<img src="/apps/numishare/xforms/images/alignment_display_vr.png" />
+							</xforms:label>
+							<xforms:action ev:event="DOMActivate">
+								<!--<xforms:setvalue xxforms:iterate="instance('control-instance')/display/*" value="''"/>-->
+								<xforms:setvalue ref="instance('control-instance')/display/vr">true</xforms:setvalue>
+							</xforms:action>
+						</xforms:trigger>
 						<radiogroup>
 							<xforms:select1 ref="instance('control-instance')/display/vr" appearance="full">
 								<xforms:item>
@@ -186,18 +183,16 @@
 					</div>
 				</div>
 				<div class="col-md-3">
-					<div class="layout-image-container">
-						<div class="layout-image ui-corner-all">
-							<xforms:trigger appearance="minimal">
-								<xforms:label>
-									<img src="/apps/numishare/xforms/images/alignment_display_ht.png" />
-								</xforms:label>
-								<xforms:action ev:event="DOMActivate">
-									<!--<xforms:setvalue xxforms:iterate="instance('control-instance')/display/*" value="''"/>-->
-									<xforms:setvalue ref="instance('control-instance')/display/ht">true</xforms:setvalue>
-								</xforms:action>
-							</xforms:trigger>
-						</div>
+					<div class="highlight text-center">
+						<xforms:trigger appearance="minimal">
+							<xforms:label>
+								<img src="/apps/numishare/xforms/images/alignment_display_ht.png" />
+							</xforms:label>
+							<xforms:action ev:event="DOMActivate">
+								<!--<xforms:setvalue xxforms:iterate="instance('control-instance')/display/*" value="''"/>-->
+								<xforms:setvalue ref="instance('control-instance')/display/ht">true</xforms:setvalue>
+							</xforms:action>
+						</xforms:trigger>
 						<radiogroup>
 							<xforms:select1 ref="instance('control-instance')/display/ht" appearance="full">
 								<xforms:item>
@@ -216,18 +211,16 @@
 					</div>
 				</div>
 				<div class="col-md-3">
-					<div class="layout-image-container">
-						<div class="layout-image ui-corner-all">
-							<xforms:trigger appearance="minimal">
-								<xforms:label>
-									<img src="/apps/numishare/xforms/images/alignment_display_hb.png" />
-								</xforms:label>
-								<xforms:action ev:event="DOMActivate">
-									<!--<xforms:setvalue xxforms:iterate="instance('control-instance')/display/*" value="''"/>-->
-									<xforms:setvalue ref="instance('control-instance')/display/hb">true</xforms:setvalue>
-								</xforms:action>
-							</xforms:trigger>
-						</div>
+					<div class="highlight text-center">
+						<xforms:trigger appearance="minimal">
+							<xforms:label>
+								<img src="/apps/numishare/xforms/images/alignment_display_hb.png" />
+							</xforms:label>
+							<xforms:action ev:event="DOMActivate">
+								<!--<xforms:setvalue xxforms:iterate="instance('control-instance')/display/*" value="''"/>-->
+								<xforms:setvalue ref="instance('control-instance')/display/hb">true</xforms:setvalue>
+							</xforms:action>
+						</xforms:trigger>
 						<radiogroup>
 							<xforms:select1 ref="instance('control-instance')/display/hb" appearance="full">
 								<xforms:item>

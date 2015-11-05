@@ -82,6 +82,7 @@
 						</maintenanceHistory>
 						<rightsStmt>
 							<copyrightHolder></copyrightHolder>
+							<license xlink:type="simple" xlink:href=""/>
 						</rightsStmt>
 						<semanticDeclaration>
 							<prefix>nmo</prefix>
@@ -121,6 +122,7 @@
 					<publicationStatus></publicationStatus>
 					<status></status>
 					<broader_query></broader_query>
+					<publication_list/>
 				</controls>
 			</xforms:instance>
 			<!-- collections/authentication instances -->
@@ -443,7 +445,7 @@
 						</xforms:bind>
 					</xforms:bind>
 					<xforms:bind nodeset="nuds:rightsStmt">
-						<xforms:bind nodeset="nuds:copyrightHolder" required="true()"></xforms:bind>
+						<xforms:bind nodeset="nuds:copyrightHolder" required="true()"></xforms:bind>						
 					</xforms:bind>
 				</xforms:bind>
 				<xforms:bind nodeset="nuds:descMeta">
@@ -596,7 +598,15 @@
 				action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/objects/{instance('control-instance')/solr-id}.xml"
 				xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}" replace="instance" instance="parent-type">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Error loading parent type.</xforms:message>
-				<xforms:send submission="to-solr" ev:event="xforms-submit-done" if="instance('parent-type')/nuds:control/nuds:publicationStatus='approved'"></xforms:send>
+				<!-- index parent type into Solr if it's approved, but if it's an approvedSubtype, iterate through parent-type process -->
+				<xforms:action ev:event="xforms-submit-done">
+					<xforms:send submission="to-solr" if="instance('parent-type')/nuds:control/nuds:publicationStatus='approved'"></xforms:send>
+					<xforms:action if="instance('parent-type')/nuds:control/nuds:publicationStatus='approvedSubtype'">
+						<xforms:setvalue ref="instance('control-instance')/solr-id" value="instance('parent-type')/nuds:control/nuds:otherRecordId[@semantic='skos:broader']"></xforms:setvalue>
+						<!-- load object into temp instance -->
+						<xforms:send submission="load-parent-type"></xforms:send>
+					</xforms:action>
+				</xforms:action>				
 			</xforms:submission>
 			
 			<!-- Save File -->			
@@ -671,6 +681,7 @@
 						<xforms:setvalue ref="instance('object')/nuds:descMeta/nuds:title/@xml:lang" value="instance('config')/template/language"></xforms:setvalue>
 						<xforms:setvalue ref="instance('object')/nuds:control/nuds:maintenanceAgency/nuds:agencyName" value="instance('config')/template/agencyName"></xforms:setvalue>
 						<xforms:setvalue ref="instance('object')/nuds:control/nuds:rightsStmt/nuds:copyrightHolder" value="instance('config')/template/copyrightHolder"></xforms:setvalue>
+						<xforms:setvalue ref="instance('object')/nuds:control/nuds:rightsStmt/nuds:license/@xlink:href" value="instance('config')/template/license"></xforms:setvalue>
 						<!-- populate adminDesc -->
 						<xforms:action if="string(instance('config')/template/collection)">
 							<xforms:insert context="instance('object')/nuds:descMeta/nuds:adminDesc" origin="instance('collection-template')"></xforms:insert>
@@ -770,13 +781,14 @@
 	</head>
 	<body>
 		<xforms:var name="display_path">../../</xforms:var>
+		<xi:include href="header.xml"></xi:include>
 		<div class="container-fluid">
 			<div class="row">
 				<div class="col-md-12">
-					<xi:include href="header.xml"></xi:include>
+					
 					<div id="form">
 						<xforms:group ref="instance('control-instance')/status/text()">
-							<div class="bg-info alert">
+							<div class="bg-info alert-box">
 								<p><span class="glyphicon glyphicon-info-sign"></span>
 									<strong>Status:</strong>
 									<xforms:output ref="instance('control-instance')/status"></xforms:output>
@@ -2142,11 +2154,13 @@
 									<fr:label>Record Metadata</fr:label>
 									<numishare:control></numishare:control>
 								</fr:tab>
-								<fr:tab>
+								<!--<fr:tab>
 									<fr:label>Inspector</fr:label>
 									<fr:xforms-inspector></fr:xforms-inspector>
-								</fr:tab>
+								</fr:tab>-->
 							</fr:tabview>
+							
+							<!--**************************************** DIALOGS **********************************-->
 							<fr:alert-dialog id="subtype-dialog">
 								<fr:label>Remove Parent Type</fr:label>
 								<fr:message>Removing the subtype designation for this record will eliminate the link to the parent type. Proceed?</fr:message>

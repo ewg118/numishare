@@ -27,6 +27,13 @@
 	border-radius: 4px;
 	border: 1px solid gray;
 }
+.highlight{
+	background-color:#F8F8F8;
+	border:1px solid #E7E7E7;
+	border-radius:4px;
+	margin-bottom:14px;
+	padding:9px 14px;
+}
 /*
   ****************************************
   ORBEON XFORM SPECIFIC STYLE
@@ -101,18 +108,4 @@ h1, h2, h3, h4, h5, h6 {
 .pagingBtn:hover {
 	background-color:#DDDDDD;
 	text-decoration:underline;
-}
-/*
-  ****************************************
-  LAYOUT FORM
-  ****************************************
- */
-.layout-image-container {
-	margin:80px;
-	text-align:center;
-}
-.layout-image {
-	background-color:silver;
-	border:1px solid gray;
-	padding:10px 0;
 }

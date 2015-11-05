@@ -171,7 +171,7 @@
 				<xi:include href="instances/languages.xml"></xi:include>
 			</xforms:instance>
 
-			<xforms:instance id="licenseselect-template">
+			<xforms:instance id="license-list">
 				<licenses xmlns="">
 					<license href="http://opendatacommons.org/licenses/odbl/">Open Data Commons Open Database License (ODbL)</license>
 					<license href="http://opendatacommons.org/licenses/by/">Open Data Commons Attribution License</license>
@@ -627,6 +627,9 @@
 	</head>
 	<body>
 		<xforms:var name="display_path">./</xforms:var>
+		<xforms:group ref=".[not(instance('control-instance')/interface = 'unauthorized-user')]">
+			<xi:include href="header.xml"></xi:include>
+		</xforms:group>		
 		<div class="container-fluid">
 			<div class="row">
 				<div class="col-md-12">
@@ -636,8 +639,7 @@
 							<p>You are seeing this interface either because authentication has not been enabled for the Numishare administrative panel or there is no matching eXist-db collection for
 								your role. If it is the latter case, please log in as the numishare-admin role and create a new collection for the associated Tomcat role.</p>
 						</xforms:case>
-						<xforms:case id="numishare-admin">
-							<xi:include href="header.xml"></xi:include>
+						<xforms:case id="numishare-admin">							
 							<div id="form">
 								<xforms:group ref=".[count(distinct-values(instance('collections-list')/collection/@name)) != count(instance('collections-list')/collection/@name)]">
 									<div class="bg-danger alert-box">
@@ -781,7 +783,7 @@
 																<xforms:label>Select License...</xforms:label>
 																<xforms:value></xforms:value>
 															</xforms:item>
-															<xforms:itemset nodeset="instance('licenseselect-template')//license">
+															<xforms:itemset nodeset="instance('license-list')//license">
 																<xforms:label ref="."></xforms:label>
 																<xforms:value ref="@href"></xforms:value>
 															</xforms:itemset>
@@ -834,8 +836,7 @@
 								</xforms:switch>
 							</div>
 						</xforms:case>
-						<xforms:case id="numishare-editor">
-							<xi:include href="header.xml"></xi:include>
+						<xforms:case id="numishare-editor">							
 							<div id="form">
 								<xforms:group ref="instance('control-instance')/status/text()">
 									<div class="success">

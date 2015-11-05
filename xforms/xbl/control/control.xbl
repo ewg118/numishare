@@ -39,7 +39,7 @@
 
 							</xforms:select1>
 						</div>
-						<xforms:repeat nodeset="nuds:otherRecordId">
+						<!--<xforms:repeat nodeset="nuds:otherRecordId">
 							<div>
 								<xforms:input ref=".">
 									<xforms:label>Other Record ID</xforms:label>
@@ -52,7 +52,7 @@
 									</xforms:label>
 								</xforms:trigger>
 							</div>
-						</xforms:repeat>
+						</xforms:repeat>-->
 						<xforms:group ref="nuds:maintenanceAgency">
 							<div class="section">
 								<h3>Maintenance Agency</h3>
@@ -199,10 +199,18 @@
 									</xforms:input>
 								</div>
 								<div>
-									<xforms:input ref="nuds:license">
+									<xforms:select1 ref="nuds:license/@xlink:href">
 										<xforms:label>License</xforms:label>
 										<xforms:alert>Required</xforms:alert>
-									</xforms:input>
+										<xforms:item>
+											<xforms:label>Select License...</xforms:label>
+											<xforms:value></xforms:value>
+										</xforms:item>
+										<xforms:itemset nodeset="instance('license-list')//license">
+											<xforms:label ref="."></xforms:label>
+											<xforms:value ref="@href"></xforms:value>
+										</xforms:itemset>
+									</xforms:select1>									
 								</div>
 							</div>
 						</xforms:group>
@@ -224,6 +232,14 @@
 						</xforms:instance>
 						<xforms:instance id="otherAgencyCode-template" xxforms:exclude-result-prefixes="#all">
 							<otherAgencyCode/>
+						</xforms:instance>
+						
+						<xforms:instance id="license-list">
+							<licenses xmlns="">
+								<license href="http://opendatacommons.org/licenses/odbl/">Open Data Commons Open Database License (ODbL)</license>
+								<license href="http://opendatacommons.org/licenses/by/">Open Data Commons Attribution License</license>
+								<license href="http://opendatacommons.org/licenses/pddl/">Open Data Commons Public Domain Dedication and License (PDDL)</license>
+							</licenses>
 						</xforms:instance>
 
 						<!-- select instances -->
