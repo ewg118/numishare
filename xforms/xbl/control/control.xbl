@@ -16,14 +16,7 @@
 					</xforms:var>
 					<xforms:var name="display_path">../../</xforms:var>
 					<xforms:group ref="$binding">
-						<h2>Electronic Record Metadata: control</h2>
-						<xforms:trigger appearance="minimal">
-							<xforms:label>
-								<span class="glyphicon glyphicon-plus"/>Other Record ID</xforms:label>
-							<xforms:action ev:event="DOMActivate">
-								<xforms:insert context="." nodeset="nuds:recordId" position="after" origin="instance('otherRecordId-template')"/>
-							</xforms:action>
-						</xforms:trigger>
+						<h2>Electronic Record Metadata: control</h2>						
 						<div>
 							<xforms:select1 ref="nuds:maintenanceStatus">
 								<xforms:label>Maintenance Status</xforms:label>
@@ -39,20 +32,6 @@
 
 							</xforms:select1>
 						</div>
-						<!--<xforms:repeat nodeset="nuds:otherRecordId">
-							<div>
-								<xforms:input ref=".">
-									<xforms:label>Other Record ID</xforms:label>
-									<xforms:alert>Must be a valid URI</xforms:alert>
-								</xforms:input>
-								<xforms:trigger appearance="minimal">
-									<xforms:delete ev:event="DOMActivate" nodeset="."/>
-									<xforms:label>
-										<span class="glyphicon glyphicon-remove"/>
-									</xforms:label>
-								</xforms:trigger>
-							</div>
-						</xforms:repeat>-->
 						<xforms:group ref="nuds:maintenanceAgency">
 							<div class="section">
 								<h3>Maintenance Agency</h3>
