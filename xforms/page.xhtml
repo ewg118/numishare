@@ -39,10 +39,8 @@
 			</xforms:instance>
 
 			<!-- collections/authentication instances -->
-			<xforms:instance id="collections-list">
-				<collections xmlns="">
-					<collection roll="admin" name="numishare"/>
-				</collections>
+			<xforms:instance id="collections-list" xxforms:exclude-result-prefixes="#all">
+				<collections xmlns=""></collections>
 			</xforms:instance>
 
 			<xforms:instance id="config">
@@ -56,21 +54,8 @@
 			<xforms:instance id="identifier">
 				<id xmlns=""/>
 			</xforms:instance>
-
-			<xforms:action ev:event="xforms-ready">
-				<xforms:var name="mode" select="xxforms:get-request-parameter('mode')"/>
-				<xforms:action if="$mode = 'edit'">
-					<xforms:setvalue ref="instance('identifier')" value="xxforms:get-request-parameter('id')"/>
-					<xforms:toggle case="edit-page" ev:event="xforms-model-construct-done"/>
-				</xforms:action>
-			</xforms:action>
-
-			<xforms:action ev:event="xforms-model-construct-done">
-				<xforms:insert context="instance('control-instance')" nodeset="collection-name" position="after"
-					origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/get-authentication.xpl', 'dump', instance('dump'), 'data')"/>
-				<xforms:send submission="load-collections"/>
-			</xforms:action>
-
+			
+			<!-- ********** BINDINGS ********** -->
 			<xforms:bind nodeset="instance('page')">
 				<xforms:bind nodeset="@stub" required="true()"/>
 				<xforms:bind nodeset="short-title" required="true">
@@ -90,6 +75,7 @@
 				</xforms:bind>
 			</xforms:bind>
 
+			<!-- **********SUBMISSIONS ********** -->
 			<xforms:submission id="load-collections" serialization="none" method="get" action="{instance('exist-config')/url}collections-list.xml" replace="instance" instance="collections-list"
 				xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}">
 				<!-- if the config loads successfully, set the collection names based on authentication -->
@@ -122,6 +108,7 @@
 				<xforms:message ev:event="xforms-submit-error" level="modal">Save Error!</xforms:message>
 			</xforms:submission>
 
+			<!-- ********** OBSERVERS ********** -->
 			<xforms:action ev:event="xforms-value-changed" ev:observer="page-title">
 				<xforms:setvalue ref="instance('page')/@stub" value="replace(instance('page')/title, ' ', '-')"/>
 				<xforms:setvalue ref="instance('page')/@stub" value="encode-for-uri(lower-case(instance('page')/@stub))"/>
@@ -130,6 +117,29 @@
 				<xforms:setvalue ref="instance('config')//page[@id=instance('identifier')]/@stub" value="replace(instance('config')//page[@id=instance('identifier')]/title, ' ', '-')"/>
 				<xforms:setvalue ref="instance('config')//page[@id=instance('identifier')]/@stub" value="encode-for-uri(lower-case(instance('config')//page[@id=instance('identifier')]/@stub))"/>
 			</xforms:action>
+			
+			<!-- ********** XFORMS-READY ********** -->
+			<xforms:action ev:event="xforms-ready">
+				<xforms:var name="mode" select="xxforms:get-request-parameter('mode')"/>
+				<xforms:action if="$mode = 'edit'">
+					<xforms:setvalue ref="instance('identifier')" value="xxforms:get-request-parameter('id')"/>
+					<xforms:toggle case="edit-page" ev:event="xforms-model-construct-done"/>
+				</xforms:action>
+			</xforms:action>
+			
+			<!-- ********** XFORMS-MODEL-CONSTRUCT-DONE ********** -->
+			<xforms:action ev:event="xforms-model-construct-done">
+				<xforms:action if="string(xxforms:get-session-attribute('collection-name'))">
+					<xforms:setvalue ref="instance('control-instance')/collection-name" value="xxforms:get-session-attribute('collection-name')"/>
+					<xforms:send submission="load-config"></xforms:send>
+				</xforms:action>
+				<xforms:action if="not(string(xxforms:get-session-attribute('collection-name')))">
+					<xforms:insert context="instance('control-instance')" nodeset="collection-name" position="after"
+						origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/get-authentication.xpl', 'dump', instance('dump'), 'data')"></xforms:insert>
+					<xforms:send submission="load-collections"></xforms:send>
+				</xforms:action>
+			</xforms:action>
+			
 		</xforms:model>
 
 	</head>

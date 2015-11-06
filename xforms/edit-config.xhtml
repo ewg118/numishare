@@ -215,19 +215,25 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 
 			<!-- ********** XFORMS-MODEL-CONSTRUCT-DONE ********** -->
 			<xforms:action ev:event="xforms-model-construct-done">
-				<xforms:insert context="instance('control-instance')" nodeset="collection-name" position="after"
-					origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/get-authentication.xpl', 'dump', instance('dump'), 'data')"></xforms:insert>
-				<xforms:send submission="load-collections"></xforms:send>
+				<xforms:action if="string(xxforms:get-session-attribute('collection-name'))">
+					<xforms:setvalue ref="instance('control-instance')/collection-name" value="xxforms:get-session-attribute('collection-name')"/>
+					<xforms:send submission="load-config"></xforms:send>
+				</xforms:action>
+				<xforms:action if="not(string(xxforms:get-session-attribute('collection-name')))">
+					<xforms:insert context="instance('control-instance')" nodeset="collection-name" position="after"
+						origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/get-authentication.xpl', 'dump', instance('dump'), 'data')"></xforms:insert>
+					<xforms:send submission="load-collections"></xforms:send>
+				</xforms:action>
 			</xforms:action>
 		</xforms:model>
 	</head>
 
 	<body>
 		<xforms:var name="display_path">../../</xforms:var>
+		<xi:include href="header.xml"></xi:include>
 		<div class="container-fluid">
 			<div class="row">
-				<div class="col-md-12">
-					<xi:include href="header.xml"></xi:include>
+				<div class="col-md-12">					
 					<xforms:group ref="instance('control-instance')/status/text()">
 						<div class="bg-info alert-box">
 							<p><span class="glyphicon glyphicon-info-sign"></span>
@@ -236,7 +242,10 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 							</p>
 						</div>
 					</xforms:group>
-					<div class="submission">
+					<p>
+						<a href="{$display_path}"><span class="glyphicon glyphicon-arrow-left"></span> Return</a>
+					</p>
+					<div class="submission text-center">
 						<xforms:trigger appearance="minimal">
 							<xforms:label><span class="glyphicon glyphicon-floppy-disk"></span> Save</xforms:label>
 							<xforms:send ev:event="DOMActivate" submission="save-config"></xforms:send>

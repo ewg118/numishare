@@ -707,13 +707,6 @@
 				xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}">
 				<!-- if the config loads successfully, set the collection names based on authentication -->
 				<xforms:action ev:event="xforms-submit-done">
-					<!-- otherwise if the role is numishare-admin, set the collection name from a request parameter -->					
-					<xforms:action if="xxforms:is-user-in-role('numishare-admin')">
-						<xforms:action if="string(xxforms:get-request-parameter('collection'))">
-							<xforms:setvalue ref="instance('control-instance')/collection-name" value="xxforms:get-request-parameter('collection')"></xforms:setvalue>
-							<xforms:send submission="load-config"></xforms:send>
-						</xforms:action>
-					</xforms:action>
 					<!-- by default set the collection-name from the security role -->
 					<xforms:action if="not(xxforms:is-user-in-role('numishare-admin'))">
 						<xforms:action if="string(instance('collections-list')/collection[@role=instance('control-instance')/request-security/role]/@name)">
@@ -741,9 +734,17 @@
 			
 			<!-- ********** XFORMS-MODEL-CONSTRUCT-DONE ********** -->
 			<xforms:action ev:event="xforms-model-construct-done">
-				<xforms:insert context="instance('control-instance')" nodeset="collection-name" position="after"
-					origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/get-authentication.xpl', 'dump', instance('dump'), 'data')"></xforms:insert>
-				<xforms:send submission="load-collections"></xforms:send>
+				<!-- if there's a collection-name session attribute carried over from numishare-admin, then use it to set the collection-name -->
+				<xforms:action if="string(xxforms:get-session-attribute('collection-name'))">
+					<xforms:setvalue ref="instance('control-instance')/collection-name" value="xxforms:get-session-attribute('collection-name')"/>
+					<xforms:send submission="load-config"></xforms:send>
+				</xforms:action>
+				<xforms:action if="not(string(xxforms:get-session-attribute('collection-name')))">
+					<xforms:insert context="instance('control-instance')" nodeset="collection-name" position="after"
+						origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/get-authentication.xpl', 'dump', instance('dump'), 'data')"></xforms:insert>
+					<xforms:send submission="load-collections"></xforms:send>
+				</xforms:action>
+				
 				<!-- get subject localTypes -->
 				<!--<xforms:setvalue ref="instance('eXist-xquery')/exist:text" value="instance('xqueries')/query[@id='localTypes']"></xforms:setvalue>
 				<xforms:send submission="xquery-collection"></xforms:send>-->
@@ -787,7 +788,7 @@
 				<div class="col-md-12">
 					
 					<div id="form">
-						<xforms:group ref="instance('control-instance')/status/text()">
+						<xforms:group ref=".[instance('control-instance')/status/text()]">
 							<div class="bg-info alert-box">
 								<p><span class="glyphicon glyphicon-info-sign"></span>
 									<strong>Status:</strong>
@@ -799,20 +800,18 @@
 							<a href="{$display_path}"><span class="glyphicon glyphicon-arrow-left"></span> Return</a>
 						</p>
 						<div class="submission text-center">
-							<h4>
-								<xforms:trigger appearance="minimal">
-									<xforms:action ev:event="DOMActivate">
-										<!-- set value of latest maintenanceEvent -->
-										<xforms:setvalue ref="instance('object')/nuds:control/nuds:maintenanceHistory/nuds:maintenanceEvent[last()]/nuds:eventDateTime/@standardDateTime"
-											value="current-dateTime()"></xforms:setvalue>
-										<!-- set maintenanceStatus to 'revised', if it is both 'new' and file was loaded from eXist, i.e., not newly created -->
-										<xforms:setvalue ref="instance('object')/nuds:control/nuds:maintenanceStatus"
-											if="string(instance('control-instance')/id) and instance('object')/nuds:control/nuds:maintenanceStatus = 'new'">revised</xforms:setvalue>
-										<xforms:send submission="save-object"></xforms:send>
-									</xforms:action>
-									<xforms:label><span class="glyphicon glyphicon-floppy-disk"></span>Save</xforms:label>
-								</xforms:trigger>
-							</h4>
+							<xforms:trigger appearance="minimal">
+								<xforms:action ev:event="DOMActivate">
+									<!-- set value of latest maintenanceEvent -->
+									<xforms:setvalue ref="instance('object')/nuds:control/nuds:maintenanceHistory/nuds:maintenanceEvent[last()]/nuds:eventDateTime/@standardDateTime"
+										value="current-dateTime()"></xforms:setvalue>
+									<!-- set maintenanceStatus to 'revised', if it is both 'new' and file was loaded from eXist, i.e., not newly created -->
+									<xforms:setvalue ref="instance('object')/nuds:control/nuds:maintenanceStatus"
+										if="string(instance('control-instance')/id) and instance('object')/nuds:control/nuds:maintenanceStatus = 'new'">revised</xforms:setvalue>
+									<xforms:send submission="save-object"></xforms:send>
+								</xforms:action>
+								<xforms:label><span class="glyphicon glyphicon-floppy-disk"></span>Save</xforms:label>
+							</xforms:trigger>
 						</div>
 						<h1>Create/Edit Coin</h1>
 						<xforms:group ref="instance('object')">
@@ -2154,10 +2153,10 @@
 									<fr:label>Record Metadata</fr:label>
 									<numishare:control></numishare:control>
 								</fr:tab>
-								<!--<fr:tab>
+								<fr:tab>
 									<fr:label>Inspector</fr:label>
 									<fr:xforms-inspector></fr:xforms-inspector>
-								</fr:tab>-->
+								</fr:tab>
 							</fr:tabview>
 							
 							<!--**************************************** DIALOGS **********************************-->

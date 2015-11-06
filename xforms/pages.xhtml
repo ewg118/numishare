@@ -36,10 +36,8 @@
 			</xforms:instance>
 
 			<!-- collections/authentication instances -->
-			<xforms:instance id="collections-list">
-				<collections xmlns="">
-					<collection roll="admin" name="numishare"/>
-				</collections>
+			<xforms:instance id="collections-list" xxforms:exclude-result-prefixes="#all">
+				<collections xmlns=""></collections>
 			</xforms:instance>
 			<xforms:instance id="status">
 				<status/>
@@ -51,6 +49,7 @@
 				<config xmlns=""/>
 			</xforms:instance>
 
+			<!-- ********** BINDINGS ********** -->
 			<xforms:bind nodeset="instance('config')">
 				<xforms:bind nodeset="pages">
 					<xforms:bind nodeset="compare/@enabled" type="xs:boolean"/>
@@ -58,7 +57,7 @@
 				</xforms:bind>
 			</xforms:bind>
 
-			<!-- submissions -->
+			<!-- ********** SUBMISSIONS ********** -->
 			<xforms:submission id="load-collections" serialization="none" method="get" action="{instance('exist-config')/url}collections-list.xml" replace="instance" instance="collections-list"
 				xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}">
 				<!-- if the config loads successfully, set the collection names based on authentication -->
@@ -87,19 +86,26 @@
 				</xforms:action>
 			</xforms:submission>
 
-			<!-- Save File -->
+			<!-- Save Config -->
 			<xforms:submission id="save-config" ref="instance('config')" xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}"
 				action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/config.xml" method="put" replace="none">
 				<xforms:setvalue ev:event="xforms-submit-done" ref="instance('status')">Numishare configuration saved.</xforms:setvalue>
 				<xforms:message ev:event="xforms-submit-error" level="modal">Error saving Numishare configuration file.</xforms:message>
 			</xforms:submission>
 
+			<!-- ********** XFORMS-MODEL-CONSTRUCT-DONE ********** -->
 			<xforms:action ev:event="xforms-model-construct-done">
 				<!-- load page parameter into instance -->
 				<xforms:setvalue ref="instance('page-number')" value="xxforms:get-request-parameter('page')"/>
-				<xforms:insert context="instance('control-instance')" nodeset="collection-name" position="after"
-					origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/get-authentication.xpl', 'dump', instance('dump'), 'data')"/>
-				<xforms:send submission="load-collections"/>
+				<xforms:action if="string(xxforms:get-session-attribute('collection-name'))">
+					<xforms:setvalue ref="instance('control-instance')/collection-name" value="xxforms:get-session-attribute('collection-name')"/>
+					<xforms:send submission="load-config"></xforms:send>
+				</xforms:action>
+				<xforms:action if="not(string(xxforms:get-session-attribute('collection-name')))">
+					<xforms:insert context="instance('control-instance')" nodeset="collection-name" position="after"
+						origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/get-authentication.xpl', 'dump', instance('dump'), 'data')"></xforms:insert>
+					<xforms:send submission="load-collections"></xforms:send>
+				</xforms:action>
 			</xforms:action>
 		</xforms:model>
 	</head>

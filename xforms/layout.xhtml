@@ -41,10 +41,8 @@
 			</xforms:instance>
 
 			<!-- collections/authentication instances -->
-			<xforms:instance id="collections-list">
-				<collections xmlns="">
-					<collection roll="admin" name="numishare"></collection>
-				</collections>
+			<xforms:instance id="collections-list" xxforms:exclude-result-prefixes="#all">
+				<collections xmlns=""></collections>
 			</xforms:instance>
 
 			<xforms:instance id="config">
@@ -81,9 +79,15 @@
 
 			<!-- ********** XFORMS-MODEL-CONSTRUCT-DONE ********** -->
 			<xforms:action ev:event="xforms-model-construct-done">
-				<xforms:insert context="instance('control-instance')" nodeset="collection-name" position="after"
-					origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/get-authentication.xpl', 'dump', instance('dump'), 'data')"></xforms:insert>
-				<xforms:send submission="load-collections"></xforms:send>
+				<xforms:action if="string(xxforms:get-session-attribute('collection-name'))">
+					<xforms:setvalue ref="instance('control-instance')/collection-name" value="xxforms:get-session-attribute('collection-name')"/>
+					<xforms:send submission="load-config"></xforms:send>
+				</xforms:action>
+				<xforms:action if="not(string(xxforms:get-session-attribute('collection-name')))">
+					<xforms:insert context="instance('control-instance')" nodeset="collection-name" position="after"
+						origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/get-authentication.xpl', 'dump', instance('dump'), 'data')"></xforms:insert>
+					<xforms:send submission="load-collections"></xforms:send>
+				</xforms:action>
 
 				<xforms:var name="display-layout"
 					select="concat(substring(instance('config')/theme/layouts/display/nuds/orientation, 1, 1), substring(instance('config')/theme/layouts/display/nuds/image_location, 1, 1))"></xforms:var>
