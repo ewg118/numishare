@@ -689,6 +689,12 @@
 							<xsl:when test="$segs[3] = 'sala(2)'">63</xsl:when>
 							<xsl:when test="$segs[3] = 'cg'">64</xsl:when>
 							<xsl:when test="$segs[3] = 'qu'">65</xsl:when>
+							<xsl:when test="$segs[3] = 'aur'">66</xsl:when>
+							<xsl:when test="$segs[3] = 'aur_seva'">67</xsl:when>
+							<xsl:when test="$segs[3] = 'seva'">68</xsl:when>
+							<xsl:when test="$segs[3] = 'tac'">69</xsl:when>
+							<xsl:when test="$segs[3] = 'fl'">70</xsl:when>
+							<xsl:when test="$segs[3] = 'intr'">71</xsl:when>
 						</xsl:choose>
 					</xsl:variable>
 					<xsl:variable name="num">
