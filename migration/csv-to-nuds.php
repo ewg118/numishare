@@ -178,8 +178,8 @@ function generate_nuds($row){
 	//geography
 	if (strlen($row['Nomisma URI for Mint']) > 0 || strlen($row['New Region URI']) > 0){
 		$xml .= '<geographic>';
-		if (strlen($row['Mint URI']) > 0){
-			$vals = explode('|', $row['Mint URI']);
+		if (strlen($row['Nomisma URI for Mint']) > 0){
+			$vals = explode('|', $row['Nomisma URI for Mint']);
 			foreach ($vals as $val){
 				if (substr($val, -1) == '?'){
 					$uri = substr($val, 0, -1);
@@ -621,6 +621,12 @@ function get_title($nudsid){
 			break;
 		case 'aur':
 			$auth = 'Aurelian';
+			break;
+		case 'aur_seva':
+			$auth = 'Aurelian and Severina';
+			break;
+		case 'seva':
+			$auth = 'Severina';
 			break;
 		case 'tac':
 			$auth = 'Tacitus';
