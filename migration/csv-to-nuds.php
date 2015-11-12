@@ -1,6 +1,6 @@
 <?php 
 
-$data = generate_json('/home/komet/ans_migration/ocre/18.csv');
+$data = generate_json('/home/komet/ans_migration/ocre/19.csv');
 $deities_array = generate_json('deities.csv');
 $nomismaUris = array();
 $errors = array();
@@ -148,7 +148,7 @@ function generate_nuds($row){
 	}
 	//authority
 	$xml .= '<authority>';
-	$vals = explode('|', $row['Authority URI']);
+	$vals = explode('|', $row['Nomisma URI for Authority']);
 	foreach ($vals as $val){
 		if (substr($val, -1) == '?'){
 			$uri = substr($val, 0, -1);
@@ -176,7 +176,7 @@ function generate_nuds($row){
 	$xml .= '</authority>';
 	
 	//geography
-	if (strlen($row['Mint URI']) > 0 || strlen($row['New Region URI']) > 0){
+	if (strlen($row['Nomisma URI for Mint']) > 0 || strlen($row['New Region URI']) > 0){
 		$xml .= '<geographic>';
 		if (strlen($row['Mint URI']) > 0){
 			$vals = explode('|', $row['Mint URI']);
@@ -340,6 +340,12 @@ function generate_nuds($row){
 			$symbols = explode('or', $row['Parent Mint Mark']);
 			foreach ($symbols as $symbol){
 				$xml .= '<symbol localType="mintMark">' . trim($symbol) . '</symbol>';
+			}
+		}
+		if (strlen($row['Officina Mark']) > 0){
+			$symbols = explode('or', $row['Officina Mark']);
+			foreach ($symbols as $symbol){
+				$xml .= '<symbol localType="officinaMark">' . trim($symbol) . '</symbol>';
 			}
 		}
 		$xml .= '</reverse>';
@@ -620,6 +626,18 @@ function get_title($nudsid){
 			break;
 		case 'qu':
 			$auth = 'Quintillus';
+			break;
+		case 'aur':
+			$auth = 'Aurelian';
+			break;
+		case 'tac':
+			$auth = 'Tacitus';
+			break;
+		case 'fl':
+			$auth = 'Florian';
+			break;
+		case 'intr':
+			$auth = 'Anonymous';
 			break;
 	}
 	
