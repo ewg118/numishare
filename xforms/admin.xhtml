@@ -377,8 +377,7 @@
 
 			<xforms:bind nodeset="instance('pagination-result')">
 				<xforms:bind nodeset="//record">
-					<xforms:bind nodeset="published" type="xs:boolean" id="publishable" readonly="../publicationStatus = 'approvedSubtype'"></xforms:bind>
-					<!--<xforms:bind nodeset="publicationStatus" id="publishable" readonly=". = 'approvedSubtype'"/>-->
+					<xforms:bind nodeset="published" type="xs:boolean" readonly="../publicationStatus = 'approvedSubtype'"></xforms:bind>
 				</xforms:bind>
 			</xforms:bind>
 

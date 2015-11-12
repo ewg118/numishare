@@ -6,12 +6,7 @@
 		<xsl:variable name="regularized_sort">
 			<xsl:value-of select="numishare:normalize_fields($sort_category, $lang)"/>
 		</xsl:variable>
-		<div class="row result-doc">
-			<xsl:if test="not($mode='compare') and //config/theme/layouts/*[name()=$pipeline]/image_location = 'left'">
-				<xsl:call-template name="result_image">
-					<xsl:with-param name="alignment">left</xsl:with-param>
-				</xsl:call-template>
-			</xsl:if>
+		<div class="row result-doc">			
 			<div class="col-md-12">
 				<h4>
 					<xsl:if test="$lang='ar'">
@@ -32,6 +27,11 @@
 					</xsl:choose>
 				</h4>
 			</div>
+			<xsl:if test="not($mode='compare')">
+				<xsl:call-template name="result_image">
+					<xsl:with-param name="alignment" select="//config/theme/layouts/*[name()=$pipeline]/image_location"></xsl:with-param>
+				</xsl:call-template>
+			</xsl:if>
 			<div>
 				<xsl:choose>
 					<xsl:when test="$mode='compare'">
@@ -292,11 +292,6 @@
 					</xsl:if>
 				</dl>
 			</div>
-			<xsl:if test="not($mode='compare') and //config/theme/layouts/*[name()=$pipeline]/image_location = 'right'">
-				<xsl:call-template name="result_image">
-					<xsl:with-param name="alignment">right</xsl:with-param>
-				</xsl:call-template>
-			</xsl:if>
 		</div>
 	</xsl:template>
 	<xsl:template match="lst[@name='facet_fields']">
@@ -538,7 +533,7 @@
 
 	<xsl:template name="result_image">
 		<xsl:param name="alignment"/>
-		<div class="col-md-5 col-lg-4 {$alignment}">
+		<div class="col-md-5 col-lg-4 {if ($alignment = 'right') then 'pull-right' else ''}">
 			<xsl:choose>
 				<xsl:when test="str[@name='recordType'] = 'physical'">
 					<xsl:if test="string(str[@name='thumbnail_obv'])">
@@ -561,6 +556,7 @@
 			</xsl:choose>
 		</div>
 	</xsl:template>
+	
 	<xsl:template name="remove_facets">
 		<div class="row">
 			<xsl:choose>

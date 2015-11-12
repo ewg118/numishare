@@ -1,0 +1,1109 @@
+<html xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:xxforms="http://orbeon.org/oxf/xml/xforms" xmlns:p="http://www.orbeon.com/oxf/pipeline" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:fr="http://orbeon.org/oxf/xml/form-runner"
+	xmlns:saxon="http://saxon.sf.net/" xmlns:numishare="https://github.com/ewg118/numishare" xmlns:res="http://www.w3.org/2005/sparql-results#">
+	<head>
+		<title>Numishare: Edit Numishare Settings</title>
+		<link rel="stylesheet" href="/fr/style/bootstrap/css/bootstrap.css" type="text/css" />
+		<link rel="stylesheet" href="/fr/style/form-runner-bootstrap-override.css" type="text/css" />
+		<link rel="shortcut icon" href="/ops/images/orbeon-icon-16.ico" />
+		<link rel="icon" href="/ops/images/orbeon-icon-16.png" type="image/png" />
+		<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" />
+		<script type="text/javascript" src="http://netdna.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+		<link rel="stylesheet" href="/apps/numishare/xforms/css/xforms.css" />
+
+		<xforms:model>
+			<!-- exist URL is stored in an XML file -->
+			<xforms:instance id="exist-config">
+				<xi:include href="../exist-config.xml"></xi:include>
+			</xforms:instance>
+
+			<!-- collections/authentication instances -->
+			<xforms:instance id="collections-list" xxforms:exclude-result-prefixes="#all">
+				<collections xmlns=""></collections>
+			</xforms:instance>
+
+			<xforms:instance id="config" xxforms:exclude-result-prefixes="#all">
+				<config xmlns=""></config>
+			</xforms:instance>
+
+			<xforms:instance id="status">
+				<status></status>
+			</xforms:instance>
+
+			<xforms:instance id="flickr-response">
+				<rsp xmlns=""></rsp>
+			</xforms:instance>
+
+			<xforms:instance id="control-instance" xxforms:exclude-result-prefixes="#all">
+				<control xmlns="">
+					<status/>
+					<api-key-accepted></api-key-accepted>
+					<save-trigger></save-trigger>
+					<collection-name></collection-name>
+					<version>0.55</version>
+					<sparql-valid>false</sparql-valid>
+					<type-series-valid>false</type-series-valid>
+					<solr-valid>false</solr-valid>
+					<display>
+						<vl>false</vl>
+						<vr>false</vr>
+						<ht>false</ht>
+						<hb>false</hb>
+					</display>
+				</control>
+			</xforms:instance>
+			
+			<xforms:instance id="themes" xxforms:exclude-result-prefixes="#all">
+				<directory-scan xmlns=""/>
+			</xforms:instance>
+
+			<xforms:instance id="dump">
+				<dump></dump>
+			</xforms:instance>
+
+			<xforms:instance id="temp">
+				<temp></temp>
+			</xforms:instance>
+			
+			<!-- template instances -->
+			<xforms:instance id="position-template" xxforms:exclude-result-prefixes="#all">
+				<position value="" side="both" xmlns="">
+					<label lang="en"/>
+				</position>
+			</xforms:instance>
+			
+			<xforms:instance id="localType-template" xxforms:exclude-result-prefixes="#all">
+				<localType value="" xmlns="">
+					<label lang="en"/>
+				</localType>
+			</xforms:instance>
+
+			<!--<xforms:instance id="serialized-footer">
+				<div xmlns=""/>
+			</xforms:instance>-->
+
+			<!--<xforms:action ev:event="xforms-ready">
+				<xforms:setvalue ref="instance('serialized-footer')"
+					value="saxon:serialize(instance('config')/footer, 'html')"/>
+					</xforms:action>-->
+
+			<!-- list instances -->
+			<xforms:instance id="languages">
+				<xi:include href="instances/languages.xml"></xi:include>
+			</xforms:instance>
+
+			<xforms:instance id="licenseselect-template">
+				<licenses xmlns="">
+					<license href="http://opendatacommons.org/licenses/odbl/">Open Data Commons Open Database License (ODbL)</license>
+					<license href="http://opendatacommons.org/licenses/by/">Open Data Commons Attribution License</license>
+					<license href="http://opendatacommons.org/licenses/pddl/">Open Data Commons Public Domain Dedication and License (PDDL)</license>
+				</licenses>
+			</xforms:instance>
+
+			<!-- validation instances -->
+			<!-- SPARQL endpoint -->
+			<xforms:instance id="sparqlQuery">
+				<query></query>
+			</xforms:instance>
+
+			<xforms:instance id="sparql-template">
+				<query><![CDATA[PREFIX rdf:	<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+					PREFIX nmo:	<http://nomisma.org/ontology#>
+ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
+				</query>
+			</xforms:instance>
+
+			<!-- preloaded instances -->
+			<xforms:instance id="sparqlResponse">
+				<sparql xmlns="http://www.w3.org/2005/sparql-results#"></sparql>
+			</xforms:instance>
+
+			<!-- ************************* BINDINGS ************************** -->
+			<xforms:bind nodeset="instance('config')">
+				<xforms:bind nodeset="title" required="true()"></xforms:bind>
+				<xforms:bind nodeset="description" required="true()"></xforms:bind>
+				<xforms:bind nodeset="url" required="true()" type="custom.httpURL"></xforms:bind>
+				<xforms:bind nodeset="uri_space" required="true()" type="custom.httpURL"></xforms:bind>
+				<xforms:bind nodeset="solr_published" required="true()" type="custom.httpURL"></xforms:bind>
+				<xforms:bind nodeset="features_enabled" readonly="../collection_type != 'object'" type="xs:boolean"></xforms:bind>
+				<xforms:bind nodeset="pelagios_enabled" type="xs:boolean"></xforms:bind>
+				<xforms:bind nodeset="ctype_enabled" type="xs:boolean"></xforms:bind>
+				<xforms:bind nodeset="sparql_endpoint" readonly="../collection_type!='cointype'"
+					constraint="if (../collection_type='cointype') then (. castable as xs:anyURI and matches(., 'https?://.+')) else '. castable as xs:string'"></xforms:bind>
+				<xforms:bind nodeset="type_series" readonly="../collection_type!='cointype'"
+					constraint="if (../collection_type='cointype') then (. castable as xs:anyURI and matches(., 'https?://.+')) else '. castable as xs:string'"></xforms:bind>
+				<xforms:bind nodeset="template">
+					<!-- about the electronic record -->
+					<xforms:bind nodeset="agencyName" required="true()"></xforms:bind>
+					<xforms:bind nodeset="copyrightHolder" required="true()"></xforms:bind>
+					<xforms:bind nodeset="createdBy"></xforms:bind>
+					<xforms:bind nodeset="project"></xforms:bind>
+					<xforms:bind nodeset="language" required="true()"></xforms:bind>
+					<xforms:bind nodeset="license" required="true()"></xforms:bind>
+					<!-- about the physical item -->
+					<xforms:bind nodeset="repository"></xforms:bind>
+					<xforms:bind nodeset="owner"></xforms:bind>
+					<xforms:bind nodeset="collection"></xforms:bind>
+				</xforms:bind>
+				<!-- list elements -->
+				<xforms:bind nodeset="facets">
+					<xforms:bind ndoeset="facet" required="true()"></xforms:bind>
+				</xforms:bind>
+				<xforms:bind nodeset="languages">
+					<xforms:bind nodeset="language/@enabled" type="xs:boolean"></xforms:bind>
+				</xforms:bind>
+				<xforms:bind nodeset="positions">
+					<xforms:bind nodeset="position">
+						<xforms:bind nodeset="@value" type="xs:NMTOKEN"/>
+						<xforms:bind nodeset="label" required="true()">
+							<xforms:bind nodeset="@lang" constraint="string-length(.) &gt; 0 and count(ancestor::position/label/@lang) = count(distinct-values(ancestor::position/label/@lang))"/>
+						</xforms:bind>
+					</xforms:bind>
+				</xforms:bind>
+				<xforms:bind nodeset="localTypes">
+					<xforms:bind nodeset="localType">
+						<xforms:bind nodeset="@value" type="xs:NMTOKEN"/>
+						<xforms:bind nodeset="label" required="true()">
+							<xforms:bind nodeset="@lang" constraint="string-length(.) &gt; 0 and count(ancestor::position/label/@lang) = count(distinct-values(ancestor::position/label/@lang))"/>
+						</xforms:bind>
+					</xforms:bind>
+				</xforms:bind>
+				<!--<xforms:bind nodeset="images">
+					<xforms:bind nodeset="thumbnail" required="true()" type="xs:integer"></xforms:bind>
+					<xforms:bind nodeset="reference" required="true()" type="xs:integer"></xforms:bind>
+				</xforms:bind>-->
+			</xforms:bind>
+
+			<xforms:bind nodeset="instance('control-instance')">
+				<xforms:bind nodeset="*[contains(name(), '-valid')]" type="xs:boolean"></xforms:bind>
+				<xforms:bind nodeset="display/*" type="xs:boolean"/>
+			</xforms:bind>
+
+			<!-- **************** CUSTOM DATATYPES ********************** -->
+			<!-- URL validation. Example from http://stackoverflow.com/questions/3381507/xml-validation-validating-a-uri-type -->
+			<xs:schema elementFormDefault="qualified" attributeFormDefault="unqualified">
+				<xs:simpleType name="custom.httpURL">
+					<xs:restriction base="xs:anyURI">
+						<!-- accepts only http:// or https:// URIs. -->
+						<xs:pattern value="https?://.+"></xs:pattern>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:schema>
+
+			<!-- ************************* SUBMISSIONS ************************** -->
+			<xforms:submission id="load-collections" serialization="none" method="get" action="{instance('exist-config')/url}collections-list.xml" replace="instance" instance="collections-list"
+				xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}">
+				<!-- if the config loads successfully, set the collection names based on authentication -->
+				<xforms:action ev:event="xforms-submit-done">
+					<!-- set default if security is false -->
+					<xforms:action if="not(string(instance('control-instance')/request-security/role))">
+						<xforms:setvalue ref="instance('control-instance')/collection-name">numishare</xforms:setvalue>
+					</xforms:action>
+					<!-- if there is a security role, set the collection-name value if it is in the list, otherwise set new collection name -->
+					<xforms:action if="string(instance('control-instance')/request-security/role)">
+						<xforms:action if="string(instance('collections-list')/collection[@role=instance('control-instance')/request-security/role]/@name)">
+							<xforms:setvalue ref="instance('control-instance')/collection-name"
+								value="instance('collections-list')/collection[@role=instance('control-instance')/request-security/role]/@name"></xforms:setvalue>
+						</xforms:action>
+					</xforms:action>
+					<xforms:send submission="load-config"></xforms:send>
+				</xforms:action>
+				<!-- if the config has not been created (given that the URL in ../exist-config.xml is correct), create it -->
+				<xforms:message ev:event="xforms-submit-error" level="modal">Unable to load Numishare collections list.</xforms:message>
+			</xforms:submission>
+
+			<!-- Load File -->
+			<xforms:submission id="load-config" serialization="none" method="get" action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/config.xml"
+				xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}" replace="instance" instance="config">
+				<xforms:message ev:event="xforms-submit-error" level="modal">Unable to load Numishare configuration file</xforms:message>
+				<!-- pre-validate required URLs for coin types -->
+				<xforms:action ev:event="xforms-submit-done">
+					<xforms:action if="instance('config')/collection_type='cointype'">
+						<xforms:setvalue ref="instance('sparqlQuery')" value="replace(instance('sparql-template'), '%TYPE_SERIES%', instance('config')/type_series)"></xforms:setvalue>
+						<!--<xforms:send submission="validate-sparql"/>-->
+					</xforms:action>
+				</xforms:action>
+			</xforms:submission>
+
+			<!-- Save File -->
+			<xforms:submission id="save-config" ref="instance('config')" xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}"
+				action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/config.xml" method="put" replace="none">
+				<xforms:setvalue ev:event="xforms-submit-done" ref="instance('control-instance')/status">Numishare configuration saved.</xforms:setvalue>
+				<xforms:message ev:event="xforms-submit-error" level="modal">Error saving Numishare configuration file.</xforms:message>
+			</xforms:submission>
+
+			<!-- ***** VALIDATORS *****-->
+			<xforms:submission id="validate-sparql" action="{instance('control-instance')/sparql_endpoint}?query={encode-for-uri(instance('sparqlQuery'))}" ref="instance('sparqlResponse')"
+				replace="instance" method="get">
+				<xforms:header>
+					<xforms:name>User-Agent</xforms:name>
+					<xforms:value>XForms/Numishare</xforms:value>
+				</xforms:header>
+				<xforms:header>
+					<xforms:name>Accept</xforms:name>
+					<xforms:value>application/sparql-results+xml</xforms:value>
+				</xforms:header>
+				<xforms:setvalue ref="instance('control-instance')/sparql-valid" value="false()" ev:event="xforms-submit-error"></xforms:setvalue>
+				<xforms:action ev:event="xforms-submit-done">
+					<xforms:setvalue ref="instance('control-instance')/sparql-valid" value="true()"></xforms:setvalue>
+				</xforms:action>
+			</xforms:submission>
+
+			<xforms:submission id="test-for-echo" serialization="none" method="get"
+				action="http://api.flickr.com/services/rest/?method=flickr.test.echo&amp;api_key={instance('config')/flickr_api_key}" replace="instance" instance="flickr-response">
+				<xforms:message ev:event="xforms-submit-error" level="modal">Error querying flickr. Please check internet connection.</xforms:message>
+				<xforms:action ev:event="xforms-submit-done">
+					<!-- set readonly for save button if the api key is a string and failed -->
+					<xforms:setvalue ref="instance('control-instance')/api-key-accepted" if="not(instance('flickr-response')/@stat = 'ok') and string-length(instance('config')/flickr_api_key) &gt; 0"
+						value="'false'"></xforms:setvalue>
+
+					<!-- activate button if the api key is okay or blank -->
+					<xforms:setvalue ref="instance('control-instance')/api-key-accepted" if="instance('flickr-response')/@stat = 'ok'" value="'true'"></xforms:setvalue>
+					<xforms:setvalue ref="instance('control-instance')/api-key-accepted" if="string-length(instance('config')/flickr_api_key) = 0" value="'true'"></xforms:setvalue>
+				</xforms:action>
+			</xforms:submission>
+
+			<!-- ********** XFORMS-MODEL-CONSTRUCT-DONE ********** -->
+			<xforms:action ev:event="xforms-model-construct-done">
+				<xforms:action if="string(xxforms:get-session-attribute('collection-name'))">
+					<xforms:setvalue ref="instance('control-instance')/collection-name" value="xxforms:get-session-attribute('collection-name')"></xforms:setvalue>
+					<xforms:send submission="load-config"></xforms:send>
+				</xforms:action>
+				<xforms:action if="not(string(xxforms:get-session-attribute('collection-name')))">
+					<xforms:insert context="instance('control-instance')" nodeset="collection-name" position="after"
+						origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/get-authentication.xpl', 'dump', instance('dump'), 'data')"></xforms:insert>
+					<xforms:send submission="load-collections"></xforms:send>
+				</xforms:action>
+				
+				<!-- pre-populate display layout -->
+				<xforms:var name="display-layout"
+					select="concat(substring(instance('config')/theme/layouts/display/nuds/orientation, 1, 1), substring(instance('config')/theme/layouts/display/nuds/image_location, 1, 1))"></xforms:var>
+				<xforms:setvalue ref="instance('control-instance')/display/*[name() = $display-layout]" value="true()"></xforms:setvalue>
+				
+				<!-- scan the themes directory -->
+				<xforms:insert context="instance('themes')"
+					origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/xforms/scan-themes.xpl', 'dump', instance('dump'), 'data')"></xforms:insert>
+			</xforms:action>
+		</xforms:model>
+	</head>
+
+	<body>
+		<xforms:var name="display_path">../../</xforms:var>
+		<xi:include href="header.xml"></xi:include>
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-md-12">
+					<xforms:group ref="instance('control-instance')/status/text()">
+						<div class="bg-info alert-box">
+							<span class="glyphicon glyphicon-info-sign"></span>
+							<strong>Status:</strong>
+							<xforms:output ref="instance('control-instance')/status"></xforms:output>
+						</div>
+					</xforms:group>
+					<p>
+						<a href="{$display_path}"><span class="glyphicon glyphicon-arrow-left"></span> Return</a>
+					</p>
+					<div class="submission text-center">
+						<xforms:trigger appearance="minimal">
+							<xforms:label><span class="glyphicon glyphicon-floppy-disk"></span> Save</xforms:label>
+							<xforms:send ev:event="DOMActivate" submission="save-config"></xforms:send>
+						</xforms:trigger>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-2">
+					<h4>Contents</h4>
+					<ul>
+						<li>
+							<xforms:trigger appearance="minimal">
+								<xforms:label>General Settings</xforms:label>
+								<xforms:toggle case="general" ev:event="DOMActivate"></xforms:toggle>
+							</xforms:trigger>
+						</li>
+						<li>
+							<xforms:trigger appearance="minimal">
+								<xforms:label>Boilerplate</xforms:label>
+								<xforms:toggle case="boilerplate" ev:event="DOMActivate"></xforms:toggle>
+							</xforms:trigger>
+						</li>
+						<li>
+							<xforms:trigger appearance="minimal">
+								<xforms:label>Local Types and Symbol Positions</xforms:label>
+								<xforms:toggle case="instances" ev:event="DOMActivate"></xforms:toggle>
+							</xforms:trigger>
+						</li>
+						<li>
+							<xforms:trigger appearance="minimal">
+								<xforms:label>Theme and Layout</xforms:label>
+								<xforms:toggle case="theme" ev:event="DOMActivate"></xforms:toggle>
+							</xforms:trigger>
+						</li>
+						<!--<li>
+							<xforms:trigger appearance="minimal">
+								<xforms:label>Body and Footer Content</xforms:label>
+								<xforms:toggle case="content" ev:event="DOMActivate"></xforms:toggle>
+							</xforms:trigger>
+						</li>-->
+						<li>
+							<xforms:trigger appearance="minimal">
+								<xforms:label>Advanced Settings</xforms:label>
+								<xforms:toggle case="advanced" ev:event="DOMActivate"></xforms:toggle>
+							</xforms:trigger>
+						</li>
+					</ul>
+				</div>
+				<div class="col-md-10">
+					<h1>Numishare Settings</h1>
+					<div id="form">						
+						<xforms:switch>
+							<xforms:case id="general">
+								<xforms:group ref="instance('config')">
+									<a id="top"/>
+									<h2>General Settings</h2>
+									<ul>
+										<li>
+											<a href="#titlesAndURLs">Titles and URLs</a>
+										</li>
+										<li>
+											<a href="#collectionType">Collection Type</a>
+										</li>
+										<li>
+											<a href="#export">Export</a>
+										</li>
+										<li>
+											<a href="#facets">Facets</a>
+										</li>
+										<li>
+											<a href="#languages">Languages</a>
+										</li>
+										<li>
+											<a href="#googleAnalytics">Google Analytics</a>
+										</li>
+									</ul>
+									<div class="section" id="titlesAndURLs">
+										<h3>Titles and URLs<small>
+											<a href="#top">
+												<span class="glyphicon glyphicon-chevron-up"></span>Top </a></small></h3>
+										<table class="table">
+											<thead>
+												<tr>
+													<td></td>
+													<td style="width:50%"></td>
+												</tr>
+											</thead>
+											<tbody>
+												<tr>
+													<td>
+														<xforms:input ref="title">
+															<xforms:label>Title</xforms:label>
+															<xforms:alert>Required</xforms:alert>
+														</xforms:input>
+													</td>
+													<td>The title of the site to be displayed in all web page titles and citations in PDF files.</td>
+												</tr>
+												<tr>
+													<td>
+														<xforms:textarea ref="description">
+															<xforms:label>Description</xforms:label>
+															<xforms:alert>Required</xforms:alert>
+														</xforms:textarea>
+													</td>
+													<td>Enter a brief description of collection. This is used for VOiD RDF for data sharing.</td>
+												</tr>
+												<tr>
+													<td>
+														<xforms:input ref="url">
+															<xforms:label>Site URL</xforms:label>
+															<xforms:alert>URI Required</xforms:alert>
+														</xforms:input>
+													</td>
+													<td>The URL is necessary in pipelines where relative paths are not sufficient (Atom, RDF, etc.). A trailing slash is necessary.</td>
+												</tr>
+												<tr>
+													<td>
+														<xforms:input ref="uri_space">
+															<xforms:label>URI Space</xforms:label>
+															<xforms:alert>URI Required</xforms:alert>
+														</xforms:input>
+													</td>
+													<td>Projects must contain a URI space for the Nomisma VoID RDF metadata and coin type projects require the URI space for select SPARQL queries.
+														The URI space is typically the Site URL appended with 'id/'.</td>
+												</tr>
+												<tr>
+													<td>
+														<xforms:input ref="contact">
+															<xforms:label>Contact Email</xforms:label>
+														</xforms:input>
+													</td>
+													<td>Optional contact email address for OpenSearch description.</td>
+												</tr>
+												<tr>
+													<td>
+														<xforms:input ref="logo">
+															<xforms:label>Logo URL</xforms:label>
+														</xforms:input>
+													</td>
+													<td>Appears in the header banner. For more sophisticated control, edit header.xsl.</td>
+												</tr>
+												<tr>
+													<td>
+														<xforms:input ref="geonames_api_key">
+															<xforms:label>Geonames API Key</xforms:label>
+														</xforms:input>
+													</td>
+													<td>A <a href="http://www.geonames.org/export/web-services.html">geonames API key</a> is required in order to link geographical places to
+														geonames ids.</td>
+												</tr>
+											</tbody>
+										</table>
+										<hr/>
+									</div>
+									<div class="section" id="collectionType">
+										<h3>Collection Type<small>
+											<a href="#top">
+												<span class="glyphicon glyphicon-chevron-up"></span>Top </a></small></h3>
+										<table class="table">
+											<thead>
+												<tr>
+													<td></td>
+													<td style="width:50%"></td>
+												</tr>
+											</thead>
+											<tbody>
+												<tr>
+													<td>
+														<xforms:select1 ref="collection_type">
+															<xforms:label>Collection Type</xforms:label>
+															<xforms:item>
+																<xforms:label>cointype</xforms:label>
+																<xforms:value>cointype</xforms:value>
+															</xforms:item>
+															<xforms:item>
+																<xforms:label>hoard</xforms:label>
+																<xforms:value>hoard</xforms:value>
+															</xforms:item>
+															<xforms:item>
+																<xforms:label>object</xforms:label>
+																<xforms:value>object</xforms:value>
+															</xforms:item>
+														</xforms:select1>
+													</td>
+													<td></td>
+												</tr>
+												<tr>
+													<td>
+														<xforms:input ref="sparql_endpoint">
+															<xforms:label>SPARQL Endpoint</xforms:label>
+															<xforms:alert>URI Required</xforms:alert>
+														</xforms:input>
+													</td>
+													<td></td>
+												</tr>
+												<tr>
+													<td>
+														<xforms:input ref="type_series">
+															<xforms:label>Type Series</xforms:label>
+															<xforms:alert>URI Required</xforms:alert>
+														</xforms:input>
+													</td>
+													<td>A coin type project must must be bound to a URI for a type series: usually, but not necessary, a Nomisma URI.</td>
+												</tr>
+												<tr>
+													<td>
+														<xforms:input ref="features_enabled">
+															<xforms:label>Featured Item</xforms:label>
+														</xforms:input>
+													</td>
+													<td>If enabled (the default), the Featured Object function will be displayed in the index page. It does not function correctly in coin-type
+														catalogs.</td>
+												</tr>
+											</tbody>
+										</table>
+										<hr/>
+									</div>
+									<div class="section" id="export">
+										<h3>Export<small>
+											<a href="#top">
+												<span class="glyphicon glyphicon-chevron-up"></span>Top </a></small></h3>
+										<table class="table">
+											<thead>
+												<tr>
+													<td></td>
+													<td style="width:50%"></td>
+												</tr>
+											</thead>
+											<tbody>
+												<tr>
+													<td>
+														<xforms:input ref="pelagios_enabled">
+															<xforms:label>Pelagios</xforms:label>
+														</xforms:input>
+													</td>
+													<td>If enabled, records linked to Pleiades-defined ancient places will be exposed at <xforms:output ref="concat(url, 'pelagios.rdf')"
+														></xforms:output> with the VOiD defined by <xforms:output ref="concat(url, 'pelagios.void.rdf')"></xforms:output>.</td>
+												</tr>
+												<tr>
+													<td>
+														<xforms:input ref="ctype_enabled">
+															<xforms:label>Nomisma</xforms:label>
+														</xforms:input>
+													</td>
+													<td>If enabled, records conforming to the Nomisma ontology will be exposed at <xforms:output ref="concat(url, 'nomisma.rdf')"></xforms:output>,
+														with the VOiD defined by <xforms:output ref="concat(url, 'nomisma.void.rdf')"></xforms:output>.</td>
+												</tr>
+											</tbody>
+										</table>
+										<hr/>
+									</div>
+									<div class="section" id="facets">
+										<xforms:group ref="facets">
+											<h3>Facets <small>
+												<a href="#top">
+													<span class="glyphicon glyphicon-chevron-up"></span>Top </a>
+												<xforms:trigger appearance="minimal">
+													<xforms:label>
+														<span class="glyphicon glyphicon-plus"></span>Facet</xforms:label>
+													<xforms:insert context="." nodeset="./child::node()[last()]" origin="xforms:element('facet')" ev:event="DOMActivate"></xforms:insert>
+												</xforms:trigger>
+											</small>
+											</h3>
+											<p>The facet must be a valid Solr string-based field (preferably defined by the *_facet dynamicField type in the schema). An invalid field will cause
+												the browse and map pages to fail. Note that the order of the facets below dictates the order in which they appear on the browse and maps pages.</p>
+											<xforms:repeat nodeset="facet" id="facet-control">
+												<xforms:var name="position" select="position()"></xforms:var>
+												<div>
+													<xforms:input ref=".">
+														<xforms:label>Facet</xforms:label>
+													</xforms:input>
+													<xforms:group ref=".[$position != 1]">
+														<xforms:trigger appearance="minimal">
+															<xforms:label><span class="glyphicon glyphicon-arrow-up"></span></xforms:label>
+															<xforms:action ev:event="DOMActivate">
+																<xforms:var name="val" select="data(.)"></xforms:var>
+																<xforms:insert context="ancestor::facets" nodeset="facet[index('facet-control') - 2]" origin="xforms:element('facet', $val)"></xforms:insert>
+																<xforms:delete nodeset="."></xforms:delete>
+															</xforms:action>
+														</xforms:trigger>
+													</xforms:group>
+													<xforms:group ref=".[not($position=count(parent::node()/facet))]">
+														<xforms:trigger appearance="minimal">
+															<xforms:label><span class="glyphicon glyphicon-arrow-down"></span></xforms:label>
+															<xforms:action ev:event="DOMActivate">
+																<xforms:var name="val" select="data(.)"></xforms:var>
+																<xforms:insert context="ancestor::facets" nodeset="facet[index('facet-control') + 1]" origin="xforms:element('facet', $val)"></xforms:insert>
+																<xforms:delete nodeset="."></xforms:delete>
+															</xforms:action>
+														</xforms:trigger>
+													</xforms:group>
+													<xforms:trigger appearance="minimal">
+														<xforms:delete ev:event="DOMActivate" context="."></xforms:delete>
+														<xforms:label>
+															<span class="glyphicon glyphicon-remove"></span>
+														</xforms:label>
+													</xforms:trigger>
+												</div>
+											</xforms:repeat>
+										</xforms:group>
+										<hr/>
+									</div>
+									<div class="section" id="languages">
+										<xforms:group ref="languages">
+											<h3>Languages<small>
+												<a href="#top">
+													<span class="glyphicon glyphicon-chevron-up"></span>Top </a></small></h3>
+											<p>The following languages are available in the Numishare public user interface. The availability of translations of Nomisma.org-defined concepts in
+												these languages is variable. Enabling other languages will required Solr re-indexing to facilitate the multilingual browse and map interfaces.</p>
+											<xforms:repeat nodeset="language">
+												<xforms:var name="code" select="@code"></xforms:var>
+												<div>
+													<xforms:input ref="@enabled">
+														<xforms:label value="tokenize(instance('languages')//language[@value=$code], ',')[1]"></xforms:label>
+													</xforms:input>
+												</div>
+											</xforms:repeat>
+										</xforms:group>
+										<hr/>
+									</div>
+									<div class="section" id="googleAnalytics">
+										<h3>Google Analytics<small>
+											<a href="#top">
+												<span class="glyphicon glyphicon-chevron-up"></span>Top </a></small></h3>
+										<table class="table">
+											<thead>
+												<tr>
+													<td></td>
+													<td style="width:50%"></td>
+												</tr>
+											</thead>
+											<tbody>
+												<tr>
+													<td>
+														<xforms:textarea ref="google_analytics">
+															<xforms:label>Google Analytics</xforms:label>
+														</xforms:textarea>
+													</td>
+													<td>Copy and paste the javascript code between <b>&lt;script type="text/javascript"&gt;&lt;/script&gt;</b> provided by Google.</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</xforms:group>
+							</xforms:case>
+							<xforms:case id="boilerplate">
+								<xforms:group ref="instance('config')">
+									<h2>About this Numishare collection</h2>
+									<xforms:group ref="template">
+										<div class="section">
+											<h3>Electronic Records</h3>
+											<p>The following fields pertain to electronic records and will be populated automatically into each new object record. They can be changed on a
+												per-document bases from within the object editing form. The maintenance agency is the entity responsible for the web site which provides access to
+												the electronic record. The copyright holder maintains the intellectual property (and may differ from the repository or physical custodian). The
+												project field pertains to the project responsible for the creation of the record. CreatedBy denotes the individual responsible for entering
+												metadata. The language refers to the language of the electronic record.</p>
+											<p>Publisher, copyright holder, and language are required. Project and createdBy may be left blank.</p>
+											<div>
+												<xforms:input ref="agencyName">
+													<xforms:label>Maintenance Agency</xforms:label>
+													<xforms:alert>Required</xforms:alert>
+												</xforms:input>
+											</div>
+											<div>
+												<xforms:input ref="copyrightHolder">
+													<xforms:label>Copyright Holder</xforms:label>
+													<xforms:alert>Required</xforms:alert>
+												</xforms:input>
+											</div>
+											<div>
+												<xforms:input ref="createdBy">
+													<xforms:label>Created By</xforms:label>
+													<xforms:alert>Required</xforms:alert>
+												</xforms:input>
+											</div>
+											<div>
+												<xforms:input ref="project">
+													<xforms:label>Project</xforms:label>
+												</xforms:input>
+											</div>
+											<div>
+												<xforms:select1 ref="language">
+													<xforms:label>Language</xforms:label>
+													<xforms:item>
+														<xforms:label>Select Language...</xforms:label>
+														<xforms:value></xforms:value>
+													</xforms:item>
+													<xforms:itemset nodeset="instance('languages')//language">
+														<xforms:label ref="."></xforms:label>
+														<xforms:value ref="@value"></xforms:value>
+													</xforms:itemset>
+													<xforms:alert>Required</xforms:alert>
+												</xforms:select1>
+											</div>
+											<div>
+												<xforms:select1 ref="license">
+													<xforms:label>License</xforms:label>
+													<xforms:alert>Required</xforms:alert>
+													<xforms:item>
+														<xforms:label>Select License...</xforms:label>
+														<xforms:value></xforms:value>
+													</xforms:item>
+													<xforms:itemset nodeset="instance('licenseselect-template')//license">
+														<xforms:label ref="."></xforms:label>
+														<xforms:value ref="@href"></xforms:value>
+													</xforms:itemset>
+												</xforms:select1>
+											</div>
+											<hr/>
+										</div>
+										<div class="section">
+											<h3>Physical Objects</h3>
+											<p>The following fields pertain to attributes of the physical objects themselves. The collection is the public name of the physical collection. The
+												owner field is an individual or corporate body which legally controls the object, and repository is the entity which serves as physical custodian.
+												Objects on loan may have a different owner than repository.</p>
+											<div>
+												<xforms:input ref="collection">
+													<xforms:label>Collection</xforms:label>
+												</xforms:input>
+											</div>
+											<div>
+												<xforms:input ref="owner">
+													<xforms:label>Owner</xforms:label>
+												</xforms:input>
+											</div>
+											<div>
+												<xforms:input ref="repository">
+													<xforms:label>Repository</xforms:label>
+												</xforms:input>
+											</div>										
+										</div>
+									</xforms:group>
+								</xforms:group>
+							</xforms:case>
+							<!--<xforms:case id="content">
+								<div class="section">
+									<h2>Index and Footer Content</h2>
+									<div>
+										<h3>Index Content</h3>
+										<xforms:textarea ref="instance('config')/pages/index" mediatype="text/html">
+											<xforms:alert>Content Required.</xforms:alert>
+										</xforms:textarea>
+									</div>
+									<div>
+										<h3>Footer Content</h3>
+										<xforms:textarea ref="instance('config')/footer" mediatype="text/html"></xforms:textarea>
+									</div>
+								</div>
+							</xforms:case>-->
+							<xforms:case id="instances">
+								<xforms:group ref="instance('config')">
+									<h2>Local Types and Symbol Positions</h2>
+									<p>Local types and positions may be defined here. These values populate drop down menues in the Numishare editing interface, but also allow for translations
+										into other languages that are used in the public user interface.</p>
+									
+									<!-- localType attributes and translations which may appear on nearly any NUDS/XML element. element constraint not yet implemented -->
+									<xforms:group ref="localTypes">
+										<div class="section">
+											<h3>Local Types</h3>
+											<xforms:trigger appearance="minimal">
+												<xforms:label>
+													<span class="glyphicon glyphicon-plus"></span></xforms:label>
+												<xforms:hint>Add Local Type</xforms:hint>
+												<xforms:insert context="." nodeset="./child::node()[last()]" origin="instance('localType-template')" ev:event="DOMActivate"></xforms:insert>
+											</xforms:trigger>
+											<xforms:repeat nodeset="localType">												
+												<div class="subsection">
+													<h4>Local Type</h4>
+													<xforms:trigger appearance="minimal">
+														<xforms:label>
+															<span class="glyphicon glyphicon-plus"></span>Label</xforms:label>														
+														<xforms:insert context="." nodeset="./child::node()[last()]" origin="xforms:element('label', (xforms:attribute('lang', '')))" ev:event="DOMActivate"></xforms:insert>
+													</xforms:trigger>
+													<xforms:trigger appearance="minimal">
+														<xforms:delete ev:event="DOMActivate" context="."></xforms:delete>
+														<xforms:label>
+															<span class="glyphicon glyphicon-remove"></span>
+														</xforms:label>
+													</xforms:trigger>
+													<xforms:group ref=".[count(label/@lang) != count(distinct-values(label/@lang))]">
+														<div class="bg-danger alert-box">
+															<span class="glyphicon glyphicon-exclamation-sign"></span>
+															<strong>Alert:</strong> Label languages must be unique. </div>
+													</xforms:group>
+													<div>
+														<xforms:input ref="@value">
+															<xforms:label>Attribute Value</xforms:label>
+															<xforms:alert>Required</xforms:alert>
+															<xforms:hint>Must be xs:NMTOKEN</xforms:hint>
+														</xforms:input>														
+													</div>															
+													<xforms:repeat nodeset="label">
+														<div>
+															<xforms:input ref=".">
+																<xforms:label>Textual Label</xforms:label>
+																<xforms:alert>Required</xforms:alert>
+															</xforms:input>
+															<xforms:select1 ref="@lang">																
+																<xforms:item>
+																	<xforms:label>Select Language...</xforms:label>
+																	<xforms:value></xforms:value>
+																</xforms:item>
+																<xforms:itemset nodeset="instance('languages')//language">
+																	<xforms:label ref="."></xforms:label>
+																	<xforms:value ref="@value"></xforms:value>
+																</xforms:itemset>
+																<xforms:alert>Required</xforms:alert>
+															</xforms:select1>
+														</div>
+													</xforms:repeat>
+												</div>
+												<hr/>
+											</xforms:repeat>
+										</div>
+									</xforms:group>
+									
+									<!-- position attributes which appear only on the symbol element in NUDS/XML -->
+									<xforms:group ref="positions">
+										<div class="section">
+											<h3>Positions</h3>
+											<xforms:trigger appearance="minimal">
+												<xforms:label>
+													<span class="glyphicon glyphicon-plus"></span></xforms:label>
+												<xforms:hint>Add Position</xforms:hint>
+												<xforms:insert context="." nodeset="./child::node()[last()]" origin="instance('position-template')" ev:event="DOMActivate"></xforms:insert>
+											</xforms:trigger>
+											<xforms:repeat nodeset="position">												
+												<div class="subsection">
+													<h4>Position</h4>
+													<xforms:trigger appearance="minimal">
+														<xforms:label>
+															<span class="glyphicon glyphicon-plus"></span>Label</xforms:label>														
+														<xforms:insert context="." nodeset="./child::node()[last()]" origin="xforms:element('label', (xforms:attribute('lang', '')))" ev:event="DOMActivate"></xforms:insert>
+													</xforms:trigger>
+													<xforms:trigger appearance="minimal">
+														<xforms:delete ev:event="DOMActivate" context="."></xforms:delete>
+														<xforms:label>
+															<span class="glyphicon glyphicon-remove"></span>
+														</xforms:label>
+													</xforms:trigger>
+													<xforms:group ref=".[count(label/@lang) != count(distinct-values(label/@lang))]">
+														<div class="bg-danger alert-box">
+															<span class="glyphicon glyphicon-exclamation-sign"></span>
+															<strong>Alert:</strong> Label languages must be unique. </div>
+													</xforms:group>
+													<div>
+														<xforms:input ref="@value">
+															<xforms:label>Attribute Value</xforms:label>
+															<xforms:alert>Required</xforms:alert>
+															<xforms:hint>Must be xs:NMTOKEN</xforms:hint>
+														</xforms:input>														
+													</div>		
+													<div>
+														<xforms:select1 ref="@side">
+															<xforms:label>Side</xforms:label>
+															<xforms:item>
+																<xforms:label>Both</xforms:label>
+																<xforms:value>both</xforms:value>
+															</xforms:item>
+															<xforms:item>
+																<xforms:label>Obverse</xforms:label>
+																<xforms:value>obv</xforms:value>
+															</xforms:item>
+															<xforms:item>
+																<xforms:label>Reverse</xforms:label>
+																<xforms:value>rev</xforms:value>
+															</xforms:item>
+														</xforms:select1>
+													</div>
+													<xforms:repeat nodeset="label">
+														<div>
+															<xforms:input ref=".">
+																<xforms:label>Textual Label</xforms:label>
+																<xforms:alert>Required</xforms:alert>
+															</xforms:input>
+															<xforms:select1 ref="@lang">																
+																<xforms:item>
+																	<xforms:label>Select Language...</xforms:label>
+																	<xforms:value></xforms:value>
+																</xforms:item>
+																<xforms:itemset nodeset="instance('languages')//language">
+																	<xforms:label ref="."></xforms:label>
+																	<xforms:value ref="@value"></xforms:value>
+																</xforms:itemset>
+																<xforms:alert>Required</xforms:alert>
+															</xforms:select1>
+														</div>
+													</xforms:repeat>
+												</div>
+												<hr/>
+											</xforms:repeat>
+										</div>
+									</xforms:group>
+								</xforms:group>
+							</xforms:case>
+							<xforms:case id="theme">
+								<xforms:group ref="instance('config')/theme">
+									<h2>Theme and Layout</h2>
+									<div class="section">
+										<xforms:select1 ref="orbeon_theme">
+											<xforms:itemset nodeset="instance('themes')//directory">
+												<xforms:label ref="@name"></xforms:label>
+												<xforms:value ref="@name"></xforms:value>
+											</xforms:itemset>
+										</xforms:select1>
+									</div>									
+									<div class="section">
+										<h3>Object Display Page</h3>
+										<p>Select a page layout from the following four choices. Note that these layouts apply to physical--not conceptual--record types.</p>
+										<div class="col-md-3">
+											<div class="highlight text-center">
+												<xforms:trigger appearance="minimal">
+													<xforms:label>
+														<img src="/apps/numishare/xforms/images/alignment_display_vl.png" />
+													</xforms:label>
+													<xforms:action ev:event="DOMActivate">
+														<!--<xforms:setvalue xxforms:iterate="instance('control-instance')/display/*" value="''"/>-->
+														<xforms:setvalue ref="instance('control-instance')/display/vl">true</xforms:setvalue>
+													</xforms:action>
+												</xforms:trigger>
+												<radiogroup>
+													<xforms:select1 ref="instance('control-instance')/display/vl" appearance="full">
+														<xforms:item>
+															<xforms:label>Vertical orientation, images on left</xforms:label>
+															<xforms:value>true</xforms:value>
+														</xforms:item>
+														<xforms:action ev:event="xforms-value-changed" if="true()">
+															<xforms:var name="name" select="name()"></xforms:var>
+															<xforms:action xxforms:iterate="instance('control-instance')/display/*[not(name() = $name)]">
+																<xforms:setvalue ref="context()" value="''"></xforms:setvalue>
+															</xforms:action>
+															<!-- set the config values -->
+															<xforms:setvalue ref="instance('config')/theme/layouts/display/nuds/orientation">vertical</xforms:setvalue>
+															<xforms:setvalue ref="instance('config')/theme/layouts/display/nuds/image_location">left</xforms:setvalue>
+														</xforms:action>
+													</xforms:select1>
+												</radiogroup>
+											</div>
+										</div>
+										<div class="col-md-3">
+											<div class="highlight text-center">
+												<xforms:trigger appearance="minimal">
+													<xforms:label>
+														<img src="/apps/numishare/xforms/images/alignment_display_vr.png" />
+													</xforms:label>
+													<xforms:action ev:event="DOMActivate">
+														<!--<xforms:setvalue xxforms:iterate="instance('control-instance')/display/*" value="''"/>-->
+														<xforms:setvalue ref="instance('control-instance')/display/vr">true</xforms:setvalue>
+													</xforms:action>
+												</xforms:trigger>
+												<radiogroup>
+													<xforms:select1 ref="instance('control-instance')/display/vr" appearance="full">
+														<xforms:item>
+															<xforms:label>Vertical orientation, images on right</xforms:label>
+															<xforms:value>true</xforms:value>
+														</xforms:item>
+														<xforms:action ev:event="xforms-value-changed" if="true()">
+															<xforms:var name="name" select="name()"></xforms:var>
+															<xforms:setvalue xxforms:iterate="instance('control-instance')/display/*[not(name() = $name)]" value="''"></xforms:setvalue>
+															<!-- set the config values -->
+															<xforms:setvalue ref="instance('config')/theme/layouts/display/nuds/orientation">vertical</xforms:setvalue>
+															<xforms:setvalue ref="instance('config')/theme/layouts/display/nuds/image_location">right</xforms:setvalue>
+														</xforms:action>
+													</xforms:select1>
+												</radiogroup>
+											</div>
+										</div>
+										<div class="col-md-3">
+											<div class="highlight text-center">
+												<xforms:trigger appearance="minimal">
+													<xforms:label>
+														<img src="/apps/numishare/xforms/images/alignment_display_ht.png" />
+													</xforms:label>
+													<xforms:action ev:event="DOMActivate">
+														<!--<xforms:setvalue xxforms:iterate="instance('control-instance')/display/*" value="''"/>-->
+														<xforms:setvalue ref="instance('control-instance')/display/ht">true</xforms:setvalue>
+													</xforms:action>
+												</xforms:trigger>
+												<radiogroup>
+													<xforms:select1 ref="instance('control-instance')/display/ht" appearance="full">
+														<xforms:item>
+															<xforms:label>Horizontal orientation, images on top</xforms:label>
+															<xforms:value>true</xforms:value>
+														</xforms:item>
+														<xforms:action ev:event="xforms-value-changed" if="true()">
+															<xforms:var name="name" select="name()"></xforms:var>
+															<xforms:setvalue xxforms:iterate="instance('control-instance')/display/*[not(name() = $name)]"></xforms:setvalue>
+															<!-- set the config values -->
+															<xforms:setvalue ref="instance('config')/theme/layouts/display/nuds/orientation">horizontal</xforms:setvalue>
+															<xforms:setvalue ref="instance('config')/theme/layouts/display/nuds/image_location">top</xforms:setvalue>
+														</xforms:action>
+													</xforms:select1>
+												</radiogroup>
+											</div>
+										</div>
+										<div class="col-md-3">
+											<div class="highlight text-center">
+												<xforms:trigger appearance="minimal">
+													<xforms:label>
+														<img src="/apps/numishare/xforms/images/alignment_display_hb.png" />
+													</xforms:label>
+													<xforms:action ev:event="DOMActivate">
+														<!--<xforms:setvalue xxforms:iterate="instance('control-instance')/display/*"/>-->
+														<xforms:setvalue ref="instance('control-instance')/display/hb">true</xforms:setvalue>
+													</xforms:action>
+												</xforms:trigger>
+												<radiogroup>
+													<xforms:select1 ref="instance('control-instance')/display/hb" appearance="full">
+														<xforms:item>
+															<xforms:label>Horizontal orientation, images on bottom</xforms:label>
+															<xforms:value>true</xforms:value>
+														</xforms:item>
+														<xforms:action ev:event="xforms-value-changed" if="true()">
+															<xforms:var name="name" select="name()"></xforms:var>
+															<xforms:setvalue xxforms:iterate="instance('control-instance')/display/*[not(name() = $name)]"></xforms:setvalue>
+															<!-- set the config values -->
+															<xforms:setvalue ref="instance('config')/theme/layouts/display/nuds/orientation">horizontal</xforms:setvalue>
+															<xforms:setvalue ref="instance('config')/theme/layouts/display/nuds/image_location">bottom</xforms:setvalue>
+														</xforms:action>
+													</xforms:select1>
+												</radiogroup>
+											</div>
+										</div>
+									</div>
+									<div class="section">
+										<h3>Browse Page</h3>
+										<p>Two page layouts are available for the browse section. Facets may occur either in a left or right-aligned column. Output fields can also be selected from the list below and
+											ordered. Keep in mind that selecting many fields may result in a cumbersome user experience. Thumbnail images may be aligned either to the left or right of the record
+											content.</p>
+										<xforms:group ref="layouts/results">
+											<div class="subsection">
+												<h4>Result Documents</h4>
+												<div>
+													<xforms:select1 ref="image_location">
+														<xforms:label>Thumbnail Alignment</xforms:label>
+														<xforms:item>
+															<xforms:label>left</xforms:label>
+															<xforms:value>left</xforms:value>
+														</xforms:item>
+														<xforms:item>
+															<xforms:label>right</xforms:label>
+															<xforms:value>right</xforms:value>
+														</xforms:item>
+													</xforms:select1>
+												</div>
+											</div>
+										</xforms:group>
+									</div>
+								</xforms:group>
+							</xforms:case>
+							<xforms:case id="advanced">
+								<xforms:group ref="instance('config')">
+									<div class="section">
+										<h2>Advanced Settings</h2>
+										<p>
+											<b>Only change these options if Orbeon is run on a separate server.</b>
+										</p>
+										<div>
+											<xforms:input ref="solr_published">
+												<xforms:label>Solr URL</xforms:label>
+												<xforms:alert>Required</xforms:alert>
+											</xforms:input>
+											<p>If Solr is run on a different server or core than the default, the Cocoon sitemap global variable must be edited manually in addition to this URL, which
+												is referenced in Orbeon web forms.</p>
+										</div>
+										<!--<xforms:group ref="images"><div class="section">
+									<h3>Image Configuration</h3>
+									<div>
+										<xforms:input ref="thumbnail">
+											<xforms:label>Thumbnail dimensions</xforms:label>
+											<xforms:alert>Required, must be integer.</xforms:alert>
+										</xforms:input>
+										<p>Maximum height or width of thumbnails.</p>
+									</div>
+									<div>
+										<xforms:input ref="reference">
+											<xforms:label>Reference dimensions</xforms:label>
+											<xforms:alert>Required, must be integer.</xforms:alert>
+										</xforms:input>
+										<p>Maximum height or width of reference sized images which display on item records and pop up in the search results.</p>
+									</div>
+									<div>
+										<xforms:input ref="absolute_path">
+											<xforms:label>Image Path</xforms:label>
+											<xforms:alert>Required</xforms:alert>
+										</xforms:input>
+										<p>Absolute path to the cocoon on the server. This only needs to be changed if Numishare was installed to a different directory than the installation
+											instructions recommend.</p>
+									</div>
+								</div>
+							</xforms:group>-->
+									</div>
+								</xforms:group>
+							</xforms:case>
+						</xforms:switch>
+					</div>
+					<!--<fr:xforms-inspector></fr:xforms-inspector>-->
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
