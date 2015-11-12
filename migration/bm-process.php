@@ -6,28 +6,30 @@ error_reporting(0);
 /*$ric1 = generate_json('/home/komet/ans_migration/ocre/bm-data/ric1.csv', false);
 $ric2_1 = generate_json('/home/komet/ans_migration/ocre/bm-data/ric2.1.csv', false);
 $ric2 = generate_json('/home/komet/ans_migration/ocre/bm-data/ric2.csv', false);
-$ric3 = generate_json('/home/komet/ans_migration/ocre/bm-data/ric3.csv', false);*/
-$data = generate_json('/home/komet/ans_migration/ocre/bm-data/ric4.csv', false);
+$ric3 = generate_json('/home/komet/ans_migration/ocre/bm-data/ric3.csv', false);
+$data = generate_json('/home/komet/ans_migration/ocre/bm-data/ric4.csv', false);*/
+$data = generate_json('/home/komet/ans_migration/ocre/bm-data/ric5.csv', false);
 //$data = array_merge($ric1, $ric2_1, $ric2, $ric3, $ric4);
-$lookup = generate_json('/home/komet/ans_migration/ocre/bm-data/RIC4-con.csv', false);
+$lookup = generate_json('/home/komet/ans_migration/ocre/bm-data/RIC5-con.csv', false);
 
 $open = '<rdf:RDF xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xmlns:nm="http://nomisma.org/id/"
          xmlns:dcterms="http://purl.org/dc/terms/" xmlns:foaf="http://xmlns.com/foaf/0.1/" 
-         xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:nmo="http://nomisma.org/ontology#">';
+         xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:nmo="http://nomisma.org/ontology#" 
+         xmlns:void="http://rdfs.org/ns/void#">';
 
 file_put_contents('bm-ric.rdf', $open);
 
 $count = 1;
 foreach ($data as $row){	
-	/*
+	
 	//reprocess entire spreadsheet
 	process_csv($row, $count);
 	$count++;
-	*/
-	if ($row['Authority'] == 'Aemilian' || $row['Authority'] == 'Volusian' || $row['Authority'] == 'Uranius Antoninus' || stristr($row['Authority'], 'Trebonianus Gallus')){
+	
+	/*if ($row['Authority'] == 'Aemilian' || $row['Authority'] == 'Volusian' || $row['Authority'] == 'Uranius Antoninus' || stristr($row['Authority'], 'Trebonianus Gallus')){
 		process_csv($row, $count);
 		$count++;
-	}
+	}*/
 }
 
 file_put_contents('bm-ric.rdf', '</rdf:RDF>', FILE_APPEND);
@@ -48,14 +50,15 @@ function process_csv($row, $count){
 	}
 	$rdf = '';
 	if (strlen($coinType) > 0){
-		$rdf .= '<nmo:NumismaticTerm rdf:about="' . $about . '">';
+		$rdf .= '<nmo:NumismaticObject rdf:about="' . $about . '">';
 		$rdf .= '<dcterms:title xml:lang="en">British Museum: ' . $accessions[0] . '</dcterms:title>';
 		$rdf .= '<dcterms:identifier>' . $accessions[0] . '</dcterms:identifier>';
 		$rdf .= '<dcterms:publisher rdf:resource="http://nomisma.org/id/bm"/>';
 		$rdf .= '<nmo:hasCollection rdf:resource="http://nomisma.org/id/bm"/>';
 		$rdf .= '<nmo:hasTypeSeriesItem rdf:resource="' . $coinType . '"/>';
 		$rdf .= query_bm($id);
-		$rdf .= '</nmo:NumismaticTerm>';
+		$rdf .= '<void:inDataset rdf:resource="http://www.britishmuseum.org/"/>';
+		$rdf .= '</nmo:NumismaticObject>';
 	}
 	file_put_contents('bm-ric.rdf', $rdf, FILE_APPEND);
 }

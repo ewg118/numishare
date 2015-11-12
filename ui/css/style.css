@@ -35,6 +35,17 @@ a > img {
 ul li, ol li {
 	list-style-type:none;
 }
+.rtl{
+	direction:rtl;
+}
+dl.ar dt {
+	float:right;
+	text-align:left;
+}
+dl.ar dd {
+	margin-right:180px;
+	margin-left:0;
+}
 .highlight {
 	background-color: #F8F8F8;
 	border: 1px solid #E7E7E7;
@@ -138,14 +149,6 @@ ul li, ol li {
 .metadata_section{
 	margin-bottom:20px;
 }
-.adminhist_div,
-.phystech,
-.bibref,
-.metadata_section ul{
-	margin-left:20px;
-	margin-bottom:10px;
-	padding:0;
-}
 .submenu{
 	width:100%;
 	vertical-align:bottom;
@@ -163,11 +166,8 @@ ul li, ol li {
 .reference_image img{
 	max-width:100%;
 }
-.abstract{
-	margin-bottom:20px;
-}
 .external_link{
-	margin-left:10px;
+	margin:0px 10px
 }
 .legend-icon{
 	width:40px;

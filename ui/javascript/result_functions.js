@@ -26,13 +26,20 @@ $(document).ready(function () {
 	
 	function setValue(field, sort_order) {
 		var category;
-		if (field.indexOf('_') > 0 || field == 'timestamp') {
+		if (field.indexOf('_') > 0 || field == 'timestamp' || field == 'recordId') {
 			category = field;
 		} else {
 			if (sort_order == 'asc') {
 				switch (field) {
 					case 'year':
 					category = field + '_minint';
+					break;
+					case 'axis':
+					case 'diameter':
+					case 'taq':
+					case 'tpq':					
+					case 'weight':
+					category = field + '_num';
 					break;
 					default:
 					category = field + '_min';
@@ -42,16 +49,23 @@ $(document).ready(function () {
 					case 'year':
 					category = field + '_maxint';
 					break;
+					case 'axis':
+					case 'diameter':
+					case 'taq':
+					case 'tpq':					
+					case 'weight':
+					category = field + '_num';
+					break;
 					default:
 					category = field + '_max';
 				}
 			}
 		}
 		if (field != 'null') {
-			$('.sort_button') .removeAttr('disabled');
+			$('.sort_button') .prop('disabled', false);
 			$('.sort_param') .attr('value', category + ' ' + sort_order);
 		} else {
-			$('.sort_button') .attr('disabled', 'disabled');
+			$('.sort_button') .prop('disabled', true);
 		}
 	}
 	
