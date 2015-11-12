@@ -254,6 +254,14 @@
 							return sm:chmod(xs:anyURI(concat($collection, '/', $doc)), 'rwxrwxrwx')
 						]]>
 					</query>
+					<query id="delete-collection">
+						<![CDATA[xquery version "1.0";
+							declare namespace xmldb="http://exist-db.org/xquery/xmldb";
+							let $collection := '/db/%COLLECTION%'
+							return
+								xmldb:remove($collection)
+						]]>
+					</query>
 					<query id="query-objects">
 						<![CDATA[xquery version "1.0";
 						declare namespace nuds="http://nomisma.org/nuds";
@@ -460,10 +468,6 @@
 			<xforms:submission id="save-collections" ref="instance('collections-list')" resource="{instance('exist-config')/url}/collections-list.xml" method="put" replace="none"
 				xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Error Saving Collections List.</xforms:message>
-				<xforms:action ev:event="xforms-submit-done">
-					<xforms:setvalue ref="instance('control-instance')/collection-name" value="instance('collections-list')/collection[last()]/@name"></xforms:setvalue>
-					<xforms:send submission="save-config"></xforms:send>
-				</xforms:action>
 			</xforms:submission>
 
 			<!-- loading, saving config -->
@@ -731,6 +735,14 @@
 																				<xforms:toggle case="numishare-editor"></xforms:toggle>
 																			</xforms:action>
 																		</xforms:trigger>
+																		<xforms:trigger appearance="minimal">
+																			<xforms:label><span class="glyphicon glyphicon-trash"></span></xforms:label>
+																			<xforms:hint>Delete Collection</xforms:hint>
+																			<xforms:action ev:event="DOMActivate">
+																				<xforms:setvalue ref="instance('control-instance')/collection-name" value="$name"></xforms:setvalue>
+																				<xforms:dispatch target="delete-collection-dialog" name="fr-show"></xforms:dispatch>
+																			</xforms:action>																			
+																		</xforms:trigger>
 																	</td>
 																</tr>
 															</xforms:repeat>
@@ -866,6 +878,11 @@
 													<xforms:action ev:event="DOMActivate">
 														<!-- save collections list, config, and XQL files -->
 														<xforms:send submission="save-collections"></xforms:send>
+														<xforms:action ev:event="xforms-submit-done">
+															<xforms:setvalue ref="instance('control-instance')/status">Collection successfully created in eXist-db.</xforms:setvalue>
+															<xforms:setvalue ref="instance('control-instance')/collection-name" value="instance('collections-list')/collection[last()]/@name"></xforms:setvalue>
+															<xforms:send submission="save-config"></xforms:send>
+														</xforms:action>
 														<xforms:toggle case="collections-list-interface"></xforms:toggle>
 													</xforms:action>
 												</xforms:trigger>
@@ -1174,7 +1191,37 @@
 				</div>
 			</div>
 		</div>
-		<!-- dialogs -->
+		
+		<!-- *********************** DIALOGS ********************* -->
+		<!-- ********* NUMISHARE-ADMIN ********* -->
+		<fr:alert-dialog id="delete-collection-dialog">
+			<fr:label>Delete Collection</fr:label>
+			<fr:message>Are you sure you want to delete this collection? This is irreversible. It is recommended that you make a backup first.</fr:message>
+			<fr:negative-choice></fr:negative-choice>
+			<fr:positive-choice>
+				<xforms:action ev:event="DOMActivate">
+					<!-- set and submit the XQuery -->
+					<xforms:setvalue ref="instance('eXist-xquery')/exist:text"
+						value="replace(instance('xqueries')/query[@id='delete-collection'], '%COLLECTION%', instance('control-instance')/collection-name)"></xforms:setvalue>
+					<xforms:send submission="xquery-db"></xforms:send>
+					
+					<!-- delete the collection from the collections-list XML -->
+					<xforms:delete nodeset="instance('collections-list')/collection[@name=instance('control-instance')/collection-name]"/>
+					<xforms:send submission="save-collections"/>
+					
+					<!-- update status and get collection metadata -->
+					<xforms:action ev:event="xforms-submit-done">
+						<xforms:setvalue ref="instance('control-instance')/status">Collection successfully removed from eXist-db.</xforms:setvalue>						
+						<xforms:setvalue ref="instance('eXist-xquery')/exist:text"
+							value="replace(instance('xqueries')/query[@id='collection-metadata'], '%SEQUENCE%', string-join(instance('collections-list')/collection/@name, ','))"></xforms:setvalue>
+						<xforms:send submission="xquery-db"></xforms:send>
+						<!-- blank collection name -->
+						<xforms:setvalue ref="instance('control-instance')/collection-name"/>
+					</xforms:action>
+				</xforms:action>
+			</fr:positive-choice>
+		</fr:alert-dialog>
+		<!-- ********* NUMISHARE-EDITOR ********* -->
 		<fr:alert-dialog id="delete">
 			<fr:label>Delete</fr:label>
 			<fr:message>Are you sure you want to delete this object?</fr:message>
