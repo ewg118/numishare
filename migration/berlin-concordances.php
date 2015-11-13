@@ -50,6 +50,9 @@ foreach ($files as $file){
 					case 'V-1':
 						$nomismaId[] = '5';
 						break;
+					case 'V-2':
+						$nomismaId[] = '5';
+						break;
 					default:
 						$nomismaId[null];
 				}
@@ -222,6 +225,18 @@ foreach ($files as $file){
 						break;
 					case 'Quintillus':
 						$nomismaId[] = 'qu';
+						break;
+					case 'Aurelianus':
+						$nomismaId[] = 'aur';
+						break;
+					case 'Severina':
+						$nomismaId[] = 'seva';
+						break;
+					case 'Tacitus':
+						$nomismaId[] = 'tac';
+						break;
+					case 'Florianus':
+						$nomismaId[] = 'fl';
 						break;
 					default:
 						$nomismaId[] = null;
