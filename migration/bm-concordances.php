@@ -1,6 +1,6 @@
 <?php
 //error_reporting(0);
-$data = generate_json('/home/komet/ans_migration/ocre/bm-data/ric5.csv', false);
+$data = generate_json('/home/komet/ans_migration/ocre/bm-data/ric5_ar.csv', false);
 $ref_array = array();
 $num_array = array();
 $type_array = array();
@@ -64,6 +64,19 @@ foreach ($data as $row){
 			} else {
 				$authority = '';
 			}
+		} else if ($authority == 'RECALCULATE-AURELIAN'){
+			preg_match('/p\.([0-9]+)/', $nums[$key], $matches);
+			if (is_numeric($matches[1])){
+				if ($matches[1] >= 263 && $matches[1] <= 312){
+					$authority = 'aur';
+				}
+				if ($matches[1] == 313){
+					$authority = 'aur_seva';
+				}
+				if ($matches[1] >= 314 && $matches[1] <= 318){
+					$authority = 'seva';
+				}
+			}
 		}
 		
 		foreach ($refs as $ref){
@@ -118,7 +131,7 @@ foreach($num_array as $k=>$array){
 	$csv .= "\n";	
 }
 //var_dump($type_array);
-file_put_contents($vol . '-con-new.csv', $csv);
+file_put_contents($vol . '-con.csv', $csv);
 
 function parse_ref($ref, $vol, $authority){
 	switch ($vol){
@@ -363,6 +376,15 @@ function parse_authority($authority, $comment){
 				break;
 			case $authority == 'Quintillus':
 				$auth = 'qu';
+				break;
+			case $authority == 'Aurelian':
+				$auth = 'RECALCULATE-AURELIAN';
+				break;
+			case $authority == 'Tacitus':
+				$auth = 'tac';
+				break;
+			case $authority == 'Florian':
+				$auth = 'fl';
 				break;
 		}		
 	}

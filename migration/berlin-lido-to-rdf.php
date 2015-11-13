@@ -8,7 +8,7 @@ $data = generate_json('berlin-concordances.csv', false);
 xmlns:dcterms="http://purl.org/dc/terms/" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:void="http://rdfs.org/ns/void#"
 xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">';*/
 
-//user XML writer to generate RDF
+//use XML writer to generate RDF
 $writer = new XMLWriter();
 $writer->openURI("berlin.rdf");
 //$writer->openURI('php://output');
@@ -26,7 +26,6 @@ $writer->writeAttribute('xmlns:foaf', "http://xmlns.com/foaf/0.1/");
 $writer->writeAttribute('xmlns:rdf', "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
 $writer->writeAttribute('xmlns:void', "http://rdfs.org/ns/void#");
 
-	//file_put_contents('berlin-ric.rdf', $open);
 $count = 1;
 foreach ($data as $row){
 	if (strlen($row['URI']) > 0){
@@ -34,13 +33,10 @@ foreach ($data as $row){
 		process_row($row, $writer);
 		$count++;
 	}
-	//file_put_contents('berlin-ric.rdf', $rdf, FILE_APPEND);
 }
 
 $writer->endElement();
 $writer->flush();
-
-//file_put_contents('berlin-ric.rdf', '</rdf:RDF>', FILE_APPEND);
 
 function process_row($row, $writer){
 	$id = $row['object_number'];

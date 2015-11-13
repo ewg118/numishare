@@ -3,67 +3,79 @@
 require_once( "sparqllib.php" );
 error_reporting(0);
 
-/*$ric1 = generate_json('/home/komet/ans_migration/ocre/bm-data/ric1.csv', false);
-$ric2_1 = generate_json('/home/komet/ans_migration/ocre/bm-data/ric2.1.csv', false);
-$ric2 = generate_json('/home/komet/ans_migration/ocre/bm-data/ric2.csv', false);
-$ric3 = generate_json('/home/komet/ans_migration/ocre/bm-data/ric3.csv', false);
-$data = generate_json('/home/komet/ans_migration/ocre/bm-data/ric4.csv', false);*/
-$data = generate_json('/home/komet/ans_migration/ocre/bm-data/ric5.csv', false);
-//$data = array_merge($ric1, $ric2_1, $ric2, $ric3, $ric4);
-$lookup = generate_json('/home/komet/ans_migration/ocre/bm-data/RIC5-con.csv', false);
+$data = generate_json('/home/komet/ans_migration/ocre/bm-data/ric5_ar.csv', false);
+$lookup = generate_json('/home/komet/ans_migration/ocre/bm-data/RIC5-ar-con.csv', false);
 
-$open = '<rdf:RDF xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xmlns:nm="http://nomisma.org/id/"
-         xmlns:dcterms="http://purl.org/dc/terms/" xmlns:foaf="http://xmlns.com/foaf/0.1/" 
-         xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:nmo="http://nomisma.org/ontology#" 
-         xmlns:void="http://rdfs.org/ns/void#">';
+//use XML writer to generate RDF
+$writer = new XMLWriter();
+$writer->openURI("bm_ric5_ar.rdf");
+//$writer->openURI('php://output');
+$writer->startDocument('1.0','UTF-8');
+$writer->setIndent(true);
+//now we need to define our Indent string,which is basically how many blank spaces we want to have for the indent
+$writer->setIndentString("    ");
 
-file_put_contents('bm-ric.rdf', $open);
+$writer->startElement('rdf:RDF');
+$writer->writeAttribute('xmlns:xsd', 'http://www.w3.org/2001/XMLSchema#');
+$writer->writeAttribute('xmlns:nm', "http://nomisma.org/id/");
+$writer->writeAttribute('xmlns:nmo', "http://nomisma.org/ontology#");
+$writer->writeAttribute('xmlns:dcterms', "http://purl.org/dc/terms/");
+$writer->writeAttribute('xmlns:foaf', "http://xmlns.com/foaf/0.1/");
+$writer->writeAttribute('xmlns:rdf', "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
+$writer->writeAttribute('xmlns:void', "http://rdfs.org/ns/void#");
 
 $count = 1;
 foreach ($data as $row){	
 	
 	//reprocess entire spreadsheet
-	process_csv($row, $count);
+	process_csv($writer, $row, $count);
 	$count++;
-	
-	/*if ($row['Authority'] == 'Aemilian' || $row['Authority'] == 'Volusian' || $row['Authority'] == 'Uranius Antoninus' || stristr($row['Authority'], 'Trebonianus Gallus')){
-		process_csv($row, $count);
-		$count++;
-	}*/
 }
 
-file_put_contents('bm-ric.rdf', '</rdf:RDF>', FILE_APPEND);
+$writer->endElement();
+$writer->flush();
 
-function process_csv($row, $count){
+function process_csv($writer, $row, $count){
 	GLOBAL $lookup;
 	$id = $row['PRN'];
 	echo "Processing {$count}: {$id}\n";
 	$about = 'http://collection.britishmuseum.org/id/object/' . $id;
 	$accessions = explode('~', $row['expr sortexpr bm_reg_no_expr']);
 	
-	//get nomisma RRC coin type URI
+	//get coin type URI
 	$coinType = '';
 	foreach ($lookup as $line){
 		if ($line['key'] == $about){
 			$coinType = $line['nomisma_id'];
 		}
 	}
-	$rdf = '';
+	
 	if (strlen($coinType) > 0){
-		$rdf .= '<nmo:NumismaticObject rdf:about="' . $about . '">';
-		$rdf .= '<dcterms:title xml:lang="en">British Museum: ' . $accessions[0] . '</dcterms:title>';
-		$rdf .= '<dcterms:identifier>' . $accessions[0] . '</dcterms:identifier>';
-		$rdf .= '<dcterms:publisher rdf:resource="http://nomisma.org/id/bm"/>';
-		$rdf .= '<nmo:hasCollection rdf:resource="http://nomisma.org/id/bm"/>';
-		$rdf .= '<nmo:hasTypeSeriesItem rdf:resource="' . $coinType . '"/>';
-		$rdf .= query_bm($id);
-		$rdf .= '<void:inDataset rdf:resource="http://www.britishmuseum.org/"/>';
-		$rdf .= '</nmo:NumismaticObject>';
+		$writer->startElement('nmo:NumismaticObject');
+			$writer->writeAttribute('rdf:about', $about);			
+			$writer->startElement('dcterms:publisher');
+				$writer->writeAttribute('rdf:resource', 'http://nomisma.org/id/bm');
+			$writer->endElement();
+			$writer->startElement('nmo:hasCollection');
+				$writer->writeAttribute('rdf:resource', 'http://nomisma.org/id/bm');
+			$writer->endElement();
+				$writer->startElement('nmo:hasTypeSeriesItem');
+			$writer->writeAttribute('rdf:resource', $coinType);
+			$writer->endElement();
+		
+			query_bm($writer, $id);
+			
+			//void:inDataset
+			$writer->startElement('void:inDataset');
+				$writer->writeAttribute('rdf:resource', 'http://www.britishmuseum.org/');
+			$writer->endElement();
+			
+		//end nmo:NumismaticObject
+		$writer->endElement();
 	}
-	file_put_contents('bm-ric.rdf', $rdf, FILE_APPEND);
 }
 
-function query_bm($id){
+function query_bm($writer, $id){
 	$db = sparql_connect( "http://collection.britishmuseum.org/sparql" );
 	if( !$db ) {
 		print sparql_errno() . ": " . sparql_error(). "\n"; exit;
@@ -73,7 +85,7 @@ function query_bm($id){
 	sparql_ns( "ecrm","http://erlangen-crm.org/current/" );
 	sparql_ns( "object","http://collection.britishmuseum.org/id/object/" );
 	
-	$sparql = "SELECT ?image ?weight ?axis ?diameter ?objectId WHERE {
+	$sparql = "SELECT ?image ?weight ?axis ?diameter ?objectId ?regno WHERE {
   OPTIONAL {object:OBJECT bmo:PX_has_main_representation ?image }
   OPTIONAL { object:OBJECT ecrm:P43_has_dimension ?wDim .
            ?wDim ecrm:P2_has_type thesDimension:weight .
@@ -93,6 +105,11 @@ function query_bm($id){
      ?identifier ecrm:P2_has_type <http://collection.britishmuseum.org/id/thesauri/identifier/codexid> ;
         rdfs:label ?objectId
     }
+    OPTIONAL {
+     object:OBJECT ecrm:P1_is_identified_by ?identifier.
+     ?identifier ecrm:P2_has_type <http://collection.britishmuseum.org/id/thesauri/identifier/regno> ;
+        rdfs:label ?regno
+    }
   }";
 	
 	$result = sparql_query(str_replace('OBJECT',$id,$sparql));
@@ -100,7 +117,6 @@ function query_bm($id){
 		print sparql_errno() . ": " . sparql_error(). "\n"; exit;
 	}
 	
-	$xml = '';
 	$fields = sparql_field_array($result);
 	while( $row = sparql_fetch_array( $result ) )
 	{
@@ -109,25 +125,44 @@ function query_bm($id){
 			if (strlen($row[$field]) > 0) {
 				switch ($field) {
 					case 'image':
-						$xml .= '<foaf:depiction rdf:resource="' . $row[$field] . '"/>';
+						$writer->startElement('foaf:depiction');
+							$writer->writeAttribute('rdf:resource', $row[$field]);
+						$writer->endElement();
+						break;
+					case 'regno':
+						$writer->startElement('dcterms:title');
+							$writer->writeAttribute('xml:lang', 'en');
+							$writer->text("British Museum: " . $row[$field]);
+						$writer->endElement();
+						$writer->writeElement('dcterms:identifier', $row[$field]);
 						break;
 					case 'objectId':
-						$xml .= '<foaf:homepage rdf:resource="http://www.britishmuseum.org/research/collection_online/collection_object_details.aspx?objectId=' . $row[$field] . '&amp;partId=1"/>';
+						$writer->startElement('foaf:homepage');
+							$writer->writeAttribute('rdf:resource', "http://www.britishmuseum.org/research/collection_online/collection_object_details.aspx?objectId={$row[$field]}&partId=1");
+						$writer->endElement();
 						break;
 					case 'axis':
-						$xml .= '<nmo:hasAxis rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">' . $row[$field] . '</nmo:hasAxis>';
+						$writer->startElement('nmo:hasAxis');
+							$writer->writeAttribute('rdf:datatype', 'http://www.w3.org/2001/XMLSchema#integer');
+							$writer->text($row[$field]);
+						$writer->endElement();						
 						break;
 					case 'weight':
-						$xml .= '<nmo:hasWeight rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">' . $row[$field] . '</nmo:hasWeight>';
+						$writer->startElement('nmo:hasWeight');
+							$writer->writeAttribute('rdf:datatype', 'http://www.w3.org/2001/XMLSchema#decimal');
+							$writer->text($row[$field]);
+						$writer->endElement();
 						break;
 					case 'diameter':
-						$xml .= '<nmo:hasDiameter rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">' . $row[$field] . '</nmo:hasDiameter>';
+						$writer->startElement('nmo:hasDiameter');
+							$writer->writeAttribute('rdf:datatype', 'http://www.w3.org/2001/XMLSchema#decimal');
+							$writer->text($row[$field]);
+						$writer->endElement();
 						break;
 				}
 			}
 		}
 	}
-	return $xml;
 }
 
 
