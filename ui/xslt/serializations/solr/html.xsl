@@ -95,7 +95,7 @@
 
 				<!-- call mapping information -->
 				<xsl:if test="//lst[contains(@name, '_geo')]/int[@name='numFacetTerms'] &gt; 0">
-					<script src="http://www.openlayers.org/api/OpenLayers.js" type="text/javascript"/>
+					<script src="http://openlayers.org/api/2.12/OpenLayers.js" type="text/javascript"/>
 					<script src="http://maps.google.com/maps/api/js?v=3.2&amp;sensor=false"/>
 					<script type="text/javascript" src="{$include_path}/javascript/result_map_functions.js"/>
 				</xsl:if>
