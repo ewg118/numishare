@@ -90,13 +90,13 @@
 				<xsl:call-template name="generic_head"/>
 				<xsl:choose>
 					<xsl:when test="$recordType='physical'">
-						<script type="text/javascript" src="http://www.openlayers.org/api/OpenLayers.js"/>
+						<script type="text/javascript" src="http://openlayers.org/api/2.12/OpenLayers.js"/>
 						<script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3.2&amp;sensor=false"/>
 						<script type="text/javascript" src="{$include_path}/javascript/display_map_functions.js"/>
 					</xsl:when>
 					<!-- coin-type CSS and JS dependencies -->
 					<xsl:when test="$recordType='conceptual'">
-						<script type="text/javascript" src="http://www.openlayers.org/api/OpenLayers.js"/>
+						<script type="text/javascript" src="http://openlayers.org/api/2.12/OpenLayers.js"/>
 						<script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3.2&amp;sensor=false"/>
 						<script type="text/javascript" src="{$include_path}/javascript/mxn.js"/>
 						<script type="text/javascript" src="{$include_path}/javascript/timeline-2.3.0.js"/>
@@ -107,7 +107,7 @@
 					</xsl:when>
 					<!-- hoard CSS and JS dependencies -->
 					<xsl:when test="$recordType='hoard'">
-						<script type="text/javascript" src="http://www.openlayers.org/api/OpenLayers.js"/>
+						<script type="text/javascript" src="http://openlayers.org/api/2.12/OpenLayers.js"/>
 						<script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3.2&amp;sensor=false"/>
 						<script type="text/javascript" src="{$include_path}/javascript/mxn.js"/>
 						<script type="text/javascript" src="{$include_path}/javascript/timeline-2.3.0.js"/>

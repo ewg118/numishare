@@ -42,7 +42,7 @@
 				<xsl:choose>
 					<xsl:when test="$collection_type='hoard'">						
 						<!-- timemap dependencies -->
-						<script type="text/javascript" src="http://www.openlayers.org/api/OpenLayers.js"/>
+						<script type="text/javascript" src="http://openlayers.org/api/2.12/OpenLayers.js"/>
 						<script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3.2&amp;sensor=false"/>
 						<script type="text/javascript" src="{$include_path}/javascript/mxn.js"/>
 						<script type="text/javascript" src="{$include_path}/javascript/timeline-2.3.0.js"/>
@@ -55,7 +55,7 @@
 					</xsl:when>
 					<xsl:otherwise>						
 						<!-- maps-->
-						<script type="text/javascript" src="http://www.openlayers.org/api/OpenLayers.js"/>
+						<script type="text/javascript" src="http://openlayers.org/api/2.12/OpenLayers.js"/>
 						<script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3.2&amp;sensor=false"/>
 						<script type="text/javascript" src="{$include_path}/javascript/map_fullscreen_functions.js"/>
 						<script type="text/javascript" src="{$include_path}/javascript/map_functions.js"/>
