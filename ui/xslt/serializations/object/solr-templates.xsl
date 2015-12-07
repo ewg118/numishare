@@ -695,6 +695,7 @@
 							<xsl:when test="$segs[3] = 'tac'">69</xsl:when>
 							<xsl:when test="$segs[3] = 'fl'">70</xsl:when>
 							<xsl:when test="$segs[3] = 'intr'">71</xsl:when>
+							<xsl:when test="$segs[3] = 'pro'">72</xsl:when>
 						</xsl:choose>
 					</xsl:variable>
 					<xsl:variable name="num">
