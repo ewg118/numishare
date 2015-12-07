@@ -1,6 +1,6 @@
 <?php 
 
-$data = generate_json('/home/komet/ans_migration/ocre/19.csv');
+$data = generate_json('/home/komet/ans_migration/ocre/probus.csv');
 $deities_array = generate_json('deities.csv');
 $nomismaUris = array();
 $errors = array();
@@ -636,6 +636,9 @@ function get_title($nudsid){
 			break;
 		case 'intr':
 			$auth = 'Anonymous';
+			break;
+		case 'pro':
+			$auth = 'Probus';
 			break;
 	}
 	
