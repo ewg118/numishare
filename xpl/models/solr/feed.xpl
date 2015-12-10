@@ -56,11 +56,11 @@
 									<xsl:choose>
 										<xsl:when test="string($sort)">
 											<xsl:value-of
-												select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+lang:', $lang, '+AND+', encode-for-uri($q), '&amp;start=', $start, '&amp;rows=', $rows, '&amp;sort=', encode-for-uri($sort), '&amp;facet=false&amp;fl=id,recordId,recordType,title_display,mint_geo,findspot_geo,tpq_num,taq_num,year_num,timestamp')"
+												select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+lang:', $lang, '+AND+', encode-for-uri($q), '&amp;start=', $start, '&amp;rows=', $rows, '&amp;sort=', encode-for-uri($sort), '&amp;facet=false&amp;fl=id,recordId,recordType,title_display,mint_geo,findspot_geo,tpq_num,taq_num,year_num,timestamp,score')"
 											/>
 										</xsl:when>
 										<xsl:otherwise>
-											<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+lang:', $lang, '+AND+', encode-for-uri($q), '&amp;start=', $start, '&amp;rows=', $rows, '&amp;sort=timestamp+desc&amp;facet=false&amp;fl=id,recordId,recordType,title_display,mint_geo,findspot_geo,tpq_num,taq_num,year_num,timestamp')"/>
+											<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+lang:', $lang, '+AND+', encode-for-uri($q), '&amp;start=', $start, '&amp;rows=', $rows, '&amp;sort=timestamp+desc&amp;facet=false&amp;fl=id,recordId,recordType,title_display,mint_geo,findspot_geo,tpq_num,taq_num,year_num,timestamp,score')"/>
 										</xsl:otherwise>
 									</xsl:choose>
 								</xsl:when>
@@ -68,11 +68,11 @@
 									<xsl:choose>
 										<xsl:when test="string($sort)">
 											<xsl:value-of
-												select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+NOT(lang:*)+AND+', encode-for-uri($q), '&amp;start=', $start, '&amp;rows=', $rows, '&amp;sort=', encode-for-uri($sort), '&amp;facet=false&amp;fl=id,recordId,recordType,title_display,mint_geo,findspot_geo,tpq_num,taq_num,year_num,timestamp')"
+												select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+NOT(lang:*)+AND+', encode-for-uri($q), '&amp;start=', $start, '&amp;rows=', $rows, '&amp;sort=', encode-for-uri($sort), '&amp;facet=false&amp;fl=id,recordId,recordType,title_display,mint_geo,findspot_geo,tpq_num,taq_num,year_num,timestamp,score')"
 											/>
 										</xsl:when>
 										<xsl:otherwise>
-											<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+NOT(lang:*)+AND+', encode-for-uri($q), '&amp;start=', $start, '&amp;rows=', $rows, '&amp;sort=timestamp+desc&amp;facet=false&amp;fl=id,recordId,recordType,title_display,mint_geo,findspot_geo,tpq_num,taq_num,year_num,timestamp')"/>
+											<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+NOT(lang:*)+AND+', encode-for-uri($q), '&amp;start=', $start, '&amp;rows=', $rows, '&amp;sort=timestamp+desc&amp;facet=false&amp;fl=id,recordId,recordType,title_display,mint_geo,findspot_geo,tpq_num,taq_num,year_num,timestamp,score')"/>
 										</xsl:otherwise>
 									</xsl:choose>
 								</xsl:otherwise>
