@@ -2459,6 +2459,24 @@
 			<xsl:text> B.C.</xsl:text>
 		</xsl:if>
 	</xsl:function>
+	
+	<xsl:function name="numishare:recordCount">
+		<xsl:param name="lang"/>
+		<xsl:param name="startRecord"/>
+		<xsl:param name="endRecord"/>
+		<xsl:param name="numFound"/>
+		
+		<xsl:choose>
+			<xsl:when test="$lang='ar'">
+				<xsl:value-of select="replace(replace(replace(numishare:normalizeLabel('results_result-desc', $lang), 'أ أ', string($startRecord)), 'ب ب', string($endRecord)), 'ج ج',
+					string($numFound))"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="replace(replace(replace(numishare:normalizeLabel('results_result-desc', $lang), 'XX', string($startRecord)), 'YY', string($endRecord)), 'ZZ',
+					string($numFound))"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:function>
 
 	<!-- this function will normalize a NUDS element into a nomisma property for RDFa -->
 	<xsl:function name="numishare:normalizeProperty">

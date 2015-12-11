@@ -16,6 +16,9 @@
 	<xsl:param name="rows">20</xsl:param>
 	<xsl:param name="start" select="doc('input:request')/request/parameters/parameter[name='start']/value"/>
 	<xsl:variable name="request-uri" select="concat('http://localhost:8080', substring-before(doc('input:request')/request/request-uri, 'results'))"/>
+	<xsl:variable name="collection-name" select="substring-before(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/')"/>
+	<xsl:variable name="role" select="/content/collections/collection[@name=$collection-name]/@role"/>
+	<xsl:variable name="authenticated" select="if (doc('input:auth')/request-security/role=$role or doc('input:auth')/request-security/role='numishare-admin') then true() else false()" as="xs:boolean"/>
 
 	<!-- blank params -->
 	<xsl:param name="mode"/>
@@ -127,6 +130,8 @@
 	<xsl:template name="results">
 		<!--<xsl:copy-of select="$sparqlResult"/>-->
 		<div class="container-fluid">
+			<xsl:copy-of select="doc('input:request')"/>
+			
 			<xsl:if test="$lang='ar'">
 				<xsl:attribute name="style">direction: rtl;</xsl:attribute>							
 			</xsl:if>

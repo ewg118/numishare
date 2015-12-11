@@ -23,6 +23,11 @@
 							<a href="{$display_path}id/{str[@name='recordId']}{if (string($lang)) then concat('?lang=', $lang) else ''}">
 								<xsl:value-of select="str[@name='title_display']"/>
 							</a>
+							<xsl:if test="$authenticated = true()">
+								<a href="" title="Edit Record">
+									<span class="glyphicon glyphicon-pencil"/>
+								</a>
+							</xsl:if>
 						</xsl:otherwise>
 					</xsl:choose>
 				</h4>
@@ -972,17 +977,8 @@
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:variable>
-				<xsl:choose>
-					<xsl:when test="$lang='ar'">
-						<xsl:value-of select="replace(replace(replace(numishare:normalizeLabel('results_result-desc', $lang), 'أ أ', string($startRecord)), 'ب ب', string($endRecord)), 'ج ج',
-							string($numFound))"/>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:value-of select="replace(replace(replace(numishare:normalizeLabel('results_result-desc', $lang), 'XX', string($startRecord)), 'YY', string($endRecord)), 'ZZ',
-							string($numFound))"/>
-					</xsl:otherwise>
-				</xsl:choose>
-
+				
+				<xsl:value-of select="numishare:recordCount($lang, $startRecord, $endRecord, $numFound)"/>
 			</div>
 			<!-- paging functionality -->
 			<div class="col-md-6 page-nos">
