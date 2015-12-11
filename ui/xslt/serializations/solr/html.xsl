@@ -130,7 +130,7 @@
 	<xsl:template name="results">
 		<!--<xsl:copy-of select="$sparqlResult"/>-->
 		<div class="container-fluid">
-			<xsl:copy-of select="doc('input:request')"/>
+			<!--<xsl:copy-of select="doc('input:request')"/>-->
 			
 			<xsl:if test="$lang='ar'">
 				<xsl:attribute name="style">direction: rtl;</xsl:attribute>							
