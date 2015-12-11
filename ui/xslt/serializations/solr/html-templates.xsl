@@ -24,9 +24,12 @@
 								<xsl:value-of select="str[@name='title_display']"/>
 							</a>
 							<xsl:if test="$authenticated = true()">
-								<a href="" title="Edit Record">
-									<span class="glyphicon glyphicon-pencil"/>
-								</a>
+								<xsl:variable name="adminURL" select="concat(doc('input:request')/request/scheme, '://', doc('input:request')/request/server-name, ':8080/orbeon/numishare/admin/')"/>
+								<small>
+									<a href="{$adminURL}edit/coin/?id={str[@name='recordId']}" title="Edit Record" style="margin-left:5px">
+										<span class="glyphicon glyphicon-pencil"/>
+									</a>
+								</small>
 							</xsl:if>
 						</xsl:otherwise>
 					</xsl:choose>
