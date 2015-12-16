@@ -69,7 +69,7 @@
 										<a href="#getRDF">getRDF</a>
 									</td>
 									<td>
-										<a href="apis/getRDF?identifiers={string-join(//doc/str[@name='recordId'], '|')}">NUDS/XML</a>
+										<a href="apis/getRDF?identifiers={string-join(//doc/str[@name='recordId'], '|')}">RDF/XML</a>
 									</td>
 									<td/>
 									<td/>
