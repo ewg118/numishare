@@ -64,6 +64,16 @@
 									<td/>
 									<td/>
 								</tr>
+								<tr>
+									<td>
+										<a href="#getRDF">getRDF</a>
+									</td>
+									<td>
+										<a href="apis/getRDF?identifiers={string-join(//doc/str[@name='recordId'], '|')}">NUDS/XML</a>
+									</td>
+									<td/>
+									<td/>
+								</tr>
 							</tbody>
 						</table>
 						<div class="highlight" id="getNuds">
@@ -75,6 +85,17 @@
 								<b>Result</b> : returns NUDS/XML records aggregated in a nudsGroup root element.<br/>
 								<b>Example</b>: <a href="apis/getNuds?identifiers={string-join(//doc/str[@name='recordId'], '|')}">apis/getNuds?identifiers=<xsl:value-of
 										select="string-join(//doc/str[@name='recordId'], '|')"/></a>
+							</p>
+						</div>
+						<div class="highlight" id="getRDF">
+							<h3>Get RDF</h3>
+							<p>Get an aggregated RDF/XML serialization based on the recordIds in the collection.<br/>
+								<b>Webservice Type</b> : REST<br/>
+								<b>Url</b>: <xsl:value-of select="concat(/content/config/url, 'apis/getRDF?')"/><br/>
+								<b>Parameters</b> : identifiers (recordIds divided by a pipe '|')<br/>
+								<b>Result</b> : returns RDF/XML triples for given objects/hoards/coin types.<br/>
+								<b>Example</b>: <a href="apis/getRDF?identifiers={string-join(//doc/str[@name='recordId'], '|')}">apis/getRDF?identifiers=<xsl:value-of
+									select="string-join(//doc/str[@name='recordId'], '|')"/></a>
 							</p>
 						</div>
 					</div>

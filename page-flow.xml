@@ -121,6 +121,7 @@
 	<!-- **** APIs **** -->
 	<page path="/numishare/[^\/]+/apis/get" model="xpl/models/object/get-id.xpl" view="xpl/views/apis/get.xpl"/>	
 	<page path="/numishare/[^\/]+/apis/getNuds" view="xpl/models/xquery/aggregate-ids.xpl"/>
+	<page path="/numishare/[^\/]+/apis/getRDF" model="xpl/models/xquery/aggregate-ids.xpl" view="xpl/views/serializations/object/rdf.xpl"/>
 	<page path="/numishare/[^\/]+/apis/search" model="xpl/models/solr/feed.xpl" view="xpl/views/apis/search.xpl"/>
 	
 	<!-- **** AGGREGATED OBJECTS / RDF EXPORT **** -->
