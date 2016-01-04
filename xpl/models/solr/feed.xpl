@@ -45,7 +45,7 @@
 				</xsl:param>
 
 				<!-- config variables -->
-				<xsl:variable name="solr-url" select="concat(/config/solr_published, 'select/')"/>				
+				<xsl:variable name="solr-url" select="concat(/config/solr_published, 'feed/')"/>				
 
 				<xsl:variable name="service">
 					<xsl:choose>

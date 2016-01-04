@@ -67,6 +67,9 @@
 			<field name="recordType">
 				<xsl:value-of select="@recordType"/>
 			</field>
+			<xsl:if test="nuds:control/nuds:publicationStatus='approvedSubtype'">
+				<field name="subtype">true</field>
+			</xsl:if>
 			<field name="publisher_display">
 				<xsl:value-of select="$publisher"/>
 			</field>

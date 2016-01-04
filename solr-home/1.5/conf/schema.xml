@@ -68,6 +68,7 @@
 	
 	<!-- index typeNumber for coin types -->
 	<field name="typeNumber" type="string" indexed="true" stored="true"/>
+	<field name="subtype" type="boolean" indexed="true" stored="true"/>
 	
 	<!-- index timestamp -->
 	<field name="timestamp" type="date" stored="true"/>
