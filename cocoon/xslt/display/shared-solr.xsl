@@ -180,7 +180,7 @@
 							<xsl:value-of select="concat($rdf/*[@rdf:about=concat($href, '#this')]/geo:long, ',', $rdf/*[@rdf:about=concat($href, '#this')]/geo:lat)"/>
 						</field>
 					</xsl:if>
-					<xsl:for-each select="$rdf/*[@rdf:about=$href]/skos:relatedMatch[contains(@rdf:resource, 'pleiades.stoa.org')]">
+					<xsl:for-each select="$rdf/*[@rdf:about=$href]/skos:closeMatch[contains(@rdf:resource, 'pleiades.stoa.org')]">
 						<field name="pleiades_uri">
 							<xsl:value-of select="@rdf:resource"/>
 						</field>
