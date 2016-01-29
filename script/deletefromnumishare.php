@@ -18,12 +18,12 @@
 		//PUT xml to eXist
 		$deleteFromExist=curl_init();		
 		//set curl opts
-		curl_setopt($deleteFromExist,CURLOPT_URL,'http://localhost:8080/exist/rest/db/numishare/ead/' . $collection . '/' . $basename);
+		curl_setopt($deleteFromExist,CURLOPT_URL,'http://localhost:8080/exist/rest/db/mantis/objects/' . $collection . '/' . $basename);
 		curl_setopt($deleteFromExist,CURLOPT_HTTPHEADER, array("Content-Type: text/xml; charset=utf-8")); 
 		curl_setopt($deleteFromExist,CURLOPT_CONNECTTIMEOUT,2);
 		curl_setopt($deleteFromExist,CURLOPT_RETURNTRANSFER,1);
 		curl_setopt($deleteFromExist,CURLOPT_CUSTOMREQUEST, "DELETE");
-		curl_setopt($deleteFromExist,CURLOPT_USERPWD,"username:password");
+		curl_setopt($deleteFromExist,CURLOPT_USERPWD,"admin:");
 		$response = curl_exec($deleteFromExist);
 		
 		$http_code = curl_getinfo($deleteFromExist,CURLINFO_HTTP_CODE); 
@@ -35,8 +35,7 @@
 			error_log($basename . ' deleted at ' . date("d/m/y : H:i:s", time()) . "\n", 3, "/var/log/numishare/success.log");
 				
 			//DELETE FROM SOLR
-			$solrId = 'ans' . str_replace('.', '_', $accnum);
-			$solrDeleteXml = '<delete><id>' . $solrId . '</id></delete>';
+			$solrDeleteXml = '<delete><query>recordId:"' . $accnum . '"</query></delete>';
 
 			//post solr doc
 			$deleteFromSolr=curl_init();
