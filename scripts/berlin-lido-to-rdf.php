@@ -4,19 +4,35 @@
 $data = generate_json('berlin-concordances.csv', false);
 
 //start RDF/XML file
-$open = '<rdf:RDF xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xmlns:nm="http://nomisma.org/id/" xmlns:nmo="http://nomisma.org/ontology#"
-xmlns:dcterms="http://purl.org/dc/terms/" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"
-xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:void="http://rdfs.org/ns/void#">';
+//use XML writer to generate RDF
+$writer = new XMLWriter();
+$writer->openURI("berlin-rrc.rdf");
+//$writer->openURI('php://output');
+$writer->startDocument('1.0','UTF-8');
+$writer->setIndent(true);
+//now we need to define our Indent string,which is basically how many blank spaces we want to have for the indent
+$writer->setIndentString("    ");
 
-file_put_contents('berlin-rrc.rdf', $open);
+$writer->startElement('rdf:RDF');
+$writer->writeAttribute('xmlns:xsd', 'http://www.w3.org/2001/XMLSchema#');
+$writer->writeAttribute('xmlns:nm', "http://nomisma.org/id/");
+$writer->writeAttribute('xmlns:nmo', "http://nomisma.org/ontology#");
+$writer->writeAttribute('xmlns:dcterms', "http://purl.org/dc/terms/");
+$writer->writeAttribute('xmlns:foaf', "http://xmlns.com/foaf/0.1/");
+$writer->writeAttribute('xmlns:rdf', "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
+$writer->writeAttribute('xmlns:void', "http://rdfs.org/ns/void#");
+
 $count = 1;
 foreach ($data as $row){
-	$rdf = process_row($row, $count);
-	file_put_contents('berlin-rrc.rdf', $rdf, FILE_APPEND);
-	$count++;
+	if (strlen($row['URI']) > 0){
+		echo "Processing #{$count}: {$row['object_number']}\n";
+		process_row($row, $writer);
+		$count++;
+	}
 }
 
-file_put_contents('berlin-rrc.rdf', '</rdf:RDF>', FILE_APPEND);
+$writer->endElement();
+$writer->flush();
 
 function process_row($row, $count){
 	//only process rows with OCRE URIs
@@ -40,29 +56,48 @@ function process_row($row, $count){
 			$measurements = $xpath->query("descendant::lido:measurementsSet");
 			
 			
-			$rdf = '<nmo:NumismaticObject rdf:about="http://ww2.smb.museum/ikmk/object.php?id=' . $id . '">';
-			$rdf .= '<dcterms:title xml:lang="de">' . $title . '</dcterms:title>';
-			$rdf .= '<dcterms:identifier>' . $id . '</dcterms:identifier>';
-			$rdf .= '<dcterms:publisher rdf:resource="http://nomisma.org/id/mk_berlin"/>';
-			$rdf .= '<nmo:hasCollection rdf:resource="http://nomisma.org/id/mk_berlin"/>';
-			$rdf .= '<nmo:hasTypeSeriesItem rdf:resource="' . $row['URI'] . '"/>';
-			
-			//measurements			
+			$writer->startElement('nmo:NumismaticObject');
+				$writer->writeAttribute('rdf:about', "http://ww2.smb.museum/ikmk/object.php?id={$id}");
+				$writer->startElement('dcterms:title');
+					$writer->writeAttribute('xml:lang', 'de');
+					$writer->text($title);
+				$writer->endElement();
+				$writer->writeElement('dcterms:identifier', $id);
+				$writer->startElement('dcterms:publisher');
+					$writer->writeAttribute('rdf:resource', 'http://nomisma.org/id/mk_berlin');
+				$writer->endElement();
+				$writer->startElement('nmo:hasCollection');
+					$writer->writeAttribute('rdf:resource', 'http://nomisma.org/id/mk_berlin');
+				$writer->endElement();
+				$writer->startElement('nmo:hasTypeSeriesItem');
+					$writer->writeAttribute('rdf:resource', $row['URI']);
+				$writer->endElement();
+				
+			//measurements
 			foreach($measurements as $measurement){
 				$type = $measurement->getElementsByTagNameNS('http://www.lido-schema.org', 'measurementType')->item(0)->nodeValue;
 				$value = $measurement->getElementsByTagNameNS('http://www.lido-schema.org', 'measurementValue')->item(0)->nodeValue;
-				
+					
 				switch ($type){
 					case 'diameter':
-						$rdf .= '<nmo:hasDiameter rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">' . $value . '</nmo:hasDiameter>';
+						$writer->startElement('nmo:hasDiameter');
+							$writer->writeAttribute('rdf:datatype', 'http://www.w3.org/2001/XMLSchema#decimal');
+							$writer->text($value);
+						$writer->endElement();
 						break;
 					case 'weight':
-						$rdf .= '<nmo:hasWeight rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">' . $value . '</nmo:hasWeight>';
+						$writer->startElement('nmo:hasWeight');
+							$writer->writeAttribute('rdf:datatype', 'http://www.w3.org/2001/XMLSchema#decimal');
+							$writer->text($value);
+						$writer->endElement();
 						break;
 					case 'orientation':
-						$rdf .= '<nmo:hasAxis rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">' . $value . '</nmo:hasAxis>';
+						$writer->startElement('nmo:hasAxis');
+							$writer->writeAttribute('rdf:datatype', 'http://www.w3.org/2001/XMLSchema#integer');
+							$writer->text($value);
+						$writer->endElement();
 						break;
-				}				
+				}
 			}
 			
 			//images
@@ -70,27 +105,43 @@ function process_row($row, $count){
 			if (strlen($image_url) > 0){
 				$pieces = explode('/', $image_url);
 				$image_id = $pieces[5];
-				
+			
 				//obverse
-				$rdf .= '<nmo:hasObverse><rdf:Description>';
-				$rdf .= '<foaf:thumbnail rdf:resource="http://ww2.smb.museum/mk_edit/images/' . $image_id . '/vs_thumb.jpg"/>';
-				$rdf .= '<foaf:depiction rdf:resource="http://ww2.smb.museum/mk_edit/images/' . $image_id . '/vs_opt.jpg"/>';
-				$rdf .='</rdf:Description></nmo:hasObverse>';
-				
+				$writer->startElement('nmo:hasObverse');
+					$writer->startElement('rdf:Description');
+						$writer->startElement('foaf:thumbnail');
+							$writer->writeAttribute('rdf:resource', "http://ww2.smb.museum/mk_edit/images/{$image_id}/vs_thumb.jpg");
+						$writer->endElement();
+						$writer->startElement('foaf:depiction');
+							$writer->writeAttribute('rdf:resource', "http://ww2.smb.museum/mk_edit/images/{$image_id}/vs_opt.jpg");
+						$writer->endElement();
+					$writer->endElement();
+				$writer->endElement();
+			
 				//reverse
-				$rdf .= '<nmo:hasReverse><rdf:Description>';
-				$rdf .= '<foaf:thumbnail rdf:resource="http://ww2.smb.museum/mk_edit/images/' . $image_id . '/rs_thumb.jpg"/>';
-				$rdf .= '<foaf:depiction rdf:resource="http://ww2.smb.museum/mk_edit/images/' . $image_id . '/rs_opt.jpg"/>';
-				$rdf .='</rdf:Description></nmo:hasReverse>';
+				$writer->startElement('nmo:hasReverse');
+					$writer->startElement('rdf:Description');
+						$writer->startElement('foaf:thumbnail');
+							$writer->writeAttribute('rdf:resource', "http://ww2.smb.museum/mk_edit/images/{$image_id}/rs_thumb.jpg");
+						$writer->endElement();
+						$writer->startElement('foaf:depiction');
+							$writer->writeAttribute('rdf:resource', "http://ww2.smb.museum/mk_edit/images/{$image_id}/rs_opt.jpg");
+						$writer->endElement();
+					$writer->endElement();
+				$writer->endElement();
 			}
 			
 			//findspots
 			$geonameId = '';
 			$findspotUri = '';
 			if ($id == '18202297'){
-				$rdf .= '<dcterms:isPartOf rdf:resource="http://numismatics.org/chrr/id/CTO"/>';
+				$writer->startElement('dcterms:isPartOf');
+					$writer->writeAttribute('rdf:resource', 'http://numismatics.org/chrr/id/CTO');
+				$writer->endElement();
 			} elseif ($id == '18214947'){
-				$rdf .= '<dcterms:isPartOf rdf:resource="http://numismatics.org/chrr/id/CAI"/>';
+				$writer->startElement('dcterms:isPartOf');
+					$writer->writeAttribute('rdf:resource', 'http://numismatics.org/chrr/id/CAI');
+				$writer->endElement();
 			} else {
 				$places = $xpath->query("descendant::lido:place");
 				foreach ($places as $place){
@@ -108,30 +159,46 @@ function process_row($row, $count){
 								//if the id is valid
 								if ($geonameId != '0'){
 									echo "Found {$findspotUri}\n";
-									$rdf .= '<nmo:hasFindspot rdf:resource="' . $findspotUri . '"/>';
+									$writer->startElement('nmo:hasFindspot');
+										$writer->writeAttribute('rdf:resource', $findspotUri);
+									$writer->endElement();
 									break;
 								}
 							} elseif (strstr($findspotUri, 'nomisma') !== FALSE){
-								$rdf .= '<nmo:hasFindspot rdf:resource="' . $findspotUri . '#this"/>';
+								$writer->startElement('nmo:hasFindspot');
+									$writer->writeAttribute('rdf:resource', $findspotUri . '#this');
+								$writer->endElement();
 							}
 						}
 					}					
 				}				
 			}
 			
-			$rdf .= '<void:inDataset rdf:resource="http://ww2.smb.museum/ikmk/"/>';
-			$rdf .= '</nmo:NumismaticObject>';
+			//void:inDataset
+			$writer->startElement('void:inDataset');
+				$writer->writeAttribute('rdf:resource', 'http://ww2.smb.museum/ikmk/');
+			$writer->endElement();
+			
+		//end nmo:NumismaticObject
+		$writer->endElement();
 			
 			//get coordinates
 			if (strlen($geonameId) > 0 && $geonameId != '0'){
 				$service = 'http://api.geonames.org/get?geonameId=' . $geonameId . '&username=anscoins&style=full';
 				$coords = query_geonames($service);
 				
-				$rdf .= '<geo:SpatialThing rdf:about="' . $findspotUri . '">';
-				$rdf .= '<foaf:name>' . $coords['name'] . '</foaf:name>';
-				$rdf .= '<geo:lat rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">' . $coords['lat'] . '</geo:lat>';
-				$rdf .= '<geo:long rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">' . $coords['long'] . '</geo:long>';
-				$rdf .= '</geo:SpatialThing>';
+				$writer->startElement('geo:SpatialThing');
+					$writer->writeAttribute('rdf:about', $findspotUri);
+					$writer->writeElement('foaf:name', $coords['name']);
+					$writer->startElement('geo:lat');
+						$writer->writeAttribute('rdf:datatype', 'http://www.w3.org/2001/XMLSchema#decimal');
+						$writer->text($coords['lat']);
+					$writer->endElement();
+					$writer->startElement('geo:long');
+						$writer->writeAttribute('rdf:datatype', 'http://www.w3.org/2001/XMLSchema#decimal');
+						$writer->text($coords['long']);
+					$writer->endElement();
+				$writer->endElement();
 			}
 		}			
 	}
