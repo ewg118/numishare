@@ -238,6 +238,9 @@ foreach ($files as $file){
 					case 'Florianus':
 						$nomismaId[] = 'fl';
 						break;
+					case 'Probus':
+						$nomismaId[] = 'pro';
+						break;
 					default:
 						$nomismaId[] = null;
 				}
