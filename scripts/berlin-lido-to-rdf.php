@@ -34,11 +34,7 @@ foreach ($data as $row){
 $writer->endElement();
 $writer->flush();
 
-function process_row($row, $count){
-	//only process rows with OCRE URIs
-	$rdf = '';
-	if (strlen($row['URI']) > 0){		
-		$id = $row['object_number'];
+function process_row($row, $writer){
 		$file = 'http://ww2.smb.museum/mk_edit/coin_export/4/' . $id . '.xml';
 		
 		echo "Processing #{$count}: {$id}\n";
@@ -201,8 +197,6 @@ function process_row($row, $count){
 				$writer->endElement();
 			}
 		}			
-	}
-	return $rdf;
 }
 
 function query_geonames($service){
