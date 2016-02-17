@@ -47,12 +47,9 @@
 .orbeon .xforms-select1-appearance-full .xforms-label {
 	vertical-align: top
 }
-.orbeon .xforms-input input, .orbeon .xforms-textarea textarea, .orbeon .xforms-select1 select {
+.orbeon .xforms-input input[type=text], .orbeon .xforms-textarea textarea, .orbeon .xforms-select1 select {
 	width: 20em;
 	margin-bottom: 2px;
-}
-.orbeon .xforms-type-boolean input {
-	width:0;
 }
 .orbeon .xforms-repeat-selected-item-1 .form-td {
 	background-color: #f5f5f5
