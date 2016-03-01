@@ -43,9 +43,9 @@ SELECT ?dataset ?publisher ?collection ?collectionLabel ?thumbnail ?homepage ?ti
            OPTIONAL {?collection foaf:thumbnail ?thumbnail}
            OPTIONAL {?collection foaf:homepage ?homepage}}
   ?dataset dcterms:publisher ?publisher ;
-           dcterms:title ?title;
-           dcterms:description ?description ;
-           dcterms:license ?license 
+           dcterms:title ?title FILTER (lang(?title) = "" || langMatches(lang(?title), "en")).
+  ?dataset dcterms:license ?license ;
+           dcterms:description ?description FILTER (lang(?description) = "" || langMatches(lang(?description), "en")) .
   OPTIONAL {?dataset foaf:thumbnail ?thumbnail}} GROUP BY ?dataset ?publisher ?collection ?collectionLabel ?title ?thumbnail ?homepage ?description ?license ORDER BY ?publisher]]>
 				</xsl:variable>
 				
