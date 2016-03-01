@@ -61,21 +61,25 @@ PREFIX skos:      <http://www.w3.org/2004/02/skos/core#>
 PREFIX foaf:	<http://xmlns.com/foaf/0.1/>
 PREFIX rdfs:	<http://www.w3.org/2000/01/rdf-schema#>
 PREFIX void:	<http://rdfs.org/ns/void#>
+PREFIX geo:	<http://www.w3.org/2003/01/geo/wgs84_pos#>
 
-SELECT ?object ?title ?identifier ?findspot ?hoard ?collection ?publisher ?weight ?axis ?diameter ?obvThumb ?revThumb ?obvRef ?revRef ?comThumb ?comRef  WHERE {
+SELECT ?object ?title ?identifier ?findUri ?findspot ?hoard ?collection ?publisher ?dataset ?datasetTitle ?weight ?axis ?diameter ?obvThumb ?revThumb ?obvRef ?revRef ?comThumb ?comRef  WHERE {
 ?object nmo:hasTypeSeriesItem <typeUri> ;
   rdf:type nmo:NumismaticObject ;
   dcterms:title ?title .
 OPTIONAL { ?object dcterms:identifier ?identifier}
 OPTIONAL { ?object nmo:hasCollection ?colUri .
-?colUri skos:prefLabel ?collection 
-FILTER(langMatches(lang(?collection), "EN"))}
+?colUri skos:prefLabel ?collection FILTER(langMatches(lang(?collection), "EN"))}
 ?object void:inDataset ?dataset .
-?dataset dcterms:publisher ?publisher .
+?dataset dcterms:publisher ?publisher ;
+	dcterms:title ?datasetTitle FILTER (lang(?datasetTitle) = "" || langMatches(lang(?datasetTitle), "en")) .
 OPTIONAL {?object nmo:hasFindspot ?findUri .
 ?findUri foaf:name ?findspot }
 OPTIONAL {?object nmo:hasFindspot ?findUri .
 ?findUri rdfs:label ?findspot }
+OPTIONAL {?object nmo:hasFindspot ?findUri .
+?nomismaUri geo:location ?findUri ;
+	skos:prefLabel ?findspot FILTER langMatches(lang(?findspot), "en")}
 OPTIONAL {?object dcterms:isPartOf ?hoard .
  ?hoard a nmo:Hoard ;
  	skos:prefLabel ?findspot }

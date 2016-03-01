@@ -48,8 +48,8 @@
           					<dl class='dl-horizontal'><dt>URL</dt><dd><a href="]]><xsl:value-of select="res:binding[@name='object']/res:uri"/><![CDATA[">]]><xsl:value-of
 				select="res:binding[@name='title']/res:literal"/><![CDATA[</a></dd>]]>
 			<xsl:if test="res:binding[@name='hoard']/res:uri">
-				<![CDATA[<dt>Hoard</dt><dd><a href="]]><xsl:value-of select="res:binding[@name='hoard']/res:uri"/><![CDATA[">]]><xsl:value-of
-					select="res:binding[@name='hoardLabel']/res:literal"/><![CDATA[</a></dd>]]>
+				<![CDATA[<dt>Hoard</dt><dd><a href="]]><xsl:value-of select="res:binding[@name='hoard']/res:uri"/><![CDATA[">]]><xsl:value-of select="res:binding[@name='hoardLabel']/res:literal"
+				/><![CDATA[</a></dd>]]>
 			</xsl:if>
 			<xsl:if test="res:binding[@name='findspot']/res:uri">
 				<![CDATA[<dt>Findspot</dt><dd><a href="]]><xsl:value-of select="res:binding[@name='findspot']/res:uri"/><![CDATA[">]]>
@@ -67,7 +67,7 @@
 			</xsl:if>
 			<![CDATA[</dl>]]>
 		</xsl:variable>
-		
+
 		<Placemark xmlns="http://earth.google.com/kml/2.0">
 			<name>
 				<xsl:value-of select="res:binding[@name='title']/res:literal"/>
@@ -110,11 +110,10 @@
 		<xsl:variable name="long" select="res:binding[@name='long']/res:literal"/>
 		<xsl:variable name="description">
 			<![CDATA[
-          					<ul><li><b>URL: </b><a href=']]><xsl:value-of select="res:binding[@name='object']/res:uri"/><![CDATA['>]]><xsl:value-of
-				select="res:binding[@name='title']/res:literal"/><![CDATA[</a></li>]]>
+          					<ul><li><b>URL: </b><a href=']]><xsl:value-of select="res:binding[@name='object']/res:uri"/><![CDATA['>]]><xsl:value-of select="res:binding[@name='title']/res:literal"/><![CDATA[</a></li>]]>
 			<xsl:if test="res:binding[@name='hoard']/res:uri">
-				<![CDATA[<li><b>Hoard: </b><a href=']]><xsl:value-of select="res:binding[@name='hoard']/res:uri"/><![CDATA['>]]><xsl:value-of
-					select="res:binding[@name='hoardLabel']/res:literal"/><![CDATA[</a></li>]]>
+				<![CDATA[<li><b>Hoard: </b><a href=']]><xsl:value-of select="res:binding[@name='hoard']/res:uri"/><![CDATA['>]]><xsl:value-of select="res:binding[@name='hoardLabel']/res:literal"
+				/><![CDATA[</a></li>]]>
 			</xsl:if>
 			<xsl:if test="res:binding[@name='findspot']/res:uri">
 				<![CDATA[<li><b>Findspot: </b><a href=']]><xsl:value-of select="res:binding[@name='findspot']/res:uri"/><![CDATA['>]]>
@@ -134,8 +133,8 @@
 		</xsl:variable>
 		<xsl:variable name="theme">red</xsl:variable>
 		<!-- output --> { <xsl:if test="string($lat) and string($long)">"point": {"lon": <xsl:value-of select="$long"/>, "lat": <xsl:value-of select="$lat"/>},</xsl:if> "title": "<xsl:value-of
-			select="res:binding[@name='title']/res:literal"/>", "start": "<xsl:value-of select="$closing_date"/>", "options": { "theme": "<xsl:value-of select="$theme"/>", "description": "<xsl:value-of
-			select="normalize-space($description)"/>" } }<xsl:if test="not(position()=last())">
+			select="res:binding[@name='title']/res:literal"/>", "start": "<xsl:value-of select="$closing_date"/>", "options": { "theme": "<xsl:value-of select="$theme"/>", "description":
+			"<xsl:value-of select="normalize-space($description)"/>" } }<xsl:if test="not(position()=last())">
 			<xsl:text>,</xsl:text>
 		</xsl:if>
 	</xsl:template>
@@ -174,19 +173,24 @@
 							<xsl:value-of select="numishare:regularize_node('collection', $lang)"/>
 						</dt>
 						<dd>
-							<xsl:value-of select="res:binding[@name='collection']/res:literal"/>
+							<a href="{res:binding[@name='dataset']/res:uri}">
+								<xsl:value-of select="res:binding[@name='collection']/res:literal"/>
+							</a>
+
 						</dd>
 					</xsl:when>
 					<xsl:when test="res:binding[@name='publisher']/res:literal">
 						<dt>
-							<xsl:value-of select="numishare:regularize_node('publisher', $lang)"/>
+							<xsl:value-of select="numishare:regularize_node('collection', $lang)"/>
 						</dt>
 						<dd>
-							<xsl:value-of select="res:binding[@name='publisher']/res:literal"/>
+							<a href="{res:binding[@name='dataset']/res:uri}">
+								<xsl:value-of select="res:binding[@name='datasetTitle']/res:literal"/>
+							</a>
 						</dd>
 					</xsl:when>
 				</xsl:choose>
-				
+
 				<xsl:if test="string(res:binding[@name='axis']/res:literal)">
 					<dt>
 						<xsl:value-of select="numishare:regularize_node('axis', $lang)"/>
@@ -211,20 +215,37 @@
 						<xsl:value-of select="string(res:binding[@name='weight']/res:literal)"/>
 					</dd>
 				</xsl:if>
-				<xsl:if test="string(res:binding[@name='findspot']/res:literal)">
-					<dt>
-						<xsl:value-of select="numishare:regularize_node('findspot', $lang)"/>
-					</dt>
-					<dd>
-						<xsl:value-of select="string(res:binding[@name='findspot']/res:literal)"/>
-					</dd>
-				</xsl:if>
+				<xsl:choose>
+					<xsl:when test="res:binding[@name='findUri']/res:uri">
+						<dt>
+							<xsl:value-of select="numishare:regularize_node('findspot', $lang)"/>
+						</dt>
+						<dd>
+							<a href="{if (ends-with(res:binding[@name='findUri']/res:uri, '#this')) then substring-before(res:binding[@name='findUri']/res:uri, '#this') else res:binding[@name='findUri']/res:uri}">
+								<xsl:value-of select="string(res:binding[@name='findspot']/res:literal)"/>
+							</a>
+						</dd>
+						
+					</xsl:when>
+					<xsl:when test="res:binding[@name='hoard']/res:uri">
+						<dt>
+							<xsl:value-of select="numishare:regularize_node('hoard', $lang)"/>
+						</dt>
+						<dd>
+							<a href="{res:binding[@name='hoard']/res:uri}">
+								<xsl:value-of select="string(res:binding[@name='findspot']/res:literal)"/>
+							</a>
+						</dd>
+						
+					</xsl:when>
+				</xsl:choose>
 			</dl>
 			<div class="gi_c">
 				<xsl:choose>
 					<xsl:when test="string(res:binding[@name='obvRef']/res:uri) and string(res:binding[@name='obvThumb']/res:uri)">
-						<a class="thumbImage" rel="gallery" href="{res:binding[@name='obvRef']/res:uri}" title="Obverse of {res:binding[@name='identifier']/res:literal}:
-							{if (string(res:binding[@name='collection']/res:literal)) then res:binding[@name='collection']/res:literal else res:binding[@name='publisher']/res:literal}" id="{res:binding[@name='object']/res:uri}">
+						<a class="thumbImage" rel="gallery" href="{res:binding[@name='obvRef']/res:uri}" title="Obverse of {res:binding[@name='identifier']/res:literal}:        {if
+							(string(res:binding[@name='collection']/res:literal)) then res:binding[@name='collection']/res:literal else res:binding[@name='publisher']/res:literal}"
+							id="{res:binding[@name='object']/res:uri}">
 							<img class="gi" src="{res:binding[@name='obvThumb']/res:uri}"/>
 						</a>
 					</xsl:when>
@@ -232,8 +253,9 @@
 						<img class="gi" src="{res:binding[@name='obvThumb']/res:uri}"/>
 					</xsl:when>
 					<xsl:when test="string(res:binding[@name='obvRef']/res:uri) and not(string(res:binding[@name='obvThumb']/res:uri))">
-						<a class="thumbImage" rel="gallery" href="{res:binding[@name='obvRef']/res:uri}" title="Obverse of {res:binding[@name='identifier']/res:literal}:
-							{if (string(res:binding[@name='collection']/res:literal)) then res:binding[@name='collection']/res:literal else res:binding[@name='publisher']/res:literal}" id="{res:binding[@name='object']/res:uri}">
+						<a class="thumbImage" rel="gallery" href="{res:binding[@name='obvRef']/res:uri}" title="Obverse of {res:binding[@name='identifier']/res:literal}:        {if
+							(string(res:binding[@name='collection']/res:literal)) then res:binding[@name='collection']/res:literal else res:binding[@name='publisher']/res:literal}"
+							id="{res:binding[@name='object']/res:uri}">
 							<img class="gi" src="{res:binding[@name='obvRef']/res:uri}" style="max-width:120px"/>
 						</a>
 					</xsl:when>
@@ -241,8 +263,9 @@
 				<!-- reverse-->
 				<xsl:choose>
 					<xsl:when test="string(res:binding[@name='revRef']/res:uri) and string(res:binding[@name='revThumb']/res:uri)">
-						<a class="thumbImage" rel="gallery" href="{res:binding[@name='revRef']/res:uri}" title="Reverse of {res:binding[@name='identifier']/res:literal}:
-							{if (string(res:binding[@name='collection']/res:literal)) then res:binding[@name='collection']/res:literal else res:binding[@name='publisher']/res:literal}" id="{res:binding[@name='object']/res:uri}">
+						<a class="thumbImage" rel="gallery" href="{res:binding[@name='revRef']/res:uri}" title="Reverse of {res:binding[@name='identifier']/res:literal}:        {if
+							(string(res:binding[@name='collection']/res:literal)) then res:binding[@name='collection']/res:literal else res:binding[@name='publisher']/res:literal}"
+							id="{res:binding[@name='object']/res:uri}">
 							<img class="gi" src="{res:binding[@name='revThumb']/res:uri}"/>
 						</a>
 					</xsl:when>
@@ -250,8 +273,9 @@
 						<img class="gi" src="{res:binding[@name='revThumb']/res:uri}"/>
 					</xsl:when>
 					<xsl:when test="string(res:binding[@name='revRef']/res:uri) and not(string(res:binding[@name='revThumb']/res:uri))">
-						<a class="thumbImage" rel="gallery" href="{res:binding[@name='revRef']/res:uri}" title="Reverse of {res:binding[@name='identifier']/res:literal}:
-							{if (string(res:binding[@name='collection']/res:literal)) then res:binding[@name='collection']/res:literal else res:binding[@name='publisher']/res:literal}" id="{res:binding[@name='object']/res:uri}">
+						<a class="thumbImage" rel="gallery" href="{res:binding[@name='revRef']/res:uri}" title="Reverse of {res:binding[@name='identifier']/res:literal}:        {if
+							(string(res:binding[@name='collection']/res:literal)) then res:binding[@name='collection']/res:literal else res:binding[@name='publisher']/res:literal}"
+							id="{res:binding[@name='object']/res:uri}">
 							<img class="gi" src="{res:binding[@name='revRef']/res:uri}" style="max-width:120px"/>
 						</a>
 					</xsl:when>
@@ -259,18 +283,20 @@
 				<!-- combined -->
 				<xsl:choose>
 					<xsl:when test="string(res:binding[@name='comRef']/res:uri) and string(res:binding[@name='comThumb']/res:uri)">
-						<a class="thumbImage" rel="gallery" href="{res:binding[@name='comRef']/res:uri}" title="Image of {res:binding[@name='identifier']/res:literal}:
-							{if (string(res:binding[@name='collection']/res:literal)) then res:binding[@name='collection']/res:literal else res:binding[@name='publisher']/res:literal}" id="{res:binding[@name='object']/res:uri}">
+						<a class="thumbImage" rel="gallery" href="{res:binding[@name='comRef']/res:uri}" title="Image of {res:binding[@name='identifier']/res:literal}:        {if
+							(string(res:binding[@name='collection']/res:literal)) then res:binding[@name='collection']/res:literal else res:binding[@name='publisher']/res:literal}"
+							id="{res:binding[@name='object']/res:uri}">
 							<img class="gi" src="{res:binding[@name='comThumb']/res:uri}" style="max-width:240px"/>
 						</a>
 					</xsl:when>
 					<xsl:when test="string(res:binding[@name='comRef']/res:uri) and not(string(res:binding[@name='comThumb']/res:uri))">
-						<a class="thumbImage" rel="gallery" href="{res:binding[@name='comRef']/res:uri}" title="Image of {res:binding[@name='identifier']/res:literal}:
-							{if (string(res:binding[@name='collection']/res:literal)) then res:binding[@name='collection']/res:literal else res:binding[@name='publisher']/res:literal}" id="{res:binding[@name='object']/res:uri}">
+						<a class="thumbImage" rel="gallery" href="{res:binding[@name='comRef']/res:uri}" title="Image of {res:binding[@name='identifier']/res:literal}:        {if
+							(string(res:binding[@name='collection']/res:literal)) then res:binding[@name='collection']/res:literal else res:binding[@name='publisher']/res:literal}"
+							id="{res:binding[@name='object']/res:uri}">
 							<img class="gi" src="{res:binding[@name='comRef']/res:uri}" style="max-width:240px"/>
 						</a>
 					</xsl:when>
-				</xsl:choose>				
+				</xsl:choose>
 			</div>
 		</div>
 	</xsl:template>
