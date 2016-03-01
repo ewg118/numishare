@@ -5,10 +5,6 @@ $project = 'priene';
 $data = generate_json($project . '-concordances.csv', false);
 $prefix = 'http://ww2.smb.museum/mk_edit/coin_export/30/';
 //start RDF/XML file
-/*$open = '<rdf:RDF xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xmlns:nm="http://nomisma.org/id/" xmlns:nmo="http://nomisma.org/ontology#"
-xmlns:dcterms="http://purl.org/dc/terms/" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:void="http://rdfs.org/ns/void#"
-xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">';*/
-
 //use XML writer to generate RDF
 $writer = new XMLWriter();
 $writer->openURI($project . ".rdf");
