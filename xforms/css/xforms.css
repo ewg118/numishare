@@ -51,6 +51,10 @@
 	width: 20em;
 	margin-bottom: 2px;
 }
+.orbeon .checkbox input {
+	width: 5em;
+	margin-bottom: 2px;
+}
 .orbeon .xforms-repeat-selected-item-1 .form-td {
 	background-color: #f5f5f5
 }
@@ -65,6 +69,13 @@
 }
 .xforms-output {
 	margin:0;
+}
+.xforms-output-output {
+	padding:0;
+	line-height:inherit;
+	display:inline;
+	font-size:inherit;
+	color:black
 }
 .xforms-trigger {
 	text-decoration:none;

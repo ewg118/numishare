@@ -1136,21 +1136,11 @@
 														<td class="text-center">
 															<!-- only enable publication if the maintenanceStatus allows it -->
 															<xforms:group ref=".[maintenanceStatus='new' or maintenanceStatus='revised' or maintenanceStatus='derived']">
-																<xforms:input ref="published">
-																	<xforms:action ev:event="xforms-value-changed">
-																		<xforms:var name="val" select="." as="xs:boolean"/>
-																		<!-- publish the record if the box is checked -->
-																		<xforms:action if="$val = true()">
-																			<xforms:setvalue ref="instance('control-instance')/id" value="$id"></xforms:setvalue>																			
-																			<!-- update publicationStatus -->
-																			<xforms:setvalue ref="instance('control-instance')/publicationStatus">approved</xforms:setvalue>
-																			<xforms:send submission="load-object"></xforms:send>
-																			<!-- publish to solr -->
-																			<xforms:send submission="nuds-to-solr"></xforms:send>
-																			<xforms:send submission="submit-commit"></xforms:send>
-																		</xforms:action>
-																		<!-- unpublish the record if the box is unchecked -->
-																		<xforms:action if="$val = false()">																			
+																<xforms:group ref="published[. = true()]">																
+																	<xforms:trigger appearance="minimal">
+																		<xforms:label><span class="glyphicon glyphicon-{if (.=true()) then 'ok' else 'unchecked'}"></span></xforms:label>
+																		<xforms:action ev:event="DOMActivate">
+																			<xforms:var name="val" select="." as="xs:boolean"/>	
 																			<xforms:setvalue ref="instance('control-instance')/id" value="$id"></xforms:setvalue>
 																			<!-- update publicationStatus -->
 																			<xforms:setvalue ref="instance('control-instance')/publicationStatus">inProcess</xforms:setvalue>
@@ -1159,9 +1149,27 @@
 																			<!-- delete from Solr -->
 																			<xforms:setvalue ref="instance('deleteId')/query" value="concat('recordId:&#x022;', instance('control-instance')/id, '&#x022;')"></xforms:setvalue>
 																			<xforms:send submission="delete-solr-doc"></xforms:send>
+																			<xforms:setvalue ref="." value="false()"></xforms:setvalue>
 																		</xforms:action>
-																	</xforms:action>
-																</xforms:input>																
+																	</xforms:trigger>
+																</xforms:group>
+																
+																<xforms:group ref="published[. = false()]">
+																	<xforms:trigger appearance="minimal">
+																		<xforms:label><span class="glyphicon glyphicon-{if (.=true()) then 'ok' else 'unchecked'}"></span></xforms:label>
+																		<xforms:action ev:event="DOMActivate">
+																			<xforms:var name="val" select="." as="xs:boolean"/>																		
+																			<!-- publish the record if the box is checked -->
+																			<xforms:setvalue ref="instance('control-instance')/id" value="$id"></xforms:setvalue>
+																			<xforms:setvalue ref="instance('control-instance')/publicationStatus">approved</xforms:setvalue>
+																			<xforms:send submission="load-object"></xforms:send>
+																			<!-- publish to solr -->
+																			<xforms:send submission="nuds-to-solr"></xforms:send>
+																			<xforms:send submission="submit-commit"></xforms:send>
+																			<xforms:setvalue ref="." value="true()"></xforms:setvalue>
+																		</xforms:action>
+																	</xforms:trigger>
+																</xforms:group>														
 															</xforms:group>
 														</td>
 														<td class="text-center">
