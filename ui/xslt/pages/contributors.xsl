@@ -51,7 +51,7 @@
 						<thead>
 							<tr>
 								<xsl:if test="descendant::res:binding[@name='thumbnail']">
-									<th/>
+									<th style="width:200px"/>
 								</xsl:if>								
 								<th>Count</th>
 								<th>Collection</th>
@@ -72,7 +72,7 @@
 				
 				<xsl:if test="string(res:binding[@name='thumbnail']/res:uri)">
 					<a href="{if (string(res:binding[@name='homepage']/res:uri)) then res:binding[@name='homepage']/res:uri else res:binding[@name='dataset']/res:uri}">
-						<img src="{res:binding[@name='thumbnail']/res:uri}" alt="logo" style="max-width:100%"/>
+						<img src="{res:binding[@name='thumbnail']/res:uri}" alt="logo" style="max-width:200px"/>
 					</a>
 				</xsl:if>
 			</td>
