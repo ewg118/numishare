@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:nuds="http://nomisma.org/nuds" xmlns:nh="http://nomisma.org/nudsHoard" xmlns:xlink="http://www.w3.org/1999/xlink"
-	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nm="http://nomisma.org/id/" exclude-result-prefixes="#all" version="2.0">
+	xmlns:mets="http://www.loc.gov/METS/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nm="http://nomisma.org/id/"
+	exclude-result-prefixes="#all" version="2.0">
 	<xsl:include href="../../templates.xsl"/>
 	<xsl:include href="../../templates-visualize.xsl"/>
 	<xsl:include href="../../templates-analyze.xsl"/>
@@ -44,8 +45,8 @@
 			<xsl:text>../</xsl:text>
 		</xsl:if>
 	</xsl:variable>-->
-	
-	<xsl:variable  name="display_path">../search/</xsl:variable>
+
+	<xsl:variable name="display_path">../search/</xsl:variable>
 
 	<xsl:variable name="include_path" select="concat('http://', doc('input:request')/request/server-name, ':8080/orbeon/themes/', //config/theme/orbeon_theme)"/>
 
@@ -108,14 +109,14 @@
 			</xsl:for-each>
 		</nudsGroup>
 	</xsl:variable>
-	
+
 	<!-- get subtypes -->
 	<xsl:variable name="subtypes" as="element()*">
 		<xsl:if test="$recordType='conceptual' and //config/collection_type='cointype'">
 			<xsl:copy-of select="document(concat($request-uri, 'get_subtypes?identifiers=', $id))/*"/>
 		</xsl:if>
 	</xsl:variable>
-	
+
 	<xsl:variable name="facets" select="string-join(//config//facet, ',')"/>
 
 	<!-- get non-coin-type RDF in the document -->
@@ -212,7 +213,8 @@
 			<!-- regular HTML display mode-->
 			<xsl:when test="not(string($mode))">
 				<html prefix="geo: http://www.w3.org/2003/01/geo/wgs84_pos# foaf: http://xmlns.com/foaf/0.1/ dcterms: http://purl.org/dc/terms/ xsd: http://www.w3.org/2001/XMLSchema# nm:
-					http://nomisma.org/id/ ecrm: http://erlangen-crm.org/current/ rdf: http://www.w3.org/1999/02/22-rdf-syntax-ns# skos: http://www.w3.org/2004/02/skos/core# nmo: http://nomisma.org/ontology#">
+					http://nomisma.org/id/ ecrm: http://erlangen-crm.org/current/ rdf: http://www.w3.org/1999/02/22-rdf-syntax-ns# skos: http://www.w3.org/2004/02/skos/core# nmo:
+					http://nomisma.org/ontology#">
 					<xsl:if test="string($lang)">
 						<xsl:attribute name="lang" select="$lang"/>
 					</xsl:if>
@@ -316,7 +318,7 @@
 		<link rel="alternate" type="application/ld+json" href="{concat($uri_space, $id)}.jsonld"/>
 		<link rel="alternate" type="text/turtle" href="{concat($uri_space, $id)}.ttl"/>
 		<link rel="alternate" type="application/vnd.google-earth.kml+xml" href="{concat($uri_space, $id)}.kml"/>
-		
+
 		<!-- open graph metadata -->
 		<meta property="og:url" content="{concat($uri_space, $id)}"/>
 		<meta property="og:type" content="article"/>
@@ -332,12 +334,12 @@
 				</xsl:choose>
 			</xsl:attribute>
 		</meta>
-		
+
 		<xsl:if test="//mets:fileGrp[@USE='obverse']/mets:file[@USE='reference']/mets:FLocat/@xlink:href">
 			<meta property="og:image" content="{//mets:fileGrp[@USE='obverse']/mets:file[@USE='reference']/mets:FLocat/@xlink:href}"/>
 		</xsl:if>
-		
-		
+
+
 		<!-- CSS -->
 		<link rel="shortcut icon" type="image/x-icon" href="{$include_path}/images/favicon.png"/>
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"/>
@@ -374,7 +376,7 @@
 					<xsl:choose>
 						<xsl:when test="count(/content/*[local-name()='nuds']) &gt; 0">
 							<xsl:call-template name="nuds"/>
-							
+
 						</xsl:when>
 						<xsl:when test="count(/content/*[local-name()='nudsHoard']) &gt; 0">
 							<xsl:call-template name="nudsHoard"/>
