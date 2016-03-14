@@ -316,6 +316,28 @@
 		<link rel="alternate" type="application/ld+json" href="{concat($uri_space, $id)}.jsonld"/>
 		<link rel="alternate" type="text/turtle" href="{concat($uri_space, $id)}.ttl"/>
 		<link rel="alternate" type="application/vnd.google-earth.kml+xml" href="{concat($uri_space, $id)}.kml"/>
+		
+		<!-- open graph metadata -->
+		<meta property="og:url" content="{concat($uri_space, $id)}"/>
+		<meta property="og:type" content="article"/>
+		<meta property="og:title">
+			<xsl:attribute name="content">
+				<xsl:choose>
+					<xsl:when test="descendant::*:descMeta/*:title[@xml:lang=$lang]">
+						<xsl:value-of select="descendant::*:descMeta/*:title[@xml:lang=$lang]"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="descendant::*:descMeta/*:title[@xml:lang='en']"/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:attribute>
+		</meta>
+		
+		<xsl:if test="//mets:fileGrp[@USE='obverse']/mets:file[@USE='reference']/mets:FLocat/@xlink:href">
+			<meta property="og:image" content="{//mets:fileGrp[@USE='obverse']/mets:file[@USE='reference']/mets:FLocat/@xlink:href}"/>
+		</xsl:if>
+		
+		
 		<!-- CSS -->
 		<link rel="shortcut icon" type="image/x-icon" href="{$include_path}/images/favicon.png"/>
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"/>
