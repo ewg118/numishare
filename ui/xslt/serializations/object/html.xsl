@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:nuds="http://nomisma.org/nuds" xmlns:nh="http://nomisma.org/nudsHoard" xmlns:xlink="http://www.w3.org/1999/xlink"  xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nm="http://nomisma.org/id/" xmlns:nmo="http://nomisma.org/ontology#"
-	exclude-result-prefixes="#all" version="2.0">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:nuds="http://nomisma.org/nuds" xmlns:nh="http://nomisma.org/nudsHoard" xmlns:xlink="http://www.w3.org/1999/xlink"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:mets="http://www.loc.gov/METS/"
+	xmlns:nm="http://nomisma.org/id/" xmlns:nmo="http://nomisma.org/ontology#" exclude-result-prefixes="#all" version="2.0">
 	<xsl:include href="../../templates.xsl"/>
 	<xsl:include href="../../templates-visualize.xsl"/>
 	<xsl:include href="../../templates-analyze.xsl"/>
@@ -46,7 +46,7 @@
 		</config>
 	</xsl:variable>
 	<xsl:variable name="regionHierarchy" select="boolean(/content/config/facets/facet[text()='region_hier'])" as="xs:boolean"/>
-	
+
 	<!-- get layout -->
 	<xsl:variable name="orientation" select="/content/config/theme/layouts/display/nuds/orientation"/>
 	<xsl:variable name="image_location" select="/content/config/theme/layouts/display/nuds/image_location"/>
@@ -69,6 +69,7 @@
 	</xsl:variable>
 
 	<xsl:variable name="id" select="normalize-space(//*[local-name()='recordId'])"/>
+	<xsl:variable name="objectUri" select="if (/content/config/uri_space) then concat(/content/config/uri_space, $id) else concat($url, 'id/', $id)"/>
 
 	<xsl:variable name="nudsGroup" as="element()*">
 		<nudsGroup>
@@ -337,11 +338,33 @@
 			</xsl:choose>
 		</title>
 		<!-- alternates -->
-		<link rel="alternate" type="application/xml" href="{concat($url, 'id/', $id)}.xml"/>
-		<link rel="alternate" type="application/rdf+xml" href="{concat($url, 'id/', $id)}.rdf"/>
-		<link rel="alternate" type="application/ld+json" href="{concat($url, 'id/', $id)}.jsonld"/>
-		<link rel="alternate" type="text/turtle" href="{concat($url, 'id/', $id)}.ttl"/>
-		<link rel="alternate" type="application/vnd.google-earth.kml+xml" href="{concat($url, 'id/', $id)}.kml"/>
+		<link rel="alternate" type="application/xml" href="{$objectUri}.xml"/>
+		<link rel="alternate" type="application/rdf+xml" href="{$objectUri}.rdf"/>
+		<link rel="alternate" type="application/ld+json" href="{$objectUri}.jsonld"/>
+		<link rel="alternate" type="text/turtle" href="{$objectUri}.ttl"/>
+		<link rel="alternate" type="application/vnd.google-earth.kml+xml" href="{$objectUri}.kml"/>
+
+		<!-- open graph metadata -->
+		<meta property="og:url" content="{$objectUri}"/>
+		<meta property="og:type" content="article"/>
+		<meta property="og:title">
+			<xsl:attribute name="content">
+				<xsl:choose>
+					<xsl:when test="descendant::*:descMeta/*:title[@xml:lang=$lang]">
+						<xsl:value-of select="descendant::*:descMeta/*:title[@xml:lang=$lang]"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="descendant::*:descMeta/*:title[@xml:lang='en']"/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:attribute>
+		</meta>
+
+		<xsl:if test="//mets:fileGrp[@USE='obverse']/mets:file[@USE='reference']/mets:FLocat/@xlink:href">
+			<meta property="og:image" content="{//mets:fileGrp[@USE='obverse']/mets:file[@USE='reference']/mets:FLocat/@xlink:href}"/>
+		</xsl:if>
+
+
 		<!-- CSS -->
 		<link rel="shortcut icon" type="image/x-icon" href="{$include_path}/images/favicon.png"/>
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"/>
@@ -374,7 +397,7 @@
 						<xsl:when test="$recordType='physical'">nmo:NumismaticObject</xsl:when>
 					</xsl:choose>
 				</xsl:variable>
-				<div class="container-fluid" typeof="{$typeof}" about="{concat($url, 'id/', $id)}">
+				<div class="container-fluid" typeof="{$typeof}" about="{$objectUri}">
 					<xsl:if test="$lang='ar'">
 						<xsl:attribute name="style">direction: rtl;</xsl:attribute>
 					</xsl:if>
