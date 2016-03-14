@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"
-	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mets="http://www.loc.gov/METS/" xmlns:numishare="https://github.com/ewg118/numishare" xmlns:nm="http://nomisma.org/id/"
-	xmlns:nmo="http://nomisma.org/ontology#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nuds="http://nomisma.org/nuds"
-	exclude-result-prefixes="#all" version="2.0">
+	xmlns:res="http://www.w3.org/2005/sparql-results#" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mets="http://www.loc.gov/METS/" xmlns:numishare="https://github.com/ewg118/numishare"
+	xmlns:nm="http://nomisma.org/id/" xmlns:nmo="http://nomisma.org/ontology#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+	xmlns:nuds="http://nomisma.org/nuds" exclude-result-prefixes="#all" version="2.0">
 
 	<!-- quantitative analysis parameters -->
 	<xsl:param name="measurement" select="doc('input:request')/request/parameters/parameter[name='measurement']/value"/>
@@ -93,6 +93,10 @@ ASK {
 									<a href="#charts">
 										<xsl:value-of select="numishare:normalizeLabel('display_quantitative', $lang)"/>
 									</a>
+									<xsl:if test="/content/res:sparql[descendant::res:result]">
+										<xsl:text> | </xsl:text>
+										<a href="#annotations">Annotations</a>
+									</xsl:if>
 								</p>
 								<xsl:if test="nuds:control/nuds:otherRecordId[@semantic='skos:broader']">
 									<xsl:variable name="broader" select="nuds:control/nuds:otherRecordId[@semantic='skos:broader']"/>
@@ -123,6 +127,15 @@ ASK {
 								</xsl:if>
 							</div>
 						</div>
+						
+						<!-- if there are annotations, then render -->
+						<xsl:if test="/content/res:sparql[descendant::res:result]">
+							<div class="row">
+								<div class="col-md-12">
+									<xsl:apply-templates select="/content/res:sparql" mode="annotations"/>
+								</div>
+							</div>
+						</xsl:if>
 					</xsl:when>
 					<xsl:when test="$recordType='physical'">
 						<xsl:choose>
@@ -228,6 +241,15 @@ ASK {
 								</xsl:choose>
 							</xsl:when>
 						</xsl:choose>
+						
+						<!-- if there are annotations, then render -->
+						<xsl:if test="/content/res:sparql[descendant::res:result]">
+							<div class="row">
+								<div class="col-md-12">
+									<xsl:apply-templates select="/content/res:sparql" mode="annotations"/>
+								</div>
+							</div>
+						</xsl:if>
 					</xsl:when>
 				</xsl:choose>
 			</xsl:when>
@@ -690,19 +712,25 @@ ASK {
 			<p>Average measurements for this coin type:</p>
 			<dl class=" {if($lang='ar') then 'dl-horizontal ar' else 'dl-horizontal'}">
 				<xsl:if test="number($axis) &gt; 0">
-					<dt><xsl:value-of select="numishare:regularize_node('axis', $lang)"/></dt>
+					<dt>
+						<xsl:value-of select="numishare:regularize_node('axis', $lang)"/>
+					</dt>
 					<dd>
 						<xsl:value-of select="$axis"/>
 					</dd>
 				</xsl:if>
 				<xsl:if test="number($diameter) &gt; 0">
-					<dt><xsl:value-of select="numishare:regularize_node('diameter', $lang)"/></dt>
+					<dt>
+						<xsl:value-of select="numishare:regularize_node('diameter', $lang)"/>
+					</dt>
 					<dd>
 						<xsl:value-of select="$diameter"/>
 					</dd>
 				</xsl:if>
 				<xsl:if test="number($weight) &gt; 0">
-					<dt><xsl:value-of select="numishare:regularize_node('weight', $lang)"/></dt>
+					<dt>
+						<xsl:value-of select="numishare:regularize_node('weight', $lang)"/>
+					</dt>
 					<dd>
 						<xsl:value-of select="$weight"/>
 					</dd>
