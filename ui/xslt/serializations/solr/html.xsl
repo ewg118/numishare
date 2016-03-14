@@ -91,6 +91,9 @@
 
 				<link rel="shortcut icon" type="image/x-icon" href="{$include_path}/images/favicon.png"/>
 				<meta name="viewport" content="width=device-width, initial-scale=1"/>
+				<xsl:for-each select="descendant::str[starts-with(@name, 'reference_')]">
+					<meta property="og:image" content="{.}"/>
+				</xsl:for-each>
 
 				<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"/>
 				<!-- bootstrap -->
