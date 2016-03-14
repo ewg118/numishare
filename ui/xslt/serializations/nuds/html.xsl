@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"
 	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mets="http://www.loc.gov/METS/" xmlns:numishare="https://github.com/ewg118/numishare" xmlns:nm="http://nomisma.org/id/"
-	xmlns:nmo="http://nomisma.org/ontology#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nuds="http://nomisma.org/nuds"
-	exclude-result-prefixes="#all" version="2.0">
+	xmlns:res="http://www.w3.org/2005/sparql-results#" xmlns:nmo="http://nomisma.org/ontology#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nuds="http://nomisma.org/nuds" exclude-result-prefixes="#all" version="2.0">
 
 	<!-- quantitative analysis parameters -->
 	<xsl:param name="measurement" select="doc('input:request')/request/parameters/parameter[name='measurement']/value"/>
@@ -64,8 +64,19 @@ ASK {?object nmo:hasTypeSeriesItem <URI> ;
 									</xsl:if>
 									<xsl:value-of select="normalize-space(nuds:descMeta/nuds:title)"/>
 								</h1>
-								<a href="#examples"><xsl:value-of select="numishare:normalizeLabel('display_examples', $lang)"/></a> | <a href="#charts"><xsl:value-of
-										select="numishare:normalizeLabel('display_quantitative', $lang)"/></a>
+								<div>
+									<a href="#examples">
+										<xsl:value-of select="numishare:normalizeLabel('display_examples', $lang)"/>
+									</a>
+									<xsl:text> | </xsl:text>
+									<a href="#charts">
+										<xsl:value-of select="numishare:normalizeLabel('display_quantitative', $lang)"/>
+									</a>
+									<xsl:if test="/content/res:sparql[descendant::res:result]">
+										<xsl:text> | </xsl:text>
+										<a href="#annotations">Annotations</a>
+									</xsl:if>
+								</div>
 							</div>
 						</div>
 						<xsl:call-template name="nuds_content"/>
@@ -87,13 +98,23 @@ ASK {?object nmo:hasTypeSeriesItem <URI> ;
 								</xsl:if>
 							</xsl:otherwise>
 						</xsl:choose>
-						<div class="row">
-							<div class="col-md-12">
-								<xsl:if test="$recordType='conceptual' and string($sparql_endpoint) and //config/collection_type='cointype'">
+
+						<xsl:if test="$recordType='conceptual' and string($sparql_endpoint) and //config/collection_type='cointype'">
+							<div class="row">
+								<div class="col-md-12">
 									<xsl:call-template name="charts"/>
-								</xsl:if>
+								</div>
 							</div>
-						</div>
+						</xsl:if>
+
+						<!-- if there are annotations, then render -->
+						<xsl:if test="/content/res:sparql[descendant::res:result]">
+							<div class="row">
+								<div class="col-md-12">
+									<xsl:apply-templates select="/content/res:sparql" mode="annotations"/>
+								</div>
+							</div>
+						</xsl:if>
 					</xsl:when>
 					<xsl:when test="$recordType='physical'">
 						<xsl:choose>
@@ -105,7 +126,7 @@ ASK {?object nmo:hasTypeSeriesItem <URI> ;
 												<xsl:attribute name="lang" select="nuds:descMeta/nuds:title/@xml:lang"/>
 											</xsl:if>
 											<xsl:value-of select="normalize-space(nuds:descMeta/nuds:title)"/>
-										</h1>
+										</h1>										
 									</div>
 								</div>
 
@@ -181,6 +202,14 @@ ASK {?object nmo:hasTypeSeriesItem <URI> ;
 								</xsl:choose>
 							</xsl:when>
 						</xsl:choose>
+						<!-- if there are annotations, then render -->
+						<xsl:if test="/content/res:sparql[descendant::res:result]">
+							<div class="row">
+								<div class="col-md-12">
+									<xsl:apply-templates select="/content/res:sparql" mode="annotations"/>
+								</div>
+							</div>
+						</xsl:if>
 					</xsl:when>
 				</xsl:choose>
 			</xsl:when>

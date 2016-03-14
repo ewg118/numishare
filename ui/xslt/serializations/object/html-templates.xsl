@@ -7,7 +7,7 @@
 -->
 <xsl:stylesheet xmlns:nuds="http://nomisma.org/nuds" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:numishare="https://github.com/ewg118/numishare" xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:nm="http://nomisma.org/id/"
-	xmlns:mods="http://www.loc.gov/mods/v3" exclude-result-prefixes="#all" version="2.0">
+	xmlns:res="http://www.w3.org/2005/sparql-results#" xmlns:mods="http://www.loc.gov/mods/v3" exclude-result-prefixes="#all" version="2.0">
 	<!--***************************************** ELEMENT TEMPLATES **************************************** -->
 	<xsl:template match="*[local-name()='refDesc']">
 		<xsl:element name="{if (ancestor::subtype) then 'h4' else 'h3'}">
@@ -33,7 +33,8 @@
 			<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
 		</xsl:element>
 		<xsl:if test="string($typeDesc_resource)">
-			<p>Source: <a href="{$typeDesc_resource}" rel="nmo:hasTypeSeriesItem"><xsl:value-of select="$nudsGroup//object[@xlink:href = $typeDesc_resource]/nuds:nuds/nuds:descMeta/nuds:title"/></a></p>
+			<p>Source: <a href="{$typeDesc_resource}" rel="nmo:hasTypeSeriesItem"><xsl:value-of select="$nudsGroup//object[@xlink:href = $typeDesc_resource]/nuds:nuds/nuds:descMeta/nuds:title"
+				/></a></p>
 		</xsl:if>
 		<ul>
 			<xsl:choose>
@@ -467,6 +468,82 @@
 			</div>
 		</div>
 	</xsl:template>
+
+
+	<!-- **************** OPEN ANNOTATIONS (E.G., LINKS FROM A TEI FILE) **************** -->
+	<xsl:template match="res:sparql" mode="annotations">
+		<xsl:variable name="sources" select="distinct-values(descendant::res:result/res:binding[@name='source']/res:uri)"/>
+		<xsl:variable name="results" as="element()*">
+			<xsl:copy-of select="res:results"/>
+		</xsl:variable>
+
+		<div id="annotations">
+			<h3>Annotations<xsl:if test="$recordType='conceptual'"><small><a href="#top" title="Return to top"><span class="glyphicon glyphicon-arrow-up"/></a></small></xsl:if></h3>
+			<xsl:for-each select="$sources">
+				<xsl:variable name="uri" select="."/>
+
+
+				<div class="row">
+					<div class="col-md-12">
+						<h4>
+							<xsl:value-of select="position()"/>
+							<xsl:text>. </xsl:text>
+							<a href="{$uri}">
+								<xsl:value-of select="$results/res:result[res:binding[@name='source']/res:uri = $uri][1]/res:binding[@name='bookTitle']/res:literal"/>
+							</a>
+						</h4>
+					</div>
+					<div class="col-md-{if ($results/res:result[res:binding[@name='source']/res:uri = $uri][1]/res:binding[@name='thumbnail']/res:uri) then '8' else '12'}">
+						<dl class="dl-horizontal">
+							<dt>Sections</dt>
+							<dd>
+								<xsl:apply-templates select="$results/res:result[res:binding[@name='source']/res:uri = $uri]" mode="annotations"/>
+							</dd>
+							<dt>Creator</dt>
+							<dd>
+								<xsl:choose>
+									<xsl:when test="$results/res:result[res:binding[@name='source']/res:uri = $uri][1]/res:binding[@name='name']/res:literal">
+										<a href="{$results/res:result[res:binding[@name='source']/res:uri = $uri][1]/res:binding[@name='creator']/res:uri}">
+											<xsl:value-of select="$results/res:result[res:binding[@name='source']/res:uri = $uri][1]/res:binding[@name='name']/res:literal"/>
+										</a>
+									</xsl:when>
+									<xsl:otherwise>
+										<a href="{$results/res:result[res:binding[@name='source']/res:uri = $uri][1]/res:binding[@name='creator']/res:uri}">
+											<xsl:value-of select="$results/res:result[res:binding[@name='source']/res:uri = $uri][1]/res:binding[@name='creator']/res:uri"/>
+										</a>
+									</xsl:otherwise>
+								</xsl:choose>
+							</dd>
+							<xsl:if test="$results/res:result[res:binding[@name='source']/res:uri = $uri][1]/res:binding[@name='abstract']/res:literal">
+								<dt>Abstract</dt>
+								<dd>
+									<xsl:value-of select="$results/res:result[res:binding[@name='source']/res:uri = $uri][1]/res:binding[@name='abstract']/res:literal"/>
+								</dd>
+							</xsl:if>
+						</dl>
+					</div>
+					<xsl:if test="$results/res:result[res:binding[@name='source']/res:uri = $uri][1]/res:binding[@name='thumbnail']/res:uri">
+						<div class="col-md-4 text-right">
+							<a href="{$uri}">
+								<img src="{$results/res:result[res:binding[@name='source']/res:uri = $uri][1]/res:binding[@name='thumbnail']/res:uri}" alt="thumbnail"/>
+							</a>
+						</div>
+					</xsl:if>
+				</div>
+			</xsl:for-each>
+			<hr/>
+		</div>
+	</xsl:template>
+
+	<xsl:template match="res:result" mode="annotations">
+		<a href="{res:binding[@name='target']/res:uri}">
+			<xsl:value-of select="res:binding[@name='title']/res:literal"/>
+		</a>
+		<xsl:if test="not(position()=last())">
+			<xsl:text>, </xsl:text>
+		</xsl:if>
+	</xsl:template>
+
 	<xsl:variable name="abbreviations" as="element()*">
 		<abbreviations>
 			<country code="US">
