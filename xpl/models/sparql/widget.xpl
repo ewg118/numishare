@@ -82,7 +82,7 @@ OPTIONAL {?object nmo:hasFindspot ?findUri .
 	skos:prefLabel ?findspot FILTER langMatches(lang(?findspot), "en")}
 OPTIONAL {?object dcterms:isPartOf ?hoard .
  ?hoard a nmo:Hoard ;
- 	skos:prefLabel ?findspot }
+ 	skos:prefLabel ?findspot FILTER(langMatches(lang(?findspot), "EN")) }
 OPTIONAL { ?object nmo:hasWeight ?weight }
 OPTIONAL { ?object nmo:hasAxis ?axis }
 OPTIONAL { ?object nmo:hasDiameter ?diameter }
