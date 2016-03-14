@@ -334,11 +334,9 @@
 				</xsl:choose>
 			</xsl:attribute>
 		</meta>
-
-		<xsl:if test="//mets:fileGrp[@USE='obverse']/mets:file[@USE='reference']/mets:FLocat/@xlink:href">
-			<meta property="og:image" content="{//mets:fileGrp[@USE='obverse']/mets:file[@USE='reference']/mets:FLocat/@xlink:href}"/>
-		</xsl:if>
-
+		<xsl:for-each select="//mets:fileGrp/mets:file[@USE='reference']/mets:FLocat/@xlink:href">
+			<meta property="og:image" content="{.}"/>
+		</xsl:for-each>
 
 		<!-- CSS -->
 		<link rel="shortcut icon" type="image/x-icon" href="{$include_path}/images/favicon.png"/>
