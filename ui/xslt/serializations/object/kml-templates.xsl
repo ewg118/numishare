@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
 	xmlns:nm="http://nomisma.org/id/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:nuds="http://nomisma.org/nuds" xmlns:nh="http://nomisma.org/nudsHoard"
-	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:numishare="https://github.com/ewg118/numishare" exclude-result-prefixes="#all" version="2.0">
+	xmlns:nmo="http://nomisma.org/ontology#" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:numishare="https://github.com/ewg118/numishare"
+	exclude-result-prefixes="#all" version="2.0">
 	<xsl:template name="kml">
 		<kml xmlns="http://earth.google.com/kml/2.0">
 			<Document>
@@ -117,6 +118,16 @@
 								</xsl:otherwise>
 							</xsl:choose>
 						</xsl:when>
+						<xsl:when test="contains($href, 'coinhoards.org')">
+							<xsl:choose>
+								<xsl:when test="string($rdf/*[@rdf:about=$href]/skos:prefLabel)">
+									<xsl:value-of select="$rdf/*[@rdf:about=$href]/skos:prefLabel"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:value-of select="$href"/>
+								</xsl:otherwise>
+							</xsl:choose>
+						</xsl:when>
 					</xsl:choose>
 				</xsl:when>
 				<xsl:otherwise>
@@ -181,6 +192,17 @@
 						<Point>
 							<coordinates>
 								<xsl:value-of select="concat($rdf//*[@rdf:about=concat($href, '#this')]/geo:long, ',', $rdf//*[@rdf:about=concat($href, '#this')]/geo:lat)"/>
+							</coordinates>
+						</Point>
+					</xsl:if>
+				</xsl:when>
+				<xsl:when test="contains($href, 'coinhoards.org')">
+					<xsl:variable name="findspotUri" select="$rdf//*[@rdf:about=$href]/nmo:hasFindspot/@rdf:resource"/>
+
+					<xsl:if test="string-length($findspotUri) &gt; 0">
+						<Point>
+							<coordinates>
+								<xsl:value-of select="concat($rdf//*[@rdf:about=$findspotUri]/geo:long, ',', $rdf//*[@rdf:about=$findspotUri]/geo:lat)"/>
 							</coordinates>
 						</Point>
 					</xsl:if>
