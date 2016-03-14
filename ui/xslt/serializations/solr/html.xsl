@@ -105,6 +105,11 @@
 						<xsl:value-of select="//config/google_analytics"/>
 					</script>
 				</xsl:if>
+				
+				<!-- meta tags-->
+				<xsl:for-each select="descendant::str[starts-with(@name, 'reference_')]">
+					<meta property="og:image" content="{.}"/>
+				</xsl:for-each>
 			</head>
 			<body>
 				<xsl:call-template name="header"/>
