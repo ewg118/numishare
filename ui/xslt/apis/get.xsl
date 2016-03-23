@@ -93,6 +93,10 @@
 
 				<xsl:variable name="rdf_url" select="concat('http://nomisma.org/apis/getRdf?identifiers=', encode-for-uri($id-param))"/>
 				<xsl:copy-of select="document($rdf_url)/rdf:RDF/*"/>
+				
+				<xsl:if test="descendant::nuds:findspotDesc[contains(@xlink:href, 'coinhoards.org')]">
+					<xsl:copy-of select="document(concat(descendant::nuds:findspotDesc/@xlink:href, '.rdf'))/rdf:RDF/*"/>
+				</xsl:if>
 			</rdf:RDF>
 		</xsl:if>
 	</xsl:variable>
