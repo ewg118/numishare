@@ -1,9 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-    Copyright (C) 2010 Ethan Gruber
-    numishare: https://github.com/ewg118/numishare
-    Apache License 2.0: https://github.com/ewg118/numishare    
--->
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ev="http://www.w3.org/2001/xml-events"
 	xmlns:xxforms="http://orbeon.org/oxf/xml/xforms" xmlns:widget="http://orbeon.org/oxf/xml/widget" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:fr="http://orbeon.org/oxf/xml/form-runner"
 	xmlns:exist="http://exist.sourceforge.net/NS/exist" xmlns:xxi="http://orbeon.org/oxf/xml/xinclude" xmlns:numishare="https://github.com/ewg118/numishare"
@@ -14,7 +9,7 @@
 	xmlns:osgeo="http://data.ordnancesurvey.co.uk/ontology/geometry/" xmlns:nmo="http://nomisma.org/ontology#" xmlns:org="http://www.w3.org/ns/org#" xmlns:bio="http://purl.org/vocab/bio/0.1/"
 	xmlns:crm="http://www.cidoc-crm.org/cidoc-crm/">
 	<head>
-		<title>Numishare: Symbols Interface</title>
+		<title>Numishare: Symbol Management</title>
 		<!-- Core + Skin CSS -->
 		<link rel="stylesheet" href="/fr/style/bootstrap/css/bootstrap.css" type="text/css" />
 		<link rel="stylesheet" href="/fr/style/form-runner-bootstrap-override.css" type="text/css" />
@@ -197,7 +192,7 @@
 								</p>
 							</div>
 						</xforms:group>
-						<h2>Object Management</h2>
+						<h2>Symbol Management</h2>
 						<ul>
 							<li>
 								<a href="../edit/symbol/">Create New Symbol</a>
@@ -344,11 +339,11 @@
 								</table>
 							</xforms:group>
 							<xforms:group ref=".[count(//record)=0]">
-								<h1>No objects in collection.</h1>
+								<h3>No symbols in collection.</h3>
 							</xforms:group>
 						</xforms:group>
 					</div>
-					<fr:xforms-inspector></fr:xforms-inspector>
+					<!--<fr:xforms-inspector></fr:xforms-inspector>-->
 				</div>
 			</div>
 		</div>
