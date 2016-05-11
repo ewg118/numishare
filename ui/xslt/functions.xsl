@@ -2419,20 +2419,32 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:function>
-	<xsl:function name="numishare:normalizeYear">
-		<xsl:param name="year" as="xs:double"/>
+	<xsl:function name="numishare:normalizeDate">
+		<xsl:param name="date"/>
+		
+		<xsl:if test="substring($date, 1, 1) != '-' and number(substring($date, 1, 4)) &lt; 500">
+			<xsl:text>A.D. </xsl:text>
+		</xsl:if>
+		
 		<xsl:choose>
-			<xsl:when test="$year &lt; 0">
-				<xsl:value-of select="abs($year)"/>
-				<xsl:text> B.C.</xsl:text>
+			<xsl:when test="$date castable as xs:dateTime">
+				<xsl:value-of select="format-dateTime($date, '[D] [MNn] [Y], [H01]:[m01]')"/>
 			</xsl:when>
-			<xsl:otherwise>
-				<xsl:if test="$year &lt;=400">
-					<xsl:text>A.D. </xsl:text>
-				</xsl:if>
-				<xsl:value-of select="$year"/>
-			</xsl:otherwise>
-		</xsl:choose>
+			<xsl:when test="$date castable as xs:date">
+				<xsl:value-of select="format-date($date, '[D] [MNn] [Y]')"/>
+			</xsl:when>
+			<xsl:when test="$date castable as xs:gYearMonth">
+				<xsl:variable name="normalized" select="xs:date(concat($date, '-01'))"/>
+				<xsl:value-of select="format-date($normalized, '[MNn] [Y]')"/>
+			</xsl:when>
+			<xsl:when test="$date castable as xs:gYear">
+				<xsl:value-of select="abs(number($date))"/>
+			</xsl:when>
+		</xsl:choose>	
+		
+		<xsl:if test="substring($date, 1, 1) = '-'">
+			<xsl:text> B.C.</xsl:text>
+		</xsl:if>
 	</xsl:function>
 	<xsl:function name="numishare:normalize_century">
 		<xsl:param name="name"/>

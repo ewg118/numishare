@@ -413,7 +413,7 @@
 		<xsl:variable name="dates" as="item()*">
 			<xsl:analyze-string select="." regex="&#x022;(-?\d{{4}})&#x022;">
 				<xsl:matching-substring>
-					<xsl:value-of select="numishare:normalizeYear(number(translate(., '&#x022;', '')))"/>
+					<xsl:value-of select="numishare:normalizeDate(number(translate(., '&#x022;', '')))"/>
 				</xsl:matching-substring>
 			</xsl:analyze-string>
 		</xsl:variable>
@@ -548,7 +548,7 @@
 				<xsl:variable name="dates" as="item()*">
 					<xsl:analyze-string select="." regex="&#x022;(-?\d{{4}})&#x022;">
 						<xsl:matching-substring>
-							<xsl:value-of select="numishare:normalizeYear(number(translate(., '&#x022;', '')))"/>
+							<xsl:value-of select="numishare:normalizeDate(number(translate(., '&#x022;', '')))"/>
 						</xsl:matching-substring>
 					</xsl:analyze-string>
 				</xsl:variable>

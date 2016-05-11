@@ -250,6 +250,7 @@
 							let $collection := '/db/%COLLECTION%'
 							let $path := '%PATH%'
 							let $create-collection := xmldb:create-collection($collection, 'objects')
+							let $create-symbols := xmldb:create-collection($collection, 'symbols')
 							let $store-xql := xmldb:store-files-from-pattern($collection, concat($path, '/xforms/xquery'), '*.xql', 'application/xquery')
 							for $doc in xmldb:get-child-resources($collection)							
 							return sm:chmod(xs:anyURI(concat($collection, '/', $doc)), 'rwxrwxrwx')
@@ -1206,8 +1207,11 @@
 		<fr:alert-dialog id="delete-collection-dialog">
 			<fr:label>Delete Collection</fr:label>
 			<fr:message>Are you sure you want to delete this collection? This is irreversible. It is recommended that you make a backup first.</fr:message>
-			<fr:negative-choice></fr:negative-choice>
+			<fr:negative-choice>
+				<fr:label>No</fr:label>
+			</fr:negative-choice>
 			<fr:positive-choice>
+				<fr:label>Yes</fr:label>
 				<xforms:action ev:event="DOMActivate">
 					<!-- set and submit the XQuery -->
 					<xforms:setvalue ref="instance('eXist-xquery')/exist:text"
@@ -1234,8 +1238,9 @@
 		<fr:alert-dialog id="delete">
 			<fr:label>Delete</fr:label>
 			<fr:message>Are you sure you want to delete this object?</fr:message>
-			<fr:negative-choice></fr:negative-choice>
+			<fr:negative-choice><fr:label>No</fr:label></fr:negative-choice>
 			<fr:positive-choice>
+				<fr:label>Yes</fr:label>
 				<xforms:action ev:event="DOMActivate">
 					<xforms:send submission="delete-object"></xforms:send>
 					<xforms:setvalue ref="instance('deleteId')/query" value="concat('recordId:&#x022;', instance('control-instance')/id, '&#x022;')"></xforms:setvalue>
@@ -1258,8 +1263,9 @@
 		<fr:alert-dialog id="publish-all">
 			<fr:label>Publish All</fr:label>
 			<fr:message>Do you want to publish all objects? This may take several minutes.</fr:message>
-			<fr:negative-choice></fr:negative-choice>
+			<fr:negative-choice><fr:label>No</fr:label></fr:negative-choice>
 			<fr:positive-choice>
+				<fr:label>Yes</fr:label>
 				<xforms:action ev:event="DOMActivate">
 					<xforms:var name="count" select="if (instance('config')/collection_type='hoard') then '25' else '100'"></xforms:var>
 					<xforms:setvalue ref="instance('eXist-xquery')/exist:text" value="replace(instance('xqueries')/query[@id='publish-all'], 'COUNT', $count)"></xforms:setvalue>
@@ -1282,8 +1288,9 @@
 		<fr:alert-dialog id="unpublish-all">
 			<fr:label>Unpublish All</fr:label>
 			<fr:message>Do you want to unpublish all objects?</fr:message>
-			<fr:negative-choice></fr:negative-choice>
+			<fr:negative-choice><fr:label>No</fr:label></fr:negative-choice>
 			<fr:positive-choice>
+				<fr:label>Yes</fr:label>
 				<xforms:action ev:event="DOMActivate">
 					<xforms:setvalue ref="instance('deleteAll')/query" value="concat('collection-name:', instance('control-instance')/collection-name)"></xforms:setvalue>
 					<xforms:send submission="delete-all" ev:event="DOMActivate"></xforms:send>
@@ -1299,8 +1306,9 @@
 		<fr:alert-dialog id="republish-dialog">
 			<fr:label>Republish</fr:label>
 			<fr:message>Do you want to reindex currently published objects?</fr:message>
-			<fr:negative-choice></fr:negative-choice>
+			<fr:negative-choice><fr:label>No</fr:label></fr:negative-choice>
 			<fr:positive-choice>
+				<fr:label>Yes</fr:label>
 				<xforms:action ev:event="DOMActivate">
 					<xforms:send submission="republish"></xforms:send>
 					<xforms:send submission="optimize" ev:event="xforms-submit-done"></xforms:send>

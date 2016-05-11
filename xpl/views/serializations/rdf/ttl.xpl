@@ -11,24 +11,60 @@
 	<p:param type="input" name="data"/>
 	<p:param type="output" name="data"/>
 	
-	<p:processor name="oxf:pipeline">
-		<p:input name="data" href="#data"/>
-		<p:input name="config" href="../object/rdf.xpl"/>		
-		<p:output name="data" id="doc"/>		
+	<p:processor name="oxf:request">
+		<p:input name="config">
+			<config>
+				<include>/request</include>
+			</config>
+		</p:input>
+		<p:output name="data" id="request"/>
 	</p:processor>
 	
-	<!-- document needs to be parsed back into application/xml -->	
-	<p:processor name="oxf:unsafe-xslt">		
-		<p:input name="data" href="#doc"/>		
+	<p:processor name="oxf:unsafe-xslt">
+		<p:input name="data" href="#request"/>
 		<p:input name="config">
-			<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:saxon="http://saxon.sf.net/">
+			<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">				
+				<xsl:variable name="path" select="tokenize(/request/request-uri, '/')[last()-1]"/>
+				
+				
 				<xsl:template match="/">
-					<xsl:copy-of select="saxon:parse(/document)/*"/>
-				</xsl:template>				
+					<path>
+						<xsl:value-of select="$path"/>
+					</path>
+				</xsl:template>
 			</xsl:stylesheet>
 		</p:input>
-		<p:output name="data" id="xml"/>	
+		<p:output name="data" id="path"/>
 	</p:processor>
+	
+	<p:choose href="#path">		
+		<p:when test="path='symbol'">
+			<p:processor name="oxf:identity">
+				<p:input name="data" href="#data"/>
+				<p:output name="data" id="xml"/>				
+			</p:processor>
+		</p:when>
+		<p:when test="path='id'">
+			<p:processor name="oxf:pipeline">
+				<p:input name="data" href="#data"/>
+				<p:input name="config" href="../object/rdf.xpl"/>		
+				<p:output name="data" id="doc"/>		
+			</p:processor>
+			
+			<!-- document needs to be parsed back into application/xml -->	
+			<p:processor name="oxf:unsafe-xslt">		
+				<p:input name="data" href="#doc"/>		
+				<p:input name="config">
+					<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:saxon="http://saxon.sf.net/">
+						<xsl:template match="/">
+							<xsl:copy-of select="saxon:parse(/document)/*"/>
+						</xsl:template>				
+					</xsl:stylesheet>
+				</p:input>
+				<p:output name="data" id="xml"/>	
+			</p:processor>
+		</p:when>
+	</p:choose>
 	
 	<p:processor name="oxf:unsafe-xslt">		
 		<p:input name="data" href="#xml"/>		

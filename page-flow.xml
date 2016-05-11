@@ -4,8 +4,10 @@
 	* ADMIN INTERFACE *
 	***************** -->	
 	<page path="/numishare/admin/" view="xforms/admin.xhtml" id="admin"/>	
+	<page path="/numishare/admin/symbols/" view="xforms/symbols.xhtml"/>
 	<page path="/numishare/admin/edit/coin/" view="xforms/nuds.xhtml"/>
-	<page path="/numishare/admin/edit/object/" view="xforms/vra.xhtml"/>	
+	<page path="/numishare/admin/edit/symbol/" view="xforms/edit-symbol.xhtml"/>
+	<!--<page path="/numishare/admin/edit/object/" view="xforms/vra.xhtml"/>-->	
 	<page path="/numishare/admin/edit/settings/" view="xforms/settings.xhtml"/>
 	<page path="/numishare/admin/edit/page/" view="xforms/page.xhtml"/>	
 	<page path="/numishare/admin/pages/" view="xforms/pages.xhtml"/>
@@ -105,6 +107,12 @@
 	<page path="/numishare/[^\/]+/id/(.*)\.solr" model="xpl/models/object/get-id.xpl" view="xpl/views/serializations/object/solr.xpl"/>
 	<page path="/numishare/[^\/]+/id/(.*)" model="xpl/models/object/get-id.xpl" view="xpl/controllers/conneg-id.xpl"/>
 	<page path="/numishare/[^\/]+/map/(.*)" model="xpl/models/object/get-id.xpl" view="xpl/views/serializations/object/html-map.xpl"/>
+	
+	<!-- symbols -->	
+	<page path="/numishare/[^\/]+/symbol/(.*)\.rdf" view="xpl/models/symbol/get.xpl"/>
+	<page path="/numishare/[^\/]+/symbol/(.*)\.ttl" model="xpl/models/symbol/get.xpl" view="xpl/views/serializations/rdf/ttl.xpl"/>
+	<page path="/numishare/[^\/]+/symbol/(.*)\.jsonld" model="xpl/models/symbol/get.xpl" view="xpl/views/serializations/rdf/json-ld.xpl"/>
+	<page path="/numishare/[^\/]+/symbol/(.*)" model="xpl/models/symbol/get.xpl" view="xpl/controllers/conneg-symbol.xpl"/>
 	
 	<!-- **** PAGES **** -->	
 	<page path="/numishare/[^\/]+/analyze" model="xpl/models/solr/search.xpl" view="xpl/views/pages/analyze.xpl"/>
