@@ -121,6 +121,11 @@
 						</a>
 					</li>
 				</xsl:if>
+				<xsl:if test="//config/pages/symbols/@enabled=true()">
+					<li>
+						<a href="{$display_path}symbols{if (string($lang)) then concat('?lang=', $lang) else ''}">Symbols</a>
+					</li>
+				</xsl:if>
 				<li>
 					<a href="{$display_path}maps{if (string($lang)) then concat('?lang=', $lang) else ''}">
 						<xsl:value-of select="numishare:normalizeLabel('header_maps', $lang)"/>
@@ -153,6 +158,11 @@
 						<xsl:value-of select="numishare:normalizeLabel('header_maps', $lang)"/>
 					</a>
 				</li>
+				<xsl:if test="//config/pages/symbols/@enabled=true()">
+					<li>
+						<a href="{$display_path}symbols{if (string($lang)) then concat('?lang=', $lang) else ''}">Symbols</a>
+					</li>
+				</xsl:if>
 				<xsl:if test="//config/collection_type= 'cointype' and string(//config/sparql_endpoint)">
 					<li>
 						<a href="{$display_path}contributors{if (string($lang)) then concat('?lang=', $lang) else ''}">
