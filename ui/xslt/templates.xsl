@@ -3,9 +3,6 @@
 	version="2.0">
 	<xsl:template name="header">
 		<div class="navbar navbar-default navbar-static-top" role="navigation">
-			<xsl:if test="$lang='ar'">
-				<xsl:attribute name="style">direction: rtl;</xsl:attribute>							
-			</xsl:if>
 			<div class="container-fluid">
 				<div class="navbar-header">					
 					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -14,7 +11,7 @@
 						<span class="icon-bar"/>
 						<span class="icon-bar"/>
 					</button>
-					<a class="navbar-brand" href="{//config/url}{if (string($lang)) then concat('?lang=', $lang) else ''}">
+					<a class="navbar-brand" href="{$display_path}./">
 						<xsl:choose>
 							<xsl:when test="string-length(//config/logo) &gt; 0">
 								<xsl:choose>
@@ -41,12 +38,21 @@
 					<div class="col-sm-3 col-md-3 pull-{if ($lang='ar') then 'left' else 'right'}">
 						<form class="navbar-form" role="search" action="{$display_path}results" method="get">
 							<div class="input-group">
+								<xsl:if test="$lang='ar'">
+									<div class="input-group-btn">
+										<button class="btn btn-default" type="submit">
+											<i class="glyphicon glyphicon-search"/>
+										</button>
+									</div>
+								</xsl:if>
 								<input type="text" class="form-control" placeholder="{numishare:normalizeLabel('header_search', $lang)}" name="q" id="srch-term"/>
-								<div class="input-group-btn">
-									<button class="btn btn-default" type="submit">
-										<i class="glyphicon glyphicon-search"/>
-									</button>
-								</div>
+								<xsl:if test="not($lang='ar')">
+									<div class="input-group-btn">
+										<button class="btn btn-default" type="submit">
+											<i class="glyphicon glyphicon-search"/>
+										</button>
+									</div>
+								</xsl:if>
 							</div>
 						</form>
 					</div>
@@ -64,35 +70,16 @@
 		<xsl:choose>
 			<xsl:when test="$lang='ar'">
 				<xsl:call-template name="languages"/>
-				<xsl:for-each select="//config/pages/page[@public = '1']">
-					<xsl:sort select="position()" order="descending"/>
-					<xsl:variable name="stub" select="@stub"/>
-					
+				<xsl:for-each select="//config/pages/page[public = '1']">
 					<li>
-						<a href="{$display_path}pages/{@stub}{if (string($lang)) then concat('?lang=', $lang) else ''}">							
-							<xsl:choose>
-								<xsl:when test="content[@lang=$lang]">
-									<xsl:value-of select="content[@lang=$lang]/short-title"/>
-								</xsl:when>
-								<xsl:otherwise>
-									<xsl:choose>
-										<xsl:when test="content[@lang='en']">
-											<xsl:value-of select="content[@lang='en']/short-title"/>
-										</xsl:when>
-										<xsl:otherwise>
-											<xsl:value-of select="short-title"/>
-										</xsl:otherwise>
-									</xsl:choose>
-								</xsl:otherwise>
-							</xsl:choose>
+						<a href="{$display_path}pages/{@stub}{if (string($lang)) then concat('?lang=', $lang) else ''}">
+							<xsl:value-of select="short-title"/>
 						</a>
 					</li>
 				</xsl:for-each>
-				<xsl:if test="not(//config/pages/apis/@enabled=false())">
-					<li>
-						<a href="{$display_path}apis{if (string($lang)) then concat('?lang=', $lang) else ''}">APIs</a>
-					</li>
-				</xsl:if>				
+				<li>
+					<a href="{$display_path}apis{if (string($lang)) then concat('?lang=', $lang) else ''}">APIs</a>
+				</li>
 				<xsl:if test="//config/pages/visualize/@enabled= true()">
 					<li>
 						<a href="{$display_path}visualize{if (string($lang)) then concat('?lang=', $lang) else ''}">
@@ -132,14 +119,14 @@
 					</a>
 				</li>
 				<li>
-					<a href="{$display_path}results{if (string($lang)) then concat('?lang=', $lang) else ''}">
+					<a href="{$display_path}results?q=*:*{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
 						<xsl:value-of select="numishare:normalizeLabel('header_browse', $lang)"/>
 					</a>
 				</li>				
 			</xsl:when>
 			<xsl:otherwise>				
 				<li>
-					<a href="{$display_path}results{if (string($lang)) then concat('?lang=', $lang) else ''}">
+					<a href="{$display_path}results?q=*:*{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
 						<xsl:value-of select="numishare:normalizeLabel('header_browse', $lang)"/>
 					</a>
 				</li>
@@ -181,31 +168,13 @@
 						</a>
 					</li>
 				</xsl:if>
-				<xsl:if test="not(//config/pages/apis/@enabled=false())">
+				<li>
+					<a href="{$display_path}apis{if (string($lang)) then concat('?lang=', $lang) else ''}">APIs</a>
+				</li>
+				<xsl:for-each select="//config/pages/page[public = '1']">
 					<li>
-						<a href="{$display_path}apis{if (string($lang)) then concat('?lang=', $lang) else ''}">APIs</a>
-					</li>
-				</xsl:if>
-				<xsl:for-each select="//config/pages/page[@public='1']">
-					<xsl:variable name="stub" select="@stub"/>
-					
-					<li>
-						<a href="{$display_path}pages/{@stub}{if (string($lang)) then concat('?lang=', $lang) else ''}">							
-							<xsl:choose>
-								<xsl:when test="content[@lang=$lang]">
-									<xsl:value-of select="content[@lang=$lang]/short-title"/>
-								</xsl:when>
-								<xsl:otherwise>
-									<xsl:choose>
-										<xsl:when test="content[@lang='en']">
-											<xsl:value-of select="content[@lang='en']/short-title"/>
-										</xsl:when>
-										<xsl:otherwise>
-											<xsl:value-of select="short-title"/>
-										</xsl:otherwise>
-									</xsl:choose>
-								</xsl:otherwise>
-							</xsl:choose>
+						<a href="{$display_path}pages/{@stub}{if (string($lang)) then concat('?lang=', $lang) else ''}">
+							<xsl:value-of select="short-title"/>
 						</a>
 					</li>
 				</xsl:for-each>
@@ -219,28 +188,16 @@
 	</xsl:template>
 	
 	<xsl:template name="languages">
-		<xsl:variable name="page" select="substring-after(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/')"/>
-		<xsl:variable name="query" select="doc('input:request')/request/parameters/parameter[name='q']/value"/>
-		
 		<xsl:if test="count(//config/descendant::language[@enabled='true']) &gt; 1">
 			<li class="dropdown">
-				<a href="#" class="dropdown-toggle" data-toggle="dropdown"><xsl:value-of select="numishare:normalizeLabel('header_language', $lang)"/> <b class="caret"/></a>
+				<a href="#" class="dropdown-toggle" data-toggle="dropdown">Language <b class="caret"/></a>
 				<ul class="dropdown-menu">
 					<xsl:for-each select="//config/descendant::language[@enabled='true']">
 						<xsl:sort select="@code"/>
 						<li>
-							<xsl:choose>
-								<xsl:when test="string-length($page) = 0">
-									<a href="{//config/url}?lang={@code}">
-										<xsl:value-of select="numishare:normalizeLabel(concat('lang_', @code), $lang)"/>
-									</a>
-								</xsl:when> 
-								<xsl:otherwise>
-									<a href="{$display_path}{$page}?lang={@code}{if (string-length($query) &gt; 0) then concat('&amp;q=', $query) else ''}">
-										<xsl:value-of select="numishare:normalizeLabel(concat('lang_', @code), $lang)"/>
-									</a>
-								</xsl:otherwise>
-							</xsl:choose>
+							<a href="?lang={@code}">
+								<xsl:value-of select="numishare:normalizeLabel(concat('lang_', @code), $lang)"/>
+							</a>
 						</li>
 					</xsl:for-each>
 				</ul>

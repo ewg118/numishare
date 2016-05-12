@@ -1,9 +1,13 @@
 <?php 
 
+/*Berlin OCRE export: http://ww2.smb.museum/mk_edit/coin_export/21/content.txt
+ *Priene export: http://ww2.smb.museum/mk_edit/coin_export/30/content.txt
+*/
+
 //Berlin's list of LIDO XML files
-$project = 'priene';
+$project = 'berlin';
 $data = generate_json($project . '-concordances.csv', false);
-$prefix = 'http://ww2.smb.museum/mk_edit/coin_export/30/';
+$prefix = 'http://ww2.smb.museum/mk_edit/coin_export/21/';
 //start RDF/XML file
 //use XML writer to generate RDF
 $writer = new XMLWriter();

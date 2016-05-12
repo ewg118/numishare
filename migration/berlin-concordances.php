@@ -2,13 +2,13 @@
 
 //Berlin's list of LIDO XML files
 
-/*Berlin OCRE export: http://ww2.smb.museum/mk_edit/coin_export/2/content.txt
+/*Berlin OCRE export: http://ww2.smb.museum/mk_edit/coin_export/21/content.txt
  *Priene export: http://ww2.smb.museum/mk_edit/coin_export/30/content.txt
  */
 
-$list = file_get_contents('http://ww2.smb.museum/mk_edit/coin_export/30/content.txt');
+$list = file_get_contents('http://ww2.smb.museum/mk_edit/coin_export/21/content.txt');
 $files = explode(PHP_EOL, $list);
-$filename = 'priene-concordances.csv';
+$filename = 'berlin-concordances.csv';
 
 $csv = '"object_number","URI","ref"' . "\n";
 
