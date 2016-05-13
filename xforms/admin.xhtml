@@ -5,9 +5,9 @@
     Apache License 2.0: https://github.com/ewg118/numishare    
 -->
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ev="http://www.w3.org/2001/xml-events"
-	xmlns:xxforms="http://orbeon.org/oxf/xml/xforms" xmlns:widget="http://orbeon.org/oxf/xml/widget" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:fr="http://orbeon.org/oxf/xml/form-runner"
-	xmlns:exist="http://exist.sourceforge.net/NS/exist" xmlns:xxi="http://orbeon.org/oxf/xml/xinclude" xmlns:numishare="https://github.com/ewg118/numishare" xmlns:xlink="http://www.w3.org/1999/xlink"
-	xmlns:nuds="http://nomisma.org/nuds">
+	xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:xxforms="http://orbeon.org/oxf/xml/xforms" xmlns:widget="http://orbeon.org/oxf/xml/widget" xmlns:xi="http://www.w3.org/2001/XInclude"
+	xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:exist="http://exist.sourceforge.net/NS/exist" xmlns:xxi="http://orbeon.org/oxf/xml/xinclude"
+	xmlns:numishare="https://github.com/ewg118/numishare" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:nuds="http://nomisma.org/nuds">
 	<head>
 		<title>Numishare: Administrative Interface</title>
 		<!-- Core + Skin CSS -->
@@ -57,7 +57,7 @@
 					<logo></logo>
 					<url>http://localhost:8080/orbeon/numishare/</url>
 					<sparql_endpoint>http://nomisma.org/query</sparql_endpoint>
-					<annotation_sparql_endpoint/>
+					<annotation_sparql_endpoint></annotation_sparql_endpoint>
 					<type_series></type_series>
 					<solr_published>http://localhost:8080/solr/numishare-published/</solr_published>
 					<flickr_api_key></flickr_api_key>
@@ -160,7 +160,7 @@
 						<analyze enabled="false"></analyze>
 						<visualize enabled="true"></visualize>
 						<apis enabled="true"></apis>
-						<symbols enabled="false"/>
+						<symbols enabled="false"></symbols>
 					</pages>
 				</config>
 			</xforms:instance>
@@ -451,14 +451,14 @@
 
 						<!-- set interface: if there is a session attribute for collection-name, then load the editor interface. otherwise load numishare-admin interface -->
 						<xforms:action if="string(xxforms:get-session-attribute('collection-name'))">
-							<xforms:setvalue ref="instance('control-instance')/collection-name" value="xxforms:get-session-attribute('collection-name')"/>
+							<xforms:setvalue ref="instance('control-instance')/collection-name" value="xxforms:get-session-attribute('collection-name')"></xforms:setvalue>
 							<xforms:setvalue ref="instance('control-instance')/interface">numishare-editor</xforms:setvalue>
-							<xforms:send submission="load-config"></xforms:send>							
+							<xforms:send submission="load-config"></xforms:send>
 						</xforms:action>
 						<xforms:action if="not(string(xxforms:get-session-attribute('collection-name')))">
 							<xforms:setvalue ref="instance('control-instance')/interface">numishare-admin</xforms:setvalue>
 						</xforms:action>
-						
+
 					</xforms:action>
 				</xforms:action>
 				<!-- if there isn't a collection list XML, then this is the first time Numishare has been run. If the role is numishare-admin display the collection creation interface, otherwise block editing to unauthorized individuals -->
@@ -578,13 +578,13 @@
 				<xforms:message ev:event="xforms-submit-error" level="modal">Error transforming XML record to Solr document.</xforms:message>
 				<xforms:send ev:event="xforms-submit-done" submission="post-solr-doc"></xforms:send>
 			</xforms:submission>
-			
+
 			<!-- post instance to Solr -->
 			<xforms:submission id="post-solr-doc" resource="{instance('config')/solr_published}update" ref="instance('addIndex')" instance="addIndex" replace="instance" method="post">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Data Failed to POST to Solr. Index may be offline or URL is incorrect.</xforms:message>
 				<xforms:setvalue ev:event="xforms-submit-done" ref="instance('control-instance')/status">Successfully published to Solr.</xforms:setvalue>
 			</xforms:submission>
-			
+
 			<!-- delete from Solr -->
 			<xforms:submission id="delete-solr-doc" resource="{instance('config')/solr_published}update" ref="instance('deleteId')" instance="deleteId" replace="none" method="post">
 				<xforms:action ev:event="xforms-submit-done">
@@ -593,7 +593,7 @@
 				</xforms:action>
 				<xforms:message ev:event="xforms-submit-error" level="modal">Data Failed to POST to Solr.</xforms:message>
 			</xforms:submission>
-			
+
 			<xforms:submission id="delete-all" resource="{instance('config')/solr_published}update" ref="instance('deleteAll')" instance="deleteAll" replace="none" method="post">
 				<xforms:send ev:event="xforms-submit-done" submission="submit-commit"></xforms:send>
 				<xforms:setvalue ev:event="xforms-submit-done" ref="instance('control-instance')/status">Objects removed from search index.</xforms:setvalue>
@@ -731,8 +731,7 @@
 																				<!-- set session attribute of the selected collection name -->
 																				<xforms:setvalue ref="instance('control-instance')/collection-name" value="$name"></xforms:setvalue>
 																				<xforms:insert context="."
-																					origin="xxforms:set-session-attribute('collection-name', instance('control-instance')/collection-name)"
-																				></xforms:insert>
+																					origin="xxforms:set-session-attribute('collection-name', instance('control-instance')/collection-name)"></xforms:insert>
 																				<!-- load the associated config and display the Numishare editor interface -->
 																				<xforms:send submission="load-config"></xforms:send>
 																				<xforms:toggle case="numishare-editor"></xforms:toggle>
@@ -744,7 +743,7 @@
 																			<xforms:action ev:event="DOMActivate">
 																				<xforms:setvalue ref="instance('control-instance')/collection-name" value="$name"></xforms:setvalue>
 																				<xforms:dispatch target="delete-collection-dialog" name="fr-show"></xforms:dispatch>
-																			</xforms:action>																			
+																			</xforms:action>
 																		</xforms:trigger>
 																	</td>
 																</tr>
@@ -914,7 +913,7 @@
 												</xforms:action>
 											</xforms:action>
 										</xforms:trigger>
-									</div>									
+									</div>
 								</xforms:group>
 								<xforms:group ref=".[instance('control-instance')/status/text()]">
 									<div class="bg-info alert-box">
@@ -1139,29 +1138,27 @@
 														<td class="text-center">
 															<!-- only enable publication if the maintenanceStatus allows it -->
 															<xforms:group ref=".[maintenanceStatus='new' or maintenanceStatus='revised' or maintenanceStatus='derived']">
-																<xforms:group ref="published[. = true()]">																
+																<xforms:group ref="published[. = true()]">
 																	<xforms:trigger appearance="minimal">
 																		<xforms:label><span class="glyphicon glyphicon-{if (.=true()) then 'ok' else 'unchecked'}"></span></xforms:label>
 																		<xforms:action ev:event="DOMActivate">
-																			<xforms:var name="val" select="." as="xs:boolean"/>	
+																			<xforms:var name="val" select="." as="xs:boolean"></xforms:var>
 																			<xforms:setvalue ref="instance('control-instance')/id" value="$id"></xforms:setvalue>
 																			<!-- update publicationStatus -->
 																			<xforms:setvalue ref="instance('control-instance')/publicationStatus">inProcess</xforms:setvalue>
 																			<xforms:send submission="load-object"></xforms:send>
-																			
 																			<!-- delete from Solr -->
-																			<xforms:setvalue ref="instance('deleteId')/query" value="concat('recordId:&#x022;', instance('control-instance')/id, '&#x022;')"></xforms:setvalue>
+																			<xforms:setvalue ref="instance('deleteId')/query"
+																				value="concat('recordId:&#x022;', instance('control-instance')/id, '&#x022;')"></xforms:setvalue>
 																			<xforms:send submission="delete-solr-doc"></xforms:send>
 																			<xforms:setvalue ref="." value="false()"></xforms:setvalue>
 																		</xforms:action>
 																	</xforms:trigger>
-																</xforms:group>
-																
-																<xforms:group ref="published[. = false()]">
+																</xforms:group> <xforms:group ref="published[. = false()]">
 																	<xforms:trigger appearance="minimal">
 																		<xforms:label><span class="glyphicon glyphicon-{if (.=true()) then 'ok' else 'unchecked'}"></span></xforms:label>
 																		<xforms:action ev:event="DOMActivate">
-																			<xforms:var name="val" select="." as="xs:boolean"/>																		
+																			<xforms:var name="val" select="." as="xs:boolean"></xforms:var>
 																			<!-- publish the record if the box is checked -->
 																			<xforms:setvalue ref="instance('control-instance')/id" value="$id"></xforms:setvalue>
 																			<xforms:setvalue ref="instance('control-instance')/publicationStatus">approved</xforms:setvalue>
@@ -1172,7 +1169,7 @@
 																			<xforms:setvalue ref="." value="true()"></xforms:setvalue>
 																		</xforms:action>
 																	</xforms:trigger>
-																</xforms:group>														
+																</xforms:group>
 															</xforms:group>
 														</td>
 														<td class="text-center">
@@ -1202,7 +1199,7 @@
 				</div>
 			</div>
 		</div>
-		
+
 		<!-- *********************** DIALOGS ********************* -->
 		<!-- ********* NUMISHARE-ADMIN ********* -->
 		<fr:alert-dialog id="delete-collection-dialog">
@@ -1218,19 +1215,19 @@
 					<xforms:setvalue ref="instance('eXist-xquery')/exist:text"
 						value="replace(instance('xqueries')/query[@id='delete-collection'], '%COLLECTION%', instance('control-instance')/collection-name)"></xforms:setvalue>
 					<xforms:send submission="xquery-db"></xforms:send>
-					
+
 					<!-- delete the collection from the collections-list XML -->
-					<xforms:delete nodeset="instance('collections-list')/collection[@name=instance('control-instance')/collection-name]"/>
-					<xforms:send submission="save-collections"/>
-					
+					<xforms:delete nodeset="instance('collections-list')/collection[@name=instance('control-instance')/collection-name]"></xforms:delete>
+					<xforms:send submission="save-collections"></xforms:send>
+
 					<!-- update status and get collection metadata -->
 					<xforms:action ev:event="xforms-submit-done">
-						<xforms:setvalue ref="instance('control-instance')/status">Collection successfully removed from eXist-db.</xforms:setvalue>						
+						<xforms:setvalue ref="instance('control-instance')/status">Collection successfully removed from eXist-db.</xforms:setvalue>
 						<xforms:setvalue ref="instance('eXist-xquery')/exist:text"
 							value="replace(instance('xqueries')/query[@id='collection-metadata'], '%SEQUENCE%', string-join(instance('collections-list')/collection/@name, ','))"></xforms:setvalue>
 						<xforms:send submission="xquery-db"></xforms:send>
 						<!-- blank collection name -->
-						<xforms:setvalue ref="instance('control-instance')/collection-name"/>
+						<xforms:setvalue ref="instance('control-instance')/collection-name"></xforms:setvalue>
 					</xforms:action>
 				</xforms:action>
 			</fr:positive-choice>
@@ -1239,7 +1236,9 @@
 		<fr:alert-dialog id="delete">
 			<fr:label>Delete</fr:label>
 			<fr:message>Are you sure you want to delete this object?</fr:message>
-			<fr:negative-choice><fr:label>No</fr:label></fr:negative-choice>
+			<fr:negative-choice>
+				<fr:label>No</fr:label>
+			</fr:negative-choice>
 			<fr:positive-choice>
 				<fr:label>Yes</fr:label>
 				<xforms:action ev:event="DOMActivate">
@@ -1259,12 +1258,14 @@
 				</xforms:action>
 			</fr:positive-choice>
 		</fr:alert-dialog>
-		
+
 		<!-- mass publication dialogs -->
 		<fr:alert-dialog id="publish-all">
 			<fr:label>Publish All</fr:label>
 			<fr:message>Do you want to publish all objects? This may take several minutes.</fr:message>
-			<fr:negative-choice><fr:label>No</fr:label></fr:negative-choice>
+			<fr:negative-choice>
+				<fr:label>No</fr:label>
+			</fr:negative-choice>
 			<fr:positive-choice>
 				<fr:label>Yes</fr:label>
 				<xforms:action ev:event="DOMActivate">
@@ -1289,7 +1290,9 @@
 		<fr:alert-dialog id="unpublish-all">
 			<fr:label>Unpublish All</fr:label>
 			<fr:message>Do you want to unpublish all objects?</fr:message>
-			<fr:negative-choice><fr:label>No</fr:label></fr:negative-choice>
+			<fr:negative-choice>
+				<fr:label>No</fr:label>
+			</fr:negative-choice>
 			<fr:positive-choice>
 				<fr:label>Yes</fr:label>
 				<xforms:action ev:event="DOMActivate">
@@ -1307,7 +1310,9 @@
 		<fr:alert-dialog id="republish-dialog">
 			<fr:label>Republish</fr:label>
 			<fr:message>Do you want to reindex currently published objects?</fr:message>
-			<fr:negative-choice><fr:label>No</fr:label></fr:negative-choice>
+			<fr:negative-choice>
+				<fr:label>No</fr:label>
+			</fr:negative-choice>
 			<fr:positive-choice>
 				<fr:label>Yes</fr:label>
 				<xforms:action ev:event="DOMActivate">

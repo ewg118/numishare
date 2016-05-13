@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:numishare="https://github.com/ewg118/numishare" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-	xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nm="http://nomisma.org/id/" xmlns:nmo="http://nomisma.org/ontology#" exclude-result-prefixes="#all" version="2.0">
+	xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nm="http://nomisma.org/id/" xmlns:nmo="http://nomisma.org/ontology#" exclude-result-prefixes="#all"
+	version="2.0">
 	<xsl:output method="xml" encoding="UTF-8"/>
 	<xsl:include href="../templates.xsl"/>
 	<xsl:include href="../functions.xsl"/>
@@ -71,7 +72,11 @@
 		<xsl:variable name="id" select="tokenize(@rdf:about, '/')[last()]"/>
 
 		<tr>
-			<td><img src="../symbols/{$id}.png" style="width:100%"/></td>
+			<td>
+				<xsl:if test="foaf:depiction">
+					<img src="{foaf:depiction/@rdf:resource}" style="width:100%"/>
+				</xsl:if>
+			</td>
 			<td>
 				<h3>
 					<a href="symbol/{$id}">
@@ -82,7 +87,7 @@
 							<xsl:otherwise>
 								<xsl:value-of select="skos:prefLabel[@xml:lang='en']"/>
 							</xsl:otherwise>
-						</xsl:choose>						
+						</xsl:choose>
 					</a>
 				</h3>
 				<dl class="dl-horizontal">

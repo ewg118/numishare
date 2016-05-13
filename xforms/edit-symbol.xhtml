@@ -22,10 +22,7 @@
 		<xforms:model>
 			<xforms:instance id="doc" xxforms:exclude-result-prefixes="#all">
 				<rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:nm="http://nomisma.org/id/" xmlns:nmo="http://nomisma.org/ontology#" xmlns:foaf="http://xmlns.com/foaf/0.1/"
-					xmlns:crm="http://www.cidoc-crm.org/cidoc-crm/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
-					xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
-					xmlns:un="http://www.owl-ontologies.com/Ontology1181490123.owl#" xmlns:osgeo="http://data.ordnancesurvey.co.uk/ontology/geometry/" xmlns:org="http://www.w3.org/ns/org#"
-					xmlns:rdac="http://www.rdaregistry.info/Elements/c/" xmlns:bio="http://purl.org/vocab/bio/0.1/"> </rdf:RDF>
+					xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#"> </rdf:RDF>
 			</xforms:instance>
 
 			<xforms:instance id="exist-config">
@@ -42,12 +39,14 @@
 
 			<xforms:instance id="control-instance" xxforms:exclude-result-prefixes="#all">
 				<controls xmlns="">
-					<status/>
+					<status></status>
 					<id></id>
 					<new_id>true</new_id>
 					<collection-name></collection-name>
 					<uri></uri>
 					<type></type>
+					<symbol_path></symbol_path>
+					<symbol_url></symbol_url>
 				</controls>
 			</xforms:instance>
 
@@ -74,6 +73,33 @@
 						<type>nmo:Monogram</type>
 					</class>
 				</classes>
+			</xforms:instance>
+
+			<!-- upload instances -->
+			<xforms:instance id="file">
+				<!-- Start with placeholders for three files -->
+				<file xmlns="" xsi:type="xs:anyURI" filename="" mediatype="" size="" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"></file>
+			</xforms:instance>
+
+			<xforms:instance id="serializer-config">
+				<config xmlns="">
+					<url></url>
+				</config>
+			</xforms:instance>
+
+			<xforms:instance id="delete-config">
+				<config xmlns="">
+					<symbol_path></symbol_path>
+					<id></id>
+				</config>
+			</xforms:instance>
+
+			<xforms:instance id="generator-config">
+				<config xmlns="">
+					<url></url>
+					<mode>binary</mode>
+					<content-type></content-type>
+				</config>
 			</xforms:instance>
 
 			<!-- ********** REST RESPONSES ********** -->
@@ -156,6 +182,12 @@ PREFIX un:	<http://www.owl-ontologies.com/Ontology1181490123.owl#>]]></prefix>
 			<xforms:submission id="load-config" serialization="none" method="get" action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/config.xml"
 				xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}" replace="instance" instance="config">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Unable to load Numishare configuration</xforms:message>
+				<xforms:action ev:event="xforms-submit-done">
+					<!-- set the symbol filesystem path and public URL -->
+					<xforms:setvalue ref="instance('control-instance')/symbol_path"
+						value="if (substring(instance('config')/images/absolute_path, -1) = '/') then concat(instance('config')/images/absolute_path, 'symbols/') else concat(instance('config')/images/absolute_path, '/symbols/')"></xforms:setvalue>
+					<xforms:setvalue ref="instance('control-instance')/symbol_url" value="concat(instance('config')/url, 'symbols/')"></xforms:setvalue>
+				</xforms:action>
 			</xforms:submission>
 
 			<xforms:submission id="load-collections" serialization="none" method="get" action="{instance('exist-config')/url}collections-list.xml" replace="instance" instance="collections-list"
@@ -239,7 +271,6 @@ PREFIX un:	<http://www.owl-ontologies.com/Ontology1181490123.owl#>]]></prefix>
 			<div class="row">
 				<div class="col-md-12">
 					<p><a href="../../symbols/"><span class="glyphicon glyphicon-arrow-left"></span>Return to Symbol List</a></p>
-					
 					<!-- messages -->
 					<xforms:group ref=".[string-length(instance('control-instance')/status) &gt; 0]">
 						<div class="bg-info alert-box">
@@ -305,9 +336,22 @@ PREFIX un:	<http://www.owl-ontologies.com/Ontology1181490123.owl#>]]></prefix>
 									<xforms:label>
 										<span class="glyphicon glyphicon-plus"></span>Scope Note</xforms:label>
 									<xforms:insert ev:event="DOMActivate" origin="xforms:element('skos:scopeNote', (xforms:attribute('xml:lang')))" context="." nodeset="./child::node()[last()]"
-										></xforms:insert>
+									></xforms:insert>
 								</xforms:trigger>
 							</li>
+						</ul>
+						<h4>Images</h4>
+						<ul class="control-list">
+							<xforms:group ref=".[count(foaf:depiction) = 0]">
+								<li>
+									<xforms:trigger appearance="minimal">
+										<xforms:label>
+											<span class="glyphicon glyphicon-plus"></span>Depiction</xforms:label>
+										<xforms:insert ev:event="DOMActivate" origin="xforms:element('foaf:depiction', (xforms:attribute('rdf:resource')))" context="."
+											nodeset="./child::node()[last()]"></xforms:insert>
+									</xforms:trigger>
+								</li>
+							</xforms:group>
 						</ul>
 						<h4>Miscellaneous</h4>
 						<ul class="control-list">
@@ -317,18 +361,8 @@ PREFIX un:	<http://www.owl-ontologies.com/Ontology1181490123.owl#>]]></prefix>
 										<span class="glyphicon glyphicon-plus"></span>Bibliographic Source</xforms:label>
 									<xforms:insert ev:event="DOMActivate" origin="xforms:element('dcterms:source', (xforms:attribute('rdf:resource')))" context="." nodeset="./child::node()[last()]"
 									></xforms:insert>
-								</xforms:trigger>								
+								</xforms:trigger>
 							</li>
-							<xforms:group ref=".[count(foaf:depiction) = 0]">
-								<li>
-									<xforms:trigger appearance="minimal">
-										<xforms:label>
-											<span class="glyphicon glyphicon-plus"></span>Image</xforms:label>
-										<xforms:insert ev:event="DOMActivate" origin="xforms:element('foaf:depiction', (xforms:attribute('rdf:resource')))" context="."
-											nodeset="./child::node()[last()]"></xforms:insert>
-									</xforms:trigger>
-								</li>
-							</xforms:group>
 						</ul>
 					</xforms:group>
 				</div>
@@ -512,6 +546,61 @@ PREFIX un:	<http://www.owl-ontologies.com/Ontology1181490123.owl#>]]></prefix>
 											</xforms:group>
 										</div>
 										<div class="subsection">
+											<h4>Images</h4>
+											<xforms:group ref="foaf:depiction">
+												<div>													
+													<xforms:group ref=".[string-length(@rdf:resource) = 0]">
+														<h5>Depiction</h5>
+														<xforms:trigger appearance="minimal">
+															<xforms:delete ev:event="DOMActivate" context="."></xforms:delete>
+															<xforms:label>
+																<span class="glyphicon glyphicon-remove"></span>
+															</xforms:label>
+														</xforms:trigger>
+														<div>
+															<fr:upload ref="instance('file')">
+																<xforms:label>Upload</xforms:label>
+																<xforms:filename ref="@filename"></xforms:filename>
+																<xforms:mediatype ref="@mediatype"></xforms:mediatype>
+																<xxforms:size ref="@size"></xxforms:size>
+															</fr:upload>
+															<xforms:trigger>
+																<xforms:label>Upload</xforms:label>
+																<xforms:action ev:event="DOMActivate">
+																	<xforms:send submission="upload-file"></xforms:send>
+																	<!--get the temp file written to disk, and move it into the symbols folder in the absolute_path directory -->
+																	<xforms:action ev:event="xforms-submit-done">
+																		<xforms:var name="extension" select="tokenize(instance('file')/@filename, '\.')[last()]"></xforms:var>
+																		<xforms:setvalue ref="instance('generator-config')/url" value="instance('file')"></xforms:setvalue>
+																		<xforms:setvalue ref="instance('generator-config')/content-type" value="instance('file')/@mediatype"></xforms:setvalue>
+																		<xforms:setvalue ref="instance('serializer-config')/url"
+																			value="concat('file:', instance('control-instance')/symbol_path, instance('control-instance')/id, '.', $extension)"></xforms:setvalue>
+																		<xforms:insert nodeset="instance('dump')"
+																			origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/xforms/move-file.xpl', ('generator-config', 'serializer-config'), (instance('generator-config'), instance('serializer-config')), 'data')"></xforms:insert>
+																		<!-- set the data within the MODS document -->
+																		<xforms:setvalue ref="instance('doc')/*[1]/foaf:depiction/@rdf:resource"
+																			value="concat(instance('control-instance')/symbol_url, instance('control-instance')/id)"></xforms:setvalue>
+																	</xforms:action>
+																</xforms:action>
+															</xforms:trigger>
+														</div>
+													</xforms:group>
+													<xforms:group ref=".[string-length(@rdf:resource) &gt; 0]">
+														<div class="subsection">
+															<h5>Depiction </h5>
+															<xforms:trigger appearance="minimal">
+																<xforms:label><span class="glyphicon glyphicon-remove"></span></xforms:label>
+																<xforms:dispatch ev:event="DOMActivate" target="delete-dialog" name="fr-show"></xforms:dispatch>
+															</xforms:trigger>
+															<div>
+																<xforms:output mediatype="image/*" ref="@rdf:resource"/>																
+															</div>
+														</div>
+													</xforms:group>
+												</div>
+											</xforms:group>
+										</div>
+										<div class="subsection">
 											<h4>Miscellaneous</h4>
 											<xforms:repeat nodeset="dcterms:source">
 												<div>
@@ -529,20 +618,6 @@ PREFIX un:	<http://www.owl-ontologies.com/Ontology1181490123.owl#>]]></prefix>
 													</xforms:select1>
 												</div>
 											</xforms:repeat>
-											<xforms:group ref="foaf:depiction">
-												<div>
-													<xforms:input ref="@rdf:resource">
-														<xforms:label>Image Link</xforms:label>
-														<xforms:alert>Required</xforms:alert>
-													</xforms:input>
-													<xforms:trigger appearance="minimal">
-														<xforms:delete ev:event="DOMActivate" context="."></xforms:delete>
-														<xforms:label>
-															<span class="glyphicon glyphicon-remove"></span>
-														</xforms:label>
-													</xforms:trigger>
-												</div>
-											</xforms:group>
 										</div>
 										<div class="subsection">
 											<h4>Provenance</h4>
@@ -560,6 +635,25 @@ PREFIX un:	<http://www.owl-ontologies.com/Ontology1181490123.owl#>]]></prefix>
 				</div>
 			</div>
 		</div>
-		<!--<fr:xforms-inspector></fr:xforms-inspector>-->
+
+		<fr:alert-dialog id="delete-dialog">
+			<fr:label>Delete Document</fr:label>
+			<fr:message>Are you sure you want to delete the symbol image?</fr:message>
+			<fr:positive-choice>
+				<fr:label>Yes</fr:label>
+				<xforms:action ev:event="DOMActivate">
+					<!-- delete the file -->
+					<xforms:delete nodeset="instance('doc')/*[1]/foaf:depiction"></xforms:delete>
+					<xforms:setvalue ref="instance('delete-config')/id" value="instance('control-instance')/id"></xforms:setvalue>
+					<xforms:setvalue ref="instance('delete-config')/symbol_path" value="instance('control-instance')/symbol_path"></xforms:setvalue>
+					<xforms:insert nodeset="instance('dump')" origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/xforms/delete-file.xpl', 'data', instance('delete-config'), 'data')"></xforms:insert>					
+				</xforms:action>
+			</fr:positive-choice>
+			<fr:negative-choice>
+				<fr:label>No</fr:label>
+			</fr:negative-choice>
+		</fr:alert-dialog>
+
+		<fr:xforms-inspector></fr:xforms-inspector>
 	</body>
 </html>

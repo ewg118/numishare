@@ -100,7 +100,7 @@
 	<xsl:template name="body">
 		<div class="container-fluid content">
 			<div class="row">
-				<div class="col-md-8">
+				<div class="col-md-8">					
 					<xsl:apply-templates select="/content/rdf:RDF/*" mode="type"/>
 				</div>
 				<div class="col-md-4">

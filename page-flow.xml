@@ -56,6 +56,9 @@
 	<!-- PELLA -->
 	<page path="/numishare/pella/" model="xpl/models/config.xpl" view="file:///usr/local/projects/pella/xpl/views/pages/index.xpl"/>
 	
+	<!-- OCRE -->
+	<page path="/numishare/ocre/" model="xpl/models/config.xpl" view="file:///usr/local/projects/ocre/xpl/views/pages/index.xpl"/>	
+	
 	<!-- MANTIS -->
 	<!-- pages -->
 	<page path="/numishare/mantis/apis" model="xpl/models/solr/apis.xpl" view="file:///usr/local/projects/mantis/xpl/views/pages/apis.xpl"/>
@@ -89,9 +92,6 @@
 	<!-- results ajax -->
 	<page path="/numishare/mantis/results_ajax" model="xpl/models/solr/results_ajax.xpl" view="file:///usr/local/projects/mantis/xpl/views/ajax/results_ajax.xpl"/>
 	
-	<!-- OCRE -->
-	<page path="/numishare/ocre/" model="xpl/models/config.xpl" view="file:///usr/local/projects/ocre/xpl/views/pages/index.xpl"/>	
-	
 	<!-- ************** GENERIC NUMISHARE PAGES *************-->	
 	<!-- **** SERIALIZATIONS **** -->	
 	<!-- Solr -->
@@ -113,6 +113,7 @@
 	<page path="/numishare/[^\/]+/symbol/(.*)\.ttl" model="xpl/models/symbol/get.xpl" view="xpl/views/serializations/rdf/ttl.xpl"/>
 	<page path="/numishare/[^\/]+/symbol/(.*)\.jsonld" model="xpl/models/symbol/get.xpl" view="xpl/views/serializations/rdf/json-ld.xpl"/>
 	<page path="/numishare/[^\/]+/symbol/(.*)" model="xpl/models/symbol/get.xpl" view="xpl/controllers/conneg-symbol.xpl"/>	
+	<page path="/numishare/[^\/]+/symbols/(.*)" model="xpl/models/config.xpl" view="xpl/controllers/render-image.xpl"/>
 	
 	<!-- **** PAGES **** -->	
 	<page path="/numishare/[^\/]+/analyze" model="xpl/models/solr/search.xpl" view="xpl/views/pages/analyze.xpl"/>
