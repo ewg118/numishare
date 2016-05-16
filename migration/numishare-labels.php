@@ -29,19 +29,18 @@ foreach ($labels as $row){
 }
 
 //output arrays
+$text = '<xsl:choose>';
 foreach ($labels[0] as $k=>$v){
 	if ($k != 'field'){
-		$text = '<xsl:when test="$lang=\'' . $k . '\'"><xsl:choose>';
+		$text .= '<xsl:when test="$lang=\'' . $k . '\'"><xsl:choose>';
 		foreach ($$k as $row){
 			$text .= '<xsl:when test="$label=\'' . $row[0] . '\'">' . trim($row[1]) . '</xsl:when>' . "\n";
 		}
-		$text .= '</xsl:choose></xsl:when>';
-		file_put_contents($k . '.txt', $text);
+		$text .= '</xsl:choose></xsl:when>';		
 	}
-	
 }
-
-
+$text .= '</xsl:choose>';
+file_put_contents('labels.xml', $text);
 
 //var_dump($en);
 
