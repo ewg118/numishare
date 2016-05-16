@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-	xmlns:numishare="https://github.com/ewg118/numishare" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nm="http://nomisma.org/id/" xmlns:nmo="http://nomisma.org/ontology#"
+	xmlns:numishare="https://github.com/ewg118/numishare" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nm="http://nomisma.org/id/" xmlns:nmo="http://nomisma.org/ontology#" xmlns:foaf="http://xmlns.com/foaf/0.1/"
 	exclude-result-prefixes="#all" version="2.0">
 	<xsl:include href="../../templates.xsl"/>
 	<xsl:include href="../../functions.xsl"/>
@@ -100,10 +100,15 @@
 	<xsl:template name="body">
 		<div class="container-fluid content">
 			<div class="row">
-				<div class="col-md-8">					
+				<xsl:if test="descendant::foaf:depiction[@rdf:resource]">
+					<div class="col-md-2">
+						<img src="{descendant::foaf:depiction/@rdf:resource}" alt="symbol" style="max-width:100%"/>
+					</div>
+				</xsl:if>				
+				<div class="col-md-{if (descendant::foaf:depiction[@rdf:resource]) then '8' else '10'}">					
 					<xsl:apply-templates select="/content/rdf:RDF/*" mode="type"/>
 				</div>
-				<div class="col-md-4">
+				<div class="col-md-2">
 					<h3>Export</h3>
 					<ul class="list-inline">
 						<li><strong>Linked Data</strong></li>						
@@ -201,51 +206,34 @@
 		<dd>
 			<xsl:choose>
 				<xsl:when test="string(.)">
-					<xsl:choose>
-						<xsl:when test="name()= 'osgeo:asGeoJSON' and string-length(.) &gt; 100">
-							<div id="geoJSON-fragment">
-								<xsl:value-of select="substring(., 1, 100)"/>
-								<xsl:text>...</xsl:text>
-								<a href="#" class="toggle-geoJSON">[more]</a>
-							</div>
-							<div id="geoJSON-full" style="display:none">
-								<span property="{name()}" xml:lang="{@xml:lang}">
-									<xsl:value-of select="."/>
-								</span>
-								<a href="#" class="toggle-geoJSON">[less]</a>
-							</div>
-						</xsl:when>
-						<xsl:otherwise>
-							<span property="{name()}">
-								<xsl:if test="@xml:lang">
-									<xsl:attribute name="xml:lang" select="@xml:lang"/>
-								</xsl:if>
-								<xsl:if test="@rdf:datatype">
-									<xsl:attribute name="datatype" select="@rdf:datatype"/>
-								</xsl:if>
-
-								<xsl:choose>
-									<xsl:when test="contains(@rdf:datatype, '#gYear')">
-										<xsl:value-of select="numishare:normalizeDate(.)"/>
-									</xsl:when>
-									<xsl:when test="contains(@rdf:datatype, '#gYearMonth')">
-										<xsl:value-of select="numishare:normalizeDate(.)"/>
-									</xsl:when>
-									<xsl:when test="contains(@rdf:datatype, '#date')">
-										<xsl:value-of select="numishare:normalizeDate(.)"/>
-									</xsl:when>
-									<xsl:otherwise>
-										<xsl:value-of select="."/>
-									</xsl:otherwise>
-								</xsl:choose>
-							</span>
-							<xsl:if test="string(@xml:lang)">
-								<span class="lang">
-									<xsl:value-of select="concat(' (', @xml:lang, ')')"/>
-								</span>
-							</xsl:if>
-						</xsl:otherwise>
-					</xsl:choose>
+					<span property="{name()}">
+						<xsl:if test="@xml:lang">
+							<xsl:attribute name="xml:lang" select="@xml:lang"/>
+						</xsl:if>
+						<xsl:if test="@rdf:datatype">
+							<xsl:attribute name="datatype" select="@rdf:datatype"/>
+						</xsl:if>
+						
+						<xsl:choose>
+							<xsl:when test="contains(@rdf:datatype, '#gYear')">
+								<xsl:value-of select="numishare:normalizeDate(.)"/>
+							</xsl:when>
+							<xsl:when test="contains(@rdf:datatype, '#gYearMonth')">
+								<xsl:value-of select="numishare:normalizeDate(.)"/>
+							</xsl:when>
+							<xsl:when test="contains(@rdf:datatype, '#date')">
+								<xsl:value-of select="numishare:normalizeDate(.)"/>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:value-of select="."/>
+							</xsl:otherwise>
+						</xsl:choose>
+					</span>
+					<xsl:if test="string(@xml:lang)">
+						<span class="lang">
+							<xsl:value-of select="concat(' (', @xml:lang, ')')"/>
+						</span>
+					</xsl:if>
 				</xsl:when>
 				<xsl:when test="string(@rdf:resource)">
 					<span>
