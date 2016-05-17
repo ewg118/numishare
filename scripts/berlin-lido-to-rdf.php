@@ -92,30 +92,26 @@ function process_row($row, $count){
 			} elseif ($id == '18214947'){
 				$rdf .= '<dcterms:isPartOf rdf:resource="http://numismatics.org/chrr/id/CAI"/>';
 			} else {
-				$places = $xpath->query("descendant::lido:place");
+				$places = $xpath->query("descendant::lido:place[@lido:politicalEntity='finding_place']");
 				foreach ($places as $place){
-					$attr = $place->getAttribute('lido:politicalEntity');
+					$findspots = $place->getElementsByTagNameNS('http://www.lido-schema.org', 'placeID');
 					
-					if ($attr == 'finding_place'){						
-						$findspots = $place->getElementsByTagNameNS('http://www.lido-schema.org', 'placeID');
-						
-						foreach ($findspots as $findspot){
-							$findspotUri = $findspot->nodeValue;
-							if (strstr($findspotUri, 'geonames') != FALSE) {
-								$ffrags = explode('/', $findspotUri);
-								$geonameId = $ffrags[3];
-									
-								//if the id is valid
-								if ($geonameId != '0'){
-									echo "Found {$findspotUri}\n";
-									$rdf .= '<nmo:hasFindspot rdf:resource="' . $findspotUri . '"/>';
-									break;
-								}
-							} elseif (strstr($findspotUri, 'nomisma') !== FALSE){
-								$rdf .= '<nmo:hasFindspot rdf:resource="' . $findspotUri . '#this"/>';
+					foreach ($findspots as $findspot){
+						$findspotUri = $findspot->nodeValue;
+						if (strstr($findspotUri, 'geonames') != FALSE) {
+							$ffrags = explode('/', $findspotUri);
+							$geonameId = $ffrags[3];
+								
+							//if the id is valid
+							if ($geonameId != '0'){
+								echo "Found {$findspotUri}\n";
+								$rdf .= '<nmo:hasFindspot rdf:resource="' . $findspotUri . '"/>';
+								break;
 							}
+						} elseif (strstr($findspotUri, 'nomisma') !== FALSE){
+							$rdf .= '<nmo:hasFindspot rdf:resource="' . $findspotUri . '#this"/>';
 						}
-					}					
+					}			
 				}				
 			}
 			
