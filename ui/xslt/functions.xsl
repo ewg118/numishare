@@ -1349,6 +1349,8 @@
 					<xsl:when test="$label='header_maps'">الخرائط</xsl:when>
 					<xsl:when test="$label='header_compare'">المقارنة</xsl:when>
 					<xsl:when test="$label='header_language'">اللغة</xsl:when>
+					<xsl:when test="$label='header_contributors'">المساهمين</xsl:when>
+					<xsl:when test="$label='header_symbols'">حرف</xsl:when>
 					<xsl:when test="$label='header_analyze'">لتحليل الكنز</xsl:when>
 					<xsl:when test="$label='header_visualize'">التصور المرئى للإستفسارات</xsl:when>
 					<xsl:when test="$label='display_summary'">ملخص</xsl:when>
@@ -1463,6 +1465,8 @@
 					<xsl:when test="$label='header_maps'">Карти</xsl:when>
 					<xsl:when test="$label='header_compare'">Сравнение</xsl:when>
 					<xsl:when test="$label='header_language'">Езици</xsl:when>
+					<xsl:when test="$label='header_contributors'">Сътрудници</xsl:when>
+					<xsl:when test="$label='header_symbols'">Символи</xsl:when>
 					<xsl:when test="$label='header_analyze'">Анализ на монетни съкровища</xsl:when>
 					<xsl:when test="$label='header_visualize'">Визуализация на запитванията</xsl:when>
 					<xsl:when test="$label='display_summary'">Обобщение</xsl:when>
@@ -1576,6 +1580,8 @@
 					<xsl:when test="$label='header_maps'">Karten</xsl:when>
 					<xsl:when test="$label='header_compare'">Vergleichen</xsl:when>
 					<xsl:when test="$label='header_language'">Sprache</xsl:when>
+					<xsl:when test="$label='header_contributors'">Mitwirkende</xsl:when>
+					<xsl:when test="$label='header_symbols'">Symbole</xsl:when>
 					<xsl:when test="$label='header_analyze'">Hortfunde analysieren</xsl:when>
 					<xsl:when test="$label='header_visualize'">Anfragen visualisieren</xsl:when>
 					<xsl:when test="$label='display_summary'">Zusammenfassung</xsl:when>
@@ -1692,6 +1698,8 @@
 					<xsl:when test="$label='header_maps'">Χάρτες</xsl:when>
 					<xsl:when test="$label='header_compare'">Αντιπαραβολή</xsl:when>
 					<xsl:when test="$label='header_language'">Γλώσσα</xsl:when>
+					<xsl:when test="$label='header_contributors'">Συντελεστές</xsl:when>
+					<xsl:when test="$label='header_symbols'">σύμβολα</xsl:when>
 					<xsl:when test="$label='header_analyze'">Ανάλυση «θησαυρών»</xsl:when>
 					<xsl:when test="$label='header_visualize'">Οπτικοποίηση αναζητήσεων</xsl:when>
 					<xsl:when test="$label='display_summary'">Συνοπτική παρουσίαση</xsl:when>
@@ -1807,6 +1815,8 @@
 					<xsl:when test="$label='header_maps'">Mapa de la web</xsl:when>
 					<xsl:when test="$label='header_compare'">Comparar</xsl:when>
 					<xsl:when test="$label='header_language'">Lengua</xsl:when>
+					<xsl:when test="$label='header_contributors'">Colaboradores</xsl:when>
+					<xsl:when test="$label='header_symbols'">Símbolos</xsl:when>
 					<xsl:when test="$label='header_analyze'">Análisis</xsl:when>
 					<xsl:when test="$label='header_visualize'">Visualizar</xsl:when>
 					<xsl:when test="$label='display_summary'">Sumario</xsl:when>
@@ -1908,6 +1918,8 @@
 					<xsl:when test="$label='header_maps'">Cartes</xsl:when>
 					<xsl:when test="$label='header_compare'">Comparer</xsl:when>
 					<xsl:when test="$label='header_language'">Langue</xsl:when>
+					<xsl:when test="$label='header_contributors'">Contributeurs</xsl:when>
+					<xsl:when test="$label='header_symbols'">Symboles</xsl:when>
 					<xsl:when test="$label='header_analyze'">Analyse des trésors</xsl:when>
 					<xsl:when test="$label='header_visualize'">Visualiser la recherche</xsl:when>
 					<xsl:when test="$label='display_summary'">Résumé</xsl:when>
@@ -2025,6 +2037,8 @@
 					<xsl:when test="$label='header_maps'">Mappe</xsl:when>
 					<xsl:when test="$label='header_compare'">Confronta</xsl:when>
 					<xsl:when test="$label='header_language'">Lingua</xsl:when>
+					<xsl:when test="$label='header_contributors'">Contributori</xsl:when>
+					<xsl:when test="$label='header_symbols'">Simboli</xsl:when>
 					<xsl:when test="$label='header_analyze'">Analisi dei ripostigli</xsl:when>
 					<xsl:when test="$label='header_visualize'">Visualizza queries</xsl:when>
 					<xsl:when test="$label='display_summary'">Sommario</xsl:when>
@@ -2109,6 +2123,8 @@
 					<xsl:when test="$label='header_maps'">Kaarten</xsl:when>
 					<xsl:when test="$label='header_compare'">Vergelijken</xsl:when>
 					<xsl:when test="$label='header_language'">Taal</xsl:when>
+					<xsl:when test="$label='header_contributors'">Medewerkers</xsl:when>
+					<xsl:when test="$label='header_symbols'">Symbolen</xsl:when>
 					<xsl:when test="$label='header_analyze'">Analyseer schatvondsten</xsl:when>
 					<xsl:when test="$label='header_visualize'">Visualiseer zoekvraag</xsl:when>
 					<xsl:when test="$label='display_summary'">Samenvatting</xsl:when>
@@ -2164,15 +2180,18 @@
 			<xsl:when test="$lang='pl'">
 				<xsl:choose>
 					<xsl:when test="$label='header_home'">Strona startowa</xsl:when>
+					<xsl:when test="$label='header_about'">O nas</xsl:when>					
 					<xsl:when test="$label='header_browse'">Przeglądaj</xsl:when>
 					<xsl:when test="$label='header_search'">Szukaj</xsl:when>
 					<xsl:when test="$label='header_maps'">Mapy</xsl:when>
 					<xsl:when test="$label='header_compare'">Porównaj</xsl:when>
+					<xsl:when test="$label='header_contributors'">Współpracownicy</xsl:when>
+					<xsl:when test="$label='header_symbols'">Symbolika</xsl:when>
 					<xsl:when test="$label='header_language'">Język</xsl:when>
 					<xsl:when test="$label='header_analyze'">Analiza znalezisk skarbów</xsl:when>
 					<xsl:when test="$label='header_visualize'">Wizualizacja kwerend</xsl:when>
-					<xsl:when test="$label='display_summary'">streszczenie</xsl:when>
-					<xsl:when test="$label='display_map'">mapa</xsl:when>
+					<xsl:when test="$label='display_summary'">Streszczenie</xsl:when>
+					<xsl:when test="$label='display_map'">Mapa</xsl:when>
 					<xsl:when test="$label='display_administrative'">administracyjny</xsl:when>
 					<xsl:when test="$label='display_visualization'">wizualizacja</xsl:when>
 					<xsl:when test="$label='display_data-download'">ściąganie danych</xsl:when>
@@ -2282,6 +2301,8 @@
 					<xsl:when test="$label='header_maps'">Hărţi</xsl:when>
 					<xsl:when test="$label='header_compare'">Comparativ</xsl:when>
 					<xsl:when test="$label='header_language'">Limbă</xsl:when>
+					<xsl:when test="$label='header_contributors'">Colaborator</xsl:when>
+					<xsl:when test="$label='header_symbols'">Simboluri</xsl:when>
 					<xsl:when test="$label='header_analyze'">Analiza tezaurelor</xsl:when>
 					<xsl:when test="$label='header_visualize'">Vizualizarea cercetării</xsl:when>
 					<xsl:when test="$label='display_summary'">Rezumat</xsl:when>
@@ -2398,6 +2419,8 @@
 					<xsl:when test="$label='header_browse'">Обзор</xsl:when>
 					<xsl:when test="$label='header_search'">Поиск</xsl:when>
 					<xsl:when test="$label='header_maps'">Карты</xsl:when>
+					<xsl:when test="$label='header_contributors'">Авторы</xsl:when>
+					<xsl:when test="$label='header_symbols'">Символы</xsl:when>
 					<xsl:when test="$label='header_compare'">Сравнить</xsl:when>
 					<xsl:when test="$label='header_language'">Язык</xsl:when>
 					<xsl:when test="$label='header_analyze'">Анализ кладов</xsl:when>
@@ -2460,6 +2483,8 @@
 					<xsl:when test="$label='header_maps'">Kartor</xsl:when>
 					<xsl:when test="$label='header_compare'">Jämföra</xsl:when>
 					<xsl:when test="$label='header_language'">Språk</xsl:when>
+					<xsl:when test="$label='header_contributors'">Bidragsgivare</xsl:when>
+					<xsl:when test="$label='header_symbols'">Symboler</xsl:when>
 					<xsl:when test="$label='header_analyze'">Fyndanalys</xsl:when>
 					<xsl:when test="$label='header_visualize'">Visualisera sökfrågor</xsl:when>
 					<xsl:when test="$label='display_summary'">Sammanfattning</xsl:when>
@@ -2518,6 +2543,7 @@
 					<xsl:when test="$label='header_maps'">Maps</xsl:when>
 					<xsl:when test="$label='header_contributors'">Contributors</xsl:when>
 					<xsl:when test="$label='header_compare'">Compare</xsl:when>
+					<xsl:when test="$label='header_symbols'">Symbols</xsl:when>
 					<xsl:when test="$label='header_analyze'">Analyze Hoards</xsl:when>
 					<xsl:when test="$label='header_visualize'">Visualize Queries</xsl:when>
 					<xsl:when test="$label='header_language'">Language</xsl:when>
@@ -2686,22 +2712,46 @@
 		</xsl:if>
 	</xsl:function>
 	
-	<!-- this function will normalize a NUDS element into a nomisma property for RDFa -->
-	<xsl:function name="numishare:normalizeProperty">
-		<xsl:param name="name"/>
+	<xsl:function name="numishare:recordCount">
+		<xsl:param name="lang"/>
+		<xsl:param name="startRecord"/>
+		<xsl:param name="endRecord"/>
+		<xsl:param name="numFound"/>
 		
 		<xsl:choose>
-			<xsl:when test="$name='fromDate'">nm:start_date</xsl:when>
-			<xsl:when test="$name='toDate'">nm:end_date</xsl:when>
-			<xsl:when test="$name='subject'">dcterms:subject</xsl:when>
-			<xsl:when test="$name='description'">dcterms:description</xsl:when>
-			<xsl:when test="$name='objectType'">nm:object_type</xsl:when>
+			<xsl:when test="$lang='ar'">
+				<xsl:value-of select="replace(replace(replace(numishare:normalizeLabel('results_result-desc', $lang), 'أ أ', string($startRecord)), 'ب ب', string($endRecord)), 'ج ج',
+					string($numFound))"/>
+			</xsl:when>
 			<xsl:otherwise>
-				<xsl:value-of select="concat('nm:', $name)"/>
+				<xsl:value-of select="replace(replace(replace(numishare:normalizeLabel('results_result-desc', $lang), 'XX', string($startRecord)), 'YY', string($endRecord)), 'ZZ',
+					string($numFound))"/>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:function>
-	
+
+	<!-- this function will normalize a NUDS element into a nomisma property for RDFa -->
+	<xsl:function name="numishare:normalizeProperty">
+		<xsl:param name="recordType"/>
+		<xsl:param name="name"/>
+
+		<xsl:choose>
+			<xsl:when test="$name='fromDate'">nmo:hasStartDate</xsl:when>
+			<xsl:when test="$name='toDate'">nmo:hasEndDate</xsl:when>
+			<xsl:when test="$name='subject'">dcterms:subject</xsl:when>
+			<xsl:when test="$name='description'">dcterms:description</xsl:when>
+			<xsl:when test="$name='objectType'">
+				<xsl:choose>
+					<xsl:when test="$recordType='conceptual'">nmo:representsObjectType</xsl:when>
+					<xsl:otherwise>nmo:hasObjectType</xsl:otherwise>
+				</xsl:choose>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="concat('nmo:has', upper-case(substring($name, 1, 1)), substring($name, 2))"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:function>
+
 	<xsl:function name="numishare:getNomismaLabel">
 		<xsl:param name="rdf" as="element()*"/>
 		<xsl:param name="lang"/>

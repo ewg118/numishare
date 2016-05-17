@@ -110,7 +110,7 @@
 										</xsl:otherwise>
 									</xsl:choose>
 								</xsl:variable>
-								<category name="{$name}" href="{$href}" value="{$value}" query="{concat('nm:', $name, ' &lt;', $href, '&gt;')}"/>
+								<category name="{$name}" href="{$href}" value="{$value}" query="{concat('nmo:has', upper-case(substring($name, 1, 1)), substring($name, 2), ' &lt;', $href, '&gt;')}"/>
 							</xsl:for-each>
 						</categories>
 					</xsl:variable>
@@ -392,12 +392,11 @@
 		</span>
 	</xsl:template>
 	<xsl:template name="sparql_search_options">
-		<xsl:variable name="fields">
-			<xsl:text>authority,collection,date,deity,denomination,issuer,manufacture,material,mint,portrait,region</xsl:text>
-		</xsl:variable>
+		<xsl:variable name="fields" select="concat(string-join(//config/facets/facet[contains(., '_facet')], ','), ',date')"/>
+		
 		<xsl:for-each select="tokenize($fields, ',')">
-			<xsl:variable name="name" select="."/>
-			<option value="{if ($name = 'date') then 'date' else concat('nm:', $name)}" class="search_option">
+			<xsl:variable name="name" select="replace(., '_facet', '')"/>
+			<option value="{if ($name = 'date') then 'date' else concat('nmo:has', upper-case(substring($name, 1, 1)), substring($name, 2))}" class="search_option">
 				<xsl:value-of select="numishare:normalize_fields($name, $lang)"/>
 			</option>
 		</xsl:for-each>
@@ -472,7 +471,7 @@
 							<xsl:value-of select="$id"/>
 						</th>
 						<td>
-							<xsl:value-of select="document(concat($request-uri, 'sparql?constraints=', encode-for-uri(concat('nm:type_series_item &lt;', //config/uri_space, $id,'&gt;')),
+							<xsl:value-of select="document(concat($request-uri, 'sparql?constraints=', encode-for-uri(concat('nmo:hasTypeSeriesItem &lt;', //config/uri_space, $id,'&gt;')),
 								'&amp;template=avgMeasurement&amp;measurement=', $measurement))"/>
 						</td>
 					</tr>
@@ -492,7 +491,7 @@
 									<xsl:call-template name="sparqlLabel"/>
 								</th>
 								<td>
-									<xsl:value-of select="document(concat($request-uri, 'sparql?constraints=', encode-for-uri(concat('dcterms:isPartOf &lt;', $type_series, '&gt; AND ',.)),
+									<xsl:value-of select="document(concat($request-uri, 'sparql?constraints=', encode-for-uri(concat('dcterms:source &lt;', $type_series, '&gt; AND ',.)),
 										'&amp;template=avgMeasurement&amp;measurement=', $measurement))"/>
 								</td>
 							</tr>
@@ -501,6 +500,8 @@
 				</xsl:choose>
 			</tbody>
 		</table>
+		<!--<xsl:value-of select="concat($request-uri, 'sparql?constraints=', encode-for-uri(concat('dcterms:source &lt;', $type_series, '&gt; AND ', )),
+			'&amp;template=avgMeasurement&amp;measurement=', $measurement)"/>-->
 	</xsl:template>
 	<xsl:template name="processInterval">
 		<xsl:param name="start"/>
@@ -553,13 +554,13 @@
 				</xsl:variable>
 				<td>
 					<xsl:variable name="filter">
-						<xsl:text>nm:end_date ?date FILTER ( ?date &gt;= "</xsl:text>
+						<xsl:text>nmo:hasEndDate ?date FILTER ( ?date &gt;= "</xsl:text>
 						<xsl:value-of select="$from"/>
-						<xsl:text>"^^xs:gYear \\and ?date &lt; "</xsl:text>
+						<xsl:text>"^^xsd:gYear \\and ?date &lt; "</xsl:text>
 						<xsl:value-of select="$to"/>
-						<xsl:text>"^^xs:gYear )</xsl:text>
+						<xsl:text>"^^xsd:gYear )</xsl:text>
 					</xsl:variable>
-					<xsl:value-of select="document(concat($request-uri, 'sparql?constraints=', encode-for-uri(concat('dcterms:isPartOf &lt;', $type_series, '&gt; AND ', ., ' AND ',       $filter)),
+					<xsl:value-of select="document(concat($request-uri, 'sparql?constraints=', encode-for-uri(concat('dcterms:source &lt;', $type_series, '&gt; AND ', ., ' AND ',       $filter)),
 						'&amp;template=avgMeasurement&amp;measurement=', $measurement))"/>
 				</td>
 			</xsl:for-each>
