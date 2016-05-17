@@ -202,6 +202,10 @@
 					<li>
 						<a href="{$display_path}pages/{@stub}{if (string($lang)) then concat('?lang=', $lang) else ''}">							
 							<xsl:choose>
+								<!-- if there is a generic header label, e.g., about page in the normalizeLabel function -->
+								<xsl:when test="not(substring(numishare:normalizeLabel(concat('header_', @stub), $lang), 1, 1) = '[')">
+									<xsl:value-of select="numishare:normalizeLabel(concat('header_', @stub), $lang)"/>
+								</xsl:when>
 								<xsl:when test="content[@lang=$lang]">
 									<xsl:value-of select="content[@lang=$lang]/short-title"/>
 								</xsl:when>
