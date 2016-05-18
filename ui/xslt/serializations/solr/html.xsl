@@ -9,16 +9,18 @@
 	<xsl:variable name="include_path" select="concat('http://', doc('input:request')/request/server-name, ':8080/orbeon/themes/', //config/theme/orbeon_theme)"/>
 	<!-- request params -->
 	<xsl:param name="pipeline">results</xsl:param>
+	<xsl:param name="langParam" select="doc('input:request')/request/parameters/parameter[name='lang']/value"/>
 	<xsl:param name="lang">
 		<xsl:choose>
-			<xsl:when test="doc('input:request')/request/parameters/parameter[name='lang']/value">
-				<xsl:value-of select="doc('input:request')/request/parameters/parameter[name='lang']/value"/>
+			<xsl:when test="string($langParam)">
+				<xsl:value-of select="$langParam"/>
 			</xsl:when>
 			<xsl:when test="string(doc('input:request')/request//header[name[.='accept-language']]/value)">
 				<xsl:value-of select="numishare:parseAcceptLanguage(doc('input:request')/request//header[name[.='accept-language']]/value)[1]"/>
 			</xsl:when>
 		</xsl:choose>
 	</xsl:param>
+	
 	<xsl:param name="q" select="doc('input:request')/request/parameters/parameter[name='q']/value"/>
 	<xsl:param name="sort" select="doc('input:request')/request/parameters/parameter[name='sort']/value"/>
 	<xsl:param name="rows">20</xsl:param>
@@ -79,15 +81,15 @@
 				</title>
 				<!-- alternates -->
 				<link rel="alternate" type="application/atom+xml" href="{concat(//config/url, 'feed/?q=', $q)}"/>
-				<link rel="alternate" type="text/csv" href="{concat(//config/url, 'query.csv/?q=', $q, if (string($sort)) then concat('&amp;sort=', $sort) else '', if(string($lang)) then
-					concat('&amp;lang=', $lang) else '')}"/>
+				<link rel="alternate" type="text/csv" href="{concat(//config/url, 'query.csv/?q=', $q, if (string($sort)) then concat('&amp;sort=', $sort) else '', if(string($langParam)) then
+					concat('&amp;lang=', $langParam) else '')}"/>
 				<xsl:choose>
 					<xsl:when test="/content/config/collection_type = 'hoard'">
-						<link rel="alternate" type="application/vnd.google-earth.kml+xml" href="{concat(//config/url, 'findspots.kml/?q=', $q, if(string($lang)) then concat('&amp;lang=', $lang) else
+						<link rel="alternate" type="application/vnd.google-earth.kml+xml" href="{concat(//config/url, 'findspots.kml/?q=', $q, if(string($langParam)) then concat('&amp;lang=', $langParam) else
 							'')}"/>
 					</xsl:when>
 					<xsl:otherwise>
-						<link rel="alternate" type="application/vnd.google-earth.kml+xml" href="{concat(//config/url, 'query.kml/?q=', $q, if(string($lang)) then concat('&amp;lang=', $lang) else '')}"
+						<link rel="alternate" type="application/vnd.google-earth.kml+xml" href="{concat(//config/url, 'query.kml/?q=', $q, if(string($langParam)) then concat('&amp;lang=', $langParam) else '')}"
 						/>
 					</xsl:otherwise>
 				</xsl:choose>
@@ -160,13 +162,6 @@
 										<div id="resultMap"/>
 									</div>
 								</xsl:if>
-								<div>
-									<xsl:value-of select="doc('input:request')/request//header[name[.='accept-language']]/value"/>
-									<br/>
-									<xsl:value-of select="numishare:parseAcceptLanguage(doc('input:request')/request//header[name[.='accept-language']]/value)"/>
-
-								</div>
-
 								<xsl:call-template name="paging"/>
 								<xsl:call-template name="sort"/>
 								<xsl:apply-templates select="descendant::doc"/>
@@ -184,29 +179,29 @@
 							<h3>
 								<xsl:value-of select="numishare:normalizeLabel('results_data-options', $lang)"/>
 							</h3>
-							<a href="{$display_path}feed/?q={$q}{if(string($lang)) then concat('&amp;lang=', $lang) else ''}">
+							<a href="{$display_path}feed/?q={$q}{if(string($langParam)) then concat('&amp;lang=', $langParam) else ''}">
 								<img src="{$include_path}/images/atom-medium.png" title="Atom" alt="Atom"/>
 							</a>
 							<xsl:if test="count(//lst[@name='mint_geo']/int) &gt; 0">
 								<xsl:choose>
 									<xsl:when test="/content/config/collection_type = 'hoard'">
-										<a href="{$display_path}findspots.kml?q={$q}{if(string($lang)) then concat('&amp;lang=', $lang) else ''}">
+										<a href="{$display_path}findspots.kml?q={$q}{if(string($langParam)) then concat('&amp;lang=', $langParam) else ''}">
 											<img src="{$include_path}/images/googleearth.png" alt="KML" title="KML: Limit, 500 objects"/>
 										</a>
 									</xsl:when>
 									<xsl:otherwise>
-										<a href="{$display_path}query.kml?q={$q}{if(string($lang)) then concat('&amp;lang=', $lang) else ''}">
+										<a href="{$display_path}query.kml?q={$q}{if(string($langParam)) then concat('&amp;lang=', $langParam) else ''}">
 											<img src="{$include_path}/images/googleearth.png" alt="KML" title="KML: Limit, 500 objects"/>
 										</a>
 									</xsl:otherwise>
 								</xsl:choose>
 
 							</xsl:if>
-							<a href="{$display_path}query.csv?q={$q}{if(string($lang)) then concat('&amp;lang=', $lang) else ''}{if (string($sort)) then concat('&amp;sort=', $sort) else ''}">
+							<a href="{$display_path}query.csv?q={$q}{if(string($langParam)) then concat('&amp;lang=', $langParam) else ''}{if (string($sort)) then concat('&amp;sort=', $sort) else ''}">
 								<!-- the image below is copyright of Silvestre Herrera, available freely on wikimedia commons: http://commons.wikimedia.org/wiki/File:X-office-spreadsheet_Gion.svg -->
 								<img src="{$include_path}/images/spreadsheet.png" title="CSV" alt="CSV"/>
 							</a>
-							<a href="{$display_path}visualize?compare={$q}{if(string($lang)) then concat('&amp;lang=', $lang) else ''}">
+							<a href="{$display_path}visualize?compare={$q}{if(string($langParam)) then concat('&amp;lang=', $langParam) else ''}">
 								<!-- the image below is copyright of Mark James, available freely on wikimedia commons: http://commons.wikimedia.org/wiki/File:Chart_bar.png -->
 								<img src="{$include_path}/images/visualize.png" title="Visualize" alt="Visualize"/>
 							</a>

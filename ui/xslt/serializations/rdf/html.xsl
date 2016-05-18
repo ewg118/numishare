@@ -1,14 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-	xmlns:numishare="https://github.com/ewg118/numishare" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nm="http://nomisma.org/id/" xmlns:nmo="http://nomisma.org/ontology#" xmlns:foaf="http://xmlns.com/foaf/0.1/"
-	exclude-result-prefixes="#all" version="2.0">
+	xmlns:numishare="https://github.com/ewg118/numishare" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nm="http://nomisma.org/id/" xmlns:nmo="http://nomisma.org/ontology#"
+	xmlns:foaf="http://xmlns.com/foaf/0.1/" exclude-result-prefixes="#all" version="2.0">
 	<xsl:include href="../../templates.xsl"/>
 	<xsl:include href="../../functions.xsl"/>
 
 	<!-- URL params -->
 	<xsl:variable name="collection-name" select="substring-before(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/')"/>
 	<xsl:variable name="request-uri" select="concat('http://localhost:8080', substring-before(doc('input:request')/request/request-uri, 'id/'))"/>
-	<xsl:param name="lang" select="doc('input:request')/request/parameters/parameter[name='lang']/value"/>
+	<xsl:param name="langParam" select="doc('input:request')/request/parameters/parameter[name='lang']/value"/>
+	<xsl:param name="lang">
+		<xsl:choose>
+			<xsl:when test="string($langParam)">
+				<xsl:value-of select="$langParam"/>
+			</xsl:when>
+			<xsl:when test="string(doc('input:request')/request//header[name[.='accept-language']]/value)">
+				<xsl:value-of select="numishare:parseAcceptLanguage(doc('input:request')/request//header[name[.='accept-language']]/value)[1]"/>
+			</xsl:when>
+		</xsl:choose>
+	</xsl:param>
 
 	<!-- paths -->
 	<xsl:variable name="display_path">../</xsl:variable>
@@ -104,14 +114,16 @@
 					<div class="col-md-2">
 						<img src="{descendant::foaf:depiction/@rdf:resource}" alt="symbol" style="max-width:100%"/>
 					</div>
-				</xsl:if>				
-				<div class="col-md-{if (descendant::foaf:depiction[@rdf:resource]) then '8' else '10'}">					
+				</xsl:if>
+				<div class="col-md-{if (descendant::foaf:depiction[@rdf:resource]) then '8' else '10'}">
 					<xsl:apply-templates select="/content/rdf:RDF/*" mode="type"/>
 				</div>
 				<div class="col-md-2">
 					<h3>Export</h3>
 					<ul class="list-inline">
-						<li><strong>Linked Data</strong></li>						
+						<li>
+							<strong>Linked Data</strong>
+						</li>
 						<li>
 							<a href="{$id}.rdf">RDF/XML</a>
 						</li>
@@ -121,7 +133,7 @@
 						<li>
 							<a href="{$id}.jsonld">JSON-LD</a>
 						</li>
-						
+
 					</ul>
 				</div>
 			</div>
@@ -213,7 +225,7 @@
 						<xsl:if test="@rdf:datatype">
 							<xsl:attribute name="datatype" select="@rdf:datatype"/>
 						</xsl:if>
-						
+
 						<xsl:choose>
 							<xsl:when test="contains(@rdf:datatype, '#gYear')">
 								<xsl:value-of select="numishare:normalizeDate(.)"/>

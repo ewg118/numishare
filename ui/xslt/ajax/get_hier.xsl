@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes="#all"
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:numishare="https://github.com/ewg118/numishare" exclude-result-prefixes="#all"
 	version="2.0">
-
+	<xsl:include href="../functions.xsl"/>
 	<!-- globals -->
 	<xsl:variable name="solr-url" select="concat(/content/config/solr_published, 'select/')"/>
 	<xsl:variable name="collection-name" select="substring-before(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/')"/>	
@@ -13,7 +13,17 @@
 	<xsl:param name="field" select="doc('input:request')/request/parameters/parameter[name='field']/value"/>
 	<xsl:param name="prefix" select="doc('input:request')/request/parameters/parameter[name='prefix']/value"/>
 	<xsl:param name="fq" select="doc('input:request')/request/parameters/parameter[name='fq']/value"/>
-	<xsl:param name="lang" select="doc('input:request')/request/parameters/parameter[name='lang']/value"/>
+	<xsl:param name="langParam" select="doc('input:request')/request/parameters/parameter[name='lang']/value"/>
+	<xsl:param name="lang">
+		<xsl:choose>
+			<xsl:when test="string($langParam)">
+				<xsl:value-of select="$langParam"/>
+			</xsl:when>
+			<xsl:when test="string(doc('input:request')/request//header[name[.='accept-language']]/value)">
+				<xsl:value-of select="numishare:parseAcceptLanguage(doc('input:request')/request//header[name[.='accept-language']]/value)[1]"/>
+			</xsl:when>
+		</xsl:choose>
+	</xsl:param>
 
 	<!-- output modes -->
 	<xsl:param name="link" select="doc('input:request')/request/parameters/parameter[name='link']/value"/>	

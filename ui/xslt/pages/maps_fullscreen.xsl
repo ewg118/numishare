@@ -11,7 +11,17 @@
 	<xsl:variable name="collection_type" select="/content/config/collection_type"/>
 
 	<xsl:param name="q" select="doc('input:request')/request/parameters/parameter[name='q']/value"/>
-	<xsl:param name="lang" select="doc('input:request')/request/parameters/parameter[name='lang']/value"/>
+	<xsl:param name="langParam" select="doc('input:request')/request/parameters/parameter[name='lang']/value"/>
+	<xsl:param name="lang">
+		<xsl:choose>
+			<xsl:when test="string($langParam)">
+				<xsl:value-of select="$langParam"/>
+			</xsl:when>
+			<xsl:when test="string(doc('input:request')/request//header[name[.='accept-language']]/value)">
+				<xsl:value-of select="numishare:parseAcceptLanguage(doc('input:request')/request//header[name[.='accept-language']]/value)[1]"/>
+			</xsl:when>
+		</xsl:choose>
+	</xsl:param>
 	<xsl:variable name="numFound" select="//result[@name='response']/@numFound"/>
 	<xsl:variable name="request-uri" select="concat('http://localhost:8080', substring-before(doc('input:request')/request/request-uri, 'maps'))"/>
 	<xsl:variable name="tokenized_q" select="tokenize($q, ' AND ')"/>
@@ -190,7 +200,7 @@
 			</xsl:choose>
 			<div style="display:none">
 				<input id="facet_form_query" name="q" value="*:*" type="hidden"/>
-				<xsl:if test="string($lang)">
+				<xsl:if test="string($langParam)">
 					<input type="hidden" name="lang" value="{$lang}"/>
 				</xsl:if>
 				<span id="collection_type">

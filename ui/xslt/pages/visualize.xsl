@@ -11,7 +11,17 @@
 	
 	<!-- request parameters -->
 	<xsl:variable name="request-uri" select="concat('http://localhost:8080', substring-before(doc('input:request')/request/request-uri, 'visualize'))"/>
-	<xsl:param name="lang" select="doc('input:request')/request/parameters/parameter[name='lang']/value"/>
+	<xsl:param name="langParam" select="doc('input:request')/request/parameters/parameter[name='lang']/value"/>
+	<xsl:param name="lang">
+		<xsl:choose>
+			<xsl:when test="string($langParam)">
+				<xsl:value-of select="$langParam"/>
+			</xsl:when>
+			<xsl:when test="string(doc('input:request')/request//header[name[.='accept-language']]/value)">
+				<xsl:value-of select="numishare:parseAcceptLanguage(doc('input:request')/request//header[name[.='accept-language']]/value)[1]"/>
+			</xsl:when>
+		</xsl:choose>
+	</xsl:param>
 	<xsl:param name="q" select="doc('input:request')/request/parameters/parameter[name='q']/value"/>
 	<!-- quantitative analysis parameters -->
 	<!-- typological comparison -->
@@ -310,7 +320,7 @@
 			<xsl:if test="string($q)">
 				<input type="hidden" name="q" value="{$q}"/>
 			</xsl:if>
-			<xsl:if test="string($lang)">
+			<xsl:if test="string($langParam)">
 				<input type="hidden" name="lang" value="{$lang}"/>
 			</xsl:if>
 			<br/>

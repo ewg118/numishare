@@ -14,13 +14,13 @@
 					</xsl:if>
 					<xsl:choose>
 						<xsl:when test="$mode = 'compare'">
-							<a href="{$display_path}id/{str[@name='recordId']}?mode=compare&amp;q={$q}&amp;start={$start}&amp;image={$image}&amp;side={$side}{if (string($lang)) then
-								concat('&amp;lang=', $lang) else ''}" class="compare">
+							<a href="{$display_path}id/{str[@name='recordId']}?mode=compare&amp;q={$q}&amp;start={$start}&amp;image={$image}&amp;side={$side}{if (string($langParam)) then
+								concat('&amp;lang=', $langParam) else ''}" class="compare">
 								<xsl:value-of select="str[@name='title_display']"/>
 							</a>
 						</xsl:when>
 						<xsl:otherwise>
-							<a href="{$display_path}id/{str[@name='recordId']}{if (string($lang)) then concat('?lang=', $lang) else ''}">
+							<a href="{$display_path}id/{str[@name='recordId']}{if (string($langParam)) then concat('?lang=', $langParam) else ''}">
 								<xsl:value-of select="str[@name='title_display']"/>
 							</a>
 							<xsl:if test="$authenticated = true()">
@@ -413,7 +413,7 @@
 
 			<!-- hidden params -->
 			<input type="hidden" name="q" id="facet_form_query" value="{if (string($imageavailable_stripped)) then $imageavailable_stripped else '*:*'}"/>
-			<xsl:if test="string($lang)">
+			<xsl:if test="string($langParam)">
 				<input type="hidden" name="lang" value="{$lang}"/>
 			</xsl:if>
 			<br/>
@@ -545,14 +545,14 @@
 			<xsl:choose>
 				<xsl:when test="str[@name='recordType'] = 'physical'">
 					<xsl:if test="string(str[@name='thumbnail_obv'])">
-						<a class="thumbImage" href="{str[@name='reference_obv']}" title="Obverse of {str[@name='title_display']}" id="{$display_path}id/{str[@name='recordId']}{if (string($lang)) then
-							concat('?lang=', $lang) else ''}">
+						<a class="thumbImage" href="{str[@name='reference_obv']}" title="Obverse of {str[@name='title_display']}" id="{$display_path}id/{str[@name='recordId']}{if (string($langParam)) then
+							concat('?lang=', $langParam) else ''}">
 							<img src="{str[@name='thumbnail_obv']}"/>
 						</a>
 					</xsl:if>
 					<xsl:if test="string(str[@name='thumbnail_rev'])">
-						<a class="thumbImage" href="{str[@name='reference_rev']}" title="Reverse of {str[@name='title_display']}" id="{$display_path}id/{str[@name='recordId']}{if (string($lang)) then
-							concat('?lang=', $lang) else ''}">
+						<a class="thumbImage" href="{str[@name='reference_rev']}" title="Reverse of {str[@name='title_display']}" id="{$display_path}id/{str[@name='recordId']}{if (string($langParam)) then
+							concat('?lang=', $langParam) else ''}">
 							<img src="{str[@name='thumbnail_rev']}"/>
 						</a>
 					</xsl:if>
@@ -898,7 +898,7 @@
 				<xsl:choose>
 					<xsl:when test="$lang='ar'">
 						<div class="col-md-2">
-							<a href="{$display_path}results?q={$q}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+							<a href="{$display_path}results?q={$q}{if (string($langParam)) then concat('&amp;lang=', $langParam) else ''}">
 								<span class="glyphicon glyphicon-remove"/>
 							</a>
 						</div>
@@ -924,7 +924,7 @@
 							</span>
 						</div>
 						<div class="col-md-2 right">
-							<a href="{$display_path}results?q={$q}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+							<a href="{$display_path}results?q={$q}{if (string($langParam)) then concat('&amp;lang=', $langParam) else ''}">
 								<span class="glyphicon glyphicon-remove"/>
 							</a>
 						</div>
@@ -1106,7 +1106,7 @@
 		<xsl:param name="class"/>
 
 		<a class="btn btn-default {$class}" role="button" title="First" href="{if($pipeline='results') then 'results' else ''}?q={encode-for-uri($q)}{if (string($sort)) then    concat('&amp;sort=',
-			$sort)          else ''}{if(string($lang)) then concat('&amp;lang=', $lang) else ''}{if(string($side)) then concat('&amp;side=', $side) else ''}{if(string($mode)) then concat('&amp;mode=',
+			$sort)          else ''}{if(string($langParam)) then concat('&amp;lang=', $langParam) else ''}{if(string($side)) then concat('&amp;side=', $side) else ''}{if(string($mode)) then concat('&amp;mode=',
 			$mode) else ''}{if(string($image)) then concat('&amp;image=', $image) else ''}">
 			<span class="glyphicon glyphicon-fast-{if ($lang='ar') then 'forward' else 'backward'}"/>
 		</a>
@@ -1117,7 +1117,7 @@
 		<xsl:param name="previous"/>
 
 		<a class="btn btn-default {$class}" role="button" title="Previous" href="{if($pipeline='results') then 'results' else    ''}?q={encode-for-uri($q)}&amp;start={$previous}{if (string($sort))
-			then          concat('&amp;sort=',          $sort) else ''}{if (string($lang)) then    concat('&amp;lang=', $lang) else ''}{if(string($side)) then concat('&amp;side=', $side) else
+			then          concat('&amp;sort=',          $sort) else ''}{if (string($langParam)) then    concat('&amp;lang=', $langParam) else ''}{if(string($side)) then concat('&amp;side=', $side) else
 			''}{if(string($mode)) then concat('&amp;mode=',    $mode) else ''}{if(string($image)) then concat('&amp;image=', $image) else ''}">
 			<span class="glyphicon glyphicon-{if ($lang='ar') then 'forward' else 'backward'}"/>
 		</a>
@@ -1128,7 +1128,7 @@
 		<xsl:param name="next"/>
 
 		<a class="btn btn-default {$class}" role="button" title="Next" href="{if($pipeline='results') then 'results' else ''}?q={encode-for-uri($q)}&amp;start={$next}{if    (string($sort)) then
-			concat('&amp;sort=', $sort) else          ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}{if(string($side)) then concat('&amp;side=', $side) else ''}{if(string($mode))
+			concat('&amp;sort=', $sort) else          ''}{if (string($langParam)) then concat('&amp;lang=', $langParam) else ''}{if(string($side)) then concat('&amp;side=', $side) else ''}{if(string($mode))
 			then concat('&amp;mode=',    $mode) else ''}{if(string($image)) then concat('&amp;image=', $image) else ''}">
 			<span class="glyphicon glyphicon-{if ($lang='ar') then 'backward' else 'forward'}"/>
 		</a>
@@ -1139,7 +1139,7 @@
 		<xsl:param name="total"/>
 
 		<a class="btn btn-default {$class}" role="button" href="{if($pipeline='results') then 'results' else ''}?q={encode-for-uri($q)}&amp;start={($total * $rows) - $rows}{if    (string($sort)) then
-			concat('&amp;sort=',          $sort) else ''}{if (string($lang)) then concat('&amp;lang=', $lang) else ''}{if(string($side)) then concat('&amp;side=', $side) else ''}{if(string($mode))
+			concat('&amp;sort=',          $sort) else ''}{if (string($langParam)) then concat('&amp;lang=', $langParam) else ''}{if(string($side)) then concat('&amp;side=', $side) else ''}{if(string($mode))
 			then concat('&amp;mode=',    $mode) else ''}{if(string($image)) then concat('&amp;image=', $image) else ''}">
 			<span class="glyphicon glyphicon-fast-{if ($lang='ar') then 'backward' else 'forward'}"/>
 		</a>
@@ -1214,7 +1214,7 @@
 					</div>
 					<input type="hidden" name="q" value="{$q}"/>
 					<input type="hidden" name="sort" value="" class="sort_param"/>
-					<xsl:if test="string($lang)">
+					<xsl:if test="string($langParam)">
 						<input type="hidden" name="lang" value="{$lang}"/>
 					</xsl:if>
 					<input class="btn btn-default sort_button" type="submit" value="{numishare:normalizeLabel('results_sort-results', $lang)}">
@@ -1233,7 +1233,7 @@
 			</h3>
 			<form role="form" action="results" method="GET" id="qs_form">
 				<input type="hidden" name="q" id="qs_query" value="{$q}"/>
-				<xsl:if test="string($lang)">
+				<xsl:if test="string($langParam)">
 					<input type="hidden" name="lang" value="{$lang}"/>
 				</xsl:if>
 				<div class="input-group">

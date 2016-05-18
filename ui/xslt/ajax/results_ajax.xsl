@@ -6,7 +6,17 @@
 
 	<!-- params -->
 	<xsl:param name="pipeline" select="doc('input:request')/request/parameters/parameter[name='pipeline']/value"/>
-	<xsl:param name="lang" select="doc('input:request')/request/parameters/parameter[name='lang']/value"/>
+	<xsl:param name="langParam" select="doc('input:request')/request/parameters/parameter[name='lang']/value"/>
+	<xsl:param name="lang">
+		<xsl:choose>
+			<xsl:when test="string($langParam)">
+				<xsl:value-of select="$langParam"/>
+			</xsl:when>
+			<xsl:when test="string(doc('input:request')/request//header[name[.='accept-language']]/value)">
+				<xsl:value-of select="numishare:parseAcceptLanguage(doc('input:request')/request//header[name[.='accept-language']]/value)[1]"/>
+			</xsl:when>
+		</xsl:choose>
+	</xsl:param>
 	<xsl:param name="request-uri" select="concat('http://localhost:8080', substring-before(doc('input:request')/request/request-uri, 'results_ajax'))"/>
 
 	<xsl:variable name="display_path">
@@ -96,7 +106,7 @@
 				<xsl:if test="$lang='ar'">
 					<xsl:attribute name="style">direction: ltr; text-align:right</xsl:attribute>
 				</xsl:if>
-				<a href="{$display_path}id/{str[@name='recordId']}{if (string($lang)) then concat('?lang=', $lang) else ''}" target="_blank">
+				<a href="{$display_path}id/{str[@name='recordId']}{if (string($langParam)) then concat('?lang=', $langParam) else ''}" target="_blank">
 					<xsl:value-of select="str[@name='title_display']"/>
 				</a>
 			</h4>
@@ -202,7 +212,7 @@
 							</xsl:variable>
 
 							<a class="thumbImage" href="{$path}{str[@name='reference_obv']}" title="Obverse of {str[@name='title_display']}" id="{$display_path}id/{str[@name='recordId']}{if
-								(string($lang))         then concat('?lang=', $lang) else ''}">
+								(string($langParam))         then concat('?lang=', $langParam) else ''}">
 								<img src="{$path}{str[@name='thumbnail_obv']}"/>
 							</a>
 						</xsl:if>
@@ -214,7 +224,7 @@
 							</xsl:variable>
 
 							<a class="thumbImage" href="{$path}{str[@name='reference_rev']}" title="Reverse of {str[@name='title_display']}" id="{$display_path}id/{str[@name='recordId']}{if
-								(string($lang))         then concat('?lang=', $lang) else ''}">
+								(string($langParam))         then concat('?lang=', $langParam) else ''}">
 								<img src="{$path}{str[@name='thumbnail_rev']}"/>
 							</a>
 						</xsl:if>

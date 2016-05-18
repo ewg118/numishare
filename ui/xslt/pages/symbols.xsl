@@ -7,7 +7,17 @@
 	<xsl:include href="../functions.xsl"/>
 
 	<xsl:param name="url" select="//config/url"/>
-	<xsl:param name="lang" select="if (doc('input:request')/request/parameters/parameter[name='lang']/value) then doc('input:request')/request/parameters/parameter[name='lang']/value else 'en'"/>
+	<xsl:param name="langParam" select="doc('input:request')/request/parameters/parameter[name='lang']/value"/>
+	<xsl:param name="lang">
+		<xsl:choose>
+			<xsl:when test="string($langParam)">
+				<xsl:value-of select="$langParam"/>
+			</xsl:when>
+			<xsl:when test="string(doc('input:request')/request//header[name[.='accept-language']]/value)">
+				<xsl:value-of select="numishare:parseAcceptLanguage(doc('input:request')/request//header[name[.='accept-language']]/value)[1]"/>
+			</xsl:when>
+		</xsl:choose>
+	</xsl:param>
 	<xsl:param name="display_path"/>
 	<xsl:variable name="include_path" select="concat('http://', doc('input:request')/request/server-name, ':8080/orbeon/themes/', //config/theme/orbeon_theme)"/>
 
@@ -22,7 +32,8 @@
 			<head>
 				<title>
 					<xsl:value-of select="//config/title"/>
-					<xsl:text>: Symbols</xsl:text>
+					<xsl:text>: </xsl:text>
+					<xsl:value-of select="numishare:normalizeLabel('header_symbols', $lang)"/>
 				</title>
 				<meta name="viewport" content="width=device-width, initial-scale=1"/>
 				<link rel="shortcut icon" type="image/x-icon" href="{$include_path}/images/favicon.png"/>
@@ -52,11 +63,17 @@
 			</xsl:if>
 			<div class="row">
 				<div class="col-md-12">
-					<h1>Symbols</h1>
+					<h1>
+						<xsl:value-of select="numishare:normalizeLabel('header_symbols', $lang)"/>
+					</h1>
 					<table class="table table-striped">
 						<thead>
-							<th style="width:100px">Image</th>
-							<th>Description</th>
+							<th style="width:100px">
+								<xsl:value-of select="numishare:regularize_node('symbol', $lang)"/>
+							</th>
+							<th>
+								<xsl:value-of select="numishare:regularize_node('description', $lang)"/>
+							</th>
 						</thead>
 						<tbody>
 							<xsl:apply-templates select="//rdf:RDF/*" mode="symbol"/>

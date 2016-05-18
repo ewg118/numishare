@@ -211,7 +211,7 @@
 											'id/'), '&#x022;')"/>
 									</xsl:variable>
 
-									<a href="{$display_path}results?q=region_hier:({encode-for-uri($selfQuery)}){if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+									<a href="{$display_path}results?q=region_hier:({encode-for-uri($selfQuery)}){if (string($langParam)) then concat('&amp;lang=', $langParam) else ''}">
 										<xsl:value-of select="$value"/>
 									</a>
 								</xsl:when>
@@ -402,12 +402,12 @@
 		<xsl:choose>
 			<xsl:when test="string($position) and $positions//position[@value=$position]">
 				<xsl:variable name="side" select="substring(parent::node()/name(), 1, 3)"/>
-				<a href="{$display_path}results?q=symbol_{$side}_{$position}_facet:&#x022;{$value}&#x022;{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+				<a href="{$display_path}results?q=symbol_{$side}_{$position}_facet:&#x022;{$value}&#x022;{if (string($langParam)) then concat('&amp;lang=', $langParam) else ''}">
 					<xsl:value-of select="$value"/>
 				</a>
 			</xsl:when>
 			<xsl:when test="contains($facets, $field)">
-				<a href="{$display_path}results?q={$field}_facet:&#x022;{$value}&#x022;{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+				<a href="{$display_path}results?q={$field}_facet:&#x022;{$value}&#x022;{if (string($langParam)) then concat('&amp;lang=', $langParam) else ''}">
 					<xsl:choose>
 						<xsl:when test="contains($href, 'geonames.org')">
 							<xsl:choose>
@@ -451,7 +451,7 @@
 			</div>
 			<div class="col-md-9">
 				<xsl:if test="string($sparql_endpoint)">
-					<xsl:copy-of select="document(concat($request-uri, 'sparql?uri=', $uri_space, $subtypeId, '&amp;template=display&amp;subtype=true&amp;lang=', $lang))/div[@class='row']"/>
+					<xsl:copy-of select="document(concat($request-uri, 'sparql?uri=', $uri_space, $subtypeId, '&amp;template=display&amp;subtype=true&amp;lang=', $langParam))/div[@class='row']"/>
 				</xsl:if>
 			</div>
 		</div>
@@ -592,7 +592,7 @@
 				</xsl:choose>
 			</xsl:variable>
 
-			<a href="{$display_path}results?q=region_hier:({encode-for-uri($fragment)}){if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+			<a href="{$display_path}results?q=region_hier:({encode-for-uri($fragment)}){if (string($langParam)) then concat('&amp;lang=', $langParam) else ''}">
 				<xsl:value-of select="."/>
 			</a>
 			<xsl:if test="not(position()=last())">

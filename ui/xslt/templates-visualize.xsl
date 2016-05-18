@@ -290,7 +290,7 @@
 				</div>
 			</xsl:if>
 			<input type="hidden" name="sparqlQuery" id="sparqlQuery" value=""/>
-			<xsl:if test="string($lang)">
+			<xsl:if test="string($langParam)">
 				<input type="hidden" name="lang" value="{$lang}"/>
 			</xsl:if>
 			<br/>
@@ -406,7 +406,7 @@
 		<xsl:variable name="hrefs" as="item()*">
 			<xsl:analyze-string select="." regex="&lt;([^>]+)&gt;">
 				<xsl:matching-substring>
-					<xsl:value-of select="document(concat('http://nomisma.org/apis/getLabel?uri=', regex-group(1), '&amp;lang=', $lang))/response"/>
+					<xsl:value-of select="document(concat('http://nomisma.org/apis/getLabel?uri=', regex-group(1), '&amp;lang=', $langParam))/response"/>
 				</xsl:matching-substring>
 			</xsl:analyze-string>
 		</xsl:variable>
@@ -541,7 +541,7 @@
 				<xsl:variable name="hrefs" as="item()*">
 					<xsl:analyze-string select="." regex="&lt;([^>]+)&gt;">
 						<xsl:matching-substring>
-							<xsl:value-of select="document(concat('http://nomisma.org/apis/getLabel?uri=', regex-group(1), '&amp;lang=', $lang))/response"/>
+							<xsl:value-of select="document(concat('http://nomisma.org/apis/getLabel?uri=', regex-group(1), '&amp;lang=', $langParam))/response"/>
 						</xsl:matching-substring>
 					</xsl:analyze-string>
 				</xsl:variable>

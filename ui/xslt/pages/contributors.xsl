@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-	<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:numishare="https://github.com/ewg118/numishare" xmlns:foaf="http://xmlns.com/foaf/0.1/"
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:numishare="https://github.com/ewg118/numishare" xmlns:foaf="http://xmlns.com/foaf/0.1/"
 	xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:res="http://www.w3.org/2005/sparql-results#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" exclude-result-prefixes="#all"
 	version="2.0">
 	<xsl:include href="../templates.xsl"/>
 	<xsl:include href="../functions.xsl"/>
 
-	<xsl:param name="lang" select="doc('input:request')/request/parameters/parameter[name='lang']/value"/>
+	<xsl:param name="langParam" select="doc('input:request')/request/parameters/parameter[name='lang']/value"/>
+	<xsl:param name="lang">
+		<xsl:choose>
+			<xsl:when test="string($langParam)">
+				<xsl:value-of select="$langParam"/>
+			</xsl:when>
+			<xsl:when test="string(doc('input:request')/request//header[name[.='accept-language']]/value)">
+				<xsl:value-of select="numishare:parseAcceptLanguage(doc('input:request')/request//header[name[.='accept-language']]/value)[1]"/>
+			</xsl:when>
+		</xsl:choose>
+	</xsl:param>
 
 	<xsl:variable name="display_path"/>
 	<xsl:variable name="include_path" select="concat('http://', doc('input:request')/request/server-name, ':8080/orbeon/themes/', //config/theme/orbeon_theme)"/>
@@ -52,14 +62,18 @@
 							<tr>
 								<xsl:if test="descendant::res:binding[@name='thumbnail']">
 									<th style="width:200px"/>
-								</xsl:if>								
-								<th>Count</th>
-								<th>Collection</th>
+								</xsl:if>
+								<th>
+									<xsl:value-of select="numishare:normalizeLabel('numeric_count', $lang)"/>
+								</th>
+								<th>
+									<xsl:value-of select="numishare:regularize_node('collection', $lang)"/>
+								</th>
 							</tr>
 						</thead>
 						<tbody>
 							<xsl:apply-templates select="descendant::res:result" mode="contributors"/>
-						</tbody>						
+						</tbody>
 					</table>
 				</div>
 			</div>
@@ -69,7 +83,7 @@
 	<xsl:template match="res:result" mode="contributors">
 		<tr>
 			<td>
-				
+
 				<xsl:if test="string(res:binding[@name='thumbnail']/res:uri)">
 					<a href="{if (string(res:binding[@name='homepage']/res:uri)) then res:binding[@name='homepage']/res:uri else res:binding[@name='dataset']/res:uri}">
 						<img src="{res:binding[@name='thumbnail']/res:uri}" alt="logo" style="max-width:200px"/>
@@ -95,7 +109,7 @@
 							</a>
 						</xsl:otherwise>
 					</xsl:choose>
-					
+
 				</h2>
 				<dl class=" {if($lang='ar') then 'dl-horizontal ar' else 'dl-horizontal'}">
 					<xsl:if test="res:binding[@name='collection']">
@@ -105,18 +119,24 @@
 								<xsl:value-of select="res:binding[@name='collection']/res:uri"/>
 							</a>
 						</dd>
-					</xsl:if>	
+					</xsl:if>
 					<xsl:if test="res:binding[@name='publisher']">
-						<dt>Publisher</dt>
+						<dt>
+							<xsl:value-of select="numishare:regularize_node('publisher', $lang)"/>
+						</dt>
 						<dd>
 							<xsl:value-of select="res:binding[@name='publisher']/res:literal"/>
 						</dd>
 					</xsl:if>
-					<dt>Description</dt>
+					<dt>
+						<xsl:value-of select="numishare:regularize_node('description', $lang)"/>
+					</dt>
 					<dd>
 						<xsl:value-of select="res:binding[@name='description']/res:literal"/>
 					</dd>
-					<dt>License</dt>
+					<dt>
+						<xsl:value-of select="numishare:regularize_node('license', $lang)"/>
+					</dt>
 					<dd>
 						<a href="{res:binding[@name='license']/res:uri}">
 							<xsl:variable name="license" select="res:binding[@name='license']/res:uri"/>
