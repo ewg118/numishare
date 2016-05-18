@@ -13,7 +13,7 @@ $(document).ready(function () {
 		var lang = '';
 	} else {
 		var lang = langStr;
-	}
+	}	
 	
 	//set hierarchical labels on load
 	$('.hierarchical-facet').each(function () {

@@ -37,6 +37,27 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:function>
+	
+	<!-- ************** PARSE ACCEPT-LANGUAGE FROM HTTP HEADER ************** -->
+	<xsl:function name="numishare:parseAcceptLanguage">
+		<xsl:param name="lang"/>
+		
+		<xsl:variable name="languages" as="item()*">
+			<xsl:analyze-string select="$lang" regex="([^;]+);q=[0-1]\.[0-9],?">
+				
+				<xsl:matching-substring>
+					<xsl:for-each select="regex-group(1)">
+						<xsl:for-each select="tokenize(., ',')">
+							<xsl:value-of select="if (contains(., '-')) then substring-before(., '-') else ."/>
+						</xsl:for-each>
+					</xsl:for-each>
+				</xsl:matching-substring>
+			</xsl:analyze-string>
+		</xsl:variable>
+		
+		<xsl:sequence select="distinct-values($languages)"/>
+	</xsl:function>
+	
 	<!-- ************** RE-ASSEMBLE CATEGORY SOLR FIELDS INTO HUMAN-READABLE CATEGORY ************** -->
 	<xsl:function name="numishare:recompile_category">
 		<xsl:param name="level" as="xs:integer"/>

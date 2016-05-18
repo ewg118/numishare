@@ -7,10 +7,18 @@
 
 	<xsl:variable name="display_path"/>
 	<xsl:variable name="include_path" select="concat('http://', doc('input:request')/request/server-name, ':8080/orbeon/themes/', //config/theme/orbeon_theme)"/>
-
 	<!-- request params -->
 	<xsl:param name="pipeline">results</xsl:param>
-	<xsl:param name="lang" select="doc('input:request')/request/parameters/parameter[name='lang']/value"/>
+	<xsl:param name="lang">
+		<xsl:choose>
+			<xsl:when test="doc('input:request')/request/parameters/parameter[name='lang']/value">
+				<xsl:value-of select="doc('input:request')/request/parameters/parameter[name='lang']/value"/>
+			</xsl:when>
+			<xsl:when test="string(doc('input:request')/request//header[name[.='accept-language']]/value)">
+				<xsl:value-of select="numishare:parseAcceptLanguage(doc('input:request')/request//header[name[.='accept-language']]/value)[1]"/>
+			</xsl:when>
+		</xsl:choose>
+	</xsl:param>
 	<xsl:param name="q" select="doc('input:request')/request/parameters/parameter[name='q']/value"/>
 	<xsl:param name="sort" select="doc('input:request')/request/parameters/parameter[name='sort']/value"/>
 	<xsl:param name="rows">20</xsl:param>
@@ -90,7 +98,7 @@
 				<meta name="itemsPerPage" content="{$rows}"/>
 
 				<link rel="shortcut icon" type="image/x-icon" href="{$include_path}/images/favicon.png"/>
-				<meta name="viewport" content="width=device-width, initial-scale=1"/>				
+				<meta name="viewport" content="width=device-width, initial-scale=1"/>
 
 				<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"/>
 				<!-- bootstrap -->
@@ -118,7 +126,7 @@
 						<xsl:value-of select="//config/google_analytics"/>
 					</script>
 				</xsl:if>
-				
+
 				<!-- meta tags-->
 				<xsl:for-each select="descendant::str[starts-with(@name, 'reference_')]">
 					<meta property="og:image" content="{.}"/>
@@ -136,11 +144,11 @@
 		<!--<xsl:copy-of select="$sparqlResult"/>-->
 		<div class="container-fluid">
 			<!--<xsl:copy-of select="doc('input:request')"/>-->
-			
+
 			<xsl:if test="$lang='ar'">
-				<xsl:attribute name="style">direction: rtl;</xsl:attribute>							
+				<xsl:attribute name="style">direction: rtl;</xsl:attribute>
 			</xsl:if>
-			<div class="row">				
+			<div class="row">
 				<div class="col-md-9 col-md-push-3">
 					<div class="container-fluid">
 						<xsl:call-template name="remove_facets"/>
@@ -152,6 +160,13 @@
 										<div id="resultMap"/>
 									</div>
 								</xsl:if>
+								<div>
+									<xsl:value-of select="doc('input:request')/request//header[name[.='accept-language']]/value"/>
+									<br/>
+									<xsl:value-of select="numishare:parseAcceptLanguage(doc('input:request')/request//header[name[.='accept-language']]/value)"/>
+
+								</div>
+
 								<xsl:call-template name="paging"/>
 								<xsl:call-template name="sort"/>
 								<xsl:apply-templates select="descendant::doc"/>
@@ -185,7 +200,7 @@
 										</a>
 									</xsl:otherwise>
 								</xsl:choose>
-								
+
 							</xsl:if>
 							<a href="{$display_path}query.csv?q={$q}{if(string($lang)) then concat('&amp;lang=', $lang) else ''}{if (string($sort)) then concat('&amp;sort=', $sort) else ''}">
 								<!-- the image below is copyright of Silvestre Herrera, available freely on wikimedia commons: http://commons.wikimedia.org/wiki/File:X-office-spreadsheet_Gion.svg -->
@@ -196,15 +211,15 @@
 								<img src="{$include_path}/images/visualize.png" title="Visualize" alt="Visualize"/>
 							</a>
 						</div>
-						<div id="refine_results">							
+						<div id="refine_results">
 							<xsl:call-template name="quick_search"/>
 							<h3>
 								<xsl:value-of select="numishare:normalizeLabel('results_refine-results', $lang)"/>
 							</h3>
 							<xsl:apply-templates select="descendant::lst[@name='facet_fields']"/>
 						</div>
-						
-						
+
+
 					</xsl:if>
 				</div>
 			</div>

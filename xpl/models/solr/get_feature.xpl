@@ -28,8 +28,24 @@
 		<p:input name="request" href="#request"/>
 		<p:input name="data" href="#config"/>
 		<p:input name="config">
-			<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-				<xsl:param name="lang" select="doc('input:request')/request/parameters/parameter[name='lang']/value"/>				
+			<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:numishare="https://github.com/ewg118/numishare">
+				<xsl:include href="../../../ui/xslt/functions.xsl"/>
+				<xsl:param name="lang">
+					<xsl:choose>
+						<xsl:when test="string(doc('input:request')/request/parameters/parameter[name='lang']/value)">
+							<xsl:if test="//config/languages/language[@code=doc('input:request')/request/parameters/parameter[name='lang']/value][@enabled=true()]">
+								<xsl:value-of select="doc('input:request')/request/parameters/parameter[name='lang']/value"/>
+							</xsl:if>
+						</xsl:when>
+						<xsl:when test="string(doc('input:request')/request//header[name[.='accept-language']]/value)">
+							<xsl:variable name="primaryLang" select="numishare:parseAcceptLanguage(doc('input:request')/request//header[name[.='accept-language']]/value)[1]"/>
+							
+							<xsl:if test="//config/languages/language[@code=$primaryLang][@enabled=true()]">
+								<xsl:value-of select="$primaryLang"/>
+							</xsl:if>
+						</xsl:when>
+					</xsl:choose>
+				</xsl:param>				
 				<xsl:variable name="collection-name" select="substring-before(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/')"/>
 				
 				<!-- config variables -->
@@ -71,7 +87,23 @@
 		<p:input name="data" href="aggregate('content', #numFound, #config)"/>
 		<p:input name="config">
 			<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:math="http://exslt.org/math">
-				<xsl:param name="lang" select="doc('input:request')/request/parameters/parameter[name='lang']/value"/>
+				<xsl:include href="../../../ui/xslt/functions.xsl"/>
+				<xsl:param name="lang">
+					<xsl:choose>
+						<xsl:when test="string(doc('input:request')/request/parameters/parameter[name='lang']/value)">
+							<xsl:if test="//config/languages/language[@code=doc('input:request')/request/parameters/parameter[name='lang']/value][@enabled=true()]">
+								<xsl:value-of select="doc('input:request')/request/parameters/parameter[name='lang']/value"/>
+							</xsl:if>
+						</xsl:when>
+						<xsl:when test="string(doc('input:request')/request//header[name[.='accept-language']]/value)">
+							<xsl:variable name="primaryLang" select="numishare:parseAcceptLanguage(doc('input:request')/request//header[name[.='accept-language']]/value)[1]"/>
+							
+							<xsl:if test="//config/languages/language[@code=$primaryLang][@enabled=true()]">
+								<xsl:value-of select="$primaryLang"/>
+							</xsl:if>
+						</xsl:when>
+					</xsl:choose>
+				</xsl:param>
 				<xsl:variable name="collection-name" select="substring-before(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/')"/>
 				<!-- config variables -->
 				<xsl:variable name="solr-url" select="concat(/content/config/solr_published, 'select/')"/>

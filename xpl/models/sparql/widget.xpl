@@ -28,11 +28,27 @@
 		<p:input name="request" href="#request"/>
 		<p:input name="data" href="#config"/>
 		<p:input name="config">
-			<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+			<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:numishare="https://github.com/ewg118/numishare">
+				<xsl:include href="../../../ui/xslt/functions.xsl"/>
 				<!-- URL params -->
 				<xsl:param name="template" select="doc('input:request')/request/parameters/parameter[name='template']/value"/>
 				<xsl:param name="uri" select="doc('input:request')/request/parameters/parameter[name='uri']/value"/>
-				<xsl:param name="lang" select="doc('input:request')/request/parameters/parameter[name='lang']/value"/>
+				<xsl:param name="lang">
+					<xsl:choose>
+						<xsl:when test="string(doc('input:request')/request/parameters/parameter[name='lang']/value)">
+							<xsl:if test="//config/languages/language[@code=doc('input:request')/request/parameters/parameter[name='lang']/value][@enabled=true()]">
+								<xsl:value-of select="doc('input:request')/request/parameters/parameter[name='lang']/value"/>
+							</xsl:if>
+						</xsl:when>
+						<xsl:when test="string(doc('input:request')/request//header[name[.='accept-language']]/value)">
+							<xsl:variable name="primaryLang" select="numishare:parseAcceptLanguage(doc('input:request')/request//header[name[.='accept-language']]/value)[1]"/>
+							
+							<xsl:if test="//config/languages/language[@code=$primaryLang][@enabled=true()]">
+								<xsl:value-of select="$primaryLang"/>
+							</xsl:if>
+						</xsl:when>
+					</xsl:choose>
+				</xsl:param>
 				<xsl:param name="identifiers" select="doc('input:request')/request/parameters/parameter[name='identifiers']/value"/>
 				<xsl:param name="baseUri" select="doc('input:request')/request/parameters/parameter[name='baseUri']/value"/>
 				<xsl:param name="constraints" select="doc('input:request')/request/parameters/parameter[name='constraints']/value"/>
