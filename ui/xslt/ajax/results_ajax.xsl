@@ -18,6 +18,7 @@
 		</xsl:choose>
 	</xsl:param>
 	<xsl:param name="request-uri" select="concat('http://localhost:8080', substring-before(doc('input:request')/request/request-uri, 'results_ajax'))"/>
+	<xsl:variable name="authenticated" select="false()" as="xs:boolean"/>
 
 	<xsl:variable name="display_path">
 		<xsl:choose>
