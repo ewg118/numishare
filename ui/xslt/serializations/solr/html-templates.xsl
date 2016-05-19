@@ -609,8 +609,8 @@
 					<xsl:if test="string($new_query)">
 						<param>q=<xsl:value-of select="encode-for-uri($new_query)"/></param>
 					</xsl:if>
-					<xsl:if test="string($lang)">
-						<param>lang=<xsl:value-of select="$lang"/></param>
+					<xsl:if test="string($langParam)">
+						<param>lang=<xsl:value-of select="$langParam"/></param>
 					</xsl:if>
 				</params>
 			</xsl:variable>
@@ -1262,8 +1262,8 @@
 				<xsl:if test="string($new_query)">
 					<param>q=<xsl:value-of select="encode-for-uri($new_query)"/></param>
 				</xsl:if>
-				<xsl:if test="string($lang)">
-					<param>lang=<xsl:value-of select="$lang"/></param>
+				<xsl:if test="string($langParam)">
+					<param>lang=<xsl:value-of select="$langParam"/></param>
 				</xsl:if>
 			</params>
 		</xsl:variable>

@@ -351,26 +351,26 @@
 					<xsl:when test="string($facet)">
 						<!-- if there is a $q parameter, gather data -->
 						<xsl:if test="string($q)">
-							<xsl:copy-of select="document(concat($request-uri, 'get_vis_quant?q=', encode-for-uri($q), '&amp;category=', $facet, '&amp;type=', $type ))"/>
+							<xsl:copy-of select="document(concat($request-uri, 'get_vis_quant?q=', encode-for-uri($q), '&amp;category=', $facet, '&amp;type=', $type, '&amp;lang=', $lang ))"/>
 						</xsl:if>
 						<!-- if there is a compare parameter, load get_hoard_quant with document() function -->
 						<xsl:if test="string($compare)">
 							<xsl:for-each select="tokenize($compare, '\|')">
-								<xsl:copy-of select="document(concat($request-uri, 'get_vis_quant?q=', encode-for-uri(.), '&amp;category=', $facet, '&amp;type=', $type ))"/>
+								<xsl:copy-of select="document(concat($request-uri, 'get_vis_quant?q=', encode-for-uri(.), '&amp;category=', $facet, '&amp;type=', $type, '&amp;lang=', $lang ))"/>
 							</xsl:for-each>
 						</xsl:if>
 					</xsl:when>
 					<xsl:when test="string($customQuery)">
 						<!-- if there is a $q parameter, gather data -->
 						<xsl:if test="string($q)">
-							<xsl:copy-of select="document(concat($request-uri, 'get_vis_custom?q=', encode-for-uri($q), '&amp;customQuery=', encode-for-uri($customQuery), '&amp;total=', $numFound, '&amp;type=', $type
+							<xsl:copy-of select="document(concat($request-uri, 'get_vis_custom?q=', encode-for-uri($q), '&amp;customQuery=', encode-for-uri($customQuery), '&amp;total=', $numFound, '&amp;type=', $type, '&amp;lang=', $lang
 								))"/>
 						</xsl:if>
 						<!-- if there is a compare parameter, load get_hoard_quant with document() function -->
 						<xsl:if test="string($compare)">
 							<xsl:for-each select="tokenize($compare, '\|')">
 								<xsl:copy-of select="document(concat($request-uri, 'get_vis_custom?q=', encode-for-uri(.), '&amp;customQuery=', encode-for-uri($customQuery), '&amp;total=', $numFound, '&amp;type=',
-									$type ))"/>
+									$type, '&amp;lang=', $lang ))"/>
 							</xsl:for-each>
 						</xsl:if>
 					</xsl:when>
