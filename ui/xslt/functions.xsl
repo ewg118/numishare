@@ -43,16 +43,25 @@
 		<xsl:param name="lang"/>
 		
 		<xsl:variable name="languages" as="item()*">
-			<xsl:analyze-string select="$lang" regex="([^;]+);q=[0-1]\.[0-9],?">
-				
-				<xsl:matching-substring>
-					<xsl:for-each select="regex-group(1)">
-						<xsl:for-each select="tokenize(., ',')">
-							<xsl:value-of select="if (contains(., '-')) then substring-before(., '-') else ."/>
-						</xsl:for-each>
+			<xsl:choose>
+				<xsl:when test="contains($lang, 'q=')">
+					<xsl:analyze-string select="$lang" regex="([^;]+);q=[0-1]\.[0-9],?">				
+						<xsl:matching-substring>
+							<xsl:for-each select="regex-group(1)">
+								<xsl:for-each select="tokenize(., ',')">
+									<xsl:value-of select="if (contains(., '-')) then substring-before(., '-') else ."/>
+								</xsl:for-each>
+							</xsl:for-each>
+						</xsl:matching-substring>
+					</xsl:analyze-string>	
+				</xsl:when>
+				<xsl:when test="string-length($lang) &gt; 0">
+					<xsl:for-each select="tokenize($lang, ',')">
+						<xsl:value-of select="if (contains(., '-')) then substring-before(., '-') else ."/>
 					</xsl:for-each>
-				</xsl:matching-substring>
-			</xsl:analyze-string>
+				</xsl:when>
+			</xsl:choose>
+			
 		</xsl:variable>
 		
 		<xsl:sequence select="distinct-values($languages)"/>
