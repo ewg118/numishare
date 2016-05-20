@@ -144,12 +144,17 @@
 	<page path="/numishare/[^\/]+/symbols.rdf" view="xpl/models/xquery/aggregate-symbols.xpl"/>
 	
 	<!-- **** GEOGRAPHIC EXPORT **** -->
-	<page path="/numishare/[^\/]+/findspots.kml" model="xpl/models/solr/geographic-facets.xpl" view="xpl/views/serializations/solr/kml.xpl"/>	
+	<page path="/numishare/[^\/]+/findspots.kml" model="xpl/models/solr/geographic-facets.xpl" view="xpl/views/serializations/solr/kml.xpl"/>
+	<page path="/numishare/[^\/]+/findspots.geojson" model="xpl/models/solr/geographic-facets.xpl" view="xpl/views/serializations/solr/geojson.xpl"/>	
 	<page path="/numishare/[^\/]+/hoards.kml" model="xpl/models/solr/geographic-docs.xpl" view="xpl/views/serializations/solr/kml.xpl"/>
 	<page path="/numishare/[^\/]+/hoards.json" model="xpl/models/solr/geographic-docs.xpl" view="xpl/views/serializations/solr/json-timemap.xpl"/>
+	<page path="/numishare/[^\/]+/hoards.geojson" model="xpl/models/solr/geographic-docs.xpl" view="xpl/views/serializations/solr/geojson.xpl"/>
 	<page path="/numishare/[^\/]+/mints.kml" model="xpl/models/solr/geographic-facets.xpl" view="xpl/views/serializations/solr/kml.xpl"/>
+	<page path="/numishare/[^\/]+/mints.geojson" model="xpl/models/solr/geographic-facets.xpl" view="xpl/views/serializations/solr/geojson.xpl"/>
 	<page path="/numishare/[^\/]+/query.kml" model="xpl/models/solr/geographic-docs.xpl" view="xpl/views/serializations/solr/kml.xpl"/>
+	<page path="/numishare/[^\/]+/query.geojson" model="xpl/models/solr/geographic-docs.xpl" view="xpl/views/serializations/solr/geojson.xpl"/>
 	<page path="/numishare/[^\/]+/subjects.kml" model="xpl/models/solr/geographic-facets.xpl" view="xpl/views/serializations/solr/kml.xpl"/>
+	<page path="/numishare/[^\/]+/subjects.geojson" model="xpl/models/solr/geographic-facets.xpl" view="xpl/views/serializations/solr/geojson.xpl"/>
 	
 	<!-- **** CSV EXPORT **** -->
 	<page path="/numishare/[^\/]+/hoards.csv" model="xpl/models/config.xpl" view="xpl/views/apis/csv-hoards.xpl"/>

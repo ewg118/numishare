@@ -54,9 +54,9 @@
 				<!-- facet variable -->
 				<xsl:variable name="facet">
 					<xsl:choose>
-						<xsl:when test="contains(doc('input:request')/request/request-url, 'mints.kml')">mint_geo</xsl:when>
-						<xsl:when test="contains(doc('input:request')/request/request-url, 'findspots.kml')">findspot_geo</xsl:when>
-						<xsl:when test="contains(doc('input:request')/request/request-url, 'subjects.kml')">subject_geo</xsl:when>
+						<xsl:when test="matches(doc('input:request')/request/request-url, 'mints\.(kml|geojson)')">mint_geo</xsl:when>
+						<xsl:when test="matches(doc('input:request')/request/request-url, 'findspots\.(kml|geojson)')">findspot_geo</xsl:when>
+						<xsl:when test="matches(doc('input:request')/request/request-url, 'subjects\.(kml|geojson)')">subject_geo</xsl:when>
 					</xsl:choose>
 				</xsl:variable>
 
