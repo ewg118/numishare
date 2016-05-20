@@ -16,13 +16,13 @@
 				<!-- use get_hoard_quant to calculate -->
 				<xsl:if test="$pipeline = 'display'">					
 					<xsl:copy-of
-						select="document(concat($request-uri, 'get_hoard_quant?id=', $id, '&amp;calculate=', if (string($role)) then $role else $element, '&amp;type=', $type, '&amp;exclude=', $exclude))"/>
+						select="document(concat($request-uri, 'get_hoard_quant?id=', $id, '&amp;calculate=', if (string($role)) then $role else $element, '&amp;type=', $type, '&amp;exclude=', $exclude, '&amp;lang=', $lang))"/>
 				</xsl:if>
 				<!-- if there is a compare parameter, load get_hoard_quant with document() function -->
 				<xsl:if test="string($compare) and string($calculate)">
 					<xsl:for-each select="tokenize($compare, ',')">
 						<xsl:copy-of
-							select="document(concat($request-uri, 'get_hoard_quant?id=', ., '&amp;calculate=', if (string($role)) then $role else $element, '&amp;type=', $type, '&amp;exclude=', $exclude))"
+							select="document(concat($request-uri, 'get_hoard_quant?id=', ., '&amp;calculate=', if (string($role)) then $role else $element, '&amp;type=', $type, '&amp;exclude=', $exclude, '&amp;lang=', $lang))"
 						/>
 					</xsl:for-each>
 				</xsl:if>
@@ -130,7 +130,7 @@
 
 			<xsl:text>[</xsl:text>
 			<xsl:if test="$pipeline = 'display'">
-				<xsl:value-of select="document(concat($request-uri, 'get_hoard_quant?id=', $id, '&amp;format=js&amp;calculate=date&amp;exclude=', $exclude, '&amp;type=', $type))"/>
+				<xsl:value-of select="document(concat($request-uri, 'get_hoard_quant?id=', $id, '&amp;format=js&amp;calculate=date&amp;exclude=', $exclude, '&amp;type=', $type, '&amp;lang=', $lang))"/>
 			</xsl:if>
 			<!-- if there is a compare parameter, load get_hoard_quant with document() function -->
 			<xsl:if test="string($compare) and string($calculate)">
@@ -138,7 +138,7 @@
 					<xsl:text>,</xsl:text>
 				</xsl:if>
 				<xsl:for-each select="tokenize($compare, ',')">
-					<xsl:value-of select="document(concat($request-uri, 'get_hoard_quant?id=', ., '&amp;format=js&amp;calculate=date&amp;exclude=', $exclude, '&amp;type=', $type))"/>
+					<xsl:value-of select="document(concat($request-uri, 'get_hoard_quant?id=', ., '&amp;format=js&amp;calculate=date&amp;exclude=', $exclude, '&amp;type=', $type, '&amp;lang=', $lang))"/>
 					<xsl:if test="not(position()=last())">
 						<!-- threre must be a line break between objects or there will be Javascript eval problems! -->
 						<xsl:text>,

@@ -5,17 +5,7 @@
 	<xsl:include href="../functions.xsl"/>
 
 	<!-- use the calculate URI parameter to output tables/charts for counts of material, denomination, issuer, etc. -->
-	<xsl:param name="langParam" select="doc('input:request')/request/parameters/parameter[name='lang']/value"/>
-	<xsl:param name="lang">
-		<xsl:choose>
-			<xsl:when test="string($langParam)">
-				<xsl:value-of select="$langParam"/>
-			</xsl:when>
-			<xsl:when test="string(doc('input:request')/request//header[name[.='accept-language']]/value)">
-				<xsl:value-of select="numishare:parseAcceptLanguage(doc('input:request')/request//header[name[.='accept-language']]/value)[1]"/>
-			</xsl:when>
-		</xsl:choose>
-	</xsl:param>
+	<xsl:param name="lang" select="doc('input:request')/request/parameters/parameter[name='lang']/value"/>	
 	<xsl:variable name="defaultLang" select="if (string($lang)) then $lang else 'en'"/>
 	<xsl:param name="calculate" select="doc('input:request')/request/parameters/parameter[name='calculate']/value"/>
 	<xsl:param name="type" select="doc('input:request')/request/parameters/parameter[name='type']/value"/>
