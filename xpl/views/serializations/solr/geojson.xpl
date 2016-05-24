@@ -36,8 +36,8 @@
 		<p:input name="data" href="#model"/>
 		<p:input name="config">
 			<config>
-				<content-type>application/json</content-type>
-				<!--<content-type>application/vnd.geo+json</content-type>-->
+				<!--<content-type>application/json</content-type>-->
+				<content-type>application/vnd.geo+json</content-type>
 				<encoding>utf-8</encoding>
 			</config>
 		</p:input>
