@@ -67,8 +67,19 @@
 						<link rel="stylesheet" href="{$include_path}/css/jquery.fancybox.css?v=2.1.5" type="text/css" media="screen"/>
 						<script type="text/javascript" src="{$include_path}/javascript/jquery.fancybox.pack.js?v=2.1.5"/>
 						<!-- maps-->
-						<script type="text/javascript" src="http://openlayers.org/api/2.12/OpenLayers.js"/>
-						<script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3.20&amp;sensor=false"/>
+						<!--<script type="text/javascript" src="http://openlayers.org/api/2.12/OpenLayers.js"/>
+						<script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3.20&amp;sensor=false"/>-->
+						<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css"/>
+						<link rel="stylesheet" href="{$include_path}/css/MarkerCluster.css"/>
+						<link rel="stylesheet" href="{$include_path}/css/MarkerCluster.Default.css"/>
+						
+						<!-- js -->
+						<script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"/>					
+						<script type="text/javascript" src="{$include_path}/javascript/leaflet.ajax.min.js"/>
+						<script type="text/javascript" src="{$include_path}/javascript/leaflet.markercluster.js"/>
+						<!--<script type="text/javascript" src="{$include_path}/javascript/leaflet.baselayers.js"/>-->
+						<!--<script type="text/javascript" src="{$display_path}ui/javascript/heatmap.min.js"/>
+						<script type="text/javascript" src="{$display_path}ui/javascript/leaflet-heatmap.js"/>-->
 						<script type="text/javascript" src="{$include_path}/javascript/map_functions.js"/>
 						<script type="text/javascript" src="{$include_path}/javascript/facet_functions.js"/>
 					</xsl:otherwise>
@@ -183,6 +194,9 @@
 				</span>
 				<span id="pipeline">
 					<xsl:value-of select="$pipeline"/>
+				</span>
+				<span id="mapboxKey">
+					<xsl:value-of select="//config/mapboxKey"/>
 				</span>
 				<span id="section">maps</span>
 				<span id="baselayers">
