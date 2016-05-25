@@ -260,8 +260,9 @@
 						<xsl:call-template name="generic_head"/>
 						<xsl:choose>
 							<xsl:when test="$recordType='physical'">
-								<script type="text/javascript" src="http://openlayers.org/api/2.12/OpenLayers.js"/>
-								<script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3.20&amp;sensor=false"/>
+								<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css"/>
+								<script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"/>					
+								<script type="text/javascript" src="{$include_path}/javascript/leaflet.ajax.min.js"/>
 								<script type="text/javascript" src="{$include_path}/javascript/display_map_functions.js"/>
 							</xsl:when>
 							<!-- coin-type CSS and JS dependencies -->
@@ -322,6 +323,9 @@
 							</span>
 							<span id="pipeline">
 								<xsl:value-of select="$pipeline"/>
+							</span>
+							<span id="mapboxKey">
+								<xsl:value-of select="//config/mapboxKey"/>
 							</span>
 						</div>
 					</body>
