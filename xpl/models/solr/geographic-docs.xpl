@@ -55,16 +55,14 @@
 				<xsl:variable name="facet">
 					<xsl:choose>
 						<xsl:when test="matches(doc('input:request')/request/request-url, 'query\.(kml|geojson)')">mint_geo</xsl:when>
-						<xsl:when test="matches(doc('input:request')/request/request-url, 'hoards\.(kml|geojson)')">findspot_geo</xsl:when>
-						<xsl:when test="matches(doc('input:request')/request/request-url, 'hoards\.(json|geojson)')">findspot_geo</xsl:when>
+						<xsl:when test="matches(doc('input:request')/request/request-url, 'hoards\.(kml|geojson|json)')">findspot_geo</xsl:when>						
 					</xsl:choose>
 				</xsl:variable>
 				
 				<xsl:variable name="mode">
 					<xsl:choose>
 						<xsl:when test="matches(doc('input:request')/request/request-url, 'query\.(kml|geojson)')">query</xsl:when>
-						<xsl:when test="matches(doc('input:request')/request/request-url, 'hoards\.(kml|geojson)')">hoard</xsl:when>
-						<xsl:when test="matches(doc('input:request')/request/request-url, 'hoards\.(json|geojson)')">hoard</xsl:when>
+						<xsl:when test="matches(doc('input:request')/request/request-url, 'hoards\.(kml|geojson|json)')">hoard</xsl:when>						
 					</xsl:choose>
 				</xsl:variable>
 
