@@ -364,6 +364,7 @@
 		<link rel="alternate" type="application/ld+json" href="{$objectUri}.jsonld"/>
 		<link rel="alternate" type="text/turtle" href="{$objectUri}.ttl"/>
 		<link rel="alternate" type="application/vnd.google-earth.kml+xml" href="{$objectUri}.kml"/>
+		<link rel="alternate" type="application/application/vnd.geo+json" href="{$objectUri}.geojson"/>
 
 		<!-- open graph metadata -->
 		<meta property="og:url" content="{$objectUri}"/>

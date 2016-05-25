@@ -713,6 +713,9 @@
 					<li>
 						<a href="{$id}.kml">KML</a>
 					</li>
+					<li>
+						<a href="{$id}.geojson">GeoJSON</a>
+					</li>
 				</ul>
 			</div>
 		</div>
