@@ -319,12 +319,6 @@ $(document).ready(function () {
 		});
 	}
 	
-	/*function onEachFeature (feature, layer) {
-	var query = q + ' AND ' + feature.properties.type + '_uri:"' + feature.properties.uri + '"';
-	var str = "<a href='#results' class='show_coins' q='" + query + "'>" + feature.properties.name + "</a>";
-	layer.bindPopup(str);
-	}*/
-	
 	/********************
 	TimeMap function for hoard collections
 	 ********************/
