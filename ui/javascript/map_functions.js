@@ -75,6 +75,10 @@ $(document).ready(function () {
 			pointToLayer: renderPoints
 		}).addTo(map);
 		
+		var subjectLayer = L.geoJson.ajax(path + "subjects.geojson?q=" + q, {
+			pointToLayer: renderPoints
+		}).addTo(map);
+		
 		//add hoards, but don't make visible by default
 		var markers = '';
 		var findspotLayer = L.geoJson.ajax(path + "findspots.geojson?q=" + q, {
@@ -97,7 +101,8 @@ $(document).ready(function () {
 		}
 		
 		var overlayMaps = {
-			'Mints': mintLayer
+			'Mints': mintLayer,
+			'Subjects': subjectLayer
 		};
 		
 		//add controls
@@ -105,7 +110,7 @@ $(document).ready(function () {
 		
 		//zoom to groups on AJAX complete
 		mintLayer.on('data:loaded', function () {
-			var group = new L.featureGroup([mintLayer, findspotLayer]);
+			var group = new L.featureGroup([mintLayer, findspotLayer, subjectLayer]);
 			map.fitBounds(group.getBounds());
 		}.bind(this));
 		
@@ -115,7 +120,12 @@ $(document).ready(function () {
 			markers.addLayer(findspotLayer);
 			map.addLayer(markers);
 			
-			var group = new L.featureGroup([mintLayer, findspotLayer]);
+			var group = new L.featureGroup([mintLayer, findspotLayer, subjectLayer]);
+			map.fitBounds(group.getBounds());
+		}.bind(this));
+		
+		subjectLayer.on('data:loaded', function () {
+			var group = new L.featureGroup([mintLayer, findspotLayer, subjectLayer]);
 			map.fitBounds(group.getBounds());
 		}.bind(this));
 		
@@ -124,6 +134,9 @@ $(document).ready(function () {
 			renderPopup(e);
 		});
 		findspotLayer.on('click', function (e) {
+			renderPopup(e);
+		});
+		subjectLayer.on('click', function (e) {
 			renderPopup(e);
 		});
 	}
@@ -257,7 +270,7 @@ $(document).ready(function () {
 			map.removeLayer(markers);
 			mintLayer.refresh(mintUrl);
 			findspotLayer.refresh(hoardUrl);
-			//subjectLayer.refresh(subjectUrl);
+			subjectLayer.refresh(subjectUrl);
 		}
 	}
 	
