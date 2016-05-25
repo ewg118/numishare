@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:nuds="http://nomisma.org/nuds" xmlns:nh="http://nomisma.org/nudsHoard" xmlns:xlink="http://www.w3.org/1999/xlink"
-	xmlns:mets="http://www.loc.gov/METS/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nm="http://nomisma.org/id/"
-	exclude-result-prefixes="#all" version="2.0">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:nuds="http://nomisma.org/nuds" xmlns:nh="http://nomisma.org/nudsHoard" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:numishare="https://github.com/ewg118/numishare"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:mets="http://www.loc.gov/METS/"
+	xmlns:nm="http://nomisma.org/id/" xmlns:nmo="http://nomisma.org/ontology#" exclude-result-prefixes="#all" version="2.0">
 	<xsl:include href="../../templates.xsl"/>
 	<xsl:include href="../../templates-visualize.xsl"/>
 	<xsl:include href="../../templates-analyze.xsl"/>
@@ -11,9 +11,19 @@
 	<xsl:include href="../nudsHoard/html.xsl"/>
 
 	<!-- URL params -->
-	<xsl:variable name="collection-name" select="substring-before(substring-after(doc('input:request')/request/servlet-path, 'numishare/'), '/')"/>
+	<xsl:variable name="collection-name" select="substring-before(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/')"/>
 	<xsl:variable name="request-uri" select="concat('http://localhost:8080', substring-before(doc('input:request')/request/request-uri, 'id/'))"/>
-	<xsl:param name="lang" select="doc('input:request')/request/parameters/parameter[name='lang']/value"/>
+	<xsl:param name="langParam" select="doc('input:request')/request/parameters/parameter[name='lang']/value"/>
+	<xsl:param name="lang">
+		<xsl:choose>
+			<xsl:when test="string($langParam)">
+				<xsl:value-of select="$langParam"/>
+			</xsl:when>
+			<xsl:when test="string(doc('input:request')/request//header[name[.='accept-language']]/value)">
+				<xsl:value-of select="numishare:parseAcceptLanguage(doc('input:request')/request//header[name[.='accept-language']]/value)[1]"/>
+			</xsl:when>
+		</xsl:choose>
+	</xsl:param>
 	<xsl:param name="mode" select="doc('input:request')/request/parameters/parameter[name='mode']/value"/>
 	<xsl:param name="pipeline">display</xsl:param>
 
@@ -34,19 +44,28 @@
 	<xsl:variable name="geonames_api_key" select="/content/config/geonames_api_key"/>
 	<xsl:variable name="sparql_endpoint" select="/content/config/sparql_endpoint"/>
 	<xsl:variable name="url" select="/content/config/url"/>
-	<xsl:variable name="uri_space" select="/content/config/uri_space"/>
 	<xsl:variable name="collection_type" select="/content/config/collection_type"/>
+	<xsl:variable name="localTypes" as="node()*">
+		<config>
+			<xsl:copy-of select="/content/config/localTypes"/>
+		</config>
+	</xsl:variable>
+	<xsl:variable name="positions" as="node()*">
+		<config>
+			<xsl:copy-of select="/content/config/positions"/>
+		</config>
+	</xsl:variable>
+	<xsl:variable name="regionHierarchy" select="boolean(/content/config/facets/facet[text()='region_hier'])" as="xs:boolean"/>
+
 	<!-- get layout -->
 	<xsl:variable name="orientation" select="/content/config/theme/layouts/display/nuds/orientation"/>
 	<xsl:variable name="image_location" select="/content/config/theme/layouts/display/nuds/image_location"/>
 
-	<!--<xsl:variable name="display_path">
+	<xsl:variable name="display_path">
 		<xsl:if test="not(string($mode))">
 			<xsl:text>../</xsl:text>
 		</xsl:if>
-	</xsl:variable>-->
-
-	<xsl:variable name="display_path">../search/</xsl:variable>
+	</xsl:variable>
 
 	<xsl:variable name="include_path" select="concat('http://', doc('input:request')/request/server-name, ':8080/orbeon/themes/', //config/theme/orbeon_theme)"/>
 
@@ -60,6 +79,7 @@
 	</xsl:variable>
 
 	<xsl:variable name="id" select="normalize-space(//*[local-name()='recordId'])"/>
+	<xsl:variable name="objectUri" select="if (/content/config/uri_space) then concat(/content/config/uri_space, $id) else concat($url, 'id/', $id)"/>
 
 	<xsl:variable name="nudsGroup" as="element()*">
 		<nudsGroup>
@@ -121,8 +141,9 @@
 
 	<!-- get non-coin-type RDF in the document -->
 	<xsl:variable name="rdf" as="element()*">
-		<rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:nm="http://nomisma.org/id/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-			xmlns:rdfa="http://www.w3.org/ns/rdfa#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#">
+		<rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:nm="http://nomisma.org/id/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+			xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:org="http://www.w3.org/ns/org#"
+			xmlns:nomisma="http://nomisma.org/" xmlns:nmo="http://nomisma.org/ontology#">
 			<xsl:variable name="id-param">
 				<xsl:for-each select="distinct-values(descendant::*[not(local-name()='typeDesc') and not(local-name()='reference')][contains(@xlink:href,
 					'nomisma.org')]/@xlink:href|$nudsGroup/descendant::*[not(local-name()='object') and not(local-name()='typeDesc')][contains(@xlink:href, 'nomisma.org')]/@xlink:href)">
@@ -136,6 +157,17 @@
 			<xsl:variable name="rdf_url" select="concat('http://nomisma.org/apis/getRdf?identifiers=', encode-for-uri($id-param))"/>
 			<xsl:copy-of select="document($rdf_url)/rdf:RDF/*"/>
 		</rdf:RDF>
+	</xsl:variable>
+
+	<xsl:variable name="regions" as="element()*">
+		<node>
+			<xsl:if test="$regionHierarchy = true()">
+				<xsl:variable name="mints" select="distinct-values($rdf//nmo:Mint/@rdf:about[contains(., 'nomisma.org')]|$rdf//nmo:Region/@rdf:about[contains(., 'nomisma.org')])"/>
+				<xsl:variable name="identifiers" select="replace(string-join($mints, '|'), 'http://nomisma.org/id/', '')"/>
+
+				<xsl:copy-of select="document(concat('http://nomisma.org/apis/regionHierarchy?identifiers=', encode-for-uri($identifiers)))"/>
+			</xsl:if>
+		</node>
 	</xsl:variable>
 
 	<xsl:template match="/">
@@ -160,6 +192,9 @@
 					<body>
 						<xsl:call-template name="header"/>
 						<div class="container-fluid">
+							<xsl:if test="$lang='ar'">
+								<xsl:attribute name="style">direction: rtl;</xsl:attribute>
+							</xsl:if>
 							<div class="row">
 								<div class="col-md-12">
 									<h1>301: Moved Permanently</h1>
@@ -179,6 +214,9 @@
 					<body>
 						<xsl:call-template name="header"/>
 						<div class="container-fluid">
+							<xsl:if test="$lang='ar'">
+								<xsl:attribute name="style">direction: rtl;</xsl:attribute>
+							</xsl:if>
 							<div class="row">
 								<div class="col-md-12">
 									<h1>
@@ -214,7 +252,7 @@
 			<xsl:when test="not(string($mode))">
 				<html prefix="geo: http://www.w3.org/2003/01/geo/wgs84_pos# foaf: http://xmlns.com/foaf/0.1/ dcterms: http://purl.org/dc/terms/ xsd: http://www.w3.org/2001/XMLSchema# nm:
 					http://nomisma.org/id/ ecrm: http://erlangen-crm.org/current/ rdf: http://www.w3.org/1999/02/22-rdf-syntax-ns# skos: http://www.w3.org/2004/02/skos/core# nmo:
-					http://nomisma.org/ontology#">
+					http://nomisma.org/ontology# dcmitype: http://purl.org/dc/dcmitype/">
 					<xsl:if test="string($lang)">
 						<xsl:attribute name="lang" select="$lang"/>
 					</xsl:if>
@@ -222,8 +260,9 @@
 						<xsl:call-template name="generic_head"/>
 						<xsl:choose>
 							<xsl:when test="$recordType='physical'">
-								<script type="text/javascript" src="http://openlayers.org/api/2.12/OpenLayers.js"/>
-								<script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3.2&amp;sensor=false"/>
+								<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css"/>
+								<script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"/>					
+								<script type="text/javascript" src="{$include_path}/javascript/leaflet.ajax.min.js"/>
 								<script type="text/javascript" src="{$include_path}/javascript/display_map_functions.js"/>
 							</xsl:when>
 							<!-- coin-type CSS and JS dependencies -->
@@ -239,7 +278,7 @@
 
 								<!-- mapping -->
 								<script type="text/javascript" src="http://openlayers.org/api/2.12/OpenLayers.js"/>
-								<script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3.2&amp;sensor=false"/>
+								<script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3.20&amp;sensor=false"/>
 								<script type="text/javascript" src="{$include_path}/javascript/mxn.js"/>
 								<script type="text/javascript" src="{$include_path}/javascript/timeline-2.3.0.js"/>
 								<link type="text/css" href="{$include_path}/css/timeline-2.3.0.css" rel="stylesheet"/>
@@ -255,7 +294,7 @@
 
 								<!-- mapping -->
 								<script type="text/javascript" src="http://openlayers.org/api/2.12/OpenLayers.js"/>
-								<script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3.2&amp;sensor=false"/>
+								<script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3.20&amp;sensor=false"/>
 								<script type="text/javascript" src="{$include_path}/javascript/mxn.js"/>
 								<script type="text/javascript" src="{$include_path}/javascript/timeline-2.3.0.js"/>
 								<link type="text/css" href="{$include_path}/css/timeline-2.3.0.css" rel="stylesheet"/>
@@ -277,16 +316,23 @@
 								<xsl:value-of select="$collection_type"/>
 							</span>
 							<span id="path">
-								<xsl:value-of select="$display_path"/>
+								<xsl:choose>
+									<xsl:when test="$recordType='physical'">
+										<xsl:value-of select="concat($display_path, 'id/')"/>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:value-of select="$display_path"/>
+									</xsl:otherwise>
+								</xsl:choose>
 							</span>
 							<span id="include_path">
 								<xsl:value-of select="$include_path"/>
 							</span>
-							<span id="department">
-								<xsl:value-of select="descendant::nuds:department"/>
-							</span>
 							<span id="pipeline">
 								<xsl:value-of select="$pipeline"/>
+							</span>
+							<span id="mapboxKey">
+								<xsl:value-of select="//config/mapboxKey"/>
 							</span>
 						</div>
 					</body>
@@ -313,14 +359,15 @@
 			</xsl:choose>
 		</title>
 		<!-- alternates -->
-		<link rel="alternate" type="application/xml" href="{concat($uri_space, $id)}.xml"/>
-		<link rel="alternate" type="application/rdf+xml" href="{concat($uri_space, $id)}.rdf"/>
-		<link rel="alternate" type="application/ld+json" href="{concat($uri_space, $id)}.jsonld"/>
-		<link rel="alternate" type="text/turtle" href="{concat($uri_space, $id)}.ttl"/>
-		<link rel="alternate" type="application/vnd.google-earth.kml+xml" href="{concat($uri_space, $id)}.kml"/>
+		<link rel="alternate" type="application/xml" href="{$objectUri}.xml"/>
+		<link rel="alternate" type="application/rdf+xml" href="{$objectUri}.rdf"/>
+		<link rel="alternate" type="application/ld+json" href="{$objectUri}.jsonld"/>
+		<link rel="alternate" type="text/turtle" href="{$objectUri}.ttl"/>
+		<link rel="alternate" type="application/vnd.google-earth.kml+xml" href="{$objectUri}.kml"/>
+		<link rel="alternate" type="application/application/vnd.geo+json" href="{$objectUri}.geojson"/>
 
 		<!-- open graph metadata -->
-		<meta property="og:url" content="{concat($uri_space, $id)}"/>
+		<meta property="og:url" content="{$objectUri}"/>
 		<meta property="og:type" content="article"/>
 		<meta property="og:title">
 			<xsl:attribute name="content">
@@ -334,6 +381,7 @@
 				</xsl:choose>
 			</xsl:attribute>
 		</meta>
+
 		<xsl:for-each select="//mets:fileGrp/mets:file[@USE='reference']/mets:FLocat/@xlink:href">
 			<meta property="og:image" content="{.}"/>
 		</xsl:for-each>
@@ -343,8 +391,8 @@
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"/>
 		<meta name="viewport" content="width=device-width, initial-scale=1"/>
 		<!-- bootstrap -->
-		<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"/>
-		<script type="text/javascript" src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"/>
+		<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"/>
+		<script type="text/javascript" src="http://netdna.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"/>
 		<xsl:if test="string(//config/google_analytics)">
 			<script type="text/javascript">
 				<xsl:value-of select="//config/google_analytics"/>
@@ -370,11 +418,13 @@
 						<xsl:when test="$recordType='physical'">nmo:NumismaticObject</xsl:when>
 					</xsl:choose>
 				</xsl:variable>
-				<div class="container-fluid" typeof="{$typeof}" about="{concat($uri_space, $id)}">
+				<div class="container-fluid" typeof="{$typeof}" about="{$objectUri}">
+					<xsl:if test="$lang='ar'">
+						<xsl:attribute name="style">direction: rtl;</xsl:attribute>
+					</xsl:if>
 					<xsl:choose>
 						<xsl:when test="count(/content/*[local-name()='nuds']) &gt; 0">
 							<xsl:call-template name="nuds"/>
-
 						</xsl:when>
 						<xsl:when test="count(/content/*[local-name()='nudsHoard']) &gt; 0">
 							<xsl:call-template name="nudsHoard"/>

@@ -37,6 +37,36 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:function>
+	
+	<!-- ************** PARSE ACCEPT-LANGUAGE FROM HTTP HEADER ************** -->
+	<xsl:function name="numishare:parseAcceptLanguage">
+		<xsl:param name="lang"/>
+		
+		<xsl:variable name="languages" as="item()*">
+			<xsl:choose>
+				<xsl:when test="contains($lang, 'q=')">
+					<xsl:analyze-string select="$lang" regex="([^;]+);q=[0-1]\.[0-9],?">				
+						<xsl:matching-substring>
+							<xsl:for-each select="regex-group(1)">
+								<xsl:for-each select="tokenize(., ',')">
+									<xsl:value-of select="if (contains(., '-')) then substring-before(., '-') else ."/>
+								</xsl:for-each>
+							</xsl:for-each>
+						</xsl:matching-substring>
+					</xsl:analyze-string>	
+				</xsl:when>
+				<xsl:when test="string-length($lang) &gt; 0">
+					<xsl:for-each select="tokenize($lang, ',')">
+						<xsl:value-of select="if (contains(., '-')) then substring-before(., '-') else ."/>
+					</xsl:for-each>
+				</xsl:when>
+			</xsl:choose>
+			
+		</xsl:variable>
+		
+		<xsl:sequence select="distinct-values($languages)"/>
+	</xsl:function>
+	
 	<!-- ************** RE-ASSEMBLE CATEGORY SOLR FIELDS INTO HUMAN-READABLE CATEGORY ************** -->
 	<xsl:function name="numishare:recompile_category">
 		<xsl:param name="level" as="xs:integer"/>
@@ -60,20 +90,33 @@
 			<xsl:when test="$lang='ar'">
 				<xsl:choose>
 					<xsl:when test="$label='acknowledgment'">تعريف</xsl:when>
+					<xsl:when test="$label='acquisition'">إكتساب</xsl:when>
 					<xsl:when test="$label='acquiredFrom'">مكان الحصول عليها</xsl:when>
+					<xsl:when test="$label='adminDesc'">التاريخ الإداري</xsl:when>
 					<xsl:when test="$label='appraisal'">القيمة</xsl:when>
-					<xsl:when test="$label='appraiser'">من الذى حدد القيمة </xsl:when>
+					<xsl:when test="$label='appraiser'">من الذى حدد القيمة</xsl:when>
+					<xsl:when test="$label='auction'">المزاد</xsl:when>
 					<xsl:when test="$label='authority'">المسئول عنها</xsl:when>
-					<xsl:when test="$label='axis'">المحور الرأسى </xsl:when>
-					<xsl:when test="$label='collection'">دار الكتب و الوثائق القومية المصرية </xsl:when>
-					<xsl:when test="$label='completeness'"> الحالة الخارجية </xsl:when>
-					<xsl:when test="$label='condition'">الظروف </xsl:when>
-					<xsl:when test="$label='conservationState'">حالة الترميم </xsl:when>
-					<xsl:when test="$label='coordinates'">الإحداثيات </xsl:when>
-					<xsl:when test="$label='countermark'">العلامة المائية </xsl:when>
-					<xsl:when test="$label='provenance'">مكان وجود القطعة</xsl:when>
-					<xsl:when test="$label='date'">التاريخ </xsl:when>
+					<xsl:when test="$label='axis'">المحور الرأسى</xsl:when>
+					<xsl:when test="$label='century'">القرن</xsl:when>
+					<xsl:when test="$label='chronList'">قائمة بالتسلسل الزمني</xsl:when>
+					<xsl:when test="$label='chronItem'">البند حسب التسلسل الزمني</xsl:when>
+					<xsl:when test="$label='coinType'">النوع المميز للعملة</xsl:when>
+					<xsl:when test="$label='collection'">دار الكتب و الوثائق القومية المصرية</xsl:when>
+					<xsl:when test="$label='color'">لون</xsl:when>
+					<xsl:when test="$label='completeness'">الحالة الخارجية</xsl:when>
+					<xsl:when test="$label='condition'">الظروف</xsl:when>
+					<xsl:when test="$label='conservationState'">حالة الترميم</xsl:when>
+					<xsl:when test="$label='contents'">محتويات</xsl:when>
+					<xsl:when test="$label='coordinates'">الإحداثيات</xsl:when>
+					<xsl:when test="$label='countermark'">العلامة المائية</xsl:when>
+					<xsl:when test="$label='date'">التاريخ</xsl:when>
 					<xsl:when test="$label='dateOnObject'">التاريخ مسجل على القطعة</xsl:when>
+					<xsl:when test="$label='dob'">التاريخ مسجل على القطعة</xsl:when>
+					<xsl:when test="$label='dateRange'">نطاق الفترة التاريخية</xsl:when>
+					<xsl:when test="$label='decade'">العِقد</xsl:when>
+					<xsl:when test="$label='degree'">الفَرَمان</xsl:when>
+					<xsl:when test="$label='deity'">آلِهَة</xsl:when>
 					<xsl:when test="$label='denomination'">طائفة</xsl:when>
 					<xsl:when test="$label='department'">القسم</xsl:when>
 					<xsl:when test="$label='deposit'">مكان الحفظ</xsl:when>
@@ -81,47 +124,66 @@
 					<xsl:when test="$label='diameter'">قطر</xsl:when>
 					<xsl:when test="$label='discovery'">الاكتشاف</xsl:when>
 					<xsl:when test="$label='disposition'">تقسيم و ترتيب القطع</xsl:when>
-					<xsl:when test="$label='edge'">الحواف </xsl:when>
-					<xsl:when test="$label='era'">الفترة الزمنية </xsl:when>
-					<xsl:when test="$label='finder'"> المكتشف </xsl:when>
-					<xsl:when test="$label='findspot'">مكان اكتشاف القطعة </xsl:when>
-					<xsl:when test="$label='geographic'">المكان </xsl:when>
-					<xsl:when test="$label='grade'">تصنيف الحالة </xsl:when>
-					<xsl:when test="$label='height'">الارتفاع </xsl:when>
-					<xsl:when test="$label='identifier'">رقم السجل </xsl:when>
+					<xsl:when test="$label='dynasty'">الأُسرة</xsl:when>
+					<xsl:when test="$label='edge'">الحواف</xsl:when>
+					<xsl:when test="$label='era'">الفترة الزمنية</xsl:when>
+					<xsl:when test="$label='finder'">المكتشف</xsl:when>
+					<xsl:when test="$label='findspot'">مكان اكتشاف القطعة</xsl:when>
+					<xsl:when test="$label='fromDate'">التاريخ: من</xsl:when>
+					<xsl:when test="$label='geographic'">المكان</xsl:when>
+					<xsl:when test="$label='grade'">تصنيف الحالة</xsl:when>
+					<xsl:when test="$label='height'">الارتفاع</xsl:when>
+					<xsl:when test="$label='hoardDesc'">وصف الكنز</xsl:when>
+					<xsl:when test="$label='identifier'">رقم السجل</xsl:when>
 					<xsl:when test="$label='issuer'">السئول عن الضرب</xsl:when>
 					<xsl:when test="$label='landowner'">المالك</xsl:when>
 					<xsl:when test="$label='legend'">الكتابات</xsl:when>
+					<xsl:when test="$label='manufacture'">صناعة</xsl:when>
 					<xsl:when test="$label='material'">المادة الخام</xsl:when>
 					<xsl:when test="$label='measurementsSet'">القياسات</xsl:when>
 					<xsl:when test="$label='mint'">دار الضرب</xsl:when>
 					<xsl:when test="$label='note'">ملاحظات</xsl:when>
+					<xsl:when test="$label='noteSet'">ملاحظات</xsl:when>
 					<xsl:when test="$label='objectType'">تصنيف القطعة</xsl:when>
 					<xsl:when test="$label='obverse'">الوجه</xsl:when>
+					<xsl:when test="$label='obv_leg'">نقش جانب الوجه للعملة</xsl:when>
+					<xsl:when test="$label='obv_type'">نوع الوجه على للعملة</xsl:when>
 					<xsl:when test="$label='owner'">حائز القطعة</xsl:when>
+					<xsl:when test="$label='physDesc'">وصف الخواص المادية للعملة</xsl:when>
 					<xsl:when test="$label='portrait'">الصور</xsl:when>
-					<xsl:when test="$label='private'">خصوصية القطعة </xsl:when>
-					<xsl:when test="$label='public'">عمومية القطعة </xsl:when>
+					<xsl:when test="$label='previousColl'">المجموعة السابقة</xsl:when>
+					<xsl:when test="$label='private'">خصوصية القطعة</xsl:when>
+					<xsl:when test="$label='provenance'">مكان وجود القطعة</xsl:when>
+					<xsl:when test="$label='public'">عمومية القطعة</xsl:when>
+					<xsl:when test="$label='publisher'">الناشر</xsl:when>
 					<xsl:when test="$label='reference'">مرجع</xsl:when>
+					<xsl:when test="$label='refDesc'">المراجع</xsl:when>
 					<xsl:when test="$label='region'">المكان</xsl:when>
-					<xsl:when test="$label='repository'">مكان وجود القطعة </xsl:when>
-					<xsl:when test="$label='reverse'">الظهر </xsl:when>
-					<xsl:when test="$label='saleCatalog'">الكتالوج </xsl:when>
-					<xsl:when test="$label='saleItem'">الرقم بالكتالوج </xsl:when>
-					<xsl:when test="$label='salePrice'">السعربالكتالوج </xsl:when>
-					<xsl:when test="$label='shape'">الشكل الخارجى </xsl:when>
-					<xsl:when test="$label='state'">السلطة </xsl:when>
-					<xsl:when test="$label='symbol'">الرمز </xsl:when>
-					<xsl:when test="$label='testmark'">علامات اختبارجودة القطع </xsl:when>
-					<xsl:when test="$label='title'">اللقب </xsl:when>
-					<xsl:when test="$label='type'">الطراز </xsl:when>
-					<xsl:when test="$label='thickness'">السمك </xsl:when>
-					<xsl:when test="$label='wear'">الحالة من الحفظ </xsl:when>
-					<xsl:when test="$label='weight'">الوزن </xsl:when>
-					<xsl:when test="$label='width'">العرض </xsl:when>
-					<xsl:otherwise>
-						<xsl:value-of select="numishare:regularize_node($label, 'en')"/>
-					</xsl:otherwise>
+					<xsl:when test="$label='repository'">مكان وجود القطعة</xsl:when>
+					<xsl:when test="$label='reverse'">الظهر</xsl:when>
+					<xsl:when test="$label='rev_leg'">النقش على ظهر العملة</xsl:when>
+					<xsl:when test="$label='rev_type'">نوع ظهر العملة</xsl:when>
+					<xsl:when test="$label='saleCatalog'">الكتالوج</xsl:when>
+					<xsl:when test="$label='saleItem'">الرقم بالكتالوج</xsl:when>
+					<xsl:when test="$label='salePrice'">السعربالكتالوج</xsl:when>
+					<xsl:when test="$label='shape'">الشكل الخارجى</xsl:when>
+					<xsl:when test="$label='state'">السلطة</xsl:when>
+					<xsl:when test="$label='subject'">موضوع</xsl:when>
+					<xsl:when test="$label='subjectSet'">المواضيع</xsl:when>
+					<xsl:when test="$label='symbol'">الرمز</xsl:when>
+					<xsl:when test="$label='testmark'">علامات اختبارجودة القطع</xsl:when>
+					<xsl:when test="$label='timestamp'">تاريخ تعديل أو تغيير التسجيل</xsl:when>
+					<xsl:when test="$label='title'">اللقب</xsl:when>
+					<xsl:when test="$label='toDate'">التاريخ إلى</xsl:when>
+					<xsl:when test="$label='type'">الطراز</xsl:when>
+					<xsl:when test="$label='typeDesc'">الوصف الهندسى/الفراغى</xsl:when>
+					<xsl:when test="$label='thickness'">السمك</xsl:when>
+					<xsl:when test="$label='wear'">الحالة من الحفظ</xsl:when>
+					<xsl:when test="$label='weight'">الوزن</xsl:when>
+					<xsl:when test="$label='width'">العرض</xsl:when>
+					<xsl:when test="$label='year'">السنة</xsl:when>
+					<!-- egypt project only-->
+					<xsl:when test="$label='authorizingEntity'">الفترة الزمنية</xsl:when>
 				</xsl:choose>
 			</xsl:when>
 			<xsl:when test="$lang='bg'">
@@ -803,7 +865,7 @@
 					<xsl:when test="$label='shape'">Vorm</xsl:when>
 					<xsl:when test="$label='state'">Staat</xsl:when>
 					<xsl:when test="$label='subject'">Onderwerp</xsl:when>
-					<xsl:when test="$label='subjectSet'">Onderwerpen</xsl:when>				
+					<xsl:when test="$label='subjectSet'">Onderwerpen</xsl:when>
 					<xsl:when test="$label='symbol'">Symbool</xsl:when>
 					<xsl:when test="$label='testmark'">Testmerk</xsl:when>
 					<xsl:when test="$label='timestamp'">Wijzigingsdatum record</xsl:when>
@@ -817,6 +879,105 @@
 					<xsl:when test="$label='weight'">Massa</xsl:when>
 					<xsl:when test="$label='width'">Breedte</xsl:when>
 					<xsl:when test="$label='year'">Jaar</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="numishare:regularize_node($label, 'en')"/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:when>
+			<xsl:when test="$lang='pl'">
+				<xsl:choose>
+					<xsl:when test="$label='acquisition'">nabytek</xsl:when>
+					<xsl:when test="$label='acquiredFrom'">pozyskany od</xsl:when>
+					<xsl:when test="$label='adminDesc'">historia administracyjna</xsl:when>
+					<xsl:when test="$label='appraisal'">wycena</xsl:when>
+					<xsl:when test="$label='appraiser'">wyceniający</xsl:when>
+					<xsl:when test="$label='auction'">aukcja</xsl:when>
+					<xsl:when test="$label='authority'">władca</xsl:when>
+					<xsl:when test="$label='axis'">oś</xsl:when>
+					<xsl:when test="$label='century'">stulecie</xsl:when>
+					<xsl:when test="$label='chronList'">lista chronologiczna</xsl:when>
+					<xsl:when test="$label='chronItem'">obiekt chronologii</xsl:when>
+					<xsl:when test="$label='coinType'">typ monetarny</xsl:when>
+					<xsl:when test="$label='collection'">kolekcja</xsl:when>
+					<xsl:when test="$label='color'">kolor</xsl:when>
+					<xsl:when test="$label='completeness'">kompletność</xsl:when>
+					<xsl:when test="$label='condition'">stan zachowania</xsl:when>
+					<xsl:when test="$label='conservationState'">stan konserwacji</xsl:when>
+					<xsl:when test="$label='contents'">treść</xsl:when>
+					<xsl:when test="$label='coordinates'">koordynaty</xsl:when>
+					<xsl:when test="$label='countermark'">kontramarka</xsl:when>
+					<xsl:when test="$label='date'">data</xsl:when>
+					<xsl:when test="$label='dateOnObject'">data na obiekcie</xsl:when>
+					<xsl:when test="$label='dob'">data na obiekcie</xsl:when>
+					<xsl:when test="$label='dateRange'">zakres dat</xsl:when>
+					<xsl:when test="$label='decade'">dekada</xsl:when>
+					<xsl:when test="$label='degree'">stopień</xsl:when>
+					<xsl:when test="$label='deity'">bóstwo</xsl:when>
+					<xsl:when test="$label='denomination'">nominał</xsl:when>
+					<xsl:when test="$label='department'">dział / gabinet</xsl:when>
+					<xsl:when test="$label='deposit'">depozyt</xsl:when>
+					<xsl:when test="$label='description'">opis</xsl:when>
+					<xsl:when test="$label='diameter'">średnica</xsl:when>
+					<xsl:when test="$label='discovery'">odkrycie</xsl:when>
+					<xsl:when test="$label='disposition'">rozmieszczenie</xsl:when>
+					<xsl:when test="$label='dynasty'">dynastia</xsl:when>
+					<xsl:when test="$label='edge'">rant, brzeg</xsl:when>
+					<xsl:when test="$label='era'">era</xsl:when>
+					<xsl:when test="$label='finder'">znalazca</xsl:when>
+					<xsl:when test="$label='findspot'">miejsce znalezienia</xsl:when>
+					<xsl:when test="$label='fromDate'">data od</xsl:when>
+					<xsl:when test="$label='geographic'">geograficzny</xsl:when>
+					<xsl:when test="$label='grade'">stopień</xsl:when>
+					<xsl:when test="$label='height'">wysokość</xsl:when>
+					<xsl:when test="$label='hoardDesc'">opis skarbu</xsl:when>
+					<xsl:when test="$label='identifier'">identyfikator</xsl:when>
+					<xsl:when test="$label='issuer'">emitent</xsl:when>
+					<xsl:when test="$label='landowner'">właściciel gruntu</xsl:when>
+					<xsl:when test="$label='legend'">legenda</xsl:when>
+					<xsl:when test="$label='manufacture'">technika produkcji</xsl:when>
+					<xsl:when test="$label='material'">materiał</xsl:when>
+					<xsl:when test="$label='measurementsSet'">wymiary</xsl:when>
+					<xsl:when test="$label='mint'">mennica</xsl:when>
+					<xsl:when test="$label='note'">uwaga</xsl:when>
+					<xsl:when test="$label='noteSet'">uwagi</xsl:when>
+					<xsl:when test="$label='objectType'">rodzaj obiektu</xsl:when>
+					<xsl:when test="$label='obverse'">awers</xsl:when>
+					<xsl:when test="$label='obv_leg'">legenda awersu</xsl:when>
+					<xsl:when test="$label='obv_type'">typ awersu</xsl:when>
+					<xsl:when test="$label='owner'">właściciel</xsl:when>
+					<xsl:when test="$label='physDesc'">opis fizyczny</xsl:when>
+					<xsl:when test="$label='portrait'">portret</xsl:when>
+					<xsl:when test="$label='previousColl'">poprzednia kolekcja</xsl:when>
+					<xsl:when test="$label='private'">prywatny</xsl:when>
+					<xsl:when test="$label='provenance'">proweniencja</xsl:when>
+					<xsl:when test="$label='public'">publiczny</xsl:when>
+					<xsl:when test="$label='publisher'">wydawca</xsl:when>
+					<xsl:when test="$label='reference'">odsyłacz</xsl:when>
+					<xsl:when test="$label='refDesc'">odsyłacze</xsl:when>
+					<xsl:when test="$label='region'">region</xsl:when>
+					<xsl:when test="$label='repository'">miejsce przechowywania</xsl:when>
+					<xsl:when test="$label='reverse'">rewers</xsl:when>
+					<xsl:when test="$label='rev_leg'">legenda rewersu</xsl:when>
+					<xsl:when test="$label='rev_type'">typ rewersu</xsl:when>
+					<xsl:when test="$label='saleCatalog'">katalog aukcyjny</xsl:when>
+					<xsl:when test="$label='saleItem'">numer aukcyjny</xsl:when>
+					<xsl:when test="$label='salePrice'">cena końcowa</xsl:when>
+					<xsl:when test="$label='shape'">kształt</xsl:when>
+					<xsl:when test="$label='state'">stan</xsl:when>
+					<xsl:when test="$label='subject'">temat</xsl:when>
+					<xsl:when test="$label='subjectSet'">tematy</xsl:when>
+					<xsl:when test="$label='symbol'">symbol</xsl:when>
+					<xsl:when test="$label='timestamp'">data modyfikacji</xsl:when>
+					<xsl:when test="$label='title'">tytuł</xsl:when>
+					<xsl:when test="$label='toDate'">data do</xsl:when>
+					<xsl:when test="$label='type'">typ</xsl:when>
+					<xsl:when test="$label='typeDesc'">opis typologiczny</xsl:when>
+					<xsl:when test="$label='thickness'">grubość</xsl:when>
+					<xsl:when test="$label='undertypeDesc'">opis podtypu</xsl:when>
+					<xsl:when test="$label='wear'">wytarcie</xsl:when>
+					<xsl:when test="$label='weight'">ciężar</xsl:when>
+					<xsl:when test="$label='width'">szerokość</xsl:when>
+					<xsl:when test="$label='year'">rok</xsl:when>	
 					<xsl:otherwise>
 						<xsl:value-of select="numishare:regularize_node($label, 'en')"/>
 					</xsl:otherwise>
@@ -1156,7 +1317,10 @@
 					<xsl:when test="$label='testmark'">Test Mark</xsl:when>
 					<xsl:when test="$label='typeDesc'">Typological Description</xsl:when>
 					<xsl:when test="$label = 'timestamp'">Date Record Modified</xsl:when>
+					<xsl:when test="$label='typeNumber'">Coin Type Number</xsl:when>
 					<xsl:when test="$label='undertypeDesc'">Undertype Description</xsl:when>
+					<!-- egypt project only-->
+					<xsl:when test="$label='authorizingEntity'">Political/Dynastic Entity</xsl:when>
 					<xsl:otherwise>
 						<xsl:value-of select="concat(upper-case(substring($label, 1, 1)), substring($label, 2))"/>
 					</xsl:otherwise>
@@ -1209,27 +1373,115 @@
 		<xsl:choose>
 			<xsl:when test="$lang='ar'">
 				<xsl:choose>
-					<!-- header menu labels -->
 					<xsl:when test="$label='header_home'">المكان</xsl:when>
-					<xsl:when test="$label='header_search'">البحث</xsl:when>
 					<xsl:when test="$label='header_browse'">البحث بالتحديد</xsl:when>
+					<xsl:when test="$label='header_search'">البحث</xsl:when>
 					<xsl:when test="$label='header_maps'">الخرائط</xsl:when>
 					<xsl:when test="$label='header_compare'">المقارنة</xsl:when>
 					<xsl:when test="$label='header_language'">اللغة</xsl:when>
+					<xsl:when test="$label='header_contributors'">المساهمين</xsl:when>
+					<xsl:when test="$label='header_symbols'">حرف</xsl:when>
+					<xsl:when test="$label='header_analyze'">لتحليل الكنز</xsl:when>
+					<xsl:when test="$label='header_visualize'">التصور المرئى للإستفسارات</xsl:when>
+					<xsl:when test="$label='display_summary'">ملخص</xsl:when>
+					<xsl:when test="$label='display_map'">خريطة</xsl:when>
+					<xsl:when test="$label='display_administrative'">الإداري</xsl:when>
+					<xsl:when test="$label='display_visualization'">التصور المرئى</xsl:when>
+					<xsl:when test="$label='display_data-download'">تحميل البيانات</xsl:when>
+					<xsl:when test="$label='display_quantitative'">التحليل الكمى</xsl:when>
+					<xsl:when test="$label='display_date-analysis'">تحليل بيانات</xsl:when>
+					<xsl:when test="$label='display_contents'">المحتويات</xsl:when>
+					<xsl:when test="$label='display_examples'">أمثلة من هذا النوع</xsl:when>
+					<xsl:when test="$label='results_all-terms'">جميع المصطلحات</xsl:when>
+					<xsl:when test="$label='results_map-results'">نتائج الخريطة</xsl:when>
+					<xsl:when test="$label='results_filters'">عوامل تصفية البحث</xsl:when>
+					<xsl:when test="$label='results_keyword'">كلمة أساسية</xsl:when>
+					<xsl:when test="$label='results_clear-all'">حذف جميع المصطلحات</xsl:when>
+					<xsl:when test="$label='results_data-options'">خيارات البيانات</xsl:when>
+					<xsl:when test="$label='results_refine-results'">تحسين النتائج</xsl:when>
+					<xsl:when test="$label='results_quick-search'">بحث سريع</xsl:when>
+					<xsl:when test="$label='results_has-images'">يشمل صور</xsl:when>
+					<xsl:when test="$label='results_refine-search'">تحسين البحث</xsl:when>
+					<xsl:when test="$label='results_select'">إختر من القائمة</xsl:when>
+					<xsl:when test="$label='results_sort-results'">ترتيب النتائج</xsl:when>
+					<xsl:when test="$label='results_sort-category'">ترتيب الفئات</xsl:when>
+					<xsl:when test="$label='results_ascending'">تصاعدى</xsl:when>
+					<xsl:when test="$label='results_descending'">تنازلى</xsl:when>
+					<xsl:when test="$label='results_result-desc'">عرض سجلات من أ أ إلى ب ب من إجمالى النتائج ج ج بالكامل</xsl:when>
+					<xsl:when test="$label='results_coin'">عملة معدنية</xsl:when>
+					<xsl:when test="$label='results_coins'">عملات معدنية</xsl:when>
+					<xsl:when test="$label='results_hoard'">الكنز</xsl:when>
+					<xsl:when test="$label='results_hoards'">الكنوز</xsl:when>
+					<xsl:when test="$label='results_and'">و</xsl:when>
+					<xsl:when test="$label='visualize_typological'">تحليل الخواص الهندسية و الفراغية</xsl:when>
+					<xsl:when test="$label='visualize_measurement'">تحليل القياسات</xsl:when>
+					<xsl:when test="$label='visualize_desc'">استخدم الخيارات و التصور المرئى للبيانات أدناه لتوليد مخطط بيانى استنادا إلى هذه المعايير. تعليمات إستخدام هذه الخاصية يمكن العثور عليها هنا</xsl:when>
+					<xsl:when test="$label='visualize_type_desc'">استخدم هذه الخاصية لإظهار التصور البصرى للنسب المئوية أو الظهور العددى للنماذج التالية</xsl:when>
+					<xsl:when test="$label='visualize_date_desc'">إستخدم هذه الخاصية لتوليد النسب المئوية أو الظهور العددى للقطع النقدية من تاريخ معين ضمن الكنوز</xsl:when>
+					<xsl:when test="$label='visualize_csv_desc'">إستخدم هذه الخاصية لتحميل سى-إس-ڤى للبحث المُقَدَّم و الكنوز المختارة</xsl:when>
+					<xsl:when test="$label='visualize_select_measurement'">إختر المقاس</xsl:when>
+					<xsl:when test="$label='visualize_chart_type'">حدد نوع الرسم البياني</xsl:when>
+					<xsl:when test="$label='visualize_categories'">إختر الفئات للتحليل</xsl:when>
+					<xsl:when test="$label='visualize_select_hoards'">إختر الكنوز</xsl:when>
+					<xsl:when test="$label='visualize_select_hoards_optional'">إختر الكنوز للمقارنة، إستخدام بين القوسين اختيارى</xsl:when>
+					<xsl:when test="$label='visualize_compare_category'">مقارنة حسب الفئة</xsl:when>
+					<xsl:when test="$label='visualize_compare_optional'">مقارنة مع الإستفسارات الأخرى، إستخدام بين القوسين إختيارى</xsl:when>
+					<xsl:when test="$label='visualize_compare'">مقارنة بين الإستفسارات</xsl:when>
+					<xsl:when test="$label='visualize_comparison_query'">إستفسار للمقارنة</xsl:when>
+					<xsl:when test="$label='visualize_add_custom'">إضافة بحث/إستفسار مخصص</xsl:when>
+					<xsl:when test="$label='visualize_custom_query'">بحث/إستفسار مخصص</xsl:when>
+					<xsl:when test="$label='visualize_remove_query'">إزالة البحث</xsl:when>
+					<xsl:when test="$label='visualize_add_query'">أضِف بحث</xsl:when>
+					<xsl:when test="$label='visualize_add_queries'">أضِف أبحاث</xsl:when>
+					<xsl:when test="$label='visualize_add_new'">إضافة جديدة</xsl:when>
+					<xsl:when test="$label='visualize_query'">إستعلام/بحث</xsl:when>
+					<xsl:when test="$label='visualize_filter_list'">قائمة عوامل التصفية</xsl:when>
+					<xsl:when test="$label='visualize_filter_query'">أضِف عوامل تصفية للإستفسارات</xsl:when>
+					<xsl:when test="$label='visualize_remove_filter'">إزالة عوامل التصفية</xsl:when>
+					<xsl:when test="$label='visualize_add_query_desc'">إستخدم القوائم المنسدلة أدناه لصياغة الإستعلام الخاص بك. لا يمكن تحديد نطاق التاريخ أكثر مرة واحدة في الإستعلام</xsl:when>
+					<xsl:when test="$label='visualize_optional_settings'">محدِدات اختيارية</xsl:when>
+					<xsl:when test="$label='visualize_hide-show'">خيارات الإخفاء أو العرض</xsl:when>
+					<xsl:when test="$label='visualize_stacking_options'">تراص الخيارات</xsl:when>
+					<xsl:when test="$label='visualize_exclude_certainty_codes'">إستبعاد الأكواد اليقينية</xsl:when>
+					<xsl:when test="$label='visualize_arrange'">رَتِّب حسب الفترات الزمنية - إختيارى</xsl:when>
+					<xsl:when test="$label='visualize_interval'">رَتِّب على فترات زمنية متساوية، بالعام</xsl:when>
+					<xsl:when test="$label='visualize_duration'">المدة</xsl:when>
+					<xsl:when test="$label='visualize_calculate'">إحسب ما تم إختياره</xsl:when>
+					<xsl:when test="$label='visualize_generate'">توليد الرسم البياني</xsl:when>
+					<xsl:when test="$label='numeric_count'">عدد</xsl:when>
+					<xsl:when test="$label='numeric_percentage'">نسبة مئوية</xsl:when>
+					<xsl:when test="$label='numeric_cumulative'">تراكمى</xsl:when>
+					<xsl:when test="$label='numeric_cumulative_percentage'">نسبة مئوية تراكمية</xsl:when>
+					<xsl:when test="$label='chart_bar'">شريط الرسم البياني</xsl:when>
+					<xsl:when test="$label='chart_column'">عمود الرسم البياني</xsl:when>
+					<xsl:when test="$label='chart_area'">منطقة الرسم البياني</xsl:when>
+					<xsl:when test="$label='chart_spline'">المنحنى البياني</xsl:when>
+					<xsl:when test="$label='chart_areaspline'">المنطقة المحصورة تحت المنحنى البيانى أو بين منحنيين بيانيين</xsl:when>
+					<xsl:when test="$label='chart_line'">خط الرسم البيانى</xsl:when>
+					<xsl:when test="$label='visualize_alert'">تنبيه</xsl:when>
+					<xsl:when test="$label='visualize_error1'">مطلوب الفترات المتساوية و مدتها</xsl:when>
+					<xsl:when test="$label='visualize_error2'">تاريخ نهاية المدة يجب أن يكون لاحقاً لتاريخ بدايتها</xsl:when>
+					<xsl:when test="$label='visualize_error3'">يجب إختيار الفئة/النوع</xsl:when>
+					<xsl:when test="$label='visualize_error4'">يجب إختيار كنز واحد على الأقل، و يمكن حتى ثمانية</xsl:when>
+					<xsl:when test="$label='visualize_error5'">يمكن أختيار ما يصل إلى ثمانية كنو</xsl:when>
+					<xsl:when test="$label='visualize_error6'">يجب إختيار كنز واحد على الأقل، و يمكن حتى ثلاثين</xsl:when>
+					<xsl:when test="$label='visualize_error7'">يمكن أختيار ما يصل إلى ثلاثين كنز</xsl:when>
 					<xsl:when test="$label='lang_ar'">العربيّة</xsl:when>
+					<xsl:when test="$label='lang_bg'">البلغارية</xsl:when>
+					<xsl:when test="$label='lang_da'">الدنماركية</xsl:when>
 					<xsl:when test="$label='lang_de'">ألماني</xsl:when>
-					<xsl:when test="$label='lang_en'">إنجليزي</xsl:when>
-					<xsl:when test="$label='lang_fr'">فرنسي</xsl:when>
-					<xsl:when test="$label='lang_ro'">رومانيا</xsl:when>
-					<xsl:when test="$label='lang_pl'">بولندي</xsl:when>
-					<xsl:when test="$label='lang_ru'">الروسية</xsl:when>
-					<xsl:when test="$label='lang_nl'">هولندي</xsl:when>
-					<xsl:when test="$label='lang_sv'">اللغة السويدية</xsl:when>
 					<xsl:when test="$label='lang_el'">اللغة اليونانية</xsl:when>
-					<xsl:when test="$label='lang_tr'">اللغة التركية</xsl:when>
+					<xsl:when test="$label='lang_en'">إنجليزي</xsl:when>
+					<xsl:when test="$label='lang_es'">الأسبانية</xsl:when>
+					<xsl:when test="$label='lang_fr'">فرنسي</xsl:when>
 					<xsl:when test="$label='lang_it'">الإيطالي</xsl:when>
-					<xsl:when test="$label='lang_da'">نوع كعك</xsl:when>
+					<xsl:when test="$label='lang_nl'">هولندي</xsl:when>
 					<xsl:when test="$label='lang_nn'">اللغة النروجية</xsl:when>
+					<xsl:when test="$label='lang_pl'">بولندي</xsl:when>
+					<xsl:when test="$label='lang_ro'">رومانيا</xsl:when>
+					<xsl:when test="$label='lang_ru'">الروسية</xsl:when>
+					<xsl:when test="$label='lang_sv'">اللغة السويدية</xsl:when>
+					<xsl:when test="$label='lang_tr'">اللغة التركية</xsl:when>
 					<xsl:otherwise>
 						<xsl:value-of select="numishare:normalizeLabel($label, 'en')"/>
 					</xsl:otherwise>
@@ -1243,6 +1495,8 @@
 					<xsl:when test="$label='header_maps'">Карти</xsl:when>
 					<xsl:when test="$label='header_compare'">Сравнение</xsl:when>
 					<xsl:when test="$label='header_language'">Езици</xsl:when>
+					<xsl:when test="$label='header_contributors'">Сътрудници</xsl:when>
+					<xsl:when test="$label='header_symbols'">Символи</xsl:when>
 					<xsl:when test="$label='header_analyze'">Анализ на монетни съкровища</xsl:when>
 					<xsl:when test="$label='header_visualize'">Визуализация на запитванията</xsl:when>
 					<xsl:when test="$label='display_summary'">Обобщение</xsl:when>
@@ -1356,6 +1610,8 @@
 					<xsl:when test="$label='header_maps'">Karten</xsl:when>
 					<xsl:when test="$label='header_compare'">Vergleichen</xsl:when>
 					<xsl:when test="$label='header_language'">Sprache</xsl:when>
+					<xsl:when test="$label='header_contributors'">Mitwirkende</xsl:when>
+					<xsl:when test="$label='header_symbols'">Symbole</xsl:when>
 					<xsl:when test="$label='header_analyze'">Hortfunde analysieren</xsl:when>
 					<xsl:when test="$label='header_visualize'">Anfragen visualisieren</xsl:when>
 					<xsl:when test="$label='display_summary'">Zusammenfassung</xsl:when>
@@ -1472,6 +1728,8 @@
 					<xsl:when test="$label='header_maps'">Χάρτες</xsl:when>
 					<xsl:when test="$label='header_compare'">Αντιπαραβολή</xsl:when>
 					<xsl:when test="$label='header_language'">Γλώσσα</xsl:when>
+					<xsl:when test="$label='header_contributors'">Συντελεστές</xsl:when>
+					<xsl:when test="$label='header_symbols'">σύμβολα</xsl:when>
 					<xsl:when test="$label='header_analyze'">Ανάλυση «θησαυρών»</xsl:when>
 					<xsl:when test="$label='header_visualize'">Οπτικοποίηση αναζητήσεων</xsl:when>
 					<xsl:when test="$label='display_summary'">Συνοπτική παρουσίαση</xsl:when>
@@ -1587,6 +1845,8 @@
 					<xsl:when test="$label='header_maps'">Mapa de la web</xsl:when>
 					<xsl:when test="$label='header_compare'">Comparar</xsl:when>
 					<xsl:when test="$label='header_language'">Lengua</xsl:when>
+					<xsl:when test="$label='header_contributors'">Colaboradores</xsl:when>
+					<xsl:when test="$label='header_symbols'">Símbolos</xsl:when>
 					<xsl:when test="$label='header_analyze'">Análisis</xsl:when>
 					<xsl:when test="$label='header_visualize'">Visualizar</xsl:when>
 					<xsl:when test="$label='display_summary'">Sumario</xsl:when>
@@ -1688,6 +1948,8 @@
 					<xsl:when test="$label='header_maps'">Cartes</xsl:when>
 					<xsl:when test="$label='header_compare'">Comparer</xsl:when>
 					<xsl:when test="$label='header_language'">Langue</xsl:when>
+					<xsl:when test="$label='header_contributors'">Contributeurs</xsl:when>
+					<xsl:when test="$label='header_symbols'">Symboles</xsl:when>
 					<xsl:when test="$label='header_analyze'">Analyse des trésors</xsl:when>
 					<xsl:when test="$label='header_visualize'">Visualiser la recherche</xsl:when>
 					<xsl:when test="$label='display_summary'">Résumé</xsl:when>
@@ -1805,6 +2067,8 @@
 					<xsl:when test="$label='header_maps'">Mappe</xsl:when>
 					<xsl:when test="$label='header_compare'">Confronta</xsl:when>
 					<xsl:when test="$label='header_language'">Lingua</xsl:when>
+					<xsl:when test="$label='header_contributors'">Contributori</xsl:when>
+					<xsl:when test="$label='header_symbols'">Simboli</xsl:when>
 					<xsl:when test="$label='header_analyze'">Analisi dei ripostigli</xsl:when>
 					<xsl:when test="$label='header_visualize'">Visualizza queries</xsl:when>
 					<xsl:when test="$label='display_summary'">Sommario</xsl:when>
@@ -1889,6 +2153,8 @@
 					<xsl:when test="$label='header_maps'">Kaarten</xsl:when>
 					<xsl:when test="$label='header_compare'">Vergelijken</xsl:when>
 					<xsl:when test="$label='header_language'">Taal</xsl:when>
+					<xsl:when test="$label='header_contributors'">Medewerkers</xsl:when>
+					<xsl:when test="$label='header_symbols'">Symbolen</xsl:when>
 					<xsl:when test="$label='header_analyze'">Analyseer schatvondsten</xsl:when>
 					<xsl:when test="$label='header_visualize'">Visualiseer zoekvraag</xsl:when>
 					<xsl:when test="$label='display_summary'">Samenvatting</xsl:when>
@@ -1941,6 +2207,122 @@
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
+			<xsl:when test="$lang='pl'">
+				<xsl:choose>
+					<xsl:when test="$label='header_home'">Strona startowa</xsl:when>
+					<xsl:when test="$label='header_about'">O nas</xsl:when>					
+					<xsl:when test="$label='header_browse'">Przeglądaj</xsl:when>
+					<xsl:when test="$label='header_search'">Szukaj</xsl:when>
+					<xsl:when test="$label='header_maps'">Mapy</xsl:when>
+					<xsl:when test="$label='header_compare'">Porównaj</xsl:when>
+					<xsl:when test="$label='header_contributors'">Współpracownicy</xsl:when>
+					<xsl:when test="$label='header_symbols'">Symbolika</xsl:when>
+					<xsl:when test="$label='header_language'">Język</xsl:when>
+					<xsl:when test="$label='header_analyze'">Analiza znalezisk skarbów</xsl:when>
+					<xsl:when test="$label='header_visualize'">Wizualizacja kwerend</xsl:when>
+					<xsl:when test="$label='display_summary'">Streszczenie</xsl:when>
+					<xsl:when test="$label='display_map'">Mapa</xsl:when>
+					<xsl:when test="$label='display_administrative'">administracyjny</xsl:when>
+					<xsl:when test="$label='display_visualization'">wizualizacja</xsl:when>
+					<xsl:when test="$label='display_data-download'">ściąganie danych</xsl:when>
+					<xsl:when test="$label='display_quantitative'">analiza ilościowa</xsl:when>
+					<xsl:when test="$label='display_date-analysis'">analiza datowania</xsl:when>
+					<xsl:when test="$label='display_contents'">treść</xsl:when>
+					<xsl:when test="$label='display_examples'">egzemplarze w tym typie</xsl:when>
+					<xsl:when test="$label='results_all-terms'">wszystkie kategorie</xsl:when>
+					<xsl:when test="$label='results_map-results'">pokaż wyniki na mapie</xsl:when>
+					<xsl:when test="$label='results_filters'">filtruj wyniki wyszukiwania</xsl:when>
+					<xsl:when test="$label='results_keyword'">słowa kluczowe</xsl:when>
+					<xsl:when test="$label='results_clear-all'">wyczyść wszystko</xsl:when>
+					<xsl:when test="$label='results_data-options'">opcje danych</xsl:when>
+					<xsl:when test="$label='results_refine-results'">zawężone wyniki wyszukiwania</xsl:when>
+					<xsl:when test="$label='results_quick-search'">szybkie wyszukiwanie</xsl:when>
+					<xsl:when test="$label='results_has-images'">z obrazkiem</xsl:when>
+					<xsl:when test="$label='results_refine-search'">zawęź wyszukiwanie</xsl:when>
+					<xsl:when test="$label='results_select'">wybierz z listy</xsl:when>
+					<xsl:when test="$label='results_sort-results'">sortuj wyniki wyszukiwania</xsl:when>
+					<xsl:when test="$label='results_sort-category'">sortuj kategorie wyszukiwania</xsl:when>
+					<xsl:when test="$label='results_ascending'">wyniki rosnąco</xsl:when>
+					<xsl:when test="$label='results_descending'">wyniki malejąco</xsl:when>
+					<xsl:when test="$label='results_result-desc'">pokazuje rekordy od XX do YY z wszystkich wyników ZZ</xsl:when>
+					<xsl:when test="$label='results_coin'">moneta</xsl:when>
+					<xsl:when test="$label='results_coins'">monety</xsl:when>
+					<xsl:when test="$label='results_hoard'">skarb</xsl:when>
+					<xsl:when test="$label='results_hoards'">skarby</xsl:when>
+					<xsl:when test="$label='results_and'">i</xsl:when>
+					<xsl:when test="$label='visualize_typological'">analiza typologiczna</xsl:when>
+					<xsl:when test="$label='visualize_measurement'">analiza metrologiczna</xsl:when>
+					<xsl:when test="$label='visualize_desc'">Użyj opcji wybierania i wizualizacji danych poniżej aby uzyskać wykres oparty na wybranych parametrach. Instrukcje korzystania z tej opcji znajdują
+						się tu</xsl:when>
+					<xsl:when test="$label='visualize_type_desc'">Użyj tej opcji aby wizualizować procentowe lub liczbowe proporcje dla następujących typów</xsl:when>
+					<xsl:when test="$label='visualize_date_desc'">Użyj tej opcji aby przedstawić procentowe lub liczbowe proporocje monet o określonym datowaniu w skarbach</xsl:when>
+					<xsl:when test="$label='visualize_csv_desc'">Użyj tej opcji aby ściągnąć dokument CSV dla danej kwerendy i wybranych skarbów</xsl:when>
+					<xsl:when test="$label='visualize_select_measurement'">wybierz wymiary</xsl:when>
+					<xsl:when test="$label='visualize_chart_type'">wybierz typ wykresu</xsl:when>
+					<xsl:when test="$label='visualize_categories'">wybierz kategorie do analizy</xsl:when>
+					<xsl:when test="$label='visualize_select_hoards'">wybierz skarby</xsl:when>
+					<xsl:when test="$label='visualize_select_hoards_optional'">wybierz skarby do porównania (opcjonalnie)</xsl:when>
+					<xsl:when test="$label='visualize_compare_category'">porównaj kategoriami</xsl:when>
+					<xsl:when test="$label='visualize_compare_optional'">porównaj z innymi kwerendami (opcjonalnie)</xsl:when>
+					<xsl:when test="$label='visualize_compare'">porównaj kwerendy</xsl:when>
+					<xsl:when test="$label='visualize_comparison_query'">kwerenda porównawcza</xsl:when>
+					<xsl:when test="$label='visualize_add_custom'">dodaj kwerendę niestandardową</xsl:when>
+					<xsl:when test="$label='visualize_custom_query'">kwerenda niestandardowa</xsl:when>
+					<xsl:when test="$label='visualize_remove_query'">usuń kwerendę</xsl:when>
+					<xsl:when test="$label='visualize_add_query'">dodaj kwerendę</xsl:when>
+					<xsl:when test="$label='visualize_add_queries'">dodaj kwerendy</xsl:when>
+					<xsl:when test="$label='visualize_add_new'">dodaj nową</xsl:when>
+					<xsl:when test="$label='visualize_query'">kwerenda</xsl:when>
+					<xsl:when test="$label='visualize_filter_list'">filtruj wyniki na liście</xsl:when>
+					<xsl:when test="$label='visualize_filter_query'">filtruj kwerendę</xsl:when>
+					<xsl:when test="$label='visualize_remove_filter'">usuń filtr</xsl:when>
+					<xsl:when test="$label='visualize_add_query_desc'">Użyj list rozwijanych poniżej aby sformułować swoją kwerendę dotyczącą wymiarów. Zakres dat może być tylko raz określony</xsl:when>
+					<xsl:when test="$label='visualize_optional_settings'">ustawienia opcjonalne</xsl:when>
+					<xsl:when test="$label='visualize_hide-show'">ukryj/pokaż opcje</xsl:when>
+					<xsl:when test="$label='visualize_stacking_options'">opcje widoku</xsl:when>
+					<xsl:when test="$label='visualize_arrange'">organizuj w interwałach</xsl:when>
+					<xsl:when test="$label='visualize_interval'">interwał (w latach)</xsl:when>
+					<xsl:when test="$label='visualize_duration'">czas trwania</xsl:when>
+					<xsl:when test="$label='visualize_calculate'">policz wybrane</xsl:when>
+					<xsl:when test="$label='visualize_generate'">pokaż wykres</xsl:when>
+					<xsl:when test="$label='numeric_count'">policz</xsl:when>
+					<xsl:when test="$label='numeric_percentage'">procent</xsl:when>
+					<xsl:when test="$label='numeric_cumulative'">sumarycznie</xsl:when>
+					<xsl:when test="$label='numeric_cumulative_percentage'">sumarycznie procentowo</xsl:when>
+					<xsl:when test="$label='chart_bar'">wykres kolumnowy</xsl:when>
+					<xsl:when test="$label='chart_column'">kolumna</xsl:when>
+					<xsl:when test="$label='chart_area'">obszar</xsl:when>
+					<xsl:when test="$label='chart_spline'">krzywa</xsl:when>
+					<xsl:when test="$label='chart_line'">linia</xsl:when>
+					<xsl:when test="$label='visualize_alert'">alert</xsl:when>
+					<xsl:when test="$label='visualize_error1'">Interwał i czas trwania wymagane.</xsl:when>
+					<xsl:when test="$label='visualize_error2'">Data do nie może być wcześniejsza niż data od</xsl:when>
+					<xsl:when test="$label='visualize_error3'">Należy wybrać kategorię.</xsl:when>
+					<xsl:when test="$label='visualize_error4'">Wybrać można co najmniej 1 i nie więcej niż 8 skarbów.</xsl:when>
+					<xsl:when test="$label='visualize_error5'">Wybrać można do 8 skarbów.</xsl:when>
+					<xsl:when test="$label='visualize_error6'">Wybrać można co najmniej 1 i nie więcej niż 30 skarbów.</xsl:when>
+					<xsl:when test="$label='visualize_error7'">Wybrać można do 30 skarbów.</xsl:when>
+					<xsl:when test="$label='lang_ar'">Arabski</xsl:when>
+					<xsl:when test="$label='lang_bg'">Bułgarski</xsl:when>
+					<xsl:when test="$label='lang_da'">Duński</xsl:when>
+					<xsl:when test="$label='lang_de'">Niemiecki</xsl:when>
+					<xsl:when test="$label='lang_el'">Grecki</xsl:when>
+					<xsl:when test="$label='lang_en'">Angielski</xsl:when>
+					<xsl:when test="$label='lang_es'">Hiszpański</xsl:when>
+					<xsl:when test="$label='lang_fr'">Francuski</xsl:when>
+					<xsl:when test="$label='lang_it'">Włoski</xsl:when>
+					<xsl:when test="$label='lang_nl'">Holenderski</xsl:when>
+					<xsl:when test="$label='lang_nn'">Norweski</xsl:when>
+					<xsl:when test="$label='lang_pl'">Polski</xsl:when>
+					<xsl:when test="$label='lang_ro'">Rumuński</xsl:when>
+					<xsl:when test="$label='lang_ru'">Rosyjski</xsl:when>
+					<xsl:when test="$label='lang_sv'">Szwedzki</xsl:when>
+					<xsl:when test="$label='lang_tr'">Turecki</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="numishare:normalizeLabel($label, 'en')"/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:when>
 			<xsl:when test="$lang='ro'">
 				<xsl:choose>
 					<xsl:when test="$label='header_home'">Acasă</xsl:when>
@@ -1949,6 +2331,8 @@
 					<xsl:when test="$label='header_maps'">Hărţi</xsl:when>
 					<xsl:when test="$label='header_compare'">Comparativ</xsl:when>
 					<xsl:when test="$label='header_language'">Limbă</xsl:when>
+					<xsl:when test="$label='header_contributors'">Colaborator</xsl:when>
+					<xsl:when test="$label='header_symbols'">Simboluri</xsl:when>
 					<xsl:when test="$label='header_analyze'">Analiza tezaurelor</xsl:when>
 					<xsl:when test="$label='header_visualize'">Vizualizarea cercetării</xsl:when>
 					<xsl:when test="$label='display_summary'">Rezumat</xsl:when>
@@ -2065,6 +2449,8 @@
 					<xsl:when test="$label='header_browse'">Обзор</xsl:when>
 					<xsl:when test="$label='header_search'">Поиск</xsl:when>
 					<xsl:when test="$label='header_maps'">Карты</xsl:when>
+					<xsl:when test="$label='header_contributors'">Авторы</xsl:when>
+					<xsl:when test="$label='header_symbols'">Символы</xsl:when>
 					<xsl:when test="$label='header_compare'">Сравнить</xsl:when>
 					<xsl:when test="$label='header_language'">Язык</xsl:when>
 					<xsl:when test="$label='header_analyze'">Анализ кладов</xsl:when>
@@ -2127,6 +2513,8 @@
 					<xsl:when test="$label='header_maps'">Kartor</xsl:when>
 					<xsl:when test="$label='header_compare'">Jämföra</xsl:when>
 					<xsl:when test="$label='header_language'">Språk</xsl:when>
+					<xsl:when test="$label='header_contributors'">Bidragsgivare</xsl:when>
+					<xsl:when test="$label='header_symbols'">Symboler</xsl:when>
 					<xsl:when test="$label='header_analyze'">Fyndanalys</xsl:when>
 					<xsl:when test="$label='header_visualize'">Visualisera sökfrågor</xsl:when>
 					<xsl:when test="$label='display_summary'">Sammanfattning</xsl:when>
@@ -2185,6 +2573,7 @@
 					<xsl:when test="$label='header_maps'">Maps</xsl:when>
 					<xsl:when test="$label='header_contributors'">Contributors</xsl:when>
 					<xsl:when test="$label='header_compare'">Compare</xsl:when>
+					<xsl:when test="$label='header_symbols'">Symbols</xsl:when>
 					<xsl:when test="$label='header_analyze'">Analyze Hoards</xsl:when>
 					<xsl:when test="$label='header_visualize'">Visualize Queries</xsl:when>
 					<xsl:when test="$label='header_language'">Language</xsl:when>
@@ -2298,21 +2687,35 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:function>
-	<xsl:function name="numishare:normalizeYear">
-		<xsl:param name="year" as="xs:double"/>
+	
+	<xsl:function name="numishare:normalizeDate">
+		<xsl:param name="date"/>
+		
+		<xsl:if test="substring($date, 1, 1) != '-' and number(substring($date, 1, 4)) &lt; 500">
+			<xsl:text>A.D. </xsl:text>
+		</xsl:if>
+		
 		<xsl:choose>
-			<xsl:when test="$year &lt; 0">
-				<xsl:value-of select="abs($year)"/>
-				<xsl:text> B.C.</xsl:text>
+			<xsl:when test="$date castable as xs:dateTime">
+				<xsl:value-of select="format-dateTime($date, '[D] [MNn] [Y], [H01]:[m01]')"/>
 			</xsl:when>
-			<xsl:otherwise>
-				<xsl:if test="$year &lt;=400">
-					<xsl:text>A.D. </xsl:text>
-				</xsl:if>
-				<xsl:value-of select="$year"/>
-			</xsl:otherwise>
-		</xsl:choose>
+			<xsl:when test="$date castable as xs:date">
+				<xsl:value-of select="format-date($date, '[D] [MNn] [Y]')"/>
+			</xsl:when>
+			<xsl:when test="$date castable as xs:gYearMonth">
+				<xsl:variable name="normalized" select="xs:date(concat($date, '-01'))"/>
+				<xsl:value-of select="format-date($normalized, '[MNn] [Y]')"/>
+			</xsl:when>
+			<xsl:when test="$date castable as xs:gYear">
+				<xsl:value-of select="abs(number($date))"/>
+			</xsl:when>
+		</xsl:choose>	
+		
+		<xsl:if test="substring($date, 1, 1) = '-'">
+			<xsl:text> B.C.</xsl:text>
+		</xsl:if>
 	</xsl:function>
+	
 	<xsl:function name="numishare:normalize_century">
 		<xsl:param name="name"/>
 		<xsl:variable name="cleaned" select="number(translate($name, '\', ''))"/>
@@ -2339,22 +2742,46 @@
 		</xsl:if>
 	</xsl:function>
 	
+	<xsl:function name="numishare:recordCount">
+		<xsl:param name="lang"/>
+		<xsl:param name="startRecord"/>
+		<xsl:param name="endRecord"/>
+		<xsl:param name="numFound"/>
+		
+		<xsl:choose>
+			<xsl:when test="$lang='ar'">
+				<xsl:value-of select="replace(replace(replace(numishare:normalizeLabel('results_result-desc', $lang), 'أ أ', string($startRecord)), 'ب ب', string($endRecord)), 'ج ج',
+					string($numFound))"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="replace(replace(replace(numishare:normalizeLabel('results_result-desc', $lang), 'XX', string($startRecord)), 'YY', string($endRecord)), 'ZZ',
+					string($numFound))"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:function>
+
 	<!-- this function will normalize a NUDS element into a nomisma property for RDFa -->
 	<xsl:function name="numishare:normalizeProperty">
+		<xsl:param name="recordType"/>
 		<xsl:param name="name"/>
-		
+
 		<xsl:choose>
 			<xsl:when test="$name='fromDate'">nmo:hasStartDate</xsl:when>
 			<xsl:when test="$name='toDate'">nmo:hasEndDate</xsl:when>
 			<xsl:when test="$name='subject'">dcterms:subject</xsl:when>
 			<xsl:when test="$name='description'">dcterms:description</xsl:when>
-			<xsl:when test="$name='objectType'">nmo:hasObjectType</xsl:when>
+			<xsl:when test="$name='objectType'">
+				<xsl:choose>
+					<xsl:when test="$recordType='conceptual'">nmo:representsObjectType</xsl:when>
+					<xsl:otherwise>nmo:hasObjectType</xsl:otherwise>
+				</xsl:choose>
+			</xsl:when>
 			<xsl:otherwise>
 				<xsl:value-of select="concat('nmo:has', upper-case(substring($name, 1, 1)), substring($name, 2))"/>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:function>
-	
+
 	<xsl:function name="numishare:getNomismaLabel">
 		<xsl:param name="rdf" as="element()*"/>
 		<xsl:param name="lang"/>
