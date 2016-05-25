@@ -18,7 +18,7 @@
 	<!-- config variables -->
 	<xsl:variable name="url" select="/content/config/url"/>
 	<xsl:variable name="collection_type" select="/content/config/collection_type"/>
-	<xsl:variable name="display_path">../</xsl:variable>
+	<xsl:variable name="display_path">../search/</xsl:variable>
 	<xsl:variable name="include_path" select="concat('http://', doc('input:request')/request/server-name, ':8080/orbeon/themes/', //config/theme/orbeon_theme)"/>
 	<xsl:variable name="recordType">
 		<xsl:choose>
@@ -201,16 +201,7 @@
 					<span id="collection_type">
 						<xsl:value-of select="$collection_type"/>
 					</span>
-					<span id="path">
-						<xsl:choose>
-							<xsl:when test="$recordType='physical'">
-								<xsl:value-of select="concat($display_path, 'id/')"/>
-							</xsl:when>
-							<xsl:otherwise>
-								<xsl:value-of select="$display_path"/>
-							</xsl:otherwise>
-						</xsl:choose>						
-					</span>
+					<span id="path"/>
 					<span id="pipeline">
 						<xsl:value-of select="$pipeline"/>
 					</span>

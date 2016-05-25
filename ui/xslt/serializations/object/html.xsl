@@ -63,7 +63,7 @@
 
 	<xsl:variable name="display_path">
 		<xsl:if test="not(string($mode))">
-			<xsl:text>../</xsl:text>
+			<xsl:text>../search/</xsl:text>
 		</xsl:if>
 	</xsl:variable>
 
@@ -315,16 +315,7 @@
 							<span id="collection_type">
 								<xsl:value-of select="$collection_type"/>
 							</span>
-							<span id="path">
-								<xsl:choose>
-									<xsl:when test="$recordType='physical'">
-										<xsl:value-of select="concat($display_path, 'id/')"/>
-									</xsl:when>
-									<xsl:otherwise>
-										<xsl:value-of select="$display_path"/>
-									</xsl:otherwise>
-								</xsl:choose>
-							</span>
+							<span id="path"/>
 							<span id="include_path">
 								<xsl:value-of select="$include_path"/>
 							</span>
