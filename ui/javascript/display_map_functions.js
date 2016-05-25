@@ -10,16 +10,7 @@ $(document).ready(function () {
 		var lang = langStr;
 	}
 	
-	if (collection_type == 'object' && pipeline == 'display') {
-		$('#mapButton').click(function () {
-			$('#tabs a:last').tab('show');
-			init();
-		});
-	} else {
-		init();
-	}
-	//only load map upon tab click on object pages, due to bootstrap tabs glitch
-	
+	init();
 	
 	function init() {
 		if (collection_type != 'object') {
@@ -71,95 +62,101 @@ function initialize_timemap(id, path, lang) {
 }
 
 function initialize_map(id, path, lang) {
-	/***** DECLARE BASELAYERS ******/
-	var google_physical = new OpenLayers.Layer.Google("Google Physical", {
-		type: google.maps.MapTypeId.TERRAIN
-	});
-	var imperium = new OpenLayers.Layer.XYZ(
-	"Imperium Romanum",[
-	"http://dare.ht.lu.se/tiles/imperium/${z}/${x}/${y}.png"], {
-		sphericalMercator: true,
-		isBaseLayer: true,
-		numZoomLevels: 12,
-		attribution: '<a href="http://imperium.ahlfeldt.se">Digital Atlas of the Roman Empire</a>, hosted by <a href="http://pelagios-project.blogspot.com">Pelagios</a>.'
-	});
-	var osm = new OpenLayers.Layer.OSM();
-	
 	var baselayers = $('#baselayers').text().split(',');
+	var mapboxKey = $('#mapboxKey').text();
+	var url = path + id + ".geojson" + (lang.length > 0 ? '?lang=' + lang: '');
 	
-	/***** KML PATH *****/
-	var url = path + "apis/get?id=" + id + "&format=kml&lang=" + lang;
-	
-	map = new OpenLayers.Map('mapcontainer', {
-		controls:[
-		new OpenLayers.Control.PanZoomBar(),
-		new OpenLayers.Control.Navigation(),
-		new OpenLayers.Control.ScaleLine(),
-		new OpenLayers.Control.Attribution(),
-		new OpenLayers.Control.LayerSwitcher({
-			'ascending': true
-		})]
+	//baselayers
+	var osm = L.tileLayer(
+	'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+		attribution: 'OpenStreetMap',
+		maxZoom: 10
 	});
 	
+	var imperium = L.tileLayer(
+	'http://dare.ht.lu.se/tiles/imperium/{z}/{x}/{y}.png', {
+		maxZoom: 10,
+		attribution: 'Powered by <a href="http://leafletjs.com/">Leaflet</a>. Map base: <a href="http://dare.ht.lu.se/" title="Digital Atlas of the Roman Empire, Department of Archaeology and Ancient History, Lund University, Sweden">DARE</a>, 2015 (cc-by-sa).'
+	});
+	var mb_physical = L.tileLayer(
+	'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=' + mapboxKey, {
+		attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+		'<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+		'Imagery © <a href="http://mapbox.com">Mapbox</a>', id: 'mapbox.streets', maxZoom: 10
+	});
 	
+	var map = new L.Map('mapcontainer', {
+		center: new L.LatLng(0, 0),
+		zoom: 4,
+		layers:[eval(baselayers[0])]
+	});
 	
+	//add mintLayer from AJAX
+	var overlay = L.geoJson.ajax(url, {
+		onEachFeature: onEachFeature,
+		pointToLayer: renderPoints
+	}).addTo(map);
+	
+	//add controls
+	var baseMaps = {
+	};
 	//add baselayers
 	var i;
 	for (i = 0; i < baselayers.length; i++) {
-		map.addLayer(eval(baselayers[i]));
-	}
-	
-	//point for coin or hoard KML
-	var kmlLayer = new OpenLayers.Layer.Vector($('#object_title').text(), {
-		eventListeners: {
-			'loadend': kmlLoaded
-		},
-		strategies:[
-		new OpenLayers.Strategy.Fixed()],
-		protocol: new OpenLayers.Protocol.HTTP({
-			url: url,
-			format: new OpenLayers.Format.KML({
-				extractStyles: true,
-				extractAttributes: true
-			})
-		})
-	});
-	
-	//add origin point last
-	map.addLayer(kmlLayer);
-	
-	function kmlLoaded() {
-		map.zoomToExtent(kmlLayer.getDataExtent());
-		var zoom = map.getZoom();
-		//only change the zoom if the zoom is too great on a single or densely clusered points
-		if (zoom > 6) {
-			map.zoomTo(6);
+		var label;
+		switch (baselayers[i]) {
+			case 'osm': label = "OpenStreetMap";
+			break;
+			case 'imperium': label = 'Imperium Romanum';
+			break;
+			case 'mb_physical': label = 'Terrain and Streets';
+			break;
 		}
+		baseMaps[label] = eval(baselayers[i]);
 	}
 	
-	/*************** OBJECT KML FEATURES ******************/
-	objectControl = new OpenLayers.Control.SelectFeature([kmlLayer], {
-		clickout: true,
-		multiple: false,
-		hover: false,
-	});
+	var overlayMaps = {
+		'Markers': overlay
+	};
 	
-	map.addControl(objectControl);
-	objectControl.activate();
-	kmlLayer.events.on({
-		"featureselected": onFeatureSelect, "featureunselected": onFeatureUnselect
-	});
+	//add controls
+	var layerControl = L.control.layers(baseMaps, overlayMaps).addTo(map);
 	
-	function onFeatureSelect(event) {
-		var feature = event.feature;
-		message = '<div style="font-size:10px">' + feature.attributes.description + '</div>';
-		popup = new OpenLayers.Popup.FramedCloud("id", event.feature.geometry.bounds.getCenterLonLat(), null, message, null, true, onPopupClose);
-		event.popup = popup;
-		map.addPopup(popup);
+	//zoom to groups on AJAX complete
+	overlay.on('data:loaded', function () {
+		map.fitBounds(overlay.getBounds());
+	}.bind(this));
+	
+	/*****
+	 * Features for manipulating layers
+	 *****/
+	function renderPoints(feature, latlng) {
+		var fillColor;
+		switch (feature.properties.type) {
+			case 'mint':
+			fillColor = '#6992fd';
+			break;
+			case 'findspot':
+			fillColor = '#d86458';
+			break;
+			case 'subject':
+			fillColor = '#a1d490';
+		}
+		
+		return new L.CircleMarker(latlng, {
+			radius: 5,
+			fillColor: fillColor,
+			color: "#000",
+			weight: 1,
+			opacity: 1,
+			fillOpacity: 0.6
+		});
 	}
 	
-	function onFeatureUnselect(event) {
-		map.removePopup(map.popups[0]);
+	function onEachFeature (feature, layer) {
+		var label = feature.properties.name;
+		str = label + ' <a href="' + feature.properties.uri + '" target="_blank"><span class="glyphicon glyphicon-new-window"/></a>';
+		layer.bindPopup(str);
 	}
 }
 

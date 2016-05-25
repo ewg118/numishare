@@ -13,7 +13,7 @@ $(document).ready(function () {
 		var lang = '';
 	} else {
 		var lang = langStr;
-	}
+	}	
 	
 	//set hierarchical labels on load
 	$('.hierarchical-facet').each(function () {
@@ -277,6 +277,8 @@ $(document).ready(function () {
 			$('#century_num-list').parent('div').removeClass('open');
 			$('#findspot_hier-list').parent('div').removeClass('open');
 			$('#category_hier-list').parent('div').removeClass('open');
+			$('#region_hier-list').parent('div').removeClass('open');
+
 			popupStatus = 0;
 		}
 	}
