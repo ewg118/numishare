@@ -64,7 +64,7 @@ function initialize_timemap(id, path, lang) {
 function initialize_map(id, path, lang) {
 	var baselayers = $('#baselayers').text().split(',');
 	var mapboxKey = $('#mapboxKey').text();
-	var url = id + ".geojson" + (lang.length > 0 ? '?lang=' + lang: '');
+	var url = path + id + ".geojson" + (lang.length > 0 ? '?lang=' + lang: '');
 	
 	//baselayers
 	var osm = L.tileLayer(
