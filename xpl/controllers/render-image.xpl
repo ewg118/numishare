@@ -52,18 +52,24 @@
 	</p:processor>
 
 	<!-- generate HTML fragment to be returned -->
-	<p:processor name="oxf:unsafe-xslt">		
+	<p:processor name="oxf:unsafe-xslt">
 		<p:input name="data" href="#directory-scan"/>
 		<p:input name="config">
-			<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">				
+			<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 				<xsl:variable name="path" select="concat('file:', /directory/@path)"/>
+				<xsl:variable name="ext" select="tokenize(//file[1]/@name, '\.')[last()]"/>
 
 				<xsl:template match="/">
 					<config>
 						<url>
 							<xsl:value-of select="concat($path, '/', //file[1]/@name)"/>
 						</url>
-						<mode>binary</mode>						
+						<mode>binary</mode>
+						<content-type>
+							<xsl:choose>
+								<xsl:when test="$ext = 'png'">image/png</xsl:when>
+							</xsl:choose>
+						</content-type>
 					</config>
 				</xsl:template>
 			</xsl:stylesheet>
