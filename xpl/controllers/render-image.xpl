@@ -63,8 +63,7 @@
 						<url>
 							<xsl:value-of select="concat($path, '/', //file[1]/@name)"/>
 						</url>
-						<mode>binary</mode>
-						<encoding>utf-8</encoding>
+						<mode>binary</mode>						
 					</config>
 				</xsl:template>
 			</xsl:stylesheet>
