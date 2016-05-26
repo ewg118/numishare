@@ -45,23 +45,21 @@ $(document).ready(function () {
 			layers:[eval(baselayers[0])]
 		});
 		
-		//add mintLayer from AJAX
+		var markers = L.markerClusterGroup();
 		var mintLayer = L.geoJson.ajax("mints.geojson?q=" + q, {
 			onEachFeature: onEachFeature,
 			pointToLayer: renderPoints
-		}).addTo(map);
+		});
 		
 		var subjectLayer = L.geoJson.ajax("subjects.geojson?q=" + q, {
 			onEachFeature: onEachFeature,
 			pointToLayer: renderPoints
-		}).addTo(map);
+		}).addTo(map);		
 		
-		//add hoards, but don't make visible by default
-		var markers = L.markerClusterGroup();
 		var findspotLayer = L.geoJson.ajax("findspots.geojson?q=" + q, {
 			onEachFeature: onEachFeature,
 			pointToLayer: renderPoints
-		});
+		}).addTo(map);
 		
 		//add controls
 		var baseMaps = {
@@ -82,8 +80,8 @@ $(document).ready(function () {
 		}
 		
 		var overlayMaps = {
-			'Mints': mintLayer,
-			'Findspots': markers,
+			'Mints': markers,
+			'Findspots': findspotLayer,
 			'Subjects': subjectLayer
 		};
 		
@@ -91,7 +89,10 @@ $(document).ready(function () {
 		var layerControl = L.control.layers(baseMaps, overlayMaps).addTo(map);
 		
 		//zoom to groups on AJAX complete
-		mintLayer.on('data:loaded', function () {
+		mintLayer.on('data:loaded', function () {		
+			markers.addLayer(mintLayer);
+			map.addLayer(markers);
+		
 			var group = new L.featureGroup([mintLayer, findspotLayer, subjectLayer]);
 			map.fitBounds(group.getBounds());
 		}.bind(this));
@@ -101,10 +102,7 @@ $(document).ready(function () {
 			map.fitBounds(group.getBounds());
 		}.bind(this));
 		
-		findspotLayer.on('data:loaded', function () {
-			markers.addLayer(findspotLayer);
-			map.addLayer(markers);
-			
+		findspotLayer.on('data:loaded', function () {			
 			var group = new L.featureGroup([mintLayer, findspotLayerr, subjectLayer]);
 			map.fitBounds(group.getBounds());
 		}.bind(this));
