@@ -64,6 +64,7 @@ function initialize_timemap(id, path, lang) {
 function initialize_map(id, path, lang) {
 	var baselayers = $('#baselayers').text().split(',');
 	var mapboxKey = $('#mapboxKey').text();
+	var department = $('#department').text();
 	var url = path + id + ".geojson" + (lang.length > 0 ? '?lang=' + lang: '');
 	
 	//baselayers
@@ -85,10 +86,16 @@ function initialize_map(id, path, lang) {
 		'Imagery © <a href="http://mapbox.com">Mapbox</a>', id: 'mapbox.streets', maxZoom: 10
 	});
 	
+	if (department == 'Roman' || department == 'Byzantine') {
+		var defaultLayer = 'imperium';
+	} else {
+		var defaultLayer = 'mb_physical';
+	}
+	
 	var map = new L.Map('mapcontainer', {
 		center: new L.LatLng(0, 0),
 		zoom: 4,
-		layers:[eval(baselayers[0])]
+		layers:[eval(defaultLayer)]
 	});
 	
 	//add mintLayer from AJAX
@@ -112,7 +119,16 @@ function initialize_map(id, path, lang) {
 			case 'mb_physical': label = 'Terrain and Streets';
 			break;
 		}
-		baseMaps[label] = eval(baselayers[i]);
+		
+		//only add the imperium layer as an option for Roman, Greek, and Byzantine departments
+		if (baselayers[i] == 'imperium') {
+			if (department == 'Roman' || department == 'Greek' || department == 'Byzantine'){
+				baseMaps[label] = eval(baselayers[i]);
+			}
+		} else {
+			baseMaps[label] = eval(baselayers[i]);
+		}
+		
 	}
 	
 	var overlayMaps = {

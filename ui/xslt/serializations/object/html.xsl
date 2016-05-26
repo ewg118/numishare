@@ -325,6 +325,9 @@
 							<span id="mapboxKey">
 								<xsl:value-of select="//config/mapboxKey"/>
 							</span>
+							<span id="department">
+								<xsl:value-of select="//nuds:department"/>
+							</span>
 						</div>
 					</body>
 				</html>

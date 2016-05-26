@@ -201,7 +201,7 @@
 					<span id="collection_type">
 						<xsl:value-of select="$collection_type"/>
 					</span>
-					<span id="path"/>
+					<span id="path">../id/</span>
 					<span id="pipeline">
 						<xsl:value-of select="$pipeline"/>
 					</span>
@@ -210,6 +210,9 @@
 					</span>
 					<span id="mapboxKey">
 						<xsl:value-of select="//config/mapboxKey"/>
+					</span>
+					<span id="department">
+						<xsl:value-of select="//nuds:department"/>
 					</span>
 				</div>
 			</body>
