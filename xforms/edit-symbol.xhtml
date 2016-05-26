@@ -3,10 +3,7 @@
 	xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xxforms="http://orbeon.org/oxf/xml/xforms" xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:res="http://www.w3.org/2005/sparql-results#"
 	xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:nm="http://nomisma.org/id/" xmlns:foaf="http://xmlns.com/foaf/0.1/"
 	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-	xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xmlns:un="http://www.owl-ontologies.com/Ontology1181490123.owl#"
-	xmlns:atom="http://www.w3.org/2005/Atom" xmlns:nomisma="https://github.com/nomisma" xmlns:rdac="http://www.rdaregistry.info/Elements/c/"
-	xmlns:osgeo="http://data.ordnancesurvey.co.uk/ontology/geometry/" xmlns:nmo="http://nomisma.org/ontology#" xmlns:org="http://www.w3.org/ns/org#" xmlns:bio="http://purl.org/vocab/bio/0.1/"
-	xmlns:crm="http://www.cidoc-crm.org/cidoc-crm/">
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xmlns:void="http://rdfs.org/ns/void#" xmlns:nmo="http://nomisma.org/ontology#" xmlns:crm="http://www.cidoc-crm.org/cidoc-crm/">
 	<head>
 		<title>Numishare: Edit Symbol</title>
 		<link rel="stylesheet" href="/fr/style/bootstrap/css/bootstrap.css" type="text/css" />
@@ -22,7 +19,7 @@
 		<xforms:model>
 			<xforms:instance id="doc" xxforms:exclude-result-prefixes="#all">
 				<rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:nm="http://nomisma.org/id/" xmlns:nmo="http://nomisma.org/ontology#" xmlns:foaf="http://xmlns.com/foaf/0.1/"
-					xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#"> </rdf:RDF>
+					xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:void="http://rdfs.org/ns/void#"> </rdf:RDF>
 			</xforms:instance>
 
 			<xforms:instance id="exist-config">
@@ -417,6 +414,8 @@ PREFIX un:	<http://www.owl-ontologies.com/Ontology1181490123.owl#>]]></prefix>
 											<!-- insert rdf:type as skos:Concept -->
 											<xforms:insert context="instance('doc')/*[1]"
 												origin="xforms:element('rdf:type', xforms:attribute('rdf:resource', 'http://www.w3.org/2004/02/skos/core#Concept'))"></xforms:insert>
+											<xforms:insert context="instance('doc')/*[1]" nodeset="./child::node()[last()]"
+												origin="xforms:element('void:inDataset', xforms:attribute('rdf:resource', instance('config')/url))"></xforms:insert>
 											<!-- set creation -->
 											<xforms:insert context="instance('doc')/*[1]" nodeset="./child::node()[last()]"
 												origin="xforms:element('dcterms:created', (xforms:attribute('rdf:datatype', 'http://www.w3.org/2001/XMLSchema#dateTime'), current-dateTime()))"></xforms:insert>
@@ -548,7 +547,7 @@ PREFIX un:	<http://www.owl-ontologies.com/Ontology1181490123.owl#>]]></prefix>
 										<div class="subsection">
 											<h4>Images</h4>
 											<xforms:group ref="foaf:depiction">
-												<div>													
+												<div>
 													<xforms:group ref=".[string-length(@rdf:resource) = 0]">
 														<h5>Depiction</h5>
 														<xforms:trigger appearance="minimal">
@@ -593,7 +592,7 @@ PREFIX un:	<http://www.owl-ontologies.com/Ontology1181490123.owl#>]]></prefix>
 																<xforms:dispatch ev:event="DOMActivate" target="delete-dialog" name="fr-show"></xforms:dispatch>
 															</xforms:trigger>
 															<div>
-																<xforms:output mediatype="image/*" ref="@rdf:resource"/>																
+																<xforms:output mediatype="image/*" ref="@rdf:resource"></xforms:output>
 															</div>
 														</div>
 													</xforms:group>
@@ -646,7 +645,7 @@ PREFIX un:	<http://www.owl-ontologies.com/Ontology1181490123.owl#>]]></prefix>
 					<xforms:delete nodeset="instance('doc')/*[1]/foaf:depiction"></xforms:delete>
 					<xforms:setvalue ref="instance('delete-config')/id" value="instance('control-instance')/id"></xforms:setvalue>
 					<xforms:setvalue ref="instance('delete-config')/symbol_path" value="instance('control-instance')/symbol_path"></xforms:setvalue>
-					<xforms:insert nodeset="instance('dump')" origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/xforms/delete-file.xpl', 'data', instance('delete-config'), 'data')"></xforms:insert>					
+					<xforms:insert nodeset="instance('dump')" origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/xforms/delete-file.xpl', 'data', instance('delete-config'), 'data')"></xforms:insert>
 				</xforms:action>
 			</fr:positive-choice>
 			<fr:negative-choice>
