@@ -93,11 +93,11 @@
 					<b>
 						<xsl:choose>
 							<xsl:when test="string(@localType)">
-								<xsl:variable name="langParam" select="if(string($lang)) then $lang else 'en'"/>
+								<xsl:variable name="lang" select="if(string($lang)) then $lang else 'en'"/>
 								<xsl:variable name="localType" select="@localType"/>
 								<xsl:choose>
-									<xsl:when test="$localTypes//localType[@value=$localType]/label[@lang=$langParam]">
-										<xsl:value-of select="$localTypes//localType[@value=$localType]/label[@lang=$langParam]"/>
+									<xsl:when test="$localTypes//localType[@value=$localType]/label[@lang=$lang]">
+										<xsl:value-of select="$localTypes//localType[@value=$localType]/label[@lang=$lang]"/>
 									</xsl:when>
 									<xsl:otherwise>
 										<xsl:value-of select="concat(upper-case(substring(@localType, 1, 1)), substring(@localType, 2))"/>
@@ -211,7 +211,7 @@
 											'id/'), '&#x022;')"/>
 									</xsl:variable>
 
-									<a href="{$display_path}results?q=region_hier:({encode-for-uri($selfQuery)}){if (string($langParam)) then concat('&amp;lang=', $langParam) else ''}">
+									<a href="{$display_path}results?q=region_hier:({encode-for-uri($selfQuery)}){if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
 										<xsl:value-of select="$value"/>
 									</a>
 								</xsl:when>
@@ -234,11 +234,11 @@
 						<i> (<xsl:value-of select="@title"/>)</i>
 					</xsl:if>
 					<xsl:if test="string(@position)">
-						<xsl:variable name="langParam" select="if(string($lang)) then $lang else 'en'"/>
+						<xsl:variable name="lang" select="if(string($lang)) then $lang else 'en'"/>
 						<xsl:variable name="position" select="@position"/>
 						<xsl:choose>
-							<xsl:when test="$positions//position[@value=$position]/label[@lang=$langParam]">
-								<i> (<xsl:value-of select="$positions//position[@value=$position]/label[@lang=$langParam]"/>)</i>
+							<xsl:when test="$positions//position[@value=$position]/label[@lang=$lang]">
+								<i> (<xsl:value-of select="$positions//position[@value=$position]/label[@lang=$lang]"/>)</i>
 							</xsl:when>
 							<xsl:otherwise>
 								<i> (<xsl:value-of select="concat(upper-case(substring(@position, 1, 1)), substring(@position, 2))"/>)</i>
@@ -402,12 +402,12 @@
 		<xsl:choose>
 			<xsl:when test="string($position) and $positions//position[@value=$position]">
 				<xsl:variable name="side" select="substring(parent::node()/name(), 1, 3)"/>
-				<a href="{$display_path}results?q=symbol_{$side}_{$position}_facet:&#x022;{$value}&#x022;{if (string($langParam)) then concat('&amp;lang=', $langParam) else ''}">
+				<a href="{$display_path}results?q=symbol_{$side}_{$position}_facet:&#x022;{$value}&#x022;{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
 					<xsl:value-of select="$value"/>
 				</a>
 			</xsl:when>
 			<xsl:when test="contains($facets, $field)">
-				<a href="{$display_path}results?q={$field}_facet:&#x022;{$value}&#x022;{if (string($langParam)) then concat('&amp;lang=', $langParam) else ''}">
+				<a href="{$display_path}results?q={$field}_facet:&#x022;{$value}&#x022;{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
 					<xsl:choose>
 						<xsl:when test="contains($href, 'geonames.org')">
 							<xsl:choose>
@@ -451,7 +451,7 @@
 			</div>
 			<div class="col-md-9">
 				<xsl:if test="string($sparql_endpoint)">
-					<xsl:copy-of select="document(concat($request-uri, 'sparql?uri=', $uri_space, $subtypeId, '&amp;template=display&amp;subtype=true&amp;lang=', $langParam))/div[@class='row']"/>
+					<xsl:copy-of select="document(concat($request-uri, 'sparql?uri=', $uri_space, $subtypeId, '&amp;template=display&amp;subtype=true&amp;lang=', $lang))/div[@class='row']"/>
 				</xsl:if>
 			</div>
 		</div>
@@ -592,7 +592,7 @@
 				</xsl:choose>
 			</xsl:variable>
 
-			<a href="{$display_path}results?q=region_hier:({encode-for-uri($fragment)}){if (string($langParam)) then concat('&amp;lang=', $langParam) else ''}">
+			<a href="{$display_path}results?q=region_hier:({encode-for-uri($fragment)}){if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
 				<xsl:value-of select="."/>
 			</a>
 			<xsl:if test="not(position()=last())">

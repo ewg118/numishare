@@ -49,10 +49,10 @@ ASK {
 		<xsl:if test="$mode = 'compare'">
 			<div class="compare_options">
 				<small>
-					<a href="compare_results?q={$q}&amp;start={$start}&amp;image={$image}&amp;side={$side}&amp;mode=compare{if (string($langParam)) then concat('&amp;lang=', $langParam) else ''}"
+					<a href="compare_results?q={$q}&amp;start={$start}&amp;image={$image}&amp;side={$side}&amp;mode=compare{if (string($lang)) then concat('&amp;lang=', $lang) else ''}"
 						class="back_results">« Search results</a>
 					<xsl:text> | </xsl:text>
-					<a href="id/{$id}{if (string($langParam)) then concat('?lang=', $langParam) else ''}">Full record »</a>
+					<a href="id/{$id}{if (string($lang)) then concat('?lang=', $lang) else ''}">Full record »</a>
 				</small>
 			</div>
 		</xsl:if>
@@ -108,7 +108,7 @@ ASK {
 
 						<!-- examples and subtypes -->
 						<xsl:if test="string($sparql_endpoint)">
-							<xsl:copy-of select="document(concat($request-uri, 'sparql?uri=', //config/uri_space, $id, '&amp;template=display&amp;lang=', $langParam))/div[@id='examples']"/>
+							<xsl:copy-of select="document(concat($request-uri, 'sparql?uri=', //config/uri_space, $id, '&amp;template=display&amp;lang=', $lang))/div[@id='examples']"/>
 						</xsl:if>
 
 						<!-- handle subtypes if they exist -->
@@ -519,7 +519,7 @@ ASK {
 	<xsl:template match="nuds:subject">
 		<li>
 			<b><xsl:value-of select="if (string(@localType)) then @localType else numishare:regularize_node(local-name(), $lang)"/>: </b>
-			<a href="{$display_path}results?q={if (string(@localType)) then @localType else 'subject'}_facet:&#x022;{normalize-space(.)}&#x022;{if (string($langParam)) then concat('&amp;lang=', $langParam) else
+			<a href="{$display_path}results?q={if (string(@localType)) then @localType else 'subject'}_facet:&#x022;{normalize-space(.)}&#x022;{if (string($lang)) then concat('&amp;lang=', $lang) else
 				''}">
 				<xsl:value-of select="."/>
 			</a>

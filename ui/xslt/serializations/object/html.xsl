@@ -13,17 +13,7 @@
 	<!-- URL params -->
 	<xsl:variable name="collection-name" select="substring-before(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/')"/>
 	<xsl:variable name="request-uri" select="concat('http://localhost:8080', substring-before(doc('input:request')/request/request-uri, 'id/'))"/>
-	<xsl:param name="langParam" select="doc('input:request')/request/parameters/parameter[name='lang']/value"/>
-	<xsl:param name="lang">
-		<xsl:choose>
-			<xsl:when test="string($langParam)">
-				<xsl:value-of select="$langParam"/>
-			</xsl:when>
-			<xsl:when test="string(doc('input:request')/request//header[name[.='accept-language']]/value)">
-				<xsl:value-of select="numishare:parseAcceptLanguage(doc('input:request')/request//header[name[.='accept-language']]/value)[1]"/>
-			</xsl:when>
-		</xsl:choose>
-	</xsl:param>
+	<xsl:param name="lang" select="doc('input:request')/request/parameters/parameter[name='lang']/value"/>	
 	<xsl:param name="mode" select="doc('input:request')/request/parameters/parameter[name='mode']/value"/>
 	<xsl:param name="pipeline">display</xsl:param>
 

@@ -290,7 +290,7 @@
 				</div>
 			</xsl:if>
 			<input type="hidden" name="sparqlQuery" id="sparqlQuery" value=""/>
-			<xsl:if test="string($langParam)">
+			<xsl:if test="string($lang)">
 				<input type="hidden" name="lang" value="{$lang}"/>
 			</xsl:if>
 			<br/>
