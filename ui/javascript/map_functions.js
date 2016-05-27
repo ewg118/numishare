@@ -292,6 +292,7 @@ $(document).ready(function () {
 				$('#results').html(data);
 			}).done(function () {
 				$('a.thumbImage').fancybox({
+					type: 'image',
 					beforeShow: function () {
 						this.title = '<a href="' + this.element.attr('id') + '">' + this.element.attr('title') + '</a>'
 					},

@@ -129,6 +129,18 @@
 			</xsl:for-each>
 		</nudsGroup>
 	</xsl:variable>
+	
+	<xsl:variable name="symbols" as="element()*">
+		<symbols>
+			<xsl:for-each select="$nudsGroup/descendant::nuds:symbol[@xlink:href]">
+				<xsl:variable name="href" select="@xlink:href"/>
+				
+				<xsl:if test="doc-available(concat($href, '.rdf'))">
+					<xsl:copy-of select="document(concat($href, '.rdf'))"/>
+				</xsl:if>
+			</xsl:for-each>
+		</symbols>
+	</xsl:variable>
 
 	<!-- get subtypes -->
 	<xsl:variable name="subtypes" as="element()*">

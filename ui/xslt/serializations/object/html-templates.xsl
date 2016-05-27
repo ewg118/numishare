@@ -7,7 +7,7 @@
 -->
 <xsl:stylesheet xmlns:nuds="http://nomisma.org/nuds" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:numishare="https://github.com/ewg118/numishare" xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:nm="http://nomisma.org/id/"
-	xmlns:res="http://www.w3.org/2005/sparql-results#" xmlns:mods="http://www.loc.gov/mods/v3" exclude-result-prefixes="#all" version="2.0">
+	xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:res="http://www.w3.org/2005/sparql-results#" xmlns:mods="http://www.loc.gov/mods/v3" exclude-result-prefixes="#all" version="2.0">
 	<!--***************************************** ELEMENT TEMPLATES **************************************** -->
 	<xsl:template match="*[local-name()='refDesc']">
 		<xsl:element name="{if (ancestor::subtype) then 'h4' else 'h3'}">
@@ -253,10 +253,16 @@
 					<xsl:if test="string(@calendar)">
 						<i> (<xsl:value-of select="@calendar"/>)</i>
 					</xsl:if>
+
+					<!-- if the element is a symbol, display image, if available -->
+					<xsl:if test="string($href) and self::nuds:symbol">
+						<xsl:apply-templates select="$symbols//rdf:RDF/*[@rdf:about=$href]" mode="symbol"/>
+					</xsl:if>
+
 					<!-- create links to resources -->
 					<xsl:if test="string($href)">
-						<a href="{$href}" target="_blank" rel="{numishare:normalizeProperty($recordType, if(@xlink:role) then @xlink:role else local-name())}">
-							<img src="{$include_path}/images/external.png" alt="external link" class="external_link"/>
+						<a href="{$href}" target="_blank" rel="{numishare:normalizeProperty($recordType, if(@xlink:role) then @xlink:role else local-name())}" class="external_link">
+							<span class="glyphicon glyphicon-new-window"/>
 						</a>
 					</xsl:if>
 				</li>
@@ -429,6 +435,16 @@
 				<xsl:value-of select="$value"/>
 			</xsl:otherwise>
 		</xsl:choose>
+	</xsl:template>
+
+	<!-- *************** RENDER RDF ABOUT SYMBOLS ******************-->
+	<xsl:template match="*" mode="symbol">
+		<xsl:if test="foaf:depiction">
+			<a href="{foaf:depiction/@rdf:resource}" class="thumbImage" title="{if (skos:prefLabel[@xml:lang=$lang]) then skos:prefLabel[@xml:lang=$lang] else
+				skos:prefLabel[@xml:lang='en']}: {if (skos:definition[@xml:lang=$lang]) then skos:definition[@xml:lang=$lang] else skos:definition[@xml:lang='en']}">
+				<span class="glyphicon glyphicon-camera"/>
+			</a>			
+		</xsl:if>
 	</xsl:template>
 
 	<!-- *************** HANDLE SUBTYPES DELIVERED FROM XQUERY ******************-->

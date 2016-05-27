@@ -524,8 +524,8 @@ ASK {
 				<xsl:value-of select="."/>
 			</a>
 			<xsl:if test="string(@xlink:href)">
-				<a rel="dcterms:subject" href="{@xlink:href}" target="_blank">
-					<img src="{$include_path}/images/external.png" alt="external link" class="external_link"/>
+				<a rel="dcterms:subject" href="{@xlink:href}" target="_blank" class="external_link">
+					<span class="glyphicon glyphicon-new-window"/>
 				</a>
 			</xsl:if>
 		</li>
