@@ -3,6 +3,7 @@ combines hard-coded fancybox call from XSLT, condenses sort_results and quick_se
 */
 $(document).ready(function () {
 	$('a.thumbImage').fancybox({
+		type: 'image',
 		beforeShow: function () {
 			this.title = '<a href="' + this.element.attr('id') + '">' + this.element.attr('title') + '</a>'
 		},
