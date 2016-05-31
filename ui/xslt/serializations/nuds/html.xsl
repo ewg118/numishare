@@ -373,7 +373,7 @@ ASK {
 					<!-- process $typeDesc differently -->
 					<div class="metadata_section">
 						<xsl:apply-templates select="$nudsGroup//nuds:typeDesc">
-							<xsl:with-param name="typeDesc_resource" select="@xlink:href"/>
+							<xsl:with-param name="typeDesc_resource" select="ancestor::object/@xlink:href"/>
 						</xsl:apply-templates>
 					</div>
 					<xsl:if test="nuds:descMeta/nuds:undertypeDesc">
