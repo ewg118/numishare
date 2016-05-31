@@ -371,10 +371,13 @@ ASK {
 						</div>
 					</xsl:if>
 					<!-- process $typeDesc differently -->
-					<div class="metadata_section">
-						<xsl:apply-templates select="$nudsGroup//nuds:typeDesc">
-							<xsl:with-param name="typeDesc_resource" select="ancestor::object/@xlink:href"/>
-						</xsl:apply-templates>
+					<div class="metadata_section">						
+						<xsl:for-each select="$nudsGroup//nuds:typeDesc">
+							<xsl:variable name="typeDesc_resource" select="ancestor::object/@xlink:href"/>
+							<xsl:apply-templates select=".">
+								<xsl:with-param name="typeDesc_resource" select="$typeDesc_resource"/>
+							</xsl:apply-templates>
+						</xsl:for-each>
 					</div>
 					<xsl:if test="nuds:descMeta/nuds:undertypeDesc">
 						<div class="metadata_section">
