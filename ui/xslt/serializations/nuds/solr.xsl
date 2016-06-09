@@ -191,11 +191,29 @@
 					<xsl:value-of select="normalize-space(.)"/>
 					<xsl:text> </xsl:text>
 				</xsl:for-each>
-				<xsl:if test="string($lang)">
-					<xsl:for-each select="$rdf/descendant-or-self::node()[@xml:lang=$lang]/text()">
-						<xsl:value-of select="normalize-space(.)"/>
-						<xsl:text> </xsl:text>
-					</xsl:for-each>
+				
+				<!-- get all labels -->
+				<xsl:if test="string($lang)">					
+					<xsl:call-template name="alternativeLabels">
+						<xsl:with-param name="lang" select="$lang"/>
+						<xsl:with-param name="typeDesc" as="node()*">
+							<xsl:choose>
+								<xsl:when test="descendant::nuds:typeDesc[string(@xlink:href)]">
+									<xsl:variable name="href" select="descendant::nuds:typeDesc/@xlink:href"/>
+									
+									<xsl:copy-of select="$nudsGroup//object[@xlink:href=$href]//nuds:typeDesc"/>
+								</xsl:when>
+								<xsl:when test="descendant::nuds:reference[@xlink:arcrole='nmo:hasTypeSeriesItem'][string(@xlink:href)]">
+									<xsl:variable name="href" select="descendant::nuds:reference[@xlink:arcrole='nmo:hasTypeSeriesItem']/@xlink:href"/>
+									
+									<xsl:copy-of select="$nudsGroup//object[@xlink:href=$href]//nuds:typeDesc"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:copy-of select="descendant::nuds:typeDesc"/>
+								</xsl:otherwise>
+							</xsl:choose>
+						</xsl:with-param>
+					</xsl:call-template>	
 				</xsl:if>
 			</field>
 		</doc>

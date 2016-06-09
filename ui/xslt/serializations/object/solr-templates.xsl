@@ -709,6 +709,19 @@
 				</field>
 			</xsl:when>
 		</xsl:choose>
-
+	</xsl:template>
+	
+	<xsl:template name="alternativeLabels">
+		<xsl:param name="lang"/>
+		<xsl:param name="typeDesc" as="node()*"/>
+		
+		<xsl:for-each select="distinct-values($typeDesc/descendant::*[contains(@xlink:href, 'nomisma.org')]/@xlink:href)">
+			<xsl:variable name="href" select="."/>
+			
+			<xsl:for-each select="$rdf//*[@rdf:about=$href]/descendant::*[contains(local-name(), 'Label')][@xml:lang=$lang]">
+				<xsl:value-of select="normalize-space(.)"/>
+				<xsl:text> </xsl:text>
+			</xsl:for-each>
+		</xsl:for-each>		
 	</xsl:template>
 </xsl:stylesheet>
