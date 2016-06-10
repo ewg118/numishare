@@ -627,6 +627,12 @@ PREFIX un:	<http://www.owl-ontologies.com/Ontology1181490123.owl#>]]></prefix>
 														</xforms:itemset>
 														<xforms:alert>Required</xforms:alert>
 													</xforms:select1>
+													<xforms:trigger appearance="minimal">
+														<xforms:delete ev:event="DOMActivate" context="."></xforms:delete>
+														<xforms:label>
+															<span class="glyphicon glyphicon-remove"></span>
+														</xforms:label>
+													</xforms:trigger>
 												</div>
 											</xforms:repeat>
 										</div>
