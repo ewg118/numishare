@@ -43,6 +43,7 @@
 					<uri></uri>
 					<type></type>
 					<symbol_path></symbol_path>
+					<symbol_id/>
 					<symbol_url></symbol_url>
 				</controls>
 			</xforms:instance>
@@ -339,16 +340,14 @@ PREFIX un:	<http://www.owl-ontologies.com/Ontology1181490123.owl#>]]></prefix>
 						</ul>
 						<h4>Images</h4>
 						<ul class="control-list">
-							<xforms:group ref=".[count(foaf:depiction) = 0]">
-								<li>
-									<xforms:trigger appearance="minimal">
-										<xforms:label>
-											<span class="glyphicon glyphicon-plus"></span>Depiction</xforms:label>
-										<xforms:insert ev:event="DOMActivate" origin="xforms:element('foaf:depiction', (xforms:attribute('rdf:resource')))" context="."
-											nodeset="./child::node()[last()]"></xforms:insert>
-									</xforms:trigger>
-								</li>
-							</xforms:group>
+							<li>
+								<xforms:trigger appearance="minimal">
+									<xforms:label>
+										<span class="glyphicon glyphicon-plus"></span>Depiction</xforms:label>
+									<xforms:insert ev:event="DOMActivate" origin="xforms:element('foaf:depiction', (xforms:attribute('rdf:resource')))" context="."
+										nodeset="./child::node()[last()]"></xforms:insert>
+								</xforms:trigger>
+							</li>
 						</ul>
 						<h4>Miscellaneous</h4>
 						<ul class="control-list">
@@ -546,7 +545,9 @@ PREFIX un:	<http://www.owl-ontologies.com/Ontology1181490123.owl#>]]></prefix>
 										</div>
 										<div class="subsection">
 											<h4>Images</h4>
-											<xforms:group ref="foaf:depiction">
+											<xforms:repeat nodeset="foaf:depiction">
+												<xforms:var name="position" select="position()"/>
+												
 												<div>
 													<xforms:group ref=".[string-length(@rdf:resource) = 0]">
 														<h5>Depiction</h5>
@@ -570,15 +571,23 @@ PREFIX un:	<http://www.owl-ontologies.com/Ontology1181490123.owl#>]]></prefix>
 																	<!--get the temp file written to disk, and move it into the symbols folder in the absolute_path directory -->
 																	<xforms:action ev:event="xforms-submit-done">
 																		<xforms:var name="extension" select="tokenize(instance('file')/@filename, '\.')[last()]"></xforms:var>
+																		<xforms:var name="current" select="if(instance('doc')/*[1]/foaf:depiction[string-length(@rdf:resource) &gt; 0]) then (number(tokenize(instance('doc')/*[1]/foaf:depiction[string-length(@rdf:resource) &gt; 0][last()]/@rdf:resource, '_')[last()]) + 1) else 1"/>																		
+																		<xforms:var name="monogram_id" select="concat(instance('control-instance')/id, '_', string($current))"/>
 																		<xforms:setvalue ref="instance('generator-config')/url" value="instance('file')"></xforms:setvalue>
 																		<xforms:setvalue ref="instance('generator-config')/content-type" value="instance('file')/@mediatype"></xforms:setvalue>
 																		<xforms:setvalue ref="instance('serializer-config')/url"
-																			value="concat('file:', instance('control-instance')/symbol_path, instance('control-instance')/id, '.', $extension)"></xforms:setvalue>
+																			value="concat('file:', instance('control-instance')/symbol_path, $monogram_id, '.', $extension)"></xforms:setvalue>
 																		<xforms:insert nodeset="instance('dump')"
 																			origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/xforms/move-file.xpl', ('generator-config', 'serializer-config'), (instance('generator-config'), instance('serializer-config')), 'data')"></xforms:insert>
 																		<!-- set the data within the MODS document -->
-																		<xforms:setvalue ref="instance('doc')/*[1]/foaf:depiction/@rdf:resource"
-																			value="concat(instance('control-instance')/symbol_url, instance('control-instance')/id)"></xforms:setvalue>
+																		<xforms:setvalue ref="instance('doc')/*[1]/foaf:depiction[$position]/@rdf:resource"
+																			value="concat(instance('control-instance')/symbol_url, $monogram_id)"></xforms:setvalue>
+																		
+																		<!-- clear file instance -->
+																		<xforms:setvalue ref="instance('file')"/>
+																		<xforms:setvalue ref="instance('file')/@filename"/>
+																		<xforms:setvalue ref="instance('file')/@mediatype"/>
+																		<xforms:setvalue ref="instance('file')/@size"/>
 																	</xforms:action>
 																</xforms:action>
 															</xforms:trigger>
@@ -589,7 +598,10 @@ PREFIX un:	<http://www.owl-ontologies.com/Ontology1181490123.owl#>]]></prefix>
 															<h5>Depiction </h5>
 															<xforms:trigger appearance="minimal">
 																<xforms:label><span class="glyphicon glyphicon-remove"></span></xforms:label>
-																<xforms:dispatch ev:event="DOMActivate" target="delete-dialog" name="fr-show"></xforms:dispatch>
+																<xforms:action ev:event="DOMActivate">
+																	<xforms:setvalue ref="instance('control-instance')/symbol_id" value="tokenize(instance('doc')/*[1]/foaf:depiction[$position]/@rdf:resource, '/')[last()]"/>
+																	<xforms:dispatch target="delete-dialog" name="fr-show"></xforms:dispatch>
+																</xforms:action>																
 															</xforms:trigger>
 															<div>
 																<xforms:output mediatype="image/*" ref="@rdf:resource"></xforms:output>
@@ -597,7 +609,7 @@ PREFIX un:	<http://www.owl-ontologies.com/Ontology1181490123.owl#>]]></prefix>
 														</div>
 													</xforms:group>
 												</div>
-											</xforms:group>
+											</xforms:repeat>
 										</div>
 										<div class="subsection">
 											<h4>Miscellaneous</h4>
@@ -642,8 +654,8 @@ PREFIX un:	<http://www.owl-ontologies.com/Ontology1181490123.owl#>]]></prefix>
 				<fr:label>Yes</fr:label>
 				<xforms:action ev:event="DOMActivate">
 					<!-- delete the file -->
-					<xforms:delete nodeset="instance('doc')/*[1]/foaf:depiction"></xforms:delete>
-					<xforms:setvalue ref="instance('delete-config')/id" value="instance('control-instance')/id"></xforms:setvalue>
+					<xforms:delete nodeset="instance('doc')/*[1]/foaf:depiction[contains(@rdf:resource, instance('control-instance')/symbol_id)]"></xforms:delete>
+					<xforms:setvalue ref="instance('delete-config')/id" value="instance('control-instance')/symbol_id"></xforms:setvalue>
 					<xforms:setvalue ref="instance('delete-config')/symbol_path" value="instance('control-instance')/symbol_path"></xforms:setvalue>
 					<xforms:insert nodeset="instance('dump')" origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/xforms/delete-file.xpl', 'data', instance('delete-config'), 'data')"></xforms:insert>
 				</xforms:action>

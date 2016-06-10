@@ -440,10 +440,14 @@
 	<!-- *************** RENDER RDF ABOUT SYMBOLS ******************-->
 	<xsl:template match="*" mode="symbol">
 		<xsl:if test="foaf:depiction">
-			<a href="{foaf:depiction/@rdf:resource}" class="thumbImage" id="{@rdf:about}" title="{if (skos:prefLabel[@xml:lang=$lang]) then skos:prefLabel[@xml:lang=$lang] else
-				skos:prefLabel[@xml:lang='en']}: {if (skos:definition[@xml:lang=$lang]) then skos:definition[@xml:lang=$lang] else skos:definition[@xml:lang='en']}">
-				<span class="glyphicon glyphicon-camera"/>
-			</a>			
+			<xsl:variable name="title" select="concat(if (skos:prefLabel[@xml:lang=$lang]) then skos:prefLabel[@xml:lang=$lang] else skos:prefLabel[@xml:lang='en'], ': ', if (skos:definition[@xml:lang=$lang]) then skos:definition[@xml:lang=$lang] else skos:definition[@xml:lang='en'])"/>
+			
+			<xsl:for-each select="foaf:depiction">
+				<a href="{@rdf:resource}" class="thumbImage" id="{tokenize(@rdf:resource, '/')[last()]}" title="{$title}">
+					<span class="glyphicon glyphicon-camera"/>
+				</a>
+			</xsl:for-each>
+			
 		</xsl:if>
 	</xsl:template>
 
