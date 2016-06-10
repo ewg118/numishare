@@ -90,9 +90,12 @@
 
 		<tr>
 			<td>
-				<xsl:if test="foaf:depiction">
-					<img src="{foaf:depiction/@rdf:resource}" style="width:100%"/>
-				</xsl:if>
+				<xsl:for-each select="foaf:depiction">
+					<img src="{@rdf:resource}" alt="symbol" style="width:100%"/>
+					<xsl:if test="not(position()=last())">
+						<br/>
+					</xsl:if>
+				</xsl:for-each>				
 			</td>
 			<td>
 				<h3>

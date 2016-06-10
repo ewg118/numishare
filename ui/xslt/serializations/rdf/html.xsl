@@ -112,7 +112,13 @@
 			<div class="row">
 				<xsl:if test="descendant::foaf:depiction[@rdf:resource]">
 					<div class="col-md-2">
-						<img src="{descendant::foaf:depiction/@rdf:resource}" alt="symbol" style="max-width:100%"/>
+						<xsl:for-each select="descendant::foaf:depiction">
+							<img src="{@rdf:resource}" alt="symbol" style="max-width:100%"/>
+							<xsl:if test="not(position()=last())">
+								<br/>
+							</xsl:if>
+						</xsl:for-each>
+						
 					</div>
 				</xsl:if>
 				<div class="col-md-{if (descendant::foaf:depiction[@rdf:resource]) then '8' else '10'}">
