@@ -27,11 +27,12 @@
 				</xsl:choose>
 			</xsl:when>
 			<xsl:otherwise>
+				
 				<xsl:choose>
 					<xsl:when test="//lst[contains(@name, '_geo')]">
-						<xsl:text>[</xsl:text>
+						<xsl:text>{"type": "FeatureCollection","features":[</xsl:text>
 						<xsl:apply-templates select="//lst[contains(@name, '_geo')]"/>
-						<xsl:text>]</xsl:text>
+						<xsl:text>]}</xsl:text>						
 					</xsl:when>
 					<xsl:otherwise>{}</xsl:otherwise>
 				</xsl:choose>
