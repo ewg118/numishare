@@ -184,6 +184,19 @@
 								<!-- the image below is copyright of Mark James, available freely on wikimedia commons: http://commons.wikimedia.org/wiki/File:Chart_bar.png -->
 								<img src="{$include_path}/images/visualize.png" title="Visualize" alt="Visualize"/>
 							</a>
+							<xsl:if test="//lst[@name='mint_geo'][count(int) &gt; 0] or //lst[@name='findspot_geo'][count(int) &gt; 0]">
+								<div id="geodata">
+									<h4><xsl:value-of select="numishare:regularize_node('geographic', $lang)"/></h4>
+									<ul>
+										<xsl:if test="//lst[@name='mint_geo'][count(int) &gt; 0]">
+											<li><b>Mints: </b> <a href="{$display_path}mints.geojson{$query}">geoJSON</a>, <a href="{$display_path}mints.kml{$query}">KML</a></li>
+										</xsl:if>
+										<xsl:if test="//lst[@name='findspot_geo'][count(int) &gt; 0]">
+											<li><b>Findspots: </b>  <a href="{$display_path}findspots.geojson{$query}">geoJSON</a>, <a href="{$display_path}findspots.kml{$query}">KML</a></li>
+										</xsl:if>									
+									</ul>
+								</div>
+							</xsl:if>
 						</div>
 						<div id="refine_results">							
 							<xsl:call-template name="quick_search"/>
