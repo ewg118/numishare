@@ -208,6 +208,59 @@
 									</tr>
 								</tbody>
 							</table>
+							
+							<h4>Geographic Responses</h4>
+							<p>Search results may also be serialized into geographic models when relevant, for example to show the mints, findspots, or subjects related to the current query. Results are made available in KML and geoJSON.</p>
+							<table class="table">
+								<thead>
+									<tr>
+										<th>Response Type</th>
+										<th>geoJSON</th>
+										<th>KML</th>										
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>Mints</td>
+										<td>
+											<a href="{concat(/content/config/url, 'mints.geojson')}">
+												<xsl:value-of select="concat(/content/config/url, 'mints.geojson')"/>
+											</a>
+										</td>
+										<td>
+											<a href="{concat(/content/config/url, 'mints.kml')}">
+												<xsl:value-of select="concat(/content/config/url, 'mints.kml')"/>
+											</a>
+										</td>
+									</tr>
+									<tr>
+										<td>Findspots</td>
+										<td>
+											<a href="{concat(/content/config/url, 'findspots.geojson')}">
+												<xsl:value-of select="concat(/content/config/url, 'findspots.geojson')"/>
+											</a>
+										</td>
+										<td>
+											<a href="{concat(/content/config/url, 'findspots.kml')}">
+												<xsl:value-of select="concat(/content/config/url, 'findspots.kml')"/>
+											</a>
+										</td>
+									</tr>
+									<tr>
+										<td>Subjects</td>
+										<td>
+											<a href="{concat(/content/config/url, 'subjects.geojson')}">
+												<xsl:value-of select="concat(/content/config/url, 'subjects.geojson')"/>
+											</a>
+										</td>
+										<td>
+											<a href="{concat(/content/config/url, 'subjects.kml')}">
+												<xsl:value-of select="concat(/content/config/url, 'subjects.kml')"/>
+											</a>
+										</td>
+									</tr>									
+								</tbody>
+							</table>
 						</div>
 						<div>
 							<h3>Nomisma RDF Dump</h3>
