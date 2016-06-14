@@ -183,35 +183,78 @@
 				<div class="col-md-3 col-md-pull-9">
 					<xsl:if test="//result[@name='response']/@numFound &gt; 0">
 						<div class="data_options">
+							
+							<xsl:variable name="requestParameters" as="node()*">
+								<params>
+									<xsl:if test="string($q)">
+										<param>
+											<xsl:text>q=</xsl:text>
+											<xsl:value-of select="$q"/>
+										</param>
+									</xsl:if>
+									<xsl:if test="string($langParam)">
+										<param>
+											<xsl:text>lang=</xsl:text>
+											<xsl:value-of select="$langParam"/>
+										</param>
+									</xsl:if>
+									<xsl:if test="string($sort)">
+										<param>
+											<xsl:text>sort=</xsl:text>
+											<xsl:value-of select="$sort"/>
+										</param>
+									</xsl:if>
+								</params>								
+							</xsl:variable>
+							<xsl:variable name="query">
+								<xsl:if test="count($requestParameters//param) &gt; 0">
+									<xsl:text>?</xsl:text>
+								</xsl:if>
+								<xsl:value-of select="string-join($requestParameters//param, '&amp;')"/>
+							</xsl:variable>
+							
 							<h3>
 								<xsl:value-of select="numishare:normalizeLabel('results_data-options', $lang)"/>
 							</h3>
-							<a href="{$display_path}feed/?q={$q}{if(string($langParam)) then concat('&amp;lang=', $langParam) else ''}">
+							<a href="{$display_path}feed/{$query}">
 								<img src="{$include_path}/images/atom-medium.png" title="Atom" alt="Atom"/>
 							</a>
 							<xsl:if test="count(//lst[@name='mint_geo']/int) &gt; 0">
 								<xsl:choose>
 									<xsl:when test="/content/config/collection_type = 'hoard'">
-										<a href="{$display_path}findspots.kml?q={$q}{if(string($langParam)) then concat('&amp;lang=', $langParam) else ''}">
+										<a href="{$display_path}findspots.kml{$query}">
 											<img src="{$include_path}/images/googleearth.png" alt="KML" title="KML: Limit, 500 objects"/>
 										</a>
 									</xsl:when>
 									<xsl:otherwise>
-										<a href="{$display_path}query.kml?q={$q}{if(string($langParam)) then concat('&amp;lang=', $langParam) else ''}">
+										<a href="{$display_path}query.kml{$query}">
 											<img src="{$include_path}/images/googleearth.png" alt="KML" title="KML: Limit, 500 objects"/>
 										</a>
 									</xsl:otherwise>
 								</xsl:choose>
 
 							</xsl:if>
-							<a href="{$display_path}query.csv?q={$q}{if(string($langParam)) then concat('&amp;lang=', $langParam) else ''}{if (string($sort)) then concat('&amp;sort=', $sort) else ''}">
+							<a href="{$display_path}query.csv{$query}">
 								<!-- the image below is copyright of Silvestre Herrera, available freely on wikimedia commons: http://commons.wikimedia.org/wiki/File:X-office-spreadsheet_Gion.svg -->
 								<img src="{$include_path}/images/spreadsheet.png" title="CSV" alt="CSV"/>
 							</a>
-							<a href="{$display_path}visualize?compare={$q}{if(string($langParam)) then concat('&amp;lang=', $langParam) else ''}">
+							<a href="{$display_path}visualize?compare={substring-after($query, 'q=')}">
 								<!-- the image below is copyright of Mark James, available freely on wikimedia commons: http://commons.wikimedia.org/wiki/File:Chart_bar.png -->
 								<img src="{$include_path}/images/visualize.png" title="Visualize" alt="Visualize"/>
 							</a>
+							<xsl:if test="//lst[@name='mint_geo'][count(int) &gt; 0] or //lst[@name='findspot_geo'][count(int) &gt; 0]">
+								<div id="geodata">
+									<h4><xsl:value-of select="numishare:regularize_node('geographic', $lang)"/></h4>
+									<ul>
+										<xsl:if test="//lst[@name='mint_geo'][count(int) &gt; 0]">
+											<li><b>Mints: </b> <a href="{$display_path}mints.geojson{$query}">geoJSON</a>, <a href="{$display_path}mints.kml{$query}">KML</a></li>
+										</xsl:if>
+										<xsl:if test="//lst[@name='findspot_geo'][count(int) &gt; 0]">
+											<li><b>Findspots: </b>  <a href="{$display_path}findspots.geojson{$query}">geoJSON</a>, <a href="{$display_path}findspots.kml{$query}">KML</a></li>
+										</xsl:if>									
+									</ul>
+								</div>
+							</xsl:if>							
 						</div>
 						<div id="refine_results">
 							<xsl:call-template name="quick_search"/>
