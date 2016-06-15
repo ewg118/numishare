@@ -24,8 +24,9 @@
 	<!-- config variables-->
 	<xsl:variable name="collection_type" select="//config/collection_type"/>
 
-	<!-- load facets into variable -->
-	<xsl:variable name="facets" select="//lst[@name='facet_fields']" as="node()*"/>
+	<xsl:variable name="rdf" as="node()*">
+		<xsl:copy-of select="//rdf:RDF"/>
+	</xsl:variable>
 
 	<xsl:template match="/">
 		<html>
@@ -66,19 +67,43 @@
 					<h1>
 						<xsl:value-of select="numishare:normalizeLabel('header_symbols', $lang)"/>
 					</h1>
-					<table class="table table-striped">
-						<thead>
-							<th style="width:100px">
-								<xsl:value-of select="numishare:regularize_node('symbol', $lang)"/>
-							</th>
-							<th>
-								<xsl:value-of select="numishare:regularize_node('description', $lang)"/>
-							</th>
-						</thead>
-						<tbody>
-							<xsl:apply-templates select="//rdf:RDF/*" mode="symbol"/>
-						</tbody>
-					</table>
+
+					<!-- construct TOC -->
+					<h3>Types</h3>
+					<ul style="list-style-type:circle">
+						<xsl:for-each select="distinct-values(//rdf:RDF/*/local-name())">
+							<li>
+								<a href="#{.}">
+									<xsl:value-of select="concat(., 's')"/>
+								</a>
+							</li>
+						</xsl:for-each>
+					</ul>
+
+
+					<!-- construct sections for each type of symbol -->
+					<xsl:for-each select="distinct-values(//rdf:RDF/*/local-name())">
+						<xsl:variable name="class" select="."/>
+						<div id="{$class}">
+							<h2>
+								<xsl:value-of select="concat($class, 's')"/>
+							</h2>
+							<table class="table table-striped">
+								<thead>
+									<th style="width:100px">
+										<xsl:value-of select="numishare:regularize_node('symbol', $lang)"/>
+									</th>
+									<th>
+										<xsl:value-of select="numishare:regularize_node('description', $lang)"/>
+									</th>
+								</thead>
+								<tbody>
+									<xsl:apply-templates select="$rdf/*[local-name()=$class]" mode="symbol"/>
+								</tbody>
+							</table>
+						</div>
+					</xsl:for-each>
+
 
 				</div>
 			</div>
@@ -95,7 +120,7 @@
 					<xsl:if test="not(position()=last())">
 						<br/>
 					</xsl:if>
-				</xsl:for-each>				
+				</xsl:for-each>
 			</td>
 			<td>
 				<h3>
