@@ -742,6 +742,7 @@
 									<xsl:when test="$segs[3] = 'tri'">105</xsl:when>
 									<xsl:when test="$segs[3] = 'lug'">106</xsl:when>
 									<xsl:when test="$segs[3] = 'ar'">107</xsl:when>
+									<xsl:when test="$segs[3] = 'med'">107a</xsl:when>
 									<xsl:when test="$segs[3] = 'rom'">108</xsl:when>
 									<xsl:when test="$segs[3] = 'aq'">109</xsl:when>
 									<xsl:when test="$segs[3] = 'sis'">110</xsl:when>
