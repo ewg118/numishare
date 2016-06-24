@@ -1070,7 +1070,7 @@ function write_file($xml, $nudsid){
 		$filename = '/home/komet/ans_migration/ocre/new/' . $nudsid . '.xml';
 		$dom->save($filename);
 	
-		//put_to_exist($filename, $nudsid);
+		put_to_exist($filename, $nudsid);
 	}
 }
 
