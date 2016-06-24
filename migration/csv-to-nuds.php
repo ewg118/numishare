@@ -1,43 +1,58 @@
 <?php 
 
-$data = generate_json('/home/komet/ans_migration/ocre/probus.csv');
+//scan and process all files in the CSV folder
+$csvDir = '/home/komet/ans_migration/ocre/csv';
+$files = scandir($csvDir);
+
+//global arrays
 $deities_array = generate_json('deities.csv');
 $nomismaUris = array();
 $errors = array();
 $records = array();
 $processed = array();
 
-foreach ($data as $row){
-	echo "Processing {$row['Nomisma.org id']}\n";
-	$records[] = trim($row['Nomisma.org id']);
-	$xml = generate_nuds($row);
-	//write file
-	write_file($xml, trim($row['Nomisma.org id']));
-}
-
-if (count($errors) > 0){
-	$text = '';
-	foreach ($errors as $error){
+foreach ($files as $file){
+	if (strpos($file, '.csv') !== FALSE){
+		$data = generate_json($csvDir . '/' . $file);
+		
+		
+		foreach ($data as $row){
+			echo "Processing {$row['Nomisma.org id']}\n";
+			$records[] = trim($row['Nomisma.org id']);
+			$xml = generate_nuds($row);
+			//write file
+			write_file($xml, trim($row['Nomisma.org id']));
+		}
+		
+		if (count($errors) > 0){
+		$text = '';
+		foreach ($errors as $error){
 		$text .= "{$error}\n";
+		}
+			$handle = fopen('error.log', 'w');
+			fwrite($handle, $text);
+			fclose($handle);
+		}
+		
+		/*foreach ($records as $record){
+			if (!array_search($record, $processed)){
+				echo "Not found: {$record}\n";
+			}
+			}*/
+		
+			echo count($records) . " records\n";
+			echo count($processed) . " processed\n";
+			echo count($errors) . " errors\n";
+		
+			foreach ($errors as $error){
+			echo "Error: {$error}\n";
+		}
 	}
-	$handle = fopen('error.log', 'w');
-	fwrite($handle, $text);
-	fclose($handle);
 }
 
-/*foreach ($records as $record){
-	if (!array_search($record, $processed)){
-		echo "Not found: {$record}\n";
-	}
-}*/
 
-echo count($records) . " records\n";
-echo count($processed) . " processed\n";
-echo count($errors) . " errors\n";
 
-foreach ($errors as $error){
-	echo "Error: {$error}\n";
-}
+
 //$fileName = '/tmp/' . $nudsid . '.xml';
 
 
@@ -49,8 +64,13 @@ function generate_nuds($row){
 	$pieces = explode('.', $nudsid);
 	//develop date
 	
+	$date = '';
 	if (strlen($row['From Date']) > 0 && strlen($row['To Date']) > 0){
-			$date = get_date($row['From Date'], $row['To Date']);
+		$date = get_date($row['From Date'], $row['To Date']);
+	} elseif (strlen($row['From Date']) > 0){
+		$date = get_date($row['From Date'], $row['From Date']);
+	} elseif (strlen($row['To Date']) > 0){
+		$date = get_date($row['To Date'], $row['To Date']);
 	}
 
 	//control
@@ -158,6 +178,23 @@ function generate_nuds($row){
 			$xml .= processUri($uri, 'authority', false);
 		}
 	}
+	
+	//input stated authority
+	if (array_key_exists('Stated Authority URI', $row)){
+		if (strlen($row['Stated Authority URI']) > 0){
+			$vals = explode('|', $row['Stated Authority URI']);
+			foreach ($vals as $val){
+				if (substr($val, -1) == '?'){
+					$uri = substr($val, 0, -1);
+					$xml .= processUri($uri, 'statedAuthority', true);
+				} else {
+					$uri = $val;
+					$xml .= processUri($uri, 'statedAuthority', false);
+				}
+			}
+		}
+	}
+	
 	if (array_key_exists('Issuer URI',$row)){
 		if (strlen($row['Issuer URI']) > 0){
 			$vals = explode('|', $row['Issuer URI']);
@@ -218,7 +255,13 @@ function generate_nuds($row){
 			$vals = explode('|', $row['Obverse Portrait URI']);
 			foreach ($vals as $val){
 				if (strstr($val, 'http://') == true){
-					$xml .= processUri($val, 'portrait', false);
+					if (substr($val, -1) == '?'){
+						$uri = substr($val, 0, -1);
+						$xml .= processUri($uri, 'portrait', true);
+					} else {
+						$uri = $val;
+						$xml .= processUri($uri, 'portrait', false);
+					}
 				} else {
 					$xml .= '<persname xlink:type="simple" xlink:role="portrait">' . $val . '</persname>';
 				}
@@ -278,15 +321,21 @@ function generate_nuds($row){
 			$xml .= '<type><description xml:lang="en">' . trim($row['Reverse Type']) . '</description></type>';
 		}
 		if (strlen($row['Reverse Portrait URI']) > 0){
-			$vals = explode('|', $row['Reverse Portrait URI']);
-			foreach ($vals as $val){
-				if (strstr($val, 'http://') == true){
-					$xml .= processUri($val, 'portrait', false);
-				} else {
-					$xml .= '<persname xlink:type="simple" xlink:role="portrait">' . $val . '</persname>';
+				$vals = explode('|', $row['Reverse Portrait URI']);
+				foreach ($vals as $val){
+					if (strstr($val, 'http://') == true){
+						if (substr($val, -1) == '?'){
+							$uri = substr($val, 0, -1);
+							$xml .= processUri($uri, 'portrait', true);
+						} else {
+							$uri = $val;
+							$xml .= processUri($uri, 'portrait', false);
+						}
+					} else {
+						$xml .= '<persname xlink:type="simple" xlink:role="portrait">' . $val . '</persname>';
+					}
 				}
 			}
-		}
 	if (strlen($row['Reverse Deity']) > 0){
 			$vals = explode('|', $row['Reverse Deity']);
 			foreach ($vals as $val){
@@ -339,7 +388,7 @@ function generate_nuds($row){
 		if (strlen($row['Parent Mint Mark']) > 0){
 			$symbols = explode('or', $row['Parent Mint Mark']);
 			foreach ($symbols as $symbol){
-				$xml .= '<symbol localType="mintMark">' . trim($symbol) . '</symbol>';
+				$xml .= '<symbol localType="mintMark">' . str_replace('<', '&lt;', str_replace('>', '&gt;', trim($symbol))) . '</symbol>';
 			}
 		}
 		if (strlen($row['Officina Mark']) > 0){
@@ -348,6 +397,26 @@ function generate_nuds($row){
 				$xml .= '<symbol localType="officinaMark">' . trim($symbol) . '</symbol>';
 			}
 		}
+		
+		//monogram
+		if (array_key_exists('Monogram URI', $row)){
+			if (strlen(trim($row['Monogram URI'])) > 0){
+				$symbols = explode(' or ', $row['Monogram URI']);
+				foreach ($symbols as $symbolUri){
+					$xmlDoc = new DOMDocument();
+					$xmlDoc->load(trim($symbolUri) . '.rdf');
+					$xpath = new DOMXpath($xmlDoc);
+					$xpath->registerNamespace('skos', 'http://www.w3.org/2004/02/skos/core#');
+					$prefLabel = $xpath->query("descendant::skos:prefLabel[@xml:lang='en']")->item(0)->nodeValue;
+					
+					$xml .= '<symbol xlink:type="simple" xlink:href="' . trim($symbolUri) . '" xlink:role="monogram" localType="monogram" xlink:arcrole="nmo:hasMonogram">' .
+							$prefLabel . '</symbol>';
+				}
+				
+				
+			}
+		}
+		
 		$xml .= '</reverse>';
 	}
 	
@@ -419,6 +488,21 @@ function get_title($nudsid){
 			break;
 		case '5':
 			$vol = 'V';
+			break;
+		case '6':
+			$vol = 'VI';
+			break;
+		case '7':
+			$vol = 'VII';
+			break;
+		case '8':
+			$vol = 'VIII';
+			break;
+		case '9':
+			$vol = 'IX';
+			break;
+		case '10':
+			$vol = 'X';
 			break;
 	}
 	
@@ -640,6 +724,180 @@ function get_title($nudsid){
 		case 'pro':
 			$auth = 'Probus';
 			break;
+		case 'lon':
+			$auth = 'Londinium';
+			break;
+		case 'tri':
+			$auth = 'Treveri';
+			break;
+		case 'lug':
+			$auth = 'Lugdunum';
+			break;
+		case 'tic':
+			$auth = 'Ticinum';
+			break;
+		case 'aq':
+			$auth = 'Aquileia';
+			break;
+		case 'rom':
+			$auth = 'Rome';
+			break;
+		case 'ost':
+			$auth = 'Ostia';
+			break;
+		case 'carth':
+			$auth = 'Carthage';
+			break;
+		case 'sis':
+			$auth = 'Siscia';
+			break;
+		case 'serd':
+			$auth = 'Serdica';
+			break;
+		case 'her':
+			$auth = 'Heraclea';
+			break;
+		case 'nic':
+			$auth = 'Nicomedia';
+			break;
+		case 'cyz':
+			$auth = 'Cyzicus';
+			break;
+		case 'anch':
+			$auth = 'Antioch';
+			break;
+		case 'alex':
+			$auth = 'Alexandria';
+			break;
+		case 'ar':
+			$auth = 'Arelate';
+			break;
+		case 'thes':
+			$auth = 'Thessalonica';
+			break;
+		case 'sir':
+			$auth = 'Sirmium';
+			break;
+		case 'cnp':
+			$auth = 'Constantinople';
+			break;
+		case 'amb':
+			$auth = 'Amiens';
+			break;
+		case 'med':
+			$auth = 'Mediolanum';
+			break;
+		case 'arc_e':
+			$auth = 'Arcadius';
+			break;
+		case 'theo_ii_e':
+			$auth = 'Theodosius II (East)';
+			break;
+		case 'marc_e':
+			$auth = 'Marcian';
+			break;
+		case 'leo_i_e':
+			$auth = 'Leo I (East)';
+			break;
+		case 'leo_ii_e':
+			$auth = 'Leo II';
+			break;
+		case 'leo_ii-zen_e':
+			$auth = 'Leo II and Zeno';
+			break;
+		case 'zeno(1)_e':
+			$auth = 'Zeno';
+			break;
+		case 'bas_e':
+			$auth = 'Basiliscus';
+			break;
+		case 'bas-mar_e':
+			$auth = 'Basiliscus and Marcus';
+			break;
+		case 'zeno(2)_e':
+			$auth = 'Zeno (East)';
+			break;
+		case 'leon_e':
+			$auth = 'Leontius';
+			break;
+		case 'hon_w':
+			$auth = 'Honorius';
+			break;
+		case 'pr_att_w':
+			$auth = 'Priscus Attalus';
+			break;
+		case 'con_iii_w':
+			$auth = 'Constantine III';
+			break;
+		case 'max_barc_w':
+			$auth = 'Maximus of Barcelona';
+			break;
+		case 'jov_w':
+			$auth = 'Jovinus';
+			break;
+		case 'theo_ii_w':
+			$auth = 'Theodosius II (West)';
+			break;
+		case 'joh_w':
+			$auth = 'Johannes';
+			break;
+		case 'valt_iii_w':
+			$auth = 'Valentinian III';
+			break;
+		case 'pet_max_w':
+			$auth = 'Petronius Maximus';
+			break;
+		case 'marc_w':
+			$auth = 'Marcian';
+			break;
+		case 'av_w':
+			$auth = 'Avitus';
+			break;
+		case 'leo_i_w':
+			$auth = 'Leo I (West)';
+			break;
+		case 'maj_w':
+			$auth = 'Majorian';
+			break;
+		case 'lib_sev_w':
+			$auth = 'Libius Severus';
+			break;
+		case 'anth_w':
+			$auth = 'Anthemius';
+			break;
+		case 'oly_w':
+			$auth = 'Olybrius';
+			break;
+		case 'glyc_w':
+			$auth = 'Glycereius';
+			break;
+		case 'jul_nep_w':
+			$auth = 'Julius Nepos';
+			break;
+		case 'bas_w':
+			$auth = 'Basilicus';
+			break;
+		case 'rom_aug_w':
+			$auth = 'Romulus Augustulus';
+			break;
+		case 'odo_w':
+			$auth = 'Odoacar';
+			break;
+		case 'zeno_w':
+			$auth = 'Zeno (West)';
+			break;
+		case 'visi':
+			$auth = 'Visigoths';
+			break;
+		case 'gallia':
+			$auth = 'Burgundians or Franks';
+			break;
+		case 'spa':
+			$auth = 'Suevi';
+			break;
+		case 'afr':
+			$auth = 'Non-Imperial African';
+			break;
 	}
 	
 	if (strpos($pieces[3], '_') === FALSE){
@@ -812,7 +1070,7 @@ function write_file($xml, $nudsid){
 		$filename = '/home/komet/ans_migration/ocre/new/' . $nudsid . '.xml';
 		$dom->save($filename);
 	
-		put_to_exist($filename, $nudsid);
+		//put_to_exist($filename, $nudsid);
 	}
 }
 
