@@ -620,82 +620,182 @@
 					<xsl:variable name="segs" select="tokenize(nuds:control/nuds:recordId, '\.')"/>
 					<xsl:variable name="auth">
 						<xsl:choose>
-							<xsl:when test="$segs[3] = 'aug'">01</xsl:when>
-							<xsl:when test="$segs[3] = 'tib'">02</xsl:when>
-							<xsl:when test="$segs[3] = 'gai'">03</xsl:when>
-							<xsl:when test="$segs[3] = 'cl'">04</xsl:when>
+							<xsl:when test="$segs[3] = 'aug'">001</xsl:when>
+							<xsl:when test="$segs[3] = 'tib'">002</xsl:when>
+							<xsl:when test="$segs[3] = 'gai'">003</xsl:when>
+							<xsl:when test="$segs[3] = 'cl'">004</xsl:when>
 							<xsl:when test="$segs[3] = 'ner'">
 								<xsl:choose>
-									<xsl:when test="$segs[2]='1(2)'">05</xsl:when>
-									<xsl:when test="$segs[2]='2'">15</xsl:when>
+									<xsl:when test="$segs[2]='1(2)'">005</xsl:when>
+									<xsl:when test="$segs[2]='2'">015</xsl:when>
 								</xsl:choose>
 							</xsl:when>
-							<xsl:when test="$segs[3] = 'clm'">06</xsl:when>
-							<xsl:when test="$segs[3] = 'cw'">07</xsl:when>
-							<xsl:when test="$segs[3] = 'gal'">08</xsl:when>
-							<xsl:when test="$segs[3] = 'ot'">09</xsl:when>
-							<xsl:when test="$segs[3] = 'vit'">10</xsl:when>
-							<xsl:when test="$segs[3] = 'ves'">11</xsl:when>
-							<xsl:when test="$segs[3] = 'tit'">12</xsl:when>
-							<xsl:when test="$segs[3] = 'dom'">13</xsl:when>
-							<xsl:when test="$segs[3] = 'anys'">14</xsl:when>
-							<xsl:when test="$segs[3] = 'tr'">16</xsl:when>
-							<xsl:when test="$segs[3] = 'hdn'">17</xsl:when>
-							<xsl:when test="$segs[3] = 'ant'">18</xsl:when>
-							<xsl:when test="$segs[3] = 'm_aur'">19</xsl:when>
-							<xsl:when test="$segs[3] = 'com'">20</xsl:when>
-							<xsl:when test="$segs[3] = 'pert'">21</xsl:when>
-							<xsl:when test="$segs[3] = 'dj'">22</xsl:when>
-							<xsl:when test="$segs[3] = 'pn'">23</xsl:when>
-							<xsl:when test="$segs[3] = 'ca'">24</xsl:when>
-							<xsl:when test="$segs[3] = 'ss'">25</xsl:when>
-							<xsl:when test="$segs[3] = 'crl'">26</xsl:when>
-							<xsl:when test="$segs[3] = 'ge'">27</xsl:when>
-							<xsl:when test="$segs[3] = 'mcs'">28</xsl:when>
-							<xsl:when test="$segs[3] = 'el'">29</xsl:when>
-							<xsl:when test="$segs[3] = 'sa'">30</xsl:when>
-							<xsl:when test="$segs[3] = 'max_i'">31</xsl:when>
-							<xsl:when test="$segs[3] = 'pa'">32</xsl:when>
-							<xsl:when test="$segs[3] = 'mxs'">33</xsl:when>
-							<xsl:when test="$segs[3] = 'gor_i'">34</xsl:when>
-							<xsl:when test="$segs[3] = 'gor_ii'">35</xsl:when>
-							<xsl:when test="$segs[3] = 'balb'">36</xsl:when>
-							<xsl:when test="$segs[3] = 'pup'">37</xsl:when>
-							<xsl:when test="$segs[3] = 'gor_iii_caes'">38</xsl:when>
-							<xsl:when test="$segs[3] = 'gor_iii'">39</xsl:when>
-							<xsl:when test="$segs[3] = 'ph_i'">40</xsl:when>
-							<xsl:when test="$segs[3] = 'pac'">41</xsl:when>
-							<xsl:when test="$segs[3] = 'jot'">42</xsl:when>
-							<xsl:when test="$segs[3] = 'mar_s'">43</xsl:when>
-							<xsl:when test="$segs[3] = 'spon'">44</xsl:when>
-							<xsl:when test="$segs[3] = 'tr_d'">45</xsl:when>
-							<xsl:when test="$segs[3] = 'tr_g'">46</xsl:when>
-							<xsl:when test="$segs[3] = 'vo'">47</xsl:when>
-							<xsl:when test="$segs[3] = 'aem'">48</xsl:when>
-							<xsl:when test="$segs[3] = 'uran_ant'">49</xsl:when>
-							<xsl:when test="$segs[3] = 'val_i'">50</xsl:when>
-							<xsl:when test="$segs[3] = 'val_i-gall'">51</xsl:when>
-							<xsl:when test="$segs[3] = 'val_i-gall-val_ii-sala'">52</xsl:when>
-							<xsl:when test="$segs[3] = 'mar'">53</xsl:when>
-							<xsl:when test="$segs[3] = 'gall(1)'">54</xsl:when>
-							<xsl:when test="$segs[3] = 'gall_sala(1)'">55</xsl:when>
-							<xsl:when test="$segs[3] = 'gall_sals'">56</xsl:when>
-							<xsl:when test="$segs[3] = 'sala(1)'">57</xsl:when>
-							<xsl:when test="$segs[3] = 'val_ii'">58</xsl:when>
-							<xsl:when test="$segs[3] = 'sals'">59</xsl:when>
-							<xsl:when test="$segs[3] = 'qjg'">60</xsl:when>
-							<xsl:when test="$segs[3] = 'gall(2)'">61</xsl:when>
-							<xsl:when test="$segs[3] = 'gall_sala(2)'">62</xsl:when>
-							<xsl:when test="$segs[3] = 'sala(2)'">63</xsl:when>
-							<xsl:when test="$segs[3] = 'cg'">64</xsl:when>
-							<xsl:when test="$segs[3] = 'qu'">65</xsl:when>
-							<xsl:when test="$segs[3] = 'aur'">66</xsl:when>
-							<xsl:when test="$segs[3] = 'aur_seva'">67</xsl:when>
-							<xsl:when test="$segs[3] = 'seva'">68</xsl:when>
-							<xsl:when test="$segs[3] = 'tac'">69</xsl:when>
-							<xsl:when test="$segs[3] = 'fl'">70</xsl:when>
-							<xsl:when test="$segs[3] = 'intr'">71</xsl:when>
-							<xsl:when test="$segs[3] = 'pro'">72</xsl:when>
+							<xsl:when test="$segs[3] = 'clm'">006</xsl:when>
+							<xsl:when test="$segs[3] = 'cw'">007</xsl:when>
+							<xsl:when test="$segs[3] = 'gal'">008</xsl:when>
+							<xsl:when test="$segs[3] = 'ot'">009</xsl:when>
+							<xsl:when test="$segs[3] = 'vit'">010</xsl:when>
+							<xsl:when test="$segs[3] = 'ves'">011</xsl:when>
+							<xsl:when test="$segs[3] = 'tit'">012</xsl:when>
+							<xsl:when test="$segs[3] = 'dom'">013</xsl:when>
+							<xsl:when test="$segs[3] = 'anys'">014</xsl:when>
+							<xsl:when test="$segs[3] = 'tr'">016</xsl:when>
+							<xsl:when test="$segs[3] = 'hdn'">017</xsl:when>
+							<xsl:when test="$segs[3] = 'ant'">018</xsl:when>
+							<xsl:when test="$segs[3] = 'm_aur'">019</xsl:when>
+							<xsl:when test="$segs[3] = 'com'">020</xsl:when>
+							<xsl:when test="$segs[3] = 'pert'">021</xsl:when>
+							<xsl:when test="$segs[3] = 'dj'">022</xsl:when>
+							<xsl:when test="$segs[3] = 'pn'">023</xsl:when>
+							<xsl:when test="$segs[3] = 'ca'">024</xsl:when>
+							<xsl:when test="$segs[3] = 'ss'">025</xsl:when>
+							<xsl:when test="$segs[3] = 'crl'">026</xsl:when>
+							<xsl:when test="$segs[3] = 'ge'">027</xsl:when>
+							<xsl:when test="$segs[3] = 'mcs'">028</xsl:when>
+							<xsl:when test="$segs[3] = 'el'">029</xsl:when>
+							<xsl:when test="$segs[3] = 'sa'">030</xsl:when>
+							<xsl:when test="$segs[3] = 'max_i'">031</xsl:when>
+							<xsl:when test="$segs[3] = 'pa'">032</xsl:when>
+							<xsl:when test="$segs[3] = 'mxs'">033</xsl:when>
+							<xsl:when test="$segs[3] = 'gor_i'">034</xsl:when>
+							<xsl:when test="$segs[3] = 'gor_ii'">035</xsl:when>
+							<xsl:when test="$segs[3] = 'balb'">036</xsl:when>
+							<xsl:when test="$segs[3] = 'pup'">037</xsl:when>
+							<xsl:when test="$segs[3] = 'gor_iii_caes'">038</xsl:when>
+							<xsl:when test="$segs[3] = 'gor_iii'">039</xsl:when>
+							<xsl:when test="$segs[3] = 'ph_i'">040</xsl:when>
+							<xsl:when test="$segs[3] = 'pac'">041</xsl:when>
+							<xsl:when test="$segs[3] = 'jot'">042</xsl:when>
+							<xsl:when test="$segs[3] = 'mar_s'">043</xsl:when>
+							<xsl:when test="$segs[3] = 'spon'">044</xsl:when>
+							<xsl:when test="$segs[3] = 'tr_d'">045</xsl:when>
+							<xsl:when test="$segs[3] = 'tr_g'">046</xsl:when>
+							<xsl:when test="$segs[3] = 'vo'">047</xsl:when>
+							<xsl:when test="$segs[3] = 'aem'">048</xsl:when>
+							<xsl:when test="$segs[3] = 'uran_ant'">049</xsl:when>
+							<xsl:when test="$segs[3] = 'val_i'">050</xsl:when>
+							<xsl:when test="$segs[3] = 'val_i-gall'">051</xsl:when>
+							<xsl:when test="$segs[3] = 'val_i-gall-val_ii-sala'">052</xsl:when>
+							<xsl:when test="$segs[3] = 'mar'">053</xsl:when>
+							<xsl:when test="$segs[3] = 'gall(1)'">054</xsl:when>
+							<xsl:when test="$segs[3] = 'gall_sala(1)'">055</xsl:when>
+							<xsl:when test="$segs[3] = 'gall_sals'">056</xsl:when>
+							<xsl:when test="$segs[3] = 'sala(1)'">057</xsl:when>
+							<xsl:when test="$segs[3] = 'val_ii'">058</xsl:when>
+							<xsl:when test="$segs[3] = 'sals'">059</xsl:when>
+							<xsl:when test="$segs[3] = 'qjg'">060</xsl:when>
+							<xsl:when test="$segs[3] = 'gall(2)'">061</xsl:when>
+							<xsl:when test="$segs[3] = 'gall_sala(2)'">062</xsl:when>
+							<xsl:when test="$segs[3] = 'sala(2)'">063</xsl:when>
+							<xsl:when test="$segs[3] = 'cg'">064</xsl:when>
+							<xsl:when test="$segs[3] = 'qu'">065</xsl:when>
+							<xsl:when test="$segs[3] = 'aur'">066</xsl:when>
+							<xsl:when test="$segs[3] = 'aur_seva'">067</xsl:when>
+							<xsl:when test="$segs[3] = 'seva'">068</xsl:when>
+							<xsl:when test="$segs[3] = 'tac'">069</xsl:when>
+							<xsl:when test="$segs[3] = 'fl'">070</xsl:when>
+							<xsl:when test="$segs[3] = 'intr'">071</xsl:when>
+							<xsl:when test="$segs[3] = 'pro'">072</xsl:when>
+							<xsl:when test="$segs[2] = '6'">
+								<xsl:choose>
+									<xsl:when test="$segs[3] = 'lon'">073</xsl:when>
+									<xsl:when test="$segs[3] = 'tri'">074</xsl:when>
+									<xsl:when test="$segs[3] = 'lug'">075</xsl:when>
+									<xsl:when test="$segs[3] = 'tic'">076</xsl:when>
+									<xsl:when test="$segs[3] = 'aq'">077</xsl:when>
+									<xsl:when test="$segs[3] = 'rom'">078</xsl:when>
+									<xsl:when test="$segs[3] = 'ost'">079</xsl:when>
+									<xsl:when test="$segs[3] = 'carth'">080</xsl:when>
+									<xsl:when test="$segs[3] = 'sis'">081</xsl:when>
+									<xsl:when test="$segs[3] = 'serd'">082</xsl:when>
+									<xsl:when test="$segs[3] = 'her'">083</xsl:when>
+									<xsl:when test="$segs[3] = 'nic'">084</xsl:when>
+									<xsl:when test="$segs[3] = 'cyz'">085</xsl:when>
+									<xsl:when test="$segs[3] = 'anch'">086</xsl:when>
+									<xsl:when test="$segs[3] = 'alex'">087</xsl:when>
+									
+								</xsl:choose>
+							</xsl:when>
+							<xsl:when test="$segs[2] = '7'">
+								<xsl:choose>
+									<xsl:when test="$segs[3] = 'lon'">088</xsl:when>									
+									<xsl:when test="$segs[3] = 'lug'">089</xsl:when>
+									<xsl:when test="$segs[3] = 'tri'">090</xsl:when>
+									<xsl:when test="$segs[3] = 'ar'">091</xsl:when>
+									<xsl:when test="$segs[3] = 'rom'">092</xsl:when>
+									<xsl:when test="$segs[3] = 'tic'">093</xsl:when>
+									<xsl:when test="$segs[3] = 'aq'">094</xsl:when>									
+									<xsl:when test="$segs[3] = 'sis'">095</xsl:when>
+									<xsl:when test="$segs[3] = 'sir'">096</xsl:when>
+									<xsl:when test="$segs[3] = 'thes'">097</xsl:when>
+									<xsl:when test="$segs[3] = 'her'">098</xsl:when>
+									<xsl:when test="$segs[3] = 'cnp'">099</xsl:when>
+									<xsl:when test="$segs[3] = 'nic'">100</xsl:when>
+									<xsl:when test="$segs[3] = 'cyz'">101</xsl:when>
+									<xsl:when test="$segs[3] = 'anch'">102</xsl:when>
+									<xsl:when test="$segs[3] = 'alex'">103</xsl:when>
+								</xsl:choose>
+							</xsl:when>
+							<xsl:when test="$segs[2] = '8'">
+								<xsl:choose>
+									<xsl:when test="$segs[3] = 'amb'">104</xsl:when>									
+									<xsl:when test="$segs[3] = 'tri'">105</xsl:when>
+									<xsl:when test="$segs[3] = 'lug'">106</xsl:when>
+									<xsl:when test="$segs[3] = 'ar'">107</xsl:when>
+									<xsl:when test="$segs[3] = 'rom'">108</xsl:when>
+									<xsl:when test="$segs[3] = 'aq'">109</xsl:when>
+									<xsl:when test="$segs[3] = 'sis'">110</xsl:when>
+									<xsl:when test="$segs[3] = 'sir'">111</xsl:when>
+									<xsl:when test="$segs[3] = 'thes'">112</xsl:when>
+									<xsl:when test="$segs[3] = 'her'">113</xsl:when>
+									<xsl:when test="$segs[3] = 'cnp'">114</xsl:when>
+									<xsl:when test="$segs[3] = 'nic'">115</xsl:when>
+									<xsl:when test="$segs[3] = 'cyz'">116</xsl:when>
+									<xsl:when test="$segs[3] = 'anch'">117</xsl:when>
+									<xsl:when test="$segs[3] = 'alex'">118</xsl:when>
+								</xsl:choose>
+							</xsl:when>
+							<xsl:when test="$segs[2] = '10'">
+								<xsl:choose>
+									<xsl:when test="$segs[3] = 'arc_e'">119</xsl:when>
+									<xsl:when test="$segs[3] = 'theo_ii_e'">120</xsl:when>
+									<xsl:when test="$segs[3] = 'marc_e'">121</xsl:when>
+									<xsl:when test="$segs[3] = 'leo_i_e'">122</xsl:when>
+									<xsl:when test="$segs[3] = 'leo_ii_e'">123</xsl:when>
+									<xsl:when test="$segs[3] = 'leo_ii-zen_e'">124</xsl:when>
+									<xsl:when test="$segs[3] = 'zeno(1)_e'">125</xsl:when>
+									<xsl:when test="$segs[3] = 'bas_e'">126</xsl:when>
+									<xsl:when test="$segs[3] = 'bas-mar_e'">127</xsl:when>
+									<xsl:when test="$segs[3] = 'zeno(2)_e'">128</xsl:when>
+									<xsl:when test="$segs[3] = 'leon_e'">129</xsl:when>
+									<xsl:when test="$segs[3] = 'hon_w'">130</xsl:when>
+									<xsl:when test="$segs[3] = 'pr_att_w'">131</xsl:when>
+									<xsl:when test="$segs[3] = 'con_iii_w'">132</xsl:when>
+									<xsl:when test="$segs[3] = 'max_barc_w'">133</xsl:when>
+									<xsl:when test="$segs[3] = 'jov_w'">134</xsl:when>
+									<xsl:when test="$segs[3] = 'theo_ii_w'">135</xsl:when>
+									<xsl:when test="$segs[3] = 'joh_w'">136</xsl:when>
+									<xsl:when test="$segs[3] = 'valt_iii_w'">137</xsl:when>
+									<xsl:when test="$segs[3] = 'pet_max_w'">138</xsl:when>
+									<xsl:when test="$segs[3] = 'marc_w'">139</xsl:when>
+									<xsl:when test="$segs[3] = 'av_w'">140</xsl:when>
+									<xsl:when test="$segs[3] = 'leo_i_w'">141</xsl:when>									
+									<xsl:when test="$segs[3] = 'maj_w'">142</xsl:when>									
+									<xsl:when test="$segs[3] = 'lib_sev_w'">143</xsl:when>
+									<xsl:when test="$segs[3] = 'anth_w'">144</xsl:when>	
+									<xsl:when test="$segs[3] = 'oly_w'">145</xsl:when>
+									<xsl:when test="$segs[3] = 'glyc_w'">146</xsl:when>
+									<xsl:when test="$segs[3] = 'jul_nep_w'">147</xsl:when>
+									<xsl:when test="$segs[3] = 'bas_w'">148</xsl:when>
+									<xsl:when test="$segs[3] = 'rom_aug_w'">149</xsl:when>
+									<xsl:when test="$segs[3] = 'odo_w'">150</xsl:when>
+									<xsl:when test="$segs[3] = 'zeno_w'">151</xsl:when>
+									<xsl:when test="$segs[3] = 'visi'">152</xsl:when>
+									<xsl:when test="$segs[3] = 'gallia'">153</xsl:when>
+									<xsl:when test="$segs[3] = 'spa'">153</xsl:when>
+									<xsl:when test="$segs[3] = 'afr'">153</xsl:when>
+								</xsl:choose>
+							</xsl:when>
 						</xsl:choose>
 					</xsl:variable>
 					<xsl:variable name="num">
