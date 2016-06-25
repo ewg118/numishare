@@ -708,6 +708,7 @@
 									<xsl:when test="$segs[3] = 'carth'">080</xsl:when>
 									<xsl:when test="$segs[3] = 'sis'">081</xsl:when>
 									<xsl:when test="$segs[3] = 'serd'">082</xsl:when>
+									<xsl:when test="$segs[3] = 'thes'">082a</xsl:when>
 									<xsl:when test="$segs[3] = 'her'">083</xsl:when>
 									<xsl:when test="$segs[3] = 'nic'">084</xsl:when>
 									<xsl:when test="$segs[3] = 'cyz'">085</xsl:when>
@@ -727,6 +728,7 @@
 									<xsl:when test="$segs[3] = 'aq'">094</xsl:when>									
 									<xsl:when test="$segs[3] = 'sis'">095</xsl:when>
 									<xsl:when test="$segs[3] = 'sir'">096</xsl:when>
+									<xsl:when test="$segs[3] = 'serd'">096a</xsl:when>
 									<xsl:when test="$segs[3] = 'thes'">097</xsl:when>
 									<xsl:when test="$segs[3] = 'her'">098</xsl:when>
 									<xsl:when test="$segs[3] = 'cnp'">099</xsl:when>
