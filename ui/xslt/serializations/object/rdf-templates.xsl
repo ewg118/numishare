@@ -351,8 +351,14 @@
 		</dcterms:description>
 	</xsl:template>
 
-	<!-- ignore symbol for now -->
-	<xsl:template match="nuds:symbol" mode="nomisma"/>
+	<!-- only include the symbol if it has a designated RDF property through the @xlink:arcrole -->
+	<xsl:template match="nuds:symbol" mode="nomisma">
+		<xsl:if test="@xlink:arcole and @xlink:href">
+			<xsl:element name="{@xlink:arcrole}">
+				<xsl:attribute name="rdf:resource" select="@xlink:href"/>
+			</xsl:element>
+		</xsl:if>
+	</xsl:template>
 
 	<xsl:template match="nuds:material|nuds:denomination|nuds:manufacture|nuds:geogname|nuds:persname|nuds:corpname" mode="nomisma">
 		<xsl:variable name="element">
