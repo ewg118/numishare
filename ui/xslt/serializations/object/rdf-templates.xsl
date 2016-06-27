@@ -353,7 +353,7 @@
 
 	<!-- only include the symbol if it has a designated RDF property through the @xlink:arcrole -->
 	<xsl:template match="nuds:symbol" mode="nomisma">
-		<xsl:if test="@xlink:arcole and @xlink:href">
+		<xsl:if test="@xlink:arcrole and @xlink:href">			
 			<xsl:element name="{@xlink:arcrole}">
 				<xsl:attribute name="rdf:resource" select="@xlink:href"/>
 			</xsl:element>
