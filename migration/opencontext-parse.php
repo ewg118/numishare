@@ -236,8 +236,9 @@ function construct_rdf($records, $findspots){
 	$writer->writeAttribute('xmlns:void', "http://rdfs.org/ns/void#");
 	
 	//process findspots
-	foreach ($findspots as $findspot){
+	foreach ($findspots as $uri=>$findspot){
 		$writer->startElement('geo:SpatialThing');
+			$writer->writeAttribute('rdf:about', $uri);
 			$writer->writeElement('foaf:name', $findspot['name']);
 			$writer->startElement('geo:lat');
 				$writer->writeAttribute('rdf:datatype', 'http://www.w3.org/2001/XMLSchema#decimal');
