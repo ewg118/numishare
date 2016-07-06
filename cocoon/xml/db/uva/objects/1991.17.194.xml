@@ -34,10 +34,10 @@
 		</semanticDeclaration>
 	</control>
 	<descMeta>
-		<title xml:lang="en">As of Claudius II Gothicus, Rome, After A.D. 270. 1991.17.194.</title>
+		<title xml:lang="en">Antoninianus of Claudius II Gothicus, Rome, After A.D. 270. 1991.17.194.</title>
 		<typeDesc>
 			<objectType xlink:href="http://nomisma.org/id/coin">Coin</objectType>
-			<denomination xlink:href="http://nomisma.org/id/as">As</denomination>
+			<denomination xlink:href="http://nomisma.org/id/antoninianus">Antoninianus</denomination>
 			<material xlink:type="simple" xlink:href="http://nomisma.org/id/ar">Silver</material>
 			<date standardDate="0270">After A.D. 270</date>
 			<authority>
@@ -60,6 +60,7 @@
 					<description xml:lang="en">Altar with eagle standing left.</description>
 				</type>
 				<legend>CONSECRATIO</legend>
+				<symbol localType="mintMark">-/-//-</symbol>
 			</reverse>
 		</typeDesc>
 		<physDesc>
