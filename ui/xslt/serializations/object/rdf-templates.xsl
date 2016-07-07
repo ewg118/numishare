@@ -7,54 +7,6 @@
 	xmlns:numishare="https://github.com/ewg118/numishare" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:mets="http://www.loc.gov/METS/" xmlns:xsd="http://www.w3.org/2001/XMLSchema#" version="2.0">
 
 	<!-- ************** OBJECT-TO-RDF **************** -->
-	<xsl:template name="rdf">
-		<rdf:RDF>
-			<xsl:choose>
-				<xsl:when test="$mode='pelagios'">
-					<xsl:choose>
-						<xsl:when test="count(/content/*[local-name()='nuds']) &gt; 0">
-							<xsl:apply-templates select="/content/nuds:nuds" mode="pelagios"/>
-						</xsl:when>
-						<xsl:when test="count(/content/*[local-name()='nudsHoard']) &gt; 0">
-							<xsl:apply-templates select="/content/nh:nudsHoard" mode="pelagios"/>
-						</xsl:when>
-					</xsl:choose>
-				</xsl:when>
-				<xsl:when test="$mode='nomisma'">
-					<xsl:choose>
-						<xsl:when test="count(/content/*[local-name()='nuds']) &gt; 0">
-							<xsl:apply-templates select="/content/nuds:nuds" mode="nomisma"/>
-						</xsl:when>
-						<xsl:when test="count(/content/*[local-name()='nudsHoard']) &gt; 0">
-							<xsl:apply-templates select="/content/nh:nudsHoard" mode="nomisma"/>
-						</xsl:when>
-					</xsl:choose>
-				</xsl:when>
-				<xsl:when test="$mode='cidoc'">
-					<xsl:choose>
-						<xsl:when test="count(/content/*[local-name()='nuds']) &gt; 0">
-							<xsl:apply-templates select="/content/nuds:nuds" mode="cidoc"/>
-						</xsl:when>
-						<xsl:when test="count(/content/*[local-name()='nudsHoard']) &gt; 0">
-							<xsl:apply-templates select="/content/nh:nudsHoard" mode="cidoc"/>
-						</xsl:when>
-					</xsl:choose>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:choose>
-						<xsl:when test="count(/content/*[local-name()='nuds']) &gt; 0">
-							<xsl:apply-templates select="/content/nuds:nuds" mode="nomisma"/>
-						</xsl:when>
-						<xsl:when test="count(/content/*[local-name()='nudsHoard']) &gt; 0">
-							<xsl:apply-templates select="/content/nh:nudsHoard" mode="nomisma"/>
-						</xsl:when>
-					</xsl:choose>
-				</xsl:otherwise>
-			</xsl:choose>
-		</rdf:RDF>
-	</xsl:template>
-
-
 	<xsl:template match="nuds:nuds|nh:nudsHoard" mode="pelagios">
 		<xsl:variable name="id" select="descendant::*[local-name()='recordId']"/>
 		<!-- get timestamp of last modification date of the NUDS record -->
@@ -93,7 +45,7 @@
 			</xsl:if>
 		</pelagios:AnnotatedThing>
 		<!-- create annotations from pleiades URIs found in nomisma RDF and from findspots -->
-		<xsl:for-each select="distinct-values($rdf//skos:related[contains(@rdf:resource, 'pleiades')]/@rdf:resource)">
+		<xsl:for-each select="distinct-values($rdf//skos:closeMatch[contains(@rdf:resource, 'pleiades')]/@rdf:resource)">
 			<oa:Annotation rdf:about="{$url}pelagios.rdf#{$id}/annotations/{format-number(position(), '000')}">
 				<oa:hasBody rdf:resource="{.}#this"/>
 				<oa:hasTarget rdf:resource="{$url}pelagios.rdf#{$id}"/>
@@ -106,12 +58,13 @@
 		</xsl:for-each>
 		<xsl:apply-templates select="descendant::*:geogname[@xlink:role='findspot'][string(@xlink:href)]|descendant::*:findspotDesc[string(@xlink:href)]" mode="pelagios">
 			<xsl:with-param name="id" select="$id"/>
-			<xsl:with-param name="count" select="count(distinct-values($rdf//skos:related[contains(@rdf:resource, 'pleiades')]/@rdf:resource))"/>
+			<xsl:with-param name="count" select="count(distinct-values($rdf//skos:closeMatch[contains(@rdf:resource, 'pleiades')]/@rdf:resource))"/>
 			<xsl:with-param name="date" select="$date"/>
 		</xsl:apply-templates>
 	</xsl:template>
 
-	<xsl:template match="nuds:nuds|nh:nudsHoard" mode="cidoc">
+	<!-- PROCESS NUDS RECORDS INTO CIDOC-CRM FOLLOWING THE BRITISH MUSUEM MODEL -->
+	<xsl:template match="nuds:nuds|nh:nudsHoard" mode="crm">
 		<xsl:variable name="id" select="descendant::*[local-name()='recordId']"/>
 		<xsl:text>(not yet developed)</xsl:text>
 	</xsl:template>
