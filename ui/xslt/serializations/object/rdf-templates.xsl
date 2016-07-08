@@ -239,7 +239,7 @@
 		</crm:P128_carries>
 	</xsl:template>
 
-	<xsl:template match="nuds:symbol">
+	<xsl:template match="nuds:symbol" mode="crm">
 		<crm:P106_is_composed_of>
 			<xsl:if test="@xlink:href">
 				<xsl:attribute name="rdf:resource" select="@xlink:href"/>
@@ -257,7 +257,6 @@
 						</rdfs:label>
 					</xsl:otherwise>
 				</xsl:choose>
-
 			</crm:E90_Symbolic_Object>
 		</crm:P106_is_composed_of>
 
