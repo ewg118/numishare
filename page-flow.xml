@@ -79,7 +79,7 @@
 	
 	<!-- id -->
 	<page path="/numishare/mantis/id/(.*)\.xml" view="file:///usr/local/projects/mantis/xpl/models/object/get-id.xpl"/>
-	<page path="/numishare/mantis/id/(.*)\.rdf" model="file:///usr/local/projects/mantis/xpl/models/object/get-id.xpl" view="file:///usr/local/projects/mantis/xpl/views/serializations/object/rdf.xpl"/>
+	<page path="/numishare/mantis/id/(.*)\.rdf" model="file:///usr/local/projects/mantis/xpl/models/object/get-id.xpl" view="xpl/views/serializations/object/rdf.xpl"/>
 	<page path="/numishare/mantis/id/(.*)\.jsonld" model="file:///usr/local/projects/mantis/xpl/models/object/get-id.xpl" view="xpl/views/serializations/rdf/json-ld.xpl"/>
 	<page path="/numishare/mantis/id/(.*)\.kml" model="file:///usr/local/projects/mantis/xpl/models/object/get-id.xpl" view="xpl/views/serializations/object/kml.xpl"/>
 	<page path="/numishare/mantis/id/(.*)\.ttl" model="file:///usr/local/projects/mantis/xpl/models/object/get-id.xpl" view="xpl/views/serializations/rdf/ttl.xpl"/>

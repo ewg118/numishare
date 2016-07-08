@@ -2,9 +2,10 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes="#all" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"
 	xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nm="http://nomisma.org/id/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:nuds="http://nomisma.org/nuds"
 	xmlns:nh="http://nomisma.org/nudsHoard" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:oa="http://www.w3.org/ns/oa#"
-	xmlns:ecrm="http://erlangen-crm.org/current/" xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:pelagios="http://pelagios.github.io/vocab/terms#" xmlns:void="http://rdfs.org/ns/void#"
-	xmlns:relations="http://pelagios.github.io/vocab/relations#" xmlns:nmo="http://nomisma.org/ontology#" xmlns:dcmitype="http://purl.org/dc/dcmitype/"
-	xmlns:numishare="https://github.com/ewg118/numishare" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:mets="http://www.loc.gov/METS/" xmlns:xsd="http://www.w3.org/2001/XMLSchema#" version="2.0">
+	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:ecrm="http://erlangen-crm.org/current/" xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:pelagios="http://pelagios.github.io/vocab/terms#"
+	xmlns:void="http://rdfs.org/ns/void#" xmlns:relations="http://pelagios.github.io/vocab/relations#" xmlns:nmo="http://nomisma.org/ontology#" xmlns:dcmitype="http://purl.org/dc/dcmitype/"
+	xmlns:crm="http://www.cidoc-crm.org/cidoc-crm/" xmlns:numishare="https://github.com/ewg118/numishare" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:mets="http://www.loc.gov/METS/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema#" version="2.0">
 
 	<!-- ************** OBJECT-TO-RDF **************** -->
 	<xsl:template match="nuds:nuds|nh:nudsHoard" mode="pelagios">
@@ -64,11 +65,203 @@
 	</xsl:template>
 
 	<!-- PROCESS NUDS RECORDS INTO CIDOC-CRM FOLLOWING THE BRITISH MUSUEM MODEL -->
-	<xsl:template match="nuds:nuds|nh:nudsHoard" mode="crm">
-		<xsl:variable name="id" select="descendant::*[local-name()='recordId']"/>
-		<xsl:text>(not yet developed)</xsl:text>
+	<xsl:template match="nh:nudsHoard" mode="crm">
+		<xsl:text>not yet implemented</xsl:text>
 	</xsl:template>
 
+	<xsl:template match="nuds:nuds" mode="crm">
+		<xsl:variable name="id" select="descendant::*[local-name()='recordId']"/>
+		<xsl:variable name="uri" select="if (string($uri_space)) then concat($uri_space, $id) else concat($url, 'id/', $id)"/>
+
+		<xsl:element name="{if (@recordType='conceptual') then 'crm:E55_Type' else 'crm:E22_Man-Made_Object'}" namespace="http://erlangen-crm.org/current/">
+			<xsl:attribute name="rdf:about" select="$uri"/>
+
+			<xsl:for-each select="descendant::nuds:descMeta/nuds:title">
+				<dcterms:title>
+					<xsl:if test="string(@xml:lang)">
+						<xsl:attribute name="xml:lang" select="@xml:lang"/>
+					</xsl:if>
+					To-do list: proper CRM titles
+					<!--<rdfs:label><xsl:value-of select="."/></rdfs:label>-->
+				</dcterms:title>
+			</xsl:for-each>
+
+			<xsl:apply-templates select="nuds:descMeta/nuds:physDesc" mode="crm"/>
+			<xsl:apply-templates select="$nudsGroup//nuds:typeDesc" mode="crm-attr"/>
+
+			<!-- production events -->
+			<crm:P108i_was_produced_by>
+				<crm:E12_Production>
+					<xsl:apply-templates select="$nudsGroup//nuds:typeDesc" mode="crm-prod"/>
+				</crm:E12_Production>
+			</crm:P108i_was_produced_by>
+
+			<xsl:if test="$nudsGroup//nuds:typeDesc/nuds:obverse">
+				<crm:P128_carries rdf:resource="{$uri}#obverse"/>
+			</xsl:if>
+			<xsl:if test="$nudsGroup//nuds:typeDesc/nuds:reverse">
+				<crm:P128_carries rdf:resource="{$uri}#reverse"/>
+			</xsl:if>
+		</xsl:element>
+
+		<xsl:apply-templates select="$nudsGroup//nuds:typeDesc/nuds:obverse|$nudsGroup//nuds:typeDesc/nuds:reverse" mode="crm">
+			<xsl:with-param name="uri" select="$uri"/>
+		</xsl:apply-templates>
+	</xsl:template>
+
+	<xsl:template match="nuds:physDesc" mode="crm">
+		<xsl:apply-templates select="nuds:axis|nuds:measurementsSet" mode="crm"/>
+	</xsl:template>
+
+	<xsl:template match="nuds:measurementsSet" mode="crm">
+		<xsl:apply-templates mode="crm"/>
+	</xsl:template>
+
+	<!-- typological attributes -->
+	<xsl:template match="nuds:typeDesc" mode="crm-attr">
+		<xsl:if test="ancestor::object/@xlink:href">
+			<nmo:hasTypeSeriesItem rdf:resource="{ancestor::object/@xlink:href}"/>
+		</xsl:if>
+		
+		<xsl:apply-templates select="nuds:denomination[@xlink:href]|nuds:material[@xlink:href]|nuds:objectType[@xlink:href]" mode="crm"/>
+	</xsl:template>
+
+	<!-- properties of E12_Production -->
+	<xsl:template match="nuds:typeDesc" mode="crm-prod">
+		<xsl:apply-templates select="nuds:date|nuds:dateRange|nuds:manufacture|nuds:authority/*|nuds:geographic/nuds:geogname[@xlink:role='mint']" mode="crm"/>
+	</xsl:template>
+
+	<xsl:template match="nuds:material" mode="crm">
+		<crm:P45_consists_of rdf:resource="{@xlink:href}"/>
+	</xsl:template>
+
+	<xsl:template match="nuds:objectType" mode="crm"/>
+
+	<xsl:template match="nuds:denomination|nuds:weight|nuds:diameter|nuds:axis|nuds:thickness" mode="crm">
+		<xsl:variable name="unit">
+			<xsl:choose>
+				<xsl:when test="@xlink:href">
+					<xsl:value-of select="@xlink:href"/>
+				</xsl:when>
+				<xsl:when test="self::nuds:weight">http://qudt.org/vocab/unit#Grams</xsl:when>
+				<xsl:when test="self::nuds:diameter or self::nuds:thickness">http://qudt.org/vocab/unit#Millimeter</xsl:when>
+			</xsl:choose>
+		</xsl:variable>
+
+		<crm:P43_has_dimension>
+			<crm:E54_Dimension>
+				<crm:P2_has_type rdf:resource="http://collection.britishmuseum.org/resource/thesDimension/{if (self::nuds:denomination) then 'currency' else local-name()}"/>
+
+				<xsl:if test="string($unit)">
+					<crm:P91_has_unit rdf:resource="{$unit}"/>
+				</xsl:if>
+				<xsl:choose>
+					<xsl:when test="text() castable as xs:integer">
+						<crm:P90_has_value rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">
+							<xsl:value-of select="."/>
+						</crm:P90_has_value>
+					</xsl:when>
+					<xsl:when test="text() castable as xs:decimal">
+						<crm:P90_has_value rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">
+							<xsl:value-of select="."/>
+						</crm:P90_has_value>
+					</xsl:when>
+				</xsl:choose>
+			</crm:E54_Dimension>
+		</crm:P43_has_dimension>
+	</xsl:template>
+
+	<!-- means of production -->
+	<xsl:template match="nuds:date|nuds:dateRange" mode="crm">
+		<crm:P4_has_time-span>
+			<crm:E52_Time-Span>
+				<crm:P82a_begin_of_the_begin rdf:datatype="http://www.w3.org/2001/XMLSchema#gYear">
+					<xsl:value-of select="if (@standardDate) then @standardDate else nuds:fromDate/@standardDate"/>
+				</crm:P82a_begin_of_the_begin>
+				<crm:P82b_end_of_the_end rdf:datatype="http://www.w3.org/2001/XMLSchema#gYear">
+					<xsl:value-of select="if (@standardDate) then @standardDate else nuds:toDate/@standardDate"/>
+				</crm:P82b_end_of_the_end>
+			</crm:E52_Time-Span>
+		</crm:P4_has_time-span>
+	</xsl:template>
+
+	<xsl:template match="nuds:manufacture" mode="crm">
+		<crm:P32_used_general_technique rdf:resource="{@xlink:href}"/>
+	</xsl:template>
+
+	<xsl:template match="nuds:*[@xlink:role]" mode="crm">
+		<xsl:choose>
+			<!-- will likely need to create separate E12_Production objects to differentiate between authorities and issuers -->
+			<xsl:when test="@xlink:role='issuer' or @xlink:role='authority'">
+				<crm:P17_was_motivated_by rdf:resource="{@xlink:href}"/>
+			</xsl:when>
+			<xsl:when test="@xlink:role='statedAuthority'">
+				<crm:P17_was_motivated_by rdf:resource="{@xlink:href}"/>
+			</xsl:when>
+			<xsl:when test="@xlink:role='mint'">
+				<crm:P7_took_place_at rdf:resource="{@xlink:href}"/>
+			</xsl:when>
+			<xsl:when test="@xlink:role='portrait' or @xlink:role='deity'">
+				<crm:P138i_has_representation rdf:resource="{@xlink:href}"/>
+			</xsl:when>
+		</xsl:choose>
+	</xsl:template>
+
+	<!-- obverse and reverse -->
+	<xsl:template match="nuds:obverse|nuds:reverse" mode="crm">
+		<xsl:param name="uri"/>
+
+		<crm:E73_Information_Object rdf:about="{$uri}#{local-name()}">
+			<crm:P2_has_type rdf:resource="http://nomisma.org/id/{local-name()}"/>
+
+			<xsl:for-each select="nuds:type/nuds:description">
+				<crm:P3_has_note>
+					<xsl:if test="string(@xml:lang)">
+						<xsl:attribute name="xml:lang" select="@xml:lang"/>
+					</xsl:if>
+					<xsl:value-of select="."/>
+				</crm:P3_has_note>
+			</xsl:for-each>
+
+			<xsl:apply-templates select="*[@xlink:role]" mode="crm"/>
+
+			<xsl:apply-templates select="nuds:legend|nuds:symbol" mode="crm"/>
+		</crm:E73_Information_Object>
+	</xsl:template>
+
+	<xsl:template match="nuds:legend" mode="crm">
+		<crm:P128_carries>
+			<crm:E34_Inscription>
+				<rdfs:label>
+					<xsl:value-of select="."/>
+				</rdfs:label>
+			</crm:E34_Inscription>
+		</crm:P128_carries>
+	</xsl:template>
+
+	<xsl:template match="nuds:symbol">
+		<crm:P106_is_composed_of>
+			<xsl:if test="@xlink:href">
+				<xsl:attribute name="rdf:resource" select="@xlink:href"/>
+			</xsl:if>
+			<crm:E90_Symbolic_Object>
+				<!-- to-do, insert placement -->
+
+				<xsl:choose>
+					<xsl:when test="@xlink:href">
+						<xsl:attribute name="rdf:about" select="@xlink:href"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<rdfs:label>
+							<xsl:value-of select="."/>
+						</rdfs:label>
+					</xsl:otherwise>
+				</xsl:choose>
+
+			</crm:E90_Symbolic_Object>
+		</crm:P106_is_composed_of>
+
+	</xsl:template>
 
 	<!-- PROCESS NUDS RECORDS INTO NOMISMA COMPLIANT RDF MODELS -->
 	<xsl:template match="nuds:nuds" mode="nomisma">
@@ -306,7 +499,7 @@
 
 	<!-- only include the symbol if it has a designated RDF property through the @xlink:arcrole -->
 	<xsl:template match="nuds:symbol" mode="nomisma">
-		<xsl:if test="@xlink:arcrole and @xlink:href">			
+		<xsl:if test="@xlink:arcrole and @xlink:href">
 			<xsl:element name="{@xlink:arcrole}">
 				<xsl:attribute name="rdf:resource" select="@xlink:href"/>
 			</xsl:element>
