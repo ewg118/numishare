@@ -223,7 +223,8 @@ if (($handle = fopen("/tmp/" . $csv_id . ".csv", "r")) !== FALSE) {
 function generate_nuds($row, $count){
 	GLOBAL $warnings;
 	
-	$coinType_uri = '';
+	$ocreUri = '';
+	$ocreTitle = '';
 
 	//generate collection year for images
 	$accnum = trim($row['accnum']);
@@ -269,10 +270,11 @@ function generate_nuds($row, $count){
 				if ($currentUri != 'FAIL'){
 					$title = get_title_from_rdf($currentUri, $accnum);
 					if ($title != 'FAIL'){
-						$xml .= $title;
+						$xml .= '<title xml:lang="en">' . $title . '</title>';
 						//$xml .= '<typeDesc xlink:type="simple" xlink:href="' . $currentUri . '"' . $certainty . '/>';
 						$xml .= generate_typeDesc_from_OCRE($row, $currentUri, $certainty);
-						$coinType_uri = $currentUri;
+						$ocreUri = $currentUri;
+						$ocreTitle = $title;
 					} else {
 						$xml .= generate_typeDesc($row, $department);
 					}
@@ -303,7 +305,7 @@ function generate_nuds($row, $count){
 		if ($file_headers[0] == 'HTTP/1.1 200 OK'){
 			$title = get_title_from_rdf($url, $accnum);
 			if ($title != 'FAIL'){
-				$xml .= $title;
+				$xml .= '<title xml:lang="en">' . $title . '</title>';
 				$xml .= '<typeDesc xlink:type="simple" xlink:href="' . $url . '"' . $certainty . '/>';
 			} else {
 				$xml .= generate_typeDesc($row, $department);
@@ -325,7 +327,7 @@ function generate_nuds($row, $count){
 		if ($file_headers[0] == 'HTTP/1.1 200 OK'){
 			$title = get_title_from_rdf($url, $accnum);
 			if ($title != 'FAIL'){
-				$xml .= $title;
+				$xml .= '<title xml:lang="en">' . $title . '</title>';
 				$xml .= '<typeDesc xlink:type="simple" xlink:href="' . $url . '"' . $certainty . '/>';
 			} else {
 				$xml .= generate_typeDesc($row, $department);
@@ -342,7 +344,7 @@ function generate_nuds($row, $count){
 		if ($file_headers[0] == 'HTTP/1.1 200 OK'){
 			$title = get_title_from_rdf($url, $accnum);
 			if ($title != 'FAIL'){
-				$xml .= $title;
+				$xml .= '<title xml:lang="en">' . $title . '</title>';
 				$xml .= '<typeDesc xlink:type="simple" xlink:href="' . $url . '"/>';
 			} else {
 				$xml .= generate_typeDesc($row, $department);
@@ -516,8 +518,8 @@ function generate_nuds($row, $count){
 				$certainty = substr($val, -1) == '?' ? ' certainty="uncertain"' : '';
 				//insert OCRE URIs into a normalized reference field				
 				
-				if (strlen($coinType_uri) > 0){
-					$xml .= '<reference' . $certainty . ' xlink:type="simple" xlink:arcrole="nmo:hasTypeSeriesItem" xlink:href="' . $url . '">' . $label . '</reference>';
+				if (strlen($ocreUri) > 0){
+					$xml .= '<reference' . $certainty . ' xlink:type="simple" xlink:arcrole="nmo:hasTypeSeriesItem" xlink:href="' . $url . '">' . $ocreTitle . '</reference>';
 				} else {
 					$label = str_replace('?', '', trim($val));
 					$xml .= '<reference' . $certainty . '>' . $label . '</reference>';
@@ -1457,9 +1459,11 @@ function get_title_from_rdf($url, $accnum){
 		$xpath->registerNamespace('dcterms', 'http://purl.org/dc/terms/');
 		$titles = $xpath->query("descendant::skos:prefLabel[@xml:lang='en']|descendant::dcterms:title");
 		if ($accnum != null){
-			return '<title xml:lang="en">' . $titles->item(0)->nodeValue . '. ' . $accnum . '</title>';
+			$title = $titles->item(0)->nodeValue . '. ' . $accnum;
+			return $title;
 		} else {
-			return $titles->item(0)->nodeValue;
+			$title = $titles->item(0)->nodeValue;
+			return $title;
 		}
 		
 	}	
