@@ -222,6 +222,8 @@ if (($handle = fopen("/tmp/" . $csv_id . ".csv", "r")) !== FALSE) {
 /****** GENERATE NUDS ******/
 function generate_nuds($row, $count){
 	GLOBAL $warnings;
+	
+	$coinType_uri = '';
 
 	//generate collection year for images
 	$accnum = trim($row['accnum']);
@@ -270,6 +272,7 @@ function generate_nuds($row, $count){
 						$xml .= $title;
 						//$xml .= '<typeDesc xlink:type="simple" xlink:href="' . $currentUri . '"' . $certainty . '/>';
 						$xml .= generate_typeDesc_from_OCRE($row, $currentUri, $certainty);
+						$coinType_uri = $currentUri;
 					} else {
 						$xml .= generate_typeDesc($row, $department);
 					}
@@ -511,33 +514,11 @@ function generate_nuds($row, $count){
 		if (count($refs) > 0){
 			foreach ($refs as $val){		
 				$certainty = substr($val, -1) == '?' ? ' certainty="uncertain"' : '';
-				//insert OCRE URIs into a normalized reference field
-				if (strstr($val, 'ric.1(2).') !== FALSE  || strstr($val, 'ric.2_1(2).') !== FALSE || strstr($val, 'ric.2.') !== FALSE  || strstr($val, 'ric.3.') !== FALSE  || strstr($val, 'ric.4.') !== FALSE || strstr($val, 'ric.5.') !== FALSE){
-					$id = substr(trim($val), -1) == '?' ? str_replace('?', '', trim($val)) : trim($val);
-					$url = 'http://numismatics.org/ocre/id/' . $id;
-					$file_headers = @get_headers($url);
-					if ($file_headers[0] == 'HTTP/1.1 200 OK'){
-						$currentUri = get_current_ocre_uri($url);
-						if ($currentUri != 'FAIL'){
-							$title = get_title_from_rdf($currentUri, null);
-							if ($title != 'FAIL'){
-								$label = $title;
-								$xml .= '<reference' . $certainty . ' xlink:type="simple" xlink:arcrole="nmo:hasTypeSeriesItem" xlink:href="' . $url . '">' . $label . '</reference>';
-							} else {
-								$label = str_replace('?', '', trim($val));
-								$xml .= '<reference' . $certainty . '>' . $label . '</reference>';
-							}
-						} else {
-							$label = str_replace('?', '', trim($val));
-							$xml .= '<reference' . $certainty . '>' . $label . '</reference>';
-						}				
-					}
-					else {
-						$label = str_replace('?', '', trim($val));
-						$xml .= '<reference' . $certainty . '>' . $label . '</reference>';
-					}
-				}
-				else {
+				//insert OCRE URIs into a normalized reference field				
+				
+				if (strlen($coinType_uri) > 0){
+					$xml .= '<reference' . $certainty . ' xlink:type="simple" xlink:arcrole="nmo:hasTypeSeriesItem" xlink:href="' . $url . '">' . $label . '</reference>';
+				} else {
 					$label = str_replace('?', '', trim($val));
 					$xml .= '<reference' . $certainty . '>' . $label . '</reference>';
 				}
