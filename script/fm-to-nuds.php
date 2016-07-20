@@ -270,7 +270,7 @@ function generate_nuds($row, $count){
 				if ($currentUri != 'FAIL'){
 					$title = get_title_from_rdf($currentUri, $accnum);
 					if ($title != 'FAIL'){
-						$xml .= '<title xml:lang="en">' . $title . '</title>';
+						$xml .= '<title xml:lang="en">' . $title . '. ' . $accnum . '</title>';
 						//$xml .= '<typeDesc xlink:type="simple" xlink:href="' . $currentUri . '"' . $certainty . '/>';
 						$xml .= generate_typeDesc_from_OCRE($row, $currentUri, $certainty);
 						$ocreUri = $currentUri;
@@ -305,7 +305,7 @@ function generate_nuds($row, $count){
 		if ($file_headers[0] == 'HTTP/1.1 200 OK'){
 			$title = get_title_from_rdf($url, $accnum);
 			if ($title != 'FAIL'){
-				$xml .= '<title xml:lang="en">' . $title . '</title>';
+				$xml .= '<title xml:lang="en">' . $title . '. ' . $accnum . '</title>';
 				$xml .= '<typeDesc xlink:type="simple" xlink:href="' . $url . '"' . $certainty . '/>';
 			} else {
 				$xml .= generate_typeDesc($row, $department);
@@ -327,7 +327,7 @@ function generate_nuds($row, $count){
 		if ($file_headers[0] == 'HTTP/1.1 200 OK'){
 			$title = get_title_from_rdf($url, $accnum);
 			if ($title != 'FAIL'){
-				$xml .= '<title xml:lang="en">' . $title . '</title>';
+				$xml .= '<title xml:lang="en">' . $title . '. ' . $accnum . '</title>';
 				$xml .= '<typeDesc xlink:type="simple" xlink:href="' . $url . '"' . $certainty . '/>';
 			} else {
 				$xml .= generate_typeDesc($row, $department);
@@ -344,7 +344,7 @@ function generate_nuds($row, $count){
 		if ($file_headers[0] == 'HTTP/1.1 200 OK'){
 			$title = get_title_from_rdf($url, $accnum);
 			if ($title != 'FAIL'){
-				$xml .= '<title xml:lang="en">' . $title . '</title>';
+				$xml .= '<title xml:lang="en">' . $title . '. ' . $accnum . '</title>';
 				$xml .= '<typeDesc xlink:type="simple" xlink:href="' . $url . '"/>';
 			} else {
 				$xml .= generate_typeDesc($row, $department);
@@ -1448,7 +1448,7 @@ function get_current_ocre_uri($url){
 	}
 }
 
-function get_title_from_rdf($url, $accnum){
+function get_title_from_rdf($url){
 	$doc = new DOMDocument();
 	//if the rdf cannot be loaded, return FAIL, proceed to generation of typeDesc from Filemaker data
 	if ($doc->load($url . '.rdf') === FALSE){
@@ -1457,15 +1457,8 @@ function get_title_from_rdf($url, $accnum){
 		$xpath = new DOMXpath($doc);
 		$xpath->registerNamespace('skos', 'http://www.w3.org/2004/02/skos/core#');
 		$xpath->registerNamespace('dcterms', 'http://purl.org/dc/terms/');
-		$titles = $xpath->query("descendant::skos:prefLabel[@xml:lang='en']|descendant::dcterms:title");
-		if ($accnum != null){
-			$title = $titles->item(0)->nodeValue . '. ' . $accnum;
-			return $title;
-		} else {
-			$title = $titles->item(0)->nodeValue;
-			return $title;
-		}
-		
+		$title = $xpath->query("descendant::skos:prefLabel[@xml:lang='en']|descendant::dcterms:title")->item(0)->nodeValue;
+		return $title;		
 	}	
 }
 
