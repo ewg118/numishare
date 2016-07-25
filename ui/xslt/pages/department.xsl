@@ -178,8 +178,8 @@
 							<p>How to find an object in the ANS database.</p>
 
 							<h2>Accession Number</h2>
-							<p>If you know the ANS’ unique accession number for the object click the ‘Search’ button in the toolbar above. On the new page that opens, select ‘Accession number’ on the
-								drop-down menu and enter the accession in the following format: YYYY.nnn.nnn.</p>
+							<p>If you know the ANS’ unique accession number for the object click the ‘Search’ button in the toolbar above. On the new page that opens, select ‘RecordId’ on the
+								drop-down menu and enter the accession in the following format: YYYY.nnn.nnn. The '*' wild card card is acceptable to gather a group of items, e.g., 1944.100.*</p>
 
 							<h2>Free Text Searching</h2>
 							<p>To conduct a free text search click the ‘Search’ button in the toolbar above. On the new page that opens, select ‘Keyword’ on the drop-down menu and enter the text for
