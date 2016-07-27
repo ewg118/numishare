@@ -3,12 +3,11 @@
 require_once( "sparqllib.php" );
 error_reporting(0);
 
-$data = generate_json('/home/komet/ans_migration/ocre/bm-data/ric5_ar.csv', false);
-$lookup = generate_json('/home/komet/ans_migration/ocre/bm-data/RIC5-ar-con.csv', false);
+$data = generate_json('/home/komet/ans_migration/ocre/bm-data/ric6-10-con.csv', false);
 
 //use XML writer to generate RDF
 $writer = new XMLWriter();
-$writer->openURI("bm_ric5_ar.rdf");
+$writer->openURI("bm6-10.rdf");
 //$writer->openURI('php://output');
 $writer->startDocument('1.0','UTF-8');
 $writer->setIndent(true);
@@ -35,47 +34,44 @@ foreach ($data as $row){
 $writer->endElement();
 $writer->flush();
 
-function process_csv($writer, $row, $count){
-	GLOBAL $lookup;
-	$id = $row['PRN'];
-	echo "Processing {$count}: {$id}\n";
-	$about = 'http://collection.britishmuseum.org/id/object/' . $id;
-	$accessions = explode('~', $row['expr sortexpr bm_reg_no_expr']);
+function process_csv($writer, $row, $count){	
+	echo "Processing {$count}: {$row['uri']}\n";
 	
 	//get coin type URI
-	$coinType = '';
-	foreach ($lookup as $line){
-		if ($line['key'] == $about){
-			$coinType = $line['nomisma_id'];
-		}
-	}
+	$coinType = $row['type'];
 	
 	if (strlen($coinType) > 0){
-		$writer->startElement('nmo:NumismaticObject');
-			$writer->writeAttribute('rdf:about', $about);			
-			$writer->startElement('dcterms:publisher');
-				$writer->writeAttribute('rdf:resource', 'http://nomisma.org/id/bm');
-			$writer->endElement();
-			$writer->startElement('nmo:hasCollection');
-				$writer->writeAttribute('rdf:resource', 'http://nomisma.org/id/bm');
-			$writer->endElement();
-				$writer->startElement('nmo:hasTypeSeriesItem');
-			$writer->writeAttribute('rdf:resource', $coinType);
-			$writer->endElement();
-		
-			query_bm($writer, $id);
+		//exclude variants, cf. or uncertainty
+		$ref = $row['ref'];
+		if (strpos($ref, 'var') === FALSE && strpos($ref, 'cf') === FALSE && strpos($ref, ' or ') === FALSE){
+			$writer->startElement('nmo:NumismaticObject');
+				$writer->writeAttribute('rdf:about', $row['uri']);
+				$writer->startElement('dcterms:title');
+					$writer->writeAttribute('xml:lang', 'en');
+					$writer->text("British Museum: " . $row['regno']);
+				$writer->endElement();
+				$writer->writeElement('dcterms:identifier', $row['regno']);
+				$writer->startElement('nmo:hasCollection');
+					$writer->writeAttribute('rdf:resource', 'http://nomisma.org/id/bm');
+				$writer->endElement();
+					$writer->startElement('nmo:hasTypeSeriesItem');
+				$writer->writeAttribute('rdf:resource', $coinType);
+				$writer->endElement();
 			
-			//void:inDataset
-			$writer->startElement('void:inDataset');
-				$writer->writeAttribute('rdf:resource', 'http://www.britishmuseum.org/');
+				query_bm($writer, $id);
+				
+				//void:inDataset
+				$writer->startElement('void:inDataset');
+					$writer->writeAttribute('rdf:resource', 'http://www.britishmuseum.org/');
+				$writer->endElement();
+				
+			//end nmo:NumismaticObject
 			$writer->endElement();
-			
-		//end nmo:NumismaticObject
-		$writer->endElement();
+		}
 	}
 }
 
-function query_bm($writer, $id){
+function query_bm($writer, $uri){
 	$db = sparql_connect( "http://collection.britishmuseum.org/sparql" );
 	if( !$db ) {
 		print sparql_errno() . ": " . sparql_error(). "\n"; exit;
@@ -85,34 +81,29 @@ function query_bm($writer, $id){
 	sparql_ns( "ecrm","http://erlangen-crm.org/current/" );
 	sparql_ns( "object","http://collection.britishmuseum.org/id/object/" );
 	
-	$sparql = "SELECT ?image ?weight ?axis ?diameter ?objectId ?regno WHERE {
-  OPTIONAL {object:OBJECT bmo:PX_has_main_representation ?image }
-  OPTIONAL { object:OBJECT ecrm:P43_has_dimension ?wDim .
+	$sparql = "SELECT ?image ?weight ?axis ?diameter ?objectId WHERE {
+  OPTIONAL {<OBJECT> bmo:PX_has_main_representation ?image }
+  OPTIONAL { <OBJECT> ecrm:P43_has_dimension ?wDim .
            ?wDim ecrm:P2_has_type thesDimension:weight .
            ?wDim ecrm:P90_has_value ?weight}
   OPTIONAL {
-     object:OBJECT ecrm:P43_has_dimension ?wAxis .
+     <OBJECT> ecrm:P43_has_dimension ?wAxis .
            ?wAxis ecrm:P2_has_type thesDimension:die-axis .
            ?wAxis ecrm:P90_has_value ?axis
     }
   OPTIONAL {
-     object:OBJECT ecrm:P43_has_dimension ?wDiameter .
+     <OBJECT> ecrm:P43_has_dimension ?wDiameter .
            ?wDiameter ecrm:P2_has_type thesDimension:diameter .
            ?wDiameter ecrm:P90_has_value ?diameter
     }
   OPTIONAL {
-     object:OBJECT ecrm:P1_is_identified_by ?identifier.
+     <OBJECT> ecrm:P1_is_identified_by ?identifier.
      ?identifier ecrm:P2_has_type <http://collection.britishmuseum.org/id/thesauri/identifier/codexid> ;
         rdfs:label ?objectId
     }
-    OPTIONAL {
-     object:OBJECT ecrm:P1_is_identified_by ?identifier.
-     ?identifier ecrm:P2_has_type <http://collection.britishmuseum.org/id/thesauri/identifier/regno> ;
-        rdfs:label ?regno
-    }
   }";
 	
-	$result = sparql_query(str_replace('OBJECT',$id,$sparql));
+	$result = sparql_query(str_replace('OBJECT',$uri , $sparql));
 	if( !$result ) {
 		print sparql_errno() . ": " . sparql_error(). "\n"; exit;
 	}
@@ -128,13 +119,6 @@ function query_bm($writer, $id){
 						$writer->startElement('foaf:depiction');
 							$writer->writeAttribute('rdf:resource', $row[$field]);
 						$writer->endElement();
-						break;
-					case 'regno':
-						$writer->startElement('dcterms:title');
-							$writer->writeAttribute('xml:lang', 'en');
-							$writer->text("British Museum: " . $row[$field]);
-						$writer->endElement();
-						$writer->writeElement('dcterms:identifier', $row[$field]);
 						break;
 					case 'objectId':
 						$writer->startElement('foaf:homepage');

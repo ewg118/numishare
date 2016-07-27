@@ -6,7 +6,7 @@
  *Priene export: http://ww2.smb.museum/mk_edit/coin_export/30/content.txt
  */
 
-$list = file_get_contents('http://ww2.smb.museum/mk_edit/coin_export/21/content.txt');
+$list = file_get_contents('http://ww2.smb.museum/mk_edit/coin_export/31/content.txt');
 $files = explode(PHP_EOL, $list);
 $filename = 'berlin-concordances.csv';
 

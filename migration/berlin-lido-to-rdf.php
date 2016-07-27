@@ -1,6 +1,6 @@
 <?php 
 
-/*Berlin OCRE export: http://ww2.smb.museum/mk_edit/coin_export/21/content.txt
+/*Berlin OCRE export: http://ww2.smb.museum/mk_edit/coin_export/31/content.txt
  *Priene export: http://ww2.smb.museum/mk_edit/coin_export/30/content.txt
 */
 
