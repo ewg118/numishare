@@ -35,7 +35,7 @@ $writer->endElement();
 $writer->flush();
 
 function process_csv($writer, $row, $count){	
-	echo "Processing {$count}: {$row['uri']}\n";
+	
 	
 	//get coin type URI
 	$coinType = $row['type'];
@@ -44,6 +44,8 @@ function process_csv($writer, $row, $count){
 		//exclude variants, cf. or uncertainty
 		$ref = $row['ref'];
 		if (strpos($ref, 'var') === FALSE && strpos($ref, 'cf') === FALSE && strpos($ref, ' or ') === FALSE){
+			echo "Processing {$count}: {$row['uri']}\n";
+			
 			$writer->startElement('nmo:NumismaticObject');
 				$writer->writeAttribute('rdf:about', $row['uri']);
 				$writer->startElement('dcterms:title');
@@ -58,7 +60,7 @@ function process_csv($writer, $row, $count){
 				$writer->writeAttribute('rdf:resource', $coinType);
 				$writer->endElement();
 			
-				query_bm($writer, $id);
+				query_bm($writer, $row['uri']);
 				
 				//void:inDataset
 				$writer->startElement('void:inDataset');
@@ -103,7 +105,7 @@ function query_bm($writer, $uri){
     }
   }";
 	
-	$result = sparql_query(str_replace('OBJECT',$uri , $sparql));
+	$result = sparql_query(str_replace('OBJECT', $uri, $sparql));
 	if( !$result ) {
 		print sparql_errno() . ": " . sparql_error(). "\n"; exit;
 	}
