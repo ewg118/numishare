@@ -31,17 +31,19 @@ PREFIX ecrm:	<http://erlangen-crm.org/current/>
 PREFIX geo:	<http://www.w3.org/2003/01/geo/wgs84_pos#>
 PREFIX nm:	<http://nomisma.org/id/>
 PREFIX nmo:	<http://nomisma.org/ontology#>
+PREFIX org:	<http://www.w3.org/ns/org#>
 PREFIX void:	<http://rdfs.org/ns/void#>
 PREFIX xsd:	<http://www.w3.org/2001/XMLSchema#>
 
-SELECT ?dataset ?publisher ?collection ?collectionLabel ?thumbnail ?homepage ?title ?description ?license (COUNT(?dataset) AS ?count) {
+SELECT ?dataset ?publisher ?collection ?collectionLabel ?thumbnail ?homepage ?memberOf ?title ?description ?license (COUNT(?dataset) AS ?count) {
     ?type dcterms:source <TYPE_SERIES> .
     ?object nmo:hasTypeSeriesItem ?type ;
             void:inDataset ?dataset .
   OPTIONAL {?object nmo:hasCollection ?collection .
            ?collection skos:prefLabel ?collectionLabel . FILTER langMatches(lang(?collectionLabel), "en")
            OPTIONAL {?collection foaf:thumbnail ?thumbnail}
-           OPTIONAL {?collection foaf:homepage ?homepage}}
+           OPTIONAL {?collection foaf:homepage ?homepage}
+           OPTIONAL {?collection org:memberOf ?memberOf}}
   ?dataset dcterms:publisher ?publisher ;
            dcterms:title ?title FILTER (lang(?title) = "" || langMatches(lang(?title), "en")).
   ?dataset dcterms:license ?license ;

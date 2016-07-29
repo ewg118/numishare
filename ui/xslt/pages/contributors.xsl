@@ -83,9 +83,22 @@
 	<xsl:template match="res:result" mode="contributors">
 		<tr>
 			<td>
-
 				<xsl:if test="string(res:binding[@name='thumbnail']/res:uri)">
-					<a href="{if (string(res:binding[@name='homepage']/res:uri)) then res:binding[@name='homepage']/res:uri else res:binding[@name='dataset']/res:uri}">
+					<xsl:variable name="link">
+						<xsl:choose>
+							<xsl:when test="res:binding[@name='memberOf']">
+								<xsl:value-of select="res:binding[@name='memberOf']/res:uri"/>
+							</xsl:when>
+							<xsl:when test="res:binding[@name='homepage']">
+								<xsl:value-of select="res:binding[@name='homepage']/res:uri"/>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:value-of select="res:binding[@name='dataset']/res:uri"/>
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:variable>
+					
+					<a href="{$link}">
 						<img src="{res:binding[@name='thumbnail']/res:uri}" alt="logo" style="max-width:200px"/>
 					</a>
 				</xsl:if>
