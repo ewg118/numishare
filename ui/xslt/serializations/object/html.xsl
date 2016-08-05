@@ -263,7 +263,7 @@
 			<!-- regular HTML display mode-->
 			<xsl:when test="not(string($mode))">
 				<html prefix="geo: http://www.w3.org/2003/01/geo/wgs84_pos# foaf: http://xmlns.com/foaf/0.1/ dcterms: http://purl.org/dc/terms/ xsd: http://www.w3.org/2001/XMLSchema# nm:
-					http://nomisma.org/id/ ecrm: http://erlangen-crm.org/current/ rdf: http://www.w3.org/1999/02/22-rdf-syntax-ns# skos: http://www.w3.org/2004/02/skos/core# nmo:
+					http://nomisma.org/id/ rdf: http://www.w3.org/1999/02/22-rdf-syntax-ns# skos: http://www.w3.org/2004/02/skos/core# nmo:
 					http://nomisma.org/ontology# dcmitype: http://purl.org/dc/dcmitype/">
 					<xsl:if test="string($lang)">
 						<xsl:attribute name="lang" select="$lang"/>

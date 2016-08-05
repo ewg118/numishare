@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes="#all" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"
-	xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nm="http://nomisma.org/id/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:nuds="http://nomisma.org/nuds"
-	xmlns:nh="http://nomisma.org/nudsHoard" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:oa="http://www.w3.org/ns/oa#"
-	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:ecrm="http://erlangen-crm.org/current/" xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:pelagios="http://pelagios.github.io/vocab/terms#"
-	xmlns:void="http://rdfs.org/ns/void#" xmlns:relations="http://pelagios.github.io/vocab/relations#" xmlns:nmo="http://nomisma.org/ontology#" xmlns:dcmitype="http://purl.org/dc/dcmitype/"
-	xmlns:crm="http://www.cidoc-crm.org/cidoc-crm/" xmlns:numishare="https://github.com/ewg118/numishare" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:mets="http://www.loc.gov/METS/"
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes="#all"
+	xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nm="http://nomisma.org/id/"
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:nuds="http://nomisma.org/nuds" xmlns:nh="http://nomisma.org/nudsHoard" xmlns:dcterms="http://purl.org/dc/terms/"
+	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:oa="http://www.w3.org/ns/oa#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:owl="http://www.w3.org/2002/07/owl#"
+	xmlns:pelagios="http://pelagios.github.io/vocab/terms#" xmlns:void="http://rdfs.org/ns/void#" xmlns:relations="http://pelagios.github.io/vocab/relations#"
+	xmlns:nmo="http://nomisma.org/ontology#" xmlns:dcmitype="http://purl.org/dc/dcmitype/" xmlns:crm="http://www.cidoc-crm.org/cidoc-crm/"
+	xmlns:numishare="https://github.com/ewg118/numishare" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:mets="http://www.loc.gov/METS/"
 	xmlns:xsd="http://www.w3.org/2001/XMLSchema#" version="2.0">
 
 	<!-- ************** OBJECT-TO-RDF **************** -->
@@ -35,8 +36,8 @@
 								select="numishare:iso-to-digit($nudsGroup//nuds:typeDesc/nuds:date/@standardDate)"/></dcterms:temporal>
 					</xsl:when>
 					<xsl:when test="$nudsGroup//nuds:typeDesc/nuds:dateRange">
-						<dcterms:temporal>start=<xsl:value-of select="numishare:iso-to-digit($nudsGroup//nuds:typeDesc/nuds:dateRange/nuds:fromDate/@standardDate)"/>; end=<xsl:value-of
-								select="numishare:iso-to-digit($nudsGroup//nuds:typeDesc/nuds:dateRange/nuds:toDate/@standardDate)"/></dcterms:temporal>
+						<dcterms:temporal>start=<xsl:value-of select="numishare:iso-to-digit($nudsGroup//nuds:typeDesc/nuds:dateRange/nuds:fromDate/@standardDate)"/>;
+								end=<xsl:value-of select="numishare:iso-to-digit($nudsGroup//nuds:typeDesc/nuds:dateRange/nuds:toDate/@standardDate)"/></dcterms:temporal>
 					</xsl:when>
 				</xsl:choose>
 				<xsl:if test="@recordType='physical'">
@@ -73,7 +74,7 @@
 		<xsl:variable name="id" select="descendant::*[local-name()='recordId']"/>
 		<xsl:variable name="uri" select="if (string($uri_space)) then concat($uri_space, $id) else concat($url, 'id/', $id)"/>
 
-		<xsl:element name="{if (@recordType='conceptual') then 'crm:E55_Type' else 'crm:E22_Man-Made_Object'}" namespace="http://erlangen-crm.org/current/">
+		<xsl:element name="{if (@recordType='conceptual') then 'crm:E55_Type' else 'crm:E22_Man-Made_Object'}" namespace="http://www.cidoc-crm.org/cidoc-crm/">
 			<xsl:attribute name="rdf:about" select="$uri"/>
 
 			<xsl:for-each select="descendant::nuds:descMeta/nuds:title">
@@ -81,7 +82,7 @@
 					<xsl:if test="string(@xml:lang)">
 						<xsl:attribute name="xml:lang" select="@xml:lang"/>
 					</xsl:if>
-					To-do list: proper CRM titles
+					<xsl:text>To-do list: proper CRM titles</xsl:text>
 					<!--<rdfs:label><xsl:value-of select="."/></rdfs:label>-->
 				</dcterms:title>
 			</xsl:for-each>
@@ -97,10 +98,10 @@
 			</crm:P108i_was_produced_by>
 
 			<xsl:if test="$nudsGroup//nuds:typeDesc/nuds:obverse">
-				<crm:P128_carries rdf:resource="{$uri}#obverse"/>
+				<crm:P56_bears_feature rdf:resource="{$uri}#obverse"/>
 			</xsl:if>
 			<xsl:if test="$nudsGroup//nuds:typeDesc/nuds:reverse">
-				<crm:P128_carries rdf:resource="{$uri}#reverse"/>
+				<crm:P56_bears_feature rdf:resource="{$uri}#reverse"/>
 			</xsl:if>
 		</xsl:element>
 
@@ -122,7 +123,7 @@
 		<xsl:if test="ancestor::object/@xlink:href">
 			<nmo:hasTypeSeriesItem rdf:resource="{ancestor::object/@xlink:href}"/>
 		</xsl:if>
-		
+
 		<xsl:apply-templates select="nuds:denomination[@xlink:href]|nuds:material[@xlink:href]|nuds:objectType[@xlink:href]" mode="crm"/>
 	</xsl:template>
 
@@ -147,10 +148,19 @@
 				<xsl:when test="self::nuds:diameter or self::nuds:thickness">http://qudt.org/vocab/unit#Millimeter</xsl:when>
 			</xsl:choose>
 		</xsl:variable>
+		<xsl:variable name="measurementType">
+			<xsl:choose>
+				<xsl:when test="self::nuds:axis">http://collection.britishmuseum.org/id/thesauri/dimension/die-axis</xsl:when>
+				<xsl:when test="self::nuds:denomination">http://vocab.getty.edu/aat/300037316</xsl:when>
+				<xsl:when test="self::nuds:diameter">http://vocab.getty.edu/aat/300055624</xsl:when>
+				<xsl:when test="self::nuds:thickness">http://vocab.getty.edu/aat/300055646</xsl:when>
+				<xsl:when test="self::nuds:weight">http://vocab.getty.edu/aat/300056240</xsl:when>
+			</xsl:choose>
+		</xsl:variable>
 
 		<crm:P43_has_dimension>
 			<crm:E54_Dimension>
-				<crm:P2_has_type rdf:resource="http://collection.britishmuseum.org/resource/thesDimension/{if (self::nuds:denomination) then 'currency' else local-name()}"/>
+				<crm:P2_has_type rdf:resource="{$measurementType}"/>
 
 				<xsl:if test="string($unit)">
 					<crm:P91_has_unit rdf:resource="{$unit}"/>
@@ -202,49 +212,55 @@
 				<crm:P7_took_place_at rdf:resource="{@xlink:href}"/>
 			</xsl:when>
 			<xsl:when test="@xlink:role='portrait' or @xlink:role='deity'">
-				<crm:P138i_has_representation rdf:resource="{@xlink:href}"/>
+				<crm:P62_depicts rdf:resource="{@xlink:href}"/>
 			</xsl:when>
 		</xsl:choose>
 	</xsl:template>
 
 	<!-- obverse and reverse -->
-	<xsl:template match="nuds:obverse|nuds:reverse" mode="crm">
+	<xsl:template match="nuds:obverse|nuds:reverse|nuds:edge" mode="crm">
 		<xsl:param name="uri"/>
+		<xsl:variable name="side" select="local-name()"/>
 
-		<crm:E73_Information_Object rdf:about="{$uri}#{local-name()}">
-			<crm:P2_has_type rdf:resource="http://nomisma.org/id/{local-name()}"/>
-
-			<xsl:for-each select="nuds:type/nuds:description">
-				<crm:P3_has_note>
-					<xsl:if test="string(@xml:lang)">
-						<xsl:attribute name="xml:lang" select="@xml:lang"/>
-					</xsl:if>
-					<xsl:value-of select="."/>
-				</crm:P3_has_note>
-			</xsl:for-each>
+		<crm:E25_Man-Made_Feature rdf:about="{$uri}#{$side}">
+			<crm:P2_has_type rdf:resource="http://nomisma.org/id/{$side}"/>
 
 			<xsl:apply-templates select="*[@xlink:role]" mode="crm"/>
 
-			<xsl:apply-templates select="nuds:legend|nuds:symbol" mode="crm"/>
-		</crm:E73_Information_Object>
+			<xsl:apply-templates select="nuds:type|nuds:legend|nuds:symbol" mode="crm"/>
+			<xsl:if test="ancestor::nuds:nuds/descendant::mets:fileGrp[@USE=$side]">
+				<crm:P138i_has_representation>this is a placeholder for images</crm:P138i_has_representation>
+			</xsl:if>
+		</crm:E25_Man-Made_Feature>
+	</xsl:template>
+
+	<xsl:template match="nuds:type" mode="crm">
+		<xsl:for-each select="nuds:description">
+			<crm:P3_has_note>
+				<xsl:if test="string(@xml:lang)">
+					<xsl:attribute name="xml:lang" select="@xml:lang"/>
+				</xsl:if>
+				<xsl:value-of select="."/>
+			</crm:P3_has_note>
+		</xsl:for-each>
 	</xsl:template>
 
 	<xsl:template match="nuds:legend" mode="crm">
-		<crm:P128_carries>
+		<crm:P65_shows_visual_item>
 			<crm:E34_Inscription>
-				<rdfs:label>
+				<crm:P3_has_note>
 					<xsl:value-of select="."/>
-				</rdfs:label>
+				</crm:P3_has_note>
 			</crm:E34_Inscription>
-		</crm:P128_carries>
+		</crm:P65_shows_visual_item>
 	</xsl:template>
 
 	<xsl:template match="nuds:symbol" mode="crm">
-		<crm:P106_is_composed_of>
+		<crm:P65_shows_visual_item>
 			<xsl:if test="@xlink:href">
 				<xsl:attribute name="rdf:resource" select="@xlink:href"/>
 			</xsl:if>
-			<crm:E90_Symbolic_Object>
+			<crm:E37_Mark>
 				<!-- to-do, insert placement -->
 
 				<xsl:choose>
@@ -252,13 +268,13 @@
 						<xsl:attribute name="rdf:about" select="@xlink:href"/>
 					</xsl:when>
 					<xsl:otherwise>
-						<rdfs:label>
+						<crm:P3_has_note>
 							<xsl:value-of select="."/>
-						</rdfs:label>
+						</crm:P3_has_note>
 					</xsl:otherwise>
 				</xsl:choose>
-			</crm:E90_Symbolic_Object>
-		</crm:P106_is_composed_of>
+			</crm:E37_Mark>
+		</crm:P65_shows_visual_item>
 
 	</xsl:template>
 
@@ -768,9 +784,11 @@
 								<xsl:variable name="adminName1" select="$geonames_data//adminName1"/>
 								<xsl:variable name="fcode" select="$geonames_data//fcode"/>
 								<!-- set a value equivalent to AACR2 standard for US, AU, CA, and GB.  This equation deviates from AACR2 for Malaysia since standard abbreviations for territories cannot be found -->
-								<xsl:value-of select="if ($countryCode = 'US' or $countryCode = 'AU' or $countryCode = 'CA') then if ($fcode = 'ADM1') then $name else concat($name, ' (',
+								<xsl:value-of
+									select="if ($countryCode = 'US' or $countryCode = 'AU' or $countryCode = 'CA') then if ($fcode = 'ADM1') then $name else concat($name, ' (',
 									$abbreviations//country[@code=$countryCode]/place[. = $adminName1]/@abbr, ')') else if ($countryCode= 'GB') then  if ($fcode = 'ADM1') then $name else concat($name,
-									' (', $adminName1, ')') else if ($fcode = 'PCLI') then $name else concat($name, ' (', $countryName, ')')"/>
+									' (', $adminName1, ')') else if ($fcode = 'PCLI') then $name else concat($name, ' (', $countryName, ')')"
+								/>
 							</xsl:variable>
 
 							<foaf:name>
