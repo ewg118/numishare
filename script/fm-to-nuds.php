@@ -1544,9 +1544,11 @@ function generate_typeDesc_from_OCRE($row, $currentUri, $certainty) {
 				
 			}
 			if (strlen(trim($row[$nodeName . 'type'])) > 0){
-				$writer->startElement('description');
-				$writer->writeAttribute('xml:lang', 'en');
-				$writer->text(trim($row[$nodeName. 'type']));
+				$writer->startElement('type');
+					$writer->startElement('description');
+					$writer->writeAttribute('xml:lang', 'en');
+					$writer->text(trim($row[$nodeName. 'type']));
+					$writer->endElement();
 				$writer->endElement();
 			}
 			if (strlen(trim($row[$nodeName . 'symbol'])) > 0){
