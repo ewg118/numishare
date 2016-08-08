@@ -118,7 +118,7 @@
 
 	<xsl:template match="nuds:control" mode="crm">
 		<crm:P37_assigned>
-			<xsl:value-of select="nuds:control/nuds:recordId"/>
+			<xsl:value-of select="nuds:recordId"/>
 		</crm:P37_assigned>
 		<xsl:if test="string(//config/type_series)">
 			<crm:P70i_is_documented_in rdf:resource="{//config/type_series}"/>
