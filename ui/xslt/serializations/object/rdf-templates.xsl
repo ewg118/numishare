@@ -78,14 +78,15 @@
 			<xsl:attribute name="rdf:about" select="$uri"/>
 
 			<xsl:for-each select="descendant::nuds:descMeta/nuds:title">
-				<dcterms:title>
+				<crm:P102_has_title>
 					<xsl:if test="string(@xml:lang)">
 						<xsl:attribute name="xml:lang" select="@xml:lang"/>
 					</xsl:if>
-					<xsl:text>To-do list: proper CRM titles</xsl:text>
-					<!--<rdfs:label><xsl:value-of select="."/></rdfs:label>-->
-				</dcterms:title>
+					<xsl:value-of select="."/>
+				</crm:P102_has_title>
 			</xsl:for-each>
+			
+			<xsl:apply-template select="nuds:control" mode="crm"/>
 
 			<xsl:apply-templates select="nuds:descMeta/nuds:physDesc" mode="crm"/>
 			<xsl:apply-templates select="$nudsGroup//nuds:typeDesc" mode="crm-attr"/>
@@ -107,7 +108,21 @@
 
 		<xsl:apply-templates select="$nudsGroup//nuds:typeDesc/nuds:obverse|$nudsGroup//nuds:typeDesc/nuds:reverse" mode="crm">
 			<xsl:with-param name="uri" select="$uri"/>
+			<xsl:with-param name="fileSec" as="element()*">
+				<xsl:copy-of select="descendant::mets:fileSec"/>
+			</xsl:with-param>
 		</xsl:apply-templates>
+		
+		<xsl:apply-templates select="descendant::mets:fileGrp[@USE = 'obverse' or @USE='reverse' or @USE='edge']/mets:file" mode="crm"/>
+	</xsl:template>
+	
+	<xsl:template match="nuds:control" mode="crm">
+		<crm:P37_assigned>
+			<xsl:value-of select="nuds:control/nuds:recordId"/>
+		</crm:P37_assigned>
+		<xsl:if test="string(//config/type_series)">
+			<crm:P70i_is_documented_in rdf:resource="{//config/type_series}"/>
+		</xsl:if>
 	</xsl:template>
 
 	<xsl:template match="nuds:physDesc" mode="crm">
@@ -220,6 +235,7 @@
 	<!-- obverse and reverse -->
 	<xsl:template match="nuds:obverse|nuds:reverse|nuds:edge" mode="crm">
 		<xsl:param name="uri"/>
+		<xsl:param name="fileSec"/>
 		<xsl:variable name="side" select="local-name()"/>
 
 		<crm:E25_Man-Made_Feature rdf:about="{$uri}#{$side}">
@@ -228,8 +244,22 @@
 			<xsl:apply-templates select="*[@xlink:role]" mode="crm"/>
 
 			<xsl:apply-templates select="nuds:type|nuds:description|nuds:legend|nuds:symbol" mode="crm"/>
-			<xsl:if test="ancestor::nuds:nuds/descendant::mets:fileGrp[@USE=$side]">
-				<crm:P138i_has_representation>this is a placeholder for images</crm:P138i_has_representation>
+			
+			<xsl:if test="$fileSec/mets:fileGrp[@USE=$side]">
+				<xsl:for-each select="$fileSec/mets:fileGrp[@USE=$side]/mets:file">
+					<xsl:variable name="href">
+						<xsl:choose>
+							<xsl:when test="contains(mets:FLocat/@xlink:href, 'http://')">
+								<xsl:value-of select="mets:FLocat/@xlink:href"/>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:value-of select="concat($url, mets:FLocat/@xlink:href)"/>
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:variable>
+					
+					<crm:P138i_has_representation rdf:resource="{$href}"/>
+				</xsl:for-each>
 			</xsl:if>
 		</crm:E25_Man-Made_Feature>
 	</xsl:template>
@@ -277,6 +307,25 @@
 				</xsl:choose>
 			</crm:E37_Mark>
 		</crm:P65_shows_visual_item>
+	</xsl:template>
+	
+	<!-- images -->
+	<xsl:template match="mets:file" mode="crm">
+		<xsl:variable name="href">
+			<xsl:choose>
+				<xsl:when test="contains(mets:FLocat/@xlink:href, 'http://')">
+					<xsl:value-of select="mets:FLocat/@xlink:href"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="concat($url, mets:FLocat/@xlink:href)"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		
+		
+		<crm:E38_Image rdf:about="{$href}">
+			<crm:P2_has_type>how to differentiate image size (eg thumbnail?)</crm:P2_has_type>
+		</crm:E38_Image>
 	</xsl:template>
 
 	<!-- PROCESS NUDS RECORDS INTO NOMISMA COMPLIANT RDF MODELS -->
