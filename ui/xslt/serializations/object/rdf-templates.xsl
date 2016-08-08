@@ -151,7 +151,7 @@
 		<xsl:variable name="measurementType">
 			<xsl:choose>
 				<xsl:when test="self::nuds:axis">http://collection.britishmuseum.org/id/thesauri/dimension/die-axis</xsl:when>
-				<xsl:when test="self::nuds:denomination">http://vocab.getty.edu/aat/300037316</xsl:when>
+				<xsl:when test="self::nuds:denomination">http://nomisma.org/id/denomination</xsl:when>
 				<xsl:when test="self::nuds:diameter">http://vocab.getty.edu/aat/300055624</xsl:when>
 				<xsl:when test="self::nuds:thickness">http://vocab.getty.edu/aat/300055646</xsl:when>
 				<xsl:when test="self::nuds:weight">http://vocab.getty.edu/aat/300056240</xsl:when>
@@ -227,7 +227,7 @@
 
 			<xsl:apply-templates select="*[@xlink:role]" mode="crm"/>
 
-			<xsl:apply-templates select="nuds:type|nuds:legend|nuds:symbol" mode="crm"/>
+			<xsl:apply-templates select="nuds:type|nuds:description|nuds:legend|nuds:symbol" mode="crm"/>
 			<xsl:if test="ancestor::nuds:nuds/descendant::mets:fileGrp[@USE=$side]">
 				<crm:P138i_has_representation>this is a placeholder for images</crm:P138i_has_representation>
 			</xsl:if>
@@ -235,14 +235,16 @@
 	</xsl:template>
 
 	<xsl:template match="nuds:type" mode="crm">
-		<xsl:for-each select="nuds:description">
-			<crm:P3_has_note>
-				<xsl:if test="string(@xml:lang)">
-					<xsl:attribute name="xml:lang" select="@xml:lang"/>
-				</xsl:if>
-				<xsl:value-of select="."/>
-			</crm:P3_has_note>
-		</xsl:for-each>
+		<xsl:apply-templates select="nuds:description" mode="crm"/>
+	</xsl:template>
+	
+	<xsl:template match="nuds:description" mode="crm">
+		<crm:P3_has_note>
+			<xsl:if test="string(@xml:lang)">
+				<xsl:attribute name="xml:lang" select="@xml:lang"/>
+			</xsl:if>
+			<xsl:value-of select="."/>
+		</crm:P3_has_note>
 	</xsl:template>
 
 	<xsl:template match="nuds:legend" mode="crm">
@@ -275,7 +277,6 @@
 				</xsl:choose>
 			</crm:E37_Mark>
 		</crm:P65_shows_visual_item>
-
 	</xsl:template>
 
 	<!-- PROCESS NUDS RECORDS INTO NOMISMA COMPLIANT RDF MODELS -->
