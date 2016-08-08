@@ -85,8 +85,8 @@
 					<xsl:value-of select="."/>
 				</crm:P102_has_title>
 			</xsl:for-each>
-			
-			<xsl:apply-template select="nuds:control" mode="crm"/>
+
+			<xsl:apply-templates select="nuds:control" mode="crm"/>
 
 			<xsl:apply-templates select="nuds:descMeta/nuds:physDesc" mode="crm"/>
 			<xsl:apply-templates select="$nudsGroup//nuds:typeDesc" mode="crm-attr"/>
@@ -112,10 +112,10 @@
 				<xsl:copy-of select="descendant::mets:fileSec"/>
 			</xsl:with-param>
 		</xsl:apply-templates>
-		
+
 		<xsl:apply-templates select="descendant::mets:fileGrp[@USE = 'obverse' or @USE='reverse' or @USE='edge']/mets:file" mode="crm"/>
 	</xsl:template>
-	
+
 	<xsl:template match="nuds:control" mode="crm">
 		<crm:P37_assigned>
 			<xsl:value-of select="nuds:control/nuds:recordId"/>
@@ -244,7 +244,7 @@
 			<xsl:apply-templates select="*[@xlink:role]" mode="crm"/>
 
 			<xsl:apply-templates select="nuds:type|nuds:description|nuds:legend|nuds:symbol" mode="crm"/>
-			
+
 			<xsl:if test="$fileSec/mets:fileGrp[@USE=$side]">
 				<xsl:for-each select="$fileSec/mets:fileGrp[@USE=$side]/mets:file">
 					<xsl:variable name="href">
@@ -257,7 +257,7 @@
 							</xsl:otherwise>
 						</xsl:choose>
 					</xsl:variable>
-					
+
 					<crm:P138i_has_representation rdf:resource="{$href}"/>
 				</xsl:for-each>
 			</xsl:if>
@@ -267,7 +267,7 @@
 	<xsl:template match="nuds:type" mode="crm">
 		<xsl:apply-templates select="nuds:description" mode="crm"/>
 	</xsl:template>
-	
+
 	<xsl:template match="nuds:description" mode="crm">
 		<crm:P3_has_note>
 			<xsl:if test="string(@xml:lang)">
@@ -308,7 +308,7 @@
 			</crm:E37_Mark>
 		</crm:P65_shows_visual_item>
 	</xsl:template>
-	
+
 	<!-- images -->
 	<xsl:template match="mets:file" mode="crm">
 		<xsl:variable name="href">
@@ -321,8 +321,8 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-		
-		
+
+
 		<crm:E38_Image rdf:about="{$href}">
 			<crm:P2_has_type>how to differentiate image size (eg thumbnail?)</crm:P2_has_type>
 		</crm:E38_Image>
