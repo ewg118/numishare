@@ -7,6 +7,7 @@
   GLOBAL
   ***************************************
  */
+   @import url(//fonts.googleapis.com/css?family=Cuprum&#038;subset=latin);
 html{
 	background-color:#F8F8F8;
 	background-attachment:scroll;
@@ -16,7 +17,7 @@ html{
 }
 body{
 	color:#535e70;
-	font-family:Georgia, "Times New Roman", Times, serif;
+	font-family: Arial,Helvetica,sans-serif;
 	font-size:14px;
 	line-height:18px;
 }
@@ -64,6 +65,18 @@ ul li{
 	border-radius:4px;
 	margin-bottom:14px;
 	padding:9px 14px;
+}
+h1, h2, h3, h4, h5, h6 {
+	color: #434343;	
+	font-family: Cuprum, sans-serif;
+}
+a {
+	color: #e64100;
+	text-decoration:none;
+}
+a:hover, a:focus {
+	color: #535e70;
+	text-decoration:underline
 }
 /*
   ***************************************
