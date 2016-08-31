@@ -724,6 +724,72 @@ function get_title($nudsid){
 		case 'pro':
 			$auth = 'Probus';
 			break;
+		case 'car':
+			$auth = 'Carus';
+			break;
+		case 'dio':
+			$auth = 'Diocletian';
+			break;
+		case 'post':
+			$auth = 'Postumus';
+			break;
+		case 'lae':
+			$auth = 'Laelianus';
+			break;
+		case 'mar':
+			$auth = 'Marius';
+			break;
+		case 'vict':
+			$auth = 'Victorinus';
+			break;
+		case 'tet_i':
+			$auth = 'Tetricus I';
+			break;
+		case 'cara':
+			$auth = 'Carausius';
+			break;
+		case 'cara-dio-max_her':
+			$auth = 'Carausius issuing for Diocletian/Maximian';
+			break;
+		case 'all':
+			$auth = 'Allectus';
+			break;
+		case 'mac_ii':
+			$auth = 'Macrianus Minor';
+			break;
+		case 'quit':
+			$auth = 'Quietus';
+			break;
+		case 'zen':
+			$auth = 'Zenobia';
+			break;
+		case 'vab':
+			$auth = 'Vabalathus';
+			break;
+		case 'reg':
+			$auth = 'Regalianus';
+			break;
+		case 'dry':
+			$auth = 'Dryantilla';
+			break;
+		case 'aurl':
+			$auth = 'Aureolus';
+			break;
+		case 'dom_g':
+			$auth = 'Domitianus of Gaul';
+			break;
+		case 'sat':
+			$auth = 'Saturninus';
+			break;
+		case 'bon':
+			$auth = 'Bonosus';
+			break;
+		case 'jul_i':
+			$auth = 'Sabinus Julianus';
+			break;
+		case 'ama':
+			$auth = 'Amandus';
+			break;
 		case 'lon':
 			$auth = 'Londinium';
 			break;

@@ -4,6 +4,7 @@ require_once( "sparqllib.php" );
 error_reporting(0);
 
 $data = generate_json('/home/komet/ans_migration/ocre/bm-data/ric6-10-con.csv', false);
+$hoards = generate_json('https://docs.google.com/spreadsheets/d/1rqS7vzFfGQ_Xz0nLhPoRNFGks1Bkku_F590GlZ_RsdA/pub?gid=1902596397&single=true&output=csv');
 
 //use XML writer to generate RDF
 $writer = new XMLWriter();
@@ -83,7 +84,7 @@ function query_bm($writer, $uri){
 	sparql_ns( "ecrm","http://erlangen-crm.org/current/" );
 	sparql_ns( "object","http://collection.britishmuseum.org/id/object/" );
 	
-	$sparql = "SELECT ?image ?weight ?axis ?diameter ?objectId WHERE {
+	$sparql = "SELECT ?image ?weight ?axis ?diameter ?objectId ?hoard WHERE {
   OPTIONAL {<OBJECT> bmo:PX_has_main_representation ?image }
   OPTIONAL { <OBJECT> ecrm:P43_has_dimension ?wDim .
            ?wDim ecrm:P2_has_type thesDimension:weight .
@@ -103,6 +104,9 @@ function query_bm($writer, $uri){
      ?identifier ecrm:P2_has_type <http://collection.britishmuseum.org/id/thesauri/identifier/codexid> ;
         rdfs:label ?objectId
     }
+  OPTIONAL {
+     <OBJECT> bmo:PX_display_wrap ?hoard . FILTER regex(?hoard, '[H|h]oard')
+    }
   }";
 	
 	$result = sparql_query(str_replace('OBJECT', $uri, $sparql));
@@ -116,36 +120,40 @@ function query_bm($writer, $uri){
 		foreach( $fields as $field )
 		{
 			if (strlen($row[$field]) > 0) {
-				switch ($field) {
-					case 'image':
-						$writer->startElement('foaf:depiction');
-							$writer->writeAttribute('rdf:resource', $row[$field]);
-						$writer->endElement();
-						break;
-					case 'objectId':
-						$writer->startElement('foaf:homepage');
-							$writer->writeAttribute('rdf:resource', "http://www.britishmuseum.org/research/collection_online/collection_object_details.aspx?objectId={$row[$field]}&partId=1");
-						$writer->endElement();
-						break;
-					case 'axis':
-						$writer->startElement('nmo:hasAxis');
-							$writer->writeAttribute('rdf:datatype', 'http://www.w3.org/2001/XMLSchema#integer');
-							$writer->text($row[$field]);
-						$writer->endElement();						
-						break;
-					case 'weight':
-						$writer->startElement('nmo:hasWeight');
-							$writer->writeAttribute('rdf:datatype', 'http://www.w3.org/2001/XMLSchema#decimal');
-							$writer->text($row[$field]);
-						$writer->endElement();
-						break;
-					case 'diameter':
-						$writer->startElement('nmo:hasDiameter');
-							$writer->writeAttribute('rdf:datatype', 'http://www.w3.org/2001/XMLSchema#decimal');
-							$writer->text($row[$field]);
-						$writer->endElement();
-						break;
-				}
+				if ($field == 'hoard'){
+					
+				} else {
+					switch ($field) {
+						case 'image':
+							$writer->startElement('foaf:depiction');
+								$writer->writeAttribute('rdf:resource', $row[$field]);
+							$writer->endElement();
+							break;
+						case 'objectId':
+							$writer->startElement('foaf:homepage');
+								$writer->writeAttribute('rdf:resource', "http://www.britishmuseum.org/research/collection_online/collection_object_details.aspx?objectId={$row[$field]}&partId=1");
+							$writer->endElement();
+							break;
+						case 'axis':
+							$writer->startElement('nmo:hasAxis');
+								$writer->writeAttribute('rdf:datatype', 'http://www.w3.org/2001/XMLSchema#integer');
+								$writer->text($row[$field]);
+							$writer->endElement();
+							break;
+						case 'weight':
+							$writer->startElement('nmo:hasWeight');
+								$writer->writeAttribute('rdf:datatype', 'http://www.w3.org/2001/XMLSchema#decimal');
+								$writer->text($row[$field]);
+							$writer->endElement();
+							break;
+						case 'diameter':
+							$writer->startElement('nmo:hasDiameter');
+								$writer->writeAttribute('rdf:datatype', 'http://www.w3.org/2001/XMLSchema#decimal');
+								$writer->text($row[$field]);
+							$writer->endElement();
+							break;
+					}
+				}				
 			}
 		}
 	}
