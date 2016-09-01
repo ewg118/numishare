@@ -34,6 +34,10 @@
          <prefix>dcterms</prefix>
          <namespace>http://purl.org/dc/terms/</namespace>
       </semanticDeclaration>
+      <semanticDeclaration>
+         <prefix>nmo</prefix>
+         <namespace>http://nomisma.org/ontology#</namespace>
+      </semanticDeclaration>
    </control>
    <descMeta>
       <title xml:lang="en">As of Gaius/Caligula, Rome,  A.D. 37-41. 1989.19.9.</title>

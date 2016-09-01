@@ -34,6 +34,10 @@
          <prefix>dcterms</prefix>
          <namespace>http://purl.org/dc/terms/</namespace>
       </semanticDeclaration>
+      <semanticDeclaration>
+         <prefix>nmo</prefix>
+         <namespace>http://nomisma.org/ontology#</namespace>
+      </semanticDeclaration>
    </control>
    <descMeta>
       <title xml:lang="en">Coin of Alexander II Zabinas, 128 B.C.-123 B.C. FIC.50.76.</title>

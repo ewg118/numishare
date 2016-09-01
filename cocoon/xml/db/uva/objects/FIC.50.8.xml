@@ -34,6 +34,10 @@
          <prefix>dcterms</prefix>
          <namespace>http://purl.org/dc/terms/</namespace>
       </semanticDeclaration>
+      <semanticDeclaration>
+         <prefix>nmo</prefix>
+         <namespace>http://nomisma.org/ontology#</namespace>
+      </semanticDeclaration>
    </control>
    <descMeta>
       <title xml:lang="en">M Nummia of Justin II, Nicomedia, 565-578. FIC.50.8.</title>

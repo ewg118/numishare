@@ -34,12 +34,15 @@
          <prefix>dcterms</prefix>
          <namespace>http://purl.org/dc/terms/</namespace>
       </semanticDeclaration>
+      <semanticDeclaration>
+         <prefix>nmo</prefix>
+         <namespace>http://nomisma.org/ontology#</namespace>
+      </semanticDeclaration>
    </control>
    <descMeta>
       <title xml:lang="en">Antoninianus of Gallienus, Rome, 253-268. 1991.17.77.</title>
-   	<typeDesc xlink:href="http://numismatics.org/ocre/id/ric.5.gall(2).249f.1" xlink:type="simple"/>
-       
-      
+      <typeDesc xlink:href="http://numismatics.org/ocre/id/ric.5.gall(2).249f.1"
+                xlink:type="simple"/>
       <physDesc>
          <axis>12</axis>
          <measurementsSet>

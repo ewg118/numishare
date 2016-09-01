@@ -34,6 +34,10 @@
          <prefix>dcterms</prefix>
          <namespace>http://purl.org/dc/terms/</namespace>
       </semanticDeclaration>
+      <semanticDeclaration>
+         <prefix>nmo</prefix>
+         <namespace>http://nomisma.org/ontology#</namespace>
+      </semanticDeclaration>
    </control>
    <descMeta>
       <title xml:lang="en">Antoninianus of Salonina, Rome, 253-268. 1991.17.151.</title>
@@ -48,8 +52,8 @@
          <authority>
             <persname xlink:type="simple" xlink:role="authority"
                       xlink:href="http://nomisma.org/id/gallienus">Gallienus</persname>
-         	<persname xlink:type="simple" xlink:role="authority"
-         		xlink:href="http://nomisma.org/id/valerian">Valerian</persname>
+            <persname xlink:type="simple" xlink:role="authority"
+                      xlink:href="http://nomisma.org/id/valerian">Valerian</persname>
             <corpname xlink:type="simple" xlink:role="state">Roman Empire</corpname>
          </authority>
          <geographic>
@@ -62,7 +66,8 @@
                <description xml:lang="en">Diademed bust, right, draped.</description>
             </type>
             <legend>COR(NELIA) SALONINA AVG(VSTA)</legend>
-            <persname xlink:type="simple" xlink:role="portrait" xlink:href="http://nomisma.org/id/salonina">Cornelia Salonina</persname>
+            <persname xlink:type="simple" xlink:role="portrait"
+                      xlink:href="http://nomisma.org/id/salonina">Cornelia Salonina</persname>
          </obverse>
          <reverse>
             <type>

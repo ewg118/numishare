@@ -34,6 +34,10 @@
          <prefix>dcterms</prefix>
          <namespace>http://purl.org/dc/terms/</namespace>
       </semanticDeclaration>
+      <semanticDeclaration>
+         <prefix>nmo</prefix>
+         <namespace>http://nomisma.org/ontology#</namespace>
+      </semanticDeclaration>
    </control>
    <descMeta>
       <title xml:lang="en">Antoninianus of Claudius II Gothicus, Mediolanum, 268-270. 1991.17.181.</title>
@@ -70,7 +74,7 @@
             </type>
             <legend>FIDES MILI(TVM)</legend>
             <persname xlink:type="simple" xlink:role="deity">Fides</persname>
-         	<symbol localType="mintMark">-/-//S</symbol>
+            <symbol localType="mintMark">-/-//S</symbol>
          </reverse>
       </typeDesc>
       <physDesc>
@@ -99,7 +103,8 @@
          <collection xlink:type="simple" xlink:href="http://nomisma.org/id/uva">The Fralin Museum of Art</collection>
       </adminDesc>
       <refDesc>
-      	<reference xlink:type="simple" xlink:arcrole="nmo:hasTypeSeriesItem" xlink:href="http://numismatics.org/ocre/id/ric.5.cg.149">RIC V Claudius Gothicus 149</reference>
+         <reference xlink:type="simple" xlink:arcrole="nmo:hasTypeSeriesItem"
+                    xlink:href="http://numismatics.org/ocre/id/ric.5.cg.149">RIC V Claudius Gothicus 149</reference>
          <reference>
             <title>The Cunetio Treasure</title>
             <identifier>2259</identifier>

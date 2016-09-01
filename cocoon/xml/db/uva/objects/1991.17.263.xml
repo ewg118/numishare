@@ -34,6 +34,10 @@
          <prefix>dcterms</prefix>
          <namespace>http://purl.org/dc/terms/</namespace>
       </semanticDeclaration>
+      <semanticDeclaration>
+         <prefix>nmo</prefix>
+         <namespace>http://nomisma.org/ontology#</namespace>
+      </semanticDeclaration>
    </control>
    <descMeta>
       <title xml:lang="en">Antoninianus of Victorinus, Southern Mint, 268-270. 1991.17.263.</title>
@@ -95,10 +99,8 @@
          <collection xlink:type="simple" xlink:href="http://nomisma.org/id/uva">The Fralin Museum of Art</collection>
       </adminDesc>
       <refDesc>
-         <reference>
-            <title>RIC</title>
-            <identifier>67</identifier>
-         </reference>
+         <reference xlink:type="simple" xlink:arcrole="nmo:hasTypeSeriesItem"
+                    xlink:href="http://numismatics.org/ocre/id/ric.5.vict.67">RIC V Victorinus 67</reference>
       </refDesc>
    </descMeta>
    <digRep>

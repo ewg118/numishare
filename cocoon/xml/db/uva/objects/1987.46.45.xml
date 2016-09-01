@@ -34,6 +34,10 @@
          <prefix>dcterms</prefix>
          <namespace>http://purl.org/dc/terms/</namespace>
       </semanticDeclaration>
+      <semanticDeclaration>
+         <prefix>nmo</prefix>
+         <namespace>http://nomisma.org/ontology#</namespace>
+      </semanticDeclaration>
    </control>
    <descMeta>
       <title xml:lang="en">Antoninianus of Claudius II Gothicus, Siscia, 268-270. 1987.46.45.</title>
@@ -68,7 +72,7 @@
             </type>
             <legend>PAX AVG(VSTI)</legend>
             <persname xlink:type="simple" xlink:role="deity">Pax</persname>
-         	<symbol localType="mintMark">-/II//</symbol>
+            <symbol localType="mintMark">-/II//</symbol>
          </reverse>
       </typeDesc>
       <findspotDesc xlink:type="simple" xlink:href="http://nomisma.org/id/normanby_hoard"/>
@@ -91,7 +95,8 @@
          <collection xlink:type="simple" xlink:href="http://nomisma.org/id/uva">The Fralin Museum of Art</collection>
       </adminDesc>
       <refDesc>
-      	<reference xlink:type="simple" xlink:arcrole="nmo:hasTypeSeriesItem" xlink:href="http://numismatics.org/ocre/id/ric.5.cg.186">RIC V Claudius Gothicus 186</reference>
+         <reference xlink:type="simple" xlink:arcrole="nmo:hasTypeSeriesItem"
+                    xlink:href="http://numismatics.org/ocre/id/ric.5.cg.186">RIC V Claudius Gothicus 186</reference>
          <reference>
             <title>The Normanby Hoard</title>
             <identifier>1080</identifier>

@@ -34,6 +34,10 @@
          <prefix>dcterms</prefix>
          <namespace>http://purl.org/dc/terms/</namespace>
       </semanticDeclaration>
+      <semanticDeclaration>
+         <prefix>nmo</prefix>
+         <namespace>http://nomisma.org/ontology#</namespace>
+      </semanticDeclaration>
    </control>
    <descMeta>
       <title xml:lang="en">Antoninianus of Postumus, Field Mint, 263-265. 1991.17.205.</title>
@@ -95,10 +99,8 @@
          <collection xlink:type="simple" xlink:href="http://nomisma.org/id/uva">The Fralin Museum of Art</collection>
       </adminDesc>
       <refDesc>
-         <reference>
-            <title>RIC</title>
-            <identifier>75</identifier>
-         </reference>
+         <reference xlink:type="simple" xlink:arcrole="nmo:hasTypeSeriesItem"
+                    xlink:href="http://numismatics.org/ocre/id/ric.5.post.75">RIC V Postumus 75</reference>
          <reference certainty="uncertain">
             <title>The Cunetio Treasure</title>
             <identifier>2404</identifier>

@@ -34,6 +34,10 @@
          <prefix>dcterms</prefix>
          <namespace>http://purl.org/dc/terms/</namespace>
       </semanticDeclaration>
+      <semanticDeclaration>
+         <prefix>nmo</prefix>
+         <namespace>http://nomisma.org/ontology#</namespace>
+      </semanticDeclaration>
    </control>
    <descMeta>
       <title xml:lang="en">Antoninianus of Tetricus II, 270-273. 1991.17.295.</title>
@@ -47,7 +51,7 @@
          </dateRange>
          <authority>
             <persname xlink:type="simple" xlink:role="authority"
-                      xlink:href="http://nomisma.org/id/tectricus_ii">Tetricus II</persname>
+                      xlink:href="http://nomisma.org/id/tetricus_i">Tetricus I</persname>
             <corpname xlink:type="simple" xlink:role="state">Gallic Empire</corpname>
          </authority>
          <geographic/>
@@ -93,10 +97,8 @@
          <collection xlink:type="simple" xlink:href="http://nomisma.org/id/uva">The Fralin Museum of Art</collection>
       </adminDesc>
       <refDesc>
-         <reference>
-            <title>RIC</title>
-            <identifier>272</identifier>
-         </reference>
+         <reference xlink:type="simple" xlink:arcrole="nmo:hasTypeSeriesItem"
+                    xlink:href="http://numismatics.org/ocre/id/ric.5.tet_i.272">RIC V Tetricus I 272</reference>
          <reference>
             <title>The Cunetio Treasure</title>
             <identifier>2608</identifier>

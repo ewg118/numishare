@@ -2,94 +2,98 @@
 <nuds xmlns="http://nomisma.org/nuds" xmlns:xlink="http://www.w3.org/1999/xlink"
       xmlns:mets="http://www.loc.gov/METS/"
       recordType="physical">
-	  <control>
-		    <recordId>1989.19.13</recordId>
-		    <maintenanceStatus>revised</maintenanceStatus>
-		    <publicationStatus>approved</publicationStatus>
-		    <maintenanceAgency>
-			      <agencyName>University of Virginia Library</agencyName>
-			      <agencyCode>US-viu</agencyCode>
-		    </maintenanceAgency>
-		    <maintenanceHistory>
-			      <maintenanceEvent>
-				        <eventType>derived</eventType>
-				        <eventDateTime standardDateTime="2012-12-12T15:05:54.552-05:00Z">2012-12-12T15:05:54.552-05:00Z</eventDateTime>
-				        <agentType>human</agentType>
-				        <agent>Ethan Gruber and/or Carrie Sulosky</agent>
-				        <eventDescription>Migrated from EAD to NUDS</eventDescription>
-			      </maintenanceEvent>
-			      <maintenanceEvent>
-				        <eventType>revised</eventType>
-				        <eventDateTime standardDateTime="2013-09-11T12:20:52.133-04:00Z">2013-09-11T12:20:52.133-04:00Z</eventDateTime>
-				        <agentType>human</agentType>
-				        <agent>XSLT</agent>
-				        <eventDescription>Migrated to new NUDS schema version; nudsHeader to control.</eventDescription>
-			      </maintenanceEvent>
-		    </maintenanceHistory>
-		    <rightsStmt>
-			      <license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/"/>
-		    </rightsStmt>
-	     <otherRecordId semantic="dcterms:replaces">http://coins.lib.virginia.edu/display-uva?id=n1989_19_13</otherRecordId>
+   <control>
+      <recordId>1989.19.13</recordId>
+      <maintenanceStatus>revised</maintenanceStatus>
+      <publicationStatus>approved</publicationStatus>
+      <maintenanceAgency>
+         <agencyName>University of Virginia Library</agencyName>
+         <agencyCode>US-viu</agencyCode>
+      </maintenanceAgency>
+      <maintenanceHistory>
+         <maintenanceEvent>
+            <eventType>derived</eventType>
+            <eventDateTime standardDateTime="2012-12-12T15:05:54.552-05:00Z">2012-12-12T15:05:54.552-05:00Z</eventDateTime>
+            <agentType>human</agentType>
+            <agent>Ethan Gruber and/or Carrie Sulosky</agent>
+            <eventDescription>Migrated from EAD to NUDS</eventDescription>
+         </maintenanceEvent>
+         <maintenanceEvent>
+            <eventType>revised</eventType>
+            <eventDateTime standardDateTime="2013-09-11T12:20:52.133-04:00Z">2013-09-11T12:20:52.133-04:00Z</eventDateTime>
+            <agentType>human</agentType>
+            <agent>XSLT</agent>
+            <eventDescription>Migrated to new NUDS schema version; nudsHeader to control.</eventDescription>
+         </maintenanceEvent>
+      </maintenanceHistory>
+      <rightsStmt>
+         <license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/"/>
+      </rightsStmt>
+      <otherRecordId semantic="dcterms:replaces">http://coins.lib.virginia.edu/display-uva?id=n1989_19_13</otherRecordId>
       <semanticDeclaration>
          <prefix>dcterms</prefix>
          <namespace>http://purl.org/dc/terms/</namespace>
       </semanticDeclaration>
+      <semanticDeclaration>
+         <prefix>nmo</prefix>
+         <namespace>http://nomisma.org/ontology#</namespace>
+      </semanticDeclaration>
    </control>
-	  <descMeta>
-		    <title xml:lang="en">As of Marcus Aurelius, Rome, A.D. 174-A.D. 175. 1989.19.13.</title>
-		    <typeDesc xlink:type="simple"
+   <descMeta>
+      <title xml:lang="en">As of Marcus Aurelius, Rome, A.D. 174-A.D. 175. 1989.19.13.</title>
+      <typeDesc xlink:type="simple"
                 xlink:href="http://numismatics.org/ocre/id/ric.3.m_aur.1142"/>
-		    <adminDesc>
-			      <identifier>1989.19.13</identifier>
-			      <provenance>
-				        <chronList>
-					          <chronItem>
-						            <acquisition>
-							              <acquiredFrom>Acquired from the Worldwide Treasure Bureau, September, 1989.</acquiredFrom>
-						            </acquisition>
-					          </chronItem>
-					          <chronItem>
-						            <previousColl>Ex: Virgil Brand Collection. Virgil Brand was once the largest collector of ancient coins in the world. he died in 1926,
+      <adminDesc>
+         <identifier>1989.19.13</identifier>
+         <provenance>
+            <chronList>
+               <chronItem>
+                  <acquisition>
+                     <acquiredFrom>Acquired from the Worldwide Treasure Bureau, September, 1989.</acquiredFrom>
+                  </acquisition>
+               </chronItem>
+               <chronItem>
+                  <previousColl>Ex: Virgil Brand Collection. Virgil Brand was once the largest collector of ancient coins in the world. he died in 1926,
 							and the vast majority of his collection mysteriously vanished. This coin was discovered with a number of others at a midwestern
 							university in the early 1980's, verified as having been part of the Brand collection, and auctioned by Christies in New York in
 							1984.</previousColl>
-					          </chronItem>
-				        </chronList>
-			      </provenance>
-			      <department>Roman</department>
-			      <collection xlink:type="simple" xlink:href="http://nomisma.org/id/uva">The Fralin Museum of Art</collection>
-		    </adminDesc>
-		    <refDesc>
-			      <reference>
-				        <title>RIC</title>
-				        <identifier>1142</identifier>
-			      </reference>
-		    </refDesc>
-	  </descMeta>
-	  <digRep>
-		    <mets:fileSec>
-			      <mets:fileGrp USE="obverse">
-				        <mets:file USE="reference" MIMETYPE="image/jpeg">
-					          <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n1989_19_13_obv.jpg"/>
-				        </mets:file>
-				        <mets:file USE="thumbnail" MIMETYPE="image/jpeg">
-					          <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1989_19_13_obv.jpg"/>
-				        </mets:file>
-			         <mets:file USE="master" MIMETYPE="image/jpeg">
+               </chronItem>
+            </chronList>
+         </provenance>
+         <department>Roman</department>
+         <collection xlink:type="simple" xlink:href="http://nomisma.org/id/uva">The Fralin Museum of Art</collection>
+      </adminDesc>
+      <refDesc>
+         <reference>
+            <title>RIC</title>
+            <identifier>1142</identifier>
+         </reference>
+      </refDesc>
+   </descMeta>
+   <digRep>
+      <mets:fileSec>
+         <mets:fileGrp USE="obverse">
+            <mets:file USE="reference" MIMETYPE="image/jpeg">
+               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n1989_19_13_obv.jpg"/>
+            </mets:file>
+            <mets:file USE="thumbnail" MIMETYPE="image/jpeg">
+               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1989_19_13_obv.jpg"/>
+            </mets:file>
+            <mets:file USE="master" MIMETYPE="image/jpeg">
                <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/master/n1989_19_13_obv.jpg"/>
             </mets:file>
          </mets:fileGrp>
-			      <mets:fileGrp USE="reverse">
-				        <mets:file USE="reference" MIMETYPE="image/jpeg">
-					          <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n1989_19_13_rev.jpg"/>
-				        </mets:file>
-				        <mets:file USE="thumbnail" MIMETYPE="image/jpeg">
-					          <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1989_19_13_rev.jpg"/>
-				        </mets:file>
-			         <mets:file USE="master" MIMETYPE="image/jpeg">
+         <mets:fileGrp USE="reverse">
+            <mets:file USE="reference" MIMETYPE="image/jpeg">
+               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n1989_19_13_rev.jpg"/>
+            </mets:file>
+            <mets:file USE="thumbnail" MIMETYPE="image/jpeg">
+               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1989_19_13_rev.jpg"/>
+            </mets:file>
+            <mets:file USE="master" MIMETYPE="image/jpeg">
                <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/master/n1989_19_13_rev.jpg"/>
             </mets:file>
          </mets:fileGrp>
-		    </mets:fileSec>
-	  </digRep>
+      </mets:fileSec>
+   </digRep>
 </nuds>

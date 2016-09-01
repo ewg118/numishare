@@ -34,6 +34,10 @@
          <prefix>dcterms</prefix>
          <namespace>http://purl.org/dc/terms/</namespace>
       </semanticDeclaration>
+      <semanticDeclaration>
+         <prefix>nmo</prefix>
+         <namespace>http://nomisma.org/ontology#</namespace>
+      </semanticDeclaration>
    </control>
    <descMeta>
       <title xml:lang="en">Antoninianus of Claudius II Gothicus, Siscia, 268-270. 1987.46.49.</title>
@@ -69,7 +73,7 @@
             </type>
             <legend>VICTORIA AVG(VSTI)</legend>
             <persname xlink:type="simple" xlink:role="deity">Victory</persname>
-         	<symbol localType="mintMark">-/-//S</symbol>
+            <symbol localType="mintMark">-/-//S</symbol>
          </reverse>
       </typeDesc>
       <findspotDesc xlink:type="simple" xlink:href="http://nomisma.org/id/normanby_hoard"/>
@@ -92,7 +96,8 @@
          <collection xlink:type="simple" xlink:href="http://nomisma.org/id/uva">The Fralin Museum of Art</collection>
       </adminDesc>
       <refDesc>
-      	<reference xlink:type="simple" xlink:arcrole="nmo:hasTypeSeriesItem" xlink:href="http://numismatics.org/ocre/id/ric.5.cg.171">RIC V Claudius Gothicus 171</reference>
+         <reference xlink:type="simple" xlink:arcrole="nmo:hasTypeSeriesItem"
+                    xlink:href="http://numismatics.org/ocre/id/ric.5.cg.171">RIC V Claudius Gothicus 171</reference>
       </refDesc>
    </descMeta>
    <digRep>
