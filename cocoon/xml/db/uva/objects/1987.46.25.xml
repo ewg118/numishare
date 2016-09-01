@@ -34,6 +34,7 @@
          <prefix>dcterms</prefix>
          <namespace>http://purl.org/dc/terms/</namespace>
       </semanticDeclaration>
+   	<semanticDeclaration><prefix>nmo</prefix><namespace>http://nomisma.org/ontology#</namespace></semanticDeclaration>
    </control>
    <descMeta>
       <title xml:lang="en">Antoninianus of Tetricus I, 270-273. 1987.46.25.</title>
@@ -86,10 +87,8 @@
          <collection xlink:type="simple" xlink:href="http://nomisma.org/id/uva">The Fralin Museum of Art</collection>
       </adminDesc>
       <refDesc>
-         <reference>
-            <title>RIC</title>
-            <identifier>148</identifier>
-         </reference>
+      	<reference xlink:type="simple" xlink:arcrole="nmo:hasTypeSeriesItem" xlink:href="http://numismatics.org/ocre/id/ric.5.tet_i.148">RIC V Tetricus I 148</reference>
+         
       </refDesc>
    </descMeta>
    <digRep>

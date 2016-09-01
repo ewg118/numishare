@@ -34,6 +34,7 @@
          <prefix>dcterms</prefix>
          <namespace>http://purl.org/dc/terms/</namespace>
       </semanticDeclaration>
+   	<semanticDeclaration><prefix>nmo</prefix><namespace>http://nomisma.org/ontology#</namespace></semanticDeclaration>
    </control>
    <descMeta>
       <title xml:lang="en">Antoninianus of Postumus, Mediolanum, A. D. 268. 1987.46.2.</title>
@@ -91,10 +92,8 @@
          <collection xlink:type="simple" xlink:href="http://nomisma.org/id/uva">The Fralin Museum of Art</collection>
       </adminDesc>
       <refDesc>
-         <reference>
-            <title>RIC</title>
-            <identifier>378</identifier>
-         </reference>
+      	<reference xlink:type="simple" xlink:arcrole="nmo:hasTypeSeriesItem" xlink:href="http://numismatics.org/ocre/id/ric.5.post.378">RIC V Postumus 378</reference>
+       
       </refDesc>
    </descMeta>
    <digRep>

@@ -34,6 +34,7 @@
          <prefix>dcterms</prefix>
          <namespace>http://purl.org/dc/terms/</namespace>
       </semanticDeclaration>
+   	<semanticDeclaration><prefix>nmo</prefix><namespace>http://nomisma.org/ontology#</namespace></semanticDeclaration>
    </control>
    <descMeta>
       <title xml:lang="en">Antoninianus of Postumus, Treveri, 263-265. 1987.46.5.</title>
@@ -90,10 +91,7 @@
          <collection xlink:type="simple" xlink:href="http://nomisma.org/id/uva">The Fralin Museum of Art</collection>
       </adminDesc>
       <refDesc>
-         <reference>
-            <title>RIC</title>
-            <identifier>78</identifier>
-         </reference>
+      	<reference xlink:type="simple" xlink:arcrole="nmo:hasTypeSeriesItem" xlink:href="http://numismatics.org/ocre/id/ric.5.post.78">RIC V Postumus 78</reference>        
          <reference>
             <title>The Cunetio Treasure</title>
             <identifier>2405</identifier>
