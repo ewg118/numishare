@@ -41,28 +41,9 @@
    </control>
    <descMeta>
       <title xml:lang="en">Antoninianus of Licinius, 308-324. FIC.50.17.</title>
-      <typeDesc>
-         <objectType xlink:href="http://nomisma.org/id/coin">Coin</objectType>
-         <denomination xlink:href="http://nomisma.org/id/antoninianus">Antoninianus</denomination>
-         <material xlink:type="simple" xlink:href="http://nomisma.org/id/ar">Silver</material>
-         <dateRange>
-            <fromDate standardDate="0308">308</fromDate>
-            <toDate standardDate="0324">324</toDate>
-         </dateRange>
-         <authority>
-            <persname xlink:type="simple" xlink:role="authority"
-                      xlink:href="http://nomisma.org/id/licinius">Licinius</persname>
-            <corpname xlink:type="simple" xlink:role="state">Roman Empire</corpname>
-         </authority>
-         <obverse>
-            <type>
-               <description xml:lang="en">Radiate head right, cuirassed.</description>
-            </type>
-            <legend>IMP(ERATOR) G(ALERIVS) VAL(ERIVS) LICIN(IANVS) LICINIVS P(IVS) F(ELIX) AVG(VSTVS)</legend>
-            <persname xlink:type="simple" xlink:role="portrait"
-                      xlink:href="http://nomisma.org/id/licinius">Licinius</persname>
-         </obverse>
-      </typeDesc>
+   	<typeDesc xlink:type="simple" xlink:href="http://numismatics.org/ocre/id/ric.7.nic.44"/>
+      
+      
       <adminDesc>
          <identifier>FIC.50.17</identifier>
          <department>Roman</department>
