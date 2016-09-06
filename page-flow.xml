@@ -142,8 +142,8 @@
 	<page path="/numishare/[^\/]+/ingest" model="xpl/models/xquery/aggregate-ids.xpl" view="xpl/views/serializations/object/solr.xpl"/>
 	<page path="/numishare/[^\/]+/nomisma.rdf" view="xpl/controllers/nomisma.xpl"/>	
 	<page path="/numishare/[^\/]+/pelagios.rdf" model="xpl/models/solr/pelagios.xpl" view="xpl/views/serializations/solr/rdf.xpl"/>
-	<page path="/numishare/[^\/]+/pelagios.void.rdf" model="xpl/models/config.xpl" view="xpl/views/serializations/config/rdf-void.xpl"/>
-	<page path="/numishare/[^\/]+/nomisma.void.rdf" model="xpl/models/config.xpl" view="xpl/views/serializations/config/rdf-void.xpl"/>
+	<page path="/numishare/[^\/]+/pelagios.void.rdf" model="xpl/models/solr/rdf_count_docs.xpl" view="xpl/views/serializations/config/rdf-void.xpl"/>
+	<page path="/numishare/[^\/]+/nomisma.void.rdf" model="xpl/controllers/rdf_count_docs.xpl" view="xpl/views/serializations/config/rdf-void.xpl"/>
 	<page path="/numishare/[^\/]+/opensearch.xml" model="xpl/models/config.xpl" view="xpl/views/serializations/config/opensearch.xpl"/>
 	<page path="/numishare/[^\/]+/symbols.rdf" view="xpl/models/xquery/aggregate-symbols.xpl"/>
 	

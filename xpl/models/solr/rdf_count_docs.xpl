@@ -22,25 +22,14 @@
 		<p:input name="request" href="#request"/>
 		<p:input name="data" href="#config"/>
 		<p:input name="config">
-			<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">				
-				<xsl:variable name="collection-name" select="substring-before(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/')"/>
-
-				<!-- url params -->
-				<xsl:param name="start">
-					<xsl:choose>
-						<xsl:when test="string(doc('input:request')/request/parameters/parameter[name='page']/value)">
-							<xsl:value-of select="(number(doc('input:request')/request/parameters/parameter[name='page']/value) - 1) * 10000"/>
-						</xsl:when>
-						<xsl:otherwise>0</xsl:otherwise>
-					</xsl:choose>
-				</xsl:param>
+			<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+				<xsl:variable name="collection-name" select="substring-before(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/')"/>				
+				<xsl:variable name="model" select="tokenize(tokenize(doc('input:request')/request/request-uri, '/')[last()], '\.')[1]"/>
 
 				<!-- config variables -->
 				<xsl:variable name="solr-url" select="concat(/config/solr_published, 'select/')"/>
 
-				<xsl:variable name="service">
-					<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+NOT(lang:*)+AND+pleiades_uri:*&amp;rows=10000&amp;start=', $start, '&amp;fl=id,recordId,title_display,pleiades_uri,findspot_uri,year_num,taq_num,tpq_num,recordType,thumbnail_obv,reference_obv,thumbnail_rev,reference_rev,timestamp&amp;mode=pelagios')"/>
-				</xsl:variable>
+				<xsl:variable name="service" select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+NOT(lang:*)+AND+', if ($model='pelagios') then 'pleiades' else 'coinType', '_uri:*&amp;rows=0&amp;facet=false')"/>
 
 				<xsl:template match="/">
 					<config>

@@ -1,10 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-	Copyright (C) 2010 Ethan Gruber
-	EADitor: https://github.com/ewg118/eaditor
-	Apache License 2.0: https://github.com/ewg118/eaditor
-	
--->
 <p:config xmlns:p="http://www.orbeon.com/oxf/pipeline"
 	xmlns:oxf="http://www.orbeon.com/oxf/processors">
 
@@ -20,9 +14,14 @@
 		<p:output name="data" id="request"/>
 	</p:processor>
 	
+	<p:processor name="oxf:pipeline">
+		<p:input name="config" href="../../../models/config.xpl"/>
+		<p:output name="data" id="config"/>
+	</p:processor>
+	
 	<p:processor name="oxf:unsafe-xslt">
 		<p:input name="request" href="#request"/>
-		<p:input name="data" href="#data"/>		
+		<p:input name="data" href="aggregate('content', #data, #config)"/>		
 		<p:input name="config" href="../../../../ui/xslt/serializations/config/rdf-void.xsl"/>
 		<p:output name="data" id="model"/>		
 	</p:processor>

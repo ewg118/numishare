@@ -98,12 +98,23 @@
 				<p:input name="config">
 					<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 						<xsl:variable name="collection-name" select="substring-before(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/')"/>
+						
+						<!-- url parameter -->
+						<xsl:param name="start">
+							<xsl:choose>
+								<xsl:when test="string(doc('input:request')/request/parameters/parameter[name='page']/value)">
+									<xsl:value-of select="(number(doc('input:request')/request/parameters/parameter[name='page']/value) - 1) * 10000"/>
+								</xsl:when>
+								<xsl:otherwise>0</xsl:otherwise>
+							</xsl:choose>
+						</xsl:param>
+						
 						<!-- config variables -->
 						<xsl:variable name="solr-url" select="concat(/config/solr_published, 'select/')"/>
 
 						<xsl:variable name="service">
 							<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name,
-								'+AND+NOT(lang:*)+AND+coinType_uri:*&amp;rows=100000&amp;fl=id,recordId,title_display,coinType_uri,objectType_uri,recordType,publisher_display,axis_num,diameter_num,height_num,width_num,taq_num,weight_num,thumbnail_obv,reference_obv,thumbnail_rev,reference_rev,findspot_uri,findspot_geo,collection_uri,hoard_uri&amp;mode=nomisma')"
+								'+AND+NOT(lang:*)+AND+coinType_uri:*&amp;rows=10000&amp;start=', $start, '&amp;fl=id,recordId,title_display,coinType_uri,objectType_uri,recordType,publisher_display,axis_num,diameter_num,height_num,width_num,taq_num,weight_num,thumbnail_obv,reference_obv,thumbnail_rev,reference_rev,findspot_uri,findspot_geo,collection_uri,hoard_uri&amp;mode=nomisma')"
 							/>
 						</xsl:variable>
 
