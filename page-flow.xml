@@ -126,6 +126,7 @@
 	<page path="/numishare/[^\/]+/contributors" model="xpl/models/sparql/contributors.xpl" view="xpl/views/pages/contributors.xpl"/>	
 	<page path="/numishare/[^\/]+/maps" model="xpl/models/solr/maps.xpl" view="xpl/views/pages/maps.xpl"/>
 	<page path="/numishare/[^\/]+/maps/fullscreen" model="xpl/models/solr/maps.xpl" view="xpl/views/pages/maps_fullscreen.xpl"/>
+	<page path="/numishare/[^\/]+/identify" model="xpl/models/config.xpl" view="xpl/views/pages/identify.xpl"/>
 	<page path="/numishare/[^\/]+/pages/(.*)" model="xpl/models/config.xpl" view="xpl/views/pages/pages.xpl"/>
 	<page path="/numishare/[^\/]+/search" model="xpl/models/solr/search.xpl" view="xpl/views/pages/search.xpl"/>
 	<page path="/numishare/[^\/]+/symbols" model="xpl/models/xquery/aggregate-symbols.xpl" view="xpl/views/pages/symbols.xpl"/>
