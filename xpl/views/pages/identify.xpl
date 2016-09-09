@@ -14,9 +14,14 @@
 		<p:output name="data" id="request"/>
 	</p:processor>
 	
+	<p:processor name="oxf:pipeline">
+		<p:input name="config" href="../../models/config.xpl"/>
+		<p:output name="data" id="config"/>
+	</p:processor>
+	
 	<p:processor name="oxf:unsafe-xslt">
 		<p:input name="request" href="#request"/>
-		<p:input name="data" href="#data"/>		
+		<p:input name="data" href="aggregate('content', #config, #data)"/>		
 		<p:input name="config" href="../../../ui/xslt/pages/identify.xsl"/>
 		<p:output name="data" ref="data"/>
 	</p:processor>

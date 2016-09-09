@@ -113,12 +113,17 @@
 							<xsl:value-of select="numishare:normalizeLabel('header_compare', $lang)"/>
 						</a>
 					</li>
-				</xsl:if>
+				</xsl:if>				
 				<xsl:if test="//config/collection-type= 'cointype'">
 					<li>
 						<a href="{$display_path}contributors{if (string($langParam)) then concat('?lang=', $langParam) else ''}">
 							<xsl:value-of select="numishare:normalizeLabel('header_contributors', $lang)"/>
 						</a>
+					</li>
+				</xsl:if>
+				<xsl:if test="//config/pages/identify/@enabled= true()">
+					<li>
+						<a href="{$display_path}identify{if (string($langParam)) then concat('?lang=', $langParam) else ''}">Identify a Coin</a>
 					</li>
 				</xsl:if>
 				<xsl:if test="//config/pages/symbols/@enabled=true()">
@@ -165,6 +170,11 @@
 						<a href="{$display_path}symbols{if (string($langParam)) then concat('?lang=', $langParam) else ''}">
 							<xsl:value-of select="numishare:normalizeLabel('header_symbols', $lang)"/>
 						</a>
+					</li>
+				</xsl:if>
+				<xsl:if test="//config/pages/identify/@enabled= true()">
+					<li>
+						<a href="{$display_path}identify{if (string($langParam)) then concat('?lang=', $langParam) else ''}">Identify a Coin</a>
 					</li>
 				</xsl:if>
 				<xsl:if test="//config/collection_type= 'cointype' and string(//config/sparql_endpoint)">
