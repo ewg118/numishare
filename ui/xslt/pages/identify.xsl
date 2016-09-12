@@ -76,8 +76,9 @@
 							<h3>
 								<xsl:value-of select="numishare:normalize_fields('legend', $lang)"/>
 							</h3>
-							<p class="text-muted">Search for characters that appear on the front and back of the coin. Please enter legends without spaces or punctuation, using the wildcard asterisk character '*' to denote gaps in legibility.
-								<br/><strong>Example: </strong><kbd>PCARISI*LEG</kbd> will match "P CARISIVS LEG".</p>
+							<p class="text-muted">Search for characters that appear on the front and back of the coin. Please enter legends without spaces or punctuation, using the wildcard asterisk character '*' to denote gaps in legibility, in the beginning, middle, or end of the legend.
+								<br/><strong>Example: </strong><kbd>PCARISI*LEG</kbd> will match "P CARISIVS LEG".
+								<br/><strong>Example: </strong><kbd>*CAES*AVG*</kbd> will match "IMP CAESAR AVGVST", "IMP CAESAR AVGVSTVS", "CAESAR AVG TRIB POTEST", etc.</p>
 							<div class="form-group">
 								<label class="col-sm-2 control-label">
 									<xsl:value-of select="numishare:normalize_fields('obv_leg', $lang)"/>
