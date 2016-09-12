@@ -24,10 +24,10 @@ $(document).ready(function () {
 		
 		//add legends if applicable
 		if ($('input[field=obv_leg_text]').val().length > 0) {
-			frags.push('obv_leg_text:' + $('input[field=obv_leg_text]').val());
+			frags.push('obv_legendCondensed_text:' + $('input[field=obv_leg_text]').val());
 		}
 		if ($('input[field=rev_leg_text]').val().length > 0) {
-			frags.push('rev_leg_text:' + $('input[field=rev_leg_text]').val());
+			frags.push('rev_legendCondensed_text:' + $('input[field=rev_leg_text]').val());
 		}
 		
 		//add materials
