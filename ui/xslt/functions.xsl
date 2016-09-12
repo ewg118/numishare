@@ -1333,6 +1333,10 @@
 		<xsl:param name="field"/>
 		<xsl:param name="lang"/>
 		<xsl:choose>
+			<xsl:when test="contains($field, 'legendCondensed')">
+				<xsl:variable name="label" select="substring-before(replace($field, 'legendCondensed', 'leg'), '_text')"/>
+				<xsl:value-of select="numishare:regularize_node($label, $lang)"/>
+			</xsl:when>
 			<xsl:when test="contains($field, '_uri')">
 				<xsl:variable name="label" select="substring-before($field, '_uri')"/>
 				<xsl:value-of select="numishare:regularize_node($label, $lang)"/>

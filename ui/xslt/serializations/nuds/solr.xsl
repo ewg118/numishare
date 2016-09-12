@@ -145,8 +145,9 @@
 						<xsl:for-each select="$pieces">
 							<field name="{$sideAbbr}_type_text">
 								<xsl:value-of select="."/>
-							</field>
+							</field>							
 						</xsl:for-each>
+						
 					</xsl:if>
 					<xsl:if test="not($typeDesc/*[local-name()=$side]/nuds:legend) and count($subtypes//subtype) &gt; 0">
 						<xsl:variable name="pieces" as="item()*">
@@ -155,12 +156,12 @@
 							</xsl:for-each>
 						</xsl:variable>
 						
-						<field name="{$sideAbbr}_legend_display">
+						<field name="{$sideAbbr}_leg_display">
 							<xsl:value-of select="string-join($pieces, ' | ')"/>
 						</field>
 						
 						<xsl:for-each select="$pieces">
-							<field name="{$sideAbbr}_legend_text">
+							<field name="{$sideAbbr}_leg_text">
 								<xsl:value-of select="."/>
 							</field>
 						</xsl:for-each>

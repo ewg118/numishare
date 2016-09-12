@@ -59,6 +59,9 @@
 				<field name="{$side}_leg_text">
 					<xsl:value-of select="normalize-space(nuds:legend)"/>
 				</field>
+				<field name="{$side}_legendCondensed_text">
+					<xsl:value-of select="replace(nuds:legend, ' ', '')"/>
+				</field>
 			</xsl:if>
 
 			<!-- handle symbols as facets -->
