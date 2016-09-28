@@ -61,6 +61,8 @@
 						<p:input name="config">
 							<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" exclude-result-prefixes="#all">
 								<xsl:output indent="yes" encoding="UTF-8"/>
+								<xsl:strip-space elements="*"/>
+								
 								<xsl:template match="/">
 									<rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:nm="http://nomisma.org/id/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
 										xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:org="http://www.w3.org/ns/org#"
@@ -69,6 +71,18 @@
 									</rdf:RDF>
 								</xsl:template>
 							</xsl:stylesheet>
+						</p:input>
+						<p:output name="data" id="model"/>
+					</p:processor>
+					
+					<p:processor name="oxf:xml-serializer">
+						<p:input name="data" href="#model"/>
+						<p:input name="config">
+							<config>
+								<content-type>application/rdf+xml</content-type>
+								<indent>true</indent>
+								<indent-amount>4</indent-amount>
+							</config>
 						</p:input>
 						<p:output name="data" ref="data"/>
 					</p:processor>

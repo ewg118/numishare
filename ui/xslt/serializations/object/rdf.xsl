@@ -10,6 +10,8 @@
 	<!-- URL parameters (only valid for GET API) -->
 	<xsl:param name="model" select="doc('input:request')/request/parameters/parameter[name='model']/value"/>
 
+	<xsl:strip-space elements="*"/>
+
 	<!-- config variables -->
 	<xsl:variable name="url" select="/content/config/url"/>
 	<xsl:variable name="uri_space" select="/content/config/uri_space"/>
