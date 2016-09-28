@@ -99,23 +99,17 @@
 			<xsl:when test="string($model)">
 				<xsl:choose>
 					<xsl:when test="$model='pelagios'">
-						<rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:relations="http://pelagios.github.io/vocab/relations#"
-							xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:oa="http://www.w3.org/ns/oa#"
-							xmlns:pelagios="http://pelagios.github.io/vocab/terms#" xmlns:void="http://rdfs.org/ns/void#">
+						<rdf:RDF>
 							<xsl:apply-templates select="/content/*[not(local-name()='config')]" mode="pelagios"/>
 						</rdf:RDF>
 					</xsl:when>
 					<xsl:when test="$model='crm'">
-						<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" 
-							xmlns:xsd="http://www.w3.org/2001/XMLSchema#"  xmlns:void="http://rdfs.org/ns/void#" xmlns:crm="http://www.cidoc-crm.org/cidoc-crm/">
+						<rdf:RDF>
 							<xsl:apply-templates select="/content/*[not(local-name()='config')]" mode="crm"/>
 						</rdf:RDF>
 					</xsl:when>
 					<xsl:when test="$model='nomisma'">
-						<rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:nm="http://nomisma.org/id/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-							xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"
-							xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:org="http://www.w3.org/ns/org#" xmlns:nmo="http://nomisma.org/ontology#" xmlns:void="http://rdfs.org/ns/void#"
-							xmlns:xsd="http://www.w3.org/2001/XMLSchema#">
+						<rdf:RDF>
 							<xsl:apply-templates select="/content/*[not(local-name()='config')]" mode="nomisma"/>
 						</rdf:RDF>
 					</xsl:when>
@@ -125,10 +119,7 @@
 				</xsl:choose>
 			</xsl:when>
 			<xsl:otherwise>
-				<rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:nm="http://nomisma.org/id/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-					xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"
-					xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:org="http://www.w3.org/ns/org#" xmlns:nmo="http://nomisma.org/ontology#" xmlns:void="http://rdfs.org/ns/void#"
-					xmlns:xsd="http://www.w3.org/2001/XMLSchema#">
+				<rdf:RDF>
 					<xsl:apply-templates select="/content/*[not(local-name()='config')]" mode="nomisma"/>
 				</rdf:RDF>
 			</xsl:otherwise>
