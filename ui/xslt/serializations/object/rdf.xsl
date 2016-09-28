@@ -68,7 +68,7 @@
 	<xsl:variable name="rdf" as="element()*">
 		<rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:nm="http://nomisma.org/id/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
 			xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:org="http://www.w3.org/ns/org#"
-			xmlns:nomisma="http://nomisma.org/" xmlns:nmo="http://nomisma.org/ontology#">
+			xmlns:nmo="http://nomisma.org/ontology#">
 
 			<xsl:if test="$model='pelagios'">
 				<xsl:variable name="id-param">
@@ -96,23 +96,32 @@
 		<xsl:choose>
 			<xsl:when test="contains(doc('input:request')/request/request-url, 'apis/get')">
 				<xsl:choose>
-					<xsl:when test="$model='pelagios'">
-						<rdf:RDF>
-							<xsl:apply-templates select="/content/*[not(local-name()='config')]" mode="pelagios"/>
-						</rdf:RDF>
+					<xsl:when test="string($model)">
+						<xsl:choose>
+							<xsl:when test="$model='pelagios'">
+								<rdf:RDF>
+									<xsl:apply-templates select="/content/*[not(local-name()='config')]" mode="pelagios"/>
+								</rdf:RDF>
+							</xsl:when>
+							<xsl:when test="$model='crm'">
+								<rdf:RDF>
+									<xsl:apply-templates select="/content/*[not(local-name()='config')]" mode="crm"/>
+								</rdf:RDF>
+							</xsl:when>
+							<xsl:when test="$model='nomisma'">
+								<rdf:RDF>
+									<xsl:apply-templates select="/content/*[not(local-name()='config')]" mode="nomisma"/>
+								</rdf:RDF>
+							</xsl:when>
+							<xsl:otherwise>
+								<error>RDF model not supported</error>
+							</xsl:otherwise>
+						</xsl:choose>
 					</xsl:when>
-					<xsl:when test="$model='crm'">
-						<rdf:RDF>
-							<xsl:apply-templates select="/content/*[not(local-name()='config')]" mode="crm"/>
-						</rdf:RDF>
-					</xsl:when>
-					<xsl:when test="$model='nomisma'">
+					<xsl:otherwise>
 						<rdf:RDF>
 							<xsl:apply-templates select="/content/*[not(local-name()='config')]" mode="nomisma"/>
 						</rdf:RDF>
-					</xsl:when>
-					<xsl:otherwise>
-						<error>RDF model not defined by URL parameter or not supported</error>
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
