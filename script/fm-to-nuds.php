@@ -237,384 +237,538 @@ function generate_nuds($row, $count){
 	//references; used to check for 'ric.' for pointing typeDesc to OCRE
 	$refs = array_filter(explode('|', $row['refs']));
 	
-	//control
-	$xml = '<?xml version="1.0" encoding="UTF-8"?><nuds xmlns="http://nomisma.org/nuds" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mets="http://www.loc.gov/METS/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" recordType="physical">';
-	$xml .= "<control><recordId>{$accnum}</recordId>";
-	$xml .= '<publicationStatus>approved</publicationStatus>';
-	$xml .= '<maintenanceAgency><agencyName>American Numismatic Society</agencyName></maintenanceAgency>';
-	$xml .= '<maintenanceStatus>derived</maintenanceStatus>';
-	$xml .= '<maintenanceHistory><maintenanceEvent>';
-	$xml .= '<eventType>derived</eventType><eventDateTime standardDateTime="' . date(DATE_W3C) . '">' . date(DATE_W3C) . '</eventDateTime><agentType>machine</agentType><agent>PHP</agent><eventDescription>Exported from Filemaker</eventDescription>';
-	$xml .= '</maintenanceEvent></maintenanceHistory>';
-	$xml .= '<rightsStmt><copyrightHolder>American Numismatic Society</copyrightHolder></rightsStmt><semanticDeclaration><prefix>nmo</prefix><namespace>http://nomisma.org/ontology#</namespace></semanticDeclaration>';
-	$xml .= "</control>";
-	$xml .= '<descMeta>';
-
-	/************ typeDesc ***************/
-	//if the coin is Roman and contains 'ric.' as a reference, point the typeDesc to OCRE
-	if (count(preg_grep('/ric\.[1-9]/', $refs)) == 1){
-		//only continue process if the reference is not variant
-		if (strpos(strtolower($row['info']), 'variant') === FALSE){
-			$matches = preg_grep('/ric\./', $refs);
-			foreach ($matches as $k=>$v){
-				if (strlen(trim($v)) > 0){
-					//account for ? used as uncertainty
-					$id = substr(trim($v), -1) == '?' ? str_replace('?', '', trim($v)) : trim($v);
-					$certainty = substr(trim($v), -1) == '?' ? false : true;
+	
+	$writer = new XMLWriter();
+	//$writer->openURI("{$collection['project_id']}.rdf");
+	$writer->openURI('php://output');
+	$writer->startDocument('1.0','UTF-8');
+	$writer->setIndent(true);
+	//now we need to define our Indent string,which is basically how many blank spaces we want to have for the indent
+	$writer->setIndentString("    ");
+	
+	$writer->startElement('nuds');
+	$writer->writeAttribute('xmlns', 'http://nomisma.org/nuds');
+	$writer->writeAttribute('xmlns:xs', "http://www.w3.org/2001/XMLSchema");
+	$writer->writeAttribute('xmlns:xlink', "http://www.w3.org/1999/xlink");
+	$writer->writeAttribute('xmlns:mets', "http://www.loc.gov/METS/");
+	$writer->writeAttribute('xmlns:xsi', "http://www.w3.org/2001/XMLSchema-instance");
+	$writer->writeAttribute('recordType', "physical");
+		
+		//start control
+		$writer->startElement('control');
+			$writer->writeElement('recordId', $accnum);
+			$writer->writeElement('publicationStatus', 'approved');
+			$writer->startElement('maintenanceAgency');
+				$writer->writeElement('agencyName', 'American Numismatic Society');
+			$writer->endElement();
+			$writer->writeElement('maintenanceStatus', 'derived');
+			$writer->startElement('maintenanceHistory');
+				$writer->startElement('maintenanceEvent');
+					$writer->writeElement('eventType', 'derived');
+					$writer->startElement('eventDateTime');
+						$writer->writeAttribute('standardDateTime', date(DATE_W3C));
+						$writer->text(date(DATE_W3C));
+					$writer->endElement();
+					$writer->writeElement('agentType', 'machine');
+					$writer->writeElement('agent', 'PHP');
+					$writer->writeElement('eventDescription', 'Exported from Filemaker');
+				$writer->endElement();
+			$writer->endElement();
+		$writer->endElement();
+		//end control
+	
+		//begin descMeta
+		$writer->startElement('descMeta');
+		/************ BEGIN TYPEDESC ***************/
+		//if the coin is Roman and contains 'ric.' as a reference, point the typeDesc to OCRE
+		if (count(preg_grep('/ric\.[1-9]/', $refs)) == 1){
+			//only continue process if the reference is not variant
+			if (strpos(strtolower($row['info']), 'variant') === FALSE){
+				$matches = preg_grep('/ric\./', $refs);
+				foreach ($matches as $k=>$v){
+					if (strlen(trim($v)) > 0){
+						//account for ? used as uncertainty
+						$id = substr(trim($v), -1) == '?' ? str_replace('?', '', trim($v)) : trim($v);
+						$uncertain = substr(trim($v), -1) == '?' ? true : false;
+					}
 				}
-			}
-			$url = 'http://numismatics.org/ocre/id/' . $id;
-			$file_headers = @get_headers($url);		
-			if ($file_headers[0] == 'HTTP/1.1 200 OK'){
-				$currentUri = get_current_ocre_uri($url);
-				if ($currentUri != 'FAIL'){
-					$title = get_title_from_rdf($currentUri, $accnum);
-					if ($title != 'FAIL'){
-						$xml .= '<title xml:lang="en">' . $title . '. ' . $accnum . '</title>';
-						//$xml .= '<typeDesc xlink:type="simple" xlink:href="' . $currentUri . '"' . $certainty . '/>';
-						$xml .= generate_typeDesc_from_OCRE($row, $currentUri, $certainty);
+				$uri = 'http://numismatics.org/ocre/id/' . $id;
+				$file_headers = @get_headers($url);
+				if ($file_headers[0] == 'HTTP/1.1 200 OK'){
+					$currentUri = get_current_ocre_uri($uri);
+					if ($currentUri != 'FAIL'){						
+						//generate the title from the NUDS
+						$title = generate_title_from_type($currentUri);
+						$writer->startElement('title');
+								$writer->writeAttribute('xml:lang', 'en');
+								$writer->text("{$title}. {$accnum}");
+						$writer->endElement();
+						generate_typeDesc_from_OCRE($writer, $row, $currentUri, $uncertain);
+						
+						//set the ocreTitle
 						$ocreUri = $currentUri;
-						$ocreTitle = $title;
+						$ocreTitle = get_title_from_rdf($currentUri);
 					} else {
-						$xml .= generate_typeDesc($row, $department);
+						//FAIL if the $ref actually has two new URIs
+						generate_typeDesc($writer, $row, $department, $uncertain);
 					}
 				} else {
-					//FAIL if the $ref actually has two new URIs
-					$xml .= generate_typeDesc($row, $department);
-				}				
-			} else {
-				$xml .= generate_typeDesc($row, $department);
-			}	
-		} else {
-			//otherwise simply generate typeDesc
-			$xml .= generate_typeDesc($row, $department);
-		}
-		
-	} elseif ($department=='Roman' && count(preg_grep('/C\.[1-9]/', $refs)) > 0){
-		//handle Roman Republican
-		$matches = preg_grep('/C\.[1-9]/', $refs);
-		$certainty = '';
-		foreach ($matches as $k=>$v){
-			if (strlen(trim($v)) > 0){
-				$id = substr(trim($v), -1) == '?' ? str_replace('?', '', trim($v)) : trim($v);
-				$certainty = substr(trim($v), -1) == '?' ? ' certainty="uncertain"' : '';
-			}
-		}
-		$url = 'http://numismatics.org/crro/id/' . str_replace('C.', 'rrc-', $id);
-		$file_headers = @get_headers($url);
-		if ($file_headers[0] == 'HTTP/1.1 200 OK'){
-			$title = get_title_from_rdf($url, $accnum);
-			if ($title != 'FAIL'){
-				$xml .= '<title xml:lang="en">' . $title . '. ' . $accnum . '</title>';
-				$xml .= '<typeDesc xlink:type="simple" xlink:href="' . $url . '"' . $certainty . '/>';
-			} else {
-				$xml .= generate_typeDesc($row, $department);
-			}
-		} else {
-			$xml .= generate_typeDesc($row, $department);
-		}
-	} elseif ($department=='Greek' && count(preg_grep('/Price\.[1-9]/', $refs)) > 0){
-		//handle Price references for Pella
-		$matches = preg_grep('/Price\.[1-9]/', $refs);
-		foreach ($matches as $k=>$v){
-			if (strlen(trim($v)) > 0){
-				$id = substr(trim($v), -1) == '?' ? str_replace('?', '', trim($v)) : trim($v);
-				$certainty = substr(trim($v), -1) == '?' ? ' certainty="uncertain"' : '';
-			}
-		}
-		$url = 'http://numismatics.org/pella/id/' . str_replace('Price.', 'price.', $id);
-		$file_headers = @get_headers($url);
-		if ($file_headers[0] == 'HTTP/1.1 200 OK'){
-			$title = get_title_from_rdf($url, $accnum);
-			if ($title != 'FAIL'){
-				$xml .= '<title xml:lang="en">' . $title . '. ' . $accnum . '</title>';
-				$xml .= '<typeDesc xlink:type="simple" xlink:href="' . $url . '"' . $certainty . '/>';
-			} else {
-				$xml .= generate_typeDesc($row, $department);
-			}
-		} else {
-			$xml .= generate_typeDesc($row, $department);
-		}
-		
-	} elseif ($row['privateinfo'] == 'WW I project ready') {
-		//handle AoD
-		$citations = array_filter(explode('|', trim($row['published'])));
-		$url = 'http://numismatics.org/aod/id/' . $citations[0];
-		$file_headers = @get_headers($url);
-		if ($file_headers[0] == 'HTTP/1.1 200 OK'){
-			$title = get_title_from_rdf($url, $accnum);
-			if ($title != 'FAIL'){
-				$xml .= '<title xml:lang="en">' . $title . '. ' . $accnum . '</title>';
-				$xml .= '<typeDesc xlink:type="simple" xlink:href="' . $url . '"/>';
-			} else {
-				$xml .= generate_typeDesc($row, $department);
-			}
-		} else {
-			$xml .= generate_typeDesc($row, $department);
-		}
-		
-	}  else {
-		$xml .= generate_typeDesc($row, $department);
-	}
-
-	/***** UNDERTYPE DESCRIPTION *****/
-	if (strlen(trim($row['undertype'])) > 0){
-		$xml .= '<undertypeDesc><description xml:lang="en">' . trim($row['undertype']) . '</description></undertypeDesc>';
-	}
-
-	/***** PHYSICAL DESCRIPTION *****/
-	$xml .= '<physDesc>';
-
-	//axis: only create if it's an integer
-	$axis = (int) $row['axis'];
-	if (is_int($axis) && $axis <= 12 && $axis >= 0){
-		$xml .= '<axis>' . $axis . '</axis>';
-	} elseif((strlen($axis) > 0 && !is_int($axis)) || $axis > 12){
-		$warnings[] = 'Line ' . $count . ': ' . $accnum . ' (' . $department . ') has non-integer axis or value exceeding 12.';
-	}
-
-	//color
-	if (strlen($row['color']) > 0){
-		$colors = array_filter(explode('|', $row['color']));
-		foreach ($colors as $color){
-			$xml .= '<color>' . trim($color) . '</color>';
-		}
-	}
-	//dob
-	if (strlen(trim($row['dob'])) > 0){
-		$xml .= '<dateOnObject><date>' . trim($row['dob']) . '</date></dateOnObject>';
-	}
-	//sernum
-	if (strlen(trim($row['sernum'])) > 0){
-		$xml .= '<serialNumber>' . trim($row['sernum']) . '</serialNumber>';
-	}
-	//watermark
-	if (strlen(trim($row['watermark'])) > 0){
-		$xml .= '<watermark>' . trim($row['watermark']) . '</watermark>';
-	}
-	//shape
-	if (strlen(trim($row['shape'])) > 0){
-		$xml .= '<shape>' . trim($row['shape']) . '</shape>';
-	}
-	//signature
-	if (strlen(trim($row['signature'])) > 0){
-		$xml .= '<signature>' . trim($row['signature']) . '</signature>';
-	}
-	//counterstamp
-	if (strlen(trim($row['counterstamp'])) > 0){
-		$xml .= '<countermark><description xml:lang="en">' . trim($row['counterstamp']) . '</description></countermark>';
-	}
-	//create measurementsSet, if applicable
-	if ((is_numeric(trim($row['weight'])) && trim($row['weight']) > 0) || (is_numeric(trim($row['diameter'])) && trim($row['diameter']) > 0) || (is_numeric(trim($row['height'])) && trim($row['height']) > 0) || (is_numeric(trim($row['width'])) && trim($row['width']) > 0) || (is_numeric(trim($row['depth'])) && trim($row['depth']) > 0)){
-		$xml .= '<measurementsSet>';
-		//weight
-		$weight = trim($row['weight']);
-		if (is_numeric($weight) && $weight > 0){
-			$xml .= '<weight units="g">' . $weight . '</weight>';
-		} elseif(!is_numeric($weight) && strlen($weight) > 0){
-			$warnings[] = 'Line ' . $count . ': ' . $accnum . ' (' . $department . ') has non-numeric weight.';
-		}
-		//diameter
-		$diameter = trim($row['diameter']);
-		if (is_numeric($diameter) && $diameter > 0){
-			$xml .= '<diameter units="mm">' . $diameter . '</diameter>';
-		} elseif(!is_numeric($diameter) && strlen($diameter) > 0){
-			$warnings[] = 'Line ' . $count . ': ' . $accnum . ' (' . $department . ') has non-numeric diameter.';
-		}
-		//height
-		$height = trim($row['height']);
-		if (is_numeric($height) && $height > 0){
-			$xml .= '<height units="mm">' . $height . '</height>';
-		} elseif(!is_numeric($height) && strlen($height) > 0){
-			$warnings[] = 'Line ' . $count . ': ' . $accnum . ' (' . $department . ') has non-numeric height.';
-		}
-		//width
-		$width = trim($row['width']);
-		if (is_numeric($width) && $width > 0){
-			$xml .= '<width units="mm">' . $width . '</width>';
-		} elseif(!is_numeric($width) && strlen($width) > 0){
-			$warnings[] = 'Line ' . $count . ': ' . $accnum . ' (' . $department . ') has non-numeric width.';
-		}
-		//depth
-		$depth = trim($row['depth']);
-		if (is_numeric($depth) && $depth > 0){
-			$xml .= '<thickness units="mm">' . $depth . '</thickness>';
-		} elseif(!is_numeric($depth) && strlen($depth) > 0){
-			$warnings[] = 'Line ' . $count . ': ' . $accnum . ' (' . $department . ') has non-numeric depth.';
-		}
-		$xml .= '</measurementsSet>';
-	}
-	
-	if (strlen(trim($row['Authenticity'])) > 0){
-		$array = array_filter(explode('|', $row['Authenticity']));
-		foreach ($array as $val){
-			$certainty = substr($val, -1) == '?' ? ' certainty="uncertain"' : '';
-			$label = str_replace('?', '', trim($val));
-			$xml .= '<authenticity' . $certainty . '>' . $label . '</authenticity>';
-		}
-	}
-	
-	if (strlen(trim($row['OrigIntendedUse'])) > 0){
-		$array = array_filter(explode('|', $row['OrigIntendedUse']));
-		foreach ($array as $val){
-			$certainty = substr($val, -1) == '?' ? ' certainty="uncertain"' : '';
-			$label = str_replace('?', '', trim($val));
-			$xml .= '<originalIntendeUse' . $certainty . '>' . $label . '</originalIntendeUse>';
-		}
-	}
-	
-	//conservationState
-	if (strlen(trim($row['conservation'])) > 0 || strlen(trim($row['PostManAlt'])) > 0){
-		$xml .= '<conservationState>';
-		if (strlen(trim($row['conservation'])) > 0){
-			$xml .= '<description xml:lang="en">' . trim($row['conservation']) . '</description>';
-		}
-		
-		if (strlen(trim($row['PostManAlt'])) > 0){
-			$array = array_filter(explode('|', $row['PostManAlt']));
-			foreach ($array as $val){
-				$certainty = substr($val, -1) == '?' ? ' certainty="uncertain"' : '';
-				$label = str_replace('?', '', trim($val));
-				$xml .= '<condition' . $certainty . '>' . $label . '</condition>';
-			}
-		}
-		$xml .='</conservationState>';
-	}
-	$xml .= '</physDesc>';
-
-	/***** ADMINSTRATIVE DESCRIPTION *****/
-	$xml .= '<adminDesc>';
-	$xml .= '<identifier>' . $accnum . '</identifier>';
-	$xml .= '<department>' . $department . '</department>';
-	$xml .= '<collection xlink:type="simple" xlink:href="http://nomisma.org/id/ans">American Numismatic Society</collection>';
-
-	if (strlen(trim($row['imagesponsor'])) > 0){
-		$xml .= '<acknowledgment>' . trim($row['imagesponsor']) . '</acknowledgment>';
-	}
-	//custhodhist
-	if (strlen(trim($row['prevcoll'])) > 0 || strlen(trim($row['acknowledgment'])) > 0){
-		$prevcolls = array_filter(explode('|', $row['prevcoll']));
-		$xml .= '<provenance><chronList>';
-		if (strlen(trim($row['acknowledgment'])) > 0){
-			$xml .= '<chronItem><acquiredFrom>' . trim($row['acknowledgment']) . '</acquiredFrom></chronItem>';
-		}
-		foreach ($prevcolls as $prevcoll){
-			if (!is_int($prevcoll) && strlen(trim($prevcoll)) > 0){
-				$xml .= '<chronItem><previousColl>' . trim($prevcoll) . '</previousColl></chronItem>';
-			}
-		}
-		$xml .= '</chronList></provenance>';
-	}
-
-	$xml .= '</adminDesc>';
-
-	/***** BIBLIOGRAPHIC DESCRIPTION *****/
-	$citations = array_filter(explode('|', trim($row['published'])));
-	if (count($refs) > 0 || count($citations) > 0){		
-		$xml .= '<refDesc>';
-		//reference		
-		if (count($refs) > 0){
-			foreach ($refs as $val){		
-				$certainty = substr($val, -1) == '?' ? ' certainty="uncertain"' : '';
-				//insert OCRE URIs into a normalized reference field				
-				
-				if (strlen($ocreUri) > 0){
-					$xml .= '<reference' . $certainty . ' xlink:type="simple" xlink:arcrole="nmo:hasTypeSeriesItem" xlink:href="' . $url . '">' . $ocreTitle . '</reference>';
-				} else {
-					$label = str_replace('?', '', trim($val));
-					$xml .= '<reference' . $certainty . '>' . $label . '</reference>';
+					generate_typeDesc($writer, $row, $department, $uncertain);
 				}
-			}			
+			} else {
+				//otherwise simply generate typeDesc
+				generate_typeDesc($writer, $row, $department, $uncertain);
+			}
+		
+		} elseif ($department=='Roman' && count(preg_grep('/C\.[1-9]/', $refs)) > 0){
+			//handle Roman Republican
+			$matches = preg_grep('/C\.[1-9]/', $refs);
+			foreach ($matches as $k=>$v){
+				if (strlen(trim($v)) > 0){
+					$id = substr(trim($v), -1) == '?' ? str_replace('?', '', trim($v)) : trim($v);
+					$uncertain = substr(trim($v), -1) == '?' ? true : false;
+				}
+			}
+			$url = 'http://numismatics.org/crro/id/' . str_replace('C.', 'rrc-', $id);
+			$file_headers = @get_headers($url);
+			if ($file_headers[0] == 'HTTP/1.1 200 OK'){
+				$title = generate_title_from_type($url);
+				$writer->startElement('title');
+					$writer->writeAttribute('xml:lang', 'en');
+					$writer->text("{$title}. {$accnum}");
+				$writer->endElement();
+				$writer->startElement('typeDesc');
+					$writer->writeAttribute('xlink:type', 'simple');
+					$writer->writeAttribute('xlink:href', $url);
+					if ($uncertain == true){
+						$writer->writeAttribute('certainty', 'uncertain');
+					}
+				$writer->endElement();
+			} else {
+				generate_typeDesc($writer, $row, $department, $uncertain);
+			}
+		} elseif ($department=='Greek' && count(preg_grep('/Price\.[1-9]/', $refs)) > 0){
+			//handle Price references for Pella
+			$matches = preg_grep('/Price\.[1-9]/', $refs);
+			foreach ($matches as $k=>$v){
+				if (strlen(trim($v)) > 0){
+					$id = substr(trim($v), -1) == '?' ? str_replace('?', '', trim($v)) : trim($v);
+					$uncertain = substr(trim($v), -1) == '?' ? true : false;
+				}
+			}
+			$url = 'http://numismatics.org/pella/id/' . str_replace('Price.', 'price.', $id);
+			$file_headers = @get_headers($url);
+			if ($file_headers[0] == 'HTTP/1.1 200 OK'){
+				$title = generate_title_from_type($url);
+				$writer->startElement('title');
+					$writer->writeAttribute('xml:lang', 'en');
+					$writer->text("{$title}. {$accnum}");
+				$writer->endElement();
+				$writer->startElement('typeDesc');
+					$writer->writeAttribute('xlink:type', 'simple');
+					$writer->writeAttribute('xlink:href', $url);
+					if ($uncertain == true){
+						$writer->writeAttribute('certainty', 'uncertain');
+					}
+				$writer->endElement();
+			} else {
+				generate_typeDesc($writer, $row, $department, $uncertain);
+			}
+		
+		} elseif ($row['privateinfo'] == 'WW I project ready') {
+			//handle AoD
+			$citations = array_filter(explode('|', trim($row['published'])));
+			$url = 'http://numismatics.org/aod/id/' . $citations[0];
+			$file_headers = @get_headers($url);
+			if ($file_headers[0] == 'HTTP/1.1 200 OK'){
+				$title = generate_title_from_type($url);
+				$writer->startElement('title');
+					$writer->writeAttribute('xml:lang', 'en');
+					$writer->text("{$title}. {$accnum}");
+				$writer->endElement();
+				$writer->startElement('typeDesc');
+					$writer->writeAttribute('xlink:type', 'simple');
+					$writer->writeAttribute('xlink:href', $url);
+					if ($certainty == false){
+						$writer->writeAttribute('certainty', 'uncertain');
+					}
+				$writer->endElement();
+			} else {
+				generate_typeDesc($writer, $row, $department, false);
+			}
+		
+		}  else {
+			generate_typeDesc($writer, $row, $department, false);
 		}
 		
-		//citation
-		if (count($citations) > 0){
-			foreach ($citations as $val){				
-				$certainty = substr($val, -1) == '?' ? ' certainty="uncertain"' : '';
-				$label = str_replace('?', '', trim($val));
-				$xml .= '<citation' . $certainty . '>' . $label . '</citation>';
-			}
-		}
-		$xml .= '</refDesc>';
-	}
-	
-	/***** SUBJECTS *****/
-	if (strlen(trim($row['category'])) > 0 || strlen(trim($row['series'])) > 0 || strlen(trim($row['subjevent'])) > 0 || strlen(trim($row['subjissuer'])) > 0 || strlen(trim($row['subjperson'])) > 0 || strlen(trim($row['subjplace'])) > 0 || strlen(trim($row['degree'])) > 0 || strlen(trim($row['era'])) > 0){
-		$xml .= '<subjectSet>';
-		//suppressing categories: no longer useful or controlled in Filemaker
-		/*if (strlen(trim($row['category'])) > 0){
-		 $categories = array_filter(explode('|', trim($row['category'])));
-		foreach ($categories as $category){
-		$xml .= '<subject localType="category">' . trim($category) . '</subject>';
-		}
-		}*/
-		if (strlen(trim($row['series'])) > 0){
-			$serieses = array_filter(explode('|', $row['series']));
-			foreach ($serieses as $series){
-				$xml .= '<subject localType="series">' . trim($series) . '</subject>';
-			}
-		}
-		if (strlen(trim($row['subjevent'])) > 0){
-			$subjEvents = array_filter(explode('|', $row['subjevent']));
-			foreach ($subjEvents as $subjEvent){
-				$xml .= '<subject localType="subjectEvent">' . trim($subjEvent) . '</subject>';
-			}
-		}
-		if (strlen(trim($row['subjissuer'])) > 0){
-			$subjIssuers = array_filter(explode('|', $row['subjissuer']));
-			foreach ($subjIssuers as $subjIssuer){
-				$xml .= '<subject localType="subjectIssuer">' . trim($subjIssuer) . '</subject>';
-			}
-		}
-		if (strlen(trim($row['subjperson'])) > 0){
-			$subjPersons = array_filter(explode('|', $row['subjperson']));
-			foreach ($subjPersons as $subjPerson){
-				$xml .= '<subject localType="subjectPerson">' . trim($subjPerson) . '</subject>';
-			}
-		}
-		if (strlen(trim($row['subjplace'])) > 0){
-			$subjPlaces = array_filter(explode('|', $row['subjplace']));
-			foreach ($subjPlaces as $subjPlace){
-				$xml .= '<subject localType="subjectPlace">' . trim($subjPlace) . '</subject>';
-			}
-		}
-		if (strlen(trim($row['era'])) > 0){
-			$eras = array_filter(explode('|', $row['era']));
-			foreach ($eras as $era){
-				$xml .= '<subject localType="era">' . trim($era) . '</subject>';
-			}
-		}
-		//degree
-		if (strlen(trim($row['degree'])) > 0){
-			$degrees = array_filter(explode('|', $row['degree']));
-			foreach ($degrees as $degree){
-				$xml .= '<subject localType="degree">' . trim($degree) . '</subject>';
-			}
-		}
-		$xml .= '</subjectSet>';
-	}
-	//notes
-	if (strlen(trim($row['info'])) > 0){
-		$infos = array_filter(explode('|', $row['info']));
-		$xml .= '<noteSet>';
-		foreach ($infos as $info){
-			$xml .= '<note>' . trim($info) . '</note>';
-		}
-		$xml .= '</noteSet>';
-	}
+		/***** END TYPESDESC *****/
 
-	/***** FINDSPOT DESCRIPTION *****/
-	if (strpos($row['privateinfo'], 'coinhoards.org') !== FALSE){
-		$url = trim($row['privateinfo']);
-		$file_headers = @get_headers($url);
-		if ($file_headers[0] == 'HTTP/1.1 200 OK'){
-			$xml.= '<findspotDesc xlink:type="simple" xlink:href="' . $url . '"/>';
+		/***** UNDERTYPE DESCRIPTION *****/
+		if (strlen(trim($row['undertype'])) > 0){
+			$writer->startElement('undertypeDesc');
+				$writer->startElement('description');
+					$writer->writeAttribute('xml:lang', 'en');
+					$writer->text(trim($row['undertype']));
+				$writer->endElement();
+			$writer->endElement();
 		}
-	} elseif (strlen(trim($row['findspot'])) > 0){
-		$xml .= '<findspotDesc><findspot><geogname xlink:type="simple" xlink:role="findspot">' . trim($row['findspot']) . '</geogname></findspot></findspotDesc>';
-	}
 	
-	$xml .= '</descMeta>';
+		/***** PHYSICAL DESCRIPTION *****/
+		$writer->startElement('phyDesc');
+	
+		//axis: only create if it's an integer
+		$axis = (int) $row['axis'];
+		if (is_int($axis) && $axis <= 12 && $axis >= 0){
+			$writer->writeElement('axis', $axis);
+		} elseif((strlen($axis) > 0 && !is_int($axis)) || $axis > 12){
+			$warnings[] = 'Line ' . $count . ': ' . $accnum . ' (' . $department . ') has non-integer axis or value exceeding 12.';
+		}
+	
+		//color
+		if (strlen($row['color']) > 0){
+			$colors = array_filter(explode('|', $row['color']));
+			foreach ($colors as $color){
+				$writer->writeElement('color', trim(color));
+			}
+		}
+		//dob
+		if (strlen(trim($row['dob'])) > 0){
+			$writer->startElement('dateOnObject');
+				$writer->writeElement('date', trim($row['dob']));
+			$writer->endElement();
+		}
+		//sernum
+		if (strlen(trim($row['sernum'])) > 0){
+			$writer->writeElement('serialNumber', trim($row['sernum']));
+		}
+		//watermark
+		if (strlen(trim($row['watermark'])) > 0){
+			$writer->writeElement('watermark', trim($row['matermark']));
+		}
+		//shape
+		if (strlen(trim($row['shape'])) > 0){
+			$writer->writeElement('shape', trim($row['shape']));
+		}
+		//signature
+		if (strlen(trim($row['signature'])) > 0){
+			$writer->writeElement('signature', trim($row['signature']));
+		}
+		//counterstamp
+		if (strlen(trim($row['counterstamp'])) > 0){
+			$writer->startElement('countermark');
+				$writer->startElement('description');
+					$writer->writeAttribute('xml:lang', 'en');
+					$writer->text(trim($row['counterstamp']));
+				$writer->endElement();
+			$writer->endElement();
+		}
+		
+		//create measurementsSet, if applicable
+		if ((is_numeric(trim($row['weight'])) && trim($row['weight']) > 0) || (is_numeric(trim($row['diameter'])) && trim($row['diameter']) > 0) || (is_numeric(trim($row['height'])) && trim($row['height']) > 0) || (is_numeric(trim($row['width'])) && trim($row['width']) > 0) || (is_numeric(trim($row['depth'])) && trim($row['depth']) > 0)){
+			$writer->startElement('measuremsentsSet');
+			//weight
+			$weight = trim($row['weight']);
+			if (is_numeric($weight) && $weight > 0){
+				$writer->startElement('weight');
+					$writer->writeAttribute('units', 'g');
+					$writer->text($weight);
+				$writer->endElement();
+			} elseif(!is_numeric($weight) && strlen($weight) > 0){
+				$warnings[] = 'Line ' . $count . ': ' . $accnum . ' (' . $department . ') has non-numeric weight.';
+			}
+			//diameter
+			$diameter = trim($row['diameter']);
+			if (is_numeric($diameter) && $diameter > 0){
+				$writer->startElement('diameter');
+					$writer->writeAttribute('units', 'mm');
+					$writer->text($diameter);
+				$writer->endElement();
+			} elseif(!is_numeric($diameter) && strlen($diameter) > 0){
+				$warnings[] = 'Line ' . $count . ': ' . $accnum . ' (' . $department . ') has non-numeric diameter.';
+			}
+			//height
+			$height = trim($row['height']);
+			if (is_numeric($height) && $height > 0){
+				$writer->startElement('height');
+					$writer->writeAttribute('units', 'mm');
+					$writer->text($height);
+				$writer->endElement();
+			} elseif(!is_numeric($height) && strlen($height) > 0){
+				$warnings[] = 'Line ' . $count . ': ' . $accnum . ' (' . $department . ') has non-numeric height.';
+			}
+			//width
+			$width = trim($row['width']);
+			if (is_numeric($width) && $width > 0){
+				$writer->startElement('width');
+					$writer->writeAttribute('units', 'mm');
+					$writer->text($width);
+				$writer->endElement();
+			} elseif(!is_numeric($width) && strlen($width) > 0){
+				$warnings[] = 'Line ' . $count . ': ' . $accnum . ' (' . $department . ') has non-numeric width.';
+			}
+			//depth
+			$depth = trim($row['depth']);
+			if (is_numeric($depth) && $depth > 0){
+				$writer->startElement('thickness');
+					$writer->writeAttribute('units', 'mm');
+					$writer->text($depth);
+				$writer->endElement();
+			} elseif(!is_numeric($depth) && strlen($depth) > 0){
+				$warnings[] = 'Line ' . $count . ': ' . $accnum . ' (' . $department . ') has non-numeric depth.';
+			}
+			$writer->endElement();
+		}
+		
+		if (strlen(trim($row['Authenticity'])) > 0){
+			$array = array_filter(explode('|', $row['Authenticity']));
+			foreach ($array as $val){
+				$uncertain = substr($val, -1) == '?' ? true : false;
+				$label = str_replace('?', '', trim($val));
+				$writer->startElement('authenticity');
+					if($uncertain == true){
+						$writer->writeAttribute('certainty', 'uncertain');
+					}
+					$writer->text($label);
+				$writer->endElement();
+			}
+		}
+		
+		if (strlen(trim($row['OrigIntendedUse'])) > 0){
+			$array = array_filter(explode('|', $row['OrigIntendedUse']));
+			foreach ($array as $val){
+				$uncertain = substr($val, -1) == '?' ? true : false;
+				$label = str_replace('?', '', trim($val));
+				$writer->startElement('originalIntendeUse');
+					if($uncertain == true){
+						$writer->writeAttribute('certainty', 'uncertain');
+					}
+					$writer->text($label);
+				$writer->endElement();
+			}
+		}
+		
+		//conservationState
+		if (strlen(trim($row['conservation'])) > 0 || strlen(trim($row['PostManAlt'])) > 0){
+			$writer->startElement('conservationState');
+			if (strlen(trim($row['conservation'])) > 0){
+				$writer->startElement('description');
+					$writer->writeAttribute('xml:lang', 'en');
+					$writer->text(trim($row['conservation']));
+				$writer->endElement();
+			}
+			
+			if (strlen(trim($row['PostManAlt'])) > 0){
+				$array = array_filter(explode('|', $row['PostManAlt']));
+				foreach ($array as $val){
+					$uncertain = substr($val, -1) == '?' ? true : false;
+					$label = str_replace('?', '', trim($val));
+					$writer->startElement('condition');
+						if($uncertain == true){
+							$writer->writeAttribute('certainty', 'uncertain');
+						}
+						$writer->text($label);
+				$writer->endElement();
+			}
+		}
+		$writer->endElement();
+	}
+	$writer->endElement();
+	//end physDesc
+	
+	
+		/***** ADMINSTRATIVE DESCRIPTION *****/
+		$writer->startElement('adminDesc');
+			$writer->writeElement('identifier', $accnum);
+			$writer->writeElement('department', $department);
+			$writer->startElement('collection');
+				$writer->writeAttribute('xlink:type', 'simple');
+				$writer->writeAttribute('xlink:href', 'http://nomisma.org/id/ans');
+				$writer->text('American Numismatic Society');
+			$writer->endElement();
+			
+	
+			if (strlen(trim($row['imagesponsor'])) > 0){
+				$writer->writeElement('acknowledgment', trim($row['imagesponsor']));
+			}
+			//custhodhist
+			if (strlen(trim($row['prevcoll'])) > 0 || strlen(trim($row['acknowledgment'])) > 0){
+				$prevcolls = array_filter(explode('|', $row['prevcoll']));
+				$writer->startElement('provenance');
+					$writer->startElement('chronList');
+					if (strlen(trim($row['acknowledgment'])) > 0){
+						$writer->startElement('chronItem');
+							$writer->writeElement('acquiredFrom', trim($row['acknowledgment']));
+						$writer->endElement();
+					}
+					foreach ($prevcolls as $prevcoll){
+						if (!is_int($prevcoll) && strlen(trim($prevcoll)) > 0){
+							$writer->startElement('chronItem');
+								$writer->writeElement('previousColl', trim($row['acknowledgment']));
+							$writer->endElement();
+						}
+					}
+					$writer->endElement();
+				$writer->endElement();
+			}
+		$writer->endElement();
+
+		/***** BIBLIOGRAPHIC DESCRIPTION *****/
+		$citations = array_filter(explode('|', trim($row['published'])));
+		if (count($refs) > 0 || count($citations) > 0){
+			$writer->startElement('refDesc');
+				//reference		
+				if (count($refs) > 0){
+					foreach ($refs as $val){		
+						$uncertain = substr($val, -1) == '?' ? true : false;
+						//insert OCRE URIs into a normalized reference field	
+						if (strlen($ocreUri) > 0){
+							$writer->startElement('reference');
+								$writer->writeAttribute('xlink:type', 'simple');
+								$writer->writeAttribute('xlink:arcrole', 'nmo:hasTypeSeriesItem');
+								$writer->writeAttribute('xlink:href', $ocreUri);
+								if ($uncertain == true){
+									$writer->writeAttribute('certainty', 'uncertain');
+								}
+								$writer->text($ocreLabel);
+							$writer->endElement();
+						} else {
+							$label = str_replace('?', '', trim($val));
+							$writer->startElement('reference');
+								if ($uncertain == true){
+									$writer->writeAttribute('certainty', 'uncertain');
+								}
+								$writer->text($label);
+							$writer->endElement();
+						}
+					}			
+				}
+				
+				//citation
+				if (count($citations) > 0){
+					foreach ($citations as $val){				
+						$uncertain = substr($val, -1) == '?' ? true : false;
+						$label = str_replace('?', '', trim($val));
+						$writer->startElement('citation');
+							if ($uncertain == true){
+								$writer->writeAttribute('certainty', 'uncertain');
+							}
+							$writer->text($label);
+						$writer->endElement();
+					}
+				}
+			$writer->endElement();
+		}
+		
+		/***** SUBJECTS *****/
+		if (strlen(trim($row['category'])) > 0 || strlen(trim($row['series'])) > 0 || strlen(trim($row['subjevent'])) > 0 || strlen(trim($row['subjissuer'])) > 0 || strlen(trim($row['subjperson'])) > 0 || strlen(trim($row['subjplace'])) > 0 || strlen(trim($row['degree'])) > 0 || strlen(trim($row['era'])) > 0){
+			$writer->startElement('subjectSet');
+				//suppressing categories: no longer useful or controlled in Filemaker
+				/*if (strlen(trim($row['category'])) > 0){
+				 $categories = array_filter(explode('|', trim($row['category'])));
+				foreach ($categories as $category){
+				$xml .= '<subject localType="category">' . trim($category) . '</subject>';
+				}
+				}*/
+				if (strlen(trim($row['series'])) > 0){
+					$serieses = array_filter(explode('|', $row['series']));
+					foreach ($serieses as $series){
+						$writer->startElement('subject');
+							$writer->writeAttribute('localType', 'series');
+							$writer->text(trim($series));
+						$writer->endElement();
+					}
+				}
+				if (strlen(trim($row['subjevent'])) > 0){
+					$subjEvents = array_filter(explode('|', $row['subjevent']));
+					foreach ($subjEvents as $subjEvent){
+						$writer->startElement('subject');
+							$writer->writeAttribute('localType', 'subjectEvent');
+							$writer->text(trim($subjEvent));
+						$writer->endElement();
+					}
+				}
+				if (strlen(trim($row['subjissuer'])) > 0){
+					$subjIssuers = array_filter(explode('|', $row['subjissuer']));
+					foreach ($subjIssuers as $subjIssuer){
+						$writer->startElement('subject');
+							$writer->writeAttribute('localType', 'subjectIssuer');
+							$writer->text(trim($subjIssuer));
+						$writer->endElement();
+					}
+				}
+				if (strlen(trim($row['subjperson'])) > 0){
+					$subjPersons = array_filter(explode('|', $row['subjperson']));
+					foreach ($subjPersons as $subjPerson){
+						$writer->startElement('subject');
+							$writer->writeAttribute('localType', 'subjectPerson');
+							$writer->text(trim($subjPerson));
+						$writer->endElement();
+					}
+				}
+				if (strlen(trim($row['subjplace'])) > 0){
+					$subjPlaces = array_filter(explode('|', $row['subjplace']));
+					foreach ($subjPlaces as $subjPlace){
+						$writer->startElement('subject');
+							$writer->writeAttribute('localType', 'subjectPlace');
+							$writer->text(trim($subjPlace));
+						$writer->endElement();
+					}
+				}
+				if (strlen(trim($row['era'])) > 0){
+					$eras = array_filter(explode('|', $row['era']));
+					foreach ($eras as $era){
+						$writer->startElement('subject');
+							$writer->writeAttribute('localType', 'era');
+							$writer->text(trim($era));
+						$writer->endElement();
+					}
+				}
+				//degree
+				if (strlen(trim($row['degree'])) > 0){
+					$degrees = array_filter(explode('|', $row['degree']));
+					foreach ($degrees as $degree){
+						$writer->startElement('subject');
+							$writer->writeAttribute('localType', 'degree');
+							$writer->text(trim($degree));
+						$writer->endElement();
+					}
+				}
+			$writer->endElement();
+		}
+		//notes
+		if (strlen(trim($row['info'])) > 0){
+			$infos = array_filter(explode('|', $row['info']));
+			$writer->startElement('nodeSet');
+			foreach ($infos as $info){
+				$writer->writeElement('note', trim($info));
+			}
+			$writer->endElement();
+		}
+	
+		/***** FINDSPOT DESCRIPTION *****/
+		if (strpos($row['privateinfo'], 'coinhoards.org') !== FALSE){
+			$url = trim($row['privateinfo']);
+			$file_headers = @get_headers($url);
+			if ($file_headers[0] == 'HTTP/1.1 200 OK'){
+				$writer->startElement('findspotDesc');
+					$writer->writeAttribute('xlink:type', 'simple');
+					$writer->writeAttribute('xlink:href', $url);
+				$writer->endElement();
+			}
+		} elseif (strlen(trim($row['findspot'])) > 0){
+			$writer->startElement('findspotDesc');
+				$writer->startElement('findspot');
+					$writer->startElement('geogname');
+						$writer->writeAttribute('xlink:type', 'simple');
+						$writer->writeAttribute('xlink:role', 'findspot');
+						$writer->text(trim($row['findspot']));
+					$writer->endElement();
+				$writer->endElement();
+			$writer->endElement();
+		}
+	
+		//end descMeta		
+		$writer->endElement();
 
 	/***** IMAGES AVAILABLE *****/
 
@@ -633,29 +787,61 @@ function generate_nuds($row, $count){
 				$image_path = '20002049';
 				break;
 		}
-		$xml .= '<digRep><mets:fileSec><mets:fileGrp USE="obverse"><mets:file USE="reference" MIMETYPE="image/jpeg">';
-		$xml .= '<mets:FLocat LOCTYPE="URL" xlink:href="http://numismatics.org/collectionimages/' . $image_path . '/' . $collection_year . '/' . $accnum . '.obv.width350.jpg"/>';
-		$xml .= '</mets:file><mets:file USE="thumbnail" MIMETYPE="image/jpeg">';
-		$xml .=	'<mets:FLocat LOCTYPE="URL" xlink:href="http://numismatics.org/collectionimages/' . $image_path . '/' . $collection_year . '/' . $accnum . '.obv.width175.jpg"/>';
-		$xml .= '</mets:file></mets:fileGrp><mets:fileGrp USE="reverse"><mets:file USE="reference" MIMETYPE="image/jpeg">';
-		$xml .= '<mets:FLocat LOCTYPE="URL" xlink:href="http://numismatics.org/collectionimages/' . $image_path . '/' . $collection_year . '/' . $accnum . '.rev.width350.jpg"/>';
-		$xml .= '</mets:file><mets:file USE="thumbnail" MIMETYPE="image/jpeg">';
-		$xml .= '<mets:FLocat LOCTYPE="URL" xlink:href="http://numismatics.org/collectionimages/' . $image_path . '/' . $collection_year . '/' . $accnum . '.rev.width175.jpg"/>';
-		$xml .= '</mets:file></mets:fileGrp></mets:fileSec></digRep>';
+		
+		$writer->startElement('digRep');
+			$writer->startElement('mets:fileSec');
+				//obverse images
+				$writer->startElement('mets:fileGrp');
+					$writer->writeAttribute('USE', 'obverse');
+					//reference
+					$writer->startElement('mets:file');
+						$writer->writeAttribute('USE', 'reference');
+						$writer->writeAttribute('MIMETYPE', 'image/jpeg');
+						$writer->startElement('mets:FLocat');
+							$writer->writeAttribute('LOCYPE', 'URL');
+							$writer->writeAttribute('xlink:href' "http://numismatics.org/collectionimages/{$image_path}/{$collection_year}/{$accnum}.obv.width350.jpg");
+						$writer->endElement();					
+					$writer->endElement();
+					//thumbnail
+					$writer->startElement('file');
+						$writer->writeAttribute('USE', 'thumbnail');
+						$writer->writeAttribute('MIMETYPE', 'image/jpeg');
+						$writer->startElement('mets:FLocat');
+							$writer->writeAttribute('LOCYPE', 'URL');
+							$writer->writeAttribute('xlink:href' "http://numismatics.org/collectionimages/{$image_path}/{$collection_year}/{$accnum}.obv.width175.jpg");
+						$writer->endElement();
+					$writer->endElement();
+				$writer->endElement();
+				//reverse images
+				$writer->startElement('mets:fileGrp');
+					$writer->writeAttribute('USE', 'reverse');
+					//reference
+					$writer->startElement('mets:file');
+						$writer->writeAttribute('USE', 'reference');
+						$writer->writeAttribute('MIMETYPE', 'image/jpeg');
+						$writer->startElement('mets:FLocat');
+							$writer->writeAttribute('LOCYPE', 'URL');
+							$writer->writeAttribute('xlink:href' "http://numismatics.org/collectionimages/{$image_path}/{$collection_year}/{$accnum}.rev.width350.jpg");
+						$writer->endElement();
+					$writer->endElement();
+					//thumbnail
+					$writer->startElement('file');
+						$writer->writeAttribute('USE', 'thumbnail');
+						$writer->writeAttribute('MIMETYPE', 'image/jpeg');
+						$writer->startElement('mets:FLocat');
+							$writer->writeAttribute('LOCYPE', 'URL');
+							$writer->writeAttribute('xlink:href' "http://numismatics.org/collectionimages/{$image_path}/{$collection_year}/{$accnum}.rev.width175.jpg");
+						$writer->endElement();
+					$writer->endElement();
+				$writer->endElement();
+			$writer->endElement();
+		$writer->endElement();
 	}
-	$xml .= '</nuds>';
-
-	return $xml;
-
-	/*
-	 //symbol
-	if (trim($row['symbol']) != ''){
-	$xml .= '<physfacet type="symbol">' . trim($row['symbol']) . '</physfacet>';
-	}
-	*/
+	//end nuds
+	$writer->endElement();
 }
 
-function generate_typeDesc($row, $department){
+function generate_typeDesc($writer, $row, $department, $certainty){
 	GLOBAL $deities_array;
 	GLOBAL $warnings;
 	
@@ -679,10 +865,6 @@ function generate_typeDesc($row, $department){
 	//dates
 	$startdate_int = trim($row['startdate']) * 1;
 	$enddate_int = trim($row['enddate']) * 1;
-	$date = '';
-	if (trim($row['startdate']) != '' || trim($row['enddate']) != ''){		
-		$date = get_date($startdate_int, $enddate_int, $row['accnum'], $department);
-	}
 	
 	//define obv., rev., and unspecified artists
 	$artists_none = array();
@@ -704,49 +886,39 @@ function generate_typeDesc($row, $department){
 	}
 	
 	//object type
-	switch (trim(strtoupper($row['objtype']))) {
-		case 'C':
-			$objtype = 'Coin';
-			$objtype_uri = 'http://nomisma.org/id/coin';
-			break;
-		case 'DE':
-			$objtype = 'Decoration';
-			break;
-		case 'INGOT':
-			$objtype = 'Ingot';
-			$objtype_uri = 'http://nomisma.org/id/ingot';
-			break;
-		case 'ME':
-			$objtype = 'Medal';
-			$objtype_uri = 'http://nomisma.org/id/medal';
-			break;
-		case 'P':
-			$objtype = 'Paper';
-			break;
-		case 'T':
-			$objtype = 'Token';
-			$objtype_uri = 'http://nomisma.org/id/token';
-			break;
-		default:
-			$objtype = ucfirst(strtolower(trim($row['objtype'])));
-	}
+	$objectType = normalize_objtype(trim(strtoupper($row['objtype'])));
 	
-	$xml = '<typeDesc>';
-	$xml .= '<objectType xlink:type="simple" xlink:href="' . $objtype_uri . '">' . $objtype . '</objectType>';
-	//date
+	$writer->startElement('typeDesc');
+		$writer->startElement('objectType');
+			$writer->writeAttribute('xlink:type', 'simple');
+			if (isset($objectType['uri'])){
+				$writer->writeAttribute('xlink:href', $objectType['uri']);
+			}
+			$writer->text($objectType['label']);
+		$writer->endElement();
+		//date
 	
-	if (strlen($date) > 0){
-		$xml .= $date;
-	}
+		if (trim($row['startdate']) != '' || trim($row['enddate']) != ''){
+			get_date($writer, $startdate_int, $enddate_int, $row['accnum'], $department);
+		}
+		
 	//denomination
 	if (count($denominations) > 0){
 		foreach ($denominations as $denomination){
 			$val = trim(str_replace('"', '', $denomination));
-			$certainty = substr($val, -1) == '?' ? ' certainty="uncertain"' : '';
-			$xml .= '<denomination xlink:type="simple"' . $certainty . '>' . trim(str_replace('?', '', $val)) . '</denomination>';
+			$uncertain = substr($val, -1) == '?' ? true : false;
+			$label = trim(str_replace('?', '', $val));
+			
+			$writer->startElement('denomination');
+				$writer->writeAttribute('xlink:type', 'simple');
+				if ($uncertain == true){
+					$writer->writeAttribute('certainty', 'uncertain');
+				}				
+				$writer->text($label);
+			$writer->endElement();
 				
 			//insert material
-			$title_elements['denomination'] = trim(str_replace('?', '', $val));
+			$title_elements['denomination'] = $label;
 		}
 	}
 	//manufacture
@@ -754,18 +926,24 @@ function generate_typeDesc($row, $department){
 		
 		foreach ($manufactures as $manufacture){
 			$val = trim(str_replace('"', '', $manufacture));
-			$certainty = substr($val, -1) == '?' ? ' certainty="uncertain"' : '';
-			if (strstr(strtolower($val), 'struck')){
-				$href = ' xlink:type="simple" xlink:href="http://nomisma.org/id/struck"';
-				$label = 'Struck';
-			} elseif (strstr(strtolower($val), 'cast')){
-				$href = ' xlink:type="simple" xlink:href="http://nomisma.org/id/cast"';
-				$label = 'Cast';
-			} else {
-				$href = '';
-				$label = str_replace('?', '', trim($val));
-			}
-			$xml .= '<manufacture' . $href . $certainty . '>' . $label . '</manufacture>';
+			$uncertain = substr($val, -1) == '?' ? true : false;
+			$label = trim(str_replace('?', '', $val));
+			
+			$writer->startElement('denomination');
+				$writer->writeAttribute('xlink:type', 'simple');
+				if ($uncertain == true){
+					$writer->writeAttribute('certainty', 'uncertain');
+				}
+				if (strstr(strtolower($label), 'struck')){
+					$writer->writeAttribute('xlink:href', 'http://nomisma.org/id/struck');
+					$writer->text('Struck');
+				} else if (strstr(strtolower($label), 'cast')){
+					$writer->writeAttribute('xlink:href', 'http://nomisma.org/id/cast');
+					$writer->text('Cast');
+				} else {
+					$writer->text($label);
+				}				
+			$writer->endElement();
 		}
 	}
 	//material
@@ -773,10 +951,14 @@ function generate_typeDesc($row, $department){
 		foreach ($materials as $material){
 			$material_string = get_material_label(trim($material));
 			$mat_array = normalize_material(trim($material));
-			if (strlen($mat_array['uri']) > 0){
-				$xml .= '<material xlink:type="simple" xlink:href="' . $mat_array['uri'] . '">' . $material_string . '</material>';
+			if (isset($mat_array['uri'])){
+				$writer->startElement('material');
+					$writer->writeAttribute('xlink:type', 'simple');
+					$writer->writeAttribute('xlink:href', $mat_array['uri']);
+					$writer->text($material_string);
+				$writer->endElement();
 			} else {
-				$xml .= '<material>' . $material_string . '</material>';
+				$writer->writeElement('material', $material_string);
 			}
 				
 			//insert material
@@ -785,96 +967,158 @@ function generate_typeDesc($row, $department){
 	}
 	//obverse
 	if (strlen($row['obverselegend']) > 0 || strlen($row['obversesymbol']) > 0 || strlen($row['obversetype']) > 0 || count($artists_obv) > 0){
-		$xml .= '<obverse>';
+		$writer->startElement('obverse');
 		//obverselegend
 		if (strlen($row['obverselegend']) > 0){
-			$xml .= '<legend>' . trim($row['obverselegend']) . '</legend>';
+			$writer->writeElement('legend', trim($row['obverselegend']));
 		}
 		//obversesymbol
 		if (strlen($row['obversesymbol']) > 0){
-			$xml .= '<symbol>' . trim($row['obversesymbol']) . '</symbol>';
+			$writer->writeElement('symbol', trim($row['obversesymbol']));
 		}
 		//obversetype
 		if (strlen($row['obversetype']) > 0){
-			$xml .= '<type><description xml:lang="en">' . trim($row['obversetype']) . '</description></type>';
+			$writer->startElement('type');
+				$writer->startElement('description');
+					$writer->writeAttribute('xml:lang', 'en');
+					$writer->text(trim($row['obversetype']));
+				$writer->endElement();
+			$writer->endElement();
 		}
 		//artist
 		foreach ($artists_obv as $artist){
 			//WORK ON ARTIST OBV/REV
-			$certainty = substr($artist, -1) == '?' ? ' certainty="uncertain"' : '';
-			$xml .= '<persname xlink:role="artist"' . $certainty . '>' . str_replace('?', '', $artist) . '</persname>';
+			$uncertain = substr($artist, -1) == '?' ? true : false;
+			$writer->startElement('persname');
+				$writer->writeAttribute('xlink:type', 'simple');
+				$writer->writeAttribute('xlink:role', 'artist');
+				if ($uncertain == true){
+					$writer->writeAttribute('certainty', 'uncertain');
+				}
+				$writer->text(str_replace('?', '', $artist));
+			$writer->endElement();
 		}
 		if ($department == 'Greek' || $department == 'Roman'){
 			$haystack = strtolower($row['obversetype']);
 			foreach($deities_array as $deity){				
 				if ($deity['name'] != 'Hera' && $deity['name'] != 'Sol' && strlen(strstr($haystack,strtolower($deity['matches'])))>0) {
-					$bm_uri = strlen($deity['bm_uri']) > 0 ? ' xlink:href="' . $deity['bm_uri'] . '"' : '';
-					$xml .= '<persname xlink:type="simple" xlink:role="deity"' . $bm_uri . '>' . $deity['name'] . '</persname>';
+					$writer->startElement('persname');
+						$writer->writeAttribute('xlink:type', 'simple');
+						$writer->writeAttribute('xlink:role', 'deity');
+						if (strlen($deity['bm_uri']) > 0) {
+							$writer->writeAttribute('xlink:href', $deity['bm_uri']);
+						}
+						$writer->text($deity['name']);
+					$writer->endElement();
 				}
 				//Hera and Sol need special cases because they are commonly part of other works, eg Herakles, soldiers
 				elseif ($deity['name'] == 'Hera' && strlen(strstr($haystack,strtolower($deity['matches'] . ' ')))>0){
-					$bm_uri = strlen($deity['bm_uri']) > 0 ? ' xlink:href="' . $deity['bm_uri'] . '"' : '';
-					$xml .= '<persname xlink:type="simple" xlink:role="deity"' . $bm_uri . '>' . $deity['name'] . '</persname>';
+					$writer->startElement('persname');
+						$writer->writeAttribute('xlink:type', 'simple');
+						$writer->writeAttribute('xlink:role', 'deity');
+						if (strlen($deity['bm_uri']) > 0) {
+							$writer->writeAttribute('xlink:href', $deity['bm_uri']);
+						}
+						$writer->text($deity['name']);
+					$writer->endElement();
 				}
 				elseif ($deity['name'] == 'Sol' && strlen(strstr($haystack,strtolower($deity['matches'] . ' ')))>0){
-					$bm_uri = strlen($deity['bm_uri']) > 0 ? ' xlink:href="' . $deity['bm_uri'] . '"' : '';
-					$xml .= '<persname xlink:type="simple" xlink:role="deity"' . $bm_uri . '>' . $deity['name'] . '</persname>';
+					$writer->startElement('persname');
+						$writer->writeAttribute('xlink:type', 'simple');
+						$writer->writeAttribute('xlink:role', 'deity');
+						if (strlen($deity['bm_uri']) > 0) {
+							$writer->writeAttribute('xlink:href', $deity['bm_uri']);
+						}
+						$writer->text($deity['name']);
+					$writer->endElement();
 				}
 			}
 		}
-		$xml .= '</obverse>';
+		$writer->endElement();
 	}
 	
 	//reverse
 	if (strlen($row['reverselegend']) > 0 || strlen($row['reversesymbol']) > 0 || strlen($row['reversetype']) > 0 || count($artists_rev) > 0){
-		$xml .= '<reverse>';
+		$writer->startElement('reverse');
 		//reverselegend
 		if (strlen($row['reverselegend']) > 0){
-			$xml .= '<legend>' . trim($row['reverselegend']) . '</legend>';
+			$writer->writeElement('legend', trim($row['reverselegend']));
 		}
 		//reversesymbol
 		if (strlen($row['reversesymbol']) > 0){
-			$xml .= '<symbol>' . trim($row['reversesymbol']) . '</symbol>';
+			$writer->writeElement('symbol', trim($row['reversesymbol']));
 		}
 		//reversetype
 		if (strlen($row['reversetype']) > 0){
-			$xml .= '<type><description xml:lang="en">' . trim($row['reversetype']) . '</description></type>';
+			$writer->startElement('type');
+				$writer->startElement('description');
+					$writer->writeAttribute('xml:lang', 'en');
+					$writer->text(trim($row['reversetype']));
+				$writer->endElement();
+			$writer->endElement();
 		}
 		//artist
 		foreach ($artists_rev as $artist){
 			//WORK ON ARTIST OBV/REV
-			$certainty = substr($artist, -1) == '?' ? ' certainty="uncertain"' : '';
-			$xml .= '<persname xlink:role="artist"' . $certainty . '>' . str_replace('?', '', $artist) . '</persname>';
+			$uncertain = substr($artist, -1) == '?' ? true : false;
+			$writer->startElement('persname');
+				$writer->writeAttribute('xlink:type', 'simple');
+				$writer->writeAttribute('xlink:role', 'artist');
+				if ($uncertain == true){
+					$writer->writeAttribute('certainty', 'uncertain');
+				}
+				$writer->text(str_replace('?', '', $artist));
+			$writer->endElement();
 		}
-		
+	
 		if ($department == 'Greek' || $department == 'Roman'){
 			$haystack = strtolower($row['reversetype']);
-			foreach($deities_array as $deity){
+			foreach($deities_array as $deity){				
 				if ($deity['name'] != 'Hera' && $deity['name'] != 'Sol' && strlen(strstr($haystack,strtolower($deity['matches'])))>0) {
-					$bm_uri = strlen($deity['bm_uri']) > 0 ? ' xlink:href="' . $deity['bm_uri'] . '"' : '';
-					$xml .= '<persname xlink:type="simple" xlink:role="deity"' . $bm_uri . '>' . $deity['name'] . '</persname>';
+					$writer->startElement('persname');
+						$writer->writeAttribute('xlink:type', 'simple');
+						$writer->writeAttribute('xlink:role', 'deity');
+						if (strlen($deity['bm_uri']) > 0) {
+							$writer->writeAttribute('xlink:href', $deity['bm_uri']);
+						}
+						$writer->text($deity['name']);
+					$writer->endElement();
 				}
 				//Hera and Sol need special cases because they are commonly part of other works, eg Herakles, soldiers
 				elseif ($deity['name'] == 'Hera' && strlen(strstr($haystack,strtolower($deity['matches'] . ' ')))>0){
-					$bm_uri = strlen($deity['bm_uri']) > 0 ? ' xlink:href="' . $deity['bm_uri'] . '"' : '';
-					$xml .= '<persname xlink:type="simple" xlink:role="deity"' . $bm_uri . '>' . $deity['name'] . '</persname>';
+					$writer->startElement('persname');
+						$writer->writeAttribute('xlink:type', 'simple');
+						$writer->writeAttribute('xlink:role', 'deity');
+						if (strlen($deity['bm_uri']) > 0) {
+							$writer->writeAttribute('xlink:href', $deity['bm_uri']);
+						}
+						$writer->text($deity['name']);
+					$writer->endElement();
 				}
 				elseif ($deity['name'] == 'Sol' && strlen(strstr($haystack,strtolower($deity['matches'] . ' ')))>0){
-					$bm_uri = strlen($deity['bm_uri']) > 0 ? ' xlink:href="' . $deity['bm_uri'] . '"' : '';
-					$xml .= '<persname xlink:type="simple" xlink:role="deity"' . $bm_uri . '>' . $deity['name'] . '</persname>';
+					$writer->startElement('persname');
+						$writer->writeAttribute('xlink:type', 'simple');
+						$writer->writeAttribute('xlink:role', 'deity');
+						if (strlen($deity['bm_uri']) > 0) {
+							$writer->writeAttribute('xlink:href', $deity['bm_uri']);
+						}
+						$writer->text($deity['name']);
+					$writer->endElement();
 				}
 			}
 		}
-		$xml .= '</reverse>';
+		$writer->endElement();
 	}
 	//edge
 	if (strlen(trim($row['edge'])) > 0){
-		$xml .= '<edge><description>' . trim($row['edge']) . '</description></edge>';
+		$writer->startElement('edge');
+			$writer->writeElement('description', trim($row['edge']));
+		$writer->endElement();
 	}
 	
 	/***** GEOGRAPHICAL LOCATIONS *****/
 	if (count($mints) > 0 || count($regions) > 0 || count($localities) > 0){
-		$xml .= '<geographic>';
+		$writer->startElement('geographic');
 		if (strlen(trim($row['mint'])) > 0){
 			$mints_cleaned = array();
 			foreach ($mints as $mint){
@@ -885,10 +1129,28 @@ function generate_typeDesc($row, $department){
 					$mint_normalized = trim(preg_replace('/\"|\{|\}|\[|\]|\#/', "", $mint));
 				}
 				$geography = parse_mint($department, $mint_normalized, $regions, $localities);
-				$xml .= $geography['mint'];
-				$geogAuthorities['state'] = $geography['state'];
-				$geogAuthorities['authority'] = $geography['authority'];
-				$mints_cleaned[] = preg_replace('/<.*>(.*)<\/geogname>/i', '$1', $geography['mint']);
+				
+				if (isset($geography['mint'])){
+					$writer->startElement('geogname');
+						$writer->writeAttribute('xlink:type', 'simple');
+						$writer->writeAttribute('xlink:role', 'mint');
+						if (isset($geography['mint']['uri'])){
+							$writer->writeAttribute('xlink:href', $geography['mint']['uri']);
+						}
+						if (isset($geography['mint']['certainty'])){
+							$writer->writeAttribute('certainty', $geography['mint']['certainty']);
+						}
+						$writer->text($geography['mint']['label']);
+					$writer->endElement();
+				}
+				
+				if (isset($geography['state'])){
+					$geogAuthorities['state'] = $geography['state'];
+				}
+				if (isset($geography['authority'])){
+					$geogAuthorities['authority'] = $geography['authority'];
+				}				
+				$mints_cleaned[] = $geography['mint']['label'];
 			}
 			$title_elements['location'] = implode('/', $mints_cleaned);
 		}
@@ -897,8 +1159,16 @@ function generate_typeDesc($row, $department){
 			$regions_cleaned = array();
 			foreach ($regions as $region){
 				$val = trim(str_replace('"', '', $region));
-				$certainty = substr($val, -1) == '?' ? ' certainty="uncertain"' : '';
-				$xml .= '<geogname xlink:type="simple" xlink:role="region"' . $certainty . '>' . trim(str_replace('?', '', $val)) . '</geogname>';
+				$uncertain = substr($val, -1) == '?' ? true : false;
+				
+				$writer->startElement('geogname');
+					$writer->writeAttribute('xlink:type', 'simple');
+					$writer->writeAttribute('xlink:role', 'region');
+					if ($uncertain == true){
+						$writer->writeAttribute('certainty', 'uncertain');
+					}
+					$writer->text(trim(str_replace('?', '', $val)));
+				$writer->endElement();
 				$regions_cleaned[] = trim(str_replace('?', '', $val));
 			}
 			if (strlen(trim($row['mint'])) == 0){
@@ -910,89 +1180,192 @@ function generate_typeDesc($row, $department){
 			$localities_cleaned = array();
 			foreach ($localities as $locality){
 				$val = trim(str_replace('"', '', $locality));
-				$certainty = substr($val, -1) == '?' ? ' certainty="uncertain"' : '';
-				$xml .= '<geogname xlink:type="simple" xlink:role="locality"' . $certainty . '>' . trim(str_replace('?', '', $val)) . '</geogname>';
+				$uncertain = substr($val, -1) == '?' ? true : false;
+				
+				$writer->startElement('geogname');
+					$writer->writeAttribute('xlink:type', 'simple');
+					$writer->writeAttribute('xlink:role', 'locality');
+					if ($uncertain == true){
+						$writer->writeAttribute('certainty', 'uncertain');
+					}
+					$writer->text(trim(str_replace('?', '', $val)));
+				$writer->endElement();				
 				$localities_cleaned[] = trim(str_replace('?', '', $val));
 			}
 			if (strlen(trim($row['mint'])) == 0 && strlen(trim($row['region'])) == 0){
 				$title_elements['location'] = implode('/', $localities_cleaned);
 			}
 		}
-	
-		$xml .= '</geographic>';
+		$writer->endElement();
 	}
 	
 	/***** AUTHORITIES AND PERSONS *****/
 	if (strlen($geogAuthorities['state']) > 0 || strlen($geogAuthorities['authority']) > 0 || count($persons) > 0 || count($issuers) > 0 || count($magistrates) > 0 || count($makers) > 0 ||  count($artists_none) > 0 || count($dynasties) > 0){
-		$xml .= '<authority>';
+		$writer->startElement('authority');		
+		
 		//insert authorities parsed out from the mint lookups (applies primarily to Latin America)
-		if (strlen($geogAuthorities['state']) > 0){
-			$xml .= $geogAuthorities['state'];
+		if (isset($geogAuthorities['state'])){
+			$writer->startElement('corpname');
+			$writer->writeAttribute('xlink:type', 'simple');
+			$writer->writeAttribute('xlink:role', 'state');
+			if (isset($geogAuthorities['state']['uri'])){
+				$writer->writeAttribute('xlink:href', $geogAuthorities['state']['uri']);
+			}
+			if (isset($geogAuthorities['state']['certainty'])){
+				$writer->writeAttribute('certainty', $geogAuthorities['state']['certainty']);
+			}
+			$writer->text($geogAuthorities['state']['label']);
+			$writer->endElement();
 		}
-		if (strlen($geogAuthorities['authority']) > 0){
-			$xml .= $geogAuthorities['authority'];
+		if (isset($geogAuthorities['authority'])){
+			$writer->startElement('corpname');
+			$writer->writeAttribute('xlink:type', 'simple');
+			$writer->writeAttribute('xlink:role', 'authority');
+			if (isset($geogAuthorities['authority']['uri'])){
+				$writer->writeAttribute('xlink:href', $geogAuthorities['authority']['uri']);
+			}
+			if (isset($geogAuthorities['authority']['certainty'])){
+				$writer->writeAttribute('certainty', $geogAuthorities['authority']['certainty']);
+			}
+			$writer->text($geogAuthorities['authority']['label']);
+			$writer->endElement();
 		}
 		//issuer
 		if (count($issuers) > 0){
 			$issuers_cleaned = array();
 			foreach ($issuers as $issuer){
 				$val = trim(str_replace('"', '', $issuer));
-				$certainty = substr($val, -1) == '?' ? ' certainty="uncertain"' : '';
+				$uncertain = substr($val, -1) == '?' ? true : false;
+				$val = trim(str_replace('?', '', $val))
 				if ($department == 'Medieval' || $department == 'Byzantine' || $department == 'Roman'){
-					$xml .= '<persname xlink:type="simple" xlink:role="issuer"' . $certainty . '>' . trim(str_replace('?', '', $val)) . '</persname>';
+					$writer->startElement('persname');
+						$writer->writeAttribute('xlink:type', 'simple');
+						$writer->writeAttribute('xlink:role', 'issuer');
+						if ($uncertain == true){
+							$writer->writeAttribute('certainty', 'uncertain');
+						}
+						$writer->text($val);
+					$writer->endElement();
 				} elseif ($department == 'Greek' || $department == 'Islamic'){
-					$xml .= '<persname xlink:type="simple" xlink:role="authority"' . $certainty . '>' . trim(str_replace('?', '', $val)) . '</persname>';
+					$writer->startElement('persname');
+						$writer->writeAttribute('xlink:type', 'simple');
+						$writer->writeAttribute('xlink:role', 'authority');
+						if ($uncertain == true){
+							$writer->writeAttribute('certainty', 'uncertain');
+						}
+						$writer->text($val);
+					$writer->endElement();
 				}
 				else {
-					$xml .= '<corpname xlink:type="simple" xlink:role="issuer"' . $certainty . '>' . trim(str_replace('?', '', $val)) . '</corpname>';
+					$writer->startElement('corpname');
+						$writer->writeAttribute('xlink:type', 'simple');
+						$writer->writeAttribute('xlink:role', 'issuer');
+						if ($uncertain == true){
+							$writer->writeAttribute('certainty', 'uncertain');
+						}
+						$writer->text($val);
+					$writer->endElement();
 				}
-				$issuers_cleaned[] = trim(str_replace('?', '', $val));
+				$issuers_cleaned[] = $val;
 			}
 			$title_elements['issuer'] = implode('/', $issuers_cleaned);
 		}
 		//artist
 		foreach ($artists_none as $artist){
-			//WORK ON ARTIST OBV/REV
-			$certainty = substr(trim(str_replace('"', '', $artist)), -1) == '?' ? ' certainty="uncertain"' : '';
-			$xml .= '<persname xlink:type="simple" xlink:role="artist"' . $certainty . '>' . str_replace('?', '', $artist) . '</persname>';
+			$val = trim(str_replace('"', '', $artist));
+			$uncertain = substr($val, -1) == '?' ? true : false;
+			
+			$writer->startElement('persname');
+				$writer->writeAttribute('xlink:type', 'simple');
+				$writer->writeAttribute('xlink:role', 'artist');
+				if ($uncertain == true){
+					$writer->writeAttribute('certainty', 'uncertain');
+				}
+				$writer->text(str_replace('?', '', $val));
+			$writer->endElement();
 		}
 		//dynasty
 		foreach ($dynasties as $dynasty){
-			$certainty = substr(trim(str_replace('"', '', $dynasty)), -1) == '?' ? ' certainty="uncertain"' : '';
-			$xml .= '<famname xlink:type="simple" xlink:role="dynasty"' . $certainty . '>' . str_replace('?', '', $dynasty) . '</famname>';
+			$val = trim(str_replace('"', '', $dynasty));
+			$uncertain = substr($val, -1) == '?' ? true : false;
+				
+			$writer->startElement('famname');
+				$writer->writeAttribute('xlink:type', 'simple');
+				$writer->writeAttribute('xlink:role', 'dynasty');
+				if ($uncertain == true){
+					$writer->writeAttribute('certainty', 'uncertain');
+				}
+				$writer->text(str_replace('?', '', $val));
+			$writer->endElement();
 		}
 		//maker
 		if (count($makers) > 0){
 			foreach ($makers as $maker){
-				$certainty = substr(trim(str_replace('"', '', $maker)), -1) == '?' ? ' certainty="uncertain"' : '';
-				$xml .= '<corpname xlink:type="simple" xlink:role="maker"' . $certainty . '>' . str_replace('?', '', $maker) . '</corpname>';
+				$val = trim(str_replace('"', '', $maker));
+				$uncertain = substr($val, -1) == '?' ? true : false;
+				
+				$writer->startElement('corpname');
+					$writer->writeAttribute('xlink:type', 'simple');
+					$writer->writeAttribute('xlink:role', 'maker');
+					if ($uncertain == true){
+						$writer->writeAttribute('certainty', 'uncertain');
+					}
+					$writer->text(str_replace('?', '', $val));
+				$writer->endElement();
 			}
 		}
 		//magistrate
 		if (count($magistrates) > 0){
 			foreach ($magistrates as $magistrate){
-				$certainty = substr(trim(str_replace('"', '', $magistrate)), -1) == '?' ? ' certainty="uncertain"' : '';
-				$xml .= '<persname xlink:type="simple" xlink:role="issuer"' . $certainty . '>' . str_replace('?', '', $magistrate) . '</persname>';
+				$val = trim(str_replace('"', '', $magistrate));
+				$uncertain = substr($val, -1) == '?' ? true : false;
+				
+				$writer->startElement('persname');
+					$writer->writeAttribute('xlink:type', 'simple');
+					$writer->writeAttribute('xlink:role', 'issuer');
+					if ($uncertain == true){
+						$writer->writeAttribute('certainty', 'uncertain');
+					}
+					$writer->text(str_replace('?', '', $val));
+				$writer->endElement();
 			}
 		}
 		//person: portrait
 		if (count($persons) > 0){			
 			foreach ($persons as $person){
+				$val = trim(str_replace('"', '', $person));
+				$uncertain = substr($val, -1) == '?' ? true : false;
+				
 				$certainty = substr(trim(str_replace('"', '', $person)), -1) == '?' ? ' certainty="uncertain"' : '';
 				if ($department == 'Roman' || $department == 'Byzantine' || $department == 'Medal' || $department == 'United States' || $department == 'Decoration'){
-					$xml .= '<persname xlink:type="simple" xlink:role="portrait"' . $certainty . '>' . str_replace('?', '', $person) . '</persname>';
+					$writer->startElement('persname');
+						$writer->writeAttribute('xlink:type', 'simple');
+						$writer->writeAttribute('xlink:role', 'porrait');
+						if ($uncertain == true){
+							$writer->writeAttribute('certainty', 'uncertain');
+						}
+						$writer->text(str_replace('?', '', $val));
+					$writer->endElement();
 				}				
 				if ($department == 'Roman' || $department == 'Byzantine' || $department == 'Medieval' || $department == 'Islamic' || $department == 'East Asian' || $department == 'South Asian' || $department == 'Greek' || $department == 'Modern' || $department == 'Latin American'){
-					$xml .= '<persname xlink:type="simple" xlink:role="authority"' . $certainty . '>' . str_replace('?', '', $person) . '</persname>';
+					$writer->startElement('persname');
+						$writer->writeAttribute('xlink:type', 'simple');
+						$writer->writeAttribute('xlink:role', 'authority');
+						if ($uncertain == true){
+							$writer->writeAttribute('certainty', 'uncertain');
+						}
+						$writer->text(str_replace('?', '', $val));
+					$writer->endElement();
 				}
 			}
 		}
-		$xml .= '</authority>';
+		$writer->endElement();
 	}
-	$xml .= '</typeDesc>';
+	//end typeDesc
+	$writer->endElement();
 	
 	/***** TITLE *****/
-	$title = '<title xml:lang="en">';
+	/*$title = '<title xml:lang="en">';
 	if (array_key_exists('material', $title_elements)){
 		$title .= $title_elements['material'];
 	}
@@ -1014,7 +1387,7 @@ function generate_typeDesc($row, $department){
 	$title .= '. ' . trim($row['accnum']) . '</title>';
 	
 	//return the title before the typeDesc
-	return $title . $xml;
+	return $title . $xml;*/
 }
 
 function get_material_label($material){
@@ -1042,6 +1415,39 @@ function get_material_label($material){
 		$mat_array = normalize_material($material);
 		return $mat_array['label'];
 	}
+}
+
+function(normalize_objtype($objtype)){
+	$objectType = array();
+	switch ($objtype) {
+		case 'C':
+			$objectType['label'] = 'Coin;'
+			$objectType['uri'] = 'http://nomisma.org/id/coin';
+			break;
+		case 'DE':
+			$objectType['label'] = 'Decoration;'
+			break;
+		case 'INGOT':
+			$objectType['label'] = 'Ingot;'
+			$objectType['uri'] = 'http://nomisma.org/id/ingot';
+			break;
+		case 'ME':
+			$objectType['label'] = 'Medal;'
+			$objectType['uri'] = 'http://nomisma.org/id/medal';
+			break;
+		case 'P':
+			$objectType['label'] = 'Paper Money;'
+			$objectType['uri'] = 'http://nomisma.org/id/paper_money';
+			break;
+		case 'T':
+			$objectType['label'] = 'Token;'
+			$objectType['uri'] = 'http://nomisma.org/id/token';
+			break;
+		default:			
+			$objectType['label'] = ucfirst(strtolower(trim($row['objtype'])));
+	}
+	
+	return $objectType;
 }
 
 function normalize_material($material){
@@ -1115,30 +1521,6 @@ function normalize_material($material){
 	return $mat_array;
 }
 
-/*function get_deity_array(){
-	//load deities DOM document from Google Docs
-	$deityUrl = 'https://spreadsheets.google.com/feeds/list/0Avp6BVZhfwHAdHk2ZXBuX0RYMEZzUlNJUkZOLXRUTmc/od6/public/values';
-	$deityDoc = new DOMDocument();
-	$deityDoc->load($deityUrl);
-	$deityMatches = $deityDoc->getElementsByTagNameNS('http://schemas.google.com/spreadsheets/2006/extended', 'matches');
-	$deityNames = $deityDoc->getElementsByTagNameNS('http://schemas.google.com/spreadsheets/2006/extended', 'name');
-	$matchArray = Array();
-	$nameArray = Array();
-	$deityMatchArray = Array();
-	foreach($deityMatches as $match){
-		$matchArray[] = $match->nodeValue;
-	}
-	foreach($deityNames as $name){
-		$nameArray[] = $name->nodeValue;
-	}
-	//associate the arrays
-	foreach($matchArray as $key=>$value){
-		$deityMatchArray[$value] = $nameArray[$key];
-	}
-
-	return $deityMatchArray;
-}*/
-
 function get_title_date($fromDate, $toDate){
 	if ($fromDate == 0 && $toDate != 0){
 		return get_date_textual($toDate);
@@ -1165,7 +1547,7 @@ function get_date_textual($year){
 	return $textual_date;
 }
 
-function get_date($startdate, $enddate, $accnum, $department){
+function get_date($writer, $startdate, $enddate, $accnum, $department){
 	GLOBAL $warnings;
 	$node = '';
 	$start_gYear = '';
@@ -1184,15 +1566,42 @@ function get_date($startdate, $enddate, $accnum, $department){
 	}
 	
 	if ($startdate == 0 && $enddate != 0){
-		$node = '<date' . (strlen($end_gYear) > 0 ? ' standardDate="' . $end_gYear . '"' : '') . '>' . get_date_textual($enddate) . '</date>';
+		$writer->startElement('date');
+			if (strlen($end_gYear) > 0){
+				$writer->writeAttribute('standardDate', $end_gYear);
+			}
+			$writer->text(get_date_textual($enddate));
+		$writer->endElement();
 	} elseif ($startdate != 0 && $enddate == 0) {
-		$node = '<date' . (strlen($start_gYear) > 0 ? ' standardDate="' . $start_gYear . '"' : '') . '>' . get_date_textual($startdate) . '</date>';
+		$writer->startElement('date');
+			if (strlen($start_gYear) > 0){
+				$writer->writeAttribute('standardDate', $start_gYear);
+			}
+			$writer->text(get_date_textual($startdate));
+		$writer->endElement();
 	} elseif ($startdate == $enddate){
-		$node = '<date' . (strlen($end_gYear) > 0 ? ' standardDate="' . $end_gYear . '"' : '') . '>' . get_date_textual($enddate) . '</date>';
+		$writer->startElement('date');
+			if (strlen($end_gYear) > 0){
+				$writer->writeAttribute('standardDate', $end_gYear);
+			}
+			$writer->text(get_date_textual($enddate));
+		$writer->endElement();
 	} elseif ($startdate != 0 && $enddate != 0){
-		$node = '<dateRange><fromDate' . (strlen($start_gYear) > 0 ? ' standardDate="' . $start_gYear . '"' : '') . '>' . get_date_textual($startdate) . '</fromDate><toDate' . (strlen($start_gYear) > 0 ? ' standardDate="' . $end_gYear . '"' : '') . '>' . get_date_textual($enddate) . '</toDate></dateRange>';
+		$writer->startElement('dateRange');
+			$writer->startElement('fromDate');
+				if (strlen($start_gYear) > 0){
+					$writer->writeAttribute('standardDate', $start_gYear);
+				}
+				$writer->text(get_date_textual($startdate));
+			$writer->endElement();
+			$writer->startElement('toDate');
+				if (strlen($end_gYear) > 0){
+					$writer->writeAttribute('standardDate', $end_gYear);
+				}
+				$writer->text(get_date_textual($enddate));
+			$writer->endElement();
+		$writer->endElement();
 	}
-	return $node;
 }
 
 //pad integer value from Filemaker to create a year that meets the xs:gYear specification
@@ -1234,8 +1643,6 @@ function parse_mint($department, $mint, $regions, $localities){
 	} else if (substr($mint, -1) == "'" && substr($mint, 0, 1) == "'"){
 		$certaintyType = 'attributed';
 		$mint = str_replace("'", '', $mint);
-	} else {
-		$certaintyType = false;
 	}
 	
 	foreach ($regions as $region){
@@ -1311,18 +1718,15 @@ function parse_mint($department, $mint, $regions, $localities){
 		} else {
 			$label = $mint;
 		}
+		
 		$geography = get_mintNode($mint_uri, $label, $certaintyType);
 	} else {
 		
-		if ($certaintyType == 'uncertain'){
-			$certainty = ' certainty="uncertain"';
-		} else if ($certaintyType == 'attributed'){
-			$certainty = ' certainty="attributed"';
-		} else {
-			$certainty = '';
+		$geography['mint'] = array();
+		$geography['mint']['label'] = $mint;
+		if (isset($certaintyType)){
+			$geography['mint']['certainty'] = $certaintyType;
 		}
-		
-		$geography['mint'] = '<geogname xlink:type="simple" xlink:role="mint"' . $certainty . '>' . $mint . '</geogname>';
 	}
 	return $geography;
 }
@@ -1330,15 +1734,13 @@ function parse_mint($department, $mint, $regions, $localities){
 function get_mintNode($mint_uri, $label, $certaintyType){
 	if (strpos($mint_uri, 'nomisma.org') > 0){
 		
-		if ($certaintyType == 'uncertain'){
-			$certainty = ' certainty="uncertain"';
-		} else if ($certaintyType == 'attributed'){
-			$certainty = ' certainty="attributed"';
-		} else {
-			$certainty = '';
+		//generate the mint array
+		$geography['mint'] = array();
+		$geography['mint']['label'] = $mint;
+		$geography['mint']['uri'] = $mint_uri;
+		if (isset($certaintyType)){
+			$geography['mint']['certainty'] = $certaintyType;
 		}
-		
-		$geography['mint'] = '<geogname xlink:type="simple" xlink:role="mint" xlink:href="' . $mint_uri . '"' . $certainty . '>' . $label . '</geogname>';
 	} elseif (strpos($mint_uri, 'geonames.org') > 0){
 		//explode the geonames id, particularly necessary for Latin American coins where the mint varies from country of issue
 		$uris = explode('|', $mint_uri);
@@ -1347,6 +1749,7 @@ function get_mintNode($mint_uri, $label, $certaintyType){
 		$localityUri = trim($uris[2]);
 
 		$geography['mint'] = process_label($mintUri, $label, 'mint', $certaintyType, 0);
+		
 		if (strlen($regionUri) > 0){
 			$geography['state'] = process_label($regionUri, $label, 'state', null, 1);
 		}
@@ -1361,27 +1764,21 @@ function get_mintNode($mint_uri, $label, $certaintyType){
 function process_label ($uri, $label, $role, $certaintyType, $pos){
 	$uriPieces = explode('/', $uri);
 	$geonameId = $uriPieces[3];
-	$geonameUri = 'http://www.geonames.org/' . $geonameId . '/';
-	
-	if ($certaintyType == 'uncertain'){
-		$certainty = ' certainty="uncertain"';
-	} else if ($certaintyType == 'attributed'){
-		$certainty = ' certainty="attributed"';
-	} else {
-		$certainty = '';
-	}
+	$geonameUri = 'http://www.geonames.org/' . $geonameId;
 	
 	//explode label pieces, display correct one
 	$labelPieces = explode('|', trim($label));
 	$place_name = trim($labelPieces[$pos]);
 	
-	if ($role == 'mint'){
-		$mintNode = '<geogname xlink:type="simple" xlink:role="mint" xlink:href="' . $geonameUri . '"' . $certainty . '>' . $place_name . '</geogname>';
-	} else {
-		$mintNode = '<corpname xlink:type="simple" xlink:role="' . $role . '" xlink:href="' . $geonameUri . '">' . $place_name . '</corpname>';
+	$geography = array();
+	$geography['label'] = $place_name;
+	$geography['uri'] = $geonameUri;
+	$geography['role'] = $role;
+	if (isset($certaintyType)){
+		$geography['certainty'] = $certaintyType;
 	}
 
-	return $mintNode;
+	return $geography;
 }
 
 function get_department($department){
@@ -1463,7 +1860,7 @@ function get_title_from_rdf($url){
 }
 
 //generate the typeDesc for RIC by pulling some fields from OCRE, but carry on the obverse/reverse types, legends and symbols
-function generate_typeDesc_from_OCRE($row, $currentUri, $certainty) {
+function generate_typeDesc_from_OCRE($writer, $row, $currentUri, $uncertain) {
 	$doc = new DOMDocument('1.0', 'UTF-8');
 	$doc->load($currentUri . '.xml');
 	$xpath = new DOMXpath($doc);
@@ -1477,7 +1874,7 @@ function generate_typeDesc_from_OCRE($row, $currentUri, $certainty) {
 	$writer->openMemory();
 	//$writer->setIndent(4);
 	$writer->startElement('typeDesc');
-	if ($certainty == false){
+	if ($uncertain == true){
 		$writer->writeAttribute('certainty', 'uncertain');
 	}
 	$fields = $xpath->query("descendant::nuds:typeDesc/*");
@@ -1579,12 +1976,12 @@ function generate_typeDesc_from_OCRE($row, $currentUri, $certainty) {
 	}
 	$writer->endElement();
 	
-	$string = $writer->outputMemory(true);
+	/*$string = $writer->outputMemory(true);
 	
 	//strip XML declaration from $string
-	$string = str_replace('<?xml version="1.0" encoding="UTF-8"?>', '', $string);
+	$string = str_replace('<?xml version="1.0" encoding="UTF-8"?>', '', $string);*/
 	
-	return $string;
+	//return $string;
 }
 
 function generate_json($doc){
