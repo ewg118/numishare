@@ -32,7 +32,7 @@ AddHandler cgi-script cgi php py
 
 // Ignore user aborts and allow the script
 // to run forever
-error_reporting(0);
+//error_reporting(0);
 ignore_user_abort(true);
 set_time_limit(0);
 ini_set("auto_detect_line_endings", "1");
@@ -40,8 +40,8 @@ ini_set("auto_detect_line_endings", "1");
 //get unique id of recently uploaded Filemaker CSV from request parameter
 //the line below is for passing request parameters from the command line.
 parse_str(implode('&', array_slice($argv, 1)), $_GET);
-$csv_id = $_GET['id'];
-//$csv_id = 'rictest01';
+//$csv_id = $_GET['id'];
+$csv_id = 'ric4-1';
 error_log(date(DATE_W3C) . ": {$csv_id}.csv now entering fm-to-nuds.php.\n", 3, "/var/log/numishare/process.log");
 
 //create an array with pre-defined labels and values passed from the Filemaker POST
@@ -60,7 +60,7 @@ $errors = array();
 $warnings = array();
 
 //load Google Spreadsheets
-$Byzantine_array = generate_json('https://docs.google.com/spreadsheet/pub?hl=en_US&hl=en_US&key=0Avp6BVZhfwHAdGJSRFhnR3ZKbHo2bG5oV0pDSzBBRnc&single=true&gid=0&output=csv');
+/*$Byzantine_array = generate_json('https://docs.google.com/spreadsheet/pub?hl=en_US&hl=en_US&key=0Avp6BVZhfwHAdGJSRFhnR3ZKbHo2bG5oV0pDSzBBRnc&single=true&gid=0&output=csv');
 $Decoration_array = generate_json('https://docs.google.com/spreadsheet/pub?hl=en_US&hl=en_US&key=0Avp6BVZhfwHAdFdTVy1UWGp6bFZvbTlsQWJyWmtlR1E&single=true&gid=0&output=csv');
 $East_Asian_array = generate_json('https://docs.google.com/spreadsheet/pub?hl=en_US&hl=en_US&key=0Avp6BVZhfwHAdFdONnhna3RpNGxwTjJ1M3RiSkxfTUE&single=true&gid=0&output=csv');
 $Greek_array = generate_json('https://docs.google.com/spreadsheet/pub?hl=en_US&hl=en_US&key=0Avp6BVZhfwHAdERQcHlNWXJlbTcwQ2g4YmM5QmxRMVE&single=true&gid=0&output=csv');
@@ -72,9 +72,12 @@ $Modern_array = generate_json('https://docs.google.com/spreadsheet/pub?hl=en_US&
 $Roman_array = generate_json('https://docs.google.com/spreadsheet/pub?hl=en_US&hl=en_US&key=0Avp6BVZhfwHAdHNMSmFWdXRkWnVxRy1sOTR1Z09HQnc&single=true&gid=0&output=csv');
 $South_Asian_array = generate_json('https://docs.google.com/spreadsheet/pub?hl=en_US&hl=en_US&key=0Avp6BVZhfwHAdFpxbjVsc25rblIyZy1OSngtVy15VGc&single=true&gid=0&output=csv');
 $United_States_array = generate_json('https://docs.google.com/spreadsheet/pub?hl=en_US&hl=en_US&key=0Avp6BVZhfwHAdEZ3VU1JeThGVHJiNEJsUkptbTFTRGc&single=true&gid=0&output=csv');
-
+*/
 //deities
 $deities_array = generate_json('https://docs.google.com/spreadsheet/pub?hl=en_US&hl=en_US&key=0Avp6BVZhfwHAdHk2ZXBuX0RYMEZzUlNJUkZOLXRUTmc&single=true&gid=0&output=csv');
+
+//keep array of valid coin type URIs to reduce the number of lookups
+$coinTypes = array();
 
 if (($handle = fopen("/tmp/" . $csv_id . ".csv", "r")) !== FALSE) {	
 	error_log(date(DATE_W3C) . ": {$csv_id}.csv successfully opened for processing.\n", 3, "/var/log/numishare/process.log");
@@ -116,70 +119,59 @@ if (($handle = fopen("/tmp/" . $csv_id . ".csv", "r")) !== FALSE) {
 				} else {
 					//block 1001.1.* and 1001.57.* ranges
 					if (strpos($accnum, '1001.1.') === FALSE && strpos($accnum, '1001.57.') === FALSE){
-						$xml = generate_nuds($row, $count);
-						//load DOMDocument
-						$dom = new DOMDocument('1.0', 'UTF-8');
-						if ($dom->loadXML($xml) === FALSE){
-							error_log($accnum . ' (' . $department . ') failed to validate in DOMDocument at ' . date(DATE_W3C) . "\n", 3, "/var/log/numishare/error.log");
-							$errors[] = $accnum . ' (' . $department . ') failed to validate in DOMDocument.';
-						} else {						
-							$dom->preserveWhiteSpace = FALSE;
-							$dom->formatOutput = TRUE;
-							//echo $dom->saveXML();
-							$dom->save($fileName);
+						generate_nuds($row, $count, $fileName);
 						
-							//read file back into memory for PUT to eXist
-							if (($readFile = fopen($fileName, 'r')) === FALSE){
-								//error_log($accnum . ' (' . $department . ') failed to open temporary file (accnum likely broken) at ' . date(DATE_W3C) . "\n", 3, "/var/log/numishare/error.log");
-								//$errors[] = $accnum . ' (' . $department . ') failed to open temporary file (accnum likely broken).';
+						//read file back into memory for PUT to eXist
+						/*if (($readFile = fopen($fileName, 'r')) === FALSE){
+							//error_log($accnum . ' (' . $department . ') failed to open temporary file (accnum likely broken) at ' . date(DATE_W3C) . "\n", 3, "/var/log/numishare/error.log");
+							//$errors[] = $accnum . ' (' . $department . ') failed to open temporary file (accnum likely broken).';
+						} else {
+							//PUT xml to eXist
+							$putToExist=curl_init();
+								
+							//set curl opts
+							curl_setopt($putToExist,CURLOPT_URL,'http://localhost:8080/exist/rest/db/' . $collection . '/objects/' . $accYear . '/' . $accnum . '.xml');
+							curl_setopt($putToExist,CURLOPT_HTTPHEADER, array("Content-Type: text/xml; charset=utf-8"));
+							curl_setopt($putToExist,CURLOPT_CONNECTTIMEOUT,2);
+							curl_setopt($putToExist,CURLOPT_RETURNTRANSFER,1);
+							curl_setopt($putToExist,CURLOPT_PUT,1);
+							curl_setopt($putToExist,CURLOPT_INFILESIZE,filesize($fileName));
+							curl_setopt($putToExist,CURLOPT_INFILE,$readFile);
+							curl_setopt($putToExist,CURLOPT_USERPWD,"admin:");
+							$response = curl_exec($putToExist);
+								
+							$http_code = curl_getinfo($putToExist,CURLINFO_HTTP_CODE);
+								
+							//error and success logging
+							if (curl_error($putToExist) === FALSE){
+								error_log($accnum . ' (' . $department . ') failed to upload to eXist at ' . date(DATE_W3C) . "\n", 3, "/var/log/numishare/error.log");
+								$errors[] = $accnum . ' (' . $department . ') failed to upload to eXist.';
 							} else {
-								//PUT xml to eXist
-								$putToExist=curl_init();
-									
-								//set curl opts
-								curl_setopt($putToExist,CURLOPT_URL,'http://localhost:8080/exist/rest/db/' . $collection . '/objects/' . $accYear . '/' . $accnum . '.xml');
-								curl_setopt($putToExist,CURLOPT_HTTPHEADER, array("Content-Type: text/xml; charset=utf-8"));
-								curl_setopt($putToExist,CURLOPT_CONNECTTIMEOUT,2);
-								curl_setopt($putToExist,CURLOPT_RETURNTRANSFER,1);
-								curl_setopt($putToExist,CURLOPT_PUT,1);
-								curl_setopt($putToExist,CURLOPT_INFILESIZE,filesize($fileName));
-								curl_setopt($putToExist,CURLOPT_INFILE,$readFile);
-								curl_setopt($putToExist,CURLOPT_USERPWD,"admin:");
-								$response = curl_exec($putToExist);
-									
-								$http_code = curl_getinfo($putToExist,CURLINFO_HTTP_CODE);
-									
-								//error and success logging
-								if (curl_error($putToExist) === FALSE){
-									error_log($accnum . ' (' . $department . ') failed to upload to eXist at ' . date(DATE_W3C) . "\n", 3, "/var/log/numishare/error.log");
-									$errors[] = $accnum . ' (' . $department . ') failed to upload to eXist.';
-								} else {
-									if ($http_code == '201'){
-										$datetime = date(DATE_W3C);
-										echo "Writing {$accnum}.\n";
-										error_log("{$accnum}: {$datetime}\n", 3, "/var/log/numishare/success.log");
-											
-										//if file was successfully PUT to eXist, add the accession number to the array for Solr indexing.
-										$accnums[] = trim($row['accnum']);
-											
-										//index records into Solr in increments of 1,000
-										if (count($accnums) > 0 && count($accnums) % 1000 == 0 ){
-											$start = count($accnums) - 1000;
-											$toIndex = array_slice($accnums, $start, 1000);
+								if ($http_code == '201'){
+									$datetime = date(DATE_W3C);
+									echo "Writing {$accnum}.\n";
+									error_log("{$accnum}: {$datetime}\n", 3, "/var/log/numishare/success.log");
+										
+									//if file was successfully PUT to eXist, add the accession number to the array for Solr indexing.
+									$accnums[] = trim($row['accnum']);
+										
+									//index records into Solr in increments of 1,000
+									if (count($accnums) > 0 && count($accnums) % 1000 == 0 ){
+										$start = count($accnums) - 1000;
+										$toIndex = array_slice($accnums, $start, 1000);
 						
-											//POST TO SOLR
-											generate_solr_shell_script($toIndex);
-										}
+										//POST TO SOLR
+										generate_solr_shell_script($toIndex);
 									}
 								}
-								//close eXist curl
-								curl_close($putToExist);
-										
-								//close files and delete from /tmp
-								fclose($readFile);
-								unlink($fileName);
 							}
-						}
+							//close eXist curl
+							curl_close($putToExist);
+						
+							//close files and delete from /tmp
+							fclose($readFile);
+							unlink($fileName);
+						}*/
 					}
 				}
 			}
@@ -202,26 +194,22 @@ if (($handle = fopen("/tmp/" . $csv_id . ".csv", "r")) !== FALSE) {
 	$toIndex = array_slice($accnums, $start);
 
 	//POST TO SOLR
-	generate_solr_shell_script($toIndex);
-
-	$endTime = date(DATE_W3C);
-
-	//generate HTML response
-	echo generate_html_response($csv_id, $accnums, $errors, $warnings, $startTime, $endTime);
+	//generate_solr_shell_script($toIndex);
 
 	//send email if there are errors
 	generate_email_report($csv_id, $accnums, $errors, $warnings, $startTime, $endTime);
 	
 	fclose($handle);
-	unlink("/tmp/" . $csv_id . ".csv");
+	//unlink("/tmp/" . $csv_id . ".csv");
 	error_log(date(DATE_W3C) . ": Processing completed. /tmp/{$csv_id}.csv has been deleted.\n", 3, "/var/log/numishare/process.log");
 } else {
 	error_log(date(DATE_W3C) . ": Unable to open {$csv_id}.csv.\n", 3, "/var/log/numishare/process.log");
 }
 
 /****** GENERATE NUDS ******/
-function generate_nuds($row, $count){
+function generate_nuds($row, $count, $fileName){
 	GLOBAL $warnings;
+	GLOBAL $coinTypes;
 	
 	$ocreUri = '';
 	$ocreTitle = '';
@@ -239,7 +227,7 @@ function generate_nuds($row, $count){
 	
 	
 	$writer = new XMLWriter();
-	//$writer->openURI("{$collection['project_id']}.rdf");
+	//$writer->openURI($fileName);
 	$writer->openURI('php://output');
 	$writer->startDocument('1.0','UTF-8');
 	$writer->setIndent(true);
@@ -279,6 +267,7 @@ function generate_nuds($row, $count){
 	
 		//begin descMeta
 		$writer->startElement('descMeta');
+		
 		/************ BEGIN TYPEDESC ***************/
 		//if the coin is Roman and contains 'ric.' as a reference, point the typeDesc to OCRE
 		if (count(preg_grep('/ric\.[1-9]/', $refs)) == 1){
@@ -293,27 +282,46 @@ function generate_nuds($row, $count){
 					}
 				}
 				$uri = 'http://numismatics.org/ocre/id/' . $id;
-				$file_headers = @get_headers($url);
-				if ($file_headers[0] == 'HTTP/1.1 200 OK'){
-					$currentUri = get_current_ocre_uri($uri);
-					if ($currentUri != 'FAIL'){						
-						//generate the title from the NUDS
-						$title = generate_title_from_type($currentUri);
-						$writer->startElement('title');
+				
+				//reduce lookups
+				if (array_key_exists($uri, $coinTypes)){
+					$ocreUri = $uri;
+					$ocreTitle = $coinTypes[$uri]['reference'];
+					$title = $coinTypes[$uri]['title'];
+					
+					//generate title
+					$writer->startElement('title');
+						$writer->writeAttribute('xml:lang', 'en');
+						$writer->text("{$title}. {$accnum}");
+					$writer->endElement();
+					generate_typeDesc_from_OCRE($writer, $row, $uri, $uncertain);
+				} else {
+					$file_headers = @get_headers($uri);
+					if ($file_headers[0] == 'HTTP/1.1 200 OK'){
+						$currentUri = get_current_ocre_uri($uri);
+						//echo "{$currentUri}\n";
+						if ($currentUri != 'FAIL'){
+							//generate the title from the NUDS
+							$titles = generate_title_from_type($currentUri);
+							$writer->startElement('title');
 								$writer->writeAttribute('xml:lang', 'en');
-								$writer->text("{$title}. {$accnum}");
-						$writer->endElement();
-						generate_typeDesc_from_OCRE($writer, $row, $currentUri, $uncertain);
-						
-						//set the ocreTitle
-						$ocreUri = $currentUri;
-						$ocreTitle = get_title_from_rdf($currentUri);
+								$writer->text("{$titles['title']}. {$accnum}");
+							$writer->endElement();
+							generate_typeDesc_from_OCRE($writer, $row, $currentUri, $uncertain);
+								
+							//set the ocreTitle
+							$ocreUri = $currentUri;
+							$ocreTitle = $titles['reference'];
+							
+							//add data into the $coinTypes array
+							$coinTypes[$currentUri] = array('title'=>$titles['title'], 'reference'=>$ocreTitle);
+						} else {
+							//FAIL if the $ref actually has two new URIs
+							generate_typeDesc($writer, $row, $department, $uncertain);
+						}
 					} else {
-						//FAIL if the $ref actually has two new URIs
 						generate_typeDesc($writer, $row, $department, $uncertain);
 					}
-				} else {
-					generate_typeDesc($writer, $row, $department, $uncertain);
 				}
 			} else {
 				//otherwise simply generate typeDesc
@@ -329,24 +337,50 @@ function generate_nuds($row, $count){
 					$uncertain = substr(trim($v), -1) == '?' ? true : false;
 				}
 			}
-			$url = 'http://numismatics.org/crro/id/' . str_replace('C.', 'rrc-', $id);
-			$file_headers = @get_headers($url);
-			if ($file_headers[0] == 'HTTP/1.1 200 OK'){
-				$title = generate_title_from_type($url);
+			$uri = 'http://numismatics.org/crro/id/' . str_replace('C.', 'rrc-', $id);
+			
+			//get info from $coinTypes array if the coin type has been verified already
+			if (array_key_exists($uri, $coinTypes)){
+				$title = $coinTypes[$uri]['title'];
+					
+				//generate title
 				$writer->startElement('title');
 					$writer->writeAttribute('xml:lang', 'en');
-					$writer->text("{$title}. {$accnum}");
+					$writer->text("{$title}. {$accnum}");	
 				$writer->endElement();
+				
+				//generate typeDesc with link
 				$writer->startElement('typeDesc');
 					$writer->writeAttribute('xlink:type', 'simple');
-					$writer->writeAttribute('xlink:href', $url);
+					$writer->writeAttribute('xlink:href', $uri);
 					if ($uncertain == true){
 						$writer->writeAttribute('certainty', 'uncertain');
 					}
 				$writer->endElement();
 			} else {
-				generate_typeDesc($writer, $row, $department, $uncertain);
-			}
+				$file_headers = @get_headers($uri);
+				if ($file_headers[0] == 'HTTP/1.1 200 OK'){
+					$titles = generate_title_from_type($uri);
+					$writer->startElement('title');
+						$writer->writeAttribute('xml:lang', 'en');
+						$writer->text("{$title['title']}. {$accnum}");
+					$writer->endElement();
+					
+					//generate typeDesc with link
+					$writer->startElement('typeDesc');
+						$writer->writeAttribute('xlink:type', 'simple');
+						$writer->writeAttribute('xlink:href', $uri);
+						if ($uncertain == true){
+							$writer->writeAttribute('certainty', 'uncertain');
+						}
+					$writer->endElement();
+					
+					//add data into the $coinTypes array
+					$coinTypes[$uri] = array('title'=>$titles['title'], 'reference'=>$titles['reference']);
+				} else {
+					generate_typeDesc($writer, $row, $department, $uncertain);
+				}
+			}			
 		} elseif ($department=='Greek' && count(preg_grep('/Price\.[1-9]/', $refs)) > 0){
 			//handle Price references for Pella
 			$matches = preg_grep('/Price\.[1-9]/', $refs);
@@ -356,51 +390,103 @@ function generate_nuds($row, $count){
 					$uncertain = substr(trim($v), -1) == '?' ? true : false;
 				}
 			}
-			$url = 'http://numismatics.org/pella/id/' . str_replace('Price.', 'price.', $id);
-			$file_headers = @get_headers($url);
-			if ($file_headers[0] == 'HTTP/1.1 200 OK'){
-				$title = generate_title_from_type($url);
+			$uri = 'http://numismatics.org/pella/id/' . str_replace('Price.', 'price.', $id);
+			
+			//get info from $coinTypes array if the coin type has been verified already
+			if (array_key_exists($uri, $coinTypes)){
+				$title = $coinTypes[$uri]['title'];
+					
+				//generate title
 				$writer->startElement('title');
 					$writer->writeAttribute('xml:lang', 'en');
 					$writer->text("{$title}. {$accnum}");
 				$writer->endElement();
+			
+				//generate typeDesc with link
 				$writer->startElement('typeDesc');
 					$writer->writeAttribute('xlink:type', 'simple');
-					$writer->writeAttribute('xlink:href', $url);
+					$writer->writeAttribute('xlink:href', $uri);
 					if ($uncertain == true){
 						$writer->writeAttribute('certainty', 'uncertain');
 					}
 				$writer->endElement();
 			} else {
-				generate_typeDesc($writer, $row, $department, $uncertain);
+				$file_headers = @get_headers($uri);
+				if ($file_headers[0] == 'HTTP/1.1 200 OK'){
+					
+					//get title
+					$titles = generate_title_from_type($uri);
+					$writer->startElement('title');
+						$writer->writeAttribute('xml:lang', 'en');
+						$writer->text("{$titles['title']}. {$accnum}");
+					$writer->endElement();
+					
+					//generate typeDesc with link
+					$writer->startElement('typeDesc');
+						$writer->writeAttribute('xlink:type', 'simple');
+						$writer->writeAttribute('xlink:href', $uri);
+						if ($uncertain == true){
+							$writer->writeAttribute('certainty', 'uncertain');
+						}
+					$writer->endElement();
+					
+					//add data into the $coinTypes array
+					$coinTypes[$uri] = array('title'=>$titles['title'], 'reference'=>$titles['reference']);
+				} else {
+					generate_typeDesc($writer, $row, $department, $uncertain);
+				}
 			}
-		
 		} elseif ($row['privateinfo'] == 'WW I project ready') {
 			//handle AoD
 			$citations = array_filter(explode('|', trim($row['published'])));
-			$url = 'http://numismatics.org/aod/id/' . $citations[0];
-			$file_headers = @get_headers($url);
-			if ($file_headers[0] == 'HTTP/1.1 200 OK'){
-				$title = generate_title_from_type($url);
+			$uri = 'http://numismatics.org/aod/id/' . $citations[0];
+			
+			//get info from $coinTypes array if the coin type has been verified already
+			if (array_key_exists($uri, $coinTypes)){
+				$title = $coinTypes[$uri]['title'];
+				//generate title
 				$writer->startElement('title');
 					$writer->writeAttribute('xml:lang', 'en');
 					$writer->text("{$title}. {$accnum}");
 				$writer->endElement();
+					
+				//generate typeDesc with link
 				$writer->startElement('typeDesc');
 					$writer->writeAttribute('xlink:type', 'simple');
-					$writer->writeAttribute('xlink:href', $url);
-					if ($certainty == false){
+					$writer->writeAttribute('xlink:href', $uri);
+					if ($uncertain == true){
 						$writer->writeAttribute('certainty', 'uncertain');
 					}
 				$writer->endElement();
 			} else {
-				generate_typeDesc($writer, $row, $department, false);
+				$file_headers = @get_headers($uri);
+				if ($file_headers[0] == 'HTTP/1.1 200 OK'){
+					
+					//get title
+					$titles = generate_title_from_type($uri);
+					$writer->startElement('title');
+						$writer->writeAttribute('xml:lang', 'en');
+						$writer->text("{$titles['title']}. {$accnum}");
+					$writer->endElement();
+				
+					//generate typeDesc with link
+					$writer->startElement('typeDesc');
+						$writer->writeAttribute('xlink:type', 'simple');
+						$writer->writeAttribute('xlink:href', $uri);
+						if ($certainty == false){
+							$writer->writeAttribute('certainty', 'uncertain');
+						}
+					$writer->endElement();
+					
+					//add data into the $coinTypes array
+					$coinTypes[$uri] = array('title'=>$titles['title'], 'reference'=>$titles['reference']);
+				} else {
+					generate_typeDesc($writer, $row, $department, false);
+				}
 			}
-		
 		}  else {
 			generate_typeDesc($writer, $row, $department, false);
-		}
-		
+		}		
 		/***** END TYPESDESC *****/
 
 		/***** UNDERTYPE DESCRIPTION *****/
@@ -618,21 +704,23 @@ function generate_nuds($row, $count){
 			$writer->startElement('refDesc');
 				//reference		
 				if (count($refs) > 0){
-					foreach ($refs as $val){		
-						$uncertain = substr($val, -1) == '?' ? true : false;
-						//insert OCRE URIs into a normalized reference field	
-						if (strlen($ocreUri) > 0){
-							$writer->startElement('reference');
-								$writer->writeAttribute('xlink:type', 'simple');
-								$writer->writeAttribute('xlink:arcrole', 'nmo:hasTypeSeriesItem');
-								$writer->writeAttribute('xlink:href', $ocreUri);
-								if ($uncertain == true){
-									$writer->writeAttribute('certainty', 'uncertain');
-								}
-								$writer->text($ocreLabel);
-							$writer->endElement();
+					foreach ($refs as $ref){		
+						$uncertain = substr($ref, -1) == '?' ? true : false;
+						if (preg_match('/ric\.[1-9]/', $ref)){
+							if (strlen($ocreUri) > 0){
+								//insert OCRE URIs into a normalized reference field
+								$writer->startElement('reference');
+									$writer->writeAttribute('xlink:type', 'simple');
+									$writer->writeAttribute('xlink:arcrole', 'nmo:hasTypeSeriesItem');
+									$writer->writeAttribute('xlink:href', $ocreUri);
+									if ($uncertain == true){
+										$writer->writeAttribute('certainty', 'uncertain');
+									}
+									$writer->text($ocreTitle);
+								$writer->endElement();
+							}
 						} else {
-							$label = str_replace('?', '', trim($val));
+							$label = str_replace('?', '', trim($ref));
 							$writer->startElement('reference');
 								if ($uncertain == true){
 									$writer->writeAttribute('certainty', 'uncertain');
@@ -799,7 +887,7 @@ function generate_nuds($row, $count){
 						$writer->writeAttribute('MIMETYPE', 'image/jpeg');
 						$writer->startElement('mets:FLocat');
 							$writer->writeAttribute('LOCYPE', 'URL');
-							$writer->writeAttribute('xlink:href' "http://numismatics.org/collectionimages/{$image_path}/{$collection_year}/{$accnum}.obv.width350.jpg");
+							$writer->writeAttribute('xlink:href', "http://numismatics.org/collectionimages/{$image_path}/{$collection_year}/{$accnum}.obv.width350.jpg");
 						$writer->endElement();					
 					$writer->endElement();
 					//thumbnail
@@ -808,7 +896,7 @@ function generate_nuds($row, $count){
 						$writer->writeAttribute('MIMETYPE', 'image/jpeg');
 						$writer->startElement('mets:FLocat');
 							$writer->writeAttribute('LOCYPE', 'URL');
-							$writer->writeAttribute('xlink:href' "http://numismatics.org/collectionimages/{$image_path}/{$collection_year}/{$accnum}.obv.width175.jpg");
+							$writer->writeAttribute('xlink:href', "http://numismatics.org/collectionimages/{$image_path}/{$collection_year}/{$accnum}.obv.width175.jpg");
 						$writer->endElement();
 					$writer->endElement();
 				$writer->endElement();
@@ -821,7 +909,7 @@ function generate_nuds($row, $count){
 						$writer->writeAttribute('MIMETYPE', 'image/jpeg');
 						$writer->startElement('mets:FLocat');
 							$writer->writeAttribute('LOCYPE', 'URL');
-							$writer->writeAttribute('xlink:href' "http://numismatics.org/collectionimages/{$image_path}/{$collection_year}/{$accnum}.rev.width350.jpg");
+							$writer->writeAttribute('xlink:href', "http://numismatics.org/collectionimages/{$image_path}/{$collection_year}/{$accnum}.rev.width350.jpg");
 						$writer->endElement();
 					$writer->endElement();
 					//thumbnail
@@ -830,7 +918,7 @@ function generate_nuds($row, $count){
 						$writer->writeAttribute('MIMETYPE', 'image/jpeg');
 						$writer->startElement('mets:FLocat');
 							$writer->writeAttribute('LOCYPE', 'URL');
-							$writer->writeAttribute('xlink:href' "http://numismatics.org/collectionimages/{$image_path}/{$collection_year}/{$accnum}.rev.width175.jpg");
+							$writer->writeAttribute('xlink:href', "http://numismatics.org/collectionimages/{$image_path}/{$collection_year}/{$accnum}.rev.width175.jpg");
 						$writer->endElement();
 					$writer->endElement();
 				$writer->endElement();
@@ -839,6 +927,10 @@ function generate_nuds($row, $count){
 	}
 	//end nuds
 	$writer->endElement();
+	
+	//close file
+	$writer->endDocument();
+	$writer->flush();
 }
 
 function generate_typeDesc($writer, $row, $department, $certainty){
@@ -1236,7 +1328,7 @@ function generate_typeDesc($writer, $row, $department, $certainty){
 			foreach ($issuers as $issuer){
 				$val = trim(str_replace('"', '', $issuer));
 				$uncertain = substr($val, -1) == '?' ? true : false;
-				$val = trim(str_replace('?', '', $val))
+				$val = trim(str_replace('?', '', $val));
 				if ($department == 'Medieval' || $department == 'Byzantine' || $department == 'Roman'){
 					$writer->startElement('persname');
 						$writer->writeAttribute('xlink:type', 'simple');
@@ -1417,30 +1509,30 @@ function get_material_label($material){
 	}
 }
 
-function(normalize_objtype($objtype)){
+function normalize_objtype($objtype){
 	$objectType = array();
 	switch ($objtype) {
 		case 'C':
-			$objectType['label'] = 'Coin;'
+			$objectType['label'] = 'Coin';
 			$objectType['uri'] = 'http://nomisma.org/id/coin';
 			break;
 		case 'DE':
-			$objectType['label'] = 'Decoration;'
+			$objectType['label'] = 'Decoration';
 			break;
 		case 'INGOT':
-			$objectType['label'] = 'Ingot;'
+			$objectType['label'] = 'Ingot';
 			$objectType['uri'] = 'http://nomisma.org/id/ingot';
 			break;
 		case 'ME':
-			$objectType['label'] = 'Medal;'
+			$objectType['label'] = 'Medal';
 			$objectType['uri'] = 'http://nomisma.org/id/medal';
 			break;
 		case 'P':
-			$objectType['label'] = 'Paper Money;'
+			$objectType['label'] = 'Paper Money';
 			$objectType['uri'] = 'http://nomisma.org/id/paper_money';
 			break;
 		case 'T':
-			$objectType['label'] = 'Token;'
+			$objectType['label'] = 'Token';
 			$objectType['uri'] = 'http://nomisma.org/id/token';
 			break;
 		default:			
@@ -1828,13 +1920,113 @@ function get_department($department){
 	return $dept_string;
 }
 
+/*
+ * Parse the NUDS/XML for the coin type to generate a title that conforms to MANTIS convention
+ * and also return the coin type title for use in the reference field
+ */
+function generate_title_from_type($uri){
+	$titlePieces = array();
+	$reference = '';
+	
+	$doc = new DOMDocument('1.0', 'UTF-8');
+	
+	if ($doc->load($uri . '.xml') !== FALSE){		
+		$xpath = new DOMXpath($doc);
+		$xpath->registerNamespace('nuds', 'http://nomisma.org/nuds');
+		$xpath->registerNamespace('xlink', 'http://www.w3.org/1999/xlink');
+		
+		$reference = $xpath->query("descendant::nuds:title[@xml:lang='en']")->item(0)->nodeValue;
+	
+		$fields = $xpath->query("descendant::nuds:typeDesc/*");
+		foreach ($fields as $field){
+			//process single nodes
+			if ($field->nodeName == 'objectType' || $field->nodeName == 'denomination' || $field->nodeName == 'date' || $field->nodeName == 'material'){
+				$titlePieces[$field->nodeName] = $field->nodeValue;
+			} elseif ($field->nodeName == 'dateRange'){
+				$date = array();
+				foreach ($field->childNodes as $child){
+					//if an element XML_ELEMENT_NODE
+					if ($child->nodeType == 1){
+						$date[] = $child->nodeValue;
+					}
+				}
+				//implode the fromDate and toDate and add to titlePieces
+				$titlePieces['date'] = implode(' - ', $date);
+			} elseif ($field->nodeName == 'authority'){
+				$authorities = array();
+				foreach ($field->childNodes as $child){
+					//if an element XML_ELEMENT_NODE
+					if ($child->nodeType == 1){
+						if ($child->getAttribute('xlink:role') == 'authority'){
+							$authorities[] = $child->nodeValue;
+						}
+					}
+				}
+				//implode authorities
+				if (count($authorities) > 0){
+					$titlePieces['authority'] = implode (', ', $authorities);
+				}
+			} elseif ($field->nodeName == 'geographic'){
+				$mints = array();
+				foreach ($field->childNodes as $child){
+					//if an element XML_ELEMENT_NODE
+					if ($child->nodeType == 1){
+						if ($child->getAttribute('xlink:role') == 'mint'){
+							$mints[] = $child->nodeValue;
+						}
+					}
+				}
+				//implode authorities
+				if (count($mints) > 0){
+					$titlePieces['mint'] = implode ('/', $mints);
+				}
+			}
+		}
+	}
+	
+	//assemble $titlePieces
+	$title = '';
+	if (count($titlePieces) > 0){
+		if (array_key_exists('material', $titlePieces)){
+			$title .= $titlePieces['material'];
+		}
+		if (array_key_exists('denomination', $titlePieces)){
+			$title .= ' ' .  $titlePieces['denomination'];
+		} else {
+			$title .= ' ' . $titlePieces['objectType'];
+		}
+		if (array_key_exists('authority', $titlePieces)){
+			$title .= ' of ' .  $titlePieces['authority'];
+		}
+		if (array_key_exists('mint', $titlePieces)){
+			$title .= ', ' . $titlePieces['mint'];
+		}
+		if (array_key_exists('date', $titlePieces)){
+			$title .= ', ';
+			$title .= $titlePieces['date'];
+		}
+	}
+	
+	//echo "title:{$title}\n";
+	
+	$titles = array();
+	if (strlen($title) > 0) {
+		$titles['title'] = $title;
+	}
+	
+	$titles['reference'] = $reference;
+	
+	return $titles;
+	
+}
+
 function get_current_ocre_uri($url){
 	$doc = new DOMDocument('1.0', 'UTF-8');
 	if ($doc->load($url . '.rdf') === FALSE){
 		return "FAIL";
 	} else {
 		$replacements = $doc->getElementsByTagNameNS('http://purl.org/dc/terms/', 'isReplacedBy');
-		echo "LENGTH" . $replacements->length . "\n";
+		//echo "LENGTH" . $replacements->length . "\n";
 		if ($replacements->length == 0){
 			return $url;
 		} elseif ($replacements->length == 1){
@@ -1867,12 +2059,12 @@ function generate_typeDesc_from_OCRE($writer, $row, $currentUri, $uncertain) {
 	$xpath->registerNamespace('nuds', 'http://nomisma.org/nuds');
 	$xpath->registerNamespace('xlink', 'http://www.w3.org/1999/xlink');	
 	
-	//$xml = '<typeDesc>';
-	$writer = new XMLWriter();
+	/*$writer = new XMLWriter();
 	$writer->openURI('php://output');
 	$writer->startDocument('1.0','UTF-8');
 	$writer->openMemory();
-	//$writer->setIndent(4);
+	*/
+	
 	$writer->startElement('typeDesc');
 	if ($uncertain == true){
 		$writer->writeAttribute('certainty', 'uncertain');
@@ -1956,7 +2148,7 @@ function generate_typeDesc_from_OCRE($writer, $row, $currentUri, $uncertain) {
 			
 			//pluck out entities
 			foreach ($field->childNodes as $child){
-				if ($child->nodeName == 'persname' || $child->nodeName == 'corpnamne' || $child->nodeName == 'famname'){
+				if ($child->nodeName == 'persname' || $child->nodeName == 'corpname' || $child->nodeName == 'famname'){
 					$writer->startElement($child->nodeName);
 					if ($child->getAttribute('xlink:href')){
 						$writer->writeAttribute('xlink:href', $child->getAttribute('xlink:href'));
