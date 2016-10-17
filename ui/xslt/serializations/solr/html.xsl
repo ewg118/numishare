@@ -159,7 +159,7 @@
 			</xsl:if>
 			<div class="row">
 				<div class="col-md-9 col-md-push-3">
-					<div class="container-fluid">
+					<div class="container-fluid">					
 						<xsl:call-template name="remove_facets"/>
 						<xsl:choose>
 							<xsl:when test="$numFound &gt; 0">
@@ -169,13 +169,26 @@
 										<div id="resultMap"/>
 									</div>
 								</xsl:if>
+								
+								<!-- display link to return to the identify page, if referred from there -->
+								<xsl:if test="tokenize(doc('input:request')/request/headers/header[name='referer']/value, '/')[last()] = 'identify'">
+									<a href="#" onclick="window.history.back();"><span class="glyphicon glyphicon-arrow-left"/> Return to previous query on Identify page.</a>
+								</xsl:if>	
+								
 								<xsl:call-template name="paging"/>
 								<xsl:call-template name="sort"/>
 								<xsl:apply-templates select="descendant::doc"/>
 								<xsl:call-template name="paging"/>
 							</xsl:when>
 							<xsl:otherwise>
-								<h2> No results found. <a href="results?q=*:*">Start over.</a></h2>
+								<xsl:choose>
+									<xsl:when test="tokenize(doc('input:request')/request/headers/header[name='referer']/value, '/')[last()] = 'identify'">
+										<h2> No results found. <a href="#" onclick="window.history.back();">Start over.</a></h2>
+									</xsl:when>
+									<xsl:otherwise>
+										<h2> No results found. <a href="results">Start over.</a></h2>
+									</xsl:otherwise>
+								</xsl:choose>
 							</xsl:otherwise>
 						</xsl:choose>
 					</div>
