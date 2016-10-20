@@ -880,7 +880,7 @@
 							<legend/>
 						</xforms:instance>
 						<xforms:instance id="portrait-template" xxforms:exclude-result-prefixes="#all">
-							<persname xlink:type="simple" xlink:role="portrait"/>
+							<persname xlink:type="simple" xlink:role="portrait" xlink:href=""/>
 						</xforms:instance>
 						<xforms:instance id="symbol-template" xxforms:exclude-result-prefixes="#all">
 							<symbol/>

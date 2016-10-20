@@ -90,7 +90,7 @@
 							
 							<div>
 								<xforms:input ref="instance('search-query')">
-									<xforms:label>Search</xforms:label>
+									<xforms:label>Search Nomisma</xforms:label>
 								</xforms:input>
 								<xforms:trigger>
 									<xforms:action ev:event="DOMActivate">
@@ -99,7 +99,7 @@
 										<xforms:setvalue ref="instance('temp')/@href"/>
 										<xforms:send submission="query-nomisma"/>
 									</xforms:action>
-									<xforms:label>Search</xforms:label>
+									<xforms:label>Execute</xforms:label>
 								</xforms:trigger>
 							</div>
 							
