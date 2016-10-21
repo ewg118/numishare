@@ -699,28 +699,28 @@
 							<xsl:when test="$segs[3] = 'fl'">070</xsl:when>
 							<xsl:when test="$segs[3] = 'intr'">071</xsl:when>
 							<xsl:when test="$segs[3] = 'pro'">072_01</xsl:when>
-							<xsl:when test="$segs[3]='car'">72_02</xsl:when>
-							<xsl:when test="$segs[3]='dio'">72_03</xsl:when>
-							<xsl:when test="$segs[3]='post'">72_04</xsl:when>
-							<xsl:when test="$segs[3]='lae'">72_05</xsl:when>
-							<xsl:when test="$segs[3]='mar'">72_06</xsl:when>
-							<xsl:when test="$segs[3]='vict'">72_07</xsl:when>
-							<xsl:when test="$segs[3]='tet_i'">72_08</xsl:when>
-							<xsl:when test="$segs[3]='cara'">72_09</xsl:when>
+							<xsl:when test="$segs[3]='car'">072_02</xsl:when>
+							<xsl:when test="$segs[3]='dio'">072_03</xsl:when>
+							<xsl:when test="$segs[3]='post'">072_04</xsl:when>
+							<xsl:when test="$segs[3]='lae'">072_05</xsl:when>
+							<xsl:when test="$segs[3]='mar'">072_06</xsl:when>
+							<xsl:when test="$segs[3]='vict'">072_07</xsl:when>
+							<xsl:when test="$segs[3]='tet_i'">072_08</xsl:when>
+							<xsl:when test="$segs[3]='cara'">072_09</xsl:when>
 							<xsl:when test="$segs[3]='cara-dio-max_her'">72_10</xsl:when>
-							<xsl:when test="$segs[3]='all'">72_11</xsl:when>
-							<xsl:when test="$segs[3]='mac_ii'">72_12</xsl:when>
-							<xsl:when test="$segs[3]='quit'">72_13</xsl:when>
-							<xsl:when test="$segs[3]='zen'">72_14</xsl:when>
-							<xsl:when test="$segs[3]='vab'">72_15</xsl:when>
-							<xsl:when test="$segs[3]='reg'">72_16</xsl:when>
-							<xsl:when test="$segs[3]='dry'">72_17</xsl:when>
-							<xsl:when test="$segs[3]='aurl'">72_18</xsl:when>
-							<xsl:when test="$segs[3]='dom_g'">72_19</xsl:when>
-							<xsl:when test="$segs[3]='sat'">72_20</xsl:when>
-							<xsl:when test="$segs[3]='bon'">72_21</xsl:when>
-							<xsl:when test="$segs[3]='jul_i'">72_22</xsl:when>
-							<xsl:when test="$segs[3]='ama'">72_23</xsl:when>
+							<xsl:when test="$segs[3]='all'">072_11</xsl:when>
+							<xsl:when test="$segs[3]='mac_ii'">072_12</xsl:when>
+							<xsl:when test="$segs[3]='quit'">072_13</xsl:when>
+							<xsl:when test="$segs[3]='zen'">072_14</xsl:when>
+							<xsl:when test="$segs[3]='vab'">072_15</xsl:when>
+							<xsl:when test="$segs[3]='reg'">072_16</xsl:when>
+							<xsl:when test="$segs[3]='dry'">072_17</xsl:when>
+							<xsl:when test="$segs[3]='aurl'">072_18</xsl:when>
+							<xsl:when test="$segs[3]='dom_g'">072_19</xsl:when>
+							<xsl:when test="$segs[3]='sat'">072_20</xsl:when>
+							<xsl:when test="$segs[3]='bon'">072_21</xsl:when>
+							<xsl:when test="$segs[3]='jul_i'">072_22</xsl:when>
+							<xsl:when test="$segs[3]='ama'">072_23</xsl:when>
 							<xsl:when test="$segs[2] = '6'">
 								<xsl:choose>
 									<xsl:when test="$segs[3] = 'lon'">073</xsl:when>
@@ -779,7 +779,27 @@
 									<xsl:when test="$segs[3] = 'nic'">115</xsl:when>
 									<xsl:when test="$segs[3] = 'cyz'">116</xsl:when>
 									<xsl:when test="$segs[3] = 'anch'">117</xsl:when>
-									<xsl:when test="$segs[3] = 'alex'">118</xsl:when>
+									<xsl:when test="$segs[3] = 'alex'">118_00</xsl:when>
+								</xsl:choose>
+							</xsl:when>
+							<xsl:when test="$segs[2] = '9'">
+								<xsl:choose>
+									<xsl:when test="$segs[3] = 'alex'">118_01</xsl:when>									
+									<xsl:when test="$segs[3] = 'anch'">118_02</xsl:when>
+									<xsl:when test="$segs[3] = 'aq'">118_03</xsl:when>
+									<xsl:when test="$segs[3] = 'ar'">118_04</xsl:when>
+									<xsl:when test="$segs[3] = 'cnp'">118_05</xsl:when>
+									<xsl:when test="$segs[3] = 'cyz'">118_06</xsl:when>
+									<xsl:when test="$segs[3] = 'her'">118_07</xsl:when>
+									<xsl:when test="$segs[3] = 'lon'">118_08</xsl:when>
+									<xsl:when test="$segs[3] = 'lug'">118_09</xsl:when>
+									<xsl:when test="$segs[3] = 'med'">118_10</xsl:when>
+									<xsl:when test="$segs[3] = 'nic'">118_11</xsl:when>
+									<xsl:when test="$segs[3] = 'rom'">118_12</xsl:when>
+									<xsl:when test="$segs[3] = 'sir'">118_13</xsl:when>
+									<xsl:when test="$segs[3] = 'sis'">118_14</xsl:when>
+									<xsl:when test="$segs[3] = 'thes'">118_15</xsl:when>
+									<xsl:when test="$segs[3] = 'tri'">118_16</xsl:when>
 								</xsl:choose>
 							</xsl:when>
 							<xsl:when test="$segs[2] = '10'">
