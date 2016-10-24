@@ -40,39 +40,8 @@
       </semanticDeclaration>
    </control>
    <descMeta>
-      <title xml:lang="en">Solidus of Valentinian I, Treveri, A.D. 388. 1989.19.23.</title>
-      <typeDesc>
-         <objectType xlink:href="http://nomisma.org/id/coin">Coin</objectType>
-         <denomination xlink:href="http://nomisma.org/id/solidus">Solidus</denomination>
-         <material xlink:href="http://nomisma.org/id/av">Gold</material>
-         <date standardDate="0388">A.D. 388</date>
-         <authority>
-            <persname xlink:type="simple" xlink:role="authority"
-                      xlink:href="http://nomisma.org/id/valentinian_i">Valentinian I</persname>
-            <famname xlink:type="simple" xlink:role="dynasty">Valentinian</famname>
-            <corpname xlink:type="simple" xlink:role="state">Roman Empire</corpname>
-         </authority>
-         <geographic>
-            <geogname xlink:type="simple" xlink:role="mint"
-                      xlink:href="http://nomisma.org/id/treveri">Treveri</geogname>
-         </geographic>
-         <obverse>
-            <type>
-               <description xml:lang="en">Head right, pearl-diademed, draped, cuirassed.</description>
-            </type>
-            <legend>D(OMINVS)N(OSTER)/VALENTINI-ANVS/P(IVS) F(ELIX) AVG(VSTVS)</legend>
-            <persname xlink:type="simple" xlink:role="portrait"
-                      xlink:href="http://nomisma.org/id/valentinian_i">Valentinian I</persname>
-         </obverse>
-         <reverse>
-            <type>
-               <description xml:lang="en">Two figures, nimbate, throned, and facing, together holding an orb; behind is a half-length Victory with outstretched wings; beneath the throne rests a
-						palm-branch.</description>
-            </type>
-            <legend>VICTOR-IA/AVGG(VSTORVM) TR COM</legend>
-            <persname xlink:type="simple" xlink:role="deity">Victory</persname>
-         </reverse>
-      </typeDesc>
+      <title xml:lang="en">Solidus of Valentinian II, Treveri, A.D. 388-392. 1989.19.23.</title>
+      <typeDesc xlink:type="simple" xlink:href="http://numismatics.org/ocre/id/ric.9.tri.90A"/>
       <adminDesc>
          <identifier>1989.19.23</identifier>
          <provenance>
@@ -90,7 +59,7 @@
          </provenance>
          <department>Roman</department>
          <collection xlink:type="simple" xlink:href="http://nomisma.org/id/uva">The Fralin Museum of Art</collection>
-      </adminDesc>
+      </adminDesc>      
    </descMeta>
    <digRep>
       <mets:fileSec>
