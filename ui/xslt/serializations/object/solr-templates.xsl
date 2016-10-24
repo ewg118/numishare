@@ -707,7 +707,7 @@
 							<xsl:when test="$segs[3]='vict'">072_07</xsl:when>
 							<xsl:when test="$segs[3]='tet_i'">072_08</xsl:when>
 							<xsl:when test="$segs[3]='cara'">072_09</xsl:when>
-							<xsl:when test="$segs[3]='cara-dio-max_her'">72_10</xsl:when>
+							<xsl:when test="$segs[3]='cara-dio-max_her'">072_10</xsl:when>
 							<xsl:when test="$segs[3]='all'">072_11</xsl:when>
 							<xsl:when test="$segs[3]='mac_ii'">072_12</xsl:when>
 							<xsl:when test="$segs[3]='quit'">072_13</xsl:when>
@@ -839,8 +839,8 @@
 									<xsl:when test="$segs[3] = 'zeno_w'">151</xsl:when>
 									<xsl:when test="$segs[3] = 'visi'">152</xsl:when>
 									<xsl:when test="$segs[3] = 'gallia'">153</xsl:when>
-									<xsl:when test="$segs[3] = 'spa'">153</xsl:when>
-									<xsl:when test="$segs[3] = 'afr'">153</xsl:when>
+									<xsl:when test="$segs[3] = 'spa'">154</xsl:when>
+									<xsl:when test="$segs[3] = 'afr'">155</xsl:when>
 								</xsl:choose>
 							</xsl:when>
 						</xsl:choose>
