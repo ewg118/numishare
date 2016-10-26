@@ -76,7 +76,9 @@
 						</tbody>
 						<tfoot>
 							<tr>
-								<td/>
+								<td>
+									<h2>Total</h2>
+								</td>
 								<td>
 									<h2>
 										<xsl:value-of select="format-number(sum(descendant::res:binding[@name = 'count']/res:literal), '###,###')"/>
