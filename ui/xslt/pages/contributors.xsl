@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:numishare="https://github.com/ewg118/numishare" xmlns:foaf="http://xmlns.com/foaf/0.1/"
-	xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:res="http://www.w3.org/2005/sparql-results#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" exclude-result-prefixes="#all"
-	version="2.0">
+	xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:res="http://www.w3.org/2005/sparql-results#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	exclude-result-prefixes="#all" version="2.0">
 	<xsl:include href="../templates.xsl"/>
 	<xsl:include href="../functions.xsl"/>
 
-	<xsl:param name="langParam" select="doc('input:request')/request/parameters/parameter[name='lang']/value"/>
+	<xsl:param name="langParam" select="doc('input:request')/request/parameters/parameter[name = 'lang']/value"/>
 	<xsl:param name="lang">
 		<xsl:choose>
 			<xsl:when test="string($langParam)">
 				<xsl:value-of select="$langParam"/>
 			</xsl:when>
-			<xsl:when test="string(doc('input:request')/request//header[name[.='accept-language']]/value)">
-				<xsl:value-of select="numishare:parseAcceptLanguage(doc('input:request')/request//header[name[.='accept-language']]/value)[1]"/>
+			<xsl:when test="string(doc('input:request')/request//header[name[. = 'accept-language']]/value)">
+				<xsl:value-of select="numishare:parseAcceptLanguage(doc('input:request')/request//header[name[. = 'accept-language']]/value)[1]"/>
 			</xsl:when>
 		</xsl:choose>
 	</xsl:param>
@@ -60,7 +60,7 @@
 					<table class="table table-striped">
 						<thead>
 							<tr>
-								<xsl:if test="descendant::res:binding[@name='thumbnail']">
+								<xsl:if test="descendant::res:binding[@name = 'thumbnail']">
 									<th style="width:200px"/>
 								</xsl:if>
 								<th>
@@ -78,7 +78,9 @@
 							<tr>
 								<td/>
 								<td>
-									<xsl:value-of select="format-number(sum(descendant::res:binding[@name='count']/res:literal), '###,###')"/>
+									<h2>
+										<xsl:value-of select="format-number(sum(descendant::res:binding[@name = 'count']/res:literal), '###,###')"/>
+									</h2>
 								</td>
 								<td/>
 							</tr>
@@ -92,21 +94,21 @@
 	<xsl:template match="res:result" mode="contributors">
 		<tr>
 			<td>
-				<xsl:if test="string(res:binding[@name='thumbnail']/res:uri)">
+				<xsl:if test="string(res:binding[@name = 'thumbnail']/res:uri)">
 					<xsl:variable name="link">
 						<xsl:choose>
-							<xsl:when test="res:binding[@name='memberOf']">
-								<xsl:value-of select="res:binding[@name='memberOf']/res:uri"/>
+							<xsl:when test="res:binding[@name = 'memberOf']">
+								<xsl:value-of select="res:binding[@name = 'memberOf']/res:uri"/>
 							</xsl:when>
-							<xsl:when test="res:binding[@name='homepage']">
-								<xsl:value-of select="res:binding[@name='homepage']/res:uri"/>
+							<xsl:when test="res:binding[@name = 'homepage']">
+								<xsl:value-of select="res:binding[@name = 'homepage']/res:uri"/>
 							</xsl:when>
 							<xsl:otherwise>
-								<xsl:value-of select="res:binding[@name='dataset']/res:uri"/>
+								<xsl:value-of select="res:binding[@name = 'dataset']/res:uri"/>
 							</xsl:otherwise>
 						</xsl:choose>
 					</xsl:variable>
-					
+
 					<a href="{$link}">
 						<img src="{res:binding[@name='thumbnail']/res:uri}" alt="logo" style="max-width:200px"/>
 					</a>
@@ -114,54 +116,55 @@
 			</td>
 			<td>
 				<h2>
-					<xsl:value-of select="format-number(res:binding[@name='count']/res:literal, '###,###')"/>
+					<xsl:value-of select="format-number(res:binding[@name = 'count']/res:literal, '###,###')"/>
 				</h2>
 			</td>
 			<td>
 				<h2>
 					<xsl:choose>
-						<xsl:when test="res:binding[@name='collection']">
-							<a href="{if (string(res:binding[@name='homepage']/res:uri)) then res:binding[@name='homepage']/res:uri else res:binding[@name='dataset']/res:uri}">
-								<xsl:value-of select="res:binding[@name='collectionLabel']/res:literal"/>
+						<xsl:when test="res:binding[@name = 'collection']">
+							<a
+								href="{if (string(res:binding[@name='homepage']/res:uri)) then res:binding[@name='homepage']/res:uri else res:binding[@name='dataset']/res:uri}">
+								<xsl:value-of select="res:binding[@name = 'collectionLabel']/res:literal"/>
 							</a>
 						</xsl:when>
 						<xsl:otherwise>
 							<a href="{res:binding[@name='dataset']/res:uri}">
-								<xsl:value-of select="res:binding[@name='title']/res:literal"/>
+								<xsl:value-of select="res:binding[@name = 'title']/res:literal"/>
 							</a>
 						</xsl:otherwise>
 					</xsl:choose>
 
 				</h2>
 				<dl class=" {if($lang='ar') then 'dl-horizontal ar' else 'dl-horizontal'}">
-					<xsl:if test="res:binding[@name='collection']">
+					<xsl:if test="res:binding[@name = 'collection']">
 						<dt>Nomisma URI</dt>
 						<dd>
 							<a href="{res:binding[@name='collection']/res:uri}">
-								<xsl:value-of select="res:binding[@name='collection']/res:uri"/>
+								<xsl:value-of select="res:binding[@name = 'collection']/res:uri"/>
 							</a>
 						</dd>
 					</xsl:if>
-					<xsl:if test="res:binding[@name='publisher']">
+					<xsl:if test="res:binding[@name = 'publisher']">
 						<dt>
 							<xsl:value-of select="numishare:regularize_node('publisher', $lang)"/>
 						</dt>
 						<dd>
-							<xsl:value-of select="res:binding[@name='publisher']/res:literal"/>
+							<xsl:value-of select="res:binding[@name = 'publisher']/res:literal"/>
 						</dd>
 					</xsl:if>
 					<dt>
 						<xsl:value-of select="numishare:regularize_node('description', $lang)"/>
 					</dt>
 					<dd>
-						<xsl:value-of select="res:binding[@name='description']/res:literal"/>
+						<xsl:value-of select="res:binding[@name = 'description']/res:literal"/>
 					</dd>
 					<dt>
 						<xsl:value-of select="numishare:regularize_node('license', $lang)"/>
 					</dt>
 					<dd>
 						<a href="{res:binding[@name='license']/res:uri}">
-							<xsl:variable name="license" select="res:binding[@name='license']/res:uri"/>
+							<xsl:variable name="license" select="res:binding[@name = 'license']/res:uri"/>
 							<xsl:choose>
 								<xsl:when test="contains($license, 'http://opendatacommons.org/licenses/odbl/')">ODC-ODbL</xsl:when>
 								<xsl:when test="contains($license, 'http://opendatacommons.org/licenses/by/')">ODC-by</xsl:when>
@@ -185,7 +188,7 @@
 									<img src="http://i.creativecommons.org/l/by-nc-nd/3.0/88x31.png" alt="CC BY-NC-ND" title="CC BY-NC-ND"/>
 								</xsl:when>
 								<xsl:otherwise>
-									<xsl:value-of select="res:binding[@name='license']/res:uri"/>
+									<xsl:value-of select="res:binding[@name = 'license']/res:uri"/>
 								</xsl:otherwise>
 							</xsl:choose>
 						</a>
