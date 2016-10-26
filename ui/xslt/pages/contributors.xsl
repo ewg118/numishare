@@ -74,6 +74,15 @@
 						<tbody>
 							<xsl:apply-templates select="descendant::res:result" mode="contributors"/>
 						</tbody>
+						<tfoot>
+							<tr>
+								<td/>
+								<td>
+									<xsl:value-of select="format-number(sum(descendant::res:binding[@name='count']/res:literal), '###,###')"/>
+								</td>
+								<td/>
+							</tr>
+						</tfoot>
 					</table>
 				</div>
 			</div>
