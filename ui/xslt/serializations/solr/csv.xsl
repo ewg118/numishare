@@ -49,8 +49,9 @@
 				<xsl:text>,</xsl:text>
 			</xsl:if>
 		</xsl:for-each>		
-		<xsl:text>
-</xsl:text>
+		<xsl:text>&#x0A;</xsl:text>
+		
+		<!-- each doc -->
 		<xsl:for-each select="descendant::doc">
 			<xsl:variable name="doc" as="element()*">
 				<xsl:copy-of select="."/>
@@ -65,8 +66,7 @@
 					<xsl:text>,</xsl:text>
 				</xsl:if>
 			</xsl:for-each>			
-			<xsl:text>
-</xsl:text>
+			<xsl:text>&#x0A;</xsl:text>
 		</xsl:for-each>
 	</xsl:template>
 
