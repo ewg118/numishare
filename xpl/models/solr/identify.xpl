@@ -24,16 +24,7 @@
 		<p:input name="config">
 			<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 				<xsl:template match="/">
-					<xsl:variable name="collection-name">
-						<xsl:choose>
-							<xsl:when test="contains(doc('input:request')/request/request-uri, 'admin/')">
-								<xsl:value-of select="substring-before(substring-after(doc('input:request')/request/request-uri, 'numishare/admin/'), '/')"/>
-							</xsl:when>
-							<xsl:otherwise>
-								<xsl:value-of select="substring-before(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/')"/>
-							</xsl:otherwise>
-						</xsl:choose>
-					</xsl:variable>	
+					<xsl:variable name="collection-name" select="substring-before(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/')"/>
 					
 					<config>
 						<url>
@@ -157,8 +148,9 @@ SELECT DISTINCT ?portrait ?en_label ?default_label WHERE {
         dcterms:source <TYPE_SERIES> .
 {?type nmo:hasObverse ?obv .
  ?obv nmo:hasPortrait ?portrait }
-{?type nmo:hasReverse ?rev .
- ?rev nmo:hasPortrait ?portrait }
+UNION {?type nmo:hasReverse ?rev .
+ ?rev nmo:hasPortrait ?portrait ;
+      dcterms:description ?desc FILTER (regex(str(?desc), "(head)|(bust)", "i")) }
 ?portrait a foaf:Person ;
             skos:prefLabel ?en_label FILTER langMatches(lang(?en_label), "en") .
  OPTIONAL {?portrait skos:prefLabel ?default_label FILTER langMatches(lang(?default_label), "LANG")}

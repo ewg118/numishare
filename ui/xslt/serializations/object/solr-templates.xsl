@@ -679,7 +679,7 @@
 							<xsl:when test="$segs[3] = 'val_i'">050</xsl:when>
 							<xsl:when test="$segs[3] = 'val_i-gall'">051</xsl:when>
 							<xsl:when test="$segs[3] = 'val_i-gall-val_ii-sala'">052</xsl:when>
-							<xsl:when test="$segs[3] = 'mar'">053</xsl:when>
+							<xsl:when test="$segs[3] = 'marin'">053</xsl:when>
 							<xsl:when test="$segs[3] = 'gall(1)'">054</xsl:when>
 							<xsl:when test="$segs[3] = 'gall_sala(1)'">055</xsl:when>
 							<xsl:when test="$segs[3] = 'gall_sals'">056</xsl:when>
