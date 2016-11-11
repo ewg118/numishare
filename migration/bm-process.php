@@ -1,14 +1,14 @@
 <?php
 
 require_once( "sparqllib.php" );
-error_reporting(0);
+//error_reporting(0);
 
-$data = generate_json('/home/komet/ans_migration/ocre/bm-data/ric6-10-con.csv', false);
+$data = generate_json('/home/komet/ans_migration/ocre/bm-data/ric9-con.csv', false);
 $hoards = generate_json('https://docs.google.com/spreadsheets/d/1rqS7vzFfGQ_Xz0nLhPoRNFGks1Bkku_F590GlZ_RsdA/pub?gid=1902596397&single=true&output=csv');
 
 //use XML writer to generate RDF
 $writer = new XMLWriter();
-$writer->openURI("bm6-10.rdf");
+$writer->openURI("bm9.rdf");
 //$writer->openURI('php://output');
 $writer->startDocument('1.0','UTF-8');
 $writer->setIndent(true);
@@ -119,9 +119,9 @@ function query_bm($writer, $uri){
 	{
 		foreach( $fields as $field )
 		{
-			if (strlen($row[$field]) > 0) {
+			if (isset($row[$field])){			
 				if ($field == 'hoard'){
-					
+					//do nothing
 				} else {
 					switch ($field) {
 						case 'image':

@@ -11,7 +11,7 @@ foreach ($data as $row){
 //var_dump($pairs);
 
 $doc = new DOMDocument();
-$doc->load('ric6-10.xml'); 
+$doc->load('ric9.xml'); 
 
 $results = $doc->getElementsByTagName("result");
 
@@ -69,9 +69,12 @@ foreach ($results as $result){
 						case 'RIC8':
 							$vol = 'ric.8';
 							break;
+						case 'RIC9':
+							$vol = 'ric.9';
+							break;
 						case 'RIC10':
 							$vol = 'ric.10';
-							break;
+							break;						
 						default:
 							$vol = null;
 					}
@@ -104,7 +107,7 @@ foreach ($results as $result){
 							} else {
 								$auth = parse_auth($vol, $page);
 								if (isset($auth)){
-									$id = $vol . '.' . $auth . '.' . $num;
+									$id = $vol . '.' . $auth . '.' . strtoupper($num);
 									$uri = "http://numismatics.org/ocre/id/{$id}";
 										
 									if (in_array($uri, $types)){
@@ -145,7 +148,7 @@ foreach ($results as $result){
 									
 									$auth = parse_mint($mint);
 									if (isset($auth)){
-										$id = $vol . '.' . $auth . '.' . $num;
+										$id = $vol . '.' . $auth . '.' . strtoupper($num);
 										$uri = "http://numismatics.org/ocre/id/{$id}";
 											
 										if (in_array($uri, $types)){
@@ -182,12 +185,10 @@ $csv = "key,regno,nomisma_id,ref\n";
 
 foreach ($con as $row){
 	//ignore the objects with RIC9 references
-	if (strpos($row['ref'], 'RIC9') === FALSE){
-		$csv .= "{$row['uri']}," . '"' . $row['regno'] . '",' . "{$row['type']}," . '"' . $row['ref'] . '"' . "\n";
-	}	
+	$csv .= "{$row['uri']}," . '"' . $row['regno'] . '",' . "{$row['type']}," . '"' . $row['ref'] . '"' . "\n";
 }
 
-file_put_contents('ric6-10-con.csv', $csv);
+file_put_contents('ric9-con.csv', $csv);
 
 function parse_mint($mint){
 	switch($mint){	
@@ -414,6 +415,55 @@ function parse_auth ($volume, $p){
 			$authority = 'anch';
 		}
 		elseif ($p >= 538 && $p <= 546){
+			$authority = 'alex';
+		}
+	} elseif ($volume == 'ric.9'){
+		if ($p == 2){
+			$authority = 'lon';
+		}
+		elseif ($p >= 13 && $p <= 34){
+			$authority = 'tri';
+		}
+		elseif ($p >= 42 && $p <= 53){
+			$authority = 'lug';
+		}
+		elseif ($p >= 61 && $p <= 70){
+			$authority = 'ar';
+		}
+		elseif ($p >= 75 && $p <= 84){
+			$authority = 'med';
+		}
+		elseif ($p >= 94 && $p <= 107){
+			$authority = 'aq';
+		}
+		elseif ($p >= 116 && $p <= 136){
+			$authority = 'rom';
+		}
+		elseif ($p >= 145 && $p <= 155){
+			$authority = 'sis';
+		}
+		elseif ($p >= 158 && $p <= 162){
+			$authority = 'sir';
+		}
+		elseif ($p >= 173 && $p <= 188){
+			$authority = 'thes';
+		}
+		elseif ($p >= 191 && $p <= 199){
+			$authority = 'her';
+		}
+		elseif ($p >= 209 && $p <= 236){
+			$authority = 'cnp';
+		}
+		elseif ($p >= 239 && $p <= 247){
+			$authority = 'cyz';
+		}
+		elseif ($p >= 250 && $p <= 263){
+			$authority = 'nic';
+		}
+		elseif ($p >= 272 && $p <= 295){
+			$authority = 'anch';
+		}
+		elseif ($p >= 298 && $p <= 304){
 			$authority = 'alex';
 		}
 	}
