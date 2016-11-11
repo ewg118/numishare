@@ -97,8 +97,7 @@
          <collection xlink:type="simple" xlink:href="http://nomisma.org/id/uva">The Fralin Museum of Art</collection>
       </adminDesc>
       <refDesc>
-         <reference xlink:type="simple" xlink:arcrole="nmo:hasTypeSeriesItem"
-                    xlink:href="http://numismatics.org/ocre/id/ric.5.vict.78">RIC V Victorinus 78</reference>
+         <reference xlink:type="simple">RIC V Victorinus 78 var.</reference>
       </refDesc>
    </descMeta>
    <digRep>
