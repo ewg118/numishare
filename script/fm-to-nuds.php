@@ -1,7 +1,7 @@
 <?php
 /************************
 AUTHOR: Ethan Gruber
-MODIFIED: September, 2013
+MODIFIED: November, 2016
 DESCRIPTION: Receive and interpret escaped CSV sent from Filemaker Pro database
 to public server, transform to Numishare-compliant NUDS XML (performing cleanup of data),
 post to eXist XML database via cURL, and get Solr add document from Orbeon and post to Solr.
@@ -41,7 +41,7 @@ ini_set("auto_detect_line_endings", "1");
 //the line below is for passing request parameters from the command line.
 parse_str(implode('&', array_slice($argv, 1)), $_GET);
 //$csv_id = $_GET['id'];
-$csv_id = 'ric4-1';
+$csv_id = 'fmexport-ric5mar';
 error_log(date(DATE_W3C) . ": {$csv_id}.csv now entering fm-to-nuds.php.\n", 3, "/var/log/numishare/process.log");
 
 //create an array with pre-defined labels and values passed from the Filemaker POST
@@ -60,7 +60,7 @@ $errors = array();
 $warnings = array();
 
 //load Google Spreadsheets
-/*$Byzantine_array = generate_json('https://docs.google.com/spreadsheet/pub?hl=en_US&hl=en_US&key=0Avp6BVZhfwHAdGJSRFhnR3ZKbHo2bG5oV0pDSzBBRnc&single=true&gid=0&output=csv');
+$Byzantine_array = generate_json('https://docs.google.com/spreadsheet/pub?hl=en_US&hl=en_US&key=0Avp6BVZhfwHAdGJSRFhnR3ZKbHo2bG5oV0pDSzBBRnc&single=true&gid=0&output=csv');
 $Decoration_array = generate_json('https://docs.google.com/spreadsheet/pub?hl=en_US&hl=en_US&key=0Avp6BVZhfwHAdFdTVy1UWGp6bFZvbTlsQWJyWmtlR1E&single=true&gid=0&output=csv');
 $East_Asian_array = generate_json('https://docs.google.com/spreadsheet/pub?hl=en_US&hl=en_US&key=0Avp6BVZhfwHAdFdONnhna3RpNGxwTjJ1M3RiSkxfTUE&single=true&gid=0&output=csv');
 $Greek_array = generate_json('https://docs.google.com/spreadsheet/pub?hl=en_US&hl=en_US&key=0Avp6BVZhfwHAdERQcHlNWXJlbTcwQ2g4YmM5QmxRMVE&single=true&gid=0&output=csv');
@@ -72,7 +72,7 @@ $Modern_array = generate_json('https://docs.google.com/spreadsheet/pub?hl=en_US&
 $Roman_array = generate_json('https://docs.google.com/spreadsheet/pub?hl=en_US&hl=en_US&key=0Avp6BVZhfwHAdHNMSmFWdXRkWnVxRy1sOTR1Z09HQnc&single=true&gid=0&output=csv');
 $South_Asian_array = generate_json('https://docs.google.com/spreadsheet/pub?hl=en_US&hl=en_US&key=0Avp6BVZhfwHAdFpxbjVsc25rblIyZy1OSngtVy15VGc&single=true&gid=0&output=csv');
 $United_States_array = generate_json('https://docs.google.com/spreadsheet/pub?hl=en_US&hl=en_US&key=0Avp6BVZhfwHAdEZ3VU1JeThGVHJiNEJsUkptbTFTRGc&single=true&gid=0&output=csv');
-*/
+
 //deities
 $deities_array = generate_json('https://docs.google.com/spreadsheet/pub?hl=en_US&hl=en_US&key=0Avp6BVZhfwHAdHk2ZXBuX0RYMEZzUlNJUkZOLXRUTmc&single=true&gid=0&output=csv');
 
@@ -119,6 +119,7 @@ if (($handle = fopen("/tmp/" . $csv_id . ".csv", "r")) !== FALSE) {
 				} else {
 					//block 1001.1.* and 1001.57.* ranges
 					if (strpos($accnum, '1001.1.') === FALSE && strpos($accnum, '1001.57.') === FALSE){
+						echo "Processing {$accnum}\n";
 						generate_nuds($row, $count, $fileName);
 						
 						//read file back into memory for PUT to eXist
@@ -227,8 +228,8 @@ function generate_nuds($row, $count, $fileName){
 	
 	
 	$writer = new XMLWriter();
-	//$writer->openURI($fileName);
-	$writer->openURI('php://output');
+	$writer->openURI($fileName);
+	//$writer->openURI('php://output');
 	$writer->startDocument('1.0','UTF-8');
 	$writer->setIndent(true);
 	//now we need to define our Indent string,which is basically how many blank spaces we want to have for the indent
@@ -285,6 +286,8 @@ function generate_nuds($row, $count, $fileName){
 				
 				//reduce lookups
 				if (array_key_exists($uri, $coinTypes)){
+					echo "Matched {$uri}\n";
+					
 					$ocreUri = $uri;
 					$ocreTitle = $coinTypes[$uri]['reference'];
 					$title = $coinTypes[$uri]['title'];
@@ -294,10 +297,13 @@ function generate_nuds($row, $count, $fileName){
 						$writer->writeAttribute('xml:lang', 'en');
 						$writer->text("{$title}. {$accnum}");
 					$writer->endElement();
-					generate_typeDesc_from_OCRE($writer, $row, $uri, $uncertain);
+					
+					process_typeDesc_object($writer, $row, $coinTypes[$uri]['object'], $uncertain);
+					//generate_typeDesc_from_OCRE($writer, $row, $uri, $uncertain);
 				} else {
 					$file_headers = @get_headers($uri);
 					if ($file_headers[0] == 'HTTP/1.1 200 OK'){
+						echo "Found {$uri}\n";
 						$currentUri = get_current_ocre_uri($uri);
 						//echo "{$currentUri}\n";
 						if ($currentUri != 'FAIL'){
@@ -307,14 +313,14 @@ function generate_nuds($row, $count, $fileName){
 								$writer->writeAttribute('xml:lang', 'en');
 								$writer->text("{$titles['title']}. {$accnum}");
 							$writer->endElement();
+							
+							//add data into the $coinTypes array
+							$coinTypes[$currentUri] = array('title'=>$titles['title'], 'reference'=>$titles['reference']);
 							generate_typeDesc_from_OCRE($writer, $row, $currentUri, $uncertain);
 								
 							//set the ocreTitle
 							$ocreUri = $currentUri;
 							$ocreTitle = $titles['reference'];
-							
-							//add data into the $coinTypes array
-							$coinTypes[$currentUri] = array('title'=>$titles['title'], 'reference'=>$ocreTitle);
 						} else {
 							//FAIL if the $ref actually has two new URIs
 							generate_typeDesc($writer, $row, $department, $uncertain);
@@ -325,6 +331,7 @@ function generate_nuds($row, $count, $fileName){
 				}
 			} else {
 				//otherwise simply generate typeDesc
+				$uncertain = false;
 				generate_typeDesc($writer, $row, $department, $uncertain);
 			}
 		
@@ -341,6 +348,7 @@ function generate_nuds($row, $count, $fileName){
 			
 			//get info from $coinTypes array if the coin type has been verified already
 			if (array_key_exists($uri, $coinTypes)){
+				echo "Matched {$uri}\n";
 				$title = $coinTypes[$uri]['title'];
 					
 				//generate title
@@ -360,6 +368,7 @@ function generate_nuds($row, $count, $fileName){
 			} else {
 				$file_headers = @get_headers($uri);
 				if ($file_headers[0] == 'HTTP/1.1 200 OK'){
+					echo "Found {$uri}\n";
 					$titles = generate_title_from_type($uri);
 					$writer->startElement('title');
 						$writer->writeAttribute('xml:lang', 'en');
@@ -394,6 +403,7 @@ function generate_nuds($row, $count, $fileName){
 			
 			//get info from $coinTypes array if the coin type has been verified already
 			if (array_key_exists($uri, $coinTypes)){
+				echo "Matched {$uri}\n";
 				$title = $coinTypes[$uri]['title'];
 					
 				//generate title
@@ -413,7 +423,7 @@ function generate_nuds($row, $count, $fileName){
 			} else {
 				$file_headers = @get_headers($uri);
 				if ($file_headers[0] == 'HTTP/1.1 200 OK'){
-					
+					echo "Found {$uri}\n";
 					//get title
 					$titles = generate_title_from_type($uri);
 					$writer->startElement('title');
@@ -619,8 +629,9 @@ function generate_nuds($row, $count, $fileName){
 			}
 		}
 		
-		if (strlen(trim($row['OrigIntendedUse'])) > 0){
-			$array = array_filter(explode('|', $row['OrigIntendedUse']));
+		//no NUDS equivalent: not used in MANTIS anyway
+		/*if (strlen(trim($row['OrigIntenUse'])) > 0){
+			$array = array_filter(explode('|', $row['OrigIntenUse']));
 			foreach ($array as $val){
 				$uncertain = substr($val, -1) == '?' ? true : false;
 				$label = str_replace('?', '', trim($val));
@@ -631,7 +642,7 @@ function generate_nuds($row, $count, $fileName){
 					$writer->text($label);
 				$writer->endElement();
 			}
-		}
+		}*/
 		
 		//conservationState
 		if (strlen(trim($row['conservation'])) > 0 || strlen(trim($row['PostManAlt'])) > 0){
@@ -672,11 +683,13 @@ function generate_nuds($row, $count, $fileName){
 				$writer->text('American Numismatic Society');
 			$writer->endElement();
 			
-	
+			//image sponsor: acknowledgement with localType
 			if (strlen(trim($row['imagesponsor'])) > 0){
-				$writer->writeElement('acknowledgment', trim($row['imagesponsor']));
+				$writer->startElement('acknowledgment', trim($row['imagesponsor']));
+					$writer->writeAttribute('localType', 'imageSponsor');
+				$writer->endElement();
 			}
-			//custhodhist
+			//custhodhist || strlen(trim($row['donor'])) > 0
 			if (strlen(trim($row['prevcoll'])) > 0 || strlen(trim($row['acknowledgment'])) > 0){
 				$prevcolls = array_filter(explode('|', $row['prevcoll']));
 				$writer->startElement('provenance');
@@ -686,6 +699,11 @@ function generate_nuds($row, $count, $fileName){
 							$writer->writeElement('acquiredFrom', trim($row['acknowledgment']));
 						$writer->endElement();
 					}
+					/*if (strlen(trim($row['donor'])) > 0){
+						$writer->startElement('chronItem');
+							$writer->writeElement('acquiredFrom', trim($row['donor']));
+						$writer->endElement();
+					}*/
 					foreach ($prevcolls as $prevcoll){
 						if (!is_int($prevcoll) && strlen(trim($prevcoll)) > 0){
 							$writer->startElement('chronItem');
@@ -748,7 +766,7 @@ function generate_nuds($row, $count, $fileName){
 		}
 		
 		/***** SUBJECTS *****/
-		if (strlen(trim($row['category'])) > 0 || strlen(trim($row['series'])) > 0 || strlen(trim($row['subjevent'])) > 0 || strlen(trim($row['subjissuer'])) > 0 || strlen(trim($row['subjperson'])) > 0 || strlen(trim($row['subjplace'])) > 0 || strlen(trim($row['degree'])) > 0 || strlen(trim($row['era'])) > 0){
+		if (strlen(trim($row['series'])) > 0 || strlen(trim($row['subjevent'])) > 0 || strlen(trim($row['subjissuer'])) > 0 || strlen(trim($row['subjperson'])) > 0 || strlen(trim($row['subjplace'])) > 0 || strlen(trim($row['degree'])) > 0 || strlen(trim($row['era'])) > 0){
 			$writer->startElement('subjectSet');
 				//suppressing categories: no longer useful or controlled in Filemaker
 				/*if (strlen(trim($row['category'])) > 0){
@@ -980,7 +998,10 @@ function generate_typeDesc($writer, $row, $department, $certainty){
 	//object type
 	$objectType = normalize_objtype(trim(strtoupper($row['objtype'])));
 	
+	//begin typeDesc
 	$writer->startElement('typeDesc');
+	
+		//object type
 		$writer->startElement('objectType');
 			$writer->writeAttribute('xlink:type', 'simple');
 			if (isset($objectType['uri'])){
@@ -988,8 +1009,8 @@ function generate_typeDesc($writer, $row, $department, $certainty){
 			}
 			$writer->text($objectType['label']);
 		$writer->endElement();
-		//date
-	
+		
+		//date	
 		if (trim($row['startdate']) != '' || trim($row['enddate']) != ''){
 			get_date($writer, $startdate_int, $enddate_int, $row['accnum'], $department);
 		}
@@ -1292,7 +1313,7 @@ function generate_typeDesc($writer, $row, $department, $certainty){
 	}
 	
 	/***** AUTHORITIES AND PERSONS *****/
-	if (strlen($geogAuthorities['state']) > 0 || strlen($geogAuthorities['authority']) > 0 || count($persons) > 0 || count($issuers) > 0 || count($magistrates) > 0 || count($makers) > 0 ||  count($artists_none) > 0 || count($dynasties) > 0){
+	if (isset($geogAuthorities['state']) || isset($geogAuthorities['authority']) || count($persons) > 0 || count($issuers) > 0 || count($magistrates) > 0 || count($makers) > 0 ||  count($artists_none) > 0 || count($dynasties) > 0){
 		$writer->startElement('authority');		
 		
 		//insert authorities parsed out from the mint lookups (applies primarily to Latin America)
@@ -1457,7 +1478,7 @@ function generate_typeDesc($writer, $row, $department, $certainty){
 	$writer->endElement();
 	
 	/***** TITLE *****/
-	/*$title = '<title xml:lang="en">';
+	$title = '';
 	if (array_key_exists('material', $title_elements)){
 		$title .= $title_elements['material'];
 	}
@@ -1472,14 +1493,18 @@ function generate_typeDesc($writer, $row, $department, $certainty){
 	if (array_key_exists('location', $title_elements)){
 		$title .= ', ' . $title_elements['location'];
 	}
-	if (strlen($date) > 0){
+	
+	
+	if (is_numeric($startdate_int) || is_numeric($enddate_int)){
 		$title .= ', ';
 		$title .= get_title_date($startdate_int, $enddate_int);
 	}
-	$title .= '. ' . trim($row['accnum']) . '</title>';
+	$title .= '. ' . trim($row['accnum']);
 	
-	//return the title before the typeDesc
-	return $title . $xml;*/
+	$writer->startElement('title');
+		$writer->writeAttribute('xml:lang', 'en');
+		$writer->text($title);
+	$writer->endElement();
 }
 
 function get_material_label($material){
@@ -1735,6 +1760,8 @@ function parse_mint($department, $mint, $regions, $localities){
 	} else if (substr($mint, -1) == "'" && substr($mint, 0, 1) == "'"){
 		$certaintyType = 'attributed';
 		$mint = str_replace("'", '', $mint);
+	} else {
+		$certaintyType = null;
 	}
 	
 	foreach ($regions as $region){
@@ -1828,7 +1855,7 @@ function get_mintNode($mint_uri, $label, $certaintyType){
 		
 		//generate the mint array
 		$geography['mint'] = array();
-		$geography['mint']['label'] = $mint;
+		$geography['mint']['label'] = $label;
 		$geography['mint']['uri'] = $mint_uri;
 		if (isset($certaintyType)){
 			$geography['mint']['certainty'] = $certaintyType;
@@ -2053,26 +2080,28 @@ function get_title_from_rdf($url){
 
 //generate the typeDesc for RIC by pulling some fields from OCRE, but carry on the obverse/reverse types, legends and symbols
 function generate_typeDesc_from_OCRE($writer, $row, $currentUri, $uncertain) {
+	GLOBAL $coinTypes;
+
+	//create DOMDocument and load from OCRE
 	$doc = new DOMDocument('1.0', 'UTF-8');
 	$doc->load($currentUri . '.xml');
 	$xpath = new DOMXpath($doc);
 	$xpath->registerNamespace('nuds', 'http://nomisma.org/nuds');
-	$xpath->registerNamespace('xlink', 'http://www.w3.org/1999/xlink');	
-	
-	/*$writer = new XMLWriter();
-	$writer->openURI('php://output');
-	$writer->startDocument('1.0','UTF-8');
-	$writer->openMemory();
-	*/
-	
+	$xpath->registerNamespace('xlink', 'http://www.w3.org/1999/xlink');
+	$fields = $xpath->query("descendant::nuds:typeDesc/*");
+	$coinTypes[$currentUri]['object'] = $fields;
+	process_typeDesc_object($writer, $row, $fields, $uncertain);
+}
+
+//this function processes the DOMDocument Object stored in an array to minimize HTTP lookups for batch processing of OCRE links
+function process_typeDesc_object($writer, $row, $fields, $uncertain){
 	$writer->startElement('typeDesc');
 	if ($uncertain == true){
 		$writer->writeAttribute('certainty', 'uncertain');
 	}
-	$fields = $xpath->query("descendant::nuds:typeDesc/*");
 	foreach ($fields as $field){
 		if ($field->nodeName != 'authority' && $field->nodeName != 'geographic' && $field->nodeName != 'dateRange' && $field->nodeName != 'obverse' && $field->nodeName != 'reverse'){
-			$writer->startElement($field->nodeName);			
+			$writer->startElement($field->nodeName);
 			if ($field->getAttribute('xlink:href')){
 				$writer->writeAttribute('xlink:href', $field->getAttribute('xlink:href'));
 			}
@@ -2087,7 +2116,9 @@ function generate_typeDesc_from_OCRE($writer, $row, $currentUri, $uncertain) {
 			}
 			$writer->text($field->nodeValue);
 			$writer->endElement();
-		} elseif ($field->nodeName == 'authority' || $field->nodeName == 'geographic'){	
+				
+				
+		} elseif ($field->nodeName == 'authority' || $field->nodeName == 'geographic'){
 			$writer->startElement($field->nodeName);
 			foreach ($field->childNodes as $child){
 				//if an element XML_ELEMENT_NODE
@@ -2104,11 +2135,11 @@ function generate_typeDesc_from_OCRE($writer, $row, $currentUri, $uncertain) {
 					}
 					$writer->text($child->nodeValue);
 					$writer->endElement();
-				}					
+				}
 			}
 			$writer->endElement();
 		} elseif ($field->nodeName == 'dateRange'){
-			$writer->startElement('dateRange');	
+			$writer->startElement('dateRange');
 			foreach ($field->childNodes as $child){
 				//if an element XML_ELEMENT_NODE
 				if ($child->nodeType == 1){
@@ -2118,8 +2149,8 @@ function generate_typeDesc_from_OCRE($writer, $row, $currentUri, $uncertain) {
 					}
 					$writer->text($child->nodeValue);
 					$writer->endElement();
-				}				
-			}	
+				}
+			}
 			$writer->endElement();
 		} elseif ($field->nodeName == 'obverse' || $field->nodeName == 'reverse') {
 			$nodeName = $field->nodeName;
@@ -2130,14 +2161,14 @@ function generate_typeDesc_from_OCRE($writer, $row, $currentUri, $uncertain) {
 				$writer->writeAttribute('scriptCode', 'Latn');
 				$writer->text(trim($row[$nodeName. 'legend']));
 				$writer->endElement();
-				
+	
 			}
 			if (strlen(trim($row[$nodeName . 'type'])) > 0){
 				$writer->startElement('type');
-					$writer->startElement('description');
-					$writer->writeAttribute('xml:lang', 'en');
-					$writer->text(trim($row[$nodeName. 'type']));
-					$writer->endElement();
+				$writer->startElement('description');
+				$writer->writeAttribute('xml:lang', 'en');
+				$writer->text(trim($row[$nodeName. 'type']));
+				$writer->endElement();
 				$writer->endElement();
 			}
 			if (strlen(trim($row[$nodeName . 'symbol'])) > 0){
@@ -2145,7 +2176,7 @@ function generate_typeDesc_from_OCRE($writer, $row, $currentUri, $uncertain) {
 				$writer->text(trim($row[$nodeName. 'symbol']));
 				$writer->endElement();
 			}
-			
+				
 			//pluck out entities
 			foreach ($field->childNodes as $child){
 				if ($child->nodeName == 'persname' || $child->nodeName == 'corpname' || $child->nodeName == 'famname'){
@@ -2160,20 +2191,13 @@ function generate_typeDesc_from_OCRE($writer, $row, $currentUri, $uncertain) {
 						$writer->writeAttribute('xlink:role', $child->getAttribute('xlink:role'));
 					}
 					$writer->text($child->nodeValue);
-					$writer->endElement();					
+					$writer->endElement();
 				}
 			}
 			$writer->endElement();
 		}
 	}
 	$writer->endElement();
-	
-	/*$string = $writer->outputMemory(true);
-	
-	//strip XML declaration from $string
-	$string = str_replace('<?xml version="1.0" encoding="UTF-8"?>', '', $string);*/
-	
-	//return $string;
 }
 
 function generate_json($doc){
