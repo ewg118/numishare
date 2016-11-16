@@ -3,12 +3,12 @@
 require_once( "sparqllib.php" );
 //error_reporting(0);
 
-$data = generate_json('/home/komet/ans_migration/ocre/bm-data/ric9-con.csv', false);
+$data = generate_json('/home/komet/ans_migration/ocre/bm-data/ric5-con.csv', false);
 $hoards = generate_json('https://docs.google.com/spreadsheets/d/1rqS7vzFfGQ_Xz0nLhPoRNFGks1Bkku_F590GlZ_RsdA/pub?gid=1902596397&single=true&output=csv');
 
 //use XML writer to generate RDF
 $writer = new XMLWriter();
-$writer->openURI("bm9.rdf");
+$writer->openURI("bm5.rdf");
 //$writer->openURI('php://output');
 $writer->startDocument('1.0','UTF-8');
 $writer->setIndent(true);
@@ -53,7 +53,9 @@ function process_csv($writer, $row, $count){
 					$writer->writeAttribute('xml:lang', 'en');
 					$writer->text("British Museum: " . $row['regno']);
 				$writer->endElement();
-				$writer->writeElement('dcterms:identifier', $row['regno']);
+				if (isset($row['regno'])){
+					$writer->writeElement('dcterms:identifier', $row['regno']);
+				}
 				$writer->startElement('nmo:hasCollection');
 					$writer->writeAttribute('rdf:resource', 'http://nomisma.org/id/bm');
 				$writer->endElement();
@@ -100,9 +102,9 @@ function query_bm($writer, $uri){
            ?wDiameter ecrm:P90_has_value ?diameter
     }
   OPTIONAL {
-     <OBJECT> ecrm:P1_is_identified_by ?identifier.
-     ?identifier ecrm:P2_has_type <http://collection.britishmuseum.org/id/thesauri/identifier/codexid> ;
-        rdfs:label ?objectId
+     <OBJECT> ecrm:P1_is_identified_by ?id1.
+     ?id1 ecrm:P2_has_type <http://collection.britishmuseum.org/id/thesauri/identifier/codexid> ;
+        rdfs:label ?objectId.
     }
   OPTIONAL {
      <OBJECT> bmo:PX_display_wrap ?hoard . FILTER regex(?hoard, '[H|h]oard')

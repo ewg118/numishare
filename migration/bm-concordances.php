@@ -1,6 +1,6 @@
 <?php
 //error_reporting(0);
-$data = generate_json('/home/komet/ans_migration/ocre/bm-data/ric5_ar.csv', false);
+$data = generate_json('/home/komet/ans_migration/ocre/bm-data/ric5.csv', false);
 $ref_array = array();
 $num_array = array();
 $type_array = array();
@@ -17,64 +17,80 @@ foreach ($data as $row){
 		//calculating the authority for Volume 4
 		$key = array_search($vol, $refs);
 		if ($authority == 'RECALCULATE') {		
-			preg_match('/p\.([0-9]+)/', $nums[$key], $matches);
-			if (is_numeric($matches[1])){
-				if ($matches[1] >= 92 && $matches[1] <= 211){
-					$authority = 'ss';
-				} else if ($matches[1] >= 212 && $matches[1] <= 313){
-					$authority = 'crl';
-				} else if ($matches[1] >= 314 && $matches[1] <= 343){
-					$authority = 'ge';
+			preg_match('/p\.\s?([0-9]+)/', $nums[$key], $matches);
+			if (isset($matches[1])){
+				$p = $matches[1];
+				if (is_numeric($p)){
+					if ($p >= 92 && $p <= 211){
+						$authority = 'ss';
+					} else if ($p >= 212 && $p <= 313){
+						$authority = 'crl';
+					} else if ($p >= 314 && $p <= 343){
+						$authority = 'ge';
+					}
 				}
-			} else {
-				$authority = '';
-			}
+			}			
 		} else if ($authority == 'RECALCULATE-VAL'){
-			preg_match('/p\.([0-9]+)/', $nums[$key], $matches);
-			if (is_numeric($matches[1])){
-				if ($matches[1] >= 37 && $matches[1] <= 60){
-					$authority = 'val_i';
-				} else if ($matches[1] >= 61 && $matches[1] <= 62){
-					$authority = 'val_i-gall';
-				} else if ($matches[1] == 63){
-					$authority = 'val_i-gall-val_ii-sala';
-				} else if ($matches[1] >= 64 && $matches[1] <= 65){
-					$authority = 'mar';
-				} else if ($matches[1] >= 66 && $matches[1] <= 104){
-					$authority = 'gall(1)';
-				} else if ($matches[1] == 105){
-					$authority = 'gall_sala(1)';
-				} else if ($matches[1] == 106){
-					$authority = 'gall_sals';
-				} else if ($matches[1] >= 107 && $matches[1] <= 115){
-					$authority = 'sala(1)';
-				} else if ($matches[1] >= 116 && $matches[1] <= 122){
-					$authority = 'val_ii';
-				} else if ($matches[1] >= 123 && $matches[1] <= 127){
-					$authority = 'sals';
-				} else if ($matches[1] == 128){
-					$authority = 'qjg';
-				} else if ($matches[1] >= 129 && $matches[1] <= 190){
-					$authority = 'gall(2)';
-				} else if ($matches[1] == 191){
-					$authority = 'gall_sala(2)';
-				} else if ($matches[1] >= 192 && $matches[1] <= 200){
-					$authority = 'sala(2)';
+			preg_match('/p\.\s?([0-9]+)/', $nums[$key], $matches);
+			if (isset($matches[1])){
+				$p = $matches[1];
+				if (is_numeric($p)){
+					if ($p >= 37 && $p <= 60){
+						$authority = 'val_i';
+					} elseif ($p >= 61 && $p <= 62){
+						$authority = 'val_i-gall';
+					} elseif ($p == 63){
+						$authority = 'val_i-gall-val_ii-sala';
+					} elseif ($p >= 64 && $p <= 65){
+						$authority = 'marin';
+					} elseif ($p >= 66 && $p <= 104){
+						$authority = 'gall(1)';
+					} elseif ($p == 105){
+						$authority = 'gall_sala(1)';
+					} elseif ($p == 106){
+						$authority = 'gall_sals';
+					} elseif ($p >= 107 && $p <= 115){
+						$authority = 'sala(1)';
+					} elseif ($p >= 116 && $p <= 122){
+						$authority = 'val_ii';
+					} elseif ($p >= 123 && $p <= 127){
+						$authority = 'sals';
+					} elseif ($p == 128){
+						$authority = 'qjg';
+					} elseif ($p >= 129 && $p <= 190){
+						$authority = 'gall(2)';
+					} elseif ($p == 191){
+						$authority = 'gall_sala(2)';
+					} elseif ($p >= 192 && $p <= 200){
+						$authority = 'sala(2)';
+					}
 				}
-			} else {
-				$authority = '';
+			}			
+		} elseif ($authority == 'RECALCULATE-AURELIAN'){
+			preg_match('/p\.\s?([0-9]+)/', $nums[$key], $matches);
+			if (isset($matches[1])){
+				$p = $matches[1];
+				if (is_numeric($p)){
+					if ($p >= 263 && $p <= 312){
+						$authority = 'aur';
+					}elseif ($p == 313){
+						$authority = 'aur_seva';
+					}elseif ($p >= 314 && $p <= 318){
+						$authority = 'seva';
+					}
+				}
 			}
-		} else if ($authority == 'RECALCULATE-AURELIAN'){
-			preg_match('/p\.([0-9]+)/', $nums[$key], $matches);
-			if (is_numeric($matches[1])){
-				if ($matches[1] >= 263 && $matches[1] <= 312){
-					$authority = 'aur';
-				}
-				if ($matches[1] == 313){
-					$authority = 'aur_seva';
-				}
-				if ($matches[1] >= 314 && $matches[1] <= 318){
-					$authority = 'seva';
+			
+		} elseif ($authority == 'RECALCULATE-CARA'){
+			preg_match('/p\.\s?([0-9]+)/', $nums[$key], $matches);
+			if (isset($matches[1])){
+				$p = $matches[1];
+				if (is_numeric($p)){
+					if ($p >= 463 && $p <= 549){
+						$authority = 'cara';
+					} elseif ($p >= 550 && $p <= 556){
+						$authority = 'cara-dio-max_her';
+					}
 				}
 			}
 		}
@@ -200,11 +216,7 @@ function parse_authority($authority, $comment){
 	$auth = '';
 	if ($comment == 'Civil Wars'){
 		$auth = 'cw';
-	}  
-	/*else if (strpos($authority, 'Septimius') >= 0 || strpos($authority, 'Caracalla') >= 0 || strpos($authority, 'Geta') >= 0){
-		$auth = 'RECALCULATE';
-	}*/
-	else {
+	} else {
 		switch (true) {
 			case stristr($authority, 'Augustus'):
 				$auth = 'aug';
@@ -386,7 +398,52 @@ function parse_authority($authority, $comment){
 			case $authority == 'Florian':
 				$auth = 'fl';
 				break;
-		}		
+			case $authority == 'Probus':
+				$auth = 'pro';
+				break;
+			case $authority == 'Carus':
+				$auth = 'car';
+				break;
+			case $authority == 'Diocletian':
+				$auth = 'dio';
+				break;
+			case $authority == 'Postumus':
+				$auth = 'post';
+				break;
+			case $authority == 'Laelian':
+				$auth = 'lae';
+				break;
+			case $authority == 'Marius':
+				$auth = 'mar';
+				break;
+			case $authority == 'Victorinus':
+				$auth = 'vict';
+				break;
+			case stristr($authority, 'Tetricus'):
+				$auth = 'tet_i';
+				break;
+			case $authority == 'Carausius':
+				$auth = 'RECALCULATE-CARA';
+				break;
+			case $authority == 'Allectus':
+				$auth = 'all';
+				break;
+			case $authority == 'Macrian II':
+				$auth = 'mac_ii';
+				break;
+			case $authority == 'Quietus':
+				$auth = 'quit';
+				break;			
+			case $authority == 'Vabalathus':
+				$auth = 'vab';
+				break;
+			case $authority == 'Regalian':
+				$auth = 'reg';
+				break;
+			case $authority == 'Julian of Pannonia':
+				$auth = 'jul_i';
+				break;
+}		
 	}
 	return $auth;
 }
