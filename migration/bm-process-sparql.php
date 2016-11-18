@@ -15,7 +15,7 @@ foreach ($data as $row){
 //var_dump($pairs);
 
 $doc = new DOMDocument();
-$doc->load('ric5.xml'); 
+$doc->load('ric2_1(2).xml'); 
 
 $results = $doc->getElementsByTagName("result");
 $types = array();
@@ -67,17 +67,17 @@ foreach ($con as $row){
 	$csv .= "{$row['uri']}," . '"' . $row['regno'] . '",' . "{$row['type']}," . '"' . $row['ref'] . '"' . "\n";
 }
 
-file_put_contents('ric5-con.csv', $csv);
+file_put_contents('ric2_1(2)-con.csv', $csv);
 
 function parse_ref($referenceText, $mint, $auth){
 	GLOBAL $types;
-	
-	preg_match('/(RIC.*)\s::/', $referenceText, $matches);
+	preg_match('/(RIC[^\s]+)(.*)\s::/', $referenceText, $matches);
 	
 	//if a regex is made
 	if (isset($matches[1])){
-		$ref = $matches[1];
-			
+		$unparsedVol = $matches[1];
+		$ref = $matches[2];
+		
 		preg_match('/p\.?\s?(\d+)/', $ref, $m);
 		if (isset($m[1])){
 			//isolate and strip page
@@ -87,16 +87,17 @@ function parse_ref($referenceText, $mint, $auth){
 			//reset the $page as null to prevent the value from being carried over through the loop
 			$page = null;
 		}
-			
+		
 		//strip uncertain page number
 		$ref = preg_replace('/p\.?\?/', '', $ref);
 		//strip extraneous punctuation
 		$ref = trim(str_replace('.', '' , str_replace(',', '', $ref)));
-		//isolate RIC volume and number
-		preg_match('/(RIC[1-9]0?)\s(\d+[a-z]?)/', $ref, $m);
-			
+		//isolate type number
+		preg_match('/(\d+[a-z]?)/', $ref, $m);
+		
 		if (isset($m[1])){
-			$unparsedVol = $m[1];
+			$num = $m[1];
+			//$unparsedVol = $m[1];
 				
 			//evaluate RIC 5 part by authority
 			if ($unparsedVol == 'RIC5'){
@@ -104,6 +105,9 @@ function parse_ref($referenceText, $mint, $auth){
 			}
 				
 			switch ($unparsedVol){
+				case 'RIC2.1':
+					$vol = 'ric.2_1(2)';
+					break;
 				case 'RIC5.1':
 				case 'RIC5.2':
 					$vol = 'ric.5';
@@ -127,7 +131,7 @@ function parse_ref($referenceText, $mint, $auth){
 					$vol = null;
 			}
 				
-			$num = $m[2];
+			//$num = $m[2];
 				
 			//if the volume is valid
 			if (isset($vol)){
@@ -259,6 +263,15 @@ function parse_authority($authority){
 	$authCode = null;
 	
 	switch ($authority){
+		case $authority == 'Vespasian':
+			$authCode = 'ves';
+			break;
+		case $authority == 'Titus':
+			$authCode = 'tit';
+			break;
+		case $authority == 'Domitian':
+			$authCode = 'dom';
+			break;
 		case $authority == 'Claudius II':
 			$authCode = 'cg';
 			break;
@@ -405,8 +418,15 @@ function parse_mint($mint){
 
 function parse_auth_by_page ($volume, $p){	
 	$authority = null;
-	
-	if ($volume == 'RIC5.1'){
+	if ($volume == 'RIC2.1'){
+		if ($p >= 58 && $p <= 180){
+			$authority = 'ves';
+		} elseif ($p >= 199 && $p <= 236){
+			$authority = 'tit';
+		} elseif ($p >= 266 && $p <= 331){
+			$authority = 'dom';
+		}
+	} else if ($volume == 'RIC5.1'){
 		if ($p >= 37 && $p <= 60){
 			$authority = 'val_i';
 		} else if ($p >= 61 && $p <= 62){

@@ -3,12 +3,12 @@
 require_once( "sparqllib.php" );
 //error_reporting(0);
 
-$data = generate_json('/home/komet/ans_migration/ocre/bm-data/ric5-con.csv', false);
+$data = generate_json('/home/komet/ans_migration/ocre/bm-data/ric2_1(2)-con.csv', false);
 $hoards = generate_json('https://docs.google.com/spreadsheets/d/1rqS7vzFfGQ_Xz0nLhPoRNFGks1Bkku_F590GlZ_RsdA/pub?gid=1902596397&single=true&output=csv');
 
 //use XML writer to generate RDF
 $writer = new XMLWriter();
-$writer->openURI("bm5.rdf");
+$writer->openURI("ric.2_1(2).rdf");
 //$writer->openURI('php://output');
 $writer->startDocument('1.0','UTF-8');
 $writer->setIndent(true);
