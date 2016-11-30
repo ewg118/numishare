@@ -271,10 +271,6 @@ select[name = "interval"],
   IDENTIFY PAGE
   ***************************************
  */
- .portrait {
- 	border:1px solid silver;
- 	border-radius:10px;
- }
  .image-spacer {
  	height:280px;
  }
