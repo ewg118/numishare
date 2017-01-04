@@ -470,9 +470,7 @@
 				</ul>
 			</div>
 			<div class="col-md-9">
-				<xsl:if test="string($sparql_endpoint)">
-					<xsl:copy-of select="document(concat($request-uri, 'sparql?uri=', $uri_space, $subtypeId, '&amp;template=display&amp;subtype=true&amp;lang=', $langParam))/div[@class='row']"/>
-				</xsl:if>
+				<xsl:apply-templates select="document(concat($request-uri, 'apis/type-examples?id=', $subtypeId, '&amp;subtype=true'))/*" mode="type-examples"/>
 			</div>
 		</div>
 		<hr/>

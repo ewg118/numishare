@@ -68,52 +68,7 @@
 				<xsl:variable name="endpoint" select="/config/sparql_endpoint"/>
 
 				<xsl:variable name="query">
-					<xsl:choose>
-						<xsl:when test="$template = 'display'"><![CDATA[PREFIX rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-PREFIX dcterms:  <http://purl.org/dc/terms/>
-PREFIX nm:       <http://nomisma.org/id/>
-PREFIX nmo:	<http://nomisma.org/ontology#>
-PREFIX skos:      <http://www.w3.org/2004/02/skos/core#>
-PREFIX foaf:	<http://xmlns.com/foaf/0.1/>
-PREFIX rdfs:	<http://www.w3.org/2000/01/rdf-schema#>
-PREFIX void:	<http://rdfs.org/ns/void#>
-PREFIX geo:	<http://www.w3.org/2003/01/geo/wgs84_pos#>
-
-SELECT ?object ?title ?identifier ?findUri ?findspot ?hoard ?collection ?publisher ?dataset ?datasetTitle ?weight ?axis ?diameter ?obvThumb ?revThumb ?obvRef ?revRef ?comThumb ?comRef  WHERE {
-?object nmo:hasTypeSeriesItem <typeUri> ;
-  rdf:type nmo:NumismaticObject ;
-  dcterms:title ?title .
-OPTIONAL { ?object dcterms:identifier ?identifier}
-OPTIONAL { ?object nmo:hasCollection ?colUri .
-?colUri skos:prefLabel ?collection FILTER(langMatches(lang(?collection), "EN"))}
-?object void:inDataset ?dataset .
-?dataset dcterms:publisher ?publisher ;
-	dcterms:title ?datasetTitle FILTER (lang(?datasetTitle) = "" || langMatches(lang(?datasetTitle), "en")) .
-OPTIONAL {?object nmo:hasFindspot ?findUri .
-?findUri foaf:name ?findspot }
-OPTIONAL {?object nmo:hasFindspot ?findUri .
-?findUri rdfs:label ?findspot }
-OPTIONAL {?object nmo:hasFindspot ?findUri .
-?nomismaUri geo:location ?findUri ;
-	skos:prefLabel ?findspot FILTER langMatches(lang(?findspot), "en")}
-OPTIONAL {?object dcterms:isPartOf ?hoard .
- ?hoard a nmo:Hoard ;
- 	skos:prefLabel ?findspot FILTER(langMatches(lang(?findspot), "EN")) }
-OPTIONAL { ?object nmo:hasWeight ?weight }
-OPTIONAL { ?object nmo:hasAxis ?axis }
-OPTIONAL { ?object nmo:hasDiameter ?diameter }
-OPTIONAL { ?object foaf:thumbnail ?comThumb }
-OPTIONAL { ?object foaf:depiction ?comRef }
-OPTIONAL { ?object nmo:hasObverse ?obverse .
-?obverse foaf:thumbnail ?obvThumb }
-OPTIONAL { ?object nmo:hasObverse ?obverse .
-?obverse foaf:depiction ?obvRef }
-OPTIONAL { ?object nmo:hasReverse ?reverse .
-?reverse foaf:thumbnail ?revThumb }
-OPTIONAL { ?object nmo:hasReverse ?reverse .
-?reverse foaf:depiction ?revRef }}
-ORDER BY ASC(?publisher) ASC(?collection)]]>
-						</xsl:when>
+					<xsl:choose>						
 						<xsl:when test="$template = 'kml'"><![CDATA[ PREFIX rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX dcmitype:	<http://purl.org/dc/dcmitype/>
 PREFIX dcterms:  <http://purl.org/dc/terms/>

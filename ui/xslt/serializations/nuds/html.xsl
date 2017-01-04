@@ -16,30 +16,15 @@
 	</xsl:variable>
 	<xsl:variable name="duration" select="number($toDate) - number($fromDate)"/>
 
-	<!-- check if there are findspots -->
-	<xsl:variable name="hasFindspots">
-		<xsl:if test="$recordType='conceptual' and string(//config/sparql_endpoint)">
-			<xsl:variable name="query">
-				<![CDATA[PREFIX nm:       <http://nomisma.org/id/>
-PREFIX nmo:	<http://nomisma.org/ontology#>
-PREFIX dcterms:  <http://purl.org/dc/terms/>
-PREFIX dcmitype:	<http://purl.org/dc/dcmitype/>
-
-ASK {
-    { ?object nmo:hasTypeSeriesItem <URI> ; a nmo:NumismaticObject ; nmo:hasFindspot ?findspot }
-  UNION { ?contents a dcmitype:Collection ; nmo:hasTypeSeriesItem <URI> .
-        ?object dcterms:tableOfContents ?contents ; nmo:hasFindspot ?findspot }
-}]]>
-			</xsl:variable>
-
-			<xsl:variable name="service">
-				<xsl:value-of select="concat(//config/sparql_endpoint, '?query=', encode-for-uri(normalize-space(replace($query, 'URI', concat(//config/uri_space, $id)))), '&amp;output=xml')"/>
-			</xsl:variable>
-
-			<xsl:value-of select="document($service)//*:boolean"/>
-		</xsl:if>
+	<!-- whether there are coin types, findspots, annotations, executed in XPL -->
+	<xsl:variable name="hasTypes" select="//res:sparql[1]/res:boolean" as="xs:boolean"/>
+	<xsl:variable name="hasFindspots" select="//res:sparql[2]/res:boolean" as="xs:boolean"/>
+	<xsl:variable name="hasAnnotations" as="xs:boolean">
+		<xsl:choose>
+			<xsl:when test="/content/res:sparql[3][descendant::res:result]">true</xsl:when>
+			<xsl:otherwise>false</xsl:otherwise>
+		</xsl:choose>
 	</xsl:variable>
-
 
 	<xsl:template name="nuds">
 		<xsl:apply-templates select="/content/nuds:nuds"/>
@@ -80,7 +65,7 @@ ASK {
 									</xsl:choose>
 								</h1>
 								<p>
-									<xsl:if test="string($sparql_endpoint)">
+									<xsl:if test="$hasTypes = true()">
 										<a href="#examples">
 											<xsl:value-of select="numishare:normalizeLabel('display_examples', $lang)"/>
 										</a>
@@ -93,7 +78,7 @@ ASK {
 									<a href="#charts">
 										<xsl:value-of select="numishare:normalizeLabel('display_quantitative', $lang)"/>
 									</a>
-									<xsl:if test="/content/res:sparql[descendant::res:result]">
+									<xsl:if test="$hasAnnotations = true()">
 										<xsl:text> | </xsl:text>
 										<a href="#annotations">Annotations</a>
 									</xsl:if>
@@ -107,8 +92,8 @@ ASK {
 						<xsl:call-template name="nuds_content"/>
 
 						<!-- examples and subtypes -->
-						<xsl:if test="string($sparql_endpoint)">
-							<xsl:copy-of select="document(concat($request-uri, 'sparql?uri=', //config/uri_space, $id, '&amp;template=display&amp;lang=', $langParam))/div[@id='examples']"/>
+						<xsl:if test="$hasTypes = true()">
+							<xsl:apply-templates select="document(concat($request-uri, 'apis/type-examples?id=', $id))/*" mode="type-examples"/>
 						</xsl:if>
 
 						<!-- handle subtypes if they exist -->
@@ -129,10 +114,10 @@ ASK {
 						</div>
 						
 						<!-- if there are annotations, then render -->
-						<xsl:if test="/content/res:sparql[descendant::res:result]">
+						<xsl:if test="$hasAnnotations = true()">
 							<div class="row">
 								<div class="col-md-12">
-									<xsl:apply-templates select="/content/res:sparql" mode="annotations"/>
+									<xsl:apply-templates select="/content/res:sparql[3]" mode="annotations"/>
 								</div>
 							</div>
 						</xsl:if>
@@ -243,10 +228,10 @@ ASK {
 						</xsl:choose>
 						
 						<!-- if there are annotations, then render -->
-						<xsl:if test="/content/res:sparql[descendant::res:result]">
+						<xsl:if test="$hasAnnotations = true()">
 							<div class="row">
 								<div class="col-md-12">
-									<xsl:apply-templates select="/content/res:sparql" mode="annotations"/>
+									<xsl:apply-templates select="/content/res:sparql[3]" mode="annotations"/>
 								</div>
 							</div>
 						</xsl:if>
@@ -306,7 +291,7 @@ ASK {
 
 							<!-- if there are no mint coordinates and no findspots (from SPARQL), then do not show the map -->
 							<xsl:choose>
-								<xsl:when test="$hasFindspots = 'false' and not($rdf//nmo:Mint[geo:location])">
+								<xsl:when test="$hasFindspots = false() and not($rdf//nmo:Mint[geo:location])">
 									<div class="col-md-12">
 										<xsl:call-template name="metadata-container"/>
 									</div>
