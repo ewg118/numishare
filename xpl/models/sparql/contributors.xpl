@@ -34,7 +34,7 @@ PREFIX org:	<http://www.w3.org/ns/org#>
 PREFIX void:	<http://rdfs.org/ns/void#>
 PREFIX xsd:	<http://www.w3.org/2001/XMLSchema#>
 
-SELECT ?dataset ?publisher ?collection ?collectionLabel ?thumbnail ?homepage ?memberOf ?title ?description ?license (COUNT(?dataset) AS ?count) {
+SELECT ?dataset ?publisher ?collection ?collectionLabel ?thumbnail ?homepage ?memberOf ?title ?description ?license ?rights (COUNT(?dataset) AS ?count) {
     ?type dcterms:source <TYPE_SERIES> .
     ?object nmo:hasTypeSeriesItem ?type ;
             void:inDataset ?dataset .
@@ -45,8 +45,9 @@ SELECT ?dataset ?publisher ?collection ?collectionLabel ?thumbnail ?homepage ?me
            OPTIONAL {?collection org:memberOf ?memberOf}}
   ?dataset dcterms:publisher ?publisher ;
            dcterms:title ?title FILTER (lang(?title) = "" || langMatches(lang(?title), "en")).
-  ?dataset dcterms:license ?license ;
-           dcterms:description ?description FILTER (lang(?description) = "" || langMatches(lang(?description), "en")) .
+  OPTIONAL {?dataset dcterms:license ?license }
+  OPTIONAL {?dataset dcterms:rights ?rights }
+  ?dataset dcterms:description ?description FILTER (lang(?description) = "" || langMatches(lang(?description), "en")) .
   OPTIONAL {?dataset foaf:thumbnail ?thumbnail}} GROUP BY ?dataset ?publisher ?collection ?collectionLabel ?title ?thumbnail ?homepage ?memberOf ?description ?license ORDER BY ?publisher]]>
 				</xsl:variable>
 				

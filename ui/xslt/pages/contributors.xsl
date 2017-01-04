@@ -165,35 +165,43 @@
 						<xsl:value-of select="numishare:regularize_node('license', $lang)"/>
 					</dt>
 					<dd>
-						<a href="{res:binding[@name='license']/res:uri}">
-							<xsl:variable name="license" select="res:binding[@name = 'license']/res:uri"/>
-							<xsl:choose>
-								<xsl:when test="contains($license, 'http://opendatacommons.org/licenses/odbl/')">ODC-ODbL</xsl:when>
-								<xsl:when test="contains($license, 'http://opendatacommons.org/licenses/by/')">ODC-by</xsl:when>
-								<xsl:when test="contains($license, 'http://opendatacommons.org/licenses/pddl/')">ODC-PDDL</xsl:when>
-								<xsl:when test="contains($license, 'http://creativecommons.org/licenses/by/')">
-									<img src="http://i.creativecommons.org/l/by/3.0/88x31.png" alt="CC BY" title="CC BY"/>
-								</xsl:when>
-								<xsl:when test="contains($license, 'http://creativecommons.org/licenses/by-nd/')">
-									<img src="http://i.creativecommons.org/l/by-nd/3.0/88x31.png" alt="CC BY-ND" title="CC BY-ND"/>
-								</xsl:when>
-								<xsl:when test="contains($license, 'http://creativecommons.org/licenses/by-nc-sa/')">
-									<img src="http://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png" alt="CC BY-NC-SA" title="CC BY-NC-SA"/>
-								</xsl:when>
-								<xsl:when test="contains($license, 'http://creativecommons.org/licenses/by-sa/')">
-									<img src="http://i.creativecommons.org/l/by-sa/3.0/88x31.png" alt="CC BY-SA" title="CC BY-SA"/>
-								</xsl:when>
-								<xsl:when test="contains($license, 'http://creativecommons.org/licenses/by-nc/')">
-									<img src="http://i.creativecommons.org/l/by-nc/3.0/88x31.png" alt="CC BY-NC" title="CC BY-NC"/>
-								</xsl:when>
-								<xsl:when test="contains($license, 'http://creativecommons.org/licenses/by-nc-nd/')">
-									<img src="http://i.creativecommons.org/l/by-nc-nd/3.0/88x31.png" alt="CC BY-NC-ND" title="CC BY-NC-ND"/>
-								</xsl:when>
-								<xsl:otherwise>
-									<xsl:value-of select="res:binding[@name = 'license']/res:uri"/>
-								</xsl:otherwise>
-							</xsl:choose>
-						</a>
+						<!-- display license first if available, otherwise rights -->
+						<xsl:choose>
+							<xsl:when test="res:binding[@name='license']">
+								<a href="{res:binding[@name='license']/res:uri}">
+									<xsl:variable name="license" select="res:binding[@name='license']/res:uri"/>
+									<xsl:choose>
+										<xsl:when test="contains($license, 'http://opendatacommons.org/licenses/odbl/')">ODC-ODbL</xsl:when>
+										<xsl:when test="contains($license, 'http://opendatacommons.org/licenses/by/')">ODC-by</xsl:when>
+										<xsl:when test="contains($license, 'http://opendatacommons.org/licenses/pddl/')">ODC-PDDL</xsl:when>
+										<xsl:when test="contains($license, 'http://creativecommons.org/licenses/by/')">
+											<img src="http://i.creativecommons.org/l/by/3.0/88x31.png" alt="CC BY" title="CC BY"/>
+										</xsl:when>
+										<xsl:when test="contains($license, 'http://creativecommons.org/licenses/by-nd/')">
+											<img src="http://i.creativecommons.org/l/by-nd/3.0/88x31.png" alt="CC BY-ND" title="CC BY-ND"/>
+										</xsl:when>
+										<xsl:when test="contains($license, 'http://creativecommons.org/licenses/by-nc-sa/')">
+											<img src="http://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png" alt="CC BY-NC-SA" title="CC BY-NC-SA"/>
+										</xsl:when>
+										<xsl:when test="contains($license, 'http://creativecommons.org/licenses/by-sa/')">
+											<img src="http://i.creativecommons.org/l/by-sa/3.0/88x31.png" alt="CC BY-SA" title="CC BY-SA"/>
+										</xsl:when>
+										<xsl:when test="contains($license, 'http://creativecommons.org/licenses/by-nc/')">
+											<img src="http://i.creativecommons.org/l/by-nc/3.0/88x31.png" alt="CC BY-NC" title="CC BY-NC"/>
+										</xsl:when>
+										<xsl:when test="contains($license, 'http://creativecommons.org/licenses/by-nc-nd/')">
+											<img src="http://i.creativecommons.org/l/by-nc-nd/3.0/88x31.png" alt="CC BY-NC-ND" title="CC BY-NC-ND"/>
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:value-of select="res:binding[@name='license']/res:uri"/>
+										</xsl:otherwise>
+									</xsl:choose>
+								</a>
+							</xsl:when>
+							<xsl:when test="res:binding[@name='rights']">
+								<xsl:value-of select="res:binding[@name='rights']/res:literal"/>
+							</xsl:when>
+						</xsl:choose>
 					</dd>
 				</dl>
 			</td>
