@@ -283,11 +283,15 @@ select[name = "interval"],
 	margin-left:20px;
 }
 .thumbImage,
+.iiif-image,
 .flickrthumb{
 	margin:5px;
 }
-.thumbImage > img{
+.thumbnail {
 	max-width:120px;
+}
+.combined-thumbnail {
+    max-width:240px;
 }
 .quick_search {
 	width:250px;
