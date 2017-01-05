@@ -48,7 +48,7 @@ SELECT ?dataset ?publisher ?collection ?collectionLabel ?thumbnail ?homepage ?me
   OPTIONAL {?dataset dcterms:license ?license }
   OPTIONAL {?dataset dcterms:rights ?rights }
   ?dataset dcterms:description ?description FILTER (lang(?description) = "" || langMatches(lang(?description), "en")) .
-  OPTIONAL {?dataset foaf:thumbnail ?thumbnail}} GROUP BY ?dataset ?publisher ?collection ?collectionLabel ?title ?thumbnail ?homepage ?memberOf ?description ?license ORDER BY ?publisher]]>
+  OPTIONAL {?dataset foaf:thumbnail ?thumbnail}} GROUP BY ?dataset ?publisher ?collection ?collectionLabel ?title ?thumbnail ?homepage ?memberOf ?description ?license ?rights ORDER BY ?publisher]]>
 				</xsl:variable>
 				
 				<xsl:variable name="service" select="concat($endpoint, '?query=', encode-for-uri(normalize-space(replace($query, 'TYPE_SERIES', /config/type_series))), '&amp;output=xml')"/>
