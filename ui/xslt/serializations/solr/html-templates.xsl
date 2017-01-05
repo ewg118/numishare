@@ -547,13 +547,13 @@
 					<xsl:if test="string(str[@name='thumbnail_obv'])">
 						<a class="thumbImage" href="{str[@name='reference_obv']}" title="Obverse of {str[@name='title_display']}" id="{$display_path}id/{str[@name='recordId']}{if (string($langParam)) then
 							concat('?lang=', $langParam) else ''}">
-							<img src="{str[@name='thumbnail_obv']}" class="thumbnail"/>
+							<img src="{str[@name='thumbnail_obv']}" class="side-thumbnail"/>
 						</a>
 					</xsl:if>
 					<xsl:if test="string(str[@name='thumbnail_rev'])">
 						<a class="thumbImage" href="{str[@name='reference_rev']}" title="Reverse of {str[@name='title_display']}" id="{$display_path}id/{str[@name='recordId']}{if (string($langParam)) then
 							concat('?lang=', $langParam) else ''}">
-							<img src="{str[@name='thumbnail_rev']}" class="thumbnail"/>
+							<img src="{str[@name='thumbnail_rev']}" class="side-thumbnail"/>
 						</a>
 					</xsl:if>
 				</xsl:when>
@@ -1329,11 +1329,11 @@
 					<xsl:if test="$position &gt; 1">
 						<xsl:attribute name="style">display:none</xsl:attribute>
 					</xsl:if>
-					<img src="{obvThumb}" class="thumbnail"/>
+					<img src="{obvThumb}" class="side-thumbnail"/>
 				</a>
 			</xsl:when>
 			<xsl:when test="not(string(obvRef)) and string(obvThumb)">
-				<img src="{obvThumb}" class="thumbnail">
+				<img src="{obvThumb}" class="side-thumbnail">
 					<xsl:if test="$position &gt; 1">
 						<xsl:attribute name="style">display:none</xsl:attribute>
 					</xsl:if>
@@ -1344,7 +1344,7 @@
 					<xsl:if test="$position &gt; 1">
 						<xsl:attribute name="style">display:none</xsl:attribute>
 					</xsl:if>
-					<img src="{obvRef}" class="thumbnail"/>
+					<img src="{obvRef}" class="side-thumbnail"/>
 				</a>
 			</xsl:when>
 		</xsl:choose>
@@ -1355,11 +1355,11 @@
 					<xsl:if test="$position &gt; 1">
 						<xsl:attribute name="style">display:none</xsl:attribute>
 					</xsl:if>
-					<img src="{revThumb}" class="thumbnail"/>
+					<img src="{revThumb}" class="side-thumbnail"/>
 				</a>
 			</xsl:when>
 			<xsl:when test="not(string(revRef)) and string(revThumb)">
-				<img src="{revThumb}" class="thumbnail">
+				<img src="{revThumb}" class="side-thumbnail">
 					<xsl:if test="$position &gt; 1">
 						<xsl:attribute name="style">display:none</xsl:attribute>
 					</xsl:if>
@@ -1370,7 +1370,7 @@
 					<xsl:if test="$position &gt; 1">
 						<xsl:attribute name="style">display:none</xsl:attribute>
 					</xsl:if>
-					<img src="{revRef}"  class="thumbnail"/>
+					<img src="{revRef}"  class="side-thumbnail"/>
 				</a>
 			</xsl:when>
 		</xsl:choose>

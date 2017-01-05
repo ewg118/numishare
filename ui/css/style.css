@@ -100,6 +100,14 @@ dl.ar dd {
 	display:none;
 	margin-top:20px;
 }
+.iiif-window{
+	width:100%;
+	height:100%;
+}
+.iiif-container{
+	width:100%;
+	height:100%;
+}
 /*
   ***************************************
   SEARCH/COMPARE/VISUALIZATION FORMS
@@ -222,7 +230,7 @@ select[name = "interval"],
 .flickrthumb{
 	margin:5px;
 }
-.thumbnail {
+.side-thumbnail {
 	max-width:120px;
 }
 .combined-thumbnail {
@@ -347,7 +355,6 @@ button.multiselect{
 /* gallery image */
 .gi{
 	padding:0px 5px;
-	max-width:120px;
 }
 /*
   ***************************************

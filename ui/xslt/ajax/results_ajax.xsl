@@ -214,7 +214,7 @@
 
 							<a class="thumbImage" href="{$path}{str[@name='reference_obv']}" title="Obverse of {str[@name='title_display']}" id="{$display_path}id/{str[@name='recordId']}{if
 								(string($langParam))         then concat('?lang=', $langParam) else ''}">
-								<img src="{$path}{str[@name='thumbnail_obv']}" class="thumbnail"/>
+								<img src="{$path}{str[@name='thumbnail_obv']}" class="side-thumbnail"/>
 							</a>
 						</xsl:if>
 						<xsl:if test="string(str[@name='thumbnail_rev'])">
@@ -226,7 +226,7 @@
 
 							<a class="thumbImage" href="{$path}{str[@name='reference_rev']}" title="Reverse of {str[@name='title_display']}" id="{$display_path}id/{str[@name='recordId']}{if
 								(string($langParam))         then concat('?lang=', $langParam) else ''}">
-								<img src="{$path}{str[@name='thumbnail_rev']}" class="thumbnail"/>
+								<img src="{$path}{str[@name='thumbnail_rev']}" class="side-thumbnail"/>
 							</a>
 						</xsl:if>
 					</xsl:when>

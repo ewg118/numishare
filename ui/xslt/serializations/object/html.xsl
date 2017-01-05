@@ -272,14 +272,14 @@
 					<head>
 						<xsl:call-template name="generic_head"/>
 						<xsl:choose>
-							<xsl:when test="$recordType='physical'">
-								<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css"/>
-								<script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"/>					
-								<script type="text/javascript" src="{$include_path}/javascript/leaflet.ajax.min.js"/>
+							<xsl:when test="$recordType='physical'">								
 								<script type="text/javascript" src="{$include_path}/javascript/display_map_functions.js"/>
 							</xsl:when>
 							<!-- coin-type CSS and JS dependencies -->
 							<xsl:when test="$recordType='conceptual'">
+								<!--- IIIF -->
+								<script type="text/javascript" src="{$include_path}/javascript/leaflet-iiif.js"/>
+								
 								<!-- Add fancyBox -->
 								<link rel="stylesheet" href="{$include_path}/css/jquery.fancybox.css?v=2.1.5" type="text/css" media="screen"/>
 								<script type="text/javascript" src="{$include_path}/javascript/jquery.fancybox.pack.js?v=2.1.5"/>
@@ -321,6 +321,7 @@
 						<xsl:call-template name="header"/>
 						<xsl:call-template name="display"/>
 						<xsl:call-template name="footer"/>
+						
 						<div class="hidden">
 							<span id="baselayers">
 								<xsl:value-of select="string-join(//config/baselayers/layer[@enabled=true()], ',')"/>
@@ -347,7 +348,12 @@
 							<span id="mapboxKey">
 								<xsl:value-of select="//config/mapboxKey"/>
 							</span>
+							<xsl:if test="$recordType='conceptual'">
+								<span id="manifest"/>				
+								<div class="iiif-container-template" style="width:100%;height:100%"/>								
+							</xsl:if>							
 						</div>
+						<div id="iiif-window" style="width:600px;height:600px;display:none"/>
 					</body>
 				</html>
 			</xsl:when>
@@ -411,6 +417,11 @@
 				<xsl:value-of select="//config/google_analytics"/>
 			</script>
 		</xsl:if>
+		
+		<!-- always include leaflet -->
+		<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css"/>
+		<script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"/>					
+		<script type="text/javascript" src="{$include_path}/javascript/leaflet.ajax.min.js"/>
 	</xsl:template>
 
 	<xsl:template name="display">
