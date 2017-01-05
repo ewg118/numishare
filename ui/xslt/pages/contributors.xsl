@@ -161,13 +161,12 @@
 					<dd>
 						<xsl:value-of select="res:binding[@name = 'description']/res:literal"/>
 					</dd>
-					<dt>
-						<xsl:value-of select="numishare:regularize_node('license', $lang)"/>
-					</dt>
-					<dd>
-						<!-- display license first if available, otherwise rights -->
-						<xsl:choose>
-							<xsl:when test="res:binding[@name='license']">
+					<xsl:choose>
+						<xsl:when test="res:binding[@name='license']">
+							<dt>
+								<xsl:value-of select="numishare:regularize_node('license', $lang)"/>
+							</dt>
+							<dd>
 								<a href="{res:binding[@name='license']/res:uri}">
 									<xsl:variable name="license" select="res:binding[@name='license']/res:uri"/>
 									<xsl:choose>
@@ -197,12 +196,17 @@
 										</xsl:otherwise>
 									</xsl:choose>
 								</a>
-							</xsl:when>
-							<xsl:when test="res:binding[@name='rights']">
+							</dd>
+						</xsl:when>
+						<xsl:when test="res:binding[@name='rights']">
+							<dt>
+								<xsl:value-of select="numishare:regularize_node('rights', $lang)"/>
+							</dt>
+							<dd>
 								<xsl:value-of select="res:binding[@name='rights']/res:literal"/>
-							</xsl:when>
-						</xsl:choose>
-					</dd>
+							</dd>
+						</xsl:when>
+					</xsl:choose>
 				</dl>
 			</td>
 

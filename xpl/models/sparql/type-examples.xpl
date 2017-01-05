@@ -44,7 +44,7 @@ PREFIX rdfs:	<http://www.w3.org/2000/01/rdf-schema#>
 PREFIX void:	<http://rdfs.org/ns/void#>
 PREFIX geo:	<http://www.w3.org/2003/01/geo/wgs84_pos#>
 
-SELECT ?object ?title ?identifier ?findUri ?findspot ?hoard ?collection ?publisher ?dataset ?datasetTitle ?weight ?axis ?diameter ?obvThumb ?revThumb ?obvRef ?revRef ?comThumb ?comRef  WHERE {
+SELECT ?object ?title ?identifier ?findUri ?findspot ?hoard ?collection ?publisher ?dataset ?datasetTitle ?weight ?axis ?diameter ?obvThumb ?revThumb ?obvRef ?revRef ?comThumb ?comRef ?obvManifest ?revManifest  WHERE {
 ?object nmo:hasTypeSeriesItem <typeURI> ;
   rdf:type nmo:NumismaticObject ;
   dcterms:title ?title .
@@ -71,11 +71,13 @@ OPTIONAL { ?object foaf:thumbnail ?comThumb }
 OPTIONAL { ?object foaf:depiction ?comRef }
 OPTIONAL { ?object nmo:hasObverse/foaf:thumbnail ?obvThumb }
 OPTIONAL { ?object nmo:hasObverse ?obverse .
-?obverse foaf:depiction ?obvRef }
+?obverse foaf:depiction ?obvRef
+	OPTIONAL { ?obvRef dcterms:isReferencedBy ?obvManifest }}
 OPTIONAL { ?object nmo:hasReverse/foaf:thumbnail ?revThumb }
 OPTIONAL { ?object nmo:hasReverse ?reverse .
-?reverse foaf:depiction ?revRef }}
-ORDER BY ASC(?publisher) ASC(?collection)]]></xsl:variable>
+?reverse foaf:depiction ?revRef 
+	OPTIONAL { ?revRef dcterms:isReferencedBy ?revManifest }}
+} ORDER BY ASC(?publisher) ASC(?collection)]]></xsl:variable>
 
 				<xsl:variable name="service">
 					<xsl:value-of select="concat($sparql_endpoint, '?query=', encode-for-uri(replace($query, 'typeURI', $uri)), '&amp;output=xml')"/>					
