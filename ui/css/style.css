@@ -307,7 +307,7 @@ select[name = "interval"],
 .flickrthumb{
 	margin:5px;
 }
-.thumbnail {
+.side-thumbnail {
 	max-width:120px;
 }
 .combined-thumbnail {
@@ -435,7 +435,6 @@ button.multiselect{
 /* gallery image */
 .gi{
 	padding:0px 5px;
-	max-width:120px;
 }
 /*
   ***************************************
