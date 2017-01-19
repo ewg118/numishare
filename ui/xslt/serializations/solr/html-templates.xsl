@@ -1377,7 +1377,7 @@
 		<!-- combined -->
 		<xsl:choose>
 			<xsl:when test="string(comRef) and string(comThumb)">
-				<a class="thumbImage" rel="gallery" href="{comRef}" title="Reverse of {@identifier}: {@collection}" id="{@uri}">
+				<a class="thumbImage" rel="gallery" href="{comRef}" title="Image of {@identifier}: {@collection}" id="{@uri}">
 					<xsl:if test="$position &gt; 1">
 						<xsl:attribute name="style">display:none</xsl:attribute>
 					</xsl:if>
@@ -1392,7 +1392,7 @@
 				</img>
 			</xsl:when>
 			<xsl:when test="string(comRef) and not(string(comThumb))">
-				<a class="thumbImage" rel="gallery" href="{comRef}" title="Obverse of {@identifier}: {@collection}" id="{@uri}">
+				<a class="thumbImage" rel="gallery" href="{comRef}" title="Image of {@identifier}: {@collection}" id="{@uri}">
 					<xsl:if test="$position &gt; 1">
 						<xsl:attribute name="style">display:none</xsl:attribute>
 					</xsl:if>
