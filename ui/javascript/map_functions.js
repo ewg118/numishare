@@ -75,6 +75,10 @@ $(document).ready(function () {
 			pointToLayer: renderPoints
 		}).addTo(map);
 		
+		var subjectLayer = L.geoJson.ajax(path + "subjects.geojson?q=" + q, {
+			pointToLayer: renderPoints
+		}).addTo(map);
+		
 		//add hoards, but don't make visible by default
 		var markers = '';
 		var findspotLayer = L.geoJson.ajax(path + "findspots.geojson?q=" + q, {
@@ -97,7 +101,8 @@ $(document).ready(function () {
 		}
 		
 		var overlayMaps = {
-			'Mints': mintLayer
+			'Mints': mintLayer,
+			'Subjects': subjectLayer
 		};
 		
 		//add controls
@@ -105,7 +110,7 @@ $(document).ready(function () {
 		
 		//zoom to groups on AJAX complete
 		mintLayer.on('data:loaded', function () {
-			var group = new L.featureGroup([mintLayer, findspotLayer]);
+			var group = new L.featureGroup([mintLayer, findspotLayer, subjectLayer]);
 			map.fitBounds(group.getBounds());
 		}.bind(this));
 		
@@ -115,7 +120,12 @@ $(document).ready(function () {
 			markers.addLayer(findspotLayer);
 			map.addLayer(markers);
 			
-			var group = new L.featureGroup([mintLayer, findspotLayer]);
+			var group = new L.featureGroup([mintLayer, findspotLayer, subjectLayer]);
+			map.fitBounds(group.getBounds());
+		}.bind(this));
+		
+		subjectLayer.on('data:loaded', function () {
+			var group = new L.featureGroup([mintLayer, findspotLayer, subjectLayer]);
 			map.fitBounds(group.getBounds());
 		}.bind(this));
 		
@@ -126,18 +136,21 @@ $(document).ready(function () {
 		findspotLayer.on('click', function (e) {
 			renderPopup(e);
 		});
+		subjectLayer.on('click', function (e) {
+			renderPopup(e);
+		});
 	}
 	
 	//multiselect facets
 	$('.multiselect').multiselect({
 		buttonWidth: '250px',
-		enableFiltering: true,
+		enableCaseInsensitiveFiltering: true,
 		maxHeight: 250,
 		buttonText: function (options, select) {
 			if (options.length == 0) {
-				return select.attr('title') + ' <b class="caret"></b>';
+				return select.attr('title');
 			} else if (options.length > 2) {
-				return select.attr('title') + ': ' + options.length + ' selected <b class="caret"></b>';
+				return select.attr('title') + ': ' + options.length;
 			} else {
 				var selected = '';
 				options.each(function () {
@@ -147,7 +160,7 @@ $(document).ready(function () {
 				if (label.length > 20) {
 					label = label.substr(0, 20) + '...';
 				}
-				return select.attr('title') + ': ' + label + ' <b class="caret"></b>';
+				return select.attr('title') + ': ' + label;
 			}
 		},
 		onChange: function (element, checked) {
@@ -257,7 +270,7 @@ $(document).ready(function () {
 			map.removeLayer(markers);
 			mintLayer.refresh(mintUrl);
 			findspotLayer.refresh(hoardUrl);
-			//subjectLayer.refresh(subjectUrl);
+			subjectLayer.refresh(subjectUrl);
 		}
 	}
 	
@@ -279,6 +292,7 @@ $(document).ready(function () {
 				$('#results').html(data);
 			}).done(function () {
 				$('a.thumbImage').fancybox({
+					type: 'image',
 					beforeShow: function () {
 						this.title = '<a href="' + this.element.attr('id') + '">' + this.element.attr('title') + '</a>'
 					},
