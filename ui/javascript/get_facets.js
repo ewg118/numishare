@@ -8,7 +8,6 @@ If the list is populated and then hidden, when it is re-activated, it fades in r
 $(document).ready(function () {	
 	var popupStatus = 0;
 	var pipeline = 'results';
-	var path = $('#path').text();
 	var langStr = getURLParameter('lang');
 	if (langStr == 'null') {
 		var lang = '';
@@ -36,13 +35,13 @@ $(document).ready(function () {
 	//multiselect facets
 	$('.multiselect').multiselect({
 		buttonWidth: '250px',
-		enableFiltering: true,
+		enableCaseInsensitiveFiltering: true,
 		maxHeight: 250,
 		buttonText: function (options, select) {
 			if (options.length == 0) {
-				return select.attr('title') + ' <b class="caret"></b>';
+				return select.attr('title');
 			} else if (options.length > 2) {
-				return select.attr('title') + ': ' + options.length + ' selected <b class="caret"></b>';
+				return select.attr('title') + ': ' + options.length;
 			} else {
 				var selected = '';
 				options.each(function () {
@@ -52,7 +51,7 @@ $(document).ready(function () {
 				if (label.length > 20) {
 					label = label.substr(0, 20) + '...';
 				}
-				return select.attr('title') + ': ' + label + ' <b class="caret"></b>';
+				return select.attr('title') + ': ' + label;
 			}
 		},
 		onChange: function (element, checked) {
@@ -63,7 +62,7 @@ $(document).ready(function () {
 				if (q.length > 0) {
 					var category = id.split('-select')[0];
 					var mincount = $(this).attr('mincount');
-					$.get(path + 'get_facet_options', {
+					$.get('get_facet_options', {
 						q: q, category: category, mincount: mincount, lang: lang, pipeline: 'results'
 					},
 					function (data) {
@@ -86,7 +85,7 @@ $(document).ready(function () {
 		var id = $(this).parent('div').prev('select').attr('id');
 		var category = id.split('-select')[0];
 		var mincount = $(this).parent('div').prev('select').attr('mincount');
-		$.get(path + 'get_facet_options', {
+		$.get('get_facet_options', {
 			q: q, category: category, mincount: mincount, lang: lang, pipeline: 'results'
 		},
 		function (data) {
@@ -123,7 +122,7 @@ $(document).ready(function () {
 		var field = $(this).attr('id').split('_hier')[0];
 		var list_id = $(this).attr('id').split('-btn')[0] + '-list';
 		if ($('#' + list_id).html().indexOf('<li') < 0) {
-			$.get(path + 'get_hier', {
+			$.get('get_hier', {
 				q: q, field: field, prefix: 'L1', fq: '*', link: '', lang: lang
 			},
 			function (data) {
@@ -157,7 +156,7 @@ $(document).ready(function () {
 			$(this).addClass('glyphicon-minus');
 			//perform ajax load on first click of expand button
 			if ($(this).parent('li').children('ul').html().indexOf('<li') < 0) {
-				$.get(path + 'get_hier', {
+				$.get('get_hier', {
 					q: q, field: field, prefix: prefix, fq: '"' + fq + '"', link: link, section: section, lang: lang
 				},
 				function (data) {
@@ -204,7 +203,7 @@ $(document).ready(function () {
 		q = getQuery();
 		var list_id = $(this).attr('id').split('_link')[0] + '-list';
 		if ($('#' + list_id).html().indexOf('<li') < 0) {
-			$.get(path + 'get_centuries', {
+			$.get('get_centuries', {
 				q: q
 			},
 			function (data) {
@@ -232,7 +231,7 @@ $(document).ready(function () {
 			$(this).addClass('glyphicon-minus');
 			//perform ajax load on first click of expand button
 			if ($(this).parent('li').children('ul').html().indexOf('<li') < 0) {
-				$.get(path + 'get_decades', {
+				$.get('get_decades', {
 					q: q, century: century
 				},
 				function (data) {
