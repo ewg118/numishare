@@ -704,9 +704,10 @@ function generate_nuds($row, $count, $fileName){
 			}
 			//custhodhist || strlen(trim($row['donor'])) > 0
 			if (strlen(trim($row['prevcoll'])) > 0 || strlen(trim($row['acknowledgment'])) > 0){
-				$prevcolls = array_filter(explode('|', $row['prevcoll']));
+				
 				$writer->startElement('provenance');
 					$writer->startElement('chronList');
+					//acknowledgment row is donor?
 					if (strlen(trim($row['acknowledgment'])) > 0){
 						$writer->startElement('chronItem');
 							$writer->writeElement('acquiredFrom', trim($row['acknowledgment']));
@@ -717,10 +718,12 @@ function generate_nuds($row, $count, $fileName){
 							$writer->writeElement('acquiredFrom', trim($row['donor']));
 						$writer->endElement();
 					}*/
+					
+					$prevcolls = array_filter(explode('|', $row['prevcoll']));
 					foreach ($prevcolls as $prevcoll){
 						if (!is_int($prevcoll) && strlen(trim($prevcoll)) > 0){
 							$writer->startElement('chronItem');
-								$writer->writeElement('previousColl', trim($row['acknowledgment']));
+								$writer->writeElement('previousColl', trim($prevcoll));
 							$writer->endElement();
 						}
 					}
