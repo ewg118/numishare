@@ -154,7 +154,7 @@ if (($handle = fopen("/tmp/" . $csv_id . ".csv", "r")) !== FALSE) {
 									error_log("{$accnum}: {$datetime}\n", 3, "/var/log/numishare/success.log");
 										
 									//if file was successfully PUT to eXist, add the accession number to the array for Solr indexing.
-									$accnums[] = trim($row['accnum']);
+									$accnums[] = trim($accnum);
 										
 									//index records into Solr in increments of 1,000
 									if (count($accnums) > 0 && count($accnums) % 1000 == 0 ){
@@ -400,9 +400,9 @@ function generate_nuds($row, $count, $fileName){
 					generate_typeDesc($writer, $row, $department, $uncertain);
 				}
 			}			
-		} elseif ($department=='Greek' && count(preg_grep('/Price\.[1-9]/', $refs)) > 0){
+		} elseif ($department=='Greek' && count(preg_grep('/Price\.[L|P]?\d+[A-Z]?$/', $refs)) > 0){
 			//handle Price references for Pella
-			$matches = preg_grep('/Price\.[1-9]/', $refs);
+			$matches = preg_grep('/Price\.[L|P]?\d+[A-Z]?$/', $refs);
 			foreach ($matches as $k=>$v){
 				if (strlen(trim($v)) > 0){
 					$id = substr(trim($v), -1) == '?' ? str_replace('?', '', trim($v)) : trim($v);
