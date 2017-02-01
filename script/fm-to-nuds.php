@@ -40,8 +40,8 @@ ini_set("auto_detect_line_endings", "1");
 //get unique id of recently uploaded Filemaker CSV from request parameter
 //the line below is for passing request parameters from the command line.
 parse_str(implode('&', array_slice($argv, 1)), $_GET);
-//$csv_id = $_GET['id'];
-$csv_id = 'fmexport-ric5mar';
+$csv_id = $_GET['id'];
+//$csv_id = 'fmexport120116';
 error_log(date(DATE_W3C) . ": {$csv_id}.csv now entering fm-to-nuds.php.\n", 3, "/var/log/numishare/process.log");
 
 //create an array with pre-defined labels and values passed from the Filemaker POST
@@ -123,9 +123,9 @@ if (($handle = fopen("/tmp/" . $csv_id . ".csv", "r")) !== FALSE) {
 						generate_nuds($row, $count, $fileName);
 						
 						//read file back into memory for PUT to eXist
-						/*if (($readFile = fopen($fileName, 'r')) === FALSE){
-							//error_log($accnum . ' (' . $department . ') failed to open temporary file (accnum likely broken) at ' . date(DATE_W3C) . "\n", 3, "/var/log/numishare/error.log");
-							//$errors[] = $accnum . ' (' . $department . ') failed to open temporary file (accnum likely broken).';
+						if (($readFile = fopen($fileName, 'r')) === FALSE){
+							error_log($accnum . ' (' . $department . ') failed to open temporary file (accnum likely broken) at ' . date(DATE_W3C) . "\n", 3, "/var/log/numishare/error.log");
+							$errors[] = $accnum . ' (' . $department . ') failed to open temporary file (accnum likely broken).';
 						} else {
 							//PUT xml to eXist
 							$putToExist=curl_init();
@@ -154,7 +154,7 @@ if (($handle = fopen("/tmp/" . $csv_id . ".csv", "r")) !== FALSE) {
 									error_log("{$accnum}: {$datetime}\n", 3, "/var/log/numishare/success.log");
 										
 									//if file was successfully PUT to eXist, add the accession number to the array for Solr indexing.
-									$accnums[] = trim($row['accnum']);
+									$accnums[] = trim($accnum);
 										
 									//index records into Solr in increments of 1,000
 									if (count($accnums) > 0 && count($accnums) % 1000 == 0 ){
@@ -172,7 +172,7 @@ if (($handle = fopen("/tmp/" . $csv_id . ".csv", "r")) !== FALSE) {
 							//close files and delete from /tmp
 							fclose($readFile);
 							unlink($fileName);
-						}*/
+						}
 					}
 				}
 			}
@@ -195,7 +195,7 @@ if (($handle = fopen("/tmp/" . $csv_id . ".csv", "r")) !== FALSE) {
 	$toIndex = array_slice($accnums, $start);
 
 	//POST TO SOLR
-	//generate_solr_shell_script($toIndex);
+	generate_solr_shell_script($toIndex);
 
 	//send email if there are errors
 	generate_email_report($csv_id, $accnums, $errors, $warnings, $startTime, $endTime);
@@ -225,7 +225,6 @@ function generate_nuds($row, $count, $fileName){
 
 	//references; used to check for 'ric.' for pointing typeDesc to OCRE
 	$refs = array_filter(explode('|', $row['refs']));
-	
 	
 	$writer = new XMLWriter();
 	$writer->openURI($fileName);
@@ -282,7 +281,18 @@ function generate_nuds($row, $count, $fileName){
 						$uncertain = substr(trim($v), -1) == '?' ? true : false;
 					}
 				}
-				$uri = 'http://numismatics.org/ocre/id/' . $id;
+				
+				//if the $id is from RIC 9, capitalize final letter
+				if (strpos($id, 'ric.9')){
+					$pieces = explode('.', $id);
+					$pieces[3] = strtoupper($pieces[3]);
+					
+					//reassemble $id
+					$id = implode('.', $pieces);
+					$uri = 'http://numismatics.org/ocre/id/' . $id;
+				} else {
+					$uri = 'http://numismatics.org/ocre/id/' . $id;
+				}
 				
 				//reduce lookups
 				if (array_key_exists($uri, $coinTypes)){
@@ -372,7 +382,7 @@ function generate_nuds($row, $count, $fileName){
 					$titles = generate_title_from_type($uri);
 					$writer->startElement('title');
 						$writer->writeAttribute('xml:lang', 'en');
-						$writer->text("{$title['title']}. {$accnum}");
+						$writer->text("{$titles['title']}. {$accnum}");
 					$writer->endElement();
 					
 					//generate typeDesc with link
@@ -390,9 +400,9 @@ function generate_nuds($row, $count, $fileName){
 					generate_typeDesc($writer, $row, $department, $uncertain);
 				}
 			}			
-		} elseif ($department=='Greek' && count(preg_grep('/Price\.[1-9]/', $refs)) > 0){
+		} elseif ($department=='Greek' && count(preg_grep('/Price\.[L|P]?\d+[A-Z]?$/', $refs)) > 0){
 			//handle Price references for Pella
-			$matches = preg_grep('/Price\.[1-9]/', $refs);
+			$matches = preg_grep('/Price\.[L|P]?\d+[A-Z]?$/', $refs);
 			foreach ($matches as $k=>$v){
 				if (strlen(trim($v)) > 0){
 					$id = substr(trim($v), -1) == '?' ? str_replace('?', '', trim($v)) : trim($v);
@@ -464,9 +474,10 @@ function generate_nuds($row, $count, $fileName){
 				$writer->startElement('typeDesc');
 					$writer->writeAttribute('xlink:type', 'simple');
 					$writer->writeAttribute('xlink:href', $uri);
-					if ($uncertain == true){
+					//no uncertainty in AoD
+					/*if ($uncertain == true){
 						$writer->writeAttribute('certainty', 'uncertain');
-					}
+					}*/
 				$writer->endElement();
 			} else {
 				$file_headers = @get_headers($uri);
@@ -483,9 +494,10 @@ function generate_nuds($row, $count, $fileName){
 					$writer->startElement('typeDesc');
 						$writer->writeAttribute('xlink:type', 'simple');
 						$writer->writeAttribute('xlink:href', $uri);
-						if ($certainty == false){
+						//no uncertainty in AoD
+						/*if ($uncertain == false){
 							$writer->writeAttribute('certainty', 'uncertain');
-						}
+						}*/
 					$writer->endElement();
 					
 					//add data into the $coinTypes array
@@ -510,7 +522,7 @@ function generate_nuds($row, $count, $fileName){
 		}
 	
 		/***** PHYSICAL DESCRIPTION *****/
-		$writer->startElement('phyDesc');
+		$writer->startElement('physDesc');
 	
 		//axis: only create if it's an integer
 		$axis = (int) $row['axis'];
@@ -524,7 +536,7 @@ function generate_nuds($row, $count, $fileName){
 		if (strlen($row['color']) > 0){
 			$colors = array_filter(explode('|', $row['color']));
 			foreach ($colors as $color){
-				$writer->writeElement('color', trim(color));
+				$writer->writeElement('color', trim($color));
 			}
 		}
 		//dob
@@ -561,7 +573,7 @@ function generate_nuds($row, $count, $fileName){
 		
 		//create measurementsSet, if applicable
 		if ((is_numeric(trim($row['weight'])) && trim($row['weight']) > 0) || (is_numeric(trim($row['diameter'])) && trim($row['diameter']) > 0) || (is_numeric(trim($row['height'])) && trim($row['height']) > 0) || (is_numeric(trim($row['width'])) && trim($row['width']) > 0) || (is_numeric(trim($row['depth'])) && trim($row['depth']) > 0)){
-			$writer->startElement('measuremsentsSet');
+			$writer->startElement('measurementsSet');
 			//weight
 			$weight = trim($row['weight']);
 			if (is_numeric($weight) && $weight > 0){
@@ -685,15 +697,17 @@ function generate_nuds($row, $count, $fileName){
 			
 			//image sponsor: acknowledgement with localType
 			if (strlen(trim($row['imagesponsor'])) > 0){
-				$writer->startElement('acknowledgment', trim($row['imagesponsor']));
+				$writer->startElement('acknowledgment');
 					$writer->writeAttribute('localType', 'imageSponsor');
+					$writer->text(trim($row['imagesponsor']));
 				$writer->endElement();
 			}
 			//custhodhist || strlen(trim($row['donor'])) > 0
 			if (strlen(trim($row['prevcoll'])) > 0 || strlen(trim($row['acknowledgment'])) > 0){
-				$prevcolls = array_filter(explode('|', $row['prevcoll']));
+				
 				$writer->startElement('provenance');
 					$writer->startElement('chronList');
+					//acknowledgment row is donor?
 					if (strlen(trim($row['acknowledgment'])) > 0){
 						$writer->startElement('chronItem');
 							$writer->writeElement('acquiredFrom', trim($row['acknowledgment']));
@@ -704,10 +718,12 @@ function generate_nuds($row, $count, $fileName){
 							$writer->writeElement('acquiredFrom', trim($row['donor']));
 						$writer->endElement();
 					}*/
+					
+					$prevcolls = array_filter(explode('|', $row['prevcoll']));
 					foreach ($prevcolls as $prevcoll){
 						if (!is_int($prevcoll) && strlen(trim($prevcoll)) > 0){
 							$writer->startElement('chronItem');
-								$writer->writeElement('previousColl', trim($row['acknowledgment']));
+								$writer->writeElement('previousColl', trim($prevcoll));
 							$writer->endElement();
 						}
 					}
@@ -1485,7 +1501,7 @@ function generate_typeDesc($writer, $row, $department, $certainty){
 	if (array_key_exists('denomination', $title_elements)){
 		$title .= ' ' .  $title_elements['denomination'];
 	} else {
-		$title .= ' ' . $objtype;
+		$title .= ' ' . $objectType['label'];
 	}
 	if (array_key_exists('issuer', $title_elements)){
 		$title .= ' of ' .  $title_elements['issuer'];
@@ -1536,7 +1552,7 @@ function get_material_label($material){
 
 function normalize_objtype($objtype){
 	$objectType = array();
-	switch ($objtype) {
+	switch (trim($objtype)) {
 		case 'C':
 			$objectType['label'] = 'Coin';
 			$objectType['uri'] = 'http://nomisma.org/id/coin';
@@ -1561,7 +1577,7 @@ function normalize_objtype($objtype){
 			$objectType['uri'] = 'http://nomisma.org/id/token';
 			break;
 		default:			
-			$objectType['label'] = ucfirst(strtolower(trim($row['objtype'])));
+			$objectType['label'] = ucfirst(strtolower(trim($objtype)));
 	}
 	
 	return $objectType;
@@ -1780,8 +1796,10 @@ function parse_mint($department, $mint, $regions, $localities){
 			$label = $result['label'];
 		}
 
-		if (strpos($nomisma_value, 'nomisma.org') > 0 || strpos($nomisma_value, 'geonames.org') > 0){
-			$mint_uri = $nomisma_value;
+		if (isset($nomisma_value)){
+			if (strpos($nomisma_value, 'nomisma.org') > 0 || strpos($nomisma_value, 'geonames.org') > 0){
+				$mint_uri = $nomisma_value;
+			}
 		}
 	}
 	//if there is a region: test for available of locality
@@ -1794,10 +1812,11 @@ function parse_mint($department, $mint, $regions, $localities){
 					$nomisma_value = $result['nomisma_id'];
 					$label = $result['label'];
 				}
-
-				if (strpos($nomisma_value, 'nomisma.org') > 0 || strpos($nomisma_value, 'geonames.org') > 0){
-					$mint_uri = $nomisma_value;
-				}
+				if (isset($nomisma_value)){
+					if (strpos($nomisma_value, 'nomisma.org') > 0 || strpos($nomisma_value, 'geonames.org') > 0){
+						$mint_uri = $nomisma_value;
+					}
+				}				
 			}
 		} else {
 			foreach ($regions_array as $rv){
@@ -1809,9 +1828,11 @@ function parse_mint($department, $mint, $regions, $localities){
 						$label = $result['label'];
 					}
 
-					if (strpos($nomisma_value, 'nomisma.org') > 0 || strpos($nomisma_value, 'geonames.org') > 0){
-						$mint_uri = $nomisma_value;
-					}
+					if (isset($nomisma_value)){
+						if (strpos($nomisma_value, 'nomisma.org') > 0 || strpos($nomisma_value, 'geonames.org') > 0){
+							$mint_uri = $nomisma_value;
+						}
+					}					
 				}
 			}
 		}
@@ -1825,9 +1846,10 @@ function parse_mint($department, $mint, $regions, $localities){
 				$nomisma_value = $result['nomisma_id'];
 				$label = $result['label'];
 			}
-
-			if (strpos($nomisma_value, 'nomisma.org') > 0 || strpos($nomisma_value, 'geonames.org') > 0){
-				$mint_uri = $nomisma_value;
+			if (isset($nomisma_value)){
+				if (strpos($nomisma_value, 'nomisma.org') > 0 || strpos($nomisma_value, 'geonames.org') > 0){
+					$mint_uri = $nomisma_value;
+				}
 			}
 		}
 	}
@@ -1864,16 +1886,14 @@ function get_mintNode($mint_uri, $label, $certaintyType){
 		//explode the geonames id, particularly necessary for Latin American coins where the mint varies from country of issue
 		$uris = explode('|', $mint_uri);
 		$mintUri = trim($uris[0]);
-		$regionUri = trim($uris[1]);
-		$localityUri = trim($uris[2]);
 
 		$geography['mint'] = process_label($mintUri, $label, 'mint', $certaintyType, 0);
 		
-		if (strlen($regionUri) > 0){
-			$geography['state'] = process_label($regionUri, $label, 'state', null, 1);
+		if (isset($uris[1])){
+			$geography['state'] = process_label(trim($uris[1]), $label, 'state', null, 1);
 		}
-		if (strlen($localityUri) > 0){
-			$geography['authority'] = process_label($localityUri, $label, 'authority', null, 2);
+		if (isset($uris[2])){
+			$geography['authority'] = process_label(trim($uris[2]), $label, 'authority', null, 2);
 		}
 	}
 	return $geography;
