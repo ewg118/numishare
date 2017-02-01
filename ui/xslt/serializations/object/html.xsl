@@ -348,6 +348,9 @@
 							<span id="mapboxKey">
 								<xsl:value-of select="//config/mapboxKey"/>
 							</span>
+							<span id="lang">
+								<xsl:value-of select="$lang"/>
+							</span>
 							<xsl:if test="$recordType='conceptual'">
 								<span id="manifest"/>				
 								<div class="iiif-container-template" style="width:100%;height:100%"/>								
