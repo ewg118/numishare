@@ -522,7 +522,7 @@ function generate_nuds($row, $count, $fileName){
 		}
 	
 		/***** PHYSICAL DESCRIPTION *****/
-		$writer->startElement('phyDesc');
+		$writer->startElement('physDesc');
 	
 		//axis: only create if it's an integer
 		$axis = (int) $row['axis'];
@@ -573,7 +573,7 @@ function generate_nuds($row, $count, $fileName){
 		
 		//create measurementsSet, if applicable
 		if ((is_numeric(trim($row['weight'])) && trim($row['weight']) > 0) || (is_numeric(trim($row['diameter'])) && trim($row['diameter']) > 0) || (is_numeric(trim($row['height'])) && trim($row['height']) > 0) || (is_numeric(trim($row['width'])) && trim($row['width']) > 0) || (is_numeric(trim($row['depth'])) && trim($row['depth']) > 0)){
-			$writer->startElement('measuremsentsSet');
+			$writer->startElement('measurementsSet');
 			//weight
 			$weight = trim($row['weight']);
 			if (is_numeric($weight) && $weight > 0){
