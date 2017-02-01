@@ -133,11 +133,12 @@
                         <img class="gi side-thumbnail" src="{res:binding[@name='obvThumb']/res:uri}"/>
                     </xsl:when>
                     <xsl:when test="string(res:binding[@name = 'obvRef']/res:uri) and not(string(res:binding[@name = 'obvThumb']/res:uri))">
-                        <a title="Obverse of {res:binding[@name='identifier']/res:literal}:        {if
+                        <a
+                            title="Obverse of {res:binding[@name='identifier']/res:literal}:        {if
                             (string(res:binding[@name='collection']/res:literal)) then res:binding[@name='collection']/res:literal else res:binding[@name='datasetTitle']/res:literal}"
                             id="{res:binding[@name='object']/res:uri}">
                             <xsl:choose>
-                                <xsl:when test="res:binding[@name = 'obvManifest']">                                    
+                                <xsl:when test="res:binding[@name = 'obvManifest']">
                                     <xsl:attribute name="href">#iiif-window</xsl:attribute>
                                     <xsl:attribute name="class">iiif-image</xsl:attribute>
                                     <xsl:attribute name="manifest" select="res:binding[@name = 'obvManifest']/res:uri"/>
@@ -155,7 +156,8 @@
                 <!-- reverse-->
                 <xsl:choose>
                     <xsl:when test="string(res:binding[@name = 'revRef']/res:uri) and string(res:binding[@name = 'revThumb']/res:uri)">
-                        <a title="Reverse of {res:binding[@name='identifier']/res:literal}:        {if
+                        <a
+                            title="Reverse of {res:binding[@name='identifier']/res:literal}:        {if
                             (string(res:binding[@name='collection']/res:literal)) then res:binding[@name='collection']/res:literal else res:binding[@name='datasetTitle']/res:literal}"
                             id="{res:binding[@name='object']/res:uri}">
                             <xsl:choose>
@@ -177,7 +179,8 @@
                         <img class="gi side-thumbnail" src="{res:binding[@name='revThumb']/res:uri}"/>
                     </xsl:when>
                     <xsl:when test="string(res:binding[@name = 'revRef']/res:uri) and not(string(res:binding[@name = 'revThumb']/res:uri))">
-                        <a title="Reverse of {res:binding[@name='identifier']/res:literal}:        {if
+                        <a
+                            title="Reverse of {res:binding[@name='identifier']/res:literal}:        {if
                             (string(res:binding[@name='collection']/res:literal)) then res:binding[@name='collection']/res:literal else res:binding[@name='datasetTitle']/res:literal}"
                             id="{res:binding[@name='object']/res:uri}">
                             <xsl:choose>
@@ -199,18 +202,42 @@
                 <!-- combined -->
                 <xsl:choose>
                     <xsl:when test="string(res:binding[@name = 'comRef']/res:uri) and string(res:binding[@name = 'comThumb']/res:uri)">
-                        <a class="thumbImage" rel="gallery" href="{res:binding[@name='comRef']/res:uri}"
+                        <a
                             title="Image of {res:binding[@name='identifier']/res:literal}:        {if
                             (string(res:binding[@name='collection']/res:literal)) then res:binding[@name='collection']/res:literal else res:binding[@name='datasetTitle']/res:literal}"
                             id="{res:binding[@name='object']/res:uri}">
+                            <xsl:choose>
+                                <xsl:when test="res:binding[@name = 'comManifest']">
+                                    <xsl:attribute name="href">#iiif-window</xsl:attribute>
+                                    <xsl:attribute name="class">iiif-image</xsl:attribute>
+                                    <xsl:attribute name="manifest" select="res:binding[@name = 'comManifest']/res:uri"/>
+                                </xsl:when>
+                                <xsl:otherwise>
+                                    <xsl:attribute name="href" select="res:binding[@name = 'comRef']/res:uri"/>
+                                    <xsl:attribute name="class">thumbImage</xsl:attribute>
+                                    <xsl:attribute name="rel">gallery</xsl:attribute>
+                                </xsl:otherwise>
+                            </xsl:choose>
                             <img class="gi combined-thumbnail" src="{res:binding[@name='comThumb']/res:uri}"/>
                         </a>
                     </xsl:when>
                     <xsl:when test="string(res:binding[@name = 'comRef']/res:uri) and not(string(res:binding[@name = 'comThumb']/res:uri))">
-                        <a class="thumbImage" rel="gallery" href="{res:binding[@name='comRef']/res:uri}"
+                        <a href="{res:binding[@name='comRef']/res:uri}"
                             title="Image of {res:binding[@name='identifier']/res:literal}:        {if
                             (string(res:binding[@name='collection']/res:literal)) then res:binding[@name='collection']/res:literal else res:binding[@name='datasetTitle']/res:literal}"
                             id="{res:binding[@name='object']/res:uri}">
+                            <xsl:choose>
+                                <xsl:when test="res:binding[@name = 'comManifest']">
+                                    <xsl:attribute name="href">#iiif-window</xsl:attribute>
+                                    <xsl:attribute name="class">iiif-image</xsl:attribute>
+                                    <xsl:attribute name="manifest" select="res:binding[@name = 'comManifest']/res:uri"/>
+                                </xsl:when>
+                                <xsl:otherwise>
+                                    <xsl:attribute name="href" select="res:binding[@name = 'comRef']/res:uri"/>
+                                    <xsl:attribute name="class">thumbImage</xsl:attribute>
+                                    <xsl:attribute name="rel">gallery</xsl:attribute>
+                                </xsl:otherwise>
+                            </xsl:choose>
                             <img src="{res:binding[@name='comRef']/res:uri}" class="gi combined-thumbnail"/>
                         </a>
                     </xsl:when>

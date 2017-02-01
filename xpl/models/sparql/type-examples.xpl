@@ -68,7 +68,8 @@ OPTIONAL { ?object nmo:hasWeight ?weight }
 OPTIONAL { ?object nmo:hasAxis ?axis }
 OPTIONAL { ?object nmo:hasDiameter ?diameter }
 OPTIONAL { ?object foaf:thumbnail ?comThumb }
-OPTIONAL { ?object foaf:depiction ?comRef }
+OPTIONAL { ?object foaf:depiction ?comRef 
+	OPTIONAL { ?comRef dcterms:isReferencedBy ?comManifest }}
 OPTIONAL { ?object nmo:hasObverse/foaf:thumbnail ?obvThumb }
 OPTIONAL { ?object nmo:hasObverse ?obverse .
 ?obverse foaf:depiction ?obvRef
