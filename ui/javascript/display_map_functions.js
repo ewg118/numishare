@@ -6,7 +6,6 @@ $(document).ready(function () {
     var lang = $('#lang').text();
     
     if (collection_type != 'object') {
-        alert('test');
         if ($('#map').length > 0) {
             initialize_timemap(id, path, lang);
         }
