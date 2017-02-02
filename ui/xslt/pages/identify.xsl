@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:numishare="https://github.com/ewg118/numishare"
-	xmlns:res="http://www.w3.org/2005/sparql-results#" exclude-result-prefixes="#all" version="2.0">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:numishare="https://github.com/ewg118/numishare" xmlns:foaf="http://xmlns.com/foaf/0.1/"
+	xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" exclude-result-prefixes="#all" version="2.0">
 	<xsl:include href="../templates.xsl"/>
 	<xsl:include href="../functions.xsl"/>
 
@@ -74,7 +74,7 @@
 							<p class="text-muted">Select one or more types of metal. Note that late Roman coinage may have been coated in silver that has since
 								worn off from a base metal core. It is recommended for these coins to search for silver and bronze, if uncertain.</p>
 							<div>
-								<xsl:apply-templates select="//lst[@name = 'material_uri']"/>
+								<xsl:apply-templates select="doc('input:materials')//lst[@name = 'material_uri']"/>
 							</div>
 						</div>
 						<div class="metadata_section">
@@ -109,9 +109,8 @@
 							<p class="text-muted">Portrait comparison may aid in identification, especially for heavily worn coinage. Ideal portraits are
 								presented in gold, silver, and bronze (when available), as well as a worn example. You can page forward and backward through
 								examples by clicking the buttons. Hover over the image to read the name of the individual depicted on the coin.</p>
-							<div class="row">
-								<xsl:apply-templates select="//res:result"/>
-							</div>
+
+							<xsl:apply-templates select="//period"/>
 						</div>
 
 						<div class="metadata_section">
@@ -150,8 +149,113 @@
 		</div>
 	</xsl:template>
 
-	<!-- generate portrait list from SPARQL response -->
-	<xsl:template match="res:result">
+	<!-- periods -->
+	<xsl:template match="period">
+		<div class="row">
+			<div class="col-md-12">
+				<h4>
+					<xsl:value-of select="@label"/>
+				</h4>
+				<xsl:apply-templates select="portrait"/>
+			</div>
+		</div>
+	</xsl:template>
+
+	<!-- generate portrait list -->
+	<xsl:template match="portrait">
+		<xsl:variable name="uri" select="@uri"/>
+
+		<xsl:variable name="label"
+			select="
+				if (doc('input:rdf')//foaf:Person[@rdf:about = $uri]/skos:prefLabel[@xml:lang = $lang]) then
+					doc('input:rdf')//foaf:Person[@rdf:about = $uri]/skos:prefLabel[@xml:lang = $lang]
+				else
+					doc('input:rdf')//foaf:Person[@rdf:about = $uri]/skos:prefLabel[@xml:lang = 'en']"/>
+
+		<div class="col-sm-6 col-md-3 col-lg-2 portrait" title="{$label}">
+			<!--<xsl:attribute name="style">background: url(&#x022;<xsl:value-of select="$portrait/descendant::image[1]"/>&#x022;); background-size: 100%; background-repeat: no-repeat;</xsl:attribute>-->
+			<div class="image-spacer text-center">
+				<xsl:choose>
+					<xsl:when test="descendant::image">
+						<img src="{descendant::image[1]}" alt="Obverse Image"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<p style="padding-top:80px" class="text-muted">
+							<xsl:text>No portraits available for </xsl:text>
+							<xsl:value-of select="$label"/>
+						</p>
+					</xsl:otherwise>
+				</xsl:choose>
+			</div>
+			<div class="paginate-images">
+				<div style="margin-bottom:2px">
+					<xsl:choose>
+						<xsl:when test="descendant::image">
+							<xsl:attribute name="class">text-center name-container</xsl:attribute>
+							<xsl:value-of select="$label"/>
+						</xsl:when>
+
+						<xsl:otherwise>
+							<xsl:attribute name="class">text-center name-container-empty</xsl:attribute>
+							<span>
+								<xsl:text>&#160;</xsl:text>
+							</span>
+						</xsl:otherwise>
+					</xsl:choose>
+				</div>
+				<div class="col-xs-4">
+					<button class="btn btn-default page-prev">
+						<xsl:if test="count(descendant::image) &lt;= 1">
+							<xsl:attribute name="disabled">disabled</xsl:attribute>
+						</xsl:if>
+						<span class="glyphicon glyphicon-chevron-left"/>
+					</button>
+				</div>
+				<div class="col-xs-4 text-center">
+					<input type="checkbox" field="portrait" value="{$label}"/>
+				</div>
+				<div class="col-xs-4 text-right">
+					<button class="btn btn-default page-next">
+						<xsl:if test="count(descendant::image) &lt;= 1">
+							<xsl:attribute name="disabled">disabled</xsl:attribute>
+						</xsl:if>
+						<span class="glyphicon glyphicon-chevron-right"/>
+					</button>
+				</div>
+			</div>
+			<!-- construct json and insert into a hidden div -->
+			<div class="hidden">
+				<xsl:text>{</xsl:text>
+				<xsl:for-each select="material[image]">
+					<xsl:value-of select="concat('&#x022;', substring-after(@uri, 'id/'), '&#x022;')"/>
+					<xsl:text>:[</xsl:text>
+					<xsl:for-each select="image">
+						<xsl:value-of select="concat('&#x022;', ., '&#x022;')"/>
+						<xsl:if test="not(position() = last())">
+							<xsl:text>,</xsl:text>
+						</xsl:if>
+					</xsl:for-each>
+					<xsl:text>]</xsl:text>
+					<xsl:if test="not(position() = last())">
+						<xsl:text>,</xsl:text>
+					</xsl:if>
+				</xsl:for-each>
+				<xsl:if test="worn">
+					<xsl:text>,"worn":[</xsl:text>
+					<xsl:for-each select="worn/image">
+						<xsl:value-of select="concat('&#x022;', ., '&#x022;')"/>
+						<xsl:if test="not(position() = last())">
+							<xsl:text>,</xsl:text>
+						</xsl:if>
+					</xsl:for-each>
+					<xsl:text>]</xsl:text>
+				</xsl:if>
+				<xsl:text>}</xsl:text>
+			</div>
+		</div>
+	</xsl:template>
+
+	<!--<xsl:template match="res:result">
 		<xsl:variable name="uri" select="res:binding[@name = 'portrait']/res:uri"/>
 		<xsl:variable name="label"
 			select="
@@ -164,7 +268,7 @@
 		</xsl:variable>
 
 		<div class="col-sm-6 col-md-3 col-lg-2 portrait" title="{$label}">
-			<!--<xsl:attribute name="style">background: url(&#x022;<xsl:value-of select="$portrait/descendant::image[1]"/>&#x022;); background-size: 100%; background-repeat: no-repeat;</xsl:attribute>-->
+			<!-\-<xsl:attribute name="style">background: url(&#x022;<xsl:value-of select="$portrait/descendant::image[1]"/>&#x022;); background-size: 100%; background-repeat: no-repeat;</xsl:attribute>-\->
 			<div class="image-spacer text-center">
 				<xsl:choose>
 					<xsl:when test="$portrait//image">
@@ -181,14 +285,16 @@
 			<div class="paginate-images">
 				<div style="margin-bottom:2px">
 					<xsl:choose>
-						<xsl:when test="$portrait//image">	
+						<xsl:when test="$portrait//image">
 							<xsl:attribute name="class">text-center name-container</xsl:attribute>
 							<xsl:value-of select="$label"/>
 						</xsl:when>
 
-						<xsl:otherwise>	
+						<xsl:otherwise>
 							<xsl:attribute name="class">text-center name-container-empty</xsl:attribute>
-							<span><xsl:text>&#160;</xsl:text></span>
+							<span>
+								<xsl:text>&#160;</xsl:text>
+							</span>
 						</xsl:otherwise>
 					</xsl:choose>
 				</div>
@@ -212,7 +318,7 @@
 					</button>
 				</div>
 			</div>
-			<!-- construct json and insert into a hidden div -->
+			<!-\- construct json and insert into a hidden div -\->
 			<div class="hidden">
 				<xsl:text>{</xsl:text>
 				<xsl:for-each select="$portrait/material[image]">
@@ -242,5 +348,5 @@
 				<xsl:text>}</xsl:text>
 			</div>
 		</div>
-	</xsl:template>
+	</xsl:template>-->
 </xsl:stylesheet>
