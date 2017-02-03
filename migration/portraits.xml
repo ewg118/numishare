@@ -78,9 +78,7 @@
             </material>
         </portrait>
         <portrait uri="http://nomisma.org/id/lucius_caesar">
-            <material uri="http://nomisma.org/id/av">
-                <image>http://numismatics.org/collectionimages/19001949/1905/1905.57.282.rev.width350.jpg</image>
-            </material>
+            <material uri="http://nomisma.org/id/av"/>
             <material uri="http://nomisma.org/id/ar">
                 <image>http://ww2.smb.museum/mk_edit/images/n2/2562/rs_opt.jpg</image>
             </material>
