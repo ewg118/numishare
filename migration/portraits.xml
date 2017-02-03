@@ -13,9 +13,7 @@
             </worn>
         </portrait>
         <portrait uri="http://nomisma.org/id/julia_daughter_of_augustus">
-            <material uri="http://nomisma.org/id/ar">
-                <image>http://ww2.smb.museum/mk_edit/images/n2/2562/rs_opt.jpg</image>
-            </material>
+            <material uri="http://nomisma.org/id/ar"/>
         </portrait>
         <portrait uri="http://nomisma.org/id/augustus">
             <material uri="http://nomisma.org/id/av">
@@ -47,9 +45,7 @@
             </worn>
         </portrait>
         <portrait uri="http://nomisma.org/id/livia">
-            <material uri="http://nomisma.org/id/ar">
-                <image>http://ww2.smb.museum/mk_edit/images/n28/28628/rs_opt.jpg</image>
-            </material>
+            <material uri="http://nomisma.org/id/ar"/>
             <material uri="http://nomisma.org/id/ae">
                 <image>http://numismatics.org/collectionimages/19501999/1951/1951.61.50.obv.width350.jpg</image>
                 <image>http://numismatics.org/collectionimages/19001949/1944/1944.100.41827.obv.width350.jpg</image>
@@ -73,15 +69,11 @@
             </worn>
         </portrait>
         <portrait uri="http://nomisma.org/id/gaius_caesar">
-            <material uri="http://nomisma.org/id/ar">
-                <image>http://ww2.smb.museum/mk_edit/images/n2/2562/rs_opt.jpg</image>
-            </material>
+            <material uri="http://nomisma.org/id/ar"/>
         </portrait>
         <portrait uri="http://nomisma.org/id/lucius_caesar">
             <material uri="http://nomisma.org/id/av"/>
-            <material uri="http://nomisma.org/id/ar">
-                <image>http://ww2.smb.museum/mk_edit/images/n2/2562/rs_opt.jpg</image>
-            </material>
+            <material uri="http://nomisma.org/id/ar"/>
         </portrait>
         <portrait uri="http://nomisma.org/id/tiberius">
             <material uri="http://nomisma.org/id/av">
