@@ -203,26 +203,29 @@
 						</xsl:otherwise>
 					</xsl:choose>
 				</div>
-				<div class="col-xs-4">
-					<button class="btn btn-default page-prev">
-						<xsl:if test="count(descendant::image) &lt;= 1">
-							<xsl:attribute name="disabled">disabled</xsl:attribute>
-						</xsl:if>
-						<span class="glyphicon glyphicon-chevron-left"/>
-					</button>
-				</div>
-				<div class="col-xs-4 text-center">
-					<input type="checkbox" field="portrait" value="{$label}"/>
-				</div>
-				<div class="col-xs-4 text-right">
-					<button class="btn btn-default page-next">
-						<xsl:if test="count(descendant::image) &lt;= 1">
-							<xsl:attribute name="disabled">disabled</xsl:attribute>
-						</xsl:if>
-						<span class="glyphicon glyphicon-chevron-right"/>
-					</button>
+				<div class="row">
+					<div class="col-xs-4">
+						<button class="btn btn-default page-prev">
+							<xsl:if test="count(descendant::image) &lt;= 1">
+								<xsl:attribute name="disabled">disabled</xsl:attribute>
+							</xsl:if>
+							<span class="glyphicon glyphicon-chevron-left"/>
+						</button>
+					</div>
+					<div class="col-xs-4 text-center">
+						<input type="checkbox" field="portrait" value="{$label}"/>
+					</div>
+					<div class="col-xs-4 text-right">
+						<button class="btn btn-default page-next">
+							<xsl:if test="count(descendant::image) &lt;= 1">
+								<xsl:attribute name="disabled">disabled</xsl:attribute>
+							</xsl:if>
+							<span class="glyphicon glyphicon-chevron-right"/>
+						</button>
+					</div>
 				</div>
 			</div>
+
 			<!-- construct json and insert into a hidden div -->
 			<div class="hidden">
 				<xsl:text>{</xsl:text>
