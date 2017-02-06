@@ -68,9 +68,9 @@
 							<input type="submit" value="Search" class="btn btn-default"/>
 						</div>
 						<div class="metadata_section">
-							<h3>
+							<h2>
 								<xsl:value-of select="numishare:normalize_fields('material', $lang)"/>
-							</h3>
+							</h2>
 							<p class="text-muted">Select one or more types of metal. Note that late Roman coinage may have been coated in silver that has since
 								worn off from a base metal core. It is recommended for these coins to search for silver and bronze, if uncertain.</p>
 							<div>
@@ -78,9 +78,9 @@
 							</div>
 						</div>
 						<div class="metadata_section">
-							<h3>
+							<h2>
 								<xsl:value-of select="numishare:normalize_fields('legend', $lang)"/>
-							</h3>
+							</h2>
 							<p class="text-muted">Search for characters that appear on the front and back of the coin. Please enter legends without spaces or
 								punctuation, using the wildcard asterisk character '*' to denote gaps in legibility, in the beginning, middle, or end of the
 								legend. <br/><strong>Example: </strong><kbd>PCARISI*LEG</kbd> will match "P CARISIVS LEG". <br/><strong>Example:
@@ -103,9 +103,9 @@
 							</div>
 						</div>
 						<div class="metadata_section">
-							<h3>
+							<h2>
 								<xsl:value-of select="numishare:normalize_fields('portrait', $lang)"/>
-							</h3>
+							</h2>
 							<p class="text-muted">Portrait comparison may aid in identification, especially for heavily worn coinage. Ideal portraits are
 								presented in gold, silver, and bronze (when available), as well as a worn example. You can page forward and backward through
 								examples by clicking the buttons. Hover over the image to read the name of the individual depicted on the coin.</p>
@@ -152,11 +152,14 @@
 	<!-- periods -->
 	<xsl:template match="period">
 		<div class="row">
-			<div class="col-md-12">
-				<h4>
+			<div class="col-md-12 metadata_section">
+				<h3>
 					<xsl:value-of select="@label"/>
-				</h4>
+				</h3>
 				<xsl:apply-templates select="portrait"/>
+				<div class="col-md-12">
+					<hr/>
+				</div>
 			</div>
 		</div>
 	</xsl:template>
