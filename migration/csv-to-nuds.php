@@ -1148,14 +1148,14 @@ function put_to_exist($filename, $nudsid){
 		$putToExist=curl_init();
 		
 		//set curl opts
-		curl_setopt($putToExist,CURLOPT_URL,'http://numismatics.org:8080/exist/rest/db/ocre/objects/' . $nudsid . '.xml');
+		curl_setopt($putToExist,CURLOPT_URL,'http://localhost:8080/exist/rest/db/ocre/objects/' . $nudsid . '.xml');
 		curl_setopt($putToExist,CURLOPT_HTTPHEADER, array("Content-Type: text/xml; charset=utf-8"));
 		curl_setopt($putToExist,CURLOPT_CONNECTTIMEOUT,2);
 		curl_setopt($putToExist,CURLOPT_RETURNTRANSFER,1);
 		curl_setopt($putToExist,CURLOPT_PUT,1);
 		curl_setopt($putToExist,CURLOPT_INFILESIZE,filesize($filename));
 		curl_setopt($putToExist,CURLOPT_INFILE,$readFile);
-		curl_setopt($putToExist,CURLOPT_USERPWD,"admin:Mp4ANSAie2r");
+		curl_setopt($putToExist,CURLOPT_USERPWD,"admin:");
 		$response = curl_exec($putToExist);
 
 		$http_code = curl_getinfo($putToExist,CURLINFO_HTTP_CODE);
