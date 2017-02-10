@@ -23,7 +23,8 @@
 							<!-- set role and index -->							
 							<xforms:setvalue ref="instance('control-instance')/element" value="$binding/local-name()"/>
 							<xforms:setvalue ref="instance('control-instance')/role" value="$binding/@xlink:role"/>
-							<xforms:setvalue ref="instance('control-instance')/type" if="$binding/local-name()='persname'">foaf:Person</xforms:setvalue>
+							<xforms:setvalue ref="instance('control-instance')/type" if="$binding/local-name()='persname' and not($binding/@xlink:role='deity')">foaf:Person</xforms:setvalue>
+							<xforms:setvalue ref="instance('control-instance')/type" if="$binding/local-name()='persname' and $binding/@xlink:role='deity'">wordnet:Deity</xforms:setvalue>
 							<xforms:setvalue ref="instance('control-instance')/type" if="$binding/local-name()='corpname'">foaf:Organization</xforms:setvalue>
 						</xforms:action>
 					</xforms:action>
@@ -52,13 +53,7 @@
 								<xforms:label>
 									<span class="glyphicon glyphicon-remove"/>
 								</xforms:label>
-							</xforms:trigger>
-							<xforms:group ref="$binding[not($binding/@title)]">
-								<xforms:trigger appearance="minimal">
-									<xforms:insert if="not($binding/title)" context="$binding" origin="xxforms:attribute('title', '')" ev:event="DOMActivate"/>
-									<xforms:label><span class="glyphicon glyphicon-plus"/>Title</xforms:label>
-								</xforms:trigger>
-							</xforms:group>
+							</xforms:trigger>							
 						</div>
 					</xforms:group>
 
@@ -73,13 +68,7 @@
 								<xforms:label>
 									<span class="glyphicon glyphicon-remove"/>
 								</xforms:label>
-							</xforms:trigger>
-							<xforms:group ref="$binding[not($binding/@title)]">
-								<xforms:trigger appearance="minimal">
-									<xforms:insert if="not($binding/@title)" context="$binding" origin="xxforms:attribute('title', '')" ev:event="DOMActivate"/>
-									<xforms:label><span class="glyphicon glyphicon-plus"/>Title</xforms:label>
-								</xforms:trigger>
-							</xforms:group>
+							</xforms:trigger>							
 							<xforms:group ref="$binding[not($binding/@certainty)]">
 								<xforms:trigger appearance="minimal">
 									<xforms:insert if="not($binding/@certainty)" context="$binding" origin="xxforms:attribute('certainty', '')" ev:event="DOMActivate"/>
@@ -94,37 +83,44 @@
 								</xforms:input>
 								<xforms:trigger>
 									<xforms:action ev:event="DOMActivate">
-										<xforms:delete context="instance('feed')/*"/>
+										<xforms:setvalue ref="instance('control-instance')/search-results"/>
+										<xforms:setvalue ref="instance('control-instance')/description"/>
 										<xforms:setvalue ref="instance('temp')"/>
 										<xforms:setvalue ref="instance('temp')/@href"/>
+										<xforms:setvalue ref="instance('sparqlQuery')" value="normalize-space(replace(replace(instance('sparqlQueryTemplate'), '%SEARCH%', instance('search-query')), '%CLASS%', instance('control-instance')/type))"/>
 										<xforms:send submission="query-nomisma"/>
 									</xforms:action>
 									<xforms:label>Execute</xforms:label>
 								</xforms:trigger>
 							</div>
 							
-							<xforms:group ref=".[count(instance('feed')//atom:entry) &gt; 0]">
-								<xforms:select1 ref="instance('temp')/@href" appearance="compact" id="nomisma-list">
+							<xforms:group ref=".[string-length(instance('control-instance')/search-results)] &gt; 0">
+								<p class="text-muted">
+									<xforms:output ref="instance('control-instance')/search-results"/>
+								</p>
+							</xforms:group>
+							
+							<xforms:group ref=".[count(instance('sparqlResponse')//res:result) &gt; 0]">
+								<xforms:select1 ref="instance('temp')/@href" appearance="compact">
 									<xforms:label>Term</xforms:label>
-									<xforms:itemset nodeset="instance('feed')//atom:entry">
-										<xforms:label ref="atom:title"/>
-										<xforms:value ref="atom:link[not(@rel)]/@href"/>
+									<xforms:itemset nodeset="instance('sparqlResponse')//res:result">
+										<xforms:label ref="res:binding[@name='label']/res:literal"/>
+										<xforms:value ref="res:binding[@name='uri']/res:uri"/>
 									</xforms:itemset>
-									<xforms:action ev:event="xforms-value-changed">
-										<xforms:var name="id" select="tokenize(instance('temp')/@href, '/')[last()]"/>
-										<xforms:setvalue ref="instance('control-instance')/description" value="instance('feed')//atom:entry[atom:id = $id]/atom:summary"/>
-									</xforms:action>
+									<xforms:setvalue ref="instance('control-instance')/description" value="instance('sparqlResponse')//res:result[res:binding[@name='uri']/res:uri =
+										instance('temp')/@href]/res:binding[@name='def']/res:literal" ev:event="xforms-value-changed"/>
 								</xforms:select1>
 								<xforms:trigger>
 									<xforms:label>Select</xforms:label>
 									<xforms:action ev:event="DOMActivate">
 										<xforms:setvalue ref="$binding/@xlink:href" value="instance('temp')/@href"/>
-										<xforms:setvalue ref="$binding"
-											value="instance('feed')//atom:entry[atom:link[not(@rel)]/@href = instance('temp')/@href]/atom:title"/>
+										<xforms:setvalue ref="$binding" value="instance('sparqlResponse')//res:result[res:binding[@name='uri']/res:uri =
+											instance('temp')/@href]/res:binding[@name='label']/res:literal"/>
 									</xforms:action>
 								</xforms:trigger>
 							</xforms:group>
-							<xforms:group ref=".[string(instance('temp')/@href)]">
+							
+							<xforms:group ref=".[string-length(instance('control-instance')/description) &gt; 0]">
 								<div>
 									<xforms:output ref="instance('control-instance')/description">
 										<xforms:label>Description</xforms:label>
@@ -137,21 +133,6 @@
 									</xforms:trigger>
 								</div>
 							</xforms:group>
-						</div>
-					</xforms:group>
-
-					<xforms:group ref="$binding/@title">
-						<div>
-							<xforms:input ref=".">
-								<xforms:label>Title</xforms:label>
-								<xforms:alert>Required</xforms:alert>
-							</xforms:input>
-							<xforms:trigger appearance="minimal">
-								<xforms:delete ev:event="DOMActivate" nodeset="."/>
-								<xforms:label>
-									<span class="glyphicon glyphicon-remove"/>
-								</xforms:label>
-							</xforms:trigger>
 						</div>
 					</xforms:group>
 					
@@ -169,6 +150,8 @@
 						</div>
 					</xforms:group>
 
+					<!--<fr:xforms-inspector></fr:xforms-inspector>-->
+
 					<!-- ********************************************************************** -->
 					<!-- ***********************  DIALOG INTERNAL MODEL *********************** -->
 					<xforms:model id="cp-name-model" xmlns:xi="http://www.w3.org/2001/XInclude">
@@ -183,30 +166,61 @@
 								<type/>
 								<element/>
 								<description/>
+								<search-results/>
 							</control>
 						</xforms:instance>
 
 						<xforms:instance id="temp">
 							<temp href=""/>
-						</xforms:instance>
+						</xforms:instance>						
 						
 						<!-- Instances containing the query string -->
 						<xforms:instance id="search-query">
 							<query/>
 						</xforms:instance>
+						<!-- sparql queries for Nomisma -->
+						<xforms:instance id="sparqlQueryTemplate">
+							<query><![CDATA[PREFIX rdf:	<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX dcterms:	<http://purl.org/dc/terms/>
+PREFIX foaf:	<http://xmlns.com/foaf/0.1/>
+PREFIX skos:	<http://www.w3.org/2004/02/skos/core#>
+PREFIX wordnet: <http://ontologi.es/WordNet/class/>
 
-						<!-- instances for nomisma -->
-						<xforms:instance id="feed">
-							<feed/>
+SELECT * WHERE {
+?uri a %CLASS% ;
+     skos:prefLabel ?label FILTER (regex(str(?label), "%SEARCH%", "i")) FILTER (langMatches(lang(?label), "en")).
+?uri skos:definition ?def .
+}]]>
+							</query>
+						</xforms:instance>
+						
+						<xforms:instance id="sparqlQuery">
+							<query/>
+						</xforms:instance>
+						
+						<xforms:instance id="sparqlResponse">
+							<sparql xmlns="http://www.w3.org/2005/sparql-results#"/>
 						</xforms:instance>
 
 						<!-- require a value for temp, thus requiring a value for $binding -->
 						<xforms:bind nodeset="instance('temp')" required="true()"/>
 
-						<xforms:submission id="query-nomisma" serialization="none" method="get"
-							action="http://nomisma.org/feed/?q=type:&#x022;{instance('control-instance')/type}&#x022;+AND+label:{instance('search-query')}&amp;sort=score+desc" instance="feed"
-							replace="instance">
-							<xforms:message ev:event="xforms-submit-error" level="modal">Unable to communicate with nomisma.org Atom feed.</xforms:message>
+						<xforms:submission id="query-nomisma" action="http://nomisma.org/query?query={encode-for-uri(instance('sparqlQuery'))}" ref="instance('sparqlResponse')" replace="instance"
+							method="get">
+							<xforms:header>
+								<xforms:name>User-Agent</xforms:name>
+								<xforms:value>XForms/Nomisma</xforms:value>
+							</xforms:header>
+							<xforms:header>
+								<xforms:name>Accept</xforms:name>
+								<xforms:value>application/sparql-results+xml</xforms:value>
+							</xforms:header>
+							<xforms:message ev:event="xforms-submit-error" level="modal">SPARQL query failed.</xforms:message>
+							<xforms:action ev:event="xforms-submit-done">
+								<xforms:var name="total" select="count(instance('sparqlResponse')//res:result)"/>
+								<xforms:setvalue if="$total = 0" ref="instance('control-instance')/search-results">No results found for query.</xforms:setvalue>
+								<xforms:setvalue if="$total &gt; 0" ref="instance('control-instance')/search-results" value="concat('Displaying ', $total, ' result(s).')"/>
+							</xforms:action>
 						</xforms:submission>
 					</xforms:model>
 				</xforms:group>
