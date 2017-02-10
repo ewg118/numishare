@@ -46,8 +46,7 @@
 									<!-- delete all holdover values before removing bind, possible orbeon bug -->
 									<xforms:setvalue ref="instance('temp')"/>
 									<xforms:setvalue ref="instance('temp')/@href"/>
-									<xforms:setvalue ref="instance('search-query')"/>
-									<xforms:delete context="instance('feed')/*"/>
+									<xforms:setvalue ref="instance('search-query')"/>									
 									<xforms:delete nodeset="$binding"/>
 								</xforms:action>
 								<xforms:label>
@@ -92,6 +91,16 @@
 									</xforms:action>
 									<xforms:label>Execute</xforms:label>
 								</xforms:trigger>
+								<xforms:group ref=".[count(instance('sparqlResponse')//res:result) = 0 and string-length(instance('control-instance')/search-results) &gt; 0]">
+									<xforms:trigger>
+										<xforms:label>Add Local Term</xforms:label>
+										<xforms:action ev:event="DOMActivate">
+											<xforms:setvalue ref="instance('temp')" value="instance('search-query')"/>
+											<xforms:setvalue ref="$binding" value="instance('search-query')"/>
+											<xforms:delete nodeset="$binding/@xlink:href"/>
+										</xforms:action>
+									</xforms:trigger>
+								</xforms:group>
 							</div>
 							
 							<xforms:group ref=".[string-length(instance('control-instance')/search-results)] &gt; 0">
@@ -100,6 +109,7 @@
 								</p>
 							</xforms:group>
 							
+							<!-- select list -->
 							<xforms:group ref=".[count(instance('sparqlResponse')//res:result) &gt; 0]">
 								<xforms:select1 ref="instance('temp')/@href" appearance="compact">
 									<xforms:label>Term</xforms:label>
@@ -166,7 +176,7 @@
 								<type/>
 								<element/>
 								<description/>
-								<search-results/>
+								<search-results/>								
 							</control>
 						</xforms:instance>
 
