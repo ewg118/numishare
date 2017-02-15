@@ -82,8 +82,11 @@
 		</p:input>
 		<p:output name="data" id="generator-config"/>
 	</p:processor>
+	
+	<!-- get the file from eXist -->
 	<p:processor name="oxf:url-generator">
 		<p:input name="config" href="#generator-config"/>
 		<p:output name="data" ref="data"/>
 	</p:processor>
+	
 </p:config>

@@ -7,7 +7,7 @@
 -->
 <xsl:stylesheet xmlns:nuds="http://nomisma.org/nuds" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:numishare="https://github.com/ewg118/numishare" xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:nm="http://nomisma.org/id/"
-	xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:res="http://www.w3.org/2005/sparql-results#" xmlns:mods="http://www.loc.gov/mods/v3" exclude-result-prefixes="#all" version="2.0">
+	xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:mets="http://www.loc.gov/METS/" xmlns:res="http://www.w3.org/2005/sparql-results#" xmlns:mods="http://www.loc.gov/mods/v3" exclude-result-prefixes="#all" version="2.0">
 	<!--***************************************** ELEMENT TEMPLATES **************************************** -->
 	<xsl:template match="*[local-name()='refDesc']">
 		<xsl:element name="{if (ancestor::subtype) then 'h4' else 'h3'}">
@@ -450,6 +450,27 @@
 			
 		</xsl:if>
 	</xsl:template>
+	
+	<!-- *************** FORMAT CONTROL MARKS FROM INDIVIDUAL SYMBOL ELEMENTS ******************-->
+	<xsl:template name="format-control-marks">
+		<li>
+			<b>Control Marks: </b>
+			<xsl:choose>
+				<xsl:when test="nuds:symbol[@position='center']">
+					<xsl:value-of select="nuds:symbol[@position='center']"/>
+					<xsl:text>//</xsl:text>
+					<xsl:value-of select="if (nuds:symbol[@position='exergue']) then nuds:symbol[@position='exergue'] else '-'"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="if (nuds:symbol[@position='left']) then nuds:symbol[@position='left'] else '-'"/>
+					<xsl:text>/</xsl:text>
+					<xsl:value-of select="if (nuds:symbol[@position='right']) then nuds:symbol[@position='right'] else '-'"/>
+					<xsl:text>//</xsl:text>
+					<xsl:value-of select="if (nuds:symbol[@position='exergue']) then nuds:symbol[@position='exergue'] else '-'"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</li>
+	</xsl:template>
 
 	<!-- *************** HANDLE SUBTYPES DELIVERED FROM XQUERY ******************-->
 	<xsl:template match="subtype">
@@ -692,6 +713,8 @@
 			<xsl:text>, </xsl:text>
 		</xsl:if>
 	</xsl:template>
+	
+	
 
 	<!--***************************************** OPTIONS BAR **************************************** -->
 	<xsl:template name="icons">
@@ -827,4 +850,64 @@
 			</country>
 		</abbreviations>
 	</xsl:variable>
+	
+	<xsl:template name="generic_head">
+		<title id="{$id}">
+			<xsl:value-of select="//config/title"/>
+			<xsl:text>: </xsl:text>
+			<xsl:choose>
+				<xsl:when test="descendant::*:descMeta/*:title[@xml:lang=$lang]">
+					<xsl:value-of select="descendant::*:descMeta/*:title[@xml:lang=$lang]"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="descendant::*:descMeta/*:title[@xml:lang='en']"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</title>
+		<!-- alternates -->
+		<link rel="alternate" type="application/xml" href="{$objectUri}.xml"/>
+		<link rel="alternate" type="application/rdf+xml" href="{$objectUri}.rdf"/>
+		<link rel="alternate" type="application/ld+json" href="{$objectUri}.jsonld"/>
+		<link rel="alternate" type="text/turtle" href="{$objectUri}.ttl"/>
+		<link rel="alternate" type="application/vnd.google-earth.kml+xml" href="{$objectUri}.kml"/>
+		<link rel="alternate" type="application/application/vnd.geo+json" href="{$objectUri}.geojson"/>
+		
+		<!-- open graph metadata -->
+		<meta property="og:url" content="{$objectUri}"/>
+		<meta property="og:type" content="article"/>
+		<meta property="og:title">
+			<xsl:attribute name="content">
+				<xsl:choose>
+					<xsl:when test="descendant::*:descMeta/*:title[@xml:lang=$lang]">
+						<xsl:value-of select="descendant::*:descMeta/*:title[@xml:lang=$lang]"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="descendant::*:descMeta/*:title[@xml:lang='en']"/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:attribute>
+		</meta>
+		
+		<xsl:for-each select="//mets:fileGrp/mets:file[@USE='reference']/mets:FLocat/@xlink:href">
+			<meta property="og:image" content="{.}"/>
+		</xsl:for-each>
+		
+		<!-- CSS -->
+		<link rel="shortcut icon" type="image/x-icon" href="{$include_path}/images/favicon.png"/>
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1"/>
+		<!-- bootstrap -->
+		<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"/>
+		<script type="text/javascript" src="http://netdna.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"/>
+		<xsl:if test="string(//config/google_analytics)">
+			<script type="text/javascript">
+				<xsl:value-of select="//config/google_analytics"/>
+			</script>
+		</xsl:if>
+		
+		<!-- always include leaflet -->
+		<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css"/>
+		<script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"/>					
+		<script type="text/javascript" src="{$include_path}/javascript/leaflet.ajax.min.js"/>
+	</xsl:template>
 </xsl:stylesheet>
