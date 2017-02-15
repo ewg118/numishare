@@ -7,7 +7,7 @@
 -->
 <xsl:stylesheet xmlns:nuds="http://nomisma.org/nuds" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:numishare="https://github.com/ewg118/numishare" xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:nm="http://nomisma.org/id/"
-	xmlns:res="http://www.w3.org/2005/sparql-results#" xmlns:mods="http://www.loc.gov/mods/v3" exclude-result-prefixes="#all" version="2.0">
+	xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:mets="http://www.loc.gov/METS/" xmlns:res="http://www.w3.org/2005/sparql-results#" xmlns:mods="http://www.loc.gov/mods/v3" exclude-result-prefixes="#all" version="2.0">
 	<!--***************************************** ELEMENT TEMPLATES **************************************** -->
 	<xsl:template match="*[local-name()='refDesc']">
 		<xsl:element name="{if (ancestor::subtype) then 'h4' else 'h3'}">
@@ -93,11 +93,11 @@
 					<b>
 						<xsl:choose>
 							<xsl:when test="string(@localType)">
-								<xsl:variable name="lang" select="if(string($lang)) then $lang else 'en'"/>
+								<xsl:variable name="langParam" select="if(string($lang)) then $lang else 'en'"/>
 								<xsl:variable name="localType" select="@localType"/>
 								<xsl:choose>
-									<xsl:when test="$localTypes//localType[@value=$localType]/label[@lang=$lang]">
-										<xsl:value-of select="$localTypes//localType[@value=$localType]/label[@lang=$lang]"/>
+									<xsl:when test="$localTypes//localType[@value=$localType]/label[@lang=$langParam]">
+										<xsl:value-of select="$localTypes//localType[@value=$localType]/label[@lang=$langParam]"/>
 									</xsl:when>
 									<xsl:otherwise>
 										<xsl:value-of select="concat(upper-case(substring(@localType, 1, 1)), substring(@localType, 2))"/>
@@ -211,7 +211,7 @@
 											'id/'), '&#x022;')"/>
 									</xsl:variable>
 
-									<a href="{$display_path}results?q=region_hier:({encode-for-uri($selfQuery)}){if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+									<a href="{$display_path}results?q=region_hier:({encode-for-uri($selfQuery)}){if (string($langParam)) then concat('&amp;lang=', $langParam) else ''}">
 										<xsl:value-of select="$value"/>
 									</a>
 								</xsl:when>
@@ -234,11 +234,11 @@
 						<i> (<xsl:value-of select="@title"/>)</i>
 					</xsl:if>
 					<xsl:if test="string(@position)">
-						<xsl:variable name="lang" select="if(string($lang)) then $lang else 'en'"/>
+						<xsl:variable name="langParam" select="if(string($lang)) then $lang else 'en'"/>
 						<xsl:variable name="position" select="@position"/>
 						<xsl:choose>
-							<xsl:when test="$positions//position[@value=$position]/label[@lang=$lang]">
-								<i> (<xsl:value-of select="$positions//position[@value=$position]/label[@lang=$lang]"/>)</i>
+							<xsl:when test="$positions//position[@value=$position]/label[@lang=$langParam]">
+								<i> (<xsl:value-of select="$positions//position[@value=$position]/label[@lang=$langParam]"/>)</i>
 							</xsl:when>
 							<xsl:otherwise>
 								<i> (<xsl:value-of select="concat(upper-case(substring(@position, 1, 1)), substring(@position, 2))"/>)</i>
@@ -253,10 +253,16 @@
 					<xsl:if test="string(@calendar)">
 						<i> (<xsl:value-of select="@calendar"/>)</i>
 					</xsl:if>
+
+					<!-- if the element is a symbol, display image, if available -->
+					<xsl:if test="string($href) and self::nuds:symbol">
+						<xsl:apply-templates select="$symbols//rdf:RDF/*[@rdf:about=$href]" mode="symbol"/>
+					</xsl:if>
+
 					<!-- create links to resources -->
 					<xsl:if test="string($href)">
-						<a href="{$href}" target="_blank" rel="{numishare:normalizeProperty($recordType, if(@xlink:role) then @xlink:role else local-name())}">
-							<img src="{$include_path}/images/external.png" alt="external link" class="external_link"/>
+						<a href="{$href}" target="_blank" rel="{numishare:normalizeProperty($recordType, if(@xlink:role) then @xlink:role else local-name())}" class="external_link">
+							<span class="glyphicon glyphicon-new-window"/>
 						</a>
 					</xsl:if>
 				</li>
@@ -402,12 +408,12 @@
 		<xsl:choose>
 			<xsl:when test="string($position) and $positions//position[@value=$position]">
 				<xsl:variable name="side" select="substring(parent::node()/name(), 1, 3)"/>
-				<a href="{$display_path}results?q=symbol_{$side}_{$position}_facet:&#x022;{$value}&#x022;{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+				<a href="{$display_path}results?q=symbol_{$side}_{$position}_facet:&#x022;{$value}&#x022;{if (string($langParam)) then concat('&amp;lang=', $langParam) else ''}">
 					<xsl:value-of select="$value"/>
 				</a>
 			</xsl:when>
 			<xsl:when test="contains($facets, $field)">
-				<a href="{$display_path}results?q={$field}_facet:&#x022;{$value}&#x022;{if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+				<a href="{$display_path}results?q={$field}_facet:&#x022;{$value}&#x022;{if (string($langParam)) then concat('&amp;lang=', $langParam) else ''}">
 					<xsl:choose>
 						<xsl:when test="contains($href, 'geonames.org')">
 							<xsl:choose>
@@ -431,6 +437,41 @@
 		</xsl:choose>
 	</xsl:template>
 
+	<!-- *************** RENDER RDF ABOUT SYMBOLS ******************-->
+	<xsl:template match="*" mode="symbol">
+		<xsl:if test="foaf:depiction">
+			<xsl:variable name="title" select="concat(if (skos:prefLabel[@xml:lang=$lang]) then skos:prefLabel[@xml:lang=$lang] else skos:prefLabel[@xml:lang='en'], ': ', if (skos:definition[@xml:lang=$lang]) then skos:definition[@xml:lang=$lang] else skos:definition[@xml:lang='en'])"/>
+			
+			<xsl:for-each select="foaf:depiction">
+				<a href="{@rdf:resource}" class="thumbImage" id="{tokenize(@rdf:resource, '/')[last()]}" title="{$title}">
+					<span class="glyphicon glyphicon-camera"/>
+				</a>
+			</xsl:for-each>
+			
+		</xsl:if>
+	</xsl:template>
+	
+	<!-- *************** FORMAT CONTROL MARKS FROM INDIVIDUAL SYMBOL ELEMENTS ******************-->
+	<xsl:template name="format-control-marks">
+		<li>
+			<b>Control Marks: </b>
+			<xsl:choose>
+				<xsl:when test="nuds:symbol[@position='center']">
+					<xsl:value-of select="nuds:symbol[@position='center']"/>
+					<xsl:text>//</xsl:text>
+					<xsl:value-of select="if (nuds:symbol[@position='exergue']) then nuds:symbol[@position='exergue'] else '-'"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="if (nuds:symbol[@position='left']) then nuds:symbol[@position='left'] else '-'"/>
+					<xsl:text>/</xsl:text>
+					<xsl:value-of select="if (nuds:symbol[@position='right']) then nuds:symbol[@position='right'] else '-'"/>
+					<xsl:text>//</xsl:text>
+					<xsl:value-of select="if (nuds:symbol[@position='exergue']) then nuds:symbol[@position='exergue'] else '-'"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</li>
+	</xsl:template>
+
 	<!-- *************** HANDLE SUBTYPES DELIVERED FROM XQUERY ******************-->
 	<xsl:template match="subtype">
 		<xsl:param name="uri_space"/>
@@ -450,9 +491,7 @@
 				</ul>
 			</div>
 			<div class="col-md-9">
-				<xsl:if test="string($sparql_endpoint)">
-					<xsl:copy-of select="document(concat($request-uri, 'sparql?uri=', $uri_space, $subtypeId, '&amp;template=display&amp;subtype=true&amp;lang=', $lang))/div[@class='row']"/>
-				</xsl:if>
+				<xsl:apply-templates select="document(concat($request-uri, 'apis/type-examples?id=', $subtypeId, '&amp;subtype=true'))/*" mode="type-examples"/>
 			</div>
 		</div>
 		<hr/>
@@ -592,7 +631,7 @@
 				</xsl:choose>
 			</xsl:variable>
 
-			<a href="{$display_path}results?q=region_hier:({encode-for-uri($fragment)}){if (string($lang)) then concat('&amp;lang=', $lang) else ''}">
+			<a href="{$display_path}results?q=region_hier:({encode-for-uri($fragment)}){if (string($langParam)) then concat('&amp;lang=', $langParam) else ''}">
 				<xsl:value-of select="."/>
 			</a>
 			<xsl:if test="not(position()=last())">
@@ -674,6 +713,8 @@
 			<xsl:text>, </xsl:text>
 		</xsl:if>
 	</xsl:template>
+	
+	
 
 	<!--***************************************** OPTIONS BAR **************************************** -->
 	<xsl:template name="icons">
@@ -809,4 +850,64 @@
 			</country>
 		</abbreviations>
 	</xsl:variable>
+	
+	<xsl:template name="generic_head">
+		<title id="{$id}">
+			<xsl:value-of select="//config/title"/>
+			<xsl:text>: </xsl:text>
+			<xsl:choose>
+				<xsl:when test="descendant::*:descMeta/*:title[@xml:lang=$lang]">
+					<xsl:value-of select="descendant::*:descMeta/*:title[@xml:lang=$lang]"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="descendant::*:descMeta/*:title[@xml:lang='en']"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</title>
+		<!-- alternates -->
+		<link rel="alternate" type="application/xml" href="{$objectUri}.xml"/>
+		<link rel="alternate" type="application/rdf+xml" href="{$objectUri}.rdf"/>
+		<link rel="alternate" type="application/ld+json" href="{$objectUri}.jsonld"/>
+		<link rel="alternate" type="text/turtle" href="{$objectUri}.ttl"/>
+		<link rel="alternate" type="application/vnd.google-earth.kml+xml" href="{$objectUri}.kml"/>
+		<link rel="alternate" type="application/application/vnd.geo+json" href="{$objectUri}.geojson"/>
+		
+		<!-- open graph metadata -->
+		<meta property="og:url" content="{$objectUri}"/>
+		<meta property="og:type" content="article"/>
+		<meta property="og:title">
+			<xsl:attribute name="content">
+				<xsl:choose>
+					<xsl:when test="descendant::*:descMeta/*:title[@xml:lang=$lang]">
+						<xsl:value-of select="descendant::*:descMeta/*:title[@xml:lang=$lang]"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="descendant::*:descMeta/*:title[@xml:lang='en']"/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:attribute>
+		</meta>
+		
+		<xsl:for-each select="//mets:fileGrp/mets:file[@USE='reference']/mets:FLocat/@xlink:href">
+			<meta property="og:image" content="{.}"/>
+		</xsl:for-each>
+		
+		<!-- CSS -->
+		<link rel="shortcut icon" type="image/x-icon" href="{$include_path}/images/favicon.png"/>
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1"/>
+		<!-- bootstrap -->
+		<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"/>
+		<script type="text/javascript" src="http://netdna.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"/>
+		<xsl:if test="string(//config/google_analytics)">
+			<script type="text/javascript">
+				<xsl:value-of select="//config/google_analytics"/>
+			</script>
+		</xsl:if>
+		
+		<!-- always include leaflet -->
+		<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css"/>
+		<script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"/>					
+		<script type="text/javascript" src="{$include_path}/javascript/leaflet.ajax.min.js"/>
+	</xsl:template>
 </xsl:stylesheet>

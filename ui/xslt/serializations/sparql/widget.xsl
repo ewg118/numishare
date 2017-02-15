@@ -4,14 +4,21 @@
 	<xsl:include href="../../functions.xsl"/>
 
 	<xsl:param name="template" select="doc('input:request')/request/parameters/parameter[name='template']/value"/>
-	<xsl:param name="lang" select="doc('input:request')/request/parameters/parameter[name='lang']/value"/>
+	<xsl:param name="langParam" select="doc('input:request')/request/parameters/parameter[name='lang']/value"/>
+	<xsl:param name="lang">
+		<xsl:choose>
+			<xsl:when test="string($langParam)">
+				<xsl:value-of select="$langParam"/>
+			</xsl:when>
+			<xsl:when test="string(doc('input:request')/request//header[name[.='accept-language']]/value)">
+				<xsl:value-of select="numishare:parseAcceptLanguage(doc('input:request')/request//header[name[.='accept-language']]/value)[1]"/>
+			</xsl:when>
+		</xsl:choose>
+	</xsl:param>
 	<xsl:param name="subtype" select="doc('input:request')/request/parameters/parameter[name='subtype']/value"/>
 
 	<xsl:template match="/">
-		<xsl:choose>
-			<xsl:when test="$template = 'display'">
-				<xsl:apply-templates select="descendant::res:sparql" mode="display"/>
-			</xsl:when>
+		<xsl:choose>			
 			<xsl:when test="$template = 'kml'">
 				<xsl:apply-templates select="descendant::res:sparql" mode="kml"/>
 			</xsl:when>
@@ -43,19 +50,37 @@
 
 	<xsl:template match="res:result" mode="kml">
 		<xsl:variable name="closing_date" select="res:binding[@name='burial']/res:literal"/>
+		<xsl:variable name="description">
+			<![CDATA[
+          					<dl class='dl-horizontal'><dt>URL</dt><dd><a href="]]><xsl:value-of select="res:binding[@name='object']/res:uri"/><![CDATA[">]]><xsl:value-of
+				select="res:binding[@name='title']/res:literal"/><![CDATA[</a></dd>]]>
+			<xsl:if test="res:binding[@name='hoard']/res:uri">
+				<![CDATA[<dt>Hoard</dt><dd><a href="]]><xsl:value-of select="res:binding[@name='hoard']/res:uri"/><![CDATA[">]]><xsl:value-of select="res:binding[@name='hoardLabel']/res:literal"
+				/><![CDATA[</a></dd>]]>
+			</xsl:if>
+			<xsl:if test="res:binding[@name='findspot']/res:uri">
+				<![CDATA[<dt>Findspot</dt><dd><a href="]]><xsl:value-of select="res:binding[@name='findspot']/res:uri"/><![CDATA[">]]>
+				<xsl:choose>
+					<xsl:when test="res:binding[@name='placeName']/res:literal">
+						<xsl:value-of select="res:binding[@name='placeName']/res:literal"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="res:binding[@name='findspot']/res:uri"/>
+					</xsl:otherwise>
+				</xsl:choose><![CDATA[</a></dd>]]>
+			</xsl:if>
+			<xsl:if test="number($closing_date) castable as xs:integer">
+				<![CDATA[<dt>]]><xsl:value-of select="numishare:regularize_node('closing_date', $lang)"/><![CDATA[</dt><dd>]]><xsl:value-of select="number($closing_date)"/><![CDATA[</dd>]]>
+			</xsl:if>
+			<![CDATA[</dl>]]>
+		</xsl:variable>
+
 		<Placemark xmlns="http://earth.google.com/kml/2.0">
 			<name>
 				<xsl:value-of select="res:binding[@name='title']/res:literal"/>
 			</name>
 			<description>
-				<![CDATA[
-          					<dl class='dl-horizontal'><dt>URL</dt><dd><a href="]]><xsl:value-of select="res:binding[@name='findspot']/res:uri"/><![CDATA[" target="_blank">]]><xsl:value-of
-					select="res:binding[@name='title']/res:literal"/><![CDATA[</a></dd>]]>
-				<xsl:if test="number($closing_date) castable as xs:integer">
-					<![CDATA[<dt>]]><xsl:value-of select="numishare:regularize_node('closing_date', $lang)"/><![CDATA[</dt><dd>]]><xsl:value-of select="number($closing_date)"/><![CDATA[</dd>]]>
-				</xsl:if>
-				<![CDATA[</dl>
-        				]]>
+				<xsl:value-of select="normalize-space($description)"/>
 			</description>
 
 			<styleUrl>#mapped</styleUrl>
@@ -90,132 +115,35 @@
 		<xsl:variable name="closing_date" select="res:binding[@name='burial']/res:literal"/>
 		<xsl:variable name="lat" select="res:binding[@name='lat']/res:literal"/>
 		<xsl:variable name="long" select="res:binding[@name='long']/res:literal"/>
-		<xsl:variable name="title">
-			<xsl:value-of select="res:binding[@name='title']/res:literal"/>
-		</xsl:variable>
 		<xsl:variable name="description">
-			<![CDATA[<dl class='dl-horizontal'><dt>URL</dt><dd><a href=']]><xsl:value-of select="res:binding[@name='object']/res:uri"/><![CDATA['>]]><xsl:value-of
-				select="res:binding[@name='object']/res:uri"/><![CDATA[</a></dd>]]>
-			<xsl:if test="string($closing_date)">
-				<![CDATA[<dt>]]><xsl:value-of select="numishare:regularize_node('closing_date', $lang)"/><![CDATA[</dt><dd>]]><xsl:value-of select="numishare:normalizeYear(number($closing_date))"
-				/><![CDATA[</dd>]]>
+			<![CDATA[
+          					<ul><li><b>URL: </b><a href=']]><xsl:value-of select="res:binding[@name='object']/res:uri"/><![CDATA['>]]><xsl:value-of select="res:binding[@name='title']/res:literal"/><![CDATA[</a></li>]]>
+			<xsl:if test="res:binding[@name='hoard']/res:uri">
+				<![CDATA[<li><b>Hoard: </b><a href=']]><xsl:value-of select="res:binding[@name='hoard']/res:uri"/><![CDATA['>]]><xsl:value-of select="res:binding[@name='hoardLabel']/res:literal"
+				/><![CDATA[</a></li>]]>
 			</xsl:if>
-			<![CDATA[</dl>]]>
+			<xsl:if test="res:binding[@name='findspot']/res:uri">
+				<![CDATA[<li><b>Findspot: </b><a href=']]><xsl:value-of select="res:binding[@name='findspot']/res:uri"/><![CDATA['>]]>
+				<xsl:choose>
+					<xsl:when test="res:binding[@name='placeName']/res:literal">
+						<xsl:value-of select="res:binding[@name='placeName']/res:literal"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="res:binding[@name='findspot']/res:uri"/>
+					</xsl:otherwise>
+				</xsl:choose><![CDATA[</a></li>]]>
+			</xsl:if>
+			<xsl:if test="number($closing_date) castable as xs:integer">
+				<![CDATA[<li><b>]]><xsl:value-of select="numishare:regularize_node('closing_date', $lang)"/><![CDATA[: </b>]]><xsl:value-of select="number($closing_date)"/><![CDATA[</li>]]>
+			</xsl:if>
+			<![CDATA[</ul>]]>
 		</xsl:variable>
 		<xsl:variable name="theme">red</xsl:variable>
 		<!-- output --> { <xsl:if test="string($lat) and string($long)">"point": {"lon": <xsl:value-of select="$long"/>, "lat": <xsl:value-of select="$lat"/>},</xsl:if> "title": "<xsl:value-of
-			select="$title"/>", "start": "<xsl:value-of select="$closing_date"/>", "options": { "theme": "<xsl:value-of select="$theme"/>", "description": "<xsl:value-of
-			select="normalize-space($description)"/>" } }<xsl:if test="not(position()=last())">
+			select="res:binding[@name='title']/res:literal"/>", "start": "<xsl:value-of select="$closing_date"/>", "options": { "theme": "<xsl:value-of select="$theme"/>", "description":
+			"<xsl:value-of select="normalize-space($description)"/>" } }<xsl:if test="not(position()=last())">
 			<xsl:text>,</xsl:text>
 		</xsl:if>
-	</xsl:template>
-
-
-	<!-- **************** DISPLAY TEMPLATES ****************-->
-	<xsl:template match="res:sparql" mode="display">
-		<xsl:variable name="count" select="count(descendant::res:result)"/>
-
-		<div class="row">
-			<xsl:if test="not($subtype='true')">
-				<xsl:attribute name="id">examples</xsl:attribute>
-			</xsl:if>
-			<xsl:if test="$count &gt; 0">
-				<div class="col-md-12">
-					<xsl:element name="{if($subtype='true') then 'h4' else 'h3'}">
-						<xsl:value-of select="numishare:normalizeLabel('display_examples', $lang)"/>
-					</xsl:element>
-				</div>
-				<xsl:apply-templates select="descendant::res:result" mode="display"/>
-			</xsl:if>
-		</div>
-	</xsl:template>
-
-	<xsl:template match="res:result" mode="display">
-		<div class="g_doc col-md-4">
-			<span class="result_link">
-				<a href="{res:binding[@name='object']/res:uri}" target="_blank">
-					<xsl:value-of select="res:binding[@name='title']/res:literal"/>
-				</a>
-			</span>
-			<dl class="dl-horizontal">
-				<xsl:if test="res:binding[@name='collection']/res:literal">
-					<dt>
-						<xsl:value-of select="numishare:regularize_node('collection', $lang)"/>
-					</dt>
-					<dd>
-						<xsl:value-of select="res:binding[@name='collection']/res:literal"/>
-					</dd>
-				</xsl:if>
-				<xsl:if test="string(res:binding[@name='axis']/res:literal)">
-					<dt>
-						<xsl:value-of select="numishare:regularize_node('axis', $lang)"/>
-					</dt>
-					<dd>
-						<xsl:value-of select="string(res:binding[@name='axis']/res:literal)"/>
-					</dd>
-				</xsl:if>
-				<xsl:if test="string(res:binding[@name='diameter']/res:literal)">
-					<dt>
-						<xsl:value-of select="numishare:regularize_node('diameter', $lang)"/>
-					</dt>
-					<dd>
-						<xsl:value-of select="string(res:binding[@name='diameter']/res:literal)"/>
-					</dd>
-				</xsl:if>
-				<xsl:if test="string(res:binding[@name='weight']/res:literal)">
-					<dt>
-						<xsl:value-of select="numishare:regularize_node('weight', $lang)"/>
-					</dt>
-					<dd>
-						<xsl:value-of select="string(res:binding[@name='weight']/res:literal)"/>
-					</dd>
-				</xsl:if>
-			</dl>
-			<div class="gi_c">
-				<xsl:choose>
-					<xsl:when test="string(res:binding[@name='obvRef']/res:uri) and string(res:binding[@name='obvThumb']/res:uri)">
-						<a class="thumbImage" rel="gallery" href="{res:binding[@name='obvRef']/res:uri}" title="Obverse of {res:binding[@name='identifier']/res:literal}:
-							{res:binding[@name='collection']/res:literal}" id="{res:binding[@name='object']/res:uri}">
-							<img class="gi" src="{res:binding[@name='obvThumb']/res:uri}"/>
-						</a>
-					</xsl:when>
-					<xsl:when test="not(string(res:binding[@name='obvRef']/res:uri)) and string(res:binding[@name='obvThumb']/res:uri)">
-						<img class="gi" src="{res:binding[@name='obvThumb']/res:uri}"/>
-					</xsl:when>
-					<xsl:when test="string(res:binding[@name='obvRef']/res:uri) and not(string(res:binding[@name='obvThumb']/res:uri))">
-						<a class="thumbImage" rel="gallery" href="{res:binding[@name='obvRef']/res:uri}" title="Obverse of {res:binding[@name='identifier']/res:literal}:
-							{res:binding[@name='collection']/res:literal}" id="{res:binding[@name='object']/res:uri}">
-							<img class="gi" src="{res:binding[@name='obvRef']/res:uri}" style="max-width:120px"/>
-						</a>
-					</xsl:when>
-				</xsl:choose>
-				<!-- reverse-->
-				<xsl:choose>
-					<xsl:when test="string(res:binding[@name='revRef']/res:uri) and string(res:binding[@name='revThumb']/res:uri)">
-						<a class="thumbImage" rel="gallery" href="{res:binding[@name='revRef']/res:uri}" title="Reverse of {res:binding[@name='identifier']/res:literal}:
-							{res:binding[@name='collection']/res:literal}" id="{res:binding[@name='object']/res:uri}">
-							<img class="gi" src="{res:binding[@name='revThumb']/res:uri}"/>
-						</a>
-					</xsl:when>
-					<xsl:when test="not(string(res:binding[@name='revRef']/res:uri)) and string(res:binding[@name='revThumb']/res:uri)">
-						<img class="gi" src="{res:binding[@name='revThumb']/res:uri}"/>
-					</xsl:when>
-					<xsl:when test="string(res:binding[@name='revRef']/res:uri) and not(string(res:binding[@name='revThumb']/res:uri))">
-						<a class="thumbImage" rel="gallery" href="{res:binding[@name='revRef']/res:uri}" title="Reverse of {res:binding[@name='identifier']/res:literal}:
-							{res:binding[@name='collection']/res:literal}" id="{res:binding[@name='object']/res:uri}">
-							<img class="gi" src="{res:binding[@name='revRef']/res:uri}" style="max-width:120px"/>
-						</a>
-					</xsl:when>
-				</xsl:choose>
-				<!-- combined -->
-				<xsl:if test="string(res:binding[@name='comRef']/res:uri) and not(string(res:binding[@name='comThumb']/res:uri))">
-					<a class="thumbImage" rel="gallery" href="{res:binding[@name='comRef']/res:uri}" title="Image of {res:binding[@name='identifier']/res:literal}:
-						{res:binding[@name='collection']/res:literal}" id="{res:binding[@name='object']/res:uri}">
-						<img class="gi" src="{res:binding[@name='comRef']/res:uri}" style="max-width:240px"/>
-					</a>
-				</xsl:if>
-			</div>
-		</div>
 	</xsl:template>
 
 	<!-- **************** SPARQL FACETS FOR VISUALIZATION ****************-->
