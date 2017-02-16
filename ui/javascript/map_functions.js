@@ -17,7 +17,6 @@ $(document).ready(function () {
 	
 	var path = $('#path').text();
 	var pipeline = $('#pipeline').text();
-	var department = $('#department').text();
 	
 	//set hierarchical labels on load
 	$('.hierarchical-facet').each(function () {
@@ -34,11 +33,7 @@ $(document).ready(function () {
 	});
 	
 	/* INITIALIZE MAP */
-	if (department.length > 0) {
-		var q = 'department_facet:"' + department + '"';
-	} else {
-		var q = '*:*';
-	}
+	var q = '*:*';
 	var collection_type = $('#collection_type').text();
 	
 	//initialize timemap if hoard
@@ -69,16 +64,10 @@ $(document).ready(function () {
 			'Imagery © <a href="http://mapbox.com">Mapbox</a>', id: 'mapbox.streets'
 		});
 		
-		if (department == 'Roman' || department == 'Byzantine') {
-			var defaultLayer = 'imperium';
-		} else {
-			var defaultLayer = 'mb_physical';
-		}
-		
 		var map = new L.Map('mapcontainer', {
 			center: new L.LatLng(0, 0),
 			zoom: 4,
-			layers:[eval(defaultLayer)]
+			layers:[eval(baselayers[0])]
 		});
 		
 		//add mintLayer from AJAX
@@ -108,14 +97,7 @@ $(document).ready(function () {
 				case 'imperium': label = 'Imperium Romanum'; break;
 				case 'mb_physical': label = 'Terrain and Streets'; break;
 			}
-			//only add the imperium layer as an option for Roman, Greek, and Byzantine departments
-			if (baselayers[i] == 'imperium') {
-				if (department == 'Roman' || department == 'Greek' || department == 'Byzantine') {
-					baseMaps[label] = eval(baselayers[i]);
-				}
-			} else {
-				baseMaps[label] = eval(baselayers[i]);
-			}
+			baseMaps[label] = eval(baselayers[i]);
 		}
 		
 		var overlayMaps = {
@@ -310,6 +292,7 @@ $(document).ready(function () {
 				$('#results').html(data);
 			}).done(function () {
 				$('a.thumbImage').fancybox({
+					type: 'image',
 					beforeShow: function () {
 						this.title = '<a href="' + this.element.attr('id') + '">' + this.element.attr('title') + '</a>'
 					},
