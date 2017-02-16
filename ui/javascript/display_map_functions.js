@@ -5,11 +5,25 @@ $(document).ready(function () {
     var pipeline = $('#pipeline').text();
     var lang = $('#lang').text();
     
-    if (collection_type != 'object') {
+    if (collection_type == 'hoard') {
         if ($('#map').length > 0) {
             initialize_timemap(id, path, lang);
         }
-    } else {       
+    } else if (collection_type == 'cointype') {
+        var hasFindspots = $('#hasFindspots').text();
+        
+        //display timemap only when there are findspots
+        if (hasFindspots == 'true') {
+            if ($('#map').length > 0) {
+                initialize_timemap(id, path, lang);
+            }
+        } else {
+            //otherwise display regular maps
+            if ($('#mapcontainer').length > 0) {
+                initialize_map(id, path, lang);
+            }
+        }
+    } else {
         if ($('#mapcontainer').length > 0) {
             initialize_map(id, path, lang);
         }
