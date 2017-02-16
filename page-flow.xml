@@ -36,14 +36,6 @@
 	<!-- ************** PROJECT NUMISHARE PAGES *************-->	
 	<!-- AoD -->
 	<page path="/numishare/aod/" model="xpl/models/config.xpl" view="file:///usr/local/projects/aod/xpl/views/pages/index.xpl"/>
-	<page path="/numishare/aod/id/(.*)\.xml" view="xpl/models/object/get-id.xpl"/>
-	<page path="/numishare/aod/id/(.*)\.rdf" model="xpl/models/object/get-id.xpl" view="xpl/views/serializations/object/rdf.xpl"/>
-	<page path="/numishare/aod/id/(.*)\.jsonld" model="xpl/models/object/get-id.xpl" view="xpl/views/serializations/rdf/json-ld.xpl"/>	
-	<page path="/numishare/aod/id/(.*)\.kml" model="xpl/models/object/get-id.xpl" view="xpl/views/serializations/object/kml.xpl"/>
-	<page path="/numishare/aod/id/(.*)\.geojson" model="xpl/models/object/get-id.xpl" view="xpl/views/serializations/object/geojson.xpl"/>
-	<page path="/numishare/aod/id/(.*)\.ttl" model="xpl/models/object/get-id.xpl" view="xpl/views/serializations/rdf/ttl.xpl"/>
-	<page path="/numishare/aod/id/(.*)\.solr" model="xpl/models/object/get-id.xpl" view="xpl/views/serializations/object/solr.xpl"/>	
-	<page path="/numishare/aod/id/(.*)" model="xpl/models/object/get-id.xpl" view="file:///usr/local/projects/aod/xpl/controllers/conneg-id.xpl"/>
 	<page path="/numishare/aod/map/(.*)" model="xpl/models/object/get-id.xpl" view="file:///usr/local/projects/aod/xpl/views/serializations/object/html-map.xpl"/>
 	
 	<!-- CHRR -->
@@ -109,14 +101,14 @@
 	<page path="/numishare/[^\/]+/id/(.*)\.geojson" model="xpl/models/object/get-id.xpl" view="xpl/views/serializations/object/geojson.xpl"/>
 	<page path="/numishare/[^\/]+/id/(.*)\.ttl" model="xpl/models/object/get-id.xpl" view="xpl/views/serializations/rdf/ttl.xpl"/>
 	<page path="/numishare/[^\/]+/id/(.*)\.solr" model="xpl/models/object/get-id.xpl" view="xpl/views/serializations/object/solr.xpl"/>
-	<page path="/numishare/[^\/]+/id/(.*)" model="xpl/models/object/get-id.xpl" view="xpl/controllers/conneg-id.xpl"/>
+	<page path="/numishare/[^\/]+/id/(.*)$" model="xpl/models/object/get-id.xpl" view="xpl/controllers/conneg-id.xpl"/>
 	<page path="/numishare/[^\/]+/map/(.*)" model="xpl/models/object/get-id.xpl" view="xpl/views/serializations/object/html-map.xpl"/>
 	
 	<!-- symbols -->	
 	<page path="/numishare/[^\/]+/symbol/(.*)\.rdf" view="xpl/models/symbol/get.xpl"/>
 	<page path="/numishare/[^\/]+/symbol/(.*)\.ttl" model="xpl/models/symbol/get.xpl" view="xpl/views/serializations/rdf/ttl.xpl"/>
 	<page path="/numishare/[^\/]+/symbol/(.*)\.jsonld" model="xpl/models/symbol/get.xpl" view="xpl/views/serializations/rdf/json-ld.xpl"/>
-	<page path="/numishare/[^\/]+/symbol/(.*)" model="xpl/models/symbol/get.xpl" view="xpl/controllers/conneg-symbol.xpl"/>	
+	<page path="/numishare/[^\/]+/symbol/(.*)$" model="xpl/models/symbol/get.xpl" view="xpl/controllers/conneg-symbol.xpl"/>	
 	<page path="/numishare/[^\/]+/symbols/(.*)" model="xpl/models/config.xpl" view="xpl/controllers/render-image.xpl"/>
 	
 	<!-- **** PAGES **** -->	
