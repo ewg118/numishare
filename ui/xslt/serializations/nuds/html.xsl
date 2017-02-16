@@ -290,6 +290,9 @@
 									<xsl:when test="$recordType = 'physical'">
 										<xsl:value-of select="concat($display_path, 'id/')"/>
 									</xsl:when>
+									<xsl:when test="$recordType = 'conceptual' and $hasFindspots = false()">
+										<xsl:value-of select="concat($display_path, 'id/')"/>
+									</xsl:when>
 									<xsl:otherwise>
 										<xsl:value-of select="$display_path"/>
 									</xsl:otherwise>
