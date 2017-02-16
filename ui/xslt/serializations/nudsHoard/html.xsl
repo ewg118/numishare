@@ -1,19 +1,243 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" version="2.0"
 	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:numishare="https://github.com/ewg118/numishare" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nuds="http://nomisma.org/nuds"
-	xmlns:nh="http://nomisma.org/nudsHoard" xmlns:nm="http://nomisma.org/id/" exclude-result-prefixes="#all">
+	xmlns:nh="http://nomisma.org/nudsHoard" xmlns:nm="http://nomisma.org/id/" xmlns:nmo="http://nomisma.org/ontology#" exclude-result-prefixes="#all">
+	<xsl:include href="../../templates.xsl"/>
+	<!--<xsl:include href="../../templates-visualize.xsl"/>-->
+	<xsl:include href="../../templates-analyze.xsl"/>
+	<xsl:include href="../../functions.xsl"/>
+	<xsl:include href="../object/html-templates.xsl"/>	
+	
+	<!-- URL params -->
+	<xsl:variable name="collection-name" select="substring-before(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/')"/>
+	<xsl:variable name="request-uri" select="concat('http://localhost:8080', substring-before(doc('input:request')/request/request-uri, 'id/'))"/>
+	<xsl:param name="langParam" select="doc('input:request')/request/parameters/parameter[name='lang']/value"/>
+	<xsl:param name="lang">
+		<xsl:choose>
+			<xsl:when test="string($langParam)">
+				<xsl:value-of select="$langParam"/>
+			</xsl:when>
+			<xsl:when test="string(doc('input:request')/request//header[name[.='accept-language']]/value)">
+				<xsl:value-of select="numishare:parseAcceptLanguage(doc('input:request')/request//header[name[.='accept-language']]/value)[1]"/>
+			</xsl:when>
+		</xsl:choose>
+	</xsl:param>	
+	<xsl:param name="pipeline">display</xsl:param>
+	
+	<!-- shared visualization/analysis params -->
+	<xsl:param name="type" select="doc('input:request')/request/parameters/parameter[name='type']/value"/>
+	<xsl:param name="chartType" select="doc('input:request')/request/parameters/parameter[name='chartType']/value"/>
+	
 	<!-- use the calculate URI parameter to output tables/charts for counts of material, denomination, issuer, etc. -->
 	<xsl:param name="calculate" select="doc('input:request')/request/parameters/parameter[name='calculate']/value"/>
 	<xsl:param name="compare" select="doc('input:request')/request/parameters/parameter[name='compare']/value"/>
 	<xsl:param name="exclude" select="doc('input:request')/request/parameters/parameter[name='exclude']/value"/>
 	<xsl:param name="options" select="doc('input:request')/request/parameters/parameter[name='options']/value"/>
-	<xsl:template name="nudsHoard">
-		<xsl:apply-templates select="/content/nh:nudsHoard"/>
+	
+	<!-- config variables -->
+	<xsl:variable name="geonames-url">http://api.geonames.org</xsl:variable>
+	<xsl:variable name="geonames_api_key" select="/content/config/geonames_api_key"/>
+	<xsl:variable name="sparql_endpoint" select="/content/config/sparql_endpoint"/>
+	<xsl:variable name="url" select="/content/config/url"/>
+	<xsl:variable name="collection_type" select="/content/config/collection_type"/>
+	<xsl:variable name="localTypes" as="node()*">
+		<config>
+			<xsl:copy-of select="/content/config/localTypes"/>
+		</config>
+	</xsl:variable>
+	<xsl:variable name="positions" as="node()*">
+		<config>
+			<xsl:copy-of select="/content/config/positions"/>
+		</config>
+	</xsl:variable>
+	<xsl:variable name="regionHierarchy" select="boolean(/content/config/facets/facet[text()='region_hier'])" as="xs:boolean"/>
+
+	<xsl:variable name="display_path">../</xsl:variable>
+	<xsl:variable name="include_path" select="concat('http://', doc('input:request')/request/server-name, ':8080/orbeon/themes/', //config/theme/orbeon_theme)"/>	
+	<xsl:variable name="recordType">hoard</xsl:variable>	
+	<xsl:variable name="id" select="normalize-space(//*[local-name()='recordId'])"/>
+	<xsl:variable name="objectUri" select="if (/content/config/uri_space) then concat(/content/config/uri_space, $id) else concat($url, 'id/', $id)"/>
+	
+	<!-- get NUDS -->
+	<xsl:variable name="nudsGroup" as="element()*">
+		<nudsGroup>
+			<xsl:variable name="type_series" as="element()*">
+				<list>
+					<xsl:for-each select="distinct-values(descendant::nuds:typeDesc[string(@xlink:href)]/substring-before(@xlink:href, 'id/'))">
+						<type_series>
+							<xsl:value-of select="."/>
+						</type_series>
+					</xsl:for-each>
+				</list>
+			</xsl:variable>
+			<xsl:variable name="type_list" as="element()*">
+				<list>
+					<xsl:for-each select="distinct-values(descendant::nuds:typeDesc[string(@xlink:href)]/@xlink:href)">
+						<type_series_item>
+							<xsl:value-of select="."/>
+						</type_series_item>
+					</xsl:for-each>
+				</list>
+			</xsl:variable>
+			
+			<xsl:for-each select="$type_series//type_series">
+				<xsl:variable name="type_series_uri" select="."/>
+				
+				<xsl:variable name="id-param">
+					<xsl:for-each select="$type_list//type_series_item[contains(., $type_series_uri)]">
+						<xsl:value-of select="substring-after(., 'id/')"/>
+						<xsl:if test="not(position()=last())">
+							<xsl:text>|</xsl:text>
+						</xsl:if>
+					</xsl:for-each>
+				</xsl:variable>
+				
+				<xsl:if test="string-length($id-param) &gt; 0">
+					<xsl:for-each select="document(concat($type_series_uri, 'apis/getNuds?identifiers=', encode-for-uri($id-param)))//nuds:nuds">
+						<object xlink:href="{$type_series_uri}id/{nuds:control/nuds:recordId}">
+							<xsl:copy-of select="."/>
+						</object>
+					</xsl:for-each>
+				</xsl:if>
+			</xsl:for-each>
+			<xsl:for-each select="descendant::nuds:typeDesc[not(string(@xlink:href))]">
+				<object>
+					<xsl:copy-of select="."/>
+				</object>
+			</xsl:for-each>
+		</nudsGroup>
+	</xsl:variable>
+	
+	<xsl:variable name="symbols" as="element()*">
+		<symbols>
+			<xsl:for-each select="$nudsGroup/descendant::nuds:symbol[@xlink:href]">
+				<xsl:variable name="href" select="@xlink:href"/>
+				
+				<xsl:if test="doc-available(concat($href, '.rdf'))">
+					<xsl:copy-of select="document(concat($href, '.rdf'))"/>
+				</xsl:if>
+			</xsl:for-each>
+		</symbols>
+	</xsl:variable>
+	
+	<!-- get subtypes -->
+	<xsl:variable name="subtypes" as="element()*">
+		<xsl:if test="$recordType='conceptual' and //config/collection_type='cointype'">
+			<xsl:copy-of select="document(concat($request-uri, 'get_subtypes?identifiers=', $id))/*"/>
+		</xsl:if>
+	</xsl:variable>
+	
+	<xsl:variable name="facets" select="string-join(//config//facet, ',')"/>
+	
+	<!-- get non-coin-type RDF in the document -->
+	<xsl:variable name="rdf" as="element()*">
+		<rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:nm="http://nomisma.org/id/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+			xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:org="http://www.w3.org/ns/org#"
+			xmlns:nomisma="http://nomisma.org/" xmlns:nmo="http://nomisma.org/ontology#">
+			<xsl:variable name="id-param">
+				<xsl:for-each select="distinct-values(descendant::*[not(local-name()='typeDesc') and not(local-name()='reference')][contains(@xlink:href,
+					'nomisma.org')]/@xlink:href|$nudsGroup/descendant::*[not(local-name()='object') and not(local-name()='typeDesc')][contains(@xlink:href, 'nomisma.org')]/@xlink:href)">
+					<xsl:value-of select="substring-after(., 'id/')"/>
+					<xsl:if test="not(position()=last())">
+						<xsl:text>|</xsl:text>
+					</xsl:if>
+				</xsl:for-each>
+			</xsl:variable>
+			
+			<xsl:variable name="rdf_url" select="concat('http://nomisma.org/apis/getRdf?identifiers=', encode-for-uri($id-param))"/>
+			<xsl:copy-of select="document($rdf_url)/rdf:RDF/*"/>
+		</rdf:RDF>
+	</xsl:variable>
+	
+	<xsl:variable name="regions" as="element()*">
+		<node>
+			<xsl:if test="$regionHierarchy = true()">
+				<xsl:variable name="mints" select="distinct-values($rdf//nmo:Mint/@rdf:about[contains(., 'nomisma.org')]|$rdf//nmo:Region/@rdf:about[contains(., 'nomisma.org')])"/>
+				<xsl:variable name="identifiers" select="replace(string-join($mints, '|'), 'http://nomisma.org/id/', '')"/>
+				
+				<xsl:copy-of select="document(concat('http://nomisma.org/apis/regionHierarchy?identifiers=', encode-for-uri($identifiers)))"/>
+			</xsl:if>
+		</node>
+	</xsl:variable>
+	
+	<xsl:template match="/">
+		<html prefix="geo: http://www.w3.org/2003/01/geo/wgs84_pos# foaf: http://xmlns.com/foaf/0.1/ dcterms: http://purl.org/dc/terms/ xsd: http://www.w3.org/2001/XMLSchema# nm:
+			http://nomisma.org/id/ rdf: http://www.w3.org/1999/02/22-rdf-syntax-ns# skos: http://www.w3.org/2004/02/skos/core# nmo:
+			http://nomisma.org/ontology# dcmitype: http://purl.org/dc/dcmitype/">
+			<xsl:if test="string($lang)">
+				<xsl:attribute name="lang" select="$lang"/>
+			</xsl:if>
+			<head>
+				<xsl:call-template name="generic_head"/>
+				<script type="text/javascript" src="{$include_path}/javascript/highcharts.js"/>
+				<script type="text/javascript" src="{$include_path}/javascript/modules/exporting.js"/>
+				<script type="text/javascript" src="{$include_path}/javascript/display_hoard_functions.js"/>
+				<script type="text/javascript" src="{$include_path}/javascript/analysis_functions.js"/>
+				
+				<!-- mapping -->
+				<script type="text/javascript" src="http://openlayers.org/api/2.12/OpenLayers.js"/>
+				<script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3.20&amp;sensor=false"/>
+				<script type="text/javascript" src="{$include_path}/javascript/mxn.js"/>
+				<script type="text/javascript" src="{$include_path}/javascript/timeline-2.3.0.js"/>
+				<link type="text/css" href="{$include_path}/css/timeline-2.3.0.css" rel="stylesheet"/>
+				<script type="text/javascript" src="{$include_path}/javascript/timemap_full.pack.js"/>
+				<script type="text/javascript" src="{$include_path}/javascript/param.js"/>
+				<link type="text/css" href="{$include_path}/css/style.css" rel="stylesheet"/>
+			</head>
+			<body>
+				<xsl:call-template name="header"/>
+				<xsl:call-template name="display"/>
+				<xsl:call-template name="footer"/>
+				
+				<div class="hidden">
+					<span id="baselayers">
+						<xsl:value-of select="string-join(//config/baselayers/layer[@enabled=true()], ',')"/>
+					</span>
+					<span id="collection_type">
+						<xsl:value-of select="$collection_type"/>
+					</span>
+					<span id="path">
+						<xsl:choose>
+							<xsl:when test="$recordType='physical'">
+								<xsl:value-of select="concat($display_path, 'id/')"/>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:value-of select="$display_path"/>
+							</xsl:otherwise>
+						</xsl:choose>
+					</span>
+					<span id="include_path">
+						<xsl:value-of select="$include_path"/>
+					</span>
+					<span id="pipeline">
+						<xsl:value-of select="$pipeline"/>
+					</span>
+					<span id="mapboxKey">
+						<xsl:value-of select="//config/mapboxKey"/>
+					</span>
+					<span id="lang">
+						<xsl:value-of select="$lang"/>
+					</span>												
+				</div>
+				<div id="iiif-window" style="width:600px;height:600px;display:none"/>
+			</body>
+		</html>
+	</xsl:template>	
+	
+	<xsl:template name="display">		
+		<div class="container-fluid" typeof="nmo:Hoard" about="{$objectUri}">
+			<xsl:if test="$lang='ar'">
+				<xsl:attribute name="style">direction: rtl;</xsl:attribute>
+			</xsl:if>
+			<xsl:apply-templates select="/content/nh:nudsHoard"/>
+		</div>
 	</xsl:template>
+	
 	<xsl:template match="nh:nudsHoard">
 		<xsl:call-template name="icons"/>
 		<xsl:call-template name="nudsHoard_content"/>
 	</xsl:template>
+	
 	<xsl:template name="nudsHoard_content">
 		<xsl:variable name="title">
 			<xsl:choose>
@@ -32,6 +256,7 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
+		
 		<div class="row">
 			<div class="col-md-12">
 				<h1 property="dcterms:title">
@@ -475,4 +700,6 @@
 			<xsl:value-of select="$value"/>
 		</name>
 	</xsl:template>
+	
+	
 </xsl:stylesheet>

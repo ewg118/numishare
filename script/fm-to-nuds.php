@@ -283,7 +283,7 @@ function generate_nuds($row, $count, $fileName){
 				}
 				
 				//if the $id is from RIC 9, capitalize final letter
-				if (strpos($id, 'ric.9')){
+				if (strpos($id, 'ric.9') !== FALSE){
 					$pieces = explode('.', $id);
 					$pieces[3] = strtoupper($pieces[3]);
 					
