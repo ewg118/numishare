@@ -925,7 +925,7 @@ function generate_nuds($row, $count, $fileName){
 						$writer->endElement();					
 					$writer->endElement();
 					//thumbnail
-					$writer->startElement('file');
+					$writer->startElement('mets:file');
 						$writer->writeAttribute('USE', 'thumbnail');
 						$writer->writeAttribute('MIMETYPE', 'image/jpeg');
 						$writer->startElement('mets:FLocat');
@@ -947,7 +947,7 @@ function generate_nuds($row, $count, $fileName){
 						$writer->endElement();
 					$writer->endElement();
 					//thumbnail
-					$writer->startElement('file');
+					$writer->startElement('mets:file');
 						$writer->writeAttribute('USE', 'thumbnail');
 						$writer->writeAttribute('MIMETYPE', 'image/jpeg');
 						$writer->startElement('mets:FLocat');
