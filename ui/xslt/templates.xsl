@@ -59,7 +59,7 @@
 			</div>
 		</div>
 	</xsl:template>
-	
+
 	<xsl:template name="menubar">
 		<xsl:choose>
 			<xsl:when test="$lang='ar'">
@@ -67,7 +67,7 @@
 				<xsl:for-each select="//config/pages/page[@public = '1']">
 					<xsl:sort select="position()" order="descending"/>
 					<xsl:variable name="stub" select="@stub"/>
-					
+
 					<li>
 						<a href="{$display_path}pages/{@stub}{if (string($langParam)) then concat('?lang=', $langParam) else ''}">
 							<xsl:choose>
@@ -212,7 +212,7 @@
 				</xsl:if>
 				<xsl:for-each select="//config/pages/page[@public='1']">
 					<xsl:variable name="stub" select="@stub"/>
-					
+
 					<li>
 						<a href="{$display_path}pages/{@stub}{if (string($langParam)) then concat('?lang=', $langParam) else ''}">
 							<xsl:choose>
@@ -243,13 +243,13 @@
 				<xsl:call-template name="languages"/>
 			</xsl:otherwise>
 		</xsl:choose>
-		
+
 	</xsl:template>
-	
+
 	<xsl:template name="languages">
 		<xsl:variable name="page" select="substring-after(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/')"/>
 		<xsl:variable name="query" select="doc('input:request')/request/parameters/parameter[name='q']/value"/>
-		
+
 		<xsl:if test="count(//config/descendant::language[@enabled='true']) &gt; 1">
 			<li class="dropdown">
 				<a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -278,7 +278,7 @@
 			</li>
 		</xsl:if>
 	</xsl:template>
-	
+
 	<xsl:template name="footer">
 		<div id="footer" class="container-fluid">
 			<xsl:copy-of select="//config/footer/*"/>
