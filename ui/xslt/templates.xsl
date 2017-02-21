@@ -62,178 +62,116 @@
 
 	<xsl:template name="menubar">
 		<xsl:choose>
-			<xsl:when test="$lang='ar'">
-				<xsl:call-template name="languages"/>
-				<xsl:for-each select="//config/pages/page[@public = '1']">
-					<xsl:sort select="position()" order="descending"/>
-					<xsl:variable name="stub" select="@stub"/>
-
-					<li>
-						<a href="{$display_path}pages/{@stub}{if (string($langParam)) then concat('?lang=', $langParam) else ''}">
-							<xsl:choose>
-								<xsl:when test="content[@lang=$lang]">
-									<xsl:value-of select="content[@lang=$lang]/short-title"/>
-								</xsl:when>
-								<xsl:otherwise>
-									<xsl:choose>
-										<xsl:when test="content[@lang='en']">
-											<xsl:value-of select="content[@lang='en']/short-title"/>
-										</xsl:when>
-										<xsl:otherwise>
-											<xsl:value-of select="short-title"/>
-										</xsl:otherwise>
-									</xsl:choose>
-								</xsl:otherwise>
-							</xsl:choose>
-						</a>
-					</li>
-				</xsl:for-each>
-				<xsl:if test="not(//config/pages/apis/@enabled=false())">
-					<li>
-						<a href="{$display_path}apis{if (string($langParam)) then concat('?lang=', $langParam) else ''}">APIs</a>
-					</li>
-				</xsl:if>
-				<xsl:if test="//config/pages/visualize/@enabled= true()">
-					<li>
-						<a href="{$display_path}visualize{if (string($langParam)) then concat('?lang=', $langParam) else ''}">
-							<xsl:value-of select="numishare:normalizeLabel('header_visualize', $lang)"/>
-						</a>
-					</li>
-				</xsl:if>
-				<xsl:if test="//config/pages/analyze/@enabled= true()">
-					<li>
-						<a href="{$display_path}analyze{if (string($langParam)) then concat('?lang=', $langParam) else ''}">
-							<xsl:value-of select="numishare:normalizeLabel('header_analyze', $lang)"/>
-						</a>
-					</li>
-				</xsl:if>
-				<xsl:if test="//config/pages/compare/@enabled= true()">
-					<li>
-						<a href="{$display_path}compare{if (string($langParam)) then concat('?lang=', $langParam) else ''}">
-							<xsl:value-of select="numishare:normalizeLabel('header_compare', $lang)"/>
-						</a>
-					</li>
-				</xsl:if>
-				<xsl:if test="//config/collection-type= 'cointype'">
-					<li>
-						<a href="{$display_path}contributors{if (string($langParam)) then concat('?lang=', $langParam) else ''}">
-							<xsl:value-of select="numishare:normalizeLabel('header_contributors', $lang)"/>
-						</a>
-					</li>
-				</xsl:if>
-				<xsl:if test="//config/pages/symbols/@enabled=true()">
-					<li>
-						<a href="{$display_path}symbols{if (string($langParam)) then concat('?lang=', $langParam) else ''}">
-							<xsl:value-of select="numishare:normalizeLabel('header_symbols', $lang)"/>
-						</a>
-					</li>
-				</xsl:if>
-				<li>
-					<a href="{$display_path}maps{if (string($langParam)) then concat('?lang=', $langParam) else ''}">
-						<xsl:value-of select="numishare:normalizeLabel('header_maps', $lang)"/>
-					</a>
-				</li>
-				<li>
-					<a href="{$display_path}search{if (string($langParam)) then concat('?lang=', $langParam) else ''}">
-						<xsl:value-of select="numishare:normalizeLabel('header_search', $lang)"/>
-					</a>
-				</li>
-				<li>
-					<a href="{$display_path}results{if (string($langParam)) then concat('?lang=', $langParam) else ''}">
-						<xsl:value-of select="numishare:normalizeLabel('header_browse', $lang)"/>
-					</a>
-				</li>
+			<xsl:when test="$lang = 'ar'">
+				<xsl:apply-templates select="//config/navigation/tab" mode="nav">
+					<xsl:sort order="descending" select="position()"></xsl:sort>
+				</xsl:apply-templates>
 			</xsl:when>
 			<xsl:otherwise>
-				<li>
-					<a href="{$display_path}results{if (string($langParam)) then concat('?lang=', $langParam) else ''}">
-						<xsl:value-of select="numishare:normalizeLabel('header_browse', $lang)"/>
-					</a>
-				</li>
-				<li>
-					<a href="{$display_path}search{if (string($langParam)) then concat('?lang=', $langParam) else ''}">
-						<xsl:value-of select="numishare:normalizeLabel('header_search', $lang)"/>
-					</a>
-				</li>
-				<li>
-					<a href="{$display_path}maps{if (string($langParam)) then concat('?lang=', $langParam) else ''}">
-						<xsl:value-of select="numishare:normalizeLabel('header_maps', $lang)"/>
-					</a>
-				</li>
-				<xsl:if test="//config/pages/symbols/@enabled=true()">
+				<xsl:apply-templates select="//config/navigation/tab" mode="nav"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+	
+	<xsl:template match="tab" mode="nav">
+		<xsl:choose>
+			<xsl:when test="@id='visualize' or @id='analyze' or @id='compare' or @id='apis' or @id='identify' or @id='symbols'">
+				<xsl:variable name="id" select="@id"/>
+				<xsl:variable name="href" select="concat($display_path, @href, if (string($langParam)) then concat('?lang=', $langParam) else '')"/>
+				
+				<xsl:if test="//config/pages/*[name()=$id]/@enabled= true()">
 					<li>
-						<a href="{$display_path}symbols{if (string($langParam)) then concat('?lang=', $langParam) else ''}">
-							<xsl:value-of select="numishare:normalizeLabel('header_symbols', $lang)"/>
-						</a>
-					</li>
-				</xsl:if>
-				<xsl:if test="//config/collection_type= 'cointype' and string(//config/sparql_endpoint)">
-					<li>
-						<a href="{$display_path}contributors{if (string($langParam)) then concat('?lang=', $langParam) else ''}">
-							<xsl:value-of select="numishare:normalizeLabel('header_contributors', $lang)"/>
-						</a>
-					</li>
-				</xsl:if>
-				<xsl:if test="//config/pages/compare/@enabled= true()">
-					<li>
-						<a href="{$display_path}compare{if (string($langParam)) then concat('?lang=', $langParam) else ''}">
-							<xsl:value-of select="numishare:normalizeLabel('header_compare', $lang)"/>
-						</a>
-					</li>
-				</xsl:if>
-				<xsl:if test="//config/pages/analyze/@enabled= true()">
-					<li>
-						<a href="{$display_path}analyze{if (string($langParam)) then concat('?lang=', $langParam) else ''}">
-							<xsl:value-of select="numishare:normalizeLabel('header_analyze', $lang)"/>
-						</a>
-					</li>
-				</xsl:if>
-				<xsl:if test="//config/pages/visualize/@enabled= true()">
-					<li>
-						<a href="{$display_path}visualize{if (string($langParam)) then concat('?lang=', $langParam) else ''}">
-							<xsl:value-of select="numishare:normalizeLabel('header_visualize', $lang)"/>
-						</a>
-					</li>
-				</xsl:if>
-				<xsl:if test="not(//config/pages/apis/@enabled=false())">
-					<li>
-						<a href="{$display_path}apis{if (string($langParam)) then concat('?lang=', $langParam) else ''}">APIs</a>
-					</li>
-				</xsl:if>
-				<xsl:for-each select="//config/pages/page[@public='1']">
-					<xsl:variable name="stub" select="@stub"/>
-
-					<li>
-						<a href="{$display_path}pages/{@stub}{if (string($langParam)) then concat('?lang=', $langParam) else ''}">
+						<a href="{$href}">
 							<xsl:choose>
-								<!-- if there is a generic header label, e.g., about page in the normalizeLabel function -->
-								<xsl:when test="not(substring(numishare:normalizeLabel(concat('header_', @stub), $lang), 1, 1) = '[')">
-									<xsl:value-of select="numishare:normalizeLabel(concat('header_', @stub), $lang)"/>
-								</xsl:when>
-								<xsl:when test="content[@lang=$lang]">
-									<xsl:value-of select="content[@lang=$lang]/short-title"/>
+								<xsl:when test="@label">
+									<xsl:value-of select="@label"/>
 								</xsl:when>
 								<xsl:otherwise>
-									<xsl:choose>
-										<xsl:when test="content[@lang='en']">
-											<xsl:value-of select="content[@lang='en']/short-title"/>
-										</xsl:when>
-										<xsl:otherwise>
-											<xsl:value-of select="short-title"/>
-										</xsl:otherwise>
-									</xsl:choose>
+									<xsl:value-of select="numishare:normalizeLabel(concat('header_', @id), $lang)"/>
 								</xsl:otherwise>
 							</xsl:choose>
 						</a>
 					</li>
-				</xsl:for-each>
-				<!-- navbar addendum -->
-				<xsl:copy-of select="//config/header/li"/>
-				<!-- display the language switching menu when 2 or more languages are enabled -->
+				</xsl:if>
+			</xsl:when>
+			<xsl:when test="@id = 'contributors'">
+				<xsl:if test="//config/collection_type= 'cointype' and string(//config/sparql_endpoint)">
+					<xsl:variable name="href" select="concat($display_path, @href, if (string($langParam)) then concat('?lang=', $langParam) else '')"/>
+					<li>
+						<a href="{$href}">	
+							<xsl:value-of select="if (@label) then @label else numishare:normalizeLabel(concat('header_', @id), $lang)"/>							
+						</a>
+					</li>
+				</xsl:if>
+			</xsl:when>
+			<xsl:when test="@id = 'pages'">
+				<xsl:call-template name="pages"/>
+			</xsl:when>
+			<xsl:when test="@id = 'languages-tab'">
 				<xsl:call-template name="languages"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:variable name="href">
+					<xsl:choose>
+						<xsl:when test="child::tab">#</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="concat($display_path, @href, if (string($langParam)) then concat('?lang=', $langParam) else '')"/>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:variable>
+				
+				<li>
+					<xsl:if test="child::tab">
+						<xsl:attribute name="class">dropdown</xsl:attribute>
+					</xsl:if>
+					<a href="{$href}">
+						<xsl:if test="child::tab">
+							<xsl:attribute name="class">dropdown-toggle</xsl:attribute>
+							<xsl:attribute name="data-toggle">dropdown</xsl:attribute>
+						</xsl:if>
+						<xsl:value-of select="if (@label) then @label else numishare:normalizeLabel(concat('header_', @id), $lang)"/>
+						<xsl:if test="child::tab">
+							<b class="caret"/>
+						</xsl:if>
+					</a>
+					<xsl:if test="child::tab">
+						<ul class="dropdown-menu">
+							<xsl:apply-templates select="tab" mode="nav"/>
+						</ul>
+					</xsl:if>
+				</li>
 			</xsl:otherwise>
 		</xsl:choose>
-
+	</xsl:template>
+	
+	<xsl:template name="pages">
+		<xsl:for-each select="//config/pages/page[@public='1']">
+			<xsl:variable name="stub" select="@stub"/>
+			
+			<li>
+				<a href="{$display_path}pages/{@stub}{if (string($langParam)) then concat('?lang=', $langParam) else ''}">
+					<xsl:choose>
+						<!-- if there is a generic header label, e.g., about page in the normalizeLabel function -->
+						<xsl:when test="not(substring(numishare:normalizeLabel(concat('header_', @stub), $lang), 1, 1) = '[')">
+							<xsl:value-of select="numishare:normalizeLabel(concat('header_', @stub), $lang)"/>
+						</xsl:when>
+						<xsl:when test="content[@lang=$lang]">
+							<xsl:value-of select="content[@lang=$lang]/short-title"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:choose>
+								<xsl:when test="content[@lang='en']">
+									<xsl:value-of select="content[@lang='en']/short-title"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:value-of select="short-title"/>
+								</xsl:otherwise>
+							</xsl:choose>
+						</xsl:otherwise>
+					</xsl:choose>
+				</a>
+			</li>
+		</xsl:for-each>
 	</xsl:template>
 
 	<xsl:template name="languages">
