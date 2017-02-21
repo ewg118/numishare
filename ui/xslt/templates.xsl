@@ -59,6 +59,19 @@
 			</div>
 		</div>
 	</xsl:template>
+
+	<xsl:template name="menubar">
+		<xsl:choose>
+			<xsl:when test="$lang = 'ar'">
+				<xsl:apply-templates select="//config/navigation/tab" mode="nav">
+					<xsl:sort order="descending" select="position()"></xsl:sort>
+				</xsl:apply-templates>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:apply-templates select="//config/navigation/tab" mode="nav"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
 	
 	<xsl:template match="tab" mode="nav">
 		<xsl:choose>
@@ -127,19 +140,6 @@
 						</ul>
 					</xsl:if>
 				</li>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>
-
-	<xsl:template name="menubar">
-		<xsl:choose>
-			<xsl:when test="$lang = 'ar'">
-				<xsl:apply-templates select="//config/navigation/tab" mode="nav">
-					<xsl:sort order="descending" select="position()"></xsl:sort>
-				</xsl:apply-templates>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:apply-templates select="//config/navigation/tab" mode="nav"/>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
