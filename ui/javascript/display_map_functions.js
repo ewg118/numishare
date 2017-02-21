@@ -13,8 +13,8 @@ $(document).ready(function () {
         var hasFindspots = $('#hasFindspots').text();
         
         //display timemap only when there are findspots
-        if (hasFindspots == 'true') {
-            if ($('#map').length > 0) {
+        if (hasFindspots == 'true') {         
+            if ($('#map').length > 0) {              
                 initialize_timemap(id, path, lang);
             }
         } else {
@@ -69,8 +69,8 @@ function initialize_timemap(id, path, lang) {
 function initialize_map(id, path, lang) {
     var baselayers = $('#baselayers').text().split(',');
     var mapboxKey = $('#mapboxKey').text();
-    var url = id + ".geojson" + (lang.length > 0 ? '?lang=' + lang: '');
-    
+    var url = path + id + ".geojson" + (lang.length > 0 ? '?lang=' + lang: '');
+
     //baselayers
     var osm = L.tileLayer(
     'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
