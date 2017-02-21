@@ -34,6 +34,8 @@ PREFIX dcmitype:	<http://purl.org/dc/dcmitype/>
 
 ASK {
   { ?object nmo:hasTypeSeriesItem <typeURI> ; a nmo:NumismaticObject ; nmo:hasFindspot ?findspot }
+  UNION { ?object nmo:hasTypeSeriesItem <typeURI> ; a nmo:NumismaticObject ; dcterms:isPartOf ?hoard .
+  		?hoard nmo:hasFindspot ?findspot }
   UNION { ?contents a dcmitype:Collection ; nmo:hasTypeSeriesItem <typeURI> .
         ?object dcterms:tableOfContents ?contents ; nmo:hasFindspot ?findspot }
 }]]></xsl:variable>
