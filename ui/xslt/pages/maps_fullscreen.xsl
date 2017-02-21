@@ -11,7 +11,17 @@
 	<xsl:variable name="collection_type" select="/content/config/collection_type"/>
 
 	<xsl:param name="q" select="doc('input:request')/request/parameters/parameter[name='q']/value"/>
-	<xsl:param name="lang" select="doc('input:request')/request/parameters/parameter[name='lang']/value"/>
+	<xsl:param name="langParam" select="doc('input:request')/request/parameters/parameter[name='lang']/value"/>
+	<xsl:param name="lang">
+		<xsl:choose>
+			<xsl:when test="string($langParam)">
+				<xsl:value-of select="$langParam"/>
+			</xsl:when>
+			<xsl:when test="string(doc('input:request')/request//header[name[.='accept-language']]/value)">
+				<xsl:value-of select="numishare:parseAcceptLanguage(doc('input:request')/request//header[name[.='accept-language']]/value)[1]"/>
+			</xsl:when>
+		</xsl:choose>
+	</xsl:param>
 	<xsl:param name="department" select="doc('input:request')/request/parameters/parameter[name='department']/value"/>
 	<xsl:variable name="tokenized_q" select="tokenize($q, ' AND ')"/>
 	<xsl:variable name="numFound" select="//result[@name='response']/@numFound" as="xs:integer"/>
