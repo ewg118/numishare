@@ -20,6 +20,16 @@
 			</xsl:when>
 		</xsl:choose>
 	</xsl:param>
+	<xsl:variable name="object-path">
+		<xsl:choose>
+			<xsl:when test="//config/collection_type = 'object' and string(//config/uri_space)">
+				<xsl:value-of select="//config/uri_space"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="concat($display_path, 'id/')"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:variable>
 	
 	<xsl:param name="q" select="doc('input:request')/request/parameters/parameter[name='q']/value"/>
 	<xsl:param name="sort" select="doc('input:request')/request/parameters/parameter[name='sort']/value"/>

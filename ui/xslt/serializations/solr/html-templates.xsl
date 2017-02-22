@@ -14,13 +14,13 @@
 					</xsl:if>
 					<xsl:choose>
 						<xsl:when test="$mode = 'compare'">
-							<a href="{$display_path}id/{str[@name='recordId']}?mode=compare&amp;q={$q}&amp;start={$start}&amp;image={$image}&amp;side={$side}{if (string($langParam)) then
+							<a href="{$object-path}{str[@name='recordId']}?mode=compare&amp;q={$q}&amp;start={$start}&amp;image={$image}&amp;side={$side}{if (string($langParam)) then
 								concat('&amp;lang=', $langParam) else ''}" class="compare">
 								<xsl:value-of select="str[@name='title_display']"/>
 							</a>
 						</xsl:when>
 						<xsl:otherwise>
-							<a href="{$display_path}id/{str[@name='recordId']}{if (string($langParam)) then concat('?lang=', $langParam) else ''}">
+							<a href="{$object-path}{str[@name='recordId']}{if (string($langParam)) then concat('?lang=', $langParam) else ''}">
 								<xsl:value-of select="str[@name='title_display']"/>
 							</a>
 							<xsl:if test="$authenticated = true()">
@@ -545,13 +545,13 @@
 			<xsl:choose>
 				<xsl:when test="str[@name='recordType'] = 'physical'">
 					<xsl:if test="string(str[@name='thumbnail_obv'])">
-						<a class="thumbImage" href="{str[@name='reference_obv']}" title="Obverse of {str[@name='title_display']}" id="{$display_path}id/{str[@name='recordId']}{if (string($langParam)) then
+						<a class="thumbImage" href="{str[@name='reference_obv']}" title="Obverse of {str[@name='title_display']}" id="{$object-path}{str[@name='recordId']}{if (string($langParam)) then
 							concat('?lang=', $langParam) else ''}">
 							<img src="{str[@name='thumbnail_obv']}" class="side-thumbnail"/>
 						</a>
 					</xsl:if>
 					<xsl:if test="string(str[@name='thumbnail_rev'])">
-						<a class="thumbImage" href="{str[@name='reference_rev']}" title="Reverse of {str[@name='title_display']}" id="{$display_path}id/{str[@name='recordId']}{if (string($langParam)) then
+						<a class="thumbImage" href="{str[@name='reference_rev']}" title="Reverse of {str[@name='title_display']}" id="{$object-path}{str[@name='recordId']}{if (string($langParam)) then
 							concat('?lang=', $langParam) else ''}">
 							<img src="{str[@name='thumbnail_rev']}" class="side-thumbnail"/>
 						</a>
