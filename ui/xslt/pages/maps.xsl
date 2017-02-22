@@ -190,6 +190,11 @@
 				<span id="pipeline">
 					<xsl:value-of select="$pipeline"/>
 				</span>
+				<xsl:if test="string(doc('input:request')/request/parameters/parameter[name='department']/value)">
+					<span id="department">
+						<xsl:value-of select="doc('input:request')/request/parameters/parameter[name='department']/value"/>
+					</span>
+				</xsl:if>
 				<span id="mapboxKey">
 					<xsl:value-of select="//config/mapboxKey"/>
 				</span>
