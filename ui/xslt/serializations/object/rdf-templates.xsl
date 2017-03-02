@@ -217,9 +217,9 @@
 	<xsl:template match="nuds:*[@xlink:role]" mode="crm">
 		<xsl:choose>
 			<!-- will likely need to create separate E12_Production objects to differentiate between authorities and issuers -->
-			<xsl:when test="@xlink:role='issuer' or @xlink:role='authority'">
+			<xsl:when test="@xlink:role='authority' or @xlink:role='state' or @xlink:role='issuer'">
 				<crm:P17_was_motivated_by rdf:resource="{@xlink:href}"/>
-			</xsl:when>
+			</xsl:when>			
 			<xsl:when test="@xlink:role='statedAuthority'">
 				<crm:P17_was_motivated_by rdf:resource="{@xlink:href}"/>
 			</xsl:when>
@@ -228,6 +228,9 @@
 			</xsl:when>
 			<xsl:when test="@xlink:role='portrait' or @xlink:role='deity'">
 				<crm:P62_depicts rdf:resource="{@xlink:href}"/>
+			</xsl:when>
+			<xsl:when test="@xlink:role='engraver' or @xlink:role='artist' or @xlink:role='designer'">
+				<crm:P14_carried_out_by rdf:resource="{@xlink:href}"/>
 			</xsl:when>
 		</xsl:choose>
 	</xsl:template>
