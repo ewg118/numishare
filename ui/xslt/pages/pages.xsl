@@ -58,13 +58,13 @@
 			</head>
 			<body>
 				<xsl:call-template name="header"/>
-				<xsl:call-template name="pages"/>
+				<xsl:call-template name="body"/>
 				<xsl:call-template name="footer"/>
 			</body>
 		</html>
 	</xsl:template>
 
-	<xsl:template name="pages">
+	<xsl:template name="body">
 		<div class="container-fluid">
 			<xsl:if test="$lang='ar'">
 				<xsl:attribute name="style">direction: rtl;</xsl:attribute>							
