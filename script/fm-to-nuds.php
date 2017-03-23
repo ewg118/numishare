@@ -64,7 +64,7 @@ $Byzantine_array = generate_json('https://docs.google.com/spreadsheet/pub?hl=en_
 $Decoration_array = generate_json('https://docs.google.com/spreadsheet/pub?hl=en_US&hl=en_US&key=0Avp6BVZhfwHAdFdTVy1UWGp6bFZvbTlsQWJyWmtlR1E&single=true&gid=0&output=csv');
 $East_Asian_array = generate_json('https://docs.google.com/spreadsheet/pub?hl=en_US&hl=en_US&key=0Avp6BVZhfwHAdFdONnhna3RpNGxwTjJ1M3RiSkxfTUE&single=true&gid=0&output=csv');
 $Greek_array = generate_json('https://docs.google.com/spreadsheet/pub?hl=en_US&hl=en_US&key=0Avp6BVZhfwHAdERQcHlNWXJlbTcwQ2g4YmM5QmxRMVE&single=true&gid=0&output=csv');
-$Islamic_array = generate_json('https://docs.google.com/spreadsheet/pub?hl=en_US&hl=en_US&key=0Avp6BVZhfwHAdG1MbV9PcGMzTUU1dWU2by1sNWNnbGc&single=true&gid=0&output=csv');
+$Islamic_array = generate_json('https://docs.google.com/spreadsheets/d/1b2_YqnX-ikzieCSsE5k4wqhiSG-nvFv46351k6ilUvQ/pub?gid=1497998420&single=true&output=csv');
 $Latin_American_array = generate_json('https://docs.google.com/spreadsheet/pub?hl=en_US&hl=en_US&key=0Avp6BVZhfwHAdGI0UmpzSTNaXy1OWHhCSnp6VDA4OEE&single=true&gid=0&output=csv');
 $Medieval_array = generate_json('https://docs.google.com/spreadsheet/pub?hl=en_US&hl=en_US&key=0Avp6BVZhfwHAdGFkbW8xLV9yYm9rQ3VVd25rcUJTVmc&single=true&gid=0&output=csv');
 $Medal_array = generate_json('https://docs.google.com/spreadsheet/pub?hl=en_US&hl=en_US&key=0Avp6BVZhfwHAdGg5SFlaU0VUUzM5ZUZQdHFHV3ZncVE&single=true&gid=0&output=csv');
