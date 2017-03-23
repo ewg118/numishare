@@ -7,12 +7,12 @@
 	REQUIRED LIBRARIES: php5, php5-curl, php5-cgi
 	************************/
 
-	$accnum = $_GET['accnum'];
+	$accnum = trim($_GET['accnum']);
 
-	if (strlen(trim($accnum)) > 0){
+	if (strlen($accnum) > 0){
 		$basename = $accnum . '.xml';
 		//get accession year for supplying the correct eXist collection
-		$collection = substr(trim($accnum), 0, 4);
+		$collection = substr($accnum, 0, 4);
 		
 		//echo $basename . '|' . $collection . '|' . $solrId . "\n";
 		//PUT xml to eXist
