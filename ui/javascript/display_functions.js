@@ -45,7 +45,7 @@ $(document).ready(function () {
         // Grab a IIIF manifest
         $.getJSON(manifest, function (data) {       
             //determine where it is a collection or image manifest
-            if (data[ '@context'] == 'http://iiif.io/api/image/2/context.json') {
+            if (data[ '@context'] == 'http://iiif.io/api/image/2/context.json' || data['@context'] == 'http://library.stanford.edu/iiif/image-api/1.1/context.json') {
                 L.tileLayer.iiif(manifest).addTo(iiifImage);
             } else if (data[ '@context'] == 'http://iiif.io/api/presentation/2/context.json') {
                 var iiifLayers = {
