@@ -247,7 +247,7 @@
 				<a href="http://numismatics.org/Education/Education">Education</a>
 			</li>
 			<li>
-				<a href="http://numismatics.org/OnlineResources/OnlineResources">Online Resources</a>
+				<a href="http://numismatics.org/resources">Online Resources</a>
 			</li>
 			<li>
 				<a href="http://numismatics.org/Development/Development">Support the ANS</a>
