@@ -934,9 +934,11 @@
 								</xforms:group>
 							</div>
 							<fr:tabview>
-								<!--**************************************** DESCMETA **********************************-->
-								<fr:tab id="descmeta-tab">
-									<fr:label>Descriptive Metadata</fr:label>
+								<!--**************************************** TYPOLOGICAL DESCRIPTION **********************************-->
+								<fr:tab id="typedesc-tab">
+									<fr:label>Description and Typology</fr:label>
+									
+									
 									<xforms:group ref="nuds:descMeta">
 										<h2>Descriptive Metadata</h2>
 										<div class="trigger_container">
@@ -994,7 +996,7 @@
 														select="if(string(instance('object')/nuds:descMeta/nuds:adminDesc/nuds:identifier)) then concat('  ', instance('object')/nuds:descMeta/nuds:adminDesc/nuds:identifier, '.') else ''"></xforms:var>
 													<xforms:setvalue ref="title"
 														value="concat($material, $denomination, $name-sep, $issuer, $mint, $region, $date, if(substring($date, string-length($date)) = '.') then '' else '.', $identifier)"
-													></xforms:setvalue>
+														></xforms:setvalue>
 												</xforms:action>
 											</xforms:trigger>
 										</div>
@@ -1098,6 +1100,101 @@
 												</div>
 											</xforms:repeat>
 										</xforms:group>
+									</xforms:group>
+									
+									<!-- typeDesc -->
+									<xforms:group ref="nuds:descMeta/nuds:typeDesc">
+										<div class="section">
+											<radiogroup>
+												<xforms:select1 ref="instance('typedesc-type')" appearance="full">
+													<xforms:label>Resource Type</xforms:label>
+													<xforms:item>
+														<xforms:label>Manual</xforms:label>
+														<xforms:value>manual</xforms:value>
+													</xforms:item>
+													<xforms:item>
+														<xforms:label>Web Resource</xforms:label>
+														<xforms:value>resource</xforms:value>
+													</xforms:item>
+													<xforms:action ev:event="xforms-value-changed">
+														<xforms:action if=".='manual'">
+															<xforms:toggle case="manual-type"></xforms:toggle>
+															<xforms:delete nodeset="instance('object')/nuds:descMeta/nuds:typeDesc/@xlink:href"></xforms:delete>
+															<xforms:delete nodeset="instance('typeDesc-resource')/*"></xforms:delete>
+															<xforms:insert context="instance('object')/nuds:descMeta/nuds:typeDesc" origin="instance('objectType-template')"></xforms:insert>
+														</xforms:action>
+														<xforms:action if=".='resource'">
+															<xforms:insert context="instance('object')/nuds:descMeta/nuds:typeDesc" origin="xforms:attribute('xlink:href', '')"
+																if="not(instance('object')/nuds:descMeta/nuds:typeDesc/*)"></xforms:insert>
+															<xforms:toggle case="resource-type" if="not(instance('object')/nuds:descMeta/nuds:typeDesc/*)"></xforms:toggle>
+															<xforms:dispatch name="fr-show" target="confirm-typeDesc-removal" if="instance('object')/nuds:descMeta/nuds:typeDesc/*"></xforms:dispatch>
+														</xforms:action>
+													</xforms:action>
+												</xforms:select1>
+											</radiogroup>
+										</div>
+										<fr:alert-dialog id="confirm-typeDesc-removal">
+											<fr:label>Remove Typological Description Elements</fr:label>
+											<fr:message>Switching the typeDesc to refer to a web resource will remove child elements. Confirm?</fr:message>
+											<fr:negative-choice>
+												<xforms:setvalue ref="instance('typedesc-type')" value="'manual'" ev:event="DOMActivate"></xforms:setvalue>
+											</fr:negative-choice>
+											<fr:positive-choice>
+												<xforms:action ev:event="DOMActivate">
+													<xforms:delete nodeset="*"></xforms:delete>
+													<xforms:insert context="." origin="xforms:attribute('xlink:href', '')"></xforms:insert>
+													<xforms:toggle case="resource-type"></xforms:toggle>
+												</xforms:action>
+											</fr:positive-choice>
+										</fr:alert-dialog>
+										<div class="section">
+											<h2>Typological Description</h2>
+											<xforms:switch>
+												<xforms:case id="manual-type">
+													<numishare:type-undertype></numishare:type-undertype>
+												</xforms:case>
+												<xforms:case id="resource-type">
+													<div>
+														<xforms:input ref="@xlink:href">
+															<xforms:label>Resource</xforms:label>
+															<xforms:alert>Required; must be URI</xforms:alert>
+														</xforms:input>
+													</div>
+													<xforms:group ref=".[string-length(@xlink:href) &gt; 0]">
+														<xforms:trigger>
+															<xforms:action ev:event="DOMActivate">
+																<xforms:setvalue ref="instance('control-instance')/typeDesc_correct">false</xforms:setvalue>
+																<xforms:send submission="get-typeDesc"></xforms:send>
+															</xforms:action>
+															<xforms:label>Search</xforms:label>
+														</xforms:trigger>
+														<xforms:group ref="instance('typeDesc-resource')/nuds:descMeta/nuds:typeDesc">
+															<xforms:group ref=".[instance('control-instance')/typeDesc_correct = 'false']">
+																<div>
+																	<span class="warning">Is the information displayed below correct?</span>
+																	<!-- if the typeDesc is correct, insert a reference to current nuds document into the conceptual document, otherwise remove the @xlink:href and typedesc instance -->
+																	<xforms:trigger>
+																		<xforms:action ev:event="DOMActivate">
+																			<xforms:setvalue ref="instance('control-instance')/typeDesc_correct">true</xforms:setvalue>
+																		</xforms:action>
+																		<xforms:label>Yes</xforms:label>
+																	</xforms:trigger>
+																	<xforms:trigger>
+																		<xforms:action ev:event="DOMActivate">
+																			<xforms:setvalue ref="instance('control-instance')/typeDesc_correct"></xforms:setvalue>
+																			<xforms:delete context="instance('typeDesc-resource')/*"></xforms:delete>
+																			<xforms:setvalue ref="instance('object')/nuds:descMeta/nuds:typeDesc/@xlink:href"></xforms:setvalue>
+																		</xforms:action>
+																		<xforms:label>No</xforms:label>
+																	</xforms:trigger>
+																</div>
+															</xforms:group>
+															<numishare:output-typeDesc></numishare:output-typeDesc>
+														</xforms:group>
+													</xforms:group>
+												</xforms:case>
+											</xforms:switch>
+										</div>
 									</xforms:group>
 								</fr:tab>
 								<!--**************************************** PHYSICAL DESCRIPTION **********************************-->
@@ -1568,104 +1665,7 @@
 											</xforms:trigger>
 										</div>
 									</xforms:group>
-								</fr:tab>
-								<!--**************************************** TYPOLOGICAL DESCRIPTION **********************************-->
-								<fr:tab id="typedesc-tab">
-									<fr:label>Typological</fr:label>
-									<xforms:group ref="nuds:descMeta/nuds:typeDesc">
-										<div class="section">
-											<radiogroup>
-												<xforms:select1 ref="instance('typedesc-type')" appearance="full">
-													<xforms:label>Resource Type</xforms:label>
-													<xforms:item>
-														<xforms:label>Manual</xforms:label>
-														<xforms:value>manual</xforms:value>
-													</xforms:item>
-													<xforms:item>
-														<xforms:label>Web Resource</xforms:label>
-														<xforms:value>resource</xforms:value>
-													</xforms:item>
-													<xforms:action ev:event="xforms-value-changed">
-														<xforms:action if=".='manual'">
-															<xforms:toggle case="manual-type"></xforms:toggle>
-															<xforms:delete nodeset="instance('object')/nuds:descMeta/nuds:typeDesc/@xlink:href"></xforms:delete>
-															<xforms:delete nodeset="instance('typeDesc-resource')/*"></xforms:delete>
-															<xforms:insert context="instance('object')/nuds:descMeta/nuds:typeDesc" origin="instance('objectType-template')"></xforms:insert>
-														</xforms:action>
-														<xforms:action if=".='resource'">
-															<xforms:insert context="instance('object')/nuds:descMeta/nuds:typeDesc" origin="xforms:attribute('xlink:href', '')"
-																if="not(instance('object')/nuds:descMeta/nuds:typeDesc/*)"></xforms:insert>
-															<xforms:toggle case="resource-type" if="not(instance('object')/nuds:descMeta/nuds:typeDesc/*)"></xforms:toggle>
-															<xforms:dispatch name="fr-show" target="confirm-typeDesc-removal" if="instance('object')/nuds:descMeta/nuds:typeDesc/*"></xforms:dispatch>
-														</xforms:action>
-													</xforms:action>
-												</xforms:select1>
-											</radiogroup>
-										</div>
-										<fr:alert-dialog id="confirm-typeDesc-removal">
-											<fr:label>Remove Typological Description Elements</fr:label>
-											<fr:message>Switching the typeDesc to refer to a web resource will remove child elements. Confirm?</fr:message>
-											<fr:negative-choice>
-												<xforms:setvalue ref="instance('typedesc-type')" value="'manual'" ev:event="DOMActivate"></xforms:setvalue>
-											</fr:negative-choice>
-											<fr:positive-choice>
-												<xforms:action ev:event="DOMActivate">
-													<xforms:delete nodeset="*"></xforms:delete>
-													<xforms:insert context="." origin="xforms:attribute('xlink:href', '')"></xforms:insert>
-													<xforms:toggle case="resource-type"></xforms:toggle>
-												</xforms:action>
-											</fr:positive-choice>
-										</fr:alert-dialog>
-										<div class="section">
-											<h2>Typological Description</h2>
-											<xforms:switch>
-												<xforms:case id="manual-type">
-													<numishare:type-undertype></numishare:type-undertype>
-												</xforms:case>
-												<xforms:case id="resource-type">
-													<div>
-														<xforms:input ref="@xlink:href">
-															<xforms:label>Resource</xforms:label>
-															<xforms:alert>Required; must be URI</xforms:alert>
-														</xforms:input>
-													</div>
-													<xforms:group ref=".[string-length(@xlink:href) &gt; 0]">
-														<xforms:trigger>
-															<xforms:action ev:event="DOMActivate">
-																<xforms:setvalue ref="instance('control-instance')/typeDesc_correct">false</xforms:setvalue>
-																<xforms:send submission="get-typeDesc"></xforms:send>
-															</xforms:action>
-															<xforms:label>Search</xforms:label>
-														</xforms:trigger>
-														<xforms:group ref="instance('typeDesc-resource')/nuds:descMeta/nuds:typeDesc">
-															<xforms:group ref=".[instance('control-instance')/typeDesc_correct = 'false']">
-																<div>
-																	<span class="warning">Is the information displayed below correct?</span>
-																	<!-- if the typeDesc is correct, insert a reference to current nuds document into the conceptual document, otherwise remove the @xlink:href and typedesc instance -->
-																	<xforms:trigger>
-																		<xforms:action ev:event="DOMActivate">
-																			<xforms:setvalue ref="instance('control-instance')/typeDesc_correct">true</xforms:setvalue>
-																		</xforms:action>
-																		<xforms:label>Yes</xforms:label>
-																	</xforms:trigger>
-																	<xforms:trigger>
-																		<xforms:action ev:event="DOMActivate">
-																			<xforms:setvalue ref="instance('control-instance')/typeDesc_correct"></xforms:setvalue>
-																			<xforms:delete context="instance('typeDesc-resource')/*"></xforms:delete>
-																			<xforms:setvalue ref="instance('object')/nuds:descMeta/nuds:typeDesc/@xlink:href"></xforms:setvalue>
-																		</xforms:action>
-																		<xforms:label>No</xforms:label>
-																	</xforms:trigger>
-																</div>
-															</xforms:group>
-															<numishare:output-typeDesc></numishare:output-typeDesc>
-														</xforms:group>
-													</xforms:group>
-												</xforms:case>
-											</xforms:switch>
-										</div>
-									</xforms:group>
-								</fr:tab>
+								</fr:tab>								
 								<!--**************************************** UNDERTYPE DESCRIPTION **********************************-->
 								<fr:tab bind="undertypedesc-tab">
 									<fr:label>Undertype</fr:label>
@@ -2153,10 +2153,10 @@
 									<fr:label>Record Metadata</fr:label>
 									<numishare:control></numishare:control>
 								</fr:tab>
-								<fr:tab>
+								<!--<fr:tab>
 									<fr:label>Inspector</fr:label>
 									<fr:xforms-inspector></fr:xforms-inspector>
-								</fr:tab>
+								</fr:tab>-->
 							</fr:tabview>
 							
 							<!--**************************************** DIALOGS **********************************-->
