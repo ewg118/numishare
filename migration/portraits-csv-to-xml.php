@@ -1,5 +1,11 @@
 <?php 
 
+/* Date: Feb 3, 2017
+ * Function: This script parses the old spreadsheet format that includes links to records
+ * in the databases, and parses source data in order to extract obverse or reverse portraits.
+ * It is deprecated by portraits-csv_final-to-xml.php
+ */
+
 $portraits = generate_json('nomisma-portraits.csv');
 $records = array();
 $dynasties = array();

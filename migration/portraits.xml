@@ -13,7 +13,9 @@
             </worn>
         </portrait>
         <portrait uri="http://nomisma.org/id/julia_daughter_of_augustus">
-            <material uri="http://nomisma.org/id/ar"/>
+            <material uri="http://nomisma.org/id/ar">
+                <image>http://ww2.smb.museum/mk_edit/images/n2/2562/rs_opt.jpg</image>
+            </material>
         </portrait>
         <portrait uri="http://nomisma.org/id/augustus">
             <material uri="http://nomisma.org/id/av">
@@ -33,7 +35,6 @@
             </worn>
         </portrait>
         <portrait uri="http://nomisma.org/id/agrippa">
-            <material uri="http://nomisma.org/id/av"/>
             <material uri="http://nomisma.org/id/ar">
                 <image>http://ww2.smb.museum/mk_edit/images/n7/7326/rs_opt.jpg</image>
             </material>
@@ -45,7 +46,9 @@
             </worn>
         </portrait>
         <portrait uri="http://nomisma.org/id/livia">
-            <material uri="http://nomisma.org/id/ar"/>
+            <material uri="http://nomisma.org/id/ar">
+                <image>http://ww2.smb.museum/mk_edit/images/n28/28628/rs_opt.jpg</image>
+            </material>
             <material uri="http://nomisma.org/id/ae">
                 <image>http://numismatics.org/collectionimages/19501999/1951/1951.61.50.obv.width350.jpg</image>
                 <image>http://numismatics.org/collectionimages/19001949/1944/1944.100.41827.obv.width350.jpg</image>
@@ -69,11 +72,17 @@
             </worn>
         </portrait>
         <portrait uri="http://nomisma.org/id/gaius_caesar">
-            <material uri="http://nomisma.org/id/ar"/>
+            <material uri="http://nomisma.org/id/ar">
+                <image>http://ww2.smb.museum/mk_edit/images/n2/2562/rs_opt.jpg</image>
+            </material>
         </portrait>
         <portrait uri="http://nomisma.org/id/lucius_caesar">
-            <material uri="http://nomisma.org/id/av"/>
-            <material uri="http://nomisma.org/id/ar"/>
+            <material uri="http://nomisma.org/id/av">
+                <image>http://numismatics.org/collectionimages/19001949/1905/1905.57.282.rev.width350.jpg</image>
+            </material>
+            <material uri="http://nomisma.org/id/ar">
+                <image>http://ww2.smb.museum/mk_edit/images/n2/2562/rs_opt.jpg</image>
+            </material>
         </portrait>
         <portrait uri="http://nomisma.org/id/tiberius">
             <material uri="http://nomisma.org/id/av">
@@ -226,9 +235,7 @@
         <portrait uri="http://nomisma.org/id/claudia_octavia"/>
     </period>
     <period label="Year of the 4 Emperors">
-        <portrait uri="http://nomisma.org/id/clodius_macer">
-            <material uri="http://nomisma.org/id/ar"/>
-        </portrait>
+        <portrait uri="http://nomisma.org/id/clodius_macer"/>
         <portrait uri="http://nomisma.org/id/galba">
             <material uri="http://nomisma.org/id/av">
                 <image>http://numismatics.org/collectionimages/19501999/1954/1954.256.8.obv.width350.jpg</image>
@@ -659,9 +666,7 @@
                 <image>http://ww2.smb.museum/mk_edit/images/n7/7308/vs_opt.jpg</image>
             </material>
         </portrait>
-        <portrait uri="http://nomisma.org/id/pompey">
-            <material uri="http://nomisma.org/id/ar"/>
-        </portrait>
+        <portrait uri="http://nomisma.org/id/pompey"/>
         <portrait uri="http://nomisma.org/id/sulla"/>
     </period>
     <period label="Year of the 5 Emperors">
@@ -793,7 +798,6 @@
             </worn>
         </portrait>
         <portrait uri="http://nomisma.org/id/plautilla">
-            <material uri="http://nomisma.org/id/av"/>
             <material uri="http://nomisma.org/id/ar">
                 <image>http://numismatics.org/collectionimages/19001949/1948/1948.19.1650.obv.width350.jpg</image>
                 <image>http://numismatics.org/collectionimages/19001949/1948/1948.19.1649.obv.width350.jpg</image>
@@ -866,19 +870,24 @@
             </worn>
         </portrait>
         <portrait uri="http://nomisma.org/id/julia_maesa">
-            <material uri="http://nomisma.org/id/av"/>
             <material uri="http://nomisma.org/id/ar">
                 <image>http://numismatics.org/collectionimages/19001949/1923/1923.151.63.obv.width350.jpg</image>
                 <image>http://numismatics.org/collectionimages/19001949/1944/1944.100.52397.obv.width350.jpg</image>
+            </material>
+            <material uri="http://nomisma.org/id/ae">
+                <image>http://numismatics.org/collectionimages/19501999/1964/1964.183.2.obv.width350.jpg</image>
+                <image>http://numismatics.org/collectionimages/19001949/1944/1944.100.52428.obv.width350.jpg</image>
             </material>
             <worn>
                 <image>http://numismatics.org/collectionimages/19501999/1995/1995.11.1139.obv.width350.jpg</image>
             </worn>
         </portrait>
         <portrait uri="http://nomisma.org/id/julia_soaemias">
-            <material uri="http://nomisma.org/id/av"/>
             <material uri="http://nomisma.org/id/ar">
                 <image>http://numismatics.org/collectionimages/19001949/1935/1935.117.640.obv.width350.jpg</image>
+            </material>
+            <material uri="http://nomisma.org/id/ae">
+                <image>http://numismatics.org/collectionimages/19001949/1944/1944.100.52426.obv.width350.jpg</image>
             </material>
             <worn>
                 <image>http://numismatics.org/collectionimages/19501999/1995/1995.11.1152.obv.width350.jpg</image>
@@ -940,7 +949,6 @@
             </worn>
         </portrait>
         <portrait uri="http://nomisma.org/id/sallustia_orbiana">
-            <material uri="http://nomisma.org/id/av"/>
             <material uri="http://nomisma.org/id/ar">
                 <image>http://numismatics.org/collectionimages/19001949/1944/1944.100.53359.obv.width350.jpg</image>
             </material>
@@ -1138,7 +1146,6 @@
             </worn>
         </portrait>
         <portrait uri="http://nomisma.org/id/herennius_etruscus">
-            <material uri="http://nomisma.org/id/av"/>
             <material uri="http://nomisma.org/id/ar">
                 <image>http://numismatics.org/collectionimages/19001949/1948/1948.19.836.obv.width350.jpg</image>
             </material>
@@ -1192,7 +1199,9 @@
             </worn>
         </portrait>
         <portrait uri="http://nomisma.org/id/aemilian">
-            <material uri="http://nomisma.org/id/av"/>
+            <material uri="http://nomisma.org/id/av">
+                <image>http://www.ikmk.at/edit/images/n70/70881/vs_opt.jpg</image>
+            </material>
             <material uri="http://nomisma.org/id/ar">
                 <image>http://numismatics.org/collectionimages/19001949/1944/1944.100.27140.obv.width350.jpg</image>
             </material>
@@ -1213,7 +1222,9 @@
             </worn>
         </portrait>
         <portrait uri="http://nomisma.org/id/uranius_antoninus">
-            <material uri="http://nomisma.org/id/av"/>
+            <material uri="http://nomisma.org/id/av">
+                <image>http://numismatics.org/collectionimages/19501999/1967/1967.153.197.obv.width350.jpg</image>
+            </material>
         </portrait>
         <portrait uri="http://nomisma.org/id/valerian">
             <material uri="http://nomisma.org/id/av">
@@ -1230,7 +1241,6 @@
             </worn>
         </portrait>
         <portrait uri="http://nomisma.org/id/egnatia_mariniana">
-            <material uri="http://nomisma.org/id/av"/>
             <material uri="http://nomisma.org/id/ar">
                 <image>http://numismatics.org/collectionimages/19001949/1944/1944.100.27252.obv.width350.jpg</image>
             </material>
@@ -1276,6 +1286,9 @@
         </portrait>
         <portrait uri="http://nomisma.org/id/quintus_julius_gallienus"/>
         <portrait uri="http://nomisma.org/id/valerian_ii">
+            <material uri="http://nomisma.org/id/av">
+                <image>http://www.ikmk.at/edit/images/n72/72376/vs_opt.jpg</image>
+            </material>
             <material uri="http://nomisma.org/id/ar">
                 <image>http://ww2.smb.museum/mk_edit/images/n0/725/vs_opt.jpg</image>
             </material>
@@ -1284,7 +1297,6 @@
             </worn>
         </portrait>
         <portrait uri="http://nomisma.org/id/saloninus">
-            <material uri="http://nomisma.org/id/av"/>
             <material uri="http://nomisma.org/id/ar">
                 <image>http://numismatics.org/collectionimages/19001949/1944/1944.100.27288.obv.width350.jpg</image>
             </material>
@@ -1293,7 +1305,6 @@
             </worn>
         </portrait>
         <portrait uri="http://nomisma.org/id/macrianus_minor">
-            <material uri="http://nomisma.org/id/av"/>
             <material uri="http://nomisma.org/id/ar">
                 <image>http://ww2.smb.museum/mk_edit/images/n0/812/vs_opt.jpg</image>
             </material>
@@ -1307,7 +1318,11 @@
             </material>
             <material uri="http://nomisma.org/id/ar">
                 <image>http://ww2.smb.museum/mk_edit/images/n0/817/vs_opt.jpg</image>
+                <image>http://numismatics.org/collectionimages/19501999/1962/1962.83.13.obv.width350.jpg</image>
             </material>
+            <worn>
+                <image>http://numismatics.org/collectionimages/19001949/1910/1910.88.8.obv.width350.jpg</image>
+            </worn>
         </portrait>
         <portrait uri="http://nomisma.org/id/regalianus">
             <worn>
@@ -1317,6 +1332,7 @@
         <portrait uri="http://nomisma.org/id/dryantilla">
             <material uri="http://nomisma.org/id/ar">
                 <image>http://numismatics.org/collectionimages/19501999/1955/1955.9.1.obv.width350.jpg</image>
+                <image>http://www.ikmk.at/edit/images/n72/72858/vs_opt.jpg</image>
             </material>
             <worn>
                 <image>http://ww2.smb.museum/mk_edit/images/n1/1427/vs_opt.jpg</image>
@@ -1355,11 +1371,17 @@
             <material uri="http://nomisma.org/id/av">
                 <image>http://ww2.smb.museum/mk_edit/images/n1/1443/vs_opt.jpg</image>
             </material>
+            <material uri="http://nomisma.org/id/ar">
+                <image>http://ww2.smb.museum/mk_edit/images/n0/639/vs_opt.jpg</image>
+            </material>
+            <worn>
+                <image>http://numismatics.org/collectionimages/19001949/1944/1944.100.30856.obv.width350.jpg</image>
+            </worn>
         </portrait>
         <portrait uri="http://nomisma.org/id/marius">
-            <material uri="http://nomisma.org/id/av"/>
             <material uri="http://nomisma.org/id/ar">
                 <image>http://ww2.smb.museum/mk_edit/images/n1/1448/vs_opt.jpg</image>
+                <image>http://numismatics.org/collectionimages/19001949/1944/1944.100.30861.obv.width350.jpg</image>
             </material>
         </portrait>
         <portrait uri="http://nomisma.org/id/victorinus">
@@ -1443,7 +1465,6 @@
             </worn>
         </portrait>
         <portrait uri="http://nomisma.org/id/ulpia_severina">
-            <material uri="http://nomisma.org/id/av"/>
             <material uri="http://nomisma.org/id/ar">
                 <image>http://numismatics.org/collectionimages/19501999/1985/1985.5.17.obv.width350.jpg</image>
             </material>
@@ -1483,7 +1504,6 @@
                 <image>http://numismatics.org/collectionimages/19001949/1944/1944.100.33136.obv.width350.jpg</image>
                 <image>http://numismatics.org/collectionimages/19501999/1989/1989.11.27.obv.width350.jpg</image>
             </material>
-            <material uri="http://nomisma.org/id/ae"/>
             <worn>
                 <image>http://numismatics.org/collectionimages/19001949/1944/1944.100.33170.obv.width350.jpg</image>
             </worn>
@@ -1552,7 +1572,6 @@
     </period>
     <period label="British Empire">
         <portrait uri="http://nomisma.org/id/carausius">
-            <material uri="http://nomisma.org/id/av"/>
             <material uri="http://nomisma.org/id/ar">
                 <image>http://ww2.smb.museum/mk_edit/images/n39/39819/vs_opt.jpg</image>
             </material>
@@ -1654,7 +1673,6 @@
             <material uri="http://nomisma.org/id/av">
                 <image>http://numismatics.org/collectionimages/19001949/1944/1944.100.5959.obv.width350.jpg</image>
             </material>
-            <material uri="http://nomisma.org/id/ar"/>
             <material uri="http://nomisma.org/id/ae">
                 <image>http://numismatics.org/collectionimages/19501999/1984/1984.146.1324.obv.width350.jpg</image>
             </material>
@@ -1684,7 +1702,10 @@
                 <image>http://ww2.smb.museum/mk_edit/images/n31/31814/vs_opt.jpg</image>
                 <image>http://numismatics.org/collectionimages/19001949/1944/1944.100.1881.obv.width350.jpg</image>
             </material>
-            <material uri="http://nomisma.org/id/ar"/>
+            <material uri="http://nomisma.org/id/ar">
+                <image>http://www.ikmk.at/edit/images/n125/125362/vs_opt.jpg</image>
+                <image>http://www.ikmk.at/edit/images/n178/178045/vs_opt.jpg</image>
+            </material>
             <material uri="http://nomisma.org/id/ae">
                 <image>http://numismatics.org/collectionimages/19501999/1984/1984.146.488.obv.width350.jpg</image>
                 <image>http://ww2.smb.museum/mk_edit/images/n17/17767/vs_opt.jpg</image>
@@ -1741,7 +1762,9 @@
                 <image>http://numismatics.org/collectionimages/19001949/1948/1948.19.289.obv.width350.jpg</image>
                 <image>http://ww2.smb.museum/mk_edit/images/n1/1154/vs_opt.jpg</image>
             </material>
-            <material uri="http://nomisma.org/id/ar"/>
+            <material uri="http://nomisma.org/id/ar">
+                <image>http://www.ikmk.at/edit/images/n178/178054/vs_opt.jpg</image>
+            </material>
             <material uri="http://nomisma.org/id/ae">
                 <image>http://numismatics.org/collectionimages/19501999/1984/1984.146.1361.obv.width350.jpg</image>
                 <image>http://numismatics.org/collectionimages/19001949/1905/1905.57.75.obv.width350.jpg</image>
@@ -1771,7 +1794,12 @@
             </worn>
         </portrait>
         <portrait uri="http://nomisma.org/id/sextus_martinianus">
-            <material uri="http://nomisma.org/id/ae"/>
+            <material uri="http://nomisma.org/id/ae">
+                <image>http://www.ikmk.at/edit/images/n116/116557/vs_opt.jpg</image>
+            </material>
+            <worn>
+                <image>http://www.ikmk.at/edit/images/n195/195267/vs_opt.jpg</image>
+            </worn>
         </portrait>
         <portrait uri="http://nomisma.org/id/licinius_ii">
             <material uri="http://nomisma.org/id/av">
@@ -1856,8 +1884,6 @@
             </worn>
         </portrait>
         <portrait uri="http://nomisma.org/id/dalmatius">
-            <material uri="http://nomisma.org/id/av"/>
-            <material uri="http://nomisma.org/id/ar"/>
             <material uri="http://nomisma.org/id/ae">
                 <image>http://numismatics.org/collectionimages/19001949/1944/1944.100.11422.obv.width350.jpg</image>
                 <image>http://numismatics.org/collectionimages/19501999/1984/1984.146.911.obv.width350.jpg</image>
@@ -1867,7 +1893,6 @@
             </worn>
         </portrait>
         <portrait uri="http://nomisma.org/id/hannibalianus">
-            <material uri="http://nomisma.org/id/ar"/>
             <material uri="http://nomisma.org/id/ae">
                 <image>http://numismatics.org/collectionimages/19001949/1919/1919.1.1.obv.width350.jpg</image>
             </material>
@@ -1931,6 +1956,9 @@
             </worn>
         </portrait>
         <portrait uri="http://nomisma.org/id/vetranio">
+            <material uri="http://nomisma.org/id/av">
+                <image>http://www.ikmk.at/edit/images/n80/80231/vs_opt.jpg</image>
+            </material>
             <material uri="http://nomisma.org/id/ar">
                 <image>http://ww2.smb.museum/mk_edit/images/n1/1348/vs_opt.jpg</image>
             </material>
@@ -1988,7 +2016,9 @@
             <material uri="http://nomisma.org/id/ae">
                 <image>http://ww2.smb.museum/mk_edit/images/n1/1378/vs_opt.jpg</image>
             </material>
-            <worn/>
+            <worn>
+                <image>http://numismatics.org/collectionimages/19001949/1944/1944.100.54690.obv.width350.jpg</image>
+            </worn>
         </portrait>
         <portrait uri="http://nomisma.org/id/valens">
             <material uri="http://nomisma.org/id/av">
@@ -2002,10 +2032,23 @@
             <material uri="http://nomisma.org/id/ae">
                 <image>http://ww2.smb.museum/mk_edit/images/n6/6640/vs_opt.jpg</image>
             </material>
-            <worn/>
+            <worn>
+                <image>http://numismatics.org/collectionimages/19001949/1932/1932.12.10.obv.width350.jpg</image>
+            </worn>
         </portrait>
         <portrait uri="http://nomisma.org/id/procopius">
-            <material uri="http://nomisma.org/id/av"/>
+            <material uri="http://nomisma.org/id/av">
+                <image>http://numismatics.org/collectionimages/19001949/1944/1944.100.25733.obv.width350.jpg</image>
+            </material>
+            <material uri="http://nomisma.org/id/ar">
+                <image>http://numismatics.org/collectionimages/19001949/1944/1944.100.25625.obv.width350.jpg</image>
+            </material>
+            <material uri="http://nomisma.org/id/ae">
+                <image>http://numismatics.org/collectionimages/19501999/1984/1984.146.990.obv.width350.jpg</image>
+            </material>
+            <worn>
+                <image>http://numismatics.org/collectionimages/19001949/1944/1944.100.25630.obv.width350.jpg</image>
+            </worn>
         </portrait>
         <portrait uri="http://nomisma.org/id/gratian">
             <material uri="http://nomisma.org/id/av">
@@ -2018,7 +2061,6 @@
             <material uri="http://nomisma.org/id/ae">
                 <image>http://ww2.smb.museum/mk_edit/images/n10/10676/vs_opt.jpg</image>
             </material>
-            <worn/>
         </portrait>
         <portrait uri="http://nomisma.org/id/valentinian_ii">
             <material uri="http://nomisma.org/id/av">
@@ -2036,14 +2078,18 @@
         </portrait>
         <portrait uri="http://nomisma.org/id/theodosius_i">
             <material uri="http://nomisma.org/id/av">
-                <image>http://ww2.smb.museum/mk_edit/images/n36/36973/vs_opt.jpg</image>
-                <image>http://ww2.smb.museum/mk_edit/images/n0/922/vs_opt.jpg</image>
+                <image>http://numismatics.org/collectionimages/19001949/1948/1948.19.813.obv.width350.jpg</image>
+            </material>
+            <material uri="http://nomisma.org/id/ar">
+                <image>http://numismatics.org/collectionimages/19501999/1978/1978.217.13.obv.width350.jpg</image>
+                <image>http://numismatics.org/collectionimages/19001949/1944/1944.100.25340.obv.width350.jpg</image>
             </material>
             <material uri="http://nomisma.org/id/ae">
                 <image>http://numismatics.org/collectionimages/19001949/1925/1925.176.121.obv.width350.jpg</image>
             </material>
             <worn>
                 <image>http://ww2.smb.museum/mk_edit/images/n10/10793/vs_opt.jpg</image>
+                <image>http://numismatics.org/collectionimages/19501999/1995/1995.39.37.obv.width350.jpg</image>
             </worn>
         </portrait>
         <portrait uri="http://nomisma.org/id/aelia_flacilla">
@@ -2053,23 +2099,43 @@
             <material uri="http://nomisma.org/id/ae">
                 <image>http://ww2.smb.museum/mk_edit/images/n0/324/vs_opt.jpg</image>
             </material>
+            <worn>
+                <image>http://numismatics.org/collectionimages/19501999/1952/1952.142.89.obv.width350.jpg</image>
+            </worn>
         </portrait>
         <portrait uri="http://nomisma.org/id/magnus_maximus">
             <material uri="http://nomisma.org/id/av">
                 <image>http://ww2.smb.museum/mk_edit/images/n1/1075/vs_opt.jpg</image>
                 <image>http://ww2.smb.museum/mk_edit/images/n1/1529/vs_opt.jpg</image>
             </material>
+            <material uri="http://nomisma.org/id/ar">
+                <image>http://numismatics.org/collectionimages/19501999/1970/1970.156.156.obv.width350.jpg</image>
+            </material>
+            <material uri="http://nomisma.org/id/ae">
+                <image>http://www.ikmk.at/edit/images/n81/81632/vs_opt.jpg</image>
+            </material>
             <worn>
                 <image>http://ww2.smb.museum/mk_edit/images/n58/58017/vs_opt.jpg</image>
             </worn>
         </portrait>
         <portrait uri="http://nomisma.org/id/flavius_victor">
-            <material uri="http://nomisma.org/id/ar"/>
+            <material uri="http://nomisma.org/id/ar">
+                <image>http://numismatics.org/collectionimages/19001949/1944/1944.100.25407.obv.width350.jpg</image>
+            </material>
+            <worn>
+                <image>http://numismatics.org/collectionimages/19001949/1944/1944.100.25361.obv.width350.jpg</image>
+            </worn>
         </portrait>
         <portrait uri="http://nomisma.org/id/eugenius">
             <material uri="http://nomisma.org/id/av">
                 <image>http://numismatics.org/collectionimages/19001949/1944/1944.100.25368.obv.width350.jpg</image>
             </material>
+            <material uri="http://nomisma.org/id/ar">
+                <image>http://www.ikmk.at/edit/images/n125/125832/vs_opt.jpg</image>
+            </material>
+            <worn>
+                <image>http://numismatics.org/collectionimages/19001949/1944/1944.100.25370.obv.width350.jpg</image>
+            </worn>
         </portrait>
     </period>
     <period label="East">
@@ -2077,6 +2143,10 @@
             <material uri="http://nomisma.org/id/av">
                 <image>http://numismatics.org/collectionimages/19501999/1968/1968.131.440.obv.width350.jpg</image>
                 <image>http://numismatics.org/collectionimages/19501999/1968/1968.131.443.obv.width350.jpg</image>
+            </material>
+            <material uri="http://nomisma.org/id/ar">
+                <image>http://numismatics.org/collectionimages/19001949/1944/1944.100.25413.obv.width350.jpg</image>
+                <image>http://numismatics.org/collectionimages/19001949/1944/1944.100.25345.obv.width350.jpg</image>
             </material>
             <material uri="http://nomisma.org/id/ae">
                 <image>http://numismatics.org/collectionimages/19501999/1964/1964.187.1.obv.width350.jpg</image>
@@ -2124,7 +2194,7 @@
         </portrait>
         <portrait uri="http://nomisma.org/id/marcian">
             <material uri="http://nomisma.org/id/av">
-                <image>http://numismatics.org/collectionimages/19001949/1946/1946.51.123.obv.width350.jpg</image>
+                <image>http://numismatics.org/collectionimages/19001949/1944/1944.100.54961.obv.width350.jpg</image>
             </material>
             <worn>
                 <image>http://numismatics.org/collectionimages/19001949/1930/1930.198.373.obv.width350.jpg</image>
@@ -2132,7 +2202,8 @@
         </portrait>
         <portrait uri="http://nomisma.org/id/leo_i">
             <material uri="http://nomisma.org/id/av">
-                <image>http://numismatics.org/collectionimages/19501999/1980/1980.109.230.obv.width350.jpg</image>
+                <image>http://numismatics.org/collectionimages/19001949/1944/1944.100.54972.obv.width350.jpg</image>
+                <image>http://numismatics.org/collectionimages/19001949/1948/1948.19.1938.obv.width350.jpg</image>
             </material>
             <worn>
                 <image>http://numismatics.org/collectionimages/19001949/1944/1944.100.54980.obv.width350.jpg</image>
@@ -2160,7 +2231,7 @@
         <portrait uri="http://nomisma.org/id/zeno">
             <material uri="http://nomisma.org/id/av">
                 <image>http://numismatics.org/collectionimages/19501999/1977/1977.158.1009.obv.width350.jpg</image>
-                <image>http://numismatics.org/collectionimages/19001949/1948/1948.19.1943.obv.width350.jpg</image>
+                <image>http://numismatics.org/collectionimages/19501999/1968/1968.131.478.obv.width350.jpg</image>
             </material>
             <material uri="http://nomisma.org/id/ar">
                 <image>http://numismatics.org/collectionimages/19001949/1944/1944.100.14983.obv.width350.jpg</image>
@@ -2169,9 +2240,7 @@
                 <image>http://numismatics.org/collectionimages/00001899/0000/0000.999.24039.obv.width350.jpg</image>
             </worn>
         </portrait>
-        <portrait uri="http://nomisma.org/id/aelia_ariadne">
-            <worn/>
-        </portrait>
+        <portrait uri="http://nomisma.org/id/aelia_ariadne"/>
         <portrait uri="http://nomisma.org/id/leontius"/>
     </period>
     <period label="Leonid">
@@ -2215,11 +2284,10 @@
         <portrait uri="http://nomisma.org/id/priscus_attalus">
             <material uri="http://nomisma.org/id/ar">
                 <image>http://numismatics.org/collectionimages/19001949/1944/1944.100.54853.obv.width350.jpg</image>
+                <image>http://ww2.smb.museum/mk_edit/images/n0/892/vs_opt.jpg</image>
             </material>
         </portrait>
-        <portrait uri="http://nomisma.org/id/maximus_barcelona">
-            <material uri="http://nomisma.org/id/ar"/>
-        </portrait>
+        <portrait uri="http://nomisma.org/id/maximus_barcelona"/>
         <portrait uri="http://nomisma.org/id/jovinus">
             <material uri="http://nomisma.org/id/ar">
                 <image>http://numismatics.org/collectionimages/19001949/1944/1944.100.54849.obv.width350.jpg</image>
@@ -2235,7 +2303,6 @@
                 <image>http://numismatics.org/collectionimages/19501999/1967/1967.153.186.obv.width350.jpg</image>
                 <image>http://numismatics.org/collectionimages/19001949/1944/1944.100.55011.obv.width350.jpg</image>
             </material>
-            <worn/>
         </portrait>
         <portrait uri="http://nomisma.org/id/joannes">
             <worn>
@@ -2297,9 +2364,7 @@
                 <image>http://numismatics.org/collectionimages/19001949/1944/1944.100.54893.obv.width350.jpg</image>
             </material>
         </portrait>
-        <portrait uri="http://nomisma.org/id/euphemia">
-            <material uri="http://nomisma.org/id/av"/>
-        </portrait>
+        <portrait uri="http://nomisma.org/id/euphemia"/>
         <portrait uri="http://nomisma.org/id/olybrius"/>
         <portrait uri="http://nomisma.org/id/glycerius"/>
         <portrait uri="http://nomisma.org/id/julius_nepos">
