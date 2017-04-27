@@ -60,9 +60,9 @@
 			</xsl:if>
 			<div class="row">
 				<div class="col-md-12">
-					<h1>
-						<xsl:value-of select="numishare:normalizeLabel('header_search', $lang)"/>
-					</h1>
+					<h1>Identify a Coin</h1>
+					<p>This interface allows you to narrow down the most basic visible components of a coin in order to reveal a subset of possible matches in
+						the search results page.</p>
 					<form method="GET" action="results" class="form-horizontal" id="identify-form" style="margin-bottom:20px">
 						<div class="metadata_section">
 							<input type="submit" value="Search" class="btn btn-default"/>
@@ -71,8 +71,10 @@
 							<h2>
 								<xsl:value-of select="numishare:normalize_fields('material', $lang)"/>
 							</h2>
-							<p class="text-muted">Select one or more types of metal. Note that late Roman coinage may have been coated in silver that has since
-								worn off from a base metal core. It is recommended for these coins to search for silver and bronze, if uncertain.</p>
+							<p class="text-muted">Select one or more types of metal. Note that, alongside gold and bronze, silver Roman coinage from the mid-3rd
+								century onward uses various bronze-silver alloys, and are deemed ’silver’, ‘billon’, or not specified. From the mid-4th century
+								onward, ‘billon’ coins only contain trace elements of silver. It is recommended for these coins to search for silver and billon,
+								or billon and bronze, if uncertain.</p>
 							<div>
 								<xsl:apply-templates select="doc('input:materials')//lst[@name = 'material_uri']"/>
 							</div>
