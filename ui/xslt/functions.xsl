@@ -192,6 +192,9 @@
 					<xsl:when test="$label = 'weight'">Gewicht</xsl:when>
 					<xsl:when test="$label = 'width'">Breite</xsl:when>
 					<xsl:when test="$label = 'year'">Jahr</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="numishare:regularize_node($label, 'en')"/>
+					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
 			<xsl:when test="$lang = 'ar'">
@@ -289,6 +292,9 @@
 					<xsl:when test="$label = 'weight'">الوزن</xsl:when>
 					<xsl:when test="$label = 'width'">العرض</xsl:when>
 					<xsl:when test="$label = 'year'">السنة</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="numishare:regularize_node($label, 'en')"/>
+					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
 			<xsl:when test="$lang = 'fr'">
@@ -387,6 +393,9 @@
 					<xsl:when test="$label = 'weight'">Poids</xsl:when>
 					<xsl:when test="$label = 'width'">Largeur</xsl:when>
 					<xsl:when test="$label = 'year'">Année</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="numishare:regularize_node($label, 'en')"/>
+					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
 			<xsl:when test="$lang = 'ro'">
@@ -484,6 +493,9 @@
 					<xsl:when test="$label = 'weight'">Greutate</xsl:when>
 					<xsl:when test="$label = 'width'">Lăţime</xsl:when>
 					<xsl:when test="$label = 'year'">An</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="numishare:regularize_node($label, 'en')"/>
+					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
 			<xsl:when test="$lang = 'ru'">
@@ -582,6 +594,9 @@
 					<xsl:when test="$label = 'weight'">Вес</xsl:when>
 					<xsl:when test="$label = 'width'">Ширина</xsl:when>
 					<xsl:when test="$label = 'year'">Год</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="numishare:regularize_node($label, 'en')"/>
+					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
 			<xsl:when test="$lang = 'ukr'">
@@ -680,6 +695,9 @@
 					<xsl:when test="$label = 'weight'">Вага</xsl:when>
 					<xsl:when test="$label = 'width'">Ширина</xsl:when>
 					<xsl:when test="$label = 'year'">Рік</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="numishare:regularize_node($label, 'en')"/>
+					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
 			<xsl:when test="$lang = 'nl'">
@@ -778,6 +796,9 @@
 					<xsl:when test="$label = 'weight'">Massa</xsl:when>
 					<xsl:when test="$label = 'width'">Breedte</xsl:when>
 					<xsl:when test="$label = 'year'">Jaar</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="numishare:regularize_node($label, 'en')"/>
+					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
 			<xsl:when test="$lang = 'sv'">
@@ -873,6 +894,9 @@
 					<xsl:when test="$label = 'weight'">Vikt</xsl:when>
 					<xsl:when test="$label = 'width'">Bredd</xsl:when>
 					<xsl:when test="$label = 'year'">År</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="numishare:regularize_node($label, 'en')"/>
+					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
 			<xsl:when test="$lang = 'pl'">
@@ -971,6 +995,9 @@
 					<xsl:when test="$label = 'weight'">ciężar</xsl:when>
 					<xsl:when test="$label = 'width'">szerokość</xsl:when>
 					<xsl:when test="$label = 'year'">rok</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="numishare:regularize_node($label, 'en')"/>
+					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
 			<xsl:when test="$lang = 'it'">
@@ -1069,6 +1096,9 @@
 					<xsl:when test="$label = 'weight'">Peso</xsl:when>
 					<xsl:when test="$label = 'width'">Larghezza</xsl:when>
 					<xsl:when test="$label = 'year'">Anno</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="numishare:regularize_node($label, 'en')"/>
+					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
 			<xsl:when test="$lang = 'tr'">
@@ -1167,6 +1197,9 @@
 					<xsl:when test="$label = 'weight'">Ağırlık</xsl:when>
 					<xsl:when test="$label = 'width'">Genişlik</xsl:when>
 					<xsl:when test="$label = 'year'">Yıl</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="numishare:regularize_node($label, 'en')"/>
+					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
 			<xsl:when test="$lang = 'fi'">
@@ -1263,6 +1296,9 @@
 					<xsl:when test="$label = 'weight'">paino</xsl:when>
 					<xsl:when test="$label = 'width'">leveys</xsl:when>
 					<xsl:when test="$label = 'year'">vuosi</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="numishare:regularize_node($label, 'en')"/>
+					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
 			<xsl:when test="$lang = 'da'">
@@ -1360,6 +1396,9 @@
 					<xsl:when test="$label = 'weight'">vægt</xsl:when>
 					<xsl:when test="$label = 'width'">bredde</xsl:when>
 					<xsl:when test="$label = 'year'">år</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="numishare:regularize_node($label, 'en')"/>
+					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
 			<xsl:when test="$lang = 'hu'">
@@ -1458,6 +1497,9 @@
 					<xsl:when test="$label = 'weight'">Súly</xsl:when>
 					<xsl:when test="$label = 'width'">Szélesség</xsl:when>
 					<xsl:when test="$label = 'year'">Év</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="numishare:regularize_node($label, 'en')"/>
+					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
 			<xsl:when test="$lang = 'gr'">
@@ -1556,6 +1598,9 @@
 					<xsl:when test="$label = 'weight'">Βάρος</xsl:when>
 					<xsl:when test="$label = 'width'">Πλάτος</xsl:when>
 					<xsl:when test="$label = 'year'">Έτος</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="numishare:regularize_node($label, 'en')"/>
+					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
 			<xsl:when test="$lang = 'es'">
@@ -1654,6 +1699,9 @@
 					<xsl:when test="$label = 'weight'">Peso</xsl:when>
 					<xsl:when test="$label = 'width'">Ancho</xsl:when>
 					<xsl:when test="$label = 'year'">Año</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="numishare:regularize_node($label, 'en')"/>
+					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
 			<xsl:when test="$lang = 'bg'">
@@ -1752,6 +1800,9 @@
 					<xsl:when test="$label = 'weight'">Тегло</xsl:when>
 					<xsl:when test="$label = 'width'">Ширина</xsl:when>
 					<xsl:when test="$label = 'year'">Година</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="numishare:regularize_node($label, 'en')"/>
+					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
 			<xsl:when test="$lang = 'he'">
@@ -1849,6 +1900,9 @@
 					<xsl:when test="$label = 'weight'">משקל</xsl:when>
 					<xsl:when test="$label = 'width'">רוחב</xsl:when>
 					<xsl:when test="$label = 'year'">שנה</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="numishare:regularize_node($label, 'en')"/>
+					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
 			<xsl:otherwise>
@@ -2067,6 +2121,9 @@
 					<xsl:when test="$label = 'lang_ru'">Russisch</xsl:when>
 					<xsl:when test="$label = 'lang_sv'">Schwedisch</xsl:when>
 					<xsl:when test="$label = 'lang_tr'">Türkisch</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="numishare:normalizeLabel($label, 'en')"/>
+					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
 			<xsl:when test="$lang = 'ar'">
@@ -2184,6 +2241,9 @@
 					<xsl:when test="$label = 'lang_ru'">الروسية</xsl:when>
 					<xsl:when test="$label = 'lang_sv'">اللغة السويدية</xsl:when>
 					<xsl:when test="$label = 'lang_tr'">اللغة التركية</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="numishare:normalizeLabel($label, 'en')"/>
+					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
 			<xsl:when test="$lang = 'fr'">
@@ -2302,6 +2362,9 @@
 					<xsl:when test="$label = 'lang_ru'">Russe</xsl:when>
 					<xsl:when test="$label = 'lang_sv'">Suédois</xsl:when>
 					<xsl:when test="$label = 'lang_tr'">Turc</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="numishare:normalizeLabel($label, 'en')"/>
+					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
 			<xsl:when test="$lang = 'ro'">
@@ -2420,6 +2483,9 @@
 					<xsl:when test="$label = 'lang_ru'">Rusă</xsl:when>
 					<xsl:when test="$label = 'lang_sv'">Suedeză</xsl:when>
 					<xsl:when test="$label = 'lang_tr'">Turcă</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="numishare:normalizeLabel($label, 'en')"/>
+					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
 			<xsl:when test="$lang = 'ru'">
@@ -2537,6 +2603,9 @@
 					<xsl:when test="$label = 'lang_ru'">Русский</xsl:when>
 					<xsl:when test="$label = 'lang_sv'">Шведский</xsl:when>
 					<xsl:when test="$label = 'lang_tr'">Турецкий</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="numishare:normalizeLabel($label, 'en')"/>
+					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
 			<xsl:when test="$lang = 'ukr'">
@@ -2654,6 +2723,9 @@
 					<xsl:when test="$label = 'lang_ru'">Російська</xsl:when>
 					<xsl:when test="$label = 'lang_sv'">Швецька</xsl:when>
 					<xsl:when test="$label = 'lang_tr'">Турецька</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="numishare:normalizeLabel($label, 'en')"/>
+					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
 			<xsl:when test="$lang = 'nl'">
@@ -2774,6 +2846,9 @@
 					<xsl:when test="$label = 'lang_ru'">Russisch</xsl:when>
 					<xsl:when test="$label = 'lang_sv'">Zweeds</xsl:when>
 					<xsl:when test="$label = 'lang_tr'">Turks</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="numishare:normalizeLabel($label, 'en')"/>
+					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
 			<xsl:when test="$lang = 'sv'">
@@ -2833,6 +2908,9 @@
 					<xsl:when test="$label = 'lang_ru'">Ryska</xsl:when>
 					<xsl:when test="$label = 'lang_sv'">Svenska</xsl:when>
 					<xsl:when test="$label = 'lang_tr'">Turkiska</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="numishare:normalizeLabel($label, 'en')"/>
+					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
 			<xsl:when test="$lang = 'pl'">
@@ -2951,6 +3029,9 @@
 					<xsl:when test="$label = 'lang_ru'">Rosyjski</xsl:when>
 					<xsl:when test="$label = 'lang_sv'">Szwedzki</xsl:when>
 					<xsl:when test="$label = 'lang_tr'">Turecki</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="numishare:normalizeLabel($label, 'en')"/>
+					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
 			<xsl:when test="$lang = 'it'">
@@ -3070,6 +3151,9 @@
 					<xsl:when test="$label = 'lang_ru'">Russo</xsl:when>
 					<xsl:when test="$label = 'lang_sv'">Svedese</xsl:when>
 					<xsl:when test="$label = 'lang_tr'">Turco</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="numishare:normalizeLabel($label, 'en')"/>
+					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
 			<xsl:when test="$lang = 'tr'">
@@ -3189,6 +3273,9 @@
 					<xsl:when test="$label = 'lang_ru'">Rusça</xsl:when>
 					<xsl:when test="$label = 'lang_sv'">İsveççe</xsl:when>
 					<xsl:when test="$label = 'lang_tr'">Türkçe</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="numishare:normalizeLabel($label, 'en')"/>
+					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
 			<xsl:when test="$lang = 'fi'">
@@ -3308,6 +3395,9 @@
 					<xsl:when test="$label = 'lang_ru'">venäjä</xsl:when>
 					<xsl:when test="$label = 'lang_sv'">ruotsi</xsl:when>
 					<xsl:when test="$label = 'lang_tr'">turkki</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="numishare:normalizeLabel($label, 'en')"/>
+					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
 			<xsl:when test="$lang = 'da'">
@@ -3427,6 +3517,9 @@
 					<xsl:when test="$label = 'lang_ru'">Russisk</xsl:when>
 					<xsl:when test="$label = 'lang_sv'">Svensk</xsl:when>
 					<xsl:when test="$label = 'lang_tr'">Tyrkisk</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="numishare:normalizeLabel($label, 'en')"/>
+					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
 			<xsl:when test="$lang = 'hu'">
@@ -3547,6 +3640,9 @@
 					<xsl:when test="$label = 'lang_ru'">orosz</xsl:when>
 					<xsl:when test="$label = 'lang_sv'">svéd</xsl:when>
 					<xsl:when test="$label = 'lang_tr'">török</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="numishare:normalizeLabel($label, 'en')"/>
+					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
 			<xsl:when test="$lang = 'gr'">
@@ -3667,6 +3763,9 @@
 					<xsl:when test="$label = 'lang_ru'">ρωσικά</xsl:when>
 					<xsl:when test="$label = 'lang_sv'">σουηδικά</xsl:when>
 					<xsl:when test="$label = 'lang_tr'">τουρκικά</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="numishare:normalizeLabel($label, 'en')"/>
+					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
 			<xsl:when test="$lang = 'es'">
@@ -3786,6 +3885,9 @@
 					<xsl:when test="$label = 'lang_ru'">Ruso</xsl:when>
 					<xsl:when test="$label = 'lang_sv'">Sueco</xsl:when>
 					<xsl:when test="$label = 'lang_tr'">Turco</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="numishare:normalizeLabel($label, 'en')"/>
+					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
 			<xsl:when test="$lang = 'bg'">
@@ -3904,6 +4006,9 @@
 					<xsl:when test="$label = 'lang_ru'">Руски</xsl:when>
 					<xsl:when test="$label = 'lang_sv'">Шведски</xsl:when>
 					<xsl:when test="$label = 'lang_tr'">Турски</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="numishare:normalizeLabel($label, 'en')"/>
+					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
 			<xsl:when test="$lang = 'he'">
@@ -3944,6 +4049,9 @@
 					<xsl:when test="$label = 'lang_ru'">רוסית</xsl:when>
 					<xsl:when test="$label = 'lang_sv'">שוודית</xsl:when>
 					<xsl:when test="$label = 'lang_tr'">תורכית</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="numishare:normalizeLabel($label, 'en')"/>
+					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
 			<xsl:otherwise>
