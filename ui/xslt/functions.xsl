@@ -599,7 +599,7 @@
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
-			<xsl:when test="$lang = 'ukr'">
+			<xsl:when test="$lang = 'uk'">
 				<xsl:choose>
 					<xsl:when test="$label = 'acknowledgment'">Подяка</xsl:when>
 					<xsl:when test="$label = 'acquisition'">Придбання</xsl:when>
@@ -2113,6 +2113,7 @@
 					<xsl:when test="$label = 'lang_fi'">Finnisch</xsl:when>
 					<xsl:when test="$label = 'lang_fr'">Französisch</xsl:when>
 					<xsl:when test="$label = 'lang_he'">Hebräisch</xsl:when>
+					<xsl:when test="$label = 'lang_hu'">Ungarisch</xsl:when>
 					<xsl:when test="$label = 'lang_it'">Italienisch</xsl:when>
 					<xsl:when test="$label = 'lang_nl'">Niederländisch</xsl:when>
 					<xsl:when test="$label = 'lang_nn'">Norwegisch</xsl:when>
@@ -2121,6 +2122,7 @@
 					<xsl:when test="$label = 'lang_ru'">Russisch</xsl:when>
 					<xsl:when test="$label = 'lang_sv'">Schwedisch</xsl:when>
 					<xsl:when test="$label = 'lang_tr'">Türkisch</xsl:when>
+					<xsl:when test="$label = 'lang_uk'">Ukrainisch</xsl:when>
 					<xsl:otherwise>
 						<xsl:value-of select="numishare:normalizeLabel($label, 'en')"/>
 					</xsl:otherwise>
@@ -2233,6 +2235,7 @@
 					<xsl:when test="$label = 'lang_fi'">الفنلندية</xsl:when>
 					<xsl:when test="$label = 'lang_fr'">فرنسي</xsl:when>
 					<xsl:when test="$label = 'lang_he'">اللغة العبرية</xsl:when>
+					<xsl:when test="$label = 'lang_hu'">المجرية</xsl:when>
 					<xsl:when test="$label = 'lang_it'">الإيطالي</xsl:when>
 					<xsl:when test="$label = 'lang_nl'">هولندي</xsl:when>
 					<xsl:when test="$label = 'lang_nn'">اللغة النروجية</xsl:when>
@@ -2241,6 +2244,7 @@
 					<xsl:when test="$label = 'lang_ru'">الروسية</xsl:when>
 					<xsl:when test="$label = 'lang_sv'">اللغة السويدية</xsl:when>
 					<xsl:when test="$label = 'lang_tr'">اللغة التركية</xsl:when>
+					<xsl:when test="$label = 'lang_uk'">الأوكرانية</xsl:when>
 					<xsl:otherwise>
 						<xsl:value-of select="numishare:normalizeLabel($label, 'en')"/>
 					</xsl:otherwise>
@@ -2354,6 +2358,7 @@
 					<xsl:when test="$label = 'lang_fi'">Finlandais</xsl:when>
 					<xsl:when test="$label = 'lang_fr'">Français</xsl:when>
 					<xsl:when test="$label = 'lang_he'">Hébreu</xsl:when>
+					<xsl:when test="$label = 'lang_hu'">Hongrois</xsl:when>
 					<xsl:when test="$label = 'lang_it'">Italien</xsl:when>
 					<xsl:when test="$label = 'lang_nl'">Néerlandais</xsl:when>
 					<xsl:when test="$label = 'lang_nn'">Norvégien</xsl:when>
@@ -2362,6 +2367,7 @@
 					<xsl:when test="$label = 'lang_ru'">Russe</xsl:when>
 					<xsl:when test="$label = 'lang_sv'">Suédois</xsl:when>
 					<xsl:when test="$label = 'lang_tr'">Turc</xsl:when>
+					<xsl:when test="$label = 'lang_uk'">Ukrainien</xsl:when>
 					<xsl:otherwise>
 						<xsl:value-of select="numishare:normalizeLabel($label, 'en')"/>
 					</xsl:otherwise>
@@ -2475,6 +2481,7 @@
 					<xsl:when test="$label = 'lang_fi'">Finlandeză</xsl:when>
 					<xsl:when test="$label = 'lang_fr'">Franceză</xsl:when>
 					<xsl:when test="$label = 'lang_he'">Evrei</xsl:when>
+					<xsl:when test="$label = 'lang_hu'">Maghiară</xsl:when>
 					<xsl:when test="$label = 'lang_it'">Italiană</xsl:when>
 					<xsl:when test="$label = 'lang_nl'">Olandeză</xsl:when>
 					<xsl:when test="$label = 'lang_nn'">Norvegiană</xsl:when>
@@ -2483,6 +2490,7 @@
 					<xsl:when test="$label = 'lang_ru'">Rusă</xsl:when>
 					<xsl:when test="$label = 'lang_sv'">Suedeză</xsl:when>
 					<xsl:when test="$label = 'lang_tr'">Turcă</xsl:when>
+					<xsl:when test="$label = 'lang_uk'">Ucrainean</xsl:when>
 					<xsl:otherwise>
 						<xsl:value-of select="numishare:normalizeLabel($label, 'en')"/>
 					</xsl:otherwise>
@@ -2595,6 +2603,7 @@
 					<xsl:when test="$label = 'lang_fi'">Финнский</xsl:when>
 					<xsl:when test="$label = 'lang_fr'">Французский</xsl:when>
 					<xsl:when test="$label = 'lang_he'">Иврит</xsl:when>
+					<xsl:when test="$label = 'lang_hu'">Венгерский</xsl:when>
 					<xsl:when test="$label = 'lang_it'">Итальянский</xsl:when>
 					<xsl:when test="$label = 'lang_nl'">Голландский</xsl:when>
 					<xsl:when test="$label = 'lang_nn'">Норвежский</xsl:when>
@@ -2603,12 +2612,13 @@
 					<xsl:when test="$label = 'lang_ru'">Русский</xsl:when>
 					<xsl:when test="$label = 'lang_sv'">Шведский</xsl:when>
 					<xsl:when test="$label = 'lang_tr'">Турецкий</xsl:when>
+					<xsl:when test="$label = 'lang_uk'">украинец</xsl:when>
 					<xsl:otherwise>
 						<xsl:value-of select="numishare:normalizeLabel($label, 'en')"/>
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
-			<xsl:when test="$lang = 'ukr'">
+			<xsl:when test="$lang = 'uk'">
 				<xsl:choose>
 					<xsl:when test="$label = 'header_home'">На головну</xsl:when>
 					<xsl:when test="$label = 'header_browse'">Перегляд</xsl:when>
@@ -2714,7 +2724,8 @@
 					<xsl:when test="$label = 'lang_es'">Іспанська</xsl:when>
 					<xsl:when test="$label = 'lang_fi'">Фіннська</xsl:when>
 					<xsl:when test="$label = 'lang_fr'">Французька</xsl:when>
-					<xsl:when test="$label = 'lang_he'">Івріт</xsl:when>
+					<xsl:when test="$label = 'lang_he'">староєврейська</xsl:when>
+					<xsl:when test="$label = 'lang_hu'">угорська</xsl:when>
 					<xsl:when test="$label = 'lang_it'">Італійська</xsl:when>
 					<xsl:when test="$label = 'lang_nl'">Голландська</xsl:when>
 					<xsl:when test="$label = 'lang_nn'">Норвежська</xsl:when>
@@ -2723,6 +2734,7 @@
 					<xsl:when test="$label = 'lang_ru'">Російська</xsl:when>
 					<xsl:when test="$label = 'lang_sv'">Швецька</xsl:when>
 					<xsl:when test="$label = 'lang_tr'">Турецька</xsl:when>
+					<xsl:when test="$label = 'lang_uk'">українська</xsl:when>
 					<xsl:otherwise>
 						<xsl:value-of select="numishare:normalizeLabel($label, 'en')"/>
 					</xsl:otherwise>
@@ -2838,6 +2850,7 @@
 					<xsl:when test="$label = 'lang_fi'">Fins</xsl:when>
 					<xsl:when test="$label = 'lang_fr'">Frans</xsl:when>
 					<xsl:when test="$label = 'lang_he'">Hebreeuws</xsl:when>
+					<xsl:when test="$label = 'lang_hu'">Hongaars</xsl:when>
 					<xsl:when test="$label = 'lang_it'">Italiaans</xsl:when>
 					<xsl:when test="$label = 'lang_nl'">Nederlands</xsl:when>
 					<xsl:when test="$label = 'lang_nn'">Noors</xsl:when>
@@ -2846,6 +2859,7 @@
 					<xsl:when test="$label = 'lang_ru'">Russisch</xsl:when>
 					<xsl:when test="$label = 'lang_sv'">Zweeds</xsl:when>
 					<xsl:when test="$label = 'lang_tr'">Turks</xsl:when>
+					<xsl:when test="$label = 'lang_uk'">Oekraïens</xsl:when>
 					<xsl:otherwise>
 						<xsl:value-of select="numishare:normalizeLabel($label, 'en')"/>
 					</xsl:otherwise>
@@ -2897,9 +2911,10 @@
 					<xsl:when test="$label = 'lang_el'">Grekiska</xsl:when>
 					<xsl:when test="$label = 'lang_en'">Engelska</xsl:when>
 					<xsl:when test="$label = 'lang_es'">Spanska</xsl:when>
-					<xsl:when test="$label = 'lang_fi'">Finsk</xsl:when>
+					<xsl:when test="$label = 'lang_fi'">Finska</xsl:when>
 					<xsl:when test="$label = 'lang_fr'">Franska</xsl:when>
 					<xsl:when test="$label = 'lang_he'">Hebreiska</xsl:when>
+					<xsl:when test="$label = 'lang_hu'">Ungerska</xsl:when>
 					<xsl:when test="$label = 'lang_it'">Italienska</xsl:when>
 					<xsl:when test="$label = 'lang_nl'">Nederländska</xsl:when>
 					<xsl:when test="$label = 'lang_nn'">Norska</xsl:when>
@@ -2908,6 +2923,7 @@
 					<xsl:when test="$label = 'lang_ru'">Ryska</xsl:when>
 					<xsl:when test="$label = 'lang_sv'">Svenska</xsl:when>
 					<xsl:when test="$label = 'lang_tr'">Turkiska</xsl:when>
+					<xsl:when test="$label = 'lang_uk'">Ukrainska</xsl:when>
 					<xsl:otherwise>
 						<xsl:value-of select="numishare:normalizeLabel($label, 'en')"/>
 					</xsl:otherwise>
@@ -3021,6 +3037,7 @@
 					<xsl:when test="$label = 'lang_fi'">Fiński</xsl:when>
 					<xsl:when test="$label = 'lang_fr'">Francuski</xsl:when>
 					<xsl:when test="$label = 'lang_he'">Hebrajski</xsl:when>
+					<xsl:when test="$label = 'lang_hu'">Język Węgierski</xsl:when>
 					<xsl:when test="$label = 'lang_it'">Włoski</xsl:when>
 					<xsl:when test="$label = 'lang_nl'">Holenderski</xsl:when>
 					<xsl:when test="$label = 'lang_nn'">Norweski</xsl:when>
@@ -3029,6 +3046,7 @@
 					<xsl:when test="$label = 'lang_ru'">Rosyjski</xsl:when>
 					<xsl:when test="$label = 'lang_sv'">Szwedzki</xsl:when>
 					<xsl:when test="$label = 'lang_tr'">Turecki</xsl:when>
+					<xsl:when test="$label = 'lang_uk'">Ukraiński</xsl:when>
 					<xsl:otherwise>
 						<xsl:value-of select="numishare:normalizeLabel($label, 'en')"/>
 					</xsl:otherwise>
@@ -3143,6 +3161,7 @@
 					<xsl:when test="$label = 'lang_fi'">Finlandese</xsl:when>
 					<xsl:when test="$label = 'lang_fr'">Francese</xsl:when>
 					<xsl:when test="$label = 'lang_he'">Ebraico</xsl:when>
+					<xsl:when test="$label = 'lang_hu'">Ungherese</xsl:when>
 					<xsl:when test="$label = 'lang_it'">Italiano</xsl:when>
 					<xsl:when test="$label = 'lang_nl'">Olandese</xsl:when>
 					<xsl:when test="$label = 'lang_nn'">Norvegese</xsl:when>
@@ -3151,6 +3170,7 @@
 					<xsl:when test="$label = 'lang_ru'">Russo</xsl:when>
 					<xsl:when test="$label = 'lang_sv'">Svedese</xsl:when>
 					<xsl:when test="$label = 'lang_tr'">Turco</xsl:when>
+					<xsl:when test="$label = 'lang_uk'">Ucraino</xsl:when>
 					<xsl:otherwise>
 						<xsl:value-of select="numishare:normalizeLabel($label, 'en')"/>
 					</xsl:otherwise>
@@ -3265,6 +3285,7 @@
 					<xsl:when test="$label = 'lang_fi'">Fince</xsl:when>
 					<xsl:when test="$label = 'lang_fr'">Fransızca</xsl:when>
 					<xsl:when test="$label = 'lang_he'">İbranice</xsl:when>
+					<xsl:when test="$label = 'lang_hu'">Macarca</xsl:when>
 					<xsl:when test="$label = 'lang_it'">İtalyanca</xsl:when>
 					<xsl:when test="$label = 'lang_nl'">Flemenkçe</xsl:when>
 					<xsl:when test="$label = 'lang_nn'">Norveççe</xsl:when>
@@ -3273,6 +3294,7 @@
 					<xsl:when test="$label = 'lang_ru'">Rusça</xsl:when>
 					<xsl:when test="$label = 'lang_sv'">İsveççe</xsl:when>
 					<xsl:when test="$label = 'lang_tr'">Türkçe</xsl:when>
+					<xsl:when test="$label = 'lang_uk'">Ukrayna</xsl:when>
 					<xsl:otherwise>
 						<xsl:value-of select="numishare:normalizeLabel($label, 'en')"/>
 					</xsl:otherwise>
@@ -3387,6 +3409,7 @@
 					<xsl:when test="$label = 'lang_fi'">suomi</xsl:when>
 					<xsl:when test="$label = 'lang_fr'">ranska</xsl:when>
 					<xsl:when test="$label = 'lang_he'">heprealainen</xsl:when>
+					<xsl:when test="$label = 'lang_hu'">unkarin kieli</xsl:when>
 					<xsl:when test="$label = 'lang_it'">italia</xsl:when>
 					<xsl:when test="$label = 'lang_nl'">hollanti</xsl:when>
 					<xsl:when test="$label = 'lang_nn'">norja</xsl:when>
@@ -3395,6 +3418,7 @@
 					<xsl:when test="$label = 'lang_ru'">venäjä</xsl:when>
 					<xsl:when test="$label = 'lang_sv'">ruotsi</xsl:when>
 					<xsl:when test="$label = 'lang_tr'">turkki</xsl:when>
+					<xsl:when test="$label = 'lang_uk'">ukraina</xsl:when>
 					<xsl:otherwise>
 						<xsl:value-of select="numishare:normalizeLabel($label, 'en')"/>
 					</xsl:otherwise>
@@ -3509,6 +3533,7 @@
 					<xsl:when test="$label = 'lang_fi'">Finsk</xsl:when>
 					<xsl:when test="$label = 'lang_fr'">Fransk</xsl:when>
 					<xsl:when test="$label = 'lang_he'">Hebraisk</xsl:when>
+					<xsl:when test="$label = 'lang_hu'">Ungarsk</xsl:when>
 					<xsl:when test="$label = 'lang_it'">Italiensk</xsl:when>
 					<xsl:when test="$label = 'lang_nl'">Hollandsk</xsl:when>
 					<xsl:when test="$label = 'lang_nn'">Norsk</xsl:when>
@@ -3517,6 +3542,7 @@
 					<xsl:when test="$label = 'lang_ru'">Russisk</xsl:when>
 					<xsl:when test="$label = 'lang_sv'">Svensk</xsl:when>
 					<xsl:when test="$label = 'lang_tr'">Tyrkisk</xsl:when>
+					<xsl:when test="$label = 'lang_uk'">Ukrainsk</xsl:when>
 					<xsl:otherwise>
 						<xsl:value-of select="numishare:normalizeLabel($label, 'en')"/>
 					</xsl:otherwise>
@@ -3632,6 +3658,7 @@
 					<xsl:when test="$label = 'lang_fi'">finn</xsl:when>
 					<xsl:when test="$label = 'lang_fr'">francia</xsl:when>
 					<xsl:when test="$label = 'lang_he'">héber</xsl:when>
+					<xsl:when test="$label = 'lang_hu'">magyar</xsl:when>
 					<xsl:when test="$label = 'lang_it'">olasz</xsl:when>
 					<xsl:when test="$label = 'lang_nl'">holland</xsl:when>
 					<xsl:when test="$label = 'lang_nn'">norvég</xsl:when>
@@ -3640,6 +3667,7 @@
 					<xsl:when test="$label = 'lang_ru'">orosz</xsl:when>
 					<xsl:when test="$label = 'lang_sv'">svéd</xsl:when>
 					<xsl:when test="$label = 'lang_tr'">török</xsl:when>
+					<xsl:when test="$label = 'lang_uk'">Ukrán</xsl:when>
 					<xsl:otherwise>
 						<xsl:value-of select="numishare:normalizeLabel($label, 'en')"/>
 					</xsl:otherwise>
@@ -3755,6 +3783,7 @@
 					<xsl:when test="$label = 'lang_fi'">φινλαδικά</xsl:when>
 					<xsl:when test="$label = 'lang_fr'">γαλλικά</xsl:when>
 					<xsl:when test="$label = 'lang_he'">εβραϊκά</xsl:when>
+					<xsl:when test="$label = 'lang_hu'">ουγγρικά</xsl:when>
 					<xsl:when test="$label = 'lang_it'">ιταλικά</xsl:when>
 					<xsl:when test="$label = 'lang_nl'">ολλανδικά</xsl:when>
 					<xsl:when test="$label = 'lang_nn'">νορβηγικά</xsl:when>
@@ -3763,6 +3792,7 @@
 					<xsl:when test="$label = 'lang_ru'">ρωσικά</xsl:when>
 					<xsl:when test="$label = 'lang_sv'">σουηδικά</xsl:when>
 					<xsl:when test="$label = 'lang_tr'">τουρκικά</xsl:when>
+					<xsl:when test="$label = 'lang_uk'">ουκρανικά</xsl:when>
 					<xsl:otherwise>
 						<xsl:value-of select="numishare:normalizeLabel($label, 'en')"/>
 					</xsl:otherwise>
@@ -3877,6 +3907,7 @@
 					<xsl:when test="$label = 'lang_fi'">Finlandés</xsl:when>
 					<xsl:when test="$label = 'lang_fr'">Francés</xsl:when>
 					<xsl:when test="$label = 'lang_he'">Hebreo</xsl:when>
+					<xsl:when test="$label = 'lang_hu'">Húngaro</xsl:when>
 					<xsl:when test="$label = 'lang_it'">Italiano</xsl:when>
 					<xsl:when test="$label = 'lang_nl'">Holandés</xsl:when>
 					<xsl:when test="$label = 'lang_nn'">Noruego</xsl:when>
@@ -3885,6 +3916,7 @@
 					<xsl:when test="$label = 'lang_ru'">Ruso</xsl:when>
 					<xsl:when test="$label = 'lang_sv'">Sueco</xsl:when>
 					<xsl:when test="$label = 'lang_tr'">Turco</xsl:when>
+					<xsl:when test="$label = 'lang_uk'">Ucranio</xsl:when>
 					<xsl:otherwise>
 						<xsl:value-of select="numishare:normalizeLabel($label, 'en')"/>
 					</xsl:otherwise>
@@ -3998,6 +4030,7 @@
 					<xsl:when test="$label = 'lang_fi'">фински</xsl:when>
 					<xsl:when test="$label = 'lang_fr'">Френски</xsl:when>
 					<xsl:when test="$label = 'lang_he'">Иврит</xsl:when>
+					<xsl:when test="$label = 'lang_hu'">Унгарски</xsl:when>
 					<xsl:when test="$label = 'lang_it'">Италиански</xsl:when>
 					<xsl:when test="$label = 'lang_nl'">Холандски</xsl:when>
 					<xsl:when test="$label = 'lang_nn'">Норвежки</xsl:when>
@@ -4006,6 +4039,7 @@
 					<xsl:when test="$label = 'lang_ru'">Руски</xsl:when>
 					<xsl:when test="$label = 'lang_sv'">Шведски</xsl:when>
 					<xsl:when test="$label = 'lang_tr'">Турски</xsl:when>
+					<xsl:when test="$label = 'lang_uk'">Украински</xsl:when>
 					<xsl:otherwise>
 						<xsl:value-of select="numishare:normalizeLabel($label, 'en')"/>
 					</xsl:otherwise>
@@ -4041,6 +4075,7 @@
 					<xsl:when test="$label = 'lang_fi'">פינית</xsl:when>
 					<xsl:when test="$label = 'lang_fr'">צרפתית</xsl:when>
 					<xsl:when test="$label = 'lang_he'">עִברִית</xsl:when>
+					<xsl:when test="$label = 'lang_hu'">הונגרית</xsl:when>
 					<xsl:when test="$label = 'lang_it'">איטלקית</xsl:when>
 					<xsl:when test="$label = 'lang_nl'">הולנדית</xsl:when>
 					<xsl:when test="$label = 'lang_nn'">נורווגית</xsl:when>
@@ -4049,6 +4084,7 @@
 					<xsl:when test="$label = 'lang_ru'">רוסית</xsl:when>
 					<xsl:when test="$label = 'lang_sv'">שוודית</xsl:when>
 					<xsl:when test="$label = 'lang_tr'">תורכית</xsl:when>
+					<xsl:when test="$label = 'lang_uk'">אוקראינית</xsl:when>
 					<xsl:otherwise>
 						<xsl:value-of select="numishare:normalizeLabel($label, 'en')"/>
 					</xsl:otherwise>
