@@ -4193,25 +4193,26 @@
 					<xsl:when test="$label = 'visualize_error5'">Up to 8 hoards may be selected.</xsl:when>
 					<xsl:when test="$label = 'visualize_error6'">At least 1 and up to 30 hoards may be selected.</xsl:when>
 					<xsl:when test="$label = 'visualize_errory'">Up to 30 hoards may be selected.</xsl:when>
-					<xsl:when test="$label = 'lang_ar'">Arabic</xsl:when>
-					<xsl:when test="$label = 'lang_bg'">Bulgarian</xsl:when>
-					<xsl:when test="$label = 'lang_da'">Danish</xsl:when>
-					<xsl:when test="$label = 'lang_de'">German</xsl:when>
-					<xsl:when test="$label = 'lang_el'">Greek</xsl:when>
-					<xsl:when test="$label = 'lang_en'">English</xsl:when>
-					<xsl:when test="$label = 'lang_es'">Spanish</xsl:when>
-					<xsl:when test="$label = 'lang_fr'">French</xsl:when>
-					<xsl:when test="$label = 'lang_it'">Italian</xsl:when>
-					<xsl:when test="$label = 'lang_nl'">Dutch</xsl:when>
-					<xsl:when test="$label = 'lang_nn'">Norwegian</xsl:when>
-					<xsl:when test="$label = 'lang_pl'">Polish</xsl:when>
-					<xsl:when test="$label = 'lang_ro'">Romanian</xsl:when>
-					<xsl:when test="$label = 'lang_ru'">Russian</xsl:when>
-					<xsl:when test="$label = 'lang_sv'">Swedish</xsl:when>
-					<xsl:when test="$label = 'lang_tr'">Turkish</xsl:when>
-					<xsl:when test="$label = 'lang_da'">Danish</xsl:when>
-					<xsl:when test="$label = 'lang_fi'">Finnish</xsl:when>
-					<xsl:when test="$label = 'lang_he'">Hebrew</xsl:when>
+					<xsl:when test="$label='lang_ar'">Arabic</xsl:when>
+					<xsl:when test="$label='lang_bg'">Bulgarian</xsl:when>
+					<xsl:when test="$label='lang_da'">Danish</xsl:when>
+					<xsl:when test="$label='lang_de'">German</xsl:when>
+					<xsl:when test="$label='lang_el'">Greek</xsl:when>
+					<xsl:when test="$label='lang_en'">English</xsl:when>
+					<xsl:when test="$label='lang_es'">Spanish</xsl:when>
+					<xsl:when test="$label='lang_fi'">Finnish</xsl:when>
+					<xsl:when test="$label='lang_fr'">French</xsl:when>
+					<xsl:when test="$label='lang_he'">Hebrew</xsl:when>
+					<xsl:when test="$label='lang_hu'">Hungarian</xsl:when>
+					<xsl:when test="$label='lang_it'">Italian</xsl:when>
+					<xsl:when test="$label='lang_nl'">Dutch</xsl:when>
+					<xsl:when test="$label='lang_nn'">Norwegian</xsl:when>
+					<xsl:when test="$label='lang_pl'">Polish</xsl:when>
+					<xsl:when test="$label='lang_ro'">Romanian</xsl:when>
+					<xsl:when test="$label='lang_ru'">Russian</xsl:when>
+					<xsl:when test="$label='lang_sv'">Swedish</xsl:when>
+					<xsl:when test="$label='lang_tr'">Turkish</xsl:when>
+					<xsl:when test="$label='lang_uk'">Ukrainian</xsl:when>
 					<xsl:otherwise>
 						<xsl:value-of select="concat('[', $label, ']')"/>
 					</xsl:otherwise>
