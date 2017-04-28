@@ -28,19 +28,94 @@ foreach ($labels as $row){
 	}
 }
 
-//output arrays
-$text = '<xsl:choose>';
-foreach ($labels[0] as $k=>$v){
-	if ($k != 'field'){
-		$text .= '<xsl:when test="$lang=\'' . $k . '\'"><xsl:choose>';
-		foreach ($$k as $row){
-			$text .= '<xsl:when test="$label=\'' . $row[0] . '\'">' . trim($row[1]) . '</xsl:when>' . "\n";
-		}
-		$text .= '</xsl:choose></xsl:when>';		
-	}
-}
-$text .= '</xsl:choose>';
-file_put_contents('labels.xml', $text);
+//var_dump($labels);
+
+//process into separate  xsl functions
+$writer = new XMLWriter();
+$writer->openURI('labels.xml');
+//$writer->openURI('php://output');
+$writer->startDocument('1.0','UTF-8');
+$writer->setIndent(true);
+//now we need to define our Indent string,which is basically how many blank spaces we want to have for the indent
+$writer->setIndentString("    ");
+$writer->startElement('xsl:stylesheet');
+$writer->writeAttribute('xmlns:xsl', 'http://www.w3.org/1999/XSL/Transform');
+
+	//begin the numishare:regularize_node function that normalizes NUDS for Solr field namess
+	$writer->startElement('xsl:function');
+		$writer->writeAttribute('name', 'numishare:regularize_node');
+		$writer->startElement('xsl:param');
+			$writer->writeAttribute('name', 'label');
+		$writer->endElement();
+		$writer->startElement('xsl:param');
+			$writer->writeAttribute('name', 'lang');
+		$writer->endElement();
+		$writer->startElement('xsl:choose');
+			foreach ($labels[0] as $k=>$v){
+				if ($k != 'field'){
+					
+					$writer->startElement('xsl:when');
+						$writer->writeAttribute('test', "\$lang='" . $k . "'");
+						$writer->startElement('xsl:choose');
+						$regularize_node = true;
+						foreach ($$k as $row){
+							if ($regularize_node == true){
+								//echo "{$row[0]}-{$row[1]}\n";
+								$writer->startElement('xsl:when');
+									$writer->writeAttribute('test', "\$label='" . $row[0] . "'");
+									$writer->text(trim($row[1]));
+								$writer->endElement();
+							}
+							if ($row[0] == 'year'){
+								$regularize_node = false;
+							}
+						}
+						$writer->endElement();
+					$writer->endElement();		
+				}
+			}		
+		$writer->endElement();
+	$writer->endElement();
+	
+	//begin the numishare:normalizeLabel, which normalizes Numishare user interface labels
+	$writer->startElement('xsl:function');
+		$writer->writeAttribute('name', 'numishare:normalizeLabel');
+		$writer->startElement('xsl:param');
+			$writer->writeAttribute('name', 'label');
+		$writer->endElement();
+		$writer->startElement('xsl:param');
+			$writer->writeAttribute('name', 'lang');
+		$writer->endElement();
+		$writer->startElement('xsl:choose');
+			foreach ($labels[0] as $k=>$v){
+				if ($k != 'field'){
+					
+					$writer->startElement('xsl:when');
+						$writer->writeAttribute('test', "\$lang='" . $k . "'");
+						$writer->startElement('xsl:choose');
+						$regularize_node = true;
+						foreach ($$k as $row){
+							if ($regularize_node == false){
+								//echo "{$row[0]}-{$row[1]}\n";
+								$writer->startElement('xsl:when');
+									$writer->writeAttribute('test', "\$label='" . $row[0] . "'");
+									$writer->text(trim($row[1]));
+								$writer->endElement();
+							}
+							if ($row[0] == 'year'){
+								$regularize_node = false;
+							}
+						}
+						$writer->endElement();
+					$writer->endElement();
+				}
+			}
+		$writer->endElement();
+	$writer->endElement();
+
+//close xsl:stylesheet
+$writer->endElement();
+$writer->flush();
 
 //var_dump($en);
 

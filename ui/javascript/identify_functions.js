@@ -13,13 +13,13 @@ $(document).ready(function () {
 		//materials
 		var materials = new Array();
 		$('input[field=material]:checked').each(function () {
-			materials.push('"' + $(this).val() + '"');
+			materials.push('material_facet:"' + $(this).val() + '"');
 		});
 		
 		//portraits
 		var portraits = new Array();
 		$('input[field=portrait]:checked').each(function () {
-			portraits.push('"' + $(this).val() + '"');
+			portraits.push('portrait_facet:"' + $(this).val() + '"');
 		});
 		
 		//add legends if applicable
@@ -33,18 +33,18 @@ $(document).ready(function () {
 		//add materials
 		if (materials.length > 0) {
 			if (materials.length == 1) {
-				frags.push('material_facet:' + materials[0]);
+				frags.push(materials[0]);
 			} else {
-				frags.push('material_facet:(' + materials.join(' OR ') + ')');
+				frags.push('(' + materials.join(' OR ') + ')');
 			}
 		}
 		
 		//add portraits
 		if (portraits.length > 0) {
 			if (portraits.length == 1) {
-				frags.push('portrait_facet:' + portraits[0]);
+				frags.push(portraits[0]);
 			} else {
-				frags.push('portrait_facet:(' + portraits.join(' OR ') + ')');
+				frags.push('(' + portraits.join(' OR ') + ')');
 			}
 		}
 		

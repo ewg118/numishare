@@ -5,11 +5,25 @@ $(document).ready(function () {
     var pipeline = $('#pipeline').text();
     var lang = $('#lang').text();
     
-    if (collection_type != 'object') {
+    if (collection_type == 'hoard') {
         if ($('#map').length > 0) {
             initialize_timemap(id, path, lang);
         }
-    } else {       
+    } else if (collection_type == 'cointype') {
+        var hasFindspots = $('#hasFindspots').text();
+        
+        //display timemap only when there are findspots
+        if (hasFindspots == 'true') {         
+            if ($('#map').length > 0) {              
+                initialize_timemap(id, path, lang);
+            }
+        } else {
+            //otherwise display regular maps
+            if ($('#mapcontainer').length > 0) {
+                initialize_map(id, path, lang);
+            }
+        }
+    } else {
         if ($('#mapcontainer').length > 0) {
             initialize_map(id, path, lang);
         }
@@ -55,8 +69,8 @@ function initialize_timemap(id, path, lang) {
 function initialize_map(id, path, lang) {
     var baselayers = $('#baselayers').text().split(',');
     var mapboxKey = $('#mapboxKey').text();
-    var url = id + ".geojson" + (lang.length > 0 ? '?lang=' + lang: '');
-    
+    var url = path + id + ".geojson" + (lang.length > 0 ? '?lang=' + lang: '');
+
     //baselayers
     var osm = L.tileLayer(
     'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {

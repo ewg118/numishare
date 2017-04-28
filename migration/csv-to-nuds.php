@@ -1155,7 +1155,7 @@ function put_to_exist($filename, $nudsid){
 		curl_setopt($putToExist,CURLOPT_PUT,1);
 		curl_setopt($putToExist,CURLOPT_INFILESIZE,filesize($filename));
 		curl_setopt($putToExist,CURLOPT_INFILE,$readFile);
-		curl_setopt($putToExist,CURLOPT_USERPWD,"admin:Mp4ANSAie2r");
+		curl_setopt($putToExist,CURLOPT_USERPWD,"admin:");
 		$response = curl_exec($putToExist);
 
 		$http_code = curl_getinfo($putToExist,CURLINFO_HTTP_CODE);
