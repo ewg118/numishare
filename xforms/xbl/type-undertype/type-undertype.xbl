@@ -3,8 +3,9 @@
 	function: EAD state component; user taps into LCSH or local vocabulary for states
 -->
 <xbl:xbl xmlns:nuds="http://nomisma.org/nuds" xmlns="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events"
-	xmlns:xxforms="http://orbeon.org/oxf/xml/xforms" xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:xbl="http://www.w3.org/ns/xbl" xmlns:xxbl="http://orbeon.org/oxf/xml/xbl"
-	xmlns:oxf="http://www.orbeon.com/oxf/processors" xmlns:numishare="https://github.com/ewg118/numishare" xmlns:xlink="http://www.w3.org/1999/xlink">
+	xmlns:xxforms="http://orbeon.org/oxf/xml/xforms" xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:xbl="http://www.w3.org/ns/xbl"
+	xmlns:xxbl="http://orbeon.org/oxf/xml/xbl" xmlns:oxf="http://www.orbeon.com/oxf/processors" xmlns:numishare="https://github.com/ewg118/numishare"
+	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:atom="http://www.w3.org/2005/Atom">
 	<xbl:binding id="numishare-type-undertype" element="numishare|type-undertype">
 		<xbl:template>
 			<xforms:group xbl:attr="model context ref bind" xxbl:scope="outer">
@@ -655,70 +656,81 @@
 								<xforms:trigger appearance="minimal">
 									<xforms:label>
 										<span class="glyphicon glyphicon-plus"/>Artist</xforms:label>
-									<xforms:insert ev:event="DOMActivate" context="." origin="instance('authpers-template')" nodeset="./child::node()[last()]" if="count(nuds:authority) = 0"/>
+									<xforms:insert ev:event="DOMActivate" context="." origin="instance('authpers-template')" nodeset="./child::node()[last()]"
+										if="count(nuds:authority) = 0"/>
 									<xforms:insert ev:event="DOMActivate" context="nuds:authority" origin="instance('artist-template')" nodeset="./child::node()[last()]"/>
 									<xxforms:hide ev:event="DOMActivate" dialog="authority-objects"/>
 								</xforms:trigger>
 								<xforms:trigger appearance="minimal">
 									<xforms:label>
 										<span class="glyphicon glyphicon-plus"/>Authority--Corporate</xforms:label>
-									<xforms:insert ev:event="DOMActivate" context="." origin="instance('authpers-template')" nodeset="./child::node()[last()]" if="count(nuds:authority) = 0"/>
-									<xforms:insert ev:event="DOMActivate" context="nuds:authority" origin="instance('authorityCorporate-template')" nodeset="./child::node()[last()]"/>
+									<xforms:insert ev:event="DOMActivate" context="." origin="instance('authpers-template')" nodeset="./child::node()[last()]"
+										if="count(nuds:authority) = 0"/>
+									<xforms:insert ev:event="DOMActivate" context="nuds:authority" origin="instance('authorityCorporate-template')"
+										nodeset="./child::node()[last()]"/>
 									<xxforms:hide ev:event="DOMActivate" dialog="authority-objects"/>
 								</xforms:trigger>
 								<xforms:trigger appearance="minimal">
 									<xforms:label>
 										<span class="glyphicon glyphicon-plus"/>Authority--Personal</xforms:label>
-									<xforms:insert ev:event="DOMActivate" context="." origin="instance('authpers-template')" nodeset="./child::node()[last()]" if="count(nuds:authority) = 0"/>
+									<xforms:insert ev:event="DOMActivate" context="." origin="instance('authpers-template')" nodeset="./child::node()[last()]"
+										if="count(nuds:authority) = 0"/>
 									<xforms:insert ev:event="DOMActivate" context="nuds:authority" origin="instance('authorityPersonal-template')" nodeset="./child::node()[last()]"/>
 									<xxforms:hide ev:event="DOMActivate" dialog="authority-objects"/>
 								</xforms:trigger>
 								<xforms:trigger appearance="minimal">
 									<xforms:label>
 										<span class="glyphicon glyphicon-plus"/>Dynasty</xforms:label>
-									<xforms:insert ev:event="DOMActivate" context="." origin="instance('authpers-template')" nodeset="./child::node()[last()]" if="count(nuds:authority) = 0"/>
+									<xforms:insert ev:event="DOMActivate" context="." origin="instance('authpers-template')" nodeset="./child::node()[last()]"
+										if="count(nuds:authority) = 0"/>
 									<xforms:insert ev:event="DOMActivate" context="nuds:authority" origin="instance('dynasty-template')" nodeset="./child::node()[last()]"/>
 									<xxforms:hide ev:event="DOMActivate" dialog="authority-objects"/>
 								</xforms:trigger>
 								<xforms:trigger appearance="minimal">
 									<xforms:label>
 										<span class="glyphicon glyphicon-plus"/>Engraver</xforms:label>
-									<xforms:insert ev:event="DOMActivate" context="." origin="instance('authpers-template')" nodeset="./child::node()[last()]" if="count(nuds:authority) = 0"/>
+									<xforms:insert ev:event="DOMActivate" context="." origin="instance('authpers-template')" nodeset="./child::node()[last()]"
+										if="count(nuds:authority) = 0"/>
 									<xforms:insert ev:event="DOMActivate" context="nuds:authority" origin="instance('engraver-template')" nodeset="./child::node()[last()]"/>
 									<xxforms:hide ev:event="DOMActivate" dialog="authority-objects"/>
 								</xforms:trigger>
 								<xforms:trigger appearance="minimal">
 									<xforms:label>
 										<span class="glyphicon glyphicon-plus"/>Issuer--Corporate</xforms:label>
-									<xforms:insert ev:event="DOMActivate" context="." origin="instance('authpers-template')" nodeset="./child::node()[last()]" if="count(nuds:authority) = 0"/>
+									<xforms:insert ev:event="DOMActivate" context="." origin="instance('authpers-template')" nodeset="./child::node()[last()]"
+										if="count(nuds:authority) = 0"/>
 									<xforms:insert ev:event="DOMActivate" context="nuds:authority" origin="instance('issuerCorporate-template')" nodeset="./child::node()[last()]"/>
 									<xxforms:hide ev:event="DOMActivate" dialog="authority-objects"/>
 								</xforms:trigger>
 								<xforms:trigger appearance="minimal">
 									<xforms:label>
 										<span class="glyphicon glyphicon-plus"/>Issuer--Personal</xforms:label>
-									<xforms:insert ev:event="DOMActivate" context="." origin="instance('authpers-template')" nodeset="./child::node()[last()]" if="count(nuds:authority) = 0"/>
+									<xforms:insert ev:event="DOMActivate" context="." origin="instance('authpers-template')" nodeset="./child::node()[last()]"
+										if="count(nuds:authority) = 0"/>
 									<xforms:insert ev:event="DOMActivate" context="nuds:authority" origin="instance('issuerPersonal-template')" nodeset="./child::node()[last()]"/>
 									<xxforms:hide ev:event="DOMActivate" dialog="authority-objects"/>
 								</xforms:trigger>
 								<xforms:trigger appearance="minimal">
 									<xforms:label>
 										<span class="glyphicon glyphicon-plus"/>Maker--Corporate</xforms:label>
-									<xforms:insert ev:event="DOMActivate" context="." origin="instance('authpers-template')" nodeset="./child::node()[last()]" if="count(nuds:authority) = 0"/>
+									<xforms:insert ev:event="DOMActivate" context="." origin="instance('authpers-template')" nodeset="./child::node()[last()]"
+										if="count(nuds:authority) = 0"/>
 									<xforms:insert ev:event="DOMActivate" context="nuds:authority" origin="instance('makerCorporate-template')" nodeset="./child::node()[last()]"/>
 									<xxforms:hide ev:event="DOMActivate" dialog="authority-objects"/>
 								</xforms:trigger>
 								<xforms:trigger appearance="minimal">
 									<xforms:label>
 										<span class="glyphicon glyphicon-plus"/>Maker--Personal</xforms:label>
-									<xforms:insert ev:event="DOMActivate" context="." origin="instance('authpers-template')" nodeset="./child::node()[last()]" if="count(nuds:authority) = 0"/>
+									<xforms:insert ev:event="DOMActivate" context="." origin="instance('authpers-template')" nodeset="./child::node()[last()]"
+										if="count(nuds:authority) = 0"/>
 									<xforms:insert ev:event="DOMActivate" context="nuds:authority" origin="instance('makerPersonal-template')" nodeset="./child::node()[last()]"/>
 									<xxforms:hide ev:event="DOMActivate" dialog="authority-objects"/>
 								</xforms:trigger>
 								<xforms:trigger appearance="minimal">
 									<xforms:label>
 										<span class="glyphicon glyphicon-plus"/>State</xforms:label>
-									<xforms:insert ev:event="DOMActivate" context="." origin="instance('authpers-template')" nodeset="./child::node()[last()]" if="count(nuds:authority) = 0"/>
+									<xforms:insert ev:event="DOMActivate" context="." origin="instance('authpers-template')" nodeset="./child::node()[last()]"
+										if="count(nuds:authority) = 0"/>
 									<xforms:insert ev:event="DOMActivate" context="nuds:authority" origin="instance('state-template')" nodeset="./child::node()[last()]"/>
 									<xxforms:hide ev:event="DOMActivate" dialog="authority-objects"/>
 								</xforms:trigger>
@@ -767,7 +779,8 @@
 									<xforms:trigger appearance="minimal">
 										<xforms:label>
 											<span class="glyphicon glyphicon-plus"/>Mint</xforms:label>
-										<xforms:insert ev:event="DOMActivate" context="." origin="instance('geographic-template')" nodeset="./child::node()[last()]" if="count(nuds:geographic) = 0"/>
+										<xforms:insert ev:event="DOMActivate" context="." origin="instance('geographic-template')" nodeset="./child::node()[last()]"
+											if="count(nuds:geographic) = 0"/>
 										<xforms:insert ev:event="DOMActivate" context="nuds:geographic" origin="instance('mint-template')" nodeset="./child::node()[last()]"/>
 									</xforms:trigger>
 								</xforms:group>
@@ -775,7 +788,8 @@
 									<xforms:trigger appearance="minimal">
 										<xforms:label>
 											<span class="glyphicon glyphicon-plus"/>Region</xforms:label>
-										<xforms:insert ev:event="DOMActivate" context="." origin="instance('geographic-template')" nodeset="./child::node()[last()]" if="count(nuds:geographic) = 0"/>
+										<xforms:insert ev:event="DOMActivate" context="." origin="instance('geographic-template')" nodeset="./child::node()[last()]"
+											if="count(nuds:geographic) = 0"/>
 										<xforms:insert ev:event="DOMActivate" context="nuds:geographic" origin="instance('region-template')" nodeset="./child::node()[last()]"/>
 									</xforms:trigger>
 								</xforms:group>
@@ -920,13 +934,15 @@
 						</xforms:instance>
 						<!-- nomisma query -->
 						<xforms:submission id="query-nomisma" serialization="none" method="get"
-							action="http://nomisma.org/feed/?q=type:&#x022;nmo:{instance('control-instance')/type}&#x022;&amp;sort=prefLabel%20asc" instance="feed" replace="instance">
+							action="http://nomisma.org/feed/?q=type:&#x022;nmo:{instance('control-instance')/type}&#x022;&amp;sort=prefLabel%20asc" instance="feed"
+							replace="instance">
 							<xforms:message ev:event="xforms-submit-error" level="modal">Unable to communicate with nomisma.org Atom feed.</xforms:message>
 							<!-- iterate through Atom feed, populating select list -->
 							<xforms:action ev:event="xforms-submit-done" xxforms:iterate="instance('feed')//atom:entry">
 								<xforms:setvalue ref="instance('listItem-template')" value="context()/atom:title"/>
 								<xforms:setvalue ref="instance('listItem-template')/@href" value="context()/atom:link[not(@rel)]/@href"/>
-								<xforms:insert origin="instance('listItem-template')" context="instance(concat(instance('control-instance')/type, '-list'))" nodeset="./child::node()[last()]"/>
+								<xforms:insert origin="instance('listItem-template')" context="instance(concat(instance('control-instance')/type, '-list'))"
+									nodeset="./child::node()[last()]"/>
 							</xforms:action>
 						</xforms:submission>
 					</xforms:model>

@@ -3,10 +3,11 @@
 	function: findspot component; user selects geonames (refers to geonames.org APIs) or manually inputs coordinates
 -->
 
-<xbl:xbl xmlns="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xxforms="http://orbeon.org/oxf/xml/xforms"
-	xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:xbl="http://www.w3.org/ns/xbl" xmlns:xxbl="http://orbeon.org/oxf/xml/xbl" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-	xmlns:oxf="http://www.orbeon.com/oxf/processors" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:georss="http://www.georss.org/georss"
-	xmlns:gml="http://www.opengis.net/gml" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:numishare="https://github.com/ewg118/numishare">
+<xbl:xbl xmlns="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events"
+	xmlns:xxforms="http://orbeon.org/oxf/xml/xforms" xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:xbl="http://www.w3.org/ns/xbl"
+	xmlns:xxbl="http://orbeon.org/oxf/xml/xbl" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:oxf="http://www.orbeon.com/oxf/processors"
+	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:numishare="https://github.com/ewg118/numishare" xmlns:xs="http://www.w3.org/2001/XMLSchema">
 	<xbl:binding id="numishare-findspot" element="numishare|findspot">
 		<xbl:template>
 			<xforms:group xbl:attr="model context ref bind" xxbl:scope="outer">
@@ -43,7 +44,8 @@
 											<xforms:delete context="instance('feed')/*"/>
 											<xforms:delete context="$binding" nodeset="gml:Point"/>
 											<!-- create attributes, clear nuds:geogname text when applicable -->
-											<xforms:insert if="not($binding/nuds:geogname/@xlink:href)" context="$binding/nuds:geogname" origin="xxforms:attribute('xlink:href', '')"/>
+											<xforms:insert if="not($binding/nuds:geogname/@xlink:href)" context="$binding/nuds:geogname"
+												origin="xxforms:attribute('xlink:href', '')"/>
 											<xforms:setvalue ref="$binding/nuds:geogname"/>
 											<xforms:toggle case="geonames-search"/>
 										</xforms:action>
@@ -144,16 +146,16 @@
 												<xforms:input ref="instance('coordinates-temp')/lat">
 													<xforms:label>Latitude</xforms:label>
 													<xforms:alert>Must be decimal coordinate less than or equal to 180.00</xforms:alert>
-													<xforms:setvalue ref="$binding/gml:Point/gml:coordinates" value="concat(instance('coordinates-temp')/lat, ', ', instance('coordinates-temp')/lon)"
-														ev:event="xforms-value-changed"/>
+													<xforms:setvalue ref="$binding/gml:Point/gml:coordinates"
+														value="concat(instance('coordinates-temp')/lat, ', ', instance('coordinates-temp')/lon)" ev:event="xforms-value-changed"/>
 												</xforms:input>
 											</div>
 											<div>
 												<xforms:input ref="instance('coordinates-temp')/lon">
 													<xforms:label>Longitude</xforms:label>
 													<xforms:alert>Must be decimal coordinate less than or equal to 180.00</xforms:alert>
-													<xforms:setvalue ref="$binding/gml:Point/gml:coordinates" value="concat(instance('coordinates-temp')/lat, ', ', instance('coordinates-temp')/lon)"
-														ev:event="xforms-value-changed"/>
+													<xforms:setvalue ref="$binding/gml:Point/gml:coordinates"
+														value="concat(instance('coordinates-temp')/lat, ', ', instance('coordinates-temp')/lon)" ev:event="xforms-value-changed"/>
 												</xforms:input>
 											</div>
 										</xforms:group>
@@ -161,7 +163,7 @@
 								</xforms:switch>
 							</div>
 						</xforms:group>
-						
+
 						<!--<xforms:group ref="nuds:geogname/@certainty">
 							<div>
 								<xforms:input ref=".">
@@ -382,8 +384,8 @@
 
 						<!-- get XML representation of single geoname, initiated on xforms-enabled -->
 						<xforms:submission id="get-geonameId" serialization="none" method="get"
-							action="http://api.geonames.org/get?geonameId={instance('geonameId')}&amp;username={instance('config')/geonames_api_key}&amp;style=full" instance="geoname-query-response"
-							replace="instance">
+							action="http://api.geonames.org/get?geonameId={instance('geonameId')}&amp;username={instance('config')/geonames_api_key}&amp;style=full"
+							instance="geoname-query-response" replace="instance">
 							<xforms:action ev:event="xforms-submit-done">
 								<xforms:insert context="instance('geoname-temp')" origin="instance('geoname-query-response')"/>
 								<xforms:action xxforms:iterate="instance('geoname-temp')//geoname">
@@ -402,8 +404,8 @@
 							</xforms:action>
 						</xforms:submission>
 
-						<xforms:submission id="load-collections" serialization="none" method="get" action="{instance('exist-config')/url}collections-list.xml" replace="instance" instance="collections-list"
-							xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}">
+						<xforms:submission id="load-collections" serialization="none" method="get" action="{instance('exist-config')/url}collections-list.xml" replace="instance"
+							instance="collections-list" xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}">
 							<!-- if the config loads successfully, set the collection names based on authentication -->
 							<xforms:action ev:event="xforms-submit-done">
 								<!-- set default if security is false -->
@@ -423,8 +425,8 @@
 							<xforms:message ev:event="xforms-submit-error" level="modal">Unable to load Numishare collections list.</xforms:message>
 						</xforms:submission>
 
-						<xforms:submission id="load-config" serialization="none" method="get" action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/config.xml"
-							replace="instance" instance="config"/>
+						<xforms:submission id="load-config" serialization="none" method="get"
+							action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/config.xml" replace="instance" instance="config"/>
 					</xforms:model>
 				</xforms:group>
 			</xforms:group>

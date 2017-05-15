@@ -2,9 +2,10 @@
 	last modified: June, 2011
 	function: NUDS dynasty (famname xlink:role="dynasty") component
 -->
-<xbl:xbl xmlns="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xxforms="http://orbeon.org/oxf/xml/xforms"
-	xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:xbl="http://www.w3.org/ns/xbl" xmlns:xxbl="http://orbeon.org/oxf/xml/xbl" xmlns:oxf="http://www.orbeon.com/oxf/processors"
-	xmlns:numishare="https://github.com/ewg118/numishare" xmlns:exist="http://exist.sourceforge.net/NS/exist">
+<xbl:xbl xmlns="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events"
+	xmlns:xxforms="http://orbeon.org/oxf/xml/xforms" xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:xbl="http://www.w3.org/ns/xbl"
+	xmlns:xxbl="http://orbeon.org/oxf/xml/xbl" xmlns:oxf="http://www.orbeon.com/oxf/processors" xmlns:numishare="https://github.com/ewg118/numishare"
+	xmlns:exist="http://exist.sourceforge.net/NS/exist" xmlns:atom="http://www.w3.org/2005/Atom">
 	<xbl:binding id="numishare-dynasty" element="numishare|dynasty">
 		<xbl:template>
 			<xforms:group xbl:attr="model context ref bind" xxbl:scope="outer">
@@ -18,7 +19,8 @@
 							<xforms:setvalue ref="instance('control-instance')/type">rdac:Family</xforms:setvalue>
 							<xforms:setvalue ref="instance('control-instance')/element" value="$binding/local-name()"/>
 							<xforms:setvalue ref="instance('control-instance')/role" value="$binding/@xlink:role"/>
-							<xforms:setvalue ref="instance('control-instance')/label" value="concat(substring(upper-case($binding/@xlink:role), 1, 1), substring($binding/@xlink:role, 2))"/>							
+							<xforms:setvalue ref="instance('control-instance')/label"
+								value="concat(substring(upper-case($binding/@xlink:role), 1, 1), substring($binding/@xlink:role, 2))"/>
 						</xforms:action>
 					</xforms:action>
 
@@ -30,7 +32,9 @@
 							</xforms:output>
 							<xforms:group ref=".[string($binding/@xlink:href)]">
 								<xforms:trigger appearance="minimal">
-									<xforms:label><span class="glyphicon glyphicon-new-window"/></xforms:label>
+									<xforms:label>
+										<span class="glyphicon glyphicon-new-window"/>
+									</xforms:label>
 									<xforms:load ev:event="DOMActivate" ref="$binding/@xlink:href" show="new"/>
 								</xforms:trigger>
 							</xforms:group>
@@ -75,7 +79,7 @@
 										<span class="glyphicon glyphicon-plus"/>Certainty </xforms:label>
 								</xforms:trigger>
 							</xforms:group>
-							
+
 							<div>
 								<xforms:input ref="instance('search-query')">
 									<xforms:label>Search</xforms:label>
@@ -88,7 +92,7 @@
 									<xforms:label>Search</xforms:label>
 								</xforms:trigger>
 							</div>
-							
+
 							<xforms:group ref=".[count(instance('feed')//atom:entry) &gt; 0]">
 								<xforms:select1 ref="instance('temp')/@href" appearance="compact" id="nomisma-list">
 									<xforms:label>Term</xforms:label>
@@ -105,8 +109,7 @@
 									<xforms:label>Select</xforms:label>
 									<xforms:action ev:event="DOMActivate">
 										<xforms:setvalue ref="$binding/@xlink:href" value="instance('temp')/@href"/>
-										<xforms:setvalue ref="$binding"
-											value="instance('feed')//atom:entry[atom:link[not(@rel)]/@href = instance('temp')/@href]/atom:title"/>
+										<xforms:setvalue ref="$binding" value="instance('feed')//atom:entry[atom:link[not(@rel)]/@href = instance('temp')/@href]/atom:title"/>
 									</xforms:action>
 								</xforms:trigger>
 							</xforms:group>
@@ -123,7 +126,7 @@
 									</xforms:trigger>
 								</div>
 							</xforms:group>
-							
+
 						</div>
 					</xforms:group>
 					<xforms:group ref="$binding/@certainty">
@@ -158,22 +161,22 @@
 
 						<xforms:instance id="temp">
 							<temp href="" xmlns=""/>
-						</xforms:instance>						
-						
+						</xforms:instance>
+
 						<!-- Instances containing the query string -->
 						<xforms:instance id="search-query">
 							<query/>
 						</xforms:instance>
-						
+
 						<!-- instances for nomisma -->
 						<xforms:instance id="feed">
 							<feed xmlns=""/>
 						</xforms:instance>
-						
+
 						<!-- query nomisma for ancient geognames -->
 						<xforms:submission id="query-nomisma" serialization="none" method="get"
-							action="http://nomisma.org/feed/?q=type:&#x022;{instance('control-instance')/type}&#x022;+AND+{instance('search-query')}&amp;sort=score+desc" instance="feed"
-							replace="instance">
+							action="http://nomisma.org/feed/?q=type:&#x022;{instance('control-instance')/type}&#x022;+AND+{instance('search-query')}&amp;sort=score+desc"
+							instance="feed" replace="instance">
 							<xforms:message ev:event="xforms-submit-error" level="modal">Unable to communicate with nomisma.org Atom feed.</xforms:message>
 						</xforms:submission>
 					</xforms:model>

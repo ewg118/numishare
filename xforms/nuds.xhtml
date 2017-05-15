@@ -238,7 +238,7 @@
 				<physDesc/>
 			</xforms:instance>
 			<xforms:instance id="axis-template" xxforms:exclude-result-prefixes="#all">
-				<axis clock=""/>
+				<axis/>
 			</xforms:instance>
 			<xforms:instance id="completeness-template" xxforms:exclude-result-prefixes="#all">
 				<completeness/>
@@ -562,6 +562,7 @@
 			<xforms:bind id="undertypedesc-tab" nodeset="instance('object')/nuds:descMeta/nuds:undertypeDesc"/>
 			<xforms:bind id="findspotdesc-tab" nodeset="instance('object')/nuds:descMeta/nuds:findspotDesc"/>
 			<xforms:bind id="digrep-tab" nodeset="instance('object')/nuds:digRep"/>
+			
 			<xforms:bind nodeset="instance('control-instance')">
 				<xforms:bind nodeset="add-upload-trigger" readonly="false()"/>
 				<xforms:bind nodeset="remove-upload-trigger" readonly="count(instance('files-instance')/file) le 1"/>
@@ -977,7 +978,7 @@
 									</xforms:trigger>
 								</xforms:group>
 							</div>
-							<fr:tabview>
+							<fr:tabbable>
 								<!--**************************************** TYPOLOGICAL DESCRIPTION **********************************-->
 								<fr:tab id="typedesc-tab">
 									<fr:label>Description and Typology</fr:label>
@@ -1201,9 +1202,11 @@
 													<fr:message>Switching the typeDesc to refer to a web resource will remove child elements.
 														Confirm?</fr:message>
 													<fr:negative-choice>
+														<fr:label>Cancel</fr:label>
 														<xforms:setvalue ref="instance('typedesc-type')" value="'manual'" ev:event="DOMActivate"/>
 													</fr:negative-choice>
 													<fr:positive-choice>
+														<fr:label>OK</fr:label>
 														<xforms:action ev:event="DOMActivate">
 															<xforms:delete nodeset="*"/>
 															<xforms:insert context="." origin="xforms:attribute('xlink:href', '')"/>
@@ -1264,7 +1267,7 @@
 									</xforms:group>
 								</fr:tab>
 								<!--**************************************** PHYSICAL DESCRIPTION **********************************-->
-								<fr:tab bind="physdesc-tab">
+								<fr:tab bind="physdesc-tab" visible="instance('object')/nuds:descMeta/nuds:physDesc">
 									<fr:label>Physical</fr:label>
 									<h2>Physical Description</h2>
 									<span class="add">
@@ -1764,7 +1767,7 @@
 									</xforms:group>
 								</fr:tab>
 								<!--**************************************** UNDERTYPE DESCRIPTION **********************************-->
-								<fr:tab bind="undertypedesc-tab">
+								<fr:tab bind="undertypedesc-tab" visible="instance('object')/nuds:descMeta/nuds:undertypeDesc">
 									<fr:label>Undertype</fr:label>
 									<h2>Undertype Description</h2>
 									<xforms:trigger appearance="minimal">
@@ -1776,9 +1779,13 @@
 									<fr:alert-dialog id="remove-undertypeDesc">
 										<fr:label>Remove Undertype Description</fr:label>
 										<fr:message>Confirm the removal of the undertypeDesc and its metadata.</fr:message>
-										<fr:negative-choice/>
+										<fr:negative-choice>
+											<fr:label>Cancel</fr:label>
+										</fr:negative-choice>
 										<fr:positive-choice>
+											<fr:label>OK</fr:label>
 											<xforms:action ev:event="DOMActivate">
+												<xforms:dispatch name="fr-toggle" targetid="typedesc-tab"/>
 												<xforms:delete nodeset="."/>
 											</xforms:action>
 										</fr:positive-choice>
@@ -1786,7 +1793,7 @@
 									<numishare:type-undertype/>
 								</fr:tab>
 								<!--**************************************** REFERENCE DESCRIPTION **********************************-->
-								<fr:tab bind="refdesc-tab">
+								<fr:tab bind="refdesc-tab" visible="instance('object')/nuds:descMeta/nuds:refDesc">
 									<fr:label>References</fr:label>
 									<h2>Reference Description</h2>
 									<xforms:trigger appearance="minimal">
@@ -1807,9 +1814,13 @@
 									<fr:alert-dialog id="remove-refDesc">
 										<fr:label>Remove Reference Description</fr:label>
 										<fr:message>Confirm the removal of the refDesc and its metadata.</fr:message>
-										<fr:negative-choice/>
+										<fr:negative-choice>
+											<fr:label>Cancel</fr:label>
+										</fr:negative-choice>
 										<fr:positive-choice>
+											<fr:label>OK</fr:label>
 											<xforms:action ev:event="DOMActivate">
+												<xforms:dispatch name="fr-toggle" targetid="typedesc-tab"/>
 												<xforms:delete nodeset="."/>
 											</xforms:action>
 										</fr:positive-choice>
@@ -1821,7 +1832,7 @@
 									</div>
 								</fr:tab>
 								<!--**************************************** FINDSPOT DESCRIPTION **********************************-->
-								<fr:tab bind="findspotdesc-tab">
+								<fr:tab bind="findspotdesc-tab" visible="instance('object')/nuds:descMeta/nuds:findspotDesc">
 									<fr:label>Findspot</fr:label>
 									<h2>Findspot Description</h2>
 									<xforms:trigger appearance="minimal">
@@ -1843,6 +1854,7 @@
 										<fr:positive-choice>
 											<fr:label>OK</fr:label>
 											<xforms:action ev:event="DOMActivate">
+												<xforms:dispatch name="fr-toggle" targetid="typedesc-tab"/>
 												<xforms:delete nodeset="."/>
 											</xforms:action>
 										</fr:positive-choice>
@@ -1850,7 +1862,7 @@
 									<xforms:setvalue ref="instance('findspot-changed')" value="'true'" ev:event="xforms-value-changed"/>
 								</fr:tab>
 								<!--**************************************** ADMINISTRATIVE DESCRIPTION **********************************-->
-								<fr:tab bind="admindesc-tab">
+								<fr:tab bind="admindesc-tab" visible="instance('object')/nuds:descMeta/nuds:adminDesc">
 									<fr:label>Administrative</fr:label>
 									<h2>Administrative Description</h2>
 									<span class="add">
@@ -2135,7 +2147,7 @@
 									</xforms:group>
 								</fr:tab>
 								<!--**************************************** DIGITAL REPRESENTATIONS **********************************-->
-								<fr:tab bind="digrep-tab">
+								<fr:tab bind="digrep-tab" visible="instance('object')/nuds:descMeta/nuds:digRep">
 									<fr:label>Digital Representations</fr:label>
 									<h2>Digital Representations</h2>
 									<xforms:trigger appearance="minimal">
@@ -2198,7 +2210,9 @@
 										<fr:alert-dialog id="delete-digRep-dialog">
 											<fr:label>Delete Digital Representations</fr:label>
 											<fr:message>Confirm the deletion of image files associated with this object.</fr:message>
-											<fr:negative-choice/>
+											<fr:negative-choice>
+												<fr:label>Cancel</fr:label>
+											</fr:negative-choice>
 											<fr:positive-choice>
 												<xforms:action ev:event="DOMActivate">
 													<!-- delete Obverse image -->
@@ -2247,6 +2261,7 @@
 															origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/remove-image.xpl', ('delete-config', 'dump'), (instance('delete-config'), instance('dump')), 'data')"
 														/>
 													</xforms:action>
+													<xforms:dispatch name="fr-toggle" targetid="typedesc-tab"/>
 													<xforms:delete nodeset="."/>
 												</xforms:action>
 											</fr:positive-choice>
@@ -2262,18 +2277,20 @@
 									<fr:label>Inspector</fr:label>
 									<fr:xforms-inspector></fr:xforms-inspector>
 								</fr:tab>-->
-							</fr:tabview>
+							</fr:tabbable>
 
 							<!--**************************************** DIALOGS **********************************-->
 							<fr:alert-dialog id="subtype-dialog">
 								<fr:label>Remove Parent Type</fr:label>
 								<fr:message>Removing the subtype designation for this record will eliminate the link to the parent type. Proceed?</fr:message>
 								<fr:negative-choice>
+									<fr:label>Cancel</fr:label>
 									<xforms:action ev:event="DOMActivate">
 										<xforms:setvalue ref="instance('object')/nuds:control/nuds:publicationStatus">approvedSubtype</xforms:setvalue>
 									</xforms:action>
 								</fr:negative-choice>
 								<fr:positive-choice>
+									<fr:label>OK</fr:label>
 									<xforms:action ev:event="DOMActivate">
 										<xforms:delete context="instance('object')/nuds:control/nuds:otherRecordId[@semantic='skos:broader']"/>
 									</xforms:action>
@@ -2284,11 +2301,13 @@
 								<fr:message>This will remove NUDS components that cannot occur in conceptual records (e.g., physical description).
 									Confirm?</fr:message>
 								<fr:negative-choice>
+									<fr:label>Cancel</fr:label>
 									<xforms:action ev:event="DOMActivate">
 										<xforms:setvalue ref="instance('object')/@recordType" value="'physical'"/>
 									</xforms:action>
 								</fr:negative-choice>
 								<fr:positive-choice>
+									<fr:label>OK</fr:label>
 									<xforms:action ev:event="DOMActivate">
 										<xforms:delete nodeset="instance('object')/nuds:descMeta/nuds:physDesc"/>
 										<xforms:delete nodeset="instance('object')/nuds:descMeta/nuds:adminDesc"/>
