@@ -225,6 +225,7 @@
 						<xforms:instance id="maintenanceStatus-list">
 							<list xmlns="">
 								<item>cancelled</item>
+								<item>cancelledSplit</item>
 								<item>deleted</item>
 								<item>deletedReplaced</item>
 								<item>deletedSplit</item>
@@ -236,6 +237,7 @@
 						<xforms:instance id="eventType-list">
 							<list xmlns="">
 								<item>cancelled</item>
+								<item>cancelledSplit</item>
 								<item>created</item>
 								<item>deleted</item>
 								<item>derived</item>
