@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-	Copyright (C) 2014 Ethan Gruber
+	Copyright (C) 2017 Ethan Gruber
 	Numishare
 	Apache License 2.0
 	

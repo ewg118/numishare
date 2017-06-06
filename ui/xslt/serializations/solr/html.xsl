@@ -4,6 +4,7 @@
 	<xsl:include href="html-templates.xsl"/>
 	<xsl:include href="../../templates.xsl"/>
 	<xsl:include href="../../functions.xsl"/>
+	<xsl:include href="../../ajax/numishareResults.xsl"/>
 
 	<xsl:variable name="display_path"/>
 	<xsl:variable name="include_path" select="concat('http://', doc('input:request')/request/server-name, ':8080/orbeon/themes/', //config/theme/orbeon_theme)"/>

@@ -60,6 +60,7 @@
 			</p:processor>
 		</p:when>
 		<p:when test="content-type='html'">
+			<!-- note that the RDF-to-HTML serialization only occurs within symbols thus far -->
 			<p:processor name="oxf:pipeline">
 				<p:input name="config" href="../views/serializations/rdf/html.xpl"/>
 				<p:input name="data" href="#data"/>		
