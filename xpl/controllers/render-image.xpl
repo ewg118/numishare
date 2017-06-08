@@ -67,7 +67,9 @@
 						<mode>binary</mode>
 						<content-type>
 							<xsl:choose>
+								<xsl:when test="$ext = 'svg'">image/svg+xml</xsl:when>
 								<xsl:when test="$ext = 'png'">image/png</xsl:when>
+								<xsl:when test="$ext = 'jpg' or $ext = 'jpeg'">image/jpeg</xsl:when>
 							</xsl:choose>
 						</content-type>
 					</config>
