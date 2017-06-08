@@ -252,9 +252,12 @@
             </div>
         </div>
     </xsl:template>
-    
+
     <!-- **************** EXAMPLES OF COIN TYPES ASSOCIATED TO A SYMBOL ****************-->
     <xsl:template match="res:sparql" mode="listTypes">
+        <xsl:param name="objectUri"/>
+        <xsl:param name="endpoint"/>
+        
         <!-- aggregate ids and get URI space -->
         <xsl:variable name="type_series_items" as="element()*">
             <type_series_items>
@@ -265,7 +268,7 @@
                 </xsl:for-each>
             </type_series_items>
         </xsl:variable>
-        
+
         <xsl:variable name="type_series" as="element()*">
             <list>
                 <xsl:for-each select="distinct-values(descendant::res:result/res:binding[@name='type']/substring-before(res:uri, 'id/'))">
@@ -280,14 +283,14 @@
                 </xsl:for-each>
             </list>
         </xsl:variable>
-        
+
         <!-- use the Numishare Results API to display example coins -->
         <xsl:variable name="sparqlResult" as="element()*">
             <response>
                 <xsl:for-each select="$type_series//type_series">
                     <xsl:variable name="baseUri" select="concat(@uri, 'id/')"/>
                     <xsl:variable name="ids" select="string-join(item, '|')"/>
-                    
+
                     <xsl:variable name="service"
                         select="concat('http://nomisma.org/apis/numishareResults?identifiers=', encode-for-uri($ids), '&amp;baseUri=',
                         encode-for-uri($baseUri))"/>
@@ -295,30 +298,24 @@
                 </xsl:for-each>
             </response>
         </xsl:variable>
-        
+
         <!-- HTML output -->
-        <h3>
-            <xsl:text>Associated Types </xsl:text>
-            <small>(max 10)</small>
-            <small>
-                <a href="#" class="toggle-button" id="toggle-listTypes" title="Click to hide or show the analysis form">
-                    <span class="glyphicon glyphicon-triangle-bottom"/>
-                </a>
-            </small>
-        </h3>
-        
-        <div id="listTypes-div">
-            <!--<div style="margin-bottom:10px;" class="control-row">
-				<a href="#" class="toggle-button btn btn-primary" id="toggle-listTypesQuery"><span class="glyphicon glyphicon-plus"/> View SPARQL for full query</a>
-				<a href="{$display_path}query?query={encode-for-uri($query)}&amp;output=csv" title="Download CSV" class="btn btn-primary" style="margin-left:10px">
-					<span class="glyphicon glyphicon-download"/>Download CSV</a>
-			</div>-->
-            <!--<div id="listTypesQuery-div" style="display:none">
-				<pre>
+        <h3>Associated Types</h3>
+
+        <xsl:variable name="query" select="replace(doc('input:query'), '%URI%', $objectUri)"/>
+
+        <div id="listTypes-container">
+            <div style="margin-bottom:10px;" class="control-row">
+                <a href="#" class="toggle-button btn btn-primary" id="toggle-listTypesQuery"><span class="glyphicon glyphicon-plus"/> View SPARQL for full query</a>
+                <a href="{$endpoint}?query={encode-for-uri($query)}&amp;output=csv" title="Download CSV" class="btn btn-primary" style="margin-left:10px">
+                    <span class="glyphicon glyphicon-download"/>Download CSV</a>
+            </div>
+            <div id="listTypesQuery-container" style="display:none">
+                <pre>
 				<xsl:value-of select="$query"/>
 			</pre>
-			</div>-->
-            
+            </div>
+
             <table class="table table-striped">
                 <thead>
                     <tr>
@@ -329,7 +326,7 @@
                 <tbody>
                     <xsl:for-each select="descendant::res:result">
                         <xsl:variable name="type_id" select="substring-after(res:binding[@name='type']/res:uri, 'id/')"/>
-                        
+
                         <tr>
                             <td>
                                 <a href="{res:binding[@name='type']/res:uri}">

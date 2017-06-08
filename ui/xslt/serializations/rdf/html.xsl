@@ -29,6 +29,8 @@
 	<!-- variables -->
 	<xsl:variable name="id" select="tokenize(//@rdf:about, '/')[last()]"/>
 	<xsl:variable name="objectUri" select="//@rdf:about"/>
+	<xsl:variable name="hasFindspots" select="doc('input:hasFindspots')//res:boolean" as="xs:boolean"/>
+	<xsl:variable name="hasMints" select="doc('input:hasMints')//res:boolean" as="xs:boolean"/>
 
 	<!-- namespaces -->
 	<xsl:variable name="namespaces" as="item()*">
@@ -102,6 +104,19 @@
 		<!-- bootstrap -->
 		<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"/>
 		<script type="text/javascript" src="http://netdna.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"/>
+		<link rel="stylesheet" href="{$include_path}/css/jquery.fancybox.css?v=2.1.5" type="text/css" media="screen"/>
+		<script type="text/javascript" src="{$include_path}/javascript/jquery.fancybox.pack.js?v=2.1.5"/>
+		<script type="text/javascript" src="{$include_path}/javascript/result_functions.js"/>
+		
+		<!-- map functions -->
+		<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css"/>
+		<script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"/>
+		<script type="text/javascript" src="{$include_path}/javascript/leaflet.ajax.min.js"/>
+		<script type="text/javascript" src="{$include_path}/javascript/heatmap.min.js"/>
+		<script type="text/javascript" src="{$include_path}/javascript/leaflet-heatmap.js"/>
+		<script type="text/javascript" src="{$include_path}/javascript/symbol_map_functions.js"/>
+		
+		<!-- google analytics -->
 		<xsl:if test="string(//config/google_analytics)">
 			<script type="text/javascript">
 				<xsl:value-of select="//config/google_analytics"/>
@@ -123,10 +138,38 @@
 						
 					</div>
 				</xsl:if>
-				<div class="col-md-{if (descendant::foaf:depiction[@rdf:resource]) then '8' else '10'}">
+				<div class="col-md-{if (descendant::foaf:depiction[@rdf:resource]) then '8' else '10'}">					
+					<!-- render RDF -->
 					<xsl:apply-templates select="/content/rdf:RDF/*" mode="type"/>
+					
+					<!-- display map -->
+					<xsl:if test="$hasMints = true() or $hasFindspots = true()">
+						<h3>Map</h3>
+						<div id="mapcontainer" class="map-normal">
+							<div id="info"/>
+						</div>
+						<div style="margin:10px 0">
+							<table>
+								<tbody>
+									<tr>
+										<td style="background-color:#6992fd;border:2px solid black;width:50px;"/>
+										<td style="width:100px">Mints</td>
+										<td style="background-color:#d86458;border:2px solid black;width:50px;"/>
+										<td style="width:100px">Hoards</td>
+										<td style="background-color:#a1d490;border:2px solid black;width:50px;"/>
+										<td style="width:100px">Finds</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</xsl:if>
+					
+					<!-- display associated coin types, if applicable -->
 					<xsl:if test="count(doc('input:types')//res:result) &gt; 0">
-						<xsl:apply-templates select="doc('input:types')/res:sparql" mode="listTypes"/>
+						<xsl:apply-templates select="doc('input:types')/res:sparql" mode="listTypes">
+							<xsl:with-param name="objectUri" select="$objectUri"/>
+							<xsl:with-param name="endpoint" select="/content/config/sparql_endpoint"/>
+						</xsl:apply-templates>
 					</xsl:if>
 				</div>
 				<div class="col-md-2">
@@ -144,10 +187,25 @@
 						<li>
 							<a href="{$id}.jsonld">JSON-LD</a>
 						</li>
-
 					</ul>
 				</div>
 			</div>
+		</div>
+		
+		<!-- hidden variables -->
+		<div class="hidden">
+			<span id="baselayers">
+				<xsl:value-of select="string-join(//config/baselayers/layer[@enabled = true()], ',')"/>
+			</span>
+			<span id="mapboxKey">
+				<xsl:value-of select="//config/mapboxKey"/>
+			</span>
+			<span id="lang">
+				<xsl:value-of select="$lang"/>
+			</span>
+			<span id="objectURI">
+				<xsl:value-of select="$objectUri"/>
+			</span>
 		</div>
 	</xsl:template>
 

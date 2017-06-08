@@ -1,0 +1,24 @@
+PREFIX nm:       <http://nomisma.org/id/>
+PREFIX nmo:	<http://nomisma.org/ontology#>
+PREFIX dcterms:  <http://purl.org/dc/terms/>
+PREFIX dcmitype:	<http://purl.org/dc/dcmitype/>
+
+ASK {
+   {
+    SELECT ?side WHERE {
+    	?side nmo:hasMonogram <%URI%>
+    }
+  }
+?type ?prop ?side
+  { ?object nmo:hasTypeSeriesItem ?type ; 
+  	a nmo:NumismaticObject ; 
+  	nmo:hasFindspot ?findspot }
+  UNION { ?object nmo:hasTypeSeriesItem ?type ; 
+  	a nmo:NumismaticObject ; 
+  	dcterms:isPartOf ?hoard .
+  	?hoard nmo:hasFindspot ?findspot }
+  UNION { ?contents a dcmitype:Collection ; 
+  	nmo:hasTypeSeriesItem ?type .
+  	?object dcterms:tableOfContents ?contents ; 
+  	nmo:hasFindspot ?findspot }
+}

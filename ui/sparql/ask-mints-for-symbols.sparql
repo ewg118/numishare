@@ -1,0 +1,16 @@
+PREFIX nm:       <http://nomisma.org/id/>
+PREFIX nmo:	<http://nomisma.org/ontology#>
+PREFIX dcterms:  <http://purl.org/dc/terms/>
+PREFIX geo:	<http://www.w3.org/2003/01/geo/wgs84_pos#>
+
+ASK {
+   {
+    SELECT ?side WHERE {
+    	?side nmo:hasMonogram <%URI%>
+    }
+  }
+  ?type ?prop ?side ;
+      a nmo:TypeSeriesItem ;
+      nmo:hasMint ?mint .
+  ?mint geo:location ?loc.
+}

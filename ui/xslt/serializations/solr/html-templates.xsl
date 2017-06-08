@@ -319,10 +319,10 @@
 					<h4>
 						<xsl:value-of select="numishare:normalize_fields('symbol', $lang)"/>
 						<small>
-							<a href="#" id="toggle-symbols" title="Hide/Show Symbol Facets"><span class="glyphicon glyphicon-{if(contains($q, 'symbol_')) then 'triangle-bottom' else 'triangle-right'}"/></a>
+							<a href="#" class="toggle-button" id="toggle-symbols" title="Hide/Show Symbol Facets"><span class="glyphicon glyphicon-{if(contains($q, 'symbol_')) then 'triangle-bottom' else 'triangle-right'}"/></a>
 						</small>
 					</h4>
-					<div id="symbol-container">
+					<div id="symbols-container">
 						<xsl:if test="not(contains($q, 'symbol_'))">
 							<xsl:attribute name="style">display:none</xsl:attribute>
 						</xsl:if>

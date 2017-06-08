@@ -5,7 +5,6 @@
 <p:config xmlns:p="http://www.orbeon.com/oxf/pipeline" xmlns:oxf="http://www.orbeon.com/oxf/processors">
 
 	<p:param type="input" name="data"/>
-	<p:param type="input" name="config-xml"/>
 	<p:param type="output" name="data"/>
 
 	<p:processor name="oxf:request">
@@ -16,12 +15,12 @@
 		</p:input>
 		<p:output name="data" id="request"/>
 	</p:processor>
-	
+
 	<!-- get query from a text file on disk -->
 	<p:processor name="oxf:url-generator">
 		<p:input name="config">
 			<config>
-				<url>oxf:/apps/numishare/ui/sparql/get-types-for-symbols.sparql</url>
+				<url>oxf:/apps/numishare/ui/sparql/ask-mints-for-symbols.sparql</url>
 				<content-type>text/plain</content-type>
 				<encoding>utf-8</encoding>
 			</config>
@@ -40,15 +39,16 @@
 	<!-- generator config for URL generator -->
 	<p:processor name="oxf:unsafe-xslt">
 		<p:input name="request" href="#request"/>
-		<p:input name="config-xml" href="#config-xml"/>
 		<p:input name="query" href="#query-document"/>
 		<p:input name="data" href="#data"/>
 		<p:input name="config">
 			<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema"
 				xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:nmo="http://nomisma.org/ontology#">
-				<xsl:variable name="uri" select="/rdf:RDF/*[1]/@rdf:about"/>
+				<xsl:variable name="id" select="tokenize(doc('input:request')/request/request-url, '/')[last()]"/>
+				<xsl:variable name="uri" select="concat(replace(/config/uri_space, 'id/', 'symbol/'), $id)"/>
+				
 				<xsl:variable name="query" select="doc('input:query')"/>
-				<xsl:variable name="endpoint" select="doc('input:config-xml')//sparql_endpoint"/>
+				<xsl:variable name="endpoint" select="/config/sparql_endpoint"/>
 				<xsl:variable name="service" select="concat($endpoint, '?query=', encode-for-uri(replace($query, '%URI%', $uri)), '&amp;output=xml')"/>
 
 				<xsl:template match="/">
