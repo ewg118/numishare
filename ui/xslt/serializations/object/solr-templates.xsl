@@ -21,63 +21,10 @@
 		<!-- AH dates -->
 		<xsl:apply-templates select="nuds:dateOnObject[@calendar='ah']"/>
 
-		<xsl:for-each select="nuds:obverse | nuds:reverse">
-			<xsl:variable name="side" select="substring(local-name(), 1, 3)"/>
-
-			<!-- get correct type description based on lang, default to english -->
-			<xsl:if test="nuds:type/nuds:description">
-				<xsl:choose>
-					<xsl:when test="nuds:type/nuds:description[@xml:lang=$lang]">
-						<xsl:if test="$recordType != 'hoard'">
-							<field name="{$side}_type_display">
-								<xsl:value-of select="normalize-space(nuds:type/nuds:description[@xml:lang=$lang])"/>
-							</field>
-						</xsl:if>
-						<field name="{$side}_type_text">
-							<xsl:value-of select="normalize-space(nuds:type/nuds:description[@xml:lang=$lang])"/>
-						</field>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:if test="$recordType != 'hoard'">
-							<field name="{$side}_type_display">
-								<xsl:value-of select="normalize-space(nuds:type/nuds:description[@xml:lang='en'])"/>
-							</field>
-						</xsl:if>
-						<field name="{$side}_type_text">
-							<xsl:value-of select="normalize-space(nuds:type/nuds:description[@xml:lang='en'])"/>
-						</field>
-					</xsl:otherwise>
-				</xsl:choose>
-			</xsl:if>
-
-			<xsl:if test="nuds:legend">
-				<xsl:if test="$recordType != 'hoard'">
-					<field name="{$side}_leg_display">
-						<xsl:value-of select="normalize-space(nuds:legend)"/>
-					</field>
-				</xsl:if>
-				<field name="{$side}_leg_text">
-					<xsl:value-of select="normalize-space(nuds:legend)"/>
-				</field>
-				<field name="{$side}_legendCondensed_text">
-					<xsl:value-of select="replace(nuds:legend, ' ', '')"/>
-				</field>
-			</xsl:if>
-
-			<!-- handle symbols as facets -->
-			<xsl:if test="$recordType='conceptual'">
-				<xsl:for-each select="nuds:symbol[@position]">
-					<field name="symbol_{$side}_{@position}_facet">
-						<xsl:value-of select="."/>
-					</field>
-					<xsl:if test="string(@xlink:href)">
-						<field name="symbol_{$side}_{@position}_uri">
-							<xsl:value-of select="."/>
-						</field>
-					</xsl:if>
-				</xsl:for-each>
-			</xsl:if>
-		</xsl:for-each>
+		<xsl:apply-templates select="nuds:obverse|nuds:reverse">
+			<xsl:with-param name="recordType" select="$recordType"/>
+			<xsl:with-param name="lang" select="$lang"/>
+		</xsl:apply-templates>
 
 		<!-- *********** FACETS ************** -->
 
@@ -90,6 +37,121 @@
 			<xsl:with-param name="lang" select="$lang"/>
 		</xsl:apply-templates>
 
+	</xsl:template>
+	
+	<xsl:template match="nuds:obverse|nuds:reverse">
+		<xsl:param name="recordType"/>
+		<xsl:param name="lang"/>
+		
+		<xsl:variable name="side" select="substring(local-name(), 1, 3)"/>
+		
+		<!-- get correct type description based on lang, default to english -->
+		<xsl:if test="nuds:type/nuds:description">
+			<xsl:choose>
+				<xsl:when test="nuds:type/nuds:description[@xml:lang=$lang]">
+					<xsl:if test="$recordType != 'hoard'">
+						<field name="{$side}_type_display">
+							<xsl:value-of select="normalize-space(nuds:type/nuds:description[@xml:lang=$lang])"/>
+						</field>
+					</xsl:if>
+					<field name="{$side}_type_text">
+						<xsl:value-of select="normalize-space(nuds:type/nuds:description[@xml:lang=$lang])"/>
+					</field>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:if test="$recordType != 'hoard'">
+						<field name="{$side}_type_display">
+							<xsl:value-of select="normalize-space(nuds:type/nuds:description[@xml:lang='en'])"/>
+						</field>
+					</xsl:if>
+					<field name="{$side}_type_text">
+						<xsl:value-of select="normalize-space(nuds:type/nuds:description[@xml:lang='en'])"/>
+					</field>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:if>
+		
+		<xsl:if test="nuds:legend">
+			<xsl:if test="$recordType != 'hoard'">
+				<field name="{$side}_leg_display">
+					<xsl:value-of select="normalize-space(nuds:legend)"/>
+				</field>
+			</xsl:if>
+			<field name="{$side}_leg_text">
+				<xsl:value-of select="normalize-space(nuds:legend)"/>
+			</field>
+			<field name="{$side}_legendCondensed_text">
+				<xsl:value-of select="replace(nuds:legend, ' ', '')"/>
+			</field>
+		</xsl:if>
+		
+		<!-- only index symbols as facets for coin type projects -->
+		<xsl:if test="$recordType='conceptual'">
+		<xsl:for-each select="nuds:symbol">
+			
+			
+			<xsl:choose>
+				<xsl:when test="@position">
+					<xsl:choose>
+						<xsl:when test="@xlink:href">
+							<xsl:variable name="uri" select="@xlink:href"/>
+							<field name="symbol_{$side}_{@position}_facet">
+								<xsl:value-of select="$symbols//*[@rdf:about=$uri]/skos:prefLabel"/>
+							</field>
+							<field name="symbol_{$side}_{@position}_uri">
+								<xsl:value-of select="@xlink:href"/>
+							</field>
+							<field name="symbol_uri">
+								<xsl:value-of select="@xlink:href"/>
+							</field>							
+						</xsl:when>
+						<xsl:otherwise>
+							<field name="symbol_{$side}_{@position}_facet">
+								<xsl:value-of select="."/>
+							</field>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:choose>
+						<xsl:when test="@xlink:href">
+							<xsl:variable name="uri" select="@xlink:href"/>
+							<field name="symbol_{$side}_facet">
+								<xsl:value-of select="$symbols//*[@rdf:about=$uri]/skos:prefLabel"/>
+							</field>
+							<field name="symbol_{$side}_uri">
+								<xsl:value-of select="@xlink:href"/>
+							</field>
+							<field name="symbol_uri">
+								<xsl:value-of select="@xlink:href"/>
+							</field>
+						</xsl:when>
+						<xsl:otherwise>
+							<field name="symbol_{$side}_facet">
+								<xsl:value-of select="."/>
+							</field>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:otherwise>
+			</xsl:choose>
+			
+			
+		</xsl:for-each>
+		</xsl:if>
+		
+		<!-- handle symbols as facets -->
+		<xsl:if test="$recordType='conceptual'">
+			<xsl:for-each select="nuds:symbol[@position]">
+				<field name="symbol_{$side}_{@position}_facet">
+					<xsl:value-of select="."/>
+				</field>
+				<xsl:if test="string(@xlink:href)">
+					<field name="symbol_{$side}_{@position}_uri">
+						<xsl:value-of select="."/>
+					</field>
+				</xsl:if>
+			</xsl:for-each>
+		</xsl:if>
 	</xsl:template>
 
 	<xsl:template match="nuds:objectType|nuds:denomination|nuds:manufacture|nuds:material">
