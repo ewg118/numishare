@@ -88,25 +88,25 @@
 		<!-- only index symbols as facets for coin type projects -->
 		<xsl:if test="$recordType='conceptual'">
 		<xsl:for-each select="nuds:symbol">
-			
+			<xsl:variable name="symbolType" select="if (@localType) then @localType else 'symbol'"/>
 			
 			<xsl:choose>
 				<xsl:when test="@position">
 					<xsl:choose>
 						<xsl:when test="@xlink:href">
 							<xsl:variable name="uri" select="@xlink:href"/>
-							<field name="symbol_{$side}_{@position}_facet">
+							<field name="{$symbolType}_{$side}_{@position}_facet">
 								<xsl:value-of select="$symbols//*[@rdf:about=$uri]/skos:prefLabel"/>
 							</field>
-							<field name="symbol_{$side}_{@position}_uri">
+							<field name="{$symbolType}_{$side}_{@position}_uri">
 								<xsl:value-of select="@xlink:href"/>
 							</field>
-							<field name="symbol_uri">
+							<field name="{$symbolType}_uri">
 								<xsl:value-of select="@xlink:href"/>
 							</field>							
 						</xsl:when>
 						<xsl:otherwise>
-							<field name="symbol_{$side}_{@position}_facet">
+							<field name="{$symbolType}_{$side}_{@position}_facet">
 								<xsl:value-of select="."/>
 							</field>
 						</xsl:otherwise>
@@ -116,42 +116,40 @@
 					<xsl:choose>
 						<xsl:when test="@xlink:href">
 							<xsl:variable name="uri" select="@xlink:href"/>
-							<field name="symbol_{$side}_facet">
+							<field name="{$symbolType}_{$side}_facet">
 								<xsl:value-of select="$symbols//*[@rdf:about=$uri]/skos:prefLabel"/>
 							</field>
-							<field name="symbol_{$side}_uri">
+							<field name="{$symbolType}_{$side}_uri">
 								<xsl:value-of select="@xlink:href"/>
 							</field>
-							<field name="symbol_uri">
+							<field name="{$symbolType}_uri">
 								<xsl:value-of select="@xlink:href"/>
 							</field>
 						</xsl:when>
 						<xsl:otherwise>
-							<field name="symbol_{$side}_facet">
+							<field name="{$symbolType}_{$side}_facet">
 								<xsl:value-of select="."/>
 							</field>
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:otherwise>
 			</xsl:choose>
-			
-			
 		</xsl:for-each>
 		</xsl:if>
 		
 		<!-- handle symbols as facets -->
-		<xsl:if test="$recordType='conceptual'">
+		<!--<xsl:if test="$recordType='conceptual'">
 			<xsl:for-each select="nuds:symbol[@position]">
-				<field name="symbol_{$side}_{@position}_facet">
+				<field name="{$symbolType}_{$side}_{@position}_facet">
 					<xsl:value-of select="."/>
 				</field>
 				<xsl:if test="string(@xlink:href)">
-					<field name="symbol_{$side}_{@position}_uri">
+					<field name="{$symbolType}_{$side}_{@position}_uri">
 						<xsl:value-of select="."/>
 					</field>
 				</xsl:if>
 			</xsl:for-each>
-		</xsl:if>
+		</xsl:if>-->
 	</xsl:template>
 
 	<xsl:template match="nuds:objectType|nuds:denomination|nuds:manufacture|nuds:material">
