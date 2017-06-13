@@ -2,9 +2,10 @@
 	last modified: June, 2011
 	function: EAD conservationState component; user taps into LCSH or local vocabulary for conservationStates
 -->
-<xbl:xbl xmlns="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xxforms="http://orbeon.org/oxf/xml/xforms"
-	xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:xbl="http://www.w3.org/ns/xbl" xmlns:xxbl="http://orbeon.org/oxf/xml/xbl" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-	xmlns:oxf="http://www.orbeon.com/oxf/processors" xmlns:numishare="https://github.com/ewg118/numishare" xmlns:atom="http://www.w3.org/2005/Atom">
+<xbl:xbl xmlns="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events"
+	xmlns:xxforms="http://orbeon.org/oxf/xml/xforms" xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:xbl="http://www.w3.org/ns/xbl"
+	xmlns:xxbl="http://orbeon.org/oxf/xml/xbl" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:oxf="http://www.orbeon.com/oxf/processors"
+	xmlns:numishare="https://github.com/ewg118/numishare" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:nuds="http://nomisma.org/nuds">
 
 
 	<xbl:binding id="numishare-conservationState" element="numishare|conservationState">
@@ -20,7 +21,7 @@
 						<xforms:setvalue ref="instance('control-instance')/type">CoinWear</xforms:setvalue>
 						<xforms:send submission="query-nomisma"/>
 					</xforms:action>
-					
+
 					<xforms:group ref="$binding">
 						<xforms:group ref="nuds:completeness">
 							<div>
@@ -47,7 +48,7 @@
 									</xforms:label>
 								</xforms:trigger>
 							</div>
-						</xforms:group>									
+						</xforms:group>
 						<xforms:group ref="nuds:grade">
 							<div>
 								<xforms:select1 ref=".">
@@ -70,7 +71,7 @@
 								</xforms:trigger>
 							</div>
 						</xforms:group>
-						
+
 						<xforms:group ref="nuds:wear">
 							<div>
 								<xforms:select1 ref="@xlink:href">
@@ -104,13 +105,13 @@
 						<xforms:instance id="feed" xxforms:exclude-result-prefixes="#all">
 							<feed xmlns=""/>
 						</xforms:instance>
-						
+
 						<xforms:instance id="control-instance" xxforms:exclude-result-prefixes="#all">
 							<controls xmlns="">
 								<type/>
 							</controls>
 						</xforms:instance>
-						
+
 						<!-- lists -->
 						<xforms:instance id="grades">
 							<grades xmlns="">
@@ -127,23 +128,25 @@
 								<grade label="Brilliant Uncirculated (BU)" value="BU"/>
 							</grades>
 						</xforms:instance>
-						
+
 						<xforms:instance id="CoinWear-list" xxforms:exclude-result-prefixes="#all">
 							<list xmlns=""/>
 						</xforms:instance>
-						
+
 						<xforms:instance id="listItem-template" xxforms:exclude-result-prefixes="#all">
 							<item href="" xmlns=""/>
 						</xforms:instance>
-						
+
 						<xforms:submission id="query-nomisma" serialization="none" method="get"
-							action="http://nomisma.org/feed/?q=type:&#x022;nmo:{instance('control-instance')/type}&#x022;&amp;sort=prefLabel%20asc" instance="feed" replace="instance">
+							action="http://nomisma.org/feed/?q=type:&#x022;nmo:{instance('control-instance')/type}&#x022;&amp;sort=prefLabel%20asc"
+							instance="feed" replace="instance">
 							<xforms:message ev:event="xforms-submit-error" level="modal">Unable to communicate with nomisma.org Atom feed.</xforms:message>
 							<!-- iterate through Atom feed, populating select list -->
 							<xforms:action ev:event="xforms-submit-done" xxforms:iterate="instance('feed')//atom:entry">
 								<xforms:setvalue ref="instance('listItem-template')" value="context()/atom:title"/>
 								<xforms:setvalue ref="instance('listItem-template')/@href" value="context()/atom:link[not(@rel)]/@href"/>
-								<xforms:insert origin="instance('listItem-template')" context="instance(concat(instance('control-instance')/type, '-list'))" nodeset="./child::node()[last()]"/>
+								<xforms:insert origin="instance('listItem-template')" context="instance(concat(instance('control-instance')/type, '-list'))"
+									nodeset="./child::node()[last()]"/>
 							</xforms:action>
 						</xforms:submission>
 					</xforms:model>

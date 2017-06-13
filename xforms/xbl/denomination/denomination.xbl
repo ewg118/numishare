@@ -2,9 +2,10 @@
 	last modified: January, 2012
 	function: Numishare denomination component: queries nomisma or accepts local vocabulary
 -->
-<xbl:xbl xmlns="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xxforms="http://orbeon.org/oxf/xml/xforms"
-	xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:xbl="http://www.w3.org/ns/xbl" xmlns:xxbl="http://orbeon.org/oxf/xml/xbl" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-	xmlns:oxf="http://www.orbeon.com/oxf/processors" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml"
+<xbl:xbl xmlns="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events"
+	xmlns:xxforms="http://orbeon.org/oxf/xml/xforms" xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:xbl="http://www.w3.org/ns/xbl"
+	xmlns:xxbl="http://orbeon.org/oxf/xml/xbl" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:oxf="http://www.orbeon.com/oxf/processors"
+	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml"
 	xmlns:atom="http://www.w3.org/2005/Atom" xmlns:numishare="https://github.com/ewg118/numishare">
 	<xbl:binding id="numishare-denomination" element="numishare|denomination">
 		<xbl:template>
@@ -23,7 +24,9 @@
 							</xforms:output>
 							<xforms:group ref=".[string($binding/@xlink:href)]">
 								<xforms:trigger appearance="minimal">
-									<xforms:label><span class="glyphicon glyphicon-new-window"/></xforms:label>
+									<xforms:label>
+										<span class="glyphicon glyphicon-new-window"/>
+									</xforms:label>
 									<xforms:load ev:event="DOMActivate" ref="$binding/@xlink:href" show="new"/>
 								</xforms:trigger>
 							</xforms:group>
@@ -43,7 +46,8 @@
 							</xforms:trigger>
 							<xforms:group ref="$binding[not($binding/@certainty)]">
 								<xforms:trigger appearance="minimal">
-									<xforms:insert if="not($binding/@certainty)" context="$binding" origin="xxforms:attribute('certainty', '')" ev:event="DOMActivate"/>
+									<xforms:insert if="not($binding/@certainty)" context="$binding" origin="xxforms:attribute('certainty', '')"
+										ev:event="DOMActivate"/>
 									<xforms:label>
 										<span class="glyphicon glyphicon-plus"/>Certainty</xforms:label>
 								</xforms:trigger>
@@ -59,20 +63,23 @@
 								<xforms:action ev:event="DOMActivate">
 									<!-- delete all holdover values before removing bind, possible orbeon bug -->
 									<xforms:setvalue ref="instance('temp')"/>
-									<xforms:setvalue ref="instance('temp')/@href"/>									
+									<xforms:setvalue ref="instance('temp')/@href"/>
 									<xforms:setvalue ref="instance('search-query')"/>
 									<xforms:delete context="instance('feed')/*"/>
 									<xforms:delete nodeset="$binding"/>
 								</xforms:action>
-								<xforms:label><span class="glyphicon glyphicon-remove"/></xforms:label>
+								<xforms:label>
+									<span class="glyphicon glyphicon-remove"/>
+								</xforms:label>
 							</xforms:trigger>
 							<xforms:group ref="$binding[not(@certainty)]">
 								<xforms:trigger appearance="minimal">
-									<xforms:insert if="not($binding/@certainty)" context="$binding" origin="xxforms:attribute('certainty', '')" ev:event="DOMActivate"/>
+									<xforms:insert if="not($binding/@certainty)" context="$binding" origin="xxforms:attribute('certainty', '')"
+										ev:event="DOMActivate"/>
 									<xforms:label>
 										<span class="glyphicon glyphicon-plus"/>Certainty </xforms:label>
 								</xforms:trigger>
-							</xforms:group>							
+							</xforms:group>
 							<div>
 								<xforms:input ref="instance('search-query')">
 									<xforms:label>Search</xforms:label>
@@ -85,7 +92,7 @@
 									<xforms:label>Search</xforms:label>
 								</xforms:trigger>
 							</div>
-							
+
 							<xforms:group ref=".[count(instance('feed')//atom:entry) &gt; 0]">
 								<xforms:select1 ref="instance('temp')/@href" appearance="compact" id="nomisma-list">
 									<xforms:label>Term</xforms:label>
@@ -95,7 +102,8 @@
 									</xforms:itemset>
 									<xforms:action ev:event="xforms-value-changed">
 										<xforms:var name="id" select="tokenize(instance('temp')/@href, '/')[last()]"/>
-										<xforms:setvalue ref="instance('control-instance')/description" value="instance('feed')//atom:entry[atom:id = $id]/atom:summary"/>
+										<xforms:setvalue ref="instance('control-instance')/description"
+											value="instance('feed')//atom:entry[atom:id = $id]/atom:summary"/>
 									</xforms:action>
 								</xforms:select1>
 								<xforms:trigger>
@@ -139,7 +147,7 @@
 
 					<!-- ********************************************************************** -->
 					<!-- ***********************  DIALOG INTERNAL MODEL *********************** -->
-					<xforms:model id="denomination-model" xmlns:xi="http://www.w3.org/2001/XInclude">						
+					<xforms:model id="denomination-model" xmlns:xi="http://www.w3.org/2001/XInclude">
 						<xforms:instance id="control-instance">
 							<control xmlns="">
 								<type>nmo:Denomination</type>
@@ -166,8 +174,9 @@
 						</xforms:instance>
 
 						<!-- query nomisma for ancient denominations -->
-						<xforms:submission id="query-nomisma" serialization="none" method="get" action="http://nomisma.org/feed/?q=type:&#x022;{instance('control-instance')/type}&#x022;+AND+{instance('search-query')}&amp;sort=score+desc" instance="feed"
-							replace="instance">
+						<xforms:submission id="query-nomisma" serialization="none" method="get"
+							action="http://nomisma.org/feed/?q=type:&#x022;{instance('control-instance')/type}&#x022;+AND+{instance('search-query')}&amp;sort=score+desc"
+							instance="feed" replace="instance">
 							<xforms:message ev:event="xforms-submit-error" level="modal">Unable to communicate with nomisma.org Atom feed.</xforms:message>
 						</xforms:submission>
 					</xforms:model>

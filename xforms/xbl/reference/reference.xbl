@@ -55,7 +55,7 @@
 					<!-- ***********************  DIALOG INTERNAL MODEL *********************** -->
 					<xforms:model id="reference-model">
 						<xforms:instance id="identifier-template">
-							<identifier/>
+							<identifier xmlns="http://nomisma.org/id/nuds"/>
 						</xforms:instance>
 					</xforms:model>
 				</xforms:group>

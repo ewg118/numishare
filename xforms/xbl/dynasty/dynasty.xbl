@@ -5,7 +5,7 @@
 <xbl:xbl xmlns="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events"
 	xmlns:xxforms="http://orbeon.org/oxf/xml/xforms" xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:xbl="http://www.w3.org/ns/xbl"
 	xmlns:xxbl="http://orbeon.org/oxf/xml/xbl" xmlns:oxf="http://www.orbeon.com/oxf/processors" xmlns:numishare="https://github.com/ewg118/numishare"
-	xmlns:exist="http://exist.sourceforge.net/NS/exist" xmlns:atom="http://www.w3.org/2005/Atom">
+	xmlns:exist="http://exist.sourceforge.net/NS/exist" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:nuds="http://nomisma.org/nuds">
 	<xbl:binding id="numishare-dynasty" element="numishare|dynasty">
 		<xbl:template>
 			<xforms:group xbl:attr="model context ref bind" xxbl:scope="outer">
@@ -53,7 +53,8 @@
 							</xforms:trigger>
 							<xforms:group ref="$binding[not($binding/@certainty)]">
 								<xforms:trigger appearance="minimal">
-									<xforms:insert if="not($binding/@certainty)" context="$binding" origin="xxforms:attribute('certainty', '')" ev:event="DOMActivate"/>
+									<xforms:insert if="not($binding/@certainty)" context="$binding" origin="xxforms:attribute('certainty', '')"
+										ev:event="DOMActivate"/>
 									<xforms:label>
 										<span class="glyphicon glyphicon-plus"/>Certainty </xforms:label>
 								</xforms:trigger>
@@ -74,7 +75,8 @@
 							</xforms:trigger>
 							<xforms:group ref="$binding[not($binding/@certainty)]">
 								<xforms:trigger appearance="minimal">
-									<xforms:insert if="not($binding/@certainty)" context="$binding" origin="xxforms:attribute('certainty', '')" ev:event="DOMActivate"/>
+									<xforms:insert if="not($binding/@certainty)" context="$binding" origin="xxforms:attribute('certainty', '')"
+										ev:event="DOMActivate"/>
 									<xforms:label>
 										<span class="glyphicon glyphicon-plus"/>Certainty </xforms:label>
 								</xforms:trigger>
@@ -102,14 +104,16 @@
 									</xforms:itemset>
 									<xforms:action ev:event="xforms-value-changed">
 										<xforms:var name="id" select="tokenize(instance('temp')/@href, '/')[last()]"/>
-										<xforms:setvalue ref="instance('control-instance')/description" value="instance('feed')//atom:entry[atom:id = $id]/atom:summary"/>
+										<xforms:setvalue ref="instance('control-instance')/description"
+											value="instance('feed')//atom:entry[atom:id = $id]/atom:summary"/>
 									</xforms:action>
 								</xforms:select1>
 								<xforms:trigger>
 									<xforms:label>Select</xforms:label>
 									<xforms:action ev:event="DOMActivate">
 										<xforms:setvalue ref="$binding/@xlink:href" value="instance('temp')/@href"/>
-										<xforms:setvalue ref="$binding" value="instance('feed')//atom:entry[atom:link[not(@rel)]/@href = instance('temp')/@href]/atom:title"/>
+										<xforms:setvalue ref="$binding"
+											value="instance('feed')//atom:entry[atom:link[not(@rel)]/@href = instance('temp')/@href]/atom:title"/>
 									</xforms:action>
 								</xforms:trigger>
 							</xforms:group>

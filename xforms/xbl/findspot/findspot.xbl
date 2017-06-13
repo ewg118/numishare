@@ -6,8 +6,9 @@
 <xbl:xbl xmlns="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events"
 	xmlns:xxforms="http://orbeon.org/oxf/xml/xforms" xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:xbl="http://www.w3.org/ns/xbl"
 	xmlns:xxbl="http://orbeon.org/oxf/xml/xbl" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:oxf="http://www.orbeon.com/oxf/processors"
-	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" xmlns:atom="http://www.w3.org/2005/Atom"
-	xmlns:numishare="https://github.com/ewg118/numishare" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	xmlns:nuds="http://nomisma.org/nuds" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:georss="http://www.georss.org/georss"
+	xmlns:gml="http://www.opengis.net/gml" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:numishare="https://github.com/ewg118/numishare"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema">
 	<xbl:binding id="numishare-findspot" element="numishare|findspot">
 		<xbl:template>
 			<xforms:group xbl:attr="model context ref bind" xxbl:scope="outer">
@@ -128,7 +129,8 @@
 												<xforms:label>Select</xforms:label>
 												<xforms:action ev:event="DOMActivate">
 													<xforms:setvalue ref="nuds:geogname/@xlink:href" value="instance('temp')/@href"/>
-													<xforms:setvalue ref="nuds:geogname" value="instance('geonames')//geoname[contains(instance('temp')/@href, geonameId)]/label"/>
+													<xforms:setvalue ref="nuds:geogname"
+														value="instance('geonames')//geoname[contains(instance('temp')/@href, geonameId)]/label"/>
 												</xforms:action>
 											</xforms:trigger>
 										</xforms:group>
@@ -147,7 +149,8 @@
 													<xforms:label>Latitude</xforms:label>
 													<xforms:alert>Must be decimal coordinate less than or equal to 180.00</xforms:alert>
 													<xforms:setvalue ref="$binding/gml:Point/gml:coordinates"
-														value="concat(instance('coordinates-temp')/lat, ', ', instance('coordinates-temp')/lon)" ev:event="xforms-value-changed"/>
+														value="concat(instance('coordinates-temp')/lat, ', ', instance('coordinates-temp')/lon)"
+														ev:event="xforms-value-changed"/>
 												</xforms:input>
 											</div>
 											<div>
@@ -155,7 +158,8 @@
 													<xforms:label>Longitude</xforms:label>
 													<xforms:alert>Must be decimal coordinate less than or equal to 180.00</xforms:alert>
 													<xforms:setvalue ref="$binding/gml:Point/gml:coordinates"
-														value="concat(instance('coordinates-temp')/lat, ', ', instance('coordinates-temp')/lon)" ev:event="xforms-value-changed"/>
+														value="concat(instance('coordinates-temp')/lat, ', ', instance('coordinates-temp')/lon)"
+														ev:event="xforms-value-changed"/>
 												</xforms:input>
 											</div>
 										</xforms:group>
@@ -364,7 +368,8 @@
 							action="http://api.geonames.org/search?q={instance('search-query')}&amp;maxRows=100&amp;lang=en&amp;username={instance('config')/geonames_api_key}&amp;style=full&amp;minChars=2"
 							instance="geoname-temp" replace="instance">
 							<xforms:action ev:event="xforms-submit-done">
-								<xforms:message if="number(instance('geoname-temp')/totalResultsCount) = 0" level="modal">No results found for query.</xforms:message>
+								<xforms:message if="number(instance('geoname-temp')/totalResultsCount) = 0" level="modal">No results found for
+									query.</xforms:message>
 								<!--<xforms:insert if="number(instance('geoname-temp')/totalResultsCount) &gt; 0" context="instance('geonames')" origin="instance('geoname-temp')"/>-->
 								<xforms:action xxforms:iterate="instance('geoname-temp')//geoname">
 									<xforms:var name="countryCode" select="countryCode"/>
@@ -404,8 +409,9 @@
 							</xforms:action>
 						</xforms:submission>
 
-						<xforms:submission id="load-collections" serialization="none" method="get" action="{instance('exist-config')/url}collections-list.xml" replace="instance"
-							instance="collections-list" xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}">
+						<xforms:submission id="load-collections" serialization="none" method="get" action="{instance('exist-config')/url}collections-list.xml"
+							replace="instance" instance="collections-list" xxforms:username="{instance('exist-config')/username}"
+							xxforms:password="{instance('exist-config')/password}">
 							<!-- if the config loads successfully, set the collection names based on authentication -->
 							<xforms:action ev:event="xforms-submit-done">
 								<!-- set default if security is false -->
@@ -414,7 +420,8 @@
 								</xforms:action>
 								<!-- if there is a security role, set the collection-name value if it is in the list, otherwise set new collection name -->
 								<xforms:action if="string(instance('control-instance')/request-security/role)">
-									<xforms:action if="string(instance('collections-list')/collection[@role=instance('control-instance')/request-security/role]/@name)">
+									<xforms:action
+										if="string(instance('collections-list')/collection[@role=instance('control-instance')/request-security/role]/@name)">
 										<xforms:setvalue ref="instance('control-instance')/collection-name"
 											value="instance('collections-list')/collection[@role=instance('control-instance')/request-security/role]/@name"/>
 									</xforms:action>
@@ -426,7 +433,8 @@
 						</xforms:submission>
 
 						<xforms:submission id="load-config" serialization="none" method="get"
-							action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/config.xml" replace="instance" instance="config"/>
+							action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/config.xml" replace="instance"
+							instance="config"/>
 					</xforms:model>
 				</xforms:group>
 			</xforms:group>

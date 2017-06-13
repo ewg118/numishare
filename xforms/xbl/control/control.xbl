@@ -15,6 +15,7 @@
 						<xxforms:sequence select="." xxbl:scope="outer"/>
 					</xforms:var>
 					<xforms:var name="display_path">../../</xforms:var>
+					
 					<xforms:group ref="$binding">
 						<h2>Electronic Record Metadata: control</h2>						
 						<div>
