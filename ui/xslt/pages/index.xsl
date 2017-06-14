@@ -16,8 +16,7 @@
 		</xsl:choose>
 	</xsl:param>
 	<xsl:variable name="display_path"/>
-	<xsl:variable name="include_path" select="concat('http://', doc('input:request')/request/server-name, ':8080/orbeon/themes/', //config/theme/orbeon_theme)"/>
-	
+	<xsl:variable name="include_path" select="if (string(//config/theme/themes_url)) then concat(//config/theme/themes_url, //config/theme/orbeon_theme) else concat('http://', doc('input:request')/request/server-name, ':8080/orbeon/themes/', //config/theme/orbeon_theme)"/>
 
 	<xsl:template match="/content/config">
 		<html lang="en">
