@@ -1153,10 +1153,12 @@
 														<td>
 															<h4>
 																<xforms:group ref=".[type='nuds']">
-																	<a href="edit/coin/?id={$id}">
-																		<xforms:output ref="title"/>
-																		<xforms:output ref="concat('(', $id, ')')"/>
-																	</a>
+																	<xforms:trigger appearance="minimal">
+																		<xforms:label value="concat(title, ' (', $id, ')')"/>
+																		<xforms:action ev:event="DOMActivate">
+																			<xforms:load show="replace" resource="edit/coin/?id={$id}"/>
+																		</xforms:action>
+																	</xforms:trigger>
 																</xforms:group>
 																<xforms:group ref=".[type!='nuds']">
 																	<xforms:output ref="title"/>
