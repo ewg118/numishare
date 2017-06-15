@@ -205,8 +205,8 @@
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"/>
 		<meta name="viewport" content="width=device-width, initial-scale=1"/>
 		<!-- bootstrap -->
-		<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"/>
-		<script type="text/javascript" src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"/>
+		<link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"/>
+		<script type="text/javascript" src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"/>
 		<link type="text/css" href="{$include_path}/css/fullscreen.css" rel="stylesheet"/>
 		<xsl:if test="string(//config/google_analytics)">
 			<script type="text/javascript">
