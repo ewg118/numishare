@@ -96,8 +96,8 @@
 				<xsl:call-template name="generic_head"/>
 				<xsl:choose>
 					<xsl:when test="$recordType='physical'">
-						<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css"/>
-						<script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"/>					
+						<link rel="stylesheet" href="https://unpkg.com/leaflet@0.7.7/dist/leaflet.css"/>
+						<script src="https://unpkg.com/leaflet@0.7.7/dist/leaflet.js"/>					
 						<script type="text/javascript" src="{$include_path}/javascript/leaflet.ajax.min.js"/>
 						<script type="text/javascript" src="{$include_path}/javascript/display_map_functions.js"/>
 					</xsl:when>
