@@ -34,8 +34,8 @@
 				<meta name="viewport" content="width=device-width, initial-scale=1"/>
 				<link rel="shortcut icon" type="image/x-icon" href="{$include_path}/images/favicon.png"/>
 				<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"/>
-				<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"/>
-				<script src="http://netdna.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"/>
+				<link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"/>
+				<script src="https://netdna.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"/>
 				<link type="text/css" href="{$include_path}/css/style.css" rel="stylesheet"/>
 				<script type="text/javascript" src="{$include_path}/javascript/identify_functions.js"/>
 				<xsl:if test="string(//config/google_analytics)">
