@@ -5,6 +5,15 @@ Library: jQuery
 Description: Rendering graphics based on hoard counts
  ************************************/
 $(document).ready(function () {
+
+    //display the magnifying glass glyph when hovering the mouse of divs that contain it (for IIIF)
+    $('.g_doc:has(.iiif-zoom-glyph)').hover(function () {
+        $(this).find('.iiif-zoom-glyph').fadeIn();
+    },
+    function () {
+        $(this).find('.iiif-zoom-glyph').fadeOut();
+    });
+
     $('a.thumbImage').fancybox({
         type: 'image',
         beforeShow: function () {
