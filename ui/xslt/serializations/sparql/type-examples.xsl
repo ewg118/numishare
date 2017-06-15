@@ -114,12 +114,21 @@
             </dl>
 
             <div class="gi_c">
+                <xsl:variable name="title"
+                    select="
+                        concat(res:binding[@name = 'identifier']/res:literal, ': ', if
+                        (string(res:binding[@name = 'collection']/res:literal)) then
+                            res:binding[@name = 'collection']/res:literal
+                        else
+                            res:binding[@name = 'datasetTitle']/res:literal)"/>
+
+                <xsl:if test="res:binding[contains(@name, 'Manifest')]">
+                    <span class="glyphicon glyphicon-zoom-in iiif-zoom-glyph" title="Click image(s) to zoom" style="display:none"/>
+                </xsl:if>
+
                 <xsl:choose>
                     <xsl:when test="string(res:binding[@name = 'obvRef']/res:uri) and string(res:binding[@name = 'obvThumb']/res:uri)">
-                        <a
-                            title="Obverse of {res:binding[@name='identifier']/res:literal}:        {if
-                            (string(res:binding[@name='collection']/res:literal)) then res:binding[@name='collection']/res:literal else res:binding[@name='datasetTitle']/res:literal}"
-                            id="{res:binding[@name='object']/res:uri}">
+                        <a title="Obverse of {$title}" id="{res:binding[@name='object']/res:uri}">
                             <xsl:choose>
                                 <xsl:when test="res:binding[@name = 'obvManifest']">
                                     <xsl:attribute name="href">#iiif-window</xsl:attribute>
@@ -133,17 +142,14 @@
                                 </xsl:otherwise>
                             </xsl:choose>
 
-                            <img class="gi side-thumbnail" src="{res:binding[@name='obvThumb']/res:uri}"/>
-                        </a>
+                            <img class="gi side-thumbnail" src="{res:binding[@name='obvThumb']/res:uri}"/>                            
+                        </a>                        
                     </xsl:when>
                     <xsl:when test="not(string(res:binding[@name = 'obvRef']/res:uri)) and string(res:binding[@name = 'obvThumb']/res:uri)">
                         <img class="gi side-thumbnail" src="{res:binding[@name='obvThumb']/res:uri}"/>
                     </xsl:when>
                     <xsl:when test="string(res:binding[@name = 'obvRef']/res:uri) and not(string(res:binding[@name = 'obvThumb']/res:uri))">
-                        <a
-                            title="Obverse of {res:binding[@name='identifier']/res:literal}:        {if
-                            (string(res:binding[@name='collection']/res:literal)) then res:binding[@name='collection']/res:literal else res:binding[@name='datasetTitle']/res:literal}"
-                            id="{res:binding[@name='object']/res:uri}">
+                        <a title="Obverse of {$title}" id="{res:binding[@name='object']/res:uri}">
                             <xsl:choose>
                                 <xsl:when test="res:binding[@name = 'obvManifest']">
                                     <xsl:attribute name="href">#iiif-window</xsl:attribute>
@@ -163,10 +169,7 @@
                 <!-- reverse-->
                 <xsl:choose>
                     <xsl:when test="string(res:binding[@name = 'revRef']/res:uri) and string(res:binding[@name = 'revThumb']/res:uri)">
-                        <a
-                            title="Reverse of {res:binding[@name='identifier']/res:literal}:        {if
-                            (string(res:binding[@name='collection']/res:literal)) then res:binding[@name='collection']/res:literal else res:binding[@name='datasetTitle']/res:literal}"
-                            id="{res:binding[@name='object']/res:uri}">
+                        <a title="Reverse of {$title}" id="{res:binding[@name='object']/res:uri}">
                             <xsl:choose>
                                 <xsl:when test="res:binding[@name = 'revManifest']">
                                     <xsl:attribute name="href">#iiif-window</xsl:attribute>
@@ -186,10 +189,7 @@
                         <img class="gi side-thumbnail" src="{res:binding[@name='revThumb']/res:uri}"/>
                     </xsl:when>
                     <xsl:when test="string(res:binding[@name = 'revRef']/res:uri) and not(string(res:binding[@name = 'revThumb']/res:uri))">
-                        <a
-                            title="Reverse of {res:binding[@name='identifier']/res:literal}:        {if
-                            (string(res:binding[@name='collection']/res:literal)) then res:binding[@name='collection']/res:literal else res:binding[@name='datasetTitle']/res:literal}"
-                            id="{res:binding[@name='object']/res:uri}">
+                        <a title="Reverse of {$title}" id="{res:binding[@name='object']/res:uri}">
                             <xsl:choose>
                                 <xsl:when test="res:binding[@name = 'revManifest']">
                                     <xsl:attribute name="href">#iiif-window</xsl:attribute>
@@ -209,10 +209,7 @@
                 <!-- combined -->
                 <xsl:choose>
                     <xsl:when test="string(res:binding[@name = 'comRef']/res:uri) and string(res:binding[@name = 'comThumb']/res:uri)">
-                        <a
-                            title="Image of {res:binding[@name='identifier']/res:literal}:        {if
-                            (string(res:binding[@name='collection']/res:literal)) then res:binding[@name='collection']/res:literal else res:binding[@name='datasetTitle']/res:literal}"
-                            id="{res:binding[@name='object']/res:uri}">
+                        <a title="Image of {$title}" id="{res:binding[@name='object']/res:uri}">
                             <xsl:choose>
                                 <xsl:when test="res:binding[@name = 'comManifest']">
                                     <xsl:attribute name="href">#iiif-window</xsl:attribute>
@@ -225,14 +222,11 @@
                                     <xsl:attribute name="rel">gallery</xsl:attribute>
                                 </xsl:otherwise>
                             </xsl:choose>
-                            <img class="gi combined-thumbnail" src="{res:binding[@name='comThumb']/res:uri}"/>
+                            <img src="{res:binding[@name='comThumb']/res:uri}" class="gi combined-thumbnail"/>
                         </a>
                     </xsl:when>
                     <xsl:when test="string(res:binding[@name = 'comRef']/res:uri) and not(string(res:binding[@name = 'comThumb']/res:uri))">
-                        <a href="{res:binding[@name='comRef']/res:uri}"
-                            title="Image of {res:binding[@name='identifier']/res:literal}:        {if
-                            (string(res:binding[@name='collection']/res:literal)) then res:binding[@name='collection']/res:literal else res:binding[@name='datasetTitle']/res:literal}"
-                            id="{res:binding[@name='object']/res:uri}">
+                        <a title="Image of {$title}" id="{res:binding[@name='object']/res:uri}">
                             <xsl:choose>
                                 <xsl:when test="res:binding[@name = 'comManifest']">
                                     <xsl:attribute name="href">#iiif-window</xsl:attribute>
@@ -257,11 +251,11 @@
     <xsl:template match="res:sparql" mode="listTypes">
         <xsl:param name="objectUri"/>
         <xsl:param name="endpoint"/>
-        
+
         <!-- aggregate ids and get URI space -->
         <xsl:variable name="type_series_items" as="element()*">
             <type_series_items>
-                <xsl:for-each select="descendant::res:result/res:binding[@name='type']/res:uri">
+                <xsl:for-each select="descendant::res:result/res:binding[@name = 'type']/res:uri">
                     <item>
                         <xsl:value-of select="."/>
                     </item>
@@ -271,7 +265,7 @@
 
         <xsl:variable name="type_series" as="element()*">
             <list>
-                <xsl:for-each select="distinct-values(descendant::res:result/res:binding[@name='type']/substring-before(res:uri, 'id/'))">
+                <xsl:for-each select="distinct-values(descendant::res:result/res:binding[@name = 'type']/substring-before(res:uri, 'id/'))">
                     <xsl:variable name="uri" select="."/>
                     <type_series uri="{$uri}">
                         <xsl:for-each select="$type_series_items//item[starts-with(., $uri)]">
@@ -306,7 +300,8 @@
 
         <div id="listTypes-container">
             <div style="margin-bottom:10px;" class="control-row">
-                <a href="#" class="toggle-button btn btn-primary" id="toggle-listTypesQuery"><span class="glyphicon glyphicon-plus"/> View SPARQL for full query</a>
+                <a href="#" class="toggle-button btn btn-primary" id="toggle-listTypesQuery"><span class="glyphicon glyphicon-plus"/> View SPARQL for full
+                    query</a>
                 <a href="{$endpoint}?query={encode-for-uri($query)}&amp;output=csv" title="Download CSV" class="btn btn-primary" style="margin-left:10px">
                     <span class="glyphicon glyphicon-download"/>Download CSV</a>
             </div>
@@ -325,42 +320,42 @@
                 </thead>
                 <tbody>
                     <xsl:for-each select="descendant::res:result">
-                        <xsl:variable name="type_id" select="substring-after(res:binding[@name='type']/res:uri, 'id/')"/>
+                        <xsl:variable name="type_id" select="substring-after(res:binding[@name = 'type']/res:uri, 'id/')"/>
 
                         <tr>
                             <td>
                                 <a href="{res:binding[@name='type']/res:uri}">
-                                    <xsl:value-of select="res:binding[@name='label']/res:literal"/>
+                                    <xsl:value-of select="res:binding[@name = 'label']/res:literal"/>
                                 </a>
                                 <dl class="dl-horizontal">
-                                    <xsl:if test="res:binding[@name='mint']/res:uri">
+                                    <xsl:if test="res:binding[@name = 'mint']/res:uri">
                                         <dt>Mint</dt>
                                         <dd>
                                             <a href="{res:binding[@name='mint']/res:uri}">
-                                                <xsl:value-of select="res:binding[@name='mintLabel']/res:literal"/>
+                                                <xsl:value-of select="res:binding[@name = 'mintLabel']/res:literal"/>
                                             </a>
                                         </dd>
                                     </xsl:if>
-                                    <xsl:if test="res:binding[@name='den']/res:uri">
+                                    <xsl:if test="res:binding[@name = 'den']/res:uri">
                                         <dt>Denomination</dt>
                                         <dd>
                                             <a href="{res:binding[@name='den']/res:uri}">
-                                                <xsl:value-of select="res:binding[@name='denLabel']/res:literal"/>
+                                                <xsl:value-of select="res:binding[@name = 'denLabel']/res:literal"/>
                                             </a>
                                         </dd>
                                     </xsl:if>
-                                    <xsl:if test="res:binding[@name='startDate']/res:literal or res:binding[@name='endDate']/res:literal">
+                                    <xsl:if test="res:binding[@name = 'startDate']/res:literal or res:binding[@name = 'endDate']/res:literal">
                                         <dt>Date</dt>
                                         <dd>
-                                            <xsl:value-of select="numishare:normalizeDate(res:binding[@name='startDate']/res:literal)"/>
-                                            <xsl:if test="res:binding[@name='startDate']/res:literal and res:binding[@name='startDate']/res:literal"> - </xsl:if>
-                                            <xsl:value-of select="numishare:normalizeDate(res:binding[@name='endDate']/res:literal)"/>
+                                            <xsl:value-of select="numishare:normalizeDate(res:binding[@name = 'startDate']/res:literal)"/>
+                                            <xsl:if test="res:binding[@name = 'startDate']/res:literal and res:binding[@name = 'startDate']/res:literal"> - </xsl:if>
+                                            <xsl:value-of select="numishare:normalizeDate(res:binding[@name = 'endDate']/res:literal)"/>
                                         </dd>
                                     </xsl:if>
                                 </dl>
                             </td>
                             <td class="text-right">
-                                <xsl:apply-templates select="$sparqlResult//group[@id=$type_id]/descendant::object" mode="results"/>
+                                <xsl:apply-templates select="$sparqlResult//group[@id = $type_id]/descendant::object" mode="results"/>
                             </td>
                         </tr>
                     </xsl:for-each>
