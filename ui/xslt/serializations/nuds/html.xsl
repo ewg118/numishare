@@ -170,9 +170,14 @@
 	<xsl:variable name="hasFindspots" select="//res:sparql[2]/res:boolean" as="xs:boolean"/>
 	<xsl:variable name="hasAnnotations" as="xs:boolean">
 		<xsl:choose>
-			<xsl:when test="doc('input:annotations')[descendant::res:result]">true</xsl:when>
-			<xsl:otherwise>false</xsl:otherwise>
-		</xsl:choose>
+			<xsl:when test="//config/annotation_sparql_endpoint">
+				<xsl:choose>
+					<xsl:when test="doc('input:annotations')[descendant::res:result]">true</xsl:when>
+					<xsl:otherwise>false</xsl:otherwise>
+				</xsl:choose>
+			</xsl:when>
+			<xsl:otherwise>false</xsl:otherwise>				
+		</xsl:choose>		
 	</xsl:variable>
 	<xsl:variable name="hasMints" as="xs:boolean">
 		<xsl:choose>
