@@ -123,7 +123,8 @@ ASK {?s oa:hasBody <URI>}]]>
 							
 							<p:processor name="oxf:unsafe-xslt">
 								<p:input name="request" href="#request"/>
-								<p:input name="data" href="aggregate('content', #data, #hasTypes, #hasFindspots, #config, #annotations)"/>
+								<p:input name="annotations" href="#annotations"/>
+								<p:input name="data" href="aggregate('content', #data, #hasTypes, #hasFindspots, #config)"/>
 								<p:input name="config" href="../../../../ui/xslt/serializations/nuds/html.xsl"/>
 								<p:output name="data" id="model"/>
 							</p:processor>
@@ -209,7 +210,8 @@ ASK {?s oa:hasBody <URI>}]]>
 							
 							<p:processor name="oxf:unsafe-xslt">
 								<p:input name="request" href="#request"/>
-								<p:input name="data" href="aggregate('content', #data, #config, #annotations)"/>
+								<p:input name="annotations" href="#annotations"/>
+								<p:input name="data" href="aggregate('content', #data, #config)"/>
 								<p:input name="config" href="../../../../ui/xslt/serializations/nuds/html.xsl"/>
 								<p:output name="data" id="model"/>
 							</p:processor>
