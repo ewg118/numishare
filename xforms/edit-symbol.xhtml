@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xxforms="http://orbeon.org/oxf/xml/xforms" xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:res="http://www.w3.org/2005/sparql-results#"
-	xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:nm="http://nomisma.org/id/" xmlns:foaf="http://xmlns.com/foaf/0.1/"
-	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-	xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xmlns:void="http://rdfs.org/ns/void#" xmlns:nmo="http://nomisma.org/ontology#" xmlns:crm="http://www.cidoc-crm.org/cidoc-crm/">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xxforms="http://orbeon.org/oxf/xml/xforms"
+	xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:res="http://www.w3.org/2005/sparql-results#" xmlns:xi="http://www.w3.org/2001/XInclude"
+	xmlns:dcterms="http://purl.org/dc/terms/" xmlns:nm="http://nomisma.org/id/" xmlns:foaf="http://xmlns.com/foaf/0.1/"
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xmlns:void="http://rdfs.org/ns/void#" xmlns:nmo="http://nomisma.org/ontology#"
+	xmlns:crm="http://www.cidoc-crm.org/cidoc-crm/">
 	<head>
 		<title>Numishare: Edit Symbol</title>
 		<link rel="stylesheet" href="/fr/style/bootstrap/css/bootstrap.css" type="text/css" />
@@ -17,13 +19,14 @@
 
 		<!-- model -->
 		<xforms:model>
-			<xforms:instance id="doc" xxforms:exclude-result-prefixes="#all">
-				<rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:nm="http://nomisma.org/id/" xmlns:nmo="http://nomisma.org/ontology#" xmlns:foaf="http://xmlns.com/foaf/0.1/"
-					xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:void="http://rdfs.org/ns/void#"> </rdf:RDF>
+			<xforms:instance id="doc" xxforms:exclude-result-prefixes="#default xs ev xxforms xforms fr res xi">
+				<rdf:RDF xmlns="" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:nm="http://nomisma.org/id/" xmlns:nmo="http://nomisma.org/ontology#"
+					xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+					xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:void="http://rdfs.org/ns/void#" xmlns:xsd="http://www.w3.org/2001/XMLSchema#"></rdf:RDF>
 			</xforms:instance>
 
 			<xforms:instance id="exist-config">
-				<xi:include href="../exist-config.xml"></xi:include>
+				<xi:include href="../exist-config.xml"/>
 			</xforms:instance>
 
 			<xforms:instance id="config" xxforms:exclude-result-prefixes="#all">
@@ -43,13 +46,13 @@
 					<uri></uri>
 					<type></type>
 					<symbol_path></symbol_path>
-					<symbol_id/>
+					<symbol_id></symbol_id>
 					<symbol_url></symbol_url>
 				</controls>
 			</xforms:instance>
 
 			<xforms:instance id="languages">
-				<xi:include href="instances/languages.xml"></xi:include>
+				<xi:include href="instances/languages.xml"/>
 			</xforms:instance>
 
 			<xforms:instance id="classes">
@@ -108,7 +111,7 @@
 
 			<!-- preloaded instances -->
 			<xforms:instance id="sparqlResponse">
-				<sparql xmlns="http://www.w3.org/2005/sparql-results#"></sparql>
+				<sparql xmlns="http://www.w3.org/2005/sparql-results#"/>
 			</xforms:instance>
 
 			<xforms:instance id="source-list" xxforms:exclude-result-prefixes="#all">
@@ -129,8 +132,8 @@ PREFIX nmo:	<http://nomisma.org/ontology#>
 PREFIX org:	<http://www.w3.org/ns/org#>
 PREFIX xsd:	<http://www.w3.org/2001/XMLSchema#>
 PREFIX un:	<http://www.owl-ontologies.com/Ontology1181490123.owl#>]]></prefix>
-					<query id="source">SELECT ?uri ?label WHERE {{?uri a nmo:TypeSeries } UNION {?uri a nmo:ReferenceWork} . ?uri skos:prefLabel ?label . FILTER(langMatches(lang(?label), "en"))} ORDER
-						BY ?label</query>
+					<query id="source">SELECT ?uri ?label WHERE {{?uri a nmo:TypeSeries } UNION {?uri a nmo:ReferenceWork} . ?uri skos:prefLabel ?label .
+						FILTER(langMatches(lang(?label), "en"))} ORDER BY ?label</query>
 				</templates>
 			</xforms:instance>
 
@@ -143,61 +146,64 @@ PREFIX un:	<http://www.owl-ontologies.com/Ontology1181490123.owl#>]]></prefix>
 			<xforms:bind nodeset="instance('doc')" id="doc-active" readonly="*[1]/dcterms:isReplacedBy/@rdf:resource">
 				<!-- handle top-level rdf:type -->
 				<xforms:bind nodeset="*[1]">
-					<xforms:bind nodeset="@rdf:about" required="true()" type="xs:anyURI"></xforms:bind>
+					<xforms:bind nodeset="@rdf:about" required="true()" type="xs:anyURI"/>
 					<!-- skos -->
 					<xforms:bind nodeset="skos:prefLabel" required="true()">
 						<xforms:bind nodeset="@xml:lang"
 							constraint="string-length(.) &gt; 0 and count(parent::node()/parent::node()/skos:prefLabel[@xml:lang='en']) = 1 and count(parent::node()/parent::node()/skos:prefLabel/@xml:lang) = count(distinct-values(parent::node()/parent::node()/skos:prefLabel/@xml:lang))"
-						></xforms:bind>
+						/>
 					</xforms:bind>
 					<xforms:bind nodeset="skos:altLabel" required="true()">
-						<xforms:bind nodeset="@xml:lang" constraint="string-length(.) &gt; 0"></xforms:bind>
+						<xforms:bind nodeset="@xml:lang" constraint="string-length(.) &gt; 0"/>
 					</xforms:bind>
 					<xforms:bind nodeset="skos:definition" required="true()">
 						<xforms:bind nodeset="@xml:lang"
 							constraint="string-length(.) &gt; 0 and count(parent::node()/parent::node()/skos:definition[@xml:lang='en']) = 1 and count(parent::node()/parent::node()/skos:definition/@xml:lang) = count(distinct-values(parent::node()/parent::node()/skos:definition/@xml:lang))"
-						></xforms:bind>
+						/>
 					</xforms:bind>
 					<xforms:bind nodeset="skos:scopeNote" required="true()">
 						<xforms:bind nodeset="@xml:lang"
 							constraint="string-length(.) &gt; 0 and count(parent::node()/parent::node()/skos:scopeNote[@xml:lang='en']) = 1 and count(parent::node()/parent::node()/skos:scopeNote/@xml:lang) = count(distinct-values(parent::node()/parent::node()/skos:scopeNote/@xml:lang))"
-						></xforms:bind>
+						/>
 					</xforms:bind>
 					<!-- @rdf:resource -->
-					<xforms:bind nodeset="//@rdf:resource" required="true()" type="xs:anyURI"></xforms:bind>
+					<xforms:bind nodeset="//@rdf:resource" required="true()" type="xs:anyURI"/>
 				</xforms:bind>
 			</xforms:bind>
 
 			<xforms:bind nodeset="instance('control-instance')">
-				<xforms:bind nodeset="id" required="true()" type="xs:anyURI"></xforms:bind>
-				<xforms:bind nodeset="new_id" type="xs:boolean"></xforms:bind>
+				<xforms:bind nodeset="id" required="true()" type="xs:anyURI"/>
+				<xforms:bind nodeset="new_id" type="xs:boolean"/>
 			</xforms:bind>
 
-			<xforms:bind id="deprecate-trigger" readonly="instance('doc')/*[1]/dcterms:isReplacedBy"></xforms:bind>
+			<xforms:bind id="deprecate-trigger" readonly="instance('doc')/*[1]/dcterms:isReplacedBy"/>
 
 			<!-- ************* SUBMISSIONS **********************-->
 			<!-- ***** LOADING COLLECTIONS/CONFIG *****-->
-			<xforms:submission id="load-config" serialization="none" method="get" action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/config.xml"
-				xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}" replace="instance" instance="config">
+			<xforms:submission id="load-config" serialization="none" method="get"
+				action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/config.xml"
+				xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}" replace="instance"
+				instance="config">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Unable to load Numishare configuration</xforms:message>
 				<xforms:action ev:event="xforms-submit-done">
 					<!-- set the symbol filesystem path and public URL -->
 					<xforms:setvalue ref="instance('control-instance')/symbol_path"
-						value="if (substring(instance('config')/images/absolute_path, -1) = '/') then concat(instance('config')/images/absolute_path, 'symbols/') else concat(instance('config')/images/absolute_path, '/symbols/')"></xforms:setvalue>
-					<xforms:setvalue ref="instance('control-instance')/symbol_url" value="concat(instance('config')/url, 'symbols/')"></xforms:setvalue>
+						value="if (substring(instance('config')/images/absolute_path, -1) = '/') then concat(instance('config')/images/absolute_path, 'symbols/') else concat(instance('config')/images/absolute_path, '/symbols/')"/>
+					<xforms:setvalue ref="instance('control-instance')/symbol_url" value="concat(instance('config')/url, 'symbols/')"/>
 				</xforms:action>
 			</xforms:submission>
 
-			<xforms:submission id="load-collections" serialization="none" method="get" action="{instance('exist-config')/url}collections-list.xml" replace="instance" instance="collections-list"
-				xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}">
+			<xforms:submission id="load-collections" serialization="none" method="get" action="{instance('exist-config')/url}collections-list.xml"
+				replace="instance" instance="collections-list" xxforms:username="{instance('exist-config')/username}"
+				xxforms:password="{instance('exist-config')/password}">
 				<!-- if the config loads successfully, set the collection names based on authentication -->
 				<xforms:action ev:event="xforms-submit-done">
 					<!-- by default set the collection-name from the security role -->
 					<xforms:action if="not(xxforms:is-user-in-role('numishare-admin'))">
 						<xforms:action if="string(instance('collections-list')/collection[@role=instance('control-instance')/request-security/role]/@name)">
 							<xforms:setvalue ref="instance('control-instance')/collection-name"
-								value="instance('collections-list')/collection[@role=instance('control-instance')/request-security/role]/@name"></xforms:setvalue>
-							<xforms:send submission="load-config"></xforms:send>
+								value="instance('collections-list')/collection[@role=instance('control-instance')/request-security/role]/@name"/>
+							<xforms:send submission="load-config"/>
 						</xforms:action>
 					</xforms:action>
 				</xforms:action>
@@ -212,8 +218,10 @@ PREFIX un:	<http://www.owl-ontologies.com/Ontology1181490123.owl#>]]></prefix>
 				<xforms:message ev:event="xforms-submit-error" level="modal">Error loading RDF.</xforms:message>
 			</xforms:submission>
 
-			<xforms:submission id="save-doc" ref="instance('doc')" xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}"
-				action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/symbols/{encode-for-uri(instance('control-instance')/id)}.rdf" method="put" replace="none">
+			<xforms:submission id="save-doc" ref="instance('doc')" xxforms:username="{instance('exist-config')/username}"
+				xxforms:password="{instance('exist-config')/password}"
+				action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/symbols/{encode-for-uri(instance('control-instance')/id)}.rdf"
+				method="put" replace="none">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Save Error. Are all required inputs filled?</xforms:message>
 				<xforms:action ev:event="xforms-submit-done">
 					<xforms:setvalue ref="instance('control-instance')/status">RDF saved.</xforms:setvalue>
@@ -222,7 +230,8 @@ PREFIX un:	<http://www.owl-ontologies.com/Ontology1181490123.owl#>]]></prefix>
 
 			<!-- ************* SPARQL **********************-->
 			<!-- SPARQL queries -->
-			<xforms:submission id="submit-sparqlQuery" action="{instance('config')/sparql_endpoint}?query={encode-for-uri(instance('sparqlQuery'))}&amp;output=xml" ref="instance('sparqlResponse')"
+			<xforms:submission id="submit-sparqlQuery"
+				action="{instance('config')/sparql_endpoint}?query={encode-for-uri(instance('sparqlQuery'))}&amp;output=xml" ref="instance('sparqlResponse')"
 				replace="instance" method="get">
 				<xforms:message ev:event="xforms-submit-error" level="modal">SPARQL query failed.</xforms:message>
 			</xforms:submission>
@@ -230,41 +239,43 @@ PREFIX un:	<http://www.owl-ontologies.com/Ontology1181490123.owl#>]]></prefix>
 			<!-- **************** MODEL-CONSTRUCT-DONE ********************** -->
 			<xforms:action ev:event="xforms-model-construct-done">
 				<xforms:action if="string(xxforms:get-session-attribute('collection-name'))">
-					<xforms:setvalue ref="instance('control-instance')/collection-name" value="xxforms:get-session-attribute('collection-name')"></xforms:setvalue>
-					<xforms:send submission="load-config"></xforms:send>
+					<xforms:setvalue ref="instance('control-instance')/collection-name" value="xxforms:get-session-attribute('collection-name')"/>
+					<xforms:send submission="load-config"/>
 				</xforms:action>
 				<xforms:action if="not(string(xxforms:get-session-attribute('collection-name')))">
 					<xforms:insert context="instance('control-instance')" nodeset="collection-name" position="after"
-						origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/get-authentication.xpl', 'dump', instance('dump'), 'data')"></xforms:insert>
-					<xforms:send submission="load-collections"></xforms:send>
+						origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/get-authentication.xpl', 'dump', instance('dump'), 'data')"/>
+					<xforms:send submission="load-collections"/>
 				</xforms:action>
 
 				<xforms:action ev:event="xforms-submit-done">
 					<!-- load id if parameter is passed -->
 					<xforms:action if="string(xxforms:get-request-parameter('id'))">
-						<xforms:setvalue ref="instance('control-instance')/id" value="xxforms:get-request-parameter('id')"></xforms:setvalue>
-						<xforms:setvalue ref="instance('control-instance')/new_id" value="false()"></xforms:setvalue>
-						<xforms:send submission="load-doc"></xforms:send>
+						<xforms:setvalue ref="instance('control-instance')/id" value="xxforms:get-request-parameter('id')"/>
+						<xforms:setvalue ref="instance('control-instance')/new_id" value="false()"/>
+						<xforms:send submission="load-doc"/>
 					</xforms:action>
 
 					<!-- load uncertainty ids -->
-					<xforms:setvalue ref="instance('sparqlQuery')" value="concat(instance('sparql-templates')/prefix, ' ', instance('sparql-templates')/query[@id='source'])"></xforms:setvalue>
-					<xforms:send submission="submit-sparqlQuery"></xforms:send>
+					<xforms:setvalue ref="instance('sparqlQuery')"
+						value="concat(instance('sparql-templates')/prefix, ' ', instance('sparql-templates')/query[@id='source'])"/>
+					<xforms:send submission="submit-sparqlQuery"/>
 					<xforms:action xxforms:iterate="instance('sparqlResponse')//res:result" ev:event="xforms-submit-done">
-						<xforms:var name="uri" select="data(res:binding[@name='uri']/res:uri)"></xforms:var>
-						<xforms:var name="label" select="data(res:binding[@name='label']/res:literal)"></xforms:var>
-						<xforms:insert context="instance('source-list')" nodeset="./child::node()[last()]" origin="xforms:element('item', (xforms:attribute('uri', $uri), $label))"></xforms:insert>
+						<xforms:var name="uri" select="data(res:binding[@name='uri']/res:uri)"/>
+						<xforms:var name="label" select="data(res:binding[@name='label']/res:literal)"/>
+						<xforms:insert context="instance('source-list')" nodeset="./child::node()[last()]"
+							origin="xforms:element('item', (xforms:attribute('uri', $uri), $label))"/>
 					</xforms:action>
 				</xforms:action>
 			</xforms:action>
 
-			<xforms:toggle case="edit-record" if="instance('control-instance')/new_id=false()" ev:event="xforms-ready"></xforms:toggle>
+			<xforms:toggle case="edit-record" if="instance('control-instance')/new_id=false()" ev:event="xforms-ready"/>
 		</xforms:model>
 	</head>
 
 	<body>
 		<xforms:var name="display_path">../../</xforms:var>
-		<xi:include href="header.xml"></xi:include>
+		<xi:include href="header.xml"/>
 		<div class="container-fluid">
 			<div class="row">
 				<div class="col-md-12">
@@ -274,10 +285,11 @@ PREFIX un:	<http://www.owl-ontologies.com/Ontology1181490123.owl#>]]></prefix>
 						<div class="bg-info alert-box">
 							<span class="glyphicon glyphicon-info-sign"></span>
 							<strong>Status:</strong>
-							<xforms:output ref="instance('control-instance')/status"></xforms:output>
+							<xforms:output ref="instance('control-instance')/status"/>
 						</div>
 					</xforms:group>
-					<xforms:group ref=".[count(instance('doc')/*[1]/skos:prefLabel/@xml:lang) &gt; count(instance('doc')/*[1]/skos:prefLabel/@xml:lang[not(preceding::skos:prefLabel/@xml:lang = .)])]">
+					<xforms:group
+						ref=".[count(instance('doc')/*[1]/skos:prefLabel/@xml:lang) &gt; count(instance('doc')/*[1]/skos:prefLabel/@xml:lang[not(preceding::skos:prefLabel/@xml:lang = .)])]">
 						<div class="bg-danger alert-box">
 							<span class="glyphicon glyphicon-exclamation-sign"></span>
 							<strong>Alert:</strong> Preferred label languages must be unique. </div>
@@ -291,7 +303,7 @@ PREFIX un:	<http://www.owl-ontologies.com/Ontology1181490123.owl#>]]></prefix>
 					<div class="submission text-center">
 						<xforms:trigger appearance="minimal">
 							<xforms:action ev:event="DOMActivate">
-								<xforms:send submission="save-doc"></xforms:send>
+								<xforms:send submission="save-doc"/>
 							</xforms:action>
 							<xforms:label><span class="glyphicon glyphicon-floppy-disk"></span>Save</xforms:label>
 						</xforms:trigger>
@@ -301,7 +313,7 @@ PREFIX un:	<http://www.owl-ontologies.com/Ontology1181490123.owl#>]]></prefix>
 			<div class="row">
 				<div class="col-md-2">
 					<xforms:group ref="instance('doc')/*[1][not(dcterms:isReplacedBy)]">
-						<xforms:var name="type" select="name()"></xforms:var>
+						<xforms:var name="type" select="name()"/>
 						<h2>Controls</h2>
 						<h4>Labels/definitions</h4>
 						<ul class="control-list">
@@ -309,32 +321,32 @@ PREFIX un:	<http://www.owl-ontologies.com/Ontology1181490123.owl#>]]></prefix>
 								<xforms:trigger appearance="minimal">
 									<xforms:label>
 										<span class="glyphicon glyphicon-plus"></span>Preferred Label</xforms:label>
-									<xforms:insert ev:event="DOMActivate" origin="xforms:element('skos:prefLabel', (xforms:attribute('xml:lang')))" context="." nodeset="./child::node()[last()]"
-									></xforms:insert>
+									<xforms:insert ev:event="DOMActivate" origin="xforms:element('skos:prefLabel', (xforms:attribute('xml:lang')))" context="."
+										nodeset="./child::node()[last()]"/>
 								</xforms:trigger>
 							</li>
 							<li>
 								<xforms:trigger appearance="minimal">
 									<xforms:label>
 										<span class="glyphicon glyphicon-plus"></span>Alternate Label</xforms:label>
-									<xforms:insert ev:event="DOMActivate" origin="xforms:element('skos:altLabel', (xforms:attribute('xml:lang')))" context="." nodeset="./child::node()[last()]"
-									></xforms:insert>
+									<xforms:insert ev:event="DOMActivate" origin="xforms:element('skos:altLabel', (xforms:attribute('xml:lang')))" context="."
+										nodeset="./child::node()[last()]"/>
 								</xforms:trigger>
 							</li>
 							<li>
 								<xforms:trigger appearance="minimal">
 									<xforms:label>
 										<span class="glyphicon glyphicon-plus"></span>Definition</xforms:label>
-									<xforms:insert ev:event="DOMActivate" origin="xforms:element('skos:definition', (xforms:attribute('xml:lang')))" context="." nodeset="./child::node()[last()]"
-									></xforms:insert>
+									<xforms:insert ev:event="DOMActivate" origin="xforms:element('skos:definition', (xforms:attribute('xml:lang')))" context="."
+										nodeset="./child::node()[last()]"/>
 								</xforms:trigger>
 							</li>
 							<li>
 								<xforms:trigger appearance="minimal">
 									<xforms:label>
 										<span class="glyphicon glyphicon-plus"></span>Scope Note</xforms:label>
-									<xforms:insert ev:event="DOMActivate" origin="xforms:element('skos:scopeNote', (xforms:attribute('xml:lang')))" context="." nodeset="./child::node()[last()]"
-									></xforms:insert>
+									<xforms:insert ev:event="DOMActivate" origin="xforms:element('skos:scopeNote', (xforms:attribute('xml:lang')))" context="."
+										nodeset="./child::node()[last()]"/>
 								</xforms:trigger>
 							</li>
 						</ul>
@@ -344,8 +356,8 @@ PREFIX un:	<http://www.owl-ontologies.com/Ontology1181490123.owl#>]]></prefix>
 								<xforms:trigger appearance="minimal">
 									<xforms:label>
 										<span class="glyphicon glyphicon-plus"></span>Depiction</xforms:label>
-									<xforms:insert ev:event="DOMActivate" origin="xforms:element('foaf:depiction', (xforms:attribute('rdf:resource')))" context="."
-										nodeset="./child::node()[last()]"></xforms:insert>
+									<xforms:insert ev:event="DOMActivate" origin="xforms:element('foaf:depiction', (xforms:attribute('rdf:resource')))"
+										context="." nodeset="./child::node()[last()]"/>
 								</xforms:trigger>
 							</li>
 						</ul>
@@ -355,8 +367,8 @@ PREFIX un:	<http://www.owl-ontologies.com/Ontology1181490123.owl#>]]></prefix>
 								<xforms:trigger appearance="minimal">
 									<xforms:label>
 										<span class="glyphicon glyphicon-plus"></span>Bibliographic Source</xforms:label>
-									<xforms:insert ev:event="DOMActivate" origin="xforms:element('dcterms:source', (xforms:attribute('rdf:resource')))" context="." nodeset="./child::node()[last()]"
-									></xforms:insert>
+									<xforms:insert ev:event="DOMActivate" origin="xforms:element('dcterms:source', (xforms:attribute('rdf:resource')))"
+										context="." nodeset="./child::node()[last()]"/>
 								</xforms:trigger>
 							</li>
 						</ul>
@@ -379,8 +391,8 @@ PREFIX un:	<http://www.owl-ontologies.com/Ontology1181490123.owl#>]]></prefix>
 											<xforms:label>Proceed</xforms:label>
 											<xforms:action ev:event="DOMActivate">
 												<xforms:setvalue ref="instance('control-instance')/uri"
-													value="concat(replace(instance('config')/uri_space, '/id/', '/symbol/'), instance('control-instance')/id)"></xforms:setvalue>
-												<xforms:toggle case="set-class"></xforms:toggle>
+													value="concat(replace(instance('config')/uri_space, '/id/', '/symbol/'), instance('control-instance')/id)"/>
+												<xforms:toggle case="set-class"/>
 											</xforms:action>
 										</xforms:trigger>
 									</xforms:group>
@@ -396,31 +408,33 @@ PREFIX un:	<http://www.owl-ontologies.com/Ontology1181490123.owl#>]]></prefix>
 										<xforms:alert>Required</xforms:alert>
 										<xforms:item>
 											<xforms:label>Select...</xforms:label>
-											<xforms:value></xforms:value>
+											<xforms:value/>
 										</xforms:item>
 										<xforms:itemset nodeset="instance('classes')/class">
-											<xforms:label ref="label"></xforms:label>
-											<xforms:value ref="type"></xforms:value>
+											<xforms:label ref="label"/>
+											<xforms:value ref="type"/>
 										</xforms:itemset>
 										<xforms:action ev:event="xforms-value-changed">
-											<xforms:var name="type" select="."></xforms:var>
+											<xforms:var name="type" select="."/>
 											<!-- create resource description -->
-											<xforms:insert context="instance('doc')" origin="xforms:element($type, xforms:attribute('rdf:about', instance('control-instance')/uri))"></xforms:insert>
+											<xforms:insert context="instance('doc')"
+												origin="xforms:element($type, xforms:attribute('rdf:about', instance('control-instance')/uri))"/>
 											<!-- insert skos:prefLabel and skos:definition with @xml:lang='en'-->
-											<xforms:insert context="instance('doc')/*[1]" origin="xforms:element('skos:prefLabel', xforms:attribute('xml:lang', 'en'))"></xforms:insert>
+											<xforms:insert context="instance('doc')/*[1]"
+												origin="xforms:element('skos:prefLabel', xforms:attribute('xml:lang', 'en'))"/>
 											<xforms:insert context="instance('doc')/*[1]" nodeset="./child::node()[last()]"
-												origin="xforms:element('skos:definition', xforms:attribute('xml:lang', 'en'))"></xforms:insert>
+												origin="xforms:element('skos:definition', xforms:attribute('xml:lang', 'en'))"/>
 											<!-- insert rdf:type as skos:Concept -->
 											<xforms:insert context="instance('doc')/*[1]"
-												origin="xforms:element('rdf:type', xforms:attribute('rdf:resource', 'http://www.w3.org/2004/02/skos/core#Concept'))"></xforms:insert>
+												origin="xforms:element('rdf:type', xforms:attribute('rdf:resource', 'http://www.w3.org/2004/02/skos/core#Concept'))"/>
 											<xforms:insert context="instance('doc')/*[1]" nodeset="./child::node()[last()]"
-												origin="xforms:element('void:inDataset', xforms:attribute('rdf:resource', instance('config')/url))"></xforms:insert>
+												origin="xforms:element('void:inDataset', xforms:attribute('rdf:resource', instance('config')/url))"/>
 											<!-- set creation -->
 											<xforms:insert context="instance('doc')/*[1]" nodeset="./child::node()[last()]"
-												origin="xforms:element('dcterms:created', (xforms:attribute('rdf:datatype', 'http://www.w3.org/2001/XMLSchema#dateTime'), current-dateTime()))"></xforms:insert>
+												origin="xforms:element('dcterms:created', (xforms:attribute('rdf:datatype', 'http://www.w3.org/2001/XMLSchema#dateTime'), current-dateTime()))"/>
 											<!-- set new_id to false() to disable id editing -->
 											<xforms:setvalue ref="instance('control-instance')/new_id">false</xforms:setvalue>
-											<xforms:toggle case="edit-record"></xforms:toggle>
+											<xforms:toggle case="edit-record"/>
 										</xforms:action>
 									</xforms:select1>
 								</div>
@@ -430,11 +444,11 @@ PREFIX un:	<http://www.owl-ontologies.com/Ontology1181490123.owl#>]]></prefix>
 							<div>
 								<xforms:group ref="instance('doc')" id="form">
 									<xforms:group ref="*[1]">
-										<xforms:var name="type" select="name()"></xforms:var>
+										<xforms:var name="type" select="name()"/>
 										<h3>
-											<xforms:output ref="instance('classes')/class[type=$type]/label"></xforms:output>
-											<small> (<xforms:output ref="instance('classes')/class[type=$type]/type"></xforms:output>, <a href="{@rdf:about}"><xforms:output ref="@rdf:about"
-													></xforms:output></a>)</small>
+											<xforms:output ref="instance('classes')/class[type=$type]/label"/>
+											<small> (<xforms:output ref="instance('classes')/class[type=$type]/type"/>, <a href="{@rdf:about}"><xforms:output
+														ref="@rdf:about"/></a>)</small>
 										</h3>
 										<div class="subsection">
 											<h4>Labels and Definitions</h4>
@@ -447,17 +461,17 @@ PREFIX un:	<http://www.owl-ontologies.com/Ontology1181490123.owl#>]]></prefix>
 													<xforms:select1 ref="@xml:lang">
 														<xforms:item>
 															<xforms:label>Select...</xforms:label>
-															<xforms:value></xforms:value>
+															<xforms:value/>
 														</xforms:item>
 														<xforms:itemset nodeset="instance('languages')/language">
-															<xforms:label ref="."></xforms:label>
-															<xforms:value ref="@value"></xforms:value>
+															<xforms:label ref="."/>
+															<xforms:value ref="@value"/>
 														</xforms:itemset>
 														<xforms:alert>Required; English label most occur once.</xforms:alert>
 													</xforms:select1>
 													<xforms:group ref=".[count(instance('doc')/*[1]/skos:prefLabel) &gt; 1]">
 														<xforms:trigger appearance="minimal">
-															<xforms:delete ev:event="DOMActivate" context="."></xforms:delete>
+															<xforms:delete ev:event="DOMActivate" context="."/>
 															<xforms:label>
 																<span class="glyphicon glyphicon-remove"></span>
 															</xforms:label>
@@ -474,16 +488,16 @@ PREFIX un:	<http://www.owl-ontologies.com/Ontology1181490123.owl#>]]></prefix>
 													<xforms:select1 ref="@xml:lang">
 														<xforms:item>
 															<xforms:label>Select...</xforms:label>
-															<xforms:value></xforms:value>
+															<xforms:value/>
 														</xforms:item>
 														<xforms:itemset nodeset="instance('languages')/language">
-															<xforms:label ref="."></xforms:label>
-															<xforms:value ref="@value"></xforms:value>
+															<xforms:label ref="."/>
+															<xforms:value ref="@value"/>
 														</xforms:itemset>
 														<xforms:alert>Required</xforms:alert>
 													</xforms:select1>
 													<xforms:trigger appearance="minimal">
-														<xforms:delete ev:event="DOMActivate" context="."></xforms:delete>
+														<xforms:delete ev:event="DOMActivate" context="."/>
 														<xforms:label>
 															<span class="glyphicon glyphicon-remove"></span>
 														</xforms:label>
@@ -499,17 +513,17 @@ PREFIX un:	<http://www.owl-ontologies.com/Ontology1181490123.owl#>]]></prefix>
 													<xforms:select1 ref="@xml:lang">
 														<xforms:item>
 															<xforms:label>Select...</xforms:label>
-															<xforms:value></xforms:value>
+															<xforms:value/>
 														</xforms:item>
 														<xforms:itemset nodeset="instance('languages')/language">
-															<xforms:label ref="."></xforms:label>
-															<xforms:value ref="@value"></xforms:value>
+															<xforms:label ref="."/>
+															<xforms:value ref="@value"/>
 														</xforms:itemset>
 														<xforms:alert>Required; English label most occur once.</xforms:alert>
 													</xforms:select1>
 													<xforms:group ref=".[count(.) &gt; 1]">
 														<xforms:trigger appearance="minimal">
-															<xforms:delete ev:event="DOMActivate" context="."></xforms:delete>
+															<xforms:delete ev:event="DOMActivate" context="."/>
 															<xforms:label>
 																<span class="glyphicon glyphicon-remove"></span>
 															</xforms:label>
@@ -526,16 +540,16 @@ PREFIX un:	<http://www.owl-ontologies.com/Ontology1181490123.owl#>]]></prefix>
 													<xforms:select1 ref="@xml:lang">
 														<xforms:item>
 															<xforms:label>Select...</xforms:label>
-															<xforms:value></xforms:value>
+															<xforms:value/>
 														</xforms:item>
 														<xforms:itemset nodeset="instance('languages')/language">
-															<xforms:label ref="."></xforms:label>
-															<xforms:value ref="@value"></xforms:value>
+															<xforms:label ref="."/>
+															<xforms:value ref="@value"/>
 														</xforms:itemset>
 														<xforms:alert>Required; English label most occur once.</xforms:alert>
 													</xforms:select1>
 													<xforms:trigger appearance="minimal">
-														<xforms:delete ev:event="DOMActivate" context="."></xforms:delete>
+														<xforms:delete ev:event="DOMActivate" context="."/>
 														<xforms:label>
 															<span class="glyphicon glyphicon-remove"></span>
 														</xforms:label>
@@ -547,12 +561,12 @@ PREFIX un:	<http://www.owl-ontologies.com/Ontology1181490123.owl#>]]></prefix>
 											<h4>Images</h4>
 											<xforms:repeat nodeset="foaf:depiction">
 												<xforms:var name="position" select="position()"/>
-												
+
 												<div>
 													<xforms:group ref=".[string-length(@rdf:resource) = 0]">
 														<h5>Depiction</h5>
 														<xforms:trigger appearance="minimal">
-															<xforms:delete ev:event="DOMActivate" context="."></xforms:delete>
+															<xforms:delete ev:event="DOMActivate" context="."/>
 															<xforms:label>
 																<span class="glyphicon glyphicon-remove"></span>
 															</xforms:label>
@@ -560,29 +574,32 @@ PREFIX un:	<http://www.owl-ontologies.com/Ontology1181490123.owl#>]]></prefix>
 														<div>
 															<fr:upload ref="instance('file')">
 																<xforms:label>Upload</xforms:label>
-																<xforms:filename ref="@filename"></xforms:filename>
-																<xforms:mediatype ref="@mediatype"></xforms:mediatype>
-																<xxforms:size ref="@size"></xxforms:size>
+																<xforms:filename ref="@filename"/>
+																<xforms:mediatype ref="@mediatype"/>
+																<xxforms:size ref="@size"/>
 															</fr:upload>
 															<xforms:trigger>
 																<xforms:label>Upload</xforms:label>
 																<xforms:action ev:event="DOMActivate">
-																	<xforms:send submission="upload-file"></xforms:send>
+																	<xforms:send submission="upload-file"/>
 																	<!--get the temp file written to disk, and move it into the symbols folder in the absolute_path directory -->
 																	<xforms:action ev:event="xforms-submit-done">
-																		<xforms:var name="extension" select="tokenize(instance('file')/@filename, '\.')[last()]"></xforms:var>
-																		<xforms:var name="current" select="if(instance('doc')/*[1]/foaf:depiction[string-length(@rdf:resource) &gt; 0]) then (number(tokenize(instance('doc')/*[1]/foaf:depiction[string-length(@rdf:resource) &gt; 0][last()]/@rdf:resource, '_')[last()]) + 1) else 1"/>																		
-																		<xforms:var name="monogram_id" select="concat(instance('control-instance')/id, '_', string($current))"/>
-																		<xforms:setvalue ref="instance('generator-config')/url" value="instance('file')"></xforms:setvalue>
-																		<xforms:setvalue ref="instance('generator-config')/content-type" value="instance('file')/@mediatype"></xforms:setvalue>
+																		<xforms:var name="extension" select="tokenize(instance('file')/@filename, '\.')[last()]"/>
+																		<xforms:var name="current"
+																			select="if(instance('doc')/*[1]/foaf:depiction[string-length(@rdf:resource) &gt; 0]) then (number(tokenize(instance('doc')/*[1]/foaf:depiction[string-length(@rdf:resource) &gt; 0][last()]/@rdf:resource, '_')[last()]) + 1) else 1"/>
+																		<xforms:var name="monogram_id"
+																			select="concat(instance('control-instance')/id, '_', string($current))"/>
+																		<xforms:setvalue ref="instance('generator-config')/url" value="instance('file')"/>
+																		<xforms:setvalue ref="instance('generator-config')/content-type"
+																			value="instance('file')/@mediatype"/>
 																		<xforms:setvalue ref="instance('serializer-config')/url"
-																			value="concat('file:', instance('control-instance')/symbol_path, $monogram_id, '.', $extension)"></xforms:setvalue>
+																			value="concat('file:', instance('control-instance')/symbol_path, $monogram_id, '.', $extension)"/>
 																		<xforms:insert nodeset="instance('dump')"
-																			origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/xforms/move-file.xpl', ('generator-config', 'serializer-config'), (instance('generator-config'), instance('serializer-config')), 'data')"></xforms:insert>
+																			origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/xforms/move-file.xpl', ('generator-config', 'serializer-config'), (instance('generator-config'), instance('serializer-config')), 'data')"/>
 																		<!-- set the data within the MODS document -->
 																		<xforms:setvalue ref="instance('doc')/*[1]/foaf:depiction[$position]/@rdf:resource"
-																			value="concat(instance('control-instance')/symbol_url, $monogram_id)"></xforms:setvalue>
-																		
+																			value="concat(instance('control-instance')/symbol_url, $monogram_id)"/>
+
 																		<!-- clear file instance -->
 																		<xforms:setvalue ref="instance('file')"/>
 																		<xforms:setvalue ref="instance('file')/@filename"/>
@@ -597,14 +614,17 @@ PREFIX un:	<http://www.owl-ontologies.com/Ontology1181490123.owl#>]]></prefix>
 														<div class="subsection">
 															<h5>Depiction </h5>
 															<xforms:trigger appearance="minimal">
-																<xforms:label><span class="glyphicon glyphicon-remove"></span></xforms:label>
+																<xforms:label>
+																	<span class="glyphicon glyphicon-remove"></span>
+																</xforms:label>
 																<xforms:action ev:event="DOMActivate">
-																	<xforms:setvalue ref="instance('control-instance')/symbol_id" value="tokenize(instance('doc')/*[1]/foaf:depiction[$position]/@rdf:resource, '/')[last()]"/>
-																	<xforms:dispatch target="delete-dialog" name="fr-show"></xforms:dispatch>
-																</xforms:action>																
+																	<xforms:setvalue ref="instance('control-instance')/symbol_id"
+																		value="tokenize(instance('doc')/*[1]/foaf:depiction[$position]/@rdf:resource, '/')[last()]"/>
+																	<xforms:dispatch target="delete-dialog" name="fr-show"/>
+																</xforms:action>
 															</xforms:trigger>
 															<div>
-																<xforms:output mediatype="image/*" ref="@rdf:resource"></xforms:output>
+																<xforms:output mediatype="image/*" ref="@rdf:resource"/>
 															</div>
 														</div>
 													</xforms:group>
@@ -619,16 +639,16 @@ PREFIX un:	<http://www.owl-ontologies.com/Ontology1181490123.owl#>]]></prefix>
 														<xforms:label>Source</xforms:label>
 														<xforms:item>
 															<xforms:label>Select...</xforms:label>
-															<xforms:value></xforms:value>
+															<xforms:value/>
 														</xforms:item>
 														<xforms:itemset nodeset="instance('source-list')//item">
-															<xforms:label ref="."></xforms:label>
-															<xforms:value ref="@uri"></xforms:value>
+															<xforms:label ref="."/>
+															<xforms:value ref="@uri"/>
 														</xforms:itemset>
 														<xforms:alert>Required</xforms:alert>
 													</xforms:select1>
 													<xforms:trigger appearance="minimal">
-														<xforms:delete ev:event="DOMActivate" context="."></xforms:delete>
+														<xforms:delete ev:event="DOMActivate" context="."/>
 														<xforms:label>
 															<span class="glyphicon glyphicon-remove"></span>
 														</xforms:label>
@@ -652,7 +672,6 @@ PREFIX un:	<http://www.owl-ontologies.com/Ontology1181490123.owl#>]]></prefix>
 				</div>
 			</div>
 		</div>
-
 		<fr:alert-dialog id="delete-dialog">
 			<fr:label>Delete Document</fr:label>
 			<fr:message>Are you sure you want to delete the symbol image?</fr:message>
@@ -660,17 +679,17 @@ PREFIX un:	<http://www.owl-ontologies.com/Ontology1181490123.owl#>]]></prefix>
 				<fr:label>Yes</fr:label>
 				<xforms:action ev:event="DOMActivate">
 					<!-- delete the file -->
-					<xforms:delete nodeset="instance('doc')/*[1]/foaf:depiction[contains(@rdf:resource, instance('control-instance')/symbol_id)]"></xforms:delete>
-					<xforms:setvalue ref="instance('delete-config')/id" value="instance('control-instance')/symbol_id"></xforms:setvalue>
-					<xforms:setvalue ref="instance('delete-config')/symbol_path" value="instance('control-instance')/symbol_path"></xforms:setvalue>
-					<xforms:insert nodeset="instance('dump')" origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/xforms/delete-file.xpl', 'data', instance('delete-config'), 'data')"></xforms:insert>
+					<xforms:delete nodeset="instance('doc')/*[1]/foaf:depiction[contains(@rdf:resource, instance('control-instance')/symbol_id)]"/>
+					<xforms:setvalue ref="instance('delete-config')/id" value="instance('control-instance')/symbol_id"/>
+					<xforms:setvalue ref="instance('delete-config')/symbol_path" value="instance('control-instance')/symbol_path"/>
+					<xforms:insert nodeset="instance('dump')"
+						origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/xforms/delete-file.xpl', 'data', instance('delete-config'), 'data')"/>
 				</xforms:action>
 			</fr:positive-choice>
 			<fr:negative-choice>
 				<fr:label>No</fr:label>
 			</fr:negative-choice>
 		</fr:alert-dialog>
-
-		<!--<fr:xforms-inspector></fr:xforms-inspector>-->
+		<!--<fr:xforms-inspector/>-->
 	</body>
 </html>
