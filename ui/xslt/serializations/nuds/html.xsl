@@ -170,7 +170,7 @@
 	<xsl:variable name="hasFindspots" select="//res:sparql[2]/res:boolean" as="xs:boolean"/>
 	<xsl:variable name="hasAnnotations" as="xs:boolean">
 		<xsl:choose>
-			<xsl:when test="/content/res:sparql[3][descendant::res:result]">true</xsl:when>
+			<xsl:when test="doc('input:annotations')[descendant::res:result]">true</xsl:when>
 			<xsl:otherwise>false</xsl:otherwise>
 		</xsl:choose>
 	</xsl:variable>
@@ -450,7 +450,7 @@
 						<xsl:if test="$hasAnnotations = true()">
 							<div class="row">
 								<div class="col-md-12">
-									<xsl:apply-templates select="/content/res:sparql[3]" mode="annotations"/>
+									<xsl:apply-templates select="doc('input:annotations')/res:sparql" mode="annotations"/>
 								</div>
 							</div>
 						</xsl:if>
@@ -564,7 +564,7 @@
 						<xsl:if test="$hasAnnotations = true()">
 							<div class="row">
 								<div class="col-md-12">
-									<xsl:apply-templates select="/content/res:sparql[3]" mode="annotations"/>
+									<xsl:apply-templates select="doc('input:annotations')/res:sparql" mode="annotations"/>
 								</div>
 							</div>
 						</xsl:if>
@@ -643,6 +643,11 @@
 					</xsl:when>
 					<xsl:otherwise>
 						<div class="row">
+							<p>
+								<xsl:if test="$hasAnnotations = true()">									
+									<a href="#annotations">Annotations</a>
+								</xsl:if>
+							</p>
 							<xsl:call-template name="metadata-container"/>
 						</div>
 						<xsl:if test="$hasMints = true()">
