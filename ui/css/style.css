@@ -201,6 +201,10 @@ dl.ar dd{
     bottom: 0;
     font-size: 120%
 }
+.model-window {
+    width:640px;
+    height:480px;
+}
 /*
   ***************************************
   SEARCH/COMPARE/VISUALIZATION FORMS
