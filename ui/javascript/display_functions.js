@@ -50,7 +50,7 @@ $(document).ready(function () {
             this.title = '<a href="' + this.element.attr('identifier') + '">' + this.element.attr('title') + '</a>';
             //if the URL is sketchfab, then remove existing iframe and reload iframe
             if (url.indexOf('sketchfab') > 0) {          
-                //$('#model-window').children('iframe').remove();
+                $('#model-window').children('iframe').remove();
                 $("#model-iframe-template").clone().removeAttr('id').attr('src', url + '/embed').appendTo("#model-window");
             }
         },
