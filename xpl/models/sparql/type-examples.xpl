@@ -43,8 +43,9 @@ PREFIX foaf:	<http://xmlns.com/foaf/0.1/>
 PREFIX rdfs:	<http://www.w3.org/2000/01/rdf-schema#>
 PREFIX void:	<http://rdfs.org/ns/void#>
 PREFIX geo:	<http://www.w3.org/2003/01/geo/wgs84_pos#>
+PREFIX edm: <http://www.europeana.eu/schemas/edm/>
 
-SELECT ?object ?title ?identifier ?findUri ?findspot ?hoard ?collection ?publisher ?dataset ?datasetTitle ?weight ?axis ?diameter ?obvThumb ?revThumb ?obvRef ?revRef ?comThumb ?comRef ?obvManifest ?revManifest ?comManifest WHERE {
+SELECT ?object ?title ?identifier ?findUri ?findspot ?hoard ?collection ?publisher ?dataset ?datasetTitle ?weight ?axis ?diameter ?obvThumb ?revThumb ?obvRef ?revRef ?comThumb ?comRef ?obvManifest ?revManifest ?comManifest ?model WHERE {
 ?object nmo:hasTypeSeriesItem <typeURI> ;
   rdf:type nmo:NumismaticObject ;
   dcterms:title ?title .
@@ -78,6 +79,7 @@ OPTIONAL { ?object nmo:hasReverse/foaf:thumbnail ?revThumb }
 OPTIONAL { ?object nmo:hasReverse ?reverse .
 ?reverse foaf:depiction ?revRef 
 	OPTIONAL { ?revRef dcterms:isReferencedBy ?revManifest }}
+OPTIONAL {?object edm:isShownBy ?model}
 } ORDER BY ASC(?publisher) ASC(?collection)]]></xsl:variable>
 
 				<xsl:variable name="service">

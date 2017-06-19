@@ -44,6 +44,24 @@ $(document).ready(function () {
         }
     });
     
+        
+    $('.model-button').fancybox({
+         beforeShow: function () {
+            var url = this.element.attr('model-url');
+            this.title = '<a href="' + this.element.attr('identifier') + '">' + this.element.attr('title') + '</a>';
+            //if the URL is sketchfab, then remove existing iframe and reload iframe
+            if (url.indexOf('sketchfab') > 0) {          
+                //$('#model-window').children('iframe').remove();
+                $("#model-iframe-template").clone().removeAttr('id').attr('src', url + '/embed').appendTo("#model-window");
+            }
+        },
+        helpers: {
+            title: {
+                type: 'inside'
+            }
+        }
+    });
+    
     function render_image(manifest) {
         var iiifImage = L.map('iiif-container', {
             center:[0, 0],

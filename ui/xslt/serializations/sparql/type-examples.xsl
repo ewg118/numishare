@@ -31,6 +31,14 @@
     </xsl:template>
 
     <xsl:template match="res:result" mode="type-examples">
+        <xsl:variable name="title"
+            select="
+            concat(res:binding[@name = 'identifier']/res:literal, ': ', if
+            (string(res:binding[@name = 'collection']/res:literal)) then
+            res:binding[@name = 'collection']/res:literal
+            else
+            res:binding[@name = 'datasetTitle']/res:literal)"/>
+        
         <div class="g_doc col-md-4">
             <span class="result_link">
                 <a href="{res:binding[@name='object']/res:uri}" target="_blank">
@@ -111,17 +119,15 @@
 
                     </xsl:when>
                 </xsl:choose>
+                <xsl:if test="string(res:binding[@name = 'model']/res:uri)">
+                    <dt>3D Model</dt>
+                    <dd>
+                        <a href="#model-window" model-url="{res:binding[@name='model']/res:uri}" class="model-button" title="{$title}" identifier="{res:binding[@name='object']/res:uri}">Click to view</a>
+                    </dd>
+                </xsl:if>
             </dl>
 
             <div class="gi_c">
-                <xsl:variable name="title"
-                    select="
-                        concat(res:binding[@name = 'identifier']/res:literal, ': ', if
-                        (string(res:binding[@name = 'collection']/res:literal)) then
-                            res:binding[@name = 'collection']/res:literal
-                        else
-                            res:binding[@name = 'datasetTitle']/res:literal)"/>
-
                 <xsl:if test="res:binding[contains(@name, 'Manifest')]">
                     <span class="glyphicon glyphicon-zoom-in iiif-zoom-glyph" title="Click image(s) to zoom" style="display:none"/>
                 </xsl:if>
@@ -142,8 +148,8 @@
                                 </xsl:otherwise>
                             </xsl:choose>
 
-                            <img class="gi side-thumbnail" src="{res:binding[@name='obvThumb']/res:uri}"/>                            
-                        </a>                        
+                            <img class="gi side-thumbnail" src="{res:binding[@name='obvThumb']/res:uri}"/>
+                        </a>
                     </xsl:when>
                     <xsl:when test="not(string(res:binding[@name = 'obvRef']/res:uri)) and string(res:binding[@name = 'obvThumb']/res:uri)">
                         <img class="gi side-thumbnail" src="{res:binding[@name='obvThumb']/res:uri}"/>
