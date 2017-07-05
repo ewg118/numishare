@@ -4085,6 +4085,7 @@
 					<xsl:when test="$label = 'header_symbols'">Symbols</xsl:when>
 					<xsl:when test="$label = 'header_analyze'">Analyze Hoards</xsl:when>
 					<xsl:when test="$label = 'header_visualize'">Visualize Queries</xsl:when>
+					<xsl:when test="$label = 'header_identify'">Identify a Coin</xsl:when>
 					<xsl:when test="$label = 'header_language'">Language</xsl:when>
 					<xsl:when test="$label = 'display_summary'">Summary</xsl:when>
 					<xsl:when test="$label = 'display_administrative'">Administrative</xsl:when>
