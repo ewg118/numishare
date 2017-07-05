@@ -121,7 +121,7 @@
 						<xsl:otherwise>
 							<div id="legend">
 								<h2>
-									<xsl:value-of select="numishare:regularize_node('legend', $lang)"/>
+									<xsl:value-of select="numishare:normalizeLabel('maps_legend', $lang)"/>
 									<small>
 										<a href="#map_filters" id="show_filters">
 											<xsl:value-of select="numishare:normalizeLabel('results_refine-results', $lang)"/>

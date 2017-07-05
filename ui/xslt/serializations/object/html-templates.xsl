@@ -334,7 +334,7 @@
 											<xsl:variable name="side" select="local-name()"/>
 											<li>
 												<b>
-													<xsl:value-of select="numishare:regularize_node('legend', $lang)"/>
+													<xsl:value-of select="numishare:normalizeLabel('maps_legend', $lang)"/>
 													<xsl:text>: </xsl:text>
 												</b>
 												<xsl:for-each select="distinct-values($subtypes//subtype/descendant::*[local-name()=$side]/nuds:legend)">

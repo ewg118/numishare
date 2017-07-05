@@ -122,7 +122,7 @@
 						<div class="col-md-12" style="height:100%">
 							<div id="timemap-legend">
 								<h2>
-									<xsl:value-of select="numishare:regularize_node('legend', $lang)"/>
+									<xsl:value-of select="numishare:normalizeLabel('maps_legend', $lang)"/>
 								</h2>
 								<div class="legend">
 									<table>

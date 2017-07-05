@@ -313,7 +313,7 @@
 						<tbody>
 							<tr>
 								<th style="width:100px">
-									<xsl:value-of select="numishare:regularize_node('legend', $lang)"/>
+									<xsl:value-of select="numishare:normalizeLabel('maps_legend', $lang)"/>
 								</th>
 								<td style="background-color:#6992fd;border:2px solid black;width:50px;"/>
 								<td style="width:100px">

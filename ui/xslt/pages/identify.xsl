@@ -81,7 +81,7 @@
 						</div>
 						<div class="metadata_section">
 							<h2>
-								<xsl:value-of select="numishare:normalize_fields('legend', $lang)"/>
+								<xsl:value-of select="numishare:normalizeLabel('maps_legend', $lang)"/>
 							</h2>
 							<p class="text-muted">Search for characters that appear on the front and back of the coin. Please enter legends without spaces or
 								punctuation, using the wildcard asterisk character '*' to denote gaps in legibility, in the beginning, middle, or end of the
