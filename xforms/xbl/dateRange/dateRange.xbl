@@ -31,6 +31,7 @@
 									<xforms:input ref="nuds:fromDate/@standardDate">
 										<xforms:label>From - Standard</xforms:label>
 										<xforms:alert>Required; must meet XML schema specification</xforms:alert>
+										<xforms:hint>Must be YYYY, YYYY-MM, or YYYY-MM-DD format</xforms:hint>
 										<xforms:action ev:event="xforms-value-changed">
 											<xforms:action if="substring(., 1, 1) = '-'">
 												<xforms:var name="year" select="abs(number(tokenize(., '-')[2]))"/>
@@ -51,7 +52,11 @@
 										</xforms:action>
 									</xforms:input>
 									<xforms:group ref=".[not(nuds:fromDate/@standardDate = nuds:fromDate)]">
-										<xforms:output ref="nuds:fromDate"/>
+										<xforms:input ref="nuds:fromDate">
+											<xforms:label>From - Textual</xforms:label>
+											<xforms:hint>Human-readable textual date</xforms:hint>
+											<xforms:alert>Required</xforms:alert>
+										</xforms:input>
 									</xforms:group>
 								</div>
 							</xforms:group>
@@ -75,6 +80,7 @@
 									<xforms:input ref="nuds:toDate/@standardDate">
 										<xforms:label>To - Standard</xforms:label>
 										<xforms:alert>Required; must meet XML schema specification</xforms:alert>
+										<xforms:hint>Must be YYYY, YYYY-MM, or YYYY-MM-DD format</xforms:hint>
 										<xforms:action ev:event="xforms-value-changed">
 											<xforms:action if="substring(., 1, 1) = '-'">
 												<xforms:var name="year" select="abs(number(tokenize(., '-')[2]))"/>
@@ -95,7 +101,11 @@
 										</xforms:action>
 									</xforms:input>
 									<xforms:group ref=".[not(nuds:toDate/@standardDate = nuds:toDate)]">
-										<xforms:output ref="nuds:toDate"/>
+										<xforms:input ref="nuds:toDate">
+											<xforms:label>To - Textual</xforms:label>
+											<xforms:hint>Human-readable textual date</xforms:hint>
+											<xforms:alert>Required</xforms:alert>
+										</xforms:input>
 									</xforms:group>
 								</div>
 							</xforms:group>

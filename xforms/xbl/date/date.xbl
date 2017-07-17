@@ -42,7 +42,11 @@
 									</xforms:action>
 								</xforms:input>
 								<xforms:group ref=".[not(@standardDate = .)]">
-									<xforms:output ref="."/>
+									<xforms:input ref=".">
+										<xforms:label>Date - Textual</xforms:label>
+										<xforms:hint>Human-readable textual date</xforms:hint>
+										<xforms:alert>Required</xforms:alert>
+									</xforms:input>
 								</xforms:group>
 								<xforms:trigger appearance="minimal">
 									<xforms:delete ev:event="DOMActivate" nodeset="."/>
