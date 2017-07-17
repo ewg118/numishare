@@ -121,9 +121,9 @@
 		mode="gc:JSONLDMode" priority="1"> "@value": <xsl:value-of select="."/>, <xsl:apply-templates select="../@rdf:datatype" mode="gc:JSONLDMode"/>
 	</xsl:template>
 
-	<xsl:template match="text()[../@rdf:datatype = '&xsd;string']" mode="gc:JSONLDMode" priority="1"> "@value": "<xsl:value-of select="."/>" </xsl:template>
+	<xsl:template match="text()[../@rdf:datatype = '&xsd;string']" mode="gc:JSONLDMode" priority="1"> "@value": "<xsl:value-of select="replace(., '&#x022;', '\&#x022;')"/>" </xsl:template>
 
-	<xsl:template match="text()" mode="gc:JSONLDMode"> "@value": "<xsl:value-of select="."/>" <xsl:if test="../@rdf:datatype"> , <xsl:apply-templates select="../@rdf:datatype" mode="gc:JSONLDMode"/>
+	<xsl:template match="text()" mode="gc:JSONLDMode"> "@value": "<xsl:value-of select="replace(., '&#x022;', '\&#x022;')"/>" <xsl:if test="../@rdf:datatype"> , <xsl:apply-templates select="../@rdf:datatype" mode="gc:JSONLDMode"/>
 		</xsl:if>
 		<xsl:if test="../@xml:lang"> , <xsl:apply-templates select="../@xml:lang" mode="gc:JSONLDMode"/>
 		</xsl:if>
