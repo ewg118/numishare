@@ -993,7 +993,7 @@
 									<li>
 										<xforms:trigger appearance="minimal">
 											<xforms:label>Publish All Approved Objects</xforms:label>
-											<xforms:dispatch target="publish-all" name="fr-show" ev:event="DOMActivate"/>
+											<xforms:dispatch target="publish-all-dialog" name="fr-show" ev:event="DOMActivate"/>
 										</xforms:trigger>
 									</li>
 									<li>
@@ -1325,7 +1325,7 @@
 			</fr:positive-choice>
 		</fr:alert-dialog>
 		<!-- mass publication dialogs -->
-		<fr:alert-dialog id="publish-all">
+		<fr:alert-dialog id="publish-all-dialog">
 			<fr:label>Publish All</fr:label>
 			<fr:message>Do you want to publish all objects? This may take several minutes.</fr:message>
 			<fr:negative-choice>
