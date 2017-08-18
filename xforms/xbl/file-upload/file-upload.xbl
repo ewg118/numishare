@@ -79,11 +79,11 @@
 							<xforms:case id="upload">
 								<h4>Upload</h4>
 								<div style="margin:10px 0 20px 0">
-									<fr:upload ref="instance('files-instance')/file" xxforms:size="60">
+									<xforms:upload ref="instance('files-instance')/file" xxforms:size="60">
 										<xforms:filename ref="@filename"/>
 										<xforms:mediatype ref="@mediatype"/>
 										<xxforms:size ref="@size"/>
-									</fr:upload>
+									</xforms:upload>
 								</div>
 
 								<xforms:trigger>
