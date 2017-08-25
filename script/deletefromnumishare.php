@@ -4,7 +4,8 @@
 	MODIFIED: April, 2011
 	DESCRIPTION: Receive an accession number in a parameter and delete from Numishare:
 	eXist database and Solr index.
-	REQUIRED LIBRARIES: php5, php5-curl, php5-cgi
+	REQUIRED LIBRARIES: php7, php7-curl, php7-cgi
+	APACHE MODULES: sudo a2enmod cgi
 	************************/
 
 	$accnum = trim($_GET['accnum']);
