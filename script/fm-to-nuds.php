@@ -2262,7 +2262,7 @@ function csvToArray($file, $delimiter) {
 function generate_solr_shell_script($array){
 	$uniqid = uniqid();
 	$solrDocUrl = 'http://localhost:8080/orbeon/numishare/mantis/ingest?identifiers=' . implode('\|', $array);
-	$solrUrl = 'http://localhost:8080/solr/numishare-published/update';
+	$solrUrl = 'http://localhost:8080/solr/numishare/update';
 
 	//generate content of bash script
 	$sh = "#!/bin/sh\n";
