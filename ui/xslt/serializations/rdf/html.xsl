@@ -168,7 +168,7 @@
 					<xsl:if test="count(doc('input:types')//res:result) &gt; 0">
 						<xsl:apply-templates select="doc('input:types')/res:sparql" mode="listTypes">
 							<xsl:with-param name="objectUri" select="$objectUri"/>
-							<xsl:with-param name="endpoint" select="/content/config/sparql_endpoint"/>
+							<xsl:with-param name="endpoint">http://nomisma.org/query</xsl:with-param>
 						</xsl:apply-templates>
 					</xsl:if>
 				</div>
