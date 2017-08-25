@@ -915,6 +915,14 @@ function generate_nuds($row, $count, $fileName){
 				//obverse images
 				$writer->startElement('mets:fileGrp');
 					$writer->writeAttribute('USE', 'obverse');
+					//IIIF
+					$writer->startElement('mets:file');
+						$writer->writeAttribute('USE', 'iiif');
+						$writer->startElement('mets:FLocat');
+							$writer->writeAttribute('LOCYPE', 'URL');
+							$writer->writeAttribute('xlink:href', "http://images.numismatics.org/collectionimages%2F{$image_path}%2F{$collection_year}%2F{$accnum}.obv.noscale.jpg");
+						$writer->endElement();
+					$writer->endElement();
 					//reference
 					$writer->startElement('mets:file');
 						$writer->writeAttribute('USE', 'reference');
@@ -937,6 +945,14 @@ function generate_nuds($row, $count, $fileName){
 				//reverse images
 				$writer->startElement('mets:fileGrp');
 					$writer->writeAttribute('USE', 'reverse');
+					//IIIF
+					$writer->startElement('mets:file');
+						$writer->writeAttribute('USE', 'iiif');
+						$writer->startElement('mets:FLocat');
+							$writer->writeAttribute('LOCYPE', 'URL');
+							$writer->writeAttribute('xlink:href', "http://images.numismatics.org/collectionimages%2F{$image_path}%2F{$collection_year}%2F{$accnum}.rev.noscale.jpg");
+						$writer->endElement();
+					$writer->endElement();
 					//reference
 					$writer->startElement('mets:file');
 						$writer->writeAttribute('USE', 'reference');
