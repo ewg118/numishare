@@ -2,7 +2,7 @@
 VISUALIZATION FUNCTIONS
 Written by Ethan Gruber, gruber@numismatics.org
 Library: jQuery
-Description: Rendering graphics based on hoard counts
+Description: Display functions for coin type records
  ************************************/
 $(document).ready(function () {
 

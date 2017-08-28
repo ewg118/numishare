@@ -76,7 +76,12 @@
 				'../'
 			else
 				''"/>
-	<xsl:variable name="include_path" select="if (string(//config/theme/themes_url)) then concat(//config/theme/themes_url, //config/theme/orbeon_theme) else concat('http://', doc('input:request')/request/server-name, ':8080/orbeon/themes/', //config/theme/orbeon_theme)"/>
+	<xsl:variable name="include_path"
+		select="
+			if (string(//config/theme/themes_url)) then
+				concat(//config/theme/themes_url, //config/theme/orbeon_theme)
+			else
+				concat('http://', doc('input:request')/request/server-name, ':8080/orbeon/themes/', //config/theme/orbeon_theme)"/>
 	<xsl:variable name="recordType" select="//nuds:nuds/@recordType"/>
 	<xsl:variable name="id" select="normalize-space(//*[local-name() = 'recordId'])"/>
 	<xsl:variable name="objectUri"
@@ -167,7 +172,25 @@
 
 	<!-- whether there are coin types, mints, findspots, annotations, executed in XPL -->
 	<xsl:variable name="hasTypes" select="//res:sparql[1]/res:boolean" as="xs:boolean"/>
-	<xsl:variable name="hasFindspots" select="//res:sparql[2]/res:boolean" as="xs:boolean"/>
+	<xsl:variable name="hasFindspots" as="xs:boolean">
+		<xsl:choose>
+			<xsl:when test="$recordType = 'conceptual'">
+				<xsl:choose>
+					<xsl:when test="//res:sparql[2]/res:boolean">
+						<xsl:value-of select="//res:sparql[2]/res:boolean"/>
+					</xsl:when>
+					<xsl:otherwise>false</xsl:otherwise>
+				</xsl:choose>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:choose>
+					<xsl:when test="descendant::nuds:findspotDesc/@xlink:href">true</xsl:when>
+					<xsl:when test="descendant::nuds:geogname[@xlink:role = 'findspot'][contains(@xlink:href, 'geonames.org')]">true</xsl:when>
+					<xsl:otherwise>false</xsl:otherwise>
+				</xsl:choose>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:variable>
 	<xsl:variable name="hasAnnotations" as="xs:boolean">
 		<xsl:choose>
 			<xsl:when test="//config/annotation_sparql_endpoint">
@@ -176,12 +199,12 @@
 					<xsl:otherwise>false</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
-			<xsl:otherwise>false</xsl:otherwise>				
-		</xsl:choose>		
+			<xsl:otherwise>false</xsl:otherwise>
+		</xsl:choose>
 	</xsl:variable>
 	<xsl:variable name="hasMints" as="xs:boolean">
 		<xsl:choose>
-			<xsl:when test="$rdf//nmo:Mint or descendant::*[contains(@xlink:href, 'geonames.org')]">true</xsl:when>
+			<xsl:when test="$rdf//nmo:Mint or descendant::nuds:geographic/nuds:geogname[contains(@xlink:href, 'geonames.org')]">true</xsl:when>
 			<xsl:otherwise>false</xsl:otherwise>
 		</xsl:choose>
 	</xsl:variable>
@@ -249,7 +272,15 @@
 						<xsl:call-template name="generic_head"/>
 						<xsl:choose>
 							<xsl:when test="$recordType = 'physical'">
-								<script type="text/javascript" src="{$include_path}/javascript/display_map_functions.js"/>
+								<xsl:if test="$hasMints = true() or $hasFindspots = true()">
+									<script type="text/javascript" src="{$include_path}/javascript/display_map_functions.js"/>
+								</xsl:if>
+
+								<!--- IIIF -->
+								<xsl:if test="descendant::mets:file[@USE = 'iiif']">
+									<script type="text/javascript" src="{$include_path}/javascript/leaflet-iiif.js"/>
+									<script type="text/javascript" src="{$include_path}/javascript/display_iiif_functions.js"/>
+								</xsl:if>
 							</xsl:when>
 							<!-- coin-type CSS and JS dependencies -->
 							<xsl:when test="$recordType = 'conceptual'">
@@ -261,18 +292,20 @@
 								<script type="text/javascript" src="{$include_path}/javascript/jquery.fancybox.pack.js?v=2.1.5"/>
 								<script type="text/javascript" src="{$include_path}/javascript/highcharts.js"/>
 								<script type="text/javascript" src="{$include_path}/javascript/modules/exporting.js"/>
-								<script type="text/javascript" src="{$include_path}/javascript/display_map_functions.js"/>
 								<script type="text/javascript" src="{$include_path}/javascript/display_functions.js"/>
 								<script type="text/javascript" src="{$include_path}/javascript/visualize_functions.js"/>
 
 								<!-- mapping -->
-								<script type="text/javascript" src="http://openlayers.org/api/2.12/OpenLayers.js"/>
-								<script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3.20&amp;sensor=false"/>
-								<script type="text/javascript" src="{$include_path}/javascript/mxn.js"/>
-								<script type="text/javascript" src="{$include_path}/javascript/timeline-2.3.0.js"/>
-								<link type="text/css" href="{$include_path}/css/timeline-2.3.0.css" rel="stylesheet"/>
-								<script type="text/javascript" src="{$include_path}/javascript/timemap_full.pack.js"/>
-								<script type="text/javascript" src="{$include_path}/javascript/param.js"/>
+								<xsl:if test="$hasMints = true() or $hasFindspots = true()">
+									<script type="text/javascript" src="http://openlayers.org/api/2.12/OpenLayers.js"/>
+									<script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3.20&amp;sensor=false"/>
+									<script type="text/javascript" src="{$include_path}/javascript/mxn.js"/>
+									<script type="text/javascript" src="{$include_path}/javascript/timeline-2.3.0.js"/>
+									<link type="text/css" href="{$include_path}/css/timeline-2.3.0.css" rel="stylesheet"/>
+									<script type="text/javascript" src="{$include_path}/javascript/timemap_full.pack.js"/>
+									<script type="text/javascript" src="{$include_path}/javascript/param.js"/>
+									<script type="text/javascript" src="{$include_path}/javascript/display_map_functions.js"/>
+								</xsl:if>
 							</xsl:when>
 
 						</xsl:choose>
@@ -321,12 +354,12 @@
 								</span>
 								<span id="manifest"/>
 								<div class="iiif-container-template" style="width:100%;height:100%"/>
-								<iframe id="model-iframe-template" width="640" height="480" frameborder="0" allowvr="true"
-									allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true" onmousewheel=""></iframe>
+								<iframe id="model-iframe-template" width="640" height="480" frameborder="0" allowvr="true" allowfullscreen="true"
+									mozallowfullscreen="true" webkitallowfullscreen="true" onmousewheel=""/>
+								<div id="iiif-window" style="width:600px;height:600px;display:none"/>
+								<div id="model-window" style="width:640px;height:480px;display:none"/>
 							</xsl:if>
 						</div>
-						<div id="iiif-window" style="width:600px;height:600px;display:none"/>
-						<div id="model-window" style="width:640px;height:480px;display:none"/>
 					</body>
 				</html>
 			</xsl:when>
@@ -596,34 +629,15 @@
 	<xsl:template name="nuds_content">
 		<xsl:choose>
 			<xsl:when test="$mode = 'compare'">
-				<!-- process $typeDesc differently -->
 				<div>
-					<xsl:if test="nuds:descMeta/nuds:physDesc">
-						<div class="metadata_section">
-							<xsl:apply-templates select="nuds:descMeta/nuds:physDesc"/>
-						</div>
-					</xsl:if>
+					<xsl:apply-templates select="nuds:descMeta/nuds:physDesc[child::*]"/>
 					<!-- process $typeDesc differently -->
-					<div class="metadata_section">
-						<xsl:apply-templates select="$nudsGroup//nuds:typeDesc">
-							<xsl:with-param name="typeDesc_resource" select="@xlink:href"/>
-						</xsl:apply-templates>
-					</div>
-					<xsl:if test="nuds:descMeta/nuds:undertypeDesc">
-						<div class="metadata_section">
-							<xsl:apply-templates select="nuds:descMeta/nuds:undertypeDesc"/>
-						</div>
-					</xsl:if>
-					<xsl:if test="nuds:descMeta/nuds:refDesc">
-						<div class="metadata_section">
-							<xsl:apply-templates select="nuds:descMeta/nuds:refDesc"/>
-						</div>
-					</xsl:if>
-					<xsl:if test="nuds:descMeta/nuds:findspotDesc">
-						<div class="metadata_section">
-							<xsl:apply-templates select="nuds:descMeta/nuds:findspotDesc"/>
-						</div>
-					</xsl:if>
+					<xsl:apply-templates select="$nudsGroup//nuds:typeDesc">
+						<xsl:with-param name="typeDesc_resource" select="@xlink:href"/>
+					</xsl:apply-templates>
+					<xsl:apply-templates select="nuds:descMeta/nuds:undertypeDesc[child::*]"/>
+					<xsl:apply-templates select="nuds:descMeta/nuds:refDesc[child::*]"/>
+					<xsl:apply-templates select="nuds:descMeta/nuds:findspotDesc[child::*]"/>
 				</div>
 			</xsl:when>
 			<xsl:otherwise>
@@ -652,7 +666,7 @@
 					<xsl:otherwise>
 						<div class="row">
 							<p>
-								<xsl:if test="$hasAnnotations = true()">									
+								<xsl:if test="$hasAnnotations = true()">
 									<a href="#annotations">Annotations</a>
 								</xsl:if>
 							</p>
@@ -674,76 +688,31 @@
 	<xsl:template name="metadata-container">
 		<xsl:choose>
 			<xsl:when test="$recordType = 'conceptual'">
-				<div class="metadata_section">
-					<xsl:apply-templates select="$nudsGroup//nuds:typeDesc">
-						<xsl:with-param name="typeDesc_resource" select="@xlink:href"/>
-					</xsl:apply-templates>
-				</div>
-				<xsl:if test="nuds:descMeta/nuds:refDesc">
-					<div class="metadata_section">
-						<xsl:apply-templates select="nuds:descMeta/nuds:refDesc"/>
-					</div>
-				</xsl:if>
-				<xsl:if test="nuds:descMeta/nuds:subjectSet">
-					<div class="metadata_section">
-						<xsl:apply-templates select="nuds:descMeta/nuds:subjectSet"/>
-					</div>
-				</xsl:if>
-				<xsl:if test="nuds:descMeta/nuds:noteSet">
-					<div class="metadata_section">
-						<xsl:apply-templates select="nuds:descMeta/nuds:noteSet"/>
-					</div>
-				</xsl:if>
+				<xsl:apply-templates select="$nudsGroup//nuds:typeDesc">
+					<xsl:with-param name="typeDesc_resource" select="@xlink:href"/>
+				</xsl:apply-templates>
+				<xsl:apply-templates select="nuds:descMeta/nuds:refDesc[child::*]"/>
+				<xsl:apply-templates select="nuds:descMeta/nuds:subjectSet[child::*]"/>
+				<xsl:apply-templates select="nuds:descMeta/nuds:noteSet[child::*]"/>
 			</xsl:when>
 			<xsl:otherwise>
 				<div class="col-md-6 {if($lang='ar') then 'pull-right' else ''}">
-					<xsl:if test="nuds:descMeta/nuds:physDesc">
-						<div class="metadata_section">
-							<xsl:apply-templates select="nuds:descMeta/nuds:physDesc"/>
-						</div>
-					</xsl:if>
+					<xsl:apply-templates select="nuds:descMeta/nuds:physDesc[child::*]"/>
 					<!-- process $typeDesc differently -->
-					<div class="metadata_section">
-						<xsl:for-each select="$nudsGroup//nuds:typeDesc">
-							<xsl:variable name="typeDesc_resource" select="ancestor::object/@xlink:href"/>
-							<xsl:apply-templates select=".">
-								<xsl:with-param name="typeDesc_resource" select="$typeDesc_resource"/>
-							</xsl:apply-templates>
-						</xsl:for-each>
-					</div>
-					<xsl:if test="nuds:descMeta/nuds:undertypeDesc">
-						<div class="metadata_section">
-							<xsl:apply-templates select="nuds:descMeta/nuds:undertypeDesc"/>
-						</div>
-					</xsl:if>
-					<xsl:if test="nuds:descMeta/nuds:findspotDesc">
-						<div class="metadata_section">
-							<xsl:apply-templates select="nuds:descMeta/nuds:findspotDesc"/>
-						</div>
-					</xsl:if>
+					<xsl:for-each select="$nudsGroup//nuds:typeDesc">
+						<xsl:variable name="typeDesc_resource" select="ancestor::object/@xlink:href"/>
+						<xsl:apply-templates select=".">
+							<xsl:with-param name="typeDesc_resource" select="$typeDesc_resource"/>
+						</xsl:apply-templates>
+					</xsl:for-each>
+					<xsl:apply-templates select="nuds:descMeta/nuds:undertypeDesc[child::*]"/>
+					<xsl:apply-templates select="nuds:descMeta/nuds:findspotDesc[child::*]"/>
 				</div>
-				<div class="col-md-6">
-					<xsl:if test="nuds:descMeta/nuds:refDesc">
-						<div class="metadata_section">
-							<xsl:apply-templates select="nuds:descMeta/nuds:refDesc"/>
-						</div>
-					</xsl:if>
-					<xsl:if test="nuds:descMeta/nuds:adminDesc">
-						<div class="metadata_section">
-							<xsl:apply-templates select="nuds:descMeta/nuds:adminDesc"/>
-						</div>
-					</xsl:if>
-
-					<xsl:if test="nuds:descMeta/nuds:subjectSet">
-						<div class="metadata_section">
-							<xsl:apply-templates select="nuds:descMeta/nuds:subjectSet"/>
-						</div>
-					</xsl:if>
-					<xsl:if test="nuds:descMeta/nuds:noteSet">
-						<div class="metadata_section">
-							<xsl:apply-templates select="nuds:descMeta/nuds:noteSet"/>
-						</div>
-					</xsl:if>
+				<div class="col-md-6 {if($lang='ar') then 'pull-right' else ''}">
+					<xsl:apply-templates select="nuds:descMeta/nuds:refDesc[child::*]"/>
+					<xsl:apply-templates select="nuds:descMeta/nuds:adminDesc[child::*]"/>
+					<xsl:apply-templates select="nuds:descMeta/nuds:subjectSet[child::*]"/>
+					<xsl:apply-templates select="nuds:descMeta/nuds:noteSet[child::*]"/>
 				</div>
 			</xsl:otherwise>
 		</xsl:choose>
@@ -804,58 +773,66 @@
 	</xsl:template>
 
 	<xsl:template match="nuds:undertypeDesc">
-		<h3>
-			<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
-		</h3>
-		<ul>
-			<xsl:apply-templates mode="descMeta"/>
-		</ul>
+		<div class="metadata_section">
+			<h3>
+				<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
+			</h3>
+			<ul>
+				<xsl:apply-templates mode="descMeta"/>
+			</ul>
+		</div>
 	</xsl:template>
 
 	<xsl:template match="nuds:findspotDesc">
-		<h3>
-			<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
-		</h3>
-		<xsl:choose>
-			<xsl:when test="string(@xlink:href)">
-				<xsl:choose>
-					<xsl:when test="contains(@xlink:href, 'nomisma.org')">
-						<xsl:variable name="elem" as="element()*">
-							<findspot xlink:href="{@xlink:href}"/>
-						</xsl:variable>
-						<ul>
-							<xsl:apply-templates select="$elem" mode="descMeta"/>
-						</ul>
-					</xsl:when>
-					<xsl:otherwise>
-						<p>Source: <a rel="nmo:hasFindspot" href="{@xlink:href}"><xsl:value-of select="@xlink:href"/></a></p>
-					</xsl:otherwise>
-				</xsl:choose>
-			</xsl:when>
-			<xsl:otherwise>
-				<ul>
-					<xsl:apply-templates mode="descMeta"/>
-				</ul>
-			</xsl:otherwise>
-		</xsl:choose>
+		<div class="metadata_section">
+			<h3>
+				<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
+			</h3>
+			<xsl:choose>
+				<xsl:when test="string(@xlink:href)">
+					<xsl:choose>
+						<xsl:when test="contains(@xlink:href, 'nomisma.org')">
+							<xsl:variable name="elem" as="element()*">
+								<findspot xlink:href="{@xlink:href}"/>
+							</xsl:variable>
+							<ul>
+								<xsl:apply-templates select="$elem" mode="descMeta"/>
+							</ul>
+						</xsl:when>
+						<xsl:otherwise>
+							<p>Source: <a rel="nmo:hasFindspot" href="{@xlink:href}"><xsl:value-of select="@xlink:href"/></a></p>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:when>
+				<xsl:otherwise>
+					<ul>
+						<xsl:apply-templates mode="descMeta"/>
+					</ul>
+				</xsl:otherwise>
+			</xsl:choose>
+		</div>
 	</xsl:template>
 
 	<xsl:template match="nuds:adminDesc">
-		<h3>
-			<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
-		</h3>
-		<ul>
-			<xsl:apply-templates mode="descMeta"/>
-		</ul>
+		<div class="metadata_section">
+			<h3>
+				<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
+			</h3>
+			<ul>
+				<xsl:apply-templates mode="descMeta"/>
+			</ul>
+		</div>
 	</xsl:template>
 
 	<xsl:template match="nuds:subjectSet | nuds:noteSet">
-		<h3>
-			<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
-		</h3>
-		<ul>
-			<xsl:apply-templates/>
-		</ul>
+		<div class="metadata_section">
+			<h3>
+				<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
+			</h3>
+			<ul>
+				<xsl:apply-templates/>
+			</ul>
+		</div>
 	</xsl:template>
 
 	<xsl:template match="nuds:subject">
@@ -919,6 +896,7 @@
 				<xsl:value-of select="//mets:fileGrp[@USE = 'obverse']/mets:file[@USE = 'reference']/mets:FLocat/@xlink:href"/>
 			</xsl:if>
 		</xsl:variable>
+		<xsl:variable name="iiif-service" select="//mets:fileGrp[@USE = 'obverse']/mets:file[@USE = 'iiif']/mets:FLocat/@xlink:href"/>
 
 		<!-- display legend and type and image if available -->
 		<xsl:choose>
@@ -927,15 +905,29 @@
 					<xsl:variable name="side" select="local-name()"/>
 					<div class="reference_image" rel="nmo:hasObverse">
 						<xsl:if test="string($obverse_image)">
+							<xsl:variable name="image_url"
+								select="
+									if (matches($obverse_image, 'https?://')) then
+										$obverse_image
+									else
+										concat($display_path, $obverse_image)"/>
+
 							<xsl:choose>
-								<xsl:when test="contains($obverse_image, 'http://')">
-									<img src="{$obverse_image}" property="foaf:depiction" alt="{$side}"/>
+								<xsl:when test="string($iiif-service)">
+									<div id="obv-iiif-container" class="iiif-container" style="width:100%;padding-top:100%"/>
+									<span class="hidden" id="obv-iiif-service">
+										<xsl:value-of select="$iiif-service"/>
+									</span>
+									<noscript>
+										<img src="{$image_url}" property="foaf:depiction" alt="{$side}"/>
+										<br/>
+									</noscript>
 								</xsl:when>
 								<xsl:otherwise>
-									<img src="{$display_path}{$obverse_image}" property="foaf:depiction" alt="{$side}"/>
+									<img src="{$image_url}" property="foaf:depiction" alt="{$side}"/>
+									<br/>
 								</xsl:otherwise>
 							</xsl:choose>
-							<br/>
 						</xsl:if>
 
 						<b>
@@ -956,7 +948,7 @@
 				<!-- otherwise only display the image -->
 				<xsl:if test="string($obverse_image)">
 					<div class="reference_image">
-						<img src="{if (contains($obverse_image, 'http://')) then $obverse_image else concat($display_path, $obverse_image)}"
+						<img src="{if (matches($obverse_image, 'https?://')) then $obverse_image else concat($display_path, $obverse_image)}"
 							property="foaf:depiction" alt="{$side}"/>
 					</div>
 				</xsl:if>
@@ -970,6 +962,7 @@
 				<xsl:value-of select="//mets:fileGrp[@USE = 'reverse']/mets:file[@USE = 'reference']/mets:FLocat/@xlink:href"/>
 			</xsl:if>
 		</xsl:variable>
+		<xsl:variable name="iiif-service" select="//mets:fileGrp[@USE = 'reverse']/mets:file[@USE = 'iiif']/mets:FLocat/@xlink:href"/>
 
 		<!-- display legend and type and image if available -->
 		<xsl:choose>
@@ -978,15 +971,29 @@
 					<xsl:variable name="side" select="local-name()"/>
 					<div class="reference_image" rel="nmo:hasReverse">
 						<xsl:if test="string($reverse_image)">
+							<xsl:variable name="image_url"
+								select="
+									if (matches($reverse_image, 'https?://')) then
+										$reverse_image
+									else
+										concat($display_path, $reverse_image)"/>
+
 							<xsl:choose>
-								<xsl:when test="contains($reverse_image, 'http://')">
-									<img src="{$reverse_image}" property="foaf:depiction" alt="{$side}"/>
+								<xsl:when test="string($iiif-service)">
+									<div id="rev-iiif-container" class="iiif-container" style="width:100%;padding-top:100%"/>
+									<span class="hidden" id="rev-iiif-service">
+										<xsl:value-of select="$iiif-service"/>
+									</span>
+									<noscript>
+										<img src="{$image_url}" property="foaf:depiction" alt="{$side}"/>
+										<br/>
+									</noscript>
 								</xsl:when>
 								<xsl:otherwise>
-									<img src="{$display_path}{$reverse_image}" property="foaf:depiction" alt="{$side}"/>
+									<img src="{$image_url}" property="foaf:depiction" alt="{$side}"/>
+									<br/>
 								</xsl:otherwise>
 							</xsl:choose>
-							<br/>
 						</xsl:if>
 
 						<b>
@@ -1007,7 +1014,7 @@
 				<!-- otherwise only display the image -->
 				<xsl:if test="string($reverse_image)">
 					<div class="reference_image">
-						<img src="{if (contains($reverse_image, 'http://')) then $reverse_image else concat($display_path, $reverse_image)}"
+						<img src="{if (matches($reverse_image, 'https?://')) then $reverse_image else concat($display_path, $reverse_image)}"
 							property="foaf:depiction" alt="{$side}"/>
 					</div>
 				</xsl:if>
