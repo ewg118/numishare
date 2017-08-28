@@ -326,7 +326,14 @@
 							<span id="path">
 								<xsl:choose>
 									<xsl:when test="$recordType = 'physical'">
-										<xsl:value-of select="concat($display_path, 'id/')"/>
+										<xsl:choose>
+											<xsl:when test="//config/uri_space">
+												<xsl:value-of select="//config/uri_space"/>
+											</xsl:when>
+											<xsl:otherwise>
+												<xsl:value-of select="concat($display_path, 'id/')"/>
+											</xsl:otherwise>
+										</xsl:choose>
 									</xsl:when>
 									<xsl:when test="$recordType = 'conceptual' and $hasFindspots = false()">
 										<xsl:value-of select="concat($display_path, 'id/')"/>
