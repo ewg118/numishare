@@ -27,6 +27,20 @@
 				<xsl:template match="/">
 					<xsl:variable name="collection-name" select="substring-before(substring-after(doc('input:request')/request/servlet-path, 'numishare/'), '/')"/>
 					<xsl:choose>
+						<!-- IIIF manifest generation -->
+						<xsl:when test="ends-with(doc('input:request')/request/request-url, '/manifest')">
+							<xsl:variable name="pieces" select="tokenize(doc('input:request')/request/request-url, '/')"/>
+							<xsl:variable name="id" select="$pieces[count($pieces) - 1]"/>
+							<xsl:variable name="accessionYear" select="tokenize($id, '\.')[1]"/>
+							
+							<config>
+								<url>
+									<xsl:value-of select="concat(/exist-config/url, $collection-name, '/objects/', $accessionYear, '/', $id, '.xml')"/>
+								</url>
+								<content-type>application/xml</content-type>
+								<encoding>utf-8</encoding>
+							</config>
+						</xsl:when>
 						<!-- handle id/ pipeline in the public interface -->
 						<xsl:when test="contains(doc('input:request')/request/request-url, 'id/') or contains(doc('input:request')/request/request-url, 'map/')">							
 							<xsl:variable name="doc" select="tokenize(doc('input:request')/request/request-url, '/')[last()]"/>
