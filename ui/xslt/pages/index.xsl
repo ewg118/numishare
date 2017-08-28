@@ -17,8 +17,9 @@
 	</xsl:param>
 	<xsl:variable name="display_path"/>
 	<xsl:variable name="include_path" select="if (string(//config/theme/themes_url)) then concat(//config/theme/themes_url, //config/theme/orbeon_theme) else concat('http://', doc('input:request')/request/server-name, ':8080/orbeon/themes/', //config/theme/orbeon_theme)"/>
+	
 
-	<xsl:template match="/content/config">
+	<xsl:template match="//config">
 		<html lang="en">
 			<head>
 				<title>
@@ -28,8 +29,8 @@
 				<meta name="viewport" content="width=device-width, initial-scale=1"/>
 				<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"/>
 				<!-- bootstrap -->
-				<link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"/>
-				<script src="https://netdna.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"/>
+				<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"/>
+				<script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"/>
 				<link type="text/css" href="{$include_path}/css/style.css" rel="stylesheet"/>
 				<xsl:if test="string(google_analytics)">
 					<script type="text/javascript">
@@ -46,10 +47,11 @@
 	</xsl:template>
 
 	<xsl:template name="index">
-		<div class="jumbotron">
+		<img src="{$include_path}/images/jumbotron.jpg" style="max-width:100%"/>
+		<!--<div class="jumbotron">
 			<div class="container">
 				<div class="row">
-					<!-- display title and description in the jumbotron, including featured object, if available -->
+					<!-\- display title and description in the jumbotron, including featured object, if available -\->
 					<xsl:choose>
 						<xsl:when test="features_enabled = true()">
 							<div class="col-md-9">
@@ -69,23 +71,20 @@
 					</xsl:choose>
 				</div>
 			</div>
-		</div>	
+		</div>-->	
 		<div class="container-fluid">
-			<xsl:if test="$lang='ar'">
-				<xsl:attribute name="style">direction: rtl;</xsl:attribute>							
-			</xsl:if>
-			<div class="row">
+			<div class="row" id="index">
 				<div class="col-md-9">					
 					<xsl:choose>
 						<xsl:when test="string($lang)">
 							<xsl:choose>
-								<xsl:when test="string(//pages/index/content[@xml:lang=$lang])">
-									<xsl:copy-of select="//pages/index/content[@xml:lang=$lang]/*"/>
+								<xsl:when test="string(//pages/index/description[@xml:lang=$lang])">
+									<xsl:copy-of select="//pages/index/description[@xml:lang=$lang]/*"/>
 								</xsl:when>
 								<xsl:otherwise>
 									<xsl:choose>
-										<xsl:when test="count(//pages/index/content) &gt; 0">
-											<xsl:copy-of select="//pages/index/content[1]/*"/>
+										<xsl:when test="count(//pages/index/description) &gt; 0">
+											<xsl:copy-of select="//pages/index/description[1]/*"/>
 										</xsl:when>
 										<xsl:otherwise>
 											<xsl:copy-of select="//pages/index/*"/>
@@ -97,8 +96,8 @@
 						</xsl:when>
 						<xsl:otherwise>							
 							<xsl:choose>
-								<xsl:when test="count(//pages/index/content) &gt; 0">
-									<xsl:copy-of select="//pages/index/content[1]/*"/>
+								<xsl:when test="count(//pages/index/description) &gt; 0">
+									<xsl:copy-of select="//pages/index/description[1]/*"/>
 								</xsl:when>
 								<xsl:otherwise>
 									<xsl:copy-of select="//pages/index/*"/>
@@ -108,6 +107,20 @@
 					</xsl:choose>
 				</div>
 				<div class="col-md-3">
+					<div class="highlight">
+						<h3>Share</h3>
+						<!-- AddThis Button BEGIN -->
+						<div class="addthis_toolbox addthis_default_style addthis_32x32_style">
+							<a class="addthis_button_preferred_1"/>
+							<a class="addthis_button_preferred_2"/>
+							<a class="addthis_button_preferred_3"/>
+							<a class="addthis_button_preferred_4"/>
+							<a class="addthis_button_compact"/>
+							<a class="addthis_counter addthis_bubble_style"/>
+						</div>
+						<script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid=xa-4ffc41710d8b692c"/>
+						<!-- AddThis Button END -->
+					</div>
 					<div class="highlight data_options">
 						<h3>Linked Data</h3>
 						<a href="{$display_path}feed/?q=*:*">
