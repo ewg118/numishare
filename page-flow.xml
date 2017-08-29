@@ -68,9 +68,13 @@
 	<page path="/numishare/mantis/id/(.*)\.kml" model="file:///usr/local/projects/mantis/xpl/models/object/get-id.xpl" view="xpl/views/serializations/object/kml.xpl"/>
 	<page path="/numishare/mantis/id/(.*)\.ttl" model="file:///usr/local/projects/mantis/xpl/models/object/get-id.xpl" view="xpl/views/serializations/rdf/ttl.xpl"/>
 	<page path="/numishare/mantis/id/(.*)\.solr" model="file:///usr/local/projects/mantis/xpl/models/object/get-id.xpl" view="xpl/views/serializations/object/solr.xpl"/>
-	<page path="/numishare/mantis/id/(.*)\.geojson" model="file:///usr/local/projects/mantis/xpl/models/object/get-id.xpl" view="xpl/views/serializations/object/geojson.xpl"/>
-	<page path="/numishare/mantis/id/(.*)" model="file:///usr/local/projects/mantis/xpl/models/object/get-id.xpl" view="xpl/controllers/conneg-id.xpl"/>
-	<page path="/numishare/mantis/map/(.*)" model="file:///usr/local/projects/mantis/xpl/models/object/get-id.xpl" view="xpl/views/serializations/object/html-map.xpl"/>
+	<page path="/numishare/mantis/id/(.*)\.geojson" model="file:///usr/local/projects/mantis/xpl/models/object/get-id.xpl" view="xpl/views/serializations/object/geojson.xpl"/>	
+	<page path="/numishare/mantis/id/(.*)$" model="file:///usr/local/projects/mantis/xpl/models/object/get-id.xpl" view="xpl/controllers/conneg-id.xpl"/>
+	<page path="/numishare/mantis/map/(.*)$" model="file:///usr/local/projects/mantis/xpl/models/object/get-id.xpl" view="xpl/views/serializations/object/html-map.xpl"/>
+	<page path="/numishare/mantis/manifest/(.*)$" model="file:///usr/local/projects/mantis/xpl/models/object/get-id.xpl" view="xpl/controllers/iiif-manifest.xpl"/>
+	<page path="/numishare/mantis/manifest/(.*)/sequence/default$" model="file:///usr/local/projects/mantis/xpl/models/object/get-id.xpl" view="xpl/controllers/iiif-manifest.xpl"/>
+	<page path="/numishare/mantis/manifest/(.*)/canvas/[obverse|reverse]$" model="file:///usr/local/projects/mantis/xpl/models/object/get-id.xpl" view="xpl/controllers/iiif-manifest.xpl"/>
+	<page path="/numishare/mantis/manifest/(.*)/annotation/[obverse|reverse]$" model="file:///usr/local/projects/mantis/xpl/models/object/get-id.xpl" view="xpl/controllers/iiif-manifest.xpl"/>
 	
 	<!-- apis -->
 	<page path="/numishare/mantis/apis/get" model="file:///usr/local/projects/mantis/xpl/models/object/get-id.xpl" view="xpl/views/apis/get.xpl"/>	
@@ -92,10 +96,14 @@
 	<page path="/numishare/[^\/]+/id/(.*)\.kml" model="xpl/models/object/get-id.xpl" view="xpl/views/serializations/object/kml.xpl"/>
 	<page path="/numishare/[^\/]+/id/(.*)\.geojson" model="xpl/models/object/get-id.xpl" view="xpl/views/serializations/object/geojson.xpl"/>
 	<page path="/numishare/[^\/]+/id/(.*)\.ttl" model="xpl/models/object/get-id.xpl" view="xpl/views/serializations/rdf/ttl.xpl"/>
-	<page path="/numishare/[^\/]+/id/(.*)\.solr" model="xpl/models/object/get-id.xpl" view="xpl/views/serializations/object/solr.xpl"/>
-	<page path="/numishare/[^\/]+/id/(.*)/manifest$" model="xpl/models/object/get-id.xpl" view="xpl/controllers/iiif-manifest.xpl"/>	
+	<page path="/numishare/[^\/]+/id/(.*)\.solr" model="xpl/models/object/get-id.xpl" view="xpl/views/serializations/object/solr.xpl"/>	
 	<page path="/numishare/[^\/]+/id/(.*)$" model="xpl/models/object/get-id.xpl" view="xpl/controllers/conneg-id.xpl"/>
 	<page path="/numishare/[^\/]+/map/(.*)" model="xpl/models/object/get-id.xpl" view="xpl/views/serializations/object/html-map.xpl"/>
+	<page path="/numishare/[^\/]+/manifest/(.*)$" model="xpl/models/object/get-id.xpl" view="xpl/controllers/iiif-manifest.xpl"/>
+	<page path="/numishare/[^\/]+/manifest/(.*)/sequence/default$" model="xpl/models/object/get-id.xpl" view="xpl/controllers/iiif-manifest.xpl"/>
+	<page path="/numishare/[^\/]+/manifest/(.*)/canvas/[obverse|reverse]$" model="xpl/models/object/get-id.xpl" view="xpl/controllers/iiif-manifest.xpl"/>
+	<page path="/numishare/[^\/]+/manifest/(.*)/annotation/[obverse|reverse]$" model="xpl/models/object/get-id.xpl" view="xpl/controllers/iiif-manifest.xpl"/>
+	
 	
 	<!-- symbols -->	
 	<page path="/numishare/[^\/]+/symbol/(.*)\.rdf" view="xpl/models/symbol/get.xpl"/>

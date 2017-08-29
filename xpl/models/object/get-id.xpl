@@ -28,9 +28,9 @@
 					<xsl:variable name="collection-name" select="substring-before(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/')"/>
 					<xsl:choose>
 						<!-- IIIF manifest generation -->
-						<xsl:when test="ends-with(doc('input:request')/request/request-url, '/manifest')">
-							<xsl:variable name="pieces" select="tokenize(doc('input:request')/request/request-url, '/')"/>
-							<xsl:variable name="id" select="$pieces[count($pieces) - 1]"/>
+						<xsl:when test="contains(doc('input:request')/request/request-url, 'manifest/')">
+							<xsl:variable name="pieces" select="tokenize(substring-after(doc('input:request')/request/request-url, 'manifest/'), '/')"/>
+							<xsl:variable name="id" select="$pieces[1]"/>
 							
 							<config>
 								<url>
