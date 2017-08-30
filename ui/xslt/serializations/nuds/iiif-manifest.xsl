@@ -115,6 +115,16 @@
 						<xsl:apply-templates select="$nudsGroup//nuds:typeDesc | nuds:descMeta/nuds:physDesc | nuds:descMeta/nuds:adminDesc"/>
 					</_array>
 				</metadata>
+				
+				<rendering>
+					<_object>
+						<__id>
+							<xsl:value-of select="$objectUri"/>
+						</__id>
+						<format>text/html</format>
+						<label>Full record</label>
+					</_object>
+				</rendering>
 
 				<seeAlso>
 					<_array>
@@ -262,7 +272,7 @@
 					</__id>
 					<__type>sc:Sequence</__type>
 					<label>Default sequence</label>
-					<rendering>
+					<!--<rendering>
 						<_object>
 							<__id>
 								<xsl:value-of select="$objectUri"/>
@@ -270,7 +280,7 @@
 							<format>text/html</format>
 							<label>Full record</label>
 						</_object>
-					</rendering>
+					</rendering>-->
 					<canvases>
 						<_array>
 							<xsl:apply-templates select="descendant::mets:file[@USE = 'iiif']"/>
