@@ -90,7 +90,7 @@
 		<!-- construct XML-JSON metamodel inspired by the XForms JSON-XML serialization -->
 		<xsl:variable name="model" as="element()*">
 			<_object>
-				<__context>http://iiif.io/api/presentation/2.1/context.json</__context>
+				<__context>http://iiif.io/api/presentation/2/context.json</__context>
 				<__id>
 					<xsl:value-of select="$manifestUri"/>
 				</__id>
