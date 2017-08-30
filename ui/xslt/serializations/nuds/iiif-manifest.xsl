@@ -116,16 +116,6 @@
 					</_array>
 				</metadata>
 
-				<rendering>
-					<_object>
-						<__id>
-							<xsl:value-of select="$objectUri"/>
-						</__id>
-						<format>text/html</format>
-						<label>Full record</label>
-					</_object>
-				</rendering>
-
 				<seeAlso>
 					<_array>
 						<_object>
@@ -271,6 +261,16 @@
 						<xsl:value-of select="concat($manifestUri, '/sequence/default')"/>
 					</__id>
 					<__type>sc:Sequence</__type>
+					<label>Default sequence</label>
+					<rendering>
+						<_object>
+							<__id>
+								<xsl:value-of select="$objectUri"/>
+							</__id>
+							<format>text/html</format>
+							<label>Full record</label>
+						</_object>
+					</rendering>
 					<canvases>
 						<_array>
 							<xsl:apply-templates select="descendant::mets:file[@USE = 'iiif']"/>
