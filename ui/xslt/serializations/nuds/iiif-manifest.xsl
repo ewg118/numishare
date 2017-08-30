@@ -182,7 +182,9 @@
 					</xsl:otherwise>
 				</xsl:choose>
 				<xsl:text>:</xsl:text>
-				<xsl:value-of select="numishare:evaluateDatatype(.)"/>
+				<xsl:call-template name="numishare:evaluateDatatype">
+					<xsl:with-param name="val" select="."/>
+				</xsl:call-template>
 			</xsl:otherwise>
 		</xsl:choose>
 		<xsl:if test="not(position() = last())">
@@ -295,15 +297,17 @@
 			<label>
 				<xsl:value-of select="numishare:regularize_node($side, $lang)"/>
 			</label>
-			<!--<thumbnail>
+			<thumbnail>
 				<_object>
 					<__id>
 						<xsl:value-of select="parent::mets:fileGrp/mets:file[@USE = 'thumbnail']/mets:FLocat/@xlink:href"/>
 					</__id>
 					<__type>dctypes:Image</__type>
 					<format>image/jpeg</format>
+					<height>175</height>
+					<width>175</width>
 				</_object>
-			</thumbnail>-->
+			</thumbnail>
 			<height>
 				<xsl:value-of select="$sizes/*[name()=$side]/height"/>
 			</height>
@@ -370,10 +374,14 @@
 	</xsl:template>
 
 	<!-- ******* FUNCTIONS ******** -->
-	<xsl:function name="numishare:evaluateDatatype">
+	<xsl:template name="numishare:evaluateDatatype">
 		<xsl:param name="val"/>
 
 		<xsl:choose>
+			<!-- metadata fields must be a string -->
+			<xsl:when test="ancestor::metadata">
+				<xsl:value-of select="concat('&#x022;', replace($val, '&#x022;', '\\&#x022;'), '&#x022;')"/>
+			</xsl:when>
 			<xsl:when test="number($val)">
 				<xsl:value-of select="$val"/>
 			</xsl:when>
@@ -381,6 +389,6 @@
 				<xsl:value-of select="concat('&#x022;', replace($val, '&#x022;', '\\&#x022;'), '&#x022;')"/>
 			</xsl:otherwise>
 		</xsl:choose>
-	</xsl:function>
+	</xsl:template>
 
 </xsl:stylesheet>
