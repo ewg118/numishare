@@ -90,7 +90,7 @@
 		<!-- construct XML-JSON metamodel inspired by the XForms JSON-XML serialization -->
 		<xsl:variable name="model" as="element()*">
 			<_object>
-				<__context>http://iiif.io/api/presentation/2/context.json</__context>
+				<__context>http://iiif.io/api/presentation/2.1/context.json</__context>
 				<__id>
 					<xsl:value-of select="$manifestUri"/>
 				</__id>
@@ -272,15 +272,6 @@
 					</__id>
 					<__type>sc:Sequence</__type>
 					<label>Default sequence</label>
-					<!--<rendering>
-						<_object>
-							<__id>
-								<xsl:value-of select="$objectUri"/>
-							</__id>
-							<format>text/html</format>
-							<label>Full record</label>
-						</_object>
-					</rendering>-->
 					<canvases>
 						<_array>
 							<xsl:apply-templates select="descendant::mets:file[@USE = 'iiif']"/>
