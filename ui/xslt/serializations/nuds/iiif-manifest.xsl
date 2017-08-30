@@ -294,14 +294,15 @@
 			<label>
 				<xsl:value-of select="numishare:regularize_node($side, $lang)"/>
 			</label>
-			<thumbnail>
+			<!--<thumbnail>
 				<_object>
 					<__id>
 						<xsl:value-of select="parent::mets:fileGrp/mets:file[@USE = 'thumbnail']/mets:FLocat/@xlink:href"/>
 					</__id>
 					<__type>dctypes:Image</__type>
+					<format>image/jpeg</format>
 				</_object>
-			</thumbnail>
+			</thumbnail>-->
 			<height>
 				<xsl:value-of select="$sizes/*[name()=$side]/height"/>
 			</height>
