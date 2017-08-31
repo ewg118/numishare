@@ -123,9 +123,11 @@
 	<copyField source="department_facet" dest="department_max"/>
 	
 	<field name="imagesavailable" type="string" indexed="true" stored="true" multiValued="true"/>
+	<field name="iiif_obv" type="string" indexed="false" stored="true"/>
 	<field name="archive_obv" type="string" indexed="false" stored="true"/>
 	<field name="reference_obv" type="string" indexed="false" stored="true"/>
 	<field name="thumbnail_obv" type="string" indexed="false" stored="true"/>
+	<field name="iiif_rev" type="string" indexed="false" stored="true"/>
 	<field name="archive_rev" type="string" indexed="false" stored="true"/>
 	<field name="reference_rev" type="string" indexed="false" stored="true"/>
 	<field name="thumbnail_rev" type="string" indexed="false" stored="true"/>
