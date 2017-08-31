@@ -530,8 +530,12 @@
 									<xsl:choose>
 										<xsl:when test="$image_location = 'left'">
 											<div class="col-md-4">
-												<xsl:call-template name="obverse_image"/>
-												<xsl:call-template name="reverse_image"/>
+												<xsl:call-template name="image">
+													<xsl:with-param name="side">obverse</xsl:with-param>
+												</xsl:call-template>
+												<xsl:call-template name="image">
+													<xsl:with-param name="side">reverse</xsl:with-param>
+												</xsl:call-template>
 												<xsl:call-template name="legend_image"/>
 											</div>
 											<div class="col-md-8">
@@ -543,8 +547,12 @@
 												<xsl:call-template name="nuds_content"/>
 											</div>
 											<div class="col-md-4">
-												<xsl:call-template name="obverse_image"/>
-												<xsl:call-template name="reverse_image"/>
+												<xsl:call-template name="image">
+													<xsl:with-param name="side">obverse</xsl:with-param>
+												</xsl:call-template>
+												<xsl:call-template name="image">
+													<xsl:with-param name="side">reverse</xsl:with-param>
+												</xsl:call-template>
 												<xsl:call-template name="legend_image"/>
 											</div>
 										</xsl:when>
@@ -577,10 +585,15 @@
 									<xsl:when test="$image_location = 'top'">
 										<div class="row">
 											<div class="col-md-6">
-												<xsl:call-template name="obverse_image"/>
+												<xsl:call-template name="image">
+													<xsl:with-param name="side">obverse</xsl:with-param>
+												</xsl:call-template>
+
 											</div>
 											<div class="col-md-6">
-												<xsl:call-template name="reverse_image"/>
+												<xsl:call-template name="image">
+													<xsl:with-param name="side">reverse</xsl:with-param>
+												</xsl:call-template>
 											</div>
 										</div>
 										<div class="row">
@@ -597,10 +610,14 @@
 										</div>
 										<div class="row">
 											<div class="col-md-6">
-												<xsl:call-template name="reverse_image"/>
+												<xsl:call-template name="image">
+													<xsl:with-param name="side">obverse</xsl:with-param>
+												</xsl:call-template>
 											</div>
 											<div class="col-md-6">
-												<xsl:call-template name="obverse_image"/>
+												<xsl:call-template name="image">
+													<xsl:with-param name="side">reverse</xsl:with-param>
+												</xsl:call-template>
 											</div>
 										</div>
 									</xsl:when>
@@ -622,8 +639,12 @@
 			<xsl:otherwise>
 				<div class="row">
 					<div class="col-md-12">
-						<xsl:call-template name="obverse_image"/>
-						<xsl:call-template name="reverse_image"/>
+						<xsl:call-template name="image">
+							<xsl:with-param name="side">obverse</xsl:with-param>
+						</xsl:call-template>
+						<xsl:call-template name="image">
+							<xsl:with-param name="side">reverse</xsl:with-param>
+						</xsl:call-template>
 						<xsl:call-template name="nuds_content"/>
 					</div>
 				</div>
@@ -897,136 +918,69 @@
 		match="nuds:symbol[@position = 'left'] | nuds:symbol[@position = 'center'] | nuds:symbol[@position = 'right'] | nuds:symbol[@position = 'exergue']"
 		mode="descMeta"/>
 
-	<xsl:template name="obverse_image">
-		<xsl:variable name="obverse_image">
-			<xsl:if test="string(//mets:fileGrp[@USE = 'obverse']/mets:file[@USE = 'reference']/mets:FLocat/@xlink:href)">
-				<xsl:value-of select="//mets:fileGrp[@USE = 'obverse']/mets:file[@USE = 'reference']/mets:FLocat/@xlink:href"/>
-			</xsl:if>
-		</xsl:variable>
-		<xsl:variable name="iiif-service" select="//mets:fileGrp[@USE = 'obverse']/mets:file[@USE = 'iiif']/mets:FLocat/@xlink:href"/>
+	<!-- *********** IMAGE TEMPLATES FOR PHYSICAL OBJECTS ********** -->
+	<xsl:template name="image">
+		<xsl:param name="side"/>
+		<xsl:variable name="reference-image" select="//mets:fileGrp[@USE = $side]/mets:file[@USE = 'reference']/mets:FLocat/@xlink:href"/>
+		<xsl:variable name="iiif-service" select="//mets:fileGrp[@USE = $side]/mets:file[@USE = 'iiif']/mets:FLocat/@xlink:href"/>
 
-		<!-- display legend and type and image if available -->
 		<xsl:choose>
-			<xsl:when test="$nudsGroup//nuds:typeDesc/nuds:obverse">
-				<xsl:for-each select="$nudsGroup//nuds:typeDesc/nuds:obverse">
-					<xsl:variable name="side" select="local-name()"/>
-					<div class="reference_image" rel="nmo:hasObverse">
-						<xsl:if test="string($obverse_image)">
-							<xsl:variable name="image_url"
-								select="
-									if (matches($obverse_image, 'https?://')) then
-										$obverse_image
-									else
-										concat($display_path, $obverse_image)"/>
+			<xsl:when test="string($reference-image)">
+				<xsl:variable name="image_url"
+					select="
+						if (matches($reference-image, 'https?://')) then
+							$reference-image
+						else
+							concat($display_path, $reference-image)"/>
 
-							<xsl:choose>
-								<xsl:when test="string($iiif-service)">
-									<div id="obv-iiif-container" class="iiif-container" style="width:100%;padding-top:100%"/>
-									<span class="hidden" id="obv-iiif-service">
-										<xsl:value-of select="$iiif-service"/>
-									</span>
-									<noscript>
-										<img src="{$image_url}" property="foaf:depiction" alt="{$side}"/>
-										<br/>
-									</noscript>
-								</xsl:when>
-								<xsl:otherwise>
-									<img src="{$image_url}" property="foaf:depiction" alt="{$side}"/>
-									<br/>
-								</xsl:otherwise>
-							</xsl:choose>
-						</xsl:if>
+				<xsl:choose>
+					<xsl:when test="string($iiif-service)">
+						<div id="{substring($side, 1, 3)}-iiif-container" class="iiif-container"/>
+						<span class="hidden" id="{substring($side, 1, 3)}-iiif-service">
+							<xsl:value-of select="$iiif-service"/>
+						</span>
+						<noscript>
+							<img src="{$image_url}" property="foaf:depiction" alt="{$side}"/>
+						</noscript>
+					</xsl:when>
+					<xsl:otherwise>
+						<img src="{$image_url}" property="foaf:depiction" alt="{$side}"/>
+					</xsl:otherwise>
+				</xsl:choose>
 
-						<b>
-							<xsl:value-of select="numishare:regularize_node($side, $lang)"/>
-							<xsl:if test="string(nuds:legend) or string(nuds:type)">
-								<xsl:text>: </xsl:text>
-							</xsl:if>
-						</b>
-						<xsl:apply-templates select="nuds:legend" mode="physical"/>
-						<xsl:if test="string(nuds:legend) and string(nuds:type)">
-							<xsl:text> - </xsl:text>
-						</xsl:if>
-						<xsl:apply-templates select="nuds:type/nuds:description" mode="physical"/>
-					</div>
-				</xsl:for-each>
+				<xsl:apply-templates select="$nudsGroup//nuds:typeDesc/*[local-name() = $side]" mode="physical"/>
 			</xsl:when>
 			<xsl:otherwise>
-				<!-- otherwise only display the image -->
-				<xsl:if test="string($obverse_image)">
-					<div class="reference_image">
-						<img src="{if (matches($obverse_image, 'https?://')) then $obverse_image else concat($display_path, $obverse_image)}"
-							property="foaf:depiction" alt="{$side}"/>
-					</div>
-				</xsl:if>
+				<xsl:apply-templates select="$nudsGroup//nuds:typeDesc/*[local-name() = $side]" mode="physical"/>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
 
-	<xsl:template name="reverse_image">
-		<xsl:variable name="reverse_image">
-			<xsl:if test="string(//mets:fileGrp[@USE = 'reverse']/mets:file[@USE = 'reference']/mets:FLocat/@xlink:href)">
-				<xsl:value-of select="//mets:fileGrp[@USE = 'reverse']/mets:file[@USE = 'reference']/mets:FLocat/@xlink:href"/>
-			</xsl:if>
-		</xsl:variable>
-		<xsl:variable name="iiif-service" select="//mets:fileGrp[@USE = 'reverse']/mets:file[@USE = 'iiif']/mets:FLocat/@xlink:href"/>
-
-		<!-- display legend and type and image if available -->
-		<xsl:choose>
-			<xsl:when test="$nudsGroup//nuds:typeDesc/nuds:reverse">
-				<xsl:for-each select="$nudsGroup//nuds:typeDesc/nuds:reverse">
-					<xsl:variable name="side" select="local-name()"/>
-					<div class="reference_image" rel="nmo:hasReverse">
-						<xsl:if test="string($reverse_image)">
-							<xsl:variable name="image_url"
-								select="
-									if (matches($reverse_image, 'https?://')) then
-										$reverse_image
-									else
-										concat($display_path, $reverse_image)"/>
-
-							<xsl:choose>
-								<xsl:when test="string($iiif-service)">
-									<div id="rev-iiif-container" class="iiif-container" style="width:100%;padding-top:100%"/>
-									<span class="hidden" id="rev-iiif-service">
-										<xsl:value-of select="$iiif-service"/>
-									</span>
-									<noscript>
-										<img src="{$image_url}" property="foaf:depiction" alt="{$side}"/>
-										<br/>
-									</noscript>
-								</xsl:when>
-								<xsl:otherwise>
-									<img src="{$image_url}" property="foaf:depiction" alt="{$side}"/>
-									<br/>
-								</xsl:otherwise>
-							</xsl:choose>
-						</xsl:if>
-
-						<b>
-							<xsl:value-of select="numishare:regularize_node($side, $lang)"/>
-							<xsl:if test="string(nuds:legend) or string(nuds:type)">
-								<xsl:text>: </xsl:text>
-							</xsl:if>
-						</b>
-						<xsl:apply-templates select="nuds:legend" mode="physical"/>
-						<xsl:if test="string(nuds:legend) and string(nuds:type)">
-							<xsl:text> - </xsl:text>
-						</xsl:if>
-						<xsl:apply-templates select="nuds:type/nuds:description" mode="physical"/>
-					</div>
-				</xsl:for-each>
-			</xsl:when>
-			<xsl:otherwise>
-				<!-- otherwise only display the image -->
-				<xsl:if test="string($reverse_image)">
-					<div class="reference_image">
-						<img src="{if (matches($reverse_image, 'https?://')) then $reverse_image else concat($display_path, $reverse_image)}"
-							property="foaf:depiction" alt="{$side}"/>
-					</div>
+	<xsl:template match="nuds:obverse | nuds:reverse" mode="physical">
+		<div>
+			<strong>
+				<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
+				<xsl:if test="string(nuds:legend) or string(nuds:type)">
+					<xsl:text>: </xsl:text>
 				</xsl:if>
-			</xsl:otherwise>
-		</xsl:choose>
+			</strong>
+			<xsl:apply-templates select="nuds:legend" mode="physical"/>
+			<xsl:if test="string(nuds:legend) and string(nuds:type)">
+				<xsl:text> - </xsl:text>
+			</xsl:if>
+			<!-- apply language-specific type description templates -->
+			<xsl:choose>
+				<xsl:when test="nuds:type/nuds:description[@xml:lang = $lang]">
+					<xsl:apply-templates select="nuds:type/nuds:description[@xml:lang = $lang]" mode="physical"/>
+				</xsl:when>
+				<xsl:when test="nuds:type/nuds:description[@xml:lang = 'en']">
+					<xsl:apply-templates select="nuds:type/nuds:description[@xml:lang = 'en']" mode="physical"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:apply-templates select="nuds:type/nuds:description[1]" mode="physical"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</div>
 	</xsl:template>
 
 	<xsl:template name="legend_image">
