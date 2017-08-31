@@ -39,7 +39,7 @@
 				<xsl:variable name="solr-url" select="concat(/config/solr_published, 'select/')"/>
 
 				<xsl:variable name="service">
-					<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+NOT(lang:*)+AND+pleiades_uri:*&amp;rows=10000&amp;start=', $start, '&amp;fl=id,recordId,title_display,pleiades_uri,findspot_uri,year_num,taq_num,tpq_num,recordType,thumbnail_obv,reference_obv,thumbnail_rev,reference_rev,timestamp&amp;mode=pelagios')"/>
+					<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+NOT(lang:*)+AND+pleiades_uri:*&amp;rows=10000&amp;start=', $start, '&amp;fl=id,recordId,title_display,pleiades_uri,findspot_uri,year_num,taq_num,tpq_num,recordType,thumbnail_obv,reference_obv,iiif_obv,thumbnail_rev,reference_rev,iiif_rev,timestamp&amp;mode=pelagios')"/>
 				</xsl:variable>
 
 				<xsl:template match="/">
