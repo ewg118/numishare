@@ -30,7 +30,7 @@
 				<xsl:text>title_display,recordId,authority_facet,degree_facet,deity_facet,denomination_facet,dynasty_facet,engraver_facet,era_facet,issuer_facet,maker_facet,manufacture_facet,material_facet,mint_facet,obv_leg_display,obv_type_display,objectType_facet,portrait_facet,reference_facet,region_facet,rev_leg_display,rev_type_display,year_num,timestamp</xsl:text>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:text>title_display,recordId,authority_facet,coinType_uri,dob_num,degree_facet,deity_facet,denomination_facet,department_facet,diameter_num,dynasty_facet,engraver_facet,era_facet,findspot_facet,findspot_uri,issuer_facet,maker_facet,manufacture_facet,material_facet,mint_facet,obv_leg_display,obv_type_display,objectType_facet,portrait_facet,reference_facet,region_facet,rev_leg_display,rev_type_display,weight_num,year_num,timestamp</xsl:text>
+				<xsl:text>title_display,recordId,authority_facet,coinType_uri,dob_num,degree_facet,deity_facet,denomination_facet,department_facet,diameter_num,dynasty_facet,engraver_facet,era_facet,findspot_facet,findspot_uri,issuer_facet,maker_facet,manufacture_facet,material_facet,mint_facet,obv_leg_display,obv_type_display,objectType_facet,portrait_facet,reference_facet,region_facet,rev_leg_display,rev_type_display,weight_num,year_num,thumbnail_obv,thumbnail_rev,timestamp</xsl:text>
 			</xsl:otherwise>
 		</xsl:choose>		
 	</xsl:variable>
