@@ -20,17 +20,7 @@
 
 	<!-- read other manifest URI patterns -->
 	<xsl:variable name="pieces" select="tokenize(substring-after(doc('input:request')/request/request-url, 'manifest/'), '/')"/>
-	<xsl:variable name="sizes" as="element()*">
-		<sizes>
-			<obverse>
-				<xsl:apply-templates select="doc('input:obverse-json')/*"/>
-			</obverse>
-			<reverse>
-				<xsl:apply-templates select="doc('input:reverse-json')/*"/>
-			</reverse>
-		</sizes>
-	</xsl:variable>
-
+	
 	<xsl:variable name="nudsGroup" as="element()*">
 		<nudsGroup>
 			<xsl:choose>
@@ -273,11 +263,34 @@
 						<xsl:value-of select="concat($manifestUri, '/sequence/default')"/>
 					</__id>
 					<__type>sc:Sequence</__type>
-					<label>Default sequence</label>
+					<label>Default sequence</label>					
 					<canvases>
 						<_array>
-							<xsl:apply-templates select="descendant::mets:file[@USE = 'iiif']"/>
+							<xsl:choose>
+								<!-- apply METS templates for NUDS records of physical coins -->
+								<xsl:when test="$recordType = 'physical'">					
+									<xsl:variable name="sizes" as="element()*">
+										<sizes>
+											<obverse>
+												<xsl:apply-templates select="doc('input:obverse-json')/*"/>
+											</obverse>
+											<reverse>
+												<xsl:apply-templates select="doc('input:reverse-json')/*"/>
+											</reverse>
+										</sizes>
+									</xsl:variable>
+									
+									<xsl:apply-templates select="descendant::mets:file[@USE = 'iiif']">
+										<xsl:with-param name="sizes" select="$sizes"/>
+									</xsl:apply-templates>									
+								</xsl:when>
+								<!-- otherwise, apply templates on SPARQL results -->
+								<xsl:otherwise>
+									
+								</xsl:otherwise>
+							</xsl:choose>
 						</_array>
+												
 					</canvases>
 					<viewingHint>individuals</viewingHint>
 				</_object>
@@ -287,6 +300,7 @@
 
 	<!-- create canvases out of mets:files -->
 	<xsl:template match="mets:file">
+		<xsl:param name="sizes"/>
 		<xsl:variable name="side" select="parent::mets:fileGrp/@USE"/>
 
 		<_object>
@@ -318,6 +332,7 @@
 				<_array>
 					<xsl:apply-templates select="mets:FLocat">
 						<xsl:with-param name="side" select="$side"/>
+						<xsl:with-param name="sizes" select="$sizes"/>
 					</xsl:apply-templates>
 				</_array>
 			</images>
@@ -325,6 +340,7 @@
 	</xsl:template>
 
 	<xsl:template match="mets:FLocat">
+		<xsl:param name="sizes"/>
 		<xsl:param name="side"/>
 
 		<_object>

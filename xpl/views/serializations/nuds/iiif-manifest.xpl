@@ -75,7 +75,7 @@
 									<xforms:submission method="get" action="{$service}">
 										<xforms:header>
 											<xforms:name>User-Agent</xforms:name>
-											<xforms:value>XForms/EADitor</xforms:value>
+											<xforms:value>XForms/Numishare</xforms:value>
 										</xforms:header>
 									</xforms:submission>
 								</xsl:template>
@@ -103,7 +103,7 @@
 									<xforms:submission method="get" action="{$service}">
 										<xforms:header>
 											<xforms:name>User-Agent</xforms:name>
-											<xforms:value>XForms/EADitor</xforms:value>
+											<xforms:value>XForms/Numishare</xforms:value>
 										</xforms:header>
 									</xforms:submission>
 								</xsl:template>

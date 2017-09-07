@@ -71,11 +71,21 @@
 	<!-- get layout -->
 	<xsl:variable name="orientation" select="/content/config/theme/layouts/display/nuds/orientation"/>
 	<xsl:variable name="image_location" select="/content/config/theme/layouts/display/nuds/image_location"/>
-	<xsl:variable name="display_path" select="
+	<xsl:variable name="display_path">
+		<xsl:if test="not(string($mode))">
+			<xsl:choose>
+				<xsl:when test="string(//config/uri_space) and $recordType = 'physical'">
+					<xsl:value-of select="$url"/>
+				</xsl:when>
+				<xsl:otherwise>../</xsl:otherwise>
+			</xsl:choose>
+		</xsl:if>
+	</xsl:variable>
+	<!--<xsl:variable name="display_path" select="
 			if (not(string($mode))) then
 				'../'
 			else
-				''"/>
+				''"/>-->
 	<xsl:variable name="include_path"
 		select="
 			if (string(//config/theme/themes_url)) then
