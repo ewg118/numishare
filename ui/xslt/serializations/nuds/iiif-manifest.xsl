@@ -20,7 +20,7 @@
 
 	<!-- read other manifest URI patterns -->
 	<xsl:variable name="pieces" select="tokenize(substring-after(doc('input:request')/request/request-url, 'manifest/'), '/')"/>
-	
+
 	<xsl:variable name="nudsGroup" as="element()*">
 		<nudsGroup>
 			<xsl:choose>
@@ -54,7 +54,7 @@
 			</xsl:when>
 			<xsl:when test="$pieces[2] = 'canvas'">
 				<xsl:variable name="side" select="$pieces[3]"/>
-				
+
 				<xsl:variable name="model" as="element()*">
 					<xsl:apply-templates select="//descendant::mets:fileGrp[@USE = $side]/mets:file[@USE = 'iiif']"/>
 				</xsl:variable>
@@ -62,7 +62,7 @@
 			</xsl:when>
 			<xsl:when test="$pieces[2] = 'annotation'">
 				<xsl:variable name="side" select="$pieces[3]"/>
-				
+
 				<xsl:variable name="model" as="element()*">
 					<xsl:apply-templates select="//descendant::mets:fileGrp[@USE = $side]/mets:file[@USE = 'iiif']/mets:FLocat">
 						<xsl:with-param name="side" select="$side"/>
@@ -105,7 +105,7 @@
 						<xsl:apply-templates select="$nudsGroup//nuds:typeDesc | nuds:descMeta/nuds:physDesc | nuds:descMeta/nuds:adminDesc"/>
 					</_array>
 				</metadata>
-				
+
 				<rendering>
 					<_object>
 						<__id>
@@ -145,7 +145,12 @@
 			</_object>
 		</xsl:variable>
 
-		<xsl:apply-templates select="$model"/>
+		<xml>
+			<xsl:copy-of select="doc('input:images')/*"/>
+			<xsl:apply-templates select="$model"/>
+			
+		</xml>
+		
 	</xsl:template>
 
 	<!-- XSLT templates for rendering the $model into JSON -->
@@ -263,12 +268,12 @@
 						<xsl:value-of select="concat($manifestUri, '/sequence/default')"/>
 					</__id>
 					<__type>sc:Sequence</__type>
-					<label>Default sequence</label>					
+					<label>Default sequence</label>
 					<canvases>
 						<_array>
 							<xsl:choose>
 								<!-- apply METS templates for NUDS records of physical coins -->
-								<xsl:when test="$recordType = 'physical'">					
+								<xsl:when test="$recordType = 'physical'">
 									<xsl:variable name="sizes" as="element()*">
 										<sizes>
 											<obverse>
@@ -279,18 +284,18 @@
 											</reverse>
 										</sizes>
 									</xsl:variable>
-									
+
 									<xsl:apply-templates select="descendant::mets:file[@USE = 'iiif']">
 										<xsl:with-param name="sizes" select="$sizes"/>
-									</xsl:apply-templates>									
+									</xsl:apply-templates>
 								</xsl:when>
 								<!-- otherwise, apply templates on SPARQL results -->
 								<xsl:otherwise>
-									
+									<xsl:apply-templates select="doc('input:sparqlResults')//res:result"/>
 								</xsl:otherwise>
 							</xsl:choose>
 						</_array>
-												
+
 					</canvases>
 					<viewingHint>individuals</viewingHint>
 				</_object>
@@ -323,10 +328,10 @@
 				</_object>
 			</thumbnail>
 			<height>
-				<xsl:value-of select="$sizes/*[name()=$side]/height"/>
+				<xsl:value-of select="$sizes/*[name() = $side]/height"/>
 			</height>
 			<width>
-				<xsl:value-of select="$sizes/*[name()=$side]/width"/>
+				<xsl:value-of select="$sizes/*[name() = $side]/width"/>
 			</width>
 			<images>
 				<_array>
@@ -355,15 +360,15 @@
 			<resource>
 				<_object>
 					<__id>
-						<xsl:value-of select="concat(@xlink:href, '/full/full/0/native.jpg')"/>
+						<xsl:value-of select="concat(@xlink:href, '/full/full/0/default.jpg')"/>
 					</__id>
 					<__type>dctypes:Image</__type>
 					<format>image/jpeg</format>
 					<height>
-						<xsl:value-of select="$sizes/*[name()=$side]/height"/>
+						<xsl:value-of select="$sizes/*[name() = $side]/height"/>
 					</height>
 					<width>
-						<xsl:value-of select="$sizes/*[name()=$side]/width"/>
+						<xsl:value-of select="$sizes/*[name() = $side]/width"/>
 					</width>
 					<service>
 						<_object>
@@ -387,6 +392,91 @@
 		<width>
 			<xsl:value-of select="width"/>
 		</width>
+	</xsl:template>
+
+	<!-- generate canvases from SPARQL results for coin type manifests -->
+	<xsl:template match="res:result">
+		<_object>
+			<__id>
+				<xsl:value-of select="res:binding[@name='object']/res:uri"/>
+			</__id>
+			<__type>sc:Canvas</__type>
+			<label>
+				<xsl:value-of select="res:binding[@name = 'title']/res:literal"/>
+			</label>
+			<!--<thumbnail>
+				<_object>
+					<__id>
+						<xsl:value-of select="parent::mets:fileGrp/mets:file[@USE = 'thumbnail']/mets:FLocat/@xlink:href"/>
+					</__id>
+					<__type>dctypes:Image</__type>
+					<format>image/jpeg</format>
+					<height>175</height>
+					<width>175</width>
+				</_object>
+			</thumbnail>-->
+			<!--<height>
+				<xsl:value-of select="$sizes/*[name()=$side]/height"/>
+			</height>
+			<width>
+				<xsl:value-of select="$sizes/*[name()=$side]/width"/>
+			</width>-->
+			<images>
+				<_array>
+					<xsl:choose>
+						<xsl:when test="res:binding[@name='comService']">
+							<xsl:apply-templates select="res:binding[@name='comService']"/>
+						</xsl:when>
+						<xsl:when test="res:binding[@name='obvService'] and res:binding[@name='revService']">
+							<xsl:apply-templates select="res:binding[@name='obvService']"/>
+							<xsl:apply-templates select="res:binding[@name='revService']"/>
+						</xsl:when>
+					</xsl:choose>
+					<!--<xsl:apply-templates select="mets:FLocat">
+						<xsl:with-param name="side" select="$side"/>
+						<xsl:with-param name="sizes" select="$sizes"/>
+					</xsl:apply-templates>-->
+				</_array>
+			</images>
+		</_object>
+	</xsl:template>
+	
+	<!-- generate images for IIIF service URIs -->
+	<xsl:template match="res:binding[@name='comService']|res:binding[@name='obvService']|res:binding[@name='revService']">
+		<_object>
+			<__id>
+				<xsl:value-of select="res:uri"/>
+			</__id>
+			<__type>oa:Annotation</__type>
+			<motivation>sc:painting</motivation>
+			<on>
+				<xsl:value-of select="parent::node()/res:binding[@name='object']/res:uri"/>
+			</on>
+			<resource>
+				<_object>
+					<__id>
+						<xsl:value-of select="concat(res:uri, '/full/full/0/default.jpg')"/>
+					</__id>
+					<__type>dctypes:Image</__type>
+					<format>image/jpeg</format>
+					<!--<height>
+						<xsl:value-of select="$sizes/*[name() = $side]/height"/>
+					</height>
+					<width>
+						<xsl:value-of select="$sizes/*[name() = $side]/width"/>
+					</width>-->
+					<service>
+						<_object>
+							<__context>http://iiif.io/api/image/2/context.json</__context>
+							<__id>
+								<xsl:value-of select="res:uri"/>
+							</__id>
+							<profile>http://iiif.io/api/image/2/level2.json</profile>
+						</_object>
+					</service>
+				</_object>
+			</resource>
+		</_object>
 	</xsl:template>
 
 	<!-- ******* FUNCTIONS ******** -->

@@ -81,11 +81,6 @@
 			</xsl:choose>
 		</xsl:if>
 	</xsl:variable>
-	<!--<xsl:variable name="display_path" select="
-			if (not(string($mode))) then
-				'../'
-			else
-				''"/>-->
 	<xsl:variable name="include_path"
 		select="
 			if (string(//config/theme/themes_url)) then

@@ -5,7 +5,7 @@
 	Apache License 2.0
 	
 -->
-<p:config xmlns:p="http://www.orbeon.com/oxf/pipeline" xmlns:oxf="http://www.orbeon.com/oxf/processors" xmlns:xforms="http://www.w3.org/2002/xforms"
+<p:config xmlns:p="http://www.orbeon.com/oxf/pipeline" xmlns:oxf="http://www.orbeon.com/oxf/processors" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:res="http://www.w3.org/2005/sparql-results#"
 	xmlns:mets="http://www.loc.gov/METS/" xmlns:xlink="http://www.w3.org/1999/xlink">
 	<p:param type="input" name="data"/>
 	<p:param type="output" name="data"/>
@@ -44,14 +44,47 @@
 	<p:choose href="#recordType">
 		<!-- if it is a coin type record, then execute an ASK query -->
 		<p:when test="recordType='conceptual'">
-			<!--<p:processor name="oxf:pipeline">						
+			<p:processor name="oxf:pipeline">						
 				<p:input name="data" href="#config"/>
-				<p:input name="config" href="../../../models/sparql/ask-types.xpl"/>
-				<p:output name="data" id="hasTypes"/>
-			</p:processor>-->
+				<p:input name="config" href="../../../models/sparql/iiif-type-examples.xpl"/>
+				<p:output name="data" id="sparqlResults"/>
+			</p:processor>
+			
+			<!-- iterate through the SPARQL results and request the info.json for each IIIF service -->
+			<p:for-each href="#sparqlResults" select="//res:binding[contains(@name, 'Service')]" root="images" id="images">
+				
+				<!-- generate an XForms processor to request JSON -->
+				<p:processor name="oxf:xslt">
+					<p:input name="data" href="current()"/>
+					<p:input name="config">
+						<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+							xmlns:mets="http://www.loc.gov/METS/" xmlns:xlink="http://www.w3.org/1999/xlink">
+							<xsl:variable name="service" select="concat(descendant::res:uri, '/info.json')"/>
+							
+							<xsl:template match="/">
+								<xforms:submission method="get" action="{$service}">
+									<xforms:header>
+										<xforms:name>User-Agent</xforms:name>
+										<xforms:value>XForms/Numishare</xforms:value>
+									</xforms:header>
+								</xforms:submission>
+							</xsl:template>
+						</xsl:stylesheet>
+					</p:input>
+					<p:output name="data" id="xforms-config"/>
+				</p:processor>
+				
+				<p:processor name="oxf:xforms-submission">
+					<p:input name="request" href="#request"/>
+					<p:input name="submission" href="#xforms-config"/>
+					<p:output name="response" ref="images"/>
+				</p:processor>
+			</p:for-each>
 
 			<p:processor name="oxf:unsafe-xslt">
 				<p:input name="request" href="#request"/>
+				<p:input name="sparqlResults" href="#sparqlResults"/>
+				<p:input name="images" href="#images"/>
 				<p:input name="data" href="aggregate('content', #data, #config)"/>
 				<p:input name="config" href="../../../../ui/xslt/serializations/nuds/iiif-manifest.xsl"/>
 				<p:output name="data" id="model"/>
@@ -146,11 +179,11 @@
 		</p:otherwise>
 	</p:choose>
 
-	<p:processor name="oxf:text-converter">
+	<p:processor name="oxf:xml-converter">
 		<p:input name="data" href="#model"/>
 		<p:input name="config">
 			<config>
-				<content-type>application/json</content-type>
+				<!--<content-type>application/json</content-type>-->
 				<encoding>utf-8</encoding>
 			</config>
 		</p:input>
