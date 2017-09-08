@@ -516,7 +516,15 @@
 					<service>
 						<_object>							
 							<__context>
-								<xsl:value-of select="$info/_context[@name='@context']"/>
+								<xsl:choose>
+									<xsl:when test="$info/_context[@name='@context'] = 'http://iiif.io/api/image/2/context.json'">
+										<xsl:text>http://iiif.io/api/image/2/level2.json</xsl:text>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:text>http://iiif.io/api/image/1/context.json</xsl:text>
+									</xsl:otherwise>
+								</xsl:choose>
+								
 							</__context>
 							<__id>
 								<xsl:value-of select="res:uri"/>
