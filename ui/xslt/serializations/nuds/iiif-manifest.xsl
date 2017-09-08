@@ -145,11 +145,7 @@
 			</_object>
 		</xsl:variable>
 
-		<xml>
-			<xsl:copy-of select="doc('input:images')/*"/>
-			<xsl:apply-templates select="$model"/>
-			
-		</xml>
+		<xsl:apply-templates select="$model"/>
 		
 	</xsl:template>
 
@@ -415,12 +411,47 @@
 					<width>175</width>
 				</_object>
 			</thumbnail>-->
-			<!--<height>
-				<xsl:value-of select="$sizes/*[name()=$side]/height"/>
-			</height>
-			<width>
-				<xsl:value-of select="$sizes/*[name()=$side]/width"/>
-			</width>-->
+			
+			<xsl:choose>
+				<xsl:when test="res:binding[@name='comService']">
+					<xsl:variable name="service" select="res:binding[@name='comService']/res:uri"/>
+					<xsl:variable name="info" as="element()*">
+						<xsl:copy-of select="doc('input:images')//image[@uri=$service][child::json]/json"/>
+					</xsl:variable>
+					
+					<height>
+						<xsl:value-of select="$info/height"/>
+					</height>
+					<width>
+						<xsl:value-of select="$info/width"/>
+					</width>
+				</xsl:when>
+				<xsl:when test="res:binding[@name='obvService'] and res:binding[@name='revService']">
+					<xsl:variable name="obvService" select="res:binding[@name='obvService']/res:uri"/>
+					<xsl:variable name="revService" select="res:binding[@name='revService']/res:uri"/>
+					
+					<xsl:variable name="obvInfo" as="element()*">
+						<xsl:copy-of select="doc('input:images')//image[@uri=$obvService][child::json]/json"/>
+					</xsl:variable>
+					<xsl:variable name="revInfo" as="element()*">
+						<xsl:copy-of select="doc('input:images')//image[@uri=$revService][child::json]/json"/>
+					</xsl:variable>
+					
+					<height>
+						<xsl:choose>
+							<xsl:when test="number($obvInfo/height) &gt;= number($revInfo/height)">
+								<xsl:value-of select="$obvInfo/height"/>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:value-of select="$revInfo/height"/>
+							</xsl:otherwise>
+						</xsl:choose>
+					</height>
+					<width>
+						<xsl:value-of select="number($obvInfo/width) + number($revInfo/width)"/>
+					</width>
+				</xsl:when>
+			</xsl:choose>
 			<images>
 				<_array>
 					<xsl:choose>
@@ -432,10 +463,6 @@
 							<xsl:apply-templates select="res:binding[@name='revService']"/>
 						</xsl:when>
 					</xsl:choose>
-					<!--<xsl:apply-templates select="mets:FLocat">
-						<xsl:with-param name="side" select="$side"/>
-						<xsl:with-param name="sizes" select="$sizes"/>
-					</xsl:apply-templates>-->
 				</_array>
 			</images>
 		</_object>
@@ -443,35 +470,67 @@
 	
 	<!-- generate images for IIIF service URIs -->
 	<xsl:template match="res:binding[@name='comService']|res:binding[@name='obvService']|res:binding[@name='revService']">
+		<xsl:variable name="service" select="res:uri"/>
+		
+		<xsl:variable name="info" as="element()*">
+			<xsl:copy-of select="doc('input:images')//image[@uri=$service][child::json]/json"/>
+		</xsl:variable>
+		
 		<_object>
 			<__id>
 				<xsl:value-of select="res:uri"/>
 			</__id>
 			<__type>oa:Annotation</__type>
 			<motivation>sc:painting</motivation>
+			<label>
+				<xsl:choose>
+					<xsl:when test="starts-with(@name, 'com')">Combined</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="numishare:regularize_node(concat(substring(@name, 1, 3), 'erse'), $lang)"/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</label>
 			<on>
 				<xsl:value-of select="parent::node()/res:binding[@name='object']/res:uri"/>
 			</on>
 			<resource>
 				<_object>
 					<__id>
-						<xsl:value-of select="concat(res:uri, '/full/full/0/default.jpg')"/>
+						<xsl:choose>
+							<xsl:when test="$info/_context[@name='@context'] = 'http://iiif.io/api/image/2/context.json'">
+								<xsl:value-of select="concat(res:uri, '/full/full/0/default.jpg')"/>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:value-of select="concat(res:uri, '/full/full/0/native.jpg')"/>
+							</xsl:otherwise>
+						</xsl:choose>						
 					</__id>
 					<__type>dctypes:Image</__type>
 					<format>image/jpeg</format>
-					<!--<height>
-						<xsl:value-of select="$sizes/*[name() = $side]/height"/>
+					<height>
+						<xsl:value-of select="$info/height"/>
 					</height>
 					<width>
-						<xsl:value-of select="$sizes/*[name() = $side]/width"/>
-					</width>-->
+						<xsl:value-of select="$info/width"/>
+					</width>
 					<service>
-						<_object>
-							<__context>http://iiif.io/api/image/2/context.json</__context>
+						<_object>							
+							<__context>
+								<xsl:value-of select="$info/_context[@name='@context']"/>
+							</__context>
 							<__id>
 								<xsl:value-of select="res:uri"/>
 							</__id>
-							<profile>http://iiif.io/api/image/2/level2.json</profile>
+							<profile>
+								<xsl:choose>
+									<xsl:when test="$info/_context[@name='@context'] = 'http://iiif.io/api/image/2/context.json'">
+										<xsl:text>http://iiif.io/api/image/2/level2.json</xsl:text>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:text>http://library.stanford.edu/iiif/image-api/1.1/compliance.html#level2</xsl:text>
+									</xsl:otherwise>
+								</xsl:choose>
+							</profile>
 						</_object>
 					</service>
 				</_object>
