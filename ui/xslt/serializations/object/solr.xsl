@@ -139,11 +139,11 @@
 
 					<!-- generate AACR2 label -->
 					<xsl:variable name="label">
-						<xsl:variable name="countryCode" select="$geonames_data//countryCode"/>
-						<xsl:variable name="countryName" select="$geonames_data//countryName"/>
-						<xsl:variable name="name" select="$geonames_data//name"/>
-						<xsl:variable name="adminName1" select="$geonames_data//adminName1"/>
-						<xsl:variable name="fcode" select="$geonames_data//fcode"/>
+						<xsl:variable name="countryCode" select="$geonames_data//countryCode[1]"/>
+						<xsl:variable name="countryName" select="$geonames_data//countryName[1]"/>
+						<xsl:variable name="name" select="$geonames_data//name[1]"/>
+						<xsl:variable name="adminName1" select="$geonames_data//adminName1[1]"/>
+						<xsl:variable name="fcode" select="$geonames_data//fcode[1]"/>
 						<!-- set a value equivalent to AACR2 standard for US, AU, CA, and GB.  This equation deviates from AACR2 for Malaysia since standard abbreviations for territories cannot be found -->
 						<xsl:value-of select="if ($countryCode = 'US' or $countryCode = 'AU' or $countryCode = 'CA') then if ($fcode = 'ADM1') then $name else concat($name, ' (',
 							$abbreviations//country[@code=$countryCode]/place[. = $adminName1]/@abbr, ')') else if ($countryCode= 'GB') then  if ($fcode = 'ADM1') then $name else concat($name, ' (',

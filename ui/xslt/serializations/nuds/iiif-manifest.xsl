@@ -589,7 +589,7 @@
 			</on>
 			<resource>
 				<_object>
-					<xsl:choose>
+					<!--<xsl:choose>
 						<xsl:when test="@name = 'comService' and ($manifestSide = 'obverse' or $manifestSide = 'reverse')">
 							<xsl:variable name="size"
 								select="
@@ -608,12 +608,12 @@
 								/>
 							</__id>
 							<__type>oa:SpecificResource</__type>
-							<!--<height>
+							<!-\-<height>
 								<xsl:value-of select="$info/height"/>
 							</height>
 							<width>
 								<xsl:value-of select="ceiling(number($info/width) div 2)"/>
-							</width>-->
+							</width>-\->
 							<full>
 								<_object>
 									<__id>
@@ -654,18 +654,67 @@
 								<xsl:with-param name="info" select="$info"/>
 							</xsl:call-template>
 						</xsl:otherwise>
+					</xsl:choose>-->
+					
+					<__id>
+						<xsl:variable name="size">
+							<xsl:choose>
+								<xsl:when test="@name = 'comService' and ($manifestSide = 'obverse' or $manifestSide = 'reverse')">
+									<xsl:value-of
+										select="
+										concat(if ($manifestSide = 'obverse') then
+										'0'
+										else
+										floor(number($info/width) div 2), ',0,', ceiling(number($info/width) div 2), ',', $info/height)"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:text>full</xsl:text>
+								</xsl:otherwise>
+							</xsl:choose>
+						</xsl:variable>
+						
+						<xsl:value-of
+							select="
+							concat(res:uri, '/', $size, '/full/0/', if ($info/_context[@name = '@context'] = 'http://iiif.io/api/image/2/context.json') then
+							'default'
+							else
+							'native', '.jpg')"
+						/>
+					</__id>
+					<__type>dctypes:Image</__type>
+					<format>image/jpeg</format>
+					<xsl:choose>
+						<xsl:when test="@name = 'comService' and ($manifestSide = 'obverse' or $manifestSide = 'reverse')">
+							<height>
+								<xsl:value-of select="$info/height"/>
+							</height>
+							<width>
+								<xsl:value-of select="ceiling(number($info/width) div 2)"/>
+							</width>
+						</xsl:when>
+						<xsl:otherwise>							
+							<height>
+								<xsl:value-of select="$info/height"/>
+							</height>
+							<width>
+								<xsl:value-of select="$info/width"/>
+							</width>
+						</xsl:otherwise>						
 					</xsl:choose>
+					<xsl:call-template name="service">
+						<xsl:with-param name="info" select="$info"/>
+					</xsl:call-template>
 				</_object>
 			</resource>
 			
-			<xsl:if test="@name = 'comService' and ($manifestSide = 'obverse' or $manifestSide = 'reverse')">
+			<!--<xsl:if test="@name = 'comService' and ($manifestSide = 'obverse' or $manifestSide = 'reverse')">
 				<selector>
 					<_object>
 						<__context>http://iiif.io/api/annex/openannotation/context.json</__context>
 						<__type>iiif:ImageApiSelector</__type>						
 					</_object>
 				</selector>
-			</xsl:if>
+			</xsl:if>-->
 		</_object>
 	</xsl:template>
 
