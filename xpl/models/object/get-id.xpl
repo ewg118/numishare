@@ -30,7 +30,16 @@
 						<!-- IIIF manifest generation -->
 						<xsl:when test="contains(doc('input:request')/request/request-url, 'manifest/')">
 							<xsl:variable name="pieces" select="tokenize(substring-after(doc('input:request')/request/request-url, 'manifest/'), '/')"/>
-							<xsl:variable name="id" select="$pieces[1]"/>
+							<xsl:variable name="id">
+								<xsl:choose>
+									<xsl:when test="$pieces[1] = 'obverse' or $pieces[1] = 'reverse'">
+										<xsl:value-of select="$pieces[2]"/>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:value-of select="$pieces[1]"/>
+									</xsl:otherwise>
+								</xsl:choose>
+							</xsl:variable>
 							
 							<config>
 								<url>

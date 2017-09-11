@@ -10,7 +10,6 @@
 	<xsl:variable name="lang">en</xsl:variable>
 	<xsl:variable name="id" select="normalize-space(//*[local-name() = 'recordId'])"/>
 	<xsl:variable name="url" select="/content/config/url"/>
-	<xsl:variable name="manifestUri" select="concat($url, 'manifest/', $id)"/>
 	<xsl:variable name="objectUri"
 		select="
 			if (/content/config/uri_space) then
@@ -19,7 +18,31 @@
 				concat($url, 'id/', $id)"/>
 
 	<!-- read other manifest URI patterns -->
-	<xsl:variable name="pieces" select="tokenize(substring-after(doc('input:request')/request/request-url, 'manifest/'), '/')"/>
+	<xsl:variable name="pieces" select="tokenize(substring-after(doc('input:request')/request/request-url, $id), '/')"/>
+
+	<xsl:variable name="manifestUri">
+		<xsl:variable name="before" select="tokenize(substring-before(doc('input:request')/request/request-url, concat('/', $id)), '/')"/>
+
+		<xsl:choose>
+			<xsl:when test="$before[last()] = 'manifest'">
+				<xsl:value-of select="concat($url, 'manifest/', $id)"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="concat($url, 'manifest/', $before[last()], '/', $id)"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:variable>
+
+	<xsl:variable name="manifestSide">
+		<xsl:variable name="before" select="tokenize(substring-before(doc('input:request')/request/request-url, concat('/', $id)), '/')"/>
+
+		<xsl:choose>
+			<xsl:when test="$before[last()] = 'manifest'"/>
+			<xsl:otherwise>
+				<xsl:value-of select="$before[last()]"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:variable>
 
 	<xsl:variable name="nudsGroup" as="element()*">
 		<nudsGroup>
@@ -146,7 +169,7 @@
 		</xsl:variable>
 
 		<xsl:apply-templates select="$model"/>
-		
+
 	</xsl:template>
 
 	<!-- XSLT templates for rendering the $model into JSON -->
@@ -394,7 +417,7 @@
 	<xsl:template match="res:result">
 		<_object>
 			<__id>
-				<xsl:value-of select="res:binding[@name='object']/res:uri"/>
+				<xsl:value-of select="res:binding[@name = 'object']/res:uri"/>
 			</__id>
 			<__type>sc:Canvas</__type>
 			<label>
@@ -411,71 +434,107 @@
 					<width>175</width>
 				</_object>
 			</thumbnail>-->
-			
+
 			<xsl:choose>
-				<xsl:when test="res:binding[@name='comService']">
-					<xsl:variable name="service" select="res:binding[@name='comService']/res:uri"/>
+				<xsl:when test="res:binding[@name = 'comService']">
+					<xsl:variable name="service" select="res:binding[@name = 'comService']/res:uri"/>
 					<xsl:variable name="info" as="element()*">
-						<xsl:copy-of select="doc('input:images')//image[@uri=$service][child::json]/json"/>
+						<xsl:copy-of select="doc('input:images')//image[@uri = $service][child::json]/json"/>
 					</xsl:variable>
-					
-					<height>
-						<xsl:value-of select="$info/height"/>
-					</height>
-					<width>
-						<xsl:value-of select="$info/width"/>
-					</width>
+
+					<xsl:choose>
+						<xsl:when test="$manifestSide = 'obverse' or $manifestSide = 'reverse'">
+							<height>
+								<xsl:value-of select="$info/height"/>
+							</height>
+							<width>
+								<xsl:value-of select="ceiling(number($info/width) div 2)"/>
+							</width>
+						</xsl:when>
+						<xsl:otherwise>
+							<height>
+								<xsl:value-of select="$info/height"/>
+							</height>
+							<width>
+								<xsl:value-of select="$info/width"/>
+							</width>
+						</xsl:otherwise>
+					</xsl:choose>
 				</xsl:when>
-				<xsl:when test="res:binding[@name='obvService'] and res:binding[@name='revService']">
-					<xsl:variable name="obvService" select="res:binding[@name='obvService']/res:uri"/>
-					<xsl:variable name="revService" select="res:binding[@name='revService']/res:uri"/>
-					
-					<xsl:variable name="obvInfo" as="element()*">
-						<xsl:copy-of select="doc('input:images')//image[@uri=$obvService][child::json]/json"/>
-					</xsl:variable>
-					<xsl:variable name="revInfo" as="element()*">
-						<xsl:copy-of select="doc('input:images')//image[@uri=$revService][child::json]/json"/>
-					</xsl:variable>
-					
-					<height>
-						<xsl:choose>
-							<xsl:when test="number($obvInfo/height) &gt;= number($revInfo/height)">
-								<xsl:value-of select="$obvInfo/height"/>
-							</xsl:when>
-							<xsl:otherwise>
-								<xsl:value-of select="$revInfo/height"/>
-							</xsl:otherwise>
-						</xsl:choose>
-					</height>
-					<width>
-						<xsl:value-of select="number($obvInfo/width) + number($revInfo/width)"/>
-					</width>
+				<xsl:when test="res:binding[@name = 'obvService'] and res:binding[@name = 'revService']">
+					<xsl:choose>
+						<xsl:when test="$manifestSide = 'obverse' or $manifestSide = 'reverse'">
+							<xsl:variable name="service" select="res:binding[@name = concat(substring($manifestSide, 1, 3), 'Service')]/res:uri"/>
+							<xsl:variable name="info" as="element()*">
+								<xsl:copy-of select="doc('input:images')//image[@uri = $service][child::json]/json"/>
+							</xsl:variable>
+
+							<height>
+								<xsl:value-of select="$info/height"/>
+							</height>
+							<width>
+								<xsl:value-of select="$info/width"/>
+							</width>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:variable name="obvService" select="res:binding[@name = 'obvService']/res:uri"/>
+							<xsl:variable name="revService" select="res:binding[@name = 'revService']/res:uri"/>
+
+							<xsl:variable name="obvInfo" as="element()*">
+								<xsl:copy-of select="doc('input:images')//image[@uri = $obvService][child::json]/json"/>
+							</xsl:variable>
+							<xsl:variable name="revInfo" as="element()*">
+								<xsl:copy-of select="doc('input:images')//image[@uri = $revService][child::json]/json"/>
+							</xsl:variable>
+
+							<height>
+								<xsl:choose>
+									<xsl:when test="number($obvInfo/height) &gt;= number($revInfo/height)">
+										<xsl:value-of select="$obvInfo/height"/>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:value-of select="$revInfo/height"/>
+									</xsl:otherwise>
+								</xsl:choose>
+							</height>
+							<width>
+								<xsl:value-of select="number($obvInfo/width) + number($revInfo/width)"/>
+							</width>
+						</xsl:otherwise>
+					</xsl:choose>
 				</xsl:when>
 			</xsl:choose>
 			<images>
 				<_array>
 					<xsl:choose>
-						<xsl:when test="res:binding[@name='comService']">
-							<xsl:apply-templates select="res:binding[@name='comService']"/>
+						<xsl:when test="res:binding[@name = 'comService']">
+							<xsl:apply-templates select="res:binding[@name = 'comService']"/>
 						</xsl:when>
-						<xsl:when test="res:binding[@name='obvService'] and res:binding[@name='revService']">
-							<xsl:apply-templates select="res:binding[@name='obvService']"/>
-							<xsl:apply-templates select="res:binding[@name='revService']"/>
+						<xsl:when test="res:binding[@name = 'obvService'] and res:binding[@name = 'revService']">
+							<xsl:choose>
+								<xsl:when test="$manifestSide = 'obverse' or $manifestSide = 'reverse'">
+									<xsl:apply-templates select="res:binding[@name = concat(substring($manifestSide, 1, 3), 'Service')]"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:apply-templates select="res:binding[@name = 'obvService']"/>
+									<xsl:apply-templates select="res:binding[@name = 'revService']"/>
+								</xsl:otherwise>
+							</xsl:choose>
 						</xsl:when>
 					</xsl:choose>
 				</_array>
 			</images>
 		</_object>
 	</xsl:template>
-	
+
 	<!-- generate images for IIIF service URIs -->
-	<xsl:template match="res:binding[@name='comService']|res:binding[@name='obvService']|res:binding[@name='revService']">
+	<xsl:template match="res:binding[@name = 'comService'] | res:binding[@name = 'obvService'] | res:binding[@name = 'revService']">
 		<xsl:variable name="service" select="res:uri"/>
-		
+
 		<xsl:variable name="info" as="element()*">
-			<xsl:copy-of select="doc('input:images')//image[@uri=$service][child::json]/json"/>
+			<xsl:copy-of select="doc('input:images')//image[@uri = $service][child::json]/json"/>
 		</xsl:variable>
-		
+
 		<_object>
 			<__id>
 				<xsl:value-of select="res:uri"/>
@@ -484,70 +543,119 @@
 			<motivation>sc:painting</motivation>
 			<label>
 				<xsl:choose>
-					<xsl:when test="starts-with(@name, 'com')">Combined</xsl:when>
+					<xsl:when test="$manifestSide = 'obverse' or $manifestSide = 'reverse'">
+						<xsl:value-of select="numishare:regularize_node($manifestSide, $lang)"/>
+					</xsl:when>
 					<xsl:otherwise>
-						<xsl:value-of select="numishare:regularize_node(concat(substring(@name, 1, 3), 'erse'), $lang)"/>
+						<xsl:choose>
+							<xsl:when test="starts-with(@name, 'com')">Combined</xsl:when>
+							<xsl:otherwise>
+								<xsl:value-of select="numishare:regularize_node(concat(substring(@name, 1, 3), 'erse'), $lang)"/>
+							</xsl:otherwise>
+						</xsl:choose>
 					</xsl:otherwise>
 				</xsl:choose>
 			</label>
 			<on>
-				<!-- if the current service is the reverse, then set the 'on' with xy coordinates to display it to the right of the obverse -->
 				<xsl:choose>
-					<xsl:when test="@name='obvService'">						
-						<xsl:value-of select="concat(parent::node()/res:binding[@name='object']/res:uri, '#xywh=0,0,', $info/width, ',', $info/height)"/>
-					</xsl:when>
-					<xsl:when test="@name='revService'">
-						<xsl:variable name="obvService" select="parent::node()/res:binding[@name='obvService']/res:uri"/>
-						<xsl:variable name="obvInfo" as="element()*">
-							<xsl:copy-of select="doc('input:images')//image[@uri=$obvService][child::json]/json"/>
-						</xsl:variable>
-						
-						<xsl:value-of select="concat(parent::node()/res:binding[@name='object']/res:uri, '#xywh=', $obvInfo/width, ',0,', $info/width, ',', $info/height)"/>
+					<xsl:when test="$manifestSide = 'obverse' or $manifestSide = 'reverse'">
+						<xsl:value-of select="parent::node()/res:binding[@name = 'object']/res:uri"/>
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:value-of select="parent::node()/res:binding[@name='object']/res:uri"/>
+						<!-- otherwise, only render the left or right side of the combined image -->
+
+						<!-- if the current service is the reverse, then set the 'on' with xy coordinates to display it to the right of the obverse -->
+						<xsl:choose>
+							<xsl:when test="@name = 'obvService'">
+								<xsl:value-of
+									select="concat(parent::node()/res:binding[@name = 'object']/res:uri, '#xywh=0,0,', $info/width, ',', $info/height)"/>
+							</xsl:when>
+							<xsl:when test="@name = 'revService'">
+								<xsl:variable name="obvService" select="parent::node()/res:binding[@name = 'obvService']/res:uri"/>
+								<xsl:variable name="obvInfo" as="element()*">
+									<xsl:copy-of select="doc('input:images')//image[@uri = $obvService][child::json]/json"/>
+								</xsl:variable>
+
+								<xsl:value-of
+									select="concat(parent::node()/res:binding[@name = 'object']/res:uri, '#xywh=', $obvInfo/width, ',0,', $info/width, ',', $info/height)"
+								/>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:value-of select="parent::node()/res:binding[@name = 'object']/res:uri"/>
+							</xsl:otherwise>
+						</xsl:choose>
 					</xsl:otherwise>
-				</xsl:choose>				
+				</xsl:choose>
 			</on>
 			<resource>
 				<_object>
 					<__id>
-						<xsl:choose>
-							<xsl:when test="$info/_context[@name='@context'] = 'http://iiif.io/api/image/2/context.json'">
-								<xsl:value-of select="concat(res:uri, '/full/full/0/default.jpg')"/>
-							</xsl:when>
-							<xsl:otherwise>
-								<xsl:value-of select="concat(res:uri, '/full/full/0/native.jpg')"/>
-							</xsl:otherwise>
-						</xsl:choose>						
+						<xsl:variable name="size">
+							<xsl:choose>
+								<xsl:when test="@name = 'comService' and ($manifestSide = 'obverse' or $manifestSide = 'reverse')">
+									<xsl:value-of
+										select="
+											concat(if ($manifestSide = 'obverse') then
+												'0'
+											else
+												floor(number($info/width) div 2), ',0,', ceiling(number($info/width) div 2), ',', $info/height)"
+									/>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:text>full</xsl:text>
+								</xsl:otherwise>
+							</xsl:choose>
+						</xsl:variable>
+
+						<xsl:value-of
+							select="
+								concat(res:uri, '/', $size, '/full/0/', if ($info/_context[@name = '@context'] = 'http://iiif.io/api/image/2/context.json') then
+									'default'
+								else
+									'native', '.jpg')"
+						/>
 					</__id>
 					<__type>dctypes:Image</__type>
 					<format>image/jpeg</format>
-					<height>
-						<xsl:value-of select="$info/height"/>
-					</height>
-					<width>
-						<xsl:value-of select="$info/width"/>
-					</width>
+
+					<!-- split image in half when it's a combined image in a obverse/reverse manifest -->
+					<xsl:choose>
+						<xsl:when test="@name = 'comService' and ($manifestSide = 'obverse' or $manifestSide = 'reverse')">
+							<height>
+								<xsl:value-of select="$info/height"/>
+							</height>
+							<width>
+								<xsl:value-of select="ceiling(number($info/width) div 2)"/>
+							</width>
+						</xsl:when>
+						<xsl:otherwise>
+							<height>
+								<xsl:value-of select="$info/height"/>
+							</height>
+							<width>
+								<xsl:value-of select="$info/width"/>
+							</width>
+						</xsl:otherwise>
+					</xsl:choose>
 					<service>
-						<_object>							
+						<_object>
 							<__context>
 								<xsl:choose>
-									<xsl:when test="$info/_context[@name='@context'] = 'http://iiif.io/api/image/2/context.json'">
+									<xsl:when test="$info/_context[@name = '@context'] = 'http://iiif.io/api/image/2/context.json'">
 										<xsl:text>http://iiif.io/api/image/2/level2.json</xsl:text>
 									</xsl:when>
 									<xsl:otherwise>
 										<xsl:text>http://iiif.io/api/image/1/context.json</xsl:text>
 									</xsl:otherwise>
 								</xsl:choose>
-								
+
 							</__context>
 							<__id>
 								<xsl:value-of select="res:uri"/>
 							</__id>
 							<profile>
 								<xsl:choose>
-									<xsl:when test="$info/_context[@name='@context'] = 'http://iiif.io/api/image/2/context.json'">
+									<xsl:when test="$info/_context[@name = '@context'] = 'http://iiif.io/api/image/2/context.json'">
 										<xsl:text>http://iiif.io/api/image/2/level2.json</xsl:text>
 									</xsl:when>
 									<xsl:otherwise>
