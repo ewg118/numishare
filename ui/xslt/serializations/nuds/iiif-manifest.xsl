@@ -493,6 +493,9 @@
 			<on>
 				<!-- if the current service is the reverse, then set the 'on' with xy coordinates to display it to the right of the obverse -->
 				<xsl:choose>
+					<xsl:when test="@name='obvService'">						
+						<xsl:value-of select="concat(parent::node()/res:binding[@name='object']/res:uri, '#xywh=0,0', $info/width, ',', $info/height)"/>
+					</xsl:when>
 					<xsl:when test="@name='revService'">
 						<xsl:variable name="obvService" select="parent::node()/res:binding[@name='obvService']/res:uri"/>
 						<xsl:variable name="obvInfo" as="element()*">
