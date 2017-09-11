@@ -589,85 +589,108 @@
 			</on>
 			<resource>
 				<_object>
-					<__id>
-						<xsl:variable name="size">
-							<xsl:choose>
-								<xsl:when test="@name = 'comService' and ($manifestSide = 'obverse' or $manifestSide = 'reverse')">
-									<xsl:value-of
-										select="
-											concat(if ($manifestSide = 'obverse') then
-												'0'
-											else
-												floor(number($info/width) div 2), ',0,', ceiling(number($info/width) div 2), ',', $info/height)"
-									/>
-								</xsl:when>
-								<xsl:otherwise>
-									<xsl:text>full</xsl:text>
-								</xsl:otherwise>
-							</xsl:choose>
-						</xsl:variable>
-
-						<xsl:value-of
-							select="
-								concat(res:uri, '/', $size, '/full/0/', if ($info/_context[@name = '@context'] = 'http://iiif.io/api/image/2/context.json') then
-									'default'
-								else
-									'native', '.jpg')"
-						/>
-					</__id>
-					<__type>dctypes:Image</__type>
-					<format>image/jpeg</format>
-
-					<!-- split image in half when it's a combined image in a obverse/reverse manifest -->
 					<xsl:choose>
 						<xsl:when test="@name = 'comService' and ($manifestSide = 'obverse' or $manifestSide = 'reverse')">
-							<height>
+							<xsl:variable name="size"
+								select="
+									concat(if ($manifestSide = 'obverse') then
+										'0'
+									else
+										floor(number($info/width) div 2), ',0,', ceiling(number($info/width) div 2), ',', $info/height)"/>
+
+							<__id>
+								<xsl:value-of
+									select="
+										concat(res:uri, '/', $size, '/full/0/', if ($info/_context[@name = '@context'] = 'http://iiif.io/api/image/2/context.json') then
+											'default'
+										else
+											'native', '.jpg')"
+								/>
+							</__id>
+							<__type>oa:SpecificResource</__type>
+							<!--<height>
 								<xsl:value-of select="$info/height"/>
 							</height>
 							<width>
 								<xsl:value-of select="ceiling(number($info/width) div 2)"/>
-							</width>
+							</width>-->
+							<full>
+								<_object>
+									<__id>
+										<xsl:value-of
+											select="
+												concat(res:uri, '/full/full/0/', if ($info/_context[@name = '@context'] = 'http://iiif.io/api/image/2/context.json') then
+													'default'
+												else
+													'native', '.jpg')"
+										/>
+									</__id>
+									<__type>dctypes:Image</__type>
+									<xsl:call-template name="service">
+										<xsl:with-param name="info" select="$info"/>
+									</xsl:call-template>
+								</_object>
+							</full>
 						</xsl:when>
 						<xsl:otherwise>
+							<__id>
+								<xsl:value-of
+									select="
+										concat(res:uri, '/full/full/0/', if ($info/_context[@name = '@context'] = 'http://iiif.io/api/image/2/context.json') then
+											'default'
+										else
+											'native', '.jpg')"
+								/>
+							</__id>
+							<__type>dctypes:Image</__type>
+							<format>image/jpeg</format>
 							<height>
 								<xsl:value-of select="$info/height"/>
 							</height>
 							<width>
 								<xsl:value-of select="$info/width"/>
 							</width>
+							<xsl:call-template name="service">
+								<xsl:with-param name="info" select="$info"/>
+							</xsl:call-template>
 						</xsl:otherwise>
 					</xsl:choose>
-					<service>
-						<_object>
-							<__context>
-								<xsl:choose>
-									<xsl:when test="$info/_context[@name = '@context'] = 'http://iiif.io/api/image/2/context.json'">
-										<xsl:text>http://iiif.io/api/image/2/level2.json</xsl:text>
-									</xsl:when>
-									<xsl:otherwise>
-										<xsl:text>http://iiif.io/api/image/1/context.json</xsl:text>
-									</xsl:otherwise>
-								</xsl:choose>
-
-							</__context>
-							<__id>
-								<xsl:value-of select="res:uri"/>
-							</__id>
-							<profile>
-								<xsl:choose>
-									<xsl:when test="$info/_context[@name = '@context'] = 'http://iiif.io/api/image/2/context.json'">
-										<xsl:text>http://iiif.io/api/image/2/level2.json</xsl:text>
-									</xsl:when>
-									<xsl:otherwise>
-										<xsl:text>http://library.stanford.edu/iiif/image-api/1.1/compliance.html#level2</xsl:text>
-									</xsl:otherwise>
-								</xsl:choose>
-							</profile>
-						</_object>
-					</service>
 				</_object>
 			</resource>
 		</_object>
+	</xsl:template>
+
+	<xsl:template name="service">
+		<xsl:param name="info"/>
+
+		<service>
+			<_object>
+				<__context>
+					<xsl:choose>
+						<xsl:when test="$info/_context[@name = '@context'] = 'http://iiif.io/api/image/2/context.json'">
+							<xsl:text>http://iiif.io/api/image/2/level2.json</xsl:text>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:text>http://iiif.io/api/image/1/context.json</xsl:text>
+						</xsl:otherwise>
+					</xsl:choose>
+
+				</__context>
+				<__id>
+					<xsl:value-of select="res:uri"/>
+				</__id>
+				<profile>
+					<xsl:choose>
+						<xsl:when test="$info/_context[@name = '@context'] = 'http://iiif.io/api/image/2/context.json'">
+							<xsl:text>http://iiif.io/api/image/2/level2.json</xsl:text>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:text>http://library.stanford.edu/iiif/image-api/1.1/compliance.html#level2</xsl:text>
+						</xsl:otherwise>
+					</xsl:choose>
+				</profile>
+			</_object>
+		</service>
 	</xsl:template>
 
 	<!-- ******* FUNCTIONS ******** -->
