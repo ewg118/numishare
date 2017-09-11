@@ -657,6 +657,15 @@
 					</xsl:choose>
 				</_object>
 			</resource>
+			
+			<xsl:if test="@name = 'comService' and ($manifestSide = 'obverse' or $manifestSide = 'reverse')">
+				<selector>
+					<_object>
+						<__context>http://iiif.io/api/annex/openannotation/context.json</__context>
+						<__type>iiif:ImageApiSelector</__type>						
+					</_object>
+				</selector>
+			</xsl:if>
 		</_object>
 	</xsl:template>
 
