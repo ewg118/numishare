@@ -139,65 +139,69 @@
 							/>
 						</results>
 					</xsl:variable>
-					<xsl:variable name="coordinates">
-						<xsl:if test="$geonames_data//lng castable as xs:decimal and $geonames_data//lat castable as xs:decimal">
-							<xsl:value-of select="concat($geonames_data//lng, ',', $geonames_data//lat)"/>
-						</xsl:if>
-					</xsl:variable>
-
-					<!-- generate AACR2 label -->
-					<xsl:variable name="label">
-						<xsl:variable name="countryCode" select="$geonames_data//countryCode[1]"/>
-						<xsl:variable name="countryName" select="$geonames_data//countryName[1]"/>
-						<xsl:variable name="name" select="$geonames_data//name[1]"/>
-						<xsl:variable name="adminName1" select="$geonames_data//adminName1[1]"/>
-						<xsl:variable name="fcode" select="$geonames_data//fcode[1]"/>
-						<!-- set a value equivalent to AACR2 standard for US, AU, CA, and GB.  This equation deviates from AACR2 for Malaysia since standard abbreviations for territories cannot be found -->
-						<xsl:value-of
-							select="
-								if ($countryCode = 'US' or $countryCode = 'AU' or $countryCode = 'CA') then
-									if ($fcode = 'ADM1') then
-										$name
-									else
-										concat($name, ' (',
-										$abbreviations//country[@code = $countryCode]/place[. = $adminName1]/@abbr, ')')
-								else
-									if ($countryCode = 'GB') then
-										if ($fcode = 'ADM1') then
-											$name
-										else
-											concat($name, ' (',
-											$adminName1, ')')
-									else
-										if ($fcode = 'PCLI') then
-											$name
-										else
-											concat($name, ' (', $countryName, ')')"
-						/>
-					</xsl:variable>					
-
-					<place id="{.}" label="{$label}">
-						<xsl:if test="$regionHierarchy = true()">
-							<xsl:variable name="geonames_hier" as="element()*">
-								<results>
-									<xsl:copy-of select="document(concat($geonames-url, '/hierarchy?geonameId=', $geonameId, '&amp;username=', $geonames_api_key))"/>
-								</results>
-							</xsl:variable>
-							<!-- create facetRegion hierarchy -->
-							<xsl:variable name="hierarchy">
-								<xsl:for-each select="$geonames_hier//geoname[position() &gt;= 3]">
-									<xsl:value-of select="concat(geonameId, '/', name)"/>
-									<xsl:if test="not(position() = last())">
-										<xsl:text>|</xsl:text>
-									</xsl:if>
-								</xsl:for-each>
-							</xsl:variable>
-							
-							<xsl:attribute name="hierarchy" select="$hierarchy"/>
-						</xsl:if>
+					
+					<!-- only evaluate if there's a positive response -->
+					<xsl:if test="$geonames_data/geonameId = $geonameId">
+						<xsl:variable name="coordinates">
+							<xsl:if test="$geonames_data//lng castable as xs:decimal and $geonames_data//lat castable as xs:decimal">
+								<xsl:value-of select="concat($geonames_data//lng, ',', $geonames_data//lat)"/>
+							</xsl:if>
+						</xsl:variable>
 						
-						<xsl:value-of select="$coordinates"/>
-					</place>
+						<!-- generate AACR2 label -->
+						<xsl:variable name="label">
+							<xsl:variable name="countryCode" select="$geonames_data//countryCode[1]"/>
+							<xsl:variable name="countryName" select="$geonames_data//countryName[1]"/>
+							<xsl:variable name="name" select="$geonames_data//name[1]"/>
+							<xsl:variable name="adminName1" select="$geonames_data//adminName1[1]"/>
+							<xsl:variable name="fcode" select="$geonames_data//fcode[1]"/>
+							<!-- set a value equivalent to AACR2 standard for US, AU, CA, and GB.  This equation deviates from AACR2 for Malaysia since standard abbreviations for territories cannot be found -->
+							<xsl:value-of
+								select="
+								if ($countryCode = 'US' or $countryCode = 'AU' or $countryCode = 'CA') then
+								if ($fcode = 'ADM1') then
+								$name
+								else
+								concat($name, ' (',
+								$abbreviations//country[@code = $countryCode]/place[. = $adminName1]/@abbr, ')')
+								else
+								if ($countryCode = 'GB') then
+								if ($fcode = 'ADM1') then
+								$name
+								else
+								concat($name, ' (',
+								$adminName1, ')')
+								else
+								if ($fcode = 'PCLI') then
+								$name
+								else
+								concat($name, ' (', $countryName, ')')"
+							/>
+						</xsl:variable>					
+						
+						<place id="{.}" label="{$label}">
+							<xsl:if test="$regionHierarchy = true()">
+								<xsl:variable name="geonames_hier" as="element()*">
+									<results>
+										<xsl:copy-of select="document(concat($geonames-url, '/hierarchy?geonameId=', $geonameId, '&amp;username=', $geonames_api_key))"/>
+									</results>
+								</xsl:variable>
+								<!-- create facetRegion hierarchy -->
+								<xsl:variable name="hierarchy">
+									<xsl:for-each select="$geonames_hier//geoname[position() &gt;= 3]">
+										<xsl:value-of select="concat(geonameId, '/', name)"/>
+										<xsl:if test="not(position() = last())">
+											<xsl:text>|</xsl:text>
+										</xsl:if>
+									</xsl:for-each>
+								</xsl:variable>
+								
+								<xsl:attribute name="hierarchy" select="$hierarchy"/>
+							</xsl:if>
+							
+							<xsl:value-of select="$coordinates"/>
+						</place>
+					</xsl:if>					
 				</xsl:if>
 			</xsl:for-each>
 		</places>
