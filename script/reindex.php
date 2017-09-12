@@ -11,6 +11,7 @@ $xpath->registerNamespace('exist', 'http://exist.sourceforge.net/NS/exist');
 $collections = $xpath->query("//exist:collection[not(child::node())]");
 
 foreach ($collections as $year){
+	echo "Processing {$year->getAttribute('name')}\n";
 	$collection = $master . '/' . $year->getAttribute('name');
 	
 	$newDoc = new DOMDocument('1.0', 'UTF-8');
@@ -38,6 +39,7 @@ $toIndex = array_slice($accnums, $start);
 //POST TO SOLR
 generate_solr_shell_script($toIndex);
 
+echo "Done\n";
 
 /**** FUNCTIONS ****/
 function generate_solr_shell_script($array){
@@ -59,6 +61,7 @@ function generate_solr_shell_script($array){
 		fclose($file);
 		
 		//execute script
+		echo "Executing\n";
 		shell_exec('sh /tmp/' . $uniqid . '.sh > /dev/null 2>/dev/null &');
 		//commented out the line below because PHP seems to delete the file before it has had a chance to run in the shell
 		//unlink('/tmp/' . $uniqid . '.sh');
