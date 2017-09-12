@@ -164,6 +164,9 @@ a:hover, a:focus {
 	display:none;
 	margin-top:20px;
 }
+.image-container{
+    margin-bottom:20px;
+}
 .iiif-container {
     width:100%;
     padding-top:100%;
