@@ -1,6 +1,7 @@
 <?php 
 
 $master = 'http://localhost:8080/exist/rest/db/mantis/objects';
+$perPage = 1000;
 $accnums = array();
 
 $doc = new DOMDocument('1.0', 'UTF-8');
@@ -22,9 +23,9 @@ foreach ($collections as $year){
 		$accnums[] = str_replace('.xml', '', $file->getAttribute('name'));
 		
 		//index records into Solr in increments of 1,000
-		if (count($accnums) > 0 && count($accnums) % 1000 == 0 ){
-			$start = count($accnums) - 1000;
-			$toIndex = array_slice($accnums, $start, 1000);
+		if (count($accnums) > 0 && count($accnums) % $perPage == 0 ){
+			$start = count($accnums) - $perPage;
+			$toIndex = array_slice($accnums, $start, $perPage);
 			
 			//POST TO SOLR
 			generate_solr_shell_script($toIndex);
@@ -33,7 +34,7 @@ foreach ($collections as $year){
 }
 
 //index final chunk
-$start = floor(count($accnums) / 1000) * 1000;
+$start = floor(count($accnums) / $perPage) * $perPage;
 $toIndex = array_slice($accnums, $start);
 
 //POST TO SOLR
