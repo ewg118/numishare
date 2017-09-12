@@ -126,7 +126,7 @@
 			<xsl:for-each
 				select="
 					distinct-values(descendant::*[local-name() = 'geogname'][contains(@xlink:href,
-					'geonames.org')]/@xlink:href | $nudsGroup/descendant::*[local-name() = 'geogname'][contains(@xlink:href, 'geonames.org')]/@xlink:href | $rdf/descendant::*[contains(@rdf:resource,
+					'geonames.org')]/@xlink:href | $nudsGroup/descendant::*[local-name() = 'geogname'][contains(@xlink:href, 'geonames.org')]/@xlink:href | $rdf/descendant::*[not(local-name()='closeMatch')][contains(@rdf:resource,
 					'geonames.org')]/@rdf:resource | descendant::*[local-name() = 'subject'][contains(@xlink:href,
 					'geonames.org')]/@xlink:href | $sparqlResult/descendant::res:binding[@name = 'findspot'][contains(res:uri, 'geonames.org')]/res:uri)">
 				<xsl:variable name="geonameId" select="tokenize(., '/')[4]"/>
@@ -174,26 +174,28 @@
 										else
 											concat($name, ' (', $countryName, ')')"
 						/>
-					</xsl:variable>
+					</xsl:variable>					
 
-
-					<xsl:variable name="geonames_hier" as="element()*">
-						<results>
-							<xsl:copy-of select="document(concat($geonames-url, '/hierarchy?geonameId=', $geonameId, '&amp;username=', $geonames_api_key))"/>
-						</results>
-					</xsl:variable>
-
-					<!-- create facetRegion hierarchy -->
-					<xsl:variable name="hierarchy">
-						<xsl:for-each select="$geonames_hier//geoname[position() &gt;= 3]">
-							<xsl:value-of select="concat(geonameId, '/', name)"/>
-							<xsl:if test="not(position() = last())">
-								<xsl:text>|</xsl:text>
-							</xsl:if>
-						</xsl:for-each>
-					</xsl:variable>
-
-					<place id="{.}" label="{$label}" hierarchy="{$hierarchy}">
+					<place id="{.}" label="{$label}">
+						<xsl:if test="$regionHierarchy = true()">
+							<xsl:variable name="geonames_hier" as="element()*">
+								<results>
+									<xsl:copy-of select="document(concat($geonames-url, '/hierarchy?geonameId=', $geonameId, '&amp;username=', $geonames_api_key))"/>
+								</results>
+							</xsl:variable>
+							<!-- create facetRegion hierarchy -->
+							<xsl:variable name="hierarchy">
+								<xsl:for-each select="$geonames_hier//geoname[position() &gt;= 3]">
+									<xsl:value-of select="concat(geonameId, '/', name)"/>
+									<xsl:if test="not(position() = last())">
+										<xsl:text>|</xsl:text>
+									</xsl:if>
+								</xsl:for-each>
+							</xsl:variable>
+							
+							<xsl:attribute name="hierarchy" select="$hierarchy"/>
+						</xsl:if>
+						
 						<xsl:value-of select="$coordinates"/>
 					</place>
 				</xsl:if>
