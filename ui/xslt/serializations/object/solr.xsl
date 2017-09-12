@@ -282,8 +282,7 @@
 			<country code="CA">
 				<place abbr="Alta.">Alberta</place>
 				<place abbr="B.C.">British Columbia</place>
-				<place abbr="Alta.">Manitoba</place>
-				<place abbr="Man.">Alberta</place>
+				<place abbr="Man.">Manitoba</place>
 				<place abbr="N.B.">New Brunswick</place>
 				<place abbr="Nfld.">Newfoundland and Labrador</place>
 				<place abbr="N.W.T.">Northwest Territories</place>
