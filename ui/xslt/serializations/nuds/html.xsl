@@ -929,36 +929,39 @@
 		<xsl:variable name="reference-image" select="//mets:fileGrp[@USE = $side]/mets:file[@USE = 'reference']/mets:FLocat/@xlink:href"/>
 		<xsl:variable name="iiif-service" select="//mets:fileGrp[@USE = $side]/mets:file[@USE = 'iiif']/mets:FLocat/@xlink:href"/>
 
-		<xsl:choose>
-			<xsl:when test="string($reference-image)">
-				<xsl:variable name="image_url"
-					select="
+		<div class="image-container">
+			<xsl:choose>
+				<xsl:when test="string($reference-image)">
+					<xsl:variable name="image_url"
+						select="
 						if (matches($reference-image, 'https?://')) then
-							$reference-image
+						$reference-image
 						else
-							concat($display_path, $reference-image)"/>
-
-				<xsl:choose>
-					<xsl:when test="string($iiif-service)">
-						<div id="{substring($side, 1, 3)}-iiif-container" class="iiif-container"/>
-						<span class="hidden" id="{substring($side, 1, 3)}-iiif-service">
-							<xsl:value-of select="$iiif-service"/>
-						</span>
-						<noscript>
+						concat($display_path, $reference-image)"/>
+					
+					<xsl:choose>
+						<xsl:when test="string($iiif-service)">
+							<div id="{substring($side, 1, 3)}-iiif-container" class="iiif-container"/>
+							<span class="hidden" id="{substring($side, 1, 3)}-iiif-service">
+								<xsl:value-of select="$iiif-service"/>
+							</span>
+							<noscript>
+								<img src="{$image_url}" property="foaf:depiction" alt="{$side}"/>
+							</noscript>
+						</xsl:when>
+						<xsl:otherwise>
 							<img src="{$image_url}" property="foaf:depiction" alt="{$side}"/>
-						</noscript>
-					</xsl:when>
-					<xsl:otherwise>
-						<img src="{$image_url}" property="foaf:depiction" alt="{$side}"/>
-					</xsl:otherwise>
-				</xsl:choose>
-
-				<xsl:apply-templates select="$nudsGroup//nuds:typeDesc/*[local-name() = $side]" mode="physical"/>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:apply-templates select="$nudsGroup//nuds:typeDesc/*[local-name() = $side]" mode="physical"/>
-			</xsl:otherwise>
-		</xsl:choose>
+						</xsl:otherwise>
+					</xsl:choose>
+					
+					<xsl:apply-templates select="$nudsGroup//nuds:typeDesc/*[local-name() = $side]" mode="physical"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:apply-templates select="$nudsGroup//nuds:typeDesc/*[local-name() = $side]" mode="physical"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</div>
+		
 	</xsl:template>
 
 	<xsl:template match="nuds:obverse | nuds:reverse" mode="physical">
