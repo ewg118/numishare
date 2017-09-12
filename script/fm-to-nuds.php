@@ -1527,7 +1527,7 @@ function generate_typeDesc($writer, $row, $department, $certainty){
 	}
 	
 	
-	if (is_numeric($startdate_int) || is_numeric($enddate_int)){
+	if (is_int($startdate_int) || is_int($enddate_int)){
 		$title .= ', ';
 		$title .= get_title_date($startdate_int, $enddate_int);
 	}
