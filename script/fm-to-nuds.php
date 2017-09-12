@@ -350,12 +350,13 @@ function generate_nuds($row, $count, $fileName){
 			$matches = preg_grep('/C\.[1-9]/', $refs);
 			foreach ($matches as $k=>$v){
 				//exclude var
-				if (strlen(trim($v)) > 0 && strpos(trim($v), 'var') === FALSE){
+				if (strlen(trim($v)) > 0){
 					$id = substr(trim($v), -1) == '?' ? str_replace('?', '', trim($v)) : trim($v);
 					$uncertain = substr(trim($v), -1) == '?' ? true : false;
 				}
 			}
-			if (isset($id)){
+			
+			if (strpos(trim($v), 'var') === FALSE){
 				$uri = 'http://numismatics.org/crro/id/' . str_replace('C.', 'rrc-', $id);
 				
 				//get info from $coinTypes array if the coin type has been verified already
@@ -402,7 +403,9 @@ function generate_nuds($row, $count, $fileName){
 						generate_typeDesc($writer, $row, $department, $uncertain);
 					}
 				}
-			}			
+			} else {
+				generate_typeDesc($writer, $row, $department, $uncertain);
+			}
 		} elseif ($department=='Greek' && count(preg_grep('/Price\.[L|P]?\d+[A-Z]?$/', $refs)) > 0){
 			//handle Price references for Pella
 			$matches = preg_grep('/Price\.[L|P]?\d+[A-Z]?$/', $refs);
