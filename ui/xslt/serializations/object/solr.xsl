@@ -141,7 +141,7 @@
 					</xsl:variable>
 					
 					<!-- only evaluate if there's a positive response -->
-					<xsl:if test="$geonames_data/geonameId = $geonameId">
+					<xsl:if test="$geonames_data//geonameId = $geonameId">
 						<xsl:variable name="coordinates">
 							<xsl:if test="$geonames_data//lng castable as xs:decimal and $geonames_data//lat castable as xs:decimal">
 								<xsl:value-of select="concat($geonames_data//lng, ',', $geonames_data//lat)"/>
