@@ -349,55 +349,58 @@ function generate_nuds($row, $count, $fileName){
 			//handle Roman Republican
 			$matches = preg_grep('/C\.[1-9]/', $refs);
 			foreach ($matches as $k=>$v){
-				if (strlen(trim($v)) > 0){
+				//exclude var
+				if (strlen(trim($v)) > 0 && strpos(trim($v), 'var') === FALSE){
 					$id = substr(trim($v), -1) == '?' ? str_replace('?', '', trim($v)) : trim($v);
 					$uncertain = substr(trim($v), -1) == '?' ? true : false;
 				}
 			}
-			$uri = 'http://numismatics.org/crro/id/' . str_replace('C.', 'rrc-', $id);
-			
-			//get info from $coinTypes array if the coin type has been verified already
-			if (array_key_exists($uri, $coinTypes)){
-				echo "Matched {$uri}\n";
-				$title = $coinTypes[$uri]['title'];
-					
-				//generate title
-				$writer->startElement('title');
-					$writer->writeAttribute('xml:lang', 'en');
-					$writer->text("{$title}. {$accnum}");	
-				$writer->endElement();
+			if (isset($id)){
+				$uri = 'http://numismatics.org/crro/id/' . str_replace('C.', 'rrc-', $id);
 				
-				//generate typeDesc with link
-				$writer->startElement('typeDesc');
+				//get info from $coinTypes array if the coin type has been verified already
+				if (array_key_exists($uri, $coinTypes)){
+					echo "Matched {$uri}\n";
+					$title = $coinTypes[$uri]['title'];
+					
+					//generate title
+					$writer->startElement('title');
+					$writer->writeAttribute('xml:lang', 'en');
+					$writer->text("{$title}. {$accnum}");
+					$writer->endElement();
+					
+					//generate typeDesc with link
+					$writer->startElement('typeDesc');
 					$writer->writeAttribute('xlink:type', 'simple');
 					$writer->writeAttribute('xlink:href', $uri);
 					if ($uncertain == true){
 						$writer->writeAttribute('certainty', 'uncertain');
 					}
-				$writer->endElement();
-			} else {
-				$file_headers = @get_headers($uri);
-				if ($file_headers[0] == 'HTTP/1.1 200 OK'){
-					echo "Found {$uri}\n";
-					$titles = generate_title_from_type($uri);
-					$writer->startElement('title');
+					$writer->endElement();
+				} else {
+					$file_headers = @get_headers($uri);
+					if ($file_headers[0] == 'HTTP/1.1 200 OK'){
+						echo "Found {$uri}\n";
+						$titles = generate_title_from_type($uri);
+						$writer->startElement('title');
 						$writer->writeAttribute('xml:lang', 'en');
 						$writer->text("{$titles['title']}. {$accnum}");
-					$writer->endElement();
-					
-					//generate typeDesc with link
-					$writer->startElement('typeDesc');
+						$writer->endElement();
+						
+						//generate typeDesc with link
+						$writer->startElement('typeDesc');
 						$writer->writeAttribute('xlink:type', 'simple');
 						$writer->writeAttribute('xlink:href', $uri);
 						if ($uncertain == true){
 							$writer->writeAttribute('certainty', 'uncertain');
 						}
-					$writer->endElement();
-					
-					//add data into the $coinTypes array
-					$coinTypes[$uri] = array('title'=>$titles['title'], 'reference'=>$titles['reference']);
-				} else {
-					generate_typeDesc($writer, $row, $department, $uncertain);
+						$writer->endElement();
+						
+						//add data into the $coinTypes array
+						$coinTypes[$uri] = array('title'=>$titles['title'], 'reference'=>$titles['reference']);
+					} else {
+						generate_typeDesc($writer, $row, $department, $uncertain);
+					}
 				}
 			}			
 		} elseif ($department=='Greek' && count(preg_grep('/Price\.[L|P]?\d+[A-Z]?$/', $refs)) > 0){
