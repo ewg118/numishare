@@ -862,6 +862,16 @@
 							<a href="{$id}.geojson">GeoJSON</a>
 						</li>
 					</xsl:if>
+					<xsl:if test="descendant::mets:file[@USE = 'iiif']">
+						<li>
+							<a href="{$display_path}manifest/{$id}">IIIF Manifest</a>
+						</li>
+					</xsl:if>
+					<xsl:if test="$recordType = 'conceptual' and $hasTypes = true()">
+						<li>
+							<a href="{$display_path}manifest/{$id}">IIIF Manifest</a>
+						</li>
+					</xsl:if>
 				</ul>
 			</div>
 		</div>

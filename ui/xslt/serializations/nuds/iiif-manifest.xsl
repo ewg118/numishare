@@ -306,7 +306,7 @@
 
 									<xsl:choose>
 										<xsl:when test="$manifestSide = 'obverse' or $manifestSide = 'reverse'">
-											<xsl:apply-templates select="descendant::mets:fileGrp[@USE=$manifestSide]/mets:file[@USE = 'iiif']">
+											<xsl:apply-templates select="descendant::mets:fileGrp[@USE = $manifestSide]/mets:file[@USE = 'iiif']">
 												<xsl:with-param name="sizes" select="$sizes"/>
 											</xsl:apply-templates>
 										</xsl:when>
@@ -315,7 +315,7 @@
 												<xsl:with-param name="sizes" select="$sizes"/>
 											</xsl:apply-templates>
 										</xsl:otherwise>
-									</xsl:choose>									
+									</xsl:choose>
 								</xsl:when>
 								<!-- otherwise, apply templates on SPARQL results -->
 								<xsl:otherwise>
@@ -432,24 +432,51 @@
 			<label>
 				<xsl:value-of select="res:binding[@name = 'title']/res:literal"/>
 			</label>
-			<!--<thumbnail>
-				<_object>
-					<__id>
-						<xsl:value-of select="parent::mets:fileGrp/mets:file[@USE = 'thumbnail']/mets:FLocat/@xlink:href"/>
-					</__id>
-					<__type>dctypes:Image</__type>
-					<format>image/jpeg</format>
-					<height>175</height>
-					<width>175</width>
-				</_object>
-			</thumbnail>-->
 
+			<!-- extract metadata from other SPARQL fields -->
+			<metadata>
+				<_array>
+					<xsl:choose>
+						<xsl:when test="res:binding[@name = 'collection']">
+							<xsl:apply-templates select="res:binding[@name = 'collection']" mode="metadata"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:apply-templates select="res:binding[@name = 'datasetTitle']" mode="metadata"/>
+						</xsl:otherwise>
+					</xsl:choose>
+					<xsl:apply-templates
+						select="res:binding[@name = 'axis'] | res:binding[@name = 'weight'] | res:binding[@name = 'diameter'] | res:binding[@name = 'identifier']"
+						mode="metadata"/>
+				</_array>
+			</metadata>
 			<xsl:choose>
 				<xsl:when test="res:binding[@name = 'comService']">
 					<xsl:variable name="service" select="res:binding[@name = 'comService']/res:uri"/>
 					<xsl:variable name="info" as="element()*">
 						<xsl:copy-of select="doc('input:images')//image[@uri = $service][child::json]/json"/>
 					</xsl:variable>
+
+					<thumbnail>
+						<_object>
+							<__id>
+								<xsl:value-of
+									select="
+										concat($service, '/full/240,120/0/', if ($info/_context[@name = '@context'] = 'http://iiif.io/api/image/2/context.json') then
+											'default'
+										else
+											'native', '.jpg')"
+								/>
+							</__id>
+							<__type>dctypes:Image</__type>
+							<format>image/jpeg</format>
+							<height>120</height>
+							<width>240</width>
+							<xsl:call-template name="service">
+								<xsl:with-param name="service" select="$service"/>
+								<xsl:with-param name="info" select="$info"/>
+							</xsl:call-template>
+						</_object>
+					</thumbnail>
 
 					<xsl:choose>
 						<xsl:when test="$manifestSide = 'obverse' or $manifestSide = 'reverse'">
@@ -495,6 +522,28 @@
 							<xsl:variable name="revInfo" as="element()*">
 								<xsl:copy-of select="doc('input:images')//image[@uri = $revService][child::json]/json"/>
 							</xsl:variable>
+
+							<thumbnail>
+								<_object>
+									<__id>
+										<xsl:value-of
+											select="
+											concat($obvService, '/full/120,120/0/', if ($obvInfo/_context[@name = '@context'] = 'http://iiif.io/api/image/2/context.json') then
+											'default'
+											else
+											'native', '.jpg')"
+										/>
+									</__id>
+									<__type>dctypes:Image</__type>
+									<format>image/jpeg</format>
+									<height>120</height>
+									<width>120</width>
+									<xsl:call-template name="service">
+										<xsl:with-param name="service" select="$obvService"/>
+										<xsl:with-param name="info" select="$obvInfo"/>
+									</xsl:call-template>
+								</_object>
+							</thumbnail>
 
 							<height>
 								<xsl:choose>
@@ -664,30 +713,31 @@
 							</xsl:call-template>
 						</xsl:otherwise>
 					</xsl:choose>-->
-					
+
 					<__id>
 						<xsl:variable name="size">
 							<xsl:choose>
 								<xsl:when test="@name = 'comService' and ($manifestSide = 'obverse' or $manifestSide = 'reverse')">
 									<xsl:value-of
 										select="
-										concat(if ($manifestSide = 'obverse') then
-										'0'
-										else
-										floor(number($info/width) div 2), ',0,', ceiling(number($info/width) div 2), ',', $info/height)"/>
+											concat(if ($manifestSide = 'obverse') then
+												'0'
+											else
+												floor(number($info/width) div 2), ',0,', ceiling(number($info/width) div 2), ',', $info/height)"
+									/>
 								</xsl:when>
 								<xsl:otherwise>
 									<xsl:text>full</xsl:text>
 								</xsl:otherwise>
 							</xsl:choose>
 						</xsl:variable>
-						
+
 						<xsl:value-of
 							select="
-							concat(res:uri, '/', $size, '/full/0/', if ($info/_context[@name = '@context'] = 'http://iiif.io/api/image/2/context.json') then
-							'default'
-							else
-							'native', '.jpg')"
+								concat(res:uri, '/', $size, '/full/0/', if ($info/_context[@name = '@context'] = 'http://iiif.io/api/image/2/context.json') then
+									'default'
+								else
+									'native', '.jpg')"
 						/>
 					</__id>
 					<__type>dctypes:Image</__type>
@@ -701,21 +751,22 @@
 								<xsl:value-of select="ceiling(number($info/width) div 2)"/>
 							</width>
 						</xsl:when>
-						<xsl:otherwise>							
+						<xsl:otherwise>
 							<height>
 								<xsl:value-of select="$info/height"/>
 							</height>
 							<width>
 								<xsl:value-of select="$info/width"/>
 							</width>
-						</xsl:otherwise>						
+						</xsl:otherwise>
 					</xsl:choose>
 					<xsl:call-template name="service">
+						<xsl:with-param name="service" select="$service"/>
 						<xsl:with-param name="info" select="$info"/>
 					</xsl:call-template>
 				</_object>
 			</resource>
-			
+
 			<!--<xsl:if test="@name = 'comService' and ($manifestSide = 'obverse' or $manifestSide = 'reverse')">
 				<selector>
 					<_object>
@@ -728,6 +779,7 @@
 	</xsl:template>
 
 	<xsl:template name="service">
+		<xsl:param name="service"/>
 		<xsl:param name="info"/>
 
 		<service>
@@ -744,7 +796,7 @@
 
 				</__context>
 				<__id>
-					<xsl:value-of select="res:uri"/>
+					<xsl:value-of select="$service"/>
 				</__id>
 				<profile>
 					<xsl:choose>
@@ -758,6 +810,22 @@
 				</profile>
 			</_object>
 		</service>
+	</xsl:template>
+
+	<xsl:template match="res:binding" mode="metadata">
+		<_object>
+			<label>
+				<xsl:choose>
+					<xsl:when test="@name = 'datasetTitle'">Dataset</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="numishare:regularize_node(@name, $lang)"/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</label>
+			<value>
+				<xsl:value-of select="child::*"/>
+			</value>
+		</_object>
 	</xsl:template>
 
 	<!-- ******* FUNCTIONS ******** -->
