@@ -304,9 +304,18 @@
 										</sizes>
 									</xsl:variable>
 
-									<xsl:apply-templates select="descendant::mets:file[@USE = 'iiif']">
-										<xsl:with-param name="sizes" select="$sizes"/>
-									</xsl:apply-templates>
+									<xsl:choose>
+										<xsl:when test="$manifestSide = 'obverse' or $manifestSide = 'reverse'">
+											<xsl:apply-templates select="descendant::mets:fileGrp[@USE=$manifestSide]/mets:file[@USE = 'iiif']">
+												<xsl:with-param name="sizes" select="$sizes"/>
+											</xsl:apply-templates>
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:apply-templates select="descendant::mets:file[@USE = 'iiif']">
+												<xsl:with-param name="sizes" select="$sizes"/>
+											</xsl:apply-templates>
+										</xsl:otherwise>
+									</xsl:choose>									
 								</xsl:when>
 								<!-- otherwise, apply templates on SPARQL results -->
 								<xsl:otherwise>
