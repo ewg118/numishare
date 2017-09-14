@@ -35,7 +35,8 @@ PREFIX foaf:	<http://xmlns.com/foaf/0.1/>
 PREFIX svcs:	<http://rdfs.org/sioc/services#>
 
 ASK {
-  ?object nmo:hasTypeSeriesItem <typeURI>.
+  ?object nmo:hasTypeSeriesItem <typeURI> ;
+  	a nmo:NumismaticObject .
   {?object foaf:depiction ?comRef .
   ?comRef svcs:has_service ?comService}
   UNION {
