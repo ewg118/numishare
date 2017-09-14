@@ -670,14 +670,13 @@
 					</xsl:apply-templates>
 					<xsl:apply-templates select="nuds:descMeta/nuds:undertypeDesc[child::*]"/>
 					<xsl:apply-templates select="nuds:descMeta/nuds:refDesc[child::*]"/>
-					<xsl:apply-templates select="nuds:descMeta/nuds:findspotDesc[child::*]"/>
+					<xsl:apply-templates select="nuds:descMeta/nuds:findspotDesc"/>
 				</div>
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:choose>
 					<xsl:when test="$recordType = 'conceptual'">
 						<div class="row">
-
 							<!-- if there are no mint coordinates and no findspots (from SPARQL), then do not show the map -->
 							<xsl:choose>
 								<xsl:when test="$hasFindspots = false() and $hasMints = false()">
@@ -698,14 +697,16 @@
 					</xsl:when>
 					<xsl:otherwise>
 						<div class="row">
-							<p>
-								<xsl:if test="$hasAnnotations = true()">
+
+							<xsl:if test="$hasAnnotations = true()">
+								<div class="col-md-12">
 									<a href="#annotations">Annotations</a>
-								</xsl:if>
-							</p>
+								</div>
+							</xsl:if>
+
 							<xsl:call-template name="metadata-container"/>
 						</div>
-						<xsl:if test="$hasMints = true()">
+						<xsl:if test="$hasMints = true() or $hasFindspots = true()">
 							<div class="row">
 								<div class="col-md-12">
 									<xsl:call-template name="map-container"/>
@@ -738,8 +739,8 @@
 							<xsl:with-param name="typeDesc_resource" select="$typeDesc_resource"/>
 						</xsl:apply-templates>
 					</xsl:for-each>
-					<xsl:apply-templates select="nuds:descMeta/nuds:undertypeDesc[child::*]"/>
-					<xsl:apply-templates select="nuds:descMeta/nuds:findspotDesc[child::*]"/>
+					<xsl:apply-templates select="nuds:descMeta/nuds:undertypeDesc"/>
+					<xsl:apply-templates select="nuds:descMeta/nuds:findspotDesc"/>
 				</div>
 				<div class="col-md-6 {if($lang='ar') then 'pull-right' else ''}">
 					<xsl:apply-templates select="nuds:descMeta/nuds:refDesc[child::*]"/>
@@ -824,16 +825,46 @@
 			<xsl:choose>
 				<xsl:when test="string(@xlink:href)">
 					<xsl:choose>
-						<xsl:when test="contains(@xlink:href, 'nomisma.org')">
-							<xsl:variable name="elem" as="element()*">
-								<findspot xlink:href="{@xlink:href}"/>
+						<xsl:when test="contains(@xlink:href, 'nomisma.org') or contains(@xlink:href, 'coinhoards.org')">
+							<xsl:variable name="label">
+								<xsl:choose>
+									<xsl:when test="doc-available(concat(@xlink:href, '.rdf'))">
+										<xsl:value-of select="document(concat(@xlink:href, '.rdf'))//skos:prefLabel[@xml:lang = 'en']"/>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:value-of select="@xlink:href"/>
+									</xsl:otherwise>
+								</xsl:choose>
 							</xsl:variable>
+
 							<ul>
-								<xsl:apply-templates select="$elem" mode="descMeta"/>
+								<li>
+									<b><xsl:value-of select="numishare:regularize_node('hoard', $lang)"/>: </b>
+									<a
+										href="{$display_path}results?q=hoard_uri:&#x022;{@xlink:href}&#x022;{if (string($langParam)) then concat('&amp;lang=', $langParam) else
+										''}">
+										<xsl:value-of select="$label"/>
+									</a>
+									<a rel="nmo:hasFindspot" href="{@xlink:href}" target="_blank" class="external_link">
+										<span class="glyphicon glyphicon-new-window"/>
+									</a>
+								</li>
 							</ul>
 						</xsl:when>
 						<xsl:otherwise>
-							<p>Source: <a rel="nmo:hasFindspot" href="{@xlink:href}"><xsl:value-of select="@xlink:href"/></a></p>
+							<ul>
+								<li>
+									<b><xsl:value-of select="numishare:regularize_node('hoard', $lang)"/>: </b>
+									<a
+										href="{$display_path}results?q=hoard_uri:&#x022;{@xlink:href}&#x022;{if (string($langParam)) then concat('&amp;lang=', $langParam) else
+										''}">
+										<xsl:value-of select="@xlink:href"/>
+									</a>
+									<a rel="nmo:hasFindspot" href="{@xlink:href}" target="_blank" class="external_link">
+										<span class="glyphicon glyphicon-new-window"/>
+									</a>
+								</li>
+							</ul>
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:when>
@@ -934,11 +965,11 @@
 				<xsl:when test="string($reference-image)">
 					<xsl:variable name="image_url"
 						select="
-						if (matches($reference-image, 'https?://')) then
-						$reference-image
-						else
-						concat($display_path, $reference-image)"/>
-					
+							if (matches($reference-image, 'https?://')) then
+								$reference-image
+							else
+								concat($display_path, $reference-image)"/>
+
 					<xsl:choose>
 						<xsl:when test="string($iiif-service)">
 							<div id="{substring($side, 1, 3)}-iiif-container" class="iiif-container"/>
@@ -953,7 +984,7 @@
 							<img src="{$image_url}" property="foaf:depiction" alt="{$side}"/>
 						</xsl:otherwise>
 					</xsl:choose>
-					
+
 					<xsl:apply-templates select="$nudsGroup//nuds:typeDesc/*[local-name() = $side]" mode="physical"/>
 				</xsl:when>
 				<xsl:otherwise>
@@ -961,7 +992,7 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</div>
-		
+
 	</xsl:template>
 
 	<xsl:template match="nuds:obverse | nuds:reverse" mode="physical">
