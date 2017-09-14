@@ -55,6 +55,12 @@
 				<p:output name="data" id="hasFindspots"/>
 			</p:processor>
 			
+			<p:processor name="oxf:pipeline">						
+				<p:input name="data" href="#config"/>
+				<p:input name="config" href="../../../models/sparql/ask-iiif.xpl"/>
+				<p:output name="data" id="hasIIIF"/>
+			</p:processor>
+			
 			<p:choose href="#config">
 				<p:when test="matches(/config/annotation_sparql_endpoint, 'https?://')">
 					
@@ -109,6 +115,7 @@ ASK {?s oa:hasBody <URI>}]]>
 							<!-- if there is a problem with the SPARQL endpoint, then simply generate the HTML page -->
 							<p:processor name="oxf:unsafe-xslt">
 								<p:input name="request" href="#request"/>
+								<p:input name="hasIIIF" href="#hasIIIF"/>
 								<p:input name="data" href="aggregate('content', #data, #hasTypes, #hasFindspots, #config)"/>
 								<p:input name="config" href="../../../../ui/xslt/serializations/nuds/html.xsl"/>
 								<p:output name="data" id="model"/>
@@ -124,6 +131,7 @@ ASK {?s oa:hasBody <URI>}]]>
 							<p:processor name="oxf:unsafe-xslt">
 								<p:input name="request" href="#request"/>
 								<p:input name="annotations" href="#annotations"/>
+								<p:input name="hasIIIF" href="#hasIIIF"/>
 								<p:input name="data" href="aggregate('content', #data, #hasTypes, #hasFindspots, #config)"/>
 								<p:input name="config" href="../../../../ui/xslt/serializations/nuds/html.xsl"/>
 								<p:output name="data" id="model"/>
@@ -134,6 +142,7 @@ ASK {?s oa:hasBody <URI>}]]>
 				<p:otherwise>
 					<p:processor name="oxf:unsafe-xslt">
 						<p:input name="request" href="#request"/>
+						<p:input name="hasIIIF" href="#hasIIIF"/>
 						<p:input name="data" href="aggregate('content', #data, #hasTypes, #hasFindspots, #config)"/>
 						<p:input name="config" href="../../../../ui/xslt/serializations/nuds/html.xsl"/>
 						<p:output name="data" id="model"/>

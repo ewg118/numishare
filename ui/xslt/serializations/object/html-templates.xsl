@@ -863,14 +863,26 @@
 						</li>
 					</xsl:if>
 					<xsl:if test="descendant::mets:file[@USE = 'iiif']">
+						<xsl:variable name="manifestURI" select="concat($display_path, 'manifest/', $id)"/>
+						
 						<li>
-							<a href="{$display_path}manifest/{$id}">IIIF Manifest</a>
+							<a href="{$manifestURI}">IIIF Manifest</a>
+							<xsl:text> </xsl:text>
+							<a href="http://universalviewer.io/uv.html?manifest={encode-for-uri($manifestURI)}">(view)</a>
 						</li>
 					</xsl:if>
-					<xsl:if test="$recordType = 'conceptual' and $hasTypes = true()">
-						<li>
-							<a href="{$display_path}manifest/{$id}">IIIF Manifest</a>
-						</li>
+					<xsl:if test="$recordType = 'conceptual'">
+						<!-- only display coin type manifest link if there are IIIF service resources -->
+						<xsl:variable name="hasIIIF" select="doc('input:hasIIIF')//res:boolean" as="xs:boolean"/>
+						
+						<xsl:if test="$hasIIIF = true()">
+							<xsl:variable name="manifestURI" select="concat($display_path, 'manifest/', $id)"/>
+							<li>
+								<a href="{$manifestURI}">IIIF Manifest</a>
+								<xsl:text> </xsl:text>
+								<a href="http://www.kanzaki.com/works/2016/pub/image-annotator?u={encode-for-uri($manifestURI)}">(view)</a>
+							</li>
+						</xsl:if>
 					</xsl:if>
 				</ul>
 			</div>
