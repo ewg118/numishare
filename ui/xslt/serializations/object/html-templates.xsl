@@ -863,7 +863,7 @@
 						</li>
 					</xsl:if>
 					<xsl:if test="descendant::mets:file[@USE = 'iiif']">
-						<xsl:variable name="manifestURI" select="concat($display_path, 'manifest/', $id)"/>
+						<xsl:variable name="manifestURI" select="concat($url, 'manifest/', $id)"/>
 						
 						<li>
 							<a href="{$manifestURI}">IIIF Manifest</a>
@@ -876,7 +876,7 @@
 						<xsl:variable name="hasIIIF" select="doc('input:hasIIIF')//res:boolean" as="xs:boolean"/>
 						
 						<xsl:if test="$hasIIIF = true()">
-							<xsl:variable name="manifestURI" select="concat($display_path, 'manifest/', $id)"/>
+							<xsl:variable name="manifestURI" select="concat($url, 'manifest/', $id)"/>
 							<li>
 								<a href="{$manifestURI}">IIIF Manifest</a>
 								<xsl:text> </xsl:text>
