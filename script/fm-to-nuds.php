@@ -866,7 +866,7 @@ function generate_nuds($row, $count, $fileName){
 		//notes
 		if (strlen(trim($row['info'])) > 0){
 			$infos = array_filter(explode('|', $row['info']));
-			$writer->startElement('nodeSet');
+			$writer->startElement('noteSet');
 			foreach ($infos as $info){
 				$writer->writeElement('note', trim($info));
 			}
