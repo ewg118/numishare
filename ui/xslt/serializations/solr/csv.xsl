@@ -81,14 +81,14 @@
 		<xsl:choose>
 			<xsl:when test="child::node()">
 				<xsl:for-each select="distinct-values(child::node())">
-					<xsl:value-of select="replace(., '&#x022;', '\\\\&#x022;')"/>
+					<xsl:value-of select="replace(., '&#x022;', '\\&#x022;')"/>
 					<xsl:if test="not(position()=last())">
 						<xsl:text>|</xsl:text>
 					</xsl:if>
 				</xsl:for-each>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:value-of select="replace(., '&#x022;', '\\\\&#x022;')"/>
+				<xsl:value-of select="replace(., '&#x022;', '\\&#x022;')"/>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
