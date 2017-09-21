@@ -56,7 +56,14 @@
 			<xsl:variable name="doc" as="element()*">
 				<xsl:copy-of select="."/>
 			</xsl:variable>
-			<xsl:value-of select="concat('&#x022;', $url, 'id/', str[@name='recordId'], '&#x022;,')"/>
+			<xsl:choose>
+				<xsl:when test="/content/config/uri_space">
+					<xsl:value-of select="concat('&#x022;', /content/config/uri_space, str[@name='recordId'], '&#x022;,')"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="concat('&#x022;', $url, 'id/', str[@name='recordId'], '&#x022;,')"/>
+				</xsl:otherwise>
+			</xsl:choose>
 			<xsl:for-each select="$tokenized_fields">
 				<xsl:variable name="field" select="."/>
 				<xsl:text>"</xsl:text>
