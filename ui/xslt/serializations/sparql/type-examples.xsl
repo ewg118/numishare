@@ -33,7 +33,7 @@
     <xsl:template match="res:result" mode="type-examples">
         <xsl:variable name="title"
             select="
-            concat(res:binding[@name = 'identifier']/res:literal, ': ', if
+            concat(res:binding[@name = 'identifier']/*, ': ', if
             (string(res:binding[@name = 'collection']/res:literal)) then
             res:binding[@name = 'collection']/res:literal
             else
