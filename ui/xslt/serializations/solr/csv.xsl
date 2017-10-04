@@ -56,7 +56,14 @@
 			<xsl:variable name="doc" as="element()*">
 				<xsl:copy-of select="."/>
 			</xsl:variable>
-			<xsl:value-of select="concat('&#x022;', $url, 'id/', str[@name='recordId'], '&#x022;,')"/>
+			<xsl:choose>
+				<xsl:when test="/content/config/uri_space">
+					<xsl:value-of select="concat('&#x022;', /content/config/uri_space, str[@name='recordId'], '&#x022;,')"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="concat('&#x022;', $url, 'id/', str[@name='recordId'], '&#x022;,')"/>
+				</xsl:otherwise>
+			</xsl:choose>
 			<xsl:for-each select="$tokenized_fields">
 				<xsl:variable name="field" select="."/>
 				<xsl:text>"</xsl:text>
@@ -74,14 +81,14 @@
 		<xsl:choose>
 			<xsl:when test="child::node()">
 				<xsl:for-each select="distinct-values(child::node())">
-					<xsl:value-of select="."/>
+					<xsl:value-of select="replace(., '&#x022;', '&#x022;&#x022;')"/>
 					<xsl:if test="not(position()=last())">
 						<xsl:text>|</xsl:text>
 					</xsl:if>
 				</xsl:for-each>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:value-of select="."/>
+				<xsl:value-of select="replace(., '&#x022;', '&#x022;&#x022;')"/>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
