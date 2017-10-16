@@ -610,7 +610,7 @@
 			</xforms:submission>
 			<!-- access service to read in pre-transformed solr doc -->
 			<xforms:submission id="nuds-to-solr" method="get" replace="instance" instance="addIndex" serialization="none"
-				resource="{instance('config')/url}id/{instance('control-instance')/id}.solr">
+				resource="/numishare/{instance('control-instance')/collection-name}/id/{instance('control-instance')/id}.solr">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Error transforming XML record to Solr document.</xforms:message>
 				<xforms:send ev:event="xforms-submit-done" submission="post-solr-doc"/>
 			</xforms:submission>
@@ -644,7 +644,7 @@
 
 			<!-- pass identifiers URL parameter to xquery process in Cocoon to generate large Solr add document -->
 			<xforms:submission id="generate-add-document" method="get" replace="instance" instance="addIndex" serialization="none"
-				resource="{instance('config')/url}ingest?identifiers={instance('control-instance')/identifiers}">
+				resource="/numishare/{instance('control-instance')/collection-name}/ingest?identifiers={instance('control-instance')/identifiers}">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Error getting Solr document from XQuery ingestion pipeline.</xforms:message>
 				<xforms:action ev:event="xforms-submit-done">
 					<xforms:send submission="post-solr-doc"/>
