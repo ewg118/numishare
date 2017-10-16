@@ -824,7 +824,7 @@
 			<int name="rows">20</int>
 			<str name="facet">true</str>
 			<int name="facet.mincount">1</int>
-			<str name="df">text</str>
+			<str name="df">fulltext</str>
 		</lst>
 		<lst name="appends">
 			<str name="fq">NOT(subtype:true)</str>
@@ -888,7 +888,7 @@
 		<lst name="defaults">
 			<str name="echoParams">explicit</str>
 			<int name="rows">100</int>	
-			<str name="df">text</str>
+			<str name="df">fulltext</str>
 		</lst>			
 	</requestHandler>
 
@@ -898,7 +898,7 @@
 			<str name="echoParams">explicit</str>
 			<str name="wt">json</str>
 			<str name="indent">true</str>
-			<str name="df">text</str>
+			<str name="df">fulltext</str>
 		</lst>
 	</requestHandler>
 

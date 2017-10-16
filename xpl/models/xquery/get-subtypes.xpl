@@ -29,7 +29,7 @@
 					<xsl:variable name="collection-name" select="substring-before(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/')"/>
 					<xsl:variable name="pieces" select="tokenize(/exist-config/url, '/')"/>
 					<xsl:variable name="xquery">
-						<![CDATA[xquery version "1.0";
+						<![CDATA[xquery version "3.0";
 						declare namespace request="http://exist-db.org/xquery/request";
 						declare namespace nuds="http://nomisma.org/nuds";
 						declare namespace xlink="http://www.w3.org/1999/xlink";
