@@ -139,7 +139,7 @@
 									</xsl:for-each>
 								</dd>
 							</xsl:if>
-							<xsl:if test="str[@name='obv_leg_display'] or str[@name='obv_type_display']">
+							<xsl:if test="string(str[@name='obv_leg_display']) or string(str[@name='obv_type_display'])">
 								<dt>
 									<xsl:value-of select="numishare:regularize_node('obverse', $lang)"/>
 								</dt>
@@ -147,14 +147,14 @@
 									<xsl:choose>
 										<xsl:when test="$lang='ar'">
 											<xsl:value-of select="str[@name='obv_type_display']"/>
-											<xsl:if test="str[@name='obv_leg_display'] and str[@name='obv_type_display']">
+											<xsl:if test="string(str[@name='obv_leg_display']) and string(str[@name='obv_type_display'])">
 												<xsl:text> :</xsl:text>
 											</xsl:if>
 											<xsl:value-of select="str[@name='obv_leg_display']"/>
 										</xsl:when>
 										<xsl:otherwise>
 											<xsl:value-of select="str[@name='obv_leg_display']"/>
-											<xsl:if test="str[@name='obv_leg_display'] and str[@name='obv_type_display']">
+											<xsl:if test="string(str[@name='obv_leg_display']) and string(str[@name='obv_type_display'])">
 												<xsl:text>: </xsl:text>
 											</xsl:if>
 											<xsl:value-of select="str[@name='obv_type_display']"/>
@@ -162,7 +162,7 @@
 									</xsl:choose>
 								</dd>
 							</xsl:if>
-							<xsl:if test="str[@name='rev_leg_display'] or str[@name='rev_type_display']">
+							<xsl:if test="string(str[@name='rev_leg_display']) or string(str[@name='rev_type_display'])">
 								<dt>
 									<xsl:value-of select="numishare:regularize_node('reverse', $lang)"/>
 								</dt>
@@ -170,14 +170,14 @@
 									<xsl:choose>
 										<xsl:when test="$lang='ar'">
 											<xsl:value-of select="str[@name='rev_type_display']"/>
-											<xsl:if test="str[@name='rev_leg_display'] and str[@name='rev_type_display']">
+											<xsl:if test="string(str[@name='rev_leg_display']) and string(str[@name='rev_type_display'])">
 												<xsl:text> :</xsl:text>
 											</xsl:if>
 											<xsl:value-of select="str[@name='rev_leg_display']"/>
 										</xsl:when>
 										<xsl:otherwise>
 											<xsl:value-of select="str[@name='rev_leg_display']"/>
-											<xsl:if test="str[@name='rev_leg_display'] and str[@name='rev_type_display']">
+											<xsl:if test="string(str[@name='rev_leg_display']) and string(str[@name='rev_type_display'])">
 												<xsl:text>: </xsl:text>
 											</xsl:if>
 											<xsl:value-of select="str[@name='rev_type_display']"/>
