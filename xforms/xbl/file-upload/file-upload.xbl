@@ -323,7 +323,7 @@
 					</xforms:action>
 					<!-- ********************************************************************** -->
 					<!-- ***********************  DIALOG INTERNAL MODEL *********************** -->
-					<xforms:model id="file-upload-model" xmlns:xi="http://www.w3.org/2001/XInclude">
+					<xforms:model id="file-upload-model" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns="http://nomisma.org/nuds">
 						<!-- exist URL is stored in an XML file -->
 						<xforms:instance id="exist-config">
 							<xi:include href="../../../exist-config.xml"/>
@@ -429,7 +429,7 @@
 						</xforms:instance>
 
 						<xforms:instance id="test-call">
-							<methodCall>
+							<methodCall xmlns="">
 								<methodName>test</methodName>
 							</methodCall>
 						</xforms:instance>
@@ -462,7 +462,7 @@
 						</xforms:instance>
 
 						<xforms:instance id="response">
-							<response/>
+							<response xmlns=""/>
 						</xforms:instance>
 
 						<xforms:instance id="image-side">
