@@ -486,6 +486,10 @@
 							<xforms:bind nodeset="@standardDate" type="m.data.standardDate"/>
 							<xforms:bind nodeset="@standardDateTime" type="m.data.standardDateTime"/>
 						</xforms:bind>
+						<xforms:bind nodeset="nuds:dateOnObject" required="true()">
+							<xforms:bind nodeset="@standardDate" type="m.data.standardDate"/>
+							<xforms:bind nodeset="@calendar" required="true()"/>
+						</xforms:bind>
 						<xforms:bind nodeset="nuds:denomination">
 							<xforms:bind constraint="string-length(.) &gt; 0"/>
 						</xforms:bind>
