@@ -868,7 +868,7 @@
 						<li>
 							<a href="{$manifestURI}">IIIF Manifest</a>
 							<xsl:text> </xsl:text>
-							<a href="http://universalviewer.io/uv.html?manifest={encode-for-uri($manifestURI)}">(view)</a>
+							<a href="http://numismatics.org/mirador/?manifest={encode-for-uri($manifestURI)}">(view)</a>
 						</li>
 					</xsl:if>
 					<xsl:if test="$recordType = 'conceptual'">
