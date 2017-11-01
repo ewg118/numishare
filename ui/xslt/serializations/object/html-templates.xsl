@@ -367,7 +367,7 @@
 										</xsl:otherwise>
 									</xsl:choose>
 
-									<!-- if the $recordType is 'conceptual' and there is no legend or description, and thee are subtypes, display the subtype data -->
+									<!-- if the $recordType is 'conceptual' and there is no legend or description, and there are subtypes, display the subtype data -->
 									<xsl:if test="$recordType = 'conceptual' and count($subtypes//subtype) &gt; 0">
 										<xsl:if test="(local-name() = 'obverse' or local-name() = 'reverse') and not(nuds:type)">
 											<xsl:variable name="side" select="local-name()"/>
@@ -378,7 +378,7 @@
 												</b>
 												<xsl:for-each
 													select="
-														distinct-values($subtypes//subtype/descendant::*[local-name() = $side]/nuds:type/nuds:description[if (string($lang)) then
+														distinct-values($subtypes//subtype/descendant::*[local-name() = $side]/nuds:type/nuds:description[if (@xml:lang = $lang) then
 															@xml:lang = $lang
 														else
 															@xml:lang = 'en'])">
