@@ -59,6 +59,14 @@
 								<flyout_service_path>/flyout?id=${id}</flyout_service_path>
 							</_object>
 						</entity>
+						<property>
+							<_object>
+								<service_url>
+									<xsl:value-of select="$service"/>
+								</service_url>
+								<service_path>/suggest/property</service_path>
+							</_object>
+						</property>
 					</_object>
 				</suggest>
 			</_object>

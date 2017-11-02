@@ -137,6 +137,7 @@
 	<!-- OpenRefine reconciliation services -->	
 	<page path="/numishare/[^\/]+/apis/reconcile/preview" model="xpl/models/object/get-id.xpl" view="xpl/views/serializations/nuds/reconcile-preview-html.xpl"/>
 	<service path="/numishare/[^\/]+/apis/reconcile/suggest/entity" model="xpl/models/solr/reconcile-suggest.xpl" view="xpl/views/serializations/solr/reconcile-json.xpl" public-methods="GET HEAD POST" />
+	<service path="/numishare/[^\/]+/apis/reconcile/suggest/property" model="xpl/models/config.xpl" view="xpl/views/serializations/config/reconcile-suggest-json.xpl" public-methods="GET HEAD POST" />
 	<service path="/numishare/[^\/]+/apis/reconcile/flyout" model="xpl/models/object/get-id.xpl" view="xpl/views/serializations/nuds/reconcile-flyout-json.xpl" public-methods="GET HEAD POST"/>	
 	<service path="/numishare/[^\/]+/apis/reconcile$" view="xpl/controllers/openrefine-reconcile.xpl" public-methods="GET HEAD POST"/>
 	

@@ -39,7 +39,16 @@
     </xsl:template>
     
     <xsl:template match="properties">
-        
+           <xsl:for-each select="_">
+               <xsl:text> AND </xsl:text>
+               <xsl:apply-templates select="*" mode="prop"/>             
+           </xsl:for-each>
+    </xsl:template>
+    
+    <xsl:template match="*" mode="prop">
+        <xsl:value-of select="name()"/>
+        <xsl:text>:</xsl:text>
+        <xsl:value-of select="."/>
     </xsl:template>
     
     <xsl:template match="type">
