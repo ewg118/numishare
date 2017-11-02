@@ -4344,4 +4344,23 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:function>
+	
+	
+	<!-- ******* FUNCTIONS ******** -->
+	<xsl:template name="numishare:evaluateDatatype">
+		<xsl:param name="val"/>
+		
+		<xsl:choose>
+			<!-- metadata fields must be a string -->
+			<xsl:when test="ancestor::metadata">
+				<xsl:value-of select="concat('&#x022;', replace($val, '&#x022;', '\\&#x022;'), '&#x022;')"/>
+			</xsl:when>
+			<xsl:when test="number($val)">
+				<xsl:value-of select="$val"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="concat('&#x022;', replace($val, '&#x022;', '\\&#x022;'), '&#x022;')"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
 </xsl:stylesheet>

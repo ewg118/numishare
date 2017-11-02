@@ -134,6 +134,11 @@
 	<page path="/numishare/[^\/]+/apis/getRDF" model="xpl/models/xquery/aggregate-ids.xpl" view="xpl/views/serializations/object/rdf.xpl"/>
 	<page path="/numishare/[^\/]+/apis/search" model="xpl/models/solr/feed.xpl" view="xpl/views/apis/search.xpl"/>
 	<page path="/numishare/[^\/]+/apis/type-examples" view="xpl/models/sparql/type-examples.xpl"/>
+	<!-- OpenRefine reconciliation services -->	
+	<page path="/numishare/[^\/]+/apis/reconcile/preview" model="xpl/models/object/get-id.xpl" view="xpl/views/serializations/nuds/reconcile-preview-html.xpl"/>
+	<service path="/numishare/[^\/]+/apis/reconcile/suggest/entity" model="xpl/models/solr/reconcile-suggest.xpl" view="xpl/views/serializations/solr/reconcile-json.xpl" public-methods="GET HEAD POST" />
+	<service path="/numishare/[^\/]+/apis/reconcile/flyout" model="xpl/models/object/get-id.xpl" view="xpl/views/serializations/nuds/reconcile-flyout-json.xpl" public-methods="GET HEAD POST"/>	
+	<service path="/numishare/[^\/]+/apis/reconcile$" view="xpl/controllers/openrefine-reconcile.xpl" public-methods="GET HEAD POST"/>
 	
 	<!-- **** AGGREGATED OBJECTS / RDF EXPORT **** -->
 	<page path="/numishare/[^\/]+/ingest" model="xpl/models/xquery/aggregate-ids.xpl" view="xpl/views/serializations/object/solr.xpl"/>

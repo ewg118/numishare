@@ -4,6 +4,7 @@
 	xmlns:nm="http://nomisma.org/id/" xmlns:nmo="http://nomisma.org/ontology#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
 	xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nuds="http://nomisma.org/nuds" exclude-result-prefixes="#all" version="2.0">
 	<xsl:include href="../../functions.xsl"/>
+	<xsl:include href="../json/json-metamodel.xsl"/>
 
 	<!-- variables -->
 	<xsl:variable name="recordType" select="//nuds:nuds/@recordType"/>
@@ -170,57 +171,6 @@
 
 		<xsl:apply-templates select="$model"/>
 
-	</xsl:template>
-
-	<!-- XSLT templates for rendering the $model into JSON -->
-	<xsl:template match="*">
-		<xsl:choose>
-			<xsl:when test="child::_array">
-				<xsl:value-of select="concat('&#x022;', name(), '&#x022;')"/>
-				<xsl:text>:</xsl:text>
-				<xsl:apply-templates select="_array"/>
-			</xsl:when>
-			<xsl:when test="child::_object">
-				<xsl:value-of select="concat('&#x022;', name(), '&#x022;')"/>
-				<xsl:text>:</xsl:text>
-				<xsl:apply-templates select="_object"/>
-			</xsl:when>
-			<xsl:otherwise>
-				<!-- when the element is preceded by two underscores, prepend an @ character, e.g., for @id or @type -->
-				<xsl:choose>
-					<xsl:when test="substring(name(), 1, 2) = '__'">
-						<xsl:value-of select="concat('&#x022;@', substring(name(), 3), '&#x022;')"/>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:value-of select="concat('&#x022;', name(), '&#x022;')"/>
-					</xsl:otherwise>
-				</xsl:choose>
-				<xsl:text>:</xsl:text>
-				<xsl:call-template name="numishare:evaluateDatatype">
-					<xsl:with-param name="val" select="."/>
-				</xsl:call-template>
-			</xsl:otherwise>
-		</xsl:choose>
-		<xsl:if test="not(position() = last())">
-			<xsl:text>,</xsl:text>
-		</xsl:if>
-	</xsl:template>
-
-	<!-- object template -->
-	<xsl:template match="_object">
-		<xsl:text>{</xsl:text>
-		<xsl:apply-templates/>
-		<xsl:text>}</xsl:text>
-		<xsl:if test="not(position() = last())">
-			<xsl:text>,</xsl:text>
-		</xsl:if>
-	</xsl:template>
-
-	<!-- array template -->
-	<xsl:template match="_array">
-		<xsl:text>[</xsl:text>
-		<xsl:apply-templates/>
-		<xsl:text>]</xsl:text>
 	</xsl:template>
 
 	<!-- XSLT templates to generate XML-JSON metamodel from NUDS -->
@@ -826,24 +776,6 @@
 				<xsl:value-of select="child::*"/>
 			</value>
 		</_object>
-	</xsl:template>
-
-	<!-- ******* FUNCTIONS ******** -->
-	<xsl:template name="numishare:evaluateDatatype">
-		<xsl:param name="val"/>
-
-		<xsl:choose>
-			<!-- metadata fields must be a string -->
-			<xsl:when test="ancestor::metadata">
-				<xsl:value-of select="concat('&#x022;', replace($val, '&#x022;', '\\&#x022;'), '&#x022;')"/>
-			</xsl:when>
-			<xsl:when test="number($val)">
-				<xsl:value-of select="$val"/>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:value-of select="concat('&#x022;', replace($val, '&#x022;', '\\&#x022;'), '&#x022;')"/>
-			</xsl:otherwise>
-		</xsl:choose>
 	</xsl:template>
 
 </xsl:stylesheet>
