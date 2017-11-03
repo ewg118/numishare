@@ -63,7 +63,7 @@
 						</xsl:variable>
 
 						<!-- config variables -->
-						<xsl:variable name="solr-url" select="concat(/config/solr_published, 'select/')"/>
+						<xsl:variable name="solr-url" select="concat(/config/solr_published, 'feed/')"/>
 						<xsl:variable name="service" select="concat($solr-url, '?', $q)"/>
 
 
@@ -130,7 +130,7 @@
 							</xsl:variable>
 							
 							<!-- config variables -->
-							<xsl:variable name="solr-url" select="concat(doc('input:config-xml')/config/solr_published, 'select/')"/>
+							<xsl:variable name="solr-url" select="concat(doc('input:config-xml')/config/solr_published, 'feed/')"/>
 							<xsl:variable name="service" select="concat($solr-url, '?', $q)"/>
 							
 							
