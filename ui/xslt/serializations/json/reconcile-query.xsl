@@ -53,15 +53,24 @@
     <xsl:template match="_" mode="prop">
         <xsl:text> AND </xsl:text>
         <xsl:choose>
-            <xsl:when test="pid">
-                <xsl:value-of select="pid"/>
+            <xsl:when test="(pid or p) and v">
+                <xsl:choose>
+                    <xsl:when test="pid">
+                        <xsl:value-of select="pid"/>
+                    </xsl:when>
+                    <xsl:when test="p">
+                        <xsl:value-of select="p"/>
+                    </xsl:when>
+                </xsl:choose>
+                <xsl:text>:</xsl:text>
+                <xsl:value-of select="v"/>
             </xsl:when>
-            <xsl:when test="p">
-                <xsl:value-of select="p"/>
-            </xsl:when>
-        </xsl:choose>
-        <xsl:text>:</xsl:text>
-        <xsl:value-of select="v"/>
+            <xsl:otherwise>
+                <xsl:value-of select="name()"/>
+                <xsl:text>:</xsl:text>
+                <xsl:value-of select="."/>
+            </xsl:otherwise>
+        </xsl:choose>        
     </xsl:template>
     
     <xsl:template match="type">
