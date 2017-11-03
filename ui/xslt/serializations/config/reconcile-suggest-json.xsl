@@ -16,8 +16,13 @@
 	<xsl:variable name="properties" as="node()*">
 		<properties>
 			<xsl:for-each select="/config/facets/facet">
+				<property id="{.}">
+					<xsl:value-of select="numishare:regularize_node(substring-before(., '_'), $lang)"/>
+					<xsl:text> (Exact)</xsl:text>
+				</property>
 				<property id="{replace(., 'facet', 'text')}">
 					<xsl:value-of select="numishare:regularize_node(substring-before(., '_'), $lang)"/>
+					<xsl:text> (Keyword)</xsl:text>
 				</property>
 			</xsl:for-each>
 		</properties>

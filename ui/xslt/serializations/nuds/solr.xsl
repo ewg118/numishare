@@ -321,6 +321,24 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</field>
+		<field name="title_text">
+			<xsl:choose>
+				<xsl:when test="nuds:title[@xml:lang=$lang]">
+					<xsl:value-of select="nuds:title[@xml:lang=$lang]"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:choose>
+						<xsl:when test="nuds:title[@xml:lang='en']">
+							<xsl:value-of select="nuds:title[@xml:lang='en']"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="nuds:title[1]"/>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:otherwise>
+			</xsl:choose>
+		</field>
+		
 		<xsl:apply-templates select="nuds:subjectSet"/>
 		<xsl:apply-templates select="nuds:physDesc"/>
 		<xsl:apply-templates select="$typeDesc">

@@ -186,6 +186,16 @@
 				<xsl:value-of select="$href"/>
 			</field>
 		</xsl:if>
+		
+		<!-- get alternative labels -->
+		<xsl:if test="contains($href, 'nomisma.org')">
+			<!-- ingest alternate labels -->
+			<xsl:for-each select="$rdf/*[@rdf:about=$href]/skos:altLabel[if (string($lang)) then @xml:lang=$lang else @xml:lang='en']">
+				<field name="{$facet}_text">
+					<xsl:value-of select="."/>
+				</field>
+			</xsl:for-each>
+		</xsl:if>
 	</xsl:template>
 
 	<xsl:template match="nuds:persname|nuds:corpname |*[local-name()='geogname']|nuds:famname|nuds:periodname">

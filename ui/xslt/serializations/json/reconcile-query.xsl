@@ -63,12 +63,26 @@
                     </xsl:when>
                 </xsl:choose>
                 <xsl:text>:</xsl:text>
-                <xsl:value-of select="v"/>
+                <xsl:choose>
+                    <xsl:when test="contains(pid, 'facet')">
+                        <xsl:value-of select="concat('&#x022;', v, '&#x022;')"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:value-of select="v"/>
+                    </xsl:otherwise>
+                </xsl:choose>
             </xsl:when>
             <xsl:otherwise>
                 <xsl:value-of select="name()"/>
                 <xsl:text>:</xsl:text>
-                <xsl:value-of select="."/>
+                <xsl:choose>
+                    <xsl:when test="contains(name(), 'facet')">
+                        <xsl:value-of select="concat('&#x022;', ., '&#x022;')"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:value-of select="."/>
+                    </xsl:otherwise>
+                </xsl:choose>                
             </xsl:otherwise>
         </xsl:choose>        
     </xsl:template>
