@@ -67,7 +67,7 @@
     <xsl:template match="type">
         <xsl:variable name="operator" select="if (parent::node()/type_strict = 'all') then 'AND' else 'OR'"/>
         
-        <xsl:text> AND type:</xsl:text>
+        <xsl:text> AND recordType:</xsl:text>
         <xsl:choose>
             <xsl:when test="@type='array'">
                 <xsl:text>(</xsl:text>
