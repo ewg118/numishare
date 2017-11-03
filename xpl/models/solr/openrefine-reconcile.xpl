@@ -39,8 +39,7 @@
 
 	<p:choose href="#query-type">
 		<!-- when there is a query parameter, then initiate the pipeline for the Solr query and serialization into the OpenRefine JSON model -->
-		<p:when test="/mode = 'query'">
-			
+		<p:when test="/mode = 'query'">			
 			<!-- get Solr results -->
 			<p:processor name="oxf:unsafe-xslt">
 				<p:input name="request" href="#request"/>
@@ -50,13 +49,17 @@
 						xmlns:xxf="http://www.orbeon.com/oxf/pipeline">
 						<xsl:include href="../../../ui/xslt/serializations/json/reconcile-query.xsl"/>
 
+						<xsl:variable name="collection-name" select="substring-before(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/')"/>
+
 						<xsl:variable name="q">
 							<xsl:variable name="query" as="node()*">
 								<xsl:copy-of select="xxf:json-to-xml(doc('input:request')/request/parameters/parameter[name='query']/value)"/>
 							</xsl:variable>
 
 							<!-- compile the q parameter -->
-							<xsl:apply-templates select="$query/json"/>
+							<xsl:apply-templates select="$query/json">
+								<xsl:with-param name="collection-name" select="$collection-name"/>
+							</xsl:apply-templates>
 						</xsl:variable>
 
 						<!-- config variables -->
@@ -117,10 +120,13 @@
 							xmlns:xxf="http://www.orbeon.com/oxf/pipeline">
 							<xsl:include href="../../../ui/xslt/serializations/json/reconcile-query.xsl"/>
 							
+							<xsl:variable name="collection-name" select="substring-before(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/')"/>
 							
 							<!-- compile the q parameter -->
 							<xsl:variable name="q">					
-								<xsl:apply-templates select="/*[@type='object']"/>
+								<xsl:apply-templates select="/*[@type='object']">
+									<xsl:with-param name="collection-name" select="$collection-name"/>
+								</xsl:apply-templates>
 							</xsl:variable>
 							
 							<!-- config variables -->

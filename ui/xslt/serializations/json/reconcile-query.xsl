@@ -4,8 +4,12 @@
 
     <!-- XSLT templates for rendering the the query JSON from the OpenRefine reconciliation service into a valid Solr query -->
     <xsl:template match="/*[@type='object']">
+        <xsl:param name="collection-name"/>
+        
         <xsl:variable name="query">
-            <xsl:apply-templates select="query"/>
+            <xsl:apply-templates select="query">
+                <xsl:with-param name="collection-name" select="$collection-name"/>
+            </xsl:apply-templates>
             <xsl:apply-templates select="type"/>
             <xsl:apply-templates select="properties"/>
         </xsl:variable>
@@ -33,22 +37,31 @@
     </xsl:template>
     
     <xsl:template match="query">
+        <xsl:param name="collection-name"/>
+        
         <xsl:text>fulltext:</xsl:text>
         <xsl:value-of select="."/>
-        <xsl:text> AND lang:en</xsl:text>
+        <xsl:text> AND collection-name:</xsl:text>
+        <xsl:value-of select="$collection-name"/>
+        <xsl:text> AND NOT(lang:*)</xsl:text>
     </xsl:template>
     
     <xsl:template match="properties">
-           <xsl:for-each select="_">
-               <xsl:text> AND </xsl:text>
-               <xsl:apply-templates select="*" mode="prop"/>             
-           </xsl:for-each>
+        <xsl:apply-templates select="_" mode="prop"/>
     </xsl:template>
     
-    <xsl:template match="*" mode="prop">
-        <xsl:value-of select="name()"/>
+    <xsl:template match="_" mode="prop">
+        <xsl:text> AND </xsl:text>
+        <xsl:choose>
+            <xsl:when test="pid">
+                <xsl:value-of select="pid"/>
+            </xsl:when>
+            <xsl:when test="p">
+                <xsl:value-of select="p"/>
+            </xsl:when>
+        </xsl:choose>
         <xsl:text>:</xsl:text>
-        <xsl:value-of select="."/>
+        <xsl:value-of select="v"/>
     </xsl:template>
     
     <xsl:template match="type">
