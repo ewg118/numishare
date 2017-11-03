@@ -3,9 +3,9 @@
     exclude-result-prefixes="xs" version="2.0">
 
     <!-- XSLT templates for rendering the the query JSON from the OpenRefine reconciliation service into a valid Solr query -->
-    <xsl:template match="/*[@type='object']">
+    <xsl:template match="/*[@type = 'object']">
         <xsl:param name="collection-name"/>
-        
+
         <xsl:variable name="query">
             <xsl:apply-templates select="query">
                 <xsl:with-param name="collection-name" select="$collection-name"/>
@@ -13,10 +13,10 @@
             <xsl:apply-templates select="type"/>
             <xsl:apply-templates select="properties"/>
         </xsl:variable>
-        
+
         <xsl:text>q=</xsl:text>
-        <xsl:value-of select="encode-for-uri($query)"/>       
-        
+        <xsl:value-of select="encode-for-uri($query)"/>
+
         <!-- construct limit -->
         <xsl:text>&amp;rows=</xsl:text>
         <xsl:choose>
@@ -25,31 +25,34 @@
             </xsl:when>
             <xsl:otherwise>20</xsl:otherwise>
         </xsl:choose>
-        
+
         <!-- include fl for score -->
         <xsl:text>&amp;fl=recordId,title_display,recordType,score</xsl:text>
-        
+
         <!-- if the name is not 'json', then this is an aggregate query, so add qid parameter -->
         <xsl:if test="not(local-name() = 'json')">
             <xsl:text>&amp;qid=</xsl:text>
             <xsl:value-of select="local-name()"/>
         </xsl:if>
     </xsl:template>
-    
+
     <xsl:template match="query">
         <xsl:param name="collection-name"/>
-        
-        <xsl:text>fulltext:</xsl:text>
+
+        <xsl:text>(fulltext:</xsl:text>
         <xsl:value-of select="."/>
+        <xsl:text> OR title_text:(</xsl:text>
+        <xsl:value-of select="."/>
+        <xsl:text>)^10)</xsl:text>
         <xsl:text> AND collection-name:</xsl:text>
         <xsl:value-of select="$collection-name"/>
         <xsl:text> AND NOT(lang:*)</xsl:text>
     </xsl:template>
-    
+
     <xsl:template match="properties">
         <xsl:apply-templates select="_" mode="prop"/>
     </xsl:template>
-    
+
     <xsl:template match="_" mode="prop">
         <xsl:text> AND </xsl:text>
         <xsl:choose>
@@ -82,17 +85,22 @@
                     <xsl:otherwise>
                         <xsl:value-of select="."/>
                     </xsl:otherwise>
-                </xsl:choose>                
+                </xsl:choose>
             </xsl:otherwise>
-        </xsl:choose>        
+        </xsl:choose>
     </xsl:template>
-    
+
     <xsl:template match="type">
-        <xsl:variable name="operator" select="if (parent::node()/type_strict = 'all') then 'AND' else 'OR'"/>
-        
+        <xsl:variable name="operator"
+            select="
+                if (parent::node()/type_strict = 'all') then
+                    'AND'
+                else
+                    'OR'"/>
+
         <xsl:text> AND recordType:</xsl:text>
         <xsl:choose>
-            <xsl:when test="@type='array'">
+            <xsl:when test="@type = 'array'">
                 <xsl:text>(</xsl:text>
                 <xsl:apply-templates select="_">
                     <xsl:with-param name="operator" select="$operator"/>
@@ -104,10 +112,10 @@
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
-    
+
     <xsl:template match="_">
         <xsl:param name="operator"/>
-        
+
         <xsl:value-of select="concat('&#x022;', ., '&#x022;')"/>
         <xsl:if test="not(position() = last())">
             <xsl:value-of select="concat(' ', $operator, ' ')"/>
