@@ -41,7 +41,7 @@
 
         <xsl:text>(fulltext:</xsl:text>
         <xsl:value-of select="."/>
-        <xsl:text> OR title_text:(</xsl:text>
+        <xsl:text> AND title_text:(</xsl:text>
         <xsl:value-of select="."/>
         <xsl:text>)^10)</xsl:text>
         <xsl:text> AND collection-name:</xsl:text>
