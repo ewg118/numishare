@@ -986,6 +986,13 @@
 					</xsl:choose>
 
 					<xsl:apply-templates select="$nudsGroup//nuds:typeDesc/*[local-name() = $side]" mode="physical"/>
+					<!-- add link to high resolution image -->
+					<xsl:if test="string($iiif-service)">
+						<div>
+							<a href="{$iiif-service}/full/full/0/default.jpg" title="Full resolution image" rel="nofollow"><span
+								class="glyphicon glyphicon-download-alt"/> Download full resolution image</a>
+						</div>
+					</xsl:if>
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:apply-templates select="$nudsGroup//nuds:typeDesc/*[local-name() = $side]" mode="physical"/>
