@@ -39,8 +39,11 @@
     <xsl:template match="query">
         <xsl:param name="collection-name"/>
 
-        <xsl:text>title_text:</xsl:text>
+        <xsl:text>(fulltext:</xsl:text>
         <xsl:value-of select="."/>
+        <xsl:text> AND title_text:(</xsl:text>
+        <xsl:value-of select="."/>
+        <xsl:text>)^10)</xsl:text>
         <xsl:text> AND collection-name:</xsl:text>
         <xsl:value-of select="$collection-name"/>
         <xsl:text> AND NOT(lang:*)</xsl:text>
