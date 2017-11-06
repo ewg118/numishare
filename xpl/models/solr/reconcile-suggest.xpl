@@ -24,6 +24,8 @@
 		<p:input name="data" href="#config"/>
 		<p:input name="config">
 			<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+				<xsl:variable name="collection-name" select="substring-before(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/')"/>
+				
 				<xsl:param name="prefix" select="doc('input:request')/request/parameters/parameter[name='prefix']/value"/>
 				<xsl:param name="limit"
 					select="if (doc('input:request')/request/parameters/parameter[name='limit']/value castable as xs:integer) then doc('input:request')/request/parameters/parameter[name='limit']/value else 20"/>
@@ -48,7 +50,7 @@
 				<!-- config variables -->
 				<xsl:variable name="solr-url" select="concat(/config/solr_published, 'feed/')"/>
 				<xsl:variable name="service"
-					select="concat($solr-url, '?q=fulltext:', encode-for-uri($prefix), '*+AND+lang:en&amp;fl=recordId,title_display,recordType&amp;rows=', $limit, '&amp;start=', $start, if (string($fq)) then concat('&amp;fq=', encode-for-uri($fq)) else '')"/>
+					select="concat($solr-url, '?q=title_text:', encode-for-uri($prefix), '*+AND+collection-name:', $collection-name '+AND+NOT(lang:*)&amp;fl=recordId,title_display,recordType&amp;rows=', $limit, '&amp;start=', $start, if (string($fq)) then concat('&amp;fq=', encode-for-uri($fq)) else '')"/>
 
 				<xsl:template match="/">
 					<config>
