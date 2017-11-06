@@ -9,6 +9,6 @@ Note: do not forget trailing / after db!
 -->
 <exist-config>
 	<username>admin</username>
-	<password>Mp4ANSAie2r</password>
+	<password></password>
 	<url>http://localhost:8080/exist/rest/db/</url>
 </exist-config>
