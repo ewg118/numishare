@@ -47,7 +47,7 @@ PREFIX geo:	<http://www.w3.org/2003/01/geo/wgs84_pos#>
 PREFIX edm: <http://www.europeana.eu/schemas/edm/>
 
 SELECT ?object ?obvThumb ?revThumb ?comRef WHERE {
-?object nmo:hasTypeSeriesItem <http://numismatics.org/ocre/id/ric.1(2).aug.36B> ;
+?object nmo:hasTypeSeriesItem <typeURI> ;
   rdf:type nmo:NumismaticObject .
 {?object foaf:depiction ?comRef }
 UNION{ ?object nmo:hasObverse/foaf:thumbnail ?obvThumb .
