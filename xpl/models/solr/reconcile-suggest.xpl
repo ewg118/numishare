@@ -50,7 +50,7 @@
 				<!-- config variables -->
 				<xsl:variable name="solr-url" select="concat(/config/solr_published, 'feed/')"/>
 				<xsl:variable name="service"
-					select="concat($solr-url, '?q=fulltext:', encode-for-uri($prefix), '*+AND+collection-name:', $collection-name, '+AND+NOT(lang:*)&amp;fl=recordId,title_display,recordType&amp;rows=', $limit, '&amp;start=', $start, if (string($fq)) then concat('&amp;fq=', encode-for-uri($fq)) else '')"/>
+					select="concat($solr-url, '?q=fulltext:', encode-for-uri($prefix), '+AND+collection-name:', $collection-name, '+AND+NOT(lang:*)&amp;fl=recordId,title_display,recordType&amp;rows=', $limit, '&amp;start=', $start, if (string($fq)) then concat('&amp;fq=', encode-for-uri($fq)) else '')"/>
 
 				<xsl:template match="/">
 					<config>

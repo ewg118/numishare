@@ -44,8 +44,8 @@
 						<url>
 							<xsl:value-of select="concat($service, '/preview?id={{id}}')"/>
 						</url>
-						<height>160</height>
-						<width>320</width>
+						<height>200</height>
+						<width>600</width>
 					</_object>
 				</preview>
 				<suggest>
