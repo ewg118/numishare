@@ -102,14 +102,16 @@
 	
 	<!-- display thumbnail -->
 	<xsl:template match="res:result">
-		<xsl:choose>
-			<xsl:when test="res:binding[@name='obvThumb'] and res:binding[@name='revThumb']">
-				<img src="{res:binding[@name='obvThumb']/res:uri}" alt="obverse" style="width:100px"/>
-				<img src="{res:binding[@name='revThumb']/res:uri}" alt="obverse" style="width:100px"/>
-			</xsl:when>
-			<xsl:when test="res:binding[@name='comRef']">
-				<img src="{res:binding[@name='comRef']/res:uri}" alt="combined" style="width:200px"/>
-			</xsl:when>
-		</xsl:choose>
+		<a href="{res:binding[@name='object']/res:uri}" target="_blank">
+			<xsl:choose>
+				<xsl:when test="res:binding[@name='obvThumb'] and res:binding[@name='revThumb']">
+					<img src="{res:binding[@name='obvThumb']/res:uri}" alt="obverse" style="width:96px"/>
+					<img src="{res:binding[@name='revThumb']/res:uri}" alt="obverse" style="width:96px"/>
+				</xsl:when>
+				<xsl:when test="res:binding[@name='comRef']">
+					<img src="{res:binding[@name='comRef']/res:uri}" alt="combined" style="width:200px"/>
+				</xsl:when>
+			</xsl:choose>
+		</a>		
 	</xsl:template>
 </xsl:stylesheet>
