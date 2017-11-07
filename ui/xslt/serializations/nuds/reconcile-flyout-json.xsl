@@ -29,38 +29,34 @@
 	</xsl:template>
 
 	<xsl:template match="nuds:typeDesc">
-		<div>
-			<xsl:if test="nuds:date or nuds:dateRange">
-				<strong>Date: </strong>
-				<xsl:apply-templates select="nuds:date | nuds:dateRange"/>
-				<br/>
-			</xsl:if>
-			<xsl:if test="nuds:denomination">
-				<strong>Denomination: </strong>
-				<xsl:value-of select="nuds:denomination"/>
-				<br/>
-			</xsl:if>
-			<xsl:if test="nuds:geographic/nuds:geogname[@xlink:role = 'mint']">
-				<strong>Mint: </strong>
-				<xsl:value-of select="string-join(nuds:geographic/nuds:geogname[@xlink:role = 'mint'], ',')"/>
-				<br/>
-			</xsl:if>
-			<xsl:if test="nuds:obverse/nuds:persname[@xlink:role = 'portrait']">
-				<strong>Portrait: </strong>
-				<xsl:value-of select="string-join(nuds:obverse/nuds:persname[@xlink:role = 'portrait'], ',')"/>
-				<br/>
-			</xsl:if>
-			<xsl:if test="nuds:obverse/nuds:type or nuds:obverse/nuds:legend">
-				<xsl:apply-templates select="nuds:obverse | nuds:reverse"/>
-			</xsl:if>
-		</div>
+		<xsl:if test="nuds:date or nuds:dateRange">
+			<xsl:text>Date: </xsl:text>
+			<xsl:apply-templates select="nuds:date | nuds:dateRange"/>
+			<xsl:text>; </xsl:text>
+		</xsl:if>
+		<xsl:if test="nuds:denomination">
+			<xsl:text>Denomination: </xsl:text>
+			<xsl:value-of select="nuds:denomination"/>
+			<xsl:text>; </xsl:text>
+		</xsl:if>
+		<xsl:if test="nuds:geographic/nuds:geogname[@xlink:role = 'mint']">
+			<xsl:text>Mint: </xsl:text>
+			<xsl:value-of select="string-join(nuds:geographic/nuds:geogname[@xlink:role = 'mint'], ',')"/>
+			<xsl:text>; </xsl:text>
+		</xsl:if>
+		<xsl:if test="nuds:obverse/nuds:persname[@xlink:role = 'portrait']">
+			<xsl:text>Portrait: </xsl:text>
+			<xsl:value-of select="string-join(nuds:obverse/nuds:persname[@xlink:role = 'portrait'], ',')"/>
+			<xsl:text>; </xsl:text>
+		</xsl:if>
+		<xsl:if test="nuds:obverse/nuds:type or nuds:obverse/nuds:legend">
+			<xsl:apply-templates select="nuds:obverse | nuds:reverse"/>
+		</xsl:if>
 	</xsl:template>
 
 	<xsl:template match="nuds:obverse | nuds:reverse">
-		<strong>
-			<xsl:value-of select="concat(upper-case(substring(local-name(), 1, 1)), substring(local-name(), 2))"/>
-			<xsl:text>: </xsl:text>
-		</strong>
+		<xsl:value-of select="concat(upper-case(substring(local-name(), 1, 1)), substring(local-name(), 2))"/>
+		<xsl:text>: </xsl:text>
 		<xsl:apply-templates select="nuds:legend"/>
 		<xsl:if test="string(nuds:legend) and string(nuds:type)">
 			<xsl:text> - </xsl:text>
@@ -74,7 +70,7 @@
 				<xsl:apply-templates select="nuds:type/nuds:description[1]"/>
 			</xsl:otherwise>
 		</xsl:choose>
-		<br/>
+		<xsl:text>; </xsl:text>
 	</xsl:template>
 
 	<xsl:template match="nuds:date">
