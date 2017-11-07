@@ -48,11 +48,12 @@ PREFIX edm: <http://www.europeana.eu/schemas/edm/>
 
 SELECT ?object ?obvThumb ?revThumb ?comRef WHERE {
 ?object nmo:hasTypeSeriesItem <typeURI> ;
-  rdf:type nmo:NumismaticObject .
+  rdf:type nmo:NumismaticObject ;
+  nmo:hasCollection ?collection.
 {?object foaf:depiction ?comRef }
 UNION{ ?object nmo:hasObverse/foaf:thumbnail ?obvThumb .
       ?object nmo:hasReverse/foaf:thumbnail ?revThumb }
-} LIMIT 1]]></xsl:variable>
+} ORDER BY ?collection LIMIT 1]]></xsl:variable>
 				
 				<xsl:variable name="service">
 					<xsl:value-of select="concat($sparql_endpoint, '?query=', encode-for-uri(replace($query, 'typeURI', $uri)), '&amp;output=xml')"/>					
