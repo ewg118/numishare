@@ -160,6 +160,21 @@
 		</node>
 	</xsl:variable>
 	
+	<!-- geographic boolean variables -->
+	<xsl:variable name="hasMints" as="xs:boolean">
+		<xsl:choose>
+			<xsl:when test="$rdf//nmo:Mint or descendant::nuds:geographic/nuds:geogname[contains(@xlink:href, 'geonames.org')]">true</xsl:when>
+			<xsl:otherwise>false</xsl:otherwise>
+		</xsl:choose>
+	</xsl:variable>
+	
+	<xsl:variable name="hasFindspots" as="xs:boolean">
+		<xsl:choose>
+			<xsl:when test="descendant::nuds:geogname[@xlink:role='findspot'][@xlink:href]">true</xsl:when>
+			<xsl:otherwise>false</xsl:otherwise>
+		</xsl:choose>
+	</xsl:variable>
+	
 	<xsl:template match="/">
 		<html prefix="geo: http://www.w3.org/2003/01/geo/wgs84_pos# foaf: http://xmlns.com/foaf/0.1/ dcterms: http://purl.org/dc/terms/ xsd: http://www.w3.org/2001/XMLSchema# nm:
 			http://nomisma.org/id/ rdf: http://www.w3.org/1999/02/22-rdf-syntax-ns# skos: http://www.w3.org/2004/02/skos/core# nmo:
