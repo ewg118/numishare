@@ -198,7 +198,7 @@
 	</xsl:variable>
 	<xsl:variable name="hasAnnotations" as="xs:boolean">
 		<xsl:choose>
-			<xsl:when test="//config/annotation_sparql_endpoint">
+			<xsl:when test="matches(//config/annotation_sparql_endpoint, 'https?://')">
 				<xsl:choose>
 					<xsl:when test="doc('input:annotations')[descendant::res:result]">true</xsl:when>
 					<xsl:otherwise>false</xsl:otherwise>
