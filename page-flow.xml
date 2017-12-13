@@ -49,6 +49,9 @@
 	<!-- PELLA -->
 	<page path="/numishare/pella/" model="xpl/models/config.xpl" view="file:///usr/local/projects/pella/xpl/views/pages/index.xpl"/>
 	
+	<!-- SCO -->
+	<page path="/numishare/sco/" model="xpl/models/config.xpl" view="file:///usr/local/projects/sco/xpl/views/pages/index.xpl"/>
+	
 	<!-- OCRE -->
 	<page path="/numishare/ocre/" model="xpl/models/config.xpl" view="file:///usr/local/projects/ocre/xpl/views/pages/index.xpl"/>	
 	
