@@ -368,21 +368,54 @@
 								else
 									concat($url, 'id/', $id)"/>
 					</xsl:attribute>
+					
+					<!-- include any additional prefix/namespace before processing otherRecordIds -->
 					<xsl:for-each select="descendant::*:semanticDeclaration">
 						<xsl:namespace name="{*:prefix}" select="*:namespace"/>
 					</xsl:for-each>
+					
+					<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+										
+					<!-- insert titles -->
+					<xsl:for-each select="descendant::nuds:descMeta/nuds:title">
+						<skos:prefLabel>
+							<xsl:if test="string(@xml:lang)">
+								<xsl:attribute name="xml:lang" select="@xml:lang"/>
+							</xsl:if>
+							<xsl:value-of select="."/>
+						</skos:prefLabel>
+						<skos:definition>
+							<xsl:if test="string(@xml:lang)">
+								<xsl:attribute name="xml:lang" select="@xml:lang"/>
+							</xsl:if>
+							<xsl:value-of select="."/>
+						</skos:definition>
+					</xsl:for-each>
+					
+					<!-- source nmo:TypeSeries, use typeSeries inherent to NUDS by default, if available -->
+					<xsl:choose>
+						<xsl:when test="nuds:descMeta/nuds:typeDesc/nuds:typeSeries/@xlink:href">
+							<dcterms:source rdf:resource="{nuds:descMeta/nuds:typeDesc/nuds:typeSeries/@xlink:href}"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<dcterms:source rdf:resource="{//config/type_series}"/>
+						</xsl:otherwise>
+					</xsl:choose>
+					
+					<!-- include other properites and URIs -->
 					<xsl:for-each select="descendant::*:otherRecordId[string(@semantic)]">
 						<xsl:variable name="uri" select="
-								if (contains(., 'http://')) then
-									.
-								else
-									concat($url, 'id/', .)"/>
+							if (matches(., '^https?://')) then
+							.
+							else
+							concat($url, 'id/', .)"/>
 						<xsl:variable name="prefix" select="substring-before(@semantic, ':')"/>
 						<xsl:variable name="namespace" select="ancestor::*:control/*:semanticDeclaration[*:prefix = $prefix]/*:namespace"/>
 						<xsl:element name="{@semantic}" namespace="{$namespace}">
 							<xsl:attribute name="rdf:resource" select="$uri"/>
 						</xsl:element>
 					</xsl:for-each>
+					
 					<void:inDataset rdf:resource="{$url}"/>
 				</xsl:element>
 			</xsl:when>
@@ -406,8 +439,17 @@
 									<xsl:value-of select="."/>
 								</skos:definition>
 							</xsl:for-each>
-							<!-- source nmo:TypeSeries -->
-							<dcterms:source rdf:resource="{//config/type_series}"/>
+							
+							<!-- source nmo:TypeSeries, use typeSeries inherent to NUDS by default, if available -->
+							<xsl:choose>
+								<xsl:when test="nuds:descMeta/nuds:typeDesc/nuds:typeSeries/@xlink:href">
+									<dcterms:source rdf:resource="{nuds:descMeta/nuds:typeDesc/nuds:typeSeries/@xlink:href}"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<dcterms:source rdf:resource="{//config/type_series}"/>
+								</xsl:otherwise>
+							</xsl:choose>
+							
 							<!-- other ids -->
 							<xsl:for-each select="descendant::*:otherRecordId[string(@semantic)]">
 								<xsl:variable name="uri"
