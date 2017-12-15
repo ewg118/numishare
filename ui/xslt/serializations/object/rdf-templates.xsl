@@ -650,12 +650,14 @@
 	</xsl:template>
 
 	<xsl:template match="nuds:legend" mode="nomisma">
-		<nmo:hasLegend>
-			<xsl:if test="string(@xml:lang)">
-				<xsl:attribute name="xml:lang" select="@xml:lang"/>
-			</xsl:if>
-			<xsl:value-of select="."/>
-		</nmo:hasLegend>
+		<xsl:if test="string(.)">
+			<nmo:hasLegend>
+				<xsl:if test="string(@xml:lang)">
+					<xsl:attribute name="xml:lang" select="@xml:lang"/>
+				</xsl:if>
+				<xsl:value-of select="."/>
+			</nmo:hasLegend>
+		</xsl:if>		
 	</xsl:template>
 
 	<xsl:template match="nuds:type/nuds:description" mode="nomisma">

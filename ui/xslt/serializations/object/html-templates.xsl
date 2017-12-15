@@ -8,7 +8,8 @@
 <xsl:stylesheet xmlns:nuds="http://nomisma.org/nuds" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:numishare="https://github.com/ewg118/numishare"
 	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
 	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:nm="http://nomisma.org/id/" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:mets="http://www.loc.gov/METS/"
-	xmlns:res="http://www.w3.org/2005/sparql-results#" xmlns:mods="http://www.loc.gov/mods/v3" exclude-result-prefixes="#all" version="2.0">
+	xmlns:res="http://www.w3.org/2005/sparql-results#" xmlns:mods="http://www.loc.gov/mods/v3" xmlns:tei="http://www.tei-c.org/ns/1.0"
+	exclude-result-prefixes="#all" version="2.0">
 	<!--***************************************** ELEMENT TEMPLATES **************************************** -->
 	<xsl:template match="*[local-name() = 'refDesc']">
 		<div class="metadata_section">
@@ -16,8 +17,8 @@
 				<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
 			</xsl:element>
 			<ul>
-				<xsl:apply-templates select="*:reference[not(child::*[local-name() = 'objectXMLWrap'])] | *:citation" mode="descMeta"/>
-				<xsl:apply-templates select="*:reference/*[local-name() = 'objectXMLWrap']"/>
+				<xsl:apply-templates select="*:reference[not(child::*[local-name() = 'objectXMLWrap']) and not(child::tei:*)] | *:citation" mode="descMeta"/>
+				<xsl:apply-templates select="*:reference/*[local-name() = 'objectXMLWrap'] | *:reference[child::tei:*]"/>
 			</ul>
 		</div>
 	</xsl:template>
@@ -678,6 +679,54 @@
 		</xsl:if>
 		<xsl:text>.</xsl:text>
 	</xsl:template>
+
+	<!-- *************** TEI TEMPLATES FOR REFERENCES, LEGENDS TRANSCRIPTIONS, ETC ******************-->
+	<xsl:template match="*:reference[child::tei:*]">
+		<li>
+			<b><xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>:</b>
+			<xsl:apply-templates/>
+		</li>
+	</xsl:template>
+
+	<xsl:template match="tei:title">
+		<i>
+			<xsl:apply-templates/>
+		</i>
+		<xsl:if test="string(@key)">
+			<a href="{@key}" target="_blank">
+				<xsl:text> </xsl:text>
+				<span class="glyphicon glyphicon-new-window"/>
+			</a>
+		</xsl:if>
+	</xsl:template>
+
+	<xsl:template match="tei:idno">
+		<xsl:choose>
+			<xsl:when test="parent::node()/@xlink:href">
+				<a href="{parent::node()/@xlink:href}">
+					<xsl:apply-templates/>
+				</a>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:apply-templates/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template match="tei:div" mode="descMeta">
+		<li>
+			<xsl:apply-templates/>
+		</li>
+	</xsl:template>
+
+	<xsl:template match="tei:gap">
+		<xsl:text>[gap: </xsl:text>
+		<i>
+			<xsl:value-of select="@reason"/>
+		</i>
+		<xsl:text>]</xsl:text>
+	</xsl:template>
+
 	<!--***************************************** CREATE LINK FROM CATEGORY **************************************** -->
 	<xsl:template name="assemble_category_query">
 		<xsl:param name="level"/>
@@ -864,7 +913,7 @@
 					</xsl:if>
 					<xsl:if test="descendant::mets:file[@USE = 'iiif']">
 						<xsl:variable name="manifestURI" select="concat($url, 'manifest/', $id)"/>
-						
+
 						<li>
 							<a href="{$manifestURI}">IIIF Manifest</a>
 							<xsl:text> </xsl:text>
@@ -874,7 +923,7 @@
 					<xsl:if test="$recordType = 'conceptual'">
 						<!-- only display coin type manifest link if there are IIIF service resources -->
 						<xsl:variable name="hasIIIF" select="doc('input:hasIIIF')//res:boolean" as="xs:boolean"/>
-						
+
 						<xsl:if test="$hasIIIF = true()">
 							<xsl:variable name="manifestURI" select="concat($url, 'manifest/', $id)"/>
 							<li>

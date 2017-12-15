@@ -5,138 +5,161 @@
 	specific stylesheets for creating Solr documents
 	Modification date: April 2012
 -->
-<xsl:stylesheet xmlns:nuds="http://nomisma.org/nuds" xmlns:nh="http://nomisma.org/nudsHoard" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:datetime="http://exslt.org/dates-and-times"
-	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mods="http://www.loc.gov/mods/v3"
-	xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:numishare="https://github.com/ewg118/numishare" exclude-result-prefixes="#all"
-	version="2.0">
+<xsl:stylesheet xmlns:nuds="http://nomisma.org/nuds" xmlns:nh="http://nomisma.org/nudsHoard" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+	xmlns:datetime="http://exslt.org/dates-and-times" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mods="http://www.loc.gov/mods/v3" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"
+	xmlns:org="http://www.w3.org/ns/org#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:numishare="https://github.com/ewg118/numishare"
+	xmlns:tei="http://www.tei-c.org/ns/1.0" exclude-result-prefixes="#all" version="2.0">
 
 	<xsl:template match="nuds:typeDesc">
 		<xsl:param name="recordType"/>
 		<xsl:param name="lang"/>
 
-		<xsl:apply-templates select="nuds:date|nuds:dateRange">
+		<xsl:apply-templates select="nuds:date | nuds:dateRange">
 			<xsl:with-param name="recordType" select="$recordType"/>
 		</xsl:apply-templates>
 
 		<!-- AH dates -->
-		<xsl:apply-templates select="nuds:dateOnObject[@calendar='ah']"/>
+		<xsl:apply-templates select="nuds:dateOnObject[@calendar = 'ah']"/>
 
-		<xsl:apply-templates select="nuds:obverse|nuds:reverse">
+		<xsl:apply-templates select="nuds:obverse | nuds:reverse">
 			<xsl:with-param name="recordType" select="$recordType"/>
 			<xsl:with-param name="lang" select="$lang"/>
 		</xsl:apply-templates>
 
 		<!-- *********** FACETS ************** -->
 
-		<xsl:apply-templates select="nuds:objectType | nuds:denomination[string(.) or string(@xlink:href)] | nuds:manufacture[string(.) or string(@xlink:href)] | nuds:material[string(.) or
-			string(@xlink:href)]">
+		<xsl:apply-templates
+			select="
+				nuds:objectType | nuds:denomination[string(.) or string(@xlink:href)] | nuds:manufacture[string(.) or string(@xlink:href)] | nuds:material[string(.) or
+				string(@xlink:href)]">
 			<xsl:with-param name="lang" select="$lang"/>
 		</xsl:apply-templates>
-		<xsl:apply-templates select="descendant::nuds:persname[string(.) or string(@xlink:href)] | descendant::nuds:corpname[string(.) or string(@xlink:href)] | descendant::nuds:geogname[string(.) or
-			string(@xlink:href)]|descendant::nuds:famname[string(.) or string(@xlink:href)]|descendant::nuds:periodname[string(.) or string(@xlink:href)]">
+		<xsl:apply-templates
+			select="
+				descendant::nuds:persname[string(.) or string(@xlink:href)] | descendant::nuds:corpname[string(.) or string(@xlink:href)] | descendant::nuds:geogname[string(.) or
+				string(@xlink:href)] | descendant::nuds:famname[string(.) or string(@xlink:href)] | descendant::nuds:periodname[string(.) or string(@xlink:href)]">
 			<xsl:with-param name="lang" select="$lang"/>
 		</xsl:apply-templates>
 
 	</xsl:template>
-	
-	<xsl:template match="nuds:obverse|nuds:reverse">
+
+	<xsl:template match="nuds:obverse | nuds:reverse">
 		<xsl:param name="recordType"/>
 		<xsl:param name="lang"/>
-		
+
 		<xsl:variable name="side" select="substring(local-name(), 1, 3)"/>
-		
+
 		<!-- get correct type description based on lang, default to english -->
 		<xsl:if test="nuds:type/nuds:description">
 			<xsl:choose>
-				<xsl:when test="nuds:type/nuds:description[@xml:lang=$lang]">
+				<xsl:when test="nuds:type/nuds:description[@xml:lang = $lang]">
 					<xsl:if test="$recordType != 'hoard'">
 						<field name="{$side}_type_display">
-							<xsl:value-of select="normalize-space(nuds:type/nuds:description[@xml:lang=$lang])"/>
+							<xsl:value-of select="normalize-space(nuds:type/nuds:description[@xml:lang = $lang])"/>
 						</field>
 					</xsl:if>
 					<field name="{$side}_type_text">
-						<xsl:value-of select="normalize-space(nuds:type/nuds:description[@xml:lang=$lang])"/>
+						<xsl:value-of select="normalize-space(nuds:type/nuds:description[@xml:lang = $lang])"/>
 					</field>
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:if test="$recordType != 'hoard'">
 						<field name="{$side}_type_display">
-							<xsl:value-of select="normalize-space(nuds:type/nuds:description[@xml:lang='en'])"/>
+							<xsl:value-of select="normalize-space(nuds:type/nuds:description[@xml:lang = 'en'])"/>
 						</field>
 					</xsl:if>
 					<field name="{$side}_type_text">
-						<xsl:value-of select="normalize-space(nuds:type/nuds:description[@xml:lang='en'])"/>
+						<xsl:value-of select="normalize-space(nuds:type/nuds:description[@xml:lang = 'en'])"/>
 					</field>
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:if>
-		
+
 		<xsl:if test="nuds:legend">
-			<xsl:if test="$recordType != 'hoard'">
-				<field name="{$side}_leg_display">
-					<xsl:value-of select="normalize-space(nuds:legend)"/>
-				</field>
-			</xsl:if>
-			<field name="{$side}_leg_text">
-				<xsl:value-of select="normalize-space(nuds:legend)"/>
-			</field>
-			<field name="{$side}_legendCondensed_text">
-				<xsl:value-of select="replace(nuds:legend, ' ', '')"/>
-			</field>
-		</xsl:if>
-		
-		<!-- only index symbols as facets for coin type projects -->
-		<xsl:if test="$recordType='conceptual'">
-		<xsl:for-each select="nuds:symbol">
-			<xsl:variable name="symbolType" select="if (@localType) then @localType else 'symbol'"/>
-			
+			<!-- only include legend if there's a string (ignore gaps) -->
+
 			<xsl:choose>
-				<xsl:when test="@position">
-					<xsl:choose>
-						<xsl:when test="@xlink:href">
-							<xsl:variable name="uri" select="@xlink:href"/>
-							<field name="{$symbolType}_{$side}_{@position}_facet">
-								<xsl:value-of select="$symbols//*[@rdf:about=$uri]/skos:prefLabel"/>
-							</field>
-							<field name="{$symbolType}_{$side}_{@position}_uri">
-								<xsl:value-of select="@xlink:href"/>
-							</field>
-							<field name="{$symbolType}_uri">
-								<xsl:value-of select="@xlink:href"/>
-							</field>							
-						</xsl:when>
-						<xsl:otherwise>
-							<field name="{$symbolType}_{$side}_{@position}_facet">
-								<xsl:value-of select="."/>
-							</field>
-						</xsl:otherwise>
-					</xsl:choose>
+				<xsl:when test="child::tei:div[@type = 'edition']">
+					<xsl:apply-templates select="tei:div[@type='edition']">
+						<xsl:with-param name="side" select="$side"/>
+						<xsl:with-param name="recordType" select="$recordType"/>
+					</xsl:apply-templates>
 				</xsl:when>
 				<xsl:otherwise>
-					<xsl:choose>
-						<xsl:when test="@xlink:href">
-							<xsl:variable name="uri" select="@xlink:href"/>
-							<field name="{$symbolType}_{$side}_facet">
-								<xsl:value-of select="$symbols//*[@rdf:about=$uri]/skos:prefLabel"/>
+					<xsl:if test="string(.)">
+						<xsl:if test="$recordType != 'hoard'">
+							<field name="{$side}_leg_display">
+								<xsl:value-of select="normalize-space(nuds:legend)"/>
 							</field>
-							<field name="{$symbolType}_{$side}_uri">
-								<xsl:value-of select="@xlink:href"/>
-							</field>
-							<field name="{$symbolType}_uri">
-								<xsl:value-of select="@xlink:href"/>
-							</field>
-						</xsl:when>
-						<xsl:otherwise>
-							<field name="{$symbolType}_{$side}_facet">
-								<xsl:value-of select="."/>
-							</field>
-						</xsl:otherwise>
-					</xsl:choose>
+						</xsl:if>
+						<field name="{$side}_leg_text">
+							<xsl:value-of select="normalize-space(nuds:legend)"/>
+						</field>
+						<field name="{$side}_legendCondensed_text">
+							<xsl:value-of select="replace(nuds:legend, ' ', '')"/>
+						</field>
+					</xsl:if>
 				</xsl:otherwise>
 			</xsl:choose>
-		</xsl:for-each>
 		</xsl:if>
-		
+
+		<!-- only index symbols as facets for coin type projects -->
+		<xsl:if test="$recordType = 'conceptual'">
+			<xsl:for-each select="nuds:symbol">
+				<xsl:variable name="symbolType" select="
+						if (@localType) then
+							@localType
+						else
+							'symbol'"/>
+
+				<xsl:choose>
+					<xsl:when test="@position">
+						<xsl:choose>
+							<xsl:when test="@xlink:href">
+								<xsl:variable name="uri" select="@xlink:href"/>
+								<field name="{$symbolType}_{$side}_{@position}_facet">
+									<xsl:value-of select="$symbols//*[@rdf:about = $uri]/skos:prefLabel"/>
+								</field>
+								<field name="{$symbolType}_{$side}_{@position}_uri">
+									<xsl:value-of select="@xlink:href"/>
+								</field>
+								<field name="{$symbolType}_uri">
+									<xsl:value-of select="@xlink:href"/>
+								</field>
+							</xsl:when>
+							<xsl:otherwise>
+								<field name="{$symbolType}_{$side}_{@position}_facet">
+									<xsl:value-of select="."/>
+								</field>
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:choose>
+							<xsl:when test="@xlink:href">
+								<xsl:variable name="uri" select="@xlink:href"/>
+								<field name="{$symbolType}_{$side}_facet">
+									<xsl:value-of select="$symbols//*[@rdf:about = $uri]/skos:prefLabel"/>
+								</field>
+								<field name="{$symbolType}_{$side}_uri">
+									<xsl:value-of select="@xlink:href"/>
+								</field>
+								<field name="{$symbolType}_uri">
+									<xsl:value-of select="@xlink:href"/>
+								</field>
+							</xsl:when>
+							<xsl:otherwise>
+								<field name="{$symbolType}_{$side}_facet">
+									<xsl:value-of select="."/>
+								</field>
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:for-each>
+		</xsl:if>
+
 		<!-- handle symbols as facets -->
 		<!--<xsl:if test="$recordType='conceptual'">
 			<xsl:for-each select="nuds:symbol[@position]">
@@ -152,19 +175,19 @@
 		</xsl:if>-->
 	</xsl:template>
 
-	<xsl:template match="nuds:objectType|nuds:denomination|nuds:manufacture|nuds:material">
+	<xsl:template match="nuds:objectType | nuds:denomination | nuds:manufacture | nuds:material">
 		<xsl:param name="lang"/>
 		<xsl:variable name="facet" select="local-name()"/>
 		<xsl:variable name="href" select="@xlink:href"/>
 		<xsl:variable name="label">
 			<xsl:choose>
 				<xsl:when test="string($lang) and contains($href, 'nomisma.org')">
-					<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about=$href], $lang)"/>
+					<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about = $href], $lang)"/>
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:choose>
 						<xsl:when test="not(string(.))">
-							<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about=$href], 'en')"/>
+							<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about = $href], 'en')"/>
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:value-of select="normalize-space(.)"/>
@@ -186,11 +209,16 @@
 				<xsl:value-of select="$href"/>
 			</field>
 		</xsl:if>
-		
+
 		<!-- get alternative labels -->
 		<xsl:if test="contains($href, 'nomisma.org')">
 			<!-- ingest alternate labels -->
-			<xsl:for-each select="$rdf/*[@rdf:about=$href]/skos:altLabel[if (string($lang)) then @xml:lang=$lang else @xml:lang='en']">
+			<xsl:for-each
+				select="
+					$rdf/*[@rdf:about = $href]/skos:altLabel[if (string($lang)) then
+						@xml:lang = $lang
+					else
+						@xml:lang = 'en']">
 				<field name="{$facet}_text">
 					<xsl:value-of select="."/>
 				</field>
@@ -198,19 +226,23 @@
 		</xsl:if>
 	</xsl:template>
 
-	<xsl:template match="nuds:persname|nuds:corpname |*[local-name()='geogname']|nuds:famname|nuds:periodname">
+	<xsl:template match="nuds:persname | nuds:corpname | *[local-name() = 'geogname'] | nuds:famname | nuds:periodname">
 		<xsl:param name="lang"/>
 		<xsl:variable name="href" select="@xlink:href"/>
-		<xsl:variable name="role" select="if (string(@xlink:role)) then @xlink:role else local-name()"/>
+		<xsl:variable name="role" select="
+				if (string(@xlink:role)) then
+					@xlink:role
+				else
+					local-name()"/>
 		<xsl:variable name="label">
 			<xsl:choose>
 				<xsl:when test="string($lang) and contains($href, 'nomisma.org')">
-					<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about=$href], $lang)"/>
+					<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about = $href], $lang)"/>
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:choose>
 						<xsl:when test="not(string(.))">
-							<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about=$href], 'en')"/>
+							<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about = $href], 'en')"/>
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:value-of select="normalize-space(.)"/>
@@ -222,26 +254,26 @@
 
 		<field name="{$role}_facet">
 			<xsl:choose>
-				<xsl:when test="$role='findspot' and contains(@xlink:href, 'geonames.org')">
-					<xsl:value-of select="$geonames//place[@id=$href]/@label"/>
+				<xsl:when test="$role = 'findspot' and contains(@xlink:href, 'geonames.org')">
+					<xsl:value-of select="$geonames//place[@id = $href]/@label"/>
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:value-of select="$label"/>
 				</xsl:otherwise>
 			</xsl:choose>
 		</field>
-		<xsl:if test="$role='findspot'">
+		<xsl:if test="$role = 'findspot'">
 			<field name="findspot_display">
 				<xsl:value-of select="$label"/>
 			</field>
 		</xsl:if>
 		<field name="{$role}_text">
 			<xsl:choose>
-				<xsl:when test="$role='findspot' and contains(@xlink:href, 'geonames.org')">
+				<xsl:when test="$role = 'findspot' and contains(@xlink:href, 'geonames.org')">
 					<!-- combine the text with the label -->
 					<xsl:value-of select="$label"/>
 					<xsl:text> </xsl:text>
-					<xsl:value-of select="$geonames//place[@id=$href]/@label"/>
+					<xsl:value-of select="$geonames//place[@id = $href]/@label"/>
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:value-of select="$label"/>
@@ -255,10 +287,58 @@
 		</xsl:if>
 		<xsl:if test="contains($href, 'nomisma.org')">
 			<!-- ingest alternate labels -->
-			<xsl:for-each select="$rdf/*[@rdf:about=$href]/skos:altLabel[if (string($lang)) then @xml:lang=$lang else @xml:lang='en']">
+			<xsl:for-each
+				select="
+					$rdf/*[@rdf:about = $href]/skos:altLabel[if (string($lang)) then
+						@xml:lang = $lang
+					else
+						@xml:lang = 'en']">
 				<field name="{$role}_text">
 					<xsl:value-of select="."/>
 				</field>
+			</xsl:for-each>
+
+			<!-- get dynasty/political entity from Nomisma RDF -->
+			<xsl:for-each select="$rdf/*[@rdf:about = $href]/org:memberOf">
+				<xsl:variable name="dynasty_uri" select="@rdf:resource"/>
+
+				<field name="dynasty_uri">
+					<xsl:value-of select="$dynasty_uri"/>
+				</field>
+
+				<xsl:if test="doc-available(concat($dynasty_uri, '.rdf'))">
+					<xsl:variable name="label" select="doc(concat($dynasty_uri, '.rdf'))//skos:prefLabel[@xml:lang = 'en']"/>
+
+					<field name="dynasty_facet">
+						<xsl:value-of select="$label"/>
+					</field>
+					<field name="dynasty_text">
+						<xsl:value-of select="$label"/>
+					</field>
+				</xsl:if>
+			</xsl:for-each>
+
+			<xsl:for-each select="$rdf/*[@rdf:about = $href]/org:hasMembership">
+				<xsl:variable name="membership_uri" select="@rdf:resource"/>
+
+				<xsl:if test="$rdf/*[@rdf:about = $membership_uri]/org:organization">
+					<xsl:variable name="org_uri" select="$rdf/*[@rdf:about = $membership_uri]/org:organization/@rdf:resource"/>
+
+					<field name="state_uri">
+						<xsl:value-of select="$org_uri"/>
+					</field>
+
+					<xsl:if test="doc-available(concat($org_uri, '.rdf'))">
+						<xsl:variable name="label" select="doc(concat($org_uri, '.rdf'))//skos:prefLabel[@xml:lang = 'en']"/>
+
+						<field name="state_facet">
+							<xsl:value-of select="$label"/>
+						</field>
+						<field name="state_text">
+							<xsl:value-of select="$label"/>
+						</field>
+					</xsl:if>
+				</xsl:if>
 			</xsl:for-each>
 		</xsl:if>
 
@@ -269,21 +349,22 @@
 					<xsl:variable name="value" select="."/>
 					<!-- *_geo format is 'mint name|URI of resource|KML-compliant geographic coordinates' -->
 
-					<xsl:if test="string-length($geonames//place[@id=$href]) &gt; 0">
+					<xsl:if test="string-length($geonames//place[@id = $href]) &gt; 0">
 						<field name="{$role}_geo">
-							<xsl:value-of select="$geonames//place[@id=$href]/@label"/>
+							<xsl:value-of select="$geonames//place[@id = $href]/@label"/>
 							<xsl:text>|</xsl:text>
 							<xsl:value-of select="$href"/>
 							<xsl:text>|</xsl:text>
-							<xsl:value-of select="$geonames//place[@id=$href]"/>
+							<xsl:value-of select="$geonames//place[@id = $href]"/>
 						</field>
 						<field name="{$role}_loc">
-							<xsl:value-of select="concat(tokenize($geonames//place[@id=$href], ',')[2], ',', tokenize($geonames//place[@id=$href], ',')[1])"/>
+							<xsl:value-of select="concat(tokenize($geonames//place[@id = $href], ',')[2], ',', tokenize($geonames//place[@id = $href], ',')[1])"
+							/>
 						</field>
 					</xsl:if>
 
 					<!-- insert hierarchical facets -->
-					<xsl:variable name="hierarchy_pieces" select="tokenize($geonames//place[@id=$href]/@hierarchy, '\|')"/>
+					<xsl:variable name="hierarchy_pieces" select="tokenize($geonames//place[@id = $href]/@hierarchy, '\|')"/>
 					<xsl:variable name="count" select="count($hierarchy_pieces)"/>
 
 					<xsl:for-each select="$hierarchy_pieces">
@@ -297,7 +378,9 @@
 							</xsl:when>
 							<xsl:otherwise>
 								<field name="{$role}_hier">
-									<xsl:value-of select="concat(substring-before($hierarchy_pieces[$position - 1], '/'), '|', substring-after(., '/'), '/', substring-before(., '/'))"/>
+									<xsl:value-of
+										select="concat(substring-before($hierarchy_pieces[$position - 1], '/'), '|', substring-after(., '/'), '/', substring-before(., '/'))"
+									/>
 								</field>
 							</xsl:otherwise>
 						</xsl:choose>
@@ -310,7 +393,7 @@
 				<xsl:when test="contains(@xlink:href, 'nomisma.org')">
 					<xsl:variable name="href" select="@xlink:href"/>
 					<xsl:variable name="coordinates">
-						<xsl:if test="$rdf/*[@rdf:about=concat($href, '#this')]/geo:lat and $rdf/*[@rdf:about=concat($href, '#this')]/geo:long">
+						<xsl:if test="$rdf/*[@rdf:about = concat($href, '#this')]/geo:lat and $rdf/*[@rdf:about = concat($href, '#this')]/geo:long">
 							<xsl:text>true</xsl:text>
 						</xsl:if>
 					</xsl:variable>
@@ -319,12 +402,12 @@
 						<field name="{$role}_geo">
 							<xsl:choose>
 								<xsl:when test="string($lang)">
-									<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about=$href], $lang)"/>
+									<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about = $href], $lang)"/>
 								</xsl:when>
 								<xsl:otherwise>
 									<xsl:choose>
 										<xsl:when test="not(string(.))">
-											<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about=$href], 'en')"/>
+											<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about = $href], 'en')"/>
 										</xsl:when>
 										<xsl:otherwise>
 											<xsl:value-of select="normalize-space(.)"/>
@@ -335,34 +418,38 @@
 							<xsl:text>|</xsl:text>
 							<xsl:value-of select="@xlink:href"/>
 							<xsl:text>|</xsl:text>
-							<xsl:value-of select="concat($rdf/*[@rdf:about=concat($href, '#this')]/geo:long, ',', $rdf/*[@rdf:about=concat($href, '#this')]/geo:lat)"/>
+							<xsl:value-of
+								select="concat($rdf/*[@rdf:about = concat($href, '#this')]/geo:long, ',', $rdf/*[@rdf:about = concat($href, '#this')]/geo:lat)"
+							/>
 						</field>
 
 						<field name="{$role}_loc">
-							<xsl:value-of select="concat($rdf/*[@rdf:about=concat($href, '#this')]/geo:lat, ',', $rdf/*[@rdf:about=concat($href, '#this')]/geo:long)"/>
+							<xsl:value-of
+								select="concat($rdf/*[@rdf:about = concat($href, '#this')]/geo:lat, ',', $rdf/*[@rdf:about = concat($href, '#this')]/geo:long)"
+							/>
 						</field>
 					</xsl:if>
-					<xsl:for-each select="$rdf/*[@rdf:about=$href]/skos:closeMatch[contains(@rdf:resource, 'pleiades.stoa.org')]">
+					<xsl:for-each select="$rdf/*[@rdf:about = $href]/skos:closeMatch[contains(@rdf:resource, 'pleiades.stoa.org')]">
 						<field name="pleiades_uri">
 							<xsl:value-of select="@rdf:resource"/>
 						</field>
 					</xsl:for-each>
-					
+
 					<!--index region hierarchy -->
-					<xsl:for-each select="$regions//hierarchy[@uri=$href]/region">
+					<xsl:for-each select="$regions//hierarchy[@uri = $href]/region">
 						<xsl:sort select="position()" order="descending"/>
 						<xsl:variable name="id" select="substring-after(@uri, 'id/')"/>
-						
+
 						<field name="region_hier">
 							<xsl:choose>
-								<xsl:when test="position()=1">
-									<xsl:value-of select="concat('L',position(), '|', ., '/', $id)"/>
+								<xsl:when test="position() = 1">
+									<xsl:value-of select="concat('L', position(), '|', ., '/', $id)"/>
 								</xsl:when>
 								<xsl:otherwise>
 									<xsl:value-of select="concat(substring-after(following-sibling::node()[1]/@uri, 'id/'), '|', ., '/', $id)"/>
 								</xsl:otherwise>
 							</xsl:choose>
-							
+
 						</field>
 					</xsl:for-each>
 				</xsl:when>
@@ -370,30 +457,30 @@
 		</xsl:if>
 		<xsl:if test="string(@xlink:href) and $role = 'region'">
 			<xsl:variable name="href" select="@xlink:href"/>
-			<xsl:for-each select="$rdf/*[@rdf:about=$href]/skos:closeMatch[contains(@rdf:resource, 'pleiades.stoa.org')]">
+			<xsl:for-each select="$rdf/*[@rdf:about = $href]/skos:closeMatch[contains(@rdf:resource, 'pleiades.stoa.org')]">
 				<field name="pleiades_uri">
 					<xsl:value-of select="@rdf:resource"/>
 				</field>
 			</xsl:for-each>
 			<xsl:if test="contains($href, 'nomisma.org')">
 				<!--index region hierarchy -->
-				<xsl:for-each select="$regions//hierarchy[@uri=$href]/region">
+				<xsl:for-each select="$regions//hierarchy[@uri = $href]/region">
 					<xsl:sort select="position()" order="descending"/>
 					<xsl:variable name="id" select="substring-after(@uri, 'id/')"/>
-					
+
 					<field name="region_hier">
 						<xsl:choose>
-							<xsl:when test="position()=1">
-								<xsl:value-of select="concat('L',position(), '|', ., '/', $id)"/>
+							<xsl:when test="position() = 1">
+								<xsl:value-of select="concat('L', position(), '|', ., '/', $id)"/>
 							</xsl:when>
 							<xsl:otherwise>
 								<xsl:value-of select="concat(substring-after(following-sibling::node()[1]/@uri, 'id/'), '|', ., '/', $id)"/>
 							</xsl:otherwise>
 						</xsl:choose>
-						
+
 					</field>
 					<!-- manually insert lowest region hierarchy for self -->
-					<xsl:if test="position()=last()">
+					<xsl:if test="position() = last()">
 						<field name="region_hier">
 							<xsl:value-of select="concat(substring-after(@uri, 'id/'), '|', $label, '/', substring-after($href, 'id/'))"/>
 						</field>
@@ -403,7 +490,7 @@
 		</xsl:if>
 	</xsl:template>
 
-	<xsl:template match="nuds:dateOnObject[@calendar='ah']">
+	<xsl:template match="nuds:dateOnObject[@calendar = 'ah']">
 		<xsl:if test="normalize-space(.) castable as xs:integer">
 			<field name="ah_num">
 				<xsl:value-of select="normalize-space(.)"/>
@@ -416,14 +503,34 @@
 			</field>
 		</xsl:if>
 	</xsl:template>
+	
+	<!-- index TEI-encoded edition into legend field -->
+	<xsl:template match="tei:div[@type='edition']">
+		<xsl:param name="side"/>
+		<xsl:param name="recordType"/>
+		
+		<xsl:if test="string(.)">
+			<xsl:if test="$recordType != 'hoard'">
+				<field name="{$side}_leg_display">
+					<xsl:value-of select="tei:div"/>
+				</field>
+			</xsl:if>
+			<field name="{$side}_leg_text">
+				<xsl:value-of select="tei:div"/>
+			</field>
+			<field name="{$side}_legendCondensed_text">
+				<xsl:value-of select="replace(nuds:legend, ' ', '')"/>
+			</field>
+		</xsl:if>		
+	</xsl:template>
 
 	<!-- generalize refDesc for NUDS and NUDS Hoard records -->
-	<xsl:template match="*[local-name()='refDesc']">
+	<xsl:template match="*[local-name() = 'refDesc']">
 
 		<!-- references -->
 		<xsl:variable name="refs" as="element()*">
 			<refs>
-				<xsl:for-each select="*[local-name()='reference']">
+				<xsl:for-each select="*[local-name() = 'reference']">
 					<ref>
 						<xsl:call-template name="get_ref"/>
 					</ref>
@@ -494,7 +601,11 @@
 
 		<xsl:if test="number(.)">
 			<xsl:variable name="year_string" select="string(abs(number(.)))"/>
-			<xsl:variable name="century" select="if(number(.) &gt; 0) then ceiling(number(.) div 100) else floor(number(.) div 100)"/>
+			<xsl:variable name="century" select="
+					if (number(.) &gt; 0) then
+						ceiling(number(.) div 100)
+					else
+						floor(number(.) div 100)"/>
 			<xsl:variable name="decade_digit" select="floor(number(substring($year_string, (string-length($year_string) - 1), 2)) div 10)"/>
 			<xsl:variable name="decade" select="(($century - 1) * 100) + $decade_digit"/>
 
@@ -530,7 +641,11 @@
 
 	<xsl:template name="get_hoard_sort_fields">
 		<xsl:param name="lang"/>
-		<xsl:variable name="localLang" select="if (string($lang)) then $lang else 'en'"/>
+		<xsl:variable name="localLang" select="
+				if (string($lang)) then
+					$lang
+				else
+					'en'"/>
 		<!-- sortable fields -->
 		<xsl:variable name="sort-fields">
 			<xsl:text>artist,authority,deity,denomination,dynasty,issuer,magistrate,maker,manufacture,material,mint,portrait,region</xsl:text>
@@ -539,14 +654,14 @@
 			<xsl:variable name="field" select="."/>
 
 			<!-- for each sortable field which is a multiValued field in Solr (a facet), grab the min and max values -->
-			<xsl:for-each select="$rdf/descendant::*[local-name()=$field]/skos:prefLabel[@xml:lang=$localLang]">
+			<xsl:for-each select="$rdf/descendant::*[local-name() = $field]/skos:prefLabel[@xml:lang = $localLang]">
 				<xsl:sort order="ascending"/>
-				<xsl:if test="position()=1">
+				<xsl:if test="position() = 1">
 					<field name="{$field}_min">
 						<xsl:value-of select="normalize-space(.)"/>
 					</field>
 				</xsl:if>
-				<xsl:if test="position()=last()">
+				<xsl:if test="position() = last()">
 					<field name="{$field}_max">
 						<xsl:value-of select="normalize-space(.)"/>
 					</field>
@@ -566,16 +681,25 @@
 		<xsl:for-each select="tokenize($sort-fields, ',')">
 			<xsl:variable name="field" select="."/>
 			<!-- for each sortable field which is a multiValued field in Solr (a facet), grab the min and max values -->
-			<xsl:for-each select="$typeDesc/descendant::*[local-name()=$field and local-name() !='authority']|$typeDesc/descendant::*[@xlink:role=$field]">
-				<xsl:sort order="ascending" select="if (@xlink:href) then @xlink:href else ."/>
+			<xsl:for-each
+				select="$typeDesc/descendant::*[local-name() = $field and local-name() != 'authority'] | $typeDesc/descendant::*[@xlink:role = $field]">
+				<xsl:sort order="ascending" select="
+						if (@xlink:href) then
+							@xlink:href
+						else
+							."/>
 				<xsl:variable name="href" select="@xlink:href"/>
-				<xsl:variable name="name" select="if(@xlink:role) then @xlink:role else local-name()"/>
+				<xsl:variable name="name" select="
+						if (@xlink:role) then
+							@xlink:role
+						else
+							local-name()"/>
 				<xsl:variable name="label">
 					<xsl:choose>
 						<xsl:when test="string($lang)">
 							<xsl:choose>
 								<xsl:when test="contains($href, 'nomisma.org')">
-									<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about=$href], $lang)"/>
+									<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about = $href], $lang)"/>
 								</xsl:when>
 								<xsl:otherwise>
 									<xsl:value-of select="normalize-space(.)"/>
@@ -587,7 +711,7 @@
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:variable>
-				<xsl:if test="position()=1">
+				<xsl:if test="position() = 1">
 					<field name="{$name}_min">
 						<xsl:value-of select="$label"/>
 					</field>
@@ -603,16 +727,16 @@
 
 	<xsl:template name="get_ref">
 		<xsl:choose>
-			<xsl:when test="*[local-name()='objectXMLWrap']/mods:modsCollection">
-				<xsl:value-of select="*[local-name()='objectXMLWrap']/mods:modsCollection/mods:mods/@ID"/>
+			<xsl:when test="*[local-name() = 'objectXMLWrap']/mods:modsCollection">
+				<xsl:value-of select="*[local-name() = 'objectXMLWrap']/mods:modsCollection/mods:mods/@ID"/>
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:choose>
-					<xsl:when test="string(*[local-name()='title'])">
-						<xsl:value-of select="normalize-space(*[local-name()='title'])"/>
-						<xsl:if test="string(*[local-name()='identifier'])">
+					<xsl:when test="string(*[local-name() = 'title'])">
+						<xsl:value-of select="normalize-space(*[local-name() = 'title'])"/>
+						<xsl:if test="string(*[local-name() = 'identifier'])">
 							<xsl:text> </xsl:text>
-							<xsl:value-of select="normalize-space(*[local-name()='identifier'])"/>
+							<xsl:value-of select="normalize-space(*[local-name() = 'identifier'])"/>
 						</xsl:if>
 					</xsl:when>
 					<xsl:otherwise>
@@ -628,19 +752,23 @@
 		<xsl:param name="collection-name"/>
 
 		<xsl:choose>
-			<xsl:when test="$collection-name='crro'">
+			<xsl:when test="$collection-name = 'crro'">
 				<field name="typeNumber">
 					<xsl:value-of select="substring-after(nuds:control/nuds:recordId, 'rrc-')"/>
 				</field>
 			</xsl:when>
-			<xsl:when test="$collection-name='ocre'">
+			<xsl:when test="$collection-name = 'ocre'">
 				<xsl:variable name="pieces" select="tokenize(nuds:control/nuds:recordId, '\.')"/>
 
 				<field name="typeNumber">
-					<xsl:value-of select="if(count($pieces) = 4) then $pieces[4] else concat($pieces[4], '.', $pieces[5])"/>
+					<xsl:value-of select="
+							if (count($pieces) = 4) then
+								$pieces[4]
+							else
+								concat($pieces[4], '.', $pieces[5])"/>
 				</field>
 			</xsl:when>
-			<xsl:when test="$collection-name='pella'">
+			<xsl:when test="$collection-name = 'pella'">
 				<field name="typeNumber">
 					<xsl:value-of select="substring-after(nuds:control/nuds:recordId, 'price.')"/>
 				</field>
@@ -654,13 +782,18 @@
 		<xsl:param name="collection-name"/>
 
 		<xsl:choose>
-			<xsl:when test="$collection-name='crro'">
+			<xsl:when test="$collection-name = 'crro'">
 				<field name="sortid">
 					<!--<xsl:variable name="segs" select="tokenize(substring-after(nuds:control/nuds:recordId, 'rrc-'), '\.')"/>-->
 					<xsl:analyze-string select="substring-after(nuds:control/nuds:recordId, 'rrc-')" regex="([0-9]+)(^[\.]+)?(\.)?([0-9]+)?([A-z]+)?">
 						<xsl:matching-substring>
-							<xsl:value-of select="concat(format-number(number(regex-group(1)), '0000'), regex-group(2), regex-group(3), if (number(regex-group(4))) then
-								format-number(number(regex-group(4)), '0000') else '', regex-group(5))"/>
+							<xsl:value-of
+								select="
+									concat(format-number(number(regex-group(1)), '0000'), regex-group(2), regex-group(3), if (number(regex-group(4))) then
+										format-number(number(regex-group(4)), '0000')
+									else
+										'', regex-group(5))"
+							/>
 						</xsl:matching-substring>
 						<xsl:non-matching-substring>
 							<xsl:value-of select="."/>
@@ -669,7 +802,7 @@
 				</field>
 			</xsl:when>
 
-			<xsl:when test="$collection-name='pella'">
+			<xsl:when test="$collection-name = 'pella'">
 				<field name="sortid">
 					<xsl:analyze-string select="substring-after(nuds:control/nuds:recordId, 'price.')" regex="([A-Z])?([0-9]+)([A-z]+)?">
 						<xsl:matching-substring>
@@ -682,13 +815,13 @@
 				</field>
 			</xsl:when>
 
-			<xsl:when test="$collection-name='igch'">
+			<xsl:when test="$collection-name = 'igch'">
 				<field name="sortid">
 					<xsl:value-of select="nh:control/nh:recordId"/>
 				</field>
 			</xsl:when>
 
-			<xsl:when test="$collection-name='ocre'">
+			<xsl:when test="$collection-name = 'ocre'">
 				<field name="sortid">
 					<xsl:variable name="segs" select="tokenize(nuds:control/nuds:recordId, '\.')"/>
 					<xsl:variable name="auth">
@@ -699,8 +832,8 @@
 							<xsl:when test="$segs[3] = 'cl'">004</xsl:when>
 							<xsl:when test="$segs[3] = 'ner'">
 								<xsl:choose>
-									<xsl:when test="$segs[2]='1(2)'">005</xsl:when>
-									<xsl:when test="$segs[2]='2'">015</xsl:when>
+									<xsl:when test="$segs[2] = '1(2)'">005</xsl:when>
+									<xsl:when test="$segs[2] = '2'">015</xsl:when>
 								</xsl:choose>
 							</xsl:when>
 							<xsl:when test="$segs[3] = 'clm'">006</xsl:when>
@@ -769,28 +902,28 @@
 							<xsl:when test="$segs[3] = 'fl'">070</xsl:when>
 							<xsl:when test="$segs[3] = 'intr'">071</xsl:when>
 							<xsl:when test="$segs[3] = 'pro'">072_01</xsl:when>
-							<xsl:when test="$segs[3]='car'">072_02</xsl:when>
-							<xsl:when test="$segs[3]='dio'">072_03</xsl:when>
-							<xsl:when test="$segs[3]='post'">072_04</xsl:when>
-							<xsl:when test="$segs[3]='lae'">072_05</xsl:when>
-							<xsl:when test="$segs[3]='mar'">072_06</xsl:when>
-							<xsl:when test="$segs[3]='vict'">072_07</xsl:when>
-							<xsl:when test="$segs[3]='tet_i'">072_08</xsl:when>
-							<xsl:when test="$segs[3]='cara'">072_09</xsl:when>
-							<xsl:when test="$segs[3]='cara-dio-max_her'">072_10</xsl:when>
-							<xsl:when test="$segs[3]='all'">072_11</xsl:when>
-							<xsl:when test="$segs[3]='mac_ii'">072_12</xsl:when>
-							<xsl:when test="$segs[3]='quit'">072_13</xsl:when>
-							<xsl:when test="$segs[3]='zen'">072_14</xsl:when>
-							<xsl:when test="$segs[3]='vab'">072_15</xsl:when>
-							<xsl:when test="$segs[3]='reg'">072_16</xsl:when>
-							<xsl:when test="$segs[3]='dry'">072_17</xsl:when>
-							<xsl:when test="$segs[3]='aurl'">072_18</xsl:when>
-							<xsl:when test="$segs[3]='dom_g'">072_19</xsl:when>
-							<xsl:when test="$segs[3]='sat'">072_20</xsl:when>
-							<xsl:when test="$segs[3]='bon'">072_21</xsl:when>
-							<xsl:when test="$segs[3]='jul_i'">072_22</xsl:when>
-							<xsl:when test="$segs[3]='ama'">072_23</xsl:when>
+							<xsl:when test="$segs[3] = 'car'">072_02</xsl:when>
+							<xsl:when test="$segs[3] = 'dio'">072_03</xsl:when>
+							<xsl:when test="$segs[3] = 'post'">072_04</xsl:when>
+							<xsl:when test="$segs[3] = 'lae'">072_05</xsl:when>
+							<xsl:when test="$segs[3] = 'mar'">072_06</xsl:when>
+							<xsl:when test="$segs[3] = 'vict'">072_07</xsl:when>
+							<xsl:when test="$segs[3] = 'tet_i'">072_08</xsl:when>
+							<xsl:when test="$segs[3] = 'cara'">072_09</xsl:when>
+							<xsl:when test="$segs[3] = 'cara-dio-max_her'">072_10</xsl:when>
+							<xsl:when test="$segs[3] = 'all'">072_11</xsl:when>
+							<xsl:when test="$segs[3] = 'mac_ii'">072_12</xsl:when>
+							<xsl:when test="$segs[3] = 'quit'">072_13</xsl:when>
+							<xsl:when test="$segs[3] = 'zen'">072_14</xsl:when>
+							<xsl:when test="$segs[3] = 'vab'">072_15</xsl:when>
+							<xsl:when test="$segs[3] = 'reg'">072_16</xsl:when>
+							<xsl:when test="$segs[3] = 'dry'">072_17</xsl:when>
+							<xsl:when test="$segs[3] = 'aurl'">072_18</xsl:when>
+							<xsl:when test="$segs[3] = 'dom_g'">072_19</xsl:when>
+							<xsl:when test="$segs[3] = 'sat'">072_20</xsl:when>
+							<xsl:when test="$segs[3] = 'bon'">072_21</xsl:when>
+							<xsl:when test="$segs[3] = 'jul_i'">072_22</xsl:when>
+							<xsl:when test="$segs[3] = 'ama'">072_23</xsl:when>
 							<xsl:when test="$segs[2] = '6'">
 								<xsl:choose>
 									<xsl:when test="$segs[3] = 'lon'">073</xsl:when>
@@ -808,18 +941,18 @@
 									<xsl:when test="$segs[3] = 'nic'">084</xsl:when>
 									<xsl:when test="$segs[3] = 'cyz'">085</xsl:when>
 									<xsl:when test="$segs[3] = 'anch'">086</xsl:when>
-									<xsl:when test="$segs[3] = 'alex'">087</xsl:when>									
+									<xsl:when test="$segs[3] = 'alex'">087</xsl:when>
 								</xsl:choose>
 							</xsl:when>
 							<xsl:when test="$segs[2] = '7'">
 								<xsl:choose>
-									<xsl:when test="$segs[3] = 'lon'">088</xsl:when>									
+									<xsl:when test="$segs[3] = 'lon'">088</xsl:when>
 									<xsl:when test="$segs[3] = 'lug'">089</xsl:when>
 									<xsl:when test="$segs[3] = 'tri'">090</xsl:when>
 									<xsl:when test="$segs[3] = 'ar'">091</xsl:when>
 									<xsl:when test="$segs[3] = 'rom'">092</xsl:when>
 									<xsl:when test="$segs[3] = 'tic'">093</xsl:when>
-									<xsl:when test="$segs[3] = 'aq'">094</xsl:when>									
+									<xsl:when test="$segs[3] = 'aq'">094</xsl:when>
 									<xsl:when test="$segs[3] = 'sis'">095</xsl:when>
 									<xsl:when test="$segs[3] = 'sir'">096</xsl:when>
 									<xsl:when test="$segs[3] = 'serd'">096a</xsl:when>
@@ -834,7 +967,7 @@
 							</xsl:when>
 							<xsl:when test="$segs[2] = '8'">
 								<xsl:choose>
-									<xsl:when test="$segs[3] = 'amb'">104</xsl:when>									
+									<xsl:when test="$segs[3] = 'amb'">104</xsl:when>
 									<xsl:when test="$segs[3] = 'tri'">105</xsl:when>
 									<xsl:when test="$segs[3] = 'lug'">106</xsl:when>
 									<xsl:when test="$segs[3] = 'ar'">107</xsl:when>
@@ -854,7 +987,7 @@
 							</xsl:when>
 							<xsl:when test="$segs[2] = '9'">
 								<xsl:choose>
-									<xsl:when test="$segs[3] = 'alex'">118_01</xsl:when>									
+									<xsl:when test="$segs[3] = 'alex'">118_01</xsl:when>
 									<xsl:when test="$segs[3] = 'anch'">118_02</xsl:when>
 									<xsl:when test="$segs[3] = 'aq'">118_03</xsl:when>
 									<xsl:when test="$segs[3] = 'ar'">118_04</xsl:when>
@@ -896,10 +1029,10 @@
 									<xsl:when test="$segs[3] = 'pet_max_w'">138</xsl:when>
 									<xsl:when test="$segs[3] = 'marc_w'">139</xsl:when>
 									<xsl:when test="$segs[3] = 'av_w'">140</xsl:when>
-									<xsl:when test="$segs[3] = 'leo_i_w'">141</xsl:when>									
-									<xsl:when test="$segs[3] = 'maj_w'">142</xsl:when>									
+									<xsl:when test="$segs[3] = 'leo_i_w'">141</xsl:when>
+									<xsl:when test="$segs[3] = 'maj_w'">142</xsl:when>
 									<xsl:when test="$segs[3] = 'lib_sev_w'">143</xsl:when>
-									<xsl:when test="$segs[3] = 'anth_w'">144</xsl:when>	
+									<xsl:when test="$segs[3] = 'anth_w'">144</xsl:when>
 									<xsl:when test="$segs[3] = 'oly_w'">145</xsl:when>
 									<xsl:when test="$segs[3] = 'glyc_w'">146</xsl:when>
 									<xsl:when test="$segs[3] = 'jul_nep_w'">147</xsl:when>
@@ -927,18 +1060,18 @@
 			</xsl:when>
 		</xsl:choose>
 	</xsl:template>
-	
+
 	<xsl:template name="alternativeLabels">
 		<xsl:param name="lang"/>
 		<xsl:param name="typeDesc" as="node()*"/>
-		
+
 		<xsl:for-each select="distinct-values($typeDesc/descendant::*[contains(@xlink:href, 'nomisma.org')]/@xlink:href)">
 			<xsl:variable name="href" select="."/>
-			
-			<xsl:for-each select="$rdf//*[@rdf:about=$href]/descendant::*[contains(local-name(), 'Label')][@xml:lang=$lang]">
+
+			<xsl:for-each select="$rdf//*[@rdf:about = $href]/descendant::*[contains(local-name(), 'Label')][@xml:lang = $lang]">
 				<xsl:value-of select="normalize-space(.)"/>
 				<xsl:text> </xsl:text>
 			</xsl:for-each>
-		</xsl:for-each>		
+		</xsl:for-each>
 	</xsl:template>
 </xsl:stylesheet>
