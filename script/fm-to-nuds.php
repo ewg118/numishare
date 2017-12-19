@@ -947,6 +947,14 @@ function generate_nuds($row, $count, $fileName){
 									}
 									$writer->text($SCOTitle);
 								$writer->endElement();
+							} else {
+								$label = str_replace('?', '', trim($ref));
+								$writer->startElement('reference');
+									if ($uncertain == true){
+										$writer->writeAttribute('certainty', 'uncertain');
+									}
+									$writer->text($label);
+								$writer->endElement();
 							}
 						} else {
 							$label = str_replace('?', '', trim($ref));
