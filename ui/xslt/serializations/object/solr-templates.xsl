@@ -814,6 +814,12 @@
 					</xsl:analyze-string>
 				</field>
 			</xsl:when>
+			
+			<xsl:when test="$collection-name = 'sco'">
+				<field name="sortid">
+					<xsl:value-of select="format-number(number(substring-after(nuds:control/nuds:recordId, 'sc.2.')), '0000')"/>
+				</field>
+			</xsl:when>
 
 			<xsl:when test="$collection-name = 'igch'">
 				<field name="sortid">
