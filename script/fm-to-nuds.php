@@ -73,6 +73,15 @@ $Roman_array = generate_json('https://docs.google.com/spreadsheet/pub?hl=en_US&h
 $South_Asian_array = generate_json('https://docs.google.com/spreadsheet/pub?hl=en_US&hl=en_US&key=0Avp6BVZhfwHAdFpxbjVsc25rblIyZy1OSngtVy15VGc&single=true&gid=0&output=csv');
 $United_States_array = generate_json('https://docs.google.com/spreadsheet/pub?hl=en_US&hl=en_US&key=0Avp6BVZhfwHAdEZ3VU1JeThGVHJiNEJsUkptbTFTRGc&single=true&gid=0&output=csv');
 
+//SCO spreadsheet for mapping SC to the new SCO number
+$sco_array = generate_json('https://docs.google.com/spreadsheets/d/e/2PACX-1vQLdeurX2qJZ6zN-uWLJex2DylQOx3wav5ZCMgAidsy6yilV4j8cco9WEuvXckxEJhuSnBTmJaF4zPj/pub?gid=998961995&single=true&output=csv');
+//process full $sco spreadsheet into key=>value array
+$sco = array();
+foreach ($sco_array as $row){
+	$uri = 'http://numismatics.org/sco/id/' . $row['ID'];
+	$sco[$row['SC no.']] = $uri;
+}
+
 //deities
 $deities_array = generate_json('https://docs.google.com/spreadsheet/pub?hl=en_US&hl=en_US&key=0Avp6BVZhfwHAdHk2ZXBuX0RYMEZzUlNJUkZOLXRUTmc&single=true&gid=0&output=csv');
 
@@ -211,9 +220,13 @@ if (($handle = fopen("/tmp/" . $csv_id . ".csv", "r")) !== FALSE) {
 function generate_nuds($row, $count, $fileName){
 	GLOBAL $warnings;
 	GLOBAL $coinTypes;
+	GLOBAL $sco;
 	
 	$ocreUri = '';
 	$ocreTitle = '';
+	
+	$SCOUri = '';
+	$SCOTitle = '';
 
 	//generate collection year for images
 	$accnum = trim($row['accnum']);
@@ -406,7 +419,105 @@ function generate_nuds($row, $count, $fileName){
 			} else {
 				generate_typeDesc($writer, $row, $department, $uncertain);
 			}
-		} elseif ($department=='Greek' && count(preg_grep('/Price\.[L|P]?\d+[A-Z]?$/', $refs)) > 0){
+		} elseif ($department=='Greek' && count(preg_grep('/Price\.[L|P]?\d+[A-Z]?$/', $refs)) > 0 && count(preg_grep('/SC\./', $refs)) > 0){
+			//if both Price and SC exist, then use Price in typeDesc, but insert reference for SCO
+			$matches = preg_grep('/Price\.[L|P]?\d+[A-Z]?$/', $refs);
+			foreach ($matches as $k=>$v){
+				if (strlen(trim($v)) > 0){
+					$id = substr(trim($v), -1) == '?' ? str_replace('?', '', trim($v)) : trim($v);
+					$uncertain = substr(trim($v), -1) == '?' ? true : false;
+				}
+			}
+			$uri = 'http://numismatics.org/pella/id/' . str_replace('Price.', 'price.', $id);
+			
+			//get info from $coinTypes array if the coin type has been verified already
+			if (array_key_exists($uri, $coinTypes)){
+				echo "Matched {$uri}\n";
+				$title = $coinTypes[$uri]['title'];
+				
+				//generate title
+				$writer->startElement('title');
+					$writer->writeAttribute('xml:lang', 'en');
+					$writer->text("{$title}. {$accnum}");
+				$writer->endElement();
+				
+				//generate typeDesc with link
+				$writer->startElement('typeDesc');
+					$writer->writeAttribute('xlink:type', 'simple');
+					$writer->writeAttribute('xlink:href', $uri);
+					if ($uncertain == true){
+						$writer->writeAttribute('certainty', 'uncertain');
+					}
+				$writer->endElement();
+			} else {
+				$file_headers = @get_headers($uri);
+				if ($file_headers[0] == 'HTTP/1.1 200 OK'){
+					echo "Found {$uri}\n";
+					//get title
+					$titles = generate_title_from_type($uri);
+					$writer->startElement('title');
+						$writer->writeAttribute('xml:lang', 'en');
+						$writer->text("{$titles['title']}. {$accnum}");
+					$writer->endElement();
+					
+					//generate typeDesc with link
+					$writer->startElement('typeDesc');
+						$writer->writeAttribute('xlink:type', 'simple');
+						$writer->writeAttribute('xlink:href', $uri);
+						if ($uncertain == true){
+							$writer->writeAttribute('certainty', 'uncertain');
+						}
+					$writer->endElement();
+					
+					//add data into the $coinTypes array
+					$coinTypes[$uri] = array('title'=>$titles['title'], 'reference'=>$titles['reference']);
+				} else {
+					generate_typeDesc($writer, $row, $department, $uncertain);
+				}
+			}
+			
+			//parse SC
+			$matches = preg_grep('/SC\./', $refs);
+			foreach ($matches as $k=>$v){
+				if (strlen(trim($v)) > 0){
+					$id = substr(trim($v), -1) == '?' ? str_replace('?', '', trim($v)) : trim($v);
+					$uncertain = substr(trim($v), -1) == '?' ? true : false;
+				}
+			}
+			
+			$key = str_replace('SC.', 'sc.1.', $id);
+			//use the SCO spreadsheet for time being
+			
+			//if the array key exists, then use the given $uri, otherwise generate typeDesc from local metadata
+			if (array_key_exists($key, $sco)){
+				$uri = $sco[$key];
+				
+				//get info from $coinTypes array if the coin type has been verified already
+				if (array_key_exists($uri, $coinTypes)){
+					$SCOUri = $uri;
+					$SCOTitle = $coinTypes[$uri]['reference'];
+				} else {
+					$file_headers = @get_headers($uri);
+					if ($file_headers[0] == 'HTTP/1.1 200 OK'){
+						echo "Found {$uri}\n";
+						//generate the title from the NUDS
+						$titles = generate_title_from_type($uri);
+						$writer->startElement('title');
+							$writer->writeAttribute('xml:lang', 'en');
+							$writer->text("{$titles['title']}. {$accnum}");
+						$writer->endElement();
+						
+						//add data into the $coinTypes array
+						$coinTypes[$uri] = array('title'=>$titles['title'], 'reference'=>$titles['reference']);
+						
+						//set the ocreTitle
+						$SCOUri= $uri;
+						$SCOTitle= $titles['reference'];
+					}
+				}
+			}
+			
+		} elseif ($department=='Greek' && count(preg_grep('/Price\.[L|P]?\d+[A-Z]?$/', $refs)) > 0 && count(preg_grep('/SC\./', $refs)) == 0){
 			//handle Price references for Pella
 			$matches = preg_grep('/Price\.[L|P]?\d+[A-Z]?$/', $refs);
 			foreach ($matches as $k=>$v){
@@ -462,45 +573,32 @@ function generate_nuds($row, $count, $fileName){
 					generate_typeDesc($writer, $row, $department, $uncertain);
 				}
 			}
-		} elseif ($department=='Greek' && count(preg_grep('/SCO\.\d+$/', $refs)) > 0){
+		} elseif ($department=='Greek' && count(preg_grep('/SC\./', $refs)) > 0 && count(preg_grep('/Price\.[L|P]?\d+[A-Z]?$/', $refs)) == 0){			
 			//handle Seleucid Coins Online
-			$matches = preg_grep('/SCO\.\d+$/', $refs);
+			$matches = preg_grep('/SC\./', $refs);
 			foreach ($matches as $k=>$v){
 				if (strlen(trim($v)) > 0){
 					$id = substr(trim($v), -1) == '?' ? str_replace('?', '', trim($v)) : trim($v);
 					$uncertain = substr(trim($v), -1) == '?' ? true : false;
 				}
 			}
-			$uri = 'http://numismatics.org/sco/id/' . str_replace('SCO.', 'sc.2.', $id);
 			
-			//get info from $coinTypes array if the coin type has been verified already
-			if (array_key_exists($uri, $coinTypes)){
-				echo "Matched {$uri}\n";
-				$title = $coinTypes[$uri]['title'];
+			$key = str_replace('SC.', 'sc.1.', $id);
+			//use the SCO spreadsheet for time being
+			
+			//if the array key exists, then use the given $uri, otherwise generate typeDesc from local metadata
+			if (array_key_exists($key, $sco)){				
+				$uri = $sco[$key];
 				
-				//generate title
-				$writer->startElement('title');
-					$writer->writeAttribute('xml:lang', 'en');
-					$writer->text("{$title}. {$accnum}");
-				$writer->endElement();
-				
-				//generate typeDesc with link
-				$writer->startElement('typeDesc');
-					$writer->writeAttribute('xlink:type', 'simple');
-					$writer->writeAttribute('xlink:href', $uri);
-					if ($uncertain == true){
-						$writer->writeAttribute('certainty', 'uncertain');
-					}
-				$writer->endElement();
-			} else {
-				$file_headers = @get_headers($uri);
-				if ($file_headers[0] == 'HTTP/1.1 200 OK'){
-					echo "Found {$uri}\n";
-					//get title
-					$titles = generate_title_from_type($uri);
+				//get info from $coinTypes array if the coin type has been verified already
+				if (array_key_exists($uri, $coinTypes)){
+					echo "Matched {$uri}\n";
+					$title = $coinTypes[$uri]['title'];
+					
+					//generate title
 					$writer->startElement('title');
 						$writer->writeAttribute('xml:lang', 'en');
-						$writer->text("{$titles['title']}. {$accnum}");
+						$writer->text("{$title}. {$accnum}");
 					$writer->endElement();
 					
 					//generate typeDesc with link
@@ -511,13 +609,35 @@ function generate_nuds($row, $count, $fileName){
 							$writer->writeAttribute('certainty', 'uncertain');
 						}
 					$writer->endElement();
-					
-					//add data into the $coinTypes array
-					$coinTypes[$uri] = array('title'=>$titles['title'], 'reference'=>$titles['reference']);
 				} else {
-					generate_typeDesc($writer, $row, $department, $uncertain);
+					$file_headers = @get_headers($uri);
+					if ($file_headers[0] == 'HTTP/1.1 200 OK'){
+						echo "Found {$uri}\n";
+						//get title
+						$titles = generate_title_from_type($uri);
+						$writer->startElement('title');
+							$writer->writeAttribute('xml:lang', 'en');
+							$writer->text("{$titles['title']}. {$accnum}");
+						$writer->endElement();
+						
+						//generate typeDesc with link
+						$writer->startElement('typeDesc');
+							$writer->writeAttribute('xlink:type', 'simple');
+							$writer->writeAttribute('xlink:href', $uri);
+							if ($uncertain == true){
+								$writer->writeAttribute('certainty', 'uncertain');
+							}
+						$writer->endElement();
+						
+						//add data into the $coinTypes array
+						$coinTypes[$uri] = array('title'=>$titles['title'], 'reference'=>$titles['reference']);
+					} else {
+						generate_typeDesc($writer, $row, $department, $uncertain);
+					}
 				}
-			}
+			} else {
+				generate_typeDesc($writer, $row, $department, $uncertain);
+			}			
 		} elseif ($row['privateinfo'] == 'WW I project ready') {
 			//handle AoD
 			$citations = array_filter(explode('|', trim($row['published'])));
@@ -813,6 +933,19 @@ function generate_nuds($row, $count, $fileName){
 										$writer->writeAttribute('certainty', 'uncertain');
 									}
 									$writer->text($ocreTitle);
+								$writer->endElement();
+							}
+						} elseif (preg_match('/SC\./', $ref)){
+							if (strlen($SCOUri) > 0){
+								//insert SCO URI when there's already a PELLA URI attached to the typeDesc
+								$writer->startElement('reference');
+									$writer->writeAttribute('xlink:type', 'simple');
+									$writer->writeAttribute('xlink:arcrole', 'nmo:hasTypeSeriesItem');
+									$writer->writeAttribute('xlink:href', $SCOUri);
+									if ($uncertain == true){
+										$writer->writeAttribute('certainty', 'uncertain');
+									}
+									$writer->text($SCOTitle);
 								$writer->endElement();
 							}
 						} else {
