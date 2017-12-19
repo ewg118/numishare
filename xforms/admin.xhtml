@@ -320,7 +320,7 @@
 					<query id="publish-all">
 						<![CDATA[xquery version "1.0";
 						<report> { 
-							for $i at $position in collection()[descendant::*:publicationStatus='approved' or descendant::*:publicationStatus='approvedSubtype']
+							for $i at $position in collection()[descendant::*[local-name()='publicationStatus'] = 'approved' or descendant::*[local-name()='publicationStatus'] = 'approvedSubtype']
 								return concat(data($i//*:recordId), if ($position mod COUNT = 0) then ',' else '|') 
 							}
 						</report>]]>
