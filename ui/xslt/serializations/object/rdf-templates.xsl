@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes="xsl xs nuds nh xlink"
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes="xsl xs nuds nh xlink numishare mets"
 	xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nm="http://nomisma.org/id/"
 	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:nuds="http://nomisma.org/nuds" xmlns:nh="http://nomisma.org/nudsHoard"
 	xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:oa="http://www.w3.org/ns/oa#"
-	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:pelagios="http://pelagios.github.io/vocab/terms#"
+	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:pelagios="http://pelagios.github.io/vocab/terms#"
 	xmlns:void="http://rdfs.org/ns/void#" xmlns:relations="http://pelagios.github.io/vocab/relations#" xmlns:nmo="http://nomisma.org/ontology#"
 	xmlns:edm="http://www.europeana.eu/schemas/edm/" xmlns:svcs="http://rdfs.org/sioc/services#" xmlns:doap="http://usefulinc.com/ns/doap#"
 	xmlns:dcmitype="http://purl.org/dc/dcmitype/" xmlns:crm="http://www.cidoc-crm.org/cidoc-crm/" xmlns:numishare="https://github.com/ewg118/numishare"
