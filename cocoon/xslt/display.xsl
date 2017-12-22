@@ -222,12 +222,7 @@
 			                                                        });
 							</script>
 								
-								<!-- always include leaflet -->
-								<link rel="stylesheet" href="https://unpkg.com/leaflet@0.7.7/dist/leaflet.css"/>
-								<script type="text/javascript" src="https://unpkg.com/leaflet@0.7.7/dist/leaflet.js"/>
-								<script type="text/javascript" src="{$display_path}/javascript/leaflet.ajax.min.js"/>
-								<script type="text/javascript" src="{$display_path}/javascript/leaflet-iiif.js"/>
-								<script type="text/javascript" src="{$display_path}/javascript/display_iiif_functions.js"/>
+								
 								<xsl:if test="$has_mint_geo = 'true' or $has_findspot_geo = 'true'">
 									<script type="text/javascript" src="http://www.openlayers.org/api/OpenLayers.js"/>
 									<script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3.2&amp;sensor=false"/>
@@ -324,6 +319,14 @@
 		<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.menu.js"/>
 		<script type="text/javascript" src="{$display_path}javascript/ui/jquery.ui.menubar.js"/>
 		<script type="text/javascript" src="{$display_path}javascript/numishare-menu.js"/>
+		
+		<!-- always include leaflet -->
+		<link rel="stylesheet" href="https://unpkg.com/leaflet@0.7.7/dist/leaflet.css"/>
+		<script type="text/javascript" src="https://unpkg.com/leaflet@0.7.7/dist/leaflet.js"/>
+		<script type="text/javascript" src="{$display_path}/javascript/leaflet.ajax.min.js"/>
+		<script type="text/javascript" src="{$display_path}/javascript/leaflet-iiif.js"/>
+		<script type="text/javascript" src="{$display_path}/javascript/display_iiif_functions.js"/>
+		
 		<link type="text/css" href="{$display_path}themes/{//config/theme/jquery_ui_theme}.css" rel="stylesheet"/>
 		<link type="text/css" href="{$display_path}style.css" rel="stylesheet"/>
 		<xsl:if test="string(//config/google_analytics/script)">
