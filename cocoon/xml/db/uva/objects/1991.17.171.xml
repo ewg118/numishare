@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<nuds xmlns="http://nomisma.org/nuds" xmlns:xlink="http://www.w3.org/1999/xlink"
+<nuds xmlns="http://nomisma.org/nuds"
+      xmlns:xlink="http://www.w3.org/1999/xlink"
       xmlns:mets="http://www.loc.gov/METS/"
+      xmlns:tei="http://www.tei-c.org/ns/1.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xs="http://www.w3.org/2001/XMLSchema"
+      xsi:schemaLocation="http://nomisma.org/nuds http://nomisma.org/nuds.xsd"
       recordType="physical">
    <control>
       <recordId>1991.17.171</recordId>
-      <maintenanceStatus>revised</maintenanceStatus>
+      <otherRecordId semantic="dcterms:replaces">http://coins.lib.virginia.edu/display-uva?id=n1991_17_171</otherRecordId>
+      <otherRecordId semantic="rdfs:seeAlso">http://search.lib.virginia.edu/catalog/tsb:63286</otherRecordId>
       <publicationStatus>approved</publicationStatus>
+      <maintenanceStatus>revised</maintenanceStatus>
       <maintenanceAgency>
          <agencyName>University of Virginia Library</agencyName>
          <agencyCode>US-viu</agencyCode>
@@ -13,23 +20,40 @@
       <maintenanceHistory>
          <maintenanceEvent>
             <eventType>derived</eventType>
-            <eventDateTime standardDateTime="2012-12-12T15:05:54.552-05:00Z">2012-12-12T15:05:54.552-05:00Z</eventDateTime>
+            <eventDateTime standardDateTime="2012-12-12T15:05:54.552-05:00">2012-12-12T15:05:54.552-05:00Z</eventDateTime>
             <agentType>human</agentType>
             <agent>Ethan Gruber and/or Carrie Sulosky</agent>
             <eventDescription>Migrated from EAD to NUDS</eventDescription>
          </maintenanceEvent>
          <maintenanceEvent>
             <eventType>revised</eventType>
-            <eventDateTime standardDateTime="2013-09-11T12:20:54.607-04:00Z">2013-09-11T12:20:54.607-04:00Z</eventDateTime>
+            <eventDateTime standardDateTime="2013-09-11T12:20:54.607-04:00">2013-09-11T12:20:54.607-04:00Z</eventDateTime>
             <agentType>human</agentType>
             <agent>XSLT</agent>
             <eventDescription>Migrated to new NUDS schema version; nudsHeader to control.</eventDescription>
          </maintenanceEvent>
+         <maintenanceEvent>
+            <eventType>revised</eventType>
+            <eventDateTime standardDateTime="2017-11-13T13:37:09.619-05:00">2017-11-13T13:37:09.619-05:00</eventDateTime>
+            <agentType>machine</agentType>
+            <agent>XSLT</agent>
+            <eventDescription>Extracted typological data from coin type URI; moved URI to nuds:reference[@arcrole='nmo:hasTypeSeriesItem']. Restructured to
+                    make compatible with current NUDS XSD schema.</eventDescription>
+         </maintenanceEvent>
+         <maintenanceEvent>
+            <eventType>revised</eventType>
+            <eventDateTime standardDateTime="2017-12-22T15:42:07.604-05:00">2017-12-22T15:42:07.604-05:00</eventDateTime>
+            <agentType>machine</agentType>
+            <agent>XSLT</agent>
+            <eventDescription>Extracting material from coin type description; replaced METS file metadata with IIIF services; inserting Virgo link</eventDescription>
+         </maintenanceEvent>
       </maintenanceHistory>
       <rightsStmt>
-         <license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/"/>
+         <license xlink:type="simple"
+                  xlink:href="http://opendatacommons.org/licenses/odbl/">Metadata are openly licensed with a Open Data Commons Open Database License (ODbL)</license>
+         <rights xlink:type="simple"
+                 xlink:href="http://rightsstatements.org/vocab/NoC-US/1.0/">The object and images are not under copyright (Public Domain) in the United States.</rights>
       </rightsStmt>
-      <otherRecordId semantic="dcterms:replaces">http://coins.lib.virginia.edu/display-uva?id=n1991_17_171</otherRecordId>
       <semanticDeclaration>
          <prefix>dcterms</prefix>
          <namespace>http://purl.org/dc/terms/</namespace>
@@ -38,37 +62,45 @@
          <prefix>nmo</prefix>
          <namespace>http://nomisma.org/ontology#</namespace>
       </semanticDeclaration>
+      <semanticDeclaration>
+         <prefix>rdfs</prefix>
+         <namespace>http://www.w3.org/2000/01/rdf-schema#</namespace>
+      </semanticDeclaration>
    </control>
    <descMeta>
       <title xml:lang="en">Antoninianus of Claudius II Gothicus, Siscia, 268-270. 1991.17.171.</title>
       <typeDesc>
          <objectType xlink:href="http://nomisma.org/id/coin">Coin</objectType>
-         <denomination xlink:href="http://nomisma.org/id/antoninianus">Antoninianus</denomination>
-         <material xlink:type="simple" xlink:href="http://nomisma.org/id/ar">Silver</material>
          <dateRange>
             <fromDate standardDate="0268">268</fromDate>
             <toDate standardDate="0270">270</toDate>
          </dateRange>
+         <denomination xlink:href="http://nomisma.org/id/antoninianus">Antoninianus</denomination>
+         <material xlink:type="simple" xlink:href="http://nomisma.org/id/ar">Silver</material>
          <authority>
-            <persname xlink:type="simple" xlink:role="authority"
+            <persname xlink:type="simple"
+                      xlink:role="authority"
                       xlink:href="http://nomisma.org/id/claudius_ii_gothicus">Claudius II Gothicus</persname>
          </authority>
          <geographic>
-            <geogname xlink:type="simple" xlink:role="mint" xlink:href="http://nomisma.org/id/siscia">Siscia</geogname>
+            <geogname xlink:type="simple"
+                      xlink:role="mint"
+                      xlink:href="http://nomisma.org/id/siscia">Siscia</geogname>
          </geographic>
          <obverse>
+            <legend>IMP(ERATOR) CLAVDIVS AVG(VSTVS)</legend>
             <type>
                <description xml:lang="en">Radiate bust, right, cuirassed.</description>
             </type>
-            <legend>IMP(ERATOR) CLAVDIVS AVG(VSTVS)</legend>
-            <persname xlink:type="simple" xlink:role="portrait"
+            <persname xlink:type="simple"
+                      xlink:role="portrait"
                       xlink:href="http://nomisma.org/id/claudius_ii_gothicus">Claudius II Gothicus</persname>
          </obverse>
          <reverse>
+            <legend>SPES AVG(VSTI)</legend>
             <type>
                <description xml:lang="en">Spes standing left, holding flower in right hand and raising robe.</description>
             </type>
-            <legend>SPES AVG(VSTI)</legend>
             <persname xlink:type="simple" xlink:role="deity">Spes</persname>
          </reverse>
       </typeDesc>
@@ -79,17 +111,23 @@
             <weight units="g">2.56</weight>
          </measurementsSet>
       </physDesc>
-      <findspotDesc xlink:type="simple" xlink:href="http://nomisma.org/id/olivers_orchard_hoards"/>
+      <findspotDesc xlink:type="simple"
+                    xlink:href="http://nomisma.org/id/olivers_orchard_hoards"/>
+      <refDesc>
+         <reference xlink:arcrole="nmo:hasTypeSeriesItem"
+                    xlink:type="simple"
+                    xlink:href="http://numismatics.org/ocre/id/ric.5.cg.191">RIC V Claudius Gothicus 191</reference>
+      </refDesc>
       <adminDesc>
          <identifier>1991.17.171</identifier>
          <provenance>
             <chronList>
                <chronItem>
-                  <acquisition>
-                     <acquiredFrom>Three hundred and two coins were acquired in 1991 from a cross section of 1,025 coins belonging to the Worldwide Treasure Bureau.</acquiredFrom>
-                  </acquisition>
+                  <date standardDate="1991">1991</date>
+                  <acquiredFrom>Three hundred and two coins were acquired in 1991 from a cross section of 1,025 coins belonging to the Worldwide Treasure Bureau.</acquiredFrom>
                </chronItem>
                <chronItem>
+                  <date standardDate="1983">1983</date>
                   <description xml:lang="en">The Oliver's Orchard Hoard was discovered near Colchester, England (ancient Camulodunum) in 1983.</description>
                </chronItem>
             </chronList>
@@ -97,33 +135,35 @@
          <department>Roman</department>
          <collection xlink:type="simple" xlink:href="http://nomisma.org/id/uva">The Fralin Museum of Art</collection>
       </adminDesc>
-      <refDesc>
-         <reference xlink:type="simple" xlink:arcrole="nmo:hasTypeSeriesItem"
-                    xlink:href="http://numismatics.org/ocre/id/ric.5.cg.191">RIC V Claudius Gothicus 191</reference>
-      </refDesc>
    </descMeta>
    <digRep>
       <mets:fileSec>
          <mets:fileGrp USE="obverse">
+            <mets:file USE="iiif">
+               <mets:FLocat LOCYPE="URL"
+                            xlink:href="https://iiif.lib.virginia.edu/iiif/tsm:1699287"/>
+            </mets:file>
             <mets:file USE="reference" MIMETYPE="image/jpeg">
-               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n1991_17_171_obv.jpg"/>
+               <mets:FLocat LOCYPE="URL"
+                            xlink:href="https://iiif.lib.virginia.edu/iiif/tsm:1699287/full/!400,400/0/default.jpg"/>
             </mets:file>
             <mets:file USE="thumbnail" MIMETYPE="image/jpeg">
-               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1991_17_171_obv.jpg"/>
-            </mets:file>
-            <mets:file USE="master" MIMETYPE="image/jpeg">
-               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/master/n1991_17_171_obv.jpg"/>
+               <mets:FLocat LOCYPE="URL"
+                            xlink:href="https://iiif.lib.virginia.edu/iiif/tsm:1699287/full/,120/0/default.jpg"/>
             </mets:file>
          </mets:fileGrp>
          <mets:fileGrp USE="reverse">
+            <mets:file USE="iiif">
+               <mets:FLocat LOCYPE="URL"
+                            xlink:href="https://iiif.lib.virginia.edu/iiif/tsm:1699288"/>
+            </mets:file>
             <mets:file USE="reference" MIMETYPE="image/jpeg">
-               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n1991_17_171_rev.jpg"/>
+               <mets:FLocat LOCYPE="URL"
+                            xlink:href="https://iiif.lib.virginia.edu/iiif/tsm:1699288/full/!400,400/0/default.jpg"/>
             </mets:file>
             <mets:file USE="thumbnail" MIMETYPE="image/jpeg">
-               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1991_17_171_rev.jpg"/>
-            </mets:file>
-            <mets:file USE="master" MIMETYPE="image/jpeg">
-               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/master/n1991_17_171_rev.jpg"/>
+               <mets:FLocat LOCYPE="URL"
+                            xlink:href="https://iiif.lib.virginia.edu/iiif/tsm:1699288/full/,120/0/default.jpg"/>
             </mets:file>
          </mets:fileGrp>
       </mets:fileSec>

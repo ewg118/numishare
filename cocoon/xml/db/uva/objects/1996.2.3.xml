@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<nuds xmlns="http://nomisma.org/nuds" xmlns:xlink="http://www.w3.org/1999/xlink"
+<nuds xmlns="http://nomisma.org/nuds"
+      xmlns:xlink="http://www.w3.org/1999/xlink"
       xmlns:mets="http://www.loc.gov/METS/"
+      xmlns:tei="http://www.tei-c.org/ns/1.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xs="http://www.w3.org/2001/XMLSchema"
+      xsi:schemaLocation="http://nomisma.org/nuds http://nomisma.org/nuds.xsd"
       recordType="physical">
    <control>
       <recordId>1996.2.3</recordId>
-      <maintenanceStatus>revised</maintenanceStatus>
+      <otherRecordId semantic="dcterms:replaces">http://coins.lib.virginia.edu/display-uva?id=n1996_2_3</otherRecordId>
+      <otherRecordId semantic="rdfs:seeAlso">http://search.lib.virginia.edu/catalog/tsb:63525</otherRecordId>
       <publicationStatus>approved</publicationStatus>
+      <maintenanceStatus>revised</maintenanceStatus>
       <maintenanceAgency>
          <agencyName>University of Virginia Library</agencyName>
          <agencyCode>US-viu</agencyCode>
@@ -13,23 +20,40 @@
       <maintenanceHistory>
          <maintenanceEvent>
             <eventType>derived</eventType>
-            <eventDateTime standardDateTime="2012-12-12T15:05:54.552-05:00Z">2012-12-12T15:05:54.552-05:00Z</eventDateTime>
+            <eventDateTime standardDateTime="2012-12-12T15:05:54.552-05:00">2012-12-12T15:05:54.552-05:00Z</eventDateTime>
             <agentType>human</agentType>
             <agent>Ethan Gruber and/or Carrie Sulosky</agent>
             <eventDescription>Migrated from EAD to NUDS</eventDescription>
          </maintenanceEvent>
          <maintenanceEvent>
             <eventType>revised</eventType>
-            <eventDateTime standardDateTime="2013-09-11T12:20:53.157-04:00Z">2013-09-11T12:20:53.157-04:00Z</eventDateTime>
+            <eventDateTime standardDateTime="2013-09-11T12:20:53.157-04:00">2013-09-11T12:20:53.157-04:00Z</eventDateTime>
             <agentType>human</agentType>
             <agent>XSLT</agent>
             <eventDescription>Migrated to new NUDS schema version; nudsHeader to control.</eventDescription>
          </maintenanceEvent>
+         <maintenanceEvent>
+            <eventType>revised</eventType>
+            <eventDateTime standardDateTime="2017-11-13T13:37:08.556-05:00">2017-11-13T13:37:08.556-05:00</eventDateTime>
+            <agentType>machine</agentType>
+            <agent>XSLT</agent>
+            <eventDescription>Extracted typological data from coin type URI; moved URI to nuds:reference[@arcrole='nmo:hasTypeSeriesItem']. Restructured to
+                    make compatible with current NUDS XSD schema.</eventDescription>
+         </maintenanceEvent>
+         <maintenanceEvent>
+            <eventType>revised</eventType>
+            <eventDateTime standardDateTime="2017-12-22T15:42:05.965-05:00">2017-12-22T15:42:05.965-05:00</eventDateTime>
+            <agentType>machine</agentType>
+            <agent>XSLT</agent>
+            <eventDescription>Extracting material from coin type description; replaced METS file metadata with IIIF services; inserting Virgo link</eventDescription>
+         </maintenanceEvent>
       </maintenanceHistory>
       <rightsStmt>
-         <license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/"/>
+         <license xlink:type="simple"
+                  xlink:href="http://opendatacommons.org/licenses/odbl/">Metadata are openly licensed with a Open Data Commons Open Database License (ODbL)</license>
+         <rights xlink:type="simple"
+                 xlink:href="http://rightsstatements.org/vocab/NoC-US/1.0/">The object and images are not under copyright (Public Domain) in the United States.</rights>
       </rightsStmt>
-      <otherRecordId semantic="dcterms:replaces">http://coins.lib.virginia.edu/display-uva?id=n1996_2_3</otherRecordId>
       <semanticDeclaration>
          <prefix>dcterms</prefix>
          <namespace>http://purl.org/dc/terms/</namespace>
@@ -38,11 +62,54 @@
          <prefix>nmo</prefix>
          <namespace>http://nomisma.org/ontology#</namespace>
       </semanticDeclaration>
+      <semanticDeclaration>
+         <prefix>rdfs</prefix>
+         <namespace>http://www.w3.org/2000/01/rdf-schema#</namespace>
+      </semanticDeclaration>
    </control>
    <descMeta>
       <title xml:lang="en">Aureus of Domitian, Rome,  A.D. 95-96. 1996.2.3.</title>
-      <typeDesc xlink:type="simple"
-                xlink:href="http://numismatics.org/ocre/id/ric.2_1(2).dom.776"/>
+      <typeDesc>
+         <objectType xlink:type="simple" xlink:href="http://nomisma.org/id/coin">Coin</objectType>
+         <dateRange>
+            <fromDate standardDate="0095">AD 95</fromDate>
+            <toDate standardDate="0096">AD 96</toDate>
+         </dateRange>
+         <denomination xlink:type="simple" xlink:href="http://nomisma.org/id/aureus">Aureus</denomination>
+         <manufacture xlink:type="simple" xlink:href="http://nomisma.org/id/struck">Struck</manufacture>
+         <material xlink:type="simple" xlink:href="http://nomisma.org/id/av">Gold</material>
+         <authority>
+            <persname xlink:type="simple"
+                      xlink:role="authority"
+                      xlink:href="http://nomisma.org/id/domitian">Domitian</persname>
+         </authority>
+         <geographic>
+            <geogname xlink:type="simple"
+                      xlink:role="mint"
+                      xlink:href="http://nomisma.org/id/rome">Rome</geogname>
+            <geogname xlink:type="simple"
+                      xlink:role="region"
+                      xlink:href="http://nomisma.org/id/italy">Italy</geogname>
+         </geographic>
+         <obverse>
+            <legend scriptCode="Latn">DOMITIANVS AVGVSTVS</legend>
+            <type>
+               <description xml:lang="en">Head of Domitian, bare, right</description>
+            </type>
+            <persname xlink:type="simple"
+                      xlink:role="portrait"
+                      xlink:href="http://nomisma.org/id/domitian">Domitian</persname>
+         </obverse>
+         <reverse>
+            <legend scriptCode="Latn">GERMANICVS COS XVII</legend>
+            <type>
+               <description xml:lang="en">Minerva standing right on top of rostral column, holding spear and shield; owl right</description>
+            </type>
+            <persname xlink:role="deity"
+                      xlink:type="simple"
+                      xlink:href="http://collection.britishmuseum.org/id/person-institution/57060">Minerva</persname>
+         </reverse>
+      </typeDesc>
       <physDesc>
          <axis>6</axis>
          <measurementsSet>
@@ -50,17 +117,26 @@
             <weight units="g">7.6</weight>
          </measurementsSet>
       </physDesc>
+      <refDesc>
+         <reference xlink:arcrole="nmo:hasTypeSeriesItem"
+                    xlink:type="simple"
+                    xlink:href="http://numismatics.org/ocre/id/ric.2_1(2).dom.776">
+            <tei:title>RIC II, Part 1 (second edition) Domitian 776</tei:title>
+         </reference>
+      </refDesc>
       <adminDesc>
          <identifier>1996.2.3</identifier>
          <provenance>
             <chronList>
                <chronItem>
-                  <acquisition>
-                     <acquiredFrom>Acquired from Rare Coins &amp; Classical Arts Ltd., 1996.</acquiredFrom>
-                  </acquisition>
+                  <date standardDate="1996">1996</date>
+                  <acquiredFrom>Acquired from Rare Coins &amp; Classical Arts Ltd., 1996.</acquiredFrom>
                </chronItem>
                <chronItem>
-                  <previousColl>Ex: Johns Hopkins University, Garrett Collection, from the auction by NFA/Leu in 1984. Acquired by T. Harrison Garret, 19th Century.</previousColl>
+                  <date standardDate="1984">1984</date>
+                  <previousColl>
+                     <description xml:lang="en">Ex: Johns Hopkins University, Garrett Collection, from the auction by NFA/Leu in 1984. Acquired by T. Harrison Garret, 19th Century.</description>
+                  </previousColl>
                </chronItem>
             </chronList>
          </provenance>
@@ -71,25 +147,31 @@
    <digRep>
       <mets:fileSec>
          <mets:fileGrp USE="obverse">
+            <mets:file USE="iiif">
+               <mets:FLocat LOCYPE="URL"
+                            xlink:href="https://iiif.lib.virginia.edu/iiif/tsm:1699765"/>
+            </mets:file>
             <mets:file USE="reference" MIMETYPE="image/jpeg">
-               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n1996_2_3_obv.jpg"/>
+               <mets:FLocat LOCYPE="URL"
+                            xlink:href="https://iiif.lib.virginia.edu/iiif/tsm:1699765/full/!400,400/0/default.jpg"/>
             </mets:file>
             <mets:file USE="thumbnail" MIMETYPE="image/jpeg">
-               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1996_2_3_obv.jpg"/>
-            </mets:file>
-            <mets:file USE="master" MIMETYPE="image/jpeg">
-               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/master/n1996_2_3_obv.jpg"/>
+               <mets:FLocat LOCYPE="URL"
+                            xlink:href="https://iiif.lib.virginia.edu/iiif/tsm:1699765/full/,120/0/default.jpg"/>
             </mets:file>
          </mets:fileGrp>
          <mets:fileGrp USE="reverse">
+            <mets:file USE="iiif">
+               <mets:FLocat LOCYPE="URL"
+                            xlink:href="https://iiif.lib.virginia.edu/iiif/tsm:1699766"/>
+            </mets:file>
             <mets:file USE="reference" MIMETYPE="image/jpeg">
-               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n1996_2_3_rev.jpg"/>
+               <mets:FLocat LOCYPE="URL"
+                            xlink:href="https://iiif.lib.virginia.edu/iiif/tsm:1699766/full/!400,400/0/default.jpg"/>
             </mets:file>
             <mets:file USE="thumbnail" MIMETYPE="image/jpeg">
-               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1996_2_3_rev.jpg"/>
-            </mets:file>
-            <mets:file USE="master" MIMETYPE="image/jpeg">
-               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/master/n1996_2_3_rev.jpg"/>
+               <mets:FLocat LOCYPE="URL"
+                            xlink:href="https://iiif.lib.virginia.edu/iiif/tsm:1699766/full/,120/0/default.jpg"/>
             </mets:file>
          </mets:fileGrp>
       </mets:fileSec>

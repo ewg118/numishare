@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<nuds xmlns="http://nomisma.org/nuds" xmlns:xlink="http://www.w3.org/1999/xlink"
+<nuds xmlns="http://nomisma.org/nuds"
+      xmlns:xlink="http://www.w3.org/1999/xlink"
       xmlns:mets="http://www.loc.gov/METS/"
+      xmlns:tei="http://www.tei-c.org/ns/1.0"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      recordType="physical"
-      xsi:schemaLocation="http://nomisma.org/nuds http://nomisma.org/nuds/nuds.xsd">
+      xmlns:xs="http://www.w3.org/2001/XMLSchema"
+      xsi:schemaLocation="http://nomisma.org/nuds http://nomisma.org/nuds.xsd"
+      recordType="physical">
    <control>
       <recordId>1994.6</recordId>
-      <maintenanceStatus>revised</maintenanceStatus>
+      <otherRecordId semantic="dcterms:replaces">http://coins.lib.virginia.edu/display-uva?id=n1994_6</otherRecordId>
+      <otherRecordId semantic="rdfs:seeAlso">http://search.lib.virginia.edu/catalog/tsb:63520</otherRecordId>
       <publicationStatus>approved</publicationStatus>
+      <maintenanceStatus>revised</maintenanceStatus>
       <maintenanceAgency>
          <agencyName>University of Virginia Library</agencyName>
          <agencyCode>US-viu</agencyCode>
@@ -15,24 +20,40 @@
       <maintenanceHistory>
          <maintenanceEvent>
             <eventType>derived</eventType>
-            <eventDateTime standardDateTime=""/>
+            <eventDateTime standardDateTime="2012-12-12T15:05:54.552-05:00">2012-12-12T15:05:54.552-05:00Z</eventDateTime>
             <agentType>human</agentType>
             <agent>Ethan Gruber and/or Carrie Sulosky</agent>
             <eventDescription>Migrated from EAD to NUDS</eventDescription>
          </maintenanceEvent>
          <maintenanceEvent>
             <eventType>revised</eventType>
-            <eventDateTime standardDateTime="2013-09-11T12:20:58.911-04:00Z">2013-09-11T12:20:58.911-04:00Z</eventDateTime>
+            <eventDateTime standardDateTime="2013-09-11T12:20:58.911-04:00">2013-09-11T12:20:58.911-04:00Z</eventDateTime>
             <agentType>human</agentType>
             <agent>XSLT</agent>
             <eventDescription>Migrated to new NUDS schema version; nudsHeader to control.</eventDescription>
          </maintenanceEvent>
+         <maintenanceEvent>
+            <eventType>revised</eventType>
+            <eventDateTime standardDateTime="2017-11-13T13:37:10.463-05:00">2017-11-13T13:37:10.463-05:00</eventDateTime>
+            <agentType>machine</agentType>
+            <agent>XSLT</agent>
+            <eventDescription>Extracted typological data from coin type URI; moved URI to nuds:reference[@arcrole='nmo:hasTypeSeriesItem']. Restructured to make
+               compatible with current NUDS XSD schema.</eventDescription>
+         </maintenanceEvent>
+         <maintenanceEvent>
+            <eventType>revised</eventType>
+            <eventDateTime standardDateTime="2017-12-22T15:42:09.131-05:00">2017-12-22T15:42:09.131-05:00</eventDateTime>
+            <agentType>machine</agentType>
+            <agent>XSLT</agent>
+            <eventDescription>Extracting material from coin type description; replaced METS file metadata with IIIF services; inserting Virgo link</eventDescription>
+         </maintenanceEvent>
       </maintenanceHistory>
       <rightsStmt>
-         <copyrightHolder>University of Virginia Library</copyrightHolder>
-         <license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/"/>
+         <license xlink:type="simple"
+                  xlink:href="http://opendatacommons.org/licenses/odbl/">Metadata are openly licensed with a Open Data Commons Open Database License (ODbL)</license>
+         <rights xlink:type="simple"
+                 xlink:href="http://rightsstatements.org/vocab/NoC-US/1.0/">The object and images are not under copyright (Public Domain) in the United States.</rights>
       </rightsStmt>
-      <otherRecordId semantic="dcterms:replaces">http://coins.lib.virginia.edu/display-uva?id=n1994_6</otherRecordId>
       <semanticDeclaration>
          <prefix>dcterms</prefix>
          <namespace>http://purl.org/dc/terms/</namespace>
@@ -41,10 +62,54 @@
          <prefix>nmo</prefix>
          <namespace>http://nomisma.org/ontology#</namespace>
       </semanticDeclaration>
+      <semanticDeclaration>
+         <prefix>rdfs</prefix>
+         <namespace>http://www.w3.org/2000/01/rdf-schema#</namespace>
+      </semanticDeclaration>
    </control>
    <descMeta>
-      <title xml:lang="en">Aureus of Claudius, Rome,  A.D. 50-54. 1994.6.</title>
-      <typeDesc xlink:type="simple" xlink:href="http://numismatics.org/ocre/id/ric.1(2).cl.80"/>
+      <title xml:lang="en">Aureus of Claudius, Rome, A.D. 50-54. 1994.6.</title>
+      <typeDesc>
+         <objectType xlink:type="simple" xlink:href="http://nomisma.org/id/coin">Coin</objectType>
+         <dateRange>
+            <fromDate standardDate="0050">AD 50</fromDate>
+            <toDate standardDate="0054">AD 54</toDate>
+         </dateRange>
+         <denomination xlink:type="simple" xlink:href="http://nomisma.org/id/aureus">Aureus</denomination>
+         <manufacture xlink:type="simple" xlink:href="http://nomisma.org/id/struck">Struck</manufacture>
+         <material xlink:type="simple" xlink:href="http://nomisma.org/id/av">Gold</material>
+         <authority>
+            <persname xlink:type="simple"
+                      xlink:role="authority"
+                      xlink:href="http://nomisma.org/id/claudius">Claudius</persname>
+         </authority>
+         <geographic>
+            <geogname xlink:type="simple"
+                      xlink:role="mint"
+                      xlink:href="http://nomisma.org/id/rome">Rome</geogname>
+            <geogname xlink:type="simple"
+                      xlink:role="region"
+                      xlink:href="http://nomisma.org/id/italy">Italy</geogname>
+         </geographic>
+         <obverse>
+            <legend scriptCode="Latn">TI CLAVD CAESAR AVG GERM P M TRIB POT P P</legend>
+            <type>
+               <description xml:lang="en">Head of Claudius, laureate, right</description>
+            </type>
+            <persname xlink:type="simple"
+                      xlink:role="portrait"
+                      xlink:href="http://nomisma.org/id/claudius">Claudius</persname>
+         </obverse>
+         <reverse>
+            <legend scriptCode="Latn">AGRIPPINAE AVGVSTAE</legend>
+            <type>
+               <description xml:lang="en">Bust of Agrippina the Younger, draped, right, wearing a crown of corn-ears; hair in a long plait behind</description>
+            </type>
+            <persname xlink:type="simple"
+                      xlink:role="portrait"
+                      xlink:href="http://nomisma.org/id/agrippina_ii">Agrippina the Younger</persname>
+         </reverse>
+      </typeDesc>
       <physDesc>
          <axis>7</axis>
          <measurementsSet>
@@ -52,25 +117,40 @@
             <weight units="g">7.64</weight>
          </measurementsSet>
       </physDesc>
+      <refDesc>
+         <reference xlink:arcrole="nmo:hasTypeSeriesItem"
+                    xlink:type="simple"
+                    xlink:href="http://numismatics.org/ocre/id/ric.1(2).cl.80">
+            <tei:title>RIC I (second edition) Claudius 80</tei:title>
+         </reference>
+      </refDesc>
       <adminDesc>
          <identifier>1994.6</identifier>
          <provenance>
             <chronList>
                <chronItem>
-                  <acquisition>
-                     <acquiredFrom>Acquired from the Worldwide Trade Bureau.</acquiredFrom>
-                  </acquisition>
+                  <date standardDate="1994">1994</date>
+                  <acquiredFrom>Acquired from the Worldwide Trade Bureau.</acquiredFrom>
                </chronItem>
                <chronItem>
                   <date standardDate="1953">1953</date>
-                  <previousColl>Published in J. Pierpont Morgan Collection, pg. 39Lot 47</previousColl>
+                  <previousColl>
+                     <saleCatalog>J. Pierpont Morgan Collection</saleCatalog>
+                     <saleItem>Lot 47, pg. 39</saleItem>
+                  </previousColl>
                </chronItem>
                <chronItem>
-                  <previousColl>On loan to American Numismatic Society Museum.</previousColl>
+                  <date>Between 1907 and 1953</date>
+                  <previousColl>
+                     <description xml:lang="en">On loan to American Numismatic Society Museum.</description>
+                  </previousColl>
                </chronItem>
                <chronItem>
                   <date standardDate="1907">1907</date>
-                  <previousColl>Marquis Carlo Strozzi Collection, RomeLot 1382</previousColl>
+                  <previousColl>
+                     <saleCatalog>Marquis Carlo Strozzi Collection, Rome</saleCatalog>
+                     <saleItem>Lot 1392</saleItem>
+                  </previousColl>
                </chronItem>
             </chronList>
          </provenance>
@@ -81,25 +161,31 @@
    <digRep>
       <mets:fileSec>
          <mets:fileGrp USE="obverse">
+            <mets:file USE="iiif">
+               <mets:FLocat LOCYPE="URL"
+                            xlink:href="https://iiif.lib.virginia.edu/iiif/tsm:1699755"/>
+            </mets:file>
             <mets:file USE="reference" MIMETYPE="image/jpeg">
-               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n1994_6_obv.jpg"/>
+               <mets:FLocat LOCYPE="URL"
+                            xlink:href="https://iiif.lib.virginia.edu/iiif/tsm:1699755/full/!400,400/0/default.jpg"/>
             </mets:file>
             <mets:file USE="thumbnail" MIMETYPE="image/jpeg">
-               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1994_6_obv.jpg"/>
-            </mets:file>
-            <mets:file USE="master" MIMETYPE="image/jpeg">
-               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/master/n1994_6_obv.jpg"/>
+               <mets:FLocat LOCYPE="URL"
+                            xlink:href="https://iiif.lib.virginia.edu/iiif/tsm:1699755/full/,120/0/default.jpg"/>
             </mets:file>
          </mets:fileGrp>
          <mets:fileGrp USE="reverse">
+            <mets:file USE="iiif">
+               <mets:FLocat LOCYPE="URL"
+                            xlink:href="https://iiif.lib.virginia.edu/iiif/tsm:1699756"/>
+            </mets:file>
             <mets:file USE="reference" MIMETYPE="image/jpeg">
-               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/screen/n1994_6_rev.jpg"/>
+               <mets:FLocat LOCYPE="URL"
+                            xlink:href="https://iiif.lib.virginia.edu/iiif/tsm:1699756/full/!400,400/0/default.jpg"/>
             </mets:file>
             <mets:file USE="thumbnail" MIMETYPE="image/jpeg">
-               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/thumb/n1994_6_rev.jpg"/>
-            </mets:file>
-            <mets:file USE="master" MIMETYPE="image/jpeg">
-               <mets:FLocat LOCTYPE="URL" xlink:href="images/coins/master/n1994_6_rev.jpg"/>
+               <mets:FLocat LOCYPE="URL"
+                            xlink:href="https://iiif.lib.virginia.edu/iiif/tsm:1699756/full/,120/0/default.jpg"/>
             </mets:file>
          </mets:fileGrp>
       </mets:fileSec>
