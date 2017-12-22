@@ -11,7 +11,7 @@ function initialize_map(id, path) {
 	
 	var imperium = new OpenLayers.Layer.XYZ(
 	"Imperium Romanum",[
-	"http://pelagios.dme.ait.ac.at/tilesets/imperium/${z}/${x}/${y}.png"], {
+	"http://dare.ht.lu.se/tiles/imperium/{z}/{x}/{y}.png"], {
 		sphericalMercator: true,
 		isBaseLayer: true,
 		numZoomLevels: 12
