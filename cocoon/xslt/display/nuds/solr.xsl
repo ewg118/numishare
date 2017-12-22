@@ -56,7 +56,13 @@
 			<field name="timestamp">
 				<xsl:choose>
 					<xsl:when test="string(descendant::*:maintenanceEvent[last()]/*:eventDateTime/@standardDateTime)">
-						<xsl:value-of select="descendant::*:maintenanceEvent[last()]/*:eventDateTime/@standardDateTime"/>
+						<xsl:value-of
+							select="
+							if (contains(descendant::*:maintenanceEvent[last()]/*:eventDateTime/@standardDateTime, 'Z')) then
+							descendant::*:maintenanceEvent[last()]/*:eventDateTime/@standardDateTime
+							else
+							concat(descendant::*:maintenanceEvent[last()]/*:eventDateTime/@standardDateTime, 'Z')"
+						/>
 					</xsl:when>
 					<xsl:otherwise>
 						<xsl:value-of
