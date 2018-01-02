@@ -482,7 +482,7 @@
 					<!-- manually insert lowest region hierarchy for self -->
 					<xsl:if test="position() = last()">
 						<field name="region_hier">
-							<xsl:value-of select="concat(substring-after(@uri, 'id/'), '|', $label, '/', substring-after($href, 'id/'))"/>
+							<xsl:value-of select="concat('L', position() + 1, '|', $label, '/', substring-after($href, 'id/'))"/>
 						</field>
 					</xsl:if>
 				</xsl:for-each>

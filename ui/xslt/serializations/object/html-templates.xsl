@@ -267,12 +267,18 @@
 											</a>
 										</xsl:when>
 										<xsl:otherwise>
-											<xsl:call-template name="display-label">
-												<xsl:with-param name="field" select="$field"/>
-												<xsl:with-param name="value" select="$value"/>
-												<xsl:with-param name="href" select="$href"/>
-												<xsl:with-param name="position" select="@position"/>
-											</xsl:call-template>
+											<xsl:variable name="selfQuery">
+												<xsl:text>+&#x022;L1|</xsl:text>
+												<xsl:value-of select="$value"/>
+												<xsl:text>/</xsl:text>
+												<xsl:value-of select="tokenize($href, '/')[last()]"/>
+												<xsl:text>&#x022;</xsl:text>
+											</xsl:variable>
+											
+											<a
+												href="{$display_path}results?q=region_hier:({encode-for-uri($selfQuery)}){if (string($langParam)) then concat('&amp;lang=', $langParam) else ''}">
+												<xsl:value-of select="$value"/>
+											</a>
 										</xsl:otherwise>
 									</xsl:choose>
 								</xsl:when>
