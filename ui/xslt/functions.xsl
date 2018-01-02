@@ -175,7 +175,7 @@
 					<xsl:when test="$label = 'saleItem'">Auktionslot</xsl:when>
 					<xsl:when test="$label = 'salePrice'">Verkaufspreis</xsl:when>
 					<xsl:when test="$label = 'shape'">Form</xsl:when>
-					<xsl:when test="$label = 'state'">Zustand</xsl:when>
+					<xsl:when test="$label = 'state'">Staat</xsl:when>
 					<xsl:when test="$label = 'subject'">Subjekt</xsl:when>
 					<xsl:when test="$label = 'subjectSet'">Subjekte</xsl:when>
 					<xsl:when test="$label = 'symbol'">Symbol</xsl:when>
