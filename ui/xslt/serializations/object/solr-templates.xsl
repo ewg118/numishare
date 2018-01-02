@@ -732,11 +732,11 @@
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:choose>
-					<xsl:when test="string(*[local-name() = 'title'])">
-						<xsl:value-of select="normalize-space(*[local-name() = 'title'])"/>
-						<xsl:if test="string(*[local-name() = 'identifier'])">
+					<xsl:when test="tei:title">
+						<xsl:value-of select="normalize-space(tei:title)"/>
+						<xsl:if test="string(tei:idno)">
 							<xsl:text> </xsl:text>
-							<xsl:value-of select="normalize-space(*[local-name() = 'identifier'])"/>
+							<xsl:value-of select="normalize-space(tei:idno)"/>
 						</xsl:if>
 					</xsl:when>
 					<xsl:otherwise>
