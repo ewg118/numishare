@@ -112,7 +112,9 @@
       <findspotDesc xlink:type="simple" xlink:href="http://nomisma.org/id/olivers_orchard_hoards"/>
       <refDesc>
          <reference xlink:arcrole="nmo:hasTypeSeriesItem" xlink:type="simple"
-                    xlink:href="http://numismatics.org/ocre/id/ric.4.tr_g.72">RIC IV Trebonianus Gallus 72</reference>
+                    xlink:href="http://numismatics.org/ocre/id/ric.4.tr_g.72">
+            <tei:title>RIC IV Trebonianus Gallus 72</tei:title>
+         </reference>
       </refDesc>
       <adminDesc>
          <identifier>1991.17.43</identifier>

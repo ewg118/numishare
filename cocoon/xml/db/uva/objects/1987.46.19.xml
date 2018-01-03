@@ -97,8 +97,14 @@
       <refDesc>
          <reference xlink:arcrole="nmo:hasTypeSeriesItem" xlink:type="simple"
                     xlink:href="http://numismatics.org/ocre/id/ric.5.tet_i.79">RIC V Tetricus I 79</reference>
-         <reference/>
-         <reference/>
+         <reference>
+            <tei:title>The Normanby Hoard</tei:title>
+            <tei:idno>1487</tei:idno>
+         </reference>
+         <reference>
+            <tei:title>The Cunetio Treasure</tei:title>
+            <tei:idno>2649</tei:idno>
+         </reference>
       </refDesc>
       <adminDesc>
          <identifier>1987.46.19</identifier>

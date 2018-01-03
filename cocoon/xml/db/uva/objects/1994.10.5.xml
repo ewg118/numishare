@@ -107,7 +107,9 @@
       </physDesc>
       <refDesc>
          <reference xlink:arcrole="nmo:hasTypeSeriesItem" xlink:type="simple"
-                    xlink:href="http://numismatics.org/ocre/id/ric.2_1(2).dom.87">RIC II, Part 1 (second edition) Domitian 87</reference>
+                    xlink:href="http://numismatics.org/ocre/id/ric.2_1(2).dom.87">
+            <tei:title>RIC II, Part 1 (second edition) Domitian 87</tei:title>
+         </reference>
       </refDesc>
       <adminDesc>
          <identifier>1994.10.5</identifier>

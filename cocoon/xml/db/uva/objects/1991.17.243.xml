@@ -107,7 +107,10 @@
       <refDesc>
          <reference xlink:arcrole="nmo:hasTypeSeriesItem" xlink:type="simple"
                     xlink:href="http://numismatics.org/ocre/id/ric.5.post.67">RIC V Postumus 67</reference>
-         <reference/>
+         <reference>
+            <tei:title>The Cunetio Treasure</tei:title>
+            <tei:idno>2395</tei:idno>
+         </reference>
       </refDesc>
       <adminDesc>
          <identifier>1991.17.243</identifier>

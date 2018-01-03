@@ -111,7 +111,10 @@
       <refDesc>
          <reference xlink:arcrole="nmo:hasTypeSeriesItem" xlink:type="simple"
                     xlink:href="http://numismatics.org/ocre/id/ric.5.cg.55">RIC V Claudius Gothicus 55</reference>
-         <reference/>
+         <reference>
+            <tei:title>The Cunetio Treasure</tei:title>
+            <tei:idno>2078</tei:idno>
+         </reference>
       </refDesc>
       <adminDesc>
          <identifier>1991.17.177</identifier>

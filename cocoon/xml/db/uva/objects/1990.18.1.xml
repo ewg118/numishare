@@ -108,7 +108,9 @@
       </physDesc>
       <refDesc>
          <reference xlink:arcrole="nmo:hasTypeSeriesItem" xlink:type="simple"
-                    xlink:href="http://numismatics.org/ocre/id/ric.1(2).ner.46">RIC I (second edition) Nero 46</reference>
+                    xlink:href="http://numismatics.org/ocre/id/ric.1(2).ner.46">
+            <tei:title>RIC I (second edition) Nero 46</tei:title>
+         </reference>
       </refDesc>
       <adminDesc>
          <identifier>1990.18.1</identifier>

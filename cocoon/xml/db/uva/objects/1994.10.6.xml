@@ -107,7 +107,9 @@
       </physDesc>
       <refDesc>
          <reference xlink:arcrole="nmo:hasTypeSeriesItem" xlink:type="simple"
-                    xlink:href="http://numismatics.org/ocre/id/ric.3.ant.1110">RIC III Antoninus Pius 1110</reference>
+                    xlink:href="http://numismatics.org/ocre/id/ric.3.ant.1110">
+            <tei:title>RIC III Antoninus Pius 1110</tei:title>
+         </reference>
       </refDesc>
       <adminDesc>
          <identifier>1994.10.6</identifier>

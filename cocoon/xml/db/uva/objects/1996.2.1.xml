@@ -109,7 +109,9 @@
       </physDesc>
       <refDesc>
          <reference xlink:arcrole="nmo:hasTypeSeriesItem" xlink:type="simple"
-                    xlink:href="http://numismatics.org/ocre/id/ric.2_1(2).ves.1559">RIC II, Part 1 (second edition) Vespasian 1559</reference>
+                    xlink:href="http://numismatics.org/ocre/id/ric.2_1(2).ves.1559">
+            <tei:title>RIC II, Part 1 (second edition) Vespasian 1559</tei:title>
+         </reference>
       </refDesc>
       <adminDesc>
          <identifier>1996.2.1</identifier>

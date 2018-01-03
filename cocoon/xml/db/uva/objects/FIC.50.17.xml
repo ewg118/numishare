@@ -107,7 +107,9 @@
       </typeDesc>
       <refDesc>
          <reference xlink:arcrole="nmo:hasTypeSeriesItem" xlink:type="simple"
-                    xlink:href="http://numismatics.org/ocre/id/ric.7.nic.44">RIC VII Nicomedia 44</reference>
+                    xlink:href="http://numismatics.org/ocre/id/ric.7.nic.44">
+            <tei:title>RIC VII Nicomedia 44</tei:title>
+         </reference>
       </refDesc>
       <adminDesc>
          <identifier>FIC.50.17</identifier>

@@ -101,7 +101,9 @@
       </typeDesc>
       <refDesc>
          <reference xlink:arcrole="nmo:hasTypeSeriesItem" xlink:type="simple"
-                    xlink:href="http://numismatics.org/crro/id/rrc-364.1d">RRC 364/1d</reference>
+                    xlink:href="http://numismatics.org/crro/id/rrc-364.1d">
+            <tei:title>RRC 364/1d</tei:title>
+         </reference>
       </refDesc>
       <adminDesc>
          <identifier>2012.108</identifier>

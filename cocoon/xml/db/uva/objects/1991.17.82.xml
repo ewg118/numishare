@@ -109,7 +109,9 @@
       <findspotDesc xlink:type="simple" xlink:href="http://nomisma.org/id/olivers_orchard_hoards"/>
       <refDesc>
          <reference xlink:arcrole="nmo:hasTypeSeriesItem" xlink:type="simple"
-                    xlink:href="http://numismatics.org/ocre/id/ric.5.gall(2).26">RIC V Gallienus 26</reference>
+                    xlink:href="http://numismatics.org/ocre/id/ric.5.gall(2).26">
+            <tei:title>RIC V Gallienus 26</tei:title>
+         </reference>
       </refDesc>
       <adminDesc>
          <identifier>1991.17.82</identifier>

@@ -105,7 +105,9 @@
       </typeDesc>
       <refDesc>
          <reference xlink:arcrole="nmo:hasTypeSeriesItem" xlink:type="simple"
-                    xlink:href="http://numismatics.org/ocre/id/ric.3.ant.657">RIC III Antoninus Pius 657</reference>
+                    xlink:href="http://numismatics.org/ocre/id/ric.3.ant.657">
+            <tei:title>RIC III Antoninus Pius 657</tei:title>
+         </reference>
       </refDesc>
       <adminDesc>
          <identifier>1989.19.11</identifier>

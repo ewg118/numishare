@@ -111,7 +111,9 @@
       </physDesc>
       <refDesc>
          <reference xlink:arcrole="nmo:hasTypeSeriesItem" xlink:type="simple"
-                    xlink:href="http://numismatics.org/ocre/id/ric.9.tri.17A.3">RIC IX Treveri 17A: Subtype 3</reference>
+                    xlink:href="http://numismatics.org/ocre/id/ric.9.tri.17A.3">
+            <tei:title>RIC IX Treveri 17A: Subtype 3</tei:title>
+         </reference>
       </refDesc>
       <adminDesc>
          <identifier>1995.3.2</identifier>

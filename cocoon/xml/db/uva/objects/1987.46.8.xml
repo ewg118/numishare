@@ -103,7 +103,10 @@
       <refDesc>
          <reference xlink:arcrole="nmo:hasTypeSeriesItem" xlink:type="simple"
                     xlink:href="http://numismatics.org/ocre/id/ric.5.vict.118">RIC V Victorinus 118</reference>
-         <reference/>
+         <reference>
+            <tei:title>The Normanby Hoard</tei:title>
+            <tei:idno>1375</tei:idno>
+         </reference>
       </refDesc>
       <adminDesc>
          <identifier>1987.46.8</identifier>

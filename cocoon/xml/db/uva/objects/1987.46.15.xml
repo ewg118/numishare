@@ -98,8 +98,14 @@
       <refDesc>
          <reference xlink:arcrole="nmo:hasTypeSeriesItem" xlink:type="simple"
                     xlink:href="http://numismatics.org/ocre/id/ric.5.vict.78">RIC V Victorinus 78</reference>
-         <reference/>
-         <reference/>
+         <reference>
+            <tei:title>The Normanby Hoard</tei:title>
+            <tei:idno>1422</tei:idno>
+         </reference>
+         <reference>
+            <tei:title>The Cunetio Treasure</tei:title>
+            <tei:idno>2553/5</tei:idno>
+         </reference>
       </refDesc>
       <adminDesc>
          <identifier>1987.46.15</identifier>

@@ -104,8 +104,14 @@
       <refDesc>
          <reference xlink:arcrole="nmo:hasTypeSeriesItem" xlink:type="simple"
                     xlink:href="http://numismatics.org/ocre/id/ric.5.cg.66">RIC V Claudius Gothicus 66</reference>
-         <reference/>
-         <reference/>
+         <reference>
+            <tei:title>The Normanby Hoard</tei:title>
+            <tei:idno>668</tei:idno>
+         </reference>
+         <reference>
+            <tei:title>The Cunetio Treasure</tei:title>
+            <tei:idno>1989</tei:idno>
+         </reference>
       </refDesc>
       <adminDesc>
          <identifier>1987.46.43</identifier>

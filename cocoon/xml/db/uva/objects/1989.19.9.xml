@@ -103,7 +103,9 @@
       </typeDesc>
       <refDesc>
          <reference xlink:arcrole="nmo:hasTypeSeriesItem" xlink:type="simple"
-                    xlink:href="http://numismatics.org/ocre/id/ric.1(2).gai.58">RIC I (second edition) Gaius/Caligula 58</reference>
+                    xlink:href="http://numismatics.org/ocre/id/ric.1(2).gai.58">
+            <tei:title>RIC I (second edition) Gaius/Caligula 58</tei:title>
+         </reference>
       </refDesc>
       <adminDesc>
          <identifier>1989.19.9</identifier>

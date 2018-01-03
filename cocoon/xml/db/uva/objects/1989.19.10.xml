@@ -98,7 +98,9 @@
       </typeDesc>
       <refDesc>
          <reference xlink:arcrole="nmo:hasTypeSeriesItem" xlink:type="simple"
-                    xlink:href="http://numismatics.org/ocre/id/ric.1(2).tib.42">RIC I (second edition) Tiberius 42</reference>
+                    xlink:href="http://numismatics.org/ocre/id/ric.1(2).tib.42">
+            <tei:title>RIC I (second edition) Tiberius 42</tei:title>
+         </reference>
       </refDesc>
       <adminDesc>
          <identifier>1989.19.10</identifier>

@@ -102,8 +102,8 @@
          </reverse>
       </typeDesc>
       <refDesc>
-         <reference xlink:arcrole="nmo:hasTypeSeriesItem" xlink:type="simple"
-                    xlink:href="http://numismatics.org/sco/id/sc.2.1612">Seleucid Coins v2 1612</reference>
+         <reference xlink:type="simple" xlink:href="http://numismatics.org/sco/id/sc.2.1612"
+                    xlink:arcrole="nmo:hasTypeSeriesItem">Seleucid Coins v2 1612</reference>
       </refDesc>
       <adminDesc>
          <identifier>1990.18.8</identifier>

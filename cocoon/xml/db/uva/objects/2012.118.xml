@@ -96,7 +96,9 @@
       </typeDesc>
       <refDesc>
          <reference xlink:arcrole="nmo:hasTypeSeriesItem" xlink:type="simple"
-                    xlink:href="http://numismatics.org/crro/id/rrc-407.2">RRC 407/2</reference>
+                    xlink:href="http://numismatics.org/crro/id/rrc-407.2">
+            <tei:title>RRC 407/2</tei:title>
+         </reference>
       </refDesc>
       <adminDesc>
          <identifier>2012.118</identifier>
