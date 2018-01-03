@@ -6,7 +6,7 @@
 	Modification date: Febrary 2012
 -->
 <xsl:stylesheet xmlns:nuds="http://nomisma.org/nuds" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:numishare="http://code.google.com/p/numishare/"
-	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:xlink="http://www.w3.org/1999/xlink"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns:nm="http://nomisma.org/id/" exclude-result-prefixes="#all" version="2.0">
 
 	<!--***************************************** ELEMENT TEMPLATES **************************************** -->
@@ -15,7 +15,8 @@
 			<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
 		</h2>
 		<ul>
-			<xsl:apply-templates mode="descMeta"/>
+			<xsl:apply-templates select="*:reference[not(child::*[local-name() = 'objectXMLWrap']) and not(child::tei:*)] | *:citation" mode="descMeta"/>
+			<xsl:apply-templates select="*:reference/*[local-name() = 'objectXMLWrap'] | *:reference[child::tei:*]"/>
 		</ul>
 	</xsl:template>
 
@@ -225,6 +226,59 @@
 				</xsl:choose>
 			</xsl:otherwise>
 		</xsl:choose>
+	</xsl:template>
+
+	<!-- *************** TEI TEMPLATES FOR REFERENCES, LEGENDS TRANSCRIPTIONS, ETC ******************-->
+	<xsl:template match="*:reference[child::tei:*]">
+		<li>
+			<b><xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>:</b>
+			<xsl:apply-templates/>
+			<xsl:if test="string(@xlink:href)">
+				<a href="{@xlink:href}" target="_blank">
+					<xsl:text> </xsl:text>
+					<span class="glyphicon glyphicon-new-window"/>
+				</a>
+			</xsl:if>
+		</li>
+	</xsl:template>
+	
+	<xsl:template match="tei:title">
+		<i>
+			<xsl:apply-templates/>
+		</i>
+		<xsl:if test="string(@key)">
+			<a href="{@key}" target="_blank">
+				<xsl:text> </xsl:text>
+				<span class="glyphicon glyphicon-new-window"/>
+			</a>
+		</xsl:if>
+	</xsl:template>
+	
+	<xsl:template match="tei:idno">
+		<xsl:choose>
+			<xsl:when test="parent::node()/@xlink:href">
+				<a href="{parent::node()/@xlink:href}">
+					<xsl:apply-templates/>
+				</a>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:apply-templates/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+	
+	<xsl:template match="tei:div" mode="descMeta">
+		<li>
+			<xsl:apply-templates/>
+		</li>
+	</xsl:template>
+	
+	<xsl:template match="tei:gap">
+		<xsl:text>[gap: </xsl:text>
+		<i>
+			<xsl:value-of select="@reason"/>
+		</i>
+		<xsl:text>]</xsl:text>
 	</xsl:template>
 
 	<!--***************************************** CREATE LINK FROM CATEGORY **************************************** -->
