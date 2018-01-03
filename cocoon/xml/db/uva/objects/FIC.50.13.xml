@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<nuds xmlns="http://nomisma.org/nuds"
-      xmlns:xlink="http://www.w3.org/1999/xlink"
+<nuds xmlns="http://nomisma.org/nuds" xmlns:xlink="http://www.w3.org/1999/xlink"
       xmlns:mets="http://www.loc.gov/METS/"
       xmlns:tei="http://www.tei-c.org/ns/1.0"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -49,10 +48,8 @@
          </maintenanceEvent>
       </maintenanceHistory>
       <rightsStmt>
-         <license xlink:type="simple"
-                  xlink:href="http://opendatacommons.org/licenses/odbl/">Metadata are openly licensed with a Open Data Commons Open Database License (ODbL)</license>
-         <rights xlink:type="simple"
-                 xlink:href="http://rightsstatements.org/vocab/NoC-US/1.0/">The object and images are not under copyright (Public Domain) in the United States.</rights>
+         <license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/">Metadata are openly licensed with a Open Data Commons Open Database License (ODbL)</license>
+         <rights xlink:type="simple" xlink:href="http://rightsstatements.org/vocab/NoC-US/1.0/">The object and images are not under copyright (Public Domain) in the United States.</rights>
       </rightsStmt>
       <semanticDeclaration>
          <prefix>dcterms</prefix>
@@ -75,19 +72,17 @@
             <fromDate standardDate="0033">A.D. 33</fromDate>
             <toDate standardDate="0032">A.D. 32</toDate>
          </dateRange>
+         <material xlink:href="http://nomisma.org/id/ae">Bronze</material>
          <authority>
-            <persname xlink:type="simple"
-                      xlink:role="authority"
+            <persname xlink:type="simple" xlink:role="authority"
                       xlink:href="http://nomisma.org/id/cleopatra_vii">Cleopatra</persname>
             <famname xlink:type="simple" xlink:role="dynasty">Ptolemaic</famname>
             <corpname xlink:type="simple" xlink:role="state">Ptolemaic Kingdom</corpname>
          </authority>
          <geographic>
-            <geogname xlink:type="simple"
-                      xlink:role="mint"
+            <geogname xlink:type="simple" xlink:role="mint"
                       xlink:href="http://nomisma.org/id/damascus">Damascus</geogname>
-            <geogname xlink:type="simple"
-                      xlink:role="region"
+            <geogname xlink:type="simple" xlink:role="region"
                       xlink:href="http://nomisma.org/id/syria">Syria</geogname>
          </geographic>
          <obverse>
@@ -106,6 +101,12 @@
             <persname xlink:type="simple" xlink:role="deity">Chrysoroas</persname>
          </reverse>
       </typeDesc>
+      <refDesc>
+         <reference>
+            <tei:title>RPC</tei:title> 
+            <tei:idno>4781</tei:idno>
+         </reference>
+      </refDesc>
       <adminDesc>
          <identifier>FIC.50.13</identifier>
          <department>Greek</department>
@@ -116,8 +117,7 @@
       <mets:fileSec>
          <mets:fileGrp USE="obverse">
             <mets:file USE="iiif">
-               <mets:FLocat LOCYPE="URL"
-                            xlink:href="https://iiif.lib.virginia.edu/iiif/tsm:1699883"/>
+               <mets:FLocat LOCYPE="URL" xlink:href="https://iiif.lib.virginia.edu/iiif/tsm:1699883"/>
             </mets:file>
             <mets:file USE="reference" MIMETYPE="image/jpeg">
                <mets:FLocat LOCYPE="URL"
@@ -130,8 +130,7 @@
          </mets:fileGrp>
          <mets:fileGrp USE="reverse">
             <mets:file USE="iiif">
-               <mets:FLocat LOCYPE="URL"
-                            xlink:href="https://iiif.lib.virginia.edu/iiif/tsm:1699884"/>
+               <mets:FLocat LOCYPE="URL" xlink:href="https://iiif.lib.virginia.edu/iiif/tsm:1699884"/>
             </mets:file>
             <mets:file USE="reference" MIMETYPE="image/jpeg">
                <mets:FLocat LOCYPE="URL"

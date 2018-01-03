@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<nuds xmlns="http://nomisma.org/nuds"
-      xmlns:xlink="http://www.w3.org/1999/xlink"
+<nuds xmlns="http://nomisma.org/nuds" xmlns:xlink="http://www.w3.org/1999/xlink"
       xmlns:mets="http://www.loc.gov/METS/"
       xmlns:tei="http://www.tei-c.org/ns/1.0"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -49,10 +48,8 @@
          </maintenanceEvent>
       </maintenanceHistory>
       <rightsStmt>
-         <license xlink:type="simple"
-                  xlink:href="http://opendatacommons.org/licenses/odbl/">Metadata are openly licensed with a Open Data Commons Open Database License (ODbL)</license>
-         <rights xlink:type="simple"
-                 xlink:href="http://rightsstatements.org/vocab/NoC-US/1.0/">The object and images are not under copyright (Public Domain) in the United States.</rights>
+         <license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/">Metadata are openly licensed with a Open Data Commons Open Database License (ODbL)</license>
+         <rights xlink:type="simple" xlink:href="http://rightsstatements.org/vocab/NoC-US/1.0/">The object and images are not under copyright (Public Domain) in the United States.</rights>
       </rightsStmt>
       <semanticDeclaration>
          <prefix>dcterms</prefix>
@@ -75,25 +72,20 @@
             <fromDate standardDate="0321">AD 321</fromDate>
             <toDate standardDate="0324">AD 324</toDate>
          </dateRange>
-         <denomination xlink:type="simple"
-                       xlink:href="http://nomisma.org/id/ae2"
+         <denomination xlink:type="simple" xlink:href="http://nomisma.org/id/ae2"
                        certainty="uncertain">AE2</denomination>
-         <denomination xlink:type="simple"
-                       xlink:href="http://nomisma.org/id/ae3"
+         <denomination xlink:type="simple" xlink:href="http://nomisma.org/id/ae3"
                        certainty="uncertain">AE3</denomination>
          <manufacture xlink:type="simple" xlink:href="http://nomisma.org/id/struck">Struck</manufacture>
          <material xlink:type="simple" xlink:href="http://nomisma.org/id/ae">Bronze</material>
          <authority>
-            <persname xlink:type="simple"
-                      xlink:role="authority"
+            <persname xlink:type="simple" xlink:role="authority"
                       xlink:href="http://nomisma.org/id/licinius">Licinius</persname>
          </authority>
          <geographic>
-            <geogname xlink:type="simple"
-                      xlink:role="mint"
+            <geogname xlink:type="simple" xlink:role="mint"
                       xlink:href="http://nomisma.org/id/nicomedia">Nicomedia</geogname>
-            <geogname xlink:type="simple"
-                      xlink:role="region"
+            <geogname xlink:type="simple" xlink:role="region"
                       xlink:href="http://nomisma.org/id/bithynia">Bithynia</geogname>
          </geographic>
          <obverse>
@@ -101,8 +93,7 @@
             <type>
                <description xml:lang="en">Bust of Licinius, radiate, draped, cuirassed, right</description>
             </type>
-            <persname xlink:type="simple"
-                      xlink:role="portrait"
+            <persname xlink:type="simple" xlink:role="portrait"
                       xlink:href="http://nomisma.org/id/licinius">Licinius</persname>
          </obverse>
          <reverse>
@@ -110,17 +101,13 @@
             <type>
                <description xml:lang="en">Jupiter, nude, chlamys draped across left shoulder, standing left, holding Victory on globe in right hand and leaning on eagle-tipped sceptre with left hand; to left, eagle holding wreath; to right, captive</description>
             </type>
-            <persname xlink:type="simple"
-                      xlink:role="deity"
+            <persname xlink:type="simple" xlink:role="deity"
                       xlink:href="http://collection.britishmuseum.org/id/person-institution/58921">Jupiter</persname>
          </reverse>
       </typeDesc>
       <refDesc>
-         <reference xlink:arcrole="nmo:hasTypeSeriesItem"
-                    xlink:type="simple"
-                    xlink:href="http://numismatics.org/ocre/id/ric.7.nic.44">
-            <tei:title>RIC VII Nicomedia 44</tei:title>
-         </reference>
+         <reference xlink:arcrole="nmo:hasTypeSeriesItem" xlink:type="simple"
+                    xlink:href="http://numismatics.org/ocre/id/ric.7.nic.44">RIC VII Nicomedia 44</reference>
       </refDesc>
       <adminDesc>
          <identifier>FIC.50.17</identifier>
@@ -132,8 +119,7 @@
       <mets:fileSec>
          <mets:fileGrp USE="obverse">
             <mets:file USE="iiif">
-               <mets:FLocat LOCYPE="URL"
-                            xlink:href="https://iiif.lib.virginia.edu/iiif/tsm:1699891"/>
+               <mets:FLocat LOCYPE="URL" xlink:href="https://iiif.lib.virginia.edu/iiif/tsm:1699891"/>
             </mets:file>
             <mets:file USE="reference" MIMETYPE="image/jpeg">
                <mets:FLocat LOCYPE="URL"
@@ -146,8 +132,7 @@
          </mets:fileGrp>
          <mets:fileGrp USE="reverse">
             <mets:file USE="iiif">
-               <mets:FLocat LOCYPE="URL"
-                            xlink:href="https://iiif.lib.virginia.edu/iiif/tsm:1699892"/>
+               <mets:FLocat LOCYPE="URL" xlink:href="https://iiif.lib.virginia.edu/iiif/tsm:1699892"/>
             </mets:file>
             <mets:file USE="reference" MIMETYPE="image/jpeg">
                <mets:FLocat LOCYPE="URL"

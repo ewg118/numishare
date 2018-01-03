@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<nuds xmlns="http://nomisma.org/nuds"
-      xmlns:xlink="http://www.w3.org/1999/xlink"
+<nuds xmlns="http://nomisma.org/nuds" xmlns:xlink="http://www.w3.org/1999/xlink"
       xmlns:mets="http://www.loc.gov/METS/"
       xmlns:tei="http://www.tei-c.org/ns/1.0"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -49,10 +48,8 @@
          </maintenanceEvent>
       </maintenanceHistory>
       <rightsStmt>
-         <license xlink:type="simple"
-                  xlink:href="http://opendatacommons.org/licenses/odbl/">Metadata are openly licensed with a Open Data Commons Open Database License (ODbL)</license>
-         <rights xlink:type="simple"
-                 xlink:href="http://rightsstatements.org/vocab/NoC-US/1.0/">The object and images are not under copyright (Public Domain) in the United States.</rights>
+         <license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/">Metadata are openly licensed with a Open Data Commons Open Database License (ODbL)</license>
+         <rights xlink:type="simple" xlink:href="http://rightsstatements.org/vocab/NoC-US/1.0/">The object and images are not under copyright (Public Domain) in the United States.</rights>
       </rightsStmt>
       <semanticDeclaration>
          <prefix>dcterms</prefix>
@@ -76,23 +73,21 @@
             <toDate standardDate="-0250">250 B.C.</toDate>
          </dateRange>
          <denomination xlink:href="http://nomisma.org/id/tetradrachm">Tetradrachm</denomination>
+         <material xlink:href="http://nomisma.org/id/ar">Silver</material>
          <authority>
-            <persname xlink:type="simple"
-                      xlink:role="authority"
+            <persname xlink:type="simple" xlink:role="authority"
                       xlink:href="http://nomisma.org/id/lysimachus">Lysimachus</persname>
             <corpname xlink:type="simple" xlink:role="state">Thracian Kingdom</corpname>
          </authority>
          <geographic>
-            <geogname xlink:type="simple"
-                      xlink:role="mint"
+            <geogname xlink:type="simple" xlink:role="mint"
                       xlink:href="http://nomisma.org/id/byzantium">Byzantium</geogname>
          </geographic>
          <obverse>
             <type>
                <description xml:lang="en">Diademed, Ammon-horned head of deified Alexander, right.</description>
             </type>
-            <persname xlink:type="simple"
-                      xlink:role="portrait"
+            <persname xlink:type="simple" xlink:role="portrait"
                       xlink:href="http://nomisma.org/id/alexander_iii">Alexander the Great</persname>
          </obverse>
          <reverse>
@@ -103,6 +98,12 @@
             <persname xlink:type="simple" xlink:role="deity">Athena</persname>
          </reverse>
       </typeDesc>
+      <refDesc>
+         <reference>
+            <tei:title>Meydencikkale</tei:title> 
+            <tei:idno>2705</tei:idno>
+         </reference>
+      </refDesc>
       <adminDesc>
          <identifier>1990.18.7</identifier>
          <provenance>
@@ -127,8 +128,7 @@
       <mets:fileSec>
          <mets:fileGrp USE="obverse">
             <mets:file USE="iiif">
-               <mets:FLocat LOCYPE="URL"
-                            xlink:href="https://iiif.lib.virginia.edu/iiif/tsm:1699121"/>
+               <mets:FLocat LOCYPE="URL" xlink:href="https://iiif.lib.virginia.edu/iiif/tsm:1699121"/>
             </mets:file>
             <mets:file USE="reference" MIMETYPE="image/jpeg">
                <mets:FLocat LOCYPE="URL"
@@ -141,8 +141,7 @@
          </mets:fileGrp>
          <mets:fileGrp USE="reverse">
             <mets:file USE="iiif">
-               <mets:FLocat LOCYPE="URL"
-                            xlink:href="https://iiif.lib.virginia.edu/iiif/tsm:1699122"/>
+               <mets:FLocat LOCYPE="URL" xlink:href="https://iiif.lib.virginia.edu/iiif/tsm:1699122"/>
             </mets:file>
             <mets:file USE="reference" MIMETYPE="image/jpeg">
                <mets:FLocat LOCYPE="URL"

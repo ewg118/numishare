@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<nuds xmlns="http://nomisma.org/nuds"
-      xmlns:xlink="http://www.w3.org/1999/xlink"
+<nuds xmlns="http://nomisma.org/nuds" xmlns:xlink="http://www.w3.org/1999/xlink"
       xmlns:mets="http://www.loc.gov/METS/"
       xmlns:tei="http://www.tei-c.org/ns/1.0"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -49,10 +48,8 @@
          </maintenanceEvent>
       </maintenanceHistory>
       <rightsStmt>
-         <license xlink:type="simple"
-                  xlink:href="http://opendatacommons.org/licenses/odbl/">Metadata are openly licensed with a Open Data Commons Open Database License (ODbL)</license>
-         <rights xlink:type="simple"
-                 xlink:href="http://rightsstatements.org/vocab/NoC-US/1.0/">The object and images are not under copyright (Public Domain) in the United States.</rights>
+         <license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/">Metadata are openly licensed with a Open Data Commons Open Database License (ODbL)</license>
+         <rights xlink:type="simple" xlink:href="http://rightsstatements.org/vocab/NoC-US/1.0/">The object and images are not under copyright (Public Domain) in the United States.</rights>
       </rightsStmt>
       <semanticDeclaration>
          <prefix>dcterms</prefix>
@@ -73,21 +70,18 @@
          <objectType xlink:href="http://nomisma.org/id/coin">Coin</objectType>
          <date standardDate="0268">A.D. 268</date>
          <denomination xlink:href="http://nomisma.org/id/antoninianus">Antoninianus</denomination>
+         <material xlink:type="simple" xlink:href="http://nomisma.org/id/ar">Silver</material>
          <authority>
-            <persname xlink:type="simple"
-                      xlink:role="authority"
+            <persname xlink:type="simple" xlink:role="authority"
                       xlink:href="http://nomisma.org/id/postumus">Postumus</persname>
-            <persname xlink:type="simple"
-                      xlink:role="issuer"
+            <persname xlink:type="simple" xlink:role="issuer"
                       xlink:href="http://nomisma.org/id/aureolus">Aureolus</persname>
             <corpname xlink:type="simple" xlink:role="state">Gallic Empire</corpname>
          </authority>
          <geographic>
-            <geogname xlink:type="simple"
-                      xlink:role="mint"
+            <geogname xlink:type="simple" xlink:role="mint"
                       xlink:href="http://nomisma.org/id/mediolanum">Mediolanum</geogname>
-            <geogname xlink:type="simple"
-                      xlink:role="region"
+            <geogname xlink:type="simple" xlink:role="region"
                       xlink:href="http://nomisma.org/id/gallia_cisalpina">Gallia</geogname>
          </geographic>
          <obverse>
@@ -95,8 +89,7 @@
             <type>
                <description xml:lang="en">Radiate head, right; draped and cuirassed.</description>
             </type>
-            <persname xlink:type="simple"
-                      xlink:role="portrait"
+            <persname xlink:type="simple" xlink:role="portrait"
                       xlink:href="http://nomisma.org/id/postumus">Postumus</persname>
          </obverse>
          <reverse>
@@ -114,8 +107,13 @@
             <weight units="g">2.32</weight>
          </measurementsSet>
       </physDesc>
-      <findspotDesc xlink:type="simple"
-                    xlink:href="http://nomisma.org/id/olivers_orchard_hoards"/>
+      <findspotDesc xlink:type="simple" xlink:href="http://nomisma.org/id/olivers_orchard_hoards"/>
+      <refDesc>
+         <reference>
+            <tei:title>The Cunetio Treasure</tei:title> 
+            <tei:idno>2498</tei:idno>
+         </reference>
+      </refDesc>
       <adminDesc>
          <identifier>1991.17.241</identifier>
          <provenance>
@@ -138,8 +136,7 @@
       <mets:fileSec>
          <mets:fileGrp USE="obverse">
             <mets:file USE="iiif">
-               <mets:FLocat LOCYPE="URL"
-                            xlink:href="https://iiif.lib.virginia.edu/iiif/tsm:1699443"/>
+               <mets:FLocat LOCYPE="URL" xlink:href="https://iiif.lib.virginia.edu/iiif/tsm:1699443"/>
             </mets:file>
             <mets:file USE="reference" MIMETYPE="image/jpeg">
                <mets:FLocat LOCYPE="URL"
@@ -152,8 +149,7 @@
          </mets:fileGrp>
          <mets:fileGrp USE="reverse">
             <mets:file USE="iiif">
-               <mets:FLocat LOCYPE="URL"
-                            xlink:href="https://iiif.lib.virginia.edu/iiif/tsm:1699444"/>
+               <mets:FLocat LOCYPE="URL" xlink:href="https://iiif.lib.virginia.edu/iiif/tsm:1699444"/>
             </mets:file>
             <mets:file USE="reference" MIMETYPE="image/jpeg">
                <mets:FLocat LOCYPE="URL"

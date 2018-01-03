@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<nuds xmlns="http://nomisma.org/nuds"
-      xmlns:xlink="http://www.w3.org/1999/xlink"
+<nuds xmlns="http://nomisma.org/nuds" xmlns:xlink="http://www.w3.org/1999/xlink"
       xmlns:mets="http://www.loc.gov/METS/"
       xmlns:tei="http://www.tei-c.org/ns/1.0"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -49,10 +48,8 @@
          </maintenanceEvent>
       </maintenanceHistory>
       <rightsStmt>
-         <license xlink:type="simple"
-                  xlink:href="http://opendatacommons.org/licenses/odbl/">Metadata are openly licensed with a Open Data Commons Open Database License (ODbL)</license>
-         <rights xlink:type="simple"
-                 xlink:href="http://rightsstatements.org/vocab/NoC-US/1.0/">The object and images are not under copyright (Public Domain) in the United States.</rights>
+         <license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/">Metadata are openly licensed with a Open Data Commons Open Database License (ODbL)</license>
+         <rights xlink:type="simple" xlink:href="http://rightsstatements.org/vocab/NoC-US/1.0/">The object and images are not under copyright (Public Domain) in the United States.</rights>
       </rightsStmt>
       <semanticDeclaration>
          <prefix>dcterms</prefix>
@@ -76,22 +73,18 @@
          <manufacture xlink:type="simple" xlink:href="http://nomisma.org/id/struck">Struck</manufacture>
          <material xlink:type="simple" xlink:href="http://nomisma.org/id/ar">Silver</material>
          <authority>
-            <persname xlink:type="simple"
-                      xlink:role="issuer"
+            <persname xlink:type="simple" xlink:role="issuer"
                       xlink:href="http://nomisma.org/id/d_silanvs_l_f_rrc">D. Iunius Silanus</persname>
          </authority>
          <geographic>
-            <geogname xlink:type="simple"
-                      xlink:role="mint"
-                      xlink:href="http://nomisma.org/id/rome">Rome</geogname>
+            <geogname xlink:type="simple" xlink:role="mint" xlink:href="http://nomisma.org/id/rome">Rome</geogname>
          </geographic>
          <obverse>
             <legend scriptCode="Latn">A</legend>
             <type>
                <description xml:lang="en">Helmeted head of Roma right; behind, control mark. Border of dots.</description>
             </type>
-            <persname xlink:type="simple"
-                      xlink:role="deity"
+            <persname xlink:type="simple" xlink:role="deity"
                       xlink:href="http://collection.britishmuseum.org/id/person-institution/60208">Roma</persname>
          </obverse>
          <reverse>
@@ -99,17 +92,13 @@
             <type>
                <description xml:lang="en">Victory in biga right, holding reins in both hands; above, control mark. Border of dots.</description>
             </type>
-            <persname xlink:type="simple"
-                      xlink:role="deity"
+            <persname xlink:type="simple" xlink:role="deity"
                       xlink:href="http://collection.britishmuseum.org/id/person-institution/60915">Victory</persname>
          </reverse>
       </typeDesc>
       <refDesc>
-         <reference xlink:arcrole="nmo:hasTypeSeriesItem"
-                    xlink:type="simple"
-                    xlink:href="http://numismatics.org/crro/id/rrc-337.3">
-            <tei:title>RRC 337/3</tei:title>
-         </reference>
+         <reference xlink:arcrole="nmo:hasTypeSeriesItem" xlink:type="simple"
+                    xlink:href="http://numismatics.org/crro/id/rrc-337.3">RRC 337/3</reference>
       </refDesc>
       <adminDesc>
          <identifier>2012.102</identifier>
@@ -148,8 +137,7 @@
       <mets:fileSec>
          <mets:fileGrp USE="obverse">
             <mets:file USE="iiif">
-               <mets:FLocat LOCYPE="URL"
-                            xlink:href="https://iiif.lib.virginia.edu/iiif/tsm:1699781"/>
+               <mets:FLocat LOCYPE="URL" xlink:href="https://iiif.lib.virginia.edu/iiif/tsm:1699781"/>
             </mets:file>
             <mets:file USE="reference" MIMETYPE="image/jpeg">
                <mets:FLocat LOCYPE="URL"
@@ -162,8 +150,7 @@
          </mets:fileGrp>
          <mets:fileGrp USE="reverse">
             <mets:file USE="iiif">
-               <mets:FLocat LOCYPE="URL"
-                            xlink:href="https://iiif.lib.virginia.edu/iiif/tsm:1699782"/>
+               <mets:FLocat LOCYPE="URL" xlink:href="https://iiif.lib.virginia.edu/iiif/tsm:1699782"/>
             </mets:file>
             <mets:file USE="reference" MIMETYPE="image/jpeg">
                <mets:FLocat LOCYPE="URL"

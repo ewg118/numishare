@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<nuds xmlns="http://nomisma.org/nuds"
-      xmlns:xlink="http://www.w3.org/1999/xlink"
+<nuds xmlns="http://nomisma.org/nuds" xmlns:xlink="http://www.w3.org/1999/xlink"
       xmlns:mets="http://www.loc.gov/METS/"
       xmlns:tei="http://www.tei-c.org/ns/1.0"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -49,10 +48,8 @@
          </maintenanceEvent>
       </maintenanceHistory>
       <rightsStmt>
-         <license xlink:type="simple"
-                  xlink:href="http://opendatacommons.org/licenses/odbl/">Metadata are openly licensed with a Open Data Commons Open Database License (ODbL)</license>
-         <rights xlink:type="simple"
-                 xlink:href="http://rightsstatements.org/vocab/NoC-US/1.0/">The object and images are not under copyright (Public Domain) in the United States.</rights>
+         <license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/">Metadata are openly licensed with a Open Data Commons Open Database License (ODbL)</license>
+         <rights xlink:type="simple" xlink:href="http://rightsstatements.org/vocab/NoC-US/1.0/">The object and images are not under copyright (Public Domain) in the United States.</rights>
       </rightsStmt>
       <semanticDeclaration>
          <prefix>dcterms</prefix>
@@ -76,14 +73,11 @@
          <manufacture xlink:type="simple" xlink:href="http://nomisma.org/id/struck">Struck</manufacture>
          <material xlink:type="simple" xlink:href="http://nomisma.org/id/ar">Silver</material>
          <authority>
-            <persname xlink:type="simple"
-                      xlink:role="issuer"
+            <persname xlink:type="simple" xlink:role="issuer"
                       xlink:href="http://nomisma.org/id/l_hostilivs_saserna_rrc">L. Hostilius Saserna</persname>
          </authority>
          <geographic>
-            <geogname xlink:type="simple"
-                      xlink:role="mint"
-                      xlink:href="http://nomisma.org/id/rome">Rome</geogname>
+            <geogname xlink:type="simple" xlink:role="mint" xlink:href="http://nomisma.org/id/rome">Rome</geogname>
          </geographic>
          <obverse>
             <type>
@@ -95,17 +89,13 @@
             <type>
                <description xml:lang="en">Artemis facing, holding spear in left hand and placing right hand on head of stag. Border of dots.</description>
             </type>
-            <persname xlink:type="simple"
-                      xlink:role="deity"
+            <persname xlink:type="simple" xlink:role="deity"
                       xlink:href="http://collection.britishmuseum.org/id/person-institution/57039">Artemis</persname>
          </reverse>
       </typeDesc>
       <refDesc>
-         <reference xlink:arcrole="nmo:hasTypeSeriesItem"
-                    xlink:type="simple"
-                    xlink:href="http://numismatics.org/crro/id/rrc-448.3">
-            <tei:title>RRC 448/3</tei:title>
-         </reference>
+         <reference xlink:arcrole="nmo:hasTypeSeriesItem" xlink:type="simple"
+                    xlink:href="http://numismatics.org/crro/id/rrc-448.3">RRC 448/3</reference>
       </refDesc>
       <adminDesc>
          <identifier>2012.129</identifier>
@@ -144,8 +134,7 @@
       <mets:fileSec>
          <mets:fileGrp USE="obverse">
             <mets:file USE="iiif">
-               <mets:FLocat LOCYPE="URL"
-                            xlink:href="https://iiif.lib.virginia.edu/iiif/tsm:1699835"/>
+               <mets:FLocat LOCYPE="URL" xlink:href="https://iiif.lib.virginia.edu/iiif/tsm:1699835"/>
             </mets:file>
             <mets:file USE="reference" MIMETYPE="image/jpeg">
                <mets:FLocat LOCYPE="URL"
@@ -158,8 +147,7 @@
          </mets:fileGrp>
          <mets:fileGrp USE="reverse">
             <mets:file USE="iiif">
-               <mets:FLocat LOCYPE="URL"
-                            xlink:href="https://iiif.lib.virginia.edu/iiif/tsm:1699836"/>
+               <mets:FLocat LOCYPE="URL" xlink:href="https://iiif.lib.virginia.edu/iiif/tsm:1699836"/>
             </mets:file>
             <mets:file USE="reference" MIMETYPE="image/jpeg">
                <mets:FLocat LOCYPE="URL"

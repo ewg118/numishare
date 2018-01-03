@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<nuds xmlns="http://nomisma.org/nuds"
-      xmlns:xlink="http://www.w3.org/1999/xlink"
+<nuds xmlns="http://nomisma.org/nuds" xmlns:xlink="http://www.w3.org/1999/xlink"
       xmlns:mets="http://www.loc.gov/METS/"
       xmlns:tei="http://www.tei-c.org/ns/1.0"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -49,10 +48,8 @@
          </maintenanceEvent>
       </maintenanceHistory>
       <rightsStmt>
-         <license xlink:type="simple"
-                  xlink:href="http://opendatacommons.org/licenses/odbl/">Metadata are openly licensed with a Open Data Commons Open Database License (ODbL)</license>
-         <rights xlink:type="simple"
-                 xlink:href="http://rightsstatements.org/vocab/NoC-US/1.0/">The object and images are not under copyright (Public Domain) in the United States.</rights>
+         <license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/">Metadata are openly licensed with a Open Data Commons Open Database License (ODbL)</license>
+         <rights xlink:type="simple" xlink:href="http://rightsstatements.org/vocab/NoC-US/1.0/">The object and images are not under copyright (Public Domain) in the United States.</rights>
       </rightsStmt>
       <semanticDeclaration>
          <prefix>dcterms</prefix>
@@ -78,23 +75,19 @@
          <denomination xlink:href="http://nomisma.org/id/antoninianus">Antoninianus</denomination>
          <material xlink:type="simple" xlink:href="http://nomisma.org/id/ar">Silver</material>
          <authority>
-            <persname xlink:type="simple"
-                      xlink:role="authority"
+            <persname xlink:type="simple" xlink:role="authority"
                       xlink:href="http://nomisma.org/id/claudius_ii_gothicus">Claudius II Gothicus</persname>
             <corpname xlink:type="simple" xlink:role="state">Roman Empire</corpname>
          </authority>
          <geographic>
-            <geogname xlink:type="simple"
-                      xlink:role="mint"
-                      xlink:href="http://nomisma.org/id/siscia">Siscia</geogname>
+            <geogname xlink:type="simple" xlink:role="mint" xlink:href="http://nomisma.org/id/siscia">Siscia</geogname>
          </geographic>
          <obverse>
             <legend>IMP(ERATOR) CLAVDIVS AVG(VSTVS)</legend>
             <type>
                <description xml:lang="en">Radiate bust, right, cuirassed.</description>
             </type>
-            <persname xlink:type="simple"
-                      xlink:role="portrait"
+            <persname xlink:type="simple" xlink:role="portrait"
                       xlink:href="http://nomisma.org/id/claudius_ii_gothicus">Claudius II Gothicus</persname>
          </obverse>
          <reverse>
@@ -112,11 +105,9 @@
             <weight units="g">2.72</weight>
          </measurementsSet>
       </physDesc>
-      <findspotDesc xlink:type="simple"
-                    xlink:href="http://nomisma.org/id/olivers_orchard_hoards"/>
+      <findspotDesc xlink:type="simple" xlink:href="http://nomisma.org/id/olivers_orchard_hoards"/>
       <refDesc>
-         <reference xlink:arcrole="nmo:hasTypeSeriesItem"
-                    xlink:type="simple"
+         <reference xlink:arcrole="nmo:hasTypeSeriesItem" xlink:type="simple"
                     xlink:href="http://numismatics.org/ocre/id/ric.5.cg.191">RIC V Claudius Gothicus 191</reference>
       </refDesc>
       <adminDesc>
@@ -141,8 +132,7 @@
       <mets:fileSec>
          <mets:fileGrp USE="obverse">
             <mets:file USE="iiif">
-               <mets:FLocat LOCYPE="URL"
-                            xlink:href="https://iiif.lib.virginia.edu/iiif/tsm:1699289"/>
+               <mets:FLocat LOCYPE="URL" xlink:href="https://iiif.lib.virginia.edu/iiif/tsm:1699289"/>
             </mets:file>
             <mets:file USE="reference" MIMETYPE="image/jpeg">
                <mets:FLocat LOCYPE="URL"
@@ -155,8 +145,7 @@
          </mets:fileGrp>
          <mets:fileGrp USE="reverse">
             <mets:file USE="iiif">
-               <mets:FLocat LOCYPE="URL"
-                            xlink:href="https://iiif.lib.virginia.edu/iiif/tsm:1699290"/>
+               <mets:FLocat LOCYPE="URL" xlink:href="https://iiif.lib.virginia.edu/iiif/tsm:1699290"/>
             </mets:file>
             <mets:file USE="reference" MIMETYPE="image/jpeg">
                <mets:FLocat LOCYPE="URL"

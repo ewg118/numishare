@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<nuds xmlns="http://nomisma.org/nuds"
-      xmlns:xlink="http://www.w3.org/1999/xlink"
+<nuds xmlns="http://nomisma.org/nuds" xmlns:xlink="http://www.w3.org/1999/xlink"
       xmlns:mets="http://www.loc.gov/METS/"
       xmlns:tei="http://www.tei-c.org/ns/1.0"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -49,10 +48,8 @@
          </maintenanceEvent>
       </maintenanceHistory>
       <rightsStmt>
-         <license xlink:type="simple"
-                  xlink:href="http://opendatacommons.org/licenses/odbl/">Metadata are openly licensed with a Open Data Commons Open Database License (ODbL)</license>
-         <rights xlink:type="simple"
-                 xlink:href="http://rightsstatements.org/vocab/NoC-US/1.0/">The object and images are not under copyright (Public Domain) in the United States.</rights>
+         <license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/">Metadata are openly licensed with a Open Data Commons Open Database License (ODbL)</license>
+         <rights xlink:type="simple" xlink:href="http://rightsstatements.org/vocab/NoC-US/1.0/">The object and images are not under copyright (Public Domain) in the United States.</rights>
       </rightsStmt>
       <semanticDeclaration>
          <prefix>dcterms</prefix>
@@ -74,20 +71,17 @@
          <date standardDate="0256">AD 256</date>
          <denomination xlink:type="simple" xlink:href="http://nomisma.org/id/antoninianus">Antoninianus</denomination>
          <manufacture xlink:type="simple" xlink:href="http://nomisma.org/id/struck">Struck</manufacture>
+         <material xlink:type="simple" xlink:href="http://nomisma.org/id/ar">Silver</material>
          <authority>
-            <persname xlink:type="simple"
-                      xlink:role="authority"
+            <persname xlink:type="simple" xlink:role="authority"
                       xlink:href="http://nomisma.org/id/valerian">Valerian</persname>
-            <persname xlink:type="simple"
-                      xlink:role="authority"
+            <persname xlink:type="simple" xlink:role="authority"
                       xlink:href="http://nomisma.org/id/gallienus">Gallienus</persname>
          </authority>
          <geographic>
-            <geogname xlink:type="simple"
-                      xlink:role="mint"
+            <geogname xlink:type="simple" xlink:role="mint"
                       xlink:href="http://nomisma.org/id/lugdunum">Lugdunum</geogname>
-            <geogname xlink:type="simple"
-                      xlink:role="region"
+            <geogname xlink:type="simple" xlink:role="region"
                       xlink:href="http://nomisma.org/id/gallia">Gallia</geogname>
          </geographic>
          <obverse>
@@ -95,8 +89,7 @@
             <type>
                <description xml:lang="en">Bust of Valerian, radiate, draped, right</description>
             </type>
-            <persname xlink:type="simple"
-                      xlink:role="portrait"
+            <persname xlink:type="simple" xlink:role="portrait"
                       xlink:href="http://nomisma.org/id/valerian">Valerian</persname>
          </obverse>
          <reverse>
@@ -104,8 +97,7 @@
             <type>
                <description xml:lang="en">Fides, draped, standing left, holding two ensigns</description>
             </type>
-            <persname xlink:type="simple"
-                      xlink:role="deity"
+            <persname xlink:type="simple" xlink:role="deity"
                       xlink:href="http://collection.britishmuseum.org/id/person-institution/69305">Fides</persname>
          </reverse>
       </typeDesc>
@@ -116,8 +108,11 @@
             <weight units="g">3.29</weight>
          </measurementsSet>
       </physDesc>
-      <findspotDesc xlink:type="simple"
-                    xlink:href="http://nomisma.org/id/olivers_orchard_hoards"/>
+      <findspotDesc xlink:type="simple" xlink:href="http://nomisma.org/id/olivers_orchard_hoards"/>
+      <refDesc>
+         <reference xlink:arcrole="nmo:hasTypeSeriesItem" xlink:type="simple"
+                    xlink:href="http://numismatics.org/ocre/id/ric.5.val_i.6">RIC V Valerian 6</reference>
+      </refDesc>
       <adminDesc>
          <identifier>1991.17.54</identifier>
          <provenance>
@@ -140,8 +135,7 @@
       <mets:fileSec>
          <mets:fileGrp USE="obverse">
             <mets:file USE="iiif">
-               <mets:FLocat LOCYPE="URL"
-                            xlink:href="https://iiif.lib.virginia.edu/iiif/tsm:1699631"/>
+               <mets:FLocat LOCYPE="URL" xlink:href="https://iiif.lib.virginia.edu/iiif/tsm:1699631"/>
             </mets:file>
             <mets:file USE="reference" MIMETYPE="image/jpeg">
                <mets:FLocat LOCYPE="URL"
@@ -154,8 +148,7 @@
          </mets:fileGrp>
          <mets:fileGrp USE="reverse">
             <mets:file USE="iiif">
-               <mets:FLocat LOCYPE="URL"
-                            xlink:href="https://iiif.lib.virginia.edu/iiif/tsm:1699632"/>
+               <mets:FLocat LOCYPE="URL" xlink:href="https://iiif.lib.virginia.edu/iiif/tsm:1699632"/>
             </mets:file>
             <mets:file USE="reference" MIMETYPE="image/jpeg">
                <mets:FLocat LOCYPE="URL"

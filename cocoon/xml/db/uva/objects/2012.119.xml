@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<nuds xmlns="http://nomisma.org/nuds"
-      xmlns:xlink="http://www.w3.org/1999/xlink"
+<nuds xmlns="http://nomisma.org/nuds" xmlns:xlink="http://www.w3.org/1999/xlink"
       xmlns:mets="http://www.loc.gov/METS/"
       xmlns:tei="http://www.tei-c.org/ns/1.0"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -49,10 +48,8 @@
          </maintenanceEvent>
       </maintenanceHistory>
       <rightsStmt>
-         <license xlink:type="simple"
-                  xlink:href="http://opendatacommons.org/licenses/odbl/">Metadata are openly licensed with a Open Data Commons Open Database License (ODbL)</license>
-         <rights xlink:type="simple"
-                 xlink:href="http://rightsstatements.org/vocab/NoC-US/1.0/">The object and images are not under copyright (Public Domain) in the United States.</rights>
+         <license xlink:type="simple" xlink:href="http://opendatacommons.org/licenses/odbl/">Metadata are openly licensed with a Open Data Commons Open Database License (ODbL)</license>
+         <rights xlink:type="simple" xlink:href="http://rightsstatements.org/vocab/NoC-US/1.0/">The object and images are not under copyright (Public Domain) in the United States.</rights>
       </rightsStmt>
       <semanticDeclaration>
          <prefix>dcterms</prefix>
@@ -76,34 +73,26 @@
          <manufacture xlink:type="simple" xlink:href="http://nomisma.org/id/struck">Struck</manufacture>
          <material xlink:type="simple" xlink:href="http://nomisma.org/id/ar">Silver</material>
          <authority>
-            <persname xlink:type="simple"
-                      xlink:role="issuer"
+            <persname xlink:type="simple" xlink:role="issuer"
                       xlink:href="http://nomisma.org/id/m_plaetorivs_cest_rrc">M. Plaetorius Cestianus</persname>
          </authority>
          <geographic>
-            <geogname xlink:type="simple"
-                      xlink:role="mint"
-                      xlink:href="http://nomisma.org/id/rome">Rome</geogname>
+            <geogname xlink:type="simple" xlink:role="mint" xlink:href="http://nomisma.org/id/rome">Rome</geogname>
          </geographic>
          <obverse>
             <legend scriptCode="Latn">CESTIANVS S·C</legend>
             <type>
                <description xml:lang="en">Bust right, draped and with attributes of Isis, Minerva, Apollo, Diana and Victory; before, cornucopia. Bead and reel border.</description>
             </type>
-            <persname xlink:type="simple"
-                      xlink:role="deity"
+            <persname xlink:type="simple" xlink:role="deity"
                       xlink:href="http://collection.britishmuseum.org/id/person-institution/56988">Apollo</persname>
-            <persname xlink:type="simple"
-                      xlink:role="deity"
+            <persname xlink:type="simple" xlink:role="deity"
                       xlink:href="http://collection.britishmuseum.org/id/person-institution/57039">Diana</persname>
-            <persname xlink:type="simple"
-                      xlink:role="deity"
+            <persname xlink:type="simple" xlink:role="deity"
                       xlink:href="http://collection.britishmuseum.org/id/person-institution/54025">Isis</persname>
-            <persname xlink:type="simple"
-                      xlink:role="deity"
+            <persname xlink:type="simple" xlink:role="deity"
                       xlink:href="http://collection.britishmuseum.org/id/person-institution/57060">Minerva</persname>
-            <persname xlink:type="simple"
-                      xlink:role="deity"
+            <persname xlink:type="simple" xlink:role="deity"
                       xlink:href="http://collection.britishmuseum.org/id/person-institution/60915">Victory</persname>
          </obverse>
          <reverse>
@@ -114,11 +103,8 @@
          </reverse>
       </typeDesc>
       <refDesc>
-         <reference xlink:arcrole="nmo:hasTypeSeriesItem"
-                    xlink:type="simple"
-                    xlink:href="http://numismatics.org/crro/id/rrc-409.1">
-            <tei:title>RRC 409/1</tei:title>
-         </reference>
+         <reference xlink:arcrole="nmo:hasTypeSeriesItem" xlink:type="simple"
+                    xlink:href="http://numismatics.org/crro/id/rrc-409.1">RRC 409/1</reference>
       </refDesc>
       <adminDesc>
          <identifier>2012.119</identifier>
@@ -157,8 +143,7 @@
       <mets:fileSec>
          <mets:fileGrp USE="obverse">
             <mets:file USE="iiif">
-               <mets:FLocat LOCYPE="URL"
-                            xlink:href="https://iiif.lib.virginia.edu/iiif/tsm:1699815"/>
+               <mets:FLocat LOCYPE="URL" xlink:href="https://iiif.lib.virginia.edu/iiif/tsm:1699815"/>
             </mets:file>
             <mets:file USE="reference" MIMETYPE="image/jpeg">
                <mets:FLocat LOCYPE="URL"
@@ -171,8 +156,7 @@
          </mets:fileGrp>
          <mets:fileGrp USE="reverse">
             <mets:file USE="iiif">
-               <mets:FLocat LOCYPE="URL"
-                            xlink:href="https://iiif.lib.virginia.edu/iiif/tsm:1699816"/>
+               <mets:FLocat LOCYPE="URL" xlink:href="https://iiif.lib.virginia.edu/iiif/tsm:1699816"/>
             </mets:file>
             <mets:file USE="reference" MIMETYPE="image/jpeg">
                <mets:FLocat LOCYPE="URL"
