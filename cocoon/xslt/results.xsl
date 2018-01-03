@@ -138,6 +138,9 @@
 					<span style="display:none" id="collection_type">
 						<xsl:value-of select="$collection_type"/>
 					</span>
+					<span style="display:none" id="mapboxKey">
+						<xsl:value-of select="//config/mapboxKey"/>
+					</span>
 				</div>
 			</div>
 			<div class="yui3-u-5-8">

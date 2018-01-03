@@ -225,7 +225,6 @@
 								
 								<xsl:if test="$has_mint_geo = 'true' or $has_findspot_geo = 'true'">
 									<script type="text/javascript" src="http://www.openlayers.org/api/OpenLayers.js"/>
-									<script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3.2&amp;sensor=false"/>
 									<script type="text/javascript" src="{$display_path}javascript/display_map_functions.js"/>
 								</xsl:if>
 							</xsl:when>
@@ -252,7 +251,6 @@
 								<!-- mapping -->
 								<xsl:if test="$has_mint_geo = 'true' or $has_findspot_geo = 'true'">
 									<script type="text/javascript" src="http://www.openlayers.org/api/OpenLayers.js"/>
-									<script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3.2&amp;sensor=false"/>
 									<script type="text/javascript" src="{$display_path}javascript/display_map_functions.js"/>
 								</xsl:if>
 							</xsl:when>
@@ -266,7 +264,6 @@
 
 								<!-- mapping -->
 								<script type="text/javascript" src="http://www.openlayers.org/api/OpenLayers.js"/>
-								<script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3.2&amp;sensor=false"/>
 								<script type="text/javascript" src="{$display_path}javascript/mxn.js"/>
 								<script type="text/javascript" src="{$display_path}javascript/timeline-2.3.0.js"/>
 								<link type="text/css" href="{$display_path}timeline-2.3.0.css" rel="stylesheet"/>
@@ -357,6 +354,9 @@
 						</xsl:when>
 						<xsl:otherwise>false</xsl:otherwise>
 					</xsl:choose>
+					<span style="display:none" id="mapboxKey">
+						<xsl:value-of select="//config/mapboxKey"/>
+					</span>
 				</div>
 			</xsl:otherwise>
 		</xsl:choose>

@@ -72,7 +72,6 @@
 						<script type="text/javascript" src="{$display_path}javascript/jquery.fancybox-1.3.4.min.js"/>
 						<!-- maps-->
 						<script type="text/javascript" src="http://www.openlayers.org/api/OpenLayers.js"/>
-						<script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3.2&amp;sensor=false"/>
 						<script type="text/javascript" src="{$display_path}javascript/map_functions.js"/>
 						<script type="text/javascript" src="{$display_path}javascript/facet_functions.js"/>
 						<script type="text/javascript">
@@ -174,6 +173,9 @@
 					</span>
 					<span style="display:none" id="pipeline">
 						<xsl:value-of select="$pipeline"/>
+					</span>
+					<span style="display:none" id="mapboxKey">
+						<xsl:value-of select="//config/mapboxKey"/>
 					</span>
 				</div>
 			</div>

@@ -11,6 +11,7 @@
 	<solr_published>http://localhost:8080/solr/numishare-published/</solr_published>
 	<solr_all>http://localhost:8080/solr/numishare-all/</solr_all>
 	<flickr_api_key/>
+	<mapboxKey>pk.eyJ1IjoiZXdnMTE4IiwiYSI6IjViNDRlMzgxMjkyMDg0MGIxYTNlMzlkMjk1ZTI5Yzg5In0.1FU6cKAs4-vPMroB_l_0lA</mapboxKey>
 	<geonames_api_key>anscoins</geonames_api_key>
 	<contact/>
 	<google_analytics>
