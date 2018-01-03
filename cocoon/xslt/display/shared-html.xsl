@@ -236,7 +236,8 @@
 			<xsl:if test="string(@xlink:href)">
 				<a href="{@xlink:href}" target="_blank">
 					<xsl:text> </xsl:text>
-					<span class="glyphicon glyphicon-new-window"/>
+					<img src="{$display_path}images/external.png" alt="external link" class="external_link"/>
+					<!--<span class="glyphicon glyphicon-new-window"/>-->
 				</a>
 			</xsl:if>
 		</li>
@@ -249,7 +250,8 @@
 		<xsl:if test="string(@key)">
 			<a href="{@key}" target="_blank">
 				<xsl:text> </xsl:text>
-				<span class="glyphicon glyphicon-new-window"/>
+				<img src="{$display_path}images/external.png" alt="external link" class="external_link"/>
+				<!--<span class="glyphicon glyphicon-new-window"/>-->
 			</a>
 		</xsl:if>
 	</xsl:template>
