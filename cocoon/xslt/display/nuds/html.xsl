@@ -292,7 +292,7 @@
 							<h2>See Also</h2>
 							<ul>
 								<li>
-									<b>Virgo record:</b>
+									<b>Virgo record: </b>
 									<a href="{//nuds:control/nuds:otherRecordId[@semantic='rdfs:seeAlso']}" title="Virgo">
 										<xsl:value-of select="//nuds:control/nuds:otherRecordId[@semantic = 'rdfs:seeAlso']"/>
 									</a>									
