@@ -285,6 +285,20 @@
 								<xsl:apply-templates select="nuds:descMeta/nuds:findspotDesc"/>
 							</div>
 						</xsl:if>
+
+
+						<!-- add link to Virgo -->
+						<div class="metadata_section">
+							<h2>See Also</h2>
+							<ul>
+								<li>
+									<b>Virgo record:</b>
+									<a href="{//nuds:control/nuds:otherRecordId[@semantic='rdfs:seeAlso']}" title="Virgo">
+										<xsl:value-of select="//nuds:control/nuds:otherRecordId[@semantic = 'rdfs:seeAlso']"/>
+									</a>									
+								</li>
+							</ul>
+						</div>
 					</div>
 					<xsl:if test="$has_mint_geo = 'true' or $has_findspot_geo = 'true'">
 						<div id="mapTab">
@@ -439,24 +453,24 @@
 		</li>
 		</xsl:template>-->
 
-	
+
 
 	<!-- *********** IMAGE TEMPLATES FOR PHYSICAL OBJECTS ********** -->
 	<xsl:template name="image">
 		<xsl:param name="side"/>
 		<xsl:variable name="reference-image" select="//mets:fileGrp[@USE = $side]/mets:file[@USE = 'reference']/mets:FLocat/@xlink:href"/>
 		<xsl:variable name="iiif-service" select="//mets:fileGrp[@USE = $side]/mets:file[@USE = 'iiif']/mets:FLocat/@xlink:href"/>
-		
+
 		<div class="image-container">
 			<xsl:choose>
 				<xsl:when test="string($reference-image)">
 					<xsl:variable name="image_url"
 						select="
-						if (matches($reference-image, 'https?://')) then
-						$reference-image
-						else
-						concat($display_path, $reference-image)"/>
-					
+							if (matches($reference-image, 'https?://')) then
+								$reference-image
+							else
+								concat($display_path, $reference-image)"/>
+
 					<xsl:choose>
 						<xsl:when test="string($iiif-service)">
 							<div id="{substring($side, 1, 3)}-iiif-container" class="iiif-container"/>
@@ -471,13 +485,13 @@
 							<img src="{$image_url}" property="foaf:depiction" alt="{$side}"/>
 						</xsl:otherwise>
 					</xsl:choose>
-					
+
 					<xsl:apply-templates select="$nudsGroup//nuds:typeDesc/*[local-name() = $side]" mode="physical"/>
 					<!-- add link to high resolution image -->
 					<xsl:if test="string($iiif-service)">
 						<div>
 							<a href="{$iiif-service}/full/full/0/default.jpg" title="Full resolution image" rel="nofollow"><span
-								class="glyphicon glyphicon-download-alt"/> Download full resolution image</a>
+									class="glyphicon glyphicon-download-alt"/> Download full resolution image</a>
 						</div>
 					</xsl:if>
 				</xsl:when>
@@ -486,7 +500,7 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</div>
-		
+
 	</xsl:template>
 
 	<xsl:template match="nuds:obverse | nuds:reverse" mode="physical">
