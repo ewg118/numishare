@@ -324,6 +324,9 @@
 					<xsl:if test="string(@calendar)">
 						<i> (<xsl:value-of select="@calendar"/>)</i>
 					</xsl:if>
+					<xsl:if test="string(@for)">
+						<i> (<xsl:value-of select="@for"/>)</i>
+					</xsl:if>
 
 					<!-- if the element is a symbol, display image, if available -->
 					<xsl:if test="string($href) and self::nuds:symbol">

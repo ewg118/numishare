@@ -90,6 +90,8 @@
 					</xsl:otherwise>
 				</xsl:choose>
 			</field>
+			
+			<xsl:apply-templates select="nuds:control/nuds:rightsStmt"/>
 
 			<!-- insert coin type facets and URIs -->
 			<xsl:for-each
@@ -218,6 +220,14 @@
 				</xsl:if>
 			</field>
 		</doc>
+	</xsl:template>
+	
+	<xsl:template match="nuds:rightsStmt">
+		<xsl:apply-templates select="nuds:rights[@xlink:href]|nuds:license[@xlink:href]"/>
+	</xsl:template>
+	
+	<xsl:template match="nuds:rights|nuds:license">
+		<field name="{if (@for) then concat(@for, 'License') else local-name()}_uri"><xsl:value-of select="@xlink:href"/></field>
 	</xsl:template>
 
 	<xsl:template match="res:result">

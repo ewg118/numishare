@@ -747,6 +747,7 @@
 					<xsl:apply-templates select="nuds:descMeta/nuds:adminDesc[child::*]"/>
 					<xsl:apply-templates select="nuds:descMeta/nuds:subjectSet[child::*]"/>
 					<xsl:apply-templates select="nuds:descMeta/nuds:noteSet[child::*]"/>
+					<xsl:apply-templates select="nuds:control/nuds:rightsStmt"/>
 				</div>
 			</xsl:otherwise>
 		</xsl:choose>
@@ -884,6 +885,16 @@
 			</h3>
 			<ul>
 				<xsl:apply-templates mode="descMeta"/>
+			</ul>
+		</div>
+	</xsl:template>
+	
+	
+	<xsl:template match="nuds:rightsStmt[nuds:rights or nuds:license[@for='images']]">
+		<div class="metadata_section">
+			<h3>Rights</h3>
+			<ul>
+				<xsl:apply-templates select="nuds:license[@for='images']|nuds:rights" mode="descMeta"/>
 			</ul>
 		</div>
 	</xsl:template>
