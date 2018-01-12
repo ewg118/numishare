@@ -775,11 +775,9 @@
 			</xsl:when>
 			<xsl:when test="$collection-name = 'sco'">
 				<field name="typeNumber">
-					<xsl:text>SCO </xsl:text>
 					<xsl:value-of select="substring-after(nuds:control/nuds:recordId, 'sc.2.')"/>
 				</field>
 				<field name="typeNumber">
-					<xsl:text>SC </xsl:text>
 					<xsl:value-of select="descendant::nuds:reference[tei:title/@key='http://nomisma.org/id/seleucid_coins']/tei:idno"/>
 				</field>
 			</xsl:when>
