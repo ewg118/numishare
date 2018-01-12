@@ -81,7 +81,7 @@
 
 			<xsl:choose>
 				<xsl:when test="child::tei:div[@type = 'edition']">
-					<xsl:apply-templates select="tei:div[@type='edition']">
+					<xsl:apply-templates select="tei:div[@type = 'edition']">
 						<xsl:with-param name="side" select="$side"/>
 						<xsl:with-param name="recordType" select="$recordType"/>
 					</xsl:apply-templates>
@@ -503,12 +503,12 @@
 			</field>
 		</xsl:if>
 	</xsl:template>
-	
+
 	<!-- index TEI-encoded edition into legend field -->
-	<xsl:template match="tei:div[@type='edition']">
+	<xsl:template match="tei:div[@type = 'edition']">
 		<xsl:param name="side"/>
 		<xsl:param name="recordType"/>
-		
+
 		<xsl:if test="string(.)">
 			<xsl:if test="$recordType != 'hoard'">
 				<field name="{$side}_leg_display">
@@ -521,7 +521,7 @@
 			<field name="{$side}_legendCondensed_text">
 				<xsl:value-of select="replace(nuds:legend, ' ', '')"/>
 			</field>
-		</xsl:if>		
+		</xsl:if>
 	</xsl:template>
 
 	<!-- generalize refDesc for NUDS and NUDS Hoard records -->
@@ -773,6 +773,16 @@
 					<xsl:value-of select="substring-after(nuds:control/nuds:recordId, 'price.')"/>
 				</field>
 			</xsl:when>
+			<xsl:when test="$collection-name = 'sco'">
+				<field name="typeNumber">
+					<xsl:text>SCO </xsl:text>
+					<xsl:value-of select="substring-after(nuds:control/nuds:recordId, 'sc.2.')"/>
+				</field>
+				<field name="typeNumber">
+					<xsl:text>SC </xsl:text>
+					<xsl:value-of select="descendant::nuds:reference[tei:title/@key='http://nomisma.org/id/seleucid_coins']/tei:idno"/>
+				</field>
+			</xsl:when>
 		</xsl:choose>
 
 	</xsl:template>
@@ -814,7 +824,7 @@
 					</xsl:analyze-string>
 				</field>
 			</xsl:when>
-			
+
 			<xsl:when test="$collection-name = 'sco'">
 				<field name="sortid">
 					<xsl:value-of select="format-number(number(substring-after(nuds:control/nuds:recordId, 'sc.2.')), '0000')"/>
