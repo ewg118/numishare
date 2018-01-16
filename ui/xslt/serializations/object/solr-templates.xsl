@@ -210,8 +210,14 @@
 			</field>
 		</xsl:if>
 
-		<!-- get alternative labels -->
+		<!-- additional content -->
 		<xsl:if test="contains($href, 'nomisma.org')">
+			<!-- ingest matchinging URIs -->
+			<xsl:for-each select="$rdf/*[@rdf:about = $href]/skos:exactMatch|$rdf/*[@rdf:about = $href]/skos:closeMatch">
+				<field name="{$facet}_match_uri">
+					<xsl:value-of select="@rdf:resource"/>
+				</field>
+			</xsl:for-each>			
 			<!-- ingest alternate labels -->
 			<xsl:for-each
 				select="
@@ -285,7 +291,16 @@
 				<xsl:value-of select="@xlink:href"/>
 			</field>
 		</xsl:if>
+		
+		<!-- additional content -->
 		<xsl:if test="contains($href, 'nomisma.org')">
+			<!-- ingest matchinging URIs -->
+			<xsl:for-each select="$rdf/*[@rdf:about = $href]/skos:exactMatch|$rdf/*[@rdf:about = $href]/skos:closeMatch">
+				<field name="{$role}_match_uri">
+					<xsl:value-of select="@rdf:resource"/>
+				</field>
+			</xsl:for-each>		
+			
 			<!-- ingest alternate labels -->
 			<xsl:for-each
 				select="
