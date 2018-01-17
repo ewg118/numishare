@@ -53,8 +53,8 @@ OPTIONAL { ?object dcterms:identifier ?identifier}
 OPTIONAL { ?object nmo:hasCollection ?colUri .
 ?colUri skos:prefLabel ?collection FILTER(langMatches(lang(?collection), "EN"))}
 ?object void:inDataset ?dataset .
-?dataset dcterms:publisher ?publisher ;
-	dcterms:title ?datasetTitle FILTER (lang(?datasetTitle) = "" || langMatches(lang(?datasetTitle), "en")) .
+?dataset dcterms:publisher ?publisher FILTER (lang(?datasetTitle) = "" || langMatches(lang(?datasetTitle), "en")) .
+?dataset dcterms:title ?datasetTitle FILTER (lang(?datasetTitle) = "" || langMatches(lang(?datasetTitle), "en")) .
 OPTIONAL {?object nmo:hasFindspot ?findUri .
 ?findUri foaf:name ?findspot }
 OPTIONAL {?object nmo:hasFindspot ?findUri .
