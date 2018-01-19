@@ -43,8 +43,8 @@ SELECT ?dataset ?publisher ?collection ?collectionLabel ?thumbnail ?homepage ?me
            OPTIONAL {?collection foaf:thumbnail ?thumbnail}
            OPTIONAL {?collection foaf:homepage ?homepage}
            OPTIONAL {?collection org:memberOf ?memberOf}}
-  ?dataset dcterms:publisher ?publisher ;
-           dcterms:title ?title FILTER (lang(?title) = "" || langMatches(lang(?title), "en")).
+  ?dataset dcterms:publisher ?publisher FILTER (lang(?publisher) = "" || langMatches(lang(?publisher), "en")).
+  ?dataset dcterms:title ?title FILTER (lang(?title) = "" || langMatches(lang(?title), "en")).
   OPTIONAL {?dataset dcterms:license ?license }
   OPTIONAL {?dataset dcterms:rights ?rights }
   ?dataset dcterms:description ?description FILTER (lang(?description) = "" || langMatches(lang(?description), "en")) .
