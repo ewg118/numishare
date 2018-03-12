@@ -369,6 +369,7 @@ function normalize_material($material){
 		case 'ALUMINUM':
 			$mat_array['label'] = 'Aluminum';
 			$mat_array['uri'] = 'http://nomisma.org/id/al';
+			break;
 		case 'AV':
 		case 'AU':
 		case 'GOLD':
