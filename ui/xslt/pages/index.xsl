@@ -18,8 +18,19 @@
 	<xsl:variable name="display_path"/>
 	<xsl:variable name="include_path" select="if (string(//config/theme/themes_url)) then concat(//config/theme/themes_url, //config/theme/orbeon_theme) else concat('http://', doc('input:request')/request/server-name, ':8080/orbeon/themes/', //config/theme/orbeon_theme)"/>
 
+	<!-- URI space for featured items -->	
+	<xsl:variable name="uri_space">
+		<xsl:choose>
+			<xsl:when test="//config/uri_space">
+				<xsl:value-of select="//config/uri_space"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="concat(//config/url, 'id/')"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:variable>
 
-	<xsl:template match="/content/config">
+	<xsl:template match="//config">
 		<html lang="en">
 			<head>
 				<title>
@@ -52,14 +63,14 @@
 				<div class="row">
 					<!-- display title and description in the jumbotron, including featured object, if available -->
 					<xsl:choose>
-						<xsl:when test="features_enabled = true()">
+						<xsl:when test="features_enabled = true() and count(doc('input:feature-model')//doc) = 1">
 							<div class="col-md-9">
 								<h1><xsl:value-of select="title"/></h1>
 								<p><xsl:value-of select="description"/></p>
 							</div>
 							<div class="col-md-3">
 								<div id="feature" class="highlight text-center">
-									<xsl:copy-of select="/content/div[@id='feature']/*"/>
+									<xsl:apply-templates select="doc('input:feature-model')//doc"/>
 								</div>
 							</div>
 						</xsl:when>
@@ -144,6 +155,25 @@
 					</div>
 				</div>
 			</div>
+		</div>
+	</xsl:template>
+	
+	<!-- featured object -->
+	<xsl:template match="doc">		
+		<h3>Featured Object</h3>
+		<div>
+			<a href="{$uri_space}{str[@name='recordId']}{if(string($langParam)) then concat('?lang=', $langParam) else ''}">
+				<img src="{str[@name='thumbnail_obv']}"/>
+			</a>
+			<br/>
+			<a href="{$uri_space}{str[@name='recordId']}{if(string($langParam)) then concat('?lang=', $langParam) else ''}">
+				<xsl:value-of select="str[@name='title_display']"/>
+			</a>
+			<xsl:if test="string(str[@name='imagesponsor'])">
+				<br/>
+				<xsl:text>Image Sponsor: </xsl:text>
+				<xsl:value-of select="str[@name='imagesponsor']"/>
+			</xsl:if>
 		</div>
 	</xsl:template>
 
