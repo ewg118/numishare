@@ -18,8 +18,19 @@
 	<xsl:variable name="display_path"/>
 	<xsl:variable name="include_path" select="if (string(//config/theme/themes_url)) then concat(//config/theme/themes_url, //config/theme/orbeon_theme) else concat('http://', doc('input:request')/request/server-name, ':8080/orbeon/themes/', //config/theme/orbeon_theme)"/>
 
+	<!-- URI space for featured items -->	
+	<xsl:variable name="uri_space">
+		<xsl:choose>
+			<xsl:when test="//config/uri_space">
+				<xsl:value-of select="//config/uri_space"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="concat(//config/url, 'id/')"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:variable>
 
-	<xsl:template match="/content/config">
+	<xsl:template match="//config">
 		<html lang="en">
 			<head>
 				<title>
@@ -147,8 +158,8 @@
 						<script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid=xa-4ffc41710d8b692c"/>
 						<!-- AddThis Button END -->
 					</div>
-					<div class="highlight">
-						<xsl:copy-of select="/content/div[@id='feature']"/>
+					<div id="feature" class="highlight text-center">
+						<xsl:apply-templates select="doc('input:feature-model')//doc"/>
 					</div>
 					<div class="highlight data_options">
 						<h3>Linked Data</h3>
@@ -262,6 +273,25 @@
 				<a target="_blank" href="http://numismatics.org/Store/Store">The ANS Store</a>
 			</li>
 		</ul>
+	</xsl:template>
+	
+	<!-- featured object -->
+	<xsl:template match="doc">		
+		<h3>Featured Object</h3>
+		<div>
+			<a href="{$uri_space}{str[@name='recordId']}{if(string($langParam)) then concat('?lang=', $langParam) else ''}">
+				<img src="{str[@name='thumbnail_obv']}"/>
+			</a>
+			<br/>
+			<a href="{$uri_space}{str[@name='recordId']}{if(string($langParam)) then concat('?lang=', $langParam) else ''}">
+				<xsl:value-of select="str[@name='title_display']"/>
+			</a>
+			<xsl:if test="string(str[@name='imagesponsor'])">
+				<br/>
+				<xsl:text>Image Sponsor: </xsl:text>
+				<xsl:value-of select="str[@name='imagesponsor']"/>
+			</xsl:if>
+		</div>
 	</xsl:template>
 
 </xsl:stylesheet>
