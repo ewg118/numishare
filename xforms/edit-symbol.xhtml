@@ -572,12 +572,12 @@ PREFIX un:	<http://www.owl-ontologies.com/Ontology1181490123.owl#>]]></prefix>
 															</xforms:label>
 														</xforms:trigger>
 														<div>
-															<fr:upload ref="instance('file')">
+															<xforms:upload ref="instance('file')">
 																<xforms:label>Upload</xforms:label>
 																<xforms:filename ref="@filename"/>
 																<xforms:mediatype ref="@mediatype"/>
 																<xxforms:size ref="@size"/>
-															</fr:upload>
+															</xforms:upload>
 															<xforms:trigger>
 																<xforms:label>Upload</xforms:label>
 																<xforms:action ev:event="DOMActivate">
