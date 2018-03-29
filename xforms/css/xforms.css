@@ -48,7 +48,7 @@
 	vertical-align: top
 }
 .orbeon .xforms-input input[type=text], .orbeon .xforms-textarea textarea, .orbeon .xforms-select1 select {
-	width: 20em;
+	width: 30em;
 	margin-bottom: 2px;
 }
 .orbeon .checkbox input {

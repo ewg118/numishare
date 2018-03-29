@@ -1,8 +1,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events"
 	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xxforms="http://orbeon.org/oxf/xml/xforms" xmlns:xi="http://www.w3.org/2001/XInclude"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:numishare="https://github.com/ewg118/numishare"
-	xmlns:mets="http://www.loc.gov/METS/" xmlns:nuds="http://nomisma.org/nuds" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml"
-	xmlns:exist="http://exist.sourceforge.net/NS/exist" xmlns:oxf="http://www.orbeon.com/oxf/processors" xmlns:saxon="http://saxon.sf.net/">
+	xmlns:mets="http://www.loc.gov/METS/" xmlns:nuds="http://nomisma.org/nuds" xmlns:xlink="http://www.w3.org/1999/xlink"
+	xmlns:exist="http://exist.sourceforge.net/NS/exist" xmlns:oxf="http://www.orbeon.com/oxf/processors">
 	<head>
 		<title>Numishare: Edit Numismatic Object</title>
 		<!-- Core + Skin CSS -->
@@ -62,7 +62,7 @@
 				</xs:simpleType>
 			</xs:schema>
 
-			<xforms:instance id="object" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="object" xxforms:exclude-result-prefixes="xhtml xforms xxforms ev xs xi xsi fr oxf nuds numishare exist">
 				<nuds recordType="physical" xmlns="http://nomisma.org/nuds" xmlns:mets="http://www.loc.gov/METS/" xmlns:xlink="http://www.w3.org/1999/xlink">
 					<control>
 						<recordId/>
@@ -122,6 +122,9 @@
 					<status/>
 					<broader_query/>
 					<publication_list/>
+					<obverse_iiif/>
+					<reverse_iiif/>
+					<iiif_service/>
 				</controls>
 			</xforms:instance>
 			<!-- collections/authentication instances -->
@@ -189,6 +192,12 @@
 			<xforms:instance id="temp">
 				<temp xmlns=""/>
 			</xforms:instance>
+
+			<!-- instance for IIIF info.json response -->
+			<xforms:instance id="iiif-response">
+				<xml xmlns=""/>
+			</xforms:instance>
+
 			<!-- control templates -->
 			<xforms:instance id="maintenanceEvent-template" xxforms:exclude-result-prefixes="#all">
 				<maintenanceEvent>
@@ -377,38 +386,29 @@
 			</xforms:instance>
 			<!-- digital representations -->
 			<xforms:instance id="digRep-template" xxforms:exclude-result-prefixes="#all">
-				<digRep/>
+				<digRep>
+					<mets:fileSec/>
+				</digRep>
 			</xforms:instance>
 			<!-- mets -->
-			<xforms:instance id="fileSec-template" xxforms:exclude-result-prefixes="#all">
-				<mets:fileSec xmlns=""/>
+			<xforms:instance id="fileGrp-template" xxforms:exclude-result-prefixes="#all">
+				<mets:fileGrp USE="" xmlns=""/>
 			</xforms:instance>
-			<xforms:instance id="fileGrp-obverse-template" xxforms:exclude-result-prefixes="#all">
-				<mets:fileGrp ID="" USE="obverse" xmlns="">
-					<mets:file ID="" USE="archive" OWNERID="" MIMETYPE="" CREATED="">
-						<mets:FLocat LOCTYPE="URL" xlink:href=""/>
-					</mets:file>
-					<mets:file ID="" USE="reference" OWNERID="" MIMETYPE="" CREATED="">
-						<mets:FLocat LOCTYPE="URL" xlink:href=""/>
-					</mets:file>
-					<mets:file ID="" USE="thumbnail" OWNERID="" MIMETYPE="" CREATED="">
-						<mets:FLocat LOCTYPE="URL" xlink:href=""/>
-					</mets:file>
-				</mets:fileGrp>
+
+			<xforms:instance id="file-template" xxforms:exclude-result-prefixes="#all">
+				<mets:file USE="" xmlns="">
+					<mets:FLocat LOCTYPE="URL" xlink:href=""/>
+				</mets:file>
 			</xforms:instance>
-			<xforms:instance id="fileGrp-reverse-template" xxforms:exclude-result-prefixes="#all">
-				<mets:fileGrp ID="" USE="reverse" xmlns="">
-					<mets:file ID="" USE="archive" OWNERID="" MIMETYPE="" CREATED="">
-						<mets:FLocat LOCTYPE="URL" xlink:href=""/>
-					</mets:file>
-					<mets:file ID="" USE="reference" OWNERID="" MIMETYPE="" CREATED="">
-						<mets:FLocat LOCTYPE="URL" xlink:href=""/>
-					</mets:file>
-					<mets:file ID="" USE="thumbnail" OWNERID="" MIMETYPE="" CREATED="">
-						<mets:FLocat LOCTYPE="URL" xlink:href=""/>
-					</mets:file>
-				</mets:fileGrp>
+
+			<!-- MIME types for METS images -->
+			<xforms:instance id="mimetypes" xxforms:exclude-result-prefixes="#all">
+				<types xmlns="">
+					<type>image/jpeg</type>
+					<type>image/png</type>
+				</types>
 			</xforms:instance>
+
 			<xforms:instance id="color-template" xxforms:exclude-result-prefixes="#all">
 				<physfacet type="color"/>
 			</xforms:instance>
@@ -539,9 +539,10 @@
 					<xforms:bind nodeset="mets:fileSec">
 						<xforms:bind constraint="count(mets:fileGrp) &gt; 0"/>
 						<xforms:bind nodeset="mets:fileGrp">
+							<xforms:bind constraint="count(mets:file) &gt; 0"/>
 							<xforms:bind nodeset="mets:file">
 								<xforms:bind nodeset="mets:FLocat">
-									<xforms:bind constraint="string(@xlink:href)"/>
+									<xforms:bind nodeset="@xlink:href" constraint="matches(., '(http://|https://)([a-z0-9]{1})((\.[a-z0-9-])|([a-z0-9-]))*\.([a-z]{2,4})(/?)')"/>
 								</xforms:bind>
 							</xforms:bind>
 						</xforms:bind>
@@ -590,6 +591,17 @@
 						<xforms:setvalue ref="instance('typedesc-type')">resource</xforms:setvalue>
 						<xforms:send submission="get-typeDesc"/>
 					</xforms:action>
+
+					<!-- if the NUDS record contains IIIF service URIs in the METS, set the control instance -->
+					<xforms:action if="instance('object')/nuds:digRep/mets:fileSec/mets:fileGrp[@USE='obverse']/mets:file[@USE='iiif']">
+						<xforms:setvalue ref="instance('control-instance')/obverse_iiif"
+							value="instance('object')/nuds:digRep/mets:fileSec/mets:fileGrp[@USE='obverse']/mets:file[@USE='iiif']/mets:FLocat/@xlink:href"/>
+					</xforms:action>
+					<xforms:action if="instance('object')/nuds:digRep/mets:fileSec/mets:fileGrp[@USE='reverse']/mets:file[@USE='iiif']">
+						<xforms:setvalue ref="instance('control-instance')/reverse_iiif"
+							value="instance('object')/nuds:digRep/mets:fileSec/mets:fileGrp[@USE='reverse']/mets:file[@USE='iiif']/mets:FLocat/@xlink:href"/>
+					</xforms:action>
+
 					<!-- populate the findspot-temp instance with current values -->
 					<!--<xforms:setvalue ref="instance('findspot-temp')/resource" value="instance('object')//nuds:findspot/@xlink:href"></xforms:setvalue>
 					<xforms:setvalue ref="instance('findspot-temp')/name" value="instance('object')//nuds:findspot/nuds:name"></xforms:setvalue>
@@ -758,6 +770,30 @@
 				<xforms:setvalue ref="instance('control-instance')/error" ev:event="xforms-submit-error">Error querying eXist database.</xforms:setvalue>
 			</xforms:submission>
 
+			<!-- ***** READ JSON FOR IIIF VALIDATION *****-->
+			<xforms:submission id="get-info-json" serialization="none" method="get" action="{instance('control-instance')/iiif_service}/info.json"
+				replace="instance" instance="iiif-response">
+				<xforms:header>
+					<xforms:name>User-Agent</xforms:name>
+					<xforms:value>XForms/Numishare</xforms:value>
+				</xforms:header>
+				<!-- if the JSON successfully loads, then set the value  -->
+				<xforms:action ev:event="xforms-submit-done">
+					<xforms:action if="instance('control-instance')/obverse_iiif = instance('control-instance')/iiif_service">
+						<xforms:setvalue
+							ref="instance('object')/nuds:digRep/mets:fileSec/mets:fileGrp[@USE='obverse']/mets:file[@USE='iiif']/mets:FLocat/@xlink:href"
+							value="instance('control-instance')/obverse_iiif"/>
+					</xforms:action>
+					<xforms:action if="instance('control-instance')/reverse_iiif = instance('control-instance')/iiif_service">
+						<xforms:setvalue
+							ref="instance('object')/nuds:digRep/mets:fileSec/mets:fileGrp[@USE='reverse']/mets:file[@USE='iiif']/mets:FLocat/@xlink:href"
+							value="instance('control-instance')/reverse_iiif"/>
+					</xforms:action>
+				</xforms:action>
+				<!-- if the response is not valid JSON -->
+				<xforms:message ev:event="xforms-submit-error" level="modal">Unable to get a valid JSON response from the IIIF service URI.</xforms:message>
+			</xforms:submission>
+
 			<!-- ********** XFORMS-MODEL-CONSTRUCT-DONE ********** -->
 			<xforms:action ev:event="xforms-model-construct-done">
 				<!-- if there's a collection-name session attribute carried over from numishare-admin, then use it to set the collection-name -->
@@ -800,7 +836,7 @@
 		<xi:include href="xbl/findspot/findspot.xbl" xi:omit-xml-base="true"/>
 		<xi:include href="xbl/geogname/geogname.xbl" xi:omit-xml-base="true"/>
 		<xi:include href="xbl/mark/mark.xbl" xi:omit-xml-base="true"/>
-			<xi:include href="xbl/control/control.xbl" xi:omit-xml-base="true"/>
+		<xi:include href="xbl/control/control.xbl" xi:omit-xml-base="true"/>
 		<xi:include href="xbl/output-typeDesc/output-typeDesc.xbl" xi:omit-xml-base="true"/>
 		<xi:include href="xbl/reference/reference.xbl" xi:omit-xml-base="true"/>
 		<xi:include href="xbl/sale/sale.xbl" xi:omit-xml-base="true"/>
@@ -1792,7 +1828,7 @@
 											</fr:positive-choice>
 										</fr:alert-dialog>
 										<numishare:type-undertype/>
-									</xforms:group>									
+									</xforms:group>
 								</fr:tab>
 								<!--**************************************** REFERENCE DESCRIPTION **********************************-->
 								<fr:tab visible="instance('object')/*[local-name()='descMeta']/*[local-name()='refDesc']">
@@ -1833,11 +1869,11 @@
 												<numishare:reference/>
 											</xforms:repeat>
 										</div>
-									</xforms:group>									
+									</xforms:group>
 								</fr:tab>
 								<!--**************************************** FINDSPOT DESCRIPTION **********************************-->
 								<fr:tab visible="instance('object')/*[local-name()='descMeta']/*[local-name()='findspotDesc']">
-									<fr:label>Findspot</fr:label>									
+									<fr:label>Findspot</fr:label>
 									<xforms:group ref="nuds:descMeta/nuds:findspotDesc">
 										<h2>Findspot Description</h2>
 										<xforms:trigger appearance="minimal">
@@ -1865,7 +1901,7 @@
 											</fr:positive-choice>
 										</fr:alert-dialog>
 										<xforms:setvalue ref="instance('findspot-changed')" value="'true'" ev:event="xforms-value-changed"/>
-									</xforms:group>									
+									</xforms:group>
 								</fr:tab>
 								<!--**************************************** ADMINISTRATIVE DESCRIPTION **********************************-->
 								<fr:tab visible="instance('object')/*[local-name()='descMeta']/*[local-name()='adminDesc']">
@@ -2152,7 +2188,7 @@
 												</xforms:repeat>
 											</div>
 										</xforms:group>
-									</xforms:group>									
+									</xforms:group>
 								</fr:tab>
 								<!--**************************************** DIGITAL REPRESENTATIONS **********************************-->
 								<fr:tab visible="instance('object')/*[local-name()='digRep']">
@@ -2165,119 +2201,168 @@
 											</xforms:label>
 											<xforms:action ev:event="DOMActivate">
 												<!-- dispatch the dialog to delete obverse and reverse images from the server if either the obverse or reverse thumbnail has an OWNERID (which is the original filename, and not set when using flickr) -->
-												<xforms:dispatch target="delete-digRep-dialog" name="fr-show"
-													if="string(mets:fileSec/mets:fileGrp[@USE='obverse']/mets:file[@USE='thumbnail']/@OWNERID) or string(mets:fileSec/mets:fileGrp[@USE='reverse']/mets:file[@USE='thumbnail']/@OWNERID)"/>
+												<xforms:dispatch target="delete-digRep-dialog" name="fr-show" if="mets:fileSec/mets:fileGrp"/>
 												<!-- delete the digRep if neither the obverse nor reverse have been uploaded by the user -->
-												<xforms:delete nodeset="."
-													if="not(string(mets:fileSec/mets:fileGrp[@USE='obverse']/mets:file[@USE='thumbnail']/@OWNERID)) and not(string(mets:fileSec/mets:fileGrp[@USE='reverse']/mets:file[@USE='thumbnail']/@OWNERID))"
-												/>
+												<xforms:delete nodeset="." if="not(mets:fileSec/mets:fileGrp)"/>
 											</xforms:action>
-											
+
 										</xforms:trigger>
 										<xforms:group ref="mets:fileSec">
 											<div class="trigger_container">
-												<xforms:group ref=".[count(mets:fileGrp[@USE='obverse']) &lt; 1]">
+												<xforms:group
+													ref=".[count(mets:fileGrp[@USE='obverse']) = 0 and count(mets:fileGrp[@USE='reverse']) = 0 and count(mets:fileGrp[@USE='combined']) = 0]">
 													<xforms:trigger appearance="minimal">
 														<xforms:label>
-															<span class="glyphicon glyphicon-plus"></span>Obverse Image</xforms:label>
+															<span class="glyphicon glyphicon-plus"></span> Obverse and Reverse Images</xforms:label>
 														<xforms:action ev:event="DOMActivate">
-															<xforms:insert context="." origin="instance('fileGrp-obverse-template')"/>
+															<xforms:insert context="." nodeset="./child::node()[last()]" origin="instance('fileGrp-template')"/>
+															<xforms:setvalue ref="mets:fileGrp[last()]/@USE">obverse</xforms:setvalue>
+															<xforms:insert context="." origin="instance('fileGrp-template')" nodeset="./child::node()[last()]"/>
+															<xforms:setvalue ref="mets:fileGrp[last()]/@USE">reverse</xforms:setvalue>
 														</xforms:action>
 													</xforms:trigger>
 												</xforms:group>
-												<xforms:group ref=".[count(mets:fileGrp[@USE='reverse']) &lt; 1]">
+												<xforms:group
+													ref=".[count(mets:fileGrp[@USE='obverse']) = 0 and count(mets:fileGrp[@USE='reverse']) = 0 and count(mets:fileGrp[@USE='combined']) = 0]">
 													<xforms:trigger appearance="minimal">
 														<xforms:label>
-															<span class="glyphicon glyphicon-plus"></span>Reverse Image</xforms:label>
+															<span class="glyphicon glyphicon-plus"></span> Combined Images</xforms:label>
 														<xforms:action ev:event="DOMActivate">
-															<xforms:insert context="." origin="instance('fileGrp-reverse-template')"
-																nodeset="./child::node()[last()]"/>
+															<xforms:insert context="." nodeset="./child::node()[last()]" origin="instance('fileGrp-template')"/>
+															<xforms:setvalue ref="mets:fileGrp[last()]/@USE">combined</xforms:setvalue>
 														</xforms:action>
 													</xforms:trigger>
 												</xforms:group>
 											</div>
+
 											<xforms:group ref=".[count(mets:fileGrp) = 0]">
-												<div class="ui-widget">
-													<div class="ui-state-highlight ui-corner-all">
-														<p>
-															<span class="ui-icon ui-icon-info" style="float: left; margin-right: 0.3em;"></span>
-															<strong>Warning!</strong> An image is required before the record can be saved. </p>
-													</div>
+												<div class="bg-danger text-danger alert-box">
+													<p>
+														<span class="glyphicon glyphicon-warning-sign"></span>
+														<strong>Warning!</strong> An image is required before the record can be saved.</p>
 												</div>
 											</xforms:group>
-											<xforms:group ref="mets:fileGrp[@USE='obverse']">
+
+											<xforms:repeat nodeset="mets:fileGrp">
 												<div class="subsection">
-													<h3>Obverse</h3>
-													<numishare:file-upload/>
+													<h3><xforms:output value="concat(upper-case(substring(@USE, 1, 1)), substring(@USE, 2))"/></h3>
+													<div class="trigger_container">
+														<xforms:group ref=".[count(mets:file[@USE='thumbnail']) = 0]">
+															<xforms:trigger appearance="minimal">
+																<xforms:label>
+																	<span class="glyphicon glyphicon-plus"></span> Thumbnail</xforms:label>
+																<xforms:action ev:event="DOMActivate">
+																	<xforms:insert context="." nodeset="./child::node()[last()]"
+																		origin="instance('file-template')"/>
+																	<xforms:setvalue ref="mets:file[last()]/@USE">thumbnail</xforms:setvalue>
+																	<xforms:insert context="mets:file[last()]"
+																		origin="xforms:attribute('MIMETYPE', 'image/jpeg')"/>
+																</xforms:action>
+															</xforms:trigger>
+														</xforms:group>
+
+														<xforms:group ref=".[count(mets:file[@USE='reference']) = 0]">
+															<xforms:trigger appearance="minimal">
+																<xforms:label>
+																	<span class="glyphicon glyphicon-plus"></span> Reference</xforms:label>
+																<xforms:action ev:event="DOMActivate">
+																	<xforms:insert context="." nodeset="./child::node()[last()]"
+																		origin="instance('file-template')"/>
+																	<xforms:setvalue ref="mets:file[last()]/@USE">reference</xforms:setvalue>
+																	<xforms:insert context="mets:file[last()]"
+																		origin="xforms:attribute('MIMETYPE', 'image/jpeg')"/>
+																</xforms:action>
+															</xforms:trigger>
+														</xforms:group>
+
+														<xforms:group ref=".[count(mets:file[@USE='iiif']) = 0]">
+															<xforms:trigger appearance="minimal">
+																<xforms:label>
+																	<span class="glyphicon glyphicon-plus"></span> IIIF Service</xforms:label>
+																<xforms:action ev:event="DOMActivate">
+																	<xforms:insert context="." nodeset="./child::node()[last()]"
+																		origin="instance('file-template')"/>
+																	<xforms:setvalue ref="mets:file[last()]/@USE">iiif</xforms:setvalue>
+																</xforms:action>
+															</xforms:trigger>
+														</xforms:group>
+													</div>
+
+													<xforms:group ref=".[count(mets:file) = 0]">
+														<div class="bg-danger text-danger alert-box">
+															<p>
+																<span class="glyphicon glyphicon-warning-sign"></span>
+																<strong>Warning!</strong> An image is required before the record can be saved.</p>
+														</div>
+													</xforms:group>
+
+													<xforms:repeat nodeset="xxforms:sort(mets:file, @USE, 'text', 'ascending')">
+														<div>
+															<h4>
+																<xforms:output
+																	value="if (@USE='iiif') then 'IIIF Service' else concat(upper-case(substring(@USE, 1, 1)), substring(@USE, 2))"
+																/>
+															</h4>
+															<xforms:trigger appearance="minimal">
+																<xforms:action ev:event="DOMActivate">
+																	<xforms:delete nodeset="."/>
+																</xforms:action>
+																<xforms:label>
+																	<span class="glyphicon glyphicon-remove"></span>
+																</xforms:label>
+															</xforms:trigger>
+
+															<!-- create a different input for IIIF services in order to test validity of the URI -->
+															<xforms:group ref=".[@USE = 'iiif']">
+																<xforms:var name="element" select="concat(parent::node()/@USE, '_iiif')"/>
+
+																<div>
+																	<xforms:input ref="instance('control-instance')/*[local-name() = $element]">
+																		<xforms:label>URL</xforms:label>
+																		<xforms:alert>Must be an absolute URL pattern.</xforms:alert>
+																		<xforms:hint>This should be the URL portion that precedes '/info.json'</xforms:hint>
+																		<xforms:action ev:event="xforms-value-changed">
+																			<!-- fire a submission to get the info.json for the given IIIF service -->
+																			<xforms:var name="service" select="."/>
+																			<xforms:setvalue ref="instance('control-instance')/iiif_service" value="$service"/>
+																			<xforms:send submission="get-info-json"/>
+																		</xforms:action>
+																	</xforms:input>
+																</div>
+															</xforms:group>
+															<xforms:group ref=".[not(@USE = 'iiif')]">
+																<div>
+																	<xforms:input ref="mets:FLocat/@xlink:href">
+																		<xforms:label>URL</xforms:label>
+																		<xforms:alert>Must be an absolute URL pattern.</xforms:alert>
+																	</xforms:input>
+																</div>
+															</xforms:group>
+
+															<xforms:group ref=".[@MIMETYPE]">
+																<div>
+																	<xforms:select1 ref="@MIMETYPE">
+																		<xforms:label>MIME Type</xforms:label>
+																		<xforms:itemset nodeset="instance('mimetypes')//type">
+																			<xforms:label ref="."/>
+																			<xforms:value ref="."/>
+																		</xforms:itemset>
+																	</xforms:select1>
+																</div>
+															</xforms:group>
+														</div>
+													</xforms:repeat>
+													<hr />
 												</div>
-											</xforms:group>
-											<xforms:group ref="mets:fileGrp[@USE='reverse']">
+											</xforms:repeat>
+											<!--<xforms:group ref="mets:fileGrp[@USE='reverse']">
 												<div class="subsection">
 													<h3>Reverse</h3>
-													<numishare:file-upload/>
+													<numishare:file-upload/>													
 												</div>
-											</xforms:group>
-											<fr:alert-dialog id="delete-digRep-dialog">
-												<fr:label>Delete Digital Representations</fr:label>
-												<fr:message>Confirm the deletion of image files associated with this object.</fr:message>
-												<fr:negative-choice>
-													<fr:label>Cancel</fr:label>
-												</fr:negative-choice>
-												<fr:positive-choice>
-													<xforms:action ev:event="DOMActivate">
-														<!-- delete Obverse image -->
-														<!-- get filename -->
-														<xforms:action
-															if="string(instance('object')/digRep/mets:fileSec/mets:fileGrp[@USE='obverse']/mets:file[@USE='thumbnail']/mets:FLocat/@xlink:href) and string(instance('object')/digRep/mets:fileSec/mets:fileGrp[@USE='obverse']/mets:file[@USE='thumbnail']/@OWNERID)">
-															<xforms:setvalue ref="instance('delete-config')/delete/file"
-																value="substring-after(instance('object')/digRep/mets:fileSec/mets:fileGrp[@USE='obverse']/mets:file[@USE='thumbnail']/mets:FLocat/@xlink:href, 'media/thumbnail/')"/>
-															<!-- thumbnail -->
-															<xforms:setvalue ref="instance('delete-config')/delete/directory"
-																value="concat(instance('config')/images/absolute_path, 'thumbnail')"/>
-															<xforms:insert context="instance('dump')"
-																origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/remove-image.xpl', ('delete-config', 'dump'), (instance('delete-config'), instance('dump')), 'data')"/>
-															<!-- reference -->
-															<xforms:setvalue ref="instance('delete-config')/delete/directory"
-																value="concat(instance('config')/images/absolute_path, 'reference')"/>
-															<xforms:insert context="instance('dump')"
-																origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/remove-image.xpl', ('delete-config', 'dump'), (instance('delete-config'), instance('dump')), 'data')"/>
-															<!-- ARCHIVE -->
-															<xforms:setvalue ref="instance('delete-config')/delete/directory"
-																value="concat(instance('config')/images/absolute_path, 'archive')"/>
-															<xforms:insert context="instance('dump')"
-																origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/remove-image.xpl', ('delete-config', 'dump'), (instance('delete-config'), instance('dump')), 'data')"
-															/>
-														</xforms:action>
-														<!-- delete Reverse image -->
-														<!-- get filename -->
-														<xforms:action
-															if="string(instance('object')/digRep/mets:fileSec/mets:fileGrp[@USE='reverse']/mets:file[@USE='thumbnail']/mets:FLocat/@xlink:href) and string(instance('object')/digRep/mets:fileSec/mets:fileGrp[@USE='reverse']/mets:file[@USE='thumbnail']/@OWNERID)">
-															<xforms:setvalue ref="instance('delete-config')/delete/file"
-																value="substring-after(instance('object')/digRep/mets:fileSec/mets:fileGrp[@USE='reverse']/mets:file[@USE='thumbnail']/mets:FLocat/@xlink:href, 'media/thumbnail/')"/>
-															<!-- thumbnail -->
-															<xforms:setvalue ref="instance('delete-config')/delete/directory"
-																value="concat(instance('config')/images/absolute_path, 'thumbnail')"/>
-															<xforms:insert context="instance('dump')"
-																origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/remove-image.xpl', ('delete-config', 'dump'), (instance('delete-config'), instance('dump')), 'data')"/>
-															<!-- reference -->
-															<xforms:setvalue ref="instance('delete-config')/delete/directory"
-																value="concat(instance('config')/images/absolute_path, 'reference')"/>
-															<xforms:insert context="instance('dump')"
-																origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/remove-image.xpl', ('delete-config', 'dump'), (instance('delete-config'), instance('dump')), 'data')"/>
-															<!-- ARCHIVE -->
-															<xforms:setvalue ref="instance('delete-config')/delete/directory"
-																value="concat(instance('config')/images/absolute_path, 'archive')"/>
-															<xforms:insert context="instance('dump')"
-																origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/remove-image.xpl', ('delete-config', 'dump'), (instance('delete-config'), instance('dump')), 'data')"
-															/>
-														</xforms:action>
-														<xforms:dispatch name="fr-toggle" targetid="typedesc-tab"/>
-														<xforms:delete nodeset="."/>
-													</xforms:action>
-												</fr:positive-choice>
-											</fr:alert-dialog>
+											</xforms:group>-->
 										</xforms:group>
-									</xforms:group>									
+									</xforms:group>
 								</fr:tab>
 								<!--**************************************** NUDS HEADER **********************************-->
 								<fr:tab visible="instance('object')/*[local-name()='control']">
@@ -2286,10 +2371,10 @@
 										<numishare:control/>
 									</xforms:group>
 								</fr:tab>
-								<!--<fr:tab>
+								<fr:tab>
 									<fr:label>Inspector</fr:label>
 									<fr:xforms-inspector/>
-								</fr:tab>-->
+								</fr:tab>
 							</fr:tabbable>
 
 							<!--**************************************** DIALOGS **********************************-->
@@ -2329,6 +2414,21 @@
 									</xforms:action>
 								</fr:positive-choice>
 							</fr:alert-dialog>
+
+							<fr:alert-dialog id="delete-digRep-dialog">
+								<fr:label>Delete Digital Representations</fr:label>
+								<fr:message>Are you sure you want to delete all links to digital objects?</fr:message>
+								<fr:negative-choice>
+									<fr:label>Cancel</fr:label>
+								</fr:negative-choice>
+								<fr:positive-choice>
+									<fr:label>OK</fr:label>
+									<xforms:action ev:event="DOMActivate">
+										<xforms:delete nodeset="instance('object')/nuds:digRep"/>
+									</xforms:action>
+								</fr:positive-choice>
+							</fr:alert-dialog>
+
 							<xxforms:dialog id="broader-dialog" appearance="full" level="modal" close="true" draggable="true" visible="false">
 								<xforms:label>Parent Type</xforms:label>
 								<p>Enter the parent type Record ID below</p>
