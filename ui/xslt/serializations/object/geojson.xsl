@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:gml="http://www.opengis.net/gml"
 	xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nmo="http://nomisma.org/ontology#" xmlns:nm="http://nomisma.org/id/"
 	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:nuds="http://nomisma.org/nuds" xmlns:nh="http://nomisma.org/nudsHoard"
 	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:numishare="https://github.com/ewg118/numishare"
@@ -116,11 +116,11 @@
 	<xsl:template match="nuds:nuds">
 		<xsl:choose>
 			<xsl:when
-				test="count($nudsGroup/descendant::nuds:geogname[@xlink:role = 'mint'][string(@xlink:href)] | descendant::nuds:findspotDesc[string(@xlink:href)] | descendant::nuds:subject[contains(@xlink:href, 'geonames.org')]) &gt; 1">
+				test="count($nudsGroup/descendant::nuds:geogname[@xlink:role = 'mint'][string(@xlink:href)] | descendant::nuds:geogname[@xlink:role = 'findspot'][string(@xlink:href)] | descendant::nuds:findspotDesc[string(@xlink:href)] | descendant::nuds:subject[contains(@xlink:href, 'geonames.org')] | descendant::nuds:findspot[gml:Point]) &gt; 1">
 				<xsl:text>[</xsl:text>
 			</xsl:when>
 			<xsl:when
-				test="count($nudsGroup/descendant::nuds:geogname[@xlink:role = 'mint'][string(@xlink:href)] | descendant::nuds:findspotDesc[string(@xlink:href)] | descendant::nuds:subject[contains(@xlink:href, 'geonames.org')]) = 0">
+				test="count($nudsGroup/descendant::nuds:geogname[@xlink:role = 'mint'][string(@xlink:href)] | descendant::nuds:geogname[@xlink:role = 'findspot'][string(@xlink:href)] | descendant::nuds:findspotDesc[string(@xlink:href)] | descendant::nuds:subject[contains(@xlink:href, 'geonames.org')] | descendant::nuds:findspot[gml:Point]) = 0">
 				<xsl:text>{</xsl:text>
 			</xsl:when>
 		</xsl:choose>
@@ -128,13 +128,13 @@
 
 		<!-- create mint points -->
 		<xsl:for-each
-			select="$nudsGroup/descendant::nuds:geogname[@xlink:role = 'mint'][string(@xlink:href)] | $nudsGroup/descendant::nuds:geogname[@xlink:role = 'findspot'][string(@xlink:href)] | descendant::nuds:findspotDesc[string(@xlink:href)] | descendant::nuds:subject[contains(@xlink:href, 'geonames.org')]">
+			select="$nudsGroup/descendant::nuds:geogname[@xlink:role = 'mint'][string(@xlink:href)] | descendant::nuds:geogname[@xlink:role = 'findspot'][string(@xlink:href)] | descendant::nuds:findspotDesc[string(@xlink:href)] | descendant::nuds:subject[contains(@xlink:href, 'geonames.org')] | descendant::nuds:findspot[gml:Point]">
 			<xsl:call-template name="generateFeature">
 				<xsl:with-param name="uri" select="@xlink:href"/>
 				<xsl:with-param name="type">
 					<xsl:choose>
 						<xsl:when test="@xlink:role = 'mint'">mint</xsl:when>
-						<xsl:when test="@xlink:role = 'findspot' or self::nuds:findspotDesc">findspot</xsl:when>
+						<xsl:when test="@xlink:role = 'findspot' or self::nuds:findspotDesc or self::nuds:findspot">findspot</xsl:when>
 						<xsl:when test="self::nuds:subject">subject</xsl:when>
 					</xsl:choose>
 				</xsl:with-param>
@@ -143,11 +143,11 @@
 
 		<xsl:choose>
 			<xsl:when
-				test="count($nudsGroup/descendant::nuds:geogname[@xlink:role = 'mint'][string(@xlink:href)] | descendant::nuds:findspotDesc[string(@xlink:href)] | descendant::nuds:subject[contains(@xlink:href, 'geonames.org')]) &gt; 1">
+				test="count($nudsGroup/descendant::nuds:geogname[@xlink:role = 'mint'][string(@xlink:href)] | descendant::nuds:geogname[@xlink:role = 'findspot'][string(@xlink:href)] | descendant::nuds:findspotDesc[string(@xlink:href)] | descendant::nuds:subject[contains(@xlink:href, 'geonames.org')] | descendant::nuds:findspot[gml:Point]) &gt; 1">
 				<xsl:text>]</xsl:text>
 			</xsl:when>
 			<xsl:when
-				test="count($nudsGroup/descendant::nuds:geogname[@xlink:role = 'mint'][string(@xlink:href)] | descendant::nuds:findspotDesc[string(@xlink:href)] | descendant::nuds:subject[contains(@xlink:href, 'geonames.org')]) = 0">
+				test="count($nudsGroup/descendant::nuds:geogname[@xlink:role = 'mint'][string(@xlink:href)] | descendant::nuds:geogname[@xlink:role = 'findspot'][string(@xlink:href)] | descendant::nuds:findspotDesc[string(@xlink:href)] | descendant::nuds:subject[contains(@xlink:href, 'geonames.org')] | descendant::nuds:findspot[gml:Point]) = 0">
 				<xsl:text>}</xsl:text>
 			</xsl:when>
 		</xsl:choose>
@@ -217,6 +217,9 @@
 				<xsl:when test="local-name() = 'findspotDesc'">
 					<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about = $uri], $lang)"/>
 				</xsl:when>
+				<xsl:when test="local-name() = 'findspot'">
+					<xsl:value-of select="nuds:geogname"/>
+				</xsl:when>
 				<xsl:when test="@xlink:role = 'mint'">
 					<xsl:choose>
 						<xsl:when test="contains($uri, 'geonames')">
@@ -226,9 +229,27 @@
 							<xsl:variable name="adminName1" select="$geonames_data//adminName1"/>
 							<xsl:variable name="fcode" select="$geonames_data//fcode"/>
 							<!-- set a value equivalent to AACR2 standard for US, AU, CA, and GB.  This equation deviates from AACR2 for Malaysia since standard abbreviations for territories cannot be found -->
-							<xsl:value-of select="if ($countryCode = 'US' or $countryCode = 'AU' or $countryCode = 'CA') then if ($fcode = 'ADM1') then $name else concat($name, ' (',
-								$abbreviations//country[@code=$countryCode]/place[. = $adminName1]/@abbr, ')') else if ($countryCode= 'GB') then  if ($fcode = 'ADM1') then $name else concat($name, ' (',
-								$adminName1, ')') else if ($fcode = 'PCLI') then $name else concat($name, ' (', $countryName, ')')"/>
+							<xsl:value-of
+								select="
+									if ($countryCode = 'US' or $countryCode = 'AU' or $countryCode = 'CA') then
+										if ($fcode = 'ADM1') then
+											$name
+										else
+											concat($name, ' (',
+											$abbreviations//country[@code = $countryCode]/place[. = $adminName1]/@abbr, ')')
+									else
+										if ($countryCode = 'GB') then
+											if ($fcode = 'ADM1') then
+												$name
+											else
+												concat($name, ' (',
+												$adminName1, ')')
+										else
+											if ($fcode = 'PCLI') then
+												$name
+											else
+												concat($name, ' (', $countryName, ')')"
+							/>
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about = $uri], $lang)"/>
@@ -243,27 +264,40 @@
 
 		<xsl:variable name="coordinates">
 			<xsl:choose>
-				<xsl:when test="contains($uri, 'geonames')">
-					<xsl:value-of select="concat($geonames_data//lng, ',', $geonames_data//lat)"/>
-				</xsl:when>
-				<xsl:when test="contains($uri, 'nomisma')">
-					<xsl:variable name="coordinates">
-						<xsl:if test="$rdf//*[@rdf:about = concat($uri, '#this')]/geo:long and $rdf//*[@rdf:about = concat($uri, '#this')]/geo:lat"
-							>true</xsl:if>
-					</xsl:variable>
-					<xsl:if test="$coordinates = 'true'">
-						<xsl:value-of
-							select="concat($rdf//*[@rdf:about = concat($uri, '#this')]/geo:long, ',', $rdf//*[@rdf:about = concat($uri, '#this')]/geo:lat)"/>
-					</xsl:if>
-				</xsl:when>
-				<xsl:when test="contains($uri, 'coinhoards.org')">
-					<xsl:variable name="findspotUri" select="$rdf//*[@rdf:about = $uri]/nmo:hasFindspot/@rdf:resource"/>
+				<!-- evaluate the URI and extract coordinates -->
+				<xsl:when test="string($uri)">
+					<xsl:choose>
+						<xsl:when test="contains($uri, 'geonames')">
+							<xsl:value-of select="concat($geonames_data//lng, ',', $geonames_data//lat)"/>
+						</xsl:when>
+						<xsl:when test="contains($uri, 'nomisma')">
+							<xsl:variable name="coordinates">
+								<xsl:if test="$rdf//*[@rdf:about = concat($uri, '#this')]/geo:long and $rdf//*[@rdf:about = concat($uri, '#this')]/geo:lat"
+									>true</xsl:if>
+							</xsl:variable>
+							<xsl:if test="$coordinates = 'true'">
+								<xsl:value-of
+									select="concat($rdf//*[@rdf:about = concat($uri, '#this')]/geo:long, ',', $rdf//*[@rdf:about = concat($uri, '#this')]/geo:lat)"
+								/>
+							</xsl:if>
+						</xsl:when>
+						<xsl:when test="contains($uri, 'coinhoards.org')">
+							<xsl:variable name="findspotUri" select="$rdf//*[@rdf:about = $uri]/nmo:hasFindspot/@rdf:resource"/>
 
-					<xsl:if test="string-length($findspotUri) &gt; 0">
-						<xsl:value-of select="concat($rdf//*[@rdf:about = $findspotUri]/geo:long, ',', $rdf//*[@rdf:about = $findspotUri]/geo:lat)"/>
-					</xsl:if>
+							<xsl:if test="string-length($findspotUri) &gt; 0">
+								<xsl:value-of select="concat($rdf//*[@rdf:about = $findspotUri]/geo:long, ',', $rdf//*[@rdf:about = $findspotUri]/geo:lat)"/>
+							</xsl:if>
+						</xsl:when>
+					</xsl:choose>
+				</xsl:when>
+				<!-- otherwise use the gml:Point stored within NUDS -->
+				<xsl:when test="gml:Point">
+					<xsl:variable name="coords" select="tokenize(gml:Point/gml:coordinates, ',')"/>
+					<xsl:value-of select="concat(normalize-space($coords[2]), ',', normalize-space($coords[1]))"/>
 				</xsl:when>
 			</xsl:choose>
+
+
 		</xsl:variable>
 
 		<xsl:if test="string-length($coordinates) &gt; 0">
@@ -271,9 +305,13 @@
 			<xsl:value-of select="$coordinates"/>
 			<xsl:text>]},"properties": {"name": "</xsl:text>
 			<xsl:value-of select="$name"/>
-			<xsl:text>", "uri": "</xsl:text>
-			<xsl:value-of select="$uri"/>
-			<xsl:text>","type": "</xsl:text>
+			<xsl:text>",</xsl:text>
+			<xsl:if test="string($uri)">
+				<xsl:text>"uri": "</xsl:text>
+				<xsl:value-of select="$uri"/>
+				<xsl:text>",</xsl:text>
+			</xsl:if>
+			<xsl:text>"type": "</xsl:text>
 			<xsl:value-of select="$type"/>
 			<xsl:text>"</xsl:text>
 			<xsl:text>}}</xsl:text>
@@ -282,7 +320,7 @@
 			</xsl:if>
 		</xsl:if>
 	</xsl:template>
-	
+
 	<!-- AACR2 place normalization variable -->
 	<xsl:variable name="abbreviations" as="element()*">
 		<abbreviations>

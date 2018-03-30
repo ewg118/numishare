@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes="xsl xs nuds nh xlink numishare mets"
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nm="http://nomisma.org/id/"
 	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:nuds="http://nomisma.org/nuds" xmlns:nh="http://nomisma.org/nudsHoard"
 	xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:oa="http://www.w3.org/ns/oa#"
-	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:pelagios="http://pelagios.github.io/vocab/terms#"
+	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:pelagios="http://pelagios.github.io/vocab/terms#" xmlns:gml="http://www.opengis.net/gml"
 	xmlns:void="http://rdfs.org/ns/void#" xmlns:relations="http://pelagios.github.io/vocab/relations#" xmlns:nmo="http://nomisma.org/ontology#"
 	xmlns:edm="http://www.europeana.eu/schemas/edm/" xmlns:svcs="http://rdfs.org/sioc/services#" xmlns:doap="http://usefulinc.com/ns/doap#"
 	xmlns:dcmitype="http://purl.org/dc/dcmitype/" xmlns:crm="http://www.cidoc-crm.org/cidoc-crm/" xmlns:numishare="https://github.com/ewg118/numishare"
-	xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:mets="http://www.loc.gov/METS/" xmlns:xsd="http://www.w3.org/2001/XMLSchema#" version="2.0">
+	xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:mets="http://www.loc.gov/METS/" xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+	exclude-result-prefixes="xsl xs nuds nh xlink numishare mets gml" version="2.0">
 
 	<!-- ************** OBJECT-TO-RDF **************** -->
 	<xsl:template match="nuds:nuds | nh:nudsHoard" mode="pelagios">
@@ -368,14 +369,14 @@
 								else
 									concat($url, 'id/', $id)"/>
 					</xsl:attribute>
-					
+
 					<!-- include any additional prefix/namespace before processing otherRecordIds -->
 					<xsl:for-each select="descendant::*:semanticDeclaration">
 						<xsl:namespace name="{*:prefix}" select="*:namespace"/>
 					</xsl:for-each>
-					
+
 					<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-										
+
 					<!-- insert titles -->
 					<xsl:for-each select="descendant::nuds:descMeta/nuds:title">
 						<skos:prefLabel>
@@ -391,7 +392,7 @@
 							<xsl:value-of select="."/>
 						</skos:definition>
 					</xsl:for-each>
-					
+
 					<!-- source nmo:TypeSeries, use typeSeries inherent to NUDS by default, if available -->
 					<xsl:choose>
 						<xsl:when test="nuds:descMeta/nuds:typeDesc/nuds:typeSeries/@xlink:href">
@@ -401,21 +402,21 @@
 							<dcterms:source rdf:resource="{//config/type_series}"/>
 						</xsl:otherwise>
 					</xsl:choose>
-					
+
 					<!-- include other properites and URIs -->
 					<xsl:for-each select="descendant::*:otherRecordId[string(@semantic)]">
 						<xsl:variable name="uri" select="
-							if (matches(., '^https?://')) then
-							.
-							else
-							concat($url, 'id/', .)"/>
+								if (matches(., '^https?://')) then
+									.
+								else
+									concat($url, 'id/', .)"/>
 						<xsl:variable name="prefix" select="substring-before(@semantic, ':')"/>
 						<xsl:variable name="namespace" select="ancestor::*:control/*:semanticDeclaration[*:prefix = $prefix]/*:namespace"/>
 						<xsl:element name="{@semantic}" namespace="{$namespace}">
 							<xsl:attribute name="rdf:resource" select="$uri"/>
 						</xsl:element>
 					</xsl:for-each>
-					
+
 					<void:inDataset rdf:resource="{$url}"/>
 				</xsl:element>
 			</xsl:when>
@@ -439,7 +440,7 @@
 									<xsl:value-of select="."/>
 								</skos:definition>
 							</xsl:for-each>
-							
+
 							<!-- source nmo:TypeSeries, use typeSeries inherent to NUDS by default, if available -->
 							<xsl:choose>
 								<xsl:when test="nuds:descMeta/nuds:typeDesc/nuds:typeSeries/@xlink:href">
@@ -449,7 +450,7 @@
 									<dcterms:source rdf:resource="{//config/type_series}"/>
 								</xsl:otherwise>
 							</xsl:choose>
-							
+
 							<!-- other ids -->
 							<xsl:for-each select="descendant::*:otherRecordId[string(@semantic)]">
 								<xsl:variable name="uri"
@@ -531,8 +532,18 @@
 							</xsl:for-each>
 							<!-- physical attributes -->
 							<xsl:apply-templates select="nuds:descMeta/nuds:physDesc" mode="nomisma"/>
+
 							<!-- findspot-->
-							<xsl:apply-templates select="nuds:descMeta/nuds:findspotDesc" mode="nomisma"/>
+							<xsl:apply-templates select="nuds:descMeta/nuds:findspotDesc" mode="nomisma">
+								<xsl:with-param name="objectURI"
+									select="
+										if (string($uri_space)) then
+											concat($uri_space, $id)
+										else
+											concat($url, 'id/', $id)"
+								/>
+							</xsl:apply-templates>
+
 							<xsl:if test="descendant::mets:fileGrp[@USE = 'obverse']">
 								<nmo:hasObverse rdf:resource="{if (string($uri_space)) then concat($uri_space, $id) else concat($url, 'id/', $id)}#obverse"/>
 							</xsl:if>
@@ -541,10 +552,18 @@
 							</xsl:if>
 							<void:inDataset rdf:resource="{$url}"/>
 						</xsl:element>
+
 						<!-- images -->
 						<xsl:apply-templates select="nuds:digRep/mets:fileSec" mode="nomisma">
 							<xsl:with-param name="id" select="$id"/>
 						</xsl:apply-templates>
+
+						<!-- findspot object -->
+						<xsl:if test="nuds:descMeta/nuds:findspotDesc/nuds:findspot[gml:Point]">
+							<xsl:apply-templates select="nuds:descMeta/nuds:findspotDesc/nuds:findspot[gml:Point]" mode="nomisma-object">
+								<xsl:with-param name="objectURI" select="if (string($uri_space)) then concat($uri_space, $id) else concat($url, 'id/', $id)"/>
+							</xsl:apply-templates>
+						</xsl:if>
 					</xsl:when>
 				</xsl:choose>
 			</xsl:otherwise>
@@ -619,7 +638,7 @@
 		</xsl:if>
 		<xsl:for-each select="nuds:measurementsSet/*">
 			<xsl:element name="nmo:has{concat(upper-case(substring(local-name(), 1, 1)), substring(local-name(), 2))}">
-				<xsl:attribute name="rdf:datatype">xsd:decimal</xsl:attribute>
+				<xsl:attribute name="rdf:datatype">http://www.w3.org/2001/XMLSchema#decimal</xsl:attribute>
 				<xsl:value-of select="."/>
 			</xsl:element>
 		</xsl:for-each>
@@ -657,7 +676,7 @@
 				</xsl:if>
 				<xsl:value-of select="."/>
 			</nmo:hasLegend>
-		</xsl:if>		
+		</xsl:if>
 	</xsl:template>
 
 	<xsl:template match="nuds:type/nuds:description" mode="nomisma">
@@ -729,10 +748,56 @@
 		</nmo:hasEndDate>
 	</xsl:template>
 
+	<!-- distinguish between hoards and individual finds -->
 	<xsl:template match="nuds:findspotDesc" mode="nomisma">
-		<xsl:if test="string(@xlink:href)">
-			<dcterms:isPartOf rdf:resource="{@xlink:href}"/>
+		<xsl:param name="objectURI"/>
+
+		<xsl:choose>
+			<xsl:when test="string(@xlink:href)">
+				<!-- if the @xlink:href is in the findspotDesc, this is presumed to be the hoard -->
+				<dcterms:isPartOf rdf:resource="{@xlink:href}"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:apply-templates select="nuds:findspot" mode="nomisma">
+					<xsl:with-param name="objectURI" select="$objectURI"/>
+				</xsl:apply-templates>
+			</xsl:otherwise>
+		</xsl:choose>
+
+	</xsl:template>
+
+	<xsl:template match="nuds:findspot" mode="nomisma">
+		<xsl:param name="objectURI"/>
+
+		<xsl:choose>
+			<xsl:when test="nuds:geogname/@xlink:href">
+				<nmo:hasFindspot rdf:resource="{nuds:geogname/@xlink:href}"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<nmo:hasFindspot rdf:resource="{$objectURI}#findspot"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template match="nuds:findspot" mode="nomisma-object">
+		<xsl:param name="objectURI"/>
+		<xsl:variable name="coords" select="tokenize(gml:Point/gml:coordinates, ',')"/>
+
+
+		<xsl:if test="count($coords) = 2">
+			<geo:SpatialThing rdf:about="{$objectURI}#findspot">
+				<foaf:name>
+					<xsl:value-of select="nuds:geogname"/>
+				</foaf:name>
+				<geo:lat rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">
+					<xsl:value-of select="normalize-space($coords[1])"/>
+				</geo:lat>
+				<geo:long rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">
+					<xsl:value-of select="normalize-space($coords[2])"/>
+				</geo:long>
+			</geo:SpatialThing>
 		</xsl:if>
+
 	</xsl:template>
 
 	<!-- PROCESS NUDS-HOARD RECORDS INTO NOMISMA/METIS COMPLIANT RDF MODELS -->

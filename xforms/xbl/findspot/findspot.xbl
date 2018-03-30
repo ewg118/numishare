@@ -1,5 +1,5 @@
 <!-- 	author: Ethan Gruber, American Numismatic Society 
-	last modified: June, 2012
+	last modified: March, 2018
 	function: findspot component; user selects geonames (refers to geonames.org APIs) or manually inputs coordinates
 -->
 
@@ -7,8 +7,8 @@
 	xmlns:xxforms="http://orbeon.org/oxf/xml/xforms" xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:xbl="http://www.w3.org/ns/xbl"
 	xmlns:xxbl="http://orbeon.org/oxf/xml/xbl" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:oxf="http://www.orbeon.com/oxf/processors"
 	xmlns:nuds="http://nomisma.org/nuds" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:georss="http://www.georss.org/georss"
-	xmlns:gml="http://www.opengis.net/gml" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:numishare="https://github.com/ewg118/numishare"
-	xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:gml="http://www.opengis.net/gml" xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:numishare="https://github.com/ewg118/numishare" xmlns:xs="http://www.w3.org/2001/XMLSchema">
 	<xbl:binding id="numishare-findspot" element="numishare|findspot">
 		<xbl:template>
 			<xforms:group xbl:attr="model context ref bind" xxbl:scope="outer">
@@ -18,157 +18,162 @@
 						<xxforms:sequence select="." xxbl:scope="outer"/>
 					</xforms:var>
 					<xforms:action ev:event="xforms-enabled" ev:target="#observer">
-						<xforms:insert context="instance('control-instance')" nodeset="collection-name" position="after"
-							origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/get-authentication.xpl', 'dump', instance('dump'), 'data')"/>
-						<xforms:send submission="load-collections"/>
-						<!--<xforms:setvalue ref="instance('interface-type')" value="'geonames'"/>-->
-						<xforms:setvalue ref="instance('coordinates-temp')/lat" value="substring-before($binding/gml:Point/gml:coordinates, ', ')"/>
-						<xforms:setvalue ref="instance('coordinates-temp')/lon" value="substring-after($binding/gml:Point/gml:coordinates, ', ')"/>
+						<!-- load config -->
+						<xforms:send submission="load-config"/>
+						<xforms:action if="$binding/gml:Point">
+							<xforms:setvalue ref="instance('coordinates-temp')/geo:lat" value="substring-before($binding/gml:Point/gml:coordinates, ', ')"/>
+							<xforms:setvalue ref="instance('coordinates-temp')/geo:long" value="substring-after($binding/gml:Point/gml:coordinates, ', ')"/>
+						</xforms:action>
+						<xforms:action if="not($binding/gml:Point)">
+							<!-- evaluate whether then Geonames username/API key has been set. If so, then insert geonames as the interface type -->
+							<xforms:setvalue ref="instance('interface-type')" if="string(instance('config')/*[local-name()='geonames_api_key'])">geonames</xforms:setvalue>
+						</xforms:action>
 					</xforms:action>
 
 					<xforms:group ref="$binding">
 						<div>
-							<radiogroup>
-								<xforms:select1 ref="instance('interface-type')" appearance="full">
-									<xforms:label>Interface Type</xforms:label>
-									<xforms:item>
-										<xforms:label>geonames</xforms:label>
-										<xforms:value>geonames</xforms:value>
-									</xforms:item>
-									<xforms:item>
-										<xforms:label>specific coordinates</xforms:label>
-										<xforms:value>specific</xforms:value>
-									</xforms:item>
-									<xforms:action ev:event="xforms-value-changed">
-										<xforms:action if=". = 'geonames'">
-											<!-- remove temporary values, applicable when switching back to geonames from local -->
-											<xforms:delete context="instance('feed')/*"/>
-											<xforms:delete context="$binding" nodeset="gml:Point"/>
-											<!-- create attributes, clear nuds:geogname text when applicable -->
-											<xforms:insert if="not($binding/nuds:geogname/@xlink:href)" context="$binding/nuds:geogname"
-												origin="xxforms:attribute('xlink:href', '')"/>
-											<xforms:setvalue ref="$binding/nuds:geogname"/>
-											<xforms:toggle case="geonames-search"/>
-										</xforms:action>
-										<xforms:action if=". = 'specific'">
-											<xforms:setvalue ref="instance('temp')"/>
-											<xforms:setvalue ref="instance('temp')/@href"/>
-											<xforms:setvalue ref="instance('suggest-query')"/>
-											<xforms:setvalue ref="instance('search-query')"/>
-											<xforms:delete context="instance('geonames')/*"/>
-											<xforms:delete context="instance('feed')/*"/>
-											<xforms:delete context="$binding" nodeset="nuds:geogname/@xlink:href"/>
-											<xforms:setvalue ref="$binding/nuds:geogname"/>
-											<xforms:insert origin="instance('coordinates-template')" context="$binding" nodeset="./child::node()[last()]"/>
-											<xforms:toggle case="specific-coordinates"/>
-										</xforms:action>
-									</xforms:action>
-								</xforms:select1>
-							</radiogroup>
-						</div>
+							<h3>Findspot</h3>
+							<xforms:group ref=".[string(instance('config')/geonames_api_key)]">
+								<div>
+									<radiogroup>
+										<xforms:select1 ref="instance('interface-type')" appearance="full">
+											<xforms:label>Lookup Type</xforms:label>
+											<xforms:item>
+												<xforms:label>Geonames</xforms:label>
+												<xforms:value>geonames</xforms:value>
+											</xforms:item>
+											<xforms:item>
+												<xforms:label>Manual coordinates</xforms:label>
+												<xforms:value>specific</xforms:value>
+											</xforms:item>
+											<xforms:action ev:event="xforms-value-changed">
+												<xforms:action if=". = 'geonames'">
+													<!-- clear existing coordinates -->
+													<xforms:setvalue ref="instance('coordinates-temp')/geo:lat"/>
+													<xforms:setvalue ref="instance('coordinates-temp')/geo:long"/>
 
-						<!-- display only outputted value and link to nomisma id, if applicable -->
-						<xforms:group ref=".[string(nuds:geogname/@xlink:href)]">
-							<div>
-								<xforms:output ref="nuds:geogname">
-									<xforms:label>Findspot</xforms:label>
-								</xforms:output>
-								<xforms:group ref=".[string(nuds:geogname/@xlink:href)]">
-									<xforms:trigger appearance="xxforms:link">
-										<xforms:label>
-											<img src="../../../xforms/images/external.png"/>
-										</xforms:label>
-										<xforms:load ev:event="DOMActivate" ref="nuds:geogname/@xlink:href" show="new"/>
-									</xforms:trigger>
-								</xforms:group>
-								<!--<xforms:group ref="$binding[not($binding/@certainty)]">
-									<xforms:trigger appearance="minimal">
-										<xforms:insert if="not($binding/@certainty)" context="$binding" origin="xxforms:attribute('certainty', '')" ev:event="DOMActivate"/>
-										<xforms:label>
-											<span class="glyphicon glyphicon-plus"/>Certainty</xforms:label>
-									</xforms:trigger>
-								</xforms:group>-->
-							</div>
-						</xforms:group>
-
-						<!-- if $binding does not contain a value, display the interface for selecting a value -->
-						<xforms:group ref=".[not(string(nuds:geogname/@xlink:href))]">
-							<div style="display:table;width:100%;">
-								<h3>Findspot</h3>
-								<!--<xforms:group ref=".[not(nuds:geogname/@certainty)]">
-									<xforms:trigger appearance="minimal">
-										<xforms:insert if="not(nuds:geogname/@certainty)" nodeset="nuds:geogname" origin="xxforms:attribute('certainty', '')" ev:event="DOMActivate"/>
-										<xforms:label>
-											<span class="glyphicon glyphicon-plus"/>Certainty </xforms:label>
-									</xforms:trigger>
-								</xforms:group>-->
-								<xforms:switch>
-									<xforms:case id="geonames-search">
-										<div>
-											<xforms:input ref="instance('search-query')">
-												<xforms:label>Search</xforms:label>
-											</xforms:input>
-											<xforms:trigger>
-												<xforms:action ev:event="DOMActivate">
+													<!-- remove temporary values, applicable when switching back to geonames from local -->
+													<xforms:delete context="instance('feed')/*"/>
+													<xforms:delete context="$binding" nodeset="gml:Point"/>
+													<!-- create attributes, clear nuds:geogname text when applicable -->
+													<xforms:insert if="not($binding/nuds:geogname/@xlink:href)" context="$binding/nuds:geogname"
+														origin="xxforms:attribute('xlink:href', '')"/>
+													<xforms:setvalue ref="$binding/nuds:geogname"/>
+													<xforms:toggle case="geonames-search"/>
+												</xforms:action>
+												<xforms:action if=". = 'specific'">
+													<xforms:setvalue ref="instance('temp')"/>
+													<xforms:setvalue ref="instance('temp')/@href"/>
+													<xforms:setvalue ref="instance('suggest-query')"/>
+													<xforms:setvalue ref="instance('search-query')"/>
 													<xforms:delete context="instance('geonames')/*"/>
-													<xforms:send submission="query-geonames"/>
+													<xforms:delete context="instance('feed')/*"/>
+													<xforms:delete context="$binding" nodeset="nuds:geogname/@xlink:href"/>
+													<xforms:setvalue ref="$binding/nuds:geogname"/>
+													<xforms:insert origin="instance('coordinates-template')" context="$binding"
+														nodeset="./child::node()[last()]" if="not($binding/gml:Point)"/>
+													<xforms:toggle case="specific-coordinates"/>
 												</xforms:action>
-												<xforms:label>Search</xforms:label>
-											</xforms:trigger>
-										</div>
+											</xforms:action>
+										</xforms:select1>
+									</radiogroup>
+								</div>
+							</xforms:group>
+							<xforms:group ref=".[not(string(instance('config')/geonames_api_key))]">
+								<div class="bg-danger text-danger alert-box">
+									<p>
+										<span class="glyphicon glyphicon-warning-sign"/>
+										<strong>Warning!</strong> No Geonames username has been set in the config.</p>
+								</div>
+							</xforms:group>
 
-										<xforms:group ref=".[count(instance('geonames')//geoname) &gt; 0]">
-											<xforms:select1 ref="instance('temp')/@href" appearance="compact" id="geonames-list">
-												<xforms:label>Location</xforms:label>
-												<xforms:itemset nodeset="instance('geonames')//geoname">
-													<xforms:label ref="label"/>
-													<xforms:value ref="concat('http://www.geonames.org/', geonameId, '/')"/>
-												</xforms:itemset>
-											</xforms:select1>
-											<xforms:trigger>
-												<xforms:label>Select</xforms:label>
-												<xforms:action ev:event="DOMActivate">
-													<xforms:setvalue ref="nuds:geogname/@xlink:href" value="instance('temp')/@href"/>
-													<xforms:setvalue ref="nuds:geogname"
-														value="instance('geonames')//geoname[contains(instance('temp')/@href, geonameId)]/label"/>
-												</xforms:action>
-											</xforms:trigger>
-										</xforms:group>
-									</xforms:case>
-									<xforms:case id="specific-coordinates">
-										<div>
-											<xforms:input ref="nuds:geogname">
-												<xforms:label>Location Name</xforms:label>
-												<xforms:alert>Required</xforms:alert>
-											</xforms:input>
-										</div>
-										<xforms:group ref="gml:Point">
-											<h4>Coordinates</h4>
+							<!-- display only outputted value and link to nomisma id, if applicable -->
+							<xforms:group ref=".[string(nuds:geogname/@xlink:href)]">
+								<div>
+									<xforms:output ref="nuds:geogname">
+										<xforms:label>Findspot</xforms:label>
+									</xforms:output>
+									<xforms:group ref=".[string(nuds:geogname/@xlink:href)]">
+										<xforms:trigger appearance="minimal">
+											<xforms:label>
+												<span class="glyphicon glyphicon-new-window"/>
+											</xforms:label>
+											<xforms:load ev:event="DOMActivate" ref="nuds:geogname/@xlink:href" show="new"/>
+										</xforms:trigger>
+									</xforms:group>
+								</div>
+							</xforms:group>
+
+							<!-- if $binding does not contain a value, display the interface for selecting a value -->
+							<xforms:group ref=".[not(string(nuds:geogname/@xlink:href))]">
+								<div>
+									<xforms:switch>
+										<xforms:case id="specific-coordinates">
 											<div>
-												<xforms:input ref="instance('coordinates-temp')/lat">
-													<xforms:label>Latitude</xforms:label>
-													<xforms:alert>Must be decimal coordinate less than or equal to 180.00</xforms:alert>
-													<xforms:setvalue ref="$binding/gml:Point/gml:coordinates"
-														value="concat(instance('coordinates-temp')/lat, ', ', instance('coordinates-temp')/lon)"
-														ev:event="xforms-value-changed"/>
+												<xforms:input ref="nuds:geogname">
+													<xforms:label>Location Name</xforms:label>
+													<xforms:alert>Required</xforms:alert>
 												</xforms:input>
 											</div>
+											<xforms:group ref="gml:Point">
+												<h4>Coordinates</h4>
+												<div>
+													<xforms:input ref="instance('coordinates-temp')/geo:lat">
+														<xforms:label>Latitude</xforms:label>
+														<xforms:alert>Must be decimal coordinate less than or equal to 180.00</xforms:alert>
+														<xforms:setvalue ref="$binding/gml:Point/gml:coordinates"
+															value="concat(instance('coordinates-temp')/geo:lat, ', ', instance('coordinates-temp')/geo:long)"
+															ev:event="xforms-value-changed"/>
+													</xforms:input>
+												</div>
+												<div>
+													<xforms:input ref="instance('coordinates-temp')/geo:long">
+														<xforms:label>Longitude</xforms:label>
+														<xforms:alert>Must be decimal coordinate less than or equal to 180.00</xforms:alert>
+														<xforms:setvalue ref="$binding/gml:Point/gml:coordinates"
+															value="concat(instance('coordinates-temp')/geo:lat, ', ', instance('coordinates-temp')/geo:long)"
+															ev:event="xforms-value-changed"/>
+													</xforms:input>
+												</div>
+											</xforms:group>
+										</xforms:case>
+										<xforms:case id="geonames-search">
 											<div>
-												<xforms:input ref="instance('coordinates-temp')/lon">
-													<xforms:label>Longitude</xforms:label>
-													<xforms:alert>Must be decimal coordinate less than or equal to 180.00</xforms:alert>
-													<xforms:setvalue ref="$binding/gml:Point/gml:coordinates"
-														value="concat(instance('coordinates-temp')/lat, ', ', instance('coordinates-temp')/lon)"
-														ev:event="xforms-value-changed"/>
+												<xforms:input ref="instance('search-query')">
+													<xforms:label>Search</xforms:label>
 												</xforms:input>
+												<xforms:trigger>
+													<xforms:action ev:event="DOMActivate">
+														<xforms:delete context="instance('geonames')/*"/>
+														<xforms:send submission="query-geonames"/>
+													</xforms:action>
+													<xforms:label>Search</xforms:label>
+												</xforms:trigger>
 											</div>
-										</xforms:group>
-									</xforms:case>
-								</xforms:switch>
-							</div>
-						</xforms:group>
 
-						<!--<xforms:group ref="nuds:geogname/@certainty">
+											<xforms:group ref=".[count(instance('geonames')//geoname) &gt; 0]">
+												<xforms:select1 ref="instance('temp')/@href" appearance="compact" id="geonames-list">
+													<xforms:label>Location</xforms:label>
+													<xforms:itemset nodeset="instance('geonames')//geoname">
+														<xforms:label ref="label"/>
+														<xforms:value ref="concat('http://www.geonames.org/', geonameId)"/>
+													</xforms:itemset>
+												</xforms:select1>
+												<xforms:trigger>
+													<xforms:label>Select</xforms:label>
+													<xforms:action ev:event="DOMActivate">
+														<xforms:setvalue ref="nuds:geogname/@xlink:href" value="instance('temp')/@href"/>
+														<xforms:setvalue ref="nuds:geogname"
+															value="instance('geonames')//geoname[contains(instance('temp')/@href, geonameId)]/label"/>
+													</xforms:action>
+												</xforms:trigger>
+											</xforms:group>
+										</xforms:case>
+									</xforms:switch>
+								</div>
+							</xforms:group>
+
+							<!--<xforms:group ref="nuds:geogname/@certainty">
 							<div>
 								<xforms:input ref=".">
 									<xforms:label>Certainty</xforms:label>
@@ -181,18 +186,21 @@
 								</xforms:trigger>
 							</div>
 						</xforms:group>-->
+
+							<!--<fr:xforms-inspector/>-->
+						</div>
 					</xforms:group>
 
 
 					<!-- ********************************************************************** -->
 					<!-- ***********************  DIALOG INTERNAL MODEL *********************** -->
-					<xforms:model id="findspot-authorities-model" xmlns:xi="http://www.w3.org/2001/XInclude">
+					<xforms:model id="findspot-model" xmlns:xi="http://www.w3.org/2001/XInclude">
 						<xforms:instance id="exist-config">
-							<xi:include href="../../../exist-config.xml"/>
+							<xi:include href="../../../exist-config.xml" xmlns=""/>
 						</xforms:instance>
 
-						<xforms:instance id="coordinates-template">
-							<gml:Point srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+						<xforms:instance id="coordinates-template" xxforms:exclude-result-prefixes="#all">
+							<gml:Point srsName="http://www.opengis.net/def/crs/EPSG/0/4326" xmlns="">
 								<gml:coordinates/>
 							</gml:Point>
 						</xforms:instance>
@@ -203,15 +211,8 @@
 							</control>
 						</xforms:instance>
 
-						<!-- collections/authentication instances -->
-						<xforms:instance id="collections-list">
-							<collections xmlns="">
-								<collection roll="admin" name="numishare"/>
-							</collections>
-						</xforms:instance>
-
 						<xforms:instance id="dump">
-							<dump/>
+							<dump xmlns=""/>
 						</xforms:instance>
 
 						<!-- site info -->
@@ -268,7 +269,7 @@
 									<place abbr="Pa.">Pennsylvania</place>
 									<place abbr="R.I.">Rhode Island</place>
 									<place abbr="S.C.">South Carolina</place>
-									<place abbr="S.D">South Dakota</place>
+									<place abbr="S.D.">South Dakota</place>
 									<place abbr="Tenn.">Tennessee</place>
 									<place abbr="Tex.">Texas</place>
 									<place abbr="Utah">Utah</place>
@@ -316,25 +317,30 @@
 
 						<!-- Instances containing the query string -->
 						<xforms:instance id="suggest-query">
-							<query/>
+							<query xmlns=""/>
 						</xforms:instance>
+
 						<xforms:instance id="search-query">
-							<query/>
+							<query xmlns=""/>
 						</xforms:instance>
 
 						<!-- geonames specific instances -->
 						<xforms:instance id="geoname-query-response">
-							<geoname/>
+							<geoname xmlns=""/>
 						</xforms:instance>
+
 						<xforms:instance id="geoname-temp">
 							<geonames xmlns=""/>
 						</xforms:instance>
+
 						<xforms:instance id="geonameId">
 							<geonameId/>
 						</xforms:instance>
+
 						<xforms:instance id="geonames">
 							<geonames xmlns=""/>
 						</xforms:instance>
+
 						<xforms:instance id="geoname-template">
 							<geoname xmlns="">
 								<label/>
@@ -343,26 +349,25 @@
 						</xforms:instance>
 
 						<!-- findspot type radio button -->
-						<xforms:instance id="interface-type">
-							<interface>geonames</interface>
+						<xforms:instance id="interface-type" xxforms:exclude-result-prefixes="#all">
+							<interface xmlns="">specific</interface>
 						</xforms:instance>
 
-						<xforms:instance id="coordinates-temp">
-							<coordinates xmlns="">
-								<lat/>
-								<lon/>
+						<xforms:instance id="coordinates-temp" xxforms:exclude-result-prefixes="#all">
+							<coordinates xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns="">
+								<geo:lat/>
+								<geo:long/>
 							</coordinates>
 						</xforms:instance>
 
+						<!-- ***** BINDINGS ***** -->
 						<xforms:bind nodeset="instance('coordinates-temp')">
-							<xforms:bind nodeset="lat" required="true()" type="xs:decimal">
-								<xforms:bind constraint=". &lt;= 180 and . &gt;= -180"/>
-							</xforms:bind>
-							<xforms:bind nodeset="lon" required="true()" type="xs:decimal">
-								<xforms:bind constraint=". &lt;= 180 and . &gt;= -180"/>
-							</xforms:bind>
+							<xforms:bind nodeset="geo:lat" required="true()" type="xs:decimal" constraint=". &lt;= 180 and . &gt;= -180"/>
+							<xforms:bind nodeset="geo:long" required="true()" type="xs:decimal" constraint=". &lt;= 180 and . &gt;= -180"/>
 						</xforms:bind>
 
+						<!-- ***** SUBMISSIONS ***** -->
+						<!-- Geonames API requests -->
 						<!-- search for matching keywords -->
 						<xforms:submission id="query-geonames" serialization="none" method="get"
 							action="http://api.geonames.org/search?q={instance('search-query')}&amp;maxRows=100&amp;lang=en&amp;username={instance('config')/geonames_api_key}&amp;style=full&amp;minChars=2"
@@ -386,7 +391,6 @@
 								</xforms:action>
 							</xforms:action>
 						</xforms:submission>
-
 						<!-- get XML representation of single geoname, initiated on xforms-enabled -->
 						<xforms:submission id="get-geonameId" serialization="none" method="get"
 							action="http://api.geonames.org/get?geonameId={instance('geonameId')}&amp;username={instance('config')/geonames_api_key}&amp;style=full"
@@ -409,32 +413,12 @@
 							</xforms:action>
 						</xforms:submission>
 
-						<xforms:submission id="load-collections" serialization="none" method="get" action="{instance('exist-config')/url}collections-list.xml"
-							replace="instance" instance="collections-list" xxforms:username="{instance('exist-config')/username}"
-							xxforms:password="{instance('exist-config')/password}">
-							<!-- if the config loads successfully, set the collection names based on authentication -->
-							<xforms:action ev:event="xforms-submit-done">
-								<!-- set default if security is false -->
-								<xforms:action if="not(string(instance('control-instance')/request-security/role))">
-									<xforms:setvalue ref="instance('control-instance')/collection-name">numishare</xforms:setvalue>
-								</xforms:action>
-								<!-- if there is a security role, set the collection-name value if it is in the list, otherwise set new collection name -->
-								<xforms:action if="string(instance('control-instance')/request-security/role)">
-									<xforms:action
-										if="string(instance('collections-list')/collection[@role=instance('control-instance')/request-security/role]/@name)">
-										<xforms:setvalue ref="instance('control-instance')/collection-name"
-											value="instance('collections-list')/collection[@role=instance('control-instance')/request-security/role]/@name"/>
-									</xforms:action>
-								</xforms:action>
-								<xforms:send submission="load-config"/>
-							</xforms:action>
-							<!-- if the config has not been created (given that the URL in ../exist-config.xml is correct), create it -->
-							<xforms:message ev:event="xforms-submit-error" level="modal">Unable to load Numishare collections list.</xforms:message>
-						</xforms:submission>
-
+						<!-- load config -->
 						<xforms:submission id="load-config" serialization="none" method="get"
-							action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/config.xml" replace="instance"
-							instance="config"/>
+							action="{instance('exist-config')/url}{xxforms:get-session-attribute('collection-name')}/config.xml" replace="instance"
+							instance="config" xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}">
+							<xforms:message ev:event="xforms-submit-error" level="modal">Error Loading Config.</xforms:message>
+						</xforms:submission>
 					</xforms:model>
 				</xforms:group>
 			</xforms:group>

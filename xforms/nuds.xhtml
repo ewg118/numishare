@@ -1,7 +1,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events"
 	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xxforms="http://orbeon.org/oxf/xml/xforms" xmlns:xi="http://www.w3.org/2001/XInclude"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:numishare="https://github.com/ewg118/numishare"
-	xmlns:mets="http://www.loc.gov/METS/" xmlns:nuds="http://nomisma.org/nuds" xmlns:xlink="http://www.w3.org/1999/xlink"
+	xmlns:mets="http://www.loc.gov/METS/" xmlns:gml="http://www.opengis.net/gml" xmlns:nuds="http://nomisma.org/nuds" xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns:exist="http://exist.sourceforge.net/NS/exist" xmlns:oxf="http://www.orbeon.com/oxf/processors">
 	<head>
 		<title>Numishare: Edit Numismatic Object</title>
@@ -15,55 +15,9 @@
 		<link rel="stylesheet" href="/apps/numishare/xforms/css/xforms.css" />
 
 		<xforms:model xmlns="http://nomisma.org/nuds">
-			<!-- date/time formats courtesy EAC-CPF schema -->
-			<xs:schema elementFormDefault="qualified" attributeFormDefault="unqualified">
-				<xs:simpleType name="m.data.standardDateTime">
-					<xs:union>
-						<xs:simpleType>
-							<xs:restriction base="xs:date">
-								<xs:maxInclusive value="2099-12-31"/>
-							</xs:restriction>
-						</xs:simpleType>
-						<xs:simpleType>
-							<xs:restriction base="xs:gYear">
-								<xs:maxInclusive value="2099"/>
-							</xs:restriction>
-						</xs:simpleType>
-						<xs:simpleType>
-							<xs:restriction base="xs:gYearMonth">
-								<xs:maxInclusive value="2099-12"/>
-							</xs:restriction>
-						</xs:simpleType>
-						<xs:simpleType>
-							<xs:restriction base="xs:dateTime">
-								<xs:maxInclusive value="2099-12-31T23:59:59"/>
-							</xs:restriction>
-						</xs:simpleType>
-					</xs:union>
-				</xs:simpleType>
-				<xs:simpleType name="m.data.standardDate">
-					<xs:union>
-						<xs:simpleType>
-							<xs:restriction base="xs:date">
-								<xs:maxInclusive value="2099-12-31"/>
-							</xs:restriction>
-						</xs:simpleType>
-						<xs:simpleType>
-							<xs:restriction base="xs:gYear">
-								<xs:maxInclusive value="2099"/>
-							</xs:restriction>
-						</xs:simpleType>
-						<xs:simpleType>
-							<xs:restriction base="xs:gYearMonth">
-								<xs:maxInclusive value="2099-12"/>
-							</xs:restriction>
-						</xs:simpleType>
-					</xs:union>
-				</xs:simpleType>
-			</xs:schema>
-
 			<xforms:instance id="object" xxforms:exclude-result-prefixes="xhtml xforms xxforms ev xs xi xsi fr oxf nuds numishare exist">
-				<nuds recordType="physical" xmlns="http://nomisma.org/nuds" xmlns:mets="http://www.loc.gov/METS/" xmlns:xlink="http://www.w3.org/1999/xlink">
+				<nuds recordType="physical" xmlns="http://nomisma.org/nuds" xmlns:mets="http://www.loc.gov/METS/" xmlns:xlink="http://www.w3.org/1999/xlink"
+					xmlns:gml="http://www.opengis.net/gml">
 					<control>
 						<recordId/>
 						<publicationStatus>inProcess</publicationStatus>
@@ -532,6 +486,9 @@
 							<xforms:bind nodeset="nuds:geogname" required="true()">
 								<xforms:bind nodeset="@xlink:href" type="xs:anyURI" required="true()"/>
 							</xforms:bind>
+							<xforms:bind nodeset="gml:Point">
+								<xforms:bind nodeset="gml:coordinates" required="true()" constraint="normalize-space(tokenize(., ',')[1]) castable as xs:decimal and normalize-space(tokenize(., ',')[2]) castable as xs:decimal"/>
+							</xforms:bind>
 						</xforms:bind>
 					</xforms:bind>
 				</xforms:bind>
@@ -542,7 +499,8 @@
 							<xforms:bind constraint="count(mets:file) &gt; 0"/>
 							<xforms:bind nodeset="mets:file">
 								<xforms:bind nodeset="mets:FLocat">
-									<xforms:bind nodeset="@xlink:href" constraint="matches(., '(http://|https://)([a-z0-9]{1})((\.[a-z0-9-])|([a-z0-9-]))*\.([a-z]{2,4})(/?)')"/>
+									<xforms:bind nodeset="@xlink:href"
+										constraint="matches(., '(http://|https://)([a-z0-9]{1})((\.[a-z0-9-])|([a-z0-9-]))*\.([a-z]{2,4})(/?)')"/>
 								</xforms:bind>
 							</xforms:bind>
 						</xforms:bind>
@@ -560,13 +518,61 @@
 					<xforms:bind nodeset="nuds:title" required="true()"/>
 					<!--<xforms:bind nodeset="nuds:identifier" required="true()"/>-->
 				</xforms:bind>
-				<xforms:bind nodeset="//@xlink:href" required="true()"/>
+				<xforms:bind nodeset="//@xlink:href" required="true()"
+					constraint="matches(., '(http://|https://)([a-z0-9]{1})((\.[a-z0-9-])|([a-z0-9-]))*\.([a-z]{2,4})(/?)')"/>
 			</xforms:bind>
 
 			<xforms:bind nodeset="instance('control-instance')">
 				<xforms:bind nodeset="add-upload-trigger" readonly="false()"/>
 				<xforms:bind nodeset="remove-upload-trigger" readonly="count(instance('files-instance')/file) le 1"/>
 			</xforms:bind>
+
+			<!-- **************** OTHER DATA TYPES ********************** -->
+			<xs:schema elementFormDefault="qualified" attributeFormDefault="unqualified">
+				<xs:simpleType name="m.data.standardDateTime">
+					<xs:union>
+						<xs:simpleType>
+							<xs:restriction base="xs:date">
+								<xs:maxInclusive value="2099-12-31"/>
+							</xs:restriction>
+						</xs:simpleType>
+						<xs:simpleType>
+							<xs:restriction base="xs:gYear">
+								<xs:maxInclusive value="2099"/>
+							</xs:restriction>
+						</xs:simpleType>
+						<xs:simpleType>
+							<xs:restriction base="xs:gYearMonth">
+								<xs:maxInclusive value="2099-12"/>
+							</xs:restriction>
+						</xs:simpleType>
+						<xs:simpleType>
+							<xs:restriction base="xs:dateTime">
+								<xs:maxInclusive value="2099-12-31T23:59:59"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:union>
+				</xs:simpleType>
+				<xs:simpleType name="m.data.standardDate">
+					<xs:union>
+						<xs:simpleType>
+							<xs:restriction base="xs:date">
+								<xs:maxInclusive value="2099-12-31"/>
+							</xs:restriction>
+						</xs:simpleType>
+						<xs:simpleType>
+							<xs:restriction base="xs:gYear">
+								<xs:maxInclusive value="2099"/>
+							</xs:restriction>
+						</xs:simpleType>
+						<xs:simpleType>
+							<xs:restriction base="xs:gYearMonth">
+								<xs:maxInclusive value="2099-12"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:union>
+				</xs:simpleType>
+			</xs:schema>
 
 			<!-- ****************** SUBMISSIONS *******************-->
 			<!-- Load File -->
@@ -601,11 +607,6 @@
 						<xforms:setvalue ref="instance('control-instance')/reverse_iiif"
 							value="instance('object')/nuds:digRep/mets:fileSec/mets:fileGrp[@USE='reverse']/mets:file[@USE='iiif']/mets:FLocat/@xlink:href"/>
 					</xforms:action>
-
-					<!-- populate the findspot-temp instance with current values -->
-					<!--<xforms:setvalue ref="instance('findspot-temp')/resource" value="instance('object')//nuds:findspot/@xlink:href"></xforms:setvalue>
-					<xforms:setvalue ref="instance('findspot-temp')/name" value="instance('object')//nuds:findspot/nuds:name"></xforms:setvalue>
-					<xforms:setvalue ref="instance('findspot-temp')/coordinates" value="instance('object')//nuds:findspot/gml:Point/gml:coordinates"></xforms:setvalue>-->
 				</xforms:action>
 			</xforms:submission>
 
@@ -658,7 +659,7 @@
 
 			<!-- ***** SOLR ***** -->
 			<xforms:submission id="to-solr" method="get" replace="instance" instance="addIndex" serialization="none"
-				resource="{instance('config')/url}id/{instance('control-instance')/solr-id}.solr">
+				resource="/numishare/{instance('control-instance')/collection-name}/id/{instance('control-instance')/solr-id}.solr">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Error transforming NUDS document to Solr document.</xforms:message>
 				<xforms:action ev:event="xforms-submit-done">
 					<xforms:send submission="publish-submission"/>
@@ -2371,10 +2372,10 @@
 										<numishare:control/>
 									</xforms:group>
 								</fr:tab>
-								<fr:tab>
+								<!--<fr:tab>
 									<fr:label>Inspector</fr:label>
 									<fr:xforms-inspector/>
-								</fr:tab>
+								</fr:tab>-->
 							</fr:tabbable>
 
 							<!--**************************************** DIALOGS **********************************-->
