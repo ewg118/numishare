@@ -168,7 +168,7 @@ function generate_nuds($row){
 	}
 	//authority
 	$xml .= '<authority>';
-	$vals = explode('|', $row['Nomisma URI for Authority']);
+	$vals = explode('|', $row['Authority URI']);
 	foreach ($vals as $val){
 		if (substr($val, -1) == '?'){
 			$uri = substr($val, 0, -1);
@@ -213,10 +213,10 @@ function generate_nuds($row){
 	$xml .= '</authority>';
 	
 	//geography
-	if (strlen($row['Nomisma URI for Mint']) > 0 || strlen($row['New Region URI']) > 0){
+	if (strlen($row['Mint URI']) > 0 || strlen($row['New Region URI']) > 0){
 		$xml .= '<geographic>';
-		if (strlen($row['Nomisma URI for Mint']) > 0){
-			$vals = explode('|', $row['Nomisma URI for Mint']);
+		if (strlen($row['Mint URI']) > 0){
+			$vals = explode('|', $row['Mint URI']);
 			foreach ($vals as $val){
 				if (substr($val, -1) == '?'){
 					$uri = substr($val, 0, -1);
@@ -1148,14 +1148,14 @@ function put_to_exist($filename, $nudsid){
 		$putToExist=curl_init();
 		
 		//set curl opts
-		curl_setopt($putToExist,CURLOPT_URL,'http://localhost:8080/exist/rest/db/ocre/objects/' . $nudsid . '.xml');
+		curl_setopt($putToExist,CURLOPT_URL,'http://numismatics.org:8080/exist/rest/db/ocre/objects/' . $nudsid . '.xml');
 		curl_setopt($putToExist,CURLOPT_HTTPHEADER, array("Content-Type: text/xml; charset=utf-8"));
 		curl_setopt($putToExist,CURLOPT_CONNECTTIMEOUT,2);
 		curl_setopt($putToExist,CURLOPT_RETURNTRANSFER,1);
 		curl_setopt($putToExist,CURLOPT_PUT,1);
 		curl_setopt($putToExist,CURLOPT_INFILESIZE,filesize($filename));
 		curl_setopt($putToExist,CURLOPT_INFILE,$readFile);
-		curl_setopt($putToExist,CURLOPT_USERPWD,"admin:");
+		curl_setopt($putToExist,CURLOPT_USERPWD,"admin:Mp4ANSAie2r");
 		$response = curl_exec($putToExist);
 
 		$http_code = curl_getinfo($putToExist,CURLINFO_HTTP_CODE);
