@@ -4,7 +4,7 @@
 -->
 <xbl:xbl xmlns:nuds="http://nomisma.org/nuds" xmlns="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events"
 	xmlns:xxforms="http://orbeon.org/oxf/xml/xforms" xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:xbl="http://www.w3.org/ns/xbl" xmlns:xxbl="http://orbeon.org/oxf/xml/xbl"
-	xmlns:oxf="http://www.orbeon.com/oxf/processors" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:numishare="https://github.com/ewg118/numishare">
+	xmlns:oxf="http://www.orbeon.com/oxf/processors" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:numishare="https://github.com/ewg118/numishare">
 	<xbl:binding id="numishare-reference" element="numishare|reference">
 		<xbl:template>
 			<xforms:group xbl:attr="model context ref bind" xxbl:scope="outer">
@@ -14,48 +14,50 @@
 						<xxforms:sequence select="." xxbl:scope="outer"/>
 					</xforms:var>
 					<xforms:group ref="$binding">
-						<h4>Reference</h4>
-						<xforms:trigger appearance="minimal">
-							<xforms:delete ev:event="DOMActivate" nodeset="."/>
-							<xforms:label>
-								<span class="glyphicon glyphicon-remove"/>
-							</xforms:label>
-						</xforms:trigger>
-						<div class="trigger_container">
-							<xforms:group ref=".[count(nuds:identifier) = 0]">
-								<xforms:trigger appearance="minimal">
-									<xforms:label>
-										<span class="glyphicon glyphicon-plus"/>Identifier</xforms:label>
-									<xforms:insert ev:event="DOMActivate" context="." origin="instance('identifier-template')" nodeset="./child::node()[last()]"/>
-								</xforms:trigger>
-							</xforms:group>
-						</div>
 						<div>
-							<xforms:input ref="*[local-name()='title']">
-								<xforms:label>Title</xforms:label>
-								<xforms:alert>Required</xforms:alert>
-							</xforms:input>
-						</div>
-						<xforms:group ref="nuds:identifier">
+							<h4>Reference</h4>
+							<xforms:trigger appearance="minimal">
+								<xforms:delete ev:event="DOMActivate" nodeset="."/>
+								<xforms:label>
+									<span class="glyphicon glyphicon-remove"/>
+								</xforms:label>
+							</xforms:trigger>
+							<div class="trigger_container">
+								<xforms:group ref=".[count(nuds:identifier) = 0]">
+									<xforms:trigger appearance="minimal">
+										<xforms:label>
+											<span class="glyphicon glyphicon-plus"/>Identifier</xforms:label>
+										<xforms:insert ev:event="DOMActivate" context="." origin="instance('identifier-template')" nodeset="./child::node()[last()]"/>
+									</xforms:trigger>
+								</xforms:group>
+							</div>
 							<div>
-								<xforms:input ref=".">
-									<xforms:label>Identifier</xforms:label>
+								<xforms:input ref="tei:title">
+									<xforms:label>Title</xforms:label>
 									<xforms:alert>Required</xforms:alert>
 								</xforms:input>
-								<xforms:trigger appearance="minimal">
-									<xforms:delete ev:event="DOMActivate" nodeset="."/>
-									<xforms:label>
-										<span class="glyphicon glyphicon-remove"/>
-									</xforms:label>
-								</xforms:trigger>
 							</div>
-						</xforms:group>
+							<xforms:group ref="tei:idno">
+								<div>
+									<xforms:input ref=".">
+										<xforms:label>Identifier</xforms:label>
+										<xforms:alert>Required</xforms:alert>
+									</xforms:input>
+									<xforms:trigger appearance="minimal">
+										<xforms:delete ev:event="DOMActivate" nodeset="."/>
+										<xforms:label>
+											<span class="glyphicon glyphicon-remove"/>
+										</xforms:label>
+									</xforms:trigger>
+								</div>
+							</xforms:group>
+						</div>						
 					</xforms:group>
 					<!-- ********************************************************************** -->
 					<!-- ***********************  DIALOG INTERNAL MODEL *********************** -->
 					<xforms:model id="reference-model">
-						<xforms:instance id="identifier-template">
-							<identifier xmlns="http://nomisma.org/id/nuds"/>
+						<xforms:instance id="identifier-template" xxforms:exclude-result-prefixes="#all">
+							<tei:idno/>
 						</xforms:instance>
 					</xforms:model>
 				</xforms:group>

@@ -755,7 +755,7 @@
 						</xsl:if>
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:value-of select="."/>
+						<xsl:value-of select="normalize-space(.)"/>
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:otherwise>

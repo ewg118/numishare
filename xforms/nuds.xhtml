@@ -2,7 +2,7 @@
 	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xxforms="http://orbeon.org/oxf/xml/xforms" xmlns:xi="http://www.w3.org/2001/XInclude"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:numishare="https://github.com/ewg118/numishare"
 	xmlns:mets="http://www.loc.gov/METS/" xmlns:gml="http://www.opengis.net/gml" xmlns:nuds="http://nomisma.org/nuds" xmlns:xlink="http://www.w3.org/1999/xlink"
-	xmlns:exist="http://exist.sourceforge.net/NS/exist" xmlns:oxf="http://www.orbeon.com/oxf/processors">
+	xmlns:exist="http://exist.sourceforge.net/NS/exist" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:oxf="http://www.orbeon.com/oxf/processors">
 	<head>
 		<title>Numishare: Edit Numismatic Object</title>
 		<!-- Core + Skin CSS -->
@@ -16,7 +16,7 @@
 
 		<xforms:model xmlns="http://nomisma.org/nuds">
 			<xforms:instance id="object" xxforms:exclude-result-prefixes="xhtml xforms xxforms ev xs xi xsi fr oxf nuds numishare exist">
-				<nuds recordType="physical" xmlns="http://nomisma.org/nuds" xmlns:mets="http://www.loc.gov/METS/" xmlns:xlink="http://www.w3.org/1999/xlink"
+				<nuds recordType="physical" xmlns="http://nomisma.org/nuds" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:mets="http://www.loc.gov/METS/" xmlns:xlink="http://www.w3.org/1999/xlink"
 					xmlns:gml="http://www.opengis.net/gml">
 					<control>
 						<recordId/>
@@ -321,7 +321,7 @@
 			</xforms:instance>
 			<xforms:instance id="reference-template" xxforms:exclude-result-prefixes="#all">
 				<reference>
-					<title/>
+					<tei:title/>
 				</reference>
 			</xforms:instance>
 			<xforms:instance id="subjectSet-template" xxforms:exclude-result-prefixes="#all">
@@ -1837,7 +1837,7 @@
 									<xforms:group ref="nuds:descMeta/nuds:refDesc">
 										<h2>Reference Description</h2>
 										<xforms:trigger appearance="minimal">
-											<xforms:dispatch target="remove-refDesc" name="fr-show" ev:event="DOMActivate"/>
+											<xforms:dispatch target="remove-refDesc-dialog" name="fr-show" ev:event="DOMActivate"/>
 											<xforms:label>
 												<span class="glyphicon glyphicon-remove"></span>
 											</xforms:label>
@@ -1851,20 +1851,7 @@
 												</xforms:action>
 											</xforms:trigger>
 										</div>
-										<fr:alert-dialog id="remove-refDesc">
-											<fr:label>Remove Reference Description</fr:label>
-											<fr:message>Confirm the removal of the refDesc and its metadata.</fr:message>
-											<fr:negative-choice>
-												<fr:label>Cancel</fr:label>
-											</fr:negative-choice>
-											<fr:positive-choice>
-												<fr:label>OK</fr:label>
-												<xforms:action ev:event="DOMActivate">
-													<xforms:dispatch name="fr-toggle" targetid="typedesc-tab"/>
-													<xforms:delete nodeset="."/>
-												</xforms:action>
-											</fr:positive-choice>
-										</fr:alert-dialog>
+										
 										<div class="section">
 											<xforms:repeat nodeset="nuds:reference">
 												<numishare:reference/>
@@ -2372,10 +2359,10 @@
 										<numishare:control/>
 									</xforms:group>
 								</fr:tab>
-								<!--<fr:tab>
+								<fr:tab>
 									<fr:label>Inspector</fr:label>
 									<fr:xforms-inspector/>
-								</fr:tab>-->
+								</fr:tab>
 							</fr:tabbable>
 
 							<!--**************************************** DIALOGS **********************************-->
@@ -2426,6 +2413,21 @@
 									<fr:label>OK</fr:label>
 									<xforms:action ev:event="DOMActivate">
 										<xforms:delete nodeset="instance('object')/nuds:digRep"/>
+									</xforms:action>
+								</fr:positive-choice>
+							</fr:alert-dialog>
+							
+							<fr:alert-dialog id="remove-refDesc-dialog">
+								<fr:label>Remove Reference Description</fr:label>
+								<fr:message>Confirm the removal of the refDesc and its metadata.</fr:message>
+								<fr:negative-choice>
+									<fr:label>Cancel</fr:label>
+								</fr:negative-choice>
+								<fr:positive-choice>
+									<fr:label>OK</fr:label>
+									<xforms:action ev:event="DOMActivate">
+										<xforms:dispatch name="fr-toggle" targetid="typedesc-tab"/>
+										<xforms:delete nodeset="instance('object')/nuds:descMeta/nuds:refDesc"/>
 									</xforms:action>
 								</fr:positive-choice>
 							</fr:alert-dialog>
