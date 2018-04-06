@@ -26,7 +26,10 @@
 						</xforms:action>
 						<xforms:action if="not($binding/gml:Point)">
 							<!-- evaluate whether then Geonames username/API key has been set. If so, then insert geonames as the interface type -->
-							<xforms:setvalue ref="instance('interface-type')" if="string(instance('config')/*[local-name()='geonames_api_key'])">geonames</xforms:setvalue>
+							<xforms:action if="string(instance('config')/*[local-name()='geonames_api_key'])">
+								<xforms:setvalue ref="instance('interface-type')">geonames</xforms:setvalue>
+								<xforms:toggle case="geonames-search"/>
+							</xforms:action>							
 						</xforms:action>
 					</xforms:action>
 
