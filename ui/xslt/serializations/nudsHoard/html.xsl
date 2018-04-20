@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" version="2.0" xmlns:xlink="http://www.w3.org/1999/xlink"
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" version="2.0" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:res="http://www.w3.org/2005/sparql-results#"
 	xmlns:numishare="https://github.com/ewg118/numishare" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nuds="http://nomisma.org/nuds"
 	xmlns:nh="http://nomisma.org/nudsHoard" xmlns:nm="http://nomisma.org/id/" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:nmo="http://nomisma.org/ontology#"
 	exclude-result-prefixes="#all">
@@ -191,6 +191,18 @@
 		</xsl:choose>
 	</xsl:variable>
 
+	<xsl:variable name="hasAnnotations" as="xs:boolean">
+		<xsl:choose>
+			<xsl:when test="matches(//config/annotation_sparql_endpoint, 'https?://')">
+				<xsl:choose>
+					<xsl:when test="doc('input:annotations')[descendant::res:result]">true</xsl:when>
+					<xsl:otherwise>false</xsl:otherwise>
+				</xsl:choose>
+			</xsl:when>
+			<xsl:otherwise>false</xsl:otherwise>
+		</xsl:choose>
+	</xsl:variable>
+
 	<xsl:template match="/">
 		<html
 			prefix="geo: http://www.w3.org/2003/01/geo/wgs84_pos# foaf: http://xmlns.com/foaf/0.1/ dcterms: http://purl.org/dc/terms/ xsd: http://www.w3.org/2001/XMLSchema# nm:
@@ -268,6 +280,15 @@
 	<xsl:template match="nh:nudsHoard">
 		<xsl:call-template name="icons"/>
 		<xsl:call-template name="nudsHoard_content"/>
+		
+		<!-- if there are annotations, then render -->
+		<xsl:if test="$hasAnnotations = true()">
+			<div class="row">
+				<div class="col-md-12">
+					<xsl:apply-templates select="doc('input:annotations')/res:sparql" mode="annotations"/>
+				</div>
+			</div>
+		</xsl:if>
 	</xsl:template>
 
 	<xsl:template name="nudsHoard_content">
@@ -304,6 +325,9 @@
 						</xsl:otherwise>
 					</xsl:choose>
 				</h1>
+				<xsl:if test="$hasAnnotations = true()">
+					<a href="#annotations">Annotations</a>
+				</xsl:if>
 			</div>
 		</div>
 		<div class="row">
