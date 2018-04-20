@@ -23,6 +23,7 @@
 	<xsl:variable name="sparql_endpoint" select="/content/config/sparql_endpoint"/>
 	<xsl:variable name="publisher" select="/content/config/template/agencyName"/>
 	<xsl:variable name="regionHierarchy" select="boolean(/content/config/facets/facet[text() = 'region_hier'])" as="xs:boolean"/>
+	<xsl:variable name="findspotHierarchy" select="boolean(/content/config/facets/facet[text() = 'findspot_hier'])" as="xs:boolean"/>
 
 	<xsl:variable name="nudsGroup" as="element()*">
 		<nudsGroup>
@@ -180,7 +181,7 @@
 						</xsl:variable>					
 						
 						<place id="{.}" label="{$label}">
-							<xsl:if test="$regionHierarchy = true()">
+							<xsl:if test="$regionHierarchy = true() or $findspotHierarchy = true()">
 								<xsl:variable name="geonames_hier" as="element()*">
 									<results>
 										<xsl:copy-of select="document(concat($geonames-url, '/hierarchy?geonameId=', $geonameId, '&amp;username=', $geonames_api_key))"/>

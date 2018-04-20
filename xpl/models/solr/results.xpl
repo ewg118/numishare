@@ -84,7 +84,7 @@
 				<!-- set field filters dependent on the type of collection -->
 				<xsl:variable name="fl">
 					<xsl:choose>
-						<xsl:when test="/config/collection_type = 'hoard'">id,recordId,recordType,title_display,findspot_display,closing_date_display,description_display,reference_facet</xsl:when>
+						<xsl:when test="/config/collection_type = 'hoard'">id,recordId,recordType,title_display,findspot_display,closing_date_display,burial_display,discovery_display,description_display,reference_facet</xsl:when>
 						<xsl:when test="/config/collection_type = 'cointype'">id,recordId,recordType,title_display,date_display,denomination_facet,mint_facet,obv_leg_display,obv_type_display,rev_leg_display,rev_type_display,reference_facet</xsl:when>
 						<xsl:when test="/config/collection_type = 'object'">id,recordId,recordType,title_display,date_display,denomination_facet,mint_facet,obv_leg_display,obv_type_display,rev_leg_display,rev_type_display,reference_facet,provenance_facet,diameter_num,weight_num,imagesavailable,reference_obv,reference_rev,thumbnail_obv,thumbnail_rev</xsl:when>
 					</xsl:choose>

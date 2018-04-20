@@ -75,12 +75,30 @@
 									<xsl:value-of select="str[@name='findspot_display']"/>
 								</dd>
 							</xsl:if>
-							<dt>
-								<xsl:value-of select="numishare:regularize_node('closing_date', $lang)"/>
-							</dt>
-							<dd>
-								<xsl:value-of select="str[@name='closing_date_display']"/>
-							</dd>
+							<xsl:if test="str[@name='closing_date_display']">
+								<dt>
+									<xsl:value-of select="numishare:regularize_node('closing_date', $lang)"/>
+								</dt>
+								<dd>
+									<xsl:value-of select="str[@name='closing_date_display']"/>
+								</dd>
+							</xsl:if>	
+							<xsl:if test="str[@name='deposit_display']">
+								<dt>
+									<xsl:value-of select="numishare:regularize_node('deposit', $lang)"/>
+								</dt>
+								<dd>
+									<xsl:value-of select="str[@name='deposit_display']"/>
+								</dd>
+							</xsl:if>
+							<xsl:if test="str[@name='discovery_display']">
+								<dt>
+									<xsl:value-of select="numishare:regularize_node('discovery', $lang)"/>
+								</dt>
+								<dd>
+									<xsl:value-of select="str[@name='discovery_display']"/>
+								</dd>
+							</xsl:if>
 							<xsl:if test="string(str[@name='description_display'])">
 								<dt>
 									<xsl:value-of select="numishare:regularize_node('description', $lang)"/>

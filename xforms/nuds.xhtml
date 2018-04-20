@@ -364,22 +364,19 @@
 			</xforms:instance>
 
 			<xforms:instance id="color-template" xxforms:exclude-result-prefixes="#all">
-				<physfacet type="color"/>
+				<color/>
 			</xforms:instance>
 			<xforms:instance id="dob-template" xxforms:exclude-result-prefixes="#all">
-				<physfacet type="dob"/>
+				<dateOnObject/>
 			</xforms:instance>
 			<xforms:instance id="script-template" xxforms:exclude-result-prefixes="#all">
 				<materialspec type="script"/>
 			</xforms:instance>
 			<xforms:instance id="sernum-template" xxforms:exclude-result-prefixes="#all">
-				<physfacet type="sernum"/>
-			</xforms:instance>
-			<xforms:instance id="signature-template" xxforms:exclude-result-prefixes="#all">
-				<physfacet type="signature"/>
-			</xforms:instance>
+				<serialNumber/>
+			</xforms:instance>			
 			<xforms:instance id="watermark-template" xxforms:exclude-result-prefixes="#all">
-				<physfacet type="watermark"/>
+				<watermark/>
 			</xforms:instance>
 
 			<!-- ********** BINDINGS ********** -->
@@ -439,11 +436,7 @@
 						<xforms:bind nodeset="nuds:date" required="true()">
 							<xforms:bind nodeset="@standardDate" type="m.data.standardDate"/>
 							<xforms:bind nodeset="@standardDateTime" type="m.data.standardDateTime"/>
-						</xforms:bind>
-						<xforms:bind nodeset="nuds:dateOnObject" required="true()">
-							<xforms:bind nodeset="@standardDate" type="m.data.standardDate"/>
-							<xforms:bind nodeset="@calendar" required="true()"/>
-						</xforms:bind>
+						</xforms:bind>						
 						<xforms:bind nodeset="nuds:denomination">
 							<xforms:bind constraint="string-length(.) &gt; 0"/>
 						</xforms:bind>

@@ -92,6 +92,7 @@
 	<field name="height_num" type="tfloat" indexed="true" stored="true"/>
 	<field name="taq_num" type="tint" indexed="true" stored="true"/>
 	<field name="tpq_num" type="tint" indexed="true" stored="true"/>
+	<field name="discovery_num" type="tint" indexed="true" stored="true"/>
 	<field name="thickness_num" type="tfloat" indexed="true" stored="true"/>
 	<field name="weight_num" type="tfloat" indexed="true" stored="true"/>
 	<field name="width_num" type="tfloat" indexed="true" stored="true"/>
