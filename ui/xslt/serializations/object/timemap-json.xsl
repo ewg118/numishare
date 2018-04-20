@@ -190,11 +190,11 @@
 				<xsl:text>,</xsl:text>
 			</xsl:if>
 		</xsl:for-each>
-		<xsl:if test="count($nudsGroup//nuds:typeDesc) &gt; 0">
+		<xsl:if test="count($nudsGroup//nuds:typeDesc[nuds:date or nuds:dateRange]) &gt; 0">
 			<xsl:text>,</xsl:text>
 		</xsl:if>
 		<!-- create timeline only events for associated coin types -->
-		<xsl:for-each select="$nudsGroup/descendant::nuds:typeDesc">
+		<xsl:for-each select="$nudsGroup/descendant::nuds:typeDesc[nuds:date or nuds:dateRange]">
 			<xsl:call-template name="getJsonPoint">
 				<xsl:with-param name="href"/>
 				<xsl:with-param name="type">coinType</xsl:with-param>

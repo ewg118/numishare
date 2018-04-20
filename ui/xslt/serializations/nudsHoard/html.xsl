@@ -447,6 +447,7 @@
 		</h3>
 		<ul>
 			<xsl:apply-templates mode="descMeta"/>
+			
 			<xsl:if test="$hasContents = 'true'">
 				<xsl:if test="not(nh:deposit/nh:date) and not(nh:deposit/nh:dateRange)">
 					<xsl:variable name="all-dates" as="element()*">
@@ -499,64 +500,65 @@
 							</xsl:choose>
 						</span>
 					</li>
-				</xsl:if>
-				<xsl:variable name="total-counts" as="element()*">
-					<total-counts>
-						<xsl:for-each select="parent::node()/nh:contentsDesc/nh:contents/descendant::nuds:typeDesc">
-							<xsl:choose>
-								<xsl:when test="string(@xlink:href)">
-									<xsl:variable name="href" select="@xlink:href"/>
-									<xsl:apply-templates select="$nudsGroup//object[@xlink:href = $href]/descendant::nuds:typeDesc/nuds:denomination" mode="den">
-										<xsl:with-param name="contentsDesc" select="$contentsDesc"/>
-										<xsl:with-param name="lang" select="$lang"/>
-									</xsl:apply-templates>
-								</xsl:when>
-								<xsl:otherwise>
-									<xsl:apply-templates select="nuds:denomination" mode="den">
-										<xsl:with-param name="contentsDesc" select="$contentsDesc"/>
-										<xsl:with-param name="lang" select="$lang"/>
-										<xsl:with-param name="num"
-											select="
+					
+					<xsl:variable name="total-counts" as="element()*">
+						<total-counts>
+							<xsl:for-each select="parent::node()/nh:contentsDesc/nh:contents/descendant::nuds:typeDesc">
+								<xsl:choose>
+									<xsl:when test="string(@xlink:href)">
+										<xsl:variable name="href" select="@xlink:href"/>
+										<xsl:apply-templates select="$nudsGroup//object[@xlink:href = $href]/descendant::nuds:typeDesc/nuds:denomination" mode="den">
+											<xsl:with-param name="contentsDesc" select="$contentsDesc"/>
+											<xsl:with-param name="lang" select="$lang"/>
+										</xsl:apply-templates>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:apply-templates select="nuds:denomination" mode="den">
+											<xsl:with-param name="contentsDesc" select="$contentsDesc"/>
+											<xsl:with-param name="lang" select="$lang"/>
+											<xsl:with-param name="num"
+												select="
 												if (ancestor::nh:coin) then
-													1
+												1
 												else
-													ancestor::nh:coinGrp/@count"
-										/>
-									</xsl:apply-templates>
-								</xsl:otherwise>
-							</xsl:choose>
-						</xsl:for-each>
-					</total-counts>
-				</xsl:variable>
-				<xsl:variable name="denominations" as="element()*">
-					<denominations>
-						<xsl:for-each select="distinct-values($total-counts//*[local-name() = 'name' and string-length(normalize-space(.)) &gt; 0])">
-							<xsl:variable name="name" select="."/>
-							<name>
-								<xsl:attribute name="count">
-									<xsl:value-of select="sum($total-counts//*[local-name() = 'name'][. = $name]/@count)"/>
-								</xsl:attribute>
-								<xsl:value-of select="$name"/>
-							</name>
-						</xsl:for-each>
-					</denominations>
-				</xsl:variable>
-				<xsl:if test="count($denominations//*[local-name() = 'name']) &gt; 0">
-					<li>
-						<b><xsl:value-of select="numishare:regularize_node('description', $lang)"/>: </b>
-						<span property="dcterms:description">
-							<xsl:for-each select="$denominations//*[local-name() = 'name']">
-								<xsl:sort select="@count" order="descending" data-type="number"/>
-								<xsl:value-of select="."/>
-								<xsl:text>: </xsl:text>
-								<xsl:value-of select="@count"/>
-								<xsl:if test="not(position() = last())">
-									<xsl:text>, </xsl:text>
-								</xsl:if>
+												ancestor::nh:coinGrp/@count"
+											/>
+										</xsl:apply-templates>
+									</xsl:otherwise>
+								</xsl:choose>
 							</xsl:for-each>
-						</span>
-					</li>
-				</xsl:if>
+						</total-counts>
+					</xsl:variable>
+					<xsl:variable name="denominations" as="element()*">
+						<denominations>
+							<xsl:for-each select="distinct-values($total-counts//*[local-name() = 'name' and string-length(normalize-space(.)) &gt; 0])">
+								<xsl:variable name="name" select="."/>
+								<name>
+									<xsl:attribute name="count">
+										<xsl:value-of select="sum($total-counts//*[local-name() = 'name'][. = $name]/@count)"/>
+									</xsl:attribute>
+									<xsl:value-of select="$name"/>
+								</name>
+							</xsl:for-each>
+						</denominations>
+					</xsl:variable>
+					<xsl:if test="count($denominations//*[local-name() = 'name']) &gt; 0">
+						<li>
+							<b><xsl:value-of select="numishare:regularize_node('description', $lang)"/>: </b>
+							<span property="dcterms:description">
+								<xsl:for-each select="$denominations//*[local-name() = 'name']">
+									<xsl:sort select="@count" order="descending" data-type="number"/>
+									<xsl:value-of select="."/>
+									<xsl:text>: </xsl:text>
+									<xsl:value-of select="@count"/>
+									<xsl:if test="not(position() = last())">
+										<xsl:text>, </xsl:text>
+									</xsl:if>
+								</xsl:for-each>
+							</span>
+						</li>
+					</xsl:if>
+				</xsl:if>				
 			</xsl:if>
 		</ul>
 	</xsl:template>
