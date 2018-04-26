@@ -6,14 +6,19 @@
 
 	<!-- params -->
 	<xsl:param name="pipeline" select="doc('input:request')/request/parameters/parameter[name='pipeline']/value"/>
-	<xsl:param name="langParam" select="doc('input:request')/request/parameters/parameter[name='lang']/value"/>
 	<xsl:param name="lang">
 		<xsl:choose>
-			<xsl:when test="string($langParam)">
-				<xsl:value-of select="$langParam"/>
+			<xsl:when test="string(doc('input:request')/request/parameters/parameter[name='lang']/value)">
+				<xsl:if test="//config/languages/language[@code=doc('input:request')/request/parameters/parameter[name='lang']/value][@enabled=true()]">
+					<xsl:value-of select="doc('input:request')/request/parameters/parameter[name='lang']/value"/>
+				</xsl:if>
 			</xsl:when>
 			<xsl:when test="string(doc('input:request')/request//header[name[.='accept-language']]/value)">
-				<xsl:value-of select="numishare:parseAcceptLanguage(doc('input:request')/request//header[name[.='accept-language']]/value)[1]"/>
+				<xsl:variable name="primaryLang" select="numishare:parseAcceptLanguage(doc('input:request')/request//header[name[.='accept-language']]/value)[1]"/>
+				
+				<xsl:if test="//config/languages/language[@code=$primaryLang][@enabled=true()]">
+					<xsl:value-of select="$primaryLang"/>
+				</xsl:if>
 			</xsl:when>
 		</xsl:choose>
 	</xsl:param>

@@ -328,7 +328,7 @@
 				<xsl:apply-templates select="lst[(@name='taq_num' or @name='findspot_hier' or @name='reference_facet') and number(int) &gt; 0]" mode="facet"/>
 				<h4><xsl:value-of select="numishare:normalize_fields('contents', $lang)"/></h4>
 				<xsl:apply-templates select="lst[(@name='authority_facet'or @name='coinType_facet' or @name='deity_facet' or @name='denomination_facet' or @name='issuer_facet' or
-					@name='manufacture_facet' or @name='material_facet' or @name='mint_facet' or @name='objectType_facet' or @name='portrait_facet' or @name='region_facet') and      number(int) &gt;
+					@name='manufacture_facet' or @name='material_facet' or @name='mint_facet' or @name='objectType_facet' or @name='portrait_facet' or @name='region_facet' or @name='region_hier') and      number(int) &gt;
 					0]" mode="facet"/>
 			</xsl:when>
 			<xsl:when test="$collection_type='cointype'">

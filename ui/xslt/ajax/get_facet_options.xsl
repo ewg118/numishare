@@ -36,7 +36,7 @@
 											<xsl:value-of select="numishare:normalize_century(@name)"/>
 										</xsl:when>
 										<xsl:when test="$category='taq_num' or $category='tpq_num'">
-											<xsl:value-of select="nh:normalize_date(@name, @name)"/>
+											<xsl:value-of select="numishare:normalizeDate(format-number(@name, '0000'))"/>
 										</xsl:when>
 										<xsl:otherwise>
 											<xsl:value-of select="@name"/>
@@ -51,7 +51,7 @@
 											<xsl:value-of select="numishare:normalize_century(@name)"/>
 										</xsl:when>
 										<xsl:when test="$category='taq_num' or $category='tpq_num'">
-											<xsl:value-of select="nh:normalize_date(@name, @name)"/>
+											<xsl:value-of select="numishare:normalizeDate(format-number(@name, '0000'))"/>
 										</xsl:when>
 										<xsl:otherwise>
 											<xsl:value-of select="@name"/>

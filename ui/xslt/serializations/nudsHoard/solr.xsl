@@ -21,68 +21,16 @@
 
 	<xsl:template match="nh:nudsHoard">
 		<xsl:param name="lang"/>
+		
 		<xsl:variable name="contentsDesc" as="element()*">
 			<xsl:copy-of select="descendant::nh:contents"/>
 		</xsl:variable>
-
-		<xsl:variable name="all-dates" as="element()*">
-			<dates>
-				<xsl:choose>
-					<xsl:when test="descendant::nh:deposit//@standardDate">
-						<xsl:for-each select="descendant::nh:deposit//@standardDate">
-							<date>
-								<xsl:value-of select="number(.)"/>
-							</date>
-						</xsl:for-each>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:for-each select="descendant::nuds:typeDesc">
-							<xsl:if test="index-of(//config/certainty_codes/code[@accept = 'true'], @certainty)">
-								<xsl:choose>
-									<xsl:when test="string(@xlink:href)">
-										<xsl:variable name="href" select="@xlink:href"/>
-										<xsl:for-each select="$nudsGroup//object[@xlink:href = $href]/descendant::*/@standardDate">
-											<xsl:if test="number(.)">
-												<date>
-													<xsl:value-of select="number(.)"/>
-												</date>
-											</xsl:if>
-										</xsl:for-each>
-									</xsl:when>
-									<xsl:otherwise>
-										<xsl:for-each select="descendant::*/@standardDate">
-											<xsl:if test="number(.)">
-												<date>
-													<xsl:value-of select="number(.)"/>
-												</date>
-											</xsl:if>
-										</xsl:for-each>
-									</xsl:otherwise>
-								</xsl:choose>
-							</xsl:if>
-						</xsl:for-each>
-					</xsl:otherwise>
-				</xsl:choose>
-			</dates>
-		</xsl:variable>
-		<xsl:variable name="dates" as="element()*">
-			<dates>
-				<xsl:for-each select="distinct-values($all-dates//date)">
-					<xsl:sort data-type="number"/>
-					<date>
-						<xsl:value-of select="number(.)"/>
-					</date>
-				</xsl:for-each>
-			</dates>
-		</xsl:variable>
-		<xsl:variable name="hasContents">
+		
+		<xsl:variable name="hasContents" as="xs:boolean">
 			<xsl:choose>
 				<xsl:when test="count(nh:descMeta/nh:contentsDesc/nh:contents/*) &gt; 0">true</xsl:when>
 				<xsl:otherwise>false</xsl:otherwise>
 			</xsl:choose>
-		</xsl:variable>
-		<xsl:variable name="title">
-			<xsl:value-of select="normalize-space(nh:descMeta/nh:title[1])"/>
 		</xsl:variable>
 
 		<doc>
@@ -112,8 +60,8 @@
 			</field>
 			<field name="title_display">
 				<xsl:choose>
-					<xsl:when test="string($title)">
-						<xsl:value-of select="$title"/>
+					<xsl:when test="nh:descMeta/nh:title">
+						<xsl:value-of select="normalize-space(nh:descMeta/nh:title[1])"/>
 					</xsl:when>
 					<xsl:otherwise>
 						<xsl:value-of select="nh:control/nh:recordId"/>
@@ -130,16 +78,60 @@
 
 			<!-- closing date, derive from deposit first -->
 			<xsl:if test="not(descendant::nh:deposit[nh:date or nh:dateRange])">
-				<xsl:if test="$hasContents = 'true'">
+				<xsl:if test="$hasContents = true()">
+					
+					<!-- derive dates from contents if the nh:deposit is not set -->
+					<xsl:variable name="all-dates" as="element()*">
+						<dates>
+							<xsl:for-each select="descendant::nuds:typeDesc">
+								<xsl:if test="index-of(//config/certainty_codes/code[@accept = 'true'], @certainty)">
+									<xsl:choose>
+										<xsl:when test="string(@xlink:href)">
+											<xsl:variable name="href" select="@xlink:href"/>
+											<xsl:for-each select="$nudsGroup//object[@xlink:href = $href]/descendant::*/@standardDate">
+												<xsl:if test="number(.)">
+													<date>
+														<xsl:value-of select="."/>
+													</date>
+												</xsl:if>
+											</xsl:for-each>
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:for-each select="descendant::*/@standardDate">
+												<xsl:if test="number(.)">
+													<date>
+														<xsl:value-of select="."/>
+													</date>
+												</xsl:if>
+											</xsl:for-each>
+										</xsl:otherwise>
+									</xsl:choose>
+								</xsl:if>
+							</xsl:for-each>
+						</dates>
+					</xsl:variable>
+					
+					<xsl:variable name="dates" as="element()*">
+						<dates>
+							<xsl:for-each select="distinct-values($all-dates//date)">
+								<xsl:sort data-type="number"/>
+								<date>
+									<xsl:value-of select="."/>
+								</date>
+							</xsl:for-each>
+						</dates>
+					</xsl:variable>
+					
+					
 					<field name="closing_date_display">
-						<xsl:value-of select="nh:normalize_date($dates/date[last()], $dates/date[last()])"/>
+						<xsl:value-of select="numishare:normalizeDate($dates/date[last()])"/>
 					</field>
 					<xsl:if test="count($dates/date) &gt; 0">
 						<field name="tpq_num">
-							<xsl:value-of select="$dates/date[1]"/>
+							<xsl:value-of select="number($dates/date[1])"/>
 						</field>
 						<field name="taq_num">
-							<xsl:value-of select="$dates/date[last()]"/>
+							<xsl:value-of select="number($dates/date[last()])"/>
 						</field>
 					</xsl:if>
 
@@ -171,7 +163,7 @@
 			</field>
 
 			<!-- create description if there are contents -->
-			<xsl:if test="$hasContents = 'true'">
+			<xsl:if test="$hasContents = true()">
 				<xsl:if test="not(nh:descMeta/nh:contentsDesc/nh:contents[@count | @minCount | @maxCount])">
 					<xsl:variable name="total-counts" as="element()*">
 						<total-counts>
@@ -300,7 +292,7 @@
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:value-of select="nh:dateRange/nh:fromDate"/>
-					<xsl:text> - </xsl:text>
+					<xsl:text>-</xsl:text>
 					<xsl:value-of select="nh:dateRange/nh:toDate"/>
 				</xsl:otherwise>
 			</xsl:choose>

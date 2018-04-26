@@ -2,42 +2,7 @@
 <!-- Repeated functions for regularization to be used through Numishare -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:nh="http://nomisma.org/nudsHoard" xmlns:numishare="https://github.com/ewg118/numishare"
 	xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes="#all" version="2.0">
-	<!-- ************** NORMALIZATION TEMPLATES ************** -->
-	<xsl:function name="nh:normalize_date">
-		<xsl:param name="start_date"/>
-		<xsl:param name="end_date"/>
-		<xsl:choose>
-			<xsl:when test="number($start_date) = number($end_date)">
-				<xsl:if test="number($start_date) &lt; 500 and number($start_date) &gt; 0">
-					<xsl:text>A.D. </xsl:text>
-				</xsl:if>
-				<xsl:value-of select="abs(number($start_date))"/>
-				<xsl:if test="number($start_date) &lt; 0">
-					<xsl:text> B.C.</xsl:text>
-				</xsl:if>
-			</xsl:when>
-			<xsl:otherwise>
-				<!-- start date -->
-				<xsl:if test="number($start_date) &lt; 500 and number($start_date) &gt; 0">
-					<xsl:text>A.D. </xsl:text>
-				</xsl:if>
-				<xsl:value-of select="abs(number($start_date))"/>
-				<xsl:if test="number($start_date) &lt; 0">
-					<xsl:text> B.C.</xsl:text>
-				</xsl:if>
-				<xsl:text> - </xsl:text>
-				<!-- end date -->
-				<xsl:if test="number($end_date) &lt; 500 and number($end_date) &gt; 0">
-					<xsl:text>A.D. </xsl:text>
-				</xsl:if>
-				<xsl:value-of select="abs(number($end_date))"/>
-				<xsl:if test="number($end_date) &lt; 0">
-					<xsl:text> B.C.</xsl:text>
-				</xsl:if>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:function>
-
+	
 	<!-- ************** PARSE ACCEPT-LANGUAGE FROM HTTP HEADER ************** -->
 	<xsl:function name="numishare:parseAcceptLanguage">
 		<xsl:param name="lang"/>
