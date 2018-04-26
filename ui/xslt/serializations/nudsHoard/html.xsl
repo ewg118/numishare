@@ -165,6 +165,87 @@
 		</rdf:RDF>
 	</xsl:variable>
 
+	<xsl:variable name="geonames" as="element()*">
+		<places>
+			<xsl:for-each select="distinct-values(descendant::*[local-name() = 'geogname'][contains(@xlink:href, 'geonames.org')]/@xlink:href)">
+				<xsl:variable name="geonameId" select="tokenize(., '/')[4]"/>
+
+				<xsl:if test="number($geonameId)">
+					<xsl:variable name="geonames_data" as="element()*">
+						<results>
+							<xsl:copy-of
+								select="document(concat($geonames-url, '/get?geonameId=', $geonameId, '&amp;username=', $geonames_api_key, '&amp;style=full'))"
+							/>
+						</results>
+					</xsl:variable>
+
+					<!-- only evaluate if there's a positive response -->
+					<xsl:if test="$geonames_data//geonameId = $geonameId">
+						<xsl:variable name="coordinates">
+							<xsl:if test="$geonames_data//lng castable as xs:decimal and $geonames_data//lat castable as xs:decimal">
+								<xsl:value-of select="concat($geonames_data//lng, ',', $geonames_data//lat)"/>
+							</xsl:if>
+						</xsl:variable>
+
+						<!-- generate AACR2 label -->
+						<xsl:variable name="label">
+							<xsl:variable name="countryCode" select="$geonames_data//countryCode[1]"/>
+							<xsl:variable name="countryName" select="$geonames_data//countryName[1]"/>
+							<xsl:variable name="name" select="$geonames_data//name[1]"/>
+							<xsl:variable name="adminName1" select="$geonames_data//adminName1[1]"/>
+							<xsl:variable name="fcode" select="$geonames_data//fcode[1]"/>
+							<!-- set a value equivalent to AACR2 standard for US, AU, CA, and GB.  This equation deviates from AACR2 for Malaysia since standard abbreviations for territories cannot be found -->
+							<xsl:value-of
+								select="
+									if ($countryCode = 'US' or $countryCode = 'AU' or $countryCode = 'CA') then
+										if ($fcode = 'ADM1') then
+											$name
+										else
+											concat($name, ' (',
+											$abbreviations//country[@code = $countryCode]/place[. = $adminName1]/@abbr, ')')
+									else
+										if ($countryCode = 'GB') then
+											if ($fcode = 'ADM1') then
+												$name
+											else
+												concat($name, ' (',
+												$adminName1, ')')
+										else
+											if ($fcode = 'PCLI') then
+												$name
+											else
+												concat($name, ' (', $countryName, ')')"
+							/>
+						</xsl:variable>
+
+						<place id="{.}" label="{$label}">
+							<!--<xsl:if test="$regionHierarchy = true() or $findspotHierarchy = true()">
+								<xsl:variable name="geonames_hier" as="element()*">
+									<results>
+										<xsl:copy-of select="document(concat($geonames-url, '/hierarchy?geonameId=', $geonameId, '&amp;username=', $geonames_api_key))"/>
+									</results>
+								</xsl:variable>
+								<!-\- create facetRegion hierarchy -\->
+								<xsl:variable name="hierarchy">
+									<xsl:for-each select="$geonames_hier//geoname[position() &gt;= 3]">
+										<xsl:value-of select="concat(geonameId, '/', name)"/>
+										<xsl:if test="not(position() = last())">
+											<xsl:text>|</xsl:text>
+										</xsl:if>
+									</xsl:for-each>
+								</xsl:variable>
+								
+								<xsl:attribute name="hierarchy" select="$hierarchy"/>
+							</xsl:if>-->
+
+							<xsl:value-of select="$coordinates"/>
+						</place>
+					</xsl:if>
+				</xsl:if>
+			</xsl:for-each>
+		</places>
+	</xsl:variable>
+
 	<xsl:variable name="regions" as="element()*">
 		<node>
 			<xsl:if test="$regionHierarchy = true()">
@@ -598,7 +679,40 @@
 		</ul>
 	</xsl:template>
 
-	<xsl:template match="nh:findspot"> </xsl:template>
+	<xsl:template match="nh:findspot">
+		<li>
+			<b><xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>: </b>
+			<xsl:call-template name="display-description"/>
+			<xsl:if test="nh:description and nh:geogname">
+				<xsl:text> : </xsl:text>
+			</xsl:if>
+			<xsl:apply-templates select="nh:geogname[@xlink:href]"/>
+		</li>
+	</xsl:template>
+
+	<xsl:template match="nh:geogname">
+		<xsl:variable name="href" select="@xlink:href"/>
+		<xsl:variable name="label" select="$geonames//place[@id = $href]/@label"/>
+	
+		<a href="{$display_path}results?q=findspot_facet:&#x022;{$label}&#x022;{if (string($langParam)) then concat('&amp;lang=', $langParam) else ''}">
+			<xsl:choose>
+				<xsl:when test="contains(@xlink:href, 'geonames.org')">
+					<xsl:value-of select="$label"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="."/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</a>
+		<!-- display certainty -->
+		<xsl:if test="string(@certainty)">
+			<i> (<xsl:value-of select="@certainty"/>)</i>
+		</xsl:if>
+		<a href="{$href}" target="_blank" rel="{numishare:normalizeProperty($recordType, if(@xlink:role) then @xlink:role else local-name())}"
+			class="external_link">
+			<span class="glyphicon glyphicon-new-window"/>
+		</a>		
+	</xsl:template>
 
 	<xsl:template match="nh:deposit | nh:discovery">
 		<li>
@@ -621,21 +735,7 @@
 		<li>
 			<b><xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>: </b>
 
-			<xsl:choose>
-				<xsl:when test="nh:description[@xml:lang = $lang]">
-					<xsl:value-of select="nh:description[@xml:lang = $lang]"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:choose>
-						<xsl:when test="nh:description[@xml:lang = 'en']">
-							<xsl:value-of select="nh:description[@xml:lang = 'en']"/>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:value-of select="nh:description[1]"/>
-						</xsl:otherwise>
-					</xsl:choose>
-				</xsl:otherwise>
-			</xsl:choose>
+			<xsl:call-template name="display-description"/>
 		</li>
 	</xsl:template>
 
@@ -721,7 +821,7 @@
 						<fields>
 							<xsl:for-each select="$fields">
 								<xsl:variable name="field" select="."/>
-								
+
 								<xsl:choose>
 									<xsl:when test="$field = 'date'">
 										<xsl:choose>
@@ -741,9 +841,11 @@
 									</xsl:when>
 									<xsl:otherwise>
 										<!-- ignore the <authority> element -->
-										<xsl:if test="$typeDesc/descendant::*[(local-name() = $field and not(local-name()='authority')) or @xlink:role = $field]">
+										<xsl:if
+											test="$typeDesc/descendant::*[(local-name() = $field and not(local-name() = 'authority')) or @xlink:role = $field]">
 											<field>
-												<xsl:for-each select="$typeDesc/descendant::*[(local-name() = $field and not(local-name()='authority')) or @xlink:role = $field]">
+												<xsl:for-each
+													select="$typeDesc/descendant::*[(local-name() = $field and not(local-name() = 'authority')) or @xlink:role = $field]">
 													<xsl:apply-templates select="self::node()" mode="stub"/>
 													<xsl:if test="not(position() = last())">
 														<xsl:text>/</xsl:text>
@@ -754,12 +856,12 @@
 									</xsl:otherwise>
 								</xsl:choose>
 							</xsl:for-each>
-						</fields>						
+						</fields>
 					</xsl:variable>
 
 					<xsl:value-of select="string-join($stub//field, ', ')"/>
 				</xsl:if>
-				
+
 				<div class="coin-content" id="{$obj-id}-div" style="display:none">
 					<xsl:apply-templates select="nuds:physDesc"/>
 					<xsl:apply-templates select="$typeDesc">
@@ -773,10 +875,10 @@
 			</td>
 		</tr>
 	</xsl:template>
-	
+
 	<xsl:template match="*" mode="stub">
-		<xsl:variable name="href" select="@xlink:href"/>		
-		
+		<xsl:variable name="href" select="@xlink:href"/>
+
 		<xsl:choose>
 			<xsl:when test="contains($href, 'nomisma.org')">
 				<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about = $href], $lang)"/>
@@ -786,13 +888,13 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
-	
+
 	<xsl:template match="nuds:denomination" mode="den">
 		<xsl:param name="contentsDesc"/>
 		<xsl:param name="lang"/>
 		<xsl:param name="num"/>
 		<xsl:variable name="href" select="@xlink:href"/>
-		
+
 		<xsl:variable name="label">
 			<xsl:choose>
 				<xsl:when test="contains($href, 'nomisma.org')">
@@ -803,7 +905,7 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-		
+
 		<xsl:variable name="source" select="ancestor::object/@xlink:href"/>
 		<xsl:variable name="count">
 			<xsl:choose>
@@ -829,6 +931,4 @@
 			<xsl:value-of select="$label"/>
 		</name>
 	</xsl:template>
-
-
 </xsl:stylesheet>
