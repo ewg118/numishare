@@ -22,10 +22,6 @@
 	<xsl:template match="nh:nudsHoard">
 		<xsl:param name="lang"/>
 		
-		<xsl:variable name="contentsDesc" as="element()*">
-			<xsl:copy-of select="descendant::nh:contents"/>
-		</xsl:variable>
-		
 		<xsl:variable name="hasContents" as="xs:boolean">
 			<xsl:choose>
 				<xsl:when test="count(nh:descMeta/nh:contentsDesc/nh:contents/*) &gt; 0">true</xsl:when>
@@ -165,60 +161,17 @@
 			<!-- create description if there are contents -->
 			<xsl:if test="$hasContents = true()">
 				<xsl:if test="not(nh:descMeta/nh:contentsDesc/nh:contents[@count | @minCount | @maxCount])">
-					<xsl:variable name="total-counts" as="element()*">
-						<total-counts>
-							<xsl:for-each select="descendant::nuds:typeDesc">
-								<xsl:choose>
-									<xsl:when test="string(@xlink:href)">
-										<xsl:variable name="href" select="@xlink:href"/>
-										<xsl:apply-templates select="$nudsGroup//object[@xlink:href = $href]/descendant::nuds:typeDesc/nuds:denomination"
-											mode="den">
-											<xsl:with-param name="contentsDesc" select="$contentsDesc"/>
-											<xsl:with-param name="lang" select="$lang"/>
-										</xsl:apply-templates>
-									</xsl:when>
-									<xsl:otherwise>
-										<xsl:apply-templates select="nuds:denomination" mode="den">
-											<xsl:with-param name="contentsDesc" select="$contentsDesc"/>
-											<xsl:with-param name="lang" select="$lang"/>
-											<xsl:with-param name="num"
-												select="
-													if (ancestor::nh:coin) then
-														1
-													else
-														ancestor::nh:coinGrp/@count"
-											/>
-										</xsl:apply-templates>
-									</xsl:otherwise>
-								</xsl:choose>
-							</xsl:for-each>
-						</total-counts>
+					<xsl:variable name="contents" as="element()*">
+						<xsl:copy-of select="descendant::nh:contents"/>
 					</xsl:variable>
-
-					<xsl:variable name="denominations" as="element()*">
-						<denominations>
-							<xsl:for-each select="distinct-values($total-counts//name[string-length(.) &gt; 0])">
-								<xsl:variable name="name" select="."/>
-								<name>
-									<xsl:attribute name="count">
-										<xsl:value-of select="sum($total-counts//name[. = $name]/@count)"/>
-									</xsl:attribute>
-									<xsl:value-of select="$name"/>
-								</name>
-							</xsl:for-each>
-						</denominations>
-					</xsl:variable>
-					<xsl:if test="count($denominations//*[local-name() = 'name']) &gt; 0">
+					
+					<!-- parse the hoard contents into a human-readable description -->
+					<xsl:variable name="description" select="numishare:hoardContentsDescription($contents, $nudsGroup, $rdf, $lang)"/>
+					
+					
+					<xsl:if test="string-length($description) &gt; 0">
 						<field name="description_display">
-							<xsl:for-each select="$denominations//*[local-name() = 'name']">
-								<xsl:sort select="@count" order="descending" data-type="number"/>
-								<xsl:value-of select="."/>
-								<xsl:text>: </xsl:text>
-								<xsl:value-of select="@count"/>
-								<xsl:if test="not(position() = last())">
-									<xsl:text>, </xsl:text>
-								</xsl:if>
-							</xsl:for-each>
+								<xsl:value-of select="$description"/>
 						</field>
 					</xsl:if>
 				</xsl:if>
@@ -349,74 +302,31 @@
 	<xsl:template match="nh:contents">
 		<field name="description_display">
 			<xsl:choose>
-				<xsl:when test="@count">
-					<xsl:value-of select="@count"/>
-				</xsl:when>
-				<xsl:otherwise>
+				<xsl:when test="@count or @minCount or @maxCount">
 					<xsl:choose>
-						<xsl:when test="@minCount and not(@maxCount)">
-							<xsl:value-of select="concat('Fewer than ', @minCount)"/>
-						</xsl:when>
-						<xsl:when test="not(@minCount) and @maxCount">
-							<xsl:value-of select="concat(@maxCount, '+')"/>
-						</xsl:when>
-						<xsl:when test="@minCount and @maxCount">
-							<xsl:value-of select="concat(@minCount, '-', @maxCount)"/>
-						</xsl:when>
-					</xsl:choose>
-				</xsl:otherwise>
-			</xsl:choose>
-			<xsl:text> coins</xsl:text>
-		</field>
-	</xsl:template>
-
-	<!-- use denominations for generating description when applicable -->
-	<xsl:template match="nuds:denomination" mode="den">
-		<xsl:param name="contentsDesc"/>
-		<xsl:param name="lang"/>
-		<xsl:param name="num"/>
-
-		<xsl:variable name="href" select="@xlink:href"/>
-		<xsl:variable name="value">
-			<xsl:choose>
-				<xsl:when test="string($lang) and contains($href, 'nomisma.org')">
-					<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about = $href], $lang)"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:choose>
-						<xsl:when test="not(string(.))">
-							<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about = $href], 'en')"/>
+						<xsl:when test="@count">
+							<xsl:value-of select="@count"/>
 						</xsl:when>
 						<xsl:otherwise>
-							<xsl:value-of select="normalize-space(.)"/>
+							<xsl:choose>
+								<xsl:when test="@minCount and not(@maxCount)">
+									<xsl:value-of select="concat('Fewer than ', @minCount)"/>
+								</xsl:when>
+								<xsl:when test="not(@minCount) and @maxCount">
+									<xsl:value-of select="concat(@maxCount, '+')"/>
+								</xsl:when>
+								<xsl:when test="@minCount and @maxCount">
+									<xsl:value-of select="concat(@minCount, '-', @maxCount)"/>
+								</xsl:when>
+							</xsl:choose>
 						</xsl:otherwise>
 					</xsl:choose>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:variable>
-		<xsl:variable name="source" select="ancestor::object/@xlink:href"/>
-		<xsl:variable name="count">
-			<xsl:choose>
-				<xsl:when test="string($source)">
-					<xsl:choose>
-						<xsl:when test="$contentsDesc//nh:coin[nuds:typeDesc[@xlink:href = $source]]">
-							<xsl:value-of select="count($contentsDesc//nh:coin/nuds:typeDesc[@xlink:href = $source])"/>
-						</xsl:when>
-						<xsl:when test="$contentsDesc//nh:coinGrp[nuds:typeDesc[@xlink:href = $source]]">
-							<xsl:value-of select="sum($contentsDesc//nh:coinGrp[nuds:typeDesc[@xlink:href = $source]]/@count)"/>
-						</xsl:when>
-					</xsl:choose>
+					<xsl:text> coins</xsl:text>
 				</xsl:when>
 				<xsl:otherwise>
-					<xsl:value-of select="$num"/>
+					<xsl:value-of select="nh:description"/>
 				</xsl:otherwise>
 			</xsl:choose>
-		</xsl:variable>
-		<name>
-			<xsl:attribute name="count">
-				<xsl:value-of select="$count"/>
-			</xsl:attribute>
-			<xsl:value-of select="$value"/>
-		</name>
+		</field>
 	</xsl:template>
 </xsl:stylesheet>
