@@ -21,7 +21,7 @@
 
 	<xsl:template match="nh:nudsHoard">
 		<xsl:param name="lang"/>
-		
+
 		<xsl:variable name="hasContents" as="xs:boolean">
 			<xsl:choose>
 				<xsl:when test="count(nh:descMeta/nh:contentsDesc/nh:contents/*) &gt; 0">true</xsl:when>
@@ -75,7 +75,7 @@
 			<!-- closing date, derive from deposit first -->
 			<xsl:if test="not(descendant::nh:deposit[nh:date or nh:dateRange])">
 				<xsl:if test="$hasContents = true()">
-					
+
 					<!-- derive dates from contents if the nh:deposit is not set -->
 					<xsl:variable name="all-dates" as="element()*">
 						<dates>
@@ -106,7 +106,7 @@
 							</xsl:for-each>
 						</dates>
 					</xsl:variable>
-					
+
 					<xsl:variable name="dates" as="element()*">
 						<dates>
 							<xsl:for-each select="distinct-values($all-dates//date)">
@@ -117,8 +117,8 @@
 							</xsl:for-each>
 						</dates>
 					</xsl:variable>
-					
-					
+
+
 					<field name="closing_date_display">
 						<xsl:value-of select="numishare:normalizeDate($dates/date[last()])"/>
 					</field>
@@ -158,27 +158,9 @@
 				</xsl:choose>
 			</field>
 
-			<!-- create description if there are contents -->
-			<xsl:if test="$hasContents = true()">
-				<xsl:if test="not(nh:descMeta/nh:contentsDesc/nh:contents[@count | @minCount | @maxCount])">
-					<xsl:variable name="contents" as="element()*">
-						<xsl:copy-of select="descendant::nh:contents"/>
-					</xsl:variable>
-					
-					<!-- parse the hoard contents into a human-readable description -->
-					<xsl:variable name="description" select="numishare:hoardContentsDescription($contents, $nudsGroup, $rdf, $lang)"/>
-					
-					
-					<xsl:if test="string-length($description) &gt; 0">
-						<field name="description_display">
-								<xsl:value-of select="$description"/>
-						</field>
-					</xsl:if>
-				</xsl:if>
-			</xsl:if>
-
-
-			<xsl:apply-templates select="nh:descMeta"/>
+			<xsl:apply-templates select="nh:descMeta">
+				<xsl:with-param name="lang" select="$lang"/>
+			</xsl:apply-templates>
 
 			<!-- apply templates for those typeDescs contained explicitly within the hoard -->
 			<xsl:for-each select="descendant::nuds:typeDesc">
@@ -225,9 +207,12 @@
 	</xsl:template>
 
 	<xsl:template match="nh:descMeta">
+		<xsl:param name="lang"/>
 		<xsl:apply-templates select="nh:hoardDesc"/>
 		<xsl:apply-templates select="nh:refDesc"/>
-		<xsl:apply-templates select="nh:contentsDesc"/>
+		<xsl:apply-templates select="nh:contentsDesc">
+			<xsl:with-param name="lang" select="$lang"/>
+		</xsl:apply-templates>
 	</xsl:template>
 
 	<xsl:template match="nh:hoardDesc">
@@ -296,10 +281,15 @@
 	</xsl:template>
 
 	<xsl:template match="nh:contentsDesc">
-		<xsl:apply-templates select="nh:contents"/>
+		<xsl:param name="lang"/>
+		<xsl:apply-templates select="nh:contents">
+			<xsl:with-param name="lang" select="$lang"/>
+		</xsl:apply-templates>
 	</xsl:template>
 
 	<xsl:template match="nh:contents">
+		<xsl:param name="lang"/>
+		
 		<field name="description_display">
 			<xsl:choose>
 				<xsl:when test="@count or @minCount or @maxCount">
@@ -324,7 +314,25 @@
 					<xsl:text> coins</xsl:text>
 				</xsl:when>
 				<xsl:otherwise>
-					<xsl:value-of select="nh:description"/>
+					<xsl:choose>
+						<xsl:when test="nh:description">
+							<xsl:value-of select="nh:description"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:variable name="contents" as="element()*">
+								<xsl:copy-of select="self::nh:contents"/>
+							</xsl:variable>
+
+							<!-- parse the hoard contents into a human-readable description -->
+							<xsl:variable name="description" select="numishare:hoardContentsDescription($contents, $nudsGroup, $rdf, $lang)"/>
+
+
+							<xsl:if test="string-length($description) &gt; 0">
+								<xsl:value-of select="$description"/>
+							</xsl:if>
+						</xsl:otherwise>
+					</xsl:choose>
+
 				</xsl:otherwise>
 			</xsl:choose>
 		</field>
