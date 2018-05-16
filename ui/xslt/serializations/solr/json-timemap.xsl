@@ -1,27 +1,100 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes="xs" xmlns="http://earth.google.com/kml/2.0" version="2.0">
-	<xsl:param name="field" select="doc('input:request')/request/parameters/parameter[name='field']/value"/>
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:saxon="http://saxon.sf.net/" exclude-result-prefixes="#all" version="3.0">
+	<xsl:include href="../json/json-metamodel.xsl"/>
+	<xsl:include href="../../functions.xsl"/>
+	
+	<!-- encoding for serializing the description into html to embed into the JSON -->
+	<xsl:output name="text" encoding="UTF-8" method="html" indent="no"/>
+
 	<xsl:param name="url" select="/content/config/url"/>
+
 	<xsl:template match="/">
-		<xsl:variable name="response">
-			<xsl:text> [ </xsl:text>
-			<xsl:apply-templates select="descendant::doc"/>
-			<xsl:text>]</xsl:text>
+		<xsl:variable name="model" as="element()*">
+			<_array>
+				<xsl:apply-templates select="descendant::doc"/>
+			</_array>
 		</xsl:variable>
-		<xsl:value-of select="normalize-space($response)"/>
+
+		<xsl:apply-templates select="$model"/>
 	</xsl:template>
+
 	<xsl:template match="doc">
-		<xsl:variable name="findspot" select="tokenize(arr[@name='findspot_geo']/str[1], '\|')[1]"/>
-		<xsl:variable name="uri" select="tokenize(arr[@name='findspot_geo']/str[1], '\|')[2]"/>
-		<xsl:variable name="coordinates" select="tokenize(arr[@name='findspot_geo']/str[1], '\|')[3]"/>
-		<xsl:variable name="description">
-			<![CDATA[<dl class='dl-horizontal'><dt>ID</dt><dd><a href=']]><xsl:value-of select="concat($url, 'id/', str[@name='recordId'])"/><![CDATA['>]]><xsl:value-of select="str[@name='recordId']"
-				/><![CDATA[</a></dd><dt>Closing Date</dt><dd>]]><xsl:value-of select="str[@name='closing_date_display']"/>
-			<![CDATA[</dd>]]>
-		</xsl:variable> {"point": {"lon": <xsl:value-of select="normalize-space(tokenize($coordinates, ',')[1])"/>, "lat": <xsl:value-of select="normalize-space(tokenize($coordinates, ',')[2])"/>},
+		<xsl:variable name="findspot" select="tokenize(arr[@name = 'findspot_geo']/str[1], '\|')[1]"/>
+		<xsl:variable name="uri" select="tokenize(arr[@name = 'findspot_geo']/str[1], '\|')[2]"/>
+		<xsl:variable name="coordinates" select="tokenize(arr[@name = 'findspot_geo']/str[1], '\|')[3]"/>
+
+		<xsl:variable name="description" as="element()*">
+			<dl class="dl-horizontal">
+				<dt>URI</dt>
+				<dd><a href="{concat($url, 'id/', str[@name='recordId'])}"><xsl:value-of select="concat($url, 'id/', str[@name = 'recordId'])"/></a></dd>
+				<xsl:if test="str[@name = 'closing_date_display']">
+					<dt>Closing Date</dt>
+					<dd><xsl:value-of select="str[@name = 'closing_date_display']"/></dd>
+				</xsl:if>
+				<xsl:if test="str[@name = 'deposit_display']">
+					<dt>Deposit</dt>
+					<dd><xsl:value-of select="str[@name = 'deposit_display']"/></dd>
+				</xsl:if>
+			</dl>			
+		</xsl:variable>
+
+		<_object>
+			<point>
+				<_object>
+					<lon>
+						<xsl:value-of select="normalize-space(tokenize($coordinates, ',')[1])"/>
+					</lon>
+					<lat>
+						<xsl:value-of select="normalize-space(tokenize($coordinates, ',')[2])"/>
+					</lat>
+				</_object>
+			</point>
+			<title>
+				<xsl:value-of select="str[@name = 'title_display']"/>
+			</title>
+			<xsl:choose>
+				<xsl:when test="number(int[@name = 'deposit_minint'])">
+					<start datatype="xs:string">
+						<xsl:value-of select="int[@name = 'deposit_minint']"/>
+					</start>
+				</xsl:when>
+				<xsl:when test="number(int[@name = 'tpq_num'])">
+					<start datatype="xs:string">
+						<xsl:value-of select="int[@name = 'tpq_num']"/>
+					</start>
+				</xsl:when>
+			</xsl:choose>
+			<xsl:choose>
+				<xsl:when test="number(int[@name = 'deposit_maxint'])">
+					<end datatype="xs:string">
+						<xsl:value-of select="int[@name = 'deposit_maxint']"/>
+					</end>
+				</xsl:when>
+				<xsl:when test="number(int[@name = 'taq_num'])">
+					<end datatype="xs:string">
+						<xsl:value-of select="int[@name = 'taq_num']"/>
+					</end>
+				</xsl:when>
+			</xsl:choose>
+			<options>
+				<_object>
+					<theme>red</theme>
+					<href>
+						<xsl:value-of select="$uri"/>
+					</href>
+					<description>
+						<xsl:value-of select="saxon:serialize($description, 'text')"/>
+					</description>
+				</_object>
+			</options>
+		</_object>
+
+
+
+		<!--	{"point": {"lon": <xsl:value-of select="normalize-space(tokenize($coordinates, ',')[1])"/>, "lat": <xsl:value-of select="normalize-space(tokenize($coordinates, ',')[2])"/>},
 		"title": "<xsl:value-of select="str[@name='title_display']"/>", <xsl:if test="number(int[@name='tpq_num'])">"start": "<xsl:value-of select="int[@name='tpq_num']"/>",</xsl:if>
 		<xsl:if test="number(int[@name='taq_num'])">"end": "<xsl:value-of select="int[@name='taq_num']"/>",</xsl:if> "options": { "theme": "red"<xsl:if
 			test="string($description)">, "description": "<xsl:value-of select="normalize-space($description)"/>"</xsl:if><xsl:if test="$uri">, "href": "<xsl:value-of select="$uri"/>"</xsl:if> } }
-			<xsl:if test="not(position()=last())"><xsl:text>,</xsl:text></xsl:if>
+			<xsl:if test="not(position()=last())"><xsl:text>,</xsl:text></xsl:if>-->
 	</xsl:template>
 </xsl:stylesheet>

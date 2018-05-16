@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-	Copyright (C) 2010 Ethan Gruber
-	EADitor: https://github.com/ewg118/eaditor
-	Apache License 2.0: https://github.com/ewg118/eaditor
-	
+	Last Update: May 2018
+	Function: submit a Solr query in order to generate a geographic query response to be serialized into KML, GeoJSON, or JSON for TimeMap	
 -->
 <p:config xmlns:p="http://www.orbeon.com/oxf/pipeline" xmlns:oxf="http://www.orbeon.com/oxf/processors">
 
@@ -76,20 +74,20 @@
 								<xsl:when test="string($q)">
 									<xsl:choose>
 										<xsl:when test="string($lang)">
-											<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+lang:', $lang, '+AND+', $facet, ':*+AND+', encode-for-uri($q), '&amp;facet=false&amp;fl=findspot_geo,recordId,title_display,taq_num,tpq_num,closing_date_display&amp;rows=', $rows, '&amp;mode=', $mode)"/>
+											<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+lang:', $lang, '+AND+', $facet, ':*+AND+', encode-for-uri($q), '&amp;facet=false&amp;fl=findspot_geo,recordId,title_display,taq_num,tpq_num,closing_date_display,deposit_maxint,deposit_minint,deposit_display&amp;rows=', $rows, '&amp;mode=', $mode)"/>
 										</xsl:when>
 										<xsl:otherwise>
-											<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+NOT(lang:*)+AND+', $facet, ':*+AND+', encode-for-uri($q), '&amp;facet=false&amp;fl=findspot_geo,recordId,title_display,taq_num,tpq_num,closing_date_display&amp;rows=', $rows, '&amp;mode=', $mode)"/>
+											<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+NOT(lang:*)+AND+', $facet, ':*+AND+', encode-for-uri($q), '&amp;facet=false&amp;fl=findspot_geo,recordId,title_display,taq_num,tpq_num,closing_date_display,deposit_maxint,deposit_minint,deposit_display&amp;rows=', $rows, '&amp;mode=', $mode)"/>
 										</xsl:otherwise>
 									</xsl:choose>
 								</xsl:when>
 								<xsl:otherwise>
 									<xsl:choose>
 										<xsl:when test="string($lang)">
-											<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+lang:', $lang, '+AND+', $facet, ':*&amp;facet=false&amp;fl=findspot_geo,recordId,title_display,taq_num,tpq_num,closing_date_display&amp;rows=', $rows, '&amp;mode=', $mode)"/>
+											<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+lang:', $lang, '+AND+', $facet, ':*&amp;facet=false&amp;fl=findspot_geo,recordId,title_display,taq_num,tpq_num,closing_date_display,deposit_maxint,deposit_minint,deposit_display&amp;rows=', $rows, '&amp;mode=', $mode)"/>
 										</xsl:when>
 										<xsl:otherwise>
-											<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+NOT(lang:*)+AND+', $facet, ':*&amp;facet=false&amp;fl=findspot_geo,recordId,title_display,taq_num,tpq_num,closing_date_display&amp;rows=', $rows, '&amp;mode=', $mode)"/>
+											<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+NOT(lang:*)+AND+', $facet, ':*&amp;facet=false&amp;fl=findspot_geo,recordId,title_display,taq_num,tpq_num,closing_date_display,deposit_maxint,deposit_minint,deposit_display&amp;rows=', $rows, '&amp;mode=', $mode)"/>
 										</xsl:otherwise>
 									</xsl:choose>
 								</xsl:otherwise>
