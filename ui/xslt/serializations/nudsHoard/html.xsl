@@ -711,37 +711,47 @@
 			<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
 		</h3>
 
-
-		<dl class="dl-horizontal">
-			<xsl:if test="@count or @minCount or @maxCount">
-				<dt>
-					<xsl:value-of select="numishare:normalizeLabel('numeric_count', $lang)"/>
-				</dt>
-				<dd>
-					<xsl:choose>
-						<xsl:when test="@count">
-							<xsl:value-of select="@count"/>
-						</xsl:when>
-						<xsl:otherwise>
+		<xsl:if test="nh:description or (@count or @minCount or @maxCount)">
+			<dl class="dl-horizontal">
+				<xsl:choose>
+					<xsl:when test="@count or @minCount or @maxCount">
+						<xsl:variable name="count-string">
 							<xsl:choose>
-								<xsl:when test="@minCount and not(@maxCount)">
-									<xsl:value-of select="concat('Fewer than ', @minCount)"/>
+								<xsl:when test="@count">
+									<xsl:value-of select="@count"/>
 								</xsl:when>
-								<xsl:when test="not(@minCount) and @maxCount">
-									<xsl:value-of select="concat(@maxCount, '+')"/>
-								</xsl:when>
-								<xsl:when test="@minCount and @maxCount">
-									<xsl:value-of select="concat(@minCount, '-', @maxCount)"/>
-								</xsl:when>
+								<xsl:otherwise>
+									<xsl:choose>
+										<xsl:when test="@minCount and not(@maxCount)">
+											<xsl:value-of select="concat(@minCount, '+')"/>
+										</xsl:when>
+										<xsl:when test="not(@minCount) and @maxCount">
+											<xsl:value-of select="concat('&lt;', @maxCount)"/>
+										</xsl:when>
+										<xsl:when test="@minCount and @maxCount">
+											<xsl:value-of select="concat(@minCount, '-', @maxCount)"/>
+										</xsl:when>
+									</xsl:choose>
+								</xsl:otherwise>
 							</xsl:choose>
-						</xsl:otherwise>
-					</xsl:choose>
-				</dd>
-			</xsl:if>			
-			<xsl:apply-templates select="nh:description"/>
-		</dl>
-
-
+						</xsl:variable>
+						
+						<dt>
+							<xsl:value-of select="numishare:normalizeLabel('numeric_count', $lang)"/>
+						</dt>
+						<dd>
+							<xsl:value-of select="$count-string"/>
+						</dd>
+						<xsl:if test="not($count-string = nh:description)">
+							<xsl:apply-templates select="nh:description"/>
+						</xsl:if>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:apply-templates select="nh:description"/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</dl>
+		</xsl:if>
 
 		<table class="table table-striped">
 			<thead>
@@ -794,10 +804,10 @@
 							<xsl:otherwise>
 								<xsl:choose>
 									<xsl:when test="@minCount and not(@maxCount)">
-										<xsl:value-of select="concat('&lt; ', @minCount)"/>
+										<xsl:value-of select="concat(@minCount, '+')"/>
 									</xsl:when>
 									<xsl:when test="not(@minCount) and @maxCount">
-										<xsl:value-of select="concat(@maxCount, '+')"/>
+										<xsl:value-of select="concat('&lt;', @maxCount)"/>
 									</xsl:when>
 									<xsl:when test="@minCount and @maxCount">
 										<xsl:value-of select="concat(@minCount, '-', @maxCount)"/>

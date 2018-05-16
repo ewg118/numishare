@@ -300,10 +300,10 @@
 						<xsl:otherwise>
 							<xsl:choose>
 								<xsl:when test="@minCount and not(@maxCount)">
-									<xsl:value-of select="concat('Fewer than ', @minCount)"/>
+									<xsl:value-of select="concat(@minCount, '+')"/>
 								</xsl:when>
 								<xsl:when test="not(@minCount) and @maxCount">
-									<xsl:value-of select="concat(@maxCount, '+')"/>
+									<xsl:value-of select="concat('&lt;', @maxCount)"/>
 								</xsl:when>
 								<xsl:when test="@minCount and @maxCount">
 									<xsl:value-of select="concat(@minCount, '-', @maxCount)"/>
