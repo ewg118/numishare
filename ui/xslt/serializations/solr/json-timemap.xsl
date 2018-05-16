@@ -1,11 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:saxon="http://saxon.sf.net/" exclude-result-prefixes="#all" version="3.0">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:numishare="https://github.com/ewg118/numishare" xmlns:saxon="http://saxon.sf.net/" exclude-result-prefixes="#all" version="3.0">
 	<xsl:include href="../json/json-metamodel.xsl"/>
 	<xsl:include href="../../functions.xsl"/>
-	
+
 	<!-- encoding for serializing the description into html to embed into the JSON -->
 	<xsl:output name="text" encoding="UTF-8" method="html" indent="no"/>
 
+	<!-- url params -->
+	<xsl:param name="langParam" select="doc('input:request')/request/parameters/parameter[name='lang']/value"/>
+	<xsl:param name="lang">
+		<xsl:choose>
+			<xsl:when test="string($langParam)">
+				<xsl:value-of select="$langParam"/>
+			</xsl:when>
+			<xsl:when test="string(doc('input:request')/request//header[name[.='accept-language']]/value)">
+				<xsl:value-of select="numishare:parseAcceptLanguage(doc('input:request')/request//header[name[.='accept-language']]/value)[1]"/>
+			</xsl:when>
+		</xsl:choose>
+	</xsl:param>
+
+	<!-- config params -->
 	<xsl:param name="url" select="/content/config/url"/>
 
 	<xsl:template match="/">
@@ -26,16 +41,30 @@
 		<xsl:variable name="description" as="element()*">
 			<dl class="dl-horizontal">
 				<dt>URI</dt>
-				<dd><a href="{concat($url, 'id/', str[@name='recordId'])}"><xsl:value-of select="concat($url, 'id/', str[@name = 'recordId'])"/></a></dd>
+				<dd>
+					<a href="{concat($url, 'id/', str[@name='recordId'])}">
+						<xsl:value-of select="concat($url, 'id/', str[@name = 'recordId'])"/>
+					</a>
+				</dd>
+				<dt><xsl:value-of select="numishare:regularize_node('findspot', $lang)"/></dt>
+				<dd>
+					<xsl:value-of select="$findspot"/>
+				</dd>
 				<xsl:if test="str[@name = 'closing_date_display']">
-					<dt>Closing Date</dt>
-					<dd><xsl:value-of select="str[@name = 'closing_date_display']"/></dd>
+					<dt>
+						<xsl:value-of select="numishare:regularize_node('closing_date', $lang)"/>
+					</dt>
+					<dd>
+						<xsl:value-of select="str[@name = 'closing_date_display']"/>
+					</dd>
 				</xsl:if>
 				<xsl:if test="str[@name = 'deposit_display']">
-					<dt>Deposit</dt>
-					<dd><xsl:value-of select="str[@name = 'deposit_display']"/></dd>
+					<dt><xsl:value-of select="numishare:regularize_node('deposit', $lang)"/></dt>
+					<dd>
+						<xsl:value-of select="str[@name = 'deposit_display']"/>
+					</dd>
 				</xsl:if>
-			</dl>			
+			</dl>
 		</xsl:variable>
 
 		<_object>
