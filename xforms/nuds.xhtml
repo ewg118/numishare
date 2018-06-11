@@ -1031,7 +1031,7 @@
 													<xforms:label>Title</xforms:label>
 													<xforms:alert>The title is required</xforms:alert>
 												</xforms:input>
-												<xforms:trigger>
+												<!--<xforms:trigger>
 													<xforms:label>Generate</xforms:label>
 													<xforms:action ev:event="DOMActivate">
 														<xforms:var name="material" select="instance('object')/nuds:descMeta/nuds:typeDesc/nuds:material"/>
@@ -1053,7 +1053,7 @@
 															value="concat($material, $denomination, $name-sep, $issuer, $mint, $region, $date, if(substring($date, string-length($date)) = '.') then '' else '.', $identifier)"
 														/>
 													</xforms:action>
-												</xforms:trigger>
+												</xforms:trigger>-->
 											</div>
 											<xforms:repeat nodeset="nuds:department">
 												<numishare:department/>
