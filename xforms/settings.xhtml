@@ -483,11 +483,19 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 												<tr>
 													<td>
 														<xforms:input ref="geonames_api_key">
-															<xforms:label>Geonames API Key</xforms:label>
+															<xforms:label>Geonames Username</xforms:label>
 														</xforms:input>
 													</td>
-													<td>A <a href="http://www.geonames.org/export/web-services.html">geonames API key</a> is required in order
+													<td>A <a href="http://www.geonames.org/export/web-services.html">Geonames username</a> is required in order
 														to link geographical places to geonames ids.</td>
+												</tr>
+												<tr>
+													<td>
+														<xforms:input ref="mapboxKey">
+															<xforms:label>Mapbox Access Token</xforms:label>
+														</xforms:input>
+													</td>
+													<td>A <a href="https://www.mapbox.com/help/define-access-token/">Mapbox API token</a> is required in order to use baselayers from Mapbox.</td>
 												</tr>
 											</tbody>
 										</table>
