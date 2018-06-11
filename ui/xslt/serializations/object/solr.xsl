@@ -104,11 +104,10 @@
 				<xsl:with-param name="count" select="$count"/>
 			</xsl:call-template>
 		</rdf:RDF>
-	</xsl:variable>
 
 	<!-- get block of images from SPARQL endpoint -->
 	<xsl:variable name="sparqlResult" as="element()*">
-		<xsl:if test="string($sparql_endpoint)">
+		<xsl:if test="string($sparql_endpoint) and //nuds:nuds/@recordType='conceptual'">
 			<response xmlns="http://www.w3.org/2005/sparql-results#">
 				<xsl:for-each select="descendant::nuds:recordId">
 					<group>

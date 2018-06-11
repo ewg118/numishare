@@ -185,9 +185,9 @@
 				</xsl:for-each>
 			</xsl:if>
 
-			<xsl:choose>
-				<xsl:when test="string($sparql_endpoint)">
-					<!-- get findspots -->
+			<xsl:choose>				
+				<xsl:when test="string($sparql_endpoint) and @recordType='conceptual'">
+					<!-- get findspots only for coin type records -->
 					<xsl:apply-templates select="$sparqlResult/descendant::res:group[@id = $id]/res:result"/>
 				</xsl:when>
 				<xsl:otherwise>
