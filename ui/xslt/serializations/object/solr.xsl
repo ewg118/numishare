@@ -104,10 +104,11 @@
 				<xsl:with-param name="count" select="$count"/>
 			</xsl:call-template>
 		</rdf:RDF>
+	</xsl:variable>
 
 	<!-- get block of images from SPARQL endpoint -->
 	<xsl:variable name="sparqlResult" as="element()*">
-		<xsl:if test="string($sparql_endpoint) and //nuds:nuds/@recordType='conceptual'">
+		<xsl:if test="string($sparql_endpoint) and //nuds:nuds/@recordType = 'conceptual'">
 			<response xmlns="http://www.w3.org/2005/sparql-results#">
 				<xsl:for-each select="descendant::nuds:recordId">
 					<group>
@@ -126,7 +127,7 @@
 			<xsl:for-each
 				select="
 					distinct-values(descendant::*[local-name() = 'geogname'][contains(@xlink:href,
-					'geonames.org')]/@xlink:href | $nudsGroup/descendant::*[local-name() = 'geogname'][contains(@xlink:href, 'geonames.org')]/@xlink:href | $rdf/descendant::*[not(local-name()='closeMatch')][contains(@rdf:resource,
+					'geonames.org')]/@xlink:href | $nudsGroup/descendant::*[local-name() = 'geogname'][contains(@xlink:href, 'geonames.org')]/@xlink:href | $rdf/descendant::*[not(local-name() = 'closeMatch')][contains(@rdf:resource,
 					'geonames.org')]/@rdf:resource | descendant::*[local-name() = 'subject'][contains(@xlink:href,
 					'geonames.org')]/@xlink:href | $sparqlResult/descendant::res:binding[@name = 'findspot'][contains(res:uri, 'geonames.org')]/res:uri)">
 				<xsl:variable name="geonameId" select="tokenize(., '/')[4]"/>
@@ -139,7 +140,7 @@
 							/>
 						</results>
 					</xsl:variable>
-					
+
 					<!-- only evaluate if there's a positive response -->
 					<xsl:if test="$geonames_data//geonameId = $geonameId">
 						<xsl:variable name="coordinates">
@@ -147,7 +148,7 @@
 								<xsl:value-of select="concat($geonames_data//lng, ',', $geonames_data//lat)"/>
 							</xsl:if>
 						</xsl:variable>
-						
+
 						<!-- generate AACR2 label -->
 						<xsl:variable name="label">
 							<xsl:variable name="countryCode" select="$geonames_data//countryCode[1]"/>
@@ -158,32 +159,33 @@
 							<!-- set a value equivalent to AACR2 standard for US, AU, CA, and GB.  This equation deviates from AACR2 for Malaysia since standard abbreviations for territories cannot be found -->
 							<xsl:value-of
 								select="
-								if ($countryCode = 'US' or $countryCode = 'AU' or $countryCode = 'CA') then
-								if ($fcode = 'ADM1') then
-								$name
-								else
-								concat($name, ' (',
-								$abbreviations//country[@code = $countryCode]/place[. = $adminName1]/@abbr, ')')
-								else
-								if ($countryCode = 'GB') then
-								if ($fcode = 'ADM1') then
-								$name
-								else
-								concat($name, ' (',
-								$adminName1, ')')
-								else
-								if ($fcode = 'PCLI') then
-								$name
-								else
-								concat($name, ' (', $countryName, ')')"
+									if ($countryCode = 'US' or $countryCode = 'AU' or $countryCode = 'CA') then
+										if ($fcode = 'ADM1') then
+											$name
+										else
+											concat($name, ' (',
+											$abbreviations//country[@code = $countryCode]/place[. = $adminName1]/@abbr, ')')
+									else
+										if ($countryCode = 'GB') then
+											if ($fcode = 'ADM1') then
+												$name
+											else
+												concat($name, ' (',
+												$adminName1, ')')
+										else
+											if ($fcode = 'PCLI') then
+												$name
+											else
+												concat($name, ' (', $countryName, ')')"
 							/>
-						</xsl:variable>					
-						
+						</xsl:variable>
+
 						<place id="{.}" label="{$label}">
 							<xsl:if test="$regionHierarchy = true() or $findspotHierarchy = true()">
 								<xsl:variable name="geonames_hier" as="element()*">
 									<results>
-										<xsl:copy-of select="document(concat($geonames-url, '/hierarchy?geonameId=', $geonameId, '&amp;username=', $geonames_api_key))"/>
+										<xsl:copy-of
+											select="document(concat($geonames-url, '/hierarchy?geonameId=', $geonameId, '&amp;username=', $geonames_api_key))"/>
 									</results>
 								</xsl:variable>
 								<!-- create facetRegion hierarchy -->
@@ -195,13 +197,13 @@
 										</xsl:if>
 									</xsl:for-each>
 								</xsl:variable>
-								
+
 								<xsl:attribute name="hierarchy" select="$hierarchy"/>
 							</xsl:if>
-							
+
 							<xsl:value-of select="$coordinates"/>
 						</place>
-					</xsl:if>					
+					</xsl:if>
 				</xsl:if>
 			</xsl:for-each>
 		</places>

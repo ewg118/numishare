@@ -185,8 +185,8 @@
 				</xsl:for-each>
 			</xsl:if>
 
-			<xsl:choose>				
-				<xsl:when test="string($sparql_endpoint) and @recordType='conceptual'">
+			<xsl:choose>
+				<xsl:when test="string($sparql_endpoint) and @recordType = 'conceptual'">
 					<!-- get findspots only for coin type records -->
 					<xsl:apply-templates select="$sparqlResult/descendant::res:group[@id = $id]/res:result"/>
 				</xsl:when>
@@ -424,15 +424,15 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
-	
+
 	<xsl:template match="nuds:findspot" mode="parse-gml">
 		<xsl:variable name="label" select="nuds:geogname"/>
 		<xsl:variable name="coords" select="tokenize(gml:Point/gml:coordinates, ',')"/>
-		
+
 		<field name="findspot_facet">
 			<xsl:value-of select="$label"/>
 		</field>
-		
+
 		<field name="findspot_geo">
 			<xsl:value-of select="$label"/>
 			<xsl:text>|(null)|</xsl:text>
