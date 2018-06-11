@@ -53,6 +53,15 @@
 					</display>
 				</control>
 			</xforms:instance>
+			
+			<!-- baselayer list -->
+			<xforms:instance id="layers">
+				<layers xmlns="">
+					<layer id="mb_physical">Mapbox Physical</layer>
+					<layer id="osm">OpenStreetMap</layer>
+					<layer id="imperium">Imperium Romanum</layer>
+				</layers>
+			</xforms:instance>
 
 			<xforms:instance id="themes" xxforms:exclude-result-prefixes="#all">
 				<directory-scan xmlns=""></directory-scan>
@@ -132,7 +141,7 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 				<xforms:bind nodeset="sparql_endpoint" readonly="../collection_type!='cointype'"
 					constraint="if (../collection_type='cointype') then (. castable as xs:anyURI and matches(., 'https?://.+')) else '. castable as xs:string'"/>
 				<xforms:bind nodeset="type_series" readonly="../collection_type!='cointype'"
-					constraint="if (../collection_type='cointype') then (. castable as xs:anyURI and matches(., 'https?://.+')) else '. castable as xs:string'"/>
+					constraint="if (../collection_type='cointype') then (. castable as xs:anyURI and matches(., 'https?://.+')) else '. castable as xs:string'"/>				
 				<xforms:bind nodeset="template">
 					<!-- about the electronic record -->
 					<xforms:bind nodeset="agencyName" required="true()"/>
@@ -155,6 +164,9 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 				</xforms:bind>
 				<xforms:bind nodeset="languages">
 					<xforms:bind nodeset="language/@enabled" type="xs:boolean"/>
+				</xforms:bind>
+				<xforms:bind nodeset="baselayers">
+					<xforms:bind nodeset="layer/@enabled" type="xs:boolean"/>
 				</xforms:bind>
 				<xforms:bind nodeset="positions">
 					<xforms:bind nodeset="position">
@@ -390,6 +402,9 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 											<a href="#export">Export</a>
 										</li>
 										<li>
+											<a href="#maps">Map Baselayers</a>
+										</li>
+										<li>
 											<a href="#facets">Facets</a>
 										</li>
 										<li>
@@ -576,6 +591,59 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 												</tr>
 											</tbody>
 										</table>
+										<hr />
+									</div>
+									<div class="section" id="maps">
+										<xforms:group ref="baselayers">
+											<h3>Map Baselayers<small>
+													<a href="#top">
+														<span class="glyphicon glyphicon-chevron-up"></span>Top </a></small></h3>
+											<xforms:repeat nodeset="layer" id="layer-control">
+												<xforms:var name="position" select="position()"/>
+												<xforms:var name="layer-name" select="."/>
+												
+												<div>
+													<xforms:output value="instance('layers')/layer[@id=$layer-name]">
+														<xforms:label>Baselayer</xforms:label>
+													</xforms:output>
+													<xforms:input ref="@enabled">
+														<xforms:hint>Enabled</xforms:hint>
+													</xforms:input>
+													<xforms:group ref=".[$position != 1]">
+														<xforms:trigger appearance="minimal">
+															<xforms:label>
+																<span class="glyphicon glyphicon-arrow-up"></span>
+															</xforms:label>
+															<xforms:action ev:event="DOMActivate">
+																<xforms:var name="val" select="data(.)"/>
+																<xforms:insert context="ancestor::baselayers" nodeset="layer[index('layer-control') - 2]"
+																	origin="xforms:element('layer', $val)"/>
+																<xforms:delete nodeset="."/>
+															</xforms:action>
+														</xforms:trigger>
+													</xforms:group>
+													<xforms:group ref=".[not($position=count(parent::node()/layer))]">
+														<xforms:trigger appearance="minimal">
+															<xforms:label>
+																<span class="glyphicon glyphicon-arrow-down"></span>
+															</xforms:label>
+															<xforms:action ev:event="DOMActivate">
+																<xforms:var name="val" select="data(.)"/>
+																<xforms:insert context="ancestor::baselayers" nodeset="layer[index('layer-control') + 1]"
+																	origin="xforms:element('layer', $val)"/>
+																<xforms:delete nodeset="."/>
+															</xforms:action>
+														</xforms:trigger>
+													</xforms:group>
+													<xforms:trigger appearance="minimal">
+														<xforms:delete ev:event="DOMActivate" context="."/>
+														<xforms:label>
+															<span class="glyphicon glyphicon-remove"></span>
+														</xforms:label>
+													</xforms:trigger>
+												</div>
+											</xforms:repeat>
+										</xforms:group>
 										<hr />
 									</div>
 									<div class="section" id="facets">
