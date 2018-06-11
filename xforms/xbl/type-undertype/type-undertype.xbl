@@ -509,7 +509,8 @@
 											<xforms:insert context="nuds:reverse" origin="instance('symbol-template')" nodeset="./child::node()[last()]"/>
 											<xxforms:hide dialog="reverse-objects"/>
 										</xforms:action>
-									</xforms:trigger>l </xforms:group>
+									</xforms:trigger>
+								</xforms:group>
 								<xforms:trigger appearance="minimal">
 									<xforms:label>
 										<span class="glyphicon glyphicon-plus"/>Type Description</xforms:label>
@@ -873,26 +874,22 @@
 						<div class="subsection">
 							<h3>Geographic</h3>
 							<div class="trigger_container">
-								<xforms:group ref=".[count(nuds:geographic/nuds:geogname[@xlink:role='region']) = 0]">
-									<xforms:trigger appearance="minimal">
-										<xforms:label>
-											<span class="glyphicon glyphicon-plus"/>Mint</xforms:label>
-										<xforms:insert ev:event="DOMActivate" context="." origin="instance('geographic-template')"
-											nodeset="./child::node()[last()]" if="count(nuds:geographic) = 0"/>
-										<xforms:insert ev:event="DOMActivate" context="nuds:geographic" origin="instance('mint-template')"
-											nodeset="./child::node()[last()]"/>
-									</xforms:trigger>
-								</xforms:group>
-								<xforms:group ref=".[count(nuds:geographic/nuds:geogname[@xlink:role='mint']) = 0]">
-									<xforms:trigger appearance="minimal">
-										<xforms:label>
-											<span class="glyphicon glyphicon-plus"/>Region</xforms:label>
-										<xforms:insert ev:event="DOMActivate" context="." origin="instance('geographic-template')"
-											nodeset="./child::node()[last()]" if="count(nuds:geographic) = 0"/>
-										<xforms:insert ev:event="DOMActivate" context="nuds:geographic" origin="instance('region-template')"
-											nodeset="./child::node()[last()]"/>
-									</xforms:trigger>
-								</xforms:group>
+								<xforms:trigger appearance="minimal">
+									<xforms:label>
+										<span class="glyphicon glyphicon-plus"/>Mint</xforms:label>
+									<xforms:insert ev:event="DOMActivate" context="." origin="instance('geographic-template')"
+										nodeset="./child::node()[last()]" if="count(nuds:geographic) = 0"/>
+									<xforms:insert ev:event="DOMActivate" context="nuds:geographic" origin="instance('mint-template')"
+										nodeset="./child::node()[last()]"/>
+								</xforms:trigger>
+								<xforms:trigger appearance="minimal">
+									<xforms:label>
+										<span class="glyphicon glyphicon-plus"/>Region</xforms:label>
+									<xforms:insert ev:event="DOMActivate" context="." origin="instance('geographic-template')"
+										nodeset="./child::node()[last()]" if="count(nuds:geographic) = 0"/>
+									<xforms:insert ev:event="DOMActivate" context="nuds:geographic" origin="instance('region-template')"
+										nodeset="./child::node()[last()]"/>
+								</xforms:trigger>
 							</div>
 							<xforms:group ref="nuds:geographic">
 								<div class="subsection">
