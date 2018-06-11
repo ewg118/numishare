@@ -740,10 +740,16 @@
 							value="xxforms:get-remote-user()"/>
 					</xforms:action>
 					
-					<!-- automatically set the @recordType based on the config -->
-					<xforms:setvalue ref="instance('object')/@recordType" value="if (instance('config')/collection_type = 'object') then 'physical' else 'conceptual'"/>
-					<!-- only allow approvedSubtype publication status for coin type corpora -->
-					<xforms:insert context="instance('publicationStatuses')" nodeset="./child::node()[last()]" origin="xforms:element('status', 'approvedSubtype')" if="instance('config')/collection_type = 'cointype'"/>
+					<!-- perform specific tasks for a conceptual object -->
+					<xforms:action if="instance('config')/collection_type = 'cointype'">
+						<!-- automatically set the @recordType based on the config -->
+						<xforms:setvalue ref="instance('object')/@recordType">conceptual</xforms:setvalue>
+						<!-- only allow approvedSubtype publication status for coin type corpora -->
+						<xforms:insert context="instance('publicationStatuses')" nodeset="./child::node()[last()]" origin="xforms:element('status', 'approvedSubtype')"/>
+						<!-- delete physical object elements -->
+						<xforms:delete nodeset="instance('object')/nuds:descMeta/nuds:adminDesc"/>
+						<xforms:delete nodeset="instance('object')/nuds:descMeta/nuds:physDesc"/>						
+					</xforms:action>					
 				</xforms:action>
 			</xforms:submission>
 
