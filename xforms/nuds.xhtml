@@ -89,6 +89,15 @@
 			<xforms:instance id="localTypes">
 				<localTypes xmlns=""/>
 			</xforms:instance>
+			
+			<!-- publication statuses -->
+			<xforms:instance id="publicationStatuses">
+				<statuses xmlns="">
+					<status>inProcess</status>
+					<status>approved</status>
+				</statuses>
+			</xforms:instance>
+			
 			<!-- XQuery -->
 			<xforms:instance id="eXist-xquery">
 				<exist:query xmlns="">
@@ -730,6 +739,11 @@
 						<xforms:setvalue ref="instance('object')/nuds:control/nuds:maintenanceHistory/nuds:maintenanceEvent[last()]/nuds:agent"
 							value="xxforms:get-remote-user()"/>
 					</xforms:action>
+					
+					<!-- automatically set the @recordType based on the config -->
+					<xforms:setvalue ref="instance('object')/@recordType" value="if (instance('config')/collection_type = 'object') then 'physical' else 'conceptual'"/>
+					<!-- only allow approvedSubtype publication status for coin type corpora -->
+					<xforms:insert context="instance('publicationStatuses')" nodeset="./child::node()[last()]" origin="xforms:element('status', 'approvedSubtype')" if="instance('config')/collection_type = 'cointype'"/>
 				</xforms:action>
 			</xforms:submission>
 
@@ -888,61 +902,19 @@
 								</div>
 							</xforms:repeat>
 							<div>
-								<xforms:select1 ref="@recordType">
+								<xforms:output ref="@recordType">
 									<xforms:label>Record Type</xforms:label>
 									<xforms:alert>Required</xforms:alert>
-									<xforms:item>
-										<xforms:label>Conceptual</xforms:label>
-										<xforms:value>conceptual</xforms:value>
-									</xforms:item>
-									<xforms:item>
-										<xforms:label>Physical</xforms:label>
-										<xforms:value>physical</xforms:value>
-									</xforms:item>
-									<xforms:action ev:event="xforms-value-changed">
-										<xforms:action if="instance('object')/@recordType='conceptual'">
-											<!-- show dialog to remove physDesc if it is not empty -->
-											<xforms:dispatch target="switch-to-conceptual" name="fr-show"
-												if="instance('object')/nuds:descMeta/nuds:physDesc/* or instance('object')/nuds:descMeta/nuds:adminDesc/* or instance('object')/nuds:descMeta/nuds:undertypeDesc/* or instance('object')/nuds:descMeta/nuds:findspotDesc/*"/>
-											<!-- remove physDesc, undertypeDesc, findspotDesc, and adminDesc without warning if it is empty -->
-											<xforms:delete nodeset="instance('object')/nuds:descMeta/nuds:physDesc"
-												if="not(instance('object')/nuds:descMeta/nuds:physDesc/*)"/>
-											<xforms:delete nodeset="instance('object')/nuds:descMeta/nuds:adminDesc"
-												if="not(instance('object')/nuds:descMeta/nuds:adminDesc/*)"/>
-											<xforms:delete nodeset="instance('object')/nuds:descMeta/nuds:undertypeDesc"
-												if="not(instance('object')/nuds:descMeta/nuds:undertypeDesc/*)"/>
-											<xforms:delete nodeset="instance('object')/nuds:descMeta/nuds:findspotDesc"
-												if="not(instance('object')/nuds:descMeta/nuds:findspotDesc/*)"/>
-											<!-- remove fileSec from digRep -->
-											<xforms:delete context="instance('object')/nuds:digRep" nodeset="mets:fileSec"/>
-										</xforms:action>
-										<xforms:action if="instance('object')/@recordType='physical'">
-											<!-- insert physDesc if it doesn't already exist -->
-											<xforms:insert context="instance('object')/nuds:descMeta" nodeset="./child::node()[last()]"
-												origin="instance('physDesc-template')" if="count(instance('object')/nuds:descMeta/nuds:physDesc) = 0"/>
-											<xforms:insert context="instance('object')/nuds:descMeta" nodeset="./child::node()[last()]"
-												origin="instance('adminDesc-template')" if="count(instance('object')/nuds:descMeta/nuds:adminDesc) = 0"/>
-											<!-- insert fileSec back into digRep -->
-											<xforms:insert context="instance('object')/nuds:digRep" origin="instance('fileSec-template')"/>
-										</xforms:action>
-									</xforms:action>
-								</xforms:select1>
+								</xforms:output>
 							</div>
 							<div>
 								<xforms:select1 ref="nuds:control/nuds:publicationStatus">
 									<xforms:label>Publication Status</xforms:label>
-									<xforms:item>
-										<xforms:label>inProcess</xforms:label>
-										<xforms:value>inProcess</xforms:value>
-									</xforms:item>
-									<xforms:item>
-										<xforms:label>approved</xforms:label>
-										<xforms:value>approved</xforms:value>
-									</xforms:item>
-									<xforms:item>
-										<xforms:label>approvedSubtype</xforms:label>
-										<xforms:value>approvedSubtype</xforms:value>
-									</xforms:item>
+									<xforms:itemset nodeset="instance('publicationStatuses')//status">
+										<xforms:label ref="."/>
+										<xforms:value ref="."/>
+									</xforms:itemset>									
+									<xforms:hint>Approved records will be made publicly available upon saving.</xforms:hint>
 									<!-- insert semanticDeclaration for skos if approved subtype and launch broader dialog -->
 									<xforms:action ev:event="xforms-value-changed">
 										<xforms:action if=".='approvedSubtype'">

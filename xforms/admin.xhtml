@@ -1,9 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-    Copyright (C) 2010 Ethan Gruber
-    numishare: https://github.com/ewg118/numishare
-    Apache License 2.0: https://github.com/ewg118/numishare    
--->
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:xxforms="http://orbeon.org/oxf/xml/xforms"
 	xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:exist="http://exist.sourceforge.net/NS/exist"
@@ -397,6 +392,7 @@
 			<xforms:bind nodeset="instance('config-template')">
 				<xforms:bind nodeset="title" required="true()"/>
 				<xforms:bind nodeset="description" required="true()"/>
+				<xforms:bind nodeset="collection_type" required="true()"/>
 				<xforms:bind nodeset="url" required="true()" type="custom.httpURL"/>
 				<xforms:bind nodeset="solr_published" required="true()" type="custom.httpURL"/>
 				<xforms:bind nodeset="template">
@@ -856,6 +852,24 @@
 															<xforms:label>Description</xforms:label>
 															<xforms:alert>Required</xforms:alert>
 														</xforms:input>
+													</div>
+													<div>
+														<xforms:select1 ref="collection_type">
+															<xforms:label>Collection Type</xforms:label>
+															<xforms:item>
+																<xforms:label>Object</xforms:label>
+																<xforms:value>object</xforms:value>
+															</xforms:item>	
+															<xforms:item>
+																<xforms:label>Coin Type</xforms:label>
+																<xforms:value>cointype</xforms:value>
+															</xforms:item>
+															<xforms:item>
+																<xforms:label>Hoard</xforms:label>
+																<xforms:value>hoard</xforms:value>
+															</xforms:item>
+															<xforms:alert>Required</xforms:alert>
+														</xforms:select1>
 													</div>
 													<div>
 														<xforms:input ref="template/agencyName">
