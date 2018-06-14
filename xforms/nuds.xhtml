@@ -846,7 +846,7 @@
 		<xi:include href="xbl/department/department.xbl" xi:omit-xml-base="true"/>
 		<xi:include href="xbl/description/description.xbl" xi:omit-xml-base="true"/>
 		<xi:include href="xbl/dynasty/dynasty.xbl" xi:omit-xml-base="true"/>
-		<!--<xi:include href="xbl/file-upload/file-upload.xbl" xi:omit-xml-base="true"/>-->
+		<xi:include href="xbl/file-upload/file-upload.xbl" xi:omit-xml-base="true"/>
 		<xi:include href="xbl/findspot/findspot.xbl" xi:omit-xml-base="true"/>
 		<xi:include href="xbl/geogname/geogname.xbl" xi:omit-xml-base="true"/>
 		<xi:include href="xbl/mark/mark.xbl" xi:omit-xml-base="true"/>
@@ -2164,7 +2164,6 @@
 												<!-- delete the digRep if neither the obverse nor reverse have been uploaded by the user -->
 												<xforms:delete nodeset="." if="not(mets:fileSec/mets:fileGrp)"/>
 											</xforms:action>
-
 										</xforms:trigger>
 										<xforms:group ref="mets:fileSec">
 											<div class="trigger_container">
@@ -2204,113 +2203,12 @@
 
 											<xforms:repeat nodeset="mets:fileGrp">
 												<div class="subsection">
-													<h3><xforms:output value="concat(upper-case(substring(@USE, 1, 1)), substring(@USE, 2))"/></h3>
-													<div class="trigger_container">
-														<xforms:group ref=".[count(mets:file[@USE='thumbnail']) = 0]">
-															<xforms:trigger appearance="minimal">
-																<xforms:label>
-																	<span class="glyphicon glyphicon-plus"></span> Thumbnail</xforms:label>
-																<xforms:action ev:event="DOMActivate">
-																	<xforms:insert context="." nodeset="./child::node()[last()]"
-																		origin="instance('file-template')"/>
-																	<xforms:setvalue ref="mets:file[last()]/@USE">thumbnail</xforms:setvalue>
-																	<xforms:insert context="mets:file[last()]"
-																		origin="xforms:attribute('MIMETYPE', 'image/jpeg')"/>
-																</xforms:action>
-															</xforms:trigger>
-														</xforms:group>
-
-														<xforms:group ref=".[count(mets:file[@USE='reference']) = 0]">
-															<xforms:trigger appearance="minimal">
-																<xforms:label>
-																	<span class="glyphicon glyphicon-plus"></span> Reference</xforms:label>
-																<xforms:action ev:event="DOMActivate">
-																	<xforms:insert context="." nodeset="./child::node()[last()]"
-																		origin="instance('file-template')"/>
-																	<xforms:setvalue ref="mets:file[last()]/@USE">reference</xforms:setvalue>
-																	<xforms:insert context="mets:file[last()]"
-																		origin="xforms:attribute('MIMETYPE', 'image/jpeg')"/>
-																</xforms:action>
-															</xforms:trigger>
-														</xforms:group>
-
-														<xforms:group ref=".[count(mets:file[@USE='iiif']) = 0]">
-															<xforms:trigger appearance="minimal">
-																<xforms:label>
-																	<span class="glyphicon glyphicon-plus"></span> IIIF Service</xforms:label>
-																<xforms:action ev:event="DOMActivate">
-																	<xforms:insert context="." nodeset="./child::node()[last()]"
-																		origin="instance('file-template')"/>
-																	<xforms:setvalue ref="mets:file[last()]/@USE">iiif</xforms:setvalue>
-																</xforms:action>
-															</xforms:trigger>
-														</xforms:group>
+													<h3>
+														<xforms:output value="concat(upper-case(substring(@USE, 1, 1)), substring(@USE, 2))"/>
+													</h3>
+													<div class="subsection">
+														<numishare:file-upload/>													
 													</div>
-
-													<xforms:group ref=".[count(mets:file) = 0]">
-														<div class="bg-danger text-danger alert-box">
-															<p>
-																<span class="glyphicon glyphicon-warning-sign"></span>
-																<strong>Warning!</strong> An image is required before the record can be saved.</p>
-														</div>
-													</xforms:group>
-
-													<xforms:repeat nodeset="xxforms:sort(mets:file, @USE, 'text', 'ascending')">
-														<div>
-															<h4>
-																<xforms:output
-																	value="if (@USE='iiif') then 'IIIF Service' else concat(upper-case(substring(@USE, 1, 1)), substring(@USE, 2))"
-																/>
-															</h4>
-															<xforms:trigger appearance="minimal">
-																<xforms:action ev:event="DOMActivate">
-																	<xforms:delete nodeset="."/>
-																</xforms:action>
-																<xforms:label>
-																	<span class="glyphicon glyphicon-remove"></span>
-																</xforms:label>
-															</xforms:trigger>
-
-															<!-- create a different input for IIIF services in order to test validity of the URI -->
-															<xforms:group ref=".[@USE = 'iiif']">
-																<xforms:var name="element" select="concat(parent::node()/@USE, '_iiif')"/>
-
-																<div>
-																	<xforms:input ref="instance('control-instance')/*[local-name() = $element]">
-																		<xforms:label>URL</xforms:label>
-																		<xforms:alert>Must be an absolute URL pattern.</xforms:alert>
-																		<xforms:hint>This should be the URL portion that precedes '/info.json'</xforms:hint>
-																		<xforms:action ev:event="xforms-value-changed">
-																			<!-- fire a submission to get the info.json for the given IIIF service -->
-																			<xforms:var name="service" select="."/>
-																			<xforms:setvalue ref="instance('control-instance')/iiif_service" value="$service"/>
-																			<xforms:send submission="get-info-json"/>
-																		</xforms:action>
-																	</xforms:input>
-																</div>
-															</xforms:group>
-															<xforms:group ref=".[not(@USE = 'iiif')]">
-																<div>
-																	<xforms:input ref="mets:FLocat/@xlink:href">
-																		<xforms:label>URL</xforms:label>
-																		<xforms:alert>Must be an absolute URL pattern.</xforms:alert>
-																	</xforms:input>
-																</div>
-															</xforms:group>
-
-															<xforms:group ref=".[@MIMETYPE]">
-																<div>
-																	<xforms:select1 ref="@MIMETYPE">
-																		<xforms:label>MIME Type</xforms:label>
-																		<xforms:itemset nodeset="instance('mimetypes')//type">
-																			<xforms:label ref="."/>
-																			<xforms:value ref="."/>
-																		</xforms:itemset>
-																	</xforms:select1>
-																</div>
-															</xforms:group>
-														</div>
-													</xforms:repeat>
 													<hr />
 												</div>
 											</xforms:repeat>
@@ -2330,10 +2228,10 @@
 										<numishare:control/>
 									</xforms:group>
 								</fr:tab>
-								<fr:tab>
+								<!--<fr:tab>
 									<fr:label>Inspector</fr:label>
 									<fr:xforms-inspector/>
-								</fr:tab>
+								</fr:tab>-->
 							</fr:tabbable>
 
 							<!--**************************************** DIALOGS **********************************-->
