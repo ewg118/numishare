@@ -973,6 +973,19 @@
 
 		<div class="image-container">
 			<xsl:choose>
+				<xsl:when test="string($iiif-service)">
+					<div id="{substring($side, 1, 3)}-iiif-container" class="iiif-container"/>
+					<span class="hidden" id="{substring($side, 1, 3)}-iiif-service">
+						<xsl:value-of select="$iiif-service"/>
+					</span>
+					<noscript>
+						<img src="{concat($iiif-service, '/full/400,/0/default.jpg')}" property="foaf:depiction" alt="{$side}"/>
+					</noscript>
+					<div>
+						<a href="{$iiif-service}/full/full/0/default.jpg" title="Full resolution image" rel="nofollow"><span
+							class="glyphicon glyphicon-download-alt"/> Download full resolution image</a>
+					</div>
+				</xsl:when>
 				<xsl:when test="string($reference-image)">
 					<xsl:variable name="image_url"
 						select="
@@ -981,34 +994,10 @@
 							else
 								concat($display_path, $reference-image)"/>
 
-					<xsl:choose>
-						<xsl:when test="string($iiif-service)">
-							<div id="{substring($side, 1, 3)}-iiif-container" class="iiif-container"/>
-							<span class="hidden" id="{substring($side, 1, 3)}-iiif-service">
-								<xsl:value-of select="$iiif-service"/>
-							</span>
-							<noscript>
-								<img src="{$image_url}" property="foaf:depiction" alt="{$side}"/>
-							</noscript>
-						</xsl:when>
-						<xsl:otherwise>
-							<img src="{$image_url}" property="foaf:depiction" alt="{$side}"/>
-						</xsl:otherwise>
-					</xsl:choose>
-
-					<xsl:apply-templates select="$nudsGroup//nuds:typeDesc/*[local-name() = $side]" mode="physical"/>
-					<!-- add link to high resolution image -->
-					<xsl:if test="string($iiif-service)">
-						<div>
-							<a href="{$iiif-service}/full/full/0/default.jpg" title="Full resolution image" rel="nofollow"><span
-									class="glyphicon glyphicon-download-alt"/> Download full resolution image</a>
-						</div>
-					</xsl:if>
+					<img src="{$image_url}" property="foaf:depiction" alt="{$side}"/>
 				</xsl:when>
-				<xsl:otherwise>
-					<xsl:apply-templates select="$nudsGroup//nuds:typeDesc/*[local-name() = $side]" mode="physical"/>
-				</xsl:otherwise>
 			</xsl:choose>
+			<xsl:apply-templates select="$nudsGroup//nuds:typeDesc/*[local-name() = $side]" mode="physical"/>
 		</div>
 
 	</xsl:template>

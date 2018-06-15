@@ -297,7 +297,14 @@
 			<thumbnail>
 				<_object>
 					<__id>
-						<xsl:value-of select="parent::mets:fileGrp/mets:file[@USE = 'thumbnail']/mets:FLocat/@xlink:href"/>
+						<xsl:choose>
+							<xsl:when test="parent::mets:fileGrp/mets:file[@USE = 'thumbnail']">
+								<xsl:value-of select="parent::mets:fileGrp/mets:file[@USE = 'thumbnail']/mets:FLocat/@xlink:href"/>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:value-of select="concat(mets:FLocat/@xlink:href, '/full/175,175/0/default.jpg')"/>
+							</xsl:otherwise>
+						</xsl:choose>
 					</__id>
 					<__type>dctypes:Image</__type>
 					<format>image/jpeg</format>

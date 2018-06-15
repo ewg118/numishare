@@ -645,11 +645,28 @@
 	<xsl:template match="mets:fileSec">
 		<xsl:for-each select="mets:fileGrp[@USE = 'obverse' or @USE = 'reverse']">
 			<xsl:variable name="side" select="substring(@USE, 1, 3)"/>
-			<xsl:for-each select="mets:file">
-				<field name="{@USE}_{$side}">
-					<xsl:value-of select="mets:FLocat/@xlink:href"/>
-				</field>
-			</xsl:for-each>
+			
+			<xsl:choose>
+				<xsl:when test="count(mets:file) = 1 and mets:file[@USE='iiif']">
+					<field name="iiif_{$side}">
+						<xsl:value-of select="mets:file/mets:FLocat/@xlink:href"/>
+					</field>
+					<field name="thumbnail_{$side}">
+						<xsl:value-of select="concat(mets:file/mets:FLocat/@xlink:href, '/full/,120/0/default.jpg')"/>
+					</field>
+					<field name="reference_{$side}">
+						<xsl:value-of select="concat(mets:file/mets:FLocat/@xlink:href, '/full/400,/0/default.jpg')"/>
+					</field>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:for-each select="mets:file">
+						<field name="{@USE}_{$side}">
+							<xsl:value-of select="mets:FLocat/@xlink:href"/>
+						</field>
+					</xsl:for-each>
+				</xsl:otherwise>
+			</xsl:choose>
+			
 		</xsl:for-each>
 		<field name="imagesavailable">true</field>
 	</xsl:template>
