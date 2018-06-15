@@ -1,6 +1,6 @@
 <!-- 	author: Ethan Gruber, American Numismatic Society 
-	last modified: August, 2011
-	function: Enable the user to upload an image file or select a flickr image URI.  If the former option is chosen, base64-encoded images are sent to remotemagick.py for resizing into thumbnails and reference images by imagemagick.
+	last modified: June 2018
+	Function: Either upload an image to the config absolute_path for use by the iiif_server (if set) or manually enter image URLs.
 -->
 <xbl:xbl xmlns="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events"
 	xmlns:xxforms="http://orbeon.org/oxf/xml/xforms" xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:xbl="http://www.w3.org/ns/xbl"
@@ -25,11 +25,20 @@
 								origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/get-authentication.xpl', 'dump', instance('dump'), 'data')"/>
 							<xforms:send submission="load-collections"/>
 						</xforms:action>
+						
+						<!-- if there's already a /tmp URL in the file, then clear the file and toggle the case -->
+						<xforms:action if="string(instance('file'))">
+							<xforms:setvalue ref="instance('file')"/>
+							<xforms:setvalue ref="instance('file')/@filename"/>
+							<xforms:setvalue ref="instance('file')/@mediatype"/>
+							<xforms:setvalue ref="instance('file')/@size"/>
+							<xforms:toggle case="upload"/>
+						</xforms:action>
 					</xforms:action>
 
 					<xforms:group ref="$binding">
 						<div class="subsection">
-							<xforms:select1 ref="instance('interface-type')" appearance="full">
+							<xforms:select1 ref="instance('interface-type')" appearance="full" id="interface-type-control">
 								<xforms:label>Image Type</xforms:label>
 								<xforms:itemset nodeset="instance('interfaces')/type">
 									<xforms:label ref="."></xforms:label>
@@ -156,8 +165,9 @@
 								</xforms:repeat>
 							</xforms:case>
 							<xforms:case id="upload">
-								<h4>Upload Image to IIIF Server</h4>
+								
 								<xforms:group ref=".[not(mets:file[@USE='iiif'])]">
+									<h4>Upload Image to IIIF Server</h4>
 									<xforms:upload ref="instance('file')" xxforms:size="60">
 										<xforms:filename ref="@filename"/>
 										<xforms:mediatype ref="@mediatype"/>
@@ -189,84 +199,12 @@
 											</xforms:action>
 										</xforms:action>
 									</xforms:trigger>
-								</xforms:group>								
-								
-								<xforms:group ref="mets:file[@USE='iiif']">
-									<div>
-										<xforms:output ref="mets:FLocat/@xlink:href">
-											<xforms:label>IIIF URL</xforms:label>
-										</xforms:output>
-									</div>
 								</xforms:group>
 							</xforms:case>
 						</xforms:switch>
 					</xforms:group>
-					
-
 					<!--<fr:xforms-inspector/>-->
-
-
-
-					<!-- thumbnail -->
-					<!--<xforms:group ref="$binding[string-length(mets:file[@USE='thumbnail']/mets:FLocat/@xlink:href) &gt; 0]">
-						<!-\- concatonate thumbnail path -\->
-						<xforms:var name="thumbnail-path" select="if (contains(mets:file[@USE='thumbnail']/mets:FLocat/@xlink:href, 'http://')) then mets:file[@USE='thumbnail']/mets:FLocat/@xlink:href else concat(instance('config')/url, mets:file[@USE='thumbnail']/mets:FLocat/@xlink:href)"/>
-						<div class="subsection">
-							<h4>Image</h4>
-							<xforms:trigger appearance="minimal">
-								<xforms:action ev:event="DOMActivate">
-									<xforms:dispatch target="delete-image-dialog" name="fr-show" if="not(contains(mets:file[@USE='thumbnail']/mets:FLocat/@xlink:href, 'flickr.com'))"/>
-									<xforms:dispatch target="delete-flickr-dialog" name="fr-show" if="contains(mets:file[@USE='thumbnail']/mets:FLocat/@xlink:href, 'flickr.com')"/>
-								</xforms:action>
-
-								<xforms:label>
-									<span class="glyphicon glyphicon-remove"/>
-								</xforms:label>
-							</xforms:trigger>
-							<div>
-								<xforms:output mediatype="image/*" value="$thumbnail-path"/>
-							</div>
-							<fr:alert-dialog id="delete-flickr-dialog">
-								<fr:label>Remove Image</fr:label>
-								<fr:message>Remove associated flickr images? They will not be permanently deleted from flickr.com.</fr:message>
-								<fr:negative-choice>
-									<fr:label>Cancel</fr:label>
-								</fr:negative-choice>
-								<fr:positive-choice>
-									<fr:label>OK</fr:label>
-									<xforms:action ev:event="DOMActivate">
-										<xforms:delete nodeset="$binding"/>
-									</xforms:action>
-								</fr:positive-choice>
-							</fr:alert-dialog>
-							<fr:alert-dialog id="delete-image-dialog">
-								<fr:label>Delete Image</fr:label>
-								<fr:message> Are you certain you wish to remove this image? Its reference will be removed from the document and files from the server. </fr:message>
-								<fr:negative-choice/>
-								<fr:positive-choice>
-									<xforms:action ev:event="DOMActivate">
-										<!-\- get filename -\->
-										<xforms:setvalue ref="instance('delete-config')/delete/file"
-											value="substring-after($binding/mets:file[@USE='thumbnail']/mets:FLocat/@xlink:href, 'media/thumbnail/')"/>
-										<!-\- thumbnail -\->
-										<xforms:setvalue ref="instance('delete-config')/delete/directory" value="concat(instance('config')/images/absolute_path, 'media/thumbnail')"/>
-										<xforms:insert context="instance('dump')"
-											origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/remove-image.xpl', ('delete-config', 'dump'), (instance('delete-config'), instance('dump')), 'data')"/>
-										<!-\- reference -\->
-										<xforms:setvalue ref="instance('delete-config')/delete/directory" value="concat(instance('config')/images/absolute_path, 'media/reference')"/>
-										<xforms:insert context="instance('dump')"
-											origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/remove-image.xpl', ('delete-config', 'dump'), (instance('delete-config'), instance('dump')), 'data')"/>
-										<!-\- ARCHIVE -\->
-										<xforms:setvalue ref="instance('delete-config')/delete/directory" value="concat(instance('config')/images/absolute_path, 'media/archive')"/>
-										<xforms:insert context="instance('dump')"
-											origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/remove-image.xpl', ('delete-config', 'dump'), (instance('delete-config'), instance('dump')), 'data')"/>
-										<xforms:delete nodeset="$binding"/>
-									</xforms:action>
-								</fr:positive-choice>
-							</fr:alert-dialog>
-						</div>
-					</xforms:group>-->
-					<!-- ********************************************************************** -->
+					
 					<!-- ***********************  DIALOG INTERNAL MODEL *********************** -->
 					<xforms:model id="file-upload-model" xmlns:xi="http://www.w3.org/2001/XInclude">
 						<!-- exist URL is stored in an XML file -->
@@ -279,6 +217,9 @@
 								<collection-name/>
 								<id/>
 								<side/>
+								<obverse_iiif/>
+								<reverse_iiif/>
+								<iiif_service/>
 							</control>
 						</xforms:instance>
 
@@ -328,8 +269,7 @@
 						<xforms:instance id="delete-config" xxforms:exclude-result-prefixes="#all">
 							<config xmlns="">
 								<delete>
-									<file/>
-									<directory/>
+									<url></url>
 								</delete>
 							</config>
 						</xforms:instance>
@@ -344,8 +284,37 @@
 								<mets:FLocat LOCTYPE="URL" xlink:href=""/>
 							</mets:file>
 						</xforms:instance>
+						
+						<!-- instance for IIIF info.json response -->
+						<xforms:instance id="iiif-response">
+							<xml xmlns=""/>
+						</xforms:instance>
+						
 
 						<!-- ***** SUBMISSIONS ***** -->
+						<!-- ***** READ JSON FOR IIIF VALIDATION *****-->
+						<xforms:submission id="get-info-json" serialization="none" method="get" action="{instance('control-instance')/iiif_service}/info.json"
+							replace="instance" instance="iiif-response">
+							<xforms:header>
+								<xforms:name>User-Agent</xforms:name>
+								<xforms:value>XForms/Numishare</xforms:value>
+							</xforms:header>
+							<!-- if the JSON successfully loads, then set the value  -->
+							<xforms:action ev:event="xforms-submit-done">
+								<xforms:action if="instance('control-instance')/obverse_iiif = instance('control-instance')/iiif_service">
+									<xforms:setvalue
+										ref="instance('object')/nuds:digRep/mets:fileSec/mets:fileGrp[@USE='obverse']/mets:file[@USE='iiif']/mets:FLocat/@xlink:href"
+										value="instance('control-instance')/obverse_iiif"/>
+								</xforms:action>
+								<xforms:action if="instance('control-instance')/reverse_iiif = instance('control-instance')/iiif_service">
+									<xforms:setvalue
+										ref="instance('object')/nuds:digRep/mets:fileSec/mets:fileGrp[@USE='reverse']/mets:file[@USE='iiif']/mets:FLocat/@xlink:href"
+										value="instance('control-instance')/reverse_iiif"/>
+								</xforms:action>
+							</xforms:action>
+							<!-- if the response is not valid JSON -->
+							<xforms:message ev:event="xforms-submit-error" level="modal">Unable to get a valid JSON response from the IIIF service URI.</xforms:message>
+						</xforms:submission>
 
 						<!-- Execute Upload -->
 						<xforms:submission id="upload-resize" method="post" replace="none" resource="test:"/>
@@ -376,8 +345,8 @@
 							action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/config.xml" xxforms:username="{instance('exist-config')/username}"
 							xxforms:password="{instance('exist-config')/password}" replace="instance" instance="config">
 							<xforms:message ev:event="xforms-submit-error" level="modal">Unable to load Numishare configuration</xforms:message>
-							<xforms:action ev:event="xforms-submit-done" if="string(instance('config')/images/iiif_server)">
-								<xforms:insert context="instance('interfaces')" origin="xforms:element('type', (xforms:attribute('id', 'upload'), 'Upload to IIIF Server'))"/>
+							<xforms:action ev:event="xforms-submit-done" if="string(instance('config')/images/iiif_server)">								
+								<xforms:insert context="instance('interfaces')" origin="xforms:element('type', (xforms:attribute('id', 'upload'), 'Upload to IIIF Server'))" if="not(instance('interfaces')/type[@id='upload'])"/>
 								<xforms:setvalue ref="instance('interface-type')">upload</xforms:setvalue>
 							</xforms:action>
 						</xforms:submission>
