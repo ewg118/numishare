@@ -189,8 +189,8 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 					</xforms:bind>
 				</xforms:bind>
 				<xforms:bind nodeset="images" relevant="../collection_type = 'object'">
-					<xforms:bind nodeset="absolute_path"></xforms:bind>
-					<xforms:bind nodeset="iiif_server" constraint="matches(., '^https?://')" type="xs:anyURI"></xforms:bind>
+					<xforms:bind nodeset="absolute_path" required="matches(../iiif_server, '^https?://')"></xforms:bind>
+					<xforms:bind nodeset="iiif_server" constraint="if (string-length(.) &gt; 0) then matches(., 'https?://.*/$') else true()" type="xs:anyURI"></xforms:bind>
 				</xforms:bind>
 			</xforms:bind>
 
@@ -403,9 +403,11 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 										<li>
 											<a href="#languages">Languages</a>
 										</li>
-										<li>
-											<a href="#iiif">IIIF Image Server</a>
-										</li>
+										<xforms:group ref="images">
+											<li>
+												<a href="#iiif">IIIF Image Server</a>
+											</li>
+										</xforms:group>
 										<li>
 											<a href="#googleAnalytics">Google Analytics</a>
 										</li>
@@ -745,7 +747,7 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 																<xforms:alert>Must be a URL</xforms:alert>
 															</xforms:input>
 														</td>
-														<td>The base URL for the IIIF Image Server.</td>
+														<td>The base URL for the IIIF Image Server. It must end with a forward slash.</td>
 													</tr>
 													<tr>
 														<td>
