@@ -157,7 +157,7 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 				</xforms:bind>
 				<!-- list elements -->
 				<xforms:bind nodeset="facets">
-					<xforms:bind ndoeset="facet" required="true()"></xforms:bind>
+					<xforms:bind nodeset="facet" required="true()"></xforms:bind>
 				</xforms:bind>
 				<xforms:bind nodeset="theme">
 					<xforms:bind nodeset="themes_url" type="xs:anyURI" constraint="if (string-length(.) &gt; 0) then matches(., 'https?://.*/$') else true()"></xforms:bind>
@@ -671,6 +671,7 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 												<div>
 													<xforms:input ref=".">
 														<xforms:label>Facet</xforms:label>
+														<xforms:alert>Required</xforms:alert>
 													</xforms:input>
 													<xforms:group ref=".[$position != 1]">
 														<xforms:trigger appearance="minimal">
