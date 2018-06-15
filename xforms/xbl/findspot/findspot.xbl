@@ -36,6 +36,13 @@
 					<xforms:group ref="$binding">
 						<div>
 							<h3>Findspot</h3>
+							<div>
+								<xforms:trigger appearance="minimal">
+									<xforms:label>
+										<span class="glyphicon glyphicon-plus"></span>Description</xforms:label>
+									<xforms:insert ev:event="DOMActivate" context="." origin="instance('description-template')"/>
+								</xforms:trigger>
+							</div>
 							<xforms:group ref=".[string(instance('config')/geonames_api_key)]">
 								<div>
 									<radiogroup>
@@ -175,6 +182,10 @@
 									</xforms:switch>
 								</div>
 							</xforms:group>
+							
+							<xforms:repeat nodeset="nuds:description">
+								<numishare:description/>
+							</xforms:repeat>
 
 							<!--<xforms:group ref="nuds:geogname/@certainty">
 							<div>
@@ -206,6 +217,10 @@
 							<gml:Point srsName="http://www.opengis.net/def/crs/EPSG/0/4326" xmlns="">
 								<gml:coordinates/>
 							</gml:Point>
+						</xforms:instance>
+						
+						<xforms:instance id="description-template" xxforms:exclude-result-prefixes="#all">
+							<description  xmlns="http://nomisma.org/nuds" xml:lang=""/>
 						</xforms:instance>
 
 						<xforms:instance id="control-instance">

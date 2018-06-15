@@ -399,6 +399,12 @@
 				</xsl:call-template>
 			</xsl:when>
 			<xsl:otherwise>
+				<xsl:if test="nuds:findspot/nuds:description">
+					<field name="context_facet">
+						<xsl:value-of select="nuds:findspot/nuds:description"/>
+					</field>
+				</xsl:if>
+				
 				<xsl:choose>
 					<xsl:when test="nuds:findspot/nuds:geogname/@xlink:href">
 						<xsl:call-template name="parse_findspot_uri">
