@@ -64,14 +64,25 @@
 									<span class="glyphicon glyphicon-plus"/>Material</xforms:label>
 								<xforms:insert ev:event="DOMActivate" context="." origin="instance('material-template')" nodeset="./child::node()[last()]"/>
 							</xforms:trigger>
-							<xforms:group ref=".[count(nuds:weightStandard) = 0]">
+							
+							<xforms:group ref=".[count(nuds:shape) &lt; 1]">
+								<xforms:trigger appearance="minimal">
+									<xforms:label>
+										<span class="glyphicon glyphicon-plus"></span>Shape</xforms:label>
+									<xforms:insert ev:event="DOMActivate" context="." origin="instance('shape-template')"
+										nodeset="./child::node()[last()]"/>
+								</xforms:trigger>
+							</xforms:group>
+							
+							<!--<xforms:group ref=".[count(nuds:weightStandard) = 0]">
 								<xforms:trigger appearance="minimal">
 									<xforms:label>
 										<span class="glyphicon glyphicon-plus"/>Weight Standard</xforms:label>
 									<xforms:insert ev:event="DOMActivate" context="." origin="instance('weightStandard-template')"
 										nodeset="./child::node()[last()]"/>
 								</xforms:trigger>
-							</xforms:group>
+							</xforms:group>-->
+							
 						</div>
 						<div class="section">
 							<div>
@@ -154,7 +165,8 @@
 									</xforms:trigger>
 								</div>
 							</xforms:repeat>
-							<xforms:group ref="nuds:weightStandard">
+							
+							<!--<xforms:group ref="nuds:weightStandard">
 								<h4>Weight Standard</h4>
 								<xforms:trigger appearance="minimal">
 									<xforms:delete ev:event="DOMActivate" nodeset="."/>
@@ -174,11 +186,13 @@
 										<xforms:alert>Required</xforms:alert>
 									</xforms:input>
 								</div>
-							</xforms:group>
+							</xforms:group>-->							
 						</div>
+						
 						<xforms:group ref="nuds:date">
 							<numishare:date/>
 						</xforms:group>
+						
 						<xforms:group ref="nuds:dateRange">
 							<numishare:dateRange/>
 						</xforms:group>
@@ -238,6 +252,20 @@
 								</div>
 							</xforms:group>
 						</xforms:repeat>
+						
+						<xforms:group ref="nuds:shape">
+							<div>
+								<xforms:input ref=".">
+									<xforms:label>Shape</xforms:label>
+								</xforms:input>
+								<xforms:trigger appearance="minimal">
+									<xforms:delete ev:event="DOMActivate" nodeset="."/>
+									<xforms:label>
+										<span class="glyphicon glyphicon-remove"></span>
+									</xforms:label>
+								</xforms:trigger>
+							</div>
+						</xforms:group>
 
 						<div class="subsection">
 							<h3>Obverse</h3>
@@ -417,7 +445,8 @@
 										</xforms:repeat>
 										<xforms:delete ev:event="xforms-value-changed" if="count(*) = 0" nodeset="."/>
 									</xforms:group>
-									<xforms:group ref="nuds:typeSeries">
+									
+									<!--<xforms:group ref="nuds:typeSeries">
 										<div>
 											<xforms:input ref=".">
 												<xforms:label>Type Series</xforms:label>
@@ -430,7 +459,8 @@
 												</xforms:label>
 											</xforms:trigger>
 										</div>
-									</xforms:group>
+									</xforms:group>-->
+									
 									<xforms:delete ev:event="xforms-value-changed" if="count(*) = 0" nodeset="."/>
 								</div>
 							</xforms:group>
@@ -613,7 +643,8 @@
 										</xforms:repeat>
 										<xforms:delete ev:event="xforms-value-changed" if="count(*) = 0" nodeset="."/>
 									</xforms:group>
-									<xforms:group ref="nuds:typeSeries">
+									
+									<!--<xforms:group ref="nuds:typeSeries">
 										<div>
 											<xforms:input ref=".">
 												<xforms:label>Type Series</xforms:label>
@@ -626,7 +657,7 @@
 												</xforms:label>
 											</xforms:trigger>
 										</div>
-									</xforms:group>
+									</xforms:group>-->
 									<xforms:delete ev:event="xforms-value-changed" if="count(*) = 0" nodeset="."/>
 								</div>
 							</xforms:group>
@@ -683,22 +714,11 @@
 									</xforms:trigger>
 								</xforms:group>
 							</xxforms:dialog>
-							<xforms:group ref="edge">
+							<xforms:group ref="nuds:edge">
 								<div class="subsection">
-									<xforms:group ref="nuds:description">
-										<div>
-											<xforms:input ref=".">
-												<xforms:label>Description</xforms:label>
-												<xforms:alert>Must contain a value.</xforms:alert>
-											</xforms:input>
-											<xforms:trigger appearance="minimal">
-												<xforms:delete ev:event="DOMActivate" nodeset="."/>
-												<xforms:label>
-													<span class="glyphicon glyphicon-remove"/>
-												</xforms:label>
-											</xforms:trigger>
-										</div>
-									</xforms:group>
+									<xforms:repeat nodeset="nuds:description">
+										<numishare:description/>
+									</xforms:repeat>
 									<xforms:group ref="nuds:legend">
 										<div>
 											<xforms:input ref=".">
@@ -714,18 +734,18 @@
 										</div>
 									</xforms:group>
 									<xforms:group ref="nuds:type">
-										<div>
-											<xforms:input ref=".">
-												<xforms:label>Type</xforms:label>
-												<xforms:alert>Must contain a value.</xforms:alert>
-											</xforms:input>
+										<h4>Type</h4>
+										<span class="add">
 											<xforms:trigger appearance="minimal">
-												<xforms:delete ev:event="DOMActivate" nodeset="."/>
-												<xforms:label>
-													<span class="glyphicon glyphicon-remove"/>
-												</xforms:label>
+												<xforms:label><span class="glyphicon glyphicon-plus"/>Description</xforms:label>
+												<xforms:insert ev:event="DOMActivate" context="." nodeset="./child::node()[last()]"
+													origin="instance('description-template')"/>
 											</xforms:trigger>
-										</div>
+										</span>
+										<xforms:repeat nodeset="nuds:description">
+											<numishare:description/>
+										</xforms:repeat>
+										<xforms:delete ev:event="xforms-value-changed" if="count(*) = 0" nodeset="."/>
 									</xforms:group>
 									<xforms:delete ev:event="xforms-value-changed" if="count(*) = 0" nodeset="."/>
 								</div>
@@ -995,6 +1015,9 @@
 						</xforms:instance>
 						<xforms:instance id="portrait-template" xxforms:exclude-result-prefixes="#all">
 							<persname xlink:type="simple" xlink:role="portrait" xlink:href=""/>
+						</xforms:instance>
+						<xforms:instance id="shape-template" xxforms:exclude-result-prefixes="#all">
+							<shape/>
 						</xforms:instance>
 						<xforms:instance id="symbol-template" xxforms:exclude-result-prefixes="#all">
 							<symbol/>

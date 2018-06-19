@@ -461,10 +461,11 @@
 								</xforms:bind>
 							</xforms:bind>
 						</xforms:bind>
+						<xforms:bind nodeset="descendant::nuds:legend" required="true()"/>
 					</xforms:bind>
-					<xforms:bind nodeset="nuds:undertypeDesc">
+					<!--<xforms:bind nodeset="nuds:undertypeDesc">
 						<xforms:bind nodeset="@xlink:href" required="true()" type="xs:anyURI"/>
-					</xforms:bind>
+					</xforms:bind>-->
 					<xforms:bind nodeset="nuds:adminDesc">
 						<xforms:bind nodeset="descendant::nuds:sale/*" required="true()"/>
 						<xforms:bind nodeset="nuds:acqinfo">
@@ -1284,6 +1285,7 @@
 														nodeset="./child::node()[last()]"/>
 												</xforms:trigger>
 											</xforms:group>
+											
 											<xforms:group ref=".[count(nuds:shape) &lt; 1]">
 												<xforms:trigger appearance="minimal">
 													<xforms:label>
@@ -1292,6 +1294,7 @@
 														nodeset="./child::node()[last()]"/>
 												</xforms:trigger>
 											</xforms:group>
+											
 											<xforms:group ref=".[count(nuds:measurementsSet/nuds:thickness) &lt; 1]">
 												<xforms:trigger appearance="minimal">
 													<xforms:label>
@@ -2219,10 +2222,10 @@
 										<numishare:control/>
 									</xforms:group>
 								</fr:tab>
-								<!--<fr:tab>
+								<fr:tab>
 									<fr:label>Inspector</fr:label>
 									<fr:xforms-inspector/>
-								</fr:tab>-->
+								</fr:tab>
 							</fr:tabbable>
 
 							<!--**************************************** DIALOGS **********************************-->
