@@ -1,6 +1,6 @@
 <!-- 	author: Ethan Gruber, American Numismatic Society 
-	last modified: January, 2012
-	function: Numishare denomination component: queries nomisma or accepts local vocabulary
+	last modified: June, 2018
+	function: Numishare denomination component: queries nomisma
 -->
 <xbl:xbl xmlns="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events"
 	xmlns:xxforms="http://orbeon.org/oxf/xml/xforms" xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:xbl="http://www.w3.org/ns/xbl"
@@ -17,140 +17,112 @@
 					</xforms:var>
 
 					<!-- display only outputted value and link to nomisma id, if applicable -->
-					<xforms:group ref=".[string($binding)]">
-						<div>
-							<xforms:output ref="$binding">
-								<xforms:label>Denomination</xforms:label>
-							</xforms:output>
-							<xforms:group ref=".[string($binding/@xlink:href)]">
-								<xforms:trigger appearance="minimal">
-									<xforms:label>
-										<span class="glyphicon glyphicon-new-window"/>
-									</xforms:label>
-									<xforms:load ev:event="DOMActivate" ref="$binding/@xlink:href" show="new"/>
-								</xforms:trigger>
-							</xforms:group>
-							<xforms:trigger appearance="minimal">
-								<xforms:action ev:event="DOMActivate">
-									<!-- delete all holdover values before removing bind, possible orbeon bug -->
-									<xforms:setvalue ref="instance('temp')"/>
-									<xforms:setvalue ref="instance('temp')/@href"/>
-									<xforms:setvalue ref="instance('suggest-query')"/>
-									<xforms:setvalue ref="instance('search-query')"/>
-									<xforms:delete context="instance('feed')/*"/>
-									<xforms:delete nodeset="$binding"/>
-								</xforms:action>
-								<xforms:label>
-									<span class="glyphicon glyphicon-remove"/>
-								</xforms:label>
-							</xforms:trigger>
-							<xforms:group ref="$binding[not($binding/@certainty)]">
-								<xforms:trigger appearance="minimal">
-									<xforms:insert if="not($binding/@certainty)" context="$binding" origin="xxforms:attribute('certainty', '')"
-										ev:event="DOMActivate"/>
-									<xforms:label>
-										<span class="glyphicon glyphicon-plus"/>Certainty</xforms:label>
-								</xforms:trigger>
-							</xforms:group>
-						</div>
-					</xforms:group>
-
-					<!-- if $binding does not contain a value, display the interface for selecting a value -->
-					<xforms:group ref=".[not(string($binding))]">
-						<div style="display:table;width:100%;">
-							<h4>Denomination</h4>
-							<xforms:trigger appearance="minimal">
-								<xforms:action ev:event="DOMActivate">
-									<!-- delete all holdover values before removing bind, possible orbeon bug -->
-									<xforms:setvalue ref="instance('temp')"/>
-									<xforms:setvalue ref="instance('temp')/@href"/>
-									<xforms:setvalue ref="instance('search-query')"/>
-									<xforms:delete context="instance('feed')/*"/>
-									<xforms:delete nodeset="$binding"/>
-								</xforms:action>
-								<xforms:label>
-									<span class="glyphicon glyphicon-remove"/>
-								</xforms:label>
-							</xforms:trigger>
-							<xforms:group ref="$binding[not(@certainty)]">
-								<xforms:trigger appearance="minimal">
-									<xforms:insert if="not($binding/@certainty)" context="$binding" origin="xxforms:attribute('certainty', '')"
-										ev:event="DOMActivate"/>
-									<xforms:label>
-										<span class="glyphicon glyphicon-plus"/>Certainty </xforms:label>
-								</xforms:trigger>
-							</xforms:group>
+					<xforms:group ref="$binding">
+						<xforms:group ref=".[string(.)]">
 							<div>
-								<xforms:input ref="instance('search-query')">
-									<xforms:label>Search</xforms:label>
-								</xforms:input>
-								<xforms:trigger>
-									<xforms:action ev:event="DOMActivate">
-										<xforms:delete context="instance('feed')/*"/>
-										<xforms:send submission="query-nomisma"/>
-									</xforms:action>
-									<xforms:label>Search</xforms:label>
-								</xforms:trigger>
-							</div>
-
-							<xforms:group ref=".[count(instance('feed')//atom:entry) &gt; 0]">
-								<xforms:select1 ref="instance('temp')/@href" appearance="compact" id="nomisma-list">
-									<xforms:label>Term</xforms:label>
-									<xforms:itemset nodeset="instance('feed')//atom:entry">
-										<xforms:label ref="atom:title"/>
-										<xforms:value ref="atom:link[not(@rel)]/@href"/>
-									</xforms:itemset>
-									<xforms:action ev:event="xforms-value-changed">
-										<xforms:var name="id" select="tokenize(instance('temp')/@href, '/')[last()]"/>
-										<xforms:setvalue ref="instance('control-instance')/description"
-											value="instance('feed')//atom:entry[atom:id = $id]/atom:summary"/>
-									</xforms:action>
-								</xforms:select1>
-								<xforms:trigger>
-									<xforms:label>Select</xforms:label>
-									<xforms:action ev:event="DOMActivate">
-										<xforms:setvalue ref="$binding/@xlink:href" value="instance('temp')/@href"/>
-										<xforms:setvalue ref="$binding"
-											value="instance('feed')//atom:entry[atom:link[not(@rel)]/@href = instance('temp')/@href]/atom:title"/>
-									</xforms:action>
-								</xforms:trigger>
-							</xforms:group>
-							<xforms:group ref=".[string(instance('temp')/@href)]">
-								<div>
-									<xforms:output ref="instance('control-instance')/description">
-										<xforms:label>Description</xforms:label>
-									</xforms:output>
+								<xforms:output ref=".">
+									<xforms:label>Denomination</xforms:label>
+								</xforms:output>
+								<xforms:group ref=".[string(@xlink:href)]">
 									<xforms:trigger appearance="minimal">
-										<xforms:label>
-											<span class="glyphicon glyphicon-new-window"/>
-										</xforms:label>
-										<xforms:load ev:event="DOMActivate" show="new" ref="instance('temp')/@href"/>
+										<xforms:label><span class="glyphicon glyphicon-new-window"/></xforms:label>
+										<xforms:load ev:event="DOMActivate" ref="@xlink:href" show="new"/>
+									</xforms:trigger>
+								</xforms:group>
+								<xforms:trigger appearance="minimal">
+									<xforms:action ev:event="DOMActivate">
+										<!-- delete all holdover values before removing bind, possible orbeon bug -->
+										<xforms:setvalue ref="instance('temp')"/>
+										<xforms:setvalue ref="instance('temp')/@href"/>
+										<xforms:setvalue ref="instance('suggest-query')"/>
+										<xforms:setvalue ref="instance('search-query')"/>
+										<xforms:delete context="instance('feed')/*"/>
+										<xforms:delete nodeset="."/>
+									</xforms:action>
+									<xforms:label><span class="glyphicon glyphicon-remove"/></xforms:label>
+								</xforms:trigger>
+								
+								<!-- @certainty controls -->
+								<numishare:certainty/>
+							</div>
+						</xforms:group>
+						
+						<!-- if $binding does not contain a value, display the interface for selecting a value -->
+						<xforms:group ref=".[not(string(.))]">
+							<div>
+								<h4>Denomination</h4>
+								<xforms:trigger appearance="minimal">
+									<xforms:action ev:event="DOMActivate">
+										<!-- delete all holdover values before removing bind, possible orbeon bug -->
+										<xforms:setvalue ref="instance('temp')"/>
+										<xforms:setvalue ref="instance('temp')/@href"/>
+										<xforms:setvalue ref="instance('search-query')"/>
+										<xforms:delete context="instance('feed')/*"/>
+										<xforms:delete nodeset="."/>
+									</xforms:action>
+									<xforms:label>
+										<span class="glyphicon glyphicon-remove"/>
+									</xforms:label>
+								</xforms:trigger>							
+								<div>
+									<xforms:input ref="instance('search-query')">
+										<xforms:label>Search</xforms:label>
+									</xforms:input>
+									<xforms:trigger>
+										<xforms:action ev:event="DOMActivate">
+											<xforms:delete context="instance('feed')/*"/>
+											<xforms:setvalue ref="instance('control-instance')/type">nmo:Denomination</xforms:setvalue>
+											<xforms:send submission="query-nomisma"/>
+										</xforms:action>
+										<xforms:label>Search</xforms:label>
 									</xforms:trigger>
 								</div>
-							</xforms:group>
-						</div>
+								
+								<xforms:group ref=".[count(instance('feed')//atom:entry) &gt; 0]">
+									<xforms:select1 ref="instance('temp')/@href" appearance="compact" id="nomisma-list">
+										<xforms:label>Term</xforms:label>
+										<xforms:itemset nodeset="instance('feed')//atom:entry">
+											<xforms:label ref="atom:title"/>
+											<xforms:value ref="atom:link[not(@rel)]/@href"/>
+										</xforms:itemset>
+										<xforms:action ev:event="xforms-value-changed">
+											<xforms:var name="id" select="tokenize(instance('temp')/@href, '/')[last()]"/>
+											<xforms:setvalue ref="instance('control-instance')/description"
+												value="instance('feed')//atom:entry[atom:id = $id]/atom:summary"/>
+										</xforms:action>
+									</xforms:select1>
+									<xforms:trigger>
+										<xforms:label>Select</xforms:label>
+										<xforms:action ev:event="DOMActivate">
+											<xforms:setvalue ref="@xlink:href" value="instance('temp')/@href"/>
+											<xforms:setvalue ref="."
+												value="instance('feed')//atom:entry[atom:link[not(@rel)]/@href = instance('temp')/@href]/atom:title"/>
+										</xforms:action>
+									</xforms:trigger>
+								</xforms:group>
+								<xforms:group ref=".[string(instance('temp')/@href)]">
+									<div>
+										<xforms:output ref="instance('control-instance')/description">
+											<xforms:label>Description</xforms:label>
+										</xforms:output>
+										<xforms:trigger appearance="minimal">
+											<xforms:label>
+												<span class="glyphicon glyphicon-new-window"/>
+											</xforms:label>
+											<xforms:load ev:event="DOMActivate" show="new" ref="instance('temp')/@href"/>
+										</xforms:trigger>
+									</div>
+								</xforms:group>
+								<hr/>
+							</div>							
+						</xforms:group>
 					</xforms:group>
 
-					<xforms:group ref="$binding/@certainty">
-						<div>
-							<xforms:input ref=".">
-								<xforms:label>Certainty</xforms:label>
-							</xforms:input>
-							<xforms:trigger appearance="minimal">
-								<xforms:delete ev:event="DOMActivate" nodeset="."/>
-								<xforms:label>
-									<span class="glyphicon glyphicon-remove"/>
-								</xforms:label>
-							</xforms:trigger>
-						</div>
-					</xforms:group>
-
-					<!-- ********************************************************************** -->
-					<!-- ***********************  DIALOG INTERNAL MODEL *********************** -->
+					<!-- ***********************  INTERNAL MODEL *********************** -->
 					<xforms:model id="denomination-model" xmlns:xi="http://www.w3.org/2001/XInclude">
 						<xforms:instance id="control-instance">
 							<control xmlns="">
-								<type>nmo:Denomination</type>
+								<type/>
 								<description/>
 							</control>
 						</xforms:instance>
@@ -173,7 +145,7 @@
 							<feed xmlns=""/>
 						</xforms:instance>
 
-						<!-- query nomisma for ancient denominations -->
+						<!-- Query Nomisma -->
 						<xforms:submission id="query-nomisma" serialization="none" method="get"
 							action="http://nomisma.org/feed/?q=type:&#x022;{instance('control-instance')/type}&#x022;+AND+{instance('search-query')}&amp;sort=score+desc"
 							instance="feed" replace="instance">

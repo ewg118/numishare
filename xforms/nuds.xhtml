@@ -46,7 +46,7 @@
 						<title xml:lang="en"/>
 						<physDesc/>
 						<typeDesc>
-							<objectType xlink:href=""/>
+							<objectType xlink:type="simple" xlink:href=""/>
 						</typeDesc>
 						<adminDesc/>
 					</descMeta>
@@ -368,15 +368,11 @@
 			<xforms:instance id="color-template" xxforms:exclude-result-prefixes="#all">
 				<color/>
 			</xforms:instance>
-			<xforms:instance id="dob-template" xxforms:exclude-result-prefixes="#all">
-				<dateOnObject/>
-			</xforms:instance>
-			<xforms:instance id="script-template" xxforms:exclude-result-prefixes="#all">
-				<materialspec type="script"/>
-			</xforms:instance>
+			
 			<xforms:instance id="sernum-template" xxforms:exclude-result-prefixes="#all">
 				<serialNumber/>
-			</xforms:instance>			
+			</xforms:instance>	
+			
 			<xforms:instance id="watermark-template" xxforms:exclude-result-prefixes="#all">
 				<watermark/>
 			</xforms:instance>
@@ -417,6 +413,7 @@
 						</xforms:bind>
 					</xforms:bind>
 					<xforms:bind nodeset="nuds:physDesc">
+						<xforms:bind nodeset="nuds:axis" required="true()"/>
 						<xforms:bind nodeset="nuds:measurementsSet">
 							<xforms:bind nodeset="nuds:diameter" type="xs:decimal" required="true()"/>
 							<xforms:bind nodeset="nuds:height" type="xs:decimal" required="true()"/>
@@ -431,34 +428,22 @@
 						</xforms:bind>
 					</xforms:bind>
 					<xforms:bind nodeset="nuds:typeDesc">
-						<xforms:bind nodeset="@xlink:href" required="true()" type="xs:anyURI"/>
-						<xforms:bind nodeset="nuds:objectType" required="true()">
-							<xforms:bind nodeset="@xlink:href" constraint="string-length(.) &gt; 0"/>
-						</xforms:bind>
-						<xforms:bind nodeset="nuds:date" required="true()">
-							<xforms:bind nodeset="@standardDate" type="m.data.standardDate"/>
-							<xforms:bind nodeset="@standardDateTime" type="m.data.standardDateTime"/>
-						</xforms:bind>						
-						<xforms:bind nodeset="nuds:denomination">
-							<xforms:bind constraint="string-length(.) &gt; 0"/>
-						</xforms:bind>
-						<xforms:bind nodeset="nuds:manufacture" required="true()">
-							<xforms:bind constraint="string-length(@xlink:href) &gt; 0"/>
-						</xforms:bind>
-						<xforms:bind nodeset="nuds:material" required="true()">
-							<xforms:bind constraint="string-length(@xlink:href) &gt; 0"/>
-						</xforms:bind>
-						<xforms:bind nodeset="nuds:weightStandard" required="true()" type="xs:decimal">
+						<xforms:bind nodeset="nuds:objectType" required="true()"/>
+						<xforms:bind nodeset="descendant::nuds:date" required="true()"/>	
+						<xforms:bind nodeset="descendant::nuds:fromDate" required="true()"/>
+						<xforms:bind nodeset="descendant::nuds:toDate" required="true()"/>
+						<xforms:bind nodeset="nuds:denomination" required="true()"/>
+						<xforms:bind nodeset="nuds:manufacture" required="true()"/>
+						<xforms:bind nodeset="nuds:material" required="true()"/>
+						
+						<!--<xforms:bind nodeset="nuds:weightStandard" required="true()" type="xs:decimal">
 							<xforms:bind nodeset="@origin" required="true()"/>
-						</xforms:bind>
+						</xforms:bind>-->
 						<xforms:bind nodeset="nuds:authority">
 							<xforms:bind nodeset="*" constraint="string-length(.) &gt; 0">
 								<xforms:bind nodeset="@xlink:title">
 									<xforms:bind constraint="string-length(.) &gt; 0"/>
-								</xforms:bind>
-								<xforms:bind nodeset="@xlink:href">
-									<xforms:bind constraint="string-length(.) &gt; 0"/>
-								</xforms:bind>
+								</xforms:bind>								
 							</xforms:bind>
 						</xforms:bind>
 						<xforms:bind nodeset="descendant::nuds:legend" required="true()"/>
@@ -477,11 +462,8 @@
 						<xforms:bind nodeset="nuds:identifier" required="true()"/>
 					</xforms:bind>
 					<xforms:bind nodeset="nuds:findspotDesc">
-						<xforms:bind nodeset="@xlink:href" required="true()" type="xs:anyURI"/>
 						<xforms:bind nodeset="nuds:findspot">
-							<xforms:bind nodeset="nuds:geogname" required="true()">
-								<xforms:bind nodeset="@xlink:href" type="xs:anyURI" required="true()"/>
-							</xforms:bind>
+							<xforms:bind nodeset="nuds:geogname" required="true()"/>							
 							<xforms:bind nodeset="gml:Point">
 								<xforms:bind nodeset="gml:coordinates" required="true()" constraint="normalize-space(tokenize(., ',')[1]) castable as xs:decimal and normalize-space(tokenize(., ',')[2]) castable as xs:decimal"/>
 							</xforms:bind>
@@ -510,6 +492,7 @@
 				<!-- validate dates anywhere -->
 				<xforms:bind nodeset="//@standardDate" type="m.data.standardDate"/>
 				<xforms:bind nodeset="//@standardDateTime" type="m.data.standardDateTime"/>
+				<xforms:bind nodeset="//@certainty" required="true()"/>
 				<xforms:bind nodeset="//nuds:reference">
 					<xforms:bind nodeset="nuds:title" required="true()"/>
 					<!--<xforms:bind nodeset="nuds:identifier" required="true()"/>-->
@@ -810,6 +793,7 @@
 		</xforms:model>
 
 		<!-- XBL components -->
+		<xi:include href="xbl/certainty/certainty.xbl" xi:omit-xml-base="true"/>
 		<xi:include href="xbl/cp-name/cp-name.xbl" xi:omit-xml-base="true"/>
 		<xi:include href="xbl/conservationState/conservationState.xbl" xi:omit-xml-base="true"/>
 		<xi:include href="xbl/date/date.xbl" xi:omit-xml-base="true"/>
@@ -1327,9 +1311,13 @@
 											</xforms:group>
 										</xxforms:dialog>
 										<xforms:group ref="nuds:axis">
+											<xforms:group ref=".[not(. castable as xs:integer)]">
+												
+											</xforms:group>											
 											<div>
 												<xforms:input ref=".">
 													<xforms:label>Axis</xforms:label>
+													<xforms:alert>Required</xforms:alert>
 												</xforms:input>
 												<xforms:trigger appearance="minimal">
 													<xforms:delete ev:event="DOMActivate" nodeset="."/>
@@ -2222,10 +2210,10 @@
 										<numishare:control/>
 									</xforms:group>
 								</fr:tab>
-								<fr:tab>
+								<!--<fr:tab>
 									<fr:label>Inspector</fr:label>
 									<fr:xforms-inspector/>
-								</fr:tab>
+								</fr:tab>-->
 							</fr:tabbable>
 
 							<!--**************************************** DIALOGS **********************************-->

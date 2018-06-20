@@ -108,9 +108,11 @@
 									</div>
 								</xforms:group>
 							</div>
+							
 							<xforms:group ref="nuds:denomination">
 								<numishare:denomination/>
 							</xforms:group>
+							
 							<xforms:group ref="nuds:manufacture">
 								<div>
 									<xforms:select1 ref="@xlink:href">
@@ -132,12 +134,11 @@
 									</xforms:select1>
 									<xforms:trigger appearance="minimal">
 										<xforms:delete ev:event="DOMActivate" nodeset="."/>
-										<xforms:label>
-											<span class="glyphicon glyphicon-remove"/>
-										</xforms:label>
+										<xforms:label><span class="glyphicon glyphicon-remove"></span></xforms:label>
 									</xforms:trigger>
 								</div>
 							</xforms:group>
+							
 							<xforms:repeat nodeset="nuds:material">
 								<div>
 									<xforms:select1 ref="@xlink:href">
@@ -196,13 +197,29 @@
 						<xforms:group ref="nuds:dateRange">
 							<numishare:dateRange/>
 						</xforms:group>
-
-						<!-- date on object -->
-						<xforms:repeat nodeset="nuds:dateOnObject">
+						
+						<xforms:group ref="nuds:shape">
 							<div>
 								<xforms:input ref=".">
-									<xforms:label>Date on Object</xforms:label>
+									<xforms:label>Shape</xforms:label>
 								</xforms:input>
+								<xforms:trigger appearance="minimal">
+									<xforms:delete ev:event="DOMActivate" nodeset="."/>
+									<xforms:label><span class="glyphicon glyphicon-remove"></span></xforms:label>
+								</xforms:trigger>
+							</div>
+						</xforms:group>
+						
+						<xforms:repeat nodeset="nuds:dateOnObject">
+							<div>								
+								<xforms:input ref=".">
+									<xforms:label>Date on Object</xforms:label>
+									<xforms:alert>Content required.</xforms:alert>
+								</xforms:input>		
+								<xforms:trigger appearance="minimal">
+									<xforms:delete ev:event="DOMActivate" nodeset="."/>
+									<xforms:label><span class="glyphicon glyphicon-remove"></span></xforms:label>
+								</xforms:trigger>
 								<xforms:group ref=".[not(@standardDate)]">
 									<xforms:trigger appearance="minimal">
 										<xforms:label>
@@ -252,20 +269,6 @@
 								</div>
 							</xforms:group>
 						</xforms:repeat>
-						
-						<xforms:group ref="nuds:shape">
-							<div>
-								<xforms:input ref=".">
-									<xforms:label>Shape</xforms:label>
-								</xforms:input>
-								<xforms:trigger appearance="minimal">
-									<xforms:delete ev:event="DOMActivate" nodeset="."/>
-									<xforms:label>
-										<span class="glyphicon glyphicon-remove"></span>
-									</xforms:label>
-								</xforms:trigger>
-							</div>
-						</xforms:group>
 
 						<div class="subsection">
 							<h3>Obverse</h3>

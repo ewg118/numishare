@@ -1,0 +1,100 @@
+<!--    author: Ethan Gruber, American Numismatic Society 
+	   last modified: June, 2018
+	   function: reusable component for adding and deleting certainty anywhere within a NUDS record. Certainty is tied to Nomisma IDs -->
+<xbl:xbl xmlns="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events"
+    xmlns:xxforms="http://orbeon.org/oxf/xml/xforms" xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:xbl="http://www.w3.org/ns/xbl"
+    xmlns:xxbl="http://orbeon.org/oxf/xml/xbl" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:oxf="http://www.orbeon.com/oxf/processors"
+    xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml"
+    xmlns:atom="http://www.w3.org/2005/Atom" xmlns:numishare="https://github.com/ewg118/numishare">
+    <xbl:binding id="numishare-certainty" element="numishare|certainty">
+        <xbl:template>
+            <xforms:group xbl:attr="model context ref bind" xxbl:scope="outer">
+                <xbl:content includes="xforms|label,xforms|help,xforms|hint,xforms|alert"/>
+                <xforms:group xxbl:scope="inner">
+                    <xforms:var name="binding" as="node()?">
+                        <xxforms:sequence select="." xxbl:scope="outer"/>
+                    </xforms:var>
+                    
+                    <!-- execute Nomisma query for uncertain IDs if @certainty is already set -->
+                    <xforms:action ev:event="xforms-enabled" ev:target="#observer" if="string($binding/@certainty)">
+                        <!-- get a list of certainty values from Nomisma -->
+                        <xforms:setvalue ref="instance('search-query')">*</xforms:setvalue>
+                        <xforms:setvalue ref="instance('control-instance')/*[local-name()='type']">un:Uncertainty</xforms:setvalue>
+                        <xforms:send submission="query-nomisma"/>
+                    </xforms:action>
+                    
+                    <xforms:group ref="$binding">
+                        <xforms:group ref=".[not(@certainty)]">
+                            <xforms:trigger appearance="minimal">
+                                <xforms:label><span class="glyphicon glyphicon-plus"/>Certainty</xforms:label>
+                                <xforms:action ev:event="DOMActivate">
+                                    <!-- get a list of certainty values from Nomisma -->
+                                    <xforms:setvalue ref="instance('search-query')">*</xforms:setvalue>
+                                    <xforms:setvalue ref="instance('control-instance')/type">un:Uncertainty</xforms:setvalue>
+                                    <xforms:send submission="query-nomisma"/>
+                                    <xforms:insert if="not(@certainty)" context="." origin="xforms:attribute('certainty', '')"/>
+                                </xforms:action>
+                            </xforms:trigger>
+                        </xforms:group>
+                        <xforms:group ref=".[@certainty]">
+                            <xforms:select1 ref="@certainty">
+                                <xforms:alert>Required</xforms:alert>
+                                <xforms:item>
+                                    <xforms:label>Certainty...</xforms:label>
+                                    <xforms:value/>
+                                </xforms:item>
+                                <xforms:itemset nodeset="instance('certainty-list')/item">
+                                    <xforms:value ref="@id"/>
+                                    <xforms:label ref="."/>
+                                </xforms:itemset>
+                            </xforms:select1>
+                            <xforms:trigger appearance="minimal">
+                                <xforms:delete ev:event="DOMActivate" nodeset="@certainty"/>
+                                <xforms:label><span class="glyphicon glyphicon-remove"/></xforms:label>
+                            </xforms:trigger>
+                        </xforms:group>
+                    </xforms:group>                    
+                    
+                    <!-- ***********************  INTERNAL MODEL *********************** -->
+                    <xforms:model id="certainty-model" xmlns:xi="http://www.w3.org/2001/XInclude">
+                        <xforms:instance id="control-instance" xxforms:exclude-result-prefixes="#all">
+                            <control xmlns="">
+                                <type/>
+                                <description/>
+                            </control>
+                        </xforms:instance>
+                        
+                        <!-- Instances containing the query string -->
+                        <xforms:instance id="search-query" xxforms:exclude-result-prefixes="#all">
+                            <query xmlns=""/>
+                        </xforms:instance>
+                        
+                        <!-- instances for nomisma -->
+                        <xforms:instance id="feed">
+                            <feed xmlns=""/>
+                        </xforms:instance>
+                        
+                        <xforms:instance id="certainty-list" xxforms:exclude-result-prefixes="#all">
+                            <list xmlns=""/>
+                        </xforms:instance>
+                        
+                        <!-- Query Nomisma -->
+                        <xforms:submission id="query-nomisma" serialization="none" method="get"
+                            action="http://nomisma.org/feed/?q=type:&#x022;{instance('control-instance')/type}&#x022;+AND+{instance('search-query')}&amp;sort=score+desc"
+                            instance="feed" replace="instance">
+                            <xforms:message ev:event="xforms-submit-error" level="modal">Unable to communicate with nomisma.org Atom feed.</xforms:message>
+                            <!-- if the type is uncertainty, then copy results into uncertainty list, but only if it's empty -->
+                            <xforms:action ev:event="xforms-submit-done" if="instance('control-instance')/type = 'un:Uncertainty' and count(instance('certainty-list')/item) = 0">
+                                <xforms:action xxforms:iterate="instance('feed')//atom:entry">			
+                                    <xforms:var name="label" select="context()/atom:title"/>
+                                    <xforms:var name="value" select="tokenize(context()/atom:link[not(@rel)]/@href, '/')[last()]"/>
+                                    <xforms:insert context="instance('certainty-list')" nodeset="./child::node()[last()]" origin="xforms:element('item', (xforms:attribute('id', $value), $label))"/>
+                                </xforms:action>
+                            </xforms:action>
+                        </xforms:submission>
+                    </xforms:model>
+                </xforms:group>
+            </xforms:group>
+        </xbl:template>
+    </xbl:binding>
+</xbl:xbl>
