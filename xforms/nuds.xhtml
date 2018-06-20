@@ -194,17 +194,13 @@
 			<xforms:instance id="reverse-template" xxforms:exclude-result-prefixes="#all">
 				<reverse/>
 			</xforms:instance>
+			
 			<!-- descMeta templates -->
-			<xforms:instance id="abstract-template" xxforms:exclude-result-prefixes="#all">
-				<abstract title="" author=""/>
-			</xforms:instance>
 			<xforms:instance id="department-template" xxforms:exclude-result-prefixes="#all">
 				<department/>
 			</xforms:instance>
+			
 			<!-- physDesc templates -->
-			<xforms:instance id="physDesc-template" xxforms:exclude-result-prefixes="#all">
-				<physDesc/>
-			</xforms:instance>
 			<xforms:instance id="axis-template" xxforms:exclude-result-prefixes="#all">
 				<axis/>
 			</xforms:instance>
@@ -416,10 +412,10 @@
 						<xforms:bind nodeset="nuds:axis" required="true()"/>
 						<xforms:bind nodeset="nuds:measurementsSet">
 							<xforms:bind nodeset="nuds:diameter" type="xs:decimal" required="true()"/>
-							<xforms:bind nodeset="nuds:height" type="xs:decimal" required="true()"/>
+							<xforms:bind nodeset="nuds:height" type="xs:decimal" required="true()" constraint="count(../nuds:width) = 1"/>
 							<xforms:bind nodeset="nuds:thickness" type="xs:decimal" required="true()"/>
 							<xforms:bind nodeset="nuds:weight" type="xs:decimal" required="true()"/>
-							<xforms:bind nodeset="nuds:width" type="xs:decimal" required="true()"/>
+							<xforms:bind nodeset="nuds:width" type="xs:decimal" required="true()" constraint="count(../nuds:height) = 1"/>
 						</xforms:bind>
 						<xforms:bind nodeset="nuds:conservationState">
 							<xforms:bind nodeset="descendant::nuds:grade">
@@ -1232,16 +1228,7 @@
 
 									<xforms:group ref="nuds:descMeta/nuds:physDesc">
 										<h2>Physical Description</h2>
-										<span class="add">
-											<xforms:trigger appearance="minimal">
-												<xforms:label>
-													<span class="glyphicon glyphicon-plus"></span>
-												</xforms:label>
-												<xxforms:show ev:event="DOMActivate" dialog="physdesc-objects"/>
-											</xforms:trigger>
-										</span>
-										<xxforms:dialog id="physdesc-objects" appearance="full" level="modal" close="true" draggable="true" visible="false">
-											<xforms:label>Descriptors</xforms:label>
+										<div class="trigger_container">
 											<xforms:group ref=".[count(nuds:axis) &lt; 1]">
 												<xforms:trigger appearance="minimal">
 													<xforms:label>
@@ -1250,7 +1237,7 @@
 														nodeset="./child::node()[last()]"/>
 												</xforms:trigger>
 											</xforms:group>
-											<xforms:group ref=".[count(nuds:measurementsSet/nuds:diameter) &lt; 1]">
+											<xforms:group ref=".[count(nuds:measurementsSet/nuds:diameter) = 0 and count(nuds:measurementsSet/nuds:height) = 0 and count(nuds:measurementsSet/nuds:width) = 0]">
 												<xforms:trigger appearance="minimal">
 													<xforms:label>
 														<span class="glyphicon glyphicon-plus"></span>Diameter</xforms:label>
@@ -1260,22 +1247,13 @@
 														nodeset="./child::node()[last()]"/>
 												</xforms:trigger>
 											</xforms:group>
-											<xforms:group ref=".[count(nuds:measurementsSet/nuds:height) &lt; 1]">
+											<xforms:group ref=".[count(nuds:measurementsSet/nuds:diameter) = 0 and count(nuds:measurementsSet/nuds:height) = 0]">
 												<xforms:trigger appearance="minimal">
 													<xforms:label>
 														<span class="glyphicon glyphicon-plus"></span>Height</xforms:label>
 													<xforms:insert ev:event="DOMActivate" context="." origin="instance('measurementsSet-template')"
 														nodeset="./child::node()[last()]" if="count(nuds:measurementsSet) = 0"/>
 													<xforms:insert ev:event="DOMActivate" context="nuds:measurementsSet" origin="instance('height-template')"
-														nodeset="./child::node()[last()]"/>
-												</xforms:trigger>
-											</xforms:group>
-											
-											<xforms:group ref=".[count(nuds:shape) &lt; 1]">
-												<xforms:trigger appearance="minimal">
-													<xforms:label>
-														<span class="glyphicon glyphicon-plus"></span>Shape</xforms:label>
-													<xforms:insert ev:event="DOMActivate" context="." origin="instance('shape-template')"
 														nodeset="./child::node()[last()]"/>
 												</xforms:trigger>
 											</xforms:group>
@@ -1300,7 +1278,7 @@
 														nodeset="./child::node()[last()]"/>
 												</xforms:trigger>
 											</xforms:group>
-											<xforms:group ref=".[count(nuds:measurementsSet/nuds:width) &lt; 1]">
+											<xforms:group ref=".[count(nuds:measurementsSet/nuds:diameter) = 0 and count(nuds:measurementsSet/nuds:width) = 0]">
 												<xforms:trigger appearance="minimal">
 													<xforms:label>
 														<span class="glyphicon glyphicon-plus"></span>Width</xforms:label>
@@ -1310,10 +1288,16 @@
 														nodeset="./child::node()[last()]"/>
 												</xforms:trigger>
 											</xforms:group>
-										</xxforms:dialog>
+										</div>
+										
+										<!-- axis -->
 										<xforms:group ref="nuds:axis">
 											<xforms:group ref=".[not(. castable as xs:integer)]">
-												
+												<div class="alert alert-warning alert-box">
+													<p><span class="glyphicon glyphicon-warning-sign"></span>
+														<strong>Warning! </strong><span>Although not strictly enforced, it is recommended that the die axis be an integer value.</span>
+													</p>
+												</div>
 											</xforms:group>											
 											<div>
 												<xforms:input ref=".">
@@ -1328,91 +1312,99 @@
 												</xforms:trigger>
 											</div>
 										</xforms:group>
+										
 										<xforms:group ref="nuds:measurementsSet">
-											<div class="subsection">
-												<h3>Measurements</h3>
-												<xforms:group ref="nuds:diameter">
-													<div>
-														<xforms:input ref=".">
-															<xforms:label>Diameter</xforms:label>
-															<xforms:alert>Must be numeric value.</xforms:alert>
-														</xforms:input>
-														<xforms:trigger appearance="minimal">
-															<xforms:delete ev:event="DOMActivate" nodeset="."/>
-															<xforms:delete ev:event="DOMActivate" nodeset="parent::nuds:measurementsSet"
-																if="count(parent::node()/*) = 0"/>
-															<xforms:label>
-																<span class="glyphicon glyphicon-remove"></span>
-															</xforms:label>
-														</xforms:trigger>
-													</div>
-												</xforms:group>
-												<xforms:group ref="nuds:height">
-													<div>
-														<xforms:input ref=".">
-															<xforms:label>Height</xforms:label>
-															<xforms:alert>Must be numeric value.</xforms:alert>
-														</xforms:input>
-														<xforms:trigger appearance="minimal">
-															<xforms:delete ev:event="DOMActivate" nodeset="."/>
-															<xforms:delete ev:event="DOMActivate" nodeset="parent::nuds:measurementsSet"
-																if="count(parent::node()/*) = 0"/>
-															<xforms:label>
-																<span class="glyphicon glyphicon-remove"></span>
-															</xforms:label>
-														</xforms:trigger>
-													</div>
-												</xforms:group>
-												<xforms:group ref="nuds:thickness">
-													<div>
-														<xforms:input ref=".">
-															<xforms:label>Thickness</xforms:label>
-															<xforms:alert>Must be numeric value.</xforms:alert>
-														</xforms:input>
-														<xforms:trigger appearance="minimal">
-															<xforms:delete ev:event="DOMActivate" nodeset="."/>
-															<xforms:delete ev:event="DOMActivate" nodeset="parent::nuds:measurementsSet"
-																if="count(parent::node()/*) = 0"/>
-															<xforms:label>
-																<span class="glyphicon glyphicon-remove"></span>
-															</xforms:label>
-														</xforms:trigger>
-													</div>
-												</xforms:group>
-												<xforms:group ref="nuds:weight">
-													<div>
-														<xforms:input ref=".">
-															<xforms:label>Weight</xforms:label>
-															<xforms:alert>Must be numeric value.</xforms:alert>
-														</xforms:input>
-														<xforms:trigger appearance="minimal">
-															<xforms:delete ev:event="DOMActivate" nodeset="."/>
-															<xforms:delete ev:event="DOMActivate" nodeset="parent::nuds:measurementsSet"
-																if="count(parent::node()/*) = 0"/>
-															<xforms:label>
-																<span class="glyphicon glyphicon-remove"></span>
-															</xforms:label>
-														</xforms:trigger>
-													</div>
-												</xforms:group>
-												<xforms:group ref="nuds:width">
-													<div>
-														<xforms:input ref=".">
-															<xforms:label>Width</xforms:label>
-															<xforms:alert>Must be numeric value.</xforms:alert>
-														</xforms:input>
-														<xforms:trigger appearance="minimal">
-															<xforms:delete ev:event="DOMActivate" nodeset="."/>
-															<xforms:delete ev:event="DOMActivate" nodeset="parent::nuds:measurementsSet"
-																if="count(parent::node()/*) = 0"/>
-															<xforms:label>
-																<span class="glyphicon glyphicon-remove"></span>
-															</xforms:label>
-														</xforms:trigger>
-													</div>
-												</xforms:group>
-											</div>
+											<!-- height and width are required together -->
+											<xforms:group ref=".[(nuds:width and not(nuds:height)) or (nuds:height and not(nuds:width))]">
+												<div class="alert alert-danger alert-box">
+													<p><span class="glyphicon glyphicon-alert"></span>
+														<strong>Alert! </strong><span>Both height and width are required simultaneously.</span>
+													</p>
+												</div>
+											</xforms:group>
+											
+											<xforms:group ref="nuds:diameter">
+												<div>
+													<xforms:input ref=".">
+														<xforms:label>Diameter</xforms:label>
+														<xforms:alert>Must be numeric value.</xforms:alert>
+													</xforms:input>
+													<xforms:trigger appearance="minimal">
+														<xforms:delete ev:event="DOMActivate" nodeset="."/>
+														<xforms:delete ev:event="DOMActivate" nodeset="parent::nuds:measurementsSet"
+															if="count(parent::node()/*) = 0"/>
+														<xforms:label>
+															<span class="glyphicon glyphicon-remove"></span>
+														</xforms:label>
+													</xforms:trigger>
+												</div>
+											</xforms:group>
+											<xforms:group ref="nuds:height">
+												<div>
+													<xforms:input ref=".">
+														<xforms:label>Height</xforms:label>
+														<xforms:alert>Must be numeric value.</xforms:alert>
+													</xforms:input>
+													<xforms:trigger appearance="minimal">
+														<xforms:delete ev:event="DOMActivate" nodeset="."/>
+														<xforms:delete ev:event="DOMActivate" nodeset="parent::nuds:measurementsSet"
+															if="count(parent::node()/*) = 0"/>
+														<xforms:label>
+															<span class="glyphicon glyphicon-remove"></span>
+														</xforms:label>
+													</xforms:trigger>
+												</div>
+											</xforms:group>
+																						<xforms:group ref="nuds:thickness">
+												<div>
+													<xforms:input ref=".">
+														<xforms:label>Thickness</xforms:label>
+														<xforms:alert>Must be numeric value.</xforms:alert>
+													</xforms:input>
+													<xforms:trigger appearance="minimal">
+														<xforms:delete ev:event="DOMActivate" nodeset="."/>
+														<xforms:delete ev:event="DOMActivate" nodeset="parent::nuds:measurementsSet"
+															if="count(parent::node()/*) = 0"/>
+														<xforms:label>
+															<span class="glyphicon glyphicon-remove"></span>
+														</xforms:label>
+													</xforms:trigger>
+												</div>
+											</xforms:group>
+											<xforms:group ref="nuds:weight">
+												<div>
+													<xforms:input ref=".">
+														<xforms:label>Weight</xforms:label>
+														<xforms:alert>Must be numeric value.</xforms:alert>
+													</xforms:input>
+													<xforms:trigger appearance="minimal">
+														<xforms:delete ev:event="DOMActivate" nodeset="."/>
+														<xforms:delete ev:event="DOMActivate" nodeset="parent::nuds:measurementsSet"
+															if="count(parent::node()/*) = 0"/>
+														<xforms:label>
+															<span class="glyphicon glyphicon-remove"></span>
+														</xforms:label>
+													</xforms:trigger>
+												</div>
+											</xforms:group>
+											<xforms:group ref="nuds:width">
+												<div>
+													<xforms:input ref=".">
+														<xforms:label>Width</xforms:label>
+														<xforms:alert>Must be numeric value.</xforms:alert>
+													</xforms:input>
+													<xforms:trigger appearance="minimal">
+														<xforms:delete ev:event="DOMActivate" nodeset="."/>
+														<xforms:delete ev:event="DOMActivate" nodeset="parent::nuds:measurementsSet"
+															if="count(parent::node()/*) = 0"/>
+														<xforms:label>
+															<span class="glyphicon glyphicon-remove"></span>
+														</xforms:label>
+													</xforms:trigger>
+												</div>
+											</xforms:group>
 										</xforms:group>
+										
 										<div class="subsection">
 											<h3>Conservation State</h3>
 											<span class="add">
