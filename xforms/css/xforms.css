@@ -19,10 +19,8 @@
 }
 .alert-box {
 	width:50%;
-	margin:20px auto;
-	padding:5px;
+	margin:auto auto;
 	border-radius: 4px;
-	border: 1px solid gray;
 }
 .highlight{
 	background-color:#F8F8F8;

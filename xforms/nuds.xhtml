@@ -432,6 +432,7 @@
 						<xforms:bind nodeset="descendant::nuds:date" required="true()"/>	
 						<xforms:bind nodeset="descendant::nuds:fromDate" required="true()"/>
 						<xforms:bind nodeset="descendant::nuds:toDate" required="true()"/>
+						<xforms:bind nodeset="nuds:dateOnObject" constraint="count(nuds:date) = 1 or count(nuds:dateRange) = 1"/>
 						<xforms:bind nodeset="nuds:denomination" required="true()"/>
 						<xforms:bind nodeset="nuds:manufacture" required="true()"/>
 						<xforms:bind nodeset="nuds:material" required="true()"/>
@@ -820,10 +821,10 @@
 				<div class="col-md-12">
 
 					<div id="form">
-						<xforms:group ref=".[instance('control-instance')/status/text()]">
-							<div class="bg-info alert-box">
+						<xforms:group ref=".[string(instance('control-instance')/status)]">
+							<div class="alert alert-box alert-success">
 								<p><span class="glyphicon glyphicon-info-sign"></span>
-									<strong>Status:</strong>
+									<strong>Success </strong>
 									<xforms:output ref="instance('control-instance')/status"/>
 								</p>
 							</div>
@@ -2210,10 +2211,10 @@
 										<numishare:control/>
 									</xforms:group>
 								</fr:tab>
-								<!--<fr:tab>
+								<fr:tab>
 									<fr:label>Inspector</fr:label>
 									<fr:xforms-inspector/>
-								</fr:tab>-->
+								</fr:tab>
 							</fr:tabbable>
 
 							<!--**************************************** DIALOGS **********************************-->

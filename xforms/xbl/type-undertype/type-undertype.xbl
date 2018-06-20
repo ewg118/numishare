@@ -38,11 +38,14 @@
 									/>
 								</xforms:trigger>
 							</xforms:group>
-							<xforms:trigger appearance="minimal">
-								<xforms:label>
-									<span class="glyphicon glyphicon-plus"/>Date on Object</xforms:label>
-								<xforms:insert ev:event="DOMActivate" context="." origin="instance('dateOnObject-template')" nodeset="./child::node()[last()]"/>
-							</xforms:trigger>
+							<xforms:group ref=".[count(nuds:dateOnObject) = 0]">
+								<xforms:trigger appearance="minimal">
+									<xforms:label>
+										<span class="glyphicon glyphicon-plus"/>Date on Object</xforms:label>
+									<xforms:insert ev:event="DOMActivate" context="." origin="instance('dateOnObject-template')"
+										nodeset="./child::node()[last()]"/>
+								</xforms:trigger>
+							</xforms:group>
 							<xforms:group ref=".[count(nuds:denomination) = 0]">
 								<xforms:trigger appearance="minimal">
 									<xforms:label>
@@ -64,16 +67,15 @@
 									<span class="glyphicon glyphicon-plus"/>Material</xforms:label>
 								<xforms:insert ev:event="DOMActivate" context="." origin="instance('material-template')" nodeset="./child::node()[last()]"/>
 							</xforms:trigger>
-							
+
 							<xforms:group ref=".[count(nuds:shape) &lt; 1]">
 								<xforms:trigger appearance="minimal">
 									<xforms:label>
-										<span class="glyphicon glyphicon-plus"></span>Shape</xforms:label>
-									<xforms:insert ev:event="DOMActivate" context="." origin="instance('shape-template')"
-										nodeset="./child::node()[last()]"/>
+										<span class="glyphicon glyphicon-plus"/>Shape</xforms:label>
+									<xforms:insert ev:event="DOMActivate" context="." origin="instance('shape-template')" nodeset="./child::node()[last()]"/>
 								</xforms:trigger>
 							</xforms:group>
-							
+
 							<!--<xforms:group ref=".[count(nuds:weightStandard) = 0]">
 								<xforms:trigger appearance="minimal">
 									<xforms:label>
@@ -82,7 +84,7 @@
 										nodeset="./child::node()[last()]"/>
 								</xforms:trigger>
 							</xforms:group>-->
-							
+
 						</div>
 						<div class="section">
 							<div>
@@ -108,11 +110,11 @@
 									</div>
 								</xforms:group>
 							</div>
-							
+
 							<xforms:group ref="nuds:denomination">
 								<numishare:denomination/>
 							</xforms:group>
-							
+
 							<xforms:group ref="nuds:manufacture">
 								<div>
 									<xforms:select1 ref="@xlink:href">
@@ -134,11 +136,13 @@
 									</xforms:select1>
 									<xforms:trigger appearance="minimal">
 										<xforms:delete ev:event="DOMActivate" nodeset="."/>
-										<xforms:label><span class="glyphicon glyphicon-remove"></span></xforms:label>
+										<xforms:label>
+											<span class="glyphicon glyphicon-remove"/>
+										</xforms:label>
 									</xforms:trigger>
 								</div>
 							</xforms:group>
-							
+
 							<xforms:repeat nodeset="nuds:material">
 								<div>
 									<xforms:select1 ref="@xlink:href">
@@ -166,7 +170,7 @@
 									</xforms:trigger>
 								</div>
 							</xforms:repeat>
-							
+
 							<!--<xforms:group ref="nuds:weightStandard">
 								<h4>Weight Standard</h4>
 								<xforms:trigger appearance="minimal">
@@ -187,17 +191,17 @@
 										<xforms:alert>Required</xforms:alert>
 									</xforms:input>
 								</div>
-							</xforms:group>-->							
+							</xforms:group>-->
 						</div>
-						
+
 						<xforms:group ref="nuds:date">
 							<numishare:date/>
 						</xforms:group>
-						
+
 						<xforms:group ref="nuds:dateRange">
 							<numishare:dateRange/>
 						</xforms:group>
-						
+
 						<xforms:group ref="nuds:shape">
 							<div>
 								<xforms:input ref=".">
@@ -205,36 +209,86 @@
 								</xforms:input>
 								<xforms:trigger appearance="minimal">
 									<xforms:delete ev:event="DOMActivate" nodeset="."/>
-									<xforms:label><span class="glyphicon glyphicon-remove"></span></xforms:label>
+									<xforms:label>
+										<span class="glyphicon glyphicon-remove"/>
+									</xforms:label>
 								</xforms:trigger>
 							</div>
 						</xforms:group>
-						
-						<xforms:repeat nodeset="nuds:dateOnObject">
-							<div>								
-								<xforms:input ref=".">
-									<xforms:label>Date on Object</xforms:label>
-									<xforms:alert>Content required.</xforms:alert>
-								</xforms:input>		
+
+						<xforms:group ref="nuds:dateOnObject">
+							<div>
+								<h4>Date on Object</h4>
 								<xforms:trigger appearance="minimal">
 									<xforms:delete ev:event="DOMActivate" nodeset="."/>
-									<xforms:label><span class="glyphicon glyphicon-remove"></span></xforms:label>
+									<xforms:label><span class="glyphicon glyphicon-remove"/></xforms:label>
 								</xforms:trigger>
-								<xforms:group ref=".[not(@standardDate)]">
-									<xforms:trigger appearance="minimal">
-										<xforms:label>
-											<span class="glyphicon glyphicon-plus"/>Standard Date</xforms:label>
-										<xforms:insert context="." origin="xxforms:attribute('standardDate', '')" ev:event="DOMActivate"/>
-									</xforms:trigger>
+								
+								<div class="trigger_container">
+									<xforms:group ref=".[count(nuds:date) = 0 and count(nuds:dateRange) = 0]">
+										<xforms:trigger appearance="minimal">
+											<xforms:label>
+												<span class="glyphicon glyphicon-plus"/>Date</xforms:label>
+											<xforms:action ev:event="DOMActivate">
+												<xforms:insert context="." origin="instance('date-template')"/>
+												<xforms:delete nodeset="nuds:date/@standardDate"/>
+											</xforms:action>
+										</xforms:trigger>
+										<xforms:trigger appearance="minimal">
+											<xforms:label>
+												<span class="glyphicon glyphicon-plus"/>Date Range</xforms:label>
+											<xforms:action ev:event="DOMActivate">
+												<xforms:insert context="." origin="instance('dateRange-template')"/>
+												<xforms:delete nodeset="nuds:dateRange/nuds:fromDate/@standardDate"/>
+												<xforms:delete nodeset="nuds:dateRange/nuds:toDate/@standardDate"/>
+											</xforms:action>
+											
+										</xforms:trigger>
+									</xforms:group>
+									<xforms:group ref=".[count(nuds:era) = 0]">
+										<xforms:trigger appearance="minimal">
+											<xforms:label>
+												<span class="glyphicon glyphicon-plus"/>Era</xforms:label>
+											<xforms:insert ev:event="DOMActivate" context="." origin="instance('era-template')" nodeset="./child::node()[last()]"/>
+										</xforms:trigger>
+									</xforms:group>
+								</div>
+								
+								<!-- display alert if there's no required date or dateRange -->
+								<xforms:group ref=".[count(nuds:date) = 0 and count(nuds:dateRange) = 0]">
+									<div class="alert alert-warning alert-box">
+										<p><span class="glyphicon glyphicon-warning-sign"></span>
+											<strong>Warning! </strong><span>Date or Date Range are required.</span>
+										</p>
+									</div>
 								</xforms:group>
-								<xforms:group ref=".[not(@calendar)]">
-									<xforms:trigger appearance="minimal">
-										<xforms:label>
-											<span class="glyphicon glyphicon-plus"/>Calendar</xforms:label>
-										<xforms:insert context="." origin="xxforms:attribute('calendar', '')" ev:event="DOMActivate"/>
-									</xforms:trigger>
-								</xforms:group>
-								<xforms:group ref=".[@calendar]">
+								
+								<div class="subsection">
+									<xforms:group ref="nuds:date">
+										<numishare:date/>
+									</xforms:group>
+									
+									<xforms:group ref="nuds:dateRange">
+										<numishare:dateRange/>
+									</xforms:group>
+									
+									<xforms:group ref="nuds:era">
+										<div>
+											<xforms:input ref=".">
+												<xforms:label>Era</xforms:label>
+											</xforms:input>
+											<xforms:trigger appearance="minimal">
+												<xforms:delete ev:event="DOMActivate" nodeset="."/>
+												<xforms:label>
+													<span class="glyphicon glyphicon-remove"/>
+												</xforms:label>
+											</xforms:trigger>
+										</div>
+									</xforms:group>
+								</div>
+								
+								
+								<!--<xforms:group ref=".[@calendar]">
 									<xforms:select1 ref="@calendar">
 										<xforms:item>
 											<xforms:label>Select calendar...</xforms:label>
@@ -246,29 +300,10 @@
 										</xforms:itemset>
 										<xforms:alert>Calendar value is required when attribute is present</xforms:alert>
 									</xforms:select1>
-									<xforms:trigger appearance="minimal">
-										<xforms:delete ev:event="DOMActivate" nodeset="@calendar"/>
-										<xforms:label>
-											<span class="glyphicon glyphicon-remove"/>
-										</xforms:label>
-									</xforms:trigger>
-								</xforms:group>
+								</xforms:group>-->								
+								<hr/>
 							</div>
-							<xforms:group ref=".[@standardDate]">
-								<div>
-									<xforms:input ref="@standardDate">
-										<xforms:label>Date - Standard</xforms:label>
-										<xforms:alert>Required; must meet XML schema specification</xforms:alert>										
-									</xforms:input>
-									<xforms:trigger appearance="minimal">
-										<xforms:delete ev:event="DOMActivate" nodeset="@standardDate"/>
-										<xforms:label>
-											<span class="glyphicon glyphicon-remove"/>
-										</xforms:label>
-									</xforms:trigger>
-								</div>
-							</xforms:group>
-						</xforms:repeat>
+						</xforms:group>
 
 						<div class="subsection">
 							<h3>Obverse</h3>
@@ -448,7 +483,7 @@
 										</xforms:repeat>
 										<xforms:delete ev:event="xforms-value-changed" if="count(*) = 0" nodeset="."/>
 									</xforms:group>
-									
+
 									<!--<xforms:group ref="nuds:typeSeries">
 										<div>
 											<xforms:input ref=".">
@@ -463,9 +498,10 @@
 											</xforms:trigger>
 										</div>
 									</xforms:group>-->
-									
+
 									<xforms:delete ev:event="xforms-value-changed" if="count(*) = 0" nodeset="."/>
 								</div>
+								<hr/>
 							</xforms:group>
 						</div>
 						<div class="subsection">
@@ -646,7 +682,7 @@
 										</xforms:repeat>
 										<xforms:delete ev:event="xforms-value-changed" if="count(*) = 0" nodeset="."/>
 									</xforms:group>
-									
+
 									<!--<xforms:group ref="nuds:typeSeries">
 										<div>
 											<xforms:input ref=".">
@@ -663,6 +699,7 @@
 									</xforms:group>-->
 									<xforms:delete ev:event="xforms-value-changed" if="count(*) = 0" nodeset="."/>
 								</div>
+								<hr/>
 							</xforms:group>
 						</div>
 						<div class="subsection">
@@ -900,16 +937,16 @@
 								<xforms:trigger appearance="minimal">
 									<xforms:label>
 										<span class="glyphicon glyphicon-plus"/>Mint</xforms:label>
-									<xforms:insert ev:event="DOMActivate" context="." origin="instance('geographic-template')"
-										nodeset="./child::node()[last()]" if="count(nuds:geographic) = 0"/>
+									<xforms:insert ev:event="DOMActivate" context="." origin="instance('geographic-template')" nodeset="./child::node()[last()]"
+										if="count(nuds:geographic) = 0"/>
 									<xforms:insert ev:event="DOMActivate" context="nuds:geographic" origin="instance('mint-template')"
 										nodeset="./child::node()[last()]"/>
 								</xforms:trigger>
 								<xforms:trigger appearance="minimal">
 									<xforms:label>
 										<span class="glyphicon glyphicon-plus"/>Region</xforms:label>
-									<xforms:insert ev:event="DOMActivate" context="." origin="instance('geographic-template')"
-										nodeset="./child::node()[last()]" if="count(nuds:geographic) = 0"/>
+									<xforms:insert ev:event="DOMActivate" context="." origin="instance('geographic-template')" nodeset="./child::node()[last()]"
+										if="count(nuds:geographic) = 0"/>
 									<xforms:insert ev:event="DOMActivate" context="nuds:geographic" origin="instance('region-template')"
 										nodeset="./child::node()[last()]"/>
 								</xforms:trigger>
@@ -946,6 +983,9 @@
 						</xforms:instance>
 						<xforms:instance id="denomination-template" xxforms:exclude-result-prefixes="#all">
 							<denomination xlink:type="simple" xlink:href=""/>
+						</xforms:instance>
+						<xforms:instance id="era-template" xxforms:exclude-result-prefixes="#all">
+							<era/>
 						</xforms:instance>
 						<xforms:instance id="manufacture-template" xxforms:exclude-result-prefixes="#all">
 							<manufacture xlink:type="simple" xlink:href=""/>
@@ -996,10 +1036,7 @@
 						</xforms:instance>
 						<xforms:instance id="makerPersonal-template" xxforms:exclude-result-prefixes="#all">
 							<persname xlink:type="simple" xlink:role="maker" xlink:href=""/>
-						</xforms:instance>
-						<xforms:instance id="state-template" xxforms:exclude-result-prefixes="#all">
-							<corpname xlink:type="simple" xlink:role="state" xlink:href=""/>
-						</xforms:instance>
+						</xforms:instance>						
 						<!-- obverse/reverse edge -->
 						<xforms:instance id="obverse-template" xxforms:exclude-result-prefixes="#all">
 							<obverse/>
@@ -1065,7 +1102,7 @@
 								<calendar code="julian">Julian</calendar>
 							</list>
 						</xforms:instance>
-						
+
 						<!-- nomisma query -->
 						<xforms:submission id="query-nomisma" serialization="none" method="get"
 							action="http://nomisma.org/feed/?q=type:&#x022;nmo:{instance('control-instance')/type}&#x022;&amp;sort=prefLabel%20asc"
