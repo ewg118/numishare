@@ -475,7 +475,7 @@
 							<xforms:bind nodeset="mets:file">
 								<xforms:bind nodeset="mets:FLocat">
 									<xforms:bind nodeset="@xlink:href"
-										constraint="matches(., '(http://|https://)([a-z0-9]{1})((\.[a-z0-9-])|([a-z0-9-]))*\.([a-z]{2,4})(/?)')"/>
+										constraint="matches(., '(http://|https://)([a-z0-9]{1})((\.[a-z0-9-])|([a-z0-9-]))*\.([a-z0-9]{2,4})(/?)')"/>
 								</xforms:bind>
 							</xforms:bind>
 						</xforms:bind>
@@ -495,7 +495,7 @@
 					<!--<xforms:bind nodeset="nuds:identifier" required="true()"/>-->
 				</xforms:bind>
 				<xforms:bind nodeset="//@xlink:href" required="true()"
-					constraint="matches(., '(http://|https://)([a-z0-9]{1})((\.[a-z0-9-])|([a-z0-9-]))*\.([a-z]{2,4})(/?)')"/>
+					constraint="matches(., '(http://|https://)([a-z0-9]{1})((\.[a-z0-9-])|([a-z0-9-]))*\.([a-z0-9]{2,4})(/?)')"/>
 			</xforms:bind>
 
 			<xforms:bind nodeset="instance('control-instance')">
