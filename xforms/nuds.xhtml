@@ -404,7 +404,6 @@
 					<xforms:bind nodeset="nuds:title" required="true()"/>
 					<xforms:bind nodeset="nuds:subjectSet">
 						<xforms:bind nodeset="nuds:subject" required="true()">
-							<xforms:bind nodeset="@xlink:href" constraint="string-length(.) &gt; 0" type="xs:anyURI"/>
 							<xforms:bind nodeset="@localType" constraint="string-length(.) &gt; 0"/>
 						</xforms:bind>
 					</xforms:bind>
@@ -445,9 +444,6 @@
 						</xforms:bind>
 						<xforms:bind nodeset="descendant::nuds:legend" required="true()"/>
 					</xforms:bind>
-					<!--<xforms:bind nodeset="nuds:undertypeDesc">
-						<xforms:bind nodeset="@xlink:href" required="true()" type="xs:anyURI"/>
-					</xforms:bind>-->
 					<xforms:bind nodeset="nuds:adminDesc">
 						<xforms:bind nodeset="descendant::nuds:sale/*" required="true()"/>
 						<xforms:bind nodeset="nuds:acqinfo">
@@ -471,13 +467,7 @@
 					<xforms:bind nodeset="mets:fileSec">
 						<xforms:bind constraint="count(mets:fileGrp) &gt; 0"/>
 						<xforms:bind nodeset="mets:fileGrp">
-							<xforms:bind constraint="count(mets:file) &gt; 0"/>
-							<xforms:bind nodeset="mets:file">
-								<xforms:bind nodeset="mets:FLocat">
-									<xforms:bind nodeset="@xlink:href"
-										constraint="matches(., '(http://|https://)([a-z0-9]{1})((\.[a-z0-9-])|([a-z0-9-]))*\.([a-z]{2,4})(/?)')"/>
-								</xforms:bind>
-							</xforms:bind>
+							<xforms:bind constraint="count(mets:file) &gt; 0"/>							
 						</xforms:bind>
 					</xforms:bind>
 				</xforms:bind>
@@ -495,7 +485,7 @@
 					<!--<xforms:bind nodeset="nuds:identifier" required="true()"/>-->
 				</xforms:bind>
 				<xforms:bind nodeset="//@xlink:href" required="true()"
-					constraint="matches(., '(http://|https://)([a-z0-9]{1})((\.[a-z0-9-])|([a-z0-9-]))*\.([a-z]{2,4})(/?)')"/>
+					constraint="matches(., '(https?|ftp)://(-\.)?([^\s/?\.#-]+\.?)+(/[^\s]*)?$')"/>
 			</xforms:bind>
 
 			<xforms:bind nodeset="instance('control-instance')">
@@ -2165,30 +2155,35 @@
 													<h3>
 														<xforms:output value="concat(upper-case(substring(@USE, 1, 1)), substring(@USE, 2))"/>
 													</h3>
-													<div class="subsection">
-														<xforms:group ref=".[not(count(mets:file) = 1 and mets:file[@USE='iiif'])]">
+													<div class="subsection">														
+														<!-- the conditional is based on whether the IIIF image service URI contains the iiif_server URL in the config -->														
+														<xforms:group ref=".[string(instance('config')/images/iiif_server)]">
+															<!-- deleting uploaded images must be handled outside the XBL due to an error with the dialog -->
+															<xforms:group ref=".[contains(mets:file[@USE='iiif']/mets:FLocat/@xlink:href, instance('config')/images/iiif_server)]">
+																<h4>IIIF Image</h4>
+																<xforms:trigger appearance="minimal">
+																	<xforms:label><span class="glyphicon glyphicon-remove"/></xforms:label>
+																	<xforms:action ev:event="DOMActivate">
+																		<xforms:setvalue ref="instance('control-instance')/side" value="$side"/>
+																		<xforms:dispatch target="delete-image-dialog" name="fr-show"/>
+																	</xforms:action>
+																</xforms:trigger>
+																<div>
+																	<xforms:output mediatype="image/*" value="concat(mets:file[@USE='iiif']/mets:FLocat/@xlink:href, '/full/!120,120/0/default.jpg')"/>
+																</div>
+																<div>
+																	<xforms:output ref="mets:file[@USE='iiif']/mets:FLocat/@xlink:href">
+																		<xforms:label>IIIF URL</xforms:label>
+																	</xforms:output>
+																</div>
+															</xforms:group>
+															<xforms:group ref=".[not(contains(mets:file[@USE='iiif']/mets:FLocat/@xlink:href, instance('config')/images/iiif_server))]">
+																<numishare:file-upload/>
+															</xforms:group>
+														</xforms:group>
+														<xforms:group ref=".[not(string(instance('config')/images/iiif_server))]">
 															<numishare:file-upload/>
-														</xforms:group>
-														
-														<!-- deleting uploaded images must be handled outside the XBL due to an error with the dialog -->
-														<xforms:group ref=".[count(mets:file) = 1 and mets:file[@USE='iiif']]">
-															<h4>IIIF Image</h4>
-															<xforms:trigger appearance="minimal">
-																<xforms:label><span class="glyphicon glyphicon-remove"/></xforms:label>
-																<xforms:action ev:event="DOMActivate">
-																	<xforms:setvalue ref="instance('control-instance')/side" value="$side"/>
-																	<xforms:dispatch target="delete-image-dialog" name="fr-show"/>
-																</xforms:action>
-															</xforms:trigger>
-															<div>
-																<xforms:output mediatype="image/*" value="concat(mets:file[@USE='iiif']/mets:FLocat/@xlink:href, '/full/!120,120/0/default.jpg')"/>
-															</div>
-															<div>
-																<xforms:output ref="mets:file[@USE='iiif']/mets:FLocat/@xlink:href">
-																	<xforms:label>IIIF URL</xforms:label>
-																</xforms:output>
-															</div>
-														</xforms:group>
+														</xforms:group>														
 													</div>
 													<hr />
 												</div>

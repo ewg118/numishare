@@ -394,50 +394,36 @@
 										<xxforms:hide dialog="obverse-objects"/>
 									</xforms:action>
 								</xforms:trigger>
-								<!--<xforms:group ref=".[count(nuds:obverse/nuds:typeSeries) = 0]">
-									<xforms:trigger appearance="minimal">
-										<xforms:label>
-											<span class="glyphicon glyphicon-plus"/>Type Series</xforms:label>
-										<xforms:action ev:event="DOMActivate">
-											<xforms:insert context="." origin="instance('obverse-template')" nodeset="./child::node()[last()]" if="count(nuds:obverse) = 0"/>
-											<xforms:insert context="nuds:obverse" origin="instance('typeSeries-template')" nodeset="./child::node()[last()]"/>
-											<xxforms:hide dialog="obverse-objects"/>
-										</xforms:action>
-									</xforms:trigger>
-								</xforms:group>-->
 							</xxforms:dialog>
 							<xforms:group ref="nuds:obverse">
 								<div class="subsection">
-									<xforms:group ref=".[count(nuds:type/nuds:description) &gt; count(distinct-values(nuds:type/nuds:description/@xml:lang))]">
+									<!--<xforms:group ref=".[count(nuds:type/nuds:description) &gt; count(distinct-values(nuds:type/nuds:description/@xml:lang))]">
 										<div class="ui-state-error ui-corner-all">
 											<p>
 												<span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"/>
 												<strong>Alert:</strong> Type Description languages must be unique. </p>
 										</div>
+									</xforms:group>-->
+									
+									<xforms:group ref=".[nuds:persname or nuds:corpname]">
+										<h4>Entities</h4>
+										<div class="subsection">											
+											<xforms:repeat nodeset="nuds:persname[@xlink:role='artist']">
+												<numishare:cp-name/>
+											</xforms:repeat>
+											<xforms:repeat nodeset="nuds:persname[@xlink:role='deity']">
+												<numishare:cp-name/>
+											</xforms:repeat>
+											<xforms:repeat nodeset="nuds:persname[@xlink:role='engraver']">
+												<numishare:cp-name/>
+											</xforms:repeat>
+											<xforms:repeat nodeset="nuds:persname[@xlink:role='portrait']">
+												<numishare:cp-name/>
+											</xforms:repeat>			
+										</div>												
 									</xforms:group>
-									<xforms:repeat nodeset="nuds:persname[@xlink:role='artist']">
-										<numishare:cp-name/>
-									</xforms:repeat>
-									<xforms:repeat nodeset="nuds:persname[@xlink:role='deity']">
-										<numishare:cp-name/>
-									</xforms:repeat>
-									<xforms:group ref="nuds:description">
-										<div>
-											<xforms:input ref=".">
-												<xforms:label>Description</xforms:label>
-												<xforms:alert>Must contain a value.</xforms:alert>
-											</xforms:input>
-											<xforms:trigger appearance="minimal">
-												<xforms:delete ev:event="DOMActivate" nodeset="."/>
-												<xforms:label>
-													<span class="glyphicon glyphicon-remove"/>
-												</xforms:label>
-											</xforms:trigger>
-										</div>
-									</xforms:group>
-									<xforms:repeat nodeset="nuds:persname[@xlink:role='engraver']">
-										<numishare:cp-name/>
-									</xforms:repeat>
+														
+																		
 									<xforms:group ref="nuds:legend">
 										<div>
 											<xforms:input ref=".">
@@ -452,9 +438,7 @@
 											</xforms:trigger>
 										</div>
 									</xforms:group>
-									<xforms:repeat nodeset="nuds:persname[@xlink:role='portrait']">
-										<numishare:cp-name/>
-									</xforms:repeat>
+									
 									<xforms:group ref="nuds:symbol">
 										<div>
 											<xforms:input ref=".">
@@ -469,6 +453,7 @@
 											</xforms:trigger>
 										</div>
 									</xforms:group>
+									
 									<xforms:group ref="nuds:type">
 										<h4>Type</h4>
 										<span class="add">
@@ -483,21 +468,6 @@
 										</xforms:repeat>
 										<xforms:delete ev:event="xforms-value-changed" if="count(*) = 0" nodeset="."/>
 									</xforms:group>
-
-									<!--<xforms:group ref="nuds:typeSeries">
-										<div>
-											<xforms:input ref=".">
-												<xforms:label>Type Series</xforms:label>
-												<xforms:alert>Must contain a value.</xforms:alert>
-											</xforms:input>
-											<xforms:trigger appearance="minimal">
-												<xforms:delete ev:event="DOMActivate" nodeset="."/>
-												<xforms:label>
-													<span class="glyphicon glyphicon-remove"/>
-												</xforms:label>
-											</xforms:trigger>
-										</div>
-									</xforms:group>-->
 
 									<xforms:delete ev:event="xforms-value-changed" if="count(*) = 0" nodeset="."/>
 								</div>
@@ -592,21 +562,11 @@
 											nodeset="./child::node()[last()]"/>
 										<xxforms:hide dialog="reverse-objects"/>
 									</xforms:action>
-								</xforms:trigger>
-								<!--<xforms:group ref=".[count(nuds:reverse/nuds:typeSeries) = 0]">
-									<xforms:trigger appearance="minimal">
-										<xforms:label>
-											<span class="glyphicon glyphicon-plus"/>Type Series</xforms:label>
-										<xforms:action ev:event="DOMActivate">
-											<xforms:insert context="." origin="instance('reverse-template')" nodeset="./child::node()[last()]" if="count(nuds:reverse) = 0"/>
-											<xforms:insert context="nuds:reverse" origin="instance('typeSeries-template')" nodeset="./child::node()[last()]"/>
-											<xxforms:hide dialog="reverse-objects"/>
-										</xforms:action>
-									</xforms:trigger>
-								</xforms:group>-->
+								</xforms:trigger>								
 							</xxforms:dialog>
 							<xforms:group ref="nuds:reverse">
 								<div class="subsection">
+									
 									<xforms:group ref=".[count(nuds:type/nuds:description) &gt; count(distinct-values(nuds:type/nuds:description/@xml:lang))]">
 										<div class="ui-state-error ui-corner-all">
 											<p>
@@ -614,29 +574,20 @@
 												<strong>Alert:</strong> Type Description languages must be unique. </p>
 										</div>
 									</xforms:group>
+									
 									<xforms:repeat nodeset="nuds:persname[@xlink:role='artist']">
 										<numishare:cp-name/>
 									</xforms:repeat>
 									<xforms:repeat nodeset="nuds:persname[@xlink:role='deity']">
 										<numishare:cp-name/>
-									</xforms:repeat>
-									<xforms:group ref="nuds:description">
-										<div>
-											<xforms:input ref=".">
-												<xforms:label>Description</xforms:label>
-												<xforms:alert>Must contain a value.</xforms:alert>
-											</xforms:input>
-											<xforms:trigger appearance="minimal">
-												<xforms:delete ev:event="DOMActivate" nodeset="."/>
-												<xforms:label>
-													<span class="glyphicon glyphicon-remove"/>
-												</xforms:label>
-											</xforms:trigger>
-										</div>
-									</xforms:group>
+									</xforms:repeat>									
 									<xforms:repeat nodeset="nuds:persname[@xlink:role='engraver']">
 										<numishare:cp-name/>
 									</xforms:repeat>
+									<xforms:repeat nodeset="nuds:persname[@xlink:role='portrait']">
+										<numishare:cp-name/>
+									</xforms:repeat>
+									
 									<xforms:group ref="nuds:legend">
 										<div>
 											<xforms:input ref=".">
@@ -651,9 +602,7 @@
 											</xforms:trigger>
 										</div>
 									</xforms:group>
-									<xforms:repeat nodeset="nuds:persname[@xlink:role='portrait']">
-										<numishare:cp-name/>
-									</xforms:repeat>
+									
 									<xforms:group ref="nuds:symbol">
 										<div>
 											<xforms:input ref=".">
@@ -682,21 +631,6 @@
 										</xforms:repeat>
 										<xforms:delete ev:event="xforms-value-changed" if="count(*) = 0" nodeset="."/>
 									</xforms:group>
-
-									<!--<xforms:group ref="nuds:typeSeries">
-										<div>
-											<xforms:input ref=".">
-												<xforms:label>Type Series</xforms:label>
-												<xforms:alert>Must contain a value.</xforms:alert>
-											</xforms:input>
-											<xforms:trigger appearance="minimal">
-												<xforms:delete ev:event="DOMActivate" nodeset="."/>
-												<xforms:label>
-													<span class="glyphicon glyphicon-remove"/>
-												</xforms:label>
-											</xforms:trigger>
-										</div>
-									</xforms:group>-->
 									<xforms:delete ev:event="xforms-value-changed" if="count(*) = 0" nodeset="."/>
 								</div>
 								<hr/>
@@ -785,8 +719,11 @@
 										<xforms:repeat nodeset="nuds:description">
 											<numishare:description/>
 										</xforms:repeat>
-										<xforms:delete ev:event="xforms-value-changed" if="count(*) = 0" nodeset="."/>
-									</xforms:group>
+										<xforms:action ev:event="DOMActivate">
+											<xforms:message level="modal">test</xforms:message>
+										</xforms:action>
+										<xforms:delete ev:event="xxforms-value-changed" if="count(*) = 0" nodeset="."/>
+									</xforms:group>									
 									<xforms:delete ev:event="xforms-value-changed" if="count(*) = 0" nodeset="."/>
 								</div>
 							</xforms:group>
