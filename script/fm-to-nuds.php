@@ -126,92 +126,99 @@ if (file_exists($eXist_config_path)) {
 				foreach ($labels as $key=>$label){
 					$row[$label] = preg_replace('/\s+/', ' ', $data[$key]);
 				}
-				if (trim(strtoupper($row['department'])) != 'J'){
-					//create new filename path
-					$collection = 'mantis';
-					$department = get_department($row['department']);
-					
-					$accnum = trim($row['accnum']);
-					$accPieces = explode('.', $accnum);
-					$accYear = $accPieces[0];					
-					$fileName = '/tmp/' . $accnum . '.xml';
-					//call function to generate xml
-					//provide error handling for $accnums that lack values
-					if (strlen($accnum) == 0){
-						error_log('[no accnum] (' . $department . ') record lacks accession number ' . date(DATE_W3C) . "\n", 3, "/var/log/numishare/error.log");
-						$errors[] = $count . ':(' . $department . ') record lacks accession number.';
-					} elseif (!is_numeric($accPieces[0]) || !is_numeric($accPieces[1]) || !is_numeric($accPieces[2])) {
-						error_log($accnum . '[invalid accnum] (' . $department . ') accnum contains non-integer component: ' . date(DATE_W3C) . "\n", 3, "/var/log/numishare/error.log");
-						$errors[] = $count . ': ' . $accnum . '(' . $department . ') accnum contains non-integer component';
-					} elseif ($department == 'FAIL') {
-						error_log($accnum . '(' . $row['department'] . ') invalid department: ' . date(DATE_W3C) . "\n", 3, "/var/log/numishare/error.log");
-						$errors[] = $count . ': ' . $accnum . '(' . $row['department'] . ') invalid department.';
-					} else {
-						//block 1001.1.* and 1001.57.* ranges
-						if (strpos($accnum, '1001.1.') === FALSE && strpos($accnum, '1001.57.') === FALSE){
-							echo "Processing {$accnum}\n";
-							
-							//generate a data object by parsing the contents of the Filemaker row
-							$record = parse_row($row, $count, $fileName);
-							//var_dump($record);
-							
-							//serialize the data object into a NUDS/XML document and write to /tmp
-							generate_nuds($record, $fileName);
-							
-							//read file back into memory for PUT to eXist
-							if (($readFile = fopen($fileName, 'r')) === FALSE){
-								error_log($accnum . ' (' . $department . ') failed to open temporary file (accnum likely broken) at ' . date(DATE_W3C) . "\n", 3, "/var/log/numishare/error.log");
-								$errors[] = $accnum . ' (' . $department . ') failed to open temporary file (accnum likely broken).';
-							} else {
-								//PUT xml to eXist
-								$putToExist=curl_init();
-								
-								//set curl opts
-								curl_setopt($putToExist,CURLOPT_URL,'http://localhost:8080/exist/rest/db/' . $collection . '/objects/' . $accYear . '/' . $accnum . '.xml');
-								curl_setopt($putToExist,CURLOPT_HTTPHEADER, array("Content-Type: text/xml; charset=utf-8"));
-								curl_setopt($putToExist,CURLOPT_CONNECTTIMEOUT,2);
-								curl_setopt($putToExist,CURLOPT_RETURNTRANSFER,1);
-								curl_setopt($putToExist,CURLOPT_PUT,1);
-								curl_setopt($putToExist,CURLOPT_INFILESIZE,filesize($fileName));
-								curl_setopt($putToExist,CURLOPT_INFILE,$readFile);
-								curl_setopt($putToExist,CURLOPT_USERPWD,$eXist_credentials);
-								$response = curl_exec($putToExist);
-								
-								$http_code = curl_getinfo($putToExist,CURLINFO_HTTP_CODE);
-								
-								//error and success logging
-								if (curl_error($putToExist) === FALSE){
-									error_log($accnum . ' (' . $department . ') failed to upload to eXist at ' . date(DATE_W3C) . "\n", 3, "/var/log/numishare/error.log");
-									$errors[] = $accnum . ' (' . $department . ') failed to upload to eXist.';
-								} else {
-									if ($http_code == '201'){
-										$datetime = date(DATE_W3C);
-										echo "Writing {$accnum}.\n";
-										error_log("{$accnum}: {$datetime}\n", 3, "/var/log/numishare/success.log");
-										
-										//if file was successfully PUT to eXist, add the accession number to the array for Solr indexing.
-										$accnums[] = $accnum;
-										
-										//index records into Solr in increments of 1,000
-										if (count($accnums) > 0 && count($accnums) % 1000 == 0 ){
-											$start = count($accnums) - 1000;
-											$toIndex = array_slice($accnums, $start, 1000);
-											
-											//POST TO SOLR
-											generate_solr_shell_script($toIndex);
-										}
-									}
-								}
-								//close eXist curl
-								curl_close($putToExist);
-								
-								//close files and delete from /tmp
-								fclose($readFile);
-								unlink($fileName);
-							}
-						}
-					}
-				}
+				if (strlen(trim($row['department'])) == 0){
+				    //report a 0 length department as an error
+				    $accnum = trim($row['accnum']);				   
+				    error_log($accnum . ' does not contain a department value: ' . date(DATE_W3C) . "\n", 3, "/var/log/numishare/error.log");
+				    $errors[] = $count . ': ' . $accnum . ' does not contain a department value';
+				} else {
+				    if (trim(strtoupper($row['department'])) != 'J'){
+				        //create new filename path
+				        $collection = 'mantis';
+				        $department = get_department($row['department']);
+				        
+				        $accnum = trim($row['accnum']);
+				        $accPieces = explode('.', $accnum);
+				        $accYear = $accPieces[0];
+				        $fileName = '/tmp/' . $accnum . '.xml';
+				        //call function to generate xml
+				        //provide error handling for $accnums that lack values
+				        if (strlen($accnum) == 0){
+				            error_log('[no accnum] (' . $department . ') record lacks accession number ' . date(DATE_W3C) . "\n", 3, "/var/log/numishare/error.log");
+				            $errors[] = $count . ':(' . $department . ') record lacks accession number.';
+				        } elseif (!is_numeric($accPieces[0]) || !is_numeric($accPieces[1]) || !is_numeric($accPieces[2])) {
+				            error_log($accnum . '[invalid accnum] (' . $department . ') accnum contains non-integer component: ' . date(DATE_W3C) . "\n", 3, "/var/log/numishare/error.log");
+				            $errors[] = $count . ': ' . $accnum . '(' . $department . ') accnum contains non-integer component';
+				        } elseif ($department == 'FAIL') {
+				            error_log($accnum . '(' . $row['department'] . ') invalid department: ' . date(DATE_W3C) . "\n", 3, "/var/log/numishare/error.log");
+				            $errors[] = $count . ': ' . $accnum . '(' . $row['department'] . ') invalid department.';
+				        } else {
+				            //block 1001.1.* and 1001.57.* ranges
+				            if (strpos($accnum, '1001.1.') === FALSE && strpos($accnum, '1001.57.') === FALSE){
+				                echo "Processing {$accnum}\n";
+				                
+				                //generate a data object by parsing the contents of the Filemaker row
+				                $record = parse_row($row, $count, $fileName);
+				                //var_dump($record);
+				                
+				                //serialize the data object into a NUDS/XML document and write to /tmp
+				                generate_nuds($record, $fileName);
+				                
+				                //read file back into memory for PUT to eXist
+				                if (($readFile = fopen($fileName, 'r')) === FALSE){
+				                    error_log($accnum . ' (' . $department . ') failed to open temporary file (accnum likely broken) at ' . date(DATE_W3C) . "\n", 3, "/var/log/numishare/error.log");
+				                    $errors[] = $accnum . ' (' . $department . ') failed to open temporary file (accnum likely broken).';
+				                } else {
+				                    //PUT xml to eXist
+				                    $putToExist=curl_init();
+				                    
+				                    //set curl opts
+				                    curl_setopt($putToExist,CURLOPT_URL,'http://localhost:8080/exist/rest/db/' . $collection . '/objects/' . $accYear . '/' . $accnum . '.xml');
+				                    curl_setopt($putToExist,CURLOPT_HTTPHEADER, array("Content-Type: text/xml; charset=utf-8"));
+				                    curl_setopt($putToExist,CURLOPT_CONNECTTIMEOUT,2);
+				                    curl_setopt($putToExist,CURLOPT_RETURNTRANSFER,1);
+				                    curl_setopt($putToExist,CURLOPT_PUT,1);
+				                    curl_setopt($putToExist,CURLOPT_INFILESIZE,filesize($fileName));
+				                    curl_setopt($putToExist,CURLOPT_INFILE,$readFile);
+				                    curl_setopt($putToExist,CURLOPT_USERPWD,$eXist_credentials);
+				                    $response = curl_exec($putToExist);
+				                    
+				                    $http_code = curl_getinfo($putToExist,CURLINFO_HTTP_CODE);
+				                    
+				                    //error and success logging
+				                    if (curl_error($putToExist) === FALSE){
+				                        error_log($accnum . ' (' . $department . ') failed to upload to eXist at ' . date(DATE_W3C) . "\n", 3, "/var/log/numishare/error.log");
+				                        $errors[] = $accnum . ' (' . $department . ') failed to upload to eXist.';
+				                    } else {
+				                        if ($http_code == '201'){
+				                            $datetime = date(DATE_W3C);
+				                            echo "Writing {$accnum}.\n";
+				                            error_log("{$accnum}: {$datetime}\n", 3, "/var/log/numishare/success.log");
+				                            
+				                            //if file was successfully PUT to eXist, add the accession number to the array for Solr indexing.
+				                            $accnums[] = $accnum;
+				                            
+				                            //index records into Solr in increments of 1,000
+				                            if (count($accnums) > 0 && count($accnums) % 1000 == 0 ){
+				                                $start = count($accnums) - 1000;
+				                                $toIndex = array_slice($accnums, $start, 1000);
+				                                
+				                                //POST TO SOLR
+				                                generate_solr_shell_script($toIndex);
+				                            }
+				                        }
+				                    }
+				                    //close eXist curl
+				                    curl_close($putToExist);
+				                    
+				                    //close files and delete from /tmp
+				                    fclose($readFile);
+				                    unlink($fileName);
+				                }
+				            }
+				        }
+				    }
+				}				
 				$count++;
 			}
 		} else {
