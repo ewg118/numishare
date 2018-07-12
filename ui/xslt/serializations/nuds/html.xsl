@@ -2,8 +2,9 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:res="http://www.w3.org/2005/sparql-results#" xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns:mets="http://www.loc.gov/METS/" xmlns:numishare="https://github.com/ewg118/numishare" xmlns:nm="http://nomisma.org/id/"
-	xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:nmo="http://nomisma.org/ontology#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-	xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nuds="http://nomisma.org/nuds" exclude-result-prefixes="#all" version="2.0">
+	xmlns:gml="http://www.opengis.net/gml" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:nmo="http://nomisma.org/ontology#"
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nuds="http://nomisma.org/nuds"
+	exclude-result-prefixes="#all" version="2.0">
 	<xsl:include href="../../templates.xsl"/>
 	<xsl:include href="../../templates-visualize.xsl"/>
 	<!--<xsl:include href="../../templates-analyze.xsl"/>-->
@@ -191,6 +192,7 @@
 				<xsl:choose>
 					<xsl:when test="descendant::nuds:findspotDesc/@xlink:href">true</xsl:when>
 					<xsl:when test="descendant::nuds:geogname[@xlink:role = 'findspot'][contains(@xlink:href, 'geonames.org')]">true</xsl:when>
+					<xsl:when test="descendant::nuds:findspot/gml:Point">true</xsl:when>
 					<xsl:otherwise>false</xsl:otherwise>
 				</xsl:choose>
 			</xsl:otherwise>
@@ -888,13 +890,13 @@
 			</ul>
 		</div>
 	</xsl:template>
-	
-	
-	<xsl:template match="nuds:rightsStmt[nuds:rights or nuds:license[@for='images']]">
+
+
+	<xsl:template match="nuds:rightsStmt[nuds:rights or nuds:license[@for = 'images']]">
 		<div class="metadata_section">
 			<h3>Rights</h3>
 			<ul>
-				<xsl:apply-templates select="nuds:license[@for='images']|nuds:rights" mode="descMeta"/>
+				<xsl:apply-templates select="nuds:license[@for = 'images'] | nuds:rights" mode="descMeta"/>
 			</ul>
 		</div>
 	</xsl:template>
@@ -983,7 +985,7 @@
 					</noscript>
 					<div>
 						<a href="{$iiif-service}/full/full/0/default.jpg" title="Full resolution image" rel="nofollow"><span
-							class="glyphicon glyphicon-download-alt"/> Download full resolution image</a>
+								class="glyphicon glyphicon-download-alt"/> Download full resolution image</a>
 					</div>
 				</xsl:when>
 				<xsl:when test="string($reference-image)">
