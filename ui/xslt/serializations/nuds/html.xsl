@@ -509,7 +509,7 @@
 							<h3>Subtypes</h3>
 							<xsl:apply-templates select="$subtypes//subtype">
 								<xsl:with-param name="uri_space" select="//config/uri_space"/>
-								<xsl:with-param name="endpoint" select="$sparql_endpoint"/>
+								<xsl:with-param name="endpoint" select="if (contains($sparql_endpoint, 'localhost')) then 'http://nomisma.org/query' else $sparql_endpoint"/>
 							</xsl:apply-templates>
 						</xsl:if>
 
