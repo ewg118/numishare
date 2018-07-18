@@ -587,11 +587,15 @@
 	<!-- *************** HANDLE SUBTYPES DELIVERED FROM XQUERY ******************-->
 	<xsl:template match="subtype">
 		<xsl:param name="uri_space"/>
+		<xsl:param name="endpoint"/>
+		
 		<xsl:variable name="subtypeId" select="@recordId"/>
+		<xsl:variable name="objectUri" select="concat($uri_space, $subtypeId)"/>
+		
 		<div class="row">
-			<div class="col-md-3" about="{concat($uri_space, $subtypeId)}" typeof="nmo:TypeSeriesItem">
+				<div class="col-md-3" about="{$objectUri}" typeof="nmo:TypeSeriesItem">
 				<h4 property="skos:prefLabel">
-					<a href="{concat($uri_space, $subtypeId)}">
+					<a href="{$objectUri}">
 						<xsl:value-of select="nuds:descMeta/nuds:title"/>
 					</a>
 				</h4>
@@ -605,6 +609,8 @@
 			<div class="col-md-9">
 				<xsl:apply-templates select="document(concat($request-uri, 'apis/type-examples?id=', $subtypeId))/res:sparql" mode="type-examples">
 					<xsl:with-param name="subtype" select="true()" as="xs:boolean"/>
+					<xsl:with-param name="objectUri" select="$objectUri"/>
+					<xsl:with-param name="endpoint" select="$endpoint"/>
 				</xsl:apply-templates>
 			</div>
 		</div>

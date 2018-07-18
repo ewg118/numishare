@@ -497,6 +497,8 @@
 								<xsl:with-param name="page" select="$page" as="xs:integer"/>
 								<xsl:with-param name="numFound" select="$specimenCount" as="xs:integer"/>
 								<xsl:with-param name="limit" select="$limit" as="xs:integer"/>
+								<xsl:with-param name="endpoint" select="$sparql_endpoint"/>
+								<xsl:with-param name="objectUri" select="$objectUri"/>
 							</xsl:apply-templates>
 						</xsl:if>
 
@@ -507,6 +509,7 @@
 							<h3>Subtypes</h3>
 							<xsl:apply-templates select="$subtypes//subtype">
 								<xsl:with-param name="uri_space" select="//config/uri_space"/>
+								<xsl:with-param name="endpoint" select="$sparql_endpoint"/>
 							</xsl:apply-templates>
 						</xsl:if>
 

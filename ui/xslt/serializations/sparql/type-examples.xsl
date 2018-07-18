@@ -15,9 +15,11 @@
         <xsl:param name="page"/>
         <xsl:param name="numFound"/>
         <xsl:param name="limit"/>
+        <xsl:param name="endpoint"/>
+        <xsl:param name="objectUri"/>
+        
 
-        <xsl:variable name="query" select="replace(doc('input:query'), 'typeURI', $objectUri)"/>           
-            
+        <xsl:variable name="query" select="replace(doc('input:query'), 'typeURI', $objectUri)"/>
 
         <div class="row">
             <xsl:if test="not($subtype = true())">
@@ -29,7 +31,7 @@
                         <xsl:value-of select="numishare:normalizeLabel('display_examples', $lang)"/>
                         <!-- insert link to download CSV -->
                         <small style="margin-left:10px">
-                            <a href="{$sparql_endpoint}?query={encode-for-uri($query)}&amp;output=csv" title="Download CSV">
+                            <a href="{$endpoint}?query={encode-for-uri($query)}&amp;output=csv" title="Download CSV">
                                 <span class="glyphicon glyphicon-download"/>Download CSV</a>
                         </small>
                     </xsl:element>
