@@ -497,7 +497,7 @@
 								<xsl:with-param name="page" select="$page" as="xs:integer"/>
 								<xsl:with-param name="numFound" select="$specimenCount" as="xs:integer"/>
 								<xsl:with-param name="limit" select="$limit" as="xs:integer"/>
-								<xsl:with-param name="endpoint" select="$sparql_endpoint"/>
+								<xsl:with-param name="endpoint" select="if (contains($sparql_endpoint, 'localhost')) then 'http://nomisma.org/query' else $sparql_endpoint"/>
 								<xsl:with-param name="objectUri" select="$objectUri"/>
 							</xsl:apply-templates>
 						</xsl:if>
