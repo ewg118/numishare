@@ -25,7 +25,7 @@
             <xsl:if test="not($subtype = true())">
                 <xsl:attribute name="id">examples</xsl:attribute>
             </xsl:if>
-            <xsl:if test="$numFound &gt; 0">
+            <xsl:if test="count(descendant::res:result) &gt; 0">
                 <div class="col-md-12">
                     <xsl:element name="{if($subtype=true()) then 'h4' else 'h3'}">
                         <xsl:value-of select="numishare:normalizeLabel('display_examples', $lang)"/>
