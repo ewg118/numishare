@@ -48,7 +48,7 @@
 			</xforms:instance>
 
 			<xforms:instance id="config-template" xxforms:exclude-result-prefixes="#all">
-				<config xmlns="" version="18.06">
+				<config xmlns="" version="18.07">
 					<title>Numishare</title>
 					<description>A short description of the collection.</description>
 					<logo/>
@@ -56,6 +56,7 @@
 					<sparql_endpoint>http://nomisma.org/query</sparql_endpoint>
 					<annotation_sparql_endpoint/>
 					<type_series/>
+					<specimens_per_page>48</specimens_per_page>
 					<solr_published>http://localhost:8080/solr/numishare-published/</solr_published>
 					<flickr_api_key/>
 					<geonames_api_key/>
@@ -404,10 +405,6 @@
 					<xforms:bind nodeset="language" required="true()"/>
 					<xforms:bind nodeset="license" required="true()"/>
 				</xforms:bind>
-				<xforms:bind nodeset="images">
-					<!-- about the electronic record -->
-					<xforms:bind nodeset="absolute_path" required="true()"/>
-				</xforms:bind>
 			</xforms:bind>
 
 			<xforms:bind nodeset="instance('pagination-result')">
@@ -527,7 +524,7 @@
 				<xforms:action ev:event="xforms-submit-done">
 					<!-- create eXist-db collections, config file, and XQuery files -->
 					<xforms:setvalue ref="instance('eXist-xquery')/exist:text"
-						value="replace(replace(instance('xqueries')/query[@id='create-collection'], '%COLLECTION%', instance('control-instance')/collection-name), '%PATH%', instance('config-template')/images/absolute_path)"/>
+						value="replace(replace(instance('xqueries')/query[@id='create-collection'], '%COLLECTION%', instance('control-instance')/collection-name), '%PATH%', 'oxf:/apps/numishare')"/>
 					<xforms:send submission="xquery-db"/>
 
 					<!-- submit collection metadata once again before switching the interface -->
@@ -713,18 +710,18 @@
 							<div id="form">
 								<xforms:group
 									ref=".[count(distinct-values(instance('collections-list')/collection/@name)) != count(instance('collections-list')/collection/@name)]">
-									<div class="bg-danger alert-box">
+									<div class="alert alert-box alert-danger">
 										<span class="glyphicon glyphicon-exclamation-sign"></span>
 										<strong>Alert:</strong> Collection of this name already exists.</div>
 								</xforms:group>
 								<xforms:group
 									ref=".[count(distinct-values(instance('collections-list')/collection/@role)) != count(instance('collections-list')/collection/@role)]">
-									<div class="bg-danger alert-box">
+									<div class="alert alert-box alert-warning">
 										<span class="glyphicon glyphicon-exclamation-sign"></span>
 										<strong>Alert:</strong>A role cannot be bound to more than one collection.</div>
 								</xforms:group>
 								<xforms:group ref=".[instance('control-instance')/status/text()]">
-									<div class="bg-info alert-box">
+									<div class="alert alert-box alert-success">
 										<p><span class="glyphicon glyphicon-info-sign"></span>
 											<strong>Status:</strong>
 											<xforms:output ref="instance('control-instance')/status"/>
@@ -933,13 +930,6 @@
 															<xforms:hint>Unlikely to need changing.</xforms:hint>
 														</xforms:input>
 													</div>
-													<div>
-														<xforms:input ref="images/absolute_path">
-															<xforms:label>Absolute Path</xforms:label>
-															<xforms:alert>Required</xforms:alert>
-															<xforms:hint>Necessary for uploading XQuery files.</xforms:hint>
-														</xforms:input>
-													</div>
 												</xforms:group>
 												<xforms:trigger>
 													<xforms:label>Cancel</xforms:label>
@@ -991,7 +981,7 @@
 									</div>
 								</xforms:group>
 								<xforms:group ref=".[instance('control-instance')/status/text()]">
-									<div class="bg-info alert-box">
+									<div class="alert alert-box alert-success">
 										<p><span class="glyphicon glyphicon-info-sign"></span>
 											<strong>Status:</strong>
 											<xforms:output ref="instance('control-instance')/status"/>

@@ -11,20 +11,39 @@
 
     <!-- **************** PHYSICAL EXAMPLES OF COIN TYPES ****************-->
     <xsl:template match="res:sparql" mode="type-examples">
-        <xsl:param name="subtype" select="doc('input:request')/request/parameters/parameter[name = 'subtype']/value"/>
+        <xsl:param name="subtype"/>
+        <xsl:param name="page"/>
+        <xsl:param name="numFound"/>
+        <xsl:param name="limit"/>
 
-        <xsl:variable name="count" select="count(descendant::res:result)"/>
+        <xsl:variable name="query" select="replace(doc('input:query'), 'typeURI', $objectUri)"/>           
+            
 
         <div class="row">
-            <xsl:if test="not($subtype = 'true')">
+            <xsl:if test="not($subtype = true())">
                 <xsl:attribute name="id">examples</xsl:attribute>
             </xsl:if>
-            <xsl:if test="$count &gt; 0">
+            <xsl:if test="$numFound &gt; 0">
                 <div class="col-md-12">
-                    <xsl:element name="{if($subtype='true') then 'h4' else 'h3'}">
+                    <xsl:element name="{if($subtype=true()) then 'h4' else 'h3'}">
                         <xsl:value-of select="numishare:normalizeLabel('display_examples', $lang)"/>
+                        <!-- insert link to download CSV -->
+                        <small style="margin-left:10px">
+                            <a href="{$sparql_endpoint}?query={encode-for-uri($query)}&amp;output=csv" title="Download CSV">
+                                <span class="glyphicon glyphicon-download"/>Download CSV</a>
+                        </small>
                     </xsl:element>
                 </div>
+                <xsl:if test="not($subtype = true())">
+                    <!-- display the pagination toolbar only if there are multiple pages -->
+                    <xsl:if test="$numFound &gt; $limit">
+                        <xsl:call-template name="pagination">
+                            <xsl:with-param name="page" select="$page" as="xs:integer"/>
+                            <xsl:with-param name="numFound" select="$numFound" as="xs:integer"/>
+                            <xsl:with-param name="limit" select="$limit" as="xs:integer"/>
+                        </xsl:call-template>
+                    </xsl:if>
+                </xsl:if>
                 <xsl:apply-templates select="descendant::res:result" mode="type-examples"/>
             </xsl:if>
         </div>
@@ -38,7 +57,7 @@
             res:binding[@name = 'collection']/res:literal
             else
             res:binding[@name = 'datasetTitle']/res:literal)"/>
-        
+
         <div class="g_doc col-md-4">
             <span class="result_link">
                 <a href="{res:binding[@name='object']/res:uri}" target="_blank">
@@ -122,7 +141,8 @@
                 <xsl:if test="string(res:binding[@name = 'model']/res:uri)">
                     <dt>3D Model</dt>
                     <dd>
-                        <a href="#model-window" model-url="{res:binding[@name='model']/res:uri}" class="model-button" title="{$title}" identifier="{res:binding[@name='object']/res:uri}">Click to view</a>
+                        <a href="#model-window" model-url="{res:binding[@name='model']/res:uri}" class="model-button" title="{$title}"
+                            identifier="{res:binding[@name='object']/res:uri}">Click to view</a>
                     </dd>
                 </xsl:if>
             </dl>
@@ -306,8 +326,7 @@
 
         <div id="listTypes-container">
             <div style="margin-bottom:10px;" class="control-row">
-                <a href="#" class="toggle-button btn btn-primary" id="toggle-listTypesQuery"><span class="glyphicon glyphicon-plus"/> View SPARQL for full
-                    query</a>
+                <a href="#" class="toggle-button btn btn-primary" id="toggle-listTypesQuery"><span class="glyphicon glyphicon-plus"/> View SPARQL for full query</a>
                 <a href="{$endpoint}?query={encode-for-uri($query)}&amp;output=csv" title="Download CSV" class="btn btn-primary" style="margin-left:10px">
                     <span class="glyphicon glyphicon-download"/>Download CSV</a>
             </div>
@@ -368,6 +387,119 @@
                 </tbody>
             </table>
         </div>
+    </xsl:template>
+
+    <!-- paginating results -->
+    <xsl:template name="pagination">
+        <xsl:param name="page" as="xs:integer"/>
+        <xsl:param name="numFound" as="xs:integer"/>
+        <xsl:param name="limit" as="xs:integer"/>
+
+        <xsl:variable name="offset" select="($page - 1) * $limit" as="xs:integer"/>
+
+        <xsl:variable name="previous" select="$page - 1"/>
+        <xsl:variable name="current" select="$page"/>
+        <xsl:variable name="next" select="$page + 1"/>
+        <xsl:variable name="total" select="ceiling($numFound div $limit)"/>
+
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-6">
+                    <xsl:variable name="startRecord" select="$offset + 1"/>
+                    <xsl:variable name="endRecord">
+                        <xsl:choose>
+                            <xsl:when test="$numFound &gt; ($offset + $limit)">
+                                <xsl:value-of select="$offset + $limit"/>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:value-of select="$numFound"/>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </xsl:variable>
+                    <p>Records <b><xsl:value-of select="$startRecord"/></b> to <b><xsl:value-of select="$endRecord"/></b> of <b><xsl:value-of select="$numFound"/></b></p>
+                </div>
+                <!-- paging functionality -->
+                <div class="col-md-6">
+                    <div class="btn-toolbar" role="toolbar">
+                        <div class="btn-group pull-right">
+                            <!-- first page -->
+                            <xsl:if test="$current &gt; 1">
+                                <a class="btn btn-default" role="button" title="First" href="?page=1#examples">
+                                    <span class="glyphicon glyphicon-fast-backward"/>
+                                    <xsl:text> 1</xsl:text>
+                                </a>
+                                <a class="btn btn-default" role="button" title="Previous" href="?page={$current - 1}#examples">
+                                    <xsl:text>Previous </xsl:text>
+                                    <span class="glyphicon glyphicon-backward"/>
+                                </a>
+                            </xsl:if>
+                            <xsl:if test="$current &gt; 5">
+                                <button type="button" class="btn btn-default disabled">
+                                    <xsl:text>...</xsl:text>
+                                </button>
+                            </xsl:if>
+                            <xsl:if test="$current &gt; 4">
+                                <a class="btn btn-default" role="button" href="?page={$current - 3}#examples">
+                                    <xsl:value-of select="$current - 3"/>
+                                    <xsl:text> </xsl:text>
+                                </a>
+                            </xsl:if>
+                            <xsl:if test="$current &gt; 3">
+                                <a class="btn btn-default" role="button" href="?page={$current - 2}#examples">
+                                    <xsl:value-of select="$current - 2"/>
+                                    <xsl:text> </xsl:text>
+                                </a>
+                            </xsl:if>
+                            <xsl:if test="$current &gt; 2">
+                                <a class="btn btn-default" role="button" href="?page={$current - 1}#examples">
+                                    <xsl:value-of select="$current - 1"/>
+                                    <xsl:text> </xsl:text>
+                                </a>
+                            </xsl:if>
+                            <!-- current page -->
+                            <button type="button" class="btn btn-default active">
+                                <b>
+                                    <xsl:value-of select="$current"/>
+                                </b>
+                            </button>
+                            <xsl:if test="$total &gt; ($current + 1)">
+                                <a class="btn btn-default" role="button" title="Next" href="?page={$current + 1}#examples">
+                                    <xsl:value-of select="$current + 1"/>
+                                </a>
+                            </xsl:if>
+                            <xsl:if test="$total &gt; ($current + 2)">
+                                <a class="btn btn-default" role="button" title="Next" href="?page={$current + 2}#examples">
+                                    <xsl:value-of select="$current + 2"/>
+                                </a>
+                            </xsl:if>
+                            <xsl:if test="$total &gt; ($current + 3)">
+                                <a class="btn btn-default" role="button" title="Next" href="?page={$current + 3}#examples">
+                                    <xsl:value-of select="$current + 3"/>
+                                </a>
+                            </xsl:if>
+                            <xsl:if test="$total &gt; ($current + 4)">
+                                <button type="button" class="btn btn-default disabled">
+                                    <xsl:text>...</xsl:text>
+                                </button>
+                            </xsl:if>
+                            <!-- last page -->
+                            <xsl:if test="$current &lt; $total">
+                                <a class="btn btn-default" role="button" title="Next" href="?page={$current + 1}#examples">
+                                    <xsl:text>Next </xsl:text>
+                                    <span class="glyphicon glyphicon-forward"/>
+                                </a>
+                                <a class="btn btn-default" role="button" title="Last" href="?page={$total}#examples">
+                                    <xsl:value-of select="$total"/>
+                                    <xsl:text> </xsl:text>
+                                    <span class="glyphicon glyphicon-fast-forward"/>
+                                </a>
+                            </xsl:if>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </xsl:template>
 
 </xsl:stylesheet>

@@ -2,8 +2,8 @@
 <!--***************************************** SHARED TEMPLATES AND FUNCTIONS *****************************************
 	Author: Ethan Gruber
 	Function: this XSLT stylesheet is included into display.xsl.  It contains shared templates and functions that may be used in object-
-	specific stylesheets
-	Modification date: Febrary 2012
+	specific stylesheets. Includes templates for bibliographies in MODS and TEI/EpiDoc extensions
+	Modification date: 2018
 -->
 <xsl:stylesheet xmlns:nuds="http://nomisma.org/nuds" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:numishare="https://github.com/ewg118/numishare"
 	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
@@ -590,7 +590,7 @@
 		<xsl:variable name="subtypeId" select="@recordId"/>
 		<div class="row">
 			<div class="col-md-3" about="{concat($uri_space, $subtypeId)}" typeof="nmo:TypeSeriesItem">
-				<h4 property="dcterms:title">
+				<h4 property="skos:prefLabel">
 					<a href="{concat($uri_space, $subtypeId)}">
 						<xsl:value-of select="nuds:descMeta/nuds:title"/>
 					</a>
@@ -603,7 +603,9 @@
 				</ul>
 			</div>
 			<div class="col-md-9">
-				<xsl:apply-templates select="document(concat($request-uri, 'apis/type-examples?id=', $subtypeId, '&amp;subtype=true'))/*" mode="type-examples"/>
+				<xsl:apply-templates select="document(concat($request-uri, 'apis/type-examples?id=', $subtypeId))/res:sparql" mode="type-examples">
+					<xsl:with-param name="subtype" select="true()" as="xs:boolean"/>
+				</xsl:apply-templates>
 			</div>
 		</div>
 		<hr/>
