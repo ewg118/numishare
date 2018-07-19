@@ -3,22 +3,18 @@
 	xmlns:res="http://www.w3.org/2005/sparql-results#" exclude-result-prefixes="#all" version="2.0">
 	<xsl:include href="../functions.xsl"/>
 	<xsl:include href="../serializations/solr/html-templates.xsl"/>
+	<xsl:include href="numishareResults.xsl"/>
 
 	<!-- params -->
 	<xsl:param name="pipeline" select="doc('input:request')/request/parameters/parameter[name='pipeline']/value"/>
+	<xsl:param name="langParam" select="doc('input:request')/request/parameters/parameter[name='lang']/value"/>
 	<xsl:param name="lang">
 		<xsl:choose>
-			<xsl:when test="string(doc('input:request')/request/parameters/parameter[name='lang']/value)">
-				<xsl:if test="//config/languages/language[@code=doc('input:request')/request/parameters/parameter[name='lang']/value][@enabled=true()]">
-					<xsl:value-of select="doc('input:request')/request/parameters/parameter[name='lang']/value"/>
-				</xsl:if>
+			<xsl:when test="string($langParam)">
+				<xsl:value-of select="$langParam"/>
 			</xsl:when>
 			<xsl:when test="string(doc('input:request')/request//header[name[.='accept-language']]/value)">
-				<xsl:variable name="primaryLang" select="numishare:parseAcceptLanguage(doc('input:request')/request//header[name[.='accept-language']]/value)[1]"/>
-				
-				<xsl:if test="//config/languages/language[@code=$primaryLang][@enabled=true()]">
-					<xsl:value-of select="$primaryLang"/>
-				</xsl:if>
+				<xsl:value-of select="numishare:parseAcceptLanguage(doc('input:request')/request//header[name[.='accept-language']]/value)[1]"/>
 			</xsl:when>
 		</xsl:choose>
 	</xsl:param>
@@ -30,6 +26,17 @@
 			<xsl:when test="$pipeline='maps'"/>
 			<xsl:when test="$pipeline='maps_fullscreen'">../</xsl:when>
 			<xsl:otherwise/>
+		</xsl:choose>
+	</xsl:variable>
+	
+	<xsl:variable name="object-path">
+		<xsl:choose>
+			<xsl:when test="//config/collection_type = 'object' and string(//config/uri_space)">
+				<xsl:value-of select="//config/uri_space"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="concat($display_path, 'id/')"/>
+			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:variable>
 
@@ -112,7 +119,7 @@
 				<xsl:if test="$lang='ar'">
 					<xsl:attribute name="style">direction: ltr; text-align:right</xsl:attribute>
 				</xsl:if>
-				<a href="{$display_path}id/{str[@name='recordId']}{if (string($langParam)) then concat('?lang=', $langParam) else ''}" target="_blank">
+				<a href="{$object-path}{str[@name='recordId']}{if (string($langParam)) then concat('?lang=', $langParam) else ''}" target="_blank">
 					<xsl:value-of select="str[@name='title_display']"/>
 				</a>
 			</h4>
@@ -211,27 +218,15 @@
 				<xsl:choose>
 					<xsl:when test="str[@name='recordType'] = 'physical'">
 						<xsl:if test="string(str[@name='thumbnail_obv'])">
-							<xsl:variable name="path">
-								<xsl:if test="not(contains(str[@name='thumbnail_obv'], 'http://'))">
-									<xsl:value-of select="$display_path"/>
-								</xsl:if>
-							</xsl:variable>
-
-							<a class="thumbImage" href="{$path}{str[@name='reference_obv']}" title="Obverse of {str[@name='title_display']}" id="{$display_path}id/{str[@name='recordId']}{if
+							<a class="thumbImage" href="{str[@name='reference_obv']}" title="Obverse of {str[@name='title_display']}" id="{$object-path}{str[@name='recordId']}{if
 								(string($langParam))         then concat('?lang=', $langParam) else ''}">
-								<img src="{$path}{str[@name='thumbnail_obv']}" class="side-thumbnail"/>
+								<img src="{str[@name='thumbnail_obv']}" class="side-thumbnail"/>
 							</a>
 						</xsl:if>
 						<xsl:if test="string(str[@name='thumbnail_rev'])">
-							<xsl:variable name="path">
-								<xsl:if test="not(contains(str[@name='thumbnail_rev'], 'http://'))">
-									<xsl:value-of select="$display_path"/>
-								</xsl:if>
-							</xsl:variable>
-
-							<a class="thumbImage" href="{$path}{str[@name='reference_rev']}" title="Reverse of {str[@name='title_display']}" id="{$display_path}id/{str[@name='recordId']}{if
+							<a class="thumbImage" href="{str[@name='reference_rev']}" title="Reverse of {str[@name='title_display']}" id="{$object-path}{str[@name='recordId']}{if
 								(string($langParam))         then concat('?lang=', $langParam) else ''}">
-								<img src="{$path}{str[@name='thumbnail_rev']}" class="side-thumbnail"/>
+								<img src="{str[@name='thumbnail_rev']}" class="side-thumbnail"/>
 							</a>
 						</xsl:if>
 					</xsl:when>

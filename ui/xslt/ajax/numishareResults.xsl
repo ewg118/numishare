@@ -1,7 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    version="2.0">
-    
+
+<!-- Author: Ethan Gruber
+        Last modified: July 2018
+        Function: process XML response from the numishareResults nomisma.org API into a block of associated images and hoard/object count -->
+
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:numishare="https://github.com/ewg118/numishare" version="2.0">
+
+    <!-- ************** PROCESS GROUP OF SPARQL RESULTS FROM NOMISMA TO DISPLAY IMAGES ************** -->
+    <xsl:template match="group" mode="results">
+        <xsl:variable name="hoard-count" select="number(hoard-count)"/>
+        <xsl:variable name="object-count" select="number(object-count)"/>
+        <xsl:variable name="count" select="$hoard-count + $object-count"/>
+        <!-- display images -->
+        <xsl:apply-templates select="descendant::object" mode="results"/>
+        <!-- object count -->
+        <xsl:if test="$count &gt; 0">
+            <br/>
+            <xsl:if test="$object-count &gt; 0">
+                <xsl:choose>
+                    <xsl:when test="$object-count = 1">object</xsl:when>
+                    <xsl:otherwise>objects</xsl:otherwise>
+                </xsl:choose>
+                <xsl:text>: </xsl:text>
+                <xsl:value-of select="$object-count"/>
+                <xsl:if test="$hoard-count &gt; 0">
+                    <xsl:text>; </xsl:text>
+                </xsl:if>
+            </xsl:if>
+
+            <xsl:if test="$hoard-count &gt; 0">
+                <xsl:choose>
+                    <xsl:when test="$hoard-count = 1">
+                        <xsl:value-of select="numishare:normalizeLabel('results_hoard', $lang)"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:value-of select="numishare:normalizeLabel('results_hoards', $lang)"/>
+                    </xsl:otherwise>
+                </xsl:choose>
+                <xsl:text>: </xsl:text>
+                <xsl:value-of select="$hoard-count"/>
+            </xsl:if>
+        </xsl:if>
+    </xsl:template>
+
     <xsl:template match="object" mode="results">
         <xsl:variable name="position" select="position()"/>
         <!-- obverse -->
@@ -52,7 +93,7 @@
                     <xsl:if test="$position &gt; 1">
                         <xsl:attribute name="style">display:none</xsl:attribute>
                     </xsl:if>
-                    <img src="{revRef}"  class="side-thumbnail"/>
+                    <img src="{revRef}" class="side-thumbnail"/>
                 </a>
             </xsl:when>
         </xsl:choose>
@@ -83,5 +124,5 @@
             </xsl:when>
         </xsl:choose>
     </xsl:template>
-    
+
 </xsl:stylesheet>
