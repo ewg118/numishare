@@ -431,18 +431,21 @@
 						<xforms:bind nodeset="nuds:denomination" required="true()"/>
 						<xforms:bind nodeset="nuds:manufacture" required="true()"/>
 						<xforms:bind nodeset="nuds:material" required="true()"/>
-						
-						<!--<xforms:bind nodeset="nuds:weightStandard" required="true()" type="xs:decimal">
-							<xforms:bind nodeset="@origin" required="true()"/>
-						</xforms:bind>-->
+						<xforms:bind nodeset="nuds:obverse|nuds:reverse">
+							<xforms:bind constraint="count(numishare:entity) = 0"/>
+							<xforms:bind nodeset="nuds:legend" required="true()"/>
+						</xforms:bind>
 						<xforms:bind nodeset="nuds:authority">
+							<xforms:bind constraint="count(numishare:entity) = 0"/>
 							<xforms:bind nodeset="*" constraint="string-length(.) &gt; 0">
 								<xforms:bind nodeset="@xlink:title">
 									<xforms:bind constraint="string-length(.) &gt; 0"/>
 								</xforms:bind>								
 							</xforms:bind>
 						</xforms:bind>
-						<xforms:bind nodeset="descendant::nuds:legend" required="true()"/>
+						<xforms:bind nodeset="nuds:geographic">
+							<xforms:bind constraint="count(numishare:entity) = 0"/>
+						</xforms:bind>						
 					</xforms:bind>
 					<xforms:bind nodeset="nuds:adminDesc">
 						<xforms:bind nodeset="descendant::nuds:sale/*" required="true()"/>
@@ -481,8 +484,8 @@
 				<xforms:bind nodeset="//@standardDateTime" type="m.data.standardDateTime"/>
 				<xforms:bind nodeset="//@certainty" required="true()"/>
 				<xforms:bind nodeset="//nuds:reference">
-					<xforms:bind nodeset="nuds:title" required="true()"/>
-					<!--<xforms:bind nodeset="nuds:identifier" required="true()"/>-->
+					<xforms:bind nodeset="tei:title" required="true()"/>
+					<xforms:bind nodeset="tei:idno" required="true()"/>
 				</xforms:bind>
 				<xforms:bind nodeset="//@xlink:href" required="true()"
 					constraint="matches(., '(https?|ftp)://(-\.)?([^\s/?\.#-]+\.?)+(/[^\s]*)?$')"/>
@@ -780,18 +783,16 @@
 		</xforms:model>
 
 		<!-- XBL components -->
-		<xi:include href="xbl/certainty/certainty.xbl" xi:omit-xml-base="true"/>
-		<xi:include href="xbl/cp-name/cp-name.xbl" xi:omit-xml-base="true"/>
+		<xi:include href="xbl/certainty/certainty.xbl" xi:omit-xml-base="true"/>		
 		<xi:include href="xbl/conservationState/conservationState.xbl" xi:omit-xml-base="true"/>
 		<xi:include href="xbl/date/date.xbl" xi:omit-xml-base="true"/>
 		<xi:include href="xbl/dateRange/dateRange.xbl" xi:omit-xml-base="true"/>
 		<xi:include href="xbl/denomination/denomination.xbl" xi:omit-xml-base="true"/>
 		<xi:include href="xbl/department/department.xbl" xi:omit-xml-base="true"/>
-		<xi:include href="xbl/description/description.xbl" xi:omit-xml-base="true"/>
-		<xi:include href="xbl/dynasty/dynasty.xbl" xi:omit-xml-base="true"/>
+		<xi:include href="xbl/description/description.xbl" xi:omit-xml-base="true"/>		
+		<xi:include href="xbl/entity-input/entity-input.xbl" xi:omit-xml-base="true"/>
 		<xi:include href="xbl/file-upload/file-upload.xbl" xi:omit-xml-base="true"/>
 		<xi:include href="xbl/findspot/findspot.xbl" xi:omit-xml-base="true"/>
-		<xi:include href="xbl/geogname/geogname.xbl" xi:omit-xml-base="true"/>
 		<xi:include href="xbl/mark/mark.xbl" xi:omit-xml-base="true"/>
 		<xi:include href="xbl/control/control.xbl" xi:omit-xml-base="true"/>
 		<xi:include href="xbl/output-typeDesc/output-typeDesc.xbl" xi:omit-xml-base="true"/>

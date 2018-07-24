@@ -26,7 +26,6 @@
 				<xsl:variable name="collection-name" select="substring-before(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/')"/>				
 				<!-- config variables -->
 				<xsl:variable name="solr-url" select="concat(/config/solr_published, 'select/')"/>
-				<xsl:variable name="facets" select="concat('&amp;facet.field=', string-join(/config/facets/facet, '&amp;facet.field='))"/>
 
 				<xsl:variable name="service">
 					<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+NOT(lang:*)&amp;rows=3&amp;fl=recordId')"/>	
