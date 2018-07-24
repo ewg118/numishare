@@ -373,6 +373,15 @@ function generate_nuds($record, $fileName){
 								$writer->writeAttribute('xlink:href', "http://images.numismatics.org/collectionimages%2F{$image_path}%2F{$collection_year}%2F{$accnum}.obv.noscale.jpg");
 							$writer->endElement();
 						$writer->endElement();
+						//archive
+						$writer->startElement('mets:file');
+    						$writer->writeAttribute('USE', 'archive');
+        						$writer->writeAttribute('MIMETYPE', 'image/jpeg');
+        						$writer->startElement('mets:FLocat');
+        						  $writer->writeAttribute('LOCYPE', 'URL');
+        						  $writer->writeAttribute('xlink:href', "http://numismatics.org/collectionimages/{$image_path}/{$collection_year}/{$accnum}.obv.noscale.jpg");
+    						$writer->endElement();
+						$writer->endElement();						
 						//reference
 						$writer->startElement('mets:file');
 							$writer->writeAttribute('USE', 'reference');
@@ -403,6 +412,15 @@ function generate_nuds($record, $fileName){
 								$writer->writeAttribute('xlink:href', "http://images.numismatics.org/collectionimages%2F{$image_path}%2F{$collection_year}%2F{$accnum}.rev.noscale.jpg");
 							$writer->endElement();
 						$writer->endElement();
+						//archive
+						$writer->startElement('mets:file');
+    						$writer->writeAttribute('USE', 'archive');
+        						$writer->writeAttribute('MIMETYPE', 'image/jpeg');
+        						$writer->startElement('mets:FLocat');
+        						  $writer->writeAttribute('LOCYPE', 'URL');
+        						  $writer->writeAttribute('xlink:href', "http://numismatics.org/collectionimages/{$image_path}/{$collection_year}/{$accnum}.rev.noscale.jpg");
+    						$writer->endElement();
+						$writer->endElement();					
 						//reference
 						$writer->startElement('mets:file');
 							$writer->writeAttribute('USE', 'reference');
