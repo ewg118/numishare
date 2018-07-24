@@ -24,26 +24,6 @@
 		<p:output name="data" id="config"/>
 	</p:processor>
 	
-	<!-- load SPARQL query from disk -->
-	<p:processor name="oxf:url-generator">
-		<p:input name="config">
-			<config>
-				<url>oxf:/apps/numishare/ui/sparql/type-examples.sparql</url>
-				<content-type>text/plain</content-type>
-				<encoding>utf-8</encoding>
-			</config>
-		</p:input>
-		<p:output name="data" id="type-examples-query"/>
-	</p:processor>
-	
-	<p:processor name="oxf:text-converter">
-		<p:input name="data" href="#type-examples-query"/>
-		<p:input name="config">
-			<config/>
-		</p:input>
-		<p:output name="data" id="type-examples-query-document"/>
-	</p:processor>
-	
 	<p:processor name="oxf:unsafe-xslt">
 		<p:input name="data" href="#data"/>
 		<p:input name="config">
@@ -80,6 +60,26 @@
 				<p:input name="data" href="#config"/>
 				<p:input name="config" href="../../../models/sparql/ask-iiif.xpl"/>
 				<p:output name="data" id="hasIIIF"/>
+			</p:processor>
+			
+			<!-- load SPARQL query from disk -->
+			<p:processor name="oxf:url-generator">
+				<p:input name="config">
+					<config>
+						<url>oxf:/apps/numishare/ui/sparql/type-examples.sparql</url>
+						<content-type>text/plain</content-type>
+						<encoding>utf-8</encoding>
+					</config>
+				</p:input>
+				<p:output name="data" id="type-examples-query"/>
+			</p:processor>
+			
+			<p:processor name="oxf:text-converter">
+				<p:input name="data" href="#type-examples-query"/>
+				<p:input name="config">
+					<config/>
+				</p:input>
+				<p:output name="data" id="type-examples-query-document"/>
 			</p:processor>
 			
 			<p:choose href="#config">
@@ -140,6 +140,7 @@ ASK {?s oa:hasBody <URI>}]]>
 									<p:processor name="oxf:unsafe-xslt">
 										<p:input name="request" href="#request"/>
 										<p:input name="hasIIIF" href="#hasIIIF"/>
+										<p:input name="query" href="#type-examples-query-document"/>
 										<p:input name="data" href="aggregate('content', #data, #specimenCount, #hasFindspots, #config)"/>
 										<p:input name="config" href="../../../../ui/xslt/serializations/nuds/html.xsl"/>
 										<p:output name="data" id="model"/>
@@ -177,6 +178,7 @@ ASK {?s oa:hasBody <URI>}]]>
 										<p:input name="request" href="#request"/>
 										<p:input name="annotations" href="#annotations"/>
 										<p:input name="hasIIIF" href="#hasIIIF"/>
+										<p:input name="query" href="#type-examples-query-document"/>
 										<p:input name="data" href="aggregate('content', #data, #specimenCount, #hasFindspots, #config)"/>
 										<p:input name="config" href="../../../../ui/xslt/serializations/nuds/html.xsl"/>
 										<p:output name="data" id="model"/>
@@ -210,6 +212,7 @@ ASK {?s oa:hasBody <URI>}]]>
 							<p:processor name="oxf:unsafe-xslt">
 								<p:input name="request" href="#request"/>
 								<p:input name="hasIIIF" href="#hasIIIF"/>
+								<p:input name="query" href="#type-examples-query-document"/>
 								<p:input name="data" href="aggregate('content', #data, #specimenCount, #hasFindspots, #config)"/>
 								<p:input name="config" href="../../../../ui/xslt/serializations/nuds/html.xsl"/>
 								<p:output name="data" id="model"/>

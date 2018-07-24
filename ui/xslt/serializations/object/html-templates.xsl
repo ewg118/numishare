@@ -607,7 +607,7 @@
 				</ul>
 			</div>
 			<div class="col-md-9">
-				<xsl:apply-templates select="document(concat($request-uri, 'apis/type-examples?id=', $subtypeId))/res:sparql" mode="type-examples">
+				<xsl:apply-templates select="document(concat($request-uri, 'apis/type-examples?id=', $subtypeId))/res:sparql" mode="type-examples">					
 					<xsl:with-param name="subtype" select="true()" as="xs:boolean"/>
 					<xsl:with-param name="objectUri" select="$objectUri"/>
 					<xsl:with-param name="endpoint" select="$endpoint"/>
