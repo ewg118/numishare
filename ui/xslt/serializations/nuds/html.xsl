@@ -992,6 +992,18 @@
 		<xsl:variable name="reference-image" select="//mets:fileGrp[@USE = $side]/mets:file[@USE = 'reference']/mets:FLocat/@xlink:href"/>
 		<xsl:variable name="iiif-service" select="//mets:fileGrp[@USE = $side]/mets:file[@USE = 'iiif']/mets:FLocat/@xlink:href"/>
 
+		<!-- use the 'archive' direct URL for full-size download if available, otherwise like to IIIF service -->
+		<xsl:variable name="full-url">
+			<xsl:choose>
+				<xsl:when test="//mets:fileGrp[@USE = $side]/mets:file[@USE = 'archive']/mets:FLocat/@xlink:href">
+					<xsl:value-of select="//mets:fileGrp[@USE = $side]/mets:file[@USE = 'archive']/mets:FLocat/@xlink:href"/>
+				</xsl:when>
+				<xsl:when test="string($iiif-service)">
+					<xsl:value-of select="concat($iiif-service, '/full/full/0/default.jpg')"/>
+				</xsl:when>
+			</xsl:choose>
+		</xsl:variable>
+
 		<div class="image-container">
 			<xsl:choose>
 				<xsl:when test="string($iiif-service)">
@@ -1003,7 +1015,7 @@
 						<img src="{concat($iiif-service, '/full/400,/0/default.jpg')}" property="foaf:depiction" alt="{$side}"/>
 					</noscript>
 					<div>
-						<a href="{$iiif-service}/full/full/0/default.jpg" title="Full resolution image" rel="nofollow"><span class="glyphicon glyphicon-download-alt"/> Download
+						<a href="{$full-url}" title="Full resolution image" rel="nofollow"><span class="glyphicon glyphicon-download-alt"/> Download
 							full resolution image</a>
 					</div>
 				</xsl:when>
@@ -1016,6 +1028,13 @@
 								concat($display_path, $reference-image)"/>
 
 					<img src="{$image_url}" property="foaf:depiction" alt="{$side}"/>
+					
+					<xsl:if test="string($full-url)">
+						<div>
+							<a href="{$full-url}" title="Full resolution image" rel="nofollow"><span class="glyphicon glyphicon-download-alt"/> Download
+								full resolution image</a>
+						</div>
+					</xsl:if>
 				</xsl:when>
 			</xsl:choose>
 			<xsl:apply-templates select="$nudsGroup//nuds:typeDesc/*[local-name() = $side]" mode="physical"/>
