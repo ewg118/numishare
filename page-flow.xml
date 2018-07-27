@@ -67,7 +67,7 @@
 	<!-- id -->
 	<page path="/numishare/mantis/id/(.*)\.xml" view="file:///usr/local/projects/mantis/xpl/models/object/get-id.xpl"/>
 	<page path="/numishare/mantis/id/(.*)\.rdf" model="file:///usr/local/projects/mantis/xpl/models/object/get-id.xpl" view="xpl/views/serializations/object/rdf.xpl"/>
-	<page path="/numishare/mantis/id/(.*)\.jsonld" model="file:///usr/local/projects/mantis/xpl/models/object/get-id.xpl" view="xpl/views/serializations/rdf/json-ld.xpl"/>
+	<page path="/numishare/mantis/id/(.*)\.jsonld" model="file:///usr/local/projects/mantis/xpl/models/object/get-id.xpl" view="xpl/views/serializations/object/json-ld.xpl"/>
 	<page path="/numishare/mantis/id/(.*)\.kml" model="file:///usr/local/projects/mantis/xpl/models/object/get-id.xpl" view="xpl/views/serializations/object/kml.xpl"/>
 	<page path="/numishare/mantis/id/(.*)\.ttl" model="file:///usr/local/projects/mantis/xpl/models/object/get-id.xpl" view="xpl/views/serializations/rdf/ttl.xpl"/>
 	<page path="/numishare/mantis/id/(.*)\.solr" model="file:///usr/local/projects/mantis/xpl/models/object/get-id.xpl" view="xpl/views/serializations/object/solr.xpl"/>
@@ -96,7 +96,7 @@
 	<!-- id -->
 	<page path="/numishare/[^\/]+/id/(.*)\.xml" view="xpl/models/object/get-id.xpl"/>
 	<page path="/numishare/[^\/]+/id/(.*)\.rdf" model="xpl/models/object/get-id.xpl" view="xpl/views/serializations/object/rdf.xpl"/>
-	<page path="/numishare/[^\/]+/id/(.*)\.jsonld" model="xpl/models/object/get-id.xpl" view="xpl/views/serializations/rdf/json-ld.xpl"/>
+	<page path="/numishare/[^\/]+/id/(.*)\.jsonld" model="xpl/models/object/get-id.xpl" view="xpl/views/serializations/object/json-ld.xpl"/>
 	<page path="/numishare/[^\/]+/id/(.*)\.kml" model="xpl/models/object/get-id.xpl" view="xpl/views/serializations/object/kml.xpl"/>
 	<page path="/numishare/[^\/]+/id/(.*)\.geojson" model="xpl/models/object/get-id.xpl" view="xpl/views/serializations/object/geojson.xpl"/>
 	<page path="/numishare/[^\/]+/id/(.*)\.ttl" model="xpl/models/object/get-id.xpl" view="xpl/views/serializations/rdf/ttl.xpl"/>
@@ -113,7 +113,7 @@
 	<!-- symbols -->	
 	<page path="/numishare/[^\/]+/symbol/(.*)\.rdf" view="xpl/models/symbol/get.xpl"/>
 	<page path="/numishare/[^\/]+/symbol/(.*)\.ttl" model="xpl/models/symbol/get.xpl" view="xpl/views/serializations/rdf/ttl.xpl"/>
-	<page path="/numishare/[^\/]+/symbol/(.*)\.jsonld" model="xpl/models/symbol/get.xpl" view="xpl/views/serializations/rdf/json-ld.xpl"/>
+	<page path="/numishare/[^\/]+/symbol/(.*)\.jsonld" model="xpl/models/symbol/get.xpl" view="xpl/views/serializations/object/json-ld.xpl"/>
 	<page path="/numishare/[^\/]+/symbol/(.*)$" model="xpl/models/symbol/get.xpl" view="xpl/controllers/conneg-symbol.xpl"/>	
 	<page path="/numishare/[^\/]+/symbols/(.*)" model="xpl/models/config.xpl" view="xpl/controllers/render-image.xpl"/>
 	

@@ -117,13 +117,5 @@
 				</_object>
 			</options>
 		</_object>
-
-
-
-		<!--	{"point": {"lon": <xsl:value-of select="normalize-space(tokenize($coordinates, ',')[1])"/>, "lat": <xsl:value-of select="normalize-space(tokenize($coordinates, ',')[2])"/>},
-		"title": "<xsl:value-of select="str[@name='title_display']"/>", <xsl:if test="number(int[@name='tpq_num'])">"start": "<xsl:value-of select="int[@name='tpq_num']"/>",</xsl:if>
-		<xsl:if test="number(int[@name='taq_num'])">"end": "<xsl:value-of select="int[@name='taq_num']"/>",</xsl:if> "options": { "theme": "red"<xsl:if
-			test="string($description)">, "description": "<xsl:value-of select="normalize-space($description)"/>"</xsl:if><xsl:if test="$uri">, "href": "<xsl:value-of select="$uri"/>"</xsl:if> } }
-			<xsl:if test="not(position()=last())"><xsl:text>,</xsl:text></xsl:if>-->
 	</xsl:template>
 </xsl:stylesheet>

@@ -5,6 +5,11 @@
     <!-- XSLT templates for rendering the $model into JSON -->
     <xsl:template match="*">
         <xsl:choose>
+            <xsl:when test="self::_">
+                <xsl:call-template name="numishare:evaluateDatatype">
+                    <xsl:with-param name="val" select="."/>
+                </xsl:call-template>
+            </xsl:when>
             <xsl:when test="child::_array">
                 <xsl:value-of select="concat('&#x022;', name(), '&#x022;')"/>
                 <xsl:text>:</xsl:text>
@@ -17,7 +22,7 @@
             </xsl:when>
             <xsl:otherwise>
                 <!-- when the element is preceded by two underscores, prepend an @ character, e.g., for @id or @type -->
-                <xsl:choose>
+                <xsl:choose>                    
                     <xsl:when test="substring(name(), 1, 2) = '__'">
                         <xsl:value-of select="concat('&#x022;@', substring(name(), 3), '&#x022;')"/>
                     </xsl:when>
