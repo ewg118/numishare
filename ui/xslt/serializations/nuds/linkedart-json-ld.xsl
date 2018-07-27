@@ -98,7 +98,7 @@
 						<id><xsl:value-of select="concat($url, 'manifest/', $id)"/></id>
 						<type>InformationObject</type>
 						<conforms_to>http://iiif.io/api/presentation</conforms_to>
-						<format>application/ld+json;profile="http://iiif.io/api/presentation/2/context.json"</format>
+						<format>application/ld+json;profile=\\"http://iiif.io/api/presentation/2/context.json\\"</format>
 					</_object>
 				</_array>
 			</subject_of>
