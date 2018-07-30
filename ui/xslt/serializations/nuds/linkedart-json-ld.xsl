@@ -178,7 +178,23 @@
 							<xsl:apply-templates select="nuds:manufacture"/>
 						</_array>
 					</technique>
-				</xsl:if>				
+				</xsl:if>		
+				<xsl:if test="nuds:date or nuds:dateRange">
+					<xsl:variable name="fromDate" select="if (nuds:dateRange/nuds:fromDate/@standardDate) then nuds:dateRange/nuds:fromDate/@standardDate else nuds:date/@standardDate"/>
+					<xsl:variable name="toDate" select="if (nuds:dateRange/nuds:toDate/@standardDate) then nuds:dateRange/nuds:toDate/@standardDate else nuds:date/@standardDate"/>
+					
+					<timespan>
+						<_object>
+							<type>TimeSpan</type>
+							<begin_of_the_begin>
+								<xsl:value-of select="numishare:expandDatetoDateTime($fromDate)"/>
+							</begin_of_the_begin>
+							<end_of_the_end>
+								<xsl:value-of select="numishare:expandDatetoDateTime($toDate)"/>
+							</end_of_the_end>
+						</_object>
+					</timespan>
+				</xsl:if>
 				<xsl:apply-templates select="nuds:authority[child::*]"/>	
 				<xsl:apply-templates select="nuds:geographic[child::*]"/>				
 			</_object>			
@@ -518,6 +534,27 @@
 			</xsl:choose>
 		</_object>
 	</xsl:template>
+	
+	<xsl:function name="numishare:expandDatetoDateTime">
+		<xsl:param name="date"/>
+		
+		<xsl:variable name="time">T00:00:00Z</xsl:variable>
+		
+		<xsl:choose>
+			<xsl:when test="$date castable as xs:gYear">
+				<xsl:value-of select="concat($date, '-01-01', $time)"/>
+			</xsl:when>
+			<xsl:when test="$date castable as xs:gYearMonth">
+				<xsl:value-of select="concat($date, '-01', $time)"/>
+			</xsl:when>
+			<xsl:when test="$date castable as xs:date">
+				<xsl:value-of select="concat($date, $time)"/>
+			</xsl:when>
+			<xsl:when test="$date castable as xs:dateTime">
+				<xsl:value-of select="$date"/>
+			</xsl:when>
+		</xsl:choose>
+	</xsl:function>
 
 	<xsl:function name="numishare:normalizeClassification">
 		<xsl:param name="name"/>
