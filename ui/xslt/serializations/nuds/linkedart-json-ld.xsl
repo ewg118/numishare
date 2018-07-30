@@ -386,7 +386,25 @@
 				<label>
 					<xsl:value-of select="."/>
 				</label>
-				<classified_as>???</classified_as>
+				<classified_as>
+					<_array>
+						<_object>
+							<id>
+								<xsl:choose>
+									<xsl:when test="@xlink:role = 'deity'">aat:300189808</xsl:when>
+									<xsl:otherwise>aat:300015637</xsl:otherwise>
+								</xsl:choose>
+							</id>
+							<type>Type</type>
+							<label>
+								<xsl:choose>
+									<xsl:when test="@xlink:role = 'deity'">figures (representations)</xsl:when>
+									<xsl:otherwise>portraits</xsl:otherwise>
+								</xsl:choose>
+							</label>
+						</_object>
+					</_array>
+				</classified_as>
 			</xsl:if>
 		</_object>
 	</xsl:template>
