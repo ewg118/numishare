@@ -85,7 +85,7 @@
 	</xsl:template>
 
 	<xsl:template match="nuds:nuds">
-		<__context>https://linked.art/ns/v1/linked-art.json</__context>
+		<__context>https://linked.art/ns/v1/linked-art.json</__context>		
 		<id>
 			<xsl:value-of select="$objectUri"/>
 		</id>
@@ -595,9 +595,10 @@
 						/>
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:value-of
+						<xsl:value-of select="$uri"/>
+						<!--<xsl:value-of
 							select="replace($uri, $namespaces//namespace[contains($uri, @uri)]/@uri, concat($namespaces//namespace[contains($uri, @uri)]/@prefix, ':'))"
-						/>
+						/>-->
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
