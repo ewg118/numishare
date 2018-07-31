@@ -936,6 +936,11 @@
 					<li>
 						<a href="{$id}.jsonld">JSON-LD</a>
 					</li>
+					<xsl:if test="$recordType = 'physical'">
+						<li>
+							<a href="{$id}.jsonld?profile=linkedart">Linked.art JSON-LD</a>
+						</li>
+					</xsl:if>
 					<xsl:if test="$hasMints = true() or $hasFindspots = true()">
 						<li>
 							<a href="{$id}.kml">KML</a>
@@ -1077,6 +1082,7 @@
 		<link rel="alternate" type="application/xml" href="{$objectUri}.xml"/>
 		<link rel="alternate" type="application/rdf+xml" href="{$objectUri}.rdf"/>
 		<link rel="alternate" type="application/ld+json" href="{$objectUri}.jsonld"/>
+		<link rel="alternate" type="application/ld+json" profile="https://linked.art/ns/v1/linked-art.json" href="{$objectUri}.jsonld?profile=linkedart"/>
 		<link rel="alternate" type="text/turtle" href="{$objectUri}.ttl"/>
 		<link rel="alternate" type="application/vnd.google-earth.kml+xml" href="{$objectUri}.kml"/>
 		<link rel="alternate" type="application/vnd.geo+json" href="{$objectUri}.geojson"/>

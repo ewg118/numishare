@@ -4534,4 +4534,83 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
+	
+	<!-- ***** Functions for linked.art JSON-LD serialization ***** -->
+	
+	<!-- expand the @standardDate into a fully compliant xs:dateTime -->
+	<xsl:function name="numishare:expandDatetoDateTime">
+		<xsl:param name="date"/>
+		
+		<xsl:variable name="time">T00:00:00Z</xsl:variable>
+		
+		<xsl:choose>
+			<xsl:when test="$date castable as xs:gYear">
+				<xsl:value-of select="concat($date, '-01-01', $time)"/>
+			</xsl:when>
+			<xsl:when test="$date castable as xs:gYearMonth">
+				<xsl:value-of select="concat($date, '-01', $time)"/>
+			</xsl:when>
+			<xsl:when test="$date castable as xs:date">
+				<xsl:value-of select="concat($date, $time)"/>
+			</xsl:when>
+			<xsl:when test="$date castable as xs:dateTime">
+				<xsl:value-of select="$date"/>
+			</xsl:when>
+		</xsl:choose>
+	</xsl:function>
+	
+	<!-- result element names into AAT curies -->
+	<xsl:function name="numishare:normalizeClassification">
+		<xsl:param name="name"/>
+		
+		<xsl:choose>
+			<xsl:when test="$name = 'axis'">http://nomisma.org/id/axis</xsl:when>
+			<xsl:when test="$name = 'diameter'">aat:300055624</xsl:when>
+			<xsl:when test="$name = 'height'">aat:300055644</xsl:when>
+			<xsl:when test="$name = 'identifier'">aat:300312355</xsl:when>
+			<xsl:when test="$name = 'obverse'">aat:300078814</xsl:when>
+			<xsl:when test="$name = 'reverse'">aat:300078820</xsl:when>
+			<xsl:when test="$name = 'weight'">aat:300056240</xsl:when>
+			<xsl:otherwise>UNCLASSIFIED</xsl:otherwise>
+		</xsl:choose>
+	</xsl:function>
+	
+	<!-- normalize Nomisma URI to Getty vocabulary curie, if available -->
+	<xsl:function name="numishare:resolveUriToCurie">
+		<xsl:param name="uri"/>
+		<xsl:param name="concept" as="node()*"/>
+		
+		<xsl:variable name="namespaces" as="item()*">
+			<namespaces>
+				<namespace prefix="aat" uri="http://vocab.getty.edu/aat/"/>
+				<namespace prefix="nm" uri="http://nomisma.org/id/"/>
+				<namespace prefix="tgn" uri="http://vocab.getty.edu/tgn/"/>
+				<namespace prefix="ulan" uri="http://vocab.getty.edu/ulan/"/>
+			</namespaces>
+		</xsl:variable>
+		
+		<xsl:choose>
+			<xsl:when test="$namespaces//namespace[contains($uri, @uri)]/@prefix">
+				<xsl:choose>
+					<xsl:when test="$concept/skos:*[contains(local-name(), 'Match')][contains(@rdf:resource, 'http://vocab.getty.edu')]">
+						<xsl:variable name="gettyURI"
+							select="$concept/skos:*[contains(local-name(), 'Match')][contains(@rdf:resource, 'http://vocab.getty.edu')][1]/@rdf:resource"/>
+						
+						<xsl:value-of
+							select="replace($gettyURI, $namespaces//namespace[contains($gettyURI, @uri)]/@uri, concat($namespaces//namespace[contains($gettyURI, @uri)]/@prefix, ':'))"
+						/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="$uri"/>
+						<!--<xsl:value-of
+							select="replace($uri, $namespaces//namespace[contains($uri, @uri)]/@uri, concat($namespaces//namespace[contains($uri, @uri)]/@prefix, ':'))"
+						/>-->
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="$uri"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:function>
 </xsl:stylesheet>

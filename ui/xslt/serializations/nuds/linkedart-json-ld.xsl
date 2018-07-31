@@ -172,10 +172,10 @@
 		<produced_by>
 			<_object>
 				<type>Production</type>	
-				<xsl:if test="nuds:manufacture">
+				<xsl:if test="nuds:manufacture[@xlink:href]">
 					<technique>
 						<_array>
-							<xsl:apply-templates select="nuds:manufacture"/>
+							<xsl:apply-templates select="nuds:manufacture[@xlink:href]"/>
 						</_array>
 					</technique>
 				</xsl:if>		
@@ -195,8 +195,8 @@
 						</_object>
 					</timespan>
 				</xsl:if>
-				<xsl:apply-templates select="nuds:authority[child::*]"/>	
-				<xsl:apply-templates select="nuds:geographic[child::*]"/>				
+				<xsl:apply-templates select="nuds:authority[child::*[@xlink:href]]"/>	
+				<xsl:apply-templates select="nuds:geographic[child::*[@xlink:href]]"/>				
 			</_object>			
 		</produced_by>		
 		
@@ -222,7 +222,7 @@
 	<xsl:template match="nuds:authority">
 		<carried_out_by>
 			<_array>
-				<xsl:apply-templates select="*[@xlink:role = 'authority' or @xlink:role = 'issuer' or @xlink:role = 'dynasty']"/>
+				<xsl:apply-templates select="*[@xlink:role = 'authority' or @xlink:role = 'issuer' or @xlink:role = 'dynasty'][@xlink:href]"/>
 			</_array>
 		</carried_out_by>
 	</xsl:template>
@@ -231,11 +231,11 @@
 		<took_place_at>
 			<_array>
 				<xsl:choose>
-					<xsl:when test="nuds:geogname[@xlink:role='mint']">
-						<xsl:apply-templates select="nuds:geogname[@xlink:role='mint']"/>
+					<xsl:when test="nuds:geogname[@xlink:role='mint'][@xlink:href]">
+						<xsl:apply-templates select="nuds:geogname[@xlink:role='mint'][@xlink:href]"/>
 					</xsl:when>
-					<xsl:when test="nuds:geogname[@xlink:role='region']">
-						<xsl:apply-templates select="nuds:geogname[@xlink:role='region']"/>
+					<xsl:when test="nuds:geogname[@xlink:role='region'][@xlink:href]">
+						<xsl:apply-templates select="nuds:geogname[@xlink:role='region'][@xlink:href]"/>
 					</xsl:when>
 				</xsl:choose>
 			</_array>
@@ -243,9 +243,11 @@
 	</xsl:template>
 
 	<xsl:template match="nuds:material | nuds:objectType | nuds:denomination | nuds:manufacture | nuds:persname | nuds:famname | nuds:corpname | nuds:geogname">
+		<xsl:variable name="uri" select="@xlink:href"/>
+		
 		<_object>
 			<id>
-				<xsl:value-of select="numishare:resolveUriToCurie(@xlink:href)"/>
+				<xsl:value-of select="numishare:resolveUriToCurie($uri, $rdf//*[@rdf:about=$uri])"/>
 			</id>
 			<type>
 				<xsl:choose>
@@ -326,14 +328,14 @@
 			<!-- visual items and descriptions -->
 			<xsl:apply-templates select="nuds:type"/>
 			<xsl:apply-templates select="nuds:legend"/>
-			<xsl:if test="nuds:persname">
+			<xsl:if test="nuds:persname[@xlink:href]">
 				<shows>
 					<_array>
 						<_object>
 							<type>VisualItem</type>
 							<represents>
 								<_array>
-									<xsl:apply-templates select="nuds:persname" mode="portrait"/>
+									<xsl:apply-templates select="nuds:persname[@xlink:href]" mode="portrait"/>
 								</_array>
 							</represents>
 						</_object>
@@ -388,40 +390,40 @@
 	</xsl:template>
 
 	<xsl:template match="nuds:persname" mode="portrait">
+		<xsl:variable name="uri" select="@xlink:href"/>
+		
 		<_object>
-			<xsl:if test="@xlink:href">
-				<id>
-					<xsl:value-of select="numishare:resolveUriToCurie(@xlink:href)"/>
-				</id>
-				<type>
-					<xsl:choose>
-						<xsl:when test="@xlink:role = 'deity'">Actor</xsl:when>
-						<xsl:otherwise>Person</xsl:otherwise>
-					</xsl:choose>
-				</type>
-				<label>
-					<xsl:value-of select="."/>
-				</label>
-				<classified_as>
-					<_array>
-						<_object>
-							<id>
-								<xsl:choose>
-									<xsl:when test="@xlink:role = 'deity'">aat:300189808</xsl:when>
-									<xsl:otherwise>aat:300015637</xsl:otherwise>
-								</xsl:choose>
-							</id>
-							<type>Type</type>
-							<label>
-								<xsl:choose>
-									<xsl:when test="@xlink:role = 'deity'">figures (representations)</xsl:when>
-									<xsl:otherwise>portraits</xsl:otherwise>
-								</xsl:choose>
-							</label>
-						</_object>
-					</_array>
-				</classified_as>
-			</xsl:if>
+			<id>
+				<xsl:value-of select="numishare:resolveUriToCurie($uri, $rdf//*[@rdf:about=$uri])"/>
+			</id>
+			<type>
+				<xsl:choose>
+					<xsl:when test="@xlink:role = 'deity'">Actor</xsl:when>
+					<xsl:otherwise>Person</xsl:otherwise>
+				</xsl:choose>
+			</type>
+			<label>
+				<xsl:value-of select="."/>
+			</label>
+			<classified_as>
+				<_array>
+					<_object>
+						<id>
+							<xsl:choose>
+								<xsl:when test="@xlink:role = 'deity'">aat:300189808</xsl:when>
+								<xsl:otherwise>aat:300015637</xsl:otherwise>
+							</xsl:choose>
+						</id>
+						<type>Type</type>
+						<label>
+							<xsl:choose>
+								<xsl:when test="@xlink:role = 'deity'">figures (representations)</xsl:when>
+								<xsl:otherwise>portraits</xsl:otherwise>
+							</xsl:choose>
+						</label>
+					</_object>
+				</_array>
+			</classified_as>
 		</_object>
 	</xsl:template>
 
@@ -534,78 +536,4 @@
 			</xsl:choose>
 		</_object>
 	</xsl:template>
-	
-	<xsl:function name="numishare:expandDatetoDateTime">
-		<xsl:param name="date"/>
-		
-		<xsl:variable name="time">T00:00:00Z</xsl:variable>
-		
-		<xsl:choose>
-			<xsl:when test="$date castable as xs:gYear">
-				<xsl:value-of select="concat($date, '-01-01', $time)"/>
-			</xsl:when>
-			<xsl:when test="$date castable as xs:gYearMonth">
-				<xsl:value-of select="concat($date, '-01', $time)"/>
-			</xsl:when>
-			<xsl:when test="$date castable as xs:date">
-				<xsl:value-of select="concat($date, $time)"/>
-			</xsl:when>
-			<xsl:when test="$date castable as xs:dateTime">
-				<xsl:value-of select="$date"/>
-			</xsl:when>
-		</xsl:choose>
-	</xsl:function>
-
-	<xsl:function name="numishare:normalizeClassification">
-		<xsl:param name="name"/>
-
-		<xsl:choose>
-			<xsl:when test="$name = 'axis'">http://nomisma.org/id/axis</xsl:when>
-			<xsl:when test="$name = 'diameter'">aat:300055624</xsl:when>
-			<xsl:when test="$name = 'height'">aat:300055644</xsl:when>
-			<xsl:when test="$name = 'identifier'">aat:300312355</xsl:when>
-			<xsl:when test="$name = 'obverse'">aat:300078814</xsl:when>
-			<xsl:when test="$name = 'reverse'">aat:300078820</xsl:when>
-			<xsl:when test="$name = 'weight'">aat:300056240</xsl:when>
-			<xsl:otherwise>UNCLASSIFIED</xsl:otherwise>
-		</xsl:choose>
-	</xsl:function>
-
-	<xsl:function name="numishare:resolveUriToCurie">
-		<xsl:param name="uri"/>
-
-		<xsl:variable name="namespaces" as="item()*">
-			<namespaces>
-				<namespace prefix="aat" uri="http://vocab.getty.edu/aat/"/>
-				<namespace prefix="nm" uri="http://nomisma.org/id/"/>
-				<namespace prefix="tgn" uri="http://vocab.getty.edu/tgn/"/>
-				<namespace prefix="ulan" uri="http://vocab.getty.edu/ulan/"/>
-			</namespaces>
-		</xsl:variable>
-
-		<xsl:choose>
-			<xsl:when test="$namespaces//namespace[contains($uri, @uri)]/@prefix">
-				<xsl:choose>
-					<xsl:when test="$rdf//*[@rdf:about = $uri]/skos:*[contains(local-name(), 'Match')][contains(@rdf:resource, 'http://vocab.getty.edu')]">
-						<xsl:variable name="gettyURI"
-							select="$rdf//*[@rdf:about = $uri]/skos:*[contains(local-name(), 'Match')][contains(@rdf:resource, 'http://vocab.getty.edu')][1]/@rdf:resource"/>
-
-						<xsl:value-of
-							select="replace($gettyURI, $namespaces//namespace[contains($gettyURI, @uri)]/@uri, concat($namespaces//namespace[contains($gettyURI, @uri)]/@prefix, ':'))"
-						/>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:value-of select="$uri"/>
-						<!--<xsl:value-of
-							select="replace($uri, $namespaces//namespace[contains($uri, @uri)]/@uri, concat($namespaces//namespace[contains($uri, @uri)]/@prefix, ':'))"
-						/>-->
-					</xsl:otherwise>
-				</xsl:choose>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:value-of select="$uri"/>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:function>
-
 </xsl:stylesheet>
