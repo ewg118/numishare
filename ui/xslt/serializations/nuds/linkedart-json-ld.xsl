@@ -461,7 +461,14 @@
 		<_object>
 			<type>Dimension</type>
 			<value>
-				<xsl:value-of select="."/>
+				<xsl:choose>
+					<xsl:when test=". castable as xs:integer">
+						<xsl:value-of select="."/>
+					</xsl:when>
+					<xsl:when test=". castable as xs:decimal">
+						<xsl:value-of select='format-number(., "#.00")' />
+					</xsl:when>
+				</xsl:choose>
 			</value>
 			<classified_as>
 				<_array>
