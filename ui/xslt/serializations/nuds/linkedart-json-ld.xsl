@@ -45,10 +45,16 @@
 		</nudsGroup>
 	</xsl:variable>
 
-	<xsl:variable name="coinType_uris">
-		<xsl:value-of
-			select="descendant::nuds:typeDesc[string(@xlink:href)]/@xlink:href | descendant::nuds:reference[@xlink:arcrole = 'nmo:hasTypeSeriesItem'][string(@xlink:href)]/@xlink:href"
-		/>
+	<xsl:variable name="coinType_uris" as="node()*">
+		<uris>
+			<xsl:for-each
+				select="descendant::nuds:typeDesc[string(@xlink:href)] | descendant::nuds:reference[@xlink:arcrole = 'nmo:hasTypeSeriesItem'][string(@xlink:href)]">
+				<uri>
+					<xsl:value-of select="@xlink:href"/>
+				</uri>
+			</xsl:for-each>
+		</uris>
+
 	</xsl:variable>
 
 	<!-- get non-coin-type RDF in the document -->
@@ -85,7 +91,7 @@
 	</xsl:template>
 
 	<xsl:template match="nuds:nuds">
-		<__context>https://linked.art/ns/v1/linked-art.json</__context>		
+		<__context>https://linked.art/ns/v1/linked-art.json</__context>
 		<id>
 			<xsl:value-of select="$objectUri"/>
 		</id>
@@ -94,7 +100,7 @@
 			<xsl:value-of select="//nuds:descMeta/nuds:title[@xml:lang = 'en']"/>
 		</label>
 
-		<xsl:apply-templates select="nuds:descMeta"/>		
+		<xsl:apply-templates select="nuds:descMeta"/>
 
 		<!-- IIIF manifest, if relevant -->
 		<xsl:if test="descendant::mets:file[@USE = 'iiif']">
@@ -121,7 +127,7 @@
 				<xsl:apply-templates select="nuds:adminDesc/nuds:identifier"/>
 			</_array>
 		</identified_by>
-		
+
 		<xsl:apply-templates select="nuds:physDesc"/>
 		<xsl:apply-templates select="$nudsGroup//nuds:typeDesc"/>
 	</xsl:template>
@@ -156,7 +162,7 @@
 
 				<xsl:apply-templates select="nuds:objectType[@xlink:href] | nuds:denomination[@xlink:href]"/>
 
-				<xsl:for-each select="$coinType_uris">
+				<xsl:for-each select="$coinType_uris/uri">
 					<_object>
 						<id>
 							<xsl:value-of select="."/>
@@ -167,22 +173,32 @@
 				</xsl:for-each>
 			</_array>
 		</classified_as>
-		
+
 		<!-- production -->
 		<produced_by>
 			<_object>
-				<type>Production</type>	
+				<type>Production</type>
 				<xsl:if test="nuds:manufacture[@xlink:href]">
 					<technique>
 						<_array>
 							<xsl:apply-templates select="nuds:manufacture[@xlink:href]"/>
 						</_array>
 					</technique>
-				</xsl:if>		
+				</xsl:if>
 				<xsl:if test="nuds:date or nuds:dateRange">
-					<xsl:variable name="fromDate" select="if (nuds:dateRange/nuds:fromDate/@standardDate) then nuds:dateRange/nuds:fromDate/@standardDate else nuds:date/@standardDate"/>
-					<xsl:variable name="toDate" select="if (nuds:dateRange/nuds:toDate/@standardDate) then nuds:dateRange/nuds:toDate/@standardDate else nuds:date/@standardDate"/>
-					
+					<xsl:variable name="fromDate"
+						select="
+							if (nuds:dateRange/nuds:fromDate/@standardDate) then
+								nuds:dateRange/nuds:fromDate/@standardDate
+							else
+								nuds:date/@standardDate"/>
+					<xsl:variable name="toDate"
+						select="
+							if (nuds:dateRange/nuds:toDate/@standardDate) then
+								nuds:dateRange/nuds:toDate/@standardDate
+							else
+								nuds:date/@standardDate"/>
+
 					<timespan>
 						<_object>
 							<type>TimeSpan</type>
@@ -195,11 +211,11 @@
 						</_object>
 					</timespan>
 				</xsl:if>
-				<xsl:apply-templates select="nuds:authority[child::*[@xlink:href]]"/>	
-				<xsl:apply-templates select="nuds:geographic[child::*[@xlink:href]]"/>				
-			</_object>			
-		</produced_by>		
-		
+				<xsl:apply-templates select="nuds:authority[child::*[@xlink:href]]"/>
+				<xsl:apply-templates select="nuds:geographic[child::*[@xlink:href]]"/>
+			</_object>
+		</produced_by>
+
 		<!-- material -->
 		<xsl:if test="nuds:material[@xlink:href]">
 			<made_of>
@@ -208,7 +224,7 @@
 				</_array>
 			</made_of>
 		</xsl:if>
-		
+
 		<!-- parts -->
 		<xsl:if test="nuds:obverse or nuds:reverse">
 			<parts>
@@ -218,7 +234,7 @@
 			</parts>
 		</xsl:if>
 	</xsl:template>
-	
+
 	<xsl:template match="nuds:authority">
 		<carried_out_by>
 			<_array>
@@ -226,16 +242,16 @@
 			</_array>
 		</carried_out_by>
 	</xsl:template>
-	
+
 	<xsl:template match="nuds:geographic">
 		<took_place_at>
 			<_array>
 				<xsl:choose>
-					<xsl:when test="nuds:geogname[@xlink:role='mint'][@xlink:href]">
-						<xsl:apply-templates select="nuds:geogname[@xlink:role='mint'][@xlink:href]"/>
+					<xsl:when test="nuds:geogname[@xlink:role = 'mint'][@xlink:href]">
+						<xsl:apply-templates select="nuds:geogname[@xlink:role = 'mint'][@xlink:href]"/>
 					</xsl:when>
-					<xsl:when test="nuds:geogname[@xlink:role='region'][@xlink:href]">
-						<xsl:apply-templates select="nuds:geogname[@xlink:role='region'][@xlink:href]"/>
+					<xsl:when test="nuds:geogname[@xlink:role = 'region'][@xlink:href]">
+						<xsl:apply-templates select="nuds:geogname[@xlink:role = 'region'][@xlink:href]"/>
 					</xsl:when>
 				</xsl:choose>
 			</_array>
@@ -244,10 +260,10 @@
 
 	<xsl:template match="nuds:material | nuds:objectType | nuds:denomination | nuds:manufacture | nuds:persname | nuds:famname | nuds:corpname | nuds:geogname">
 		<xsl:variable name="uri" select="@xlink:href"/>
-		
+
 		<_object>
 			<id>
-				<xsl:value-of select="numishare:resolveUriToCurie($uri, $rdf//*[@rdf:about=$uri])"/>
+				<xsl:value-of select="numishare:resolveUriToCurie($uri, $rdf//*[@rdf:about = $uri])"/>
 			</id>
 			<type>
 				<xsl:choose>
@@ -265,34 +281,34 @@
 				<classified_as>
 					<_array>
 						<_object>
-							<type>Type</type>							
+							<type>Type</type>
 							<xsl:choose>
-								<xsl:when test="@xlink:role='authority'">
+								<xsl:when test="@xlink:role = 'authority'">
 									<xsl:choose>
 										<xsl:when test="self::nuds:persname">
 											<id>aat:300025475</id>
 											<label>rulers (people)</label>
-										</xsl:when>										
+										</xsl:when>
 										<xsl:when test="self::nuds:corpname">
 											<id>aat:300232420</id>
 											<label>sovereign states</label>
 										</xsl:when>
 									</xsl:choose>
 								</xsl:when>
-								<xsl:when test="@xlink:role='dynasty'">
+								<xsl:when test="@xlink:role = 'dynasty'">
 									<id>aat:300386176</id>
 									<label>dynasties</label>
 								</xsl:when>
-								<xsl:when test="@xlink:role='issuer'">
-									<id>aat:300025467</id>									
+								<xsl:when test="@xlink:role = 'issuer'">
+									<id>aat:300025467</id>
 									<label>magistrates</label>
-								</xsl:when>	
-								<xsl:when test="@xlink:role='mint'">
-									<id>aat:300006031</id>									
+								</xsl:when>
+								<xsl:when test="@xlink:role = 'mint'">
+									<id>aat:300006031</id>
 									<label>mints (buildings)</label>
 								</xsl:when>
 							</xsl:choose>
-							
+
 						</_object>
 					</_array>
 				</classified_as>
@@ -383,7 +399,7 @@
 						<type>Type</type>
 						<label>description (activity)</label>
 					</_object>
-					
+
 				</_array>
 			</classified_as>
 		</_object>
@@ -391,10 +407,10 @@
 
 	<xsl:template match="nuds:persname" mode="portrait">
 		<xsl:variable name="uri" select="@xlink:href"/>
-		
+
 		<_object>
 			<id>
-				<xsl:value-of select="numishare:resolveUriToCurie($uri, $rdf//*[@rdf:about=$uri])"/>
+				<xsl:value-of select="numishare:resolveUriToCurie($uri, $rdf//*[@rdf:about = $uri])"/>
 			</id>
 			<type>
 				<xsl:choose>
@@ -450,7 +466,9 @@
 			<classified_as>
 				<_array>
 					<_object>
-						<id><xsl:value-of select="numishare:normalizeClassification(local-name())"/></id>
+						<id>
+							<xsl:value-of select="numishare:normalizeClassification(local-name())"/>
+						</id>
 						<type>Type</type>
 						<label>
 							<xsl:choose>
@@ -486,7 +504,7 @@
 				<_array>
 					<_object>
 						<id>
-							<xsl:value-of select="numishare:normalizeClassification(local-name())"/>							
+							<xsl:value-of select="numishare:normalizeClassification(local-name())"/>
 						</id>
 						<type>Type</type>
 						<label>accession numbers</label>
@@ -517,7 +535,7 @@
 					<conforms_to>http://iiif.io/api/image</conforms_to>
 				</xsl:when>
 				<xsl:otherwise>
-					<label>Digital Image</label>					
+					<label>Digital Image</label>
 					<xsl:if test="@MIMETYPE">
 						<format>
 							<xsl:value-of select="@MIMETYPE"/>
@@ -529,7 +547,7 @@
 								<id>aat:300215302</id>
 								<type>Type</type>
 								<label>digital images</label>
-							</_object>							
+							</_object>
 						</_array>
 					</classified_as>
 				</xsl:otherwise>
