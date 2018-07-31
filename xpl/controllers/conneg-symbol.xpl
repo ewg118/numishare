@@ -41,7 +41,7 @@
 	<p:choose href="#conneg-config">		
 		<p:when test="content-type='json-ld'">
 			<p:processor name="oxf:pipeline">
-				<p:input name="config" href="../views/serializations/rdf/json-ld.xpl"/>	
+				<p:input name="config" href="../views/serializations/object/json-ld.xpl"/>	
 				<p:input name="data" href="#data"/>				
 				<p:output name="data" ref="data"/>
 			</p:processor>

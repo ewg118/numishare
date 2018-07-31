@@ -12,35 +12,85 @@
 		</p:input>
 		<p:output name="data" id="request"/>
 	</p:processor>
-	
+
 	<!-- read request header for content-type -->
 	<p:processor name="oxf:unsafe-xslt">
 		<p:input name="data" href="#request"/>
 		<p:input name="config">
-			<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+			<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:numishare="https://github.com/ewg118/numishare"
+				exclude-result-prefixes="#all">
 				<xsl:output indent="yes"/>
-				
+
 				<xsl:variable name="content-type" select="//header[name[.='accept']]/value"/>
-				
+
 				<xsl:template match="/">
 					<content-type>
+						<xsl:variable name="pieces" select="tokenize($content-type, ';')"/>
+						
+						<!-- normalize space in fragments in order to support better parsing for content negotiation -->
+						<xsl:variable name="accept-fragments" as="item()*">
+							<nodes>
+								<xsl:for-each select="$pieces">
+									<node>
+										<xsl:value-of select="normalize-space(.)"/>
+									</node>
+								</xsl:for-each>
+							</nodes>
+						</xsl:variable>
+
 						<xsl:choose>
-							<xsl:when test="$content-type='application/ld+json'">json-ld</xsl:when>
-							<xsl:when test="$content-type='application/vnd.google-earth.kml+xml'">kml</xsl:when>
-							<xsl:when test="$content-type='application/vnd.geo+json'">geojson</xsl:when>
-							<xsl:when test="$content-type='application/xml' or $content-type='text/xml'">xml</xsl:when>
-							<xsl:when test="$content-type='application/rdf+xml'">rdfxml</xsl:when>
-							<xsl:when test="$content-type='text/turtle'">turtle</xsl:when>							
-							<xsl:when test="contains($content-type, 'text/html') or $content-type='*/*' or not(string($content-type))">html</xsl:when>
-							<xsl:otherwise>error</xsl:otherwise>
+							<xsl:when test="count($accept-fragments/node) &gt; 1">
+								
+								<!-- validate profiles, only linked.art profile for JSON-LD is supported at the moment, to differentiate from the default Nomisma.org JSON-LD -->
+								<xsl:choose>
+									<xsl:when test="$accept-fragments/node[starts-with(., 'profile=')]">
+										<!-- parse the profile URI -->
+										<xsl:variable name="profile" select="replace(substring-after($accept-fragments/node[starts-with(., 'profile=')][1], '='), '&#x022;', '')"/>
+
+										<xsl:choose>
+											<!-- only allow the linked.art profile if the content-type is validated to JSON-LD -->
+											<xsl:when test="numishare:resolve-content-type($accept-fragments/node[1]) = 'json-ld'">												
+												<xsl:choose>
+													<xsl:when test="$profile = 'https://linked.art/ns/v1/linked-art.json'">linked-art</xsl:when>
+													<xsl:otherwise>json-ld</xsl:otherwise>
+												</xsl:choose>
+											</xsl:when>
+											<xsl:otherwise>
+												<xsl:value-of select="numishare:resolve-content-type($accept-fragments/node[1])"/>
+											</xsl:otherwise>
+										</xsl:choose>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:value-of select="numishare:resolve-content-type($accept-fragments/node[1])"/>
+									</xsl:otherwise>
+								</xsl:choose>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:value-of select="numishare:resolve-content-type($content-type)"/>
+							</xsl:otherwise>
 						</xsl:choose>
 					</content-type>
 				</xsl:template>
+
+				<xsl:function name="numishare:resolve-content-type">
+					<xsl:param name="content-type"/>
+
+					<xsl:choose>
+						<xsl:when test="$content-type='application/ld+json'">json-ld</xsl:when>
+						<xsl:when test="$content-type='application/vnd.google-earth.kml+xml'">kml</xsl:when>
+						<xsl:when test="$content-type='application/vnd.geo+json'">geojson</xsl:when>
+						<xsl:when test="$content-type='application/xml' or $content-type='text/xml'">xml</xsl:when>
+						<xsl:when test="$content-type='application/rdf+xml'">rdfxml</xsl:when>
+						<xsl:when test="$content-type='text/turtle'">turtle</xsl:when>
+						<xsl:when test="contains($content-type, 'text/html') or $content-type='*/*' or not(string($content-type))">html</xsl:when>
+						<xsl:otherwise>error</xsl:otherwise>
+					</xsl:choose>
+				</xsl:function>
 			</xsl:stylesheet>
 		</p:input>
 		<p:output name="data" id="conneg-config"/>
 	</p:processor>
-	
+
 	<p:choose href="#conneg-config">
 		<p:when test="content-type='xml'">
 			<p:processor name="oxf:identity">
@@ -48,10 +98,17 @@
 				<p:output name="data" ref="data"/>				
 			</p:processor>
 		</p:when>
+		<p:when test="content-type='linked-art'">
+			<p:processor name="oxf:pipeline">
+				<p:input name="data" href="#data"/>
+				<p:input name="config" href="../views/serializations/nuds/linkedart-json-ld.xpl"/>
+				<p:output name="data" ref="data"/>
+			</p:processor>
+		</p:when>
 		<p:when test="content-type='json-ld'">
 			<p:processor name="oxf:pipeline">
-				<p:input name="config" href="../views/serializations/rdf/json-ld.xpl"/>	
-				<p:input name="data" href="#data"/>				
+				<p:input name="data" href="#data"/>
+				<p:input name="config" href="../views/serializations/object/json-ld.xpl"/>
 				<p:output name="data" ref="data"/>
 			</p:processor>
 		</p:when>
