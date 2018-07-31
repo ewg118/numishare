@@ -466,7 +466,7 @@
 						<xsl:value-of select="."/>
 					</xsl:when>
 					<xsl:when test=". castable as xs:decimal">
-						<xsl:value-of select='format-number(., "#.00")' />
+						<xsl:value-of select='format-number(., "0.00")' />
 					</xsl:when>
 				</xsl:choose>
 			</value>
