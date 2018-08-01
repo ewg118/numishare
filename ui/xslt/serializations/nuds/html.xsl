@@ -809,16 +809,16 @@
 							<xsl:value-of select="numishare:normalizeLabel('maps_legend', $lang)"/>
 						</th>
 						<td style="background-color:#6992fd;border:2px solid black;width:50px;"/>
-						<td style="width:100px">
+						<td style="width:100px;padding-left:6px;">
 							<xsl:value-of select="numishare:regularize_node('mint', $lang)"/>
 						</td>
 						<td style="background-color:#d86458;border:2px solid black;width:50px;"/>
-						<td style="width:100px">
+						<td style="width:100px;padding-left:6px;">
 							<xsl:value-of select="numishare:regularize_node('findspot', $lang)"/>
 						</td>
 						<xsl:if test="descendant::nuds:subject[contains(@xlink:href, 'geonames.org')]">
 							<td style="background-color:#00e64d;border:2px solid black;width:50px;"/>
-							<td style="width:100px">
+							<td style="width:100px;padding-left:6px;">
 								<xsl:value-of select="numishare:regularize_node('subject', $lang)"/>
 							</td>
 						</xsl:if>
