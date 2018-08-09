@@ -646,9 +646,8 @@
 
 	<xsl:template match="nuds:typeDesc" mode="nomisma">
 		<xsl:param name="id"/>
-		<xsl:if test="nuds:objectType[@xlink:href]">
-			<nmo:representsObjectType rdf:resource="{nuds:objectType/@xlink:href}"/>
-		</xsl:if>
+		
+		<xsl:apply-templates select="nuds:objectType[@xlink:href]" mode="nomisma"/>
 
 		<xsl:apply-templates select="nuds:material | nuds:denomination | nuds:manufacture" mode="nomisma"/>
 		<xsl:apply-templates select="nuds:geographic/nuds:geogname | nuds:authority/nuds:persname | nuds:authority/nuds:corpname" mode="nomisma"/>
@@ -659,6 +658,10 @@
 		<xsl:if test="nuds:reverse">
 			<nmo:hasReverse rdf:resource="{if (string($uri_space)) then concat($uri_space, $id) else concat($url, 'id/', $id)}#reverse"/>
 		</xsl:if>
+	</xsl:template>
+	
+	<xsl:template match="nuds:objectType" mode="nomisma">
+		<nmo:representsObjectType rdf:resource="{@xlink:href}"/>
 	</xsl:template>
 
 	<xsl:template match="nuds:obverse | nuds:reverse" mode="nomisma">
