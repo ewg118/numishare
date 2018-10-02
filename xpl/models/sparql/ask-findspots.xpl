@@ -67,7 +67,7 @@
 				<!-- determine whether the URI corresponds to the type or the symbol -->
 				<xsl:variable name="uri">
 					<xsl:choose>
-						<xsl:when test="contains(doc('input:request')/request/request-url, 'id/')">
+						<xsl:when test="contains(doc('input:request')/request/request-url, 'id/') or contains(doc('input:request')/request/request-url, 'map/')">
 							<xsl:value-of select="concat(/config/uri_space, $id)"/>
 						</xsl:when>
 						<xsl:when test="contains(doc('input:request')/request/request-url, 'symbol/')">
@@ -81,7 +81,7 @@
 				
 				<xsl:variable name="query">
 					<xsl:choose>
-						<xsl:when test="contains(doc('input:request')/request/request-url, 'id/')">
+						<xsl:when test="contains(doc('input:request')/request/request-url, 'id/') or contains(doc('input:request')/request/request-url, 'map/')">
 							<xsl:value-of select="doc('input:type-query')"/>
 						</xsl:when>
 						<xsl:when test="contains(doc('input:request')/request/request-url, 'symbol/')">

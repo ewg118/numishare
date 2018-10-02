@@ -90,7 +90,6 @@
 					<xsl:when test="$recordType = 'conceptual'">
 						<xsl:if test="$hasFindspots = true()">
 							<script type="text/javascript" src="http://openlayers.org/api/2.12/OpenLayers.js"/>
-							<script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3.20&amp;sensor=false"/>
 							<script type="text/javascript" src="{$include_path}/javascript/mxn.js"/>
 							<script type="text/javascript" src="{$include_path}/javascript/timeline-2.3.0.js"/>
 							<link type="text/css" href="{$include_path}/css/timeline-2.3.0.css" rel="stylesheet"/>
@@ -103,7 +102,6 @@
 					<!-- hoard CSS and JS dependencies -->
 					<xsl:when test="$recordType = 'hoard'">
 						<script type="text/javascript" src="http://openlayers.org/api/2.12/OpenLayers.js"/>
-						<script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3.20&amp;sensor=false"/>
 						<script type="text/javascript" src="{$include_path}/javascript/mxn.js"/>
 						<script type="text/javascript" src="{$include_path}/javascript/timeline-2.3.0.js"/>
 						<link type="text/css" href="{$include_path}/css/timeline-2.3.0.css" rel="stylesheet"/>
