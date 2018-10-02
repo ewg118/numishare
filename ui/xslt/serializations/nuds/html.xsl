@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"
-	xmlns:res="http://www.w3.org/2005/sparql-results#" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mets="http://www.loc.gov/METS/"
-	xmlns:numishare="https://github.com/ewg118/numishare" xmlns:nm="http://nomisma.org/id/" xmlns:gml="http://www.opengis.net/gml" xmlns:tei="http://www.tei-c.org/ns/1.0"
-	xmlns:nmo="http://nomisma.org/ontology#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-	xmlns:nuds="http://nomisma.org/nuds" exclude-result-prefixes="#all" version="2.0">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:res="http://www.w3.org/2005/sparql-results#" xmlns:xlink="http://www.w3.org/1999/xlink"
+	xmlns:mets="http://www.loc.gov/METS/" xmlns:numishare="https://github.com/ewg118/numishare" xmlns:nm="http://nomisma.org/id/"
+	xmlns:gml="http://www.opengis.net/gml" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:nmo="http://nomisma.org/ontology#"
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nuds="http://nomisma.org/nuds"
+	exclude-result-prefixes="#all" version="2.0">
 	<xsl:include href="../../templates.xsl"/>
 	<xsl:include href="../../templates-visualize.xsl"/>
 	<!--<xsl:include href="../../templates-analyze.xsl"/>-->
@@ -32,9 +33,10 @@
 	<xsl:param name="page" as="xs:integer">
 		<xsl:choose>
 			<xsl:when
-				test="string-length(doc('input:request')/request/parameters/parameter[name='page']/value) &gt; 0 and doc('input:request')/request/parameters/parameter[name='page']/value castable
-				as xs:integer and number(doc('input:request')/request/parameters/parameter[name='page']/value) > 0">
-				<xsl:value-of select="doc('input:request')/request/parameters/parameter[name='page']/value"/>
+				test="
+					string-length(doc('input:request')/request/parameters/parameter[name = 'page']/value) &gt; 0 and doc('input:request')/request/parameters/parameter[name = 'page']/value castable
+					as xs:integer and number(doc('input:request')/request/parameters/parameter[name = 'page']/value) > 0">
+				<xsl:value-of select="doc('input:request')/request/parameters/parameter[name = 'page']/value"/>
 			</xsl:when>
 			<xsl:otherwise>1</xsl:otherwise>
 		</xsl:choose>
@@ -101,7 +103,8 @@
 				concat('http://', doc('input:request')/request/server-name, ':8080/orbeon/themes/', //config/theme/orbeon_theme)"/>
 	<xsl:variable name="recordType" select="//nuds:nuds/@recordType"/>
 	<xsl:variable name="id" select="normalize-space(//*[local-name() = 'recordId'])"/>
-	<xsl:variable name="objectUri" select="
+	<xsl:variable name="objectUri"
+		select="
 			if (/content/config/uri_space) then
 				concat(/content/config/uri_space, $id)
 			else
@@ -154,8 +157,9 @@
 	<!-- get non-coin-type RDF in the document -->
 	<xsl:variable name="rdf" as="element()*">
 		<rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:nm="http://nomisma.org/id/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-			xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"
-			xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:org="http://www.w3.org/ns/org#" xmlns:nomisma="http://nomisma.org/" xmlns:nmo="http://nomisma.org/ontology#">
+			xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+			xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:org="http://www.w3.org/ns/org#"
+			xmlns:nomisma="http://nomisma.org/" xmlns:nmo="http://nomisma.org/ontology#">
 			<xsl:variable name="id-param">
 				<xsl:for-each
 					select="
@@ -176,7 +180,8 @@
 	<xsl:variable name="regions" as="element()*">
 		<node>
 			<xsl:if test="$regionHierarchy = true()">
-				<xsl:variable name="mints" select="distinct-values($rdf//nmo:Mint/@rdf:about[contains(., 'nomisma.org')] | $rdf//nmo:Region/@rdf:about[contains(., 'nomisma.org')])"/>
+				<xsl:variable name="mints"
+					select="distinct-values($rdf//nmo:Mint/@rdf:about[contains(., 'nomisma.org')] | $rdf//nmo:Region/@rdf:about[contains(., 'nomisma.org')])"/>
 				<xsl:variable name="identifiers" select="replace(string-join($mints, '|'), 'http://nomisma.org/id/', '')"/>
 
 				<xsl:copy-of select="document(concat('http://nomisma.org/apis/regionHierarchy?identifiers=', encode-for-uri($identifiers)))"/>
@@ -185,8 +190,8 @@
 	</xsl:variable>
 
 	<!-- whether there are coin types, mints, findspots, annotations, executed in XPL -->
-	<xsl:variable name="hasSpecimens" select="number(//res:sparql[1]//descendant::res:binding[@name='count']/res:literal) &gt; 0" as="xs:boolean"/>
-	<xsl:variable name="specimenCount" select="//res:sparql[1]/descendant::res:binding[@name='count']/res:literal" as="xs:integer"/>
+	<xsl:variable name="hasSpecimens" select="number(//res:sparql[1]//descendant::res:binding[@name = 'count']/res:literal) &gt; 0" as="xs:boolean"/>
+	<xsl:variable name="specimenCount" select="//res:sparql[1]/descendant::res:binding[@name = 'count']/res:literal" as="xs:integer"/>
 	<xsl:variable name="hasFindspots" as="xs:boolean">
 		<xsl:choose>
 			<xsl:when test="$recordType = 'conceptual'">
@@ -218,6 +223,7 @@
 			<xsl:otherwise>false</xsl:otherwise>
 		</xsl:choose>
 	</xsl:variable>
+
 	<xsl:variable name="hasMints" as="xs:boolean">
 		<xsl:choose>
 			<xsl:when test="$rdf//nmo:Mint or descendant::nuds:geographic/nuds:geogname[contains(@xlink:href, 'geonames.org')]">true</xsl:when>
@@ -225,9 +231,18 @@
 		</xsl:choose>
 	</xsl:variable>
 
+	<!-- variable for whether or not geography has been enabled -->
+	<xsl:variable name="geoEnabled" as="xs:boolean">
+		<xsl:choose>
+			<xsl:when test="not(//config/baselayers/layer[@enabled = true()])">false</xsl:when>
+			<xsl:otherwise>true</xsl:otherwise>
+		</xsl:choose>
+	</xsl:variable>
+
 	<xsl:template match="/">
 		<xsl:choose>
-			<xsl:when test="count(descendant::*:otherRecordId[@semantic = 'dcterms:isReplacedBy']) &gt; 1 and descendant::*:control/*:maintenanceStatus = 'cancelledSplit'">
+			<xsl:when
+				test="count(descendant::*:otherRecordId[@semantic = 'dcterms:isReplacedBy']) &gt; 1 and descendant::*:control/*:maintenanceStatus = 'cancelledSplit'">
 				<html>
 					<head>
 						<xsl:call-template name="generic_head"/>
@@ -287,8 +302,10 @@
 						<xsl:call-template name="generic_head"/>
 						<xsl:choose>
 							<xsl:when test="$recordType = 'physical'">
-								<xsl:if test="$hasMints = true() or $hasFindspots = true()">
-									<script type="text/javascript" src="{$include_path}/javascript/display_map_functions.js"/>
+								<xsl:if test="$geoEnabled = true()">
+									<xsl:if test="$hasMints = true() or $hasFindspots = true()">
+										<script type="text/javascript" src="{$include_path}/javascript/display_map_functions.js"/>
+									</xsl:if>
 								</xsl:if>
 
 								<!--- IIIF -->
@@ -311,15 +328,17 @@
 								<script type="text/javascript" src="{$include_path}/javascript/visualize_functions.js"/>
 
 								<!-- mapping -->
-								<xsl:if test="$hasMints = true() or $hasFindspots = true()">
-									<script type="text/javascript" src="http://openlayers.org/api/2.12/OpenLayers.js"/>
-									<script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3.20&amp;sensor=false"/>
-									<script type="text/javascript" src="{$include_path}/javascript/mxn.js"/>
-									<script type="text/javascript" src="{$include_path}/javascript/timeline-2.3.0.js"/>
-									<link type="text/css" href="{$include_path}/css/timeline-2.3.0.css" rel="stylesheet"/>
-									<script type="text/javascript" src="{$include_path}/javascript/timemap_full.pack.js"/>
-									<script type="text/javascript" src="{$include_path}/javascript/param.js"/>
-									<script type="text/javascript" src="{$include_path}/javascript/display_map_functions.js"/>
+								<xsl:if test="$geoEnabled = true()">
+									<xsl:if test="$hasMints = true() or $hasFindspots = true()">
+										<script type="text/javascript" src="http://openlayers.org/api/2.12/OpenLayers.js"/>
+										<script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3.20&amp;sensor=false"/>
+										<script type="text/javascript" src="{$include_path}/javascript/mxn.js"/>
+										<script type="text/javascript" src="{$include_path}/javascript/timeline-2.3.0.js"/>
+										<link type="text/css" href="{$include_path}/css/timeline-2.3.0.css" rel="stylesheet"/>
+										<script type="text/javascript" src="{$include_path}/javascript/timemap_full.pack.js"/>
+										<script type="text/javascript" src="{$include_path}/javascript/param.js"/>
+										<script type="text/javascript" src="{$include_path}/javascript/display_map_functions.js"/>
+									</xsl:if>
 								</xsl:if>
 							</xsl:when>
 
@@ -376,8 +395,8 @@
 								</span>
 								<span id="manifest"/>
 								<div class="iiif-container-template" style="width:100%;height:100%"/>
-								<iframe id="model-iframe-template" width="640" height="480" frameborder="0" allowvr="true" allowfullscreen="true" mozallowfullscreen="true"
-									webkitallowfullscreen="true" onmousewheel=""/>
+								<iframe id="model-iframe-template" width="640" height="480" frameborder="0" allowvr="true" allowfullscreen="true"
+									mozallowfullscreen="true" webkitallowfullscreen="true" onmousewheel=""/>
 								<div id="iiif-window" style="width:600px;height:600px;display:none"/>
 								<div id="model-window" style="width:640px;height:480px;display:none"/>
 							</xsl:if>
@@ -483,7 +502,8 @@
 								</p>
 								<xsl:if test="nuds:control/nuds:otherRecordId[@semantic = 'skos:broader']">
 									<xsl:variable name="broader" select="nuds:control/nuds:otherRecordId[@semantic = 'skos:broader']"/>
-									<p>Parent Type: <a href="{concat(//config/uri_space, $broader)}" rel="skos:broader"><xsl:value-of select="$broader"/></a></p>
+									<p>Parent Type: <a href="{concat(//config/uri_space, $broader)}" rel="skos:broader"><xsl:value-of select="$broader"
+										/></a></p>
 								</xsl:if>
 							</div>
 						</div>
@@ -491,13 +511,23 @@
 
 						<!-- examples and subtypes -->
 						<xsl:if test="$hasSpecimens = true()">
-							<xsl:variable name="limit" select="if (//config/specimens_per_page castable as xs:integer) then //config/specimens_per_page else 48"/>
-							
+							<xsl:variable name="limit"
+								select="
+									if (//config/specimens_per_page castable as xs:integer) then
+										//config/specimens_per_page
+									else
+										48"/>
+
 							<xsl:apply-templates select="doc('input:specimens')/res:sparql" mode="type-examples">
 								<xsl:with-param name="page" select="$page" as="xs:integer"/>
 								<xsl:with-param name="numFound" select="$specimenCount" as="xs:integer"/>
 								<xsl:with-param name="limit" select="$limit" as="xs:integer"/>
-								<xsl:with-param name="endpoint" select="if (contains($sparql_endpoint, 'localhost')) then 'http://nomisma.org/query' else $sparql_endpoint"/>
+								<xsl:with-param name="endpoint"
+									select="
+										if (contains($sparql_endpoint, 'localhost')) then
+											'http://nomisma.org/query'
+										else
+											$sparql_endpoint"/>
 								<xsl:with-param name="objectUri" select="$objectUri"/>
 							</xsl:apply-templates>
 						</xsl:if>
@@ -509,7 +539,13 @@
 							<h3>Subtypes</h3>
 							<xsl:apply-templates select="$subtypes//subtype">
 								<xsl:with-param name="uri_space" select="//config/uri_space"/>
-								<xsl:with-param name="endpoint" select="if (contains($sparql_endpoint, 'localhost')) then 'http://nomisma.org/query' else $sparql_endpoint"/>
+								<xsl:with-param name="endpoint"
+									select="
+										if (contains($sparql_endpoint, 'localhost')) then
+											'http://nomisma.org/query'
+										else
+											$sparql_endpoint"
+								/>
 							</xsl:apply-templates>
 						</xsl:if>
 
@@ -701,17 +737,26 @@
 						<div class="row">
 							<!-- if there are no mint coordinates and no findspots (from SPARQL), then do not show the map -->
 							<xsl:choose>
-								<xsl:when test="$hasFindspots = false() and $hasMints = false()">
-									<div class="col-md-12">
-										<xsl:call-template name="metadata-container"/>
-									</div>
+								<xsl:when test="$geoEnabled = true()">
+									<xsl:choose>
+										<xsl:when test="$hasFindspots = false() and $hasMints = false()">
+											<div class="col-md-12">
+												<xsl:call-template name="metadata-container"/>
+											</div>
+										</xsl:when>
+										<xsl:otherwise>
+											<div class="col-md-6">
+												<xsl:call-template name="metadata-container"/>
+											</div>
+											<div class="col-md-6">
+												<xsl:call-template name="map-container"/>
+											</div>
+										</xsl:otherwise>
+									</xsl:choose>
 								</xsl:when>
 								<xsl:otherwise>
-									<div class="col-md-6">
+									<div class="col-md-12">
 										<xsl:call-template name="metadata-container"/>
-									</div>
-									<div class="col-md-6">
-										<xsl:call-template name="map-container"/>
 									</div>
 								</xsl:otherwise>
 							</xsl:choose>
@@ -728,13 +773,15 @@
 
 							<xsl:call-template name="metadata-container"/>
 						</div>
-						<xsl:if test="$hasMints = true() or $hasFindspots = true()">
-							<div class="row">
-								<div class="col-md-12">
-									<xsl:call-template name="map-container"/>
+						<xsl:if test="$geoEnabled = true()">
+							<xsl:if test="$hasMints = true() or $hasFindspots = true()">
+								<div class="row">
+									<div class="col-md-12">
+										<xsl:call-template name="map-container"/>
+									</div>
 								</div>
-							</div>
-						</xsl:if>
+							</xsl:if>
+						</xsl:if>						
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:otherwise>
@@ -983,7 +1030,8 @@
 	</xsl:template>
 
 	<!-- hide symbols with left/right/center/exerque positions, format elsewhere -->
-	<xsl:template match="nuds:symbol[@position = 'left'] | nuds:symbol[@position = 'center'] | nuds:symbol[@position = 'right'] | nuds:symbol[@position = 'exergue']"
+	<xsl:template
+		match="nuds:symbol[@position = 'left'] | nuds:symbol[@position = 'center'] | nuds:symbol[@position = 'right'] | nuds:symbol[@position = 'exergue']"
 		mode="descMeta"/>
 
 	<!-- *********** IMAGE TEMPLATES FOR PHYSICAL OBJECTS ********** -->
@@ -1015,8 +1063,8 @@
 						<img src="{concat($iiif-service, '/full/400,/0/default.jpg')}" property="foaf:depiction" alt="{$side}"/>
 					</noscript>
 					<div>
-						<a href="{$full-url}" title="Full resolution image" rel="nofollow"><span class="glyphicon glyphicon-download-alt"/> Download
-							full resolution image</a>
+						<a href="{$full-url}" title="Full resolution image" rel="nofollow"><span class="glyphicon glyphicon-download-alt"/> Download full
+							resolution image</a>
 					</div>
 				</xsl:when>
 				<xsl:when test="string($reference-image)">
@@ -1028,11 +1076,11 @@
 								concat($display_path, $reference-image)"/>
 
 					<img src="{$image_url}" property="foaf:depiction" alt="{$side}"/>
-					
+
 					<xsl:if test="string($full-url)">
 						<div>
-							<a href="{$full-url}" title="Full resolution image" rel="nofollow"><span class="glyphicon glyphicon-download-alt"/> Download
-								full resolution image</a>
+							<a href="{$full-url}" title="Full resolution image" rel="nofollow"><span class="glyphicon glyphicon-download-alt"/> Download full
+								resolution image</a>
 						</div>
 					</xsl:if>
 				</xsl:when>
