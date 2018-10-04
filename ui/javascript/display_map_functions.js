@@ -13,8 +13,8 @@ $(document).ready(function () {
         var hasFindspots = $('#hasFindspots').text();
         
         //display timemap only when there are findspots
-        if (hasFindspots == 'true') {         
-            if ($('#map').length > 0) {              
+        if (hasFindspots == 'true') {
+            if ($('#map').length > 0) {
                 initialize_timemap(id, path, lang);
             }
         } else {
@@ -70,7 +70,7 @@ function initialize_map(id, path, lang) {
     var baselayers = $('#baselayers').text().split(',');
     var mapboxKey = $('#mapboxKey').text();
     var url = path + id + ".geojson" + (lang.length > 0 ? '?lang=' + lang: '');
-
+    
     //baselayers
     var osm = L.tileLayer(
     'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -146,6 +146,9 @@ function initialize_map(id, path, lang) {
             break;
             case 'subject':
             fillColor = '#a1d490';
+            break;
+            default:
+            fillColor = '#efefef'
         }
         
         return new L.CircleMarker(latlng, {
@@ -160,7 +163,12 @@ function initialize_map(id, path, lang) {
     
     function onEachFeature (feature, layer) {
         var label = feature.properties.name;
-        str = label + ' <a href="' + feature.properties.uri + '" target="_blank"><span class="glyphicon glyphicon-new-window"/></a>';
+        if (feature.properties.hasOwnProperty('uri')) {
+            str = label + ' <a href="' + feature.properties.uri + '" target="_blank"><span class="glyphicon glyphicon-new-window"/></a>';
+        } else {
+            str = label;
+        }
+        
         layer.bindPopup(str);
     }
 }
