@@ -73,10 +73,10 @@
 	<xsl:variable name="image_location" select="/content/config/theme/layouts/display/nuds/image_location"/>
 	<xsl:variable name="display_path" select="
 			if (not(string($mode))) then
-				'../search/'
+				'../'
 			else
 				''"/>
-	<xsl:variable name="include_path" select="concat('http://', doc('input:request')/request/server-name, ':8080/orbeon/themes/', //config/theme/orbeon_theme)"/>
+	<xsl:variable name="include_path" select="if (string(//config/theme/themes_url)) then concat(//config/theme/themes_url, //config/theme/orbeon_theme) else concat('http://', doc('input:request')/request/server-name, ':8080/orbeon/themes/', //config/theme/orbeon_theme)"/>
 	<xsl:variable name="recordType" select="//nuds:nuds/@recordType"/>
 	<xsl:variable name="id" select="normalize-space(//*[local-name() = 'recordId'])"/>
 	<xsl:variable name="objectUri"
@@ -170,9 +170,14 @@
 	<xsl:variable name="hasFindspots" select="//res:sparql[2]/res:boolean" as="xs:boolean"/>
 	<xsl:variable name="hasAnnotations" as="xs:boolean">
 		<xsl:choose>
-			<xsl:when test="/content/res:sparql[3][descendant::res:result]">true</xsl:when>
-			<xsl:otherwise>false</xsl:otherwise>
-		</xsl:choose>
+			<xsl:when test="//config/annotation_sparql_endpoint">
+				<xsl:choose>
+					<xsl:when test="doc('input:annotations')[descendant::res:result]">true</xsl:when>
+					<xsl:otherwise>false</xsl:otherwise>
+				</xsl:choose>
+			</xsl:when>
+			<xsl:otherwise>false</xsl:otherwise>				
+		</xsl:choose>		
 	</xsl:variable>
 	<xsl:variable name="hasMints" as="xs:boolean">
 		<xsl:choose>
@@ -245,6 +250,12 @@
 						<xsl:choose>
 							<xsl:when test="$recordType = 'physical'">
 								<script type="text/javascript" src="{$include_path}/javascript/display_map_functions.js"/>
+								
+								<!--- IIIF -->
+								<xsl:if test="descendant::mets:file[@USE='iiif']">
+									<script type="text/javascript" src="{$include_path}/javascript/leaflet-iiif.js"/>
+									<script type="text/javascript" src="{$include_path}/javascript/display_iiif_functions.js"/>
+								</xsl:if>								
 							</xsl:when>
 							<!-- coin-type CSS and JS dependencies -->
 							<xsl:when test="$recordType = 'conceptual'">
@@ -290,6 +301,9 @@
 									<xsl:when test="$recordType = 'physical'">
 										<xsl:value-of select="concat($display_path, 'id/')"/>
 									</xsl:when>
+									<xsl:when test="$recordType = 'conceptual' and $hasFindspots = false()">
+										<xsl:value-of select="concat($display_path, 'id/')"/>
+									</xsl:when>
 									<xsl:otherwise>
 										<xsl:value-of select="$display_path"/>
 									</xsl:otherwise>
@@ -313,9 +327,12 @@
 								</span>
 								<span id="manifest"/>
 								<div class="iiif-container-template" style="width:100%;height:100%"/>
+								<iframe id="model-iframe-template" width="640" height="480" frameborder="0" allowvr="true"
+									allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true" onmousewheel=""></iframe>
 							</xsl:if>
 						</div>
 						<div id="iiif-window" style="width:600px;height:600px;display:none"/>
+						<div id="model-window" style="width:640px;height:480px;display:none"/>
 					</body>
 				</html>
 			</xsl:when>
@@ -447,7 +464,7 @@
 						<xsl:if test="$hasAnnotations = true()">
 							<div class="row">
 								<div class="col-md-12">
-									<xsl:apply-templates select="/content/res:sparql[3]" mode="annotations"/>
+									<xsl:apply-templates select="doc('input:annotations')/res:sparql" mode="annotations"/>
 								</div>
 							</div>
 						</xsl:if>
@@ -561,7 +578,7 @@
 						<xsl:if test="$hasAnnotations = true()">
 							<div class="row">
 								<div class="col-md-12">
-									<xsl:apply-templates select="/content/res:sparql[3]" mode="annotations"/>
+									<xsl:apply-templates select="doc('input:annotations')/res:sparql" mode="annotations"/>
 								</div>
 							</div>
 						</xsl:if>
@@ -640,6 +657,11 @@
 					</xsl:when>
 					<xsl:otherwise>
 						<div class="row">
+							<p>
+								<xsl:if test="$hasAnnotations = true()">									
+									<a href="#annotations">Annotations</a>
+								</xsl:if>
+							</p>
 							<xsl:call-template name="metadata-container"/>
 						</div>
 						<xsl:if test="$hasMints = true()">
@@ -764,7 +786,7 @@
 				<tbody>
 					<tr>
 						<th style="width:100px;background:none">
-							<xsl:value-of select="numishare:regularize_node('legend', $lang)"/>
+							<xsl:value-of select="numishare:normalizeLabel('maps_legend', $lang)"/>
 						</th>
 						<td style="background-color:#6992fd;border:2px solid black;width:50px;"/>
 						<td style="width:100px">
@@ -903,6 +925,7 @@
 				<xsl:value-of select="//mets:fileGrp[@USE = 'obverse']/mets:file[@USE = 'reference']/mets:FLocat/@xlink:href"/>
 			</xsl:if>
 		</xsl:variable>
+		<xsl:variable name="iiif-service" select="//mets:fileGrp[@USE = 'obverse']/mets:file[@USE = 'iiif']/mets:FLocat/@xlink:href"/>
 
 		<!-- display legend and type and image if available -->
 		<xsl:choose>
@@ -911,15 +934,20 @@
 					<xsl:variable name="side" select="local-name()"/>
 					<div class="reference_image" rel="nmo:hasObverse">
 						<xsl:if test="string($obverse_image)">
+							<xsl:variable name="image_url" select="if (matches($obverse_image, 'https?://')) then $obverse_image else concat($display_path, $obverse_image)"/>
+							
 							<xsl:choose>
-								<xsl:when test="contains($obverse_image, 'http://')">
-									<img src="{$obverse_image}" property="foaf:depiction" alt="{$side}"/>
+								<xsl:when test="string($iiif-service)">
+									<div id="obv-iiif-container" class="iiif-container" style="width:400px;height:400px;"/>
+									<span class="hidden" id="obv-iiif-service">
+										<xsl:value-of select="$iiif-service"/>
+									</span>									
 								</xsl:when>
-								<xsl:otherwise>
-									<img src="{$display_path}{$obverse_image}" property="foaf:depiction" alt="{$side}"/>
+								<xsl:otherwise>									
+									<img src="{$image_url}" property="foaf:depiction" alt="{$side}"/>
+									<br/>
 								</xsl:otherwise>
 							</xsl:choose>
-							<br/>
 						</xsl:if>
 
 						<b>
@@ -940,7 +968,7 @@
 				<!-- otherwise only display the image -->
 				<xsl:if test="string($obverse_image)">
 					<div class="reference_image">
-						<img src="{if (contains($obverse_image, 'http://')) then $obverse_image else concat($display_path, $obverse_image)}"
+						<img src="{if (matches($obverse_image, 'https?://')) then $obverse_image else concat($display_path, $obverse_image)}"
 							property="foaf:depiction" alt="{$side}"/>
 					</div>
 				</xsl:if>

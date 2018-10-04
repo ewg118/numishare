@@ -1,10 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-	Copyright (C) 2010 Ethan Gruber
-	EADitor: https://github.com/ewg118/eaditor
-	Apache License 2.0: https://github.com/ewg118/eaditor
-	
--->
 <p:config xmlns:p="http://www.orbeon.com/oxf/pipeline" xmlns:oxf="http://www.orbeon.com/oxf/processors">
 	<p:param type="input" name="data"/>
 	<p:param type="output" name="data"/>
@@ -27,6 +21,29 @@
 				<xsl:template match="/">
 					<xsl:variable name="collection-name" select="substring-before(substring-after(doc('input:request')/request/servlet-path, 'numishare/'), '/')"/>
 					<xsl:choose>
+						<!-- IIIF manifest generation -->
+						<xsl:when test="contains(doc('input:request')/request/request-url, 'manifest/')">
+							<xsl:variable name="pieces" select="tokenize(substring-after(doc('input:request')/request/request-url, 'manifest/'), '/')"/>
+							<xsl:variable name="id">
+								<xsl:choose>
+									<xsl:when test="$pieces[1] = 'obverse' or $pieces[1] = 'reverse'">
+										<xsl:value-of select="$pieces[2]"/>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:value-of select="$pieces[1]"/>
+									</xsl:otherwise>
+								</xsl:choose>
+							</xsl:variable>
+							<xsl:variable name="accessionYear" select="tokenize($id, '\.')[1]"/>
+							
+							<config>
+								<url>
+									<xsl:value-of select="concat(/exist-config/url, $collection-name, '/objects/', $accessionYear, '/', $id, '.xml')"/>
+								</url>
+								<content-type>application/xml</content-type>
+								<encoding>utf-8</encoding>
+							</config>
+						</xsl:when>
 						<!-- handle id/ pipeline in the public interface -->
 						<xsl:when test="contains(doc('input:request')/request/request-url, 'id/') or contains(doc('input:request')/request/request-url, 'map/')">							
 							<xsl:variable name="doc" select="tokenize(doc('input:request')/request/request-url, '/')[last()]"/>

@@ -6,7 +6,7 @@
 	<xsl:include href="../../functions.xsl"/>
 
 	<xsl:variable name="display_path"/>
-	<xsl:variable name="include_path" select="concat('http://', doc('input:request')/request/server-name, ':8080/orbeon/themes/', //config/theme/orbeon_theme)"/>
+	<xsl:variable name="include_path" select="if (string(//config/theme/themes_url)) then concat(//config/theme/themes_url, //config/theme/orbeon_theme) else concat('http://', doc('input:request')/request/server-name, ':8080/orbeon/themes/', //config/theme/orbeon_theme)"/>
 
 	<!-- request params -->
 	<xsl:param name="pipeline">results</xsl:param>
@@ -81,8 +81,8 @@
 
 				<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"/>
 				<!-- bootstrap -->
-				<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"/>
-				<script type="text/javascript" src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"/>
+				<link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"/>
+				<script type="text/javascript" src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"/>
 				<script type="text/javascript" src="{$include_path}/javascript/bootstrap-multiselect.js"/>
 				<link rel="stylesheet" href="{$include_path}/css/bootstrap-multiselect.css" type="text/css"/>
 				<link type="text/css" href="{$include_path}/css/style.css" rel="stylesheet"/>
@@ -97,12 +97,12 @@
 				<!-- call mapping information -->
 				<xsl:if test="count(//lst[contains(@name, '_geo')]/int) &gt; 0">
 					<!-- maps-->
-					<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css"/>
+					<link rel="stylesheet" href="https://unpkg.com/leaflet@0.7.7/dist/leaflet.css"/>
 					<link rel="stylesheet" href="{$include_path}/css/MarkerCluster.css"/>
 					<link rel="stylesheet" href="{$include_path}/css/MarkerCluster.Default.css"/>
 					
 					<!-- js -->
-					<script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"/>					
+					<script src="https://unpkg.com/leaflet@0.7.7/dist/leaflet.js"/>					
 					<script type="text/javascript" src="{$include_path}/javascript/leaflet.ajax.min.js"/>
 					<script type="text/javascript" src="{$include_path}/javascript/leaflet.markercluster.js"/>
 					<script type="text/javascript" src="{$include_path}/javascript/result_map_functions.js"/>

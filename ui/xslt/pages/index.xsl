@@ -4,12 +4,33 @@
 	<xsl:include href="../functions.xsl"/>
 
 	<xsl:param name="pipeline">display</xsl:param>
-	<xsl:param name="lang" select="doc('input:request')/request/parameters/parameter[name='lang']/value"/>
+	<xsl:param name="langParam" select="doc('input:request')/request/parameters/parameter[name='lang']/value"/>
+	<xsl:param name="lang">
+		<xsl:choose>
+			<xsl:when test="string($langParam)">
+				<xsl:value-of select="$langParam"/>
+			</xsl:when>
+			<xsl:when test="string(doc('input:request')/request//header[name[.='accept-language']]/value)">
+				<xsl:value-of select="numishare:parseAcceptLanguage(doc('input:request')/request//header[name[.='accept-language']]/value)[1]"/>
+			</xsl:when>
+		</xsl:choose>
+	</xsl:param>
 	<xsl:variable name="display_path"/>
-	<xsl:variable name="include_path" select="concat('http://', doc('input:request')/request/server-name, ':8080/orbeon/themes/', //config/theme/orbeon_theme)"/>
+	<xsl:variable name="include_path" select="if (string(//config/theme/themes_url)) then concat(//config/theme/themes_url, //config/theme/orbeon_theme) else concat('http://', doc('input:request')/request/server-name, ':8080/orbeon/themes/', //config/theme/orbeon_theme)"/>
 
+	<!-- URI space for featured items -->	
+	<xsl:variable name="uri_space">
+		<xsl:choose>
+			<xsl:when test="//config/uri_space">
+				<xsl:value-of select="//config/uri_space"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="concat(//config/url, 'id/')"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:variable>
 
-	<xsl:template match="/content/config">
+	<xsl:template match="//config">
 		<html lang="en">
 			<head>
 				<title>
@@ -19,8 +40,8 @@
 				<meta name="viewport" content="width=device-width, initial-scale=1"/>
 				<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"/>
 				<!-- bootstrap -->
-				<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"/>
-				<script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"/>
+				<link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"/>
+				<script src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"/>
 				<link type="text/css" href="{$include_path}/css/style.css" rel="stylesheet"/>
 				<xsl:if test="string(google_analytics)">
 					<script type="text/javascript">
@@ -137,8 +158,8 @@
 						<script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid=xa-4ffc41710d8b692c"/>
 						<!-- AddThis Button END -->
 					</div>
-					<div class="highlight">
-						<xsl:copy-of select="/content/div[@id='feature']"/>
+					<div id="feature" class="highlight text-center">
+						<xsl:apply-templates select="doc('input:feature-model')//doc"/>
 					</div>
 					<div class="highlight data_options">
 						<h3>Linked Data</h3>
@@ -237,7 +258,7 @@
 				<a href="http://numismatics.org/Education/Education">Education</a>
 			</li>
 			<li>
-				<a href="http://numismatics.org/OnlineResources/OnlineResources">Online Resources</a>
+				<a href="http://numismatics.org/resources">Online Resources</a>
 			</li>
 			<li>
 				<a href="http://numismatics.org/Development/Development">Support the ANS</a>
@@ -252,6 +273,25 @@
 				<a target="_blank" href="http://numismatics.org/Store/Store">The ANS Store</a>
 			</li>
 		</ul>
+	</xsl:template>
+	
+	<!-- featured object -->
+	<xsl:template match="doc">		
+		<h3>Featured Object</h3>
+		<div>
+			<a href="{$uri_space}{str[@name='recordId']}{if(string($langParam)) then concat('?lang=', $langParam) else ''}">
+				<img src="{str[@name='thumbnail_obv']}"/>
+			</a>
+			<br/>
+			<a href="{$uri_space}{str[@name='recordId']}{if(string($langParam)) then concat('?lang=', $langParam) else ''}">
+				<xsl:value-of select="str[@name='title_display']"/>
+			</a>
+			<xsl:if test="string(str[@name='imagesponsor'])">
+				<br/>
+				<xsl:text>Image Sponsor: </xsl:text>
+				<xsl:value-of select="str[@name='imagesponsor']"/>
+			</xsl:if>
+		</div>
 	</xsl:template>
 
 </xsl:stylesheet>
