@@ -5,10 +5,19 @@ Library: jQuery
 Description: Rendering graphics based on hoard counts
  ************************************/
 $(document).ready(function () {
+
+    //display the magnifying glass glyph when hovering the mouse of divs that contain it (for IIIF)
+    $('.g_doc:has(.iiif-zoom-glyph)').hover(function () {
+        $(this).find('.iiif-zoom-glyph').fadeIn();
+    },
+    function () {
+        $(this).find('.iiif-zoom-glyph').fadeOut();
+    });
+
     $('a.thumbImage').fancybox({
         type: 'image',
         beforeShow: function () {
-            this.title = '<a href="' + this.element.attr('id') + '">' + this.element.attr('title') + '</a>'
+            this.title = '<a href="' + this.element.attr('id') + '">' + this.element.attr('title') + '</a>';
         },
         helpers: {
             title: {
@@ -26,6 +35,23 @@ $(document).ready(function () {
                 $(".iiif-container-template").clone().removeAttr('class').attr('id', 'iiif-container').appendTo("#iiif-window");
                 $('#manifest').text(manifest);
                 render_image(manifest);
+            }
+        },
+        helpers: {
+            title: {
+                type: 'inside'
+            }
+        }
+    });
+    
+    $('.model-button').fancybox({
+         beforeShow: function () {
+            var url = this.element.attr('model-url');
+            this.title = '<a href="' + this.element.attr('identifier') + '">' + this.element.attr('title') + '</a>';
+            //if the URL is sketchfab, then remove existing iframe and reload iframe
+            if (url.indexOf('sketchfab') > 0) {          
+                $('#model-window').children('iframe').remove();
+                $("#model-iframe-template").clone().removeAttr('id').attr('src', url + '/embed').appendTo("#model-window");
             }
         },
         helpers: {

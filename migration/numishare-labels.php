@@ -70,11 +70,20 @@ $writer->writeAttribute('xmlns:xsl', 'http://www.w3.org/1999/XSL/Transform');
 								$regularize_node = false;
 							}
 						}
+							//otherwise call the function for English
+							$writer->startElement('xsl:otherwise');
+								$writer->startElement('xsl:value-of');
+									$writer->writeAttribute('select', "numishare:regularize_node(\$label, 'en')");
+								$writer->endElement();
+							$writer->endElement();
+						//end choose
 						$writer->endElement();
 					$writer->endElement();		
 				}
-			}		
+			}			
+		//end choose
 		$writer->endElement();
+	//end function
 	$writer->endElement();
 	
 	//begin the numishare:normalizeLabel, which normalizes Numishare user interface labels
@@ -106,11 +115,21 @@ $writer->writeAttribute('xmlns:xsl', 'http://www.w3.org/1999/XSL/Transform');
 								$regularize_node = false;
 							}
 						}
+							//otherwise call the function for English
+							$writer->startElement('xsl:otherwise');
+								$writer->startElement('xsl:value-of');
+									$writer->writeAttribute('select', "numishare:normalizeLabel(\$label, 'en')");
+								$writer->endElement();
+							$writer->endElement();
+						//end choose
 						$writer->endElement();
 					$writer->endElement();
 				}
 			}
+			
+		//end choose
 		$writer->endElement();
+	//end function
 	$writer->endElement();
 
 //close xsl:stylesheet

@@ -77,7 +77,7 @@ function process_csv($writer, $row, $count){
 }
 
 function query_bm($writer, $uri){
-	$db = sparql_connect( "http://collection.britishmuseum.org/sparql" );
+	$db = sparql_connect( "https://collection.britishmuseum.org/sparql" );
 	if( !$db ) {
 		print sparql_errno() . ": " . sparql_error(). "\n"; exit;
 	}
