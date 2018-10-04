@@ -3,7 +3,7 @@
 	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" version="2.0" xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns:res="http://www.w3.org/2005/sparql-results#" xmlns:numishare="https://github.com/ewg118/numishare" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
 	xmlns:nuds="http://nomisma.org/nuds" xmlns:nh="http://nomisma.org/nudsHoard" xmlns:nm="http://nomisma.org/id/" xmlns:tei="http://www.tei-c.org/ns/1.0"
-	xmlns:nmo="http://nomisma.org/ontology#" exclude-result-prefixes="#all">
+	xmlns:nmo="http://nomisma.org/ontology#" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" exclude-result-prefixes="#all">
 	<xsl:include href="../../templates.xsl"/>
 	<!--<xsl:include href="../../templates-visualize.xsl"/>-->
 	<xsl:include href="../../templates-analyze.xsl"/>
@@ -261,7 +261,7 @@
 	<!-- geographic boolean variables -->
 	<xsl:variable name="hasMints" as="xs:boolean">
 		<xsl:choose>
-			<xsl:when test="$rdf//nmo:Mint or descendant::nuds:geographic/nuds:geogname[contains(@xlink:href, 'geonames.org')]">true</xsl:when>
+			<xsl:when test="$rdf//nmo:Mint[geo:location or skos:related] or descendant::nuds:geographic/nuds:geogname[contains(@xlink:href, 'geonames.org')]">true</xsl:when>
 			<xsl:otherwise>false</xsl:otherwise>
 		</xsl:choose>
 	</xsl:variable>
@@ -456,7 +456,15 @@
 								<td style="background-color:#6992fd;border:2px solid black;width:50px;"/>
 								<td style="width:100px">
 									<xsl:value-of select="numishare:regularize_node('mint', $lang)"/>
-								</td>
+								</td>								
+								<xsl:if test="$rdf//nmo:Mint[skos:related]">
+									<!-- only display the uncertain mint key if there's an uncertain mint match -->
+									<td style="background-color:#666666;border:2px solid black;width:50px;"/>							
+									<td style="width:150px;padding-left:6px;">
+										<xsl:value-of select="numishare:regularize_node('mint', $lang)"/>
+										<xsl:text> (uncertain)</xsl:text>
+									</td>
+								</xsl:if>								
 								<td style="background-color:#d86458;border:2px solid black;width:50px;"/>
 								<td style="width:100px">
 									<xsl:value-of select="numishare:regularize_node('findspot', $lang)"/>

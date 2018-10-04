@@ -129,15 +129,24 @@
 		<!-- create mint points -->
 		<xsl:for-each
 			select="$nudsGroup/descendant::nuds:geogname[@xlink:role = 'mint'][string(@xlink:href)] | descendant::nuds:geogname[@xlink:role = 'findspot'][string(@xlink:href)] | descendant::nuds:findspotDesc[string(@xlink:href)] | descendant::nuds:subject[contains(@xlink:href, 'geonames.org')] | descendant::nuds:findspot[gml:Point]">
+			<xsl:variable name="uri" select="@xlink:href"/>
+			<xsl:variable name="type">
+				<xsl:choose>
+					<xsl:when test="@xlink:role = 'mint'">
+						<!-- evaluate whether the mint is uncertain or not -->
+						<xsl:choose>
+							<xsl:when test="$rdf//*[@rdf:about = $uri]/skos:related">uncertainMint</xsl:when>
+							<xsl:otherwise>mint</xsl:otherwise>
+						</xsl:choose>
+					</xsl:when>
+					<xsl:when test="@xlink:role = 'findspot' or self::nuds:findspotDesc or self::nuds:findspot">findspot</xsl:when>
+					<xsl:when test="self::nuds:subject">subject</xsl:when>
+				</xsl:choose>
+			</xsl:variable>
+			
 			<xsl:call-template name="generateFeature">
-				<xsl:with-param name="uri" select="@xlink:href"/>
-				<xsl:with-param name="type">
-					<xsl:choose>
-						<xsl:when test="@xlink:role = 'mint'">mint</xsl:when>
-						<xsl:when test="@xlink:role = 'findspot' or self::nuds:findspotDesc or self::nuds:findspot">findspot</xsl:when>
-						<xsl:when test="self::nuds:subject">subject</xsl:when>
-					</xsl:choose>
-				</xsl:with-param>
+				<xsl:with-param name="uri" select="$uri"/>
+				<xsl:with-param name="type" select="$type"/>
 			</xsl:call-template>
 		</xsl:for-each>
 
@@ -271,15 +280,35 @@
 							<xsl:value-of select="concat($geonames_data//lng, ',', $geonames_data//lat)"/>
 						</xsl:when>
 						<xsl:when test="contains($uri, 'nomisma')">
-							<xsl:variable name="coordinates">
-								<xsl:if test="$rdf//*[@rdf:about = concat($uri, '#this')]/geo:long and $rdf//*[@rdf:about = concat($uri, '#this')]/geo:lat"
-									>true</xsl:if>
-							</xsl:variable>
-							<xsl:if test="$coordinates = 'true'">
-								<xsl:value-of
-									select="concat($rdf//*[@rdf:about = concat($uri, '#this')]/geo:long, ',', $rdf//*[@rdf:about = concat($uri, '#this')]/geo:lat)"
-								/>
-							</xsl:if>
+							<xsl:choose>
+								<!-- when there is a geo:SpatialThing associated with the mint that contains a lat and long: -->
+								<xsl:when test="$rdf//*[@rdf:about = concat($uri, '#this')]/geo:long and $rdf//*[@rdf:about = concat($uri, '#this')]/geo:lat">
+									<xsl:value-of
+										select="concat($rdf//*[@rdf:about = concat($uri, '#this')]/geo:long, ',', $rdf//*[@rdf:about = concat($uri, '#this')]/geo:lat)"
+									/>
+								</xsl:when>
+								<!-- if the URI contains a skos:related linking to an uncertain mint attribution -->
+								<xsl:when test="$rdf//*[@rdf:about = $uri]/skos:related">
+									<xsl:variable name="uncertainMint" as="node()*">
+										<xsl:copy-of
+											select="document(concat($rdf//*[@rdf:about = $uri]/skos:related/rdf:Description/rdf:value/@rdf:resource, '.rdf'))"/>
+									</xsl:variable>
+
+									<xsl:if test="$uncertainMint//geo:long and $uncertainMint//geo:lat">
+										<xsl:value-of select="concat($uncertainMint//geo:long, ',', $uncertainMint//geo:lat)"/>
+									</xsl:if>
+								</xsl:when>
+								<!-- if the mint does not have coordinates, but does have skos:broader, exectue the region hierarchy API call to look for parent mint/region coordinates -->
+								<xsl:when test="$rdf//*[@rdf:about = $uri]/skos:broader">
+									<xsl:variable name="regions" as="node()*">
+										<xsl:copy-of select="document(concat('http://nomisma.org/apis/regionHierarchy?identifiers=', encode-for-uri(substring-after($uri, 'http://nomisma.org/id/'))))"/>
+									</xsl:variable>
+									
+									<xsl:if test="$regions//mint[1][@lat and @long]">
+										<xsl:value-of select="concat($regions//mint[1]/@long, ',', $regions//mint[1]/@lat)"/>
+									</xsl:if>									
+								</xsl:when>
+							</xsl:choose>
 						</xsl:when>
 						<xsl:when test="contains($uri, 'coinhoards.org')">
 							<xsl:variable name="findspotUri" select="$rdf//*[@rdf:about = $uri]/nmo:hasFindspot/@rdf:resource"/>

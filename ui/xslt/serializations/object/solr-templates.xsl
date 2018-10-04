@@ -213,11 +213,11 @@
 		<!-- additional content -->
 		<xsl:if test="contains($href, 'nomisma.org')">
 			<!-- ingest matchinging URIs -->
-			<xsl:for-each select="$rdf/*[@rdf:about = $href]/skos:exactMatch|$rdf/*[@rdf:about = $href]/skos:closeMatch">
+			<xsl:for-each select="$rdf/*[@rdf:about = $href]/skos:exactMatch | $rdf/*[@rdf:about = $href]/skos:closeMatch">
 				<field name="{$facet}_match_uri">
 					<xsl:value-of select="@rdf:resource"/>
 				</field>
-			</xsl:for-each>			
+			</xsl:for-each>
 			<!-- ingest alternate labels -->
 			<xsl:for-each
 				select="
@@ -291,16 +291,16 @@
 				<xsl:value-of select="@xlink:href"/>
 			</field>
 		</xsl:if>
-		
+
 		<!-- additional content -->
 		<xsl:if test="contains($href, 'nomisma.org')">
 			<!-- ingest matchinging URIs -->
-			<xsl:for-each select="$rdf/*[@rdf:about = $href]/skos:exactMatch|$rdf/*[@rdf:about = $href]/skos:closeMatch">
+			<xsl:for-each select="$rdf/*[@rdf:about = $href]/skos:exactMatch | $rdf/*[@rdf:about = $href]/skos:closeMatch">
 				<field name="{$role}_match_uri">
 					<xsl:value-of select="@rdf:resource"/>
 				</field>
-			</xsl:for-each>		
-			
+			</xsl:for-each>
+
 			<!-- ingest alternate labels -->
 			<xsl:for-each
 				select="
@@ -407,12 +407,37 @@
 				</xsl:when>
 				<xsl:when test="contains(@xlink:href, 'nomisma.org')">
 					<xsl:variable name="href" select="@xlink:href"/>
-					<xsl:variable name="coordinates">
-						<xsl:if test="$rdf/*[@rdf:about = concat($href, '#this')]/geo:lat and $rdf/*[@rdf:about = concat($href, '#this')]/geo:long">
-							<xsl:text>true</xsl:text>
-						</xsl:if>
+
+					<xsl:variable name="coordinates" as="node()*">
+						<coordinates> 
+							<xsl:choose>
+								<!-- when there is a geo:SpatialThing associated with the mint that contains a lat and long: -->
+								<xsl:when test="$rdf//*[@rdf:about = concat($href, '#this')]/geo:long and $rdf//*[@rdf:about = concat($href, '#this')]/geo:lat">
+									<lat>
+										<xsl:value-of select="$rdf//*[@rdf:about = concat($href, '#this')]/geo:lat"/>
+									</lat>
+									<long>
+										<xsl:value-of select="$rdf//*[@rdf:about = concat($href, '#this')]/geo:long"/>
+									</long>
+								</xsl:when>
+								<!-- ignore uncertain mints for now -->
+								<xsl:when test="$rdf//*[@rdf:about = $href]/skos:related"/>
+								<!-- if the mint does not have coordinates, but does have skos:broader, exectue the region hierarchy API call to look for parent mint/region coordinates -->
+								<xsl:when test="$rdf//*[@rdf:about = $href]/skos:broader">
+									<xsl:if test="$regions//mint[1][@lat and @long]">
+										<lat>
+											<xsl:value-of select="$regions//mint[1]/@lat"/>
+										</lat>
+										<long>
+											<xsl:value-of select="$regions//mint[1]/@long"/>
+										</long>
+									</xsl:if>
+								</xsl:when>
+							</xsl:choose>
+						</coordinates>
 					</xsl:variable>
-					<xsl:if test="$coordinates = 'true'">
+
+					<xsl:if test="$coordinates/lat and $coordinates/long">
 						<!-- *_geo format is 'mint name|URI of resource|KML-compliant geographic coordinates' -->
 						<field name="{$role}_geo">
 							<xsl:choose>
@@ -434,16 +459,17 @@
 							<xsl:value-of select="@xlink:href"/>
 							<xsl:text>|</xsl:text>
 							<xsl:value-of
-								select="concat($rdf/*[@rdf:about = concat($href, '#this')]/geo:long, ',', $rdf/*[@rdf:about = concat($href, '#this')]/geo:lat)"
+								select="concat($coordinates/long, ',', $coordinates/lat)"
 							/>
 						</field>
 
 						<field name="{$role}_loc">
 							<xsl:value-of
-								select="concat($rdf/*[@rdf:about = concat($href, '#this')]/geo:lat, ',', $rdf/*[@rdf:about = concat($href, '#this')]/geo:long)"
+								select="concat($coordinates/lat, ',', $coordinates/long)"
 							/>
 						</field>
 					</xsl:if>
+
 					<xsl:for-each select="$rdf/*[@rdf:about = $href]/skos:closeMatch[contains(@rdf:resource, 'pleiades.stoa.org')]">
 						<field name="pleiades_uri">
 							<xsl:value-of select="@rdf:resource"/>
@@ -793,7 +819,7 @@
 					<xsl:value-of select="substring-after(nuds:control/nuds:recordId, 'sc.2.')"/>
 				</field>
 				<field name="typeNumber">
-					<xsl:value-of select="descendant::nuds:reference[tei:title/@key='http://nomisma.org/id/seleucid_coins']/tei:idno"/>
+					<xsl:value-of select="descendant::nuds:reference[tei:title/@key = 'http://nomisma.org/id/seleucid_coins']/tei:idno"/>
 				</field>
 			</xsl:when>
 		</xsl:choose>

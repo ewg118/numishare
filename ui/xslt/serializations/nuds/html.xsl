@@ -226,7 +226,7 @@
 
 	<xsl:variable name="hasMints" as="xs:boolean">
 		<xsl:choose>
-			<xsl:when test="$rdf//nmo:Mint or descendant::nuds:geographic/nuds:geogname[contains(@xlink:href, 'geonames.org')]">true</xsl:when>
+			<xsl:when test="$rdf//nmo:Mint[geo:location or skos:related] or $regions//mint[@lat and @long] or descendant::nuds:geographic/nuds:geogname[contains(@xlink:href, 'geonames.org')]">true</xsl:when>
 			<xsl:otherwise>false</xsl:otherwise>
 		</xsl:choose>
 	</xsl:variable>
@@ -859,6 +859,14 @@
 						<td style="width:100px;padding-left:6px;">
 							<xsl:value-of select="numishare:regularize_node('mint', $lang)"/>
 						</td>
+						<xsl:if test="$rdf//nmo:Mint[skos:related]">
+							<!-- only display the uncertain mint key if there's an uncertain mint match -->
+							<td style="background-color:#666666;border:2px solid black;width:50px;"/>							
+							<td style="width:150px;padding-left:6px;">
+								<xsl:value-of select="numishare:regularize_node('mint', $lang)"/>
+								<xsl:text> (uncertain)</xsl:text>
+							</td>
+						</xsl:if>
 						<td style="background-color:#d86458;border:2px solid black;width:50px;"/>
 						<td style="width:100px;padding-left:6px;">
 							<xsl:value-of select="numishare:regularize_node('findspot', $lang)"/>

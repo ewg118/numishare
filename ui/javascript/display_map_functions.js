@@ -146,6 +146,9 @@ function initialize_map(id, path, lang) {
             break;
             case 'subject':
             fillColor = '#a1d490';
+            break;
+            default:
+            fillColor = '#efefef'
         }
         
         return new L.CircleMarker(latlng, {
