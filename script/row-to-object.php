@@ -207,8 +207,7 @@ function parse_row($row, $count, $fileName){
 					$record['refs'][] = array('label'=>$id, 'uncertain'=>$uncertain);
 				}
 			}
-		} elseif ($department=='Greek' && preg_match('/SC\./', $ref)){
-			//use the SCO spreadsheet for time being
+		} elseif ($department=='Greek' && preg_match('/SC\./', $ref)){			
 		    $uri = 'http://numismatics.org/sco/id/' . str_replace('SC.', 'sc.1.', $id);
 			
 		    //get info from $coinTypes array if the coin type has been verified already
@@ -219,7 +218,7 @@ function parse_row($row, $count, $fileName){
 		        $record['title'] = $coinTypes[$uri]['title'] . '. ' . $accnum;
 		    } else {
 		        $file_headers = @get_headers($uri);
-		        if ($file_headers[0] == 'HTTP/1.1 200 OK'){
+		        if ($file_headers[0] == 'HTTP/1.1 200 OK' || $file_headers[0] == 'HTTP/1.1 303 See Other'){
 		            echo "Found {$uri}\n";
 		            //generate the title from the NUDS
 		            $titles = generate_title_from_type($uri);
