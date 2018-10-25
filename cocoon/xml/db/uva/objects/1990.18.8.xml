@@ -94,16 +94,18 @@
                       xlink:href="http://nomisma.org/id/antiochus_i">Antiochus I</persname>
          </obverse>
          <reverse>
-            <legend>BASILEOS ANTIOXOU</legend>
+            <legend scriptCode="Grek" xml:lang="grc">BAΣΙΛΕΩΣ ANTIOXOY</legend>
             <type>
-               <description xml:lang="en">Apollo seated left on omphalos, holding arrow in right hand, left hand resting on bow.</description>
+               <description xml:lang="en">Apollo seated l. on omphalos, testing arrow and resting left hand on grounded bow</description>
             </type>
-            <persname xlink:type="simple" xlink:role="deity">Apollo</persname>
+            <symbol position="outerLeftField">monogram</symbol>
+            <symbol position="outerRightField">monogram</symbol>
+            <persname xlink:type="simple" xlink:role="deity" xlink:href="http://collection.britishmuseum.org/id/person-institution/56988">Apollo</persname>
          </reverse>
       </typeDesc>
       <refDesc>
-         <reference xlink:type="simple" xlink:href="http://numismatics.org/sco/id/sc.2.1612"
-                    xlink:arcrole="nmo:hasTypeSeriesItem">Seleucid Coins v2 1612</reference>
+         <reference xlink:type="simple" xlink:href="http://numismatics.org/sco/id/sc.1.587.1a"
+                    xlink:arcrole="nmo:hasTypeSeriesItem">Seleucid Coins 587.1a</reference>
       </refDesc>
       <adminDesc>
          <identifier>1990.18.8</identifier>
