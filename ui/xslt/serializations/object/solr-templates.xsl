@@ -76,88 +76,17 @@
 			</xsl:choose>
 		</xsl:if>
 
-		<xsl:if test="nuds:legend">
-			<!-- only include legend if there's a string (ignore gaps) -->
-
-			<xsl:choose>
-				<xsl:when test="child::tei:div[@type = 'edition']">
-					<xsl:apply-templates select="tei:div[@type = 'edition']">
-						<xsl:with-param name="side" select="$side"/>
-						<xsl:with-param name="recordType" select="$recordType"/>
-					</xsl:apply-templates>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:if test="string(.)">
-						<xsl:if test="$recordType != 'hoard'">
-							<field name="{$side}_leg_display">
-								<xsl:value-of select="normalize-space(nuds:legend)"/>
-							</field>
-						</xsl:if>
-						<field name="{$side}_leg_text">
-							<xsl:value-of select="normalize-space(nuds:legend)"/>
-						</field>
-						<field name="{$side}_legendCondensed_text">
-							<xsl:value-of select="replace(nuds:legend, ' ', '')"/>
-						</field>
-					</xsl:if>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:if>
+		<xsl:apply-templates select="nuds:legend">
+			<xsl:with-param name="recordType" select="$recordType"/>
+			<xsl:with-param name="side" select="$side"/>
+		</xsl:apply-templates>
 
 		<!-- only index symbols as facets for coin type projects -->
-		<xsl:if test="$recordType = 'conceptual'">
-			<xsl:for-each select="nuds:symbol">
-				<xsl:variable name="symbolType" select="
-						if (@localType) then
-							@localType
-						else
-							'symbol'"/>
-
-				<xsl:choose>
-					<xsl:when test="@position">
-						<xsl:choose>
-							<xsl:when test="@xlink:href">
-								<xsl:variable name="uri" select="@xlink:href"/>
-								<field name="{$symbolType}_{$side}_{@position}_facet">
-									<xsl:value-of select="$symbols//*[@rdf:about = $uri]/skos:prefLabel"/>
-								</field>
-								<field name="{$symbolType}_{$side}_{@position}_uri">
-									<xsl:value-of select="@xlink:href"/>
-								</field>
-								<field name="{$symbolType}_uri">
-									<xsl:value-of select="@xlink:href"/>
-								</field>
-							</xsl:when>
-							<xsl:otherwise>
-								<field name="{$symbolType}_{$side}_{@position}_facet">
-									<xsl:value-of select="."/>
-								</field>
-							</xsl:otherwise>
-						</xsl:choose>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:choose>
-							<xsl:when test="@xlink:href">
-								<xsl:variable name="uri" select="@xlink:href"/>
-								<field name="{$symbolType}_{$side}_facet">
-									<xsl:value-of select="$symbols//*[@rdf:about = $uri]/skos:prefLabel"/>
-								</field>
-								<field name="{$symbolType}_{$side}_uri">
-									<xsl:value-of select="@xlink:href"/>
-								</field>
-								<field name="{$symbolType}_uri">
-									<xsl:value-of select="@xlink:href"/>
-								</field>
-							</xsl:when>
-							<xsl:otherwise>
-								<field name="{$symbolType}_{$side}_facet">
-									<xsl:value-of select="."/>
-								</field>
-							</xsl:otherwise>
-						</xsl:choose>
-					</xsl:otherwise>
-				</xsl:choose>
-			</xsl:for-each>
+		<xsl:if test="$recordType = 'conceptual'">			
+			<xsl:apply-templates select="nuds:symbol">
+				<xsl:with-param name="side" select="$side"/>
+				<xsl:with-param name="symbols" select="$symbols"/>
+			</xsl:apply-templates>
 		</xsl:if>
 
 		<!-- handle symbols as facets -->
@@ -173,6 +102,93 @@
 				</xsl:if>
 			</xsl:for-each>
 		</xsl:if>-->
+	</xsl:template>
+	
+	<xsl:template match="nuds:legend">
+		<xsl:param name="recordType"/>
+		<xsl:param name="side"/>
+		
+		<!-- only include legend if there's a string (ignore gaps) -->
+		
+		<xsl:choose>
+			<xsl:when test="child::tei:div[@type = 'edition']">
+				<xsl:apply-templates select="tei:div[@type = 'edition']">
+					<xsl:with-param name="side" select="$side"/>
+					<xsl:with-param name="recordType" select="$recordType"/>
+				</xsl:apply-templates>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:if test="string(.)">
+					<xsl:if test="$recordType != 'hoard'">
+						<field name="{$side}_leg_display">
+							<xsl:value-of select="normalize-space(.)"/>
+						</field>
+					</xsl:if>
+					<field name="{$side}_leg_text">
+						<xsl:value-of select="normalize-space(.)"/>
+					</field>
+					<field name="{$side}_legendCondensed_text">
+						<xsl:value-of select="replace(., ' ', '')"/>
+					</field>
+				</xsl:if>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+	
+	<xsl:template match="nuds:symbol">
+		<xsl:param name="side"/>
+		<xsl:param name="symbols"/>
+		
+		<xsl:variable name="symbolType" select="
+			if (@localType) then
+			@localType
+			else
+			'symbol'"/>
+		
+		<xsl:choose>
+			<xsl:when test="@position">
+				<xsl:choose>
+					<xsl:when test="@xlink:href">
+						<xsl:variable name="uri" select="@xlink:href"/>
+						<field name="{$symbolType}_{$side}_{@position}_facet">
+							<xsl:value-of select="$symbols//*[@rdf:about = $uri]/skos:prefLabel"/>
+						</field>
+						<field name="{$symbolType}_{$side}_{@position}_uri">
+							<xsl:value-of select="@xlink:href"/>
+						</field>
+						<field name="{$symbolType}_uri">
+							<xsl:value-of select="@xlink:href"/>
+						</field>
+					</xsl:when>
+					<xsl:otherwise>
+						<field name="{$symbolType}_{$side}_{@position}_facet">
+							<xsl:value-of select="."/>
+						</field>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:choose>
+					<xsl:when test="@xlink:href">
+						<xsl:variable name="uri" select="@xlink:href"/>
+						<field name="{$symbolType}_{$side}_facet">
+							<xsl:value-of select="$symbols//*[@rdf:about = $uri]/skos:prefLabel"/>
+						</field>
+						<field name="{$symbolType}_{$side}_uri">
+							<xsl:value-of select="@xlink:href"/>
+						</field>
+						<field name="{$symbolType}_uri">
+							<xsl:value-of select="@xlink:href"/>
+						</field>
+					</xsl:when>
+					<xsl:otherwise>
+						<field name="{$symbolType}_{$side}_facet">
+							<xsl:value-of select="."/>
+						</field>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 	<xsl:template match="nuds:objectType | nuds:denomination | nuds:manufacture | nuds:material">
@@ -550,17 +566,17 @@
 		<xsl:param name="side"/>
 		<xsl:param name="recordType"/>
 
-		<xsl:if test="string(.)">
+		<xsl:if test="string(.)">			
 			<xsl:if test="$recordType != 'hoard'">
-				<field name="{$side}_leg_display">
-					<xsl:value-of select="tei:div"/>
+				<field name="{$side}_leg_display">					
+					<xsl:value-of select="string-join(tei:div, ' ')"/>
 				</field>
 			</xsl:if>
 			<field name="{$side}_leg_text">
-				<xsl:value-of select="tei:div"/>
+				<xsl:value-of select="string-join(tei:div, ' ')"/>
 			</field>
 			<field name="{$side}_legendCondensed_text">
-				<xsl:value-of select="replace(nuds:legend, ' ', '')"/>
+				<xsl:value-of select="replace(string-join(tei:div, ' '), ' ', '')"/>
 			</field>
 		</xsl:if>
 	</xsl:template>
@@ -866,7 +882,7 @@
 
 			<xsl:when test="$collection-name = 'sco'">
 				<field name="sortid">
-					<xsl:value-of select="format-number(number(substring-after(nuds:control/nuds:recordId, 'sc.2.')), '0000')"/>
+					<xsl:value-of select="nuds:control/nuds:otherRecordId[@localType='sortId']"/>
 				</field>
 			</xsl:when>
 

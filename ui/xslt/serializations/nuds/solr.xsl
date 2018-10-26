@@ -131,11 +131,11 @@
 				<xsl:with-param name="lang" select="$lang"/>
 			</xsl:apply-templates>
 
-			<!-- if there are subtypes, extract the legend and type description, if missing from parent record -->
+			<!-- if there are subtypes, extract the legend and type description or symbols, if missing from parent record -->
 			<xsl:if
 				test="
 					count($subtypes//subtype) &gt; 0 and (not(descendant::nuds:typeDesc/nuds:obverse/nuds:type) or not(descendant::nuds:typeDesc/nuds:reverse/nuds:type) or
-					not(descendant::nuds:typeDesc/nuds:obverse/nuds:legend) or not(descendant::nuds:typeDesc/nuds:reverse/nuds:legend))">
+					not(descendant::nuds:typeDesc/nuds:obverse/nuds:legend) or not(descendant::nuds:typeDesc/nuds:reverse/nuds:legend) or not(descendant::nuds:typeDesc/nuds:obverse/nuds:symbol) or not(descendant::nuds:typeDesc/nuds:reverse/nuds:symbol))">
 				<xsl:variable name="typeDesc" as="element()*">
 					<xsl:copy-of select="descendant::nuds:typeDesc"/>
 				</xsl:variable>
@@ -181,6 +181,26 @@
 								<xsl:value-of select="."/>
 							</field>
 						</xsl:for-each>
+					</xsl:if>
+					
+					<!-- symbols -->
+					<xsl:if test="not($typeDesc/*[local-name() = $side]/nuds:symbol) and count($subtypes//subtype) &gt; 0">
+						<xsl:variable name="subtype-symbols" as="element()*">
+							<symbols>
+								<xsl:for-each select="$subtypes/descendant::nuds:symbol[@xlink:href]">
+									<xsl:variable name="href" select="@xlink:href"/>
+									
+									<xsl:if test="doc-available(concat($href, '.rdf'))">
+										<xsl:copy-of select="document(concat($href, '.rdf'))"/>
+									</xsl:if>
+								</xsl:for-each>
+							</symbols>
+						</xsl:variable>
+						
+						<xsl:apply-templates select="$subtypes//subtype/descendant::*[local-name() = $side]/nuds:symbol">
+							<xsl:with-param name="side" select="substring($side, 1, 3)"/>
+							<xsl:with-param name="symbols" select="$subtype-symbols"/>
+						</xsl:apply-templates>
 					</xsl:if>
 				</xsl:for-each>
 			</xsl:if>
@@ -404,7 +424,7 @@
 						<xsl:value-of select="nuds:findspot/nuds:description"/>
 					</field>
 				</xsl:if>
-				
+
 				<xsl:choose>
 					<xsl:when test="nuds:findspot/nuds:geogname/@xlink:href">
 						<xsl:call-template name="parse_findspot_uri">
@@ -651,9 +671,9 @@
 	<xsl:template match="mets:fileSec">
 		<xsl:for-each select="mets:fileGrp[@USE = 'obverse' or @USE = 'reverse']">
 			<xsl:variable name="side" select="substring(@USE, 1, 3)"/>
-			
+
 			<xsl:choose>
-				<xsl:when test="count(mets:file) = 1 and mets:file[@USE='iiif']">
+				<xsl:when test="count(mets:file) = 1 and mets:file[@USE = 'iiif']">
 					<field name="iiif_{$side}">
 						<xsl:value-of select="mets:file/mets:FLocat/@xlink:href"/>
 					</field>
@@ -672,7 +692,7 @@
 					</xsl:for-each>
 				</xsl:otherwise>
 			</xsl:choose>
-			
+
 		</xsl:for-each>
 		<field name="imagesavailable">true</field>
 	</xsl:template>
