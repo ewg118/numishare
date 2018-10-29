@@ -22,14 +22,7 @@
 	<xsl:template match="nuds:nuds">
 		<xsl:param name="lang"/>
 		<xsl:variable name="id" select="nuds:control/nuds:recordId"/>
-
-		<!-- get subtypes -->
-		<xsl:variable name="subtypes" as="element()*">
-			<xsl:if test="@recordType = 'conceptual' and //config/collection_type = 'cointype'">
-				<xsl:copy-of select="document(concat($request-uri, '/get_subtypes?identifiers=', $id))/*"/>
-			</xsl:if>
-		</xsl:variable>
-
+		
 		<doc>
 			<field name="id">
 				<xsl:choose>
@@ -132,83 +125,103 @@
 			</xsl:apply-templates>
 
 			<!-- if there are subtypes, extract the legend and type description or symbols, if missing from parent record -->
-			<xsl:if
-				test="
+			<xsl:if test="$index_subtype_metadata = true()">
+				<!-- get subtypes -->
+				<xsl:variable name="subtypes" as="element()*">
+					<xsl:if test="@recordType = 'conceptual' and //config/collection_type = 'cointype'">
+						<xsl:copy-of select="document(concat($request-uri, '/get_subtypes?identifiers=', $id))/*"/>
+					</xsl:if>
+				</xsl:variable>
+				
+				<xsl:if
+					test="
 					count($subtypes//subtype) &gt; 0 and (not(descendant::nuds:typeDesc/nuds:obverse/nuds:type) or not(descendant::nuds:typeDesc/nuds:reverse/nuds:type) or
 					not(descendant::nuds:typeDesc/nuds:obverse/nuds:legend) or not(descendant::nuds:typeDesc/nuds:reverse/nuds:legend) or not(descendant::nuds:typeDesc/nuds:obverse/nuds:symbol) or not(descendant::nuds:typeDesc/nuds:reverse/nuds:symbol))">
-				<xsl:variable name="typeDesc" as="element()*">
-					<xsl:copy-of select="descendant::nuds:typeDesc"/>
-				</xsl:variable>
-				<xsl:for-each select="('obverse', 'reverse')">
-					<xsl:variable name="side" select="."/>
-					<xsl:variable name="sideAbbr" select="substring($side, 1, 3)"/>
-					<xsl:if test="not($typeDesc/*[local-name() = $side]/nuds:type) and count($subtypes//subtype) &gt; 0">
-						<xsl:variable name="pieces" as="item()*">
-							<xsl:for-each
-								select="
+					<xsl:variable name="typeDesc" as="element()*">
+						<xsl:copy-of select="descendant::nuds:typeDesc"/>
+					</xsl:variable>
+					<xsl:for-each select="('obverse', 'reverse')">
+						<xsl:variable name="side" select="."/>
+						<xsl:variable name="sideAbbr" select="substring($side, 1, 3)"/>
+						<xsl:if test="not($typeDesc/*[local-name() = $side]/nuds:type) and count($subtypes//subtype) &gt; 0">
+							<xsl:variable name="pieces" as="item()*">
+								<xsl:for-each
+									select="
 									distinct-values($subtypes//subtype/descendant::*[local-name() = $side]/nuds:type/nuds:description[if (string($lang)) then
-										@xml:lang = $lang
+									@xml:lang = $lang
 									else
-										@xml:lang = 'en'])">
-								<xsl:value-of select="."/>
-							</xsl:for-each>
-						</xsl:variable>
-
-						<field name="{$sideAbbr}_type_display">
-							<xsl:value-of select="string-join($pieces, ' | ')"/>
-						</field>
-
-						<xsl:for-each select="$pieces">
-							<field name="{$sideAbbr}_type_text">
-								<xsl:value-of select="."/>
-							</field>
-						</xsl:for-each>
-
-					</xsl:if>
-					<xsl:if test="not($typeDesc/*[local-name() = $side]/nuds:legend) and count($subtypes//subtype) &gt; 0">
-						<xsl:variable name="pieces" as="item()*">
-							<xsl:for-each select="distinct-values($subtypes//subtype/descendant::*[local-name() = $side]/nuds:legend)">
-								<xsl:value-of select="."/>
-							</xsl:for-each>
-						</xsl:variable>
-
-						<field name="{$sideAbbr}_leg_display">
-							<xsl:value-of select="string-join($pieces, ' | ')"/>
-						</field>
-
-						<xsl:for-each select="$pieces">
-							<field name="{$sideAbbr}_leg_text">
-								<xsl:value-of select="."/>
-							</field>
-						</xsl:for-each>
-					</xsl:if>
-					
-					<!-- symbols -->
-					<xsl:if test="not($typeDesc/*[local-name() = $side]/nuds:symbol) and count($subtypes//subtype) &gt; 0">
-						<xsl:variable name="subtype-symbols" as="element()*">
-							<symbols>
-								<xsl:for-each select="$subtypes/descendant::nuds:symbol[@xlink:href]">
-									<xsl:variable name="href" select="@xlink:href"/>
-									
-									<xsl:if test="doc-available(concat($href, '.rdf'))">
-										<xsl:copy-of select="document(concat($href, '.rdf'))"/>
-									</xsl:if>
+									@xml:lang = 'en'])">
+									<xsl:value-of select="."/>
 								</xsl:for-each>
-							</symbols>
-						</xsl:variable>
+							</xsl:variable>
+							
+							<field name="{$sideAbbr}_type_display">
+								<xsl:value-of select="string-join($pieces, ' | ')"/>
+							</field>
+							
+							<xsl:for-each select="$pieces">
+								<field name="{$sideAbbr}_type_text">
+									<xsl:value-of select="."/>
+								</field>
+							</xsl:for-each>
+							
+						</xsl:if>
+						<xsl:if test="not($typeDesc/*[local-name() = $side]/nuds:legend) and count($subtypes//subtype) &gt; 0">
+							<xsl:variable name="pieces" as="item()*">
+								<xsl:for-each select="distinct-values($subtypes//subtype/descendant::*[local-name() = $side]/nuds:legend)">
+									<xsl:value-of select="."/>
+								</xsl:for-each>
+							</xsl:variable>
+							
+							<field name="{$sideAbbr}_leg_display">
+								<xsl:value-of select="string-join($pieces, ' | ')"/>
+							</field>
+							
+							<xsl:for-each select="$pieces">
+								<field name="{$sideAbbr}_leg_text">
+									<xsl:value-of select="."/>
+								</field>
+							</xsl:for-each>
+						</xsl:if>
 						
-						<xsl:apply-templates select="$subtypes//subtype/descendant::*[local-name() = $side]/nuds:symbol">
-							<xsl:with-param name="side" select="substring($side, 1, 3)"/>
-							<xsl:with-param name="symbols" select="$subtype-symbols"/>
-						</xsl:apply-templates>
-					</xsl:if>
-				</xsl:for-each>
+						<!-- symbols -->
+						<xsl:if test="not($typeDesc/*[local-name() = $side]/nuds:symbol) and count($subtypes//subtype) &gt; 0">
+							<xsl:variable name="subtype-symbols" as="element()*">
+								<symbols>
+									<xsl:for-each select="$subtypes/descendant::nuds:symbol[@xlink:href]">
+										<xsl:variable name="href" select="@xlink:href"/>
+										
+										<xsl:if test="doc-available(concat($href, '.rdf'))">
+											<xsl:copy-of select="document(concat($href, '.rdf'))"/>
+										</xsl:if>
+									</xsl:for-each>
+								</symbols>
+							</xsl:variable>
+							
+							<xsl:apply-templates select="$subtypes//subtype/descendant::*[local-name() = $side]/nuds:symbol">
+								<xsl:with-param name="side" select="substring($side, 1, 3)"/>
+								<xsl:with-param name="symbols" select="$subtype-symbols"/>
+							</xsl:apply-templates>
+						</xsl:if>
+					</xsl:for-each>
+				</xsl:if>				
+				
+				<!-- subtype fulltext -->
+				<xsl:if test="count($subtypes//subtype) &gt; 0">
+					<field name="fulltext">					
+						<xsl:for-each select="$subtypes/descendant::nuds:descMeta/descendant-or-self::text()">
+							<xsl:value-of select="normalize-space(.)"/>
+							<xsl:text> </xsl:text>
+						</xsl:for-each>
+					</field>
+				</xsl:if>				
 			</xsl:if>
 
 			<xsl:choose>
 				<xsl:when test="string($sparql_endpoint) and @recordType = 'conceptual'">
 					<!-- get findspots only for coin type records -->
-					<xsl:apply-templates select="$sparqlResult/descendant::res:group[@id = $id]/res:result"/>
+					<!-- Oct. 29, 2018: begin transition to SPARQL-generated maps -->
+					<!--<xsl:apply-templates select="$sparqlResult/descendant::res:group[@id = $id]/res:result"/>-->
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:apply-templates select="nuds:digRep"/>
@@ -223,12 +236,7 @@
 					<xsl:value-of select="normalize-space(.)"/>
 					<xsl:text> </xsl:text>
 				</xsl:for-each>
-				<!-- subtypes -->
-				<xsl:for-each select="$subtypes/descendant::nuds:descMeta/descendant-or-self::text()">
-					<xsl:value-of select="normalize-space(.)"/>
-					<xsl:text> </xsl:text>
-				</xsl:for-each>
-
+				
 				<!-- get all labels -->
 				<xsl:if test="string($lang)">
 					<xsl:call-template name="alternativeLabels">

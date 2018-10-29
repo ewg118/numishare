@@ -74,7 +74,12 @@
 		</nudsGroup>
 	</xsl:variable>
 
-	<!-- get symbol metadata -->
+	<!-- get symbol metadata -->	
+	
+	<xsl:variable name="index_subtype_metadata" as="xs:boolean">
+		<xsl:value-of select="if (/content/config/index_subtype_metadata = 'true') then true() else false()"/>
+	</xsl:variable>
+	
 	<xsl:variable name="symbols" as="element()*">
 		<symbols>
 			<xsl:for-each select="$nudsGroup/descendant::nuds:symbol[@xlink:href]">
@@ -106,8 +111,9 @@
 		</rdf:RDF>
 	</xsl:variable>
 
+	<!-- Oct 29, 2018: commenting out the indexing of findspots via SPARQL; it is no longer scalable for indexing. Prepare to transition maps page to SPARQL-derived GeoJSON-->
 	<!-- get block of images from SPARQL endpoint -->
-	<xsl:variable name="sparqlResult" as="element()*">
+	<!--<xsl:variable name="sparqlResult" as="element()*">
 		<xsl:if test="string($sparql_endpoint) and //nuds:nuds/@recordType = 'conceptual'">
 			<response xmlns="http://www.w3.org/2005/sparql-results#">
 				<xsl:for-each select="descendant::nuds:recordId">
@@ -119,7 +125,7 @@
 				</xsl:for-each>
 			</response>
 		</xsl:if>
-	</xsl:variable>
+	</xsl:variable>-->
 
 	<!-- accumulate unique geonames IDs -->
 	<xsl:variable name="geonames" as="element()*">
@@ -129,7 +135,9 @@
 					distinct-values(descendant::*[local-name() = 'geogname'][contains(@xlink:href,
 					'geonames.org')]/@xlink:href | $nudsGroup/descendant::*[local-name() = 'geogname'][contains(@xlink:href, 'geonames.org')]/@xlink:href | $rdf/descendant::*[not(local-name() = 'closeMatch')][contains(@rdf:resource,
 					'geonames.org')]/@rdf:resource | descendant::*[local-name() = 'subject'][contains(@xlink:href,
-					'geonames.org')]/@xlink:href | $sparqlResult/descendant::res:binding[@name = 'findspot'][contains(res:uri, 'geonames.org')]/res:uri)">
+					'geonames.org')]/@xlink:href)">
+				
+				<!-- commented out: $sparqlResult/descendant::res:binding[@name = 'findspot'][contains(res:uri, 'geonames.org')]/res:uri -->
 				<xsl:variable name="geonameId" select="tokenize(., '/')[4]"/>
 
 				<xsl:if test="number($geonameId)">

@@ -440,12 +440,12 @@
 								<xsl:when test="$rdf//*[@rdf:about = $href]/skos:related"/>
 								<!-- if the mint does not have coordinates, but does have skos:broader, exectue the region hierarchy API call to look for parent mint/region coordinates -->
 								<xsl:when test="$rdf//*[@rdf:about = $href]/skos:broader">
-									<xsl:if test="$regions//mint[1][@lat and @long]">
+									<xsl:if test="$regions//hierarchy[@uri=$href]/mint[1][@lat and @long]">
 										<lat>
-											<xsl:value-of select="$regions//mint[1]/@lat"/>
+											<xsl:value-of select="$regions//hierarchy[@uri=$href]/mint[1]/@lat"/>
 										</lat>
 										<long>
-											<xsl:value-of select="$regions//mint[1]/@long"/>
+											<xsl:value-of select="$regions//hierarchy[@uri=$href]/mint[1]/@long"/>
 										</long>
 									</xsl:if>
 								</xsl:when>
