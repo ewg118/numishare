@@ -208,7 +208,9 @@
 					</xsl:when>
 					<xsl:otherwise>
 						<xsl:for-each select="arr[@name = 'coinType_uri']/str">
-							<nmo:hasTypeSeriesItem rdf:resource="{.}"/>
+							<xsl:if test="not(contains(., 'sc.2.'))">
+								<nmo:hasTypeSeriesItem rdf:resource="{.}"/>
+							</xsl:if>							
 						</xsl:for-each>
 					</xsl:otherwise>
 				</xsl:choose>
