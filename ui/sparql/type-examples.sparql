@@ -10,9 +10,12 @@ PREFIX geo:	<http://www.w3.org/2003/01/geo/wgs84_pos#>
 PREFIX edm: <http://www.europeana.eu/schemas/edm/>
 
 SELECT ?object ?title ?identifier ?findUri ?findspot ?hoard ?collection ?publisher ?dataset ?datasetTitle ?weight ?axis ?diameter ?obvThumb ?revThumb ?obvRef ?revRef ?comThumb ?comRef ?obvManifest ?revManifest ?comManifest ?model WHERE {
-?object nmo:hasTypeSeriesItem <typeURI> ;
-  rdf:type nmo:NumismaticObject ;
-  dcterms:title ?title .
+{ ?object a nmo:NumismaticObject ;
+ nmo:hasTypeSeriesItem <typeURI>}
+UNION { ?broader skos:broader+ <typeURI> .
+?object nmo:hasTypeSeriesItem ?broader ;
+  a nmo:NumismaticObject }
+?object dcterms:title ?title .
 OPTIONAL { ?object dcterms:identifier ?identifier}
 OPTIONAL { ?object nmo:hasCollection ?colUri .
 ?colUri skos:prefLabel ?collection FILTER(langMatches(lang(?collection), "EN"))}
