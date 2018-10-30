@@ -67,32 +67,33 @@
    <descMeta>
       <title xml:lang="en">Drachm of Antiochus IV Epiphanes, 176 B.C.-164 B.C. FIC.50.68.</title>
       <typeDesc>
-         <objectType xlink:href="http://nomisma.org/id/coin">Coin</objectType>
+         <objectType xlink:type="simple" xlink:href="http://nomisma.org/id/coin">Coin</objectType>
          <dateRange>
-            <fromDate standardDate="-0176">176 B.C.</fromDate>
-            <toDate standardDate="-0164">164 B.C.</toDate>
+            <fromDate standardDate="-0146">146 BC</fromDate>
+            <toDate standardDate="-0145">145 BC</toDate>
          </dateRange>
-         <denomination xlink:href="http://nomisma.org/id/drachma">Drachm</denomination>
-         <material xlink:href="http://nomisma.org/id/ar">Silver</material>
+         <denomination xlink:type="simple" xlink:href="http://nomisma.org/id/drachma">Drachma</denomination>
+         <manufacture xlink:type="simple" xlink:href="http://nomisma.org/id/struck">Struck</manufacture>
+         <material xlink:type="simple" xlink:href="http://nomisma.org/id/ar">Silver</material>
          <authority>
-            <persname xlink:type="simple" xlink:role="authority"
-                      xlink:href="http://nomisma.org/id/antiochus_iv">Antiochus IV Epiphanes</persname>
-            <famname xlink:type="simple" xlink:role="dynasty">Seleucid</famname>
-            <corpname xlink:type="simple" xlink:role="state">Seleucid Kingdom</corpname>
+            <persname xlink:type="simple" xlink:role="authority" xlink:href="http://nomisma.org/id/antiochus_vi">Antiochus VI Dionysus</persname>
          </authority>
+         <geographic>
+            <geogname xlink:type="simple" xlink:role="mint" xlink:href="http://nomisma.org/id/antiocheia_syria">Antioch</geogname>
+         </geographic>
          <obverse>
             <type>
-               <description xml:lang="en">Diademed youthful head of Antiochus IV Epiphanes</description>
+               <description xml:lang="en">Diademed head of Antiochus IV right</description>
             </type>
+            <persname xlink:type="simple" xlink:role="portrait" xlink:href="http://nomisma.org/id/antiochus_iv">Antiochus IV Epiphanes</persname>
          </obverse>
          <reverse>
-            <legend>ΑΝΤΙΟΧΟΥ ΕΠΙΦΑΝOΥΣ ΒΑΣΙΛΕΩΣ (ANTIOXOU EPIPHANOUS BASILEOS)</legend>
+            <legend scriptCode="Grek" xml:lang="grc">BAΣΙΛΕΩΣ ANTIOXOY EΠIΦANOYΣ</legend>
             <type>
-               <description xml:lang="en">Apollo, naked but for chlamis draped over right
-				thigh, seated to the left on omphalos, holds arrow in outstretched right, rests left
-				on bow. In exergue: a symbol.</description>
+               <description xml:lang="en">Zeus seated on high-backed throne left, holding Nike facing right offering wreath on outstretched right hand and sceptre in left</description>
             </type>
-            <persname xlink:type="simple" xlink:role="deity">Apollo</persname>
+            <persname xlink:type="simple" xlink:role="deity" xlink:href="http://collection.britishmuseum.org/id/person-institution/60915">Nike</persname>
+            <persname xlink:type="simple" xlink:role="deity" xlink:href="http://collection.britishmuseum.org/id/person-institution/58921">Zeus</persname>
          </reverse>
       </typeDesc>
       <physDesc>
@@ -105,6 +106,8 @@
             <tei:title>BMC Greek: The Seleucid Kings of Syria</tei:title> 
             <tei:idno>9</tei:idno>
          </reference>
+         <reference xlink:type="simple" xlink:href="http://numismatics.org/sco/id/sc.1.1886"
+            xlink:arcrole="nmo:hasTypeSeriesItem">Seleucid Coins (part 2) 1886</reference>
       </refDesc>
       <adminDesc>
          <identifier>FIC.50.68</identifier>

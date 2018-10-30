@@ -67,31 +67,32 @@
    <descMeta>
       <title xml:lang="en">Half-chalkus of Antiochus IV Epiphanes, 176 B.C.-164 B.C. FIC.50.69.</title>
       <typeDesc>
-         <objectType xlink:href="http://nomisma.org/id/coin">Coin</objectType>
+         <objectType xlink:type="simple" xlink:href="http://nomisma.org/id/coin">Coin</objectType>
          <dateRange>
-            <fromDate standardDate="-0176">176 B.C.</fromDate>
-            <toDate standardDate="-0164">164 B.C.</toDate>
+            <fromDate standardDate="-0173">173 BC</fromDate>
+            <toDate standardDate="-0168">168 BC</toDate>
          </dateRange>
-         <denomination>Half-chalkus</denomination>
-         <material xlink:href="http://nomisma.org/id/ae">Bronze</material>
+         <denomination xlink:type="simple" xlink:href="http://nomisma.org/id/denomination_d_sco">Denomination D (half)</denomination>
+         <manufacture xlink:type="simple" xlink:href="http://nomisma.org/id/struck">Struck</manufacture>
+         <material xlink:type="simple" xlink:href="http://nomisma.org/id/ae">Bronze</material>
          <authority>
-            <persname xlink:type="simple" xlink:role="authority"
-                      xlink:href="http://nomisma.org/id/antiochus_iv">Antiochus IV Epiphanes</persname>
-            <famname xlink:type="simple" xlink:role="dynasty">Seleucid</famname>
-            <corpname xlink:type="simple" xlink:role="state">Seleucid Kingdom</corpname>
+            <persname xlink:type="simple" xlink:role="authority" xlink:href="http://nomisma.org/id/antiochus_iv">Antiochus IV Epiphanes</persname>
          </authority>
+         <geographic>
+            <geogname xlink:type="simple" xlink:role="mint" xlink:href="http://nomisma.org/id/ace_ptolemais">Ptolemais-Ake</geogname>
+         </geographic>
          <obverse>
             <type>
-               <description xml:lang="en">Head of Antiochus, diadem and radiations,
-				encircled by solid line.</description>
+               <description xml:lang="en">Radiate, diademed head of Antiochus IV right</description>
             </type>
+            <symbol>monogram</symbol>
+            <persname xlink:type="simple" xlink:role="portrait" xlink:href="http://nomisma.org/id/antiochus_iv">Antiochus IV Epiphanes</persname>
          </obverse>
          <reverse>
-            <legend>ΑΝΤΙΟΧΟΥ ΒΑΣΙΛΕΩΣ (ANTIOXOU BASILEOS)</legend>
+            <legend scriptCode="Grek" xml:lang="grc">BAΣΙΛΕΩΣ ANTIOXΟΥ</legend>
             <type>
-               <description xml:lang="en">Female figure facing, wearing long chiton and peplos; holds in right long sceptre (Hera?)</description>
+               <description xml:lang="en">Veiled goddess standing facing, holding long scepter or torch</description>
             </type>
-            <persname xlink:type="simple" xlink:role="deity">Hera</persname>
          </reverse>
       </typeDesc>
       <refDesc>
@@ -100,6 +101,8 @@
             <tei:title>BMC Greek: The Seleucid Kings of Syria</tei:title> 
             <tei:idno>41</tei:idno>
          </reference>
+         <reference xlink:type="simple" xlink:href="http://numismatics.org/sco/id/sc.1.1479"
+            xlink:arcrole="nmo:hasTypeSeriesItem">Seleucid Coins (part 2) 1479</reference>
       </refDesc>
       <adminDesc>
          <identifier>FIC.50.69</identifier>

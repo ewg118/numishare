@@ -67,31 +67,32 @@
    <descMeta>
       <title xml:lang="en">Coin of Antiochus III the Great, 222 B.C.-187 B.C. FIC.50.61.</title>
       <typeDesc>
-         <objectType xlink:href="http://nomisma.org/id/coin">Coin</objectType>
+         <objectType xlink:type="simple" xlink:href="http://nomisma.org/id/coin">Coin</objectType>
          <dateRange>
-            <fromDate standardDate="-0222">222 B.C.</fromDate>
-            <toDate standardDate="-0187">187 B.C.</toDate>
+            <fromDate standardDate="-0223">223 BC</fromDate>
+            <toDate standardDate="-0210">210 BC</toDate>
          </dateRange>
-         <material xlink:href="http://nomisma.org/id/ae">Bronze</material>
+         <denomination xlink:type="simple" xlink:href="http://nomisma.org/id/denomination_d_sco">Denomination D (half)</denomination>
+         <manufacture xlink:type="simple" xlink:href="http://nomisma.org/id/struck">Struck</manufacture>
+         <material xlink:type="simple" xlink:href="http://nomisma.org/id/ae">Bronze</material>
          <authority>
-            <persname xlink:type="simple" xlink:role="authority"
-                      xlink:href="http://nomisma.org/id/antiochus_iii">Antiochus III the Great</persname>
-            <famname xlink:type="simple" xlink:role="dynasty">Seleucid</famname>
-            <corpname xlink:type="simple" xlink:role="state">Seleucid Kingdom</corpname>
+            <persname xlink:type="simple" xlink:role="authority" xlink:href="http://nomisma.org/id/antiochus_iii">Antiochus III the Great</persname>
          </authority>
+         <geographic>
+            <geogname xlink:type="simple" xlink:role="mint" xlink:href="http://nomisma.org/id/antiocheia_syria">Antioch</geogname>
+         </geographic>
          <obverse>
             <type>
-               <description xml:lang="en">Laureated head of Antiochus III as Apollo</description>
+               <description xml:lang="en">Laureate head of Antiochus III right,  as Apollo</description>               
             </type>
+            <persname xlink:type="simple" xlink:role="portrait" xlink:href="http://nomisma.org/id/antiochus_iii">Antiochus III the Great</persname>
          </obverse>
          <reverse>
-            <legend>ΑΝΤΙΟΧΟΥ ΒΑΣΙΛΕΩΣ (ANTIOXOU BASILEOS)</legend>
+            <legend scriptCode="Grek" xml:lang="grc">BAΣΙΛΕΩΣ ANTIOXOY</legend>
             <type>
-               <description xml:lang="en">Nude Apollo standing facing left holding arrow in
-				right hand and supporting himself with bow in left; bow stands on
-			ground.</description>
+               <description xml:lang="en">Apollo standing left, testing arrow and resting left hand on grounded bow</description>               
             </type>
-            <persname xlink:type="simple" xlink:role="deity">Apollo</persname>
+            <persname xlink:type="simple" xlink:role="deity" xlink:href="http://collection.britishmuseum.org/id/person-institution/56988">Apollo</persname>
          </reverse>
       </typeDesc>
       <refDesc>
@@ -99,6 +100,8 @@
             <tei:title>BMC Greek</tei:title> 
             <tei:idno>52</tei:idno>
          </reference>
+         <reference xlink:type="simple" xlink:href="http://numismatics.org/sco/id/sc.1.1052"
+            xlink:arcrole="nmo:hasTypeSeriesItem">Seleucid Coins (part 1) 1052</reference>
       </refDesc>
       <adminDesc>
          <identifier>FIC.50.61</identifier>

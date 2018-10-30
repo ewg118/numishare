@@ -65,34 +65,34 @@
       </semanticDeclaration>
    </control>
    <descMeta>
-      <title xml:lang="en">Coin of Alexander II Zabinas, 128 B.C.-123 B.C. FIC.50.60.</title>
+      <title xml:lang="en">Coin of Antiochus III, 223 B.C.-211 B.C. FIC.50.60.</title>
       <typeDesc>
-         <objectType xlink:href="http://nomisma.org/id/coin">Coin</objectType>
+         <objectType xlink:type="simple" xlink:href="http://nomisma.org/id/coin">Coin</objectType>
          <dateRange>
-            <fromDate standardDate="-0128">128 B.C.</fromDate>
-            <toDate standardDate="-0123">123 B.C.</toDate>
+            <fromDate standardDate="-0223">223 BC</fromDate>
+            <toDate standardDate="-0211">211 BC</toDate>
          </dateRange>
-         <material xlink:href="http://nomisma.org/id/ae">Bronze</material>
+         <denomination xlink:type="simple" xlink:href="http://nomisma.org/id/denomination_d_sco">Denomination D (half)</denomination>
+         <manufacture xlink:type="simple" xlink:href="http://nomisma.org/id/struck">Struck</manufacture>
+         <material xlink:type="simple" xlink:href="http://nomisma.org/id/ae">Bronze</material>
          <authority>
-            <persname xlink:type="simple" xlink:role="authority"
-                      xlink:href="http://nomisma.org/id/alexander_ii_zabinas">Alexander II Zabinas</persname>
-            <famname xlink:type="simple" xlink:role="dynasty">Seleucid</famname>
-            <corpname xlink:type="simple" xlink:role="state">Seleucid Kingdom</corpname>
+            <persname xlink:type="simple" xlink:role="authority" xlink:href="http://nomisma.org/id/antiochus_iii">Antiochus III the Great</persname>
          </authority>
+         <geographic>
+            <geogname xlink:type="simple" xlink:role="mint" xlink:href="http://nomisma.org/id/DEL_sco">ΔEΛ Mint</geogname>
+         </geographic>
          <obverse>
             <type>
-               <description xml:lang="en">Ivy-crowned head of Dionysus, right.</description>
+               <description xml:lang="en">Laureate head of Apollo right</description>
             </type>
+            <persname xlink:type="simple" xlink:role="deity" xlink:href="http://collection.britishmuseum.org/id/person-institution/56988">Apollo</persname>
          </obverse>
          <reverse>
-            <legend>ΑΛΕΧΑΝΔΡΟΥ ΒΑΣΙΛΕΩΣ (ALEXANDROU BASILEOS)</legend>
+            <legend scriptCode="Grek" xml:lang="grc">BAΣΙΛΕΩΣ ANTIOXOY</legend>
             <type>
-               <description xml:lang="en">Demeter, head surmounted by calathus, holding
-				cornucopia in left arm; supporting herself with right on a rudder. Monogram no. 277
-				and a crown.</description>
+               <description xml:lang="en">Apollo standing left, testing arrow and resting left hand on grounded bow</description>
             </type>
-            <persname xlink:type="simple" xlink:role="deity">Dionysus</persname>
-            <persname xlink:type="simple" xlink:role="deity">Demeter</persname>
+            <persname xlink:type="simple" xlink:role="deity" xlink:href="http://collection.britishmuseum.org/id/person-institution/56988">Apollo</persname>
          </reverse>
       </typeDesc>
       <physDesc>
@@ -100,6 +100,10 @@
             <diameter units="mm">18</diameter>
          </measurementsSet>
       </physDesc>
+      <refDesc>
+         <reference xlink:type="simple" xlink:href="http://numismatics.org/sco/id/sc.1.1064"
+            xlink:arcrole="nmo:hasTypeSeriesItem">Seleucid Coins (part 1) 1064</reference>
+      </refDesc>
       <adminDesc>
          <identifier>FIC.50.60</identifier>
          <department>Greek</department>

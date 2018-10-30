@@ -67,32 +67,34 @@
    <descMeta>
       <title xml:lang="en">Coin of Alexander II Zabinas, 128 B.C.-123 B.C. FIC.50.76.</title>
       <typeDesc>
-         <objectType xlink:href="http://nomisma.org/id/coin">Coin</objectType>
+         <objectType xlink:type="simple" xlink:href="http://nomisma.org/id/coin">Coin</objectType>
          <dateRange>
-            <fromDate standardDate="-0128">128 B.C.</fromDate>
-            <toDate standardDate="-0123">123 B.C.</toDate>
+            <fromDate standardDate="-0128">128 BC</fromDate>
+            <toDate standardDate="-0122">122 BC</toDate>
          </dateRange>
-         <material xlink:href="http://nomisma.org/id/ae">Bronze</material>
+         <denomination xlink:type="simple" xlink:href="http://nomisma.org/id/denomination_b_sco">Denomination B (double)</denomination>
+         <denomination xlink:type="simple" xlink:href="http://nomisma.org/id/denomination_c_sco">Denomination C (unit)</denomination>
+         <manufacture xlink:type="simple" xlink:href="http://nomisma.org/id/struck">Struck</manufacture>
+         <material xlink:type="simple" xlink:href="http://nomisma.org/id/ae">Bronze</material>
          <authority>
-            <persname xlink:type="simple" xlink:role="authority"
-                      xlink:href="http://nomisma.org/id/alexander_ii_zabinas">Alexander II Zabinas</persname>
-            <famname xlink:type="simple" xlink:role="dynasty">Seleucid</famname>
-            <corpname xlink:type="simple" xlink:role="state">Seleucid Kingdom</corpname>
+            <persname xlink:type="simple" xlink:role="authority" xlink:href="http://nomisma.org/id/alexander_ii_zabinas">Alexander II Zabinas</persname>
          </authority>
+         <geographic>
+            <geogname xlink:type="simple" xlink:role="mint" xlink:href="http://nomisma.org/id/apameia_syria" certainty="probably">Apameia</geogname>
+         </geographic>
          <obverse>
             <type>
-               <description xml:lang="en">Head of young Dionysos right, wearing
-				ivy-wreath.</description>
+               <description xml:lang="en">Head of young Dionysus right, wreathed with ivy</description>
             </type>
+            <persname xlink:type="simple" xlink:role="deity" xlink:href="http://collection.britishmuseum.org/id/person-institution/57949">Dionysus</persname>
          </obverse>
          <reverse>
-            <legend>ΒΑΣΙΛΕΩΣ ΑΛΕΧΑΝΔΡΟΥ (BASILEOS ALEXANDROU)</legend>
+            <legend scriptCode="Grek" xml:lang="grc">BAΣΙΛΕΩΣ AΛEXANΔPOY</legend>
             <type>
-               <description xml:lang="en">Tyche left, winged, on head modius; holds rudder
-				and cornucopiae. Symbol to left.</description>
+               <description xml:lang="en">Winged Tyche standing left, calathus on head, holding ship's tiller and cornucopiae</description>
             </type>
-            <persname xlink:type="simple" xlink:role="deity">Tyche</persname>
-            <persname xlink:type="simple" xlink:role="deity">Dionysus</persname>
+            <symbol position="outerLeftField">monogram above wreath</symbol>
+            <persname xlink:type="simple" xlink:role="deity" xlink:href="http://collection.britishmuseum.org/id/person-institution/58260">Tyche</persname>
          </reverse>
       </typeDesc>
       <refDesc>
@@ -100,6 +102,8 @@
             <tei:title>BMC Greek: The Seleucid Kings of Syria</tei:title> 
             <tei:idno>33 34</tei:idno>
          </reference>
+         <reference xlink:type="simple" xlink:href="http://numismatics.org/sco/id/sc.1.2242.3j"
+            xlink:arcrole="nmo:hasTypeSeriesItem">Seleucid Coins (part 2) 2242.3j</reference>
       </refDesc>
       <adminDesc>
          <identifier>FIC.50.76</identifier>
