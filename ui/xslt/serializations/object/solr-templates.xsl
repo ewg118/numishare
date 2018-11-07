@@ -830,13 +830,15 @@
 					<xsl:value-of select="substring-after(nuds:control/nuds:recordId, 'price.')"/>
 				</field>
 			</xsl:when>
+			<xsl:when test="$collection-name = 'pco'">
+				<field name="typeNumber">
+					<xsl:value-of select="tokenize(nuds:control/nuds:recordId, '\.')[last()]"/>
+				</field>				
+			</xsl:when>
 			<xsl:when test="$collection-name = 'sco'">
 				<field name="typeNumber">
-					<xsl:value-of select="substring-after(nuds:control/nuds:recordId, 'sc.2.')"/>
-				</field>
-				<field name="typeNumber">
-					<xsl:value-of select="descendant::nuds:reference[tei:title/@key = 'http://nomisma.org/id/seleucid_coins']/tei:idno"/>
-				</field>
+					<xsl:value-of select="substring-after(nuds:control/nuds:recordId, 'sc.1.')"/>
+				</field>				
 			</xsl:when>
 		</xsl:choose>
 
@@ -877,12 +879,6 @@
 							<xsl:value-of select="."/>
 						</xsl:non-matching-substring>
 					</xsl:analyze-string>
-				</field>
-			</xsl:when>
-
-			<xsl:when test="$collection-name = 'sco'">
-				<field name="sortid">
-					<xsl:value-of select="nuds:control/nuds:otherRecordId[@localType='sortId']"/>
 				</field>
 			</xsl:when>
 

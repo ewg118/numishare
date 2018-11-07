@@ -44,10 +44,20 @@
 			</xsl:if>
 
 			<xsl:if test="@recordType = 'conceptual'">
-				<!-- get the sort id for coin type records, used for ordering by type number -->
-				<xsl:call-template name="sortid">
-					<xsl:with-param name="collection-name" select="$collection-name"/>
-				</xsl:call-template>
+				<!-- get the sort id for coin type records, used for ordering by type number -->				
+				<xsl:choose>
+					<xsl:when test="nuds:control/nuds:otherRecordId[@localType='sortId']">
+						<field name="sortid">
+							<xsl:value-of select="nuds:control/nuds:otherRecordId[@localType='sortId']"/>
+						</field>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:call-template name="sortid">
+							<xsl:with-param name="collection-name" select="$collection-name"/>
+						</xsl:call-template>
+					</xsl:otherwise>
+				</xsl:choose>
+				
 
 				<!-- index the type number for specific query -->
 				<xsl:call-template name="typeNumber">
