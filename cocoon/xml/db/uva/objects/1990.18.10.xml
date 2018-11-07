@@ -65,42 +65,42 @@
       </semanticDeclaration>
    </control>
    <descMeta>
-      <title xml:lang="en">Tetradrachm of Ptolemy I Soter, Alexandria, 305 B.C.-283 B.C. 1990.18.10.</title>
+      <title xml:lang="en">Silver state of Ptolemy I Soter, Alexandria, 294-282 B.C. 1990.18.10.</title>
       <typeDesc>
-         <objectType xlink:href="http://nomisma.org/id/coin">Coin</objectType>
+         <objectType xlink:type="simple" xlink:href="http://nomisma.org/id/coin">Coin</objectType>
          <dateRange>
-            <fromDate standardDate="-0305">305 B.C.</fromDate>
-            <toDate standardDate="-0283">283 B.C.</toDate>
+            <fromDate standardDate="-0294">294 BC</fromDate>
+            <toDate standardDate="-0282">282 BC</toDate>
          </dateRange>
-         <denomination xlink:href="http://nomisma.org/id/tetradrachm">Tetradrachm</denomination>
-         <material xlink:href="http://nomisma.org/id/ar">Silver</material>
+         <denomination xlink:type="simple" xlink:href="http://nomisma.org/id/stater">Stater</denomination>
+         <manufacture xlink:type="simple" xlink:href="http://nomisma.org/id/struck">Struck</manufacture>
+         <material xlink:type="simple" xlink:href="http://nomisma.org/id/ar">Silver</material>
          <authority>
-            <persname xlink:type="simple" xlink:role="authority"
-                      xlink:href="http://nomisma.org/id/ptolemy_i">Ptolemy I Soter</persname>
-            <famname xlink:type="simple" xlink:role="dynasty">Ptolemaic</famname>
-            <corpname xlink:type="simple" xlink:role="state">Ptolemaic Kingdom</corpname>
+            <persname xlink:type="simple" xlink:role="authority" xlink:href="http://nomisma.org/id/ptolemy_i">Ptolemy I Soter</persname>
          </authority>
          <geographic>
-            <geogname xlink:type="simple" xlink:role="mint"
-                      xlink:href="http://nomisma.org/id/alexandreia_egypt">Alexandria</geogname>
+            <geogname xlink:type="simple" xlink:role="mint" xlink:href="http://nomisma.org/id/alexandreia_egypt">Alexandria</geogname>
          </geographic>
          <obverse>
             <type>
-               <description xml:lang="en">Diademed head of Ptolemy I, right, in aegis.</description>
+               <description xml:lang="en">Diademed head of Ptolemy I right, with aegis, tiny Δ behind ear</description>
             </type>
-            <persname xlink:type="simple" xlink:role="portrait"
-                      xlink:href="http://nomisma.org/id/ptolemy_i">Ptolemy I Soter</persname>
+            <persname xlink:type="simple" xlink:role="portrait" xlink:href="http://nomisma.org/id/ptolemy_i">Ptolemy I Soter</persname>
          </obverse>
          <reverse>
-            <legend>PTOLEMAIOU BASILEOS</legend>
+            <legend>ΠΤΟΛΕΜΑΙΟY l., ΒΑΣΙΛΕΩΣ r.</legend>
             <type>
-               <description xml:lang="en">Eagle on thunderbolt facing left.</description>
+               <description xml:lang="en">Eagle with closed wings standing left on thunderbolt</description>
             </type>
+            <symbol position="leftField">mertens334 (mertens331 above mertens30)</symbol>
          </reverse>
+         <typeSeries xlink:type="simple" xlink:href="http://nomisma.org/id/coins_ptolemaic_empire">Coins of the Ptolemaic Empire</typeSeries>
       </typeDesc>
-      <refDesc>
-         <reference>
-            <tei:title>Svoronos</tei:title> 
+      <refDesc>         
+         <reference xlink:arcrole="nmo:hasTypeSeriesItem" xlink:type="simple"
+            xlink:href="http://numismatics.org/pco/id/cpe.1_1.158">Coins of the Ptolemaic Empire Vol. I, Part 1, no. 158</reference>
+         <reference xlink:type="simple" xlink:href="http://numismatics.org/pco/id/svoronos-1904.248">
+            <tei:title key="http://nomisma.org/id/svoronos-1904">Svoronos (1904-1908)</tei:title>
             <tei:idno>248</tei:idno>
          </reference>
       </refDesc>
