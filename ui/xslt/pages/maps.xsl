@@ -22,7 +22,7 @@
 			</xsl:when>
 		</xsl:choose>
 	</xsl:param>
-	<xsl:variable name="request-uri" select="concat('http://localhost:', doc('input:request')/request/server-port, substring-before(doc('input:request')/request/request-uri, 'maps'))"/>
+	<xsl:variable name="request-uri" select="concat('http://localhost:8080', substring-before(doc('input:request')/request/request-uri, 'maps'))"/>
 	<xsl:variable name="numFound" select="//result[@name='response']/@numFound"/>
 	<xsl:variable name="tokenized_q" select="tokenize($q, ' AND ')"/>
 
@@ -89,7 +89,6 @@
 			</head>
 			<body>
 				<xsl:call-template name="header"/>
-				<xsl:copy-of select="doc('input:request')/request"/>
 				<xsl:call-template name="maps"/>
 				<xsl:call-template name="footer"/>
 			</body>
