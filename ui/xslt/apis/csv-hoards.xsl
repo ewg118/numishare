@@ -17,7 +17,7 @@
 	<xsl:param name="type" select="doc('input:request')/request/parameters/parameter[name='type']/value"/>
 	<xsl:param name="compare" select="doc('input:request')/request/parameters/parameter[name='compare']/value"/>
 	<xsl:param name="exclude" select="doc('input:request')/request/parameters/parameter[name='exclude']/value"/>	
-	<xsl:param name="request-uri" select="concat('http://localhost:8080', substring-before(doc('input:request')/request/request-uri, 'hoards.csv'))"/>
+	<xsl:param name="request-uri" select="concat('http://localhost:', if (//config/server-port castable as xs:integer) then //config/server-port else '8080', substring-before(doc('input:request')/request/request-uri, 'hoards.csv'))"/>
 	<xsl:variable name="url" select="/config/url"/>
 
 	<xsl:template match="/">

@@ -4,7 +4,7 @@
 	<xsl:include href="../functions.xsl"/>
 	<xsl:param name="q" select="doc('input:request')/request/parameters/parameter[name='q']/value"/>
 	<xsl:param name="pipeline" select="doc('input:request')/request/parameters/parameter[name='pipeline']/value"/>
-	<xsl:variable name="request-uri" select="concat('http://localhost:8080', substring-before(doc('input:request')/request/request-uri, 'get_centuries'))"/>
+	<xsl:variable name="request-uri" select="concat('http://localhost:', if (//config/server-port castable as xs:integer) then //config/server-port else '8080', substring-before(doc('input:request')/request/request-uri, 'get_centuries'))"/>
 	<xsl:variable name="display_path">
 		<xsl:choose>
 			<xsl:when test="$pipeline='maps'">../</xsl:when>

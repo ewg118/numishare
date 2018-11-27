@@ -9,7 +9,7 @@
 	<!-- URL parameters -->
 	<xsl:param name="id" select="doc('input:request')/request/parameters/parameter[name = 'id']/value"/>
 	<xsl:param name="lang" select="doc('input:request')/request/parameters/parameter[name = 'lang']/value"/>
-	<xsl:variable name="request-uri" select="concat('http://localhost:8080', substring-before(doc('input:request')/request/request-uri, 'apis/'))"/>
+	<xsl:variable name="request-uri" select="concat('http://localhost:', if (//config/server-port castable as xs:integer) then //config/server-port else '8080', substring-before(doc('input:request')/request/request-uri, 'apis/'))"/>
 
 	<!-- config variables -->
 	<xsl:variable name="url" select="/content/config/url"/>

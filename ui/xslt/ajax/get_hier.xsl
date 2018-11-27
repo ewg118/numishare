@@ -5,7 +5,7 @@
 	<!-- globals -->
 	<xsl:variable name="solr-url" select="concat(/content/config/solr_published, 'select/')"/>
 	<xsl:variable name="collection-name" select="substring-before(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/')"/>	
-	<xsl:variable name="request-uri" select="concat('http://localhost:8080', substring-before(doc('input:request')/request/request-uri, 'get_hier'))"/>
+	<xsl:variable name="request-uri" select="concat('http://localhost:', if (//config/server-port castable as xs:integer) then //config/server-port else '8080', substring-before(doc('input:request')/request/request-uri, 'get_hier'))"/>
 	
 
 	<!-- solr query parameters -->
