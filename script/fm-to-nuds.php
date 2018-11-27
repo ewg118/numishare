@@ -35,6 +35,8 @@ include 'row-to-object.php';
 include 'normalization.php';
 include 'object-to-nuds.php';
 
+define("INDEX_COUNT", 500);
+
 // Ignore user aborts and allow the script
 // to run forever
 //error_reporting(0);
@@ -198,10 +200,10 @@ if (file_exists($eXist_config_path)) {
 				                            //if file was successfully PUT to eXist, add the accession number to the array for Solr indexing.
 				                            $accnums[] = $accnum;
 				                            
-				                            //index records into Solr in increments of 1,000
-				                            if (count($accnums) > 0 && count($accnums) % 1000 == 0 ){
-				                                $start = count($accnums) - 1000;
-				                                $toIndex = array_slice($accnums, $start, 1000);
+				                            //index records into Solr in increments of the INDEX_COUNT constant
+				                            if (count($accnums) > 0 && count($accnums) % INDEX_COUNT == 0 ){
+				                                $start = count($accnums) - INDEX_COUNT;
+				                                $toIndex = array_slice($accnums, $start, INDEX_COUNT);
 				                                
 				                                //POST TO SOLR
 				                                generate_solr_shell_script($toIndex);
@@ -234,7 +236,7 @@ if (file_exists($eXist_config_path)) {
 		echo generate_html_response($csv_id, $accnums, $errors, $warnings, $startTime, $endTime);
 		
 		//execute process for remaining accnums.
-		$start = floor(count($accnums) / 1000) * 1000;
+		$start = floor(count($accnums) / INDEX_COUNT) * INDEX_COUNT;
 		$toIndex = array_slice($accnums, $start);
 		
 		//POST TO SOLR
