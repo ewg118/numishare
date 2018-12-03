@@ -2052,7 +2052,7 @@
 					<xsl:when test="$label = 'visualize_duration'">Dauer</xsl:when>
 					<xsl:when test="$label = 'visualize_calculate'">Ausgewähltes berechnen</xsl:when>
 					<xsl:when test="$label = 'visualize_generate'">Grafik erzeugen</xsl:when>
-					<xsl:when test="$label = 'numeric_count'">Zählen</xsl:when>
+					<xsl:when test="$label = 'numeric_count'">Anzahl</xsl:when>
 					<xsl:when test="$label = 'numeric_percentage'">Prozentzahl</xsl:when>
 					<xsl:when test="$label = 'numeric_cumulative'">Cumulativ</xsl:when>
 					<xsl:when test="$label = 'numeric_cumulative_percentage'">Cumulative Prozentzahl</xsl:when>
