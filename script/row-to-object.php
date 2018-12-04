@@ -218,7 +218,7 @@ function parse_row($row, $count, $fileName){
 		        $record['title'] = $coinTypes[$uri]['title'] . '. ' . $accnum;
 		    } else {
 		        $file_headers = @get_headers($uri);
-		        if ($file_headers[0] == 'HTTP/1.1 200 OK' || $file_headers[0] == 'HTTP/1.1 303 See Other'){
+		        if ($file_headers[0] == 'HTTP/1.1 200 OK'){
 		            echo "Found {$uri}\n";
 		            //generate the title from the NUDS
 		            $titles = generate_title_from_type($uri);
@@ -230,6 +230,77 @@ function parse_row($row, $count, $fileName){
 		        } else {
 		            $record['refs'][] = array('label'=>$id, 'uncertain'=>$uncertain);
 		        }
+		    }
+		} elseif ($department == 'Greek' && preg_match('/^Sv[\s|\.](\d+[A-Za-z]?)$/', $ref, $matches)){
+		    if (isset($matches[1])){
+		        $uri = 'http://numismatics.org/pco/id/svoronos-1904.' . $matches[1];
+		        
+		        //get info from $coinTypes array if the coin type has been verified already
+		        if (array_key_exists($uri, $coinTypes)){
+		            echo "Matched {$uri}\n";
+		            $coinType= array('label'=>$coinTypes[$uri]['reference'], 'uri'=>$uri, 'uncertain'=>$uncertain);
+		            $record['types']['PCO'] = $coinType;
+		            $record['title'] = $coinTypes[$uri]['title'] . '. ' . $accnum;
+		        } else {
+		            $file_headers = @get_headers($uri);
+		            if ($file_headers[0] == 'HTTP/1.1 200 OK'){
+		                echo "Found {$uri}\n";
+		                //generate the title from the NUDS
+		                $titles = generate_title_from_type($uri);
+		                $coinTypes[$uri] = array('title'=>$titles['title'], 'reference'=>$titles['reference']);
+		                
+		                $record['title'] = $titles['title'] . ' ' . $accnum;
+		                $coinType= array('label'=>$titles['reference'], 'uri'=>$uri, 'uncertain'=>$uncertain);
+		                $record['types']['PCO'] = $coinType;
+		            } elseif ($file_headers[0] == 'HTTP/1.1 303 See Other'){
+		                //redirect Svoronos references to CPE URIs
+		                $cointype = str_replace('Location: ', '', $file_headers[7]);
+		                echo "Matching: {$uri} -> {$cointype}\n";
+		                
+		                //make CPE URI the new $uri variable
+		                $uri = $cointype;
+		                
+		                //generate the title from the NUDS
+		                $titles = generate_title_from_type($uri);
+		                $coinTypes[$uri] = array('title'=>$titles['title'], 'reference'=>$titles['reference']);
+		                
+		                $record['title'] = $titles['title'] . ' ' . $accnum;
+		                $coinType= array('label'=>$titles['reference'], 'uri'=>$uri, 'uncertain'=>$uncertain);
+		                $record['types']['PCO'] = $coinType;		                
+		            } else {
+		                $record['refs'][] = array('label'=>$id, 'uncertain'=>$uncertain);
+		            }
+		        }
+		    } else {
+		        $record['refs'][] = array('label'=>$id, 'uncertain'=>$uncertain);
+		    }
+		} elseif ($department == 'Greek' && preg_match('/^(cpe\..*)$/', $ref, $matches)){
+		    if (isset($matches[1])){
+		        $uri = 'http://numismatics.org/pco/id/' . $matches[1];
+		        
+		        //get info from $coinTypes array if the coin type has been verified already
+		        if (array_key_exists($uri, $coinTypes)){
+		            echo "Matched {$uri}\n";
+		            $coinType= array('label'=>$coinTypes[$uri]['reference'], 'uri'=>$uri, 'uncertain'=>$uncertain);
+		            $record['types']['PCO'] = $coinType;
+		            $record['title'] = $coinTypes[$uri]['title'] . '. ' . $accnum;
+		        } else {
+		            $file_headers = @get_headers($uri);
+		            if ($file_headers[0] == 'HTTP/1.1 200 OK'){
+		                echo "Found {$uri}\n";
+		                //generate the title from the NUDS
+		                $titles = generate_title_from_type($uri);
+		                $coinTypes[$uri] = array('title'=>$titles['title'], 'reference'=>$titles['reference']);
+		                
+		                $record['title'] = $titles['title'] . ' ' . $accnum;
+		                $coinType= array('label'=>$titles['reference'], 'uri'=>$uri, 'uncertain'=>$uncertain);
+		                $record['types']['PCO'] = $coinType;
+		            } else {
+		                $record['refs'][] = array('label'=>$id, 'uncertain'=>$uncertain);
+		            }
+		        }
+		    } else {
+		        $record['refs'][] = array('label'=>$id, 'uncertain'=>$uncertain);
 		    }
 		} elseif ($row['privateinfo'] == 'WW I project ready') {
 			//handle AoD
