@@ -2,7 +2,7 @@
 
 /************************
  AUTHOR: Ethan Gruber
- MODIFIED: January, 2018
+ MODIFIED: December, 2018
  DESCRIPTION: Functions for processing the row from the Filemaker export CSV into a data object for later 
  processing into NUDS/XML
  ************************/
@@ -243,16 +243,7 @@ function parse_row($row, $count, $fileName){
 		            $record['title'] = $coinTypes[$uri]['title'] . '. ' . $accnum;
 		        } else {
 		            $file_headers = @get_headers($uri);
-		            if ($file_headers[0] == 'HTTP/1.1 200 OK'){
-		                echo "Found {$uri}\n";
-		                //generate the title from the NUDS
-		                $titles = generate_title_from_type($uri);
-		                $coinTypes[$uri] = array('title'=>$titles['title'], 'reference'=>$titles['reference']);
-		                
-		                $record['title'] = $titles['title'] . ' ' . $accnum;
-		                $coinType= array('label'=>$titles['reference'], 'uri'=>$uri, 'uncertain'=>$uncertain);
-		                $record['types']['PCO'] = $coinType;
-		            } elseif ($file_headers[0] == 'HTTP/1.1 303 See Other'){
+		            if ($file_headers[0] == 'HTTP/1.1 303 See Other'){
 		                //redirect Svoronos references to CPE URIs
 		                $cointype = str_replace('Location: ', '', $file_headers[7]);
 		                echo "Matching: {$uri} -> {$cointype}\n";
