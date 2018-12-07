@@ -259,10 +259,10 @@ function generate_nuds($record, $fileName){
 		
 		/***** BIBLIOGRAPHIC DESCRIPTION *****/
 		//create refDesc if there are refs, citations, an OCRE coin type, or both SCO and PELLA types
-		if (array_key_exists('refs', $record) || array_key_exists('citations', $record) || (array_key_exists('types', $record) && count($record['types']) > 1)){
+		if (array_key_exists('refs', $record) || array_key_exists('citations', $record) || array_key_exists('types', $record)){
 			$writer->startElement('refDesc');
 				//always insert a reference to a coin type URI
-				if (array_key_exists('types', $record) && count($record['types']) >= 1){
+				if (array_key_exists('types', $record)){
 				    foreach ($record['types'] as $k=>$v){
 				        //create a reference[@xlink:arcole='nmo:hasTypeSeriesItem'] for any URI that isn't PELLA (used in typeDesc/@xlink:href)
 				    	$record['types'][$k]['arcrole'] = 'nmo:hasTypeSeriesItem';
