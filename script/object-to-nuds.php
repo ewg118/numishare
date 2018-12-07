@@ -263,10 +263,10 @@ function generate_nuds($record, $fileName){
 			$writer->startElement('refDesc');
 				//always insert a reference to a coin type URI
 				if (array_key_exists('types', $record)){
-				    foreach ($record['types'] as $k=>$v){
+				    foreach ($record['types'] as $type){
 				        //create a reference[@xlink:arcole='nmo:hasTypeSeriesItem'] for any URI that isn't PELLA (used in typeDesc/@xlink:href)
-				    	$record['types'][$k]['arcrole'] = 'nmo:hasTypeSeriesItem';
-				    	generate_entity_element($writer, $v, 'reference');
+				    	$type['arcrole'] = 'nmo:hasTypeSeriesItem';
+				    	generate_entity_element($writer, $type, 'reference');
 				    }					
 				}
 				
