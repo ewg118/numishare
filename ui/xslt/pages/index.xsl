@@ -169,7 +169,7 @@
 								<img src="{$include_path}/images/neh_logo_horizontal_rgb.jpg" style="max-width:100%"/>
 							</a>
 						</p>
-						<p>In March 2017, the National Endowment for the Humanities awarded Seleucid Coins Online $262,000 as part of the the broader <a
+						<p>In March 2017, the National Endowment for the Humanities awarded <xsl:value-of select="title"/> $262,000 as part of the the broader <a
 								href="http://numismatics.org/neh-hrc2017/">Hellenistic Royal Coinages (HRC)</a> initiative. This grant is issued through the NEH <a
 								href="http://www.neh.gov/grants/preservation/humanities-collections-and-reference-resources">Humanities Collections and
 								Reference Resources</a> program, to be dispersed over three years, to complete the project.</p>
