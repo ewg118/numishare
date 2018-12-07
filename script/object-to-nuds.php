@@ -143,14 +143,17 @@ function generate_nuds($record, $fileName){
 					}
 				}
 			} else {
-				//if there are two or more URIs, then (at the moment), they are PELLA/SCO/PCO
-				foreach ($record['types'] as $k=>$type){
-					if ($k == 'PELLA'){
-						$writer->startElement('typeDesc');
-							$writer->writeAttribute('xlink:type', 'simple');
-							$writer->writeAttribute('xlink:href', $type['uri']);
-						$writer->endElement();
-					}
+				//if there are two or more URIs, then (at the moment), they are PELLA/SCO/PCO: favor SCO, PCO > PELLA
+				if (array_key_exists('SCO', $record['types'])){
+					$writer->startElement('typeDesc');
+						$writer->writeAttribute('xlink:type', 'simple');
+						$writer->writeAttribute('xlink:href', $record['types']['SCO']['uri']);
+					$writer->endElement();
+				} elseif (array_key_exists('PCO', $record['types'])){
+					$writer->startElement('typeDesc');
+						$writer->writeAttribute('xlink:type', 'simple');
+						$writer->writeAttribute('xlink:href', $record['types']['PCO']['uri']);
+					$writer->endElement();
 				}
 			}
 		} else {
@@ -260,19 +263,15 @@ function generate_nuds($record, $fileName){
 			$writer->startElement('refDesc');
 				//insert OCRE reference, if applicable
 				if (isset($record['types']['OCRE'])){
-					$writer->startElement('reference');
-						$record['types']['OCRE']['arcrole'] = 'nmo:hasTypeSeriesItem';
-						generate_entity_element($writer, $record['types']['OCRE'], 'reference');
-					$writer->endElement();
+					$record['types']['OCRE']['arcrole'] = 'nmo:hasTypeSeriesItem';
+					generate_entity_element($writer, $record['types']['OCRE'], 'reference');
 				}
 				//insert SCO reference if there are two types
 				if (array_key_exists('types', $record) && count($record['types']) > 1){
 				    foreach ($record['types'] as $k=>$v){
 				        //create a reference[@xlink:arcole='nmo:hasTypeSeriesItem'] for any URI that isn't PELLA (used in typeDesc/@xlink:href)
-				        if ($k != 'PELLA'){
-				            $record['types'][$k]['arcrole'] = 'nmo:hasTypeSeriesItem';
-				            generate_entity_element($writer, $v, 'reference');
-				        }
+				    	$record['types'][$k]['arcrole'] = 'nmo:hasTypeSeriesItem';
+				    	generate_entity_element($writer, $v, 'reference');
 				    }					
 				}
 				
