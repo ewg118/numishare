@@ -70,13 +70,26 @@
 				</li>
 			</xsl:when>
 			<xsl:otherwise>
-				<li>
-					<b>
-						<xsl:value-of select="numishare:regularize_node(local-name(), 'en')"/>
-						<xsl:text>: </xsl:text>
-					</b>
-					<xsl:value-of select="nuds:description[@xml:lang = 'en']"/>
-				</li>
+				<xsl:choose>
+					<xsl:when test="nuds:description[@xml:lang = 'en']">
+						<li>
+							<b>
+								<xsl:value-of select="numishare:regularize_node(local-name(), 'en')"/>
+								<xsl:text>: </xsl:text>
+							</b>
+							<xsl:value-of select="nuds:description[@xml:lang = 'en']"/>
+						</li>
+					</xsl:when>
+					<xsl:otherwise>
+						<li>
+							<b>
+								<xsl:value-of select="numishare:regularize_node(local-name(), 'en')"/>
+								<xsl:text>: </xsl:text>
+							</b>
+							<xsl:value-of select="nuds:description[1]"/>
+						</li>
+					</xsl:otherwise>
+				</xsl:choose>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>

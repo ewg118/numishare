@@ -64,14 +64,29 @@
 					</field>
 				</xsl:when>
 				<xsl:otherwise>
-					<xsl:if test="$recordType != 'hoard'">
-						<field name="{$side}_type_display">
-							<xsl:value-of select="normalize-space(nuds:type/nuds:description[@xml:lang = 'en'])"/>
-						</field>
-					</xsl:if>
-					<field name="{$side}_type_text">
-						<xsl:value-of select="normalize-space(nuds:type/nuds:description[@xml:lang = 'en'])"/>
-					</field>
+					<xsl:choose>
+						<xsl:when test="nuds:type/nuds:description[@xml:lang = 'en']">							
+							<xsl:if test="$recordType != 'hoard'">
+								<field name="{$side}_type_display">
+									<xsl:value-of select="normalize-space(nuds:type/nuds:description[@xml:lang = 'en'])"/>
+								</field>
+							</xsl:if>
+							<field name="{$side}_type_text">
+								<xsl:value-of select="normalize-space(nuds:type/nuds:description[@xml:lang = 'en'])"/>
+							</field>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:if test="$recordType != 'hoard'">
+								<field name="{$side}_type_display">
+									<xsl:value-of select="normalize-space(nuds:type/nuds:description[1])"/>
+								</field>
+							</xsl:if>
+							<field name="{$side}_type_text">
+								<xsl:value-of select="normalize-space(nuds:type/nuds:description[1])"/>
+							</field>
+						</xsl:otherwise>
+					</xsl:choose>
+					
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:if>
