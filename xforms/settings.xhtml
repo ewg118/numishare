@@ -317,7 +317,7 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 			<div class="row">
 				<div class="col-md-12">
 					<xforms:group ref="instance('control-instance')/status/text()">
-						<div class="bg-info alert-box">
+						<div class="alert alert-box alert-success">
 							<span class="glyphicon glyphicon-info-sign"></span>
 							<strong>Status:</strong>
 							<xforms:output ref="instance('control-instance')/status"></xforms:output>
@@ -928,7 +928,7 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 														</xforms:label>
 													</xforms:trigger>
 													<xforms:group ref=".[count(label/@lang) != count(distinct-values(label/@lang))]">
-														<div class="bg-danger alert-box">
+														<div class="alert alert-box alert-danger">
 															<span class="glyphicon glyphicon-exclamation-sign"></span>
 															<strong>Alert:</strong> Label languages must be unique. </div>
 													</xforms:group>
@@ -991,7 +991,7 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 														</xforms:label>
 													</xforms:trigger>
 													<xforms:group ref=".[count(label/@lang) != count(distinct-values(label/@lang))]">
-														<div class="bg-danger alert-box">
+														<div class="alert alert-box alert-danger">
 															<span class="glyphicon glyphicon-exclamation-sign"></span>
 															<strong>Alert:</strong> Label languages must be unique. </div>
 													</xforms:group>

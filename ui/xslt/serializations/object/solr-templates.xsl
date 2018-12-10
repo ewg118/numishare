@@ -41,6 +41,8 @@
 				string(@xlink:href)] | descendant::nuds:famname[string(.) or string(@xlink:href)] | descendant::nuds:periodname[string(.) or string(@xlink:href)]">
 			<xsl:with-param name="lang" select="$lang"/>
 		</xsl:apply-templates>
+		
+		<xsl:apply-templates select="nuds:typeSeries"/>
 
 	</xsl:template>
 
@@ -206,7 +208,7 @@
 		</xsl:choose>
 	</xsl:template>
 
-	<xsl:template match="nuds:objectType | nuds:denomination | nuds:manufacture | nuds:material">
+	<xsl:template match="nuds:objectType | nuds:denomination | nuds:manufacture | nuds:material | nuds:typeSeries">
 		<xsl:param name="lang"/>
 		<xsl:variable name="facet" select="local-name()"/>
 		<xsl:variable name="href" select="@xlink:href"/>
