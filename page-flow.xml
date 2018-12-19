@@ -32,7 +32,10 @@
 		<page path="/numishare/project1/" matcher="oxf:perl5-matcher" model="xpl/models/config.xpl" view="file:///usr/local/projects/project1/xpl/views/pages/index.xpl"/>
 		Model paths are unlikely to require changing. Other ajax pages may need to be copied if alterations in format are required.
 	*** -->
-	
+
+	<!-- 303 See Other redirect for original display-uva pipeline -->
+	<page path="/numishare/[^\/]+/display-uva$" model="xpl/models/config.xpl"  view="xpl/controllers/display-uva.xpl"/>
+
 	<!-- ************** GENERIC NUMISHARE PAGES *************-->	
 	<!-- **** SERIALIZATIONS **** -->	
 	<!-- Solr -->
