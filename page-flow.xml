@@ -37,6 +37,9 @@
 	<!-- AoD -->
 	<page path="/numishare/aod/" model="xpl/models/config.xpl" view="file:///usr/local/projects/aod/xpl/views/pages/index.xpl"/>
 	
+	<!-- Fralin UVA -->
+	<page path="/numishare/fralin/" model="xpl/models/config.xpl" view="file:///usr/local/projects/fralin/xpl/views/pages/index.xpl"/>
+	
 	<!-- CHRR -->
 	<page path="/numishare/chrr/" model="xpl/models/config.xpl" view="file:///usr/local/projects/chrr/xpl/views/pages/index.xpl"/>
 
