@@ -39,6 +39,7 @@
 	
 	<!-- Fralin UVA -->
 	<page path="/numishare/fralin/" model="xpl/models/config.xpl" view="file:///usr/local/projects/fralin/xpl/views/pages/index.xpl"/>
+	<page path="/numishare/fralin/display-uva$" model="xpl/models/config.xpl"  view="file:///usr/local/projects/fralin/xpl/controllers/display-uva.xpl"/>
 	
 	<!-- CHRR -->
 	<page path="/numishare/chrr/" model="xpl/models/config.xpl" view="file:///usr/local/projects/chrr/xpl/views/pages/index.xpl"/>
