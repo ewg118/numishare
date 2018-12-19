@@ -21,11 +21,11 @@
 	<!-- URI space for featured items -->	
 	<xsl:variable name="uri_space">
 		<xsl:choose>
-			<xsl:when test="//config/uri_space">
+			<xsl:when test="string(//config/uri_space)">
 				<xsl:value-of select="//config/uri_space"/>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:value-of select="concat(//config/url, 'id/')"/>
+				<xsl:text>id/</xsl:text>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:variable>
