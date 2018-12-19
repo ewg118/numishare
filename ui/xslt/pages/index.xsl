@@ -74,9 +74,17 @@
 			<div class="container">
 				<div class="row">
 					<!-- display title and description in the jumbotron, including featured object, if available -->
-					<div class="col-md-9 pull-right banner-background">
+					<div class="col-md-9 pull-right banner-background hidden-xs hidden-sm">
 						<div class="col-md-4">
-							<img src="{$include_path}/images/uva_centrd_rgb_white.png" alt="UVA Logo" style="max-width:100%;vertical-align:bottom"/>
+							<img src="{$include_path}/images/uva_centrd_rgb_white.png" alt="UVA Logo" style="max-width:100%"/>
+						</div>
+						<div class="col-md-8">
+							<h1><xsl:value-of select="title"/></h1>
+						</div>
+					</div>
+					<div class="cold-md-12 banner-background visible-xs visible-sm text-center">
+						<div class="col-md-4">
+							<img src="{$include_path}/images/uva_centrd_rgb_white.png" alt="UVA Logo" style="max-width:100%"/>
 						</div>
 						<div class="col-md-8">
 							<h1><xsl:value-of select="title"/></h1>
