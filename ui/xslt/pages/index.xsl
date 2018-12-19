@@ -74,25 +74,10 @@
 			<div class="container">
 				<div class="row">
 					<!-- display title and description in the jumbotron, including featured object, if available -->
-					<xsl:choose>
-						<xsl:when test="features_enabled = true() and count(doc('input:feature-model')//doc) = 1">
-							<div class="col-md-9">
-								<h1><xsl:value-of select="title"/></h1>
-								<p><xsl:value-of select="description"/></p>
-							</div>
-							<div class="col-md-3">
-								<div id="feature" class="highlight text-center">
-									<xsl:apply-templates select="doc('input:feature-model')//doc"/>
-								</div>
-							</div>
-						</xsl:when>
-						<xsl:otherwise>
-							<div class="col-md-12">
-								<h1><xsl:value-of select="title"/></h1>
-								<p><xsl:value-of select="description"/></p>
-							</div>
-						</xsl:otherwise>
-					</xsl:choose>
+					<div class="col-md-9 pull-right banner-background">
+						<h1><xsl:value-of select="title"/></h1>
+						<p><xsl:value-of select="description"/></p>
+					</div>
 				</div>
 			</div>
 		</div>	
@@ -134,7 +119,18 @@
 					</xsl:choose>
 				</div>
 				<div class="col-md-3">
-					<div class="highlight data_options">
+					<div id="feature" class="highlight text-center">
+						<xsl:apply-templates select="doc('input:feature-model')//doc"/>
+					</div>
+					
+					<div class="highlight text-center">
+						<h3>Collaborators</h3>
+						<a href="" title="Institute for Advanced Technology in the Humanities">
+							<img src="{$include_path}/images/iath.svg" title="IATH" alt="IATH" style="width:120px"/>
+						</a>
+					</div>
+					
+					<div class="highlight data_options text-center">
 						<h3>Linked Data</h3>
 						<a href="{$display_path}feed/?q=*:*">
 							<img src="{$include_path}/images/atom-large.png" title="Atom" alt="Atom"/>

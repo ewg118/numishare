@@ -33,60 +33,6 @@
 		Model paths are unlikely to require changing. Other ajax pages may need to be copied if alterations in format are required.
 	*** -->
 	
-	<!-- ************** PROJECT NUMISHARE PAGES *************-->	
-	<!-- AoD -->
-	<page path="/numishare/aod/" model="xpl/models/config.xpl" view="file:///usr/local/projects/aod/xpl/views/pages/index.xpl"/>
-	
-	<!-- Fralin UVA -->
-	<page path="/numishare/fralin/" model="xpl/models/config.xpl" view="file:///usr/local/projects/fralin/xpl/views/pages/index.xpl"/>
-	
-	<!-- CHRR -->
-	<page path="/numishare/chrr/" model="xpl/models/config.xpl" view="file:///usr/local/projects/chrr/xpl/views/pages/index.xpl"/>
-
-	<!-- RRC -->
-	<page path="/numishare/crro/" model="xpl/models/config.xpl" view="file:///usr/local/projects/crro/xpl/views/pages/index.xpl"/>
-	
-	<!-- EGYPT -->
-	<page path="/numishare/egypt/" model="xpl/models/config.xpl" view="file:///usr/local/projects/egypt/xpl/views/pages/index.xpl"/>
-	
-	<!-- Hellenistic Royal Coinages projects -->
-	<page path="/numishare/(sco|pella|pco)/" model="xpl/models/config.xpl" view="file:///usr/local/projects/hrc/xpl/views/pages/index.xpl"/>
-	
-	<!-- OCRE -->
-	<page path="/numishare/ocre/" model="xpl/models/config.xpl" view="file:///usr/local/projects/ocre/xpl/views/pages/index.xpl"/>	
-	
-	<!-- MANTIS -->
-	<page path="/numishare/mantis/department/[^\/]+" model="file:///usr/local/projects/mantis/xpl/models/solr/department.xpl" view="file:///usr/local/projects/mantis/xpl/views/pages/department.xpl"/>
-	<page path="/numishare/mantis/maps" model="file:///usr/local/projects/mantis/xpl/models/solr/maps.xpl" view="xpl/views/pages/maps.xpl"/>
-	<page path="/numishare/mantis/maps/fullscreen" model="file:///usr/local/projects/mantis/xpl/models/solr/maps.xpl" view="xpl/views/pages/maps_fullscreen.xpl"/>
-	<page path="/numishare/mantis/" model="xpl/models/config.xpl" view="file:///usr/local/projects/mantis/xpl/views/pages/index.xpl"/>
-	
-	<!-- serializations -->
-	<page path="/numishare/mantis/feed/" model="xpl/models/solr/feed.xpl" view="file:///usr/local/projects/mantis/xpl/views/serializations/solr/atom.xpl"/>
-	
-	<!-- id -->
-	<page path="/numishare/mantis/id/(.*)\.xml" view="file:///usr/local/projects/mantis/xpl/models/object/get-id.xpl"/>
-	<page path="/numishare/mantis/id/(.*)\.rdf" model="file:///usr/local/projects/mantis/xpl/models/object/get-id.xpl" view="xpl/views/serializations/object/rdf.xpl"/>
-	<page path="/numishare/mantis/id/(.*)\.jsonld" model="file:///usr/local/projects/mantis/xpl/models/object/get-id.xpl" view="xpl/views/serializations/object/json-ld.xpl"/>
-	<page path="/numishare/mantis/id/(.*)\.kml" model="file:///usr/local/projects/mantis/xpl/models/object/get-id.xpl" view="xpl/views/serializations/object/kml.xpl"/>
-	<page path="/numishare/mantis/id/(.*)\.ttl" model="file:///usr/local/projects/mantis/xpl/models/object/get-id.xpl" view="xpl/views/serializations/rdf/ttl.xpl"/>
-	<page path="/numishare/mantis/id/(.*)\.solr" model="file:///usr/local/projects/mantis/xpl/models/object/get-id.xpl" view="xpl/views/serializations/object/solr.xpl"/>
-	<page path="/numishare/mantis/id/(.*)\.geojson" model="file:///usr/local/projects/mantis/xpl/models/object/get-id.xpl" view="xpl/views/serializations/object/geojson.xpl"/>	
-	<page path="/numishare/mantis/id/(.*)$" model="file:///usr/local/projects/mantis/xpl/models/object/get-id.xpl" view="xpl/controllers/conneg-id.xpl"/>
-	<page path="/numishare/mantis/map/(.*)$" model="file:///usr/local/projects/mantis/xpl/models/object/get-id.xpl" view="xpl/views/serializations/object/html-map.xpl"/>
-	<page path="/numishare/mantis/manifest/(.*)$" model="file:///usr/local/projects/mantis/xpl/models/object/get-id.xpl" view="xpl/controllers/iiif-manifest.xpl"/>
-	<page path="/numishare/mantis/manifest/[obverse?|reverse?]/?(.*)$" model="file:///usr/local/projects/mantis/xpl/models/object/get-id.xpl" view="xpl/controllers/iiif-manifest.xpl"/>
-	<page path="/numishare/mantis/manifest/(.*)/sequence/default$" model="file:///usr/local/projects/mantis/xpl/models/object/get-id.xpl" view="xpl/controllers/iiif-manifest.xpl"/>
-	<page path="/numishare/mantis/manifest/(.*)/canvas/[obverse|reverse]$" model="file:///usr/local/projects/mantis/xpl/models/object/get-id.xpl" view="xpl/controllers/iiif-manifest.xpl"/>
-	<page path="/numishare/mantis/manifest/(.*)/annotation/[obverse|reverse]$" model="file:///usr/local/projects/mantis/xpl/models/object/get-id.xpl" view="xpl/controllers/iiif-manifest.xpl"/>
-	
-	<!-- apis -->
-	<page path="/numishare/mantis/apis/get" model="file:///usr/local/projects/mantis/xpl/models/object/get-id.xpl" view="xpl/views/apis/get.xpl"/>	
-	<page path="/numishare/mantis/apis/search" model="xpl/models/solr/feed.xpl" view="file:///usr/local/projects/mantis/xpl/views/apis/search.xpl"/>
-	
-	<!-- results ajax -->
-	<page path="/numishare/mantis/results_ajax" model="xpl/models/solr/results_ajax.xpl" view="file:///usr/local/projects/mantis/xpl/views/ajax/results_ajax.xpl"/>
-	
 	<!-- ************** GENERIC NUMISHARE PAGES *************-->	
 	<!-- **** SERIALIZATIONS **** -->	
 	<!-- Solr -->
