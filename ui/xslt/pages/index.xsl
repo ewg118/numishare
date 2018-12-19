@@ -75,8 +75,12 @@
 				<div class="row">
 					<!-- display title and description in the jumbotron, including featured object, if available -->
 					<div class="col-md-9 pull-right banner-background">
-						<h1><xsl:value-of select="title"/></h1>
-						<p><xsl:value-of select="description"/></p>
+						<div class="col-md-4">
+							<img src="{$include_path}/images/uva_centrd_rgb_white.png" alt="UVA Logo" style="max-width:100%;vertical-align:bottom"/>
+						</div>
+						<div class="col-md-8">
+							<h1><xsl:value-of select="title"/></h1>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -125,7 +129,7 @@
 					
 					<div class="highlight text-center">
 						<h3>Collaborators</h3>
-						<a href="" title="Institute for Advanced Technology in the Humanities">
+						<a href="http://iath.virginia.edu" title="Institute for Advanced Technology in the Humanities">
 							<img src="{$include_path}/images/iath.svg" title="IATH" alt="IATH" style="width:120px"/>
 						</a>
 					</div>
