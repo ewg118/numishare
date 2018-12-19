@@ -40,6 +40,17 @@
 				<!-- jquery -->
 				<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"/>				
 
+				<xsl:for-each select="//config/includes/include">
+					<xsl:choose>
+						<xsl:when test="@type = 'css'">
+							<link type="text/{@type}" rel="stylesheet" href="{@url}"/>
+						</xsl:when>
+						<xsl:when test="@type = 'javascript'">
+							<script type="text/{@type}" src="{@url}"/>
+						</xsl:when>
+					</xsl:choose>
+				</xsl:for-each>
+
 				<!-- bootstrap -->
 				<link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"/>
 				<script type="text/javascript" src="https://netdna.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"/>

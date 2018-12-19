@@ -112,6 +112,17 @@
 
 				<link rel="shortcut icon" type="image/x-icon" href="{$include_path}/images/favicon.png"/>
 				<meta name="viewport" content="width=device-width, initial-scale=1"/>
+				
+				<xsl:for-each select="//config/includes/include">
+					<xsl:choose>
+						<xsl:when test="@type = 'css'">
+							<link type="text/{@type}" rel="stylesheet" href="{@url}"/>
+						</xsl:when>
+						<xsl:when test="@type = 'javascript'">
+							<script type="text/{@type}" src="{@url}"/>
+						</xsl:when>
+					</xsl:choose>
+				</xsl:for-each>
 
 				<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"/>
 				<!-- bootstrap -->
