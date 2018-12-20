@@ -432,7 +432,7 @@
 					<xsl:if test="$lang = 'ar'">
 						<xsl:attribute name="style">direction: rtl;</xsl:attribute>
 					</xsl:if>
-
+					
 					<xsl:apply-templates select="//nuds:nuds"/>
 				</div>
 			</xsl:otherwise>
@@ -1140,14 +1140,11 @@
 	<!-- charts template -->
 	<xsl:template name="charts">
 		<xsl:variable name="axis"
-			select="document(concat($request-uri, 'sparql?constraints=', encode-for-uri(concat('nmo:hasTypeSeriesItem &lt;', //config/uri_space, $id, '&gt;')),
-			'&amp;template=avgMeasurement&amp;measurement=axis'))"/>
+			select="document(concat('http://nomisma.org/apis/avgAxis?type=', encode-for-uri($objectUri)))"/>
 		<xsl:variable name="diameter"
-			select="document(concat($request-uri, 'sparql?constraints=', encode-for-uri(concat('nmo:hasTypeSeriesItem &lt;', //config/uri_space, $id, '&gt;')),
-			'&amp;template=avgMeasurement&amp;measurement=diameter'))"/>
+			select="document(concat('http://nomisma.org/apis/avgDiameter?type=', encode-for-uri($objectUri)))"/>
 		<xsl:variable name="weight"
-			select="document(concat($request-uri, 'sparql?constraints=', encode-for-uri(concat('nmo:hasTypeSeriesItem &lt;', //config/uri_space, $id, '&gt;')),
-			'&amp;template=avgMeasurement&amp;measurement=weight'))"/>
+			select="document(concat('http://nomisma.org/apis/avgWeight?type=', encode-for-uri($objectUri)))"/>
 
 		<a name="charts"/>
 		<h3>
@@ -1170,7 +1167,7 @@
 						<xsl:value-of select="numishare:regularize_node('diameter', $lang)"/>
 					</dt>
 					<dd>
-						<xsl:value-of select="$diameter"/>
+						<xsl:value-of select="format-number($diameter, '##.##')"/>
 					</dd>
 				</xsl:if>
 				<xsl:if test="number($weight) &gt; 0">
@@ -1178,7 +1175,7 @@
 						<xsl:value-of select="numishare:regularize_node('weight', $lang)"/>
 					</dt>
 					<dd>
-						<xsl:value-of select="$weight"/>
+						<xsl:value-of select="format-number($weight, '##.##')"/>
 					</dd>
 				</xsl:if>
 			</dl>

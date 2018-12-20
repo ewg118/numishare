@@ -35,9 +35,14 @@ PREFIX void:	<http://rdfs.org/ns/void#>
 PREFIX xsd:	<http://www.w3.org/2001/XMLSchema#>
 
 SELECT ?dataset ?publisher ?collection ?collectionLabel ?thumbnail ?homepage ?memberOf ?title ?description ?license ?rights (COUNT(?dataset) AS ?count) {
-    ?type dcterms:source <TYPE_SERIES> .
-    ?object nmo:hasTypeSeriesItem ?type ;
-            void:inDataset ?dataset .
+		{ SELECT ?coinType WHERE {
+			{?coinType dcterms:source <TYPE_SERIES> }
+			UNION {?types dcterms:source <TYPE_SERIES> .
+			?types skos:exactMatch ?coinType}
+		  } 
+		}
+    ?object nmo:hasTypeSeriesItem ?coinType .
+    ?object void:inDataset ?dataset .
   OPTIONAL {?object nmo:hasCollection ?collection .
            ?collection skos:prefLabel ?collectionLabel . FILTER langMatches(lang(?collectionLabel), "en")
            OPTIONAL {?collection foaf:thumbnail ?thumbnail}
@@ -48,7 +53,8 @@ SELECT ?dataset ?publisher ?collection ?collectionLabel ?thumbnail ?homepage ?me
   OPTIONAL {?dataset dcterms:license ?license }
   OPTIONAL {?dataset dcterms:rights ?rights }
   ?dataset dcterms:description ?description FILTER (lang(?description) = "" || langMatches(lang(?description), "en")) .
-  OPTIONAL {?dataset foaf:thumbnail ?thumbnail}} GROUP BY ?dataset ?publisher ?collection ?collectionLabel ?title ?thumbnail ?homepage ?memberOf ?description ?license ?rights ORDER BY ?publisher]]>
+  OPTIONAL {?dataset foaf:thumbnail ?thumbnail}
+} GROUP BY ?dataset ?publisher ?collection ?collectionLabel ?title ?thumbnail ?homepage ?memberOf ?description ?license ?rights ORDER BY ?publisher]]>
 				</xsl:variable>
 				
 				<xsl:variable name="service" select="concat($endpoint, '?query=', encode-for-uri(normalize-space(replace($query, 'TYPE_SERIES', /config/type_series))), '&amp;output=xml')"/>

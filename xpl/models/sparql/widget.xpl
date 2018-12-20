@@ -81,12 +81,15 @@ PREFIX rdfs:	<http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT ?object ?title ?findspot ?hoard ?placeName ?hoardLabel ?lat ?long ?type ?burial WHERE {
 { ?object a nmo:NumismaticObject ;
- nmo:hasTypeSeriesItem <typeUri>}
-UNION { ?broader skos:broader+ <typeUri> .
+ nmo:hasTypeSeriesItem <typeURI>}
+UNION { <typeURI> skos:exactMatch ?match .
+?object nmo:hasTypeSeriesItem ?match ;
+  a nmo:NumismaticObject }
+UNION { ?broader skos:broader+ <typeURI> .
 ?object nmo:hasTypeSeriesItem ?broader ;
   a nmo:NumismaticObject }
 UNION { ?contents a dcmitype:Collection ; 
-  nmo:hasTypeSeriesItem <typeUri> .
+  nmo:hasTypeSeriesItem <typeURI> .
 ?object dcterms:tableOfContents ?contents }
 ?object dcterms:title ?title .			
 { ?object nmo:hasFindspot ?findspot }
@@ -117,12 +120,15 @@ PREFIX rdfs:	<http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT ?object ?title ?findspot ?hoard ?placeName ?hoardLabel ?lat ?long ?type ?burial WHERE {
 { ?object a nmo:NumismaticObject ;
- nmo:hasTypeSeriesItem <typeUri>}
-UNION { ?broader skos:broader+ <typeUri> .
+ nmo:hasTypeSeriesItem <typeURI>}
+UNION { <typeURI> skos:exactMatch ?match .
+?object nmo:hasTypeSeriesItem ?match ;
+  a nmo:NumismaticObject }
+UNION { ?broader skos:broader+ <typeURI> .
 ?object nmo:hasTypeSeriesItem ?broader ;
   a nmo:NumismaticObject }
 UNION { ?contents a dcmitype:Collection ; 
-  nmo:hasTypeSeriesItem <typeUri> .
+  nmo:hasTypeSeriesItem <typeURI> .
 ?object dcterms:tableOfContents ?contents }
 ?object dcterms:title ?title .			
 { ?object nmo:hasFindspot ?findspot }
@@ -153,12 +159,15 @@ PREFIX rdfs:	<http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT DISTINCT ?findspot ?findspotLabel  ?lat ?long WHERE {
 { ?object a nmo:NumismaticObject ;
- nmo:hasTypeSeriesItem <typeUri>}
-UNION { ?broader skos:broader+ <typeUri> .
+ nmo:hasTypeSeriesItem <typeURI>}
+UNION { <typeURI> skos:exactMatch ?match .
+?object nmo:hasTypeSeriesItem ?match ;
+  a nmo:NumismaticObject }
+UNION { ?broader skos:broader+ <typeURI> .
 ?object nmo:hasTypeSeriesItem ?broader ;
   a nmo:NumismaticObject }
 UNION { ?contents a dcmitype:Collection ; 
-  nmo:hasTypeSeriesItem <typeUri> .
+  nmo:hasTypeSeriesItem <typeURI> .
 ?object dcterms:tableOfContents ?contents }
 ?object dcterms:title ?title .			
 { ?object nmo:hasFindspot ?findspot }
@@ -204,15 +213,12 @@ ORDER BY asc(?label)
 				</xsl:variable>
 
 				<xsl:variable name="service">
-					<xsl:choose>
-						<xsl:when test="$template = 'avgMeasurement'">
-							<xsl:value-of select="concat('http://nomisma.org/apis/', $api, '?constraints=', encode-for-uri($constraints))"/>
-						</xsl:when>
+					<xsl:choose>						
 						<xsl:when test="$template = 'facets'">
 							<xsl:value-of select="concat($endpoint, '?query=', encode-for-uri(normalize-space(replace(replace(replace($query, 'TYPE_SERIES', /config/type_series), 'LANG', $langStr), 'FIELD', $field))), '&amp;output=xml')"/>
 						</xsl:when>
 						<xsl:otherwise>
-							<xsl:value-of select="concat($endpoint, '?query=', encode-for-uri(normalize-space(replace($query, 'typeUri', $uri))), '&amp;output=xml')"/>
+							<xsl:value-of select="concat($endpoint, '?query=', encode-for-uri(normalize-space(replace($query, 'typeURI', $uri))), '&amp;output=xml')"/>
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:variable>
