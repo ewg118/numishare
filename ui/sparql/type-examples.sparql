@@ -9,7 +9,7 @@ PREFIX void:	<http://rdfs.org/ns/void#>
 PREFIX geo:	<http://www.w3.org/2003/01/geo/wgs84_pos#>
 PREFIX edm: <http://www.europeana.eu/schemas/edm/>
 
-SELECT ?object ?title ?identifier ?findUri ?findspot ?hoard ?collection ?publisher ?dataset ?datasetTitle ?weight ?axis ?diameter ?obvThumb ?revThumb ?obvRef ?revRef ?comThumb ?comRef ?obvManifest ?revManifest ?comManifest ?model WHERE {
+SELECT DISTINCT ?object ?title ?identifier ?findUri ?findspot ?hoard ?collection ?publisher ?dataset ?datasetTitle ?weight ?axis ?diameter ?obvThumb ?revThumb ?obvRef ?revRef ?comThumb ?comRef ?obvManifest ?revManifest ?comManifest ?model WHERE {
 { ?object a nmo:NumismaticObject ;
  nmo:hasTypeSeriesItem <typeURI>}
 UNION { <typeURI> skos:exactMatch ?match .
