@@ -84,7 +84,7 @@ h4{
     border-radius: 20px;
     padding: 20px;
     color:white;
-    background-color: rgba(19, 90, 135, 0.5);
+    background-color: rgba(35, 45, 75, 0.5);
 }
 /* custom navbar*/
 .navbar-default .navbar-brand{
@@ -95,7 +95,7 @@ h4{
 }
 .navbar-default{
     font-size: 14px;
-    background-color: rgba(19, 90, 135, 1);
+    background-color: #232D4B;
 }
 .navbar-default .navbar-nav > li > a{
     color: rgba(255, 255, 255, 1);
