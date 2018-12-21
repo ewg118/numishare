@@ -13,7 +13,7 @@
   ***************************************
  */
 html{
-    background-color: #135a87;
+    background-color: #232D4B;
 }
 body{
     font-family: 'ITC Franklin Gothic LT W01 Bk', Arial, sans-serif;
@@ -21,7 +21,7 @@ body{
     color: #333;
 }
 a{
-    color: #135a87;
+    color: #232D4B;
 }
 a:hover{
     color: #6d3e5a;
@@ -59,13 +59,13 @@ h1{
 h2{
     font-family: 'ITC Franklin Gothic LT W01 Dm', Arial, sans-serif;
     font-size: 36px;
-    color: #135a87;
+    color: #232D4B;
 }
 h3{
     font-family: "ITC Franklin Gothic LT W01DmCn", Arial, sans-serif;
     font-weight: 500;
     font-size: 24px;
-    color: #135a87;
+    color: #232D4B;
 }
 h4{
     font-family: 'ITC Franklin Gothic LT W01 Dm', Arial, sans-serif;
@@ -124,7 +124,7 @@ h4{
 }
 .navbar-default .navbar-toggle:hover .icon-bar,
 .navbar-default .navbar-toggle:focus .icon-bar{
-    background-color: #135a87;
+    background-color: #232D4B;
 }
 
 /*
@@ -133,7 +133,7 @@ h4{
   ***************************************
  */
 #footer{
-    background-color: #135a87;
+    background-color: #232D4B;
     color: white;
     border-top: 1px solid #E7E7E7;
     padding-top: 10px;
