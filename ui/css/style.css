@@ -290,8 +290,6 @@ select[name = "interval"],
 .stacked_term{
 	padding:2px;
 	margin-bottom:5px;
-	border:1px solid #E7E7E7;
-	border-radius:5px;
 	vertical-align:middle;
 }
 .remove_segment{
