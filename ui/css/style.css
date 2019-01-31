@@ -297,9 +297,14 @@ select[name = "interval"],
 #map_results{
 	margin-left:20px;
 }
+.grid-doc {
+    height:240px;
+}
+.grid-doc img {
+    max-height:120px;
+}
 .thumbImage,
-.iiif-image,
-.flickrthumb{
+.iiif-image{
 	margin:5px;
 }
 .side-thumbnail {
