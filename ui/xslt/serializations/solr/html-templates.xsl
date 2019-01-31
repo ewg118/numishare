@@ -1067,7 +1067,7 @@
 					<xsl:attribute name="style">text-align:right</xsl:attribute>
 				</xsl:if>
 				<div class="col-md-12">
-					<a id="clear_all" href="{$display_path}results">
+					<a id="clear_all" href="{$display_path}results{if ($layout = 'grid') then '?layout=grid' else ''}">
 						<xsl:value-of select="numishare:normalizeLabel('results_clear-all', $lang)"/>
 					</a>
 				</div>
