@@ -38,7 +38,7 @@
 	</xsl:template>
 
 	<xsl:template match="doc" mode="grid">
-		<div class="col-xs-12 col-sm-6 col-md-4" style="height:300px">
+		<div class="col-xs-12 col-sm-6 col-md-4 grid-doc">
 			<h4>
 				<xsl:if test="$lang = 'ar'">
 					<xsl:attribute name="style">direction: ltr; text-align:right</xsl:attribute>
