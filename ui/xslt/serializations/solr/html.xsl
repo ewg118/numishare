@@ -36,6 +36,7 @@
 	<xsl:param name="sort" select="doc('input:request')/request/parameters/parameter[name='sort']/value"/>
 	<xsl:param name="rows">20</xsl:param>
 	<xsl:param name="start" select="doc('input:request')/request/parameters/parameter[name='start']/value"/>
+	<xsl:param name="layout" select="doc('input:request')/request/parameters/parameter[name='layout']/value"/>
 	<xsl:variable name="request-uri" select="concat('http://localhost:', if (//config/server-port castable as xs:integer) then //config/server-port else '8080', substring-before(doc('input:request')/request/request-uri, 'results'))"/>
 	<xsl:variable name="collection-name" select="substring-before(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/')"/>
 	<xsl:variable name="role" select="/content/collections/collection[@name=$collection-name]/@role"/>
@@ -179,6 +180,7 @@
 			<xsl:if test="$lang='ar'">
 				<xsl:attribute name="style">direction: rtl;</xsl:attribute>
 			</xsl:if>
+			
 			<div class="row">
 				<div class="col-md-9 col-md-push-3">
 					<div class="container-fluid">					
@@ -199,7 +201,19 @@
 								
 								<xsl:call-template name="paging"/>
 								<xsl:call-template name="sort"/>
-								<xsl:apply-templates select="descendant::doc"/>
+								
+								<!-- use the $layout to choose between grid and default -->
+								<xsl:choose>
+									<xsl:when test="$layout = 'grid'">
+										<div class="row">
+											<xsl:apply-templates select="descendant::doc" mode="grid"/>
+										</div>										
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:apply-templates select="descendant::doc" mode="default"/>										
+									</xsl:otherwise>
+								</xsl:choose>
+								
 								<xsl:call-template name="paging"/>
 							</xsl:when>
 							<xsl:otherwise>

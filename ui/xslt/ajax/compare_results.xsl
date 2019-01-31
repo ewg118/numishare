@@ -52,7 +52,7 @@
 			<xsl:when test="$numFound &gt; 0">
 				<xsl:call-template name="paging"/>
 				<xsl:call-template name="sort"/>
-				<xsl:apply-templates select="descendant::doc"/>
+				<xsl:apply-templates select="descendant::doc" mode="compare"/>
 				<xsl:call-template name="paging"/>
 			</xsl:when>
 			<xsl:otherwise>
