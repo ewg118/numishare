@@ -276,12 +276,21 @@ select[name = "interval"],
 #map_results{
 	margin-left:20px;
 }
+.grid-doc {
+    height:240px;
+}
+.grid-doc img {
+    max-height:120px;
+}
 .thumbImage,
-.flickrthumb{
+.iiif-image{
 	margin:5px;
 }
-.thumbImage > img{
+.side-thumbnail {
 	max-width:120px;
+}
+.combined-thumbnail {
+    max-width:240px;
 }
 .quick_search {
 	width:250px;
