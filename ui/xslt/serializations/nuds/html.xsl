@@ -122,6 +122,21 @@
 						</xsl:if>
 					</object>
 				</xsl:when>
+				<xsl:when test="descendant::nuds:reference[@xlink:arcrole = 'nmo:hasTypeSeriesItem'][string(@xlink:href)]">
+					<object>
+						<xsl:copy-of select="descendant::nuds:typeDesc"/>
+					</object>
+					
+					<xsl:for-each select="descendant::nuds:reference[@xlink:arcrole = 'nmo:hasTypeSeriesItem'][string(@xlink:href)]">
+						<xsl:variable name="uri" select="@xlink:href"/>
+						
+						<object xlink:href="{$uri}">
+							<xsl:if test="doc-available(concat($uri, '.xml'))">
+								<xsl:copy-of select="document(concat($uri, '.xml'))/nuds:nuds"/>
+							</xsl:if>
+						</object>
+					</xsl:for-each>
+				</xsl:when>
 				<xsl:otherwise>
 					<object>
 						<xsl:copy-of select="descendant::nuds:typeDesc"/>
@@ -164,7 +179,7 @@
 				<xsl:for-each
 					select="
 						distinct-values(descendant::*[not(local-name() = 'typeDesc') and not(local-name() = 'reference')][contains(@xlink:href,
-						'nomisma.org')]/@xlink:href | $nudsGroup/descendant::*[not(local-name() = 'object') and not(local-name() = 'typeDesc')][contains(@xlink:href, 'nomisma.org')]/@xlink:href)">
+						'nomisma.org')]/@xlink:href | $nudsGroup/descendant::*[not(local-name() = 'object') and not(local-name() = 'typeDesc')][contains(@xlink:href, 'nomisma.org')]/@xlink:href | descendant::*[contains(@certainty, 'nomisma.org')]/@certainty | $nudsGroup/descendant::*[contains(@certainty, 'nomisma.org')]/@certainty)">
 					<xsl:value-of select="substring-after(., 'id/')"/>
 					<xsl:if test="not(position() = last())">
 						<xsl:text>|</xsl:text>
@@ -725,9 +740,20 @@
 				<div>
 					<xsl:apply-templates select="nuds:descMeta/nuds:physDesc[child::*]"/>
 					<!-- process $typeDesc differently -->
-					<xsl:apply-templates select="$nudsGroup//nuds:typeDesc">
-						<xsl:with-param name="typeDesc_resource" select="@xlink:href"/>
-					</xsl:apply-templates>
+					<xsl:choose>
+						<!-- apply-template only to NUDS-explicit typeDesc when there is one or more type references -->
+						<xsl:when test="nuds:descMeta/nuds:refDesc/nuds:reference[@xlink:href][@xlink:arcrole='nmo:hasTypeSeriesItem']">
+							<xsl:apply-templates select="$nudsGroup//object[not(@xlink:href)]/descendant::nuds:typeDesc"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:for-each select="$nudsGroup//nuds:typeDesc">
+								<xsl:variable name="typeDesc_resource" select="ancestor::object/@xlink:href"/>
+								<xsl:apply-templates select=".">
+									<xsl:with-param name="typeDesc_resource" select="$typeDesc_resource"/>
+								</xsl:apply-templates>
+							</xsl:for-each>
+						</xsl:otherwise>
+					</xsl:choose>
 					<xsl:apply-templates select="nuds:descMeta/nuds:undertypeDesc[child::*]"/>
 					<xsl:apply-templates select="nuds:descMeta/nuds:refDesc[child::*]"/>
 					<xsl:apply-templates select="nuds:descMeta/nuds:findspotDesc"/>
@@ -803,13 +829,24 @@
 			<xsl:otherwise>
 				<div class="col-md-6 {if($lang='ar') then 'pull-right' else ''}">
 					<xsl:apply-templates select="nuds:descMeta/nuds:physDesc[child::*]"/>
+					
 					<!-- process $typeDesc differently -->
-					<xsl:for-each select="$nudsGroup//nuds:typeDesc">
-						<xsl:variable name="typeDesc_resource" select="ancestor::object/@xlink:href"/>
-						<xsl:apply-templates select=".">
-							<xsl:with-param name="typeDesc_resource" select="$typeDesc_resource"/>
-						</xsl:apply-templates>
-					</xsl:for-each>
+					<xsl:choose>
+						<!-- apply-template only to NUDS-explicit typeDesc when there is one or more type references -->
+						<xsl:when test="nuds:descMeta/nuds:refDesc/nuds:reference[@xlink:href][@xlink:arcrole='nmo:hasTypeSeriesItem']">
+							<xsl:apply-templates select="$nudsGroup//object[not(@xlink:href)]/descendant::nuds:typeDesc"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:for-each select="$nudsGroup//nuds:typeDesc">
+								<xsl:variable name="typeDesc_resource" select="ancestor::object/@xlink:href"/>
+								<xsl:apply-templates select=".">
+									<xsl:with-param name="typeDesc_resource" select="$typeDesc_resource"/>
+								</xsl:apply-templates>
+							</xsl:for-each>
+						</xsl:otherwise>
+					</xsl:choose>
+					
+					
 					<xsl:apply-templates select="nuds:descMeta/nuds:undertypeDesc"/>
 					<xsl:apply-templates select="nuds:descMeta/nuds:findspotDesc"/>
 				</div>
@@ -818,7 +855,7 @@
 					<xsl:apply-templates select="nuds:descMeta/nuds:adminDesc[child::*]"/>
 					<xsl:apply-templates select="nuds:descMeta/nuds:subjectSet[child::*]"/>
 					<xsl:apply-templates select="nuds:descMeta/nuds:noteSet[child::*]"/>
-					<xsl:apply-templates select="nuds:control/nuds:rightsStmt"/>
+					<xsl:apply-templates select="nuds:control/nuds:rightsStmt[nuds:rights or nuds:license[@for = 'images'] or nuds:copyrightHolder]"/>
 				</div>
 			</xsl:otherwise>
 		</xsl:choose>
@@ -969,11 +1006,11 @@
 	</xsl:template>
 
 
-	<xsl:template match="nuds:rightsStmt[nuds:rights or nuds:license[@for = 'images']]">
+	<xsl:template match="nuds:rightsStmt">
 		<div class="metadata_section">
 			<h3>Rights</h3>
 			<ul>
-				<xsl:apply-templates select="nuds:license[@for = 'images'] | nuds:rights" mode="descMeta"/>
+				<xsl:apply-templates select="nuds:license[@for = 'images'] | nuds:rights | nuds:copyrightHolder" mode="descMeta"/>
 			</ul>
 		</div>
 	</xsl:template>
@@ -1095,7 +1132,7 @@
 					</xsl:if>
 				</xsl:when>
 			</xsl:choose>
-			<xsl:apply-templates select="$nudsGroup//nuds:typeDesc/*[local-name() = $side]" mode="physical"/>
+			<xsl:apply-templates select="$nudsGroup/object[1]/descendant::nuds:typeDesc/*[local-name() = $side]" mode="physical"/>
 		</div>
 
 	</xsl:template>

@@ -18,7 +18,12 @@
 			</xsl:when>
 		</xsl:choose>
 	</xsl:param>
-	<xsl:variable name="request-uri" select="concat('http://localhost:', if (//config/server-port castable as xs:integer) then //config/server-port else '8080', substring-before(doc('input:request')/request/request-uri, 'id/'))"/>
+	<xsl:variable name="request-uri"
+		select="
+			concat('http://localhost:', if (//config/server-port castable as xs:integer) then
+				//config/server-port
+			else
+				'8080', substring-before(doc('input:request')/request/request-uri, 'id/'))"/>
 
 	<!-- config variables -->
 	<xsl:variable name="url" select="/content/config/url"/>
@@ -30,7 +35,8 @@
 		<nudsGroup>
 			<xsl:variable name="type_series" as="element()*">
 				<list>
-					<xsl:for-each select="distinct-values(descendant::nuds:typeDesc[string(@xlink:href)]/substring-before(@xlink:href, 'id/'))">
+					<xsl:for-each
+						select="distinct-values((descendant::nuds:typeDesc[string(@xlink:href)] | descendant::nuds:reference[@xlink:arcrole = 'nmo:hasTypeSeriesItem'][string(@xlink:href)])/substring-before(@xlink:href, 'id/'))">
 						<type_series>
 							<xsl:value-of select="."/>
 						</type_series>
@@ -39,7 +45,8 @@
 			</xsl:variable>
 			<xsl:variable name="type_list" as="element()*">
 				<list>
-					<xsl:for-each select="distinct-values(descendant::nuds:typeDesc[string(@xlink:href)]/@xlink:href)">
+					<xsl:for-each
+						select="distinct-values(descendant::nuds:typeDesc[string(@xlink:href)]/@xlink:href | descendant::nuds:reference[@xlink:arcrole = 'nmo:hasTypeSeriesItem'][string(@xlink:href)]/@xlink:href)">
 						<type_series_item>
 							<xsl:value-of select="."/>
 						</type_series_item>
@@ -135,6 +142,7 @@
 					<xsl:when test="@xlink:role = 'mint'">
 						<!-- evaluate whether the mint is uncertain or not -->
 						<xsl:choose>
+							<xsl:when test="@certainty">uncertainMint</xsl:when>
 							<xsl:when test="$rdf//*[@rdf:about = $uri]/skos:related">uncertainMint</xsl:when>
 							<xsl:otherwise>mint</xsl:otherwise>
 						</xsl:choose>
@@ -143,7 +151,7 @@
 					<xsl:when test="self::nuds:subject">subject</xsl:when>
 				</xsl:choose>
 			</xsl:variable>
-			
+
 			<xsl:call-template name="generateFeature">
 				<xsl:with-param name="uri" select="$uri"/>
 				<xsl:with-param name="type" select="$type"/>
@@ -301,12 +309,14 @@
 								<!-- if the mint does not have coordinates, but does have skos:broader, exectue the region hierarchy API call to look for parent mint/region coordinates -->
 								<xsl:when test="$rdf//*[@rdf:about = $uri]/skos:broader">
 									<xsl:variable name="regions" as="node()*">
-										<xsl:copy-of select="document(concat('http://nomisma.org/apis/regionHierarchy?identifiers=', encode-for-uri(substring-after($uri, 'http://nomisma.org/id/'))))"/>
+										<xsl:copy-of
+											select="document(concat('http://nomisma.org/apis/regionHierarchy?identifiers=', encode-for-uri(substring-after($uri, 'http://nomisma.org/id/'))))"
+										/>
 									</xsl:variable>
-									
+
 									<xsl:if test="$regions//mint[1][@lat and @long]">
 										<xsl:value-of select="concat($regions//mint[1]/@long, ',', $regions//mint[1]/@lat)"/>
-									</xsl:if>									
+									</xsl:if>
 								</xsl:when>
 							</xsl:choose>
 						</xsl:when>

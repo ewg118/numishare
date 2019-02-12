@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<licenses>
+	<images>
+		<statement value="https://creativecommons.org/licenses/by/4.0/">Attribution 4.0 International (CC BY 4.0)</statement>
+		<statement value="https://creativecommons.org/licenses/by-sa/4.0/">Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)</statement>
+		<statement value="https://creativecommons.org/licenses/by-nd/4.0/">Attribution-NoDerivatives 4.0 International (CC BY-ND 4.0)</statement>
+		<statement value="https://creativecommons.org/licenses/by-nc/4.0/">Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)</statement>
+		<statement value="https://creativecommons.org/licenses/by-nc-sa/4.0/">Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)</statement>
+		<statement value="https://creativecommons.org/licenses/by-nc-nd/4.0/">Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)</statement>
+		<statement value="https://creativecommons.org/choose/mark/">Public Domain Mark</statement>
+	</images>
+	<data>
+		<statement value="http://opendatacommons.org/licenses/odbl/">Open Data Commons Open Database License (ODbL)</statement>
+		<statement value="http://opendatacommons.org/licenses/by/">Open Data Commons Attribution License</statement>
+		<statement value="http://opendatacommons.org/licenses/pddl/">Open Data Commons Public Domain Dedication and License (PDDL)</statement>
+	</data>
+</licenses>

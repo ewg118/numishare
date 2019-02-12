@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rights>
+	<statement value="http://rightsstatements.org/vocab/InC/1.0/">In Copyright</statement>
+	<statement value="http://rightsstatements.org/vocab/InC-OW-EU/1.0/">In Copyright - EU orphan work</statement>
+	<statement value="http://rightsstatements.org/vocab/InC-EDU/1.0/">In Copyright - Educational use permitted</statement>
+	<statement value="http://rightsstatements.org/vocab/InC-NC/1.0/">In Copyright - Non-commercial use permitted</statement>
+	<statement value="http://rightsstatements.org/vocab/InC-RUU/1.0/">In Copyright - Rights-holder(s) unlocatable or unidentifiable</statement>
+	<statement value="http://rightsstatements.org/vocab/NoC-CR/1.0/">No Copyright - Contractual restrictions</statement>
+	<statement value="http://rightsstatements.org/vocab/NoC-NC/1.0/">No Copyright - Non-commercial use only</statement>
+	<statement value="http://rightsstatements.org/vocab/NoC-OKLR/1.0/">No Copyright - Other known legal restrictions</statement>
+	<statement value="http://rightsstatements.org/vocab/NoC-US/1.0/">No Copyright - United States</statement>
+	<statement value="http://rightsstatements.org/vocab/CNE/1.0/">Copyright not evaluated</statement>
+	<statement value="http://rightsstatements.org/vocab/UND/1.0/">Copyright undetermined</statement>
+	<statement value="http://rightsstatements.org/vocab/NKC/1.0/">No known copyright</statement>
+</rights>

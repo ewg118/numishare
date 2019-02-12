@@ -5,7 +5,7 @@
 <xbl:xbl xmlns:nuds="http://nomisma.org/nuds" xmlns="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms"
 	xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xxforms="http://orbeon.org/oxf/xml/xforms" xmlns:fr="http://orbeon.org/oxf/xml/form-runner"
 	xmlns:xbl="http://www.w3.org/ns/xbl" xmlns:xxbl="http://orbeon.org/oxf/xml/xbl" xmlns:oxf="http://www.orbeon.com/oxf/processors"
-	xmlns:numishare="https://github.com/ewg118/numishare" xmlns:xlink="http://www.w3.org/1999/xlink">
+	xmlns:numishare="https://github.com/ewg118/numishare" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xi="http://www.w3.org/2001/XInclude">
 	<xbl:binding id="numishare-control" element="numishare|control">
 		<xbl:template>
 			<xforms:group xbl:attr="model context ref bind" xxbl:scope="outer">
@@ -177,19 +177,62 @@
 										<xforms:label>Copyright Holder</xforms:label>
 										<xforms:alert>Required</xforms:alert>
 									</xforms:input>
-								</div>
+								</div>								
 								<div>
-									<xforms:select1 ref="nuds:license/@xlink:href">
-										<xforms:label>License</xforms:label>
+									<xforms:select1 ref="nuds:rights/@xlink:href">
+										<xforms:label>Rights Statement</xforms:label>
 										<xforms:alert>Required</xforms:alert>
 										<xforms:item>
 											<xforms:label>Select License...</xforms:label>
 											<xforms:value></xforms:value>
 										</xforms:item>
-										<xforms:itemset nodeset="instance('license-list')//license">
-											<xforms:label ref="."></xforms:label>
-											<xforms:value ref="@href"></xforms:value>
+										<xforms:itemset nodeset="instance('rights-list')/statement">
+											<xforms:label ref="."/>
+											<xforms:value ref="@value"/>
 										</xforms:itemset>
+										
+										<xforms:action ev:event="xforms-value-changed">
+											<xforms:var name="uri" select="."/>
+											<xforms:setvalue ref="parent::node()" value="instance('rights-list')/statement[@value=$uri]"/>
+										</xforms:action>
+									</xforms:select1>									
+								</div>
+								<div>
+									<xforms:select1 ref="nuds:license[@for='images']/@xlink:href">
+										<xforms:label>Image License</xforms:label>
+										<xforms:alert>Required</xforms:alert>
+										<xforms:item>
+											<xforms:label>Select License...</xforms:label>
+											<xforms:value></xforms:value>
+										</xforms:item>
+										<xforms:itemset nodeset="instance('license-list')/images/statement">
+											<xforms:label ref="."/>
+											<xforms:value ref="@value"/>
+										</xforms:itemset>
+										
+										<xforms:action ev:event="xforms-value-changed">
+											<xforms:var name="uri" select="."/>
+											<xforms:setvalue ref="parent::node()" value="instance('license-list')/images/statement[@value=$uri]"/>
+										</xforms:action>
+									</xforms:select1>									
+								</div>
+								<div>
+									<xforms:select1 ref="nuds:license[@for='data']/@xlink:href">
+										<xforms:label>Data License</xforms:label>
+										<xforms:alert>Required</xforms:alert>
+										<xforms:item>
+											<xforms:label>Select License...</xforms:label>
+											<xforms:value></xforms:value>
+										</xforms:item>
+										<xforms:itemset nodeset="instance('license-list')/data/statement">
+											<xforms:label ref="."/>
+											<xforms:value ref="@value"/>
+										</xforms:itemset>
+										
+										<xforms:action ev:event="xforms-value-changed">
+											<xforms:var name="uri" select="."/>
+											<xforms:setvalue ref="parent::node()" value="instance('license-list')/data/statement[@value=$uri]"/>
+										</xforms:action>
 									</xforms:select1>									
 								</div>
 							</div>
@@ -215,11 +258,11 @@
 						</xforms:instance>
 						
 						<xforms:instance id="license-list">
-							<licenses xmlns="">
-								<license href="http://opendatacommons.org/licenses/odbl/">Open Data Commons Open Database License (ODbL)</license>
-								<license href="http://opendatacommons.org/licenses/by/">Open Data Commons Attribution License</license>
-								<license href="http://opendatacommons.org/licenses/pddl/">Open Data Commons Public Domain Dedication and License (PDDL)</license>
-							</licenses>
+							<xi:include href="../../instances/licenses.xml"/>
+						</xforms:instance>
+						
+						<xforms:instance id="rights-list">
+							<xi:include href="../../instances/rights.xml"/>
 						</xforms:instance>
 
 						<!-- select instances -->

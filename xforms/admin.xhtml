@@ -48,7 +48,7 @@
 			</xforms:instance>
 
 			<xforms:instance id="config-template" xxforms:exclude-result-prefixes="#all">
-				<config xmlns="" version="18.12">
+				<config xmlns="" version="19.02">
 					<title>Numishare</title>
 					<description>A short description of the collection.</description>
 					<logo/>
@@ -80,7 +80,9 @@
 						<copyrightHolder/>
 						<collection/>
 						<language>en</language>
-						<license>http://opendatacommons.org/licenses/odbl/</license>
+						<rights>http://rightsstatements.org/vocab/NoC-US/1.0/</rights>
+						<license for="data">http://opendatacommons.org/licenses/odbl/</license>
+						<license for="images">https://creativecommons.org/choose/mark/</license>
 						<owner/>
 						<repository/>
 					</template>
@@ -199,11 +201,11 @@
 			</xforms:instance>
 
 			<xforms:instance id="license-list">
-				<licenses xmlns="">
-					<license href="http://opendatacommons.org/licenses/odbl/">Open Data Commons Open Database License (ODbL)</license>
-					<license href="http://opendatacommons.org/licenses/by/">Open Data Commons Attribution License</license>
-					<license href="http://opendatacommons.org/licenses/pddl/">Open Data Commons Public Domain Dedication and License (PDDL)</license>
-				</licenses>
+				<xi:include href="instances/licenses.xml"/>
+			</xforms:instance>
+
+			<xforms:instance id="rights-list">
+				<xi:include href="instances/rights.xml"/>
 			</xforms:instance>
 
 			<xforms:instance id="request" xxforms:exclude-result-prefixes="#all">
@@ -407,6 +409,7 @@
 					<xforms:bind nodeset="copyrightHolder" required="true()"/>
 					<xforms:bind nodeset="language" required="true()"/>
 					<xforms:bind nodeset="license" required="true()"/>
+					<xforms:bind nodeset="rights" required="true()"/>
 				</xforms:bind>
 			</xforms:bind>
 
@@ -902,16 +905,44 @@
 														</xforms:select1>
 													</div>
 													<div>
-														<xforms:select1 ref="template/license">
-															<xforms:label>License</xforms:label>
+														<xforms:select1 ref="template/rights">
+															<xforms:label>Rights Statement</xforms:label>
 															<xforms:alert>Required</xforms:alert>
 															<xforms:item>
 																<xforms:label>Select License...</xforms:label>
 																<xforms:value/>
 															</xforms:item>
-															<xforms:itemset nodeset="instance('license-list')//license">
+															<xforms:itemset nodeset="instance('rights-list')/statement">
 																<xforms:label ref="."/>
-																<xforms:value ref="@href"/>
+																<xforms:value ref="@value"/>
+															</xforms:itemset>
+														</xforms:select1>
+													</div>
+													<div>
+														<xforms:select1 ref="template/license[@for='images']">
+															<xforms:label>Image License</xforms:label>
+															<xforms:alert>Required</xforms:alert>
+															<xforms:item>
+																<xforms:label>Select License...</xforms:label>
+																<xforms:value/>
+															</xforms:item>
+															<xforms:itemset nodeset="instance('license-list')/images/statement">
+																<xforms:label ref="."/>
+																<xforms:value ref="@value"/>
+															</xforms:itemset>
+														</xforms:select1>
+													</div>
+													<div>
+														<xforms:select1 ref="template/license[@for='data']">
+															<xforms:label>Data License</xforms:label>
+															<xforms:alert>Required</xforms:alert>
+															<xforms:item>
+																<xforms:label>Select License...</xforms:label>
+																<xforms:value/>
+															</xforms:item>
+															<xforms:itemset nodeset="instance('license-list')/data/statement">
+																<xforms:label ref="."/>
+																<xforms:value ref="@value"/>
 															</xforms:itemset>
 														</xforms:select1>
 													</div>

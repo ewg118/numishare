@@ -3,7 +3,8 @@
 	xmlns:datetime="http://exslt.org/dates-and-times" xmlns:nm="http://nomisma.org/id/" xmlns:nmo="http://nomisma.org/ontology#"
 	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:mets="http://www.loc.gov/METS/"
 	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:res="http://www.w3.org/2005/sparql-results#"
-	xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" exclude-result-prefixes="#all">
+	xmlns:numishare="https://github.com/ewg118/numishare" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+	exclude-result-prefixes="#all">
 
 	<xsl:template name="nuds">
 		<!-- create default document -->
@@ -22,7 +23,7 @@
 	<xsl:template match="nuds:nuds">
 		<xsl:param name="lang"/>
 		<xsl:variable name="id" select="nuds:control/nuds:recordId"/>
-		
+
 		<doc>
 			<field name="id">
 				<xsl:choose>
@@ -44,11 +45,11 @@
 			</xsl:if>
 
 			<xsl:if test="@recordType = 'conceptual'">
-				<!-- get the sort id for coin type records, used for ordering by type number -->				
+				<!-- get the sort id for coin type records, used for ordering by type number -->
 				<xsl:choose>
-					<xsl:when test="nuds:control/nuds:otherRecordId[@localType='sortId']">
+					<xsl:when test="nuds:control/nuds:otherRecordId[@localType = 'sortId']">
 						<field name="sortid">
-							<xsl:value-of select="nuds:control/nuds:otherRecordId[@localType='sortId']"/>
+							<xsl:value-of select="nuds:control/nuds:otherRecordId[@localType = 'sortId']"/>
 						</field>
 					</xsl:when>
 					<xsl:otherwise>
@@ -57,12 +58,22 @@
 						</xsl:call-template>
 					</xsl:otherwise>
 				</xsl:choose>
-				
+
 
 				<!-- index the type number for specific query -->
-				<xsl:call-template name="typeNumber">
-					<xsl:with-param name="collection-name" select="$collection-name"/>
-				</xsl:call-template>
+				<!-- if there is a typeNumber in the control: -->
+				<xsl:choose>
+					<xsl:when test="nuds:control/nuds:otherRecordId[@localType = 'typeNumber']">
+						<field name="typeNumber">
+							<xsl:value-of select="nuds:control/nuds:otherRecordId[@localType = 'typeNumber']"/>
+						</field>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:call-template name="typeNumber">
+							<xsl:with-param name="collection-name" select="$collection-name"/>
+						</xsl:call-template>
+					</xsl:otherwise>
+				</xsl:choose>
 			</xsl:if>
 
 			<field name="collection-name">
@@ -142,11 +153,11 @@
 						<xsl:copy-of select="document(concat($request-uri, '/get_subtypes?identifiers=', $id))/*"/>
 					</xsl:if>
 				</xsl:variable>
-				
+
 				<xsl:if
 					test="
-					count($subtypes//subtype) &gt; 0 and (not(descendant::nuds:typeDesc/nuds:obverse/nuds:type) or not(descendant::nuds:typeDesc/nuds:reverse/nuds:type) or
-					not(descendant::nuds:typeDesc/nuds:obverse/nuds:legend) or not(descendant::nuds:typeDesc/nuds:reverse/nuds:legend) or not(descendant::nuds:typeDesc/nuds:obverse/nuds:symbol) or not(descendant::nuds:typeDesc/nuds:reverse/nuds:symbol))">
+						count($subtypes//subtype) &gt; 0 and (not(descendant::nuds:typeDesc/nuds:obverse/nuds:type) or not(descendant::nuds:typeDesc/nuds:reverse/nuds:type) or
+						not(descendant::nuds:typeDesc/nuds:obverse/nuds:legend) or not(descendant::nuds:typeDesc/nuds:reverse/nuds:legend) or not(descendant::nuds:typeDesc/nuds:obverse/nuds:symbol) or not(descendant::nuds:typeDesc/nuds:reverse/nuds:symbol))">
 					<xsl:variable name="typeDesc" as="element()*">
 						<xsl:copy-of select="descendant::nuds:typeDesc"/>
 					</xsl:variable>
@@ -157,24 +168,24 @@
 							<xsl:variable name="pieces" as="item()*">
 								<xsl:for-each
 									select="
-									distinct-values($subtypes//subtype/descendant::*[local-name() = $side]/nuds:type/nuds:description[if (string($lang)) then
-									@xml:lang = $lang
-									else
-									@xml:lang = 'en'])">
+										distinct-values($subtypes//subtype/descendant::*[local-name() = $side]/nuds:type/nuds:description[if (string($lang)) then
+											@xml:lang = $lang
+										else
+											@xml:lang = 'en'])">
 									<xsl:value-of select="."/>
 								</xsl:for-each>
 							</xsl:variable>
-							
+
 							<field name="{$sideAbbr}_type_display">
 								<xsl:value-of select="string-join($pieces, ' | ')"/>
 							</field>
-							
+
 							<xsl:for-each select="$pieces">
 								<field name="{$sideAbbr}_type_text">
 									<xsl:value-of select="."/>
 								</field>
 							</xsl:for-each>
-							
+
 						</xsl:if>
 						<xsl:if test="not($typeDesc/*[local-name() = $side]/nuds:legend) and count($subtypes//subtype) &gt; 0">
 							<xsl:variable name="pieces" as="item()*">
@@ -182,49 +193,49 @@
 									<xsl:value-of select="."/>
 								</xsl:for-each>
 							</xsl:variable>
-							
+
 							<field name="{$sideAbbr}_leg_display">
 								<xsl:value-of select="string-join($pieces, ' | ')"/>
 							</field>
-							
+
 							<xsl:for-each select="$pieces">
 								<field name="{$sideAbbr}_leg_text">
 									<xsl:value-of select="."/>
 								</field>
 							</xsl:for-each>
 						</xsl:if>
-						
+
 						<!-- symbols -->
 						<xsl:if test="not($typeDesc/*[local-name() = $side]/nuds:symbol) and count($subtypes//subtype) &gt; 0">
 							<xsl:variable name="subtype-symbols" as="element()*">
 								<symbols>
 									<xsl:for-each select="$subtypes/descendant::nuds:symbol[@xlink:href]">
 										<xsl:variable name="href" select="@xlink:href"/>
-										
+
 										<xsl:if test="doc-available(concat($href, '.rdf'))">
 											<xsl:copy-of select="document(concat($href, '.rdf'))"/>
 										</xsl:if>
 									</xsl:for-each>
 								</symbols>
 							</xsl:variable>
-							
+
 							<xsl:apply-templates select="$subtypes//subtype/descendant::*[local-name() = $side]/nuds:symbol">
 								<xsl:with-param name="side" select="substring($side, 1, 3)"/>
 								<xsl:with-param name="symbols" select="$subtype-symbols"/>
 							</xsl:apply-templates>
 						</xsl:if>
 					</xsl:for-each>
-				</xsl:if>				
-				
+				</xsl:if>
+
 				<!-- subtype fulltext -->
 				<xsl:if test="count($subtypes//subtype) &gt; 0">
-					<field name="fulltext">					
+					<field name="fulltext">
 						<xsl:for-each select="$subtypes/descendant::nuds:descMeta/descendant-or-self::text()">
 							<xsl:value-of select="normalize-space(.)"/>
 							<xsl:text> </xsl:text>
 						</xsl:for-each>
 					</field>
-				</xsl:if>				
+				</xsl:if>
 			</xsl:if>
 
 			<xsl:choose>
@@ -246,7 +257,7 @@
 					<xsl:value-of select="normalize-space(.)"/>
 					<xsl:text> </xsl:text>
 				</xsl:for-each>
-				
+
 				<!-- get all labels -->
 				<xsl:if test="string($lang)">
 					<xsl:call-template name="alternativeLabels">
@@ -347,31 +358,8 @@
 		<xsl:variable name="recordType">
 			<xsl:value-of select="parent::nuds:nuds/@recordType"/>
 		</xsl:variable>
-		<xsl:variable name="nuds:typeDesc_resource">
-			<xsl:if test="string(nuds:typeDesc/@xlink:href)">
-				<xsl:value-of select="nuds:typeDesc/@xlink:href"/>
-			</xsl:if>
-		</xsl:variable>
-		<xsl:variable name="typeDesc" as="element()*">
-			<xsl:choose>
-				<xsl:when test="string(nuds:typeDesc/@xlink:href)">
-					<xsl:choose>
-						<xsl:when test="string($nuds:typeDesc_resource)">
-							<xsl:copy-of select="$nudsGroup//object[@xlink:href = $nuds:typeDesc_resource]/nuds:nuds/nuds:descMeta/nuds:typeDesc"/>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:copy-of select="/content/nuds:nuds/nuds:descMeta/nuds:typeDesc"/>
-						</xsl:otherwise>
-					</xsl:choose>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:copy-of select="nuds:typeDesc"/>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:variable>
 
 		<xsl:call-template name="get_coin_sort_fields">
-			<xsl:with-param name="typeDesc" select="$typeDesc"/>
 			<xsl:with-param name="lang" select="$lang"/>
 		</xsl:call-template>
 
@@ -412,10 +400,51 @@
 
 		<xsl:apply-templates select="nuds:subjectSet"/>
 		<xsl:apply-templates select="nuds:physDesc"/>
-		<xsl:apply-templates select="$typeDesc">
+
+		<xsl:apply-templates select="$nudsGroup/descendant::nuds:typeDesc">
 			<xsl:with-param name="recordType" select="$recordType"/>
 			<xsl:with-param name="lang" select="$lang"/>
 		</xsl:apply-templates>
+
+		<!-- evaluate dates -->
+		<xsl:variable name="dates" as="element()*">
+			<dates>
+				<xsl:for-each select="distinct-values($nudsGroup/descendant::*/@standardDate)">
+					<xsl:sort order="ascending" data-type="number"/>
+					<xsl:if test="number(.)">
+						<date>
+							<xsl:value-of select="."/>
+						</date>
+					</xsl:if>
+				</xsl:for-each>
+			</dates>
+		</xsl:variable>
+
+		<xsl:for-each select="$dates//date">
+			<!-- add min and max, even if they are integers (for ISO dates) -->
+			<xsl:if test="position() = 1">
+				<field name="year_minint">
+					<xsl:value-of select="number(.)"/>
+				</field>
+			</xsl:if>
+			<xsl:if test="position() = last()">
+				<field name="year_maxint">
+					<xsl:value-of select="number(.)"/>
+				</field>
+			</xsl:if>
+
+			<!-- parse all dates -->
+			<xsl:call-template name="get_date_hierarchy">
+				<xsl:with-param name="standardDate" select="."/>
+			</xsl:call-template>
+		</xsl:for-each>
+
+		<field name="date_display">
+			<xsl:value-of select="numishare:normalizeDate($dates//date[1])"/>
+			<xsl:text> - </xsl:text>
+			<xsl:value-of select="numishare:normalizeDate($dates//date[last()])"/>
+		</field>
+
 		<xsl:apply-templates select="nuds:adminDesc"/>
 		<xsl:apply-templates select="nuds:refDesc"/>
 		<xsl:apply-templates select="nuds:findspotDesc"/>

@@ -15,17 +15,43 @@
 		<xsl:param name="recordType"/>
 		<xsl:param name="lang"/>
 
-		<xsl:apply-templates select="nuds:date | nuds:dateRange">
-			<xsl:with-param name="recordType" select="$recordType"/>
-		</xsl:apply-templates>
+		<!-- these templates are only applied on hoard records -->
+		<xsl:if test="$recordType = 'hoard'">
+			<xsl:apply-templates select="nuds:date | nuds:dateRange"/>
+		</xsl:if>
 
 		<!-- AH dates -->
 		<xsl:apply-templates select="nuds:dateOnObject[@calendar = 'ah']"/>
 
-		<xsl:apply-templates select="nuds:obverse | nuds:reverse">
-			<xsl:with-param name="recordType" select="$recordType"/>
-			<xsl:with-param name="lang" select="$lang"/>
-		</xsl:apply-templates>
+		<xsl:choose>
+			<xsl:when test="$recordType = 'physical'">
+				<xsl:choose>
+					<xsl:when test="position() = 1">
+						<!-- only the primary typeDesc of the physical object will have include a displaying legend and type description string -->
+						<xsl:apply-templates select="nuds:obverse | nuds:reverse">
+							<xsl:with-param name="recordType" select="$recordType"/>
+							<xsl:with-param name="lang" select="$lang"/>
+							<xsl:with-param name="primary" select="true()"/>
+						</xsl:apply-templates>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:apply-templates select="nuds:obverse | nuds:reverse">
+							<xsl:with-param name="recordType" select="$recordType"/>
+							<xsl:with-param name="lang" select="$lang"/>
+						</xsl:apply-templates>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:apply-templates select="nuds:obverse | nuds:reverse">
+					<xsl:with-param name="recordType" select="$recordType"/>
+					<xsl:with-param name="lang" select="$lang"/>
+				</xsl:apply-templates>
+			</xsl:otherwise>
+		</xsl:choose>
+
+
+
 
 		<!-- *********** FACETS ************** -->
 
@@ -41,7 +67,7 @@
 				string(@xlink:href)] | descendant::nuds:famname[string(.) or string(@xlink:href)] | descendant::nuds:periodname[string(.) or string(@xlink:href)]">
 			<xsl:with-param name="lang" select="$lang"/>
 		</xsl:apply-templates>
-		
+
 		<xsl:apply-templates select="nuds:typeSeries"/>
 
 	</xsl:template>
@@ -49,6 +75,7 @@
 	<xsl:template match="nuds:obverse | nuds:reverse">
 		<xsl:param name="recordType"/>
 		<xsl:param name="lang"/>
+		<xsl:param name="primary"/>
 
 		<xsl:variable name="side" select="substring(local-name(), 1, 3)"/>
 
@@ -56,39 +83,68 @@
 		<xsl:if test="nuds:type/nuds:description">
 			<xsl:choose>
 				<xsl:when test="nuds:type/nuds:description[@xml:lang = $lang]">
-					<xsl:if test="$recordType != 'hoard'">
-						<field name="{$side}_type_display">
-							<xsl:value-of select="normalize-space(nuds:type/nuds:description[@xml:lang = $lang])"/>
-						</field>
-					</xsl:if>
+					<xsl:choose>
+						<xsl:when test="$recordType = 'physical'">
+							<xsl:if test="$primary = true()">
+								<field name="{$side}_type_display">
+									<xsl:value-of select="normalize-space(nuds:type/nuds:description[@xml:lang = $lang])"/>
+								</field>
+							</xsl:if>
+						</xsl:when>
+						<xsl:when test="$recordType = 'conceptual'">
+							<field name="{$side}_type_display">
+								<xsl:value-of select="normalize-space(nuds:type/nuds:description[@xml:lang = $lang])"/>
+							</field>
+						</xsl:when>
+					</xsl:choose>
 					<field name="{$side}_type_text">
 						<xsl:value-of select="normalize-space(nuds:type/nuds:description[@xml:lang = $lang])"/>
 					</field>
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:choose>
-						<xsl:when test="nuds:type/nuds:description[@xml:lang = 'en']">							
-							<xsl:if test="$recordType != 'hoard'">
-								<field name="{$side}_type_display">
-									<xsl:value-of select="normalize-space(nuds:type/nuds:description[@xml:lang = 'en'])"/>
-								</field>
-							</xsl:if>
+						<xsl:when test="nuds:type/nuds:description[@xml:lang = 'en']">
+							<xsl:choose>
+								<xsl:when test="$recordType = 'physical'">
+									<xsl:if test="$primary = true()">
+										<field name="{$side}_type_display">
+											<xsl:value-of select="normalize-space(nuds:type/nuds:description[@xml:lang = $lang])"/>
+										</field>
+									</xsl:if>
+								</xsl:when>
+								<xsl:when test="$recordType = 'conceptual'">
+									<field name="{$side}_type_display">
+										<xsl:value-of select="normalize-space(nuds:type/nuds:description[@xml:lang = $lang])"/>
+									</field>
+								</xsl:when>
+							</xsl:choose>
 							<field name="{$side}_type_text">
 								<xsl:value-of select="normalize-space(nuds:type/nuds:description[@xml:lang = 'en'])"/>
 							</field>
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:if test="$recordType != 'hoard'">
-								<field name="{$side}_type_display">
-									<xsl:value-of select="normalize-space(nuds:type/nuds:description[1])"/>
-								</field>
+								<xsl:choose>
+									<xsl:when test="$recordType = 'physical'">
+										<xsl:if test="$primary = true()">
+											<field name="{$side}_type_display">
+												<xsl:value-of select="normalize-space(nuds:type/nuds:description[@xml:lang = $lang])"/>
+											</field>
+										</xsl:if>
+									</xsl:when>
+									<xsl:when test="$recordType = 'conceptual'">
+										<field name="{$side}_type_display">
+											<xsl:value-of select="normalize-space(nuds:type/nuds:description[@xml:lang = $lang])"/>
+										</field>
+									</xsl:when>
+								</xsl:choose>
 							</xsl:if>
 							<field name="{$side}_type_text">
 								<xsl:value-of select="normalize-space(nuds:type/nuds:description[1])"/>
 							</field>
 						</xsl:otherwise>
 					</xsl:choose>
-					
+
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:if>
@@ -96,10 +152,11 @@
 		<xsl:apply-templates select="nuds:legend">
 			<xsl:with-param name="recordType" select="$recordType"/>
 			<xsl:with-param name="side" select="$side"/>
+			<xsl:with-param name="primary" select="$primary"/>
 		</xsl:apply-templates>
 
 		<!-- only index symbols as facets for coin type projects -->
-		<xsl:if test="$recordType = 'conceptual'">			
+		<xsl:if test="$recordType = 'conceptual'">
 			<xsl:apply-templates select="nuds:symbol">
 				<xsl:with-param name="side" select="$side"/>
 				<xsl:with-param name="symbols" select="$symbols"/>
@@ -120,27 +177,39 @@
 			</xsl:for-each>
 		</xsl:if>-->
 	</xsl:template>
-	
+
 	<xsl:template match="nuds:legend">
 		<xsl:param name="recordType"/>
 		<xsl:param name="side"/>
-		
+		<xsl:param name="primary"/>
+
 		<!-- only include legend if there's a string (ignore gaps) -->
-		
+
 		<xsl:choose>
 			<xsl:when test="child::tei:div[@type = 'edition']">
 				<xsl:apply-templates select="tei:div[@type = 'edition']">
 					<xsl:with-param name="side" select="$side"/>
 					<xsl:with-param name="recordType" select="$recordType"/>
+					<xsl:with-param name="primary" select="$primary"/>
 				</xsl:apply-templates>
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:if test="string(.)">
-					<xsl:if test="$recordType != 'hoard'">
-						<field name="{$side}_leg_display">
-							<xsl:value-of select="normalize-space(.)"/>
-						</field>
-					</xsl:if>
+					<xsl:choose>
+						<xsl:when test="$recordType = 'physical'">
+							<xsl:if test="$primary = true()">
+								<field name="{$side}_leg_display">
+									<xsl:value-of select="normalize-space(.)"/>
+								</field>
+							</xsl:if>
+						</xsl:when>
+						<xsl:when test="$recordType = 'conceptual'">
+							<field name="{$side}_leg_display">
+								<xsl:value-of select="normalize-space(.)"/>
+							</field>
+						</xsl:when>
+					</xsl:choose>
+
 					<field name="{$side}_leg_text">
 						<xsl:value-of select="normalize-space(.)"/>
 					</field>
@@ -151,17 +220,17 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
-	
+
 	<xsl:template match="nuds:symbol">
 		<xsl:param name="side"/>
 		<xsl:param name="symbols"/>
-		
+
 		<xsl:variable name="symbolType" select="
-			if (@localType) then
-			@localType
-			else
-			'symbol'"/>
-		
+				if (@localType) then
+					@localType
+				else
+					'symbol'"/>
+
 		<xsl:choose>
 			<xsl:when test="@position">
 				<xsl:choose>
@@ -442,7 +511,7 @@
 					<xsl:variable name="href" select="@xlink:href"/>
 
 					<xsl:variable name="coordinates" as="node()*">
-						<coordinates> 
+						<coordinates>
 							<xsl:choose>
 								<!-- when there is a geo:SpatialThing associated with the mint that contains a lat and long: -->
 								<xsl:when test="$rdf//*[@rdf:about = concat($href, '#this')]/geo:long and $rdf//*[@rdf:about = concat($href, '#this')]/geo:lat">
@@ -457,12 +526,12 @@
 								<xsl:when test="$rdf//*[@rdf:about = $href]/skos:related"/>
 								<!-- if the mint does not have coordinates, but does have skos:broader, exectue the region hierarchy API call to look for parent mint/region coordinates -->
 								<xsl:when test="$rdf//*[@rdf:about = $href]/skos:broader">
-									<xsl:if test="$regions//hierarchy[@uri=$href]/mint[1][@lat and @long]">
+									<xsl:if test="$regions//hierarchy[@uri = $href]/mint[1][@lat and @long]">
 										<lat>
-											<xsl:value-of select="$regions//hierarchy[@uri=$href]/mint[1]/@lat"/>
+											<xsl:value-of select="$regions//hierarchy[@uri = $href]/mint[1]/@lat"/>
 										</lat>
 										<long>
-											<xsl:value-of select="$regions//hierarchy[@uri=$href]/mint[1]/@long"/>
+											<xsl:value-of select="$regions//hierarchy[@uri = $href]/mint[1]/@long"/>
 										</long>
 									</xsl:if>
 								</xsl:when>
@@ -491,15 +560,11 @@
 							<xsl:text>|</xsl:text>
 							<xsl:value-of select="@xlink:href"/>
 							<xsl:text>|</xsl:text>
-							<xsl:value-of
-								select="concat($coordinates/long, ',', $coordinates/lat)"
-							/>
+							<xsl:value-of select="concat($coordinates/long, ',', $coordinates/lat)"/>
 						</field>
 
 						<field name="{$role}_loc">
-							<xsl:value-of
-								select="concat($coordinates/lat, ',', $coordinates/long)"
-							/>
+							<xsl:value-of select="concat($coordinates/lat, ',', $coordinates/long)"/>
 						</field>
 					</xsl:if>
 
@@ -582,13 +647,24 @@
 	<xsl:template match="tei:div[@type = 'edition']">
 		<xsl:param name="side"/>
 		<xsl:param name="recordType"/>
+		<xsl:param name="primary"/>
 
-		<xsl:if test="string(.)">			
-			<xsl:if test="$recordType != 'hoard'">
-				<field name="{$side}_leg_display">					
-					<xsl:value-of select="string-join(tei:div, ' ')"/>
-				</field>
-			</xsl:if>
+		<xsl:if test="string(.)">
+			<xsl:choose>
+				<xsl:when test="$recordType = 'physical'">
+					<xsl:if test="$primary = true()">
+						<field name="{$side}_leg_display">
+							<xsl:value-of select="string-join(tei:div, ' ')"/>
+						</field>
+					</xsl:if>
+				</xsl:when>
+				<xsl:when test="$recordType = 'conceptual'">
+					<field name="{$side}_leg_display">
+						<xsl:value-of select="string-join(tei:div, ' ')"/>
+					</field>
+				</xsl:when>
+			</xsl:choose>
+
 			<field name="{$side}_leg_text">
 				<xsl:value-of select="string-join(tei:div, ' ')"/>
 			</field>
@@ -634,47 +710,26 @@
 	</xsl:template>
 
 	<xsl:template match="nuds:date">
-		<xsl:param name="recordType"/>
-
-		<xsl:if test="$recordType != 'hoard'">
-			<field name="date_display">
-				<xsl:value-of select="normalize-space(.)"/>
-			</field>
-		</xsl:if>
-
 		<xsl:for-each select="@standardDate">
 			<xsl:call-template name="get_date_hierarchy">
 				<xsl:with-param name="standardDate" select="."/>
-				<xsl:with-param name="recordType" select="$recordType"/>
 			</xsl:call-template>
 		</xsl:for-each>
 	</xsl:template>
 
 	<xsl:template match="nuds:dateRange">
-		<xsl:param name="recordType"/>
-
-		<xsl:if test="$recordType != 'hoard'">
-			<field name="date_display">
-				<xsl:value-of select="normalize-space(nuds:fromDate)"/>
-				<xsl:text> - </xsl:text>
-				<xsl:value-of select="normalize-space(nuds:toDate)"/>
-			</field>
-		</xsl:if>
-
 		<xsl:for-each select="*/@standardDate">
 			<xsl:call-template name="get_date_hierarchy">
 				<xsl:with-param name="standardDate" select="."/>
-				<xsl:with-param name="recordType" select="$recordType"/>
 			</xsl:call-template>
 		</xsl:for-each>
 	</xsl:template>
 
 	<xsl:template name="get_date_hierarchy">
 		<xsl:param name="standardDate"/>
-		<xsl:param name="recordType"/>
 
 		<xsl:if test="number(.)">
-			<xsl:variable name="year_string" select="string(abs(number(.)))"/>
+			<!--<xsl:variable name="year_string" select="string(abs(number(.)))"/>
 			<xsl:variable name="century" select="
 					if (number(.) &gt; 0) then
 						ceiling(number(.) div 100)
@@ -690,26 +745,11 @@
 			</xsl:if>
 			<field name="decade_num">
 				<xsl:value-of select="$decade"/>
-			</field>
-			<xsl:if test="number(.)">
-				<field name="year_num">
-					<xsl:value-of select="number(.)"/>
-				</field>
-			</xsl:if>
+			</field>-->
 
-			<!-- add min and max, even if they are integers (for ISO dates) -->
-			<xsl:if test="$recordType != 'hoard'">
-				<xsl:if test="position() = 1">
-					<field name="year_minint">
-						<xsl:value-of select="number(.)"/>
-					</field>
-				</xsl:if>
-				<xsl:if test="position() = last()">
-					<field name="year_maxint">
-						<xsl:value-of select="number(.)"/>
-					</field>
-				</xsl:if>
-			</xsl:if>
+			<field name="year_num">
+				<xsl:value-of select="number(.)"/>
+			</field>
 		</xsl:if>
 	</xsl:template>
 
@@ -745,8 +785,8 @@
 	</xsl:template>
 
 	<xsl:template name="get_coin_sort_fields">
-		<xsl:param name="typeDesc"/>
 		<xsl:param name="lang"/>
+
 		<!-- sortable fields -->
 		<xsl:variable name="sort-fields">
 			<xsl:text>artist,authority,deity,denomination,dynasty,issuer,maker,manufacture,material,mint,portrait,region</xsl:text>
@@ -756,7 +796,7 @@
 			<xsl:variable name="field" select="."/>
 			<!-- for each sortable field which is a multiValued field in Solr (a facet), grab the min and max values -->
 			<xsl:for-each
-				select="$typeDesc/descendant::*[local-name() = $field and local-name() != 'authority'] | $typeDesc/descendant::*[@xlink:role = $field]">
+				select="$nudsGroup/descendant::nuds:typeDesc/descendant::*[local-name() = $field and local-name() != 'authority'] | $nudsGroup/descendant::nuds:typeDesc/descendant::*[@xlink:role = $field]">
 				<xsl:sort order="ascending" select="
 						if (@xlink:href) then
 							@xlink:href
@@ -850,12 +890,12 @@
 			<xsl:when test="$collection-name = 'pco'">
 				<field name="typeNumber">
 					<xsl:value-of select="tokenize(nuds:control/nuds:recordId, '\.')[last()]"/>
-				</field>				
+				</field>
 			</xsl:when>
 			<xsl:when test="$collection-name = 'sco'">
 				<field name="typeNumber">
 					<xsl:value-of select="substring-after(nuds:control/nuds:recordId, 'sc.1.')"/>
-				</field>				
+				</field>
 			</xsl:when>
 		</xsl:choose>
 

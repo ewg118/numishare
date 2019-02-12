@@ -144,6 +144,33 @@
 							<xsl:when test="string($lang) and contains($href, 'nomisma.org')">
 								<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about = $href], $lang)"/>
 							</xsl:when>
+							<xsl:when test="self::*:reference and string(@xlink:href) and @xlink:arcrole='nmo:hasTypeSeriesItem'">
+								<!-- extract the title from $nudsGroup -->
+								<xsl:variable name="uri" select="@xlink:href"/>
+								
+								<xsl:choose>
+									<xsl:when test="$lang">
+										<xsl:choose>
+											<xsl:when test="$nudsGroup/object[@xlink:href=$uri]//nuds:title[@xml:lang = $lang]">
+												<xsl:value-of select="$nudsGroup/object[@xlink:href=$uri]//nuds:title[@xml:lang = $lang]"/>
+											</xsl:when>
+											<xsl:otherwise>
+												<xsl:choose>
+													<xsl:when test="$nudsGroup/object[@xlink:href=$uri]//nuds:title[@xml:lang = 'en']">
+														<xsl:value-of select="$nudsGroup/object[@xlink:href=$uri]//nuds:title[@xml:lang = 'en']"/>
+													</xsl:when>
+													<xsl:otherwise>
+														<xsl:value-of select="$nudsGroup/object[@xlink:href=$uri]//nuds:title[1]"/>
+													</xsl:otherwise>
+												</xsl:choose>
+											</xsl:otherwise>
+										</xsl:choose>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:value-of select="normalize-space(.)"/>
+									</xsl:otherwise>
+								</xsl:choose>
+							</xsl:when>
 							<xsl:when test="contains($href, 'geonames.org') and not(string(.))">
 								<xsl:variable name="geonameId" select="tokenize($href, '/')[4]"/>
 								<xsl:choose>
@@ -477,6 +504,7 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
+	
 	<xsl:template match="*[local-name() = 'objectXMLWrap']">
 		<xsl:variable name="label">
 			<xsl:choose>

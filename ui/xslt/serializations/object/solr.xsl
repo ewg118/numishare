@@ -29,7 +29,7 @@
 		<nudsGroup>
 			<xsl:variable name="type_series" as="element()*">
 				<list>
-					<xsl:for-each select="distinct-values(descendant::nuds:typeDesc[string(@xlink:href)]/substring-before(@xlink:href, 'id/'))">
+					<xsl:for-each select="distinct-values((descendant::nuds:typeDesc[string(@xlink:href)]|descendant::nuds:reference[@xlink:arcrole='nmo:hasTypeSeriesItem'][string(@xlink:href)])/substring-before(@xlink:href, 'id/'))">
 						<type_series>
 							<xsl:value-of select="."/>
 						</type_series>
@@ -38,13 +38,20 @@
 			</xsl:variable>
 			<xsl:variable name="type_list" as="element()*">
 				<list>
-					<xsl:for-each select="distinct-values(descendant::nuds:typeDesc[string(@xlink:href)]/@xlink:href)">
+					<xsl:for-each select="distinct-values(descendant::nuds:typeDesc[string(@xlink:href)]/@xlink:href|descendant::nuds:reference[@xlink:arcrole='nmo:hasTypeSeriesItem'][string(@xlink:href)]/@xlink:href)">
 						<type_series_item>
 							<xsl:value-of select="."/>
 						</type_series_item>
 					</xsl:for-each>
 				</list>
 			</xsl:variable>
+			
+			<!-- make explicit typeDesc the primary, for evaluating legend and type description -->
+			<xsl:for-each select="descendant::nuds:typeDesc[not(string(@xlink:href))]">
+				<object>
+					<xsl:copy-of select="."/>
+				</object>
+			</xsl:for-each>
 
 			<xsl:for-each select="$type_series//type_series">
 				<xsl:variable name="type_series_uri" select="."/>
@@ -65,11 +72,6 @@
 						</object>
 					</xsl:for-each>
 				</xsl:if>
-			</xsl:for-each>
-			<xsl:for-each select="descendant::nuds:typeDesc[not(string(@xlink:href))]">
-				<object>
-					<xsl:copy-of select="."/>
-				</object>
 			</xsl:for-each>
 		</nudsGroup>
 	</xsl:variable>
