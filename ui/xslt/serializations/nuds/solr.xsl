@@ -2,9 +2,9 @@
 <xsl:stylesheet version="2.0" xmlns:nuds="http://nomisma.org/nuds" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:datetime="http://exslt.org/dates-and-times" xmlns:nm="http://nomisma.org/id/" xmlns:nmo="http://nomisma.org/ontology#"
 	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:mets="http://www.loc.gov/METS/"
-	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:res="http://www.w3.org/2005/sparql-results#"
-	xmlns:numishare="https://github.com/ewg118/numishare" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-	exclude-result-prefixes="#all">
+	xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml"
+	xmlns:res="http://www.w3.org/2005/sparql-results#" xmlns:numishare="https://github.com/ewg118/numishare"
+	xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" exclude-result-prefixes="#all">
 
 	<xsl:template name="nuds">
 		<!-- create default document -->
@@ -114,6 +114,11 @@
 
 			<xsl:apply-templates select="nuds:control/nuds:rightsStmt"/>
 
+			<!-- if there are any uncertain type attributions, flag this in a solr field -->
+			<xsl:if test="descendant::nuds:reference[@xlink:arcrole = 'nmo:hasTypeSeriesItem'][string(@xlink:href)][@certainty]">
+				<field name="typeUncertain">true</field>
+			</xsl:if>
+
 			<!-- insert coin type facets and URIs -->
 			<xsl:for-each
 				select="descendant::nuds:typeDesc[string(@xlink:href)] | descendant::nuds:undertypeDesc[string(@xlink:href)] | descendant::nuds:reference[@xlink:arcrole = 'nmo:hasTypeSeriesItem'][string(@xlink:href)]">
@@ -124,7 +129,25 @@
 				<field name="coinType_facet">
 					<xsl:choose>
 						<xsl:when test="local-name() = 'reference'">
-							<xsl:value-of select="."/>
+							<xsl:choose>
+								<xsl:when test="@xlink:title">
+									<xsl:value-of select="@xlink:title"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:choose>
+										<xsl:when test="tei:title">
+											<xsl:value-of select="normalize-space(tei:title)"/>
+											<xsl:if test="string(tei:idno)">
+												<xsl:text> </xsl:text>
+												<xsl:value-of select="normalize-space(tei:idno)"/>
+											</xsl:if>
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:value-of select="normalize-space(.)"/>
+										</xsl:otherwise>
+									</xsl:choose>
+								</xsl:otherwise>
+							</xsl:choose>
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:value-of select="$nudsGroup//object[@xlink:href = $href]/descendant::nuds:title"/>

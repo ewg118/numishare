@@ -25,22 +25,49 @@
 								</xforms:label>
 							</xforms:trigger>
 							<div class="trigger_container">
-								<xforms:group ref=".[count(nuds:identifier) = 0]">
+								<xforms:group ref=".[count(tei:idno) = 0]">
 									<xforms:trigger appearance="minimal">
 										<xforms:label>
 											<span class="glyphicon glyphicon-plus"/>Identifier</xforms:label>
-										<xforms:insert ev:event="DOMActivate" context="." origin="instance('identifier-template')"
-											nodeset="./child::node()[last()]"/>
+										<xforms:action ev:event="DOMActivate">
+											<!-- if there's no child element within the nuds:reference, then move the text() node into a tei:title as well -->
+											<xforms:action if=".[not(child::*)]">
+												<xforms:var name="title" select="normalize-space(text())"/>
+												<xforms:setvalue ref="."/>
+												<xforms:insert context="." origin="instance('title-template')"/>
+												<xforms:setvalue ref="tei:title" value="$title"/>
+											</xforms:action>
+
+											<xforms:insert context="." origin="instance('identifier-template')" nodeset="./child::node()[last()]"/>
+										</xforms:action>
 									</xforms:trigger>
 								</xforms:group>
 								<xforms:group ref=".[not(@certainty)]">
 									<xforms:trigger appearance="minimal">
 										<xforms:label>
 											<span class="glyphicon glyphicon-plus"/>Uncertain</xforms:label>
-										<xforms:insert ev:event="DOMActivate" context="." origin="xforms:attribute('certainty', 'http://nomisma.org/id/uncertain_value')"/>
+										<xforms:insert ev:event="DOMActivate" context="."
+											origin="xforms:attribute('certainty', 'http://nomisma.org/id/uncertain_value')"/>
 									</xforms:trigger>
 								</xforms:group>
 							</div>
+
+							<!-- error message for search -->
+							<xforms:group ref=".[instance('control-instance')/search-error = true()]">
+								<div class="alert-danger alert alert-box">
+									<span class="glyphicon glyphicon-exclamation-sign"/>
+									<strong>Alert:</strong> The search for the coin type URI resulted in an invalid response. Please check the URI and try
+									again.</div>
+							</xforms:group>
+
+							<!-- warning message for change in URI without submitted new search -->
+							<xforms:group ref=".[instance('control-instance')/uri-changed = true()]">
+								<div class="alert-warning alert alert-box">
+									<span class="glyphicon glyphicon-warning-sign"/>
+									<strong>Warning:</strong> The coin type URI has been changed, but the search has not been resubmitted. This record cannot be
+									saved without validating the URI.</div>
+							</xforms:group>
+
 							<div>
 								<xforms:group ref="tei:title">
 									<div>
@@ -48,20 +75,25 @@
 											<xforms:label>Title</xforms:label>
 											<xforms:alert>Required</xforms:alert>
 										</xforms:input>
-										<xforms:group ref="$binding[not(@xlink:href)]">
-											<xforms:trigger appearance="minimal">
-												<xforms:label>
-													<span class="glyphicon glyphicon-link"/>
-												</xforms:label>
-												<xforms:hint>Insert URI to coin type</xforms:hint>
-												<xforms:action ev:event="DOMActivate">
-													<xforms:insert context="." origin="xforms:attribute(resolve-QName('xlink:href', $binding), '')"/>
-												</xforms:action>
-											</xforms:trigger>
-										</xforms:group>										
+										<xforms:group ref=".[ancestor::nuds:nuds/@recordType='physical']">
+											<xforms:group ref="$binding[not(@xlink:href)]">
+												<xforms:trigger appearance="minimal">
+													<xforms:label>
+														<span class="glyphicon glyphicon-link"/>
+													</xforms:label>
+													<xforms:hint>Insert URI to coin type</xforms:hint>
+													<xforms:action ev:event="DOMActivate">
+														<!-- insert XLink attributes -->
+														<xforms:insert context="." origin="xforms:attribute(resolve-QName('xlink:href', $binding), '')"/>
+														<xforms:insert context="." origin="xforms:attribute(resolve-QName('xlink:arcrole', $binding), '')"/>
+														<xforms:insert context="." origin="xforms:attribute(resolve-QName('xlink:type', $binding), 'simple')"/>
+													</xforms:action>
+												</xforms:trigger>
+											</xforms:group>
+										</xforms:group>
 									</div>
 								</xforms:group>
-								
+
 								<xforms:group ref=".[not(child::*)]">
 									<div>
 										<xforms:input ref="text()">
@@ -85,86 +117,111 @@
 									</div>
 								</xforms:group>
 
-								<!-- typological linking -->
-								<xforms:group ref="@xlink:href">
-									<div>
-										<xforms:input ref=".">
-											<xforms:label>URI</xforms:label>
-											<xforms:alert>Required</xforms:alert>
-											
-											<xforms:action ev:event="xforms-value-changed">
-												<xforms:var name="uri" select="."/>
-												
-												<xforms:setvalue ref="instance('control-instance')/uri-changed" value="true()" if="not(instance('control-instance')/uri = $uri)"/>
-											</xforms:action>
-										</xforms:input>
-										<xforms:trigger appearance="minimal">
-											<xforms:label><span class="glyphicon glyphicon-search"/> Search</xforms:label>
-											<xforms:action ev:event="DOMActivate">
-												<xforms:setvalue ref="instance('control-instance')/uri" value="$binding/@xlink:href"/>
-												<xforms:send submission="load-type"/>
+								<!-- typological linking: applies only to physical coins -->
+								<xforms:group ref=".[ancestor::nuds:nuds/@recordType='physical']">
+									<xforms:group ref="@xlink:href">
+										<div>
+											<xforms:input ref="." incremental="true">
+												<xforms:label>URI</xforms:label>
+												<xforms:alert>Required</xforms:alert>
 
-												<xforms:action ev:event="xforms-submit-done">
+												<xforms:action ev:event="xforms-value-changed">
+													<xforms:var name="uri" select="."/>
+
+													<xforms:action if="not(instance('control-instance')/uri = $uri)">
+														<xforms:setvalue ref="instance('control-instance')/uri-changed" value="true()"/>
+														<xforms:setvalue ref="$binding/@xlink:arcrole"/>
+													</xforms:action>
+												</xforms:action>
+											</xforms:input>
+											<xforms:trigger appearance="minimal">
+												<xforms:label><span class="glyphicon glyphicon-search"/> Search</xforms:label>
+												<xforms:action ev:event="DOMActivate">
+													<xforms:setvalue ref="instance('control-instance')/uri" value="$binding/@xlink:href"/>
 													<xforms:setvalue ref="instance('control-instance')/uri-changed" value="false()"/>
-													<xforms:setvalue ref="instance('control-instance')/search-error" value="false()"/>
-													
-													<!-- insert an xlink:arcrole to describe the semantic nature of the reference. insert xlink:type -->
-													<xforms:insert context="$binding" origin="xforms:attribute(resolve-QName('xlink:arcrole', $binding), 'nmo:hasTypeSeriesItem')"/>
-													<xforms:insert context="$binding" origin="xforms:attribute(resolve-QName('xlink:type', $binding), 'simple')"/>
-													
-													<!-- if there's both a typeSeries and a otherRecordId for the type number, use those -->
-													<xforms:action
-														if="instance('type')/nuds:control/nuds:otherRecordId[@localType='typeNumber'] and instance('type')/nuds:descMeta/nuds:typeDesc/nuds:typeSeries">
-														
-														<!-- insert tei:title and tei:idno if not present -->
-														<xforms:insert context="$binding" nodeset="./child::node()[last()]" origin="instance('title-template')" if="not($binding/tei:title)"/>
-														<xforms:insert context="$binding" nodeset="./child::node()[last()]" origin="instance('identifier-template')" if="not($binding/tei:idno)"/>
-														
-														<xforms:setvalue ref="$binding/tei:title" value="instance('type')/nuds:descMeta/nuds:typeDesc/nuds:typeSeries"/>
-														<xforms:setvalue ref="$binding/tei:idno" value="instance('type')/nuds:control/nuds:otherRecordId[@localType='typeNumber']"/>
-														
-														<!-- insert @key for the Nomisma URI of a type series -->
-														<xforms:insert context="$binding/tei:title" origin="xforms:attribute('key', instance('type')/nuds:descMeta/nuds:typeDesc/nuds:typeSeries/@xlink:href)"/>
+
+													<xforms:send submission="load-type"/>
+
+													<!-- blank the @xlink:arcrole to prevent document saving on error -->
+													<xforms:action if="instance('control-instance')/search-error = true()">
+														<xforms:setvalue ref="$binding/@xlink:arcrole"/>
 													</xforms:action>
 
-													<!-- otherwise, embed only the title of the type directly in reference -->
-													<xforms:action
-														if="not(instance('type')/nuds:control/nuds:otherRecordId[@localType='typeNumber'] and instance('type')/nuds:descMeta/nuds:typeDesc/nuds:typeSeries)">
-														<xforms:delete nodeset="$binding/tei:title"/>
-														<xforms:delete nodeset="$binding/tei:idno"/>
+													<!-- if there is not an error, proceed with automated population of reference metadata -->
+													<xforms:action if="instance('control-instance')/search-error = false()">
+														<xforms:var name="title"
+															select="if (instance('type')/nuds:descMeta/nuds:title[@xml:lang='en']) 
+															then instance('type')/nuds:descMeta/nuds:title[@xml:lang='en'] 
+															else instance('type')/nuds:descMeta/nuds:title[1]"/>
 
-														<xforms:setvalue ref="$binding"
-															value="if (instance('type')/nuds:descMeta/nuds:title[@xml:lang='en']) 
-																then instance('type')/nuds:descMeta/nuds:title[@xml:lang='en'] 
-																else instance('type')/nuds:descMeta/nuds:title[1]"
+														<!-- set the xlink:arcrole to nmo:hasTypeSeriesItem upon successful lookup. Content of @xlink:arcrole is required.
+														Invalid searches will nullify the value of this attribute, making it impossible to save the document. -->
+														<xforms:setvalue ref="$binding/@xlink:arcrole">nmo:hasTypeSeriesItem</xforms:setvalue>
+
+														<!-- if there's both a typeSeries and a otherRecordId for the type number, use those -->
+														<xforms:action
+															if="instance('type')/nuds:control/nuds:otherRecordId[@localType='typeNumber'] and instance('type')/nuds:descMeta/nuds:typeDesc/nuds:typeSeries">
+
+															<!-- insert tei:title and tei:idno if not present -->
+															<xforms:insert context="$binding" nodeset="./child::node()[last()]"
+																origin="instance('title-template')" if="not($binding/tei:title)"/>
+															<xforms:insert context="$binding" nodeset="./child::node()[last()]"
+																origin="instance('identifier-template')" if="not($binding/tei:idno)"/>
+
+															<xforms:setvalue ref="$binding/tei:title"
+																value="instance('type')/nuds:descMeta/nuds:typeDesc/nuds:typeSeries"/>
+															<xforms:setvalue ref="$binding/tei:idno"
+																value="instance('type')/nuds:control/nuds:otherRecordId[@localType='typeNumber']"/>
+
+															<!-- insert @key for the Nomisma URI of a type series -->
+															<xforms:insert context="$binding/tei:title"
+																origin="xforms:attribute('key', instance('type')/nuds:descMeta/nuds:typeDesc/nuds:typeSeries/@xlink:href)"/>
+
+															<!-- insert xlink:title into the nuds:reference. This is the official type title used for faceted search -->
+															<xforms:insert context="$binding" origin="xforms:attribute(resolve-QName('xlink:title', $binding), $title)"/>
+														</xforms:action>
+
+														<!-- otherwise, embed only the title of the type directly in reference -->
+														<xforms:action
+															if="not(instance('type')/nuds:control/nuds:otherRecordId[@localType='typeNumber'] and instance('type')/nuds:descMeta/nuds:typeDesc/nuds:typeSeries)">
+															<xforms:delete nodeset="$binding/tei:title"/>
+															<xforms:delete nodeset="$binding/tei:idno"/>
+															<xforms:delete nodeset="$binding/@xlink:title"/>
+
+															<xforms:setvalue ref="$binding" value="$title"/>
+														</xforms:action>
+													</xforms:action>
+												</xforms:action>
+											</xforms:trigger>
+											<xforms:trigger appearance="minimal">
+												<xforms:label>
+													<span class="glyphicon glyphicon-remove"/>
+												</xforms:label>
+												<xforms:action ev:event="DOMActivate">
+													<!-- reset the text -->
+													<xforms:action if=".[not($binding/child::tei:title)]">
+														<xforms:setvalue ref="$binding"/>
+														<xforms:insert context="$binding" nodeset="./child::node()[last()]" origin="instance('title-template')"
 														/>
 													</xforms:action>
+													<xforms:delete nodeset="parent::node()/@xlink:arcrole"/>
+													<xforms:delete nodeset="parent::node()/@xlink:title"/>
+													<xforms:delete nodeset="parent::node()/@xlink:type"/>
+													<xforms:delete nodeset="."/>
 												</xforms:action>
-												
-												<!-- catch error and display warning -->
-												<xforms:action ev:event="xforms-submit-error">
-													<xforms:setvalue ref="instance('control-instance')/search-error" value="true()"/>
-												</xforms:action>
-											</xforms:action>
-										</xforms:trigger>
-										<xforms:trigger appearance="minimal">											
-											<xforms:label>
-												<span class="glyphicon glyphicon-remove"/>
-											</xforms:label>
-											<xforms:action ev:event="DOMActivate">
-												<!-- reset the text -->
-												<xforms:action if=".[not($binding/child::tei:title)]">
-													<xforms:setvalue ref="$binding"/>
-													<xforms:insert context="$binding" nodeset="./child::node()[last()]" origin="instance('title-template')"/>
-												</xforms:action>	
-												<xforms:delete nodeset="parent::node()/@xlink:arcrole"/>
-												<xforms:delete nodeset="parent::node()/@xlink:type"/>
-												<xforms:delete nodeset="."/>
-											</xforms:action>
-										</xforms:trigger>
+											</xforms:trigger>
+										</div>
+									</xforms:group>
+								</xforms:group>
+
+								<xforms:group ref="@xlink:title">
+									<div>
+										<xforms:output value=".">
+											<xforms:label>Type Name</xforms:label>
+										</xforms:output>										
 									</div>
 								</xforms:group>
-								
+
 								<xforms:group ref="@certainty">
 									<div>
 										<xforms:output value="true()">
@@ -179,7 +236,7 @@
 									</div>
 								</xforms:group>
 							</div>
-							<fr:xforms-inspector/>
+							<!--<fr:xforms-inspector/>-->
 						</div>
 					</xforms:group>
 					<!-- ********************************************************************** -->
@@ -204,14 +261,15 @@
 						<xforms:instance id="identifier-template" xxforms:exclude-result-prefixes="#all">
 							<tei:idno/>
 						</xforms:instance>
-						
+
 						<xforms:instance id="title-template" xxforms:exclude-result-prefixes="#all">
 							<tei:title/>
 						</xforms:instance>
-						
+
 						<!-- bindings -->
 						<xforms:bind nodeset="instance('control-instance')">
 							<xforms:bind nodeset="uri-changed" type="xs:boolean"/>
+							<xforms:bind nodeset="search-error" type="xs:boolean"/>
 						</xforms:bind>
 
 						<!-- submissions -->
@@ -224,6 +282,13 @@
 								<xforms:name>Accept</xforms:name>
 								<xforms:value>application/xml</xforms:value>
 							</xforms:header>
+							<!-- set errors within the xforms:submission so that the pipeline will proceed with next action -->
+							<xforms:action ev:event="xforms-submit-error">
+								<xforms:setvalue ref="instance('control-instance')/search-error" value="true()"/>
+							</xforms:action>
+							<xforms:action ev:event="xforms-submit-done">
+								<xforms:setvalue ref="instance('control-instance')/search-error" value="false()"/>
+							</xforms:action>
 						</xforms:submission>
 					</xforms:model>
 				</xforms:group>

@@ -135,7 +135,7 @@
 						<xsl:variable name="service">
 							<xsl:value-of
 								select="concat($solr-url, '?q=collection-name:', $collection-name,
-								'+AND+NOT(lang:*)+AND+coinType_uri:*&amp;rows=10000&amp;start=', $start, '&amp;fl=id,recordId,title_display,coinType_uri,objectType_uri,recordType,publisher_display,axis_num,diameter_num,height_num,width_num,taq_num,weight_num,thumbnail_obv,reference_obv,thumbnail_rev,reference_rev,iiif_obv,iiif_rev,findspot_uri,findspot_geo,collection_uri,hoard_uri&amp;mode=nomisma')"
+								'+AND+NOT(lang:*)+AND+coinType_uri:*+AND+NOT(typeUncertain:true)&amp;rows=10000&amp;start=', $start, '&amp;fl=id,recordId,title_display,coinType_uri,objectType_uri,recordType,publisher_display,axis_num,diameter_num,height_num,width_num,taq_num,weight_num,thumbnail_obv,reference_obv,thumbnail_rev,reference_rev,iiif_obv,iiif_rev,findspot_uri,findspot_geo,collection_uri,hoard_uri&amp;mode=nomisma')"
 							/>
 						</xsl:variable>
 

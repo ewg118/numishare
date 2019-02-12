@@ -511,7 +511,7 @@
 							</xsl:for-each>
 							
 							<!-- type series items -->
-							<xsl:for-each select="distinct-values(nuds:descMeta/nuds:typeDesc/@xlink:href|descendant::nuds:reference[@xlink:arcrole = 'nmo:hasTypeSeriesItem'][@xlink:href]/@xlink:href)">
+							<xsl:for-each select="distinct-values(nuds:descMeta/nuds:typeDesc[not(@certainty)]/@xlink:href|descendant::nuds:reference[@xlink:arcrole = 'nmo:hasTypeSeriesItem'][@xlink:href][not(@certainty)]/@xlink:href)">
 								<nmo:hasTypeSeriesItem rdf:resource="{.}"/>
 							</xsl:for-each>
 							

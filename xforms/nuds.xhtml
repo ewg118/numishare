@@ -509,6 +509,7 @@
 					<xforms:bind nodeset="tei:idno" required="true()"/>
 				</xforms:bind>
 				<xforms:bind nodeset="//@xlink:href" required="true()" constraint="matches(., '(https?|ftp)://(-\.)?([^\s/?\.#-]+\.?)+(/[^\s]*)?$')"/>
+				<xforms:bind nodeset="//@xlink:arcrole" required="true()"/>
 			</xforms:bind>
 
 			<xforms:bind nodeset="instance('control-instance')">

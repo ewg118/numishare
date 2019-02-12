@@ -778,7 +778,39 @@
 	<xsl:template match="*:reference[child::tei:*]">
 		<li>
 			<b><xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>: </b>
-			<xsl:apply-templates select="*"/>
+			<xsl:choose>
+				<xsl:when test="@xlink:title">
+					<a href="{$display_path}results?q={if (@xlink:arcrole='nmo:hasTypeSeriesItem') then 'coinType' else 'reference'}_facet:&#x022;{@xlink:title}&#x022;{if (string($langParam)) then concat('&amp;lang=', $langParam) else ''}">
+						<xsl:value-of select="@xlink:title"/>
+					</a>			
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:variable name="label">
+						<xsl:choose>
+							<xsl:when test="tei:title">
+								<xsl:value-of select="tei:title"/>
+								<xsl:if test="tei:idno">
+									<xsl:text> </xsl:text>
+									<xsl:value-of select="tei:idno"/>
+								</xsl:if>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:value-of select="normalize-space(.)"/>
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:variable>
+					
+					<a href="{$display_path}results?q={if (@xlink:arcrole='nmo:hasTypeSeriesItem') then 'coinType' else 'reference'}_facet:&#x022;{$label}&#x022;{if (string($langParam)) then concat('&amp;lang=', $langParam) else ''}">
+						<xsl:apply-templates select="*"/>
+					</a>					
+				</xsl:otherwise>
+			</xsl:choose>	
+			<xsl:if test="@xlink:href">
+				<xsl:text> </xsl:text>
+				<a href="{@xlink:href}" target="_blank">				
+					<span class="glyphicon glyphicon-new-window"/>
+				</a>
+			</xsl:if>
 			<xsl:apply-templates select="@certainty"/>
 		</li>
 	</xsl:template>
@@ -786,27 +818,18 @@
 	<xsl:template match="tei:title">
 		<i>
 			<xsl:apply-templates/>
-		</i>
-		<xsl:if test="string(@key)">
-			<xsl:text> </xsl:text>
-			<a href="{@key}" target="_blank">				
-				<span class="glyphicon glyphicon-new-window"/>
-			</a>
-		</xsl:if>
+		</i>		
 	</xsl:template>
 
 	<xsl:template match="tei:idno">
 		<xsl:text> </xsl:text>
-		<xsl:choose>
-			<xsl:when test="parent::node()/@xlink:href">
-				<a href="{parent::node()/@xlink:href}">
-					<xsl:apply-templates/>
-				</a>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:apply-templates/>
-			</xsl:otherwise>
-		</xsl:choose>
+		<xsl:apply-templates/>		
+		<xsl:if test="parent::node()/tei:title/@key">
+			<xsl:text> </xsl:text>
+			<a href="{parent::node()/tei:title/@key}" target="_blank">				
+				<span class="glyphicon glyphicon-new-window"/>
+			</a>
+		</xsl:if>
 	</xsl:template>
 
 	<xsl:template match="tei:div" mode="descMeta">

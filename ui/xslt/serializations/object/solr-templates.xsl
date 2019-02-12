@@ -846,17 +846,24 @@
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:choose>
-					<xsl:when test="tei:title">
-						<xsl:value-of select="normalize-space(tei:title)"/>
-						<xsl:if test="string(tei:idno)">
-							<xsl:text> </xsl:text>
-							<xsl:value-of select="normalize-space(tei:idno)"/>
-						</xsl:if>
+					<xsl:when test="@xlink:title">
+						<xsl:value-of select="@xlink:title"/>
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:value-of select="normalize-space(.)"/>
+						<xsl:choose>
+							<xsl:when test="tei:title">
+								<xsl:value-of select="normalize-space(tei:title)"/>
+								<xsl:if test="string(tei:idno)">
+									<xsl:text> </xsl:text>
+									<xsl:value-of select="normalize-space(tei:idno)"/>
+								</xsl:if>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:value-of select="normalize-space(.)"/>
+							</xsl:otherwise>
+						</xsl:choose>
 					</xsl:otherwise>
-				</xsl:choose>
+				</xsl:choose>				
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
