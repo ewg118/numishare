@@ -823,6 +823,7 @@
 					<xsl:with-param name="typeDesc_resource" select="@xlink:href"/>
 				</xsl:apply-templates>
 				<xsl:apply-templates select="nuds:descMeta/nuds:refDesc[child::*]"/>
+				<xsl:apply-templates select="nuds:descMeta/nuds:descriptionSet[child::*]"/>
 				<xsl:apply-templates select="nuds:descMeta/nuds:subjectSet[child::*]"/>
 				<xsl:apply-templates select="nuds:descMeta/nuds:noteSet[child::*]"/>
 			</xsl:when>
@@ -853,6 +854,7 @@
 				<div class="col-md-6 {if($lang='ar') then 'pull-right' else ''}">
 					<xsl:apply-templates select="nuds:descMeta/nuds:refDesc[child::*]"/>
 					<xsl:apply-templates select="nuds:descMeta/nuds:adminDesc[child::*]"/>
+					<xsl:apply-templates select="nuds:descMeta/nuds:descriptionSet[child::*]"/>
 					<xsl:apply-templates select="nuds:descMeta/nuds:subjectSet[child::*]"/>
 					<xsl:apply-templates select="nuds:descMeta/nuds:noteSet[child::*]"/>
 					<xsl:apply-templates select="nuds:control/nuds:rightsStmt[nuds:rights or nuds:license[@for = 'images'] or nuds:copyrightHolder]"/>
@@ -1017,12 +1019,35 @@
 
 	<xsl:template match="nuds:subjectSet | nuds:noteSet">
 		<div class="metadata_section">
-			<h3>
-				<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
-			</h3>
+			
 			<ul>
 				<xsl:apply-templates/>
 			</ul>
+		</div>
+	</xsl:template>
+	
+	<xsl:template match="nuds:descriptionSet">
+		<div class="metadata_section">
+			<h3>
+				<xsl:value-of select="numishare:regularize_node('description', $lang)"/>
+			</h3>
+			
+			<xsl:choose>
+				<xsl:when test="nuds:description[@xml:lang=$lang]">
+					<xsl:apply-templates select="nuds:description[@xml:lang=$lang]"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:choose>
+						<xsl:when test="nuds:description[@xml:lang='en']">
+							<xsl:apply-templates select="nuds:description[@xml:lang='en']"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:apply-templates select="nuds:description"/>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:otherwise>
+			</xsl:choose>
+			
 		</div>
 	</xsl:template>
 

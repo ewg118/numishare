@@ -13,31 +13,45 @@
 					<xforms:var name="binding" as="node()?">
 						<xxforms:sequence select="." xxbl:scope="outer"/>
 					</xforms:var>
-					<div>
-						<xforms:textarea ref="$binding">
-							<xforms:label>Description</xforms:label>
-							<xforms:alert>Content Required</xforms:alert>
-						</xforms:textarea>
-						<xforms:select1 ref="$binding/@xml:lang">
-							<xforms:alert>Required</xforms:alert>
-							<xforms:item>
-								<xforms:label>Select...</xforms:label>
-								<xforms:value/>
-							</xforms:item>
-							<xforms:itemset nodeset="instance('languages')/language">
-								<xforms:label ref="."/>
-								<xforms:value ref="@value"/>
-							</xforms:itemset>
-						</xforms:select1>
-						<xforms:group ref="$binding[not(parent::nuds:mark)]">
-							<xforms:trigger appearance="minimal">
-								<xforms:delete ev:event="DOMActivate" nodeset="$binding"/>
-								<xforms:label>
-									<span class="glyphicon glyphicon-remove"/>
-								</xforms:label>
-							</xforms:trigger>
-						</xforms:group>
-					</div>
+					
+					<xforms:group ref="$binding">
+						<div>
+							<xforms:textarea ref=".">
+								<xforms:label>Description</xforms:label>
+								<xforms:alert>Content Required</xforms:alert>
+							</xforms:textarea>
+							<xforms:select1 ref="@xml:lang">
+								<xforms:alert>Required</xforms:alert>
+								<xforms:item>
+									<xforms:label>Select...</xforms:label>
+									<xforms:value/>
+								</xforms:item>
+								<xforms:itemset nodeset="instance('languages')/language">
+									<xforms:label ref="."/>
+									<xforms:value ref="@value"/>
+								</xforms:itemset>
+							</xforms:select1>
+							<xforms:group ref=".[not(parent::nuds:mark)]">
+								<xforms:trigger appearance="minimal">
+									<xforms:action ev:event="DOMActivate">
+										
+										<xforms:delete nodeset="."/>
+										
+										<!-- if the parent is a descriptionSet, then delete the parent, when empty -->
+										<xforms:action if="parent::nuds:descriptionSet">
+											<xforms:message level="modal">test</xforms:message>
+											<xforms:delete nodeset="parent::node()" if="count(parent::node()/nuds:description) = 0"/>
+										</xforms:action>
+									</xforms:action>
+									
+									<xforms:label>
+										<span class="glyphicon glyphicon-remove"/>
+									</xforms:label>
+								</xforms:trigger>
+							</xforms:group>
+						</div>
+					</xforms:group>
+					
 					
 					<!-- ***********************  MODEL *********************** -->
 					<xforms:model id="description-model" xmlns:xi="http://www.w3.org/2001/XInclude">

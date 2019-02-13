@@ -15,7 +15,7 @@
 		<link rel="stylesheet" href="/apps/numishare/xforms/css/xforms.css" />
 
 		<xforms:model xmlns="http://nomisma.org/nuds">
-			
+
 			<xforms:instance id="object" xxforms:exclude-result-prefixes="xhtml xforms xxforms ev xs xi xsi fr oxf nuds numishare exist">
 				<nuds recordType="physical" xmlns="http://nomisma.org/nuds" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:mets="http://www.loc.gov/METS/"
 					xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml">
@@ -174,19 +174,22 @@
 			<xforms:instance id="otherRecordId-template" xxforms:exclude-result-prefixes="#all">
 				<otherRecordId/>
 			</xforms:instance>
-			
+
 			<!-- rightsStmt templates -->
 			<xforms:instance id="copyrightHolder-template" xxforms:exclude-result-prefixes="#all">
 				<copyrightHolder/>
 			</xforms:instance>
-			
+
 			<xforms:instance id="rights-template" xxforms:exclude-result-prefixes="#all">
 				<rights xlink:type="simple" xlink:href=""/>
 			</xforms:instance>
-			
+
 			<!-- commonly repeatable elements -->
 			<xforms:instance id="date-template" xxforms:exclude-result-prefixes="#all">
 				<date standardDate=""/>
+			</xforms:instance>
+			<xforms:instance id="descriptionSet-template" xxforms:exclude-result-prefixes="#all">
+				<descriptionSet/>
 			</xforms:instance>
 			<xforms:instance id="description-template" xxforms:exclude-result-prefixes="#all">
 				<description xml:lang=""/>
@@ -384,12 +387,12 @@
 			<xforms:instance id="watermark-template" xxforms:exclude-result-prefixes="#all">
 				<watermark/>
 			</xforms:instance>
-			
+
 			<!-- license list -->
 			<xforms:instance id="license-list">
 				<xi:include href="instances/licenses.xml"/>
 			</xforms:instance>
-			
+
 			<!-- ********** BINDINGS ********** -->
 			<xforms:bind nodeset="instance('object')">
 				<!-- recordType -->
@@ -419,6 +422,13 @@
 				</xforms:bind>
 				<xforms:bind nodeset="nuds:descMeta">
 					<xforms:bind nodeset="nuds:title" required="true()"/>
+					<xforms:bind nodeset="nuds:descriptionSet">
+						<xforms:bind nodeset="nuds:description">
+							<xforms:bind nodeset="@xml:lang"
+								constraint="count(parent::node()/parent::node()/nuds:description/@xml:lang) = count(distinct-values(parent::node()/parent::node()/nuds:description/@xml:lang))"
+							/>
+						</xforms:bind>
+					</xforms:bind>
 					<xforms:bind nodeset="nuds:subjectSet">
 						<xforms:bind nodeset="nuds:subject" required="true()">
 							<xforms:bind nodeset="@localType" constraint="string-length(.) &gt; 0"/>
@@ -700,7 +710,7 @@
 						<xforms:var name="binding" as="node()?">
 							<xxforms:sequence select="instance('object')"/>
 						</xforms:var>
-						
+
 						<xforms:setvalue ref="instance('object')/nuds:control/nuds:recordId"
 							value="substring(string(digest( string( random( true ) ), 'MD5', 'hex' )), 1, 10)"/>
 						<!-- set control data from config if it is a new document -->
@@ -711,45 +721,52 @@
 						<!-- insert copyrightHolder if it has been set in the config -->
 						<xforms:action if="string(instance('config')/template/copyrightHolder)">
 							<xforms:insert context="instance('object')/nuds:control/nuds:rightsStmt" origin="instance('copyrightHolder-template')"/>
-							<xforms:setvalue ref="instance('object')/nuds:control/nuds:rightsStmt/nuds:copyrightHolder" value="instance('config')/template/copyrightHolder"/>
-						</xforms:action>						
+							<xforms:setvalue ref="instance('object')/nuds:control/nuds:rightsStmt/nuds:copyrightHolder"
+								value="instance('config')/template/copyrightHolder"/>
+						</xforms:action>
 
 						<!-- set rights and license -->
 						<xforms:action if="string(instance('config')/template/rights)">
 							<xforms:insert context="instance('object')/nuds:control/nuds:rightsStmt" origin="instance('rights-template')"/>
-							<xforms:setvalue ref="instance('object')/nuds:control/nuds:rightsStmt/nuds:rights/@xlink:href" value="instance('config')/template/rights"/>
+							<xforms:setvalue ref="instance('object')/nuds:control/nuds:rightsStmt/nuds:rights/@xlink:href"
+								value="instance('config')/template/rights"/>
 						</xforms:action>
-						
+
 						<!-- ensure backwards compatibility of licenes by mapping a single license to the image/data licenes in the current NUDS template -->
 						<!-- images -->
 						<xforms:action if="instance('config')/template/license[@for='images']">
 							<xforms:var name="uri" select="instance('config')/template/license[@for='images']"/>
-							
+
 							<xforms:setvalue ref="instance('object')/nuds:control/nuds:rightsStmt/nuds:license[@for='images']/@xlink:href" value="$uri"/>
-							<xforms:setvalue ref="instance('object')/nuds:control/nuds:rightsStmt/nuds:license[@for='images']" value="instance('license-list')/images/statement[@value = $uri]"/>
+							<xforms:setvalue ref="instance('object')/nuds:control/nuds:rightsStmt/nuds:license[@for='images']"
+								value="instance('license-list')/images/statement[@value = $uri]"/>
 						</xforms:action>
-						
+
 						<!-- if there's no image license in the config, then set a CC-BY licnese by default -->
-						<xforms:action if="not(instance('config')/template/license[@for='images'])">							
-							<xforms:setvalue ref="instance('object')/nuds:control/nuds:rightsStmt/nuds:license[@for='images']/@xlink:href">https://creativecommons.org/licenses/by/4.0/</xforms:setvalue>
-							<xforms:setvalue ref="instance('object')/nuds:control/nuds:rightsStmt/nuds:license[@for='images']">Attribution 4.0 International (CC BY 4.0)</xforms:setvalue>
+						<xforms:action if="not(instance('config')/template/license[@for='images'])">
+							<xforms:setvalue ref="instance('object')/nuds:control/nuds:rightsStmt/nuds:license[@for='images']/@xlink:href"
+								>https://creativecommons.org/licenses/by/4.0/</xforms:setvalue>
+							<xforms:setvalue ref="instance('object')/nuds:control/nuds:rightsStmt/nuds:license[@for='images']">Attribution 4.0 International (CC
+								BY 4.0)</xforms:setvalue>
 						</xforms:action>
-						
+
 						<!-- data: early version of the license in the Numishare config were specific to the data license -->
 						<xforms:action if="instance('config')/template/license[@for='data']">
 							<xforms:var name="uri" select="instance('config')/template/license[@for='data']"/>
-							
+
 							<xforms:setvalue ref="instance('object')/nuds:control/nuds:rightsStmt/nuds:license[@for='data']/@xlink:href" value="$uri"/>
-							<xforms:setvalue ref="instance('object')/nuds:control/nuds:rightsStmt/nuds:license[@for='data']" value="instance('license-list')/data/statement[@value = $uri]"/>
+							<xforms:setvalue ref="instance('object')/nuds:control/nuds:rightsStmt/nuds:license[@for='data']"
+								value="instance('license-list')/data/statement[@value = $uri]"/>
 						</xforms:action>
-						
+
 						<xforms:action if="not(instance('config')/template/license[@for='data'])">
 							<xforms:var name="uri" select="instance('config')/template/license"/>
-							
+
 							<xforms:setvalue ref="instance('object')/nuds:control/nuds:rightsStmt/nuds:license[@for='data']/@xlink:href" value="$uri"/>
-							<xforms:setvalue ref="instance('object')/nuds:control/nuds:rightsStmt/nuds:license[@for='data']" value="instance('license-list')/data/statement[@value = $uri]"/>
+							<xforms:setvalue ref="instance('object')/nuds:control/nuds:rightsStmt/nuds:license[@for='data']"
+								value="instance('license-list')/data/statement[@value = $uri]"/>
 						</xforms:action>
-						
+
 						<!-- populate adminDesc -->
 						<xforms:action if="string(instance('config')/template/collection)">
 							<xforms:insert context="instance('object')/nuds:descMeta/nuds:adminDesc" origin="instance('collection-template')"/>
@@ -853,7 +870,7 @@
 		<xi:include href="xbl/date/date.xbl" xi:omit-xml-base="true"/>
 		<xi:include href="xbl/dateRange/dateRange.xbl" xi:omit-xml-base="true"/>
 		<xi:include href="xbl/denomination/denomination.xbl" xi:omit-xml-base="true"/>
-		<xi:include href="xbl/department/department.xbl" xi:omit-xml-base="true"/>
+		<!--<xi:include href="xbl/department/department.xbl" xi:omit-xml-base="true"/>-->
 		<xi:include href="xbl/description/description.xbl" xi:omit-xml-base="true"/>
 		<xi:include href="xbl/entity-input/entity-input.xbl" xi:omit-xml-base="true"/>
 		<xi:include href="xbl/file-upload/file-upload.xbl" xi:omit-xml-base="true"/>
@@ -1000,19 +1017,17 @@
 									<xforms:group ref="nuds:descMeta">
 										<div class="section">
 											<h2>Descriptive Metadata</h2>
-											<div class="trigger_container">
-												<xforms:trigger appearance="minimal">
-													<xforms:label>
-														<span class="glyphicon glyphicon-plus"></span>Department</xforms:label>
-													<xforms:insert ev:event="DOMActivate" context="." origin="instance('department-template')"
-														nodeset="nuds:title" position="after"/>
-												</xforms:trigger>
+											<div class="trigger_container">												
 												<xforms:group ref=".[count(nuds:description) = 0]">
 													<xforms:trigger appearance="minimal">
 														<xforms:label>
 															<span class="glyphicon glyphicon-plus"></span>Description</xforms:label>
-														<xforms:insert ev:event="DOMActivate" context="." origin="instance('description-template')"
-															nodeset="nuds:title" position="after"/>
+														<xforms:action ev:event="DOMActivate">
+															<xforms:insert context="." nodeset="./child::node()[last()]"
+																origin="instance('descriptionSet-template')" if="not(nuds:descriptionSet)"/>
+															<xforms:insert context="nuds:descriptionSet" origin="instance('description-template')"
+																nodeset="./child::node()[last()]"/>
+														</xforms:action>
 													</xforms:trigger>
 												</xforms:group>
 												<xforms:trigger appearance="minimal">
@@ -1065,108 +1080,129 @@
 													</xforms:action>
 												</xforms:trigger>-->
 											</div>
-											<xforms:repeat nodeset="nuds:department">
-												<numishare:department/>
-											</xforms:repeat>
-											<xforms:group ref="nuds:description">
-												<numishare:description/>
+
+											<xforms:group ref="nuds:descriptionSet">
+												<div class="section">
+													<h3>Descriptions</h3>
+
+													<!-- warning for duplicate languages -->
+													<xforms:group
+														ref=".[not(count(nuds:description/@xml:lang) = count(distinct-values(nuds:description/@xml:lang)))]">
+														<div class="alert alert-warning alert-box">
+															<p><span class="glyphicon glyphicon-warning-sign"></span>
+																<strong>Warning! </strong><span>Description languages should be unique.</span>
+															</p>
+														</div>
+													</xforms:group>
+
+													<xforms:repeat ref="nuds:description" id="descriptionSet">
+														<numishare:description/>
+													</xforms:repeat>
+												</div>
 											</xforms:group>
+
 											<xforms:group ref="nuds:noteSet">
-												<h3>Notes</h3>
-												<xforms:repeat nodeset="nuds:note">
-													<div>
-														<xforms:textarea ref=".">
-															<xforms:label>Note</xforms:label>
-														</xforms:textarea>
-														<xforms:trigger appearance="minimal">
-															<xforms:action ev:event="DOMActivate">
-																<xforms:delete nodeset="."/>
-																<xforms:delete nodeset="parent::nuds:noteSet" if="count(parent::node()/*) = 0"/>
-															</xforms:action>
-															<xforms:label>
-																<span class="glyphicon glyphicon-remove"></span>
-															</xforms:label>
-														</xforms:trigger>
-													</div>
-												</xforms:repeat>
+												<div class="section">
+													<h3>Notes</h3>
+													<xforms:repeat nodeset="nuds:note">
+														<div>
+															<xforms:textarea ref=".">
+																<xforms:label>Note</xforms:label>
+															</xforms:textarea>
+															<xforms:trigger appearance="minimal">
+																<xforms:action ev:event="DOMActivate">
+																	<xforms:delete nodeset="."/>
+																	<xforms:delete nodeset="parent::nuds:noteSet" if="count(parent::node()/*) = 0"/>
+																</xforms:action>
+																<xforms:label>
+																	<span class="glyphicon glyphicon-remove"></span>
+																</xforms:label>
+															</xforms:trigger>
+														</div>
+													</xforms:repeat>
+												</div>
 											</xforms:group>
 											<xforms:group ref="nuds:subjectSet">
-												<h3>Subjects</h3>
-												<xforms:repeat nodeset="nuds:subject">
-													<div class="subsection">
-														<h4>Subject</h4>
-														<xforms:trigger appearance="minimal">
-															<xforms:action ev:event="DOMActivate">
-																<xforms:delete nodeset="."/>
-																<xforms:delete nodeset="parent::nuds:subjectSet" if="count(parent::node()/*) = 0"/>
-															</xforms:action>
-															<xforms:label>
-																<span class="glyphicon glyphicon-remove"></span>
-															</xforms:label>
-														</xforms:trigger>
-														<div class="trigger_container">
-															<xforms:group ref=".[not(@xlink:href)]">
-																<xforms:trigger appearance="minimal">
-																	<xforms:label>
-																		<span class="glyphicon glyphicon-plus"></span>URL</xforms:label>
-																	<xforms:insert ev:event="DOMActivate" context="."
-																		origin="xforms:attribute('xlink:href', '')" if="not(@xlink:href)"/>
-																</xforms:trigger>
-															</xforms:group>
-															<xforms:group ref=".[not(@localType)]">
-																<xforms:trigger appearance="minimal">
-																	<xforms:label>
-																		<span class="glyphicon glyphicon-plus"></span>Type</xforms:label>
-																	<xforms:insert ev:event="DOMActivate" context="." origin="xforms:attribute('localType', '')"
-																		if="not(@localType)"/>
-																</xforms:trigger>
-															</xforms:group>
-														</div>
-														<div>
-															<xforms:input ref=".">
-																<xforms:label>Term</xforms:label>
-																<xforms:alert>Required</xforms:alert>
-															</xforms:input>
-														</div>
-														<xforms:group ref="@localType">
-															<div>
-																<xforms:select1 ref=".">
-																	<xforms:label>Type</xforms:label>
-																	<xforms:alert>Required</xforms:alert>
-																	<xforms:item>
-																		<xforms:label>Select...</xforms:label>
-																		<xforms:value/>
-																	</xforms:item>
-																	<xforms:itemset nodeset="instance('localTypes')//localType">
-																		<xforms:label ref="."/>
-																		<xforms:value ref="."/>
-																	</xforms:itemset>
-																</xforms:select1>
-																<xforms:trigger appearance="minimal">
-																	<xforms:delete ev:event="DOMActivate" nodeset="."/>
-																	<xforms:label>
-																		<span class="glyphicon glyphicon-remove"></span>
-																	</xforms:label>
-																</xforms:trigger>
+												<div class="section">
+													<h3>Subjects</h3>
+													<xforms:repeat nodeset="nuds:subject">
+														<div class="subsection">
+															<h4>Subject</h4>
+															<xforms:trigger appearance="minimal">
+																<xforms:action ev:event="DOMActivate">
+																	<xforms:delete nodeset="."/>
+																	<xforms:delete nodeset="parent::nuds:subjectSet" if="count(parent::node()/*) = 0"/>
+																</xforms:action>
+																<xforms:label>
+																	<span class="glyphicon glyphicon-remove"></span>
+																</xforms:label>
+															</xforms:trigger>
+															<div class="trigger_container">
+																<xforms:group ref=".[not(@xlink:href)]">
+																	<xforms:trigger appearance="minimal">
+																		<xforms:label>
+																			<span class="glyphicon glyphicon-plus"></span>URL</xforms:label>
+																		<xforms:insert ev:event="DOMActivate" context="."
+																			origin="xforms:attribute('xlink:href', '')" if="not(@xlink:href)"/>
+																	</xforms:trigger>
+																</xforms:group>
+																<xforms:group ref=".[not(@localType)]">
+																	<xforms:trigger appearance="minimal">
+																		<xforms:label>
+																			<span class="glyphicon glyphicon-plus"></span>Type</xforms:label>
+																		<xforms:insert ev:event="DOMActivate" context="."
+																			origin="xforms:attribute('localType', '')" if="not(@localType)"/>
+																	</xforms:trigger>
+																</xforms:group>
 															</div>
-														</xforms:group>
-														<xforms:group ref="@xlink:href">
 															<div>
 																<xforms:input ref=".">
-																	<xforms:label>URL</xforms:label>
+																	<xforms:label>Term</xforms:label>
 																	<xforms:alert>Required</xforms:alert>
 																</xforms:input>
-																<xforms:trigger appearance="minimal">
-																	<xforms:delete ev:event="DOMActivate" nodeset="."/>
-																	<xforms:label>
-																		<span class="glyphicon glyphicon-remove"></span>
-																	</xforms:label>
-																</xforms:trigger>
 															</div>
-														</xforms:group>
-													</div>
-												</xforms:repeat>
+															<xforms:group ref="@localType">
+																<div>
+																	<xforms:select1 ref=".">
+																		<xforms:label>Type</xforms:label>
+																		<xforms:alert>Required</xforms:alert>
+																		<xforms:item>
+																			<xforms:label>Select...</xforms:label>
+																			<xforms:value/>
+																		</xforms:item>
+																		<xforms:itemset nodeset="instance('localTypes')//localType">
+																			<xforms:label ref="."/>
+																			<xforms:value ref="."/>
+																		</xforms:itemset>
+																	</xforms:select1>
+																	<xforms:trigger appearance="minimal">
+																		<xforms:delete ev:event="DOMActivate" nodeset="."/>
+																		<xforms:label>
+																			<span class="glyphicon glyphicon-remove"></span>
+																		</xforms:label>
+																	</xforms:trigger>
+																</div>
+															</xforms:group>
+															<xforms:group ref="@xlink:href">
+																<div>
+																	<xforms:input ref=".">
+																		<xforms:label>URL</xforms:label>
+																		<xforms:alert>Required</xforms:alert>
+																	</xforms:input>
+																	<xforms:trigger appearance="minimal">
+																		<xforms:delete ev:event="DOMActivate" nodeset="."/>
+																		<xforms:label>
+																			<span class="glyphicon glyphicon-remove"></span>
+																		</xforms:label>
+																	</xforms:trigger>
+																</div>
+															</xforms:group>
+														</div>
+													</xforms:repeat>
+												</div>
 											</xforms:group>
+											
+											<hr/>
 										</div>
 									</xforms:group>
 
@@ -1875,16 +1911,7 @@
 								<fr:tab bind="adminDesc">
 									<fr:label>Administrative</fr:label>
 									<h2>Administrative Description</h2>
-									<span class="add">
-										<xforms:trigger appearance="minimal">
-											<xforms:label>
-												<span class="glyphicon glyphicon-plus"></span>
-											</xforms:label>
-											<xxforms:show ev:event="DOMActivate" dialog="adminDesc-objects"/>
-										</xforms:trigger>
-									</span>
-									<xxforms:dialog id="adminDesc-objects" appearance="full" level="modal" close="true" draggable="true" visible="false">
-										<xforms:label>Administrative Description Objects</xforms:label>
+									<div class="trigger_container">
 										<xforms:trigger appearance="minimal">
 											<xforms:label>
 												<span class="glyphicon glyphicon-plus"></span>Acknowledgment</xforms:label>
@@ -1893,7 +1920,7 @@
 												<xxforms:hide dialog="adminDesc-objects"/>
 											</xforms:action>
 										</xforms:trigger>
-										<xforms:group ref=".[count(nuds:acqinfo) &lt; 1]">
+										<!--<xforms:group ref=".[count(nuds:acqinfo) &lt; 1]">
 											<xforms:trigger appearance="minimal">
 												<xforms:label>
 													<span class="glyphicon glyphicon-plus"></span>Acquisition Information</xforms:label>
@@ -1902,7 +1929,7 @@
 													<xxforms:hide dialog="adminDesc-objects"/>
 												</xforms:action>
 											</xforms:trigger>
-										</xforms:group>
+										</xforms:group>-->
 										<xforms:trigger appearance="minimal">
 											<xforms:label>
 												<span class="glyphicon glyphicon-plus"></span>Appraisal</xforms:label>
@@ -1921,7 +1948,15 @@
 												</xforms:action>
 											</xforms:trigger>
 										</xforms:group>
-										<xforms:group ref=".[count(nuds:custodhist) &lt; 1]">
+										<xforms:trigger appearance="minimal">
+											<xforms:label>
+												<span class="glyphicon glyphicon-plus"></span>Department</xforms:label>
+											<xforms:action ev:event="DOMActivate">
+												<xforms:insert context="." origin="instance('department-template')" nodeset="./child::node()[last()]"/>
+												<xxforms:hide dialog="adminDesc-objects"/>
+											</xforms:action>
+										</xforms:trigger>
+										<!--<xforms:group ref=".[count(nuds:custodhist) &lt; 1]">
 											<xforms:trigger appearance="minimal">
 												<xforms:label>
 													<span class="glyphicon glyphicon-plus"></span>Custodial History</xforms:label>
@@ -1930,7 +1965,7 @@
 													<xxforms:hide dialog="adminDesc-objects"/>
 												</xforms:action>
 											</xforms:trigger>
-										</xforms:group>
+										</xforms:group>-->
 										<xforms:group ref=".[count(nuds:identifier) &lt; 1]">
 											<xforms:trigger appearance="minimal">
 												<xforms:label>
@@ -1959,148 +1994,145 @@
 												</xforms:action>
 											</xforms:trigger>
 										</xforms:group>
-									</xxforms:dialog>
-									<xforms:group ref="nuds:identifier">
-										<div>
-											<xforms:input ref=".">
-												<xforms:label>Identifier</xforms:label>
-											</xforms:input>
-											<xforms:trigger appearance="minimal">
-												<xforms:delete ev:event="DOMActivate" nodeset="."/>
-												<xforms:label>
-													<span class="glyphicon glyphicon-remove"></span>
-												</xforms:label>
-											</xforms:trigger>
-										</div>
-									</xforms:group>
-									<xforms:repeat nodeset="nuds:acknowledgment">
-										<div>
-											<xforms:input ref=".">
-												<xforms:label>Acknowledgment</xforms:label>
-											</xforms:input>
-											<xforms:trigger appearance="minimal">
-												<xforms:delete ev:event="DOMActivate" nodeset="."/>
-												<xforms:label>
-													<span class="glyphicon glyphicon-remove"></span>
-												</xforms:label>
-											</xforms:trigger>
-										</div>
-									</xforms:repeat>
-									<xforms:repeat nodeset="nuds:appraisal">
-										<div>
-											<h3>Appraisal</h3>
-											<xforms:trigger appearance="minimal">
-												<xforms:delete ev:event="DOMActivate" nodeset="."/>
-												<xforms:label>
-													<span class="glyphicon glyphicon-remove"></span>
-												</xforms:label>
-											</xforms:trigger>
-											<div class="subsection">
-												<div>
-													<xforms:input ref="nuds:appraiser">
-														<xforms:label>Appraiser</xforms:label>
-														<xforms:alert>Required</xforms:alert>
-													</xforms:input>
-												</div>
-												<xforms:group ref="nuds:date">
-													<numishare:date/>
-												</xforms:group>
-											</div>
-										</div>
-									</xforms:repeat>
-									<xforms:group ref="nuds:collection">
-										<div>
-											<xforms:input ref=".">
-												<xforms:label>Collection</xforms:label>
-											</xforms:input>
-											<xforms:trigger appearance="minimal">
-												<xforms:delete ev:event="DOMActivate" nodeset="."/>
-												<xforms:label>
-													<span class="glyphicon glyphicon-remove"></span>
-												</xforms:label>
-											</xforms:trigger>
-										</div>
-									</xforms:group>
-									<xforms:repeat nodeset="nuds:owner">
-										<div>
-											<xforms:input ref=".">
-												<xforms:label>Owner</xforms:label>
-											</xforms:input>
-											<xforms:trigger appearance="minimal">
-												<xforms:delete ev:event="DOMActivate" nodeset="."/>
-												<xforms:label>
-													<span class="glyphicon glyphicon-remove"></span>
-												</xforms:label>
-											</xforms:trigger>
-										</div>
-									</xforms:repeat>
-									<xforms:group ref="nuds:physloc">
-										<div>
-											<xforms:input ref=".">
-												<xforms:label>Physical Location</xforms:label>
-											</xforms:input>
-											<xforms:trigger appearance="minimal">
-												<xforms:delete ev:event="DOMActivate" nodeset="."/>
-												<xforms:label>
-													<span class="glyphicon glyphicon-remove"></span>
-												</xforms:label>
-											</xforms:trigger>
-										</div>
-									</xforms:group>
-									<xforms:group ref="nuds:repository">
-										<div>
-											<xforms:input ref=".">
-												<xforms:label>Repository</xforms:label>
-											</xforms:input>
-											<xforms:trigger appearance="minimal">
-												<xforms:delete ev:event="DOMActivate" nodeset="."/>
-												<xforms:label>
-													<span class="glyphicon glyphicon-remove"></span>
-												</xforms:label>
-											</xforms:trigger>
-										</div>
-									</xforms:group>
-									<xforms:group ref="nuds:acqinfo">
+									</div>									
+									
+									<xforms:group ref=".[nuds:identifier or nuds:collection or nuds:department]">
 										<div class="section">
-											<h3>Acquisition Information</h3>
-											<xforms:trigger appearance="minimal">
-												<xforms:delete ev:event="DOMActivate" nodeset="."/>
-												<xforms:label>
-													<span class="glyphicon glyphicon-remove"></span>
-												</xforms:label>
-											</xforms:trigger>
-											<xforms:group ref=".[count(nuds:sale) = 0]">
-												<xforms:trigger appearance="minimal">
-													<xforms:label>
-														<span class="glyphicon glyphicon-plus"></span>Sale</xforms:label>
-													<xforms:action ev:event="DOMActivate">
-														<xforms:insert context="." origin="instance('sale-template')"/>
-													</xforms:action>
-												</xforms:trigger>
+											<h3>Primary Identifying Attributes</h3>
+											<xforms:group ref="nuds:identifier">
+												<div>
+													<xforms:input ref=".">
+														<xforms:label>Identifier</xforms:label>
+													</xforms:input>
+													<xforms:trigger appearance="minimal">
+														<xforms:delete ev:event="DOMActivate" nodeset="."/>
+														<xforms:label>
+															<span class="glyphicon glyphicon-remove"></span>
+														</xforms:label>
+													</xforms:trigger>
+												</div>
 											</xforms:group>
-											<div class="subsection">
+											<xforms:group ref="nuds:collection">
 												<div>
-													<xforms:input ref="nuds:acquiredFrom">
-														<xforms:label>Acquired From</xforms:label>
+													<xforms:input ref=".">
+														<xforms:label>Collection</xforms:label>
+													</xforms:input>
+													<xforms:trigger appearance="minimal">
+														<xforms:delete ev:event="DOMActivate" nodeset="."/>
+														<xforms:label>
+															<span class="glyphicon glyphicon-remove"></span>
+														</xforms:label>
+													</xforms:trigger>
+												</div>
+											</xforms:group>
+											<xforms:repeat nodeset="nuds:department">
+												<div>
+													<xforms:input ref=".">
+														<xforms:label>Department</xforms:label>
 														<xforms:alert>Required</xforms:alert>
 													</xforms:input>
+													<xforms:trigger appearance="minimal">
+														<xforms:delete ev:event="DOMActivate" nodeset="."/>
+														<xforms:label>
+															<span class="glyphicon glyphicon-remove"></span>
+														</xforms:label>
+													</xforms:trigger>
 												</div>
-												<div>
-													<xforms:input ref="nuds:acquiredMethod">
-														<xforms:label>Acquisition Method</xforms:label>
-														<xforms:alert>Required</xforms:alert>
-													</xforms:input>
-												</div>
-												<xforms:group ref="nuds:date">
-													<numishare:date/>
-												</xforms:group>
-												<xforms:group ref="nuds:sale">
-													<numishare:sale/>
-												</xforms:group>
-											</div>
+												
+												<!--<numishare:department/>-->
+											</xforms:repeat>
 										</div>
 									</xforms:group>
-									<xforms:group ref="nuds:custodhist">
+									
+									<xforms:group ref=".[nuds:acknowledgment or nuds:appraisal or nuds:owner or nuds:physloc or nuds:repository]">
+										<div class="section">
+											<h3>Additional Administrative Metadata</h3>
+											<xforms:repeat nodeset="nuds:acknowledgment">
+												<div>
+													<xforms:input ref=".">
+														<xforms:label>Acknowledgment</xforms:label>
+													</xforms:input>
+													<xforms:trigger appearance="minimal">
+														<xforms:delete ev:event="DOMActivate" nodeset="."/>
+														<xforms:label>
+															<span class="glyphicon glyphicon-remove"></span>
+														</xforms:label>
+													</xforms:trigger>
+												</div>
+											</xforms:repeat>
+											<xforms:repeat nodeset="nuds:appraisal">
+												<div>
+													<h4>Appraisal</h4>
+													<xforms:trigger appearance="minimal">
+														<xforms:delete ev:event="DOMActivate" nodeset="."/>
+														<xforms:label>
+															<span class="glyphicon glyphicon-remove"></span>
+														</xforms:label>
+													</xforms:trigger>
+													<div class="subsection">
+														<div>
+															<xforms:input ref="nuds:appraiser">
+																<xforms:label>Appraiser</xforms:label>
+																<xforms:alert>Required</xforms:alert>
+															</xforms:input>
+														</div>
+														<xforms:group ref="nuds:date">
+															<numishare:date/>
+														</xforms:group>
+													</div>
+												</div>
+											</xforms:repeat>									
+											<xforms:repeat nodeset="nuds:owner">
+												<div>
+													<xforms:input ref=".">
+														<xforms:label>Owner</xforms:label>
+													</xforms:input>
+													<xforms:trigger appearance="minimal">
+														<xforms:delete ev:event="DOMActivate" nodeset="."/>
+														<xforms:label>
+															<span class="glyphicon glyphicon-remove"></span>
+														</xforms:label>
+													</xforms:trigger>
+												</div>
+											</xforms:repeat>
+											<xforms:group ref="nuds:physloc">
+												<div>
+													<xforms:input ref=".">
+														<xforms:label>Physical Location</xforms:label>
+													</xforms:input>
+													<xforms:trigger appearance="minimal">
+														<xforms:delete ev:event="DOMActivate" nodeset="."/>
+														<xforms:label>
+															<span class="glyphicon glyphicon-remove"></span>
+														</xforms:label>
+													</xforms:trigger>
+												</div>
+											</xforms:group>
+											<xforms:group ref="nuds:repository">
+												<div>
+													<xforms:input ref=".">
+														<xforms:label>Repository</xforms:label>
+													</xforms:input>
+													<xforms:trigger appearance="minimal">
+														<xforms:delete ev:event="DOMActivate" nodeset="."/>
+														<xforms:label>
+															<span class="glyphicon glyphicon-remove"></span>
+														</xforms:label>
+													</xforms:trigger>
+												</div>
+											</xforms:group>	
+										</div>
+									</xforms:group>
+									
+									<xforms:group ref="nuds:provenance">
+										<div class="section">
+											<h3>Provenance</h3>
+										</div>
+									</xforms:group>
+									
+									
+																	
+									<!--<xforms:group ref="nuds:custodhist">
 										<div class="section">
 											<h3>Custodial History</h3>
 											<xforms:trigger appearance="minimal">
@@ -2154,7 +2186,7 @@
 												</div>
 											</xforms:repeat>
 										</div>
-									</xforms:group>
+									</xforms:group>-->
 								</fr:tab>
 								<!--**************************************** DIGITAL REPRESENTATIONS **********************************-->
 								<fr:tab bind="digRep">
