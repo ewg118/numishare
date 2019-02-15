@@ -226,7 +226,23 @@
 										<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about = $href], 'en')"/>
 									</xsl:when>
 									<xsl:otherwise>
-										<xsl:value-of select="normalize-space(.)"/>
+										<xsl:choose>
+											<xsl:when test="self::*:date or self::*:fromDate or self::*:toDate">
+												<xsl:choose>
+													<xsl:when test="string($lang)">
+														<!--<xsl:value-of select="format-date(xs:date(concat(@standardDate, '-01-01')), '[Y1]-[Mno]-[D1] [E]', 'fr', 'AD', ())"/>-->
+														<xsl:value-of select="normalize-space(.)"/>
+													</xsl:when>
+													<xsl:otherwise>
+														<xsl:value-of select="normalize-space(.)"/>
+													</xsl:otherwise>
+												</xsl:choose>
+											</xsl:when>
+											<xsl:otherwise>
+												<xsl:value-of select="normalize-space(.)"/>
+											</xsl:otherwise>
+										</xsl:choose>
+										
 									</xsl:otherwise>
 								</xsl:choose>
 							</xsl:otherwise>
