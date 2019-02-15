@@ -85,10 +85,6 @@
 			<xforms:instance id="collections-list">
 				<collections xmlns=""/>
 			</xforms:instance>
-			<!-- list of localTypes -->
-			<xforms:instance id="localTypes">
-				<localTypes xmlns=""/>
-			</xforms:instance>
 
 			<!-- publication statuses -->
 			<xforms:instance id="publicationStatuses">
@@ -104,26 +100,28 @@
 					<exist:text/>
 				</exist:query>
 			</xforms:instance>
+
 			<xforms:instance id="xqueries">
 				<xqueries xmlns="">
-					<query id="localTypes">declare namespace nuds="http://nomisma.org/nuds"; declare namespace nh="http://nomisma.org/nudsHoard"; &lt;report> {
-						for $term in distinct-values(collection()//descendant::nuds:subject/@localType) order by $term return &lt;term> { data($term) }
-						&lt;/term> } &lt;/report></query>
 					<query id="broader">declare namespace nuds="http://nomisma.org/nuds"; &lt;report> { for $record in
 						collection()[descendant::*[local-name()='recordId'] = 'QUERY'] return &lt;record recordId="{data($record//nuds:recordId)}"> {
 						data($record//nuds:title[@xml:lang='en']) } &lt;/record> } &lt;/report></query>
 				</xqueries>
 			</xforms:instance>
+
 			<xforms:instance id="xquery-result">
 				<exist:result/>
 			</xforms:instance>
+
 			<!-- nuds instances -->
 			<xforms:instance id="typedesc-type">
 				<type xmlns="">manual</type>
 			</xforms:instance>
+
 			<xforms:instance id="typeDesc-resource">
 				<nuds xmlns=""/>
 			</xforms:instance>
+
 			<!-- send to Solr -->
 			<xforms:instance id="addIndex">
 				<add xmlns=""/>
@@ -461,6 +459,13 @@
 						<xforms:bind nodeset="nuds:obverse|nuds:reverse">
 							<xforms:bind constraint="count(numishare:entity) = 0"/>
 							<xforms:bind nodeset="nuds:legend" required="true()"/>
+							<xforms:bind nodeset="nuds:type">
+								<xforms:bind nodeset="nuds:description">
+									<xforms:bind nodeset="@xml:lang"
+										constraint="count(parent::node()/parent::node()/nuds:description/@xml:lang) = count(distinct-values(parent::node()/parent::node()/nuds:description/@xml:lang))"
+									/>
+								</xforms:bind>
+							</xforms:bind>
 						</xforms:bind>
 						<xforms:bind nodeset="nuds:authority">
 							<xforms:bind constraint="count(numishare:entity) = 0"/>
@@ -833,8 +838,6 @@
 				<xforms:setvalue ref="instance('control-instance')/error" ev:event="xforms-submit-error">Error querying eXist database.</xforms:setvalue>
 			</xforms:submission>
 
-
-
 			<!-- ********** XFORMS-MODEL-CONSTRUCT-DONE ********** -->
 			<xforms:action ev:event="xforms-model-construct-done">
 				<!-- if there's a collection-name session attribute carried over from numishare-admin, then use it to set the collection-name -->
@@ -847,15 +850,6 @@
 						origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/get-authentication.xpl', 'dump', instance('dump'), 'data')"/>
 					<xforms:send submission="load-collections"/>
 				</xforms:action>
-
-				<!-- get subject localTypes -->
-				<!--<xforms:setvalue ref="instance('eXist-xquery')/exist:text" value="instance('xqueries')/query[@id='localTypes']"></xforms:setvalue>
-				<xforms:send submission="xquery-collection"></xforms:send>-->
-				<!-- populate localTypes instance -->
-				<!--<xforms:action ev:event="xforms-submit-done" xxforms:iterate="instance('xquery-result')//term">
-					<xforms:var name="label" select="context()"></xforms:var>
-					<xforms:insert context="instance('localTypes')" nodeset="./child::node()[last()]" origin="xforms:element('localType', $label)"></xforms:insert>
-				</xforms:action>-->
 			</xforms:action>
 
 			<!-- ********** XFORMS-READY ********** -->
@@ -880,6 +874,7 @@
 		<xi:include href="xbl/output-typeDesc/output-typeDesc.xbl" xi:omit-xml-base="true"/>
 		<xi:include href="xbl/reference/reference.xbl" xi:omit-xml-base="true"/>
 		<xi:include href="xbl/sale/sale.xbl" xi:omit-xml-base="true"/>
+		<xi:include href="xbl/symbol/symbol.xbl" xi:omit-xml-base="true"/>
 		<xi:include href="xbl/type-undertype/type-undertype.xbl" xi:omit-xml-base="true"/>
 	</head>
 	<body>
@@ -908,10 +903,20 @@
 									<xforms:setvalue
 										ref="instance('object')/nuds:control/nuds:maintenanceHistory/nuds:maintenanceEvent[last()]/nuds:eventDateTime/@standardDateTime"
 										value="current-dateTime()"/>
+									
 									<!-- set maintenanceStatus to 'revised', if it is both 'new' and file was loaded from eXist, i.e., not newly created -->
 									<xforms:setvalue ref="instance('object')/nuds:control/nuds:maintenanceStatus"
 										if="string(instance('control-instance')/id) and instance('object')/nuds:control/nuds:maintenanceStatus = 'new'"
 										>revised</xforms:setvalue>
+									
+									<!-- delete specificed empty elements -->
+									<xforms:delete nodeset="instance('object')/nuds:descMeta/nuds:typeDesc/nuds:obverse/nuds:type" if="not(instance('object')/nuds:descMeta/nuds:typeDesc/nuds:obverse/nuds:type/*)"/>
+									<xforms:delete nodeset="instance('object')/nuds:descMeta/nuds:typeDesc/nuds:reverse/nuds:type" if="not(instance('object')/nuds:descMeta/nuds:typeDesc/nuds:reverse/nuds:type/*)"/>
+									<xforms:delete nodeset="instance('object')/nuds:descMeta/nuds:typeDesc/nuds:obverse" if="not(instance('object')/nuds:descMeta/nuds:typeDesc/nuds:obverse/*)"/>
+									<xforms:delete nodeset="instance('object')/nuds:descMeta/nuds:typeDesc/nuds:reverse" if="not(instance('object')/nuds:descMeta/nuds:typeDesc/nuds:reverse/*)"/>
+									<xforms:delete nodeset="instance('object')/nuds:descMeta/nuds:typeDesc/nuds:authority" if="not(instance('object')/nuds:descMeta/nuds:typeDesc/nuds:authority/*)"/>
+									<xforms:delete nodeset="instance('object')/nuds:descMeta/nuds:typeDesc/nuds:geographic" if="not(instance('object')/nuds:descMeta/nuds:typeDesc/nuds:geographic/*)"/>
+									
 									<xforms:send submission="save-object"/>
 								</xforms:action>
 								<xforms:label><span class="glyphicon glyphicon-floppy-disk"></span>Save</xforms:label>
@@ -1017,7 +1022,7 @@
 									<xforms:group ref="nuds:descMeta">
 										<div class="section">
 											<h2>Descriptive Metadata</h2>
-											<div class="trigger_container">												
+											<div class="trigger_container">
 												<xforms:group ref=".[count(nuds:description) = 0]">
 													<xforms:trigger appearance="minimal">
 														<xforms:label>
@@ -1088,9 +1093,9 @@
 													<!-- warning for duplicate languages -->
 													<xforms:group
 														ref=".[not(count(nuds:description/@xml:lang) = count(distinct-values(nuds:description/@xml:lang)))]">
-														<div class="alert alert-warning alert-box">
+														<div class="alert alert-danger alert-box">
 															<p><span class="glyphicon glyphicon-warning-sign"></span>
-																<strong>Warning! </strong><span>Description languages should be unique.</span>
+																<strong>Alert! </strong><span>Description languages should be unique.</span>
 															</p>
 														</div>
 													</xforms:group>
@@ -1170,9 +1175,9 @@
 																			<xforms:label>Select...</xforms:label>
 																			<xforms:value/>
 																		</xforms:item>
-																		<xforms:itemset nodeset="instance('localTypes')//localType">
-																			<xforms:label ref="."/>
-																			<xforms:value ref="."/>
+																		<xforms:itemset nodeset="instance('config')/localTypes/localType">
+																			<xforms:label ref="if (label[@lang='en']) then label[@lang='en'] else label[1]"/>
+																			<xforms:value ref="@value"/>
 																		</xforms:itemset>
 																	</xforms:select1>
 																	<xforms:trigger appearance="minimal">
@@ -1201,8 +1206,8 @@
 													</xforms:repeat>
 												</div>
 											</xforms:group>
-											
-											<hr/>
+
+											<hr />
 										</div>
 									</xforms:group>
 
@@ -1994,8 +1999,8 @@
 												</xforms:action>
 											</xforms:trigger>
 										</xforms:group>
-									</div>									
-									
+									</div>
+
 									<xforms:group ref=".[nuds:identifier or nuds:collection or nuds:department]">
 										<div class="section">
 											<h3>Primary Identifying Attributes</h3>
@@ -2038,12 +2043,12 @@
 														</xforms:label>
 													</xforms:trigger>
 												</div>
-												
+
 												<!--<numishare:department/>-->
 											</xforms:repeat>
 										</div>
 									</xforms:group>
-									
+
 									<xforms:group ref=".[nuds:acknowledgment or nuds:appraisal or nuds:owner or nuds:physloc or nuds:repository]">
 										<div class="section">
 											<h3>Additional Administrative Metadata</h3>
@@ -2081,7 +2086,7 @@
 														</xforms:group>
 													</div>
 												</div>
-											</xforms:repeat>									
+											</xforms:repeat>
 											<xforms:repeat nodeset="nuds:owner">
 												<div>
 													<xforms:input ref=".">
@@ -2120,18 +2125,18 @@
 														</xforms:label>
 													</xforms:trigger>
 												</div>
-											</xforms:group>	
+											</xforms:group>
 										</div>
 									</xforms:group>
-									
+
 									<xforms:group ref="nuds:provenance">
 										<div class="section">
 											<h3>Provenance</h3>
 										</div>
 									</xforms:group>
-									
-									
-																	
+
+
+
 									<!--<xforms:group ref="nuds:custodhist">
 										<div class="section">
 											<h3>Custodial History</h3>

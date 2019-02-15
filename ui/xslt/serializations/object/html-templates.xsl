@@ -104,6 +104,9 @@
 						<xsl:when test="string(@xlink:role)">
 							<xsl:value-of select="@xlink:role"/>
 						</xsl:when>
+						<xsl:when test="string(@localType)">
+							<xsl:value-of select="@localType"/>
+						</xsl:when>
 						<xsl:otherwise>
 							<xsl:value-of select="local-name()"/>
 						</xsl:otherwise>

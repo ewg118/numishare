@@ -336,18 +336,16 @@
 										</xforms:action>
 									</xforms:trigger>
 								</xforms:group>
-								<xforms:group ref=".[count(nuds:obverse/nuds:symbol) = 0]">
-									<xforms:trigger appearance="minimal">
-										<xforms:label>
-											<span class="glyphicon glyphicon-plus"/>Symbol</xforms:label>
-										<xforms:action ev:event="DOMActivate">
-											<xforms:insert context="." origin="instance('obverse-template')" nodeset="./child::node()[last()]"
-												if="count(nuds:obverse) = 0"/>
-											<xforms:insert context="nuds:obverse" origin="instance('symbol-template')" nodeset="./child::node()[last()]"/>
-											<xxforms:hide dialog="obverse-objects"/>
-										</xforms:action>
-									</xforms:trigger>
-								</xforms:group>
+								<xforms:trigger appearance="minimal">
+									<xforms:label>
+										<span class="glyphicon glyphicon-plus"/>Symbol</xforms:label>
+									<xforms:action ev:event="DOMActivate">
+										<xforms:insert context="." origin="instance('obverse-template')" nodeset="./child::node()[last()]"
+											if="count(nuds:obverse) = 0"/>
+										<xforms:insert context="nuds:obverse" origin="instance('symbol-template')" nodeset="./child::node()[last()]"/>
+										<xxforms:hide dialog="obverse-objects"/>
+									</xforms:action>
+								</xforms:trigger>
 								<xforms:trigger appearance="minimal">
 									<xforms:label>
 										<span class="glyphicon glyphicon-plus"/>Type Description</xforms:label>
@@ -370,17 +368,16 @@
 											<p>
 												<span class="glyphicon glyphicon-warning-sign"/>
 												<strong>Warning! </strong>
-												<span>An entity lookup must be completed or deleted before the record can be saved..</span>
+												<span>An entity lookup must be completed or deleted before the record can be saved.</span>
 											</p>
 										</div>
 									</xforms:group>
 
-
 									<xforms:group ref=".[count(nuds:type/nuds:description) &gt; count(distinct-values(nuds:type/nuds:description/@xml:lang))]">
-										<div class="alert alert-warning alert-box">
+										<div class="alert alert-danger alert-box">
 											<p>
 												<span class="glyphicon glyphicon-warning-sign"/>
-												<strong>Warning! </strong>
+												<strong>Alert! </strong>
 												<span>Type Description languages must be unique.</span>
 											</p>
 										</div>
@@ -430,23 +427,18 @@
 										</div>
 									</xforms:group>
 
-									<xforms:group ref="nuds:symbol">
-										<div>
-											<xforms:input ref=".">
-												<xforms:label>Symbol</xforms:label>
-												<xforms:alert>Must contain a value.</xforms:alert>
-											</xforms:input>
-											<xforms:trigger appearance="minimal">
-												<xforms:delete ev:event="DOMActivate" nodeset="."/>
-												<xforms:label>
-													<span class="glyphicon glyphicon-remove"/>
-												</xforms:label>
-											</xforms:trigger>
-										</div>
-									</xforms:group>
+									<xforms:repeat ref="nuds:symbol">
+										<numishare:symbol/>
+									</xforms:repeat>
 
 									<xforms:group ref="nuds:type">
 										<h4>Type</h4>
+										<xforms:trigger appearance="minimal">
+											<xforms:delete ev:event="DOMActivate" nodeset="."/>
+											<xforms:label>
+												<span class="glyphicon glyphicon-remove"/>
+											</xforms:label>
+										</xforms:trigger>
 										<span class="add">
 											<xforms:trigger appearance="minimal">
 												<xforms:label><span class="glyphicon glyphicon-plus"/>Description</xforms:label>
@@ -456,11 +448,8 @@
 										</span>
 										<xforms:repeat nodeset="nuds:description">
 											<numishare:description/>
-										</xforms:repeat>
-										<xforms:delete ev:event="xforms-value-changed" if="count(*) = 0" nodeset="."/>
+										</xforms:repeat>										
 									</xforms:group>
-
-									<xforms:delete ev:event="xforms-value-changed" if="count(*) = 0" nodeset="."/>
 								</div>
 							</xforms:group>
 							
@@ -493,18 +482,16 @@
 										</xforms:action>
 									</xforms:trigger>
 								</xforms:group>
-								<xforms:group ref=".[count(nuds:reverse/nuds:symbol) = 0]">
-									<xforms:trigger appearance="minimal">
-										<xforms:label>
-											<span class="glyphicon glyphicon-plus"/>Symbol</xforms:label>
-										<xforms:action ev:event="DOMActivate">
-											<xforms:insert context="." origin="instance('reverse-template')" nodeset="./child::node()[last()]"
-												if="count(nuds:reverse) = 0"/>
-											<xforms:insert context="nuds:reverse" origin="instance('symbol-template')" nodeset="./child::node()[last()]"/>
-											<xxforms:hide dialog="reverse-objects"/>
-										</xforms:action>
-									</xforms:trigger>
-								</xforms:group>
+								<xforms:trigger appearance="minimal">
+									<xforms:label>
+										<span class="glyphicon glyphicon-plus"/>Symbol</xforms:label>
+									<xforms:action ev:event="DOMActivate">
+										<xforms:insert context="." origin="instance('reverse-template')" nodeset="./child::node()[last()]"
+											if="count(nuds:reverse) = 0"/>
+										<xforms:insert context="nuds:reverse" origin="instance('symbol-template')" nodeset="./child::node()[last()]"/>
+										<xxforms:hide dialog="reverse-objects"/>
+									</xforms:action>
+								</xforms:trigger>
 								<xforms:trigger appearance="minimal">
 									<xforms:label>
 										<span class="glyphicon glyphicon-plus"/>Type Description</xforms:label>
@@ -527,16 +514,16 @@
 											<p>
 												<span class="glyphicon glyphicon-warning-sign"/>
 												<strong>Warning! </strong>
-												<span>An entity lookup must be completed or deleted before the record can be saved..</span>
+												<span>An entity lookup must be completed or deleted before the record can be saved.</span>
 											</p>
 										</div>
 									</xforms:group>
 
 									<xforms:group ref=".[count(nuds:type/nuds:description) &gt; count(distinct-values(nuds:type/nuds:description/@xml:lang))]">
-										<div class="alert alert-warning alert-box">
+										<div class="alert alert-danger alert-box">
 											<p>
 												<span class="glyphicon glyphicon-warning-sign"/>
-												<strong>Warning! </strong>
+												<strong>Alert! </strong>
 												<span>Type Description languages must be unique.</span>
 											</p>
 										</div>
@@ -586,22 +573,18 @@
 										</div>
 									</xforms:group>
 
-									<xforms:group ref="nuds:symbol">
-										<div>
-											<xforms:input ref=".">
-												<xforms:label>Symbol</xforms:label>
-												<xforms:alert>Must contain a value.</xforms:alert>
-											</xforms:input>
-											<xforms:trigger appearance="minimal">
-												<xforms:delete ev:event="DOMActivate" nodeset="."/>
-												<xforms:label>
-													<span class="glyphicon glyphicon-remove"/>
-												</xforms:label>
-											</xforms:trigger>
-										</div>
-									</xforms:group>
+									<xforms:repeat ref="nuds:symbol">
+										<numishare:symbol/>
+									</xforms:repeat>
+									
 									<xforms:group ref="nuds:type">
 										<h4>Type</h4>
+										<xforms:trigger appearance="minimal">
+											<xforms:delete ev:event="DOMActivate" nodeset="."/>
+											<xforms:label>
+												<span class="glyphicon glyphicon-remove"/>
+											</xforms:label>
+										</xforms:trigger>
 										<span class="add">
 											<xforms:trigger appearance="minimal">
 												<xforms:label><span class="glyphicon glyphicon-plus"/>Description</xforms:label>
@@ -611,10 +594,8 @@
 										</span>
 										<xforms:repeat nodeset="nuds:description">
 											<numishare:description/>
-										</xforms:repeat>
-										<xforms:delete ev:event="xforms-value-changed" if="count(*) = 0" nodeset="."/>
-									</xforms:group>
-									<xforms:delete ev:event="xforms-value-changed" if="count(*) = 0" nodeset="."/>
+										</xforms:repeat>										
+									</xforms:group>									
 								</div>
 							</xforms:group>
 							<hr/>
@@ -686,6 +667,12 @@
 									</xforms:group>
 									<xforms:group ref="nuds:type">
 										<h4>Type</h4>
+										<xforms:trigger appearance="minimal">
+											<xforms:delete ev:event="DOMActivate" nodeset="."/>
+											<xforms:label>
+												<span class="glyphicon glyphicon-remove"/>
+											</xforms:label>
+										</xforms:trigger>
 										<span class="add">
 											<xforms:trigger appearance="minimal">
 												<xforms:label><span class="glyphicon glyphicon-plus"/>Description</xforms:label>
@@ -696,12 +683,7 @@
 										<xforms:repeat nodeset="nuds:description">
 											<numishare:description/>
 										</xforms:repeat>
-										<xforms:action ev:event="DOMActivate">
-											<xforms:message level="modal">test</xforms:message>
-										</xforms:action>
-										<xforms:delete ev:event="xxforms-value-changed" if="count(*) = 0" nodeset="."/>
 									</xforms:group>
-									<xforms:delete ev:event="xforms-value-changed" if="count(*) = 0" nodeset="."/>
 								</div>
 							</xforms:group>
 							<hr/>
@@ -727,7 +709,7 @@
 											<p>
 												<span class="glyphicon glyphicon-warning-sign"/>
 												<strong>Warning! </strong>
-												<span>An entity lookup must be completed or deleted before the record can be saved..</span>
+												<span>An entity lookup must be completed or deleted before the record can be saved.</span>
 											</p>
 										</div>
 									</xforms:group>
@@ -756,8 +738,6 @@
 											<numishare:certainty/>
 										</div>
 									</xforms:repeat>
-
-									<xforms:delete ev:event="xforms-value-changed" if="count(*) = 0" nodeset="."/>
 								</div>
 							</xforms:group>
 							<hr/>
@@ -797,7 +777,7 @@
 											<p>
 												<span class="glyphicon glyphicon-warning-sign"/>
 												<strong>Warning! </strong>
-												<span>An entity lookup must be completed or deleted before the record can be saved..</span>
+												<span>An entity lookup must be completed or deleted before the record can be saved.</span>
 											</p>
 										</div>
 									</xforms:group>
@@ -826,8 +806,6 @@
 											<numishare:certainty/>
 										</div>
 									</xforms:repeat>
-									
-									<xforms:delete ev:event="xforms-value-changed" if="count(*) = 0" nodeset="."/>
 								</div>
 							</xforms:group>
 							<hr/>

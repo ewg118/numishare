@@ -33,15 +33,9 @@
 							</xforms:select1>
 							<xforms:group ref=".[not(parent::nuds:mark)]">
 								<xforms:trigger appearance="minimal">
-									<xforms:action ev:event="DOMActivate">
-										
+									<xforms:action ev:event="DOMActivate">										
 										<xforms:delete nodeset="."/>
-										
-										<!-- if the parent is a descriptionSet, then delete the parent, when empty -->
-										<xforms:action if="parent::nuds:descriptionSet">
-											<xforms:message level="modal">test</xforms:message>
-											<xforms:delete nodeset="parent::node()" if="count(parent::node()/nuds:description) = 0"/>
-										</xforms:action>
+										<xforms:delete nodeset="parent::node()" if="count(parent::node()/*) = 0"/>	
 									</xforms:action>
 									
 									<xforms:label>

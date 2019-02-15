@@ -1021,7 +1021,7 @@
 		<div class="metadata_section">
 			
 			<ul>
-				<xsl:apply-templates/>
+				<xsl:apply-templates mode="descMeta"/>
 			</ul>
 		</div>
 	</xsl:template>
@@ -1049,26 +1049,6 @@
 			</xsl:choose>
 			
 		</div>
-	</xsl:template>
-
-	<xsl:template match="nuds:subject">
-		<li>
-			<b><xsl:value-of select="
-						if (string(@localType)) then
-							@localType
-						else
-							numishare:regularize_node(local-name(), $lang)"/>: </b>
-			<a
-				href="{$display_path}results?q={if (string(@localType)) then @localType else 'subject'}_facet:&#x022;{normalize-space(.)}&#x022;{if (string($langParam)) then concat('&amp;lang=', $langParam) else
-				''}">
-				<xsl:value-of select="."/>
-			</a>
-			<xsl:if test="string(@xlink:href)">
-				<a rel="dcterms:subject" href="{@xlink:href}" target="_blank" class="external_link">
-					<span class="glyphicon glyphicon-new-window"/>
-				</a>
-			</xsl:if>
-		</li>
 	</xsl:template>
 
 	<xsl:template match="nuds:note">
