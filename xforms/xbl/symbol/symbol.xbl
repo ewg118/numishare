@@ -1,0 +1,80 @@
+<!-- 	author: Ethan Gruber, American Numismatic Society 
+	last modified: February 2019
+	Function: Input for symbol. The config is loaded to populate acceptable symbol positions, if applicable. TODO: implement lookup mechanism for symbol URIs
+-->
+
+<xbl:xbl xmlns="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events"
+	xmlns:xxforms="http://orbeon.org/oxf/xml/xforms" xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:xbl="http://www.w3.org/ns/xbl"
+	xmlns:xxbl="http://orbeon.org/oxf/xml/xbl" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:oxf="http://www.orbeon.com/oxf/processors"
+	xmlns:nuds="http://nomisma.org/nuds" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:numishare="https://github.com/ewg118/numishare"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xbl:binding id="numishare-symbol" element="numishare|symbol">
+		<xbl:template>
+			<xforms:group xbl:attr="model context ref bind" xxbl:scope="outer">
+				<xbl:content includes="xforms|label,xforms|help,xforms|hint,xforms|alert"/>
+				<xforms:group xxbl:scope="inner">
+					<xforms:var name="binding" as="node()?">
+						<xxforms:sequence select="." xxbl:scope="outer"/>
+					</xforms:var>
+					<!--<xforms:action ev:event="xforms-enabled" ev:target="#observer">
+						<!-\- load config -\->
+						<xforms:send submission="load-config"/>
+						<xforms:action if="$binding/gml:Point">
+							<xforms:setvalue ref="instance('coordinates-temp')/geo:lat" value="substring-before($binding/gml:Point/gml:coordinates, ', ')"/>
+							<xforms:setvalue ref="instance('coordinates-temp')/geo:long" value="substring-after($binding/gml:Point/gml:coordinates, ', ')"/>
+						</xforms:action>
+						<xforms:action if="not($binding/gml:Point)">
+							<!-\- evaluate whether then Geonames username/API key has been set. If so, then insert geonames as the interface type -\->
+							<xforms:action if="string(instance('config')/*[local-name()='geonames_api_key'])">
+								<xforms:setvalue ref="instance('interface-type')">geonames</xforms:setvalue>
+								<xforms:toggle case="geonames-search"/>
+							</xforms:action>
+						</xforms:action>
+					</xforms:action>-->
+
+					<xforms:group ref="$binding">
+						<div>
+							<xforms:input ref=".">
+								<xforms:label>Symbol</xforms:label>
+								<xforms:alert>Must contain a value.</xforms:alert>
+							</xforms:input>
+							<xforms:trigger appearance="minimal">
+								<xforms:delete ev:event="DOMActivate" nodeset="."/>
+								<xforms:label>
+									<span class="glyphicon glyphicon-remove"/>
+								</xforms:label>
+							</xforms:trigger>
+						</div>
+					</xforms:group>
+
+					<!-- ***********************  DIALOG INTERNAL MODEL *********************** -->
+					<xforms:model id="symbol-model" xmlns:xi="http://www.w3.org/2001/XInclude">
+						<xforms:instance id="exist-config">
+							<xi:include href="../../../exist-config.xml" xmlns=""/>
+						</xforms:instance>
+
+						<xforms:instance id="control-instance">
+							<control xmlns="">
+								<collection-name/>
+							</control>
+						</xforms:instance>
+
+						<!-- site info -->
+						<xforms:instance id="config">
+							<config xmlns=""/>
+						</xforms:instance>
+
+						<!-- ***** SUBMISSIONS ***** -->
+						<!-- load config -->
+						<xforms:submission id="load-config" serialization="none" method="get"
+							action="{instance('exist-config')/url}{xxforms:get-session-attribute('collection-name')}/config.xml" replace="instance"
+							instance="config" xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}">
+							<xforms:message ev:event="xforms-submit-error" level="modal">Error Loading Config.</xforms:message>
+						</xforms:submission>
+					</xforms:model>
+				</xforms:group>
+			</xforms:group>
+		</xbl:template>
+	</xbl:binding>
+
+</xbl:xbl>
