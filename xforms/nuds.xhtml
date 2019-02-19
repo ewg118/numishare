@@ -48,6 +48,9 @@
 						<physDesc/>
 						<typeDesc>
 							<objectType xlink:type="simple" xlink:href=""/>
+							<obverse/>
+							<reverse/>
+							<edge/>
 						</typeDesc>
 						<refDesc/>
 						<adminDesc/>
@@ -207,6 +210,9 @@
 			<xforms:instance id="reverse-template" xxforms:exclude-result-prefixes="#all">
 				<reverse/>
 			</xforms:instance>
+			<xforms:instance id="edge-template" xxforms:exclude-result-prefixes="#all">
+				<edge/>
+			</xforms:instance>
 
 			<!-- descMeta templates -->
 			<xforms:instance id="department-template" xxforms:exclude-result-prefixes="#all">
@@ -238,16 +244,11 @@
 			<xforms:instance id="height-template" xxforms:exclude-result-prefixes="#all">
 				<height/>
 			</xforms:instance>
-			<xforms:instance id="mark-template" xxforms:exclude-result-prefixes="#all">
-				<mark>
-					<description/>
-				</mark>
-			</xforms:instance>
 			<xforms:instance id="measurementsSet-template" xxforms:exclude-result-prefixes="#all">
 				<measurementsSet/>
-			</xforms:instance>
-			<xforms:instance id="shape-template" xxforms:exclude-result-prefixes="#all">
-				<shape/>
+			</xforms:instance>			
+			<xforms:instance id="symbol-template" xxforms:exclude-result-prefixes="#all">
+				<symbol/>
 			</xforms:instance>
 			<xforms:instance id="testmark-template" xxforms:exclude-result-prefixes="#all">
 				<testmark/>
@@ -264,14 +265,17 @@
 			<xforms:instance id="width-template" xxforms:exclude-result-prefixes="#all">
 				<width/>
 			</xforms:instance>
+
 			<!-- objecttype -->
 			<xforms:instance id="objectType-template" xxforms:exclude-result-prefixes="#all">
 				<objectType xlink:type="simple" xlink:href=""/>
 			</xforms:instance>
+
 			<!-- undertypeDesc -->
 			<xforms:instance id="undertypeDesc-template" xxforms:exclude-result-prefixes="#all">
 				<undertypeDesc/>
 			</xforms:instance>
+
 			<!-- adminDesc -->
 			<xforms:instance id="adminDesc-template" xxforms:exclude-result-prefixes="#all">
 				<adminDesc/>
@@ -279,32 +283,18 @@
 			<xforms:instance id="acknowledgment-template" xxforms:exclude-result-prefixes="#all">
 				<acknowledgment/>
 			</xforms:instance>
-			<xforms:instance id="acqinfo-template" xxforms:exclude-result-prefixes="#all">
-				<acqinfo xxforms:exclude-result-prefixes="#all">
-					<date/>
-					<acquiredFrom/>
-					<acquiredMethod/>
-				</acqinfo>
-			</xforms:instance>
+
 			<xforms:instance id="appraisal-template" xxforms:exclude-result-prefixes="#all">
 				<appraisal>
 					<date/>
 					<appraiser/>
 				</appraisal>
 			</xforms:instance>
+
 			<xforms:instance id="collection-template" xxforms:exclude-result-prefixes="#all">
 				<collection/>
 			</xforms:instance>
-			<xforms:instance id="custodhist-template" xxforms:exclude-result-prefixes="#all">
-				<custodhist>
-					<chronlist>
-						<chronitem>
-							<date/>
-							<previousColl/>
-						</chronitem>
-					</chronlist>
-				</custodhist>
-			</xforms:instance>
+
 			<xforms:instance id="chronitem-template" xxforms:exclude-result-prefixes="#all">
 				<chronitem>
 					<date/>
@@ -456,8 +446,13 @@
 						<xforms:bind nodeset="nuds:denomination" required="true()"/>
 						<xforms:bind nodeset="nuds:manufacture" required="true()"/>
 						<xforms:bind nodeset="nuds:material" required="true()"/>
-						<xforms:bind nodeset="nuds:obverse|nuds:reverse">
+						<xforms:bind nodeset="nuds:obverse|nuds:reverse|nuds:edge">
 							<xforms:bind constraint="count(numishare:entity) = 0"/>
+							<xforms:bind nodeset="nuds:description">
+								<xforms:bind nodeset="@xml:lang"
+									constraint="count(parent::node()/nuds:description/@xml:lang) = count(distinct-values(parent::node()/nuds:description/@xml:lang))"
+								/>
+							</xforms:bind>
 							<xforms:bind nodeset="nuds:legend" required="true()"/>
 							<xforms:bind nodeset="nuds:type">
 								<xforms:bind nodeset="nuds:description">
@@ -869,11 +864,11 @@
 		<xi:include href="xbl/entity-input/entity-input.xbl" xi:omit-xml-base="true"/>
 		<xi:include href="xbl/file-upload/file-upload.xbl" xi:omit-xml-base="true"/>
 		<xi:include href="xbl/findspot/findspot.xbl" xi:omit-xml-base="true"/>
-		<xi:include href="xbl/mark/mark.xbl" xi:omit-xml-base="true"/>
 		<xi:include href="xbl/control/control.xbl" xi:omit-xml-base="true"/>
 		<xi:include href="xbl/output-typeDesc/output-typeDesc.xbl" xi:omit-xml-base="true"/>
 		<xi:include href="xbl/reference/reference.xbl" xi:omit-xml-base="true"/>
 		<xi:include href="xbl/sale/sale.xbl" xi:omit-xml-base="true"/>
+		<xi:include href="xbl/sideCharacteristics/sideCharacteristics.xbl" xi:omit-xml-base="true"/>
 		<xi:include href="xbl/symbol/symbol.xbl" xi:omit-xml-base="true"/>
 		<xi:include href="xbl/type-undertype/type-undertype.xbl" xi:omit-xml-base="true"/>
 	</head>
@@ -903,20 +898,28 @@
 									<xforms:setvalue
 										ref="instance('object')/nuds:control/nuds:maintenanceHistory/nuds:maintenanceEvent[last()]/nuds:eventDateTime/@standardDateTime"
 										value="current-dateTime()"/>
-									
+
 									<!-- set maintenanceStatus to 'revised', if it is both 'new' and file was loaded from eXist, i.e., not newly created -->
 									<xforms:setvalue ref="instance('object')/nuds:control/nuds:maintenanceStatus"
 										if="string(instance('control-instance')/id) and instance('object')/nuds:control/nuds:maintenanceStatus = 'new'"
 										>revised</xforms:setvalue>
-									
+
 									<!-- delete specificed empty elements -->
-									<xforms:delete nodeset="instance('object')/nuds:descMeta/nuds:typeDesc/nuds:obverse/nuds:type" if="not(instance('object')/nuds:descMeta/nuds:typeDesc/nuds:obverse/nuds:type/*)"/>
-									<xforms:delete nodeset="instance('object')/nuds:descMeta/nuds:typeDesc/nuds:reverse/nuds:type" if="not(instance('object')/nuds:descMeta/nuds:typeDesc/nuds:reverse/nuds:type/*)"/>
-									<xforms:delete nodeset="instance('object')/nuds:descMeta/nuds:typeDesc/nuds:obverse" if="not(instance('object')/nuds:descMeta/nuds:typeDesc/nuds:obverse/*)"/>
-									<xforms:delete nodeset="instance('object')/nuds:descMeta/nuds:typeDesc/nuds:reverse" if="not(instance('object')/nuds:descMeta/nuds:typeDesc/nuds:reverse/*)"/>
-									<xforms:delete nodeset="instance('object')/nuds:descMeta/nuds:typeDesc/nuds:authority" if="not(instance('object')/nuds:descMeta/nuds:typeDesc/nuds:authority/*)"/>
-									<xforms:delete nodeset="instance('object')/nuds:descMeta/nuds:typeDesc/nuds:geographic" if="not(instance('object')/nuds:descMeta/nuds:typeDesc/nuds:geographic/*)"/>
-									
+									<xforms:delete nodeset="instance('object')/nuds:descMeta/nuds:typeDesc/nuds:obverse/nuds:type"
+										if="not(instance('object')/nuds:descMeta/nuds:typeDesc/nuds:obverse/nuds:type/*)"/>
+									<xforms:delete nodeset="instance('object')/nuds:descMeta/nuds:typeDesc/nuds:reverse/nuds:type"
+										if="not(instance('object')/nuds:descMeta/nuds:typeDesc/nuds:reverse/nuds:type/*)"/>
+									<xforms:delete nodeset="instance('object')/nuds:descMeta/nuds:typeDesc/nuds:obverse"
+										if="not(instance('object')/nuds:descMeta/nuds:typeDesc/nuds:obverse/*)"/>
+									<xforms:delete nodeset="instance('object')/nuds:descMeta/nuds:typeDesc/nuds:reverse"
+										if="not(instance('object')/nuds:descMeta/nuds:typeDesc/nuds:reverse/*)"/>
+									<xforms:delete nodeset="instance('object')/nuds:descMeta/nuds:typeDesc/nuds:edge"
+										if="not(instance('object')/nuds:descMeta/nuds:typeDesc/nuds:edge/*)"/>
+									<xforms:delete nodeset="instance('object')/nuds:descMeta/nuds:typeDesc/nuds:authority"
+										if="not(instance('object')/nuds:descMeta/nuds:typeDesc/nuds:authority/*)"/>
+									<xforms:delete nodeset="instance('object')/nuds:descMeta/nuds:typeDesc/nuds:geographic"
+										if="not(instance('object')/nuds:descMeta/nuds:typeDesc/nuds:geographic/*)"/>
+
 									<xforms:send submission="save-object"/>
 								</xforms:action>
 								<xforms:label><span class="glyphicon glyphicon-floppy-disk"></span>Save</xforms:label>
@@ -1715,115 +1718,190 @@
 									<div class="subsection">
 										<h3>Countermark</h3>
 										<div class="trigger_container">
-											<xforms:trigger appearance="minimal">
-												<xforms:label>
-													<span class="glyphicon glyphicon-plus"></span>Mark--Obverse</xforms:label>
-												<xforms:action ev:event="DOMActivate">
-													<xforms:insert context="." origin="instance('countermark-template')" nodeset="./child::node()[last()]"
-														if="count(nuds:countermark) = 0"/>
-													<xforms:insert context="nuds:countermark" origin="instance('obverse-template')" if="count(nuds:obverse) = 0"/>
-													<xforms:insert context="nuds:countermark/nuds:obverse" origin="instance('mark-template')"
-														nodeset="./child::node()[last()]"/>
-												</xforms:action>
-											</xforms:trigger>
-											<xforms:trigger appearance="minimal">
-												<xforms:label>
-													<span class="glyphicon glyphicon-plus"></span>Mark--Reverse</xforms:label>
-												<xforms:action ev:event="DOMActivate">
-													<xforms:insert context="." origin="instance('countermark-template')" nodeset="./child::node()[last()]"
-														if="count(nuds:countermark) = 0"/>
-													<xforms:insert context="nuds:countermark" origin="instance('reverse-template')"
-														nodeset="./child::node()[last()]" if="count(nuds:reverse) = 0"/>
-													<xforms:insert context="nuds:countermark/nuds:reverse" origin="instance('mark-template')"
-														nodeset="./child::node()[last()]"/>
-												</xforms:action>
-											</xforms:trigger>
+											<xforms:group ref=".[not(nuds:countermark/nuds:obverse) and not(nuds:countermark/nuds:reverse)]">
+												<xforms:trigger appearance="minimal">
+													<xforms:label>
+														<span class="glyphicon glyphicon-plus"></span>Description</xforms:label>
+													<xforms:action ev:event="DOMActivate">
+														<xforms:insert context="." origin="instance('countermark-template')" nodeset="./child::node()[last()]"
+															if="count(nuds:countermark) = 0"/>
+														<xforms:insert context="nuds:countermark" origin="instance('description-template')"/>
+													</xforms:action>
+												</xforms:trigger>
+											</xforms:group>
+											<xforms:group ref=".[not(nuds:countermark/nuds:obverse) and not(nuds:countermark/nuds:reverse)]">
+												<xforms:trigger appearance="minimal">
+													<xforms:label>
+														<span class="glyphicon glyphicon-plus"></span>Symbol</xforms:label>
+													<xforms:action ev:event="DOMActivate">
+														<xforms:insert context="." origin="instance('countermark-template')" nodeset="./child::node()[last()]"
+															if="count(nuds:countermark) = 0"/>
+														<xforms:insert context="nuds:countermark" origin="instance('symbol-template')"/>
+													</xforms:action>
+												</xforms:trigger>
+											</xforms:group>
+
+											<xforms:group
+												ref=".[count(nuds:countermark/nuds:obverse) = 0 and not(nuds:countermark/nuds:description or nuds:countermark/nuds:symbol)]">
+												<xforms:trigger appearance="minimal">
+													<xforms:label>
+														<span class="glyphicon glyphicon-plus"></span>Obverse Features</xforms:label>
+													<xforms:action ev:event="DOMActivate">
+														<xforms:insert context="." origin="instance('countermark-template')" nodeset="./child::node()[last()]"
+															if="count(nuds:countermark) = 0"/>
+														<xforms:insert context="nuds:countermark" nodeset="./child::node()[last()]"
+															origin="instance('obverse-template')"/>
+													</xforms:action>
+												</xforms:trigger>
+											</xforms:group>
+											<xforms:group
+												ref=".[count(nuds:countermark/nuds:reverse) = 0 and not(nuds:countermark/nuds:description or nuds:countermark/nuds:symbol)]">
+												<xforms:trigger appearance="minimal">
+													<xforms:label>
+														<span class="glyphicon glyphicon-plus"></span>Reverse Features</xforms:label>
+													<xforms:action ev:event="DOMActivate">
+														<xforms:insert context="." origin="instance('countermark-template')" nodeset="./child::node()[last()]"
+															if="count(nuds:countermark) = 0"/>
+														<xforms:insert context="nuds:countermark" nodeset="./child::node()[last()]"
+															origin="instance('reverse-template')"/>
+													</xforms:action>
+												</xforms:trigger>
+											</xforms:group>
 										</div>
+
 										<xforms:group ref="nuds:countermark">
+											<xforms:repeat nodeset="nuds:description">
+												<numishare:description/>
+											</xforms:repeat>
+
+											<xforms:repeat nodeset="nuds:symbol">
+												<numishare:symbol/>
+											</xforms:repeat>
+
 											<xforms:group ref="nuds:obverse">
 												<div class="subsection">
 													<h4>Obverse</h4>
-													<xforms:repeat nodeset="nuds:mark">
-														<numishare:mark/>
-													</xforms:repeat>
+													<xforms:trigger appearance="minimal">
+														<xforms:delete ev:event="DOMActivate" nodeset="."/>
+														<xforms:label>
+															<span class="glyphicon glyphicon-remove"></span>
+														</xforms:label>
+													</xforms:trigger>
+													
+													<numishare:sideCharacteristics/>													
 												</div>
-												<xforms:delete ev:event="xforms-value-changed" if="count(*) = 0" nodeset="."/>
 											</xforms:group>
+											
 											<xforms:group ref="nuds:reverse">
 												<div class="subsection">
 													<h4>Reverse</h4>
-													<xforms:repeat nodeset="nuds:mark">
-														<numishare:mark/>
-													</xforms:repeat>
+													<xforms:trigger appearance="minimal">
+														<xforms:delete ev:event="DOMActivate" nodeset="."/>
+														<xforms:label>
+															<span class="glyphicon glyphicon-remove"></span>
+														</xforms:label>
+													</xforms:trigger>
+													
+													<numishare:sideCharacteristics/>													
 												</div>
-												<xforms:delete ev:event="xforms-value-changed" if="count(*) = 0" nodeset="."/>
 											</xforms:group>
-											<xforms:delete ev:event="xforms-value-changed" if="count(*) = 0" nodeset="."/>
+
 										</xforms:group>
 									</div>
 									<!-- ************* TESTMARK ************** -->
 									<div class="subsection">
 										<h3>Testmark</h3>
 										<div class="trigger_container">
-											<xforms:trigger appearance="minimal">
-												<xforms:label>
-													<span class="glyphicon glyphicon-plus"></span>Mark--Obverse</xforms:label>
-												<xforms:action ev:event="DOMActivate">
-													<xforms:insert context="." origin="instance('testmark-template')" nodeset="./child::node()[last()]"
-														if="count(nuds:testmark) = 0"/>
-													<xforms:insert context="nuds:testmark" origin="instance('obverse-template')" if="count(nuds:obverse) = 0"/>
-													<xforms:insert context="nuds:testmark/nuds:obverse" origin="instance('mark-template')"
-														nodeset="./child::node()[last()]"/>
-												</xforms:action>
-											</xforms:trigger>
-											<xforms:trigger appearance="minimal">
-												<xforms:label>
-													<span class="glyphicon glyphicon-plus"></span>Mark--Reverse</xforms:label>
-												<xforms:action ev:event="DOMActivate">
-													<xforms:insert context="." origin="instance('testmark-template')" nodeset="./child::node()[last()]"
-														if="count(nuds:testmark) = 0"/>
-													<xforms:insert context="nuds:testmark" origin="instance('reverse-template')"
-														nodeset="./child::node()[last()]" if="count(nuds:reverse) = 0"/>
-													<xforms:insert context="nuds:testmark/nuds:reverse" origin="instance('mark-template')"
-														nodeset="./child::node()[last()]"/>
-												</xforms:action>
-											</xforms:trigger>
+											<xforms:group ref=".[not(nuds:testmark/nuds:obverse) and not(nuds:testmark/nuds:reverse)]">
+												<xforms:trigger appearance="minimal">
+													<xforms:label>
+														<span class="glyphicon glyphicon-plus"></span>Description</xforms:label>
+													<xforms:action ev:event="DOMActivate">
+														<xforms:insert context="." origin="instance('testmark-template')" nodeset="./child::node()[last()]"
+															if="count(nuds:testmark) = 0"/>
+														<xforms:insert context="nuds:testmark" origin="instance('description-template')"/>
+													</xforms:action>
+												</xforms:trigger>
+											</xforms:group>
+											<xforms:group ref=".[not(nuds:testmark/nuds:obverse) and not(nuds:testmark/nuds:reverse)]">
+												<xforms:trigger appearance="minimal">
+													<xforms:label>
+														<span class="glyphicon glyphicon-plus"></span>Symbol</xforms:label>
+													<xforms:action ev:event="DOMActivate">
+														<xforms:insert context="." origin="instance('testmark-template')" nodeset="./child::node()[last()]"
+															if="count(nuds:testmark) = 0"/>
+														<xforms:insert context="nuds:testmark" origin="instance('symbol-template')"/>
+													</xforms:action>
+												</xforms:trigger>
+											</xforms:group>
+											
+											<xforms:group
+												ref=".[count(nuds:testmark/nuds:obverse) = 0 and not(nuds:testmark/nuds:description or nuds:testmark/nuds:symbol)]">
+												<xforms:trigger appearance="minimal">
+													<xforms:label>
+														<span class="glyphicon glyphicon-plus"></span>Obverse Features</xforms:label>
+													<xforms:action ev:event="DOMActivate">
+														<xforms:insert context="." origin="instance('testmark-template')" nodeset="./child::node()[last()]"
+															if="count(nuds:testmark) = 0"/>
+														<xforms:insert context="nuds:testmark" nodeset="./child::node()[last()]"
+															origin="instance('obverse-template')"/>
+													</xforms:action>
+												</xforms:trigger>
+											</xforms:group>
+											<xforms:group
+												ref=".[count(nuds:testmark/nuds:reverse) = 0 and not(nuds:testmark/nuds:description or nuds:testmark/nuds:symbol)]">
+												<xforms:trigger appearance="minimal">
+													<xforms:label>
+														<span class="glyphicon glyphicon-plus"></span>Reverse Features</xforms:label>
+													<xforms:action ev:event="DOMActivate">
+														<xforms:insert context="." origin="instance('testmark-template')" nodeset="./child::node()[last()]"
+															if="count(nuds:testmark) = 0"/>
+														<xforms:insert context="nuds:testmark" nodeset="./child::node()[last()]"
+															origin="instance('reverse-template')"/>
+													</xforms:action>
+												</xforms:trigger>
+											</xforms:group>
 										</div>
+										
 										<xforms:group ref="nuds:testmark">
+											<xforms:repeat nodeset="nuds:description">
+												<numishare:description/>
+											</xforms:repeat>
+											
+											<xforms:repeat nodeset="nuds:symbol">
+												<numishare:symbol/>
+											</xforms:repeat>
+											
 											<xforms:group ref="nuds:obverse">
 												<div class="subsection">
 													<h4>Obverse</h4>
-													<xforms:repeat nodeset="nuds:mark">
-														<numishare:mark/>
-													</xforms:repeat>
+													<xforms:trigger appearance="minimal">
+														<xforms:delete ev:event="DOMActivate" nodeset="."/>
+														<xforms:label>
+															<span class="glyphicon glyphicon-remove"></span>
+														</xforms:label>
+													</xforms:trigger>
+													
+													<numishare:sideCharacteristics/>													
 												</div>
-												<xforms:delete ev:event="xforms-value-changed" if="count(*) = 0" nodeset="."/>
 											</xforms:group>
+											
 											<xforms:group ref="nuds:reverse">
 												<div class="subsection">
 													<h4>Reverse</h4>
-													<xforms:repeat nodeset="nuds:mark">
-														<numishare:mark/>
-													</xforms:repeat>
+													<xforms:trigger appearance="minimal">
+														<xforms:delete ev:event="DOMActivate" nodeset="."/>
+														<xforms:label>
+															<span class="glyphicon glyphicon-remove"></span>
+														</xforms:label>
+													</xforms:trigger>
+													
+													<numishare:sideCharacteristics/>													
 												</div>
-												<xforms:delete ev:event="xforms-value-changed" if="count(*) = 0" nodeset="."/>
 											</xforms:group>
-											<xforms:delete ev:event="xforms-value-changed" if="count(*) = 0" nodeset="."/>
+											
 										</xforms:group>
 									</div>
-									<xforms:group ref="nuds:shape">
-										<div>
-											<xforms:input ref=".">
-												<xforms:label>Shape</xforms:label>
-											</xforms:input>
-											<xforms:trigger appearance="minimal">
-												<xforms:delete ev:event="DOMActivate" nodeset="."/>
-												<xforms:label>
-													<span class="glyphicon glyphicon-remove"></span>
-												</xforms:label>
-											</xforms:trigger>
-										</div>
-									</xforms:group>
 								</fr:tab>
 								<!--**************************************** UNDERTYPE DESCRIPTION **********************************-->
 								<fr:tab bind="undertypeDesc">

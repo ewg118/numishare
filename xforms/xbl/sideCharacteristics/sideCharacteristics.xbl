@@ -1,0 +1,201 @@
+<!-- 	author: Ethan Gruber, American Numismatic Society 
+	last modified: February 2019
+	Function: Repeatable obverse/reverse XBL component. Vary the input triggers based on parent
+-->
+
+<xbl:xbl xmlns="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events"
+	xmlns:xxforms="http://orbeon.org/oxf/xml/xforms" xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:xbl="http://www.w3.org/ns/xbl"
+	xmlns:xxbl="http://orbeon.org/oxf/xml/xbl" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:oxf="http://www.orbeon.com/oxf/processors"
+	xmlns:nuds="http://nomisma.org/nuds" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:numishare="https://github.com/ewg118/numishare"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xbl:binding id="numishare-sideCharacteristics" element="numishare|sideCharacteristics">
+		<xbl:template>
+			<xforms:group xbl:attr="model context ref bind" xxbl:scope="outer">
+				<xbl:content includes="xforms|label,xforms|help,xforms|hint,xforms|alert"/>
+				<xforms:group xxbl:scope="inner">
+					<xforms:var name="binding" as="node()?">
+						<xxforms:sequence select="." xxbl:scope="outer"/>
+					</xforms:var>
+
+					<xforms:group ref="$binding">
+						<xforms:var name="name" select="$binding/local-name()"/>
+
+						<div class="trigger_container">
+							<xforms:group ref=".[count(nuds:legend) = 0 and count(nuds:type) = 0]">
+								<xforms:trigger appearance="minimal">
+									<xforms:label>
+										<span class="glyphicon glyphicon-plus"/>General Description</xforms:label>
+									<xforms:insert context="." origin="instance('description-template')" nodeset="./child::node()[last()]" ev:event="DOMActivate"/>
+								</xforms:trigger>
+							</xforms:group>
+							
+							<xforms:group ref=".[not($name = 'edge')]">
+								<xforms:trigger appearance="minimal">
+									<xforms:label>
+										<span class="glyphicon glyphicon-plus"/>Entity</xforms:label>
+									<xforms:insert context="." origin="instance('entity-template')" nodeset="./child::node()[last()]" ev:event="DOMActivate"/>
+								</xforms:trigger>
+							</xforms:group>
+							
+							<xforms:group ref=".[count(nuds:legend) = 0 and count(nuds:description) = 0]">
+								<xforms:trigger appearance="minimal">
+									<xforms:label>
+										<span class="glyphicon glyphicon-plus"/>Legend</xforms:label>
+									<xforms:insert context="." origin="instance('legend-template')" nodeset="./child::node()[last()]" ev:event="DOMActivate"/>
+								</xforms:trigger>
+							</xforms:group>
+							
+							<xforms:trigger appearance="minimal">
+								<xforms:label>
+									<span class="glyphicon glyphicon-plus"/>Symbol</xforms:label>
+								<xforms:insert context="." origin="instance('symbol-template')" nodeset="./child::node()[last()]" ev:event="DOMActivate"/>
+							</xforms:trigger>
+							
+							<!-- suppress type description for countermarks, testmarks, etc. -->
+							<xforms:group ref=".[not(ancestor::nuds:physDesc)]">
+								<xforms:group ref=".[count(nuds:description) = 0]">
+									<xforms:trigger appearance="minimal">
+										<xforms:label>
+											<span class="glyphicon glyphicon-plus"/>Type Description</xforms:label>
+										<xforms:action ev:event="DOMActivate">
+											<xforms:insert context="." origin="instance('type-template')" nodeset="./child::node()[last()]"
+												if="count(nuds:type) = 0"/>
+											<xforms:insert context="nuds:type" origin="instance('description-template')" nodeset="./child::node()[last()]"/>
+										</xforms:action>
+									</xforms:trigger>
+								</xforms:group>
+							</xforms:group>							
+						</div>
+
+						<div class="subsection">
+							<xforms:group ref=".[count(numishare:entity) &gt; 0]">
+								<div class="alert alert-warning alert-box">
+									<p>
+										<span class="glyphicon glyphicon-warning-sign"/>
+										<strong>Warning! </strong>
+										<span>An entity lookup must be completed or deleted before the record can be saved.</span>
+									</p>
+								</div>
+							</xforms:group>
+
+							<xforms:group ref=".[count(nuds:type/nuds:description) &gt; count(distinct-values(nuds:type/nuds:description/@xml:lang))]">
+								<div class="alert alert-danger alert-box">
+									<p>
+										<span class="glyphicon glyphicon-warning-sign"/>
+										<strong>Alert! </strong>
+										<span>Type Description languages must be unique.</span>
+									</p>
+								</div>
+							</xforms:group>
+							
+							<xforms:group ref=".[count(nuds:description) &gt; count(distinct-values(nuds:description/@xml:lang))]">
+								<div class="alert alert-danger alert-box">
+									<p>
+										<span class="glyphicon glyphicon-warning-sign"/>
+										<strong>Alert! </strong>
+										<span>General Description languages must be unique.</span>
+									</p>
+								</div>
+							</xforms:group>
+							
+							<!-- general description -->
+							<xforms:repeat nodeset="nuds:description">
+								<numishare:description/>
+							</xforms:repeat>
+
+							<!-- display entity lookups -->
+							<xforms:repeat nodeset="numishare:entity">
+								<numishare:entity-input/>
+							</xforms:repeat>
+
+							<!-- display existing entities, regardless of element -->
+							<xforms:repeat nodeset="nuds:persname|nuds:famname|nuds:corpname|nuds:geogname">
+								<div>
+									<xforms:output ref=".">
+										<xforms:label value="concat(upper-case(substring(@xlink:role, 1, 1)), substring(@xlink:role, 2))"/>
+									</xforms:output>
+									<xforms:group ref=".[string(@xlink:href)]">
+										<xforms:trigger appearance="minimal">
+											<xforms:label><span class="glyphicon glyphicon-new-window"/></xforms:label>
+											<xforms:load ev:event="DOMActivate" ref="@xlink:href" show="new"/>
+										</xforms:trigger>
+									</xforms:group>
+									<xforms:trigger appearance="minimal">
+										<xforms:label><span class="glyphicon glyphicon-remove"/></xforms:label>
+										<xforms:delete ev:event="DOMActivate" nodeset="."/>										
+									</xforms:trigger>
+									<numishare:certainty/>
+								</div>
+							</xforms:repeat>
+
+							<xforms:group ref="nuds:legend">
+								<div>
+									<xforms:input ref=".">
+										<xforms:label>Legend</xforms:label>
+										<xforms:alert>Must contain a value.</xforms:alert>
+									</xforms:input>
+									<xforms:trigger appearance="minimal">
+										<xforms:delete ev:event="DOMActivate" nodeset="."/>
+										<xforms:label>
+											<span class="glyphicon glyphicon-remove"/>
+										</xforms:label>
+									</xforms:trigger>
+								</div>
+							</xforms:group>
+
+							<xforms:repeat ref="nuds:symbol">
+								<numishare:symbol/>
+							</xforms:repeat>
+
+							<xforms:group ref="nuds:type">
+								<h4>Type</h4>
+								<xforms:trigger appearance="minimal">
+									<xforms:delete ev:event="DOMActivate" nodeset="."/>
+									<xforms:label>
+										<span class="glyphicon glyphicon-remove"/>
+									</xforms:label>
+								</xforms:trigger>
+								<span class="add">
+									<xforms:trigger appearance="minimal">
+										<xforms:label><span class="glyphicon glyphicon-plus"/>Description</xforms:label>
+										<xforms:insert ev:event="DOMActivate" context="." nodeset="./child::node()[last()]"
+											origin="instance('description-template')"/>
+									</xforms:trigger>
+								</span>
+								<xforms:repeat nodeset="nuds:description">
+									<numishare:description/>
+								</xforms:repeat>
+							</xforms:group>
+						</div>
+					</xforms:group>
+
+					<xforms:model id="sideCharacteristics-model" xmlns="http://nomisma.org/nuds">
+
+						<!-- NUDS templates -->
+						<xforms:instance id="description-template" xxforms:exclude-result-prefixes="#all">
+							<description xml:lang=""/>
+						</xforms:instance>
+
+						<xforms:instance id="legend-template" xxforms:exclude-result-prefixes="#all">
+							<legend/>
+						</xforms:instance>
+
+						<xforms:instance id="symbol-template" xxforms:exclude-result-prefixes="#all">
+							<symbol/>
+						</xforms:instance>
+
+						<xforms:instance id="type-template" xxforms:exclude-result-prefixes="#all">
+							<type/>
+						</xforms:instance>
+
+						<!-- Numishare entity lookup -->
+						<xforms:instance id="entity-template">
+							<numishare:entity xmlns=""/>
+						</xforms:instance>
+					</xforms:model>
+				</xforms:group>
+			</xforms:group>
+		</xbl:template>
+	</xbl:binding>
+
+</xbl:xbl>

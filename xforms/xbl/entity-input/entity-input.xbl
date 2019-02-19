@@ -19,7 +19,7 @@
 
 					<!-- set the parent element to restrict the role list -->
 					<xforms:action ev:event="xforms-enabled" ev:target="#observer">
-						<xforms:setvalue ref="instance('control-instance')/context" value="$binding/parent::node()/local-name()"/>
+						<xforms:setvalue ref="instance('control-instance')/context" value="if ($binding/ancestor::nuds:physDesc) then 'physDesc' else $binding/parent::node()/local-name()"/>
 						<!-- preset the role from the numishare:entity/@role, if it had been set from the initial trigger that added the component -->
 						<xforms:setvalue ref="instance('control-instance')/role" value="$binding/@role" if="$binding/@role = 'mint' or $binding/@role='region'"
 						/>
@@ -197,13 +197,13 @@
 						<xforms:instance id="roles" xxforms:exclude-result-prefixes="#all">
 							<roles xmlns="">
 								<role id="artist" context="obverse|reverse|authority">Artist</role>
-								<role id="authority" context="authority">Authority</role>
+								<role id="authority" context="authority|physDesc">Authority</role>
 								<role id="deity" context="obverse|reverse">Deity</role>
 								<role id="dynasty" context="authority">Dynasty</role>
 								<role id="engraver" context="obverse|reverse|authority">Engraver</role>
-								<role id="issuer" context="authority">Issuer</role>
+								<role id="issuer" context="authority|physDesc">Issuer</role>
 								<role id="maker" context="authority">Maker</role>
-								<role id="mint" context="geographic">Mint</role>
+								<role id="mint" context="geographic|physDesc">Mint</role>
 								<role id="portrait" context="obverse|reverse">Portrait</role>
 								<role id="region" context="geographic">Region</role>
 								<role id="statedAuthority" context="authority">Stated Authority</role>

@@ -310,387 +310,61 @@
 							</div>
 						</xforms:group>
 
-						<!-- ***** OBVERSE ***** -->
-						<div class="subsection">
-							<h3>Obverse</h3>
+						<!-- ***** SIDES ***** -->
+						<div class="section">
+							<h3>Side Descriptions</h3>
 							<div class="trigger_container">
-								<xforms:trigger appearance="minimal">
-									<xforms:label>
-										<span class="glyphicon glyphicon-plus"/>Entity</xforms:label>
-									<xforms:action ev:event="DOMActivate">
-										<xforms:insert context="." origin="instance('obverse-template')" nodeset="./child::node()[last()]"
-											if="count(nuds:obverse) = 0"/>
-										<xforms:insert context="nuds:obverse" origin="instance('entity-template')" nodeset="./child::node()[last()]"/>
-										<xxforms:hide dialog="obverse-objects"/>
-									</xforms:action>
-								</xforms:trigger>
-								<xforms:group ref=".[count(nuds:obverse/nuds:legend) = 0]">
+								<xforms:group ref=".[count(nuds:obverse) = 0]">
 									<xforms:trigger appearance="minimal">
-										<xforms:label>
-											<span class="glyphicon glyphicon-plus"/>Legend</xforms:label>
-										<xforms:action ev:event="DOMActivate">
-											<xforms:insert context="." origin="instance('obverse-template')" nodeset="./child::node()[last()]"
-												if="count(nuds:obverse) = 0"/>
-											<xforms:insert context="nuds:obverse" origin="instance('legend-template')" nodeset="./child::node()[last()]"/>
-											<xxforms:hide dialog="obverse-objects"/>
-										</xforms:action>
+										<xforms:label><span class="glyphicon glyphicon-plus"/>Obverse</xforms:label>
+										<xforms:insert ev:event="DOMActivate" context="." origin="instance('obverse-template')"
+											nodeset="./child::node()[last()]"/>
 									</xforms:trigger>
 								</xforms:group>
-								<xforms:trigger appearance="minimal">
-									<xforms:label>
-										<span class="glyphicon glyphicon-plus"/>Symbol</xforms:label>
-									<xforms:action ev:event="DOMActivate">
-										<xforms:insert context="." origin="instance('obverse-template')" nodeset="./child::node()[last()]"
-											if="count(nuds:obverse) = 0"/>
-										<xforms:insert context="nuds:obverse" origin="instance('symbol-template')" nodeset="./child::node()[last()]"/>
-										<xxforms:hide dialog="obverse-objects"/>
-									</xforms:action>
-								</xforms:trigger>
-								<xforms:trigger appearance="minimal">
-									<xforms:label>
-										<span class="glyphicon glyphicon-plus"/>Type Description</xforms:label>
-									<xforms:action ev:event="DOMActivate">
-										<xforms:insert context="." origin="instance('obverse-template')" nodeset="./child::node()[last()]"
-											if="count(nuds:obverse) = 0"/>
-										<xforms:insert context="nuds:obverse" origin="instance('type-template')" nodeset="./child::node()[last()]"
-											if="count(nuds:type) = 0"/>
-										<xforms:insert context="nuds:obverse/nuds:type" origin="instance('description-template')"
+								<xforms:group ref=".[count(nuds:reverse) = 0]">
+									<xforms:trigger appearance="minimal">
+										<xforms:label><span class="glyphicon glyphicon-plus"/>Reverse</xforms:label>
+										<xforms:insert ev:event="DOMActivate" context="." origin="instance('reverse-template')"
 											nodeset="./child::node()[last()]"/>
-										<xxforms:hide dialog="obverse-objects"/>
-									</xforms:action>
-								</xforms:trigger>
+									</xforms:trigger>
+								</xforms:group>
+								<xforms:group ref=".[count(nuds:edge) = 0]">
+									<xforms:trigger appearance="minimal">
+										<xforms:label><span class="glyphicon glyphicon-plus"/>Edge</xforms:label>
+										<xforms:insert ev:event="DOMActivate" context="." origin="instance('edge-template')"
+											nodeset="./child::node()[last()]"/>
+									</xforms:trigger>
+								</xforms:group>
 							</div>
-							
-							<xforms:group ref="nuds:obverse[child::*]">
+
+							<!-- ***** OBVERSE ***** -->
+							<xforms:group ref="nuds:obverse">
 								<div class="subsection">
-									<xforms:group ref=".[count(numishare:entity) &gt; 0]">
-										<div class="alert alert-warning alert-box">
-											<p>
-												<span class="glyphicon glyphicon-warning-sign"/>
-												<strong>Warning! </strong>
-												<span>An entity lookup must be completed or deleted before the record can be saved.</span>
-											</p>
-										</div>
-									</xforms:group>
-
-									<xforms:group ref=".[count(nuds:type/nuds:description) &gt; count(distinct-values(nuds:type/nuds:description/@xml:lang))]">
-										<div class="alert alert-danger alert-box">
-											<p>
-												<span class="glyphicon glyphicon-warning-sign"/>
-												<strong>Alert! </strong>
-												<span>Type Description languages must be unique.</span>
-											</p>
-										</div>
-									</xforms:group>
-
-									<!-- display entity lookups -->
-									<xforms:repeat nodeset="numishare:entity">
-										<numishare:entity-input/>
-									</xforms:repeat>
-
-									<!-- display existing entities, regardless of element -->
-									<xforms:repeat nodeset="nuds:persname|nuds:famname|nuds:corpname">
-										<div>
-											<xforms:output ref=".">
-												<xforms:label value="concat(upper-case(substring(@xlink:role, 1, 1)), substring(@xlink:role, 2))"/>
-											</xforms:output>
-											<xforms:group ref=".[string(@xlink:href)]">
-												<xforms:trigger appearance="minimal">
-													<xforms:label>
-														<span class="glyphicon glyphicon-new-window"/>
-													</xforms:label>
-													<xforms:load ev:event="DOMActivate" ref="@xlink:href" show="new"/>
-												</xforms:trigger>
-											</xforms:group>
-											<xforms:trigger appearance="minimal">
-												<xforms:delete ev:event="DOMActivate" nodeset="."/>
-												<xforms:label>
-													<span class="glyphicon glyphicon-remove"/>
-												</xforms:label>
-											</xforms:trigger>
-											<numishare:certainty/>
-										</div>
-									</xforms:repeat>
-
-									<xforms:group ref="nuds:legend">
-										<div>
-											<xforms:input ref=".">
-												<xforms:label>Legend</xforms:label>
-												<xforms:alert>Must contain a value.</xforms:alert>
-											</xforms:input>
-											<xforms:trigger appearance="minimal">
-												<xforms:delete ev:event="DOMActivate" nodeset="."/>
-												<xforms:label>
-													<span class="glyphicon glyphicon-remove"/>
-												</xforms:label>
-											</xforms:trigger>
-										</div>
-									</xforms:group>
-
-									<xforms:repeat ref="nuds:symbol">
-										<numishare:symbol/>
-									</xforms:repeat>
-
-									<xforms:group ref="nuds:type">
-										<h4>Type</h4>
-										<xforms:trigger appearance="minimal">
-											<xforms:delete ev:event="DOMActivate" nodeset="."/>
-											<xforms:label>
-												<span class="glyphicon glyphicon-remove"/>
-											</xforms:label>
-										</xforms:trigger>
-										<span class="add">
-											<xforms:trigger appearance="minimal">
-												<xforms:label><span class="glyphicon glyphicon-plus"/>Description</xforms:label>
-												<xforms:insert ev:event="DOMActivate" context="." nodeset="./child::node()[last()]"
-													origin="instance('description-template')"/>
-											</xforms:trigger>
-										</span>
-										<xforms:repeat nodeset="nuds:description">
-											<numishare:description/>
-										</xforms:repeat>										
-									</xforms:group>
-								</div>
+									<h4>Obverse</h4>
+									<numishare:sideCharacteristics/>
+								</div>								
 							</xforms:group>
 							
-							<hr/>
-						</div>
-						
-						<!-- ***** REVERSE ***** -->
-						<div class="subsection">
-							<h3>Reverse</h3>
-							<div class="trigger_container">
-								<xforms:trigger appearance="minimal">
-									<xforms:label>
-										<span class="glyphicon glyphicon-plus"/>Entity</xforms:label>
-									<xforms:action ev:event="DOMActivate">
-										<xforms:insert context="." origin="instance('reverse-template')" nodeset="./child::node()[last()]"
-											if="count(nuds:reverse) = 0"/>
-										<xforms:insert context="nuds:reverse" origin="instance('entity-template')" nodeset="./child::node()[last()]"/>
-										<xxforms:hide dialog="reverse-objects"/>
-									</xforms:action>
-								</xforms:trigger>
-								<xforms:group ref=".[count(nuds:reverse/nuds:legend) = 0]">
-									<xforms:trigger appearance="minimal">
-										<xforms:label>
-											<span class="glyphicon glyphicon-plus"/>Legend</xforms:label>
-										<xforms:action ev:event="DOMActivate">
-											<xforms:insert context="." origin="instance('reverse-template')" nodeset="./child::node()[last()]"
-												if="count(nuds:reverse) = 0"/>
-											<xforms:insert context="nuds:reverse" origin="instance('legend-template')" nodeset="./child::node()[last()]"/>
-											<xxforms:hide dialog="reverse-objects"/>
-										</xforms:action>
-									</xforms:trigger>
-								</xforms:group>
-								<xforms:trigger appearance="minimal">
-									<xforms:label>
-										<span class="glyphicon glyphicon-plus"/>Symbol</xforms:label>
-									<xforms:action ev:event="DOMActivate">
-										<xforms:insert context="." origin="instance('reverse-template')" nodeset="./child::node()[last()]"
-											if="count(nuds:reverse) = 0"/>
-										<xforms:insert context="nuds:reverse" origin="instance('symbol-template')" nodeset="./child::node()[last()]"/>
-										<xxforms:hide dialog="reverse-objects"/>
-									</xforms:action>
-								</xforms:trigger>
-								<xforms:trigger appearance="minimal">
-									<xforms:label>
-										<span class="glyphicon glyphicon-plus"/>Type Description</xforms:label>
-									<xforms:action ev:event="DOMActivate">
-										<xforms:insert context="." origin="instance('reverse-template')" nodeset="./child::node()[last()]"
-											if="count(nuds:reverse) = 0"/>
-										<xforms:insert context="nuds:reverse" origin="instance('type-template')" nodeset="./child::node()[last()]"
-											if="count(nuds:type) = 0"/>
-										<xforms:insert context="nuds:reverse/nuds:type" origin="instance('description-template')"
-											nodeset="./child::node()[last()]"/>
-										<xxforms:hide dialog="reverse-objects"/>
-									</xforms:action>
-								</xforms:trigger>
-							</div>
-							
-							<xforms:group ref="nuds:reverse[child::*]">
+							<!-- ***** REVERSE ***** -->
+							<xforms:group ref="nuds:reverse">
 								<div class="subsection">
-									<xforms:group ref=".[count(numishare:entity) &gt; 0]">
-										<div class="alert alert-warning alert-box">
-											<p>
-												<span class="glyphicon glyphicon-warning-sign"/>
-												<strong>Warning! </strong>
-												<span>An entity lookup must be completed or deleted before the record can be saved.</span>
-											</p>
-										</div>
-									</xforms:group>
-
-									<xforms:group ref=".[count(nuds:type/nuds:description) &gt; count(distinct-values(nuds:type/nuds:description/@xml:lang))]">
-										<div class="alert alert-danger alert-box">
-											<p>
-												<span class="glyphicon glyphicon-warning-sign"/>
-												<strong>Alert! </strong>
-												<span>Type Description languages must be unique.</span>
-											</p>
-										</div>
-									</xforms:group>
-
-									<!-- display entity lookups -->
-									<xforms:repeat nodeset="numishare:entity">
-										<numishare:entity-input/>
-									</xforms:repeat>
-
-									<!-- display existing entities, regardless of element -->
-									<xforms:repeat nodeset="nuds:persname|nuds:famname|nuds:corpname">
-										<div>
-											<xforms:output ref=".">
-												<xforms:label value="concat(upper-case(substring(@xlink:role, 1, 1)), substring(@xlink:role, 2))"/>
-											</xforms:output>
-											<xforms:group ref=".[string(@xlink:href)]">
-												<xforms:trigger appearance="minimal">
-													<xforms:label>
-														<span class="glyphicon glyphicon-new-window"/>
-													</xforms:label>
-													<xforms:load ev:event="DOMActivate" ref="@xlink:href" show="new"/>
-												</xforms:trigger>
-											</xforms:group>
-											<xforms:trigger appearance="minimal">
-												<xforms:delete ev:event="DOMActivate" nodeset="."/>
-												<xforms:label>
-													<span class="glyphicon glyphicon-remove"/>
-												</xforms:label>
-											</xforms:trigger>
-											<numishare:certainty/>
-										</div>
-									</xforms:repeat>
-
-									<xforms:group ref="nuds:legend">
-										<div>
-											<xforms:input ref=".">
-												<xforms:label>Legend</xforms:label>
-												<xforms:alert>Must contain a value.</xforms:alert>
-											</xforms:input>
-											<xforms:trigger appearance="minimal">
-												<xforms:delete ev:event="DOMActivate" nodeset="."/>
-												<xforms:label>
-													<span class="glyphicon glyphicon-remove"/>
-												</xforms:label>
-											</xforms:trigger>
-										</div>
-									</xforms:group>
-
-									<xforms:repeat ref="nuds:symbol">
-										<numishare:symbol/>
-									</xforms:repeat>
-									
-									<xforms:group ref="nuds:type">
-										<h4>Type</h4>
-										<xforms:trigger appearance="minimal">
-											<xforms:delete ev:event="DOMActivate" nodeset="."/>
-											<xforms:label>
-												<span class="glyphicon glyphicon-remove"/>
-											</xforms:label>
-										</xforms:trigger>
-										<span class="add">
-											<xforms:trigger appearance="minimal">
-												<xforms:label><span class="glyphicon glyphicon-plus"/>Description</xforms:label>
-												<xforms:insert ev:event="DOMActivate" context="." nodeset="./child::node()[last()]"
-													origin="instance('description-template')"/>
-											</xforms:trigger>
-										</span>
-										<xforms:repeat nodeset="nuds:description">
-											<numishare:description/>
-										</xforms:repeat>										
-									</xforms:group>									
-								</div>
+									<h4>Reverse</h4>
+									<numishare:sideCharacteristics/>
+								</div>								
 							</xforms:group>
-							<hr/>
-						</div>
-						
-						<!-- ***** EDGE ***** -->
-						<div class="subsection">
-							<h3>Edge</h3>
-							<div class="trigger_container">
-								<xforms:group ref=".[count(nuds:edge/nuds:description) = 0]">
-									<xforms:trigger appearance="minimal">
-										<xforms:label>
-											<span class="glyphicon glyphicon-plus"/>Description</xforms:label>
-										<xforms:action ev:event="DOMActivate">
-											<xforms:insert context="." origin="instance('edge-template')" nodeset="./child::node()[last()]"
-												if="count(nuds:edge) = 0"/>
-											<xforms:insert context="nuds:edge" origin="instance('description-template')" nodeset="./child::node()[last()]"/>
-											<xxforms:hide dialog="edge-objects"/>
-										</xforms:action>
-									</xforms:trigger>
-								</xforms:group>
-								<xforms:group ref=".[count(nuds:edge/nuds:legend) = 0]">
-									<xforms:trigger appearance="minimal">
-										<xforms:label>
-											<span class="glyphicon glyphicon-plus"/>Legend</xforms:label>
-										<xforms:action ev:event="DOMActivate">
-											<xforms:insert context="." origin="instance('edge-template')" nodeset="./child::node()[last()]"
-												if="count(nuds:edge) = 0"/>
-											<xforms:insert context="nuds:edge" origin="instance('legend-template')" nodeset="./child::node()[last()]"/>
-											<xxforms:hide dialog="edge-objects"/>
-										</xforms:action>
-									</xforms:trigger>
-								</xforms:group>
-								<xforms:group ref=".[count(nuds:edge/nuds:type) = 0]">
-									<xforms:trigger appearance="minimal">
-										<xforms:label>
-											<span class="glyphicon glyphicon-plus"/>Type</xforms:label>
-										<xforms:action ev:event="DOMActivate">
-											<xforms:insert context="." origin="instance('edge-template')" nodeset="./child::node()[last()]"
-												if="count(nuds:edge) = 0"/>
-											<xforms:insert context="nuds:edge" origin="instance('type-template')" nodeset="./child::node()[last()]"
-												if="count(nuds:type) = 0"/>
-											<xforms:insert context="nuds:edge/nuds:type" origin="instance('description-template')"
-												nodeset="./child::node()[last()]"/>
-											<xxforms:hide dialog="edge-objects"/>
-										</xforms:action>
-									</xforms:trigger>
-								</xforms:group>
-							</div>							
 							
+							<!-- ***** EDGE ***** -->
 							<xforms:group ref="nuds:edge">
 								<div class="subsection">
-									<xforms:repeat nodeset="nuds:description">
-										<numishare:description/>
-									</xforms:repeat>
-									<xforms:group ref="nuds:legend">
-										<div>
-											<xforms:input ref=".">
-												<xforms:label>Legend</xforms:label>
-												<xforms:alert>Must contain a value.</xforms:alert>
-											</xforms:input>
-											<xforms:trigger appearance="minimal">
-												<xforms:delete ev:event="DOMActivate" nodeset="."/>
-												<xforms:label>
-													<span class="glyphicon glyphicon-remove"/>
-												</xforms:label>
-											</xforms:trigger>
-										</div>
-									</xforms:group>
-									<xforms:group ref="nuds:type">
-										<h4>Type</h4>
-										<xforms:trigger appearance="minimal">
-											<xforms:delete ev:event="DOMActivate" nodeset="."/>
-											<xforms:label>
-												<span class="glyphicon glyphicon-remove"/>
-											</xforms:label>
-										</xforms:trigger>
-										<span class="add">
-											<xforms:trigger appearance="minimal">
-												<xforms:label><span class="glyphicon glyphicon-plus"/>Description</xforms:label>
-												<xforms:insert ev:event="DOMActivate" context="." nodeset="./child::node()[last()]"
-													origin="instance('description-template')"/>
-											</xforms:trigger>
-										</span>
-										<xforms:repeat nodeset="nuds:description">
-											<numishare:description/>
-										</xforms:repeat>
-									</xforms:group>
-								</div>
+									<h4>Edge</h4>
+									<numishare:sideCharacteristics/>
+								</div>								
 							</xforms:group>
 							<hr/>
 						</div>
-						
+
 						<!-- ***** AUTHORITY ***** -->
-						<div class="subsection">
+						<div class="section">
 							<h3>Authority</h3>
 							<xforms:trigger appearance="minimal">
 								<xforms:label>
@@ -727,13 +401,17 @@
 											</xforms:output>
 											<xforms:group ref=".[string(@xlink:href)]">
 												<xforms:trigger appearance="minimal">
-													<xforms:label><span class="glyphicon glyphicon-new-window"/></xforms:label>
+													<xforms:label>
+														<span class="glyphicon glyphicon-new-window"/>
+													</xforms:label>
 													<xforms:load ev:event="DOMActivate" ref="@xlink:href" show="new"/>
 												</xforms:trigger>
 											</xforms:group>
 											<xforms:trigger appearance="minimal">
 												<xforms:delete ev:event="DOMActivate" nodeset="."/>
-												<xforms:label><span class="glyphicon glyphicon-remove"/></xforms:label>
+												<xforms:label>
+													<span class="glyphicon glyphicon-remove"/>
+												</xforms:label>
 											</xforms:trigger>
 											<numishare:certainty/>
 										</div>
@@ -742,9 +420,9 @@
 							</xforms:group>
 							<hr/>
 						</div>
-						
+
 						<!-- ***** GEOGRAPHIC ***** -->
-						<div class="subsection">
+						<div class="section">
 							<h3>Geographic</h3>
 							<div class="trigger_container">
 								<xforms:trigger appearance="minimal">
@@ -753,8 +431,7 @@
 									<xforms:action ev:event="DOMActivate">
 										<xforms:insert context="." origin="instance('geographic-template')" nodeset="./child::node()[last()]"
 											if="count(nuds:geographic) = 0"/>
-										<xforms:insert context="nuds:geographic" origin="instance('entity-template')"
-											nodeset="./child::node()[last()]"/>
+										<xforms:insert context="nuds:geographic" origin="instance('entity-template')" nodeset="./child::node()[last()]"/>
 										<xforms:insert context="nuds:geographic/numishare:entity[last()]" origin="xforms:attribute('role', 'mint')"/>
 									</xforms:action>
 								</xforms:trigger>
@@ -764,8 +441,7 @@
 									<xforms:action ev:event="DOMActivate">
 										<xforms:insert context="." origin="instance('geographic-template')" nodeset="./child::node()[last()]"
 											if="count(nuds:geographic) = 0"/>
-										<xforms:insert context="nuds:geographic" origin="instance('entity-template')"
-											nodeset="./child::node()[last()]"/>
+										<xforms:insert context="nuds:geographic" origin="instance('entity-template')" nodeset="./child::node()[last()]"/>
 										<xforms:insert context="nuds:geographic/numishare:entity[last()]" origin="xforms:attribute('role', 'region')"/>
 									</xforms:action>
 								</xforms:trigger>
@@ -781,12 +457,12 @@
 											</p>
 										</div>
 									</xforms:group>
-									
+
 									<!-- display entity lookups -->
 									<xforms:repeat nodeset="numishare:entity">
 										<numishare:entity-input/>
 									</xforms:repeat>
-									
+
 									<!-- display existing entities, regardless of element -->
 									<xforms:repeat nodeset="nuds:geogname">
 										<div>
@@ -795,13 +471,17 @@
 											</xforms:output>
 											<xforms:group ref=".[string(@xlink:href)]">
 												<xforms:trigger appearance="minimal">
-													<xforms:label><span class="glyphicon glyphicon-new-window"/></xforms:label>
+													<xforms:label>
+														<span class="glyphicon glyphicon-new-window"/>
+													</xforms:label>
 													<xforms:load ev:event="DOMActivate" ref="@xlink:href" show="new"/>
 												</xforms:trigger>
 											</xforms:group>
 											<xforms:trigger appearance="minimal">
 												<xforms:delete ev:event="DOMActivate" nodeset="."/>
-												<xforms:label><span class="glyphicon glyphicon-remove"/></xforms:label>
+												<xforms:label>
+													<span class="glyphicon glyphicon-remove"/>
+												</xforms:label>
 											</xforms:trigger>
 											<numishare:certainty/>
 										</div>
@@ -854,36 +534,6 @@
 						<xforms:instance id="authpers-template" xxforms:exclude-result-prefixes="#all">
 							<authority/>
 						</xforms:instance>
-						<xforms:instance id="artist-template" xxforms:exclude-result-prefixes="#all">
-							<persname xlink:type="simple" xlink:role="artist" xlink:href=""/>
-						</xforms:instance>
-						<xforms:instance id="authorityPersonal-template" xxforms:exclude-result-prefixes="#all">
-							<persname xlink:type="simple" xlink:role="authority" xlink:href=""/>
-						</xforms:instance>
-						<xforms:instance id="authorityCorporate-template" xxforms:exclude-result-prefixes="#all">
-							<corpname xlink:type="simple" xlink:role="authority" xlink:href=""/>
-						</xforms:instance>
-						<xforms:instance id="dynasty-template" xxforms:exclude-result-prefixes="#all">
-							<famname xlink:type="simple" xlink:role="dynasty" xlink:href=""/>
-						</xforms:instance>
-						<xforms:instance id="deity-template" xxforms:exclude-result-prefixes="#all">
-							<persname xlink:type="simple" xlink:role="deity" xlink:href=""/>
-						</xforms:instance>
-						<xforms:instance id="engraver-template" xxforms:exclude-result-prefixes="#all">
-							<persname xlink:type="simple" xlink:role="engraver" xlink:href=""/>
-						</xforms:instance>
-						<xforms:instance id="issuerPersonal-template" xxforms:exclude-result-prefixes="#all">
-							<persname xlink:type="simple" xlink:role="issuer" xlink:href=""/>
-						</xforms:instance>
-						<xforms:instance id="issuerCorporate-template" xxforms:exclude-result-prefixes="#all">
-							<corpname xlink:type="simple" xlink:role="issuer" xlink:href=""/>
-						</xforms:instance>
-						<xforms:instance id="makerCorporate-template" xxforms:exclude-result-prefixes="#all">
-							<corpname xlink:type="simple" xlink:role="maker" xlink:href=""/>
-						</xforms:instance>
-						<xforms:instance id="makerPersonal-template" xxforms:exclude-result-prefixes="#all">
-							<persname xlink:type="simple" xlink:role="maker" xlink:href=""/>
-						</xforms:instance>
 						<!-- obverse/reverse edge -->
 						<xforms:instance id="obverse-template" xxforms:exclude-result-prefixes="#all">
 							<obverse/>
@@ -897,17 +547,8 @@
 						<xforms:instance id="edge-template" xxforms:exclude-result-prefixes="#all">
 							<edge/>
 						</xforms:instance>
-						<xforms:instance id="legend-template" xxforms:exclude-result-prefixes="#all">
-							<legend/>
-						</xforms:instance>
 						<xforms:instance id="shape-template" xxforms:exclude-result-prefixes="#all">
 							<shape/>
-						</xforms:instance>
-						<xforms:instance id="symbol-template" xxforms:exclude-result-prefixes="#all">
-							<symbol/>
-						</xforms:instance>
-						<xforms:instance id="type-template" xxforms:exclude-result-prefixes="#all">
-							<type/>
 						</xforms:instance>
 						<xforms:instance id="typeSeries-template" xxforms:exclude-result-prefixes="#all">
 							<typeSeries/>
@@ -915,6 +556,7 @@
 						<xforms:instance id="weightStandard-template" xxforms:exclude-result-prefixes="#all">
 							<weightStandard origin="" units="g"/>
 						</xforms:instance>
+
 						<!-- controlled vocabulary instances -->
 						<xforms:instance id="feed" xxforms:exclude-result-prefixes="#all">
 							<feed xmlns=""/>
