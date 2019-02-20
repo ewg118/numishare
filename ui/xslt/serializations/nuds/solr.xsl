@@ -433,11 +433,21 @@
 				</xsl:apply-templates>
 			</xsl:when>
 			<xsl:otherwise>
-				<!-- otherwise, index facets and keywords for all coin types related to physical specimens -->
-				<xsl:apply-templates select="$nudsGroup/descendant::nuds:typeDesc">
+				<!-- index explicit typeDesc -->
+				<xsl:apply-templates select="nuds:typeDesc">
 					<xsl:with-param name="recordType" select="$recordType"/>
 					<xsl:with-param name="lang" select="$lang"/>
 				</xsl:apply-templates>
+				
+				<!-- index additional metadata from relevant coin type URIs -->
+				<xsl:for-each select="nuds:typeDesc[@xlink:href]|descendant::nuds:reference[@xlink:arcrole='nmo:hasTypeSeriesItem'][@xlink:href]">
+					<xsl:variable name="uri" select="@xlink:href"/>
+					<xsl:apply-templates select="$nudsGroup/descendant::object[@xlink:href=$uri]/descendant::nuds:typeDesc">
+						<xsl:with-param name="recordType" select="$recordType"/>
+						<xsl:with-param name="lang" select="$lang"/>
+					</xsl:apply-templates>
+				</xsl:for-each>
+				
 			</xsl:otherwise>
 		</xsl:choose>
 		
