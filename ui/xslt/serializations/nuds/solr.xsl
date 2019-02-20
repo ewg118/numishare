@@ -424,10 +424,23 @@
 		<xsl:apply-templates select="nuds:subjectSet"/>
 		<xsl:apply-templates select="nuds:physDesc"/>
 
-		<xsl:apply-templates select="$nudsGroup/descendant::nuds:typeDesc">
-			<xsl:with-param name="recordType" select="$recordType"/>
-			<xsl:with-param name="lang" select="$lang"/>
-		</xsl:apply-templates>
+		<xsl:choose>
+			<!-- apply template for immediate, explicit typeDesc for coin type records --> 
+			<xsl:when test="$recordType = 'conceptual'">
+				<xsl:apply-templates select="nuds:typeDesc">
+					<xsl:with-param name="recordType" select="$recordType"/>
+					<xsl:with-param name="lang" select="$lang"/>
+				</xsl:apply-templates>
+			</xsl:when>
+			<xsl:otherwise>
+				<!-- otherwise, index facets and keywords for all coin types related to physical specimens -->
+				<xsl:apply-templates select="$nudsGroup/descendant::nuds:typeDesc">
+					<xsl:with-param name="recordType" select="$recordType"/>
+					<xsl:with-param name="lang" select="$lang"/>
+				</xsl:apply-templates>
+			</xsl:otherwise>
+		</xsl:choose>
+		
 
 		<!-- evaluate dates -->
 		<xsl:variable name="dates" as="element()*">

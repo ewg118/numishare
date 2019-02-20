@@ -108,13 +108,13 @@
 								<xsl:when test="$recordType = 'physical'">
 									<xsl:if test="$primary = true()">
 										<field name="{$side}_type_display">
-											<xsl:value-of select="normalize-space(nuds:type/nuds:description[@xml:lang = $lang])"/>
+											<xsl:value-of select="normalize-space(nuds:type/nuds:description[@xml:lang = 'en'])"/>
 										</field>
 									</xsl:if>
 								</xsl:when>
 								<xsl:when test="$recordType = 'conceptual'">
 									<field name="{$side}_type_display">
-										<xsl:value-of select="normalize-space(nuds:type/nuds:description[@xml:lang = $lang])"/>
+										<xsl:value-of select="normalize-space(nuds:type/nuds:description[@xml:lang = 'en'])"/>
 									</field>
 								</xsl:when>
 							</xsl:choose>
@@ -128,13 +128,13 @@
 									<xsl:when test="$recordType = 'physical'">
 										<xsl:if test="$primary = true()">
 											<field name="{$side}_type_display">
-												<xsl:value-of select="normalize-space(nuds:type/nuds:description[@xml:lang = $lang])"/>
+												<xsl:value-of select="normalize-space(nuds:type/nuds:description[1])"/>
 											</field>
 										</xsl:if>
 									</xsl:when>
 									<xsl:when test="$recordType = 'conceptual'">
 										<field name="{$side}_type_display">
-											<xsl:value-of select="normalize-space(nuds:type/nuds:description[@xml:lang = $lang])"/>
+											<xsl:value-of select="normalize-space(nuds:type/nuds:description[1])"/>
 										</field>
 									</xsl:when>
 								</xsl:choose>
