@@ -725,6 +725,7 @@
 		</xsl:for-each>
 	</xsl:template>
 
+	<!-- ***** CUSTOM TEMPLATES ***** -->
 	<xsl:template name="get_date_hierarchy">
 		<xsl:param name="standardDate"/>
 
@@ -751,6 +752,49 @@
 				<xsl:value-of select="number(.)"/>
 			</field>
 		</xsl:if>
+	</xsl:template>
+	
+	<xsl:template name="parse_dates">
+		<xsl:param name="typologies"/>
+		
+		<xsl:variable name="dates" as="element()*">
+			<dates>
+				<xsl:for-each select="distinct-values($typologies/descendant::*/@standardDate)">
+					<xsl:sort order="ascending" data-type="number"/>
+					<xsl:if test="number(.)">
+						<date>
+							<xsl:value-of select="."/>
+						</date>
+					</xsl:if>
+				</xsl:for-each>
+			</dates>
+		</xsl:variable>
+		
+		<xsl:for-each select="$dates//date">
+			<!-- add min and max, even if they are integers (for ISO dates) -->
+			<xsl:if test="position() = 1">
+				<field name="year_minint">
+					<xsl:value-of select="number(.)"/>
+				</field>
+				<field name="year_num">
+					<xsl:value-of select="number(.)"/>
+				</field>
+			</xsl:if>
+			<xsl:if test="position() = last()">
+				<field name="year_maxint">
+					<xsl:value-of select="number(.)"/>
+				</field>
+				<field name="year_num">
+					<xsl:value-of select="number(.)"/>
+				</field>
+			</xsl:if>
+		</xsl:for-each>
+		
+		<field name="date_display">
+			<xsl:value-of select="numishare:normalizeDate($dates//date[1])"/>
+			<xsl:text> - </xsl:text>
+			<xsl:value-of select="numishare:normalizeDate($dates//date[last()])"/>
+		</field>
 	</xsl:template>
 
 	<xsl:template name="get_hoard_sort_fields">
@@ -786,6 +830,7 @@
 
 	<xsl:template name="get_coin_sort_fields">
 		<xsl:param name="lang"/>
+		<xsl:param name="typologies"/>
 
 		<!-- sortable fields -->
 		<xsl:variable name="sort-fields">
@@ -796,7 +841,7 @@
 			<xsl:variable name="field" select="."/>
 			<!-- for each sortable field which is a multiValued field in Solr (a facet), grab the min and max values -->
 			<xsl:for-each
-				select="$nudsGroup/descendant::nuds:typeDesc/descendant::*[local-name() = $field and local-name() != 'authority'] | $nudsGroup/descendant::nuds:typeDesc/descendant::*[@xlink:role = $field]">
+				select="$typologies//nuds:typeDesc/descendant::*[local-name() = $field and local-name() != 'authority'] | $typologies//nuds:typeDesc/descendant::*[@xlink:role = $field]">
 				<xsl:sort order="ascending" select="
 						if (@xlink:href) then
 							@xlink:href

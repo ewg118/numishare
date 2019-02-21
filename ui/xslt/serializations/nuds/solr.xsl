@@ -282,28 +282,26 @@
 				</xsl:for-each>
 
 				<!-- get all labels -->
-				<xsl:if test="string($lang)">
-					<xsl:call-template name="alternativeLabels">
-						<xsl:with-param name="lang" select="$lang"/>
-						<xsl:with-param name="typeDesc" as="node()*">
-							<xsl:choose>
-								<xsl:when test="descendant::nuds:typeDesc[string(@xlink:href)]">
-									<xsl:variable name="href" select="descendant::nuds:typeDesc/@xlink:href"/>
-
-									<xsl:copy-of select="$nudsGroup//object[@xlink:href = $href]//nuds:typeDesc"/>
-								</xsl:when>
-								<xsl:when test="descendant::nuds:reference[@xlink:arcrole = 'nmo:hasTypeSeriesItem'][string(@xlink:href)]">
-									<xsl:variable name="href" select="descendant::nuds:reference[@xlink:arcrole = 'nmo:hasTypeSeriesItem']/@xlink:href"/>
-
-									<xsl:copy-of select="$nudsGroup//object[@xlink:href = $href]//nuds:typeDesc"/>
-								</xsl:when>
-								<xsl:otherwise>
-									<xsl:copy-of select="descendant::nuds:typeDesc"/>
-								</xsl:otherwise>
-							</xsl:choose>
-						</xsl:with-param>
-					</xsl:call-template>
-				</xsl:if>
+				<xsl:call-template name="alternativeLabels">
+					<xsl:with-param name="lang" select="if (string($lang)) then $lang else 'en'"/>
+					<xsl:with-param name="typeDesc" as="node()*">
+						<xsl:choose>
+							<xsl:when test="descendant::nuds:typeDesc[string(@xlink:href)]">
+								<xsl:variable name="href" select="descendant::nuds:typeDesc/@xlink:href"/>
+								
+								<xsl:copy-of select="$nudsGroup//object[@xlink:href = $href]//nuds:typeDesc"/>
+							</xsl:when>
+							<xsl:when test="descendant::nuds:reference[@xlink:arcrole = 'nmo:hasTypeSeriesItem'][string(@xlink:href)]">
+								<xsl:variable name="href" select="descendant::nuds:reference[@xlink:arcrole = 'nmo:hasTypeSeriesItem']/@xlink:href"/>
+								
+								<xsl:copy-of select="$nudsGroup//object[@xlink:href = $href]//nuds:typeDesc"/>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:copy-of select="descendant::nuds:typeDesc"/>
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:with-param>
+				</xsl:call-template>
 			</field>
 		</doc>
 	</xsl:template>
@@ -382,10 +380,6 @@
 			<xsl:value-of select="parent::nuds:nuds/@recordType"/>
 		</xsl:variable>
 
-		<xsl:call-template name="get_coin_sort_fields">
-			<xsl:with-param name="lang" select="$lang"/>
-		</xsl:call-template>
-
 		<field name="title_display">
 			<xsl:choose>
 				<xsl:when test="nuds:title[@xml:lang = $lang]">
@@ -424,72 +418,45 @@
 		<xsl:apply-templates select="nuds:subjectSet"/>
 		<xsl:apply-templates select="nuds:physDesc"/>
 
-		<xsl:choose>
-			<!-- apply template for immediate, explicit typeDesc for coin type records --> 
-			<xsl:when test="$recordType = 'conceptual'">
-				<xsl:apply-templates select="nuds:typeDesc">
-					<xsl:with-param name="recordType" select="$recordType"/>
-					<xsl:with-param name="lang" select="$lang"/>
-				</xsl:apply-templates>
-			</xsl:when>
-			<xsl:otherwise>
-				<!-- index explicit typeDesc -->
-				<xsl:apply-templates select="nuds:typeDesc">
-					<xsl:with-param name="recordType" select="$recordType"/>
-					<xsl:with-param name="lang" select="$lang"/>
-				</xsl:apply-templates>
-				
-				<!-- index additional metadata from relevant coin type URIs -->
-				<xsl:for-each select="nuds:typeDesc[@xlink:href]|descendant::nuds:reference[@xlink:arcrole='nmo:hasTypeSeriesItem'][@xlink:href]">
-					<xsl:variable name="uri" select="@xlink:href"/>
-					<xsl:apply-templates select="$nudsGroup/descendant::object[@xlink:href=$uri]/descendant::nuds:typeDesc">
-						<xsl:with-param name="recordType" select="$recordType"/>
-						<xsl:with-param name="lang" select="$lang"/>
-					</xsl:apply-templates>
-				</xsl:for-each>
-				
-			</xsl:otherwise>
-		</xsl:choose>
 		
+		<!-- ***** typeDesc and/or reference typology indexing ***** -->
+		<xsl:variable name="typologies" as="element()*">
+			<typologies>
+				<xsl:choose>
+					<!-- apply template for immediate, explicit typeDesc for coin type records -->
+					<xsl:when test="$recordType = 'conceptual'">
+						<xsl:copy-of select="nuds:typeDesc"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:copy-of select="nuds:typeDesc[not(@xlink:href)]"/>
+						
+						<xsl:for-each
+							select="distinct-values(nuds:typeDesc[@xlink:href]/@xlink:href | descendant::nuds:reference[@xlink:arcrole = 'nmo:hasTypeSeriesItem'][@xlink:href]/@xlink:href)">
+							<xsl:variable name="uri" select="."/>
 
-		<!-- evaluate dates -->
-		<xsl:variable name="dates" as="element()*">
-			<dates>
-				<xsl:for-each select="distinct-values($nudsGroup/descendant::*/@standardDate)">
-					<xsl:sort order="ascending" data-type="number"/>
-					<xsl:if test="number(.)">
-						<date>
-							<xsl:value-of select="."/>
-						</date>
-					</xsl:if>
-				</xsl:for-each>
-			</dates>
+							<xsl:copy-of select="$nudsGroup/descendant::object[@xlink:href = $uri]/descendant::nuds:typeDesc"/>
+						</xsl:for-each>
+					</xsl:otherwise>
+				</xsl:choose>
+			</typologies>
 		</xsl:variable>
-
-		<xsl:for-each select="$dates//date">
-			<!-- add min and max, even if they are integers (for ISO dates) -->
-			<xsl:if test="position() = 1">
-				<field name="year_minint">
-					<xsl:value-of select="number(.)"/>
-				</field>
-			</xsl:if>
-			<xsl:if test="position() = last()">
-				<field name="year_maxint">
-					<xsl:value-of select="number(.)"/>
-				</field>
-			</xsl:if>
-
-			<!-- parse all dates -->
-			<xsl:call-template name="get_date_hierarchy">
-				<xsl:with-param name="standardDate" select="."/>
-			</xsl:call-template>
-		</xsl:for-each>
-
-		<field name="date_display">
-			<xsl:value-of select="numishare:normalizeDate($dates//date[1])"/>
-			<xsl:text> - </xsl:text>
-			<xsl:value-of select="numishare:normalizeDate($dates//date[last()])"/>
-		</field>
+		
+		<!-- process typeDesc(s) -->
+		<xsl:apply-templates select="$typologies//nuds:typeDesc">
+			<xsl:with-param name="recordType" select="$recordType"/>
+			<xsl:with-param name="lang" select="$lang"/>
+		</xsl:apply-templates>
+		
+		<!-- evaluate the dates within the group of typologies to extract the earliest and latest possible dates -->
+		<xsl:call-template name="parse_dates">
+			<xsl:with-param name="typologies" select="$typologies"/>
+		</xsl:call-template>
+		
+		<!-- get sort fields from within the associated $typologies -->
+		<xsl:call-template name="get_coin_sort_fields">
+			<xsl:with-param name="typologies" select="$typologies"/>
+			<xsl:with-param name="lang" select="$lang"/>
+		</xsl:call-template>		
 
 		<xsl:apply-templates select="nuds:adminDesc"/>
 		<xsl:apply-templates select="nuds:refDesc"/>
@@ -867,4 +834,5 @@
 			</field>
 		</xsl:if>
 	</xsl:template>
+	
 </xsl:stylesheet>

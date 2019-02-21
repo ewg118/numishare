@@ -45,13 +45,6 @@
 					</xsl:for-each>
 				</list>
 			</xsl:variable>
-			
-			<!-- make explicit typeDesc the primary, for evaluating legend and type description -->
-			<xsl:for-each select="descendant::nuds:typeDesc[not(string(@xlink:href))]">
-				<object>
-					<xsl:copy-of select="."/>
-				</object>
-			</xsl:for-each>
 
 			<xsl:for-each select="$type_series//type_series">
 				<xsl:variable name="type_series_uri" select="."/>
