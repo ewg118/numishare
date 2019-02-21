@@ -1019,7 +1019,9 @@
 
 	<xsl:template match="nuds:subjectSet | nuds:noteSet">
 		<div class="metadata_section">
-			
+			<h3>
+				<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
+			</h3>
 			<ul>
 				<xsl:apply-templates mode="descMeta"/>
 			</ul>

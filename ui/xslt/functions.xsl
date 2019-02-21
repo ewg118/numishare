@@ -1904,7 +1904,7 @@
 					<xsl:when test="$label = 'saleItem'">Sale Item</xsl:when>
 					<xsl:when test="$label = 'salePrice'">Sale Price</xsl:when>
 					<xsl:when test="$label = 'statedAuthority'">Stated Authority</xsl:when>
-					<xsl:when test="$label = 'subjectSet'">SubjectSet</xsl:when>
+					<xsl:when test="$label = 'subjectSet'">Subjects</xsl:when>
 					<xsl:when test="$label = 'subjectEvent'">Associated Subject</xsl:when>
 					<xsl:when test="$label = 'subjectIssuer'">Associated Issuer</xsl:when>
 					<xsl:when test="$label = 'subjectPerson'">Associated Person</xsl:when>
