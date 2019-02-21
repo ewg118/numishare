@@ -410,13 +410,6 @@
 				</xforms:bind>
 				<xforms:bind nodeset="nuds:descMeta">
 					<xforms:bind nodeset="nuds:title" required="true()"/>
-					<xforms:bind nodeset="nuds:descriptionSet">
-						<xforms:bind nodeset="nuds:description">
-							<xforms:bind nodeset="@xml:lang"
-								constraint="count(parent::node()/parent::node()/nuds:description/@xml:lang) = count(distinct-values(parent::node()/parent::node()/nuds:description/@xml:lang))"
-							/>
-						</xforms:bind>
-					</xforms:bind>
 					<xforms:bind nodeset="nuds:subjectSet">
 						<xforms:bind nodeset="nuds:subject" required="true()">
 							<xforms:bind nodeset="@localType" constraint="string-length(.) &gt; 0"/>
@@ -435,7 +428,7 @@
 							<xforms:bind nodeset="descendant::nuds:grade">
 								<xforms:bind constraint="string-length(.) &gt; 0"/>
 							</xforms:bind>
-						</xforms:bind>
+						</xforms:bind>						
 					</xforms:bind>
 					<xforms:bind nodeset="nuds:typeDesc">
 						<xforms:bind nodeset="nuds:objectType" required="true()"/>
@@ -447,20 +440,8 @@
 						<xforms:bind nodeset="nuds:manufacture" required="true()"/>
 						<xforms:bind nodeset="nuds:material" required="true()"/>
 						<xforms:bind nodeset="nuds:obverse|nuds:reverse|nuds:edge">
-							<xforms:bind constraint="count(numishare:entity) = 0"/>
-							<xforms:bind nodeset="nuds:description">
-								<xforms:bind nodeset="@xml:lang"
-									constraint="count(parent::node()/nuds:description/@xml:lang) = count(distinct-values(parent::node()/nuds:description/@xml:lang))"
-								/>
-							</xforms:bind>
-							<xforms:bind nodeset="nuds:legend" required="true()"/>
-							<xforms:bind nodeset="nuds:type">
-								<xforms:bind nodeset="nuds:description">
-									<xforms:bind nodeset="@xml:lang"
-										constraint="count(parent::node()/parent::node()/nuds:description/@xml:lang) = count(distinct-values(parent::node()/parent::node()/nuds:description/@xml:lang))"
-									/>
-								</xforms:bind>
-							</xforms:bind>
+							<xforms:bind constraint="count(numishare:entity) = 0"/>							
+							<xforms:bind nodeset="nuds:legend" required="true()"/>							
 						</xforms:bind>
 						<xforms:bind nodeset="nuds:authority">
 							<xforms:bind constraint="count(numishare:entity) = 0"/>
@@ -508,7 +489,7 @@
 				<!-- global -->
 				<!-- validate description anywhere -->
 				<xforms:bind nodeset="descendant::nuds:description" required="true()">
-					<xforms:bind nodeset="@xml:lang" constraint="string-length(.) &gt; 0"/>
+					<xforms:bind nodeset="@xml:lang" constraint="string-length(.) &gt; 0 and count(parent::node()/parent::node()/nuds:description/@xml:lang) = count(distinct-values(parent::node()/parent::node()/nuds:description/@xml:lang))"/>
 				</xforms:bind>
 				<!-- validate dates anywhere -->
 				<xforms:bind nodeset="//@standardDate" type="m.data.standardDate"/>
@@ -905,21 +886,23 @@
 										>revised</xforms:setvalue>
 
 									<!-- delete specificed empty elements -->
+									
+									
 									<xforms:delete nodeset="instance('object')/nuds:descMeta/nuds:typeDesc/nuds:obverse/nuds:type"
 										if="not(instance('object')/nuds:descMeta/nuds:typeDesc/nuds:obverse/nuds:type/*)"/>
 									<xforms:delete nodeset="instance('object')/nuds:descMeta/nuds:typeDesc/nuds:reverse/nuds:type"
 										if="not(instance('object')/nuds:descMeta/nuds:typeDesc/nuds:reverse/nuds:type/*)"/>
-									<xforms:delete nodeset="instance('object')/nuds:descMeta/nuds:typeDesc/nuds:obverse"
-										if="not(instance('object')/nuds:descMeta/nuds:typeDesc/nuds:obverse/*)"/>
-									<xforms:delete nodeset="instance('object')/nuds:descMeta/nuds:typeDesc/nuds:reverse"
-										if="not(instance('object')/nuds:descMeta/nuds:typeDesc/nuds:reverse/*)"/>
-									<xforms:delete nodeset="instance('object')/nuds:descMeta/nuds:typeDesc/nuds:edge"
+																		<xforms:delete nodeset="instance('object')/nuds:descMeta/nuds:typeDesc/nuds:edge"
 										if="not(instance('object')/nuds:descMeta/nuds:typeDesc/nuds:edge/*)"/>
 									<xforms:delete nodeset="instance('object')/nuds:descMeta/nuds:typeDesc/nuds:authority"
 										if="not(instance('object')/nuds:descMeta/nuds:typeDesc/nuds:authority/*)"/>
 									<xforms:delete nodeset="instance('object')/nuds:descMeta/nuds:typeDesc/nuds:geographic"
 										if="not(instance('object')/nuds:descMeta/nuds:typeDesc/nuds:geographic/*)"/>
 
+									<!-- delete any empty obverse or reverse element in the NUDS document -->
+									<xforms:action xxforms:iterate="instance('object')//nuds:obverse|instance('object')//nuds:reverse">
+										<xforms:delete nodeset="." if="not(child::*)"/>
+									</xforms:action>
 									<xforms:send submission="save-object"/>
 								</xforms:action>
 								<xforms:label><span class="glyphicon glyphicon-floppy-disk"></span>Save</xforms:label>
@@ -1725,7 +1708,7 @@
 													<xforms:action ev:event="DOMActivate">
 														<xforms:insert context="." origin="instance('countermark-template')" nodeset="./child::node()[last()]"
 															if="count(nuds:countermark) = 0"/>
-														<xforms:insert context="nuds:countermark" origin="instance('description-template')"/>
+														<xforms:insert context="nuds:countermark" nodeset="./child::node()[last()]" origin="instance('description-template')"/>
 													</xforms:action>
 												</xforms:trigger>
 											</xforms:group>
@@ -1770,6 +1753,18 @@
 										</div>
 
 										<xforms:group ref="nuds:countermark">
+											
+											<!-- alert for duplicate languages -->
+											<xforms:group ref=".[count(nuds:description) &gt; count(distinct-values(nuds:description/@xml:lang))]">
+												<div class="alert alert-danger alert-box">
+													<p>
+														<span class="glyphicon glyphicon-warning-sign"/>
+														<strong>Alert! </strong>
+														<span>General Description languages must be unique.</span>
+													</p>
+												</div>
+											</xforms:group>
+											
 											<xforms:repeat nodeset="nuds:description">
 												<numishare:description/>
 											</xforms:repeat>
@@ -1819,7 +1814,7 @@
 													<xforms:action ev:event="DOMActivate">
 														<xforms:insert context="." origin="instance('testmark-template')" nodeset="./child::node()[last()]"
 															if="count(nuds:testmark) = 0"/>
-														<xforms:insert context="nuds:testmark" origin="instance('description-template')"/>
+														<xforms:insert context="nuds:testmark" nodeset="./child::node()[last()]" origin="instance('description-template')"/>
 													</xforms:action>
 												</xforms:trigger>
 											</xforms:group>
@@ -1864,6 +1859,18 @@
 										</div>
 										
 										<xforms:group ref="nuds:testmark">
+											
+											<!-- alert for duplicate languages -->
+											<xforms:group ref=".[count(nuds:description) &gt; count(distinct-values(nuds:description/@xml:lang))]">
+												<div class="alert alert-danger alert-box">
+													<p>
+														<span class="glyphicon glyphicon-warning-sign"/>
+														<strong>Alert! </strong>
+														<span>General Description languages must be unique.</span>
+													</p>
+												</div>
+											</xforms:group>
+											
 											<xforms:repeat nodeset="nuds:description">
 												<numishare:description/>
 											</xforms:repeat>
