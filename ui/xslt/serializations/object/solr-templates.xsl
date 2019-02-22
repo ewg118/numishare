@@ -791,9 +791,16 @@
 		</xsl:for-each>
 		
 		<field name="date_display">
-			<xsl:value-of select="numishare:normalizeDate($dates//date[1])"/>
-			<xsl:text> - </xsl:text>
-			<xsl:value-of select="numishare:normalizeDate($dates//date[last()])"/>
+			<xsl:choose>
+				<xsl:when test="$dates//date[1] = $dates//date[last()]">
+					<xsl:value-of select="numishare:normalizeDate($dates//date[1])"/>
+				</xsl:when> 
+				<xsl:otherwise>
+					<xsl:value-of select="numishare:normalizeDate($dates//date[1])"/>
+					<xsl:text> - </xsl:text>
+					<xsl:value-of select="numishare:normalizeDate($dates//date[last()])"/>
+				</xsl:otherwise>
+			</xsl:choose>
 		</field>
 	</xsl:template>
 
