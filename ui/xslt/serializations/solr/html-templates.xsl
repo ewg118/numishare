@@ -1331,7 +1331,7 @@
 		</xsl:variable>
 		<xsl:variable name="sort_categories" select="tokenize(normalize-space($sort_categories_string), ',')"/>
 		<div class="row">
-			<div class="{if ($mode = 'compare') then 'col-md-12' else 'col-md-6 col-sm-9'}">
+			<div class="{if ($mode = 'compare') then 'col-md-12' else 'col-md-9'}">
 				<form role="form" class="sortForm form-inline" action="results" method="GET">
 					<div class="form-group">
 						<select class="sortForm_categories form-control">
