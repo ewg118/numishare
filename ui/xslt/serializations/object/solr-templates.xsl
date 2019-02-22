@@ -790,18 +790,21 @@
 			</xsl:if>
 		</xsl:for-each>
 		
-		<field name="date_display">
-			<xsl:choose>
-				<xsl:when test="$dates//date[1] = $dates//date[last()]">
-					<xsl:value-of select="numishare:normalizeDate($dates//date[1])"/>
-				</xsl:when> 
-				<xsl:otherwise>
-					<xsl:value-of select="numishare:normalizeDate($dates//date[1])"/>
-					<xsl:text> - </xsl:text>
-					<xsl:value-of select="numishare:normalizeDate($dates//date[last()])"/>
-				</xsl:otherwise>
-			</xsl:choose>
-		</field>
+		<xsl:if test="count($dates//date) &gt; 0">
+			<field name="date_display">
+				<xsl:choose>
+					<xsl:when test="$dates//date[1] = $dates//date[last()]">
+						<xsl:value-of select="numishare:normalizeDate($dates//date[1])"/>
+					</xsl:when> 
+					<xsl:otherwise>
+						<xsl:value-of select="numishare:normalizeDate($dates//date[1])"/>
+						<xsl:text> - </xsl:text>
+						<xsl:value-of select="numishare:normalizeDate($dates//date[last()])"/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</field>
+		</xsl:if>
+		
 	</xsl:template>
 
 	<xsl:template name="get_hoard_sort_fields">

@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="2.0" xmlns:nuds="http://nomisma.org/nuds" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-	xmlns:datetime="http://exslt.org/dates-and-times" xmlns:nm="http://nomisma.org/id/" xmlns:nmo="http://nomisma.org/ontology#"
-	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:mets="http://www.loc.gov/METS/"
-	xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml"
-	xmlns:res="http://www.w3.org/2005/sparql-results#" xmlns:numishare="https://github.com/ewg118/numishare"
-	xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" exclude-result-prefixes="#all">
+<xsl:stylesheet version="2.0" xmlns:nuds="http://nomisma.org/nuds" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:datetime="http://exslt.org/dates-and-times"
+	xmlns:nm="http://nomisma.org/id/" xmlns:nmo="http://nomisma.org/ontology#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:mets="http://www.loc.gov/METS/" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml"
+	xmlns:res="http://www.w3.org/2005/sparql-results#" xmlns:numishare="https://github.com/ewg118/numishare" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"
+	xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:digest="org.apache.commons.codec.digest.DigestUtils" exclude-result-prefixes="#all">
 
 	<xsl:template name="nuds">
 		<!-- create default document -->
@@ -106,8 +105,7 @@
 								if (contains(datetime:dateTime(), 'Z')) then
 									datetime:dateTime()
 								else
-									concat(datetime:dateTime(), 'Z')"
-						/>
+									concat(datetime:dateTime(), 'Z')"/>
 					</xsl:otherwise>
 				</xsl:choose>
 			</field>
@@ -283,17 +281,21 @@
 
 				<!-- get all labels -->
 				<xsl:call-template name="alternativeLabels">
-					<xsl:with-param name="lang" select="if (string($lang)) then $lang else 'en'"/>
+					<xsl:with-param name="lang" select="
+							if (string($lang)) then
+								$lang
+							else
+								'en'"/>
 					<xsl:with-param name="typeDesc" as="node()*">
 						<xsl:choose>
 							<xsl:when test="descendant::nuds:typeDesc[string(@xlink:href)]">
 								<xsl:variable name="href" select="descendant::nuds:typeDesc/@xlink:href"/>
-								
+
 								<xsl:copy-of select="$nudsGroup//object[@xlink:href = $href]//nuds:typeDesc"/>
 							</xsl:when>
 							<xsl:when test="descendant::nuds:reference[@xlink:arcrole = 'nmo:hasTypeSeriesItem'][string(@xlink:href)]">
 								<xsl:variable name="href" select="descendant::nuds:reference[@xlink:arcrole = 'nmo:hasTypeSeriesItem']/@xlink:href"/>
-								
+
 								<xsl:copy-of select="$nudsGroup//object[@xlink:href = $href]//nuds:typeDesc"/>
 							</xsl:when>
 							<xsl:otherwise>
@@ -359,9 +361,7 @@
 					</xsl:when>
 					<xsl:otherwise>
 						<field name="findspot_hier">
-							<xsl:value-of
-								select="concat(substring-before($hierarchy_pieces[$position - 1], '/'), '|', substring-after(., '/'), '/', substring-before(., '/'))"
-							/>
+							<xsl:value-of select="concat(substring-before($hierarchy_pieces[$position - 1], '/'), '|', substring-after(., '/'), '/', substring-before(., '/'))"/>
 						</field>
 					</xsl:otherwise>
 				</xsl:choose>
@@ -418,7 +418,7 @@
 		<xsl:apply-templates select="nuds:subjectSet"/>
 		<xsl:apply-templates select="nuds:physDesc"/>
 
-		
+
 		<!-- ***** typeDesc and/or reference typology indexing ***** -->
 		<xsl:variable name="typologies" as="element()*">
 			<typologies>
@@ -429,7 +429,7 @@
 					</xsl:when>
 					<xsl:otherwise>
 						<xsl:copy-of select="nuds:typeDesc[not(@xlink:href)]"/>
-						
+
 						<xsl:for-each
 							select="distinct-values(nuds:typeDesc[@xlink:href]/@xlink:href | descendant::nuds:reference[@xlink:arcrole = 'nmo:hasTypeSeriesItem'][@xlink:href]/@xlink:href)">
 							<xsl:variable name="uri" select="."/>
@@ -440,23 +440,23 @@
 				</xsl:choose>
 			</typologies>
 		</xsl:variable>
-		
+
 		<!-- process typeDesc(s) -->
 		<xsl:apply-templates select="$typologies//nuds:typeDesc">
 			<xsl:with-param name="recordType" select="$recordType"/>
 			<xsl:with-param name="lang" select="$lang"/>
 		</xsl:apply-templates>
-		
+
 		<!-- evaluate the dates within the group of typologies to extract the earliest and latest possible dates -->
 		<xsl:call-template name="parse_dates">
 			<xsl:with-param name="typologies" select="$typologies"/>
 		</xsl:call-template>
-		
+
 		<!-- get sort fields from within the associated $typologies -->
 		<xsl:call-template name="get_coin_sort_fields">
 			<xsl:with-param name="typologies" select="$typologies"/>
 			<xsl:with-param name="lang" select="$lang"/>
-		</xsl:call-template>		
+		</xsl:call-template>
 
 		<xsl:apply-templates select="nuds:adminDesc"/>
 		<xsl:apply-templates select="nuds:refDesc"/>
@@ -521,7 +521,9 @@
 
 		<field name="findspot_geo">
 			<xsl:value-of select="$label"/>
-			<xsl:text>|(null)|</xsl:text>
+			<xsl:text>|</xsl:text>
+			<xsl:value-of select="concat($url, 'findspot/', digest:md5Hex(string(gml:Point/gml:coordinates)))"/>
+			<xsl:text>|</xsl:text>
 			<xsl:value-of select="concat(normalize-space($coords[2]), ',', normalize-space($coords[1]))"/>
 		</field>
 	</xsl:template>
@@ -583,8 +585,7 @@
 								<xsl:otherwise>
 									<field name="findspot_hier">
 										<xsl:value-of
-											select="concat(substring-before($hierarchy_pieces[$position - 1], '/'), '|', substring-after(., '/'), '/', substring-before(., '/'))"
-										/>
+											select="concat(substring-before($hierarchy_pieces[$position - 1], '/'), '|', substring-after(., '/'), '/', substring-before(., '/'))"/>
 									</field>
 								</xsl:otherwise>
 							</xsl:choose>
@@ -628,8 +629,7 @@
 							<xsl:otherwise>
 								<field name="findspot_hier">
 									<xsl:value-of
-										select="concat(substring-before($hierarchy_pieces[$position - 1], '/'), '|', substring-after(., '/'), '/', substring-before(., '/'))"
-									/>
+										select="concat(substring-before($hierarchy_pieces[$position - 1], '/'), '|', substring-after(., '/'), '/', substring-before(., '/'))"/>
 								</field>
 							</xsl:otherwise>
 						</xsl:choose>
@@ -800,8 +800,7 @@
 
 		<xsl:apply-templates select="nuds:identifier"/>
 
-		<xsl:for-each
-			select="nuds:provenance/nuds:chronList/nuds:chronItem/nuds:previousColl | nuds:provenance/nuds:chronList/nuds:chronItem/nuds:auction/nuds:saleCatalog">
+		<xsl:for-each select="nuds:provenance/nuds:chronList/nuds:chronItem/nuds:previousColl | nuds:provenance/nuds:chronList/nuds:chronItem/nuds:auction/nuds:saleCatalog">
 			<field name="provenance_text">
 				<xsl:value-of select="."/>
 			</field>
@@ -834,5 +833,5 @@
 			</field>
 		</xsl:if>
 	</xsl:template>
-	
+
 </xsl:stylesheet>
