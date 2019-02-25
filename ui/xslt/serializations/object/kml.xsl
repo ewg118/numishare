@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"
 	xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nm="http://nomisma.org/id/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-	xmlns:nuds="http://nomisma.org/nuds" xmlns:nh="http://nomisma.org/nudsHoard" xmlns:xlink="http://www.w3.org/1999/xlink"
+	xmlns:nuds="http://nomisma.org/nuds" xmlns:nh="http://nomisma.org/nudsHoard" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml"
 	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:nmo="http://nomisma.org/ontology#" exclude-result-prefixes="#all" version="2.0">
 
 	<xsl:variable name="id" select="descendant::*:recordId"/>
@@ -151,7 +151,7 @@
 		</xsl:for-each>
 		<!-- create findspot points (for physical coins -->
 		<xsl:for-each
-			select="$nudsGroup/descendant::nuds:geogname[@xlink:role = 'findspot'][string(@xlink:href)] | descendant::nuds:findspotDesc[string(@xlink:href)]">
+			select="descendant::nuds:geogname[@xlink:role = 'findspot'][string(@xlink:href)] | descendant::nuds:findspot[gml:Point/gml:coordinates] | descendant::nuds:findspotDesc[string(@xlink:href)]">
 			<xsl:call-template name="getPlacemark">
 				<xsl:with-param name="uri" select="@xlink:href"/>
 				<xsl:with-param name="styleUrl">#hoard</xsl:with-param>
@@ -218,6 +218,9 @@
 							</xsl:choose>
 						</xsl:when>
 					</xsl:choose>
+				</xsl:when>
+				<xsl:when test="local-name()='findspot'">
+					<xsl:value-of select="nuds:geogname[@xlink:role='findspot']"/>
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:value-of select="."/>
@@ -326,6 +329,15 @@
 							</coordinates>
 						</Point>
 					</xsl:if>
+				</xsl:when>
+				<xsl:when test="gml:Point/gml:coordinates">
+					<xsl:variable name="coords" select="tokenize(gml:Point/gml:coordinates, ',')"/>
+					
+					<Point>
+						<coordinates>
+							<xsl:value-of select="concat(normalize-space($coords[2]), ',', normalize-space($coords[1]))"/>
+						</coordinates>
+					</Point>
 				</xsl:when>
 			</xsl:choose>
 			<!-- display timespan -->
