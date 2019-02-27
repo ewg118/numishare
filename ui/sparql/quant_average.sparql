@@ -1,0 +1,21 @@
+PREFIX rdf:	<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX bio:	<http://purl.org/vocab/bio/0.1/>
+PREFIX crm:	<http://www.cidoc-crm.org/cidoc-crm/>
+PREFIX dcmitype:	<http://purl.org/dc/dcmitype/>
+PREFIX dcterms:	<http://purl.org/dc/terms/>
+PREFIX foaf:	<http://xmlns.com/foaf/0.1/>
+PREFIX geo:	<http://www.w3.org/2003/01/geo/wgs84_pos#>
+PREFIX nm:	<http://nomisma.org/id/>
+PREFIX nmo:	<http://nomisma.org/ontology#>
+PREFIX org:	<http://www.w3.org/ns/org#>
+PREFIX osgeo:	<http://data.ordnancesurvey.co.uk/ontology/geometry/>
+PREFIX rdac:	<http://www.rdaregistry.info/Elements/c/>
+PREFIX skos:	<http://www.w3.org/2004/02/skos/core#>
+PREFIX spatial: <http://jena.apache.org/spatial#>
+PREFIX un:	<http://www.owl-ontologies.com/Ontology1181490123.owl#>
+PREFIX wordnet: <http://ontologi.es/WordNet/class/>
+PREFIX xsd:	<http://www.w3.org/2001/XMLSchema#>
+
+SELECT (AVG(xsd:decimal(?measurement)) AS ?average)  WHERE {
+ %STATEMENTS%
+}
