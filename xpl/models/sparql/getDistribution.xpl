@@ -81,6 +81,8 @@
 			<p:input name="data" href="#config"/>
 			<p:input name="config">
 				<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+					<xsl:include href="../../../ui/xslt/controllers/sparql-metamodel.xsl"/>
+					
 					<!-- request parameters -->
 					<xsl:param name="filter" select="doc('input:filter')/query"/>
 					<xsl:param name="dist" select="doc('input:request')/request/parameters/parameter[name='dist']/value"/>
@@ -186,31 +188,6 @@
 							<encoding>utf-8</encoding>
 						</config>
 					</xsl:template>
-
-					<xsl:template match="triple">
-						<xsl:value-of select="concat(@s, ' ', @p, ' ', @o, if (@filter) then concat(' FILTER ', @filter) else '', '.')"/>						
-						<xsl:if test="not(parent::union)">
-							<xsl:text>&#x0A;</xsl:text>
-						</xsl:if>
-					</xsl:template>
-
-					<xsl:template match="optional">
-						<xsl:text>OPTIONAL {</xsl:text>
-						<xsl:apply-templates select="triple"/>
-						<xsl:text>}&#x0A;</xsl:text>
-					</xsl:template>
-
-					<xsl:template match="union">
-						<xsl:for-each select="triple">
-							<xsl:if test="position() &gt; 1">
-								<xsl:text>UNION </xsl:text>
-							</xsl:if>
-							<xsl:text>{</xsl:text>
-							<xsl:apply-templates select="self::node()"/>
-							<xsl:text>}&#x0A;</xsl:text>
-						</xsl:for-each>
-					</xsl:template>
-
 				</xsl:stylesheet>
 			</p:input>
 			<p:output name="data" id="compare-url-generator-config"/>

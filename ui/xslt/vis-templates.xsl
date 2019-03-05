@@ -659,7 +659,7 @@
 	</xsl:template>
 
 	<xsl:template name="ajax-loader-template">
-		<span id="ajax-loader-template"><img src="{$display_path}ui/images/ajax-loader.gif" alt="loading"/> Loading</span>
+		<span id="ajax-loader-template"><img src="{$include_path}images/ajax-loader.gif" alt="loading"/> Loading</span>
 	</xsl:template>
 
 	<xsl:template name="property-list">

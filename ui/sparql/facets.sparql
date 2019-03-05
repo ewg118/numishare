@@ -18,5 +18,4 @@ PREFIX xsd:	<http://www.w3.org/2001/XMLSchema#>
 
 SELECT DISTINCT ?facet ?label  WHERE {
  %STATEMENTS%
- ?facet skos:prefLabel ?label FILTER langMatches(lang(?label), "en")
 }  ORDER BY ?label

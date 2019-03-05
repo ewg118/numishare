@@ -50,6 +50,8 @@
 		<p:input name="data" href="#config"/>
 		<p:input name="config">
 			<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+				<xsl:include href="../../../ui/xslt/controllers/sparql-metamodel.xsl"/>
+				
 				<!-- request parameters -->
 				<xsl:param name="filter" select="doc('input:request')/request/parameters/parameter[name='filter']/value"/>
 				<xsl:param name="facet" select="doc('input:request')/request/parameters/parameter[name='facet']/value"/>
@@ -61,6 +63,13 @@
 				<xsl:variable name="statements" as="element()*">
 					<statements>
 						<triple s="?coinType" p="rdf:type" o="nmo:TypeSeriesItem"/>
+						
+						<!-- insert the type series set in the config -->
+						<xsl:if test="matches(/config/type_series, '^https?://')">
+							<triple s="?coinType" p="dcterms:source">
+								<xsl:attribute name="o" select="concat('&lt;', /config/type_series, '&gt;')"/>
+							</triple>
+						</xsl:if>
 						
 						<!-- parse filters -->
 						<xsl:for-each select="tokenize($filter, ';')">
@@ -88,7 +97,7 @@
 						<xsl:choose>
 							<xsl:when test="$facet='?prop'">
 								<triple s="?coinType" p="?prop" o="?facet"></triple>
-								<triple s="?facet" p="rdf:type" o="?type FILTER strStarts(str(?type), &#x022;http://xmlns.com/foaf/0.1/&#x022;)"></triple>
+								<triple s="?facet" p="rdf:type" o="?type" filter="FILTER strStarts(str(?type), &#x022;http://xmlns.com/foaf/0.1/&#x022;)"></triple>
 							</xsl:when>
 							<xsl:when test="$facet='portrait' or $facet='deity'">
 								<xsl:variable name="distClass" select="if ($facet='portrait') then 'foaf:Person' else 'wordnet:Deity'"/>									
@@ -102,13 +111,24 @@
 							</xsl:when>
 							<xsl:otherwise>
 								<triple s="?coinType" p="{$facet}" o="?facet"/>
+								<!--<triple s="?coinType" p="{$facet}" o="?facet"/>-->
+								<!-- statements for label: union between literal and skos:prefLabel in desired language -->
+								<!--<union>
+									<group>
+										<triple s="?coinType" p="{?facet}" o="?label" filter="isLiteral(?label)"/>
+									</group>
+									<group>
+										<triple s="?coinType" p="{$facet}/skos:prefLabel" o="?label" filter="langMatches(lang(?label), &#x022;en&#x022;)"/>
+									</group>
+								</union>-->
 							</xsl:otherwise>
-						</xsl:choose>						
+						</xsl:choose>
+						<triple s="?facet" p="skos:prefLabel" o="?label" filter="langMatches(lang(?label), &#x022;en&#x022;)"/>
 					</statements>
 				</xsl:variable>
 				
 				<xsl:variable name="statementsSPARQL">
-					<xsl:apply-templates select="$statements/triple|$statements/union"/>
+					<xsl:apply-templates select="$statements/*"/>
 				</xsl:variable>
 
 				<xsl:variable name="service">
@@ -120,30 +140,11 @@
 				<xsl:template match="/">
 					<config>
 						<url>
-							<!--<xsl:copy-of select="$statementsSPARQL"/>-->
 							<xsl:value-of select="$service"/>
 						</url>
 						<content-type>application/xml</content-type>
 						<encoding>utf-8</encoding>
 					</config>
-				</xsl:template>
-				
-				<xsl:template match="triple">
-					<xsl:value-of select="concat(@s, ' ', @p, ' ', @o, '.')"/>
-					<xsl:if test="not(parent::union)">
-						<xsl:text>&#x0A;</xsl:text>
-					</xsl:if>
-				</xsl:template>
-				
-				<xsl:template match="union">
-					<xsl:for-each select="triple">
-						<xsl:if test="position() &gt; 1">
-							<xsl:text>UNION </xsl:text>
-						</xsl:if>
-						<xsl:text>{</xsl:text>
-						<xsl:apply-templates select="self::node()"/>
-						<xsl:text>}&#x0A;</xsl:text>
-					</xsl:for-each>
 				</xsl:template>
 			</xsl:stylesheet>
 		</p:input>
