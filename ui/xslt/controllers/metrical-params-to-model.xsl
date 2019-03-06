@@ -13,6 +13,14 @@
 	
 	<xsl:variable name="abstracted" as="node()*">
 		<group>
+			
+			<!-- insert the type series set in the config -->
+			<xsl:if test="matches(/config/type_series, '^https?://')">
+				<triple s="?coinType" p="dcterms:source">
+					<xsl:attribute name="o" select="concat('&lt;', /config/type_series, '&gt;')"/>
+				</triple>
+			</xsl:if>
+			
 			<xsl:for-each select="tokenize($filter, ';')">
 				<xsl:variable name="property" select="substring-before(normalize-space(.), ' ')"/>
 				<xsl:variable name="object" select="substring-after(normalize-space(.), ' ')"/>
@@ -79,10 +87,13 @@
 	<xsl:variable name="statements" as="element()*">
 		<statements>
 			<!-- parse filters -->
-			<union>								
+			<!-- the coin apparatus can be commented out here (in contrast to Nomisma queries) since we are only querying specimens related to this particular type series -->
+			<!--<union>				
 				<xsl:apply-templates select="$abstracted" mode="coin"/>
 				<xsl:apply-templates select="$abstracted" mode="coinType"/>
-			</union>
+			</union>-->
+			
+			<xsl:apply-templates select="$abstracted" mode="coinType"/>
 			
 			<!-- parse measurement -->
 			<triple s="?coin" p="{$measurement}" o="?measurement"/>
@@ -122,7 +133,7 @@
 	
 	<!-- construct triples for coin types -->
 	<xsl:template match="group" mode="coinType">
-		<group>
+		<!--<group>-->
 			<xsl:for-each select="triple">
 				<triple s="?coinType" p="{@p}" o="{@o}">
 					<xsl:if test="@filter">
@@ -131,6 +142,6 @@
 				</triple>								
 			</xsl:for-each>
 			<triple s="?coin" p="nmo:hasTypeSeriesItem" o="?coinType"/>
-		</group>						
+		<!--</group>-->						
 	</xsl:template>
 </xsl:stylesheet>

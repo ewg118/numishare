@@ -4215,7 +4215,7 @@
 				<xsl:variable name="normalized" select="xs:date(concat($date, '-01'))"/>
 				<xsl:value-of select="format-date($normalized, '[MNn] [Y]')"/>
 			</xsl:when>
-			<xsl:when test="$date castable as xs:gYear">
+			<xsl:when test="$date castable as xs:gYear or $date castable as xs:integer">
 				<xsl:value-of select="abs(number($date))"/>
 			</xsl:when>
 		</xsl:choose>

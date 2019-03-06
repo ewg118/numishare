@@ -73,8 +73,16 @@
 						</xsl:call-template>
 					</xsl:otherwise>
 				</xsl:choose>
+				
+				<field name="typeSeries">
+					<xsl:value-of select="if (descendant::nuds:typeSeries/@xlink:href) then descendant::nuds:typeSeries/@xlink:href else //config/type_series"/>
+				</field>
+				
+				<field name="uri_space">
+					<xsl:value-of select="//config/uri_space"/>
+				</field>
 			</xsl:if>
-
+			
 			<field name="collection-name">
 				<xsl:value-of select="$collection-name"/>
 			</field>

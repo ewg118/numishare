@@ -68,6 +68,8 @@
 	
 	<!-- index typeNumber for coin types -->
 	<field name="typeNumber" type="string" indexed="true" stored="true" multiValued="true"/>
+	<field name="typeSeries" type="string" indexed="true" stored="true"/>
+	<field name="uri_space" type="string" indexed="true" stored="true"/>
 	<field name="subtype" type="boolean" indexed="true" stored="true"/>
 	<field name="typeUncertain" type="boolean" indexed="true" stored="true"/>
 	

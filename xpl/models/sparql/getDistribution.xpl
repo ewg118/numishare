@@ -95,6 +95,13 @@
 					<!-- parse query statements into a data object -->
 					<xsl:variable name="statements" as="element()*">
 						<statements>
+							<!-- insert the type series set in the config -->
+							<xsl:if test="matches(/config/type_series, '^https?://')">
+								<triple s="?coinType" p="dcterms:source">
+									<xsl:attribute name="o" select="concat('&lt;', /config/type_series, '&gt;')"/>
+								</triple>
+							</xsl:if>
+							
 							<!-- parse filters -->
 							<xsl:for-each select="tokenize($filter, ';')">
 								<xsl:variable name="property" select="substring-before(normalize-space(.), ' ')"/>

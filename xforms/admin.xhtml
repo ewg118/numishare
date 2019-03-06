@@ -48,7 +48,7 @@
 			</xforms:instance>
 
 			<xforms:instance id="config-template" xxforms:exclude-result-prefixes="#all">
-				<config xmlns="" version="19.02">
+				<config xmlns="" version="19.03">
 					<title>Numishare</title>
 					<description>A short description of the collection.</description>
 					<logo/>
@@ -68,7 +68,9 @@
 					<pelagios_enabled>false</pelagios_enabled>
 					<ctype_enabled>false</ctype_enabled>
 					<index_subtype_metadata>false</index_subtype_metadata>
-					<union_type_catalog>false</union_type_catalog>
+					<union_type_catalog enabled="false">
+						<series type_series_uri="" uri-space="" collection-name=""/>
+					</union_type_catalog>					
 					<uri_space/>
 					<baselayers>
 						<layer enabled="true">mb_physical</layer>

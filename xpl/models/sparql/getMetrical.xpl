@@ -17,7 +17,7 @@
 		</p:input>
 		<p:output name="data" id="request"/>
 	</p:processor>
-	
+
 	<p:processor name="oxf:pipeline">
 		<p:input name="config" href="../config.xpl"/>
 		<p:output name="data" id="config"/>
@@ -70,7 +70,8 @@
 			<p:processor name="oxf:unsafe-xslt">
 				<p:input name="data" href="#request"/>
 				<p:input name="config">
-					<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:nomisma="http://nomisma.org/">
+					<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+						xmlns:numishare="https://github.com/ewg118/numishare">
 						<xsl:include href="../../../ui/xslt/functions.xsl"/>
 
 						<!-- request parameters -->
