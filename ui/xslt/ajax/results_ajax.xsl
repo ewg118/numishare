@@ -69,9 +69,28 @@
 	<!-- get block of images from SPARQL endpoint, via nomisma API -->
 	<xsl:variable name="sparqlResult" as="element()*">
 		<xsl:if test="string($sparql_endpoint) and //config/collection_type='cointype'">
-			<xsl:variable name="service" select="concat('http://nomisma.org/apis/numishareResults?identifiers=', encode-for-uri(string-join(descendant::str[@name='recordId'], '|')), '&amp;baseUri=',
-				encode-for-uri(/content/config/uri_space))"/>
-			<xsl:copy-of select="document($service)/response"/>
+			<xsl:choose>
+				<xsl:when test="//config/union_type_catalog/@enabled = true()">
+					<xsl:variable name="identifiers" as="node()*">
+						<identifiers>
+							<xsl:for-each select="descendant::doc">
+								<identifier>
+									<xsl:value-of select="concat(str[@name='uri_space'], str[@name='recordId'])"/>
+								</identifier>
+							</xsl:for-each>
+						</identifiers>
+					</xsl:variable>
+					<xsl:variable name="service" select="concat('http://nomisma.org/apis/numishareResults?identifiers=', encode-for-uri(string-join($identifiers//identifier, '|')))"/>
+					
+					<xsl:copy-of select="document($service)/response"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:variable name="service" select="concat('http://nomisma.org/apis/numishareResults?identifiers=', encode-for-uri(string-join(descendant::str[@name='recordId'], '|')), '&amp;baseUri=',
+						encode-for-uri(/content/config/uri_space))"/>
+					
+					<xsl:copy-of select="document($service)/response"/>
+				</xsl:otherwise>
+			</xsl:choose>
 		</xsl:if>
 	</xsl:variable>
 
