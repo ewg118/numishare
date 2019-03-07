@@ -23,7 +23,7 @@
 		<p:input name="data" href="#config"/>
 		<p:input name="config">
 			<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-				<xsl:variable name="collection-name" select="substring-before(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/')"/>				
+				<xsl:variable name="collection-name" select="if (/config/union_type_catalog/@enabled = true()) then concat('(', string-join(/config/union_type_catalog/series/@collectionName, '+OR+'), ')')  					else substring-before(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/')"/>				
 				<xsl:variable name="model" select="tokenize(tokenize(doc('input:request')/request/request-uri, '/')[last()], '\.')[1]"/>
 
 				<!-- config variables -->

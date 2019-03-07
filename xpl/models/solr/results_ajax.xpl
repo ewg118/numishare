@@ -26,7 +26,9 @@
 		<p:input name="config">
 			<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:numishare="https://github.com/ewg118/numishare">
 				<xsl:include href="../../../ui/xslt/functions.xsl"/>
-				<xsl:variable name="collection-name" select="substring-before(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/')"/>
+				<xsl:variable name="collection-name"
+					select="if (/config/union_type_catalog/@enabled = true()) then concat('(', string-join(/config/union_type_catalog/series/@collectionName, '+OR+'), ')') 
+					else substring-before(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/')"/>
 				<!-- url params -->
 				<xsl:param name="lang">
 					<xsl:choose>
@@ -62,7 +64,7 @@
 				<xsl:variable name="fl">
 					<xsl:choose>
 						<xsl:when test="/config/collection_type = 'hoard'">id,recordId,recordType,title_display,findspot_display,closing_date_display,description_display,reference_facet</xsl:when>
-						<xsl:when test="/config/collection_type = 'cointype'">id,recordId,recordType,title_display,date_display,denomination_facet,mint_facet,obv_leg_display,obv_type_display,rev_leg_display,rev_type_display,reference_facet</xsl:when>
+						<xsl:when test="/config/collection_type = 'cointype'">id,recordId,recordType,title_display,date_display,denomination_facet,mint_facet,obv_leg_display,obv_type_display,rev_leg_display,rev_type_display,reference_facet,uri_space</xsl:when>
 						<xsl:when test="/config/collection_type = 'object'">id,recordId,recordType,title_display,date_display,denomination_facet,mint_facet,obv_leg_display,obv_type_display,rev_leg_display,rev_type_display,reference_facet,provenance_facet,diameter_num,weight_num,thumbnail_obv,thumbnail_rev,reference_obv,reference_rev</xsl:when>
 					</xsl:choose>
 				</xsl:variable>

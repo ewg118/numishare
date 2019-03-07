@@ -4,6 +4,20 @@
 
 	<!-- default document display mode; metadata with images in table-like layout -->
 	<xsl:template match="doc" mode="default">
+		<xsl:variable name="object-path">
+			<xsl:choose>
+				<xsl:when test="//config/collection_type = 'object' and string(//config/uri_space)">
+					<xsl:value-of select="//config/uri_space"/>
+				</xsl:when>
+				<xsl:when test="//config/union_type_catalog/@enabled = true()">
+					<xsl:value-of select="str[@name='uri_space']"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="concat($display_path, 'id/')"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		
 		<div class="row result-doc">
 			<div class="col-md-12">
 				<h4>
@@ -28,6 +42,7 @@
 
 			<xsl:call-template name="result_image">
 				<xsl:with-param name="alignment" select="//config/theme/layouts/*[name() = $pipeline]/image_location"/>
+				<xsl:with-param name="object-path" select="$object-path"/>
 			</xsl:call-template>
 
 			<div class="col-md-7 col-lg-8">
@@ -38,6 +53,20 @@
 	</xsl:template>
 
 	<xsl:template match="doc" mode="grid">
+		<xsl:variable name="object-path">
+			<xsl:choose>
+				<xsl:when test="//config/collection_type = 'object' and string(//config/uri_space)">
+					<xsl:value-of select="//config/uri_space"/>
+				</xsl:when>
+				<xsl:when test="//config/union_type_catalog/@enabled = true()">
+					<xsl:value-of select="str[@name='uri_space']"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="concat($display_path, 'id/')"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		
 		<div class="col-xs-12 col-sm-6 col-md-4 grid-doc">
 			<h4>
 				<xsl:if test="$lang = 'ar'">
@@ -84,6 +113,17 @@
 	</xsl:template>
 
 	<xsl:template match="doc" mode="compare">
+		<xsl:variable name="object-path">
+			<xsl:choose>
+				<xsl:when test="//config/collection_type = 'object' and string(//config/uri_space)">
+					<xsl:value-of select="//config/uri_space"/>
+				</xsl:when>				
+				<xsl:otherwise>
+					<xsl:value-of select="concat($display_path, 'id/')"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		
 		<div class="row result-doc">
 			<div class="col-md-12">
 				<h4>
@@ -650,6 +690,8 @@
 
 	<xsl:template name="result_image">
 		<xsl:param name="alignment"/>
+		<xsl:param name="object-path"/>
+		
 		<div class="col-md-5 col-lg-4 {if ($alignment = 'right') then 'pull-right' else ''}">
 			<xsl:choose>
 				<xsl:when test="str[@name = 'recordType'] = 'physical'">

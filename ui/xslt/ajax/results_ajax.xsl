@@ -18,6 +18,7 @@
 			</xsl:when>
 		</xsl:choose>
 	</xsl:param>
+	<xsl:param name="layout" select="doc('input:request')/request/parameters/parameter[name='layout']/value"/>
 	<xsl:param name="request-uri" select="concat('http://localhost:', if (//config/server-port castable as xs:integer) then //config/server-port else '8080', substring-before(doc('input:request')/request/request-uri, 'results_ajax'))"/>
 	<xsl:variable name="authenticated" select="false()" as="xs:boolean"/>
 
@@ -33,6 +34,9 @@
 		<xsl:choose>
 			<xsl:when test="//config/collection_type = 'object' and string(//config/uri_space)">
 				<xsl:value-of select="//config/uri_space"/>
+			</xsl:when>
+			<xsl:when test="//config/union_type_catalog/@enabled = true()">
+				<xsl:value-of select="str[@name='uri_space']"/>
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:value-of select="concat($display_path, 'id/')"/>

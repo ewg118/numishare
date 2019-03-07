@@ -46,7 +46,7 @@
 						</xsl:when>
 					</xsl:choose>
 				</xsl:param>
-				<xsl:variable name="collection-name" select="substring-before(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/')"/>
+				<xsl:variable name="collection-name" select="if (/config/union_type_catalog/@enabled = true()) then concat('(', string-join(/config/union_type_catalog/series/@collectionName, '+OR+'), ')')  					else substring-before(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/')"/>
 				
 				<!-- config variables -->
 				<xsl:variable name="solr-url" select="concat(/config/solr_published, 'select/')"/>

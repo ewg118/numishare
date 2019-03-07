@@ -15,11 +15,24 @@
 		<group>
 			
 			<!-- insert the type series set in the config -->
-			<xsl:if test="matches(/config/type_series, '^https?://')">
-				<triple s="?coinType" p="dcterms:source">
-					<xsl:attribute name="o" select="concat('&lt;', /config/type_series, '&gt;')"/>
-				</triple>
-			</xsl:if>
+			<xsl:choose>
+				<xsl:when test="/config/union_type_catalog/@enabled = true()">
+					<union>
+						<xsl:for-each select="/config/union_type_catalog/series">
+							<triple s="?coinType" p="dcterms:source">
+								<xsl:attribute name="o" select="concat('&lt;', @typeSeries, '&gt;')"/>
+							</triple>
+						</xsl:for-each>
+					</union>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:if test="matches(/config/type_series, '^https?://')">
+						<triple s="?coinType" p="dcterms:source">
+							<xsl:attribute name="o" select="concat('&lt;', /config/type_series, '&gt;')"/>
+						</triple>
+					</xsl:if>
+				</xsl:otherwise>
+			</xsl:choose>
 			
 			<xsl:for-each select="tokenize($filter, ';')">
 				<xsl:variable name="property" select="substring-before(normalize-space(.), ' ')"/>
@@ -27,11 +40,9 @@
 				
 				<xsl:choose>
 					<xsl:when test="$property = 'portrait' or $property='deity'">
-						<triple s="" p="nmo:hasObverse" o="?obv"/>
-						<triple s="" p="nmo:hasReverse" o="?rev"/>
 						<union>
-							<triple s="?obv" p="nmo:hasPortrait" o="{$object}"/>
-							<triple s="?rev" p="nmo:hasPortrait" o="{$object}"/>
+							<triple s="" p="nmo:hasObverse/nmo:hasPortrait" o="{$object}"/>
+							<triple s="" p="nmo:hasReverse/nmo:hasPortrait" o="{$object}"/>
 						</union>
 					</xsl:when>
 					<xsl:when test="$property = 'from'">

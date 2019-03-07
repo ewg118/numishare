@@ -49,7 +49,7 @@
 						xmlns:xxf="http://www.orbeon.com/oxf/pipeline">
 						<xsl:include href="../../../ui/xslt/serializations/json/reconcile-query.xsl"/>
 
-						<xsl:variable name="collection-name" select="substring-before(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/')"/>
+						<xsl:variable name="collection-name" select="if (/config/union_type_catalog/@enabled = true()) then concat('(', string-join(/config/union_type_catalog/series/@collectionName, '+OR+'), ')')  					else substring-before(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/')"/>
 
 						<xsl:variable name="q">
 							<xsl:variable name="query" as="node()*">
@@ -120,7 +120,7 @@
 							xmlns:xxf="http://www.orbeon.com/oxf/pipeline">
 							<xsl:include href="../../../ui/xslt/serializations/json/reconcile-query.xsl"/>
 							
-							<xsl:variable name="collection-name" select="substring-before(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/')"/>
+							<xsl:variable name="collection-name" select="if (/config/union_type_catalog/@enabled = true()) then concat('(', string-join(/config/union_type_catalog/series/@collectionName, '+OR+'), ')')  					else substring-before(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/')"/>
 							
 							<!-- compile the q parameter -->
 							<xsl:variable name="q">					
