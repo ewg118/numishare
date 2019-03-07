@@ -14,7 +14,7 @@
 		<link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" />
 		<script type="text/javascript" src="https://netdna.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 		<link rel="stylesheet" href="/apps/numishare/xforms/css/xforms.css" />
-		
+
 		<xforms:model xmlns="http://nomisma.org/nuds">
 			<!-- exist URL is stored in an XML file -->
 			<xforms:instance id="exist-config" xxforms:exclude-result-prefixes="#all">
@@ -70,7 +70,7 @@
 					<index_subtype_metadata>false</index_subtype_metadata>
 					<union_type_catalog enabled="false">
 						<series type_series_uri="" uri-space="" collection-name=""/>
-					</union_type_catalog>					
+					</union_type_catalog>
 					<uri_space/>
 					<baselayers>
 						<layer enabled="true">mb_physical</layer>
@@ -89,6 +89,7 @@
 						<repository/>
 					</template>
 					<includes/>
+					<installation_path>/usr/local/projects/numishare</installation_path>
 					<images>
 						<absolute_path>/usr/local/projects/numishare</absolute_path>
 						<iiif_server/>
@@ -403,12 +404,12 @@
 				<xforms:bind nodeset="title" required="true()"/>
 				<xforms:bind nodeset="description" required="true()"/>
 				<xforms:bind nodeset="collection_type" required="true()"/>
-				<xforms:bind nodeset="url" required="true()" type="custom.httpURL"/>
-				<xforms:bind nodeset="solr_published" required="true()" type="custom.httpURL"/>
+				<xforms:bind nodeset="installation_path" required="true()"/>
+				<xforms:bind nodeset="url" required="true()"  constraint="matches(., 'https?://.+')"/>
+				<xforms:bind nodeset="solr_published" required="true()" constraint="matches(., 'https?://.+')"/>
 				<xforms:bind nodeset="template">
 					<!-- about the electronic record -->
 					<xforms:bind nodeset="agencyName" required="true()"/>
-					<xforms:bind nodeset="copyrightHolder" required="true()"/>
 					<xforms:bind nodeset="language" required="true()"/>
 					<xforms:bind nodeset="license" required="true()"/>
 					<xforms:bind nodeset="rights" required="true()"/>
@@ -420,17 +421,6 @@
 					<xforms:bind nodeset="published" type="xs:boolean" readonly="../publicationStatus = 'approvedSubtype'"/>
 				</xforms:bind>
 			</xforms:bind>
-
-			<!-- **************** CUSTOM DATATYPES ********************** -->
-			<!-- URL validation. Example from http://stackoverflow.com/questions/3381507/xml-validation-validating-a-uri-type -->
-			<xs:schema elementFormDefault="qualified" attributeFormDefault="unqualified">
-				<xs:simpleType name="custom.httpURL">
-					<xs:restriction base="xs:anyURI">
-						<!-- accepts only http:// or https:// URIs. -->
-						<xs:pattern value="https?://.+"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:schema>
 
 			<!-- **************** DYNAMIC VALIDATION CONTROLS ********************** -->
 			<xforms:action ev:event="xxforms-invalid" ev:observer="collections-list">
@@ -532,7 +522,7 @@
 				<xforms:action ev:event="xforms-submit-done">
 					<!-- create eXist-db collections, config file, and XQuery files -->
 					<xforms:setvalue ref="instance('eXist-xquery')/exist:text"
-						value="replace(replace(instance('xqueries')/query[@id='create-collection'], '%COLLECTION%', instance('control-instance')/collection-name), '%PATH%', 'oxf:/apps/numishare')"/>
+						value="replace(replace(instance('xqueries')/query[@id='create-collection'], '%COLLECTION%', instance('control-instance')/collection-name), '%PATH%', instance('config-template')/installation_path)"/>
 					<xforms:send submission="xquery-db"/>
 
 					<!-- submit collection metadata once again before switching the interface -->
@@ -847,6 +837,14 @@
 													</div>
 												</xforms:group>
 												<xforms:group ref="instance('config-template')">
+													<div>
+														<xforms:input ref="installation_path">
+															<xforms:label>Installation Directory</xforms:label>
+															<xforms:alert>Required</xforms:alert>
+														</xforms:input>
+														<p class="text-muted">The absolute path to the directory to which Numishare was installed. This is
+															necessary for writing XQuery files from the disk into the eXist-db collection.</p>
+													</div>
 													<h4>Boilerplate</h4>
 													<div>
 														<xforms:input ref="title">
@@ -866,7 +864,7 @@
 															<xforms:item>
 																<xforms:label>Object</xforms:label>
 																<xforms:value>object</xforms:value>
-															</xforms:item>	
+															</xforms:item>
 															<xforms:item>
 																<xforms:label>Coin Type</xforms:label>
 																<xforms:value>cointype</xforms:value>
@@ -883,13 +881,6 @@
 															<xforms:label>Maintainer</xforms:label>
 															<xforms:alert>Required</xforms:alert>
 															<xforms:hint>The agent responsible for maintaining the data.</xforms:hint>
-														</xforms:input>
-													</div>
-													<div>
-														<xforms:input ref="template/copyrightHolder">
-															<xforms:label>Copyright Holder</xforms:label>
-															<xforms:alert>Required</xforms:alert>
-															<xforms:hint>The individual or organization that owns the copyright.</xforms:hint>
 														</xforms:input>
 													</div>
 													<div>
