@@ -97,6 +97,32 @@
 										<triple s="?coinType" p="nmo:hasReverse/nmo:hasPortrait" o="{$object}"/>
 									</union>																							
 								</xsl:when>
+								<xsl:when test="$property = 'from'">
+									<xsl:if test="$object castable as xs:integer">
+										<xsl:variable name="gYear" select="format-number(number($object), '0000')"/>
+										
+										<triple s="?coinType" p="nmo:hasStartDate" o="?startDate">
+											<xsl:attribute name="filter">
+												<xsl:text>(?startDate >= "</xsl:text>
+												<xsl:value-of select="$gYear"/>
+												<xsl:text>"^^xsd:gYear)</xsl:text>
+											</xsl:attribute>
+										</triple>
+									</xsl:if>
+								</xsl:when>
+								<xsl:when test="$property = 'to'">
+									<xsl:if test="$object castable as xs:integer">
+										<xsl:variable name="gYear" select="format-number(number($object), '0000')"/>
+										
+										<triple s="?coinType" p="nmo:hasEndDate" o="?endDate">
+											<xsl:attribute name="filter">
+												<xsl:text>(?endDate &lt;= "</xsl:text>
+												<xsl:value-of select="$gYear"/>
+												<xsl:text>"^^xsd:gYear)</xsl:text>
+											</xsl:attribute>
+										</triple>
+									</xsl:if>
+								</xsl:when>
 								<xsl:otherwise>
 									<triple s="?coinType" p="{$property}" o="{$object}"/>
 								</xsl:otherwise>
@@ -119,16 +145,6 @@
 							</xsl:when>
 							<xsl:otherwise>
 								<triple s="?coinType" p="{$facet}" o="?facet"/>
-								<!--<triple s="?coinType" p="{$facet}" o="?facet"/>-->
-								<!-- statements for label: union between literal and skos:prefLabel in desired language -->
-								<!--<union>
-									<group>
-										<triple s="?coinType" p="{?facet}" o="?label" filter="isLiteral(?label)"/>
-									</group>
-									<group>
-										<triple s="?coinType" p="{$facet}/skos:prefLabel" o="?label" filter="langMatches(lang(?label), &#x022;en&#x022;)"/>
-									</group>
-								</union>-->
 							</xsl:otherwise>
 						</xsl:choose>
 						<triple s="?facet" p="skos:prefLabel" o="?label" filter="langMatches(lang(?label), &#x022;en&#x022;)"/>

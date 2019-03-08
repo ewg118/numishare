@@ -164,8 +164,8 @@
 								<xsl:when test="$dist='portrait' or $dist='deity'">
 									<xsl:variable name="distClass" select="if ($dist='portrait') then 'foaf:Person' else 'wordnet:Deity'"/>
 									<union>
-										<triple s="?coinType" p="nmo:hasObverse/nmo:hasPortrait" o="?facet"/>
-										<triple s="?coinType" p="nmo:hasReverse/nmo:hasPortrait" o="?facet"/>
+										<triple s="?coinType" p="nmo:hasObverse/nmo:hasPortrait" o="?dist"/>
+										<triple s="?coinType" p="nmo:hasReverse/nmo:hasPortrait" o="?dist"/>
 									</union>
 									<triple s="?dist" p="a" o="{$distClass}"/>
 								</xsl:when>
