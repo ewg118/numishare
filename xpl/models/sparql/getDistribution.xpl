@@ -127,6 +127,17 @@
 											<triple s="?coinType" p="nmo:hasReverse/nmo:hasPortrait" o="{$object}"/>
 										</union>
 									</xsl:when>
+									<xsl:when test="$property = 'region'">
+										<union>
+											<group>
+												<triple s="?coinType" p="nmo:hasRegion" o="{$object}"/>
+											</group>
+											<group>
+												<triple s="?coinType" p="nmo:hasMint" o="?mint"/>
+												<triple s="?mint" p="skos:broader+" o="{$object}"/>
+											</group>											
+										</union>
+									</xsl:when>
 									<xsl:when test="$property = 'from'">
 										<xsl:if test="$object castable as xs:integer">
 											<xsl:variable name="gYear" select="format-number(number($object), '0000')"/>
@@ -168,6 +179,15 @@
 										<triple s="?coinType" p="nmo:hasReverse/nmo:hasPortrait" o="?dist"/>
 									</union>
 									<triple s="?dist" p="a" o="{$distClass}"/>
+								</xsl:when>
+								<xsl:when test="$dist = 'region'">
+									<union>
+										<triple s="?coinType" p="nmo:hasRegion" o="?dist"/>
+										<group>
+											<triple s="?coinType" p="nmo:hasMint" o="?mint"/>
+											<triple s="?mint" p="skos:broader+" o="?dist"/>
+										</group>											
+									</union>
 								</xsl:when>
 								<xsl:otherwise>
 									<triple s="?coinType" p="{$dist}" o="?dist"/>

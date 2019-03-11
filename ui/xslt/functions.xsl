@@ -4551,6 +4551,14 @@
 						</xsl:matching-substring>
 					</xsl:analyze-string>
 				</xsl:when>
+				<xsl:when test="contains(., 'region')">
+					<xsl:analyze-string select="." regex="region\s(nm:.*)">
+						<xsl:matching-substring>
+							<xsl:text>Region: </xsl:text>
+							<xsl:value-of select="nomisma:getLabel(regex-group(1))"/>
+						</xsl:matching-substring>
+					</xsl:analyze-string>
+				</xsl:when>
 				<xsl:when test="matches(normalize-space(.), '^from\s')">
 					<xsl:analyze-string select="." regex="from\s(.*)">
 						<xsl:matching-substring>
