@@ -162,7 +162,7 @@
 
 				<xsl:apply-templates select="nuds:objectType[@xlink:href] | nuds:denomination[@xlink:href]"/>
 
-				<xsl:for-each select="$coinType_uris/uri">
+				<xsl:for-each select="distinct-values($coinType_uris/uri)">
 					<_object>
 						<id>
 							<xsl:value-of select="."/>

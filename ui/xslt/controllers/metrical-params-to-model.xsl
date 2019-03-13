@@ -7,33 +7,38 @@
 	<xsl:param name="measurement" select="doc('input:request')/request/parameters/parameter[name='measurement']/value"/>
 	<xsl:param name="format" select="doc('input:request')/request/parameters/parameter[name='format']/value"/>
 	
+	<!-- derive subject based on primary query property -->
+	<xsl:variable name="subject" select="if (starts-with($filter, 'nmo:hasTypeSeriesItem')) then '?coin' else '?coinType'"/>
+	
 	<!-- config variables -->
 	<xsl:variable name="sparql_endpoint" select="/config/sparql_endpoint"/>
 	<xsl:variable name="query" select="doc('input:query')"/>
 	
-	<xsl:variable name="abstracted" as="node()*">
-		<group>
-			
-			<!-- insert the type series set in the config -->
-			<xsl:choose>
-				<xsl:when test="/config/union_type_catalog/@enabled = true()">
-					<union>
-						<xsl:for-each select="/config/union_type_catalog/series">
+	<xsl:variable name="statements" as="node()*">
+		<statements>			
+			<!-- insert the type series set in the config, but only if this isn't a metrical query issued for a specific coin type -->
+			<xsl:if test="$subject = '?coinType'">
+				<xsl:choose>
+					<xsl:when test="/config/union_type_catalog/@enabled = true()">
+						<union>
+							<xsl:for-each select="/config/union_type_catalog/series">
+								<triple s="?coinType" p="dcterms:source">
+									<xsl:attribute name="o" select="concat('&lt;', @typeSeries, '&gt;')"/>
+								</triple>
+							</xsl:for-each>
+						</union>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:if test="matches(/config/type_series, '^https?://')">
 							<triple s="?coinType" p="dcterms:source">
-								<xsl:attribute name="o" select="concat('&lt;', @typeSeries, '&gt;')"/>
+								<xsl:attribute name="o" select="concat('&lt;', /config/type_series, '&gt;')"/>
 							</triple>
-						</xsl:for-each>
-					</union>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:if test="matches(/config/type_series, '^https?://')">
-						<triple s="?coinType" p="dcterms:source">
-							<xsl:attribute name="o" select="concat('&lt;', /config/type_series, '&gt;')"/>
-						</triple>
-					</xsl:if>
-				</xsl:otherwise>
-			</xsl:choose>
+						</xsl:if>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:if>
 			
+			<!-- process each SPARQL query fragment -->
 			<xsl:for-each select="tokenize($filter, ';')">
 				<xsl:variable name="property" select="substring-before(normalize-space(.), ' ')"/>
 				<xsl:variable name="object" select="substring-after(normalize-space(.), ' ')"/>
@@ -41,15 +46,15 @@
 				<xsl:choose>
 					<xsl:when test="$property = 'portrait' or $property='deity'">
 						<union>
-							<triple s="" p="nmo:hasObverse/nmo:hasPortrait" o="{$object}"/>
-							<triple s="" p="nmo:hasReverse/nmo:hasPortrait" o="{$object}"/>
+							<triple s="{$subject}" p="nmo:hasObverse/nmo:hasPortrait" o="{$object}"/>
+							<triple s="{$subject}" p="nmo:hasReverse/nmo:hasPortrait" o="{$object}"/>
 						</union>
 					</xsl:when>
 					<xsl:when test="$property = 'from'">
 						<xsl:if test="$object castable as xs:integer">
 							<xsl:variable name="gYear" select="format-number(number($object), '0000')"/>
 							
-							<triple s="" p="nmo:hasStartDate" o="?startDate">
+							<triple s="{$subject}" p="nmo:hasStartDate" o="?startDate">
 								<xsl:attribute name="filter">
 									<xsl:text>(?startDate >= "</xsl:text>
 									<xsl:value-of select="$gYear"/>
@@ -62,7 +67,7 @@
 						<xsl:if test="$object castable as xs:integer">
 							<xsl:variable name="gYear" select="format-number(number($object), '0000')"/>
 							
-							<triple s="" p="nmo:hasEndDate" o="?endDate">
+							<triple s="{$subject}" p="nmo:hasEndDate" o="?endDate">
 								<xsl:attribute name="filter">
 									<xsl:text>(?endDate &lt;= "</xsl:text>
 									<xsl:value-of select="$gYear"/>
@@ -75,7 +80,7 @@
 						<xsl:if test="matches($object, '-?\d+\|-?\d+')">
 							<xsl:variable name="range" select="tokenize($object, '\|')"/>
 							
-							<triple s="" p="nmo:hasEndDate" o="?endDate">
+							<triple s="{$subject}" p="nmo:hasEndDate" o="?endDate">
 								<xsl:attribute name="filter">
 									<xsl:text>(?endDate &gt;= "</xsl:text>
 									<xsl:value-of select="format-number(number($range[1]), '0000')"/>
@@ -86,27 +91,28 @@
 							</triple>
 						</xsl:if>
 					</xsl:when>
+					<xsl:when test="$property = 'nmo:hasTypeSeriesItem'">
+						<!-- get the measurements for all coins connected with a given type or any of its subtypes -->
+						<union>
+							<group>
+								<triple s="{$subject}" p="{$property}" o="{$object}"/>
+							</group>							
+							<group>
+								<triple s="?broader" p="skos:broader+" o="{$object}"/>
+								<triple s="{$subject}" p="{$property}" o="?broader"/>
+							</group>
+						</union>
+					</xsl:when>
 					<xsl:otherwise>
-						<triple s="" p="{$property}" o="{$object}"/>
+						<triple s="{$subject}" p="{$property}" o="{$object}"/>
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:for-each>
-		</group>
-	</xsl:variable>
-	
-	<!-- parse query statements into a data object -->
-	<xsl:variable name="statements" as="element()*">
-		<statements>
-			<!-- parse filters -->
-			<!-- the coin apparatus can be commented out here (in contrast to Nomisma queries) since we are only querying specimens related to this particular type series -->
-			<!--<union>				
-				<xsl:apply-templates select="$abstracted" mode="coin"/>
-				<xsl:apply-templates select="$abstracted" mode="coinType"/>
-			</union>-->
 			
-			<xsl:apply-templates select="$abstracted" mode="coinType"/>
+			<xsl:if test="$subject = '?coinType'">
+				<triple s="?coin" p="nmo:hasTypeSeriesItem" o="?coinType"/>
+			</xsl:if>
 			
-			<!-- parse measurement -->
 			<triple s="?coin" p="{$measurement}" o="?measurement"/>
 		</statements>
 	</xsl:variable>
@@ -127,32 +133,5 @@
 			<content-type>application/xml</content-type>
 			<encoding>utf-8</encoding>
 		</config>
-	</xsl:template>
-	
-	<!-- construct triple for coins -->
-	<xsl:template match="group" mode="coin">	
-		<group>
-			<xsl:for-each select="triple">
-				<triple s="?coin" p="{@p}" o="{@o}">
-					<xsl:if test="@filter">
-						<xsl:attribute name="filter" select="@filter"/>
-					</xsl:if>
-				</triple>
-			</xsl:for-each>
-		</group>						
-	</xsl:template>
-	
-	<!-- construct triples for coin types -->
-	<xsl:template match="group" mode="coinType">
-		<!--<group>-->
-			<xsl:for-each select="triple">
-				<triple s="?coinType" p="{@p}" o="{@o}">
-					<xsl:if test="@filter">
-						<xsl:attribute name="filter" select="@filter"/>
-					</xsl:if>
-				</triple>								
-			</xsl:for-each>
-			<triple s="?coin" p="nmo:hasTypeSeriesItem" o="?coinType"/>
-		<!--</group>-->						
 	</xsl:template>
 </xsl:stylesheet>
