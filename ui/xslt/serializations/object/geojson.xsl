@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:gml="http://www.opengis.net/gml"
 	xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nmo="http://nomisma.org/ontology#" xmlns:nm="http://nomisma.org/id/"
-	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:nuds="http://nomisma.org/nuds" xmlns:nh="http://nomisma.org/nudsHoard"
-	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:numishare="https://github.com/ewg118/numishare"
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:nuds="http://nomisma.org/nuds" xmlns:nh="http://nomisma.org/nudsHoard" xmlns:xlink="http://www.w3.org/1999/xlink"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:numishare="https://github.com/ewg118/numishare" xmlns:digest="org.apache.commons.codec.digest.DigestUtils"
 	exclude-result-prefixes="#all" version="2.0">
 	<xsl:include href="../../functions.xsl"/>
 
@@ -18,7 +18,12 @@
 			</xsl:when>
 		</xsl:choose>
 	</xsl:param>
-	<xsl:variable name="request-uri" select="concat('http://localhost:', if (//config/server-port castable as xs:integer) then //config/server-port else '8080', substring-before(doc('input:request')/request/request-uri, 'id/'))"/>
+	<xsl:variable name="request-uri"
+		select="
+			concat('http://localhost:', if (//config/server-port castable as xs:integer) then
+				//config/server-port
+			else
+				'8080', substring-before(doc('input:request')/request/request-uri, 'id/'))"/>
 
 	<!-- config variables -->
 	<xsl:variable name="url" select="/content/config/url"/>
@@ -30,7 +35,8 @@
 		<nudsGroup>
 			<xsl:variable name="type_series" as="element()*">
 				<list>
-					<xsl:for-each select="distinct-values(descendant::nuds:typeDesc[string(@xlink:href)]/substring-before(@xlink:href, 'id/'))">
+					<xsl:for-each
+						select="distinct-values((descendant::nuds:typeDesc[string(@xlink:href)] | descendant::nuds:reference[@xlink:arcrole = 'nmo:hasTypeSeriesItem'][string(@xlink:href)])/substring-before(@xlink:href, 'id/'))">
 						<type_series>
 							<xsl:value-of select="."/>
 						</type_series>
@@ -39,7 +45,8 @@
 			</xsl:variable>
 			<xsl:variable name="type_list" as="element()*">
 				<list>
-					<xsl:for-each select="distinct-values(descendant::nuds:typeDesc[string(@xlink:href)]/@xlink:href)">
+					<xsl:for-each
+						select="distinct-values(descendant::nuds:typeDesc[string(@xlink:href)]/@xlink:href | descendant::nuds:reference[@xlink:arcrole = 'nmo:hasTypeSeriesItem'][string(@xlink:href)]/@xlink:href)">
 						<type_series_item>
 							<xsl:value-of select="."/>
 						</type_series_item>
@@ -78,9 +85,8 @@
 	<!-- get non-coin-type RDF in the document -->
 	<xsl:variable name="rdf" as="element()*">
 		<rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:nm="http://nomisma.org/id/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-			xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-			xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:org="http://www.w3.org/ns/org#"
-			xmlns:nomisma="http://nomisma.org/" xmlns:nmo="http://nomisma.org/ontology#">
+			xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"
+			xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:org="http://www.w3.org/ns/org#" xmlns:nomisma="http://nomisma.org/" xmlns:nmo="http://nomisma.org/ontology#">
 			<xsl:variable name="id-param">
 				<xsl:for-each
 					select="
@@ -126,15 +132,16 @@
 		</xsl:choose>
 
 
-		<!-- create mint points -->
+		<!-- create points -->
 		<xsl:for-each
-			select="$nudsGroup/descendant::nuds:geogname[@xlink:role = 'mint'][string(@xlink:href)] | descendant::nuds:geogname[@xlink:role = 'findspot'][string(@xlink:href)] | descendant::nuds:findspotDesc[string(@xlink:href)] | descendant::nuds:subject[contains(@xlink:href, 'geonames.org')] | descendant::nuds:findspot[gml:Point]">
+			select="$nudsGroup/descendant::nuds:geogname[@xlink:role = 'mint'][string(@xlink:href)][not(preceding::*/@xlink:href = @xlink:href)] | descendant::nuds:geogname[@xlink:role = 'findspot'][string(@xlink:href)] | descendant::nuds:findspotDesc[string(@xlink:href)] | descendant::nuds:subject[contains(@xlink:href, 'geonames.org')] | descendant::nuds:findspot[gml:Point]">
 			<xsl:variable name="uri" select="@xlink:href"/>
 			<xsl:variable name="type">
 				<xsl:choose>
 					<xsl:when test="@xlink:role = 'mint'">
 						<!-- evaluate whether the mint is uncertain or not -->
 						<xsl:choose>
+							<xsl:when test="@certainty">uncertainMint</xsl:when>
 							<xsl:when test="$rdf//*[@rdf:about = $uri]/skos:related">uncertainMint</xsl:when>
 							<xsl:otherwise>mint</xsl:otherwise>
 						</xsl:choose>
@@ -143,11 +150,12 @@
 					<xsl:when test="self::nuds:subject">subject</xsl:when>
 				</xsl:choose>
 			</xsl:variable>
-			
+
 			<xsl:call-template name="generateFeature">
 				<xsl:with-param name="uri" select="$uri"/>
 				<xsl:with-param name="type" select="$type"/>
 			</xsl:call-template>
+			
 		</xsl:for-each>
 
 		<xsl:choose>
@@ -207,8 +215,7 @@
 			<xsl:choose>
 				<xsl:when test="contains($uri, 'geonames')">
 					<xsl:variable name="geonameId" select="tokenize($uri, '/')[4]"/>
-					<xsl:copy-of
-						select="document(concat($geonames-url, '/get?geonameId=', $geonameId, '&amp;username=', $geonames_api_key, '&amp;style=full'))/*"/>
+					<xsl:copy-of select="document(concat($geonames-url, '/get?geonameId=', $geonameId, '&amp;username=', $geonames_api_key, '&amp;style=full'))/*"/>
 				</xsl:when>
 				<xsl:otherwise>
 					<empty/>
@@ -283,15 +290,16 @@
 							<xsl:choose>
 								<!-- when there is a geo:SpatialThing associated with the mint that contains a lat and long: -->
 								<xsl:when test="$rdf//*[@rdf:about = concat($uri, '#this')]/geo:long and $rdf//*[@rdf:about = concat($uri, '#this')]/geo:lat">
-									<xsl:value-of
-										select="concat($rdf//*[@rdf:about = concat($uri, '#this')]/geo:long, ',', $rdf//*[@rdf:about = concat($uri, '#this')]/geo:lat)"
-									/>
+									<xsl:value-of select="concat($rdf//*[@rdf:about = concat($uri, '#this')]/geo:long, ',', $rdf//*[@rdf:about = concat($uri, '#this')]/geo:lat)"/>
+								</xsl:when>
+								<xsl:when test="$rdf//*[@rdf:about = $uri]/nmo:hasFindspot[@rdf:resource]">
+									<xsl:variable name="findspotURI" select="$rdf//*[@rdf:about = $uri]/nmo:hasFindspot/@rdf:resource"/>
+									<xsl:value-of select="concat($rdf//*[@rdf:about = $findspotURI]/geo:long, ',', $rdf//*[@rdf:about = $findspotURI]/geo:lat)"/>
 								</xsl:when>
 								<!-- if the URI contains a skos:related linking to an uncertain mint attribution -->
 								<xsl:when test="$rdf//*[@rdf:about = $uri]/skos:related">
 									<xsl:variable name="uncertainMint" as="node()*">
-										<xsl:copy-of
-											select="document(concat($rdf//*[@rdf:about = $uri]/skos:related/rdf:Description/rdf:value/@rdf:resource, '.rdf'))"/>
+										<xsl:copy-of select="document(concat($rdf//*[@rdf:about = $uri]/skos:related/rdf:Description/rdf:value/@rdf:resource, '.rdf'))"/>
 									</xsl:variable>
 
 									<xsl:if test="$uncertainMint//geo:long and $uncertainMint//geo:lat">
@@ -301,12 +309,14 @@
 								<!-- if the mint does not have coordinates, but does have skos:broader, exectue the region hierarchy API call to look for parent mint/region coordinates -->
 								<xsl:when test="$rdf//*[@rdf:about = $uri]/skos:broader">
 									<xsl:variable name="regions" as="node()*">
-										<xsl:copy-of select="document(concat('http://nomisma.org/apis/regionHierarchy?identifiers=', encode-for-uri(substring-after($uri, 'http://nomisma.org/id/'))))"/>
+										<xsl:copy-of
+											select="document(concat('http://nomisma.org/apis/regionHierarchy?identifiers=', encode-for-uri(substring-after($uri, 'http://nomisma.org/id/'))))"
+										/>
 									</xsl:variable>
-									
+
 									<xsl:if test="$regions//mint[1][@lat and @long]">
 										<xsl:value-of select="concat($regions//mint[1]/@long, ',', $regions//mint[1]/@lat)"/>
-									</xsl:if>									
+									</xsl:if>
 								</xsl:when>
 							</xsl:choose>
 						</xsl:when>
