@@ -132,9 +132,9 @@
 		</xsl:choose>
 
 
-		<!-- create mint points -->
+		<!-- create points -->
 		<xsl:for-each
-			select="$nudsGroup/descendant::nuds:geogname[@xlink:role = 'mint'][string(@xlink:href)] | descendant::nuds:geogname[@xlink:role = 'findspot'][string(@xlink:href)] | descendant::nuds:findspotDesc[string(@xlink:href)] | descendant::nuds:subject[contains(@xlink:href, 'geonames.org')] | descendant::nuds:findspot[gml:Point]">
+			select="$nudsGroup/descendant::nuds:geogname[@xlink:role = 'mint'][string(@xlink:href)][not(preceding::*/@xlink:href = @xlink:href)] | descendant::nuds:geogname[@xlink:role = 'findspot'][string(@xlink:href)] | descendant::nuds:findspotDesc[string(@xlink:href)] | descendant::nuds:subject[contains(@xlink:href, 'geonames.org')] | descendant::nuds:findspot[gml:Point]">
 			<xsl:variable name="uri" select="@xlink:href"/>
 			<xsl:variable name="type">
 				<xsl:choose>
@@ -155,6 +155,7 @@
 				<xsl:with-param name="uri" select="$uri"/>
 				<xsl:with-param name="type" select="$type"/>
 			</xsl:call-template>
+			
 		</xsl:for-each>
 
 		<xsl:choose>
@@ -290,6 +291,10 @@
 								<!-- when there is a geo:SpatialThing associated with the mint that contains a lat and long: -->
 								<xsl:when test="$rdf//*[@rdf:about = concat($uri, '#this')]/geo:long and $rdf//*[@rdf:about = concat($uri, '#this')]/geo:lat">
 									<xsl:value-of select="concat($rdf//*[@rdf:about = concat($uri, '#this')]/geo:long, ',', $rdf//*[@rdf:about = concat($uri, '#this')]/geo:lat)"/>
+								</xsl:when>
+								<xsl:when test="$rdf//*[@rdf:about = $uri]/nmo:hasFindspot[@rdf:resource]">
+									<xsl:variable name="findspotURI" select="$rdf//*[@rdf:about = $uri]/nmo:hasFindspot/@rdf:resource"/>
+									<xsl:value-of select="concat($rdf//*[@rdf:about = $findspotURI]/geo:long, ',', $rdf//*[@rdf:about = $findspotURI]/geo:lat)"/>
 								</xsl:when>
 								<!-- if the URI contains a skos:related linking to an uncertain mint attribution -->
 								<xsl:when test="$rdf//*[@rdf:about = $uri]/skos:related">
