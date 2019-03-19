@@ -15,49 +15,83 @@
 		<p:output name="data" id="config"/>
 	</p:processor>
 
+	<!-- load SPARQL text file from disk -->
+	<!-- get query from a text file on disk -->
+	<p:processor name="oxf:url-generator">
+		<p:input name="config">
+			<config>
+				<url>oxf:/apps/numishare/ui/sparql/contributors.sparql</url>
+				<content-type>text/plain</content-type>
+				<encoding>utf-8</encoding>
+			</config>
+		</p:input>
+		<p:output name="data" id="query"/>
+	</p:processor>
+	
+	<p:processor name="oxf:text-converter">
+		<p:input name="data" href="#query"/>
+		<p:input name="config">
+			<config/>
+		</p:input>
+		<p:output name="data" id="query-document"/>
+	</p:processor>
+
 	<p:processor name="oxf:unsafe-xslt">		
 		<p:input name="data" href="#config"/>
+		<p:input name="query" href="#query-document"/>
 		<p:input name="config">
-			<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">				
-				<xsl:variable name="endpoint" select="/config/sparql_endpoint"/>
+			<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">		
+				<xsl:include href="../../../ui/xslt/controllers/sparql-metamodel.xsl"/>
 				
-				<xsl:variable name="query">
-					<![CDATA[PREFIX rdf:	<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-PREFIX dcterms:	<http://purl.org/dc/terms/>
-PREFIX skos:	<http://www.w3.org/2004/02/skos/core#>
-PREFIX owl:	<http://www.w3.org/2002/07/owl#>
-PREFIX foaf:	<http://xmlns.com/foaf/0.1/>
-PREFIX geo:	<http://www.w3.org/2003/01/geo/wgs84_pos#>
-PREFIX nm:	<http://nomisma.org/id/>
-PREFIX nmo:	<http://nomisma.org/ontology#>
-PREFIX org:	<http://www.w3.org/ns/org#>
-PREFIX void:	<http://rdfs.org/ns/void#>
-PREFIX xsd:	<http://www.w3.org/2001/XMLSchema#>
-
-SELECT ?dataset ?publisher ?collection ?collectionLabel ?thumbnail ?homepage ?memberOf ?title ?description ?license ?rights (COUNT(?dataset) AS ?count) {
-		{ SELECT ?coinType WHERE {
-			{?coinType dcterms:source <TYPE_SERIES> }
-			UNION {?types dcterms:source <TYPE_SERIES> .
-			?types skos:exactMatch ?coinType}
-		  } 
-		}
-    ?object nmo:hasTypeSeriesItem ?coinType .
-    ?object void:inDataset ?dataset .
-  OPTIONAL {?object nmo:hasCollection ?collection .
-           ?collection skos:prefLabel ?collectionLabel . FILTER langMatches(lang(?collectionLabel), "en")
-           OPTIONAL {?collection foaf:thumbnail ?thumbnail}
-           OPTIONAL {?collection foaf:homepage ?homepage}
-           OPTIONAL {?collection org:memberOf ?memberOf}}
-  ?dataset dcterms:publisher ?publisher FILTER (lang(?publisher) = "" || langMatches(lang(?publisher), "en")).
-  ?dataset dcterms:title ?title FILTER (lang(?title) = "" || langMatches(lang(?title), "en")).
-  OPTIONAL {?dataset dcterms:license ?license }
-  OPTIONAL {?dataset dcterms:rights ?rights }
-  ?dataset dcterms:description ?description FILTER (lang(?description) = "" || langMatches(lang(?description), "en")) .
-  OPTIONAL {?dataset foaf:thumbnail ?thumbnail}
-} GROUP BY ?dataset ?publisher ?collection ?collectionLabel ?title ?thumbnail ?homepage ?memberOf ?description ?license ?rights ORDER BY ?publisher]]>
+				<xsl:variable name="sparql_endpoint" select="/config/sparql_endpoint"/>				
+				<xsl:variable name="query" select="doc('input:query')"/>
+				
+				<xsl:variable name="statements" as="element()*">
+					<statements>
+						<!-- insert the type series set in the config -->
+						<xsl:choose>
+							<xsl:when test="/config/union_type_catalog/@enabled = true()">
+								<union>
+									<xsl:for-each select="/config/union_type_catalog/series">
+										<triple s="?coinType" p="dcterms:source">
+											<xsl:attribute name="o" select="concat('&lt;', @typeSeries, '&gt;')"/>
+										</triple>
+									</xsl:for-each>
+								</union>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:if test="matches(/config/type_series, '^https?://')">
+									<union>
+										<group>
+											<triple s="?coinType" p="dcterms:source">
+												<xsl:attribute name="o" select="concat('&lt;', /config/type_series, '&gt;')"/>
+											</triple>
+										</group>
+										<group>
+											<triple s="?types" p="dcterms:source">
+												<xsl:attribute name="o" select="concat('&lt;', /config/type_series, '&gt;')"/>
+											</triple>
+											<triple s="?types" p="skos:exactMatch" o="?coinType"/>
+										</group>
+									</union>
+									
+								</xsl:if>
+							</xsl:otherwise>
+						</xsl:choose>
+					</statements>
 				</xsl:variable>
 				
-				<xsl:variable name="service" select="concat($endpoint, '?query=', encode-for-uri(normalize-space(replace($query, 'TYPE_SERIES', /config/type_series))), '&amp;output=xml')"/>
+				<xsl:variable name="statementsSPARQL">
+					<xsl:apply-templates select="$statements/*"/>
+				</xsl:variable>
+				
+				<xsl:variable name="service">
+					<xsl:value-of
+						select="concat($sparql_endpoint, '?query=', encode-for-uri(replace($query, '%STATEMENTS%', $statementsSPARQL)), '&amp;output=xml')"
+					/>
+				</xsl:variable>
+				
+				<!--<xsl:variable name="service" select="concat($endpoint, '?query=', encode-for-uri(normalize-space(replace($query, 'TYPE_SERIES', /config/type_series))), '&amp;output=xml')"/>-->
 
 				<xsl:template match="/">
 					<config>
