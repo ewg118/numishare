@@ -4559,6 +4559,14 @@
 						</xsl:matching-substring>
 					</xsl:analyze-string>
 				</xsl:when>
+				<xsl:when test="contains(., 'nmo:hasTypeSeriesItem')">
+					<xsl:analyze-string select="." regex="nmo:hasTypeSeriesItem\s&lt;(.*)&gt;">
+						<xsl:matching-substring>
+							<xsl:text>Type: </xsl:text>
+							<xsl:value-of select="tokenize(regex-group(1), '/')[last()]"/>
+						</xsl:matching-substring>
+					</xsl:analyze-string>
+				</xsl:when>
 				<xsl:when test="matches(normalize-space(.), '^from\s')">
 					<xsl:analyze-string select="." regex="from\s(.*)">
 						<xsl:matching-substring>

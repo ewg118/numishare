@@ -66,7 +66,6 @@
 						</xsl:for-each>
 					</queries>
 				</xsl:template>
-
 			</xsl:stylesheet>
 		</p:input>
 		<p:output name="data" id="compare-queries"/>

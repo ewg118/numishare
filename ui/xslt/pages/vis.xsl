@@ -9,7 +9,7 @@
 
 	<!-- empty variables to account for vis templates -->
 	<xsl:variable name="base-query"/>
-	<xsl:variable name="id"/>
+	<xsl:variable name="objectUri"/>
 	<xsl:variable name="type"/>
 	<xsl:variable name="classes" as="item()*">
 		<classes/>

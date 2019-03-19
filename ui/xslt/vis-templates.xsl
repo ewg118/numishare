@@ -26,20 +26,10 @@
 		</xsl:if>
 		
 		<h3>
-			<xsl:text>Measurement Analysis</xsl:text>
-			<xsl:if test="$mode = 'record'">
-				<xsl:call-template name="toggle-button">
-					<xsl:with-param name="form">metrical</xsl:with-param>
-				</xsl:call-template>
-			</xsl:if>
+			<xsl:text>Measurement Analysis</xsl:text>			
 		</h3>
 
 		<div>
-			<xsl:if test="$mode = 'record'">
-				<xsl:attribute name="id">metrical</xsl:attribute>
-				<xsl:attribute name="style">display:none</xsl:attribute>
-			</xsl:if>
-
 			<!-- display chart div when applicable, with additional filtering options -->
 			<xsl:choose>
 				<xsl:when test="$mode = 'page'">
@@ -64,18 +54,14 @@
 							<xsl:value-of select="concat($display_path, 'visualize/metrical')"/>
 						</xsl:when>
 						<xsl:when test="$mode = 'record'">
-							<xsl:value-of select="concat($display_path, 'id/', $id, '#metrical')"/>
+							<xsl:value-of select="concat($objectUri, '#metrical')"/>
 						</xsl:when>
 					</xsl:choose>
 				</xsl:attribute>
 
 				<!-- only include filter in the ID page -->
 				<xsl:if test="$mode = 'record'">
-					<input type="hidden" name="filter">
-						<!--<xsl:if test="string($filter)">
-							<xsl:attribute name="class" select="$filter"/>
-						</xsl:if>-->
-					</input>
+					<input type="hidden" name="filter"/>
 				</xsl:if>
 
 				<div class="form-group">
@@ -97,41 +83,10 @@
 
 				<xsl:call-template name="measurement-categories"/>
 
-				<xsl:if test="$mode = 'page'">
-					<xsl:call-template name="dist-compare-template">
-						<xsl:with-param name="mode" select="$mode"/>
-					</xsl:call-template>
-				</xsl:if>
-
-				<!-- display additional filters for current query associated with source concept -->
-				<xsl:if test="$mode = 'record'">
-					<div class="form-inline">
-						<h4>Additional Filters</h4>
-						<p>Include additional filters to the basic distribution query for this concept. <a href="#" class="add-filter"><span class="glyphicon glyphicon-plus"/>Add
-								one</a></p>
-						<div class="filter-container">
-							<div class="bg-danger text-danger duplicate-date-alert danger-box hidden">
-								<span class="glyphicon glyphicon-exclamation-sign"/>
-								<strong>Alert:</strong> There must not be more than one from or to date.</div>
-							<!-- if there's a dist and filter, then break the filter query and insert preset filter templates -->
-							<!--<xsl:if test="$dist and $filter">
-								<xsl:variable name="filterPieces" select="tokenize($filter, ';')"/>
-
-								<xsl:for-each select="$filterPieces[not(normalize-space(.) = $base-query)]">
-									<xsl:call-template name="field-template">
-										<xsl:with-param name="query" select="normalize-space(.)"/>
-									</xsl:call-template>
-								</xsl:for-each>
-							</xsl:if>-->
-						</div>
-					</div>
-
-					<!-- display compare template last -->
-					<xsl:call-template name="dist-compare-template">
-						<xsl:with-param name="mode" select="$mode"/>
-					</xsl:call-template>
-				</xsl:if>
-
+				<xsl:call-template name="dist-compare-template">
+					<xsl:with-param name="mode" select="$mode"/>
+				</xsl:call-template>
+				
 				<!-- display optional date range last -->
 				<div>
 					<h4>Date Range</h4>
@@ -263,19 +218,10 @@
 							<xsl:value-of select="concat($display_path, 'visualize/distribution')"/>
 						</xsl:when>
 						<xsl:when test="$mode = 'record'">
-							<xsl:value-of select="concat($display_path, 'id/', $id, '#quant')"/>
+							<xsl:value-of select="concat($display_path, 'id/', $objectUri, '#quant')"/>
 						</xsl:when>
 					</xsl:choose>
 				</xsl:attribute>
-
-				<!-- only include filter in the ID page -->
-				<xsl:if test="$mode = 'record'">
-					<input type="hidden" name="filter">
-						<!--<xsl:if test="string($filter)">
-							<xsl:attribute name="class" select="$filter"/>
-						</xsl:if>-->
-					</input>
-				</xsl:if>
 
 				<xsl:call-template name="dist-categories"/>
 
@@ -296,40 +242,9 @@
 					</input>
 				</div>
 
-				<xsl:if test="$mode = 'page'">
-					<xsl:call-template name="dist-compare-template">
-						<xsl:with-param name="mode" select="$mode"/>
-					</xsl:call-template>
-				</xsl:if>
-
-				<xsl:if test="$mode = 'record'">
-					<div class="form-inline">
-						<h4>Additional Filters</h4>
-						<p>Include additional filters to the basic distribution query for this concept. <a href="#" class="add-filter"><span class="glyphicon glyphicon-plus"/>Add
-								one</a></p>
-						<div class="filter-container">
-							<div class="bg-danger text-danger duplicate-date-alert danger-box hidden">
-								<span class="glyphicon glyphicon-exclamation-sign"/>
-								<strong>Alert:</strong> There must not be more than one from or to date.</div>
-							<!-- if there's a dist and filter, then break the filter query and insert preset filter templates -->
-							<!--<xsl:if test="$dist and $filter">
-								<xsl:variable name="filterPieces" select="tokenize($filter, ';')"/>
-
-								<xsl:for-each select="$filterPieces[not(normalize-space(.) = $base-query)]">
-									<xsl:call-template name="field-template">
-										<xsl:with-param name="query" select="normalize-space(.)"/>
-									</xsl:call-template>
-								</xsl:for-each>
-							</xsl:if>-->
-						</div>
-					</div>
-				</xsl:if>
-
-				<xsl:if test="$mode = 'record'">
-					<xsl:call-template name="dist-compare-template">
-						<xsl:with-param name="mode" select="$mode"/>
-					</xsl:call-template>
-				</xsl:if>
+				<xsl:call-template name="dist-compare-template">
+					<xsl:with-param name="mode" select="$mode"/>
+				</xsl:call-template>
 
 				<input type="submit" value="Generate" class="btn btn-default visualize-submit" disabled="disabled"/>
 			</form>
@@ -458,30 +373,14 @@
 				into Nomisma.</p>
 			<select name="dist" class="form-control" id="categorySelect">
 				<option value="">Select...</option>
-				<xsl:choose>
-					<xsl:when test="string($type)">
-						<!-- when there is a RDF Class (ID page), exclude the distribution option from the class of the ID
-						note: portrait and deity are always available -->
-						<xsl:for-each select="$properties/prop[not(contains(@class, $type))]">
-							<option value="{@value}">
-								<xsl:if test="$dist = @value">
-									<xsl:attribute name="selected">selected</xsl:attribute>
-								</xsl:if>
-								<xsl:value-of select="."/>
-							</option>
-						</xsl:for-each>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:for-each select="$properties/prop">
-							<option value="{@value}">
-								<xsl:if test="$dist = @value">
-									<xsl:attribute name="selected">selected</xsl:attribute>
-								</xsl:if>
-								<xsl:value-of select="."/>
-							</option>
-						</xsl:for-each>
-					</xsl:otherwise>
-				</xsl:choose>
+				<xsl:for-each select="$properties/prop">
+					<option value="{@value}">
+						<xsl:if test="$dist = @value">
+							<xsl:attribute name="selected">selected</xsl:attribute>
+						</xsl:if>
+						<xsl:value-of select="."/>
+					</option>
+				</xsl:for-each>
 			</select>
 		</div>
 	</xsl:template>
@@ -689,7 +588,10 @@
 		</xsl:variable>
 
 		<option>Select...</option>
-		<xsl:choose>
+		<xsl:apply-templates select="$properties//prop">
+			<xsl:with-param name="query" select="$query"/>
+		</xsl:apply-templates>
+		<!--<xsl:choose>
 			<xsl:when test="$mode = 'compare' or $template = true()">
 				<xsl:apply-templates select="$properties//prop">
 					<xsl:with-param name="query" select="$query"/>
@@ -700,7 +602,7 @@
 					<xsl:with-param name="query" select="$query"/>
 				</xsl:apply-templates>
 			</xsl:otherwise>
-		</xsl:choose>
+		</xsl:choose>-->
 	</xsl:template>
 
 	<xsl:template match="prop">
