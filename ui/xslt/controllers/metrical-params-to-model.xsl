@@ -80,7 +80,22 @@
 						<xsl:if test="matches($object, '-?\d+\|-?\d+')">
 							<xsl:variable name="range" select="tokenize($object, '\|')"/>
 							
-							<triple s="{$subject}" p="nmo:hasEndDate" o="?endDate">
+							<xsl:variable name="s">
+								<xsl:choose>
+									<xsl:when test="contains($filter, 'nmo:hasTypeSeriesItem')">
+										<xsl:analyze-string select="$filter" regex="nmo:hasTypeSeriesItem\s(&lt;.*&gt;)">
+											<xsl:matching-substring>
+												<xsl:value-of select="regex-group(1)"/>
+											</xsl:matching-substring>
+										</xsl:analyze-string>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:value-of select="$subject"/>
+									</xsl:otherwise>
+								</xsl:choose>
+							</xsl:variable>
+							
+							<triple s="{$s}" p="nmo:hasEndDate" o="?endDate">
 								<xsl:attribute name="filter">
 									<xsl:text>(?endDate &gt;= "</xsl:text>
 									<xsl:value-of select="format-number(number($range[1]), '0000')"/>

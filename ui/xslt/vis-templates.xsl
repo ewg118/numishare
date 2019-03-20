@@ -469,6 +469,13 @@
 			</select>
 		</span>
 	</xsl:template>
+	
+	<xsl:template name="coinType-template">
+		<xsl:param name="query"/>
+		<span>
+			<input type="text" disabled="disabled" class="form-control coinType" value="{substring-after($query, ' ')}"/>			
+		</span>
+	</xsl:template>
 
 	<xsl:template name="compare-container-template">
 		<xsl:param name="template"/>
@@ -484,7 +491,11 @@
 					<a href="#" title="Remove Group" class="remove-dataset">
 						<span class="glyphicon glyphicon-remove"/>
 					</a>
-					<a href="#" class="add-compare-field" title="Add Query Field"><span class="glyphicon glyphicon-plus"/>Add Query Field</a>
+					
+					<!-- do not allow other fields if the query is for a coin type -->
+					<xsl:if test="not(starts-with($query, 'nmo:hasTypeSeriesItem'))">
+						<a href="#" class="add-compare-field" title="Add Query Field"><span class="glyphicon glyphicon-plus"/>Add Query Field</a>
+					</xsl:if>					
 				</small>
 			</h4>
 			<div class="bg-danger text-danger empty-query-alert danger-box hidden">
@@ -537,6 +548,11 @@
 								<xsl:with-param name="template" as="xs:boolean">false</xsl:with-param>
 							</xsl:call-template>
 						</xsl:when>
+						<xsl:when test="substring-before($query, ' ') = 'nmo:hasTypeSeriesItem'">
+							<xsl:call-template name="coinType-template">
+								<xsl:with-param name="query" select="$query"/>
+							</xsl:call-template>
+						</xsl:when>
 						<xsl:otherwise>
 							<span class="hidden query">
 								<xsl:value-of select="$query"/>
@@ -576,6 +592,7 @@
 				<xsl:if test="substring-before($query, ' ') = '?prop'">
 					<prop value="?prop" class="foaf:Person|foaf:Organization">Authority or Issuer</prop>
 				</xsl:if>
+				<prop value="nmo:hasTypeSeriesItem" class="nmo:TypeSeriesItem">Coin Type</prop>
 				<prop value="from">Date, From</prop>
 				<prop value="to">Date, To</prop>
 				<prop value="nmo:hasDenomination" class="nmo:Denomination">Denomination</prop>
@@ -584,9 +601,9 @@
 				<prop value="nmo:hasManufacture" class="nmo:Manufacture">Manufacture</prop>
 				<prop value="nmo:hasMaterial" class="nmo:Material">Material</prop>
 				<prop value="nmo:hasMint" class="nmo:Mint">Mint</prop>
-				<prop value="nmo:representsObjectType" class="nmo:ObjectType">ObjectType</prop>
+				<prop value="nmo:representsObjectType" class="nmo:ObjectType">Object Type</prop>
 				<prop value="portrait" class="">Portrait</prop>
-				<prop value="region" class="nmo:Region">Region</prop>
+				<prop value="region" class="nmo:Region">Region</prop>				
 			</properties>
 		</xsl:variable>
 
