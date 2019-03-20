@@ -1,6 +1,6 @@
 /*******
 DISTRIBUTION VISUALIZATION FUNCTIONS
-Modified: October 2016
+Modified: March 2019
 Function: These are the functions for generating charts and graphs with d3js
  *******/
 
@@ -88,7 +88,6 @@ $(document).ready(function () {
                 });
                 urlParams[ 'compare'] = compare;
             }
-            console.log(urlParams);
             
             params = new Array();
             //set the href value for the CSV download
@@ -107,7 +106,7 @@ $(document).ready(function () {
             //set values and call chart rendering function dependent upon the id of the form
             if (formId == 'distributionForm') {
                 //set bookmarkable page URL
-                var href = path + 'research/distribution?' + params.join('&');
+                var href = path + 'visualize/distribution?' + params.join('&');
                 $('.chart-container').children('div.control-row').children('a[title=Bookmark]').attr('href', href);
                 
                 //set CSV download URL
@@ -119,7 +118,7 @@ $(document).ready(function () {
                 renderDistChart(path, urlParams);
             } else if (formId == 'metricalForm') {
                 //set bookmarkable page URL
-                var href = path + 'research/metrical?' + params.join('&');
+                var href = path + 'visualize/metrical?' + params.join('&');
                 $('.chart-container').children('div.control-row').children('a[title=Bookmark]').attr('href', href);
                 
                 //set CSV download URL

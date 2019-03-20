@@ -87,85 +87,88 @@
 					<xsl:with-param name="mode" select="$mode"/>
 				</xsl:call-template>
 				
-				<!-- display optional date range last -->
-				<div>
-					<h4>Date Range</h4>
-					<p>You may select both a start and end date to display change in measurement(s) over time in the form of a line chart. An average will be taken for the selected
-						interval over the entire duration.</p>
-					<div class="bg-danger text-danger measurementRange-alert danger-box hidden">
-						<span class="glyphicon glyphicon-exclamation-sign"/>
-						<strong>Alert:</strong> Inputted date range is invalid and/or interval is not set.</div>
-
-					<div class="form-inline" id="measurementRange-container">
-						<input type="number" class="form-control year" id="fromYear" min="1" step="1" placeholder="Year">
-							<xsl:if test="$from castable as xs:integer">
-								<xsl:attribute name="value" select="abs(xs:integer($from))"/>
-							</xsl:if>
-						</input>
-						<select class="form-control era" id="fromEra">
-							<option value="bc">
+				<!-- display optional date range last, but only for the visualization page (ranges not much use for specific types) -->
+				<xsl:if test="$mode = 'page'">
+					<div>
+						<h4>Date Range</h4>
+						<p>You may select both a start and end date to display change in measurement(s) over time in the form of a line chart. An average will be taken for the selected
+							interval over the entire duration.</p>
+						<div class="bg-danger text-danger measurementRange-alert danger-box hidden">
+							<span class="glyphicon glyphicon-exclamation-sign"/>
+							<strong>Alert:</strong> Inputted date range is invalid and/or interval is not set.</div>
+						
+						<div class="form-inline" id="measurementRange-container">
+							<input type="number" class="form-control year" id="fromYear" min="1" step="1" placeholder="Year">
 								<xsl:if test="$from castable as xs:integer">
-									<xsl:if test="xs:integer($from) &lt; 0">
-										<xsl:attribute name="selected">selected</xsl:attribute>
-									</xsl:if>
+									<xsl:attribute name="value" select="abs(xs:integer($from))"/>
 								</xsl:if>
-								<xsl:text>B.C.</xsl:text>
-							</option>
-							<option value="ad">
-								<xsl:if test="$from castable as xs:integer">
-									<xsl:if test="xs:integer($from) &gt; 0">
-										<xsl:attribute name="selected">selected</xsl:attribute>
+							</input>
+							<select class="form-control era" id="fromEra">
+								<option value="bc">
+									<xsl:if test="$from castable as xs:integer">
+										<xsl:if test="xs:integer($from) &lt; 0">
+											<xsl:attribute name="selected">selected</xsl:attribute>
+										</xsl:if>
 									</xsl:if>
-								</xsl:if>
-								<xsl:text>A.D.</xsl:text>
-							</option>
-						</select>
-						<xsl:text> to </xsl:text>
-						<input type="number" class="form-control year" id="toYear" min="1" step="1" placeholder="Year">
-							<xsl:if test="$to castable as xs:integer">
-								<xsl:attribute name="value" select="abs(xs:integer($to))"/>
-							</xsl:if>
-						</input>
-						<select class="form-control era" id="toEra">
-							<option value="bc">
+									<xsl:text>B.C.</xsl:text>
+								</option>
+								<option value="ad">
+									<xsl:if test="$from castable as xs:integer">
+										<xsl:if test="xs:integer($from) &gt; 0">
+											<xsl:attribute name="selected">selected</xsl:attribute>
+										</xsl:if>
+									</xsl:if>
+									<xsl:text>A.D.</xsl:text>
+								</option>
+							</select>
+							<xsl:text> to </xsl:text>
+							<input type="number" class="form-control year" id="toYear" min="1" step="1" placeholder="Year">
 								<xsl:if test="$to castable as xs:integer">
-									<xsl:if test="xs:integer($to) &lt; 0">
-										<xsl:attribute name="selected">selected</xsl:attribute>
-									</xsl:if>
+									<xsl:attribute name="value" select="abs(xs:integer($to))"/>
 								</xsl:if>
-								<xsl:text>B.C.</xsl:text>
-							</option>
-							<option value="ad">
-								<xsl:if test="$to castable as xs:integer">
-									<xsl:if test="xs:integer($to) &gt; 0">
-										<xsl:attribute name="selected">selected</xsl:attribute>
+							</input>
+							<select class="form-control era" id="toEra">
+								<option value="bc">
+									<xsl:if test="$to castable as xs:integer">
+										<xsl:if test="xs:integer($to) &lt; 0">
+											<xsl:attribute name="selected">selected</xsl:attribute>
+										</xsl:if>
 									</xsl:if>
-								</xsl:if>
-								<xsl:text>A.D.</xsl:text>
-							</option>
-						</select>
-						<label>Interval</label>
-						<select class="form-control interval" id="interval">
-							<option>Select...</option>
-							<option value="5">
-								<xsl:if test="$interval castable as xs:integer">
-									<xsl:if test="xs:integer($interval) = 5">
-										<xsl:attribute name="selected">selected</xsl:attribute>
+									<xsl:text>B.C.</xsl:text>
+								</option>
+								<option value="ad">
+									<xsl:if test="$to castable as xs:integer">
+										<xsl:if test="xs:integer($to) &gt; 0">
+											<xsl:attribute name="selected">selected</xsl:attribute>
+										</xsl:if>
 									</xsl:if>
-								</xsl:if>
-								<xsl:text>5 Years</xsl:text>
-							</option>
-							<option value="10">
-								<xsl:if test="$to castable as xs:integer">
-									<xsl:if test="xs:integer($interval) = 10">
-										<xsl:attribute name="selected">selected</xsl:attribute>
+									<xsl:text>A.D.</xsl:text>
+								</option>
+							</select>
+							<label>Interval</label>
+							<select class="form-control interval" id="interval">
+								<option>Select...</option>
+								<option value="5">
+									<xsl:if test="$interval castable as xs:integer">
+										<xsl:if test="xs:integer($interval) = 5">
+											<xsl:attribute name="selected">selected</xsl:attribute>
+										</xsl:if>
 									</xsl:if>
-								</xsl:if>
-								<xsl:text>10 Years</xsl:text>
-							</option>
-						</select>
+									<xsl:text>5 Years</xsl:text>
+								</option>
+								<option value="10">
+									<xsl:if test="$to castable as xs:integer">
+										<xsl:if test="xs:integer($interval) = 10">
+											<xsl:attribute name="selected">selected</xsl:attribute>
+										</xsl:if>
+									</xsl:if>
+									<xsl:text>10 Years</xsl:text>
+								</option>
+							</select>
+						</div>
 					</div>
-				</div>
+				</xsl:if>
+				
 
 				<input type="submit" value="Generate" class="btn btn-default visualize-submit" disabled="disabled"/>
 			</form>

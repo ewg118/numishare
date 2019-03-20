@@ -24,6 +24,7 @@
 					<format>
 						<xsl:choose>
 							<xsl:when test="$format = 'csv'">csv</xsl:when>
+							<xsl:when test="$format = 'xml'">xml</xsl:when>
 							<xsl:otherwise>json</xsl:otherwise>
 						</xsl:choose>
 					</format>
@@ -39,6 +40,13 @@
 			<p:processor name="oxf:pipeline">
 				<p:input name="data" href="#data"/>
 				<p:input name="config" href="../../views/serializations/sparql/distribution-csv.xpl"/>	
+				<p:output name="data" ref="data"/>
+			</p:processor>
+		</p:when>
+		<p:when test="format='xml'">
+			<!-- output the aggregated SPARQL responses for the XML result -->
+			<p:processor name="oxf:identity">
+				<p:input name="data" href="#data"/>
 				<p:output name="data" ref="data"/>
 			</p:processor>
 		</p:when>
