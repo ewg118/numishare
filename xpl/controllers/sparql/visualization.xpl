@@ -62,10 +62,29 @@
 	
 	<p:choose href="#source">
 		<p:when test="source = 'solr'">
-			<p:processor name="oxf:identity">
-				<p:input name="data" href="#data"/>
-				<p:output name="data" ref="data"/>
-			</p:processor>
+			<p:choose href="#format">
+				<p:when test="format='csv'">
+					<p:processor name="oxf:pipeline">
+						<p:input name="data" href="#data"/>
+						<p:input name="config" href="../../views/serializations/solr/distribution-csv.xpl"/>
+						<p:output name="data" ref="data"/>
+					</p:processor>
+				</p:when>
+				<p:when test="format='xml'">
+					<!-- output the aggregated Solr responses for the XML result -->
+					<p:processor name="oxf:identity">
+						<p:input name="data" href="#data"/>
+						<p:output name="data" ref="data"/>
+					</p:processor>
+				</p:when>
+				<p:otherwise>
+					<p:processor name="oxf:pipeline">
+						<p:input name="data" href="#data"/>
+						<p:input name="config" href="../../views/serializations/solr/d3plus-json.xpl"/>
+						<p:output name="data" ref="data"/>
+					</p:processor>
+				</p:otherwise>
+			</p:choose>
 		</p:when>
 		<p:when test="source='sparql'">
 			<p:choose href="#format">

@@ -95,10 +95,10 @@
 					<xsl:variable name="service">
 						<xsl:choose>
 							<xsl:when test="string($lang)">
-								<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+lang:', $lang, '+AND+', encode-for-uri($q), '&amp;facet=true&amp;rows=0&amp;facet.field=', encode-for-uri($category))"/>
+								<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+lang:', $lang, '+AND+', encode-for-uri($q), '&amp;facet=true&amp;rows=0&amp;facet.field=', encode-for-uri($category), '&amp;facet.sort=index')"/>
 							</xsl:when>
 							<xsl:otherwise>
-								<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+NOT(lang:*)+AND+', encode-for-uri($q), '&amp;facet=true&amp;rows=0&amp;facet.field=', encode-for-uri($category))"/>
+								<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+NOT(lang:*)+AND+', encode-for-uri($q), '&amp;facet=true&amp;rows=0&amp;facet.field=', encode-for-uri($category), '&amp;facet.sort=index')"/>
 							</xsl:otherwise>
 						</xsl:choose>		
 					</xsl:variable>
