@@ -18,5 +18,5 @@ PREFIX xsd:	<http://www.w3.org/2001/XMLSchema#>
 
 SELECT ?dist ?label ?lat ?long (count(?dist) as ?count)  WHERE {
  %STATEMENTS%
- ?dist skos:prefLabel ?label FILTER langMatches(lang(?label), "en")
+ FILTER NOT EXISTS {?coinType skos:broader ?broader}
 } GROUP BY ?dist ?label ?lat ?long ORDER BY ?label

@@ -323,7 +323,9 @@
 			</span>
 			<div id="ajax-temp"/>
 		</div>
+		
 	</xsl:template>
+	
 	<!-- ************** SEARCH INTERFACE FOR CUSTOM WEIGHT QUERIES FROM SPARQL **************** -->
 	<xsl:template name="sparql_form">
 		<div class="queryGroup">

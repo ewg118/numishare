@@ -168,7 +168,7 @@
 									</xsl:otherwise>
 								</xsl:choose>
 							</xsl:for-each>
-
+							
 							<!-- parse dist -->
 							<xsl:choose>
 								<xsl:when test="$dist='portrait' or $dist='deity'">
@@ -200,6 +200,9 @@
 									</xsl:if>
 								</xsl:otherwise>
 							</xsl:choose>
+							
+							<!-- get label -->
+							<triple s="?dist" p="skos:prefLabel" o="?label" filter="langMatches(lang(?label), &#x022;en&#x022;)"/>
 						</statements>
 					</xsl:variable>
 
