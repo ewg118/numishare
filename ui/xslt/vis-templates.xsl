@@ -2,8 +2,8 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:dcterms="http://purl.org/dc/terms/"
 	xmlns:nm="http://nomisma.org/id/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
 	xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:foaf="http://xmlns.com/foaf/0.1/"
-	xmlns:res="http://www.w3.org/2005/sparql-results#" xmlns:org="http://www.w3.org/ns/org#" xmlns:nomisma="http://nomisma.org/" xmlns:nmo="http://nomisma.org/ontology#"
-	xmlns:crm="http://www.cidoc-crm.org/cidoc-crm/" exclude-result-prefixes="#all" version="2.0">
+	xmlns:res="http://www.w3.org/2005/sparql-results#" xmlns:org="http://www.w3.org/ns/org#" xmlns:numishare="https://github.com/ewg118/numishare"
+	xmlns:nmo="http://nomisma.org/ontology#" xmlns:crm="http://www.cidoc-crm.org/cidoc-crm/" exclude-result-prefixes="#all" version="2.0">
 
 	<!-- distribution params -->
 	<xsl:param name="dist" select="doc('input:request')/request/parameters/parameter[name = 'dist']/value"/>
@@ -24,9 +24,9 @@
 		<xsl:if test="$mode = 'record'">
 			<hr/>
 		</xsl:if>
-		
+
 		<h3>
-			<xsl:text>Measurement Analysis</xsl:text>			
+			<xsl:value-of select="numishare:normalizeLabel('visualize_measurement', $lang)"/>
 		</h3>
 
 		<div>
@@ -86,19 +86,22 @@
 				<xsl:call-template name="dist-compare-template">
 					<xsl:with-param name="mode" select="$mode"/>
 				</xsl:call-template>
-				
+
 				<!-- display optional date range last, but only for the visualization page (ranges not much use for specific types) -->
 				<xsl:if test="$mode = 'page'">
 					<div>
-						<h4>Date Range</h4>
-						<p>You may select both a start and end date to display change in measurement(s) over time in the form of a line chart. An average will be taken for the selected
-							interval over the entire duration.</p>
+						<h4>
+							<xsl:value-of select="numishare:normalize_fields('dateRange', $lang)"/>
+						</h4>
+						<p>You may select both a start and end date to display change in measurement(s) over time in the form of a line chart. An average will
+							be taken for the selected interval over the entire duration.</p>
 						<div class="alert alert-box alert-danger measurementRange-alert hidden">
 							<span class="glyphicon glyphicon-exclamation-sign"/>
-							<strong>Alert:</strong> Inputted date range is invalid and/or interval is not set.</div>
-						
+							<strong><xsl:value-of select="numishare:normalizeLabel('visualize_alert', $lang)"/>:</strong> Inputted date range is invalid and/or
+							interval is not set.</div>
+
 						<div class="form-inline" id="measurementRange-container">
-							<input type="number" class="form-control year" id="fromYear" min="1" step="1" placeholder="Year">
+							<input type="number" class="form-control year" id="fromYear" min="1" step="1" placeholder="{numishare:regularize_node('year', $lang)}">
 								<xsl:if test="$from castable as xs:integer">
 									<xsl:attribute name="value" select="abs(xs:integer($from))"/>
 								</xsl:if>
@@ -122,7 +125,7 @@
 								</option>
 							</select>
 							<xsl:text> to </xsl:text>
-							<input type="number" class="form-control year" id="toYear" min="1" step="1" placeholder="Year">
+							<input type="number" class="form-control year" id="toYear" min="1" step="1" placeholder="{numishare:regularize_node('year', $lang)}">
 								<xsl:if test="$to castable as xs:integer">
 									<xsl:attribute name="value" select="abs(xs:integer($to))"/>
 								</xsl:if>
@@ -145,7 +148,10 @@
 									<xsl:text>A.D.</xsl:text>
 								</option>
 							</select>
-							<label>Interval</label>
+
+							<label>
+								<xsl:value-of select="numishare:normalizeLabel('visualize_interval', $lang)"/>
+							</label>
 							<select class="form-control interval" id="interval">
 								<option>Select...</option>
 								<option value="5">
@@ -154,7 +160,7 @@
 											<xsl:attribute name="selected">selected</xsl:attribute>
 										</xsl:if>
 									</xsl:if>
-									<xsl:text>5 Years</xsl:text>
+									<xsl:text>5</xsl:text>
 								</option>
 								<option value="10">
 									<xsl:if test="$to castable as xs:integer">
@@ -162,27 +168,30 @@
 											<xsl:attribute name="selected">selected</xsl:attribute>
 										</xsl:if>
 									</xsl:if>
-									<xsl:text>10 Years</xsl:text>
+									<xsl:text>10</xsl:text>
 								</option>
 							</select>
 						</div>
 					</div>
 				</xsl:if>
-				
 
-				<input type="submit" value="Generate" class="btn btn-default visualize-submit" disabled="disabled"/>
+				<xsl:if test="string($langParam)">
+					<input type="hidden" name="lang" value="{$lang}"/>
+				</xsl:if>
+
+				<input type="submit" value="{numishare:normalizeLabel('visualize_generate', $lang)}" class="btn btn-default visualize-submit" disabled="disabled"/>
 			</form>
 		</div>
 	</xsl:template>
 
 	<xsl:template name="distribution-form">
 		<xsl:param name="mode"/>
-		
+
 		<!--<xsl:if test="$mode = 'record'">
 			<hr/>
 		</xsl:if>-->
 		<h3>
-			<xsl:text>Typological Distribution</xsl:text>
+			<xsl:value-of select="numishare:normalizeLabel('visualize_typological', $lang)"/>
 			<xsl:if test="$mode = 'record'">
 				<xsl:call-template name="toggle-button">
 					<xsl:with-param name="form">distribution</xsl:with-param>
@@ -234,22 +243,27 @@
 						<xsl:if test="not(string($numericType)) or $numericType = 'percentage'">
 							<xsl:attribute name="checked">checked</xsl:attribute>
 						</xsl:if>
-						<xsl:text>Percentage</xsl:text>
+						<xsl:value-of select="numishare:normalizeLabel('numeric_percentage', $lang)"/>
 					</input>
 					<br/>
 					<input type="radio" name="type" value="count">
 						<xsl:if test="$numericType = 'count'">
 							<xsl:attribute name="checked">checked</xsl:attribute>
 						</xsl:if>
-						<xsl:text>Count</xsl:text>
+						<xsl:value-of select="numishare:normalizeLabel('numeric_count', $lang)"/>
 					</input>
 				</div>
 
 				<xsl:call-template name="dist-compare-template">
 					<xsl:with-param name="mode" select="$mode"/>
 				</xsl:call-template>
+				
+				<xsl:if test="string($langParam)">
+					<input type="hidden" name="lang" value="{$lang}"/>
+				</xsl:if>
 
-				<input type="submit" value="Generate" class="btn btn-default visualize-submit" disabled="disabled"/>
+				<input type="submit" value="{numishare:normalizeLabel('visualize_generate', $lang)}" class="btn btn-default visualize-submit"
+					disabled="disabled"/>
 			</form>
 		</div>
 	</xsl:template>
@@ -332,6 +346,11 @@
 										<xsl:value-of select="concat('compare=', normalize-space(.))"/>
 									</param>
 								</xsl:for-each>
+								<xsl:if test="string($langParam)">
+									<param>
+										<xsl:value-of select="concat('lang=', $langParam)"/>
+									</param>
+								</xsl:if>
 								<param>format=csv</param>
 							</params>
 						</xsl:variable>
@@ -354,34 +373,50 @@
 	<xsl:template name="dist-categories">
 
 		<div class="form-group">
-			<h4>Category</h4>
+			<h4>
+				<xsl:value-of select="numishare:normalizeLabel('visualize_categories', $lang)"/>
+			</h4>
 
 			<xsl:variable name="properties" as="element()*">
 				<properties>
-					<prop value="nmo:hasAuthority" class="foaf:Person|foaf:Organization">Authority</prop>
-					<prop value="nmo:hasStatedAuthority" class="foaf:Person|foaf:Organization">Authority, Stated</prop>
-					<prop value="deity" class="">Deity</prop>
-					<prop value="nmo:hasDenomination" class="nmo:Denomination">Denomination</prop>
-					<prop value="nmo:hasIssuer" class="foaf:Person|foaf:Organization">Issuer</prop>
-					<prop value="nmo:hasManufacture" class="nmo:Manufacture">Manufacture</prop>
-					<prop value="nmo:hasMaterial" class="nmo:Material">Material</prop>
-					<prop value="nmo:hasMint" class="nmo:Mint">Mint</prop>
-					<prop value="nmo:representsObjectType" class="nmo:ObjectType">ObjectType</prop>
-					<prop value="portrait" class="">Portrait</prop>
+					<prop value="nmo:hasAuthority" class="foaf:Person|foaf:Organization"/>
+					<prop value="nmo:hasStatedAuthority" class="foaf:Person|foaf:Organization"/>
+					<prop value="deity" class=""/>
+					<prop value="nmo:hasDenomination" class="nmo:Denomination"/>
+					<prop value="nmo:hasIssuer" class="foaf:Person|foaf:Organization"/>
+					<prop value="nmo:hasManufacture" class="nmo:Manufacture"/>
+					<prop value="nmo:hasMaterial" class="nmo:Material"/>
+					<prop value="nmo:hasMint" class="nmo:Mint"/>
+					<prop value="nmo:representsObjectType" class="nmo:ObjectType"/>
+					<prop value="portrait" class=""/>
 					<!--<prop value="region" class="nmo:Region">Region</prop>-->
 				</properties>
 			</xsl:variable>
 
-			<p>Select a category below to generate a graph showing the quantitative distribution for the following queries. The distribution is based on coin type data aggregated
-				into Nomisma.</p>
+			<p>Select a category below to generate a graph showing the quantitative distribution for the following queries. The distribution is based on coin
+				type data aggregated into Nomisma.</p>
 			<select name="dist" class="form-control" id="categorySelect">
 				<option value="">Select...</option>
 				<xsl:for-each select="$properties/prop">
+					<xsl:variable name="label">
+						<xsl:choose>
+							<xsl:when test="@value = 'nmo:representsObjectType'">
+								<xsl:value-of select="numishare:regularize_node('objectType', $lang)"/>
+							</xsl:when>
+							<xsl:when test="contains(@value, 'nmo:')">
+								<xsl:value-of select="numishare:regularize_node(concat(lower-case(substring(substring-after(@value, 'nmo:has'), 1, 1)), substring(substring-after(@value, 'nmo:has'), 2)), $lang)"/>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:value-of select="numishare:regularize_node(@value, $lang)"/>
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:variable>
+					
 					<option value="{@value}">
 						<xsl:if test="$dist = @value">
 							<xsl:attribute name="selected">selected</xsl:attribute>
 						</xsl:if>
-						<xsl:value-of select="."/>
+						<xsl:value-of select="$label"/>
 					</option>
 				</xsl:for-each>
 			</select>
@@ -390,22 +425,24 @@
 
 	<xsl:template name="measurement-categories">
 		<div class="form-group">
-			<h4>Measurement Type</h4>
-			<p>Select the measurement type below for visualization. Measurement queries are executed across all coins harvested in Nomisma.org, regardless connection to coin type
-				URIs.</p>
+			<h4>
+				<xsl:value-of select="numishare:normalizeLabel('visualize_select_measurement', $lang)"/>
+			</h4>
+			<p>Select the measurement type below for visualization. Measurement queries are executed across all coins harvested in Nomisma.org, regardless
+				connection to coin type URIs.</p>
 			<select name="measurement" class="form-control" id="measurementSelect">
 				<option value="">Select...</option>
 				<option value="nmo:hasWeight">
 					<xsl:if test="$measurement = 'nmo:hasWeight'">
 						<xsl:attribute name="selected">selected</xsl:attribute>
 					</xsl:if>
-					<xsl:text>Weight</xsl:text>
+					<xsl:value-of select="numishare:regularize_node('weight', $lang)"/>
 				</option>
 				<option value="nmo:hasDiameter">
 					<xsl:if test="$measurement = 'nmo:hasDiameter'">
 						<xsl:attribute name="selected">selected</xsl:attribute>
 					</xsl:if>
-					<xsl:text>Diameter</xsl:text>
+					<xsl:value-of select="numishare:regularize_node('diameter', $lang)"/>
 				</option>
 			</select>
 		</div>
@@ -416,13 +453,18 @@
 		<div class="form-inline">
 			<h4>
 				<xsl:choose>
-					<xsl:when test="$mode = 'record'">Compare to Other Queries</xsl:when>
-					<xsl:when test="$mode = 'page'">Compare Queries</xsl:when>
+					<xsl:when test="$mode = 'record'">
+						<xsl:value-of select="numishare:normalizeLabel('visualize_compare_optional', $lang)"/>
+					</xsl:when>
+					<xsl:when test="$mode = 'page'">
+						<xsl:value-of select="numishare:normalizeLabel('visualize_compare', $lang)"/>
+					</xsl:when>
 				</xsl:choose>
 			</h4>
-			<p>You can compare multiple queries to generate a more complex chart. Note that the value for each category for comparison is refined by previous selections in that
-				group. For example, if the first category in a Group is "Denomination: Denarius", and Mint is select as the second category, the drop-down menu will include only
-				those mints that produced denarii. <a href="#" class="add-compare"><span class="glyphicon glyphicon-plus"/>Add query</a></p>
+			<p>You can compare multiple queries to generate a more complex chart. Note that the value for each category for comparison is refined by previous
+				selections in that group. For example, if the first category in a Group is "Denomination: Denarius", and Mint is select as the second category,
+				the drop-down menu will include only those mints that produced denarii. <a href="#" class="add-compare"><span class="glyphicon glyphicon-plus"
+						/><xsl:value-of select="numishare:normalizeLabel('visualize_add_query', $lang)"/></a></p>
 			<div class="compare-master-container">
 				<xsl:for-each select="$compare">
 					<xsl:call-template name="compare-container-template">
@@ -444,7 +486,7 @@
 			<xsl:if test="$template = true()">
 				<xsl:attribute name="id">date-container-template</xsl:attribute>
 			</xsl:if>
-			<input type="number" class="form-control year" min="1" step="1" placeholder="Year">
+			<input type="number" class="form-control year" min="1" step="1" placeholder="{numishare:regularize_node('year', $lang)}">
 				<xsl:if test="$year castable as xs:integer">
 					<xsl:attribute name="value" select="abs(xs:integer($year))"/>
 				</xsl:if>
@@ -469,11 +511,11 @@
 			</select>
 		</span>
 	</xsl:template>
-	
+
 	<xsl:template name="coinType-template">
 		<xsl:param name="query"/>
 		<span>
-			<input type="text" disabled="disabled" class="form-control coinType" value="{substring-after($query, ' ')}"/>			
+			<input type="text" disabled="disabled" class="form-control coinType" value="{substring-after($query, ' ')}"/>
 		</span>
 	</xsl:template>
 
@@ -491,19 +533,21 @@
 					<a href="#" title="Remove Group" class="remove-dataset">
 						<span class="glyphicon glyphicon-remove"/>
 					</a>
-					
+
 					<!-- do not allow other fields if the query is for a coin type -->
 					<xsl:if test="not(starts-with($query, 'nmo:hasTypeSeriesItem'))">
 						<a href="#" class="add-compare-field" title="Add Query Field"><span class="glyphicon glyphicon-plus"/>Add Query Field</a>
-					</xsl:if>					
+					</xsl:if>
 				</small>
 			</h4>
 			<div class="alert alert-box alert-danger empty-query-alert hidden">
 				<span class="glyphicon glyphicon-exclamation-sign"/>
-				<strong>Alert:</strong> There must be at least one field in the group query.</div>
+				<strong><xsl:value-of select="numishare:normalizeLabel('visualize_alert', $lang)"/>:</strong> There must be at least one field in the group
+				query.</div>
 			<div class="alert alert-box alert-danger duplicate-date-alert hidden">
 				<span class="glyphicon glyphicon-exclamation-sign"/>
-				<strong>Alert:</strong> There must not be more than one from or to date.</div>
+				<strong><xsl:value-of select="numishare:normalizeLabel('visualize_alert', $lang)"/>:</strong> There must not be more than one from or to
+				date.</div>
 			<!-- if this xsl:template isn't an HTML template used by Javascript (generated in DOM from the compare request parameter), then pre-populate the query fields -->
 			<xsl:if test="$template = false()">
 				<xsl:variable name="pieces" select="tokenize($query, ';')"/>
@@ -587,23 +631,20 @@
 
 		<xsl:variable name="properties" as="element()*">
 			<properties>
-				<prop value="nmo:hasAuthority" class="foaf:Person|foaf:Organization">Authority</prop>
-				<prop value="nmo:hasStatedAuthority" class="foaf:Person|foaf:Organization">Authority, Stated</prop>
-				<xsl:if test="substring-before($query, ' ') = '?prop'">
-					<prop value="?prop" class="foaf:Person|foaf:Organization">Authority or Issuer</prop>
-				</xsl:if>
-				<prop value="nmo:hasTypeSeriesItem" class="nmo:TypeSeriesItem">Coin Type</prop>
-				<prop value="from">Date, From</prop>
-				<prop value="to">Date, To</prop>
-				<prop value="nmo:hasDenomination" class="nmo:Denomination">Denomination</prop>
-				<prop value="deity" class="">Deity</prop>
-				<prop value="nmo:hasIssuer" class="foaf:Person|foaf:Organization">Issuer</prop>
-				<prop value="nmo:hasManufacture" class="nmo:Manufacture">Manufacture</prop>
-				<prop value="nmo:hasMaterial" class="nmo:Material">Material</prop>
-				<prop value="nmo:hasMint" class="nmo:Mint">Mint</prop>
-				<prop value="nmo:representsObjectType" class="nmo:ObjectType">Object Type</prop>
-				<prop value="portrait" class="">Portrait</prop>
-				<prop value="region" class="nmo:Region">Region</prop>				
+				<prop value="nmo:hasAuthority" class="foaf:Person|foaf:Organization"/>								
+				<prop value="nmo:hasTypeSeriesItem" class="nmo:TypeSeriesItem"/>
+				<prop value="from"/>
+				<prop value="to"/>
+				<prop value="nmo:hasDenomination" class="nmo:Denomination"/>
+				<prop value="deity" class=""/>
+				<prop value="nmo:hasIssuer" class="foaf:Person|foaf:Organization"/>
+				<prop value="nmo:hasManufacture" class="nmo:Manufacture"/>
+				<prop value="nmo:hasMaterial" class="nmo:Material"/>
+				<prop value="nmo:hasMint" class="nmo:Mint"/>
+				<prop value="nmo:representsObjectType" class="nmo:ObjectType"/>
+				<prop value="portrait" class=""/>
+				<prop value="region" class="nmo:Region"/>
+				<prop value="nmo:hasStatedAuthority" class="foaf:Person|foaf:Organization"/>
 			</properties>
 		</xsl:variable>
 
@@ -628,12 +669,31 @@
 	<xsl:template match="prop">
 		<xsl:param name="query"/>
 		<xsl:variable name="value" select="@value"/>
+		<xsl:variable name="label">
+			<xsl:choose>
+				<xsl:when test="@value = 'from' or @value = 'to'">
+					<xsl:value-of select="numishare:regularize_node(concat(@value, 'Date'), $lang)"/>
+				</xsl:when>
+				<xsl:when test="@value = 'nmo:hasTypeSeriesItem'">
+					<xsl:value-of select="numishare:regularize_node('coinType', $lang)"/>
+				</xsl:when>
+				<xsl:when test="@value = 'nmo:representsObjectType'">
+					<xsl:value-of select="numishare:regularize_node('objectType', $lang)"/>
+				</xsl:when>
+				<xsl:when test="contains(@value, 'nmo:')">
+					<xsl:value-of select="numishare:regularize_node(concat(lower-case(substring(substring-after(@value, 'nmo:has'), 1, 1)), substring(substring-after(@value, 'nmo:has'), 2)), $lang)"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="numishare:regularize_node(@value, $lang)"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
 
 		<option value="{$value}" type="{@class}">
 			<xsl:if test="substring-before($query, ' ') = $value">
 				<xsl:attribute name="selected">selected</xsl:attribute>
 			</xsl:if>
-			<xsl:value-of select="."/>
+			<xsl:value-of select="$label"/>
 		</option>
 	</xsl:template>
 

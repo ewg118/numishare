@@ -105,7 +105,7 @@
 						<xsl:value-of select="numishare:normalizeLabel('header_visualize', $lang)"/>
 					</h1>
 					<p><xsl:value-of select="numishare:normalizeLabel('visualize_desc', $lang)"/>: <a href="http://wiki.numismatics.org/numishare:visualize"
-							target="_blank">http://wiki.numismatics.org/numishare:visualize</a>.</p>
+						target="_blank">http://wiki.numismatics.org/numishare:visualize</a>.</p>
 					<xsl:choose>
 						<xsl:when test="$interface = 'distribution'">
 							<xsl:call-template name="distribution-form">

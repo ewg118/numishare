@@ -71,7 +71,6 @@
 					</p:processor>
 				</p:when>
 				<p:when test="format='xml'">
-					<!-- output the aggregated Solr responses for the XML result -->
 					<p:processor name="oxf:identity">
 						<p:input name="data" href="#data"/>
 						<p:output name="data" ref="data"/>
@@ -96,7 +95,8 @@
 					</p:processor>
 				</p:when>
 				<p:when test="format='xml'">
-					<!-- output the aggregated SPARQL responses for the XML result -->
+					<!-- output the aggregated SPARQL responses for the XML result: used to query the average axis, weight,
+					and diameter for coin type pages when a local SPARQL (not Nomisma.org) endpoint is set in the Numishare config-->
 					<p:processor name="oxf:identity">
 						<p:input name="data" href="#data"/>
 						<p:output name="data" ref="data"/>

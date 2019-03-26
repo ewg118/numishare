@@ -12,11 +12,9 @@
 	JSON results to be displayed in d3.js -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:numishare="https://github.com/ewg118/numishare"
 	xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes="#all" version="2.0">
-
 	<xsl:include href="../templates.xsl"/>
 	<xsl:include href="../functions.xsl"/>
 	<xsl:include href="../templates-search.xsl"/>
-
 
 	<xsl:variable name="pipeline">visualize</xsl:variable>
 	<xsl:variable name="display_path"/>
@@ -27,7 +25,7 @@
 			else
 				concat('http://', doc('input:request')/request/server-name, ':8080/orbeon/themes/', //config/theme/orbeon_theme)"/>
 
-	<!-- request parameters -->		
+	<!-- request parameters -->
 	<xsl:param name="langParam" select="doc('input:request')/request/parameters/parameter[name = 'lang']/value"/>
 	<xsl:param name="lang">
 		<xsl:choose>
@@ -39,26 +37,14 @@
 			</xsl:when>
 		</xsl:choose>
 	</xsl:param>
-	
+
 	<xsl:param name="q" select="doc('input:request')/request/parameters/parameter[name = 'q']/value"/>
 
 	<!-- typological comparison -->
 	<xsl:param name="dist" select="doc('input:request')/request/parameters/parameter[name = 'category']/value"/>
-	<xsl:param name="compare" select="doc('input:request')/request/parameters/parameter[name = 'compare']/value"/>	
+	<xsl:param name="compare" select="doc('input:request')/request/parameters/parameter[name = 'compare']/value"/>
 	<xsl:param name="numericType" select="doc('input:request')/request/parameters/parameter[name = 'type']/value"/>
-	
-	<!-- variables -->
-	<!--<xsl:variable name="category_normalized">
-		<xsl:value-of select="numishare:normalize_fields($category, $lang)"/>
-	</xsl:variable>
-	<xsl:variable name="tokenized_q" select="tokenize($q, ' AND ')"/>
-	<xsl:variable name="numFound" select="//result[@name = 'response']/@numFound" as="xs:integer"/>
-	<xsl:variable name="qString" select="
-			if (string($q)) then
-				$q
-			else
-				'*:*'"/>-->
-	
+
 	<!-- config variables -->
 	<xsl:variable name="url" select="//config/url"/>
 	<xsl:variable name="collection_type" select="//config/collection_type"/>
@@ -91,18 +77,18 @@
 				<!-- bootstrap -->
 				<link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"/>
 				<script src="https://netdna.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"/>
-				
+
 				<!-- Add fancyBox -->
 				<link rel="stylesheet" href="{$include_path}/css/jquery.fancybox.css?v=2.1.5" type="text/css" media="screen"/>
 				<script type="text/javascript" src="{$include_path}/javascript/jquery.fancybox.pack.js?v=2.1.5"/>
 				<link type="text/css" href="{$include_path}/css/style.css" rel="stylesheet"/>
-				
-				<!-- visualization libraries -->				
+
+				<!-- visualization libraries -->
 				<script type="text/javascript" src="https://d3plus.org/js/d3.js"/>
 				<script type="text/javascript" src="https://d3plus.org/js/d3plus.js"/>
 				<script type="text/javascript" src="{$include_path}/javascript/search_functions.js"/>
 				<script type="text/javascript" src="{$include_path}/javascript/visualize_functions.js"/>
-				
+
 				<xsl:if test="string(//config/google_analytics)">
 					<script type="text/javascript">
 						<xsl:value-of select="//config/google_analytics"/>
@@ -116,7 +102,7 @@
 			</body>
 		</html>
 	</xsl:template>
-	
+
 	<xsl:template name="body">
 		<div class="container-fluid">
 			<xsl:if test="$lang = 'ar'">
@@ -135,7 +121,7 @@
 				</div>
 			</div>
 		</div>
-		
+
 		<div class="hidden">
 			<div id="searchBox">
 				<h3>
@@ -147,9 +133,11 @@
 	</xsl:template>
 
 	<xsl:template match="response">
-		
-		<h3>Typological Distribution</h3>
-		
+
+		<h3>
+			<xsl:value-of select="numishare:normalizeLabel('visualize_typological', $lang)"/>
+		</h3>
+
 		<div id="distribution">
 			<xsl:if test="string($dist) and count($compare) &gt; 0">
 				<xsl:call-template name="chart">
@@ -157,7 +145,7 @@
 					<xsl:with-param name="interface">distribution</xsl:with-param>
 				</xsl:call-template>
 			</xsl:if>
-			
+
 			<xsl:call-template name="distribution-form"/>
 		</div>
 	</xsl:template>
@@ -188,21 +176,19 @@
 
 			<!-- select distribution category by checklist -->
 			<div class="form-group">
-				<h4>
-					<xsl:value-of select="numishare:normalizeLabel('visualize_categories', $lang)"/>
-				</h4>
-				
+				<h4>Category</h4>
+
 				<select name="category" class="form-control" id="categorySelect">
 					<option value="">Select...</option>
 					<xsl:for-each select="//lst[@name = 'facet_fields']/lst">
 						<option value="{@name}">
 							<xsl:if test="@name = $dist">
-								<xsl:attribute name="selected">selected</xsl:attribute>								
+								<xsl:attribute name="selected">selected</xsl:attribute>
 							</xsl:if>
 							<xsl:value-of select="numishare:normalize_fields(@name, $lang)"/>
 						</option>
 					</xsl:for-each>
-				</select>				
+				</select>
 			</div>
 
 			<div class="form-group">
@@ -231,8 +217,9 @@
 							</xsl:choose>
 						</xsl:attribute>
 						<span class="glyphicon glyphicon-exclamation-sign"/>
-						<strong>Alert:</strong> There must be at least one query to visualize.</div>
-					
+						<strong><xsl:value-of select="numishare:normalizeLabel('visualize_alert', $lang)"/>:</strong> There must be at least one query to
+						visualize.</div>
+
 					<xsl:for-each select="tokenize($compare, '\|')">
 						<div class="compareQuery">
 							<b><xsl:value-of select="numishare:normalizeLabel('visualize_comparison_query', $lang)"/>: </b>
@@ -244,27 +231,27 @@
 								<xsl:value-of select="numishare:normalizeLabel('visualize_remove_query', $lang)"/>
 							</a>
 						</div>
-					</xsl:for-each>					
+					</xsl:for-each>
 				</div>
 			</div>
-			
+
 			<xsl:if test="string($langParam)">
 				<input type="hidden" name="lang" value="{$lang}"/>
 			</xsl:if>
 			<input type="hidden" name="compare" value="{$compare}"/>
 			<br/>
-			
+
 			<input type="submit" value="{numishare:normalizeLabel('visualize_generate', $lang)}" class="btn btn-default visualize-submit" disabled="disabled"/>
 		</form>
 	</xsl:template>
-	
+
 	<!-- templates -->
 	<xsl:template name="chart">
 		<xsl:param name="hidden"/>
 		<xsl:param name="interface"/>
-		
+
 		<xsl:variable name="api">getSolrDistribution</xsl:variable>
-		
+
 		<div>
 			<xsl:choose>
 				<xsl:when test="$hidden = true()">
@@ -274,13 +261,13 @@
 					<xsl:attribute name="class">chart-container</xsl:attribute>
 				</xsl:otherwise>
 			</xsl:choose>
-			
+
 			<div id="{$interface}-chart"/>
-			
+
 			<!-- only display model-generated link when there are URL params (distribution page) -->
 			<div style="margin-bottom:10px;" class="control-row text-center">
 				<p>The chart is limited to 100 results. For the full distribution, please download the CSV.</p>
-				
+
 				<xsl:choose>
 					<xsl:when test="$hidden = false()">
 						<xsl:variable name="queryParams" as="element()*">
@@ -289,7 +276,7 @@
 									<param>
 										<xsl:value-of select="concat('category=', $dist)"/>
 									</param>
-								</xsl:if>								
+								</xsl:if>
 								<xsl:if test="string($numericType)">
 									<param>
 										<xsl:value-of select="concat('type=', $numericType)"/>
@@ -299,11 +286,16 @@
 									<param>
 										<xsl:value-of select="concat('compare=', $compare)"/>
 									</param>
-								</xsl:if>								
+								</xsl:if>
+								<xsl:if test="string($langParam)">
+									<param>
+										<xsl:value-of select="concat('lang=', $langParam)"/>
+									</param>
+								</xsl:if>
 								<param>format=csv</param>
 							</params>
 						</xsl:variable>
-						
+
 						<a href="{$display_path}apis/{$api}?{string-join($queryParams/*, '&amp;')}" title="Download CSV" class="btn btn-primary">
 							<span class="glyphicon glyphicon-download"/>Download CSV</a>
 					</xsl:when>
@@ -316,6 +308,6 @@
 				</xsl:choose>
 			</div>
 		</div>
-		
+
 	</xsl:template>
 </xsl:stylesheet>
