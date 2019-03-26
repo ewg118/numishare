@@ -200,7 +200,7 @@
 			<!-- only display duration in visualize page: doesn't work properly from coin type comparison -->
 			<xsl:if test="$pipeline='visualize'">
 				<div class="row">
-					<div class="alert alert-danger center-block" id="measurementsForm-alert" style="display:none">
+					<div class="alert alert-danger alert-box" id="measurementsForm-alert" style="display:none">
 						<span class="glyphicon glyphicon-warning-sign"/>
 						<span class="validationError"/>
 					</div>
@@ -329,7 +329,7 @@
 	<!-- ************** SEARCH INTERFACE FOR CUSTOM WEIGHT QUERIES FROM SPARQL **************** -->
 	<xsl:template name="sparql_form">
 		<div class="queryGroup">
-			<div class="alert alert-danger center-block" id="sparqlForm-alert" style="display:none">
+			<div class="alert alert-danger alert-box" id="sparqlForm-alert" style="display:none">
 				<span class="glyphicon glyphicon-warning-sign"/>
 				<span class="validationError"/>
 			</div>

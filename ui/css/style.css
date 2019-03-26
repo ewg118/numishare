@@ -42,6 +42,10 @@ dl.ar dd{
     margin-right: 180px;
     margin-left: 0;
 }
+.alert-box {
+	width:50%;
+	margin:20px auto;
+}
 /*
   ***************************************
   FOOTER
@@ -224,6 +228,9 @@ select[name = "interval"],
   VISUALIZATION FORM
   ***************************************
 */
+.quant-form {
+    margin-bottom:20px;
+}
 .quant-form input[type=text], .quant-form select {
 	width:20em;
 }
@@ -574,7 +581,4 @@ div.custominfostyle{
 }
 .mr{
     display: none;
-}
-.center-block{
-    width: 50%;
 }

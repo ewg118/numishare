@@ -223,6 +223,16 @@
 					</small>
 				</h4>
 				<div id="compareQueryDiv">
+					<div id="empty-query-alert">
+						<xsl:attribute name="class">
+							<xsl:choose>
+								<xsl:when test="string($compare)">alert alert-box alert-danger hidden</xsl:when>
+								<xsl:otherwise>alert alert-box alert-danger</xsl:otherwise>
+							</xsl:choose>
+						</xsl:attribute>
+						<span class="glyphicon glyphicon-exclamation-sign"/>
+						<strong>Alert:</strong> There must be at least one query to visualize.</div>
+					
 					<xsl:for-each select="tokenize($compare, '\|')">
 						<div class="compareQuery">
 							<b><xsl:value-of select="numishare:normalizeLabel('visualize_comparison_query', $lang)"/>: </b>
@@ -234,13 +244,14 @@
 								<xsl:value-of select="numishare:normalizeLabel('visualize_remove_query', $lang)"/>
 							</a>
 						</div>
-					</xsl:for-each>
+					</xsl:for-each>					
 				</div>
 			</div>
 			
 			<xsl:if test="string($langParam)">
 				<input type="hidden" name="lang" value="{$lang}"/>
 			</xsl:if>
+			<input type="hidden" name="compare" value="{$compare}"/>
 			<br/>
 			
 			<input type="submit" value="{numishare:normalizeLabel('visualize_generate', $lang)}" class="btn btn-default visualize-submit" disabled="disabled"/>

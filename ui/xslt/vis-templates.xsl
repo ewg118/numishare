@@ -93,7 +93,7 @@
 						<h4>Date Range</h4>
 						<p>You may select both a start and end date to display change in measurement(s) over time in the form of a line chart. An average will be taken for the selected
 							interval over the entire duration.</p>
-						<div class="bg-danger text-danger measurementRange-alert danger-box hidden">
+						<div class="alert alert-box alert-danger measurementRange-alert hidden">
 							<span class="glyphicon glyphicon-exclamation-sign"/>
 							<strong>Alert:</strong> Inputted date range is invalid and/or interval is not set.</div>
 						
@@ -498,10 +498,10 @@
 					</xsl:if>					
 				</small>
 			</h4>
-			<div class="bg-danger text-danger empty-query-alert danger-box hidden">
+			<div class="alert alert-box alert-danger empty-query-alert hidden">
 				<span class="glyphicon glyphicon-exclamation-sign"/>
 				<strong>Alert:</strong> There must be at least one field in the group query.</div>
-			<div class="bg-danger text-danger duplicate-date-alert danger-box hidden">
+			<div class="alert alert-box alert-danger duplicate-date-alert hidden">
 				<span class="glyphicon glyphicon-exclamation-sign"/>
 				<strong>Alert:</strong> There must not be more than one from or to date.</div>
 			<!-- if this xsl:template isn't an HTML template used by Javascript (generated in DOM from the compare request parameter), then pre-populate the query fields -->

@@ -212,7 +212,7 @@
 			<div class="row">
 				<div class="col-md-12">
 					<h2>3. <xsl:value-of select="numishare:normalizeLabel('visualize_categories', $lang)"/></h2>
-					<div class="alert alert-danger center-block" id="visualize-cat-alert" style="display:none">
+					<div class="alert alert-danger alert-box" id="visualize-cat-alert" style="display:none">
 						<span class="glyphicon glyphicon-warning-sign"/>
 						<xsl:value-of select="numishare:normalizeLabel('visualize_error3', $lang)"/>.</div>
 					<xsl:for-each select="tokenize($queryOptions, ',')">
@@ -248,7 +248,7 @@
 								</small>
 							</h2>
 
-							<div class="alert alert-danger center-block" id="visualize-hoard-alert" style="display:none">
+							<div class="alert alert-danger alert-box" id="visualize-hoard-alert" style="display:none">
 								<span class="glyphicon glyphicon-warning-sign"/>
 								<xsl:value-of select="numishare:normalizeLabel('visualize_error4', $lang)"/>
 							</div>
@@ -266,7 +266,7 @@
 						</xsl:when>
 						<xsl:otherwise>
 							<h2>4. <xsl:value-of select="numishare:normalizeLabel('visualize_select_hoards_optional', $lang)"/></h2>
-							<div class="alert alert-danger center-block" id="visualize-hoard-alert" style="display:none">
+							<div class="alert alert-danger alert-box" id="visualize-hoard-alert" style="display:none">
 								<span class="glyphicon glyphicon-warning-sign"/>
 								<xsl:value-of select="numishare:normalizeLabel('visualize_error5', $lang)"/>
 							</div>
@@ -445,7 +445,7 @@
 									</a>
 								</small>
 							</h2>
-							<div class="alert alert-danger center-block" id="date-hoard-alert" style="display:none">
+							<div class="alert alert-danger alert-box" id="date-hoard-alert" style="display:none">
 								<span class="glyphicon glyphicon-warning-sign"/>
 								<xsl:value-of select="numishare:normalizeLabel('visualize_error4', $lang)"/>
 							</div>
@@ -461,7 +461,7 @@
 						</xsl:when>
 						<xsl:otherwise>
 							<h2>3. <xsl:value-of select="numishare:normalizeLabel('visualize_select_hoards_optional', $lang)"/></h2>
-							<div class="alert alert-danger center-block" id="date-hoard-alert" style="display:none">
+							<div class="alert alert-danger alert-box" id="date-hoard-alert" style="display:none">
 								<span class="glyphicon glyphicon-warning-sign"/>
 								<xsl:value-of select="numishare:normalizeLabel('visualize_error5', $lang)"/>
 							</div>
@@ -561,7 +561,7 @@
 			<div class="row">
 				<div class="col-md-12">
 					<h2>2. <xsl:value-of select="numishare:normalizeLabel('visualize_categories', $lang)"/></h2>
-					<div class="alert alert-danger center-block" id="csv-cat-alert" style="display:none">
+					<div class="alert alert-danger alert-box" id="csv-cat-alert" style="display:none">
 						<span class="glyphicon glyphicon-warning-sign"/>
 						<xsl:value-of select="numishare:normalizeLabel('visualize_error3', $lang)"/>
 					</div>
@@ -597,7 +597,7 @@
 									</a>
 								</small>
 							</h2>
-							<div class="alert alert-danger center-block" id="csv-hoard-alert" style="display:none">
+							<div class="alert alert-danger alert-box" id="csv-hoard-alert" style="display:none">
 								<span class="glyphicon glyphicon-warning-sign"/>
 								<xsl:value-of select="numishare:normalizeLabel('visualize_error6', $lang)"/>
 							</div>
@@ -613,7 +613,7 @@
 						</xsl:when>
 						<xsl:otherwise>
 							<h2>3. <xsl:value-of select="numishare:normalizeLabel('visualize_select_hoards_optional', $lang)"/></h2>
-							<div class="alert alert-danger center-block" id="csv-hoard-alert" style="display:none">
+							<div class="alert alert-danger alert-box" id="csv-hoard-alert" style="display:none">
 								<span class="glyphicon glyphicon-warning-sign"/>
 								<xsl:value-of select="numishare:normalizeLabel('visualize_error7', $lang)"/>
 							</div>

@@ -227,11 +227,11 @@
 
 		<!-- parts -->
 		<xsl:if test="nuds:obverse or nuds:reverse">
-			<parts>
+			<part>
 				<_array>
 					<xsl:apply-templates select="nuds:obverse | nuds:reverse"/>
 				</_array>
-			</parts>
+			</part>
 		</xsl:if>
 	</xsl:template>
 
