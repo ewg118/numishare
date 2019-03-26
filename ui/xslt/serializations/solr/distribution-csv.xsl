@@ -9,27 +9,6 @@
 	<!-- query params -->
 	<xsl:param name="compare" select="doc('input:request')/request/parameters/parameter[name = 'compare']/value"/>
 
-	<xsl:variable name="queries" as="element()*">
-		<queries>
-			<xsl:choose>
-				<xsl:when test="contains($compare, '|')">
-					<xsl:for-each select="tokenize($compare, '\|')">
-						<query>
-							<xsl:attribute name="label" select="."/>
-							<xsl:value-of select="normalize-space(.)"/>
-						</query>
-					</xsl:for-each>
-				</xsl:when>
-				<xsl:otherwise>
-					<query>
-						<xsl:attribute name="label" select="."/>
-						<xsl:value-of select="normalize-space($compare)"/>
-					</query>
-				</xsl:otherwise>
-			</xsl:choose>
-		</queries>
-	</xsl:variable>
-
 	<xsl:template match="/">
 		<xsl:text>"group","value",</xsl:text>
 		<xsl:text>"</xsl:text>
@@ -45,8 +24,7 @@
 	<!-- templates for distribution analysis -->
 	<xsl:template match="response[lst[@name = 'facet_counts']]">
 		<xsl:variable name="position" select="position()"/>
-		<xsl:variable name="query" select="$queries/query[$position]"/>
-
+		<xsl:variable name="query" select="lst[@name='responseHeader']/lst[@name='params']/str[@name='compare']"/>
 
 		<xsl:variable name="total" select="sum(descendant::lst[@name = $dist]/int)"/>
 

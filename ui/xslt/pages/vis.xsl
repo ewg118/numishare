@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:numishare="https://github.com/ewg118/numishare"
-	exclude-result-prefixes="#all" version="2.0">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:numishare="https://github.com/ewg118/numishare" exclude-result-prefixes="#all" version="2.0">
 	<xsl:include href="../templates.xsl"/>
 	<xsl:include href="../functions.xsl"/>
 	<xsl:include href="../vis-templates.xsl"/>
@@ -29,14 +29,19 @@
 
 	<!-- config or other variables -->
 	<xsl:variable name="display_path">../</xsl:variable>
-	<xsl:variable name="include_path" select="if (string(//config/theme/themes_url)) then concat(//config/theme/themes_url, //config/theme/orbeon_theme) else concat('http://', doc('input:request')/request/server-name, ':8080/orbeon/themes/', //config/theme/orbeon_theme)"/>
-	
+	<xsl:variable name="include_path"
+		select="
+			if (string(//config/theme/themes_url)) then
+				concat(//config/theme/themes_url, //config/theme/orbeon_theme)
+			else
+				concat('http://', doc('input:request')/request/server-name, ':8080/orbeon/themes/', //config/theme/orbeon_theme)"/>
+
 	<xsl:variable name="mode">page</xsl:variable>
 
 	<xsl:template match="/">
 		<xsl:param name="interface" select="tokenize(doc('input:request')/request/request-uri, '/')[last()]"/>
 
-		<html lang="en">
+		<html>
 			<head>
 				<title>
 					<xsl:value-of select="//config/title"/>
@@ -46,16 +51,29 @@
 						<xsl:when test="$interface = 'metrical'">Metrical Analysis</xsl:when>
 					</xsl:choose>
 				</title>
-				<meta name="viewport" content="width=device-width, initial-scale=1"/>
-				<script type="text/javascript" src="http://code.jquery.com/jquery-2.1.4.min.js"/>
+				<link rel="shortcut icon" type="image/x-icon" href="{$include_path}/images/favicon.png"/>
+				<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"/>
+
+				<xsl:for-each select="//config/includes/include">
+					<xsl:choose>
+						<xsl:when test="@type = 'css'">
+							<link type="text/{@type}" rel="stylesheet" href="{@url}"/>
+						</xsl:when>
+						<xsl:when test="@type = 'javascript'">
+							<script type="text/{@type}" src="{@url}"/>
+						</xsl:when>
+					</xsl:choose>
+				</xsl:for-each>
+
 				<!-- bootstrap -->
 				<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"/>
 				<script src="http://netdna.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"/>
+				<link rel="stylesheet" type="text/css" href="{$include_path}/css/style.css"/>
+
+				<!-- visualization libraries -->
 				<script type="text/javascript" src="https://d3plus.org/js/d3.js"/>
 				<script type="text/javascript" src="https://d3plus.org/js/d3plus.js"/>
 				<script type="text/javascript" src="{$include_path}/javascript/vis_functions.js"/>
-
-				<link rel="stylesheet" type="text/css" href="{$include_path}/css/style.css"/>
 
 				<!-- google analytics -->
 				<xsl:if test="string(//config/google_analytics)">
@@ -78,16 +96,16 @@
 		<xsl:param name="interface"/>
 
 		<div class="container-fluid">
-			<xsl:if test="$lang='ar'">
-				<xsl:attribute name="style">direction: rtl;</xsl:attribute>							
+			<xsl:if test="$lang = 'ar'">
+				<xsl:attribute name="style">direction: rtl;</xsl:attribute>
 			</xsl:if>
 			<div class="row">
 				<div class="col-md-12">
 					<h1>
 						<xsl:value-of select="numishare:normalizeLabel('header_visualize', $lang)"/>
 					</h1>
-					<p><xsl:value-of select="numishare:normalizeLabel('visualize_desc', $lang)"/>: <a href="http://wiki.numismatics.org/numishare:visualize" target="_blank"
-						>http://wiki.numismatics.org/numishare:visualize</a>.</p>
+					<p><xsl:value-of select="numishare:normalizeLabel('visualize_desc', $lang)"/>: <a href="http://wiki.numismatics.org/numishare:visualize"
+							target="_blank">http://wiki.numismatics.org/numishare:visualize</a>.</p>
 					<xsl:choose>
 						<xsl:when test="$interface = 'distribution'">
 							<xsl:call-template name="distribution-form">

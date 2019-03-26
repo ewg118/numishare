@@ -9,48 +9,22 @@
 	<xsl:param name="type" select="doc('input:request')/request/parameters/parameter[name = 'type']/value"/>
 	<!-- query params -->
 	<xsl:param name="compare" select="doc('input:request')/request/parameters/parameter[name = 'compare']/value"/>
-	
 
-	<xsl:variable name="queries" as="element()*">
-		<queries>
-			<xsl:choose>
-				<xsl:when test="contains($compare, '|')">
-					<xsl:for-each select="tokenize($compare, '\|')">
-						<query>
-							<xsl:attribute name="label" select="."/>
-							<xsl:value-of select="normalize-space(.)"/>
-						</query>
-					</xsl:for-each>
-				</xsl:when>
-				<xsl:otherwise>
-					<query>
-						<xsl:attribute name="label" select="."/>
-						<xsl:value-of select="normalize-space($compare)"/>
-					</query>
-				</xsl:otherwise>
-			</xsl:choose>
-		</queries>
-	</xsl:variable>
 
 	<xsl:template match="/">
 		<xsl:text>[</xsl:text>
-		<xsl:apply-templates select="descendant::response[lst[@name='facet_counts']]"/>		
+		<xsl:apply-templates select="//response[lst[@name='facet_counts']]"/>		
 		<xsl:text>]</xsl:text>
 	</xsl:template>
 
 	<!-- templates for the getDistribution API: display numeric counts or percentages for distribution queries -->
 	<xsl:template match="response[lst[@name='facet_counts']]">
-		<xsl:variable name="position" select="position()"/>
-		<xsl:variable name="query" select="$queries/query[$position]"/>
-		<xsl:variable name="subset" select="$queries/query[$position]/@label"/>
+		<xsl:variable name="query" select="lst[@name='responseHeader']/lst[@name='params']/str[@name='compare']"/>
 
 		<xsl:variable name="total" select="sum(descendant::lst[@name=$dist]/int)"/>
 		
-		
-		
 		<xsl:apply-templates select="descendant::lst[@name=$dist]">
 			<xsl:with-param name="query" select="$query"/>
-			<xsl:with-param name="subset" select="$subset"/>
 			<xsl:with-param name="total" select="$total"/>
 		</xsl:apply-templates>
 
@@ -66,20 +40,18 @@
 		
 		<xsl:apply-templates select="int">
 			<xsl:with-param name="query" select="$query"/>
-			<xsl:with-param name="subset" select="$subset"/>
 			<xsl:with-param name="total" select="$total"/>
 		</xsl:apply-templates>	
 	</xsl:template>
 
 	<xsl:template match="int">
 		<xsl:param name="query"/>
-		<xsl:param name="subset"/>
 		<xsl:param name="total"/>
 
 		<xsl:variable name="object" as="element()*">
 			<row>
 				<xsl:element name="subset">
-					<xsl:value-of select="$subset"/>
+					<xsl:value-of select="$query"/>
 				</xsl:element>
 				<xsl:element name="{$dist}">
 					<xsl:value-of select="@name"/>
