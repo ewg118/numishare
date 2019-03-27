@@ -58,6 +58,10 @@ a:visited{
 a:hover{
     color: #D46A6A;
 }
+.alert-box {
+	width:50%;
+	margin:20px auto;
+}
 /*
   ***************************************
   BOOTSTRAP NAVBAR
@@ -311,6 +315,9 @@ select[name = "interval"],
   VISUALIZATION FORM
   ***************************************
 */
+.quant-form {
+    margin-bottom:20px;
+}
 .quant-form input[type=text], .quant-form select {
 	width:20em;
 }
