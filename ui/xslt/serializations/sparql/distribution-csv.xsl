@@ -17,18 +17,30 @@
 	<xsl:param name="from" select="doc('input:request')/request/parameters/parameter[name = 'from']/value"/>
 	<xsl:param name="to" select="doc('input:request')/request/parameters/parameter[name = 'to']/value"/>
 	<xsl:param name="interval" select="doc('input:request')/request/parameters/parameter[name = 'interval']/value"/>
+	
+	<xsl:param name="langParam" select="doc('input:request')/request/parameters/parameter[name = 'lang']/value"/>
+	<xsl:param name="lang">
+		<xsl:choose>
+			<xsl:when test="string($langParam)">
+				<xsl:value-of select="$langParam"/>
+			</xsl:when>
+			<xsl:when test="string(doc('input:request')/request//header[name[. = 'accept-language']]/value)">
+				<xsl:value-of select="numishare:parseAcceptLanguage(doc('input:request')/request//header[name[. = 'accept-language']]/value)[1]"/>
+			</xsl:when>
+		</xsl:choose>
+	</xsl:param>
 
 	<xsl:variable name="queries" as="element()*">
 		<queries>
 			<xsl:if test="string($filter)">
 				<query>
-					<xsl:attribute name="label" select="numishare:parseFilter(normalize-space($filter))"/>
+					<xsl:attribute name="label" select="numishare:parseFilter(normalize-space($filter), $lang)"/>
 					<xsl:value-of select="normalize-space($filter)"/>
 				</query>
 			</xsl:if>
 			<xsl:for-each select="$compare">
 				<query>
-					<xsl:attribute name="label" select="numishare:parseFilter(normalize-space(.))"/>
+					<xsl:attribute name="label" select="numishare:parseFilter(normalize-space(.), $lang)"/>
 					<xsl:value-of select="."/>
 				</query>
 			</xsl:for-each>
@@ -89,7 +101,6 @@
 		<xsl:variable name="position" select="position()"/>
 		<xsl:variable name="query" select="$queries/query[$position]"/>
 
-
 		<xsl:variable name="total" select="sum(descendant::res:binding[@name = 'count']/res:literal)"/>
 
 		<xsl:apply-templates select="descendant::res:result[res:binding[@name = 'label']/res:literal]" mode="getDistribution">
@@ -109,10 +120,17 @@
 		<xsl:variable name="object" as="element()*">
 			<row>
 				<xsl:element name="subset">
-					<xsl:value-of select="numishare:parseFilter($query)"/>
+					<xsl:value-of select="numishare:parseFilter($query, $lang)"/>
 				</xsl:element>
 				<xsl:element name="{if (starts-with($dist, 'nmo:')) then lower-case(substring-after($dist, 'has')) else $dist}">
-					<xsl:value-of select="res:binding[@name = 'label']/res:literal"/>
+					<xsl:choose>
+						<xsl:when test="res:binding[@name='label']">
+							<xsl:value-of select="res:binding[@name = 'label']/res:literal"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="res:binding[@name = 'en_label']/res:literal"/>
+						</xsl:otherwise>
+					</xsl:choose>
 				</xsl:element>
 				<xsl:element name="uri">
 					<xsl:value-of select="res:binding[@name = 'dist']/res:uri"/>
@@ -200,8 +218,6 @@
 					<xsl:value-of select="$value"/>
 				</xsl:element>				
 				<xsl:element name="average">
-					<!--<xsl:value-of select="format-number(number(res:binding[@name = 'average']/res:literal), '0.00')"/>-->
-					
 					<xsl:choose>
 						<xsl:when test="number(res:binding[@name = 'average']/res:literal) &gt; 0">
 							<xsl:value-of select="format-number(number(res:binding[@name = 'average']/res:literal), '0.00')"/>

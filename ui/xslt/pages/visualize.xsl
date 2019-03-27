@@ -110,6 +110,19 @@
 			</xsl:if>
 			<div class="row">
 				<div class="col-md-12">
+					<!-- depreciation message -->
+
+					<xsl:if test="$collection_type = 'cointype'">
+						<div class="alert alert-box alert-warning">
+							<span class="glyphicon glyphicon-info-sign"></span>
+							<strong><xsl:value-of select="numishare:regularize_node('note', $lang)"/>:</strong> The distribution analysis interface is
+							going to be deprecated in favor of a <a
+								href="./visualize/distribution{if (string($langParam)) then concat('?lang=', $langParam) else ''}">new system</a>. The metrical
+							analyses have migrated to <a href="./visualize/metrical{if (string($langParam)) then concat('?lang=', $langParam) else ''}"
+							>here</a>.</div>
+					</xsl:if>
+
+
 					<h1>
 						<xsl:value-of select="numishare:normalizeLabel('header_visualize', $lang)"/>
 					</h1>

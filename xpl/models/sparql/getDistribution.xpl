@@ -17,7 +17,7 @@
 		</p:input>
 		<p:output name="data" id="request"/>
 	</p:processor>
-	
+
 	<p:processor name="oxf:pipeline">
 		<p:input name="config" href="../config.xpl"/>
 		<p:output name="data" id="config"/>
@@ -79,13 +79,29 @@
 			<p:input name="request" href="#request"/>
 			<p:input name="data" href="#config"/>
 			<p:input name="config">
-				<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+				<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+					xmlns:numishare="https://github.com/ewg118/numishare">
 					<xsl:include href="../../../ui/xslt/controllers/sparql-metamodel.xsl"/>
-					
+					<xsl:include href="../../../ui/xslt/functions.xsl"/>
+
 					<!-- request parameters -->
 					<xsl:param name="filter" select="doc('input:filter')/query"/>
 					<xsl:param name="dist" select="doc('input:request')/request/parameters/parameter[name='dist']/value"/>
 					<xsl:param name="format" select="doc('input:request')/request/parameters/parameter[name='format']/value"/>
+
+					<!-- language -->
+					<xsl:param name="langParam" select="doc('input:request')/request/parameters/parameter[name = 'lang']/value"/>
+					<xsl:param name="lang">
+						<xsl:choose>
+							<xsl:when test="string($langParam)">
+								<xsl:value-of select="$langParam"/>
+							</xsl:when>
+							<xsl:when test="string(doc('input:request')/request//header[name[. = 'accept-language']]/value)">
+								<xsl:value-of select="numishare:parseAcceptLanguage(doc('input:request')/request//header[name[. = 'accept-language']]/value)[1]"
+								/>
+							</xsl:when>
+						</xsl:choose>
+					</xsl:param>
 
 					<!-- config variables -->
 					<xsl:variable name="sparql_endpoint" select="/config/sparql_endpoint"/>
@@ -113,7 +129,7 @@
 									</xsl:if>
 								</xsl:otherwise>
 							</xsl:choose>
-							
+
 							<!-- parse filters -->
 							<xsl:for-each select="tokenize($filter, ';')">
 								<xsl:variable name="property" select="substring-before(normalize-space(.), ' ')"/>
@@ -134,13 +150,13 @@
 											<group>
 												<triple s="?coinType" p="nmo:hasMint" o="?mint"/>
 												<triple s="?mint" p="skos:broader+" o="{$object}"/>
-											</group>											
+											</group>
 										</union>
 									</xsl:when>
 									<xsl:when test="$property = 'from'">
 										<xsl:if test="$object castable as xs:integer">
 											<xsl:variable name="gYear" select="format-number(number($object), '0000')"/>
-											
+
 											<triple s="?coinType" p="nmo:hasStartDate" o="?startDate">
 												<xsl:attribute name="filter">
 													<xsl:text>(?startDate >= "</xsl:text>
@@ -153,7 +169,7 @@
 									<xsl:when test="$property = 'to'">
 										<xsl:if test="$object castable as xs:integer">
 											<xsl:variable name="gYear" select="format-number(number($object), '0000')"/>
-											
+
 											<triple s="?coinType" p="nmo:hasEndDate" o="?endDate">
 												<xsl:attribute name="filter">
 													<xsl:text>(?endDate &lt;= "</xsl:text>
@@ -168,7 +184,7 @@
 									</xsl:otherwise>
 								</xsl:choose>
 							</xsl:for-each>
-							
+
 							<!-- parse dist -->
 							<xsl:choose>
 								<xsl:when test="$dist='portrait' or $dist='deity'">
@@ -185,7 +201,7 @@
 										<group>
 											<triple s="?coinType" p="nmo:hasMint" o="?mint"/>
 											<triple s="?mint" p="skos:broader+" o="?dist"/>
-										</group>											
+										</group>
 									</union>
 								</xsl:when>
 								<xsl:otherwise>
@@ -200,9 +216,19 @@
 									</xsl:if>
 								</xsl:otherwise>
 							</xsl:choose>
-							
+
 							<!-- get label -->
-							<triple s="?dist" p="skos:prefLabel" o="?label" filter="langMatches(lang(?label), &#x022;en&#x022;)"/>
+							<xsl:choose>
+								<xsl:when test="not($lang = 'en')">
+									<optional>
+										<triple s="?dist" p="skos:prefLabel" o="?label" filter="langMatches(lang(?label), &#x022;{$lang}&#x022;)"/>
+									</optional>
+									<triple s="?dist" p="skos:prefLabel" o="?en_label" filter="langMatches(lang(?en_label), &#x022;en&#x022;)"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<triple s="?dist" p="skos:prefLabel" o="?label" filter="langMatches(lang(?label), &#x022;en&#x022;)"/>
+								</xsl:otherwise>
+							</xsl:choose>							
 						</statements>
 					</xsl:variable>
 

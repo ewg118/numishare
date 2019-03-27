@@ -13,22 +13,34 @@
 	<xsl:param name="filter" select="doc('input:request')/request/parameters/parameter[name = 'filter']/value"/>
 	<!-- metrical analysis params -->
 	<xsl:param name="measurement" select="doc('input:request')/request/parameters/parameter[name = 'measurement']/value"/>
-	<xsl:param name="analysisType" select="doc('input:request')/request/parameters/parameter[name = 'analysisType']/value"/>	
+	<xsl:param name="analysisType" select="doc('input:request')/request/parameters/parameter[name = 'analysisType']/value"/>
 	<xsl:param name="from" select="doc('input:request')/request/parameters/parameter[name = 'from']/value"/>
 	<xsl:param name="to" select="doc('input:request')/request/parameters/parameter[name = 'to']/value"/>
 	<xsl:param name="interval" select="doc('input:request')/request/parameters/parameter[name = 'interval']/value"/>
+
+	<xsl:param name="langParam" select="doc('input:request')/request/parameters/parameter[name = 'lang']/value"/>
+	<xsl:param name="lang">
+		<xsl:choose>
+			<xsl:when test="string($langParam)">
+				<xsl:value-of select="$langParam"/>
+			</xsl:when>
+			<xsl:when test="string(doc('input:request')/request//header[name[. = 'accept-language']]/value)">
+				<xsl:value-of select="numishare:parseAcceptLanguage(doc('input:request')/request//header[name[. = 'accept-language']]/value)[1]"/>
+			</xsl:when>
+		</xsl:choose>
+	</xsl:param>
 
 	<xsl:variable name="queries" as="element()*">
 		<queries>
 			<xsl:if test="string($filter)">
 				<query>
-					<xsl:attribute name="label" select="numishare:parseFilter(normalize-space($filter))"/>
+					<xsl:attribute name="label" select="numishare:parseFilter(normalize-space($filter), $lang)"/>
 					<xsl:value-of select="normalize-space($filter)"/>
 				</query>
 			</xsl:if>
 			<xsl:for-each select="$compare">
 				<query>
-					<xsl:attribute name="label" select="numishare:parseFilter(normalize-space(.))"/>
+					<xsl:attribute name="label" select="numishare:parseFilter(normalize-space(.), $lang)"/>
 					<xsl:value-of select="."/>
 				</query>
 			</xsl:for-each>
@@ -38,10 +50,10 @@
 	<xsl:template match="/">
 		<xsl:text>[</xsl:text>
 		<xsl:choose>
-			<xsl:when test="$api='getDistribution'">
+			<xsl:when test="$api = 'getDistribution'">
 				<xsl:apply-templates select="descendant::res:sparql" mode="getDistribution"/>
 			</xsl:when>
-			<xsl:when test="$api='getMetrical'">
+			<xsl:when test="$api = 'getMetrical'">
 				<xsl:choose>
 					<!-- apply templates on the group element if a date range query -->
 					<xsl:when test="number($from) and number($to) and number($interval)">
@@ -51,7 +63,7 @@
 						<xsl:for-each select="descendant::res:result[res:binding[@name = 'average']/res:literal]">
 							<xsl:variable name="position" select="position()"/>
 							<xsl:variable name="value" select="$queries/query[$position]/@label"/>
-							
+
 							<xsl:apply-templates select="self::node()" mode="getMetrical">
 								<xsl:with-param name="value" select="$value"/>
 								<xsl:with-param name="subset" select="substring-after($measurement, 'has')"/>
@@ -64,7 +76,7 @@
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
-		</xsl:choose>		
+		</xsl:choose>
 		<xsl:text>]</xsl:text>
 	</xsl:template>
 
@@ -98,7 +110,14 @@
 					<xsl:value-of select="$subset"/>
 				</xsl:element>
 				<xsl:element name="{if (starts-with($dist, 'nmo:')) then lower-case(substring-after($dist, 'has')) else $dist}">
-					<xsl:value-of select="res:binding[@name = 'label']/res:literal"/>
+					<xsl:choose>
+						<xsl:when test="res:binding[@name = 'label']">
+							<xsl:value-of select="res:binding[@name = 'label']/res:literal"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="res:binding[@name = 'en_label']/res:literal"/>
+						</xsl:otherwise>
+					</xsl:choose>
 				</xsl:element>
 				<xsl:element name="{if ($type='count') then 'count' else 'percentage'}">
 					<xsl:choose>
@@ -139,7 +158,7 @@
 	<xsl:template match="group" mode="getMetrical">
 		<xsl:variable name="position" select="position()"/>
 		<xsl:variable name="subset" select="$queries/query[$position]/@label"/>
-		
+
 		<xsl:for-each select="descendant::res:result[res:binding[@name = 'average']/res:literal]">
 			<xsl:variable name="value" select="ancestor::value/query/@year"/>
 			<xsl:variable name="label" select="ancestor::value/query/@range"/>
@@ -152,17 +171,17 @@
 				<xsl:text>, </xsl:text>
 			</xsl:if>
 		</xsl:for-each>
-		
+
 		<xsl:if test="not(position() = last())">
 			<xsl:text>, </xsl:text>
 		</xsl:if>
 	</xsl:template>
-		
+
 	<xsl:template match="res:result" mode="getMetrical">
 		<xsl:param name="label"/>
 		<xsl:param name="subset"/>
 		<xsl:param name="value"/>
-		
+
 		<xsl:variable name="object" as="element()*">
 			<row>
 				<xsl:element name="subset">
@@ -173,14 +192,14 @@
 				</xsl:element>
 				<xsl:element name="average">
 					<!--<xsl:value-of select="format-number(number(res:binding[@name = 'average']/res:literal), '0.00')"/>-->
-					
+
 					<xsl:choose>
 						<xsl:when test="number(res:binding[@name = 'average']/res:literal) &gt; 0">
 							<xsl:value-of select="format-number(number(res:binding[@name = 'average']/res:literal), '0.00')"/>
 						</xsl:when>
 						<xsl:otherwise>null</xsl:otherwise>
 					</xsl:choose>
-					
+
 				</xsl:element>
 				<xsl:if test="string($label)">
 					<xsl:element name="label">
@@ -189,7 +208,7 @@
 				</xsl:if>
 			</row>
 		</xsl:variable>
-		
+
 		<xsl:text>{</xsl:text>
 		<xsl:for-each select="$object/*">
 			<xsl:value-of select="concat('&#x022;', name(), '&#x022;')"/>

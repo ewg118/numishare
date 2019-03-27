@@ -16,7 +16,7 @@ PREFIX un:	<http://www.owl-ontologies.com/Ontology1181490123.owl#>
 PREFIX wordnet: <http://ontologi.es/WordNet/class/>
 PREFIX xsd:	<http://www.w3.org/2001/XMLSchema#>
 
-SELECT ?dist ?label ?lat ?long (count(?dist) as ?count)  WHERE {
+SELECT ?dist ?label ?en_label ?lat ?long (count(?dist) as ?count)  WHERE {
  %STATEMENTS%
  FILTER NOT EXISTS {?coinType skos:broader ?broader}
-} GROUP BY ?dist ?label ?lat ?long ORDER BY ?label
+} GROUP BY ?dist ?label ?en_label ?lat ?long ORDER BY ?label

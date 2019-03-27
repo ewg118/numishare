@@ -4523,6 +4523,7 @@
 	<!-- parse the SPARQL query into a human-readable string -->
 	<xsl:function name="numishare:parseFilter">
 		<xsl:param name="query"/>
+		<xsl:param name="lang"/>
 
 		<xsl:variable name="pieces" select="tokenize(normalize-space($query), ';')"/>
 		<xsl:for-each select="$pieces">
@@ -4530,7 +4531,8 @@
 				<xsl:when test="contains(., '?prop')">
 					<xsl:analyze-string select="." regex="\?prop\s(nm:.*)">
 						<xsl:matching-substring>
-							<xsl:text>Authority/Issuer: </xsl:text>
+							<xsl:value-of select="concat(numishare:regularize_node('authority', $lang), '/', numishare:regularize_node('issuer', $lang))"/>
+							<xsl:text>: </xsl:text>
 							<xsl:value-of select="nomisma:getLabel(regex-group(1))"/>
 						</xsl:matching-substring>
 					</xsl:analyze-string>
@@ -4538,7 +4540,8 @@
 				<xsl:when test="contains(., 'portrait')">
 					<xsl:analyze-string select="." regex="portrait\s(nm:.*)">
 						<xsl:matching-substring>
-							<xsl:text>Portrait: </xsl:text>
+							<xsl:value-of select="numishare:regularize_node('portrait', $lang)"/>
+							<xsl:text>: </xsl:text>
 							<xsl:value-of select="nomisma:getLabel(regex-group(1))"/>
 						</xsl:matching-substring>
 					</xsl:analyze-string>
@@ -4546,7 +4549,8 @@
 				<xsl:when test="contains(., 'deity')">
 					<xsl:analyze-string select="." regex="deity\s&lt;(.*)&gt;">
 						<xsl:matching-substring>
-							<xsl:text>Deity: </xsl:text>
+							<xsl:value-of select="numishare:regularize_node('deity', $lang)"/>
+							<xsl:text>: </xsl:text>
 							<xsl:value-of select="nomisma:getLabel(regex-group(1))"/>
 						</xsl:matching-substring>
 					</xsl:analyze-string>
@@ -4554,7 +4558,8 @@
 				<xsl:when test="contains(., 'region')">
 					<xsl:analyze-string select="." regex="region\s(nm:.*)">
 						<xsl:matching-substring>
-							<xsl:text>Region: </xsl:text>
+							<xsl:value-of select="numishare:regularize_node('region', $lang)"/>
+							<xsl:text>: </xsl:text>
 							<xsl:value-of select="nomisma:getLabel(regex-group(1))"/>
 						</xsl:matching-substring>
 					</xsl:analyze-string>
@@ -4562,7 +4567,8 @@
 				<xsl:when test="contains(., 'nmo:hasTypeSeriesItem')">
 					<xsl:analyze-string select="." regex="nmo:hasTypeSeriesItem\s&lt;(.*)&gt;">
 						<xsl:matching-substring>
-							<xsl:text>Type: </xsl:text>
+							<xsl:value-of select="numishare:regularize_node('coinType', $lang)"/>
+							<xsl:text>: </xsl:text>
 							<xsl:value-of select="tokenize(regex-group(1), '/')[last()]"/>
 						</xsl:matching-substring>
 					</xsl:analyze-string>
@@ -4570,7 +4576,8 @@
 				<xsl:when test="matches(normalize-space(.), '^from\s')">
 					<xsl:analyze-string select="." regex="from\s(.*)">
 						<xsl:matching-substring>
-							<xsl:text>From Date: </xsl:text>
+							<xsl:value-of select="numishare:regularize_node('fromDate', $lang)"/>
+							<xsl:text>: </xsl:text>
 							<xsl:value-of select="numishare:normalizeDate(regex-group(1))"/>
 						</xsl:matching-substring>
 					</xsl:analyze-string>
@@ -4578,7 +4585,8 @@
 				<xsl:when test="matches(normalize-space(.), '^to\s')">
 					<xsl:analyze-string select="." regex="to\s(.*)">
 						<xsl:matching-substring>
-							<xsl:text>To Date: </xsl:text>
+							<xsl:value-of select="numishare:regularize_node('toDate', $lang)"/>
+							<xsl:text>: </xsl:text>
 							<xsl:value-of select="numishare:normalizeDate(regex-group(1))"/>
 						</xsl:matching-substring>
 					</xsl:analyze-string>
@@ -4586,7 +4594,7 @@
 				<xsl:otherwise>
 					<xsl:analyze-string select="." regex="nmo:has([A-Za-z]+)\s(nm:.*)">
 						<xsl:matching-substring>
-							<xsl:value-of select="regex-group(1)"/>
+							<xsl:value-of select="numishare:regularize_node(lower-case(regex-group(1)), $lang)"/>
 							<xsl:text>: </xsl:text>
 							<xsl:value-of select="nomisma:getLabel(regex-group(2))"/>
 						</xsl:matching-substring>

@@ -29,7 +29,14 @@
 				<xsl:attribute name="selected">selected</xsl:attribute>
 			</xsl:if>
 
-			<xsl:value-of select="res:binding[@name = 'label']/res:literal"/>
+			<xsl:choose>
+				<xsl:when test="res:binding[@name='label']">
+					<xsl:value-of select="res:binding[@name = 'label']/res:literal"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="res:binding[@name = 'en_label']/res:literal"/>
+				</xsl:otherwise>
+			</xsl:choose>			
 		</option>
 	</xsl:template>
 
