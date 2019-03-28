@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Author: Ethan Gruber
+	Date Modified: March 2019
+	Function: Develop HTML page structure for NUDS documents for types/specimens. See ../object/html-templates.xsl for generate XSL templates for NUDS and NUDS-Hoard elements
+-->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:res="http://www.w3.org/2005/sparql-results#" xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns:mets="http://www.loc.gov/METS/" xmlns:numishare="https://github.com/ewg118/numishare" xmlns:nm="http://nomisma.org/id/"
@@ -6,15 +11,19 @@
 	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nuds="http://nomisma.org/nuds"
 	exclude-result-prefixes="#all" version="2.0">
 	<xsl:include href="../../templates.xsl"/>
-	<xsl:include href="../../templates-visualize.xsl"/>
-	<!--<xsl:include href="../../templates-analyze.xsl"/>-->
 	<xsl:include href="../../functions.xsl"/>
+	<xsl:include href="../../vis-templates.xsl"/>
 	<xsl:include href="../object/html-templates.xsl"/>
 	<xsl:include href="../sparql/type-examples.xsl"/>
 
 	<!-- URL params -->
 	<xsl:variable name="collection-name" select="substring-before(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/')"/>
-	<xsl:variable name="request-uri" select="concat('http://localhost:', if (//config/server-port castable as xs:integer) then //config/server-port else '8080', substring-before(doc('input:request')/request/request-uri, 'id/'))"/>
+	<xsl:variable name="request-uri"
+		select="
+			concat('http://localhost:', if (//config/server-port castable as xs:integer) then
+				//config/server-port
+			else
+				'8080', substring-before(doc('input:request')/request/request-uri, 'id/'))"/>
 	<xsl:param name="langParam" select="doc('input:request')/request/parameters/parameter[name = 'lang']/value"/>
 	<xsl:param name="lang">
 		<xsl:choose>
@@ -47,22 +56,6 @@
 	<xsl:param name="start" select="doc('input:request')/request/parameters/parameter[name = 'start']/value"/>
 	<xsl:param name="image" select="doc('input:request')/request/parameters/parameter[name = 'image']/value"/>
 	<xsl:param name="side" select="doc('input:request')/request/parameters/parameter[name = 'side']/value"/>
-
-	<!-- shared visualization/analysis params -->
-	<xsl:param name="type" select="doc('input:request')/request/parameters/parameter[name = 'type']/value"/>
-	<xsl:param name="chartType" select="doc('input:request')/request/parameters/parameter[name = 'chartType']/value"/>
-
-	<!-- quantitative analysis parameters -->
-	<xsl:param name="measurement" select="doc('input:request')/request/parameters/parameter[name = 'measurement']/value"/>
-	<xsl:param name="numericType" select="doc('input:request')/request/parameters/parameter[name = 'numericType']/value"/>
-	<xsl:param name="interval" select="doc('input:request')/request/parameters/parameter[name = 'interval']/value"/>
-	<xsl:param name="fromDate" select="doc('input:request')/request/parameters/parameter[name = 'fromDate']/value"/>
-	<xsl:param name="toDate" select="doc('input:request')/request/parameters/parameter[name = 'toDate']/value"/>
-	<xsl:param name="sparqlQuery" select="doc('input:request')/request/parameters/parameter[name = 'sparqlQuery']/value"/>
-	<xsl:variable name="tokenized_sparqlQuery" as="item()*">
-		<xsl:sequence select="tokenize($sparqlQuery, '\|')"/>
-	</xsl:variable>
-	<xsl:variable name="duration" select="number($toDate) - number($fromDate)"/>
 
 	<!-- config variables -->
 	<xsl:variable name="geonames-url">http://api.geonames.org</xsl:variable>
@@ -122,6 +115,21 @@
 						</xsl:if>
 					</object>
 				</xsl:when>
+				<xsl:when test="descendant::nuds:reference[@xlink:arcrole = 'nmo:hasTypeSeriesItem'][string(@xlink:href)]">
+					<object>
+						<xsl:copy-of select="descendant::nuds:typeDesc"/>
+					</object>
+
+					<xsl:for-each select="descendant::nuds:reference[@xlink:arcrole = 'nmo:hasTypeSeriesItem'][string(@xlink:href)]">
+						<xsl:variable name="uri" select="@xlink:href"/>
+
+						<object xlink:href="{$uri}">
+							<xsl:if test="doc-available(concat($uri, '.xml'))">
+								<xsl:copy-of select="document(concat($uri, '.xml'))/nuds:nuds"/>
+							</xsl:if>
+						</object>
+					</xsl:for-each>
+				</xsl:when>
 				<xsl:otherwise>
 					<object>
 						<xsl:copy-of select="descendant::nuds:typeDesc"/>
@@ -164,7 +172,7 @@
 				<xsl:for-each
 					select="
 						distinct-values(descendant::*[not(local-name() = 'typeDesc') and not(local-name() = 'reference')][contains(@xlink:href,
-						'nomisma.org')]/@xlink:href | $nudsGroup/descendant::*[not(local-name() = 'object') and not(local-name() = 'typeDesc')][contains(@xlink:href, 'nomisma.org')]/@xlink:href)">
+						'nomisma.org')]/@xlink:href | $nudsGroup/descendant::*[not(local-name() = 'object') and not(local-name() = 'typeDesc')][contains(@xlink:href, 'nomisma.org')]/@xlink:href | descendant::*[contains(@certainty, 'nomisma.org')]/@certainty | $nudsGroup/descendant::*[contains(@certainty, 'nomisma.org')]/@certainty)">
 					<xsl:value-of select="substring-after(., 'id/')"/>
 					<xsl:if test="not(position() = last())">
 						<xsl:text>|</xsl:text>
@@ -226,7 +234,9 @@
 
 	<xsl:variable name="hasMints" as="xs:boolean">
 		<xsl:choose>
-			<xsl:when test="$rdf//nmo:Mint[geo:location or skos:related] or $regions//mint[@lat and @long] or descendant::nuds:geographic/nuds:geogname[contains(@xlink:href, 'geonames.org')]">true</xsl:when>
+			<xsl:when
+				test="$rdf//nmo:Mint[geo:location or skos:related] or $regions//mint[@lat and @long] or descendant::nuds:geographic/nuds:geogname[contains(@xlink:href, 'geonames.org')]"
+				>true</xsl:when>
 			<xsl:otherwise>false</xsl:otherwise>
 		</xsl:choose>
 	</xsl:variable>
@@ -322,10 +332,12 @@
 								<!-- Add fancyBox -->
 								<link rel="stylesheet" href="{$include_path}/css/jquery.fancybox.css?v=2.1.5" type="text/css" media="screen"/>
 								<script type="text/javascript" src="{$include_path}/javascript/jquery.fancybox.pack.js?v=2.1.5"/>
-								<script type="text/javascript" src="{$include_path}/javascript/highcharts.js"/>
-								<script type="text/javascript" src="{$include_path}/javascript/modules/exporting.js"/>
 								<script type="text/javascript" src="{$include_path}/javascript/display_functions.js"/>
-								<script type="text/javascript" src="{$include_path}/javascript/visualize_functions.js"/>
+
+								<!-- visualization -->
+								<script type="text/javascript" src="https://d3plus.org/js/d3.js"/>
+								<script type="text/javascript" src="https://d3plus.org/js/d3plus.js"/>
+								<script type="text/javascript" src="{$include_path}/javascript/vis_functions.js"/>
 
 								<!-- mapping -->
 								<xsl:if test="$geoEnabled = true()">
@@ -360,14 +372,7 @@
 							<span id="path">
 								<xsl:choose>
 									<xsl:when test="$recordType = 'physical'">
-										<xsl:choose>
-											<xsl:when test="//config/uri_space">
-												<xsl:value-of select="//config/uri_space"/>
-											</xsl:when>
-											<xsl:otherwise>
-												<xsl:value-of select="concat($display_path, 'id/')"/>
-											</xsl:otherwise>
-										</xsl:choose>
+										<xsl:value-of select="concat($display_path, 'id/')"/>
 									</xsl:when>
 									<xsl:when test="$recordType = 'conceptual' and $hasFindspots = false()">
 										<xsl:value-of select="concat($display_path, 'id/')"/>
@@ -389,6 +394,31 @@
 							<span id="lang">
 								<xsl:value-of select="$lang"/>
 							</span>
+
+							<!-- metrical analysis params -->
+							<xsl:if test="$recordType = 'conceptual'">
+								<span id="page">record</span>
+								<span id="interface">metrical</span>
+								<span id="base-query">
+									<xsl:value-of select="concat('nmo:hasTypeSeriesItem &lt;', $objectUri, '&gt;')"/>
+								</span>
+
+								<!-- include templates for form -->
+								<xsl:call-template name="field-template">
+									<xsl:with-param name="template" as="xs:boolean">true</xsl:with-param>
+								</xsl:call-template>
+
+								<xsl:call-template name="compare-container-template">
+									<xsl:with-param name="template" as="xs:boolean">true</xsl:with-param>
+								</xsl:call-template>
+
+								<xsl:call-template name="date-template">
+									<xsl:with-param name="template" as="xs:boolean">true</xsl:with-param>
+								</xsl:call-template>
+
+								<xsl:call-template name="ajax-loader-template"/>
+							</xsl:if>
+
 							<xsl:if test="$recordType = 'conceptual'">
 								<span id="hasFindspots">
 									<xsl:value-of select="$hasFindspots"/>
@@ -491,7 +521,7 @@
 										<xsl:text> | </xsl:text>
 									</xsl:if>
 									<xsl:if test="$hasSpecimens = true()">
-										<a href="#charts">
+										<a href="#metrical">
 											<xsl:value-of select="numishare:normalizeLabel('display_quantitative', $lang)"/>
 										</a>
 									</xsl:if>
@@ -539,7 +569,7 @@
 							<h3>Subtypes</h3>
 							<xsl:apply-templates select="$subtypes//subtype">
 								<xsl:sort select="@recordId" order="ascending"/>
-								
+
 								<xsl:with-param name="uri_space" select="//config/uri_space"/>
 								<xsl:with-param name="endpoint"
 									select="
@@ -553,7 +583,7 @@
 
 						<xsl:if test="$hasSpecimens = true()">
 							<div class="row">
-								<div class="col-md-12">
+								<div class="col-md-12" id="metrical">
 									<xsl:call-template name="charts"/>
 								</div>
 							</div>
@@ -724,10 +754,20 @@
 			<xsl:when test="$mode = 'compare'">
 				<div>
 					<xsl:apply-templates select="nuds:descMeta/nuds:physDesc[child::*]"/>
-					<!-- process $typeDesc differently -->
-					<xsl:apply-templates select="$nudsGroup//nuds:typeDesc">
-						<xsl:with-param name="typeDesc_resource" select="@xlink:href"/>
-					</xsl:apply-templates>
+					<!-- apply-template only to NUDS-explicit typeDesc when there is one or more type references -->
+					<xsl:choose>
+						<xsl:when test="nuds:descMeta/nuds:typeDesc[not(@xlink:href)]">
+							<xsl:apply-templates select="nuds:descMeta/nuds:typeDesc"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:for-each select="$nudsGroup//nuds:typeDesc">
+								<xsl:variable name="typeDesc_resource" select="ancestor::object/@xlink:href"/>
+								<xsl:apply-templates select=".">
+									<xsl:with-param name="typeDesc_resource" select="$typeDesc_resource"/>
+								</xsl:apply-templates>
+							</xsl:for-each>
+						</xsl:otherwise>
+					</xsl:choose>
 					<xsl:apply-templates select="nuds:descMeta/nuds:undertypeDesc[child::*]"/>
 					<xsl:apply-templates select="nuds:descMeta/nuds:refDesc[child::*]"/>
 					<xsl:apply-templates select="nuds:descMeta/nuds:findspotDesc"/>
@@ -783,7 +823,7 @@
 									</div>
 								</div>
 							</xsl:if>
-						</xsl:if>						
+						</xsl:if>
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:otherwise>
@@ -797,28 +837,39 @@
 					<xsl:with-param name="typeDesc_resource" select="@xlink:href"/>
 				</xsl:apply-templates>
 				<xsl:apply-templates select="nuds:descMeta/nuds:refDesc[child::*]"/>
+				<xsl:apply-templates select="nuds:descMeta/nuds:descriptionSet[child::*]"/>
 				<xsl:apply-templates select="nuds:descMeta/nuds:subjectSet[child::*]"/>
 				<xsl:apply-templates select="nuds:descMeta/nuds:noteSet[child::*]"/>
 			</xsl:when>
 			<xsl:otherwise>
 				<div class="col-md-6 {if($lang='ar') then 'pull-right' else ''}">
 					<xsl:apply-templates select="nuds:descMeta/nuds:physDesc[child::*]"/>
-					<!-- process $typeDesc differently -->
-					<xsl:for-each select="$nudsGroup//nuds:typeDesc">
-						<xsl:variable name="typeDesc_resource" select="ancestor::object/@xlink:href"/>
-						<xsl:apply-templates select=".">
-							<xsl:with-param name="typeDesc_resource" select="$typeDesc_resource"/>
-						</xsl:apply-templates>
-					</xsl:for-each>
+
+					<!-- apply-template only to NUDS-explicit typeDesc when there is one or more type references -->
+					<xsl:choose>
+						<xsl:when test="nuds:descMeta/nuds:typeDesc[not(@xlink:href)]">
+							<xsl:apply-templates select="nuds:descMeta/nuds:typeDesc"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:for-each select="$nudsGroup//nuds:typeDesc">
+								<xsl:variable name="typeDesc_resource" select="ancestor::object/@xlink:href"/>
+								<xsl:apply-templates select=".">
+									<xsl:with-param name="typeDesc_resource" select="$typeDesc_resource"/>
+								</xsl:apply-templates>
+							</xsl:for-each>
+						</xsl:otherwise>
+					</xsl:choose>
+
 					<xsl:apply-templates select="nuds:descMeta/nuds:undertypeDesc"/>
 					<xsl:apply-templates select="nuds:descMeta/nuds:findspotDesc"/>
 				</div>
 				<div class="col-md-6 {if($lang='ar') then 'pull-right' else ''}">
 					<xsl:apply-templates select="nuds:descMeta/nuds:refDesc[child::*]"/>
 					<xsl:apply-templates select="nuds:descMeta/nuds:adminDesc[child::*]"/>
+					<xsl:apply-templates select="nuds:descMeta/nuds:descriptionSet[child::*]"/>
 					<xsl:apply-templates select="nuds:descMeta/nuds:subjectSet[child::*]"/>
 					<xsl:apply-templates select="nuds:descMeta/nuds:noteSet[child::*]"/>
-					<xsl:apply-templates select="nuds:control/nuds:rightsStmt"/>
+					<xsl:apply-templates select="nuds:control/nuds:rightsStmt[nuds:rights or nuds:license[@for = 'images'] or nuds:copyrightHolder]"/>
 				</div>
 			</xsl:otherwise>
 		</xsl:choose>
@@ -863,7 +914,7 @@
 						</td>
 						<xsl:if test="$rdf//nmo:Mint[skos:related]">
 							<!-- only display the uncertain mint key if there's an uncertain mint match -->
-							<td style="background-color:#666666;border:2px solid black;width:50px;"/>							
+							<td style="background-color:#666666;border:2px solid black;width:50px;"/>
 							<td style="width:150px;padding-left:6px;">
 								<xsl:value-of select="numishare:regularize_node('mint', $lang)"/>
 								<xsl:text> (uncertain)</xsl:text>
@@ -969,11 +1020,11 @@
 	</xsl:template>
 
 
-	<xsl:template match="nuds:rightsStmt[nuds:rights or nuds:license[@for = 'images']]">
+	<xsl:template match="nuds:rightsStmt">
 		<div class="metadata_section">
 			<h3>Rights</h3>
 			<ul>
-				<xsl:apply-templates select="nuds:license[@for = 'images'] | nuds:rights" mode="descMeta"/>
+				<xsl:apply-templates select="nuds:license[@for = 'images'] | nuds:rights | nuds:copyrightHolder" mode="descMeta"/>
 			</ul>
 		</div>
 	</xsl:template>
@@ -984,29 +1035,34 @@
 				<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
 			</h3>
 			<ul>
-				<xsl:apply-templates/>
+				<xsl:apply-templates mode="descMeta"/>
 			</ul>
 		</div>
 	</xsl:template>
 
-	<xsl:template match="nuds:subject">
-		<li>
-			<b><xsl:value-of select="
-						if (string(@localType)) then
-							@localType
-						else
-							numishare:regularize_node(local-name(), $lang)"/>: </b>
-			<a
-				href="{$display_path}results?q={if (string(@localType)) then @localType else 'subject'}_facet:&#x022;{normalize-space(.)}&#x022;{if (string($langParam)) then concat('&amp;lang=', $langParam) else
-				''}">
-				<xsl:value-of select="."/>
-			</a>
-			<xsl:if test="string(@xlink:href)">
-				<a rel="dcterms:subject" href="{@xlink:href}" target="_blank" class="external_link">
-					<span class="glyphicon glyphicon-new-window"/>
-				</a>
-			</xsl:if>
-		</li>
+	<xsl:template match="nuds:descriptionSet">
+		<div class="metadata_section">
+			<h3>
+				<xsl:value-of select="numishare:regularize_node('description', $lang)"/>
+			</h3>
+
+			<xsl:choose>
+				<xsl:when test="nuds:description[@xml:lang = $lang]">
+					<xsl:apply-templates select="nuds:description[@xml:lang = $lang]"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:choose>
+						<xsl:when test="nuds:description[@xml:lang = 'en']">
+							<xsl:apply-templates select="nuds:description[@xml:lang = 'en']"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:apply-templates select="nuds:description"/>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:otherwise>
+			</xsl:choose>
+
+		</div>
 	</xsl:template>
 
 	<xsl:template match="nuds:note">
@@ -1021,13 +1077,31 @@
 				<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
 			</h4>
 			<ul>
-				<xsl:for-each select="descendant::nuds:chronItem">
-					<li>
-						<xsl:apply-templates select="*" mode="descMeta"/>
-					</li>
-				</xsl:for-each>
+				<xsl:apply-templates select="descendant::nuds:chronItem">
+					<xsl:sort select="number(nuds:date/@standardDate)" data-type="number" order="descending"/>
+				</xsl:apply-templates>
 			</ul>
 		</li>
+	</xsl:template>
+	
+	<xsl:template match="nuds:chronItem">
+		<li>
+			<xsl:apply-templates/>
+		</li>
+	</xsl:template>
+	
+	<xsl:template match="nuds:date">
+		<xsl:choose>
+			<xsl:when test="parent::nuds:chronItem">
+				<strong>
+					<xsl:value-of select="."/>
+				</strong>
+				<xsl:text>:  </xsl:text>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="."/>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 	<xsl:template match="nuds:descripton | nuds:legend" mode="physical">
@@ -1095,7 +1169,7 @@
 					</xsl:if>
 				</xsl:when>
 			</xsl:choose>
-			<xsl:apply-templates select="$nudsGroup//nuds:typeDesc/*[local-name() = $side]" mode="physical"/>
+			<xsl:apply-templates select="$nudsGroup/object[1]/descendant::nuds:typeDesc/*[local-name() = $side]" mode="physical"/>
 		</div>
 
 	</xsl:template>
@@ -1139,78 +1213,80 @@
 
 	<!-- charts template -->
 	<xsl:template name="charts">
-		<xsl:variable name="axis"
-			select="document(concat($request-uri, 'sparql?constraints=', encode-for-uri(concat('nmo:hasTypeSeriesItem &lt;', //config/uri_space, $id, '&gt;')),
-			'&amp;template=avgMeasurement&amp;measurement=axis'))"/>
-		<xsl:variable name="diameter"
-			select="document(concat($request-uri, 'sparql?constraints=', encode-for-uri(concat('nmo:hasTypeSeriesItem &lt;', //config/uri_space, $id, '&gt;')),
-			'&amp;template=avgMeasurement&amp;measurement=diameter'))"/>
-		<xsl:variable name="weight"
-			select="document(concat($request-uri, 'sparql?constraints=', encode-for-uri(concat('nmo:hasTypeSeriesItem &lt;', //config/uri_space, $id, '&gt;')),
-			'&amp;template=avgMeasurement&amp;measurement=weight'))"/>
 
-		<a name="charts"/>
+		<!-- if the SPARQL endpoint is Nomisma.org, use the Nomisma measurement APIs, otherwise query the locally-defined SPARQL endpoint -->
+		<xsl:variable name="measurements" as="element()*">
+			<measurements>
+				<xsl:choose>
+					<xsl:when test="//config/sparql_endpoint = 'http://nomisma.org/query'">
+						<axis>
+							<xsl:value-of select="document(concat('http://nomisma.org/apis/avgAxis?type=', encode-for-uri($objectUri)))"/>
+						</axis>
+						<diameter>
+							<xsl:value-of select="document(concat('http://nomisma.org/apis/avgDiameter?type=', encode-for-uri($objectUri)))"/>
+						</diameter>
+						<weight>
+							<xsl:value-of select="document(concat('http://nomisma.org/apis/avgWeight?type=', encode-for-uri($objectUri)))"/>
+						</weight>
+					</xsl:when>
+					<xsl:otherwise>
+						<axis>
+							<xsl:value-of
+								select="document(concat($url, 'apis/getMetrical?format=xml&amp;measurement=nmo:hasAxis&amp;compare=', encode-for-uri(concat('nmo:hasTypeSeriesItem &lt;', $objectUri, '&gt;'))))//res:binding[@name='average']/res:literal"
+							/>
+						</axis>
+						<diameter>
+							<xsl:value-of
+								select="document(concat($url, 'apis/getMetrical?format=xml&amp;measurement=nmo:hasDiameter&amp;compare=', encode-for-uri(concat('nmo:hasTypeSeriesItem &lt;', $objectUri, '&gt;'))))//res:binding[@name='average']/res:literal"
+							/>
+						</diameter>
+						<weight>
+							<xsl:value-of
+								select="document(concat($url, 'apis/getMetrical?format=xml&amp;measurement=nmo:hasWeight&amp;compare=', encode-for-uri(concat('nmo:hasTypeSeriesItem &lt;', $objectUri, '&gt;'))))//res:binding[@name='average']/res:literal"
+							/>
+						</weight>
+					</xsl:otherwise>
+				</xsl:choose>
+			</measurements>
+		</xsl:variable>
+
 		<h3>
 			<xsl:value-of select="numishare:normalizeLabel('display_quantitative', $lang)"/>
 		</h3>
 
-		<xsl:if test="number($axis) &gt; 0 or number($diameter) &gt; 0 or number($weight) &gt; 0">
+		<xsl:if test="number($measurements//axis) &gt; 0 or number($measurements//diameter) &gt; 0 or number($measurements//weight) &gt; 0">
 			<p>Average measurements for this coin type:</p>
 			<dl class=" {if($lang='ar') then 'dl-horizontal ar' else 'dl-horizontal'}">
-				<xsl:if test="number($axis) &gt; 0">
+				<xsl:if test="number($measurements//axis) &gt; 0">
 					<dt>
 						<xsl:value-of select="numishare:regularize_node('axis', $lang)"/>
 					</dt>
 					<dd>
-						<xsl:value-of select="$axis"/>
+						<xsl:value-of select="format-number($measurements//axis, '##.##')"/>
 					</dd>
 				</xsl:if>
-				<xsl:if test="number($diameter) &gt; 0">
+				<xsl:if test="number($measurements//diameter) &gt; 0">
 					<dt>
 						<xsl:value-of select="numishare:regularize_node('diameter', $lang)"/>
 					</dt>
 					<dd>
-						<xsl:value-of select="$diameter"/>
+						<xsl:value-of select="format-number($measurements//diameter, '##.##')"/>
 					</dd>
 				</xsl:if>
-				<xsl:if test="number($weight) &gt; 0">
+				<xsl:if test="number($measurements//weight) &gt; 0">
 					<dt>
 						<xsl:value-of select="numishare:regularize_node('weight', $lang)"/>
 					</dt>
 					<dd>
-						<xsl:value-of select="$weight"/>
+						<xsl:value-of select="format-number($measurements//weight, '##.##')"/>
 					</dd>
 				</xsl:if>
 			</dl>
 		</xsl:if>
 
-		<xsl:call-template name="measurementForm"/>
-	</xsl:template>
-
-	<xsl:template match="nuds:chronList | nuds:list">
-		<ul class="list">
-			<xsl:apply-templates/>
-		</ul>
-	</xsl:template>
-
-	<xsl:template match="nuds:chronItem | nuds:item">
-		<li>
-			<xsl:apply-templates/>
-		</li>
-	</xsl:template>
-
-	<xsl:template match="nuds:date">
-		<xsl:choose>
-			<xsl:when test="parent::nuds:chronItem">
-				<i>
-					<xsl:value-of select="."/>
-				</i>
-				<xsl:text>:  </xsl:text>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:value-of select="."/>
-			</xsl:otherwise>
-		</xsl:choose>
+		<xsl:call-template name="metrical-form">
+			<xsl:with-param name="mode">record</xsl:with-param>
+		</xsl:call-template>
 	</xsl:template>
 
 	<xsl:template match="nuds:event">

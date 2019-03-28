@@ -4,6 +4,20 @@
 
 	<!-- default document display mode; metadata with images in table-like layout -->
 	<xsl:template match="doc" mode="default">
+		<xsl:variable name="object-path">
+			<xsl:choose>
+				<xsl:when test="//config/collection_type = 'object' and string(//config/uri_space)">
+					<xsl:value-of select="//config/uri_space"/>
+				</xsl:when>
+				<xsl:when test="//config/union_type_catalog/@enabled = true()">
+					<xsl:value-of select="str[@name='uri_space']"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="concat($display_path, 'id/')"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		
 		<div class="row result-doc">
 			<div class="col-md-12">
 				<h4>
@@ -28,6 +42,7 @@
 
 			<xsl:call-template name="result_image">
 				<xsl:with-param name="alignment" select="//config/theme/layouts/*[name() = $pipeline]/image_location"/>
+				<xsl:with-param name="object-path" select="$object-path"/>
 			</xsl:call-template>
 
 			<div class="col-md-7 col-lg-8">
@@ -38,6 +53,20 @@
 	</xsl:template>
 
 	<xsl:template match="doc" mode="grid">
+		<xsl:variable name="object-path">
+			<xsl:choose>
+				<xsl:when test="//config/collection_type = 'object' and string(//config/uri_space)">
+					<xsl:value-of select="//config/uri_space"/>
+				</xsl:when>
+				<xsl:when test="//config/union_type_catalog/@enabled = true()">
+					<xsl:value-of select="str[@name='uri_space']"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="concat($display_path, 'id/')"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		
 		<div class="col-xs-12 col-sm-6 col-md-4 grid-doc">
 			<h4>
 				<xsl:if test="$lang = 'ar'">
@@ -84,6 +113,17 @@
 	</xsl:template>
 
 	<xsl:template match="doc" mode="compare">
+		<xsl:variable name="object-path">
+			<xsl:choose>
+				<xsl:when test="//config/collection_type = 'object' and string(//config/uri_space)">
+					<xsl:value-of select="//config/uri_space"/>
+				</xsl:when>				
+				<xsl:otherwise>
+					<xsl:value-of select="concat($display_path, 'id/')"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		
 		<div class="row result-doc">
 			<div class="col-md-12">
 				<h4>
@@ -294,19 +334,21 @@
 							</xsl:for-each>
 						</dd>
 					</xsl:if>
-					<xsl:if test="arr[@name = 'provenance_facet']">
+					<!--<xsl:if test="arr[@name = 'provenance_facet']">
 						<dt>
 							<xsl:value-of select="numishare:regularize_node('provenance', $lang)"/>
 						</dt>
 						<dd>
 							<xsl:for-each select="arr[@name = 'provenance_facet']/str">
+								<xsl:sort select="substring-before(., ':')" order="descending"/>
+								
 								<xsl:value-of select="."/>
 								<xsl:if test="not(position() = last())">
-									<xsl:text>, </xsl:text>
+									<br/>
 								</xsl:if>
 							</xsl:for-each>
 						</dd>
-					</xsl:if>
+					</xsl:if>-->
 				</xsl:otherwise>
 			</xsl:choose>
 			<!-- display appropriate sort category if it isn't one of the default display fields -->
@@ -650,6 +692,8 @@
 
 	<xsl:template name="result_image">
 		<xsl:param name="alignment"/>
+		<xsl:param name="object-path"/>
+		
 		<div class="col-md-5 col-lg-4 {if ($alignment = 'right') then 'pull-right' else ''}">
 			<xsl:choose>
 				<xsl:when test="str[@name = 'recordType'] = 'physical'">
@@ -738,16 +782,9 @@
 								<xsl:choose>
 									<xsl:when test="contains($field, 'symbol_')">
 										<xsl:variable name="position" select="tokenize($field, '_')[3]"/>
-										<xsl:variable name="langParam"
-											select="
-												if (string($lang)) then
-													$lang
-												else
-													'en'"/>
-
 										<xsl:choose>
-											<xsl:when test="$positions//position[@value = $position]/label[@lang = $langParam]">
-												<xsl:value-of select="$positions//position[@value = $position]/label[@lang = $langParam]"/>
+											<xsl:when test="$positions//position[@value = $position]/label[@lang = $lang]">
+												<xsl:value-of select="$positions//position[@value = $position]/label[@lang = $lang]"/>
 											</xsl:when>
 											<xsl:otherwise>
 												<xsl:value-of select="concat(upper-case(substring($position, 1, 1)), substring($position, 2))"/>
@@ -913,23 +950,16 @@
 									<b>
 										<xsl:choose>
 											<xsl:when test="contains($field, 'symbol_')">
-												<xsl:variable name="position" select="tokenize($field, '_')[3]"/>
-												<xsl:variable name="langParam"
-													select="
-														if (string($lang)) then
-															$lang
-														else
-															'en'"/>
+												<xsl:variable name="position" select="tokenize($field, '_')[3]"/>												
 
 												<xsl:choose>
-													<xsl:when test="$positions//position[@value = $position]/label[@lang = $langParam]">
-														<xsl:value-of select="$positions//position[@value = $position]/label[@lang = $langParam]"/>
+													<xsl:when test="$positions//position[@value = $position]/label[@lang = $lang]">
+														<xsl:value-of select="$positions//position[@value = $position]/label[@lang = $lang]"/>
 													</xsl:when>
 													<xsl:otherwise>
 														<xsl:value-of select="concat(upper-case(substring($position, 1, 1)), substring($position, 2))"/>
 													</xsl:otherwise>
 												</xsl:choose>
-
 											</xsl:when>
 											<xsl:otherwise>
 												<xsl:value-of select="numishare:normalize_fields($field, $lang)"/>
@@ -1331,7 +1361,7 @@
 		</xsl:variable>
 		<xsl:variable name="sort_categories" select="tokenize(normalize-space($sort_categories_string), ',')"/>
 		<div class="row">
-			<div class="{if ($mode = 'compare') then 'col-md-12' else 'col-md-6 col-sm-9'}">
+			<div class="{if ($mode = 'compare') then 'col-md-12' else 'col-md-9'}">
 				<form role="form" class="sortForm form-inline" action="results" method="GET">
 					<div class="form-group">
 						<select class="sortForm_categories form-control">
