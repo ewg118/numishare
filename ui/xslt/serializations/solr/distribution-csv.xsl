@@ -8,6 +8,19 @@
 	<xsl:param name="type" select="doc('input:request')/request/parameters/parameter[name = 'type']/value"/>
 	<!-- query params -->
 	<xsl:param name="compare" select="doc('input:request')/request/parameters/parameter[name = 'compare']/value"/>
+	
+	<!-- language parameters -->
+	<xsl:param name="langParam" select="doc('input:request')/request/parameters/parameter[name = 'lang']/value"/>
+	<xsl:param name="lang">
+		<xsl:choose>
+			<xsl:when test="string($langParam)">
+				<xsl:value-of select="$langParam"/>
+			</xsl:when>
+			<xsl:when test="string(doc('input:request')/request//header[name[. = 'accept-language']]/value)">
+				<xsl:value-of select="numishare:parseAcceptLanguage(doc('input:request')/request//header[name[. = 'accept-language']]/value)[1]"/>
+			</xsl:when>
+		</xsl:choose>
+	</xsl:param>
 
 	<xsl:template match="/">
 		<xsl:text>"group","value",</xsl:text>
@@ -55,7 +68,7 @@
 		<xsl:variable name="object" as="element()*">
 			<row>
 				<xsl:element name="subset">
-					<xsl:value-of select="$query"/>
+					<xsl:value-of select="numishare:parseSolrQuery($query, $lang)"/>
 				</xsl:element>
 				<xsl:element name="{$dist}">
 					<xsl:value-of select="@name"/>

@@ -780,16 +780,9 @@
 								<xsl:choose>
 									<xsl:when test="contains($field, 'symbol_')">
 										<xsl:variable name="position" select="tokenize($field, '_')[3]"/>
-										<xsl:variable name="langParam"
-											select="
-												if (string($lang)) then
-													$lang
-												else
-													'en'"/>
-
 										<xsl:choose>
-											<xsl:when test="$positions//position[@value = $position]/label[@lang = $langParam]">
-												<xsl:value-of select="$positions//position[@value = $position]/label[@lang = $langParam]"/>
+											<xsl:when test="$positions//position[@value = $position]/label[@lang = $lang]">
+												<xsl:value-of select="$positions//position[@value = $position]/label[@lang = $lang]"/>
 											</xsl:when>
 											<xsl:otherwise>
 												<xsl:value-of select="concat(upper-case(substring($position, 1, 1)), substring($position, 2))"/>
@@ -955,23 +948,16 @@
 									<b>
 										<xsl:choose>
 											<xsl:when test="contains($field, 'symbol_')">
-												<xsl:variable name="position" select="tokenize($field, '_')[3]"/>
-												<xsl:variable name="langParam"
-													select="
-														if (string($lang)) then
-															$lang
-														else
-															'en'"/>
+												<xsl:variable name="position" select="tokenize($field, '_')[3]"/>												
 
 												<xsl:choose>
-													<xsl:when test="$positions//position[@value = $position]/label[@lang = $langParam]">
-														<xsl:value-of select="$positions//position[@value = $position]/label[@lang = $langParam]"/>
+													<xsl:when test="$positions//position[@value = $position]/label[@lang = $lang]">
+														<xsl:value-of select="$positions//position[@value = $position]/label[@lang = $lang]"/>
 													</xsl:when>
 													<xsl:otherwise>
 														<xsl:value-of select="concat(upper-case(substring($position, 1, 1)), substring($position, 2))"/>
 													</xsl:otherwise>
 												</xsl:choose>
-
 											</xsl:when>
 											<xsl:otherwise>
 												<xsl:value-of select="numishare:normalize_fields($field, $lang)"/>

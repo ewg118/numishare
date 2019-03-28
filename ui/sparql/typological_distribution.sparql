@@ -19,4 +19,4 @@ PREFIX xsd:	<http://www.w3.org/2001/XMLSchema#>
 SELECT ?dist ?label ?en_label ?lat ?long (count(?dist) as ?count)  WHERE {
  %STATEMENTS%
  FILTER NOT EXISTS {?coinType skos:broader ?broader}
-} GROUP BY ?dist ?label ?en_label ?lat ?long ORDER BY ?label
+} GROUP BY ?dist ?label ?en_label ?lat ?long ORDER BY ?en_label

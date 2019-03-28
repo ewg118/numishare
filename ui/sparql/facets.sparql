@@ -16,6 +16,6 @@ PREFIX un:	<http://www.owl-ontologies.com/Ontology1181490123.owl#>
 PREFIX wordnet: <http://ontologi.es/WordNet/class/>
 PREFIX xsd:	<http://www.w3.org/2001/XMLSchema#>
 
-SELECT DISTINCT ?facet ?label  WHERE {
+SELECT DISTINCT ?facet ?label ?en_label WHERE {
  %STATEMENTS%
-}  ORDER BY ?label
+}  ORDER BY ?label ?en_label

@@ -4519,6 +4519,58 @@
 	</xsl:template>
 
 	<!-- ***** Visualization Interface Functions ***** -->
+	<!-- parse the Solr query into a human-readable string -->
+	<xsl:function name="numishare:parseSolrQuery">
+		<xsl:param name="query"/>
+		<xsl:param name="lang"/>
+		
+		<xsl:variable name="tokenized_q" select="tokenize(normalize-space($query), ' AND ')"/>
+		<xsl:variable name="pieces" as="element()*">
+			<pieces>
+				<xsl:for-each select="$tokenized_q">
+					<xsl:variable name="piece" select="normalize-space(.)"/>
+					
+					<piece>
+						<xsl:choose>
+							<xsl:when test="contains($piece, ':')">
+								<xsl:choose>
+									<xsl:when test="$piece = '*:*'">
+										<xsl:text>All records</xsl:text>
+									</xsl:when>
+									<xsl:when test="substring($piece, 1, 1) = '('">
+										<!-- remove parentheses and parse the fields separated by 'OR' -->
+										<xsl:variable name="or_frags" select="tokenize(replace(replace($piece, '\(', ''), '\)', ''), ' OR ')"/>										
+										<xsl:variable name="field" select="substring-before($or_frags[1], ':')"/>
+										
+										<xsl:value-of select="numishare:normalize_fields($field, $lang)"/>
+										<xsl:text>: </xsl:text>
+										<xsl:for-each select="$or_frags">
+											<xsl:value-of select="replace(substring-after(., ':'), '&#x022;', '')"/>
+											<xsl:if test="not(position() = last())">
+												<xsl:text> or </xsl:text>
+											</xsl:if>
+										</xsl:for-each>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:value-of select="numishare:normalize_fields(substring-before($piece, ':'), $lang)"/>
+										<xsl:text>: </xsl:text>
+										<xsl:value-of select="replace(substring-after($piece, ':'), '&#x022;', '')"/>
+									</xsl:otherwise>
+								</xsl:choose>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:value-of select="numishare:normalize_fields('fulltext', $lang)"/>
+								<xsl:text>: </xsl:text>
+								<xsl:value-of select="replace($piece, '&#x022;', '')"/>
+							</xsl:otherwise>
+						</xsl:choose>
+					</piece>
+				</xsl:for-each>
+			</pieces>
+		</xsl:variable>
+		
+		<xsl:value-of select="string-join($pieces//piece, ' &amp; ')"/>		
+	</xsl:function>
 
 	<!-- parse the SPARQL query into a human-readable string -->
 	<xsl:function name="numishare:parseFilter">
@@ -4533,7 +4585,7 @@
 						<xsl:matching-substring>
 							<xsl:value-of select="concat(numishare:regularize_node('authority', $lang), '/', numishare:regularize_node('issuer', $lang))"/>
 							<xsl:text>: </xsl:text>
-							<xsl:value-of select="nomisma:getLabel(regex-group(1))"/>
+							<xsl:value-of select="nomisma:getLabel(regex-group(1), $lang)"/>
 						</xsl:matching-substring>
 					</xsl:analyze-string>
 				</xsl:when>
@@ -4542,7 +4594,7 @@
 						<xsl:matching-substring>
 							<xsl:value-of select="numishare:regularize_node('portrait', $lang)"/>
 							<xsl:text>: </xsl:text>
-							<xsl:value-of select="nomisma:getLabel(regex-group(1))"/>
+							<xsl:value-of select="nomisma:getLabel(regex-group(1), $lang)"/>
 						</xsl:matching-substring>
 					</xsl:analyze-string>
 				</xsl:when>
@@ -4551,7 +4603,7 @@
 						<xsl:matching-substring>
 							<xsl:value-of select="numishare:regularize_node('deity', $lang)"/>
 							<xsl:text>: </xsl:text>
-							<xsl:value-of select="nomisma:getLabel(regex-group(1))"/>
+							<xsl:value-of select="nomisma:getLabel(regex-group(1), $lang)"/>
 						</xsl:matching-substring>
 					</xsl:analyze-string>
 				</xsl:when>
@@ -4560,7 +4612,7 @@
 						<xsl:matching-substring>
 							<xsl:value-of select="numishare:regularize_node('region', $lang)"/>
 							<xsl:text>: </xsl:text>
-							<xsl:value-of select="nomisma:getLabel(regex-group(1))"/>
+							<xsl:value-of select="nomisma:getLabel(regex-group(1), $lang)"/>
 						</xsl:matching-substring>
 					</xsl:analyze-string>
 				</xsl:when>
@@ -4596,7 +4648,7 @@
 						<xsl:matching-substring>
 							<xsl:value-of select="numishare:regularize_node(lower-case(regex-group(1)), $lang)"/>
 							<xsl:text>: </xsl:text>
-							<xsl:value-of select="nomisma:getLabel(regex-group(2))"/>
+							<xsl:value-of select="nomisma:getLabel(regex-group(2), $lang)"/>
 						</xsl:matching-substring>
 					</xsl:analyze-string>
 				</xsl:otherwise>
@@ -4609,8 +4661,9 @@
 
 	<xsl:function name="nomisma:getLabel">
 		<xsl:param name="uri"/>
+		<xsl:param name="lang"/>
 
-		<xsl:variable name="service" select="concat('http://nomisma.org/apis/getLabel?uri=', $uri)"/>
+		<xsl:variable name="service" select="concat('http://nomisma.org/apis/getLabel?uri=', $uri, '&amp;lang=', $lang)"/>
 
 		<xsl:value-of select="document($service)/response"/>
 	</xsl:function>

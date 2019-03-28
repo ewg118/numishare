@@ -103,7 +103,7 @@
 
 		<xsl:variable name="total" select="sum(descendant::res:binding[@name = 'count']/res:literal)"/>
 
-		<xsl:apply-templates select="descendant::res:result[res:binding[@name = 'label']/res:literal]" mode="getDistribution">
+		<xsl:apply-templates select="descendant::res:result" mode="getDistribution">
 			<xsl:with-param name="query" select="$query"/>
 			<xsl:with-param name="total" select="$total"/>
 		</xsl:apply-templates>

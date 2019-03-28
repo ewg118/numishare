@@ -96,7 +96,6 @@
 					<!-- config variables -->
 					<xsl:variable name="solr-url" select="concat(/config/solr_published, 'select/')"/>
 
-
 					<xsl:variable name="service">
 						<xsl:choose>
 							<xsl:when test="string($lang)">
