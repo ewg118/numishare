@@ -181,7 +181,7 @@ $(document).ready(function () {
         if (prop == 'from' || prop == 'to') {
             addDate(next);
         } else {
-            getFacets(filter, prop, type, next, path, urlParams['lang']);
+            getFacets(filter, prop, type, next, path, urlParams[ 'lang']);
         }
         
         //display duplicate property alert if there is more than one from or to date
@@ -266,7 +266,7 @@ $(document).ready(function () {
         } else if (prop == 'nmo:hasTypeSeriesItem') {
             validate(formId);
         } else {
-            getFacets(filter, prop, type, next, path, urlParams['lang']);
+            getFacets(filter, prop, type, next, path, urlParams[ 'lang']);
         }
     });
     
@@ -319,7 +319,7 @@ $(document).ready(function () {
         if (prop == 'from' || prop == 'to') {
             addDate(next);
         } else {
-            getFacets(filter, prop, type, next, path, urlParams['lang']);
+            getFacets(filter, prop, type, next, path, urlParams[ 'lang']);
         }
         
         //display duplicate property alert if there is more than one from or to date
@@ -691,10 +691,10 @@ function renderDistChart(path, urlParams) {
     $('#distribution-chart').html('');
     $('#distribution-chart').height(600);
     
-    if (urlParams['dist'].indexOf('nmo:has') != -1) {
-        var distValue =  urlParams['dist'].replace('nmo:has', '').toLowerCase();
+    if (urlParams[ 'dist'].indexOf('nmo:has') != -1) {
+        var distValue = urlParams[ 'dist'].replace('nmo:has', '').toLowerCase();
     } else {
-        var distValue = urlParams['dist'];
+        var distValue = urlParams[ 'dist'];
     }
     var distLabel = $('select[name=dist] option:selected').text();
     
@@ -708,7 +708,8 @@ function renderDistChart(path, urlParams) {
     function (data) {
         console.log(data);
         
-        var visualization = d3plus.viz().container("#distribution-chart").data(data).type("bar").id('subset').x({ 'value': distValue, 'label': distLabel
+        var visualization = d3plus.viz().container("#distribution-chart").data(data).type("bar").id('subset').x({
+            'value': distValue, 'label': distLabel
         }).y(y).legend({
             "value": true, "size": 50
         }).color({
