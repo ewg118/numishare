@@ -85,7 +85,11 @@
 	<page path="/numishare/[^\/]+/apis/getNuds" view="xpl/models/xquery/aggregate-ids.xpl"/>
 	<page path="/numishare/[^\/]+/apis/getRDF" model="xpl/models/xquery/aggregate-ids.xpl" view="xpl/views/serializations/object/rdf.xpl"/>
 	<page path="/numishare/[^\/]+/apis/search" model="xpl/models/solr/feed.xpl" view="xpl/views/apis/search.xpl"/>
-	<page path="/numishare/[^\/]+/apis/type-examples" model="xpl/models/config.xpl" view="xpl/models/sparql/type-examples.xpl"/>
+	<page path="/numishare/[^\/]+/apis/type-examples" model="xpl/models/config.xpl" view="xpl/models/sparql/type-examples.xpl"/>	
+	<page path="/numishare/[^\/]+/apis/getDistribution" model="xpl/models/sparql/getDistribution.xpl" view="xpl/controllers/sparql/visualization.xpl"/>
+	<page path="/numishare/[^\/]+/apis/getMetrical" model="xpl/models/sparql/getMetrical.xpl" view="xpl/controllers/sparql/visualization.xpl"/>
+	<page path="/numishare/[^\/]+/apis/getSolrDistribution" model="xpl/models/solr/getDistribution.xpl" view="xpl/controllers/sparql/visualization.xpl"/>
+	
 	<!-- OpenRefine reconciliation services -->	
 	<page path="/numishare/[^\/]+/apis/reconcile/preview" model="xpl/models/object/get-id.xpl" view="xpl/views/serializations/nuds/reconcile-preview-html.xpl"/>
 	<service path="/numishare/[^\/]+/apis/reconcile/suggest/entity" model="xpl/models/solr/reconcile-suggest.xpl" view="xpl/views/serializations/solr/reconcile-json.xpl" public-methods="GET HEAD POST" />
@@ -129,8 +133,6 @@
 	<page path="/numishare/[^\/]+/get_hoards" model="xpl/models/solr/get_hoards.xpl" view="xpl/views/ajax/get_hoards.xpl"/>	
 	<page path="/numishare/[^\/]+/get_search_facets" model="xpl/models/solr/get_search_facets.xpl" view="xpl/views/ajax/get_search_facets.xpl"/>	
 	<page path="/numishare/[^\/]+/get_subtypes" view="xpl/models/xquery/get-subtypes.xpl"/>
-	<page path="/numishare/[^\/]+/get_vis_custom" model="xpl/models/solr/get_vis_custom.xpl" view="xpl/views/ajax/get_vis_custom.xpl"/>
-	<page path="/numishare/[^\/]+/get_vis_quant" model="xpl/models/solr/get_vis_quant.xpl" view="xpl/views/ajax/get_vis_quant.xpl"/>
 	<page path="/numishare/[^\/]+/results_ajax" model="xpl/models/solr/results_ajax.xpl" view="xpl/views/ajax/results_ajax.xpl"/>
 	
 	<!-- **** SPARQL WIDGET **** -->
