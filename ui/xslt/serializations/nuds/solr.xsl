@@ -808,14 +808,37 @@
 
 		<xsl:apply-templates select="nuds:identifier"/>
 
-		<xsl:for-each select="nuds:provenance/nuds:chronList/nuds:chronItem/nuds:previousColl | nuds:provenance/nuds:chronList/nuds:chronItem/nuds:auction/nuds:saleCatalog">
-			<field name="provenance_text">
-				<xsl:value-of select="."/>
-			</field>
-			<field name="provenance_facet">
-				<xsl:value-of select="."/>
-			</field>
-		</xsl:for-each>
+		<xsl:apply-templates select="nuds:provenance/nuds:chronList/nuds:chronItem"/>		
+	</xsl:template>
+	
+	<xsl:template match="nuds:chronItem">
+		<xsl:choose>
+			<xsl:when test="nuds:date">
+				<field name="provenance_text">
+					<xsl:value-of select="nuds:date"/>
+					<xsl:text> </xsl:text>
+					<xsl:apply-templates select="nuds:acquiredFrom|nuds:auction/nuds:saleCatalog|nuds:previousColl/nuds:description" mode="provenance"/>
+				</field>
+				<field name="provenance_facet">
+					<xsl:value-of select="nuds:date"/>
+					<xsl:text>: </xsl:text>
+					<xsl:apply-templates select="nuds:acquiredFrom|nuds:auction/nuds:saleCatalog|nuds:previousColl/nuds:description" mode="provenance"/>
+				</field>
+			</xsl:when>
+			<xsl:otherwise>
+				<field name="provenance_text">			
+					<xsl:apply-templates select="nuds:acquiredFrom|nuds:auction/nuds:saleCatalog|nuds:previousColl/nuds:description" mode="provenance"/>
+				</field>
+				
+				<field name="provenance_facet">
+					<xsl:apply-templates select="nuds:acquiredFrom|nuds:auction/nuds:saleCatalog|nuds:previousColl/nuds:description" mode="provenance"/>
+				</field>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+	
+	<xsl:template match="*" mode="provenance">
+		<xsl:value-of select="."/>
 	</xsl:template>
 
 	<xsl:template match="nuds:identifier">

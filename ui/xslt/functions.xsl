@@ -1875,7 +1875,7 @@
 				<xsl:choose>
 					<xsl:when test="$label = 'acquiredFrom'">Acquired From</xsl:when>
 					<xsl:when test="$label = 'adminDesc'">Administrative History</xsl:when>
-					<xsl:when test="$label = 'chronItem'">Chronological Item</xsl:when>
+					<xsl:when test="$label = 'chronItem'">Event</xsl:when>
 					<xsl:when test="$label = 'chronList'">Chronological List</xsl:when>
 					<xsl:when test="$label = 'coinType'">Coin Type</xsl:when>
 					<xsl:when test="$label = 'closing_date'">Closing Date</xsl:when>

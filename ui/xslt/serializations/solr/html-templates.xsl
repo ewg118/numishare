@@ -340,9 +340,11 @@
 						</dt>
 						<dd>
 							<xsl:for-each select="arr[@name = 'provenance_facet']/str">
+								<xsl:sort select="substring-before(., ':')" order="descending"/>
+								
 								<xsl:value-of select="."/>
 								<xsl:if test="not(position() = last())">
-									<xsl:text>, </xsl:text>
+									<br/>
 								</xsl:if>
 							</xsl:for-each>
 						</dd>

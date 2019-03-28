@@ -1077,13 +1077,31 @@
 				<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
 			</h4>
 			<ul>
-				<xsl:for-each select="descendant::nuds:chronItem">
-					<li>
-						<xsl:apply-templates select="*" mode="descMeta"/>
-					</li>
-				</xsl:for-each>
+				<xsl:apply-templates select="descendant::nuds:chronItem">
+					<xsl:sort select="number(nuds:date/@standardDate)" data-type="number" order="descending"/>
+				</xsl:apply-templates>
 			</ul>
 		</li>
+	</xsl:template>
+	
+	<xsl:template match="nuds:chronItem">
+		<li>
+			<xsl:apply-templates/>
+		</li>
+	</xsl:template>
+	
+	<xsl:template match="nuds:date">
+		<xsl:choose>
+			<xsl:when test="parent::nuds:chronItem">
+				<strong>
+					<xsl:value-of select="."/>
+				</strong>
+				<xsl:text>:  </xsl:text>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="."/>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 	<xsl:template match="nuds:descripton | nuds:legend" mode="physical">
@@ -1269,32 +1287,6 @@
 		<xsl:call-template name="metrical-form">
 			<xsl:with-param name="mode">record</xsl:with-param>
 		</xsl:call-template>
-	</xsl:template>
-
-	<xsl:template match="nuds:chronList | nuds:list">
-		<ul class="list">
-			<xsl:apply-templates/>
-		</ul>
-	</xsl:template>
-
-	<xsl:template match="nuds:chronItem | nuds:item">
-		<li>
-			<xsl:apply-templates/>
-		</li>
-	</xsl:template>
-
-	<xsl:template match="nuds:date">
-		<xsl:choose>
-			<xsl:when test="parent::nuds:chronItem">
-				<i>
-					<xsl:value-of select="."/>
-				</i>
-				<xsl:text>:  </xsl:text>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:value-of select="."/>
-			</xsl:otherwise>
-		</xsl:choose>
 	</xsl:template>
 
 	<xsl:template match="nuds:event">
