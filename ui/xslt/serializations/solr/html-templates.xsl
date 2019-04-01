@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Author: Ethan Gruber
+	Date last modified: April 2019
+	Function: Generic templates for serializing Solr documents for browse, ajax_results, and the compare section into HTML.
+		Inludes templates for serializing the numishareResults XML document into HTML for example specimens for coin type corpora -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	xmlns:numishare="https://github.com/ewg118/numishare" xmlns:res="http://www.w3.org/2005/sparql-results#" exclude-result-prefixes="#all" version="2.0">
 
@@ -104,9 +108,9 @@
 						</a>
 					</xsl:if>
 				</xsl:when>
-				<xsl:when test="str[@name = 'recordType'] = 'conceptual'">
+				<xsl:when test="str[@name = 'recordType'] = 'conceptual' and matches(/content/config/sparql_endpoint, '^https?://')">
 					<xsl:variable name="id" select="str[@name = 'recordId']"/>
-					<xsl:apply-templates select="$sparqlResult//group[@id = $id]" mode="results"/>
+					<xsl:apply-templates select="doc('input:numishareResults')//group[@id = $id]" mode="results"/>
 				</xsl:when>
 			</xsl:choose>
 		</div>
@@ -712,9 +716,9 @@
 						</a>
 					</xsl:if>
 				</xsl:when>
-				<xsl:when test="str[@name = 'recordType'] = 'conceptual'">
+				<xsl:when test="str[@name = 'recordType'] = 'conceptual' and matches(/content/config/sparql_endpoint, '^https?://')">
 					<xsl:variable name="id" select="str[@name = 'recordId']"/>
-					<xsl:apply-templates select="$sparqlResult//group[@id = $id]" mode="results"/>
+					<xsl:apply-templates select="doc('input:numishareResults')//group[@id = $id]" mode="results"/>
 				</xsl:when>
 			</xsl:choose>
 		</div>

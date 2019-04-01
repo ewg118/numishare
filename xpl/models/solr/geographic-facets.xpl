@@ -48,7 +48,22 @@
 						</xsl:when>
 					</xsl:choose>
 				</xsl:param>
-				<xsl:param name="q" select="doc('input:request')/request/parameters/parameter[name='q']/value"/>
+				
+				<xsl:param name="department" select="doc('input:request')/request/parameters/parameter[name='department']/value"/>
+				<xsl:param name="q">
+					<xsl:choose>
+						<xsl:when test="string($department)">
+							<xsl:value-of select="concat('department_facet:&#x022;', $department, '&#x022;')"/>
+							<xsl:if test="string(doc('input:request')/request/parameters/parameter[name='q']/value)">
+								<xsl:text> AND </xsl:text>
+								<xsl:value-of select="doc('input:request')/request/parameters/parameter[name='q']/value"/>
+							</xsl:if>						
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="doc('input:request')/request/parameters/parameter[name='q']/value"/>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:param>
 				<xsl:param name="rows">0</xsl:param>
 				
 				<!-- facet variable -->

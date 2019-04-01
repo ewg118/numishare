@@ -51,7 +51,6 @@
 
 	<!-- config variables -->
 	<xsl:variable name="collection_type" select="/content/config/collection_type"/>
-	<xsl:variable name="sparql_endpoint" select="/content/config/sparql_endpoint"/>
 	<xsl:variable name="url" select="/content/config/url"/>
 	<xsl:variable name="positions" as="node()*">
 		<config>
@@ -60,7 +59,7 @@
 	</xsl:variable>
 
 	<!-- get block of images from SPARQL endpoint, via nomisma API -->
-	<xsl:variable name="sparqlResult" as="element()*">
+	<!--<xsl:variable name="sparqlResult" as="element()*">
 		<xsl:if test="string($sparql_endpoint) and //config/collection_type='cointype'">
 			<xsl:choose>
 				<xsl:when test="//config/union_type_catalog/@enabled = true()">
@@ -85,7 +84,7 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:if>
-	</xsl:variable>
+	</xsl:variable>-->
 
 	<xsl:template match="/">
 		<html>
@@ -182,17 +181,14 @@
 	</xsl:template>
 
 	<xsl:template name="results">
-		<!--<xsl:copy-of select="$sparqlResult"/>-->
 		<div class="container-fluid">
-			<!--<xsl:copy-of select="doc('input:request')"/>-->
-
 			<xsl:if test="$lang='ar'">
 				<xsl:attribute name="style">direction: rtl;</xsl:attribute>
 			</xsl:if>
 			
 			<div class="row">
 				<div class="col-md-9 col-md-push-3">
-					<div class="container-fluid">					
+					<div class="container-fluid">
 						<xsl:call-template name="remove_facets"/>
 						<xsl:choose>
 							<xsl:when test="$numFound &gt; 0">

@@ -104,12 +104,13 @@
 	<page path="/numishare/[^\/]+/id/(.*)\.solr" model="xpl/models/object/get-id.xpl" view="xpl/views/serializations/object/solr.xpl"/>	
 	<page path="/numishare/[^\/]+/id/(.*)$" model="xpl/models/object/get-id.xpl" view="xpl/controllers/conneg-id.xpl"/>
 	<page path="/numishare/[^\/]+/map/(.*)" model="xpl/models/object/get-id.xpl" view="xpl/views/serializations/object/html-map.xpl"/>
+	
+	<!-- IIIF manifest pipelines -->
 	<page path="/numishare/[^\/]+/manifest/(.*)$" model="xpl/models/object/get-id.xpl" view="xpl/controllers/iiif-manifest.xpl"/>
 	<page path="/numishare/[^\/]+/manifest/[obverse?|reverse?]/?(.*)$" model="xpl/models/object/get-id.xpl" view="xpl/controllers/iiif-manifest.xpl"/>
 	<page path="/numishare/[^\/]+/manifest/(.*)/sequence/default$" model="xpl/models/object/get-id.xpl" view="xpl/controllers/iiif-manifest.xpl"/>
 	<page path="/numishare/[^\/]+/manifest/(.*)/canvas/[obverse|reverse]$" model="xpl/models/object/get-id.xpl" view="xpl/controllers/iiif-manifest.xpl"/>
 	<page path="/numishare/[^\/]+/manifest/(.*)/annotation/[obverse|reverse]$" model="xpl/models/object/get-id.xpl" view="xpl/controllers/iiif-manifest.xpl"/>
-	
 	
 	<!-- symbols -->	
 	<page path="/numishare/[^\/]+/symbol/(.*)\.rdf" view="xpl/models/symbol/get.xpl"/>

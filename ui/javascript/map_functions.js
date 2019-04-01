@@ -9,10 +9,18 @@ $(document).ready(function () {
 	var popupStatus = 0;
 	var firstrun = true;
 	var langStr = getURLParameter('lang');
+	var departmentStr = getURLParameter('department');
+	
 	if (langStr == 'null') {
 		var lang = '';
 	} else {
 		var lang = langStr;
+	}
+	
+	if (departmentStr == 'null') {
+		var department = '';
+	} else {
+		var department = departmentStr;
 	}
 	
 	var path = $('#path').text();
@@ -71,17 +79,17 @@ $(document).ready(function () {
 		});
 		
 		//add mintLayer from AJAX
-		var mintLayer = L.geoJson.ajax(path + "mints.geojson?q=" + q, {
+		var mintLayer = L.geoJson.ajax(path + "mints.geojson?q=" + q + '&department=' + department, {
 			pointToLayer: renderPoints
 		}).addTo(map);
 		
-		var subjectLayer = L.geoJson.ajax(path + "subjects.geojson?q=" + q, {
+		var subjectLayer = L.geoJson.ajax(path + "subjects.geojson?q=" + q + '&department=' + department, {
 			pointToLayer: renderPoints
 		}).addTo(map);
 		
 		//add hoards, but don't make visible by default
 		var markers = '';
-		var findspotLayer = L.geoJson.ajax(path + "findspots.geojson?q=" + q, {
+		var findspotLayer = L.geoJson.ajax(path + "findspots.geojson?q=" + q + '&department=' + department, {
 			pointToLayer: renderPoints
 		});
 		

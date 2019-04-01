@@ -62,38 +62,9 @@
 	<xsl:variable name="tokenized_q" select="tokenize($q, ' AND ')"/>
 	<xsl:variable name="numFound" select="//result[@name='response']/@numFound" as="xs:integer"/>
 
-	<!-- config variables -->
-	<xsl:variable name="sparql_endpoint" select="/content/config/sparql_endpoint"/>
+	<!-- config variables -->	
 	<xsl:variable name="url" select="/content/config/url"/>
-
-	<!-- get block of images from SPARQL endpoint, via nomisma API -->
-	<xsl:variable name="sparqlResult" as="element()*">
-		<xsl:if test="string($sparql_endpoint) and //config/collection_type='cointype'">
-			<xsl:choose>
-				<xsl:when test="//config/union_type_catalog/@enabled = true()">
-					<xsl:variable name="identifiers" as="node()*">
-						<identifiers>
-							<xsl:for-each select="descendant::doc">
-								<identifier>
-									<xsl:value-of select="concat(str[@name='uri_space'], str[@name='recordId'])"/>
-								</identifier>
-							</xsl:for-each>
-						</identifiers>
-					</xsl:variable>
-					<xsl:variable name="service" select="concat('http://nomisma.org/apis/numishareResults?identifiers=', encode-for-uri(string-join($identifiers//identifier, '|')))"/>
-					
-					<xsl:copy-of select="document($service)/response"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:variable name="service" select="concat('http://nomisma.org/apis/numishareResults?identifiers=', encode-for-uri(string-join(descendant::str[@name='recordId'], '|')), '&amp;baseUri=',
-						encode-for-uri(/content/config/uri_space))"/>
-					
-					<xsl:copy-of select="document($service)/response"/>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:if>
-	</xsl:variable>
-
+	
 	<xsl:template match="/">
 		<xsl:variable name="facets" as="element()*">
 			<xsl:copy-of select="descendant::lst[@name='facet_fields']"/>
@@ -253,11 +224,9 @@
 							</a>
 						</xsl:if>
 					</xsl:when>
-					<xsl:when test="str[@name='recordType'] = 'conceptual'">
-						<xsl:if test="string($sparql_endpoint)">
-							<xsl:variable name="id" select="str[@name='recordId']"/>
-							<xsl:apply-templates select="$sparqlResult//group[@id=$id]" mode="results"/>
-						</xsl:if>
+					<xsl:when test="str[@name='recordType'] = 'conceptual' and matches(/content/config/sparql_endpoint, '^https?://')">
+						<xsl:variable name="id" select="str[@name='recordId']"/>
+						<xsl:apply-templates select="doc('input:numishareResults')//group[@id=$id]" mode="results"/>
 					</xsl:when>
 				</xsl:choose>
 			</div>
