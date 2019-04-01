@@ -54,6 +54,10 @@ a:hover {
 .bg-info {
 	background-color:#E7E7E7;
 }
+.alert-box {
+	width:50%;
+	margin:20px auto;
+}
 /*
   ***************************************
   BOOTSTRAP NAVBAR
@@ -302,6 +306,40 @@ select[name = "interval"],
 #search1,
 #search2{
 	margin-top:20px;
+}
+/*
+  ***************************************
+  VISUALIZATION FORM
+  ***************************************
+*/
+.quant-form {
+    margin-bottom:20px;
+}
+.quant-form input[type=text], .quant-form select {
+	width:20em;
+}
+.quant-form select.era {
+    width:5em;
+    margin-left:10px;
+}
+.quant-form input.year, .quant-form select.interval {
+    width:10em;
+}
+.control-container {
+	display:inline;
+	width:20px;
+}
+.control-row .btn{
+    margin:0 5px;
+}
+.query-pair {
+	display:block;
+	margin-bottom:15px;
+}
+.prop-container {
+	display:inline;
+	margin-left:10px;
+	margin-right:10px;
 }
 /*
   ***************************************
@@ -591,7 +629,4 @@ div.custominfostyle{
 }
 .mr{
 	display:none;
-}
-.center-block{
-	width:50%;
 }
