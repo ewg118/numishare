@@ -1,6 +1,6 @@
 /*******
 DISTRIBUTION VISUALIZATION FUNCTIONS
-Modified: October 2016
+Modified: March 2019
 Function: These are the functions for generating charts and graphs with d3js
  *******/
 
@@ -88,7 +88,6 @@ $(document).ready(function () {
                 });
                 urlParams[ 'compare'] = compare;
             }
-            console.log(urlParams);
             
             params = new Array();
             //set the href value for the CSV download
@@ -107,7 +106,7 @@ $(document).ready(function () {
             //set values and call chart rendering function dependent upon the id of the form
             if (formId == 'distributionForm') {
                 //set bookmarkable page URL
-                var href = path + 'research/distribution?' + params.join('&');
+                var href = path + 'visualize/distribution?' + params.join('&');
                 $('.chart-container').children('div.control-row').children('a[title=Bookmark]').attr('href', href);
                 
                 //set CSV download URL
@@ -119,7 +118,7 @@ $(document).ready(function () {
                 renderDistChart(path, urlParams);
             } else if (formId == 'metricalForm') {
                 //set bookmarkable page URL
-                var href = path + 'research/metrical?' + params.join('&');
+                var href = path + 'visualize/metrical?' + params.join('&');
                 $('.chart-container').children('div.control-row').children('a[title=Bookmark]').attr('href', href);
                 
                 //set CSV download URL
@@ -155,6 +154,7 @@ $(document).ready(function () {
         var formId = $(this).closest('form').attr('id');
         validate(formId);
     });
+    
     $('#measurementSelect').change(function () {
         var formId = $(this).closest('form').attr('id');
         validate(formId);
@@ -181,7 +181,7 @@ $(document).ready(function () {
         if (prop == 'from' || prop == 'to') {
             addDate(next);
         } else {
-            getFacets(filter, prop, type, next, path);
+            getFacets(filter, prop, type, next, path, urlParams[ 'lang']);
         }
         
         //display duplicate property alert if there is more than one from or to date
@@ -263,8 +263,10 @@ $(document).ready(function () {
         
         if (prop == 'from' || prop == 'to') {
             validate(formId);
+        } else if (prop == 'nmo:hasTypeSeriesItem') {
+            validate(formId);
         } else {
-            getFacets(filter, prop, type, next, path);
+            getFacets(filter, prop, type, next, path, urlParams[ 'lang']);
         }
     });
     
@@ -317,7 +319,7 @@ $(document).ready(function () {
         if (prop == 'from' || prop == 'to') {
             addDate(next);
         } else {
-            getFacets(filter, prop, type, next, path);
+            getFacets(filter, prop, type, next, path, urlParams[ 'lang']);
         }
         
         //display duplicate property alert if there is more than one from or to date
@@ -454,12 +456,13 @@ function addDate(next) {
 }
 
 //get the associated facets from thet getSparqlFacets web service
-function getFacets(filter, prop, type, next, path) {
+function getFacets(filter, prop, type, next, path, lang) {
     var formId = $(next).closest('form').attr('id');
     if (type != null) {
         //define ajax parameters
         params = {
-            "facet": prop
+            "facet": prop,
+            "lang": lang
         }
         
         params.filter = filter;
@@ -538,6 +541,12 @@ function validate(formId) {
                 if ($(this).children('.add-filter-prop').val() == 'to' || $(this).children('.add-filter-prop').val() == 'from') {
                     var year = $(this).children('.prop-container').children('span').children('input.year').val();
                     if ($.isNumeric(year)) {
+                        elements.push(true);
+                    } else {
+                        elements.push(false);
+                    }
+                } else if ($(this).children('.add-filter-prop').val() == 'nmo:hasTypeSeriesItem') {
+                    if ($(this).children('.prop-container').children('span').children('input.coinType').val()) {
                         elements.push(true);
                     } else {
                         elements.push(false);
@@ -633,6 +642,9 @@ function validate(formId) {
                     }
                     
                     q.push($(this).children('.add-filter-prop').val() + ' ' + year);
+                } else if ($(this).children('.add-filter-prop').val() == 'nmo:hasTypeSeriesItem') {
+                    //create query for coinType
+                    q.push($(this).children('.add-filter-prop').val() + ' ' + $(this).children('.prop-container').children('span').children('input.coinType').val());
                 } else if ($(this).children('.add-filter-prop').val() && $(this).children('.prop-container').children('.add-filter-object').val()) {
                     q.push($(this).children('.add-filter-prop').val() + ' ' + $(this).children('.prop-container').children('.add-filter-object').val());
                 }
@@ -675,7 +687,17 @@ function validate(formId) {
 }
 
 function renderDistChart(path, urlParams) {
-    var distLabel = $('select[name=dist] option:selected').text().toLowerCase();
+    $('#distribution .chart-container').removeClass('hidden');
+    $('#distribution-chart').html('');
+    $('#distribution-chart').height(600);
+    
+    if (urlParams[ 'dist'].indexOf('nmo:has') != -1) {
+        var distValue = urlParams[ 'dist'].replace('nmo:has', '').toLowerCase();
+    } else {
+        var distValue = urlParams[ 'dist'];
+    }
+    var distLabel = $('select[name=dist] option:selected').text();
+    
     if (urlParams[ 'type'] == 'count') {
         var y = 'count';
     } else {
@@ -684,10 +706,11 @@ function renderDistChart(path, urlParams) {
     
     $.get(path + 'apis/getDistribution', $.param(urlParams, true),
     function (data) {
-        $('#distribution .chart-container').removeClass('hidden');
-        $('#distribution-chart').html('');
-        $('#distribution-chart').height(600);
-        var visualization = d3plus.viz().container("#distribution-chart").data(data).type("bar").id('subset').x(distLabel).y(y).legend({
+        console.log(data);
+        
+        var visualization = d3plus.viz().container("#distribution-chart").data(data).type("bar").id('subset').x({
+            'value': distValue, 'label': distLabel
+        }).y(y).legend({
             "value": true, "size": 50
         }).color({
             "value": "subset"

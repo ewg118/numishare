@@ -54,8 +54,15 @@ dl.ar dd{
     margin: 0 0 15px 0;
     padding: 9px 14px;
 }
-
-/* custom navbar */
+.alert-box {
+	width:50%;
+	margin:20px auto;
+}
+/*
+  ***************************************
+  CUSTOM BOOTSTRAP NAVBAR
+  ***************************************
+ */
 .navbar-default{
     background-color: #3383bb;
     border-color: #0b205c;
@@ -301,6 +308,9 @@ select[name = "interval"],
   VISUALIZATION FORM
   ***************************************
 */
+.quant-form {
+    margin-bottom:20px;
+}
 .quant-form input[type=text], .quant-form select {
 	width:20em;
 }
@@ -658,7 +668,4 @@ div.custominfostyle{
 }
 .mr{
     display: none;
-}
-.center-block{
-    width: 50%;
 }
