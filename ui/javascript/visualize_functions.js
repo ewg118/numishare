@@ -94,7 +94,8 @@ $(document).ready(function () {
 });
 
 function renderDistChart(path, urlParams) {
-    var distLabel = $('select[name=category] option:selected').val();
+    var distValue = $('select[name=category] option:selected').val();
+    var distLabel = $('select[name=category] option:selected').text();
     
     if (urlParams[ 'type'] == 'count') {
         var y = 'count';
@@ -104,11 +105,12 @@ function renderDistChart(path, urlParams) {
     
     $.get(path + 'apis/getSolrDistribution', $.param(urlParams, true),
     function (data) {
-        console.log(data);
         //$('#distribution .chart-container').removeClass('hidden');
         $('#distribution-chart').html('');
         $('#distribution-chart').height(600);
-        var visualization = d3plus.viz().container("#distribution-chart").data(data).type("bar").id('subset').x(distLabel).y(y).legend({
+        var visualization = d3plus.viz().container("#distribution-chart").data(data).type("bar").id('subset').x({
+            'value': distValue, 'label': distLabel
+        }).y(y).legend({
             "value": true, "size": 50
         }).color({
             "value": "subset"
