@@ -9,10 +9,18 @@ $(document).ready(function () {
 	var popupStatus = 0;
 	var firstrun = true;
 	var langStr = getURLParameter('lang');
+	var departmentStr = getURLParameter('department');
+	
 	if (langStr == 'null') {
 		var lang = '';
 	} else {
 		var lang = langStr;
+	}
+	
+	if (departmentStr == 'null') {
+		var department = '';
+	} else {
+		var department = departmentStr;
 	}
 	
 	var path = $('#path').text();
@@ -71,17 +79,17 @@ $(document).ready(function () {
 		});
 		
 		//add mintLayer from AJAX
-		var mintLayer = L.geoJson.ajax(path + "mints.geojson?q=" + q, {
+		var mintLayer = L.geoJson.ajax(path + "mints.geojson?q=" + q + (department.length > 0 ? '&department=' + department : ''), {
 			pointToLayer: renderPoints
 		}).addTo(map);
 		
-		var subjectLayer = L.geoJson.ajax(path + "subjects.geojson?q=" + q, {
+		var subjectLayer = L.geoJson.ajax(path + "subjects.geojson?q=" + q + (department.length > 0 ? '&department=' + department : ''), {
 			pointToLayer: renderPoints
 		}).addTo(map);
 		
 		//add hoards, but don't make visible by default
 		var markers = '';
-		var findspotLayer = L.geoJson.ajax(path + "findspots.geojson?q=" + q, {
+		var findspotLayer = L.geoJson.ajax(path + "findspots.geojson?q=" + q + (department.length > 0 ? '&department=' + department : ''), {
 			pointToLayer: renderPoints
 		});
 		
@@ -262,9 +270,9 @@ $(document).ready(function () {
 			$('#timemap').html('<div id="mapcontainer" class="fullscreen"><div id="map"/></div><div id="timelinecontainer"><div id="timeline"/></div>');
 			initialize_timemap(query);
 		} else {
-			mintUrl = path + "mints.geojson?q=" + query + (lang.length > 0 ? '&lang=' + lang: '');
-			hoardUrl = path + "findspots.geojson?q=" + query + (lang.length > 0 ? '&lang=' + lang: '');
-			subjectUrl = path + "subjects.geojson?q=" + query + (lang.length > 0 ? '&lang=' + lang: '');
+			mintUrl = path + "mints.geojson?q=" + query + (lang.length > 0 ? '&lang=' + lang: '') + (department.length > 0 ? '&department=' + department : '');
+			hoardUrl = path + "findspots.geojson?q=" + query + (lang.length > 0 ? '&lang=' + lang: '') + (department.length > 0 ? '&department=' + department : '');
+			subjectUrl = path + "subjects.geojson?q=" + query + (lang.length > 0 ? '&lang=' + lang: '') + (department.length > 0 ? '&department=' + department : '');
 			
 			layerControl.removeLayer(markers);
 			map.removeLayer(markers);
