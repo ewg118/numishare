@@ -43,6 +43,10 @@ ul li{
 .content {
 	padding-bottom:10px;
 }
+.alert-box {
+	width:50%;
+	margin:20px auto;
+}
 /*
   ***************************************
   BOOTSTRAP NAVBAR
@@ -602,7 +606,4 @@ div.custominfostyle{
 }
 .mr{
 	display:none;
-}
-.center-block{
-	width:50%;
 }
