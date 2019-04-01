@@ -100,7 +100,7 @@
 						<p:output name="data" id="numishareResults-url-generator-config"/>
 					</p:processor>
 					
-					<!-- query SPARQL -->
+					<!-- query Nomisma numishareResults API -->
 					<p:processor name="oxf:url-generator">
 						<p:input name="config" href="#numishareResults-url-generator-config"/>
 						<p:output name="data" id="numishareResults"/>
