@@ -355,6 +355,9 @@
 							</params>
 						</xsl:variable>
 
+						<a href="{$display_path}visualize/{$interface}" title="Bookmark" class="btn btn-primary">
+							<span class="glyphicon glyphicon-erase"/>Clear</a>
+						
 						<a href="{$display_path}apis/{$api}?{string-join($queryParams/*, '&amp;')}" title="Download CSV" class="btn btn-primary">
 							<span class="glyphicon glyphicon-download"/>Download CSV</a>
 					</xsl:when>
@@ -621,7 +624,7 @@
 	</xsl:template>
 
 	<xsl:template name="ajax-loader-template">
-		<span id="ajax-loader-template"><img src="{$include_path}images/ajax-loader.gif" alt="loading"/> Loading</span>
+		<span id="ajax-loader-template"><img src="{$include_path}/images/ajax-loader.gif" alt="loading"/> Loading</span>
 	</xsl:template>
 
 	<xsl:template name="property-list">
