@@ -117,12 +117,12 @@
 									<li>
 										<a
 											href="{$display_path}visualize/distribution{if (string($langParam)) then concat('?lang=', $langParam) else ''}">
-											<xsl:value-of select="numishare:normalizeLabel('visualize_measurement', $lang)"/>
+											<xsl:value-of select="numishare:normalizeLabel('visualize_typological', $lang)"/>
 										</a>
 									</li>
 									<li>
 										<a href="{$display_path}visualize/metrical{if (string($langParam)) then concat('?lang=', $langParam) else ''}">
-											<xsl:value-of select="numishare:normalizeLabel('visualize_typological', $lang)"/>
+											<xsl:value-of select="numishare:normalizeLabel('visualize_measurement', $lang)"/>											
 										</a>
 									</li>
 								</ul>
