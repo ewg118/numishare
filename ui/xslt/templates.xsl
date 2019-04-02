@@ -18,7 +18,7 @@
 						<xsl:choose>
 							<xsl:when test="string-length(//config/logo) &gt; 0">
 								<xsl:choose>
-									<xsl:when test="contains(//config/logo, 'http://')">
+									<xsl:when test="matches(//config/logo, 'https?://')">
 										<img src="{//config/logo}"/>
 									</xsl:when>
 									<xsl:otherwise>

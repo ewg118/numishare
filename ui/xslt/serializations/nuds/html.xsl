@@ -273,7 +273,7 @@
 										<xsl:for-each select="descendant::*:otherRecordId[@semantic = 'dcterms:isReplacedBy']">
 											<xsl:variable name="uri"
 												select="
-													if (contains(., 'http://')) then
+													if (matches(., 'https?://')) then
 														.
 													else
 														concat($url, 'id/', .)"/>
@@ -1206,7 +1206,7 @@
 			<xsl:variable name="src" select="//mets:fileGrp[@USE = 'legend']/mets:file[@USE = 'reference']/mets:FLocat/@xlink:href"/>
 
 			<div class="reference_image">
-				<img src="{if (contains($src, 'http://')) then $src else concat($display_path, $src)}" alt="legend"/>
+				<img src="{if (matches($src, 'https?://')) then $src else concat($display_path, $src)}" alt="legend"/>
 			</div>
 		</xsl:if>
 	</xsl:template>

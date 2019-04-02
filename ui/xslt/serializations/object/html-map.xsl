@@ -112,7 +112,7 @@
 										<xsl:for-each select="descendant::*:otherRecordId[@semantic = 'dcterms:isReplacedBy']">
 											<xsl:variable name="uri"
 												select="
-													if (contains(., 'http://')) then
+													if (matches(., 'https?://')) then
 														.
 													else
 														concat($url, 'id/', .)"/>

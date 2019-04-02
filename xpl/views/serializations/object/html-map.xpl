@@ -36,7 +36,7 @@
 							test="count(descendant::*:otherRecordId[@semantic='dcterms:isReplacedBy']) = 1 and descendant::*:control/*:maintenanceStatus='cancelledReplaced'">
 							<xsl:variable name="uri">
 								<xsl:choose>
-									<xsl:when test="contains(descendant::*:otherRecordId[@semantic='dcterms:isReplacedBy'][1], 'http://')">
+									<xsl:when test="matches(descendant::*:otherRecordId[@semantic='dcterms:isReplacedBy'][1], '^https?://')">
 										<xsl:value-of select="descendant::*:otherRecordId[1]"/>
 									</xsl:when>
 									<xsl:otherwise>

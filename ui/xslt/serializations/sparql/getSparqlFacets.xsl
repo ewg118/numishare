@@ -13,7 +13,7 @@
 	<xsl:template match="res:result">
 		<xsl:variable name="curie">
 			<xsl:choose>
-				<xsl:when test="contains(res:binding[@name = 'facet']/res:uri, 'http://nomisma.org/id/')">
+				<xsl:when test="starts-with(res:binding[@name = 'facet']/res:uri, 'http://nomisma.org/id/')">
 					<xsl:value-of select="replace(res:binding[@name = 'facet']/res:uri, 'http://nomisma.org/id/', 'nm:')"/>
 				</xsl:when>
 				<xsl:otherwise>

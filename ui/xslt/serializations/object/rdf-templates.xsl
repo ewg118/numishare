@@ -269,7 +269,7 @@
 				<xsl:for-each select="$fileSec/mets:fileGrp[@USE = $side]/mets:file">
 					<xsl:variable name="href">
 						<xsl:choose>
-							<xsl:when test="contains(mets:FLocat/@xlink:href, 'http://')">
+							<xsl:when test="matches(mets:FLocat/@xlink:href, 'https?://')">
 								<xsl:value-of select="mets:FLocat/@xlink:href"/>
 							</xsl:when>
 							<xsl:otherwise>
@@ -333,7 +333,7 @@
 	<xsl:template match="mets:file" mode="crm">
 		<xsl:variable name="href">
 			<xsl:choose>
-				<xsl:when test="contains(mets:FLocat/@xlink:href, 'http://')">
+				<xsl:when test="matches(mets:FLocat/@xlink:href, 'https?://')">
 					<xsl:value-of select="mets:FLocat/@xlink:href"/>
 				</xsl:when>
 				<xsl:otherwise>
@@ -455,7 +455,7 @@
 							<xsl:for-each select="descendant::*:otherRecordId[string(@semantic)]">
 								<xsl:variable name="uri"
 									select="
-										if (contains(., 'http://')) then
+										if (matches(., 'https?://')) then
 											.
 										else
 											concat($url, 'id/', .)"/>
@@ -519,7 +519,7 @@
 							<xsl:for-each select="descendant::*:otherRecordId[string(@semantic)]">
 								<xsl:variable name="uri"
 									select="
-										if (contains(., 'http://')) then
+										if (matches(., 'https?://')) then
 											.
 										else
 											concat($url, 'id/', .)"/>
@@ -581,7 +581,7 @@
 							<foaf:thumbnail>
 								<xsl:attribute name="rdf:resource">
 									<xsl:choose>
-										<xsl:when test="contains(mets:FLocat/@xlink:href, 'http://')">
+										<xsl:when test="matches(mets:FLocat/@xlink:href, 'https?://')">
 											<xsl:value-of select="mets:FLocat/@xlink:href"/>
 										</xsl:when>
 										<xsl:otherwise>
@@ -595,7 +595,7 @@
 							<foaf:depiction>
 								<xsl:attribute name="rdf:resource">
 									<xsl:choose>
-										<xsl:when test="contains(mets:FLocat/@xlink:href, 'http://')">
+										<xsl:when test="matches(mets:FLocat/@xlink:href, 'https?://')">
 											<xsl:value-of select="mets:FLocat/@xlink:href"/>
 										</xsl:when>
 										<xsl:otherwise>
@@ -822,7 +822,7 @@
 					</xsl:for-each>
 					<xsl:for-each select="descendant::*:otherRecordId[string(@semantic)]">
 						<xsl:variable name="uri" select="
-								if (contains(., 'http://')) then
+								if (matches(., 'https?://')) then
 									.
 								else
 									concat($url, 'id/', .)"/>
@@ -852,7 +852,7 @@
 					<!-- other ids -->
 					<xsl:for-each select="descendant::*:otherRecordId[string(@semantic)]">
 						<xsl:variable name="uri" select="
-								if (contains(., 'http://')) then
+								if (matches(., 'https?://')) then
 									.
 								else
 									concat($url, 'id/', .)"/>
@@ -1073,7 +1073,7 @@
 						<foaf:thumbnail>
 							<xsl:attribute name="rdf:resource">
 								<xsl:choose>
-									<xsl:when test="contains(mets:FLocat/@xlink:href, 'http://')">
+									<xsl:when test="matches(mets:FLocat/@xlink:href, 'https?://')">
 										<xsl:value-of select="mets:FLocat/@xlink:href"/>
 									</xsl:when>
 									<xsl:otherwise>
@@ -1087,7 +1087,7 @@
 						<foaf:depiction>
 							<xsl:attribute name="rdf:resource">
 								<xsl:choose>
-									<xsl:when test="contains(mets:FLocat/@xlink:href, 'http://')">
+									<xsl:when test="matches(mets:FLocat/@xlink:href, 'https?://')">
 										<xsl:value-of select="mets:FLocat/@xlink:href"/>
 									</xsl:when>
 									<xsl:otherwise>
