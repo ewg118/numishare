@@ -172,6 +172,7 @@
 
 			<xsl:apply-templates select="nuds:descMeta">
 				<xsl:with-param name="lang" select="$lang"/>
+				<xsl:with-param name="id" select="$id"/>
 			</xsl:apply-templates>
 
 			<!-- if there are subtypes, extract the legend and type description or symbols, if missing from parent record -->
@@ -326,64 +327,10 @@
 		</field>
 	</xsl:template>
 
-	<xsl:template match="res:result">
-		<xsl:variable name="title"
-			select="
-				if (string(res:binding[@name = 'findspotLabel']/res:literal)) then
-					res:binding[@name = 'findspotLabel']/res:literal
-				else
-					res:binding[@name = 'findspot']/res:uri"/>
-		<xsl:variable name="uri" select="res:binding[@name = 'findspot']/res:uri"/>
-
-		<xsl:if test="string(res:binding[@name = 'findspotLabel']/res:literal)">
-			<field name="findspot_facet">
-				<xsl:value-of select="$title"/>
-			</field>
-		</xsl:if>
-		<xsl:if test="res:binding[@name = 'long']/res:literal and res:binding[@name = 'lat']/res:literal">
-			<field name="findspot_uri">
-				<xsl:value-of select="$uri"/>
-			</field>
-			<field name="findspot_geo">
-				<xsl:value-of select="$title"/>
-				<xsl:text>|</xsl:text>
-				<xsl:value-of select="$uri"/>
-				<xsl:text>|</xsl:text>
-				<xsl:value-of select="concat(res:binding[@name = 'long']/res:literal, ',', res:binding[@name = 'lat']/res:literal)"/>
-			</field>
-		</xsl:if>
-
-		<xsl:if test="contains($uri, 'geonames.org')">
-			<!-- if the findspot is a geonamesId, then establish the findspot_hier facet -->
-			<xsl:variable name="hierarchy_pieces" select="tokenize($geonames//place[@id = $uri]/@hierarchy, '\|')"/>
-			<xsl:variable name="count" select="count($hierarchy_pieces)"/>
-
-			<xsl:for-each select="$hierarchy_pieces">
-				<xsl:variable name="position" select="position()"/>
-
-				<xsl:choose>
-					<xsl:when test="$position = 1">
-						<field name="findspot_hier">
-							<xsl:value-of select="concat('L', position(), '|', substring-after(., '/'), '/', substring-before(., '/'))"/>
-						</field>
-					</xsl:when>
-					<xsl:otherwise>
-						<field name="findspot_hier">
-							<xsl:value-of select="concat(substring-before($hierarchy_pieces[$position - 1], '/'), '|', substring-after(., '/'), '/', substring-before(., '/'))"/>
-						</field>
-					</xsl:otherwise>
-				</xsl:choose>
-
-				<field name="findspot_text">
-					<xsl:value-of select="substring-after(., '/')"/>
-				</field>
-			</xsl:for-each>
-		</xsl:if>
-
-	</xsl:template>
-
 	<xsl:template match="nuds:descMeta">
 		<xsl:param name="lang"/>
+		<xsl:param name="id"/>
+		
 		<xsl:variable name="recordType">
 			<xsl:value-of select="parent::nuds:nuds/@recordType"/>
 		</xsl:variable>
@@ -468,10 +415,20 @@
 
 		<xsl:apply-templates select="nuds:adminDesc"/>
 		<xsl:apply-templates select="nuds:refDesc"/>
-		<xsl:apply-templates select="nuds:findspotDesc"/>
+		<xsl:apply-templates select="nuds:findspotDesc">
+			<xsl:with-param name="objectURI"
+				select="
+				if (string($uri_space)) then
+				concat($uri_space, $id)
+				else
+				concat($url, 'id/', $id)"
+			/>
+		</xsl:apply-templates>
 	</xsl:template>
 
 	<xsl:template match="nuds:findspotDesc">
+		<xsl:param name="objectURI"/>
+		
 		<xsl:choose>
 			<xsl:when test="string(@xlink:href)">
 				<xsl:variable name="href" select="@xlink:href"/>
@@ -503,7 +460,9 @@
 					<xsl:otherwise>
 						<xsl:choose>
 							<xsl:when test="nuds:findspot/gml:Point">
-								<xsl:apply-templates select="nuds:findspot" mode="parse-gml"/>
+								<xsl:apply-templates select="nuds:findspot" mode="parse-gml">
+									<xsl:with-param name="objectURI" select="$objectURI"/>
+								</xsl:apply-templates>
 							</xsl:when>
 							<xsl:otherwise>
 								<xsl:if test="nuds:findspot">
@@ -520,7 +479,12 @@
 	</xsl:template>
 
 	<xsl:template match="nuds:findspot" mode="parse-gml">
+		<xsl:param name="objectURI"/>
+		
 		<xsl:variable name="label" select="nuds:geogname"/>
+		<xsl:variable name="uri" select="if (nuds:geogname/@xlink:href) then nuds:geogname/@xlink:href else concat($objectURI, '#findspot')">
+			
+		</xsl:variable>
 		<xsl:variable name="coords" select="tokenize(gml:Point/gml:coordinates, ',')"/>
 
 		<field name="findspot_facet">
@@ -530,7 +494,7 @@
 		<field name="findspot_geo">
 			<xsl:value-of select="$label"/>
 			<xsl:text>|</xsl:text>
-			<xsl:value-of select="concat($url, 'findspot/', digest:md5Hex(string(gml:Point/gml:coordinates)))"/>
+			<xsl:value-of select="$uri"/>
 			<xsl:text>|</xsl:text>
 			<xsl:value-of select="concat(normalize-space($coords[2]), ',', normalize-space($coords[1]))"/>
 		</field>
@@ -863,6 +827,65 @@
 				<xsl:value-of select="."/>
 			</field>
 		</xsl:if>
+	</xsl:template>
+	
+	<!-- ********** SERIALIZE SPARQL RESULTS FOR FINDSPOTS INTO SOLR FIELDS ********** -->
+	<!-- As of October 2018, this feature has been commented out since it is too difficult to maintain in Solr indexing at scale. The map feature
+		for coin type corpora published in Numishare will eventually transition to SPARQL for both mint and findspot distribution -->
+	<xsl:template match="res:result">
+		<xsl:variable name="title"
+			select="
+			if (string(res:binding[@name = 'findspotLabel']/res:literal)) then
+			res:binding[@name = 'findspotLabel']/res:literal
+			else
+			res:binding[@name = 'findspot']/res:uri"/>
+		<xsl:variable name="uri" select="res:binding[@name = 'findspot']/res:uri"/>
+		
+		<xsl:if test="string(res:binding[@name = 'findspotLabel']/res:literal)">
+			<field name="findspot_facet">
+				<xsl:value-of select="$title"/>
+			</field>
+		</xsl:if>
+		<xsl:if test="res:binding[@name = 'long']/res:literal and res:binding[@name = 'lat']/res:literal">
+			<field name="findspot_uri">
+				<xsl:value-of select="$uri"/>
+			</field>
+			<field name="findspot_geo">
+				<xsl:value-of select="$title"/>
+				<xsl:text>|</xsl:text>
+				<xsl:value-of select="$uri"/>
+				<xsl:text>|</xsl:text>
+				<xsl:value-of select="concat(res:binding[@name = 'long']/res:literal, ',', res:binding[@name = 'lat']/res:literal)"/>
+			</field>
+		</xsl:if>
+		
+		<xsl:if test="contains($uri, 'geonames.org')">
+			<!-- if the findspot is a geonamesId, then establish the findspot_hier facet -->
+			<xsl:variable name="hierarchy_pieces" select="tokenize($geonames//place[@id = $uri]/@hierarchy, '\|')"/>
+			<xsl:variable name="count" select="count($hierarchy_pieces)"/>
+			
+			<xsl:for-each select="$hierarchy_pieces">
+				<xsl:variable name="position" select="position()"/>
+				
+				<xsl:choose>
+					<xsl:when test="$position = 1">
+						<field name="findspot_hier">
+							<xsl:value-of select="concat('L', position(), '|', substring-after(., '/'), '/', substring-before(., '/'))"/>
+						</field>
+					</xsl:when>
+					<xsl:otherwise>
+						<field name="findspot_hier">
+							<xsl:value-of select="concat(substring-before($hierarchy_pieces[$position - 1], '/'), '|', substring-after(., '/'), '/', substring-before(., '/'))"/>
+						</field>
+					</xsl:otherwise>
+				</xsl:choose>
+				
+				<field name="findspot_text">
+					<xsl:value-of select="substring-after(., '/')"/>
+				</field>
+			</xsl:for-each>
+		</xsl:if>
+		
 	</xsl:template>
 
 </xsl:stylesheet>

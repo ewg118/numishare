@@ -949,7 +949,7 @@
 	</xsl:template>
 
 	<xsl:template match="nuds:findspotDesc">
-		<div class="metadata_section">
+		<div class="metadata_section" id="findspot">
 			<h3>
 				<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
 			</h3>
