@@ -35,7 +35,33 @@ function parse_row($row, $count, $fileName){
 		$id = substr(trim($ref), -1) == '?' ? str_replace('?', '', trim($ref)) : trim($ref);
 		$uncertain = substr(trim($ref), -1) == '?' ? true : false;
 		
-		if (preg_match('/ric\.[1-9]/', $ref)){
+		if (preg_match('/^https?:\/\//', $ref)){
+		    //first, look for URIs (currently for Tokens of the Roman Empire
+		    $uri = $id;
+		    
+		    //get info from $coinTypes array if the coin type has been verified already
+		    if (array_key_exists($uri, $coinTypes)){
+		        echo "Matched {$uri}\n";
+		        $coinType= array('label'=>$coinTypes[$uri]['reference'], 'uri'=>$uri, 'uncertain'=>$uncertain);
+		        $record['types']['TAMS'] = $coinType;
+		        $record['title'] = $coinTypes[$uri]['title'] . '. ' . $accnum;
+		    } else {
+		        $file_headers = @get_headers($uri);
+		        if ($file_headers[0] == 'HTTP/1.1 200 OK'){
+		            echo "Found {$uri}\n";
+		            //generate the title from the NUDS
+		            $titles = generate_title_from_type($uri);
+		            $coinTypes[$uri] = array('title'=>$titles['title'], 'reference'=>$titles['reference']);
+		            
+		            $record['title'] = $titles['title'] . ' ' . $accnum;
+		            $coinType= array('label'=>$titles['reference'], 'uri'=>$uri, 'uncertain'=>$uncertain);
+		            $record['types']['TAMS'] = $coinType;
+		        } else {
+		            $record['refs'][] = array('label'=>$id, 'uncertain'=>$uncertain);
+		        }
+		    }
+		} elseif (preg_match('/ric\.[1-9]/', $ref)){
+		    //match OCRE		    
 			//only continue process if the reference is not variant
 			if (strpos(strtolower($row['info']), 'variant') === FALSE){
 				//if the $id is from RIC 9, capitalize final letter
@@ -154,34 +180,34 @@ function parse_row($row, $count, $fileName){
 				$record['refs'][] = array('label'=>$id, 'uncertain'=>$uncertain);
 			}
 		} elseif ($department=='Roman' && preg_match('/C\.[1-9]/', $ref)){
-			//handle Roman Republican			
-			if (strpos(trim($ref), 'var') === FALSE){
-				$uri = 'http://numismatics.org/crro/id/' . str_replace('C.', 'rrc-', $id);
-				
-				//get info from $coinTypes array if the coin type has been verified already
-				if (array_key_exists($uri, $coinTypes)){
-					echo "Matched {$uri}\n";
-					$coinType= array('label'=>$coinTypes[$uri]['reference'], 'uri'=>$uri, 'uncertain'=>$uncertain);
-					$record['types']['CRRO'] = $coinType;
-					$record['title'] = $coinTypes[$uri]['title'] . '. ' . $accnum;
-				} else {
-					$file_headers = @get_headers($uri);
-					if ($file_headers[0] == 'HTTP/1.1 200 OK'){
-						echo "Found {$uri}\n";
-						//generate the title from the NUDS
-						$titles = generate_title_from_type($uri);
-						$coinTypes[$uri] = array('title'=>$titles['title'], 'reference'=>$titles['reference']);
-						
-						$record['title'] = $titles['title'] . ' ' . $accnum;
-						$coinType= array('label'=>$titles['reference'], 'uri'=>$uri, 'uncertain'=>$uncertain);
-						$record['types']['CRRO'] = $coinType;
-					} else {
-						$record['refs'][] = array('label'=>$id, 'uncertain'=>$uncertain);
-					}
-				}
-			} else {
-				$record['refs'][] = array('label'=>$id, 'uncertain'=>$uncertain);
-			}
+		    //handle Roman Republican			
+		    if (strpos(trim($ref), 'var') === FALSE){
+		        $uri = 'http://numismatics.org/crro/id/' . str_replace('C.', 'rrc-', $id);
+		        
+		        //get info from $coinTypes array if the coin type has been verified already
+		        if (array_key_exists($uri, $coinTypes)){
+		            echo "Matched {$uri}\n";
+		            $coinType= array('label'=>$coinTypes[$uri]['reference'], 'uri'=>$uri, 'uncertain'=>$uncertain);
+		            $record['types']['CRRO'] = $coinType;
+		            $record['title'] = $coinTypes[$uri]['title'] . '. ' . $accnum;
+		        } else {
+		            $file_headers = @get_headers($uri);
+		            if ($file_headers[0] == 'HTTP/1.1 200 OK'){
+		                echo "Found {$uri}\n";
+		                //generate the title from the NUDS
+		                $titles = generate_title_from_type($uri);
+		                $coinTypes[$uri] = array('title'=>$titles['title'], 'reference'=>$titles['reference']);
+		                
+		                $record['title'] = $titles['title'] . ' ' . $accnum;
+		                $coinType= array('label'=>$titles['reference'], 'uri'=>$uri, 'uncertain'=>$uncertain);
+		                $record['types']['CRRO'] = $coinType;
+		            } else {
+		                $record['refs'][] = array('label'=>$id, 'uncertain'=>$uncertain);
+		            }
+		        }
+		    } else {
+		        $record['refs'][] = array('label'=>$id, 'uncertain'=>$uncertain);
+		    }
 		} elseif ($department=='Greek' && preg_match('/Price\.[L|P]?\d+[A-Z]?$/', $ref)){
 			//handle Price references for Pella
 			$uri = 'http://numismatics.org/pella/id/' . str_replace('Price.', 'price.', $id);
