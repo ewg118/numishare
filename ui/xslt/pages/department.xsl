@@ -60,11 +60,17 @@
 	<xsl:param name="rows" as="xs:integer"/>
 	<xsl:param name="pipeline"/>
 	<xsl:param name="side"/>
+	<xsl:param name="layout"/>
+	<xsl:param name="authenticated"/>
+	
 	<xsl:variable name="numFound" select="//result[@name = 'response']/@numFound" as="xs:integer"/>
-	<xsl:variable name="tokenized_q"/>
+	
+	<!-- config variables -->
 	<xsl:variable name="collection_type" select="/content//collection_type"/>
-	<xsl:variable name="sparqlResult" as="item()*">
-		<xml/>
+	<xsl:variable name="positions" as="node()*">
+		<config>
+			<xsl:copy-of select="/content/config/positions"/>
+		</config>
 	</xsl:variable>
 
 	<xsl:template match="/content">
