@@ -64,6 +64,7 @@
 	<xsl:param name="authenticated"/>
 	
 	<xsl:variable name="numFound" select="//result[@name = 'response']/@numFound" as="xs:integer"/>
+	<xsl:variable name="tokenized_q"/>	
 	
 	<!-- config variables -->
 	<xsl:variable name="collection_type" select="/content//collection_type"/>
