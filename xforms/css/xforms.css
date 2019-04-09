@@ -89,6 +89,9 @@
 .xxforms-dialog-body>a, .xxforms-dialog-body>span {
 	width:100px;
 }
+#simple-captcha input {
+    width:10em;
+}
 .xbl-component {
 	margin:5px 0;
 }

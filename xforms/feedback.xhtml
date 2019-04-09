@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms"
-	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xxforms="http://orbeon.org/oxf/xml/xforms"
-	xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:res="http://www.w3.org/2005/sparql-results#" xmlns:xi="http://www.w3.org/2001/XInclude"
-	xmlns:dcterms="http://purl.org/dc/terms/" xmlns:nm="http://nomisma.org/id/" xmlns:foaf="http://xmlns.com/foaf/0.1/"
-	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-	xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xmlns:void="http://rdfs.org/ns/void#" xmlns:nmo="http://nomisma.org/ontology#"
-	xmlns:crm="http://www.cidoc-crm.org/cidoc-crm/">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xxforms="http://orbeon.org/oxf/xml/xforms" xmlns:fr="http://orbeon.org/oxf/xml/form-runner"
+	xmlns:xi="http://www.w3.org/2001/XInclude">
 	<head>
 		<title>Numishare: Feedback</title>
 		<link rel="stylesheet" href="/fr/style/bootstrap/css/bootstrap.css" type="text/css" />
@@ -23,86 +19,102 @@
 			<xforms:instance id="control-instance" xxforms:exclude-result-prefixes="#all">
 				<controls xmlns="">
 					<status></status>
-				
+					<collection-name></collection-name>
+					<public-key></public-key>
+					<private-key></private-key>
 				</controls>
 			</xforms:instance>
 
-			<xforms:instance id="exist-config">
-				<xi:include href="../exist-config.xml"/>
+			<xforms:instance id="feedback" xxforms:exclude-result-prefixes="#all">
+				<feedback xmlns="">
+					<name></name>
+					<email></email>
+					<text></text>
+				</feedback>
 			</xforms:instance>
 
 			<xforms:instance id="config" xxforms:exclude-result-prefixes="#all">
 				<config xmlns=""></config>
 			</xforms:instance>
 
-			<xforms:instance id="collections-list" xxforms:exclude-result-prefixes="#all">
-				<collections xmlns=""></collections>
+			<!-- null element for call-xpl -->
+			<xforms:instance id="dump">
+				<dump xmlns=""></dump>
 			</xforms:instance>
-
 			
+			<!-- ************* BINDINGS **********************-->
+			<xforms:bind nodeset="instance('feedback')">
+				<xforms:bind nodeset="*" required="true()"/>
+			</xforms:bind>
 
 			<!-- ************* SUBMISSIONS **********************-->
-			<!-- ***** LOADING COLLECTIONS/CONFIG *****-->
-			<xforms:submission id="load-config" serialization="none" method="get"
-				action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/config.xml"
-				xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}" replace="instance"
-				instance="config">
-				<xforms:message ev:event="xforms-submit-error" level="modal">Unable to load Numishare configuration</xforms:message>
-				<xforms:action ev:event="xforms-submit-done">
-					<!-- set the symbol filesystem path and public URL -->
-					<xforms:setvalue ref="instance('control-instance')/symbol_path"
-						value="if (substring(instance('config')/images/absolute_path, -1) = '/') then concat(instance('config')/images/absolute_path, 'symbols/') else concat(instance('config')/images/absolute_path, '/symbols/')"/>
-					<xforms:setvalue ref="instance('control-instance')/symbol_url" value="concat(instance('config')/url, 'symbols/')"/>
-				</xforms:action>
-			</xforms:submission>
 
-			<xforms:submission id="load-collections" serialization="none" method="get" action="{instance('exist-config')/url}collections-list.xml"
-				replace="instance" instance="collections-list" xxforms:username="{instance('exist-config')/username}"
-				xxforms:password="{instance('exist-config')/password}">
-				<!-- if the config loads successfully, set the collection names based on authentication -->
-				<xforms:action ev:event="xforms-submit-done">
-					<!-- by default set the collection-name from the security role -->
-					<xforms:action if="not(xxforms:is-user-in-role('numishare-admin'))">
-						<xforms:action if="string(instance('collections-list')/collection[@role=instance('control-instance')/request-security/role]/@name)">
-							<xforms:setvalue ref="instance('control-instance')/collection-name"
-								value="instance('collections-list')/collection[@role=instance('control-instance')/request-security/role]/@name"/>
-							<xforms:send submission="load-config"/>
-						</xforms:action>
-					</xforms:action>
-				</xforms:action>
-				<!-- if the config has not been created (given that the URL in ../exist-config.xml is correct), create it -->
-				<xforms:message ev:event="xforms-submit-error" level="modal">Unable to load Numishare collections list.</xforms:message>
-			</xforms:submission>
-
-			
 
 			<!-- **************** MODEL-CONSTRUCT-DONE ********************** -->
 			<xforms:action ev:event="xforms-model-construct-done">
-				<xforms:action if="string(xxforms:get-session-attribute('collection-name'))">
-					<xforms:setvalue ref="instance('control-instance')/collection-name" value="xxforms:get-session-attribute('collection-name')"/>
-					<xforms:send submission="load-config"/>
-				</xforms:action>
-				<xforms:action if="not(string(xxforms:get-session-attribute('collection-name')))">
-					<xforms:insert context="instance('control-instance')" nodeset="collection-name" position="after"
-						origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/get-authentication.xpl', 'dump', instance('dump'), 'data')"/>
-					<xforms:send submission="load-collections"/>
-				</xforms:action>
-				
+				<!-- load the config -->
+				<xforms:insert context="instance('config')" 
+					origin="xxforms:call-xpl('oxforms:/apps/numishare/xpl/models/config.xpl', 'dump', instance('dump'), 'data')"/>
 			</xforms:action>
 		</xforms:model>
 	</head>
 
 	<body>
 		<xforms:var name="display_path">../</xforms:var>
-		
-		<!--<xi:include href="header.xml"/>-->
 		<div class="container-fluid">
 			<div class="row">
 				<div class="col-md-12">
-					<h1>Feedback</h1>
+
+
+					<xforms:group ref="instance('feedback')">
+						<div>
+							<h1>Feedback</h1>
+							<p>Instructions here.</p>
+							<div>
+								<xforms:input ref="instance('feedback')/name">
+									<xforms:label>Name</xforms:label>
+									<xforms:alert>Required</xforms:alert>
+								</xforms:input>
+							</div>
+							<div>
+								<xforms:input ref="instance('feedback')/email">
+									<xforms:label>Email Address</xforms:label>
+									<xforms:alert>Must conform to a valid email address</xforms:alert>
+								</xforms:input>
+							</div>
+							<div>
+								<xforms:textarea ref="instance('feedback')/text">
+									<xforms:label>Feedback</xforms:label>
+									<xforms:alert>Required</xforms:alert>
+								</xforms:textarea>
+							</div>
+						</div>
+					</xforms:group>
+
+					<fr:simple-captcha id="simple-captcha">
+						<xforms:message level="modal" ev:event="fr-verify-done">Verified</xforms:message>
+						
+						<xforms:action ev:event="fr-verify-error">
+							<xforms:message level="modal">Error</xforms:message>
+						</xforms:action>						
+					</fr:simple-captcha>
+					
+					<div>
+						<xforms:trigger>
+							<xforms:label>Send</xforms:label>
+							<xforms:dispatch target="simple-captcha" name="fr-verify" ev:event="DOMActivate"/>
+						</xforms:trigger>
+					</div>
+
+					<!--<fr:recaptcha id="my-recaptcha">
+						<xforms:message level="modal" ev:event="fr-verify-done">Verified</xforms:message>
+						<xforms:action ev:event="fr-verify-error">
+							<xforms:message level="modal">Error</xforms:message>
+						</xforms:action>
+					</fr:recaptcha>-->
+					<fr:xforms-inspector/>
 				</div>
 			</div>
 		</div>
-		<!--<fr:xforms-inspector/>-->
 	</body>
 </html>
