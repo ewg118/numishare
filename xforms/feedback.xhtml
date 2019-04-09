@@ -36,6 +36,22 @@
 			<xforms:instance id="config" xxforms:exclude-result-prefixes="#all">
 				<config xmlns=""></config>
 			</xforms:instance>
+			
+			<xforms:instance id="email-config" xxforms:exclude-result-prefixes="#all">
+				<message xmlns="">
+					<smtp-host>localhost</smtp-host>
+					<from>
+						<email>gruber@numismatics.org</email>
+						<name>Ethan Gruber</name>
+					</from>
+					<to>
+						<email>ewg4xuva@gmail.com</email>
+						<name>To</name>
+					</to>
+					<subject>Reminder</subject>
+					<body content-type="text/plain">Hello, Jani!</body>
+				</message>
+			</xforms:instance>
 
 			<!-- null element for call-xpl -->
 			<xforms:instance id="dump">
@@ -54,7 +70,7 @@
 			<xforms:action ev:event="xforms-model-construct-done">
 				<!-- load the config -->
 				<xforms:insert context="instance('config')" 
-					origin="xxforms:call-xpl('oxforms:/apps/numishare/xpl/models/config.xpl', 'dump', instance('dump'), 'data')"/>
+					origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/models/config.xpl', 'data', instance('dump'), 'data')"/>
 			</xforms:action>
 		</xforms:model>
 	</head>
@@ -92,8 +108,10 @@
 					</xforms:group>
 
 					<fr:simple-captcha id="simple-captcha">
-						<xforms:message level="modal" ev:event="fr-verify-done">Verified</xforms:message>
-						
+						<xforms:action ev:event="fr-verify-done">
+							<xforms:insert context="instance('dump')" 
+								origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/controllers/feedback-email.xpl', 'data', instance('dump'), 'data')"/>
+						</xforms:action>
 						<xforms:action ev:event="fr-verify-error">
 							<xforms:message level="modal">Error</xforms:message>
 						</xforms:action>						
@@ -103,6 +121,16 @@
 						<xforms:trigger>
 							<xforms:label>Send</xforms:label>
 							<xforms:dispatch target="simple-captcha" name="fr-verify" ev:event="DOMActivate"/>
+						</xforms:trigger>
+					</div>
+					
+					<div>
+						<xforms:trigger>
+							<xforms:label>Test Email</xforms:label>
+							<xforms:action ev:event="DOMActivate">
+								<xforms:insert context="instance('dump')" 
+									origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/controllers/feedback-email.xpl', 'data', instance('email-config'), 'data')"/>
+							</xforms:action>
 						</xforms:trigger>
 					</div>
 
