@@ -15,13 +15,13 @@
 		<link rel="stylesheet" href="/apps/numishare/ui/css/style.css" />
 
 		<!-- model -->
-		<xforms:model>
+		<xforms:model xxforms:function-library="org.orbeon.oxf.fr.library.FormRunnerFunctionLibrary">
 			<xforms:instance id="control-instance" xxforms:exclude-result-prefixes="#all">
 				<controls xmlns="">
 					<status></status>
 					<collection-name></collection-name>
-					<public-key></public-key>
-					<private-key></private-key>
+					<verified>false</verified>
+					<send-trigger>false</send-trigger>
 				</controls>
 			</xforms:instance>
 
@@ -36,20 +36,16 @@
 			<xforms:instance id="config" xxforms:exclude-result-prefixes="#all">
 				<config xmlns=""></config>
 			</xforms:instance>
-			
+
 			<xforms:instance id="email-config" xxforms:exclude-result-prefixes="#all">
 				<message xmlns="">
-					<smtp-host>localhost</smtp-host>
+					<smtp-host/>
 					<from>
-						<email>gruber@numismatics.org</email>
-						<name>Ethan Gruber</name>
+						<email></email>
+						<name></name>
 					</from>
-					<to>
-						<email>ewg4xuva@gmail.com</email>
-						<name>To</name>
-					</to>
-					<subject>Reminder</subject>
-					<body content-type="text/plain">Hello, Jani!</body>
+					<subject></subject>
+					<body content-type="text/plain"></body>
 				</message>
 			</xforms:instance>
 
@@ -57,20 +53,43 @@
 			<xforms:instance id="dump">
 				<dump xmlns=""></dump>
 			</xforms:instance>
-			
+
 			<!-- ************* BINDINGS **********************-->
-			<xforms:bind nodeset="instance('feedback')">
-				<xforms:bind nodeset="*" required="true()"/>
+			<xforms:bind nodeset="instance('control-instance')">
+				<xforms:bind nodeset="verified" type="xs:boolean"/>				
+				<!-- enable/disable the send email trigger based on validation of the form -->
+				<xforms:bind id="send-trigger" nodeset="send-trigger" type="xs:boolean" readonly=". != true()"/>
 			</xforms:bind>
+			
+			<xforms:bind nodeset="instance('email-config')">
+				<xforms:bind nodeset="from|to">
+					<xforms:bind nodeset="name" required="true()"/>
+					<xforms:bind nodeset="email" required="true()" type="xforms:email"/>
+				</xforms:bind>
+				<xforms:bind nodeset="body" required="true()"/>
+			</xforms:bind>
+			
 
-			<!-- ************* SUBMISSIONS **********************-->
-
+			<!-- **************** DYNAMIC VALIDATION CONTROLS ********************** -->
+			<xforms:action ev:event="xxforms-invalid" ev:observer="email-config">
+				<xforms:setvalue ref="instance('control-instance')/send-trigger" value="false()"/>
+			</xforms:action>
+			
+			<xforms:action ev:event="xxforms-valid" ev:observer="email-config">
+				<xforms:setvalue ref="instance('control-instance')/send-trigger" value="true()"/>
+			</xforms:action>
 
 			<!-- **************** MODEL-CONSTRUCT-DONE ********************** -->
 			<xforms:action ev:event="xforms-model-construct-done">
 				<!-- load the config -->
-				<xforms:insert context="instance('config')" 
+				<xforms:insert context="instance('dump')"
 					origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/models/config.xpl', 'data', instance('dump'), 'data')"/>
+				<xforms:insert context="instance('config')" origin="instance('dump')/config/*"/>
+				
+				<!-- set email processor configuration from the config -->
+				<xforms:insert context="instance('email-config')" nodeset="from" position="after" origin="instance('config')/pages/feedback/to"/>
+				<xforms:setvalue ref="instance('email-config')/smtp-host" value="instance('config')/pages/feedback/smtp-host"/>
+				<xforms:setvalue ref="instance('email-config')/subject" value="concat('Feedback from ', instance('config')/title)"/>
 			</xforms:action>
 		</xforms:model>
 	</head>
@@ -80,66 +99,69 @@
 		<div class="container-fluid">
 			<div class="row">
 				<div class="col-md-12">
-
-
-					<xforms:group ref="instance('feedback')">
-						<div>
-							<h1>Feedback</h1>
-							<p>Instructions here.</p>
-							<div>
-								<xforms:input ref="instance('feedback')/name">
-									<xforms:label>Name</xforms:label>
-									<xforms:alert>Required</xforms:alert>
-								</xforms:input>
-							</div>
-							<div>
-								<xforms:input ref="instance('feedback')/email">
-									<xforms:label>Email Address</xforms:label>
-									<xforms:alert>Must conform to a valid email address</xforms:alert>
-								</xforms:input>
-							</div>
-							<div>
-								<xforms:textarea ref="instance('feedback')/text">
-									<xforms:label>Feedback</xforms:label>
-									<xforms:alert>Required</xforms:alert>
-								</xforms:textarea>
-							</div>
-						</div>
-					</xforms:group>
-
-					<fr:simple-captcha id="simple-captcha">
-						<xforms:action ev:event="fr-verify-done">
-							<xforms:insert context="instance('dump')" 
-								origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/controllers/feedback-email.xpl', 'data', instance('dump'), 'data')"/>
-						</xforms:action>
-						<xforms:action ev:event="fr-verify-error">
-							<xforms:message level="modal">Error</xforms:message>
-						</xforms:action>						
-					</fr:simple-captcha>
+					<h1>Feedback</h1>
 					
-					<div>
-						<xforms:trigger>
-							<xforms:label>Send</xforms:label>
-							<xforms:dispatch target="simple-captcha" name="fr-verify" ev:event="DOMActivate"/>
-						</xforms:trigger>
-					</div>
-					
-					<div>
-						<xforms:trigger>
-							<xforms:label>Test Email</xforms:label>
-							<xforms:action ev:event="DOMActivate">
-								<xforms:insert context="instance('dump')" 
-									origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/controllers/feedback-email.xpl', 'data', instance('email-config'), 'data')"/>
-							</xforms:action>
-						</xforms:trigger>
-					</div>
+					<xforms:switch>
+						<xforms:case id="feedback-form">
+							<xforms:group ref="instance('email-config')">
+								<div>
+									
+									<p>Instructions here.</p>
+									<div>
+										<xforms:input ref="from/name">
+											<xforms:label>Name</xforms:label>
+											<xforms:alert>Required</xforms:alert>
+										</xforms:input>
+									</div>
+									<div>
+										<xforms:input ref="from/email">
+											<xforms:label>Email Address</xforms:label>
+											<xforms:alert>Must conform to a valid email address</xforms:alert>
+										</xforms:input>
+									</div>
+									<div>
+										<xforms:textarea ref="body">
+											<xforms:label>Feedback</xforms:label>
+											<xforms:alert>Required</xforms:alert>
+										</xforms:textarea>
+									</div>
+								</div>
+							</xforms:group>
+							
+							<div>
+								<xforms:trigger bind="send-trigger">
+									<xforms:label>Send</xforms:label>
+									<xforms:action ev:event="DOMActivate">
+										<!-- determine whether or not the recaptcha has been checked -->
+										<xforms:dispatch target="my-recaptcha" name="fr-verify"/>
+										
+										<!-- send email if verified -->
+										<xforms:action if="instance('control-instance')/verified = true()">
+											<xforms:toggle case="response-success"/>
+											<xforms:insert context="instance('dump')"
+												origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/controllers/feedback-email.xpl', 'data', instance('email-config'), 'data')"
+											/>											
+										</xforms:action>								
+									</xforms:action>							
+								</xforms:trigger>
+							</div>
+							
+							<fr:recaptcha id="my-recaptcha">
+								<xforms:action ev:event="fr-verify-done">
+									<xforms:setvalue ref="instance('control-instance')/verified" value="true()"/>
+								</xforms:action>
+								<xforms:action ev:event="fr-verify-error">
+									<xforms:setvalue ref="instance('control-instance')/verified" value="false()"/>
+								</xforms:action>
+							</fr:recaptcha>
+							
+						</xforms:case>
+						<xforms:case id="response-success">
+							<p>The email has been sent to the managers of this collection. Thank you for your feedback.</p>
+						</xforms:case>
+					</xforms:switch>
 
-					<!--<fr:recaptcha id="my-recaptcha">
-						<xforms:message level="modal" ev:event="fr-verify-done">Verified</xforms:message>
-						<xforms:action ev:event="fr-verify-error">
-							<xforms:message level="modal">Error</xforms:message>
-						</xforms:action>
-					</fr:recaptcha>-->
+					
 					<fr:xforms-inspector/>
 				</div>
 			</div>

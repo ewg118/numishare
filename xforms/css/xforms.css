@@ -70,12 +70,13 @@
 .xforms-output {
 	margin:0;
 }
-.xforms-output-output {
-	padding:0;
-	line-height:inherit;
+.orbeon .xforms-output output[role=textbox] {
 	display:inline;
 	font-size:inherit;
-	color:black
+	border:none;
+	background-color:white;
+	cursor:default;
+	white-space:normal;
 }
 .xforms-trigger {
 	text-decoration:none;

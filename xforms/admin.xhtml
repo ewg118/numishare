@@ -7,8 +7,8 @@
 	<head>
 		<title>Numishare: Administrative Interface</title>
 		<!-- Core + Skin CSS -->
-		<link rel="stylesheet" href="/fr/style/bootstrap/css/bootstrap.css" type="text/css" />
-		<link rel="stylesheet" href="/fr/style/form-runner-bootstrap-override.css" type="text/css" />
+		<!--<link rel="stylesheet" href="/fr/style/bootstrap/css/bootstrap.css" type="text/css" />
+		<link rel="stylesheet" href="/fr/style/form-runner-bootstrap-override.css" type="text/css" />-->
 		<link rel="shortcut icon" href="/ops/images/orbeon-icon-16.ico" />
 		<link rel="icon" href="/ops/images/orbeon-icon-16.png" type="image/png" />
 		<link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" />
@@ -176,6 +176,13 @@
 						<analyze enabled="false"/>
 						<visualize enabled="true"/>
 						<apis enabled="true"/>
+						<feedback enabled="false">
+							<smtp-host>localhost</smtp-host>
+							<to>
+								<email></email>
+								<name></name>
+							</to>
+						</feedback>
 						<symbols enabled="false"/>
 						<identify enabled="false"/>
 					</pages>
@@ -189,6 +196,7 @@
 						<tab href="compare" id="compare"/>
 						<tab href="analyze" id="analyze"/>
 						<tab href="visualize" id="visualize"/>
+						<tab href="feedback" id="feedback"/>
 						<tab href="apis" id="apis" label="APIs"/>
 						<tab id="pages"/>
 						<tab id="languages-tab"/>

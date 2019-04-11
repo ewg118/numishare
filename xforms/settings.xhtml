@@ -1,7 +1,7 @@
-<html xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:xxforms="http://orbeon.org/oxf/xml/xforms" xmlns:p="http://www.orbeon.com/oxf/pipeline" xmlns:xi="http://www.w3.org/2001/XInclude"
-	xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:saxon="http://saxon.sf.net/" xmlns:numishare="https://github.com/ewg118/numishare"
-	xmlns:res="http://www.w3.org/2005/sparql-results#">
+<html xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns="http://www.w3.org/1999/xhtml" xmlns:xxforms="http://orbeon.org/oxf/xml/xforms" xmlns:p="http://www.orbeon.com/oxf/pipeline"
+	xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:saxon="http://saxon.sf.net/"
+	xmlns:numishare="https://github.com/ewg118/numishare" xmlns:res="http://www.w3.org/2005/sparql-results#">
 	<head>
 		<title>Numishare: Edit Numishare Settings</title>
 		<link rel="stylesheet" href="/fr/style/bootstrap/css/bootstrap.css" type="text/css" />
@@ -15,7 +15,7 @@
 		<xforms:model>
 			<!-- exist URL is stored in an XML file -->
 			<xforms:instance id="exist-config">
-				<xi:include href="../exist-config.xml"></xi:include>
+				<xi:include href="../exist-config.xml"/>
 			</xforms:instance>
 
 			<!-- collections/authentication instances -->
@@ -88,6 +88,13 @@
 				</localType>
 			</xforms:instance>
 
+			<xforms:instance id="to-template" xxforms:exclude-result-prefixes="#all">
+				<to xmlns="">
+					<name></name>
+					<email></email>
+				</to>
+			</xforms:instance>
+
 			<!--<xforms:instance id="serialized-footer">
 				<div xmlns=""/>
 			</xforms:instance>-->
@@ -99,7 +106,7 @@
 
 			<!-- list instances -->
 			<xforms:instance id="languages">
-				<xi:include href="instances/languages.xml"></xi:include>
+				<xi:include href="instances/languages.xml"/>
 			</xforms:instance>
 
 			<xforms:instance id="licenseselect-template">
@@ -125,78 +132,93 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 
 			<!-- preloaded instances -->
 			<xforms:instance id="sparqlResponse">
-				<sparql xmlns="http://www.w3.org/2005/sparql-results#"></sparql>
+				<sparql xmlns="http://www.w3.org/2005/sparql-results#"/>
 			</xforms:instance>
 
 			<!-- ************************* BINDINGS ************************** -->
 			<xforms:bind nodeset="instance('config')">
-				<xforms:bind nodeset="title" required="true()"></xforms:bind>
-				<xforms:bind nodeset="description" required="true()"></xforms:bind>
-				<xforms:bind nodeset="url" required="true()" type="custom.httpURL"></xforms:bind>
-				<xforms:bind nodeset="uri_space" required="true()" type="custom.httpURL"></xforms:bind>
-				<xforms:bind nodeset="solr_published" required="true()" type="custom.httpURL"></xforms:bind>
-				<xforms:bind nodeset="features_enabled" readonly="../collection_type != 'object'" type="xs:boolean"></xforms:bind>
-				<xforms:bind nodeset="pelagios_enabled" type="xs:boolean"></xforms:bind>
-				<xforms:bind nodeset="ctype_enabled" type="xs:boolean"></xforms:bind>
+				<xforms:bind nodeset="title" required="true()"/>
+				<xforms:bind nodeset="description" required="true()"/>
+				<xforms:bind nodeset="url" required="true()" type="custom.httpURL"/>
+				<xforms:bind nodeset="uri_space" required="true()" type="custom.httpURL"/>
+				<xforms:bind nodeset="solr_published" required="true()" type="custom.httpURL"/>
+				<xforms:bind nodeset="features_enabled" readonly="../collection_type != 'object'" type="xs:boolean"/>
+				<xforms:bind nodeset="pelagios_enabled" type="xs:boolean"/>
+				<xforms:bind nodeset="ctype_enabled" type="xs:boolean"/>
 				<xforms:bind nodeset="sparql_endpoint" readonly="../collection_type!='cointype'"
-					constraint="if (../collection_type='cointype') then (. castable as xs:anyURI and matches(., 'https?://.+')) else '. castable as xs:string'"></xforms:bind>
+					constraint="if (../collection_type='cointype') then (. castable as xs:anyURI and matches(., 'https?://.+')) else '. castable as xs:string'"/>
 				<xforms:bind nodeset="type_series" readonly="../collection_type!='cointype'"
-					constraint="if (../collection_type='cointype') then (. castable as xs:anyURI and matches(., 'https?://.+')) else '. castable as xs:string'"></xforms:bind>
+					constraint="if (../collection_type='cointype') then (. castable as xs:anyURI and matches(., 'https?://.+')) else '. castable as xs:string'"/>
 				<xforms:bind nodeset="template">
 					<!-- about the electronic record -->
-					<xforms:bind nodeset="agencyName" required="true()"></xforms:bind>
-					<xforms:bind nodeset="copyrightHolder" required="true()"></xforms:bind>
-					<xforms:bind nodeset="createdBy"></xforms:bind>
-					<xforms:bind nodeset="project"></xforms:bind>
-					<xforms:bind nodeset="language" required="true()"></xforms:bind>
-					<xforms:bind nodeset="license" required="true()"></xforms:bind>
+					<xforms:bind nodeset="agencyName" required="true()"/>
+					<xforms:bind nodeset="copyrightHolder" required="true()"/>
+					<xforms:bind nodeset="createdBy"/>
+					<xforms:bind nodeset="project"/>
+					<xforms:bind nodeset="language" required="true()"/>
+					<xforms:bind nodeset="license" required="true()"/>
 					<!-- about the physical item -->
-					<xforms:bind nodeset="repository"></xforms:bind>
-					<xforms:bind nodeset="owner"></xforms:bind>
-					<xforms:bind nodeset="collection"></xforms:bind>
+					<xforms:bind nodeset="repository"/>
+					<xforms:bind nodeset="owner"/>
+					<xforms:bind nodeset="collection"/>
 				</xforms:bind>
 				<!-- list elements -->
 				<xforms:bind nodeset="facets">
-					<xforms:bind nodeset="facet" required="true()"></xforms:bind>
+					<xforms:bind nodeset="facet" required="true()"/>
 				</xforms:bind>
 				<xforms:bind nodeset="theme">
-					<xforms:bind nodeset="themes_url" type="xs:anyURI" constraint="if (string-length(.) &gt; 0) then matches(., 'https?://.*/$') else true()"></xforms:bind>
+					<xforms:bind nodeset="themes_url" type="xs:anyURI" constraint="if (string-length(.) &gt; 0) then matches(., 'https?://.*/$') else true()"/>
 				</xforms:bind>
 				<xforms:bind nodeset="languages">
-					<xforms:bind nodeset="language/@enabled" type="xs:boolean"></xforms:bind>
+					<xforms:bind nodeset="language/@enabled" type="xs:boolean"/>
 				</xforms:bind>
 				<xforms:bind nodeset="baselayers">
-					<xforms:bind nodeset="layer/@enabled" type="xs:boolean"></xforms:bind>
+					<xforms:bind nodeset="layer/@enabled" type="xs:boolean"/>
 				</xforms:bind>
 				<xforms:bind nodeset="positions">
 					<xforms:bind nodeset="position">
-						<xforms:bind nodeset="@value" type="xs:NMTOKEN"></xforms:bind>
+						<xforms:bind nodeset="@value" type="xs:NMTOKEN"/>
 						<xforms:bind nodeset="label" required="true()">
 							<xforms:bind nodeset="@lang"
 								constraint="string-length(.) &gt; 0 and count(ancestor::position/label/@lang) = count(distinct-values(ancestor::position/label/@lang))"
-							></xforms:bind>
+							/>
 						</xforms:bind>
 					</xforms:bind>
 				</xforms:bind>
 				<xforms:bind nodeset="localTypes">
 					<xforms:bind nodeset="localType">
-						<xforms:bind nodeset="@value" type="xs:NMTOKEN"></xforms:bind>
+						<xforms:bind nodeset="@value" type="xs:NMTOKEN"/>
 						<xforms:bind nodeset="label" required="true()">
 							<xforms:bind nodeset="@lang"
 								constraint="string-length(.) &gt; 0 and count(ancestor::position/label/@lang) = count(distinct-values(ancestor::position/label/@lang))"
-							></xforms:bind>
+							/>
 						</xforms:bind>
 					</xforms:bind>
 				</xforms:bind>
 				<xforms:bind nodeset="images" relevant="../collection_type = 'object'">
-					<xforms:bind nodeset="absolute_path" required="matches(../iiif_server, '^https?://')"></xforms:bind>
-					<xforms:bind nodeset="iiif_server" constraint="if (string-length(.) &gt; 0) then matches(., 'https?://.*/$') else true()" type="xs:anyURI"></xforms:bind>
+					<xforms:bind nodeset="absolute_path" required="matches(../iiif_server, '^https?://')"/>
+					<xforms:bind nodeset="iiif_server" constraint="if (string-length(.) &gt; 0) then matches(., 'https?://.*/$') else true()" type="xs:anyURI"/>
+				</xforms:bind>
+				<xforms:bind nodeset="pages">
+					<xforms:bind nodeset="*/@enabled" type="xs:boolean"/>
+					<xforms:bind nodeset="analyze" readonly="not(../../collection_type='hoard')"/>
+					<xforms:bind nodeset="compare" readonly="not(../../collection_type='object')"/>
+					<xforms:bind nodeset="identify" readonly="not(../../collection_type='cointype')"/>
+					<xforms:bind nodeset="symbols" readonly="not(../../collection_type='cointype')"/>
+					<xforms:bind nodeset="visualize" readonly="../../collection_type='hoard'"/>
+					<xforms:bind nodeset="feedback">
+						<xforms:bind nodeset="smtp-host" type="xs:anyURI" required="../@enabled = true()"/>
+						<xforms:bind nodeset="to">
+							<xforms:bind nodeset="name" required="../../@enabled = true()"/>
+							<xforms:bind nodeset="email" required="../../@enabled = true()" type="xforms:email"/>
+						</xforms:bind>
+					</xforms:bind>
 				</xforms:bind>
 			</xforms:bind>
 
 			<xforms:bind nodeset="instance('control-instance')">
-				<xforms:bind nodeset="*[contains(name(), '-valid')]" type="xs:boolean"></xforms:bind>
-				<xforms:bind nodeset="display/*" type="xs:boolean"></xforms:bind>
+				<xforms:bind nodeset="*[contains(name(), '-valid')]" type="xs:boolean"/>
+				<xforms:bind nodeset="display/*" type="xs:boolean"/>
 			</xforms:bind>
 
 			<!-- **************** CUSTOM DATATYPES ********************** -->
@@ -205,14 +227,15 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 				<xs:simpleType name="custom.httpURL">
 					<xs:restriction base="xs:anyURI">
 						<!-- accepts only http:// or https:// URIs. -->
-						<xs:pattern value="https?://.+"></xs:pattern>
+						<xs:pattern value="https?://.+"/>
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:schema>
 
 			<!-- ************************* SUBMISSIONS ************************** -->
-			<xforms:submission id="load-collections" serialization="none" method="get" action="{instance('exist-config')/url}collections-list.xml" replace="instance"
-				instance="collections-list" xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}">
+			<xforms:submission id="load-collections" serialization="none" method="get" action="{instance('exist-config')/url}collections-list.xml"
+				replace="instance" instance="collections-list" xxforms:username="{instance('exist-config')/username}"
+				xxforms:password="{instance('exist-config')/password}">
 				<!-- if the config loads successfully, set the collection names based on authentication -->
 				<xforms:action ev:event="xforms-submit-done">
 					<!-- set default if security is false -->
@@ -223,23 +246,26 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 					<xforms:action if="string(instance('control-instance')/request-security/role)">
 						<xforms:action if="string(instance('collections-list')/collection[@role=instance('control-instance')/request-security/role]/@name)">
 							<xforms:setvalue ref="instance('control-instance')/collection-name"
-								value="instance('collections-list')/collection[@role=instance('control-instance')/request-security/role]/@name"></xforms:setvalue>
+								value="instance('collections-list')/collection[@role=instance('control-instance')/request-security/role]/@name"/>
 						</xforms:action>
 					</xforms:action>
-					<xforms:send submission="load-config"></xforms:send>
+					<xforms:send submission="load-config"/>
 				</xforms:action>
 				<!-- if the config has not been created (given that the URL in ../exist-config.xml is correct), create it -->
 				<xforms:message ev:event="xforms-submit-error" level="modal">Unable to load Numishare collections list.</xforms:message>
 			</xforms:submission>
 
 			<!-- Load File -->
-			<xforms:submission id="load-config" serialization="none" method="get" action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/config.xml"
-				xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}" replace="instance" instance="config">
+			<xforms:submission id="load-config" serialization="none" method="get"
+				action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/config.xml"
+				xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}" replace="instance"
+				instance="config">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Unable to load Numishare configuration file</xforms:message>
 				<!-- pre-validate required URLs for coin types -->
 				<xforms:action ev:event="xforms-submit-done">
 					<xforms:action if="instance('config')/collection_type='cointype'">
-						<xforms:setvalue ref="instance('sparqlQuery')" value="replace(instance('sparql-template'), '%TYPE_SERIES%', instance('config')/type_series)"></xforms:setvalue>
+						<xforms:setvalue ref="instance('sparqlQuery')"
+							value="replace(instance('sparql-template'), '%TYPE_SERIES%', instance('config')/type_series)"/>
 						<!--<xforms:send submission="validate-sparql"/>-->
 					</xforms:action>
 				</xforms:action>
@@ -247,8 +273,8 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 
 			<!-- Save File -->
 			<xforms:submission id="save-config" ref="instance('config')" xxforms:username="{instance('exist-config')/username}"
-				xxforms:password="{instance('exist-config')/password}" action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/config.xml" method="put"
-				replace="none">
+				xxforms:password="{instance('exist-config')/password}"
+				action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/config.xml" method="put" replace="none">
 				<xforms:setvalue ev:event="xforms-submit-done" ref="instance('control-instance')/status">Numishare configuration saved.</xforms:setvalue>
 				<xforms:message ev:event="xforms-submit-error" level="modal">Error saving Numishare configuration file.</xforms:message>
 			</xforms:submission>
@@ -264,55 +290,58 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 					<xforms:name>Accept</xforms:name>
 					<xforms:value>application/sparql-results+xml</xforms:value>
 				</xforms:header>
-				<xforms:setvalue ref="instance('control-instance')/sparql-valid" value="false()" ev:event="xforms-submit-error"></xforms:setvalue>
+				<xforms:setvalue ref="instance('control-instance')/sparql-valid" value="false()" ev:event="xforms-submit-error"/>
 				<xforms:action ev:event="xforms-submit-done">
-					<xforms:setvalue ref="instance('control-instance')/sparql-valid" value="true()"></xforms:setvalue>
+					<xforms:setvalue ref="instance('control-instance')/sparql-valid" value="true()"/>
 				</xforms:action>
 			</xforms:submission>
 
 			<xforms:submission id="test-for-echo" serialization="none" method="get"
-				action="http://api.flickr.com/services/rest/?method=flickr.test.echo&amp;api_key={instance('config')/flickr_api_key}" replace="instance" instance="flickr-response">
+				action="http://api.flickr.com/services/rest/?method=flickr.test.echo&amp;api_key={instance('config')/flickr_api_key}" replace="instance"
+				instance="flickr-response">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Error querying flickr. Please check internet connection.</xforms:message>
 				<xforms:action ev:event="xforms-submit-done">
 					<!-- set readonly for save button if the api key is a string and failed -->
 					<xforms:setvalue ref="instance('control-instance')/api-key-accepted"
-						if="not(instance('flickr-response')/@stat = 'ok') and string-length(instance('config')/flickr_api_key) &gt; 0" value="'false'"></xforms:setvalue>
+						if="not(instance('flickr-response')/@stat = 'ok') and string-length(instance('config')/flickr_api_key) &gt; 0" value="'false'"/>
 
 					<!-- activate button if the api key is okay or blank -->
-					<xforms:setvalue ref="instance('control-instance')/api-key-accepted" if="instance('flickr-response')/@stat = 'ok'" value="'true'"></xforms:setvalue>
-					<xforms:setvalue ref="instance('control-instance')/api-key-accepted" if="string-length(instance('config')/flickr_api_key) = 0" value="'true'"></xforms:setvalue>
+					<xforms:setvalue ref="instance('control-instance')/api-key-accepted" if="instance('flickr-response')/@stat = 'ok'" value="'true'"/>
+					<xforms:setvalue ref="instance('control-instance')/api-key-accepted" if="string-length(instance('config')/flickr_api_key) = 0"
+						value="'true'"/>
 				</xforms:action>
 			</xforms:submission>
 
 			<!-- ********** XFORMS-MODEL-CONSTRUCT-DONE ********** -->
 			<xforms:action ev:event="xforms-model-construct-done">
 				<xforms:action if="string(xxforms:get-session-attribute('collection-name'))">
-					<xforms:setvalue ref="instance('control-instance')/collection-name" value="xxforms:get-session-attribute('collection-name')"></xforms:setvalue>
-					<xforms:send submission="load-config"></xforms:send>
+					<xforms:setvalue ref="instance('control-instance')/collection-name" value="xxforms:get-session-attribute('collection-name')"/>
+					<xforms:send submission="load-config"/>
 				</xforms:action>
 				<xforms:action if="not(string(xxforms:get-session-attribute('collection-name')))">
 					<xforms:insert context="instance('control-instance')" nodeset="collection-name" position="after"
-						origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/get-authentication.xpl', 'dump', instance('dump'), 'data')"></xforms:insert>
-					<xforms:send submission="load-collections"></xforms:send>
+						origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/get-authentication.xpl', 'dump', instance('dump'), 'data')"/>
+					<xforms:send submission="load-collections"/>
 				</xforms:action>
 
 				<!-- pre-populate display layout -->
 				<xforms:var name="display-layout"
-					select="concat(substring(instance('config')/theme/layouts/display/nuds/orientation, 1, 1), substring(instance('config')/theme/layouts/display/nuds/image_location, 1, 1))"></xforms:var>
-				<xforms:setvalue ref="instance('control-instance')/display/*[name() = $display-layout]" value="true()"></xforms:setvalue>
+					select="concat(substring(instance('config')/theme/layouts/display/nuds/orientation, 1, 1), substring(instance('config')/theme/layouts/display/nuds/image_location, 1, 1))"/>
+				<xforms:setvalue ref="instance('control-instance')/display/*[name() = $display-layout]" value="true()"/>
 
 				<!-- scan the themes directory -->
-				<xforms:insert context="instance('themes')" origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/xforms/scan-themes.xpl', 'dump', instance('dump'), 'data')"></xforms:insert>
+				<xforms:insert context="instance('themes')"
+					origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/xforms/scan-themes.xpl', 'dump', instance('dump'), 'data')"/>
 
 				<!-- insert elements that didn't exist in previous versions -->
-				<xforms:insert context="instance('config')/theme" origin="xforms:element('themes_url', '')" if="not(instance('config')/theme/themes_url)"></xforms:insert>
+				<xforms:insert context="instance('config')/theme" origin="xforms:element('themes_url', '')" if="not(instance('config')/theme/themes_url)"/>
 			</xforms:action>
 		</xforms:model>
 	</head>
 
 	<body>
 		<xforms:var name="display_path">../../</xforms:var>
-		<xi:include href="header.xml"></xi:include>
+		<xi:include href="header.xml"/>
 		<div class="container-fluid">
 			<div class="row">
 				<div class="col-md-12">
@@ -320,7 +349,7 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 						<div class="alert alert-box alert-success">
 							<span class="glyphicon glyphicon-info-sign"></span>
 							<strong>Status:</strong>
-							<xforms:output ref="instance('control-instance')/status"></xforms:output>
+							<xforms:output ref="instance('control-instance')/status"/>
 						</div>
 					</xforms:group>
 					<p>
@@ -329,7 +358,7 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 					<div class="submission text-center">
 						<xforms:trigger appearance="minimal">
 							<xforms:label><span class="glyphicon glyphicon-floppy-disk"></span> Save</xforms:label>
-							<xforms:send ev:event="DOMActivate" submission="save-config"></xforms:send>
+							<xforms:send ev:event="DOMActivate" submission="save-config"/>
 						</xforms:trigger>
 					</div>
 				</div>
@@ -341,25 +370,31 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 						<li>
 							<xforms:trigger appearance="minimal">
 								<xforms:label>General Settings</xforms:label>
-								<xforms:toggle case="general" ev:event="DOMActivate"></xforms:toggle>
+								<xforms:toggle case="general" ev:event="DOMActivate"/>
+							</xforms:trigger>
+						</li>
+						<li>
+							<xforms:trigger appearance="minimal">
+								<xforms:label>Page Content and Navigation</xforms:label>
+								<xforms:toggle case="pages" ev:event="DOMActivate"/>
 							</xforms:trigger>
 						</li>
 						<li>
 							<xforms:trigger appearance="minimal">
 								<xforms:label>Boilerplate</xforms:label>
-								<xforms:toggle case="boilerplate" ev:event="DOMActivate"></xforms:toggle>
+								<xforms:toggle case="boilerplate" ev:event="DOMActivate"/>
 							</xforms:trigger>
 						</li>
 						<li>
 							<xforms:trigger appearance="minimal">
 								<xforms:label>Local Types and Symbol Positions</xforms:label>
-								<xforms:toggle case="instances" ev:event="DOMActivate"></xforms:toggle>
+								<xforms:toggle case="instances" ev:event="DOMActivate"/>
 							</xforms:trigger>
 						</li>
 						<li>
 							<xforms:trigger appearance="minimal">
 								<xforms:label>Theme and Layout</xforms:label>
-								<xforms:toggle case="theme" ev:event="DOMActivate"></xforms:toggle>
+								<xforms:toggle case="theme" ev:event="DOMActivate"/>
 							</xforms:trigger>
 						</li>
 						<!--<li>
@@ -371,7 +406,7 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 						<li>
 							<xforms:trigger appearance="minimal">
 								<xforms:label>Advanced Settings</xforms:label>
-								<xforms:toggle case="advanced" ev:event="DOMActivate"></xforms:toggle>
+								<xforms:toggle case="advanced" ev:event="DOMActivate"/>
 							</xforms:trigger>
 						</li>
 					</ul>
@@ -449,8 +484,8 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 															<xforms:alert>URI Required</xforms:alert>
 														</xforms:input>
 													</td>
-													<td>The URL is necessary in pipelines where relative paths are not sufficient (Atom, RDF, etc.). A trailing slash is
-														necessary.</td>
+													<td>The URL is necessary in pipelines where relative paths are not sufficient (Atom, RDF, etc.). A trailing
+														slash is necessary.</td>
 												</tr>
 												<tr>
 													<td>
@@ -459,8 +494,8 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 															<xforms:alert>URI Required</xforms:alert>
 														</xforms:input>
 													</td>
-													<td>Projects must contain a URI space for the Nomisma VoID RDF metadata and coin type projects require the URI space for select
-														SPARQL queries. The URI space is typically the Site URL appended with 'id/'.</td>
+													<td>Projects must contain a URI space for the Nomisma VoID RDF metadata and coin type projects require the
+														URI space for select SPARQL queries. The URI space is typically the Site URL appended with 'id/'.</td>
 												</tr>
 												<tr>
 													<td>
@@ -484,8 +519,8 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 															<xforms:label>Geonames Username</xforms:label>
 														</xforms:input>
 													</td>
-													<td>A <a href="http://www.geonames.org/export/web-services.html">Geonames username</a> is required in order to link geographical
-														places to geonames ids.</td>
+													<td>A <a href="http://www.geonames.org/export/web-services.html">Geonames username</a> is required in order
+														to link geographical places to geonames ids.</td>
 												</tr>
 												<tr>
 													<td>
@@ -493,8 +528,8 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 															<xforms:label>Mapbox Access Token</xforms:label>
 														</xforms:input>
 													</td>
-													<td>A <a href="https://www.mapbox.com/help/define-access-token/">Mapbox API token</a> is required in order to use baselayers
-														from Mapbox.</td>
+													<td>A <a href="https://www.mapbox.com/help/define-access-token/">Mapbox API token</a> is required in order
+														to use baselayers from Mapbox.</td>
 												</tr>
 											</tbody>
 										</table>
@@ -548,7 +583,8 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 															<xforms:alert>URI Required</xforms:alert>
 														</xforms:input>
 													</td>
-													<td>A coin type project must must be bound to a URI for a type series: usually, but not necessary, a Nomisma URI.</td>
+													<td>A coin type project must must be bound to a URI for a type series: usually, but not necessary, a Nomisma
+														URI.</td>
 												</tr>
 												<tr>
 													<td>
@@ -556,8 +592,8 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 															<xforms:label>Featured Item</xforms:label>
 														</xforms:input>
 													</td>
-													<td>If enabled (the default), the Featured Object function will be displayed in the index page. It does not function correctly
-														in coin-type catalogs.</td>
+													<td>If enabled (the default), the Featured Object function will be displayed in the index page. It does not
+														function correctly in coin-type catalogs.</td>
 												</tr>
 											</tbody>
 										</table>
@@ -582,8 +618,8 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 														</xforms:input>
 													</td>
 													<td>If enabled, records linked to Pleiades-defined ancient places will be exposed at <xforms:output
-															ref="concat(url, 'pelagios.rdf')"></xforms:output> with the VOiD defined by <xforms:output
-															ref="concat(url, 'pelagios.void.rdf')"></xforms:output>.</td>
+															ref="concat(url, 'pelagios.rdf')"/> with the VOiD defined by <xforms:output
+															ref="concat(url, 'pelagios.void.rdf')"/>.</td>
 												</tr>
 												<tr>
 													<td>
@@ -591,8 +627,9 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 															<xforms:label>Nomisma</xforms:label>
 														</xforms:input>
 													</td>
-													<td>If enabled, records conforming to the Nomisma ontology will be exposed at <xforms:output ref="concat(url, 'nomisma.rdf')"
-														></xforms:output>, with the VOiD defined by <xforms:output ref="concat(url, 'nomisma.void.rdf')"></xforms:output>.</td>
+													<td>If enabled, records conforming to the Nomisma ontology will be exposed at <xforms:output
+															ref="concat(url, 'nomisma.rdf')"/>, with the VOiD defined by <xforms:output
+															ref="concat(url, 'nomisma.void.rdf')"/>.</td>
 												</tr>
 											</tbody>
 										</table>
@@ -604,8 +641,8 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 													<a href="#top">
 														<span class="glyphicon glyphicon-chevron-up"></span>Top </a></small></h3>
 											<xforms:repeat nodeset="layer" id="layer-control">
-												<xforms:var name="position" select="position()"></xforms:var>
-												<xforms:var name="layer-name" select="."></xforms:var>
+												<xforms:var name="position" select="position()"/>
+												<xforms:var name="layer-name" select="."/>
 												<div>
 													<xforms:output value="instance('layers')/layer[@id=$layer-name]">
 														<xforms:label>Baselayer</xforms:label>
@@ -619,10 +656,10 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 																<span class="glyphicon glyphicon-arrow-up"></span>
 															</xforms:label>
 															<xforms:action ev:event="DOMActivate">
-																<xforms:var name="val" select="data(.)"></xforms:var>
+																<xforms:var name="val" select="data(.)"/>
 																<xforms:insert context="ancestor::baselayers" nodeset="layer[index('layer-control') - 2]"
-																	origin="xforms:element('layer', $val)"></xforms:insert>
-																<xforms:delete nodeset="."></xforms:delete>
+																	origin="xforms:element('layer', $val)"/>
+																<xforms:delete nodeset="."/>
 															</xforms:action>
 														</xforms:trigger>
 													</xforms:group>
@@ -632,15 +669,15 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 																<span class="glyphicon glyphicon-arrow-down"></span>
 															</xforms:label>
 															<xforms:action ev:event="DOMActivate">
-																<xforms:var name="val" select="data(.)"></xforms:var>
+																<xforms:var name="val" select="data(.)"/>
 																<xforms:insert context="ancestor::baselayers" nodeset="layer[index('layer-control') + 1]"
-																	origin="xforms:element('layer', $val)"></xforms:insert>
-																<xforms:delete nodeset="."></xforms:delete>
+																	origin="xforms:element('layer', $val)"/>
+																<xforms:delete nodeset="."/>
 															</xforms:action>
 														</xforms:trigger>
 													</xforms:group>
 													<xforms:trigger appearance="minimal">
-														<xforms:delete ev:event="DOMActivate" context="."></xforms:delete>
+														<xforms:delete ev:event="DOMActivate" context="."/>
 														<xforms:label>
 															<span class="glyphicon glyphicon-remove"></span>
 														</xforms:label>
@@ -658,16 +695,16 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 													<xforms:trigger appearance="minimal">
 														<xforms:label>
 															<span class="glyphicon glyphicon-plus"></span>Facet</xforms:label>
-														<xforms:insert context="." nodeset="./child::node()[last()]" origin="xforms:element('facet')" ev:event="DOMActivate"
-														></xforms:insert>
+														<xforms:insert context="." nodeset="./child::node()[last()]" origin="xforms:element('facet')"
+															ev:event="DOMActivate"/>
 													</xforms:trigger>
 												</small>
 											</h3>
-											<p>The facet must be a valid Solr string-based field (preferably defined by the *_facet dynamicField type in the schema). An invalid
-												field will cause the browse and map pages to fail. Note that the order of the facets below dictates the order in which they appear
-												on the browse and maps pages.</p>
+											<p>The facet must be a valid Solr string-based field (preferably defined by the *_facet dynamicField type in the
+												schema). An invalid field will cause the browse and map pages to fail. Note that the order of the facets below
+												dictates the order in which they appear on the browse and maps pages.</p>
 											<xforms:repeat nodeset="facet" id="facet-control">
-												<xforms:var name="position" select="position()"></xforms:var>
+												<xforms:var name="position" select="position()"/>
 												<div>
 													<xforms:input ref=".">
 														<xforms:label>Facet</xforms:label>
@@ -679,10 +716,10 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 																<span class="glyphicon glyphicon-arrow-up"></span>
 															</xforms:label>
 															<xforms:action ev:event="DOMActivate">
-																<xforms:var name="val" select="data(.)"></xforms:var>
+																<xforms:var name="val" select="data(.)"/>
 																<xforms:insert context="ancestor::facets" nodeset="facet[index('facet-control') - 2]"
-																	origin="xforms:element('facet', $val)"></xforms:insert>
-																<xforms:delete nodeset="."></xforms:delete>
+																	origin="xforms:element('facet', $val)"/>
+																<xforms:delete nodeset="."/>
 															</xforms:action>
 														</xforms:trigger>
 													</xforms:group>
@@ -692,15 +729,15 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 																<span class="glyphicon glyphicon-arrow-down"></span>
 															</xforms:label>
 															<xforms:action ev:event="DOMActivate">
-																<xforms:var name="val" select="data(.)"></xforms:var>
+																<xforms:var name="val" select="data(.)"/>
 																<xforms:insert context="ancestor::facets" nodeset="facet[index('facet-control') + 1]"
-																	origin="xforms:element('facet', $val)"></xforms:insert>
-																<xforms:delete nodeset="."></xforms:delete>
+																	origin="xforms:element('facet', $val)"/>
+																<xforms:delete nodeset="."/>
 															</xforms:action>
 														</xforms:trigger>
 													</xforms:group>
 													<xforms:trigger appearance="minimal">
-														<xforms:delete ev:event="DOMActivate" context="."></xforms:delete>
+														<xforms:delete ev:event="DOMActivate" context="."/>
 														<xforms:label>
 															<span class="glyphicon glyphicon-remove"></span>
 														</xforms:label>
@@ -715,20 +752,21 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 											<h3>Languages<small>
 													<a href="#top">
 														<span class="glyphicon glyphicon-chevron-up"></span>Top </a></small></h3>
-											<p>The following languages are available in the Numishare public user interface. The availability of translations of Nomisma.org-defined
-												concepts in these languages is variable. Enabling other languages will required Solr re-indexing to facilitate the multilingual
-												browse and map interfaces.</p>
+											<p>The following languages are available in the Numishare public user interface. The availability of translations of
+												Nomisma.org-defined concepts in these languages is variable. Enabling other languages will required Solr
+												re-indexing to facilitate the multilingual browse and map interfaces.</p>
 											<xforms:repeat nodeset="language">
-												<xforms:var name="code" select="@code"></xforms:var>
+												<xforms:var name="code" select="@code"/>
 												<div>
 													<xforms:input ref="@enabled">
-														<xforms:label value="tokenize(instance('languages')//language[@value=$code], ',')[1]"></xforms:label>
+														<xforms:label value="tokenize(instance('languages')//language[@value=$code], ',')[1]"/>
 													</xforms:input>
 												</div>
 											</xforms:repeat>
 										</xforms:group>
 										<hr />
-									</div> <xforms:group ref="images">
+									</div>
+									<xforms:group ref="images">
 										<div class="section" id="iiif">
 											<h3>IIIF Image Server<small>
 													<a href="#top">
@@ -757,14 +795,15 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 																<xforms:alert>Required when the IIIF Server has been set.</xforms:alert>
 															</xforms:input>
 														</td>
-														<td>If a IIIF Server has been configured, the image folder is the path on the server into which Numishare will place
-															uploaded files. This folder should be writeable by Tomcat.</td>
+														<td>If a IIIF Server has been configured, the image folder is the path on the server into which
+															Numishare will place uploaded files. This folder should be writeable by Tomcat.</td>
 													</tr>
 												</tbody>
 											</table>
 											<hr />
 										</div>
-									</xforms:group> <div class="section" id="googleAnalytics">
+									</xforms:group>
+									<div class="section" id="googleAnalytics">
 										<h3>Google Analytics<small>
 												<a href="#top">
 													<span class="glyphicon glyphicon-chevron-up"></span>Top </a></small></h3>
@@ -782,12 +821,76 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 															<xforms:label>Google Analytics</xforms:label>
 														</xforms:textarea>
 													</td>
-													<td>Copy and paste the javascript code between <b>&lt;script type="text/javascript"&gt;&lt;/script&gt;</b> provided by
-														Google.</td>
+													<td>Copy and paste the javascript code between <b>&lt;script type="text/javascript"&gt;&lt;/script&gt;</b>
+														provided by Google.</td>
 												</tr>
 											</tbody>
 										</table>
 									</div>
+								</xforms:group>
+							</xforms:case>
+							<xforms:case id="pages">
+								<xforms:group ref="instance('config')/pages">
+									<h2>Page Content and Navigation</h2>
+									<p>Here you can configure the pages that will appear as links in the navigation tab. Note that some pages are unavailable
+										for certain types of Numishare collections. For example, the 'Analyize Hoards' feature is only available for hoard
+										projects.</p>
+
+									<div class="section">
+										<h3>Enabled Pages</h3>
+										<xforms:repeat nodeset="xxforms:sort(*[not(self::index or self::page)], name(), 'text', 'ascending')">
+											<div>
+												<xforms:input ref="@enabled">
+													<xforms:label ref="parent::node()/name()"/>
+												</xforms:input>
+											</div>
+										</xforms:repeat>
+										<hr />
+									</div>
+									<xforms:group ref="feedback[@enabled = true()]">
+										<div class="section">
+											<h3>Feedback Form Configuration</h3>
+											<xforms:trigger appearance="minimal">
+												<xforms:label>
+													<span class="glyphicon glyphicon-plus"></span>Recipient</xforms:label>
+												<xforms:insert context="." nodeset="./child::node()[last()]" origin="instance('to-template')"
+													ev:event="DOMActivate"/>
+											</xforms:trigger>
+											<p>Insert an internal or external SMTP mail server and one or more email addresses that are designated to receive
+												correspondence from the Feedback web form.</p>
+											<div>
+												<xforms:input ref="smtp-host">
+													<xforms:label>SMTP Server</xforms:label>
+													<xforms:alert>Required. Must conform to xs:anyURI</xforms:alert>
+												</xforms:input>
+											</div>
+											<xforms:repeat nodeset="to">
+												<div>
+													<h4>Recipient</h4>
+													<xforms:group ref=".[count(parent::node()/to) &gt; 1]">
+														<xforms:trigger appearance="minimal">
+															<xforms:delete ev:event="DOMActivate" context="."/>
+															<xforms:label>
+																<span class="glyphicon glyphicon-remove"></span>
+															</xforms:label>
+														</xforms:trigger>
+													</xforms:group>
+													<div>
+														<xforms:input ref="name">
+															<xforms:label>Name</xforms:label>
+															<xforms:alert>Required</xforms:alert>
+														</xforms:input>
+													</div>
+													<div>
+														<xforms:input ref="email">
+															<xforms:label>Email Address</xforms:label>
+															<xforms:alert>Must be a valid email address</xforms:alert>
+														</xforms:input>
+													</div>
+												</div>
+											</xforms:repeat>
+										</div>
+									</xforms:group>
 								</xforms:group>
 							</xforms:case>
 							<xforms:case id="boilerplate">
@@ -796,12 +899,12 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 									<xforms:group ref="template">
 										<div class="section">
 											<h3>Electronic Records</h3>
-											<p>The following fields pertain to electronic records and will be populated automatically into each new object record. They can be
-												changed on a per-document bases from within the object editing form. The maintenance agency is the entity responsible for the web
-												site which provides access to the electronic record. The copyright holder maintains the intellectual property (and may differ from
-												the repository or physical custodian). The project field pertains to the project responsible for the creation of the record.
-												CreatedBy denotes the individual responsible for entering metadata. The language refers to the language of the electronic
-												record.</p>
+											<p>The following fields pertain to electronic records and will be populated automatically into each new object
+												record. They can be changed on a per-document bases from within the object editing form. The maintenance agency
+												is the entity responsible for the web site which provides access to the electronic record. The copyright holder
+												maintains the intellectual property (and may differ from the repository or physical custodian). The project
+												field pertains to the project responsible for the creation of the record. CreatedBy denotes the individual
+												responsible for entering metadata. The language refers to the language of the electronic record.</p>
 											<p>Publisher, copyright holder, and language are required. Project and createdBy may be left blank.</p>
 											<div>
 												<xforms:input ref="agencyName">
@@ -831,11 +934,11 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 													<xforms:label>Language</xforms:label>
 													<xforms:item>
 														<xforms:label>Select Language...</xforms:label>
-														<xforms:value></xforms:value>
+														<xforms:value/>
 													</xforms:item>
 													<xforms:itemset nodeset="instance('languages')//language">
-														<xforms:label ref="."></xforms:label>
-														<xforms:value ref="@value"></xforms:value>
+														<xforms:label ref="."/>
+														<xforms:value ref="@value"/>
 													</xforms:itemset>
 													<xforms:alert>Required</xforms:alert>
 												</xforms:select1>
@@ -846,11 +949,11 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 													<xforms:alert>Required</xforms:alert>
 													<xforms:item>
 														<xforms:label>Select License...</xforms:label>
-														<xforms:value></xforms:value>
+														<xforms:value/>
 													</xforms:item>
 													<xforms:itemset nodeset="instance('licenseselect-template')//license">
-														<xforms:label ref="."></xforms:label>
-														<xforms:value ref="@href"></xforms:value>
+														<xforms:label ref="."/>
+														<xforms:value ref="@href"/>
 													</xforms:itemset>
 												</xforms:select1>
 											</div>
@@ -858,9 +961,10 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 										</div>
 										<div class="section">
 											<h3>Physical Objects</h3>
-											<p>The following fields pertain to attributes of the physical objects themselves. The collection is the public name of the physical
-												collection. The owner field is an individual or corporate body which legally controls the object, and repository is the entity which
-												serves as physical custodian. Objects on loan may have a different owner than repository.</p>
+											<p>The following fields pertain to attributes of the physical objects themselves. The collection is the public name
+												of the physical collection. The owner field is an individual or corporate body which legally controls the
+												object, and repository is the entity which serves as physical custodian. Objects on loan may have a different
+												owner than repository.</p>
 											<div>
 												<xforms:input ref="collection">
 													<xforms:label>Collection</xforms:label>
@@ -898,8 +1002,8 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 							<xforms:case id="instances">
 								<xforms:group ref="instance('config')">
 									<h2>Local Types and Symbol Positions</h2>
-									<p>Local types and positions may be defined here. These values populate drop down menues in the Numishare editing interface, but also allow for
-										translations into other languages that are used in the public user interface.</p>
+									<p>Local types and positions may be defined here. These values populate drop down menues in the Numishare editing interface,
+										but also allow for translations into other languages that are used in the public user interface.</p>
 									<!-- localType attributes and translations which may appear on nearly any NUDS/XML element. element constraint not yet implemented -->
 									<xforms:group ref="localTypes">
 										<div class="section">
@@ -909,8 +1013,8 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 													<span class="glyphicon glyphicon-plus"></span>
 												</xforms:label>
 												<xforms:hint>Add Local Type</xforms:hint>
-												<xforms:insert context="." nodeset="./child::node()[last()]" origin="instance('localType-template')" ev:event="DOMActivate"
-												></xforms:insert>
+												<xforms:insert context="." nodeset="./child::node()[last()]" origin="instance('localType-template')"
+													ev:event="DOMActivate"/>
 											</xforms:trigger>
 											<xforms:repeat nodeset="localType">
 												<div class="subsection">
@@ -919,10 +1023,10 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 														<xforms:label>
 															<span class="glyphicon glyphicon-plus"></span>Label</xforms:label>
 														<xforms:insert context="." nodeset="./child::node()[last()]"
-															origin="xforms:element('label', (xforms:attribute('lang', '')))" ev:event="DOMActivate"></xforms:insert>
+															origin="xforms:element('label', (xforms:attribute('lang', '')))" ev:event="DOMActivate"/>
 													</xforms:trigger>
 													<xforms:trigger appearance="minimal">
-														<xforms:delete ev:event="DOMActivate" context="."></xforms:delete>
+														<xforms:delete ev:event="DOMActivate" context="."/>
 														<xforms:label>
 															<span class="glyphicon glyphicon-remove"></span>
 														</xforms:label>
@@ -948,11 +1052,11 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 															<xforms:select1 ref="@lang">
 																<xforms:item>
 																	<xforms:label>Select Language...</xforms:label>
-																	<xforms:value></xforms:value>
+																	<xforms:value/>
 																</xforms:item>
 																<xforms:itemset nodeset="instance('languages')//language">
-																	<xforms:label ref="."></xforms:label>
-																	<xforms:value ref="@value"></xforms:value>
+																	<xforms:label ref="."/>
+																	<xforms:value ref="@value"/>
 																</xforms:itemset>
 																<xforms:alert>Required</xforms:alert>
 															</xforms:select1>
@@ -972,8 +1076,8 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 													<span class="glyphicon glyphicon-plus"></span>
 												</xforms:label>
 												<xforms:hint>Add Position</xforms:hint>
-												<xforms:insert context="." nodeset="./child::node()[last()]" origin="instance('position-template')" ev:event="DOMActivate"
-												></xforms:insert>
+												<xforms:insert context="." nodeset="./child::node()[last()]" origin="instance('position-template')"
+													ev:event="DOMActivate"/>
 											</xforms:trigger>
 											<xforms:repeat nodeset="position">
 												<div class="subsection">
@@ -982,10 +1086,10 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 														<xforms:label>
 															<span class="glyphicon glyphicon-plus"></span>Label</xforms:label>
 														<xforms:insert context="." nodeset="./child::node()[last()]"
-															origin="xforms:element('label', (xforms:attribute('lang', '')))" ev:event="DOMActivate"></xforms:insert>
+															origin="xforms:element('label', (xforms:attribute('lang', '')))" ev:event="DOMActivate"/>
 													</xforms:trigger>
 													<xforms:trigger appearance="minimal">
-														<xforms:delete ev:event="DOMActivate" context="."></xforms:delete>
+														<xforms:delete ev:event="DOMActivate" context="."/>
 														<xforms:label>
 															<span class="glyphicon glyphicon-remove"></span>
 														</xforms:label>
@@ -1028,11 +1132,11 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 															<xforms:select1 ref="@lang">
 																<xforms:item>
 																	<xforms:label>Select Language...</xforms:label>
-																	<xforms:value></xforms:value>
+																	<xforms:value/>
 																</xforms:item>
 																<xforms:itemset nodeset="instance('languages')//language">
-																	<xforms:label ref="."></xforms:label>
-																	<xforms:value ref="@value"></xforms:value>
+																	<xforms:label ref="."/>
+																	<xforms:value ref="@value"/>
 																</xforms:itemset>
 																<xforms:alert>Required</xforms:alert>
 															</xforms:select1>
@@ -1053,8 +1157,8 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 											<xforms:select1 ref="orbeon_theme">
 												<xforms:label>Theme Folder</xforms:label>
 												<xforms:itemset nodeset="instance('themes')//directory">
-													<xforms:label ref="@name"></xforms:label>
-													<xforms:value ref="@name"></xforms:value>
+													<xforms:label ref="@name"/>
+													<xforms:value ref="@name"/>
 												</xforms:itemset>
 											</xforms:select1>
 										</div>
@@ -1062,14 +1166,15 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 											<xforms:input ref="themes_url">
 												<xforms:label>Theme URL</xforms:label>
 												<xforms:alert>Must conform to a URL and end with a forward slash</xforms:alert>
-												<xforms:hint>Enter the URL of the themes folder. It is concatenated with the above theme name, so it must end in a forward
-													slash.</xforms:hint>
+												<xforms:hint>Enter the URL of the themes folder. It is concatenated with the above theme name, so it must end in
+													a forward slash.</xforms:hint>
 											</xforms:input>
 										</div>
 									</div>
 									<div class="section">
 										<h3>Object Display Page</h3>
-										<p>Select a page layout from the following four choices. Note that these layouts apply to physical--not conceptual--record types.</p>
+										<p>Select a page layout from the following four choices. Note that these layouts apply to physical--not
+											conceptual--record types.</p>
 										<div class="col-md-3">
 											<div class="highlight text-center">
 												<xforms:trigger appearance="minimal">
@@ -1088,13 +1193,15 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 															<xforms:value>true</xforms:value>
 														</xforms:item>
 														<xforms:action ev:event="xforms-value-changed" if="true()">
-															<xforms:var name="name" select="name()"></xforms:var>
+															<xforms:var name="name" select="name()"/>
 															<xforms:action xxforms:iterate="instance('control-instance')/display/*[not(name() = $name)]">
-																<xforms:setvalue ref="context()" value="''"></xforms:setvalue>
+																<xforms:setvalue ref="context()" value="''"/>
 															</xforms:action>
 															<!-- set the config values -->
-															<xforms:setvalue ref="instance('config')/theme/layouts/display/nuds/orientation">vertical</xforms:setvalue>
-															<xforms:setvalue ref="instance('config')/theme/layouts/display/nuds/image_location">left</xforms:setvalue>
+															<xforms:setvalue ref="instance('config')/theme/layouts/display/nuds/orientation"
+																>vertical</xforms:setvalue>
+															<xforms:setvalue ref="instance('config')/theme/layouts/display/nuds/image_location"
+																>left</xforms:setvalue>
 														</xforms:action>
 													</xforms:select1>
 												</radiogroup>
@@ -1118,11 +1225,14 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 															<xforms:value>true</xforms:value>
 														</xforms:item>
 														<xforms:action ev:event="xforms-value-changed" if="true()">
-															<xforms:var name="name" select="name()"></xforms:var>
-															<xforms:setvalue xxforms:iterate="instance('control-instance')/display/*[not(name() = $name)]" value="''"></xforms:setvalue>
+															<xforms:var name="name" select="name()"/>
+															<xforms:setvalue xxforms:iterate="instance('control-instance')/display/*[not(name() = $name)]"
+																value="''"/>
 															<!-- set the config values -->
-															<xforms:setvalue ref="instance('config')/theme/layouts/display/nuds/orientation">vertical</xforms:setvalue>
-															<xforms:setvalue ref="instance('config')/theme/layouts/display/nuds/image_location">right</xforms:setvalue>
+															<xforms:setvalue ref="instance('config')/theme/layouts/display/nuds/orientation"
+																>vertical</xforms:setvalue>
+															<xforms:setvalue ref="instance('config')/theme/layouts/display/nuds/image_location"
+																>right</xforms:setvalue>
 														</xforms:action>
 													</xforms:select1>
 												</radiogroup>
@@ -1146,11 +1256,13 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 															<xforms:value>true</xforms:value>
 														</xforms:item>
 														<xforms:action ev:event="xforms-value-changed" if="true()">
-															<xforms:var name="name" select="name()"></xforms:var>
-															<xforms:setvalue xxforms:iterate="instance('control-instance')/display/*[not(name() = $name)]"></xforms:setvalue>
+															<xforms:var name="name" select="name()"/>
+															<xforms:setvalue xxforms:iterate="instance('control-instance')/display/*[not(name() = $name)]"/>
 															<!-- set the config values -->
-															<xforms:setvalue ref="instance('config')/theme/layouts/display/nuds/orientation">horizontal</xforms:setvalue>
-															<xforms:setvalue ref="instance('config')/theme/layouts/display/nuds/image_location">top</xforms:setvalue>
+															<xforms:setvalue ref="instance('config')/theme/layouts/display/nuds/orientation"
+																>horizontal</xforms:setvalue>
+															<xforms:setvalue ref="instance('config')/theme/layouts/display/nuds/image_location"
+																>top</xforms:setvalue>
 														</xforms:action>
 													</xforms:select1>
 												</radiogroup>
@@ -1174,11 +1286,13 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 															<xforms:value>true</xforms:value>
 														</xforms:item>
 														<xforms:action ev:event="xforms-value-changed" if="true()">
-															<xforms:var name="name" select="name()"></xforms:var>
-															<xforms:setvalue xxforms:iterate="instance('control-instance')/display/*[not(name() = $name)]"></xforms:setvalue>
+															<xforms:var name="name" select="name()"/>
+															<xforms:setvalue xxforms:iterate="instance('control-instance')/display/*[not(name() = $name)]"/>
 															<!-- set the config values -->
-															<xforms:setvalue ref="instance('config')/theme/layouts/display/nuds/orientation">horizontal</xforms:setvalue>
-															<xforms:setvalue ref="instance('config')/theme/layouts/display/nuds/image_location">bottom</xforms:setvalue>
+															<xforms:setvalue ref="instance('config')/theme/layouts/display/nuds/orientation"
+																>horizontal</xforms:setvalue>
+															<xforms:setvalue ref="instance('config')/theme/layouts/display/nuds/image_location"
+																>bottom</xforms:setvalue>
 														</xforms:action>
 													</xforms:select1>
 												</radiogroup>
@@ -1187,9 +1301,10 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 									</div>
 									<div class="section">
 										<h3>Browse Page</h3>
-										<p>Two page layouts are available for the browse section. Facets may occur either in a left or right-aligned column. Output fields can also
-											be selected from the list below and ordered. Keep in mind that selecting many fields may result in a cumbersome user experience.
-											Thumbnail images may be aligned either to the left or right of the record content.</p>
+										<p>Two page layouts are available for the browse section. Facets may occur either in a left or right-aligned column.
+											Output fields can also be selected from the list below and ordered. Keep in mind that selecting many fields may
+											result in a cumbersome user experience. Thumbnail images may be aligned either to the left or right of the record
+											content.</p>
 										<xforms:group ref="layouts/results">
 											<div class="subsection">
 												<h4>Result Documents</h4>
@@ -1223,8 +1338,8 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 												<xforms:label>Solr URL</xforms:label>
 												<xforms:alert>Required</xforms:alert>
 											</xforms:input>
-											<p>If Solr is run on a different server or core than the default, the Cocoon sitemap global variable must be edited manually in addition
-												to this URL, which is referenced in Orbeon web forms.</p>
+											<p>If Solr is run on a different server or core than the default, the Cocoon sitemap global variable must be edited
+												manually in addition to this URL, which is referenced in Orbeon web forms.</p>
 										</div>
 										<!--<xforms:group ref="images"><div class="section">
 									<h3>Image Configuration</h3>
@@ -1257,7 +1372,7 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 							</xforms:case>
 						</xforms:switch>
 					</div>
-					<!--<fr:xforms-inspector></fr:xforms-inspector>-->
+					<fr:xforms-inspector/>
 				</div>
 			</div>
 		</div>
