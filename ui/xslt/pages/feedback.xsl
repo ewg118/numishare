@@ -24,8 +24,8 @@
 			else
 				concat('http://', doc('input:request')/request/server-name, ':8080/orbeon/themes/', //config/theme/orbeon_theme)"/>
 
-	<xsl:template match="/content/config">
-		<html lang="{$lang}">
+	<xsl:template match="/config">
+		<html>
 			<head>
 				<title>
 					<xsl:value-of select="title"/>
