@@ -25,7 +25,7 @@
 				concat('http://', doc('input:request')/request/server-name, ':8080/orbeon/themes/', //config/theme/orbeon_theme)"/>
 
 	<xsl:template match="/content/config">
-		<html>
+		<html lang="{$lang}">
 			<head>
 				<title>
 					<xsl:value-of select="title"/>
@@ -74,7 +74,7 @@
 					<h1>
 						<xsl:value-of select="numishare:normalizeLabel('header_feedback', $lang)"/>
 					</h1>
-					<iframe src="feedback-form" id="feedback-frame" style="width:100%;height:800px"/>
+					<iframe src="feedback-form" id="feedback-frame"/>
 				</div>
 			</div>
 		</div>
