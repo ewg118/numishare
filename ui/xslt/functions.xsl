@@ -4074,6 +4074,7 @@
 					<xsl:when test="$label = 'header_maps'">Maps</xsl:when>
 					<xsl:when test="$label = 'header_contributors'">Contributors</xsl:when>
 					<xsl:when test="$label = 'header_compare'">Compare</xsl:when>
+					<xsl:when test="$label = 'header_feedback'">Feedback</xsl:when>
 					<xsl:when test="$label = 'header_symbols'">Symbols</xsl:when>
 					<xsl:when test="$label = 'header_analyze'">Analyze Hoards</xsl:when>
 					<xsl:when test="$label = 'header_visualize'">Visualize Queries</xsl:when>

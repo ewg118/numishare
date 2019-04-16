@@ -15,8 +15,6 @@
 	<page path="/numishare/admin/templates/" view="xforms/templates.xhtml"/>	
 	<page path="/numishare/admin/theme/layout/" view="xforms/layout.xhtml"/>	
 	
-	<page path="/numishare/[^\/]+/feedback" view="xforms/feedback.xhtml"/>
-	
 	<!-- authentication -->
 	<page path="/numishare/login" view="xforms/login.html" id="login"/>
 	<page path="/numishare/login-failed" view="xforms/login-failed.html"/>
@@ -132,6 +130,8 @@
 	<page path="/numishare/[^\/]+/search" model="xpl/models/solr/search.xpl" view="xpl/views/pages/search.xpl"/>
 	<page path="/numishare/[^\/]+/symbols" model="xpl/models/xquery/aggregate-symbols.xpl" view="xpl/views/pages/symbols.xpl"/>
 	<page path="/numishare/[^\/]+/visualize" model="xpl/models/solr/search.xpl" view="xpl/views/pages/visualize.xpl"/>
+	<page path="/numishare/[^\/]+/feedback" view="xpl/views/pages/feedback.xpl"/>
+	<page path="/numishare/[^\/]+/feedback-form" view="xforms/feedback.xhtml"/>
 	<page path="/numishare/[^\/]+/" model="xpl/models/config.xpl" view="xpl/views/pages/index.xpl"/>
 	
 	<page path="/numishare/[^\/]+/visualize/distribution" view="xpl/views/pages/vis.xpl"/>

@@ -1,12 +1,4 @@
-/*
-  Numishare styling: https://github.com/ewg118/numishare
-  Copyright 2014 Ethan Gruber
- */
-/*
-  ***************************************
-  VARIABLES
-  ***************************************
- */
+/*Numishare styling: https://github.com/ewg118/numishare*/
 /*
   ***************************************
   GLOBAL
@@ -45,6 +37,10 @@ dl.ar dd{
 .alert-box {
 	width:50%;
 	margin:20px auto;
+}
+#feedback-frame {
+    width:100%;
+    border:none;
 }
 /*
   ***************************************

@@ -48,7 +48,7 @@
 			</xforms:instance>
 
 			<xforms:instance id="config-template" xxforms:exclude-result-prefixes="#all">
-				<config xmlns="" version="19.03">
+				<config xmlns="" version="19.04">
 					<title>Numishare</title>
 					<description>A short description of the collection.</description>
 					<logo/>
@@ -178,10 +178,20 @@
 						<apis enabled="true"/>
 						<feedback enabled="false">
 							<smtp-host>localhost</smtp-host>
-							<to>
+							<to type="">
 								<email></email>
 								<name></name>
 							</to>
+							<recipient-types>
+								<type>curatorial</type>
+								<type>technical</type>
+							</recipient-types>
+							<feedback-types>
+								<type type="curatorial">Cataloging error</type>
+								<type type="curatorial|technical">Comment or suggestion</type>
+								<type type="technical">Interface bug</type>					
+								<type type="curatorial">Other</type>
+							</feedback-types>
 						</feedback>
 						<symbols enabled="false"/>
 						<identify enabled="false"/>

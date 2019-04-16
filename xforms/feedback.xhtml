@@ -7,30 +7,22 @@
 		<link rel="stylesheet" href="/fr/style/bootstrap/css/bootstrap.css" type="text/css" />
 		<link rel="stylesheet" href="/fr/style/form-runner-bootstrap-override.css" type="text/css" />
 
-		<link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
-		<script type="text/javascript" src="https://netdna.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-		<link rel="shortcut icon" href="/ops/images/orbeon-icon-16.ico" />
 		<link rel="icon" href="/ops/images/orbeon-icon-16.png" type="image/png" />
+		<link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" />
+		<script type="text/javascript" src="https://netdna.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 		<link rel="stylesheet" href="/apps/numishare/xforms/css/xforms.css" />
-		<link rel="stylesheet" href="/apps/numishare/ui/css/style.css" />
 
 		<!-- model -->
 		<xforms:model xxforms:function-library="org.orbeon.oxf.fr.library.FormRunnerFunctionLibrary">
 			<xforms:instance id="control-instance" xxforms:exclude-result-prefixes="#all">
 				<controls xmlns="">
 					<status></status>
-					<collection-name></collection-name>
+					<feedback-type></feedback-type>
+					<recipient-type></recipient-type>
 					<verified>false</verified>
+					<error>false</error>
 					<send-trigger>false</send-trigger>
 				</controls>
-			</xforms:instance>
-
-			<xforms:instance id="feedback" xxforms:exclude-result-prefixes="#all">
-				<feedback xmlns="">
-					<name></name>
-					<email></email>
-					<text></text>
-				</feedback>
 			</xforms:instance>
 
 			<xforms:instance id="config" xxforms:exclude-result-prefixes="#all">
@@ -39,7 +31,7 @@
 
 			<xforms:instance id="email-config" xxforms:exclude-result-prefixes="#all">
 				<message xmlns="">
-					<smtp-host/>
+					<smtp-host></smtp-host>
 					<from>
 						<email></email>
 						<name></name>
@@ -56,11 +48,12 @@
 
 			<!-- ************* BINDINGS **********************-->
 			<xforms:bind nodeset="instance('control-instance')">
-				<xforms:bind nodeset="verified" type="xs:boolean"/>				
+				<xforms:bind nodeset="verified" type="xs:boolean"/>
+				<xforms:bind nodeset="error" type="xs:boolean"/>
 				<!-- enable/disable the send email trigger based on validation of the form -->
 				<xforms:bind id="send-trigger" nodeset="send-trigger" type="xs:boolean" readonly=". != true()"/>
 			</xforms:bind>
-			
+
 			<xforms:bind nodeset="instance('email-config')">
 				<xforms:bind nodeset="from|to">
 					<xforms:bind nodeset="name" required="true()"/>
@@ -68,103 +61,171 @@
 				</xforms:bind>
 				<xforms:bind nodeset="body" required="true()"/>
 			</xforms:bind>
-			
+
 
 			<!-- **************** DYNAMIC VALIDATION CONTROLS ********************** -->
 			<xforms:action ev:event="xxforms-invalid" ev:observer="email-config">
 				<xforms:setvalue ref="instance('control-instance')/send-trigger" value="false()"/>
 			</xforms:action>
-			
+
 			<xforms:action ev:event="xxforms-valid" ev:observer="email-config">
 				<xforms:setvalue ref="instance('control-instance')/send-trigger" value="true()"/>
 			</xforms:action>
 
-			<!-- **************** MODEL-CONSTRUCT-DONE ********************** -->
+			<!-- **************** XFORMS-MODEL-CONSTRUCT-DONE ********************** -->
 			<xforms:action ev:event="xforms-model-construct-done">
 				<!-- load the config -->
 				<xforms:insert context="instance('dump')"
 					origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/models/config.xpl', 'data', instance('dump'), 'data')"/>
 				<xforms:insert context="instance('config')" origin="instance('dump')/config/*"/>
-				
+
 				<!-- set email processor configuration from the config -->
-				<xforms:insert context="instance('email-config')" nodeset="from" position="after" origin="instance('config')/pages/feedback/to"/>
 				<xforms:setvalue ref="instance('email-config')/smtp-host" value="instance('config')/pages/feedback/smtp-host"/>
-				<xforms:setvalue ref="instance('email-config')/subject" value="concat('Feedback from ', instance('config')/title)"/>
+			</xforms:action>
+
+			<!-- **************** XFORMS-READY ********************** -->
+			<xforms:action ev:event="xforms-ready">
+				<!-- evaluate the config and toggle the case to the error interface under the conditions outlined below -->
+				<xforms:action if="not(instance('config')/pages/feedback)">
+					<xforms:toggle case="error-interface"/>
+				</xforms:action>
+				<xforms:action if="instance('config')/pages/feedback">
+					<xforms:toggle case="error-interface" if="not(instance('config')/pages/feedback/@enabled = true())"/>
+					<xforms:toggle case="error-interface" if="not(instance('config')/pages/feedback/smtp-host castable as xs:anyURI)"/>
+					<xforms:toggle case="error-interface" if="not(instance('config')/pages/feedback/to)"/>
+				</xforms:action>
 			</xforms:action>
 		</xforms:model>
 	</head>
 
 	<body>
-		<xforms:var name="display_path">../</xforms:var>
-		<div class="container-fluid">
-			<div class="row">
-				<div class="col-md-12">
-					<h1>Feedback</h1>
-					
-					<xforms:switch>
-						<xforms:case id="feedback-form">
-							<xforms:group ref="instance('email-config')">
-								<div>
-									
-									<p>Instructions here.</p>
-									<div>
-										<xforms:input ref="from/name">
-											<xforms:label>Name</xforms:label>
-											<xforms:alert>Required</xforms:alert>
-										</xforms:input>
-									</div>
-									<div>
-										<xforms:input ref="from/email">
-											<xforms:label>Email Address</xforms:label>
-											<xforms:alert>Must conform to a valid email address</xforms:alert>
-										</xforms:input>
-									</div>
-									<div>
-										<xforms:textarea ref="body">
-											<xforms:label>Feedback</xforms:label>
-											<xforms:alert>Required</xforms:alert>
-										</xforms:textarea>
-									</div>
-								</div>
-							</xforms:group>
-							
-							<div>
-								<xforms:trigger bind="send-trigger">
-									<xforms:label>Send</xforms:label>
-									<xforms:action ev:event="DOMActivate">
-										<!-- determine whether or not the recaptcha has been checked -->
-										<xforms:dispatch target="my-recaptcha" name="fr-verify"/>
-										
-										<!-- send email if verified -->
-										<xforms:action if="instance('control-instance')/verified = true()">
-											<xforms:toggle case="response-success"/>
-											<xforms:insert context="instance('dump')"
-												origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/controllers/feedback-email.xpl', 'data', instance('email-config'), 'data')"
-											/>											
-										</xforms:action>								
-									</xforms:action>							
-								</xforms:trigger>
-							</div>
-							
-							<fr:recaptcha id="my-recaptcha">
-								<xforms:action ev:event="fr-verify-done">
-									<xforms:setvalue ref="instance('control-instance')/verified" value="true()"/>
-								</xforms:action>
-								<xforms:action ev:event="fr-verify-error">
-									<xforms:setvalue ref="instance('control-instance')/verified" value="false()"/>
-								</xforms:action>
-							</fr:recaptcha>
-							
-						</xforms:case>
-						<xforms:case id="response-success">
-							<p>The email has been sent to the managers of this collection. Thank you for your feedback.</p>
-						</xforms:case>
-					</xforms:switch>
+		<xforms:switch>
+			<xforms:case id="feedback-form">
 
-					
-					<fr:xforms-inspector/>
+				<xforms:group ref=".[instance('control-instance')/error = true()]">
+					<div class="alert-danger alert alert-box">
+						<span class="glyphicon glyphicon-exclamation-sign"></span>
+						<strong>Alert:</strong> Please verify with reCAPTCHA.</div>
+				</xforms:group>
+
+				<xforms:group ref="instance('email-config')">
+					<div>
+
+						<p>Please provide as detailed a description as possible. If there are errors in cataloging or problems/bugs in the user interface,
+							please include URLs to the relevant pages in your feedback. This will enable us to address these issues as quickly as possible.</p>
+						<div>
+							<xforms:input ref="from/name">
+								<xforms:label>Name</xforms:label>
+								<xforms:alert>Required</xforms:alert>
+							</xforms:input>
+						</div>
+						<div>
+							<xforms:input ref="from/email">
+								<xforms:label>Email Address</xforms:label>
+								<xforms:alert>Must conform to a valid email address</xforms:alert>
+							</xforms:input>
+						</div>
+						<div>
+							<xforms:select1 ref="instance('control-instance')/feedback-type">
+								<xforms:label>Feedback type</xforms:label>
+								<xforms:alert>Required</xforms:alert>
+								<xforms:item>
+									<xforms:label>Select...</xforms:label>
+									<xforms:value/>
+								</xforms:item>
+								<xforms:itemset nodeset="instance('config')/pages/feedback/feedback-types/type">
+									<xforms:label ref="."/>
+									<xforms:value ref="."/>
+								</xforms:itemset>
+								<xforms:action ev:event="xforms-value-changed">
+									<xforms:var name="val" select="."/>
+									<xforms:setvalue ref="instance('control-instance')/recipient-type"
+										value="instance('config')/pages/feedback/feedback-types/type[. = $val]/@type"/>
+								</xforms:action>
+							</xforms:select1>
+						</div>
+						<div>
+							<xforms:textarea ref="body">
+								<xforms:label>Description</xforms:label>
+								<xforms:alert>Required</xforms:alert>
+							</xforms:textarea>
+						</div>
+					</div>
+				</xforms:group>
+
+				<fr:recaptcha id="my-recaptcha">
+					<xforms:action ev:event="fr-verify-done">
+						<xforms:setvalue ref="instance('control-instance')/verified" value="true()"/>
+						<xforms:setvalue ref="instance('control-instance')/error" value="false()"/>
+					</xforms:action>
+					<xforms:action ev:event="fr-verify-error">
+						<xforms:setvalue ref="instance('control-instance')/verified" value="false()"/>
+						<xforms:setvalue ref="instance('control-instance')/error" value="true()"/>
+					</xforms:action>
+				</fr:recaptcha>
+
+				<div>
+					<xforms:trigger bind="send-trigger">
+						<xforms:label>Send</xforms:label>
+						<xforms:action ev:event="DOMActivate">
+							<!-- determine whether or not the recaptcha has been checked -->
+							<xforms:dispatch target="my-recaptcha" name="fr-verify"/>
+
+							<!-- send email if verified -->
+							<xforms:action if="instance('control-instance')/verified = true()">
+								<!-- insert relevant recipients -->
+								<xforms:var name="type" select="instance('control-instance')/recipient-type"/>
+								<xforms:insert context="instance('email-config')" nodeset="from" position="after"
+									origin="instance('config')/pages/feedback/to[contains($type, @type)]"/>
+
+								<!-- delete @to attribute -->
+								<xforms:delete nodeset="instance('email-config')/to/@type"/>
+
+								<!-- set the subject -->
+								<xforms:setvalue ref="instance('email-config')/subject"
+									value="concat('Feedback (', instance('control-instance')/feedback-type, ') from ', instance('config')/title)"/>
+
+								<xforms:toggle case="response-success"/>
+								<xforms:insert context="instance('dump')"
+									origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/controllers/feedback-email.xpl', 'data', instance('email-config'), 'data')"
+								/>
+							</xforms:action>
+						</xforms:action>
+					</xforms:trigger>
 				</div>
-			</div>
-		</div>
+
+			</xforms:case>
+			<xforms:case id="response-success">
+				<p>The email has been sent to the managers of this collection. Thank you for your feedback.</p>
+			</xforms:case>
+			<xforms:case id="error-interface">
+				<xforms:group ref="instance('config')/pages">
+					<xforms:group ref=".[not(feedback)]">
+						<div class="alert-danger alert alert-box">
+							<span class="glyphicon glyphicon-exclamation-sign"></span>
+							<strong>Alert:</strong> There are no Feedback page configurations in this Numishare project. Please update the config.</div>
+					</xforms:group>
+					<xforms:group ref="feedback">
+						<xforms:group ref=".[not(@enabled = true())]">
+							<div class="alert-danger alert alert-box">
+								<span class="glyphicon glyphicon-exclamation-sign"></span>
+								<strong>Alert:</strong> The Feedback interface has not been activated in this Numishare project.</div>
+						</xforms:group>
+						<xforms:group ref=".[not(smtp-host castable as xs:anyURI)]">
+							<div class="alert-danger alert alert-box">
+								<span class="glyphicon glyphicon-exclamation-sign"></span>
+								<strong>Alert:</strong> The email server URL has not been configured properly.</div>
+						</xforms:group>
+						<xforms:group ref=".[not(to)]">
+							<div class="alert-danger alert alert-box">
+								<span class="glyphicon glyphicon-exclamation-sign"></span>
+								<strong>Alert:</strong> No recipients for feedback have been designated in the Numishare config for this project.</div>
+						</xforms:group>
+					</xforms:group>
+				</xforms:group>
+			</xforms:case>
+		</xforms:switch>
+
+		<!--<fr:xforms-inspector/>-->
 	</body>
 </html>

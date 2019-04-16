@@ -89,7 +89,7 @@
 			</xforms:instance>
 
 			<xforms:instance id="to-template" xxforms:exclude-result-prefixes="#all">
-				<to xmlns="">
+				<to type="" xmlns="">
 					<name></name>
 					<email></email>
 				</to>
@@ -850,12 +850,7 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 									<xforms:group ref="feedback[@enabled = true()]">
 										<div class="section">
 											<h3>Feedback Form Configuration</h3>
-											<xforms:trigger appearance="minimal">
-												<xforms:label>
-													<span class="glyphicon glyphicon-plus"></span>Recipient</xforms:label>
-												<xforms:insert context="." nodeset="./child::node()[last()]" origin="instance('to-template')"
-													ev:event="DOMActivate"/>
-											</xforms:trigger>
+
 											<p>Insert an internal or external SMTP mail server and one or more email addresses that are designated to receive
 												correspondence from the Feedback web form.</p>
 											<div>
@@ -864,31 +859,105 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 													<xforms:alert>Required. Must conform to xs:anyURI</xforms:alert>
 												</xforms:input>
 											</div>
-											<xforms:repeat nodeset="to">
-												<div>
-													<h4>Recipient</h4>
-													<xforms:group ref=".[count(parent::node()/to) &gt; 1]">
-														<xforms:trigger appearance="minimal">
-															<xforms:delete ev:event="DOMActivate" context="."/>
-															<xforms:label>
-																<span class="glyphicon glyphicon-remove"></span>
-															</xforms:label>
-														</xforms:trigger>
-													</xforms:group>
+
+											<div class="subsection">
+												<h4>Recipients</h4>
+												<xforms:trigger appearance="minimal">
+													<xforms:label>
+														<span class="glyphicon glyphicon-plus"></span>Recipient</xforms:label>
+													<xforms:insert context="." nodeset="./child::node()[last()]" origin="instance('to-template')"
+														ev:event="DOMActivate"/>
+												</xforms:trigger>
+												<xforms:repeat nodeset="to">
 													<div>
-														<xforms:input ref="name">
-															<xforms:label>Name</xforms:label>
-															<xforms:alert>Required</xforms:alert>
-														</xforms:input>
+														<h5>Recipient</h5>
+														<xforms:group ref=".[count(parent::node()/to) &gt; 1]">
+															<xforms:trigger appearance="minimal">
+																<xforms:delete ev:event="DOMActivate" context="."/>
+																<xforms:label>
+																	<span class="glyphicon glyphicon-remove"></span>
+																</xforms:label>
+															</xforms:trigger>
+														</xforms:group>
+														<div>
+															<xforms:input ref="name">
+																<xforms:label>Name</xforms:label>
+																<xforms:alert>Required</xforms:alert>
+															</xforms:input>
+														</div>
+														<div>
+															<xforms:input ref="email">
+																<xforms:label>Email Address</xforms:label>
+																<xforms:alert>Must be a valid email address</xforms:alert>
+															</xforms:input>
+														</div>
+														<div>
+															<xforms:select1 ref="@type">
+																<xforms:label>Type</xforms:label>
+																<xforms:alert>Required</xforms:alert>
+																<xforms:item>
+																	<xforms:label>Select...</xforms:label>
+																	<xforms:value/>
+																</xforms:item>
+																<xforms:itemset nodeset="instance('config')/pages/feedback/recipient-types/type">
+																	<xforms:label ref="."/>
+																	<xforms:value ref="."/>
+																</xforms:itemset>
+															</xforms:select1>
+														</div>
 													</div>
-													<div>
-														<xforms:input ref="email">
-															<xforms:label>Email Address</xforms:label>
-															<xforms:alert>Must be a valid email address</xforms:alert>
-														</xforms:input>
-													</div>
+												</xforms:repeat>
+											</div>
+
+											<xforms:group ref="feedback-types">
+												<div class="subsection">
+													<h4>Feedback Categories</h4>
+													<xforms:trigger appearance="minimal">
+														<xforms:label>
+															<span class="glyphicon glyphicon-plus"></span>Category</xforms:label>
+														<xforms:insert context="." nodeset="./child::node()[last()]" origin="xforms:element('type', '')"
+															ev:event="DOMActivate"/>
+													</xforms:trigger>
+													<xforms:repeat nodeset="type">
+														<div>
+															<h5>Category</h5>
+															<xforms:group ref=".[count(parent::node()/type) &gt; 1]">
+																<xforms:trigger appearance="minimal">
+																	<xforms:delete ev:event="DOMActivate" context="."/>
+																	<xforms:label>
+																		<span class="glyphicon glyphicon-remove"></span>
+																	</xforms:label>
+																</xforms:trigger>
+															</xforms:group>
+															<div>
+																<xforms:input ref=".">
+																	<xforms:label>Heading</xforms:label>
+																	<xforms:alert>Required</xforms:alert>
+																</xforms:input>															
+															</div>
+															<div>
+																<xforms:select1 ref="@type">
+																	<xforms:label>Recipient Type</xforms:label>
+																	<xforms:alert>Required</xforms:alert>
+																	<xforms:item>
+																		<xforms:label>Select...</xforms:label>
+																		<xforms:value/>
+																	</xforms:item>
+																	<xforms:itemset nodeset="instance('config')/pages/feedback/recipient-types/type">
+																		<xforms:label ref="."/>
+																		<xforms:value ref="."/>
+																	</xforms:itemset>
+																	<xforms:item>
+																		<xforms:label>all</xforms:label>
+																		<xforms:value value="string-join(instance('config')/pages/feedback/recipient-types/type, '|')"></xforms:value>
+																	</xforms:item>
+																</xforms:select1>															
+															</div>
+														</div>														
+													</xforms:repeat>
 												</div>
-											</xforms:repeat>
+											</xforms:group>
+
 										</div>
 									</xforms:group>
 								</xforms:group>
@@ -1372,7 +1441,7 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 							</xforms:case>
 						</xforms:switch>
 					</div>
-					<fr:xforms-inspector/>
+					<!--<fr:xforms-inspector/>-->
 				</div>
 			</div>
 		</div>
