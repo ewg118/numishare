@@ -112,6 +112,20 @@
 										<triple s="?coinType" p="nmo:hasReverse/nmo:hasPortrait" o="{$object}"/>
 									</union>
 								</xsl:when>
+								<xsl:when test="$property = 'authPerson'">
+									<triple s="?coinType" p="nmo:hasAuthority" o="{$object}"/>
+								</xsl:when>
+								<xsl:when test="$property = 'authCorp'">
+									<union>
+										<group>
+											<triple s="?coinType" p="nmo:hasAuthority" o="{$object}"/>
+										</group>
+										<group>
+											<triple s="?coinType" p="nmo:hasAuthority" o="?authority"/>
+											<triple s="?authority" p="org:hasMembership/org:organization" o="{$object}"/>
+										</group>
+									</union>
+								</xsl:when>
 								<xsl:when test="$property = 'from'">
 									<xsl:if test="$object castable as xs:integer">
 										<xsl:variable name="gYear" select="format-number(number($object), '0000')"/>
@@ -149,6 +163,22 @@
 							<xsl:when test="$facet='?prop'">
 								<triple s="?coinType" p="?prop" o="?facet"/>
 								<triple s="?facet" p="rdf:type" o="?type" filter="FILTER strStarts(str(?type), &#x022;http://xmlns.com/foaf/0.1/&#x022;)"/>
+							</xsl:when>
+							<xsl:when test="$facet='authPerson'">
+								<triple s="?coinType" p="nmo:hasAuthority" o="?facet"/>
+								<triple s="?facet" p="a" o="foaf:Person"/>
+							</xsl:when>
+							<xsl:when test="$facet='authCorp'">
+								<union>
+									<group>
+										<triple s="?coinType" p="nmo:hasAuthority" o="?facet"/>
+									</group>
+									<group>
+										<triple s="?coinType" p="nmo:hasAuthority" o="?authority"/>
+										<triple s="?authority" p="org:hasMembership/org:organization" o="?facet"/>
+									</group>
+								</union>
+								<triple s="?facet" p="a" o="foaf:Organization"/>
 							</xsl:when>
 							<xsl:when test="$facet='portrait' or $facet='deity'">
 								<xsl:variable name="distClass" select="if ($facet='portrait') then 'foaf:Person' else 'wordnet:Deity'"/>

@@ -50,6 +50,20 @@
 							<triple s="{$subject}" p="nmo:hasReverse/nmo:hasPortrait" o="{$object}"/>
 						</union>
 					</xsl:when>
+					<xsl:when test="$property = 'authPerson'">
+						<triple s="{$subject}" p="nmo:hasAuthority" o="{$object}"/>
+					</xsl:when>
+					<xsl:when test="$property = 'authCorp'">
+						<union>
+							<group>
+								<triple s="{$subject}" p="nmo:hasAuthority" o="{$object}"/>
+							</group>
+							<group>
+								<triple s="{$subject}" p="nmo:hasAuthority" o="?authority"/>
+								<triple s="?authority" p="org:hasMembership/org:organization" o="{$object}"/>
+							</group>
+						</union>
+					</xsl:when>
 					<xsl:when test="$property = 'from'">
 						<xsl:if test="$object castable as xs:integer">
 							<xsl:variable name="gYear" select="format-number(number($object), '0000')"/>

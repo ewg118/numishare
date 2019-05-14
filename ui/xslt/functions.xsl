@@ -4608,6 +4608,24 @@
 						</xsl:matching-substring>
 					</xsl:analyze-string>
 				</xsl:when>
+				<xsl:when test="contains(., 'authPerson')">
+					<xsl:analyze-string select="." regex="authPerson\s(nm:.*)">
+						<xsl:matching-substring>
+							<xsl:value-of select="numishare:regularize_node('authority', $lang)"/>
+							<xsl:text>: </xsl:text>
+							<xsl:value-of select="nomisma:getLabel(regex-group(1), $lang)"/>
+						</xsl:matching-substring>
+					</xsl:analyze-string>
+				</xsl:when>
+				<xsl:when test="contains(., 'authCorp')">
+					<xsl:analyze-string select="." regex="authCorp\s(nm:.*)">
+						<xsl:matching-substring>
+							<xsl:value-of select="numishare:regularize_node('state', $lang)"/>
+							<xsl:text>: </xsl:text>
+							<xsl:value-of select="nomisma:getLabel(regex-group(1), $lang)"/>
+						</xsl:matching-substring>
+					</xsl:analyze-string>
+				</xsl:when>
 				<xsl:when test="contains(., 'region')">
 					<xsl:analyze-string select="." regex="region\s(nm:.*)">
 						<xsl:matching-substring>

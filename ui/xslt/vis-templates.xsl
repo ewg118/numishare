@@ -634,7 +634,8 @@
 
 		<xsl:variable name="properties" as="element()*">
 			<properties>
-				<prop value="nmo:hasAuthority" class="foaf:Person|foaf:Organization"/>								
+				<prop value="authPerson" class="foaf:Person|foaf:Organization"/>
+				<prop value="authCorp" class="foaf:Organization"/>							
 				<prop value="nmo:hasTypeSeriesItem" class="nmo:TypeSeriesItem"/>
 				<prop value="from"/>
 				<prop value="to"/>
@@ -674,6 +675,18 @@
 		<xsl:variable name="value" select="@value"/>
 		<xsl:variable name="label">
 			<xsl:choose>
+				<xsl:when test="@value = 'authPerson'">
+					<xsl:value-of select="numishare:regularize_node('authority', $lang)"/>
+					<xsl:text> (</xsl:text>
+					<xsl:text>Person</xsl:text>
+					<xsl:text>)</xsl:text>
+				</xsl:when>
+				<xsl:when test="@value = 'authCorp'">
+					<xsl:value-of select="numishare:regularize_node('authority', $lang)"/>
+					<xsl:text> (</xsl:text>
+					<xsl:value-of select="numishare:regularize_node('state', $lang)"/>
+					<xsl:text>)</xsl:text>
+				</xsl:when>
 				<xsl:when test="@value = 'from' or @value = 'to'">
 					<xsl:value-of select="numishare:regularize_node(concat(@value, 'Date'), $lang)"/>
 				</xsl:when>
