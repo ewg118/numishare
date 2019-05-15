@@ -382,7 +382,8 @@
 
 			<xsl:variable name="properties" as="element()*">
 				<properties>
-					<prop value="nmo:hasAuthority" class="foaf:Person|foaf:Organization"/>
+					<prop value="authPerson" class="foaf:Person"/>
+					<prop value="authCorp" class="foaf:Organization"/>
 					<prop value="nmo:hasStatedAuthority" class="foaf:Person|foaf:Organization"/>
 					<prop value="deity" class=""/>
 					<prop value="nmo:hasDenomination" class="nmo:Denomination"/>
@@ -403,6 +404,18 @@
 				<xsl:for-each select="$properties/prop">
 					<xsl:variable name="label">
 						<xsl:choose>
+							<xsl:when test="@value = 'authPerson'">
+								<xsl:value-of select="numishare:regularize_node('authority', $lang)"/>
+								<xsl:text> (</xsl:text>
+								<xsl:text>Person</xsl:text>
+								<xsl:text>)</xsl:text>
+							</xsl:when>
+							<xsl:when test="@value = 'authCorp'">
+								<xsl:value-of select="numishare:regularize_node('authority', $lang)"/>
+								<xsl:text> (</xsl:text>
+								<xsl:value-of select="numishare:regularize_node('state', $lang)"/>
+								<xsl:text>)</xsl:text>
+							</xsl:when>
 							<xsl:when test="@value = 'nmo:representsObjectType'">
 								<xsl:value-of select="numishare:regularize_node('objectType', $lang)"/>
 							</xsl:when>
