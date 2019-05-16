@@ -6,10 +6,9 @@
 	<xsl:include href="../functions.xsl"/>
 
 	<!-- request parameters -->
-	<xsl:param name="filter" select="doc('input:filter')/query"/>
-	<xsl:param name="dist" select="doc('input:request')/request/parameters/parameter[name = 'dist']/value"/>
-	<xsl:param name="format" select="doc('input:request')/request/parameters/parameter[name = 'format']/value"/>
-
+	<xsl:param name="filter" select="doc('input:request')/request/parameters/parameter[name='filter']/value"/>
+	<xsl:param name="facet" select="doc('input:request')/request/parameters/parameter[name='facet']/value"/>
+	
 	<!-- language -->
 	<xsl:param name="langParam" select="doc('input:request')/request/parameters/parameter[name = 'lang']/value"/>
 	<xsl:param name="lang">
@@ -22,14 +21,15 @@
 			</xsl:when>
 		</xsl:choose>
 	</xsl:param>
-
+	
 	<!-- config variables -->
 	<xsl:variable name="sparql_endpoint" select="/config/sparql_endpoint"/>
 	<xsl:variable name="query" select="doc('input:query')"/>
-
-	<!-- parse query statements into a data object -->
+	
 	<xsl:variable name="statements" as="element()*">
 		<statements>
+			<triple s="?coinType" p="rdf:type" o="nmo:TypeSeriesItem"/>
+			
 			<!-- insert the type series set in the config -->
 			<xsl:choose>
 				<xsl:when test="/config/union_type_catalog/@enabled = true()">
@@ -49,51 +49,43 @@
 					</xsl:if>
 				</xsl:otherwise>
 			</xsl:choose>
-
+			
 			<!-- process each SPARQL query fragments -->
 			<xsl:call-template name="numishare:filterToMetamodel">
 				<xsl:with-param name="subject">?coinType</xsl:with-param>
 				<xsl:with-param name="filter" select="$filter"/>
 			</xsl:call-template>
-
-			<!-- parse dist -->
+			
+			<!-- facet -->
 			<xsl:call-template name="numishare:distToMetamodel">
-				<xsl:with-param name="object">?dist</xsl:with-param>
-				<xsl:with-param name="dist" select="$dist"/>
+				<xsl:with-param name="object">?facet</xsl:with-param>
+				<xsl:with-param name="dist" select="$facet"/>
 			</xsl:call-template>
 			
-			<!-- if the dist is mint, then include lat and long, but only for CSV -->
-			<xsl:if test="$dist = 'nmo:hasMint' and $format = 'csv'">
-				<optional>
-					<triple s="?dist" p="geo:location" o="?loc"/>
-					<triple s="?loc" p="geo:lat" o="?lat"/>
-					<triple s="?loc" p="geo:long" o="?long"/>
-				</optional>
-			</xsl:if>
-
 			<!-- get label -->
 			<xsl:choose>
 				<xsl:when test="not($lang = 'en')">
 					<optional>
-						<triple s="?dist" p="skos:prefLabel" o="?label" filter="langMatches(lang(?label), &#x022;{$lang}&#x022;)"/>
+						<triple s="?facet" p="skos:prefLabel" o="?label" filter="langMatches(lang(?label), &#x022;{$lang}&#x022;)"/>
 					</optional>
-					<triple s="?dist" p="skos:prefLabel" o="?en_label" filter="langMatches(lang(?en_label), &#x022;en&#x022;)"/>
+					<triple s="?facet" p="skos:prefLabel" o="?en_label" filter="langMatches(lang(?en_label), &#x022;en&#x022;)"/>
 				</xsl:when>
 				<xsl:otherwise>
-					<triple s="?dist" p="skos:prefLabel" o="?label" filter="langMatches(lang(?label), &#x022;en&#x022;)"/>
+					<triple s="?facet" p="skos:prefLabel" o="?label" filter="langMatches(lang(?label), &#x022;en&#x022;)"/>
 				</xsl:otherwise>
 			</xsl:choose>
 		</statements>
 	</xsl:variable>
-
+	
 	<xsl:variable name="statementsSPARQL">
 		<xsl:apply-templates select="$statements/*"/>
 	</xsl:variable>
-
+	
 	<xsl:variable name="service">
-		<xsl:value-of select="concat($sparql_endpoint, '?query=', encode-for-uri(replace($query, '%STATEMENTS%', $statementsSPARQL)), '&amp;output=xml')"/>
+		<xsl:value-of
+			select="concat($sparql_endpoint, '?query=', encode-for-uri(replace($query, '%STATEMENTS%', $statementsSPARQL)), '&amp;output=xml')"/>
 	</xsl:variable>
-
+	
 	<xsl:template match="/">
 		<config>
 			<url>
