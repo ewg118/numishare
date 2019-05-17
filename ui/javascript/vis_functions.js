@@ -149,6 +149,29 @@ $(document).ready(function () {
         return false;
     });
     
+    $('#getDateRange').click(function () {
+        
+        //get all of the queries from the compare fields
+        queries = new Array();
+        $('input[name=compare]').each(function () {
+            queries.push($(this).val());
+        });
+        
+        compareParams = {
+            'compare': queries
+        }
+        
+        //call the getDateRange API to find the absolute earliest and latest dates across all queries
+        $.get(path + 'apis/getDateRange', $.param(urlParams, true),
+        function (data) {
+            $('#fromYear').val(data.earliest);
+            $('#toYear').val(data.latest);
+        
+        });
+        
+        return false;
+    });
+    
     //observe changes in drop down menus for validation
     $('#categorySelect').change(function () {
         var formId = $(this).closest('form').attr('id');
@@ -604,7 +627,7 @@ function validate(formId) {
         }
     }
     
-    //if there is a false element to the form OR if there is only one element (i.e., the category, then the form is invalid
+    //if there is a false element to the form OR if there is only one element (i.e., the category), then the form is invalid
     if (elements.indexOf(false) !== -1) {
         var valid = false;
     } else {
@@ -622,7 +645,6 @@ function validate(formId) {
     
     //enable/disable button
     if (valid == true) {
-        $('#' + formId).children('.visualize-submit').prop("disabled", false);
         //generate the filter query and assign the value to the hidden input
         q = generateFilter(formId);
         $('#' + formId + ' input[name=filter]').val(q);
@@ -681,6 +703,12 @@ function validate(formId) {
                 $('#' + formId).children('input[name=interval]').remove();
             }
         }
+        
+        //enable the button
+        $('#' + formId).children('.visualize-submit').prop("disabled", false);
+        
+        //show the button to automatically generate the date range for the given queries.
+        $('#' + formId).children('.getDateRange-container').attr("class", "hidden");
     } else {
         $('#' + formId).children('.visualize-submit').prop("disabled", true);
     }
@@ -706,8 +734,6 @@ function renderDistChart(path, urlParams) {
     
     $.get(path + 'apis/getDistribution', $.param(urlParams, true),
     function (data) {
-        console.log(data);
-        
         var visualization = d3plus.viz().container("#distribution-chart").data(data).type("bar").id('subset').x({
             'value': distValue, 'label': distLabel
         }).y(y).legend({

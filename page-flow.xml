@@ -145,6 +145,7 @@
 	<page path="/numishare/[^\/]+/apis/type-examples" model="xpl/models/config.xpl" view="xpl/models/sparql/type-examples.xpl"/>
 	<page path="/numishare/[^\/]+/apis/getDistribution" model="xpl/models/sparql/getDistribution.xpl" view="xpl/controllers/sparql/visualization.xpl"/>
 	<page path="/numishare/[^\/]+/apis/getMetrical" model="xpl/models/sparql/getMetrical.xpl" view="xpl/controllers/sparql/visualization.xpl"/>
+	<page path="/numishare/[^\/]+/apis/getDateRange" model="xpl/models/sparql/getDateRange.xpl" view="xpl/views/serializations/sparql/getDateRange.xpl"/>
 	<page path="/numishare/[^\/]+/apis/getSolrDistribution" model="xpl/models/solr/getDistribution.xpl" view="xpl/controllers/sparql/visualization.xpl"/>
 	
 	<!-- OpenRefine reconciliation services -->	

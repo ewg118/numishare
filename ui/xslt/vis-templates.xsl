@@ -100,6 +100,11 @@
 							<strong><xsl:value-of select="numishare:normalizeLabel('visualize_alert', $lang)"/>:</strong> Inputted date range is invalid and/or
 							interval is not set.</div>
 
+						<div class="getDateRange-container">
+							<button class="btn btn-default" id="getDateRange">Generate Range</button>
+							<span class="hidden"><img src="{$include_path}/images/ajax-loader.gif" alt="loading"/> Loading</span>
+						</div>
+						
 						<div class="form-inline" id="measurementRange-container">
 							<input type="number" class="form-control year" id="fromYear" min="1" step="1" placeholder="{numishare:regularize_node('year', $lang)}">
 								<xsl:if test="$from castable as xs:integer">
