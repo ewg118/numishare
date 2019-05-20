@@ -149,6 +149,56 @@ $(document).ready(function () {
         return false;
     });
     
+    $('#getDateRange').click(function () {
+        var formId = $(this).closest('form').attr('id');
+        
+        //get all of the queries from the compare fields
+        queries = new Array();
+        $('input[name=compare]').each(function () {
+            queries.push($(this).val());
+        });
+        
+        compareParams = {
+            'compare': queries
+        }
+        
+        //show ajax gif
+        $('.getDateRange-container').children('span').removeClass('hidden');
+        
+        //call the getDateRange API to find the absolute earliest and latest dates across all queries
+        $.get(path + 'apis/getDateRange', $.param(compareParams, true),
+        function (data) {
+            //set text inputs
+            $('#fromYear').val(Math.abs(data.earliest));
+            $('#toYear').val(Math.abs(data.latest));
+            
+            //set era drop downs
+            if (data.earliest < 0) {
+                $('#fromEra').val('bc');
+            } else {
+                $('#fromEra').val('ad');
+            }
+            
+            if (data.latest < 0) {
+                $('#toEra').val('bc');
+            } else {
+                $('#toEra').val('ad');
+            }
+            
+            //automatically set the interval, if blank
+            if (isNaN($('#interval').val())) {
+                $('#interval').val(5)
+            }
+            
+            $('.getDateRange-container').children('span').addClass('hidden');
+            
+            //revalidate form
+            validate(formId);
+        });
+        
+        return false;
+    });
+    
     //observe changes in drop down menus for validation
     $('#categorySelect').change(function () {
         var formId = $(this).closest('form').attr('id');
@@ -604,7 +654,7 @@ function validate(formId) {
         }
     }
     
-    //if there is a false element to the form OR if there is only one element (i.e., the category, then the form is invalid
+    //if there is a false element to the form OR if there is only one element (i.e., the category), then the form is invalid
     if (elements.indexOf(false) !== -1) {
         var valid = false;
     } else {
@@ -622,7 +672,6 @@ function validate(formId) {
     
     //enable/disable button
     if (valid == true) {
-        $('#' + formId).children('.visualize-submit').prop("disabled", false);
         //generate the filter query and assign the value to the hidden input
         q = generateFilter(formId);
         $('#' + formId + ' input[name=filter]').val(q);
@@ -681,8 +730,15 @@ function validate(formId) {
                 $('#' + formId).children('input[name=interval]').remove();
             }
         }
+        
+        //enable the button
+        $('#' + formId).children('.visualize-submit').prop("disabled", false);
+        
+        //show the button to automatically generate the date range for the given queries.
+        $('.getDateRange-container').removeClass('hidden');
     } else {
         $('#' + formId).children('.visualize-submit').prop("disabled", true);
+        $('.getDateRange-container').addClass('hidden');
     }
 }
 
@@ -706,8 +762,6 @@ function renderDistChart(path, urlParams) {
     
     $.get(path + 'apis/getDistribution', $.param(urlParams, true),
     function (data) {
-        console.log(data);
-        
         var visualization = d3plus.viz().container("#distribution-chart").data(data).type("bar").id('subset').x({
             'value': distValue, 'label': distLabel
         }).y(y).legend({
