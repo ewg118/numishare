@@ -150,6 +150,7 @@ $(document).ready(function () {
     });
     
     $('#getDateRange').click(function () {
+        var formId = $(this).closest('form').attr('id');
         
         //get all of the queries from the compare fields
         queries = new Array();
@@ -161,11 +162,38 @@ $(document).ready(function () {
             'compare': queries
         }
         
+        //show ajax gif
+        $('.getDateRange-container').children('span').removeClass('hidden');
+        
         //call the getDateRange API to find the absolute earliest and latest dates across all queries
-        $.get(path + 'apis/getDateRange', $.param(urlParams, true),
+        $.get(path + 'apis/getDateRange', $.param(compareParams, true),
         function (data) {
-            $('#fromYear').val(abs(data.earliest));
-            $('#toYear').val(abs(data.latest));        
+            //set text inputs
+            $('#fromYear').val(Math.abs(data.earliest));
+            $('#toYear').val(Math.abs(data.latest));
+            
+            //set era drop downs
+            if (data.earliest < 0) {
+                $('#fromEra').val('bc');
+            } else {
+                $('#fromEra').val('ad');
+            }
+            
+            if (data.latest < 0) {
+                $('#toEra').val('bc');
+            } else {
+                $('#toEra').val('ad');
+            }
+            
+            //automatically set the interval, if blank
+            if (isNaN($('#interval').val())) {
+                $('#interval').val(5)
+            }
+            
+            $('.getDateRange-container').children('span').addClass('hidden');
+            
+            //revalidate form
+            validate(formId);
         });
         
         return false;
@@ -707,9 +735,10 @@ function validate(formId) {
         $('#' + formId).children('.visualize-submit').prop("disabled", false);
         
         //show the button to automatically generate the date range for the given queries.
-        $('#' + formId).children('.getDateRange-container').attr("class", "hidden");
+        $('.getDateRange-container').removeClass('hidden');
     } else {
         $('#' + formId).children('.visualize-submit').prop("disabled", true);
+        $('.getDateRange-container').addClass('hidden');
     }
 }
 
