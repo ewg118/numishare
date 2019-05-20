@@ -89,7 +89,7 @@
 
 				<!-- display optional date range last, but only for the visualization page (ranges not much use for specific types) -->
 				<xsl:if test="$mode = 'page'">
-					<div>
+					<div class="form-group">
 						<h4>
 							<xsl:value-of select="numishare:normalize_fields('dateRange', $lang)"/>
 						</h4>
@@ -100,9 +100,9 @@
 							<strong><xsl:value-of select="numishare:normalizeLabel('visualize_alert', $lang)"/>:</strong> Inputted date range is invalid and/or
 							interval is not set.</div>
 
-						<div class="getDateRange-container">
-							<button class="btn btn-default" id="getDateRange">Generate Range</button>
-							<span class="hidden"><img src="{$include_path}/images/ajax-loader.gif" alt="loading"/> Loading</span>
+						<div class="getDateRange-container hidden" style="margin-bottom:15px">
+							<button class="btn btn-default" id="getDateRange">Calculate Range</button>
+							<span class="hidden text-muted"><img src="{$include_path}/images/ajax-loader.gif" alt="loading"/> Automatically calculating date range based on existing queries.</span>
 						</div>
 						
 						<div class="form-inline" id="measurementRange-container">
