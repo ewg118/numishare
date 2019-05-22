@@ -388,15 +388,15 @@ $(document).ready(function () {
     });
     
     //delete dataset query
-    $(' .compare-master-container').on('click', '.compare-container h4 small .remove-dataset', function () {
-        $(this).closest('.compare-container').remove();
+    $('.compare-master-container').on('click', '.compare-container h4 small .remove-dataset', function () {        
         var formId = $(this).closest('form').attr('id');
+        $(this).closest('.compare-container').remove();
         validate(formId);
         return false;
     });
     
     //delete property-object pair
-    $(' .compare-master-container').on('click', '.compare-container .filter .control-container .remove-query', function () {
+    $('.compare-master-container').on('click', '.compare-container .filter .control-container .remove-query', function () {
         var formId = $(this).closest('form').attr('id');
         var count = $(this).closest('.compare-container').children('.filter').length;
         
