@@ -18,5 +18,4 @@ PREFIX xsd:	<http://www.w3.org/2001/XMLSchema#>
 
 SELECT (MIN(?start) as ?earliest) (MAX(?end) as ?latest)  WHERE {
  %STATEMENTS%
- FILTER NOT EXISTS {?coinType skos:broader ?broader}
 }
