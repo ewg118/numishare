@@ -44,6 +44,10 @@
 			<!-- insert start and end dates -->
 			<triple s="?coinType" p="nmo:hasStartDate" o="?start"/>
 			<triple s="?coinType" p="nmo:hasEndDate" o="?end"/>
+			
+			<!-- only apply the years to types that have a specimen -->
+			<triple s="?coin" p="nmo:hasTypeSeriesItem" o="?coinType"/>
+			<triple s="?coin" p="rdf:type" o="nmo:NumismaticObject"/>
 		</statements>
 	</xsl:variable>
 

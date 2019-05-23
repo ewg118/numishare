@@ -3,12 +3,13 @@
 	xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nm="http://nomisma.org/id/"
 	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:nuds="http://nomisma.org/nuds" xmlns:nh="http://nomisma.org/nudsHoard"
 	xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:oa="http://www.w3.org/ns/oa#"
-	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:pelagios="http://pelagios.github.io/vocab/terms#" xmlns:gml="http://www.opengis.net/gml"
-	xmlns:void="http://rdfs.org/ns/void#" xmlns:relations="http://pelagios.github.io/vocab/relations#" xmlns:nmo="http://nomisma.org/ontology#"
-	xmlns:edm="http://www.europeana.eu/schemas/edm/" xmlns:svcs="http://rdfs.org/sioc/services#" xmlns:doap="http://usefulinc.com/ns/doap#"
-	xmlns:dcmitype="http://purl.org/dc/dcmitype/" xmlns:crm="http://www.cidoc-crm.org/cidoc-crm/" xmlns:numishare="https://github.com/ewg118/numishare"
-	xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:mets="http://www.loc.gov/METS/" xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
-	exclude-result-prefixes="xsl xs nuds nh xlink numishare mets gml" version="2.0">
+	xmlns:un="http://www.owl-ontologies.com/Ontology1181490123.owl#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+	xmlns:pelagios="http://pelagios.github.io/vocab/terms#" xmlns:gml="http://www.opengis.net/gml" xmlns:void="http://rdfs.org/ns/void#"
+	xmlns:relations="http://pelagios.github.io/vocab/relations#" xmlns:nmo="http://nomisma.org/ontology#" xmlns:edm="http://www.europeana.eu/schemas/edm/"
+	xmlns:svcs="http://rdfs.org/sioc/services#" xmlns:doap="http://usefulinc.com/ns/doap#" xmlns:dcmitype="http://purl.org/dc/dcmitype/"
+	xmlns:crm="http://www.cidoc-crm.org/cidoc-crm/" xmlns:numishare="https://github.com/ewg118/numishare" xmlns:foaf="http://xmlns.com/foaf/0.1/"
+	xmlns:mets="http://www.loc.gov/METS/" xmlns:xsd="http://www.w3.org/2001/XMLSchema#" exclude-result-prefixes="xsl xs nuds nh xlink numishare mets gml"
+	version="2.0">
 
 	<!-- ************** OBJECT-TO-RDF **************** -->
 	<xsl:template match="nuds:nuds | nh:nudsHoard" mode="pelagios">
@@ -509,12 +510,13 @@
 									</xsl:choose>
 								</nmo:hasCollection>
 							</xsl:for-each>
-							
+
 							<!-- type series items -->
-							<xsl:for-each select="distinct-values(nuds:descMeta/nuds:typeDesc[not(@certainty)]/@xlink:href|descendant::nuds:reference[@xlink:arcrole = 'nmo:hasTypeSeriesItem'][@xlink:href][not(@certainty)]/@xlink:href)">
+							<xsl:for-each
+								select="distinct-values(nuds:descMeta/nuds:typeDesc[not(@certainty)]/@xlink:href | descendant::nuds:reference[@xlink:arcrole = 'nmo:hasTypeSeriesItem'][@xlink:href][not(@certainty)]/@xlink:href)">
 								<nmo:hasTypeSeriesItem rdf:resource="{.}"/>
 							</xsl:for-each>
-							
+
 							<!-- other ids -->
 							<xsl:for-each select="descendant::*:otherRecordId[string(@semantic)]">
 								<xsl:variable name="uri"
@@ -560,7 +562,13 @@
 						<!-- findspot object -->
 						<xsl:if test="nuds:descMeta/nuds:findspotDesc/nuds:findspot[gml:Point]">
 							<xsl:apply-templates select="nuds:descMeta/nuds:findspotDesc/nuds:findspot[gml:Point]" mode="nomisma-object">
-								<xsl:with-param name="objectURI" select="if (string($uri_space)) then concat($uri_space, $id) else concat($url, 'id/', $id)"/>
+								<xsl:with-param name="objectURI"
+									select="
+										if (string($uri_space)) then
+											concat($uri_space, $id)
+										else
+											concat($url, 'id/', $id)"
+								/>
 							</xsl:apply-templates>
 						</xsl:if>
 					</xsl:when>
@@ -645,7 +653,7 @@
 
 	<xsl:template match="nuds:typeDesc" mode="nomisma">
 		<xsl:param name="id"/>
-		
+
 		<xsl:apply-templates select="nuds:objectType[@xlink:href]" mode="nomisma"/>
 
 		<xsl:apply-templates select="nuds:material | nuds:denomination | nuds:manufacture" mode="nomisma"/>
@@ -658,7 +666,7 @@
 			<nmo:hasReverse rdf:resource="{if (string($uri_space)) then concat($uri_space, $id) else concat($url, 'id/', $id)}#reverse"/>
 		</xsl:if>
 	</xsl:template>
-	
+
 	<xsl:template match="nuds:objectType" mode="nomisma">
 		<nmo:representsObjectType rdf:resource="{@xlink:href}"/>
 	</xsl:template>
@@ -719,9 +727,32 @@
 		<xsl:if test="string-length($element) &gt; 0">
 			<xsl:choose>
 				<xsl:when test="string(@xlink:href)">
-					<xsl:element name="nmo:{$element}">
-						<xsl:attribute name="rdf:resource" select="@xlink:href"/>
-					</xsl:element>
+
+					<!-- model uncertainty -->
+					<xsl:choose>
+						<xsl:when test="@certainty = 'uncertain' or matches(@certainty, 'https?://nomisma\.org')">
+							<xsl:element name="nmo:{$element}">
+								<rdf:Description>
+									<rdf:value rdf:resource="{@xlink:href}"/>
+									<un:hasUncertainty>
+										<xsl:attribute name="rdf:resource">
+											<xsl:choose>
+												<xsl:when test="@certainty = 'uncertain'">http://nomisma.org/id/uncertain_value</xsl:when>
+												<xsl:otherwise>
+													<xsl:value-of select="@certainty"/>
+												</xsl:otherwise>
+											</xsl:choose>
+										</xsl:attribute>
+									</un:hasUncertainty>
+								</rdf:Description>
+							</xsl:element>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:element name="nmo:{$element}">
+								<xsl:attribute name="rdf:resource" select="@xlink:href"/>
+							</xsl:element>
+						</xsl:otherwise>
+					</xsl:choose>
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:element name="nmo:{$element}">

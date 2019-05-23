@@ -51,7 +51,15 @@
 			</xsl:call-template>
 
 			<xsl:if test="$subject = '?coinType'">
-				<triple s="?coin" p="nmo:hasTypeSeriesItem" o="?coinType"/>
+				<union>
+					<group>
+						<triple s="?coin" p="nmo:hasTypeSeriesItem" o="?coinType"/>
+					</group>
+					<group>
+						<triple s="?coinType" p="skos:exactMatch" o="?match"/>
+						<triple s="?coin" p="nmo:hasTypeSeriesItem" o="?match"/>						
+					</group>					
+				</union>				
 			</xsl:if>
 
 			<triple s="?coin" p="{$measurement}" o="?measurement"/>

@@ -94,19 +94,29 @@
 							<xsl:value-of select="numishare:normalize_fields('dateRange', $lang)"/>
 						</h4>
 						<p>You may select both a start and end date to display change in measurement(s) over time in the form of a line chart. An average will
-							be taken for the selected interval over the entire duration.</p>
+							be taken for the selected interval over the entire duration. You may automatically generate this date range based on the queries
+							above. Note that the automatic date range applies only to typologies for which there is at least one physical specimen where the
+							selected measurement applies.</p>
+
 						<div class="alert alert-box alert-danger measurementRange-alert hidden">
 							<span class="glyphicon glyphicon-exclamation-sign"/>
 							<strong><xsl:value-of select="numishare:normalizeLabel('visualize_alert', $lang)"/>:</strong> Inputted date range is invalid and/or
 							interval is not set.</div>
 
+						<div class="alert alert-box alert-danger interval-alert hidden">
+							<span class="glyphicon glyphicon-exclamation-sign"/>
+							<strong><xsl:value-of select="numishare:normalizeLabel('visualize_alert', $lang)"/>:</strong> An interval of 1 year can only be
+							applied to a maximum range of 30 years due to performance issues regarding iterative queries.</div>
+
 						<div class="getDateRange-container hidden" style="margin-bottom:15px">
 							<button class="btn btn-default" id="getDateRange">Calculate Range</button>
-							<span class="hidden text-muted"><img src="{$include_path}/images/ajax-loader.gif" alt="loading"/> Automatically calculating date range based on existing queries.</span>
+							<span class="hidden text-muted"><img src="{$include_path}/images/ajax-loader.gif" alt="loading"/> Automatically calculating date
+								range based on existing queries.</span>
 						</div>
-						
+
 						<div class="form-inline" id="measurementRange-container">
-							<input type="number" class="form-control year" id="fromYear" min="1" step="1" placeholder="{numishare:regularize_node('year', $lang)}">
+							<input type="number" class="form-control year" id="fromYear" min="1" step="1"
+								placeholder="{numishare:regularize_node('year', $lang)}">
 								<xsl:if test="$from castable as xs:integer">
 									<xsl:attribute name="value" select="abs(xs:integer($from))"/>
 								</xsl:if>
@@ -159,6 +169,14 @@
 							</label>
 							<select class="form-control interval" id="interval">
 								<option>Select...</option>
+								<option value="1">
+									<xsl:if test="$interval castable as xs:integer">
+										<xsl:if test="xs:integer($interval) = 1">
+											<xsl:attribute name="selected">selected</xsl:attribute>
+										</xsl:if>
+									</xsl:if>
+									<xsl:text>1</xsl:text>
+								</option>
 								<option value="5">
 									<xsl:if test="$interval castable as xs:integer">
 										<xsl:if test="xs:integer($interval) = 5">
@@ -184,7 +202,8 @@
 					<input type="hidden" name="lang" value="{$lang}"/>
 				</xsl:if>
 
-				<input type="submit" value="{numishare:normalizeLabel('visualize_generate', $lang)}" class="btn btn-default visualize-submit" disabled="disabled"/>
+				<input type="submit" value="{numishare:normalizeLabel('visualize_generate', $lang)}" class="btn btn-default visualize-submit"
+					disabled="disabled"/>
 			</form>
 		</div>
 	</xsl:template>
@@ -262,7 +281,7 @@
 				<xsl:call-template name="dist-compare-template">
 					<xsl:with-param name="mode" select="$mode"/>
 				</xsl:call-template>
-				
+
 				<xsl:if test="string($langParam)">
 					<input type="hidden" name="lang" value="{$lang}"/>
 				</xsl:if>
@@ -362,7 +381,7 @@
 
 						<a href="{$display_path}visualize/{$interface}" title="Bookmark" class="btn btn-primary">
 							<span class="glyphicon glyphicon-erase"/>Clear</a>
-						
+
 						<a href="{$display_path}apis/{$api}?{string-join($queryParams/*, '&amp;')}" title="Download CSV" class="btn btn-primary">
 							<span class="glyphicon glyphicon-download"/>Download CSV</a>
 					</xsl:when>
@@ -425,14 +444,16 @@
 								<xsl:value-of select="numishare:regularize_node('objectType', $lang)"/>
 							</xsl:when>
 							<xsl:when test="contains(@value, 'nmo:')">
-								<xsl:value-of select="numishare:regularize_node(concat(lower-case(substring(substring-after(@value, 'nmo:has'), 1, 1)), substring(substring-after(@value, 'nmo:has'), 2)), $lang)"/>
+								<xsl:value-of
+									select="numishare:regularize_node(concat(lower-case(substring(substring-after(@value, 'nmo:has'), 1, 1)), substring(substring-after(@value, 'nmo:has'), 2)), $lang)"
+								/>
 							</xsl:when>
 							<xsl:otherwise>
 								<xsl:value-of select="numishare:regularize_node(@value, $lang)"/>
 							</xsl:otherwise>
 						</xsl:choose>
 					</xsl:variable>
-					
+
 					<option value="{@value}">
 						<xsl:if test="$dist = @value">
 							<xsl:attribute name="selected">selected</xsl:attribute>
@@ -653,7 +674,7 @@
 		<xsl:variable name="properties" as="element()*">
 			<properties>
 				<prop value="authPerson" class="foaf:Person|foaf:Organization"/>
-				<prop value="authCorp" class="foaf:Organization"/>							
+				<prop value="authCorp" class="foaf:Organization"/>
 				<prop value="nmo:hasTypeSeriesItem" class="nmo:TypeSeriesItem"/>
 				<prop value="from"/>
 				<prop value="to"/>
@@ -715,7 +736,9 @@
 					<xsl:value-of select="numishare:regularize_node('objectType', $lang)"/>
 				</xsl:when>
 				<xsl:when test="contains(@value, 'nmo:')">
-					<xsl:value-of select="numishare:regularize_node(concat(lower-case(substring(substring-after(@value, 'nmo:has'), 1, 1)), substring(substring-after(@value, 'nmo:has'), 2)), $lang)"/>
+					<xsl:value-of
+						select="numishare:regularize_node(concat(lower-case(substring(substring-after(@value, 'nmo:has'), 1, 1)), substring(substring-after(@value, 'nmo:has'), 2)), $lang)"
+					/>
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:value-of select="numishare:regularize_node(@value, $lang)"/>
