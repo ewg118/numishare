@@ -5,7 +5,6 @@ Function: These are the functions for generating charts and graphs with d3js
  *******/
 
 $(document).ready(function () {
-    
     //get URL parameters, from http://stackoverflow.com/questions/901115/how-can-i-get-query-string-values-in-javascript
     var urlParams;
     (window.onpopstate = function () {
@@ -388,7 +387,7 @@ $(document).ready(function () {
     });
     
     //delete dataset query
-    $('.compare-master-container').on('click', '.compare-container h4 small .remove-dataset', function () {        
+    $('.compare-master-container').on('click', '.compare-container h4 small .remove-dataset', function () {
         var formId = $(this).closest('form').attr('id');
         $(this).closest('.compare-container').remove();
         validate(formId);
@@ -633,24 +632,41 @@ function validate(formId) {
                     if ($('#toEra').val() == 'bc') {
                         toYear = toYear * -1;
                     }
+                    
+                    //be sure that fromYear is less than toYear
                     if (fromYear >= toYear) {
                         elements.push(false);
-                        $('.measurementRange-alert').removeClass('hidden')
+                        $('.measurementRange-alert').removeClass('hidden');
                     } else {
                         elements.push(true);
-                        $('.measurementRange-alert').addClass('hidden')
+                        $('.measurementRange-alert').addClass('hidden');
                     }
+                    
+                    //evaluate the interval and only allow the interval of 1 year for a range of <= 30 years
+                    if (interval == 1) {
+                        if (toYear - fromYear > 30) {
+                            elements.push(false);
+                            $('.interval-alert').removeClass('hidden');
+                        } else {
+                            elements.push(true);
+                            $('.interval-alert').addClass('hidden');
+                        }
+                    } else {
+                        $('.interval-alert').addClass('hidden');
+                    }
+                    
                 } else {
                     elements.push(false);
-                    $('.measurementRange-alert').removeClass('hidden')
+                    $('.measurementRange-alert').removeClass('hidden');
                 }
             } else {
                 elements.push(false);
-                $('.measurementRange-alert').removeClass('hidden')
+                $('.measurementRange-alert').removeClass('hidden');
             }
         } else {
             //hide the date alert if no values have been set
-            $('.measurementRange-alert').addClass('hidden')
+            $('.measurementRange-alert').addClass('hidden');
+            $('.interval-alert').addClass('hidden');
         }
     }
     
@@ -783,7 +799,8 @@ function renderMetricalChart(path, urlParams) {
             var visualization = d3plus.viz().container("#metrical-chart").data(data).type('line').id('subset').y({
                 'value': 'average'
             }).x({
-                'value': 'value', 'label': 'Date Range'
+                'value': 'value',
+                'label': 'Date Range'
             }).tooltip([ "label", "average"]).legend({
                 "size":[20, 50], 'data': false
             }).size(5).color({
