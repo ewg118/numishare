@@ -75,15 +75,36 @@
                             </xsl:choose>
                         </xsl:variable>
 
-                        <triple s="{$s}" p="nmo:hasEndDate" o="?endDate">
-                            <xsl:attribute name="filter">
-                                <xsl:text>(?endDate &gt;= "</xsl:text>
-                                <xsl:value-of select="format-number(number($range[1]), '0000')"/>
-                                <xsl:text>"^^xsd:gYear &amp;&amp; ?endDate &lt;= "</xsl:text>
-                                <xsl:value-of select="format-number(number($range[2]), '0000')"/>
-                                <xsl:text>"^^xsd:gYear)</xsl:text>
-                            </xsl:attribute>
-                        </triple>
+                        <xsl:choose>
+                            <!-- if the interval is 1, then the from and to are the same -->
+                            <xsl:when test="number($range[1]) = number($range[2])">
+                                <triple s="{$s}" p="nmo:hasStartDate" o="?startDate">
+                                    <xsl:attribute name="filter">
+                                        <xsl:text>(?startDate &lt;= "</xsl:text>
+                                        <xsl:value-of select="format-number(number($range[1]), '0000')"/>
+                                        <xsl:text>"^^xsd:gYear)</xsl:text>
+                                    </xsl:attribute>
+                                </triple>
+                                <triple s="{$s}" p="nmo:hasEndDate" o="?endDate">
+                                    <xsl:attribute name="filter">
+                                        <xsl:text>(?endDate &gt;= "</xsl:text>
+                                        <xsl:value-of select="format-number(number($range[1]), '0000')"/>
+                                        <xsl:text>"^^xsd:gYear)</xsl:text>
+                                    </xsl:attribute>
+                                </triple>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <triple s="{$s}" p="nmo:hasEndDate" o="?endDate">
+                                    <xsl:attribute name="filter">
+                                        <xsl:text>(?endDate &gt;= "</xsl:text>
+                                        <xsl:value-of select="format-number(number($range[1]), '0000')"/>
+                                        <xsl:text>"^^xsd:gYear &amp;&amp; ?endDate &lt;= "</xsl:text>
+                                        <xsl:value-of select="format-number(number($range[2]), '0000')"/>
+                                        <xsl:text>"^^xsd:gYear)</xsl:text>
+                                    </xsl:attribute>
+                                </triple>
+                            </xsl:otherwise>
+                        </xsl:choose>
                     </xsl:if>
                 </xsl:when>
                 <xsl:when test="$property = 'nmo:hasTypeSeriesItem'">

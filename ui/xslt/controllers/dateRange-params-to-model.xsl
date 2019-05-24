@@ -45,8 +45,16 @@
 			<triple s="?coinType" p="nmo:hasStartDate" o="?start"/>
 			<triple s="?coinType" p="nmo:hasEndDate" o="?end"/>
 			
-			<!-- only apply the years to types that have a specimen -->
-			<triple s="?coin" p="nmo:hasTypeSeriesItem" o="?coinType"/>
+			<!-- only apply the years to types (including skos:exactMatch) that have a specimen -->
+			<union>
+				<group>
+					<triple s="?coin" p="nmo:hasTypeSeriesItem" o="?coinType"/>
+				</group>
+				<group>
+					<triple s="?coinType" p="skos:exactMatch" o="?match"/>
+					<triple s="?coin" p="nmo:hasTypeSeriesItem" o="?match"/>						
+				</group>					
+			</union>
 			<triple s="?coin" p="rdf:type" o="nmo:NumismaticObject"/>
 		</statements>
 	</xsl:variable>
