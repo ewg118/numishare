@@ -30,6 +30,17 @@
                         </group>
                     </union>
                 </xsl:when>
+                <xsl:when test="$property = 'dynasty'">
+                    <union>
+                        <group>
+                            <triple s="{$subject}" p="?prop" o="{$object}"/>
+                        </group>
+                        <group>
+                            <triple s="{$subject}" p="?prop" o="?person"/>
+                            <triple s="?person" p="org:memberOf" o="{$object}"/>
+                        </group>
+                    </union>
+                </xsl:when>
                 <xsl:when test="$property = 'from'">
                     <xsl:if test="$object castable as xs:integer">
                         <xsl:variable name="gYear" select="format-number(number($object), '0000')"/>
