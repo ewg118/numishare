@@ -33,11 +33,13 @@
                 <xsl:when test="$property = 'dynasty'">
                     <union>
                         <group>
-                            <triple s="{$subject}" p="?prop" o="{$object}"/>
+                            <triple s="{$subject}" p="nmo:hasAuthority" o="{$object}"/>
+                            <triple s="{$object}" p="a" o="rdac:Family"/>
                         </group>
                         <group>
-                            <triple s="{$subject}" p="?prop" o="?person"/>
+                            <triple s="{$subject}" p="nmo:hasAuthority" o="?person"/>
                             <triple s="?person" p="org:memberOf" o="{$object}"/>
+                            <triple s="{$object}" p="a" o="rdac:Family"/>
                         </group>
                     </union>
                 </xsl:when>
@@ -157,6 +159,19 @@
                     </group>
                 </union>
                 <triple s="{$object}" p="a" o="foaf:Organization"/>
+            </xsl:when>
+            <xsl:when test="$dist = 'dynasty'">
+                <union>
+                    <group>
+                        <triple s="?coinType" p="nmo:hasAuthority" o="{$object}"/>
+                        <triple s="{$object}" p="a" o="rdac:Family"/>
+                    </group>
+                    <group>
+                        <triple s="?coinType" p="nmo:hasAuthority" o="?person"/>
+                        <triple s="?person" p="org:memberOf" o="{$object}"/>
+                        <triple s="{$object}" p="a" o="rdac:Family"/>
+                    </group>
+                </union>
             </xsl:when>
             <xsl:when test="$dist = 'portrait' or $dist = 'deity'">
                 <xsl:variable name="distClass"
