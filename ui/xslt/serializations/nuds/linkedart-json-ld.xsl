@@ -160,7 +160,7 @@
 					<_label>exchange media</_label>
 				</_object>
 
-				<xsl:apply-templates select="nuds:denomination[@xlink:href]"/>
+				<xsl:apply-templates select="nuds:denomination[@xlink:href]|nuds:objectType[@xlink:href]"/>
 
 				<xsl:for-each select="distinct-values($coinType_uris/uri)">
 					<xsl:variable name="uri" select="."/>
