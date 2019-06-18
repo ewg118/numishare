@@ -4503,7 +4503,7 @@
 			<xsl:when test="ancestor::metadata">
 				<xsl:value-of select="concat('&#x022;', replace($val, '&#x022;', '\\&#x022;'), '&#x022;')"/>
 			</xsl:when>
-			<xsl:when test="number($val)">
+			<xsl:when test="number($val) or $val = '0'">
 				<xsl:choose>
 					<xsl:when test="@datatype = 'xs:string'">
 						<xsl:value-of select="concat('&#x022;', replace($val, '&#x022;', '\\&#x022;'), '&#x022;')"/>
@@ -4702,35 +4702,62 @@
 		<xsl:param name="date"/>
 
 		<xsl:variable name="time">T00:00:00Z</xsl:variable>
-
+		
+		<!-- the data should be assumed to be XSD 1.0 compliant, which means that in order to make BC dates compliant to ISO 8601/XSD 1.1, 
+			a year should be added mathematically so that 1 BC is "0000" in the JSON output -->
 		<xsl:choose>
-			<xsl:when test="$date castable as xs:gYear">
-				<xsl:value-of select="concat($date, '-01-01', $time)"/>
+			<xsl:when test="substring($date, 1, 1) = '-'">
+				<xsl:choose>
+					<xsl:when test="$date castable as xs:gYear">
+						<xsl:value-of select="concat(xs:date(concat($date, '-01-01')) + xs:dayTimeDuration('P365DT0M'), $time)"/>
+					</xsl:when>
+					<xsl:when test="$date castable as xs:gYearMonth">
+						<xsl:value-of select="concat(xs:date(concat($date, '-01')) + xs:dayTimeDuration('P365DT0M'), $time)"/>
+					</xsl:when>
+					<xsl:when test="$date castable as xs:date">
+						<xsl:value-of select="concat(xs:date($date) + xs:dayTimeDuration('P365DT0M'), $time)"/>
+					</xsl:when>
+					<xsl:when test="$date castable as xs:dateTime">
+						<xsl:value-of select="$date"/>
+					</xsl:when>
+				</xsl:choose>
 			</xsl:when>
-			<xsl:when test="$date castable as xs:gYearMonth">
-				<xsl:value-of select="concat($date, '-01', $time)"/>
-			</xsl:when>
-			<xsl:when test="$date castable as xs:date">
-				<xsl:value-of select="concat($date, $time)"/>
-			</xsl:when>
-			<xsl:when test="$date castable as xs:dateTime">
-				<xsl:value-of select="$date"/>
-			</xsl:when>
+			<xsl:otherwise>
+				<xsl:choose>
+					<xsl:when test="$date castable as xs:gYear">
+						<xsl:value-of select="concat($date, '-01-01', $time)"/>
+					</xsl:when>
+					<xsl:when test="$date castable as xs:gYearMonth">
+						<xsl:value-of select="concat($date, '-01', $time)"/>
+					</xsl:when>
+					<xsl:when test="$date castable as xs:date">
+						<xsl:value-of select="concat($date, $time)"/>
+					</xsl:when>
+					<xsl:when test="$date castable as xs:dateTime">
+						<xsl:value-of select="$date"/>
+					</xsl:when>
+				</xsl:choose>
+			</xsl:otherwise>
 		</xsl:choose>
+		
 	</xsl:function>
 
 	<!-- result element names into AAT curies -->
 	<xsl:function name="numishare:normalizeClassification">
 		<xsl:param name="name"/>
+		
+		<!-- obverse/reverse = fronts/backs in AAT, not obverse and reverse -->
 
 		<xsl:choose>
 			<xsl:when test="$name = 'axis'">http://nomisma.org/id/axis</xsl:when>
+			<xsl:when test="$name = 'thickness'">aat:300072633</xsl:when>
 			<xsl:when test="$name = 'diameter'">aat:300055624</xsl:when>
 			<xsl:when test="$name = 'height'">aat:300055644</xsl:when>
 			<xsl:when test="$name = 'identifier'">aat:300312355</xsl:when>
-			<xsl:when test="$name = 'obverse'">aat:300078814</xsl:when>
-			<xsl:when test="$name = 'reverse'">aat:300078820</xsl:when>
+			<xsl:when test="$name = 'obverse'">aat:300190703</xsl:when>
+			<xsl:when test="$name = 'reverse'">aat:300190692</xsl:when>
 			<xsl:when test="$name = 'weight'">aat:300056240</xsl:when>
+			<xsl:when test="$name = 'width'">aat:300055647</xsl:when>
 			<xsl:otherwise>UNCLASSIFIED</xsl:otherwise>
 		</xsl:choose>
 	</xsl:function>
