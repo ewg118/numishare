@@ -163,7 +163,7 @@
 				</xsl:when>
 				<xsl:when test="string-length(.) = 0"/>
 				<xsl:otherwise>
-					<xsl:value-of select="concat('&#x022;', ., '&#x022;')"/>
+					<xsl:value-of select="concat('&#x022;', replace(., '&#x022;', '&#x022;&#x022;'), '&#x022;')"/>
 				</xsl:otherwise>
 			</xsl:choose>
 			<xsl:if test="not(position() = last())">
@@ -240,7 +240,7 @@
 					<xsl:value-of select="."/>
 				</xsl:when>
 				<xsl:otherwise>
-					<xsl:value-of select="concat('&#x022;', ., '&#x022;')"/>
+					<xsl:value-of select="concat('&#x022;', replace(., '&#x022;', '&#x022;&#x022;'), '&#x022;')"/>
 				</xsl:otherwise>
 			</xsl:choose>
 			<xsl:if test="not(position() = last())">
