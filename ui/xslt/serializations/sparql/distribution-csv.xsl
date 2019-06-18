@@ -149,7 +149,7 @@
 							<xsl:value-of select="res:binding[@name = 'count']/res:literal"/>
 						</xsl:when>
 						<xsl:otherwise>
-							<xsl:value-of select="format-number((res:binding[@name = 'count']/res:literal div $total) * 100, '0.0')"/>
+							<xsl:value-of select="format-number((res:binding[@name = 'count']/res:literal div $total) * 100, '0.00')"/>
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:element>
