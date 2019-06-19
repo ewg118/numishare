@@ -319,36 +319,46 @@ function parse_row($row, $count, $fileName){
 		    } else {
 		        $record['refs'][] = array('label'=>$id, 'uncertain'=>$uncertain);
 		    }
-		} elseif ($row['privateinfo'] == 'WW I project ready') {
-			//handle AoD
-			$citations = array_filter(explode('|', trim($row['published'])));
-			$uri = 'http://numismatics.org/aod/id/' . $citations[0];
-			
-			//get info from $coinTypes array if the coin type has been verified already
-			if (array_key_exists($uri, $coinTypes)){
-				echo "Matched {$uri}\n";
-				$coinType= array('label'=>$coinTypes[$uri]['reference'], 'uri'=>$uri);
-				$record['types']['AOD'] = $coinType;
-				$record['title'] = $coinTypes[$uri]['title'] . '. ' . $accnum;
-				
-			} else {
-				$file_headers = @get_headers($uri);
-				if ($file_headers[0] == 'HTTP/1.1 200 OK'){
-					echo "Found {$uri}\n";
-					//generate the title from the NUDS
-					$titles = generate_title_from_type($uri);
-					$coinTypes[$uri] = array('title'=>$titles['title'], 'reference'=>$titles['reference']);
-					
-					$record['title'] = $titles['title'] . ' ' . $accnum;
-					$coinType= array('label'=>$titles['reference'], 'uri'=>$uri);
-					$record['types']['AOD'] = $coinType;
-				} else {
-					$record['refs'][] = array('label'=>$id, 'uncertain'=>$uncertain);
-				}
-			}
 		} else {
 			$record['refs'][] = array('label'=>$id, 'uncertain'=>$uncertain);
 		}
+	}
+	
+	//evaluate medals for AOD, which do not include IDs in $refs
+	if ($row['privateinfo'] == 'WW I project ready') {
+	    $refs = array_filter(explode('|', trim($row['published'])));
+	    foreach ($refs as $ref){
+	        if (preg_match('/^(\d+\..*)$', $ref)){
+	            $id = $ref;
+	            
+	            $uri = 'http://numismatics.org/aod/id/' . $id;
+	            
+	            //get info from $coinTypes array if the coin type has been verified already
+	            if (array_key_exists($uri, $coinTypes)){
+	                echo "Matched {$uri}\n";
+	                $coinType = array('label'=>$coinTypes[$uri]['reference'], 'uri'=>$uri, 'uncertain'=>false);
+	                $record['types']['AOD'] = $coinType;
+	                $record['title'] = $coinTypes[$uri]['title'] . '. ' . $accnum;
+	                
+	            } else {
+	                $file_headers = @get_headers($uri);
+	                if ($file_headers[0] == 'HTTP/1.1 200 OK'){
+	                    echo "Found {$uri}\n";
+	                    //generate the title from the NUDS
+	                    $titles = generate_title_from_type($uri);
+	                    $coinTypes[$uri] = array('title'=>$titles['title'], 'reference'=>$titles['reference']);
+	                    
+	                    $record['title'] = $titles['title'] . ' ' . $accnum;
+	                    $coinType = array('label'=>$titles['reference'], 'uri'=>$uri, 'uncertain'=>false);
+	                    $record['types']['AOD'] = $coinType;
+	                } else {
+	                    $record['citations'][] = array('label'=>$id, 'uncertain'=>false);
+	                }
+	            }
+	        } else {
+	            $record['citations'][] = array('label'=>$id, 'uncertain'=>false);
+	        }
+	    }
 	}
 	
 	//if no coin types have been connected, then parse the typological metadata
@@ -511,13 +521,17 @@ function parse_row($row, $count, $fileName){
 	
 	/***** BIBLIOGRAPHIC DESCRIPTION *****/
 	//refs are already handled above in the coin type parsing
-	$citations = array_filter(explode('|', trim($row['published'])));
-	if (count($citations) > 0){
-		foreach ($citations as $val){
-			$uncertain = substr($val, -1) == '?' ? true : false;
-			$label = str_replace('?', '', trim($val));
-			$record['citations'][] = array('label'=>$label, 'uncertain'=>$uncertain);
-		}
+	
+	//ignore WWI objects, which were processed above
+	if ($row['privateinfo'] != 'WW I project ready') {
+	    $citations = array_filter(explode('|', trim($row['published'])));
+	    if (count($citations) > 0){
+	        foreach ($citations as $val){
+	            $uncertain = substr($val, -1) == '?' ? true : false;
+	            $label = str_replace('?', '', trim($val));
+	            $record['citations'][] = array('label'=>$label, 'uncertain'=>$uncertain);
+	        }
+	    }
 	}
 	
 	/***** SUBJECTS *****/
