@@ -12,7 +12,7 @@
 		</p:input>
 		<p:output name="data" id="request"/>
 	</p:processor>
-	
+
 	<p:processor name="oxf:pipeline">
 		<p:input name="config" href="../config.xpl"/>
 		<p:output name="data" id="config"/>
@@ -39,7 +39,7 @@
 
 	<p:choose href="#query-type">
 		<!-- when there is a query parameter, then initiate the pipeline for the Solr query and serialization into the OpenRefine JSON model -->
-		<p:when test="/mode = 'query'">			
+		<p:when test="/mode = 'query'">
 			<!-- get Solr results -->
 			<p:processor name="oxf:unsafe-xslt">
 				<p:input name="request" href="#request"/>
@@ -49,7 +49,8 @@
 						xmlns:xxf="http://www.orbeon.com/oxf/pipeline">
 						<xsl:include href="../../../ui/xslt/serializations/json/reconcile-query.xsl"/>
 
-						<xsl:variable name="collection-name" select="if (/config/union_type_catalog/@enabled = true()) then concat('(', string-join(/config/union_type_catalog/series/@collectionName, '+OR+'), ')')  					else substring-before(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/')"/>
+						<xsl:variable name="collection-name"
+							select="if (/config/union_type_catalog/@enabled = true()) then concat('(', string-join(/config/union_type_catalog/series/@collectionName, '+OR+'), ')')  					else substring-before(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/')"/>
 
 						<xsl:variable name="q">
 							<xsl:variable name="query" as="node()*">
@@ -85,7 +86,7 @@
 				<p:input name="config" href="#url-generator-config"/>
 				<p:output name="data" id="solr-response"/>
 			</p:processor>
-			
+
 			<!-- serialize into JSON -->
 			<p:processor name="oxf:pipeline">
 				<p:input name="data" href="aggregate('content', #config, #solr-response)"/>
@@ -103,13 +104,13 @@
 						xmlns:xxf="http://www.orbeon.com/oxf/pipeline">
 
 						<xsl:template match="/">
-							<xsl:copy-of select="xxf:json-to-xml(doc('input:request')/request/parameters/parameter[name='queries']/value)"/>							
+							<xsl:copy-of select="xxf:json-to-xml(doc('input:request')/request/parameters/parameter[name='queries']/value)"/>
 						</xsl:template>
 					</xsl:stylesheet>
 				</p:input>
 				<p:output name="data" id="queries"/>
 			</p:processor>
-			
+
 			<p:for-each href="#queries" select="/json/*[@type='object']" root="aggregate" id="aggregate">
 				<p:processor name="oxf:unsafe-xslt">
 					<p:input name="request" href="#request"/>
@@ -119,21 +120,22 @@
 						<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema"
 							xmlns:xxf="http://www.orbeon.com/oxf/pipeline">
 							<xsl:include href="../../../ui/xslt/serializations/json/reconcile-query.xsl"/>
-							
-							<xsl:variable name="collection-name" select="if (/config/union_type_catalog/@enabled = true()) then concat('(', string-join(/config/union_type_catalog/series/@collectionName, '+OR+'), ')')  					else substring-before(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/')"/>
-							
+
+							<xsl:variable name="collection-name"
+								select="if (/config/union_type_catalog/@enabled = true()) then concat('(', string-join(/config/union_type_catalog/series/@collectionName, '+OR+'), ')')  					else substring-before(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/')"/>
+
 							<!-- compile the q parameter -->
-							<xsl:variable name="q">					
+							<xsl:variable name="q">
 								<xsl:apply-templates select="/*[@type='object']">
 									<xsl:with-param name="collection-name" select="$collection-name"/>
 								</xsl:apply-templates>
 							</xsl:variable>
-							
+
 							<!-- config variables -->
 							<xsl:variable name="solr-url" select="concat(doc('input:config-xml')/config/solr_published, 'feed/')"/>
 							<xsl:variable name="service" select="concat($solr-url, '?', $q)"/>
-							
-							
+
+
 							<xsl:template match="/">
 								<config>
 									<url>
@@ -147,13 +149,13 @@
 					</p:input>
 					<p:output name="data" id="url-generator-config"/>
 				</p:processor>
-				
+
 				<p:processor name="oxf:url-generator">
 					<p:input name="config" href="#url-generator-config"/>
 					<p:output name="data" ref="aggregate"/>
 				</p:processor>
 			</p:for-each>
-			
+
 			<!--  process aggregate model through XSLT transformation into JSON -->
 			<p:processor name="oxf:pipeline">
 				<p:input name="data" href="aggregate('content', #config, #aggregate)"/>

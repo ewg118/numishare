@@ -40,7 +40,7 @@
         <!-- append regex to search for optional letter designation, that might be enclosed in parentheses -->
         
         <xsl:param name="collection-name"/>
-        <xsl:variable name="regex" select="concat('/', ., '(\(?[a-zA-z]\)?)?/')"/>
+        <xsl:variable name="regex" select="concat('/', replace(., '/', '//'), '(\(?[a-zA-z]\)?)?/')"/>
 
         <xsl:text>title_text:</xsl:text>
         <xsl:value-of select="$regex"/>
