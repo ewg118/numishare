@@ -328,7 +328,7 @@ function parse_row($row, $count, $fileName){
 	if ($row['privateinfo'] == 'WW I project ready') {
 	    $refs = array_filter(explode('|', trim($row['published'])));
 	    foreach ($refs as $ref){
-	        if (preg_match('/^(\d+\..*)$', $ref)){
+	        if (preg_match('/^(\d+\..*)$/', $ref)){
 	            $id = $ref;
 	            
 	            $uri = 'http://numismatics.org/aod/id/' . $id;
