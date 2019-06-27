@@ -1209,7 +1209,7 @@
 		</meta>
 		
 		<!-- twitter microdata -->
-		<meta name="twitter:card" content="photo" />
+		<meta name="twitter:card" content="summary_large_image" />
 		<meta name="twitter:title">
 			<xsl:attribute name="content">
 				<xsl:choose>
