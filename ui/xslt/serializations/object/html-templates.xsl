@@ -1207,9 +1207,27 @@
 				</xsl:choose>
 			</xsl:attribute>
 		</meta>
+		
+		<!-- twitter microdata -->
+		<meta name="twitter:card" content="photo" />
+		<meta name="twitter:title">
+			<xsl:attribute name="content">
+				<xsl:choose>
+					<xsl:when test="descendant::*:descMeta/*:title[@xml:lang = $lang]">
+						<xsl:value-of select="descendant::*:descMeta/*:title[@xml:lang = $lang]"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="descendant::*:descMeta/*:title[@xml:lang = 'en']"/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:attribute>
+		</meta>		
+		<meta name="twitter:url" content="{$objectUri}"/>
+		
 
 		<xsl:for-each select="//mets:fileGrp/mets:file[@USE = 'reference']/mets:FLocat/@xlink:href">
 			<meta property="og:image" content="{.}"/>
+			<meta name="twitter:image" content="{.}" />
 		</xsl:for-each>
 
 		<!-- CSS -->
