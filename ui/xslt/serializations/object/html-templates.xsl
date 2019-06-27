@@ -1225,7 +1225,7 @@
 		<meta name="twitter:url" content="{$objectUri}"/>
 		
 
-		<xsl:for-each select="//mets:fileGrp[@USE='obverse']/mets:file[@USE = 'reference']/mets:FLocat/@xlink:href">
+		<xsl:for-each select="//mets:fileGrp/mets:file[@USE = 'reference']/mets:FLocat/@xlink:href">
 			<meta property="og:image" content="{.}"/>
 			<meta name="twitter:image" content="{.}" />
 		</xsl:for-each>
