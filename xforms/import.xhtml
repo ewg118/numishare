@@ -1,0 +1,1207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xxforms="http://orbeon.org/oxf/xml/xforms"
+	xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:numishare="https://github.comu/ewg118/numishare" xmlns:xlink="http://www.w3.org/1999/xlink"
+	xmlns:nuds="http://nomisma.org/nuds" xmlns:res="http://www.w3.org/2005/sparql-results#" xmlns:xi="http://www.w3.org/2001/XInclude"
+	xmlns:nm="http://nomisma.org/id/" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:prov="http://www.w3.org/ns/prov#"
+	xmlns:rdac="http://www.rdaregistry.info/Elements/c/" xmlns:nmo="http://nomisma.org/ontology#">
+	<head>
+		<title>Numishare: Import Data from CSV</title>
+		<link rel="stylesheet" href="/fr/style/bootstrap/css/bootstrap.css" type="text/css" />
+		<link rel="stylesheet" href="/fr/style/form-runner-bootstrap-override.css" type="text/css" />
+		<link rel="shortcut icon" href="/ops/images/orbeon-icon-16.ico" />
+		<link rel="icon" href="/ops/images/orbeon-icon-16.png" type="image/png" />
+		<link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" />
+		<script type="text/javascript" src="https://netdna.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+		<link rel="stylesheet" href="/apps/numishare/xforms/css/xforms.css" />
+
+		<xforms:model xmlns="http://nomisma.org/nuds">
+			<xforms:instance id="nuds"
+				xxforms:exclude-result-prefixes="xhtml xforms xxforms ev xs xi xsi fr oxf nuds numishare exist res nm foaf rdf skos atom prov nmo rdac">
+				<nuds recordType="" xmlns="http://nomisma.org/nuds" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:mets="http://www.loc.gov/METS/"
+					xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml"> </nuds>
+			</xforms:instance>
+
+			<!-- xhtml xforms xxforms ev xs xi xsi fr oxf foaf rdf skos atom prov nmo nm res nuds numishare exist -->
+
+			<!-- configurations and form controls -->
+			<xforms:instance id="control-instance" xxforms:exclude-result-prefixes="#all">
+				<controls xmlns="">
+					<status/>
+					<collection-name/>
+					<username/>
+					<spreadsheet_key>1wRoRThLRz62O3jJ7rVm3HMeGUlZNYOLxnQBaJbMO8wg</spreadsheet_key>
+					<spreadsheet_uri/>
+					<worksheet_id/>
+					<language>en</language>
+					<nomisma-uri/>
+					<id/>
+					<mappings-valid>false</mappings-valid>
+					<metadata-valid>false</metadata-valid>
+					<load-trigger>false</load-trigger>
+					<validate-trigger>false</validate-trigger>
+					<import-trigger>false</import-trigger>
+					<content_before_hash/>
+					<content_after_hash/>
+					<position/>
+					<count/>
+				</controls>
+			</xforms:instance>
+
+			<!-- exist URL is stored in an XML file -->
+			<xforms:instance id="exist-config">
+				<xi:include href="../exist-config.xml"/>
+			</xforms:instance>
+			<!-- load URLs from config.xml in eXist into form for Solr and CSS file -->
+			<xforms:instance id="config">
+				<config xmlns=""/>
+			</xforms:instance>
+
+			<xforms:instance id="collections-list">
+				<collections xmlns=""/>
+			</xforms:instance>
+
+			<!-- Nomisma RDF -->
+			<xforms:instance id="rdf-concept" xxforms:exclude-result-prefixes="#default xhtml xforms xs ev xxforms fr res xi nomisma atom">
+				<rdf:RDF xmlns="" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:nm="http://nomisma.org/id/" xmlns:nmo="http://nomisma.org/ontology#"
+					xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+					xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+					xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+					xmlns:un="http://www.owl-ontologies.com/Ontology1181490123.owl#" xmlns:osgeo="http://data.ordnancesurvey.co.uk/ontology/geometry/"
+					xmlns:org="http://www.w3.org/ns/org#" xmlns:rdac="http://www.rdaregistry.info/Elements/c/" xmlns:bio="http://purl.org/vocab/bio/0.1/"
+					xmlns:prov="http://www.w3.org/ns/prov#" xmlns:crm="http://www.cidoc-crm.org/cidoc-crm/"/>
+			</xforms:instance>
+
+			<xforms:instance id="rdf" xxforms:exclude-result-prefixes="#default xhtml xforms xs ev xxforms fr res xi nomisma atom">
+				<rdf:RDF xmlns="" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:nm="http://nomisma.org/id/" xmlns:nmo="http://nomisma.org/ontology#"
+					xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+					xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+					xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+					xmlns:un="http://www.owl-ontologies.com/Ontology1181490123.owl#" xmlns:osgeo="http://data.ordnancesurvey.co.uk/ontology/geometry/"
+					xmlns:org="http://www.w3.org/ns/org#" xmlns:rdac="http://www.rdaregistry.info/Elements/c/" xmlns:bio="http://purl.org/vocab/bio/0.1/"
+					xmlns:prov="http://www.w3.org/ns/prov#" xmlns:crm="http://www.cidoc-crm.org/cidoc-crm/"/>
+			</xforms:instance>
+
+			<!-- NUDS templates -->
+			<xforms:instance id="descMeta-template" xxforms:exclude-result-prefixes="#all">
+				<descMeta>
+					<typeDesc/>
+				</descMeta>
+			</xforms:instance>
+
+
+			<xforms:instance id="control-template" xxforms:exclude-result-prefixes="#all">
+				<control>
+					<recordId/>
+					<publicationStatus>approved</publicationStatus>
+					<maintenanceStatus>derived</maintenanceStatus>
+					<maintenanceAgency>
+						<agencyName/>
+					</maintenanceAgency>
+					<maintenanceHistory>
+						<maintenanceEvent>
+							<eventType>derived</eventType>
+							<eventDateTime standardDateTime=""/>
+							<agentType>human</agentType>
+							<agent/>
+						</maintenanceEvent>
+					</maintenanceHistory>
+					<rightsStmt/>
+					<semanticDeclaration>
+						<prefix>nmo</prefix>
+						<namespace>http://nomisma.org/ontology#</namespace>
+					</semanticDeclaration>
+					<semanticDeclaration>
+						<prefix>skos</prefix>
+						<namespace>http://www.w3.org/2004/02/skos/core#</namespace>
+					</semanticDeclaration>
+				</control>
+			</xforms:instance>
+
+			<xforms:instance id="title-template" xxforms:exclude-result-prefixes="#all">
+				<title xml:lang=""/>
+			</xforms:instance>
+
+			<!-- typeDesc templates -->
+			<xforms:instance id="authority-template" xxforms:exclude-result-prefixes="#all">
+				<authority/>
+			</xforms:instance>
+
+			<xforms:instance id="corpname-template" xxforms:exclude-result-prefixes="#all">
+				<corpname xlink:type="simple" xlink:role="" xlink:href=""/>
+			</xforms:instance>
+
+			<xforms:instance id="denomination-template" xxforms:exclude-result-prefixes="#all">
+				<denomination xlink:type="simple" xlink:href=""/>
+			</xforms:instance>
+
+			<xforms:instance id="description-template" xxforms:exclude-result-prefixes="#all">
+				<description xml:lang=""/>
+			</xforms:instance>
+
+			<xforms:instance id="famname-template" xxforms:exclude-result-prefixes="#all">
+				<famname xlink:type="simple" xlink:role="" xlink:href=""/>
+			</xforms:instance>
+
+			<xforms:instance id="geogname-template" xxforms:exclude-result-prefixes="#all">
+				<geogname xlink:type="simple" xlink:role="" xlink:href=""/>
+			</xforms:instance>
+
+			<xforms:instance id="geographic-template" xxforms:exclude-result-prefixes="#all">
+				<geographic/>
+			</xforms:instance>
+
+			<xforms:instance id="legend-template" xxforms:exclude-result-prefixes="#all">
+				<legend/>
+			</xforms:instance>
+
+			<xforms:instance id="material-template" xxforms:exclude-result-prefixes="#all">
+				<material xlink:type="simple" xlink:href=""/>
+			</xforms:instance>
+
+			<xforms:instance id="obverse-template" xxforms:exclude-result-prefixes="#all">
+				<obverse/>
+			</xforms:instance>
+
+			<xforms:instance id="persname-template" xxforms:exclude-result-prefixes="#all">
+				<persname xlink:type="simple" xlink:role="" xlink:href=""/>
+			</xforms:instance>
+
+			<xforms:instance id="reverse-template" xxforms:exclude-result-prefixes="#all">
+				<reverse/>
+			</xforms:instance>
+
+			<xforms:instance id="type-template" xxforms:exclude-result-prefixes="#all">
+				<type/>
+			</xforms:instance>
+
+			<!-- dump instance necessary for saving files to the disk -->
+			<xforms:instance id="dump">
+				<dump xmlns=""/>
+			</xforms:instance>
+
+			<xforms:instance id="properties" xxforms:exclude-result-prefixes="#all">
+				<properties xmlns="">
+					<property label="Record ID">id</property>
+					<property label="Title">title</property>
+					<property label="Authority URI">auth_authority_uri</property>
+					<property label="Denomination URI">denomination_uri</property>
+					<property label="Exatch Match" constraint="conceptual">exactMatch</property>
+					<property label="Issuer URI">auth_issuer_uri</property>
+					<property label="Manufacture URI">manufacture_uri</property>
+					<property label="Material URI">material_uri</property>
+					<property label="Mint URI">geo_mint_uri</property>
+					<property label="Obverse Legend">obv_legend</property>
+					<property label="Obverse Portrait URI">obv_portrait_uri</property>
+					<property label="Obverse Type Description">obv_type</property>
+					<property label="Object Type URI">objectType_uri</property>
+					<property label="Parent ID" constraint="conceptual">broader</property>
+					<property label="Region URI">geo_region_uri</property>
+					<property label="Reverse Legend">rev_legend</property>
+					<property label="Reverse Portrait URI">rev_portrait_uri</property>
+					<property label="Reverse Type Description">rev_type</property>
+					<property label="Start Date">fromDate</property>
+					<property label="End Date">toDate</property>
+
+					<!--<property label="Definition">skos:definition</property>
+					<property label="Alternate Concept" constraint="nmo:Mint">prov:alternateOf</property>
+					<property label="Alternative Label">skos:altLabel</property>
+					<property label="Birth" constraint="foaf:Person">bio:birth</property>
+					<property label="Death" constraint="foaf:Person">bio:death</property>
+					<property label="Broader Concept" exclude="foaf:Person">skos:broader</property>
+					<property label="Close Match" constraint="nmo:Mint">skos:closeMatch</property>
+					<property label="Dynasty" constraint="foaf:Person">org:memberOf</property>
+					<property label="End Date">nmo:hasEndDate</property>
+					<property label="Exact Match" exclude="nmo:Mint">skos:exactMatch</property>
+					<property label="Field of Numismatics">dcterms:isPartOf</property>
+					<property label="Latitude" constraint="nmo:Mint">geo:lat</property>
+					<property label="Longitude" constraint="nmo:Mint">geo:long</property>
+					<property label="Organization" constraint="foaf:Person">org:organization</property>
+					<property label="Role" constraint="foaf:Person|foaf:Organization">org:role</property>
+					<property label="Scope Note">skos:scopeNote</property>
+					<property label="Source">dcterms:source</property>
+					<property label="Start Date">nmo:hasStartDate</property>
+					<property label="Uncertain Match" contstraint="nmo:Mint">skos:related</property>-->
+				</properties>
+			</xforms:instance>
+
+			<xforms:instance id="languages">
+				<xi:include href="instances/languages.xml"/>
+			</xforms:instance>
+
+			<xforms:instance id="mappings" xxforms:exclude-result-prefixes="#all">
+				<mappings xmlns=""/>
+			</xforms:instance>
+
+			<xforms:instance id="validation-model" xxforms:exclude-result-prefixes="#all">
+				<validation xmlns=""/>
+			</xforms:instance>
+
+			<xforms:instance id="nomisma-ids" xxforms:exclude-result-prefixes="#all">
+				<ids xmlns=""/>
+			</xforms:instance>
+
+			<!-- Google Spreadsheet Atom -->
+			<xforms:instance id="spreadsheet-feed">
+				<feed xmlns=""/>
+			</xforms:instance>
+
+			<xforms:instance id="feed" xxforms:exclude-result-prefixes="#all">
+				<feed xmlns=""/>
+			</xforms:instance>
+
+			<!-- Solr instances -->
+			<xforms:instance id="addIndex">
+				<add xmlns=""/>
+			</xforms:instance>
+			<xforms:instance id="sendCommit">
+				<commit/>
+			</xforms:instance>
+
+			<!-- ************* BINDINGS **********************-->
+			<xforms:bind nodeset="instance('control-instance')">
+				<xforms:bind nodeset="type" required="true()"/>
+				<xforms:bind nodeset="load-trigger" id="load-trigger" type="xs:boolean" readonly=". != true()"
+					calculate="string-length(../spreadsheet_key) != 0"/>
+				<xforms:bind nodeset="mappings-valid" type="xs:boolean"/>
+				<xforms:bind nodeset="metadata-valid" type="xs:boolean"/>
+				<xforms:bind nodeset="validate-trigger" id="validate-trigger" type="xs:boolean" readonly="../mappings-valid = false()"/>
+				<xforms:bind nodeset="import-trigger" id="import-trigger" type="xs:boolean"/>
+				<xforms:bind nodeset="new_id" type="xs:boolean"/>
+			</xforms:bind>
+
+			<xforms:bind nodeset="instance('mappings')" constraint="count(mapping[@to = 'id']) = 1 and count(mapping[@to = 'title']) = 1">
+				<!-- language bindings -->
+				<xforms:bind nodeset="mapping[@to='title']">
+					<xforms:bind nodeset="@lang" required="true()"
+						constraint="string-length(.) &gt; 0 and count(//mapping[@to='title']/@lang) = count(distinct-values(//mapping[@to='title']/@lang))"/>
+				</xforms:bind>
+				<xforms:bind nodeset="mapping[@to='obv_type']">
+					<xforms:bind nodeset="@lang" required="true()"
+						constraint="string-length(.) &gt; 0 and count(//mapping[@to='obv_type']/@lang) = count(distinct-values(//mapping[@to='obv_type']/@lang))"
+					/>
+				</xforms:bind>
+				<xforms:bind nodeset="mapping[@to='rev_type']">
+					<xforms:bind nodeset="@lang" required="true()"
+						constraint="string-length(.) &gt; 0 and count(//mapping[@to='rev_type']/@lang) = count(distinct-values(//mapping[@to='rev_type']/@lang))"
+					/>
+				</xforms:bind>
+			</xforms:bind>
+
+			<xforms:bind nodeset="instance('nomisma-ids')">
+				<xforms:bind nodeset="id" type="xs:boolean"/>
+			</xforms:bind>
+
+			<!-- **************** DYNAMIC VALIDATION CONTROLS ********************** -->
+			<!-- ensure that the mappings are valid before continuing with validation -->
+			<xforms:action ev:event="xxforms-invalid" ev:observer="mappings">
+				<xforms:setvalue ref="instance('control-instance')/mappings-valid" value="false()"/>
+			</xforms:action>
+
+			<xforms:action ev:event="xxforms-valid" ev:observer="mappings">
+				<xforms:setvalue ref="instance('control-instance')/mappings-valid" value="true()"/>
+			</xforms:action>
+
+			<!-- **************** CUSTOM DATATYPES ********************** -->
+			<!-- URL validation. Example from http://stackoverflow.com/questions/3381507/xml-validation-validating-a-uri-type -->
+			<xs:schema elementFormDefault="qualified" attributeFormDefault="unqualified">
+				<xs:simpleType name="custom.httpURL">
+					<xs:restriction base="xs:anyURI">
+						<!-- accepts only http:// or https:// URIs. -->
+						<xs:pattern value="https?://.+"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:schema>
+
+			<!-- ************* SUBMISSIONS **********************-->
+			<!-- ************* GOOGLE DRIVE **********************-->
+			<xforms:submission id="query-spreadsheet-feed" serialization="none" method="get"
+				action="https://spreadsheets.google.com/feeds/worksheets/{instance('control-instance')/spreadsheet_key}/public/full" instance="spreadsheet-feed"
+				replace="instance">
+				<xforms:message ev:event="xforms-submit-error" level="modal">Unable to receive Atom from Google Drive for the key provided.</xforms:message>
+				<!-- if a feed is successfully received, set the id for the workshop -->
+				<xforms:action ev:event="xforms-submit-done">
+					<xforms:setvalue ref="instance('control-instance')/spreadsheet_uri"
+						value="concat('https://docs.google.com/spreadsheets/d/', instance('control-instance')/spreadsheet_key, '/pubhtml')"/>
+					<xforms:setvalue ref="instance('control-instance')/worksheet_id"
+						value="tokenize(instance('spreadsheet-feed')//atom:entry[1]/atom:id, '/')[last()]"/>
+					<xforms:send submission="load-worksheet"/>
+				</xforms:action>
+			</xforms:submission>
+
+			<xforms:submission id="load-worksheet" serialization="none" method="get"
+				action="https://spreadsheets.google.com/feeds/list/{instance('control-instance')/spreadsheet_key}/{instance('control-instance')/worksheet_id}/public/full"
+				instance="feed" replace="instance">
+				<xforms:message ev:event="xforms-submit-error" level="modal">Unable to receive Atom from Google Drive for the worksheet ID.</xforms:message>
+				<!-- if a feed is successfully received, set the id for the workshop -->
+				<xforms:action ev:event="xforms-submit-done">
+					<!-- if there is at least one entry, set the mapping instance and toggle the mapping interface -->
+					<xforms:action if="count(instance('feed')//atom:entry) &gt; 0">
+						<xforms:action
+							xxforms:iterate="instance('feed')//atom:entry[1]/*[namespace-uri()='http://schemas.google.com/spreadsheets/2006/extended']">
+							<xforms:var name="heading" select="name()"/>
+							<xforms:insert context="instance('mappings')" nodeset="./child::node()[last()]"
+								origin="xforms:element('mapping', (xforms:attribute('from', $heading), xforms:attribute('to', '')))"/>
+						</xforms:action>
+
+						<!-- read whether or not the spreadsheet already exists in the system -->
+						<!--<xforms:action if="not(instance('spreadsheet-rdf')/prov:Entity[@rdf:about = instance('control-instance')/spreadsheet_uri])">
+							<!-\- if there is no matching URI for the spreadsheet (prov:Entity), then insert the spreadsheet template into the spreadsheet RDF -\->
+							<xforms:insert context="instance('spreadsheet-rdf')" nodeset="./child::node()[last()]" origin="instance('spreadsheet-template')"/>
+							<xforms:setvalue ref="instance('spreadsheet-rdf')/prov:Entity[last()]/@rdf:about"
+								value="instance('control-instance')/spreadsheet_uri"/>
+						</xforms:action>-->
+
+						<!-- iterate through all of the distinct values of Nomisma URIs -->
+						<xforms:action
+							xxforms:iterate="distinct-values(instance('feed')//*[namespace-uri()='http://schemas.google.com/spreadsheets/2006/extended'][contains(., 'http://nomisma.org/id/')])">
+							<xforms:var name="value"
+								select="if (ends-with(normalize-space(context()), '?')) then substring-before(normalize-space(context()), '?') else normalize-space(context())"/>
+
+							<!-- ensure that the URI is not re-inserted due to trailing question mark for uncertainty -->
+							<xforms:action if="not(instance('nomisma-ids')/id[@uri = $value])">
+								<!-- execute REST call to ensure the URI exists in Nomisma.org -->
+								<xforms:setvalue ref="instance('control-instance')/nomisma-uri" value="$value"/>
+								<xforms:send submission="load-rdf"/>
+							</xforms:action>
+						</xforms:action>
+
+						<!-- if there are errors, then display the nomisma validation interface -->
+						<xforms:toggle case="nomisma-validation" if="instance('nomisma-ids')/id = false()"/>
+						<xforms:toggle case="mapping-interface" if="not(instance('nomisma-ids')/id = false())"/>
+					</xforms:action>
+					<!-- if there are no entries in the Atom feed, set the error interface -->
+					<xforms:action if="count(instance('feed')//atom:entry) = 0">
+						<xforms:toggle case="mapping-error-interface"/>
+					</xforms:action>
+				</xforms:action>
+			</xforms:submission>
+
+			<!-- ***** LOADING COLLECTIONS/CONFIG *****-->
+			<xforms:submission id="load-config" serialization="none" method="get"
+				action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/config.xml"
+				xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}" replace="instance"
+				instance="config">
+				<xforms:message ev:event="xforms-submit-error" level="modal">Unable to load Numishare configuration</xforms:message>
+
+				<xforms:action ev:event="xforms-submit-done">
+					<xforms:setvalue ref="instance('nuds')/@recordType"
+						value="if (instance('config')/collection_type = 'cointype') then 'conceptual' else 'physical'"/>
+				</xforms:action>
+			</xforms:submission>
+
+			<xforms:submission id="load-collections" serialization="none" method="get" action="{instance('exist-config')/url}collections-list.xml"
+				replace="instance" instance="collections-list" xxforms:username="{instance('exist-config')/username}"
+				xxforms:password="{instance('exist-config')/password}">
+				<!-- if the config loads successfully, set the collection names based on authentication -->
+				<xforms:action ev:event="xforms-submit-done">
+					<!-- by default set the collection-name from the security role -->
+					<xforms:action if="not(xxforms:is-user-in-role('numishare-admin'))">
+						<xforms:action if="string(instance('collections-list')/collection[@role=instance('control-instance')/request-security/role]/@name)">
+							<xforms:setvalue ref="instance('control-instance')/collection-name"
+								value="instance('collections-list')/collection[@role=instance('control-instance')/request-security/role]/@name"/>
+							<xforms:send submission="load-config"/>
+						</xforms:action>
+					</xforms:action>
+				</xforms:action>
+				<!-- if the config has not been created (given that the URL in ../exist-config.xml is correct), create it -->
+				<xforms:message ev:event="xforms-submit-error" level="modal">Unable to load Numishare collections list.</xforms:message>
+			</xforms:submission>
+
+			<!-- ************************* LOAD NOMISMA RDF/XML ************************** -->
+			<xforms:submission id="load-rdf" serialization="none" method="get" action="{instance('control-instance')/nomisma-uri}.rdf" replace="instance"
+				instance="rdf-concept">
+				<!-- if there's an error, report the error into the Nomisma ID instance -->
+				<xforms:action ev:event="xforms-submit-error">
+					<xforms:insert context="instance('nomisma-ids')" nodeset="./child::node()[last()]"
+						origin="xforms:element('id', (xforms:attribute('uri', instance('control-instance')/nomisma-uri), false()))"/>
+				</xforms:action>
+				<!-- otherwise, validate the URI and insert the skos:Concept into the aggregate instance('rdf') -->
+				<xforms:action ev:event="xforms-submit-done">
+					<xforms:insert context="instance('nomisma-ids')" nodeset="./child::node()[last()]"
+						origin="xforms:element('id', (xforms:attribute('uri', instance('control-instance')/nomisma-uri), true()))"/>
+					<xforms:insert context="instance('rdf')" nodeset="./child::node()[last()]" origin="instance('rdf-concept')/*[1]"/>
+				</xforms:action>
+			</xforms:submission>
+
+			<!-- ************************* SOLR SUBMISSIONS ************************** -->
+			<!-- post instance to Solr -->
+			<xforms:submission id="post-solr-doc" action="{instance('config')/solr_published}update" ref="instance('addIndex')" instance="addIndex"
+				replace="instance" method="post">
+				<xforms:message ev:event="xforms-submit-error" level="modal">Data Failed to POST to Solr. Index may be offline or URL is
+					incorrect.</xforms:message>
+				<xforms:action ev:event="xforms-submit-done">
+					<xforms:send submission="submit-commit"/>
+				</xforms:action>
+			</xforms:submission>
+
+			<!-- send commit -->
+			<xforms:submission id="submit-commit" action="{instance('config')/solr_published}update" ref="instance('sendCommit')" instance="sendCommit"
+				replace="none" method="post">
+				<xforms:message level="modal" ev:event="xforms-submit-error">Failed to commit to Solr index.</xforms:message>
+			</xforms:submission>
+
+			<!-- ********** XFORMS-MODEL-CONSTRUCT-DONE ********** -->
+			<xforms:action ev:event="xforms-model-construct-done">
+				<!-- set username -->
+				<xforms:setvalue ref="instance('control-instance')/username" value="xxforms:get-remote-user()"/>
+
+				<!-- if there's a collection-name session attribute carried over from numishare-admin, then use it to set the collection-name -->
+				<xforms:action if="string(xxforms:get-session-attribute('collection-name'))">
+					<xforms:setvalue ref="instance('control-instance')/collection-name" value="xxforms:get-session-attribute('collection-name')"/>
+					<xforms:send submission="load-config"/>
+				</xforms:action>
+				<xforms:action if="not(string(xxforms:get-session-attribute('collection-name')))">
+					<xforms:insert context="instance('control-instance')" nodeset="collection-name" position="after"
+						origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/get-authentication.xpl', 'dump', instance('dump'), 'data')"/>
+					<xforms:send submission="load-collections"/>
+				</xforms:action>
+			</xforms:action>
+
+			<!-- ********** XFORMS-READY ********** -->
+			<!--<xforms:action ev:event="xforms-ready">
+				<!-\- test spreadsheet RDF validity on xforms-ready -\->
+				<xforms:setvalue ref="instance('control-instance')/metadata-valid" value="true()" if="xxforms:valid(instance('spreadsheet-rdf'), true())"/>
+			</xforms:action>-->
+		</xforms:model>
+	</head>
+
+	<body>
+		<xforms:var name="display_path">../</xforms:var>
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-md-3 pull-right text-right">
+					<h4>
+						<a href="logout"><span class="glyphicon glyphicon-log-out"></span> logout</a>
+					</h4>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<p><a href="../"><span class="glyphicon glyphicon-arrow-left"></span>Return to Admin</a></p>
+					<xforms:group ref=".[string-length(instance('control-instance')/status) &gt; 0]">
+						<div class="alert-success alert-box alert">
+							<span class="glyphicon glyphicon-info-sign"></span>
+							<strong>Status:</strong>
+							<xforms:output ref="instance('control-instance')/status"/>
+						</div>
+					</xforms:group>
+					<h1>Import Records into Numishare</h1>
+					<xforms:switch>
+						<xforms:case id="default">
+							<p>This interface will import records from a Google Spreadsheet into Numishare. The type of record must conform to the specimen/coin
+								type collection setting established in the Numishare config. Prior to the display of the column mapping interface, this workflow
+								will parse and validate the Nomisma URIs that exist in the spreadsheet.</p>
+
+							<div>
+								<xforms:output ref="instance('config')/collection_type">
+									<xforms:label>Collection Type</xforms:label>
+								</xforms:output>
+							</div>
+							<xforms:group ref="instance('control-instance')">
+								<div>
+									<xforms:select1 ref="language">
+										<xforms:label>Record Language</xforms:label>
+										<xforms:itemset nodeset="instance('languages')/language">
+											<xforms:label ref="."/>
+											<xforms:value ref="@value"/>
+										</xforms:itemset>
+									</xforms:select1>
+								</div>
+								<div>
+									<xforms:input ref="spreadsheet_key">
+										<xforms:label>Spreadsheet ID</xforms:label>
+									</xforms:input>
+									<xforms:trigger bind="load-trigger">
+										<xforms:label>Load Spreadsheet</xforms:label>
+										<xforms:send submission="query-spreadsheet-feed" ev:event="DOMActivate"/>
+									</xforms:trigger>
+								</div>
+							</xforms:group>
+						</xforms:case>
+						<xforms:case id="nomisma-validation">
+							<h3>Nomisma.org Validation</h3>
+
+							<div class="alert-danger alert-box alert">
+								<span class="glyphicon glyphicon-exclamation-sign"></span>
+								<strong>Alert:</strong> Nomisma validation error.</div>
+
+							<p>The following URIs do not presently exist in Nomisma.org:</p>
+
+							<xforms:group ref="instance('nomisma-ids')">
+								<ol>
+									<xforms:repeat nodeset="id[. = false()]">
+										<li>
+											<xforms:output ref="@uri"/>
+										</li>
+									</xforms:repeat>
+								</ol>
+							</xforms:group>
+
+							<p>Please either update the source spreadsheet to fix errors or submit these concepts for creation in Nomisma.org before continuing
+								with the spreadsheet import.</p>
+						</xforms:case>
+						<xforms:case id="mapping-interface">
+							<!--<xforms:group ref="instance('spreadsheet-rdf')/prov:Entity[@rdf:about  =instance('control-instance')/spreadsheet_uri]">
+								<div class="section">
+									<h3>Spreadsheet Metadata</h3>
+									<div class="trigger_container">
+										<xforms:trigger appearance="minimal">
+											<xforms:label>
+												<span class="glyphicon glyphicon-plus"></span>Contributor</xforms:label>
+											<xforms:insert ev:event="DOMActivate" context="." nodeset="./child::node()[last()]"
+												origin="xforms:element('dcterms:contributor', (xforms:attribute('rdf:resource'), ''))"/>
+										</xforms:trigger>
+									</div>
+									<xforms:group ref=".[dcterms:creator/@rdf:resource = dcterms:contributor/@rdf:resource]">
+										<div class="alert-danger alert-box alert">
+											<span class="glyphicon glyphicon-exclamation-sign"></span>
+											<strong>Alert:</strong> The same person cannot be a creator and contributor simultaneously.</div>
+									</xforms:group>
+									<xforms:group
+										ref=".[count(dcterms:contributor/@rdf:resource) &gt; count(distinct-values(dcterms:contributor/@rdf:resource))]">
+										<div class="alert-danger alert-box alert">
+											<span class="glyphicon glyphicon-exclamation-sign"></span>
+											<strong>Alert:</strong> The same contributor is selected more than once.</div>
+									</xforms:group>
+									<xforms:group ref="dcterms:description">
+										<div>
+											<xforms:textarea ref=".">
+												<xforms:label>Description</xforms:label>
+												<xforms:alert>Required</xforms:alert>
+											</xforms:textarea>
+											<xforms:select1 ref="@xml:lang">
+												<xforms:item>
+													<xforms:label>Select...</xforms:label>
+													<xforms:value/>
+												</xforms:item>
+												<xforms:itemset nodeset="instance('languages')/language">
+													<xforms:label ref="."/>
+													<xforms:value ref="@value"/>
+												</xforms:itemset>
+												<xforms:alert>Required</xforms:alert>
+											</xforms:select1>
+										</div>
+									</xforms:group>
+									<div>
+										<xforms:select1 ref="dcterms:creator/@rdf:resource">
+											<xforms:label>Primary Creator</xforms:label>
+											<xforms:alert>Required</xforms:alert>
+											<xforms:item>
+												<xforms:label>Select...</xforms:label>
+												<xforms:value/>
+											</xforms:item>
+											<xforms:itemset nodeset="instance('editor-list')/item">
+												<xforms:label ref="."/>
+												<xforms:value ref="@uri"/>
+											</xforms:itemset>
+										</xforms:select1>
+									</div>
+									<xforms:repeat nodeset="dcterms:contributor">
+										<div>
+											<xforms:select1 ref="@rdf:resource">
+												<xforms:label>Contributor</xforms:label>
+												<xforms:alert>Required</xforms:alert>
+												<xforms:item>
+													<xforms:label>Select...</xforms:label>
+													<xforms:value/>
+												</xforms:item>
+												<xforms:itemset nodeset="instance('editor-list')/item">
+													<xforms:label ref="."/>
+													<xforms:value ref="@uri"/>
+												</xforms:itemset>
+											</xforms:select1>
+											<xforms:trigger appearance="minimal">
+												<xforms:delete ev:event="DOMActivate" context="."/>
+												<xforms:label>
+													<span class="glyphicon glyphicon-remove"></span>
+												</xforms:label>
+											</xforms:trigger>
+										</div>
+									</xforms:repeat>
+								</div>
+							</xforms:group>-->
+							<div class="section">
+								<h3>Mapping</h3>
+								<p>Associate the headings with allowable properties, where applicable. Note that the NUDS Record ID and Title are required.</p>
+
+								<xforms:group ref="instance('mappings')">
+									<xforms:group ref=".[count(mapping[@to='id']) != 1]">
+										<div class="alert-danger alert-box alert">
+											<span class="glyphicon glyphicon-exclamation-sign"></span>
+											<strong>Alert:</strong>There must be one Record ID.</div>
+									</xforms:group>
+									<xforms:group ref=".[count(mapping[@to='title']) = 0]">
+										<div class="alert-danger alert-box alert">
+											<span class="glyphicon glyphicon-exclamation-sign"></span>
+											<strong>Alert:</strong> A title is required.</div>
+									</xforms:group>
+									<!-- language warnings -->
+									
+									<xforms:group
+										ref=".[count(mapping[@to='title']/@lang) != count(distinct-values(mapping[@to='title']/@lang))]">
+										<div class="alert-danger alert-box alert">
+											<span class="glyphicon glyphicon-exclamation-sign"></span>
+											<strong>Alert:</strong> Title languages must be unique.</div>
+									</xforms:group>
+									<xforms:group
+										ref=".[count(mapping[@to='obv_type']/@lang) != count(distinct-values(mapping[@to='obv_type']/@lang))]">
+										<div class="alert-danger alert-box alert">
+											<span class="glyphicon glyphicon-exclamation-sign"></span>
+											<strong>Alert:</strong> Obverse type description languages must be unique.</div>
+									</xforms:group>
+									<xforms:group
+										ref=".[count(mapping[@to='rev_type']/@lang) != count(distinct-values(mapping[@to='rev_type']/@lang))]">
+										<div class="alert-danger alert-box alert">
+											<span class="glyphicon glyphicon-exclamation-sign"></span>
+											<strong>Alert:</strong> Reverse type description languages must be unique.</div>
+									</xforms:group>
+
+									<table class="table">
+										<thead>
+											<tr>
+												<th style="width:25%">Column Heading</th>
+												<th>Property Mapping</th>
+											</tr>
+										</thead>
+										<xforms:repeat nodeset="mapping">
+
+											<tr>
+												<td>
+													<xforms:output ref="substring-after(@from, ':')"/>
+												</td>
+												<td>
+													<xforms:select1 ref="@to">
+														<xforms:alert>Mapping Error</xforms:alert>
+														<xforms:item>
+															<xforms:label>Select...</xforms:label>
+															<xforms:value/>
+														</xforms:item>
+														<xforms:itemset
+															nodeset="instance('properties')/property[(not(@constraint) or @constraint = instance('config')/collection_type) and not(@exclude = instance('config')/collection_type)]">
+															<xforms:label ref="@label"/>
+															<xforms:value ref="."/>
+														</xforms:itemset>
+														<xforms:action ev:event="xforms-value-changed">
+															<xforms:var name="property" select="."/>
+															<!-- if it is a literal-based property, insert the @lang attribute -->
+															<xforms:action if="$property = 'title' or ends-with($property, '_type')">
+																<xforms:insert context="parent::node()" origin="xforms:attribute('lang', '')"/>
+															</xforms:action>
+															<!-- if it is not a literal, then delete @lang -->
+															<xforms:action if="$property != 'title' and not(ends-with($property, '_type'))">
+																<xforms:delete context="parent::node()" nodeset="@lang"/>
+															</xforms:action>
+														</xforms:action>
+													</xforms:select1>
+													<xforms:group ref="@lang">
+														<xforms:select1 ref=".">
+															<xforms:alert>Mapping Error</xforms:alert>
+															<xforms:item>
+																<xforms:label>Select...</xforms:label>
+																<xforms:value/>
+															</xforms:item>
+															<xforms:itemset nodeset="instance('languages')/language">
+																<xforms:label ref="."/>
+																<xforms:value ref="@value"/>
+															</xforms:itemset>
+														</xforms:select1>
+													</xforms:group>
+												</td>
+											</tr>
+										</xforms:repeat>
+									</table>
+									<xforms:trigger bind="validate-trigger">
+										<xforms:label>Validate Spreadsheet</xforms:label>
+										<xforms:action ev:event="DOMActivate">
+											<!-- first delete entries, in the event of changing the mapping -->
+											<xforms:delete nodeset="instance('validation-model')/record"/>
+											<!-- then iterate through all Atom entries -->
+											<xforms:action xxforms:iterate="instance('feed')//atom:entry">
+												<!-- create record in the validation model -->
+												<xforms:var name="title" select="atom:title"/>
+												<xforms:var name="position" select="position()"/>
+												<xforms:insert context="instance('validation-model')" nodeset="./child::node()[last()]"
+													origin="xforms:element('record', (xforms:attribute('title', $title), ''))"/>
+												<!-- ensure that nomisma ids are unique -->
+												<xforms:insert
+													if="count(instance('feed')//atom:entry/*[name()=instance('mappings')/mapping[@to='id']/@from]) != count(distinct-values(instance('feed')//atom:entry/*[name()=instance('mappings')/mapping[@to='id']/@from]))"
+													context="instance('validation-model')" nodeset="./child::node()[last()]"
+													origin="xforms:element('error', 'Duplicate Nomisma IDs.')"/>
+												<!-- iterate through all gsx elements -->
+												<xforms:action xxforms:iterate="*[namespace-uri()='http://schemas.google.com/spreadsheets/2006/extended']">
+													<xforms:var name="from" select="name()"/>
+													<xforms:var name="value" select="normalize-space(context())"/>
+													<!-- only process those fields which have been mapped in the user interface -->
+													<xforms:action if="string(instance('mappings')/mapping[@from=$from]/@to)">
+														<xforms:var name="mapping" select="instance('mappings')/mapping[@from=$from]/@to"/>
+														<!-- id -->
+														<xforms:action if="$mapping = 'id'">
+															<!-- only allow certain characters as the Nomisma ID -->
+															<xforms:var name="isValid" select="matches($value, &quot;^([a-zA-Z0-9\-\._\(\)&#x0027;]*)?$&quot;)"/>
+															<xforms:insert if="not(string($value)) or $isValid = false()"
+																context="instance('validation-model')/record[last()]" nodeset="./child::node()[last()]"
+																origin="xforms:element('error', 'Invalid or blank ID')"/>
+														</xforms:action>
+														<xforms:action if="$mapping = 'title'">
+															<xforms:insert if="not(string-length($value) &gt; 0)"
+																context="instance('validation-model')/record[last()]" nodeset="./child::node()[last()]"
+																origin="xforms:element('error', 'Record lacks a title')"/>
+														</xforms:action>
+														<!-- validate start and end dates -->
+														<xforms:action if="$mapping = 'fromDate' and string-length($value) &gt; 0">
+															<xforms:insert if="not($value castable as xs:integer)"
+																context="instance('validation-model')/record[last()]" nodeset="./child::node()[last()]"
+																origin="xforms:element('error', concat('Start Date is not a number: ', $value))"/>
+															<!-- if the start date and end date are both numbers, ensure that the start date is before the end date -->
+															<xforms:action if="instance('mappings')/mapping[@to='toDate'] and $value castable as xs:integer">
+																<xforms:var name="endDate"
+																	select="normalize-space(instance('feed')//atom:entry[position()=$position]/*[name()=instance('mappings')/mapping[@to='toDate']/@from])"/>
+																<xforms:action if="string-length($endDate) &gt; 0 and $endDate castable as xs:integer">
+																	<xforms:insert if="number($value) &gt; number($endDate)"
+																		context="instance('validation-model')/record[last()]" nodeset="./child::node()[last()]"
+																		origin="xforms:element('error', 'Start date post-dates end date.')"/>
+																</xforms:action>
+															</xforms:action>
+														</xforms:action>
+														<xforms:action if="$mapping = 'toDate' and string-length($value) &gt; 0">
+															<xforms:insert if="not($value castable as xs:integer)"
+																context="instance('validation-model')/record[last()]" nodeset="./child::node()[last()]"
+																origin="xforms:element('error', concat('End Date is not a number: ', $value))"/>
+														</xforms:action>
+														<!-- URI validation -->
+														<xforms:action if="contains($mapping, '_uri')">
+															<xforms:var name="isValid" select="starts-with($value, 'http://nomisma.org/id/')"/>
+															<xforms:insert
+																if="string-length($value) &gt; 0 and (not($value castable as xs:anyURI) or $isValid = false())"
+																context="instance('validation-model')/record[last()]" nodeset="./child::node()[last()]"
+																origin="xforms:element('error', concat('Nomisma URI required for this field (', $mapping, '): ', $value))"> </xforms:insert>
+
+														</xforms:action>
+													</xforms:action>
+												</xforms:action>
+											</xforms:action>
+											<!-- after validation, change the import-trigger button value, if necessary, and switch the case -->
+											<xforms:setvalue ref="instance('control-instance')/import-trigger" value="true()"
+												if="count(instance('validation-model')//error) = 0"/>
+											<xforms:toggle case="validation-interface"/>
+										</xforms:action>
+									</xforms:trigger>
+								</xforms:group>
+							</div>
+						</xforms:case>
+						<xforms:case id="mapping-error-interface">
+							<h3>Mapping Error</h3>
+							<p>The Atom representation of the Google Spreadsheet has successfully loaded, but it does not appear to contain content.</p>
+						</xforms:case>
+						<xforms:case id="validation-interface">
+							<xforms:group ref="instance('validation-model')">
+								<h3>Validation</h3>
+								<xforms:group ref=".[count(descendant::error) = 0]">
+									<div class="alert-success alert-box alert">
+										<span class="glyphicon glyphicon-ok"></span>
+										<strong>Success: </strong><xforms:output value="count(record)"/> records successfully validated.</div>
+								</xforms:group>
+								<xforms:group ref=".[count(descendant::error) &gt; 0]">
+									<div class="alert-danger alert-box alert">
+										<span class="glyphicon glyphicon-exclamation-sign"></span>
+										<strong>Alert:</strong> The spreadsheet is invalid. Please fix errors and import again.</div>
+								</xforms:group>
+								<!-- if the error is on the top level -->
+								<xforms:group ref=".[error]">
+									<div class="alert-danger alert-box alert">
+										<span class="glyphicon glyphicon-exclamation-sign"></span>
+										<strong>Alert:</strong>
+										<xforms:output ref="error"/>
+									</div>
+								</xforms:group>
+								<!-- if there are errors or warnings, then display the table -->
+								<xforms:group ref=".[count(record[warning]) &gt; 0  or count(record[error]) &gt; 0]">
+									<p><b><xforms:output value="count(record[error])"/></b> of <b><xforms:output value="count(record)"/></b> total records
+										contain errors. <b><xforms:output value="count(record[warning])"/></b> contain warnings. See below.</p>
+									<table class="table">
+										<thead>
+											<th width="25%">ID</th>
+											<th>Messages</th>
+										</thead>
+										<tbody>
+											<xforms:repeat nodeset="record[warning or error]">
+												<tr>
+													<td><xforms:output ref="@title"/></td>
+													<td>
+														<xforms:repeat nodeset="error">
+															<div>
+																<xforms:output ref=".">
+																	<xforms:label>Error</xforms:label>
+																</xforms:output>
+															</div>
+														</xforms:repeat>
+														<xforms:repeat nodeset="warning">
+															<div>
+																<xforms:output ref=".">
+																	<xforms:label>Warning</xforms:label>
+																</xforms:output>
+															</div>
+														</xforms:repeat>
+													</td>
+												</tr>
+											</xforms:repeat>
+										</tbody>
+									</table>
+								</xforms:group>
+								<!-- if there are no errors, then allow the validation button -->
+								<xforms:trigger bind="import-trigger">
+									<xforms:label>Import Data</xforms:label>
+									<xforms:action ev:event="DOMActivate">
+										<!-- set the current dateTime into a variable that will apply to all IDs 
+											(previous version resulting in different time for each ID in spreadsheet -->
+
+										<xforms:var name="dateTime" select="current-dateTime()"/>
+
+										<!-- begin processing the spreadsheet into RDF -->
+										<xforms:action xxforms:iterate="instance('feed')//atom:entry[1]">
+											<!-- set position for progress dialog -->
+											<!--<xforms:setvalue ref="instance('control-instance')/position" value="context()/position()"></xforms:setvalue>-->
+											<xforms:var name="id"
+												select="normalize-space(data(context()/*[namespace-uri()='http://schemas.google.com/spreadsheets/2006/extended'][name()=instance('mappings')/mapping[@to='id']/@from]))"/>
+											<xforms:var name="position" select="position()"/>
+
+											<xforms:setvalue ref="instance('control-instance')/id" value="$id"/>
+
+											<!-- clear data from NUDS instance before loading-->
+											<xforms:delete nodeset="instance('nuds')/*"/>
+											<xforms:insert context="instance('nuds')" origin="instance('control-template')"/>
+											<xforms:insert context="instance('nuds')" nodeset="./child::node()[last()]" origin="instance('descMeta-template')"/>
+											<xforms:var name="binding" select="instance('nuds')"/>
+
+
+											<!-- *** BEGIN ATOM TO RDF IMPORT *** -->
+											<xforms:action
+												xxforms:iterate="instance('feed')//atom:entry[position()=$position]/*[namespace-uri()='http://schemas.google.com/spreadsheets/2006/extended']">
+												<xforms:var name="from" select="name()"/>
+												<xforms:var name="value" select="normalize-space(data(context()))"/>
+
+												<!-- only process those fields which have been mapped in the user interface -->
+												<xforms:action if="string(instance('mappings')/mapping[@from=$from]/@to) and string-length($value) &gt; 0">
+													<xforms:var name="mapping" select="instance('mappings')/mapping[@from=$from]/@to"/>
+
+													<xforms:action if="$mapping = 'id'">
+														<xforms:setvalue ref="instance('nuds')/nuds:control/nuds:recordId" value="$value"/>
+													</xforms:action>
+
+													<xforms:action if="$mapping = 'title'">
+														<xforms:var name="lang" select="instance('mappings')/mapping[@from=$from]/@lang"/>
+
+														<xforms:setvalue ref="instance('title-template')" value="$value"/>
+														<xforms:setvalue ref="instance('title-template')/@xml:lang" value="$lang"/>
+
+														<xforms:insert context="instance('nuds')/nuds:descMeta" origin="instance('title-template')"/>
+													</xforms:action>
+													
+													<!-- ***** TYPEDESC ***** -->
+				
+													<!-- ** PARSE URIs ** -->
+													<xforms:action if="ends-with($mapping, '_uri')">
+														<xforms:var name="uri"
+															select="if (ends-with($value, '?')) then substring-before($value, '?') else $value"/>
+														<xforms:var name="uncertain" select="if (ends-with($value, '?')) then true() else false()"/>
+
+														<!-- get the preferred label from the Nomisma RDF -->
+														<xforms:var name="label"
+															select="if (instance('rdf')/*[@rdf:about=$uri]/skos:prefLabel[@xml:lang=instance('control-instance')/language]) 
+																then instance('rdf')/*[@rdf:about=$uri]/skos:prefLabel[@xml:lang=instance('control-instance')/language] 
+																else instance('rdf')/*[@rdf:about=$uri]/skos:prefLabel[@xml:lang='en']"/>
+
+														<!-- evaluate the placement of the element into the appropriate context -->
+														<xforms:action if="starts-with($mapping, 'geo_')">
+															<xforms:var name="role" select="substring-after(substring-before($mapping, '_uri'), 'geo_')"/>
+
+															<!-- insert geographic if it doesn't exist -->
+															<xforms:insert context="instance('nuds')/nuds:descMeta/nuds:typeDesc"
+																nodeset="./child::node()[last()]" origin="instance('geographic-template')"
+																if="not(instance('nuds')/nuds:descMeta/nuds:typeDesc/nuds:geographic)"/>
+
+															<xforms:insert context="instance('nuds')/nuds:descMeta/nuds:typeDesc/nuds:geographic"
+																nodeset="./child::node()[last()]" origin="instance('geogname-template')"/>
+															<xforms:setvalue
+																ref="instance('nuds')/nuds:descMeta/nuds:typeDesc/nuds:geographic/nuds:geogname[last()]"
+																value="$label"/>
+															<xforms:setvalue
+																ref="instance('nuds')/nuds:descMeta/nuds:typeDesc/nuds:geographic/nuds:geogname[last()]/@xlink:href"
+																value="$uri"/>
+															<xforms:setvalue
+																ref="instance('nuds')/nuds:descMeta/nuds:typeDesc/nuds:geographic/nuds:geogname[last()]/@xlink:role"
+																value="$role"/>
+															<xforms:insert
+																nodeset="instance('nuds')/nuds:descMeta/nuds:typeDesc/nuds:geographic/nuds:geogname[last()]"
+																origin="xforms:attribute('certainty', 'http://nomisma.org/id/uncertain_value')"
+																if="$uncertain = true()"/>
+														</xforms:action>
+														<xforms:action if="starts-with($mapping, 'auth_')">
+															<xforms:var name="element"
+																select="if (instance('rdf')/*[@rdf:about=$uri]/name()='foaf:Person') then 'persname' else if (instance('rdf')/*[@rdf:about=$uri]/name()='rdac:Family') then 'famname' else 'corpname'"/>
+															<xforms:var name="role" select="substring-after(substring-before($mapping, '_uri'), 'auth_')"/>
+
+															<!-- insert authority if it doesn't exist -->
+															<xforms:insert context="instance('nuds')/nuds:descMeta/nuds:typeDesc"
+																nodeset="./child::node()[last()]" origin="instance('authority-template')"
+																if="not(instance('nuds')/nuds:descMeta/nuds:typeDesc/nuds:authority)"/>
+
+															<xforms:insert context="instance('nuds')/nuds:descMeta/nuds:typeDesc/nuds:authority"
+																nodeset="./child::node()[last()]" origin="instance(concat($element, '-template'))"/>
+															<xforms:setvalue ref="instance('nuds')/nuds:descMeta/nuds:typeDesc/nuds:authority/*[last()]"
+																value="$label"/>
+															<xforms:setvalue
+																ref="instance('nuds')/nuds:descMeta/nuds:typeDesc/nuds:authority/*[last()]/@xlink:href"
+																value="$uri"/>
+															<xforms:setvalue
+																ref="instance('nuds')/nuds:descMeta/nuds:typeDesc/nuds:authority/*[last()]/@xlink:role"
+																value="$role"/>
+															<xforms:insert nodeset="instance('nuds')/nuds:descMeta/nuds:typeDesc/nuds:authority/*[last()]"
+																origin="xforms:attribute('certainty', 'http://nomisma.org/id/uncertain_value')"
+																if="$uncertain = true()"/>
+														</xforms:action>
+														<xforms:action if="starts-with($mapping, 'obv_') or starts-with($mapping, 'rev_')">
+															<xforms:var name="container"
+																select="if (starts-with($mapping, 'obv_')) then 'obverse' else 'reverse'"/>
+															<xforms:var name="role" select="substring-after(substring-before($mapping, '_uri'), 'v_')"/>
+
+															<!-- insert obverse/reverse if it doesn't exist -->
+															<xforms:insert context="instance('nuds')/nuds:descMeta/nuds:typeDesc"
+																nodeset="./child::node()[last()]" origin="instance(concat($container, '-template'))"
+																if="not(instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container])"/>
+
+															<xforms:insert context="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container]"
+																nodeset="./child::node()[last()]" origin="instance('persname-template')"/>
+															<xforms:setvalue
+																ref="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container]/nuds:persname[last()]"
+																value="$label"/>
+															<xforms:setvalue
+																ref="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container]/nuds:persname[last()]/@xlink:href"
+																value="$uri"/>
+															<xforms:setvalue
+																ref="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container]/nuds:persname[last()]/@xlink:role"
+																value="$role"/>
+															<xforms:insert
+																nodeset="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container]/*[last()]"
+																origin="xforms:attribute('certainty', 'http://nomisma.org/id/uncertain_value')"
+																if="$uncertain = true()"/>
+														</xforms:action>
+														<xforms:action if="not(starts-with($mapping, 'geo_')) and not(starts-with($mapping, 'auth_'))">
+															<xforms:var name="element" select="substring-before($mapping, '_uri')"/>
+
+															<xforms:insert context="instance('nuds')/nuds:descMeta/nuds:typeDesc"
+																nodeset="./child::node()[last()]" origin="instance(concat($element, '-template'))"/>
+															<xforms:setvalue ref="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$element][last()]"
+																value="$label"/>
+															<xforms:setvalue
+																ref="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$element][last()]/@xlink:href"
+																value="$uri"/>
+															<xforms:insert
+																nodeset="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$element][last()]"
+																origin="xforms:attribute('certainty', 'http://nomisma.org/id/uncertain_value')"
+																if="$uncertain = true()"/>
+														</xforms:action>
+													</xforms:action>
+
+													<!-- ** OBVERSE/REVERSE ** -->
+													<xforms:action
+														if="(starts-with($mapping, 'obv_') or starts-with($mapping, 'rev_')) and not(ends-with($mapping, '_uri'))">
+														<xforms:var name="container" select="if (starts-with($mapping, 'obv_')) then 'obverse' else 'reverse'"/>
+														<xforms:var name="element"
+															select="if (starts-with($mapping, 'obv_')) then substring-after($mapping, 'obv_') else substring-after($mapping, 'rev_')"/>
+
+														<!-- insert obverse/reverse if it doesn't exist -->
+														<xforms:insert context="instance('nuds')/nuds:descMeta/nuds:typeDesc" nodeset="./child::node()[last()]"
+															origin="instance(concat($container, '-template'))"
+															if="not(instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container])"/>
+
+														<!-- insert type element once and multiple description elements -->
+														<xforms:action if="$element = 'type'">
+															<xforms:var name="lang" select="instance('mappings')/mapping[@from=$from]/@lang"/>
+															
+															<xforms:insert context="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container]"
+																nodeset="./child::node()[last()]" origin="instance('type-template')"
+																if="not(instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container]/nuds:type)"/>
+															<xforms:insert context="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container]/nuds:type"
+																nodeset="./child::node()[last()]" origin="instance('description-template')"/>
+															<xforms:setvalue
+																ref="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container]/nuds:type/nuds:description[last()]"
+																value="$value"/>
+															<xforms:setvalue
+																ref="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container]/nuds:type/nuds:description[last()]/@xml:lang"
+																value="$lang"/>
+														</xforms:action>
+														<xforms:action if="not($element = 'type')">
+															<xforms:insert context="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container]"
+																nodeset="./child::node()[last()]" origin="instance(concat($element, '-template'))"/>
+															<xforms:setvalue
+																ref="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container]/*[local-name()=$element][last()]"
+																value="$value"/>
+														</xforms:action>
+													</xforms:action>
+													
+													<!-- ** DATE/DATERANGE ** -->
+													<xforms:action if="$mapping = 'fromDate' or $mapping = 'toDate'">
+														
+													</xforms:action>
+												</xforms:action>
+											</xforms:action>
+
+											<!-- *** BEGIN CRUD OPERATIONS *** -->
+											<!-- if the ID is new, then insert dcterms:ProvenanceStatement and a prov:wasGeneratedBy statement -->
+											<!--<xforms:action if="instance('control-instance')/new_id = true()">
+
+												<!-\- insert skos:changeNote template into the concept -\->
+												<xforms:insert context="instance('rdf')/*[1]" nodeset="./child::node()[last()]"
+													origin="instance('changeNote-template')"/>
+												<xforms:setvalue ref="instance('rdf')/*[1]/skos:changeNote/@rdf:resource" value="concat($uri, '#provenance')"/>
+
+												<!-\- *** Insert ProvenanceStatement *** -\->
+												<xforms:insert context="instance('rdf')" nodeset="./child::node()[last()]"
+													origin="instance('provenance-template')"/>
+												<xforms:setvalue ref="instance('rdf')/dcterms:ProvenanceStatement/@rdf:about"
+													value="concat($uri, '#provenance')"/>
+												<xforms:setvalue ref="instance('rdf')/dcterms:ProvenanceStatement/foaf:topic/@rdf:resource" value="$uri"/>
+
+												<!-\- Create Activity -\->
+												<xforms:insert context="instance('rdf')/dcterms:ProvenanceStatement" nodeset="./child::node()[last()]"
+													origin="xforms:element('prov:wasGeneratedBy')"/>
+												<xforms:insert context="instance('rdf')/dcterms:ProvenanceStatement/prov:wasGeneratedBy"
+													origin="instance('activity-template')"/>
+												<xforms:insert context="instance('rdf')/dcterms:ProvenanceStatement/prov:wasGeneratedBy/prov:Activity"
+													origin="xforms:element('rdf:type', xforms:attribute('rdf:resource', 'http://www.w3.org/ns/prov#Create'))"/>
+												<xforms:setvalue
+													ref="instance('rdf')/dcterms:ProvenanceStatement/prov:wasGeneratedBy/prov:Activity/dcterms:type"
+													>spreadsheet</xforms:setvalue>
+												<xforms:setvalue
+													ref="instance('rdf')/dcterms:ProvenanceStatement/prov:wasGeneratedBy/prov:Activity/prov:wasAssociatedWith/@rdf:resource"
+													value="concat('http://nomisma.org/editor/', instance('control-instance')/username)"/>
+												<xforms:setvalue ref="instance('rdf')/dcterms:ProvenanceStatement/prov:wasGeneratedBy/prov:Activity/prov:atTime"
+													value="$dateTime"/>
+												<xforms:setvalue
+													ref="instance('rdf')/dcterms:ProvenanceStatement/prov:wasGeneratedBy/prov:Activity/prov:used/@rdf:resource"
+													value="instance('control-instance')/spreadsheet_uri"/>
+
+												<!-\- save file back to disk -\->
+												<xforms:setvalue ref="instance('save-config')/url"
+													value="concat(instance('config')/data_path, '/id/',  instance('control-instance')/id, '.rdf')"/>
+												<xforms:insert nodeset="instance('dump')"
+													origin="xxforms:call-xpl('oxf:/apps/nomisma/xpl/xforms/save-id.xpl', ('doc', 'configuration'), (instance('rdf'), instance('save-config')), 'data')"/>
+
+												<!-\- Post RDF (no deletion necessary ) -\->
+												<xforms:send submission="post-rdf"/>
+												<!-\- post to Solr -\->
+												<xforms:insert nodeset="instance('addIndex')"
+													origin="xxforms:call-xpl('oxf:/apps/nomisma/xpl/views/serializations/rdf/solr.xpl', 'data', instance('rdf'), 'data')"/>
+												<xforms:send submission="post-solr-doc"/>
+											</xforms:action>-->
+
+											<!-- if the ID is not new, hash encode the content after previous actions -->
+											<!--<xforms:action if="instance('control-instance')/new_id = false()">
+												<xforms:setvalue ref="instance('control-instance')/content_after_hash"
+													value="digest(normalize-space(saxon:serialize(instance('rdf'), 'xml')), 'MD5', 'hex')"/>
+
+												<!-\- if the old and new hashes are different, then insert a new modification event -\->
+												<xforms:action
+													if="not(instance('control-instance')/content_before_hash = instance('control-instance')/content_after_hash)">
+													<xforms:insert context="instance('rdf')/dcterms:ProvenanceStatement" nodeset="./child::node()[last()]"
+														origin="xforms:element('prov:activity')"/>
+													<xforms:insert context="instance('rdf')/dcterms:ProvenanceStatement/prov:activity[last()]"
+														origin="instance('activity-template')"/>
+													<xforms:insert context="instance('rdf')/dcterms:ProvenanceStatement/prov:activity[last()]/prov:Activity"
+														origin="xforms:element('rdf:type', xforms:attribute('rdf:resource', 'http://www.w3.org/ns/prov#Modify'))"/>
+													<xforms:setvalue
+														ref="instance('rdf')/dcterms:ProvenanceStatement/prov:activity[last()]/prov:Activity/dcterms:type"
+														>spreadsheet</xforms:setvalue>
+													<xforms:setvalue
+														ref="instance('rdf')/dcterms:ProvenanceStatement/prov:activity[last()]/prov:Activity/prov:wasAssociatedWith/@rdf:resource"
+														value="concat('http://nomisma.org/editor/', instance('control-instance')/username)"/>
+													<xforms:setvalue
+														ref="instance('rdf')/dcterms:ProvenanceStatement/prov:activity[last()]/prov:Activity/prov:atTime"
+														value="$dateTime"/>
+													<xforms:setvalue
+														ref="instance('rdf')/dcterms:ProvenanceStatement/prov:activity[last()]/prov:Activity/prov:used/@rdf:resource"
+														value="instance('control-instance')/spreadsheet_uri"/>
+
+													<!-\- save file back to disk, but only if the content has changed -\->
+													<xforms:setvalue ref="instance('save-config')/url"
+														value="concat(instance('config')/data_path, '/id/',  instance('control-instance')/id, '.rdf')"/>
+													<xforms:insert nodeset="instance('dump')"
+														origin="xxforms:call-xpl('oxf:/apps/nomisma/xpl/xforms/save-id.xpl', ('doc', 'configuration'), (instance('rdf'), instance('save-config')), 'data')"/>
+
+													<!-\- delete graphs from triplestore, then repost updates -\->
+													<xforms:setvalue ref="instance('sparqlUpdate')"
+														value="replace(instance('sparqlUpdate-templates')/query[@id='delete-concept'], 'URI', $uri)"/>
+													<xforms:send submission="delete-graph"/>
+													<xforms:send submission="post-rdf"/>
+
+													<!-\- post to Solr -\->
+													<xforms:insert nodeset="instance('addIndex')"
+														origin="xxforms:call-xpl('oxf:/apps/nomisma/xpl/views/serializations/rdf/solr.xpl', 'data', instance('rdf'), 'data')"/>
+													<xforms:send submission="post-solr-doc"/>
+												</xforms:action>
+											</xforms:action>-->
+											<!-- end of ID processing action: CRUD operations moved to new or updated IDs only -->
+										</xforms:action>
+
+										<!-- *** after each row in the spreadsheet has been processed, create/update the spreadsheet RDF *** -->
+										<!--<xforms:delete nodeset="instance('rdf')/*"/>
+										<xforms:insert context="instance('rdf')"
+											origin="instance('spreadsheet-rdf')/prov:Entity[@rdf:about = instance('control-instance')/spreadsheet_uri]"/>
+										<!-\- update SPARQL endpoint -\->
+										<xforms:setvalue ref="instance('sparqlUpdate')"
+											value="replace(instance('sparqlUpdate-templates')/query[@id='delete-spreadsheet'], 'URI', instance('control-instance')/spreadsheet_uri)"/>
+										<xforms:send submission="delete-graph"/>
+										<xforms:send submission="post-rdf"/>
+										<!-\- save the spreadsheet RDF to disk -\->
+										<xforms:setvalue ref="instance('save-config')/url"
+											value="concat(instance('config')/data_path, '/spreadsheets/spreadsheets.rdf')"/>
+										<xforms:insert nodeset="instance('dump')"
+											origin="xxforms:call-xpl('oxf:/apps/nomisma/xpl/xforms/save-id.xpl', ('doc', 'configuration'), (instance('spreadsheet-rdf'), instance('save-config')), 'data')"/>
+
+										<xforms:toggle case="process-complete"/>-->
+									</xforms:action>
+								</xforms:trigger>
+							</xforms:group>
+						</xforms:case>
+						<xforms:case id="process-complete">
+							<p>The process has been completed successfully. The following IDs have been created or updated:</p>
+							<table class="table">
+								<thead>
+									<tr>
+										<th>URI</th>
+										<th>Preferred Label</th>
+									</tr>
+								</thead>
+								<tbody>
+									<xforms:repeat nodeset="instance('feed')//atom:entry">
+										<xforms:var name="id"
+											select="*[namespace-uri()='http://schemas.google.com/spreadsheets/2006/extended'][name()=instance('mappings')/mapping[@to='id']/@from]"/>
+										<tr>
+											<td>
+												<xforms:trigger appearance="minimal">
+													<xforms:label value="concat(instance('config')/url, 'id/', $id)"/>
+													<xforms:action ev:event="DOMActivate">
+														<xforms:load show="replace" resource="{concat(instance('config')/url, 'id/', $id)}"/>
+													</xforms:action>
+												</xforms:trigger>
+											</td>
+											<td>
+												<xforms:output
+													ref="*[namespace-uri()='http://schemas.google.com/spreadsheets/2006/extended'][name()=instance('mappings')/mapping[@to='skos:prefLabel' and @lang='en']/@from]"
+												/>
+											</td>
+										</tr>
+									</xforms:repeat>
+								</tbody>
+							</table>
+						</xforms:case>
+					</xforms:switch>
+					<fr:xforms-inspector/>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
