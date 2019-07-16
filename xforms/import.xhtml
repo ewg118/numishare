@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms"
-	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xxforms="http://orbeon.org/oxf/xml/xforms"
-	xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:numishare="https://github.comu/ewg118/numishare" xmlns:xlink="http://www.w3.org/1999/xlink"
-	xmlns:nuds="http://nomisma.org/nuds" xmlns:res="http://www.w3.org/2005/sparql-results#" xmlns:xi="http://www.w3.org/2001/XInclude"
-	xmlns:nm="http://nomisma.org/id/" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-	xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:prov="http://www.w3.org/ns/prov#"
-	xmlns:rdac="http://www.rdaregistry.info/Elements/c/" xmlns:nmo="http://nomisma.org/ontology#">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xxforms="http://orbeon.org/oxf/xml/xforms" xmlns:fr="http://orbeon.org/oxf/xml/form-runner"
+	xmlns:numishare="https://github.comu/ewg118/numishare" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:nuds="http://nomisma.org/nuds"
+	xmlns:res="http://www.w3.org/2005/sparql-results#" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:nm="http://nomisma.org/id/" xmlns:foaf="http://xmlns.com/foaf/0.1/"
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:prov="http://www.w3.org/ns/prov#" xmlns:rdac="http://www.rdaregistry.info/Elements/c/" xmlns:nmo="http://nomisma.org/ontology#">
 	<head>
 		<title>Numishare: Import Data from CSV</title>
 		<link rel="stylesheet" href="/fr/style/bootstrap/css/bootstrap.css" type="text/css" />
@@ -17,8 +16,7 @@
 		<link rel="stylesheet" href="/apps/numishare/xforms/css/xforms.css" />
 
 		<xforms:model xmlns="http://nomisma.org/nuds">
-			<xforms:instance id="nuds"
-				xxforms:exclude-result-prefixes="xhtml xforms xxforms ev xs xi xsi fr oxf nuds numishare exist res nm foaf rdf skos atom prov nmo rdac">
+			<xforms:instance id="nuds" xxforms:exclude-result-prefixes="xhtml xforms xxforms ev xs xi xsi fr oxf nuds numishare exist res nm foaf rdf skos atom prov nmo rdac">
 				<nuds recordType="" xmlns="http://nomisma.org/nuds" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:mets="http://www.loc.gov/METS/"
 					xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml"> </nuds>
 			</xforms:instance>
@@ -65,9 +63,8 @@
 			<!-- Nomisma RDF -->
 			<xforms:instance id="rdf-concept" xxforms:exclude-result-prefixes="#default xhtml xforms xs ev xxforms fr res xi nomisma atom">
 				<rdf:RDF xmlns="" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:nm="http://nomisma.org/id/" xmlns:nmo="http://nomisma.org/ontology#"
-					xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-					xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-					xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+					xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+					xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
 					xmlns:un="http://www.owl-ontologies.com/Ontology1181490123.owl#" xmlns:osgeo="http://data.ordnancesurvey.co.uk/ontology/geometry/"
 					xmlns:org="http://www.w3.org/ns/org#" xmlns:rdac="http://www.rdaregistry.info/Elements/c/" xmlns:bio="http://purl.org/vocab/bio/0.1/"
 					xmlns:prov="http://www.w3.org/ns/prov#" xmlns:crm="http://www.cidoc-crm.org/cidoc-crm/"/>
@@ -75,9 +72,8 @@
 
 			<xforms:instance id="rdf" xxforms:exclude-result-prefixes="#default xhtml xforms xs ev xxforms fr res xi nomisma atom">
 				<rdf:RDF xmlns="" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:nm="http://nomisma.org/id/" xmlns:nmo="http://nomisma.org/ontology#"
-					xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-					xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-					xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+					xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+					xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
 					xmlns:un="http://www.owl-ontologies.com/Ontology1181490123.owl#" xmlns:osgeo="http://data.ordnancesurvey.co.uk/ontology/geometry/"
 					xmlns:org="http://www.w3.org/ns/org#" xmlns:rdac="http://www.rdaregistry.info/Elements/c/" xmlns:bio="http://purl.org/vocab/bio/0.1/"
 					xmlns:prov="http://www.w3.org/ns/prov#" xmlns:crm="http://www.cidoc-crm.org/cidoc-crm/"/>
@@ -86,7 +82,10 @@
 			<!-- NUDS templates -->
 			<xforms:instance id="descMeta-template" xxforms:exclude-result-prefixes="#all">
 				<descMeta>
-					<typeDesc/>
+					<typeDesc>
+						<obverse/>
+						<reverse/>
+					</typeDesc>
 				</descMeta>
 			</xforms:instance>
 
@@ -132,6 +131,17 @@
 				<corpname xlink:type="simple" xlink:role="" xlink:href=""/>
 			</xforms:instance>
 
+			<xforms:instance id="date-template" xxforms:exclude-result-prefixes="#all">
+				<date standardDate=""/>
+			</xforms:instance>
+
+			<xforms:instance id="dateRange-template" xxforms:exclude-result-prefixes="#all">
+				<dateRange>
+					<fromDate standardDate=""/>
+					<toDate standardDate=""/>
+				</dateRange>
+			</xforms:instance>
+
 			<xforms:instance id="denomination-template" xxforms:exclude-result-prefixes="#all">
 				<denomination xlink:type="simple" xlink:href=""/>
 			</xforms:instance>
@@ -156,8 +166,16 @@
 				<legend/>
 			</xforms:instance>
 
+			<xforms:instance id="manufacture-template" xxforms:exclude-result-prefixes="#all">
+				<manufacture xlink:type="simple" xlink:href=""/>
+			</xforms:instance>
+
 			<xforms:instance id="material-template" xxforms:exclude-result-prefixes="#all">
 				<material xlink:type="simple" xlink:href=""/>
+			</xforms:instance>
+
+			<xforms:instance id="objectType-template" xxforms:exclude-result-prefixes="#all">
+				<objectType xlink:type="simple" xlink:href=""/>
 			</xforms:instance>
 
 			<xforms:instance id="obverse-template" xxforms:exclude-result-prefixes="#all">
@@ -170,6 +188,10 @@
 
 			<xforms:instance id="reverse-template" xxforms:exclude-result-prefixes="#all">
 				<reverse/>
+			</xforms:instance>
+
+			<xforms:instance id="symbol-template" xxforms:exclude-result-prefixes="#all">
+				<symbol position=""/>
 			</xforms:instance>
 
 			<xforms:instance id="type-template" xxforms:exclude-result-prefixes="#all">
@@ -186,9 +208,15 @@
 					<property label="Record ID">id</property>
 					<property label="Title">title</property>
 					<property label="Authority URI">auth_authority_uri</property>
+					<property label="Axis" constraint="physical">axis</property>
+					<property label="Date On Object">dateOnObject</property>
+					<property label="Diameter" constraint="physical">diameter</property>
 					<property label="Denomination URI">denomination_uri</property>
+					<property label="Date Certainty">dateCertainty</property>
+					<property label="End Date">toDate</property>
 					<property label="Exatch Match" constraint="conceptual">exactMatch</property>
 					<property label="Issuer URI">auth_issuer_uri</property>
+					<property label="Height" constraint="physical">height</property>
 					<property label="Manufacture URI">manufacture_uri</property>
 					<property label="Material URI">material_uri</property>
 					<property label="Mint URI">geo_mint_uri</property>
@@ -202,27 +230,8 @@
 					<property label="Reverse Portrait URI">rev_portrait_uri</property>
 					<property label="Reverse Type Description">rev_type</property>
 					<property label="Start Date">fromDate</property>
-					<property label="End Date">toDate</property>
-
-					<!--<property label="Definition">skos:definition</property>
-					<property label="Alternate Concept" constraint="nmo:Mint">prov:alternateOf</property>
-					<property label="Alternative Label">skos:altLabel</property>
-					<property label="Birth" constraint="foaf:Person">bio:birth</property>
-					<property label="Death" constraint="foaf:Person">bio:death</property>
-					<property label="Broader Concept" exclude="foaf:Person">skos:broader</property>
-					<property label="Close Match" constraint="nmo:Mint">skos:closeMatch</property>
-					<property label="Dynasty" constraint="foaf:Person">org:memberOf</property>
-					<property label="End Date">nmo:hasEndDate</property>
-					<property label="Exact Match" exclude="nmo:Mint">skos:exactMatch</property>
-					<property label="Field of Numismatics">dcterms:isPartOf</property>
-					<property label="Latitude" constraint="nmo:Mint">geo:lat</property>
-					<property label="Longitude" constraint="nmo:Mint">geo:long</property>
-					<property label="Organization" constraint="foaf:Person">org:organization</property>
-					<property label="Role" constraint="foaf:Person|foaf:Organization">org:role</property>
-					<property label="Scope Note">skos:scopeNote</property>
-					<property label="Source">dcterms:source</property>
-					<property label="Start Date">nmo:hasStartDate</property>
-					<property label="Uncertain Match" contstraint="nmo:Mint">skos:related</property>-->
+					<property label="Weight" constraint="physical">weight</property>
+					<property label="Width" constraint="physical">width</property>
 				</properties>
 			</xforms:instance>
 
@@ -262,8 +271,7 @@
 			<!-- ************* BINDINGS **********************-->
 			<xforms:bind nodeset="instance('control-instance')">
 				<xforms:bind nodeset="type" required="true()"/>
-				<xforms:bind nodeset="load-trigger" id="load-trigger" type="xs:boolean" readonly=". != true()"
-					calculate="string-length(../spreadsheet_key) != 0"/>
+				<xforms:bind nodeset="load-trigger" id="load-trigger" type="xs:boolean" readonly=". != true()" calculate="string-length(../spreadsheet_key) != 0"/>
 				<xforms:bind nodeset="mappings-valid" type="xs:boolean"/>
 				<xforms:bind nodeset="metadata-valid" type="xs:boolean"/>
 				<xforms:bind nodeset="validate-trigger" id="validate-trigger" type="xs:boolean" readonly="../mappings-valid = false()"/>
@@ -271,7 +279,9 @@
 				<xforms:bind nodeset="new_id" type="xs:boolean"/>
 			</xforms:bind>
 
-			<xforms:bind nodeset="instance('mappings')" constraint="count(mapping[@to = 'id']) = 1 and count(mapping[@to = 'title']) = 1">
+			<xforms:bind nodeset="instance('mappings')"
+				constraint="count(mapping[@to = 'id']) = 1 and count(mapping[@to = 'title']) = 1 and count(mapping[@to='objectType_uri']) = 1 and 
+				(count(mapping[@to = 'fromDate']) = count(mapping[@to = 'toDate'])) and count(mapping[@to = 'fromDate']) &lt;= 1">
 				<!-- language bindings -->
 				<xforms:bind nodeset="mapping[@to='title']">
 					<xforms:bind nodeset="@lang" required="true()"
@@ -279,13 +289,11 @@
 				</xforms:bind>
 				<xforms:bind nodeset="mapping[@to='obv_type']">
 					<xforms:bind nodeset="@lang" required="true()"
-						constraint="string-length(.) &gt; 0 and count(//mapping[@to='obv_type']/@lang) = count(distinct-values(//mapping[@to='obv_type']/@lang))"
-					/>
+						constraint="string-length(.) &gt; 0 and count(//mapping[@to='obv_type']/@lang) = count(distinct-values(//mapping[@to='obv_type']/@lang))"/>
 				</xforms:bind>
 				<xforms:bind nodeset="mapping[@to='rev_type']">
 					<xforms:bind nodeset="@lang" required="true()"
-						constraint="string-length(.) &gt; 0 and count(//mapping[@to='rev_type']/@lang) = count(distinct-values(//mapping[@to='rev_type']/@lang))"
-					/>
+						constraint="string-length(.) &gt; 0 and count(//mapping[@to='rev_type']/@lang) = count(distinct-values(//mapping[@to='rev_type']/@lang))"/>
 				</xforms:bind>
 			</xforms:bind>
 
@@ -317,15 +325,13 @@
 			<!-- ************* SUBMISSIONS **********************-->
 			<!-- ************* GOOGLE DRIVE **********************-->
 			<xforms:submission id="query-spreadsheet-feed" serialization="none" method="get"
-				action="https://spreadsheets.google.com/feeds/worksheets/{instance('control-instance')/spreadsheet_key}/public/full" instance="spreadsheet-feed"
-				replace="instance">
+				action="https://spreadsheets.google.com/feeds/worksheets/{instance('control-instance')/spreadsheet_key}/public/full" instance="spreadsheet-feed" replace="instance">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Unable to receive Atom from Google Drive for the key provided.</xforms:message>
 				<!-- if a feed is successfully received, set the id for the workshop -->
 				<xforms:action ev:event="xforms-submit-done">
 					<xforms:setvalue ref="instance('control-instance')/spreadsheet_uri"
 						value="concat('https://docs.google.com/spreadsheets/d/', instance('control-instance')/spreadsheet_key, '/pubhtml')"/>
-					<xforms:setvalue ref="instance('control-instance')/worksheet_id"
-						value="tokenize(instance('spreadsheet-feed')//atom:entry[1]/atom:id, '/')[last()]"/>
+					<xforms:setvalue ref="instance('control-instance')/worksheet_id" value="tokenize(instance('spreadsheet-feed')//atom:entry[1]/atom:id, '/')[last()]"/>
 					<xforms:send submission="load-worksheet"/>
 				</xforms:action>
 			</xforms:submission>
@@ -338,8 +344,7 @@
 				<xforms:action ev:event="xforms-submit-done">
 					<!-- if there is at least one entry, set the mapping instance and toggle the mapping interface -->
 					<xforms:action if="count(instance('feed')//atom:entry) &gt; 0">
-						<xforms:action
-							xxforms:iterate="instance('feed')//atom:entry[1]/*[namespace-uri()='http://schemas.google.com/spreadsheets/2006/extended']">
+						<xforms:action xxforms:iterate="instance('feed')//atom:entry[1]/*[namespace-uri()='http://schemas.google.com/spreadsheets/2006/extended']">
 							<xforms:var name="heading" select="name()"/>
 							<xforms:insert context="instance('mappings')" nodeset="./child::node()[last()]"
 								origin="xforms:element('mapping', (xforms:attribute('from', $heading), xforms:attribute('to', '')))"/>
@@ -379,21 +384,17 @@
 			</xforms:submission>
 
 			<!-- ***** LOADING COLLECTIONS/CONFIG *****-->
-			<xforms:submission id="load-config" serialization="none" method="get"
-				action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/config.xml"
-				xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}" replace="instance"
-				instance="config">
+			<xforms:submission id="load-config" serialization="none" method="get" action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/config.xml"
+				xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}" replace="instance" instance="config">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Unable to load Numishare configuration</xforms:message>
 
 				<xforms:action ev:event="xforms-submit-done">
-					<xforms:setvalue ref="instance('nuds')/@recordType"
-						value="if (instance('config')/collection_type = 'cointype') then 'conceptual' else 'physical'"/>
+					<xforms:setvalue ref="instance('nuds')/@recordType" value="if (instance('config')/collection_type = 'cointype') then 'conceptual' else 'physical'"/>
 				</xforms:action>
 			</xforms:submission>
 
-			<xforms:submission id="load-collections" serialization="none" method="get" action="{instance('exist-config')/url}collections-list.xml"
-				replace="instance" instance="collections-list" xxforms:username="{instance('exist-config')/username}"
-				xxforms:password="{instance('exist-config')/password}">
+			<xforms:submission id="load-collections" serialization="none" method="get" action="{instance('exist-config')/url}collections-list.xml" replace="instance"
+				instance="collections-list" xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}">
 				<!-- if the config loads successfully, set the collection names based on authentication -->
 				<xforms:action ev:event="xforms-submit-done">
 					<!-- by default set the collection-name from the security role -->
@@ -410,8 +411,7 @@
 			</xforms:submission>
 
 			<!-- ************************* LOAD NOMISMA RDF/XML ************************** -->
-			<xforms:submission id="load-rdf" serialization="none" method="get" action="{instance('control-instance')/nomisma-uri}.rdf" replace="instance"
-				instance="rdf-concept">
+			<xforms:submission id="load-rdf" serialization="none" method="get" action="{instance('control-instance')/nomisma-uri}.rdf" replace="instance" instance="rdf-concept">
 				<!-- if there's an error, report the error into the Nomisma ID instance -->
 				<xforms:action ev:event="xforms-submit-error">
 					<xforms:insert context="instance('nomisma-ids')" nodeset="./child::node()[last()]"
@@ -427,18 +427,15 @@
 
 			<!-- ************************* SOLR SUBMISSIONS ************************** -->
 			<!-- post instance to Solr -->
-			<xforms:submission id="post-solr-doc" action="{instance('config')/solr_published}update" ref="instance('addIndex')" instance="addIndex"
-				replace="instance" method="post">
-				<xforms:message ev:event="xforms-submit-error" level="modal">Data Failed to POST to Solr. Index may be offline or URL is
-					incorrect.</xforms:message>
+			<xforms:submission id="post-solr-doc" action="{instance('config')/solr_published}update" ref="instance('addIndex')" instance="addIndex" replace="instance" method="post">
+				<xforms:message ev:event="xforms-submit-error" level="modal">Data Failed to POST to Solr. Index may be offline or URL is incorrect.</xforms:message>
 				<xforms:action ev:event="xforms-submit-done">
 					<xforms:send submission="submit-commit"/>
 				</xforms:action>
 			</xforms:submission>
 
 			<!-- send commit -->
-			<xforms:submission id="submit-commit" action="{instance('config')/solr_published}update" ref="instance('sendCommit')" instance="sendCommit"
-				replace="none" method="post">
+			<xforms:submission id="submit-commit" action="{instance('config')/solr_published}update" ref="instance('sendCommit')" instance="sendCommit" replace="none" method="post">
 				<xforms:message level="modal" ev:event="xforms-submit-error">Failed to commit to Solr index.</xforms:message>
 			</xforms:submission>
 
@@ -456,6 +453,28 @@
 					<xforms:insert context="instance('control-instance')" nodeset="collection-name" position="after"
 						origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/get-authentication.xpl', 'dump', instance('dump'), 'data')"/>
 					<xforms:send submission="load-collections"/>
+				</xforms:action>
+
+				<!-- iterate through the available symbol positions in the config in order to populate the property list -->
+				<xforms:action xxforms:iterate="xxforms:sort(instance('config')/positions/position, label[@lang = instance('control-instance')/language], 'text', 'ascending')">
+					<xforms:var name="side" select="context()/@side"/>
+					<xforms:var name="position" select="context()/@value"/>
+					<xforms:var name="label" select="context()/label[@lang = instance('control-instance')/language]"/>
+
+					<xforms:action if="$side = 'obv'">
+						<xforms:insert context="instance('properties')" nodeset="property[starts-with(@label, 'Obverse')][last()]" position="after"
+							origin="xforms:element('property', (xforms:attribute('label', concat('Obverse Symbol: ', $label)), concat($side, '_', $position, '_symbol')))"/>
+					</xforms:action>
+					<xforms:action if="$side = 'rev'">
+						<xforms:insert context="instance('properties')" nodeset="property[starts-with(@label, 'Reverse')][last()]" position="after"
+							origin="xforms:element('property', (xforms:attribute('label', concat('Reverse Symbol: ', $label)), concat($side, '_', $position, '_symbol')))"/>
+					</xforms:action>
+					<xforms:action if="$side = 'both'">
+						<xforms:insert context="instance('properties')" nodeset="property[starts-with(@label, 'Obverse')][last()]" position="after"
+							origin="xforms:element('property', (xforms:attribute('label', concat('Obverse Symbol: ', $label)), concat('obv_', $position, '_symbol')))"/>
+						<xforms:insert context="instance('properties')" nodeset="property[starts-with(@label, 'Reverse')][last()]" position="after"
+							origin="xforms:element('property', (xforms:attribute('label', concat('Reverse Symbol: ', $label)), concat('rev_', $position, '_symbol')))"/>
+					</xforms:action>
 				</xforms:action>
 			</xforms:action>
 
@@ -490,9 +509,9 @@
 					<h1>Import Records into Numishare</h1>
 					<xforms:switch>
 						<xforms:case id="default">
-							<p>This interface will import records from a Google Spreadsheet into Numishare. The type of record must conform to the specimen/coin
-								type collection setting established in the Numishare config. Prior to the display of the column mapping interface, this workflow
-								will parse and validate the Nomisma URIs that exist in the spreadsheet.</p>
+							<p>This interface will import records from a Google Spreadsheet into Numishare. The type of record must conform to the specimen/coin type collection
+								setting established in the Numishare config. Prior to the display of the column mapping interface, this workflow will parse and validate the Nomisma
+								URIs that exist in the spreadsheet.</p>
 
 							<div>
 								<xforms:output ref="instance('config')/collection_type">
@@ -539,8 +558,8 @@
 								</ol>
 							</xforms:group>
 
-							<p>Please either update the source spreadsheet to fix errors or submit these concepts for creation in Nomisma.org before continuing
-								with the spreadsheet import.</p>
+							<p>Please either update the source spreadsheet to fix errors or submit these concepts for creation in Nomisma.org before continuing with the spreadsheet
+								import.</p>
 						</xforms:case>
 						<xforms:case id="mapping-interface">
 							<!--<xforms:group ref="instance('spreadsheet-rdf')/prov:Entity[@rdf:about  =instance('control-instance')/spreadsheet_uri]">
@@ -638,25 +657,32 @@
 											<strong>Alert:</strong> A title is required.</div>
 									</xforms:group>
 									<!-- language warnings -->
-									
-									<xforms:group
-										ref=".[count(mapping[@to='title']/@lang) != count(distinct-values(mapping[@to='title']/@lang))]">
+
+									<xforms:group ref=".[count(mapping[@to='title']/@lang) != count(distinct-values(mapping[@to='title']/@lang))]">
 										<div class="alert-danger alert-box alert">
 											<span class="glyphicon glyphicon-exclamation-sign"></span>
 											<strong>Alert:</strong> Title languages must be unique.</div>
 									</xforms:group>
-									<xforms:group
-										ref=".[count(mapping[@to='obv_type']/@lang) != count(distinct-values(mapping[@to='obv_type']/@lang))]">
+									<xforms:group ref=".[count(mapping[@to='obv_type']/@lang) != count(distinct-values(mapping[@to='obv_type']/@lang))]">
 										<div class="alert-danger alert-box alert">
 											<span class="glyphicon glyphicon-exclamation-sign"></span>
 											<strong>Alert:</strong> Obverse type description languages must be unique.</div>
 									</xforms:group>
-									<xforms:group
-										ref=".[count(mapping[@to='rev_type']/@lang) != count(distinct-values(mapping[@to='rev_type']/@lang))]">
+									<xforms:group ref=".[count(mapping[@to='rev_type']/@lang) != count(distinct-values(mapping[@to='rev_type']/@lang))]">
 										<div class="alert-danger alert-box alert">
 											<span class="glyphicon glyphicon-exclamation-sign"></span>
 											<strong>Alert:</strong> Reverse type description languages must be unique.</div>
 									</xforms:group>
+
+									<!-- dates -->
+									<xforms:group
+										ref=".[count(mapping[@to='fromDate']) &gt; 1 and count(mapping[@to='toDate']) &gt; 1 or count(mapping[@to='fromDate']) != count(mapping[@to='toDate'])]">
+										<div class="alert-danger alert-box alert">
+											<span class="glyphicon glyphicon-exclamation-sign"></span>
+											<strong>Alert:</strong> There must be both a Start Date and End Date, with a maximum of 1 mapping each.</div>
+									</xforms:group>
+
+
 
 									<table class="table">
 										<thead>
@@ -728,7 +754,7 @@
 												<xforms:insert
 													if="count(instance('feed')//atom:entry/*[name()=instance('mappings')/mapping[@to='id']/@from]) != count(distinct-values(instance('feed')//atom:entry/*[name()=instance('mappings')/mapping[@to='id']/@from]))"
 													context="instance('validation-model')" nodeset="./child::node()[last()]"
-													origin="xforms:element('error', 'Duplicate Nomisma IDs.')"/>
+													origin="xforms:element('error', 'Duplicate Record IDs.')"/>
 												<!-- iterate through all gsx elements -->
 												<xforms:action xxforms:iterate="*[namespace-uri()='http://schemas.google.com/spreadsheets/2006/extended']">
 													<xforms:var name="from" select="name()"/>
@@ -740,41 +766,35 @@
 														<xforms:action if="$mapping = 'id'">
 															<!-- only allow certain characters as the Nomisma ID -->
 															<xforms:var name="isValid" select="matches($value, &quot;^([a-zA-Z0-9\-\._\(\)&#x0027;]*)?$&quot;)"/>
-															<xforms:insert if="not(string($value)) or $isValid = false()"
-																context="instance('validation-model')/record[last()]" nodeset="./child::node()[last()]"
-																origin="xforms:element('error', 'Invalid or blank ID')"/>
+															<xforms:insert if="not(string($value)) or $isValid = false()" context="instance('validation-model')/record[last()]"
+																nodeset="./child::node()[last()]" origin="xforms:element('error', 'Invalid or blank ID')"/>
 														</xforms:action>
 														<xforms:action if="$mapping = 'title'">
-															<xforms:insert if="not(string-length($value) &gt; 0)"
-																context="instance('validation-model')/record[last()]" nodeset="./child::node()[last()]"
-																origin="xforms:element('error', 'Record lacks a title')"/>
+															<xforms:insert if="not(string-length($value) &gt; 0)" context="instance('validation-model')/record[last()]"
+																nodeset="./child::node()[last()]" origin="xforms:element('error', 'Record lacks a title')"/>
 														</xforms:action>
 														<!-- validate start and end dates -->
 														<xforms:action if="$mapping = 'fromDate' and string-length($value) &gt; 0">
-															<xforms:insert if="not($value castable as xs:integer)"
-																context="instance('validation-model')/record[last()]" nodeset="./child::node()[last()]"
-																origin="xforms:element('error', concat('Start Date is not a number: ', $value))"/>
+															<xforms:insert if="not($value castable as xs:integer)" context="instance('validation-model')/record[last()]"
+																nodeset="./child::node()[last()]" origin="xforms:element('error', concat('Start Date is not a number: ', $value))"/>
 															<!-- if the start date and end date are both numbers, ensure that the start date is before the end date -->
 															<xforms:action if="instance('mappings')/mapping[@to='toDate'] and $value castable as xs:integer">
 																<xforms:var name="endDate"
 																	select="normalize-space(instance('feed')//atom:entry[position()=$position]/*[name()=instance('mappings')/mapping[@to='toDate']/@from])"/>
 																<xforms:action if="string-length($endDate) &gt; 0 and $endDate castable as xs:integer">
-																	<xforms:insert if="number($value) &gt; number($endDate)"
-																		context="instance('validation-model')/record[last()]" nodeset="./child::node()[last()]"
-																		origin="xforms:element('error', 'Start date post-dates end date.')"/>
+																	<xforms:insert if="number($value) &gt; number($endDate)" context="instance('validation-model')/record[last()]"
+																		nodeset="./child::node()[last()]" origin="xforms:element('error', 'Start date post-dates end date.')"/>
 																</xforms:action>
 															</xforms:action>
 														</xforms:action>
 														<xforms:action if="$mapping = 'toDate' and string-length($value) &gt; 0">
-															<xforms:insert if="not($value castable as xs:integer)"
-																context="instance('validation-model')/record[last()]" nodeset="./child::node()[last()]"
-																origin="xforms:element('error', concat('End Date is not a number: ', $value))"/>
+															<xforms:insert if="not($value castable as xs:integer)" context="instance('validation-model')/record[last()]"
+																nodeset="./child::node()[last()]" origin="xforms:element('error', concat('End Date is not a number: ', $value))"/>
 														</xforms:action>
 														<!-- URI validation -->
 														<xforms:action if="contains($mapping, '_uri')">
 															<xforms:var name="isValid" select="starts-with($value, 'http://nomisma.org/id/')"/>
-															<xforms:insert
-																if="string-length($value) &gt; 0 and (not($value castable as xs:anyURI) or $isValid = false())"
+															<xforms:insert if="string-length($value) &gt; 0 and (not($value castable as xs:anyURI) or $isValid = false())"
 																context="instance('validation-model')/record[last()]" nodeset="./child::node()[last()]"
 																origin="xforms:element('error', concat('Nomisma URI required for this field (', $mapping, '): ', $value))"> </xforms:insert>
 
@@ -783,8 +803,7 @@
 												</xforms:action>
 											</xforms:action>
 											<!-- after validation, change the import-trigger button value, if necessary, and switch the case -->
-											<xforms:setvalue ref="instance('control-instance')/import-trigger" value="true()"
-												if="count(instance('validation-model')//error) = 0"/>
+											<xforms:setvalue ref="instance('control-instance')/import-trigger" value="true()" if="count(instance('validation-model')//error) = 0"/>
 											<xforms:toggle case="validation-interface"/>
 										</xforms:action>
 									</xforms:trigger>
@@ -818,8 +837,8 @@
 								</xforms:group>
 								<!-- if there are errors or warnings, then display the table -->
 								<xforms:group ref=".[count(record[warning]) &gt; 0  or count(record[error]) &gt; 0]">
-									<p><b><xforms:output value="count(record[error])"/></b> of <b><xforms:output value="count(record)"/></b> total records
-										contain errors. <b><xforms:output value="count(record[warning])"/></b> contain warnings. See below.</p>
+									<p><b><xforms:output value="count(record[error])"/></b> of <b><xforms:output value="count(record)"/></b> total records contain errors.
+												<b><xforms:output value="count(record[warning])"/></b> contain warnings. See below.</p>
 									<table class="table">
 										<thead>
 											<th width="25%">ID</th>
@@ -860,7 +879,7 @@
 										<xforms:var name="dateTime" select="current-dateTime()"/>
 
 										<!-- begin processing the spreadsheet into RDF -->
-										<xforms:action xxforms:iterate="instance('feed')//atom:entry[1]">
+										<xforms:action xxforms:iterate="instance('feed')//atom:entry">
 											<!-- set position for progress dialog -->
 											<!--<xforms:setvalue ref="instance('control-instance')/position" value="context()/position()"></xforms:setvalue>-->
 											<xforms:var name="id"
@@ -898,13 +917,12 @@
 
 														<xforms:insert context="instance('nuds')/nuds:descMeta" origin="instance('title-template')"/>
 													</xforms:action>
-													
+
 													<!-- ***** TYPEDESC ***** -->
-				
+
 													<!-- ** PARSE URIs ** -->
 													<xforms:action if="ends-with($mapping, '_uri')">
-														<xforms:var name="uri"
-															select="if (ends-with($value, '?')) then substring-before($value, '?') else $value"/>
+														<xforms:var name="uri" select="if (ends-with($value, '?')) then substring-before($value, '?') else $value"/>
 														<xforms:var name="uncertain" select="if (ends-with($value, '?')) then true() else false()"/>
 
 														<!-- get the preferred label from the Nomisma RDF -->
@@ -918,25 +936,18 @@
 															<xforms:var name="role" select="substring-after(substring-before($mapping, '_uri'), 'geo_')"/>
 
 															<!-- insert geographic if it doesn't exist -->
-															<xforms:insert context="instance('nuds')/nuds:descMeta/nuds:typeDesc"
-																nodeset="./child::node()[last()]" origin="instance('geographic-template')"
-																if="not(instance('nuds')/nuds:descMeta/nuds:typeDesc/nuds:geographic)"/>
+															<xforms:insert context="instance('nuds')/nuds:descMeta/nuds:typeDesc" nodeset="./child::node()[last()]"
+																origin="instance('geographic-template')" if="not(instance('nuds')/nuds:descMeta/nuds:typeDesc/nuds:geographic)"/>
 
-															<xforms:insert context="instance('nuds')/nuds:descMeta/nuds:typeDesc/nuds:geographic"
-																nodeset="./child::node()[last()]" origin="instance('geogname-template')"/>
-															<xforms:setvalue
-																ref="instance('nuds')/nuds:descMeta/nuds:typeDesc/nuds:geographic/nuds:geogname[last()]"
-																value="$label"/>
-															<xforms:setvalue
-																ref="instance('nuds')/nuds:descMeta/nuds:typeDesc/nuds:geographic/nuds:geogname[last()]/@xlink:href"
+															<xforms:insert context="instance('nuds')/nuds:descMeta/nuds:typeDesc/nuds:geographic" nodeset="./child::node()[last()]"
+																origin="instance('geogname-template')"/>
+															<xforms:setvalue ref="instance('nuds')/nuds:descMeta/nuds:typeDesc/nuds:geographic/nuds:geogname[last()]" value="$label"/>
+															<xforms:setvalue ref="instance('nuds')/nuds:descMeta/nuds:typeDesc/nuds:geographic/nuds:geogname[last()]/@xlink:href"
 																value="$uri"/>
-															<xforms:setvalue
-																ref="instance('nuds')/nuds:descMeta/nuds:typeDesc/nuds:geographic/nuds:geogname[last()]/@xlink:role"
+															<xforms:setvalue ref="instance('nuds')/nuds:descMeta/nuds:typeDesc/nuds:geographic/nuds:geogname[last()]/@xlink:role"
 																value="$role"/>
-															<xforms:insert
-																nodeset="instance('nuds')/nuds:descMeta/nuds:typeDesc/nuds:geographic/nuds:geogname[last()]"
-																origin="xforms:attribute('certainty', 'http://nomisma.org/id/uncertain_value')"
-																if="$uncertain = true()"/>
+															<xforms:insert nodeset="instance('nuds')/nuds:descMeta/nuds:typeDesc/nuds:geographic/nuds:geogname[last()]"
+																origin="xforms:attribute('certainty', 'http://nomisma.org/id/uncertain_value')" if="$uncertain = true()"/>
 														</xforms:action>
 														<xforms:action if="starts-with($mapping, 'auth_')">
 															<xforms:var name="element"
@@ -944,38 +955,24 @@
 															<xforms:var name="role" select="substring-after(substring-before($mapping, '_uri'), 'auth_')"/>
 
 															<!-- insert authority if it doesn't exist -->
-															<xforms:insert context="instance('nuds')/nuds:descMeta/nuds:typeDesc"
-																nodeset="./child::node()[last()]" origin="instance('authority-template')"
-																if="not(instance('nuds')/nuds:descMeta/nuds:typeDesc/nuds:authority)"/>
+															<xforms:insert context="instance('nuds')/nuds:descMeta/nuds:typeDesc" nodeset="./child::node()[last()]"
+																origin="instance('authority-template')" if="not(instance('nuds')/nuds:descMeta/nuds:typeDesc/nuds:authority)"/>
 
-															<xforms:insert context="instance('nuds')/nuds:descMeta/nuds:typeDesc/nuds:authority"
-																nodeset="./child::node()[last()]" origin="instance(concat($element, '-template'))"/>
-															<xforms:setvalue ref="instance('nuds')/nuds:descMeta/nuds:typeDesc/nuds:authority/*[last()]"
-																value="$label"/>
-															<xforms:setvalue
-																ref="instance('nuds')/nuds:descMeta/nuds:typeDesc/nuds:authority/*[last()]/@xlink:href"
-																value="$uri"/>
-															<xforms:setvalue
-																ref="instance('nuds')/nuds:descMeta/nuds:typeDesc/nuds:authority/*[last()]/@xlink:role"
-																value="$role"/>
+															<xforms:insert context="instance('nuds')/nuds:descMeta/nuds:typeDesc/nuds:authority" nodeset="./child::node()[last()]"
+																origin="instance(concat($element, '-template'))"/>
+															<xforms:setvalue ref="instance('nuds')/nuds:descMeta/nuds:typeDesc/nuds:authority/*[last()]" value="$label"/>
+															<xforms:setvalue ref="instance('nuds')/nuds:descMeta/nuds:typeDesc/nuds:authority/*[last()]/@xlink:href" value="$uri"/>
+															<xforms:setvalue ref="instance('nuds')/nuds:descMeta/nuds:typeDesc/nuds:authority/*[last()]/@xlink:role" value="$role"/>
 															<xforms:insert nodeset="instance('nuds')/nuds:descMeta/nuds:typeDesc/nuds:authority/*[last()]"
-																origin="xforms:attribute('certainty', 'http://nomisma.org/id/uncertain_value')"
-																if="$uncertain = true()"/>
+																origin="xforms:attribute('certainty', 'http://nomisma.org/id/uncertain_value')" if="$uncertain = true()"/>
 														</xforms:action>
 														<xforms:action if="starts-with($mapping, 'obv_') or starts-with($mapping, 'rev_')">
-															<xforms:var name="container"
-																select="if (starts-with($mapping, 'obv_')) then 'obverse' else 'reverse'"/>
+															<xforms:var name="container" select="if (starts-with($mapping, 'obv_')) then 'obverse' else 'reverse'"/>
 															<xforms:var name="role" select="substring-after(substring-before($mapping, '_uri'), 'v_')"/>
-
-															<!-- insert obverse/reverse if it doesn't exist -->
-															<xforms:insert context="instance('nuds')/nuds:descMeta/nuds:typeDesc"
-																nodeset="./child::node()[last()]" origin="instance(concat($container, '-template'))"
-																if="not(instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container])"/>
 
 															<xforms:insert context="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container]"
 																nodeset="./child::node()[last()]" origin="instance('persname-template')"/>
-															<xforms:setvalue
-																ref="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container]/nuds:persname[last()]"
+															<xforms:setvalue ref="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container]/nuds:persname[last()]"
 																value="$label"/>
 															<xforms:setvalue
 																ref="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container]/nuds:persname[last()]/@xlink:href"
@@ -983,44 +980,33 @@
 															<xforms:setvalue
 																ref="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container]/nuds:persname[last()]/@xlink:role"
 																value="$role"/>
-															<xforms:insert
-																nodeset="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container]/*[last()]"
-																origin="xforms:attribute('certainty', 'http://nomisma.org/id/uncertain_value')"
-																if="$uncertain = true()"/>
+															<xforms:insert nodeset="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container]/*[last()]"
+																origin="xforms:attribute('certainty', 'http://nomisma.org/id/uncertain_value')" if="$uncertain = true()"/>
 														</xforms:action>
-														<xforms:action if="not(starts-with($mapping, 'geo_')) and not(starts-with($mapping, 'auth_'))">
+														<xforms:action
+															if="not(starts-with($mapping, 'geo_')) and not(starts-with($mapping, 'auth_')) and not(starts-with($mapping, 'obv_')) and not(starts-with($mapping, 'rev_'))">
 															<xforms:var name="element" select="substring-before($mapping, '_uri')"/>
 
-															<xforms:insert context="instance('nuds')/nuds:descMeta/nuds:typeDesc"
-																nodeset="./child::node()[last()]" origin="instance(concat($element, '-template'))"/>
-															<xforms:setvalue ref="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$element][last()]"
-																value="$label"/>
-															<xforms:setvalue
-																ref="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$element][last()]/@xlink:href"
+															<xforms:insert context="instance('nuds')/nuds:descMeta/nuds:typeDesc" nodeset="./child::node()[last()]"
+																origin="instance(concat($element, '-template'))"/>
+															<xforms:setvalue ref="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$element][last()]" value="$label"/>
+															<xforms:setvalue ref="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$element][last()]/@xlink:href"
 																value="$uri"/>
-															<xforms:insert
-																nodeset="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$element][last()]"
-																origin="xforms:attribute('certainty', 'http://nomisma.org/id/uncertain_value')"
-																if="$uncertain = true()"/>
+															<xforms:insert nodeset="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$element][last()]"
+																origin="xforms:attribute('certainty', 'http://nomisma.org/id/uncertain_value')" if="$uncertain = true()"/>
 														</xforms:action>
 													</xforms:action>
 
 													<!-- ** OBVERSE/REVERSE ** -->
-													<xforms:action
-														if="(starts-with($mapping, 'obv_') or starts-with($mapping, 'rev_')) and not(ends-with($mapping, '_uri'))">
+													<xforms:action if="(starts-with($mapping, 'obv_') or starts-with($mapping, 'rev_')) and not(ends-with($mapping, '_uri'))">
 														<xforms:var name="container" select="if (starts-with($mapping, 'obv_')) then 'obverse' else 'reverse'"/>
 														<xforms:var name="element"
 															select="if (starts-with($mapping, 'obv_')) then substring-after($mapping, 'obv_') else substring-after($mapping, 'rev_')"/>
 
-														<!-- insert obverse/reverse if it doesn't exist -->
-														<xforms:insert context="instance('nuds')/nuds:descMeta/nuds:typeDesc" nodeset="./child::node()[last()]"
-															origin="instance(concat($container, '-template'))"
-															if="not(instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container])"/>
-
 														<!-- insert type element once and multiple description elements -->
 														<xforms:action if="$element = 'type'">
 															<xforms:var name="lang" select="instance('mappings')/mapping[@from=$from]/@lang"/>
-															
+
 															<xforms:insert context="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container]"
 																nodeset="./child::node()[last()]" origin="instance('type-template')"
 																if="not(instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container]/nuds:type)"/>
@@ -1033,21 +1019,99 @@
 																ref="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container]/nuds:type/nuds:description[last()]/@xml:lang"
 																value="$lang"/>
 														</xforms:action>
-														<xforms:action if="not($element = 'type')">
+														<xforms:action if="$element = 'legend'">
 															<xforms:insert context="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container]"
 																nodeset="./child::node()[last()]" origin="instance(concat($element, '-template'))"/>
 															<xforms:setvalue
 																ref="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container]/*[local-name()=$element][last()]"
 																value="$value"/>
 														</xforms:action>
+														<xforms:action if="ends-with($element, '_symbol')">
+															<xforms:var name="position" select="substring-before($element, '_symbol')"/>
+
+															<!-- evaluate whether the $value is a URI or not -->
+															<xforms:action if="matches($value, '^https?://')">
+																<xforms:var name="uri" select="if (ends-with($value, '?')) then substring-before($value, '?') else $value"/>
+																<xforms:var name="uncertain" select="if (ends-with($value, '?')) then true() else false()"/>
+
+																<xforms:insert context="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container]"
+																	nodeset="./child::node()[last()]" origin="instance('symbol-template')"/>
+																<xforms:setvalue
+																	ref="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container]/nuds:symbol[last()]/@position"
+																	value="$position"/>
+																<xforms:insert context="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container]/nuds:symbol[last()]"
+																	origin="xforms:attribute(resolve-QName('xlink:href', self::node()), $uri)"/>
+																<!--<xforms:setvalue ref="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container]/nuds:symbol[last()]" value="$value"/>-->
+															</xforms:action>
+															<xforms:action if="not(matches($value, '^https?://'))">
+																<xforms:insert context="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container]"
+																	nodeset="./child::node()[last()]" origin="instance('symbol-template')"/>
+																<xforms:setvalue ref="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container]/nuds:symbol[last()]"
+																	value="$value"/>
+																<xforms:setvalue
+																	ref="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container]/nuds:symbol[last()]/@position"
+																	value="$position"/>
+															</xforms:action>
+														</xforms:action>
 													</xforms:action>
-													
+
 													<!-- ** DATE/DATERANGE ** -->
-													<xforms:action if="$mapping = 'fromDate' or $mapping = 'toDate'">
-														
+													<xforms:action if="$mapping = 'fromDate'">
+														<xforms:var name="year" select="number($value)"/>
+														<xforms:var name="toDate"
+															select="normalize-space(instance('feed')//atom:entry[position()=$position]/*[name()=instance('mappings')/mapping[@to='toDate']/@from])"/>
+
+														<!-- if $toDate is an integer, and it is not the same as $value, then create dateRange -->
+														<xforms:action if="$toDate castable as xs:integer and not($value = $toDate)">
+															<xforms:insert context="instance('nuds')/nuds:descMeta/nuds:typeDesc" nodeset="./child::node()[last()]"
+																origin="instance('dateRange-template')"/>
+
+															<xforms:setvalue ref="instance('nuds')/nuds:descMeta/nuds:typeDesc/nuds:dateRange/nuds:fromDate/@standardDate"
+																value="format-number($year, '0000')"/>
+															<xforms:setvalue ref="instance('nuds')/nuds:descMeta/nuds:typeDesc/nuds:dateRange/nuds:fromDate"
+																value="if ($year &lt; 0) then concat(abs($year), ' BCE') else $year"/>
+															<xforms:setvalue ref="instance('nuds')/nuds:descMeta/nuds:typeDesc/nuds:dateRange/nuds:toDate/@standardDate"
+																value="format-number(number($toDate), '0000')"/>
+															<xforms:setvalue ref="instance('nuds')/nuds:descMeta/nuds:typeDesc/nuds:dateRange/nuds:toDate"
+																value="if (number($toDate) &lt; 0) then concat(abs(number($toDate)), ' BCE') else $toDate"/>
+														</xforms:action>
+														<xforms:action if="not($toDate castable as xs:integer) or $value = $toDate">
+															<xforms:insert context="instance('nuds')/nuds:descMeta/nuds:typeDesc" nodeset="./child::node()[last()]"
+																origin="instance('date-template')"/>
+
+															<!-- set date values -->
+															<xforms:setvalue ref="instance('nuds')/nuds:descMeta/nuds:typeDesc/nuds:date/@standardDate"
+																value="format-number($year, '0000')"/>
+															<xforms:setvalue ref="instance('nuds')/nuds:descMeta/nuds:typeDesc/nuds:date"
+																value="if ($year &lt; 0) then concat(abs($year), ' BCE') else $year"/>
+														</xforms:action>
+													</xforms:action>
+													<xforms:action if="$mapping = 'toDate'">
+														<xforms:var name="year" select="number($value)"/>
+
+														<xforms:var name="fromDate"
+															select="normalize-space(instance('feed')//atom:entry[position()=$position]/*[name()=instance('mappings')/mapping[@to='fromDate']/@from])"/>
+
+														<!-- insert nuds:date if there is no $fromDate -->
+														<xforms:action if="not($fromDate castable as xs:integer)">
+															<xforms:insert context="instance('nuds')/nuds:descMeta/nuds:typeDesc" nodeset="./child::node()[last()]"
+																origin="instance('date-template')"/>
+
+															<!-- set date values -->
+															<xforms:setvalue ref="instance('nuds')/nuds:descMeta/nuds:typeDesc/nuds:date/@standardDate"
+																value="format-number($year, '0000')"/>
+															<xforms:setvalue ref="instance('nuds')/nuds:descMeta/nuds:typeDesc/nuds:date"
+																value="if ($year &lt; 0) then concat(abs($value), ' BCE') else $value"/>
+														</xforms:action>
 													</xforms:action>
 												</xforms:action>
 											</xforms:action>
+
+											<!-- delete empty obverse and reverse -->
+											<xforms:delete nodeset="instance('nuds')/nuds:descMeta/nuds:typeDesc/nuds:obverse"
+												if="not(instance('nuds')/nuds:descMeta/nuds:typeDesc/nuds:obverse/*)"/>
+											<xforms:delete nodeset="instance('nuds')/nuds:descMeta/nuds:typeDesc/nuds:reverse"
+												if="not(instance('nuds')/nuds:descMeta/nuds:typeDesc/nuds:reverse/*)"/>
 
 											<!-- *** BEGIN CRUD OPERATIONS *** -->
 											<!-- if the ID is new, then insert dcterms:ProvenanceStatement and a prov:wasGeneratedBy statement -->
