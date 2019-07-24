@@ -89,7 +89,7 @@
 				</descMeta>
 			</xforms:instance>
 
-
+			<!-- ***** CONTROL TEMPLATES ***** -->
 			<xforms:instance id="control-template" xxforms:exclude-result-prefixes="#all">
 				<control>
 					<recordId/>
@@ -118,6 +118,11 @@
 				</control>
 			</xforms:instance>
 
+			<xforms:instance id="otherRecordId-template" xxforms:exclude-result-prefixes="#all">
+				<otherRecordId semantic=""/>
+			</xforms:instance>
+
+			<!-- ***** DESCMETA ***** -->
 			<xforms:instance id="title-template" xxforms:exclude-result-prefixes="#all">
 				<title xml:lang=""/>
 			</xforms:instance>
@@ -214,7 +219,7 @@
 					<property label="Denomination URI">denomination_uri</property>
 					<property label="Date Certainty">dateCertainty</property>
 					<property label="End Date">toDate</property>
-					<property label="Exatch Match" constraint="conceptual">exactMatch</property>
+					<property label="Exatch Match URI" constraint="conceptual">exactMatch</property>
 					<property label="Issuer URI">auth_issuer_uri</property>
 					<property label="Height" constraint="physical">height</property>
 					<property label="Manufacture URI">manufacture_uri</property>
@@ -224,7 +229,9 @@
 					<property label="Obverse Portrait URI">obv_portrait_uri</property>
 					<property label="Obverse Type Description">obv_type</property>
 					<property label="Object Type URI">objectType_uri</property>
-					<property label="Parent ID" constraint="conceptual">broader</property>
+					<property label="Parent Type ID" constraint="conceptual">broader</property>
+					<property label="Replaced By ID" constraint="conceptual">replacedBy</property>
+					<property label="Replaces ID" constraint="conceptual">replaces</property>
 					<property label="Region URI">geo_region_uri</property>
 					<property label="Reverse Legend">rev_legend</property>
 					<property label="Reverse Portrait URI">rev_portrait_uri</property>
@@ -295,6 +302,9 @@
 					<xforms:bind nodeset="@lang" required="true()"
 						constraint="string-length(.) &gt; 0 and count(//mapping[@to='rev_type']/@lang) = count(distinct-values(//mapping[@to='rev_type']/@lang))"/>
 				</xforms:bind>
+				<xforms:bind nodeset="mapping[@to='rev_legend']" constraint="count(//mapping[@to='rev_legend']) = 1"/>
+
+
 			</xforms:bind>
 
 			<xforms:bind nodeset="instance('nomisma-ids')">
@@ -360,7 +370,7 @@
 
 						<!-- iterate through all of the distinct values of Nomisma URIs -->
 						<xforms:action
-							xxforms:iterate="distinct-values(instance('feed')//*[namespace-uri()='http://schemas.google.com/spreadsheets/2006/extended'][contains(., 'http://nomisma.org/id/')])">
+							xxforms:iterate="distinct-values(instance('feed')//*[namespace-uri()='http://schemas.google.com/spreadsheets/2006/extended'][contains(., 'http://nomisma.org/') or contains(., 'http://numismatics.org/')])">
 							<xforms:var name="value"
 								select="if (ends-with(normalize-space(context()), '?')) then substring-before(normalize-space(context()), '?') else normalize-space(context())"/>
 
@@ -646,6 +656,7 @@
 								<p>Associate the headings with allowable properties, where applicable. Note that the NUDS Record ID and Title are required.</p>
 
 								<xforms:group ref="instance('mappings')">
+									<!-- required elements -->
 									<xforms:group ref=".[count(mapping[@to='id']) != 1]">
 										<div class="alert-danger alert-box alert">
 											<span class="glyphicon glyphicon-exclamation-sign"></span>
@@ -656,8 +667,13 @@
 											<span class="glyphicon glyphicon-exclamation-sign"></span>
 											<strong>Alert:</strong> A title is required.</div>
 									</xforms:group>
-									<!-- language warnings -->
+									<xforms:group ref=".[count(mapping[@to='objectType_uri']) != 1]">
+										<div class="alert-danger alert-box alert">
+											<span class="glyphicon glyphicon-exclamation-sign"></span>
+											<strong>Alert:</strong> There must be one Object Type.</div>
+									</xforms:group>
 
+									<!-- language warnings -->
 									<xforms:group ref=".[count(mapping[@to='title']/@lang) != count(distinct-values(mapping[@to='title']/@lang))]">
 										<div class="alert-danger alert-box alert">
 											<span class="glyphicon glyphicon-exclamation-sign"></span>
@@ -680,6 +696,18 @@
 										<div class="alert-danger alert-box alert">
 											<span class="glyphicon glyphicon-exclamation-sign"></span>
 											<strong>Alert:</strong> There must be both a Start Date and End Date, with a maximum of 1 mapping each.</div>
+									</xforms:group>
+
+									<!-- other -->
+									<xforms:group ref=".[count(mapping[@to='obv_legend']) != count(distinct-values(mapping[@to='obv_legend']))]">
+										<div class="alert-danger alert-box alert">
+											<span class="glyphicon glyphicon-exclamation-sign"></span>
+											<strong>Alert:</strong> There can only be one Obverse Legend.</div>
+									</xforms:group>
+									<xforms:group ref=".[count(mapping[@to='rev_legend']) != count(distinct-values(mapping[@to='rev_legend']))]">
+										<div class="alert-danger alert-box alert">
+											<span class="glyphicon glyphicon-exclamation-sign"></span>
+											<strong>Alert:</strong> There can only be one Reverse Legend.</div>
 									</xforms:group>
 
 
@@ -792,12 +820,19 @@
 																nodeset="./child::node()[last()]" origin="xforms:element('error', concat('End Date is not a number: ', $value))"/>
 														</xforms:action>
 														<!-- URI validation -->
-														<xforms:action if="contains($mapping, '_uri')">
+														<xforms:action if="ends-with($mapping, '_uri')">
 															<xforms:var name="isValid" select="starts-with($value, 'http://nomisma.org/id/')"/>
 															<xforms:insert if="string-length($value) &gt; 0 and (not($value castable as xs:anyURI) or $isValid = false())"
 																context="instance('validation-model')/record[last()]" nodeset="./child::node()[last()]"
 																origin="xforms:element('error', concat('Nomisma URI required for this field (', $mapping, '): ', $value))"> </xforms:insert>
 
+														</xforms:action>
+														<xforms:action if="$mapping = 'exactMatch'">
+															<xforms:var name="isValid" select="matches($value, '^https?://')"/>
+
+															<xforms:insert if="string-length($value) &gt; 0 and $isValid = false())"
+																context="instance('validation-model')/record[last()]" nodeset="./child::node()[last()]"
+																origin="xforms:element('error', concat('Valid URI required for this field (', $mapping, '): ', $value))"/>
 														</xforms:action>
 													</xforms:action>
 												</xforms:action>
@@ -879,7 +914,7 @@
 										<xforms:var name="dateTime" select="current-dateTime()"/>
 
 										<!-- begin processing the spreadsheet into RDF -->
-										<xforms:action xxforms:iterate="instance('feed')//atom:entry">
+										<xforms:action xxforms:iterate="instance('feed')//atom:entry[1]">
 											<!-- set position for progress dialog -->
 											<!--<xforms:setvalue ref="instance('control-instance')/position" value="context()/position()"></xforms:setvalue>-->
 											<xforms:var name="id"
@@ -946,7 +981,7 @@
 																value="$uri"/>
 															<xforms:setvalue ref="instance('nuds')/nuds:descMeta/nuds:typeDesc/nuds:geographic/nuds:geogname[last()]/@xlink:role"
 																value="$role"/>
-															<xforms:insert nodeset="instance('nuds')/nuds:descMeta/nuds:typeDesc/nuds:geographic/nuds:geogname[last()]"
+															<xforms:insert context="instance('nuds')/nuds:descMeta/nuds:typeDesc/nuds:geographic/nuds:geogname[last()]"
 																origin="xforms:attribute('certainty', 'http://nomisma.org/id/uncertain_value')" if="$uncertain = true()"/>
 														</xforms:action>
 														<xforms:action if="starts-with($mapping, 'auth_')">
@@ -963,7 +998,7 @@
 															<xforms:setvalue ref="instance('nuds')/nuds:descMeta/nuds:typeDesc/nuds:authority/*[last()]" value="$label"/>
 															<xforms:setvalue ref="instance('nuds')/nuds:descMeta/nuds:typeDesc/nuds:authority/*[last()]/@xlink:href" value="$uri"/>
 															<xforms:setvalue ref="instance('nuds')/nuds:descMeta/nuds:typeDesc/nuds:authority/*[last()]/@xlink:role" value="$role"/>
-															<xforms:insert nodeset="instance('nuds')/nuds:descMeta/nuds:typeDesc/nuds:authority/*[last()]"
+															<xforms:insert context="instance('nuds')/nuds:descMeta/nuds:typeDesc/nuds:authority/*[last()]"
 																origin="xforms:attribute('certainty', 'http://nomisma.org/id/uncertain_value')" if="$uncertain = true()"/>
 														</xforms:action>
 														<xforms:action if="starts-with($mapping, 'obv_') or starts-with($mapping, 'rev_')">
@@ -980,7 +1015,7 @@
 															<xforms:setvalue
 																ref="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container]/nuds:persname[last()]/@xlink:role"
 																value="$role"/>
-															<xforms:insert nodeset="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container]/*[last()]"
+															<xforms:insert context="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container]/*[last()]"
 																origin="xforms:attribute('certainty', 'http://nomisma.org/id/uncertain_value')" if="$uncertain = true()"/>
 														</xforms:action>
 														<xforms:action
@@ -992,7 +1027,7 @@
 															<xforms:setvalue ref="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$element][last()]" value="$label"/>
 															<xforms:setvalue ref="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$element][last()]/@xlink:href"
 																value="$uri"/>
-															<xforms:insert nodeset="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$element][last()]"
+															<xforms:insert context="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$element][last()]"
 																origin="xforms:attribute('certainty', 'http://nomisma.org/id/uncertain_value')" if="$uncertain = true()"/>
 														</xforms:action>
 													</xforms:action>
@@ -1028,20 +1063,27 @@
 														</xforms:action>
 														<xforms:action if="ends-with($element, '_symbol')">
 															<xforms:var name="position" select="substring-before($element, '_symbol')"/>
-
-															<!-- evaluate whether the $value is a URI or not -->
-															<xforms:action if="matches($value, '^https?://')">
+															<!-- evaluate whether the $value is a URI or not -->x <xforms:action if="matches($value, '^https?://')">
 																<xforms:var name="uri" select="if (ends-with($value, '?')) then substring-before($value, '?') else $value"/>
 																<xforms:var name="uncertain" select="if (ends-with($value, '?')) then true() else false()"/>
-
-																<xforms:insert context="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container]"
+																<!-- get preferred label from RDF -->
+																<xforms:var name="label"
+																	select="if (instance('rdf')/*[@rdf:about=$uri]/skos:prefLabel[@xml:lang=instance('control-instance')/language]) 
+																	then instance('rdf')/*[@rdf:about=$uri]/skos:prefLabel[@xml:lang=instance('control-instance')/language] 
+																	else instance('rdf')/*[@rdf:about=$uri]/skos:prefLabel[@xml:lang='en']"
+																/> <xforms:insert context="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container]"
 																	nodeset="./child::node()[last()]" origin="instance('symbol-template')"/>
 																<xforms:setvalue
 																	ref="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container]/nuds:symbol[last()]/@position"
 																	value="$position"/>
 																<xforms:insert context="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container]/nuds:symbol[last()]"
 																	origin="xforms:attribute(resolve-QName('xlink:href', self::node()), $uri)"/>
-																<!--<xforms:setvalue ref="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container]/nuds:symbol[last()]" value="$value"/>-->
+																<xforms:insert context="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container]/nuds:symbol[last()]"
+																	origin="xforms:attribute(resolve-QName('xlink:type', self::node()), 'simple')"/>
+																<xforms:setvalue ref="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container]/nuds:symbol[last()]"
+																	value="$label"/>
+																<xforms:insert context="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container]/nuds:symbol[last()]"
+																	origin="xforms:attribute('certainty', 'http://nomisma.org/id/uncertain_value')" if="$uncertain = true()"/>
 															</xforms:action>
 															<xforms:action if="not(matches($value, '^https?://'))">
 																<xforms:insert context="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container]"
