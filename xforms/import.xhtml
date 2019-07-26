@@ -219,7 +219,7 @@
 					<property label="Denomination URI">denomination_uri</property>
 					<property label="Date Certainty">dateCertainty</property>
 					<property label="End Date">toDate</property>
-					<property label="Exatch Match URI" constraint="conceptual">exactMatch</property>
+					<property label="Exatch Match URI" constraint="cointype">exactMatch</property>
 					<property label="Issuer URI">auth_issuer_uri</property>
 					<property label="Height" constraint="physical">height</property>
 					<property label="Manufacture URI">manufacture_uri</property>
@@ -229,9 +229,9 @@
 					<property label="Obverse Portrait URI">obv_portrait_uri</property>
 					<property label="Obverse Type Description">obv_type</property>
 					<property label="Object Type URI">objectType_uri</property>
-					<property label="Parent Type ID" constraint="conceptual">broader</property>
-					<property label="Replaced By ID" constraint="conceptual">replacedBy</property>
-					<property label="Replaces ID" constraint="conceptual">replaces</property>
+					<property label="Parent Type ID" constraint="cointype">broader</property>
+					<property label="Replaced By ID" constraint="cointype">replacedBy</property>
+					<property label="Replaces ID" constraint="cointype">replaces</property>
 					<property label="Region URI">geo_region_uri</property>
 					<property label="Reverse Legend">rev_legend</property>
 					<property label="Reverse Portrait URI">rev_portrait_uri</property>
@@ -733,7 +733,7 @@
 															<xforms:value/>
 														</xforms:item>
 														<xforms:itemset
-															nodeset="instance('properties')/property[(not(@constraint) or @constraint = instance('config')/collection_type) and not(@exclude = instance('config')/collection_type)]">
+															nodeset="instance('properties')/property[not(@constraint) or @constraint = instance('config')/collection_type]">
 															<xforms:label ref="@label"/>
 															<xforms:value ref="."/>
 														</xforms:itemset>
@@ -797,6 +797,33 @@
 															<xforms:insert if="not(string($value)) or $isValid = false()" context="instance('validation-model')/record[last()]"
 																nodeset="./child::node()[last()]" origin="xforms:element('error', 'Invalid or blank ID')"/>
 														</xforms:action>
+
+														<!-- evaluate broader, replacedBy, or replaces IDs to determine whether they are in this spreadsheet or execute an XQuery for it -->
+														<xforms:action
+															if="string-length($value) &gt; 0 and ($mapping = 'broader' or $mapping = 'replacedBy' or $mapping = 'replaces')">
+															<xforms:var name="isValid" select="matches($value, &quot;^([a-zA-Z0-9\-\._\(\)&#x0027;]*)?$&quot;)"/>
+
+															<xforms:insert if="$isValid = false()" context="instance('validation-model')/record[last()]"
+																nodeset="./child::node()[last()]"
+																origin="xforms:element('error', concat('Invalid ', instance('properties')/property[. = $mapping]/@label))"/>
+
+															<!-- if the ID is valid, look for a corresponding record -->
+															<xforms:action if="$isValid = true()">
+																<xforms:var name="target-id" select="$value"/>
+																
+																
+																<xforms:action if="not(instance('feed')//atom:entry/*[name()=instance('mappings')/mapping[@to='id']/@from][normalize-space(.) = $target-id])">
+																	
+																	<!-- if the ID is not in the spreadsheet, initiate an XQuery to look for the recordId in the eXist-db collection -->	
+																	
+																	<xforms:insert context="instance('validation-model')/record[last()]"
+																		nodeset="./child::node()[last()]"
+																		origin="xforms:element('error', concat('ID not found in spreadsheet or Numishare XML collection for ', instance('properties')/property[. = $mapping]/@label))"/>
+																</xforms:action>
+															</xforms:action>
+														</xforms:action>
+
+														<!-- ensure that the title exists -->
 														<xforms:action if="$mapping = 'title'">
 															<xforms:insert if="not(string-length($value) &gt; 0)" context="instance('validation-model')/record[last()]"
 																nodeset="./child::node()[last()]" origin="xforms:element('error', 'Record lacks a title')"/>
@@ -805,7 +832,7 @@
 														<xforms:action if="$mapping = 'fromDate' and string-length($value) &gt; 0">
 															<xforms:insert if="not($value castable as xs:integer)" context="instance('validation-model')/record[last()]"
 																nodeset="./child::node()[last()]" origin="xforms:element('error', concat('Start Date is not a number: ', $value))"/>
-															<!-- if the start date and end date are both numbers, ensure that the start date is before the end date -->
+															<!-- if the start date and end date are both numbers, ensure that the start date is before the end dte -->
 															<xforms:action if="instance('mappings')/mapping[@to='toDate'] and $value castable as xs:integer">
 																<xforms:var name="endDate"
 																	select="normalize-space(instance('feed')//atom:entry[position()=$position]/*[name()=instance('mappings')/mapping[@to='toDate']/@from])"/>
@@ -1070,8 +1097,8 @@
 																<xforms:var name="label"
 																	select="if (instance('rdf')/*[@rdf:about=$uri]/skos:prefLabel[@xml:lang=instance('control-instance')/language]) 
 																	then instance('rdf')/*[@rdf:about=$uri]/skos:prefLabel[@xml:lang=instance('control-instance')/language] 
-																	else instance('rdf')/*[@rdf:about=$uri]/skos:prefLabel[@xml:lang='en']"
-																/> <xforms:insert context="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container]"
+																	else instance('rdf')/*[@rdf:about=$uri]/skos:prefLabel[@xml:lang='en']"/>
+																<xforms:insert context="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container]"
 																	nodeset="./child::node()[last()]" origin="instance('symbol-template')"/>
 																<xforms:setvalue
 																	ref="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container]/nuds:symbol[last()]/@position"
