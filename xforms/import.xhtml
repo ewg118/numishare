@@ -4,7 +4,8 @@
 	xmlns:numishare="https://github.comu/ewg118/numishare" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:nuds="http://nomisma.org/nuds"
 	xmlns:res="http://www.w3.org/2005/sparql-results#" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:nm="http://nomisma.org/id/" xmlns:foaf="http://xmlns.com/foaf/0.1/"
 	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:atom="http://www.w3.org/2005/Atom"
-	xmlns:prov="http://www.w3.org/ns/prov#" xmlns:rdac="http://www.rdaregistry.info/Elements/c/" xmlns:nmo="http://nomisma.org/ontology#">
+	xmlns:prov="http://www.w3.org/ns/prov#" xmlns:rdac="http://www.rdaregistry.info/Elements/c/" xmlns:nmo="http://nomisma.org/ontology#"
+	xmlns:exist="http://exist.sourceforge.net/NS/exist">
 	<head>
 		<title>Numishare: Import Data from CSV</title>
 		<link rel="stylesheet" href="/fr/style/bootstrap/css/bootstrap.css" type="text/css" />
@@ -35,6 +36,8 @@
 					<language>en</language>
 					<nomisma-uri/>
 					<id/>
+					<parent-id/>
+					<mapping/>
 					<mappings-valid>false</mappings-valid>
 					<metadata-valid>false</metadata-valid>
 					<load-trigger>false</load-trigger>
@@ -208,6 +211,7 @@
 				<dump xmlns=""/>
 			</xforms:instance>
 
+			<!-- NUDS mappings and validation -->
 			<xforms:instance id="properties" xxforms:exclude-result-prefixes="#all">
 				<properties xmlns="">
 					<property label="Record ID">id</property>
@@ -256,6 +260,15 @@
 
 			<xforms:instance id="nomisma-ids" xxforms:exclude-result-prefixes="#all">
 				<ids xmlns=""/>
+			</xforms:instance>
+
+			<xforms:instance id="parents-valid" xxforms:exclude-result-prefixes="#all">
+				<ids xmlns=""/>
+			</xforms:instance>
+
+			<!-- NUDS instance for parent type -->
+			<xforms:instance id="parent-nuds" xxforms:exclude-result-prefixes="#all">
+				<nuds/>
 			</xforms:instance>
 
 			<!-- Google Spreadsheet Atom -->
@@ -432,6 +445,23 @@
 					<xforms:insert context="instance('nomisma-ids')" nodeset="./child::node()[last()]"
 						origin="xforms:element('id', (xforms:attribute('uri', instance('control-instance')/nomisma-uri), true()))"/>
 					<xforms:insert context="instance('rdf')" nodeset="./child::node()[last()]" origin="instance('rdf-concept')/*[1]"/>
+				</xforms:action>
+			</xforms:submission>
+
+			<!-- ************************* LOAD PARENT NUDS FILE ************************** -->
+			<xforms:submission id="load-parent-nuds" serialization="none" method="get"
+				action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/objects/{encode-for-uri(instance('control-instance')/parent-id)}.xml"
+				xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}" replace="instance" instance="parent-nuds">
+
+				<!-- evaluate whether the NUDS document exists in the exist-db collection -->
+				<xforms:action ev:event="xforms-submit-done">
+					<xforms:insert context="instance('parents-valid')" nodeset="./child::node()[last()]" origin="xforms:element('id', data(instance('control-instance')/parent-id))"
+					/>
+				</xforms:action>
+				<xforms:action ev:event="xforms-submit-error">
+					<xforms:insert context="instance('validation-model')/record[last()]" nodeset="./child::node()[last()]"
+						origin="xforms:element('error', concat('ID not found in spreadsheet or Numishare XML collection for ', instance('properties')/property[. = instance('control-instance')/mapping]/@label))"
+					/>
 				</xforms:action>
 			</xforms:submission>
 
@@ -798,7 +828,7 @@
 																nodeset="./child::node()[last()]" origin="xforms:element('error', 'Invalid or blank ID')"/>
 														</xforms:action>
 
-														<!-- evaluate broader, replacedBy, or replaces IDs to determine whether they are in this spreadsheet or execute an XQuery for it -->
+														<!-- evaluate broader, replacedBy, or replaces IDs to determine whether they are in this spreadsheet or load a NUDS document from exist-db -->
 														<xforms:action
 															if="string-length($value) &gt; 0 and ($mapping = 'broader' or $mapping = 'replacedBy' or $mapping = 'replaces')">
 															<xforms:var name="isValid" select="matches($value, &quot;^([a-zA-Z0-9\-\._\(\)&#x0027;]*)?$&quot;)"/>
@@ -810,15 +840,24 @@
 															<!-- if the ID is valid, look for a corresponding record -->
 															<xforms:action if="$isValid = true()">
 																<xforms:var name="target-id" select="$value"/>
-																
-																
-																<xforms:action if="not(instance('feed')//atom:entry/*[name()=instance('mappings')/mapping[@to='id']/@from][normalize-space(.) = $target-id])">
-																	
-																	<!-- if the ID is not in the spreadsheet, initiate an XQuery to look for the recordId in the eXist-db collection -->	
-																	
-																	<xforms:insert context="instance('validation-model')/record[last()]"
-																		nodeset="./child::node()[last()]"
-																		origin="xforms:element('error', concat('ID not found in spreadsheet or Numishare XML collection for ', instance('properties')/property[. = $mapping]/@label))"/>
+
+																<!-- if the ID hasn't already been inserted into the instance of valid parents -->
+																<xforms:action if="not(instance('parents-valid')/id = $value)">
+
+																	<!-- if the ID is in the spreadsheet, add the ID to the 'parents-valid' instance -->
+																	<xforms:action
+																		if="instance('feed')//atom:entry/*[name()=instance('mappings')/mapping[@to='id']/@from][normalize-space(.) = $target-id]">
+																		<xforms:insert context="instance('parents-valid')" nodeset="./child::node()[last()]"
+																			origin="xforms:element('id', $target-id)"/>
+																	</xforms:action>
+
+																	<!-- if the ID is not in the spreadsheet, load a NUDS file of that ID from exist-db -->
+																	<xforms:action
+																		if="not(instance('feed')//atom:entry/*[name()=instance('mappings')/mapping[@to='id']/@from][normalize-space(.) = $target-id])">
+																		<xforms:setvalue ref="instance('control-instance')/parent-id" value="$target-id"/>
+																		<xforms:setvalue ref="instance('control-instance')/mapping" value="$mapping"/>
+																		<xforms:send submission="load-parent-nuds"/>
+																	</xforms:action>
 																</xforms:action>
 															</xforms:action>
 														</xforms:action>
@@ -854,10 +893,10 @@
 																origin="xforms:element('error', concat('Nomisma URI required for this field (', $mapping, '): ', $value))"> </xforms:insert>
 
 														</xforms:action>
-														<xforms:action if="$mapping = 'exactMatch'">
+														<xforms:action if="$mapping = 'exactMatch' and string-length($value) &gt; 0">
 															<xforms:var name="isValid" select="matches($value, '^https?://')"/>
 
-															<xforms:insert if="string-length($value) &gt; 0 and $isValid = false())"
+															<xforms:insert if="$isValid = false()"
 																context="instance('validation-model')/record[last()]" nodeset="./child::node()[last()]"
 																origin="xforms:element('error', concat('Valid URI required for this field (', $mapping, '): ', $value))"/>
 														</xforms:action>
@@ -941,7 +980,7 @@
 										<xforms:var name="dateTime" select="current-dateTime()"/>
 
 										<!-- begin processing the spreadsheet into RDF -->
-										<xforms:action xxforms:iterate="instance('feed')//atom:entry[1]">
+										<xforms:action xxforms:iterate="instance('feed')//atom:entry">
 											<!-- set position for progress dialog -->
 											<!--<xforms:setvalue ref="instance('control-instance')/position" value="context()/position()"></xforms:setvalue>-->
 											<xforms:var name="id"
@@ -969,6 +1008,14 @@
 
 													<xforms:action if="$mapping = 'id'">
 														<xforms:setvalue ref="instance('nuds')/nuds:control/nuds:recordId" value="$value"/>
+													</xforms:action>
+													
+													<xforms:action if="$mapping = 'broader' or $mapping = 'replaces' or $mapping = 'replacedBy' or $mapping = 'exactMatch'">
+														<xforms:var name="property" select="if (contains($mapping, 'replace')) then concat('dcterms:', $mapping) else concat('skos:', $mapping)"/>
+														
+														<xforms:insert context="instance('nuds')/nuds:control" nodeset="if (nuds:otherRecordId) then nuds:otherRecordId else nuds:recordId" position="after" origin="instance('otherRecordId-template')"/>
+														<xforms:setvalue ref="instance('nuds')/nuds:control/nuds:otherRecordId[last()]/@semantic" value="$property"/>
+														<xforms:setvalue ref="instance('nuds')/nuds:control/nuds:otherRecordId[last()]" value="$value"/>
 													</xforms:action>
 
 													<xforms:action if="$mapping = 'title'">
