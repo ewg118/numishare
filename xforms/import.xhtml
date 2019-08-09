@@ -214,7 +214,7 @@
 			<xforms:instance id="type-template" xxforms:exclude-result-prefixes="#all">
 				<type/>
 			</xforms:instance>
-			
+
 			<xforms:instance id="typeSeries-template" xxforms:exclude-result-prefixes="#all">
 				<typeSeries xlink:type="simple" xlink:href=""/>
 			</xforms:instance>
@@ -250,6 +250,7 @@
 					<property label="Manufacture URI">manufacture_uri</property>
 					<property label="Material URI">material_uri</property>
 					<property label="Mint URI">geo_mint_uri</property>
+					<property label="Note">note</property>
 					<property label="Object Type URI">objectType_uri</property>
 					<property label="Obverse Legend">obv_legend</property>
 					<property label="Obverse Portrait URI">obv_portrait_uri</property>
@@ -278,6 +279,14 @@
 				<xi:include href="instances/languages.xml"/>
 			</xforms:instance>
 
+			<xforms:instance id="semantic-properties" xxforms:exclude-result-prefixes="#all">
+				<properties xmlns="">
+					<property label="SKOS Definition">skos:definition</property>
+					<property label="SKOS Note">skos:note</property>
+					<property label="SKOS ScopeNote">skos:scopeNote</property>
+				</properties>
+			</xforms:instance>
+
 			<xforms:instance id="mappings" xxforms:exclude-result-prefixes="#all">
 				<mappings xmlns=""/>
 			</xforms:instance>
@@ -295,7 +304,7 @@
 			</xforms:instance>
 
 			<!-- NUDS instance for parent type -->
-			<xforms:instance id="parent-nuds" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="related-nuds" xxforms:exclude-result-prefixes="#all">
 				<nuds/>
 			</xforms:instance>
 
@@ -359,6 +368,10 @@
 					<xforms:bind nodeset="@lang" required="true()"
 						constraint="string-length(.) &gt; 0 and count(//mapping[@to='rev_type']/@lang) = count(distinct-values(//mapping[@to='rev_type']/@lang))"
 					/>
+				</xforms:bind>
+				<xforms:bind nodeset="mapping[@to = 'note']">
+					<xforms:bind nodeset="@lang" required="true()"/>
+					<xforms:bind nodeset="@property" required="true()"/>
 				</xforms:bind>
 			</xforms:bind>
 
@@ -503,7 +516,7 @@
 			<xforms:submission id="load-nuds" serialization="none" method="get"
 				action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/objects/{encode-for-uri(instance('control-instance')/target-id)}.xml"
 				xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}" replace="instance"
-				instance="parent-nuds">
+				instance="related-nuds">
 
 				<!-- evaluate whether the NUDS document exists in the exist-db collection -->
 				<xforms:action ev:event="xforms-submit-done">
@@ -908,14 +921,12 @@
 											<strong>Note:</strong> Coin Type URIs that are not linked to the Typological Description should be designated as a
 											Reference instead</div>
 									</xforms:group>
-									<xforms:group
-										ref=".[count(mapping[@to = 'typeSeries_uri']) &gt; 1]">
+									<xforms:group ref=".[count(mapping[@to = 'typeSeries_uri']) &gt; 1]">
 										<div class="alert-danger alert-box alert">
 											<span class="glyphicon glyphicon-exclamation-sign"></span>
 											<strong>Alert:</strong> There must not be more than one Type Series URI.</div>
 									</xforms:group>
-									<xforms:group
-										ref=".[count(mapping[@to = 'typeNumber']) &gt; 1]">
+									<xforms:group ref=".[count(mapping[@to = 'typeNumber']) &gt; 1]">
 										<div class="alert-danger alert-box alert">
 											<span class="glyphicon glyphicon-exclamation-sign"></span>
 											<strong>Alert:</strong> There must not be more than one Type Number.</div>
@@ -949,13 +960,16 @@
 														<xforms:action ev:event="xforms-value-changed">
 															<xforms:var name="property" select="."/>
 															<!-- if it is a literal-based property, insert the @lang attribute -->
-															<xforms:action if="$property = 'title' or ends-with($property, '_type')">
+															<xforms:action if="$property = 'title' or $property = 'note' or ends-with($property, '_type')">
 																<xforms:insert context="parent::node()" origin="xforms:attribute('lang', '')"/>
 															</xforms:action>
 															<!-- if it is not a literal, then delete @lang -->
-															<xforms:action if="$property != 'title' and not(ends-with($property, '_type'))">
+															<xforms:action
+																if="not($property = 'title') and not($property = 'note') and not(ends-with($property, '_type'))">
 																<xforms:delete context="parent::node()" nodeset="@lang"/>
 															</xforms:action>
+															<!-- delete @proprety if not a note -->
+															<xforms:delete context="parent::node()" nodeset="@property" if="not($property = 'note')"/>
 														</xforms:action>
 													</xforms:select1>
 													<xforms:group ref="@lang">
@@ -970,6 +984,34 @@
 																<xforms:value ref="@value"/>
 															</xforms:itemset>
 														</xforms:select1>
+													</xforms:group>
+													<!-- allow SKOS properties for coin types -->
+													<xforms:group ref=".[@to = 'note' and instance('config')/collection_type = 'cointype']">
+														<xforms:group ref="@property">
+															<xforms:select1 ref=".">
+																<xforms:alert>Required</xforms:alert>
+																<xforms:item>
+																	<xforms:label>Select...</xforms:label>
+																	<xforms:value/>
+																</xforms:item>
+																<xforms:itemset nodeset="instance('semantic-properties')/property">
+																	<xforms:label ref="@label"/>
+																	<xforms:value ref="."/>
+																</xforms:itemset>
+															</xforms:select1>
+															<xforms:trigger appearance="minimal">
+																<xforms:label>
+																	<span class="glyphicon glyphicon-remove"></span></xforms:label>
+																<xforms:delete ev:event="DOMActivate" nodeset="."/>
+															</xforms:trigger>
+														</xforms:group>
+														<xforms:group ref=".[not(@property)]">
+															<xforms:trigger appearance="minimal">
+																<xforms:label>
+																	<span class="glyphicon glyphicon-plus"></span>Semantic Property</xforms:label>
+																<xforms:insert ev:event="DOMActivate" context="." origin="xforms:attribute('property')"/>
+															</xforms:trigger>
+														</xforms:group>
 													</xforms:group>
 												</td>
 											</tr>
@@ -1342,14 +1384,16 @@
 															<xforms:insert context="instance('nuds')/nuds:control"
 																nodeset="if (nuds:otherRecordId) then nuds:otherRecordId else nuds:recordId" position="after"
 																origin="instance('otherRecordId-template')"/>
-															
+
 															<!-- insert semantic when there is an RDF property -->
-															<xforms:insert if="not($mapping = 'typeNumber') and not($mapping = 'sortId')" context="instance('nuds')/nuds:control/nuds:otherRecordId[last()]"
-																origin="xforms:attribute(resolve-QName('semantic', self::node()), $property)"/>			
+															<xforms:insert if="not($mapping = 'typeNumber') and not($mapping = 'sortId')"
+																context="instance('nuds')/nuds:control/nuds:otherRecordId[last()]"
+																origin="xforms:attribute(resolve-QName('semantic', self::node()), $property)"/>
 															<!-- typeNumber is a @localType -->
-															<xforms:insert if="$mapping = 'typeNumber' or $mapping = 'sortId'" context="instance('nuds')/nuds:control/nuds:otherRecordId[last()]"
+															<xforms:insert if="$mapping = 'typeNumber' or $mapping = 'sortId'"
+																context="instance('nuds')/nuds:control/nuds:otherRecordId[last()]"
 																origin="xforms:attribute(resolve-QName('localType', self::node()), $mapping)"/>
-															
+
 															<xforms:setvalue ref="instance('nuds')/nuds:control/nuds:otherRecordId[last()]" value="$value"/>
 
 															<!-- if the exactMatch-to-reference box is checked, then create a reference and link to it -->
@@ -1370,6 +1414,8 @@
 															</xforms:action>
 														</xforms:action>
 
+														<!-- ***** DESCMETA ***** -->
+
 														<!-- titles -->
 														<xforms:action if="$mapping = 'title'">
 															<xforms:var name="lang" select="instance('mappings')/mapping[@from=$from]/@lang"/>
@@ -1380,6 +1426,27 @@
 															<xforms:insert context="instance('nuds')/nuds:descMeta" origin="instance('title-template')"/>
 														</xforms:action>
 
+														<!-- ** NOTES ** -->
+														<xforms:action if="$mapping = 'note' and string-length($value) &gt; 0">
+															<xforms:var name="lang" select="instance('mappings')/mapping[@from=$from]/@lang"/>
+															<xforms:var name="lang" select="instance('mappings')/mapping[@from=$from]/@property"/>
+
+															<xforms:insert context="instance('nuds')/nuds:descMeta" nodeset="nuds:title[last()]"
+																origin="instance('noteSet-template')" if="not(instance('nuds')/nuds:descMeta/nuds:nodeSet)"/>
+
+															<xforms:insert context="instance('nuds')/nuds:descMeta/nuds:nodeSet"
+																nodeset="./child::node()[last()]" origin="instance('note-template')"/>
+															<xforms:setvalue ref="instance('nuds')/nuds:descMeta/nuds:nodeSet/nuds:note[last()]" value="$value"/>
+															<xforms:setvalue ref="instance('nuds')/nuds:descMeta/nuds:nodeSet/nuds:note[last()]/@xml:lang"
+																value="$lang"/>
+															
+															<!-- TODO: TEST NOTE -->
+
+															<!-- insert semantic property into a semantic element, if set -->
+															<xforms:insert if="string($property)" context="instance('nuds')/nuds:descMeta/nuds:nodeSet/nuds:note[last()]"
+																origin="xforms:attribute(resolve-QName('semantic', self::node()), $property)"/>
+														</xforms:action>
+
 														<!-- ***** TYPEDESC ***** -->
 														<!-- if there is a coinType URI in the Atom entry and the control to insert a URI into the typeDesc is enabled, inset XLink attributes -->
 														<xforms:action if="string($coinType_uri) and instance('control-instance')/link-to-coinType = true()">
@@ -1388,7 +1455,7 @@
 															<xforms:insert context="instance('nuds')/nuds:descMeta/nuds:typeDesc"
 																origin="xforms:attribute(resolve-QName('xlink:type', self::node()), 'simple')"/>
 														</xforms:action>
-														
+
 														<!-- otherwise process all possible typeDesc mappings and insert elements into the typeDesc -->
 														<xforms:action
 															if="not(string($coinType_uri)) or instance('control-instance')/link-to-coinType = false()">
@@ -1560,11 +1627,11 @@
 																		<xforms:insert
 																			context="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container]"
 																			nodeset="./child::node()[last()]" origin="instance('symbol-template')"/>
-																		
+
 																		<!-- insert attributes -->
 																		<xforms:insert if="string($symbol_position)"
 																			context="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container]/nuds:symbol[last()]"
-																			origin="xforms:attribute(resolve-QName('position', self::node()), $symbol_position)"/>																																				
+																			origin="xforms:attribute(resolve-QName('position', self::node()), $symbol_position)"/>
 																		<xforms:insert
 																			context="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container]/nuds:symbol[last()]"
 																			origin="xforms:attribute(resolve-QName('xlink:href', self::node()), $uri)"/>
@@ -1593,11 +1660,12 @@
 																		<xforms:setvalue
 																			ref="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container]/nuds:symbol[last()]"
 																			value="$value"/>
-																		
+
 																		<!-- insert position, if set -->
 																		<xforms:insert if="string($symbol_position)"
 																			context="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container]/nuds:symbol[last()]"
-																			origin="xforms:attribute(resolve-QName('position', self::node()), $symbol_position)"/>				
+																			origin="xforms:attribute(resolve-QName('position', self::node()), $symbol_position)"
+																		/>
 																	</xforms:action>
 																</xforms:action>
 															</xforms:action>
