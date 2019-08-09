@@ -38,6 +38,8 @@
 					<nomisma-uri/>
 					<id/>
 					<target-id/>
+					<position>0</position>
+					<identifiers/>
 					<mapping/>
 					<mappings-valid>false</mappings-valid>
 					<metadata-valid>false</metadata-valid>
@@ -46,10 +48,9 @@
 					<import-trigger>false</import-trigger>
 					<exactMatch-reference>true</exactMatch-reference>
 					<link-to-coinType>true</link-to-coinType>
-					<index-to-solr/>
+					<index-to-solr>true</index-to-solr>
 					<validate-ids>true</validate-ids>
-					<position/>
-					<count/>
+					<deprecate-ids>false</deprecate-ids>
 				</controls>
 			</xforms:instance>
 
@@ -130,7 +131,7 @@
 			</xforms:instance>
 
 			<xforms:instance id="otherRecordId-template" xxforms:exclude-result-prefixes="#all">
-				<otherRecordId semantic=""/>
+				<otherRecordId/>
 			</xforms:instance>
 
 			<!-- ***** DESCMETA ***** -->
@@ -207,11 +208,15 @@
 			</xforms:instance>
 
 			<xforms:instance id="symbol-template" xxforms:exclude-result-prefixes="#all">
-				<symbol position=""/>
+				<symbol/>
 			</xforms:instance>
 
 			<xforms:instance id="type-template" xxforms:exclude-result-prefixes="#all">
 				<type/>
+			</xforms:instance>
+			
+			<xforms:instance id="typeSeries-template" xxforms:exclude-result-prefixes="#all">
+				<typeSeries xlink:type="simple" xlink:href=""/>
 			</xforms:instance>
 
 			<!-- refDesc templates -->
@@ -231,8 +236,6 @@
 			<!-- NUDS mappings and validation -->
 			<xforms:instance id="properties" xxforms:exclude-result-prefixes="#all">
 				<properties xmlns="">
-					<property label="Record ID">id</property>
-					<property label="Title">title</property>
 					<property label="Authority URI">auth_authority_uri</property>
 					<property label="Axis" constraint="object">axis</property>
 					<property label="Coin Type URI" constraint="object">coinType</property>
@@ -247,19 +250,25 @@
 					<property label="Manufacture URI">manufacture_uri</property>
 					<property label="Material URI">material_uri</property>
 					<property label="Mint URI">geo_mint_uri</property>
+					<property label="Object Type URI">objectType_uri</property>
 					<property label="Obverse Legend">obv_legend</property>
 					<property label="Obverse Portrait URI">obv_portrait_uri</property>
+					<property label="Obverse Symbol">obv_symbol</property>
 					<property label="Obverse Type Description">obv_type</property>
-					<property label="Object Type URI">objectType_uri</property>
 					<property label="Parent Type ID" constraint="cointype">broader</property>
+					<property label="Record ID">id</property>
 					<property label="Reference">reference</property>
 					<property label="Region URI">geo_region_uri</property>
 					<property label="Replaced By ID" constraint="cointype">replacedBy</property>
 					<property label="Replaces ID" constraint="cointype">replaces</property>
 					<property label="Reverse Legend">rev_legend</property>
 					<property label="Reverse Portrait URI">rev_portrait_uri</property>
+					<property label="Reverse Symbol">rev_symbol</property>
 					<property label="Reverse Type Description">rev_type</property>
 					<property label="Start Date">fromDate</property>
+					<property label="Title">title</property>
+					<property label="Type Number" constraint="cointype">typeNumber</property>
+					<property label="Type Series URI" constraint="cointype">typeSeries_uri</property>
 					<property label="Weight" constraint="object">weight</property>
 					<property label="Width" constraint="object">width</property>
 				</properties>
@@ -303,6 +312,7 @@
 			<xforms:instance id="addIndex">
 				<add xmlns=""/>
 			</xforms:instance>
+
 			<xforms:instance id="sendCommit">
 				<commit/>
 			</xforms:instance>
@@ -312,15 +322,20 @@
 				<xforms:bind nodeset="type" required="true()"/>
 				<xforms:bind nodeset="load-trigger" id="load-trigger" type="xs:boolean" readonly=". != true()"
 					calculate="string-length(../spreadsheet-key) != 0"/>
+				<xforms:bind nodeset="position" type="xs:integer"/>
+
+				<!-- enable/disable buttons based on validation -->
 				<xforms:bind nodeset="mappings-valid" type="xs:boolean"/>
 				<xforms:bind nodeset="metadata-valid" type="xs:boolean"/>
 				<xforms:bind nodeset="validate-trigger" id="validate-trigger" type="xs:boolean" readonly="../mappings-valid = false()"/>
 				<xforms:bind nodeset="import-trigger" id="import-trigger" type="xs:boolean"/>
+
+				<!-- additional boolean options for modeling and indexing -->
 				<xforms:bind nodeset="exactMatch-reference" type="xs:boolean"/>
 				<xforms:bind nodeset="link-to-coinType" type="xs:boolean"/>
-				<xforms:bind nodeset="index-to-solr" type="xs:boolean"/>
+				<xforms:bind nodeset="index-to-solr" type="xs:boolean" readonly="../deprecate-ids = true()"/>
 				<xforms:bind nodeset="validate-ids" type="xs:boolean"/>
-				<xforms:bind nodeset="new_id" type="xs:boolean"/>
+				<xforms:bind nodeset="deprecate-ids" type="xs:boolean"/>
 			</xforms:bind>
 
 			<xforms:bind nodeset="instance('mappings')"
@@ -328,7 +343,8 @@
 				(count(mapping[@to = 'fromDate']) = count(mapping[@to = 'toDate'])) and count(mapping[@to = 'fromDate']) &lt;= 1 and
 				count(//mapping[@to='obv_legend']) &lt;= 1 and count(//mapping[@to='rev_legend']) &lt;= 1 and
 				(if (instance('config')/collection_type = 'cointype') then count(mapping[@to = 'objectType_uri']) = 1 else if (instance('control-instance')/link-to-coinType = false()) then count(mapping[@to = 'objectType_uri']) = 1 else count(mapping[@to = 'objectType_uri']) &lt;= 1) and
-				(if (instance('control-instance')/link-to-coinType = true() and instance('config')/collection_type = 'object') then count(mapping[@to = 'coinType']) = 1 else count(mapping[@to = 'coinType']) = 0)">
+				(if (instance('control-instance')/link-to-coinType = true() and instance('config')/collection_type = 'object') then count(mapping[@to = 'coinType']) = 1 else count(mapping[@to = 'coinType']) = 0)
+				and count(mapping[@to = 'typeSeries_uri']) &lt;= 1 and count(mapping[@to = 'typeNumber']) &lt;= 1">
 				<!-- language bindings -->
 				<xforms:bind nodeset="mapping[@to='title']">
 					<xforms:bind nodeset="@lang" required="true()"
@@ -344,10 +360,6 @@
 						constraint="string-length(.) &gt; 0 and count(//mapping[@to='rev_type']/@lang) = count(distinct-values(//mapping[@to='rev_type']/@lang))"
 					/>
 				</xforms:bind>
-				<!--<xforms:bind nodeset="mapping[@to='obv_legend']" constraint="count(//mapping[@to='obv_legend']) = 1"/>
-				<xforms:bind nodeset="mapping[@to='rev_legend']" constraint="count(//mapping[@to='rev_legend']) = 1"/>-->
-
-
 			</xforms:bind>
 
 			<xforms:bind nodeset="instance('nomisma-ids')">
@@ -510,15 +522,50 @@
 				action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/objects/{instance('nuds')/nuds:control/nuds:recordId}.xml"
 				method="put" replace="none">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Error saving file to eXist-db collection.</xforms:message>
+
+
+				<xforms:action ev:event="xforms-submit-done">
+					<xforms:setvalue ref="instance('control-instance')/status"
+						value="concat(instance('nuds')/nuds:control/nuds:recordId, ' saved to eXist-db collection.')"/>
+
+					<!-- if the record is approved or approved subtype, add it to the identifier list for indexing, if activated -->
+					<xforms:action if="instance('control-instance')/index-to-solr = true()">
+						<xforms:var name="publicationStatus" select="instance('nuds')/nuds:control/nuds:publicationStatus"/>
+
+						<!-- only index active types and subtypes -->
+						<xforms:action if="$publicationStatus = 'approved' or $publicationStatus = 'approvedSubtype'">
+							<!-- set position -->
+							<xforms:setvalue ref="instance('control-instance')/position" value="instance('control-instance')/position + 1"/>
+
+							<!-- set proper separator based on position. IDs are to be indexed in blocks of 100 -->
+							<xforms:var name="sep"
+								select="if (instance('control-instance')/position = 1) then '' else if (instance('control-instance')/position mod 100 = 0) then ',' else '|'"/>
+							<xforms:var name="recordId" select="instance('nuds')/nuds:control/nuds:recordId"/>
+
+							<xforms:setvalue ref="instance('control-instance')/identifiers"
+								value="concat(instance('control-instance')/identifiers, $sep, $recordId)"/>
+						</xforms:action>
+					</xforms:action>
+				</xforms:action>
 			</xforms:submission>
 
 			<!-- ************************* SOLR SUBMISSIONS ************************** -->
+			<!-- pass identifiers URL parameter to xquery process in Cocoon to generate large Solr add document -->
+			<xforms:submission id="generate-add-document" method="get" replace="instance" instance="addIndex" serialization="none"
+				resource="/numishare/{instance('control-instance')/collection-name}/ingest?identifiers={instance('control-instance')/identifiers}">
+				<xforms:message ev:event="xforms-submit-error" level="modal">Error getting Solr document from XQuery ingestion pipeline.</xforms:message>
+				<xforms:action ev:event="xforms-submit-done">
+					<xforms:send submission="post-solr-doc"/>
+				</xforms:action>
+			</xforms:submission>
+
 			<!-- post instance to Solr -->
 			<xforms:submission id="post-solr-doc" action="{instance('config')/solr_published}update" ref="instance('addIndex')" instance="addIndex"
 				replace="instance" method="post">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Data Failed to POST to Solr. Index may be offline or URL is
 					incorrect.</xforms:message>
 				<xforms:action ev:event="xforms-submit-done">
+					<xforms:setvalue ref="instance('control-instance')/status">Successfully published to Solr.</xforms:setvalue>
 					<xforms:send submission="submit-commit"/>
 				</xforms:action>
 			</xforms:submission>
@@ -539,6 +586,7 @@
 					<xforms:setvalue ref="instance('control-instance')/collection-name" value="xxforms:get-session-attribute('collection-name')"/>
 					<xforms:send submission="load-config"/>
 				</xforms:action>
+
 				<xforms:action if="not(string(xxforms:get-session-attribute('collection-name')))">
 					<xforms:insert context="instance('control-instance')" nodeset="collection-name" position="after"
 						origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/get-authentication.xpl', 'dump', instance('dump'), 'data')"/>
@@ -553,19 +601,19 @@
 					<xforms:var name="label" select="context()/label[@lang = instance('control-instance')/language]"/>
 
 					<xforms:action if="$side = 'obv'">
-						<xforms:insert context="instance('properties')" nodeset="property[starts-with(@label, 'Obverse')][last()]" position="after"
+						<xforms:insert context="instance('properties')" nodeset="property[starts-with(@label, 'Obverse Symbol')][last()]" position="after"
 							origin="xforms:element('property', (xforms:attribute('label', concat('Obverse Symbol: ', $label)), concat($side, '_', $position, '_symbol')))"
 						/>
 					</xforms:action>
 					<xforms:action if="$side = 'rev'">
-						<xforms:insert context="instance('properties')" nodeset="property[starts-with(@label, 'Reverse')][last()]" position="after"
+						<xforms:insert context="instance('properties')" nodeset="property[starts-with(@label, 'Reverse Symbol')][last()]" position="after"
 							origin="xforms:element('property', (xforms:attribute('label', concat('Reverse Symbol: ', $label)), concat($side, '_', $position, '_symbol')))"
 						/>
 					</xforms:action>
 					<xforms:action if="$side = 'both'">
-						<xforms:insert context="instance('properties')" nodeset="property[starts-with(@label, 'Obverse')][last()]" position="after"
+						<xforms:insert context="instance('properties')" nodeset="property[starts-with(@label, 'Obverse Symbol')][last()]" position="after"
 							origin="xforms:element('property', (xforms:attribute('label', concat('Obverse Symbol: ', $label)), concat('obv_', $position, '_symbol')))"/>
-						<xforms:insert context="instance('properties')" nodeset="property[starts-with(@label, 'Reverse')][last()]" position="after"
+						<xforms:insert context="instance('properties')" nodeset="property[starts-with(@label, 'Reverse Symbol')][last()]" position="after"
 							origin="xforms:element('property', (xforms:attribute('label', concat('Reverse Symbol: ', $label)), concat('rev_', $position, '_symbol')))"
 						/>
 					</xforms:action>
@@ -607,7 +655,6 @@
 								type collection setting established in the Numishare config. Prior to the display of the column mapping interface, this workflow
 								will parse and validate the Nomisma URIs that exist in the spreadsheet.</p>
 
-
 							<xforms:group ref="instance('control-instance')">
 								<div class="subsection">
 									<div>
@@ -641,10 +688,29 @@
 									<table class="table">
 
 										<tbody>
+											<tr>
+												<td><xforms:input ref="index-to-solr"/></td>
+												<td>Index records in Solr for search/browse after spreadsheet processing is completed.</td>
+											</tr>
 											<xforms:group ref=".[instance('config')/collection_type = 'cointype']">
 												<tr>
 													<td><xforms:input ref="exactMatch-reference"/></td>
 													<td>Convert Exact Match coin type URIs to human-readable references (with a link to the URI).</td>
+												</tr>
+												<tr>
+													<td>
+														<xforms:input ref="deprecate-ids">
+															<!-- when the box is checked, change value of index-to-solr -->
+															<xforms:action ev:event="xforms-value-changed">
+																<xforms:setvalue ref="../index-to-solr" value="false()" if=". = true()"/>
+																<xforms:setvalue ref="../index-to-solr" value="true()" if=". = false()"/>
+															</xforms:action>
+														</xforms:input>
+													</td>
+													<td><strong>Deprecate IDs</strong>: enable this to deprecate all IDs by default. This option should be
+														enabled when publishing old type corpora or editions before publishing a new corpus to the same
+														collection (e.g., to publish Svoronos 1904 types before publishing Coins of the Ptolemaic Empire IDs).
+														Deprecated IDs are not indexed into Solr for the search/browse interfaces.</td>
 												</tr>
 											</xforms:group>
 											<xforms:group ref=".[instance('config')/collection_type = 'object']">
@@ -835,8 +901,6 @@
 											<span class="glyphicon glyphicon-exclamation-sign"></span>
 											<strong>Alert:</strong> There must be one column mapped to Coin Type URI.</div>
 									</xforms:group>
-
-									<!-- warnings -->
 									<xforms:group
 										ref=".[instance('control-instance')/link-to-coinType = false() and instance('config')/collection_type = 'object' and count(mapping[@to = 'coinType']) &gt;= 1]">
 										<div class="alert-danger alert-box alert">
@@ -844,9 +908,18 @@
 											<strong>Note:</strong> Coin Type URIs that are not linked to the Typological Description should be designated as a
 											Reference instead</div>
 									</xforms:group>
-
-
-
+									<xforms:group
+										ref=".[count(mapping[@to = 'typeSeries_uri']) &gt; 1]">
+										<div class="alert-danger alert-box alert">
+											<span class="glyphicon glyphicon-exclamation-sign"></span>
+											<strong>Alert:</strong> There must not be more than one Type Series URI.</div>
+									</xforms:group>
+									<xforms:group
+										ref=".[count(mapping[@to = 'typeNumber']) &gt; 1]">
+										<div class="alert-danger alert-box alert">
+											<span class="glyphicon glyphicon-exclamation-sign"></span>
+											<strong>Alert:</strong> There must not be more than one Type Number.</div>
+									</xforms:group>
 
 									<table class="table">
 										<thead>
@@ -920,8 +993,6 @@
 													if="count(instance('feed')//atom:entry/*[name()=instance('mappings')/mapping[@to='id']/@from]) != count(distinct-values(instance('feed')//atom:entry/*[name()=instance('mappings')/mapping[@to='id']/@from]))"
 													context="instance('validation-model')" nodeset="./child::node()[last()]"
 													origin="xforms:element('error', 'Duplicate Record IDs.')"/>
-
-
 
 												<!-- iterate through all gsx elements -->
 												<xforms:action xxforms:iterate="*[namespace-uri()='http://schemas.google.com/spreadsheets/2006/extended']">
@@ -1131,8 +1202,6 @@
 						<xforms:case id="validation-interface">
 							<xforms:group ref="instance('validation-model')">
 								<div>
-
-
 									<h3>Validation</h3>
 									<xforms:group ref=".[count(descendant::error) = 0]">
 										<div class="alert-success alert-box alert">
@@ -1197,8 +1266,6 @@
 
 											<!-- begin processing the spreadsheet into RDF -->
 											<xforms:action xxforms:iterate="instance('feed')//atom:entry[40]">
-												<!-- set position for progress dialog -->
-												<!--<xforms:setvalue ref="instance('control-instance')/position" value="context()/position()"></xforms:setvalue>-->
 												<xforms:var name="id"
 													select="normalize-space(data(context()/*[namespace-uri()='http://schemas.google.com/spreadsheets/2006/extended'][name()=instance('mappings')/mapping[@to='id']/@from]))"/>
 												<xforms:var name="position" select="position()"/>
@@ -1214,10 +1281,12 @@
 												<!-- *** set control metadata *** -->
 												<!-- set publicationStatus and maintenanceStatus based on replacedBy or broader value -->
 												<xforms:setvalue ref="instance('nuds')/nuds:control/nuds:publicationStatus"
-													value="if (count(context()/*[namespace-uri()='http://schemas.google.com/spreadsheets/2006/extended'][name()=instance('mappings')/mapping[@to='replacedBy']/@from][normalize-space()]) &gt;= 1) 
+													value="if (instance('control-instance')/deprecate-ids = true())
 															then 'deprecatedType'
+														else if (count(context()/*[namespace-uri()='http://schemas.google.com/spreadsheets/2006/extended'][name()=instance('mappings')/mapping[@to='replacedBy']/@from][normalize-space()]) &gt;= 1) 
+															then 'deprecatedType'															
 														else if (count(context()/*[namespace-uri()='http://schemas.google.com/spreadsheets/2006/extended'][name()=instance('mappings')/mapping[@to='broader']/@from][normalize-space()]) &gt;= 1)
-															then 'approvedSubtype'
+															then 'approvedSubtype'														
 														else 'approved'"/>
 												<!-- if there's more than one replacedBy, then the status is cancelledSplit -->
 												<xforms:setvalue ref="instance('nuds')/nuds:control/nuds:maintenanceStatus"
@@ -1225,7 +1294,13 @@
 															then 'cancelledSplit'
 														else if (count(context()/*[namespace-uri()='http://schemas.google.com/spreadsheets/2006/extended'][name()=instance('mappings')/mapping[@to='replacedBy']/@from][normalize-space()]) = 1) 
 															then 'cancelledReplaced'
+														else if (instance('control-instance')/deprecate-ids = true())
+															then 'cancelled'
 														else 'derived'"/>
+
+												<!-- set maintenanceAgency -->
+												<xforms:setvalue ref="instance('nuds')/nuds:control/nuds:maintenanceAgency/nuds:agencyName"
+													value="instance('config')/template/agencyName"/>
 
 												<!-- record provenance -->
 												<xforms:setvalue ref="instance('nuds')/nuds:control/nuds:maintenanceHistory/nuds:maintenanceEvent/nuds:agent"
@@ -1241,7 +1316,7 @@
 
 												<!-- if there is a coin type URI -->
 												<xforms:var name="coinType_uri"
-													select="normalize-space(data(context()/*[namespace-uri()='http://schemas.google.com/spreadsheets/2006/extended'][name()=instance('mappings')/mapping[@to='coinType']/@from][string-length(normalize-space(.)) &gt; 0]))"/>
+													select="normalize-space(data(context()/*[namespace-uri()='http://schemas.google.com/spreadsheets/2006/extended'][name()=instance('mappings')/mapping[@to='coinType']/@from][normalize-space()]))"/>
 
 												<!-- *** BEGIN ATOM TO RDF IMPORT *** -->
 												<xforms:action
@@ -1253,20 +1328,28 @@
 													<xforms:action if="string(instance('mappings')/mapping[@from=$from]/@to) and string-length($value) &gt; 0">
 														<xforms:var name="mapping" select="instance('mappings')/mapping[@from=$from]/@to"/>
 
+														<!-- recordId -->
 														<xforms:action if="$mapping = 'id'">
 															<xforms:setvalue ref="instance('nuds')/nuds:control/nuds:recordId" value="$value"/>
 														</xforms:action>
 
+														<!-- otherRecordIds -->
 														<xforms:action
-															if="$mapping = 'broader' or $mapping = 'replaces' or $mapping = 'replacedBy' or $mapping = 'exactMatch'">
+															if="$mapping = 'broader' or $mapping = 'replaces' or $mapping = 'replacedBy' or $mapping = 'exactMatch' or $mapping = 'typeNumber' or $mapping = 'sortId'">
 															<xforms:var name="property"
 																select="if (contains($mapping, 'replace')) then concat('dcterms:', $mapping) else concat('skos:', $mapping)"/>
 
 															<xforms:insert context="instance('nuds')/nuds:control"
 																nodeset="if (nuds:otherRecordId) then nuds:otherRecordId else nuds:recordId" position="after"
 																origin="instance('otherRecordId-template')"/>
-															<xforms:setvalue ref="instance('nuds')/nuds:control/nuds:otherRecordId[last()]/@semantic"
-																value="$property"/>
+															
+															<!-- insert semantic when there is an RDF property -->
+															<xforms:insert if="not($mapping = 'typeNumber') and not($mapping = 'sortId')" context="instance('nuds')/nuds:control/nuds:otherRecordId[last()]"
+																origin="xforms:attribute(resolve-QName('semantic', self::node()), $property)"/>			
+															<!-- typeNumber is a @localType -->
+															<xforms:insert if="$mapping = 'typeNumber' or $mapping = 'sortId'" context="instance('nuds')/nuds:control/nuds:otherRecordId[last()]"
+																origin="xforms:attribute(resolve-QName('localType', self::node()), $mapping)"/>
+															
 															<xforms:setvalue ref="instance('nuds')/nuds:control/nuds:otherRecordId[last()]" value="$value"/>
 
 															<!-- if the exactMatch-to-reference box is checked, then create a reference and link to it -->
@@ -1287,6 +1370,7 @@
 															</xforms:action>
 														</xforms:action>
 
+														<!-- titles -->
 														<xforms:action if="$mapping = 'title'">
 															<xforms:var name="lang" select="instance('mappings')/mapping[@from=$from]/@lang"/>
 
@@ -1304,9 +1388,7 @@
 															<xforms:insert context="instance('nuds')/nuds:descMeta/nuds:typeDesc"
 																origin="xforms:attribute(resolve-QName('xlink:type', self::node()), 'simple')"/>
 														</xforms:action>
-
-														<!-- TODO trouble shoot below -->
-
+														
 														<!-- otherwise process all possible typeDesc mappings and insert elements into the typeDesc -->
 														<xforms:action
 															if="not(string($coinType_uri)) or instance('control-instance')/link-to-coinType = false()">
@@ -1458,8 +1540,11 @@
 																		ref="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container]/*[local-name()=$element][last()]"
 																		value="$value"/>
 																</xforms:action>
-																<xforms:action if="ends-with($element, '_symbol')">
-																	<xforms:var name="symbol_position" select="substring-before($element, '_symbol')"/>
+
+																<xforms:action if="ends-with($element, 'symbol')">
+
+																	<xforms:var name="symbol_position"
+																		select="if (contains($element, '_')) then substring-before($element, '_symbol') else ''"/>
 
 																	<!-- evaluate whether the $value is a URI or not -->
 																	<xforms:action if="matches($value, '^https?://')">
@@ -1475,9 +1560,11 @@
 																		<xforms:insert
 																			context="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container]"
 																			nodeset="./child::node()[last()]" origin="instance('symbol-template')"/>
-																		<xforms:setvalue
-																			ref="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container]/nuds:symbol[last()]/@position"
-																			value="$symbol_position"/>
+																		
+																		<!-- insert attributes -->
+																		<xforms:insert if="string($symbol_position)"
+																			context="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container]/nuds:symbol[last()]"
+																			origin="xforms:attribute(resolve-QName('position', self::node()), $symbol_position)"/>																																				
 																		<xforms:insert
 																			context="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container]/nuds:symbol[last()]"
 																			origin="xforms:attribute(resolve-QName('xlink:href', self::node()), $uri)"/>
@@ -1487,6 +1574,13 @@
 																		<xforms:setvalue
 																			ref="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container]/nuds:symbol[last()]"
 																			value="$label"/>
+
+																		<!-- insert arcrole for nmo:hasMonogram if the RDF class of the URI is nmo:Monogram -->
+																		<xforms:insert if="instance('rdf')/nmo:Monogram[@rdf:about = $uri]"
+																			context="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container]/nuds:symbol[last()]"
+																			origin="xforms:attribute(resolve-QName('xlink:arcrole', self::node()), 'nmo:hasMonogram')"/>
+
+																		<!-- insert uncertainty if true() -->
 																		<xforms:insert
 																			context="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container]/nuds:symbol[last()]"
 																			origin="xforms:attribute(resolve-QName('certainty', self::node()), 'http://nomisma.org/id/uncertain_value')"
@@ -1499,9 +1593,11 @@
 																		<xforms:setvalue
 																			ref="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container]/nuds:symbol[last()]"
 																			value="$value"/>
-																		<xforms:setvalue
-																			ref="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container]/nuds:symbol[last()]/@position"
-																			value="$symbol_position"/>
+																		
+																		<!-- insert position, if set -->
+																		<xforms:insert if="string($symbol_position)"
+																			context="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container]/nuds:symbol[last()]"
+																			origin="xforms:attribute(resolve-QName('position', self::node()), $symbol_position)"/>				
 																	</xforms:action>
 																</xforms:action>
 															</xforms:action>
@@ -1562,6 +1658,8 @@
 															</xforms:action>
 														</xforms:action>
 
+														<!-- ***** PHYSDESC ***** -->
+
 														<!-- ***** REFDESC ***** -->
 														<xforms:action if="$mapping = 'reference'">
 															<!-- insert refDesc if one does not exist -->
@@ -1618,21 +1716,34 @@
 																		value="$value"/>
 																</xforms:action>
 															</xforms:action>
-
 														</xforms:action>
+
+														<!-- ***** ADMINDESC ***** -->
 													</xforms:action>
 												</xforms:action>
 
 												<!-- *** BEGIN CRUD OPERATIONS *** -->
 												<!-- save NUDS/XML to eXist-db collection -->
-												<!--<xforms:send submission="save-nuds"/>-->
+												<xforms:send submission="save-nuds"/>
 											</xforms:action>
 
 											<!-- *** after each row in the spreadsheet has been processed execute following processes *** -->
 
 											<!-- if the types should be indexed into Solr, publish all non-deprecated IDs -->
-											
-											
+											<xforms:action if="instance('control-instance')/index-to-solr = true()">
+
+												<!-- split the concatenated list of identifiers into blocks of 100 on the comma separator -->
+												<xforms:var name="tokens" select="tokenize(instance('control-instance')/identifiers, ',')"/>
+
+												<!-- call the /ingest pipeline with 100 IDs per API call, and post that to Solr -->
+												<xforms:action xxforms:iterate="$tokens">
+													<xforms:setvalue ref="instance('control-instance')/identifiers" value="context()"/>
+													<!-- get Solr document -->
+													<xforms:send submission="generate-add-document"/>
+													<!-- on xforms-submit-done, the document is posted and a commit posted -->
+												</xforms:action>
+											</xforms:action>
+
 											<xforms:toggle case="process-complete"/>
 										</xforms:action>
 									</xforms:trigger>
@@ -1640,36 +1751,7 @@
 							</xforms:group>
 						</xforms:case>
 						<xforms:case id="process-complete">
-							<p>The process has been completed successfully. The following IDs have been created or updated:</p>
-							<!--<table class="table">
-								<thead>
-									<tr>
-										<th>URI</th>
-										<th>Preferred Label</th>
-									</tr>
-								</thead>
-								<tbody>
-									<xforms:repeat nodeset="instance('feed')//atom:entry">
-										<xforms:var name="id"
-											select="*[namespace-uri()='http://schemas.google.com/spreadsheets/2006/extended'][name()=instance('mappings')/mapping[@to='id']/@from]"/>
-										<tr>
-											<td>
-												<xforms:trigger appearance="minimal">
-													<xforms:label value="concat(instance('config')/url, 'id/', $id)"/>
-													<xforms:action ev:event="DOMActivate">
-														<xforms:load show="replace" resource="{concat(instance('config')/url, 'id/', $id)}"/>
-													</xforms:action>
-												</xforms:trigger>
-											</td>
-											<td>
-												<xforms:output
-													ref="*[namespace-uri()='http://schemas.google.com/spreadsheets/2006/extended'][name()=instance('mappings')/mapping[@to='skos:prefLabel' and @lang='en']/@from]"
-												/>
-											</td>
-										</tr>
-									</xforms:repeat>
-								</tbody>
-							</table>-->
+							<p>The process has been completed successfully. Click the link above to return to the Admin panel.</p>
 						</xforms:case>
 					</xforms:switch>
 					<fr:xforms-inspector/>
