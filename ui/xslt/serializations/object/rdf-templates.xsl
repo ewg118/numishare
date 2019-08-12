@@ -352,6 +352,8 @@
 	<!-- PROCESS NUDS RECORDS INTO NOMISMA COMPLIANT RDF MODELS -->
 	<xsl:template match="nuds:nuds" mode="nomisma">
 		<xsl:variable name="id" select="descendant::*[local-name() = 'recordId']"/>
+		
+		<!-- deprecated objects (usually types and subtypes) -->
 		<xsl:choose>
 			<xsl:when
 				test="descendant::*:maintenanceStatus != 'new' and descendant::*:maintenanceStatus != 'derived' and descendant::*:maintenanceStatus != 'revised'">
@@ -424,6 +426,8 @@
 			<xsl:otherwise>
 				<xsl:choose>
 					<xsl:when test="@recordType = 'conceptual'">
+						<xsl:variable name="hasDefinition" select="boolean(descendant::nuds:descMeta/nuds:noteSet/nuds:note[@semantic = 'skos:definition'])" as="xs:boolean"/>
+						
 						<nmo:TypeSeriesItem rdf:about="{if (string($uri_space)) then concat($uri_space, $id) else concat($url, 'id/', $id)}">
 							<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 							<!-- insert titles -->
@@ -434,13 +438,21 @@
 									</xsl:if>
 									<xsl:value-of select="."/>
 								</skos:prefLabel>
-								<skos:definition>
-									<xsl:if test="string(@xml:lang)">
-										<xsl:attribute name="xml:lang" select="@xml:lang"/>
-									</xsl:if>
-									<xsl:value-of select="."/>
-								</skos:definition>
+								
+								<!-- only display the definition if it's not explicitly included in a nuds:note -->
+								<xsl:if test="$hasDefinition = false()">
+									<skos:definition>
+										<xsl:if test="string(@xml:lang)">
+											<xsl:attribute name="xml:lang" select="@xml:lang"/>
+										</xsl:if>
+										<xsl:value-of select="."/>
+									</skos:definition>
+								</xsl:if>
+								
 							</xsl:for-each>
+							
+							<!-- map notes with skos properties into skos -->
+							<xsl:apply-templates select="descendant::nuds:descMeta/nuds:noteSet/nuds:note[@semantic]"/>
 
 							<!-- source nmo:TypeSeries, use typeSeries inherent to NUDS by default, if available -->
 							<xsl:choose>
@@ -831,6 +843,15 @@
 			</geo:SpatialThing>
 		</xsl:if>
 
+	</xsl:template>
+	
+	<xsl:template match="nuds:note[@semantic]">
+		<xsl:element name="{@semantic}" >
+			<xsl:if test="@xml:lang">
+				<xsl:attribute name="xml:lang" select="@xml:lang"/>
+			</xsl:if>
+			<xsl:value-of select="."/>
+		</xsl:element>
 	</xsl:template>
 
 	<!-- PROCESS NUDS-HOARD RECORDS INTO NOMISMA/METIS COMPLIANT RDF MODELS -->

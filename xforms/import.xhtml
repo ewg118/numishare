@@ -190,7 +190,15 @@
 			<xforms:instance id="material-template" xxforms:exclude-result-prefixes="#all">
 				<material xlink:type="simple" xlink:href=""/>
 			</xforms:instance>
-
+			
+			<xforms:instance id="noteSet-template" xxforms:exclude-result-prefixes="#all">
+				<noteSet/>
+			</xforms:instance>
+			
+			<xforms:instance id="note-template" xxforms:exclude-result-prefixes="#all">
+				<note xml:lang=""/>
+			</xforms:instance>
+			
 			<xforms:instance id="objectType-template" xxforms:exclude-result-prefixes="#all">
 				<objectType xlink:type="simple" xlink:href=""/>
 			</xforms:instance>
@@ -1429,21 +1437,19 @@
 														<!-- ** NOTES ** -->
 														<xforms:action if="$mapping = 'note' and string-length($value) &gt; 0">
 															<xforms:var name="lang" select="instance('mappings')/mapping[@from=$from]/@lang"/>
-															<xforms:var name="lang" select="instance('mappings')/mapping[@from=$from]/@property"/>
+															<xforms:var name="property" select="instance('mappings')/mapping[@from=$from]/@property"/>
 
 															<xforms:insert context="instance('nuds')/nuds:descMeta" nodeset="nuds:title[last()]"
-																origin="instance('noteSet-template')" if="not(instance('nuds')/nuds:descMeta/nuds:nodeSet)"/>
+																origin="instance('noteSet-template')" if="not(instance('nuds')/nuds:descMeta/nuds:noteSet)"/>
 
-															<xforms:insert context="instance('nuds')/nuds:descMeta/nuds:nodeSet"
+															<xforms:insert context="instance('nuds')/nuds:descMeta/nuds:noteSet"
 																nodeset="./child::node()[last()]" origin="instance('note-template')"/>
-															<xforms:setvalue ref="instance('nuds')/nuds:descMeta/nuds:nodeSet/nuds:note[last()]" value="$value"/>
-															<xforms:setvalue ref="instance('nuds')/nuds:descMeta/nuds:nodeSet/nuds:note[last()]/@xml:lang"
+															<xforms:setvalue ref="instance('nuds')/nuds:descMeta/nuds:noteSet/nuds:note[last()]" value="$value"/>
+															<xforms:setvalue ref="instance('nuds')/nuds:descMeta/nuds:noteSet/nuds:note[last()]/@xml:lang"
 																value="$lang"/>
 															
-															<!-- TODO: TEST NOTE -->
-
 															<!-- insert semantic property into a semantic element, if set -->
-															<xforms:insert if="string($property)" context="instance('nuds')/nuds:descMeta/nuds:nodeSet/nuds:note[last()]"
+															<xforms:insert if="string($property)" context="instance('nuds')/nuds:descMeta/nuds:noteSet/nuds:note[last()]"
 																origin="xforms:attribute(resolve-QName('semantic', self::node()), $property)"/>
 														</xforms:action>
 
