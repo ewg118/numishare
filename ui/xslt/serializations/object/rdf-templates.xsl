@@ -363,6 +363,9 @@
 						<xsl:when test="@recordType = 'physical'">nmo:NumismaticObject</xsl:when>
 					</xsl:choose>
 				</xsl:variable>
+				
+				<xsl:variable name="hasDefinition" select="boolean(nuds:descMeta/nuds:noteSet/nuds:note[@semantic = 'skos:definition'])" as="xs:boolean"/>
+				
 				<xsl:element name="{$element}">
 					<xsl:attribute name="rdf:about">
 						<xsl:value-of
@@ -374,7 +377,7 @@
 					</xsl:attribute>
 
 					<!-- include any additional prefix/namespace before processing otherRecordIds -->
-					<xsl:for-each select="descendant::*:semanticDeclaration">
+					<xsl:for-each select="nuds:control/nuds:semanticDeclaration">
 						<xsl:namespace name="{*:prefix}" select="*:namespace"/>
 					</xsl:for-each>
 
@@ -388,12 +391,14 @@
 							</xsl:if>
 							<xsl:value-of select="."/>
 						</skos:prefLabel>
-						<skos:definition>
-							<xsl:if test="string(@xml:lang)">
-								<xsl:attribute name="xml:lang" select="@xml:lang"/>
-							</xsl:if>
-							<xsl:value-of select="."/>
-						</skos:definition>
+						<xsl:if test="$hasDefinition = false()">
+							<skos:definition>
+								<xsl:if test="string(@xml:lang)">
+									<xsl:attribute name="xml:lang" select="@xml:lang"/>
+								</xsl:if>
+								<xsl:value-of select="."/>
+							</skos:definition>
+						</xsl:if>
 					</xsl:for-each>
 
 					<!-- source nmo:TypeSeries, use typeSeries inherent to NUDS by default, if available -->
@@ -405,6 +410,9 @@
 							<dcterms:source rdf:resource="{//config/type_series}"/>
 						</xsl:otherwise>
 					</xsl:choose>
+
+					<!-- map notes with skos properties into skos -->
+					<xsl:apply-templates select="nuds:descMeta/nuds:noteSet/nuds:note[@semantic]"/>
 
 					<!-- include other properites and URIs -->
 					<xsl:for-each select="descendant::*:otherRecordId[string(@semantic)]">
@@ -426,12 +434,12 @@
 			<xsl:otherwise>
 				<xsl:choose>
 					<xsl:when test="@recordType = 'conceptual'">
-						<xsl:variable name="hasDefinition" select="boolean(descendant::nuds:descMeta/nuds:noteSet/nuds:note[@semantic = 'skos:definition'])" as="xs:boolean"/>
+						<xsl:variable name="hasDefinition" select="boolean(nuds:descMeta/nuds:noteSet/nuds:note[@semantic = 'skos:definition'])" as="xs:boolean"/>
 						
 						<nmo:TypeSeriesItem rdf:about="{if (string($uri_space)) then concat($uri_space, $id) else concat($url, 'id/', $id)}">
 							<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 							<!-- insert titles -->
-							<xsl:for-each select="descendant::nuds:descMeta/nuds:title">
+							<xsl:for-each select="nuds:descMeta/nuds:title">
 								<skos:prefLabel>
 									<xsl:if test="string(@xml:lang)">
 										<xsl:attribute name="xml:lang" select="@xml:lang"/>
@@ -452,7 +460,7 @@
 							</xsl:for-each>
 							
 							<!-- map notes with skos properties into skos -->
-							<xsl:apply-templates select="descendant::nuds:descMeta/nuds:noteSet/nuds:note[@semantic]"/>
+							<xsl:apply-templates select="nuds:descMeta/nuds:noteSet/nuds:note[@semantic]"/>
 
 							<!-- source nmo:TypeSeries, use typeSeries inherent to NUDS by default, if available -->
 							<xsl:choose>
@@ -465,7 +473,7 @@
 							</xsl:choose>
 
 							<!-- other ids -->
-							<xsl:for-each select="descendant::*:otherRecordId[string(@semantic)]">
+							<xsl:for-each select="nuds:control/nuds:otherRecordId[string(@semantic)]">
 								<xsl:variable name="uri"
 									select="
 										if (matches(., 'https?://')) then

@@ -36,6 +36,7 @@
 					<worksheet_id/>
 					<language>en</language>
 					<nomisma-uri/>
+					<rdf-api/>
 					<id/>
 					<target-id/>
 					<position>0</position>
@@ -190,15 +191,15 @@
 			<xforms:instance id="material-template" xxforms:exclude-result-prefixes="#all">
 				<material xlink:type="simple" xlink:href=""/>
 			</xforms:instance>
-			
+
 			<xforms:instance id="noteSet-template" xxforms:exclude-result-prefixes="#all">
 				<noteSet/>
 			</xforms:instance>
-			
+
 			<xforms:instance id="note-template" xxforms:exclude-result-prefixes="#all">
 				<note xml:lang=""/>
 			</xforms:instance>
-			
+
 			<xforms:instance id="objectType-template" xxforms:exclude-result-prefixes="#all">
 				<objectType xlink:type="simple" xlink:href=""/>
 			</xforms:instance>
@@ -268,13 +269,14 @@
 					<property label="Record ID">id</property>
 					<property label="Reference">reference</property>
 					<property label="Region URI">geo_region_uri</property>
-					<property label="Replaced By ID" constraint="cointype">replacedBy</property>
+					<property label="Replaced By ID" constraint="cointype">isReplacedBy</property>
 					<property label="Replaces ID" constraint="cointype">replaces</property>
 					<property label="Reverse Legend">rev_legend</property>
 					<property label="Reverse Portrait URI">rev_portrait_uri</property>
 					<property label="Reverse Symbol">rev_symbol</property>
 					<property label="Reverse Type Description">rev_type</property>
 					<property label="Start Date">fromDate</property>
+					<property label="Stated Authority URI">auth_statedAuthority_uri</property>
 					<property label="Title">title</property>
 					<property label="Type Number" constraint="cointype">typeNumber</property>
 					<property label="Type Series URI" constraint="cointype">typeSeries_uri</property>
@@ -303,8 +305,12 @@
 				<validation xmlns=""/>
 			</xforms:instance>
 
-			<xforms:instance id="nomisma-ids" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="nomisma-uris" xxforms:exclude-result-prefixes="#all">
 				<ids xmlns=""/>
+			</xforms:instance>
+
+			<xforms:instance id="type-uris" xxforms:exclude-result-prefixes="#all">
+				<types xmlns=""/>
 			</xforms:instance>
 
 			<xforms:instance id="parents-valid" xxforms:exclude-result-prefixes="#all">
@@ -383,7 +389,7 @@
 				</xforms:bind>
 			</xforms:bind>
 
-			<xforms:bind nodeset="instance('nomisma-ids')">
+			<xforms:bind nodeset="instance('nomisma-uris')">
 				<xforms:bind nodeset="id" type="xs:boolean"/>
 			</xforms:bind>
 
@@ -450,21 +456,59 @@
 						<!-- iterate through all of the distinct values of Nomisma URIs -->
 						<xforms:action
 							xxforms:iterate="distinct-values(instance('feed')//*[namespace-uri()='http://schemas.google.com/spreadsheets/2006/extended'][contains(., 'http://nomisma.org/') or contains(., 'http://numismatics.org/')])">
+							<!-- ensure that the URI is not re-inserted due to trailing question mark for uncertainty -->
 							<xforms:var name="value"
 								select="if (contains(normalize-space(context()), '|')) then substring-before(normalize-space(context()), '|') else normalize-space(context())"/>
 							<xforms:var name="uri" select="if (ends-with($value, '?')) then substring-before($value, '?') else $value"/>
 
-							<!-- ensure that the URI is not re-inserted due to trailing question mark for uncertainty -->
-							<xforms:action if="not(instance('nomisma-ids')/id[@uri = $uri])">
-								<!-- execute REST call to ensure the URI exists in Nomisma.org -->
-								<xforms:setvalue ref="instance('control-instance')/nomisma-uri" value="$uri"/>
+							<!-- always validate and get RDF from Nomisma -->
+							<xforms:action if="starts-with($uri, 'http://nomisma.org/')">
+								<xforms:insert if="not(instance('nomisma-uris')/id[@uri = $uri])" context="instance('nomisma-uris')"
+									nodeset="./child::node()[last()]" origin="xforms:element('id', (xforms:attribute('uri', $uri), false()))"/>
+							</xforms:action>
+
+							<!-- only validate and get numismatics.org coin type data in certain circumstances  -->
+							<xforms:action if="starts-with($uri, 'http://numismatics.org/')">
+								<!-- references and coin types should be validated for physical specimens, and so should Exact Match URIs 
+									if these should be converted into human-readable references -->
+								<xforms:action
+									if="instance('config')/collection_type = 'object' or 
+										(instance('config')/collection_type = 'cointype' and instance('control-instance')/exactMatch-reference = true())">
+									<xforms:var name="series" select="substring-before($uri, 'id/')"/>
+
+									<xforms:action if="not(instance('type-uris')/series[@uri = $series]/id[@uri = $uri])">
+										<!-- insert series element if not already present -->
+										<xforms:insert if="not(instance('type-uris')/series[@uri = $series])" context="instance('type-uris')"
+											nodeset="./child::node()[last()]" origin="xforms:element('series', xforms:attribute('uri', $series))"/>
+
+										<xforms:insert context="instance('type-uris')/series[@uri = $series]" nodeset="./child::node()[last()]"
+											origin="xforms:element('id', (xforms:attribute('uri', $uri), false()))"/>
+									</xforms:action>
+								</xforms:action>
+							</xforms:action>
+						</xforms:action>
+
+						<!-- initiate getRDF API call for Nomisma URIs -->
+						<xforms:action if="count(instance('nomisma-uris')/id) &gt; 0">
+							<xforms:setvalue ref="instance('control-instance')/rdf-api">http://nomisma.org/apis/getRdf</xforms:setvalue>
+							<xforms:setvalue ref="instance('control-instance')/identifiers"
+								value="string-join(instance('nomisma-uris')/id/substring-after(@uri, 'id/'), '|')"/>
+							<xforms:send submission="load-rdf"/>
+						</xforms:action>
+
+						<!-- initiate getRDF API call for each individual type series -->
+						<xforms:action if="count(instance('type-uris')//id) &gt; 0">
+							<xforms:action xxforms:iterate="instance('type-uris')/series">
+								<xforms:setvalue ref="instance('control-instance')/rdf-api" value="concat(context()/@uri, 'apis/getRDF')"/>
+								<xforms:setvalue ref="instance('control-instance')/identifiers"
+									value="string-join(context()/id/substring-after(@uri, 'id/'), '|')"/>
 								<xforms:send submission="load-rdf"/>
 							</xforms:action>
 						</xforms:action>
 
 						<!-- if there are errors, then display the nomisma validation interface -->
-						<xforms:toggle case="nomisma-validation" if="instance('nomisma-ids')/id = false()"/>
-						<xforms:toggle case="mapping-interface" if="not(instance('nomisma-ids')/id = false())"/>
+						<xforms:toggle case="nomisma-validation" if="instance('nomisma-uris')/id = false() or instance('type-uris')//id = false()"/>
+						<xforms:toggle case="mapping-interface" if="not(instance('nomisma-uris')/id = false()) and not(instance('type-uris')//id = false())"/>
 					</xforms:action>
 					<!-- if there are no entries in the Atom feed, set the error interface -->
 					<xforms:action if="count(instance('feed')//atom:entry) = 0">
@@ -505,18 +549,35 @@
 			</xforms:submission>
 
 			<!-- ************************* LOAD NOMISMA RDF/XML ************************** -->
-			<xforms:submission id="load-rdf" serialization="none" method="get" action="{instance('control-instance')/nomisma-uri}.rdf" replace="instance"
-				instance="rdf-concept">
+			<xforms:submission id="load-rdf" serialization="none" method="get"
+				action="{instance('control-instance')/rdf-api}?identifiers={instance('control-instance')/identifiers}" replace="instance" instance="rdf-concept">
 				<!-- if there's an error, report the error into the Nomisma ID instance -->
 				<xforms:action ev:event="xforms-submit-error">
-					<xforms:insert context="instance('nomisma-ids')" nodeset="./child::node()[last()]"
-						origin="xforms:element('id', (xforms:attribute('uri', instance('control-instance')/nomisma-uri), false()))"/>
+					<xforms:message level="modal">
+						<xforms:output value="concat('Unable to access ', instance('control-instance')/rdf-api)"/>
+					</xforms:message>
 				</xforms:action>
 				<!-- otherwise, validate the URI and insert the skos:Concept into the aggregate instance('rdf') -->
 				<xforms:action ev:event="xforms-submit-done">
-					<xforms:insert context="instance('nomisma-ids')" nodeset="./child::node()[last()]"
-						origin="xforms:element('id', (xforms:attribute('uri', instance('control-instance')/nomisma-uri), true()))"/>
-					<xforms:insert context="instance('rdf')" nodeset="./child::node()[last()]" origin="instance('rdf-concept')/*[1]"/>
+					<!-- perform validation for any Concept URI that does not exist within the rdf response -->
+					<!-- apply for Nomisma -->
+					<xforms:action if="contains(instance('control-instance')/rdf-api, 'nomisma.org')">
+						<xforms:action xxforms:iterate="instance('nomisma-uris')/id">
+							<xforms:setvalue if="instance('rdf-concept')/*[@rdf:about = context()/@uri]" ref="context()" value="true()"/>
+						</xforms:action>
+					</xforms:action>
+
+					<!-- apply for Numismatics.org type series -->
+					<xforms:action if="contains(instance('control-instance')/rdf-api, 'numismatics.org')">
+						<xforms:var name="series" select="substring-before(instance('control-instance')/rdf-api, 'apis')"/>
+						<xforms:action xxforms:iterate="instance('type-uris')/series[@uri = $series]/id">
+							<xforms:setvalue if="instance('rdf-concept')/*[@rdf:about = context()/@uri]" ref="context()" value="true()"/>
+						</xforms:action>
+					</xforms:action>
+
+					<!-- insert the Concept RDF (whether types or Nomisma) from the API response RDF into the primary RDF instance -->
+					<xforms:insert context="instance('rdf')" nodeset="./child::node()[last()]"
+						origin="instance('rdf-concept')/*[rdf:type/@rdf:resource = 'http://www.w3.org/2004/02/skos/core#Concept']"/>
 				</xforms:action>
 			</xforms:submission>
 
@@ -720,6 +781,18 @@
 												</tr>
 												<tr>
 													<td>
+														<xforms:input ref="validate-ids"/>
+													</td>
+													<td><strong>Validate IDs</strong>
+														<i>Recommended</i>: Record ID numbers for parent (skos:broader) or deprecation-related coin types
+														(dcterms:replaces or dcterms:isReplacedBy) will be validated in order to ensure their presence either in
+														this spreadsheet or the eXist-db XML collection. Disabling this feature is sometimes useful for
+														publishing deprecated type corpora that contain concordances to new editions that have not been uploaded
+														yet. Note that automatic HTTP 303 (See Other) forwarding may result in errors for mistyped IDs or IDs
+														that do not exist in Numishare yet.</td>
+												</tr>
+												<tr>
+													<td>
 														<xforms:input ref="deprecate-ids">
 															<!-- when the box is checked, change value of index-to-solr -->
 															<xforms:action ev:event="xforms-value-changed">
@@ -750,26 +823,49 @@
 							</xforms:group>
 						</xforms:case>
 						<xforms:case id="nomisma-validation">
-							<h3>Nomisma.org Validation</h3>
+							<div class="section">
 
-							<div class="alert-danger alert-box alert">
-								<span class="glyphicon glyphicon-exclamation-sign"></span>
-								<strong>Alert:</strong> Nomisma validation error.</div>
+								<div class="alert-danger alert-box alert">
+									<span class="glyphicon glyphicon-exclamation-sign"></span>
+									<strong>Alert:</strong> URI validation error(s).</div>
 
-							<p>The following URIs do not presently exist in Nomisma.org:</p>
+								<h3>URI Validation</h3>
 
-							<xforms:group ref="instance('nomisma-ids')">
-								<ol>
-									<xforms:repeat nodeset="id[. = false()]">
-										<li>
-											<xforms:output ref="@uri"/>
-										</li>
-									</xforms:repeat>
-								</ol>
-							</xforms:group>
+								<xforms:group ref=".[instance('nomisma-uris')/id = false()]">
+									<div>
+										<h4>Nomisma.org Validation</h4>
+										<p>The following URIs do not presently exist in Nomisma.org:</p>
 
-							<p>Please either update the source spreadsheet to fix errors or submit these concepts for creation in Nomisma.org before continuing
-								with the spreadsheet import.</p>
+										<xforms:group ref="instance('nomisma-uris')">
+											<ol>
+												<xforms:repeat nodeset="id[. = false()]">
+													<li>
+														<xforms:output ref="@uri"/>
+													</li>
+												</xforms:repeat>
+											</ol>
+										</xforms:group>
+									</div>
+								</xforms:group>
+
+								<!-- display list of errors for each type series -->
+								<xforms:repeat nodeset="instance('type-uris')/series[id = false()]">
+									<div>
+										<h4>Type Series <xforms:output ref="@uri"/> Validation</h4>
+										<p>The following Coin Type URIs do not exist within the target digital corpus:</p>
+
+										<ol>
+											<xforms:repeat nodeset="id[. = false()]">
+												<li>
+													<xforms:output ref="@uri"/>
+												</li>
+											</xforms:repeat>
+										</ol>
+									</div>
+								</xforms:repeat>
+								<p>Please either update the source spreadsheet to fix errors or submit these concepts for creation in Nomisma.org before
+									continuing with the spreadsheet import.</p>
+							</div>
 						</xforms:case>
 						<xforms:case id="mapping-interface">
 							<!--<xforms:group ref="instance('spreadsheet-rdf')/prov:Entity[@rdf:about  =instance('control-instance')/spreadsheet-uri]">
@@ -1030,6 +1126,13 @@
 										<xforms:action ev:event="DOMActivate">
 											<!-- first delete entries, in the event of changing the mapping -->
 											<xforms:delete nodeset="instance('validation-model')/record"/>
+
+											<!-- ensure that Record IDs are unique -->
+											<xforms:insert
+												if="count(instance('feed')//atom:entry/*[name()=instance('mappings')/mapping[@to='id']/@from]) != count(distinct-values(instance('feed')//atom:entry/*[name()=instance('mappings')/mapping[@to='id']/@from]))"
+												context="instance('validation-model')" nodeset="./child::node()[last()]"
+												origin="xforms:element('error', 'Duplicate Record IDs.')"/>
+
 											<!-- then iterate through all Atom entries -->
 											<xforms:action xxforms:iterate="instance('feed')//atom:entry">
 												<!-- create record in the validation model -->
@@ -1037,12 +1140,6 @@
 												<xforms:var name="position" select="position()"/>
 												<xforms:insert context="instance('validation-model')" nodeset="./child::node()[last()]"
 													origin="xforms:element('record', (xforms:attribute('title', $title), ''))"/>
-
-												<!-- ensure that nomisma ids are unique -->
-												<xforms:insert
-													if="count(instance('feed')//atom:entry/*[name()=instance('mappings')/mapping[@to='id']/@from]) != count(distinct-values(instance('feed')//atom:entry/*[name()=instance('mappings')/mapping[@to='id']/@from]))"
-													context="instance('validation-model')" nodeset="./child::node()[last()]"
-													origin="xforms:element('error', 'Duplicate Record IDs.')"/>
 
 												<!-- iterate through all gsx elements -->
 												<xforms:action xxforms:iterate="*[namespace-uri()='http://schemas.google.com/spreadsheets/2006/extended']">
@@ -1061,17 +1158,17 @@
 																origin="xforms:element('error', 'Invalid or blank ID')"/>
 														</xforms:action>
 
-														<!-- evaluate broader, replacedBy, or replaces IDs to determine whether they are in this spreadsheet or load a NUDS document from exist-db -->
+														<!-- evaluate broader, isReplacedBy, or replaces IDs to determine whether they are in this spreadsheet or load a NUDS document from exist-db -->
 														<xforms:action
-															if="string-length($value) &gt; 0 and ($mapping = 'broader' or $mapping = 'replacedBy' or $mapping = 'replaces')">
+															if="string-length($value) &gt; 0 and ($mapping = 'broader' or $mapping = 'isReplacedBy' or $mapping = 'replaces')">
 															<xforms:var name="isValid" select="matches($value, &quot;^([a-zA-Z0-9\-\._\(\)&#x0027;]*)?$&quot;)"/>
 
 															<xforms:insert if="$isValid = false()" context="instance('validation-model')/record[last()]"
 																nodeset="./child::node()[last()]"
 																origin="xforms:element('error', concat('Invalid ', instance('properties')/property[. = $mapping]/@label))"/>
 
-															<!-- if the ID is valid, look for a corresponding record -->
-															<xforms:action if="$isValid = true()">
+															<!-- if the ID is valid, look for a corresponding record, but only if the validate-ids option is enabled -->
+															<xforms:action if="$isValid = true() and instance('control-instance')/validate-ids = true()">
 																<xforms:var name="target-id" select="$value"/>
 
 																<!-- if the ID hasn't already been inserted into the instance of valid parents -->
@@ -1230,6 +1327,16 @@
 																	/>
 																</xforms:action>
 															</xforms:action>
+
+															<!-- if the value is a sole URI for a coin type, issue an error message -->
+															<xforms:action
+																if="not(contains($value, '|')) and matches($value, 'https?://') and instance('config')/collection_type = 'cointype'">
+																<xforms:insert context="instance('validation-model')/record[last()]"
+																	nodeset="./child::node()[last()]"
+																	origin="xforms:element('error', 'A lone URI in a reference field for a coin type collection
+																	(implied coin type URI) should be designated as an Exact Match URI. Otherwise, the URI should correspond to a Type Series and be used in conjunction with a Type Number (separated by the | character).')"
+																/>
+															</xforms:action>
 														</xforms:action>
 													</xforms:action>
 												</xforms:action>
@@ -1315,7 +1422,7 @@
 											<xforms:var name="dateTime" select="current-dateTime()"/>
 
 											<!-- begin processing the spreadsheet into RDF -->
-											<xforms:action xxforms:iterate="instance('feed')//atom:entry[40]">
+											<xforms:action xxforms:iterate="instance('feed')//atom:entry[29]">
 												<xforms:var name="id"
 													select="normalize-space(data(context()/*[namespace-uri()='http://schemas.google.com/spreadsheets/2006/extended'][name()=instance('mappings')/mapping[@to='id']/@from]))"/>
 												<xforms:var name="position" select="position()"/>
@@ -1329,20 +1436,20 @@
 													origin="instance('descMeta-template')"/>
 
 												<!-- *** set control metadata *** -->
-												<!-- set publicationStatus and maintenanceStatus based on replacedBy or broader value -->
+												<!-- set publicationStatus and maintenanceStatus based on isReplacedBy or broader value -->
 												<xforms:setvalue ref="instance('nuds')/nuds:control/nuds:publicationStatus"
 													value="if (instance('control-instance')/deprecate-ids = true())
 															then 'deprecatedType'
-														else if (count(context()/*[namespace-uri()='http://schemas.google.com/spreadsheets/2006/extended'][name()=instance('mappings')/mapping[@to='replacedBy']/@from][normalize-space()]) &gt;= 1) 
+														else if (count(context()/*[namespace-uri()='http://schemas.google.com/spreadsheets/2006/extended'][name()=instance('mappings')/mapping[@to='isReplacedBy']/@from][normalize-space()]) &gt;= 1) 
 															then 'deprecatedType'															
 														else if (count(context()/*[namespace-uri()='http://schemas.google.com/spreadsheets/2006/extended'][name()=instance('mappings')/mapping[@to='broader']/@from][normalize-space()]) &gt;= 1)
 															then 'approvedSubtype'														
 														else 'approved'"/>
-												<!-- if there's more than one replacedBy, then the status is cancelledSplit -->
+												<!-- if there's more than one isReplacedBy, then the status is cancelledSplit -->
 												<xforms:setvalue ref="instance('nuds')/nuds:control/nuds:maintenanceStatus"
-													value="if (count(context()/*[namespace-uri()='http://schemas.google.com/spreadsheets/2006/extended'][name()=instance('mappings')/mapping[@to='replacedBy']/@from][normalize-space()]) &gt; 1)
+													value="if (count(context()/*[namespace-uri()='http://schemas.google.com/spreadsheets/2006/extended'][name()=instance('mappings')/mapping[@to='isReplacedBy']/@from][normalize-space()]) &gt; 1)
 															then 'cancelledSplit'
-														else if (count(context()/*[namespace-uri()='http://schemas.google.com/spreadsheets/2006/extended'][name()=instance('mappings')/mapping[@to='replacedBy']/@from][normalize-space()]) = 1) 
+														else if (count(context()/*[namespace-uri()='http://schemas.google.com/spreadsheets/2006/extended'][name()=instance('mappings')/mapping[@to='isReplacedBy']/@from][normalize-space()]) = 1) 
 															then 'cancelledReplaced'
 														else if (instance('control-instance')/deprecate-ids = true())
 															then 'cancelled'
@@ -1385,9 +1492,9 @@
 
 														<!-- otherRecordIds -->
 														<xforms:action
-															if="$mapping = 'broader' or $mapping = 'replaces' or $mapping = 'replacedBy' or $mapping = 'exactMatch' or $mapping = 'typeNumber' or $mapping = 'sortId'">
+															if="$mapping = 'broader' or $mapping = 'replaces' or $mapping = 'isReplacedBy' or $mapping = 'exactMatch' or $mapping = 'typeNumber' or $mapping = 'sortId'">
 															<xforms:var name="property"
-																select="if (contains($mapping, 'replace')) then concat('dcterms:', $mapping) else concat('skos:', $mapping)"/>
+																select="if (contains($mapping, 'place')) then concat('dcterms:', $mapping) else concat('skos:', $mapping)"/>
 
 															<xforms:insert context="instance('nuds')/nuds:control"
 																nodeset="if (nuds:otherRecordId) then nuds:otherRecordId else nuds:recordId" position="after"
@@ -1447,9 +1554,10 @@
 															<xforms:setvalue ref="instance('nuds')/nuds:descMeta/nuds:noteSet/nuds:note[last()]" value="$value"/>
 															<xforms:setvalue ref="instance('nuds')/nuds:descMeta/nuds:noteSet/nuds:note[last()]/@xml:lang"
 																value="$lang"/>
-															
+
 															<!-- insert semantic property into a semantic element, if set -->
-															<xforms:insert if="string($property)" context="instance('nuds')/nuds:descMeta/nuds:noteSet/nuds:note[last()]"
+															<xforms:insert if="string($property)"
+																context="instance('nuds')/nuds:descMeta/nuds:noteSet/nuds:note[last()]"
 																origin="xforms:attribute(resolve-QName('semantic', self::node()), $property)"/>
 														</xforms:action>
 
@@ -1798,25 +1906,25 @@
 
 												<!-- *** BEGIN CRUD OPERATIONS *** -->
 												<!-- save NUDS/XML to eXist-db collection -->
-												<xforms:send submission="save-nuds"/>
+												<!--<xforms:send submission="save-nuds"/>-->
 											</xforms:action>
 
 											<!-- *** after each row in the spreadsheet has been processed execute following processes *** -->
 
 											<!-- if the types should be indexed into Solr, publish all non-deprecated IDs -->
-											<xforms:action if="instance('control-instance')/index-to-solr = true()">
+											<!--<xforms:action if="instance('control-instance')/index-to-solr = true()">
 
-												<!-- split the concatenated list of identifiers into blocks of 100 on the comma separator -->
+												<!-\- split the concatenated list of identifiers into blocks of 100 on the comma separator -\->
 												<xforms:var name="tokens" select="tokenize(instance('control-instance')/identifiers, ',')"/>
 
-												<!-- call the /ingest pipeline with 100 IDs per API call, and post that to Solr -->
+												<!-\- call the /ingest pipeline with 100 IDs per API call, and post that to Solr -\->
 												<xforms:action xxforms:iterate="$tokens">
 													<xforms:setvalue ref="instance('control-instance')/identifiers" value="context()"/>
-													<!-- get Solr document -->
+													<!-\- get Solr document -\->
 													<xforms:send submission="generate-add-document"/>
-													<!-- on xforms-submit-done, the document is posted and a commit posted -->
+													<!-\- on xforms-submit-done, the document is posted and a commit posted -\->
 												</xforms:action>
-											</xforms:action>
+											</xforms:action>-->
 
 											<xforms:toggle case="process-complete"/>
 										</xforms:action>
