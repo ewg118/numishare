@@ -227,7 +227,40 @@
 			<xforms:instance id="typeSeries-template" xxforms:exclude-result-prefixes="#all">
 				<typeSeries xlink:type="simple" xlink:href=""/>
 			</xforms:instance>
+			
+			<!-- physDesc templates -->
+			<xforms:instance id="physDesc-template" xxforms:exclude-result-prefixes="#all">
+				<physDesc/>
+			</xforms:instance>
+			
+			<xforms:instance id="measurementsSet-template" xxforms:exclude-result-prefixes="#all">
+				<measurementsSet/>
+			</xforms:instance>
+			
+			<xforms:instance id="axis-template" xxforms:exclude-result-prefixes="#all">
+				<axis/>
+			</xforms:instance>
 
+			<xforms:instance id="diameter-template" xxforms:exclude-result-prefixes="#all">
+				<diameter units="mm"/>
+			</xforms:instance>
+
+			<xforms:instance id="height-template" xxforms:exclude-result-prefixes="#all">
+				<height units="mm"/>
+			</xforms:instance>
+			
+			<xforms:instance id="thickness-template" xxforms:exclude-result-prefixes="#all">
+				<thickness units="mm"/>
+			</xforms:instance>
+			
+			<xforms:instance id="weight-template" xxforms:exclude-result-prefixes="#all">
+				<weight units="g"/>
+			</xforms:instance>
+			
+			<xforms:instance id="width-template" xxforms:exclude-result-prefixes="#all">
+				<width units="mm"/>
+			</xforms:instance>
+			
 			<!-- refDesc templates -->
 			<xforms:instance id="refDesc-template" xxforms:exclude-result-prefixes="#all">
 				<refDesc/>
@@ -277,6 +310,7 @@
 					<property label="Reverse Type Description">rev_type</property>
 					<property label="Start Date">fromDate</property>
 					<property label="Stated Authority URI">auth_statedAuthority_uri</property>
+					<property label="Thickness" constraint="object">thickness</property>
 					<property label="Title">title</property>
 					<property label="Type Number" constraint="cointype">typeNumber</property>
 					<property label="Type Series URI" constraint="cointype">typeSeries_uri</property>
@@ -367,7 +401,10 @@
 				count(//mapping[@to='obv_legend']) &lt;= 1 and count(//mapping[@to='rev_legend']) &lt;= 1 and
 				(if (instance('config')/collection_type = 'cointype') then count(mapping[@to = 'objectType_uri']) = 1 else if (instance('control-instance')/link-to-coinType = false()) then count(mapping[@to = 'objectType_uri']) = 1 else count(mapping[@to = 'objectType_uri']) &lt;= 1) and
 				(if (instance('control-instance')/link-to-coinType = true() and instance('config')/collection_type = 'object') then count(mapping[@to = 'coinType']) = 1 else count(mapping[@to = 'coinType']) = 0)
-				and count(mapping[@to = 'typeSeries_uri']) &lt;= 1 and count(mapping[@to = 'typeNumber']) &lt;= 1">
+				and count(mapping[@to = 'typeSeries_uri']) &lt;= 1 and count(mapping[@to = 'typeNumber']) &lt;= 1
+				and count(mapping[@to = 'axis']) &lt;= 1 and count(mapping[@to = 'thickness']) &lt;= 1 and count(mapping[@to = 'diameter']) &lt;= 1 and count(mapping[@to = 'height']) &lt;= 1 and count(mapping[@to = 'width']) &lt;= 1 and count(mapping[@to = 'weight']) &lt;= 1
+				and count(mapping[@to = 'height']) = count(mapping[@to = 'width'])
+				and not(mapping[@to='diameter'] and (mapping[@to='height'] or mapping[@to='width']))">
 				<!-- language bindings -->
 				<xforms:bind nodeset="mapping[@to='title']">
 					<xforms:bind nodeset="@lang" required="true()"
@@ -387,6 +424,11 @@
 					<xforms:bind nodeset="@lang" required="true()"/>
 					<xforms:bind nodeset="@property" required="true()"/>
 				</xforms:bind>
+
+				<!-- measurements -->
+				<xforms:bind nodeset="mapping[@to='height']" constraint="count(//mapping[@to='width']) = 1 and count(//mapping[@to='diameter']) = 0"/>
+				<xforms:bind nodeset="mapping[@to='width']" constraint="count(./mapping[@to='height']) = 1 and count(//mapping[@to='diameter']) = 0"/>
+				<xforms:bind nodeset="mapping[@to='diameter']" constraint="count(//mapping[@to='height']) = 0 and count(//mapping[@to='width']) = 0"/>
 			</xforms:bind>
 
 			<xforms:bind nodeset="instance('nomisma-uris')">
@@ -1036,6 +1078,40 @@
 											<strong>Alert:</strong> There must not be more than one Type Number.</div>
 									</xforms:group>
 
+									<!-- measurements -->
+									<xforms:group ref=".[count(mapping[@to = 'axis']) &gt; 1]">
+										<div class="alert-danger alert-box alert">
+											<span class="glyphicon glyphicon-exclamation-sign"></span>
+											<strong>Alert:</strong> There must not be more than one Die Axis.</div>
+									</xforms:group>
+
+									<xforms:group
+										ref=".[count(mapping[@to = 'diameter']) &gt; 1 or (count(mapping[@to = 'diameter']) &gt;= 1 and (count(mapping[@to = 'height']) &gt; 0 or count(mapping[@to = 'width']) &gt; 0))]">
+										<div class="alert-danger alert-box alert">
+											<span class="glyphicon glyphicon-exclamation-sign"></span>
+											<strong>Alert:</strong> There must not be more than one Diameter and Diameter cannot be used in conjunction with
+											Height or Width.</div>
+									</xforms:group>
+
+									<xforms:group
+										ref=".[not(count(mapping[@to = 'height']) = count(mapping[@to = 'width'])) or count(mapping[@to = 'height']) &gt; 1]">
+										<div class="alert-danger alert-box alert">
+											<span class="glyphicon glyphicon-exclamation-sign"></span>
+											<strong>Alert:</strong> There must be one Height and one Width.</div>
+									</xforms:group>
+
+									<xforms:group ref=".[count(mapping[@to = 'thickness']) &gt; 1]">
+										<div class="alert-danger alert-box alert">
+											<span class="glyphicon glyphicon-exclamation-sign"></span>
+											<strong>Alert:</strong> There must not be more than one Thickness (Depth) measurement.</div>
+									</xforms:group>
+
+									<xforms:group ref=".[count(mapping[@to = 'weight']) &gt; 1]">
+										<div class="alert-danger alert-box alert">
+											<span class="glyphicon glyphicon-exclamation-sign"></span>
+											<strong>Alert:</strong> There must not be more than one Weight measurement.</div>
+									</xforms:group>
+
 									<table class="table">
 										<thead>
 											<tr>
@@ -1149,6 +1225,8 @@
 													<!-- only process those fields which have been mapped in the user interface -->
 													<xforms:action if="string(instance('mappings')/mapping[@from=$from]/@to)">
 														<xforms:var name="mapping" select="instance('mappings')/mapping[@from=$from]/@to"/>
+
+														<!-- ***** CONTROL ***** -->
 														<!-- id -->
 														<xforms:action if="$mapping = 'id'">
 															<!-- only allow certain characters as the Nomisma ID -->
@@ -1192,12 +1270,14 @@
 															</xforms:action>
 														</xforms:action>
 
-														<!-- ensure that the title exists -->
+														<!-- ***** TITLES ***** -->
 														<xforms:action if="$mapping = 'title'">
 															<xforms:insert if="not(string-length($value) &gt; 0)"
 																context="instance('validation-model')/record[last()]" nodeset="./child::node()[last()]"
 																origin="xforms:element('error', 'Record lacks a title')"/>
 														</xforms:action>
+
+														<!-- ***** [MOSTLY] TYPOLOGICAL METADATA ***** -->
 
 														<!-- validate start and end dates -->
 														<xforms:action if="$mapping = 'fromDate' and string-length($value) &gt; 0">
@@ -1249,6 +1329,7 @@
 															</xforms:action>
 														</xforms:action>
 
+														<!-- ***** REFERENCES ***** -->
 														<!-- if the $mapping is a coin type URI, throw an error if the coin type URI and object type URI are blank -->
 														<xforms:action if="$mapping = 'coinType' and instance('control-instance')/link-to-coinType = true()">
 															<xforms:action if="string-length($value) = 0">
@@ -1338,6 +1419,27 @@
 																/>
 															</xforms:action>
 														</xforms:action>
+
+														<!-- ***** PHYSICAL DESCRIPTION ***** -->
+
+														<!-- measurements -->
+														<xforms:action if="$mapping = 'axis' and string-length($value) &gt; 0">
+															<xforms:insert
+																if="not($value castable as xs:integer) or ($value castable as xs:integer and (number($value) &gt; 12 or number($value) &lt; 1))"
+																context="instance('validation-model')/record[last()]" nodeset="./child::node()[last()]"
+																origin="xforms:element('error', 'The axis must be an integer between 1 and 12')"/>
+														</xforms:action>
+
+														<xforms:action
+															if="string-length($value) &gt; 0 and 
+															($mapping = 'weight' or $mapping = 'height' or $mapping = 'width' or $mapping = 'diameter' or $mapping = 'thickness')">
+															<!-- insert an error if the $value is not a decimal number -->
+															<xforms:insert
+																if="not($value castable as xs:decimal) or ($value castable as xs:decimal and number($value) &lt;= 0)"
+																context="instance('validation-model')/record[last()]" nodeset="./child::node()[last()]"
+																origin="xforms:element('error', concat('The ', $mapping, ' must be a decimal number greater than 0'))"
+															/>
+														</xforms:action>
 													</xforms:action>
 												</xforms:action>
 											</xforms:action>
@@ -1422,7 +1524,7 @@
 											<xforms:var name="dateTime" select="current-dateTime()"/>
 
 											<!-- begin processing the spreadsheet into RDF -->
-											<xforms:action xxforms:iterate="instance('feed')//atom:entry[29]">
+											<xforms:action xxforms:iterate="instance('feed')//atom:entry">
 												<xforms:var name="id"
 													select="normalize-space(data(context()/*[namespace-uri()='http://schemas.google.com/spreadsheets/2006/extended'][name()=instance('mappings')/mapping[@to='id']/@from]))"/>
 												<xforms:var name="position" select="position()"/>
@@ -1701,7 +1803,7 @@
 
 																	<xforms:insert
 																		context="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container]"
-																		nodeset="./child::node()[last()]" origin="instance('type-template')"
+																		nodeset="./*[name() &lt;= $element]" origin="instance('type-template')"
 																		if="not(instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container]/nuds:type)"/>
 																	<xforms:insert
 																		context="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container]/nuds:type"
@@ -1716,7 +1818,7 @@
 																<xforms:action if="$element = 'legend'">
 																	<xforms:insert
 																		context="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container]"
-																		nodeset="./child::node()[last()]" origin="instance(concat($element, '-template'))"/>
+																		nodeset="./*[name() &lt;= $element]" origin="instance(concat($element, '-template'))"/>
 																	<xforms:setvalue
 																		ref="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container]/*[local-name()=$element][last()]"
 																		value="$value"/>
@@ -1740,7 +1842,7 @@
 																		else instance('rdf')/*[@rdf:about=$uri]/skos:prefLabel[@xml:lang='en']"/>
 																		<xforms:insert
 																			context="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container]"
-																			nodeset="./child::node()[last()]" origin="instance('symbol-template')"/>
+																			nodeset="./*[name() &lt;= $element]" origin="instance('symbol-template')"/>
 
 																		<!-- insert attributes -->
 																		<xforms:insert if="string($symbol_position)"
@@ -1756,10 +1858,10 @@
 																			ref="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container]/nuds:symbol[last()]"
 																			value="$label"/>
 
-																		<!-- insert arcrole for nmo:hasMonogram if the RDF class of the URI is nmo:Monogram -->
+																		<!-- insert arcrole for nmo:hasControlmark if the RDF class of the URI is nmo:Monogram -->
 																		<xforms:insert if="instance('rdf')/nmo:Monogram[@rdf:about = $uri]"
 																			context="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container]/nuds:symbol[last()]"
-																			origin="xforms:attribute(resolve-QName('xlink:arcrole', self::node()), 'nmo:hasMonogram')"/>
+																			origin="xforms:attribute(resolve-QName('xlink:arcrole', self::node()), 'nmo:hasControlmark')"/>
 
 																		<!-- insert uncertainty if true() -->
 																		<xforms:insert
@@ -1770,7 +1872,7 @@
 																	<xforms:action if="not(matches($value, '^https?://'))">
 																		<xforms:insert
 																			context="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container]"
-																			nodeset="./child::node()[last()]" origin="instance('symbol-template')"/>
+																			nodeset="./*[name() &lt;= $element]" origin="instance('symbol-template')"/>
 																		<xforms:setvalue
 																			ref="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container]/nuds:symbol[last()]"
 																			value="$value"/>
@@ -1841,6 +1943,33 @@
 														</xforms:action>
 
 														<!-- ***** PHYSDESC ***** -->
+														<xforms:action if="$mapping = 'axis'">
+															<!-- insert physDesc if it doesn't exist -->
+															<xforms:insert if="not(instance('nuds')/nuds:descMeta/nuds:physDesc)"
+																context="instance('nuds')/nuds:descMeta" nodeset="./*[contains(name(), 'Desc')]/preceding::*[1]"
+																origin="instance('physDesc-template')"/>
+
+															<xforms:insert
+																context="instance('nuds')/nuds:descMeta/nuds:physDesc" nodeset="./*[name() &lt;= $mapping]"
+																origin="instance('axis-template')"/>
+															<xforms:setvalue ref="instance('nuds')/nuds:descMeta/nuds:physDesc/nuds:axis" value="$value"/>
+														</xforms:action>
+
+														<xforms:action if="$mapping = 'weight' or $mapping = 'height' or $mapping = 'width' or $mapping = 'diameter' or $mapping = 'thickness'">
+															<!-- insert physDesc if it doesn't exist -->
+															<xforms:insert if="not(instance('nuds')/nuds:descMeta/nuds:physDesc)"
+																context="instance('nuds')/nuds:descMeta" nodeset="./*[contains(name(), 'Desc')]/preceding::*[1]"
+																origin="instance('physDesc-template')"/>
+															<!-- insert measurementsSet -->
+															<xforms:insert if="not(instance('nuds')/nuds:descMeta/nuds:physDesc/nuds:measurementsSet)"
+																context="instance('nuds')/nuds:descMeta/nuds:physDesc" nodeset="./*[name() &lt;= 'measurementsSet']"
+																origin="instance('measurementsSet-template')"/>
+															
+															<xforms:insert
+																context="instance('nuds')/nuds:descMeta/nuds:physDesc/nuds:measurementsSet" nodeset="./*[name() &lt;= $mapping]"
+																origin="instance(concat($mapping, '-template'))"/>
+															<xforms:setvalue ref="instance('nuds')/nuds:descMeta/nuds:physDesc/nuds:measurementsSet/*[local-name()=$mapping]" value="$value"/>
+														</xforms:action>
 
 														<!-- ***** REFDESC ***** -->
 														<xforms:action if="$mapping = 'reference'">
