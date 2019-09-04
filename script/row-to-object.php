@@ -42,7 +42,11 @@ function parse_row($row, $count, $fileName){
 		    $domain = $pieces[2];
 		    
 		    //get info from $coinTypes array if the coin type has been verified already
-		    if (array_key_exists($uri, $coinTypes)){
+		    
+		    //ignore volume 1 for RPC Online (URIs not active yet, as of Sept. 2019)
+		    if ($domain == 'rpc.ashmus.ox.ac.uk' && $pieces[4] == '1'){
+		    	echo "Ignored {$uri}\n";
+		    } elseif (array_key_exists($uri, $coinTypes)){
 		        echo "Matched {$uri}\n";
 		        $coinType= array('label'=>$coinTypes[$uri]['reference'], 'uri'=>$uri, 'uncertain'=>$uncertain);
 		        $record['types'][$domain] = $coinType;
