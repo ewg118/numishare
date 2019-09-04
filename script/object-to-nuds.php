@@ -143,8 +143,15 @@ function generate_nuds($record, $fileName){
 					}
 				}
 			} else {
-				//if there are two or more URIs, then (at the moment), they are PELLA/SCO/PCO: favor SCO, PCO > PELLA
-				if (array_key_exists('SCO', $record['types'])){
+				//if there are two or more URIs, then (at the moment), they are PELLA/SCO/PCO: favor SCO, PCO > PELLA.
+				//also create a typeDesc if there is an OCRE URI along with RPC Online
+				if (array_key_exists('OCRE', $record['types'])){
+					$uri = $record['types']['OCRE']['uri'];
+					$uncertain = $record['types']['OCRE']['uncertain'];
+					
+					//process XML object
+					generate_typeDesc_from_OCRE($writer, $record['typeDesc'], $coinTypes[$uri]['object'], $uncertain);
+				} elseif (array_key_exists('SCO', $record['types'])){
 					$writer->startElement('typeDesc');
 						$writer->writeAttribute('xlink:type', 'simple');
 						$writer->writeAttribute('xlink:href', $record['types']['SCO']['uri']);

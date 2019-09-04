@@ -48,7 +48,7 @@ ini_set("auto_detect_line_endings", "1");
 //the line below is for passing request parameters from the command line.
 parse_str(implode('&', array_slice($argv, 1)), $_GET);
 $csv_id = $_GET['id'];
-//$csv_id = 'fmexport121517';
+//$csv_id = 'fmexport-rpca';
 error_log(date(DATE_W3C) . ": {$csv_id}.csv now entering fm-to-nuds.php.\n", 3, "/var/log/numishare/process.log");
 
 //create an array with pre-defined labels and values passed from the Filemaker POST

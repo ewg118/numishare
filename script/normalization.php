@@ -441,9 +441,18 @@ function generate_title_from_type($uri){
 	$titlePieces = array();
 	$reference = '';
 	
+	//get the NUDS XML URL based on domain
+	if (strpos($uri, 'rpc.ashmus') !== FALSE){
+		$pieces = explode('/', $uri);
+		
+		$xml_url = 'https://rpc.ashmus.ox.ac.uk/id/rpc-' . $pieces[4] . '-' . $pieces[5] . '.xml';
+	} else {
+		$xml_url = $uri . '.xml';
+	}
+	
 	$doc = new DOMDocument('1.0', 'UTF-8');
 	
-	if ($doc->load($uri . '.xml') !== FALSE){
+	if ($doc->load($xml_url) !== FALSE){
 		$xpath = new DOMXpath($doc);
 		$xpath->registerNamespace('nuds', 'http://nomisma.org/nuds');
 		$xpath->registerNamespace('xlink', 'http://www.w3.org/1999/xlink');

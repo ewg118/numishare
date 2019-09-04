@@ -36,14 +36,16 @@ function parse_row($row, $count, $fileName){
 		$uncertain = substr(trim($ref), -1) == '?' ? true : false;
 		
 		if (preg_match('/^https?:\/\//', $ref)){
-		    //first, look for URIs (currently for Tokens of the Roman Empire
+		    //first, look for URIs (currently for Tokens of the Roman Empire)
 		    $uri = $id;
+		    $pieces = explode('/', $uri);
+		    $domain = $pieces[2];
 		    
 		    //get info from $coinTypes array if the coin type has been verified already
 		    if (array_key_exists($uri, $coinTypes)){
 		        echo "Matched {$uri}\n";
 		        $coinType= array('label'=>$coinTypes[$uri]['reference'], 'uri'=>$uri, 'uncertain'=>$uncertain);
-		        $record['types']['TAMS'] = $coinType;
+		        $record['types'][$domain] = $coinType;
 		        $record['title'] = $coinTypes[$uri]['title'] . '. ' . $accnum;
 		    } else {
 		        $file_headers = @get_headers($uri);
@@ -55,7 +57,7 @@ function parse_row($row, $count, $fileName){
 		            
 		            $record['title'] = $titles['title'] . ' ' . $accnum;
 		            $coinType= array('label'=>$titles['reference'], 'uri'=>$uri, 'uncertain'=>$uncertain);
-		            $record['types']['TAMS'] = $coinType;
+		            $record['types'][$domain] = $coinType;
 		        } else {
 		            $record['refs'][] = array('label'=>$id, 'uncertain'=>$uncertain);
 		        }
