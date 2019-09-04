@@ -164,7 +164,7 @@
 		<_object>
 			<type>Name</type>
 			<value>
-				<xsl:value-of select="."/>
+				<xsl:value-of select="normalize-space(.)"/>
 			</value>
 			<classified_as>
 				<_array>
@@ -402,7 +402,7 @@
 				<_object>
 					<type>LinguisticObject</type>
 					<value>
-						<xsl:value-of select="."/>
+						<xsl:value-of select="normalize-space(.)"/>
 					</value>
 				</_object>
 			</_array>
@@ -422,7 +422,7 @@
 		<_object>
 			<type>LinguisticObject</type>
 			<value>
-				<xsl:value-of select="."/>
+				<xsl:value-of select="normalize-space(.)"/>
 			</value>
 			<classified_as>
 				<_array>
@@ -538,7 +538,7 @@
 		<_object>
 			<type>Identifier</type>
 			<value>
-				<xsl:value-of select="."/>
+				<xsl:value-of select="normalize-space(.)"/>
 			</value>
 			<classified_as>
 				<_array>
