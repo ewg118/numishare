@@ -2,7 +2,8 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"
 	xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nm="http://nomisma.org/id/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
 	xmlns:nuds="http://nomisma.org/nuds" xmlns:nh="http://nomisma.org/nudsHoard" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml"
-	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:nmo="http://nomisma.org/ontology#" exclude-result-prefixes="#all" version="2.0">
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:nmo="http://nomisma.org/ontology#" xmlns:numishare="https://github.com/ewg118/numishare" exclude-result-prefixes="#all" version="2.0">
+	<xsl:include href="../../functions.xsl"/>
 
 	<xsl:variable name="id" select="descendant::*:recordId"/>
 	<xsl:variable name="lang" select="doc('input:request')/request/parameters/parameter[name = 'lang']/value"/>
@@ -16,28 +17,23 @@
 
 	<xsl:variable name="nudsGroup" as="element()*">
 		<nudsGroup>
-			<xsl:variable name="type_series" as="element()*">
-				<list>
-					<xsl:for-each select="distinct-values(descendant::nuds:typeDesc[string(@xlink:href)]/substring-before(@xlink:href, 'id/'))">
-						<type_series>
-							<xsl:value-of select="."/>
-						</type_series>
-					</xsl:for-each>
-				</list>
-			</xsl:variable>
 			<xsl:variable name="type_list" as="element()*">
 				<list>
-					<xsl:for-each select="distinct-values(descendant::nuds:typeDesc[string(@xlink:href)]/@xlink:href)">
+					<xsl:for-each select="distinct-values(descendant::nuds:typeDesc[string(@xlink:href)]/@xlink:href|descendant::nuds:reference[@xlink:arcrole='nmo:hasTypeSeriesItem'][string(@xlink:href)]/@xlink:href)">
 						<type_series_item>
+							<xsl:if test="contains(., '/id/')">
+								<xsl:attribute name="type_series" select="substring-before(., 'id/')"/>
+							</xsl:if>
+							
 							<xsl:value-of select="."/>
 						</type_series_item>
 					</xsl:for-each>
 				</list>
 			</xsl:variable>
-
-			<xsl:for-each select="$type_series//type_series">
+			
+			<xsl:for-each select="distinct-values($type_list//type_series_item/@type_series)">
 				<xsl:variable name="type_series_uri" select="."/>
-
+				
 				<xsl:variable name="id-param">
 					<xsl:for-each select="$type_list//type_series_item[contains(., $type_series_uri)]">
 						<xsl:value-of select="substring-after(., 'id/')"/>
@@ -46,7 +42,7 @@
 						</xsl:if>
 					</xsl:for-each>
 				</xsl:variable>
-
+				
 				<xsl:if test="string-length($id-param) &gt; 0">
 					<xsl:for-each select="document(concat($type_series_uri, 'apis/getNuds?identifiers=', encode-for-uri($id-param)))//nuds:nuds">
 						<object xlink:href="{$type_series_uri}id/{nuds:control/nuds:recordId}">
@@ -55,10 +51,15 @@
 					</xsl:for-each>
 				</xsl:if>
 			</xsl:for-each>
-			<xsl:for-each select="descendant::nuds:typeDesc[not(string(@xlink:href))]">
-				<object>
-					<xsl:copy-of select="."/>
-				</object>
+			
+			<!-- include individual REST calls for URIs not in a recognized, Numishare based id/ namespace -->
+			<xsl:for-each select="$type_list//type_series_item[not(@type_series)]">
+				<xsl:variable name="uri" select="."/>
+				
+				<xsl:call-template name="numishare:getNudsDocument">
+					<xsl:with-param name="uri" select="$uri"/>
+				</xsl:call-template>
+				
 			</xsl:for-each>
 		</nudsGroup>
 	</xsl:variable>

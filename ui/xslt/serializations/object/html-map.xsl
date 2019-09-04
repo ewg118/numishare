@@ -51,11 +51,9 @@
 				<xsl:when test="descendant::nuds:typeDesc[string(@xlink:href)]">
 					<xsl:variable name="uri" select="descendant::nuds:typeDesc/@xlink:href"/>
 
-					<object xlink:href="{$uri}">
-						<xsl:if test="doc-available(concat($uri, '.xml'))">
-							<xsl:copy-of select="document(concat($uri, '.xml'))/nuds:nuds"/>
-						</xsl:if>
-					</object>
+					<xsl:call-template name="numishare:getNudsDocument">
+						<xsl:with-param name="uri" select="$uri"/>
+					</xsl:call-template>
 				</xsl:when>
 				<xsl:otherwise>
 					<object>

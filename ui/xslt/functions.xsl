@@ -4518,6 +4518,29 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
+	
+	<xsl:template name="numishare:getNudsDocument">
+		<xsl:param name="uri"/>
+		
+		<!-- evaluate pattern to determine how to get the NUDS XML export -->
+		<xsl:variable name="xml-url">
+			<xsl:choose>
+				<xsl:when test="matches($uri, '^https://rpc\.ashmus\.ox\.ac\.uk')">
+					<xsl:variable name="pieces" select="tokenize($uri, '/')"/>
+					<xsl:value-of select="concat('https://rpc.ashmus.ox.ac.uk/id/rpc-', $pieces[5], '-', $pieces[6], '.xml')"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="concat($uri, '.xml')"/>
+				</xsl:otherwise>
+			</xsl:choose>
+			
+		</xsl:variable>
+		<object xlink:href="{$uri}">
+			<xsl:if test="doc-available($xml-url)">
+				<xsl:copy-of select="document($xml-url)/nuds:nuds"/>
+			</xsl:if>
+		</object>
+	</xsl:template>
 
 	<!-- ***** Visualization Interface Functions ***** -->
 	<!-- parse the Solr query into a human-readable string -->
