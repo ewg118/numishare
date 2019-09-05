@@ -75,7 +75,13 @@
 				<xsl:call-template name="numishare:getNudsDocument">
 					<xsl:with-param name="uri" select="$uri"/>
 				</xsl:call-template>
-				
+			</xsl:for-each>
+			
+			<!-- get typeDesc -->
+			<xsl:for-each select="descendant::nuds:typeDesc[not(string(@xlink:href))]">
+				<object>
+					<xsl:copy-of select="."/>
+				</object>
 			</xsl:for-each>
 		</nudsGroup>
 	</xsl:variable>
