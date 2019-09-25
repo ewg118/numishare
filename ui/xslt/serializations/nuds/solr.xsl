@@ -22,7 +22,6 @@
 	<xsl:template match="nuds:nuds">
 		<xsl:param name="lang"/>
 		<xsl:variable name="id" select="nuds:control/nuds:recordId"/>
-
 		<doc>
 			<field name="id">
 				<xsl:choose>

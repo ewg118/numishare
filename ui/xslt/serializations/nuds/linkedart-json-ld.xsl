@@ -26,22 +26,56 @@
 
 	<xsl:variable name="nudsGroup" as="element()*">
 		<nudsGroup>
-			<xsl:choose>
-				<xsl:when test="descendant::nuds:typeDesc[string(@xlink:href)]">
-					<xsl:variable name="uri" select="descendant::nuds:typeDesc/@xlink:href"/>
-
-					<object xlink:href="{$uri}">
-						<xsl:if test="doc-available(concat($uri, '.xml'))">
-							<xsl:copy-of select="document(concat($uri, '.xml'))/nuds:nuds"/>
+			<xsl:variable name="type_list" as="element()*">
+				<list>
+					<xsl:for-each select="distinct-values(descendant::nuds:typeDesc[string(@xlink:href)]/@xlink:href|descendant::nuds:reference[@xlink:arcrole='nmo:hasTypeSeriesItem'][string(@xlink:href)]/@xlink:href)">
+						<type_series_item>
+							<xsl:if test="contains(., '/id/')">
+								<xsl:attribute name="type_series" select="substring-before(., 'id/')"/>
+							</xsl:if>
+							
+							<xsl:value-of select="."/>
+						</type_series_item>
+					</xsl:for-each>
+				</list>
+			</xsl:variable>
+			
+			<xsl:for-each select="distinct-values($type_list//type_series_item/@type_series)">
+				<xsl:variable name="type_series_uri" select="."/>
+				
+				<xsl:variable name="id-param">
+					<xsl:for-each select="$type_list//type_series_item[contains(., $type_series_uri)]">
+						<xsl:value-of select="substring-after(., 'id/')"/>
+						<xsl:if test="not(position() = last())">
+							<xsl:text>|</xsl:text>
 						</xsl:if>
-					</object>
-				</xsl:when>
-				<xsl:otherwise>
-					<object>
-						<xsl:copy-of select="descendant::nuds:typeDesc"/>
-					</object>
-				</xsl:otherwise>
-			</xsl:choose>
+					</xsl:for-each>
+				</xsl:variable>
+				
+				<xsl:if test="string-length($id-param) &gt; 0">
+					<xsl:for-each select="document(concat($type_series_uri, 'apis/getNuds?identifiers=', encode-for-uri($id-param)))//nuds:nuds">
+						<object xlink:href="{$type_series_uri}id/{nuds:control/nuds:recordId}">
+							<xsl:copy-of select="."/>
+						</object>
+					</xsl:for-each>
+				</xsl:if>
+			</xsl:for-each>
+			
+			<!-- include individual REST calls for URIs not in a recognized, Numishare based id/ namespace -->
+			<xsl:for-each select="$type_list//type_series_item[not(@type_series)]">
+				<xsl:variable name="uri" select="."/>
+				
+				<xsl:call-template name="numishare:getNudsDocument">
+					<xsl:with-param name="uri" select="$uri"/>
+				</xsl:call-template>				
+			</xsl:for-each>
+			
+			<!-- get typeDesc -->
+			<xsl:for-each select="descendant::nuds:typeDesc[not(string(@xlink:href))]">
+				<object>
+					<xsl:copy-of select="."/>
+				</object>
+			</xsl:for-each>
 		</nudsGroup>
 	</xsl:variable>
 
@@ -138,7 +172,7 @@
 		<_object>
 			<type>Name</type>
 			<value>
-				<xsl:value-of select="."/>
+				<xsl:value-of select="normalize-space(.)"/>
 			</value>
 			<classified_as>
 				<_array>
@@ -380,7 +414,7 @@
 				<_object>
 					<type>LinguisticObject</type>
 					<value>
-						<xsl:value-of select="."/>
+						<xsl:value-of select="normalize-space(.)"/>
 					</value>
 				</_object>
 			</_array>
@@ -400,7 +434,7 @@
 		<_object>
 			<type>LinguisticObject</type>
 			<value>
-				<xsl:value-of select="."/>
+				<xsl:value-of select="normalize-space(.)"/>
 			</value>
 			<classified_as>
 				<_array>
@@ -516,7 +550,7 @@
 		<_object>
 			<type>Identifier</type>
 			<value>
-				<xsl:value-of select="."/>
+				<xsl:value-of select="normalize-space(.)"/>
 			</value>
 			<classified_as>
 				<_array>
