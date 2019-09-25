@@ -171,9 +171,9 @@
 	<xsl:template match="nuds:title">
 		<_object>
 			<type>Name</type>
-			<value>
+			<content>
 				<xsl:value-of select="normalize-space(.)"/>
-			</value>
+			</content>
 			<classified_as>
 				<_array>
 					<_object>
@@ -413,9 +413,9 @@
 			<_array>
 				<_object>
 					<type>LinguisticObject</type>
-					<value>
+					<content>
 						<xsl:value-of select="normalize-space(.)"/>
-					</value>
+					</content>
 				</_object>
 			</_array>
 		</carries>
@@ -433,9 +433,9 @@
 	<xsl:template match="nuds:description">
 		<_object>
 			<type>LinguisticObject</type>
-			<value>
+			<content>
 				<xsl:value-of select="normalize-space(.)"/>
-			</value>
+			</content>
 			<classified_as>
 				<_array>
 					<_object>
@@ -549,9 +549,9 @@
 	<xsl:template match="nuds:identifier">
 		<_object>
 			<type>Identifier</type>
-			<value>
+			<content>
 				<xsl:value-of select="normalize-space(.)"/>
-			</value>
+			</content>
 			<classified_as>
 				<_array>
 					<_object>
