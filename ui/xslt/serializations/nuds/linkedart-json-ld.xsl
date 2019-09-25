@@ -130,6 +130,8 @@
 
 		<xsl:apply-templates select="nuds:physDesc"/>
 		<xsl:apply-templates select="$nudsGroup//nuds:typeDesc"/>
+
+		<xsl:apply-templates select="nuds:adminDesc/nuds:collection"/>
 	</xsl:template>
 
 	<xsl:template match="nuds:title">
@@ -160,18 +162,18 @@
 					<_label>exchange media</_label>
 				</_object>
 
-				<xsl:apply-templates select="nuds:denomination[@xlink:href]|nuds:objectType[@xlink:href]"/>
+				<xsl:apply-templates select="nuds:denomination[@xlink:href] | nuds:objectType[@xlink:href]"/>
 
 				<xsl:for-each select="distinct-values($coinType_uris/uri)">
 					<xsl:variable name="uri" select="."/>
-					
+
 					<_object>
 						<id>
 							<xsl:value-of select="$uri"/>
 						</id>
 						<type>Type</type>
 						<_label>
-							<xsl:value-of select="$nudsGroup//object[@xlink:href = $uri]//nuds:descMeta/nuds:title[@xml:lang='en']"/>
+							<xsl:value-of select="$nudsGroup//object[@xlink:href = $uri]//nuds:descMeta/nuds:title[@xml:lang = 'en']"/>
 						</_label>
 					</_object>
 				</xsl:for-each>
@@ -339,7 +341,11 @@
 						</id>
 						<type>Type</type>
 						<_label>
-							<xsl:value-of select="if (local-name() = 'obverse') then 'fronts' else 'backs'"/>
+							<xsl:value-of select="
+									if (local-name() = 'obverse') then
+										'fronts'
+									else
+										'backs'"/>
 						</_label>
 					</_object>
 				</_array>
@@ -470,7 +476,7 @@
 						<xsl:value-of select="."/>
 					</xsl:when>
 					<xsl:when test=". castable as xs:decimal">
-						<xsl:value-of select='format-number(., "0.00")' />
+						<xsl:value-of select='format-number(., "0.00")'/>
 					</xsl:when>
 				</xsl:choose>
 			</value>
@@ -524,6 +530,32 @@
 				</_array>
 			</classified_as>
 		</_object>
+	</xsl:template>
+
+	<xsl:template match="nuds:collection">
+		<xsl:variable name="uri" select="@xlink:href"/>
+
+		<current_owner>
+			<_object>
+				<id>
+					<xsl:value-of select="numishare:resolveUriToCurie($uri, $rdf//*[@rdf:about = $uri])"/>
+				</id>
+				<type>Group</type>
+				<_label>
+					<xsl:value-of select="."/>
+				</_label>				
+				<!--<classified_as>
+					<_array>
+						<_object>
+							<id/>
+							<type>Type</type>
+							<_label/>
+						</_object>
+					</_array>
+				</classified_as>-->
+			</_object>
+		</current_owner>
+
 	</xsl:template>
 
 	<!-- ***** Digitial representations ***** -->
