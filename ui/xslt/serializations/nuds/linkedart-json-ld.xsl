@@ -338,6 +338,16 @@
 			</_label>
 			
 			<xsl:choose>
+				<xsl:when test="local-name() = 'denomination'">
+					<part_of>aat:300037222</part_of>
+				</xsl:when>
+				<xsl:when test="local-name() = 'objectType'">
+					<part_of>aat:300387350</part_of>
+				</xsl:when>
+			</xsl:choose>
+			
+			
+			<xsl:choose>
 				<xsl:when test="local-name() = 'denomination' or local-name()='objectType'">
 					<classified_as>
 						<_array>
