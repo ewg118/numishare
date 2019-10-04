@@ -195,6 +195,15 @@
 					<id>aat:300387350</id>
 					<type>Type</type>
 					<_label>exchange media</_label>
+					<classified_as>
+						<_array>
+							<_object>
+								<id>aat:300264092</id>
+								<type>Type</type>
+								<_label>Objects Facet</_label>
+							</_object>
+						</_array>
+					</classified_as>
 				</_object>
 
 				<xsl:apply-templates select="nuds:denomination[@xlink:href] | nuds:objectType[@xlink:href]"/>
@@ -210,6 +219,15 @@
 						<_label>
 							<xsl:value-of select="$nudsGroup//object[@xlink:href = $uri]//nuds:descMeta/nuds:title[@xml:lang = 'en']"/>
 						</_label>
+						<classified_as>
+							<_array>
+								<_object>
+									<id>aat:300067209</id>
+									<type>Type</type>
+									<_label>typology</_label>
+								</_object>
+							</_array>
+						</classified_as>
 					</_object>
 				</xsl:for-each>
 			</_array>
@@ -318,42 +336,56 @@
 			<_label>
 				<xsl:value-of select="."/>
 			</_label>
-			<xsl:if test="@xlink:role[not(. = 'region') and not(. = 'statedAuthority')]">
-				<classified_as>
-					<_array>
-						<_object>
-							<type>Type</type>
-							<xsl:choose>
-								<xsl:when test="@xlink:role = 'authority'">
-									<xsl:choose>
-										<xsl:when test="self::nuds:persname">
-											<id>aat:300025475</id>
-											<_label>rulers (people)</_label>
-										</xsl:when>
-										<xsl:when test="self::nuds:corpname">
-											<id>aat:300232420</id>
-											<_label>sovereign states</_label>
-										</xsl:when>
-									</xsl:choose>
-								</xsl:when>
-								<xsl:when test="@xlink:role = 'dynasty'">
-									<id>aat:300386176</id>
-									<_label>dynasties</_label>
-								</xsl:when>
-								<xsl:when test="@xlink:role = 'issuer'">
-									<id>aat:300025467</id>
-									<_label>magistrates</_label>
-								</xsl:when>
-								<xsl:when test="@xlink:role = 'mint'">
-									<id>aat:300006031</id>
-									<_label>mints (buildings)</_label>
-								</xsl:when>
-							</xsl:choose>
-
-						</_object>
-					</_array>
-				</classified_as>
-			</xsl:if>
+			
+			<xsl:choose>
+				<xsl:when test="local-name() = 'denomination' or local-name()='objectType'">
+					<classified_as>
+						<_array>
+							<_object>
+								<id>aat:300264092</id>
+								<type>Type</type>
+								<_label>Objects Facet</_label>
+							</_object>
+						</_array>
+					</classified_as>
+				</xsl:when>
+				<xsl:when test="@xlink:role[not(. = 'region') and not(. = 'statedAuthority')]">
+					<classified_as>
+						<_array>
+							<_object>
+								<type>Type</type>
+								<xsl:choose>
+									<xsl:when test="@xlink:role = 'authority'">
+										<xsl:choose>
+											<xsl:when test="self::nuds:persname">
+												<id>aat:300025475</id>
+												<_label>rulers (people)</_label>
+											</xsl:when>
+											<xsl:when test="self::nuds:corpname">
+												<id>aat:300232420</id>
+												<_label>sovereign states</_label>
+											</xsl:when>
+										</xsl:choose>
+									</xsl:when>
+									<xsl:when test="@xlink:role = 'dynasty'">
+										<id>aat:300386176</id>
+										<_label>dynasties</_label>
+									</xsl:when>
+									<xsl:when test="@xlink:role = 'issuer'">
+										<id>aat:300025467</id>
+										<_label>magistrates</_label>
+									</xsl:when>
+									<xsl:when test="@xlink:role = 'mint'">
+										<id>aat:300006031</id>
+										<_label>mints (buildings)</_label>
+									</xsl:when>								
+								</xsl:choose>
+								
+							</_object>
+						</_array>
+					</classified_as>
+				</xsl:when>
+			</xsl:choose>
 		</_object>
 	</xsl:template>
 
