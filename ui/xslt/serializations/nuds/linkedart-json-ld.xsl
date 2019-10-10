@@ -261,6 +261,18 @@
 					<timespan>
 						<_object>
 							<type>TimeSpan</type>
+							<_label>
+								<xsl:choose>
+									<xsl:when test="nuds:date">
+										<xsl:value-of select="nuds:date"/>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:value-of select="nuds:dateRange/nuds:fromDate"/>
+										<xsl:text> - </xsl:text>
+										<xsl:value-of select="nuds:dateRange/nuds:toDate"/>
+									</xsl:otherwise>
+								</xsl:choose>
+							</_label>
 							<begin_of_the_begin>
 								<xsl:value-of select="numishare:expandDatetoDateTime($fromDate)"/>
 							</begin_of_the_begin>
