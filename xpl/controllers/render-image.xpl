@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Author: Ethan Gruber
-	Date: May 2016
-	Function: This XPL enables the rendering of symbol image files via a faux proxy pipeline. The symbol images are stored in the symbols folder within the individual Numishare project directory
-	
+	Date: November 2019
+	Function: This XPL enables the rendering of symbol image files via a faux proxy pipeline. 
+	The symbols should be stored in oxf:/symbols/{$project_name}. The path can be set in the config. SVG is recommended.
 	-->
 
 <p:pipeline xmlns:p="http://www.orbeon.com/oxf/pipeline" xmlns:oxf="http://www.orbeon.com/oxf/processors">
@@ -25,8 +25,9 @@
 		<p:input name="data" href="#data"/>
 		<p:input name="config">
 			<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+				<xsl:variable name="collection-name" select="substring-before(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/')"/>				
+				<xsl:variable name="directory" select="concat('oxf:/symbols/', $collection-name)"/>
 				<xsl:variable name="id" select="tokenize(doc('input:request')/request/request-uri, '/')[last()]"/>
-				<xsl:variable name="directory" select="concat('file:', /config/images/absolute_path, '/symbols')"/>
 
 				<xsl:template match="/">
 					<config>
@@ -53,16 +54,18 @@
 
 	<!-- generate HTML fragment to be returned -->
 	<p:processor name="oxf:unsafe-xslt">
+		<p:input name="request" href="#request"/>
 		<p:input name="data" href="#directory-scan"/>
 		<p:input name="config">
 			<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-				<xsl:variable name="path" select="concat('file:', /directory/@path)"/>
+				<xsl:variable name="collection-name" select="substring-before(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/')"/>
+				<xsl:variable name="directory" select="concat('oxf:/symbols/', $collection-name)"/>
 				<xsl:variable name="ext" select="tokenize(//file[1]/@name, '\.')[last()]"/>
 
 				<xsl:template match="/">
 					<config>
 						<url>
-							<xsl:value-of select="concat($path, '/', //file[1]/@name)"/>
+							<xsl:value-of select="concat($directory, '/', //file[1]/@name)"/>
 						</url>
 						<mode>binary</mode>
 						<content-type>
