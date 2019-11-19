@@ -72,6 +72,7 @@
 						<![CDATA[xquery version "1.0";
 						declare namespace rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#";
 						declare namespace skos="http://www.w3.org/2004/02/skos/core#";
+						declare namespace foaf="http://xmlns.com/foaf/0.1/";
 						<report> { 
 							for $record in subsequence(collection(), START, 20)
 								let $type := $record/rdf:RDF/*[1]/local-name()
@@ -81,6 +82,9 @@
 										<id>{ tokenize($record//@rdf:about, '/')[last()] }</id>
 										<prefLabel>{ data($record//skos:prefLabel[@xml:lang='en']) }</prefLabel >
 										<definition>{ data($record//skos:definition[@xml:lang='en']) }</definition>
+										{ for $image in $record//foaf:depiction return
+											<image> { data($image/@rdf:resource) } </image>
+										}								
 									</record>
 							}
 						</report>]]>
@@ -343,7 +347,7 @@
 							</xforms:group>
 						</xforms:group>
 					</div>
-					<!--<fr:xforms-inspector></fr:xforms-inspector>-->
+					<fr:xforms-inspector></fr:xforms-inspector>
 				</div>
 			</div>
 		</div>

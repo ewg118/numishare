@@ -5,6 +5,7 @@
 	***************** -->	
 	<page path="/numishare/admin/" view="xforms/admin.xhtml" id="admin"/>	
 	<page path="/numishare/admin/symbols/" view="xforms/symbols.xhtml"/>
+	<page path="/numishare/admin/import/symbol/" view="xforms/import-symbols.xhtml"/>
 	<page path="/numishare/admin/edit/coin/" view="xforms/nuds.xhtml"/>
 	<page path="/numishare/admin/edit/symbol/" view="xforms/edit-symbol.xhtml"/>
 	<page path="/numishare/admin/edit/settings/" view="xforms/settings.xhtml"/>
