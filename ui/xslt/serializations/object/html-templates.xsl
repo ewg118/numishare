@@ -1013,19 +1013,7 @@
 				<ul class="list-inline">
 					<li>
 						<strong>SHARE:</strong>
-					</li>
-					<li>
-						<!-- AddThis Button BEGIN -->
-						<div class="addthis_toolbox addthis_default_style">
-							<a class="addthis_button_preferred_1"/>
-							<a class="addthis_button_preferred_2"/>
-							<a class="addthis_button_preferred_3"/>
-							<a class="addthis_button_preferred_4"/>
-							<a class="addthis_button_compact"/>
-							<a class="addthis_counter addthis_bubble_style"/>
-						</div>
-						<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=xa-525d63ef6a07cd89"/>
-					</li>
+					</li>					
 					<li>
 						<strong>EXPORT:</strong>
 					</li>
