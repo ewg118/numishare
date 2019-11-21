@@ -1241,8 +1241,8 @@
 		</xsl:if>
 
 		<!-- always include leaflet -->
-		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"/>
-		<script type="text/javascript" src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"/>
+		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.0/dist/leaflet.css"/>
+		<script type="text/javascript" src="https://unpkg.com/leaflet@1.0.0/dist/leaflet.js"/>
 		<script type="text/javascript" src="{$include_path}/javascript/leaflet.ajax.min.js"/>
 	</xsl:template>
 </xsl:stylesheet>

@@ -123,12 +123,12 @@
 				<!-- call mapping information -->
 				<xsl:if test="count(//lst[contains(@name, '_geo')]/int) &gt; 0">
 					<!-- maps-->
-					<link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"/>
+					<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.0/dist/leaflet.css"/>
 					<link rel="stylesheet" href="{$include_path}/css/MarkerCluster.css"/>
 					<link rel="stylesheet" href="{$include_path}/css/MarkerCluster.Default.css"/>
 					
 					<!-- js -->
-					<script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"/>					
+					<script src="https://unpkg.com/leaflet@1.0.0/dist/leaflet.js"/>					
 					<script type="text/javascript" src="{$include_path}/javascript/leaflet.ajax.min.js"/>
 					<script type="text/javascript" src="{$include_path}/javascript/leaflet.markercluster.js"/>
 					<script type="text/javascript" src="{$include_path}/javascript/result_map_functions.js"/>
