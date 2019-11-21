@@ -43,7 +43,7 @@
 				<meta name="viewport" content="width=device-width, initial-scale=1"/>
 
 				<!-- jquery -->
-				<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"/>
+				<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"/>
 
 				<!-- bootstrap -->
 				<link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"/>
@@ -72,12 +72,12 @@
 					</xsl:when>
 					<xsl:otherwise>
 						<!-- maps-->
-						<link rel="stylesheet" href="https://unpkg.com/leaflet@0.7.7/dist/leaflet.css"/>
+						<link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"/>
 						<link rel="stylesheet" href="{$include_path}/css/MarkerCluster.css"/>
 						<link rel="stylesheet" href="{$include_path}/css/MarkerCluster.Default.css"/>
 						
 						<!-- js -->
-						<script src="https://unpkg.com/leaflet@0.7.7/dist/leaflet.js"/>					
+						<script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"/>					
 						<script type="text/javascript" src="{$include_path}/javascript/leaflet.ajax.min.js"/>
 						<script type="text/javascript" src="{$include_path}/javascript/leaflet.markercluster.js"/>
 						<script type="text/javascript" src="{$include_path}/javascript/map_functions.js"/>

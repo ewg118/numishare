@@ -133,7 +133,7 @@
 					</xsl:choose>
 				</xsl:for-each>
 
-				<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"/>
+				<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"/>
 				<!-- bootstrap -->
 				<link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"/>
 				<script type="text/javascript" src="https://netdna.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"/>
@@ -151,12 +151,12 @@
 				<!-- call mapping information -->
 				<xsl:if test="count(//lst[contains(@name, '_geo')]/int) &gt; 0">
 					<!-- maps-->
-					<link rel="stylesheet" href="https://unpkg.com/leaflet@0.7.7/dist/leaflet.css"/>
+					<link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"/>
 					<link rel="stylesheet" href="{$include_path}/css/MarkerCluster.css"/>
 					<link rel="stylesheet" href="{$include_path}/css/MarkerCluster.Default.css"/>
 					
 					<!-- js -->
-					<script src="https://unpkg.com/leaflet@0.7.7/dist/leaflet.js"/>					
+					<script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"/>					
 					<script type="text/javascript" src="{$include_path}/javascript/leaflet.ajax.min.js"/>
 					<script type="text/javascript" src="{$include_path}/javascript/leaflet.markercluster.js"/>
 					<script type="text/javascript" src="{$include_path}/javascript/result_map_functions.js"/>

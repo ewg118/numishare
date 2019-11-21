@@ -96,8 +96,8 @@
 				<xsl:call-template name="generic_head"/>
 				<xsl:choose>
 					<xsl:when test="$recordType='physical'">
-						<link rel="stylesheet" href="https://unpkg.com/leaflet@0.7.7/dist/leaflet.css"/>
-						<script src="https://unpkg.com/leaflet@0.7.7/dist/leaflet.js"/>					
+						<link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"/>
+						<script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"/>					
 						<script type="text/javascript" src="{$include_path}/javascript/leaflet.ajax.min.js"/>
 						<script type="text/javascript" src="{$include_path}/javascript/display_map_functions.js"/>
 					</xsl:when>
@@ -216,7 +216,7 @@
 		</title>
 		<!-- CSS -->
 		<link rel="shortcut icon" type="image/x-icon" href="{$include_path}/images/favicon.png"/>
-		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"/>
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"/>
 		<meta name="viewport" content="width=device-width, initial-scale=1"/>
 		<!-- bootstrap -->
 		<link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"/>
