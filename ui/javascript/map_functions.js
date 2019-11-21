@@ -266,8 +266,8 @@ $(document).ready(function () {
 			hoardUrl = path + "findspots.geojson?q=" + query + (lang.length > 0 ? '&lang=' + lang: '');
 			subjectUrl = path + "subjects.geojson?q=" + query + (lang.length > 0 ? '&lang=' + lang: '');
 			
-			layerControl.removeLayer(markers);
-			map.removeLayer(markers);
+			/*layerControl.removeLayer(markers);
+			map.removeLayer(markers);*/
 			mintLayer.refresh(mintUrl);
 			findspotLayer.refresh(hoardUrl);
 			subjectLayer.refresh(subjectUrl);
