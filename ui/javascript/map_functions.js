@@ -270,12 +270,13 @@ $(document).ready(function () {
 			$('#timemap').html('<div id="mapcontainer" class="fullscreen"><div id="map"/></div><div id="timelinecontainer"><div id="timeline"/></div>');
 			initialize_timemap(query);
 		} else {
+		  
 			mintUrl = path + "mints.geojson?q=" + query + (lang.length > 0 ? '&lang=' + lang: '') + (department.length > 0 ? '&department=' + department : '');
 			hoardUrl = path + "findspots.geojson?q=" + query + (lang.length > 0 ? '&lang=' + lang: '') + (department.length > 0 ? '&department=' + department : '');
-			subjectUrl = path + "subjects.geojson?q=" + query + (lang.length > 0 ? '&lang=' + lang: '') + (department.length > 0 ? '&department=' + department : '');
+			subjectUrl = path + "subjects.geojson?q=" + query + (lang.length > 0 ? '&lang=' + lang: '') + (department.length > 0 ? '&department=' + department : '');			
 			
-			layerControl.removeLayer(markers);
-			map.removeLayer(markers);
+			/*layerControl.removeLayer(markers);
+			map.removeLayer(markers);	*/		
 			mintLayer.refresh(mintUrl);
 			findspotLayer.refresh(hoardUrl);
 			subjectLayer.refresh(subjectUrl);
