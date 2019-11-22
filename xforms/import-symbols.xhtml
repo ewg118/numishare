@@ -19,7 +19,7 @@
 
 		<xforms:model>
 			<!-- RDF template -->
-			<xforms:instance id="rdf" xxforms:exclude-result-prefixes="#default xhtml xforms xs ev xxforms fr res xi nomisma atom">
+			<xforms:instance id="rdf" xxforms:exclude-result-prefixes="#default xhtml xforms xs ev xxforms fr res xi nomisma atom exist">
 				<rdf:RDF xmlns="" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:nmo="http://nomisma.org/ontology#" xmlns:foaf="http://xmlns.com/foaf/0.1/"
 					xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
 					xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:void="http://rdfs.org/ns/void#"
@@ -74,16 +74,18 @@
 			<!-- NUDS mappings and validation -->
 			<xforms:instance id="properties" xxforms:exclude-result-prefixes="#all">
 				<properties xmlns="">
-					<property label="ID">id</property>
-					<property label="Preferred Label">skos:prefLabel</property>
-					<property label="Definition">skos:definition</property>
+
 					<property label="Alternative Label">skos:altLabel</property>
 					<property label="Broader Concept">skos:broader</property>
 					<property label="Constituent Symbol(s)">crm:P106_is_composed_of</property>
-					<property label="Exact Match">skos:exactMatch</property>					
+					<property label="Creation Date">creation_date</property>
+					<property label="Definition">skos:definition</property>
+					<property label="Exact Match">skos:exactMatch</property>
+					<property label="ID">id</property>
 					<property label="Image Creator">image_creator</property>
 					<property label="Image URI or Unicode Character">crm:P165i_is_incorporated_in</property>
 					<!--<property label="Field of Numismatics">dcterms:isPartOf</property>-->
+					<property label="Preferred Label">skos:prefLabel</property>
 					<property label="Scope Note">skos:scopeNote</property>
 					<property label="Source">dcterms:source</property>
 				</properties>
@@ -106,6 +108,19 @@
 				<crm:P165i_is_incorporated_in>
 					<crmdig:D1_Digital_Object rdf:about=""/>
 				</crm:P165i_is_incorporated_in>
+			</xforms:instance>
+
+			<xforms:instance id="provenance-template" xxforms:exclude-result-prefixes="#all">
+				<dcterms:ProvenanceStatement rdf:about="">
+					<foaf:topic rdf:resource=""/>
+				</dcterms:ProvenanceStatement>
+			</xforms:instance>
+
+			<xforms:instance id="activity-template" xxforms:exclude-result-prefixes="#all">
+				<prov:Activity>
+					<prov:atTime rdf:datatype=""/>
+					<dcterms:type/>
+				</prov:Activity>
 			</xforms:instance>
 
 			<!-- Google Spreadsheet Atom -->
@@ -142,8 +157,9 @@
 
 			<xforms:bind nodeset="instance('mappings')"
 				constraint="count(mapping[@to = 'id']) = 1 and count(mapping[@to = 'skos:prefLabel'][@lang='en']) = 1 and count(mapping[@to = 'skos:definition'][@lang='en']) = 1
+				and count(mapping[@to = 'image_creator']) &lt;= 1
 				and (if (count(mapping[@to = 'image_creator']) = 1) then not(mapping[@to = 'image_creator']/following-sibling::mapping[@to = 'crm:P165i_is_incorporated_in']) else true())
-				and (if(count(mapping[@to = 'image_creator']) = 1) then count(mapping[@to = 'crm:P165i_is_incorporated_in']) &gt; 0">
+				and (if(count(mapping[@to = 'image_creator']) = 1) then (count(mapping[@to = 'crm:P165i_is_incorporated_in']) &gt; 0) else true())">
 				<!-- language bindings -->
 				<xforms:bind nodeset="mapping[@to='skos:prefLabel']">
 					<xforms:bind nodeset="@lang" required="true()"
@@ -499,6 +515,27 @@
 											<span class="glyphicon glyphicon-exclamation-sign"></span>
 											<strong>Alert:</strong> Scope Note languages must be unique.</div>
 									</xforms:group>
+									<xforms:group ref=".[count(mapping[@to = 'image_creator']) &gt; 1]">
+										<div class="alert-danger alert-box alert">
+											<span class="glyphicon glyphicon-exclamation-sign"></span>
+											<strong>Alert:</strong> There cannot be more than one Image Creator.</div>
+									</xforms:group>
+									<xforms:group
+										ref=".[count(mapping[@to = 'image_creator']) &gt; 0 and count(mapping[@to = 'crm:P165i_is_incorporated_in']) = 0]">
+										<div class="alert-danger alert-box alert">
+											<span class="glyphicon glyphicon-exclamation-sign"></span>
+											<strong>Alert:</strong> There must be at least one Image URL or Unicode Character column when the Image Creator is
+											specified.</div>
+									</xforms:group>
+									<xforms:group
+										ref=".[count(mapping[@to = 'image_creator']) &gt; 0 and mapping[@to = 'image_creator']/following-sibling::mapping[@to = 'crm:P165i_is_incorporated_in']]">
+										<div class="alert-danger alert-box alert">
+											<span class="glyphicon glyphicon-exclamation-sign"></span>
+											<strong>Alert:</strong> The Image Creator column must come after the Image URL or Unicode Character column(s).</div>
+									</xforms:group>
+
+									<!--and (if (count(mapping[@to = 'image_creator']) = 1) then not(mapping[@to = 'image_creator']/following-sibling::mapping[@to = 'crm:P165i_is_incorporated_in']) else true())
+									and (if(count(mapping[@to = 'image_creator']) = 1) then (count(mapping[@to = 'crm:P165i_is_incorporated_in']) &gt; 0) else true())-->
 
 									<table class="table">
 										<thead>
@@ -697,6 +734,12 @@
 												<xforms:setvalue ref="instance('control-instance')/id" value="$id"/>
 												<xforms:var name="dataset" select="substring-before(instance('config')/uri_space, 'id/')"/>
 
+												<!-- evaluate whether a creation_date is castable as xs:date or xs:dateTime for provenance statement -->
+												<xforms:var name="creation_date"
+													select="normalize-space(data(context()/*[namespace-uri()='http://schemas.google.com/spreadsheets/2006/extended'][name()=instance('mappings')/mapping[@to='creation_date']/@from]))"/>
+												<xforms:var name="isNew"
+													select="if ($creation_date castable as xs:date or $creation_date castable as xs:dateTime) then false() else true()"/>
+
 												<!-- clear data from RDF instance before loading-->
 												<xforms:delete nodeset="instance('rdf')/*"/>
 
@@ -707,6 +750,21 @@
 												<!-- insert rdf:type as skos:Concept -->
 												<xforms:insert context="instance('rdf')/*[last()]"
 													origin="xforms:element('rdf:type', xforms:attribute('rdf:resource', 'http://www.w3.org/2004/02/skos/core#Concept'))"/>
+
+												<!-- insert provenance event -->
+												<xforms:insert context="instance('rdf')/*[last()]" nodeset="./child::node()[last()]"
+													origin="xforms:element('skos:changeNote', xforms:attribute('rdf:resource', concat($uri, '#provenance')))"/>
+
+												<!-- insert void:inDataset -->
+												<xforms:insert context="instance('rdf')/*[last()]" nodeset="./child::node()[last()]"
+													origin="xforms:element('void:inDataset', xforms:attribute('rdf:resource', $dataset))"/>
+
+												<!-- insert provenance template and set values -->
+												<xforms:insert context="instance('rdf')" nodeset="./child::node()[last()]"
+													origin="instance('provenance-template')"/>
+												<xforms:setvalue ref="instance('rdf')/dcterms:ProvenanceStatement/@rdf:about"
+													value="concat($uri, '#provenance')"/>
+												<xforms:setvalue ref="instance('rdf')/dcterms:ProvenanceStatement/foaf:topic/@rdf:resource" value="$uri"/>
 
 												<!-- iterate through columns -->
 												<xforms:action
@@ -764,33 +822,102 @@
 																<xforms:insert context="instance('rdf')/*[1]" nodeset="./child::node()[last()]"
 																	origin="xforms:element('crm:P165i_is_incorporated_in', $value)"/>
 															</xforms:action>
-															
-															<!-- if the $value matches a URI pattern, then insert a D1 Digital Object -->															
+
+															<!-- if the $value matches a URI pattern, then insert a D1 Digital Object -->
 															<xforms:action if="matches($value, 'https?://(-\.)?([^\s/?\.#]+\.?)+(/[^\s]*)?$')">
 																<xforms:var name="ext" select="tokenize(tokenize($value, '/')[last()], '\.')[last()]"/>
 																<xforms:var name="format" select="if ($ext = 'svg') then 'image/svg+xml' else ''"/>
-																
-																<xforms:insert context="instance('rdf')/*[1]" nodeset="child::node()[last()]" origin="instance('image-template')"/>
-																<xforms:setvalue ref="instance('rdf')/*[1]/crm:P165i_is_incorporated_in[last()]/crmdig:D1_Digital_Object/@rdf:about" value="$value"/>
-																
+
+																<xforms:insert context="instance('rdf')/*[1]" nodeset="child::node()[last()]"
+																	origin="instance('image-template')"/>
+																<xforms:setvalue
+																	ref="instance('rdf')/*[1]/crm:P165i_is_incorporated_in[last()]/crmdig:D1_Digital_Object/@rdf:about"
+																	value="$value"/>
+
 																<!-- if the format is discernable from the filename extension, then insert the appropriate property -->
 																<xforms:action if="string($format)">
-																	<xforms:insert context="instance('rdf')/*[1]/crm:P165i_is_incorporated_in[last()]/crmdig:D1_Digital_Object" nodeset="./child::node()[last()]"
-																		origin="xforms:element('dcterms:format', $format)"/>
+																	<xforms:insert
+																		context="instance('rdf')/*[1]/crm:P165i_is_incorporated_in[last()]/crmdig:D1_Digital_Object"
+																		nodeset="./child::node()[last()]" origin="xforms:element('dcterms:format', $format)"/>
 																</xforms:action>
 															</xforms:action>
-														</xforms:action>														
-														
-														<xforms:action if="$mapping = 'image_creator'">
-															<!-- insert the image creator URI into each D1_Digital_Object. 
+														</xforms:action>
+
+														<!-- insert the image creator URI into each D1_Digital_Object. 
 																Validation will ensure each D1_Digital_Ojbect is already created before the image_creator column is processed -->
+														<xforms:action if="$mapping = 'image_creator'">
+
+															<!-- only insert an image_creator if there are D1_Digital_Objects (this ignores unicode characters) -->
+															<xforms:action
+																xxforms:iterate="instance('rdf')/*[1]/crm:P165i_is_incorporated_in[last()]/crmdig:D1_Digital_Object">
+																<xforms:insert context="." nodeset="./child::node()[last()]"
+																	origin="xforms:element('dcterms:creator', xforms:attribute('rdf:resource', $value)))"/>
+															</xforms:action>
+														</xforms:action>
+
+														<!-- if there is a creation date (xsd:dateTime or xsd:date), then insert an initial provenance event for it -->
+														<xforms:action if="$mapping = 'creation_date'">
+															<xforms:insert context="instance('rdf')/dcterms:ProvenanceStatement"
+																nodeset="./child::node()[last()]" origin="xforms:element('prov:wasGeneratedBy')"/>
+															<xforms:insert context="instance('rdf')/dcterms:ProvenanceStatement/prov:wasGeneratedBy"
+																nodeset="./child::node()[last()]" origin="instance('activity-template')"/>
+
+															<!-- insert create event -->
+															<xforms:insert
+																context="instance('rdf')/dcterms:ProvenanceStatement/prov:wasGeneratedBy/prov:Activity"
+																origin="xforms:element('rdf:type', (xforms:attribute('rdf:resource', 'http://www.w3.org/ns/prov#Create')))"/>
+
+															<!-- set timestamp -->
+															<xforms:setvalue
+																ref="instance('rdf')/dcterms:ProvenanceStatement/prov:wasGeneratedBy/prov:Activity/prov:atTime/@rdf:datatype"
+																if="$value castable as xs:dateTime">http://www.w3.org/2001/XMLSchema#dateTime</xforms:setvalue>
+															<xforms:setvalue
+																ref="instance('rdf')/dcterms:ProvenanceStatement/prov:wasGeneratedBy/prov:Activity/prov:atTime/@rdf:datatype"
+																if="$value castable as xs:date">http://www.w3.org/2001/XMLSchema#date</xforms:setvalue>
+															<xforms:setvalue
+																ref="instance('rdf')/dcterms:ProvenanceStatement/prov:wasGeneratedBy/prov:Activity/prov:atTime"
+																value="$value"/>
+
+															<!-- set type -->
+															<xforms:setvalue
+																ref="instance('rdf')/dcterms:ProvenanceStatement/prov:wasGeneratedBy/prov:Activity/dcterms:type"
+																>manual</xforms:setvalue>
+
+															<!-- insert description for extra-spreadsheet workflow -->
+															<xforms:insert
+																context="instance('rdf')/dcterms:ProvenanceStatement/prov:wasGeneratedBy/prov:Activity"
+																nodeset="./child::node()[last()]"
+																origin="xforms:element('dcterms:description', (xforms:attribute('xml:lang', 'en'), 'Monogram URI had been previously created before spreadsheet import process.'))"
+															/>
 														</xforms:action>
 													</xforms:action>
 												</xforms:action>
 
-												<!-- insert void:inDataset -->
-												<xforms:insert context="instance('rdf')/*[last()]" nodeset="./child::node()[last()]"
-													origin="xforms:element('void:inDataset', xforms:attribute('rdf:resource', $dataset))"/>
+												<!-- insert final provenance activity -->
+												<xforms:insert context="instance('rdf')/dcterms:ProvenanceStatement" nodeset="./child::node()[last()]"
+													origin="xforms:element(if ($isNew = true()) then 'prov:wasGeneratedBy' else 'prov:activity')"/>
+
+												<xforms:insert context="instance('rdf')/dcterms:ProvenanceStatement/prov:*[last()]"
+													nodeset="./child::node()[last()]" origin="instance('activity-template')"/>
+
+												<!-- insert type of activity -->
+												<xforms:insert context="instance('rdf')/dcterms:ProvenanceStatement/prov:*[last()]/prov:Activity"
+													origin="xforms:element('rdf:type', (xforms:attribute('rdf:resource', if ($isNew = true()) then 'http://www.w3.org/ns/prov#Create' else 'http://www.w3.org/ns/prov#Modify')))"/>
+
+												<!-- set timestamp -->
+												<!--<xforms:setvalue
+													ref="instance('rdf')/dcterms:ProvenanceStatement/prov:*[last()]/prov:Activity/prov:atTime/@rdf:datatype"
+													>http://www.w3.org/2001/XMLSchema#dateTime</xforms:setvalue>
+												<xforms:setvalue ref="instance('rdf')/dcterms:ProvenanceStatement/prov:*[last()]/prov:Activity/prov:atTime"
+													value="curent-dateTime()"/>
+
+												<!-\- set type -\->
+												<xforms:setvalue ref="instance('rdf')/dcterms:ProvenanceStatement/prov:*[last()]/prov:Activity/dcterms:type"
+													>spreadsheet</xforms:setvalue>
+												
+												<!-\- insert spreadsheet URI -\->
+												<xforms:insert context="instance('rdf')/dcterms:ProvenanceStatement/prov:*[last()]/prov:Activity"
+													origin="xforms:element('prov:used', (xforms:attribute('rdf:resource', instance('control-instance')/spreadsheet-uri)))"/>-->
 
 												<!-- *** BEGIN CRUD OPERATIONS *** -->
 												<!-- save NUDS/XML to eXist-db collection -->
