@@ -905,19 +905,19 @@
 													origin="xforms:element('rdf:type', (xforms:attribute('rdf:resource', if ($isNew = true()) then 'http://www.w3.org/ns/prov#Create' else 'http://www.w3.org/ns/prov#Modify')))"/>
 
 												<!-- set timestamp -->
-												<!--<xforms:setvalue
+												<xforms:setvalue
 													ref="instance('rdf')/dcterms:ProvenanceStatement/prov:*[last()]/prov:Activity/prov:atTime/@rdf:datatype"
 													>http://www.w3.org/2001/XMLSchema#dateTime</xforms:setvalue>
 												<xforms:setvalue ref="instance('rdf')/dcterms:ProvenanceStatement/prov:*[last()]/prov:Activity/prov:atTime"
 													value="curent-dateTime()"/>
 
-												<!-\- set type -\->
+												<!-- set type -->
 												<xforms:setvalue ref="instance('rdf')/dcterms:ProvenanceStatement/prov:*[last()]/prov:Activity/dcterms:type"
 													>spreadsheet</xforms:setvalue>
 												
-												<!-\- insert spreadsheet URI -\->
+												<!-- insert spreadsheet URI -->
 												<xforms:insert context="instance('rdf')/dcterms:ProvenanceStatement/prov:*[last()]/prov:Activity"
-													origin="xforms:element('prov:used', (xforms:attribute('rdf:resource', instance('control-instance')/spreadsheet-uri)))"/>-->
+													origin="xforms:element('prov:used', (xforms:attribute('rdf:resource', instance('control-instance')/spreadsheet-uri)))"/>
 
 												<!-- *** BEGIN CRUD OPERATIONS *** -->
 												<!-- save NUDS/XML to eXist-db collection -->
