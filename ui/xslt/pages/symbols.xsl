@@ -29,16 +29,20 @@
 
 	<!-- pagination params/variables -->
 	<xsl:param name="limit">48</xsl:param>
-	<xsl:param name="page" select="doc('input:request')/request/parameters/parameter[name = 'page']/value"/>
-
-	<xsl:variable name="offset">
+	
+	<!-- pagination parameter for iterating through pages of physical specimens -->
+	<xsl:param name="page" as="xs:integer">
 		<xsl:choose>
-			<xsl:when test="string-length($page) &gt; 0 and $page castable as xs:integer and number($page) > 0">
-				<xsl:value-of select="($page - 1) * number($limit)"/>
+			<xsl:when
+				test="
+				string-length(doc('input:request')/request/parameters/parameter[name = 'page']/value) &gt; 0 and doc('input:request')/request/parameters/parameter[name = 'page']/value castable
+				as xs:integer and number(doc('input:request')/request/parameters/parameter[name = 'page']/value) > 0">
+				<xsl:value-of select="doc('input:request')/request/parameters/parameter[name = 'page']/value"/>
 			</xsl:when>
-			<xsl:otherwise>0</xsl:otherwise>
+			<xsl:otherwise>1</xsl:otherwise>
 		</xsl:choose>
-	</xsl:variable>
+	</xsl:param>
+
 	<xsl:variable name="numFound" select="doc('input:count')//count" as="xs:integer"/>
 
 	<!-- path variables -->
@@ -114,6 +118,14 @@
 					</xsl:if>
 
 					<xsl:apply-templates select="//rdf:RDF/*" mode="symbol"/>
+					
+					<xsl:if test="$numFound &gt; $limit">
+						<xsl:call-template name="pagination">
+							<xsl:with-param name="page" select="$page" as="xs:integer"/>
+							<xsl:with-param name="numFound" select="$numFound" as="xs:integer"/>
+							<xsl:with-param name="limit" select="$limit" as="xs:integer"/>
+						</xsl:call-template>
+					</xsl:if>
 				</div>
 			</div>
 		</div>
@@ -193,11 +205,11 @@
 						<div class="btn-group pull-right">
 							<!-- first page -->
 							<xsl:if test="$current &gt; 1">
-								<a class="btn btn-default" role="button" title="First" href="?page=1#examples">
+								<a class="btn btn-default" role="button" title="First" href="?page=1">
 									<span class="glyphicon glyphicon-fast-backward"/>
 									<xsl:text> 1</xsl:text>
 								</a>
-								<a class="btn btn-default" role="button" title="Previous" href="?page={$current - 1}#examples">
+								<a class="btn btn-default" role="button" title="Previous" href="?page={$current - 1}">
 									<xsl:text>Previous </xsl:text>
 									<span class="glyphicon glyphicon-backward"/>
 								</a>
@@ -208,19 +220,19 @@
 								</button>
 							</xsl:if>
 							<xsl:if test="$current &gt; 4">
-								<a class="btn btn-default" role="button" href="?page={$current - 3}#examples">
+								<a class="btn btn-default" role="button" href="?page={$current - 3}">
 									<xsl:value-of select="$current - 3"/>
 									<xsl:text> </xsl:text>
 								</a>
 							</xsl:if>
 							<xsl:if test="$current &gt; 3">
-								<a class="btn btn-default" role="button" href="?page={$current - 2}#examples">
+								<a class="btn btn-default" role="button" href="?page={$current - 2}">
 									<xsl:value-of select="$current - 2"/>
 									<xsl:text> </xsl:text>
 								</a>
 							</xsl:if>
 							<xsl:if test="$current &gt; 2">
-								<a class="btn btn-default" role="button" href="?page={$current - 1}#examples">
+								<a class="btn btn-default" role="button" href="?page={$current - 1}">
 									<xsl:value-of select="$current - 1"/>
 									<xsl:text> </xsl:text>
 								</a>
@@ -232,17 +244,17 @@
 								</b>
 							</button>
 							<xsl:if test="$total &gt; ($current + 1)">
-								<a class="btn btn-default" role="button" title="Next" href="?page={$current + 1}#examples">
+								<a class="btn btn-default" role="button" title="Next" href="?page={$current + 1}">
 									<xsl:value-of select="$current + 1"/>
 								</a>
 							</xsl:if>
 							<xsl:if test="$total &gt; ($current + 2)">
-								<a class="btn btn-default" role="button" title="Next" href="?page={$current + 2}#examples">
+								<a class="btn btn-default" role="button" title="Next" href="?page={$current + 2}">
 									<xsl:value-of select="$current + 2"/>
 								</a>
 							</xsl:if>
 							<xsl:if test="$total &gt; ($current + 3)">
-								<a class="btn btn-default" role="button" title="Next" href="?page={$current + 3}#examples">
+								<a class="btn btn-default" role="button" title="Next" href="?page={$current + 3}">
 									<xsl:value-of select="$current + 3"/>
 								</a>
 							</xsl:if>
@@ -253,11 +265,11 @@
 							</xsl:if>
 							<!-- last page -->
 							<xsl:if test="$current &lt; $total">
-								<a class="btn btn-default" role="button" title="Next" href="?page={$current + 1}#examples">
+								<a class="btn btn-default" role="button" title="Next" href="?page={$current + 1}">
 									<xsl:text>Next </xsl:text>
 									<span class="glyphicon glyphicon-forward"/>
 								</a>
-								<a class="btn btn-default" role="button" title="Last" href="?page={$total}#examples">
+								<a class="btn btn-default" role="button" title="Last" href="?page={$total}">
 									<xsl:value-of select="$total"/>
 									<xsl:text> </xsl:text>
 									<span class="glyphicon glyphicon-fast-forward"/>

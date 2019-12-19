@@ -173,7 +173,8 @@
 				</xsl:if>
 				<div class="col-md-{if (descendant::crm:P165i_is_incorporated_in) then '9' else '12'}">
 					<!-- render RDF -->
-					<xsl:apply-templates select="/content/rdf:RDF/*[1]" mode="type"/>
+					<xsl:apply-templates select="/content/rdf:RDF/*[1]" mode="symbol"/>
+
 
 					<!-- display map -->
 					<xsl:if test="$hasMints = true() or $hasFindspots = true()">
@@ -249,7 +250,7 @@
 	</xsl:template>
 
 	<!-- templates for RDF/XML -> HTML taken from Nomisma -->
-	<xsl:template match="*[1]" mode="type">
+	<xsl:template match="*" mode="symbol">
 		<div typeof="{name()}" about="{@rdf:about}">
 			<xsl:if test="contains(@rdf:about, '#')">
 				<xsl:attribute name="id" select="substring-after(@rdf:about, '#')"/>
@@ -273,9 +274,9 @@
 				<dd>
 					<a href="{@rdf:about}" title="Stable URI">
 						<xsl:value-of select="@rdf:about"/>
-					</a>					
+					</a>
 				</dd>
-				
+
 				<xsl:if test="count(skos:prefLabel) &gt; 1">
 					<dt>
 						<a href="{concat($namespaces//namespace[@prefix='skos']/@uri, 'prefLabel')}">
@@ -283,7 +284,7 @@
 						</a>
 					</dt>
 					<dd>
-						<xsl:apply-templates select="skos:prefLabel[not(@xml:lang='en')]" mode="prefLabel">
+						<xsl:apply-templates select="skos:prefLabel[not(@xml:lang = 'en')]" mode="prefLabel">
 							<xsl:sort select="@xml:lang"/>
 						</xsl:apply-templates>
 					</dd>
@@ -298,7 +299,7 @@
 
 				<xsl:if test="crm:P106_is_composed_of">
 					<xsl:variable name="name">crm:P106_is_composed_of</xsl:variable>
-					
+
 					<dt>
 						<a href="{concat($namespaces//namespace[@prefix=substring-before($name, ':')]/@uri, substring-after($name, ':'))}">
 							<xsl:value-of select="numishare:getLabelforRDF('crm:P106_is_composed_of', $lang)"/>
@@ -325,7 +326,31 @@
 					<xsl:sort select="@rdf:resource"/>
 				</xsl:apply-templates>
 			</dl>
+
+			<xsl:if test="descendant::crmdig:D1_Digital_Object">
+				<h3>Digital Image Metadata</h3>
+				<xsl:apply-templates select="descendant::crmdig:D1_Digital_Object"/>
+			</xsl:if>
+
 		</div>
+	</xsl:template>
+
+	<xsl:template match="crmdig:D1_Digital_Object">
+		<h4>
+			<xsl:value-of select="concat('Image ', position())"/>
+		</h4>
+		<dl class="dl-horizontal">
+			<dt>URI</dt>
+			<dd>
+				<a href="{@rdf:about}" title="Stable URI">
+					<xsl:value-of select="@rdf:about"/>
+				</a>
+			</dd>
+
+			<xsl:apply-templates select="dcterms:format | dcterms:creator" mode="list-item">
+				<xsl:sort select="name()"/>
+			</xsl:apply-templates>
+		</dl>
 	</xsl:template>
 
 	<xsl:template match="skos:prefLabel" mode="prefLabel">

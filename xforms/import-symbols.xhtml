@@ -470,7 +470,7 @@ PREFIX skos:	<http://www.w3.org/2004/02/skos/core#>]]></prefix>
 	</head>
 
 	<body>
-		<xforms:var name="display_path">../../</xforms:var>
+		<xforms:var name="display_path">../../symbols/</xforms:var>
 		<div class="container-fluid">
 			<div class="row">
 				<div class="col-md-3 pull-right text-right">
@@ -481,7 +481,7 @@ PREFIX skos:	<http://www.w3.org/2004/02/skos/core#>]]></prefix>
 			</div>
 			<div class="row">
 				<div class="col-md-12">
-					<p><a href="{$display_path}"><span class="glyphicon glyphicon-arrow-left"></span>Return to Admin</a></p>
+					<p><a href="{$display_path}"><span class="glyphicon glyphicon-arrow-left"></span>Return to Symbol Panel</a></p>
 					<xforms:group ref=".[string-length(instance('control-instance')/status) &gt; 0]">
 						<div class="alert-success alert-box alert">
 							<span class="glyphicon glyphicon-info-sign"></span>
@@ -914,7 +914,7 @@ PREFIX skos:	<http://www.w3.org/2004/02/skos/core#>]]></prefix>
 											<xforms:var name="dateTime" select="current-dateTime()"/>
 
 											<!-- begin processing the spreadsheet into RDF -->
-											<xforms:action xxforms:iterate="instance('feed')//atom:entry[1]">
+											<xforms:action xxforms:iterate="instance('feed')//atom:entry">
 												<xforms:var name="id"
 													select="normalize-space(data(context()/*[namespace-uri()='http://schemas.google.com/spreadsheets/2006/extended'][name()=instance('mappings')/mapping[@to='id']/@from]))"/>
 												<xforms:setvalue ref="instance('control-instance')/id" value="$id"/>
@@ -1135,7 +1135,7 @@ PREFIX skos:	<http://www.w3.org/2004/02/skos/core#>]]></prefix>
 							<p>The process has been completed successfully. Click the link above to return to the Admin panel.</p>
 						</xforms:case>
 					</xforms:switch>
-					<fr:xforms-inspector/>
+					<!--<fr:xforms-inspector/>-->
 				</div>
 			</div>
 		</div>

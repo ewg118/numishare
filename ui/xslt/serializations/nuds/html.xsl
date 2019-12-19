@@ -38,7 +38,7 @@
 	<xsl:param name="mode" select="doc('input:request')/request/parameters/parameter[name = 'mode']/value"/>
 	<xsl:param name="pipeline">display</xsl:param>
 
-	<!-- pagination parameter for iterating through pages of physical speciments -->
+	<!-- pagination parameter for iterating through pages of physical specimens -->
 	<xsl:param name="page" as="xs:integer">
 		<xsl:choose>
 			<xsl:when

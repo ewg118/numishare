@@ -4529,7 +4529,7 @@
 				<xsl:choose>
 					<xsl:when test="$element = 'crm:P106_is_composed_of'">Constituent Letters</xsl:when>
 					<xsl:when test="$element = 'crmdig:D1_Digital_Object'">Digital Object</xsl:when>
-					<xsl:when test="$element = 'dcterms:creator'">Field of Numismatics</xsl:when>
+					<xsl:when test="$element = 'dcterms:creator'">Creator</xsl:when>
 					<xsl:when test="$element = 'dcterms:format'">Media Type</xsl:when>
 					<xsl:when test="$element = 'dcterms:isPartOf'">Field of Numismatics</xsl:when>
 					<xsl:when test="$element = 'dcterms:source'">Source</xsl:when>
