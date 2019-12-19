@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:void="http://rdfs.org/ns/void#"
-	xmlns:numishare="https://github.com/ewg118/numishare" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nm="http://nomisma.org/id/" xmlns:nmo="http://nomisma.org/ontology#"
-	xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:res="http://www.w3.org/2005/sparql-results#" exclude-result-prefixes="#all" version="2.0">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:dcterms="http://purl.org/dc/terms/"
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:void="http://rdfs.org/ns/void#" xmlns:numishare="https://github.com/ewg118/numishare"
+	xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nm="http://nomisma.org/id/" xmlns:nmo="http://nomisma.org/ontology#"
+	xmlns:res="http://www.w3.org/2005/sparql-results#" xmlns:prov="http://www.w3.org/ns/prov#" xmlns:crm="http://www.cidoc-crm.org/cidoc-crm/"
+	xmlns:crmdig="http://www.ics.forth.gr/isl/CRMdig" exclude-result-prefixes="#all" version="2.0">
+
 	<xsl:include href="../../templates.xsl"/>
 	<xsl:include href="../../functions.xsl"/>
 	<xsl:include href="../sparql/type-examples.xsl"/>
@@ -9,33 +12,44 @@
 
 	<!-- URL params -->
 	<xsl:variable name="collection-name" select="substring-before(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/')"/>
-	<xsl:variable name="request-uri" select="concat('http://localhost:', if (//config/server-port castable as xs:integer) then //config/server-port else '8080', substring-before(doc('input:request')/request/request-uri, 'id/'))"/>
-	<xsl:param name="langParam" select="doc('input:request')/request/parameters/parameter[name='lang']/value"/>
+	<xsl:variable name="request-uri"
+		select="
+			concat('http://localhost:', if (//config/server-port castable as xs:integer) then
+				//config/server-port
+			else
+				'8080', substring-before(doc('input:request')/request/request-uri, 'id/'))"/>
+	<xsl:param name="langParam" select="doc('input:request')/request/parameters/parameter[name = 'lang']/value"/>
 	<xsl:param name="lang">
 		<xsl:choose>
 			<xsl:when test="string($langParam)">
 				<xsl:value-of select="$langParam"/>
 			</xsl:when>
-			<xsl:when test="string(doc('input:request')/request//header[name[.='accept-language']]/value)">
-				<xsl:value-of select="numishare:parseAcceptLanguage(doc('input:request')/request//header[name[.='accept-language']]/value)[1]"/>
+			<xsl:when test="string(doc('input:request')/request//header[name[. = 'accept-language']]/value)">
+				<xsl:value-of select="numishare:parseAcceptLanguage(doc('input:request')/request//header[name[. = 'accept-language']]/value)[1]"/>
 			</xsl:when>
 		</xsl:choose>
 	</xsl:param>
 
 	<!-- paths -->
 	<xsl:variable name="display_path">../</xsl:variable>
-	<xsl:variable name="include_path" select="if (string(//config/theme/themes_url)) then concat(//config/theme/themes_url, //config/theme/orbeon_theme) else concat('http://', doc('input:request')/request/server-name, ':8080/orbeon/themes/', //config/theme/orbeon_theme)"/>
+	<xsl:variable name="include_path"
+		select="
+			if (string(//config/theme/themes_url)) then
+				concat(//config/theme/themes_url, //config/theme/orbeon_theme)
+			else
+				concat('http://', doc('input:request')/request/server-name, ':8080/orbeon/themes/', //config/theme/orbeon_theme)"/>
 
 	<!-- variables -->
-	<xsl:variable name="id" select="tokenize(//@rdf:about, '/')[last()]"/>
-	<xsl:variable name="objectUri" select="//@rdf:about"/>
+	<xsl:variable name="objectUri" select="//rdf:RDF/*[1]/@rdf:about"/>
+	<xsl:variable name="id" select="tokenize($objectUri, '/')[last()]"/>
+
 	<xsl:variable name="hasFindspots" select="doc('input:hasFindspots')//res:boolean" as="xs:boolean"/>
 	<xsl:variable name="hasMints" select="doc('input:hasMints')//res:boolean" as="xs:boolean"/>
 
 	<!-- namespaces -->
 	<xsl:variable name="namespaces" as="item()*">
 		<namespaces>
-			<xsl:for-each select="//rdf:RDF/namespace::*[not(name()='xml')]">
+			<xsl:for-each select="//rdf:RDF/namespace::*[not(name() = 'xml')]">
 				<namespace prefix="{name()}" uri="{.}"/>
 			</xsl:for-each>
 		</namespaces>
@@ -43,7 +57,7 @@
 	<xsl:variable name="prefix">
 		<xsl:for-each select="$namespaces/namespace">
 			<xsl:value-of select="concat(@prefix, ': ', @uri)"/>
-			<xsl:if test="not(position()=last())">
+			<xsl:if test="not(position() = last())">
 				<xsl:text> </xsl:text>
 			</xsl:if>
 		</xsl:for-each>
@@ -74,7 +88,7 @@
 		<title id="{$id}">
 			<xsl:value-of select="//config/title"/>
 			<xsl:text>: </xsl:text>
-			<xsl:value-of select="descendant::skos:prefLabel[@xml:lang='en']"/>
+			<xsl:value-of select="descendant::skos:prefLabel[@xml:lang = 'en']"/>
 		</title>
 		<!-- alternates -->
 		<link rel="alternate" type="application/rdf+xml" href="{$objectUri}.rdf"/>
@@ -87,11 +101,11 @@
 		<meta property="og:title">
 			<xsl:attribute name="content">
 				<xsl:choose>
-					<xsl:when test="descendant::*:descMeta/*:title[@xml:lang=$lang]">
-						<xsl:value-of select="descendant::*:descMeta/*:title[@xml:lang=$lang]"/>
+					<xsl:when test="descendant::*:descMeta/*:title[@xml:lang = $lang]">
+						<xsl:value-of select="descendant::*:descMeta/*:title[@xml:lang = $lang]"/>
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:value-of select="descendant::*:descMeta/*:title[@xml:lang='en']"/>
+						<xsl:value-of select="descendant::*:descMeta/*:title[@xml:lang = 'en']"/>
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:attribute>
@@ -101,7 +115,7 @@
 		<link rel="shortcut icon" type="image/x-icon" href="{$include_path}/images/favicon.png"/>
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"/>
 		<meta name="viewport" content="width=device-width, initial-scale=1"/>
-		
+
 		<xsl:for-each select="//config/includes/include">
 			<xsl:choose>
 				<xsl:when test="@type = 'css'">
@@ -112,14 +126,14 @@
 				</xsl:when>
 			</xsl:choose>
 		</xsl:for-each>
-		
+
 		<!-- bootstrap -->
 		<link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
 		<script type="text/javascript" src="https://netdna.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"/>
 		<link rel="stylesheet" href="{$include_path}/css/jquery.fancybox.css?v=2.1.5" type="text/css" media="screen"/>
 		<script type="text/javascript" src="{$include_path}/javascript/jquery.fancybox.pack.js?v=2.1.5"/>
 		<script type="text/javascript" src="{$include_path}/javascript/result_functions.js"/>
-		
+
 		<!-- map functions -->
 		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.0/dist/leaflet.css"/>
 		<script src="https://unpkg.com/leaflet@1.0.0/dist/leaflet.js"/>
@@ -127,7 +141,7 @@
 		<script type="text/javascript" src="{$include_path}/javascript/heatmap.min.js"/>
 		<script type="text/javascript" src="{$include_path}/javascript/leaflet-heatmap.js"/>
 		<script type="text/javascript" src="{$include_path}/javascript/symbol_map_functions.js"/>
-		
+
 		<!-- google analytics -->
 		<xsl:if test="string(//config/google_analytics)">
 			<script type="text/javascript">
@@ -139,21 +153,28 @@
 	<xsl:template name="body">
 		<div class="container-fluid content">
 			<div class="row">
-				<xsl:if test="descendant::foaf:depiction[@rdf:resource]">
-					<div class="col-md-2">
-						<xsl:for-each select="descendant::foaf:depiction">
-							<img src="{@rdf:resource}" alt="symbol" style="max-width:100%"/>
-							<xsl:if test="not(position()=last())">
+				<xsl:if test="descendant::crm:P165i_is_incorporated_in">
+					<div class="col-md-3">
+						<xsl:for-each select="descendant::crm:P165i_is_incorporated_in">
+							<xsl:variable name="uri"
+								select="
+									if (@rdf:resource) then
+										@rdf:resource
+									else
+										crmdig:D1_Digital_Object/@rdf:about"/>
+
+							<img src="{$uri}" alt="symbol" style="max-width:100%"/>
+							<xsl:if test="not(position() = last())">
 								<br/>
 							</xsl:if>
 						</xsl:for-each>
-						
+
 					</div>
 				</xsl:if>
-				<div class="col-md-{if (descendant::foaf:depiction[@rdf:resource]) then '8' else '10'}">					
+				<div class="col-md-{if (descendant::crm:P165i_is_incorporated_in) then '9' else '12'}">
 					<!-- render RDF -->
-					<xsl:apply-templates select="/content/rdf:RDF/*" mode="type"/>
-					
+					<xsl:apply-templates select="/content/rdf:RDF/*[1]" mode="type"/>
+
 					<!-- display map -->
 					<xsl:if test="$hasMints = true() or $hasFindspots = true()">
 						<h3>Map</h3>
@@ -175,16 +196,22 @@
 							</table>
 						</div>
 					</xsl:if>
-					
+
 					<!-- display associated coin types, if applicable -->
 					<xsl:if test="count(doc('input:types')//res:result) &gt; 0">
 						<xsl:apply-templates select="doc('input:types')/res:sparql" mode="listTypes">
 							<xsl:with-param name="objectUri" select="$objectUri"/>
-							<xsl:with-param name="endpoint" select="if (contains(//config/sparql_endpoint, 'localhost')) then 'http://nomisma.org/query' else //config/sparql_endpoint"/>
+							<xsl:with-param name="endpoint"
+								select="
+									if (contains(//config/sparql_endpoint, 'localhost')) then
+										'http://nomisma.org/query'
+									else
+										//config/sparql_endpoint"
+							/>
 						</xsl:apply-templates>
 					</xsl:if>
 				</div>
-				<div class="col-md-2">
+				<div class="col-md-12">
 					<h3>Export</h3>
 					<ul class="list-inline">
 						<li>
@@ -203,7 +230,7 @@
 				</div>
 			</div>
 		</div>
-		
+
 		<!-- hidden variables -->
 		<div class="hidden">
 			<span id="baselayers">
@@ -222,25 +249,14 @@
 	</xsl:template>
 
 	<!-- templates for RDF/XML -> HTML taken from Nomisma -->
-	<xsl:template match="*" mode="type">
+	<xsl:template match="*[1]" mode="type">
 		<div typeof="{name()}" about="{@rdf:about}">
 			<xsl:if test="contains(@rdf:about, '#')">
 				<xsl:attribute name="id" select="substring-after(@rdf:about, '#')"/>
 			</xsl:if>
-			<xsl:element name="{if(position()=1) then 'h2' else 'h3'}">
-				<a href="{@rdf:about}">
-					<xsl:choose>
-						<xsl:when test="contains(@rdf:about, '#')">
-							<xsl:value-of select="concat('#', substring-after(@rdf:about, '#'))"/>
-						</xsl:when>
-						<xsl:when test="contains(@rdf:about, 'geonames.org')">
-							<xsl:value-of select="@rdf:about"/>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:value-of select="$id"/>
-						</xsl:otherwise>
-					</xsl:choose>
-				</a>
+
+			<h2>
+				<xsl:value-of select="skos:prefLabel[@xml:lang = 'en']"/>
 				<small>
 					<xsl:text> (</xsl:text>
 					<a href="{concat(namespace-uri(.), local-name())}">
@@ -248,30 +264,67 @@
 					</a>
 					<xsl:text>)</xsl:text>
 				</small>
-			</xsl:element>
+			</h2>
+
+
 			<dl class="dl-horizontal">
-				<xsl:if test="skos:prefLabel">
+				<!-- display stable URI first -->
+				<dt>URI</dt>
+				<dd>
+					<a href="{@rdf:about}" title="Stable URI">
+						<xsl:value-of select="@rdf:about"/>
+					</a>					
+				</dd>
+				
+				<xsl:if test="count(skos:prefLabel) &gt; 1">
 					<dt>
-						<a href="{concat($namespaces//namespace[@prefix='skos']/@uri, 'prefLabel')}">skos:prefLabel</a>
+						<a href="{concat($namespaces//namespace[@prefix='skos']/@uri, 'prefLabel')}">
+							<xsl:value-of select="numishare:getLabelforRDF('skos:prefLabel', $lang)"/>
+						</a>
 					</dt>
 					<dd>
-						<xsl:apply-templates select="skos:prefLabel" mode="prefLabel">
+						<xsl:apply-templates select="skos:prefLabel[not(@xml:lang='en')]" mode="prefLabel">
 							<xsl:sort select="@xml:lang"/>
 						</xsl:apply-templates>
 					</dd>
 				</xsl:if>
+
+
 				<xsl:apply-templates select="skos:definition" mode="list-item">
 					<xsl:sort select="@xml:lang"/>
 				</xsl:apply-templates>
-				<xsl:apply-templates select="*[not(name()='skos:prefLabel') and not(name()='skos:definition')][not(child::*)]" mode="list-item">
+
+				<!-- constituent letters -->
+
+				<xsl:if test="crm:P106_is_composed_of">
+					<xsl:variable name="name">crm:P106_is_composed_of</xsl:variable>
+					
+					<dt>
+						<a href="{concat($namespaces//namespace[@prefix=substring-before($name, ':')]/@uri, substring-after($name, ':'))}">
+							<xsl:value-of select="numishare:getLabelforRDF('crm:P106_is_composed_of', $lang)"/>
+						</a>
+					</dt>
+					<dd>
+						<xsl:for-each select="crm:P106_is_composed_of">
+							<xsl:if test="position() = last()">
+								<xsl:text> and</xsl:text>
+							</xsl:if>
+							<xsl:text> </xsl:text>
+							<xsl:value-of select="."/>
+							<xsl:if test="not(position() = last()) and (count(../crm:P106_is_composed_of) &gt; 2)">
+								<xsl:text>,</xsl:text>
+							</xsl:if>
+						</xsl:for-each>
+					</dd>
+				</xsl:if>
+
+
+
+				<xsl:apply-templates select="dcterms:source | dcterms:isPartOf" mode="list-item">
 					<xsl:sort select="name()"/>
 					<xsl:sort select="@rdf:resource"/>
 				</xsl:apply-templates>
 			</dl>
-			<xsl:apply-templates select="*[(child::*)]" mode="suburi">
-				<xsl:sort select="name()"/>
-				<xsl:sort select="@rdf:resource"/>
-			</xsl:apply-templates>
 		</div>
 	</xsl:template>
 
@@ -284,7 +337,7 @@
 				<xsl:value-of select="concat(' (', @xml:lang, ')')"/>
 			</span>
 		</xsl:if>
-		<xsl:if test="not(position()=last())">
+		<xsl:if test="not(position() = last())">
 			<xsl:text>, </xsl:text>
 		</xsl:if>
 	</xsl:template>
@@ -293,7 +346,7 @@
 		<xsl:variable name="name" select="name()"/>
 		<dt>
 			<a href="{concat($namespaces//namespace[@prefix=substring-before($name, ':')]/@uri, substring-after($name, ':'))}">
-				<xsl:value-of select="name()"/>
+				<xsl:value-of select="numishare:getLabelforRDF(name(), $lang)"/>
 			</a>
 		</dt>
 		<dd>
@@ -307,20 +360,7 @@
 							<xsl:attribute name="datatype" select="@rdf:datatype"/>
 						</xsl:if>
 
-						<xsl:choose>
-							<xsl:when test="contains(@rdf:datatype, '#gYear')">
-								<xsl:value-of select="numishare:normalizeDate(.)"/>
-							</xsl:when>
-							<xsl:when test="contains(@rdf:datatype, '#gYearMonth')">
-								<xsl:value-of select="numishare:normalizeDate(.)"/>
-							</xsl:when>
-							<xsl:when test="contains(@rdf:datatype, '#date')">
-								<xsl:value-of select="numishare:normalizeDate(.)"/>
-							</xsl:when>
-							<xsl:otherwise>
-								<xsl:value-of select="."/>
-							</xsl:otherwise>
-						</xsl:choose>
+						<xsl:value-of select="."/>
 					</span>
 					<xsl:if test="string(@xml:lang)">
 						<span class="lang">
@@ -332,9 +372,11 @@
 					<span>
 						<a href="{@rdf:resource}" rel="{name()}" title="{@rdf:resource}">
 							<xsl:choose>
-								<xsl:when test="name()='rdf:type'">
+								<xsl:when test="name() = 'rdf:type'">
 									<xsl:variable name="uri" select="@rdf:resource"/>
-									<xsl:value-of select="replace($uri, $namespaces//namespace[contains($uri, @uri)]/@uri, concat($namespaces//namespace[contains($uri, @uri)]/@prefix, ':'))"/>
+									<xsl:value-of
+										select="replace($uri, $namespaces//namespace[contains($uri, @uri)]/@uri, concat($namespaces//namespace[contains($uri, @uri)]/@prefix, ':'))"
+									/>
 								</xsl:when>
 								<xsl:otherwise>
 									<xsl:value-of select="@rdf:resource"/>
@@ -345,39 +387,5 @@
 				</xsl:when>
 			</xsl:choose>
 		</dd>
-	</xsl:template>
-
-	<xsl:template match="*" mode="suburi">
-		<xsl:variable name="about" select="if(@rdf:about) then @rdf:about else rdf:Description/@rdf:about"/>
-
-		<div rel="{name()}">
-			<xsl:if test="string($about)">
-				<xsl:attribute name="resource" select="$about"/>
-			</xsl:if>
-			<h3>
-				<xsl:value-of select="name()"/>
-				<xsl:if test="string($about)">
-					<small>
-						<xsl:text> (</xsl:text>
-						<a href="{$about}">
-							<xsl:value-of select="$about"/>
-						</a>
-						<xsl:text>)</xsl:text>
-					</small>
-				</xsl:if>
-			</h3>
-			<dl class="dl-horizontal">
-				<xsl:apply-templates select="descendant::skos:prefLabel" mode="list-item">
-					<xsl:sort select="@xml:lang"/>
-				</xsl:apply-templates>
-				<xsl:apply-templates select="descendant::skos:definition" mode="list-item">
-					<xsl:sort select="@xml:lang"/>
-				</xsl:apply-templates>
-				<xsl:apply-templates select="descendant::*[not(name()='skos:prefLabel') and not(name()='skos:definition')][not(child::*)]" mode="list-item">
-					<xsl:sort select="name()"/>
-					<xsl:sort select="@rdf:resource"/>
-				</xsl:apply-templates>
-			</dl>
-		</div>
 	</xsl:template>
 </xsl:stylesheet>

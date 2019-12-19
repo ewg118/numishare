@@ -74,7 +74,7 @@
 						declare namespace crm="http://www.cidoc-crm.org/cidoc-crm/";
 						declare namespace crmdig="http://www.ics.forth.gr/isl/CRMdig";
 						<report> { 
-							for $record in subsequence(collection(), START, 20)
+							for $record in subsequence(collection(), START, 100)
 								let $type := $record/rdf:RDF/*[1]/local-name()
 								return 
 									<record>
@@ -133,7 +133,7 @@
 					<xforms:setvalue ref="instance('control-instance')/numFound" value="number(instance('xquery-result'))"></xforms:setvalue>
 					<!-- set value in control instance -->
 
-					<xforms:var name="end" select="if(instance('control-instance')/numFound &gt; 20) then 20 else instance('control-instance')/numFound"></xforms:var>
+					<xforms:var name="end" select="if(instance('control-instance')/numFound &gt; 100) then 100 else instance('control-instance')/numFound"></xforms:var>
 					<!-- get list of files for page 1, replacing START and END -->
 					<xforms:setvalue ref="instance('eXist-xquery')/exist:text" value="replace(instance('xqueries')/query[@id='get-objects'], 'START', '1')"></xforms:setvalue>
 					<xforms:send submission="xquery-pagination"></xforms:send>
@@ -189,18 +189,18 @@
 				<div class="col-md-12">
 					<div id="form">								
 						<xforms:group ref=".[instance('control-instance')/status/text()]">
-							<div class="bg-info alert-box">
+							<div class="alert alert-box alert-success">
 								<p><span class="glyphicon glyphicon-info-sign"></span>
 									<strong>Status:</strong>
-									<xforms:output ref="instance('control-instance')/status"></xforms:output>
+									<xforms:output ref="instance('control-instance')/status"/>
 								</p>
 							</div>
 						</xforms:group>
 						<h2>Symbol Management</h2>
 						<ul>
-							<li>
+							<!--<li>
 								<a href="../edit/symbol/">Create New Symbol</a>
-							</li>
+							</li>-->
 						</ul>
 						<xforms:group ref="instance('pagination-result')">
 							<xforms:group ref=".[count(//record) &gt; 0]">
@@ -209,11 +209,11 @@
 								<xforms:var name="numFound" select="number(instance('control-instance')/numFound)"></xforms:var>
 								<xforms:var name="page" select="number(instance('control-instance')/page)"></xforms:var>
 								<xforms:var name="current" select="$page"></xforms:var>
-								<xforms:var name="rows" select="number(20)"></xforms:var>
-								<xforms:var name="start" select="(($page - 1) * 20) + 1"></xforms:var>
-								<xforms:var name="end" select="if ($numFound &lt; $page * 20) then $numFound else $page * 20"></xforms:var>
-								<xforms:var name="next" select="($page * 20) + 1"></xforms:var>
-								<xforms:var name="total" select="ceiling($numFound div 20)"></xforms:var>
+								<xforms:var name="rows" select="number(100)"></xforms:var>
+								<xforms:var name="start" select="(($page - 1) * 100) + 1"></xforms:var>
+								<xforms:var name="end" select="if ($numFound &lt; $page * 100) then $numFound else $page * 100"></xforms:var>
+								<xforms:var name="next" select="($page * 100) + 1"></xforms:var>
+								<xforms:var name="total" select="ceiling($numFound div 100)"></xforms:var>
 								<!-- pagination -->
 								<xforms:group ref=".[string-length(instance('control-instance')/query_sent) = 0]">
 									<!-- pagination -->
@@ -241,7 +241,7 @@
 													<xforms:action ev:event="DOMActivate">
 														<xforms:setvalue ref="instance('control-instance')/page" value="$page - 1"></xforms:setvalue>
 														<xforms:setvalue ref="instance('eXist-xquery')/exist:text"
-															value="replace(instance('xqueries')/query[@id='get-objects'], 'START', string($start - 20))"></xforms:setvalue>
+															value="replace(instance('xqueries')/query[@id='get-objects'], 'START', string($start - 100))"></xforms:setvalue>
 														<xforms:send submission="xquery-pagination"></xforms:send>
 													</xforms:action>
 												</xforms:trigger>
@@ -278,7 +278,7 @@
 													<xforms:action ev:event="DOMActivate">
 														<xforms:setvalue ref="instance('control-instance')/page" value="$total"></xforms:setvalue>
 														<xforms:setvalue ref="instance('eXist-xquery')/exist:text"
-															value="replace(instance('xqueries')/query[@id='get-objects'], 'START', string((($total - 1) * 20) + 1))"></xforms:setvalue>
+															value="replace(instance('xqueries')/query[@id='get-objects'], 'START', string((($total - 1) * 100) + 1))"></xforms:setvalue>
 														<xforms:send submission="xquery-pagination"></xforms:send>
 													</xforms:action>
 												</xforms:trigger>
@@ -308,7 +308,12 @@
 											<xforms:var name="id" select="id"></xforms:var>
 											<tr>
 												<td class="text-center">
-													<xforms:output ref="type"></xforms:output>
+													<xforms:repeat nodeset="image">
+														<div>
+															<img src="{.}" style="width:240px" />
+														</div>														
+													</xforms:repeat>
+													
 												</td>
 												<td>
 													<h4>
@@ -320,6 +325,9 @@
 													<div>
 														<xforms:output ref="definition">
 															<xforms:label>Definition</xforms:label>
+														</xforms:output>
+														<xforms:output ref="type">
+															<xforms:label>Type</xforms:label>
 														</xforms:output>
 													</div>
 												</td>
@@ -372,8 +380,8 @@
 
 					<!-- reload table -->
 					<xforms:var name="page" select="number(instance('control-instance')/page)"></xforms:var>
-					<xforms:var name="start" select="(($page - 1) * 20) + 1"></xforms:var>
-					<xforms:var name="end" select="$page * 20"></xforms:var>
+					<xforms:var name="start" select="(($page - 1) * 100) + 1"></xforms:var>
+					<xforms:var name="end" select="$page * 100"></xforms:var>
 					<xforms:setvalue ref="instance('eXist-xquery')/exist:text" value="replace(instance('xqueries')/query[@id='get-objects'], 'START', string($start))"></xforms:setvalue>
 					<xforms:send submission="xquery-pagination"></xforms:send>
 				</xforms:action>

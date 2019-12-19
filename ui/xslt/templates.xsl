@@ -254,7 +254,7 @@
 	</xsl:template>
 
 	<xsl:template name="languages">
-		<xsl:variable name="page" select="substring-after(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/')"/>
+		<xsl:variable name="collection-name" select="substring-after(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/')"/>
 		<xsl:variable name="query" select="doc('input:request')/request/parameters/parameter[name = 'q']/value"/>
 
 		<xsl:if test="count(//config/descendant::language[@enabled = 'true']) &gt; 1">
@@ -268,13 +268,13 @@
 						<xsl:sort select="@code"/>
 						<li>
 							<xsl:choose>
-								<xsl:when test="string-length($page) = 0">
+								<xsl:when test="string-length($collection-name) = 0">
 									<a href="{//config/url}?lang={@code}">
 										<xsl:value-of select="numishare:normalizeLabel(concat('lang_', @code), $lang)"/>
 									</a>
 								</xsl:when>
 								<xsl:otherwise>
-									<a href="{$display_path}{$page}?lang={@code}{if (string-length($query) &gt; 0) then concat('&amp;q=', $query) else ''}">
+									<a href="{$display_path}{$collection-name}?lang={@code}{if (string-length($query) &gt; 0) then concat('&amp;q=', $query) else ''}">
 										<xsl:value-of select="numishare:normalizeLabel(concat('lang_', @code), $lang)"/>
 									</a>
 								</xsl:otherwise>

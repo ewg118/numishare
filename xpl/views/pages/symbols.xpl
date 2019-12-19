@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-	Copyright (C) 2010 Ethan Gruber
-	EADitor: http://code.google.com/p/eaditor/
-	Apache License 2.0: http://code.google.com/p/eaditor/
-	
+	Author: Ethan Gruber
+	Date: December 2019
+	Function: Serialize the XQuery results for symbols and combine with the total number of symbol documents in order
+		to serialize an HTML page for the symbols 
 -->
 <p:config xmlns:p="http://www.orbeon.com/oxf/pipeline"
 	xmlns:oxf="http://www.orbeon.com/oxf/processors">
@@ -25,8 +25,15 @@
 		<p:output name="data" id="config"/>
 	</p:processor>
 	
+	<!-- execute the XQuery for the simple count for the symbols collection -->
+	<p:processor name="oxf:pipeline">
+		<p:input name="config" href="../../models/xquery/symbol-count.xpl"/>
+		<p:output name="data" id="count"/>
+	</p:processor>
+	
 	<p:processor name="oxf:unsafe-xslt">
 		<p:input name="request" href="#request"/>
+		<p:input name="count" href="#count"/>
 		<p:input name="data" href="aggregate('content', #config, #data)"/>		
 		<p:input name="config" href="../../../ui/xslt/pages/symbols.xsl"/>
 		<p:output name="data" ref="data"/>

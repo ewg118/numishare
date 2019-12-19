@@ -4519,6 +4519,27 @@
 		</xsl:choose>
 	</xsl:template>
 	
+	<!-- create human-readable label for RDF properties or classes -->
+	<xsl:function name="numishare:getLabelforRDF">
+		<xsl:param name="element"/>
+		<xsl:param name="lang"/>
+		
+		<xsl:choose>
+			<xsl:when test="$lang = 'en'">
+				<xsl:choose>
+					<xsl:when test="$element = 'crm:P106_is_composed_of'">Constituent Letters</xsl:when>
+					<xsl:when test="$element = 'crmdig:D1_Digital_Object'">Digital Object</xsl:when>
+					<xsl:when test="$element = 'dcterms:creator'">Field of Numismatics</xsl:when>
+					<xsl:when test="$element = 'dcterms:format'">Media Type</xsl:when>
+					<xsl:when test="$element = 'dcterms:isPartOf'">Field of Numismatics</xsl:when>
+					<xsl:when test="$element = 'dcterms:source'">Source</xsl:when>
+					<xsl:when test="$element = 'skos:definition'">Definition</xsl:when>
+					<xsl:when test="$element = 'skos:prefLabel'">Preferred Label</xsl:when>
+				</xsl:choose>
+			</xsl:when>
+		</xsl:choose>
+	</xsl:function>
+	
 	<xsl:template name="numishare:getNudsDocument">
 		<xsl:param name="uri"/>
 		
