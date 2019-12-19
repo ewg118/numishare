@@ -33,11 +33,11 @@
 					<status></status>
 					<collection-name></collection-name>
 					<username></username>
-					<spreadsheet-key>1FFpnWj1lrcP3RAy9qBlCyWRVAkOLMq-rPM7oUSk0sfg</spreadsheet-key>
+					<spreadsheet-key>1DNJc54c-KUagSWG_CJL0Ykqj3QYatY9Dn6bW1d7GKok</spreadsheet-key>
 					<spreadsheet-uri></spreadsheet-uri>
 					<worksheet_id></worksheet_id>
 					<id></id>
-					<type></type>
+					<type>nmo:Monogram</type>
 					<position>0</position>
 					<mapping></mapping>
 					<mappings-valid>false</mappings-valid>
@@ -68,23 +68,27 @@
 						<label>Monogram</label>
 						<type>nmo:Monogram</type>
 					</class>
+					<class>
+						<label>Symbol (E37 Mark)</label>
+						<type>crm:E37_Mark</type>
+					</class>
 				</classes>
 			</xforms:instance>
 
 			<!-- NUDS mappings and validation -->
 			<xforms:instance id="properties" xxforms:exclude-result-prefixes="#all">
 				<properties xmlns="">
-
 					<property label="Alternative Label">skos:altLabel</property>
 					<property label="Broader Concept">skos:broader</property>
 					<property label="Constituent Symbol(s)">crm:P106_is_composed_of</property>
+					<property label="Contributor">contributor</property>
 					<property label="Creation Date">creation_date</property>
 					<property label="Definition">skos:definition</property>
 					<property label="Exact Match">skos:exactMatch</property>
+					<property label="Field of Numismatics">dcterms:isPartOf</property>
 					<property label="ID">id</property>
 					<property label="Image Creator">image_creator</property>
 					<property label="Image URI or Unicode Character">crm:P165i_is_incorporated_in</property>
-					<!--<property label="Field of Numismatics">dcterms:isPartOf</property>-->
 					<property label="Preferred Label">skos:prefLabel</property>
 					<property label="Scope Note">skos:scopeNote</property>
 					<property label="Source">dcterms:source</property>
@@ -101,6 +105,10 @@
 
 			<xforms:instance id="validation-model" xxforms:exclude-result-prefixes="#all">
 				<validation xmlns=""></validation>
+			</xforms:instance>
+
+			<xforms:instance id="nomisma-ids" xxforms:exclude-result-prefixes="#all">
+				<ids xmlns=""></ids>
 			</xforms:instance>
 
 			<!-- RDF templates -->
@@ -123,6 +131,23 @@
 				</prov:Activity>
 			</xforms:instance>
 
+			<!-- instance for spreadsheet RDF as a static file -->
+			<xforms:instance id="spreadsheet-rdf" xxforms:exclude-result-prefixes="#default xhtml xforms xs ev xxforms fr res xi nomisma atom exist">
+				<rdf:RDF xmlns="" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:nmo="http://nomisma.org/ontology#" xmlns:foaf="http://xmlns.com/foaf/0.1/"
+					xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+					xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:void="http://rdfs.org/ns/void#"
+					xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xmlns:prov="http://www.w3.org/ns/prov#" xmlns:crm="http://www.cidoc-crm.org/cidoc-crm/"
+					xmlns:crmdig="http://www.ics.forth.gr/isl/CRMdig"/>
+			</xforms:instance>
+
+			<xforms:instance id="spreadsheet-template" xxforms:exclude-result-prefixes="#all">
+				<prov:Entity rdf:about="">
+					<dcterms:format>application/vnd.google-apps.spreadsheet</dcterms:format>
+					<dcterms:description xml:lang="en"/>
+					<dcterms:creator rdf:resource=""/>
+				</prov:Entity>
+			</xforms:instance>
+
 			<!-- Google Spreadsheet Atom -->
 			<xforms:instance id="spreadsheet-feed">
 				<feed xmlns=""></feed>
@@ -139,6 +164,37 @@
 
 			<xforms:instance id="sendCommit">
 				<commit></commit>
+			</xforms:instance>
+
+			<!-- editor list -->
+			<xforms:instance id="editor-list" xxforms:exclude-result-prefixes="#all">
+				<list xmlns=""></list>
+			</xforms:instance>
+
+			<!-- SPARQL instances -->
+			<xforms:instance id="sparqlQuery">
+				<query></query>
+			</xforms:instance>
+
+			<!-- preloaded instances -->
+			<xforms:instance id="sparqlResponse">
+				<sparql xmlns="http://www.w3.org/2005/sparql-results#"/>
+			</xforms:instance>
+
+			<!-- sparql query templates -->
+			<xforms:instance id="sparql-templates">
+				<templates xmlns="">
+					<prefix><![CDATA[PREFIX rdf:	<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX foaf:	<http://xmlns.com/foaf/0.1/>
+PREFIX nmo:	<http://nomisma.org/ontology#>
+PREFIX org:	<http://www.w3.org/ns/org#>
+PREFIX rdac:	<http://www.rdaregistry.info/Elements/c/>
+PREFIX un:	<http://www.owl-ontologies.com/Ontology1181490123.owl#>
+PREFIX skos:	<http://www.w3.org/2004/02/skos/core#>]]></prefix>
+					<query id="ask">ASK {&lt;URI&gt; rdf:type CLASS}</query>
+					<query id="editor">SELECT ?uri ?label WHERE {?uri a foaf:Person ; skos:inScheme &lt;http://nomisma.org/editor/&gt; ; skos:prefLabel ?label}
+						ORDER BY ?label</query>
+				</templates>
 			</xforms:instance>
 
 			<!-- ************* BINDINGS **********************-->
@@ -180,15 +236,44 @@
 					<xforms:bind nodeset="@lang" required="true()" constraint="string-length(.) &gt; 0"/>
 				</xforms:bind>
 			</xforms:bind>
+			
+			<!-- bindings for the RDF of spreadsheet metadata: creator and contributor URIs must be unique -->
+			<xforms:bind nodeset="instance('spreadsheet-rdf')">
+				<xforms:bind nodeset="prov:Entity"
+					constraint="count(dcterms:contributor/@rdf:resource) = count(distinct-values(dcterms:contributor/@rdf:resource))">
+					<xforms:bind nodeset="dcterms:description" required="true()">
+						<xforms:bind nodeset="@xml:lang" required="true()"/>
+					</xforms:bind>
+					<xforms:bind nodeset="dcterms:creator">
+						<xforms:bind nodeset="@rdf:resource" required="true()" constraint="not(. = ../dcterms:contributor/@rdf:resource)"/>
+					</xforms:bind>
+					<xforms:bind nodeset="dcterms:contributor">
+						<xforms:bind nodeset="@rdf:resource" required="true()"/>
+					</xforms:bind>
+				</xforms:bind>
+			</xforms:bind>
+
+			<xforms:bind nodeset="instance('nomisma-ids')">
+				<xforms:bind nodeset="id" type="xs:boolean"/>
+			</xforms:bind>
 
 			<!-- **************** DYNAMIC VALIDATION CONTROLS ********************** -->
 			<!-- ensure that the mappings are valid before continuing with validation -->
 			<xforms:action ev:event="xxforms-invalid" ev:observer="mappings">
 				<xforms:setvalue ref="instance('control-instance')/mappings-valid" value="false()"/>
 			</xforms:action>
-
+			
 			<xforms:action ev:event="xxforms-valid" ev:observer="mappings">
 				<xforms:setvalue ref="instance('control-instance')/mappings-valid" value="true()"/>
+			</xforms:action>
+			
+			<!-- ensure that the spreadsheet metadata are valid before continuing with validation -->
+			<xforms:action ev:event="xxforms-invalid" ev:observer="spreadsheet-rdf">
+				<xforms:setvalue ref="instance('control-instance')/metadata-valid" value="false()"/>
+			</xforms:action>
+			
+			<xforms:action ev:event="xxforms-valid" ev:observer="spreadsheet-rdf">
+				<xforms:setvalue ref="instance('control-instance')/metadata-valid" value="true()"/>
 			</xforms:action>
 
 			<!-- **************** CUSTOM DATATYPES ********************** -->
@@ -234,12 +319,12 @@
 						</xforms:action>
 
 						<!-- read whether or not the spreadsheet already exists in the system -->
-						<!--<xforms:action if="not(instance('spreadsheet-rdf')/prov:Entity[@rdf:about = instance('control-instance')/spreadsheet-uri])">
-							<!-\- if there is no matching URI for the spreadsheet (prov:Entity), then insert the spreadsheet template into the spreadsheet RDF -\->
+						<xforms:action if="not(instance('spreadsheet-rdf')/prov:Entity[@rdf:about = instance('control-instance')/spreadsheet-uri])">
+							<!-- if there is no matching URI for the spreadsheet (prov:Entity), then insert the spreadsheet template into the spreadsheet RDF -->
 							<xforms:insert context="instance('spreadsheet-rdf')" nodeset="./child::node()[last()]" origin="instance('spreadsheet-template')"/>
 							<xforms:setvalue ref="instance('spreadsheet-rdf')/prov:Entity[last()]/@rdf:about"
 								value="instance('control-instance')/spreadsheet-uri"/>
-						</xforms:action>-->
+						</xforms:action>
 
 						<!-- if there are errors, then display the mapping interface -->
 						<xforms:toggle case="mapping-interface"/>
@@ -282,87 +367,35 @@
 				<xforms:message ev:event="xforms-submit-error" level="modal">Unable to load Numishare collections list.</xforms:message>
 			</xforms:submission>
 
-			<!-- ************************* LOAD NOMISMA RDF/XML ************************** -->
-			<xforms:submission id="load-rdf" serialization="none" method="get"
-				action="{instance('control-instance')/rdf-api}?identifiers={instance('control-instance')/identifiers}" replace="instance" instance="rdf-concept">
-				<!-- if there's an error, report the error into the Nomisma ID instance -->
-				<xforms:action ev:event="xforms-submit-error">
-					<xforms:message level="modal">
-						<xforms:output value="concat('Unable to access ', instance('control-instance')/rdf-api)"/>
-					</xforms:message>
-				</xforms:action>
-				<!-- otherwise, validate the URI and insert the skos:Concept into the aggregate instance('rdf') -->
+			<!-- ************************* SAVE RDF FOR SYMBOL CONCEPT ************************** -->
+			<xforms:submission id="save-rdf" ref="instance('rdf')" xxforms:username="{instance('exist-config')/username}"
+				xxforms:password="{instance('exist-config')/password}"
+				action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/symbols/{instance('control-instance')/id}.rdf" method="put"
+				replace="none">
+				<xforms:message ev:event="xforms-submit-error" level="modal">
+					<xforms:output value="concat('Error saving ', instance('control-instance')/id, ' to eXist-db collection.')"/>
+				</xforms:message>
 				<xforms:action ev:event="xforms-submit-done">
-					<!-- perform validation for any Concept URI that does not exist within the rdf response -->
-					<!-- apply for Nomisma -->
-					<xforms:action if="contains(instance('control-instance')/rdf-api, 'nomisma.org')">
-						<xforms:action xxforms:iterate="instance('nomisma-uris')/id">
-							<xforms:setvalue if="instance('rdf-concept')/*[@rdf:about = context()/@uri]" ref="context()" value="true()"/>
-						</xforms:action>
-					</xforms:action>
-
-					<!-- apply for Numismatics.org type series -->
-					<xforms:action if="contains(instance('control-instance')/rdf-api, 'numismatics.org')">
-						<xforms:var name="series" select="substring-before(instance('control-instance')/rdf-api, 'apis')"/>
-						<xforms:action xxforms:iterate="instance('type-uris')/series[@uri = $series]/id">
-							<xforms:setvalue if="instance('rdf-concept')/*[@rdf:about = context()/@uri]" ref="context()" value="true()"/>
-						</xforms:action>
-					</xforms:action>
-
-					<!-- insert the Concept RDF (whether types or Nomisma) from the API response RDF into the primary RDF instance -->
-					<xforms:insert context="instance('rdf')" nodeset="./child::node()[last()]"
-						origin="instance('rdf-concept')/*[rdf:type/@rdf:resource = 'http://www.w3.org/2004/02/skos/core#Concept']"/>
-				</xforms:action>
-			</xforms:submission>
-
-			<!-- ************************* LOAD PARENT NUDS FILE ************************** -->
-			<xforms:submission id="load-nuds" serialization="none" method="get"
-				action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/objects/{encode-for-uri(instance('control-instance')/target-id)}.xml"
-				xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}" replace="instance"
-				instance="related-nuds">
-
-				<!-- evaluate whether the NUDS document exists in the exist-db collection -->
-				<xforms:action ev:event="xforms-submit-done">
-					<xforms:insert context="instance('parents-valid')" nodeset="./child::node()[last()]"
-						origin="xforms:element('id', data(instance('control-instance')/target-id))"/>
-				</xforms:action>
-				<xforms:action ev:event="xforms-submit-error">
-					<xforms:insert context="instance('validation-model')/record[last()]" nodeset="./child::node()[last()]"
-						origin="xforms:element('error', concat('ID not found in spreadsheet or Numishare XML collection for ', instance('properties')/property[. = instance('control-instance')/mapping]/@label))"
+					<xforms:setvalue ref="instance('control-instance')/status" value="concat(instance('control-instance')/id, ' saved to eXist-db collection.')"
 					/>
 				</xforms:action>
 			</xforms:submission>
 
-			<xforms:submission id="save-nuds" ref="instance('nuds')" xxforms:username="{instance('exist-config')/username}"
+			<!-- ************************* LOAD AND SAVE RDF FILE FOR SPREADSHEET METADATA ************************** -->
+			<xforms:submission id="load-spreadsheet-rdf" serialization="none" method="get"
+				action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/spreadsheets.rdf" replace="instance"
+				instance="spreadsheet-rdf" xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}"> </xforms:submission>
+
+			<xforms:submission id="save-spreadsheet-rdf" ref="instance('spreadsheet-rdf')" xxforms:username="{instance('exist-config')/username}"
 				xxforms:password="{instance('exist-config')/password}"
-				action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/objects/{instance('nuds')/nuds:control/nuds:recordId}.xml"
-				method="put" replace="none">
-				<xforms:message ev:event="xforms-submit-error" level="modal">Error saving file to eXist-db collection.</xforms:message>
+				action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/spreadsheets.rdf" method="put" replace="none">
+				<xforms:message ev:event="xforms-submit-error" level="modal">Error saving spreadsheet RDF.</xforms:message>
+			</xforms:submission>
 
-
-				<xforms:action ev:event="xforms-submit-done">
-					<xforms:setvalue ref="instance('control-instance')/status"
-						value="concat(instance('nuds')/nuds:control/nuds:recordId, ' saved to eXist-db collection.')"/>
-
-					<!-- if the record is approved or approved subtype, add it to the identifier list for indexing, if activated -->
-					<xforms:action if="instance('control-instance')/index-to-solr = true()">
-						<xforms:var name="publicationStatus" select="instance('nuds')/nuds:control/nuds:publicationStatus"/>
-
-						<!-- only index active types and subtypes -->
-						<xforms:action if="$publicationStatus = 'approved' or $publicationStatus = 'approvedSubtype'">
-							<!-- set position -->
-							<xforms:setvalue ref="instance('control-instance')/position" value="instance('control-instance')/position + 1"/>
-
-							<!-- set proper separator based on position. IDs are to be indexed in blocks of 100 -->
-							<xforms:var name="sep"
-								select="if (instance('control-instance')/position = 1) then '' else if (instance('control-instance')/position mod 100 = 0) then ',' else '|'"/>
-							<xforms:var name="recordId" select="instance('nuds')/nuds:control/nuds:recordId"/>
-
-							<xforms:setvalue ref="instance('control-instance')/identifiers"
-								value="concat(instance('control-instance')/identifiers, $sep, $recordId)"/>
-						</xforms:action>
-					</xforms:action>
-				</xforms:action>
+			<!-- ************* SPARQL **********************-->
+			<xforms:submission id="submit-sparqlQuery" action="http://nomisma.org/query?query={encode-for-uri(instance('sparqlQuery'))}&amp;output=xml"
+				ref="instance('sparqlResponse')" replace="instance" method="get">
+				<xforms:message ev:event="xforms-submit-error" level="modal">SPARQL query failed.</xforms:message>
 			</xforms:submission>
 
 			<!-- ************************* SOLR SUBMISSIONS ************************** -->
@@ -408,6 +441,24 @@
 						origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/get-authentication.xpl', 'dump', instance('dump'), 'data')"/>
 					<xforms:send submission="load-collections"/>
 				</xforms:action>
+
+				<!-- load spreadsheet RDF -->
+				<xforms:send submission="load-spreadsheet-rdf"/>
+
+				<!-- execute a SPARQL query to get the list of Nomisma.org editors -->
+				<xforms:setvalue ref="instance('sparqlQuery')"
+					value="concat(instance('sparql-templates')/prefix, ' ', instance('sparql-templates')/query[@id='editor'])"/>
+				<xforms:send submission="submit-sparqlQuery"/>
+				<xforms:action xxforms:iterate="instance('sparqlResponse')//res:result" ev:event="xforms-submit-done">
+					<xforms:var name="uri" select="data(res:binding[@name='uri']/res:uri)"/>
+					<xforms:var name="label" select="data(res:binding[@name='label']/res:literal)"/>
+					<xforms:insert context="instance('editor-list')" nodeset="./child::node()[last()]"
+						origin="xforms:element('item', (xforms:attribute('uri', $uri), $label))"/>
+				</xforms:action>
+				
+				<!-- insert the current Orbeon user as the first editor URI as a dummy -->
+				<xforms:insert context="instance('editor-list')"
+					origin="xforms:element('item', (xforms:attribute('uri', concat(instance('config')/url, 'editor#', instance('control-instance')/username)), instance('control-instance')/username))"/>
 			</xforms:action>
 
 			<!-- ********** XFORMS-READY ********** -->
@@ -451,10 +502,6 @@
 										<xforms:select1 ref="type">
 											<xforms:label>Type</xforms:label>
 											<xforms:alert>Required</xforms:alert>
-											<xforms:item>
-												<xforms:label>Select...</xforms:label>
-												<xforms:value/>
-											</xforms:item>
 											<xforms:itemset nodeset="instance('classes')/class">
 												<xforms:label ref="label"/>
 												<xforms:value ref="type"/>
@@ -474,6 +521,89 @@
 							</xforms:group>
 						</xforms:case>
 						<xforms:case id="mapping-interface">
+							<xforms:group ref="instance('spreadsheet-rdf')/prov:Entity[@rdf:about = instance('control-instance')/spreadsheet-uri]">
+								<div class="section">
+									<h3>Spreadsheet Metadata</h3>
+									<div class="trigger_container">
+										<xforms:trigger appearance="minimal">
+											<xforms:label>
+												<span class="glyphicon glyphicon-plus"></span>Contributor</xforms:label>
+											<xforms:insert ev:event="DOMActivate" context="." nodeset="./child::node()[last()]"
+												origin="xforms:element('dcterms:contributor', (xforms:attribute('rdf:resource'), ''))"/>
+										</xforms:trigger>
+									</div>
+									<div class="alert-warning alert-box alert">
+										<span class="glyphicon glyphicon-warning-sign"></span>
+										<strong>Notice:</strong> It is recommended to create editors in Nomisma.org.</div>
+									<xforms:group ref=".[dcterms:creator/@rdf:resource = dcterms:contributor/@rdf:resource]">
+										<div class="alert-danger alert-box alert">
+											<span class="glyphicon glyphicon-exclamation-sign"></span>
+											<strong>Alert:</strong> The same person cannot be a creator and contributor simultaneously.</div>
+									</xforms:group>
+									<xforms:group
+										ref=".[count(dcterms:contributor/@rdf:resource) &gt; count(distinct-values(dcterms:contributor/@rdf:resource))]">
+										<div class="alert-danger alert-box alert">
+											<span class="glyphicon glyphicon-exclamation-sign"></span>
+											<strong>Alert:</strong> The same contributor is selected more than once.</div>
+									</xforms:group>
+									<xforms:group ref="dcterms:description">
+										<div>
+											<xforms:textarea ref=".">
+												<xforms:label>Description</xforms:label>
+												<xforms:alert>Required</xforms:alert>
+											</xforms:textarea>
+											<xforms:select1 ref="@xml:lang">
+												<xforms:item>
+													<xforms:label>Select...</xforms:label>
+													<xforms:value/>
+												</xforms:item>
+												<xforms:itemset nodeset="instance('languages')/language">
+													<xforms:label ref="."/>
+													<xforms:value ref="@value"/>
+												</xforms:itemset>
+												<xforms:alert>Required</xforms:alert>
+											</xforms:select1>
+										</div>
+									</xforms:group>
+									<div>
+										<xforms:select1 ref="dcterms:creator/@rdf:resource">
+											<xforms:label>Primary Creator</xforms:label>
+											<xforms:alert>Required</xforms:alert>
+											<xforms:item>
+												<xforms:label>Select...</xforms:label>
+												<xforms:value/>
+											</xforms:item>
+											<xforms:itemset nodeset="instance('editor-list')/item">
+												<xforms:label ref="."/>
+												<xforms:value ref="@uri"/>
+											</xforms:itemset>
+										</xforms:select1>
+									</div>
+									<xforms:repeat nodeset="dcterms:contributor">
+										<div>
+											<xforms:select1 ref="@rdf:resource">
+												<xforms:label>Contributor</xforms:label>
+												<xforms:alert>Required</xforms:alert>
+												<xforms:item>
+													<xforms:label>Select...</xforms:label>
+													<xforms:value/>
+												</xforms:item>
+												<xforms:itemset nodeset="instance('editor-list')/item">
+													<xforms:label ref="."/>
+													<xforms:value ref="@uri"/>
+												</xforms:itemset>
+											</xforms:select1>
+											<xforms:trigger appearance="minimal">
+												<xforms:delete ev:event="DOMActivate" context="."/>
+												<xforms:label>
+													<span class="glyphicon glyphicon-remove"></span>
+												</xforms:label>
+											</xforms:trigger>
+										</div>
+									</xforms:repeat>
+								</div>
+							</xforms:group>
+
 							<div class="section">
 								<h3>Mapping</h3>
 								<p>Associate the headings with allowable properties, where applicable. Note that the ID, Preferred Label (English), and
@@ -533,10 +663,7 @@
 											<span class="glyphicon glyphicon-exclamation-sign"></span>
 											<strong>Alert:</strong> The Image Creator column must come after the Image URL or Unicode Character column(s).</div>
 									</xforms:group>
-
-									<!--and (if (count(mapping[@to = 'image_creator']) = 1) then not(mapping[@to = 'image_creator']/following-sibling::mapping[@to = 'crm:P165i_is_incorporated_in']) else true())
-									and (if(count(mapping[@to = 'image_creator']) = 1) then (count(mapping[@to = 'crm:P165i_is_incorporated_in']) &gt; 0) else true())-->
-
+									
 									<table class="table">
 										<thead>
 											<tr>
@@ -644,6 +771,65 @@
 																context="instance('validation-model')/record[last()]" nodeset="./child::node()[last()]"
 																origin="xforms:element('error', 'English definition must contain a value.')"/>
 														</xforms:action>
+
+														<!-- creation date must be valid xs:date or xs:dateTime -->
+														<xforms:action if="$mapping = 'creation_date'">
+															<xforms:insert if="not($value castable as xs:date) and not($value castable as xs:dateTime)"
+																context="instance('validation-model')/record[last()]" nodeset="./child::node()[last()]"
+																origin="xforms:element('error', 'Creation Date is not valid xs:date or xs:dateTime.')"/>
+														</xforms:action>
+
+														<!-- fields that can be any type of URI -->
+														<xforms:action
+															if="$mapping = 'contributor' or $mapping = 'crm:P165i_is_incorporated_in' or $mapping = 'image_creator' 
+															or $mapping = 'skos:broader' or $mapping = 'skos:exactMatch'">
+
+															<xforms:var name="isValid" select="matches($value, 'https?://(-\.)?([^\s/?\.#]+\.?)+(/[^\s]*)?$')"/>
+															<xforms:insert if="string-length($value) &gt; 0 and $isValid = false()"
+																context="instance('validation-model')/record[last()]" nodeset="./child::node()[last()]"
+																origin="xforms:element('error', concat('URI is invalid: ', $value))"> </xforms:insert>
+														</xforms:action>
+
+														<!-- Must be Nomisma URIs -->
+														<xforms:action if="$mapping = 'dcterms:isPartOf' or $mapping = 'dcterms:source'">
+															<!-- these are properties that must be linked internally to other Nomisma IDs -->
+															<xforms:insert if="not(starts-with($value, 'http://nomisma.org/id/'))"
+																context="instance('validation-model')/record[last()]" nodeset="./child::node()[last()]"
+																origin="xforms:element('error', concat($mapping, ' does not link to a Nomisma URI: ', $value))"/>
+
+															<xforms:action if="starts-with($value, 'http://nomisma.org/id/')">
+																<!-- if the URI space is nm:, then test whether the URI has already been validated via SPARQL. If not, then submit a SPARQL query -->
+																<xforms:action if="instance('nomisma-ids')/id[@uri=$value and @mapping=$mapping] = false()"
+																	context="instance('validation-model')/record[last()]" nodeset="./child::node()[last()]"
+																	origin="xforms:element('error', concat($mapping, ' links to a non-existent Nomisma URI or the URI is a different class: ', $value))"/>
+
+																<xforms:action if="not(instance('nomisma-ids')/id[@uri=$value and @mapping=$mapping])">
+																	<!-- if the $mapping is dcterms:isPartOf, then the target will be an nmo:FieldOfNumismatics;																	
+																	otherwise, it will be assumed the mapping is dcterms:source and the class is therefore an nmo:TypeSeries
+																	-->
+																	<xforms:var name="class"
+																		select="if($mapping = 'dcterms:isPartOf') then 'nmo:FieldOfNumismatics' else 'nmo:TypeSeries'"/>
+
+																	<!-- all other ASK queries -->
+																	<xforms:setvalue ref="instance('sparqlQuery')"
+																		value="concat(instance('sparql-templates')/prefix, ' ', replace(replace(instance('sparql-templates')/query[@id='ask'], 'URI', $value), 'CLASS', $class))"/>
+
+																	<xforms:send submission="submit-sparqlQuery"/>
+
+																	<!-- if the SPARQL query concludes successfully, then create an entry in nomisma-ids and display an error if the ASK if false -->
+																	<xforms:action ev:event="xforms-submit-done">
+																		<xforms:insert context="instance('nomisma-ids')" nodeset="./child::node()[last()]"
+																			origin="xforms:element('id', (xforms:attribute('uri', $value), xforms:attribute('mapping', $mapping), data(instance('sparqlResponse')/descendant::res:boolean)))"/>
+																		<xforms:insert if="instance('sparqlResponse')/descendant::res:boolean = 'false'"
+																			context="instance('validation-model')/record[last()]"
+																			nodeset="./child::node()[last()]"
+																			origin="xforms:element('error', concat($mapping, ' links to a non-existent Nomisma URI or the URI is a different class: ', $value))"
+																		/>
+																	</xforms:action>
+																</xforms:action>
+															</xforms:action>
+
+														</xforms:action>
 													</xforms:action>
 												</xforms:action>
 											</xforms:action>
@@ -739,6 +925,10 @@
 													select="normalize-space(data(context()/*[namespace-uri()='http://schemas.google.com/spreadsheets/2006/extended'][name()=instance('mappings')/mapping[@to='creation_date']/@from]))"/>
 												<xforms:var name="isNew"
 													select="if ($creation_date castable as xs:date or $creation_date castable as xs:dateTime) then false() else true()"/>
+
+												<!-- get contributors, which should be inserted into the last possible activity -->
+												<xforms:var name="contributors"
+													select="context()/*[namespace-uri()='http://schemas.google.com/spreadsheets/2006/extended'][name()=instance('mappings')/mapping[@to='contributor']/@from]"/>
 
 												<!-- clear data from RDF instance before loading-->
 												<xforms:delete nodeset="instance('rdf')/*"/>
@@ -851,7 +1041,7 @@
 															<xforms:action
 																xxforms:iterate="instance('rdf')/*[1]/crm:P165i_is_incorporated_in[last()]/crmdig:D1_Digital_Object">
 																<xforms:insert context="." nodeset="./child::node()[last()]"
-																	origin="xforms:element('dcterms:creator', xforms:attribute('rdf:resource', $value)))"/>
+																	origin="xforms:element('dcterms:creator', xforms:attribute('rdf:resource', $value))"/>
 															</xforms:action>
 														</xforms:action>
 
@@ -909,21 +1099,32 @@
 													ref="instance('rdf')/dcterms:ProvenanceStatement/prov:*[last()]/prov:Activity/prov:atTime/@rdf:datatype"
 													>http://www.w3.org/2001/XMLSchema#dateTime</xforms:setvalue>
 												<xforms:setvalue ref="instance('rdf')/dcterms:ProvenanceStatement/prov:*[last()]/prov:Activity/prov:atTime"
-													value="curent-dateTime()"/>
+													value="current-dateTime()"/>
 
 												<!-- set type -->
 												<xforms:setvalue ref="instance('rdf')/dcterms:ProvenanceStatement/prov:*[last()]/prov:Activity/dcterms:type"
 													>spreadsheet</xforms:setvalue>
-												
+
 												<!-- insert spreadsheet URI -->
 												<xforms:insert context="instance('rdf')/dcterms:ProvenanceStatement/prov:*[last()]/prov:Activity"
 													origin="xforms:element('prov:used', (xforms:attribute('rdf:resource', instance('control-instance')/spreadsheet-uri)))"/>
 
-												<!-- *** BEGIN CRUD OPERATIONS *** -->
-												<!-- save NUDS/XML to eXist-db collection -->
-												<!--<xforms:send submission="save-nuds"/>-->
-											</xforms:action>
+												<!-- insert contributors -->
+												<xforms:action xxforms:iterate="$contributors">
+													<xforms:var name="value" select="normalize-space(data(.))"/>
 
+													<xforms:insert context="instance('rdf')/dcterms:ProvenanceStatement/prov:*[last()]/prov:Activity"
+														origin="xforms:element('prov:wasAssociatedWith', (xforms:attribute('rdf:resource', $value)))"/>
+												</xforms:action>
+
+												<!-- *** BEGIN CRUD OPERATIONS *** -->
+												<!-- save RDF/XML to eXist-db collection -->
+												<xforms:send submission="save-rdf"/>
+											</xforms:action>
+											
+											<!-- save the spreadsheet rdf -->
+											<xforms:send submission="save-spreadsheet-rdf"/>
+											
 											<xforms:toggle case="process-complete"/>
 										</xforms:action>
 									</xforms:trigger>

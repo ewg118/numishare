@@ -213,6 +213,16 @@
 					</navigation>
 				</config>
 			</xforms:instance>
+			
+			<!-- instance for spreadsheet RDF as a static file -->
+			<xforms:instance id="spreadsheet-rdf" xxforms:exclude-result-prefixes="#default xhtml xforms xs ev xxforms fr res xi nomisma atom exist">
+				<rdf:RDF xmlns="" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:nmo="http://nomisma.org/ontology#" xmlns:foaf="http://xmlns.com/foaf/0.1/"
+					xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+					xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:void="http://rdfs.org/ns/void#"
+					xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xmlns:prov="http://www.w3.org/ns/prov#" xmlns:crm="http://www.cidoc-crm.org/cidoc-crm/"
+					xmlns:crmdig="http://www.ics.forth.gr/isl/CRMdig"/>
+			</xforms:instance>
+			
 			<xforms:instance id="object" xxforms:exclude-result-prefixes="#all">
 				<nuds xmlns=""/>
 			</xforms:instance>
@@ -557,6 +567,9 @@
 					<xforms:setvalue ref="instance('eXist-xquery')/exist:text"
 						value="replace(replace(instance('xqueries')/query[@id='create-collection'], '%COLLECTION%', instance('control-instance')/collection-name), '%PATH%', instance('config-template')/installation_path)"/>
 					<xforms:send submission="xquery-db"/>
+					
+					<!-- save spreadsheet RDF -->
+					<xforms:send submission="save-spreadsheet-rdf"/>
 
 					<!-- submit collection metadata once again before switching the interface -->
 					<xforms:action ev:event="xforms-submit-done">
@@ -565,6 +578,12 @@
 						<xforms:send submission="xquery-db"/>
 					</xforms:action>
 				</xforms:action>
+			</xforms:submission>
+			
+			<xforms:submission id="save-spreadsheet-rdf" ref="instance('spreadsheet-rdf')" xxforms:username="{instance('exist-config')/username}"
+				xxforms:password="{instance('exist-config')/password}"
+				action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/spreadsheets.rdf" method="put" replace="none">
+				<xforms:message ev:event="xforms-submit-error" level="modal">Error saving spreadsheet RDF.</xforms:message>				
 			</xforms:submission>
 
 			<!--***************** XQUERY ******************-->

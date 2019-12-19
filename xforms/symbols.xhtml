@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ev="http://www.w3.org/2001/xml-events"
-	xmlns:xxforms="http://orbeon.org/oxf/xml/xforms" xmlns:widget="http://orbeon.org/oxf/xml/widget" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:fr="http://orbeon.org/oxf/xml/form-runner"
-	xmlns:exist="http://exist.sourceforge.net/NS/exist" xmlns:xxi="http://orbeon.org/oxf/xml/xinclude" xmlns:numishare="https://github.com/ewg118/numishare"
-	xmlns:res="http://www.w3.org/2005/sparql-results#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:nm="http://nomisma.org/id/" xmlns:foaf="http://xmlns.com/foaf/0.1/"
-	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-	xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xmlns:un="http://www.owl-ontologies.com/Ontology1181490123.owl#"
-	xmlns:atom="http://www.w3.org/2005/Atom" xmlns:nomisma="https://github.com/nomisma" xmlns:rdac="http://www.rdaregistry.info/Elements/c/"
-	xmlns:osgeo="http://data.ordnancesurvey.co.uk/ontology/geometry/" xmlns:nmo="http://nomisma.org/ontology#" xmlns:org="http://www.w3.org/ns/org#" xmlns:bio="http://purl.org/vocab/bio/0.1/"
-	xmlns:crm="http://www.cidoc-crm.org/cidoc-crm/">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xxforms="http://orbeon.org/oxf/xml/xforms"
+	xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:res="http://www.w3.org/2005/sparql-results#" xmlns:xi="http://www.w3.org/2001/XInclude"
+	xmlns:dcterms="http://purl.org/dc/terms/" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:nomisma="https://github.com/nomisma"
+	xmlns:prov="http://www.w3.org/ns/prov#" xmlns:nmo="http://nomisma.org/ontology#" xmlns:crm="http://www.cidoc-crm.org/cidoc-crm/"
+	xmlns:void="http://rdfs.org/ns/void#" xmlns:crmdig="http://www.ics.forth.gr/isl/CRMdig" xmlns:exist="http://exist.sourceforge.net/NS/exist">
 	<head>
 		<title>Numishare: Symbol Management</title>
 		<!-- Core + Skin CSS -->
@@ -72,7 +71,8 @@
 						<![CDATA[xquery version "1.0";
 						declare namespace rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#";
 						declare namespace skos="http://www.w3.org/2004/02/skos/core#";
-						declare namespace foaf="http://xmlns.com/foaf/0.1/";
+						declare namespace crm="http://www.cidoc-crm.org/cidoc-crm/";
+						declare namespace crmdig="http://www.ics.forth.gr/isl/CRMdig";
 						<report> { 
 							for $record in subsequence(collection(), START, 20)
 								let $type := $record/rdf:RDF/*[1]/local-name()
@@ -82,8 +82,8 @@
 										<id>{ tokenize($record//@rdf:about, '/')[last()] }</id>
 										<prefLabel>{ data($record//skos:prefLabel[@xml:lang='en']) }</prefLabel >
 										<definition>{ data($record//skos:definition[@xml:lang='en']) }</definition>
-										{ for $image in $record//foaf:depiction return
-											<image> { data($image/@rdf:resource) } </image>
+										{ for $image in $record//crm:P165i_is_incorporated_in/crmdig:D1_Digital_Object return
+											<image> { data($image/@rdf:about) } </image>
 										}								
 									</record>
 							}
