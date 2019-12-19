@@ -30,9 +30,9 @@
 					<xsl:variable name="offset">
 						<xsl:choose>
 							<xsl:when test="string-length($page) &gt; 0 and $page castable as xs:integer and number($page) > 0">
-								<xsl:value-of select="($page - 1) * number($limit)"/>
+								<xsl:value-of select="(($page - 1) * number($limit)) + 1"/>
 							</xsl:when>
-							<xsl:otherwise>0</xsl:otherwise>
+							<xsl:otherwise>1</xsl:otherwise>
 						</xsl:choose>
 					</xsl:variable>
 					

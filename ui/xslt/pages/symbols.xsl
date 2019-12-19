@@ -28,7 +28,7 @@
 	</xsl:param>
 
 	<!-- pagination params/variables -->
-	<xsl:param name="limit">48</xsl:param>
+	<xsl:param name="limit">24</xsl:param>
 	
 	<!-- pagination parameter for iterating through pages of physical specimens -->
 	<xsl:param name="page" as="xs:integer">
@@ -134,14 +134,16 @@
 	<xsl:template match="*" mode="symbol">
 		<xsl:variable name="id" select="tokenize(@rdf:about, '/')[last()]"/>
 
-		<div class="col-md-3 col-sm-6 col-lg-2 monogram" style="height:400px">
-			<img
-				src="{
-				if (crm:P165i_is_incorporated_in/@rdf:resource) then
-				crm:P165i_is_incorporated_in[1]/@rdf:resource
-				else
-				crm:P165i_is_incorporated_in[1]/crmdig:D1_Digital_Object/@rdf:about}"
-				alt="Symbol image" style="width:100%"/>
+		<div class="col-md-3 col-sm-6 col-lg-2 monogram" style="height:240px">
+			<div class="text-center">
+				<img
+					src="{
+					if (crm:P165i_is_incorporated_in[1]/@rdf:resource) then
+					crm:P165i_is_incorporated_in[1]/@rdf:resource
+					else
+					crm:P165i_is_incorporated_in[1]/crmdig:D1_Digital_Object/@rdf:about}"
+					alt="Symbol image" style="max-height:200px"/>
+			</div>
 			<a href="symbol/{$id}">
 				<xsl:choose>
 					<xsl:when test="skos:prefLabel[@xml:lang = $lang]">
