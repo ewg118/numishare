@@ -16,6 +16,7 @@
 
 	<xsl:param name="url" select="//config/url"/>
 	<xsl:param name="langParam" select="doc('input:request')/request/parameters/parameter[name = 'lang']/value"/>
+	<xsl:param name="symbol" select="doc('input:request')/request/parameters/parameter[name = 'symbol']"/>
 	<xsl:param name="lang">
 		<xsl:choose>
 			<xsl:when test="string($langParam)">
@@ -29,14 +30,14 @@
 
 	<!-- pagination params/variables -->
 	<xsl:param name="limit">24</xsl:param>
-	
+
 	<!-- pagination parameter for iterating through pages of physical specimens -->
 	<xsl:param name="page" as="xs:integer">
 		<xsl:choose>
 			<xsl:when
 				test="
-				string-length(doc('input:request')/request/parameters/parameter[name = 'page']/value) &gt; 0 and doc('input:request')/request/parameters/parameter[name = 'page']/value castable
-				as xs:integer and number(doc('input:request')/request/parameters/parameter[name = 'page']/value) > 0">
+					string-length(doc('input:request')/request/parameters/parameter[name = 'page']/value) &gt; 0 and doc('input:request')/request/parameters/parameter[name = 'page']/value castable
+					as xs:integer and number(doc('input:request')/request/parameters/parameter[name = 'page']/value) > 0">
 				<xsl:value-of select="doc('input:request')/request/parameters/parameter[name = 'page']/value"/>
 			</xsl:when>
 			<xsl:otherwise>1</xsl:otherwise>
@@ -81,7 +82,8 @@
 
 				<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"/>
 				<link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
-				<script src="https://netdna.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"/>
+				<script type="text/javascript" src="https://netdna.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"/>
+				<script type="text/javascript" src="{$include_path}/javascript/symbol_functions.js"/>
 				<link type="text/css" href="{$include_path}/css/style.css" rel="stylesheet"/>
 				<xsl:if test="string(//config/google_analytics)">
 					<script type="text/javascript">
@@ -109,6 +111,9 @@
 						<xsl:value-of select="numishare:normalizeLabel('header_symbols', $lang)"/>
 					</h1>
 
+					<!-- display clickable buttons -->
+					<xsl:apply-templates select="doc('input:letters')//letters"/>
+
 					<xsl:if test="$numFound &gt; $limit">
 						<xsl:call-template name="pagination">
 							<xsl:with-param name="page" select="$page" as="xs:integer"/>
@@ -117,8 +122,19 @@
 						</xsl:call-template>
 					</xsl:if>
 
-					<xsl:apply-templates select="//rdf:RDF/*" mode="symbol"/>
+					<!-- render each symbol/monogram -->
 					
+					<xsl:choose>
+						<xsl:when test="count(//rdf:RDF/*) &gt; 0">
+							<xsl:apply-templates select="//rdf:RDF/*" mode="symbol"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<h3>No symbols found.</h3>
+						</xsl:otherwise>
+					</xsl:choose>
+					
+					
+
 					<xsl:if test="$numFound &gt; $limit">
 						<xsl:call-template name="pagination">
 							<xsl:with-param name="page" select="$page" as="xs:integer"/>
@@ -131,6 +147,7 @@
 		</div>
 	</xsl:template>
 
+	<!-- ******** RDF TEMPLATES ********* -->
 	<xsl:template match="*" mode="symbol">
 		<xsl:variable name="id" select="tokenize(@rdf:about, '/')[last()]"/>
 
@@ -144,7 +161,7 @@
 						else
 						crm:P165i_is_incorporated_in[1]/crmdig:D1_Digital_Object/@rdf:about}"
 						alt="Symbol image" style="max-height:200px"/>
-				</a>				
+				</a>
 			</div>
 			<a href="symbol/{$id}">
 				<xsl:choose>
@@ -173,6 +190,69 @@
 		</div>
 	</xsl:template>
 
+	<!-- ********** LETTER TEMPLATES *********** -->
+	<xsl:template match="letters">
+
+		<!-- Greek 880-1023 (https://codepoints.net/greek_and_coptic) -->
+		<!-- Latin 33-591  -->
+		
+
+		<div class="row">
+			<div class="col-md-12">
+				<h3>
+					<xsl:value-of select="numishare:getLabelforRDF('crm:P106_is_composed_of', $lang)"/>
+				</h3>
+
+				<xsl:if test="letter[@codepoint &gt;= 33 and @codepoint &lt;= 591]">
+					<div id="symbol-container">
+						<h4>Latin</h4>
+						<xsl:apply-templates select="letter[@codepoint &gt;= 33 and @codepoint &lt;= 591]"/>
+					</div>
+				</xsl:if>
+
+				<xsl:if test="letter[@codepoint &gt;= 880 and @codepoint &lt;= 1023]">
+					<div id="symbol-container">
+						<h4>
+							<xsl:value-of select="numishare:normalizeLabel('lang_el', $lang)"/>
+						</h4>
+						<xsl:apply-templates select="letter[@codepoint &gt;= 880 and @codepoint &lt;= 1023]"/>
+					</div>
+				</xsl:if>
+				
+				<div id="form-container">
+					<form role="form" method="get" action="symbols" id="symbol-form">
+						<xsl:for-each select="$symbol//value">
+							<input type="hidden" name="symbol" value="{.}"/>
+						</xsl:for-each>
+						
+						<input class="btn btn-primary" type="submit" value="Refine Search"/>
+					</form>		
+					
+					<xsl:if test="$symbol">
+						<form role="form" method="get" action="symbols">
+							<input class="btn btn-primary" type="submit" value="Clear"/>
+						</form>
+					</xsl:if>
+				</div>
+				
+			</div>
+		</div>
+	</xsl:template>
+
+	<xsl:template match="letter">
+		<xsl:variable name="active" as="xs:boolean">
+			<xsl:choose>
+				<xsl:when test="$symbol//value = .">true</xsl:when>
+				<xsl:otherwise>false</xsl:otherwise>
+			</xsl:choose>
+			
+		</xsl:variable>
+		
+		<button class="btn btn-default letter-button {if ($active = true()) then 'active' else ''}">
+			<xsl:value-of select="."/>
+		</button>
+	</xsl:template>
+
 	<!-- ********** PAGINATION *********** -->
 	<xsl:template name="pagination">
 		<xsl:param name="page" as="xs:integer"/>
@@ -185,6 +265,13 @@
 		<xsl:variable name="current" select="$page"/>
 		<xsl:variable name="next" select="$page + 1"/>
 		<xsl:variable name="total" select="ceiling($numFound div $limit)"/>
+
+		<xsl:variable name="symbol-params">
+			<xsl:for-each select="$symbol//value">
+				<xsl:text>&amp;symbol=</xsl:text>
+				<xsl:value-of select="."/>
+			</xsl:for-each>
+		</xsl:variable>
 
 
 		<div class="col-md-12 paging_div">
@@ -210,11 +297,11 @@
 						<div class="btn-group pull-right">
 							<!-- first page -->
 							<xsl:if test="$current &gt; 1">
-								<a class="btn btn-default" role="button" title="First" href="symbols?page=1">
+								<a class="btn btn-default" role="button" title="First" href="symbols?page=1{$symbol-params}">
 									<span class="glyphicon glyphicon-fast-backward"/>
 									<xsl:text> 1</xsl:text>
 								</a>
-								<a class="btn btn-default" role="button" title="Previous" href="symbols?page={$current - 1}">
+								<a class="btn btn-default" role="button" title="Previous" href="symbols?page={$current - 1}{$symbol-params}">
 									<xsl:text>Previous </xsl:text>
 									<span class="glyphicon glyphicon-backward"/>
 								</a>
@@ -225,19 +312,19 @@
 								</button>
 							</xsl:if>
 							<xsl:if test="$current &gt; 4">
-								<a class="btn btn-default" role="button" href="symbols?page={$current - 3}">
+								<a class="btn btn-default" role="button" href="symbols?page={$current - 3}{$symbol-params}">
 									<xsl:value-of select="$current - 3"/>
 									<xsl:text> </xsl:text>
 								</a>
 							</xsl:if>
 							<xsl:if test="$current &gt; 3">
-								<a class="btn btn-default" role="button" href="symbols?page={$current - 2}">
+								<a class="btn btn-default" role="button" href="symbols?page={$current - 2}{$symbol-params}">
 									<xsl:value-of select="$current - 2"/>
 									<xsl:text> </xsl:text>
 								</a>
 							</xsl:if>
 							<xsl:if test="$current &gt; 2">
-								<a class="btn btn-default" role="button" href="symbols?page={$current - 1}">
+								<a class="btn btn-default" role="button" href="symbols?page={$current - 1}{$symbol-params}">
 									<xsl:value-of select="$current - 1"/>
 									<xsl:text> </xsl:text>
 								</a>
@@ -249,17 +336,17 @@
 								</b>
 							</button>
 							<xsl:if test="$total &gt; ($current + 1)">
-								<a class="btn btn-default" role="button" title="Next" href="symbols?page={$current + 1}">
+								<a class="btn btn-default" role="button" title="Next" href="symbols?page={$current + 1}{$symbol-params}">
 									<xsl:value-of select="$current + 1"/>
 								</a>
 							</xsl:if>
 							<xsl:if test="$total &gt; ($current + 2)">
-								<a class="btn btn-default" role="button" title="Next" href="symbols?page={$current + 2}">
+								<a class="btn btn-default" role="button" title="Next" href="symbols?page={$current + 2}{$symbol-params}">
 									<xsl:value-of select="$current + 2"/>
 								</a>
 							</xsl:if>
 							<xsl:if test="$total &gt; ($current + 3)">
-								<a class="btn btn-default" role="button" title="Next" href="symbols?page={$current + 3}">
+								<a class="btn btn-default" role="button" title="Next" href="symbols?page={$current + 3}{$symbol-params}">
 									<xsl:value-of select="$current + 3"/>
 								</a>
 							</xsl:if>
@@ -270,11 +357,11 @@
 							</xsl:if>
 							<!-- last page -->
 							<xsl:if test="$current &lt; $total">
-								<a class="btn btn-default" role="button" title="Next" href="symbols?page={$current + 1}">
+								<a class="btn btn-default" role="button" title="Next" href="symbols?page={$current + 1}{$symbol-params}">
 									<xsl:text>Next </xsl:text>
 									<span class="glyphicon glyphicon-forward"/>
 								</a>
-								<a class="btn btn-default" role="button" title="Last" href="symbols?page={$total}">
+								<a class="btn btn-default" role="button" title="Last" href="symbols?page={$total}{$symbol-params}">
 									<xsl:value-of select="$total"/>
 									<xsl:text> </xsl:text>
 									<span class="glyphicon glyphicon-fast-forward"/>
@@ -285,7 +372,6 @@
 				</div>
 			</div>
 		</div>
-
 	</xsl:template>
 
 </xsl:stylesheet>

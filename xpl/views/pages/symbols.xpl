@@ -31,9 +31,16 @@
 		<p:output name="data" id="count"/>
 	</p:processor>
 	
+	<!-- get the distinct letters that appear in the collection -->
+	<p:processor name="oxf:pipeline">
+		<p:input name="config" href="../../models/xquery/get-symbol-letters.xpl"/>
+		<p:output name="data" id="letters"/>
+	</p:processor>
+	
 	<p:processor name="oxf:unsafe-xslt">
 		<p:input name="request" href="#request"/>
 		<p:input name="count" href="#count"/>
+		<p:input name="letters" href="#letters"/>
 		<p:input name="data" href="aggregate('content', #config, #data)"/>		
 		<p:input name="config" href="../../../ui/xslt/pages/symbols.xsl"/>
 		<p:output name="data" ref="data"/>
