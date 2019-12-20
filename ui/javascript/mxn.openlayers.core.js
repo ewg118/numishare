@@ -39,11 +39,11 @@ mxn.register('openlayers', {
 			this.layers.osm = new OpenLayers.Layer.OSM();
 			this.layers.imperium = new OpenLayers.Layer.XYZ(
 			"Imperium Romanum",[
-			"http://dare.ht.lu.se/tiles/imperium/${z}/${x}/${y}.png"], {
+			"https://dh.gu.se/tiles/imperium/${z}/${x}/${y}.png"], {
 				sphericalMercator: true,
 				isBaseLayer: true,
 				numZoomLevels: 12,
-				attribution: '<a href="http://imperium.ahlfeldt.se">Digital Atlas of the Roman Empire</a>, hosted by <a href="http://pelagios-project.blogspot.com">Pelagios</a>.'
+				attribution: '<a href="https://dh.gu.se/dare/">Digital Atlas of the Roman Empire</a>, hosted by <a href="http://pelagios-project.blogspot.com">Pelagios</a>.'
 			});
 			
 			this.layers.mb_physical = new OpenLayers.Layer.XYZ(
