@@ -136,13 +136,15 @@
 
 		<div class="col-md-3 col-sm-6 col-lg-2 monogram" style="height:240px">
 			<div class="text-center">
-				<img
-					src="{
-					if (crm:P165i_is_incorporated_in[1]/@rdf:resource) then
-					crm:P165i_is_incorporated_in[1]/@rdf:resource
-					else
-					crm:P165i_is_incorporated_in[1]/crmdig:D1_Digital_Object/@rdf:about}"
-					alt="Symbol image" style="max-height:200px"/>
+				<a href="symbol/{$id}">
+					<img
+						src="{
+						if (crm:P165i_is_incorporated_in[1]/@rdf:resource) then
+						crm:P165i_is_incorporated_in[1]/@rdf:resource
+						else
+						crm:P165i_is_incorporated_in[1]/crmdig:D1_Digital_Object/@rdf:about}"
+						alt="Symbol image" style="max-height:200px"/>
+				</a>				
 			</div>
 			<a href="symbol/{$id}">
 				<xsl:choose>
@@ -184,7 +186,8 @@
 		<xsl:variable name="next" select="$page + 1"/>
 		<xsl:variable name="total" select="ceiling($numFound div $limit)"/>
 
-		<div class="col-md-12">
+
+		<div class="col-md-12 paging_div">
 			<div class="row">
 				<div class="col-md-6">
 					<xsl:variable name="startRecord" select="$offset + 1"/>
