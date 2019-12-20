@@ -123,7 +123,7 @@
 					</xsl:if>
 
 					<!-- render each symbol/monogram -->
-					
+
 					<xsl:choose>
 						<xsl:when test="count(//rdf:RDF/*) &gt; 0">
 							<xsl:apply-templates select="//rdf:RDF/*" mode="symbol"/>
@@ -132,8 +132,8 @@
 							<h3>No symbols found.</h3>
 						</xsl:otherwise>
 					</xsl:choose>
-					
-					
+
+
 
 					<xsl:if test="$numFound &gt; $limit">
 						<xsl:call-template name="pagination">
@@ -195,13 +195,16 @@
 
 		<!-- Greek 880-1023 (https://codepoints.net/greek_and_coptic) -->
 		<!-- Latin 33-591  -->
-		
+
 
 		<div class="row">
 			<div class="col-md-12">
 				<h3>
 					<xsl:value-of select="numishare:getLabelforRDF('crm:P106_is_composed_of', $lang)"/>
 				</h3>
+
+				<p>Click the the buttons for letters below in order to select them to refine the search to filter only those monograms that contain the letters.
+					Clicking a selected letter again will deselect it.</p>
 
 				<xsl:if test="letter[@codepoint &gt;= 33 and @codepoint &lt;= 591]">
 					<div id="symbol-container">
@@ -218,23 +221,23 @@
 						<xsl:apply-templates select="letter[@codepoint &gt;= 880 and @codepoint &lt;= 1023]"/>
 					</div>
 				</xsl:if>
-				
+
 				<div id="form-container">
 					<form role="form" method="get" action="symbols" id="symbol-form">
 						<xsl:for-each select="$symbol//value">
 							<input type="hidden" name="symbol" value="{.}"/>
 						</xsl:for-each>
-						
+
 						<input class="btn btn-primary" type="submit" value="Refine Search"/>
-					</form>		
-					
+					</form>
+
 					<xsl:if test="$symbol">
 						<form role="form" method="get" action="symbols">
 							<input class="btn btn-primary" type="submit" value="Clear"/>
 						</form>
 					</xsl:if>
 				</div>
-				
+
 			</div>
 		</div>
 	</xsl:template>
@@ -245,9 +248,9 @@
 				<xsl:when test="$symbol//value = .">true</xsl:when>
 				<xsl:otherwise>false</xsl:otherwise>
 			</xsl:choose>
-			
+
 		</xsl:variable>
-		
+
 		<button class="btn btn-default letter-button {if ($active = true()) then 'active' else ''}">
 			<xsl:value-of select="."/>
 		</button>
@@ -361,7 +364,7 @@
 									<xsl:text>Next </xsl:text>
 									<span class="glyphicon glyphicon-forward"/>
 								</a>
-								<a class="btn btn-default" role="button" title="Last" href="symbols?page={$total}{$symbol-params}">
+								<a class="btn btn-default" role="button" title="Last" href="symbols?page={$total}{$symbol-params} ">
 									<xsl:value-of select="$total"/>
 									<xsl:text> </xsl:text>
 									<span class="glyphicon glyphicon-fast-forward"/>
