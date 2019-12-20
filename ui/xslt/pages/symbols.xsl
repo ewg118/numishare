@@ -203,8 +203,8 @@
 					<xsl:value-of select="numishare:getLabelforRDF('crm:P106_is_composed_of', $lang)"/>
 				</h3>
 
-				<p>Click the the buttons for letters below in order to select them to refine the search to filter only those monograms that contain the letters.
-					Clicking a selected letter again will deselect it.</p>
+				<p>Click the buttons for letters below in order to select them in order to filter for only those monograms that contain the letters (click
+					Refine Search after the selection is complete). Clicking a selected letter again will deselect it.</p>
 
 				<xsl:if test="letter[@codepoint &gt;= 33 and @codepoint &lt;= 591]">
 					<div id="symbol-container">
