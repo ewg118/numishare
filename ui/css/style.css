@@ -636,3 +636,20 @@ div.custominfostyle{
 .center-block{
     width: 50%;
 }
+/*
+  ***************************************
+  SYMBOL PAGE
+  ***************************************
+ */
+ #symbol-container{
+  margin: 10px 0;
+ }
+ #form-container form {
+     display:inline;
+ }
+ #symbol-form input {
+     margin-right:5px;
+ }
+ .letter-button {
+     margin-right:5px;
+ }
