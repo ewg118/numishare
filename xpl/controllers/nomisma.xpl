@@ -70,7 +70,7 @@
 								xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xmlns:nmo="http://nomisma.org/ontology#"
 								xmlns:edm="http://www.europeana.eu/schemas/edm/" xmlns:svcs="http://rdfs.org/sioc/services#"
 								xmlns:doap="http://usefulinc.com/ns/doap#" xmlns:prov="http://www.w3.org/ns/prov#"
-								xmlns:crm="http://www.cidoc-crm.org/cidoc-crm/" xmlns:crmdig="http://www.ics.forth.gr/isl/CRMdig">
+								xmlns:crm="http://www.cidoc-crm.org/cidoc-crm/" xmlns:crmdig="http://www.ics.forth.gr/isl/CRMdig/">
 								<xsl:output indent="yes" encoding="UTF-8"/>
 								<xsl:strip-space elements="*"/>
 

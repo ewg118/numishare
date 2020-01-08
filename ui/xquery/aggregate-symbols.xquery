@@ -7,7 +7,7 @@ Function: XQuery to aggregate all symbol RDF files for the RDF export:)
 declare namespace rdf = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
 declare namespace skos = "http://www.w3.org/2004/02/skos/core#";
 declare namespace crm = "http://www.cidoc-crm.org/cidoc-crm/";
-declare namespace crmdig = "http://www.ics.forth.gr/isl/CRMdig";
+declare namespace crmdig = "http://www.ics.forth.gr/isl/CRMdig/";
 
     <rdf:RDF
         xmlns:dcterms="http://purl.org/dc/terms/"
@@ -21,7 +21,7 @@ declare namespace crmdig = "http://www.ics.forth.gr/isl/CRMdig";
         xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
         xmlns:prov="http://www.w3.org/ns/prov#"
         xmlns:crm="http://www.cidoc-crm.org/cidoc-crm/"
-        xmlns:crmdig="http://www.ics.forth.gr/isl/CRMdig">
+        xmlns:crmdig="http://www.ics.forth.gr/isl/CRMdig/">
         {
             for $doc in collection('/db/numishare/symbols/')
 								return $doc/rdf:RDF/*

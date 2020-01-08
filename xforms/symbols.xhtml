@@ -6,7 +6,7 @@
 	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"
 	xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:nomisma="https://github.com/nomisma"
 	xmlns:prov="http://www.w3.org/ns/prov#" xmlns:nmo="http://nomisma.org/ontology#" xmlns:crm="http://www.cidoc-crm.org/cidoc-crm/"
-	xmlns:void="http://rdfs.org/ns/void#" xmlns:crmdig="http://www.ics.forth.gr/isl/CRMdig" xmlns:exist="http://exist.sourceforge.net/NS/exist">
+	xmlns:void="http://rdfs.org/ns/void#" xmlns:crmdig="http://www.ics.forth.gr/isl/CRMdig/" xmlns:exist="http://exist.sourceforge.net/NS/exist">
 	<head>
 		<title>Numishare: Symbol Management</title>
 		<!-- Core + Skin CSS -->
@@ -74,7 +74,7 @@
 						declare namespace rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#";
 						declare namespace skos="http://www.w3.org/2004/02/skos/core#";
 						declare namespace crm="http://www.cidoc-crm.org/cidoc-crm/";
-						declare namespace crmdig="http://www.ics.forth.gr/isl/CRMdig";
+						declare namespace crmdig="http://www.ics.forth.gr/isl/CRMdig/";
 						<report> { 
 							for $record in subsequence(collection(), START, 100)
 								let $type := $record/rdf:RDF/*[1]/local-name()
