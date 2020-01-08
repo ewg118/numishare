@@ -88,6 +88,7 @@
 					<property label="Field of Numismatics">dcterms:isPartOf</property>
 					<property label="ID">id</property>
 					<property label="Image Creator">image_creator</property>
+					<property label="Image License">image_license</property>
 					<property label="Image URI or Unicode Character">crm:P165i_is_incorporated_in</property>
 					<property label="Preferred Label">skos:prefLabel</property>
 					<property label="Scope Note">skos:scopeNote</property>
@@ -213,9 +214,11 @@ PREFIX skos:	<http://www.w3.org/2004/02/skos/core#>]]></prefix>
 
 			<xforms:bind nodeset="instance('mappings')"
 				constraint="count(mapping[@to = 'id']) = 1 and count(mapping[@to = 'skos:prefLabel'][@lang='en']) = 1 and count(mapping[@to = 'skos:definition'][@lang='en']) = 1
-				and count(mapping[@to = 'image_creator']) &lt;= 1
+				and count(mapping[@to = 'image_creator']) &lt;= 1 and count(mapping[@to = 'image_license']) &lt;= 1
 				and (if (count(mapping[@to = 'image_creator']) = 1) then not(mapping[@to = 'image_creator']/following-sibling::mapping[@to = 'crm:P165i_is_incorporated_in']) else true())
-				and (if(count(mapping[@to = 'image_creator']) = 1) then (count(mapping[@to = 'crm:P165i_is_incorporated_in']) &gt; 0) else true())">
+				and (if(count(mapping[@to = 'image_creator']) = 1) then (count(mapping[@to = 'crm:P165i_is_incorporated_in']) &gt; 0) else true())
+				and (if (count(mapping[@to = 'image_license']) = 1) then not(mapping[@to = 'image_license']/following-sibling::mapping[@to = 'crm:P165i_is_incorporated_in']) else true())
+				and (if(count(mapping[@to = 'image_license']) = 1) then (count(mapping[@to = 'crm:P165i_is_incorporated_in']) &gt; 0) else true())">
 				<!-- language bindings -->
 				<xforms:bind nodeset="mapping[@to='skos:prefLabel']">
 					<xforms:bind nodeset="@lang" required="true()"
@@ -236,7 +239,7 @@ PREFIX skos:	<http://www.w3.org/2004/02/skos/core#>]]></prefix>
 					<xforms:bind nodeset="@lang" required="true()" constraint="string-length(.) &gt; 0"/>
 				</xforms:bind>
 			</xforms:bind>
-			
+
 			<!-- bindings for the RDF of spreadsheet metadata: creator and contributor URIs must be unique -->
 			<xforms:bind nodeset="instance('spreadsheet-rdf')">
 				<xforms:bind nodeset="prov:Entity"
@@ -262,16 +265,16 @@ PREFIX skos:	<http://www.w3.org/2004/02/skos/core#>]]></prefix>
 			<xforms:action ev:event="xxforms-invalid" ev:observer="mappings">
 				<xforms:setvalue ref="instance('control-instance')/mappings-valid" value="false()"/>
 			</xforms:action>
-			
+
 			<xforms:action ev:event="xxforms-valid" ev:observer="mappings">
 				<xforms:setvalue ref="instance('control-instance')/mappings-valid" value="true()"/>
 			</xforms:action>
-			
+
 			<!-- ensure that the spreadsheet metadata are valid before continuing with validation -->
 			<xforms:action ev:event="xxforms-invalid" ev:observer="spreadsheet-rdf">
 				<xforms:setvalue ref="instance('control-instance')/metadata-valid" value="false()"/>
 			</xforms:action>
-			
+
 			<xforms:action ev:event="xxforms-valid" ev:observer="spreadsheet-rdf">
 				<xforms:setvalue ref="instance('control-instance')/metadata-valid" value="true()"/>
 			</xforms:action>
@@ -455,10 +458,11 @@ PREFIX skos:	<http://www.w3.org/2004/02/skos/core#>]]></prefix>
 					<xforms:insert context="instance('editor-list')" nodeset="./child::node()[last()]"
 						origin="xforms:element('item', (xforms:attribute('uri', $uri), $label))"/>
 				</xforms:action>
-				
+
 				<!-- insert the current Orbeon user as the first editor URI as a dummy -->
 				<xforms:insert context="instance('editor-list')"
-					origin="xforms:element('item', (xforms:attribute('uri', concat(instance('config')/url, 'editor#', instance('control-instance')/username)), instance('control-instance')/username))"/>
+					origin="xforms:element('item', (xforms:attribute('uri', concat(instance('config')/url, 'editor#', instance('control-instance')/username)), instance('control-instance')/username))"
+				/>
 			</xforms:action>
 
 			<!-- ********** XFORMS-READY ********** -->
@@ -658,12 +662,26 @@ PREFIX skos:	<http://www.w3.org/2004/02/skos/core#>]]></prefix>
 											specified.</div>
 									</xforms:group>
 									<xforms:group
+										ref=".[count(mapping[@to = 'image_license']) &gt; 0 and count(mapping[@to = 'crm:P165i_is_incorporated_in']) = 0]">
+										<div class="alert-danger alert-box alert">
+											<span class="glyphicon glyphicon-exclamation-sign"></span>
+											<strong>Alert:</strong> There must be at least one Image URL or Unicode Character column when the Image License is
+											specified.</div>
+									</xforms:group>
+									<xforms:group
 										ref=".[count(mapping[@to = 'image_creator']) &gt; 0 and mapping[@to = 'image_creator']/following-sibling::mapping[@to = 'crm:P165i_is_incorporated_in']]">
 										<div class="alert-danger alert-box alert">
 											<span class="glyphicon glyphicon-exclamation-sign"></span>
 											<strong>Alert:</strong> The Image Creator column must come after the Image URL or Unicode Character column(s).</div>
 									</xforms:group>
-									
+
+									<xforms:group
+										ref=".[count(mapping[@to = 'image_license']) &gt; 0 and mapping[@to = 'image_license']/following-sibling::mapping[@to = 'crm:P165i_is_incorporated_in']]">
+										<div class="alert-danger alert-box alert">
+											<span class="glyphicon glyphicon-exclamation-sign"></span>
+											<strong>Alert:</strong> The Image License column must come after the Image URL or Unicode Character column(s).</div>
+									</xforms:group>
+
 									<table class="table">
 										<thead>
 											<tr>
@@ -782,7 +800,7 @@ PREFIX skos:	<http://www.w3.org/2004/02/skos/core#>]]></prefix>
 														<!-- fields that can be any type of URI -->
 														<xforms:action
 															if="$mapping = 'contributor' or $mapping = 'crm:P165i_is_incorporated_in' or $mapping = 'image_creator' 
-															or $mapping = 'skos:broader' or $mapping = 'skos:exactMatch'">
+															or $mapping = 'skos:broader' or $mapping = 'skos:exactMatch' or $mapping = 'image_license'">
 
 															<xforms:var name="isValid" select="matches($value, 'https?://(-\.)?([^\s/?\.#]+\.?)+(/[^\s]*)?$')"/>
 															<xforms:insert if="string-length($value) &gt; 0 and $isValid = false()"
@@ -1045,6 +1063,15 @@ PREFIX skos:	<http://www.w3.org/2004/02/skos/core#>]]></prefix>
 															</xforms:action>
 														</xforms:action>
 
+														<xforms:action if="$mapping = 'image_license'">
+															<!-- only insert an image_license if there are D1_Digital_Objects (this ignores unicode characters) -->
+															<xforms:action
+																xxforms:iterate="instance('rdf')/*[1]/crm:P165i_is_incorporated_in[last()]/crmdig:D1_Digital_Object">
+																<xforms:insert context="." nodeset="./child::node()[last()]"
+																	origin="xforms:element('dcterms:license', xforms:attribute('rdf:resource', $value))"/>
+															</xforms:action>
+														</xforms:action>
+
 														<!-- if there is a creation date (xsd:dateTime or xsd:date), then insert an initial provenance event for it -->
 														<xforms:action if="$mapping = 'creation_date'">
 															<xforms:insert context="instance('rdf')/dcterms:ProvenanceStatement"
@@ -1121,10 +1148,10 @@ PREFIX skos:	<http://www.w3.org/2004/02/skos/core#>]]></prefix>
 												<!-- save RDF/XML to eXist-db collection -->
 												<xforms:send submission="save-rdf"/>
 											</xforms:action>
-											
+
 											<!-- save the spreadsheet rdf -->
 											<xforms:send submission="save-spreadsheet-rdf"/>
-											
+
 											<xforms:toggle case="process-complete"/>
 										</xforms:action>
 									</xforms:trigger>

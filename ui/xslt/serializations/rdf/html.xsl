@@ -347,7 +347,7 @@
 				</a>
 			</dd>
 
-			<xsl:apply-templates select="dcterms:format | dcterms:creator" mode="list-item">
+			<xsl:apply-templates select="dcterms:format | dcterms:creator | dcterms:license" mode="list-item">
 				<xsl:sort select="name()"/>
 			</xsl:apply-templates>
 		</dl>

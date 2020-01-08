@@ -4532,6 +4532,7 @@
 					<xsl:when test="$element = 'dcterms:creator'">Creator</xsl:when>
 					<xsl:when test="$element = 'dcterms:format'">Media Type</xsl:when>
 					<xsl:when test="$element = 'dcterms:isPartOf'">Field of Numismatics</xsl:when>
+					<xsl:when test="$element = 'dcterms:license'">License</xsl:when>
 					<xsl:when test="$element = 'dcterms:source'">Source</xsl:when>
 					<xsl:when test="$element = 'skos:definition'">Definition</xsl:when>
 					<xsl:when test="$element = 'skos:prefLabel'">Preferred Label</xsl:when>
