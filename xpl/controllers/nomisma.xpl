@@ -42,7 +42,7 @@
 
 			<!-- only aggregate symbols with types when there are symbol URIs -->
 			<p:choose href="#symbols">
-				<p:when test="count(rdf:RDF/*) &gt; 0">
+				<p:when test="count(descendant::rdf:RDF/*) &gt; 0">
 					<!-- aggregate all NUDS documents and pipe through XSLT into RDF -->
 					<p:processor name="oxf:pipeline">
 						<p:input name="config" href="../models/xquery/aggregate-all.xpl"/>
@@ -69,7 +69,8 @@
 								xmlns:relations="http://pelagios.github.io/vocab/relations#" xmlns:foaf="http://xmlns.com/foaf/0.1/"
 								xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xmlns:nmo="http://nomisma.org/ontology#"
 								xmlns:edm="http://www.europeana.eu/schemas/edm/" xmlns:svcs="http://rdfs.org/sioc/services#"
-								xmlns:doap="http://usefulinc.com/ns/doap#">
+								xmlns:doap="http://usefulinc.com/ns/doap#" xmlns:prov="http://www.w3.org/ns/prov#"
+								xmlns:crm="http://www.cidoc-crm.org/cidoc-crm/" xmlns:crmdig="http://www.ics.forth.gr/isl/CRMdig">
 								<xsl:output indent="yes" encoding="UTF-8"/>
 								<xsl:strip-space elements="*"/>
 
