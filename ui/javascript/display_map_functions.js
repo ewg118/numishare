@@ -79,7 +79,7 @@ function initialize_map(id, path, lang) {
     });
     
     var imperium = L.tileLayer(
-    'http://dare.ht.lu.se/tiles/imperium/{z}/{x}/{y}.png', {
+    'https://dh.gu.se/tiles/imperium/{z}/{x}/{y}.png', {
         maxZoom: 10,
         attribution: 'Powered by <a href="http://leafletjs.com/">Leaflet</a>. Map base: <a href="http://dare.ht.lu.se/" title="Digital Atlas of the Roman Empire, Department of Archaeology and Ancient History, Lund University, Sweden">DARE</a>, 2015 (cc-by-sa).'
     });
