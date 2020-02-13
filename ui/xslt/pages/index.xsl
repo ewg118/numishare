@@ -129,8 +129,12 @@
 									<img src="{$include_path}/images/logo_dai.png" alt="DAI"/>
 								</a>
 								<br/>
-								<a href="http://ww2.smb.museum/ikmk/" title="Münzkabinett Berlin">
+								<a href="http://ww2.smb.museum/ikmk/" title="Münzkabinett Berlin" style="margin:0 10px;">
 									<img src="{$include_path}/images/logo_berlin.jpg" alt="Berlin"/>
+								</a>
+								<br/>
+								<a href="https://www.spink.com/" title="Spink &amp; Son" style="margin:0 10px;">
+									<img src="{$include_path}/images/logo_spink.jpg" alt="Spink &amp; Son" style="width:260px;"/>
 								</a>
 							</p>
 						</div>
@@ -147,22 +151,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="col-md-3">
-					<div class="highlight">
-						<h3>Share</h3>
-						<!-- AddThis Button BEGIN -->
-						<div class="addthis_toolbox addthis_default_style addthis_32x32_style">
-							<a class="addthis_button_preferred_1"/>
-							<a class="addthis_button_preferred_2"/>
-							<a class="addthis_button_preferred_3"/>
-							<a class="addthis_button_preferred_4"/>
-							<a class="addthis_button_compact"/>
-							<a class="addthis_counter addthis_bubble_style"/>
-						</div>
-						<script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid=xa-4ffc41710d8b692c"/>
-						<!-- AddThis Button END -->
-					</div>
-					
+				<div class="col-md-3">					
 					<div class="highlight data_options">
 						<h3>Linked Data</h3>
 						<a href="{$display_path}feed/?q=*:*">
