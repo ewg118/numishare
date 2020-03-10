@@ -51,6 +51,18 @@ dl.ar dd{
     border:none;
     height:600px;
 }
+#funding {
+    background-color:orange;
+    font-weight:bold;
+    color:white;
+    min-height:80px;
+    font-size:larger;
+    padding:8px 0;
+}
+#funding a {
+    color:white;
+    text-decoration:underline;
+}
 /*
   ***************************************
   CUSTOM BOOTSTRAP NAVBAR
