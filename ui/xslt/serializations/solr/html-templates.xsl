@@ -14,14 +14,14 @@
 					<xsl:value-of select="//config/uri_space"/>
 				</xsl:when>
 				<xsl:when test="//config/union_type_catalog/@enabled = true()">
-					<xsl:value-of select="str[@name='uri_space']"/>
+					<xsl:value-of select="str[@name = 'uri_space']"/>
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:value-of select="concat($display_path, 'id/')"/>
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-		
+
 		<div class="row result-doc">
 			<div class="col-md-12">
 				<h4>
@@ -63,14 +63,14 @@
 					<xsl:value-of select="//config/uri_space"/>
 				</xsl:when>
 				<xsl:when test="//config/union_type_catalog/@enabled = true()">
-					<xsl:value-of select="str[@name='uri_space']"/>
+					<xsl:value-of select="str[@name = 'uri_space']"/>
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:value-of select="concat($display_path, 'id/')"/>
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-		
+
 		<div class="col-xs-12 col-sm-6 col-md-4 grid-doc">
 			<h4>
 				<xsl:if test="$lang = 'ar'">
@@ -121,13 +121,13 @@
 			<xsl:choose>
 				<xsl:when test="//config/collection_type = 'object' and string(//config/uri_space)">
 					<xsl:value-of select="//config/uri_space"/>
-				</xsl:when>				
+				</xsl:when>
 				<xsl:otherwise>
 					<xsl:value-of select="concat($display_path, 'id/')"/>
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-		
+
 		<div class="row result-doc">
 			<div class="col-md-12">
 				<h4>
@@ -345,7 +345,7 @@
 						<dd>
 							<xsl:for-each select="arr[@name = 'provenance_facet']/str">
 								<xsl:sort select="substring-before(., ':')" order="descending"/>
-								
+
 								<xsl:value-of select="."/>
 								<xsl:if test="not(position() = last())">
 									<br/>
@@ -637,22 +637,30 @@
 				<xsl:variable name="title">
 					<xsl:choose>
 						<xsl:when test="contains(@name, 'symbol_')">
-							<xsl:variable name="position" select="tokenize(@name, '_')[3]"/>
 							<xsl:variable name="langParam" select="
 									if (string($lang)) then
 										$lang
 									else
 										'en'"/>
 
+							<!-- evaluate whether the symbol is indexed at a certain position or pertains to the side more generally -->
 							<xsl:choose>
-								<xsl:when test="$positions//position[@value = $position]/label[@lang = $langParam]">
-									<xsl:value-of select="$positions//position[@value = $position]/label[@lang = $langParam]"/>
+								<xsl:when test="count(tokenize(@name, '_')) = 4">
+									<xsl:variable name="position" select="tokenize(@name, '_')[3]"/>
+
+									<xsl:choose>
+										<xsl:when test="$positions//position[@value = $position]/label[@lang = $langParam]">
+											<xsl:value-of select="$positions//position[@value = $position]/label[@lang = $langParam]"/>
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:value-of select="concat(upper-case(substring($position, 1, 1)), substring($position, 2))"/>
+										</xsl:otherwise>
+									</xsl:choose>
 								</xsl:when>
 								<xsl:otherwise>
-									<xsl:value-of select="concat(upper-case(substring($position, 1, 1)), substring($position, 2))"/>
+									<xsl:value-of select="numishare:normalizeLabel('position_any', $lang)"/>
 								</xsl:otherwise>
 							</xsl:choose>
-
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:value-of select="numishare:normalize_fields(@name, $lang)"/>
@@ -697,7 +705,7 @@
 	<xsl:template name="result_image">
 		<xsl:param name="alignment"/>
 		<xsl:param name="object-path"/>
-		
+
 		<div class="col-md-5 col-lg-4 {if ($alignment = 'right') then 'pull-right' else ''}">
 			<xsl:choose>
 				<xsl:when test="str[@name = 'recordType'] = 'physical'">
@@ -784,17 +792,27 @@
 						<xsl:choose>
 							<xsl:when test="string($field)">
 								<xsl:choose>
-									<xsl:when test="contains($field, 'symbol_')">
-										<xsl:variable name="position" select="tokenize($field, '_')[3]"/>
+									<xsl:when test="starts-with($field, 'symbol_')">
+										<!-- evaluate whether the symbol is indexed at a certain position or pertains to the side more generally -->
 										<xsl:choose>
-											<xsl:when test="$positions//position[@value = $position]/label[@lang = $lang]">
-												<xsl:value-of select="$positions//position[@value = $position]/label[@lang = $lang]"/>
+											<xsl:when test="count(tokenize($field, '_')) = 4">
+												<xsl:variable name="position" select="tokenize($field, '_')[3]"/>
+
+												<xsl:choose>
+													<xsl:when test="$positions//position[@value = $position]/label[@lang = $langParam]">
+														<xsl:value-of select="$positions//position[@value = $position]/label[@lang = $langParam]"/>
+													</xsl:when>
+													<xsl:otherwise>
+														<xsl:value-of select="concat(upper-case(substring($position, 1, 1)), substring($position, 2))"/>
+													</xsl:otherwise>
+												</xsl:choose>
 											</xsl:when>
 											<xsl:otherwise>
-												<xsl:value-of select="concat(upper-case(substring($position, 1, 1)), substring($position, 2))"/>
+												<xsl:value-of
+													select="concat(numishare:normalize_fields('symbol', $lang), ', ', numishare:normalize_fields('reverse', $lang))"
+												/>
 											</xsl:otherwise>
 										</xsl:choose>
-
 									</xsl:when>
 									<xsl:otherwise>
 										<xsl:value-of select="numishare:normalize_fields($field, $lang)"/>
@@ -953,15 +971,25 @@
 									<!-- display either the term or the regularized name for the century -->
 									<b>
 										<xsl:choose>
-											<xsl:when test="contains($field, 'symbol_')">
-												<xsl:variable name="position" select="tokenize($field, '_')[3]"/>												
-
+											<xsl:when test="starts-with($field, 'symbol_')">
+												<!-- evaluate whether the symbol is indexed at a certain position or pertains to the side more generally -->
 												<xsl:choose>
-													<xsl:when test="$positions//position[@value = $position]/label[@lang = $lang]">
-														<xsl:value-of select="$positions//position[@value = $position]/label[@lang = $lang]"/>
+													<xsl:when test="count(tokenize($field, '_')) = 4">
+														<xsl:variable name="position" select="tokenize($field, '_')[3]"/>
+
+														<xsl:choose>
+															<xsl:when test="$positions//position[@value = $position]/label[@lang = $langParam]">
+																<xsl:value-of select="$positions//position[@value = $position]/label[@lang = $langParam]"/>
+															</xsl:when>
+															<xsl:otherwise>
+																<xsl:value-of select="concat(upper-case(substring($position, 1, 1)), substring($position, 2))"/>
+															</xsl:otherwise>
+														</xsl:choose>
 													</xsl:when>
 													<xsl:otherwise>
-														<xsl:value-of select="concat(upper-case(substring($position, 1, 1)), substring($position, 2))"/>
+														<xsl:value-of
+															select="concat(numishare:normalize_fields('symbol', $lang), ', ', numishare:normalize_fields('reverse', $lang))"
+														/>
 													</xsl:otherwise>
 												</xsl:choose>
 											</xsl:when>

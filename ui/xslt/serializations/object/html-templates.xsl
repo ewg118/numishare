@@ -543,6 +543,7 @@
 			</xsl:choose>
 		</li>
 	</xsl:template>
+	
 	<xsl:template name="display-label">
 		<xsl:param name="field"/>
 		<xsl:param name="value"/>
@@ -550,13 +551,25 @@
 		<xsl:param name="position"/>
 
 		<xsl:choose>
-			<xsl:when test="string($position) and $positions//position[@value = $position]">
+			<xsl:when test="$field = 'symbol'">
 				<xsl:variable name="side" select="substring(parent::node()/name(), 1, 3)"/>
-				<a
-					href="{$display_path}results?q=symbol_{$side}_{$position}_facet:&#x022;{$value}&#x022;{if (string($langParam)) then concat('&amp;lang=', $langParam) else ''}">
-					<xsl:value-of select="$value"/>
-				</a>
+				
+				<xsl:choose>
+					<xsl:when test="string($position) and $positions//position[@value = $position]">						
+						<a
+							href="{$display_path}results?q=symbol_{$side}_{$position}_facet:&#x022;{$value}&#x022;{if (string($langParam)) then concat('&amp;lang=', $langParam) else ''}">
+							<xsl:value-of select="$value"/>
+						</a>
+					</xsl:when>
+					<xsl:otherwise>
+						<a
+							href="{$display_path}results?q=symbol_{$side}_facet:&#x022;{$value}&#x022;{if (string($langParam)) then concat('&amp;lang=', $langParam) else ''}">
+							<xsl:value-of select="$value"/>
+						</a>
+					</xsl:otherwise>
+				</xsl:choose>
 			</xsl:when>
+			
 			<xsl:when test="contains($facets, $field)">
 				<a href="{$display_path}results?q={$field}_facet:&#x022;{$value}&#x022;{if (string($langParam)) then concat('&amp;lang=', $langParam) else ''}">
 					<xsl:choose>

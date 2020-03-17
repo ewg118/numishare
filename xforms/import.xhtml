@@ -31,7 +31,7 @@
 					<status/>
 					<collection-name/>
 					<username/>
-					<spreadsheet-key>1wRoRThLRz62O3jJ7rVm3HMeGUlZNYOLxnQBaJbMO8wg</spreadsheet-key>
+					<spreadsheet-key>1yB2BJEaSk0-Mo3hhN4X8IEudc4yUQ_gYP2VhEbNG0CM</spreadsheet-key>
 					<spreadsheet-uri/>
 					<worksheet_id/>
 					<language>en</language>
@@ -167,6 +167,10 @@
 			<xforms:instance id="description-template" xxforms:exclude-result-prefixes="#all">
 				<description xml:lang=""/>
 			</xforms:instance>
+			
+			<xforms:instance id="die-template" xxforms:exclude-result-prefixes="#all">
+				<die state="nonexistent"/>
+			</xforms:instance>
 
 			<xforms:instance id="famname-template" xxforms:exclude-result-prefixes="#all">
 				<famname xlink:type="simple" xlink:role="" xlink:href=""/>
@@ -294,6 +298,8 @@
 					<property label="Mint URI">geo_mint_uri</property>
 					<property label="Note">note</property>
 					<property label="Object Type URI">objectType_uri</property>
+					<property label="Obverse Deity URI">obv_deity_uri</property>
+					<property label="Obverse Die ID">obv_die</property>
 					<property label="Obverse Legend">obv_legend</property>
 					<property label="Obverse Portrait URI">obv_portrait_uri</property>
 					<property label="Obverse Symbol">obv_symbol</property>
@@ -304,10 +310,13 @@
 					<property label="Region URI">geo_region_uri</property>
 					<property label="Replaced By ID" constraint="cointype">isReplacedBy</property>
 					<property label="Replaces ID" constraint="cointype">replaces</property>
-					<property label="Reverse Legend">rev_legend</property>
+					<property label="Reverse Deity URI">rev_deity_uri</property>
+					<property label="Reverse Die ID">rev_die</property>
+					<property label="Reverse Legend">rev_legend</property>					
 					<property label="Reverse Portrait URI">rev_portrait_uri</property>
 					<property label="Reverse Symbol">rev_symbol</property>
 					<property label="Reverse Type Description">rev_type</property>
+					<property label="Sort ID" constraint="cointype">sortId</property>
 					<property label="Start Date">fromDate</property>
 					<property label="Stated Authority URI">auth_statedAuthority_uri</property>
 					<property label="Thickness" constraint="object">thickness</property>
@@ -399,6 +408,7 @@
 				constraint="count(mapping[@to = 'id']) = 1 and count(mapping[@to = 'title']) &gt;= 1 and 
 				(count(mapping[@to = 'fromDate']) = count(mapping[@to = 'toDate'])) and count(mapping[@to = 'fromDate']) &lt;= 1 and
 				count(//mapping[@to='obv_legend']) &lt;= 1 and count(//mapping[@to='rev_legend']) &lt;= 1 and
+				count(//mapping[@to='obv_die']) &lt;= 1 and count(//mapping[@to='rev_die']) &lt;= 1 and
 				(if (instance('config')/collection_type = 'cointype') then count(mapping[@to = 'objectType_uri']) = 1 else if (instance('control-instance')/link-to-coinType = false()) then count(mapping[@to = 'objectType_uri']) = 1 else count(mapping[@to = 'objectType_uri']) &lt;= 1) and
 				(if (instance('control-instance')/link-to-coinType = true() and instance('config')/collection_type = 'object') then count(mapping[@to = 'coinType']) = 1 else count(mapping[@to = 'coinType']) = 0)
 				and count(mapping[@to = 'typeSeries_uri']) &lt;= 1 and count(mapping[@to = 'typeNumber']) &lt;= 1
@@ -1054,6 +1064,18 @@
 											<span class="glyphicon glyphicon-exclamation-sign"></span>
 											<strong>Alert:</strong> There can only be one Reverse Legend.</div>
 									</xforms:group>
+									
+									<xforms:group ref=".[count(mapping[@to='obv_die']) != count(distinct-values(mapping[@to='obv_die']))]">
+										<div class="alert-danger alert-box alert">
+											<span class="glyphicon glyphicon-exclamation-sign"></span>
+											<strong>Alert:</strong> There can only be one Obverse Die ID.</div>
+									</xforms:group>
+									<xforms:group ref=".[count(mapping[@to='rev_die']) != count(distinct-values(mapping[@to='rev_die']))]">
+										<div class="alert-danger alert-box alert">
+											<span class="glyphicon glyphicon-exclamation-sign"></span>
+											<strong>Alert:</strong> There can only be one Reverse Die ID.</div>
+									</xforms:group>
+									
 									<xforms:group
 										ref=".[instance('control-instance')/link-to-coinType = true() and instance('config')/collection_type = 'object' and count(mapping[@to = 'coinType']) != 1]">
 										<div class="alert-danger alert-box alert">
@@ -1815,7 +1837,8 @@
 																		ref="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container]/nuds:type/nuds:description[last()]/@xml:lang"
 																		value="$lang"/>
 																</xforms:action>
-																<xforms:action if="$element = 'legend'">
+																
+																<xforms:action if="$element = 'legend' or $element = 'die'">
 																	<xforms:insert
 																		context="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container]"
 																		nodeset="./*[name() &lt;= $element]" origin="instance(concat($element, '-template'))"/>
@@ -2035,25 +2058,25 @@
 
 												<!-- *** BEGIN CRUD OPERATIONS *** -->
 												<!-- save NUDS/XML to eXist-db collection -->
-												<!--<xforms:send submission="save-nuds"/>-->
+												<xforms:send submission="save-nuds"/>
 											</xforms:action>
 
 											<!-- *** after each row in the spreadsheet has been processed execute following processes *** -->
 
 											<!-- if the types should be indexed into Solr, publish all non-deprecated IDs -->
-											<!--<xforms:action if="instance('control-instance')/index-to-solr = true()">
+											<xforms:action if="instance('control-instance')/index-to-solr = true()">
 
-												<!-\- split the concatenated list of identifiers into blocks of 100 on the comma separator -\->
+												<!-- split the concatenated list of identifiers into blocks of 100 on the comma separator -->
 												<xforms:var name="tokens" select="tokenize(instance('control-instance')/identifiers, ',')"/>
 
-												<!-\- call the /ingest pipeline with 100 IDs per API call, and post that to Solr -\->
+												<!-- call the /ingest pipeline with 100 IDs per API call, and post that to Solr -->
 												<xforms:action xxforms:iterate="$tokens">
 													<xforms:setvalue ref="instance('control-instance')/identifiers" value="context()"/>
-													<!-\- get Solr document -\->
+													<!-- get Solr document -->
 													<xforms:send submission="generate-add-document"/>
-													<!-\- on xforms-submit-done, the document is posted and a commit posted -\->
+													<!-- on xforms-submit-done, the document is posted and a commit posted -->
 												</xforms:action>
-											</xforms:action>-->
+											</xforms:action>
 
 											<xforms:toggle case="process-complete"/>
 										</xforms:action>
@@ -2065,7 +2088,7 @@
 							<p>The process has been completed successfully. Click the link above to return to the Admin panel.</p>
 						</xforms:case>
 					</xforms:switch>
-					<fr:xforms-inspector/>
+					<!--<fr:xforms-inspector/>-->
 				</div>
 			</div>
 		</div>

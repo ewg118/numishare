@@ -239,6 +239,9 @@
 						<field name="{$symbolType}_{$side}_{@position}_facet">
 							<xsl:value-of select="$symbols//*[@rdf:about = $uri]/skos:prefLabel"/>
 						</field>
+						<field name="{$symbolType}_{$side}_facet">
+							<xsl:value-of select="$symbols//*[@rdf:about = $uri]/skos:prefLabel"/>
+						</field>
 						<field name="{$symbolType}_{$side}_{@position}_uri">
 							<xsl:value-of select="@xlink:href"/>
 						</field>
@@ -248,6 +251,9 @@
 					</xsl:when>
 					<xsl:otherwise>
 						<field name="{$symbolType}_{$side}_{@position}_facet">
+							<xsl:value-of select="."/>
+						</field>
+						<field name="{$symbolType}_{$side}_facet">
 							<xsl:value-of select="."/>
 						</field>
 					</xsl:otherwise>
