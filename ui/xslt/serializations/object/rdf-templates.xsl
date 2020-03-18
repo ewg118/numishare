@@ -708,6 +708,21 @@
 			</nmo:hasLegend>
 		</xsl:if>
 	</xsl:template>
+	
+	<xsl:template match="nuds:die" mode="nomisma">
+		<xsl:if test="string(.)">
+			<nmo:hasDie>
+				<xsl:choose>
+					<xsl:when test="@xlink:href">
+						<xsl:attribute name="rdf:resource" select="@xlink:href"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="."/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</nmo:hasDie>
+		</xsl:if>
+	</xsl:template>
 
 	<xsl:template match="nuds:type/nuds:description" mode="nomisma">
 		<dcterms:description>
