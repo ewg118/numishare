@@ -193,6 +193,8 @@
 					<xsl:for-each select="('obverse', 'reverse')">
 						<xsl:variable name="side" select="."/>
 						<xsl:variable name="sideAbbr" select="substring($side, 1, 3)"/>
+						
+						<!-- type descriptions -->
 						<xsl:if test="not($typeDesc/*[local-name() = $side]/nuds:type) and count($subtypes//subtype) &gt; 0">
 							<xsl:variable name="pieces" as="item()*">
 								<xsl:for-each
@@ -216,6 +218,8 @@
 							</xsl:for-each>
 
 						</xsl:if>
+						
+						<!-- legend -->
 						<xsl:if test="not($typeDesc/*[local-name() = $side]/nuds:legend) and count($subtypes//subtype) &gt; 0">
 							<xsl:variable name="pieces" as="item()*">
 								<xsl:for-each select="distinct-values($subtypes//subtype/descendant::*[local-name() = $side]/nuds:legend)">

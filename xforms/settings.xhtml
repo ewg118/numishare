@@ -152,15 +152,9 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 				<xforms:bind nodeset="template">
 					<!-- about the electronic record -->
 					<xforms:bind nodeset="agencyName" required="true()"/>
-					<xforms:bind nodeset="copyrightHolder" required="true()"/>
-					<xforms:bind nodeset="createdBy"/>
-					<xforms:bind nodeset="project"/>
 					<xforms:bind nodeset="language" required="true()"/>
 					<xforms:bind nodeset="license" required="true()"/>
-					<!-- about the physical item -->
-					<xforms:bind nodeset="repository"/>
-					<xforms:bind nodeset="owner"/>
-					<xforms:bind nodeset="collection"/>
+					<xforms:bind nodeset="rights" required="true()"/>
 				</xforms:bind>
 				<!-- list elements -->
 				<xforms:bind nodeset="facets">
@@ -983,8 +977,7 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 											</div>
 											<div>
 												<xforms:input ref="copyrightHolder">
-													<xforms:label>Copyright Holder</xforms:label>
-													<xforms:alert>Required</xforms:alert>
+													<xforms:label>Copyright Holder</xforms:label>													
 												</xforms:input>
 											</div>
 											<div>
