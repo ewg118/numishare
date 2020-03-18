@@ -66,6 +66,31 @@ function parse_row($row, $count, $fileName){
 		            $record['refs'][] = array('label'=>$id, 'uncertain'=>$uncertain);
 		        }
 		    }
+		} elseif (preg_match('/pella\.philip_ii\.\d+[A-Z]?$/', $ref) || preg_match('/lerider\.philip_ii\./', $ref)){
+		   //LeRider 
+		    $uri = 'http://numismatics.org/pella/id/' . $id;
+		    
+		    //get info from $coinTypes array if the coin type has been verified already
+		    if (array_key_exists($uri, $coinTypes)){
+		        echo "Matched {$uri}\n";
+		        $coinType= array('label'=>$coinTypes[$uri]['reference'], 'uri'=>$uri, 'uncertain'=>$uncertain);
+		        $record['types']['PELLA'] = $coinType;
+		        $record['title'] = $coinTypes[$uri]['title'] . '. ' . $accnum;
+		    } else {
+		        $file_headers = @get_headers($uri);
+		        if ($file_headers[0] == 'HTTP/1.1 200 OK'){
+		            echo "Found {$uri}\n";
+		            //generate the title from the NUDS
+		            $titles = generate_title_from_type($uri);
+		            $coinTypes[$uri] = array('title'=>$titles['title'], 'reference'=>$titles['reference']);
+		            
+		            $record['title'] = $titles['title'] . ' ' . $accnum;
+		            $coinType = array('label'=>$titles['reference'], 'uri'=>$uri, 'uncertain'=>$uncertain);
+		            $record['types']['PELLA'] = $coinType;
+		        } else {
+		            $record['refs'][] = array('label'=>$id, 'uncertain'=>$uncertain);
+		        }
+		    }
 		} elseif (preg_match('/ric\.[1-9]/', $ref)){
 		    //match OCRE		    
 			//only continue process if the reference is not variant
