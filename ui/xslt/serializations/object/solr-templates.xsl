@@ -950,23 +950,7 @@
 								concat($pieces[4], '.', $pieces[5])"/>
 				</field>
 			</xsl:when>
-			<xsl:when test="$collection-name = 'pella'">
-				<field name="typeNumber">
-					<xsl:value-of select="substring-after(nuds:control/nuds:recordId, 'price.')"/>
-				</field>
-			</xsl:when>
-			<xsl:when test="$collection-name = 'pco'">
-				<field name="typeNumber">
-					<xsl:value-of select="tokenize(nuds:control/nuds:recordId, '\.')[last()]"/>
-				</field>
-			</xsl:when>
-			<xsl:when test="$collection-name = 'sco'">
-				<field name="typeNumber">
-					<xsl:value-of select="substring-after(nuds:control/nuds:recordId, 'sc.1.')"/>
-				</field>
-			</xsl:when>
 		</xsl:choose>
-
 	</xsl:template>
 
 	<!-- sortid -->
