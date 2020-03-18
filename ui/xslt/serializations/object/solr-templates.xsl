@@ -994,19 +994,6 @@
 				</field>
 			</xsl:when>
 
-			<xsl:when test="$collection-name = 'pella'">
-				<field name="sortid">
-					<xsl:analyze-string select="substring-after(nuds:control/nuds:recordId, 'price.')" regex="([A-Z])?([0-9]+)([A-z]+)?">
-						<xsl:matching-substring>
-							<xsl:value-of select="concat(regex-group(1), format-number(number(regex-group(2)), '0000'), regex-group(3))"/>
-						</xsl:matching-substring>
-						<xsl:non-matching-substring>
-							<xsl:value-of select="."/>
-						</xsl:non-matching-substring>
-					</xsl:analyze-string>
-				</field>
-			</xsl:when>
-
 			<xsl:when test="$collection-name = 'igch'">
 				<field name="sortid">
 					<xsl:value-of select="nh:control/nh:recordId"/>
