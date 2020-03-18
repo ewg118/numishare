@@ -5,7 +5,18 @@
   ***************************************
  */
 html{
-    background-color: #F8F8F8;
+    background-color: #232D4B;
+}
+body{
+    font-family: 'ITC Franklin Gothic LT W01 Bk', Arial, sans-serif;
+    font-size: 14px;
+    color: #333;
+}
+a{
+    color: #232D4B;
+}
+a:hover{
+    color: #6d3e5a;
 }
 .navbar{
     margin-bottom: 0;
@@ -34,6 +45,79 @@ dl.ar dd{
     margin-right: 180px;
     margin-left: 0;
 }
+h1{
+    line-height: 1em;
+}
+h2{
+    font-family: 'ITC Franklin Gothic LT W01 Dm', Arial, sans-serif;
+    font-size: 36px;
+    color: #232D4B;
+}
+h3{
+    font-family: "ITC Franklin Gothic LT W01DmCn", Arial, sans-serif;
+    font-weight: 500;
+    font-size: 24px;
+    color: #232D4B;
+}
+h4{
+    font-family: 'ITC Franklin Gothic LT W01 Dm', Arial, sans-serif;
+    font-style: normal;
+    font-size: 19px;
+    color: #E57200;
+    text-transform: uppercase;
+}
+.jumbotron{
+    background-position: left 50% top 50%;
+    background-repeat: no-repeat;
+    background-color: white;
+    background-image: url("http://coins.lib.virginia.edu/themes/default/images/banner.jpg");
+}
+.banner-background{
+    border-radius: 20px;
+    padding: 20px;
+    color:white;
+    background-color: rgba(35, 45, 75, 0.5);
+}
+/* custom navbar*/
+.navbar-default .navbar-brand{
+    color: rgba(255, 255, 255, 1);
+}
+.navbar-brand img{
+    height: 24px
+}
+.navbar-default{
+    font-size: 14px;
+    background-color: #232D4B;
+}
+.navbar-default .navbar-nav > li > a{
+    color: rgba(255, 255, 255, 1);
+    background-color: rgba(248, 248, 248, 0);
+}
+.navbar-default .navbar-nav > li > a:hover,
+.navbar-default .navbar-nav > li > a:focus{
+    color: rgba(81, 81, 89, 1);
+    background-color: rgba(255, 255, 255, 1);
+}
+.navbar-default .navbar-nav > .active > a,
+.navbar-default .navbar-nav > .active > a:hover,
+.navbar-default .navbar-nav > .active > a:focus{
+    color: rgba(81, 81, 89, 1);
+    background-color: rgba(255, 255, 255, 1);
+}
+.navbar-default .navbar-toggle{
+    border-color: #ffffff;
+}
+.navbar-default .navbar-toggle:hover,
+.navbar-default .navbar-toggle:focus{
+    background-color: #ffffff;
+}
+.navbar-default .navbar-toggle .icon-bar{
+    background-color: #ffffff;
+}
+.navbar-default .navbar-toggle:hover .icon-bar,
+.navbar-default .navbar-toggle:focus .icon-bar{
+    background-color: #232D4B;
+}
 .alert-box {
 	width:50%;
 	margin:20px auto;
@@ -49,11 +133,19 @@ dl.ar dd{
   ***************************************
  */
 #footer{
-    background-color: #F8F8F8;
+    background-color: #232D4B;
+    color: white;
     border-top: 1px solid #E7E7E7;
     padding-top: 10px;
     padding-bottom: 10px;
     text-align: center;
+}
+#footer a{
+    color: white;
+    text-decoration: underline;
+}
+#footer a:hover{
+    text-decoration: none;
 }
 /*
   ***************************************
@@ -106,12 +198,12 @@ dl.ar dd{
     height: 100%;
 }
 .image-container{
-    margin-bottom:20px;
+    margin-bottom: 20px;
 }
-.iiif-container {
-    width:100%;
-    padding-top:100%;
-    background-color:white;    
+.iiif-container{
+    width: 100%;
+    padding-top: 100%;
+    background-color: white;
 }
 .iiif-zoom-glyph{
     position: absolute;
@@ -119,9 +211,9 @@ dl.ar dd{
     bottom: 0;
     font-size: 120%
 }
-.model-window {
-    width:640px;
-    height:480px;
+.model-window{
+    width: 640px;
+    height: 480px;
 }
 /*
   ***************************************
@@ -274,8 +366,8 @@ select[name = "interval"],
     max-height: 100%;
     cursor: pointer;
     vertical-align: bottom;
-    margin-left:auto;
-    margin-right:auto;
+    margin-left: auto;
+    margin-right: auto;
 }
 .name-container{
     background-color: gray;
