@@ -34,10 +34,60 @@
 	*** -->
 	
 	<!-- ************** PROJECT NUMISHARE PAGES *************-->	
+	<!-- AoD -->
+	<page path="/numishare/aod/" model="xpl/models/config.xpl" view="oxf:/numishare-projects/aod/xpl/views/pages/index.xpl"/>
 	
-	<!-- 303 See Other redirect for original display-uva pipeline -->
-	<page path="/numishare/[^\/]+/display-uva$" model="xpl/models/config.xpl"  view="xpl/controllers/display-uva.xpl"/>
+	<!-- Fralin UVA -->
+	<page path="/numishare/fralin/" model="xpl/models/config.xpl" view="oxf:/numishare-projects/fralin/xpl/views/pages/index.xpl"/>
+	<page path="/numishare/fralin/display-uva$" model="xpl/models/config.xpl"  view="oxf:/numishare-projects/fralin/xpl/controllers/display-uva.xpl"/>
+	
+	<!-- CHRR -->
+	<page path="/numishare/chrr/" model="xpl/models/config.xpl" view="oxf:/numishare-projects/chrr/xpl/views/pages/index.xpl"/>
 
+	<!-- RRC -->
+	<page path="/numishare/crro/" model="xpl/models/config.xpl" view="oxf:/numishare-projects/crro/xpl/views/pages/index.xpl"/>
+	
+	<!-- EGYPT -->
+	<page path="/numishare/egypt/" model="xpl/models/config.xpl" view="oxf:/numishare-projects/egypt/xpl/views/pages/index.xpl"/>
+	
+	<!-- Hellenistic Royal Coinages projects -->
+	<page path="/numishare/(sco|pella|pco|hrc)/" model="xpl/models/config.xpl" view="oxf:/numishare-projects/hrc/xpl/views/pages/index.xpl"/>
+	
+	<!-- OCRE -->
+	<page path="/numishare/ocre/" model="xpl/models/config.xpl" view="oxf:/numishare-projects/ocre/xpl/views/pages/index.xpl"/>	
+	
+	<!-- MANTIS -->
+	<page path="/numishare/mantis/department/[^\/]+" model="oxf:/numishare-projects/mantis/xpl/models/solr/department.xpl" view="oxf:/numishare-projects/mantis/xpl/views/pages/department.xpl"/>
+	<page path="/numishare/mantis/maps" model="oxf:/numishare-projects/mantis/xpl/models/solr/maps.xpl" view="xpl/views/pages/maps.xpl"/>
+	<page path="/numishare/mantis/maps/fullscreen" model="oxf:/numishare-projects/mantis/xpl/models/solr/maps.xpl" view="xpl/views/pages/maps_fullscreen.xpl"/>
+	<page path="/numishare/mantis/" model="xpl/models/config.xpl" view="oxf:/numishare-projects/mantis/xpl/views/pages/index.xpl"/>
+	
+	<!-- serializations -->
+	<page path="/numishare/mantis/feed/" model="xpl/models/solr/feed.xpl" view="oxf:/numishare-projects/mantis/xpl/views/serializations/solr/atom.xpl"/>
+	
+	<!-- id -->
+	<page path="/numishare/mantis/id/(.*)\.xml" view="oxf:/numishare-projects/mantis/xpl/models/object/get-id.xpl"/>
+	<page path="/numishare/mantis/id/(.*)\.rdf" model="oxf:/numishare-projects/mantis/xpl/models/object/get-id.xpl" view="xpl/views/serializations/object/rdf.xpl"/>
+	<page path="/numishare/mantis/id/(.*)\.jsonld" model="oxf:/numishare-projects/mantis/xpl/models/object/get-id.xpl" view="xpl/views/serializations/object/json-ld.xpl"/>
+	<page path="/numishare/mantis/id/(.*)\.kml" model="oxf:/numishare-projects/mantis/xpl/models/object/get-id.xpl" view="xpl/views/serializations/object/kml.xpl"/>
+	<page path="/numishare/mantis/id/(.*)\.ttl" model="oxf:/numishare-projects/mantis/xpl/models/object/get-id.xpl" view="xpl/views/serializations/rdf/ttl.xpl"/>
+	<page path="/numishare/mantis/id/(.*)\.solr" model="oxf:/numishare-projects/mantis/xpl/models/object/get-id.xpl" view="xpl/views/serializations/object/solr.xpl"/>
+	<page path="/numishare/mantis/id/(.*)\.geojson" model="oxf:/numishare-projects/mantis/xpl/models/object/get-id.xpl" view="xpl/views/serializations/object/geojson.xpl"/>	
+	<page path="/numishare/mantis/id/(.*)$" model="oxf:/numishare-projects/mantis/xpl/models/object/get-id.xpl" view="xpl/controllers/conneg-id.xpl"/>
+	<page path="/numishare/mantis/map/(.*)$" model="oxf:/numishare-projects/mantis/xpl/models/object/get-id.xpl" view="xpl/views/serializations/object/html-map.xpl"/>
+	<page path="/numishare/mantis/manifest/(.*)$" model="oxf:/numishare-projects/mantis/xpl/models/object/get-id.xpl" view="xpl/controllers/iiif-manifest.xpl"/>
+	<page path="/numishare/mantis/manifest/[obverse?|reverse?]/?(.*)$" model="oxf:/numishare-projects/mantis/xpl/models/object/get-id.xpl" view="xpl/controllers/iiif-manifest.xpl"/>
+	<page path="/numishare/mantis/manifest/(.*)/sequence/default$" model="oxf:/numishare-projects/mantis/xpl/models/object/get-id.xpl" view="xpl/controllers/iiif-manifest.xpl"/>
+	<page path="/numishare/mantis/manifest/(.*)/canvas/[obverse|reverse]$" model="oxf:/numishare-projects/mantis/xpl/models/object/get-id.xpl" view="xpl/controllers/iiif-manifest.xpl"/>
+	<page path="/numishare/mantis/manifest/(.*)/annotation/[obverse|reverse]$" model="oxf:/numishare-projects/mantis/xpl/models/object/get-id.xpl" view="xpl/controllers/iiif-manifest.xpl"/>
+	
+	<!-- apis -->
+	<page path="/numishare/mantis/apis/get" model="oxf:/numishare-projects/mantis/xpl/models/object/get-id.xpl" view="xpl/views/apis/get.xpl"/>	
+	<page path="/numishare/mantis/apis/search" model="xpl/models/solr/feed.xpl" view="oxf:/numishare-projects/mantis/xpl/views/apis/search.xpl"/>
+	
+	<!-- results ajax -->
+	<page path="/numishare/mantis/results_ajax" model="xpl/models/solr/results_ajax.xpl" view="oxf:/numishare-projects/mantis/xpl/views/ajax/results_ajax.xpl"/>
+	
 	<!-- ************** GENERIC NUMISHARE PAGES *************-->	
 	<!-- **** SERIALIZATIONS **** -->	
 	<!-- Solr -->
@@ -97,8 +147,6 @@
 	<page path="/numishare/[^\/]+/apis/getDistribution" model="xpl/models/sparql/getDistribution.xpl" view="xpl/controllers/sparql/visualization.xpl"/>
 	<page path="/numishare/[^\/]+/apis/getMetrical" model="xpl/models/sparql/getMetrical.xpl" view="xpl/controllers/sparql/visualization.xpl"/>
 	<page path="/numishare/[^\/]+/apis/getDateRange" model="xpl/models/sparql/getDateRange.xpl" view="xpl/views/serializations/sparql/getDateRange.xpl"/>
-	<page path="/numishare/[^\/]+/apis/getDistribution" model="xpl/models/sparql/getDistribution.xpl" view="xpl/controllers/sparql/visualization.xpl"/>
-	<page path="/numishare/[^\/]+/apis/getMetrical" model="xpl/models/sparql/getMetrical.xpl" view="xpl/controllers/sparql/visualization.xpl"/>
 	<page path="/numishare/[^\/]+/apis/getSolrDistribution" model="xpl/models/solr/getDistribution.xpl" view="xpl/controllers/sparql/visualization.xpl"/>
 	
 	<!-- OpenRefine reconciliation services -->	

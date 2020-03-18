@@ -53,6 +53,7 @@
 				</title>
 				<link rel="shortcut icon" type="image/x-icon" href="{$include_path}/images/favicon.png"/>
 				<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"/>
+
 				<xsl:for-each select="//config/includes/include">
 					<xsl:choose>
 						<xsl:when test="@type = 'css'">

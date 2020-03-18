@@ -126,21 +126,6 @@
 						</xsl:call-template>
 					</xsl:for-each>
 				</xsl:when>
-				<xsl:when test="descendant::nuds:reference[@xlink:arcrole = 'nmo:hasTypeSeriesItem'][string(@xlink:href)]">
-					<object>
-						<xsl:copy-of select="descendant::nuds:typeDesc"/>
-					</object>
-
-					<xsl:for-each select="descendant::nuds:reference[@xlink:arcrole = 'nmo:hasTypeSeriesItem'][string(@xlink:href)]">
-						<xsl:variable name="uri" select="@xlink:href"/>
-
-						<object xlink:href="{$uri}">
-							<xsl:if test="doc-available(concat($uri, '.xml'))">
-								<xsl:copy-of select="document(concat($uri, '.xml'))/nuds:nuds"/>
-							</xsl:if>
-						</object>
-					</xsl:for-each>
-				</xsl:when>
 				<xsl:otherwise>
 					<object>
 						<xsl:copy-of select="descendant::nuds:typeDesc"/>
