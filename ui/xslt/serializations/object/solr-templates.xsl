@@ -154,6 +154,10 @@
 			<xsl:with-param name="side" select="$side"/>
 			<xsl:with-param name="primary" select="$primary"/>
 		</xsl:apply-templates>
+		
+		<xsl:apply-templates select="nuds:die">
+			<xsl:with-param name="side" select="$side"/>
+		</xsl:apply-templates>
 
 		<!-- only index symbols as facets for coin type projects -->
 		<xsl:if test="$recordType = 'conceptual'">
@@ -162,20 +166,6 @@
 				<xsl:with-param name="symbols" select="$symbols"/>
 			</xsl:apply-templates>
 		</xsl:if>
-
-		<!-- handle symbols as facets -->
-		<!--<xsl:if test="$recordType='conceptual'">
-			<xsl:for-each select="nuds:symbol[@position]">
-				<field name="{$symbolType}_{$side}_{@position}_facet">
-					<xsl:value-of select="."/>
-				</field>
-				<xsl:if test="string(@xlink:href)">
-					<field name="{$symbolType}_{$side}_{@position}_uri">
-						<xsl:value-of select="."/>
-					</field>
-				</xsl:if>
-			</xsl:for-each>
-		</xsl:if>-->
 	</xsl:template>
 
 	<xsl:template match="nuds:legend">
@@ -219,6 +209,24 @@
 				</xsl:if>
 			</xsl:otherwise>
 		</xsl:choose>
+	</xsl:template>
+	
+	<xsl:template match="nuds:die">
+		<xsl:param name="side"/>
+		
+		<field name="{$side}_die_facet">
+			<xsl:value-of select="."/>
+		</field>
+		
+		<field name="{$side}_die_text">
+			<xsl:value-of select="."/>
+		</field>
+		
+		<xsl:if test="@xlink:href">
+			<field name="{$side}_die_uri">
+				<xsl:value-of select="@xlink:href"/>
+			</field>
+		</xsl:if>
 	</xsl:template>
 
 	<xsl:template match="nuds:symbol">

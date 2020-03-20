@@ -453,7 +453,7 @@
 
 									<!-- if the $recordType is 'conceptual' and there is no legend or description, and there are subtypes, display the subtype data -->
 									<xsl:if test="$recordType = 'conceptual' and count($subtypes//subtype) &gt; 0">
-										<xsl:if test="(local-name() = 'obverse' or local-name() = 'reverse') and not(nuds:type)">
+										<xsl:if test="(local-name() = 'obverse' or local-name() = 'reverse') and ($subtypes//subtype/descendant::*[local-name() = $side]/nuds:type/nuds:description and not(nuds:type))">
 											<xsl:variable name="side" select="local-name()"/>
 											<li>
 												<b>
@@ -471,7 +471,7 @@
 												</xsl:for-each>
 											</li>
 										</xsl:if>
-										<xsl:if test="(local-name() = 'obverse' or local-name() = 'reverse') and not(nuds:legend)">
+										<xsl:if test="(local-name() = 'obverse' or local-name() = 'reverse') and ($subtypes//subtype/descendant::*[local-name() = $side]/nuds:legend and not(nuds:legend))">
 											<xsl:variable name="side" select="local-name()"/>
 											<li>
 												<b>

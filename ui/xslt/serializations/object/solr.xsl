@@ -30,12 +30,13 @@
 		<nudsGroup>
 			<xsl:variable name="type_list" as="element()*">
 				<list>
-					<xsl:for-each select="distinct-values(descendant::nuds:typeDesc[string(@xlink:href)]/@xlink:href|descendant::nuds:reference[@xlink:arcrole='nmo:hasTypeSeriesItem'][string(@xlink:href)]/@xlink:href)">
+					<xsl:for-each
+						select="distinct-values(descendant::nuds:typeDesc[string(@xlink:href)]/@xlink:href | descendant::nuds:reference[@xlink:arcrole = 'nmo:hasTypeSeriesItem'][string(@xlink:href)]/@xlink:href)">
 						<type_series_item>
 							<xsl:if test="contains(., '/id/')">
 								<xsl:attribute name="type_series" select="substring-before(., 'id/')"/>
 							</xsl:if>
-							
+
 							<xsl:value-of select="."/>
 						</type_series_item>
 					</xsl:for-each>
@@ -62,16 +63,16 @@
 					</xsl:for-each>
 				</xsl:if>
 			</xsl:for-each>
-			
+
 			<!-- include individual REST calls for URIs not in a recognized, Numishare based id/ namespace -->
 			<xsl:for-each select="$type_list//type_series_item[not(@type_series)]">
 				<xsl:variable name="uri" select="."/>
-				
+
 				<xsl:call-template name="numishare:getNudsDocument">
 					<xsl:with-param name="uri" select="$uri"/>
-				</xsl:call-template>				
+				</xsl:call-template>
 			</xsl:for-each>
-			
+
 			<!-- get typeDesc -->
 			<xsl:for-each select="descendant::nuds:typeDesc[not(string(@xlink:href))]">
 				<object>
@@ -81,12 +82,25 @@
 		</nudsGroup>
 	</xsl:variable>
 
-	<!-- get symbol metadata -->	
-	
+
+	<!-- get metadata from subtypes -->
 	<xsl:variable name="index_subtype_metadata" as="xs:boolean">
-		<xsl:value-of select="if (/content/config/index_subtype_metadata = 'true') then true() else false()"/>
+		<xsl:value-of select="
+				if (/content/config/index_subtype_metadata = 'true') then
+					true()
+				else
+					false()"/>
 	</xsl:variable>
-	
+
+	<xsl:variable name="index_subtypes_as_references" as="xs:boolean">
+		<xsl:value-of select="
+				if (/content/config/index_subtypes_as_references = 'true') then
+					true()
+				else
+					false()"/>
+	</xsl:variable>
+
+	<!-- get symbol metadata -->
 	<xsl:variable name="symbols" as="element()*">
 		<symbols>
 			<xsl:for-each select="$nudsGroup/descendant::nuds:symbol[@xlink:href]">
@@ -143,7 +157,7 @@
 					'geonames.org')]/@xlink:href | $nudsGroup/descendant::*[local-name() = 'geogname'][contains(@xlink:href, 'geonames.org')]/@xlink:href | $rdf/descendant::*[not(local-name() = 'closeMatch')][contains(@rdf:resource,
 					'geonames.org')]/@rdf:resource | descendant::*[local-name() = 'subject'][contains(@xlink:href,
 					'geonames.org')]/@xlink:href)">
-				
+
 				<!-- commented out: $sparqlResult/descendant::res:binding[@name = 'findspot'][contains(res:uri, 'geonames.org')]/res:uri -->
 				<xsl:variable name="geonameId" select="tokenize(., '/')[4]"/>
 
