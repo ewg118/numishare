@@ -77,7 +77,7 @@ function parse_row($row, $count, $fileName){
 		        $record['types']['PELLA'] = $coinType;
 		        $record['title'] = $coinTypes[$uri]['title'] . '. ' . $accnum;
 		    } else {
-		        $file_headers = @get_headers($uri);
+		        $file_headers = @get_headers($uri);		        
 		        if ($file_headers[0] == 'HTTP/1.1 200 OK'){
 		            echo "Found {$uri}\n";
 		            //generate the title from the NUDS
@@ -87,6 +87,21 @@ function parse_row($row, $count, $fileName){
 		            $record['title'] = $titles['title'] . ' ' . $accnum;
 		            $coinType = array('label'=>$titles['reference'], 'uri'=>$uri, 'uncertain'=>$uncertain);
 		            $record['types']['PELLA'] = $coinType;
+		        } elseif ($file_headers[0] == 'HTTP/1.1 303 See Other'){
+		            //redirect Svoronos references to CPE URIs
+		            $cointype = str_replace('Location: ', '', $file_headers[7]);
+		            echo "Matching: {$uri} -> {$cointype}\n";
+		            
+		            //make CPE URI the new $uri variable
+		            $uri = $cointype;
+		            
+		            //generate the title from the NUDS
+		            $titles = generate_title_from_type($uri);
+		            $coinTypes[$uri] = array('title'=>$titles['title'], 'reference'=>$titles['reference']);
+		            
+		            $record['title'] = $titles['title'] . ' ' . $accnum;
+		            $coinType= array('label'=>$titles['reference'], 'uri'=>$uri, 'uncertain'=>$uncertain);
+		            $record['types']['PCO'] = $coinType;
 		        } else {
 		            $record['refs'][] = array('label'=>$id, 'uncertain'=>$uncertain);
 		        }
