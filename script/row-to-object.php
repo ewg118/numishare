@@ -68,7 +68,7 @@ function parse_row($row, $count, $fileName){
 		    }
 		} elseif (preg_match('/pella\.philip_ii\.\d+[A-Z]?$/', $ref) || preg_match('/lerider\sphilip_ii\./', $ref)){
 		   //LeRider or PELLA numbers
-		    $uri = 'http://numismatics.org/pella/id/' . $id;
+		    $uri = 'http://numismatics.org/pella/id/' . str_replace('lerider philip_ii', 'lerider.philip_ii', $id);
 		    
 		    //get info from $coinTypes array if the coin type has been verified already
 		    if (array_key_exists($uri, $coinTypes)){
