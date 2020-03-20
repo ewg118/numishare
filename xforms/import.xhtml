@@ -551,10 +551,37 @@
 						<!-- initiate getRDF API call for each individual type series -->
 						<xforms:action if="count(instance('type-uris')//id) &gt; 0">
 							<xforms:action xxforms:iterate="instance('type-uris')/series">
+								<!-- reset identifiers, position -->
+								<xforms:setvalue ref="instance('control-instance')/identifiers"/>
+								<xforms:setvalue ref="instance('control-instance')/position">0</xforms:setvalue>
+								
+								<!-- set Numishare API -->
 								<xforms:setvalue ref="instance('control-instance')/rdf-api" value="concat(context()/@uri, 'apis/getRDF')"/>
-								<xforms:setvalue ref="instance('control-instance')/identifiers"
-									value="string-join(context()/id/substring-after(@uri, 'id/'), '|')"/>
-								<xforms:send submission="load-rdf"/>
+								
+								<!-- getRDF for types needs to be broken down into manageable chunks of 100 in order to not exceed the server-set URL length -->
+								<xforms:action xxforms:iterate="context()/id">
+									<xforms:var name="uri" select="context()/@uri"/>
+									
+									<!-- set position -->
+									<xforms:setvalue ref="instance('control-instance')/position" value="instance('control-instance')/position + 1"/>
+									
+									<!-- set proper separator based on position. IDs are to be indexed in blocks of 100 -->
+									<xforms:var name="sep"
+										select="if (instance('control-instance')/position = 1) then '' else if (instance('control-instance')/position mod 100 = 0) then ',' else '|'"/>
+									<xforms:var name="recordId" select="instance('nuds')/nuds:control/nuds:recordId"/>
+									
+									<xforms:setvalue ref="instance('control-instance')/identifiers"
+										value="concat(instance('control-instance')/identifiers, $sep, substring-after($uri, 'id/'))"/>									
+								</xforms:action>
+								
+								<!-- split the concatenated list of identifiers into blocks of 100 on the comma separator -->
+								<xforms:var name="tokens" select="tokenize(instance('control-instance')/identifiers, ',')"/>
+								
+								<!-- call the /ingest pipeline with 100 IDs per API call, and post that to Solr -->
+								<xforms:action xxforms:iterate="$tokens">
+									<xforms:setvalue ref="instance('control-instance')/identifiers" value="context()"/>
+									<xforms:send submission="load-rdf"/>
+								</xforms:action>
 							</xforms:action>
 						</xforms:action>
 
@@ -1542,11 +1569,14 @@
 										<xforms:action ev:event="DOMActivate">
 											<!-- set the current dateTime into a variable that will apply to all IDs 
 											(previous version resulting in different time for each ID in spreadsheet -->
-
 											<xforms:var name="dateTime" select="current-dateTime()"/>
+											
+											<!-- reset position and identifiers, which were previously used for getRDF API calls -->
+											<xforms:setvalue ref="instance('control-instance')/identifiers"/>
+											<xforms:setvalue ref="instance('control-instance')/position">0</xforms:setvalue>
 
 											<!-- begin processing the spreadsheet into RDF -->
-											<xforms:action xxforms:iterate="instance('feed')//atom:entry">
+											<xforms:action xxforms:iterate="instance('feed')//atom:entry[28]">
 												<xforms:var name="id"
 													select="normalize-space(data(context()/*[namespace-uri()='http://schemas.google.com/spreadsheets/2006/extended'][name()=instance('mappings')/mapping[@to='id']/@from]))"/>
 												<xforms:var name="position" select="position()"/>
@@ -2088,7 +2118,7 @@
 							<p>The process has been completed successfully. Click the link above to return to the Admin panel.</p>
 						</xforms:case>
 					</xforms:switch>
-					<!--<fr:xforms-inspector/>-->
+					<fr:xforms-inspector/>
 				</div>
 			</div>
 		</div>
