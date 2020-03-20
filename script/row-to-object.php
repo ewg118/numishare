@@ -66,9 +66,9 @@ function parse_row($row, $count, $fileName){
 		            $record['refs'][] = array('label'=>$id, 'uncertain'=>$uncertain);
 		        }
 		    }
-		} elseif (preg_match('/pella\.philip_ii\.\d+[A-Z]?$/', $ref) || preg_match('/lerider\sphilip_ii\./', $ref)){
+		} elseif (preg_match('/pella\.philip_ii\.\d+[A-Z]?$/', $ref) || preg_match('/lerider\.philip_ii\./', $ref)){
 		   //LeRider or PELLA numbers
-		    $uri = 'http://numismatics.org/pella/id/' . str_replace('lerider philip_ii', 'lerider.philip_ii', $id);
+		    $uri = 'http://numismatics.org/pella/id/' . $id;
 		    
 		    //get info from $coinTypes array if the coin type has been verified already
 		    if (array_key_exists($uri, $coinTypes)){
@@ -92,7 +92,7 @@ function parse_row($row, $count, $fileName){
 		            $cointype = str_replace('Location: ', '', $file_headers[7]);
 		            echo "Matching: {$uri} -> {$cointype}\n";
 		            
-		            //make CPE URI the new $uri variable
+		            //make Le Rider URI the new $uri variable
 		            $uri = $cointype;
 		            
 		            //generate the title from the NUDS
@@ -101,7 +101,7 @@ function parse_row($row, $count, $fileName){
 		            
 		            $record['title'] = $titles['title'] . ' ' . $accnum;
 		            $coinType= array('label'=>$titles['reference'], 'uri'=>$uri, 'uncertain'=>$uncertain);
-		            $record['types']['PCO'] = $coinType;
+		            $record['types']['PELLA'] = $coinType;
 		        } else {
 		            $record['refs'][] = array('label'=>$id, 'uncertain'=>$uncertain);
 		        }
