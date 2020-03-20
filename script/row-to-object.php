@@ -66,7 +66,7 @@ function parse_row($row, $count, $fileName){
 		            $record['refs'][] = array('label'=>$id, 'uncertain'=>$uncertain);
 		        }
 		    }
-		} elseif (preg_match('/pella\.philip_ii\.\d+[A-Z]?$/', $ref) || preg_match('/lerider\.philip_ii\./', $ref)){
+		} elseif (preg_match('/pella\.philip_ii\.\d+[A-Z]?$/', $ref) || preg_match('/lerider\sphilip_ii\./', $ref)){
 		   //LeRider or PELLA numbers
 		    $uri = 'http://numismatics.org/pella/id/' . $id;
 		    
