@@ -66,8 +66,14 @@ function parse_row($row, $count, $fileName){
 		            $record['refs'][] = array('label'=>$id, 'uncertain'=>$uncertain);
 		        }
 		    }
-		} elseif (preg_match('/pella\.philip_ii\.\d+[A-Z]?$/', $ref) || preg_match('/lerider\.philip_ii\./', $ref)){
-		   //LeRider or PELLA numbers
+		} elseif (preg_match('/pella\.philip_ii\.\d+[A-Z]?$/', $ref) || preg_match('/lerider\.philip_ii\./', $ref) || preg_match('/LeRider\.\d\./', $ref)){
+		   //LeRider or PELLA numbers		   
+		    
+		    if (strpos($id, 'LeRider') !== FALSE){
+		        //if the ID matches the 'LeRider' string, then replace it with the proper ID
+		        $id = str_replace('LeRider', 'lerider.philip_ii');
+		    }
+		    
 		    $uri = 'http://numismatics.org/pella/id/' . $id;
 		    
 		    //get info from $coinTypes array if the coin type has been verified already
