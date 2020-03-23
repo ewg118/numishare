@@ -173,6 +173,7 @@
 					<xsl:when test="$label = 'appraiser'">من الذى حدد القيمة</xsl:when>
 					<xsl:when test="$label = 'auction'">المزاد</xsl:when>
 					<xsl:when test="$label = 'authority'">المسئول عنها</xsl:when>
+					<xsl:when test="$label = 'authorizingEntity'">السلالات والفئات المقبولة الأخرى</xsl:when>
 					<xsl:when test="$label = 'axis'">المحور الرأسى</xsl:when>
 					<xsl:when test="$label = 'century'">القرن</xsl:when>
 					<xsl:when test="$label = 'chronList'">قائمة بالتسلسل الزمني</xsl:when>
