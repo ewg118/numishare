@@ -71,7 +71,7 @@ function parse_row($row, $count, $fileName){
 		    
 		    if (strpos($id, 'LeRider') !== FALSE){
 		        //if the ID matches the 'LeRider' string, then replace it with the proper ID
-		        $id = str_replace('LeRider', 'lerider.philip_ii');
+		        $id = str_replace('LeRider', 'lerider.philip_ii', $id);
 		    }
 		    
 		    $uri = 'http://numismatics.org/pella/id/' . $id;
