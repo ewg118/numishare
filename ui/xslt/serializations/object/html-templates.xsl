@@ -452,38 +452,43 @@
 									</xsl:choose>
 
 									<!-- if the $recordType is 'conceptual' and there is no legend or description, and there are subtypes, display the subtype data -->
-									<xsl:if test="$recordType = 'conceptual' and count($subtypes//subtype) &gt; 0">
-										<xsl:if test="(local-name() = 'obverse' or local-name() = 'reverse') and ($subtypes//subtype/descendant::*[local-name() = $side]/nuds:type/nuds:description and not(nuds:type))">
+									<xsl:if test="$recordType = 'conceptual' and (local-name() = 'obverse' or local-name() = 'reverse')">
+										
+										<xsl:if test="count($subtypes//subtype) &gt; 0">
 											<xsl:variable name="side" select="local-name()"/>
-											<li>
-												<b>
-													<xsl:value-of select="numishare:regularize_node('description', $lang)"/>
-													<xsl:text>: </xsl:text>
-												</b>
-												<xsl:for-each
-													select="
+											
+											<xsl:if test="not(nuds:type) and $subtypes//subtype/descendant::*[local-name() = $side]/nuds:type/nuds:description">
+												<xsl:variable name="side" select="local-name()"/>
+												<li>
+													<b>
+														<xsl:value-of select="numishare:regularize_node('description', $lang)"/>
+														<xsl:text>: </xsl:text>
+													</b>
+													<xsl:for-each
+														select="
 														distinct-values($subtypes//subtype/descendant::*[local-name() = $side]/nuds:type/nuds:description[if (@xml:lang = $lang) then
-															@xml:lang = $lang
+														@xml:lang = $lang
 														else
-															@xml:lang = 'en'])">
-													<xsl:value-of select="."/>
-													<xsl:if test="not(position() = last())"> | </xsl:if>
-												</xsl:for-each>
-											</li>
-										</xsl:if>
-										<xsl:if test="(local-name() = 'obverse' or local-name() = 'reverse') and ($subtypes//subtype/descendant::*[local-name() = $side]/nuds:legend and not(nuds:legend))">
-											<xsl:variable name="side" select="local-name()"/>
-											<li>
-												<b>
-													<xsl:value-of select="numishare:normalizeLabel('maps_legend', $lang)"/>
-													<xsl:text>: </xsl:text>
-												</b>
-												<xsl:for-each select="distinct-values($subtypes//subtype/descendant::*[local-name() = $side]/nuds:legend)">
-													<xsl:value-of select="."/>
-													<xsl:if test="not(position() = last())"> | </xsl:if>
-												</xsl:for-each>
-											</li>
-										</xsl:if>
+														@xml:lang = 'en'])">
+														<xsl:value-of select="."/>
+														<xsl:if test="not(position() = last())"> | </xsl:if>
+													</xsl:for-each>
+												</li>
+											</xsl:if>
+											<xsl:if test="not(nuds:legend) and $subtypes//subtype/descendant::*[local-name() = $side]/nuds:legend">
+												<xsl:variable name="side" select="local-name()"/>
+												<li>
+													<b>
+														<xsl:value-of select="numishare:normalizeLabel('maps_legend', $lang)"/>
+														<xsl:text>: </xsl:text>
+													</b>
+													<xsl:for-each select="distinct-values($subtypes//subtype/descendant::*[local-name() = $side]/nuds:legend)">
+														<xsl:value-of select="."/>
+														<xsl:if test="not(position() = last())"> | </xsl:if>
+													</xsl:for-each>
+												</li>
+											</xsl:if>
+										</xsl:if>										
 									</xsl:if>
 
 									<!-- display Roman style mint marks for OCRE -->
