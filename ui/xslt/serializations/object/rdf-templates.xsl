@@ -427,6 +427,10 @@
 							<xsl:attribute name="rdf:resource" select="$uri"/>
 						</xsl:element>
 					</xsl:for-each>
+					
+					<xsl:apply-templates select="nuds:descMeta/nuds:typeDesc" mode="nomisma">
+						<xsl:with-param name="id" select="$id"/>
+					</xsl:apply-templates>
 
 					<void:inDataset rdf:resource="{$url}"/>
 				</xsl:element>
