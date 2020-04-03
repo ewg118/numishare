@@ -384,7 +384,7 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</field>
-		<xsl:if test="$role = 'findspot'">
+		<xsl:if test="$role = 'findspot' and not(ancestor::nh:findspot/nh:description)">
 			<field name="findspot_display">
 				<xsl:value-of select="$label"/>
 			</field>

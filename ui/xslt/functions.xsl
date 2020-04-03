@@ -4199,6 +4199,28 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:function>
+	
+	<!-- general purpose function for rendering descriptions based on available languages -->
+	<xsl:function name="numishare:display-description">
+		<xsl:param name="node" as="node()*"/>
+		<xsl:param name="lang"/>
+		
+		<xsl:choose>
+			<xsl:when test="$node/*:description[@xml:lang = $lang]">
+				<xsl:value-of select="$node/*:description[@xml:lang = $lang]"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:choose>
+					<xsl:when test="$node/*:description[@xml:lang = 'en']">
+						<xsl:value-of select="$node/*:description[@xml:lang = 'en']"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="$node/*:description[1]"/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:function>
 
 	<xsl:function name="numishare:normalizeDate">
 		<xsl:param name="date"/>

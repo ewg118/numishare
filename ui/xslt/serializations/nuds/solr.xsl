@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="2.0" xmlns:nuds="http://nomisma.org/nuds" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-	xmlns:datetime="http://exslt.org/dates-and-times" xmlns:nm="http://nomisma.org/id/" xmlns:nmo="http://nomisma.org/ontology#"
-	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:mets="http://www.loc.gov/METS/"
-	xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml"
-	xmlns:res="http://www.w3.org/2005/sparql-results#" xmlns:numishare="https://github.com/ewg118/numishare"
+<xsl:stylesheet version="2.0" xmlns:nuds="http://nomisma.org/nuds" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:nm="http://nomisma.org/id/"
+	xmlns:nmo="http://nomisma.org/ontology#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:mets="http://www.loc.gov/METS/" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:xlink="http://www.w3.org/1999/xlink"
+	xmlns:gml="http://www.opengis.net/gml" xmlns:res="http://www.w3.org/2005/sparql-results#" xmlns:numishare="https://github.com/ewg118/numishare"
 	xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
 	xmlns:digest="org.apache.commons.codec.digest.DigestUtils" exclude-result-prefixes="#all">
 
@@ -117,10 +116,10 @@
 					<xsl:otherwise>
 						<xsl:value-of
 							select="
-								if (contains(datetime:dateTime(), 'Z')) then
-									datetime:dateTime()
+								if (contains(string(current-dateTime()), 'Z')) then
+									string(current-dateTime())
 								else
-									concat(datetime:dateTime(), 'Z')"
+									concat(string(current-dateTime()), 'Z')"
 						/>
 					</xsl:otherwise>
 				</xsl:choose>
@@ -184,7 +183,8 @@
 			</xsl:apply-templates>
 
 			<!-- if there are subtypes, extract the legend and type description or symbols, if missing from parent record (only extract information to index for type-level type -->
-			<xsl:if test="not(nuds:control/nuds:otherRecordId[@semantic='skos:broader']) and ($index_subtype_metadata = true() or $index_subtypes_as_references = true())">
+			<xsl:if
+				test="not(nuds:control/nuds:otherRecordId[@semantic = 'skos:broader']) and ($index_subtype_metadata = true() or $index_subtypes_as_references = true())">
 
 				<!-- get subtypes -->
 				<xsl:variable name="subtypes" as="element()*">
@@ -273,13 +273,13 @@
 
 							<!-- die IDs -->
 							<!--<xsl:if test="not($typeDesc/*[local-name() = $side]/nuds:die) and count($subtypes//subtype) &gt; 0"> </xsl:if>-->
-							
+
 							<xsl:if test="$hasDies = false() and $subtypes//subtype/descendant::*[local-name() = $side]/nuds:die">
 								<xsl:apply-templates select="$subtypes//subtype/descendant::*[local-name() = $side]/nuds:die">
 									<xsl:with-param name="side" select="substring($side, 1, 3)"/>
 								</xsl:apply-templates>
 							</xsl:if>
-							
+
 						</xsl:for-each>
 					</xsl:if>
 				</xsl:if>

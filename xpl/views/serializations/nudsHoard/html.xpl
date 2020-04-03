@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-	Copyright (C) 2017 Ethan Gruber
-	Numishare
-	Apache License 2.0
-	
--->
+	Author: Ethan Gruber
+	Last modified: March 2020
+	Function: HTML view for NUDSHoard-->
 <p:config xmlns:p="http://www.orbeon.com/oxf/pipeline" xmlns:oxf="http://www.orbeon.com/oxf/processors">
 	<p:param type="input" name="data"/>
 	<p:param type="output" name="data"/>

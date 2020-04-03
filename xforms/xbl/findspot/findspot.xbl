@@ -166,7 +166,7 @@
 													<xforms:label>Location</xforms:label>
 													<xforms:itemset nodeset="instance('geonames')//geoname">
 														<xforms:label ref="label"/>
-														<xforms:value ref="concat('http://www.geonames.org/', geonameId)"/>
+														<xforms:value ref="concat('https://sws.geonames.org/', geonameId, '/')"/>
 													</xforms:itemset>
 												</xforms:select1>
 												<xforms:trigger>

@@ -286,25 +286,6 @@
 		</xsl:if>
 	</xsl:template>
 
-	<!-- general purpose template for rendering descriptions based on available languages -->
-	<xsl:template name="display-description">
-		<xsl:choose>
-			<xsl:when test="*:description[@xml:lang = $lang]">
-				<xsl:value-of select="*:description[@xml:lang = $lang]"/>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:choose>
-					<xsl:when test="*:description[@xml:lang = 'en']">
-						<xsl:value-of select="*:description[@xml:lang = 'en']"/>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:value-of select="*:description[1]"/>
-					</xsl:otherwise>
-				</xsl:choose>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>
-
 	<xsl:template name="footer">
 		<div id="footer" class="container-fluid">
 			<xsl:copy-of select="//config/footer/*"/>

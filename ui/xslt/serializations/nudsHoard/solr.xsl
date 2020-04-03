@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Author: Ethan Gruber
+	Modified: April 2020
+	Function: This stylesheet transforms a nudsHoard XML document into Solr
+-->
 <xsl:stylesheet version="2.0" xmlns:nh="http://nomisma.org/nudsHoard" xmlns:nuds="http://nomisma.org/nuds" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-	xmlns:datetime="http://exslt.org/dates-and-times" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	xmlns:math="http://exslt.org/math" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"
-	xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:numishare="https://github.com/ewg118/numishare" exclude-result-prefixes="#all">
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml"
+	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+	xmlns:numishare="https://github.com/ewg118/numishare" exclude-result-prefixes="#all">
 	<xsl:output method="xml" encoding="UTF-8"/>
 
 	<xsl:template name="nudsHoard">
@@ -149,10 +153,10 @@
 					<xsl:otherwise>
 						<xsl:value-of
 							select="
-								if (contains(datetime:dateTime(), 'Z')) then
-									datetime:dateTime()
+								if (contains(string(current-dateTime()), 'Z')) then
+									string(current-dateTime())
 								else
-									concat(datetime:dateTime(), 'Z')"
+									concat(string(current-dateTime()), 'Z')"
 						/>
 					</xsl:otherwise>
 				</xsl:choose>
@@ -208,7 +212,10 @@
 
 	<xsl:template match="nh:descMeta">
 		<xsl:param name="lang"/>
-		<xsl:apply-templates select="nh:hoardDesc"/>
+
+		<xsl:apply-templates select="nh:hoardDesc">
+			<xsl:with-param name="lang" select="$lang"/>
+		</xsl:apply-templates>
 		<xsl:apply-templates select="nh:refDesc"/>
 		<xsl:apply-templates select="nh:contentsDesc">
 			<xsl:with-param name="lang" select="$lang"/>
@@ -216,8 +223,35 @@
 	</xsl:template>
 
 	<xsl:template match="nh:hoardDesc">
-		<xsl:apply-templates select="nh:findspot/nh:geogname[@xlink:role = 'findspot']"/>
+		<xsl:param name="lang"/>
+
+		<xsl:apply-templates select="nh:findspot">
+			<xsl:with-param name="lang" select="$lang"/>
+		</xsl:apply-templates>
+
 		<xsl:apply-templates select="nh:deposit[nh:date or nh:dateRange] | nh:discovery[nh:date or nh:dateRange]"/>
+	</xsl:template>
+
+	<xsl:template match="nh:findspot">
+		<xsl:param name="lang"/>
+
+		<xsl:if test="nh:description">
+			<field name="findspot_display">
+				<xsl:value-of select="numishare:display-description(self::node(), $lang)"/>
+			</field>
+			<field name="findspot_text">
+				<xsl:value-of select="numishare:display-description(self::node(), $lang)"/>
+			</field>
+		</xsl:if>
+
+		<xsl:choose>
+			<xsl:when test="gml:Point or gml:Polygon">
+				<!-- use localized (non-gazetteer) findspots later -->
+			</xsl:when>
+			<xsl:when test="nh:fallsWithin">
+				<xsl:apply-templates select="nh:fallsWithin/nh:geogname[@xlink:href]"/>
+			</xsl:when>
+		</xsl:choose>
 	</xsl:template>
 
 	<xsl:template match="nh:deposit | nh:discovery">
@@ -289,7 +323,7 @@
 
 	<xsl:template match="nh:contents">
 		<xsl:param name="lang"/>
-		
+
 		<field name="description_display">
 			<xsl:choose>
 				<xsl:when test="@count or @minCount or @maxCount">
