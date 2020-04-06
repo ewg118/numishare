@@ -27,10 +27,11 @@
 		<p:input name="request" href="#request"/>		
 		<p:input name="data" href="aggregate('content', #data, #config)"/>		
 		<p:input name="config" href="../../../../ui/xslt/serializations/nudsHoard/geojson.xsl"/>
-		<p:output name="data" id="model"/>
+		<!--<p:output name="data" id="model"/>-->
+		<p:output name="data" ref="data"/>
 	</p:processor>
 
-	<p:processor name="oxf:text-converter">
+	<!--<p:processor name="oxf:text-converter">
 		<p:input name="data" href="#model"/>
 		<p:input name="config">
 			<config>
@@ -39,5 +40,5 @@
 			</config>
 		</p:input>
 		<p:output name="data" ref="data"/>
-	</p:processor>
+	</p:processor>-->
 </p:config>

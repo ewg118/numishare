@@ -1,8 +1,7 @@
 /************************************
-COMPARE
-Written by Ethan Gruber, gruber@numismatics.org
-Library: jQuery
-Description: Rendering graphics based on hoard counts
+Author: Ethan Gruber
+Last modified: April 2020
+Function: initiate functions on hoard page, incuding Leaflet maps and GeoJSON API call
 ************************************/
 $(document).ready(function () {
 	$('.toggle-coin').click(function () {

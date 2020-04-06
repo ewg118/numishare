@@ -32,12 +32,15 @@
 	<xsl:variable name="geonames_api_key" select="/content/config/geonames_api_key"/>
 	<xsl:variable name="sparql_endpoint" select="/content/config/sparql_endpoint"/>
 
+	<xsl:variable name="contentsDesc" as="element()*">
+		<xsl:copy-of select="descendant::nh:contents"/>
+	</xsl:variable>
+
 	<xsl:variable name="nudsGroup" as="element()*">
 		<nudsGroup>
 			<xsl:variable name="type_list" as="element()*">
 				<list>
-					<xsl:for-each
-						select="distinct-values(descendant::nuds:typeDesc[string(@xlink:href)]/@xlink:href | descendant::nuds:reference[@xlink:arcrole = 'nmo:hasTypeSeriesItem'][string(@xlink:href)]/@xlink:href)">
+					<xsl:for-each select="distinct-values(descendant::nuds:typeDesc[string(@xlink:href)]/@xlink:href)">
 						<type_series_item>
 							<xsl:if test="contains(., '/id/')">
 								<xsl:attribute name="type_series" select="substring-before(., 'id/')"/>
@@ -108,11 +111,124 @@
 
 			<xsl:variable name="rdf_url" select="concat('http://nomisma.org/apis/getRdf?identifiers=', encode-for-uri($id-param))"/>
 			<xsl:copy-of select="document($rdf_url)/rdf:RDF/*"/>
-
-			<xsl:if test="descendant::nuds:findspotDesc[contains(@xlink:href, 'coinhoards.org')]">
-				<xsl:copy-of select="document(concat(descendant::nuds:findspotDesc/@xlink:href, '.rdf'))/rdf:RDF/*"/>
-			</xsl:if>
 		</rdf:RDF>
+	</xsl:variable>
+
+	<!-- generate a list of distinct mint concepts from within the $nudsGroup, parsing labels and coordinates from the Nomisma RDF -->
+	<xsl:variable name="mints" as="element()*">
+		<mints>
+			<xsl:for-each
+				select="distinct-values($nudsGroup/descendant::nuds:geogname[@xlink:role = 'mint'][starts-with(@xlink:href, 'http://nomisma.org/id/')]/@xlink:href)">
+				<xsl:variable name="uri" select="."/>
+				
+				<xsl:variable name="coordinates">
+					<xsl:choose>
+						<!-- when there is a geo:SpatialThing associated with the mint that contains a lat and long: -->
+						<xsl:when test="$rdf//*[@rdf:about = concat($uri, '#this')]/geo:long and $rdf//*[@rdf:about = concat($uri, '#this')]/geo:lat">
+							<xsl:value-of
+								select="concat($rdf//*[@rdf:about = concat($uri, '#this')]/geo:long, ',', $rdf//*[@rdf:about = concat($uri, '#this')]/geo:lat)"
+							/>
+						</xsl:when>
+						<!-- if the URI contains a skos:related linking to an uncertain mint attribution -->
+						<xsl:when test="$rdf//*[@rdf:about = $uri]/skos:related">
+							<xsl:variable name="uncertainMint" as="node()*">
+								<xsl:copy-of
+									select="document(concat($rdf//*[@rdf:about = $uri]/skos:related/rdf:Description/rdf:value/@rdf:resource, '.rdf'))"/>
+							</xsl:variable>
+							
+							<xsl:if test="$uncertainMint//geo:long and $uncertainMint//geo:lat">
+								<xsl:value-of select="concat($uncertainMint//geo:long, ',', $uncertainMint//geo:lat)"/>
+							</xsl:if>
+						</xsl:when>
+						<!-- if the mint does not have coordinates, but does have skos:broader, execute the region hierarchy API call to look for parent mint/region coordinates -->
+						<!--<xsl:when test="$rdf//*[@rdf:about = $uri]/skos:broader">
+								<xsl:variable name="regions" as="node()*">
+									<xsl:copy-of
+										select="document(concat('http://nomisma.org/apis/regionHierarchy?identifiers=', encode-for-uri(substring-after($uri, 'http://nomisma.org/id/'))))"
+									/>
+								</xsl:variable>
+								
+								<xsl:if test="$regions//mint[1][@lat and @long]">
+									<xsl:value-of select="concat($regions//mint[1]/@long, ',', $regions//mint[1]/@lat)"/>
+								</xsl:if>
+							</xsl:when>-->
+					</xsl:choose>
+				</xsl:variable>
+				
+				<xsl:if test="$rdf//*[@rdf:about = $uri]/name() = 'nmo:Mint' and string($coordinates)">
+					<mint>
+						<xsl:attribute name="uri" select="$uri"/>
+						<xsl:attribute name="coordinates" select="$coordinates"/>
+						
+						
+						<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about = $uri], $lang)"/>
+					</mint>
+				</xsl:if>
+				
+			</xsl:for-each>
+		</mints>
+	</xsl:variable>
+
+	<!-- get the total number of coins that can be geographically mapped. the numeric visualization is based only on mappable coin groups, not the total -->
+	<xsl:variable name="total-counts">
+		<total>
+			<xsl:for-each select="/content/nh:nudsHoard//nh:coin | /content/nh:nudsHoard//nh:coinGrp">
+				
+				<xsl:variable name="mints" as="element()*">
+					<mints>
+						<xsl:choose>
+							<xsl:when test="nuds:typeDesc/@xlink:href">
+								<xsl:variable name="href" select="nuds:typeDesc/@xlink:href"/>
+								
+								<xsl:for-each select="$nudsGroup//object[@xlink:href = $href]/descendant::nuds:geogname[@xlink:role = 'mint'][starts-with(@xlink:href, 'http://nomisma.org/id/')]">
+									<mint>
+										<xsl:value-of select="@xlink:href"/>
+									</mint>
+								</xsl:for-each>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:for-each select="descendant::nuds:geogname[@xlink:role = 'mint'][starts-with(@xlink:href, 'http://nomisma.org/id/')]">
+									<mint>
+										<xsl:value-of select="@xlink:href"/>
+									</mint>
+								</xsl:for-each>
+							</xsl:otherwise>
+						</xsl:choose>
+					</mints>
+				</xsl:variable>		
+				
+				<xsl:variable name="count" as="xs:integer">
+					<xsl:choose>
+						<xsl:when test="self::nh:coin">1</xsl:when>
+						<xsl:otherwise>
+							<xsl:choose>
+								<xsl:when test="number(@minCount) and number(@maxCount)">
+									<xsl:value-of select="round((@minCount + @maxCount) div 2)"/>
+								</xsl:when>
+								<xsl:when test="number(@minCount)">
+									<xsl:value-of select="@minCount"/>
+								</xsl:when>
+								<xsl:when test="number(@maxCount)">
+									<xsl:value-of select="@maxCount"/>
+								</xsl:when>
+								<xsl:when test="number(@count)">
+									<xsl:value-of select="@count"/>
+								</xsl:when>
+								<xsl:otherwise>0</xsl:otherwise>
+							</xsl:choose>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:variable>
+
+				<!-- only include a countable item when there is a mint -->
+				<xsl:if test="count($mints//mint) &gt; 0">
+					<item count="{$count}">
+						<xsl:copy-of select="$mints"/>						
+					</item>
+				</xsl:if>				
+			</xsl:for-each>
+		</total>
+
 	</xsl:variable>
 
 	<xsl:template match="/">
@@ -122,16 +238,49 @@
 	<xsl:template match="nh:nudsHoard">
 		<xsl:variable name="model" as="element()*">
 			<_array>
-				<xsl:apply-templates
-					select="descendant::nh:geogname[@xlink:role = 'findspot'][string(@xlink:href)] | $nudsGroup/descendant::nuds:geogname[@xlink:role = 'mint'][string(@xlink:href)]"
-				/>
+				<xsl:apply-templates select="descendant::nh:geogname[@xlink:role = 'findspot'][string(@xlink:href)]"/>
+				<xsl:apply-templates select="$mints//mint"/>
 			</_array>
 		</xsl:variable>
 
-		<xsl:apply-templates select="$model"/>
+		<!--<xsl:apply-templates select="$model"/>-->
+		<xsl:copy-of select="$model"/>
 	</xsl:template>
 
-	<xsl:template match="*:geogname">
+	<!-- transform distinct concepts for each mint into a Point with a average count -->
+	<xsl:template match="mint">
+		<xsl:variable name="uri" select="@uri"/>
+
+		<_object>
+			<type>Feature</type>
+			<geometry>
+				<_object>
+					<type>Point</type>
+					<coordinates>
+						<_array>
+							<xsl:value-of select="@coordinates"/>
+						</_array>
+					</coordinates>
+				</_object>
+			</geometry>
+			<properties>
+				<_object>
+					<name>
+						<xsl:value-of select="."/>
+					</name>
+					<uri>
+						<xsl:value-of select="@uri"/>
+					</uri>
+					<type>mint</type>
+					<average_count>
+						<xsl:value-of select="sum($total-counts//item[mints/mint = $uri]/@count)"/>
+					</average_count>					
+				</_object>
+			</properties>
+		</_object>
+	</xsl:template>
+
+	<xsl:template match="nh:geogname[@xlink:role = 'findspot']">
 		<xsl:call-template name="generateFeature">
 			<xsl:with-param name="uri" select="@xlink:href"/>
 			<xsl:with-param name="type">
@@ -211,7 +360,7 @@
 										<xsl:value-of select="concat($uncertainMint//geo:long, ',', $uncertainMint//geo:lat)"/>
 									</xsl:if>
 								</xsl:when>
-								<!-- if the mint does not have coordinates, but does have skos:broader, exectue the region hierarchy API call to look for parent mint/region coordinates -->
+								<!-- if the mint does not have coordinates, but does have skos:broader, execute the region hierarchy API call to look for parent mint/region coordinates -->
 								<xsl:when test="$rdf//*[@rdf:about = $uri]/skos:broader">
 									<xsl:variable name="regions" as="node()*">
 										<xsl:copy-of
@@ -273,4 +422,5 @@
 			</_object>
 		</xsl:if>
 	</xsl:template>
+	
 </xsl:stylesheet>
