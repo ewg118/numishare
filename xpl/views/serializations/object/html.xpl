@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-	Copyright (C) 2017 Ethan Gruber
-	Numishare
-	Apache License 2.0
-	
+	Author: Ethan Gruber
+	Function: evaluate the root node of the XML document and determine which pipeline to call (NUDS vs NUDS Hoard) to serialize into HTML	
 -->
 <p:config xmlns:p="http://www.orbeon.com/oxf/pipeline" xmlns:oxf="http://www.orbeon.com/oxf/processors">
 	<p:param type="input" name="data"/>

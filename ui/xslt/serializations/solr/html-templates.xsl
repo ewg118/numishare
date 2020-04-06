@@ -443,8 +443,7 @@
 				</h4>
 				<xsl:apply-templates
 					select="
-						lst[(@name = 'authority_facet' or @name = 'coinType_facet' or @name = 'deity_facet' or @name = 'denomination_facet' or @name = 'issuer_facet' or
-						@name = 'manufacture_facet' or @name = 'material_facet' or @name = 'mint_facet' or @name = 'objectType_facet' or @name = 'portrait_facet' or @name = 'region_facet' or @name = 'region_hier') and number(int) &gt;
+					lst[((ends-with(@name, '_facet') and not(@name = 'reference_facet')) or @name = 'region_hier') and number(int) &gt;
 						0]"
 					mode="facet"/>
 			</xsl:when>
