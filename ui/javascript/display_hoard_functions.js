@@ -32,34 +32,6 @@ $(document).ready(function () {
     }
 });
 
-/*function initialize_timemap(id) {
-var langStr = getURLParameter('lang');
-if (langStr == 'null') {
-var lang = '';
-} else {
-var lang = langStr;
-}
-
-var tm;
-tm = TimeMap.init({
-mapId: "map", // Id of map div element (required)
-timelineId: "timeline", // Id of timeline div element (required)
-options: {
-eventIconPath: $('#include_path').text() + "/images/timemap/"
-},
-datasets:[ {
-title: "Mints",
-type: "json",
-options: {
-url: "../apis/get?id=" + id + "&format=json&lang=" + lang
-}
-}],
-bandIntervals:[
-Timeline.DateTime.DECADE,
-Timeline.DateTime.CENTURY]
-});
-}*/
-
 function getURLParameter(name) {
     return decodeURI(
     (RegExp(name + '=' + '(.+?)(&|$)').exec(location.search) ||[, null])[1]);
@@ -107,6 +79,15 @@ function initialize_map(id, path, lang) {
         
         var overlay = L.geoJson(data, {
             onEachFeature: onEachFeature,
+            style: function (feature) {
+                if (feature.geometry.type == 'Polygon') {
+                    var fillColor = getFillColor(feature.properties.type);                    
+                    
+                    return {
+                        color: fillColor
+                    }
+                }
+            },
             pointToLayer: function (feature, latlng) {
                 return renderPoints(feature, latlng, maxDensity);
             }
@@ -141,8 +122,8 @@ function initialize_map(id, path, lang) {
      * Features for manipulating layers
      *****/
     function renderPoints(feature, latlng, maxDensity) {
-        grade = maxDensity / 5;    
-    
+        grade = maxDensity / 5;
+        
         var radius = 5;
         if (feature.properties.average_count < Math.round(grade)) {
             radius = 5;
@@ -157,9 +138,22 @@ function initialize_map(id, path, lang) {
         } else {
             radius = 5;
         }
+        
+        var fillColor = getFillColor(feature.properties.type);
+        
+        return new L.CircleMarker(latlng, {
+            radius: radius,
+            fillColor: fillColor,
+            color: "#000",
+            weight: 1,
+            opacity: 1,
+            fillOpacity: 0.6
+        });
+    }
     
+    function getFillColor (type) {
         var fillColor;
-        switch (feature.properties.type) {
+        switch (type) {
             case 'mint':
             fillColor = '#6992fd';
             break;
@@ -173,19 +167,12 @@ function initialize_map(id, path, lang) {
             fillColor = '#efefef'
         }
         
-        return new L.CircleMarker(latlng, {
-            radius: radius,
-            fillColor: fillColor,
-            color: "#000",
-            weight: 1,
-            opacity: 1,
-            fillOpacity: 0.6
-        });
+        return fillColor;
     }
     
     function onEachFeature (feature, layer) {
         var label = feature.properties.name;
-        if (feature.properties.hasOwnProperty('uri')) {            
+        if (feature.properties.hasOwnProperty('uri')) {
             str = label + ' <a href="' + feature.properties.uri + '" target="_blank"><span class="glyphicon glyphicon-new-window"/></a>';
             if (feature.properties.hasOwnProperty('average_count')) {
                 str += '<br/>Specimens: ' + feature.properties.average_count;

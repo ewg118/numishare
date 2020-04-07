@@ -290,6 +290,7 @@
 
 		<xsl:call-template name="generateFeature">
 			<xsl:with-param name="uri" select="@xlink:href"/>
+			<xsl:with-param name="featureType">Point</xsl:with-param>
 			<xsl:with-param name="coordinates" select="concat($geonames_data//lng, ',', $geonames_data//lat)"/>
 			<xsl:with-param name="type">findspot</xsl:with-param>
 			<xsl:with-param name="name" select="."/>
@@ -303,7 +304,16 @@
 
 		<xsl:call-template name="generateFeature">
 			<xsl:with-param name="uri" select="$uri"/>
-			<xsl:with-param name="coordinates" select="if (gml:Polygon) then gml:Polygon else gml:Point"/>
+			<xsl:with-param name="featureType" select="
+					if (gml:Polygon) then
+						'Polygon'
+					else
+						'Point'"/>
+			<xsl:with-param name="coordinates" select="
+					if (gml:Polygon) then
+						gml:Polygon/gml:coordinates
+					else
+						gml:Point/gml:coordinates"/>
 			<xsl:with-param name="type">findspot</xsl:with-param>
 			<xsl:with-param name="name" select="$name"/>
 		</xsl:call-template>
@@ -317,6 +327,11 @@
 
 		<xsl:call-template name="generateFeature">
 			<xsl:with-param name="uri" select="@uri"/>
+			<xsl:with-param name="featureType" select="
+					if (contains(@coordinates, ' ')) then
+						'Polygon'
+					else
+						'Point'"/>
 			<xsl:with-param name="coordinates" select="@coordinates"/>
 			<xsl:with-param name="type">mint</xsl:with-param>
 			<xsl:with-param name="name" select="."/>
@@ -327,6 +342,7 @@
 	<!-- generate the GeoJSON feature depending on variables passed for mints and findspots -->
 	<xsl:template name="generateFeature">
 		<xsl:param name="uri"/>
+		<xsl:param name="featureType"/>
 		<xsl:param name="coordinates"/>
 		<xsl:param name="type"/>
 		<xsl:param name="count"/>
@@ -336,14 +352,134 @@
 			<type>Feature</type>
 			<geometry>
 				<_object>
-					<type>Point</type>
+					<type>
+						<xsl:value-of select="$featureType"/>
+					</type>
 					<coordinates>
 						<_array>
-							<xsl:for-each select="tokenize($coordinates, ',')">
-								<_>
-									<xsl:value-of select="normalize-space(.)"/>
-								</_>
-							</xsl:for-each>
+							<!--<_><xsl:value-of select="$coordinates"/></_>-->
+							<xsl:choose>
+								<xsl:when test="$featureType = 'Point'">
+									<xsl:for-each select="tokenize($coordinates, ',')">
+										<_>
+											<xsl:value-of select="normalize-space(.)"/>
+										</_>
+									</xsl:for-each>
+								</xsl:when>
+								<xsl:when test="$featureType = 'Polygon'">
+									<xsl:variable name="points" select="tokenize($coordinates, ' ')"/>
+
+									<_array>
+										<!-- take a GML Polygon represented as a diagonal set of points and convert to a 4-point GeoJSON Polygon -->
+										<xsl:choose>
+											<xsl:when test="count($points) = 2">
+												<xsl:variable name="x1" select="tokenize(normalize-space($points[1]), ',')[1]"/>
+												<xsl:variable name="x2" select="tokenize(normalize-space($points[2]), ',')[1]"/>
+												<xsl:variable name="y1" select="tokenize(normalize-space($points[1]), ',')[2]"/>
+												<xsl:variable name="y2" select="tokenize(normalize-space($points[2]), ',')[2]"/>
+
+
+												<xsl:variable name="polygon" as="element()*">
+													<polygon>
+														<sw>
+															<x>
+																<xsl:value-of
+																	select="
+																		if ($x1 &lt; $x2) then
+																			$x1
+																		else
+																			$x2"
+																/>
+															</x>
+															<y>
+																<xsl:value-of
+																	select="
+																	if ($y1 &lt; $y2) then
+																	$y1
+																	else
+																	$y2"
+																/>
+															</y>
+														</sw>
+														<nw>
+															<x>
+																<xsl:value-of
+																	select="
+																		if ($x1 &lt; $x2) then
+																			$x1
+																		else
+																			$x2"
+																/>
+															</x>
+															<y>
+																<xsl:value-of
+																	select="
+																		if ($y1 &gt; $y2) then
+																			$y1
+																		else
+																			$y2"
+																/>
+															</y>
+														</nw>
+														<ne>
+															<x>
+																<xsl:value-of
+																	select="
+																		if ($x1 &gt; $x2) then
+																			$x1
+																		else
+																			$x2"
+																/>
+															</x>
+															<y>
+																<xsl:value-of
+																	select="
+																		if ($y1 &gt; $y2) then
+																			$y1
+																		else
+																			$y2"
+																/>
+															</y>
+														</ne>
+														<se>
+															<x>
+																<xsl:value-of
+																	select="
+																		if ($x1 &gt; $x2) then
+																			$x1
+																		else
+																			$x2"
+																/>
+															</x>
+															<y>
+																<xsl:value-of
+																	select="
+																		if ($y1 &lt; $y2) then
+																			$y1
+																		else
+																			$y2"
+																/>
+															</y>
+														</se>
+													</polygon>
+												</xsl:variable>
+
+												<xsl:for-each select="$polygon/*">													
+													<_array>
+														<_>
+															<xsl:value-of select="x"/>
+														</_>
+														<_>
+															<xsl:value-of select="y"/>
+														</_>
+													</_array>
+												</xsl:for-each>
+											</xsl:when>
+										</xsl:choose>
+									</_array>
+								</xsl:when>
+							</xsl:choose>
+
 						</_array>
 					</coordinates>
 				</_object>

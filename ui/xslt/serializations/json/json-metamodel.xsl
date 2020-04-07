@@ -56,6 +56,9 @@
         <xsl:text>[</xsl:text>
         <xsl:apply-templates/>
         <xsl:text>]</xsl:text>
+        <xsl:if test="not(position() = last())">
+            <xsl:text>,</xsl:text>
+        </xsl:if>
     </xsl:template>
 
 </xsl:stylesheet>
