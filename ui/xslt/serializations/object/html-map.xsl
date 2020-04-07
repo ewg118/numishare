@@ -155,12 +155,6 @@
 					</xsl:when>
 					<!-- hoard CSS and JS dependencies -->
 					<xsl:when test="$recordType = 'hoard'">
-						<script type="text/javascript" src="http://openlayers.org/api/2.12/OpenLayers.js"/>
-						<script type="text/javascript" src="{$include_path}/javascript/mxn.js"/>
-						<script type="text/javascript" src="{$include_path}/javascript/timeline-2.3.0.js"/>
-						<link type="text/css" href="{$include_path}/css/timeline-2.3.0.css" rel="stylesheet"/>
-						<script type="text/javascript" src="{$include_path}/javascript/timemap_full.pack.js"/>
-						<script type="text/javascript" src="{$include_path}/javascript/param.js"/>
 						<script type="text/javascript" src="{$include_path}/javascript/display_hoard_functions.js"/>
 					</xsl:when>
 				</xsl:choose>
@@ -236,14 +230,7 @@
 									</xsl:choose>
 								</xsl:when>
 								<xsl:when test="$recordType = 'hoard'">
-									<div id="timemap" style="height:100%">
-										<div id="mapcontainer" class="fullscreen">
-											<div id="map"/>
-										</div>
-										<div id="timelinecontainer">
-											<div id="timeline"/>
-										</div>
-									</div>
+									<div id="mapcontainer" style="height:100%"/>
 								</xsl:when>
 							</xsl:choose>
 						</div>
@@ -265,7 +252,7 @@
 								<xsl:value-of select="concat($display_path, 'id/')"/>
 							</xsl:when>
 							<xsl:otherwise>
-								<xsl:value-of select="$display_path"/>
+								<xsl:value-of select="concat($display_path, 'id/')"/>
 							</xsl:otherwise>
 						</xsl:choose>
 					</span>

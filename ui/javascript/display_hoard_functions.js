@@ -33,31 +33,31 @@ $(document).ready(function () {
 });
 
 /*function initialize_timemap(id) {
-    var langStr = getURLParameter('lang');
-    if (langStr == 'null') {
-        var lang = '';
-    } else {
-        var lang = langStr;
-    }
-    
-    var tm;
-    tm = TimeMap.init({
-        mapId: "map", // Id of map div element (required)
-        timelineId: "timeline", // Id of timeline div element (required)
-        options: {
-            eventIconPath: $('#include_path').text() + "/images/timemap/"
-        },
-        datasets:[ {
-            title: "Mints",
-            type: "json",
-            options: {
-                url: "../apis/get?id=" + id + "&format=json&lang=" + lang
-            }
-        }],
-        bandIntervals:[
-        Timeline.DateTime.DECADE,
-        Timeline.DateTime.CENTURY]
-    });
+var langStr = getURLParameter('lang');
+if (langStr == 'null') {
+var lang = '';
+} else {
+var lang = langStr;
+}
+
+var tm;
+tm = TimeMap.init({
+mapId: "map", // Id of map div element (required)
+timelineId: "timeline", // Id of timeline div element (required)
+options: {
+eventIconPath: $('#include_path').text() + "/images/timemap/"
+},
+datasets:[ {
+title: "Mints",
+type: "json",
+options: {
+url: "../apis/get?id=" + id + "&format=json&lang=" + lang
+}
+}],
+bandIntervals:[
+Timeline.DateTime.DECADE,
+Timeline.DateTime.CENTURY]
+});
 }*/
 
 function getURLParameter(name) {
@@ -95,11 +95,27 @@ function initialize_map(id, path, lang) {
         layers:[eval(baselayers[0])]
     });
     
-    //add mintLayer from AJAX
-    var overlay = L.geoJson.ajax(url, {
-        onEachFeature: onEachFeature,
-        pointToLayer: renderPoints
-    }).addTo(map);
+    $.getJSON(url, function (data) {
+        var maxDensity = 0;
+        $.each(data, function (key, value) {
+            if (value.properties.average_count !== undefined) {
+                if (value.properties.average_count > maxDensity) {
+                    maxDensity = value.properties.average_count;
+                }
+            }
+        });
+        
+        var overlay = L.geoJson(data, {
+            onEachFeature: onEachFeature,
+            pointToLayer: function (feature, latlng) {
+                return renderPoints(feature, latlng, maxDensity);
+            }
+        }).addTo(map);
+        
+        map.fitBounds(overlay.getBounds());
+    });
+    
+    
     
     //add controls
     var baseMaps = {
@@ -119,22 +135,29 @@ function initialize_map(id, path, lang) {
         baseMaps[label] = eval(baselayers[i]);
     }
     
-    var overlayMaps = {
-        'Markers': overlay
-    };
-    
     //add controls
-    var layerControl = L.control.layers(baseMaps, overlayMaps).addTo(map);
-    
-    //zoom to groups on AJAX complete
-    overlay.on('data:loaded', function () {
-        map.fitBounds(overlay.getBounds());
-    }.bind(this));
-    
+    var layerControl = L.control.layers(baseMaps).addTo(map);
     /*****
      * Features for manipulating layers
      *****/
-    function renderPoints(feature, latlng) {
+    function renderPoints(feature, latlng, maxDensity) {
+        grade = maxDensity / 5;    
+    
+        var radius = 5;
+        if (feature.properties.average_count < Math.round(grade)) {
+            radius = 5;
+        } else if (feature.properties.average_count >= Math.round(grade) && feature.properties.average_count < Math.round(grade * 2)) {
+            radius = 10;
+        } else if (feature.properties.average_count >= Math.round(grade * 2) && feature.properties.average_count < Math.round(grade * 3)) {
+            radius = 15;
+        } else if (feature.properties.average_count >= Math.round(grade * 3) && feature.properties.average_count < Math.round(grade * 4)) {
+            radius = 20;
+        } else if (feature.properties.average_count >= Math.round(grade * 4)) {
+            radius = 25;
+        } else {
+            radius = 5;
+        }
+    
         var fillColor;
         switch (feature.properties.type) {
             case 'mint':
@@ -151,7 +174,7 @@ function initialize_map(id, path, lang) {
         }
         
         return new L.CircleMarker(latlng, {
-            radius: 5,
+            radius: radius,
             fillColor: fillColor,
             color: "#000",
             weight: 1,
@@ -162,8 +185,11 @@ function initialize_map(id, path, lang) {
     
     function onEachFeature (feature, layer) {
         var label = feature.properties.name;
-        if (feature.properties.hasOwnProperty('uri')) {
+        if (feature.properties.hasOwnProperty('uri')) {            
             str = label + ' <a href="' + feature.properties.uri + '" target="_blank"><span class="glyphicon glyphicon-new-window"/></a>';
+            if (feature.properties.hasOwnProperty('average_count')) {
+                str += '<br/>Specimens: ' + feature.properties.average_count;
+            }
         } else {
             str = label;
         }
