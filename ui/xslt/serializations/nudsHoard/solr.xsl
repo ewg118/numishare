@@ -245,7 +245,7 @@
 		</xsl:if>
 
 		<xsl:choose>
-			<xsl:when test="gml:Point or gml:Polygon">
+			<xsl:when test="gml:location">
 				<!-- use localized (non-gazetteer) findspots later -->
 			</xsl:when>
 			<xsl:when test="nh:fallsWithin">

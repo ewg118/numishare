@@ -506,7 +506,7 @@
 					</xsl:when>
 					<xsl:otherwise>
 						<xsl:choose>
-							<xsl:when test="nuds:findspot/gml:Point">
+							<xsl:when test="nuds:findspot/gml:location/gml:Point">
 								<xsl:apply-templates select="nuds:findspot" mode="parse-gml">
 									<xsl:with-param name="objectURI" select="$objectURI"/>
 								</xsl:apply-templates>
@@ -534,7 +534,7 @@
 					nuds:geogname/@xlink:href
 				else
 					concat($objectURI, '#findspot')"> </xsl:variable>
-		<xsl:variable name="coords" select="tokenize(gml:Point/gml:coordinates, ',')"/>
+		<xsl:variable name="coords" select="tokenize(gml:location/gml:Point/gml:coordinates, ',')"/>
 
 		<field name="findspot_facet">
 			<xsl:value-of select="$label"/>

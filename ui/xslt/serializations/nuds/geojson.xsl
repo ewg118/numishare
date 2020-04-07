@@ -227,8 +227,8 @@
 					</xsl:choose>
 				</xsl:when>
 				<!-- otherwise use the gml:Point stored within NUDS -->
-				<xsl:when test="gml:Point">
-					<xsl:variable name="coords" select="tokenize(gml:Point/gml:coordinates, ',')"/>
+				<xsl:when test="gml:location/gml:Point">
+					<xsl:variable name="coords" select="tokenize(gml:location/gml:Point/gml:coordinates, ',')"/>
 					<xsl:value-of select="concat(normalize-space($coords[2]), ',', normalize-space($coords[1]))"/>
 				</xsl:when>
 			</xsl:choose>

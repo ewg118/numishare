@@ -195,8 +195,8 @@
 
 	<xsl:variable name="hasFindspots" as="xs:boolean">
 		<xsl:choose>
-			<xsl:when test="descendant::nh:findspot[gml:Point or gml:Polygon]">true</xsl:when>
-			<xsl:when test="descendant::nh:findspot/nh:fallsWithin[gml:Point or gml:Polygon]">true</xsl:when>
+			<xsl:when test="descendant::nh:findspot/gml:location">true</xsl:when>
+			<xsl:when test="descendant::nh:findspot/nh:fallsWithin/gml:location">true</xsl:when>
 			<xsl:when test="descendant::nuds:geogname[@xlink:role = 'findspot'][@xlink:href]">true</xsl:when>
 			<xsl:otherwise>false</xsl:otherwise>
 		</xsl:choose>
@@ -236,20 +236,14 @@
 				<script type="text/javascript" src="{$include_path}/javascript/modules/exporting.js"/>
 				<script type="text/javascript" src="{$include_path}/javascript/display_hoard_functions.js"/>
 				<script type="text/javascript" src="{$include_path}/javascript/analysis_functions.js"/>
+				<link type="text/css" href="{$include_path}/css/style.css" rel="stylesheet"/>
 
 				<!-- mapping -->
-				<xsl:if test="$geoEnabled = true()">
+				<!--<xsl:if test="$geoEnabled = true()">
 					<xsl:if test="$hasMints = true() or $hasFindspots = true()">
-						<script type="text/javascript" src="http://openlayers.org/api/2.12/OpenLayers.js"/>
-						<script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3.20&amp;sensor=false"/>
-						<script type="text/javascript" src="{$include_path}/javascript/mxn.js"/>
-						<script type="text/javascript" src="{$include_path}/javascript/timeline-2.3.0.js"/>
-						<link type="text/css" href="{$include_path}/css/timeline-2.3.0.css" rel="stylesheet"/>
-						<script type="text/javascript" src="{$include_path}/javascript/timemap_full.pack.js"/>
-						<script type="text/javascript" src="{$include_path}/javascript/param.js"/>
-						<link type="text/css" href="{$include_path}/css/style.css" rel="stylesheet"/>
+						
 					</xsl:if>
-				</xsl:if>
+				</xsl:if>-->
 			</head>
 			<body>
 
@@ -265,14 +259,7 @@
 						<xsl:value-of select="$collection_type"/>
 					</span>
 					<span id="path">
-						<xsl:choose>
-							<xsl:when test="$recordType = 'physical'">
-								<xsl:value-of select="concat($display_path, 'id/')"/>
-							</xsl:when>
-							<xsl:otherwise>
-								<xsl:value-of select="$display_path"/>
-							</xsl:otherwise>
-						</xsl:choose>
+						<xsl:value-of select="concat($display_path, 'id/')"/>
 					</span>
 					<span id="include_path">
 						<xsl:value-of select="$include_path"/>
@@ -383,14 +370,15 @@
 			<xsl:if test="$geoEnabled = true()">
 				<xsl:if test="$hasMints = true() or $hasFindspots = true()">
 					<div class="col-md-6">
-						<div id="timemap">
+						<!--<div id="timemap">
 							<div id="mapcontainer">
 								<div id="map"/>
 							</div>
 							<div id="timelinecontainer">
 								<div id="timeline"/>
 							</div>
-						</div>
+						</div>-->
+						<div id="mapcontainer"/>
 						<div class="legend">
 							<table>
 								<tbody>

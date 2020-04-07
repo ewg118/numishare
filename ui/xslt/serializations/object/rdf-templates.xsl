@@ -584,8 +584,8 @@
 						</xsl:apply-templates>
 
 						<!-- findspot object -->
-						<xsl:if test="nuds:descMeta/nuds:findspotDesc/nuds:findspot[gml:Point]">
-							<xsl:apply-templates select="nuds:descMeta/nuds:findspotDesc/nuds:findspot[gml:Point]" mode="nomisma-object">
+						<xsl:if test="nuds:descMeta/nuds:findspotDesc/nuds:findspot[gml:location]">
+							<xsl:apply-templates select="nuds:descMeta/nuds:findspotDesc/nuds:findspot[gml:location]" mode="nomisma-object">
 								<xsl:with-param name="objectURI"
 									select="
 										if (string($uri_space)) then
@@ -853,7 +853,7 @@
 
 	<xsl:template match="nuds:findspot" mode="nomisma-object">
 		<xsl:param name="objectURI"/>
-		<xsl:variable name="coords" select="tokenize(gml:Point/gml:coordinates, ',')"/>
+		<xsl:variable name="coords" select="tokenize(gml:location/gml:Point/gml:coordinates, ',')"/>
 
 
 		<xsl:if test="count($coords) = 2">

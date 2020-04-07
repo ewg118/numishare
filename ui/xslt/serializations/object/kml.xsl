@@ -158,7 +158,7 @@
 		</xsl:for-each>
 		<!-- create findspot points (for physical coins -->
 		<xsl:for-each
-			select="descendant::nuds:geogname[@xlink:role = 'findspot'][string(@xlink:href)] | descendant::nuds:findspot[gml:Point/gml:coordinates] | descendant::nuds:findspotDesc[string(@xlink:href)]">
+			select="descendant::nuds:geogname[@xlink:role = 'findspot'][string(@xlink:href)] | descendant::nuds:findspot[gml:location/gml:Point/gml:coordinates] | descendant::nuds:findspotDesc[string(@xlink:href)]">
 			<xsl:call-template name="getPlacemark">
 				<xsl:with-param name="uri" select="@xlink:href"/>
 				<xsl:with-param name="styleUrl">#hoard</xsl:with-param>
@@ -337,8 +337,8 @@
 						</Point>
 					</xsl:if>
 				</xsl:when>
-				<xsl:when test="gml:Point/gml:coordinates">
-					<xsl:variable name="coords" select="tokenize(gml:Point/gml:coordinates, ',')"/>
+				<xsl:when test="gml:location/gml:Point/gml:coordinates">
+					<xsl:variable name="coords" select="tokenize(gml:location/gml:Point/gml:coordinates, ',')"/>
 					
 					<Point>
 						<coordinates>
