@@ -19,14 +19,15 @@
 
 	<!-- evaluate URL params to direct toward a view based on SPARQL results or based on the older Solr results -->
 	<p:processor name="oxf:unsafe-xslt">
-		<p:input name="data" href="#request"/>
+		<p:input name="data" href="#data"/>
 		<p:input name="config">
 			<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
 				<xsl:template match="/">
 					<source>
 						<xsl:choose>
-							<xsl:when test="string(/request/parameters/parameter[name='category']/value)">solr</xsl:when>
+							<xsl:when test="//response[lst[@name='responseHeader']]">solr</xsl:when>
+							<xsl:when test="//hoard">nudsHoard</xsl:when>
 							<xsl:otherwise>sparql</xsl:otherwise>
 						</xsl:choose>
 					</source>
@@ -80,6 +81,30 @@
 					<p:processor name="oxf:pipeline">
 						<p:input name="data" href="#data"/>
 						<p:input name="config" href="../../views/serializations/solr/d3plus-json.xpl"/>
+						<p:output name="data" ref="data"/>
+					</p:processor>
+				</p:otherwise>
+			</p:choose>
+		</p:when>
+		<p:when test="source = 'nudsHoard'">
+			<p:choose href="#format">
+				<p:when test="format='csv'">
+					<p:processor name="oxf:pipeline">
+						<p:input name="data" href="#data"/>
+						<p:input name="config" href="../../views/serializations/nudsHoard/distribution-csv.xpl"/>
+						<p:output name="data" ref="data"/>
+					</p:processor>
+				</p:when>
+				<p:when test="format='xml'">
+					<p:processor name="oxf:identity">
+						<p:input name="data" href="#data"/>
+						<p:output name="data" ref="data"/>
+					</p:processor>
+				</p:when>
+				<p:otherwise>
+					<p:processor name="oxf:pipeline">
+						<p:input name="data" href="#data"/>
+						<p:input name="config" href="../../views/serializations/nudsHoard/d3plus-json.xpl"/>
 						<p:output name="data" ref="data"/>
 					</p:processor>
 				</p:otherwise>
