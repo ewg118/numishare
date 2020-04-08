@@ -189,7 +189,6 @@
 	<page path="/numishare/[^\/]+/get_decades" model="xpl/models/solr/get_decades.xpl"  view="xpl/views/ajax/get_decades.xpl"/>
 	<page path="/numishare/[^\/]+/get_facet_options" model="xpl/models/solr/get_facet_options.xpl" view="xpl/views/ajax/get_facet_options.xpl"/>
 	<page path="/numishare/[^\/]+/get_hier" model="xpl/models/solr/get_hier.xpl" view="xpl/views/ajax/get_hier.xpl"/>
-	<page path="/numishare/[^\/]+/get_hoard_quant" model="xpl/models/object/get-id.xpl" view="xpl/views/ajax/get_hoard_quant.xpl"/>
 	<page path="/numishare/[^\/]+/get_hoards" model="xpl/models/solr/get_hoards.xpl" view="xpl/views/ajax/get_hoards.xpl"/>	
 	<page path="/numishare/[^\/]+/get_search_facets" model="xpl/models/solr/get_search_facets.xpl" view="xpl/views/ajax/get_search_facets.xpl"/>	
 	<page path="/numishare/[^\/]+/get_subtypes" view="xpl/models/xquery/get-subtypes.xpl"/>
