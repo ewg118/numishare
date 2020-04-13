@@ -37,7 +37,7 @@
 	<xsl:param name="chartType" select="doc('input:request')/request/parameters/parameter[name = 'chartType']/value"/>
 
 	<!-- use the calculate URI parameter to output tables/charts for counts of material, denomination, issuer, etc. -->
-	<xsl:param name="calculate" select="doc('input:request')/request/parameters/parameter[name = 'calculate']/value"/>
+	<xsl:param name="dist" select="doc('input:request')/request/parameters/parameter[name = 'dist']/value"/>
 	<xsl:param name="compare" select="doc('input:request')/request/parameters/parameter[name = 'compare']/value"/>
 	<xsl:param name="exclude" select="doc('input:request')/request/parameters/parameter[name = 'exclude']/value"/>
 	<xsl:param name="options" select="doc('input:request')/request/parameters/parameter[name = 'options']/value"/>
@@ -232,8 +232,9 @@
 			</xsl:if>
 			<head>
 				<xsl:call-template name="generic_head"/>
-				<script type="text/javascript" src="{$include_path}/javascript/highcharts.js"/>
-				<script type="text/javascript" src="{$include_path}/javascript/modules/exporting.js"/>
+				<!-- visualization -->
+				<script type="text/javascript" src="https://d3plus.org/js/d3.js"/>
+				<script type="text/javascript" src="https://d3plus.org/js/d3plus.js"/>
 				<script type="text/javascript" src="{$include_path}/javascript/display_hoard_functions.js"/>
 				<script type="text/javascript" src="{$include_path}/javascript/analysis_functions.js"/>
 				<link type="text/css" href="{$include_path}/css/style.css" rel="stylesheet"/>
@@ -273,6 +274,7 @@
 					<span id="lang">
 						<xsl:value-of select="$lang"/>
 					</span>
+					<span id="page">record</span>
 				</div>
 				<div id="iiif-window" style="width:600px;height:600px;display:none"/>
 			</body>
@@ -370,14 +372,6 @@
 			<xsl:if test="$geoEnabled = true()">
 				<xsl:if test="$hasMints = true() or $hasFindspots = true()">
 					<div class="col-md-6">
-						<!--<div id="timemap">
-							<div id="mapcontainer">
-								<div id="map"/>
-							</div>
-							<div id="timelinecontainer">
-								<div id="timeline"/>
-							</div>
-						</div>-->
 						<div id="mapcontainer"/>
 						<div class="legend">
 							<table>
@@ -411,85 +405,52 @@
 				</xsl:if>
 			</xsl:if>
 		</div>
-		<div class="row">
-			<div class="col-md-12">
-				<!--********************************* MENU ******************************************* -->
-				<xsl:if test="count(nh:descMeta/nh:contentsDesc/nh:contents/*) &gt; 0">
-					<ul class="nav nav-pills" id="tabs">
-						<li class="active">
-							<a href="#contents" data-toggle="pill">
-								<xsl:value-of select="numishare:normalizeLabel('display_contents', $lang)"/>
-							</a>
-						</li>
-						<li>
-							<a href="#quantitative" data-toggle="pill">
-								<xsl:value-of select="numishare:normalizeLabel('display_quantitative', $lang)"/>
-							</a>
-						</li>
-					</ul>
-					<div class="tab-content">
-						<div class="tab-pane active" id="contents">
-							<xsl:if test="nh:descMeta/nh:contentsDesc">
-								<div class="metadata_section">
+		
+		
+		<!--********************************* RENDERING HOARD CONTENTS AND VISUALIZATION OPTIONS ******************************************* -->
+		<xsl:if test="nh:descMeta/nh:contentsDesc/nh:contents/*">
+			<div class="row">
+				<div class="col-md-12">
+					<hr/>
+					<!-- if there are any calculable contents, display the interface -->
+					<xsl:choose>
+						<xsl:when test="nh:descMeta/nh:contentsDesc/nh:contents[nh:coin or nh:coinGrp[@count or @minCount or @maxCount]]">
+							<ul class="nav nav-pills" id="tabs">
+								<li class="active">
+									<a href="#contents" data-toggle="pill">
+										<xsl:value-of select="numishare:normalizeLabel('display_contents', $lang)"/>
+									</a>
+								</li>
+								<li>
+									<a href="#quantitative" data-toggle="pill">
+										<xsl:value-of select="numishare:normalizeLabel('display_quantitative', $lang)"/>
+									</a>
+								</li>
+							</ul>
+							<div class="tab-content">
+								<div class="tab-pane active" id="contents">
 									<xsl:apply-templates select="nh:descMeta/nh:contentsDesc/nh:contents"/>
 								</div>
-							</xsl:if>
-						</div>
-						<div class="tab-pane" id="quantitative">
-							<h1>
-								<xsl:value-of select="numishare:normalizeLabel('display_quantitative', $lang)"/>
-							</h1>
-							<span style="display:none" id="vis-pipeline">
-								<xsl:value-of select="$pipeline"/>
-							</span>
-
-							<!-- only show visualization interface if there's no uncertainty within the counts -->
-							<xsl:choose>
-								<xsl:when test="nh:descMeta/nh:contentsDesc/nh:contents/*/@certainty">
-									<p>Quantitative analyses are temporarily disabled in records with uncertain content counts.</p>
-								</xsl:when>
-								<xsl:otherwise>
-									<ul class="nav nav-pills" id="quant-tabs">
-										<li class="active">
-											<a href="#visTab" data-toggle="pill">
-												<xsl:value-of select="numishare:normalizeLabel('display_visualization', $lang)"/>
-											</a>
-										</li>
-										<li>
-											<a href="#dateTab" data-toggle="pill">
-												<xsl:value-of select="numishare:normalizeLabel('display_date-analysis', $lang)"/>
-											</a>
-										</li>
-										<li>
-											<a href="#csvTab" data-toggle="pill">
-												<xsl:value-of select="numishare:normalizeLabel('display_data-download', $lang)"/>
-											</a>
-										</li>
-									</ul>
-									<div class="tab-content">
-										<div class="tab-pane active" id="visTab">
-											<xsl:call-template name="hoard-visualization">
-												<xsl:with-param name="action" select="concat('./', $id, '#quantitative')"/>
-											</xsl:call-template>
-										</div>
-										<div class="tab-pane" id="dateTab">
-											<xsl:call-template name="date-vis">
-												<xsl:with-param name="action" select="concat('./', $id, '#quantitative')"/>
-											</xsl:call-template>
-										</div>
-										<div class="tab-pane" id="csvTab">
-											<xsl:call-template name="data-download"/>
-										</div>
-										<span id="formId" style="display:none"/>
-									</div>
-								</xsl:otherwise>
-							</xsl:choose>
-
-						</div>
-					</div>
-				</xsl:if>
+								<div class="tab-pane" id="quantitative">
+									<h1>
+										<xsl:value-of select="numishare:normalizeLabel('display_quantitative', $lang)"/>
+									</h1>
+									<!-- the chart and downloadable/bookmarkable links are hidden by default on the hoard record page -->
+									<xsl:call-template name="hoard-visualization">
+										<xsl:with-param name="hidden" select="true()"/>
+										<xsl:with-param name="action" select="concat('./', $id, '#quantitative')"/>
+										<xsl:with-param name="compare" select="$id"/>
+									</xsl:call-template>
+								</div>
+							</div>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:apply-templates select="nh:descMeta/nh:contentsDesc/nh:contents"/>
+						</xsl:otherwise>
+					</xsl:choose>
+				</div>
 			</div>
-		</div>
+		</xsl:if>
 	</xsl:template>
 
 	<!-- ******** HOARD DESCRIPTION STRUCTURE ********-->
@@ -652,68 +613,70 @@
 
 	<!-- ************ CONTENTS ************-->
 	<xsl:template match="nh:contents">
-		<h3>
-			<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
-		</h3>
-
-		<xsl:if test="nh:description or (@count or @minCount or @maxCount)">
-			<dl class="dl-horizontal">
-				<xsl:choose>
-					<xsl:when test="@count or @minCount or @maxCount">
-						<xsl:variable name="count-string">
-							<xsl:choose>
-								<xsl:when test="@count">
-									<xsl:value-of select="@count"/>
-								</xsl:when>
-								<xsl:otherwise>
-									<xsl:choose>
-										<xsl:when test="@minCount and not(@maxCount)">
-											<xsl:value-of select="concat(@minCount, '+')"/>
-										</xsl:when>
-										<xsl:when test="not(@minCount) and @maxCount">
-											<xsl:value-of select="concat('&lt;', @maxCount)"/>
-										</xsl:when>
-										<xsl:when test="@minCount and @maxCount">
-											<xsl:value-of select="concat(@minCount, '-', @maxCount)"/>
-										</xsl:when>
-									</xsl:choose>
-								</xsl:otherwise>
-							</xsl:choose>
-						</xsl:variable>
-
-						<dt>
-							<xsl:value-of select="numishare:normalizeLabel('numeric_count', $lang)"/>
-						</dt>
-						<dd>
-							<xsl:value-of select="$count-string"/>
-						</dd>
-						<xsl:if test="not($count-string = nh:description)">
+		<div class="metadata_section">
+			<h3>
+				<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
+			</h3>
+			
+			<xsl:if test="nh:description or (@count or @minCount or @maxCount)">
+				<dl class="dl-horizontal">
+					<xsl:choose>
+						<xsl:when test="@count or @minCount or @maxCount">
+							<xsl:variable name="count-string">
+								<xsl:choose>
+									<xsl:when test="@count">
+										<xsl:value-of select="@count"/>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:choose>
+											<xsl:when test="@minCount and not(@maxCount)">
+												<xsl:value-of select="concat(@minCount, '+')"/>
+											</xsl:when>
+											<xsl:when test="not(@minCount) and @maxCount">
+												<xsl:value-of select="concat('&lt;', @maxCount)"/>
+											</xsl:when>
+											<xsl:when test="@minCount and @maxCount">
+												<xsl:value-of select="concat(@minCount, '-', @maxCount)"/>
+											</xsl:when>
+										</xsl:choose>
+									</xsl:otherwise>
+								</xsl:choose>
+							</xsl:variable>
+							
+							<dt>
+								<xsl:value-of select="numishare:normalizeLabel('numeric_count', $lang)"/>
+							</dt>
+							<dd>
+								<xsl:value-of select="$count-string"/>
+							</dd>
+							<xsl:if test="not($count-string = nh:description)">
+								<xsl:apply-templates select="nh:description"/>
+							</xsl:if>
+						</xsl:when>
+						<xsl:otherwise>
 							<xsl:apply-templates select="nh:description"/>
-						</xsl:if>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:apply-templates select="nh:description"/>
-					</xsl:otherwise>
-				</xsl:choose>
-			</dl>
-		</xsl:if>
-
-		<table class="table table-striped">
-			<thead>
-				<tr>
-					<th style="width:10%" class="text-center">
-						<xsl:value-of select="numishare:normalizeLabel('numeric_count', $lang)"/>
-					</th>
-					<th>
-						<xsl:value-of select="numishare:regularize_node('description', $lang)"/>
-					</th>
-					<th style="width:10%" class="text-center"/>
-				</tr>
-			</thead>
-			<tbody>
-				<xsl:apply-templates select="descendant::nh:coin | descendant::nh:coinGrp"/>
-			</tbody>
-		</table>
+						</xsl:otherwise>
+					</xsl:choose>
+				</dl>
+			</xsl:if>
+			
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th style="width:10%" class="text-center">
+							<xsl:value-of select="numishare:normalizeLabel('numeric_count', $lang)"/>
+						</th>
+						<th>
+							<xsl:value-of select="numishare:regularize_node('description', $lang)"/>
+						</th>
+						<th style="width:10%" class="text-center"/>
+					</tr>
+				</thead>
+				<tbody>
+					<xsl:apply-templates select="descendant::nh:coin | descendant::nh:coinGrp"/>
+				</tbody>
+			</table>
+		</div>		
 	</xsl:template>
 
 	<!-- display table row for each coin or coinGrp -->

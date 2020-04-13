@@ -50,6 +50,11 @@
 			<xsl:element name="{$dist}">
 				<xsl:value-of select="@label"/>
 			</xsl:element>
+			<xsl:if test="@sort">
+				<xsl:element name="value">
+					<xsl:value-of select="@sort"/>
+				</xsl:element>
+			</xsl:if>
 			<xsl:element name="{if ($type='count') then 'count' else 'percentage'}">
 				<xsl:value-of select="@num"/>
 			</xsl:element>

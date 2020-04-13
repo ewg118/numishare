@@ -38,6 +38,9 @@
 			<xsl:when test="$dist = 'dynasty'">
 				<xsl:text>famname</xsl:text>
 			</xsl:when>
+			<xsl:when test="$dist = 'state'">
+				<xsl:text>corpname</xsl:text>
+			</xsl:when>
 			<xsl:otherwise>
 				<xsl:text>persname</xsl:text>
 			</xsl:otherwise>
@@ -153,11 +156,13 @@
 									</xsl:when>
 									<xsl:when test="$dist = 'coinType'">
 										<xsl:attribute name="uri" select="$href"/>
-										<xsl:attribute name="label" select="
-											$nudsGroup//object[@xlink:href = $href]/descendant::nuds:descMeta/nuds:title[if (@xml:lang = $lang) then
-											(@xml:lang = $lang)
-											else
-											'en']"/>
+										<xsl:attribute name="label"
+											select="
+												$nudsGroup//object[@xlink:href = $href]/descendant::nuds:descMeta/nuds:title[if (@xml:lang = $lang) then
+													(@xml:lang = $lang)
+												else
+													'en']"
+										/>
 									</xsl:when>
 									<xsl:when test="$dist = 'date'">
 										<xsl:choose>
@@ -260,7 +265,7 @@
 				</xsl:variable>
 
 				<!-- only include a countable item when there is a concept -->
-				<xsl:if test="$concept//@uri or $concept//@date">
+				<xsl:if test="string($concept//@uri) or string($concept//@date)">
 					<item count="{$count}">
 						<xsl:if test="$concept//@uri">
 							<xsl:attribute name="uri" select="$concept/@uri"/>
@@ -289,19 +294,25 @@
 					<xsl:value-of
 						select="
 							sum(//nh:coinGrp[if (@certainty) then
-								boolean(index-of($codes, nuds:typeDesc/@certainty)) = false()
+								if (nuds:typeDesc/@certainty) then
+									boolean(index-of($codes, nuds:typeDesc/@certainty)) = false()
+								else
+									*
 							else
 								*]/@count) +
 							count(//nh:coin[if (@certainty) then
-								boolean(index-of($codes, nuds:typeDesc/@certainty)) = false()
+								if (nuds:typeDesc/@certainty) then
+									boolean(index-of($codes, nuds:typeDesc/@certainty)) = false()
+								else
+									*
 							else
 								*])"
 					/>
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-		
-		<hoard id="{$id}" total="{$total}" title="{$title}">
+
+		<hoard id="{$id}" total="{$total}" title="{$title}">			
 			<xsl:choose>
 				<xsl:when test="$dist = 'date'">
 					<xsl:call-template name="date-distribution">
@@ -361,12 +372,15 @@
 
 		<xsl:for-each select="$distinct-counts//date">
 			<xsl:sort select="@date" order="ascending" data-type="number"/>
-			
-			<item label="{.}">
+
+			<item label="{.}" sort="{number(@date)}">
 				<xsl:attribute name="num">
 					<xsl:choose>
 						<xsl:when test="$type = 'cumulative'">
-							<xsl:value-of select="format-number(((@count + sum(preceding-sibling::date/@count)) div $total) * 100, '##.00')"/>
+							<xsl:value-of select="format-number(((@count + sum(preceding-sibling::date/@count)) div $total) * 100, '0.00')"/>
+						</xsl:when>
+						<xsl:when test="$type = 'percentage'">
+							<xsl:value-of select="format-number((@count div $total) * 100, '0.00')"/>
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:value-of select="@count"/>
@@ -386,12 +400,12 @@
 				<xsl:apply-templates select="$nudsGroup//nuds:typeDesc" mode="extract-concepts"/>
 			</concepts>
 		</xsl:variable>
-		
+
 		<xsl:for-each select="$all-concepts//concept[string(.)]">
 			<xsl:sort select="."/>
-			
+
 			<xsl:variable name="uri" select="@uri"/>
-			
+
 			<xsl:if test="not(preceding-sibling::concept/@uri = $uri)">
 				<item label="{.}">
 					<xsl:attribute name="num">
@@ -400,7 +414,7 @@
 								<xsl:value-of select="sum($total-counts//item[@uri = $uri]/@count)"/>
 							</xsl:when>
 							<xsl:otherwise>
-								<xsl:value-of select="format-number((sum($total-counts//item[@uri = $uri]/@count) div $total) * 100, '##.00')"/>
+								<xsl:value-of select="format-number((sum($total-counts//item[@uri = $uri]/@count) div $total) * 100, '0.00')"/>
 							</xsl:otherwise>
 						</xsl:choose>
 					</xsl:attribute>
@@ -408,13 +422,13 @@
 			</xsl:if>
 		</xsl:for-each>
 	</xsl:template>
-	
+
 	<!-- types should theoretically not occur more than once, and so the $total-counts is sufficient -->
 	<xsl:template name="type-distribution">
 		<xsl:param name="total"/>
-		
+
 		<xsl:for-each select="$total-counts//item">
-			
+
 			<item label="{@label}">
 				<xsl:attribute name="num">
 					<xsl:choose>
@@ -422,7 +436,7 @@
 							<xsl:value-of select="@count"/>
 						</xsl:when>
 						<xsl:otherwise>
-							<xsl:value-of select="format-number((number(@count) div $total) * 100, '##.00')"/>
+							<xsl:value-of select="format-number((number(@count) div $total) * 100, '0.00')"/>
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:attribute>
@@ -437,7 +451,7 @@
 				<xsl:when test="string($role)">
 					<xsl:variable name="uris" as="element()*">
 						<uris>
-							<xsl:apply-templates select="*[local-name() = $element and @xlink:role = $role][starts-with(@xlink:href, 'http://nomisma.org/id/')]"
+							<xsl:apply-templates select="descendant::*[local-name() = $element and @xlink:role = $role][starts-with(@xlink:href, 'http://nomisma.org/id/')]"
 								mode="extract-concepts">
 								<xsl:sort select="@xlink:href" order="ascending"/>
 							</xsl:apply-templates>
