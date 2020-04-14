@@ -34,14 +34,14 @@ dl.ar dd{
     margin-right: 180px;
     margin-left: 0;
 }
-.alert-box {
-	width:50%;
-	margin:20px auto;
+.alert-box{
+    width: 50%;
+    margin: 20px auto;
 }
-#feedback-frame {
-    width:100%;
-    border:none;
-    height:600px;
+#feedback-frame{
+    width: 100%;
+    border: none;
+    height: 600px;
 }
 /*
   ***************************************
@@ -106,12 +106,12 @@ dl.ar dd{
     height: 100%;
 }
 .image-container{
-    margin-bottom:20px;
+    margin-bottom: 20px;
 }
-.iiif-container {
-    width:100%;
-    padding-top:100%;
-    background-color:white;    
+.iiif-container{
+    width: 100%;
+    padding-top: 100%;
+    background-color: white;
 }
 .iiif-zoom-glyph{
     position: absolute;
@@ -119,9 +119,9 @@ dl.ar dd{
     bottom: 0;
     font-size: 120%
 }
-.model-window {
-    width:640px;
-    height:480px;
+.model-window{
+    width: 640px;
+    height: 480px;
 }
 /*
   ***************************************
@@ -225,34 +225,36 @@ select[name = "interval"],
   VISUALIZATION FORM
   ***************************************
 */
-.quant-form {
-    margin-bottom:20px;
+.quant-form{
+    margin-bottom: 20px;
 }
-.quant-form input[type=text], .quant-form select {
-	width:20em;
+.quant-form input[type = text],
+.quant-form select{
+    width: 20em;
 }
-.quant-form select.era {
-    width:5em;
-    margin-left:10px;
+.quant-form select.era{
+    width: 5em;
+    margin-left: 10px;
 }
-.quant-form input.year, .quant-form select.interval {
-    width:10em;
+.quant-form input.year,
+.quant-form select.interval{
+    width: 10em;
 }
-.control-container {
-	display:inline;
-	width:20px;
+.control-container{
+    display: inline;
+    width: 20px;
 }
 .control-row .btn{
-    margin:0 5px;
+    margin: 0 5px;
 }
-.query-pair {
-	display:block;
-	margin-bottom:15px;
+.query-pair{
+    display: block;
+    margin-bottom: 15px;
 }
-.prop-container {
-	display:inline;
-	margin-left:10px;
-	margin-right:10px;
+.prop-container{
+    display: inline;
+    margin-left: 10px;
+    margin-right: 10px;
 }
 /*
   ***************************************
@@ -274,8 +276,8 @@ select[name = "interval"],
     max-height: 100%;
     cursor: pointer;
     vertical-align: bottom;
-    margin-left:auto;
-    margin-right:auto;
+    margin-left: auto;
+    margin-right: auto;
 }
 .name-container{
     background-color: gray;
@@ -303,15 +305,15 @@ select[name = "interval"],
 #map_results{
     margin-left: 20px;
 }
-.grid-doc {
-    height:240px;
+.grid-doc{
+    height: 240px;
 }
-.grid-doc img {
-    max-height:120px;
+.grid-doc img{
+    max-height: 120px;
 }
 .thumbImage,
 .iiif-image{
-	margin:5px;
+    margin: 5px;
 }
 .side-thumbnail{
     max-width: 120px;
@@ -324,9 +326,9 @@ select[name = "interval"],
     padding: 10px 0;
 }
 .stacked_term{
-	padding:2px;
-	margin-bottom:5px;
-	vertical-align:middle;
+    padding: 2px;
+    margin-bottom: 5px;
+    vertical-align: middle;
 }
 .remove_segment{
     margin-left: 2px;
@@ -584,15 +586,15 @@ div.custominfostyle{
   SYMBOL PAGE
   ***************************************
  */
- #symbol-container{
-  margin: 10px 0;
- }
- #form-container form {
-     display:inline;
- }
- #symbol-form input {
-     margin-right:5px;
- }
- .letter-button {
-     margin-right:5px;
- }
+#symbol-container{
+    margin: 10px 0;
+}
+#form-container form{
+    display: inline;
+}
+#symbol-form input{
+    margin-right: 5px;
+}
+.letter-button{
+    margin-right: 5px;
+}
