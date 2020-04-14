@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 	Author: Ethan Gruber
-	Last modified: March 2020
-	Function: HTML view for NUDSHoard-->
+	Last modified: April 2020
+	Function: HTML view for NUDSHoard -->
 <p:config xmlns:p="http://www.orbeon.com/oxf/pipeline" xmlns:oxf="http://www.orbeon.com/oxf/processors">
 	<p:param type="input" name="data"/>
 	<p:param type="output" name="data"/>
@@ -30,7 +30,7 @@
 		<p:input name="request" href="#request"/>
 		<p:input name="data" href="#get_hoards-model"/>		
 		<p:input name="config" href="../../../../ui/xslt/ajax/get_hoards.xsl"/>
-		<p:output name="data" id="get_hoards-view"/>
+		<p:output name="data" id="hoards-list"/>
 	</p:processor>
 	
 	<p:processor name="oxf:pipeline">
@@ -98,7 +98,8 @@ ASK {?s oa:hasBody <URI>}]]>
 					<!-- if there is a problem with the SPARQL endpoint, then simply generate the HTML page -->
 					<p:processor name="oxf:unsafe-xslt">
 						<p:input name="request" href="#request"/>
-						<p:input name="data" href="aggregate('content', #data, #config, #get_hoards-view, #codes-view)"/>
+						<p:input name="hoards-list" href="#hoards-list"/>
+						<p:input name="data" href="aggregate('content', #data, #config, #codes-view)"/>
 						<p:input name="config" href="../../../../ui/xslt/serializations/nudsHoard/html.xsl"/>
 						<p:output name="data" id="model"/>				
 					</p:processor>
@@ -113,7 +114,8 @@ ASK {?s oa:hasBody <URI>}]]>
 					<p:processor name="oxf:unsafe-xslt">
 						<p:input name="request" href="#request"/>
 						<p:input name="annotations" href="#annotations"/>
-						<p:input name="data" href="aggregate('content', #data, #config, #get_hoards-view, #codes-view)"/>
+						<p:input name="hoards-list" href="#hoards-list"/>
+						<p:input name="data" href="aggregate('content', #data, #config, #codes-view)"/>
 						<p:input name="config" href="../../../../ui/xslt/serializations/nudsHoard/html.xsl"/>
 						<p:output name="data" id="model"/>				
 					</p:processor>
@@ -123,7 +125,8 @@ ASK {?s oa:hasBody <URI>}]]>
 		<p:otherwise>
 			<p:processor name="oxf:unsafe-xslt">
 				<p:input name="request" href="#request"/>
-				<p:input name="data" href="aggregate('content', #data, #config, #get_hoards-view, #codes-view)"/>
+				<p:input name="hoards-list" href="#hoards-list"/>
+				<p:input name="data" href="aggregate('content', #data, #config, #codes-view)"/>
 				<p:input name="config" href="../../../../ui/xslt/serializations/nudsHoard/html.xsl"/>
 				<p:output name="data" id="model"/>				
 			</p:processor>

@@ -4125,7 +4125,7 @@
 					<xsl:when test="$label = 'visualize_response_type'">Select Numeric Response Type</xsl:when>
 					<xsl:when test="$label = 'visualize_select_measurement'">Select Measurement</xsl:when>
 					<xsl:when test="$label = 'visualize_chart_type'">Select Chart Type</xsl:when>
-					<xsl:when test="$label = 'visualize_categories'">Select Categories for Analysis</xsl:when>
+					<xsl:when test="$label = 'visualize_categories'">Select Category for Analysis</xsl:when>
 					<xsl:when test="$label = 'visualize_select_hoards'">Select Hoards</xsl:when>
 					<xsl:when test="$label = 'visualize_select_hoards_optional'">Select Hoards to Compare (optional)</xsl:when>
 					<xsl:when test="$label = 'visualize_compare'">Compare Queries</xsl:when>

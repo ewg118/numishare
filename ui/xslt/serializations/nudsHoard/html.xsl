@@ -5,10 +5,10 @@
 	xmlns:nuds="http://nomisma.org/nuds" xmlns:nh="http://nomisma.org/nudsHoard" xmlns:nm="http://nomisma.org/id/" xmlns:tei="http://www.tei-c.org/ns/1.0"
 	xmlns:gml="http://www.opengis.net/gml" xmlns:nmo="http://nomisma.org/ontology#" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"
 	exclude-result-prefixes="#all">
-	<xsl:include href="../../templates.xsl"/>
-	<!--<xsl:include href="../../templates-visualize.xsl"/>-->
-	<xsl:include href="../../templates-analyze.xsl"/>
+	<xsl:include href="../../templates.xsl"/>	
 	<xsl:include href="../../functions.xsl"/>
+	<xsl:include href="../../templates-analyze.xsl"/>
+	<xsl:include href="../../templates-search.xsl"/>
 	<xsl:include href="../object/html-templates.xsl"/>
 
 	<!-- URL params -->
@@ -34,9 +34,6 @@
 
 	<!-- shared visualization/analysis params -->
 	<xsl:param name="type" select="doc('input:request')/request/parameters/parameter[name = 'type']/value"/>
-	<xsl:param name="chartType" select="doc('input:request')/request/parameters/parameter[name = 'chartType']/value"/>
-
-	<!-- use the calculate URI parameter to output tables/charts for counts of material, denomination, issuer, etc. -->
 	<xsl:param name="dist" select="doc('input:request')/request/parameters/parameter[name = 'dist']/value"/>
 	<xsl:param name="compare" select="doc('input:request')/request/parameters/parameter[name = 'compare']/value"/>
 	<xsl:param name="exclude" select="doc('input:request')/request/parameters/parameter[name = 'exclude']/value"/>
@@ -146,7 +143,8 @@
 		</xsl:if>
 	</xsl:variable>
 
-	<xsl:variable name="facets" select="string-join(//config//facet, ',')"/>
+	<!-- get the facets as a sequence -->
+	<xsl:variable name="facets" select="//config/facets/facet"/>	
 
 	<!-- get non-coin-type RDF in the document -->
 	<xsl:variable name="rdf" as="element()*">
@@ -236,15 +234,14 @@
 				<script type="text/javascript" src="https://d3plus.org/js/d3.js"/>
 				<script type="text/javascript" src="https://d3plus.org/js/d3plus.js"/>
 				<script type="text/javascript" src="{$include_path}/javascript/display_hoard_functions.js"/>
-				<script type="text/javascript" src="{$include_path}/javascript/analysis_functions.js"/>
+				<script type="text/javascript" src="{$include_path}/javascript/hoard_analysis_functions.js"/>
+				<script type="text/javascript" src="{$include_path}/javascript/search_functions.js"/>
+				
+				<!-- Add fancyBox -->
+				<link rel="stylesheet" href="{$include_path}/css/jquery.fancybox.css?v=2.1.5" type="text/css" media="screen"/>
+				<script type="text/javascript" src="{$include_path}/javascript/jquery.fancybox.pack.js?v=2.1.5"/>
+				
 				<link type="text/css" href="{$include_path}/css/style.css" rel="stylesheet"/>
-
-				<!-- mapping -->
-				<!--<xsl:if test="$geoEnabled = true()">
-					<xsl:if test="$hasMints = true() or $hasFindspots = true()">
-						
-					</xsl:if>
-				</xsl:if>-->
 			</head>
 			<body>
 
@@ -262,6 +259,9 @@
 					<span id="path">
 						<xsl:value-of select="concat($display_path, 'id/')"/>
 					</span>
+					<span id="display_path">
+						<xsl:value-of select="$display_path"/>
+					</span>
 					<span id="include_path">
 						<xsl:value-of select="$include_path"/>
 					</span>
@@ -275,6 +275,9 @@
 						<xsl:value-of select="$lang"/>
 					</span>
 					<span id="page">record</span>
+					<div id="filterHoards">
+						<xsl:call-template name="search_forms"/>
+					</div>
 				</div>
 				<div id="iiif-window" style="width:600px;height:600px;display:none"/>
 			</body>
@@ -438,7 +441,7 @@
 									<!-- the chart and downloadable/bookmarkable links are hidden by default on the hoard record page -->
 									<xsl:call-template name="hoard-visualization">
 										<xsl:with-param name="hidden" select="true()"/>
-										<xsl:with-param name="action" select="concat('./', $id, '#quantitative')"/>
+										<xsl:with-param name="page">record</xsl:with-param>
 										<xsl:with-param name="compare" select="$id"/>
 									</xsl:call-template>
 								</div>

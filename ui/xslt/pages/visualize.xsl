@@ -136,6 +136,9 @@
 		</div>
 
 		<div class="hidden">
+			<span id="display_path">
+				<xsl:value-of select="$display_path"/>
+			</span>
 			<div id="searchBox">
 				<h3>
 					<xsl:value-of select="numishare:normalizeLabel('visualize_add_query', $lang)"/>

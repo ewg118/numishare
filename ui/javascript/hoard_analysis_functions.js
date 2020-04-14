@@ -23,12 +23,28 @@ $(document).ready(function () {
         };
         compare = new Array();
         while (match = search.exec(query)) {
-            urlParams[decode(match[1])] = decode(match[2]);
+            if (decode(match[1]) == 'compare') {
+                if (decode(match[2]).length > 0) {
+                    compare.push(decode(match[2]));
+                }
+            } else {
+                urlParams[decode(match[1])] = decode(match[2]);
+            }
         }
+        urlParams[ 'compare'] = compare;
     })();
     
-    var path = '../';
+    var path = $('#display_path').text();
     var page = $('#page').text();
+    
+     /**** RENDER CHART ****/
+    //render the chart from request parameters on the distribution page and also validate the form
+    if (page == 'page') {
+        if (urlParams[ 'dist'] != null && urlParams[ 'compare'] != null) {            
+            renderDistChart(path, urlParams);
+            validate('distributionForm');
+        }
+    }
     
     /*** AJAX-BASED FORM SUBMISSION***/
     $('.quant-form').submit(function () {
@@ -48,8 +64,8 @@ $(document).ready(function () {
             
             compare = new Array();
             //add the self ID
-            if ($('#' + formId).find('input[name=compare]').length > 0) {
-                compare.push($('#' + formId).find('input[name=compare]').val());
+            if ($('#' + formId).find('input[name=compare][type=hidden]').length > 0) {
+                compare.push($('#' + formId).find('input[name=compare][type=hidden]').val());
             }
             $('#' + formId + ' .compare-select').children('option:selected').each(function () {
                 compare.push($(this).val());
@@ -120,14 +136,9 @@ $(document).ready(function () {
     
     
     /********* SOLR FILTERING FUNCTIONS **********/
+    //show dialog to filter the hoard list
     $(".showFilter").each(function () {
-        var tthis = this;
-        $(this).fancybox({
-            beforeLoad: function () {
-                var formId = tthis.id.split('-')[0] + '-form';
-                $('#formId').html(formId);
-            }
-        });
+        $(this).fancybox();
     });
     
     // total options for advanced search - used for unique id's on dynamically created elements
@@ -149,15 +160,14 @@ $(document).ready(function () {
     
     //filter button activation
     $('#advancedSearchForm').submit(function () {
-        var formId = $('#formId').text();
         var q = assembleQuery('advancedSearchForm');
-        $('#' + formId + ' .filter-div').children('span').html(q);
-        $('#' + formId + ' .filter-div').show();
-        $.get('get_hoards', {
+        $('#distributionForm .filter-div').children('span').html(q);
+        $('#distributionForm .filter-div').show();
+        $.get(path + 'get_hoards', {
             q: q
         },
         function (data) {
-            $('#' + formId + ' .compare-div').html(data);
+            $('#distributionForm .compare-div').html(data);
         });
         $.fancybox.close();
         return false;
@@ -165,13 +175,12 @@ $(document).ready(function () {
     
     //remove filter
     $('.removeFilter').click(function () {
-        var formId = $('#formId').text();
-        $('#' + formId + ' .filter-div').hide();
-        $.get('get_hoards', {
+        $('#distributionForm .filter-div').hide();
+        $.get(path + 'get_hoards', {
             q: '*'
         },
         function (data) {
-            $('#' + formId + ' .compare-div').html(data);
+            $('#distributionForm .compare-div').html(data);
         });
         return false;
     });

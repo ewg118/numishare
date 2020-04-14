@@ -37,10 +37,9 @@
 	</xsl:param>
 
 	<!-- use the calculate URI parameter to output tables/charts for counts of material, denomination, issuer, etc. -->
-	<xsl:param name="calculate" select="doc('input:request')/request/parameters/parameter[name = 'calculate']/value"/>
+	<xsl:param name="dist" select="doc('input:request')/request/parameters/parameter[name = 'dist']/value"/>
 	<xsl:param name="compare" select="doc('input:request')/request/parameters/parameter[name = 'compare']/value"/>
 	<xsl:param name="type" select="doc('input:request')/request/parameters/parameter[name = 'type']/value"/>
-	<xsl:param name="chartType" select="doc('input:request')/request/parameters/parameter[name = 'chartType']/value"/>
 	<xsl:param name="exclude" select="doc('input:request')/request/parameters/parameter[name = 'exclude']/value"/>
 	<xsl:param name="options" select="doc('input:request')/request/parameters/parameter[name = 'options']/value"/>
 
@@ -54,10 +53,8 @@
 	<xsl:variable name="url" select="//config/url"/>
 	<xsl:variable name="collection_type" select="//config/collection_type"/>
 
-	<!-- load facets into variable -->
-	<xsl:variable name="facets" as="element()*">
-		<xsl:copy-of select="//lst[@name = 'facet_fields']"/>
-	</xsl:variable>
+	<!-- get the facets as a sequence -->
+	<xsl:variable name="facets" select="//config/facets/facet"/>
 
 	<xsl:template match="/">
 		<html>
@@ -85,19 +82,17 @@
 				<!-- bootstrap -->
 				<link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
 				<script src="https://netdna.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"/>
+				
+				<!-- analysis scripts -->
+				<script type="text/javascript" src="https://d3plus.org/js/d3.js"/>
+				<script type="text/javascript" src="https://d3plus.org/js/d3plus.js"/>
+				<script type="text/javascript" src="{$include_path}/javascript/hoard_analysis_functions.js"/>				
+				<script type="text/javascript" src="{$include_path}/javascript/search_functions.js"/>
+				
 				<!-- Add fancyBox -->
 				<link rel="stylesheet" href="{$include_path}/css/jquery.fancybox.css?v=2.1.5" type="text/css" media="screen"/>
 				<script type="text/javascript" src="{$include_path}/javascript/jquery.fancybox.pack.js?v=2.1.5"/>
 				<link type="text/css" href="{$include_path}/css/style.css" rel="stylesheet"/>
-				<!-- analysis scripts -->
-				<script type="text/javascript" src="{$include_path}/javascript/highcharts.js"/>
-				<script type="text/javascript" src="{$include_path}/javascript/modules/exporting.js"/>
-				<script type="text/javascript" src="{$include_path}/javascript/analyze.js"/>
-				<script type="text/javascript" src="{$include_path}/javascript/analysis_functions.js"/>
-				<!-- Add fancyBox -->
-				<link rel="stylesheet" href="{$include_path}/css/jquery.fancybox.css?v=2.1.5" type="text/css" media="screen"/>
-				<script type="text/javascript" src="{$include_path}/javascript/jquery.fancybox.pack.js?v=2.1.5"/>
-				<script type="text/javascript" src="{$include_path}/javascript/search_functions.js"/>
 
 				<!-- google analytics -->
 				<xsl:if test="string(/config/google_analytics)">
@@ -124,51 +119,22 @@
 					<h1>
 						<xsl:value-of select="numishare:normalizeLabel('header_analyze', $lang)"/>
 					</h1>
-					<span style="display:none" id="vis-pipeline">
-						<xsl:value-of select="$pipeline"/>
-					</span>
 
-					<ul class="nav nav-pills" id="tabs">
-						<li class="active">
-							<a href="#visualization" data-toggle="pill">
-								<xsl:value-of select="numishare:normalizeLabel('display_visualization', $lang)"/>
-							</a>
-						</li>
-						<li>
-							<a href="#date-analysis" data-toggle="pill">
-								<xsl:value-of select="numishare:normalizeLabel('display_date-analysis', $lang)"/>
-							</a>
-						</li>
-						<li>
-							<a href="#data-download" data-toggle="pill">
-								<xsl:value-of select="numishare:normalizeLabel('display_data-download', $lang)"/>
-							</a>
-						</li>
-					</ul>
-					<div class="tab-content">
-						<div class="tab-pane active" id="visualization">
-							<xsl:call-template name="hoard-visualization">
-								<xsl:with-param name="action">#visualization</xsl:with-param>
-							</xsl:call-template>
-						</div>
-						<div class="tab-pane" id="date-analysis">
-							<xsl:call-template name="date-vis">
-								<xsl:with-param name="action">#date-analysis</xsl:with-param>
-							</xsl:call-template>
-						</div>
-						<div class="tab-pane" id="data-download">
-							<xsl:call-template name="data-download"/>
-						</div>
-					</div>
-					<div style="display:none">
+					<xsl:call-template name="hoard-visualization">
+						<xsl:with-param name="hidden" select="if (string($dist) and count($compare) &gt; 0) then false() else true()"/>
+						<xsl:with-param name="page">page</xsl:with-param>
+						<xsl:with-param name="compare" select="$compare"/>
+					</xsl:call-template>
+					
+					<div class="hidden">
+						<span id="display_path">
+							<xsl:value-of select="$display_path"/>
+						</span>
+						<span id="page">page</span>
 						<div id="filterHoards">
-							<h3>
-								<xsl:value-of select="numishare:normalizeLabel('visualize_filter_hoards', $lang)"/>
-							</h3>
 							<xsl:call-template name="search_forms"/>
 						</div>
 					</div>
-					<span id="formId" style="display:none"/>
 				</div>
 			</div>
 		</div>

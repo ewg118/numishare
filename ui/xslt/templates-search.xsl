@@ -26,7 +26,7 @@
 				</xsl:if>
 				<xsl:choose>
 					<xsl:when test="$pipeline='analyze'">
-						<input type="submit" value="Filter" id="filterButton" class="btn btn-default"/>
+						<input type="submit" value="{numishare:normalizeLabel('visualize_filter_list', $lang)}" class="btn btn-default"/>
 					</xsl:when>
 					<xsl:when test="$pipeline='visualize'">
 						<input type="submit" value="{numishare:normalizeLabel('visualize_add_query', $lang)}" class="btn btn-default"/>
@@ -81,7 +81,7 @@
 			<xsl:choose>
 				<xsl:when test="contains($name, '_facet')">
 					<!-- display only those search options when their facet equivalent has hits -->
-					<xsl:if test="$facets//lst[@name=$name]">
+					<xsl:if test="$facets//lst[@name=$name] or boolean(index-of($facets, $name)) = true()">
 						<option value="{$name}" class="search_option">
 							<xsl:value-of select="numishare:normalize_fields($name, $lang)"/>
 						</option>

@@ -556,6 +556,8 @@
 		<xsl:param name="value"/>
 		<xsl:param name="href"/>
 		<xsl:param name="position"/>
+		
+		<xsl:variable name="facet" select="concat($field, '_facet')"/>
 
 		<xsl:choose>
 			<xsl:when test="$field = 'symbol'">
@@ -575,9 +577,8 @@
 						</a>
 					</xsl:otherwise>
 				</xsl:choose>
-			</xsl:when>
-
-			<xsl:when test="contains($facets, $field)">
+			</xsl:when>			
+			<xsl:when test="boolean(index-of($facets, $facet)) = true()">
 				<a href="{$display_path}results?q={$field}_facet:&#x022;{$value}&#x022;{if (string($langParam)) then concat('&amp;lang=', $langParam) else ''}">
 					<xsl:choose>
 						<xsl:when test="contains($href, 'geonames.org')">

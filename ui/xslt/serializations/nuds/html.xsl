@@ -156,7 +156,8 @@
 		</xsl:if>
 	</xsl:variable>
 
-	<xsl:variable name="facets" select="string-join(//config//facet, ',')"/>
+	<!-- get the facets as a sequence -->
+	<xsl:variable name="facets" select="//config/facets/facet"/>
 
 	<!-- get non-coin-type RDF in the document -->
 	<xsl:variable name="rdf" as="element()*">

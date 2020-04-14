@@ -19,23 +19,11 @@ $(document).ready(function () {
         return false;
     });
     
-    var calculate = getURLParameter('calculate');
-    if (calculate != 'null') {
-        $('#tabs a[href="#quantitative"]').tab('show');
-        if (calculate == 'date') {
-            $('#quant-tabs a[href="#dateTab"]').tab('show');
-        }
-    }
-    
+    //initialize Leaflet map
     if ($('#mapcontainer').length > 0) {
         initialize_map(id, path, lang);
     }
 });
-
-function getURLParameter(name) {
-    return decodeURI(
-    (RegExp(name + '=' + '(.+?)(&|$)').exec(location.search) ||[, null])[1]);
-}
 
 function initialize_map(id, path, lang) {
     var baselayers = $('#baselayers').text().split(',');
