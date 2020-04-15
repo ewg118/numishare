@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:nuds="http://nomisma.org/nuds" xmlns:nh="http://nomisma.org/nudsHoard"
 	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-	xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nm="http://nomisma.org/id/" xmlns:numishare="https://github.com/ewg118/numishare"
+	xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nm="http://nomisma.org/id/" xmlns:numishare="https://github.com/ewg118/numishare" xmlns:org="http://www.w3.org/ns/org#"
 	exclude-result-prefixes="#all" version="2.0">
 	<xsl:include href="../functions.xsl"/>
 
@@ -124,7 +124,36 @@
 			</xsl:variable>
 
 			<xsl:variable name="rdf_url" select="concat('http://nomisma.org/apis/getRdf?identifiers=', encode-for-uri($id-param))"/>
-			<xsl:copy-of select="document($rdf_url)/rdf:RDF/*"/>
+
+
+			<!-- if the dist is dynasty or state, then grab the RDF for any org/dynasty linked to people -->
+			<xsl:choose>
+				<xsl:when test="$dist = 'dynasty' or $dist = 'state'">
+					<xsl:variable name="first-iteration" as="element()*">
+						<xsl:copy-of select="document($rdf_url)/rdf:RDF"/>
+					</xsl:variable>
+
+					<xsl:variable name="id-param">
+						<xsl:for-each
+							select="
+								distinct-values($first-iteration/descendant::org:organization/@rdf:resource | $first-iteration/descendant::org:memberOf/@rdf:resource)">
+							<xsl:value-of select="substring-after(., 'id/')"/>
+							<xsl:if test="not(position() = last())">
+								<xsl:text>|</xsl:text>
+							</xsl:if>
+						</xsl:for-each>
+					</xsl:variable>
+
+					<xsl:variable name="org_rdf_url" select="concat('http://nomisma.org/apis/getRdf?identifiers=', encode-for-uri($id-param))"/>
+
+					<xsl:copy-of select="$first-iteration/*"/>
+
+					<xsl:copy-of select="document($org_rdf_url)/rdf:RDF/*"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:copy-of select="document($rdf_url)/rdf:RDF/*"/>
+				</xsl:otherwise>
+			</xsl:choose>
 		</rdf:RDF>
 	</xsl:variable>
 
@@ -148,6 +177,14 @@
 													mode="extract-concepts">
 													<xsl:sort select="@xlink:href" order="ascending"/>
 												</xsl:apply-templates>
+												
+												<xsl:if test="$dist = 'dynasty' or $dist = 'state'">
+													<xsl:apply-templates
+														select="$nudsGroup//object[@xlink:href = $href]/descendant::nuds:persname[starts-with(@xlink:href, 'http://nomisma.org/id/')]"
+														mode="extract-orgs">
+														<xsl:sort select="@xlink:href" order="ascending"/>
+													</xsl:apply-templates>
+												</xsl:if>
 											</uris>
 										</xsl:variable>
 
@@ -202,6 +239,14 @@
 													mode="extract-concepts">
 													<xsl:sort select="@xlink:href" order="ascending"/>
 												</xsl:apply-templates>
+												
+												<xsl:if test="$dist = 'dynasty' or $dist = 'state'">
+													<xsl:apply-templates
+														select="descendant::nuds:persname[starts-with(@xlink:href, 'http://nomisma.org/id/')]"
+														mode="extract-orgs">
+														<xsl:sort select="@xlink:href" order="ascending"/>
+													</xsl:apply-templates>
+												</xsl:if>
 											</uris>
 										</xsl:variable>
 
@@ -312,7 +357,7 @@
 			</xsl:choose>
 		</xsl:variable>
 
-		<hoard id="{$id}" total="{$total}" title="{$title}">			
+		<hoard id="{$id}" total="{$total}" title="{$title}">
 			<xsl:choose>
 				<xsl:when test="$dist = 'date'">
 					<xsl:call-template name="date-distribution">
@@ -451,10 +496,19 @@
 				<xsl:when test="string($role)">
 					<xsl:variable name="uris" as="element()*">
 						<uris>
-							<xsl:apply-templates select="descendant::*[local-name() = $element and @xlink:role = $role][starts-with(@xlink:href, 'http://nomisma.org/id/')]"
+							<xsl:apply-templates
+								select="descendant::*[local-name() = $element and @xlink:role = $role][starts-with(@xlink:href, 'http://nomisma.org/id/')]"
 								mode="extract-concepts">
 								<xsl:sort select="@xlink:href" order="ascending"/>
 							</xsl:apply-templates>
+							
+							<xsl:if test="$dist = 'dynasty' or $dist = 'state'">
+								<xsl:apply-templates
+									select="descendant::nuds:persname[starts-with(@xlink:href, 'http://nomisma.org/id/')]"
+									mode="extract-orgs">
+									<xsl:sort select="@xlink:href" order="ascending"/>
+								</xsl:apply-templates>
+							</xsl:if>
 						</uris>
 					</xsl:variable>
 
@@ -490,6 +544,35 @@
 
 			<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about = $href], $lang)"/>
 		</uri>
+	</xsl:template>
+	
+	<!-- get the dynasty and corporate entities related to each person for state/dynasty distributions -->
+	<xsl:template match="nuds:persname" mode="extract-orgs">
+		<xsl:variable name="href" select="@xlink:href"/>
+		
+		<xsl:choose>
+			<xsl:when test="$dist = 'state'">
+				<xsl:apply-templates select="$rdf/*[@rdf:about = $href]/org:hasMembership" mode="extract-orgs"/>
+			</xsl:when>
+			<xsl:when test="$dist = 'dynasty'">
+				<xsl:apply-templates select="$rdf/*[@rdf:about = $href]/org:memberOf" mode="extract-orgs"/>
+			</xsl:when>
+		</xsl:choose>
+		
+	</xsl:template>
+	
+	<xsl:template match="org:memberOf|org:organization" mode="extract-orgs">
+		<xsl:variable name="href" select="@rdf:resource"/>
+		
+		<uri uri="{@rdf:resource}">			
+			<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about = $href], $lang)"/>
+		</uri>
+	</xsl:template>
+	
+	<xsl:template match="org:hasMembership" mode="extract-orgs">
+		<xsl:variable name="href" select="@rdf:resource"/>
+		
+		<xsl:apply-templates select="$rdf/org:Membership[@rdf:about = $href]/org:organization" mode="extract-orgs"/>
 	</xsl:template>
 
 </xsl:stylesheet>

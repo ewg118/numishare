@@ -2,7 +2,8 @@
 <!--
 	Author: Ethan Gruber
 	Date Modified: April 2020
-	Function: Read the compare URL parameter(s), excute 	
+	Function: Read the compare URL parameter(s), execute lookup for each hoard file in the eXist-db (compare HTTP request parameter), 
+	and then process the results based on the distribution parameter and numeric response type (type parameter)
 -->
 <p:config xmlns:p="http://www.orbeon.com/oxf/pipeline"
 	xmlns:oxf="http://www.orbeon.com/oxf/processors">
