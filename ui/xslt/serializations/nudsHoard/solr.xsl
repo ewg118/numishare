@@ -220,6 +220,8 @@
 		<xsl:apply-templates select="nh:contentsDesc">
 			<xsl:with-param name="lang" select="$lang"/>
 		</xsl:apply-templates>
+		
+		<xsl:apply-templates select="nh:subjectSet"/>
 	</xsl:template>
 
 	<xsl:template match="nh:hoardDesc">
@@ -249,9 +251,29 @@
 				<!-- use localized (non-gazetteer) findspots later -->
 			</xsl:when>
 			<xsl:when test="nh:fallsWithin">
-				<xsl:apply-templates select="nh:fallsWithin/nh:geogname[@xlink:href]"/>
+				<xsl:apply-templates select="nh:fallsWithin"/>
 			</xsl:when>
 		</xsl:choose>
+	</xsl:template>
+	
+	<xsl:template match="nh:fallsWithin">
+		<xsl:apply-templates select="nh:geogname[@xlink:href]|nh:type"/>
+	</xsl:template>
+
+	<!-- place feature type -->
+	<xsl:template match="nh:type">
+		<field name="findspot_type_text">
+			<xsl:value-of select="."/>
+		</field>
+		<field name="findspot_type_facet">
+			<xsl:value-of select="."/>
+		</field>
+		
+		<xsl:if test="@xlink:href">
+			<field name="findspot_type_uri">
+				<xsl:value-of select="@xlink:href"/>
+			</field>
+		</xsl:if>
 	</xsl:template>
 
 	<xsl:template match="nh:deposit | nh:discovery">

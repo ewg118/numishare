@@ -947,7 +947,30 @@
 
 					<!-- closing date -->
 					<xsl:choose>
-						<xsl:when test="not(descendant::nh:deposit/nh:date) and not(descendant::nh:deposit/nh:dateRange)">
+						<xsl:when test="descendant::nh:deposit/nh:date or descendant::nh:deposit/nh:dateRange">
+							<xsl:variable name="date">
+								<xsl:choose>
+									<xsl:when test="descendant::nh:deposit//@standardDate">
+										
+										<xsl:value-of select="descendant::nh:deposit//*[last()]/@standardDate"/>
+									</xsl:when>
+									<xsl:when test="descendant::nh:deposit//@notAfter">
+										<xsl:value-of select="descendant::nh:deposit//*[last()]/@notAfter"/>
+									</xsl:when>
+									<xsl:when test="descendant::nh:deposit//@notBefore">
+										<xsl:value-of select="descendant::nh:deposit//*[last()]/@notBefore"/>
+									</xsl:when>
+								</xsl:choose>
+							</xsl:variable>
+							
+							<xsl:if test="$date castable as xs:gYear">
+								<nmo:hasClosingDate rdf:datatype="http://www.w3.org/2001/XMLSchema#gYear">
+									<xsl:value-of select="$date"/>
+								</nmo:hasClosingDate>
+							</xsl:if>
+							
+						</xsl:when>
+						<xsl:otherwise>
 							<!-- get the nudsGroup to determine the closing date -->
 							<xsl:variable name="nudsGroup" as="element()*">
 								<nudsGroup>
@@ -996,7 +1019,7 @@
 									</xsl:for-each>
 								</nudsGroup>
 							</xsl:variable>
-
+							
 							<xsl:variable name="all-dates" as="element()*">
 								<dates>
 									<xsl:for-each select="descendant::nuds:typeDesc">
@@ -1040,7 +1063,7 @@
 									</xsl:for-each>
 								</dates>
 							</xsl:variable>
-
+							
 							<!-- get date values for closing date -->
 							<xsl:variable name="dates" as="element()*">
 								<dates>
@@ -1052,15 +1075,12 @@
 									</xsl:for-each>
 								</dates>
 							</xsl:variable>
-
+							
 							<xsl:if test="count($dates//date) &gt; 0">
 								<nmo:hasClosingDate rdf:datatype="http://www.w3.org/2001/XMLSchema#gYear">
 									<xsl:value-of select="format-number($dates//date[last()], '0000')"/>
 								</nmo:hasClosingDate>
 							</xsl:if>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:value-of select="number(descendant::nh:deposit//@standardDate)"/>
 						</xsl:otherwise>
 					</xsl:choose>
 

@@ -436,14 +436,14 @@
 				<h4>
 					<xsl:value-of select="numishare:normalize_fields('hoard', $lang)"/>
 				</h4>
-				<xsl:apply-templates select="lst[(@name = 'taq_num' or @name = 'findspot_hier' or @name = 'reference_facet') and number(int) &gt; 0]"
+				<xsl:apply-templates select="lst[(@name = 'taq_num' or @name = 'reference_facet' or @name = 'findspot_hier' or @name = 'ancient_place_facet' or @name = 'findspot_type_facet') and number(int) &gt; 0]"
 					mode="facet"/>
 				<h4>
 					<xsl:value-of select="numishare:normalize_fields('contents', $lang)"/>
 				</h4>
 				<xsl:apply-templates
 					select="
-					lst[((ends-with(@name, '_facet') and not(@name = 'reference_facet')) or @name = 'region_hier') and number(int) &gt;
+					lst[((ends-with(@name, '_facet') and not(@name = 'reference_facet' or @name = 'findspot_type_facet' or @name = 'ancient_place_facet')) or @name = 'region_hier') and number(int) &gt;
 						0]"
 					mode="facet"/>
 			</xsl:when>

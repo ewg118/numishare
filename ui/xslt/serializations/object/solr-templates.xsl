@@ -11,6 +11,89 @@
 	xmlns:org="http://www.w3.org/ns/org#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:numishare="https://github.com/ewg118/numishare"
 	xmlns:tei="http://www.tei-c.org/ns/1.0" exclude-result-prefixes="#all" version="2.0">
 
+	<!-- general subject indexing -->
+	<xsl:template match="*:subjectSet">
+		<xsl:for-each select="*:subject">
+			<xsl:choose>
+				<xsl:when test="string(@localType)">
+					<xsl:choose>
+						<xsl:when test="@localType = 'category'">
+							<field name="category_display">
+								<xsl:value-of select="."/>
+							</field>
+							<xsl:variable name="subsets" select="tokenize(., '--')"/>
+							<xsl:for-each select="$subsets">
+								<field name="category_facet">
+									<xsl:value-of select="concat('L', position(), '|', .)"/>
+								</field>
+							</xsl:for-each>
+						</xsl:when>
+						<xsl:otherwise>
+							<field name="{@localType}_facet">
+								<xsl:value-of select="normalize-space(.)"/>
+							</field>
+							<field name="{@localType}_text">
+								<xsl:value-of select="normalize-space(.)"/>
+							</field>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:when>
+				<xsl:otherwise>
+					<field name="subject_facet">
+						<xsl:value-of select="normalize-space(.)"/>
+					</field>
+				</xsl:otherwise>
+			</xsl:choose>
+			<xsl:if test="string(@xlink:href)">
+				<field name="subject_uri">
+					<xsl:value-of select="@xlink:href"/>
+				</field>
+			</xsl:if>
+			<field name="subject_text">
+				<xsl:value-of select="normalize-space(.)"/>
+			</field>
+			<xsl:if test="contains(@xlink:href, 'geonames.org')">
+				<xsl:call-template name="subject-geographic"/>
+			</xsl:if>
+		</xsl:for-each>
+	</xsl:template>
+	
+	<xsl:template name="subject-geographic">
+		<xsl:variable name="href" select="@xlink:href"/>
+		<xsl:variable name="role">subject</xsl:variable>
+		<xsl:variable name="value" select="."/>
+		<!-- *_geo format is 'mint name|URI of resource|KML-compliant geographic coordinates' -->
+		<field name="{$role}_geo">
+			<xsl:value-of select="$geonames//place[@id = $href]/@label"/>
+			<xsl:text>|</xsl:text>
+			<xsl:value-of select="$href"/>
+			<xsl:text>|</xsl:text>
+			<xsl:value-of select="$geonames//place[@id = $href]"/>
+		</field>
+		<!-- insert hierarchical facets -->
+		<xsl:for-each select="tokenize($geonames//place[@id = $href]/@hierarchy, '\|')">
+			<xsl:if test="not(. = $value)">
+				<field name="{$role}_hier">
+					<xsl:value-of select="concat('L', position(), '|', .)"/>
+				</field>
+				<field name="{$role}_text">
+					<xsl:value-of select="."/>
+				</field>
+			</xsl:if>
+			<xsl:if test="position() = last()">
+				<xsl:variable name="level" select="
+					if (. = $value) then
+					position()
+					else
+					position() + 1"/>
+				<field name="{$role}_hier">
+					<xsl:value-of select="concat('L', $level, '|', $value)"/>
+				</field>
+			</xsl:if>
+		</xsl:for-each>
+	</xsl:template>
+
+	<!-- typeDesc -->
 	<xsl:template match="nuds:typeDesc">
 		<xsl:param name="recordType"/>
 		<xsl:param name="lang"/>
@@ -50,11 +133,7 @@
 			</xsl:otherwise>
 		</xsl:choose>
 
-
-
-
 		<!-- *********** FACETS ************** -->
-
 		<xsl:apply-templates
 			select="
 				nuds:objectType | nuds:denomination[string(.) or string(@xlink:href)] | nuds:manufacture[string(.) or string(@xlink:href)] | nuds:material[string(.) or

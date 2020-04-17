@@ -1874,6 +1874,7 @@
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:choose>					
+					<xsl:when test="$label = 'ancient_place'">Ancient Place</xsl:when>
 					<xsl:when test="$label = 'acquiredFrom'">Acquired From</xsl:when>
 					<xsl:when test="$label = 'adminDesc'">Administrative History</xsl:when>
 					<xsl:when test="$label = 'chronItem'">Event</xsl:when>
@@ -1886,6 +1887,7 @@
 					<xsl:when test="$label = 'dob'">Date on Object</xsl:when>
 					<xsl:when test="$label = 'dateRange'">Date Range</xsl:when>
 					<xsl:when test="$label = 'findspotDesc'">Findspot Description</xsl:when>
+					<xsl:when test="$label = 'findspot_type'">Findspot Type</xsl:when>
 					<xsl:when test="$label = 'fulltext'">Keyword</xsl:when>
 					<xsl:when test="$label = 'hoardDesc'">Hoard Description</xsl:when>
 					<xsl:when test="$label = 'fromDate'">From Date</xsl:when>

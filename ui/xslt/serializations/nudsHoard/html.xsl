@@ -5,7 +5,7 @@
 	xmlns:nuds="http://nomisma.org/nuds" xmlns:nh="http://nomisma.org/nudsHoard" xmlns:nm="http://nomisma.org/id/" xmlns:tei="http://www.tei-c.org/ns/1.0"
 	xmlns:gml="http://www.opengis.net/gml" xmlns:nmo="http://nomisma.org/ontology#" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"
 	exclude-result-prefixes="#all">
-	<xsl:include href="../../templates.xsl"/>	
+	<xsl:include href="../../templates.xsl"/>
 	<xsl:include href="../../functions.xsl"/>
 	<xsl:include href="../../templates-analyze.xsl"/>
 	<xsl:include href="../../templates-search.xsl"/>
@@ -144,7 +144,7 @@
 	</xsl:variable>
 
 	<!-- get the facets as a sequence -->
-	<xsl:variable name="facets" select="//config/facets/facet"/>	
+	<xsl:variable name="facets" select="//config/facets/facet"/>
 
 	<!-- get non-coin-type RDF in the document -->
 	<xsl:variable name="rdf" as="element()*">
@@ -236,11 +236,11 @@
 				<script type="text/javascript" src="{$include_path}/javascript/display_hoard_functions.js"/>
 				<script type="text/javascript" src="{$include_path}/javascript/hoard_analysis_functions.js"/>
 				<script type="text/javascript" src="{$include_path}/javascript/search_functions.js"/>
-				
+
 				<!-- Add fancyBox -->
 				<link rel="stylesheet" href="{$include_path}/css/jquery.fancybox.css?v=2.1.5" type="text/css" media="screen"/>
 				<script type="text/javascript" src="{$include_path}/javascript/jquery.fancybox.pack.js?v=2.1.5"/>
-				
+
 				<link type="text/css" href="{$include_path}/css/style.css" rel="stylesheet"/>
 			</head>
 			<body>
@@ -371,7 +371,7 @@
 					</xsl:if>
 				</div>
 			</div>
-			
+
 			<xsl:if test="$geoEnabled = true()">
 				<xsl:if test="$hasMints = true() or $hasFindspots = true()">
 					<div class="col-md-6">
@@ -408,8 +408,8 @@
 				</xsl:if>
 			</xsl:if>
 		</div>
-		
-		
+
+
 		<!--********************************* RENDERING HOARD CONTENTS AND VISUALIZATION OPTIONS ******************************************* -->
 		<xsl:if test="nh:descMeta/nh:contentsDesc/nh:contents/*">
 			<div class="row">
@@ -569,14 +569,33 @@
 	<xsl:template match="nh:fallsWithin">
 		<li>
 			<b>Falls Within: </b>
-			<xsl:apply-templates select="nh:geogname[@xlink:href]"/>
+			<xsl:apply-templates select="nh:geogname[@xlink:role = 'findspot']"/>
 		</li>
+		<xsl:if test="nh:geogname[@xlink:role = 'ancient_place']">
+			<li>
+				<b>Ancient Place: </b>
+				<xsl:apply-templates select="nh:geogname[@xlink:role = 'ancient_place']"/>
+			</li>
+		</xsl:if>
+
+		<xsl:if test="nh:type">
+			<li>
+				<b><xsl:value-of select="numishare:regularize_node('type', $lang)"/>: </b>
+				<xsl:apply-templates select="nh:type"/>
+			</li>
+		</xsl:if>
 
 	</xsl:template>
 
-	<xsl:template match="nh:geogname">
+	<xsl:template match="nh:geogname|nh:type">
+		<xsl:variable name="facet" select="
+				if (@xlink:role) then
+					@xlink:role
+				else
+					'findspot_type'"/>
 
-		<a href="{$display_path}results?q=findspot_facet:&#x022;{.}&#x022;{if (string($langParam)) then concat('&amp;lang=', $langParam) else ''}">
+
+		<a href="{$display_path}results?q={$facet}_facet:&#x022;{.}&#x022;{if (string($langParam)) then concat('&amp;lang=', $langParam) else ''}">
 			<xsl:value-of select="."/>
 		</a>
 		<!-- display certainty -->
@@ -587,6 +606,9 @@
 				class="external_link">
 				<span class="glyphicon glyphicon-new-window"/>
 			</a>
+		</xsl:if>
+		<xsl:if test="not(position() = last())">
+			<xsl:text>, </xsl:text>
 		</xsl:if>
 	</xsl:template>
 
@@ -620,7 +642,7 @@
 			<h3>
 				<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
 			</h3>
-			
+
 			<xsl:if test="nh:description or (@count or @minCount or @maxCount)">
 				<dl class="dl-horizontal">
 					<xsl:choose>
@@ -645,7 +667,7 @@
 									</xsl:otherwise>
 								</xsl:choose>
 							</xsl:variable>
-							
+
 							<dt>
 								<xsl:value-of select="numishare:normalizeLabel('numeric_count', $lang)"/>
 							</dt>
@@ -662,7 +684,7 @@
 					</xsl:choose>
 				</dl>
 			</xsl:if>
-			
+
 			<table class="table table-striped">
 				<thead>
 					<tr>
@@ -679,7 +701,7 @@
 					<xsl:apply-templates select="descendant::nh:coin | descendant::nh:coinGrp"/>
 				</tbody>
 			</table>
-		</div>		
+		</div>
 	</xsl:template>
 
 	<!-- display table row for each coin or coinGrp -->
