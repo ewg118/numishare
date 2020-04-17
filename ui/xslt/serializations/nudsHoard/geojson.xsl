@@ -487,9 +487,17 @@
 			<properties>
 				<_object>
 					<name>
-						<xsl:value-of select="$name"/>
+						<xsl:choose>
+							<xsl:when test="$name castable as xs:string">
+								<xsl:value-of select="$name"/>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:value-of select="string-join($name, '/')"/>
+							</xsl:otherwise>
+						</xsl:choose>
+						
 					</name>
-					<xsl:if test="string($uri)">
+					<xsl:if test="$uri castable as xs:string">
 						<uri>
 							<xsl:value-of select="$uri"/>
 						</uri>
