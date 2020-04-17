@@ -255,7 +255,7 @@
 		<xsl:choose>
 			<xsl:when test="gml:location">
 				<xsl:apply-templates select="gml:location">
-					<xsl:with-param name="name" select="normalize-space(string(nh:geogname))"/>
+					<xsl:with-param name="name" select="nh:geogname[@xlink:role = 'findspot']"/>
 				</xsl:apply-templates>
 			</xsl:when>
 			<xsl:when test="nh:fallsWithin">
@@ -271,8 +271,8 @@
 		<xsl:choose>
 			<xsl:when test="gml:location">
 				<xsl:apply-templates select="gml:location">
-					<xsl:with-param name="name" select="normalize-space(string(nh:geogname))"/>
-					<xsl:with-param name="uri" select="nh:geogname/@xlink:href"/>
+					<xsl:with-param name="name" select="nh:geogname[@xlink:role = 'findspot']"/>
+					<xsl:with-param name="uri" select="nh:geogname[@xlink:role = 'findspot']/@xlink:href"/>
 				</xsl:apply-templates>
 			</xsl:when>
 			<xsl:when test="nh:geogname[@xlink:role = 'findspot'][contains(@xlink:href, 'geonames.org')]">
