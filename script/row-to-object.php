@@ -675,14 +675,18 @@ function parse_row($row, $count, $fileName){
 	
 	//rights and license
 	if (trim($row['startdate']) != '' || trim($row['enddate']) != ''){
-	    $year = (int) date("Y");
+	    $year = (int) date("Y") - 96;
 	    
 		//use the start or end date from filemaker since some coins may be connected to type URIs and lack the typeDesc object
 	    $startdate = (is_digit(trim($row['startdate'])) == true ? intval(trim($row['startdate'])) : false);
 	    $enddate = (is_digit(trim($row['enddate'])) == true ? intval(trim($row['enddate'])) : false);
 	    
-	    //if the start or end dates are integers, prefer evaluating the end date first
-	    if ($startdate != false && $enddate != false){
+	    //if neither start nor end date are valid integers, use default rights and license
+	    if ($startdate == false && $enddate == false){
+	        $record['license'] = 'https://creativecommons.org/licenses/by-nc/4.0/';
+	        $record['rights'] = 'http://rightsstatements.org/page/UND/1.0/';
+	    } else {
+	        //prefer to evaluate end date over start date
 	        if ($enddate != false){
 	            if ($enddate <= $year){
 	                $record['license'] = 'https://creativecommons.org/choose/mark/';
@@ -699,16 +703,12 @@ function parse_row($row, $count, $fileName){
 	                $record['license'] = 'https://creativecommons.org/licenses/by-nc/4.0/';
 	                $record['rights'] = 'http://rightsstatements.org/page/UND/1.0/';
 	            }
-	        }	        
-	    } else {
-	        //set default rights and licenses the dates cannot be evaluated as integers
-	        $record['license'] = 'https://creativecommons.org/licenses/by-nc/4.0/';
-	        $record['rights'] = 'http://rightsstatements.org/page/UND/1.0/';
+	        }
 	    }
 	} else {
 	    //set default rights and licenses when there's no date at all
 	    $record['license'] = 'https://creativecommons.org/licenses/by-nc/4.0/';
-	    $record['rights'] = 'http://rightsstatements.org/page/UND/1.0/';
+	    $record['rights'] = 'http://rightsstatements.org/page/UND/1.0/';	      
 	}
 	
 	return $record;
