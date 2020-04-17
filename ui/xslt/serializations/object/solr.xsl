@@ -163,10 +163,13 @@
 
 				<xsl:if test="number($geonameId)">
 					<xsl:variable name="geonames_data" as="element()*">
+						<xsl:variable name="api"
+							select="concat($geonames-url, '/get?geonameId=', $geonameId, '&amp;username=', $geonames_api_key, '&amp;style=full')"/>
+
 						<results>
-							<xsl:copy-of
-								select="document(concat($geonames-url, '/get?geonameId=', $geonameId, '&amp;username=', $geonames_api_key, '&amp;style=full'))"
-							/>
+							<xsl:if test="doc-available($api)">
+								<xsl:copy-of select="document($api)"/>
+							</xsl:if>
 						</results>
 					</xsl:variable>
 
