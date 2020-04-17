@@ -237,6 +237,18 @@ function number_pad($number,$n) {
 	return $gYear;
 }
 
+/**
+ * Check input for existing only of digits (numbers)
+ * @author Guilherme Nascimento <brcontainer@yahoo.com.br>
+ * @param $digit
+ * @return bool
+ */
+//better way to evaluate if the start or end date is actually an integer
+function is_digit($digit)
+{
+    return preg_match('#^-?\d+$#', $digit) && is_int((int) $digit);
+}
+
 /***** MISCELLANEOUS *****/
 //parse department abbreviations into human-readable text
 function get_department($department){

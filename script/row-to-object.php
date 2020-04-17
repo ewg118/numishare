@@ -675,23 +675,40 @@ function parse_row($row, $count, $fileName){
 	
 	//rights and license
 	if (trim($row['startdate']) != '' || trim($row['enddate']) != ''){
+	    $year = (int) date("Y");
+	    
 		//use the start or end date from filemaker since some coins may be connected to type URIs and lack the typeDesc object
-		$startdate = trim($row['startdate']) * 1;
-		$enddate = trim($row['enddate']) * 1;
-		if (is_int($enddate) && $enddate < 1923){
-			$record['license'] = 'https://creativecommons.org/choose/mark/';
-			$record['rights'] = 'http://rightsstatements.org/vocab/NoC-US/1.0/';
-		} elseif (is_int($startdate) && $startdate < 1923) {
-			$record['license'] = 'https://creativecommons.org/choose/mark/';
-			$record['rights'] = 'http://rightsstatements.org/vocab/NoC-US/1.0/';
-		} else {
-			$record['license'] = 'https://creativecommons.org/licenses/by-nc/4.0/';
-			$record['rights'] = 'http://rightsstatements.org/page/UND/1.0/';
-		}
+	    $startdate = (is_digit(trim($row['startdate'])) == true ? intval(trim($row['startdate'])) : false);
+	    $enddate = (is_digit(trim($row['enddate'])) == true ? intval(trim($row['enddate'])) : false);
+	    
+	    //if the start or end dates are integers, prefer evaluating the end date first
+	    if ($startdate != false && $enddate != false){
+	        if ($enddate != false){
+	            if ($enddate <= $year){
+	                $record['license'] = 'https://creativecommons.org/choose/mark/';
+	                $record['rights'] = 'http://rightsstatements.org/vocab/NoC-US/1.0/';
+	            } else {
+	                $record['license'] = 'https://creativecommons.org/licenses/by-nc/4.0/';
+	                $record['rights'] = 'http://rightsstatements.org/page/UND/1.0/';
+	            }
+	        } else if ($startdate != false){
+	            if ($startdate <= $year){
+	                $record['license'] = 'https://creativecommons.org/choose/mark/';
+	                $record['rights'] = 'http://rightsstatements.org/vocab/NoC-US/1.0/';
+	            } else {
+	                $record['license'] = 'https://creativecommons.org/licenses/by-nc/4.0/';
+	                $record['rights'] = 'http://rightsstatements.org/page/UND/1.0/';
+	            }
+	        }	        
+	    } else {
+	        //set default rights and licenses the dates cannot be evaluated as integers
+	        $record['license'] = 'https://creativecommons.org/licenses/by-nc/4.0/';
+	        $record['rights'] = 'http://rightsstatements.org/page/UND/1.0/';
+	    }
 	} else {
-		//set default rights and licenses when there's no date at all
-		$record['license'] = 'https://creativecommons.org/licenses/by-nc/4.0/';
-		$record['rights'] = 'http://rightsstatements.org/page/UND/1.0/';
+	    //set default rights and licenses when there's no date at all
+	    $record['license'] = 'https://creativecommons.org/licenses/by-nc/4.0/';
+	    $record['rights'] = 'http://rightsstatements.org/page/UND/1.0/';
 	}
 	
 	return $record;
@@ -773,6 +790,8 @@ function parse_typology ($accnum, $count, $row, $department){
 	GLOBAL $deities_array;
 	GLOBAL $warnings;
 	
+	$year = (int) date("Y");
+	
 	//define typeDesc array
 	$typeDesc = array();
 	
@@ -817,29 +836,48 @@ function parse_typology ($accnum, $count, $row, $department){
 	$typeDesc['objectType'] = $objectType;
 	
 	//date
-	if (trim($row['startdate']) != '' || trim($row['enddate']) != ''){
-		$startdate = trim($row['startdate']) * 1;
-		$enddate = trim($row['enddate']) * 1;
-		
-		//validate dates
-		if ($startdate != 0 && is_int($startdate) && $startdate < 3000 ){
-			$typeDesc['fromDate'] = $startdate;
-		} elseif ($startdate > 3000 || (is_numeric($startdate) && !is_int($startdate))) {
-			$warnings[] = 'Line ' . $count . ': ' . $accnum . ' (' . $department . ') contains invalid startdate (non-integer or greater than 3000).';
-		}
-		if ($enddate != 0 && is_int($enddate) && $enddate < 3000 ){
-			$typeDesc['toDate'] = $enddate;
-		}  elseif ($enddate > 3000 || (is_numeric($enddate) && !is_int($enddate)) || $enddate < $startdate) {
-			$warnings[] = 'Line ' . $count . ': ' . $accnum . ' (' . $department . ') contains invalid enddate (non-integer, greater than 3000, or enddate is before startdate).';
-		}
-		
-		//set toDate or fromDate if it doesn't exist, but the latter does
-		if (array_key_exists('toDate', $typeDesc) && !array_key_exists('fromDate', $typeDesc)){
-			$typeDesc['fromDate'] = $typeDesc['toDate'];
-		}
-		if (array_key_exists('fromDate', $typeDesc) && !array_key_exists('toDate', $typeDesc)){
-			$typeDesc['toDate'] = $typeDesc['fromDate'];
-		}
+	if (strlen(trim($row['startdate'])) > 0){
+	    $num = trim($row['startdate']);
+	    
+	    $startdate = (is_digit($num) == true ? intval($num) : false);
+	    
+	    //validate dates
+	    if ($startdate == false){
+	        $warnings[] = "Line {$count}: {$accnum} ({$department}) contains invalid startdate (non-integer: {$startdate}).";
+	    } else {
+	        if ($startdate == 0 || $startdate > $year){
+	            $warnings[] = "Line {$count}: {$accnum} ({$department}) contains invalid startdate (0 or greater than the current year: {$startdate}).";
+	        } else {
+	            $typeDesc['fromDate'] = $startdate;
+	        }
+	    }
+	}
+	
+	if (strlen(trim($row['enddate'])) > 0){
+	    $num = trim($row['enddate']);
+	    
+	    $enddate = (is_digit($num) == true ? intval($num) : false);
+	    
+	    //validate dates
+	    if ($enddate == false){
+	        $warnings[] = "Line {$count}: {$accnum} ({$department}) contains invalid enddate (non-integer: {$enddate}).";
+	    } else {
+	        if ($enddate == 0 || $enddate > $year){
+	            $warnings[] = "Line {$count}: {$accnum} ({$department}) contains invalid enddate (0 or greater than the current year: {$enddate}).";
+	        } elseif (isset($startdate) && (is_int($startdate) && $enddate < $startdate)) {
+	            $warnings[] = "Line {$count}: {$accnum} ({$department}) contains invalid enddate (integer value greater than startdate).";
+	        } else {
+	            $typeDesc['toDate'] = $enddate;
+	        }
+	    }
+	}
+	
+	//set toDate or fromDate if it doesn't exist, but the latter does
+	if (array_key_exists('toDate', $typeDesc) && !array_key_exists('fromDate', $typeDesc)){
+	    $typeDesc['fromDate'] = $typeDesc['toDate'];
+	}
+	if (array_key_exists('fromDate', $typeDesc) && !array_key_exists('toDate', $typeDesc)){
+	    $typeDesc['toDate'] = $typeDesc['fromDate'];
 	}
 	
 	//denomination
