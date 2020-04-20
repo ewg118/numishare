@@ -37,10 +37,10 @@ $(document).ready(function () {
     var path = $('#display_path').text();
     var page = $('#page').text();
     
-     /**** RENDER CHART ****/
+    /**** RENDER CHART ****/
     //render the chart from request parameters on the distribution page and also validate the form
     if (page == 'page') {
-        if (urlParams[ 'dist'] != null && urlParams[ 'compare'] != null) {            
+        if (urlParams[ 'dist'] != null && urlParams[ 'compare'] != null) {
             renderDistChart(path, urlParams);
             validate('distributionForm');
         }
@@ -204,25 +204,14 @@ function renderDistChart(path, urlParams) {
         $('#distribution-chart').html('');
         $('#distribution-chart').height(600);
         
-        if (urlParams[ 'type'] == 'cumulative') {
-            var visualization = d3plus.viz().container("#distribution-chart").data(data).type('line').id('subset').y({
-                'value': 'percentage'
-            }).x({
-                'value': 'value',
-                'label': 'Cumulative Date Percentage'
-            }).tooltip([ "date", "percentage"]).legend({
-                "size":[20, 50], 'data': false
-            }).size(5).color({
-                "value": "subset"
-            }).draw();
+        if (urlParams[ 'type'] == 'cumulative') {            
+            new d3plus.LinePlot().data(data).groupBy("subset").x('value').y('percentage').shapeConfig({
+                Line: {
+                    strokeWidth: 5
+                }
+            }).select("#distribution-chart").render();
         } else {
-            var visualization = d3plus.viz().container("#distribution-chart").data(data).type('bar').id('subset').x({
-                'value': distValue, 'label': distLabel
-            }).y(y).legend({
-                "value": true, "size": 50
-            }).color({
-                "value": "subset"
-            }).draw();
+            new d3plus.BarChart().data(data).groupBy('subset').x(distValue).y(y).select("#distribution-chart").render();
         }
     });
 }
