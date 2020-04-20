@@ -332,8 +332,8 @@
 								<script type="text/javascript" src="{$include_path}/javascript/display_functions.js"/>
 
 								<!-- visualization -->
-								<script type="text/javascript" src="https://d3plus.org/js/d3.js"/>
-								<script type="text/javascript" src="https://d3plus.org/js/d3plus.js"/>
+								<script type="text/javascript" src="https://d3plus.org/js/d3.min.js"/>
+								<script type="text/javascript" src="https://d3plus.org/js/d3plus-plot.v0.8.full.min.js"/>
 								<script type="text/javascript" src="{$include_path}/javascript/vis_functions.js"/>
 
 								<!-- mapping -->

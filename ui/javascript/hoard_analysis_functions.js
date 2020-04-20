@@ -204,14 +204,28 @@ function renderDistChart(path, urlParams) {
         $('#distribution-chart').html('');
         $('#distribution-chart').height(600);
         
-        if (urlParams[ 'type'] == 'cumulative') {            
+        if (urlParams[ 'type'] == 'cumulative') {
             new d3plus.LinePlot().data(data).groupBy("subset").x('value').y('percentage').shapeConfig({
                 Line: {
-                    strokeWidth: 5
+                    strokeWidth: 2
                 }
+            }).tooltipConfig({
+                title: function (d) {
+                    return d[ "date"];
+                },
+                tbody:[[ function (d) {
+                    return "Percentage: " + d[ "percentage"] + "%"
+                }]]
             }).select("#distribution-chart").render();
         } else {
-            new d3plus.BarChart().data(data).groupBy('subset').x(distValue).y(y).select("#distribution-chart").render();
+            new d3plus.BarChart().data(data).groupBy('subset').x(distValue).y(y).tooltipConfig({
+                title: function (d) {
+                    return d[ 'subset'];
+                },
+                tbody:[[ function (d) {
+                    return d[distValue] + ': ' + d[y] + (y == 'percentage' ? '%': '')
+                }]]
+            }).select("#distribution-chart").render();
         }
     });
 }
