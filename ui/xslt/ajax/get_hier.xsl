@@ -126,7 +126,7 @@
 												' '"/>
 									<ul class="{$field}_level" id="{substring-after(@name, '/')}__list">
 										<xsl:copy-of
-											select="document(concat($request-uri, 'get_hier?q=', if (string($q)) then encode-for-uri($q) else '*:*', '&amp;fq=', encode-for-uri(@name), '&amp;prefix=', $next-prefix, '&amp;link=', encode-for-uri(concat($link, $starter-space, '+&#x022;', @name, '&#x022;')), '&amp;field=', $field))//ul[@id='root']/li"
+											select="document(concat($request-uri, 'get_hier?q=', if (string($q)) then encode-for-uri($q) else '*:*', '&amp;fq=%22', encode-for-uri(@name), '%22&amp;prefix=', encode-for-uri($next-prefix), '&amp;link=', encode-for-uri(concat($link, $starter-space, '+&#x022;', @name, '&#x022;')), '&amp;field=', $field))//ul[@id='root']/li"
 										/>
 									</ul>
 								</xsl:when>
