@@ -108,13 +108,14 @@ function renderDistChart(path, urlParams) {
         //$('#distribution .chart-container').removeClass('hidden');
         $('#distribution-chart').html('');
         $('#distribution-chart').height(600);
-        var visualization = d3plus.viz().container("#distribution-chart").data(data).type("bar").id('subset').x({
-            'value': distValue, 'label': distLabel
-        }).y(y).legend({
-            "value": true, "size": 50
-        }).color({
-            "value": "subset"
-        }).draw();
+        new d3plus.BarChart().data(data).groupBy('subset').x(distValue).y(y).tooltipConfig({
+            title: function (d) {
+                return d[ 'subset'];
+            },
+            tbody:[[ function (d) {
+                return y + ': ' + d[y] + (y == 'percentage' ? '%': '')
+            }]]
+        }).select("#distribution-chart").render();
     });
 }
 
