@@ -798,14 +798,14 @@ function renderMetricalChart(path, urlParams) {
         function (data) {
             new d3plus.LinePlot().data(data).baseline(0).groupBy("subset").x('value').y('average').shapeConfig({
                 Line: {
-                    strokeWidth: 2
+                    strokeWidth: 2,
                 }
             }).tooltipConfig({
                 title: function (d) {
-                    return d[ "value"];
+                    return d["label"];
                 },
-                tbody:[[ "Average", function (d) {
-                    return d[ "average"]
+                tbody:[[function (d) {
+                    return "Average: " + d[ "average"]
                 }]]
             }).select("#metrical-chart").render();
         });
@@ -814,10 +814,10 @@ function renderMetricalChart(path, urlParams) {
         function (data) {
             new d3plus.BarChart().data(data).groupBy('subset').x('value').y('average').tooltipConfig({
                 title: function (d) {
-                    return d[ "value"];
+                    return d["subset"];
                 },
-                tbody:[[ "Average", function (d) {
-                    return d[ "average"]
+                tbody:[[function (d) {
+                    return "Average: " + d[ "average"]
                 }]]
             }).select("#metrical-chart").render();
         });
