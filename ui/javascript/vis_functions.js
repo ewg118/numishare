@@ -654,7 +654,6 @@ function validate(formId) {
                     } else {
                         $('.interval-alert').addClass('hidden');
                     }
-                    
                 } else {
                     elements.push(false);
                     $('.measurementRange-alert').removeClass('hidden');
@@ -778,13 +777,14 @@ function renderDistChart(path, urlParams) {
     
     $.get(path + 'apis/getDistribution', $.param(urlParams, true),
     function (data) {
-        var visualization = d3plus.viz().container("#distribution-chart").data(data).type("bar").id('subset').x({
-            'value': distValue, 'label': distLabel
-        }).y(y).legend({
-            "value": true, "size": 50
-        }).color({
-            "value": "subset"
-        }).draw();
+        new d3plus.BarChart().data(data).groupBy('subset').x(distValue).y(y).tooltipConfig({
+                title: function (d) {
+                    return d['subset'];
+                },
+                tbody:[[function (d) {
+                    return y + ': ' + d[y] + (y == 'percentage' ? '%' : '')
+                }]]
+            }).select("#distribution-chart").render();
     });
 }
 
@@ -796,25 +796,30 @@ function renderMetricalChart(path, urlParams) {
     if ($.isNumeric(urlParams[ 'interval'])) {
         $.get(path + 'apis/getMetrical', $.param(urlParams, true),
         function (data) {
-            var visualization = d3plus.viz().container("#metrical-chart").data(data).type('line').id('subset').y({
-                'value': 'average'
-            }).x({
-                'value': 'value',
-                'label': 'Date Range'
-            }).tooltip([ "label", "average"]).legend({
-                "size":[20, 50], 'data': false
-            }).size(5).color({
-                "value": "subset"
-            }).draw();
+            new d3plus.LinePlot().data(data).baseline(0).groupBy("subset").x('value').y('average').shapeConfig({
+                Line: {
+                    strokeWidth: 2
+                }
+            }).tooltipConfig({
+                title: function (d) {
+                    return d["label"];
+                },
+                tbody:[[function (d) {
+                    return "Average: " + d[ "average"]
+                }]]
+            }).select("#metrical-chart").render();
         });
     } else {
         $.get(path + 'apis/getMetrical', $.param(urlParams, true),
         function (data) {
-            var visualization = d3plus.viz().container("#metrical-chart").data(data).type('bar').id('subset').y('average').x('value').legend({
-                "size": 50
-            }).color({
-                "value": "subset"
-            }).draw();
+            new d3plus.BarChart().data(data).groupBy('subset').x('value').y('average').tooltipConfig({
+                title: function (d) {
+                    return d["subset"];
+                },
+                tbody:[[function (d) {
+                    return "Average: " + d[ "average"]
+                }]]
+            }).select("#metrical-chart").render();
         });
     }
 }
