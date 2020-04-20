@@ -5,7 +5,6 @@ Function: These are the functions for generating charts and graphs with d3js
  *******/
 
 $(document).ready(function () {
-    
     //get URL parameters, from http://stackoverflow.com/questions/901115/how-can-i-get-query-string-values-in-javascript
     var urlParams;
     (window.onpopstate = function () {
@@ -146,6 +145,56 @@ $(document).ready(function () {
         //work on removing the option for the current class
         $('.filter-container').find('option[type="' + type + '"]').remove();
         validate(formId);
+        return false;
+    });
+    
+    $('#getDateRange').click(function () {
+        var formId = $(this).closest('form').attr('id');
+        
+        //get all of the queries from the compare fields
+        queries = new Array();
+        $('input[name=compare]').each(function () {
+            queries.push($(this).val());
+        });
+        
+        compareParams = {
+            'compare': queries
+        }
+        
+        //show ajax gif
+        $('.getDateRange-container').children('span').removeClass('hidden');
+        
+        //call the getDateRange API to find the absolute earliest and latest dates across all queries
+        $.get(path + 'apis/getDateRange', $.param(compareParams, true),
+        function (data) {
+            //set text inputs
+            $('#fromYear').val(Math.abs(data.earliest));
+            $('#toYear').val(Math.abs(data.latest));
+            
+            //set era drop downs
+            if (data.earliest < 0) {
+                $('#fromEra').val('bc');
+            } else {
+                $('#fromEra').val('ad');
+            }
+            
+            if (data.latest < 0) {
+                $('#toEra').val('bc');
+            } else {
+                $('#toEra').val('ad');
+            }
+            
+            //automatically set the interval, if blank
+            if (isNaN($('#interval').val())) {
+                $('#interval').val(5)
+            }
+            
+            $('.getDateRange-container').children('span').addClass('hidden');
+            
+            //revalidate form
+            validate(formId);
+        });
+        
         return false;
     });
     
@@ -338,15 +387,15 @@ $(document).ready(function () {
     });
     
     //delete dataset query
-    $(' .compare-master-container').on('click', '.compare-container h4 small .remove-dataset', function () {
-        $(this).closest('.compare-container').remove();
+    $('.compare-master-container').on('click', '.compare-container h4 small .remove-dataset', function () {
         var formId = $(this).closest('form').attr('id');
+        $(this).closest('.compare-container').remove();
         validate(formId);
         return false;
     });
     
     //delete property-object pair
-    $(' .compare-master-container').on('click', '.compare-container .filter .control-container .remove-query', function () {
+    $('.compare-master-container').on('click', '.compare-container .filter .control-container .remove-query', function () {
         var formId = $(this).closest('form').attr('id');
         var count = $(this).closest('.compare-container').children('.filter').length;
         
@@ -583,28 +632,44 @@ function validate(formId) {
                     if ($('#toEra').val() == 'bc') {
                         toYear = toYear * -1;
                     }
+                    
+                    //be sure that fromYear is less than toYear
                     if (fromYear >= toYear) {
                         elements.push(false);
-                        $('.measurementRange-alert').removeClass('hidden')
+                        $('.measurementRange-alert').removeClass('hidden');
                     } else {
                         elements.push(true);
-                        $('.measurementRange-alert').addClass('hidden')
+                        $('.measurementRange-alert').addClass('hidden');
+                    }
+                    
+                    //evaluate the interval and only allow the interval of 1 year for a range of <= 30 years
+                    if (interval == 1) {
+                        if (toYear - fromYear > 30) {
+                            elements.push(false);
+                            $('.interval-alert').removeClass('hidden');
+                        } else {
+                            elements.push(true);
+                            $('.interval-alert').addClass('hidden');
+                        }
+                    } else {
+                        $('.interval-alert').addClass('hidden');
                     }
                 } else {
                     elements.push(false);
-                    $('.measurementRange-alert').removeClass('hidden')
+                    $('.measurementRange-alert').removeClass('hidden');
                 }
             } else {
                 elements.push(false);
-                $('.measurementRange-alert').removeClass('hidden')
+                $('.measurementRange-alert').removeClass('hidden');
             }
         } else {
             //hide the date alert if no values have been set
-            $('.measurementRange-alert').addClass('hidden')
+            $('.measurementRange-alert').addClass('hidden');
+            $('.interval-alert').addClass('hidden');
         }
     }
     
-    //if there is a false element to the form OR if there is only one element (i.e., the category, then the form is invalid
+    //if there is a false element to the form OR if there is only one element (i.e., the category), then the form is invalid
     if (elements.indexOf(false) !== -1) {
         var valid = false;
     } else {
@@ -622,7 +687,6 @@ function validate(formId) {
     
     //enable/disable button
     if (valid == true) {
-        $('#' + formId).children('.visualize-submit').prop("disabled", false);
         //generate the filter query and assign the value to the hidden input
         q = generateFilter(formId);
         $('#' + formId + ' input[name=filter]').val(q);
@@ -681,8 +745,15 @@ function validate(formId) {
                 $('#' + formId).children('input[name=interval]').remove();
             }
         }
+        
+        //enable the button
+        $('#' + formId).children('.visualize-submit').prop("disabled", false);
+        
+        //show the button to automatically generate the date range for the given queries.
+        $('.getDateRange-container').removeClass('hidden');
     } else {
         $('#' + formId).children('.visualize-submit').prop("disabled", true);
+        $('.getDateRange-container').addClass('hidden');
     }
 }
 
@@ -706,15 +777,14 @@ function renderDistChart(path, urlParams) {
     
     $.get(path + 'apis/getDistribution', $.param(urlParams, true),
     function (data) {
-        console.log(data);
-        
-        var visualization = d3plus.viz().container("#distribution-chart").data(data).type("bar").id('subset').x({
-            'value': distValue, 'label': distLabel
-        }).y(y).legend({
-            "value": true, "size": 50
-        }).color({
-            "value": "subset"
-        }).draw();
+        new d3plus.BarChart().data(data).groupBy('subset').x(distValue).y(y).tooltipConfig({
+                title: function (d) {
+                    return d['subset'];
+                },
+                tbody:[[function (d) {
+                    return y + ': ' + d[y] + (y == 'percentage' ? '%' : '')
+                }]]
+            }).select("#distribution-chart").render();
     });
 }
 
@@ -726,24 +796,30 @@ function renderMetricalChart(path, urlParams) {
     if ($.isNumeric(urlParams[ 'interval'])) {
         $.get(path + 'apis/getMetrical', $.param(urlParams, true),
         function (data) {
-            var visualization = d3plus.viz().container("#metrical-chart").data(data).type('line').id('subset').y({
-                'value': 'average'
-            }).x({
-                'value': 'value', 'label': 'Date Range'
-            }).tooltip([ "label", "average"]).legend({
-                "size":[20, 50], 'data': false
-            }).size(5).color({
-                "value": "subset"
-            }).draw();
+            new d3plus.LinePlot().data(data).baseline(0).groupBy("subset").x('value').y('average').shapeConfig({
+                Line: {
+                    strokeWidth: 2
+                }
+            }).tooltipConfig({
+                title: function (d) {
+                    return d["label"];
+                },
+                tbody:[[function (d) {
+                    return "Average: " + d[ "average"]
+                }]]
+            }).select("#metrical-chart").render();
         });
     } else {
         $.get(path + 'apis/getMetrical', $.param(urlParams, true),
         function (data) {
-            var visualization = d3plus.viz().container("#metrical-chart").data(data).type('bar').id('subset').y('average').x('value').legend({
-                "size": 50
-            }).color({
-                "value": "subset"
-            }).draw();
+            new d3plus.BarChart().data(data).groupBy('subset').x('value').y('average').tooltipConfig({
+                title: function (d) {
+                    return d["subset"];
+                },
+                tbody:[[function (d) {
+                    return "Average: " + d[ "average"]
+                }]]
+            }).select("#metrical-chart").render();
         });
     }
 }
