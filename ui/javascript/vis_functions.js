@@ -798,7 +798,7 @@ function renderMetricalChart(path, urlParams) {
         function (data) {
             new d3plus.LinePlot().data(data).baseline(0).groupBy("subset").x('value').y('average').shapeConfig({
                 Line: {
-                    strokeWidth: 2,
+                    strokeWidth: 2
                 }
             }).tooltipConfig({
                 title: function (d) {
