@@ -51,6 +51,11 @@ $(document).ready(function () {
 			pointToLayer: renderPoints
 		}).addTo(map);
 		
+		var subjectLayer = L.geoJson.ajax("subjects.geojson?q=" + q, {
+			onEachFeature: onEachFeature,
+			pointToLayer: renderPoints
+		}).addTo(map);
+		
 		//add hoards, but don't make visible by default
 		var markers = L.markerClusterGroup();
 		var findspotLayer = L.geoJson.ajax("findspots.geojson?q=" + q, {
@@ -78,7 +83,8 @@ $(document).ready(function () {
 		
 		var overlayMaps = {
 			'Mints': mintLayer,
-			'Findspots': markers
+			'Findspots': markers,
+			'Subjects': subjectLayer
 		};
 		
 		//add controls
@@ -86,7 +92,12 @@ $(document).ready(function () {
 		
 		//zoom to groups on AJAX complete
 		mintLayer.on('data:loaded', function () {
-			var group = new L.featureGroup([mintLayer, findspotLayer]);
+			var group = new L.featureGroup([mintLayer, findspotLayer, subjectLayer]);
+			map.fitBounds(group.getBounds());
+		}.bind(this));
+		
+		subjectLayer.on('data:loaded', function () {
+			var group = new L.featureGroup([mintLayer, findspotLayer, subjectLayer]);
 			map.fitBounds(group.getBounds());
 		}.bind(this));
 		
@@ -94,7 +105,7 @@ $(document).ready(function () {
 			markers.addLayer(findspotLayer);
 			map.addLayer(markers);
 			
-			var group = new L.featureGroup([mintLayer, findspotLayer]);
+			var group = new L.featureGroup([mintLayer, findspotLayerr, subjectLayer]);
 			map.fitBounds(group.getBounds());
 		}.bind(this));
 		
@@ -125,12 +136,17 @@ $(document).ready(function () {
 		}
 		
 		function onEachFeature (feature, layer) {
-			var label = feature.properties.name;
+			var label = feature.properties.name;		
+			if (feature.properties.type == 'subject') {
+				var facet = 'subjectPlace';
+			} else {
+				var facet = feature.properties.type;
+			}
 			
 			if (q.length > 0) {
-				var query = q + ' AND ' + feature.properties.type + '_facet:"' + label + '"';
+				var query = q + ' AND ' + facet + '_facet:"' + label + '"';
 			} else {
-				var query = feature.properties.type + '_facet:"' + label + '"';
+				var query = facet + '_facet:"' + label + '"';
 			}
 			
 			if (q.indexOf('mint_facet') !== -1) {
