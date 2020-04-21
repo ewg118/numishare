@@ -89,7 +89,6 @@ $(document).ready(function () {
         baseMaps[label] = eval(baselayers[i]);
     }
     
-    //initialize timemap if hoard
     if (collection_type == 'hoard') {
         //load individual hoards and mints for a hoard collection
         var mintLayer = L.geoJson.ajax(path + "mints.geojson?q=" + q + '&department=' + department, {
