@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    var q = $('#current-query').text();
+    var q = encodeURI($('#current-query').text());
     $("#map_results").fancybox({
         beforeShow: function () {
             if ($('#resultMap').html().length == 0) {
