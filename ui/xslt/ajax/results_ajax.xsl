@@ -117,27 +117,47 @@
 					<xsl:value-of select="str[@name='title_display']"/>
 				</a>
 			</h4>
-			<dl class=" {if($lang='ar') then 'dl-horizontal ar' else 'dl-horizontal'}">
+			<dl class="{if($lang='ar') then 'dl-horizontal ar' else 'dl-horizontal'}">
 				<xsl:choose>
 					<xsl:when test="str[@name='recordType'] = 'hoard'">
-						<dt>							
-							<xsl:value-of select="numishare:regularize_node('findspot', $lang)"/>
-						</dt>
-						<dd>							
-							<xsl:value-of select="arr[@name='findspot_facet']/str[1]"/>
-						</dd>
-						<dt>							
-							<xsl:value-of select="numishare:regularize_node('closing_date', $lang)"/>
-						</dt>
-						<dd>							
-							<xsl:value-of select="str[@name='closing_date_display']"/>
-						</dd>
-						<xsl:if test="string(str[@name='description_display'])">
-							<dt>								
+						<xsl:if test="string(str[@name = 'findspot_display'])">
+							<dt>
+								<xsl:value-of select="numishare:regularize_node('findspot', $lang)"/>
+							</dt>
+							<dd>
+								<xsl:value-of select="str[@name = 'findspot_display']"/>
+							</dd>
+						</xsl:if>
+						<xsl:if test="str[@name = 'closing_date_display']">
+							<dt>
+								<xsl:value-of select="numishare:regularize_node('closing_date', $lang)"/>
+							</dt>
+							<dd>
+								<xsl:value-of select="str[@name = 'closing_date_display']"/>
+							</dd>
+						</xsl:if>
+						<xsl:if test="str[@name = 'deposit_display']">
+							<dt>
+								<xsl:value-of select="numishare:regularize_node('deposit', $lang)"/>
+							</dt>
+							<dd>
+								<xsl:value-of select="str[@name = 'deposit_display']"/>
+							</dd>
+						</xsl:if>
+						<xsl:if test="str[@name = 'discovery_display']">
+							<dt>
+								<xsl:value-of select="numishare:regularize_node('discovery', $lang)"/>
+							</dt>
+							<dd>
+								<xsl:value-of select="str[@name = 'discovery_display']"/>
+							</dd>
+						</xsl:if>
+						<xsl:if test="string(str[@name = 'description_display'])">
+							<dt>
 								<xsl:value-of select="numishare:regularize_node('description', $lang)"/>
 							</dt>
-							<dd>								
-								<xsl:value-of select="str[@name='description_display']"/>
+							<dd>
+								<xsl:value-of select="str[@name = 'description_display']"/>
 							</dd>
 						</xsl:if>
 					</xsl:when>

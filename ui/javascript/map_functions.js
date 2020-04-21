@@ -23,7 +23,6 @@ $(document).ready(function () {
         var department = departmentStr;
     }
     
-    var path = $('#path').text();
     var pipeline = $('#pipeline').text();
     
     //set hierarchical labels on load
@@ -44,41 +43,91 @@ $(document).ready(function () {
     var q = '*:*';
     var collection_type = $('#collection_type').text();
     
+    //Leaflet variables
+    var path = $('#path').text();
+    var mapboxKey = $('#mapboxKey').text();
+    var baselayers = $('#baselayers').text().split(',');
+    
+    //baselayers
+    var osm = L.tileLayer(
+    'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: 'OpenStreetMap',
+        maxZoom: 18
+    });
+    
+    var imperium = L.tileLayer(
+    'https://dh.gu.se/tiles/imperium/{z}/{x}/{y}.png', {
+        maxZoom: 10,
+        attribution: 'Powered by <a href="http://leafletjs.com/">Leaflet</a>. Map base: <a href="https://dh.gu.se/dare/" title="Digital Atlas of the Roman Empire, Department of Archaeology and Ancient History, Lund University, Sweden">DARE</a>, 2015 (cc-by-sa).'
+    });
+    
+    var mb_physical = L.tileLayer(
+    'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=' + mapboxKey, {
+        attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+        '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+        'Imagery © <a href="http://mapbox.com">Mapbox</a>', id: 'mapbox.streets'
+    });
+    
+    var map = new L.Map('mapcontainer', {
+        center: new L.LatLng(0, 0),
+        zoom: 4,
+        layers:[eval(baselayers[0])]
+    });
+    
+    //add controls
+    var baseMaps = {
+    };
+    //add baselayers
+    var i;
+    for (i = 0; i < baselayers.length; i++) {
+        var label;
+        switch (baselayers[i]) {
+            case 'osm': label = "OpenStreetMap"; break;
+            case 'imperium': label = 'Imperium Romanum'; break;
+            case 'mb_physical': label = 'Terrain and Streets'; break;
+        }
+        baseMaps[label] = eval(baselayers[i]);
+    }
+    
     //initialize timemap if hoard
     if (collection_type == 'hoard') {
-        initialize_timemap(q);
+        //load individual hoards and mints for a hoard collection
+        var mintLayer = L.geoJson.ajax(path + "mints.geojson?q=" + q + '&department=' + department, {
+            pointToLayer: renderPoints
+        }).addTo(map);
+        
+        var hoardLayer = L.geoJson.ajax(path + "hoards.geojson?q=" + q + '&department=' + department, {
+            pointToLayer: renderPoints
+        }).addTo(map);
+        
+        var overlayMaps = {
+            'Hoards': hoardLayer,
+            'Mints': mintLayer
+        };
+        
+        //add controls
+        var layerControl = L.control.layers(baseMaps, overlayMaps).addTo(map);
+        
+        //zoom to groups on AJAX complete
+        mintLayer.on('data:loaded', function () {
+            var group = new L.featureGroup([hoardLayer, mintLayer]);
+            map.fitBounds(group.getBounds());
+        }.bind(this));
+        
+        hoardLayer.on('data:loaded', function () {
+            var group = new L.featureGroup([hoardLayer, mintLayer]);
+            map.fitBounds(group.getBounds());
+        }.bind(this));
+        
+        //enable popup
+        mintLayer.on('click', function (e) {
+            renderPopup(e);
+        });
+        hoardLayer.on('click', function (e) {
+            renderHoardPopup(e);
+        });
     } else {
-        var path = $('#path').text();
-        var mapboxKey = $('#mapboxKey').text();
-        var baselayers = $('#baselayers').text().split(',');
-        
-        //baselayers
-        var osm = L.tileLayer(
-        'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: 'OpenStreetMap',
-            maxZoom: 18
-        });
-        
-        var imperium = L.tileLayer(
-        'https://dh.gu.se/tiles/imperium/{z}/{x}/{y}.png', {
-            maxZoom: 10,
-            attribution: 'Powered by <a href="http://leafletjs.com/">Leaflet</a>. Map base: <a href="https://dh.gu.se/dare/" title="Digital Atlas of the Roman Empire, Department of Archaeology and Ancient History, Lund University, Sweden">DARE</a>, 2015 (cc-by-sa).'
-        });
-        
-        var mb_physical = L.tileLayer(
-        'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=' + mapboxKey, {
-            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
-            '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
-            'Imagery © <a href="http://mapbox.com">Mapbox</a>', id: 'mapbox.streets'
-        });
-        
-        var map = new L.Map('mapcontainer', {
-            center: new L.LatLng(0, 0),
-            zoom: 4,
-            layers:[eval(baselayers[0])]
-        });
-        
-        //add mintLayer from AJAX
+        //load mints, subjects, and findspots as markers for coin types and physical specimen collections
         var mintLayer = L.geoJson.ajax(path + "mints.geojson?q=" + q + '&department=' + department, {
             pointToLayer: renderPoints
         }).addTo(map);
@@ -92,21 +141,6 @@ $(document).ready(function () {
         var findspotLayer = L.geoJson.ajax(path + "findspots.geojson?q=" + q + '&department=' + department, {
             pointToLayer: renderPoints
         });
-        
-        //add controls
-        var baseMaps = {
-        };
-        //add baselayers
-        var i;
-        for (i = 0; i < baselayers.length; i++) {
-            var label;
-            switch (baselayers[i]) {
-                case 'osm': label = "OpenStreetMap"; break;
-                case 'imperium': label = 'Imperium Romanum'; break;
-                case 'mb_physical': label = 'Terrain and Streets'; break;
-            }
-            baseMaps[label] = eval(baselayers[i]);
-        }
         
         var overlayMaps = {
             'Mints': mintLayer,
@@ -235,31 +269,6 @@ $(document).ready(function () {
         return false;
     });
     
-    /***************************/
-    //@Author: Adrian "yEnS" Mato Gondelle
-    //@website: www.yensdesign.com
-    //@email: yensamg@gmail.com
-    //@license: Feel free to use it, but keep this credits please!
-    /***************************/
-    
-    //disabling popup with jQuery magic!
-    function disablePopup() {
-        //disables popup only if it is enabled
-        if (popupStatus == 1) {
-            $("#backgroundPopup").fadeOut("fast");
-            $('#category_hier-list').parent('div').attr('style', 'width: 192px;');
-            $('#findspot_hier-list').parent('div').attr('style', 'width: 192px;');
-            $('#century_num-list').parent('div').attr('style', 'width: 192px;');
-            popupStatus = 0;
-        }
-    }
-    
-    function getURLParameter(name) {
-        return decodeURI(
-        (RegExp(name + '=' + '(.+?)(&|$)').exec(location.search) ||[, null])[1]);
-    }
-    
-    
     /*****
      * LEAFLET FUNCTIONS
      *****/
@@ -267,15 +276,16 @@ $(document).ready(function () {
         var query = getQuery();
         //refresh maps.
         if (collection_type == 'hoard') {
-            $('#timemap').html('<div id="mapcontainer" class="fullscreen"><div id="map"/></div><div id="timelinecontainer"><div id="timeline"/></div>');
-            initialize_timemap(query);
+            mintUrl = path + "mints.geojson?q=" + query + (lang.length > 0 ? '&lang=' + lang: '');
+            hoardUrl = path + "hoards.geojson?q=" + query + (lang.length > 0 ? '&lang=' + lang: '');
+            
+            mintLayer.refresh(mintUrl);
+            hoardLayer.refresh(hoardUrl);
         } else {
             mintUrl = path + "mints.geojson?q=" + query + (lang.length > 0 ? '&lang=' + lang: '');
             hoardUrl = path + "findspots.geojson?q=" + query + (lang.length > 0 ? '&lang=' + lang: '');
             subjectUrl = path + "subjects.geojson?q=" + query + (lang.length > 0 ? '&lang=' + lang: '');
             
-            /*layerControl.removeLayer(markers);
-            map.removeLayer(markers);*/
             mintLayer.refresh(mintUrl);
             findspotLayer.refresh(hoardUrl);
             subjectLayer.refresh(subjectUrl);
@@ -315,6 +325,20 @@ $(document).ready(function () {
         });
     }
     
+    function renderHoardPopup(e) {
+        var str = "<h4><a href='" + e.layer.feature.properties.objectURI + "' target='_blank'>" + e.layer.feature.properties.objectTitle + "</a></h4>" +
+        "<div><strong>Findspot: </strong>" + e.layer.feature.properties.name + "<a href='" + e.layer.feature.properties.uri + "' target='_blank'> <span class='glyphicon glyphicon-new-window'/></a>";
+        
+        if (e.layer.feature.properties.hasOwnProperty('closing_date')){
+            str += "<br/><strong>Closing Date: </strong>" + e.layer.feature.properties.closing_date; 
+        } else if (e.layer.feature.properties.hasOwnProperty('deposit')){
+            str += "<br/><strong>Deposit: </strong>" + e.layer.feature.properties.deposit; 
+        }
+        
+        str += "</div>";
+        e.layer.bindPopup(str).openPopup();
+    }
+    
     /*****
      * Features for manipulating layers
      *****/
@@ -324,7 +348,7 @@ $(document).ready(function () {
             case 'mint':
             fillColor = '#6992fd';
             break;
-            case 'findspot':
+            case 'findspot', 'hoard':
             fillColor = '#d86458';
             break;
             case 'subject':
@@ -340,29 +364,29 @@ $(document).ready(function () {
             fillOpacity: 0.6
         });
     }
-    
-    /********************
-    TimeMap function for hoard collections
-     ********************/
-    function initialize_timemap(q) {
-        var tm;
-        tm = TimeMap.init({
-            mapId: "map", // Id of map div element (required)
-            timelineId: "timeline", // Id of timeline div element (required)
-            options: {
-                eventIconPath: $('#include_path').text() + "/images/timemap/"
-            },
-            datasets:[ {
-                title: "Title",
-                theme: "red",
-                type: "json", // Data to be loaded in KML - must be a local URL
-                options: {
-                    url: path + "hoards.json?q=" + q + (lang.length > 0 ? '&lang=' + lang: '')
-                }
-            }],
-            bandIntervals:[
-            Timeline.DateTime.DECADE,
-            Timeline.DateTime.CENTURY]
-        });
-    }
 });
+
+
+/***************************/
+//@Author: Adrian "yEnS" Mato Gondelle
+//@website: www.yensdesign.com
+//@email: yensamg@gmail.com
+//@license: Feel free to use it, but keep this credits please!
+/***************************/
+
+//disabling popup with jQuery magic!
+function disablePopup() {
+    //disables popup only if it is enabled
+    if (popupStatus == 1) {
+        $("#backgroundPopup").fadeOut("fast");
+        $('#category_hier-list').parent('div').attr('style', 'width: 192px;');
+        $('#findspot_hier-list').parent('div').attr('style', 'width: 192px;');
+        $('#century_num-list').parent('div').attr('style', 'width: 192px;');
+        popupStatus = 0;
+    }
+}
+
+function getURLParameter(name) {
+    return decodeURI(
+    (RegExp(name + '=' + '(.+?)(&|$)').exec(location.search) ||[, null])[1]);
+}

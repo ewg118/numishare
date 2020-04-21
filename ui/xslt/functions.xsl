@@ -4529,6 +4529,9 @@
 			<xsl:when test="ancestor::metadata">
 				<xsl:value-of select="concat('&#x022;', replace($val, '&#x022;', '\\&#x022;'), '&#x022;')"/>
 			</xsl:when>
+			<xsl:when test="$val castable as xs:gYear">
+				<xsl:value-of select="concat('&#x022;', replace($val, '&#x022;', '\\&#x022;'), '&#x022;')"/>
+			</xsl:when>
 			<xsl:when test="number($val) or $val = '0'">
 				<xsl:choose>
 					<xsl:when test="@datatype = 'xs:string'">
