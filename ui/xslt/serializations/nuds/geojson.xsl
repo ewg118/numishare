@@ -121,7 +121,7 @@
 		<xsl:variable name="model" as="element()*">
 			<_array>
 				<xsl:apply-templates
-					select="descendant::nh:geogname[@xlink:role = 'findspot'][string(@xlink:href)] | $nudsGroup/descendant::nuds:geogname[@xlink:role = 'mint'][string(@xlink:href)]"
+					select="descendant::nuds:geogname[@xlink:role = 'findspot'][string(@xlink:href)] | descendant::nuds:findspotDesc[contains(@xlink:href, 'coinhoards.org')] | $nudsGroup/descendant::nuds:geogname[@xlink:role = 'mint'][string(@xlink:href)]"
 				/>
 			</_array>
 		</xsl:variable>
@@ -129,7 +129,7 @@
 		<xsl:apply-templates select="$model"/>
 	</xsl:template>
 	
-	<xsl:template match="*:geogname">
+	<xsl:template match="nuds:geogname">
 		<xsl:call-template name="generateFeature">
 			<xsl:with-param name="uri" select="@xlink:href"/>
 			<xsl:with-param name="type">
@@ -140,22 +140,17 @@
 			</xsl:with-param>
 		</xsl:call-template>
 	</xsl:template>
+	
+	<xsl:template match="nuds:findspotDesc">
+		<xsl:call-template name="generateFeature">
+			<xsl:with-param name="uri" select="@xlink:href"/>
+			<xsl:with-param name="type">findspot</xsl:with-param>
+		</xsl:call-template>
+	</xsl:template>
 
 	<xsl:template name="generateFeature">
 		<xsl:param name="uri"/>
 		<xsl:param name="type"/>
-
-		<xsl:variable name="geonames_data" as="element()*">
-			<xsl:choose>
-				<xsl:when test="contains($uri, 'geonames')">
-					<xsl:variable name="geonameId" select="tokenize($uri, '/')[4]"/>
-					<xsl:copy-of select="document(concat($geonames-url, '/get?geonameId=', $geonameId, '&amp;username=', $geonames_api_key, '&amp;style=full'))/*"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<empty/>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:variable>
 
 		<xsl:variable name="name">
 			<!-- display the title (coin type reference) for hoards, place name for other points -->
@@ -181,6 +176,11 @@
 				<xsl:when test="string($uri)">
 					<xsl:choose>
 						<xsl:when test="contains($uri, 'geonames')">
+							<xsl:variable name="geonames_data" as="element()*">
+								<xsl:variable name="geonameId" select="tokenize($uri, '/')[4]"/>
+								<xsl:copy-of select="document(concat($geonames-url, '/get?geonameId=', $geonameId, '&amp;username=', $geonames_api_key, '&amp;style=full'))/*"/>
+							</xsl:variable>
+							
 							<xsl:value-of select="concat($geonames_data//lng, ',', $geonames_data//lat)"/>
 						</xsl:when>
 						<xsl:when test="contains($uri, 'nomisma')">
