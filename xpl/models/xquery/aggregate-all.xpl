@@ -10,7 +10,7 @@
 		</p:input>
 		<p:output name="data" id="request"/>
 	</p:processor>
-	
+
 	<p:processor name="oxf:unsafe-xslt">
 		<p:input name="request" href="#request"/>
 		<p:input name="data" href="../../../exist-config.xml"/>
@@ -36,7 +36,7 @@
 		<p:input name="config" href="#generator-config"/>
 		<p:output name="data" ref="data"/>
 	</p:processor>
-	
+
 	<!--<p:processor name="oxf:unsafe-xslt">
 		<p:input name="request" href="#request"/>
 		<p:input name="data" href="../../../exist-config.xml"/>
@@ -52,10 +52,13 @@
 						declare namespace nuds="http://nomisma.org/nuds";
 						declare namespace xlink="http://www.w3.org/1999/xlink";
 							
-						<nudsGroup xmlns="http://nomisma.org/nuds" xmlns:xlink="http://www.w3.org/1999/xlink">
+						<nudsGroup xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:nuds="http://nomisma.org/nuds" xmlns:mods="http://www.loc.gov/mods/v3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mets="http://www.loc.gov/METS/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml">
 							{
-							for $doc in collection('/db/numishare/objects/')[(descendant::*:publicationStatus='approved' or descendant::*:publicationStatus='approvedSubtype') and (descendant::nuds:nuds/@recordType='conceptual' or descendant::nuds:typeDesc[string(@xlink:href)])]
-							return $doc 
+							for $doc in subsequence(collection('/db/numishare/objects/'), 1, 100)
+								let $publicationStatus := $doc/descendant::*:publicationStatus
+								return if ($publicationStatus = 'approved' or $publicationStatus = 'approvedSubtype' or $publicationStatus = 'deprecatedType') then
+									$doc
+								else ''
 							}
 						</nudsGroup>]]>
 					</xsl:variable>
@@ -87,20 +90,20 @@
 						</property>
 						<query>
 							<xsl:value-of select="replace($xquery, 'numishare', $collection-name)"/>
-						</query>						
+						</query>
 					</config>
 				</xsl:template>
 			</xsl:stylesheet>
 		</p:input>
 		<p:output name="data" id="xquery-config"/>
-	</p:processor>-->
-	
-	<!--<p:processor name="oxf:xquery">
-		<p:input name="config" href="#xquery-config"/>
-		<p:output name="data" id="results"/>
 	</p:processor>
-	
-	<p:processor name="oxf:unsafe-xslt">
+
+	<p:processor name="oxf:xquery">
+		<p:input name="config" href="#xquery-config"/>
+		<p:output name="data" ref="data"/>
+	</p:processor>-->
+
+	<!--<p:processor name="oxf:unsafe-xslt">
 		<p:input name="data" href="#results"/>
 		<p:input name="config">
 			<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">

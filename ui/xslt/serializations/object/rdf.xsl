@@ -22,7 +22,7 @@
 
 	<xsl:variable name="nudsGroup" as="element()*">
 		<nudsGroup>
-			<xsl:if test="$model = 'pelagios' or $model = 'crm'">
+			<xsl:if test="$model = 'pelagios'">
 				<xsl:variable name="type_list" as="element()*">
 					<list>
 						<xsl:for-each select="distinct-values(descendant::nuds:typeDesc[string(@xlink:href)]/@xlink:href|descendant::nuds:reference[@xlink:arcrole='nmo:hasTypeSeriesItem'][string(@xlink:href)]/@xlink:href)">
@@ -114,14 +114,14 @@
 				<xsl:choose>
 					<xsl:when test="$model = 'pelagios'">
 						<rdf:RDF>
+							<foaf:Organization rdf:about="{$url}pelagios.rdf#agents/me">
+								<foaf:name>
+									<xsl:value-of select="//config/template/agencyName"/>
+								</foaf:name>
+							</foaf:Organization>
 							<xsl:apply-templates select="/content/*[not(local-name() = 'config')]" mode="pelagios"/>
 						</rdf:RDF>
-					</xsl:when>
-					<xsl:when test="$model = 'crm'">
-						<rdf:RDF>
-							<xsl:apply-templates select="/content/*[not(local-name() = 'config')]" mode="crm"/>
-						</rdf:RDF>
-					</xsl:when>
+					</xsl:when>					
 					<xsl:when test="$model = 'nomisma'">
 						<rdf:RDF>
 							<xsl:apply-templates select="/content/*[not(local-name() = 'config')]" mode="nomisma"/>

@@ -9,7 +9,10 @@ let $collection-name:= substring-before(substring-after(request:get-uri(), '/exi
 return
 <nudsGroup xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:nuds="http://nomisma.org/nuds" xmlns:mods="http://www.loc.gov/mods/v3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mets="http://www.loc.gov/METS/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
    {
-         for $doc in collection(concat('/db/', $collection-name, '/objects/'))[(descendant::*:publicationStatus='approved' or descendant::*:publicationStatus='approvedSubtype' or descendant::*:publicationStatus='deprecatedType') and (descendant::nuds:nuds/@recordType='conceptual' or descendant::nuds:typeDesc[string(@xlink:href)])]
-         return $doc 
+         for $doc in collection(concat('/db/', $collection-name, '/objects/'))
+            let $publicationStatus := $doc/descendant::*:publicationStatus
+ 			return if ($publicationStatus = 'approved' or $publicationStatus = 'approvedSubtype' or $publicationStatus = 'deprecatedType') then
+				$doc
+			else ''
       }
 </nudsGroup>

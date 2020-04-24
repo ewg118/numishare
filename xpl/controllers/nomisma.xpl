@@ -111,7 +111,9 @@
 				</p:otherwise>
 			</p:choose>
 		</p:when>
-		<p:otherwise>
+		<p:when test="collection-type='object'">
+			<!-- for collections of physical specimens, generate RDF only from coins that have been linked to one or more coin type URI, derived from Solr -->
+			
 			<p:processor name="oxf:unsafe-xslt">
 				<p:input name="request" href="#request"/>
 				<p:input name="data" href="#config"/>
@@ -119,7 +121,7 @@
 					<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 						<xsl:variable name="collection-name"
 							select="substring-before(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/')"/>
-
+						
 						<!-- url parameter -->
 						<xsl:param name="start">
 							<xsl:choose>
@@ -129,17 +131,17 @@
 								<xsl:otherwise>0</xsl:otherwise>
 							</xsl:choose>
 						</xsl:param>
-
+						
 						<!-- config variables -->
 						<xsl:variable name="solr-url" select="concat(/config/solr_published, 'select/')"/>
-
+						
 						<xsl:variable name="service">
 							<xsl:value-of
 								select="concat($solr-url, '?q=collection-name:', $collection-name,
 								'+AND+NOT(lang:*)+AND+coinType_uri:*+AND+NOT(typeUncertain:true)&amp;rows=10000&amp;start=', $start, '&amp;fl=id,recordId,title_display,coinType_uri,objectType_uri,recordType,publisher_display,axis_num,diameter_num,height_num,width_num,taq_num,weight_num,thumbnail_obv,reference_obv,thumbnail_rev,reference_rev,iiif_obv,iiif_rev,findspot_uri,findspot_geo,collection_uri,hoard_uri&amp;mode=nomisma')"
 							/>
 						</xsl:variable>
-
+						
 						<xsl:template match="/">
 							<config>
 								<url>
@@ -153,17 +155,30 @@
 				</p:input>
 				<p:output name="data" id="generator-config"/>
 			</p:processor>
-
+			
 			<p:processor name="oxf:url-generator">
 				<p:input name="config" href="#generator-config"/>
 				<p:output name="data" id="model"/>
 			</p:processor>
-
+			
 			<p:processor name="oxf:pipeline">
 				<p:input name="data" href="#model"/>
 				<p:input name="config" href="../views/serializations/solr/rdf.xpl"/>
 				<p:output name="data" ref="data"/>
 			</p:processor>
-		</p:otherwise>
+		</p:when>
+		<p:when test="collection-type='hoard'">
+			<!-- aggregate all Hoard documents and pipe through XSLT into RDF -->
+			<p:processor name="oxf:pipeline">
+				<p:input name="config" href="../models/xquery/aggregate-all.xpl"/>
+				<p:output name="data" id="model"/>
+			</p:processor>
+			
+			<p:processor name="oxf:pipeline">
+				<p:input name="config" href="../views/serializations/object/rdf.xpl"/>
+				<p:input name="data" href="#model"/>
+				<p:output name="data" ref="data"/>
+			</p:processor>
+		</p:when>
 	</p:choose>
 </p:config>
