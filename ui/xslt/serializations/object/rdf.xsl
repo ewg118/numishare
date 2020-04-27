@@ -5,9 +5,12 @@
 	xmlns:nh="http://nomisma.org/nudsHoard" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns:oa="http://www.w3.org/ns/oa#" xmlns:pelagios="http://pelagios.github.io/vocab/terms#" xmlns:void="http://rdfs.org/ns/void#"
 	xmlns:un="http://www.owl-ontologies.com/Ontology1181490123.owl#" xmlns:dcmitype="http://purl.org/dc/dcmitype/"
-	xmlns:relations="http://pelagios.github.io/vocab/relations#" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
-	xmlns:nmo="http://nomisma.org/ontology#" xmlns:crm="http://www.cidoc-crm.org/cidoc-crm/" xmlns:edm="http://www.europeana.eu/schemas/edm/"
-	xmlns:svcs="http://rdfs.org/sioc/services#" xmlns:doap="http://usefulinc.com/ns/doap#" xmlns:numishare="https://github.com/ewg118/numishare" exclude-result-prefixes="xs xsl nuds nh xlink gml" version="2.0">
+	xmlns:crmsci="http://www.ics.forth.gr/isl/CRMsci/" xmlns:crmgeo="http://www.ics.forth.gr/isl/CRMgeo/"
+	xmlns:crmarchaeo="http://www.cidoc-crm.org/cidoc-crm/CRMarchaeo/" xmlns:relations="http://pelagios.github.io/vocab/relations#"
+	xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xmlns:nmo="http://nomisma.org/ontology#"
+	xmlns:crm="http://www.cidoc-crm.org/cidoc-crm/" xmlns:edm="http://www.europeana.eu/schemas/edm/" xmlns:svcs="http://rdfs.org/sioc/services#"
+	xmlns:doap="http://usefulinc.com/ns/doap#" xmlns:numishare="https://github.com/ewg118/numishare" exclude-result-prefixes="xs xsl nuds nh xlink gml"
+	version="2.0">
 	<xsl:include href="rdf-templates.xsl"/>
 	<xsl:include href="../../functions.xsl"/>
 
@@ -25,21 +28,22 @@
 			<xsl:if test="$model = 'pelagios'">
 				<xsl:variable name="type_list" as="element()*">
 					<list>
-						<xsl:for-each select="distinct-values(descendant::nuds:typeDesc[string(@xlink:href)]/@xlink:href|descendant::nuds:reference[@xlink:arcrole='nmo:hasTypeSeriesItem'][string(@xlink:href)]/@xlink:href)">
+						<xsl:for-each
+							select="distinct-values(descendant::nuds:typeDesc[string(@xlink:href)]/@xlink:href | descendant::nuds:reference[@xlink:arcrole = 'nmo:hasTypeSeriesItem'][string(@xlink:href)]/@xlink:href)">
 							<type_series_item>
 								<xsl:if test="contains(., '/id/')">
 									<xsl:attribute name="type_series" select="substring-before(., 'id/')"/>
 								</xsl:if>
-								
+
 								<xsl:value-of select="."/>
 							</type_series_item>
 						</xsl:for-each>
 					</list>
 				</xsl:variable>
-				
+
 				<xsl:for-each select="distinct-values($type_list//type_series_item/@type_series)">
 					<xsl:variable name="type_series_uri" select="."/>
-					
+
 					<xsl:variable name="id-param">
 						<xsl:for-each select="$type_list//type_series_item[contains(., $type_series_uri)]">
 							<xsl:value-of select="substring-after(., 'id/')"/>
@@ -48,7 +52,7 @@
 							</xsl:if>
 						</xsl:for-each>
 					</xsl:variable>
-					
+
 					<xsl:if test="string-length($id-param) &gt; 0">
 						<xsl:for-each select="document(concat($type_series_uri, 'apis/getNuds?identifiers=', encode-for-uri($id-param)))//nuds:nuds">
 							<object xlink:href="{$type_series_uri}id/{nuds:control/nuds:recordId}">
@@ -57,16 +61,16 @@
 						</xsl:for-each>
 					</xsl:if>
 				</xsl:for-each>
-				
+
 				<!-- include individual REST calls for URIs not in a recognized, Numishare based id/ namespace -->
 				<xsl:for-each select="$type_list//type_series_item[not(@type_series)]">
 					<xsl:variable name="uri" select="."/>
-					
+
 					<xsl:call-template name="numishare:getNudsDocument">
 						<xsl:with-param name="uri" select="$uri"/>
-					</xsl:call-template>				
+					</xsl:call-template>
 				</xsl:for-each>
-				
+
 				<!-- get typeDesc -->
 				<xsl:for-each select="descendant::nuds:typeDesc[not(string(@xlink:href))]">
 					<object>
@@ -82,7 +86,9 @@
 			xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
 			xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:org="http://www.w3.org/ns/org#"
 			xmlns:nmo="http://nomisma.org/ontology#" xmlns:edm="http://www.europeana.eu/schemas/edm/" xmlns:svcs="http://rdfs.org/sioc/services#"
-			xmlns:doap="http://usefulinc.com/ns/doap#" xmlns:un="http://www.owl-ontologies.com/Ontology1181490123.owl#">
+			xmlns:doap="http://usefulinc.com/ns/doap#" xmlns:un="http://www.owl-ontologies.com/Ontology1181490123.owl#"
+			xmlns:crmsci="http://www.ics.forth.gr/isl/CRMsci/" xmlns:crmgeo="http://www.ics.forth.gr/isl/CRMgeo/"
+			xmlns:crmarchaeo="http://www.cidoc-crm.org/cidoc-crm/CRMarchaeo/">
 
 			<xsl:if test="$model = 'pelagios'">
 				<xsl:variable name="id-param">
@@ -121,7 +127,7 @@
 							</foaf:Organization>
 							<xsl:apply-templates select="/content/*[not(local-name() = 'config')]" mode="pelagios"/>
 						</rdf:RDF>
-					</xsl:when>					
+					</xsl:when>
 					<xsl:when test="$model = 'nomisma'">
 						<rdf:RDF>
 							<xsl:apply-templates select="/content/*[not(local-name() = 'config')]" mode="nomisma"/>
@@ -135,6 +141,10 @@
 			<xsl:otherwise>
 				<rdf:RDF>
 					<xsl:apply-templates select="/content/*[not(local-name() = 'config')]" mode="nomisma"/>
+					
+					<xsl:if test="/content/config/collection_type = 'hoard'">
+						<xsl:apply-templates select="descendant::nh:geogname[@xlink:role = 'findspot'][@xlink:href][not(@xlink:href = preceding::nh:geogname/@xlink:href)]" mode="place"/>
+					</xsl:if>
 				</rdf:RDF>
 			</xsl:otherwise>
 		</xsl:choose>

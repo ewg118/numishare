@@ -7,9 +7,10 @@
 	xmlns:pelagios="http://pelagios.github.io/vocab/terms#" xmlns:gml="http://www.opengis.net/gml" xmlns:void="http://rdfs.org/ns/void#"
 	xmlns:relations="http://pelagios.github.io/vocab/relations#" xmlns:nmo="http://nomisma.org/ontology#" xmlns:edm="http://www.europeana.eu/schemas/edm/"
 	xmlns:svcs="http://rdfs.org/sioc/services#" xmlns:doap="http://usefulinc.com/ns/doap#" xmlns:dcmitype="http://purl.org/dc/dcmitype/"
-	xmlns:crm="http://www.cidoc-crm.org/cidoc-crm/" xmlns:numishare="https://github.com/ewg118/numishare" xmlns:foaf="http://xmlns.com/foaf/0.1/"
-	xmlns:mets="http://www.loc.gov/METS/" xmlns:xsd="http://www.w3.org/2001/XMLSchema#" exclude-result-prefixes="xsl xs nuds nh xlink numishare mets gml"
-	version="2.0">
+	xmlns:crmsci="http://www.ics.forth.gr/isl/CRMsci/" xmlns:crmgeo="http://www.ics.forth.gr/isl/CRMgeo/"
+	xmlns:crmarchaeo="http://www.cidoc-crm.org/cidoc-crm/CRMarchaeo/" xmlns:crm="http://www.cidoc-crm.org/cidoc-crm/"
+	xmlns:numishare="https://github.com/ewg118/numishare" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:mets="http://www.loc.gov/METS/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema#" exclude-result-prefixes="xsl xs nuds nh xlink numishare mets gml" version="2.0">
 
 	<!-- ************** PELAGIOS TEMPLATES **************** -->
 	<xsl:template match="nuds:nuds | nh:nudsHoard" mode="pelagios">
@@ -30,13 +31,12 @@
 				<!-- dates -->
 				<xsl:choose>
 					<xsl:when test="$nudsGroup//nuds:typeDesc/nuds:date">
-						<dcterms:temporal>start=<xsl:value-of select="number($nudsGroup//nuds:typeDesc/nuds:date/@standardDate)"/>;
-								end=<xsl:value-of select="number($nudsGroup//nuds:typeDesc/nuds:date/@standardDate)"/></dcterms:temporal>
+						<dcterms:temporal>start=<xsl:value-of select="number($nudsGroup//nuds:typeDesc/nuds:date/@standardDate)"/>; end=<xsl:value-of
+								select="number($nudsGroup//nuds:typeDesc/nuds:date/@standardDate)"/></dcterms:temporal>
 					</xsl:when>
 					<xsl:when test="$nudsGroup//nuds:typeDesc/nuds:dateRange">
-						<dcterms:temporal>start=<xsl:value-of
-								select="number($nudsGroup//nuds:typeDesc/nuds:dateRange/nuds:fromDate/@standardDate)"/>; end=<xsl:value-of
-								select="number($nudsGroup//nuds:typeDesc/nuds:dateRange/nuds:toDate/@standardDate)"/></dcterms:temporal>
+						<dcterms:temporal>start=<xsl:value-of select="number($nudsGroup//nuds:typeDesc/nuds:dateRange/nuds:fromDate/@standardDate)"/>;
+								end=<xsl:value-of select="number($nudsGroup//nuds:typeDesc/nuds:dateRange/nuds:toDate/@standardDate)"/></dcterms:temporal>
 					</xsl:when>
 				</xsl:choose>
 				<xsl:if test="@recordType = 'physical'">
@@ -504,52 +504,48 @@
 	<xsl:template match="nuds:material | nuds:denomination | nuds:manufacture | nuds:geogname | nuds:persname | nuds:corpname" mode="nomisma">
 		<xsl:variable name="href" select="@xlink:href"/>
 
-		<xsl:if test="not(preceding::*[@xlink:href = $href])">
-			<xsl:variable name="element">
-				<xsl:choose>
-					<xsl:when test="parent::nuds:obverse or parent::nuds:reverse">hasPortrait</xsl:when>
-					<!-- ignore maker and artist -->
-					<xsl:when test="@xlink:role = 'artist' or @xlink:role = 'maker'"/>
-					<xsl:otherwise>
-						<xsl:variable name="role" select="
-								if (@xlink:role) then
-									@xlink:role
-								else
-									local-name()"/>
-						<xsl:value-of select="concat('has', concat(upper-case(substring($role, 1, 1)), substring($role, 2)))"/>
-					</xsl:otherwise>
-				</xsl:choose>
-			</xsl:variable>
+		<xsl:variable name="element">
+			<xsl:choose>
+				<xsl:when test="parent::nuds:obverse or parent::nuds:reverse">hasPortrait</xsl:when>
+				<!-- ignore maker and artist -->
+				<xsl:when test="@xlink:role = 'artist' or @xlink:role = 'maker'"/>
+				<xsl:otherwise>
+					<xsl:variable name="role" select="
+							if (@xlink:role) then
+								@xlink:role
+							else
+								local-name()"/>
+					<xsl:value-of select="concat('has', concat(upper-case(substring($role, 1, 1)), substring($role, 2)))"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
 
-			<xsl:if test="string-length($element) &gt; 0">
-				<xsl:choose>
-					<xsl:when test="@certainty = 'uncertain' or matches(@certainty, 'https?://nomisma\.org')">
-						<xsl:element name="nmo:{$element}">
-							<rdf:Description>
-								<rdf:value rdf:resource="{@xlink:href}"/>
-								<un:hasUncertainty>
-									<xsl:attribute name="rdf:resource">
-										<xsl:choose>
-											<xsl:when test="@certainty = 'uncertain'">http://nomisma.org/id/uncertain_value</xsl:when>
-											<xsl:otherwise>
-												<xsl:value-of select="@certainty"/>
-											</xsl:otherwise>
-										</xsl:choose>
-									</xsl:attribute>
-								</un:hasUncertainty>
-							</rdf:Description>
-						</xsl:element>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:element name="nmo:{$element}">
-							<xsl:attribute name="rdf:resource" select="@xlink:href"/>
-						</xsl:element>
-					</xsl:otherwise>
-				</xsl:choose>
-			</xsl:if>
+		<xsl:if test="string-length($element) &gt; 0">
+			<xsl:choose>
+				<xsl:when test="@certainty = 'uncertain' or matches(@certainty, 'https?://nomisma\.org')">
+					<xsl:element name="nmo:{$element}">
+						<rdf:Description>
+							<rdf:value rdf:resource="{@xlink:href}"/>
+							<un:hasUncertainty>
+								<xsl:attribute name="rdf:resource">
+									<xsl:choose>
+										<xsl:when test="@certainty = 'uncertain'">http://nomisma.org/id/uncertain_value</xsl:when>
+										<xsl:otherwise>
+											<xsl:value-of select="@certainty"/>
+										</xsl:otherwise>
+									</xsl:choose>
+								</xsl:attribute>
+							</un:hasUncertainty>
+						</rdf:Description>
+					</xsl:element>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:element name="nmo:{$element}">
+						<xsl:attribute name="rdf:resource" select="@xlink:href"/>
+					</xsl:element>
+				</xsl:otherwise>
+			</xsl:choose>
 		</xsl:if>
-
-
 	</xsl:template>
 
 	<xsl:template match="nuds:date" mode="nomisma">
@@ -668,25 +664,30 @@
 					<void:inDataset rdf:resource="{$url}"/>
 				</nmo:Hoard>
 
-				<xsl:if test="descendant::nh:contentsDesc">
+				<xsl:if test="descendant::nh:contentsDesc[nh:contents]">
 					<dcmitype:Collection rdf:about="{if (string($uri_space)) then concat($uri_space, $id) else concat($url, 'id/', $id)}#contents">
-						
+
 						<xsl:for-each select="descendant::nuds:typeDesc/@xlink:href | descendant::nuds:undertypeDesc/@xlink:href">
 							<nmo:hasTypeSeriesItem rdf:resource="{.}"/>
 						</xsl:for-each>
+
+						<xsl:variable name="all-nodes" as="element()*">
+							<nodes>
+								<xsl:for-each
+									select="
+										descendant::nuds:material[@xlink:href] | descendant::nuds:denomination[@xlink:href] | descendant::nuds:manufacture[@xlink:href] |
+										descendant::nuds:geogname[@xlink:href] | descendant::nuds:persname[@xlink:href] | descendant::nuds:corpname[@xlink:href]">
+									<xsl:sort select="@xlink:href"/>
+
+									<xsl:copy-of select="."/>
+								</xsl:for-each>
+							</nodes>
+						</xsl:variable>
+
 						
-						<xsl:apply-templates
-							select="descendant::nuds:material[@xlink:href] | descendant::nuds:denomination[@xlink:href] | descendant::nuds:manufacture[@xlink:href] | 
-							descendant::nuds:geogname[@xlink:href] | descendant::nuds:persname[@xlink:href] | descendant::nuds:corpname[@xlink:href]"
-							mode="nomisma">
-							<xsl:sort select="@xlink:href"/>
-						</xsl:apply-templates>
-						
+						<xsl:apply-templates select="$all-nodes/*[not(@xlink:href = preceding-sibling::*/@xlink:href)]" mode="nomisma"/>
 					</dcmitype:Collection>
 				</xsl:if>
-				
-				<xsl:apply-templates select="descendant::nh:geogname[@xlink:role='findspot'][@xlink:href]" mode="place"/>
-				
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
@@ -839,33 +840,186 @@
 
 	<xsl:template match="nh:findspot">
 		<nmo:hasFindspot>
-			<nmo:Find>
-				<xsl:apply-templates select="parent::node()/nh:discovery"/>
-				
-				<crm:P7_took_place_at>
-					<crm:E53_Place>
-						<xsl:apply-templates select="nh:description"/>
-						<xsl:apply-templates select="nh:fallsWithin[nh:geogname[@xlink:role='findspot'][@xlink:href]]"/>
-					</crm:E53_Place>
-				</crm:P7_took_place_at>
-			</nmo:Find>
+
+			<xsl:choose>
+				<xsl:when test="nh:geogname[@xlink:role = 'findspot'][@xlink:href]">
+					<!-- create a shorthand directly to gazetteer URI in the old Hoard model -->
+					<xsl:attribute name="rdf:resource" select="nh:geogname[@xlink:role = 'findspot'][1]/@xlink:href"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<nmo:Find>
+						<xsl:apply-templates select="parent::node()/nh:discovery"/>
+
+						<crm:P7_took_place_at>
+							<crm:E53_Place>
+								<xsl:apply-templates select="nh:description"/>
+								<xsl:apply-templates select="nh:fallsWithin[nh:geogname[@xlink:role = 'findspot'][@xlink:href]]"/>
+							</crm:E53_Place>
+						</crm:P7_took_place_at>
+					</nmo:Find>
+				</xsl:otherwise>
+			</xsl:choose>
 		</nmo:hasFindspot>
 	</xsl:template>
-	
+
 	<xsl:template match="nh:fallsWithin">
-		<xsl:apply-templates select="nh:geogname[@xlink:href]" mode="fallsWithin"/>		
+		<xsl:apply-templates select="nh:geogname[@xlink:href]" mode="fallsWithin"/>
 	</xsl:template>
-	
+
 	<xsl:template match="nh:geogname" mode="fallsWithin">
-		<crm:P89_falls_within rdf:resource="{@xlink:href}"/>
+		<xsl:choose>
+			<xsl:when test="matches(@certainty, 'https?://')">
+				<crm:P89_falls_within>
+					<rdf:Description>
+						<rdf:value rdf:resource="{@xlink:href}"/>
+						<un:hasUncertainty rdf:resource="{@certainty}"/>
+					</rdf:Description>
+				</crm:P89_falls_within>
+			</xsl:when>
+			<xsl:otherwise>
+				<crm:P89_falls_within rdf:resource="{@xlink:href}"/>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
-	
+
 	<xsl:template match="nh:geogname" mode="place">
+		<xsl:variable name="geoURI" select="concat(@xlink:href, '#this')"/>
+
 		<crm:E53_Place rdf:about="{@xlink:href}">
-			
+			<rdfs:label>
+				<xsl:value-of select="."/>
+			</rdfs:label>
+
+			<xsl:if test="parent::nh:fallsWithin/nh:type[@xlink:href]">
+				<crm:P2_has_type rdf:resource="{parent::nh:fallsWithin/nh:type/@xlink:href}"/>
+			</xsl:if>
+
+			<xsl:if test="parent::nh:fallsWithin/gml:location">
+				<geo:location rdf:resource="{$geoURI}"/>
+				<crm:P168_place_is_defined_by rdf:resource="{$geoURI}"/>
+			</xsl:if>
 		</crm:E53_Place>
+
+		<xsl:apply-templates select="parent::nh:fallsWithin/gml:location">
+			<xsl:with-param name="geoURI" select="$geoURI"/>
+		</xsl:apply-templates>
 	</xsl:template>
-	
+
+	<xsl:template match="gml:location">
+		<xsl:param name="geoURI"/>
+
+		<geo:SpatialThing rdf:about="{$geoURI}">
+			<rdf:type rdf:resource="http://www.ics.forth.gr/isl/CRMgeo/SP5_Geometric_Place_Expression"/>
+			<crmgeo:Q9_is_expressed_in_terms_of rdf:resource="http://www.wikidata.org/entity/Q215848"/>
+
+			<xsl:choose>
+				<xsl:when test="gml:Point">
+					<xsl:variable name="lat" select="normalize-space(substring-after(gml:Point/gml:coordinates, ','))"/>
+					<xsl:variable name="long" select="normalize-space(substring-before(gml:Point/gml:coordinates, ','))"/>
+
+					<geo:lat rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">
+						<xsl:value-of select="$lat"/>
+					</geo:lat>
+					<geo:long rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">
+						<xsl:value-of select="$long"/>
+					</geo:long>
+					<crmgeo:asWKT rdf:datatype="http://www.opengis.net/ont/geosparql#wktLiteral">
+						<xsl:value-of select="concat('POINT (', $long, ' ', $lat, ')')"/>
+					</crmgeo:asWKT>
+				</xsl:when>
+				<xsl:when test="gml:Polygon">
+					<xsl:variable name="points" select="tokenize(gml:Polygon/gml:coordinates, ' ')"/>
+					<xsl:variable name="x1" select="tokenize(normalize-space($points[1]), ',')[1]"/>
+					<xsl:variable name="x2" select="tokenize(normalize-space($points[2]), ',')[1]"/>
+					<xsl:variable name="y1" select="tokenize(normalize-space($points[1]), ',')[2]"/>
+					<xsl:variable name="y2" select="tokenize(normalize-space($points[2]), ',')[2]"/>
+
+					<xsl:variable name="polygon" as="element()*">
+						<polygon>
+							<sw>
+								<x>
+									<xsl:value-of select="
+											if ($x1 &lt; $x2) then
+												$x1
+											else
+												$x2"/>
+								</x>
+								<y>
+									<xsl:value-of select="
+											if ($y1 &lt; $y2) then
+												$y1
+											else
+												$y2"/>
+								</y>
+							</sw>
+							<nw>
+								<x>
+									<xsl:value-of select="
+											if ($x1 &lt; $x2) then
+												$x1
+											else
+												$x2"/>
+								</x>
+								<y>
+									<xsl:value-of select="
+											if ($y1 &gt; $y2) then
+												$y1
+											else
+												$y2"/>
+								</y>
+							</nw>
+							<ne>
+								<x>
+									<xsl:value-of select="
+											if ($x1 &gt; $x2) then
+												$x1
+											else
+												$x2"/>
+								</x>
+								<y>
+									<xsl:value-of select="
+											if ($y1 &gt; $y2) then
+												$y1
+											else
+												$y2"/>
+								</y>
+							</ne>
+							<se>
+								<x>
+									<xsl:value-of select="
+											if ($x1 &gt; $x2) then
+												$x1
+											else
+												$x2"/>
+								</x>
+								<y>
+									<xsl:value-of select="
+											if ($y1 &lt; $y2) then
+												$y1
+											else
+												$y2"/>
+								</y>
+							</se>
+						</polygon>
+					</xsl:variable>
+
+					<crmgeo:asWKT rdf:datatype="http://www.opengis.net/ont/geosparql#wktLiteral">
+						<xsl:text>POLYGON (</xsl:text>
+						<xsl:for-each select="$polygon/*">
+							<xsl:value-of select="x"/>
+							<xsl:text> </xsl:text>
+							<xsl:value-of select="y"/>
+							<xsl:if test="not(position() = last())">
+								<xsl:text>, </xsl:text>
+							</xsl:if>
+						</xsl:for-each>
+						<xsl:text>)</xsl:text>
+					</crmgeo:asWKT>
+				</xsl:when>
+			</xsl:choose>
+		</geo:SpatialThing>
+	</xsl:template>
+
 	<xsl:template match="nh:description">
 		<rdfs:label>
 			<xsl:if test="@xml:lang">
@@ -874,7 +1028,7 @@
 			<xsl:value-of select="."/>
 		</rdfs:label>
 	</xsl:template>
-	
+
 	<xsl:template match="nh:discovery">
 		<xsl:choose>
 			<xsl:when test="nh:date/@standardDate">
@@ -882,9 +1036,10 @@
 			</xsl:when>
 		</xsl:choose>
 	</xsl:template>
-	
-	<xsl:template match="nh:date|nh:fromDate|nh:toDate">
-		<xsl:element name="{if (self::nh:fromDate) then 'hasStartDate' else if (self::nh:toDate) then 'hasEndDate' else 'hasDate'}" namespace="http://nomisma.org/ontology#">
+
+	<xsl:template match="nh:date | nh:fromDate | nh:toDate">
+		<xsl:element name="{if (self::nh:fromDate) then 'hasStartDate' else if (self::nh:toDate) then 'hasEndDate' else 'hasDate'}"
+			namespace="http://nomisma.org/ontology#">
 			<xsl:attribute name="rdf:datatype">
 				<xsl:choose>
 					<xsl:when test="@standardDate castable as xs:date">
@@ -898,7 +1053,7 @@
 					</xsl:when>
 				</xsl:choose>
 			</xsl:attribute>
-			
+
 			<xsl:value-of select="@standardDate"/>
 		</xsl:element>
 	</xsl:template>
