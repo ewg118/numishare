@@ -22,6 +22,8 @@
 	<!-- config variables -->
 	<xsl:variable name="url" select="/content/config/url"/>
 	<xsl:variable name="uri_space" select="/content/config/uri_space"/>
+	<xsl:variable name="geonames-url">http://api.geonames.org</xsl:variable>
+	<xsl:variable name="geonames_api_key" select="/content/config/geonames_api_key"/>
 
 	<xsl:variable name="nudsGroup" as="element()*">
 		<nudsGroup>

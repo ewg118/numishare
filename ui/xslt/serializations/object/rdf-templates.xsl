@@ -684,7 +684,7 @@
 							</nodes>
 						</xsl:variable>
 
-						
+
 						<xsl:apply-templates select="$all-nodes/*[not(@xlink:href = preceding-sibling::*/@xlink:href)]" mode="nomisma"/>
 					</dcmitype:Collection>
 				</xsl:if>
@@ -709,7 +709,7 @@
 		</xsl:choose>
 
 		<xsl:apply-templates select="nh:hoardDesc"/>
-		
+
 		<!-- if there's no deposit date, then use the contents to derive a closing date (note, hoard records should have this manually entered to minimize pre-processing for RDF -->
 		<xsl:if test="not(nh:hoardDesc/nh:deposit[nh:date or nh:dateRange]) and not(nh:hoardDesc/nh:closingDate[nh:date or nh:dateRange])">
 			<xsl:call-template name="derive-closing-date"/>
@@ -721,7 +721,7 @@
 	</xsl:template>
 
 	<xsl:template match="nh:hoardDesc">
-		<xsl:apply-templates select="nh:deposit | nh:closingDate | nh:findspot"/>		
+		<xsl:apply-templates select="nh:deposit | nh:closingDate | nh:findspot"/>
 	</xsl:template>
 
 	<xsl:template match="nh:deposit | nh:closingDate">
@@ -791,28 +791,62 @@
 	</xsl:template>
 
 	<xsl:template match="nh:geogname" mode="place">
-		<xsl:variable name="geoURI" select="concat(@xlink:href, '#this')"/>
 
-		<crm:E53_Place rdf:about="{@xlink:href}">
-			<rdfs:label>
-				<xsl:value-of select="."/>
-			</rdfs:label>
 
-			<xsl:if test="parent::nh:fallsWithin/nh:type[@xlink:href]">
-				<crm:P2_has_type rdf:resource="{parent::nh:fallsWithin/nh:type/@xlink:href}"/>
-			</xsl:if>
 
-			<xsl:if test="parent::nh:fallsWithin/gml:location">
-				<geo:location rdf:resource="{$geoURI}"/>
-				<crm:P168_place_is_defined_by rdf:resource="{$geoURI}"/>
-			</xsl:if>
-		</crm:E53_Place>
+		<!-- default to using internal coordinates first -->
+		<xsl:choose>
+			<xsl:when test="parent::nh:fallsWithin/gml:location">
+				<xsl:variable name="geoURI" select="concat(@xlink:href, '#this')"/>
+				<crm:E53_Place rdf:about="{@xlink:href}">
+					<rdfs:label>
+						<xsl:value-of select="."/>
+					</rdfs:label>
 
-		<xsl:apply-templates select="parent::nh:fallsWithin/gml:location">
-			<xsl:with-param name="geoURI" select="$geoURI"/>
-		</xsl:apply-templates>
+					<xsl:if test="parent::nh:fallsWithin/nh:type[@xlink:href]">
+						<crm:P2_has_type rdf:resource="{parent::nh:fallsWithin/nh:type/@xlink:href}"/>
+					</xsl:if>
+
+					<geo:location rdf:resource="{$geoURI}"/>
+					<crm:P168_place_is_defined_by rdf:resource="{$geoURI}"/>
+				</crm:E53_Place>
+
+				<xsl:apply-templates select="parent::nh:fallsWithin/gml:location">
+					<xsl:with-param name="geoURI" select="$geoURI"/>
+				</xsl:apply-templates>
+			</xsl:when>
+			<xsl:when test="contains(@xlink:href, 'geonames.org')">
+				<xsl:variable name="geonameId" select="tokenize(@xlink:href, '/')[4]"/>
+				<xsl:variable name="geoURI" select="concat('https://sws.geonames.org/', $geonameId, '/#this')"/>
+
+				<!-- get coords from Geonames API -->
+				<xsl:variable name="geonames_data" as="element()*">
+					<xsl:copy-of
+						select="document(concat($geonames-url, '/get?geonameId=', $geonameId, '&amp;username=', $geonames_api_key, '&amp;style=full'))/*"/>
+				</xsl:variable>
+
+				<crm:E53_Place rdf:about="{@xlink:href}">
+					<rdfs:label>
+						<xsl:value-of select="."/>
+					</rdfs:label>
+
+					<xsl:if test="parent::nh:fallsWithin/nh:type[@xlink:href]">
+						<crm:P2_has_type rdf:resource="{parent::nh:fallsWithin/nh:type/@xlink:href}"/>
+					</xsl:if>
+
+					<geo:location rdf:resource="{$geoURI}"/>
+					<crm:P168_place_is_defined_by rdf:resource="{$geoURI}"/>
+				</crm:E53_Place>
+
+				<xsl:call-template name="generateSpatialThing">
+					<xsl:with-param name="geoURI" select="$geoURI"/>
+					<xsl:with-param name="lat" select="$geonames_data//lat"/>
+					<xsl:with-param name="long" select="$geonames_data//lng"/>
+				</xsl:call-template>
+			</xsl:when>
+		</xsl:choose>
 	</xsl:template>
-
+	
 	<xsl:template match="gml:location">
 		<xsl:param name="geoURI"/>
 
@@ -966,6 +1000,27 @@
 		</xsl:element>
 	</xsl:template>
 	
+	<!-- ***** generate geo:SpatialThing from coordinates extracted from Geonames API ***** -->
+	<xsl:template name="generateSpatialThing">
+		<xsl:param name="geoURI"/>
+		<xsl:param name="lat"/>
+		<xsl:param name="long"/>
+		
+		<geo:SpatialThing rdf:about="{$geoURI}">
+			<rdf:type rdf:resource="http://www.ics.forth.gr/isl/CRMgeo/SP5_Geometric_Place_Expression"/>
+			<crmgeo:Q9_is_expressed_in_terms_of rdf:resource="http://www.wikidata.org/entity/Q215848"/>
+			<geo:lat rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">
+				<xsl:value-of select="$lat"/>
+			</geo:lat>
+			<geo:long rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">
+				<xsl:value-of select="$long"/>
+			</geo:long>
+			<crmgeo:asWKT rdf:datatype="http://www.opengis.net/ont/geosparql#wktLiteral">
+				<xsl:value-of select="concat('POINT (', $long, ' ', $lat, ')')"/>
+			</crmgeo:asWKT>
+		</geo:SpatialThing>
+	</xsl:template>
+
 	<!-- ***** derive closing date from hoard contents. this should be primarily deprecated since the closing date will be added to CHRR record in order to minimize pre-processing -->
 	<xsl:template name="derive-closing-date">
 		<xsl:variable name="nudsGroup" as="element()*">
@@ -1013,7 +1068,7 @@
 				</xsl:for-each>
 			</nudsGroup>
 		</xsl:variable>
-		
+
 		<xsl:variable name="all-dates" as="element()*">
 			<dates>
 				<xsl:for-each select="descendant::nuds:typeDesc">
@@ -1043,7 +1098,7 @@
 				</xsl:for-each>
 			</dates>
 		</xsl:variable>
-		
+
 		<!-- get date values for closing date -->
 		<xsl:variable name="dates" as="element()*">
 			<dates>
@@ -1055,7 +1110,7 @@
 				</xsl:for-each>
 			</dates>
 		</xsl:variable>
-		
+
 		<xsl:if test="count($dates//date) &gt; 0">
 			<nmo:hasClosingDate rdf:datatype="http://www.w3.org/2001/XMLSchema#gYear">
 				<xsl:value-of select="format-number($dates//date[last()], '0000')"/>
