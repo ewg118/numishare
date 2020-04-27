@@ -709,6 +709,11 @@
 		</xsl:choose>
 
 		<xsl:apply-templates select="nh:hoardDesc"/>
+		
+		<!-- if there's no deposit date, then use the contents to derive a closing date (note, hoard records should have this manually entered to minimize pre-processing for RDF -->
+		<xsl:if test="not(nh:hoardDesc/nh:deposit[nh:date or nh:dateRange]) and not(nh:hoardDesc/nh:closingDate[nh:date or nh:dateRange])">
+			<xsl:call-template name="derive-closing-date"/>
+		</xsl:if>
 
 		<xsl:if test="nh:contentsDesc">
 			<dcterms:tableOfContents rdf:resource="{if (string($uri_space)) then concat($uri_space, $id) else concat($url, 'id/', $id)}#contents"/>
@@ -716,107 +721,10 @@
 	</xsl:template>
 
 	<xsl:template match="nh:hoardDesc">
-		<xsl:apply-templates select="nh:deposit | nh:findspot"/>
-
-		<!-- if there's no deposit date, then use the contents to derive a closing date -->
-		<xsl:if test="not(nh:deposit[nh:date or nh:dateRange])">
-			<xsl:variable name="nudsGroup" as="element()*">
-				<nudsGroup>
-					<xsl:variable name="type_series" as="element()*">
-						<list>
-							<xsl:for-each select="distinct-values(descendant::nuds:typeDesc[string(@xlink:href)]/substring-before(@xlink:href, 'id/'))">
-								<type_series>
-									<xsl:value-of select="."/>
-								</type_series>
-							</xsl:for-each>
-						</list>
-					</xsl:variable>
-					<xsl:variable name="type_list" as="element()*">
-						<list>
-							<xsl:for-each select="distinct-values(descendant::nuds:typeDesc[string(@xlink:href)]/@xlink:href)">
-								<type_series_item>
-									<xsl:value-of select="."/>
-								</type_series_item>
-							</xsl:for-each>
-						</list>
-					</xsl:variable>
-					<xsl:for-each select="$type_series//type_series">
-						<xsl:variable name="type_series_uri" select="."/>
-						<xsl:variable name="id-param">
-							<xsl:for-each select="$type_list//type_series_item[contains(., $type_series_uri)]">
-								<xsl:value-of select="substring-after(., 'id/')"/>
-								<xsl:if test="not(position() = last())">
-									<xsl:text>|</xsl:text>
-								</xsl:if>
-							</xsl:for-each>
-						</xsl:variable>
-						<xsl:if test="string-length($id-param) &gt; 0">
-							<xsl:for-each select="document(concat($type_series_uri, 'apis/getNuds?identifiers=', encode-for-uri($id-param)))//nuds:nuds">
-								<object xlink:href="{$type_series_uri}id/{nuds:control/nuds:recordId}">
-									<xsl:copy-of select="."/>
-								</object>
-							</xsl:for-each>
-						</xsl:if>
-					</xsl:for-each>
-					<xsl:for-each select="descendant::nuds:typeDesc[not(string(@xlink:href))]">
-						<object>
-							<xsl:copy-of select="."/>
-						</object>
-					</xsl:for-each>
-				</nudsGroup>
-			</xsl:variable>
-
-			<xsl:variable name="all-dates" as="element()*">
-				<dates>
-					<xsl:for-each select="descendant::nuds:typeDesc">
-						<xsl:if test="index-of(//config/certainty_codes/code[@accept = 'true'], @certainty)">
-							<xsl:choose>
-								<xsl:when test="string(@xlink:href)">
-									<xsl:variable name="href" select="@xlink:href"/>
-									<xsl:for-each select="$nudsGroup//object[@xlink:href = $href]/descendant::*/@standardDate">
-										<xsl:if test="number(.)">
-											<date>
-												<xsl:value-of select="number(.)"/>
-											</date>
-										</xsl:if>
-									</xsl:for-each>
-								</xsl:when>
-								<xsl:otherwise>
-									<xsl:for-each select="descendant::*/@standardDate">
-										<xsl:if test="number(.)">
-											<date>
-												<xsl:value-of select="number(.)"/>
-											</date>
-										</xsl:if>
-									</xsl:for-each>
-								</xsl:otherwise>
-							</xsl:choose>
-						</xsl:if>
-					</xsl:for-each>
-				</dates>
-			</xsl:variable>
-
-			<!-- get date values for closing date -->
-			<xsl:variable name="dates" as="element()*">
-				<dates>
-					<xsl:for-each select="distinct-values($all-dates//date)">
-						<xsl:sort data-type="number"/>
-						<date>
-							<xsl:value-of select="number(.)"/>
-						</date>
-					</xsl:for-each>
-				</dates>
-			</xsl:variable>
-
-			<xsl:if test="count($dates//date) &gt; 0">
-				<nmo:hasClosingDate rdf:datatype="http://www.w3.org/2001/XMLSchema#gYear">
-					<xsl:value-of select="format-number($dates//date[last()], '0000')"/>
-				</nmo:hasClosingDate>
-			</xsl:if>
-		</xsl:if>
+		<xsl:apply-templates select="nh:deposit | nh:closingDate | nh:findspot"/>		
 	</xsl:template>
 
-	<xsl:template match="nh:deposit">
+	<xsl:template match="nh:deposit | nh:closingDate">
 		<xsl:variable name="date">
 			<xsl:choose>
 				<xsl:when test="descendant::*/@standardDate">
@@ -1056,5 +964,102 @@
 
 			<xsl:value-of select="@standardDate"/>
 		</xsl:element>
+	</xsl:template>
+	
+	<!-- ***** derive closing date from hoard contents. this should be primarily deprecated since the closing date will be added to CHRR record in order to minimize pre-processing -->
+	<xsl:template name="derive-closing-date">
+		<xsl:variable name="nudsGroup" as="element()*">
+			<nudsGroup>
+				<xsl:variable name="type_series" as="element()*">
+					<list>
+						<xsl:for-each select="distinct-values(descendant::nuds:typeDesc[string(@xlink:href)]/substring-before(@xlink:href, 'id/'))">
+							<type_series>
+								<xsl:value-of select="."/>
+							</type_series>
+						</xsl:for-each>
+					</list>
+				</xsl:variable>
+				<xsl:variable name="type_list" as="element()*">
+					<list>
+						<xsl:for-each select="distinct-values(descendant::nuds:typeDesc[string(@xlink:href)]/@xlink:href)">
+							<type_series_item>
+								<xsl:value-of select="."/>
+							</type_series_item>
+						</xsl:for-each>
+					</list>
+				</xsl:variable>
+				<xsl:for-each select="$type_series//type_series">
+					<xsl:variable name="type_series_uri" select="."/>
+					<xsl:variable name="id-param">
+						<xsl:for-each select="$type_list//type_series_item[contains(., $type_series_uri)]">
+							<xsl:value-of select="substring-after(., 'id/')"/>
+							<xsl:if test="not(position() = last())">
+								<xsl:text>|</xsl:text>
+							</xsl:if>
+						</xsl:for-each>
+					</xsl:variable>
+					<xsl:if test="string-length($id-param) &gt; 0">
+						<xsl:for-each select="document(concat($type_series_uri, 'apis/getNuds?identifiers=', encode-for-uri($id-param)))//nuds:nuds">
+							<object xlink:href="{$type_series_uri}id/{nuds:control/nuds:recordId}">
+								<xsl:copy-of select="."/>
+							</object>
+						</xsl:for-each>
+					</xsl:if>
+				</xsl:for-each>
+				<xsl:for-each select="descendant::nuds:typeDesc[not(string(@xlink:href))]">
+					<object>
+						<xsl:copy-of select="."/>
+					</object>
+				</xsl:for-each>
+			</nudsGroup>
+		</xsl:variable>
+		
+		<xsl:variable name="all-dates" as="element()*">
+			<dates>
+				<xsl:for-each select="descendant::nuds:typeDesc">
+					<xsl:if test="index-of(//config/certainty_codes/code[@accept = 'true'], @certainty)">
+						<xsl:choose>
+							<xsl:when test="string(@xlink:href)">
+								<xsl:variable name="href" select="@xlink:href"/>
+								<xsl:for-each select="$nudsGroup//object[@xlink:href = $href]/descendant::*/@standardDate">
+									<xsl:if test="number(.)">
+										<date>
+											<xsl:value-of select="number(.)"/>
+										</date>
+									</xsl:if>
+								</xsl:for-each>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:for-each select="descendant::*/@standardDate">
+									<xsl:if test="number(.)">
+										<date>
+											<xsl:value-of select="number(.)"/>
+										</date>
+									</xsl:if>
+								</xsl:for-each>
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:if>
+				</xsl:for-each>
+			</dates>
+		</xsl:variable>
+		
+		<!-- get date values for closing date -->
+		<xsl:variable name="dates" as="element()*">
+			<dates>
+				<xsl:for-each select="distinct-values($all-dates//date)">
+					<xsl:sort data-type="number"/>
+					<date>
+						<xsl:value-of select="number(.)"/>
+					</date>
+				</xsl:for-each>
+			</dates>
+		</xsl:variable>
+		
+		<xsl:if test="count($dates//date) &gt; 0">
+			<nmo:hasClosingDate rdf:datatype="http://www.w3.org/2001/XMLSchema#gYear">
+				<xsl:value-of select="format-number($dates//date[last()], '0000')"/>
+			</nmo:hasClosingDate>
+		</xsl:if>
 	</xsl:template>
 </xsl:stylesheet>
