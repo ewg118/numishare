@@ -26,9 +26,7 @@ OPTIONAL { ?object nmo:hasCollection ?colUri .
 ?dataset dcterms:publisher ?publisher FILTER (lang(?publisher) = "" || langMatches(lang(?publisher), "en")) .
 ?dataset dcterms:title ?datasetTitle FILTER (lang(?datasetTitle) = "" || langMatches(lang(?datasetTitle), "en")) .
 OPTIONAL {?object nmo:hasFindspot ?findUri .
-?findUri foaf:name ?findspot }
-OPTIONAL {?object nmo:hasFindspot ?findUri .
-?findUri rdfs:label ?findspot }
+?findUri foaf:name|rdfs:label ?findspot }
 OPTIONAL {?object nmo:hasFindspot ?findUri .
 ?nomismaUri geo:location ?findUri ;
 	skos:prefLabel ?findspot FILTER langMatches(lang(?findspot), "en")}

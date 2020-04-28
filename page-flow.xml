@@ -170,7 +170,6 @@
 	<page path="/numishare/[^\/]+/findspots.kml" model="xpl/models/solr/geographic-facets.xpl" view="xpl/views/serializations/solr/kml.xpl"/>
 	<page path="/numishare/[^\/]+/findspots.geojson" model="xpl/models/solr/geographic-facets.xpl" view="xpl/views/serializations/solr/geojson.xpl"/>	
 	<page path="/numishare/[^\/]+/hoards.kml" model="xpl/models/solr/geographic-docs.xpl" view="xpl/views/serializations/solr/kml.xpl"/>
-	<page path="/numishare/[^\/]+/hoards.json" model="xpl/models/solr/geographic-docs.xpl" view="xpl/views/serializations/solr/json-timemap.xpl"/>
 	<page path="/numishare/[^\/]+/hoards.geojson" model="xpl/models/solr/geographic-docs.xpl" view="xpl/views/serializations/solr/geojson.xpl"/>
 	<page path="/numishare/[^\/]+/mints.kml" model="xpl/models/solr/geographic-facets.xpl" view="xpl/views/serializations/solr/kml.xpl"/>
 	<page path="/numishare/[^\/]+/mints.geojson" model="xpl/models/solr/geographic-facets.xpl" view="xpl/views/serializations/solr/geojson.xpl"/>
