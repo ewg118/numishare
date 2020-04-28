@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"
+<!-- Author: Ethan Gruber
+	Modified: April 2020
+	Function: Serialize the NUDS or NUDS Hoard into KML. The NUDS record for a coin type will serialize a SPARQL response of associated hoards into Placemarks -->
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:saxon="http://saxon.sf.net/"
 	xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nm="http://nomisma.org/id/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
 	xmlns:nuds="http://nomisma.org/nuds" xmlns:nh="http://nomisma.org/nudsHoard" xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns:gml="http://www.opengis.net/gml" xmlns:crm="http://www.cidoc-crm.org/cidoc-crm/" xmlns:crmgeo="http://www.ics.forth.gr/isl/CRMgeo/"
-	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:nmo="http://nomisma.org/ontology#" xmlns:numishare="https://github.com/ewg118/numishare"
-	exclude-result-prefixes="#all" version="2.0">
+	xmlns:res="http://www.w3.org/2005/sparql-results#" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:nmo="http://nomisma.org/ontology#"
+	xmlns:numishare="https://github.com/ewg118/numishare" exclude-result-prefixes="#all" version="2.0">
 	<xsl:include href="../../functions.xsl"/>
 
 	<xsl:variable name="id" select="descendant::*:recordId"/>
@@ -21,6 +24,7 @@
 	<xsl:variable name="geonames-url">http://api.geonames.org</xsl:variable>
 	<xsl:variable name="geonames_api_key" select="/content/config/geonames_api_key"/>
 	<xsl:variable name="sparql_endpoint" select="/content/config/sparql_endpoint"/>
+	<xsl:variable name="collection_type" select="/content/config/collection_type"/>
 
 	<xsl:variable name="nudsGroup" as="element()*">
 		<nudsGroup>
@@ -146,17 +150,17 @@
 				</Style>
 				<xsl:choose>
 					<xsl:when test="count(/content/*[local-name() = 'nuds']) &gt; 0">
-						<xsl:apply-templates select="/content/nuds:nuds" mode="kml"/>
+						<xsl:apply-templates select="/content/nuds:nuds"/>
 					</xsl:when>
 					<xsl:when test="count(/content/*[local-name() = 'nudsHoard']) &gt; 0">
-						<xsl:apply-templates select="/content/nh:nudsHoard" mode="kml"/>
+						<xsl:apply-templates select="/content/nh:nudsHoard"/>
 					</xsl:when>
 				</xsl:choose>
 			</Document>
 		</kml>
 	</xsl:template>
 
-	<xsl:template match="nuds:nuds" mode="kml">
+	<xsl:template match="nuds:nuds">
 		<!-- create mint points -->
 		<xsl:for-each select="$nudsGroup/descendant::nuds:geogname[@xlink:role = 'mint'][string(@xlink:href)]">
 			<xsl:call-template name="getPlacemark">
@@ -164,6 +168,7 @@
 				<xsl:with-param name="styleUrl">#mint</xsl:with-param>
 			</xsl:call-template>
 		</xsl:for-each>
+
 		<!-- create findspot points (for physical coins -->
 		<xsl:for-each
 			select="descendant::nuds:geogname[@xlink:role = 'findspot'][string(@xlink:href)] | descendant::nuds:findspot[gml:location/gml:Point/gml:coordinates] | descendant::nuds:findspotDesc[string(@xlink:href)]">
@@ -172,19 +177,22 @@
 				<xsl:with-param name="styleUrl">#hoard</xsl:with-param>
 			</xsl:call-template>
 		</xsl:for-each>
+
+		<!-- create subject markers whent he subject is a Geonames place -->
 		<xsl:for-each select="descendant::nuds:subject[contains(@xlink:href, 'geonames.org')]">
 			<xsl:call-template name="getPlacemark">
 				<xsl:with-param name="uri" select="@xlink:href"/>
 				<xsl:with-param name="styleUrl">#subject</xsl:with-param>
 			</xsl:call-template>
 		</xsl:for-each>
-		<!-- gather associated hoards from Nomisma is available -->
-		<xsl:if test="string($sparql_endpoint)">
-			<xsl:variable name="service" select="concat($request-uri, 'sparql?uri=', //config/uri_space, $id, '&amp;template=kml')"/>
-			<xsl:copy-of select="document($service)//*:Placemark"/>
+
+		<!-- gather associated hoards from Nomisma, when the KML is for a coin type -->
+		<xsl:if test="$collection_type = 'cointype' and matches($sparql_endpoint, 'https?://')">
+			<xsl:apply-templates select="doc('input:hoards')//res:result"/>
 		</xsl:if>
 	</xsl:template>
-	<xsl:template match="nh:nudsHoard" mode="kml">
+
+	<xsl:template match="nh:nudsHoard">
 		<xsl:for-each select="descendant::nh:geogname[@xlink:role = 'findspot'][string(@xlink:href)]">
 			<xsl:call-template name="getPlacemark">
 				<xsl:with-param name="uri" select="@xlink:href"/>
@@ -200,6 +208,24 @@
 			</xsl:call-template>
 		</xsl:for-each>
 	</xsl:template>
+	
+	<xsl:template match="res:result">
+		<Placemark xmlns="http://earth.google.com/kml/2.0">
+			<name>
+				<xsl:value-of select="res:binding[@name='hoardLabel']/res:literal"/>
+			</name>
+			<description>
+				
+			</description>
+			<styleUrl>#hoard</styleUrl>
+			<Point>
+				<coordinates>
+					<xsl:value-of select="concat(res:binding[@name = 'long']/res:literal, ',', res:binding[@name = 'lat']/res:literal)"/>
+				</coordinates>
+			</Point>
+		</Placemark>
+	</xsl:template>
+
 	<xsl:template name="getPlacemark">
 		<xsl:param name="uri"/>
 		<xsl:param name="type"/>
@@ -228,6 +254,7 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
+
 		<Placemark xmlns="http://earth.google.com/kml/2.0">
 			<name>
 				<xsl:value-of select="$label"/>
