@@ -1,13 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"
 	xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nm="http://nomisma.org/id/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-	xmlns:nuds="http://nomisma.org/nuds" xmlns:nh="http://nomisma.org/nudsHoard" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml"
-	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:nmo="http://nomisma.org/ontology#" xmlns:numishare="https://github.com/ewg118/numishare" exclude-result-prefixes="#all" version="2.0">
+	xmlns:nuds="http://nomisma.org/nuds" xmlns:nh="http://nomisma.org/nudsHoard" xmlns:xlink="http://www.w3.org/1999/xlink"
+	xmlns:gml="http://www.opengis.net/gml" xmlns:crm="http://www.cidoc-crm.org/cidoc-crm/" xmlns:crmgeo="http://www.ics.forth.gr/isl/CRMgeo/"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:nmo="http://nomisma.org/ontology#" xmlns:numishare="https://github.com/ewg118/numishare"
+	exclude-result-prefixes="#all" version="2.0">
 	<xsl:include href="../../functions.xsl"/>
 
 	<xsl:variable name="id" select="descendant::*:recordId"/>
 	<xsl:variable name="lang" select="doc('input:request')/request/parameters/parameter[name = 'lang']/value"/>
-	<xsl:variable name="request-uri" select="concat('http://localhost:', if (//config/server-port castable as xs:integer) then //config/server-port else '8080', substring-before(doc('input:request')/request/request-uri, 'id/'))"/>
+	<xsl:variable name="request-uri"
+		select="
+			concat('http://localhost:', if (//config/server-port castable as xs:integer) then
+				//config/server-port
+			else
+				'8080', substring-before(doc('input:request')/request/request-uri, 'id/'))"/>
 
 	<!-- config variables -->
 	<xsl:variable name="url" select="/content/config/url"/>
@@ -19,21 +26,22 @@
 		<nudsGroup>
 			<xsl:variable name="type_list" as="element()*">
 				<list>
-					<xsl:for-each select="distinct-values(descendant::nuds:typeDesc[string(@xlink:href)]/@xlink:href|descendant::nuds:reference[@xlink:arcrole='nmo:hasTypeSeriesItem'][string(@xlink:href)]/@xlink:href)">
+					<xsl:for-each
+						select="distinct-values(descendant::nuds:typeDesc[string(@xlink:href)]/@xlink:href | descendant::nuds:reference[@xlink:arcrole = 'nmo:hasTypeSeriesItem'][string(@xlink:href)]/@xlink:href)">
 						<type_series_item>
 							<xsl:if test="contains(., '/id/')">
 								<xsl:attribute name="type_series" select="substring-before(., 'id/')"/>
 							</xsl:if>
-							
+
 							<xsl:value-of select="."/>
 						</type_series_item>
 					</xsl:for-each>
 				</list>
 			</xsl:variable>
-			
+
 			<xsl:for-each select="distinct-values($type_list//type_series_item/@type_series)">
 				<xsl:variable name="type_series_uri" select="."/>
-				
+
 				<xsl:variable name="id-param">
 					<xsl:for-each select="$type_list//type_series_item[contains(., $type_series_uri)]">
 						<xsl:value-of select="substring-after(., 'id/')"/>
@@ -42,7 +50,7 @@
 						</xsl:if>
 					</xsl:for-each>
 				</xsl:variable>
-				
+
 				<xsl:if test="string-length($id-param) &gt; 0">
 					<xsl:for-each select="document(concat($type_series_uri, 'apis/getNuds?identifiers=', encode-for-uri($id-param)))//nuds:nuds">
 						<object xlink:href="{$type_series_uri}id/{nuds:control/nuds:recordId}">
@@ -51,16 +59,16 @@
 					</xsl:for-each>
 				</xsl:if>
 			</xsl:for-each>
-			
+
 			<!-- include individual REST calls for URIs not in a recognized, Numishare based id/ namespace -->
 			<xsl:for-each select="$type_list//type_series_item[not(@type_series)]">
 				<xsl:variable name="uri" select="."/>
-				
+
 				<xsl:call-template name="numishare:getNudsDocument">
 					<xsl:with-param name="uri" select="$uri"/>
-				</xsl:call-template>				
+				</xsl:call-template>
 			</xsl:for-each>
-			
+
 			<!-- get typeDesc -->
 			<xsl:for-each select="descendant::nuds:typeDesc[not(string(@xlink:href))]">
 				<object>
@@ -204,30 +212,16 @@
 				</xsl:when>
 				<xsl:when test="local-name() = 'findspotDesc'">
 					<xsl:choose>
-						<xsl:when test="contains($uri, 'nomisma.org')">
-							<xsl:choose>
-								<xsl:when test="string($rdf/*[@rdf:about = $uri]/skos:prefLabel)">
-									<xsl:value-of select="$rdf/*[@rdf:about = $uri]/skos:prefLabel"/>
-								</xsl:when>
-								<xsl:otherwise>
-									<xsl:value-of select="$uri"/>
-								</xsl:otherwise>
-							</xsl:choose>
+						<xsl:when test="contains($uri, 'nomisma.org') or contains($uri, 'coinhoards.org')">
+							<xsl:value-of select="$rdf/*[@rdf:about = $uri]/skos:prefLabel"/>
 						</xsl:when>
-						<xsl:when test="contains($uri, 'coinhoards.org')">
-							<xsl:choose>
-								<xsl:when test="string($rdf/*[@rdf:about = $uri]/skos:prefLabel)">
-									<xsl:value-of select="$rdf/*[@rdf:about = $uri]/skos:prefLabel"/>
-								</xsl:when>
-								<xsl:otherwise>
-									<xsl:value-of select="$uri"/>
-								</xsl:otherwise>
-							</xsl:choose>
-						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="$uri"/>
+						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:when>
-				<xsl:when test="local-name()='findspot'">
-					<xsl:value-of select="nuds:geogname[@xlink:role='findspot']"/>
+				<xsl:when test="local-name() = 'findspot'">
+					<xsl:value-of select="nuds:geogname[@xlink:role = 'findspot']"/>
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:value-of select="."/>
@@ -271,21 +265,9 @@
 			<styleUrl>
 				<xsl:value-of select="$styleUrl"/>
 			</styleUrl>
+
 			<xsl:choose>
-				<xsl:when test="contains($uri, 'geonames')">
-					<xsl:variable name="geonameId" select="tokenize($uri, '/')[4]"/>
-					<xsl:variable name="geonames_data" as="element()*">
-						<xsl:copy-of
-							select="document(concat($geonames-url, '/get?geonameId=', $geonameId, '&amp;username=', $geonames_api_key, '&amp;style=full'))/*"/>
-					</xsl:variable>
-					<xsl:variable name="coordinates" select="concat($geonames_data//lng, ',', $geonames_data//lat)"/>
-					<Point>
-						<coordinates>
-							<xsl:value-of select="$coordinates"/>
-						</coordinates>
-					</Point>
-				</xsl:when>
-				<xsl:when test="contains($uri, 'nomisma')">
+				<xsl:when test="$rdf//*[@rdf:about = $uri]">
 					<xsl:variable name="coordinates">
 						<xsl:choose>
 							<!-- when there is a geo:SpatialThing associated with the mint that contains a lat and long: -->
@@ -308,12 +290,38 @@
 							<!-- if the mint does not have coordinates, but does have skos:broader, exectue the region hierarchy API call to look for parent mint/region coordinates -->
 							<xsl:when test="$rdf//*[@rdf:about = $uri]/skos:broader">
 								<xsl:variable name="regions" as="node()*">
-									<xsl:copy-of select="document(concat('http://nomisma.org/apis/regionHierarchy?identifiers=', encode-for-uri(substring-after($uri, 'http://nomisma.org/id/'))))"/>
+									<xsl:copy-of
+										select="document(concat('http://nomisma.org/apis/regionHierarchy?identifiers=', encode-for-uri(substring-after($uri, 'http://nomisma.org/id/'))))"
+									/>
 								</xsl:variable>
-								
+
 								<xsl:if test="$regions//mint[1][@lat and @long]">
 									<xsl:value-of select="concat($regions//mint[1]/@long, ',', $regions//mint[1]/@lat)"/>
-								</xsl:if>									
+								</xsl:if>
+							</xsl:when>
+							<!-- Hoard RDF in the variable has an nmo:hasFindspot, regardless of IGCH/CHRR or few Nomisma hoard origin -->
+							<xsl:when test="$rdf//*[@rdf:about = $uri]/nmo:hasFindspot">
+
+								<!-- @rdf:resource comes within P89 if it's certain -->
+								<xsl:variable name="gazetteerURI"
+									select="$rdf//*[@rdf:about = $uri]/nmo:hasFindspot/descendant::crm:P89_falls_within[contains(@rdf:resource, 'geonames.org')]/@rdf:resource"/>
+
+								<xsl:if test="string($gazetteerURI)">
+									<xsl:variable name="spatialThingURI" select="$rdf//*[@rdf:about = $gazetteerURI]/crm:P168_place_is_defined_by/@rdf:resource"/>
+
+									<xsl:if test="$spatialThingURI">
+										<xsl:choose>
+											<!-- if there are a lat and long, then output an array of points -->
+											<xsl:when test="$rdf//*[@rdf:about = $spatialThingURI][geo:lat and geo:long]">
+												<xsl:value-of
+													select="concat($rdf//*[@rdf:about = $spatialThingURI]/geo:long, ',', $rdf//*[@rdf:about = $spatialThingURI]/geo:lat)"
+												/>
+											</xsl:when>
+											<!-- polygon later -->
+											<xsl:when test="$rdf//*[@rdf:about = $spatialThingURI][crmgeo:asWKT[contains(., 'POLYGON')]]"> </xsl:when>
+										</xsl:choose>
+									</xsl:if>
+								</xsl:if>
 							</xsl:when>
 						</xsl:choose>
 					</xsl:variable>
@@ -326,20 +334,22 @@
 						</Point>
 					</xsl:if>
 				</xsl:when>
-				<xsl:when test="contains($uri, 'coinhoards.org')">
-					<xsl:variable name="findspotUri" select="$rdf//*[@rdf:about = $uri]/nmo:hasFindspot/@rdf:resource"/>
-
-					<xsl:if test="string-length($findspotUri) &gt; 0">
-						<Point>
-							<coordinates>
-								<xsl:value-of select="concat($rdf//*[@rdf:about = $findspotUri]/geo:long, ',', $rdf//*[@rdf:about = $findspotUri]/geo:lat)"/>
-							</coordinates>
-						</Point>
-					</xsl:if>
+				<xsl:when test="contains($uri, 'geonames')">
+					<xsl:variable name="geonameId" select="tokenize($uri, '/')[4]"/>
+					<xsl:variable name="geonames_data" as="element()*">
+						<xsl:copy-of
+							select="document(concat($geonames-url, '/get?geonameId=', $geonameId, '&amp;username=', $geonames_api_key, '&amp;style=full'))/*"/>
+					</xsl:variable>
+					<xsl:variable name="coordinates" select="concat($geonames_data//lng, ',', $geonames_data//lat)"/>
+					<Point>
+						<coordinates>
+							<xsl:value-of select="$coordinates"/>
+						</coordinates>
+					</Point>
 				</xsl:when>
 				<xsl:when test="gml:location/gml:Point/gml:coordinates">
 					<xsl:variable name="coords" select="tokenize(gml:location/gml:Point/gml:coordinates, ',')"/>
-					
+
 					<Point>
 						<coordinates>
 							<xsl:value-of select="concat(normalize-space($coords[2]), ',', normalize-space($coords[1]))"/>

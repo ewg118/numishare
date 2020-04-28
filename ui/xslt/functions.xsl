@@ -1880,7 +1880,7 @@
 					<xsl:when test="$label = 'chronItem'">Event</xsl:when>
 					<xsl:when test="$label = 'chronList'">Chronological List</xsl:when>
 					<xsl:when test="$label = 'coinType'">Coin Type</xsl:when>
-					<xsl:when test="$label = 'closing_date'">Closing Date</xsl:when>
+					<xsl:when test="$label = 'closing_date' or $label = 'closingDate'">Closing Date</xsl:when>
 					<xsl:when test="$label = 'conservationState'">Conservation State</xsl:when>
 					<xsl:when test="$label = 'provenance'">Provenance</xsl:when>
 					<xsl:when test="$label = 'dateOnObject'">Date on Object</xsl:when>
