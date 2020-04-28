@@ -8,8 +8,8 @@
 	xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:res="http://www.w3.org/2005/sparql-results#" xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns:mets="http://www.loc.gov/METS/" xmlns:numishare="https://github.com/ewg118/numishare" xmlns:nm="http://nomisma.org/id/"
 	xmlns:gml="http://www.opengis.net/gml" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:nmo="http://nomisma.org/ontology#"
-	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nuds="http://nomisma.org/nuds"
-	exclude-result-prefixes="#all" version="2.0">
+	xmlns:crm="http://www.cidoc-crm.org/cidoc-crm/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+	xmlns:nuds="http://nomisma.org/nuds" exclude-result-prefixes="#all" version="2.0">
 	<xsl:include href="../../templates.xsl"/>
 	<xsl:include href="../../functions.xsl"/>
 	<xsl:include href="../../vis-templates.xsl"/>
@@ -179,6 +179,10 @@
 
 			<xsl:variable name="rdf_url" select="concat('http://nomisma.org/apis/getRdf?identifiers=', encode-for-uri($id-param))"/>
 			<xsl:copy-of select="document($rdf_url)/rdf:RDF/*"/>
+
+			<xsl:if test="descendant::nuds:findspotDesc[contains(@xlink:href, 'coinhoards.org')]">
+				<xsl:copy-of select="document(concat(descendant::nuds:findspotDesc/@xlink:href, '.rdf'))/rdf:RDF/*"/>
+			</xsl:if>
 		</rdf:RDF>
 	</xsl:variable>
 
@@ -954,17 +958,9 @@
 				<xsl:when test="string(@xlink:href)">
 					<xsl:choose>
 						<xsl:when test="contains(@xlink:href, 'nomisma.org') or contains(@xlink:href, 'coinhoards.org')">
-							<xsl:variable name="label">
-								<xsl:choose>
-									<xsl:when test="doc-available(concat(@xlink:href, '.rdf'))">
-										<xsl:value-of select="document(concat(@xlink:href, '.rdf'))//skos:prefLabel[@xml:lang = 'en']"/>
-									</xsl:when>
-									<xsl:otherwise>
-										<xsl:value-of select="@xlink:href"/>
-									</xsl:otherwise>
-								</xsl:choose>
-							</xsl:variable>
-
+							<xsl:variable name="uri" select="@xlink:href"/>							
+							<xsl:variable name="label" select="$rdf//*[@rdf:about = $uri]/skos:prefLabel[@xml:lang = 'en']"/>
+							
 							<ul>
 								<li>
 									<b><xsl:value-of select="numishare:regularize_node('hoard', $lang)"/>: </b>
@@ -1080,13 +1076,13 @@
 			</ul>
 		</li>
 	</xsl:template>
-	
+
 	<xsl:template match="nuds:chronItem">
 		<li>
 			<xsl:apply-templates/>
 		</li>
 	</xsl:template>
-	
+
 	<xsl:template match="nuds:date">
 		<xsl:choose>
 			<xsl:when test="parent::nuds:chronItem">

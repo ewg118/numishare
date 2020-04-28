@@ -791,9 +791,6 @@
 	</xsl:template>
 
 	<xsl:template match="nh:geogname" mode="place">
-
-
-
 		<!-- default to using internal coordinates first -->
 		<xsl:choose>
 			<xsl:when test="parent::nh:fallsWithin/gml:location">
@@ -980,7 +977,7 @@
 	</xsl:template>
 
 	<xsl:template match="nh:date | nh:fromDate | nh:toDate">
-		<xsl:element name="{if (self::nh:fromDate) then 'hasStartDate' else if (self::nh:toDate) then 'hasEndDate' else 'hasDate'}"
+		<xsl:element name="nmo:{if (self::nh:fromDate) then 'hasStartDate' else if (self::nh:toDate) then 'hasEndDate' else 'hasDate'}"
 			namespace="http://nomisma.org/ontology#">
 			<xsl:attribute name="rdf:datatype">
 				<xsl:choose>
