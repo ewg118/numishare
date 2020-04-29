@@ -955,10 +955,14 @@
 					<div
 						class="col-md-{if ($results/res:result[res:binding[@name='source']/res:uri = $uri][1]/res:binding[@name='thumbnail']/res:uri) then '8' else '12'}">
 						<dl class="dl-horizontal">
-							<dt>Sections</dt>
-							<dd>
-								<xsl:apply-templates select="$results/res:result[res:binding[@name = 'source']/res:uri = $uri]" mode="annotations"/>
-							</dd>
+							
+							<!-- only display sections if there are targets (annotations). this is suppressed if the URI is a dcterms:subject, rather than annotation -->
+							<xsl:if test="$results/res:result[res:binding[@name = 'source']/res:uri = $uri]/res:binding[@name='target']">
+								<dt>Sections</dt>
+								<dd>
+									<xsl:apply-templates select="$results/res:result[res:binding[@name = 'source']/res:uri = $uri]" mode="annotations"/>
+								</dd>
+							</xsl:if>							
 							<dt>Creator</dt>
 							<dd>
 								<xsl:choose>

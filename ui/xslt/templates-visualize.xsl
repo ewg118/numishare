@@ -21,9 +21,11 @@
 				<xsl:otherwise>bar,column,area,line,spline,areaspline</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
+		
 		<xsl:if test="string($sparqlQuery)">
 			<xsl:call-template name="measurementTable"/>
 		</xsl:if>
+
 		<form id="measurementsForm" action="{$action}" style="margin:40px" method="get">
 			<div class="row">
 				<h3>1. <xsl:value-of select="numishare:normalizeLabel('visualize_select_measurement', $lang)"/></h3>
@@ -426,6 +428,7 @@
 		<!-- display year range, if applicable -->
 		<xsl:value-of select="string-join($dates, '-')"/>
 	</xsl:template>
+	
 	<!-- ************** GENERATE TABLE FROM PIPELINES THAT EXECUTE SPARQL QUERIES ************** -->
 	<xsl:template name="measurementTable">
 		<xsl:variable name="iterations" select="ceiling(number($duration) div number($interval))"/>
@@ -505,6 +508,7 @@
 		<!--<xsl:value-of select="concat($request-uri, 'sparql?constraints=', encode-for-uri(concat('dcterms:source &lt;', $type_series, '&gt; AND ', )),
 			'&amp;template=avgMeasurement&amp;measurement=', $measurement)"/>-->
 	</xsl:template>
+	
 	<xsl:template name="processInterval">
 		<xsl:param name="start"/>
 		<xsl:param name="iterations"/>

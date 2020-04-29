@@ -9,7 +9,9 @@
 	xmlns:res="http://www.w3.org/2005/sparql-results#" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:nmo="http://nomisma.org/ontology#"
 	xmlns:numishare="https://github.com/ewg118/numishare" exclude-result-prefixes="#all" version="2.0">
 	<xsl:include href="../../functions.xsl"/>
-
+	
+	<xsl:output name="html" encoding="UTF-8" method="html" indent="no" omit-xml-declaration="yes"/>
+	
 	<xsl:variable name="id" select="descendant::*:recordId"/>
 	<xsl:variable name="lang" select="doc('input:request')/request/parameters/parameter[name = 'lang']/value"/>
 	<xsl:variable name="request-uri"
@@ -215,7 +217,24 @@
 				<xsl:value-of select="res:binding[@name='hoardLabel']/res:literal"/>
 			</name>
 			<description>
+				<xsl:variable name="desc" as="element()*">
+					<ul>
+						<li>
+							<b>URL: </b>
+							<a href="{res:binding[@name='hoard']/res:uri}">
+								<xsl:value-of select="res:binding[@name = 'hoardLabel']/res:literal"/>
+							</a>
+						</li>
+						<li>
+							<b>Findspot: </b>
+							<a href="{res:binding[@name='place']/res:uri}">
+								<xsl:value-of select="res:binding[@name = 'label']/res:literal"/>
+							</a>
+						</li>
+					</ul>
+				</xsl:variable>
 				
+				<xsl:value-of select="saxon:serialize($desc, 'html')"/>
 			</description>
 			<styleUrl>#hoard</styleUrl>
 			<Point>

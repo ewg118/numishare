@@ -1,0 +1,16 @@
+PREFIX rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX dcterms:  <http://purl.org/dc/terms/>
+PREFIX foaf:  <http://xmlns.com/foaf/0.1/>
+PREFIX oa:	<http://www.w3.org/ns/oa#>
+SELECT ?target ?title ?bookTitle ?source ?abstract ?creator ?name ?thumbnail ?abstract WHERE {
+{?s oa:hasBody <URI> ;
+   oa:hasTarget ?target . 
+  ?target dcterms:source ?source ;
+          dcterms:title ?title }
+UNION {?source dcterms:subject <URI>}
+  ?source dcterms:title ?bookTitle ;
+  	dcterms:creator ?creator .
+  OPTIONAL {?source foaf:thumbnail ?thumbnail}
+  OPTIONAL {?source dcterms:abstract ?abstract}
+  OPTIONAL {?creator foaf:name ?name}
+}
