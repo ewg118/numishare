@@ -132,21 +132,7 @@
 		</rdf:RDF>
 	</xsl:variable>
 
-	<!-- Oct 29, 2018: commenting out the indexing of findspots via SPARQL; it is no longer scalable for indexing. Prepare to transition maps page to SPARQL-derived GeoJSON-->
-	<!-- get block of images from SPARQL endpoint -->
-	<!--<xsl:variable name="sparqlResult" as="element()*">
-		<xsl:if test="string($sparql_endpoint) and //nuds:nuds/@recordType = 'conceptual'">
-			<response xmlns="http://www.w3.org/2005/sparql-results#">
-				<xsl:for-each select="descendant::nuds:recordId">
-					<group>
-						<xsl:attribute name="id" select="."/>
-						<xsl:variable name="uri" select="concat(//config/uri_space, .)"/>
-						<xsl:copy-of select="document(concat($request-uri, '/sparql?uri=', $uri, '&amp;template=solr'))//res:result"/>
-					</group>
-				</xsl:for-each>
-			</response>
-		</xsl:if>
-	</xsl:variable>-->
+	<!-- Oct 29, 2018: commenting out the indexing of findspots via SPARQL; it is no longer scalable for indexing. Prepare to transition maps page to SPARQL-derived GeoJSON-->	
 
 	<!-- accumulate unique geonames IDs -->
 	<xsl:variable name="geonames" as="element()*">
