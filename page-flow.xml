@@ -194,10 +194,6 @@
 	<page path="/numishare/[^\/]+/results_ajax" model="xpl/models/solr/results_ajax.xpl" view="xpl/views/ajax/results_ajax.xpl"/>
 	<page path="/numishare/[^\/]+/ajax/getSparqlFacets" model="xpl/models/sparql/getSparqlFacets.xpl" view="xpl/views/serializations/sparql/getSparqlFacets.xpl"/>
 	
-	
-	<!-- **** SPARQL WIDGET **** -->
-	<page path="/numishare/[^\/]+/sparql" model="xpl/models/sparql/widget.xpl" view="xpl/views/serializations/sparql/widget.xpl"/>	
-	
 	<!-- **** ROOT **** -->
 	<page path="/numishare/" view="xpl/root.xpl" id="index"/>
 	

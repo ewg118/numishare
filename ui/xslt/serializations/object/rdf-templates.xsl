@@ -761,7 +761,16 @@
 						<crm:P7_took_place_at>
 							<crm:E53_Place>
 								<xsl:apply-templates select="nh:description"/>
-								<xsl:apply-templates select="nh:fallsWithin[nh:geogname[@xlink:role = 'findspot'][@xlink:href]]"/>
+								<xsl:choose>
+									<xsl:when test="nh:fallsWithin[nh:geogname[@xlink:role = 'findspot'][@xlink:href]]">
+										<xsl:apply-templates select="nh:fallsWithin[nh:geogname[@xlink:role = 'findspot'][@xlink:href]]"/>
+									</xsl:when>
+									<xsl:when test="nh:geogname[@xlink:role='findspot'][not(@xlink:href)]">
+										<rdfs:label>
+											<xsl:value-of select="nh:geogname[@xlink:role='findspot'][not(@xlink:href)]"/>
+										</rdfs:label>
+									</xsl:when>
+								</xsl:choose>								
 							</crm:E53_Place>
 						</crm:P7_took_place_at>
 					</nmo:Find>

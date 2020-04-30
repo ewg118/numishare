@@ -77,7 +77,7 @@
 			</field>
 
 			<!-- closing date, derive from deposit first -->
-			<xsl:if test="not(descendant::nh:deposit[nh:date or nh:dateRange])">
+			<xsl:if test="not(descendant::nh:deposit[nh:date or nh:dateRange]) and not(descendant::nh:closingDate[nh:date or nh:dateRange])">
 				<xsl:if test="$hasContents = true()">
 
 					<!-- derive dates from contents if the nh:deposit is not set -->
@@ -231,7 +231,7 @@
 			<xsl:with-param name="lang" select="$lang"/>
 		</xsl:apply-templates>
 
-		<xsl:apply-templates select="nh:deposit[nh:date or nh:dateRange] | nh:discovery[nh:date or nh:dateRange]"/>
+		<xsl:apply-templates select="nh:deposit[nh:date or nh:dateRange] | nh:discovery[nh:date or nh:dateRange] | nh:closingDate[nh:date or nh:dateRange]"/>
 	</xsl:template>
 
 	<xsl:template match="nh:findspot">
@@ -276,8 +276,8 @@
 		</xsl:if>
 	</xsl:template>
 
-	<xsl:template match="nh:deposit | nh:discovery">
-		<xsl:variable name="type" select="local-name()"/>
+	<xsl:template match="nh:deposit | nh:discovery | nh:closingDate">
+		<xsl:variable name="type" select="if (local-name() = 'closingDate') then 'closing_date' else local-name()"/>
 
 		<field name="{$type}_display">
 			<xsl:choose>
@@ -296,7 +296,7 @@
 			<xsl:when test="nh:date">
 				<xsl:choose>
 					<xsl:when test="nh:date/@notAfter">
-						<xsl:if test="self::nh:deposit">
+						<xsl:if test="self::nh:deposit or self::nh:closingDate">
 							<field name="taq_num">
 								<xsl:value-of select="number(nh:date/@notAfter)"/>
 							</field>
@@ -306,7 +306,7 @@
 						</field>
 					</xsl:when>
 					<xsl:when test="nh:date/@standardDate">
-						<xsl:if test="self::nh:deposit">
+						<xsl:if test="self::nh:deposit or self::nh:closingDate">
 							<field name="taq_num">
 								<xsl:value-of select="number(nh:date/@standardDate)"/>
 							</field>
@@ -321,7 +321,7 @@
 				</xsl:choose>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:if test="self::nh:deposit">
+				<xsl:if test="self::nh:deposit or self::nh:closingDate">
 					<field name="taq_num">
 						<xsl:value-of select="number(nh:dateRange/nh:toDate/@standardDate)"/>
 					</field>

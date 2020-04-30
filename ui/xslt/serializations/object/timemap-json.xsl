@@ -292,11 +292,17 @@
 				</xsl:when>
 				<xsl:when test="$type = 'findspot'">
 					<xsl:choose>
-						<xsl:when test="ancestor::nh:findspot/nh:deposit/nh:date/@standardDate">
-							<xsl:value-of select="number(ancestor::nh:findspot/nh:deposit/nh:date/@standardDate)"/>
+						<xsl:when test="ancestor::nh:hoardDesc/nh:closingDate/nh:date/@standardDate">
+							<xsl:value-of select="number(ancestor::nh:hoardDesc/nh:closingDate/nh:date/@standardDate)"/>
 						</xsl:when>
-						<xsl:when test="ancestor::nh:findspot/nh:deposit/nh:dateRange/nh:fromDate/@standardDate">
-							<xsl:value-of select="number(ancestor::nh:findspot/nh:deposit/nh:dateRange/nh:fromDate/@standardDate)"/>
+						<xsl:when test="ancestor::nh:hoardDesc/nh:deposit/nh:date/@standardDate">
+							<xsl:value-of select="number(ancestor::nh:hoardDesc/nh:deposit/nh:date/@standardDate)"/>
+						</xsl:when>
+						<xsl:when test="ancestor::nh:hoardDesc/nh:closingDate/nh:dateRange/nh:fromDate/@standardDate">
+							<xsl:value-of select="number(ancestor::nh:hoardDesc/nh:closingDate/nh:dateRange/nh:fromDate/@standardDate)"/>
+						</xsl:when>
+						<xsl:when test="ancestor::nh:hoardDesc/nh:deposit/nh:dateRange/nh:fromDate/@standardDate">
+							<xsl:value-of select="number(ancestor::nh:hoardDesc/nh:deposit/nh:dateRange/nh:fromDate/@standardDate)"/>
 						</xsl:when>
 					</xsl:choose>
 				</xsl:when>
@@ -318,11 +324,17 @@
 				</xsl:when>
 				<xsl:when test="$type = 'findspot'">
 					<xsl:choose>
-						<xsl:when test="ancestor::nh:findspot/nh:deposit/nh:date/@standardDate">
-							<xsl:value-of select="number(ancestor::nh:findspot/nh:deposit/nh:date/@standardDate)"/>
+						<xsl:when test="ancestor::nh:hoardDesc/nh:closingDate/nh:date/@standardDate">
+							<xsl:value-of select="number(ancestor::nh:hoardDesc/nh:closingDate/nh:date/@standardDate)"/>
 						</xsl:when>
-						<xsl:when test="number(ancestor::nh:findspot/nh:deposit/nh:dateRange/nh:toDate/@standardDate)">
-							<xsl:value-of select="number(ancestor::nh:findspot/nh:deposit/nh:dateRange/nh:toDate/@standardDate)"/>
+						<xsl:when test="ancestor::nh:hoardDesc/nh:deposit/nh:date/@standardDate">
+							<xsl:value-of select="number(ancestor::nh:hoardDesc/nh:deposit/nh:date/@standardDate)"/>
+						</xsl:when>
+						<xsl:when test="number(ancestor::nh:hoardDesc/nh:closingDate/nh:dateRange/nh:toDate/@standardDate)">
+							<xsl:value-of select="number(ancestor::nh:hoardDesc/nh:deposit/nh:dateRange/nh:toDate/@standardDate)"/>
+						</xsl:when>
+						<xsl:when test="number(ancestor::nh:hoardDesc/nh:deposit/nh:dateRange/nh:toDate/@standardDate)">
+							<xsl:value-of select="number(ancestor::nh:hoardDesc/nh:closingDate/nh:dateRange/nh:toDate/@standardDate)"/>
 						</xsl:when>
 					</xsl:choose>
 				</xsl:when>

@@ -195,7 +195,7 @@
 		<xsl:choose>
 			<xsl:when test="descendant::nh:findspot/gml:location">true</xsl:when>
 			<xsl:when test="descendant::nh:findspot/nh:fallsWithin/gml:location">true</xsl:when>
-			<xsl:when test="descendant::nuds:geogname[@xlink:role = 'findspot'][@xlink:href]">true</xsl:when>
+			<xsl:when test="descendant::nh:geogname[@xlink:role = 'findspot'][@xlink:href]">true</xsl:when>
 			<xsl:otherwise>false</xsl:otherwise>
 		</xsl:choose>
 	</xsl:variable>
@@ -474,6 +474,9 @@
 				<xsl:when test="nh:deposit[nh:date or nh:dateRange]">
 					<xsl:apply-templates select="nh:deposit"/>
 				</xsl:when>
+				<xsl:when test="nh:closingDate[nh:date or nh:dateRange]">
+					<xsl:apply-templates select="nh:closingDate"/>
+				</xsl:when>
 				<xsl:otherwise>
 					<xsl:if test="$hasContents = true()">
 						<xsl:variable name="all-dates" as="element()*">
@@ -612,7 +615,7 @@
 		</xsl:if>
 	</xsl:template>
 
-	<xsl:template match="nh:deposit | nh:discovery">
+	<xsl:template match="nh:deposit | nh:discovery | nh:closingDate">
 		<li>
 			<b><xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>: </b>
 
