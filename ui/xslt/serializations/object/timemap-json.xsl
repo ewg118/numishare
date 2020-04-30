@@ -405,6 +405,9 @@
 					</lat>
 				</_object>
 			</point>
+			<start datatype="xs:string">
+				<xsl:value-of select="number(res:binding[@name = 'closingDate']/res:literal)"/>
+			</start>
 			<end datatype="xs:string">
 				<xsl:value-of select="number(res:binding[@name = 'closingDate']/res:literal)"/>
 			</end>
