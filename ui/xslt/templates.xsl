@@ -18,7 +18,7 @@
 						<xsl:choose>
 							<xsl:when test="string-length(//config/logo) &gt; 0">
 								<xsl:choose>
-									<xsl:when test="contains(//config/logo, 'http://')">
+									<xsl:when test="matches(//config/logo, 'https?://')">
 										<img src="{//config/logo}"/>
 									</xsl:when>
 									<xsl:otherwise>
@@ -59,7 +59,7 @@
 			</div>
 		</div>
 	</xsl:template>
-
+	
 	<xsl:template name="menubar">
 		<xsl:choose>
 			<xsl:when test="$lang = 'ar'">
@@ -72,18 +72,18 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
-
+	
 	<xsl:template match="tab" mode="nav">
 		<xsl:choose>
 			<xsl:when test="@id = 'analyze' or @id = 'compare' or @id = 'apis' or @id = 'identify' or @id = 'symbols'">
 				<xsl:variable name="id" select="@id"/>
 				<xsl:variable name="href"
 					select="
-						concat($display_path, @href, if (string($langParam)) then
-							concat('?lang=', $langParam)
-						else
-							'')"/>
-
+					concat($display_path, @href, if (string($langParam)) then
+					concat('?lang=', $langParam)
+					else
+					'')"/>
+				
 				<!-- only display tabs if the page has been activated in the config -->
 				<xsl:if test="//config/pages/*[name() = $id]/@enabled = true()">
 					<li>
@@ -102,7 +102,7 @@
 			</xsl:when>
 			<xsl:when test="@id = 'visualize'">
 				<xsl:variable name="id" select="@id"/>
-
+				
 				<xsl:if test="//config/pages/*[name() = $id]/@enabled = true()">
 					<!-- conditional for drop-down versus single link -->
 					<xsl:choose>
@@ -131,10 +131,10 @@
 						<xsl:otherwise>
 							<xsl:variable name="href"
 								select="
-									concat($display_path, @href, if (string($langParam)) then
-										concat('?lang=', $langParam)
-									else
-										'')"/>
+								concat($display_path, @href, if (string($langParam)) then
+								concat('?lang=', $langParam)
+								else
+								'')"/>
 							<li>
 								<a href="{$href}">
 									<xsl:choose>
@@ -155,18 +155,18 @@
 				<xsl:if test="//config/collection_type = 'cointype' and string(//config/sparql_endpoint)">
 					<xsl:variable name="href"
 						select="
-							concat($display_path, @href, if (string($langParam)) then
-								concat('?lang=', $langParam)
-							else
-								'')"/>
+						concat($display_path, @href, if (string($langParam)) then
+						concat('?lang=', $langParam)
+						else
+						'')"/>
 					<li>
 						<a href="{$href}">
 							<xsl:value-of
 								select="
-									if (@label) then
-										@label
-									else
-										numishare:normalizeLabel(concat('header_', @id), $lang)"
+								if (@label) then
+								@label
+								else
+								numishare:normalizeLabel(concat('header_', @id), $lang)"
 							/>
 						</a>
 					</li>
@@ -185,15 +185,15 @@
 						<xsl:otherwise>
 							<xsl:value-of
 								select="
-									concat($display_path, @href, if (string($langParam)) then
-										concat('?lang=', $langParam)
-									else
-										'')"
+								concat($display_path, @href, if (string($langParam)) then
+								concat('?lang=', $langParam)
+								else
+								'')"
 							/>
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:variable>
-
+				
 				<li>
 					<xsl:if test="child::tab">
 						<xsl:attribute name="class">dropdown</xsl:attribute>
@@ -205,10 +205,10 @@
 						</xsl:if>
 						<xsl:value-of
 							select="
-								if (@label) then
-									@label
-								else
-									numishare:normalizeLabel(concat('header_', @id), $lang)"/>
+							if (@label) then
+							@label
+							else
+							numishare:normalizeLabel(concat('header_', @id), $lang)"/>
 						<xsl:if test="child::tab">
 							<b class="caret"/>
 						</xsl:if>
@@ -222,11 +222,11 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
-
+	
 	<xsl:template name="pages">
 		<xsl:for-each select="//config/pages/page[@public = '1']">
 			<xsl:variable name="stub" select="@stub"/>
-
+			
 			<li>
 				<a href="{$display_path}pages/{@stub}{if (string($langParam)) then concat('?lang=', $langParam) else ''}">
 					<xsl:choose>
@@ -252,11 +252,11 @@
 			</li>
 		</xsl:for-each>
 	</xsl:template>
-
+	
 	<xsl:template name="languages">
-		<xsl:variable name="page" select="substring-after(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/')"/>
+		<xsl:variable name="collection-name" select="substring-after(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/')"/>
 		<xsl:variable name="query" select="doc('input:request')/request/parameters/parameter[name = 'q']/value"/>
-
+		
 		<xsl:if test="count(//config/descendant::language[@enabled = 'true']) &gt; 1">
 			<li class="dropdown">
 				<a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -268,13 +268,13 @@
 						<xsl:sort select="@code"/>
 						<li>
 							<xsl:choose>
-								<xsl:when test="string-length($page) = 0">
+								<xsl:when test="string-length($collection-name) = 0">
 									<a href="{//config/url}?lang={@code}">
 										<xsl:value-of select="numishare:normalizeLabel(concat('lang_', @code), $lang)"/>
 									</a>
 								</xsl:when>
 								<xsl:otherwise>
-									<a href="{$display_path}{$page}?lang={@code}{if (string-length($query) &gt; 0) then concat('&amp;q=', $query) else ''}">
+									<a href="{$display_path}{$collection-name}?lang={@code}{if (string-length($query) &gt; 0) then concat('&amp;q=', $query) else ''}">
 										<xsl:value-of select="numishare:normalizeLabel(concat('lang_', @code), $lang)"/>
 									</a>
 								</xsl:otherwise>
@@ -285,26 +285,7 @@
 			</li>
 		</xsl:if>
 	</xsl:template>
-
-	<!-- general purpose template for rendering descriptions based on available languages -->
-	<xsl:template name="display-description">
-		<xsl:choose>
-			<xsl:when test="*:description[@xml:lang = $lang]">
-				<xsl:value-of select="*:description[@xml:lang = $lang]"/>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:choose>
-					<xsl:when test="*:description[@xml:lang = 'en']">
-						<xsl:value-of select="*:description[@xml:lang = 'en']"/>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:value-of select="*:description[1]"/>
-					</xsl:otherwise>
-				</xsl:choose>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>
-
+	
 	<xsl:template name="footer">
 		<div id="footer" class="container-fluid">
 			<xsl:copy-of select="//config/footer/*"/>
