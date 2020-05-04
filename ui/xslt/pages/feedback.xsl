@@ -74,7 +74,9 @@
 					<h1>
 						<xsl:value-of select="numishare:normalizeLabel('header_feedback', $lang)"/>
 					</h1>
-					<iframe src="feedback-form" id="feedback-frame"/>
+					<xsl:if test="string(pages/feedback/iframe-url)">
+						<iframe src="{pages/feedback/iframe-url}" id="feedback-frame"/>
+					</xsl:if>					
 				</div>
 			</div>
 		</div>
