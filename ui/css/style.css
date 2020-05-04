@@ -47,6 +47,11 @@ ul li{
 	width:50%;
 	margin:20px auto;
 }
+#feedback-frame{
+    width: 100%;
+    border: none;
+    height: 600px;
+}
 /*
   ***************************************
   BOOTSTRAP NAVBAR
