@@ -218,7 +218,7 @@
 															select="tokenize(substring-after(substring-before($rdf//*[@rdf:about = $spatialThingURI]/crmgeo:asWKT, ')'), '('), ',')"/>
 
 														<xsl:for-each select="$corners">
-															<xsl:variable name="points" select="tokenize(normalize-space($corners), ' ')"/>
+															<xsl:variable name="points" select="tokenize(normalize-space(.), ' ')"/>
 
 															<_array>
 																<xsl:for-each select="$points">
