@@ -9,7 +9,7 @@ PREFIX void:	<http://rdfs.org/ns/void#>
 PREFIX geo:	<http://www.w3.org/2003/01/geo/wgs84_pos#>
 PREFIX edm: <http://www.europeana.eu/schemas/edm/>
 
-SELECT DISTINCT ?object ?title ?identifier ?collection ?publisher ?dataset ?datasetTitle ?obvThumb ?revThumb ?obvRef ?revRef ?comThumb ?comRef ?obvManifest ?revManifest ?comManifest (GROUP_CONCAT(DISTINCT ?type ; separator='|') AS ?types) (GROUP_CONCAT(DISTINCT ?typeTitle ; separator='|') AS ?typeTitles) WHERE {
+SELECT DISTINCT ?object ?title ?identifier ?collection ?publisher ?dataset ?datasetTitle ?obvThumb ?revThumb ?obvRef ?revRef ?comThumb ?comRef ?obvManifest ?revManifest ?comManifest (GROUP_CONCAT(DISTINCT ?type ; separator='|') AS ?types) (GROUP_CONCAT(DISTINCT ?typeTitle ; separator='|') AS ?typeTitles) (GROUP_CONCAT(DISTINCT ?mint ; separator='|') AS ?mints) (GROUP_CONCAT(DISTINCT ?denomination ; separator='|') AS ?denominations) (GROUP_CONCAT(DISTINCT ?authority ; separator='|') AS ?authorities) WHERE {
 { ?object a nmo:NumismaticObject ;
  dcterms:isPartOf <hoardURI>}
 UNION { <http://coinhoards.org/id/igch1764> skos:exactMatch ?match .
@@ -19,7 +19,11 @@ UNION { <http://coinhoards.org/id/igch1764> skos:exactMatch ?match .
 OPTIONAL { ?object dcterms:identifier ?identifier}
 OPTIONAL { ?object nmo:hasCollection/skos:prefLabel ?collection FILTER(langMatches(lang(?collection), "en"))}
 OPTIONAL { ?object nmo:hasTypeSeriesItem ?type .
-?type skos:prefLabel ?typeTitle FILTER(langMatches(lang(?typeTitle), "en")) }
+?type skos:prefLabel ?typeTitle FILTER(langMatches(lang(?typeTitle), "en")) 
+    OPTIONAL {?type nmo:hasDenomination/skos:prefLabel ?denomination FILTER(langMatches(lang(?denomination), "en"))}
+    OPTIONAL {?type nmo:hasMint/skos:prefLabel ?mint FILTER(langMatches(lang(?mint), "en"))}
+    OPTIONAL {?type nmo:hasAuthority/skos:prefLabel ?authority FILTER(langMatches(lang(?authority), "en"))}
+}
 ?object void:inDataset ?dataset .
 ?dataset dcterms:publisher ?publisher FILTER (lang(?publisher) = "" || langMatches(lang(?publisher), "en")) .
 ?dataset dcterms:title ?datasetTitle FILTER (lang(?datasetTitle) = "" || langMatches(lang(?datasetTitle), "en")) .
@@ -34,4 +38,4 @@ OPTIONAL { ?object nmo:hasReverse/foaf:thumbnail ?revThumb }
 OPTIONAL { ?object nmo:hasReverse ?reverse .
 ?reverse foaf:depiction ?revRef 
 	OPTIONAL { ?revRef dcterms:isReferencedBy ?revManifest }}
-} GROUP BY ?object ?title ?identifier ?collection ?publisher ?dataset ?datasetTitle ?obvThumb ?revThumb ?obvRef ?revRef ?comThumb ?comRef ?obvManifest ?revManifest ?comManifest ?types ?typeTitles ORDER BY ASC(?publisher) ASC(?collection)
+} GROUP BY ?object ?title ?identifier ?collection ?publisher ?dataset ?datasetTitle ?obvThumb ?revThumb ?obvRef ?revRef ?comThumb ?comRef ?obvManifest ?revManifest ?comManifest ?types ?typeTitles ?mints ?denominations ?authorities ORDER BY ASC(?publisher) ASC(?collection)

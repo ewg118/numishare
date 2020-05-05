@@ -92,31 +92,7 @@
                     </xsl:otherwise>
                 </xsl:choose>
                 
-                <xsl:if test="string(res:binding[@name='types']/res:literal)">
-                    <xsl:variable name="typeURIs" select="tokenize(res:binding[@name='types']/res:literal, '\|')"/>
-                    <xsl:variable name="typeTitles" select="tokenize(res:binding[@name='typeTitles']/res:literal, '\|')"/>
-                    
-                    <dt>
-                        <xsl:value-of select="numishare:regularize_node('coinType', $lang)"/>
-                    </dt>
-                    <dd>
-                        <xsl:for-each select="$typeURIs">
-                            <xsl:variable name="position" select="position()"/>
-                            
-                            <a href="{.}" title="{$typeTitles[$position]}">
-                                <xsl:value-of select="$typeTitles[$position]"/>
-                            </a>
-                            
-                            
-                            <xsl:if test="not(position() = last())">
-                                <xsl:text>, </xsl:text>
-                            </xsl:if>
-                        </xsl:for-each>
-                    </dd>
-                    
-                    
-                </xsl:if>
-
+                <!-- typological attributes for coins connected to types -->
                 <xsl:if test="string(res:binding[@name = 'axis']/res:literal)">
                     <dt>
                         <xsl:value-of select="numishare:regularize_node('axis', $lang)"/>
@@ -173,131 +149,75 @@
                             identifier="{res:binding[@name='object']/res:uri}">Click to view</a>
                     </dd>
                 </xsl:if>
+                
+                <!-- typological attributes for coins connected to hoards -->
+                <xsl:if test="string(res:binding[@name = 'types']/res:literal)">
+                    <xsl:variable name="typeURIs" select="tokenize(res:binding[@name = 'types']/res:literal, '\|')"/>
+                    <xsl:variable name="typeTitles" select="tokenize(res:binding[@name = 'typeTitles']/res:literal, '\|')"/>
+                    
+                    <dt>
+                        <xsl:value-of select="numishare:regularize_node('coinType', $lang)"/>
+                    </dt>
+                    <dd>
+                        <xsl:for-each select="$typeURIs">
+                            <xsl:variable name="position" select="position()"/>
+                            
+                            <a href="{.}" title="{$typeTitles[$position]}">
+                                <xsl:value-of select="$typeTitles[$position]"/>
+                            </a>
+                            
+                            
+                            <xsl:if test="not(position() = last())">
+                                <xsl:text>, </xsl:text>
+                            </xsl:if>
+                        </xsl:for-each>
+                    </dd>
+                </xsl:if>
+                
+                <xsl:if test="string(res:binding[@name = 'authorities']/res:literal)">
+                    <dt>
+                        <xsl:value-of select="numishare:regularize_node('authority', $lang)"/>
+                    </dt>
+                    <dd>
+                        <xsl:for-each select="tokenize(res:binding[@name = 'authorities']/res:literal, '\|')">
+                            <xsl:value-of select="."/>
+                            <xsl:if test="not(position() = last())">
+                                <xsl:text>, </xsl:text>
+                            </xsl:if>
+                        </xsl:for-each>
+                    </dd>                    
+                </xsl:if>
+                <xsl:if test="string(res:binding[@name = 'mints']/res:literal)">
+                    <dt>
+                        <xsl:value-of select="numishare:regularize_node('mint', $lang)"/>
+                    </dt>
+                    <dd>
+                        <xsl:for-each select="tokenize(res:binding[@name = 'mints']/res:literal, '\|')">
+                            <xsl:value-of select="."/>
+                            <xsl:if test="not(position() = last())">
+                                <xsl:text>, </xsl:text>
+                            </xsl:if>
+                        </xsl:for-each>
+                    </dd>                    
+                </xsl:if>
+                <xsl:if test="string(res:binding[@name = 'denominations']/res:literal)">
+                    <dt>
+                        <xsl:value-of select="numishare:regularize_node('denomination', $lang)"/>
+                    </dt>
+                    <dd>
+                        <xsl:for-each select="tokenize(res:binding[@name = 'denominations']/res:literal, '\|')">
+                            <xsl:value-of select="."/>
+                            <xsl:if test="not(position() = last())">
+                                <xsl:text>, </xsl:text>
+                            </xsl:if>
+                        </xsl:for-each>
+                    </dd>                    
+                </xsl:if>
             </dl>
 
-            <div class="gi_c">
-                <xsl:if test="res:binding[contains(@name, 'Manifest')]">
-                    <span class="glyphicon glyphicon-zoom-in iiif-zoom-glyph" title="Click image(s) to zoom" style="display:none"/>
-                </xsl:if>
-
-                <xsl:choose>
-                    <xsl:when test="string(res:binding[@name = 'obvRef']/res:uri) and string(res:binding[@name = 'obvThumb']/res:uri)">
-                        <a title="Obverse of {$title}" id="{res:binding[@name='object']/res:uri}">
-                            <xsl:choose>
-                                <xsl:when test="res:binding[@name = 'obvManifest']">
-                                    <xsl:attribute name="href">#iiif-window</xsl:attribute>
-                                    <xsl:attribute name="class">iiif-image</xsl:attribute>
-                                    <xsl:attribute name="manifest" select="res:binding[@name = 'obvManifest']/res:uri"/>
-                                </xsl:when>
-                                <xsl:otherwise>
-                                    <xsl:attribute name="href" select="res:binding[@name = 'obvRef']/res:uri"/>
-                                    <xsl:attribute name="class">thumbImage</xsl:attribute>
-                                    <xsl:attribute name="rel">gallery</xsl:attribute>
-                                </xsl:otherwise>
-                            </xsl:choose>
-
-                            <img class="gi side-thumbnail" src="{res:binding[@name='obvThumb']/res:uri}"/>
-                        </a>
-                    </xsl:when>
-                    <xsl:when test="not(string(res:binding[@name = 'obvRef']/res:uri)) and string(res:binding[@name = 'obvThumb']/res:uri)">
-                        <img class="gi side-thumbnail" src="{res:binding[@name='obvThumb']/res:uri}"/>
-                    </xsl:when>
-                    <xsl:when test="string(res:binding[@name = 'obvRef']/res:uri) and not(string(res:binding[@name = 'obvThumb']/res:uri))">
-                        <a title="Obverse of {$title}" id="{res:binding[@name='object']/res:uri}">
-                            <xsl:choose>
-                                <xsl:when test="res:binding[@name = 'obvManifest']">
-                                    <xsl:attribute name="href">#iiif-window</xsl:attribute>
-                                    <xsl:attribute name="class">iiif-image</xsl:attribute>
-                                    <xsl:attribute name="manifest" select="res:binding[@name = 'obvManifest']/res:uri"/>
-                                </xsl:when>
-                                <xsl:otherwise>
-                                    <xsl:attribute name="href" select="res:binding[@name = 'obvRef']/res:uri"/>
-                                    <xsl:attribute name="class">thumbImage</xsl:attribute>
-                                    <xsl:attribute name="rel">gallery</xsl:attribute>
-                                </xsl:otherwise>
-                            </xsl:choose>
-                            <img class="gi side-thumbnail" src="{res:binding[@name='obvRef']/res:uri}"/>
-                        </a>
-                    </xsl:when>
-                </xsl:choose>
-                <!-- reverse-->
-                <xsl:choose>
-                    <xsl:when test="string(res:binding[@name = 'revRef']/res:uri) and string(res:binding[@name = 'revThumb']/res:uri)">
-                        <a title="Reverse of {$title}" id="{res:binding[@name='object']/res:uri}">
-                            <xsl:choose>
-                                <xsl:when test="res:binding[@name = 'revManifest']">
-                                    <xsl:attribute name="href">#iiif-window</xsl:attribute>
-                                    <xsl:attribute name="class">iiif-image</xsl:attribute>
-                                    <xsl:attribute name="manifest" select="res:binding[@name = 'revManifest']/res:uri"/>
-                                </xsl:when>
-                                <xsl:otherwise>
-                                    <xsl:attribute name="href" select="res:binding[@name = 'revRef']/res:uri"/>
-                                    <xsl:attribute name="class">thumbImage</xsl:attribute>
-                                    <xsl:attribute name="rel">gallery</xsl:attribute>
-                                </xsl:otherwise>
-                            </xsl:choose>
-                            <img class="gi side-thumbnail" src="{res:binding[@name='revThumb']/res:uri}"/>
-                        </a>
-                    </xsl:when>
-                    <xsl:when test="not(string(res:binding[@name = 'revRef']/res:uri)) and string(res:binding[@name = 'revThumb']/res:uri)">
-                        <img class="gi side-thumbnail" src="{res:binding[@name='revThumb']/res:uri}"/>
-                    </xsl:when>
-                    <xsl:when test="string(res:binding[@name = 'revRef']/res:uri) and not(string(res:binding[@name = 'revThumb']/res:uri))">
-                        <a title="Reverse of {$title}" id="{res:binding[@name='object']/res:uri}">
-                            <xsl:choose>
-                                <xsl:when test="res:binding[@name = 'revManifest']">
-                                    <xsl:attribute name="href">#iiif-window</xsl:attribute>
-                                    <xsl:attribute name="class">iiif-image</xsl:attribute>
-                                    <xsl:attribute name="manifest" select="res:binding[@name = 'revManifest']/res:uri"/>
-                                </xsl:when>
-                                <xsl:otherwise>
-                                    <xsl:attribute name="href" select="res:binding[@name = 'revRef']/res:uri"/>
-                                    <xsl:attribute name="class">thumbImage</xsl:attribute>
-                                    <xsl:attribute name="rel">gallery</xsl:attribute>
-                                </xsl:otherwise>
-                            </xsl:choose>
-                            <img class="gi side-thumbnail" src="{res:binding[@name='revRef']/res:uri}"/>
-                        </a>
-                    </xsl:when>
-                </xsl:choose>
-                <!-- combined -->
-                <xsl:choose>
-                    <xsl:when test="string(res:binding[@name = 'comRef']/res:uri) and string(res:binding[@name = 'comThumb']/res:uri)">
-                        <a title="Image of {$title}" id="{res:binding[@name='object']/res:uri}">
-                            <xsl:choose>
-                                <xsl:when test="res:binding[@name = 'comManifest']">
-                                    <xsl:attribute name="href">#iiif-window</xsl:attribute>
-                                    <xsl:attribute name="class">iiif-image</xsl:attribute>
-                                    <xsl:attribute name="manifest" select="res:binding[@name = 'comManifest']/res:uri"/>
-                                </xsl:when>
-                                <xsl:otherwise>
-                                    <xsl:attribute name="href" select="res:binding[@name = 'comRef']/res:uri"/>
-                                    <xsl:attribute name="class">thumbImage</xsl:attribute>
-                                    <xsl:attribute name="rel">gallery</xsl:attribute>
-                                </xsl:otherwise>
-                            </xsl:choose>
-                            <img src="{res:binding[@name='comThumb']/res:uri}" class="gi combined-thumbnail"/>
-                        </a>
-                    </xsl:when>
-                    <xsl:when test="string(res:binding[@name = 'comRef']/res:uri) and not(string(res:binding[@name = 'comThumb']/res:uri))">
-                        <a title="Image of {$title}" id="{res:binding[@name='object']/res:uri}">
-                            <xsl:choose>
-                                <xsl:when test="res:binding[@name = 'comManifest']">
-                                    <xsl:attribute name="href">#iiif-window</xsl:attribute>
-                                    <xsl:attribute name="class">iiif-image</xsl:attribute>
-                                    <xsl:attribute name="manifest" select="res:binding[@name = 'comManifest']/res:uri"/>
-                                </xsl:when>
-                                <xsl:otherwise>
-                                    <xsl:attribute name="href" select="res:binding[@name = 'comRef']/res:uri"/>
-                                    <xsl:attribute name="class">thumbImage</xsl:attribute>
-                                    <xsl:attribute name="rel">gallery</xsl:attribute>
-                                </xsl:otherwise>
-                            </xsl:choose>
-                            <img src="{res:binding[@name='comRef']/res:uri}" class="gi combined-thumbnail"/>
-                        </a>
-                    </xsl:when>
-                </xsl:choose>
-            </div>
+            <xsl:call-template name="thumbnails">
+                <xsl:with-param name="title" select="$title"/>
+            </xsl:call-template>
         </div>
     </xsl:template>
 
@@ -324,7 +244,7 @@
                             <a href="{$endpoint}?query={encode-for-uri($query)}&amp;output=csv" title="Download CSV">
                                 <span class="glyphicon glyphicon-download"/>Download CSV</a>
                         </small>
-                    </h3>                    
+                    </h3>
                 </div>
 
                 <!-- display the pagination toolbar only if there are multiple pages -->
@@ -337,8 +257,252 @@
                 </xsl:if>
 
                 <xsl:apply-templates select="descendant::res:result" mode="type-examples"/>
+
+                <!--<table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>
+                                <xsl:value-of select="numishare:regularize_node('identifier', $lang)"/>
+                            </th>
+                            <th>
+                                <xsl:value-of select="numishare:regularize_node('collection', $lang)"/>
+                            </th>
+                            <th>
+                                <xsl:value-of select="numishare:regularize_node('coinType', $lang)"/>
+                            </th>
+                            <th>
+                                <xsl:value-of select="numishare:regularize_node('authority', $lang)"/>
+                            </th>
+                            <th>
+                                <xsl:value-of select="numishare:regularize_node('mint', $lang)"/>
+                            </th>
+                            <th>
+                                <xsl:value-of select="numishare:regularize_node('denomination', $lang)"/>
+                            </th>
+                            <th>Images</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <xsl:apply-templates select="descendant::res:result" mode="hoard-examples"/>
+                    </tbody>
+                </table>-->
             </xsl:if>
         </div>
+    </xsl:template>
+
+    <xsl:template match="res:result" mode="hoard-examples">
+        <xsl:variable name="title"
+            select="
+                concat(res:binding[@name = 'identifier']/*, ': ', if
+                (string(res:binding[@name = 'collection']/res:literal)) then
+                    res:binding[@name = 'collection']/res:literal
+                else
+                    res:binding[@name = 'datasetTitle']/res:literal)"/>
+
+        <tr>
+            <td>
+                <a href="{res:binding[@name='object']/res:uri}" title="{res:binding[@name = 'title']/res:literal}" target="_blank">
+                    <xsl:value-of select="res:binding[@name = 'identifier']/res:literal"/>
+                </a>
+            </td>
+            <td>
+                <xsl:choose>
+                    <xsl:when test="res:binding[@name = 'collection']/res:literal">
+                        <a href="{res:binding[@name='dataset']/res:uri}">
+                            <xsl:value-of select="res:binding[@name = 'collection']/res:literal"/>
+                        </a>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <a href="{res:binding[@name='dataset']/res:uri}">
+                            <xsl:value-of select="res:binding[@name = 'datasetTitle']/res:literal"/>
+                        </a>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </td>
+            <td>
+                <xsl:if test="string(res:binding[@name = 'types']/res:literal)">
+                    <xsl:variable name="typeURIs" select="tokenize(res:binding[@name = 'types']/res:literal, '\|')"/>
+                    <xsl:variable name="typeTitles" select="tokenize(res:binding[@name = 'typeTitles']/res:literal, '\|')"/>
+
+                    <xsl:for-each select="$typeURIs">
+                        <xsl:variable name="position" select="position()"/>
+
+                        <a href="{.}" title="{$typeTitles[$position]}">
+                            <xsl:value-of select="$typeTitles[$position]"/>
+                        </a>
+
+                        <xsl:if test="not(position() = last())">
+                            <xsl:text>, </xsl:text>
+                        </xsl:if>
+                    </xsl:for-each>
+                </xsl:if>
+            </td>
+            <td>
+                <xsl:if test="string(res:binding[@name = 'authorities']/res:literal)">
+                    <xsl:for-each select="tokenize(res:binding[@name = 'authorities']/res:literal, '\|')">
+                        <xsl:value-of select="."/>
+                        <xsl:if test="not(position() = last())">
+                            <xsl:text>, </xsl:text>
+                        </xsl:if>
+                    </xsl:for-each>
+                </xsl:if>
+            </td>
+            <td>
+                <xsl:if test="string(res:binding[@name = 'mints']/res:literal)">
+                    <xsl:for-each select="tokenize(res:binding[@name = 'mints']/res:literal, '\|')">
+                        <xsl:value-of select="."/>
+                        <xsl:if test="not(position() = last())">
+                            <xsl:text>, </xsl:text>
+                        </xsl:if>
+                    </xsl:for-each>
+                </xsl:if>
+            </td>
+            <td>
+                <xsl:if test="string(res:binding[@name = 'denominations']/res:literal)">
+                    <xsl:for-each select="tokenize(res:binding[@name = 'denominations']/res:literal, '\|')">
+                        <xsl:value-of select="."/>
+                        <xsl:if test="not(position() = last())">
+                            <xsl:text>, </xsl:text>
+                        </xsl:if>
+                    </xsl:for-each>
+                </xsl:if>
+            </td>
+            <td>
+                <xsl:call-template name="thumbnails">
+                    <xsl:with-param name="title" select="$title"/>
+                </xsl:call-template>
+            </td>
+        </tr>
+    </xsl:template>
+
+    <!-- **************** SHARED THUMBNAIL TEMPLATE *************** -->
+    <xsl:template name="thumbnails">
+        <xsl:param name="title"/>
+
+        <div class="gi_c">
+            <xsl:if test="res:binding[contains(@name, 'Manifest')]">
+                <span class="glyphicon glyphicon-zoom-in iiif-zoom-glyph" title="Click image(s) to zoom" style="display:none"/>
+            </xsl:if>
+
+            <xsl:choose>
+                <xsl:when test="string(res:binding[@name = 'obvRef']/res:uri) and string(res:binding[@name = 'obvThumb']/res:uri)">
+                    <a title="Obverse of {$title}" id="{res:binding[@name='object']/res:uri}">
+                        <xsl:choose>
+                            <xsl:when test="res:binding[@name = 'obvManifest']">
+                                <xsl:attribute name="href">#iiif-window</xsl:attribute>
+                                <xsl:attribute name="class">iiif-image</xsl:attribute>
+                                <xsl:attribute name="manifest" select="res:binding[@name = 'obvManifest']/res:uri"/>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:attribute name="href" select="res:binding[@name = 'obvRef']/res:uri"/>
+                                <xsl:attribute name="class">thumbImage</xsl:attribute>
+                                <xsl:attribute name="rel">gallery</xsl:attribute>
+                            </xsl:otherwise>
+                        </xsl:choose>
+
+                        <img class="gi side-thumbnail" src="{res:binding[@name='obvThumb']/res:uri}"/>
+                    </a>
+                </xsl:when>
+                <xsl:when test="not(string(res:binding[@name = 'obvRef']/res:uri)) and string(res:binding[@name = 'obvThumb']/res:uri)">
+                    <img class="gi side-thumbnail" src="{res:binding[@name='obvThumb']/res:uri}"/>
+                </xsl:when>
+                <xsl:when test="string(res:binding[@name = 'obvRef']/res:uri) and not(string(res:binding[@name = 'obvThumb']/res:uri))">
+                    <a title="Obverse of {$title}" id="{res:binding[@name='object']/res:uri}">
+                        <xsl:choose>
+                            <xsl:when test="res:binding[@name = 'obvManifest']">
+                                <xsl:attribute name="href">#iiif-window</xsl:attribute>
+                                <xsl:attribute name="class">iiif-image</xsl:attribute>
+                                <xsl:attribute name="manifest" select="res:binding[@name = 'obvManifest']/res:uri"/>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:attribute name="href" select="res:binding[@name = 'obvRef']/res:uri"/>
+                                <xsl:attribute name="class">thumbImage</xsl:attribute>
+                                <xsl:attribute name="rel">gallery</xsl:attribute>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                        <img class="gi side-thumbnail" src="{res:binding[@name='obvRef']/res:uri}"/>
+                    </a>
+                </xsl:when>
+            </xsl:choose>
+            <!-- reverse-->
+            <xsl:choose>
+                <xsl:when test="string(res:binding[@name = 'revRef']/res:uri) and string(res:binding[@name = 'revThumb']/res:uri)">
+                    <a title="Reverse of {$title}" id="{res:binding[@name='object']/res:uri}">
+                        <xsl:choose>
+                            <xsl:when test="res:binding[@name = 'revManifest']">
+                                <xsl:attribute name="href">#iiif-window</xsl:attribute>
+                                <xsl:attribute name="class">iiif-image</xsl:attribute>
+                                <xsl:attribute name="manifest" select="res:binding[@name = 'revManifest']/res:uri"/>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:attribute name="href" select="res:binding[@name = 'revRef']/res:uri"/>
+                                <xsl:attribute name="class">thumbImage</xsl:attribute>
+                                <xsl:attribute name="rel">gallery</xsl:attribute>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                        <img class="gi side-thumbnail" src="{res:binding[@name='revThumb']/res:uri}"/>
+                    </a>
+                </xsl:when>
+                <xsl:when test="not(string(res:binding[@name = 'revRef']/res:uri)) and string(res:binding[@name = 'revThumb']/res:uri)">
+                    <img class="gi side-thumbnail" src="{res:binding[@name='revThumb']/res:uri}"/>
+                </xsl:when>
+                <xsl:when test="string(res:binding[@name = 'revRef']/res:uri) and not(string(res:binding[@name = 'revThumb']/res:uri))">
+                    <a title="Reverse of {$title}" id="{res:binding[@name='object']/res:uri}">
+                        <xsl:choose>
+                            <xsl:when test="res:binding[@name = 'revManifest']">
+                                <xsl:attribute name="href">#iiif-window</xsl:attribute>
+                                <xsl:attribute name="class">iiif-image</xsl:attribute>
+                                <xsl:attribute name="manifest" select="res:binding[@name = 'revManifest']/res:uri"/>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:attribute name="href" select="res:binding[@name = 'revRef']/res:uri"/>
+                                <xsl:attribute name="class">thumbImage</xsl:attribute>
+                                <xsl:attribute name="rel">gallery</xsl:attribute>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                        <img class="gi side-thumbnail" src="{res:binding[@name='revRef']/res:uri}"/>
+                    </a>
+                </xsl:when>
+            </xsl:choose>
+            <!-- combined -->
+            <xsl:choose>
+                <xsl:when test="string(res:binding[@name = 'comRef']/res:uri) and string(res:binding[@name = 'comThumb']/res:uri)">
+                    <a title="Image of {$title}" id="{res:binding[@name='object']/res:uri}">
+                        <xsl:choose>
+                            <xsl:when test="res:binding[@name = 'comManifest']">
+                                <xsl:attribute name="href">#iiif-window</xsl:attribute>
+                                <xsl:attribute name="class">iiif-image</xsl:attribute>
+                                <xsl:attribute name="manifest" select="res:binding[@name = 'comManifest']/res:uri"/>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:attribute name="href" select="res:binding[@name = 'comRef']/res:uri"/>
+                                <xsl:attribute name="class">thumbImage</xsl:attribute>
+                                <xsl:attribute name="rel">gallery</xsl:attribute>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                        <img src="{res:binding[@name='comThumb']/res:uri}" class="gi combined-thumbnail"/>
+                    </a>
+                </xsl:when>
+                <xsl:when test="string(res:binding[@name = 'comRef']/res:uri) and not(string(res:binding[@name = 'comThumb']/res:uri))">
+                    <a title="Image of {$title}" id="{res:binding[@name='object']/res:uri}">
+                        <xsl:choose>
+                            <xsl:when test="res:binding[@name = 'comManifest']">
+                                <xsl:attribute name="href">#iiif-window</xsl:attribute>
+                                <xsl:attribute name="class">iiif-image</xsl:attribute>
+                                <xsl:attribute name="manifest" select="res:binding[@name = 'comManifest']/res:uri"/>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:attribute name="href" select="res:binding[@name = 'comRef']/res:uri"/>
+                                <xsl:attribute name="class">thumbImage</xsl:attribute>
+                                <xsl:attribute name="rel">gallery</xsl:attribute>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                        <img src="{res:binding[@name='comRef']/res:uri}" class="gi combined-thumbnail"/>
+                    </a>
+                </xsl:when>
+            </xsl:choose>
+        </div>
+
     </xsl:template>
 
     <!-- **************** EXAMPLES OF COIN TYPES ASSOCIATED TO A SYMBOL ****************-->
