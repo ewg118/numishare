@@ -99,7 +99,18 @@ function initialize_map(id, path, lang) {
     //add mintLayer from AJAX
     var overlay = L.geoJson.ajax(url, {
         onEachFeature: onEachFeature,
-        pointToLayer: renderPoints
+        style: function (feature) {
+            if (feature.geometry.type == 'Polygon') {
+                var fillColor = getFillColor(feature.properties.type);
+                
+                return {
+                    color: fillColor
+                }
+            }
+        },
+        pointToLayer: function (feature, latlng) {
+            return renderPoints(feature, latlng);
+        }
     }).addTo(map);
     
     //add controls
@@ -136,8 +147,22 @@ function initialize_map(id, path, lang) {
      * Features for manipulating layers
      *****/
     function renderPoints(feature, latlng) {
+        
+        var fillColor = getFillColor(feature.properties.type);
+        
+        return new L.CircleMarker(latlng, {
+            radius: 5,
+            fillColor: fillColor,
+            color: "#000",
+            weight: 1,
+            opacity: 1,
+            fillOpacity: 0.6
+        });
+    }
+    
+    function getFillColor (type) {
         var fillColor;
-        switch (feature.properties.type) {
+        switch (type) {
             case 'mint':
             fillColor = '#6992fd';
             break;
@@ -151,14 +176,7 @@ function initialize_map(id, path, lang) {
             fillColor = '#efefef'
         }
         
-        return new L.CircleMarker(latlng, {
-            radius: 5,
-            fillColor: fillColor,
-            color: "#000",
-            weight: 1,
-            opacity: 1,
-            fillOpacity: 0.6
-        });
+        return fillColor;
     }
     
     function onEachFeature (feature, layer) {
