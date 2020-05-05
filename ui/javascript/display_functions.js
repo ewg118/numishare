@@ -1,8 +1,9 @@
 /************************************
 VISUALIZATION FUNCTIONS
 Written by Ethan Gruber, gruber@numismatics.org
+Date: May 2020
 Library: jQuery
-Description: Display functions for coin type records
+Description: Display functions for coin type records. Extended 2020 for displaying images of physical coins connected to hoards
  ************************************/
 $(document).ready(function () {
 
@@ -91,38 +92,3 @@ $(document).ready(function () {
         });
     }
 });
-
-
-
-// copy the base template
-function gateTypeBtnClick(btn) {
-    var formId = btn.closest('form').attr('id');
-    
-    //clone the template
-    var tpl = cloneTemplate(formId);
-    
-    // focus the text field after select
-    $(tpl).children('select').change(function () {
-        $(this).siblings('input').focus();
-    });
-    
-    // add the new template to the dom
-    $(btn).parent().after(tpl);
-    
-    tpl.children('.removeBtn').removeAttr('style');
-    tpl.children('.removeBtn').before(' |&nbsp;');
-    // display the entire new template
-    tpl.fadeIn('fast');
-}
-
-function cloneTemplate(formId) {
-    if (formId == 'sparqlForm') {
-        var tpl = $('#sparqlItemTemplate').clone();
-    } else {
-        var tpl = $('#searchItemTemplate').clone();
-    }
-    
-    //remove id to avoid duplication with the template
-    tpl.removeAttr('id');
-    return tpl;
-}

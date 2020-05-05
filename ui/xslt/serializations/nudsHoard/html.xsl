@@ -10,6 +10,7 @@
 	<xsl:include href="../../templates-analyze.xsl"/>
 	<xsl:include href="../../templates-search.xsl"/>
 	<xsl:include href="../object/html-templates.xsl"/>
+	<xsl:include href="../sparql/type-examples.xsl"/>
 
 	<!-- URL params -->
 	<xsl:variable name="collection-name" select="substring-before(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/')"/>
@@ -31,6 +32,19 @@
 		</xsl:choose>
 	</xsl:param>
 	<xsl:param name="pipeline">display</xsl:param>
+	
+	<!--pagination of specimen count -->
+	<xsl:param name="page" as="xs:integer">
+		<xsl:choose>
+			<xsl:when
+				test="
+				string-length(doc('input:request')/request/parameters/parameter[name = 'page']/value) &gt; 0 and doc('input:request')/request/parameters/parameter[name = 'page']/value castable
+				as xs:integer and number(doc('input:request')/request/parameters/parameter[name = 'page']/value) > 0">
+				<xsl:value-of select="doc('input:request')/request/parameters/parameter[name = 'page']/value"/>
+			</xsl:when>
+			<xsl:otherwise>1</xsl:otherwise>
+		</xsl:choose>
+	</xsl:param>
 
 	<!-- shared visualization/analysis params -->
 	<xsl:param name="type" select="doc('input:request')/request/parameters/parameter[name = 'type']/value"/>
@@ -219,6 +233,9 @@
 			<xsl:otherwise>false</xsl:otherwise>
 		</xsl:choose>
 	</xsl:variable>
+	
+	<xsl:variable name="hasSpecimens" select="number(doc('input:specimenCount')//res:sparql//descendant::res:binding[@name = 'count']/res:literal) &gt; 0" as="xs:boolean"/>
+	<xsl:variable name="specimenCount" select="doc('input:specimenCount')//res:sparql/descendant::res:binding[@name = 'count']/res:literal" as="xs:integer"/>
 
 	<xsl:template match="/">
 		<html
@@ -230,6 +247,17 @@
 			</xsl:if>
 			<head>
 				<xsl:call-template name="generic_head"/>
+				
+				<xsl:if test="$hasSpecimens">
+					<!--- IIIF -->				
+					<script type="text/javascript" src="{$include_path}/javascript/leaflet-iiif.js"/>
+					
+					<!-- Add fancyBox for popups of coin images -->
+					<link rel="stylesheet" href="{$include_path}/css/jquery.fancybox.css?v=2.1.5" type="text/css" media="screen"/>
+					<script type="text/javascript" src="{$include_path}/javascript/jquery.fancybox.pack.js?v=2.1.5"/>
+					<script type="text/javascript" src="{$include_path}/javascript/display_functions.js"/>
+				</xsl:if>
+				
 				<!-- visualization -->
 				<script type="text/javascript" src="https://d3plus.org/js/d3.min.js"/>
 				<script type="text/javascript" src="https://d3plus.org/js/d3plus-plot.v0.8.full.min.js"/>
@@ -279,7 +307,12 @@
 						<xsl:call-template name="search_forms"/>
 					</div>
 				</div>
+				<span id="manifest"/>
+				<div class="iiif-container-template" style="width:100%;height:100%"/>
+				<iframe id="model-iframe-template" width="640" height="480" frameborder="0" allowvr="true" allowfullscreen="true"
+					mozallowfullscreen="true" webkitallowfullscreen="true" onmousewheel=""/>
 				<div id="iiif-window" style="width:600px;height:600px;display:none"/>
+				<div id="model-window" style="width:640px;height:480px;display:none"/>
 			</body>
 		</html>
 	</xsl:template>
@@ -295,8 +328,32 @@
 
 	<xsl:template match="nh:nudsHoard">
 		<xsl:call-template name="icons"/>
+		
 		<xsl:call-template name="nudsHoard_content"/>
-
+		
+		<!-- if there are coins from this hoard: -->
+		<xsl:if test="$hasSpecimens = true()">
+			<xsl:variable name="limit"
+				select="
+				if (//config/specimens_per_page castable as xs:integer) then
+				//config/specimens_per_page
+				else
+				48"/>
+			
+			<xsl:apply-templates select="doc('input:specimens')/res:sparql" mode="hoard-examples">
+				<xsl:with-param name="page" select="$page" as="xs:integer"/>
+				<xsl:with-param name="numFound" select="$specimenCount" as="xs:integer"/>
+				<xsl:with-param name="limit" select="$limit" as="xs:integer"/>
+				<xsl:with-param name="endpoint"
+					select="
+					if (contains($sparql_endpoint, 'localhost')) then
+					'http://nomisma.org/query'
+					else
+					$sparql_endpoint"/>
+				<xsl:with-param name="objectUri" select="$objectUri"/>
+			</xsl:apply-templates>
+		</xsl:if>
+		
 		<!-- if there are annotations, then render -->
 		<xsl:if test="$hasAnnotations = true()">
 			<div class="row">
@@ -341,6 +398,12 @@
 						</xsl:otherwise>
 					</xsl:choose>
 				</h1>
+				<xsl:if test="$hasSpecimens = true()">
+					<a href="#examples">Coins from this Hoard</a>			
+				</xsl:if>
+				<xsl:if test="$hasSpecimens = true() and $hasAnnotations = true()">
+					<xsl:text> | </xsl:text>
+				</xsl:if>				
 				<xsl:if test="$hasAnnotations = true()">
 					<a href="#annotations">Annotations</a>
 				</xsl:if>

@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- 	Author: Ethan Gruber
-	Date: June 2017
+	Date: May 2020
 	Function: There are two modes of templates to render SPARQL results into HTML:
 	   1. type-examples renders examples of physical specimens related to coin types displayed on coin type pages
 	   2. examples of coin types associated with a symbol
+	   3. hoard-examples displayed a slightly modified version of type-examples, but for physical specimens related to a coin hoard rather than coin type URI
 -->
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:res="http://www.w3.org/2005/sparql-results#"
@@ -17,7 +18,7 @@
         <xsl:param name="limit"/>
         <xsl:param name="endpoint"/>
         <xsl:param name="objectUri"/>
-        
+
 
         <xsl:variable name="query" select="replace(doc('input:query'), 'typeURI', $objectUri)"/>
 
@@ -54,11 +55,11 @@
     <xsl:template match="res:result" mode="type-examples">
         <xsl:variable name="title"
             select="
-            concat(res:binding[@name = 'identifier']/*, ': ', if
-            (string(res:binding[@name = 'collection']/res:literal)) then
-            res:binding[@name = 'collection']/res:literal
-            else
-            res:binding[@name = 'datasetTitle']/res:literal)"/>
+                concat(res:binding[@name = 'identifier']/*, ': ', if
+                (string(res:binding[@name = 'collection']/res:literal)) then
+                    res:binding[@name = 'collection']/res:literal
+                else
+                    res:binding[@name = 'datasetTitle']/res:literal)"/>
 
         <div class="g_doc col-md-4">
             <span class="result_link">
@@ -90,6 +91,31 @@
                         </dd>
                     </xsl:otherwise>
                 </xsl:choose>
+                
+                <xsl:if test="string(res:binding[@name='types']/res:literal)">
+                    <xsl:variable name="typeURIs" select="tokenize(res:binding[@name='types']/res:literal, '\|')"/>
+                    <xsl:variable name="typeTitles" select="tokenize(res:binding[@name='typeTitles']/res:literal, '\|')"/>
+                    
+                    <dt>
+                        <xsl:value-of select="numishare:regularize_node('coinType', $lang)"/>
+                    </dt>
+                    <dd>
+                        <xsl:for-each select="$typeURIs">
+                            <xsl:variable name="position" select="position()"/>
+                            
+                            <a href="{.}" title="{$typeTitles[$position]}">
+                                <xsl:value-of select="$typeTitles[$position]"/>
+                            </a>
+                            
+                            
+                            <xsl:if test="not(position() = last())">
+                                <xsl:text>, </xsl:text>
+                            </xsl:if>
+                        </xsl:for-each>
+                    </dd>
+                    
+                    
+                </xsl:if>
 
                 <xsl:if test="string(res:binding[@name = 'axis']/res:literal)">
                     <dt>
@@ -275,6 +301,46 @@
         </div>
     </xsl:template>
 
+    <!-- **************** PHYSICAL EXAMPLES ASSOCIATED WITH A COIN HOARD ****************-->
+    <xsl:template match="res:sparql" mode="hoard-examples">
+        <xsl:param name="subtype"/>
+        <xsl:param name="page"/>
+        <xsl:param name="numFound"/>
+        <xsl:param name="limit"/>
+        <xsl:param name="endpoint"/>
+        <xsl:param name="objectUri"/>
+
+
+        <xsl:variable name="query" select="replace(doc('input:query'), 'hoardURI', $objectUri)"/>
+
+        <div class="row" id="examples">
+
+            <xsl:if test="count(descendant::res:result) &gt; 0">
+                <div class="col-md-12">
+                    <h3>
+                        <xsl:text>Coins from this Hoard</xsl:text>
+                        <!-- insert link to download CSV -->
+                        <small style="margin-left:10px">
+                            <a href="{$endpoint}?query={encode-for-uri($query)}&amp;output=csv" title="Download CSV">
+                                <span class="glyphicon glyphicon-download"/>Download CSV</a>
+                        </small>
+                    </h3>                    
+                </div>
+
+                <!-- display the pagination toolbar only if there are multiple pages -->
+                <xsl:if test="$numFound &gt; $limit">
+                    <xsl:call-template name="pagination">
+                        <xsl:with-param name="page" select="$page" as="xs:integer"/>
+                        <xsl:with-param name="numFound" select="$numFound" as="xs:integer"/>
+                        <xsl:with-param name="limit" select="$limit" as="xs:integer"/>
+                    </xsl:call-template>
+                </xsl:if>
+
+                <xsl:apply-templates select="descendant::res:result" mode="type-examples"/>
+            </xsl:if>
+        </div>
+    </xsl:template>
+
     <!-- **************** EXAMPLES OF COIN TYPES ASSOCIATED TO A SYMBOL ****************-->
     <xsl:template match="res:sparql" mode="listTypes">
         <xsl:param name="objectUri"/>
@@ -328,7 +394,8 @@
 
         <div id="listTypes-container">
             <div style="margin-bottom:10px;" class="control-row">
-                <a href="#" class="toggle-button btn btn-primary" id="toggle-listTypesQuery"><span class="glyphicon glyphicon-plus"/> View SPARQL for full query</a>
+                <a href="#" class="toggle-button btn btn-primary" id="toggle-listTypesQuery"><span class="glyphicon glyphicon-plus"/> View SPARQL for full
+                    query</a>
                 <a href="{$endpoint}?query={encode-for-uri($query)}&amp;output=csv" title="Download CSV" class="btn btn-primary" style="margin-left:10px">
                     <span class="glyphicon glyphicon-download"/>Download CSV</a>
             </div>
@@ -418,7 +485,8 @@
                             </xsl:otherwise>
                         </xsl:choose>
                     </xsl:variable>
-                    <p>Records <b><xsl:value-of select="$startRecord"/></b> to <b><xsl:value-of select="$endRecord"/></b> of <b><xsl:value-of select="$numFound"/></b></p>
+                    <p>Records <b><xsl:value-of select="$startRecord"/></b> to <b><xsl:value-of select="$endRecord"/></b> of <b><xsl:value-of select="$numFound"
+                            /></b></p>
                 </div>
                 <!-- paging functionality -->
                 <div class="col-md-6">
