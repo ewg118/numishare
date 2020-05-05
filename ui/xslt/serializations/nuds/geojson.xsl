@@ -216,19 +216,21 @@
 													<xsl:when test="$rdf//*[@rdf:about = $spatialThingURI][crmgeo:asWKT[contains(., 'POLYGON')]]">
 														<xsl:variable name="corners"
 															select="tokenize(substring-after(substring-before($rdf//*[@rdf:about = $spatialThingURI]/crmgeo:asWKT, ')'), '('), ',')"/>
-
-														<xsl:for-each select="$corners">
-															<xsl:variable name="points" select="tokenize(normalize-space(.), ' ')"/>
-
-															<_array>
-																<xsl:for-each select="$points">
-																	<_>
-																		<xsl:value-of select="normalize-space(.)"/>
-																	</_>
-																</xsl:for-each>
-															</_array>
-
-														</xsl:for-each>
+														<_array>
+															<xsl:for-each select="$corners">
+																<xsl:variable name="points" select="tokenize(normalize-space(.), ' ')"/>
+																
+																<_array>
+																	<xsl:for-each select="$points">
+																		<_>
+																			<xsl:value-of select="normalize-space(.)"/>
+																		</_>
+																	</xsl:for-each>
+																</_array>
+																
+															</xsl:for-each>
+														</_array>
+														
 													</xsl:when>
 												</xsl:choose>
 											</xsl:if>
