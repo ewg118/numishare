@@ -151,4 +151,9 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
+	
+	<!-- any symbol or monogram URI requested in the getRDF API will be copied into the root rdf:RDF element -->
+	<xsl:template match="rdf:RDF" mode="nomisma">
+		<xsl:copy-of select="child::*"/>
+	</xsl:template>
 </xsl:stylesheet>
