@@ -6,10 +6,10 @@ PREFIX dcmitype:	<http://purl.org/dc/dcmitype/>
 ASK {
    {
     SELECT ?side WHERE {
-    	?side nmo:hasMonogram <%URI%>
+    	?side nmo:hasControlmark <%URI%>
     }
   }
-?type ?prop ?side
+?type nmo:hasObverse|nmo:hasReverse ?side
   { ?object nmo:hasTypeSeriesItem ?type ; 
   	a nmo:NumismaticObject ; 
   	nmo:hasFindspot ?findspot }

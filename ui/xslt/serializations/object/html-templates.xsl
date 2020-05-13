@@ -9,6 +9,7 @@
 	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
 	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:nm="http://nomisma.org/id/" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:mets="http://www.loc.gov/METS/"
 	xmlns:gml="http://www.opengis.net/gml" xmlns:res="http://www.w3.org/2005/sparql-results#" xmlns:mods="http://www.loc.gov/mods/v3"
+	xmlns:nmo="http://nomisma.org/ontology#" xmlns:crm="http://www.cidoc-crm.org/cidoc-crm/" xmlns:crmdig="http://www.ics.forth.gr/isl/CRMdig/"
 	xmlns:tei="http://www.tei-c.org/ns/1.0" exclude-result-prefixes="#all" version="2.0">
 	<!--***************************************** ELEMENT TEMPLATES **************************************** -->
 	<xsl:template match="*[local-name() = 'refDesc']">
@@ -340,12 +341,18 @@
 						</xsl:otherwise>
 					</xsl:choose>
 
+					<!-- ***** additional attributes ***** -->
 
+					<!-- if the element is a symbol, display image and constituent letters, if applicable -->
+					<xsl:if test="string($href) and self::nuds:symbol">
+						<xsl:apply-templates select="$rdf/*[@rdf:about = $href]"/>
+					</xsl:if>
 
 					<!-- display title -->
 					<xsl:if test="string(@title)">
 						<i> (<xsl:value-of select="@title"/>)</i>
 					</xsl:if>
+
 					<xsl:if test="string(@position)">
 						<xsl:variable name="langParam" select="
 								if (string($lang)) then
@@ -362,6 +369,7 @@
 							</xsl:otherwise>
 						</xsl:choose>
 					</xsl:if>
+
 					<!-- display certainty -->
 					<xsl:apply-templates select="@certainty"/>
 
@@ -371,11 +379,6 @@
 					</xsl:if>
 					<xsl:if test="string(@for)">
 						<i> (<xsl:value-of select="@for"/>)</i>
-					</xsl:if>
-
-					<!-- if the element is a symbol, display image, if available -->
-					<xsl:if test="string($href) and self::nuds:symbol">
-						<xsl:apply-templates select="$symbols//rdf:RDF/*[@rdf:about = $href]" mode="symbol"/>
 					</xsl:if>
 
 					<!-- create links to resources -->
@@ -541,28 +544,31 @@
 		<xsl:param name="value"/>
 		<xsl:param name="href"/>
 		<xsl:param name="position"/>
-		
+
 		<xsl:variable name="facet" select="concat($field, '_facet')"/>
 
 		<xsl:choose>
 			<xsl:when test="$field = 'symbol'">
 				<xsl:variable name="side" select="substring(parent::node()/name(), 1, 3)"/>
+				
+				<!-- get the first crmdig Digital Image URL from the $rdf -->
+				<xsl:variable name="image-url" select="$rdf/*[@rdf:about = $href]/descendant::crmdig:D1_Digital_Object/@rdf:about"/>
 
 				<xsl:choose>
 					<xsl:when test="string($position) and $positions//position[@value = $position]">
 						<a
-							href="{$display_path}results?q=symbol_{$side}_{$position}_facet:&#x022;{$value}&#x022;{if (string($langParam)) then concat('&amp;lang=', $langParam) else ''}">
+							href="{$display_path}results?q=symbol_{$side}_{$position}_facet:&#x022;{if (string($image-url)) then concat($image-url, '%7C', $value) else $value}&#x022;{if (string($langParam)) then concat('&amp;lang=', $langParam) else ''}">
 							<xsl:value-of select="$value"/>
 						</a>
 					</xsl:when>
 					<xsl:otherwise>
 						<a
-							href="{$display_path}results?q=symbol_{$side}_facet:&#x022;{$value}&#x022;{if (string($langParam)) then concat('&amp;lang=', $langParam) else ''}">
+							href="{$display_path}results?q=symbol_{$side}_facet:&#x022;{if (string($image-url)) then concat($image-url, '%7C', $value) else $value}&#x022;{if (string($langParam)) then concat('&amp;lang=', $langParam) else ''}">
 							<xsl:value-of select="$value"/>
 						</a>
 					</xsl:otherwise>
 				</xsl:choose>
-			</xsl:when>			
+			</xsl:when>
 			<xsl:when test="boolean(index-of($facets, $facet)) = true()">
 				<a href="{$display_path}results?q={$field}_facet:&#x022;{$value}&#x022;{if (string($langParam)) then concat('&amp;lang=', $langParam) else ''}">
 					<xsl:choose>
@@ -610,25 +616,33 @@
 	</xsl:template>
 
 	<!-- *************** RENDER RDF ABOUT SYMBOLS ******************-->
-	<xsl:template match="*" mode="symbol">
-		<xsl:if test="foaf:depiction">
-			<xsl:variable name="title"
-				select="
-					concat(if (skos:prefLabel[@xml:lang = $lang]) then
-						skos:prefLabel[@xml:lang = $lang]
-					else
-						skos:prefLabel[@xml:lang = 'en'], ': ', if (skos:definition[@xml:lang = $lang]) then
-						skos:definition[@xml:lang = $lang]
-					else
-						skos:definition[@xml:lang = 'en'])"/>
-
-			<xsl:for-each select="foaf:depiction">
-				<a href="{@rdf:resource}" class="thumbImage" id="{tokenize(@rdf:resource, '/')[last()]}" title="{$title}">
-					<span class="glyphicon glyphicon-camera"/>
-				</a>
+	<xsl:template match="nmo:Monogram | crm:E37_Mark">
+		<xsl:apply-templates select="descendant::crmdig:D1_Digital_Object">
+			<xsl:with-param name="uri" select="@rdf:about"/>
+		</xsl:apply-templates>
+		
+		<xsl:if test="crm:P106_is_composed_of">
+			<xsl:text>, consists of </xsl:text>
+			<xsl:for-each select="crm:P106_is_composed_of">
+				<xsl:if test="position() = last()">
+					<xsl:text> and</xsl:text>
+				</xsl:if>
+				<xsl:text> </xsl:text>
+				<xsl:value-of select="."/>
+				<xsl:if test="not(position() = last()) and (count(../crm:P106_is_composed_of) &gt; 2)">
+					<xsl:text>,</xsl:text>
+				</xsl:if>
 			</xsl:for-each>
-
 		</xsl:if>
+	</xsl:template>
+
+	<xsl:template match="crmdig:D1_Digital_Object">
+		<xsl:param name="uri"/>
+		
+		<a href="{$uri}">
+			<img src="{@rdf:about}" alt="symbol" style="height:24px"/>
+		</a>
+		
 	</xsl:template>
 
 	<!-- *************** FORMAT CONTROL MARKS FROM INDIVIDUAL SYMBOL ELEMENTS ******************-->
@@ -955,14 +969,14 @@
 					<div
 						class="col-md-{if ($results/res:result[res:binding[@name='source']/res:uri = $uri][1]/res:binding[@name='thumbnail']/res:uri) then '8' else '12'}">
 						<dl class="dl-horizontal">
-							
+
 							<!-- only display sections if there are targets (annotations). this is suppressed if the URI is a dcterms:subject, rather than annotation -->
-							<xsl:if test="$results/res:result[res:binding[@name = 'source']/res:uri = $uri]/res:binding[@name='target']">
+							<xsl:if test="$results/res:result[res:binding[@name = 'source']/res:uri = $uri]/res:binding[@name = 'target']">
 								<dt>Sections</dt>
 								<dd>
 									<xsl:apply-templates select="$results/res:result[res:binding[@name = 'source']/res:uri = $uri]" mode="annotations"/>
 								</dd>
-							</xsl:if>							
+							</xsl:if>
 							<dt>Creator</dt>
 							<dd>
 								<xsl:choose>

@@ -8,10 +8,10 @@ PREFIX xsd:	<http://www.w3.org/2001/XMLSchema#>
 SELECT ?type ?label ?startDate ?endDate ?mint ?mintLabel ?den ?denLabel WHERE {
   {
     SELECT ?side WHERE {
-    	?side nmo:hasMonogram <%URI%>
+    	?side nmo:hasControlmark <%URI%>
     }
   }
-?type ?prop ?side
+?type nmo:hasObverse|nmo:hasReverse ?side
    MINUS {?type dcterms:isReplacedBy ?replaced}
    ?type a nmo:TypeSeriesItem ;
    skos:prefLabel ?label FILTER(langMatches(lang(?label), "en")) .

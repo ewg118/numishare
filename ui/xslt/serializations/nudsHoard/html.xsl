@@ -138,18 +138,6 @@
 		</nudsGroup>
 	</xsl:variable>
 
-	<xsl:variable name="symbols" as="element()*">
-		<symbols>
-			<xsl:for-each select="$nudsGroup/descendant::nuds:symbol[@xlink:href]">
-				<xsl:variable name="href" select="@xlink:href"/>
-
-				<xsl:if test="doc-available(concat($href, '.rdf'))">
-					<xsl:copy-of select="document(concat($href, '.rdf'))"/>
-				</xsl:if>
-			</xsl:for-each>
-		</symbols>
-	</xsl:variable>
-
 	<!-- get subtypes -->
 	<xsl:variable name="subtypes" as="element()*">
 		<xsl:if test="$recordType = 'conceptual' and //config/collection_type = 'cointype'">
@@ -180,6 +168,15 @@
 
 			<xsl:variable name="rdf_url" select="concat('http://nomisma.org/apis/getRdf?identifiers=', encode-for-uri($id-param))"/>
 			<xsl:copy-of select="document($rdf_url)/rdf:RDF/*"/>
+			
+			<!-- these individual RDF calls should be replaced with the getRDF API when many symbols might appear in one hoard -->
+			<xsl:for-each select="$nudsGroup/descendant::nuds:symbol[contains(@xlink:href, 'http://numismatics.org')]">
+				<xsl:variable name="href" select="@xlink:href"/>
+				
+				<xsl:if test="doc-available(concat($href, '.rdf'))">
+					<xsl:copy-of select="document(concat($href, '.rdf'))/rdf:RDF/*"/>
+				</xsl:if>
+			</xsl:for-each>
 		</rdf:RDF>
 	</xsl:variable>
 

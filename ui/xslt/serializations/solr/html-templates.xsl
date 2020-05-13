@@ -6,6 +6,7 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	xmlns:numishare="https://github.com/ewg118/numishare" xmlns:res="http://www.w3.org/2005/sparql-results#" exclude-result-prefixes="#all" version="2.0">
 
+	<!-- ****** STRUCTURE FOR SOLR DOC ****** -->
 	<!-- default document display mode; metadata with images in table-like layout -->
 	<xsl:template match="doc" mode="default">
 		<xsl:variable name="object-path">
@@ -164,6 +165,7 @@
 		</div>
 	</xsl:template>
 
+	<!-- ****** DISPLAY SOLR DOC METADATA ****** -->
 	<xsl:template name="doc-metadata">
 		<xsl:variable name="sort_category" select="substring-before($sort, ' ')"/>
 		<xsl:variable name="regularized_sort">
@@ -428,7 +430,39 @@
 			</xsl:if>
 		</dl>
 	</xsl:template>
+	
+	<!-- display related images: indexed in Solr for physical specimens, or call SPARQL endpoint for coin types, if applicable -->
+	<xsl:template name="result_image">
+		<xsl:param name="alignment"/>
+		<xsl:param name="object-path"/>
+		
+		<div class="col-md-5 col-lg-4 {if ($alignment = 'right') then 'pull-right' else ''}">
+			<xsl:choose>
+				<xsl:when test="str[@name = 'recordType'] = 'physical'">
+					<xsl:if test="string(str[@name = 'thumbnail_obv'])">
+						<a class="thumbImage" href="{str[@name='reference_obv']}" title="Obverse of {str[@name='title_display']}"
+							id="{$object-path}{str[@name='recordId']}{if (string($langParam)) then
+							concat('?lang=', $langParam) else ''}">
+							<img src="{str[@name='thumbnail_obv']}" class="side-thumbnail"/>
+						</a>
+					</xsl:if>
+					<xsl:if test="string(str[@name = 'thumbnail_rev'])">
+						<a class="thumbImage" href="{str[@name='reference_rev']}" title="Reverse of {str[@name='title_display']}"
+							id="{$object-path}{str[@name='recordId']}{if (string($langParam)) then
+							concat('?lang=', $langParam) else ''}">
+							<img src="{str[@name='thumbnail_rev']}" class="side-thumbnail"/>
+						</a>
+					</xsl:if>
+				</xsl:when>
+				<xsl:when test="str[@name = 'recordType'] = 'conceptual' and matches(/content/config/sparql_endpoint, '^https?://')">
+					<xsl:variable name="id" select="str[@name = 'recordId']"/>
+					<xsl:apply-templates select="doc('input:numishareResults')//group[@id = $id]" mode="results"/>
+				</xsl:when>
+			</xsl:choose>
+		</div>
+	</xsl:template>
 
+	<!-- ****** SEARCH/BROWSE SIDEBAR ****** -->
 	<xsl:template match="lst[@name = 'facet_fields']">
 		<!-- ignore mint_geo-->
 		<xsl:choose>
@@ -481,6 +515,8 @@
 				<xsl:apply-templates select="lst[not(contains(@name, '_geo')) and not(contains(@name, 'symbol_')) and number(int) &gt; 0]" mode="facet"/>
 			</xsl:otherwise>
 		</xsl:choose>
+		
+		<!-- SUBMISSION FORM FOR REFINING RESULTS -->
 		<form action="results" method="GET" role="form" id="facet_form">
 			<xsl:variable name="imageavailable_stripped">
 				<xsl:for-each select="$tokenized_q[not(contains(., 'imagesavailable'))]">
@@ -527,6 +563,7 @@
 				</div>
 			</xsl:if>
 
+			<!-- CE DATES -->
 			<div class="form-group">
 				<div>
 					<label>
@@ -578,6 +615,7 @@
 		</form>
 	</xsl:template>
 
+	<!-- ****** FACET LISTS ****** -->
 	<xsl:template match="lst" mode="facet">
 		<xsl:variable name="val" select="@name"/>
 		<xsl:variable name="new_query">
@@ -699,38 +737,10 @@
 		</xsl:choose>
 	</xsl:template>
 
+	<!-- suppress the geographic coordinates as a facet -->
 	<xsl:template match="lst[@name = 'mint_geo']" mode="facet"/>
 
-	<xsl:template name="result_image">
-		<xsl:param name="alignment"/>
-		<xsl:param name="object-path"/>
-
-		<div class="col-md-5 col-lg-4 {if ($alignment = 'right') then 'pull-right' else ''}">
-			<xsl:choose>
-				<xsl:when test="str[@name = 'recordType'] = 'physical'">
-					<xsl:if test="string(str[@name = 'thumbnail_obv'])">
-						<a class="thumbImage" href="{str[@name='reference_obv']}" title="Obverse of {str[@name='title_display']}"
-							id="{$object-path}{str[@name='recordId']}{if (string($langParam)) then
-							concat('?lang=', $langParam) else ''}">
-							<img src="{str[@name='thumbnail_obv']}" class="side-thumbnail"/>
-						</a>
-					</xsl:if>
-					<xsl:if test="string(str[@name = 'thumbnail_rev'])">
-						<a class="thumbImage" href="{str[@name='reference_rev']}" title="Reverse of {str[@name='title_display']}"
-							id="{$object-path}{str[@name='recordId']}{if (string($langParam)) then
-							concat('?lang=', $langParam) else ''}">
-							<img src="{str[@name='thumbnail_rev']}" class="side-thumbnail"/>
-						</a>
-					</xsl:if>
-				</xsl:when>
-				<xsl:when test="str[@name = 'recordType'] = 'conceptual' and matches(/content/config/sparql_endpoint, '^https?://')">
-					<xsl:variable name="id" select="str[@name = 'recordId']"/>
-					<xsl:apply-templates select="doc('input:numishareResults')//group[@id = $id]" mode="results"/>
-				</xsl:when>
-			</xsl:choose>
-		</div>
-	</xsl:template>
-
+	<!-- ****** REMOVING INDIVIDUAL QUERY COMPONENTS (DISPLAY ABOVE RESULT LIST) ****** -->
 	<xsl:template name="remove_facets">
 		<div class="row">
 			<xsl:choose>
@@ -785,6 +795,7 @@
 			</xsl:variable>
 
 			<xsl:choose>
+				<!-- individual terms from a single Solr field -->
 				<xsl:when test="not(. = '*:*') and not(substring(., 1, 1) = '(')">
 					<xsl:variable name="field" select="substring-before(., ':')"/>
 					<xsl:variable name="name">
@@ -847,24 +858,11 @@
 						<div class="col-md-10">
 							<span>
 								<b><xsl:value-of select="$name"/>: </b>
-								<xsl:choose>
-									<xsl:when test="$field = 'century_num'">
-										<xsl:value-of select="numishare:normalize_century($term)"/>
-									</xsl:when>
-									<xsl:when test="contains($field, '_hier')">
-										<xsl:variable name="tokens" select="tokenize(substring($term, 2, string-length($term) - 2), '\+')"/>
-										<xsl:for-each select="$tokens[position() &gt; 1]">
-											<xsl:sort select="position()" order="descending"/>
-											<xsl:value-of select="normalize-space(substring-after(substring-before(., '/'), '|'))"/>
-											<xsl:if test="not(position() = last())">
-												<xsl:text>--</xsl:text>
-											</xsl:if>
-										</xsl:for-each>
-									</xsl:when>
-									<xsl:otherwise>
-										<xsl:value-of select="$term"/>
-									</xsl:otherwise>
-								</xsl:choose>
+								
+								<xsl:call-template name="render-query-term">
+									<xsl:with-param name="field" select="$field"/>
+									<xsl:with-param name="term" select="$term"/>
+								</xsl:call-template>								
 							</span>
 						</div>
 						<xsl:if test="not($lang = 'ar')">
@@ -967,7 +965,8 @@
 											</xsl:otherwise>
 										</xsl:choose>
 									</xsl:variable>
-									<!-- display either the term or the regularized name for the century -->
+									
+									<!-- Field Label -->
 									<b>
 										<xsl:choose>
 											<xsl:when test="starts-with($field, 'symbol_')">
@@ -977,8 +976,8 @@
 														<xsl:variable name="position" select="tokenize($field, '_')[3]"/>
 
 														<xsl:choose>
-															<xsl:when test="$positions//position[@value = $position]/label[@lang = $langParam]">
-																<xsl:value-of select="$positions//position[@value = $position]/label[@lang = $langParam]"/>
+															<xsl:when test="$positions//position[@value = $position]/label[@lang = $lang]">
+																<xsl:value-of select="$positions//position[@value = $position]/label[@lang = $lang]"/>
 															</xsl:when>
 															<xsl:otherwise>
 																<xsl:value-of select="concat(upper-case(substring($position, 1, 1)), substring($position, 2))"/>
@@ -998,24 +997,13 @@
 										</xsl:choose>
 										<xsl:text>: </xsl:text>
 									</b>
-									<xsl:choose>
-										<xsl:when test="$field = 'century_num'">
-											<xsl:value-of select="numishare:normalize_century($value)"/>
-										</xsl:when>
-										<xsl:when test="contains($field, '_hier')">
-											<xsl:variable name="tokens" select="tokenize(substring($value, 2, string-length($value) - 2), '\+')"/>
-											<xsl:for-each select="$tokens[position() &gt; 1]">
-												<xsl:sort select="position()" order="descending"/>
-												<xsl:value-of select="normalize-space(replace(substring-after(substring-before(., '/'), '|'), '&#x022;', ''))"/>
-												<xsl:if test="not(position() = last())">
-													<xsl:text>--</xsl:text>
-												</xsl:if>
-											</xsl:for-each>
-										</xsl:when>
-										<xsl:otherwise>
-											<xsl:value-of select="$value"/>
-										</xsl:otherwise>
-									</xsl:choose>
+									
+									<!-- Field Value -->
+									<xsl:call-template name="render-query-term">
+										<xsl:with-param name="field" select="$field"/>
+										<xsl:with-param name="term" select="$value"/>
+									</xsl:call-template>									
+									
 									<!-- concatenate the query with the multicategory removed with the new multicategory, or if the multicategory is empty, display just the $new_query -->
 									<a
 										href="{$display_path}results?q={if (string($multicategory_query) and string($new_query)) then concat($new_query, ' AND ', $multicategory_query) else if
@@ -1023,6 +1011,7 @@
 										$lang) else ''}">
 										<span class="glyphicon glyphicon-remove"/>
 									</a>
+									
 									<xsl:if test="position() != last()">
 										<xsl:text> OR </xsl:text>
 									</xsl:if>
@@ -1135,6 +1124,47 @@
 			</div>
 		</xsl:if>
 	</xsl:template>
+	
+	<!-- render the term into a human readable format, depending on the particular Solr field name -->
+	<xsl:template name="render-query-term">
+		<xsl:param name="field"/>
+		<xsl:param name="term"/>
+		
+		<xsl:choose>
+			<xsl:when test="$field = 'century_num'">
+				<xsl:value-of select="numishare:normalize_century($term)"/>
+			</xsl:when>
+			<xsl:when test="starts-with($field, 'symbol_')">
+				<xsl:choose>
+					<xsl:when test="contains($term, '|') and matches(substring-before($term, '|'), '^https?://')">
+						<span>
+							<img src="{substring-before($term, '|')}" alt="SVG File" style="height:24px"/>
+							<xsl:text> </xsl:text>
+							<xsl:value-of select="substring-after($term, '|')"/>
+						</span>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="$term"/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:when>
+			<xsl:when test="contains($field, '_hier')">
+				<xsl:variable name="tokens" select="tokenize(substring($term, 2, string-length($term) - 2), '\+')"/>
+				<xsl:for-each select="$tokens[position() &gt; 1]">
+					<xsl:sort select="position()" order="descending"/>
+					<xsl:value-of select="normalize-space(substring-after(substring-before(., '/'), '|'))"/>
+					<xsl:if test="not(position() = last())">
+						<xsl:text>--</xsl:text>
+					</xsl:if>
+				</xsl:for-each>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="$term"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+	
+	<!-- ****** PAGINATION ****** -->
 	<xsl:template name="paging">
 		<!-- evaluate the page numbering -->
 		<xsl:variable name="start_var" as="xs:integer">
@@ -1506,6 +1536,8 @@
 			</xsl:if>
 		</div>
 	</xsl:template>
+	
+	<!-- template for the quick keyword search in the sidebar -->
 	<xsl:template name="quick_search">
 		<div class="quick_search">
 			<h3>
@@ -1531,6 +1563,7 @@
 		</div>
 	</xsl:template>
 
+	<!-- probably deprecated; categories from Mantis v1, which aren't currently implemented -->
 	<xsl:template name="render_categories">
 		<xsl:param name="category_fragment"/>
 		<xsl:variable name="new_query">

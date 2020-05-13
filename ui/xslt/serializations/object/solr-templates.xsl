@@ -7,7 +7,7 @@
 -->
 <xsl:stylesheet xmlns:nuds="http://nomisma.org/nuds" xmlns:nh="http://nomisma.org/nudsHoard" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:datetime="http://exslt.org/dates-and-times" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mods="http://www.loc.gov/mods/v3" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"
+	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mods="http://www.loc.gov/mods/v3" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:crmdig="http://www.ics.forth.gr/isl/CRMdig/"
 	xmlns:org="http://www.w3.org/ns/org#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:numishare="https://github.com/ewg118/numishare"
 	xmlns:tei="http://www.tei-c.org/ns/1.0" exclude-result-prefixes="#all" version="2.0">
 
@@ -242,7 +242,6 @@
 		<xsl:if test="$recordType = 'conceptual'">
 			<xsl:apply-templates select="nuds:symbol">
 				<xsl:with-param name="side" select="$side"/>
-				<xsl:with-param name="symbols" select="$symbols"/>
 			</xsl:apply-templates>
 		</xsl:if>
 	</xsl:template>
@@ -310,7 +309,6 @@
 
 	<xsl:template match="nuds:symbol">
 		<xsl:param name="side"/>
-		<xsl:param name="symbols"/>
 
 		<xsl:variable name="symbolType" select="
 				if (@localType) then
@@ -324,10 +322,14 @@
 					<xsl:when test="@xlink:href">
 						<xsl:variable name="uri" select="@xlink:href"/>
 						<field name="{$symbolType}_{$side}_{@position}_facet">
-							<xsl:value-of select="$symbols//*[@rdf:about = $uri]/skos:prefLabel"/>
+							<xsl:value-of select="$rdf//*[@rdf:about = $uri]/descendant::crmdig:D1_Digital_Object[1]/@rdf:about"/>
+							<xsl:text>|</xsl:text>
+							<xsl:value-of select="$rdf//*[@rdf:about = $uri]/skos:prefLabel"/>
 						</field>
 						<field name="{$symbolType}_{$side}_facet">
-							<xsl:value-of select="$symbols//*[@rdf:about = $uri]/skos:prefLabel"/>
+							<xsl:value-of select="$rdf//*[@rdf:about = $uri]/descendant::crmdig:D1_Digital_Object[1]/@rdf:about"/>
+							<xsl:text>|</xsl:text>
+							<xsl:value-of select="$rdf//*[@rdf:about = $uri]/skos:prefLabel"/>
 						</field>
 						<field name="{$symbolType}_{$side}_{@position}_uri">
 							<xsl:value-of select="@xlink:href"/>
@@ -351,7 +353,7 @@
 					<xsl:when test="@xlink:href">
 						<xsl:variable name="uri" select="@xlink:href"/>
 						<field name="{$symbolType}_{$side}_facet">
-							<xsl:value-of select="$symbols//*[@rdf:about = $uri]/skos:prefLabel"/>
+							<xsl:value-of select="$rdf//*[@rdf:about = $uri]/skos:prefLabel"/>
 						</field>
 						<field name="{$symbolType}_{$side}_uri">
 							<xsl:value-of select="@xlink:href"/>

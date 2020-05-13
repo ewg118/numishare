@@ -283,7 +283,10 @@
 							</xsl:if>							
 						</div>
 						<div id="refine_results">
+							<!-- keyword search -->
 							<xsl:call-template name="quick_search"/>
+							
+							<!-- more complex facet form -->
 							<h3>
 								<xsl:value-of select="numishare:normalizeLabel('results_refine-results', $lang)"/>
 							</h3>
