@@ -31,7 +31,7 @@
 					<status/>
 					<collection-name/>
 					<username/>
-					<spreadsheet-key>1m4QeTCn12bTU-LiJrdk9U_HY43m2fviQHFdnzvHiuBg</spreadsheet-key>
+					<spreadsheet-key/>
 					<spreadsheet-uri/>
 					<worksheet_id/>
 					<sheets-api-action/>
@@ -1648,7 +1648,7 @@
 											<xforms:setvalue ref="instance('control-instance')/position">0</xforms:setvalue>
 
 											<!-- begin processing the spreadsheet into RDF -->
-											<xforms:action xxforms:iterate="instance('feed')//atom:entry[70]">
+											<xforms:action xxforms:iterate="instance('feed')//atom:entry">
 												<xforms:var name="id"
 													select="normalize-space(data(context()/*[namespace-uri()='http://schemas.google.com/spreadsheets/2006/extended'][name()=instance('mappings')/mapping[@to='id']/@from]))"/>
 												<xforms:var name="position" select="position()"/>
@@ -2194,7 +2194,7 @@
 							<p>The process has been completed successfully. Click the link above to return to the Admin panel.</p>
 						</xforms:case>
 					</xforms:switch>
-					<fr:xforms-inspector/>
+					<!--<fr:xforms-inspector/>-->
 				</div>
 			</div>
 		</div>
