@@ -138,7 +138,6 @@
 		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.0/dist/leaflet.css"/>
 		<script src="https://unpkg.com/leaflet@1.0.0/dist/leaflet.js"/>
 		<script type="text/javascript" src="{$include_path}/javascript/leaflet.ajax.min.js"/>
-		<script type="text/javascript" src="{$include_path}/javascript/heatmap.min.js"/>
 		<script type="text/javascript" src="{$include_path}/javascript/leaflet-heatmap.js"/>
 		<script type="text/javascript" src="{$include_path}/javascript/symbol_map_functions.js"/>
 

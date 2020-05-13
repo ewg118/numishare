@@ -26,17 +26,6 @@ function initialize_map(uri) {
         'Imagery © <a href="http://mapbox.com">Mapbox</a>', id: 'mapbox.streets', maxZoom: 10
     });
     
-    //overlays
-    var heatmapLayer = new HeatmapOverlay({
-        "radius": .5,
-        "maxOpacity": .8,
-        "scaleRadius": true,
-        "useLocalExtrema": true,
-        latField: 'lat',
-        lngField: 'lng',
-        valueField: 'count'
-    });
-    
     var map = new L.Map('mapcontainer', {
         center: new L.LatLng(0, 0),
         zoom: 4,
@@ -53,18 +42,13 @@ function initialize_map(uri) {
     var hoardLayer = L.geoJson.ajax('http://nomisma.org/apis/getHoards?symbol=' + uri, {
         onEachFeature: onEachFeature,
         pointToLayer: renderPoints
-    });
+    }).addTo(map);
     
     //add individual finds layer, but don't make visible
     var findLayer = L.geoJson.ajax('http://nomisma.org/apis/getFindspots?symbol=' + uri, {
         onEachFeature: onEachFeature,
         pointToLayer: renderPoints
-    });
-    
-    //load heatmapLayer after JSON loading concludes
-    $.getJSON('http://nomisma.org/apis/heatmap?symbol=' + uri, function (data) {
-        heatmapLayer.setData(data);
-    });
+    }).addTo(map);
     
     //add controls
     var baseMaps = {
@@ -85,7 +69,7 @@ function initialize_map(uri) {
     }
     
     var overlayMaps = {
-        'Mints': mintLayer, 'Hoards': hoardLayer, 'Finds': findLayer, 'Heatmap': heatmapLayer
+        'Mints': mintLayer, 'Hoards': hoardLayer, 'Finds': findLayer
     };
     
     L.control.layers(baseMaps, overlayMaps).addTo(map);
