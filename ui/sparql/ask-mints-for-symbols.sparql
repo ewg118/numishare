@@ -1,3 +1,4 @@
+PREFIX rdf:	<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX nm:       <http://nomisma.org/id/>
 PREFIX nmo:	<http://nomisma.org/ontology#>
 PREFIX dcterms:  <http://purl.org/dc/terms/>
@@ -11,6 +12,6 @@ ASK {
   }
   ?type nmo:hasObverse|nmo:hasReverse ?side ;
       a nmo:TypeSeriesItem ;
-      nmo:hasMint ?mint .
+      nmo:hasMint|nmo:hasMint/rdf:value ?mint .
   ?mint geo:location ?loc.
 }
