@@ -67,6 +67,9 @@ a:hover{
     border: none;
     height: 600px;
 }
+a .btn-primary {
+    color:white;
+}
 /*
   ***************************************
   BOOTSTRAP NAVBAR
