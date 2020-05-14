@@ -17,8 +17,10 @@ SELECT ?type ?label ?startDate ?endDate ?mint ?mintLabel ?den ?denLabel WHERE {
    skos:prefLabel ?label FILTER(langMatches(lang(?label), "en")) .
    OPTIONAL {?type nmo:hasStartDate ?startDate}
    OPTIONAL {?type nmo:hasEndDate ?endDate}
-   OPTIONAL {?type nmo:hasMint ?mint . 
-   	?mint skos:prefLabel ?mintLabel FILTER(langMatches(lang(?mintLabel), "en"))}
+   OPTIONAL { {?type nmo:hasMint ?mint}
+        UNION {?type nmo:hasMint/rdf:value ?mint }
+        ?mint skos:prefLabel ?mintLabel FILTER(langMatches(lang(?mintLabel), "en"))
+   }
    OPTIONAL {?type nmo:hasDenomination ?den . 
    	?den skos:prefLabel ?denLabel FILTER(langMatches(lang(?denLabel), "en"))}
 }
