@@ -430,12 +430,12 @@
 			</xsl:if>
 		</dl>
 	</xsl:template>
-	
+
 	<!-- display related images: indexed in Solr for physical specimens, or call SPARQL endpoint for coin types, if applicable -->
 	<xsl:template name="result_image">
 		<xsl:param name="alignment"/>
 		<xsl:param name="object-path"/>
-		
+
 		<div class="col-md-5 col-lg-4 {if ($alignment = 'right') then 'pull-right' else ''}">
 			<xsl:choose>
 				<xsl:when test="str[@name = 'recordType'] = 'physical'">
@@ -470,14 +470,15 @@
 				<h4>
 					<xsl:value-of select="numishare:normalize_fields('hoard', $lang)"/>
 				</h4>
-				<xsl:apply-templates select="lst[(@name = 'taq_num' or @name = 'reference_facet' or @name = 'findspot_hier' or @name = 'ancient_place_facet' or @name = 'findspot_type_facet') and number(int) &gt; 0]"
+				<xsl:apply-templates
+					select="lst[(@name = 'taq_num' or @name = 'reference_facet' or @name = 'findspot_hier' or @name = 'ancient_place_facet' or @name = 'findspot_type_facet') and number(int) &gt; 0]"
 					mode="facet"/>
 				<h4>
 					<xsl:value-of select="numishare:normalize_fields('contents', $lang)"/>
 				</h4>
 				<xsl:apply-templates
 					select="
-					lst[((ends-with(@name, '_facet') and not(@name = 'reference_facet' or @name = 'findspot_type_facet' or @name = 'ancient_place_facet')) or @name = 'region_hier') and number(int) &gt;
+						lst[((ends-with(@name, '_facet') and not(@name = 'reference_facet' or @name = 'findspot_type_facet' or @name = 'ancient_place_facet')) or @name = 'region_hier') and number(int) &gt;
 						0]"
 					mode="facet"/>
 			</xsl:when>
@@ -515,7 +516,7 @@
 				<xsl:apply-templates select="lst[not(contains(@name, '_geo')) and not(contains(@name, 'symbol_')) and number(int) &gt; 0]" mode="facet"/>
 			</xsl:otherwise>
 		</xsl:choose>
-		
+
 		<!-- SUBMISSION FORM FOR REFINING RESULTS -->
 		<form action="results" method="GET" role="form" id="facet_form">
 			<xsl:variable name="imageavailable_stripped">
@@ -858,11 +859,11 @@
 						<div class="col-md-10">
 							<span>
 								<b><xsl:value-of select="$name"/>: </b>
-								
+
 								<xsl:call-template name="render-query-term">
 									<xsl:with-param name="field" select="$field"/>
 									<xsl:with-param name="term" select="$term"/>
-								</xsl:call-template>								
+								</xsl:call-template>
 							</span>
 						</div>
 						<xsl:if test="not($lang = 'ar')">
@@ -893,7 +894,9 @@
 								<xsl:for-each select="$tokenized-fragments">
 									<xsl:variable name="field" select="substring-before(translate(., '()', ''), ':')"/>
 									<xsl:variable name="after-colon" select="substring-after(., ':')"/>
-									<xsl:variable name="value">
+
+									<!-- Solr query term to be parsed for removing individual terms from a Solr query -->
+									<xsl:variable name="solr-term">
 										<xsl:choose>
 											<xsl:when test="substring($after-colon, 1, 1) = '&#x022;'">
 												<xsl:analyze-string select="$after-colon" regex="&#x022;([^&#x022;]+)&#x022;">
@@ -918,8 +921,37 @@
 											</xsl:otherwise>
 										</xsl:choose>
 									</xsl:variable>
-									<xsl:variable name="q_string" select="concat($field, ':', $value)"/>
-									<!--<xsl:variable name="value" select="."/>-->
+
+									<!-- human-readable value to be displayed to the user -->
+									<xsl:variable name="value">
+										<xsl:choose>
+											<xsl:when test="substring($after-colon, 1, 1) = '&#x022;'">
+												<xsl:analyze-string select="$after-colon" regex="&#x022;([^&#x022;]+)&#x022;">
+													<xsl:matching-substring>
+														<xsl:value-of select="regex-group(1)"/>
+													</xsl:matching-substring>
+												</xsl:analyze-string>
+											</xsl:when>
+											<xsl:when test="substring($after-colon, 1, 1) = '('">
+												<xsl:analyze-string select="$after-colon" regex="\(([^\)]+)\)">
+													<xsl:matching-substring>
+														<xsl:value-of select="regex-group(1)"/>
+													</xsl:matching-substring>
+												</xsl:analyze-string>
+											</xsl:when>
+											<xsl:otherwise>
+												<xsl:analyze-string select="$after-colon" regex="([0-9]+)">
+													<xsl:matching-substring>
+														<xsl:value-of select="regex-group(1)"/>
+													</xsl:matching-substring>
+												</xsl:analyze-string>
+											</xsl:otherwise>
+										</xsl:choose>
+									</xsl:variable>
+
+									<xsl:variable name="q_string" select="concat($field, ':', $solr-term)"/>
+
+									<!-- generate the new solr query to be submitted upon removal of this particular term from a multiquery sequence -->
 									<xsl:variable name="new_multicategory">
 										<xsl:for-each select="$tokenized-fragments[not(contains(., $q_string))]">
 											<xsl:variable name="other_field" select="substring-before(translate(., '()', ''), ':')"/>
@@ -955,6 +987,7 @@
 											</xsl:if>
 										</xsl:for-each>
 									</xsl:variable>
+
 									<xsl:variable name="multicategory_query">
 										<xsl:choose>
 											<xsl:when test="contains($new_multicategory, ' OR ')">
@@ -965,7 +998,7 @@
 											</xsl:otherwise>
 										</xsl:choose>
 									</xsl:variable>
-									
+
 									<!-- Field Label -->
 									<b>
 										<xsl:choose>
@@ -997,13 +1030,13 @@
 										</xsl:choose>
 										<xsl:text>: </xsl:text>
 									</b>
-									
+
 									<!-- Field Value -->
 									<xsl:call-template name="render-query-term">
 										<xsl:with-param name="field" select="$field"/>
 										<xsl:with-param name="term" select="$value"/>
-									</xsl:call-template>									
-									
+									</xsl:call-template>
+
 									<!-- concatenate the query with the multicategory removed with the new multicategory, or if the multicategory is empty, display just the $new_query -->
 									<a
 										href="{$display_path}results?q={if (string($multicategory_query) and string($new_query)) then concat($new_query, ' AND ', $multicategory_query) else if
@@ -1011,7 +1044,7 @@
 										$lang) else ''}">
 										<span class="glyphicon glyphicon-remove"/>
 									</a>
-									
+
 									<xsl:if test="position() != last()">
 										<xsl:text> OR </xsl:text>
 									</xsl:if>
@@ -1124,12 +1157,12 @@
 			</div>
 		</xsl:if>
 	</xsl:template>
-	
+
 	<!-- render the term into a human readable format, depending on the particular Solr field name -->
 	<xsl:template name="render-query-term">
 		<xsl:param name="field"/>
 		<xsl:param name="term"/>
-		
+
 		<xsl:choose>
 			<xsl:when test="$field = 'century_num'">
 				<xsl:value-of select="numishare:normalize_century($term)"/>
@@ -1163,7 +1196,7 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
-	
+
 	<!-- ****** PAGINATION ****** -->
 	<xsl:template name="paging">
 		<!-- evaluate the page numbering -->
@@ -1536,7 +1569,7 @@
 			</xsl:if>
 		</div>
 	</xsl:template>
-	
+
 	<!-- template for the quick keyword search in the sidebar -->
 	<xsl:template name="quick_search">
 		<div class="quick_search">
