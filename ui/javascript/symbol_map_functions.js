@@ -135,8 +135,8 @@ function initialize_map(uri) {
                 }
                 str += '<a href="' + feature.properties.gazetteer_uri + '">' + feature.properties.toponym + '</a></span>';
             }
-            if (feature.when.hasOwnProperty('closing_date') == true) {
-                str += '<span>';
+            if (feature.properties.hasOwnProperty('closing_date') == true) {
+                str += '<br/><span>';
                 str += '<b>Closing Date: </b>' + feature.properties.closing_date;
             }
         }
