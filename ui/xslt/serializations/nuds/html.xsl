@@ -172,8 +172,8 @@
 				<xsl:copy-of select="document(concat(descendant::nuds:findspotDesc/@xlink:href, '.rdf'))/rdf:RDF/*"/>
 			</xsl:if>
 			
-			<xsl:for-each select="$nudsGroup/descendant::nuds:symbol[contains(@xlink:href, 'http://numismatics.org')]">
-				<xsl:variable name="href" select="@xlink:href"/>
+			<xsl:for-each select="distinct-values($nudsGroup/descendant::nuds:symbol[contains(@xlink:href, 'http://numismatics.org')]/@xlink:href)">
+				<xsl:variable name="href" select="."/>
 				
 				<xsl:if test="doc-available(concat($href, '.rdf'))">
 					<xsl:copy-of select="document(concat($href, '.rdf'))/rdf:RDF/*"/>
