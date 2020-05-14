@@ -67,8 +67,11 @@ a:hover{
     border: none;
     height: 600px;
 }
-a .btn-primary {
+a.btn-primary:link {
     color:white;
+}
+a.btn-primary:hover {
+    color:white
 }
 /*
   ***************************************
