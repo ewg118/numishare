@@ -322,14 +322,28 @@
 					<xsl:when test="@xlink:href">
 						<xsl:variable name="uri" select="@xlink:href"/>
 						<field name="{$symbolType}_{$side}_{@position}_facet">
-							<xsl:value-of select="$rdf//*[@rdf:about = $uri]/descendant::crmdig:D1_Digital_Object[1]/@rdf:about"/>
-							<xsl:text>|</xsl:text>
-							<xsl:value-of select="$rdf//*[@rdf:about = $uri]/skos:prefLabel"/>
+							<xsl:choose>
+								<xsl:when test="$rdf//*[@rdf:about = $uri]/descendant::crmdig:D1_Digital_Object">
+									<xsl:value-of select="$rdf//*[@rdf:about = $uri]/descendant::crmdig:D1_Digital_Object[1]/@rdf:about"/>
+									<xsl:text>|</xsl:text>
+									<xsl:value-of select="$rdf//*[@rdf:about = $uri]/skos:prefLabel"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:value-of select="$rdf//*[@rdf:about = $uri]/skos:prefLabel"/>
+								</xsl:otherwise>
+							</xsl:choose>							
 						</field>
 						<field name="{$symbolType}_{$side}_facet">
-							<xsl:value-of select="$rdf//*[@rdf:about = $uri]/descendant::crmdig:D1_Digital_Object[1]/@rdf:about"/>
-							<xsl:text>|</xsl:text>
-							<xsl:value-of select="$rdf//*[@rdf:about = $uri]/skos:prefLabel"/>
+							<xsl:choose>
+								<xsl:when test="$rdf//*[@rdf:about = $uri]/descendant::crmdig:D1_Digital_Object">
+									<xsl:value-of select="$rdf//*[@rdf:about = $uri]/descendant::crmdig:D1_Digital_Object[1]/@rdf:about"/>
+									<xsl:text>|</xsl:text>
+									<xsl:value-of select="$rdf//*[@rdf:about = $uri]/skos:prefLabel"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:value-of select="$rdf//*[@rdf:about = $uri]/skos:prefLabel"/>
+								</xsl:otherwise>
+							</xsl:choose>
 						</field>
 						<field name="{$symbolType}_{$side}_{@position}_uri">
 							<xsl:value-of select="@xlink:href"/>
