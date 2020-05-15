@@ -97,7 +97,8 @@
 
 	<xsl:template match="*" mode="descMeta">
 		<xsl:choose>
-			<xsl:when test="not(child::*) and (string(.) or string(@xlink:href))">
+			<!-- always process symbol here -->
+			<xsl:when test="(not(child::*) and (string(.) or string(@xlink:href))) or self::nuds:symbol">
 				<xsl:variable name="href" select="@xlink:href"/>
 				<!-- the facet field is the @xlink:role if it exists, otherwise it is the name of the nuds element -->
 				<xsl:variable name="field">
@@ -115,7 +116,6 @@
 				</xsl:variable>
 
 				<li>
-					<!-- display label first for non-Arabic languages -->
 					<b>
 						<xsl:choose>
 							<xsl:when test="string(@localType)">
@@ -138,6 +138,24 @@
 								<xsl:value-of select="numishare:regularize_node($field, $lang)"/>
 							</xsl:otherwise>
 						</xsl:choose>
+
+						<!-- insert position under bold heading -->
+						<xsl:if test="string(@position)">
+							<xsl:variable name="langParam" select="
+									if (string($lang)) then
+										$lang
+									else
+										'en'"/>
+							<xsl:variable name="position" select="@position"/>
+							<xsl:choose>
+								<xsl:when test="$positions//position[@value = $position]/label[@lang = $langParam]">
+									<i> (<xsl:value-of select="$positions//position[@value = $position]/label[@lang = $langParam]"/>)</i>
+								</xsl:when>
+								<xsl:otherwise>
+									<i> (<xsl:value-of select="concat(upper-case(substring(@position, 1, 1)), substring(@position, 2))"/>)</i>
+								</xsl:otherwise>
+							</xsl:choose>
+						</xsl:if>
 
 						<xsl:text>: </xsl:text>
 					</b>
@@ -238,7 +256,9 @@
 					</xsl:variable>
 
 					<xsl:choose>
-						<xsl:when test="not(ancestor::nuds:typeDesc/@xlink:href) and not(ancestor::nuds:refDesc) and not(@xlink:href)">
+						<!-- process non-linkable literals -->
+						<xsl:when
+							test="not(ancestor::nuds:typeDesc/@xlink:href) and not(ancestor::nuds:refDesc) and not(self::nuds:symbol) and not(@xlink:href)">
 							<span>
 								<xsl:attribute name="property"
 									select="
@@ -329,6 +349,30 @@
 										</xsl:otherwise>
 									</xsl:choose>
 								</xsl:when>
+								<xsl:when test="$field = 'symbol'">
+									<xsl:choose>
+										<xsl:when test="child::tei:div">
+											<xsl:apply-templates select="tei:div" mode="symbols">
+												<xsl:with-param name="field">symbol</xsl:with-param>
+												<xsl:with-param name="position" select="@position"/>
+											</xsl:apply-templates>
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:call-template name="display-label">
+												<xsl:with-param name="field" select="$field"/>
+												<xsl:with-param name="value" select="$value"/>
+												<xsl:with-param name="href" select="$href"/>
+												<xsl:with-param name="position" select="@position"/>
+											</xsl:call-template>
+
+
+											<!-- if the element is a symbol, display image and constituent letters, if applicable -->
+											<xsl:if test="string($href) and self::nuds:symbol">
+												<xsl:apply-templates select="$rdf/*[@rdf:about = $href]"/>
+											</xsl:if>
+										</xsl:otherwise>
+									</xsl:choose>
+								</xsl:when>
 								<xsl:otherwise>
 									<xsl:call-template name="display-label">
 										<xsl:with-param name="field" select="$field"/>
@@ -342,32 +386,9 @@
 					</xsl:choose>
 
 					<!-- ***** additional attributes ***** -->
-
-					<!-- if the element is a symbol, display image and constituent letters, if applicable -->
-					<xsl:if test="string($href) and self::nuds:symbol">
-						<xsl:apply-templates select="$rdf/*[@rdf:about = $href]"/>
-					</xsl:if>
-
 					<!-- display title -->
 					<xsl:if test="string(@title)">
 						<i> (<xsl:value-of select="@title"/>)</i>
-					</xsl:if>
-
-					<xsl:if test="string(@position)">
-						<xsl:variable name="langParam" select="
-								if (string($lang)) then
-									$lang
-								else
-									'en'"/>
-						<xsl:variable name="position" select="@position"/>
-						<xsl:choose>
-							<xsl:when test="$positions//position[@value = $position]/label[@lang = $langParam]">
-								<i> (<xsl:value-of select="$positions//position[@value = $position]/label[@lang = $langParam]"/>)</i>
-							</xsl:when>
-							<xsl:otherwise>
-								<i> (<xsl:value-of select="concat(upper-case(substring(@position, 1, 1)), substring(@position, 2))"/>)</i>
-							</xsl:otherwise>
-						</xsl:choose>
 					</xsl:if>
 
 					<!-- display certainty -->
@@ -550,7 +571,7 @@
 		<xsl:choose>
 			<xsl:when test="$field = 'symbol'">
 				<xsl:variable name="side" select="substring(parent::node()/name(), 1, 3)"/>
-				
+
 				<!-- get the first crmdig Digital Image URL from the $rdf -->
 				<xsl:variable name="image-url" select="$rdf/*[@rdf:about = $href]/descendant::crmdig:D1_Digital_Object/@rdf:about"/>
 
@@ -620,7 +641,7 @@
 		<xsl:apply-templates select="descendant::crmdig:D1_Digital_Object">
 			<xsl:with-param name="uri" select="@rdf:about"/>
 		</xsl:apply-templates>
-		
+
 		<xsl:if test="crm:P106_is_composed_of">
 			<xsl:text>, consists of </xsl:text>
 			<xsl:for-each select="crm:P106_is_composed_of">
@@ -638,11 +659,11 @@
 
 	<xsl:template match="crmdig:D1_Digital_Object">
 		<xsl:param name="uri"/>
-		
+
 		<a href="{$uri}">
 			<img src="{@rdf:about}" alt="symbol" style="height:24px"/>
 		</a>
-		
+
 	</xsl:template>
 
 	<!-- *************** FORMAT CONTROL MARKS FROM INDIVIDUAL SYMBOL ELEMENTS ******************-->
@@ -885,6 +906,97 @@
 			<xsl:value-of select="@reason"/>
 		</i>
 		<xsl:text>]</xsl:text>
+	</xsl:template>
+
+	<!-- complex symbols and monograms encoded in EpiDoc -->
+	<xsl:template match="tei:div" mode="symbols">
+		<xsl:param name="field"/>
+		<xsl:param name="position"/>
+		
+		<xsl:apply-templates select="tei:choice|tei:ab" mode="symbols">
+			<xsl:with-param name="field" select="$field"/>
+			<xsl:with-param name="position" select="$position"/>
+		</xsl:apply-templates>
+	</xsl:template>
+
+	<xsl:template match="tei:ab" mode="symbols">
+		<xsl:param name="field"/>
+		<xsl:param name="position"/>
+		
+		<xsl:choose>
+			<xsl:when test="child::*">
+				<xsl:apply-templates select="*" mode="symbols">
+					<xsl:with-param name="field" select="$field"/>
+					<xsl:with-param name="position" select="$position"/>
+				</xsl:apply-templates>
+			</xsl:when>
+			<xsl:when test="string-length(normalize-space(.)) &gt; 0">
+				<xsl:apply-templates select="text()" mode="symbols">
+					<xsl:with-param name="field" select="$field"/>
+					<xsl:with-param name="position" select="$position"/>
+				</xsl:apply-templates>
+			</xsl:when>
+		</xsl:choose>
+		
+		<xsl:if test="@rend">
+			<xsl:text> (</xsl:text>
+			<i>
+				<xsl:value-of select="@rend"/>
+			</i>
+			<xsl:text>)</xsl:text>
+		</xsl:if>
+		
+		<xsl:if test="not(position() = last())">
+			<xsl:text> / </xsl:text>
+		</xsl:if>
+	</xsl:template>
+	
+	<xsl:template match="tei:seg|tei:am|tei:g" mode="symbols">
+		<xsl:param name="field"/>
+		<xsl:param name="position"/>
+		
+		<xsl:choose>
+			<xsl:when test="child::*">
+				<xsl:apply-templates select="*" mode="symbols">
+					<xsl:with-param name="field" select="$field"/>
+					<xsl:with-param name="position" select="$position"/>
+				</xsl:apply-templates>
+			</xsl:when>
+			<xsl:when test="string-length(normalize-space(.)) &gt; 0">
+				<xsl:apply-templates select="text()" mode="symbols">
+					<xsl:with-param name="field" select="$field"/>
+					<xsl:with-param name="position" select="$position"/>
+				</xsl:apply-templates>
+			</xsl:when>
+		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template match="tei:choice" mode="symbols">
+		<xsl:param name="field"/>
+		<xsl:param name="position"/>
+		
+		<xsl:for-each select="*">
+			<xsl:apply-templates select="self::node()" mode="symbols">
+				<xsl:with-param name="field" select="$field"/>
+				<xsl:with-param name="position" select="$position"/>
+			</xsl:apply-templates>
+			<xsl:if test="not(position() = last())">
+				<i> or </i>
+			</xsl:if>
+		</xsl:for-each>
+	</xsl:template>
+	
+	<!-- process the text() node into a clickable link -->
+	<xsl:template match="text()" mode="symbols">
+		<xsl:param name="field"/>
+		<xsl:param name="position"/>
+		
+		<xsl:call-template name="display-label">
+			<xsl:with-param name="field" select="$field"/>
+			<xsl:with-param name="value" select="."/>
+			<xsl:with-param name="href"/>
+			<xsl:with-param name="position" select="$position"/>
+		</xsl:call-template>
 	</xsl:template>
 
 	<!--***************************************** CREATE LINK FROM CATEGORY **************************************** -->

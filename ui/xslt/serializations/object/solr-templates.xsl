@@ -316,70 +316,83 @@
 				else
 					'symbol'"/>
 
+		
+		<!-- parse text fragments and monograms encoded in EpiDoc TEI -->
 		<xsl:choose>
-			<xsl:when test="@position">
-				<xsl:choose>
-					<xsl:when test="@xlink:href">
-						<xsl:variable name="uri" select="@xlink:href"/>
-						<field name="{$symbolType}_{$side}_{@position}_facet">
-							<xsl:choose>
-								<xsl:when test="$rdf//*[@rdf:about = $uri]/descendant::crmdig:D1_Digital_Object">
-									<xsl:value-of select="$rdf//*[@rdf:about = $uri]/descendant::crmdig:D1_Digital_Object[1]/@rdf:about"/>
-									<xsl:text>|</xsl:text>
-									<xsl:value-of select="$rdf//*[@rdf:about = $uri]/skos:prefLabel"/>
-								</xsl:when>
-								<xsl:otherwise>
-									<xsl:value-of select="$rdf//*[@rdf:about = $uri]/skos:prefLabel"/>
-								</xsl:otherwise>
-							</xsl:choose>							
-						</field>
-						<field name="{$symbolType}_{$side}_facet">
-							<xsl:choose>
-								<xsl:when test="$rdf//*[@rdf:about = $uri]/descendant::crmdig:D1_Digital_Object">
-									<xsl:value-of select="$rdf//*[@rdf:about = $uri]/descendant::crmdig:D1_Digital_Object[1]/@rdf:about"/>
-									<xsl:text>|</xsl:text>
-									<xsl:value-of select="$rdf//*[@rdf:about = $uri]/skos:prefLabel"/>
-								</xsl:when>
-								<xsl:otherwise>
-									<xsl:value-of select="$rdf//*[@rdf:about = $uri]/skos:prefLabel"/>
-								</xsl:otherwise>
-							</xsl:choose>
-						</field>
-						<field name="{$symbolType}_{$side}_{@position}_uri">
-							<xsl:value-of select="@xlink:href"/>
-						</field>
-						<field name="{$symbolType}_uri">
-							<xsl:value-of select="@xlink:href"/>
-						</field>
-					</xsl:when>
-					<xsl:otherwise>
-						<field name="{$symbolType}_{$side}_{@position}_facet">
-							<xsl:value-of select="."/>
-						</field>
-						<field name="{$symbolType}_{$side}_facet">
-							<xsl:value-of select="."/>
-						</field>
-					</xsl:otherwise>
-				</xsl:choose>
+			<xsl:when test="child::tei:div">
+				<xsl:apply-templates select="tei:div" mode="symbols">
+					<xsl:with-param name="symbolType" select="$symbolType"/>
+					<xsl:with-param name="side" select="$side"/>
+					<xsl:with-param name="position" select="@position"/>
+				</xsl:apply-templates>
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:choose>
-					<xsl:when test="@xlink:href">
-						<xsl:variable name="uri" select="@xlink:href"/>
-						<field name="{$symbolType}_{$side}_facet">
-							<xsl:value-of select="$rdf//*[@rdf:about = $uri]/skos:prefLabel"/>
-						</field>
-						<field name="{$symbolType}_{$side}_uri">
-							<xsl:value-of select="@xlink:href"/>
-						</field>
-						<field name="{$symbolType}_uri">
-							<xsl:value-of select="@xlink:href"/>
-						</field>
+					<xsl:when test="@position">
+						<xsl:choose>
+							<xsl:when test="@xlink:href">
+								<xsl:variable name="uri" select="@xlink:href"/>
+								<field name="{$symbolType}_{$side}_{@position}_facet">
+									<xsl:choose>
+										<xsl:when test="$rdf//*[@rdf:about = $uri]/descendant::crmdig:D1_Digital_Object">
+											<xsl:value-of select="$rdf//*[@rdf:about = $uri]/descendant::crmdig:D1_Digital_Object[1]/@rdf:about"/>
+											<xsl:text>|</xsl:text>
+											<xsl:value-of select="$rdf//*[@rdf:about = $uri]/skos:prefLabel"/>
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:value-of select="$rdf//*[@rdf:about = $uri]/skos:prefLabel"/>
+										</xsl:otherwise>
+									</xsl:choose>							
+								</field>
+								<field name="{$symbolType}_{$side}_facet">
+									<xsl:choose>
+										<xsl:when test="$rdf//*[@rdf:about = $uri]/descendant::crmdig:D1_Digital_Object">
+											<xsl:value-of select="$rdf//*[@rdf:about = $uri]/descendant::crmdig:D1_Digital_Object[1]/@rdf:about"/>
+											<xsl:text>|</xsl:text>
+											<xsl:value-of select="$rdf//*[@rdf:about = $uri]/skos:prefLabel"/>
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:value-of select="$rdf//*[@rdf:about = $uri]/skos:prefLabel"/>
+										</xsl:otherwise>
+									</xsl:choose>
+								</field>
+								<field name="{$symbolType}_{$side}_{@position}_uri">
+									<xsl:value-of select="@xlink:href"/>
+								</field>
+								<field name="{$symbolType}_uri">
+									<xsl:value-of select="@xlink:href"/>
+								</field>
+							</xsl:when>
+							<xsl:otherwise>
+								<field name="{$symbolType}_{$side}_{@position}_facet">
+									<xsl:value-of select="."/>
+								</field>
+								<field name="{$symbolType}_{$side}_facet">
+									<xsl:value-of select="."/>
+								</field>
+							</xsl:otherwise>
+						</xsl:choose>
 					</xsl:when>
 					<xsl:otherwise>
-						<field name="{$symbolType}_{$side}_facet">
-							<xsl:value-of select="."/>
-						</field>
+						<xsl:choose>
+							<xsl:when test="@xlink:href">
+								<xsl:variable name="uri" select="@xlink:href"/>
+								<field name="{$symbolType}_{$side}_facet">
+									<xsl:value-of select="$rdf//*[@rdf:about = $uri]/skos:prefLabel"/>
+								</field>
+								<field name="{$symbolType}_{$side}_uri">
+									<xsl:value-of select="@xlink:href"/>
+								</field>
+								<field name="{$symbolType}_uri">
+									<xsl:value-of select="@xlink:href"/>
+								</field>
+							</xsl:when>
+							<xsl:otherwise>
+								<field name="{$symbolType}_{$side}_facet">
+									<xsl:value-of select="."/>
+								</field>
+							</xsl:otherwise>
+						</xsl:choose>
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:otherwise>
@@ -750,6 +763,118 @@
 				<xsl:value-of select="normalize-space(.)"/>
 			</field>
 		</xsl:if>
+	</xsl:template>
+	
+	<!-- TEI-encoded symbols and monograms encoded in EpiDoc -->
+	<xsl:template match="tei:div" mode="symbols">
+		<xsl:param name="side"/>
+		<xsl:param name="symbolType"/>
+		<xsl:param name="position"/>
+		
+		<xsl:apply-templates select="tei:choice|tei:ab" mode="symbols">
+			<xsl:with-param name="side" select="$side"/>
+			<xsl:with-param name="symbolType" select="$symbolType"/>
+			<xsl:with-param name="position" select="$position"/>
+		</xsl:apply-templates>
+	</xsl:template>
+	
+	<xsl:template match="tei:ab" mode="symbols">
+		<xsl:param name="side"/>
+		<xsl:param name="symbolType"/>
+		<xsl:param name="position"/>
+		
+		<xsl:choose>
+			<xsl:when test="child::*">
+				<xsl:apply-templates select="*" mode="symbols">
+					<xsl:with-param name="side" select="$side"/>
+					<xsl:with-param name="symbolType" select="$symbolType"/>
+					<xsl:with-param name="position" select="$position"/>
+				</xsl:apply-templates>
+			</xsl:when>
+			<xsl:when test="string-length(normalize-space(.)) &gt; 0">
+				<xsl:apply-templates select="text()" mode="symbols">
+					<xsl:with-param name="side" select="$side"/>
+					<xsl:with-param name="symbolType" select="$symbolType"/>
+					<xsl:with-param name="position" select="$position"/>
+				</xsl:apply-templates>
+			</xsl:when>
+		</xsl:choose>
+	</xsl:template>
+	
+	<xsl:template match="tei:seg|tei:am|tei:g" mode="symbols">
+		<xsl:param name="side"/>
+		<xsl:param name="symbolType"/>
+		<xsl:param name="position"/>
+		
+		<xsl:choose>
+			<xsl:when test="child::*">
+				<xsl:apply-templates select="*" mode="symbols">
+					<xsl:with-param name="side" select="$side"/>
+					<xsl:with-param name="symbolType" select="$symbolType"/>
+					<xsl:with-param name="position" select="$position"/>
+				</xsl:apply-templates>
+			</xsl:when>
+			<xsl:when test="string-length(normalize-space(.)) &gt; 0">
+				<xsl:apply-templates select="text()" mode="symbols">
+					<xsl:with-param name="side" select="$side"/>
+					<xsl:with-param name="symbolType" select="$symbolType"/>
+					<xsl:with-param name="position" select="$position"/>
+				</xsl:apply-templates>
+			</xsl:when>
+		</xsl:choose>
+		
+		
+	</xsl:template>
+	
+	<xsl:template match="tei:choice" mode="symbols">
+		<xsl:param name="side"/>
+		<xsl:param name="symbolType"/>
+		<xsl:param name="position"/>
+		
+		<xsl:for-each select="*">
+			<xsl:apply-templates select="self::node()" mode="symbols">
+				<xsl:with-param name="side" select="$side"/>
+				<xsl:with-param name="symbolType" select="$symbolType"/>
+				<xsl:with-param name="position" select="$position"/>
+			</xsl:apply-templates>
+		</xsl:for-each>
+	</xsl:template>
+	
+	<!-- process the text() node into a clickable link -->
+	<xsl:template match="text()" mode="symbols">
+		<xsl:param name="side"/>
+		<xsl:param name="symbolType"/>
+		<xsl:param name="position"/>
+		
+		<xsl:call-template name="generate-symbol-field">
+			<xsl:with-param name="side" select="$side"/>
+			<xsl:with-param name="symbolType" select="$symbolType"/>
+			<xsl:with-param name="position" select="$position"/>
+			<xsl:with-param name="value" select="."/>
+			<xsl:with-param name="href"/>
+		</xsl:call-template>
+	</xsl:template>
+	
+	<xsl:template name="generate-symbol-field">
+		<xsl:param name="side"/>
+		<xsl:param name="symbolType"/>
+		<xsl:param name="position"/>
+		<xsl:param name="value"/>
+		<xsl:param name="href"/>		
+
+		<xsl:choose>
+			<xsl:when test="string($position)">
+				<field name="{$symbolType}_{$side}_{$position}_facet">
+							<xsl:value-of select="$value"/>					
+				</field>
+				<field name="{$symbolType}_{$side}_facet">
+					<xsl:value-of select="$value"/>
+				</field>
+			</xsl:when>
+			<xsl:otherwise>
+				
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 	<!-- index TEI-encoded edition into legend field -->
