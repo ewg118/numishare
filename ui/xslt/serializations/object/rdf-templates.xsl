@@ -496,7 +496,7 @@
 	<xsl:template match="nuds:symbol" mode="nomisma">
 		<xsl:if test="@xlink:arcrole and @xlink:href">
 			<xsl:variable name="element" select="
-					if (@xlink:arcole = 'nmo:hasMonogram') then
+					if (@xlink:arcrole = 'nmo:hasMonogram') then
 						'nmo:hasControlmark'
 					else
 						@xlink:arcrole"/>
