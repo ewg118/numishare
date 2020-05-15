@@ -501,7 +501,7 @@
 					else
 						@xlink:arcrole"/>
 
-			<xsl:element name="{@xlink:arcrole}">
+			<xsl:element name="{$element}">
 				<xsl:attribute name="rdf:resource" select="@xlink:href"/>
 			</xsl:element>
 		</xsl:if>
