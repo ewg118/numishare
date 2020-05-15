@@ -349,11 +349,14 @@
 										</xsl:otherwise>
 									</xsl:choose>
 								</xsl:when>
-								<xsl:when test="$field = 'symbol'">
+								<xsl:when test="self::nuds:symbol">
+									<xsl:variable name="side" select="substring(parent::node()/name(), 1, 3)"/>
+
 									<xsl:choose>
 										<xsl:when test="child::tei:div">
 											<xsl:apply-templates select="tei:div" mode="symbols">
-												<xsl:with-param name="field">symbol</xsl:with-param>
+												<xsl:with-param name="field" select="$field"/>
+												<xsl:with-param name="side" select="$side"/>
 												<xsl:with-param name="position" select="@position"/>
 											</xsl:apply-templates>
 										</xsl:when>
@@ -362,6 +365,7 @@
 												<xsl:with-param name="field" select="$field"/>
 												<xsl:with-param name="value" select="$value"/>
 												<xsl:with-param name="href" select="$href"/>
+												<xsl:with-param name="side" select="$side"/>
 												<xsl:with-param name="position" select="@position"/>
 											</xsl:call-template>
 
@@ -564,13 +568,13 @@
 		<xsl:param name="field"/>
 		<xsl:param name="value"/>
 		<xsl:param name="href"/>
+		<xsl:param name="side"/>
 		<xsl:param name="position"/>
 
 		<xsl:variable name="facet" select="concat($field, '_facet')"/>
 
 		<xsl:choose>
 			<xsl:when test="$field = 'symbol'">
-				<xsl:variable name="side" select="substring(parent::node()/name(), 1, 3)"/>
 
 				<!-- get the first crmdig Digital Image URL from the $rdf -->
 				<xsl:variable name="image-url" select="$rdf/*[@rdf:about = $href]/descendant::crmdig:D1_Digital_Object/@rdf:about"/>
@@ -911,33 +915,38 @@
 	<!-- complex symbols and monograms encoded in EpiDoc -->
 	<xsl:template match="tei:div" mode="symbols">
 		<xsl:param name="field"/>
+		<xsl:param name="side"/>
 		<xsl:param name="position"/>
-		
-		<xsl:apply-templates select="tei:choice|tei:ab" mode="symbols">
+
+		<xsl:apply-templates select="tei:choice | tei:ab" mode="symbols">
 			<xsl:with-param name="field" select="$field"/>
+			<xsl:with-param name="side" select="$side"/>
 			<xsl:with-param name="position" select="$position"/>
 		</xsl:apply-templates>
 	</xsl:template>
 
 	<xsl:template match="tei:ab" mode="symbols">
 		<xsl:param name="field"/>
+		<xsl:param name="side"/>
 		<xsl:param name="position"/>
-		
+
 		<xsl:choose>
 			<xsl:when test="child::*">
 				<xsl:apply-templates select="*" mode="symbols">
 					<xsl:with-param name="field" select="$field"/>
+					<xsl:with-param name="side" select="$side"/>
 					<xsl:with-param name="position" select="$position"/>
 				</xsl:apply-templates>
 			</xsl:when>
 			<xsl:when test="string-length(normalize-space(.)) &gt; 0">
 				<xsl:apply-templates select="text()" mode="symbols">
 					<xsl:with-param name="field" select="$field"/>
+					<xsl:with-param name="side" select="$side"/>
 					<xsl:with-param name="position" select="$position"/>
 				</xsl:apply-templates>
 			</xsl:when>
 		</xsl:choose>
-		
+
 		<xsl:if test="@rend">
 			<xsl:text> (</xsl:text>
 			<i>
@@ -945,26 +954,29 @@
 			</i>
 			<xsl:text>)</xsl:text>
 		</xsl:if>
-		
+
 		<xsl:if test="not(position() = last())">
 			<xsl:text> / </xsl:text>
 		</xsl:if>
 	</xsl:template>
-	
-	<xsl:template match="tei:seg|tei:am|tei:g" mode="symbols">
+
+	<xsl:template match="tei:seg | tei:am | tei:g" mode="symbols">
 		<xsl:param name="field"/>
+		<xsl:param name="side"/>
 		<xsl:param name="position"/>
-		
+
 		<xsl:choose>
 			<xsl:when test="child::*">
 				<xsl:apply-templates select="*" mode="symbols">
 					<xsl:with-param name="field" select="$field"/>
+					<xsl:with-param name="side" select="$side"/>
 					<xsl:with-param name="position" select="$position"/>
 				</xsl:apply-templates>
 			</xsl:when>
 			<xsl:when test="string-length(normalize-space(.)) &gt; 0">
 				<xsl:apply-templates select="text()" mode="symbols">
 					<xsl:with-param name="field" select="$field"/>
+					<xsl:with-param name="side" select="$side"/>
 					<xsl:with-param name="position" select="$position"/>
 				</xsl:apply-templates>
 			</xsl:when>
@@ -973,11 +985,13 @@
 
 	<xsl:template match="tei:choice" mode="symbols">
 		<xsl:param name="field"/>
+		<xsl:param name="side"/>
 		<xsl:param name="position"/>
-		
+
 		<xsl:for-each select="*">
 			<xsl:apply-templates select="self::node()" mode="symbols">
 				<xsl:with-param name="field" select="$field"/>
+				<xsl:with-param name="side" select="$side"/>
 				<xsl:with-param name="position" select="$position"/>
 			</xsl:apply-templates>
 			<xsl:if test="not(position() = last())">
@@ -985,16 +999,18 @@
 			</xsl:if>
 		</xsl:for-each>
 	</xsl:template>
-	
+
 	<!-- process the text() node into a clickable link -->
 	<xsl:template match="text()" mode="symbols">
 		<xsl:param name="field"/>
+		<xsl:param name="side"/>
 		<xsl:param name="position"/>
-		
+
 		<xsl:call-template name="display-label">
 			<xsl:with-param name="field" select="$field"/>
 			<xsl:with-param name="value" select="."/>
 			<xsl:with-param name="href"/>
+			<xsl:with-param name="side" select="$side"/>
 			<xsl:with-param name="position" select="$position"/>
 		</xsl:call-template>
 	</xsl:template>
