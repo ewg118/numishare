@@ -495,6 +495,12 @@
 	<!-- only include the symbol if it has a designated RDF property through the @xlink:arcrole -->
 	<xsl:template match="nuds:symbol" mode="nomisma">
 		<xsl:if test="@xlink:arcrole and @xlink:href">
+			<xsl:variable name="element" select="
+					if (@xlink:arcole = 'nmo:hasMonogram') then
+						'nmo:hasControlmark'
+					else
+						@xlink:arcrole"/>
+
 			<xsl:element name="{@xlink:arcrole}">
 				<xsl:attribute name="rdf:resource" select="@xlink:href"/>
 			</xsl:element>
@@ -765,12 +771,12 @@
 									<xsl:when test="nh:fallsWithin[nh:geogname[@xlink:role = 'findspot'][@xlink:href]]">
 										<xsl:apply-templates select="nh:fallsWithin[nh:geogname[@xlink:role = 'findspot'][@xlink:href]]"/>
 									</xsl:when>
-									<xsl:when test="nh:geogname[@xlink:role='findspot'][not(@xlink:href)]">
+									<xsl:when test="nh:geogname[@xlink:role = 'findspot'][not(@xlink:href)]">
 										<rdfs:label>
-											<xsl:value-of select="nh:geogname[@xlink:role='findspot'][not(@xlink:href)]"/>
+											<xsl:value-of select="nh:geogname[@xlink:role = 'findspot'][not(@xlink:href)]"/>
 										</rdfs:label>
 									</xsl:when>
-								</xsl:choose>								
+								</xsl:choose>
 							</crm:E53_Place>
 						</crm:P7_took_place_at>
 					</nmo:Find>
@@ -852,7 +858,7 @@
 			</xsl:when>
 		</xsl:choose>
 	</xsl:template>
-	
+
 	<xsl:template match="gml:location">
 		<xsl:param name="geoURI"/>
 
@@ -1005,13 +1011,13 @@
 			<xsl:value-of select="@standardDate"/>
 		</xsl:element>
 	</xsl:template>
-	
+
 	<!-- ***** generate geo:SpatialThing from coordinates extracted from Geonames API ***** -->
 	<xsl:template name="generateSpatialThing">
 		<xsl:param name="geoURI"/>
 		<xsl:param name="lat"/>
 		<xsl:param name="long"/>
-		
+
 		<geo:SpatialThing rdf:about="{$geoURI}">
 			<rdf:type rdf:resource="http://www.ics.forth.gr/isl/CRMgeo/SP5_Geometric_Place_Expression"/>
 			<crmgeo:Q9_is_expressed_in_terms_of rdf:resource="http://www.wikidata.org/entity/Q215848"/>
