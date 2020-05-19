@@ -24,6 +24,9 @@ OPTIONAL { ?object nmo:hasTypeSeriesItem ?type .
     OPTIONAL {?type nmo:hasMint/skos:prefLabel ?mint FILTER(langMatches(lang(?mint), "en"))}
     OPTIONAL {?type nmo:hasAuthority/skos:prefLabel ?authority FILTER(langMatches(lang(?authority), "en"))}
 }
+OPTIONAL {?object nmo:hasDenomination/skos:prefLabel ?denomination FILTER(langMatches(lang(?denomination), "en"))}
+OPTIONAL {?object nmo:hasMint/skos:prefLabel ?mint FILTER(langMatches(lang(?mint), "en"))}
+OPTIONAL {?object nmo:hasAuthority/skos:prefLabel ?authority FILTER(langMatches(lang(?authority), "en"))}
 ?object void:inDataset ?dataset .
 ?dataset dcterms:publisher ?publisher FILTER (lang(?publisher) = "" || langMatches(lang(?publisher), "en")) .
 ?dataset dcterms:title ?datasetTitle FILTER (lang(?datasetTitle) = "" || langMatches(lang(?datasetTitle), "en")) .
@@ -31,11 +34,9 @@ OPTIONAL { ?object foaf:thumbnail ?comThumb }
 OPTIONAL { ?object foaf:depiction ?comRef 
 	OPTIONAL { ?comRef dcterms:isReferencedBy ?comManifest }}
 OPTIONAL { ?object nmo:hasObverse/foaf:thumbnail ?obvThumb }
-OPTIONAL { ?object nmo:hasObverse ?obverse .
-?obverse foaf:depiction ?obvRef
+OPTIONAL { ?object nmo:hasObverse/foaf:depiction ?obvRef
 	OPTIONAL { ?obvRef dcterms:isReferencedBy ?obvManifest }}
 OPTIONAL { ?object nmo:hasReverse/foaf:thumbnail ?revThumb }
-OPTIONAL { ?object nmo:hasReverse ?reverse .
-?reverse foaf:depiction ?revRef 
+OPTIONAL { ?object nmo:hasReverse/foaf:depiction ?revRef 
 	OPTIONAL { ?revRef dcterms:isReferencedBy ?revManifest }}
 } GROUP BY ?object ?title ?identifier ?collection ?publisher ?dataset ?datasetTitle ?obvThumb ?revThumb ?obvRef ?revRef ?comThumb ?comRef ?obvManifest ?revManifest ?comManifest ?types ?typeTitles ?mints ?denominations ?authorities ORDER BY ASC(?publisher) ASC(?collection)
