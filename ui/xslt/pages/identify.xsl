@@ -17,8 +17,15 @@
 		</xsl:choose>
 	</xsl:param>
 
+	<xsl:variable name="collection-name" select="substring-before(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/')"/>
+
 	<xsl:variable name="display_path"/>
-	<xsl:variable name="include_path" select="if (string(//config/theme/themes_url)) then concat(//config/theme/themes_url, //config/theme/orbeon_theme) else concat('http://', doc('input:request')/request/server-name, ':8080/orbeon/themes/', //config/theme/orbeon_theme)"/>
+	<xsl:variable name="include_path"
+		select="
+			if (string(//config/theme/themes_url)) then
+				concat(//config/theme/themes_url, //config/theme/orbeon_theme)
+			else
+				concat('http://', doc('input:request')/request/server-name, ':8080/orbeon/themes/', //config/theme/orbeon_theme)"/>
 
 	<!-- config variables-->
 	<xsl:variable name="collection_type" select="//config/collection_type"/>
@@ -33,7 +40,7 @@
 				</title>
 				<meta name="viewport" content="width=device-width, initial-scale=1"/>
 				<link rel="shortcut icon" type="image/x-icon" href="{$include_path}/images/favicon.png"/>
-				
+
 				<xsl:for-each select="//config/includes/include">
 					<xsl:choose>
 						<xsl:when test="@type = 'css'">
@@ -44,7 +51,7 @@
 						</xsl:when>
 					</xsl:choose>
 				</xsl:for-each>
-				
+
 				<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"/>
 				<link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
 				<script src="https://netdna.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"/>
@@ -97,8 +104,17 @@
 							</h2>
 							<p class="text-muted">Search for characters that appear on the front and back of the coin. Please enter legends without spaces or
 								punctuation, using the wildcard asterisk character '*' to denote gaps in legibility, in the beginning, middle, or end of the
-								legend. <br/><strong>Example: </strong><kbd>PCARISI*LEG</kbd> will match "P CARISIVS LEG". <br/><strong>Example:
-									</strong><kbd>*CAES*AVG*</kbd> will match "IMP CAESAR AVGVST", "IMP CAESAR AVGVSTVS", "CAESAR AVG TRIB POTEST", etc.</p>
+								legend. <br/>
+								<xsl:choose>
+									<xsl:when test="$collection-name = 'ocre'">
+										<strong>Example: </strong><kbd>PCARISI*LEG</kbd> will match "P CARISIVS LEG". <br/><strong>Example:
+										</strong><kbd>*CAES*AVG*</kbd> will match "IMP CAESAR AVGVST", "IMP CAESAR AVGVSTVS", "CAESAR AVG TRIB POTEST", etc.
+									</xsl:when>
+									<xsl:when test="$collection-name = 'hrc'">
+										<strong>Example: </strong><kbd>*ΩΣANT*</kbd> will match "BAΣΙΛΕΩΣ ANTIOXΟΥ", "BAΣΙΛΕΩΣ ANTIOXΟΥ ΘEOY EΠIΦANOYΣ", "BAΣΙΛΕΩΣ ANTIOXOY KAI BAΣΙΛΕΩΣ ΦIΛIΠΠOY", etc.
+									</xsl:when>
+								</xsl:choose>
+								</p>
 							<div class="form-group">
 								<label class="col-sm-2 control-label">
 									<xsl:value-of select="numishare:normalize_fields('obv_leg', $lang)"/>
