@@ -72,7 +72,7 @@
 								xmlns:doap="http://usefulinc.com/ns/doap#" xmlns:prov="http://www.w3.org/ns/prov#"
 								xmlns:crm="http://www.cidoc-crm.org/cidoc-crm/" xmlns:crmsci="http://www.ics.forth.gr/isl/CRMsci/"
 								xmlns:crmgeo="http://www.ics.forth.gr/isl/CRMgeo/" xmlns:crmarchaeo="http://www.cidoc-crm.org/cidoc-crm/CRMarchaeo/"
-								xmlns:crmdig="http://www.ics.forth.gr/isl/CRMdig/">
+								xmlns:crmdig="http://www.ics.forth.gr/isl/CRMdig/" xmlns:un="http://www.owl-ontologies.com/Ontology1181490123.owl#">
 								<xsl:output indent="yes" encoding="UTF-8"/>
 								<xsl:strip-space elements="*"/>
 
