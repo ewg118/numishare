@@ -48,6 +48,10 @@ UNION { <typeURI> skos:exactMatch ?match .
 UNION { ?broader skos:broader+ <typeURI> .
 ?coin nmo:hasTypeSeriesItem ?broader ;
   a nmo:NumismaticObject }
+UNION { ?broader skos:broader+ <typeUri> .
+?broader skos:exactMatch ?match .
+?object nmo:hasTypeSeriesItem ?match ;
+  a nmo:NumismaticObject }
 }]]></xsl:variable>
 
 				<xsl:variable name="service">
