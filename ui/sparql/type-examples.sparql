@@ -18,6 +18,10 @@ UNION { <typeURI> skos:exactMatch ?match .
 UNION { ?broader skos:broader+ <typeURI> .
 ?object nmo:hasTypeSeriesItem ?broader ;
   a nmo:NumismaticObject }
+UNION { ?broader skos:broader+ <typeUri> .
+?broader skos:exactMatch ?match .
+?object nmo:hasTypeSeriesItem ?match ;
+  a nmo:NumismaticObject }
 ?object dcterms:title ?title .
 OPTIONAL { ?object dcterms:identifier ?identifier}
 OPTIONAL { ?object nmo:hasCollection ?colUri .
