@@ -48,7 +48,7 @@ UNION { <typeURI> skos:exactMatch ?match .
 UNION { ?broader skos:broader+ <typeURI> .
 ?coin nmo:hasTypeSeriesItem ?broader ;
   a nmo:NumismaticObject }
-UNION { ?broader skos:broader+ <typeUri> .
+UNION { ?broader skos:broader+ <typeURI> .
 ?broader skos:exactMatch ?match .
 ?object nmo:hasTypeSeriesItem ?match ;
   a nmo:NumismaticObject }
