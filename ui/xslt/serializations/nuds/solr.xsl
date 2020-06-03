@@ -182,9 +182,12 @@
 				<xsl:with-param name="id" select="$id"/>
 			</xsl:apply-templates>
 
+			
 			<!-- if there are subtypes, extract the legend and type description or symbols, if missing from parent record (only extract information to index for type-level type -->
 			<xsl:if
 				test="not(nuds:control/nuds:otherRecordId[@semantic = 'skos:broader']) and ($index_subtype_metadata = true() or $index_subtypes_as_references = true())">
+
+
 
 				<!-- get subtypes -->
 				<xsl:variable name="subtypes" as="element()*">
@@ -195,17 +198,21 @@
 
 				<!-- index subtype metadata -->
 				<xsl:if test="$index_subtype_metadata = true()">
-
-					<xsl:variable name="hasTypes" select="boolean(descendant::nuds:typeDesc//nuds:type)" as="xs:boolean"/>
-					<xsl:variable name="hasLegends" select="boolean(descendant::nuds:typeDesc//nuds:legend)" as="xs:boolean"/>
-					<xsl:variable name="hasSymbols" select="boolean(descendant::nuds:typeDesc//nuds:symbol)" as="xs:boolean"/>
-					<xsl:variable name="hasDies" select="boolean(descendant::nuds:typeDesc//nuds:die)" as="xs:boolean"/>
+					
+					<xsl:variable name="typeDesc" as="element()*">
+						<xsl:copy-of select="descendant::nuds:typeDesc"/>
+					</xsl:variable>
+					
 
 					<xsl:if test="count($subtypes//subtype) &gt; 0">
-
 						<xsl:for-each select="('obverse', 'reverse')">
 							<xsl:variable name="side" select="."/>
 							<xsl:variable name="sideAbbr" select="substring($side, 1, 3)"/>
+							
+							<xsl:variable name="hasTypes" select="boolean($typeDesc/*[local-name()=$side]/nuds:type)" as="xs:boolean"/>
+							<xsl:variable name="hasLegends" select="boolean($typeDesc/*[local-name()=$side]/nuds:legend)" as="xs:boolean"/>
+							<xsl:variable name="hasSymbols" select="boolean($typeDesc/*[local-name()=$side]/nuds:symbol)" as="xs:boolean"/>
+							<xsl:variable name="hasDies" select="boolean($typeDesc/*[local-name()=$side]/nuds:die)" as="xs:boolean"/>							
 
 							<!-- type descriptions -->
 							<xsl:if test="$hasTypes = false() and $subtypes//subtype/descendant::*[local-name() = $side]/nuds:type/nuds:description">

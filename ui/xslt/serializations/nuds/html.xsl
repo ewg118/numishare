@@ -490,6 +490,13 @@
 					<xsl:when test="$recordType = 'conceptual'">
 						<div class="row">
 							<div class="col-md-12">
+								
+								<xsl:if test="nuds:control/nuds:publicationStatus = 'deprecatedType'">
+									<div class="alert alert-box alert-danger">
+										<span class="glyphicon glyphicon-exclamation-sign"></span>
+										<strong>Attention:</strong> This type has been deprecated, but does not link to a newer reference.</div>
+								</xsl:if>
+								
 								<h1 id="object_title" property="skos:prefLabel">
 									<xsl:if test="$lang = 'ar'">
 										<xsl:attribute name="style">direction: ltr; text-align:right</xsl:attribute>

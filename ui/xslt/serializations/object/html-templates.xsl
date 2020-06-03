@@ -476,7 +476,7 @@
 												<xsl:variable name="side" select="local-name()"/>
 												<li>
 													<b>
-														<xsl:value-of select="numishare:regularize_node('description', $lang)"/>
+														<xsl:value-of select="numishare:regularize_node('type', $lang)"/>
 														<xsl:text>: </xsl:text>
 													</b>
 													<xsl:for-each
