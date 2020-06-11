@@ -820,7 +820,7 @@
 											</xsl:when>
 											<xsl:otherwise>
 												<xsl:value-of
-													select="concat(numishare:normalize_fields('symbol', $lang), ', ', numishare:normalize_fields('reverse', $lang))"
+													select="concat(numishare:normalize_fields('symbol', $lang), ', ', numishare:normalize_fields(concat(tokenize($field, '_')[2], 'erse'), $lang))"
 												/>
 											</xsl:otherwise>
 										</xsl:choose>

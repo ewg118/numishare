@@ -981,6 +981,7 @@
 				<xsl:apply-templates select="text()" mode="symbols">
 					<xsl:with-param name="field" select="$field"/>
 					<xsl:with-param name="side" select="$side"/>
+					<xsl:with-param name="href" select="@ref"/>
 					<xsl:with-param name="position" select="$position"/>
 				</xsl:apply-templates>
 			</xsl:when>
@@ -1028,11 +1029,12 @@
 		<xsl:param name="field"/>
 		<xsl:param name="side"/>
 		<xsl:param name="position"/>
+		<xsl:param name="href"/>
 
 		<xsl:call-template name="display-label">
 			<xsl:with-param name="field" select="$field"/>
 			<xsl:with-param name="value" select="."/>
-			<xsl:with-param name="href"/>
+			<xsl:with-param name="href" select="$href"/>
 			<xsl:with-param name="side" select="$side"/>
 			<xsl:with-param name="position" select="$position"/>
 		</xsl:call-template>
