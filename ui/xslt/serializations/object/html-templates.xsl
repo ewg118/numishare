@@ -354,6 +354,7 @@
 
 									<xsl:choose>
 										<xsl:when test="child::tei:div">
+
 											<xsl:apply-templates select="tei:div" mode="symbols">
 												<xsl:with-param name="field" select="$field"/>
 												<xsl:with-param name="side" select="$side"/>
@@ -667,6 +668,9 @@
 		<a href="{$uri}">
 			<img src="{@rdf:about}" alt="symbol" style="height:24px"/>
 		</a>
+		<xsl:if test="not(position() = last())">
+			<xsl:text> - </xsl:text>
+		</xsl:if>
 
 	</xsl:template>
 
@@ -981,6 +985,25 @@
 				</xsl:apply-templates>
 			</xsl:when>
 		</xsl:choose>
+
+
+
+		<xsl:if test="self::tei:g and starts-with(@ref, 'http://numismatics.org')">
+			<xsl:variable name="href" select="@ref"/>
+			<xsl:apply-templates select="$rdf/*[@rdf:about = $href]"/>
+		</xsl:if>
+
+		<xsl:if test="@rend">
+			<i>
+				<xsl:text> (</xsl:text>
+				<xsl:value-of select="@rend"/>
+				<xsl:text>)</xsl:text>
+			</i>
+		</xsl:if>
+		
+		<xsl:if test="tei:unclear">
+			<i> (unclear)</i>
+		</xsl:if>
 	</xsl:template>
 
 	<xsl:template match="tei:choice" mode="symbols">

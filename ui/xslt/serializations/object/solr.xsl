@@ -6,7 +6,7 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:nuds="http://nomisma.org/nuds" xmlns:nh="http://nomisma.org/nudsHoard"
 	xmlns:nm="http://nomisma.org/id/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:mets="http://www.loc.gov/METS/" xmlns:gml="http://www.opengis.net/gml"
 	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:res="http://www.w3.org/2005/sparql-results#"
-	xmlns:nmo="http://nomisma.org/ontology#" xmlns:numishare="https://github.com/ewg118/numishare" exclude-result-prefixes="#all" version="2.0">
+	xmlns:nmo="http://nomisma.org/ontology#" xmlns:numishare="https://github.com/ewg118/numishare" xmlns:tei="http://www.tei-c.org/ns/1.0" exclude-result-prefixes="#all" version="2.0">
 	<xsl:output method="xml" encoding="UTF-8"/>
 	<xsl:include href="../../functions.xsl"/>
 	<xsl:include href="../nuds/solr.xsl"/>
@@ -117,7 +117,8 @@
 				<xsl:with-param name="count" select="$count"/>
 			</xsl:call-template>
 			
-			<xsl:for-each select="distinct-values($nudsGroup/descendant::nuds:symbol[contains(@xlink:href, 'http://numismatics.org')]/@xlink:href)">
+			<xsl:for-each
+				select="distinct-values($nudsGroup/descendant::nuds:symbol[contains(@xlink:href, 'http://numismatics.org')]/@xlink:href | $nudsGroup/descendant::nuds:symbol/descendant::tei:g[contains(@ref, 'http://numismatics.org')]/@ref)">
 				<xsl:variable name="href" select="."/>
 				
 				<xsl:if test="doc-available(concat($href, '.rdf'))">

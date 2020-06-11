@@ -171,10 +171,11 @@
 			<xsl:if test="descendant::nuds:findspotDesc[contains(@xlink:href, 'coinhoards.org')]">
 				<xsl:copy-of select="document(concat(descendant::nuds:findspotDesc/@xlink:href, '.rdf'))/rdf:RDF/*"/>
 			</xsl:if>
-			
-			<xsl:for-each select="distinct-values($nudsGroup/descendant::nuds:symbol[contains(@xlink:href, 'http://numismatics.org')]/@xlink:href)">
+
+			<xsl:for-each
+				select="distinct-values($nudsGroup/descendant::nuds:symbol[contains(@xlink:href, 'http://numismatics.org')]/@xlink:href | $nudsGroup/descendant::nuds:symbol/descendant::tei:g[contains(@ref, 'http://numismatics.org')]/@ref)">
 				<xsl:variable name="href" select="."/>
-				
+
 				<xsl:if test="doc-available(concat($href, '.rdf'))">
 					<xsl:copy-of select="document(concat($href, '.rdf'))/rdf:RDF/*"/>
 				</xsl:if>
@@ -490,13 +491,13 @@
 					<xsl:when test="$recordType = 'conceptual'">
 						<div class="row">
 							<div class="col-md-12">
-								
+
 								<xsl:if test="nuds:control/nuds:publicationStatus = 'deprecatedType'">
 									<div class="alert alert-box alert-danger">
-										<span class="glyphicon glyphicon-exclamation-sign"></span>
+										<span class="glyphicon glyphicon-exclamation-sign"/>
 										<strong>Attention:</strong> This type has been deprecated, but does not link to a newer reference.</div>
 								</xsl:if>
-								
+
 								<h1 id="object_title" property="skos:prefLabel">
 									<xsl:if test="$lang = 'ar'">
 										<xsl:attribute name="style">direction: ltr; text-align:right</xsl:attribute>
@@ -961,9 +962,9 @@
 				<xsl:when test="string(@xlink:href)">
 					<xsl:choose>
 						<xsl:when test="contains(@xlink:href, 'nomisma.org') or contains(@xlink:href, 'coinhoards.org')">
-							<xsl:variable name="uri" select="@xlink:href"/>							
+							<xsl:variable name="uri" select="@xlink:href"/>
 							<xsl:variable name="label" select="$rdf//*[@rdf:about = $uri]/skos:prefLabel[@xml:lang = 'en']"/>
-							
+
 							<ul>
 								<li>
 									<b><xsl:value-of select="numishare:regularize_node('hoard', $lang)"/>: </b>
@@ -1108,11 +1109,6 @@
 			<xsl:value-of select="."/>
 		</span>
 	</xsl:template>
-
-	<!-- hide symbols with left/right/center/exerque positions, format elsewhere -->
-	<xsl:template
-		match="nuds:symbol[@position = 'left'] | nuds:symbol[@position = 'center'] | nuds:symbol[@position = 'right'] | nuds:symbol[@position = 'exergue']"
-		mode="descMeta"/>
 
 	<!-- *********** IMAGE TEMPLATES FOR PHYSICAL OBJECTS ********** -->
 	<xsl:template name="image">

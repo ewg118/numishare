@@ -7,10 +7,10 @@
 	xmlns:pelagios="http://pelagios.github.io/vocab/terms#" xmlns:gml="http://www.opengis.net/gml" xmlns:void="http://rdfs.org/ns/void#"
 	xmlns:relations="http://pelagios.github.io/vocab/relations#" xmlns:nmo="http://nomisma.org/ontology#" xmlns:edm="http://www.europeana.eu/schemas/edm/"
 	xmlns:svcs="http://rdfs.org/sioc/services#" xmlns:doap="http://usefulinc.com/ns/doap#" xmlns:dcmitype="http://purl.org/dc/dcmitype/"
-	xmlns:crmsci="http://www.ics.forth.gr/isl/CRMsci/" xmlns:crmgeo="http://www.ics.forth.gr/isl/CRMgeo/"
+	xmlns:crmsci="http://www.ics.forth.gr/isl/CRMsci/" xmlns:crmgeo="http://www.ics.forth.gr/isl/CRMgeo/" xmlns:tei="http://www.tei-c.org/ns/1.0"
 	xmlns:crmarchaeo="http://www.cidoc-crm.org/cidoc-crm/CRMarchaeo/" xmlns:crm="http://www.cidoc-crm.org/cidoc-crm/"
 	xmlns:numishare="https://github.com/ewg118/numishare" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:mets="http://www.loc.gov/METS/"
-	xmlns:xsd="http://www.w3.org/2001/XMLSchema#" exclude-result-prefixes="xsl xs nuds nh xlink numishare mets gml" version="2.0">
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema#" exclude-result-prefixes="xsl xs nuds nh xlink numishare mets gml tei" version="2.0">
 
 	<!-- ************** PELAGIOS TEMPLATES **************** -->
 	<xsl:template match="nuds:nuds | nh:nudsHoard" mode="pelagios">
@@ -494,17 +494,40 @@
 
 	<!-- only include the symbol if it has a designated RDF property through the @xlink:arcrole -->
 	<xsl:template match="nuds:symbol" mode="nomisma">
-		<xsl:if test="@xlink:arcrole and @xlink:href">
-			<xsl:variable name="element" select="
+		<xsl:choose>
+			<xsl:when test="@xlink:arcrole and @xlink:href">
+				<xsl:variable name="element" select="
 					if (@xlink:arcrole = 'nmo:hasMonogram') then
-						'nmo:hasControlmark'
+					'nmo:hasControlmark'
 					else
-						@xlink:arcrole"/>
-
-			<xsl:element name="{$element}">
-				<xsl:attribute name="rdf:resource" select="@xlink:href"/>
-			</xsl:element>
-		</xsl:if>
+					@xlink:arcrole"/>
+				
+				<xsl:element name="{$element}">
+					<xsl:attribute name="rdf:resource" select="@xlink:href"/>
+				</xsl:element>
+			</xsl:when>
+			<xsl:when test="descendant::tei:g[@ref]">
+				<xsl:apply-templates select="descendant::tei:g[@ref]"/>
+			</xsl:when>
+		</xsl:choose>
+	</xsl:template>
+	
+	<!-- render TEI glyphs -->
+	<xsl:template match="tei:g">
+		<xsl:choose>
+			<xsl:when test="ancestor::tei:choice">
+				<!-- if there is a choice, then the implication is that the monogram is uncertain -->
+				<nmo:hasControlmark>
+					<rdf:Description>
+						<rdf:value rdf:resource="{@ref}"/>
+						<un:hasUncertainty rdf:resource="http://nomisma.org/id/uncertain_value"/>
+					</rdf:Description>
+				</nmo:hasControlmark>
+			</xsl:when>
+			<xsl:otherwise>
+				<nmo:hasControlmark rdf:resource="{@ref}"/>
+			</xsl:otherwise>			
+		</xsl:choose>
 	</xsl:template>
 
 	<xsl:template match="nuds:material | nuds:denomination | nuds:manufacture | nuds:geogname | nuds:persname | nuds:corpname" mode="nomisma">

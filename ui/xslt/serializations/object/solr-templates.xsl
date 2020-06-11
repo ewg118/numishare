@@ -819,6 +819,7 @@
 					<xsl:with-param name="side" select="$side"/>
 					<xsl:with-param name="symbolType" select="$symbolType"/>
 					<xsl:with-param name="position" select="$position"/>
+					<xsl:with-param name="href" select="@ref"/>
 				</xsl:apply-templates>
 			</xsl:when>
 		</xsl:choose>
@@ -845,13 +846,14 @@
 		<xsl:param name="side"/>
 		<xsl:param name="symbolType"/>
 		<xsl:param name="position"/>
+		<xsl:param name="href"/>
 		
 		<xsl:call-template name="generate-symbol-field">
 			<xsl:with-param name="side" select="$side"/>
 			<xsl:with-param name="symbolType" select="$symbolType"/>
 			<xsl:with-param name="position" select="$position"/>
 			<xsl:with-param name="value" select="."/>
-			<xsl:with-param name="href"/>
+			<xsl:with-param name="href" select="$href"/>
 		</xsl:call-template>
 	</xsl:template>
 	
@@ -861,6 +863,86 @@
 		<xsl:param name="position"/>
 		<xsl:param name="value"/>
 		<xsl:param name="href"/>		
+		
+		<xsl:choose>
+			<xsl:when test="string($position)">
+				<xsl:choose>
+					<xsl:when test="string($href)">
+						<field name="{$symbolType}_{$side}_{$position}_facet">
+							<xsl:choose>
+								<xsl:when test="$rdf//*[@rdf:about = $href]/descendant::crmdig:D1_Digital_Object">
+									<xsl:value-of select="$rdf//*[@rdf:about = $href]/descendant::crmdig:D1_Digital_Object[1]/@rdf:about"/>
+									<xsl:text>|</xsl:text>
+									<xsl:value-of select="$rdf//*[@rdf:about = $href]/skos:prefLabel"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:value-of select="$rdf//*[@rdf:about = $href]/skos:prefLabel"/>
+								</xsl:otherwise>
+							</xsl:choose>							
+						</field>
+						<field name="{$symbolType}_{$side}_facet">
+							<xsl:choose>
+								<xsl:when test="$rdf//*[@rdf:about = $href]/descendant::crmdig:D1_Digital_Object">
+									<xsl:value-of select="$rdf//*[@rdf:about = $href]/descendant::crmdig:D1_Digital_Object[1]/@rdf:about"/>
+									<xsl:text>|</xsl:text>
+									<xsl:value-of select="$rdf//*[@rdf:about = $href]/skos:prefLabel"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:value-of select="$rdf//*[@rdf:about = $href]/skos:prefLabel"/>
+								</xsl:otherwise>
+							</xsl:choose>
+						</field>
+						<field name="{$symbolType}_{$side}_{$position}_uri">
+							<xsl:value-of select="$href"/>
+						</field>
+						<field name="{$symbolType}_uri">
+							<xsl:value-of select="$href"/>
+						</field>
+					</xsl:when>
+					<xsl:otherwise>
+						<field name="{$symbolType}_{$side}_{$position}_facet">
+							<xsl:value-of select="."/>
+						</field>
+						<field name="{$symbolType}_{$side}_facet">
+							<xsl:value-of select="."/>
+						</field>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:choose>
+					<xsl:when test="string($href)">
+						<field name="{$symbolType}_{$side}_facet">
+							<xsl:value-of select="$rdf//*[@rdf:about = $href]/skos:prefLabel"/>
+						</field>
+						<field name="{$symbolType}_{$side}_uri">
+							<xsl:value-of select="$href"/>
+						</field>
+						<field name="{$symbolType}_uri">
+							<xsl:value-of select="$href"/>
+						</field>
+					</xsl:when>
+					<xsl:otherwise>
+						<field name="{$symbolType}_{$side}_facet">
+							<xsl:value-of select="."/>
+						</field>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:otherwise>
+		</xsl:choose>
+		
+		
+		<!--<xsl:choose>
+			<xsl:when test="$rdf//*[@rdf:about = $href]/descendant::crmdig:D1_Digital_Object">
+				<xsl:value-of select="$rdf//*[@rdf:about = $href]/descendant::crmdig:D1_Digital_Object[1]/@rdf:about"/>
+				<xsl:text>|</xsl:text>
+				<xsl:value-of select="$rdf//*[@rdf:about = $href]/skos:prefLabel"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="$rdf//*[@rdf:about = $href]/skos:prefLabel"/>
+			</xsl:otherwise>
+		</xsl:choose>
+		
 
 		<xsl:choose>
 			<xsl:when test="string($position)">
@@ -874,7 +956,7 @@
 			<xsl:otherwise>
 				
 			</xsl:otherwise>
-		</xsl:choose>
+		</xsl:choose>-->
 	</xsl:template>
 
 	<!-- index TEI-encoded edition into legend field -->
