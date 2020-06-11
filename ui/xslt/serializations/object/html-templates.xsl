@@ -578,7 +578,7 @@
 			<xsl:when test="$field = 'symbol'">
 
 				<!-- get the first crmdig Digital Image URL from the $rdf -->
-				<xsl:variable name="image-url" select="$rdf/*[@rdf:about = $href]/descendant::crmdig:D1_Digital_Object/@rdf:about"/>
+				<xsl:variable name="image-url" select="$rdf/*[@rdf:about = $href]/descendant::crmdig:D1_Digital_Object[1]/@rdf:about"/>
 
 				<xsl:choose>
 					<xsl:when test="string($position) and $positions//position[@value = $position]">
