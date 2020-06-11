@@ -1005,6 +1005,10 @@
 		<xsl:if test="tei:unclear">
 			<i> (unclear)</i>
 		</xsl:if>
+		
+		<xsl:if test="not(position() = last())">
+			<i> beside </i>
+		</xsl:if>
 	</xsl:template>
 
 	<xsl:template match="tei:choice" mode="symbols">
