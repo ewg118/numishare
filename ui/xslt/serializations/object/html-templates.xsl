@@ -664,12 +664,12 @@
 
 	<xsl:template match="crmdig:D1_Digital_Object">
 		<xsl:param name="uri"/>
-
+		<xsl:text> </xsl:text>
 		<a href="{$uri}">
 			<img src="{@rdf:about}" alt="symbol" style="height:24px"/>
 		</a>
 		<xsl:if test="not(position() = last())">
-			<xsl:text> - </xsl:text>
+			<xsl:text> -</xsl:text>
 		</xsl:if>
 
 	</xsl:template>
