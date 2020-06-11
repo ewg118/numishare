@@ -913,7 +913,16 @@
 				<xsl:choose>
 					<xsl:when test="string($href)">
 						<field name="{$symbolType}_{$side}_facet">
-							<xsl:value-of select="$rdf//*[@rdf:about = $href]/skos:prefLabel"/>
+							<xsl:choose>
+								<xsl:when test="$rdf//*[@rdf:about = $href]/descendant::crmdig:D1_Digital_Object">
+									<xsl:value-of select="$rdf//*[@rdf:about = $href]/descendant::crmdig:D1_Digital_Object[1]/@rdf:about"/>
+									<xsl:text>|</xsl:text>
+									<xsl:value-of select="$rdf//*[@rdf:about = $href]/skos:prefLabel"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:value-of select="$rdf//*[@rdf:about = $href]/skos:prefLabel"/>
+								</xsl:otherwise>
+							</xsl:choose>
 						</field>
 						<field name="{$symbolType}_{$side}_uri">
 							<xsl:value-of select="$href"/>
