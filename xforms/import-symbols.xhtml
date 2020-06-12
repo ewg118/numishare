@@ -1057,7 +1057,7 @@ PREFIX skos:	<http://www.w3.org/2004/02/skos/core#>]]></prefix>
 
 															<!-- only insert an image_creator if there are D1_Digital_Objects (this ignores unicode characters) -->
 															<xforms:action
-																xxforms:iterate="instance('rdf')/*[1]/crm:P165i_is_incorporated_in[last()]/crmdig:D1_Digital_Object">
+																xxforms:iterate="instance('rdf')/*[1]//crmdig:D1_Digital_Object">
 																<xforms:insert context="." nodeset="./child::node()[last()]"
 																	origin="xforms:element('dcterms:creator', xforms:attribute('rdf:resource', $value))"/>
 															</xforms:action>
@@ -1066,7 +1066,7 @@ PREFIX skos:	<http://www.w3.org/2004/02/skos/core#>]]></prefix>
 														<xforms:action if="$mapping = 'image_license'">
 															<!-- only insert an image_license if there are D1_Digital_Objects (this ignores unicode characters) -->
 															<xforms:action
-																xxforms:iterate="instance('rdf')/*[1]/crm:P165i_is_incorporated_in[last()]/crmdig:D1_Digital_Object">
+																xxforms:iterate="instance('rdf')/*[1]//crmdig:D1_Digital_Object">
 																<xforms:insert context="." nodeset="./child::node()[last()]"
 																	origin="xforms:element('dcterms:license', xforms:attribute('rdf:resource', $value))"/>
 															</xforms:action>
