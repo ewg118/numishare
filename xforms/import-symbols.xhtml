@@ -37,6 +37,7 @@
 					<spreadsheet-uri></spreadsheet-uri>
 					<worksheet_id></worksheet_id>
 					<id></id>
+					<conceptScheme_uri/>
 					<type>nmo:Monogram</type>
 					<position>0</position>
 					<mapping></mapping>
@@ -298,6 +299,10 @@ PREFIX skos:	<http://www.w3.org/2004/02/skos/core#>]]></prefix>
 				<xforms:message ev:event="xforms-submit-error" level="modal">Unable to receive Atom from Google Drive for the key provided.</xforms:message>
 				<!-- if a feed is successfully received, set the id for the workshop -->
 				<xforms:action ev:event="xforms-submit-done">
+					<!-- set conceptScheme_uri -->
+					<xforms:setvalue ref="instance('control-instance')/conceptScheme_uri"
+						value="replace(instance('config')/uri_space, '/id/', '/symbol/')"/>
+					
 					<xforms:setvalue ref="instance('control-instance')/spreadsheet-uri"
 						value="concat('https://docs.google.com/spreadsheets/d/', instance('control-instance')/spreadsheet-key, '/pubhtml')"/>
 					<xforms:setvalue ref="instance('control-instance')/worksheet_id"
@@ -800,12 +805,26 @@ PREFIX skos:	<http://www.w3.org/2004/02/skos/core#>]]></prefix>
 														<!-- fields that can be any type of URI -->
 														<xforms:action
 															if="$mapping = 'contributor' or $mapping = 'crm:P165i_is_incorporated_in' or $mapping = 'image_creator' 
-															or $mapping = 'skos:broader' or $mapping = 'skos:exactMatch' or $mapping = 'image_license'">
+															or $mapping = 'skos:exactMatch' or $mapping = 'image_license'">
 
 															<xforms:var name="isValid" select="matches($value, 'https?://(-\.)?([^\s/?\.#]+\.?)+(/[^\s]*)?$')"/>
 															<xforms:insert if="string-length($value) &gt; 0 and $isValid = false()"
 																context="instance('validation-model')/record[last()]" nodeset="./child::node()[last()]"
 																origin="xforms:element('error', concat('URI is invalid: ', $value))"> </xforms:insert>
+														</xforms:action>
+														
+														<!-- ensure that the broader ID exists in the spreadsheet -->
+														<xforms:action if="$mapping = 'skos:broader' and string-length($value) &gt; 0">
+															<xforms:var name="id" select="$value"/>
+															
+															<xforms:action
+																if="not(instance('feed')//atom:entry[*[namespace-uri()='http://schemas.google.com/spreadsheets/2006/extended'][name()=instance('mappings')/mapping[@to='id']/@from] = $id])">
+																<xforms:insert
+																	context="instance('validation-model')/record[last()]"
+																	nodeset="./child::node()[last()]"
+																	origin="xforms:element('error', concat('skos:broader ID ', $value, ' is not found in spreadsheet.'))"
+																/>																
+															</xforms:action>
 														</xforms:action>
 
 														<!-- Must be Nomisma URIs -->
@@ -952,7 +971,8 @@ PREFIX skos:	<http://www.w3.org/2004/02/skos/core#>]]></prefix>
 												<xforms:delete nodeset="instance('rdf')/*"/>
 
 												<!-- create the Concept object -->
-												<xforms:var name="uri" select="concat($dataset, 'symbol/', instance('control-instance')/id)"/>
+												<xforms:var name="uri" select="concat(instance('control-instance')/conceptScheme_uri, instance('control-instance')/id)"/>
+												
 												<xforms:insert context="instance('rdf')"
 													origin="xforms:element(instance('control-instance')/type, xforms:attribute('rdf:about', $uri))"/>
 												<!-- insert rdf:type as skos:Concept -->
@@ -998,6 +1018,12 @@ PREFIX skos:	<http://www.w3.org/2004/02/skos/core#>]]></prefix>
 
 															<xforms:insert context="instance('rdf')/*[1]" nodeset="./child::node()[last()]"
 																origin="xforms:element($mapping, (xforms:attribute('rdf:resource', $value)))"/>
+														</xforms:action>
+														
+														<!-- combine skos:broader ID with URI Space -->
+														<xforms:action if="$mapping = 'skos:broader'">															
+															<xforms:insert context="instance('rdf')/*[1]" nodeset="./child::node()[last()]"
+																origin="xforms:element($mapping, (xforms:attribute('rdf:resource', concat(instance('control-instance')/conceptScheme_uri, $value))))"/>
 														</xforms:action>
 
 														<!-- constituent letters and symbols -->
