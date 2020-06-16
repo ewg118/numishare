@@ -117,7 +117,6 @@
 	<page path="/numishare/[^\/]+/symbol/(.*)\.ttl" model="xpl/models/symbol/get.xpl" view="xpl/views/serializations/rdf/ttl.xpl"/>
 	<page path="/numishare/[^\/]+/symbol/(.*)\.jsonld" model="xpl/models/symbol/get.xpl" view="xpl/views/serializations/object/json-ld.xpl"/>
 	<page path="/numishare/[^\/]+/symbol/(.*)$" model="xpl/models/symbol/get.xpl" view="xpl/controllers/conneg-symbol.xpl"/>	
-	<page path="/numishare/[^\/]+/symbols/(.*)" model="xpl/models/config.xpl" view="xpl/controllers/render-image.xpl"/>
 	
 	<!-- **** PAGES **** -->	
 	<page path="/numishare/[^\/]+/analyze" model="xpl/models/config.xpl" view="xpl/views/pages/analyze.xpl"/>

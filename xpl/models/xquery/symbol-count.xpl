@@ -69,6 +69,8 @@
 								<xsl:when test="count($symbol//value) &gt; 0">
 									<xsl:variable name="xpath">
 										<xsl:text>[</xsl:text>
+										<!-- only display monograms with images (eliminates supertypes) -->
+										<xsl:text>descendant::crm:P165i_is_incorporated_in and </xsl:text>			
 										<xsl:for-each select="$symbol//value">
 											<xsl:value-of select="concat('descendant::crm:P106_is_composed_of = &#x022;', ., '&#x022;')"/>
 											<xsl:if test="not(position() = last())">
@@ -81,7 +83,8 @@
 									<xsl:value-of select="replace(replace($xquery, 'numishare', $collection-name), 'XPATH', $xpath)"/>
 								</xsl:when>
 								<xsl:otherwise>
-									<xsl:value-of select="replace(replace($xquery, 'numishare', $collection-name), 'XPATH', '')"/>
+									<xsl:variable name="xpath">[descendant::crm:P165i_is_incorporated_in]</xsl:variable>
+									<xsl:value-of select="replace(replace($xquery, 'numishare', $collection-name), 'XPATH', $xpath)"/>
 								</xsl:otherwise>
 							</xsl:choose>
 						</query>
