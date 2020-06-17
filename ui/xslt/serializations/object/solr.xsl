@@ -103,7 +103,9 @@
 	<!-- get subtypes -->
 	<xsl:variable name="subtypes" as="element()*">
 		<xsl:if test="//config/collection_type = 'cointype'">
-			<xsl:copy-of select="document(concat($request-uri, '/get_subtypes?identifiers=', string-join(descendant::nuds:recordId, '|')))/*"/>
+			<xsl:if test="doc-available(concat($request-uri, 'get_subtypes?identifiers=', encode-for-uri(string-join(descendant::nuds:recordId, '|'))))">
+				<xsl:copy-of select="document(concat($request-uri, 'get_subtypes?identifiers=', encode-for-uri(string-join(descendant::nuds:recordId, '|'))))/*"/>
+			</xsl:if>
 		</xsl:if>
 	</xsl:variable>
 
