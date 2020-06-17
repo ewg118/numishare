@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-	Copyright (C) 2017 Ethan Gruber
-	Numishare
-	Apache License 2.0
-	Function:  Render RDF into HTML. Note that the RDF-to-HTML serialization only occurs within symbols thus far
+	Author: Ethan Gruber
+	Date: June 2020
+	Function: Execute some SPARQL ASK queries for geodata and query for types related to a symbol URI
 -->
-<p:config xmlns:p="http://www.orbeon.com/oxf/pipeline" xmlns:oxf="http://www.orbeon.com/oxf/processors">
+<p:config xmlns:p="http://www.orbeon.com/oxf/pipeline" xmlns:oxf="http://www.orbeon.com/oxf/processors" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#">
 	<p:param type="input" name="data"/>
 	<p:param type="output" name="data"/>
 	
@@ -64,17 +63,25 @@
 		<p:output name="data" id="types"/>
 	</p:processor>
 	
+	<!-- get a list of symbols that have a skos:broader of the current symbol URI -->	
+	<p:processor name="oxf:pipeline">
+		<p:input name="data" href="#config"/>
+		<p:input name="config" href="../../../models/xquery/get-subsymbols.xpl"/>
+		<p:output name="data" id="subsymbols"/>
+	</p:processor>			
+	
 	<!-- serialize models into HTML -->
 	<p:processor name="oxf:unsafe-xslt">
 		<p:input name="request" href="#request"/>
 		<p:input name="types" href="#types"/>
 		<p:input name="hasFindspots" href="#hasFindspots"/>
 		<p:input name="hasMints" href="#hasMints"/>
+		<p:input name="subsymbols" href="#subsymbols"/>
 		<p:input name="query" href="#query-document"/>
 		<p:input name="data" href="aggregate('content', #data, #config)"/>
 		<p:input name="config" href="../../../../ui/xslt/serializations/rdf/html.xsl"/>
 		<p:output name="data" id="model"/>
-	</p:processor>
+	</p:processor>	
 	
 	<p:processor name="oxf:html-converter">
 		<p:input name="data" href="#model"/>

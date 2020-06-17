@@ -177,7 +177,7 @@
 				<br/>
 				<strong>Constituent Letters: </strong>
 				<xsl:for-each select="crm:P106_is_composed_of">
-					<xsl:if test="position() = last()">
+					<xsl:if test="position() = last() and position() &gt; 1">
 						<xsl:text> and</xsl:text>
 					</xsl:if>
 					<xsl:text> </xsl:text>

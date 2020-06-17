@@ -4563,6 +4563,7 @@
 					<xsl:when test="$element = 'dcterms:isPartOf'">Field of Numismatics</xsl:when>
 					<xsl:when test="$element = 'dcterms:license'">License</xsl:when>
 					<xsl:when test="$element = 'dcterms:source'">Source</xsl:when>
+					<xsl:when test="$element = 'skos:broader'">Broader Concept</xsl:when>
 					<xsl:when test="$element = 'skos:definition'">Definition</xsl:when>
 					<xsl:when test="$element = 'skos:prefLabel'">Preferred Label</xsl:when>
 				</xsl:choose>
