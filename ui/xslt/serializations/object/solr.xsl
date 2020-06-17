@@ -99,6 +99,13 @@
 				else
 					false()"/>
 	</xsl:variable>
+	
+	<!-- get subtypes -->
+	<xsl:variable name="subtypes" as="element()*">
+		<xsl:if test="//config/collection_type = 'cointype'">
+			<xsl:copy-of select="document(concat($request-uri, '/get_subtypes?identifiers=', string-join(descendant::nuds:recordId, '|')))/*"/>
+		</xsl:if>
+	</xsl:variable>
 
 	<!-- get non-coin-type RDF in the document -->
 	<xsl:variable name="rdf" as="element()*">
@@ -118,7 +125,9 @@
 			</xsl:call-template>
 			
 			<xsl:for-each
-				select="distinct-values($nudsGroup/descendant::nuds:symbol[contains(@xlink:href, 'http://numismatics.org')]/@xlink:href | $nudsGroup/descendant::nuds:symbol/descendant::tei:g[contains(@ref, 'http://numismatics.org')]/@ref)">
+				select="
+				distinct-values($nudsGroup/descendant::nuds:symbol[contains(@xlink:href, 'http://numismatics.org')]/@xlink:href | $nudsGroup/descendant::nuds:symbol/descendant::tei:g[contains(@ref, 'http://numismatics.org')]/@ref |
+				$subtypes/descendant::nuds:symbol[contains(@xlink:href, 'http://numismatics.org')]/@xlink:href | $subtypes/descendant::nuds:symbol/descendant::tei:g[contains(@ref, 'http://numismatics.org')]/@ref)">
 				<xsl:variable name="href" select="."/>
 				
 				<xsl:if test="doc-available(concat($href, '.rdf'))">
@@ -356,7 +365,7 @@
 	</xsl:template>
 
 	<xsl:template match="/">
-		<add>
+		<add>			
 			<xsl:choose>
 				<xsl:when test="count(descendant::nuds:nuds) &gt; 0">
 					<xsl:call-template name="nuds"/>
