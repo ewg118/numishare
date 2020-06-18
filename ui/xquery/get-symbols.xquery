@@ -23,7 +23,7 @@ declare namespace crmdig = "http://www.ics.forth.gr/isl/CRMdig/";
         xmlns:crm="http://www.cidoc-crm.org/cidoc-crm/"
         xmlns:crmdig="http://www.ics.forth.gr/isl/CRMdig/">
         {
-            for $record in subsequence(collection('/db/numishare/symbols')XPATH, OFFSET, LIMIT)
+            for $record in subsequence(collection(COLLECTION)XPATH, OFFSET, LIMIT)
                 
                 return
                     $record//rdf:RDF/*[1]

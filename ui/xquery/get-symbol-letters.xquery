@@ -11,7 +11,7 @@ declare namespace crmdig = "http://www.ics.forth.gr/isl/CRMdig/";
 
 <letters>
     {
-        for $x in distinct-values(collection('/db/numishare/symbols')//crm:P106_is_composed_of)
+        for $x in distinct-values(collection(COLLECTION)//crm:P106_is_composed_of)
         order by $x
         return
             <letter codepoint="{string-to-codepoints($x)}">

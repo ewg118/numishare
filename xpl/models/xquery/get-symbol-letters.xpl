@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 	Author: Ethan Gruber
-	Last Modified: December 2019
-	Function: Execute an XQuery to generate pages for symbols in the local Numishare instance.	
+	Last Modified: June 2020
+	Function: Execute an XQuery to generate pages for symbols in the local Numishare instance. A union catalog site joins collections
 -->
 <p:config xmlns:p="http://www.orbeon.com/oxf/pipeline" xmlns:oxf="http://www.orbeon.com/oxf/processors">
 	
@@ -16,6 +16,11 @@
 			</config>
 		</p:input>
 		<p:output name="data" id="request"/>
+	</p:processor>
+	
+	<p:processor name="oxf:pipeline">
+		<p:input name="config" href="../config.xpl"/>
+		<p:output name="data" id="config"/>
 	</p:processor>
 
 	<!-- get XQuery from disk -->
@@ -41,14 +46,15 @@
 	<p:processor name="oxf:unsafe-xslt">
 		<p:input name="request" href="#request"/>
 		<p:input name="xquery" href="#query-document"/>
-		<p:input name="data" href="../../../exist-config.xml"/>
+		<p:input name="data" href="#config"/>
+		<p:input name="exist-config" href="../../../exist-config.xml"/>
 		<p:input name="config">
 			<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema">
 				<xsl:output indent="yes"/>
 				<xsl:template match="/">
 					
 					<xsl:variable name="collection-name" select="substring-before(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/')"/>
-					<xsl:variable name="pieces" select="tokenize(/exist-config/url, '/')"/>					
+					<xsl:variable name="pieces" select="tokenize(doc('input:exist-config')/exist-config/url, '/')"/>					
 					<xsl:variable name="xquery" select="doc('input:xquery')"/>
 					
 					<config>
@@ -68,17 +74,35 @@
 						<property>
 							<name>user</name>
 							<value>
-								<xsl:value-of select="/exist-config/username"/>
+								<xsl:value-of select="doc('input:exist-config')/exist-config/username"/>
 							</value>
 						</property>
 						<property>
 							<name>password</name>
 							<value>
-								<xsl:value-of select="/exist-config/password"/>
+								<xsl:value-of select="doc('input:exist-config')/exist-config/password"/>
 							</value>
 						</property>
 						<query>
-							<xsl:value-of select="replace($xquery, 'numishare', $collection-name)"/>
+							<xsl:variable name="collection">
+								<xsl:choose>
+									<xsl:when test="/config/union_type_catalog/@enabled = true()">
+										<xsl:for-each select="/config/union_type_catalog/series/@collectionName">
+											<xsl:value-of select="concat('&#x022;/db/', ., '/symbols&#x022;')"/>
+											<xsl:if test="not(position() = last())">
+												<xsl:text>, </xsl:text>
+											</xsl:if>
+										</xsl:for-each>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:variable name="collection-name" select="substring-before(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/')"/>
+										
+										<xsl:value-of select="concat('&#x022;/db/', $collection-name, '/symbols&#x022;')"/>
+									</xsl:otherwise>
+								</xsl:choose>
+							</xsl:variable>
+							
+							<xsl:value-of select="replace($xquery, 'COLLECTION', $collection)"/>
 						</query>
 					</config>
 				</xsl:template>
