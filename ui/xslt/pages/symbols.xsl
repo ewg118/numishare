@@ -57,6 +57,7 @@
 
 	<!-- config variables-->
 	<xsl:variable name="collection_type" select="//config/collection_type"/>
+	<xsl:variable name="union_type_catalog" select="boolean(//config/union_type_catalog/@enabled)"/>
 
 	<xsl:template match="/">
 		<html>
@@ -149,11 +150,11 @@
 
 	<!-- ******** RDF TEMPLATES ********* -->
 	<xsl:template match="*" mode="symbol">
-		<xsl:variable name="id" select="tokenize(@rdf:about, '/')[last()]"/>
+		<xsl:variable name="uri" select="if ($union_type_catalog = true()) then @rdf:about else concat('symbol/', tokenize(@rdf:about, '/')[last()])"/>
 
 		<div class="col-md-3 col-sm-6 col-lg-2 monogram" style="height:240px">
 			<div class="text-center">
-				<a href="symbol/{$id}">
+				<a href="{$uri}">
 					<img
 						src="{
 						if (crm:P165i_is_incorporated_in[1]/@rdf:resource) then
@@ -163,7 +164,7 @@
 						alt="Symbol image" style="max-height:200px"/>
 				</a>
 			</div>
-			<a href="symbol/{$id}">
+			<a href="{$uri}">
 				<xsl:choose>
 					<xsl:when test="skos:prefLabel[@xml:lang = $lang]">
 						<xsl:value-of select="skos:prefLabel[@xml:lang = $lang]"/>
