@@ -194,8 +194,11 @@
 						<xsl:copy-of select="descendant::nuds:typeDesc"/>
 					</xsl:variable>
 					
+					
+					
 
 					<xsl:if test="count($subtypes//type[@recordId = $id]/subtype) &gt; 0">
+						
 						<xsl:for-each select="('obverse', 'reverse')">
 							<xsl:variable name="side" select="."/>
 							<xsl:variable name="sideAbbr" select="substring($side, 1, 3)"/>
@@ -251,21 +254,9 @@
 
 							<!-- symbols -->
 							<xsl:if test="$hasSymbols = false() and $subtypes//type[@recordId = $id]/subtype/descendant::*[local-name() = $side]/nuds:symbol">
-								<xsl:variable name="subtype-symbols" as="element()*">
-									<symbols>
-										<xsl:for-each select="$subtypes/descendant::nuds:symbol[@xlink:href]">
-											<xsl:variable name="href" select="@xlink:href"/>
-
-											<xsl:if test="doc-available(concat($href, '.rdf'))">
-												<xsl:copy-of select="document(concat($href, '.rdf'))"/>
-											</xsl:if>
-										</xsl:for-each>
-									</symbols>
-								</xsl:variable>
-
+								
 								<xsl:apply-templates select="$subtypes//type[@recordId = $id]/subtype/descendant::*[local-name() = $side]/nuds:symbol">
-									<xsl:with-param name="side" select="substring($side, 1, 3)"/>
-									<xsl:with-param name="symbols" select="$subtype-symbols"/>
+									<xsl:with-param name="side" select="substring($side, 1, 3)"/>									
 								</xsl:apply-templates>
 							</xsl:if>
 
