@@ -6,9 +6,12 @@ PREFIX skos:	<http://www.w3.org/2004/02/skos/core#>
 PREFIX xsd:	<http://www.w3.org/2001/XMLSchema#>
 
 SELECT ?type ?label ?startDate ?endDate ?mint ?mintLabel ?den ?denLabel WHERE {
+  BIND (<%URI%> as ?symbol)
   {
-    SELECT ?side WHERE {
-    	?side nmo:hasControlmark <%URI%>
+    SELECT ?symbol ?side WHERE {
+    	{?side nmo:hasControlmark ?symbol}
+    	UNION {?children skos:broader+ ?symbol .
+              ?side nmo:hasControlmark ?children}
     }
   }
 ?type nmo:hasObverse|nmo:hasReverse ?side

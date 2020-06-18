@@ -2,12 +2,16 @@ PREFIX rdf:	<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX nm:       <http://nomisma.org/id/>
 PREFIX nmo:	<http://nomisma.org/ontology#>
 PREFIX dcterms:  <http://purl.org/dc/terms/>
+PREFIX skos:	<http://www.w3.org/2004/02/skos/core#>
 PREFIX geo:	<http://www.w3.org/2003/01/geo/wgs84_pos#>
 
 ASK {
-   {
-    SELECT ?side WHERE {
-    	?side nmo:hasControlmark <%URI%>
+  BIND (<%URI%> as ?symbol)
+  {
+    SELECT ?symbol ?side WHERE {
+    	{?side nmo:hasControlmark ?symbol}
+    	UNION {?children skos:broader+ ?symbol .
+              ?side nmo:hasControlmark ?children}
     }
   }
   ?type nmo:hasObverse|nmo:hasReverse ?side ;
