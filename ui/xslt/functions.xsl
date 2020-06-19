@@ -1892,6 +1892,7 @@
 					<xsl:when test="$label = 'hoardDesc'">Hoard Description</xsl:when>
 					<xsl:when test="$label = 'fromDate'">From Date</xsl:when>
 					<xsl:when test="$label = 'toDate'">To Date</xsl:when>
+					<xsl:when test="$label = 'letter'">Monogram Letter</xsl:when>
 					<xsl:when test="$label = 'measurementsSet'">Measurements</xsl:when>
 					<xsl:when test="$label = 'noteSet'">Notes</xsl:when>
 					<xsl:when test="$label = 'objectType'">Object Type</xsl:when>

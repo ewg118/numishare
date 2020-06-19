@@ -7,9 +7,10 @@
 -->
 <xsl:stylesheet xmlns:nuds="http://nomisma.org/nuds" xmlns:nh="http://nomisma.org/nudsHoard" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:datetime="http://exslt.org/dates-and-times" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mods="http://www.loc.gov/mods/v3" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:crmdig="http://www.ics.forth.gr/isl/CRMdig/"
-	xmlns:org="http://www.w3.org/ns/org#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:numishare="https://github.com/ewg118/numishare"
-	xmlns:tei="http://www.tei-c.org/ns/1.0" exclude-result-prefixes="#all" version="2.0">
+	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mods="http://www.loc.gov/mods/v3" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"
+	xmlns:crmdig="http://www.ics.forth.gr/isl/CRMdig/" xmlns:crm="http://www.cidoc-crm.org/cidoc-crm/" xmlns:org="http://www.w3.org/ns/org#"
+	xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:numishare="https://github.com/ewg118/numishare" xmlns:tei="http://www.tei-c.org/ns/1.0"
+	exclude-result-prefixes="#all" version="2.0">
 
 	<!-- general subject indexing -->
 	<xsl:template match="*:subjectSet">
@@ -57,7 +58,7 @@
 			</xsl:if>
 		</xsl:for-each>
 	</xsl:template>
-	
+
 	<xsl:template name="subject-geographic">
 		<xsl:variable name="href" select="@xlink:href"/>
 		<xsl:variable name="role">subject</xsl:variable>
@@ -82,10 +83,10 @@
 			</xsl:if>
 			<xsl:if test="position() = last()">
 				<xsl:variable name="level" select="
-					if (. = $value) then
-					position()
-					else
-					position() + 1"/>
+						if (. = $value) then
+							position()
+						else
+							position() + 1"/>
 				<field name="{$role}_hier">
 					<xsl:value-of select="concat('L', $level, '|', $value)"/>
 				</field>
@@ -233,7 +234,7 @@
 			<xsl:with-param name="side" select="$side"/>
 			<xsl:with-param name="primary" select="$primary"/>
 		</xsl:apply-templates>
-		
+
 		<xsl:apply-templates select="nuds:die">
 			<xsl:with-param name="side" select="$side"/>
 		</xsl:apply-templates>
@@ -288,18 +289,18 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
-	
+
 	<xsl:template match="nuds:die">
 		<xsl:param name="side"/>
-		
+
 		<field name="{$side}_die_facet">
 			<xsl:value-of select="."/>
 		</field>
-		
+
 		<field name="{$side}_die_text">
 			<xsl:value-of select="."/>
 		</field>
-		
+
 		<xsl:if test="@xlink:href">
 			<field name="{$side}_die_uri">
 				<xsl:value-of select="@xlink:href"/>
@@ -316,7 +317,7 @@
 				else
 					'symbol'"/>
 
-		
+
 		<!-- parse text fragments and monograms encoded in EpiDoc TEI -->
 		<xsl:choose>
 			<xsl:when test="child::tei:div">
@@ -342,7 +343,7 @@
 										<xsl:otherwise>
 											<xsl:value-of select="$rdf//*[@rdf:about = $uri]/skos:prefLabel"/>
 										</xsl:otherwise>
-									</xsl:choose>							
+									</xsl:choose>
 								</field>
 								<field name="{$symbolType}_{$side}_facet">
 									<xsl:choose>
@@ -362,6 +363,11 @@
 								<field name="{$symbolType}_uri">
 									<xsl:value-of select="@xlink:href"/>
 								</field>
+
+								<!-- index constuent letters -->
+								<xsl:apply-templates select="$rdf//*[@rdf:about = $uri]/crm:P106_is_composed_of">
+									<xsl:with-param name="side" select="$side"/>
+								</xsl:apply-templates>
 							</xsl:when>
 							<xsl:otherwise>
 								<field name="{$symbolType}_{$side}_{@position}_facet">
@@ -386,6 +392,11 @@
 								<field name="{$symbolType}_uri">
 									<xsl:value-of select="@xlink:href"/>
 								</field>
+
+								<!-- index constuent letters -->
+								<xsl:apply-templates select="$rdf//*[@rdf:about = $uri]/crm:P106_is_composed_of">
+									<xsl:with-param name="side" select="$side"/>
+								</xsl:apply-templates>
 							</xsl:when>
 							<xsl:otherwise>
 								<field name="{$symbolType}_{$side}_facet">
@@ -764,25 +775,25 @@
 			</field>
 		</xsl:if>
 	</xsl:template>
-	
+
 	<!-- TEI-encoded symbols and monograms encoded in EpiDoc -->
 	<xsl:template match="tei:div" mode="symbols">
 		<xsl:param name="side"/>
 		<xsl:param name="symbolType"/>
 		<xsl:param name="position"/>
-		
-		<xsl:apply-templates select="tei:choice|tei:ab" mode="symbols">
+
+		<xsl:apply-templates select="tei:choice | tei:ab" mode="symbols">
 			<xsl:with-param name="side" select="$side"/>
 			<xsl:with-param name="symbolType" select="$symbolType"/>
 			<xsl:with-param name="position" select="$position"/>
 		</xsl:apply-templates>
 	</xsl:template>
-	
+
 	<xsl:template match="tei:ab" mode="symbols">
 		<xsl:param name="side"/>
 		<xsl:param name="symbolType"/>
 		<xsl:param name="position"/>
-		
+
 		<xsl:choose>
 			<xsl:when test="child::*">
 				<xsl:apply-templates select="*" mode="symbols">
@@ -800,12 +811,12 @@
 			</xsl:when>
 		</xsl:choose>
 	</xsl:template>
-	
-	<xsl:template match="tei:seg|tei:am|tei:g" mode="symbols">
+
+	<xsl:template match="tei:seg | tei:am | tei:g" mode="symbols">
 		<xsl:param name="side"/>
 		<xsl:param name="symbolType"/>
 		<xsl:param name="position"/>
-		
+
 		<xsl:choose>
 			<xsl:when test="child::*">
 				<xsl:apply-templates select="*" mode="symbols">
@@ -823,15 +834,15 @@
 				</xsl:apply-templates>
 			</xsl:when>
 		</xsl:choose>
-		
-		
+
+
 	</xsl:template>
-	
+
 	<xsl:template match="tei:choice" mode="symbols">
 		<xsl:param name="side"/>
 		<xsl:param name="symbolType"/>
 		<xsl:param name="position"/>
-		
+
 		<xsl:for-each select="*">
 			<xsl:apply-templates select="self::node()" mode="symbols">
 				<xsl:with-param name="side" select="$side"/>
@@ -840,14 +851,14 @@
 			</xsl:apply-templates>
 		</xsl:for-each>
 	</xsl:template>
-	
+
 	<!-- process the text() node into a clickable link -->
 	<xsl:template match="text()" mode="symbols">
 		<xsl:param name="side"/>
 		<xsl:param name="symbolType"/>
 		<xsl:param name="position"/>
 		<xsl:param name="href"/>
-		
+
 		<xsl:call-template name="generate-symbol-field">
 			<xsl:with-param name="side" select="$side"/>
 			<xsl:with-param name="symbolType" select="$symbolType"/>
@@ -856,14 +867,14 @@
 			<xsl:with-param name="href" select="$href"/>
 		</xsl:call-template>
 	</xsl:template>
-	
+
 	<xsl:template name="generate-symbol-field">
 		<xsl:param name="side"/>
 		<xsl:param name="symbolType"/>
 		<xsl:param name="position"/>
 		<xsl:param name="value"/>
-		<xsl:param name="href"/>		
-		
+		<xsl:param name="href"/>
+
 		<xsl:choose>
 			<xsl:when test="string($position)">
 				<xsl:choose>
@@ -878,7 +889,7 @@
 								<xsl:otherwise>
 									<xsl:value-of select="$rdf//*[@rdf:about = $href]/skos:prefLabel"/>
 								</xsl:otherwise>
-							</xsl:choose>							
+							</xsl:choose>
 						</field>
 						<field name="{$symbolType}_{$side}_facet">
 							<xsl:choose>
@@ -898,6 +909,11 @@
 						<field name="{$symbolType}_uri">
 							<xsl:value-of select="$href"/>
 						</field>
+
+						<!-- index constuent letters -->
+						<xsl:apply-templates select="$rdf//*[@rdf:about = $href]/crm:P106_is_composed_of">
+							<xsl:with-param name="side" select="$side"/>
+						</xsl:apply-templates>
 					</xsl:when>
 					<xsl:otherwise>
 						<field name="{$symbolType}_{$side}_{$position}_facet">
@@ -930,6 +946,11 @@
 						<field name="{$symbolType}_uri">
 							<xsl:value-of select="$href"/>
 						</field>
+
+						<!-- index constuent letters -->
+						<xsl:apply-templates select="$rdf//*[@rdf:about = $href]/crm:P106_is_composed_of">
+							<xsl:with-param name="side" select="$side"/>
+						</xsl:apply-templates>
 					</xsl:when>
 					<xsl:otherwise>
 						<field name="{$symbolType}_{$side}_facet">
@@ -939,33 +960,6 @@
 				</xsl:choose>
 			</xsl:otherwise>
 		</xsl:choose>
-		
-		
-		<!--<xsl:choose>
-			<xsl:when test="$rdf//*[@rdf:about = $href]/descendant::crmdig:D1_Digital_Object">
-				<xsl:value-of select="$rdf//*[@rdf:about = $href]/descendant::crmdig:D1_Digital_Object[1]/@rdf:about"/>
-				<xsl:text>|</xsl:text>
-				<xsl:value-of select="$rdf//*[@rdf:about = $href]/skos:prefLabel"/>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:value-of select="$rdf//*[@rdf:about = $href]/skos:prefLabel"/>
-			</xsl:otherwise>
-		</xsl:choose>
-		
-
-		<xsl:choose>
-			<xsl:when test="string($position)">
-				<field name="{$symbolType}_{$side}_{$position}_facet">
-							<xsl:value-of select="$value"/>					
-				</field>
-				<field name="{$symbolType}_{$side}_facet">
-					<xsl:value-of select="$value"/>
-				</field>
-			</xsl:when>
-			<xsl:otherwise>
-				
-			</xsl:otherwise>
-		</xsl:choose>-->
 	</xsl:template>
 
 	<!-- index TEI-encoded edition into legend field -->
@@ -1050,6 +1044,17 @@
 		</xsl:for-each>
 	</xsl:template>
 
+	<!-- index constituent letters -->
+	<xsl:template match="crm:P106_is_composed_of">
+		<xsl:param name="side"/>
+
+		<xsl:if test="string(.)">
+			<field name="symbol_{$side}_letter_facet">
+				<xsl:value-of select="."/>
+			</field>
+		</xsl:if>
+	</xsl:template>
+
 	<!-- ***** CUSTOM TEMPLATES ***** -->
 	<xsl:template name="get_date_hierarchy">
 		<xsl:param name="standardDate"/>
@@ -1078,10 +1083,10 @@
 			</field>
 		</xsl:if>
 	</xsl:template>
-	
+
 	<xsl:template name="parse_dates">
 		<xsl:param name="typologies"/>
-		
+
 		<xsl:variable name="dates" as="element()*">
 			<dates>
 				<xsl:for-each select="distinct-values($typologies/descendant::*/@standardDate)">
@@ -1094,7 +1099,7 @@
 				</xsl:for-each>
 			</dates>
 		</xsl:variable>
-		
+
 		<xsl:for-each select="$dates//date">
 			<!-- add min and max, even if they are integers (for ISO dates) -->
 			<xsl:if test="position() = 1">
@@ -1114,13 +1119,13 @@
 				</field>
 			</xsl:if>
 		</xsl:for-each>
-		
+
 		<xsl:if test="count($dates//date) &gt; 0">
 			<field name="date_display">
 				<xsl:choose>
 					<xsl:when test="$dates//date[1] = $dates//date[last()]">
 						<xsl:value-of select="numishare:normalizeDate($dates//date[1])"/>
-					</xsl:when> 
+					</xsl:when>
 					<xsl:otherwise>
 						<xsl:value-of select="numishare:normalizeDate($dates//date[1])"/>
 						<xsl:text> - </xsl:text>
@@ -1129,7 +1134,7 @@
 				</xsl:choose>
 			</field>
 		</xsl:if>
-		
+
 	</xsl:template>
 
 	<xsl:template name="get_hoard_sort_fields">
@@ -1243,7 +1248,7 @@
 							</xsl:otherwise>
 						</xsl:choose>
 					</xsl:otherwise>
-				</xsl:choose>				
+				</xsl:choose>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>

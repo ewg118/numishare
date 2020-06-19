@@ -687,6 +687,9 @@
 									<xsl:variable name="position" select="tokenize(@name, '_')[3]"/>
 
 									<xsl:choose>
+										<xsl:when test="$position = 'letter'">
+											<xsl:value-of select="numishare:normalize_fields('letter', $lang)"/>
+										</xsl:when>
 										<xsl:when test="$positions//position[@value = $position]/label[@lang = $langParam]">
 											<xsl:value-of select="$positions//position[@value = $position]/label[@lang = $langParam]"/>
 										</xsl:when>
@@ -694,8 +697,7 @@
 											<xsl:value-of select="concat(upper-case(substring($position, 1, 1)), substring($position, 2))"/>
 										</xsl:otherwise>
 									</xsl:choose>
-								</xsl:when>
-								<xsl:otherwise>
+								</xsl:when>																<xsl:otherwise>
 									<xsl:value-of select="numishare:normalizeLabel('position_any', $lang)"/>
 								</xsl:otherwise>
 							</xsl:choose>
