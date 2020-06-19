@@ -881,7 +881,9 @@
 				</xsl:when>
 				<!-- if the token contains a parenthisis, then it was probably sent from the search widget and the token must be broken down further to remove other facets -->
 				<xsl:when test="substring(., 1, 1) = '('">
-					<xsl:variable name="tokenized-fragments" select="tokenize(., ' OR ')"/>
+					<xsl:variable name="delimiter" select="if (contains(., ' OR ')) then ' OR ' else ' '"/>
+					
+					<xsl:variable name="tokenized-fragments" select="tokenize(., $delimiter)"/>
 					<div class="stacked_term alert alert-info row">
 						<xsl:if test="$lang = 'ar'">
 							<div class="col-md-2 left">
@@ -985,14 +987,14 @@
 											</xsl:variable>
 											<xsl:value-of select="concat($other_field, ':', encode-for-uri($other_value))"/>
 											<xsl:if test="position() != last()">
-												<xsl:text> OR </xsl:text>
+												<xsl:value-of select="$delimiter"/>
 											</xsl:if>
 										</xsl:for-each>
 									</xsl:variable>
 
 									<xsl:variable name="multicategory_query">
 										<xsl:choose>
-											<xsl:when test="contains($new_multicategory, ' OR ')">
+											<xsl:when test="contains($new_multicategory, $delimiter)">
 												<xsl:value-of select="concat('(', $new_multicategory, ')')"/>
 											</xsl:when>
 											<xsl:otherwise>
@@ -1048,7 +1050,7 @@
 									</a>
 
 									<xsl:if test="position() != last()">
-										<xsl:text> OR </xsl:text>
+										<xsl:value-of select="$delimiter"/>
 									</xsl:if>
 								</xsl:for-each>
 							</span>

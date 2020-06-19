@@ -65,7 +65,11 @@ function getQuery() {
                 if (collection_type == 'hoard' && (facet != 'taq_num' && facet != 'findspot_facet')) {
                     query.push(segments.join(' AND '));
                 } else {
-                    query.push('(' + segments.join(' OR ') + ')');
+                    if (facet.indexOf('letter') > 0) {
+                        query.push('(' + segments.join(' ') + ')');
+                    } else {
+                        query.push('(' + segments.join(' OR ') + ')');
+                    }
                 }
             } else {
                 query.push(segments[0]);
