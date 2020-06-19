@@ -1,6 +1,6 @@
 /*******************
 AUTHOR: Ethan Gruber
-DATE: November 2019
+DATE: June 2020
 FUNCTIONS USED IN FACET-BASED PAGES: BROWSE, COLLECTION, AND MAPS
  ********************/
  

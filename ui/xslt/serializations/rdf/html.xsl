@@ -426,7 +426,7 @@
 						crm:P165i_is_incorporated_in[1]/@rdf:resource
 						else
 						crm:P165i_is_incorporated_in[1]/crmdig:D1_Digital_Object/@rdf:about}"
-						alt="Symbol image" style="max-height:200px"/>
+						alt="Symbol image" style="max-height:200px;max-width:100%;"/>
 				</a>
 			</div>
 			<a href="{@rdf:about}">
