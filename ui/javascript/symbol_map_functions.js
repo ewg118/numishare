@@ -1,3 +1,7 @@
+/* Author: Ethan Gruber
+ * Date: June 2020
+ * Function: JQuery functions for the /symbol/ namespace in Numishare. Displays map for related hoards and mints for a symbol URI
+ */
 $(document).ready(function () {
     var uri = $('#objectURI').text();
     initialize_map(uri);
@@ -134,6 +138,10 @@ function initialize_map(uri) {
                     str += '<b>Findspot: </b>';
                 }
                 str += '<a href="' + feature.properties.gazetteer_uri + '">' + feature.properties.toponym + '</a></span>'
+            }
+            if (feature.properties.hasOwnProperty('closing_date') == true) {
+                str += '<br/><span>';
+                str += '<b>Closing Date: </b>' + feature.properties.closing_date;
             }
         }
         layer.bindPopup(str);
