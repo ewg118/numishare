@@ -2,7 +2,7 @@
 
 /************************
  AUTHOR: Ethan Gruber
- MODIFIED: December, 2018
+ MODIFIED: June, 2020
  DESCRIPTION: Functions for processing the row from the Filemaker export CSV into a data object for later 
  processing into NUDS/XML
  ************************/
@@ -1142,8 +1142,11 @@ function parse_typology ($accnum, $count, $row, $department){
 				
 				if ($department == 'Medieval' || $department == 'Byzantine' || $department == 'Roman'){
 					$entity = array('label'=>$val, 'uncertain'=>$uncertain, 'element'=>'persname', 'role'=>'issuer');
-				} elseif ($department == 'Greek' || $department == 'Islamic'){
+				} elseif ($department == 'Islamic'){
 					$entity = array('label'=>$val, 'uncertain'=>$uncertain, 'element'=>'persname', 'role'=>'authority');
+				} elseif ($department == 'Greek'){
+				    //attempt to to normalize the $val to a URI and preferred label in the Greek authorities spreadsheet
+				    $entity = lookup_entity($department, $val, $uncertain);
 				}
 				else {
 					$entity = array('label'=>$val, 'uncertain'=>$uncertain, 'element'=>'corpname', 'role'=>'issuer');

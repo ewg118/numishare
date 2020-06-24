@@ -197,6 +197,26 @@ class filterGeo {
 	}
 }
 
+/***** NORMALIZING NON-GEOGRAPHIC ENTITIES TO URIS *****/
+function lookup_entity ($department, $val, $uncertain){    
+    GLOBAL $Greek_authorities_array;
+    
+    $found = false;
+    
+    foreach ($Greek_authorities_array as $row){
+        if ($row['match'] == $val){
+            if (strlen($row['uri']) > 0){
+                return array('label'=>$row['prefLabel_en'], 'uri'=>$row['uri'], 'uncertain'=>$uncertain, 'element'=>$row['type'], 'role'=>'authority');
+            } else {
+                return array('label'=>$val, 'uncertain'=>$uncertain, 'element'=>'persname', 'role'=>'authority');
+            }
+        }
+    }
+    
+    //if the key has not been found after checking the spreadsheet, return the default values
+    return array('label'=>$val, 'uncertain'=>$uncertain, 'element'=>'persname', 'role'=>'authority');
+}
+
 /***** DATES *****/
 //evaluate the fromDate and toDate for use in the nuds:title
 function get_title_date($fromDate, $toDate){
