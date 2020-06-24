@@ -69,18 +69,18 @@ $warnings = array();
 $accnums = array();
 
 //load Google Spreadsheets
-$Byzantine_array = generate_json('https://docs.google.com/spreadsheet/pub?hl=en_US&hl=en_US&key=0Avp6BVZhfwHAdGJSRFhnR3ZKbHo2bG5oV0pDSzBBRnc&single=true&gid=0&output=csv');
-$Decoration_array = generate_json('https://docs.google.com/spreadsheet/pub?hl=en_US&hl=en_US&key=0Avp6BVZhfwHAdFdTVy1UWGp6bFZvbTlsQWJyWmtlR1E&single=true&gid=0&output=csv');
-$East_Asian_array = generate_json('https://docs.google.com/spreadsheet/pub?hl=en_US&hl=en_US&key=0Avp6BVZhfwHAdFdONnhna3RpNGxwTjJ1M3RiSkxfTUE&single=true&gid=0&output=csv');
-$Greek_array = generate_json('https://docs.google.com/spreadsheet/pub?hl=en_US&hl=en_US&key=0Avp6BVZhfwHAdERQcHlNWXJlbTcwQ2g4YmM5QmxRMVE&single=true&gid=0&output=csv');
-$Islamic_array = generate_json('https://docs.google.com/spreadsheets/d/1b2_YqnX-ikzieCSsE5k4wqhiSG-nvFv46351k6ilUvQ/pub?gid=1497998420&single=true&output=csv');
-$Latin_American_array = generate_json('https://docs.google.com/spreadsheet/pub?hl=en_US&hl=en_US&key=0Avp6BVZhfwHAdGI0UmpzSTNaXy1OWHhCSnp6VDA4OEE&single=true&gid=0&output=csv');
-$Medieval_array = generate_json('https://docs.google.com/spreadsheet/pub?hl=en_US&hl=en_US&key=0Avp6BVZhfwHAdGFkbW8xLV9yYm9rQ3VVd25rcUJTVmc&single=true&gid=0&output=csv');
-$Medal_array = generate_json('https://docs.google.com/spreadsheet/pub?hl=en_US&hl=en_US&key=0Avp6BVZhfwHAdGg5SFlaU0VUUzM5ZUZQdHFHV3ZncVE&single=true&gid=0&output=csv');
-$Modern_array = generate_json('https://docs.google.com/spreadsheet/pub?hl=en_US&hl=en_US&key=0Avp6BVZhfwHAdG9WVk5EMW1YamN3UFNNTHZlS0hwT1E&single=true&gid=0&output=csv');
-$Roman_array = generate_json('https://docs.google.com/spreadsheet/pub?hl=en_US&hl=en_US&key=0Avp6BVZhfwHAdHNMSmFWdXRkWnVxRy1sOTR1Z09HQnc&single=true&gid=0&output=csv');
-$South_Asian_array = generate_json('https://docs.google.com/spreadsheet/pub?hl=en_US&hl=en_US&key=0Avp6BVZhfwHAdFpxbjVsc25rblIyZy1OSngtVy15VGc&single=true&gid=0&output=csv');
-$United_States_array = generate_json('https://docs.google.com/spreadsheet/pub?hl=en_US&hl=en_US&key=0Avp6BVZhfwHAdEZ3VU1JeThGVHJiNEJsUkptbTFTRGc&single=true&gid=0&output=csv');
+$Byzantine_array = generate_json('https://docs.google.com/spreadsheets/d/e/2PACX-1vQBsPg2dHki4f-z2fq0wY4Cqcibkwk_RitLLyaAJ4S3VV0W5pF5dMpgUMfX_cVf2mw8EMZaJLn0h_XF/pub?output=csv');
+$Decoration_array = generate_json('https://docs.google.com/spreadsheets/d/e/2PACX-1vRzXMfNbEQ1mhQD6N6pAApF3qiY7ZVUIVttEsenZIo16Kn2rLyyw-OyE82jwoXcf44amBcz1pzpOVg9/pub?output=csv');
+$East_Asian_array = generate_json('https://docs.google.com/spreadsheets/d/e/2PACX-1vSEpksT55dnmRw32OPj4CbJnPbO5ycjksrn-9arFB9oF6wtOA3SUfKRVMyuWOqTFWEKYzvyTFzxOA-n/pub?output=csv');
+$Greek_array = generate_json('https://docs.google.com/spreadsheets/d/e/2PACX-1vRoDROgTRe2oXfj5srWQm9xALt0ztV7745S90lbBWUi2j16UmMmYH2B2XbEhj1c3Sni3W7fDsNnM2BP/pub?output=csv');
+$Islamic_array = generate_json('https://docs.google.com/spreadsheets/d/e/2PACX-1vQOpj_KPqLH0VtK3T5PUmFRBOC0j788nXhIIJw33Y50Iab_XSEzlLCfu4UrypaV8ZppjsidkWvVSvcz/pub?output=csv');
+$Latin_American_array = generate_json('https://docs.google.com/spreadsheets/d/e/2PACX-1vSDbVOA3Sh0Zhhb13V4q3NPIA2N-fJiSgb2-c7Jf7XDJLUL2wO2vfgD5KjgbY72aC3j9aasb5ogC4-k/pub?output=csv');
+$Medal_array = generate_json('https://docs.google.com/spreadsheets/d/e/2PACX-1vRegeOXLwQGoi9tSGXmd8B_eyCGC3gsuiUG7hCgJdvVr_zePhOLQ4ogkGcJHleP9o3S9e27xvyM0E2z/pub?output=csv');
+$Medieval_array = generate_json('https://docs.google.com/spreadsheets/d/e/2PACX-1vQwKucfaQmyVVJMb0Ia_kDflx446U8CJ_O1kzbjimUOtOFDgPi4sy8M1s5BWNhZu9-q-WeA5hVtO9Bt/pub?output=csv');
+$Modern_array = generate_json('https://docs.google.com/spreadsheets/d/e/2PACX-1vQbGr1pk3X9dTtJN_xox10Ze94nHCy1Q7qYHy0KPngCMiThTZhDtihyRPS3Mx2XVKsOSur3C1r7KURu/pub?output=csv');
+$Roman_array = generate_json('https://docs.google.com/spreadsheets/d/e/2PACX-1vSy6fRVmhLRkJQcsWmxaQfch6oVGUtP3M_hjNDmuGNQXvF266PLi4vjsrXnxFDEo0I1KRoMjYZ815Xm/pub?output=csv');
+$South_Asian_array = generate_json('https://docs.google.com/spreadsheets/d/e/2PACX-1vRuTGEVOB3v5qOigC1ubHJ82QDApxiPxRR8q7TFhVKLZTRJCwCMsk8_0VvekM_kUufwb646XPAuAdil/pub?output=csv');
+$United_States_array = generate_json('https://docs.google.com/spreadsheets/d/e/2PACX-1vQLO452BttROCPIvTq5USc2SXxXYwxCVMK_nR3NUmPLiYG-cg-mejS5VtAEsd-W2IHSKSnfZo2ckIR8/pub?output=csv');
 $Greek_authorities_array = generate_json('https://docs.google.com/spreadsheets/d/e/2PACX-1vSLKDSk4XUSnTyoYdvHTGPH906wnWtaHcZRxufR2BLRTdaira5m-LPvHsJCxV15dwGIk7NUevPmSDzl/pub?output=csv');
 
 /*//SCO spreadsheet for mapping SC to the new SCO number

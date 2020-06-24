@@ -2,7 +2,7 @@
 
 /************************
  AUTHOR: Ethan Gruber
- MODIFIED: January, 2018
+ MODIFIED: June, 2020
  DESCRIPTION: Contains all of the functions for parsing and normalizing fields to standardized labels and URIs from internal or external 
  (Google Spreadsheets) lookup mechanisms
  ************************/
@@ -52,13 +52,13 @@ function parse_mint($department, $mint, $regions, $localities){
 		$results = array_filter($$geoData, array(new filterGeo($mint, '', ''), 'matches'));
 		
 		foreach ($results as $result){
-			$nomisma_value = $result['nomisma_id'];
+			$uri = $result['uri'];
 			$label = $result['label'];
 		}
 		
-		if (isset($nomisma_value)){
-			if (strpos($nomisma_value, 'nomisma.org') > 0 || strpos($nomisma_value, 'geonames.org') > 0){
-				$mint_uri = $nomisma_value;
+		if (isset($uri)){
+			if (strpos($uri, 'nomisma.org') > 0 || strpos($uri, 'geonames.org') > 0){
+				$mint_uri = $uri;
 			}
 		}
 	}
@@ -69,12 +69,12 @@ function parse_mint($department, $mint, $regions, $localities){
 				$results = array_filter($$geoData, array(new filterGeo($mint, $rv, ''), 'matches'));
 				
 				foreach ($results as $result){
-					$nomisma_value = $result['nomisma_id'];
+					$uri = $result['uri'];
 					$label = $result['label'];
 				}
-				if (isset($nomisma_value)){
-					if (strpos($nomisma_value, 'nomisma.org') > 0 || strpos($nomisma_value, 'geonames.org') > 0){
-						$mint_uri = $nomisma_value;
+				if (isset($uri)){
+					if (strpos($uri, 'nomisma.org') > 0 || strpos($uri, 'geonames.org') > 0){
+						$mint_uri = $uri;
 					}
 				}
 			}
@@ -84,13 +84,13 @@ function parse_mint($department, $mint, $regions, $localities){
 					$results = array_filter($$geoData, array(new filterGeo($mint, $rv, $lv), 'matches'));
 					
 					foreach ($results as $result){
-						$nomisma_value = $result['nomisma_id'];
+						$uri = $result['uri'];
 						$label = $result['label'];
 					}
 					
-					if (isset($nomisma_value)){
-						if (strpos($nomisma_value, 'nomisma.org') > 0 || strpos($nomisma_value, 'geonames.org') > 0){
-							$mint_uri = $nomisma_value;
+					if (isset($uri)){
+						if (strpos($uri, 'nomisma.org') > 0 || strpos($uri, 'geonames.org') > 0){
+							$mint_uri = $uri;
 						}
 					}
 				}
@@ -103,12 +103,12 @@ function parse_mint($department, $mint, $regions, $localities){
 			$results = array_filter($$geoData, array(new filterGeo($mint, '', $lv), 'matches'));
 			
 			foreach ($results as $result){
-				$nomisma_value = $result['nomisma_id'];
+				$uri = $result['uri'];
 				$label = $result['label'];
 			}
-			if (isset($nomisma_value)){
-				if (strpos($nomisma_value, 'nomisma.org') > 0 || strpos($nomisma_value, 'geonames.org') > 0){
-					$mint_uri = $nomisma_value;
+			if (isset($uri)){
+				if (strpos($uri, 'nomisma.org') > 0 || strpos($uri, 'geonames.org') > 0){
+					$mint_uri = $uri;
 				}
 			}
 		}
