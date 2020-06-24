@@ -206,7 +206,12 @@ function lookup_entity ($department, $val, $uncertain){
     foreach ($Greek_authorities_array as $row){
         if ($row['match'] == $val){
             if (strlen($row['uri']) > 0){
-                return array('label'=>$row['prefLabel_en'], 'uri'=>$row['uri'], 'uncertain'=>$uncertain, 'element'=>$row['type'], 'role'=>'authority');
+                //if it's a deity, return null. The deity will already be parsed from the type description, so it should not be indexed as an authority.
+                if ($row['type'] == 'deity'){
+                    return null;
+                } else {
+                    return array('label'=>$row['prefLabel_en'], 'uri'=>$row['uri'], 'uncertain'=>$uncertain, 'element'=>$row['type'], 'role'=>'authority');
+                }                
             } else {
                 return array('label'=>$val, 'uncertain'=>$uncertain, 'element'=>'persname', 'role'=>'authority');
             }

@@ -1151,7 +1151,10 @@ function parse_typology ($accnum, $count, $row, $department){
 				else {
 					$entity = array('label'=>$val, 'uncertain'=>$uncertain, 'element'=>'corpname', 'role'=>'issuer');
 				}
-				$authority[] = $entity;
+				
+				if (isset($entity)){
+				    $authority[] = $entity;
+				}				
 			}
 		}
 		//artist
@@ -1168,16 +1171,18 @@ function parse_typology ($accnum, $count, $row, $department){
 		
 		
 		//dynasty
-		if (count($dynasties) > 0){
-			foreach ($dynasties as $dynasty){
-				$val = trim(str_replace('"', '', $dynasty));
-				$uncertain = substr($val, -1) == '?' ? true : false;
-				$val = trim(str_replace('?', '', $val));
-				
-				$entity = array('label'=>$val, 'uncertain'=>$uncertain, 'element'=>'famname', 'role'=>'dynasty');
-				$authority[] = $entity;
-			}
-		}
+		if ($department != "Greek"){
+		    if (count($dynasties) > 0){
+		        foreach ($dynasties as $dynasty){
+		            $val = trim(str_replace('"', '', $dynasty));
+		            $uncertain = substr($val, -1) == '?' ? true : false;
+		            $val = trim(str_replace('?', '', $val));
+		            
+		            $entity = array('label'=>$val, 'uncertain'=>$uncertain, 'element'=>'famname', 'role'=>'dynasty');
+		            $authority[] = $entity;
+		        }
+		    }
+		}		
 		
 		//maker
 		if (count($makers) > 0){
