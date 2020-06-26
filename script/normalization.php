@@ -198,7 +198,7 @@ class filterGeo {
 }
 
 /***** NORMALIZING NON-GEOGRAPHIC ENTITIES TO URIS *****/
-function lookup_entity ($department, $val, $uncertain){    
+function lookup_entity ($department, $val, $uncertain, $role){    
     GLOBAL $Greek_authorities_array;
     
     $found = false;
@@ -210,16 +210,17 @@ function lookup_entity ($department, $val, $uncertain){
                 if ($row['type'] == 'deity'){
                     return null;
                 } else {
-                    return array('label'=>$row['prefLabel_en'], 'uri'=>$row['uri'], 'uncertain'=>$uncertain, 'element'=>$row['type'], 'role'=>'authority');
+                    echo "Found {$row['uri']}\n";
+                    return array('label'=>$row['prefLabel_en'], 'uri'=>$row['uri'], 'uncertain'=>$uncertain, 'element'=>$row['type'], 'role'=>$role);
                 }                
             } else {
-                return array('label'=>$val, 'uncertain'=>$uncertain, 'element'=>'persname', 'role'=>'authority');
+                return array('label'=>$val, 'uncertain'=>$uncertain, 'element'=>'persname', 'role'=>$role);
             }
         }
     }
     
     //if the key has not been found after checking the spreadsheet, return the default values
-    return array('label'=>$val, 'uncertain'=>$uncertain, 'element'=>'persname', 'role'=>'authority');
+    return array('label'=>$val, 'uncertain'=>$uncertain, 'element'=>'persname', 'role'=>$role);
 }
 
 /***** DATES *****/

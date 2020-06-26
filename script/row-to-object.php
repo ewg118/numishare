@@ -835,6 +835,11 @@ function parse_typology ($accnum, $count, $row, $department){
 	$objectType = normalize_objtype($row['objtype']);
 	$typeDesc['objectType'] = $objectType;
 	
+	//parse integer date on object for certain departments
+	/*if ($department == 'United States'){
+	    
+	}*/
+	
 	//date
 	if (strlen(trim($row['startdate'])) > 0){
 	    $num = trim($row['startdate']);
@@ -1146,7 +1151,7 @@ function parse_typology ($accnum, $count, $row, $department){
 					$entity = array('label'=>$val, 'uncertain'=>$uncertain, 'element'=>'persname', 'role'=>'authority');
 				} elseif ($department == 'Greek'){
 				    //attempt to to normalize the $val to a URI and preferred label in the Greek authorities spreadsheet
-				    $entity = lookup_entity($department, $val, $uncertain);
+				    $entity = lookup_entity($department, $val, $uncertain, 'authority');
 				}
 				else {
 					$entity = array('label'=>$val, 'uncertain'=>$uncertain, 'element'=>'corpname', 'role'=>'issuer');
@@ -1215,12 +1220,23 @@ function parse_typology ($accnum, $count, $row, $department){
 				
 				if ($department == 'Roman' || $department == 'Byzantine' || $department == 'Medal' || $department == 'United States' || $department == 'Decoration'){
 					$entity = array('label'=>$val, 'uncertain'=>$uncertain, 'element'=>'persname', 'role'=>'portrait');
-					$authority[] = $entity;
 				}
-				if ($department == 'Roman' || $department == 'Byzantine' || $department == 'Medieval' || $department == 'Islamic' || $department == 'East Asian' || $department == 'South Asian' || $department == 'Greek' || $department == 'Modern' || $department == 'Latin American'){
+				if ($department == 'Roman' || $department == 'Byzantine' || $department == 'Medieval' || $department == 'Islamic' || $department == 'East Asian' || $department == 'South Asian' || $department == 'Modern' || $department == 'Latin American'){
 					$entity = array('label'=>$val, 'uncertain'=>$uncertain, 'element'=>'persname', 'role'=>'authority');
-					$authority[] = $entity;
+				} elseif ($department == 'Greek'){
+				    //attempt to to normalize the $val to a URI and preferred label in the Greek authorities spreadsheet
+				    
+				    //if there are values in issuer, then person is a portrait
+				    if (count($issuers) > 0){
+				        $entity = lookup_entity($department, $val, $uncertain, 'portrait');
+				    } else {
+				        $entity = lookup_entity($department, $val, $uncertain, 'authority');
+				    }				    
 				}
+				
+				if (isset($entity)){
+				    $authority[] = $entity;
+				}	
 			}
 		}
 		$typeDesc['authority'] = $authority;
