@@ -1873,7 +1873,8 @@
 				</xsl:choose>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:choose>					
+				<xsl:choose>			
+					<xsl:when test="$label = 'ah'">Hijra Date</xsl:when>
 					<xsl:when test="$label = 'ancient_place'">Ancient Place</xsl:when>
 					<xsl:when test="$label = 'acquiredFrom'">Acquired From</xsl:when>
 					<xsl:when test="$label = 'adminDesc'">Administrative History</xsl:when>

@@ -557,7 +557,7 @@
 			<!-- if AH date range searching is enabled, then display that form first -->
 			<xsl:if test="/content/config/ah_enabled = 'true'">
 				<div class="form-group" id="ah_dateRange">
-					<span>AH </span>
+					<label>Hijra </label>
 					<input type="text" id="ah_fromDate" class="form-control" placeholder="{numishare:normalize_fields('fromDate', $lang)}"/>
 					<span> - </span>
 					<input type="text" id="ah_toDate" class="form-control" placeholder="{numishare:normalize_fields('toDate', $lang)}"/>
@@ -589,6 +589,16 @@
 					<option value="" selected="selected">A.D.</option>
 				</select>
 			</div>
+			
+			<!-- ANS MANTIS specific: if the Lucene query is specific to the Islamic department  -->
+			<xsl:if test="$collection-name = 'mantis' and contains($q, 'department_facet:&#x022;Islamic&#x022;')">
+				<div class="form-group" id="ah_dateRange">
+					<label>Hijra </label>
+					<input type="text" id="ah_fromDate" class="form-control" placeholder="{numishare:normalize_fields('fromDate', $lang)}"/>
+					<span> - </span>
+					<input type="text" id="ah_toDate" class="form-control" placeholder="{numishare:normalize_fields('toDate', $lang)}"/>
+				</div>
+			</xsl:if>
 
 			<!-- hidden params -->
 			<input type="hidden" name="q" id="facet_form_query" value="{if (string($imageavailable_stripped)) then $imageavailable_stripped else '*:*'}"/>
