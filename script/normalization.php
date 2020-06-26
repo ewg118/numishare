@@ -210,7 +210,6 @@ function lookup_entity ($department, $val, $uncertain, $role){
                 if ($row['type'] == 'deity'){
                     return null;
                 } else {
-                    echo "Found {$row['uri']}\n";
                     return array('label'=>$row['prefLabel_en'], 'uri'=>$row['uri'], 'uncertain'=>$uncertain, 'element'=>$row['type'], 'role'=>$role);
                 }                
             } else {

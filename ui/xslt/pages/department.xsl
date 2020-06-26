@@ -274,26 +274,36 @@
 				</div>
 			</div>
 			<div class="col-md-6">
-				<h3>
-					<xsl:value-of select="numishare:normalize_fields('dateRange', $lang)"/>
-				</h3>
-				<label>
-					<xsl:value-of select="numishare:normalize_fields('fromDate', $lang)"/>
-				</label>
-				<input type="text" id="from_date" class="form-control"/>
-				<select id="from_era" class="form-control">
-					<option value="minus">B.C.</option>
-					<option value="" selected="selected">A.D.</option>
-				</select>
-				<label>
-					<xsl:value-of select="numishare:normalize_fields('toDate', $lang)"/>
-				</label>
-				<input type="text" id="to_date" class="form-control"/>
-				<select id="to_era" class="form-control">
-					<option value="minus">B.C.</option>
-					<option value="" selected="selected">A.D.</option>
-				</select>
+				<div class="form-group">
+					<h3>
+						<xsl:value-of select="numishare:normalize_fields('dateRange', $lang)"/>
+					</h3>
+					<label>
+						<xsl:value-of select="numishare:normalize_fields('fromDate', $lang)"/>
+					</label>
+					<input type="text" id="from_date" class="form-control"/>
+					<select id="from_era" class="form-control">
+						<option value="minus">B.C.</option>
+						<option value="" selected="selected">A.D.</option>
+					</select>
+					<label>
+						<xsl:value-of select="numishare:normalize_fields('toDate', $lang)"/>
+					</label>
+					<input type="text" id="to_date" class="form-control"/>
+					<select id="to_era" class="form-control">
+						<option value="minus">B.C.</option>
+						<option value="" selected="selected">A.D.</option>
+					</select>
+				</div>
+				
+				<div class="form-group" id="ah_dateRange">
+					<label>Hijra </label>
+					<input type="text" id="ah_fromDate" class="form-control" placeholder="{numishare:normalize_fields('fromDate', $lang)}"/>
+					<span> - </span>
+					<input type="text" id="ah_toDate" class="form-control" placeholder="{numishare:normalize_fields('toDate', $lang)}"/>
+				</div>
 			</div>
+			
 		</div>
 	</xsl:template>
 

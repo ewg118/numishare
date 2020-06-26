@@ -448,12 +448,8 @@ function parse_row($row, $count, $fileName){
 			}
 		}
 		
-	}
-	
-	//dob
-	if (strlen(trim($row['dob'])) > 0){
-		$record['dob'] = trim($row['dob']);
-	}
+	}	
+
 	//sernum
 	if (strlen(trim($row['sernum'])) > 0){
 		$record['sernum'] = trim($row['sernum']);
@@ -772,8 +768,10 @@ function generate_title($typeDesc){
 		}
 	}
 	
-	//date	
-	if (array_key_exists('fromDate', $typeDesc) && array_key_exists('toDate', $typeDesc)){
+	//date: prefer the date on object for the title over fromDate/toDate, if available
+	if (array_key_exists('title_dob', $typeDesc)){
+	    $title .= ', ' . $typeDesc['title_dob'];
+	} elseif (array_key_exists('fromDate', $typeDesc) && array_key_exists('toDate', $typeDesc)){
 		$title .= ', ';
 		$title .= get_title_date($typeDesc['fromDate'], $typeDesc['toDate']);
 	}
@@ -836,9 +834,32 @@ function parse_typology ($accnum, $count, $row, $department){
 	$typeDesc['objectType'] = $objectType;
 	
 	//parse integer date on object for certain departments
-	/*if ($department == 'United States'){
+	if (strlen(trim($row['dob'])) > 0){
+	    $num = trim($row['dob']);	    
+	    $dob_num = (is_digit($num) == true ? intval($num) : false);
 	    
-	}*/
+	    //only begin the evaluation of the date on object if it's an integer value	    
+        if ($department == 'United States' || $department == 'Modern' || $department == 'Latin American'){
+            if ($dob_num == true){
+                $typeDesc['title_dob'] = $num;
+            }
+            
+            $typeDesc['dob'] = $num;
+        } elseif ($department == 'Islamic' || $department == 'South Asian'){
+            //for Islamic coinage, ensure that the era has been set	            
+            $era = trim($row['era']);
+            
+            if ($era == 'H' || strtolower($era) == 'hijra'){
+                //add Hijra data into the title DoB
+                $typeDesc['title_dob'] = $num . ' H';
+                $typeDesc['ah_date'] = $num;
+            } else {
+                $typeDesc['dob'] = $num;
+            }
+        } else {
+            $typeDesc['dob'] = $num;
+        }
+    }
 	
 	//date
 	if (strlen(trim($row['startdate'])) > 0){

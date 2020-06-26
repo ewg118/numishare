@@ -202,12 +202,7 @@ function generate_nuds($record, $fileName){
 				$writer->startElement('countermark');
 					$writer->writeElement('symbol', $record['countermark']);
 				$writer->endElement();
-			}
-			if (array_key_exists('dob', $record)){
-				$writer->startElement('dateOnObject');
-					$writer->writeElement('date', $record['dob']);
-				$writer->endElement();
-			}
+			}			
 			if (array_key_exists('measurements', $record)){
 				$writer->startElement('measurementsSet');
 					foreach($record['measurements'] as $k=>$v){
@@ -469,6 +464,19 @@ function generate_typeDesc_from_object ($writer, $typeDesc){
 	if (array_key_exists('fromDate', $typeDesc) && array_key_exists('toDate', $typeDesc)){
 		get_date($writer, $typeDesc['fromDate'], $typeDesc['toDate']);
 	}
+	
+	//dateOnObject now in typeDesc. Include AH when possible
+	if (array_key_exists('ah_date', $typeDesc)){
+	    $writer->startElement('dateOnObject');
+	       $writer->writeAttribute('calendar', 'ah');
+	       $writer->writeElement('date', $typeDesc['ah_date']);
+	    $writer->endElement();
+	} elseif (array_key_exists('dob', $typeDesc)){
+	    $writer->startElement('dateOnObject');
+	       $writer->writeElement('date', $typeDesc['dob']);
+	    $writer->endElement();
+	}
+	
 	if (array_key_exists('denomination', $typeDesc)){
 		foreach ($typeDesc['denomination'] as $entity){
 			generate_entity_element($writer, $entity, 'denomination');

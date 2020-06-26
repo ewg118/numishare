@@ -245,6 +245,13 @@ select[name = "interval"],
     margin-right: 5px;
     display: inline;
 }
+#ah_fromDate,
+#ah_toDate{
+    width: 100px;
+    margin-left: 0px;
+    margin-right: 5px;
+    display: inline;
+}
 .year_range,
 .weight_range,
 .dimensions_range{
