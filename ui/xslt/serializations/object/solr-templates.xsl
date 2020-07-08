@@ -308,15 +308,11 @@
 		</xsl:if>
 	</xsl:template>
 
-	<xsl:template match="nuds:symbol">
+	<xsl:template match="nuds:symbol[not(@localType = 'mintMark')]">
 		<xsl:param name="side"/>
 
-		<xsl:variable name="symbolType" select="
-				if (@localType) then
-					@localType
-				else
-					'symbol'"/>
-
+		<xsl:variable name="symbolType">symbol</xsl:variable>
+		<xsl:variable name="position" select="if (@position) then @position else @localType"/>
 
 		<!-- parse text fragments and monograms encoded in EpiDoc TEI -->
 		<xsl:choose>
@@ -324,16 +320,16 @@
 				<xsl:apply-templates select="tei:div" mode="symbols">
 					<xsl:with-param name="symbolType" select="$symbolType"/>
 					<xsl:with-param name="side" select="$side"/>
-					<xsl:with-param name="position" select="@position"/>
+					<xsl:with-param name="position" select="if (@position) then @position else @localType"/>
 				</xsl:apply-templates>
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:choose>
-					<xsl:when test="@position">
+					<xsl:when test="string($position)">
 						<xsl:choose>
 							<xsl:when test="@xlink:href">
 								<xsl:variable name="uri" select="@xlink:href"/>
-								<field name="{$symbolType}_{$side}_{@position}_facet">
+								<field name="{$symbolType}_{$side}_{$position}_facet">
 									<xsl:choose>
 										<xsl:when test="$rdf//*[@rdf:about = $uri]/descendant::crmdig:D1_Digital_Object">
 											<xsl:value-of select="$rdf//*[@rdf:about = $uri]/descendant::crmdig:D1_Digital_Object[1]/@rdf:about"/>
@@ -357,7 +353,7 @@
 										</xsl:otherwise>
 									</xsl:choose>
 								</field>
-								<field name="{$symbolType}_{$side}_{@position}_uri">
+								<field name="{$symbolType}_{$side}_{$position}_uri">
 									<xsl:value-of select="@xlink:href"/>
 								</field>
 								<field name="{$symbolType}_uri">
@@ -370,7 +366,7 @@
 								</xsl:apply-templates>
 							</xsl:when>
 							<xsl:otherwise>
-								<field name="{$symbolType}_{$side}_{@position}_facet">
+								<field name="{$symbolType}_{$side}_{$position}_facet">
 									<xsl:value-of select="."/>
 								</field>
 								<field name="{$symbolType}_{$side}_facet">
@@ -384,7 +380,16 @@
 							<xsl:when test="@xlink:href">
 								<xsl:variable name="uri" select="@xlink:href"/>
 								<field name="{$symbolType}_{$side}_facet">
-									<xsl:value-of select="$rdf//*[@rdf:about = $uri]/skos:prefLabel"/>
+									<xsl:choose>
+										<xsl:when test="$rdf//*[@rdf:about = $uri]/descendant::crmdig:D1_Digital_Object">
+											<xsl:value-of select="$rdf//*[@rdf:about = $uri]/descendant::crmdig:D1_Digital_Object[1]/@rdf:about"/>
+											<xsl:text>|</xsl:text>
+											<xsl:value-of select="$rdf//*[@rdf:about = $uri]/skos:prefLabel"/>
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:value-of select="$rdf//*[@rdf:about = $uri]/skos:prefLabel"/>
+										</xsl:otherwise>
+									</xsl:choose>
 								</field>
 								<field name="{$symbolType}_{$side}_uri">
 									<xsl:value-of select="@xlink:href"/>

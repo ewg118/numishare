@@ -358,7 +358,7 @@
 											<xsl:apply-templates select="tei:div" mode="symbols">
 												<xsl:with-param name="field" select="$field"/>
 												<xsl:with-param name="side" select="$side"/>
-												<xsl:with-param name="position" select="@position"/>
+												<xsl:with-param name="position" select="if (@position) then @position else @localType"/>
 											</xsl:apply-templates>
 										</xsl:when>
 										<xsl:otherwise>
@@ -367,7 +367,7 @@
 												<xsl:with-param name="value" select="$value"/>
 												<xsl:with-param name="href" select="$href"/>
 												<xsl:with-param name="side" select="$side"/>
-												<xsl:with-param name="position" select="@position"/>
+												<xsl:with-param name="position" select="if (@position) then @position else @localType"/>
 											</xsl:call-template>
 
 
@@ -383,7 +383,7 @@
 										<xsl:with-param name="field" select="$field"/>
 										<xsl:with-param name="value" select="$value"/>
 										<xsl:with-param name="href" select="$href"/>
-										<xsl:with-param name="position" select="@position"/>
+										<xsl:with-param name="position" select="if (@position) then @position else @localType"/>
 									</xsl:call-template>
 								</xsl:otherwise>
 							</xsl:choose>
@@ -992,6 +992,11 @@
 		<xsl:if test="self::tei:g and starts-with(@ref, 'http://numismatics.org')">
 			<xsl:variable name="href" select="@ref"/>
 			<xsl:apply-templates select="$rdf/*[@rdf:about = $href]"/>
+			
+			<a href="{$href}" target="_blank"
+				class="external_link">
+				<span class="glyphicon glyphicon-new-window"/>
+			</a>
 		</xsl:if>
 
 		<xsl:if test="@rend">
