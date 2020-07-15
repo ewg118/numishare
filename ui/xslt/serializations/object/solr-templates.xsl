@@ -240,11 +240,9 @@
 		</xsl:apply-templates>
 
 		<!-- only index symbols as facets for coin type projects -->
-		<xsl:if test="$recordType = 'conceptual'">
-			<xsl:apply-templates select="nuds:symbol">
-				<xsl:with-param name="side" select="$side"/>
-			</xsl:apply-templates>
-		</xsl:if>
+		<xsl:apply-templates select="nuds:symbol">
+			<xsl:with-param name="side" select="$side"/>
+		</xsl:apply-templates>
 	</xsl:template>
 
 	<xsl:template match="nuds:legend">
