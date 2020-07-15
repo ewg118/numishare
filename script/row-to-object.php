@@ -285,6 +285,29 @@ function parse_row($row, $count, $fileName){
 					$record['refs'][] = array('label'=>$id, 'uncertain'=>$uncertain);
 				}
 			}
+		} elseif ($department=='Greek' && preg_match('/^newell\.demetrius\.\d+$/', $ref)){
+		    $uri = 'http://numismatics.org/agco/id/' . $id;
+		    //get info from $coinTypes array if the coin type has been verified already
+		    if (array_key_exists($uri, $coinTypes)){
+		        echo "Matched {$uri}\n";
+		        $coinType= array('label'=>$coinTypes[$uri]['reference'], 'uri'=>$uri, 'uncertain'=>$uncertain);
+		        $record['types']['AGCO'] = $coinType;
+		        $record['title'] = $coinTypes[$uri]['title'] . '. ' . $accnum;
+		    } else {
+		        $file_headers = @get_headers($uri);
+		        if ($file_headers[0] == 'HTTP/1.1 200 OK'){
+		            echo "Found {$uri}\n";
+		            //generate the title from the NUDS
+		            $titles = generate_title_from_type($uri);
+		            $coinTypes[$uri] = array('title'=>$titles['title'], 'reference'=>$titles['reference']);
+		            
+		            $record['title'] = $titles['title'] . ' ' . $accnum;
+		            $coinType= array('label'=>$titles['reference'], 'uri'=>$uri, 'uncertain'=>$uncertain);
+		            $record['types']['AGCO'] = $coinType;
+		        } else {
+		            $record['refs'][] = array('label'=>$id, 'uncertain'=>$uncertain);
+		        }
+		    }
 		} elseif ($department=='Greek' && preg_match('/SC\./', $ref)){			
 		    $uri = 'http://numismatics.org/sco/id/' . str_replace('SC.', 'sc.1.', $id);
 			
