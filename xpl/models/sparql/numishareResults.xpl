@@ -148,15 +148,11 @@ OPTIONAL { ?object nmo:hasCollection ?colUri .
 ?dataset dcterms:title ?datasetTitle FILTER (lang(?datasetTitle) = "" || langMatches(lang(?datasetTitle), "en")) .
 OPTIONAL { ?object foaf:thumbnail ?comThumb }
 OPTIONAL { ?object foaf:depiction ?comRef }
-OPTIONAL { ?object nmo:hasObverse ?obverse .
-?obverse foaf:thumbnail ?obvThumb }
-OPTIONAL { ?object nmo:hasObverse ?obverse .
-?obverse foaf:depiction ?obvRef }
-OPTIONAL { ?object nmo:hasReverse ?reverse .
-?reverse foaf:thumbnail ?revThumb }
-OPTIONAL { ?object nmo:hasReverse ?reverse .
-?reverse foaf:depiction ?revRef }
-} ORDER BY ASC(?datasetTitle) LIMIT 5]]></xsl:variable>
+OPTIONAL { ?object nmo:hasObverse/foaf:thumbnail ?obvThumb }
+OPTIONAL { ?object nmo:hasObverse/foaf:depiction ?obvRef }
+OPTIONAL { ?object nmo:hasReverse/foaf:thumbnail ?revThumb }
+OPTIONAL { ?object nmo:hasReverse/foaf:depiction ?revRef }
+} HAVING (isURI(?comThumb) || isURI(?comRef) || isURI(?obvThumb) || isURI(?obvRef) || isURI(?revThumb) || isURI(?revRef)) ORDER BY ASC(?datasetTitle) LIMIT 5]]></xsl:variable>
 					
 					<xsl:template match="/">
 						<xsl:variable name="uri" select="."/>
