@@ -194,6 +194,7 @@
 					@rdf:about
 				else
 					concat('symbol/', tokenize(@rdf:about, '/')[last()])"/>
+		<xsl:variable name="label" select="if (skos:prefLabel[@xml:lang = $lang]) then skos:prefLabel[@xml:lang = $lang] else skos:prefLabel[@xml:lang = 'en']"/>
 
 		<div class="col-md-3 col-sm-6 col-lg-2 monogram" style="height:240px">
 			<div class="text-center">
@@ -207,15 +208,12 @@
 						alt="Symbol image" style="max-height:200px;max-width:100%"/>
 				</a>
 			</div>
-			<a href="{$uri}">
-				<xsl:choose>
-					<xsl:when test="skos:prefLabel[@xml:lang = $lang]">
-						<xsl:value-of select="skos:prefLabel[@xml:lang = $lang]"/>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:value-of select="skos:prefLabel[@xml:lang = 'en']"/>
-					</xsl:otherwise>
-				</xsl:choose>
+			<a href="{$uri}" title="{$label}">
+				<xsl:value-of select="$label"/>
+			</a>
+			<xsl:text> </xsl:text>
+			<a href="{$display_path}results?q={encode-for-uri(concat('symbol_uri:&#x022;', @rdf:about, '&#x022;'))}" title="Search for this monogram">
+				<span class="glyphicon glyphicon glyphicon-search"/>
 			</a>
 			<xsl:if test="crm:P106_is_composed_of">
 				<br/>

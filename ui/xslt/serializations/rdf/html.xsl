@@ -268,7 +268,10 @@
 					<a href="{concat(namespace-uri(.), local-name())}">
 						<xsl:value-of select="name()"/>
 					</a>
-					<xsl:text>)</xsl:text>
+					<xsl:text>) </xsl:text>
+					<a href="{$display_path}results?q={encode-for-uri(concat('symbol_uri:&#x022;', @rdf:about, '&#x022;'))}" title="Search for this monogram">
+						<span class="glyphicon glyphicon glyphicon-search"/>
+					</a>
 				</small>
 			</h2>
 
