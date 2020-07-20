@@ -74,7 +74,7 @@
 											<triple s="?types" p="skos:exactMatch" o="?coinType"/>
 										</group>
 									</union>
-									
+									<triple s="?object" p="nmo:hasTypeSeriesItem" o="?coinType"/>
 								</xsl:if>
 							</xsl:otherwise>
 						</xsl:choose>

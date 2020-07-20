@@ -11,10 +11,9 @@ PREFIX void:	<http://rdfs.org/ns/void#>
 PREFIX xsd:	<http://www.w3.org/2001/XMLSchema#>
 
 SELECT ?dataset ?publisher ?collection ?collectionLabel ?thumbnail ?homepage ?memberOf ?title ?description ?license ?rights (COUNT(?dataset) AS ?count) {
-    {SELECT ?coinType WHERE {
+    {SELECT DISTINCT ?object WHERE {
         %STATEMENTS%
     }}
-    ?object nmo:hasTypeSeriesItem ?coinType .
     ?object void:inDataset ?dataset .
   OPTIONAL {?object nmo:hasCollection ?collection .
            ?collection skos:prefLabel ?collectionLabel . FILTER langMatches(lang(?collectionLabel), "en")
