@@ -312,16 +312,16 @@
 						<xsl:call-template name="generic_head"/>
 						<xsl:choose>
 							<xsl:when test="$recordType = 'physical'">
-								<xsl:if test="$geoEnabled = true()">
-									<xsl:if test="$hasMints = true() or $hasFindspots = true()">
-										<script type="text/javascript" src="{$include_path}/javascript/display_map_functions.js"/>
-									</xsl:if>
-								</xsl:if>
-
 								<!--- IIIF -->
 								<xsl:if test="descendant::mets:file[@USE = 'iiif']">
 									<script type="text/javascript" src="{$include_path}/javascript/leaflet-iiif.js"/>
 									<script type="text/javascript" src="{$include_path}/javascript/display_iiif_functions.js"/>
+								</xsl:if>
+								
+								<xsl:if test="$geoEnabled = true()">
+									<xsl:if test="$hasMints = true() or $hasFindspots = true()">
+										<script type="text/javascript" src="{$include_path}/javascript/display_map_functions.js"/>
+									</xsl:if>
 								</xsl:if>
 							</xsl:when>
 							<!-- coin-type CSS and JS dependencies -->
