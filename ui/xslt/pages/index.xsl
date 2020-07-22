@@ -45,6 +45,17 @@
 						<xsl:value-of select="google_analytics"/>
 					</script>
 				</xsl:if>
+				
+				<!-- open graph metadata -->
+				<meta property="og:url" content="{url}"/>
+				<meta property="og:type" content="article"/>
+				<meta property="og:title">
+					<xsl:value-of select="title"/>
+				</meta>
+				
+				<xsl:if test="$collection-name = 'pella' or $collection-name = 'sco' or $collection-name = 'pco' or $collection-name = 'hrc' or $collection-name = 'igch' or $collection-name='agco'">
+					<meta property="og:image" content="{$include_path}/images/{$collection-name}-banner.jpg"/>
+				</xsl:if>
 			</head>
 			<body>
 				<xsl:call-template name="header"/>
