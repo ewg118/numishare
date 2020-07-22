@@ -1469,7 +1469,7 @@
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
-			<xsl:when test="$lang = 'gr'">
+			<xsl:when test="$lang = 'el'">
 				<xsl:choose>
 					<xsl:when test="$label = 'acknowledgment'">Ευχαριστίες</xsl:when>
 					<xsl:when test="$label = 'acquisition'">Πρόσκτημα</xsl:when>
