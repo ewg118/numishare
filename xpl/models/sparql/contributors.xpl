@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-	Copyright (C) 2010 Ethan Gruber
-	EADitor: https://github.com/ewg118/eaditor
-	Apache License 2.0: https://github.com/ewg118/eaditor
-	
+	Author: Ethan Gruber
+	Date: July 2020
+	Function: submit a SPARQL query for a type corpus or union type corpus to ascertain contributors of physical specimens
 -->
 <p:config xmlns:p="http://www.orbeon.com/oxf/pipeline" xmlns:oxf="http://www.orbeon.com/oxf/processors">
 
@@ -58,6 +57,7 @@
 										</triple>
 									</xsl:for-each>
 								</union>
+								<triple s="?object" p="nmo:hasTypeSeriesItem" o="?coinType"/>
 							</xsl:when>
 							<xsl:otherwise>
 								<xsl:if test="matches(/config/type_series, '^https?://')">
