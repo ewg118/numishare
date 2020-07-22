@@ -3652,7 +3652,7 @@
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
-			<xsl:when test="$lang = 'gr'">
+			<xsl:when test="$lang = 'el'">
 				<xsl:choose>
 					<xsl:when test="$label = 'header_home'">Αφετηρία</xsl:when>
 					<xsl:when test="$label = 'header_about'">Πληροφορίες</xsl:when>
