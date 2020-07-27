@@ -49,9 +49,7 @@
 				<!-- open graph metadata -->
 				<meta property="og:url" content="{url}"/>
 				<meta property="og:type" content="article"/>
-				<meta property="og:title">
-					<xsl:value-of select="title"/>
-				</meta>
+				<meta property="og:title" content="{title}"/>
 				
 				<xsl:if test="$collection-name = 'pella' or $collection-name = 'sco' or $collection-name = 'pco' or $collection-name = 'hrc' or $collection-name = 'igch' or $collection-name='agco'">
 					<meta property="og:image" content="{$include_path}/images/{$collection-name}-banner.jpg"/>
