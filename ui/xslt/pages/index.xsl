@@ -46,13 +46,17 @@
 					</script>
 				</xsl:if>
 				
-				<!-- open graph metadata -->
+				<!-- open graph/twitter metadata -->
 				<meta property="og:url" content="{url}"/>
 				<meta property="og:type" content="article"/>
 				<meta property="og:title" content="{title}"/>
+				<meta property="twitter:url" content="{url}"/>
+				<meta property="twitter:title" content="{title}"/>
+				<meta name="twitter:card" content="summary_large_image"/>
 				
 				<xsl:if test="$collection-name = 'pella' or $collection-name = 'sco' or $collection-name = 'pco' or $collection-name = 'hrc' or $collection-name = 'igch' or $collection-name='agco'">
 					<meta property="og:image" content="{$include_path}/images/{$collection-name}-banner.jpg"/>
+					<meta property="twitter:image" content="{$include_path}/images/{$collection-name}-banner.jpg"/>
 				</xsl:if>
 			</head>
 			<body>
