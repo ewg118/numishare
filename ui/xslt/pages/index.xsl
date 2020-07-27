@@ -60,6 +60,14 @@
 						<xsl:value-of select="google_analytics"/>
 					</script>
 				</xsl:if>
+				
+				<!-- open graph/twitter metadata -->
+				<meta property="og:url" content="{url}"/>
+				<meta property="og:type" content="article"/>
+				<meta property="og:title" content="{title}"/>
+				<meta property="twitter:url" content="{url}"/>
+				<meta property="twitter:title" content="{title}"/>
+				<meta name="twitter:card" content="summary_large_image"/>
 			</head>
 			<body>
 				<xsl:call-template name="header"/>
