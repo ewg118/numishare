@@ -200,16 +200,23 @@ class filterGeo {
 /***** NORMALIZING NON-GEOGRAPHIC ENTITIES TO URIS *****/
 function lookup_entity ($department, $val, $uncertain, $role){    
     GLOBAL $Greek_authorities_array;
+    GLOBAL $Islamic_authorities_array;
+    
+    $lookup = str_replace(' ', '_', $department) . '_authorities_array';
     
     $found = false;
     
-    foreach ($Greek_authorities_array as $row){
+    foreach ($$lookup as $row){
         if ($row['match'] == $val){
             if (strlen($row['uri']) > 0){
                 //if it's a deity, return null. The deity will already be parsed from the type description, so it should not be indexed as an authority.
                 if ($row['type'] == 'deity'){
                     return null;
                 } else {
+                    //uncertainty column in spreadsheet overrides the parsed value
+                    if ($row['uncertain'] == 'TRUE'){
+                        $uncertain = true;
+                    }
                     return array('label'=>$row['prefLabel_en'], 'uri'=>$row['uri'], 'uncertain'=>$uncertain, 'element'=>$row['type'], 'role'=>$role);
                 }                
             } else {

@@ -1192,7 +1192,8 @@ function parse_typology ($accnum, $count, $row, $department){
 				if ($department == 'Medieval' || $department == 'Byzantine' || $department == 'Roman'){
 					$entity = array('label'=>$val, 'uncertain'=>$uncertain, 'element'=>'persname', 'role'=>'issuer');
 				} elseif ($department == 'Islamic'){
-					$entity = array('label'=>$val, 'uncertain'=>$uncertain, 'element'=>'persname', 'role'=>'authority');
+				    $entity = lookup_entity($department, $val, $uncertain, 'authority');
+					//$entity = array('label'=>$val, 'uncertain'=>$uncertain, 'element'=>'persname', 'role'=>'authority');
 				} elseif ($department == 'Greek'){
 				    //attempt to to normalize the $val to a URI and preferred label in the Greek authorities spreadsheet
 				    $entity = lookup_entity($department, $val, $uncertain, 'authority');

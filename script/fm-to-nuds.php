@@ -82,6 +82,7 @@ $Roman_array = generate_json('https://docs.google.com/spreadsheets/d/e/2PACX-1vS
 $South_Asian_array = generate_json('https://docs.google.com/spreadsheets/d/e/2PACX-1vRuTGEVOB3v5qOigC1ubHJ82QDApxiPxRR8q7TFhVKLZTRJCwCMsk8_0VvekM_kUufwb646XPAuAdil/pub?output=csv');
 $United_States_array = generate_json('https://docs.google.com/spreadsheets/d/e/2PACX-1vQLO452BttROCPIvTq5USc2SXxXYwxCVMK_nR3NUmPLiYG-cg-mejS5VtAEsd-W2IHSKSnfZo2ckIR8/pub?output=csv');
 $Greek_authorities_array = generate_json('https://docs.google.com/spreadsheets/d/e/2PACX-1vSLKDSk4XUSnTyoYdvHTGPH906wnWtaHcZRxufR2BLRTdaira5m-LPvHsJCxV15dwGIk7NUevPmSDzl/pub?output=csv');
+$Islamic_authorities_array = generate_json('https://docs.google.com/spreadsheets/d/e/2PACX-1vSBIAYUmxMxp_--jLHYcNoapdUiWCNc99ZcEo8Vo9fwZXK78TkK34fMzptZu5mLH3ylOYUXwCOI6bQY/pub?output=csv');
 
 /*//SCO spreadsheet for mapping SC to the new SCO number
 $sco_array = generate_json('https://docs.google.com/spreadsheets/d/e/2PACX-1vQLdeurX2qJZ6zN-uWLJex2DylQOx3wav5ZCMgAidsy6yilV4j8cco9WEuvXckxEJhuSnBTmJaF4zPj/pub?gid=998961995&single=true&output=csv');
