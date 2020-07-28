@@ -1266,8 +1266,10 @@ function parse_typology ($accnum, $count, $row, $department){
 				if ($department == 'Roman' || $department == 'Byzantine' || $department == 'Medal' || $department == 'United States' || $department == 'Decoration'){
 					$entity = array('label'=>$val, 'uncertain'=>$uncertain, 'element'=>'persname', 'role'=>'portrait');
 				}
-				if ($department == 'Roman' || $department == 'Byzantine' || $department == 'Medieval' || $department == 'Islamic' || $department == 'East Asian' || $department == 'South Asian' || $department == 'Modern' || $department == 'Latin American'){
+				if ($department == 'Roman' || $department == 'Byzantine' || $department == 'Medieval'|| $department == 'East Asian' || $department == 'South Asian' || $department == 'Modern' || $department == 'Latin American'){
 					$entity = array('label'=>$val, 'uncertain'=>$uncertain, 'element'=>'persname', 'role'=>'authority');
+				} elseif ($department == 'Islamic'){
+				    $entity = lookup_entity($department, $val, $uncertain, 'authority');
 				} elseif ($department == 'Greek'){
 				    //attempt to to normalize the $val to a URI and preferred label in the Greek authorities spreadsheet
 				    
