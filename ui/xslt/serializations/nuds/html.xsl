@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <!-- Author: Ethan Gruber
 	Date Modified: March 2019
 	Function: Develop HTML page structure for NUDS documents for types/specimens. See ../object/html-templates.xsl for generate XSL templates for NUDS and NUDS-Hoard elements
@@ -7,7 +6,7 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:res="http://www.w3.org/2005/sparql-results#" xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns:mets="http://www.loc.gov/METS/" xmlns:numishare="https://github.com/ewg118/numishare" xmlns:nm="http://nomisma.org/id/"
-	xmlns:gml="http://www.opengis.net/gml" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:nmo="http://nomisma.org/ontology#"
+	xmlns:gml="http://www.opengis.net/gml" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:nmo="http://nomisma.org/ontology#" xmlns:org="http://www.w3.org/ns/org#"
 	xmlns:crm="http://www.cidoc-crm.org/cidoc-crm/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
 	xmlns:nuds="http://nomisma.org/nuds" exclude-result-prefixes="#all" version="2.0">
 	<xsl:include href="../../templates.xsl"/>
@@ -153,6 +152,8 @@
 			xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
 			xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:org="http://www.w3.org/ns/org#"
 			xmlns:nomisma="http://nomisma.org/" xmlns:nmo="http://nomisma.org/ontology#">
+			
+			<!-- aggregate distinct Nomisma URIs and perform an API lookup to get the RDF for all of them -->
 			<xsl:variable name="id-param">
 				<xsl:for-each
 					select="
@@ -165,13 +166,46 @@
 				</xsl:for-each>
 			</xsl:variable>
 
-			<xsl:variable name="rdf_url" select="concat('http://nomisma.org/apis/getRdf?identifiers=', encode-for-uri($id-param))"/>
-			<xsl:copy-of select="document($rdf_url)/rdf:RDF/*"/>
+			<xsl:variable name="id-url" select="concat('http://nomisma.org/apis/getRdf?identifiers=', encode-for-uri($id-param))"/>
+			
+			<xsl:variable name="id-var" as="element()*">
+				<xsl:if test="doc-available($id-url)">
+					<xsl:copy-of select="document($id-url)/rdf:RDF"/>
+				</xsl:if>
+			</xsl:variable>
+			
+			<!-- read distinct org:organization and org:memberOf URIs from the initial RDF API request and request these, but only if they aren't in the initial request -->
+			<xsl:variable name="org-param">
+				<xsl:for-each select="distinct-values($id-var//org:organization/@rdf:resource | $id-var//org:memberOf/@rdf:resource)">
+					<xsl:variable name="href" select="."/>
+					
+					<xsl:if test="not($id-var/*[@rdf:about = $href])">						
+						<xsl:value-of select="substring-after($href, 'id/')"/>
+						<xsl:if test="not(position() = last())">
+							<xsl:text>|</xsl:text>
+						</xsl:if>
+					</xsl:if>
+				</xsl:for-each>
+			</xsl:variable>
+			
+			<xsl:variable name="org-url" select="concat('http://nomisma.org/apis/getRdf?identifiers=', encode-for-uri($org-param))"/>
+			
+			<xsl:variable name="org-var" as="element()*">
+				<xsl:if test="doc-available($org-url)">
+					<xsl:copy-of select="document($org-url)/rdf:RDF"/>
+				</xsl:if>
+			</xsl:variable>
+			
+			<!-- copy the contents of the API request variables into this variable -->
+			<xsl:copy-of select="$id-var/*"/>
+			<xsl:copy-of select="$org-var/*"/>	
 
+			<!-- request RDF from the coinhoards.org URIs -->
 			<xsl:if test="descendant::nuds:findspotDesc[contains(@xlink:href, 'coinhoards.org')]">
 				<xsl:copy-of select="document(concat(descendant::nuds:findspotDesc/@xlink:href, '.rdf'))/rdf:RDF/*"/>
 			</xsl:if>
 
+			<!-- perform an RDF request for each distinct monogram/symbol URI -->
 			<xsl:for-each
 				select="
 					distinct-values($nudsGroup/descendant::nuds:symbol[contains(@xlink:href, 'http://numismatics.org')]/@xlink:href | $nudsGroup/descendant::nuds:symbol/descendant::tei:g[contains(@ref, 'http://numismatics.org')]/@ref |

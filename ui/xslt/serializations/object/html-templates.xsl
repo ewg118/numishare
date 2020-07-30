@@ -9,8 +9,8 @@
 	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
 	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:nm="http://nomisma.org/id/" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:mets="http://www.loc.gov/METS/"
 	xmlns:gml="http://www.opengis.net/gml" xmlns:res="http://www.w3.org/2005/sparql-results#" xmlns:mods="http://www.loc.gov/mods/v3"
-	xmlns:nmo="http://nomisma.org/ontology#" xmlns:crm="http://www.cidoc-crm.org/cidoc-crm/" xmlns:crmdig="http://www.ics.forth.gr/isl/CRMdig/"
-	xmlns:tei="http://www.tei-c.org/ns/1.0" exclude-result-prefixes="#all" version="2.0">
+	xmlns:org="http://www.w3.org/ns/org#" xmlns:nmo="http://nomisma.org/ontology#" xmlns:crm="http://www.cidoc-crm.org/cidoc-crm/"
+	xmlns:crmdig="http://www.ics.forth.gr/isl/CRMdig/" xmlns:tei="http://www.tei-c.org/ns/1.0" exclude-result-prefixes="#all" version="2.0">
 	<!--***************************************** ELEMENT TEMPLATES **************************************** -->
 	<xsl:template match="*[local-name() = 'refDesc']">
 		<div class="metadata_section">
@@ -60,39 +60,27 @@
 
 	<!-- handle type descriptions in various languages -->
 	<xsl:template match="nuds:type" mode="descMeta">
-		<xsl:choose>
-			<xsl:when test="nuds:description[@xml:lang = $lang]">
-				<li>
-					<b>
-						<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
-						<xsl:text>: </xsl:text>
-					</b>
+		<li>
+			<b>
+				<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
+				<xsl:text>: </xsl:text>
+			</b>
+			<xsl:choose>
+				<xsl:when test="nuds:description[@xml:lang = $lang]">
 					<xsl:value-of select="nuds:description[@xml:lang = $lang]"/>
-				</li>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:choose>
-					<xsl:when test="nuds:description[@xml:lang = 'en']">
-						<li>
-							<b>
-								<xsl:value-of select="numishare:regularize_node(local-name(), 'en')"/>
-								<xsl:text>: </xsl:text>
-							</b>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:choose>
+						<xsl:when test="nuds:description[@xml:lang = 'en']">
 							<xsl:value-of select="nuds:description[@xml:lang = 'en']"/>
-						</li>
-					</xsl:when>
-					<xsl:otherwise>
-						<li>
-							<b>
-								<xsl:value-of select="numishare:regularize_node(local-name(), 'en')"/>
-								<xsl:text>: </xsl:text>
-							</b>
+						</xsl:when>
+						<xsl:otherwise>
 							<xsl:value-of select="nuds:description[1]"/>
-						</li>
-					</xsl:otherwise>
-				</xsl:choose>
-			</xsl:otherwise>
-		</xsl:choose>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:otherwise>
+			</xsl:choose>
+		</li>
 	</xsl:template>
 
 	<xsl:template match="*" mode="descMeta">
@@ -358,7 +346,13 @@
 											<xsl:apply-templates select="tei:div" mode="symbols">
 												<xsl:with-param name="field" select="$field"/>
 												<xsl:with-param name="side" select="$side"/>
-												<xsl:with-param name="position" select="if (@position) then @position else @localType"/>
+												<xsl:with-param name="position"
+													select="
+														if (@position) then
+															@position
+														else
+															@localType"
+												/>
 											</xsl:apply-templates>
 										</xsl:when>
 										<xsl:otherwise>
@@ -367,7 +361,13 @@
 												<xsl:with-param name="value" select="$value"/>
 												<xsl:with-param name="href" select="$href"/>
 												<xsl:with-param name="side" select="$side"/>
-												<xsl:with-param name="position" select="if (@position) then @position else @localType"/>
+												<xsl:with-param name="position"
+													select="
+														if (@position) then
+															@position
+														else
+															@localType"
+												/>
 											</xsl:call-template>
 
 
@@ -383,7 +383,12 @@
 										<xsl:with-param name="field" select="$field"/>
 										<xsl:with-param name="value" select="$value"/>
 										<xsl:with-param name="href" select="$href"/>
-										<xsl:with-param name="position" select="if (@position) then @position else @localType"/>
+										<xsl:with-param name="position"
+											select="
+												if (@position) then
+													@position
+												else
+													@localType"/>
 									</xsl:call-template>
 								</xsl:otherwise>
 							</xsl:choose>
@@ -543,6 +548,20 @@
 				</xsl:choose>
 			</xsl:otherwise>
 		</xsl:choose>
+
+		<!-- if the element is a persname with a Nomisma URI, then extract the state and dynasty from the Nomisma RDF -->
+		<xsl:if test="local-name() = 'persname' and contains(@xlink:href, 'nomisma.org')">
+			<xsl:variable name="href" select="@xlink:href"/>
+			
+			<!-- nest the org/dynasty sub-fields under the person -->
+			<xsl:if test="$rdf//*[@rdf:about = $href]/org:hasMembership or $rdf//*[@rdf:about = $href]/org:memberOf">
+				<li>
+					<ul>
+						<xsl:apply-templates select="$rdf//*[@rdf:about = $href]/org:hasMembership | $rdf//*[@rdf:about = $href]/org:memberOf"/>
+					</ul>
+				</li>
+			</xsl:if>
+		</xsl:if>
 	</xsl:template>
 
 	<xsl:template match="*[local-name() = 'objectXMLWrap']">
@@ -744,6 +763,37 @@
 			</div>
 		</div>
 		<hr/>
+	</xsl:template>
+
+	<!-- *************** RDF TEMPLATES ******************-->
+	<!-- these templates process corporate entities and dynasties connected to people in the underlying RDF in order to display them as clickable links to the browse page -->
+	<xsl:template match="org:hasMembership">
+		<xsl:variable name="uri" select="@rdf:resource"/>
+
+		<xsl:apply-templates select="$rdf//org:Membership[@rdf:about = $uri]/org:organization"/>
+	</xsl:template>
+
+	<!-- construct variables of relevant NUDS elements, and then apply the template against this variable element -->
+	<xsl:template match="org:organization">
+		<xsl:variable name="element" as="element()*">
+			<xsl:element name="corpname" namespace="http://nomisma.org/nuds">
+				<xsl:attribute name="xlink:role">state</xsl:attribute>
+				<xsl:attribute name="xlink:href" select="@rdf:resource"/>
+			</xsl:element>
+		</xsl:variable>
+
+		<xsl:apply-templates select="$element" mode="descMeta"/>
+	</xsl:template>
+
+	<xsl:template match="org:memberOf">
+		<xsl:variable name="element" as="element()*">
+			<xsl:element name="famname" namespace="http://nomisma.org/nuds">
+				<xsl:attribute name="xlink:role">dynasty</xsl:attribute>
+				<xsl:attribute name="xlink:href" select="@rdf:resource"/>
+			</xsl:element>
+		</xsl:variable>
+
+		<xsl:apply-templates select="$element" mode="descMeta"/>
 	</xsl:template>
 
 	<!-- ************** PROCESS MODS RECORD INTO CHICAGO MANUAL OF STYLE CITATION ************** -->
@@ -992,9 +1042,8 @@
 		<xsl:if test="self::tei:g and starts-with(@ref, 'http://numismatics.org')">
 			<xsl:variable name="href" select="@ref"/>
 			<xsl:apply-templates select="$rdf/*[@rdf:about = $href]"/>
-			
-			<a href="{$href}" target="_blank"
-				class="external_link">
+
+			<a href="{$href}" target="_blank" class="external_link">
 				<span class="glyphicon glyphicon-new-window"/>
 			</a>
 		</xsl:if>
@@ -1006,11 +1055,11 @@
 				<xsl:text>)</xsl:text>
 			</i>
 		</xsl:if>
-		
+
 		<xsl:if test="tei:unclear">
 			<i> (unclear)</i>
 		</xsl:if>
-		
+
 		<xsl:if test="not(position() = last())">
 			<i> beside </i>
 		</xsl:if>

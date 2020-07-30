@@ -6,7 +6,8 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:nuds="http://nomisma.org/nuds" xmlns:nh="http://nomisma.org/nudsHoard"
 	xmlns:nm="http://nomisma.org/id/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:mets="http://www.loc.gov/METS/" xmlns:gml="http://www.opengis.net/gml"
 	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:res="http://www.w3.org/2005/sparql-results#"
-	xmlns:nmo="http://nomisma.org/ontology#" xmlns:numishare="https://github.com/ewg118/numishare" xmlns:tei="http://www.tei-c.org/ns/1.0" exclude-result-prefixes="#all" version="2.0">
+	xmlns:nmo="http://nomisma.org/ontology#" xmlns:numishare="https://github.com/ewg118/numishare" xmlns:tei="http://www.tei-c.org/ns/1.0"
+	xmlns:org="http://www.w3.org/ns/org#" exclude-result-prefixes="#all" version="2.0">
 	<xsl:output method="xml" encoding="UTF-8"/>
 	<xsl:include href="../../functions.xsl"/>
 	<xsl:include href="../nuds/solr.xsl"/>
@@ -99,12 +100,13 @@
 				else
 					false()"/>
 	</xsl:variable>
-	
+
 	<!-- get subtypes -->
 	<xsl:variable name="subtypes" as="element()*">
 		<xsl:if test="//config/collection_type = 'cointype' and ($index_subtype_metadata = true() or $index_subtypes_as_references = true())">
 			<xsl:if test="doc-available(concat($request-uri, '/get_subtypes?identifiers=', encode-for-uri(string-join(descendant::nuds:recordId, '|'))))">
-				<xsl:copy-of select="document(concat($request-uri, '/get_subtypes?identifiers=', encode-for-uri(string-join(descendant::nuds:recordId, '|'))))/*"/>
+				<xsl:copy-of
+					select="document(concat($request-uri, '/get_subtypes?identifiers=', encode-for-uri(string-join(descendant::nuds:recordId, '|'))))/*"/>
 			</xsl:if>
 		</xsl:if>
 	</xsl:variable>
@@ -115,23 +117,60 @@
 			xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
 			xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:org="http://www.w3.org/ns/org#"
 			xmlns:nomisma="http://nomisma.org/" xmlns:nmo="http://nomisma.org/ontology#">
-			<xsl:variable name="count"
+
+			<!-- execute recursive template to call 1 or more API requests for Nomisma URIs in the document or nudsGroup -->
+			<xsl:variable name="id-count"
 				select="
 					count(distinct-values(descendant::*[not(local-name() = 'typeDesc') and not(local-name() = 'reference')][contains(@xlink:href, 'nomisma.org')]/@xlink:href |
 					$nudsGroup/descendant::*[not(local-name() = 'typeDesc')][contains(@xlink:href, 'nomisma.org')]/@xlink:href))"/>
 
-			<xsl:call-template name="get-ids">
-				<xsl:with-param name="start">1</xsl:with-param>
-				<xsl:with-param name="end">100</xsl:with-param>
-				<xsl:with-param name="count" select="$count"/>
-			</xsl:call-template>
-			
+			<xsl:variable name="id-var" as="element()*">
+				<rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:nm="http://nomisma.org/id/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+					xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+					xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:org="http://www.w3.org/ns/org#"
+					xmlns:nomisma="http://nomisma.org/" xmlns:nmo="http://nomisma.org/ontology#">
+					<xsl:call-template name="get-ids">
+						<xsl:with-param name="start">1</xsl:with-param>
+						<xsl:with-param name="end">100</xsl:with-param>
+						<xsl:with-param name="count" select="$id-count"/>
+						<xsl:with-param name="ids"
+							select="
+								distinct-values(descendant::*[not(local-name() = 'typeDesc') and not(local-name() = 'reference')][contains(@xlink:href, 'nomisma.org')]/@xlink:href |
+								$nudsGroup/descendant::*[not(local-name() = 'typeDesc') and not(local-name() = 'object')][contains(@xlink:href, 'nomisma.org')]/@xlink:href)"
+						/>
+					</xsl:call-template>
+				</rdf:RDF>
+			</xsl:variable>
+
+			<!-- call API only for those org URIs that weren't in the initial API call -->
+			<xsl:variable name="org-count" select="count(distinct-values($id-var//org:organization/@rdf:resource | $id-var//org:memberOf/@rdf:resource)[not(. = $id-var/*/@rdf:about)])"/>
+
+			<xsl:variable name="org-var" as="element()*">
+				<rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:nm="http://nomisma.org/id/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+					xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+					xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:org="http://www.w3.org/ns/org#"
+					xmlns:nomisma="http://nomisma.org/" xmlns:nmo="http://nomisma.org/ontology#">
+					<xsl:call-template name="get-ids">
+						<xsl:with-param name="start">1</xsl:with-param>
+						<xsl:with-param name="end">100</xsl:with-param>
+						<xsl:with-param name="count" select="$org-count"/>
+						<xsl:with-param name="ids" select="distinct-values($id-var//org:organization/@rdf:resource | $id-var//org:memberOf/@rdf:resource)[not(. = $id-var/*/@rdf:about)]"
+						> </xsl:with-param>
+					</xsl:call-template>
+				</rdf:RDF>
+			</xsl:variable>
+
+			<!-- merge contents of the ID and additional, unique org API calls into the $rdf variable -->
+			<xsl:copy-of select="$id-var/*"/>
+			<xsl:copy-of select="$org-var/*"/>
+
+			<!-- perform an RDF request for each distinct monogram/symbol URI -->
 			<xsl:for-each
 				select="
-				distinct-values($nudsGroup/descendant::nuds:symbol[contains(@xlink:href, 'http://numismatics.org')]/@xlink:href | $nudsGroup/descendant::nuds:symbol/descendant::tei:g[contains(@ref, 'http://numismatics.org')]/@ref |
-				$subtypes/descendant::nuds:symbol[contains(@xlink:href, 'http://numismatics.org')]/@xlink:href | $subtypes/descendant::nuds:symbol/descendant::tei:g[contains(@ref, 'http://numismatics.org')]/@ref)">
+					distinct-values($nudsGroup/descendant::nuds:symbol[contains(@xlink:href, 'http://numismatics.org')]/@xlink:href | $nudsGroup/descendant::nuds:symbol/descendant::tei:g[contains(@ref, 'http://numismatics.org')]/@ref |
+					$subtypes/descendant::nuds:symbol[contains(@xlink:href, 'http://numismatics.org')]/@xlink:href | $subtypes/descendant::nuds:symbol/descendant::tei:g[contains(@ref, 'http://numismatics.org')]/@ref)">
 				<xsl:variable name="href" select="."/>
-				
+
 				<xsl:if test="doc-available(concat($href, '.rdf'))">
 					<xsl:copy-of select="document(concat($href, '.rdf'))/rdf:RDF/*"/>
 				</xsl:if>
@@ -139,7 +178,7 @@
 		</rdf:RDF>
 	</xsl:variable>
 
-	<!-- Oct 29, 2018: commenting out the indexing of findspots via SPARQL; it is no longer scalable for indexing. Prepare to transition maps page to SPARQL-derived GeoJSON-->	
+	<!-- Oct 29, 2018: commenting out the indexing of findspots via SPARQL; it is no longer scalable for indexing. Prepare to transition maps page to SPARQL-derived GeoJSON-->
 
 	<!-- accumulate unique geonames IDs -->
 	<xsl:variable name="geonames" as="element()*">
@@ -335,16 +374,15 @@
 		</abbreviations>
 	</xsl:variable>
 
+
 	<xsl:template name="get-ids">
 		<xsl:param name="start"/>
 		<xsl:param name="end"/>
 		<xsl:param name="count"/>
+		<xsl:param name="ids"/>
 
 		<xsl:variable name="id-param">
-			<xsl:for-each
-				select="
-					distinct-values(descendant::*[not(local-name() = 'typeDesc') and not(local-name() = 'reference')][contains(@xlink:href, 'nomisma.org')]/@xlink:href |
-					$nudsGroup/descendant::*[not(local-name() = 'typeDesc') and not(local-name() = 'object')][contains(@xlink:href, 'nomisma.org')]/@xlink:href)">
+			<xsl:for-each select="$ids">
 				<xsl:if test="position() &gt;= $start and position() &lt;= $end">
 					<xsl:value-of select="substring-after(., 'id/')"/>
 					<xsl:if test="not(position() = $count)">
@@ -354,14 +392,15 @@
 			</xsl:for-each>
 		</xsl:variable>
 
-		<xsl:variable name="rdf_url" select="concat('http://nomisma.org/apis/getRdf?identifiers=', encode-for-uri($id-param))"/>
-		<xsl:copy-of select="document($rdf_url)/rdf:RDF/*"/>
+		<xsl:variable name="api-url" select="concat('http://nomisma.org/apis/getRdf?identifiers=', encode-for-uri($id-param))"/>
+		<xsl:copy-of select="document($api-url)/rdf:RDF/*"/>
 
 		<xsl:if test="$end &lt; $count">
 			<xsl:call-template name="get-ids">
 				<xsl:with-param name="start" select="$start + $end"/>
 				<xsl:with-param name="end" select="($start + 1) * 100"/>
 				<xsl:with-param name="count" select="$count"/>
+				<xsl:with-param name="ids" select="$ids"/>
 			</xsl:call-template>
 		</xsl:if>
 	</xsl:template>

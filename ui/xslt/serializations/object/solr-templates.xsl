@@ -554,21 +554,23 @@
 			<!-- get dynasty/political entity from Nomisma RDF -->
 			<xsl:for-each select="$rdf/*[@rdf:about = $href]/org:memberOf">
 				<xsl:variable name="dynasty_uri" select="@rdf:resource"/>
+				<xsl:variable name="label" select="$rdf/*[@rdf:about = $dynasty_uri]/skos:prefLabel[if (string($lang)) then
+					@xml:lang = $lang
+					else
+					@xml:lang = 'en']"/>
 
 				<field name="dynasty_uri">
 					<xsl:value-of select="$dynasty_uri"/>
 				</field>
 
-				<xsl:if test="doc-available(concat($dynasty_uri, '.rdf'))">
-					<xsl:variable name="label" select="doc(concat($dynasty_uri, '.rdf'))//skos:prefLabel[@xml:lang = 'en']"/>
-
-					<field name="dynasty_facet">
-						<xsl:value-of select="$label"/>
-					</field>
-					<field name="dynasty_text">
-						<xsl:value-of select="$label"/>
-					</field>
-				</xsl:if>
+				
+				
+				<field name="dynasty_facet">
+					<xsl:value-of select="$label"/>
+				</field>
+				<field name="dynasty_text">
+					<xsl:value-of select="$label"/>
+				</field>
 			</xsl:for-each>
 
 			<xsl:for-each select="$rdf/*[@rdf:about = $href]/org:hasMembership">
@@ -576,21 +578,21 @@
 
 				<xsl:if test="$rdf/*[@rdf:about = $membership_uri]/org:organization">
 					<xsl:variable name="org_uri" select="$rdf/*[@rdf:about = $membership_uri]/org:organization/@rdf:resource"/>
+					<xsl:variable name="label" select="$rdf/*[@rdf:about = $org_uri]/skos:prefLabel[if (string($lang)) then
+						@xml:lang = $lang
+						else
+						@xml:lang = 'en']"/>
 
 					<field name="state_uri">
 						<xsl:value-of select="$org_uri"/>
 					</field>
 
-					<xsl:if test="doc-available(concat($org_uri, '.rdf'))">
-						<xsl:variable name="label" select="doc(concat($org_uri, '.rdf'))//skos:prefLabel[@xml:lang = 'en']"/>
-
-						<field name="state_facet">
-							<xsl:value-of select="$label"/>
-						</field>
-						<field name="state_text">
-							<xsl:value-of select="$label"/>
-						</field>
-					</xsl:if>
+					<field name="state_facet">
+						<xsl:value-of select="$label"/>
+					</field>
+					<field name="state_text">
+						<xsl:value-of select="$label"/>
+					</field>
 				</xsl:if>
 			</xsl:for-each>
 		</xsl:if>

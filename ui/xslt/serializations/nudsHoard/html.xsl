@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" version="2.0" xmlns:xlink="http://www.w3.org/1999/xlink"
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" version="2.0" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:org="http://www.w3.org/ns/org#"
 	xmlns:res="http://www.w3.org/2005/sparql-results#" xmlns:numishare="https://github.com/ewg118/numishare" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
 	xmlns:nuds="http://nomisma.org/nuds" xmlns:nh="http://nomisma.org/nudsHoard" xmlns:nm="http://nomisma.org/id/" xmlns:tei="http://www.tei-c.org/ns/1.0"
 	xmlns:gml="http://www.opengis.net/gml" xmlns:nmo="http://nomisma.org/ontology#" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"
@@ -32,14 +32,14 @@
 		</xsl:choose>
 	</xsl:param>
 	<xsl:param name="pipeline">display</xsl:param>
-	
+
 	<!--pagination of specimen count -->
 	<xsl:param name="page" as="xs:integer">
 		<xsl:choose>
 			<xsl:when
 				test="
-				string-length(doc('input:request')/request/parameters/parameter[name = 'page']/value) &gt; 0 and doc('input:request')/request/parameters/parameter[name = 'page']/value castable
-				as xs:integer and number(doc('input:request')/request/parameters/parameter[name = 'page']/value) > 0">
+					string-length(doc('input:request')/request/parameters/parameter[name = 'page']/value) &gt; 0 and doc('input:request')/request/parameters/parameter[name = 'page']/value castable
+					as xs:integer and number(doc('input:request')/request/parameters/parameter[name = 'page']/value) > 0">
 				<xsl:value-of select="doc('input:request')/request/parameters/parameter[name = 'page']/value"/>
 			</xsl:when>
 			<xsl:otherwise>1</xsl:otherwise>
@@ -154,28 +154,61 @@
 			xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
 			xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:org="http://www.w3.org/ns/org#"
 			xmlns:nomisma="http://nomisma.org/" xmlns:nmo="http://nomisma.org/ontology#">
+
+			<!-- aggregate distinct Nomisma URIs and perform an API lookup to get the RDF for all of them -->
 			<xsl:variable name="id-param">
 				<xsl:for-each
 					select="
-						distinct-values(descendant::*[not(local-name() = 'typeDesc') and not(local-name() = 'reference')][contains(@xlink:href,
-						'nomisma.org')]/@xlink:href | $nudsGroup/descendant::*[not(local-name() = 'object') and not(local-name() = 'typeDesc')][contains(@xlink:href, 'nomisma.org')]/@xlink:href | descendant::*[contains(@certainty, 'nomisma.org')]/@certainty | $nudsGroup/descendant::*[contains(@certainty, 'nomisma.org')]/@certainty)">
+					distinct-values(descendant::*[not(local-name() = 'typeDesc') and not(local-name() = 'reference')][contains(@xlink:href,
+					'nomisma.org')]/@xlink:href | $nudsGroup/descendant::*[not(local-name() = 'object') and not(local-name() = 'typeDesc')][contains(@xlink:href, 'nomisma.org')]/@xlink:href | descendant::*[contains(@certainty, 'nomisma.org')]/@certainty | $nudsGroup/descendant::*[contains(@certainty, 'nomisma.org')]/@certainty)">
 					<xsl:value-of select="substring-after(., 'id/')"/>
 					<xsl:if test="not(position() = last())">
 						<xsl:text>|</xsl:text>
 					</xsl:if>
 				</xsl:for-each>
 			</xsl:variable>
-
-			<xsl:variable name="rdf_url" select="concat('http://nomisma.org/apis/getRdf?identifiers=', encode-for-uri($id-param))"/>
-			<xsl:copy-of select="document($rdf_url)/rdf:RDF/*"/>
 			
+			<xsl:variable name="id-url" select="concat('http://nomisma.org/apis/getRdf?identifiers=', encode-for-uri($id-param))"/>
+			
+			<xsl:variable name="id-var" as="element()*">
+				<xsl:if test="doc-available($id-url)">
+					<xsl:copy-of select="document($id-url)/rdf:RDF"/>
+				</xsl:if>
+			</xsl:variable>
+			
+			<!-- read distinct org:organization and org:memberOf URIs from the initial RDF API request and request these, but only if they aren't in the initial request -->
+			<xsl:variable name="org-param">
+				<xsl:for-each select="distinct-values($id-var//org:organization/@rdf:resource | $id-var//org:memberOf/@rdf:resource)">
+					<xsl:variable name="href" select="."/>
+					
+					<xsl:if test="not($id-var/*[@rdf:about = $href])">						
+						<xsl:value-of select="substring-after($href, 'id/')"/>
+						<xsl:if test="not(position() = last())">
+							<xsl:text>|</xsl:text>
+						</xsl:if>
+					</xsl:if>
+				</xsl:for-each>
+			</xsl:variable>
+			
+			<xsl:variable name="org-url" select="concat('http://nomisma.org/apis/getRdf?identifiers=', encode-for-uri($org-param))"/>
+			
+			<xsl:variable name="org-var" as="element()*">
+				<xsl:if test="doc-available($org-url)">
+					<xsl:copy-of select="document($org-url)/rdf:RDF"/>
+				</xsl:if>
+			</xsl:variable>
+			
+			<!-- copy the contents of the API request variables into this variable -->
+			<xsl:copy-of select="$id-var/*"/>
+			<xsl:copy-of select="$org-var/*"/>	
+
 			<!-- these individual RDF calls should be replaced with the getRDF API when many symbols might appear in one hoard -->
 			<xsl:for-each
 				select="
-				distinct-values($nudsGroup/descendant::nuds:symbol[contains(@xlink:href, 'http://numismatics.org')]/@xlink:href | $nudsGroup/descendant::nuds:symbol/descendant::tei:g[contains(@ref, 'http://numismatics.org')]/@ref |
-				$subtypes/descendant::nuds:symbol[contains(@xlink:href, 'http://numismatics.org')]/@xlink:href | $subtypes/descendant::nuds:symbol/descendant::tei:g[contains(@ref, 'http://numismatics.org')]/@ref)">
+					distinct-values($nudsGroup/descendant::nuds:symbol[contains(@xlink:href, 'http://numismatics.org')]/@xlink:href | $nudsGroup/descendant::nuds:symbol/descendant::tei:g[contains(@ref, 'http://numismatics.org')]/@ref |
+					$subtypes/descendant::nuds:symbol[contains(@xlink:href, 'http://numismatics.org')]/@xlink:href | $subtypes/descendant::nuds:symbol/descendant::tei:g[contains(@ref, 'http://numismatics.org')]/@ref)">
 				<xsl:variable name="href" select="."/>
-				
+
 				<xsl:if test="doc-available(concat($href, '.rdf'))">
 					<xsl:copy-of select="document(concat($href, '.rdf'))/rdf:RDF/*"/>
 				</xsl:if>
@@ -233,8 +266,9 @@
 			<xsl:otherwise>false</xsl:otherwise>
 		</xsl:choose>
 	</xsl:variable>
-	
-	<xsl:variable name="hasSpecimens" select="number(doc('input:specimenCount')//res:sparql//descendant::res:binding[@name = 'count']/res:literal) &gt; 0" as="xs:boolean"/>
+
+	<xsl:variable name="hasSpecimens" select="number(doc('input:specimenCount')//res:sparql//descendant::res:binding[@name = 'count']/res:literal) &gt; 0"
+		as="xs:boolean"/>
 	<xsl:variable name="specimenCount" select="doc('input:specimenCount')//res:sparql/descendant::res:binding[@name = 'count']/res:literal" as="xs:integer"/>
 
 	<xsl:template match="/">
@@ -247,17 +281,17 @@
 			</xsl:if>
 			<head>
 				<xsl:call-template name="generic_head"/>
-				
+
 				<xsl:if test="$hasSpecimens">
-					<!--- IIIF -->				
+					<!--- IIIF -->
 					<script type="text/javascript" src="{$include_path}/javascript/leaflet-iiif.js"/>
-					
+
 					<!-- Add fancyBox for popups of coin images -->
 					<link rel="stylesheet" href="{$include_path}/css/jquery.fancybox.css?v=2.1.5" type="text/css" media="screen"/>
 					<script type="text/javascript" src="{$include_path}/javascript/jquery.fancybox.pack.js?v=2.1.5"/>
 					<script type="text/javascript" src="{$include_path}/javascript/display_functions.js"/>
 				</xsl:if>
-				
+
 				<!-- visualization -->
 				<script type="text/javascript" src="https://d3plus.org/js/d3.min.js"/>
 				<script type="text/javascript" src="https://d3plus.org/js/d3plus-plot.v0.8.full.min.js"/>
@@ -309,8 +343,8 @@
 				</div>
 				<span id="manifest"/>
 				<div class="iiif-container-template" style="width:100%;height:100%"/>
-				<iframe id="model-iframe-template" width="640" height="480" frameborder="0" allowvr="true" allowfullscreen="true"
-					mozallowfullscreen="true" webkitallowfullscreen="true" onmousewheel=""/>
+				<iframe id="model-iframe-template" width="640" height="480" frameborder="0" allowvr="true" allowfullscreen="true" mozallowfullscreen="true"
+					webkitallowfullscreen="true" onmousewheel=""/>
 				<div id="iiif-window" style="width:600px;height:600px;display:none"/>
 				<div id="model-window" style="width:640px;height:480px;display:none"/>
 			</body>
@@ -328,32 +362,32 @@
 
 	<xsl:template match="nh:nudsHoard">
 		<xsl:call-template name="icons"/>
-		
+
 		<xsl:call-template name="nudsHoard_content"/>
-		
+
 		<!-- if there are coins from this hoard: -->
 		<xsl:if test="$hasSpecimens = true()">
 			<xsl:variable name="limit"
 				select="
-				if (//config/specimens_per_page castable as xs:integer) then
-				//config/specimens_per_page
-				else
-				48"/>
-			
+					if (//config/specimens_per_page castable as xs:integer) then
+						//config/specimens_per_page
+					else
+						48"/>
+
 			<xsl:apply-templates select="doc('input:specimens')/res:sparql" mode="hoard-examples">
 				<xsl:with-param name="page" select="$page" as="xs:integer"/>
 				<xsl:with-param name="numFound" select="$specimenCount" as="xs:integer"/>
 				<xsl:with-param name="limit" select="$limit" as="xs:integer"/>
 				<xsl:with-param name="endpoint"
 					select="
-					if (contains($sparql_endpoint, 'localhost')) then
-					'http://nomisma.org/query'
-					else
-					$sparql_endpoint"/>
+						if (contains($sparql_endpoint, 'localhost')) then
+							'http://nomisma.org/query'
+						else
+							$sparql_endpoint"/>
 				<xsl:with-param name="objectUri" select="$objectUri"/>
 			</xsl:apply-templates>
 		</xsl:if>
-		
+
 		<!-- if there are annotations, then render -->
 		<xsl:if test="$hasAnnotations = true()">
 			<div class="row">
@@ -399,11 +433,11 @@
 					</xsl:choose>
 				</h1>
 				<xsl:if test="$hasSpecimens = true()">
-					<a href="#examples">Coins from this Hoard</a>			
+					<a href="#examples">Coins from this Hoard</a>
 				</xsl:if>
 				<xsl:if test="$hasSpecimens = true() and $hasAnnotations = true()">
 					<xsl:text> | </xsl:text>
-				</xsl:if>				
+				</xsl:if>
 				<xsl:if test="$hasAnnotations = true()">
 					<a href="#annotations">Annotations</a>
 				</xsl:if>
@@ -653,7 +687,7 @@
 
 	</xsl:template>
 
-	<xsl:template match="nh:geogname|nh:type">
+	<xsl:template match="nh:geogname | nh:type">
 		<xsl:variable name="facet" select="
 				if (@xlink:role) then
 					@xlink:role
