@@ -225,8 +225,13 @@ function lookup_entity ($department, $val, $uncertain, $role){
         }
     }
     
-    //if the key has not been found after checking the spreadsheet, return the default values
-    return array('label'=>$val, 'uncertain'=>$uncertain, 'element'=>'persname', 'role'=>$role);
+    //if the key has not been found after checking the spreadsheet, return the default values, except in Islamic department
+    if ($department != 'Islamic'){
+        return array('label'=>$val, 'uncertain'=>$uncertain, 'element'=>'persname', 'role'=>$role);
+    } else {
+        return null;
+    }
+    
 }
 
 /***** DATES *****/
