@@ -130,7 +130,7 @@
 					<xsl:when test="$label = 'private'">Privat</xsl:when>
 					<xsl:when test="$label = 'provenance'">Herkunft</xsl:when>
 					<xsl:when test="$label = 'public'">öffentlich</xsl:when>
-					<xsl:when test="$label = 'publisher'">Verlag</xsl:when>
+					<xsl:when test="$label = 'publisher'">Herausgeber</xsl:when>
 					<xsl:when test="$label = 'reference'">Zitat</xsl:when>
 					<xsl:when test="$label = 'refDesc'">Zitate</xsl:when>
 					<xsl:when test="$label = 'region'">Region</xsl:when>
