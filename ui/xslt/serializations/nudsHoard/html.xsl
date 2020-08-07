@@ -294,7 +294,7 @@
 
 				<!-- visualization -->
 				<script type="text/javascript" src="https://d3plus.org/js/d3.min.js"/>
-				<script type="text/javascript" src="https://d3plus.org/js/d3plus-plot.v0.8.full.min.js"/>
+				<script type="text/javascript" src="https://d3plus.org/js/d3plus-plot.v0.9.full.min.js"/>
 				<script type="text/javascript" src="{$include_path}/javascript/display_hoard_functions.js"/>
 				<script type="text/javascript" src="{$include_path}/javascript/hoard_analysis_functions.js"/>
 				<script type="text/javascript" src="{$include_path}/javascript/search_functions.js"/>
