@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Author: Ethan Gruber
-	Date Modified: March 2019
+	Date Modified: August 2020
 	Function: Develop HTML page structure for NUDS documents for types/specimens. See ../object/html-templates.xsl for generate XSL templates for NUDS and NUDS-Hoard elements
 -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema"

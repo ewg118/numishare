@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Author: Ethan Gruber
+	Function: Formulate HTTP See Other redirect for automated forwarding -->
 <p:pipeline xmlns:p="http://www.orbeon.com/oxf/pipeline" xmlns:oxf="http://www.orbeon.com/oxf/processors">
 
 	<p:param type="input" name="data"/>
@@ -17,7 +19,7 @@
 		</head>
 		<body>
 			<h1>See Other</h1>
-			<p>The answer to your request is located <a href="]]><xsl:value-of select="/redirect/@uri"/><![CDATA[">here</a>.</p>
+			<p>The answer to your request is located <a href="]]><xsl:value-of select="/redirect/uri"/><![CDATA[">here</a>.</p>
 		</body>
 </html>]]>
 					</xml>
@@ -40,7 +42,7 @@
 						<header>
 							<name>Location</name>
 							<value>
-								<xsl:value-of select="/redirect/@uri"/>
+								<xsl:value-of select="/redirect/uri"/>
 							</value>
 						</header>
 					</config>
