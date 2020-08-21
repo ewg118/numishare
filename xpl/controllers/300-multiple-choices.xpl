@@ -62,7 +62,7 @@
 							<value>
 								<xsl:for-each select="descendant::*:otherRecordId[@semantic = 'dcterms:isReplacedBy']">									
 									<xsl:value-of select="concat('&lt;', ., '&gt;; rel=&#x022;related&#x022;')"/>
-									<xsl:if test="not(position() = last()">
+									<xsl:if test="not(position() = last())">
 										<xsl:text>, </xsl:text>
 									</xsl:if>
 								</xsl:for-each>
