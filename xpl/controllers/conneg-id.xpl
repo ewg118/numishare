@@ -22,6 +22,7 @@
 				<xsl:output indent="yes"/>
 
 				<xsl:variable name="content-type" select="//header[name[.='accept']]/value"/>
+				<xsl:variable name="accept-profile" select="//header[name[.='accept-profile']]/value"/>
 
 				<xsl:template match="/">
 					<content-type>
@@ -66,6 +67,13 @@
 								</xsl:choose>
 							</xsl:when>
 							<xsl:otherwise>
+								<!--<xsl:choose>
+									<xsl:when test="$accept-profile = '&lt;https://linked.art/ns/v1/linked-art.json&gt;'">linked-art</xsl:when>
+									<xsl:otherwise>
+										<xsl:value-of select="numishare:resolve-content-type($content-type)"/>
+									</xsl:otherwise>
+								</xsl:choose>-->
+								
 								<xsl:value-of select="numishare:resolve-content-type($content-type)"/>
 							</xsl:otherwise>
 						</xsl:choose>

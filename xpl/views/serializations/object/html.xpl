@@ -12,7 +12,8 @@
 		<p:input name="config" href="../../../models/config.xpl"/>
 		<p:output name="data" id="config"/>
 	</p:processor>
-
+	
+	<!--evaluate whether there are dcterms:isReplacedBy URIs and determine whether to implement HTTP 300 or 303 directs -->
 	<p:processor name="oxf:unsafe-xslt">
 		<p:input name="data" href="aggregate('content', #data, #config)"/>
 		<p:input name="config">
@@ -21,6 +22,7 @@
 
 				<xsl:template match="/">
 					<xsl:choose>
+						<!-- 303 -->
 						<xsl:when
 							test="count(descendant::*:otherRecordId[@semantic='dcterms:isReplacedBy']) = 1 and descendant::*:control/*:maintenanceStatus='cancelledReplaced'">
 							<xsl:variable name="uri">
@@ -40,6 +42,7 @@
 								</uri>
 							</redirect>
 						</xsl:when>
+						<!-- 300 -->
 						<xsl:when
 							test="count(descendant::*:otherRecordId[@semantic='dcterms:isReplacedBy']) &gt; 1 and descendant::*:control/*:maintenanceStatus='cancelledSplit'">
 							<xsl:variable name="uri">
@@ -78,7 +81,7 @@
 		<p:output name="data" id="redirect"/>
 	</p:processor>
 
-	<!-- evaluate whether there should be a 303 redirect for replaced concepts -->
+	<!-- choose serializer -->
 	<p:choose href="#redirect">
 		<p:when test="redirect/@bool = true()">
 			<!-- read the number of URIs to determine whether to implement HTTP 303 or 300 -->

@@ -57,14 +57,18 @@
 						<status-code>300</status-code>
 						<content-type>text/html</content-type>
 
-						<xsl:for-each select="descendant::*:otherRecordId[@semantic = 'dcterms:isReplacedBy']">
-							<header>
-								<name>Link</name>
-								<value>
+						<header>
+							<name>Link</name>
+							<value>
+								<xsl:for-each select="descendant::*:otherRecordId[@semantic = 'dcterms:isReplacedBy']">									
 									<xsl:value-of select="concat('&lt;', ., '&gt;; rel=&#x022;related&#x022;')"/>
-								</value>
-							</header>
-						</xsl:for-each>
+									<xsl:if test="not(position() = last()">
+										<xsl:text>, </xsl:text>
+									</xsl:if>
+								</xsl:for-each>
+							</value>
+						</header>
+						
 					</config>
 				</xsl:template>
 			</xsl:stylesheet>
