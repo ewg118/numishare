@@ -26,7 +26,7 @@
 		<div class="row result-doc">
 			<div class="col-md-12">
 				<h4>
-					<xsl:if test="$lang = 'ar'">
+					<xsl:if test="//config/languages/language[@code = $lang]/@rtl = true()">
 						<xsl:attribute name="style">direction: ltr; text-align:right</xsl:attribute>
 					</xsl:if>
 
@@ -74,7 +74,7 @@
 
 		<div class="col-xs-12 col-sm-6 col-md-4 grid-doc">
 			<h4>
-				<xsl:if test="$lang = 'ar'">
+				<xsl:if test="//config/languages/language[@code = $lang]/@rtl = true()">
 					<xsl:attribute name="style">direction: ltr; text-align:right</xsl:attribute>
 				</xsl:if>
 
@@ -132,7 +132,7 @@
 		<div class="row result-doc">
 			<div class="col-md-12">
 				<h4>
-					<xsl:if test="$lang = 'ar'">
+					<xsl:if test="//config/languages/language[@code = $lang]/@rtl = true()">
 						<xsl:attribute name="style">direction: ltr; text-align:right</xsl:attribute>
 					</xsl:if>
 
@@ -172,7 +172,7 @@
 			<xsl:value-of select="numishare:normalize_fields($sort_category, $lang)"/>
 		</xsl:variable>
 
-		<dl class="{if($lang='ar') then 'dl-horizontal ar' else 'dl-horizontal'}">
+		<dl class="{if(//config/languages/language[@code = $lang]/@rtl = true()) then 'dl-horizontal ar' else 'dl-horizontal'}">
 			<xsl:choose>
 				<xsl:when test="str[@name = 'recordType'] = 'hoard'">
 					<xsl:if test="string(str[@name = 'findspot_display'])">
@@ -271,7 +271,7 @@
 						</dt>
 						<dd>
 							<xsl:choose>
-								<xsl:when test="$lang = 'ar'">
+								<xsl:when test="//config/languages/language[@code = $lang]/@rtl = true()">
 									<xsl:value-of select="str[@name = 'obv_type_display']"/>
 									<xsl:if test="string(str[@name = 'obv_leg_display']) and string(str[@name = 'obv_type_display'])">
 										<xsl:text> :</xsl:text>
@@ -294,7 +294,7 @@
 						</dt>
 						<dd>
 							<xsl:choose>
-								<xsl:when test="$lang = 'ar'">
+								<xsl:when test="//config/languages/language[@code = $lang]/@rtl = true()">
 									<xsl:value-of select="str[@name = 'rev_type_display']"/>
 									<xsl:if test="string(str[@name = 'rev_leg_display']) and string(str[@name = 'rev_type_display'])">
 										<xsl:text> :</xsl:text>
@@ -755,6 +755,8 @@
 
 	<!-- ****** REMOVING INDIVIDUAL QUERY COMPONENTS (DISPLAY ABOVE RESULT LIST) ****** -->
 	<xsl:template name="remove_facets">
+		<xsl:variable name="rtl" select="//config/languages/language[@code = $lang]/@rtl = true()" as="xs:boolean"/>
+		
 		<div class="row">
 			<xsl:choose>
 				<xsl:when test="$q = '*:*' or not(string($q))">
@@ -859,7 +861,7 @@
 					</xsl:variable>
 
 					<div class="stacked_term alert alert-info row">
-						<xsl:if test="$lang = 'ar'">
+						<xsl:if test="$rtl = true()">
 							<div class="col-md-2 left">
 								<a
 									href="{$display_path}results{if (count($params//param) &gt; 0) then concat('?', string-join($params//param, '&amp;')) else ''}">
@@ -878,7 +880,7 @@
 								</xsl:call-template>
 							</span>
 						</div>
-						<xsl:if test="not($lang = 'ar')">
+						<xsl:if test="not($rtl = true())">
 							<div class="col-md-2 right">
 								<a
 									href="{$display_path}results{if (count($params//param) &gt; 0) then concat('?', string-join($params//param, '&amp;')) else ''}">
@@ -895,7 +897,7 @@
 					
 					<xsl:variable name="tokenized-fragments" select="tokenize(., $delimiter)"/>
 					<div class="stacked_term alert alert-info row">
-						<xsl:if test="$lang = 'ar'">
+						<xsl:if test="$rtl = true()">
 							<div class="col-md-2 left">
 								<a
 									href="{$display_path}results{if (count($params//param) &gt; 0) then concat('?', string-join($params//param, '&amp;')) else ''}">
@@ -1065,7 +1067,7 @@
 								</xsl:for-each>
 							</span>
 						</div>
-						<xsl:if test="not($lang = 'ar')">
+						<xsl:if test="not($rtl = true())">
 							<div class="col-md-2 right">
 								<a
 									href="{$display_path}results{if (count($params//param) &gt; 0) then concat('?', string-join($params//param, '&amp;')) else ''}">
@@ -1077,13 +1079,13 @@
 				</xsl:when>
 				<xsl:when test="not(contains(., ':'))">
 					<div class="stacked_term alert alert-info row">
-						<xsl:if test="$lang = 'ar'">
+						<xsl:if test="$rtl = true()">
 							<xsl:attribute name="style">text-align:right</xsl:attribute>
 						</xsl:if>
 						<div class="col-md-12">
 							<span>
 								<xsl:choose>
-									<xsl:when test="$lang = 'ar'">
+									<xsl:when test="$rtl = true()">
 										<xsl:value-of select="."/>
 										<b>
 											<xsl:text> :</xsl:text>
@@ -1118,11 +1120,11 @@
 				</xsl:choose>
 			</xsl:variable>
 			<div class="stacked_term alert alert-info row">
-				<xsl:if test="$lang = 'ar'">
+				<xsl:if test="$rtl = true()">
 					<xsl:attribute name="style">text-align:right</xsl:attribute>
 				</xsl:if>
 				<xsl:choose>
-					<xsl:when test="$lang = 'ar'">
+					<xsl:when test="$rtl = true()">
 						<div class="col-md-2">
 							<a href="{$display_path}results?q={$q}{if (string($langParam)) then concat('&amp;lang=', $langParam) else ''}">
 								<span class="glyphicon glyphicon-remove"/>
@@ -1160,7 +1162,7 @@
 		</xsl:if>
 		<xsl:if test="string($tokenized_q[3])">
 			<div class="stacked_term alert alert-info row">
-				<xsl:if test="$lang = 'ar'">
+				<xsl:if test="$rtl = true()">
 					<xsl:attribute name="style">text-align:right</xsl:attribute>
 				</xsl:if>
 				<div class="col-md-12">
@@ -1262,7 +1264,7 @@
 		</xsl:variable>
 
 		<div class="paging_div row">
-			<div class="col-md-6 {if ($lang='ar') then 'pull-right' else ''}">
+			<div class="col-md-6 {if (//config/languages/language[@code = $lang]/@rtl = true()) then 'pull-right' else ''}">
 				<xsl:variable name="startRecord" select="$start_var + 1"/>
 				<xsl:variable name="endRecord">
 					<xsl:choose>
@@ -1280,9 +1282,9 @@
 			<!-- paging functionality -->
 			<div class="col-md-6 page-nos">
 				<div class="btn-toolbar" role="toolbar">
-					<div class="btn-group pagination {if (not($lang='ar')) then 'pull-right' else ''}">
+					<div class="btn-group pagination {if (not(//config/languages/language[@code = $lang]/@rtl = true())) then 'pull-right' else ''}">
 						<xsl:choose>
-							<xsl:when test="$lang = 'ar'">
+							<xsl:when test="//config/languages/language[@code = $lang]/@rtl = true()">
 								<xsl:choose>
 									<xsl:when test="$numFound - $start_var &gt; $rows">
 										<xsl:call-template name="last-button">
@@ -1348,7 +1350,7 @@
 						</button>
 						<!-- next page -->
 						<xsl:choose>
-							<xsl:when test="$lang = 'ar'">
+							<xsl:when test="//config/languages/language[@code = $lang]/@rtl = true()">
 								<xsl:choose>
 									<xsl:when test="$start_var &gt;= $rows">
 										<xsl:call-template name="prev-button">
@@ -1416,7 +1418,7 @@
 
 		<a class="btn btn-default {$class}" role="button" title="First"
 			href="{if($pipeline='results') then 'results' else ''}?{string-join($params//param, '&amp;')}">
-			<span class="glyphicon glyphicon-fast-{if ($lang='ar') then 'forward' else 'backward'}"/>
+			<span class="glyphicon glyphicon-fast-{if (//config/languages/language[@code = $lang]/@rtl = true()) then 'forward' else 'backward'}"/>
 		</a>
 	</xsl:template>
 
@@ -1427,7 +1429,7 @@
 
 		<a class="btn btn-default {$class}" role="button" title="Previous"
 			href="{if($pipeline='results') then 'results' else    ''}?{string-join($params//param, '&amp;')}&amp;start={$previous}">
-			<span class="glyphicon glyphicon-{if ($lang='ar') then 'forward' else 'backward'}"/>
+			<span class="glyphicon glyphicon-{if (//config/languages/language[@code = $lang]/@rtl = true()) then 'forward' else 'backward'}"/>
 		</a>
 	</xsl:template>
 
@@ -1438,7 +1440,7 @@
 
 		<a class="btn btn-default {$class}" role="button" title="Next"
 			href="{if($pipeline='results') then 'results' else ''}?{string-join($params//param, '&amp;')}&amp;start={$next}">
-			<span class="glyphicon glyphicon-{if ($lang='ar') then 'backward' else 'forward'}"/>
+			<span class="glyphicon glyphicon-{if (//config/languages/language[@code = $lang]/@rtl = true()) then 'backward' else 'forward'}"/>
 		</a>
 	</xsl:template>
 
@@ -1449,7 +1451,7 @@
 
 		<a class="btn btn-default {$class}" role="button"
 			href="{if($pipeline='results') then 'results' else ''}?{string-join($params//param, '&amp;')}&amp;start={($total * $rows) - $rows}">
-			<span class="glyphicon glyphicon-fast-{if ($lang='ar') then 'backward' else 'forward'}"/>
+			<span class="glyphicon glyphicon-fast-{if (//config/languages/language[@code = $lang]/@rtl = true()) then 'backward' else 'forward'}"/>
 		</a>
 	</xsl:template>
 

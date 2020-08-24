@@ -103,7 +103,7 @@
 	<xsl:template name="maps">
 		<div id="backgroundPopup"/>
 		<div class="container-fluid" style="height:100%">
-			<xsl:if test="$lang = 'ar'">
+			<xsl:if test="//config/languages/language[@code = $lang]/@rtl = true()">
 				<xsl:attribute name="style">direction: rtl;</xsl:attribute>
 			</xsl:if>
 			<xsl:choose>

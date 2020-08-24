@@ -91,7 +91,7 @@
 
 	<xsl:template name="maps">
 		<div class="container-fluid">
-			<xsl:if test="$lang='ar'">
+			<xsl:if test="//config/languages/language[@code = $lang]/@rtl = true()">
 				<xsl:attribute name="style">direction: rtl;</xsl:attribute>							
 			</xsl:if>
 			<div class="row">

@@ -63,7 +63,7 @@
 			<xsl:if test="string($lang)">
 				<xsl:attribute name="lang" select="$lang"/>
 			</xsl:if>
-			<xsl:if test="$lang='ar'">
+			<xsl:if test="//config/languages/language[@code = $lang]/@rtl = true()">
 				<xsl:attribute name="class">rtl</xsl:attribute>
 			</xsl:if>
 			<head profile="http://a9.com/-/spec/opensearch/1.1/">
@@ -154,7 +154,7 @@
 
 	<xsl:template name="results">
 		<div class="container-fluid">
-			<xsl:if test="$lang='ar'">
+			<xsl:if test="//config/languages/language[@code = $lang]/@rtl = true()">
 				<xsl:attribute name="style">direction: rtl;</xsl:attribute>
 			</xsl:if>
 			

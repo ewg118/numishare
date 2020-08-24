@@ -285,56 +285,12 @@
 
 	<xsl:template match="/">
 		<xsl:choose>
-			<xsl:when
-				test="count(descendant::*:otherRecordId[@semantic = 'dcterms:isReplacedBy']) &gt; 1 and descendant::*:control/*:maintenanceStatus = 'cancelledSplit'">
-				<html>
-					<head>
-						<xsl:call-template name="generic_head"/>
-					</head>
-					<body>
-						<xsl:call-template name="header"/>
-						<div class="container-fluid">
-							<xsl:if test="$lang = 'ar'">
-								<xsl:attribute name="style">direction: rtl;</xsl:attribute>
-							</xsl:if>
-							<div class="row">
-								<div class="col-md-12">
-									<h1>
-										<xsl:value-of select="$id"/>
-									</h1>
-									<p>This resource has been split and supplanted by the following new URIs:</p>
-									<ul>
-										<xsl:for-each select="descendant::*:otherRecordId[@semantic = 'dcterms:isReplacedBy']">
-											<xsl:variable name="uri"
-												select="
-													if (matches(., 'https?://')) then
-														.
-													else
-														concat($url, 'id/', .)"/>
-											<li>
-												<a href="{$uri}">
-													<xsl:value-of select="$uri"/>
-												</a>
-											</li>
-										</xsl:for-each>
-									</ul>
-								</div>
-							</div>
-						</div>
-						<xsl:call-template name="footer"/>
-					</body>
-				</html>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:call-template name="construct_page"/>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>
-
-	<xsl:template name="construct_page">
-		<xsl:choose>
+			<xsl:when test="$mode = 'compare'">
+				<!-- only call display template for compare display -->
+				<xsl:call-template name="display"/>
+			</xsl:when>			
 			<!-- regular HTML display mode-->
-			<xsl:when test="not(string($mode))">
+			<xsl:otherwise>
 				<html
 					prefix="geo: http://www.w3.org/2003/01/geo/wgs84_pos# foaf: http://xmlns.com/foaf/0.1/ dcterms: http://purl.org/dc/terms/ xsd: http://www.w3.org/2001/XMLSchema# nm:
 					http://nomisma.org/id/ rdf: http://www.w3.org/1999/02/22-rdf-syntax-ns# skos: http://www.w3.org/2004/02/skos/core# nmo:
@@ -362,17 +318,17 @@
 							<xsl:when test="$recordType = 'conceptual'">
 								<!--- IIIF -->
 								<script type="text/javascript" src="{$include_path}/javascript/leaflet-iiif.js"/>
-
+								
 								<!-- Add fancyBox -->
 								<link rel="stylesheet" href="{$include_path}/css/jquery.fancybox.css?v=2.1.5" type="text/css" media="screen"/>
 								<script type="text/javascript" src="{$include_path}/javascript/jquery.fancybox.pack.js?v=2.1.5"/>
 								<script type="text/javascript" src="{$include_path}/javascript/display_functions.js"/>
-
+								
 								<!-- visualization -->
 								<script type="text/javascript" src="https://d3plus.org/js/d3.min.js"/>
 								<script type="text/javascript" src="https://d3plus.org/js/d3plus-plot.v0.9.full.min.js"/>
 								<script type="text/javascript" src="{$include_path}/javascript/vis_functions.js"/>
-
+								
 								<!-- mapping -->
 								<xsl:if test="$geoEnabled = true()">
 									<xsl:if test="$hasMints = true() or $hasFindspots = true()">
@@ -387,7 +343,7 @@
 									</xsl:if>
 								</xsl:if>
 							</xsl:when>
-
+							
 						</xsl:choose>
 						<link type="text/css" href="{$include_path}/css/style.css" rel="stylesheet"/>
 					</head>
@@ -395,7 +351,7 @@
 						<xsl:call-template name="header"/>
 						<xsl:call-template name="display"/>
 						<xsl:call-template name="footer"/>
-
+						
 						<div class="hidden">
 							<span id="baselayers">
 								<xsl:value-of select="string-join(//config/baselayers/layer[@enabled = true()], ',')"/>
@@ -428,7 +384,7 @@
 							<span id="lang">
 								<xsl:value-of select="$lang"/>
 							</span>
-
+							
 							<!-- metrical analysis params -->
 							<xsl:if test="$recordType = 'conceptual'">
 								<span id="page">record</span>
@@ -436,23 +392,23 @@
 								<span id="base-query">
 									<xsl:value-of select="concat('nmo:hasTypeSeriesItem &lt;', $objectUri, '&gt;')"/>
 								</span>
-
+								
 								<!-- include templates for form -->
 								<xsl:call-template name="field-template">
 									<xsl:with-param name="template" as="xs:boolean">true</xsl:with-param>
 								</xsl:call-template>
-
+								
 								<xsl:call-template name="compare-container-template">
 									<xsl:with-param name="template" as="xs:boolean">true</xsl:with-param>
 								</xsl:call-template>
-
+								
 								<xsl:call-template name="date-template">
 									<xsl:with-param name="template" as="xs:boolean">true</xsl:with-param>
 								</xsl:call-template>
-
+								
 								<xsl:call-template name="ajax-loader-template"/>
 							</xsl:if>
-
+							
 							<xsl:if test="$recordType = 'conceptual'">
 								<span id="hasFindspots">
 									<xsl:value-of select="$hasFindspots"/>
@@ -467,10 +423,6 @@
 						</div>
 					</body>
 				</html>
-			</xsl:when>
-			<xsl:otherwise>
-				<!-- only call display template for compare display -->
-				<xsl:call-template name="display"/>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
@@ -493,7 +445,7 @@
 					</xsl:choose>
 				</xsl:variable>
 				<div class="container-fluid" typeof="{$typeof}" about="{$objectUri}">
-					<xsl:if test="$lang = 'ar'">
+					<xsl:if test="//config/languages/language[@code = $lang]/@rtl = true()">
 						<xsl:attribute name="style">direction: rtl;</xsl:attribute>
 					</xsl:if>
 
@@ -535,7 +487,7 @@
 								</xsl:if>
 
 								<h1 id="object_title" property="skos:prefLabel">
-									<xsl:if test="$lang = 'ar'">
+									<xsl:if test="//config/languages/language[@code = $lang]/@rtl = true()">
 										<xsl:attribute name="style">direction: ltr; text-align:right</xsl:attribute>
 									</xsl:if>
 									<xsl:choose>
@@ -588,7 +540,6 @@
 										//config/specimens_per_page
 									else
 										48"/>
-
 							<xsl:apply-templates select="doc('input:specimens')/res:sparql" mode="type-examples">
 								<xsl:with-param name="page" select="$page" as="xs:integer"/>
 								<xsl:with-param name="numFound" select="$specimenCount" as="xs:integer"/>
@@ -600,6 +551,7 @@
 										else
 											$sparql_endpoint"/>
 								<xsl:with-param name="objectUri" select="$objectUri"/>
+								<xsl:with-param name="rtl" select="boolean(//config/languages/language[@code = $lang]/@rtl)"/>
 							</xsl:apply-templates>
 						</xsl:if>
 
@@ -645,7 +597,7 @@
 								<div class="row">
 									<div class="col-md-12">
 										<h1 id="object_title" property="dcterms:title">
-											<xsl:if test="$lang = 'ar'">
+											<xsl:if test="//config/languages/language[@code = $lang]/@rtl = true()">
 												<xsl:attribute name="style">direction: ltr; text-align:right</xsl:attribute>
 											</xsl:if>
 											<xsl:choose>
@@ -700,7 +652,7 @@
 								<div class="row">
 									<div class="col-md-12">
 										<h1 id="object_title" property="dcterms:title">
-											<xsl:if test="$lang = 'ar'">
+											<xsl:if test="//config/languages/language[@code = $lang]/@rtl = true()">
 												<xsl:attribute name="style">direction: ltr; text-align:right</xsl:attribute>
 											</xsl:if>
 											<xsl:choose>
@@ -883,7 +835,7 @@
 				<xsl:apply-templates select="nuds:descMeta/nuds:noteSet[child::*]"/>
 			</xsl:when>
 			<xsl:otherwise>
-				<div class="col-md-6 {if($lang='ar') then 'pull-right' else ''}">
+				<div class="col-md-6 {if(//config/languages/language[@code = $lang]/@rtl = true()) then 'pull-right' else ''}">
 					<xsl:apply-templates select="nuds:descMeta/nuds:physDesc[child::*]"/>
 
 					<!-- apply-template only to NUDS-explicit typeDesc when there is one or more type references -->
@@ -904,7 +856,7 @@
 					<xsl:apply-templates select="nuds:descMeta/nuds:undertypeDesc"/>
 					<xsl:apply-templates select="nuds:descMeta/nuds:findspotDesc"/>
 				</div>
-				<div class="col-md-6 {if($lang='ar') then 'pull-right' else ''}">
+				<div class="col-md-6 {if(//config/languages/language[@code = $lang]/@rtl = true()) then 'pull-right' else ''}">
 					<xsl:apply-templates select="nuds:descMeta/nuds:refDesc[child::*]"/>
 					<xsl:apply-templates select="nuds:descMeta/nuds:adminDesc[child::*]"/>
 					<xsl:apply-templates select="nuds:descMeta/nuds:descriptionSet[child::*]"/>
@@ -1284,7 +1236,7 @@
 
 		<xsl:if test="number($measurements//axis) &gt; 0 or number($measurements//diameter) &gt; 0 or number($measurements//weight) &gt; 0">
 			<p>Average measurements for this coin type:</p>
-			<dl class=" {if($lang='ar') then 'dl-horizontal ar' else 'dl-horizontal'}">
+			<dl class=" {if(//config/languages/language[@code = $lang]/@rtl = true()) then 'dl-horizontal ar' else 'dl-horizontal'}">
 				<xsl:if test="number($measurements//axis) &gt; 0">
 					<dt>
 						<xsl:value-of select="numishare:regularize_node('axis', $lang)"/>

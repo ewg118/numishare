@@ -97,7 +97,7 @@
 					</head>
 					<body>
 						<div class="container-fluid">
-							<xsl:if test="$lang = 'ar'">
+							<xsl:if test="//config/languages/language[@code = $lang]/@rtl = true()">
 								<xsl:attribute name="style">direction: rtl;</xsl:attribute>
 							</xsl:if>
 							<div class="row">
@@ -161,7 +161,7 @@
 			</head>
 			<body>
 				<div class="container-fluid" style="height:100%">
-					<xsl:if test="$lang = 'ar'">
+					<xsl:if test="//config/languages/language[@code = $lang]/@rtl = true()">
 						<xsl:attribute name="style">direction: rtl;</xsl:attribute>
 					</xsl:if>
 					<div class="row" style="height:100%">

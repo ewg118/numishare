@@ -353,7 +353,7 @@
 
 	<xsl:template name="display">
 		<div class="container-fluid" typeof="nmo:Hoard" about="{$objectUri}">
-			<xsl:if test="$lang = 'ar'">
+			<xsl:if test="//config/languages/language[@code = $lang]/@rtl = true()">
 				<xsl:attribute name="style">direction: rtl;</xsl:attribute>
 			</xsl:if>
 			<xsl:apply-templates select="/content/nh:nudsHoard"/>
@@ -385,6 +385,7 @@
 						else
 							$sparql_endpoint"/>
 				<xsl:with-param name="objectUri" select="$objectUri"/>
+				<xsl:with-param name="rtl" select="boolean(//config/languages/language[@code = $lang]/@rtl)"/>
 			</xsl:apply-templates>
 		</xsl:if>
 

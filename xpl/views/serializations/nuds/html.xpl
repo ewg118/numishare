@@ -6,7 +6,7 @@
 		including SPARQL queries for associated specimens and annoations.
 		July 2018: added type-examples.xpl into this XPL in order to avoid xsl:document() function call to /api pipeline within the XSLT
 -->
-<p:config xmlns:p="http://www.orbeon.com/oxf/pipeline" xmlns:oxf="http://www.orbeon.com/oxf/processors" xmlns:res="http://www.w3.org/2005/sparql-results#">
+<p:config xmlns:p="http://www.orbeon.com/oxf/pipeline" xmlns:oxf="http://www.orbeon.com/oxf/processors" xmlns:res="http://www.w3.org/2005/sparql-results#" xmlns:saxon="http://saxon.sf.net/">
 	<p:param type="input" name="data"/>
 	<p:param type="output" name="data"/>
 	
@@ -327,6 +327,59 @@ ASK {?s oa:hasBody <URI>}]]>
 			</p:choose>
 		</p:otherwise>
 	</p:choose>
+	
+	<!-- prepare the HTML model to be piped through the HTTP serializer -->
+	<!--<p:processor name="oxf:unsafe-xslt">
+		<p:input name="data" href="#model"/>
+		<p:input name="config">
+			<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+				<xsl:output name="html" encoding="UTF-8" method="html" indent="yes" omit-xml-declaration="yes" doctype-system="HTML"/>
+				
+				<xsl:template match="/">
+					<xml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+						content-type="text/html">
+						<xsl:value-of select="saxon:serialize(/html, 'html')"/>
+					</xml>
+				</xsl:template>
+			</xsl:stylesheet>
+		</p:input>
+		<p:output name="data" id="converted"/>
+	</p:processor>-->
+	
+	<!-- generate config for http-serializer -->
+	<!--<p:processor name="oxf:unsafe-xslt">
+		<p:input name="data" href="#config"/>
+		<p:input name="config">
+			<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+				<xsl:output indent="yes"/>
+				<xsl:template match="/">
+					<config>
+						<status-code>200</status-code>
+						<content-type>text/html</content-type>
+						
+						<!-\-<header>
+							<name>Link</name>
+							<value>
+								<xsl:for-each select="descendant::*:otherRecordId[@semantic = 'dcterms:isReplacedBy']">									
+									<xsl:value-of select="concat('&lt;', ., '&gt;; rel=&#x022;related&#x022;')"/>
+									<xsl:if test="not(position() = last())">
+										<xsl:text>, </xsl:text>
+									</xsl:if>
+								</xsl:for-each>
+							</value>
+						</header>-\->
+						
+					</config>
+				</xsl:template>
+			</xsl:stylesheet>
+		</p:input>
+		<p:output name="data" id="serializer-config"/>
+	</p:processor>-->
+	
+	<!--<p:processor name="oxf:http-serializer">
+		<p:input name="data" href="#converted"/>
+		<p:input name="config" href="#serializer-config"/>
+	</p:processor>-->
 	
 	<p:processor name="oxf:html-converter">
 		<p:input name="data" href="#model"/>

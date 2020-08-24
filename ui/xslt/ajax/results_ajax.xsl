@@ -110,14 +110,14 @@
 
 		<div class="g_doc col-md-4">
 			<h4>
-				<xsl:if test="$lang='ar'">
+				<xsl:if test="//config/languages/language[@code = $lang]/@rtl = true()">
 					<xsl:attribute name="style">direction: ltr; text-align:right</xsl:attribute>
 				</xsl:if>
 				<a href="{$object-path}{str[@name='recordId']}{if (string($langParam)) then concat('?lang=', $langParam) else ''}" target="_blank">
 					<xsl:value-of select="str[@name='title_display']"/>
 				</a>
 			</h4>
-			<dl class="{if($lang='ar') then 'dl-horizontal ar' else 'dl-horizontal'}">
+			<dl class="{if(//config/languages/language[@code = $lang]/@rtl = true()) then 'dl-horizontal ar' else 'dl-horizontal'}">
 				<xsl:choose>
 					<xsl:when test="str[@name='recordType'] = 'hoard'">
 						<xsl:if test="string(str[@name = 'findspot_display'])">

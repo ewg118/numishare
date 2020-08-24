@@ -18,6 +18,7 @@
         <xsl:param name="limit"/>
         <xsl:param name="endpoint"/>
         <xsl:param name="objectUri"/>
+        <xsl:param name="rtl"/>
 
 
         <xsl:variable name="query" select="replace(doc('input:query'), 'typeURI', $objectUri)"/>
@@ -47,12 +48,16 @@
                         </xsl:call-template>
                     </xsl:if>
                 </xsl:if>
-                <xsl:apply-templates select="descendant::res:result" mode="type-examples"/>
+                <xsl:apply-templates select="descendant::res:result" mode="type-examples">
+                    <xsl:with-param name="rtl" select="$rtl" as="xs:boolean"/>
+                </xsl:apply-templates>
             </xsl:if>
         </div>
     </xsl:template>
 
     <xsl:template match="res:result" mode="type-examples">
+        <xsl:param name="rtl"/>
+        
         <xsl:variable name="title"
             select="
                 concat(res:binding[@name = 'identifier']/*, ': ', if
@@ -67,7 +72,7 @@
                     <xsl:value-of select="res:binding[@name = 'title']/res:literal"/>
                 </a>
             </span>
-            <dl class=" {if($lang='ar') then 'dl-horizontal ar' else 'dl-horizontal'}">
+            <dl class="{if($rtl = true()) then 'dl-horizontal ar' else 'dl-horizontal'}">
                 <xsl:choose>
                     <xsl:when test="res:binding[@name = 'collection']/res:literal">
                         <dt>
@@ -229,7 +234,7 @@
         <xsl:param name="limit"/>
         <xsl:param name="endpoint"/>
         <xsl:param name="objectUri"/>
-
+        <xsl:param name="rtl"/>
 
         <xsl:variable name="query" select="replace(doc('input:query'), 'hoardURI', $objectUri)"/>
 
@@ -252,127 +257,15 @@
                     <xsl:call-template name="pagination">
                         <xsl:with-param name="page" select="$page" as="xs:integer"/>
                         <xsl:with-param name="numFound" select="$numFound" as="xs:integer"/>
-                        <xsl:with-param name="limit" select="$limit" as="xs:integer"/>
+                        <xsl:with-param name="limit" select="$limit" as="xs:integer"/>                        
                     </xsl:call-template>
                 </xsl:if>
 
-                <xsl:apply-templates select="descendant::res:result" mode="type-examples"/>
-
-                <!--<table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>
-                                <xsl:value-of select="numishare:regularize_node('identifier', $lang)"/>
-                            </th>
-                            <th>
-                                <xsl:value-of select="numishare:regularize_node('collection', $lang)"/>
-                            </th>
-                            <th>
-                                <xsl:value-of select="numishare:regularize_node('coinType', $lang)"/>
-                            </th>
-                            <th>
-                                <xsl:value-of select="numishare:regularize_node('authority', $lang)"/>
-                            </th>
-                            <th>
-                                <xsl:value-of select="numishare:regularize_node('mint', $lang)"/>
-                            </th>
-                            <th>
-                                <xsl:value-of select="numishare:regularize_node('denomination', $lang)"/>
-                            </th>
-                            <th>Images</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <xsl:apply-templates select="descendant::res:result" mode="hoard-examples"/>
-                    </tbody>
-                </table>-->
+                <xsl:apply-templates select="descendant::res:result" mode="type-examples">
+                    <xsl:with-param name="rtl" select="$rtl"/>
+                </xsl:apply-templates>
             </xsl:if>
         </div>
-    </xsl:template>
-
-    <xsl:template match="res:result" mode="hoard-examples">
-        <xsl:variable name="title"
-            select="
-                concat(res:binding[@name = 'identifier']/*, ': ', if
-                (string(res:binding[@name = 'collection']/res:literal)) then
-                    res:binding[@name = 'collection']/res:literal
-                else
-                    res:binding[@name = 'datasetTitle']/res:literal)"/>
-
-        <tr>
-            <td>
-                <a href="{res:binding[@name='object']/res:uri}" title="{res:binding[@name = 'title']/res:literal}" target="_blank">
-                    <xsl:value-of select="res:binding[@name = 'identifier']/res:literal"/>
-                </a>
-            </td>
-            <td>
-                <xsl:choose>
-                    <xsl:when test="res:binding[@name = 'collection']/res:literal">
-                        <a href="{res:binding[@name='dataset']/res:uri}">
-                            <xsl:value-of select="res:binding[@name = 'collection']/res:literal"/>
-                        </a>
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <a href="{res:binding[@name='dataset']/res:uri}">
-                            <xsl:value-of select="res:binding[@name = 'datasetTitle']/res:literal"/>
-                        </a>
-                    </xsl:otherwise>
-                </xsl:choose>
-            </td>
-            <td>
-                <xsl:if test="string(res:binding[@name = 'types']/res:literal)">
-                    <xsl:variable name="typeURIs" select="tokenize(res:binding[@name = 'types']/res:literal, '\|')"/>
-                    <xsl:variable name="typeTitles" select="tokenize(res:binding[@name = 'typeTitles']/res:literal, '\|')"/>
-
-                    <xsl:for-each select="$typeURIs">
-                        <xsl:variable name="position" select="position()"/>
-
-                        <a href="{.}" title="{$typeTitles[$position]}">
-                            <xsl:value-of select="$typeTitles[$position]"/>
-                        </a>
-
-                        <xsl:if test="not(position() = last())">
-                            <xsl:text>, </xsl:text>
-                        </xsl:if>
-                    </xsl:for-each>
-                </xsl:if>
-            </td>
-            <td>
-                <xsl:if test="string(res:binding[@name = 'authorities']/res:literal)">
-                    <xsl:for-each select="tokenize(res:binding[@name = 'authorities']/res:literal, '\|')">
-                        <xsl:value-of select="."/>
-                        <xsl:if test="not(position() = last())">
-                            <xsl:text>, </xsl:text>
-                        </xsl:if>
-                    </xsl:for-each>
-                </xsl:if>
-            </td>
-            <td>
-                <xsl:if test="string(res:binding[@name = 'mints']/res:literal)">
-                    <xsl:for-each select="tokenize(res:binding[@name = 'mints']/res:literal, '\|')">
-                        <xsl:value-of select="."/>
-                        <xsl:if test="not(position() = last())">
-                            <xsl:text>, </xsl:text>
-                        </xsl:if>
-                    </xsl:for-each>
-                </xsl:if>
-            </td>
-            <td>
-                <xsl:if test="string(res:binding[@name = 'denominations']/res:literal)">
-                    <xsl:for-each select="tokenize(res:binding[@name = 'denominations']/res:literal, '\|')">
-                        <xsl:value-of select="."/>
-                        <xsl:if test="not(position() = last())">
-                            <xsl:text>, </xsl:text>
-                        </xsl:if>
-                    </xsl:for-each>
-                </xsl:if>
-            </td>
-            <td>
-                <xsl:call-template name="thumbnails">
-                    <xsl:with-param name="title" select="$title"/>
-                </xsl:call-template>
-            </td>
-        </tr>
     </xsl:template>
 
     <!-- **************** SHARED THUMBNAIL TEMPLATE *************** -->
@@ -509,6 +402,7 @@
     <xsl:template match="res:sparql" mode="listTypes">
         <xsl:param name="objectUri"/>
         <xsl:param name="endpoint"/>
+        <xsl:param name="rtl"/>
 
         <!-- aggregate ids and get URI space -->
         <xsl:variable name="type_series_items" as="element()*">
