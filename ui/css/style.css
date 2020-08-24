@@ -90,6 +90,17 @@ a:focus{
     width: 50%;
     margin: 20px auto;
 }
+.rtl{
+    direction: rtl;
+}
+dl.ar dt{
+    float: right;
+    text-align: left;
+}
+dl.ar dd{
+    margin-right: 180px;
+    margin-left: 0;
+}
 /*
   ***************************************
   FOOTER
