@@ -160,51 +160,49 @@
 			
 			<div class="row">
 				<div class="col-md-9 col-md-push-3">
-					<div class="container-fluid">
-						<xsl:call-template name="remove_facets"/>
-						<xsl:choose>
-							<xsl:when test="$numFound &gt; 0">
-								<!-- include resultMap div when there are geographical results-->
-								<xsl:if test="count(//lst[@name='mint_geo']/int) &gt; 0 or count(//lst[@name='findspot_geo']/int) &gt; 0">
-									<div style="display:none">
-										<div id="resultMap"/>
-									</div>
-								</xsl:if>
-								
-								<!-- display link to return to the identify page, if referred from there -->
-								<xsl:if test="tokenize(doc('input:request')/request/headers/header[name='referer']/value, '/')[last()] = 'identify'">
-									<a href="#" onclick="window.history.back();"><span class="glyphicon glyphicon-arrow-left"/> Return to previous query on Identify page.</a>
-								</xsl:if>	
-								
-								<xsl:call-template name="paging"/>
-								<xsl:call-template name="sort"/>
-								
-								<!-- use the $layout to choose between grid and default -->
-								<xsl:choose>
-									<xsl:when test="$layout = 'grid'">
-										<div class="row">
-											<xsl:apply-templates select="descendant::doc" mode="grid"/>
-										</div>										
-									</xsl:when>
-									<xsl:otherwise>
-										<xsl:apply-templates select="descendant::doc" mode="default"/>										
-									</xsl:otherwise>
-								</xsl:choose>
-								
-								<xsl:call-template name="paging"/>
-							</xsl:when>
-							<xsl:otherwise>
-								<xsl:choose>
-									<xsl:when test="tokenize(doc('input:request')/request/headers/header[name='referer']/value, '/')[last()] = 'identify'">
-										<h2> No results found. <a href="#" onclick="window.history.back();">Start over.</a></h2>
-									</xsl:when>
-									<xsl:otherwise>
-										<h2> No results found. <a href="results">Start over.</a></h2>
-									</xsl:otherwise>
-								</xsl:choose>
-							</xsl:otherwise>
-						</xsl:choose>
-					</div>
+					<xsl:call-template name="remove_facets"/>
+					<xsl:choose>
+						<xsl:when test="$numFound &gt; 0">
+							<!-- include resultMap div when there are geographical results-->
+							<xsl:if test="count(//lst[@name='mint_geo']/int) &gt; 0 or count(//lst[@name='findspot_geo']/int) &gt; 0">
+								<div style="display:none">
+									<div id="resultMap"/>
+								</div>
+							</xsl:if>
+							
+							<!-- display link to return to the identify page, if referred from there -->
+							<xsl:if test="tokenize(doc('input:request')/request/headers/header[name='referer']/value, '/')[last()] = 'identify'">
+								<a href="#" onclick="window.history.back();"><span class="glyphicon glyphicon-arrow-left"/> Return to previous query on Identify page.</a>
+							</xsl:if>	
+							
+							<xsl:call-template name="paging"/>
+							<xsl:call-template name="sort"/>
+							
+							<!-- use the $layout to choose between grid and default -->
+							<xsl:choose>
+								<xsl:when test="$layout = 'grid'">
+									<div class="row">
+										<xsl:apply-templates select="descendant::doc" mode="grid"/>
+									</div>										
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:apply-templates select="descendant::doc" mode="default"/>										
+								</xsl:otherwise>
+							</xsl:choose>
+							
+							<xsl:call-template name="paging"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:choose>
+								<xsl:when test="tokenize(doc('input:request')/request/headers/header[name='referer']/value, '/')[last()] = 'identify'">
+									<h2> No results found. <a href="#" onclick="window.history.back();">Start over.</a></h2>
+								</xsl:when>
+								<xsl:otherwise>
+									<h2> No results found. <a href="results">Start over.</a></h2>
+								</xsl:otherwise>
+							</xsl:choose>
+						</xsl:otherwise>
+					</xsl:choose>
 				</div>
 				<div class="col-md-3 col-md-pull-9">
 					<xsl:if test="//result[@name='response']/@numFound &gt; 0">
