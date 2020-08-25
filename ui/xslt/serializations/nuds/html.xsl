@@ -574,6 +574,7 @@
 										else
 											$sparql_endpoint"
 								/>
+								<xsl:with-param name="rtl" select="boolean(//config/languages/language[@code = $lang]/@rtl)"/>
 							</xsl:apply-templates>
 						</xsl:if>
 

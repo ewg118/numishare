@@ -49,7 +49,7 @@
                     </xsl:if>
                 </xsl:if>
                 <xsl:apply-templates select="descendant::res:result" mode="type-examples">
-                    <xsl:with-param name="rtl" select="$rtl"/>
+                    <xsl:with-param name="rtl" select="$rtl" as="xs:boolean"/>
                 </xsl:apply-templates>
             </xsl:if>
         </div>
@@ -262,7 +262,7 @@
                 </xsl:if>
 
                 <xsl:apply-templates select="descendant::res:result" mode="type-examples">
-                    <xsl:with-param name="rtl" select="$rtl"/>
+                    <xsl:with-param name="rtl" select="$rtl" as="xs:boolean"/>
                 </xsl:apply-templates>
             </xsl:if>
         </div>

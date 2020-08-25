@@ -751,6 +751,7 @@
 	<xsl:template match="subtype">
 		<xsl:param name="uri_space"/>
 		<xsl:param name="endpoint"/>
+		<xsl:param name="rtl"/>
 
 		<xsl:variable name="subtypeId" select="@recordId"/>
 		<xsl:variable name="objectUri" select="concat($uri_space, $subtypeId)"/>
@@ -774,6 +775,7 @@
 					<xsl:with-param name="subtype" select="true()" as="xs:boolean"/>
 					<xsl:with-param name="objectUri" select="$objectUri"/>
 					<xsl:with-param name="endpoint" select="$endpoint"/>
+					<xsl:with-param name="rtl" select="$rtl"/>
 				</xsl:apply-templates>
 			</div>
 		</div>
