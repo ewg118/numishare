@@ -34,6 +34,9 @@
 			</xsl:when>
 		</xsl:choose>
 	</xsl:param>
+	
+	<xsl:variable name="langEnabled" select="boolean(//config/languages/language[@code = $lang]/@enabled = true())"/>
+	
 	<xsl:param name="mode" select="doc('input:request')/request/parameters/parameter[name = 'mode']/value"/>
 	<xsl:param name="pipeline">display</xsl:param>
 

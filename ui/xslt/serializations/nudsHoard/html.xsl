@@ -30,7 +30,9 @@
 				<xsl:value-of select="numishare:parseAcceptLanguage(doc('input:request')/request//header[name[. = 'accept-language']]/value)[1]"/>
 			</xsl:when>
 		</xsl:choose>
-	</xsl:param>
+	</xsl:param>	
+	<xsl:variable name="langEnabled" select="boolean(//config/languages/language[@code = $lang]/@enabled = true())"/>
+	
 	<xsl:param name="pipeline">display</xsl:param>
 
 	<!--pagination of specimen count -->
