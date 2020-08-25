@@ -619,18 +619,18 @@
 					otherwise use the English preferred label -->
 				
 				<xsl:variable name="queryValue">
-					<xsl:choose>
+					<!--<xsl:choose>
 						<xsl:when test="contains($href, 'nomisma.org') and not(//config/languages/language[@code = $lang]/@enabled = true())">
 							<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about = $href], 'en')"/>
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:value-of select="$value"/>
 						</xsl:otherwise>
-					</xsl:choose>
+					</xsl:choose>-->
 				</xsl:variable>
 					
 				
-				<a href="{$display_path}results?q={$field}_facet:&#x022;{$queryValue}&#x022;{if (string($langParam)) then concat('&amp;lang=', $langParam) else ''}">
+				<a href="{$display_path}results?q={$field}_facet:&#x022;{$value}&#x022;{if (string($langParam)) then concat('&amp;lang=', $langParam) else ''}">
 					<xsl:choose>
 						<xsl:when test="contains($href, 'geonames.org')">
 							<xsl:choose>
