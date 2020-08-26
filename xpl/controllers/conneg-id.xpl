@@ -90,7 +90,7 @@
 						<xsl:when test="$content-type='application/xml' or $content-type='text/xml'">xml</xsl:when>
 						<xsl:when test="$content-type='application/rdf+xml'">rdfxml</xsl:when>
 						<xsl:when test="$content-type='text/turtle'">turtle</xsl:when>
-						<xsl:when test="contains($content-type, 'text/html') or $content-type='*/*' or not(string($content-type))">html</xsl:when>
+						<xsl:when test="contains($content-type, 'text/html') or contains($content-type, 'xhtml') or $content-type='*/*' or not(string($content-type))">html</xsl:when>
 						<xsl:otherwise>error</xsl:otherwise>
 					</xsl:choose>
 				</xsl:function>

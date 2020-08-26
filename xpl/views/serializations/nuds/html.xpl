@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 	Author: Ethan Gruber
-	Last modified: July 2018
+	Last modified: August 2020
 	Function: HTML view for NUDS. It involves conditionals for conceptual vs. physical specimens, 
 		including SPARQL queries for associated specimens and annoations.
 		July 2018: added type-examples.xpl into this XPL in order to avoid xsl:document() function call to /api pipeline within the XSLT
