@@ -274,10 +274,10 @@
 								</xsl:choose>
 							</_label>
 							<begin_of_the_begin>
-								<xsl:value-of select="numishare:expandDatetoDateTime($fromDate)"/>
+								<xsl:value-of select="numishare:expandDatetoDateTime($fromDate, 'begin')"/>
 							</begin_of_the_begin>
 							<end_of_the_end>
-								<xsl:value-of select="numishare:expandDatetoDateTime($toDate)"/>
+								<xsl:value-of select="numishare:expandDatetoDateTime($toDate, 'end')"/>
 							</end_of_the_end>
 						</_object>
 					</timespan>
