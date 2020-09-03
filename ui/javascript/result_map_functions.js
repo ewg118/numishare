@@ -28,10 +28,10 @@ $(document).ready(function () {
 		});
 		
 		var imperium = L.tileLayer(
-		'http://dare.ht.lu.se/tiles/imperium/{z}/{x}/{y}.png', {
-			maxZoom: 11,
-			attribution: 'Powered by <a href="http://leafletjs.com/">Leaflet</a>. Map base: <a href="http://dare.ht.lu.se/" title="Digital Atlas of the Roman Empire, Department of Archaeology and Ancient History, Lund University, Sweden">DARE</a>, 2015 (cc-by-sa).'
-		});
+        'https://dh.gu.se/tiles/imperium/{z}/{x}/{y}.png', {
+            maxZoom: 10,
+            attribution: 'Powered by <a href="http://leafletjs.com/">Leaflet</a>. Map base: <a href="https://dh.gu.se/dare/" title="Digital Atlas of the Roman Empire, Department of Archaeology and Ancient History, Lund University, Sweden">DARE</a>, 2015 (cc-by-sa).'
+        });
 		var mb_physical = L.tileLayer(
 		'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=' + mapboxKey, {
 			attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
