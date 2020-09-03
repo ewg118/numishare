@@ -221,7 +221,7 @@
 						</div>
 						
 					</xforms:group>
-					<fr:xforms-inspector/>
+					<!--<fr:xforms-inspector/>-->
 
 					<!-- ***********************  DIALOG INTERNAL MODEL *********************** -->
 					<xforms:model id="file-upload-model" xmlns:xi="http://www.w3.org/2001/XInclude">
