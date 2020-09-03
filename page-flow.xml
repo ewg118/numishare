@@ -28,7 +28,7 @@
 	* PUBLIC INTERFACE *
 	***************** -->
 	<!-- *** For multiple projects that employ different XSLT, JS, or CSS:
-		Serializations and Pages should be copied and pasted above the generic regex pages, with models and views given absolute paths with the file:// protocol, e.g.,
+		Serializations and Pages should be copied and pasted above the generic regex pages, with models and views given absolute paths with the oxf:/ protocol, e.g.,
 		<page path="/numishare/project1/" matcher="oxf:perl5-matcher" model="xpl/models/config.xpl" view="oxf:/numishare-projects/project1/xpl/views/pages/index.xpl"/>
 		Model paths are unlikely to require changing. Other ajax pages may need to be copied if alterations in format are required.
 	*** -->

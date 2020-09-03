@@ -85,13 +85,14 @@
 										else '(&#x022;foaf:Person&#x022;+OR+&#x022;foaf:Organization&#x022;)'"/>
 
 									<!-- query the Nomisma Atom feed for all entities except for deity -->
-									<xforms:send submission="query-nomisma-atom" if="not(instance('control-instance')/role = 'deity')"/>
+									<xforms:send submission="query-nomisma-atom"/>
 
-									<xforms:action if="instance('control-instance')/role = 'deity'">
+									<!-- deities are migrating to Nomisma -->
+									<!--<xforms:action if="instance('control-instance')/role = 'deity'">
 										<xforms:setvalue ref="instance('sparqlQuery')"
 											value="normalize-space(replace(replace(instance('sparqlQueryTemplate'), '%SEARCH%', instance('control-instance')/search-query), '%CLASS%', 'wordnet:Deity'))"/>
 										<xforms:send submission="query-nomisma-sparql"/>
-									</xforms:action>
+									</xforms:action>-->
 								</xforms:action>
 								<xforms:label>Execute</xforms:label>
 							</xforms:trigger>
@@ -288,7 +289,7 @@ SELECT * WHERE {
 									<!-- iterate through the results to populate the entity-list -->
 									<xforms:action xxforms:iterate="instance('feed')//atom:entry">
 										<xforms:var name="title" select="context()/atom:title"/>
-										<xforms:var name="uri" select="context()/atom:link[not(@rel)]/@href"/>
+										<xforms:var name="uri" select="context()/atom:link[@rel = 'canonical']/@href"/>
 										<xforms:var name="description" select="context()/atom:summary"/>
 										<xforms:var name="type" select="context()/atom:category[not(@term='skos:Concept')]/@term"/>
 
@@ -300,7 +301,7 @@ SELECT * WHERE {
 							</xforms:action>
 						</xforms:submission>
 
-						<xforms:submission id="query-nomisma-sparql" action="http://nomisma.org/query?query={encode-for-uri(instance('sparqlQuery'))}"
+						<!--<xforms:submission id="query-nomisma-sparql" action="http://nomisma.org/query?query={encode-for-uri(instance('sparqlQuery'))}"
 							ref="instance('sparqlResponse')" replace="instance" method="get">
 							<xforms:header>
 								<xforms:name>User-Agent</xforms:name>
@@ -318,7 +319,7 @@ SELECT * WHERE {
 								<xforms:action if="$total &gt; 0">
 									<xforms:setvalue ref="instance('control-instance')/search-results" value="concat('Displaying ', $total, ' result(s).')"/>
 
-									<!-- iterate through the results to populate the entity-list -->
+									<!-\- iterate through the results to populate the entity-list -\->
 									<xforms:action xxforms:iterate="instance('sparqlResponse')//res:result">
 										<xforms:var name="title" select="context()/res:binding[@name='label']/res:literal"/>
 										<xforms:var name="uri" select="context()/res:binding[@name='uri']/res:uri"/>
@@ -331,7 +332,7 @@ SELECT * WHERE {
 									</xforms:action>
 								</xforms:action>
 							</xforms:action>
-						</xforms:submission>
+						</xforms:submission>-->
 					</xforms:model>
 				</xforms:group>
 			</xforms:group>
