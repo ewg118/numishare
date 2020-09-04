@@ -82,6 +82,8 @@ function initialize_map(id, path, lang) {
     //add controls
     var layerControl = L.control.layers(baseMaps, overlayMaps).addTo(map);
     
+    
+    
     //zoom to groups on AJAX complete
     overlay.on('data:loaded', function () {
         map.fitBounds(overlay.getBounds());
@@ -126,28 +128,28 @@ function initialize_map(id, path, lang) {
         return fillColor;
     }
     
-   function onEachFeature (feature, layer) {
-		var str;
-		//individual finds
-		if (feature.properties.hasOwnProperty('gazetteer_uri') == false) {
-			str = feature.label;
-		} else {
-			var str = '';
-			//display hoard link and gazetteer link
-			if (feature.hasOwnProperty('id') == true) {
-				str += '<a href="' + feature.id + '">' + feature.label + '</a><br/>';
-			}			
-			if (feature.properties.hasOwnProperty('gazetteer_uri') == true) {
-				str += '<span>';
-				if (feature.properties.type == 'hoard') {
-					str += '<b>Findspot: </b>';
-				}
-				str +='<a href="' + feature.properties.gazetteer_uri + '">' + feature.properties.toponym + '</a></span>';
-				if (feature.properties.type == 'hoard' && feature.properties.hasOwnProperty('closing_date') == true) {
-					str += '<br/><b>Closing Date: </b>' + feature.properties.closing_date;
-				}
-			}
-		}
-		layer.bindPopup(str);
-	}
+    function onEachFeature (feature, layer) {
+        var str;
+        //individual finds
+        if (feature.properties.hasOwnProperty('gazetteer_uri') == false) {
+            str = feature.label;
+        } else {
+            var str = '';
+            //display hoard link and gazetteer link
+            if (feature.hasOwnProperty('id') == true) {
+                str += '<a href="' + feature.id + '">' + feature.label + '</a><br/>';
+            }
+            if (feature.properties.hasOwnProperty('gazetteer_uri') == true) {
+                str += '<span>';
+                if (feature.properties.type == 'hoard') {
+                    str += '<b>Findspot: </b>';
+                }
+                str += '<a href="' + feature.properties.gazetteer_uri + '">' + feature.properties.toponym + '</a></span>';
+                if (feature.properties.type == 'hoard' && feature.properties.hasOwnProperty('closing_date') == true) {
+                    str += '<br/><b>Closing Date: </b>' + feature.properties.closing_date;
+                }
+            }
+        }
+        layer.bindPopup(str);
+    }
 }

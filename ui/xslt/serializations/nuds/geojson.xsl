@@ -122,15 +122,21 @@
 
 	<xsl:template match="nuds:nuds">
 		<xsl:variable name="model" as="element()*">
-			<_array>
-				<xsl:apply-templates
-					select="descendant::nuds:geogname[@xlink:role = 'findspot'][string(@xlink:href)] | descendant::nuds:findspotDesc[contains(@xlink:href, 'coinhoards.org') or contains(@xlink:href, 'nomisma.org')] | $nudsGroup/descendant::nuds:geogname[@xlink:role = 'mint'][string(@xlink:href)]"/>
-				
-				<!-- gather associated hoards from Nomisma, but only for coin types and an active SPARQL endpoint  -->
-				<xsl:if test="/content/config/collection_type='cointype' and matches($sparql_endpoint, 'https?://')">
-					<xsl:apply-templates select="doc('input:hoards')//res:result"/>
-				</xsl:if>				
-			</_array>
+			<_object>
+				<type>FeatureCollection</type>
+				<features>
+					<_array>
+						<xsl:apply-templates
+							select="descendant::nuds:geogname[@xlink:role = 'findspot'][string(@xlink:href)] | descendant::nuds:findspotDesc[contains(@xlink:href, 'coinhoards.org') or contains(@xlink:href, 'nomisma.org')] | $nudsGroup/descendant::nuds:geogname[@xlink:role = 'mint'][string(@xlink:href)]"/>
+						
+						<!-- gather associated hoards from Nomisma, but only for coin types and an active SPARQL endpoint  -->
+						<xsl:if test="/content/config/collection_type='cointype' and matches($sparql_endpoint, 'https?://')">
+							<xsl:apply-templates select="doc('input:hoards')//res:result"/>
+						</xsl:if>				
+					</_array>
+				</features>
+			</_object>
+			
 		</xsl:variable>
 
 		<xsl:apply-templates select="$model"/>
@@ -403,6 +409,25 @@
 					<closing_date>
 						<xsl:value-of select="numishare:normalizeDate(res:binding[@name='closingDate']/res:literal)"/>
 					</closing_date>
+					<!--<xsl:if test="res:binding[@name = 'closingDate']">
+						<when>
+							<_object>
+								<timespans>
+									<_array>
+										<_object>
+											<start>
+												<xsl:value-of select="abs(number(res:binding[@name = 'closingDate']/res:literal)) + 1000"/>
+											</start>
+											<end>
+												<xsl:value-of select="abs(number(res:binding[@name = 'closingDate']/res:literal)) + 1000"/>
+											</end>
+										</_object>
+									</_array>
+								</timespans>
+							</_object>
+							
+						</when>
+					</xsl:if>-->
 				</_object>
 			</properties>
 		</_object>

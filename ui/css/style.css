@@ -458,54 +458,40 @@ button.multiselect{
 }
 /*
   ***************************************
-  Timemap CSS
+  Leaflet Map and Timeline
   ***************************************
  */
-div#timelinecontainer{
-    width: 100%;
-    height: 200px;
-}
 div#mapcontainer{
     width: 100%;
     height: 400px;
 }
+
 .maps-page #mapcontainer{
     height: 500px;
     width: 100%;
 }
-div.olFramedCloudPopupContent{
-    width: 300px;
-}
-div#help{
-    font-size: 12px;
-    width: 45em;
-    padding: 1em;
-}
-div#timeline{
+
+.leaflet-bottom.leaflet-left{
     width: 100%;
-    height: 100%;
-    font-size: 12px;
-    background: #CCCCCC;
 }
-div#map{
+
+.leaflet-control-container .leaflet-timeline-controls{
+    box-sizing: border-box;
     width: 100%;
-    height: 100%;
-    background: #EEEEEE;
+    margin: 0;
+    margin-bottom: 15px;
 }
-div.infotitle{
-    font-size: 14px;
-    font-weight: bold;
+#mapcontainer table,
+th,
+td{
+    background-color: white;
+    border: 5px solid black;
+    border-collapse: collapse;
+    height: 30px;
+    width: 100%;
+    padding: 0;
 }
-div.infodescription{
-    font-size: 14px;
-    font-style: italic;
-}
-div.custominfostyle{
-    font-family: Georgia, Garamond, serif;
-    font-size: 1.5em;
-    font-style: italic;
-    width: 20em;
-}
+
 /*
   ****************************************
   FEATURES/LINKED DATA SECTION

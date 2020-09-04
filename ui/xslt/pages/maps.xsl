@@ -113,7 +113,7 @@
 							</div>
 						</div>
 					</div>
-					<!-- display timemap divs for hoard records or regular map + ajax results div for non-hoard collections -->
+					
 					<div class="row">
 						<div class="col-md-12 maps-page">
 							<div id="mapcontainer"/>

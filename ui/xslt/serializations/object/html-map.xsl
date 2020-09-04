@@ -208,31 +208,7 @@
 									<a href="{$url}id/{$id}"><span class="glyphicon glyphicon-arrow-left"/>Return</a>
 								</small>
 							</div>
-							<xsl:choose>
-								<xsl:when test="$recordType = 'physical'">
-									<div id="mapcontainer" style="height:100%"/>
-								</xsl:when>
-								<xsl:when test="$recordType = 'conceptual'">
-									<xsl:choose>
-										<xsl:when test="$hasFindspots = true()">
-											<div id="timemap" style="height:100%">
-												<div id="mapcontainer" class="fullscreen">
-													<div id="map"/>
-												</div>
-												<div id="timelinecontainer">
-													<div id="timeline"/>
-												</div>
-											</div>
-										</xsl:when>
-										<xsl:otherwise>
-											<div id="mapcontainer" style="height:100%"/>
-										</xsl:otherwise>
-									</xsl:choose>
-								</xsl:when>
-								<xsl:when test="$recordType = 'hoard'">
-									<div id="mapcontainer" style="height:100%"/>
-								</xsl:when>
-							</xsl:choose>
+							<div id="mapcontainer" style="height:100%"/>
 						</div>
 					</div>
 				</div>

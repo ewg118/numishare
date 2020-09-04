@@ -335,13 +335,18 @@
 								<!-- mapping -->
 								<xsl:if test="$geoEnabled = true()">
 									<xsl:if test="$hasMints = true() or $hasFindspots = true()">
-										<!--<script type="text/javascript" src="http://openlayers.org/api/2.12/OpenLayers.js"/>
-										<script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3.20&amp;sensor=false"/>
-										<script type="text/javascript" src="{$include_path}/javascript/mxn.js"/>
-										<script type="text/javascript" src="{$include_path}/javascript/timeline-2.3.0.js"/>
-										<link type="text/css" href="{$include_path}/css/timeline-2.3.0.css" rel="stylesheet"/>
-										<script type="text/javascript" src="{$include_path}/javascript/timemap_full.pack.js"/>
-										<script type="text/javascript" src="{$include_path}/javascript/param.js"/>-->
+										
+										<!-- commented out: LinkedPaths Leaflet libraries for timelines -->
+										<!--<link type="text/css" href="{$include_path}/css/leaflet.timeline.css" rel="stylesheet"/>
+										<link type="text/css" href="{$include_path}/css/vis-timeline-graph2d.min.css" rel="stylesheet"/>
+										
+										<script type="text/javascript" src="{$include_path}/javascript/IntervalTree.js"/>
+										<script type="text/javascript" src="{$include_path}/javascript/moment.min.js"/>
+										<script type="text/javascript" src="{$include_path}/javascript/Timeline.js"/>
+										<script type="text/javascript" src="{$include_path}/javascript/TimelineSliderControl.js"/>
+										<script type="text/javascript" src="{$include_path}/javascript/VisTimeline.js"/>
+										<script type="text/javascript" src="{$include_path}/javascript/vis-timeline-graph2d.min.js"/>-->
+										
 										<script type="text/javascript" src="{$include_path}/javascript/display_map_functions.js"/>
 									</xsl:if>
 								</xsl:if>
