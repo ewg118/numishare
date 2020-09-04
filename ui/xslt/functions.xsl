@@ -4818,6 +4818,31 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:function>
+	
+	
+	<!-- convert XSD compliant date datatypes into ISO 8601 dates (e.g., 1 B.C., "-0001"^^xsd:gYear = "0000" in ISO 8601) -->
+	<xsl:function name="numishare:xsdToIso">
+		<xsl:param name="date"/>
+		
+		<xsl:variable name="year" select="
+			if (substring($date, 1, 1) = '-') then
+			substring($date, 1, 5)
+			else
+			substring($date, 1, 4)"/>
+		<xsl:choose>
+			<xsl:when test="number($year) &lt; 0">
+				<!-- convert the year to ISO -->
+				<xsl:value-of select="format-number(number($year) + 1, '0000')"/>
+				<!-- include month and/or day when applicable -->
+				<xsl:if test="string-length($date) &gt; 5">
+					<xsl:value-of select="substring($date, 5)"/>
+				</xsl:if>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="$date"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:function>
 
 	<!-- result element names into AAT curies -->
 	<xsl:function name="numishare:normalizeClassification">

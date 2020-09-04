@@ -5,66 +5,10 @@ $(document).ready(function () {
     var pipeline = $('#pipeline').text();
     var lang = $('#lang').text();
     
-    if (collection_type == 'hoard') {
-        if ($('#map').length > 0) {
-            initialize_timemap(id, path, lang);
-        }
-    } else if (collection_type == 'cointype') {
-        var hasFindspots = $('#hasFindspots').text();
-        
-        //display timemap only when there are findspots
-        if (hasFindspots == 'true') {
-            if ($('#map').length > 0) {
-                initialize_timemap(id, path, lang);
-            }
-        } else {
-            //otherwise display regular maps
-            if ($('#mapcontainer').length > 0) {
-                initialize_map(id, path, lang);
-            }
-        }
-    } else {
-        if ($('#mapcontainer').length > 0) {
-            initialize_map(id, path, lang);
-        }
+    if ($('#mapcontainer').length > 0) {
+        initialize_map(id, path, lang);
     }
 });
-
-function initialize_timemap(id, path, lang) {
-    var url = path + "apis/get?id=" + id + "&format=json&lang=" + lang;
-    var datasets = new Array();
-    
-    //first dataset
-    datasets.push({
-        id: 'dist',
-        title: "Distribution",
-        type: "json",
-        options: {
-            url: url
-        }
-    });
-    
-    var tm;
-    tm = TimeMap.init({
-        mapId: "map", // Id of map div element (required)
-        timelineId: "timeline", // Id of timeline div element (required)
-        options: {
-            mapType: "physical",
-            eventIconPath: $('#include_path').text() + "/images/timemap/"
-        },
-        datasets: datasets,
-        bandIntervals:[
-        Timeline.DateTime.YEAR,
-        Timeline.DateTime.DECADE]
-    });
-    function toggleDataset(dsid, toggle) {
-        if (toggle) {
-            tm.datasets[dsid].show();
-        } else {
-            tm.datasets[dsid].hide();
-        }
-    }
-}
 
 function initialize_map(id, path, lang) {
     var baselayers = $('#baselayers').text().split(',');
@@ -169,6 +113,9 @@ function initialize_map(id, path, lang) {
             case 'findspot':
             fillColor = '#d86458';
             break;
+            case 'hoard':
+            fillColor = '#d86458';
+            break;
             case 'subject':
             fillColor = '#a1d490';
             break;
@@ -179,14 +126,28 @@ function initialize_map(id, path, lang) {
         return fillColor;
     }
     
-    function onEachFeature (feature, layer) {
-        var label = feature.properties.name;
-        if (feature.properties.hasOwnProperty('uri')) {
-            str = label + ' <a href="' + feature.properties.uri + '" target="_blank"><span class="glyphicon glyphicon-new-window"/></a>';
-        } else {
-            str = label;
-        }
-        
-        layer.bindPopup(str);
-    }
+   function onEachFeature (feature, layer) {
+		var str;
+		//individual finds
+		if (feature.properties.hasOwnProperty('gazetteer_uri') == false) {
+			str = feature.label;
+		} else {
+			var str = '';
+			//display hoard link and gazetteer link
+			if (feature.hasOwnProperty('id') == true) {
+				str += '<a href="' + feature.id + '">' + feature.label + '</a><br/>';
+			}			
+			if (feature.properties.hasOwnProperty('gazetteer_uri') == true) {
+				str += '<span>';
+				if (feature.properties.type == 'hoard') {
+					str += '<b>Findspot: </b>';
+				}
+				str +='<a href="' + feature.properties.gazetteer_uri + '">' + feature.properties.toponym + '</a></span>';
+				if (feature.properties.type == 'hoard' && feature.properties.hasOwnProperty('closing_date') == true) {
+					str += '<br/><b>Closing Date: </b>' + feature.properties.closing_date;
+				}
+			}
+		}
+		layer.bindPopup(str);
+	}
 }

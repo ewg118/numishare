@@ -335,13 +335,13 @@
 								<!-- mapping -->
 								<xsl:if test="$geoEnabled = true()">
 									<xsl:if test="$hasMints = true() or $hasFindspots = true()">
-										<script type="text/javascript" src="http://openlayers.org/api/2.12/OpenLayers.js"/>
+										<!--<script type="text/javascript" src="http://openlayers.org/api/2.12/OpenLayers.js"/>
 										<script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3.20&amp;sensor=false"/>
 										<script type="text/javascript" src="{$include_path}/javascript/mxn.js"/>
 										<script type="text/javascript" src="{$include_path}/javascript/timeline-2.3.0.js"/>
 										<link type="text/css" href="{$include_path}/css/timeline-2.3.0.css" rel="stylesheet"/>
 										<script type="text/javascript" src="{$include_path}/javascript/timemap_full.pack.js"/>
-										<script type="text/javascript" src="{$include_path}/javascript/param.js"/>
+										<script type="text/javascript" src="{$include_path}/javascript/param.js"/>-->
 										<script type="text/javascript" src="{$include_path}/javascript/display_map_functions.js"/>
 									</xsl:if>
 								</xsl:if>
@@ -367,7 +367,7 @@
 									<xsl:when test="$recordType = 'physical'">
 										<xsl:value-of select="concat($display_path, 'id/')"/>
 									</xsl:when>
-									<xsl:when test="$recordType = 'conceptual' and $hasFindspots = false()">
+									<xsl:when test="$recordType = 'conceptual'">
 										<xsl:value-of select="concat($display_path, 'id/')"/>
 									</xsl:when>
 									<xsl:otherwise>
@@ -880,14 +880,7 @@
 			<xsl:when test="$recordType = 'conceptual'">
 				<xsl:choose>
 					<xsl:when test="$hasFindspots = true()">
-						<div id="timemap">
-							<div id="mapcontainer">
-								<div id="map"/>
-							</div>
-							<div id="timelinecontainer">
-								<div id="timeline"/>
-							</div>
-						</div>
+						<div id="mapcontainer"/>
 					</xsl:when>
 					<xsl:otherwise>
 						<div id="mapcontainer"/>

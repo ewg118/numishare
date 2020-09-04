@@ -3,7 +3,7 @@
 	xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nmo="http://nomisma.org/ontology#" xmlns:nm="http://nomisma.org/id/"
 	xmlns:crm="http://www.cidoc-crm.org/cidoc-crm/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:nuds="http://nomisma.org/nuds"
 	xmlns:nh="http://nomisma.org/nudsHoard" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	xmlns:crmgeo="http://www.ics.forth.gr/isl/CRMgeo/" xmlns:numishare="https://github.com/ewg118/numishare"
+	xmlns:crmgeo="http://www.ics.forth.gr/isl/CRMgeo/" xmlns:numishare="https://github.com/ewg118/numishare" xmlns:res="http://www.w3.org/2005/sparql-results#"
 	xmlns:digest="org.apache.commons.codec.digest.DigestUtils" exclude-result-prefixes="#all" version="2.0">
 	<xsl:include href="../json/json-metamodel.xsl"/>
 	<xsl:include href="../../functions.xsl"/>
@@ -124,8 +124,12 @@
 		<xsl:variable name="model" as="element()*">
 			<_array>
 				<xsl:apply-templates
-					select="descendant::nuds:geogname[@xlink:role = 'findspot'][string(@xlink:href)] | descendant::nuds:findspotDesc[contains(@xlink:href, 'coinhoards.org') or contains(@xlink:href, 'nomisma.org')] | $nudsGroup/descendant::nuds:geogname[@xlink:role = 'mint'][string(@xlink:href)]"
-				/>
+					select="descendant::nuds:geogname[@xlink:role = 'findspot'][string(@xlink:href)] | descendant::nuds:findspotDesc[contains(@xlink:href, 'coinhoards.org') or contains(@xlink:href, 'nomisma.org')] | $nudsGroup/descendant::nuds:geogname[@xlink:role = 'mint'][string(@xlink:href)]"/>
+				
+				<!-- gather associated hoards from Nomisma, but only for coin types and an active SPARQL endpoint  -->
+				<xsl:if test="/content/config/collection_type='cointype' and matches($sparql_endpoint, 'https?://')">
+					<xsl:apply-templates select="doc('input:hoards')//res:result"/>
+				</xsl:if>				
 			</_array>
 		</xsl:variable>
 
@@ -219,7 +223,7 @@
 														<_array>
 															<xsl:for-each select="$corners">
 																<xsl:variable name="points" select="tokenize(normalize-space(.), ' ')"/>
-																
+
 																<_array>
 																	<xsl:for-each select="$points">
 																		<_>
@@ -227,10 +231,10 @@
 																		</_>
 																	</xsl:for-each>
 																</_array>
-																
+
 															</xsl:for-each>
 														</_array>
-														
+
 													</xsl:when>
 												</xsl:choose>
 											</xsl:if>
@@ -308,6 +312,9 @@
 		<xsl:if test="$coordinates/child::*">
 			<_object>
 				<type>Feature</type>
+				<label>
+					<xsl:value-of select="$name"/>
+				</label>
 				<geometry>
 					<_object>
 						<type>
@@ -324,13 +331,16 @@
 				</geometry>
 				<properties>
 					<_object>
-						<name>
+						<toponym>
 							<xsl:value-of select="$name"/>
-						</name>
+						</toponym>
+						<gazetteer_label>
+							<xsl:value-of select="$name"/>
+						</gazetteer_label>
 						<xsl:if test="string($uri)">
-							<uri>
+							<gazetteer_uri>
 								<xsl:value-of select="$uri"/>
-							</uri>
+							</gazetteer_uri>
 						</xsl:if>
 						<type>
 							<xsl:value-of select="$type"/>
@@ -339,6 +349,63 @@
 				</properties>
 			</_object>
 		</xsl:if>
+	</xsl:template>
+
+
+	<xsl:template match="res:result">
+		<_object>
+			<type>Feature</type>
+			<label>
+				<xsl:value-of select="res:binding[@name = 'hoardLabel']/res:literal"/>
+			</label>
+			<id>
+				<xsl:value-of select="res:binding[@name = 'hoard']/res:uri"/>
+			</id>
+			<geometry>
+				<_object>
+					<type>Point</type>
+					<coordinates>
+						<_array>
+							<_>
+								<xsl:value-of select="res:binding[@name = 'long']/res:literal"/>
+							</_>
+							<_>
+								<xsl:value-of select="res:binding[@name = 'lat']/res:literal"/>
+							</_>
+						</_array>
+					</coordinates>
+				</_object>
+			</geometry>
+			<xsl:if test="res:binding[@name = 'closingDate']">
+				<when>
+					<_object>
+						<start>
+							<xsl:value-of select="numishare:xsdToIso(res:binding[@name = 'closingDate']/res:literal)"/>
+						</start>
+						<end>
+							<xsl:value-of select="numishare:xsdToIso(res:binding[@name = 'closingDate']/res:literal)"/>
+						</end>
+					</_object>
+				</when>
+			</xsl:if>
+			<properties>
+				<_object>
+					<toponym>
+						<xsl:value-of select="res:binding[@name = 'label']/res:literal"/>
+					</toponym>
+					<gazetteer_label>
+						<xsl:value-of select="res:binding[@name = 'label']/res:literal"/>
+					</gazetteer_label>
+					<gazetteer_uri>
+						<xsl:value-of select="res:binding[@name = 'place']/res:uri"/>
+					</gazetteer_uri>
+					<type>hoard</type>
+					<closing_date>
+						<xsl:value-of select="numishare:normalizeDate(res:binding[@name='closingDate']/res:literal)"/>
+					</closing_date>
+				</_object>
+			</properties>
+		</_object>
 	</xsl:template>
 
 </xsl:stylesheet>
