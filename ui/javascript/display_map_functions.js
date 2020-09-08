@@ -1,3 +1,8 @@
+/***
+ Author: Ethan Gruber
+ Date: September 2020
+ Function: Generate a Leaflet map for a specimen/type page and call the relevant GeoJSON serialization
+***/
 $(document).ready(function () {
     var id = $('title').attr('id');
     var collection_type = $('#collection_type').text();
