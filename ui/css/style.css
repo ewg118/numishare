@@ -574,16 +574,6 @@ div#mapcontainer{
     margin: 0;
     margin-bottom: 15px;
 }
-#mapcontainer table,
-th,
-td{
-    background-color: white;
-    border: 5px solid black;
-    border-collapse: collapse;
-    height: 30px;
-    width: 100%;
-    padding: 0;
-}
 /*
   ****************************************
   FEATURES/LINKED DATA SECTION
