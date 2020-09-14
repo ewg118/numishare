@@ -145,7 +145,7 @@
 							<!-- iterate through Atom feed, populating select list -->
 							<xforms:action ev:event="xforms-submit-done" xxforms:iterate="instance('feed')//atom:entry">
 								<xforms:setvalue ref="instance('listItem-template')" value="context()/atom:title"/>
-								<xforms:setvalue ref="instance('listItem-template')/@href" value="context()/atom:link[not(@rel)]/@href"/>
+								<xforms:setvalue ref="instance('listItem-template')/@href" value="context()/atom:link[@rel = 'canonical']/@href"/>
 								<xforms:insert origin="instance('listItem-template')" context="instance(concat(instance('control-instance')/type, '-list'))"
 									nodeset="./child::node()[last()]"/>
 							</xforms:action>
