@@ -103,23 +103,12 @@
 			</field>
 			<field name="timestamp">
 				<xsl:choose>
-					<xsl:when test="string(descendant::*:maintenanceEvent[last()]/*:eventDateTime/@standardDateTime)">
-						<xsl:choose>
-							<xsl:when test="contains(descendant::*:maintenanceEvent[last()]/*:eventDateTime/@standardDateTime, 'Z')">
-								<xsl:value-of select="descendant::*:maintenanceEvent[last()]/*:eventDateTime/@standardDateTime"/>
-							</xsl:when>
-							<xsl:otherwise>
-								<xsl:value-of select="concat(descendant::*:maintenanceEvent[last()]/*:eventDateTime/@standardDateTime, 'Z')"/>
-							</xsl:otherwise>
-						</xsl:choose>
+					<xsl:when test="descendant::*:maintenanceEvent[last()]/*:eventDateTime/@standardDateTime castable as xs:dateTime">
+						<xsl:value-of select="format-dateTime(xs:dateTime(descendant::*:maintenanceEvent[last()]/*:eventDateTime/@standardDateTime), '[Y0001]-[M01]-[D01]T[h01]:[m01]:[s01]Z')"/>
 					</xsl:when>
 					<xsl:otherwise>
 						<xsl:value-of
-							select="
-								if (contains(string(current-dateTime()), 'Z')) then
-									string(current-dateTime())
-								else
-									concat(string(current-dateTime()), 'Z')"
+							select="format-dateTime(current-dateTime(), '[Y0001]-[M01]-[D01]T[h01]:[m01]:[s01]Z')"/>
 						/>
 					</xsl:otherwise>
 				</xsl:choose>
