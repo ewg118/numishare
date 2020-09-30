@@ -1,0 +1,5 @@
+<properties xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:oxf="http://www.orbeon.com/oxf/processors">
+    <property as="xs:string" name="oxf.fr.authentication.method" value="container"/>
+    <property as="xs:string" name="oxf.fr.authentication.container.roles" value="other-project-roles numishare-admin"/>
+</properties>
