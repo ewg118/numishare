@@ -14,6 +14,7 @@ services:
       - "8081:8080"
     volumes:
       - "./orbeon.xml:/usr/local/tomcat/conf/Catalina/localhost/ROOT.xml"
+      - "..:/usr/local/projects/numishare"
       - "..:/usr/local/tomcat/webapps/orbeon/WEB-INF/resources/apps/numishare"
       - "./exist-config.xml:/usr/local/tomcat/webapps/orbeon/WEB-INF/resources/apps/numishare/exist-config.xml"
       - "./tomcat-users.xml:/usr/local/tomcat/conf/tomcat-users.xml"
@@ -23,7 +24,7 @@ services:
     container_name: solr
     image: solr:8.6.2
     ports:
-     - "8983:8983"
+      - "8983:8983"
     volumes:
       - data:/var/solr
       - "../solr-home/1.6:/var/solr/data/numishare"
@@ -34,8 +35,8 @@ services:
     image: existdb/existdb:5.2.0
     container_name: exist
     ports:
-        - 8080:8080
-        - 8443:8443
+      - 8080:8080
+      - 8443:8443
     volumes:
       - type: volume
         source: data
