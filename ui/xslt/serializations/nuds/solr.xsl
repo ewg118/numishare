@@ -74,15 +74,25 @@
 					</xsl:otherwise>
 				</xsl:choose>
 
-				<field name="typeSeries">
-					<xsl:value-of
-						select="
-							if (descendant::nuds:typeSeries/@xlink:href) then
+				<xsl:choose>
+					<xsl:when test="$collection-type = 'cointype'">
+						<field name="typeSeries">
+							<xsl:value-of
+								select="
+								if (descendant::nuds:typeSeries/@xlink:href) then
 								descendant::nuds:typeSeries/@xlink:href
-							else
+								else
 								//config/type_series"
-					/>
-				</field>
+							/>
+						</field>
+					</xsl:when>
+					<xsl:when test="$collection-type = 'die'">
+						<field name="dieSeries">
+							<xsl:value-of select="//config/die_series"/>
+						</field>
+					</xsl:when>
+				</xsl:choose>
+				
 
 				<field name="uri_space">
 					<xsl:value-of select="//config/uri_space"/>

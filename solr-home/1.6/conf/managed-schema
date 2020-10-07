@@ -459,6 +459,7 @@
   <field name="collection-name" type="string" indexed="true" required="true" stored="true"/>
   <field name="decade_num" type="pint" multiValued="true" indexed="true" stored="true"/>
   <field name="diameter_num" type="pfloat" indexed="true" stored="true"/>
+  <field name="dieSeries" type="string" indexed="true" stored="true"/>
   <field name="discovery_num" type="pint" indexed="true" stored="true"/>
   <field name="dob_num" type="string" multiValued="true" indexed="true" stored="true"/>
   <field name="fulltext" type="text_general" multiValued="true" indexed="true" stored="false"/>

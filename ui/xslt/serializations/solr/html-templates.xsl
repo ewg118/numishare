@@ -109,7 +109,7 @@
 						</a>
 					</xsl:if>
 				</xsl:when>
-				<xsl:when test="str[@name = 'recordType'] = 'conceptual' and matches(/content/config/sparql_endpoint, '^https?://')">
+				<xsl:when test="//config/collection_type = 'cointype' and matches(/content/config/sparql_endpoint, '^https?://')">
 					<xsl:variable name="id" select="str[@name = 'recordId']"/>
 					<xsl:apply-templates select="doc('input:numishareResults')//group[@id = $id]" mode="results"/>
 				</xsl:when>
@@ -454,7 +454,7 @@
 						</a>
 					</xsl:if>
 				</xsl:when>
-				<xsl:when test="str[@name = 'recordType'] = 'conceptual' and matches(/content/config/sparql_endpoint, '^https?://')">
+				<xsl:when test="//config/collection_type = 'cointype' and matches(/content/config/sparql_endpoint, '^https?://')">
 					<xsl:variable name="id" select="str[@name = 'recordId']"/>
 					<xsl:apply-templates select="doc('input:numishareResults')//group[@id = $id]" mode="results"/>
 				</xsl:when>
@@ -543,62 +543,65 @@
 			</xsl:if>
 
 			<!-- date ranges -->
-			<h4>
-				<xsl:choose>
-					<xsl:when test="$collection_type = 'hoard'">
-						<xsl:value-of select="numishare:normalize_fields('closing_date', $lang)"/>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:value-of select="numishare:normalize_fields('dateRange', $lang)"/>
-					</xsl:otherwise>
-				</xsl:choose>
-			</h4>
-
-			<!-- if AH date range searching is enabled, then display that form first -->
-			<xsl:if test="/content/config/ah_enabled = 'true'">
-				<div class="form-group" id="ah_dateRange">
-					<label>Hijra </label>
-					<input type="text" id="ah_fromDate" class="form-control" placeholder="{numishare:normalize_fields('fromDate', $lang)}"/>
-					<span> - </span>
-					<input type="text" id="ah_toDate" class="form-control" placeholder="{numishare:normalize_fields('toDate', $lang)}"/>
+			<xsl:if test="lst[(@name = 'year_num' or @name = 'taq_num') and number(int) &gt; 0]">
+				<h4>
+					<xsl:choose>
+						<xsl:when test="$collection_type = 'hoard'">
+							<xsl:value-of select="numishare:normalize_fields('closing_date', $lang)"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="numishare:normalize_fields('dateRange', $lang)"/>
+						</xsl:otherwise>
+					</xsl:choose>
+				</h4>
+				
+				<!-- if AH date range searching is enabled, then display that form first -->
+				<xsl:if test="/content/config/ah_enabled = 'true'">
+					<div class="form-group" id="ah_dateRange">
+						<label>Hijra </label>
+						<input type="text" id="ah_fromDate" class="form-control" placeholder="{numishare:normalize_fields('fromDate', $lang)}"/>
+						<span> - </span>
+						<input type="text" id="ah_toDate" class="form-control" placeholder="{numishare:normalize_fields('toDate', $lang)}"/>
+					</div>
+				</xsl:if>
+				
+				<!-- CE DATES -->
+				<div class="form-group">
+					<div>
+						<label>
+							<xsl:value-of select="numishare:normalize_fields('fromDate', $lang)"/>
+						</label>
+					</div>
+					<input type="text" id="from_date" class="form-control"/>
+					<select id="from_era" class="form-control">
+						<option value="minus">B.C.</option>
+						<option value="" selected="selected">A.D.</option>
+					</select>
 				</div>
+				<div class="form-group">
+					<div>
+						<label>
+							<xsl:value-of select="numishare:normalize_fields('toDate', $lang)"/>
+						</label>
+					</div>
+					<input type="text" id="to_date" class="form-control"/>
+					<select id="to_era" class="form-control">
+						<option value="minus">B.C.</option>
+						<option value="" selected="selected">A.D.</option>
+					</select>
+				</div>
+				
+				<!-- ANS MANTIS specific: if the Lucene query is specific to the Islamic department  -->
+				<xsl:if test="$collection-name = 'mantis' and contains($q, 'department_facet:&#x022;Islamic&#x022;')">
+					<div class="form-group" id="ah_dateRange">
+						<label>Hijra </label>
+						<input type="text" id="ah_fromDate" class="form-control" placeholder="{numishare:normalize_fields('fromDate', $lang)}"/>
+						<span> - </span>
+						<input type="text" id="ah_toDate" class="form-control" placeholder="{numishare:normalize_fields('toDate', $lang)}"/>
+					</div>
+				</xsl:if>
 			</xsl:if>
-
-			<!-- CE DATES -->
-			<div class="form-group">
-				<div>
-					<label>
-						<xsl:value-of select="numishare:normalize_fields('fromDate', $lang)"/>
-					</label>
-				</div>
-				<input type="text" id="from_date" class="form-control"/>
-				<select id="from_era" class="form-control">
-					<option value="minus">B.C.</option>
-					<option value="" selected="selected">A.D.</option>
-				</select>
-			</div>
-			<div class="form-group">
-				<div>
-					<label>
-						<xsl:value-of select="numishare:normalize_fields('toDate', $lang)"/>
-					</label>
-				</div>
-				<input type="text" id="to_date" class="form-control"/>
-				<select id="to_era" class="form-control">
-					<option value="minus">B.C.</option>
-					<option value="" selected="selected">A.D.</option>
-				</select>
-			</div>
 			
-			<!-- ANS MANTIS specific: if the Lucene query is specific to the Islamic department  -->
-			<xsl:if test="$collection-name = 'mantis' and contains($q, 'department_facet:&#x022;Islamic&#x022;')">
-				<div class="form-group" id="ah_dateRange">
-					<label>Hijra </label>
-					<input type="text" id="ah_fromDate" class="form-control" placeholder="{numishare:normalize_fields('fromDate', $lang)}"/>
-					<span> - </span>
-					<input type="text" id="ah_toDate" class="form-control" placeholder="{numishare:normalize_fields('toDate', $lang)}"/>
-				</div>
-			</xsl:if>
 
 			<!-- hidden params -->
 			<input type="hidden" name="q" id="facet_form_query" value="{if (string($imageavailable_stripped)) then $imageavailable_stripped else '*:*'}"/>

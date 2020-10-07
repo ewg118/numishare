@@ -129,7 +129,12 @@
 				test="descendant::*:maintenanceStatus != 'new' and descendant::*:maintenanceStatus != 'derived' and descendant::*:maintenanceStatus != 'revised'">
 				<xsl:variable name="element">
 					<xsl:choose>
-						<xsl:when test="@recordType = 'conceptual'">nmo:TypeSeriesItem</xsl:when>
+						<xsl:when test="@recordType = 'conceptual'">
+							<xsl:choose>
+								<xsl:when test="$collection-type = 'cointype'">nmo:TypeSeriesItem</xsl:when>
+								<xsl:when test="$collection-type = 'die'">nmo:Die</xsl:when>
+							</xsl:choose>
+						</xsl:when>
 						<xsl:when test="@recordType = 'physical'">nmo:NumismaticObject</xsl:when>
 					</xsl:choose>
 				</xsl:variable>
@@ -177,7 +182,14 @@
 							<dcterms:source rdf:resource="{nuds:descMeta/nuds:typeDesc/nuds:typeSeries/@xlink:href}"/>
 						</xsl:when>
 						<xsl:otherwise>
-							<dcterms:source rdf:resource="{//config/type_series}"/>
+							<xsl:choose>
+								<xsl:when test="$collection-type = 'cointype'">
+									<dcterms:source rdf:resource="{//config/type_series}"/>
+								</xsl:when>
+								<xsl:when test="$collection-type = 'die'">
+									<dcterms:source rdf:resource="{//config/die_series}"/>
+								</xsl:when>
+							</xsl:choose>							
 						</xsl:otherwise>
 					</xsl:choose>
 
@@ -199,7 +211,29 @@
 					<xsl:when test="@recordType = 'conceptual'">
 						<xsl:variable name="hasDefinition" select="boolean(nuds:descMeta/nuds:noteSet/nuds:note[@semantic = 'skos:definition'])" as="xs:boolean"/>
 
-						<nmo:TypeSeriesItem rdf:about="{if (string($uri_space)) then concat($uri_space, $id) else concat($url, 'id/', $id)}">
+						<xsl:variable name="element">
+							<xsl:choose>
+								<xsl:when test="$collection-type = 'cointype'">nmo:TypeSeriesItem</xsl:when>
+								<xsl:when test="$collection-type = 'die'">nmo:Die</xsl:when>
+							</xsl:choose>
+						</xsl:variable>
+						
+						<xsl:element name="{$element}">
+							<xsl:attribute name="rdf:about">
+								<xsl:value-of
+									select="
+									if (string($uri_space)) then
+									concat($uri_space, $id)
+									else
+									concat($url, 'id/', $id)"/>
+							</xsl:attribute>
+							
+							<!-- include any additional prefix/namespace before processing otherRecordIds -->
+							<xsl:for-each select="nuds:control/nuds:semanticDeclaration">
+								<xsl:namespace name="{*:prefix}" select="*:namespace"/>
+							</xsl:for-each>
+							
+							
 							<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 							<!-- insert titles -->
 							<xsl:for-each select="nuds:descMeta/nuds:title">
@@ -231,7 +265,14 @@
 									<dcterms:source rdf:resource="{nuds:descMeta/nuds:typeDesc/nuds:typeSeries/@xlink:href}"/>
 								</xsl:when>
 								<xsl:otherwise>
-									<dcterms:source rdf:resource="{//config/type_series}"/>
+									<xsl:choose>
+										<xsl:when test="$collection-type = 'cointype'">
+											<dcterms:source rdf:resource="{//config/type_series}"/>
+										</xsl:when>
+										<xsl:when test="$collection-type = 'die'">
+											<dcterms:source rdf:resource="{//config/die_series}"/>
+										</xsl:when>
+									</xsl:choose>							
 								</xsl:otherwise>
 							</xsl:choose>
 
@@ -243,7 +284,9 @@
 								<xsl:with-param name="id" select="$id"/>
 							</xsl:apply-templates>
 							<void:inDataset rdf:resource="{$url}"/>
-						</nmo:TypeSeriesItem>
+						
+						</xsl:element>
+						
 						<xsl:apply-templates select="nuds:descMeta/nuds:typeDesc/nuds:obverse | nuds:descMeta/nuds:typeDesc/nuds:reverse" mode="nomisma">
 							<xsl:with-param name="id" select="$id"/>
 						</xsl:apply-templates>

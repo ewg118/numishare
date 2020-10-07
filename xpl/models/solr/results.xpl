@@ -84,6 +84,15 @@
 							</xsl:choose>
 						</xsl:for-each>
 					</xsl:if>
+					<!-- insert the queryable date field as a facet in order to control the appearance of the date range widget in the UI -->
+					<xsl:choose>
+						<xsl:when test="/config/collection_type = 'hoard'">
+							<xsl:text>&amp;facet.field=taq_num</xsl:text>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:text>&amp;facet.field=year_num</xsl:text>
+						</xsl:otherwise>
+					</xsl:choose>
 				</xsl:variable>
 
 				<!-- set field filters dependent on the type of collection -->
