@@ -113,6 +113,19 @@
 				</p:otherwise>
 			</p:choose>
 		</p:when>
+		<p:when test="collection-type='die'">
+			<!-- transform the aggregated NUDS into RDF -->
+			<p:processor name="oxf:pipeline">
+				<p:input name="config" href="../models/xquery/aggregate-all.xpl"/>
+				<p:output name="data" id="model"/>
+			</p:processor>
+			
+			<p:processor name="oxf:pipeline">
+				<p:input name="config" href="../views/serializations/object/rdf.xpl"/>
+				<p:input name="data" href="#model"/>
+				<p:output name="data" ref="data"/>
+			</p:processor>
+		</p:when>
 		<p:when test="collection-type='object'">
 			<!-- for collections of physical specimens, generate RDF only from coins that have been linked to one or more coin type URI, derived from Solr -->
 

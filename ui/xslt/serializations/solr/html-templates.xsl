@@ -482,7 +482,7 @@
 						0]"
 					mode="facet"/>
 			</xsl:when>
-			<xsl:when test="$collection_type = 'cointype'">
+			<xsl:when test="$collection_type = 'cointype' or $collection_type = 'die'">
 				<xsl:apply-templates select="lst[not(contains(@name, '_geo')) and not(contains(@name, 'symbol_')) and number(int) &gt; 0]" mode="facet"/>
 				<xsl:if test="lst[contains(@name, 'symbol_')]">
 					<h4>
@@ -1461,7 +1461,7 @@
 				<xsl:when test="$collection_type = 'hoard'">
 					<xsl:text>authority,taq_num,timestamp,deity,denomination,dynasty,findspot,issuer,manufacture,material,mint,obv_leg_display,portrait,region,rev_leg_display</xsl:text>
 				</xsl:when>
-				<xsl:when test="$collection_type = 'cointype'">
+				<xsl:when test="$collection_type = 'cointype' or $collection_type = 'die'">
 					<xsl:text>authority,timestamp,deity,denomination,findspot,issuer,manufacture,material,mint,obv_leg_display,portrait,region,rev_leg_display,year</xsl:text>
 				</xsl:when>
 				<xsl:otherwise>

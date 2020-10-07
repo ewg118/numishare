@@ -33,7 +33,7 @@
 	</p:processor>
 	
 	<p:choose href="#collection-type-config">
-		<p:when test="collection-type='cointype' or collection-type='hoard'">
+		<p:when test="collection-type='cointype' or collection-type='hoard' or collection-type='die'">
 			<p:processor name="oxf:identity">
 				<p:input name="data">
 					<response/>

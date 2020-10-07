@@ -767,7 +767,7 @@
 					</xforms:action>
 
 					<!-- perform specific tasks for a conceptual object -->
-					<xforms:action if="instance('config')/collection_type = 'cointype'">
+					<xforms:action if="instance('config')/collection_type = 'cointype' or instance('config')/collection_type = 'die'">
 						<!-- automatically set the @recordType based on the config -->
 						<xforms:setvalue ref="instance('object')/@recordType">conceptual</xforms:setvalue>
 						<!-- only allow approvedSubtype publication status for coin type corpora -->
