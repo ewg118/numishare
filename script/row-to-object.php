@@ -441,7 +441,7 @@ function parse_row($row, $count, $fileName){
 		$record['typeDesc'] = parse_typology($accnum, $count, $row, $department);
 		
 		//generate the title by parsing elements from the typeDesc
-		$title = generate_title($record['typeDesc']) . '. ' . $accnum;
+		$title = generate_title($record['typeDesc'], $department) . '. ' . $accnum;
 		$record['title'] = $title;
 	}
 	
@@ -734,7 +734,7 @@ function parse_row($row, $count, $fileName){
 }
 
 //generate title from metadata stored in the typeDesc object
-function generate_title($typeDesc){
+function generate_title($typeDesc, $department){
 	$title = '';
 	
 	if (array_key_exists('material', $typeDesc)){
@@ -778,17 +778,29 @@ function generate_title($typeDesc){
 		}			
 	}
 	
-	if (array_key_exists('geographic', $typeDesc)){
-		foreach ($typeDesc['geographic'] as $k=>$array){
-			if ($k == 'mint' || $k == 'region' || $k == 'locality'){
-				$places = array();
-				foreach ($array as $item){
-					$places[] = $item['label'];
-				}
-				$title .= ', ' . implode('/', $places);
-				break;
-			}
-		}
+	//geographic parsing
+	if (array_key_exists('geographic', $typeDesc)){	    
+	    if ($department == 'Medal' || $department == 'Modern'){
+	        if (array_key_exists('locality', $typeDesc['geographic'])){
+	            $title .= ", {$typeDesc['geographic']['locality']}";
+	            if (array_key_exists('mint', $typeDesc['geographic'])){
+	               $title .= " ({$typeDesc['geographic']['mint']})";   
+	            }
+	        } elseif (array_key_exists('region', $typeDesc['geographic'])){
+	            $title .= ", {$typeDesc['geographic']['region']}";
+	        }
+	    } else {
+	        foreach ($typeDesc['geographic'] as $k=>$array){
+	            if ($k == 'mint' || $k == 'region' || $k == 'locality'){
+	                $places = array();
+	                foreach ($array as $item){
+	                    $places[] = $item['label'];
+	                }
+	                $title .= ', ' . implode('/', $places);
+	                break;
+	            }
+	        }
+	    }
 	}
 	
 	//date: prefer the date on object for the title over fromDate/toDate, if available

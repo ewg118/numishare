@@ -108,7 +108,7 @@ $eXist_config_path = '/usr/local/projects/numishare/exist-config.xml';
 if (file_exists($eXist_config_path)) {
 	$eXist_config = simplexml_load_file($eXist_config_path);
 	$eXist_credentials = $eXist_config->username . ':' . $eXist_config->password;
-	echo $eXist_credentials . "\n";
+	//echo $eXist_credentials . "\n";
 	
 	if (($handle = fopen("/tmp/" . $csv_id . ".csv", "r")) !== FALSE) {
 		error_log(date(DATE_W3C) . ": {$csv_id}.csv successfully opened for processing.\n", 3, "/var/log/numishare/process.log");
