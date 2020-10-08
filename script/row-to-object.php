@@ -802,6 +802,13 @@ function generate_title($typeDesc, $department){
 	            }
 	            
 	            $title .= ", " . implode('/', $regions);
+	        } elseif (array_key_exists('mint', $typeDesc['geographic'])){
+	            $mints = array();
+	            foreach ($typeDesc['geographic']['mint'] as $array){
+	                $mints[] = $array['label'];
+	            }
+	            
+	            $title .= ", " . implode('/', $mints);
 	        }
 	    } else {
 	        foreach ($typeDesc['geographic'] as $k=>$array){
