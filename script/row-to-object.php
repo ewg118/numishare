@@ -780,14 +780,28 @@ function generate_title($typeDesc, $department){
 	
 	//geographic parsing
 	if (array_key_exists('geographic', $typeDesc)){	    
-	    if ($department == 'Medal' || $department == 'Modern'){
+	    if ($department == 'Medieval' || $department == 'Modern'){
 	        if (array_key_exists('locality', $typeDesc['geographic'])){
-	            $title .= ", {$typeDesc['geographic']['locality']}";
+	            $localities = array();
+	            foreach ($typeDesc['geographic']['locality'] as $array){
+	                $localities[] = $array['label'];
+	            }	            
+	            $title .= ", " . implode('/', $localities);
 	            if (array_key_exists('mint', $typeDesc['geographic'])){
-	               $title .= " ({$typeDesc['geographic']['mint']})";   
+	                $mints = array();
+	                foreach ($typeDesc['geographic']['mint'] as $array){
+	                    $mints[] = $array['label'];
+	                }
+	                
+	               $title .= " (" . implode('/', $mints) . ")";   
 	            }
 	        } elseif (array_key_exists('region', $typeDesc['geographic'])){
-	            $title .= ", {$typeDesc['geographic']['region']}";
+	            $regions = array();
+	            foreach ($typeDesc['geographic']['region'] as $array){
+	                $regions[] = $array['label'];
+	            }
+	            
+	            $title .= ", " . implode('/', $regions);
 	        }
 	    } else {
 	        foreach ($typeDesc['geographic'] as $k=>$array){
