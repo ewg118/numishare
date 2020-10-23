@@ -1,0 +1,24 @@
+PREFIX rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX dcterms:  <http://purl.org/dc/terms/>
+PREFIX nm:       <http://nomisma.org/id/>
+PREFIX nmo:	<http://nomisma.org/ontology#>
+PREFIX skos:      <http://www.w3.org/2004/02/skos/core#>
+PREFIX foaf:	<http://xmlns.com/foaf/0.1/>
+PREFIX rdfs:	<http://www.w3.org/2000/01/rdf-schema#>
+PREFIX void:	<http://rdfs.org/ns/void#>
+PREFIX geo:	<http://www.w3.org/2003/01/geo/wgs84_pos#>
+
+SELECT (count(?coin) as ?count) WHERE {
+{ ?coin a nmo:NumismaticObject ;
+ nmo:hasTypeSeriesItem <typeURI>}
+UNION { <typeURI> skos:exactMatch ?match .
+?coin nmo:hasTypeSeriesItem ?match ;
+  a nmo:NumismaticObject }
+UNION { ?broader skos:broader+ <typeURI> .
+?coin nmo:hasTypeSeriesItem ?broader ;
+  a nmo:NumismaticObject }
+UNION { ?broader skos:broader+ <typeURI> .
+?broader skos:exactMatch ?match .
+?object nmo:hasTypeSeriesItem ?match ;
+  a nmo:NumismaticObject }
+}

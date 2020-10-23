@@ -4095,6 +4095,7 @@
 					<xsl:when test="$label = 'display_data-download'">Data Download</xsl:when>
 					<xsl:when test="$label = 'display_date-analysis'">Date Analysis</xsl:when>
 					<xsl:when test="$label = 'display_examples'">Examples of this type</xsl:when>
+					<xsl:when test="$label = 'display_die_examples'">Die Examples</xsl:when>
 					<xsl:when test="$label = 'results_all-terms'">All Terms</xsl:when>
 					<xsl:when test="$label = 'results_map-results'">Map Results</xsl:when>
 					<xsl:when test="$label = 'results_filters'">Filters</xsl:when>

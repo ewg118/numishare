@@ -6,14 +6,16 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:res="http://www.w3.org/2005/sparql-results#" xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns:mets="http://www.loc.gov/METS/" xmlns:numishare="https://github.com/ewg118/numishare" xmlns:nm="http://nomisma.org/id/"
-	xmlns:gml="http://www.opengis.net/gml" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:nmo="http://nomisma.org/ontology#" xmlns:org="http://www.w3.org/ns/org#"
-	xmlns:crm="http://www.cidoc-crm.org/cidoc-crm/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-	xmlns:nuds="http://nomisma.org/nuds" exclude-result-prefixes="#all" version="2.0">
+	xmlns:gml="http://www.opengis.net/gml" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:nmo="http://nomisma.org/ontology#"
+	xmlns:org="http://www.w3.org/ns/org#" xmlns:crm="http://www.cidoc-crm.org/cidoc-crm/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nuds="http://nomisma.org/nuds" exclude-result-prefixes="#all" version="2.0">
 	<xsl:include href="../../templates.xsl"/>
 	<xsl:include href="../../functions.xsl"/>
 	<xsl:include href="../../vis-templates.xsl"/>
 	<xsl:include href="../object/html-templates.xsl"/>
 	<xsl:include href="../sparql/type-examples.xsl"/>
+	<xsl:include href="../../controllers/metamodel-templates.xsl"/>
+	<xsl:include href="../../controllers/sparql-metamodel.xsl"/>
 
 	<!-- URL params -->
 	<xsl:variable name="collection-name" select="substring-before(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/')"/>
@@ -34,9 +36,9 @@
 			</xsl:when>
 		</xsl:choose>
 	</xsl:param>
-	
+
 	<xsl:variable name="langEnabled" select="boolean(//config/languages/language[@code = $lang]/@enabled = true())"/>
-	
+
 	<xsl:param name="mode" select="doc('input:request')/request/parameters/parameter[name = 'mode']/value"/>
 	<xsl:param name="pipeline">display</xsl:param>
 
@@ -155,7 +157,7 @@
 			xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
 			xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:org="http://www.w3.org/ns/org#"
 			xmlns:nomisma="http://nomisma.org/" xmlns:nmo="http://nomisma.org/ontology#">
-			
+
 			<!-- aggregate distinct Nomisma URIs and perform an API lookup to get the RDF for all of them -->
 			<xsl:variable name="id-param">
 				<xsl:for-each
@@ -170,19 +172,19 @@
 			</xsl:variable>
 
 			<xsl:variable name="id-url" select="concat('http://nomisma.org/apis/getRdf?identifiers=', encode-for-uri($id-param))"/>
-			
+
 			<xsl:variable name="id-var" as="element()*">
 				<xsl:if test="doc-available($id-url)">
 					<xsl:copy-of select="document($id-url)/rdf:RDF"/>
 				</xsl:if>
 			</xsl:variable>
-			
+
 			<!-- read distinct org:organization and org:memberOf URIs from the initial RDF API request and request these, but only if they aren't in the initial request -->
 			<xsl:variable name="org-param">
 				<xsl:for-each select="distinct-values($id-var//org:organization/@rdf:resource | $id-var//org:memberOf/@rdf:resource)">
 					<xsl:variable name="href" select="."/>
-					
-					<xsl:if test="not($id-var/*[@rdf:about = $href])">						
+
+					<xsl:if test="not($id-var/*[@rdf:about = $href])">
 						<xsl:value-of select="substring-after($href, 'id/')"/>
 						<xsl:if test="not(position() = last())">
 							<xsl:text>|</xsl:text>
@@ -190,18 +192,18 @@
 					</xsl:if>
 				</xsl:for-each>
 			</xsl:variable>
-			
+
 			<xsl:variable name="org-url" select="concat('http://nomisma.org/apis/getRdf?identifiers=', encode-for-uri($org-param))"/>
-			
+
 			<xsl:variable name="org-var" as="element()*">
 				<xsl:if test="doc-available($org-url)">
 					<xsl:copy-of select="document($org-url)/rdf:RDF"/>
 				</xsl:if>
 			</xsl:variable>
-			
+
 			<!-- copy the contents of the API request variables into this variable -->
 			<xsl:copy-of select="$id-var/*"/>
-			<xsl:copy-of select="$org-var/*"/>	
+			<xsl:copy-of select="$org-var/*"/>
 
 			<!-- request RDF from the coinhoards.org URIs -->
 			<xsl:if test="descendant::nuds:findspotDesc[contains(@xlink:href, 'coinhoards.org')]">
@@ -291,7 +293,7 @@
 			<xsl:when test="$mode = 'compare'">
 				<!-- only call display template for compare display -->
 				<xsl:call-template name="display"/>
-			</xsl:when>			
+			</xsl:when>
 			<!-- regular HTML display mode-->
 			<xsl:otherwise>
 				<html
@@ -310,7 +312,7 @@
 									<script type="text/javascript" src="{$include_path}/javascript/leaflet-iiif.js"/>
 									<script type="text/javascript" src="{$include_path}/javascript/display_iiif_functions.js"/>
 								</xsl:if>
-								
+
 								<xsl:if test="$geoEnabled = true()">
 									<xsl:if test="$hasMints = true() or $hasFindspots = true()">
 										<script type="text/javascript" src="{$include_path}/javascript/display_map_functions.js"/>
@@ -321,21 +323,21 @@
 							<xsl:when test="$recordType = 'conceptual'">
 								<!--- IIIF -->
 								<script type="text/javascript" src="{$include_path}/javascript/leaflet-iiif.js"/>
-								
+
 								<!-- Add fancyBox -->
 								<link rel="stylesheet" href="{$include_path}/css/jquery.fancybox.css?v=2.1.5" type="text/css" media="screen"/>
 								<script type="text/javascript" src="{$include_path}/javascript/jquery.fancybox.pack.js?v=2.1.5"/>
 								<script type="text/javascript" src="{$include_path}/javascript/display_functions.js"/>
-								
+
 								<!-- visualization -->
 								<script type="text/javascript" src="https://d3plus.org/js/d3.min.js"/>
 								<script type="text/javascript" src="https://d3plus.org/js/d3plus-plot.v0.9.full.min.js"/>
 								<script type="text/javascript" src="{$include_path}/javascript/vis_functions.js"/>
-								
+
 								<!-- mapping -->
 								<xsl:if test="$geoEnabled = true()">
 									<xsl:if test="$hasMints = true() or $hasFindspots = true()">
-										
+
 										<!-- commented out: LinkedPaths Leaflet libraries for timelines -->
 										<!--<link type="text/css" href="{$include_path}/css/leaflet.timeline.css" rel="stylesheet"/>
 										<link type="text/css" href="{$include_path}/css/vis-timeline-graph2d.min.css" rel="stylesheet"/>
@@ -346,12 +348,12 @@
 										<script type="text/javascript" src="{$include_path}/javascript/TimelineSliderControl.js"/>
 										<script type="text/javascript" src="{$include_path}/javascript/VisTimeline.js"/>
 										<script type="text/javascript" src="{$include_path}/javascript/vis-timeline-graph2d.min.js"/>-->
-										
+
 										<script type="text/javascript" src="{$include_path}/javascript/display_map_functions.js"/>
 									</xsl:if>
 								</xsl:if>
 							</xsl:when>
-							
+
 						</xsl:choose>
 						<link type="text/css" href="{$include_path}/css/style.css" rel="stylesheet"/>
 					</head>
@@ -359,7 +361,7 @@
 						<xsl:call-template name="header"/>
 						<xsl:call-template name="display"/>
 						<xsl:call-template name="footer"/>
-						
+
 						<div class="hidden">
 							<span id="baselayers">
 								<xsl:value-of select="string-join(//config/baselayers/layer[@enabled = true()], ',')"/>
@@ -392,7 +394,7 @@
 							<span id="lang">
 								<xsl:value-of select="$lang"/>
 							</span>
-							
+
 							<!-- metrical analysis params -->
 							<xsl:if test="$recordType = 'conceptual'">
 								<span id="page">record</span>
@@ -400,23 +402,23 @@
 								<span id="base-query">
 									<xsl:value-of select="concat('nmo:hasTypeSeriesItem &lt;', $objectUri, '&gt;')"/>
 								</span>
-								
+
 								<!-- include templates for form -->
 								<xsl:call-template name="field-template">
 									<xsl:with-param name="template" as="xs:boolean">true</xsl:with-param>
 								</xsl:call-template>
-								
+
 								<xsl:call-template name="compare-container-template">
 									<xsl:with-param name="template" as="xs:boolean">true</xsl:with-param>
 								</xsl:call-template>
-								
+
 								<xsl:call-template name="date-template">
 									<xsl:with-param name="template" as="xs:boolean">true</xsl:with-param>
 								</xsl:call-template>
-								
+
 								<xsl:call-template name="ajax-loader-template"/>
 							</xsl:if>
-							
+
 							<xsl:if test="$recordType = 'conceptual'">
 								<span id="hasFindspots">
 									<xsl:value-of select="$hasFindspots"/>
@@ -513,15 +515,21 @@
 								<p>
 									<xsl:if test="$hasSpecimens = true()">
 										<a href="#examples">
-											<xsl:value-of select="numishare:normalizeLabel('display_examples', $lang)"/>
-										</a>
-										<xsl:text> | </xsl:text>
+											<xsl:value-of
+												select="
+													if ($collection_type = 'cointype') then
+														numishare:normalizeLabel('display_examples', $lang)
+													else
+														numishare:normalizeLabel('display_die_examples', $lang)"
+											/>
+										</a>										
 									</xsl:if>
 									<xsl:if test="count($subtypes//subtype) &gt; 0">
-										<a href="#subtypes">Subtypes</a>
 										<xsl:text> | </xsl:text>
+										<a href="#subtypes">Subtypes</a>										
 									</xsl:if>
-									<xsl:if test="$hasSpecimens = true()">
+									<xsl:if test="$hasSpecimens = true() and $collection_type = 'cointype'">
+										<xsl:text> | </xsl:text>
 										<a href="#metrical">
 											<xsl:value-of select="numishare:normalizeLabel('display_quantitative', $lang)"/>
 										</a>
@@ -548,19 +556,71 @@
 										//config/specimens_per_page
 									else
 										48"/>
-							<xsl:apply-templates select="doc('input:specimens')/res:sparql" mode="type-examples">
-								<xsl:with-param name="page" select="$page" as="xs:integer"/>
-								<xsl:with-param name="numFound" select="$specimenCount" as="xs:integer"/>
-								<xsl:with-param name="limit" select="$limit" as="xs:integer"/>
-								<xsl:with-param name="endpoint"
-									select="
-										if (contains($sparql_endpoint, 'localhost')) then
-											'http://nomisma.org/query'
-										else
-											$sparql_endpoint"/>
-								<xsl:with-param name="objectUri" select="$objectUri"/>
-								<xsl:with-param name="rtl" select="boolean(//config/languages/language[@code = $lang]/@rtl)"/>
-							</xsl:apply-templates>
+
+							<!-- evaluate collection_type in order to determine which mode to apply to the res:sparql template -->
+							<xsl:choose>
+								<xsl:when test="$collection_type = 'cointype'">
+									<xsl:apply-templates select="doc('input:specimens')/res:sparql" mode="type-examples">
+										<xsl:with-param name="page" select="$page" as="xs:integer"/>
+										<xsl:with-param name="numFound" select="$specimenCount" as="xs:integer"/>
+										<xsl:with-param name="limit" select="$limit" as="xs:integer"/>
+										<xsl:with-param name="endpoint"
+											select="
+												if (contains($sparql_endpoint, 'localhost')) then
+													'http://nomisma.org/query'
+												else
+													$sparql_endpoint"/>
+										<xsl:with-param name="objectUri" select="$objectUri"/>
+										<xsl:with-param name="rtl" select="boolean(//config/languages/language[@code = $lang]/@rtl)"/>
+									</xsl:apply-templates>
+								</xsl:when>
+								<xsl:when test="$collection_type = 'die'">
+
+									<!-- form the SPARQL query and pass it to the template parameter -->
+									<xsl:variable name="statements" as="element()*">
+										<statements>
+											<union>
+												<xsl:for-each select="//config/die_study/namedGraph">
+													<group>
+														<xsl:call-template name="numishare:graph-group">
+															<xsl:with-param name="uri" select="$objectUri"/>
+															<xsl:with-param name="namedGraph" select="."/>
+															<xsl:with-param name="side">Obverse</xsl:with-param>
+														</xsl:call-template>
+													</group>
+													<group>
+														<xsl:call-template name="numishare:graph-group">
+															<xsl:with-param name="uri" select="$objectUri"/>
+															<xsl:with-param name="namedGraph" select="."/>
+															<xsl:with-param name="side">Reverse</xsl:with-param>
+														</xsl:call-template>
+													</group>
+												</xsl:for-each>
+											</union>
+										</statements>
+									</xsl:variable>
+
+									<xsl:variable name="statementsSPARQL">
+										<xsl:apply-templates select="$statements/*"/>
+									</xsl:variable>
+
+									<xsl:apply-templates select="doc('input:specimens')/res:sparql" mode="die-examples">
+										<xsl:with-param name="query" select="replace(doc('input:query'), '%STATEMENTS%', $statementsSPARQL)"/>
+										<xsl:with-param name="page" select="$page" as="xs:integer"/>
+										<xsl:with-param name="numFound" select="$specimenCount" as="xs:integer"/>
+										<xsl:with-param name="limit" select="$limit" as="xs:integer"/>
+										<xsl:with-param name="endpoint"
+											select="
+												if (contains($sparql_endpoint, 'localhost')) then
+													'http://nomisma.org/query'
+												else
+													$sparql_endpoint"/>
+										<xsl:with-param name="objectUri" select="$objectUri"/>
+										<xsl:with-param name="rtl" select="boolean(//config/languages/language[@code = $lang]/@rtl)"/>
+									</xsl:apply-templates>
+								</xsl:when>
+							</xsl:choose>
+
 						</xsl:if>
 
 						<!-- handle subtypes if they exist -->
@@ -577,13 +637,12 @@
 										if (contains($sparql_endpoint, 'localhost')) then
 											'http://nomisma.org/query'
 										else
-											$sparql_endpoint"
-								/>
+											$sparql_endpoint"/>
 								<xsl:with-param name="rtl" select="boolean(//config/languages/language[@code = $lang]/@rtl)"/>
 							</xsl:apply-templates>
 						</xsl:if>
 
-						<xsl:if test="$hasSpecimens = true()">
+						<xsl:if test="$hasSpecimens = true() and $collection_type = 'cointype'">
 							<div class="row">
 								<div class="col-md-12" id="metrical">
 									<xsl:call-template name="charts"/>

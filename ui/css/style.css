@@ -439,6 +439,11 @@ button.multiselect{
 .gi{
     padding: 0px 5px;
 }
+.die-title{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 /*
   ***************************************
   PAGINATION

@@ -202,5 +202,37 @@
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
+    
+    <!-- construct groups for 1 or more named graphs pertaining to die studies -->
+    <xsl:template name="numishare:graph-group">
+        <xsl:param name="uri"/>
+        <xsl:param name="namedGraph"/>
+        <xsl:param name="side"/>
+        
+        <graph namedGraph="{$namedGraph}">
+            <triple s="?object" p="nmo:has{$side}/nmo:hasDie" o="?die"/>
+            <triple s="?die" p="rdf:value" o="&lt;{$uri}&gt;"/>
+        </graph>
+        <triple s="?object" p="dcterms:title" o="?title"/>
+        <optional>
+            <triple s="?object" p="dcterms:identifier" o="?identifier"/>
+        </optional>
+        <optional>
+            <triple s="?object" p="nmo:hasCollection/skos:prefLabel" o="?collection" filter="(langMatches(lang(?collection), &#x022;en&#x022;))"/>
+        </optional>
+        <triple s="?object" p="void:inDataset" o="?dataset"/>
+        <triple s="?dataset" p="dcterms:publisher" o="?publisher" filter="(lang(?publisher) = &#x022;&#x022; || langMatches(lang(?publisher), &#x022;en&#x022;))"/>
+        <triple s="?dataset" p="dcterms:title" o="?datasetTitle" filter="(lang(?datasetTitle) = &#x022;&#x022; || langMatches(lang(?datasetTitle), &#x022;en&#x022;))"/>
+        <optional>
+            <triple s="?object" p="nmo:has{$side}" o="?side"/>
+            <triple s="?side" p="foaf:depiction" o="?reference"/>
+            <optional>
+                <triple s="?reference" p="dcterms:isReferencedBy" o="?manifest"/>
+            </optional>
+        </optional>
+        <optional>
+            <triple s="?object" p="foaf:depiction" o="?reference"/>
+        </optional>
+    </xsl:template>
 
 </xsl:stylesheet>

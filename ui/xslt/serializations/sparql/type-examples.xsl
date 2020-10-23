@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- 	Author: Ethan Gruber
-	Date: May 2020
+	Date: October 2020
 	Function: There are two modes of templates to render SPARQL results into HTML:
 	   1. type-examples renders examples of physical specimens related to coin types displayed on coin type pages
 	   2. examples of coin types associated with a symbol
 	   3. hoard-examples displayed a slightly modified version of type-examples, but for physical specimens related to a coin hoard rather than coin type URI
+	   4. die-examples display a more single-image oriented view
 -->
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:res="http://www.w3.org/2005/sparql-results#"
@@ -57,7 +58,7 @@
 
     <xsl:template match="res:result" mode="type-examples">
         <xsl:param name="rtl"/>
-        
+
         <xsl:variable name="title"
             select="
                 concat(res:binding[@name = 'identifier']/*, ': ', if
@@ -96,7 +97,7 @@
                         </dd>
                     </xsl:otherwise>
                 </xsl:choose>
-                
+
                 <!-- typological attributes for coins connected to types -->
                 <xsl:if test="string(res:binding[@name = 'axis']/res:literal)">
                     <dt>
@@ -154,31 +155,31 @@
                             identifier="{res:binding[@name='object']/res:uri}">Click to view</a>
                     </dd>
                 </xsl:if>
-                
+
                 <!-- typological attributes for coins connected to hoards -->
                 <xsl:if test="string(res:binding[@name = 'types']/res:literal)">
                     <xsl:variable name="typeURIs" select="tokenize(res:binding[@name = 'types']/res:literal, '\|')"/>
                     <xsl:variable name="typeTitles" select="tokenize(res:binding[@name = 'typeTitles']/res:literal, '\|')"/>
-                    
+
                     <dt>
                         <xsl:value-of select="numishare:regularize_node('coinType', $lang)"/>
                     </dt>
                     <dd>
                         <xsl:for-each select="$typeURIs">
                             <xsl:variable name="position" select="position()"/>
-                            
+
                             <a href="{.}" title="{$typeTitles[$position]}">
                                 <xsl:value-of select="$typeTitles[$position]"/>
                             </a>
-                            
-                            
+
+
                             <xsl:if test="not(position() = last())">
                                 <xsl:text>, </xsl:text>
                             </xsl:if>
                         </xsl:for-each>
                     </dd>
                 </xsl:if>
-                
+
                 <xsl:if test="string(res:binding[@name = 'authorities']/res:literal)">
                     <dt>
                         <xsl:value-of select="numishare:regularize_node('authority', $lang)"/>
@@ -190,7 +191,7 @@
                                 <xsl:text>, </xsl:text>
                             </xsl:if>
                         </xsl:for-each>
-                    </dd>                    
+                    </dd>
                 </xsl:if>
                 <xsl:if test="string(res:binding[@name = 'mints']/res:literal)">
                     <dt>
@@ -203,7 +204,7 @@
                                 <xsl:text>, </xsl:text>
                             </xsl:if>
                         </xsl:for-each>
-                    </dd>                    
+                    </dd>
                 </xsl:if>
                 <xsl:if test="string(res:binding[@name = 'denominations']/res:literal)">
                     <dt>
@@ -216,13 +217,94 @@
                                 <xsl:text>, </xsl:text>
                             </xsl:if>
                         </xsl:for-each>
-                    </dd>                    
+                    </dd>
                 </xsl:if>
             </dl>
 
             <xsl:call-template name="thumbnails">
                 <xsl:with-param name="title" select="$title"/>
             </xsl:call-template>
+        </div>
+    </xsl:template>
+    
+    <!-- **************** PHYSICAL EXAMPLES OF OBVERSE/REVERSE RELATED TO DIE URIS ****************-->
+    <xsl:template match="res:sparql" mode="die-examples">
+        <xsl:param name="query"/>
+        <xsl:param name="page"/>
+        <xsl:param name="numFound"/>
+        <xsl:param name="limit"/>
+        <xsl:param name="endpoint"/>
+        <xsl:param name="objectUri"/>
+        <xsl:param name="rtl"/>
+        
+        <div class="row">
+            <xsl:attribute name="id">examples</xsl:attribute>
+            
+            <xsl:if test="count(descendant::res:result) &gt; 0">
+                <div class="col-md-12">
+                    <xsl:element name="h3"> Die Examples <!--<xsl:value-of select="numishare:normalizeLabel('display_die_examples', $lang)"/>-->
+                        <!-- insert link to download CSV -->
+                        <small style="margin-left:10px">
+                            <a href="{$endpoint}?query={encode-for-uri($query)}&amp;output=csv" title="Download CSV">
+                                <span class="glyphicon glyphicon-download"/>Download CSV</a>
+                        </small>
+                    </xsl:element>
+                </div>
+                <!-- display the pagination toolbar only if there are multiple pages -->
+                <xsl:if test="$numFound &gt; $limit">
+                    <xsl:call-template name="pagination">
+                        <xsl:with-param name="page" select="$page" as="xs:integer"/>
+                        <xsl:with-param name="numFound" select="$numFound" as="xs:integer"/>
+                        <xsl:with-param name="limit" select="$limit" as="xs:integer"/>
+                    </xsl:call-template>
+                </xsl:if>
+                <xsl:apply-templates select="descendant::res:result" mode="die-examples">
+                    <xsl:with-param name="rtl" select="$rtl" as="xs:boolean"/>
+                </xsl:apply-templates>
+            </xsl:if>
+        </div>
+    </xsl:template>
+    
+    <xsl:template match="res:result" mode="die-examples">
+        <xsl:param name="rtl"/>
+        
+        <xsl:variable name="title"
+            select="
+            concat(if
+            (string(res:binding[@name = 'collection']/res:literal)) then
+            res:binding[@name = 'collection']/res:literal
+            else
+            res:binding[@name = 'datasetTitle']/res:literal, ' ', res:binding[@name = 'identifier']/*)"/>
+        
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-2">
+            <div>
+                <xsl:if test="res:binding[@name = 'manifest']">
+                    <span class="glyphicon glyphicon-zoom-in iiif-zoom-glyph" title="Click image(s) to zoom" style="display:none"/>
+                </xsl:if>
+                
+                <xsl:if test="res:binding[@name = 'reference']/res:uri">
+                    <a title="{$title}" id="{res:binding[@name='object']/res:uri}">
+                        <xsl:choose>
+                            <xsl:when test="res:binding[@name = 'manifest']">
+                                <xsl:attribute name="href">#iiif-window</xsl:attribute>
+                                <xsl:attribute name="class">iiif-image</xsl:attribute>
+                                <xsl:attribute name="manifest" select="res:binding[@name = 'manifest']/res:uri"/>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:attribute name="href" select="res:binding[@name = 'reference']/res:uri"/>
+                                <xsl:attribute name="class">thumbImage</xsl:attribute>
+                                <xsl:attribute name="rel">gallery</xsl:attribute>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                        <img style="width:100%" src="{res:binding[@name='reference']/res:uri}"/>
+                    </a>                    
+                </xsl:if>
+                <div class="die-title">                    
+                    <a href="{res:binding[@name='object']/res:uri}" title="{$title}">
+                        <xsl:value-of select="$title"/>                        
+                    </a>
+                </div>                
+            </div>
         </div>
     </xsl:template>
 
@@ -257,7 +339,7 @@
                     <xsl:call-template name="pagination">
                         <xsl:with-param name="page" select="$page" as="xs:integer"/>
                         <xsl:with-param name="numFound" select="$numFound" as="xs:integer"/>
-                        <xsl:with-param name="limit" select="$limit" as="xs:integer"/>                        
+                        <xsl:with-param name="limit" select="$limit" as="xs:integer"/>
                     </xsl:call-template>
                 </xsl:if>
 

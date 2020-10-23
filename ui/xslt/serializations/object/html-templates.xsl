@@ -1302,7 +1302,7 @@
 							<a href="http://numismatics.org/mirador/?manifest={encode-for-uri($manifestURI)}">(view)</a>
 						</li>
 					</xsl:if>
-					<xsl:if test="$recordType = 'conceptual'">
+					<xsl:if test="$collection_type = 'cointype'">
 						<!-- only display coin type manifest link if there are IIIF service resources -->
 						<xsl:variable name="hasIIIF" select="doc('input:hasIIIF')//res:boolean" as="xs:boolean"/>
 

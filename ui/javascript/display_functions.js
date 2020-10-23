@@ -30,6 +30,7 @@ $(document).ready(function () {
     $('.iiif-image').fancybox({
         beforeShow: function () {
             var manifest = this.element.attr('manifest');
+            this.title = '<a href="' + this.element.attr('id') + '">' + this.element.attr('title') + '</a>'
             //remove and replace #iiif-container, if different or new
             if (manifest != $('#manifest').text()) {          
                 $('#iiif-container').remove();

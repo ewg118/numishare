@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 	Author: Ethan Gruber
-	Last modified: August 2020
+	Last modified: October 2020
 	Function: HTML view for NUDS. It involves conditionals for conceptual vs. physical specimens, 
 		including SPARQL queries for associated specimens and annoations.
 		July 2018: added type-examples.xpl into this XPL in order to avoid xsl:document() function call to /api pipeline within the XSLT
+		October 2020: Added support for die studies
 -->
 <p:config xmlns:p="http://www.orbeon.com/oxf/pipeline" xmlns:oxf="http://www.orbeon.com/oxf/processors" xmlns:res="http://www.w3.org/2005/sparql-results#" xmlns:saxon="http://saxon.sf.net/">
 	<p:param type="input" name="data"/>
@@ -25,25 +26,77 @@
 	</p:processor>
 	
 	<p:processor name="oxf:unsafe-xslt">
-		<p:input name="data" href="#data"/>
+		<p:input name="data" href="#config"/>
 		<p:input name="config">
 			<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 				<xsl:template match="/">
-					<recordType>
-						<xsl:choose>							
-							<xsl:when test="*/@recordType='conceptual'">conceptual</xsl:when>
-							<xsl:when test="*/@recordType='physical'">physical</xsl:when>
-						</xsl:choose>
-					</recordType>
+					<collectionType>
+						<xsl:value-of select="/config/collection_type"/>
+					</collectionType>
 				</xsl:template>
 			</xsl:stylesheet>
 		</p:input>
-		<p:output name="data" id="recordType"/>
+		<p:output name="data" id="collectionType"/>
 	</p:processor>
 	
-	<p:choose href="#recordType">		
+	<p:choose href="#collectionType">		
+		<p:when test="collectionType = 'die'">
+			<p:processor name="oxf:pipeline">						
+				<p:input name="data" href="#config"/>
+				<p:input name="config" href="../../../models/sparql/specimen-count.xpl"/>
+				<p:output name="data" id="specimenCount"/>
+			</p:processor>
+			
+			<!-- load SPARQL query from disk -->
+			<p:processor name="oxf:url-generator">
+				<p:input name="config">
+					<config>
+						<url>oxf:/apps/numishare/ui/sparql/die-examples.sparql</url>
+						<content-type>text/plain</content-type>
+						<encoding>utf-8</encoding>
+					</config>
+				</p:input>
+				<p:output name="data" id="die-examples-query"/>
+			</p:processor>
+			
+			<p:processor name="oxf:text-converter">
+				<p:input name="data" href="#die-examples-query"/>
+				<p:input name="config">
+					<config/>
+				</p:input>
+				<p:output name="data" id="die-examples-query-document"/>
+			</p:processor>
+			
+			<p:choose href="#specimenCount">
+				<p:when test="//res:binding[@name='count']/res:literal = 0">
+					<p:processor name="oxf:unsafe-xslt">
+						<p:input name="request" href="#request"/>
+						<p:input name="query" href="#die-examples-query-document"/>
+						<p:input name="data" href="aggregate('content', #data, #specimenCount, #config)"/>
+						<p:input name="config" href="../../../../ui/xslt/serializations/nuds/html.xsl"/>
+						<p:output name="data" id="model"/>
+					</p:processor>
+				</p:when>
+				<p:otherwise>	
+					<p:processor name="oxf:pipeline">						
+						<p:input name="data" href="#config"/>
+						<p:input name="config" href="../../../models/sparql/die-examples.xpl"/>
+						<p:output name="data" id="specimens"/>
+					</p:processor>
+					
+					<p:processor name="oxf:unsafe-xslt">
+						<p:input name="request" href="#request"/>
+						<p:input name="specimens" href="#specimens"/>
+						<p:input name="query" href="#die-examples-query-document"/>
+						<p:input name="data" href="aggregate('content', #data, #specimenCount, #config)"/>
+						<p:input name="config" href="../../../../ui/xslt/serializations/nuds/html.xsl"/>
+						<p:output name="data" id="model"/>
+					</p:processor>
+				</p:otherwise>
+			</p:choose>
+		</p:when>		
 		<!-- if it is a coin type record, then execute an ASK query -->
-		<p:when test="recordType='conceptual'">
+		<p:when test="collectionType='cointype'">
 			<p:processor name="oxf:pipeline">						
 				<p:input name="data" href="#config"/>
 				<p:input name="config" href="../../../models/sparql/specimen-count.xpl"/>

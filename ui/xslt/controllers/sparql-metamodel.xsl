@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Author: Ethan Gruber
-	Date: March 2019
+	Date: October 2020
 	Function: XSLT templates for serializing an XML metamodel for SPARQL queries into text
 -->
 <xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes="#all">
@@ -15,7 +15,7 @@
 	
 	<xsl:template match="optional">
 		<xsl:text>OPTIONAL {</xsl:text>
-		<xsl:apply-templates select="triple"/>
+		<xsl:apply-templates select="optional|triple"/>
 		<xsl:text>}&#x0A;</xsl:text>
 	</xsl:template>
 	
@@ -24,7 +24,7 @@
 			<xsl:text>UNION </xsl:text>
 		</xsl:if>
 		<xsl:text>{</xsl:text>
-		<xsl:apply-templates select="triple"/>
+		<xsl:apply-templates select="triple|graph|optional"/>
 		<xsl:text>}&#x0A;</xsl:text>
 	</xsl:template>
 	
@@ -32,7 +32,7 @@
 		<xsl:choose>
 			<xsl:when test="child::group">
 				<xsl:apply-templates select="group"/>
-			</xsl:when>
+			</xsl:when>			
 			<xsl:otherwise>
 				<xsl:for-each select="triple">
 					<xsl:if test="position() &gt; 1">
@@ -45,4 +45,10 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>	
+	
+	<xsl:template match="graph">
+		<xsl:value-of select="concat('GRAPH &lt;', @namedGraph, '&gt; {&#x0A;')"/>	
+		<xsl:apply-templates/>
+		<xsl:text>}&#x0A;</xsl:text>
+	</xsl:template>
 </xsl:stylesheet>
