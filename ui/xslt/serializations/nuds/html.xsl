@@ -331,8 +331,17 @@
 
 								<!-- visualization -->
 								<script type="text/javascript" src="https://d3plus.org/js/d3.min.js"/>
-								<script type="text/javascript" src="https://d3plus.org/js/d3plus-plot.v0.9.full.min.js"/>
-								<script type="text/javascript" src="{$include_path}/javascript/vis_functions.js"/>
+
+								<xsl:if test="$collection_type = 'cointype'">
+									<script type="text/javascript" src="https://d3plus.org/js/d3plus-plot.v0.9.full.min.js"/>
+									<script type="text/javascript" src="{$include_path}/javascript/vis_functions.js"/>
+								</xsl:if>
+
+								<!-- network graph functions -->
+								<xsl:if test="//config/die_study[@enabled = true()] and $hasSpecimens = true()">
+									<script type="text/javascript" src="https://d3plus.org/js/d3plus-network.v0.6.full.min.js"/>
+									<script type="text/javascript" src="{$include_path}/javascript/network_functions.js"/>
+								</xsl:if>
 
 								<!-- mapping -->
 								<xsl:if test="$geoEnabled = true()">
@@ -363,6 +372,9 @@
 						<xsl:call-template name="footer"/>
 
 						<div class="hidden">
+							<span id="recordId">
+								<xsl:value-of select="$id"/>
+							</span>
 							<span id="baselayers">
 								<xsl:value-of select="string-join(//config/baselayers/layer[@enabled = true()], ',')"/>
 							</span>
@@ -490,6 +502,8 @@
 						<div class="row">
 							<div class="col-md-12">
 
+								<!--<xsl:copy-of select="doc('input:dies')"/>-->
+
 								<xsl:if test="nuds:control/nuds:publicationStatus = 'deprecatedType'">
 									<div class="alert alert-box alert-danger">
 										<span class="glyphicon glyphicon-exclamation-sign"/>
@@ -522,11 +536,16 @@
 													else
 														numishare:normalizeLabel('display_die_examples', $lang)"
 											/>
-										</a>										
+										</a>
+										<!-- if the die_study is enabled, then display a section for die links -->
+										<xsl:if test="//config/die_study[@enabled = true()]">
+											<xsl:text> | </xsl:text>
+											<a href="#dieAnalysis">Die Analysis</a>
+										</xsl:if>
 									</xsl:if>
 									<xsl:if test="count($subtypes//subtype) &gt; 0">
 										<xsl:text> | </xsl:text>
-										<a href="#subtypes">Subtypes</a>										
+										<a href="#subtypes">Subtypes</a>
 									</xsl:if>
 									<xsl:if test="$hasSpecimens = true() and $collection_type = 'cointype'">
 										<xsl:text> | </xsl:text>
@@ -620,7 +639,6 @@
 									</xsl:apply-templates>
 								</xsl:when>
 							</xsl:choose>
-
 						</xsl:if>
 
 						<!-- handle subtypes if they exist -->
@@ -642,9 +660,21 @@
 							</xsl:apply-templates>
 						</xsl:if>
 
+						<!-- display die analysis, visualization -->
+						<xsl:if test="$hasSpecimens = true() and //config/die_study[@enabled = true()]">
+							<div class="row" id="dieAnalysis">
+								<div class="col-md-12">
+									<!-- display a div for each d3js forced network graph for each namedGraph for die attributions -->
+									<xsl:for-each select="//config/die_study/namedGraph">										
+										<div namedGraph="{.}" class="network-graph hidden" id="{generate-id()}"/>
+									</xsl:for-each>
+								</div>
+							</div>
+						</xsl:if>
+
 						<xsl:if test="$hasSpecimens = true() and $collection_type = 'cointype'">
-							<div class="row">
-								<div class="col-md-12" id="metrical">
+							<div class="row" id="metrical">
+								<div class="col-md-12">
 									<xsl:call-template name="charts"/>
 								</div>
 							</div>

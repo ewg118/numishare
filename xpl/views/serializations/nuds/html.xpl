@@ -77,16 +77,45 @@
 						<p:output name="data" id="model"/>
 					</p:processor>
 				</p:when>
-				<p:otherwise>	
+				<p:otherwise>					
+					<!-- execute SPARQL query to get the images related to the die URI -->
 					<p:processor name="oxf:pipeline">						
 						<p:input name="data" href="#config"/>
 						<p:input name="config" href="../../../models/sparql/die-examples.xpl"/>
 						<p:output name="data" id="specimens"/>
 					</p:processor>
 					
+					<!-- iterate through named graphs and execute a die-linking query for each named graph to evaluate links from the obverse or reverse -->					
+					<p:for-each href="#config" select="/config/die_study/namedGraph" root="obverse" id="obv-dies">
+						<p:processor name="oxf:pipeline">						
+							<p:input name="data" href="#config"/>
+							<p:input name="request" href="#request"/>
+							<p:input name="namedGraph" href="current()"/>
+							<p:input name="side">
+								<side>obv</side>
+							</p:input>
+							<p:input name="config" href="../../../models/sparql/query-die-relations.xpl"/>
+							<p:output name="data" ref="obv-dies"/>
+						</p:processor>
+					</p:for-each>
+					
+					<p:for-each href="#config" select="/config/die_study/namedGraph" root="reverse" id="rev-dies">
+						<p:processor name="oxf:pipeline">						
+							<p:input name="data" href="#config"/>
+							<p:input name="request" href="#request"/>
+							<p:input name="namedGraph" href="current()"/>
+							<p:input name="side">
+								<side>rev</side>
+							</p:input>
+							<p:input name="config" href="../../../models/sparql/query-die-relations.xpl"/>
+							<p:output name="data" ref="rev-dies"/>
+						</p:processor>
+					</p:for-each>
+					
 					<p:processor name="oxf:unsafe-xslt">
 						<p:input name="request" href="#request"/>
 						<p:input name="specimens" href="#specimens"/>
+						<p:input name="dies" href="aggregate('dies', #obv-dies, #rev-dies)"/>
 						<p:input name="query" href="#die-examples-query-document"/>
 						<p:input name="data" href="aggregate('content', #data, #specimenCount, #config)"/>
 						<p:input name="config" href="../../../../ui/xslt/serializations/nuds/html.xsl"/>

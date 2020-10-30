@@ -149,6 +149,7 @@
 	<page path="/numishare/[^\/]+/apis/getDateRange" model="xpl/models/sparql/getDateRange.xpl" view="xpl/views/serializations/sparql/getDateRange.xpl"/>
 	<page path="/numishare/[^\/]+/apis/getSolrDistribution" model="xpl/models/solr/getDistribution.xpl" view="xpl/controllers/sparql/visualization.xpl"/>
 	<page path="/numishare/[^\/]+/apis/getHoardQuant" model="xpl/controllers/getHoardQuant.xpl" view="xpl/controllers/sparql/visualization.xpl"/>
+	<page path="/numishare/[^\/]+/apis/getDieLinks" model="xpl/models/sparql/getDieLinks.xpl" view="xpl/views/serializations/sparql/d3plus-graph-json.xpl"/>
 
 	<!-- OpenRefine reconciliation services -->
 	<page path="/numishare/[^\/]+/apis/reconcile/preview" model="xpl/models/object/get-id.xpl" view="xpl/views/serializations/nuds/reconcile-preview-html.xpl"/>

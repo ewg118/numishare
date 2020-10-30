@@ -234,5 +234,19 @@
             <triple s="?object" p="foaf:depiction" o="?reference"/>
         </optional>
     </xsl:template>
+    
+    <xsl:template name="numishare:queryDieRelations">
+        <xsl:param name="namedGraph"/>
+        <xsl:param name="side"/>
+        
+        <graph namedGraph="{$namedGraph}">
+            <triple s="?object" p="nmo:has{if ($side = 'obv') then 'Obverse' else 'Reverse'}/nmo:hasDie/rdf:value" o="?die"/>
+            <select variables="?object ?altDie">
+                <triple s="?object" p="nmo:has{if ($side = 'obv') then 'Reverse' else 'Obverse'}/nmo:hasDie/rdf:value" o="?altDie"/>
+            </select>
+        </graph>
+        <triple s="?die" p="skos:prefLabel" o="?dieLabel" filter="langMatches(lang(?dieLabel), &#x022;en&#x022;)"/>
+        <triple s="?altDie" p="skos:prefLabel" o="?altDieLabel" filter="langMatches(lang(?altDieLabel), &#x022;en&#x022;)"/>
+    </xsl:template>
 
 </xsl:stylesheet>

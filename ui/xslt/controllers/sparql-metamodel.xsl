@@ -9,8 +9,26 @@
 	<xsl:template match="triple">
 		<xsl:value-of select="concat(@s, ' ', @p, ' ', @o, if (@filter) then concat(' FILTER ', @filter) else '', '.')"/>
 		<xsl:if test="not(parent::union)">
-			<xsl:text>&#x0A;</xsl:text>
+			<xsl:if test="not(position() = last())">
+				<xsl:text>&#x0A;</xsl:text>
+			</xsl:if>
 		</xsl:if>
+	</xsl:template>
+	
+	<!-- subselects -->
+	<xsl:template match="select">
+		<xsl:text>{&#x0A;SELECT </xsl:text>
+		<xsl:value-of select="@variables"/>
+		<xsl:text> WHERE {</xsl:text>
+		<xsl:apply-templates/>
+		<xsl:text>}&#x0A;</xsl:text>
+		<xsl:text>}&#x0A;</xsl:text>
+	</xsl:template>
+	
+	<xsl:template match="minus">
+		<xsl:text>MINUS {</xsl:text>
+		<xsl:apply-templates select="triple"/>
+		<xsl:text>}&#x0A;</xsl:text>
 	</xsl:template>
 	
 	<xsl:template match="optional">
@@ -24,12 +42,15 @@
 			<xsl:text>UNION </xsl:text>
 		</xsl:if>
 		<xsl:text>{</xsl:text>
-		<xsl:apply-templates select="triple|graph|optional"/>
+		<xsl:apply-templates/>
 		<xsl:text>}&#x0A;</xsl:text>
 	</xsl:template>
 	
 	<xsl:template match="union">
 		<xsl:choose>
+			<xsl:when test="child::union">
+				<xsl:apply-templates select="union"/>
+			</xsl:when>
 			<xsl:when test="child::group">
 				<xsl:apply-templates select="group"/>
 			</xsl:when>			
