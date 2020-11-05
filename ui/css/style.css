@@ -123,6 +123,29 @@ dl.ar dd{
     width: 640px;
     height: 480px;
 }
+.obj-container{
+    z-index: 1;
+    /*cursor:pointer;*/
+    color: #c94f2a;
+}
+a.fancybox {
+    height:100%;
+    width:100%;
+    display:block;
+}
+/*Die Study pages*/
+.die-image {
+    height:325px;
+}
+.die-image img {
+    max-width:100%;
+    max-height:300px;
+}
+.die-title{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 /*
   ***************************************
   SEARCH/COMPARE/VISUALIZATION FORMS
@@ -438,11 +461,6 @@ button.multiselect{
 /* gallery image */
 .gi{
     padding: 0px 5px;
-}
-.die-title{
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
 }
 /*
   ***************************************

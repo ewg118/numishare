@@ -132,7 +132,7 @@
 						<xsl:when test="@recordType = 'conceptual'">
 							<xsl:choose>
 								<xsl:when test="$collection-type = 'cointype'">nmo:TypeSeriesItem</xsl:when>
-								<xsl:when test="$collection-type = 'die'">nmo:Die</xsl:when>
+								<xsl:when test="$collection-type = 'die'">crm:E28_Conceptual_Object</xsl:when>
 							</xsl:choose>
 						</xsl:when>
 						<xsl:when test="@recordType = 'physical'">nmo:NumismaticObject</xsl:when>
@@ -189,7 +189,7 @@
 								<xsl:when test="$collection-type = 'die'">
 									<dcterms:source rdf:resource="{//config/die_series}"/>
 								</xsl:when>
-							</xsl:choose>							
+							</xsl:choose>
 						</xsl:otherwise>
 					</xsl:choose>
 
@@ -214,26 +214,27 @@
 						<xsl:variable name="element">
 							<xsl:choose>
 								<xsl:when test="$collection-type = 'cointype'">nmo:TypeSeriesItem</xsl:when>
-								<xsl:when test="$collection-type = 'die'">nmo:Die</xsl:when>
+								<xsl:when test="$collection-type = 'die'">crm:E28_Conceptual_Object</xsl:when>
 							</xsl:choose>
 						</xsl:variable>
-						
+
 						<xsl:element name="{$element}">
 							<xsl:attribute name="rdf:about">
 								<xsl:value-of
 									select="
-									if (string($uri_space)) then
-									concat($uri_space, $id)
-									else
-									concat($url, 'id/', $id)"/>
+										if (string($uri_space)) then
+											concat($uri_space, $id)
+										else
+											concat($url, 'id/', $id)"
+								/>
 							</xsl:attribute>
-							
+
 							<!-- include any additional prefix/namespace before processing otherRecordIds -->
 							<xsl:for-each select="nuds:control/nuds:semanticDeclaration">
 								<xsl:namespace name="{*:prefix}" select="*:namespace"/>
 							</xsl:for-each>
-							
-							
+
+
 							<rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
 							<!-- insert titles -->
 							<xsl:for-each select="nuds:descMeta/nuds:title">
@@ -272,7 +273,7 @@
 										<xsl:when test="$collection-type = 'die'">
 											<dcterms:source rdf:resource="{//config/die_series}"/>
 										</xsl:when>
-									</xsl:choose>							
+									</xsl:choose>
 								</xsl:otherwise>
 							</xsl:choose>
 
@@ -284,9 +285,9 @@
 								<xsl:with-param name="id" select="$id"/>
 							</xsl:apply-templates>
 							<void:inDataset rdf:resource="{$url}"/>
-						
+
 						</xsl:element>
-						
+
 						<xsl:apply-templates select="nuds:descMeta/nuds:typeDesc/nuds:obverse | nuds:descMeta/nuds:typeDesc/nuds:reverse" mode="nomisma">
 							<xsl:with-param name="id" select="$id"/>
 						</xsl:apply-templates>
@@ -430,14 +431,21 @@
 	<!-- other record IDs -->
 	<xsl:template match="*:otherRecordId[@semantic]">
 		<xsl:variable name="uri" select="
-				if (matches(., 'https?://')) then
+				if (matches(., 'https?://') or @semantic = 'skos:notation') then
 					.
 				else
 					concat($url, 'id/', .)"/>
 		<xsl:variable name="prefix" select="substring-before(@semantic, ':')"/>
 		<xsl:variable name="namespace" select="ancestor::*:control/*:semanticDeclaration[*:prefix = $prefix]/*:namespace"/>
 		<xsl:element name="{@semantic}" namespace="{$namespace}">
-			<xsl:attribute name="rdf:resource" select="$uri"/>
+			<xsl:choose>
+				<xsl:when test="@semantic = 'skos:notation'">
+					<xsl:value-of select="."/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:attribute name="rdf:resource" select="$uri"/>
+				</xsl:otherwise>
+			</xsl:choose>
 		</xsl:element>
 	</xsl:template>
 
@@ -539,12 +547,13 @@
 	<xsl:template match="nuds:symbol" mode="nomisma">
 		<xsl:choose>
 			<xsl:when test="@xlink:arcrole and @xlink:href">
-				<xsl:variable name="element" select="
-					if (@xlink:arcrole = 'nmo:hasMonogram') then
-					'nmo:hasControlmark'
-					else
-					@xlink:arcrole"/>
-				
+				<xsl:variable name="element"
+					select="
+						if (@xlink:arcrole = 'nmo:hasMonogram') then
+							'nmo:hasControlmark'
+						else
+							@xlink:arcrole"/>
+
 				<xsl:element name="{$element}">
 					<xsl:attribute name="rdf:resource" select="@xlink:href"/>
 				</xsl:element>
@@ -554,7 +563,7 @@
 			</xsl:when>
 		</xsl:choose>
 	</xsl:template>
-	
+
 	<!-- render TEI glyphs -->
 	<xsl:template match="tei:g">
 		<xsl:choose>
@@ -569,7 +578,7 @@
 			</xsl:when>
 			<xsl:otherwise>
 				<nmo:hasControlmark rdf:resource="{@ref}"/>
-			</xsl:otherwise>			
+			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
 

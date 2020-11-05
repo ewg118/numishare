@@ -276,35 +276,33 @@
             else
             res:binding[@name = 'datasetTitle']/res:literal, ' ', res:binding[@name = 'identifier']/*)"/>
         
-        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-2">
-            <div>
-                <xsl:if test="res:binding[@name = 'manifest']">
-                    <span class="glyphicon glyphicon-zoom-in iiif-zoom-glyph" title="Click image(s) to zoom" style="display:none"/>
-                </xsl:if>
-                
-                <xsl:if test="res:binding[@name = 'reference']/res:uri">
-                    <a title="{$title}" id="{res:binding[@name='object']/res:uri}">
-                        <xsl:choose>
-                            <xsl:when test="res:binding[@name = 'manifest']">
-                                <xsl:attribute name="href">#iiif-window</xsl:attribute>
-                                <xsl:attribute name="class">iiif-image</xsl:attribute>
-                                <xsl:attribute name="manifest" select="res:binding[@name = 'manifest']/res:uri"/>
-                            </xsl:when>
-                            <xsl:otherwise>
-                                <xsl:attribute name="href" select="res:binding[@name = 'reference']/res:uri"/>
-                                <xsl:attribute name="class">thumbImage</xsl:attribute>
-                                <xsl:attribute name="rel">gallery</xsl:attribute>
-                            </xsl:otherwise>
-                        </xsl:choose>
-                        <img style="width:100%" src="{res:binding[@name='reference']/res:uri}"/>
-                    </a>                    
-                </xsl:if>
-                <div class="die-title">                    
-                    <a href="{res:binding[@name='object']/res:uri}" title="{$title}">
-                        <xsl:value-of select="$title"/>                        
-                    </a>
-                </div>                
-            </div>
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-2 die-image">
+            <xsl:if test="res:binding[@name = 'manifest']">
+                <span class="glyphicon glyphicon-zoom-in iiif-zoom-glyph" title="Click image(s) to zoom" style="display:none"/>
+            </xsl:if>
+            
+            <xsl:if test="res:binding[@name = 'reference']/res:uri">
+                <a title="{$title}" id="{res:binding[@name='object']/res:uri}">
+                    <xsl:choose>
+                        <xsl:when test="res:binding[@name = 'manifest']">
+                            <xsl:attribute name="href">#iiif-window</xsl:attribute>
+                            <xsl:attribute name="class">iiif-image</xsl:attribute>
+                            <xsl:attribute name="manifest" select="res:binding[@name = 'manifest']/res:uri"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:attribute name="href" select="res:binding[@name = 'reference']/res:uri"/>
+                            <xsl:attribute name="class">thumbImage</xsl:attribute>
+                            <xsl:attribute name="rel">gallery</xsl:attribute>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                    <img src="{res:binding[@name='reference']/res:uri}" alt="Image of Die"/>
+                </a>                    
+            </xsl:if>
+            <div class="die-title">                    
+                <a href="{res:binding[@name='object']/res:uri}" title="{$title}">
+                    <xsl:value-of select="$title"/>                        
+                </a>
+            </div>           
         </div>
     </xsl:template>
 

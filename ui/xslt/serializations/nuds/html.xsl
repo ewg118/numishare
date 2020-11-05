@@ -540,7 +540,9 @@
 										<!-- if the die_study is enabled, then display a section for die links -->
 										<xsl:if test="//config/die_study[@enabled = true()]">
 											<xsl:text> | </xsl:text>
-											<a href="#dieAnalysis">Die Analysis</a>
+											<a href="#dieAnalysis">
+												<xsl:value-of select="numishare:normalizeLabel('display_die_analysis', $lang)"/>
+											</a>
 										</xsl:if>
 									</xsl:if>
 									<xsl:if test="count($subtypes//subtype) &gt; 0">
@@ -664,8 +666,17 @@
 						<xsl:if test="$hasSpecimens = true() and //config/die_study[@enabled = true()]">
 							<div class="row" id="dieAnalysis">
 								<div class="col-md-12">
+									<h3>
+										<xsl:value-of select="numishare:normalizeLabel('display_die_analysis', $lang)"/>
+									</h3>
 									<!-- display a div for each d3js forced network graph for each namedGraph for die attributions -->
-									<xsl:for-each select="//config/die_study/namedGraph">										
+									<xsl:for-each select="//config/die_study/namedGraph">
+										<h4>
+											<xsl:text>Atribution: </xsl:text>
+											<a href="{.}">
+												<xsl:value-of select="."/>
+											</a>
+										</h4>
 										<div namedGraph="{.}" class="network-graph hidden" id="{generate-id()}"/>
 									</xsl:for-each>
 								</div>

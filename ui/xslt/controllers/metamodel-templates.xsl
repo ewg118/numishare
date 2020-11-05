@@ -245,8 +245,8 @@
                 <triple s="?object" p="nmo:has{if ($side = 'obv') then 'Reverse' else 'Obverse'}/nmo:hasDie/rdf:value" o="?altDie"/>
             </select>
         </graph>
-        <triple s="?die" p="skos:prefLabel" o="?dieLabel" filter="langMatches(lang(?dieLabel), &#x022;en&#x022;)"/>
-        <triple s="?altDie" p="skos:prefLabel" o="?altDieLabel" filter="langMatches(lang(?altDieLabel), &#x022;en&#x022;)"/>
+        <triple s="?die" p="skos:notation" o="?dieLabel"/>
+        <triple s="?altDie" p="skos:notation" o="?altDieLabel"/>
     </xsl:template>
 
 </xsl:stylesheet>

@@ -24,11 +24,9 @@ $(document).ready(function () {
         
         renderNetworkGraph(id, path, urlParams);
     });
-    
-    //render the chart on button click ajax trigger on ID page--do not reload page with request params
 });
 
-
+//initiate a call to the getDieLinks JSON API and parse the resulting object into a d3plus Network
 function renderNetworkGraph(id, path, urlParams) {
     //alert(urlParams);
     $('#' + id).removeClass('hidden');
@@ -41,10 +39,25 @@ function renderNetworkGraph(id, path, urlParams) {
         
         const network = new d3plus.Network().config({
             links: edgeArray,
-            linkSize: function (d) {
-                return d.weight;
+            linkSize: function (edge) {
+                return edge.weight;
             },
-            nodes: nodeArray
+            nodes: nodeArray,
+            groupBy: function (node) {
+                return node.side;
+            }, 
+            label: function (node) {
+                return node.label;
+            }, 
+            color: function (node) {
+                if (node.side == 'obv'){
+                    return '#282f6b'
+                } else if (node.side == 'rev') {
+                    return '#b22200';
+                } else {
+                    return '#7e12cc';
+                }
+            }
         }).select('#' + id).render();
     });
 }
