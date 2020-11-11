@@ -54,8 +54,14 @@
 	
 	<p:choose href="#collection_type">
 		<p:when test="collection_type = 'cointype'">
-			<p:processor name="oxf:identity">
-				<p:input name="data" href="#collection_type"/>
+			<p:processor name="oxf:pipeline">						
+				<p:input name="data" href="#config"/>
+				<p:input name="request" href="#request"/>
+				<p:input name="namedGraph" href="#namedGraph"/>
+				<p:input name="side">
+					<side/>
+				</p:input>
+				<p:input name="config" href="query-die-relations.xpl"/>
 				<p:output name="data" ref="data"/>
 			</p:processor>
 		</p:when>

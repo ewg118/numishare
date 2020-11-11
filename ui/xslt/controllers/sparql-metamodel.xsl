@@ -72,4 +72,10 @@
 		<xsl:apply-templates/>
 		<xsl:text>}&#x0A;</xsl:text>
 	</xsl:template>
+	
+	<xsl:template match="bind">
+		<xsl:text>BIND (</xsl:text>
+		<xsl:value-of select="concat(@statement, ' AS ', @variable)"/>
+		<xsl:text>)</xsl:text>
+	</xsl:template>
 </xsl:stylesheet>

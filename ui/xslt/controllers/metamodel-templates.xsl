@@ -248,5 +248,22 @@
         <triple s="?die" p="skos:notation" o="?dieLabel"/>
         <triple s="?altDie" p="skos:notation" o="?altDieLabel"/>
     </xsl:template>
+    
+    <xsl:template name="numishare:queryDieRelationsForType">
+        <xsl:param name="typeURI"/>
+        <xsl:param name="namedGraph"/>
+        
+        <bind statement="&lt;{$typeURI}&gt;" variable="?type"/>
+        <triple s="?object" p="nmo:hasTypeSeriesItem" o="?type"/>
+        <graph namedGraph="{$namedGraph}">
+            <triple s="?object" p="nmo:hasObverse/nmo:hasDie/rdf:value" o="?die"/>
+            <select variables="?object ?altDie">
+                <triple s="?object" p="nmo:hasReverse/nmo:hasDie/rdf:value" o="?altDie"/>
+            </select>
+        </graph>
+        <triple s="?die" p="skos:notation" o="?dieLabel"/>
+        <triple s="?altDie" p="skos:notation" o="?altDieLabel"/>
+        <triple s="?type" p="skos:prefLabel" o="?typeLabel" filter="(langMatches(lang(?typeLabel), &#x022;en&#x022;))"/>
+    </xsl:template>
 
 </xsl:stylesheet>

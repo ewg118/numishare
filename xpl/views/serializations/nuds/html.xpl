@@ -30,9 +30,9 @@
 		<p:input name="config">
 			<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 				<xsl:template match="/">
-					<collectionType>
+					<collection_type>
 						<xsl:value-of select="/config/collection_type"/>
-					</collectionType>
+					</collection_type>
 				</xsl:template>
 			</xsl:stylesheet>
 		</p:input>
@@ -40,7 +40,7 @@
 	</p:processor>
 	
 	<p:choose href="#collectionType">		
-		<p:when test="collectionType = 'die'">
+		<p:when test="collection_type = 'die'">
 			<p:processor name="oxf:pipeline">						
 				<p:input name="data" href="#config"/>
 				<p:input name="config" href="../../../models/sparql/specimen-count.xpl"/>
@@ -86,7 +86,7 @@
 					</p:processor>
 					
 					<!-- iterate through named graphs and execute a die-linking query for each named graph to evaluate links from the obverse or reverse -->					
-					<p:for-each href="#config" select="/config/die_study/namedGraph" root="obverse" id="obv-dies">
+					<!--<p:for-each href="#config" select="/config/die_study/namedGraph" root="obverse" id="obv-dies">
 						<p:processor name="oxf:pipeline">						
 							<p:input name="data" href="#config"/>
 							<p:input name="request" href="#request"/>
@@ -110,12 +110,12 @@
 							<p:input name="config" href="../../../models/sparql/query-die-relations.xpl"/>
 							<p:output name="data" ref="rev-dies"/>
 						</p:processor>
-					</p:for-each>
+					</p:for-each>-->
 					
 					<p:processor name="oxf:unsafe-xslt">
 						<p:input name="request" href="#request"/>
 						<p:input name="specimens" href="#specimens"/>
-						<p:input name="dies" href="aggregate('dies', #obv-dies, #rev-dies)"/>
+						<!--<p:input name="dies" href="aggregate('dies', #obv-dies, #rev-dies)"/>-->
 						<p:input name="query" href="#die-examples-query-document"/>
 						<p:input name="data" href="aggregate('content', #data, #specimenCount, #config)"/>
 						<p:input name="config" href="../../../../ui/xslt/serializations/nuds/html.xsl"/>
@@ -125,7 +125,7 @@
 			</p:choose>
 		</p:when>		
 		<!-- if it is a coin type record, then execute an ASK query -->
-		<p:when test="collectionType='cointype'">
+		<p:when test="collection_type='cointype'">
 			<p:processor name="oxf:pipeline">						
 				<p:input name="data" href="#config"/>
 				<p:input name="config" href="../../../models/sparql/specimen-count.xpl"/>
@@ -143,6 +143,45 @@
 				<p:input name="config" href="../../../models/sparql/ask-iiif.xpl"/>
 				<p:output name="data" id="hasIIIF"/>
 			</p:processor>
+			
+			<!-- evaluate the config for a die study and return true or false if there are dies associated with the coin type -->
+			<p:processor name="oxf:pipeline">						
+				<p:input name="data" href="#config"/>
+				<p:input name="config" href="../../../models/sparql/ask-dies.xpl"/>
+				<p:output name="data" id="hasDies"/>
+			</p:processor>
+			
+			<!-- if hasDies is true, then submit a SPARQL query for the die links in order to generate an HTML chart.
+				This is the same query for the d3plus forced network graph, but serialized differently -->
+			<p:choose href="#hasDies">
+				<p:when test="boolean(//res:boolean = true())">
+					<p:for-each href="#config" select="/config/die_study/namedGraph" root="dies" id="sparql-response">
+						<p:processor name="oxf:pipeline">						
+							<p:input name="data" href="#config"/>
+							<p:input name="request" href="#request"/>
+							<p:input name="namedGraph" href="current()"/>
+							<p:input name="side">
+								<side/>
+							</p:input>
+							<p:input name="config" href="../../../models/sparql/query-die-relations.xpl"/>
+							<p:output name="data" ref="sparql-response"/>
+						</p:processor>
+					</p:for-each>
+					
+					<p:processor name="oxf:identity">
+						<p:input name="data" href="#sparql-response"/>
+						<p:output name="data" id="dies"/>
+					</p:processor>
+				</p:when>
+				<p:otherwise>
+					<p:processor name="oxf:identity">
+						<p:input name="data">
+							<sparql xmlns="http://www.w3.org/2005/sparql-results#"/>
+						</p:input>
+						<p:output name="data" id="dies"/>
+					</p:processor>
+				</p:otherwise>
+			</p:choose>
 			
 			<!-- load SPARQL query from disk -->
 			<p:processor name="oxf:url-generator">
@@ -222,6 +261,8 @@ ASK {?s oa:hasBody <URI>}]]>
 									<p:processor name="oxf:unsafe-xslt">
 										<p:input name="request" href="#request"/>
 										<p:input name="hasIIIF" href="#hasIIIF"/>
+										<p:input name="hasDies" href="#hasDies"/>
+										<p:input name="dies" href="#dies"/>
 										<p:input name="query" href="#type-examples-query-document"/>
 										<p:input name="data" href="aggregate('content', #data, #specimenCount, #hasFindspots, #config)"/>
 										<p:input name="config" href="../../../../ui/xslt/serializations/nuds/html.xsl"/>
@@ -238,6 +279,8 @@ ASK {?s oa:hasBody <URI>}]]>
 									<p:processor name="oxf:unsafe-xslt">
 										<p:input name="request" href="#request"/>
 										<p:input name="hasIIIF" href="#hasIIIF"/>
+										<p:input name="hasDies" href="#hasDies"/>
+										<p:input name="dies" href="#dies"/>
 										<p:input name="specimens" href="#specimens"/>
 										<p:input name="query" href="#type-examples-query-document"/>
 										<p:input name="data" href="aggregate('content', #data, #specimenCount, #hasFindspots, #config)"/>
@@ -260,6 +303,8 @@ ASK {?s oa:hasBody <URI>}]]>
 										<p:input name="request" href="#request"/>
 										<p:input name="annotations" href="#annotations"/>
 										<p:input name="hasIIIF" href="#hasIIIF"/>
+										<p:input name="hasDies" href="#hasDies"/>
+										<p:input name="dies" href="#dies"/>
 										<p:input name="query" href="#type-examples-query-document"/>
 										<p:input name="data" href="aggregate('content', #data, #specimenCount, #hasFindspots, #config)"/>
 										<p:input name="config" href="../../../../ui/xslt/serializations/nuds/html.xsl"/>
@@ -276,6 +321,8 @@ ASK {?s oa:hasBody <URI>}]]>
 									<p:processor name="oxf:unsafe-xslt">
 										<p:input name="request" href="#request"/>
 										<p:input name="hasIIIF" href="#hasIIIF"/>
+										<p:input name="hasDies" href="#hasDies"/>
+										<p:input name="dies" href="#dies"/>
 										<p:input name="annotations" href="#annotations"/>
 										<p:input name="specimens" href="#specimens"/>
 										<p:input name="query" href="#type-examples-query-document"/>
@@ -294,6 +341,8 @@ ASK {?s oa:hasBody <URI>}]]>
 							<p:processor name="oxf:unsafe-xslt">
 								<p:input name="request" href="#request"/>
 								<p:input name="hasIIIF" href="#hasIIIF"/>
+								<p:input name="hasDies" href="#hasDies"/>
+								<p:input name="dies" href="#dies"/>
 								<p:input name="query" href="#type-examples-query-document"/>
 								<p:input name="data" href="aggregate('content', #data, #specimenCount, #hasFindspots, #config)"/>
 								<p:input name="config" href="../../../../ui/xslt/serializations/nuds/html.xsl"/>
@@ -310,7 +359,9 @@ ASK {?s oa:hasBody <URI>}]]>
 							<p:processor name="oxf:unsafe-xslt">
 								<p:input name="request" href="#request"/>
 								<p:input name="hasIIIF" href="#hasIIIF"/>
+								<p:input name="hasDies" href="#hasDies"/>
 								<p:input name="specimens" href="#specimens"/>
+								<p:input name="dies" href="#dies"/>
 								<p:input name="query" href="#type-examples-query-document"/>
 								<p:input name="data" href="aggregate('content', #data, #specimenCount, #hasFindspots, #config)"/>
 								<p:input name="config" href="../../../../ui/xslt/serializations/nuds/html.xsl"/>

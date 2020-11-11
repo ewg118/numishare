@@ -141,7 +141,7 @@
 
 	<!-- get subtypes -->
 	<xsl:variable name="subtypes" as="element()*">
-		<xsl:if test="$recordType = 'conceptual' and //config/collection_type = 'cointype'">
+		<xsl:if test="$recordType = 'conceptual' and $collection_type = 'cointype'">
 			<xsl:if test="doc-available(concat($request-uri, 'get_subtypes?identifiers=', $id))">
 				<xsl:copy-of select="document(concat($request-uri, 'get_subtypes?identifiers=', $id))/*"/>
 			</xsl:if>
@@ -236,7 +236,7 @@
 		</node>
 	</xsl:variable>
 
-	<!-- whether there are coin types, mints, findspots, annotations, executed in XPL -->
+	<!-- whether there are coin types, mints, findspots, annotations, dies, executed in XPL -->
 	<xsl:variable name="hasSpecimens" select="number(//res:sparql[1]//descendant::res:binding[@name = 'count']/res:literal) &gt; 0" as="xs:boolean"/>
 	<xsl:variable name="specimenCount" select="//res:sparql[1]/descendant::res:binding[@name = 'count']/res:literal" as="xs:integer"/>
 	<xsl:variable name="hasFindspots" as="xs:boolean">
@@ -264,6 +264,28 @@
 			<xsl:when test="matches(//config/annotation_sparql_endpoint, 'https?://')">
 				<xsl:choose>
 					<xsl:when test="doc('input:annotations')[descendant::res:result]">true</xsl:when>
+					<xsl:otherwise>false</xsl:otherwise>
+				</xsl:choose>
+			</xsl:when>
+			<xsl:otherwise>false</xsl:otherwise>
+		</xsl:choose>
+	</xsl:variable>
+	<xsl:variable name="hasDies" as="xs:boolean">
+		<xsl:choose>
+			<xsl:when test="//config/die_study[@enabled = true()]">
+				<xsl:choose>
+					<xsl:when test="$recordType = 'conceptual'">
+						<xsl:choose>
+							<xsl:when test="$collection_type = 'cointype'">
+								<!-- if there is a true() response for dies for any possible named graph, then $hasDies is true -->
+								<xsl:value-of select="boolean(doc('input:hasDies')//res:boolean = true())"/>
+							</xsl:when>
+							<xsl:when test="$collection_type = 'die'">
+								<xsl:value-of select="number(//res:sparql[1]//descendant::res:binding[@name = 'count']/res:literal) &gt; 0"/>
+							</xsl:when>
+							<xsl:otherwise>false</xsl:otherwise>
+						</xsl:choose>
+					</xsl:when>
 					<xsl:otherwise>false</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
@@ -501,9 +523,6 @@
 					<xsl:when test="$recordType = 'conceptual'">
 						<div class="row">
 							<div class="col-md-12">
-
-								<!--<xsl:copy-of select="doc('input:dies')"/>-->
-
 								<xsl:if test="nuds:control/nuds:publicationStatus = 'deprecatedType'">
 									<div class="alert alert-box alert-danger">
 										<span class="glyphicon glyphicon-exclamation-sign"/>
@@ -537,13 +556,13 @@
 														numishare:normalizeLabel('display_die_examples', $lang)"
 											/>
 										</a>
-										<!-- if the die_study is enabled, then display a section for die links -->
-										<xsl:if test="//config/die_study[@enabled = true()]">
-											<xsl:text> | </xsl:text>
-											<a href="#dieAnalysis">
-												<xsl:value-of select="numishare:normalizeLabel('display_die_analysis', $lang)"/>
-											</a>
-										</xsl:if>
+									</xsl:if>
+									<!-- if the die_study is enabled, then display a section for die links -->
+									<xsl:if test="$hasDies = true()">
+										<xsl:text> | </xsl:text>
+										<a href="#dieAnalysis">
+											<xsl:value-of select="numishare:normalizeLabel('display_die_analysis', $lang)"/>
+										</a>
 									</xsl:if>
 									<xsl:if test="count($subtypes//subtype) &gt; 0">
 										<xsl:text> | </xsl:text>
@@ -662,8 +681,8 @@
 							</xsl:apply-templates>
 						</xsl:if>
 
-						<!-- display die analysis, visualization -->
-						<xsl:if test="$hasSpecimens = true() and //config/die_study[@enabled = true()]">
+						<!-- display die analysis, visualization, only if there are dies in the SPARQL endpoint -->
+						<xsl:if test="$hasDies = true()">
 							<div class="row" id="dieAnalysis">
 								<div class="col-md-12">
 									<h3>
@@ -671,13 +690,22 @@
 									</h3>
 									<!-- display a div for each d3js forced network graph for each namedGraph for die attributions -->
 									<xsl:for-each select="//config/die_study/namedGraph">
+										<xsl:variable name="position" select="position()"/>
+
 										<h4>
-											<xsl:text>Atribution: </xsl:text>
+											<xsl:text>Attribution: </xsl:text>
 											<a href="{.}">
 												<xsl:value-of select="."/>
 											</a>
 										</h4>
 										<div namedGraph="{.}" class="network-graph hidden" id="{generate-id()}"/>
+
+										<div>
+											<h4>Die Links</h4>
+
+											<!-- serialize the SPARQL response relevant to the named graph into an HTML table -->
+											<xsl:apply-templates select="doc('input:dies')//res:sparql[$position]" mode="die-links"/>
+										</div>
 									</xsl:for-each>
 								</div>
 							</div>
@@ -1382,5 +1410,43 @@
 				<xsl:text>; </xsl:text>
 			</xsl:if>
 		</xsl:for-each>
+	</xsl:template>
+
+	<!-- ************** TEMPLATES FOR RENDERING SPARQL RESULTS INTO A TABLE OF DIE LINKS ************** -->
+	<xsl:template match="res:sparql" mode="die-links">
+		<table class="table table-striped">
+			<thead>
+				<th>
+					<xsl:value-of select="numishare:regularize_node('obverse', $lang)"/>
+				</th>
+				<th>
+					<xsl:value-of select="numishare:regularize_node('reverse', $lang)"/>
+				</th>
+				<th>
+					<xsl:value-of select="numishare:normalizeLabel('numeric_count', $lang)"/>
+				</th>
+			</thead>
+			<tbody>
+				<xsl:apply-templates select="descendant::res:result" mode="die-links"/>
+			</tbody>
+		</table>
+	</xsl:template>
+
+	<xsl:template match="res:result" mode="die-links">
+		<tr>
+			<td>
+				<a href="{res:binding[@name = 'die']/res:uri}">
+					<xsl:value-of select="res:binding[@name = 'dieLabel']/res:literal"/>
+				</a>				
+			</td>
+			<td>
+				<a href="{res:binding[@name = 'altDie']/res:uri}">
+					<xsl:value-of select="res:binding[@name = 'altDieLabel']/res:literal"/>
+				</a>				
+			</td>
+			<td>
+				<xsl:value-of select="res:binding[@name = 'count']/res:literal"/>
+			</td>
+		</tr>
 	</xsl:template>
 </xsl:stylesheet>
