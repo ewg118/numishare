@@ -35,7 +35,7 @@ $(document).ready(function () {
 	
 	/*** pagination ***/
 	$(' #search1') .on('click', '.paging_div .page-nos .btn-toolbar .pagination .pagingBtn', function () {
-		var href = 'compare_results' + $(this) .attr('href');
+		var href = 'compare_results' + $(this) .attr('href');		
 		$.get(href,
 		function (data) {
 			$('#search1') .html(data);

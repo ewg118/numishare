@@ -1,8 +1,9 @@
 /************************************
 VISUALIZATION FUNCTIONS
 Written by Ethan Gruber, gruber@numismatics.org
+Date: May 2020
 Library: jQuery
-Description: Rendering graphics based on hoard counts
+Description: Display functions for coin type records. Extended 2020 for displaying images of physical coins connected to hoards
  ************************************/
 $(document).ready(function () {
 
@@ -29,12 +30,31 @@ $(document).ready(function () {
     $('.iiif-image').fancybox({
         beforeShow: function () {
             var manifest = this.element.attr('manifest');
+            this.title = '<a href="' + this.element.attr('id') + '">' + this.element.attr('title') + '</a>'
             //remove and replace #iiif-container, if different or new
             if (manifest != $('#manifest').text()) {          
                 $('#iiif-container').remove();
                 $(".iiif-container-template").clone().removeAttr('class').attr('id', 'iiif-container').appendTo("#iiif-window");
                 $('#manifest').text(manifest);
                 render_image(manifest);
+            }
+        },
+        helpers: {
+            title: {
+                type: 'inside'
+            }
+        }
+    });
+    
+        
+    $('.model-button').fancybox({
+         beforeShow: function () {
+            var url = this.element.attr('model-url');
+            this.title = '<a href="' + this.element.attr('identifier') + '">' + this.element.attr('title') + '</a>';
+            //if the URL is sketchfab, then remove existing iframe and reload iframe
+            if (url.indexOf('sketchfab') > 0) {          
+                $('#model-window').children('iframe').remove();
+                $("#model-iframe-template").clone().removeAttr('id').attr('src', url + '/embed').appendTo("#model-window");
             }
         },
         helpers: {
@@ -73,38 +93,3 @@ $(document).ready(function () {
         });
     }
 });
-
-
-
-// copy the base template
-function gateTypeBtnClick(btn) {
-    var formId = btn.closest('form').attr('id');
-    
-    //clone the template
-    var tpl = cloneTemplate(formId);
-    
-    // focus the text field after select
-    $(tpl).children('select').change(function () {
-        $(this).siblings('input').focus();
-    });
-    
-    // add the new template to the dom
-    $(btn).parent().after(tpl);
-    
-    tpl.children('.removeBtn').removeAttr('style');
-    tpl.children('.removeBtn').before(' |&nbsp;');
-    // display the entire new template
-    tpl.fadeIn('fast');
-}
-
-function cloneTemplate(formId) {
-    if (formId == 'sparqlForm') {
-        var tpl = $('#sparqlItemTemplate').clone();
-    } else {
-        var tpl = $('#searchItemTemplate').clone();
-    }
-    
-    //remove id to avoid duplication with the template
-    tpl.removeAttr('id');
-    return tpl;
-}
