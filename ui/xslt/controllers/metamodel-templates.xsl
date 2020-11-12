@@ -236,9 +236,11 @@
     </xsl:template>
     
     <xsl:template name="numishare:queryDieRelations">
+        <xsl:param name="dieURI"/>
         <xsl:param name="namedGraph"/>
         <xsl:param name="side"/>
         
+        <bind statement="&lt;{$dieURI}&gt;" variable="?die"/>
         <graph namedGraph="{$namedGraph}">
             <triple s="?object" p="nmo:has{if ($side = 'obv') then 'Obverse' else 'Reverse'}/nmo:hasDie/rdf:value" o="?die"/>
             <select variables="?object ?altDie">
@@ -264,6 +266,23 @@
         <triple s="?die" p="skos:notation" o="?dieLabel"/>
         <triple s="?altDie" p="skos:notation" o="?altDieLabel"/>
         <triple s="?type" p="skos:prefLabel" o="?typeLabel" filter="(langMatches(lang(?typeLabel), &#x022;en&#x022;))"/>
+    </xsl:template>
+    
+    <xsl:template name="numishare:queryDieRelationsForCoin">
+        <xsl:param name="objectURI"/>
+        <xsl:param name="namedGraph"/>
+        
+        <bind statement="&lt;{$objectURI}&gt;" variable="?object"/>
+        <graph namedGraph="{$namedGraph}">
+            <optional>
+                <triple s="?object" p="nmo:hasObverse/nmo:hasDie/rdf:value" o="?die"/>
+            </optional>
+            <optional>
+                <triple s="?object" p="nmo:hasReverse/nmo:hasDie/rdf:value" o="?altDie"/>
+            </optional>
+        </graph>
+        <triple s="?die" p="skos:prefLabel" o="?dieLabel" filter="(langMatches(lang(?dieLabel), &#x022;en&#x022;))"/>
+        <triple s="?altDie" p="skos:prefLabel" o="?altDieLabel" filter="(langMatches(lang(?altDieLabel), &#x022;en&#x022;))"/>
     </xsl:template>
 
 </xsl:stylesheet>

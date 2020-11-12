@@ -5,6 +5,9 @@ PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 
-SELECT DISTINCT ?die ?dieLabel ?altDie ?altDieLabel WHERE {
-    %STATEMENTS%
+ASK {
+  	BIND (<%URI%> as ?object)
+    GRAPH <%graphURI%> {
+      ?object nmo:hasObverse/nmo:hasDie/rdf:value | nmo:hasReverse/nmo:hasDie/rdf:value ?die
+    }
 }

@@ -525,7 +525,8 @@
 					</xsl:when>
 					<xsl:otherwise>
 						<!-- suppress type and legend from nested list output for physical records: these fields are displayed with the images -->
-						<xsl:if test="child::*[not(local-name() = 'type' or local-name() = 'legend')]">
+						<!-- November 2020: display the section and heading if $hasDies = true() -->
+						<xsl:if test="(child::*[not(local-name() = 'type' or local-name() = 'legend')]) or $hasDies = true()">
 							<li>
 								<xsl:choose>
 									<xsl:when test="parent::physDesc">
@@ -541,6 +542,18 @@
 								</xsl:choose>
 								<ul>
 									<xsl:apply-templates select="*[not(local-name() = 'type' or local-name() = 'legend')]" mode="descMeta"/>
+
+									<!-- if $hasDies is true for a physical collection, then display the die link(s) in the appropriate obverse/reverse section -->
+									<xsl:if test="$collection_type = 'object' and $hasDies = true()">
+										<xsl:choose>
+											<xsl:when test="local-name() = 'obverse' and parent::nuds:typeDesc">
+												<xsl:apply-templates select="doc('input:dies')//res:binding[@name='die']" mode="coin-die"/>
+											</xsl:when>
+											<xsl:when test="local-name() = 'reverse' and parent::nuds:typeDesc">
+												<xsl:apply-templates select="doc('input:dies')//res:binding[@name='altDie']" mode="coin-die"/>
+											</xsl:when>
+										</xsl:choose>
+									</xsl:if>
 								</ul>
 							</li>
 						</xsl:if>
@@ -548,11 +561,11 @@
 				</xsl:choose>
 			</xsl:otherwise>
 		</xsl:choose>
-
+		
 		<!-- if the element is a persname with a Nomisma URI, then extract the state and dynasty from the Nomisma RDF -->
 		<xsl:if test="local-name() = 'persname' and contains(@xlink:href, 'nomisma.org')">
 			<xsl:variable name="href" select="@xlink:href"/>
-			
+
 			<!-- nest the org/dynasty sub-fields under the person -->
 			<xsl:if test="$rdf//*[@rdf:about = $href]/org:hasMembership or $rdf//*[@rdf:about = $href]/org:memberOf">
 				<li>
@@ -617,7 +630,7 @@
 			<xsl:when test="boolean(index-of($facets, $facet)) = true()">
 				<!-- if the $lang is enabled in the config (implying indexing into solr), then direct the user to the language-specific Solr query based on Nomisma prefLabel,
 					otherwise use the English preferred label -->
-				
+
 				<xsl:variable name="queryValue">
 					<xsl:choose>
 						<xsl:when test="contains($href, 'nomisma.org') and not($langEnabled = true())">
@@ -628,9 +641,10 @@
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:variable>
-					
-				
-				<a href="{$display_path}results?q={$field}_facet:&#x022;{$queryValue}&#x022;{if (string($langParam)) then concat('&amp;lang=', $langParam) else ''}">
+
+
+				<a
+					href="{$display_path}results?q={$field}_facet:&#x022;{$queryValue}&#x022;{if (string($langParam)) then concat('&amp;lang=', $langParam) else ''}">
 					<xsl:choose>
 						<xsl:when test="contains($href, 'geonames.org')">
 							<xsl:choose>
@@ -1257,8 +1271,17 @@
 			<xsl:text>, </xsl:text>
 		</xsl:if>
 	</xsl:template>
-
-
+	
+	<xsl:template match="res:binding[@name = 'die'] | res:binding[@name='altDie']" mode="coin-die">
+		<xsl:variable name="name" select="@name"/>
+		
+		<li>
+			<b><xsl:value-of select="numishare:regularize_node('die', $lang)"/>: </b>
+			<a href="{res:uri}">
+				<xsl:value-of select="parent::res:result/res:binding[@name = concat($name, 'Label')]/res:literal"/>
+			</a>
+		</li>
+	</xsl:template>
 
 	<!--***************************************** OPTIONS BAR **************************************** -->
 	<xsl:template name="icons">

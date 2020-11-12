@@ -6,7 +6,7 @@ PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 
 ASK {
-  	?object nmo:hasTypeSeriesItem <%typeURI%> ;
+  	?object nmo:hasTypeSeriesItem <%URI%> ;
             rdf:type nmo:NumismaticObject
     GRAPH <%graphURI%> {
       ?object nmo:hasObverse/nmo:hasDie/rdf:value | nmo:hasReverse/nmo:hasDie/rdf:value ?die

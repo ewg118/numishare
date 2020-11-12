@@ -282,11 +282,13 @@
 							</xsl:when>
 							<xsl:when test="$collection_type = 'die'">
 								<xsl:value-of select="number(//res:sparql[1]//descendant::res:binding[@name = 'count']/res:literal) &gt; 0"/>
-							</xsl:when>
+							</xsl:when>							
 							<xsl:otherwise>false</xsl:otherwise>
 						</xsl:choose>
 					</xsl:when>
-					<xsl:otherwise>false</xsl:otherwise>
+					<xsl:otherwise>
+						<xsl:value-of select="boolean(doc('input:hasDies')//res:boolean = true())"/>
+					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
 			<xsl:otherwise>false</xsl:otherwise>

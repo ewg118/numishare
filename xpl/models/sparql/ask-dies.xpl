@@ -21,17 +21,34 @@
 	<!-- evaluate if die_study is activated -->
 	<p:choose href="#data">
 		<p:when test="/config/die_study[@enabled = true()]">
-			<!-- load SPARQL queries from disk -->
-			<p:processor name="oxf:url-generator">
-				<p:input name="config">
-					<config>
-						<url>oxf:/apps/numishare/ui/sparql/ask-dies-for-types.sparql</url>
-						<content-type>text/plain</content-type>
-						<encoding>utf-8</encoding>
-					</config>
-				</p:input>
-				<p:output name="data" id="query"/>
-			</p:processor>
+			<!-- evaluate the collection_type, and execute a different SPARQL query for dies linked to a coin vs. coin type -->
+			<p:choose href="#data">
+				<p:when test="/config/collection_type = 'cointype'">
+					<p:processor name="oxf:url-generator">
+						<p:input name="config">
+							<config>
+								<url>oxf:/apps/numishare/ui/sparql/ask-dies-for-types.sparql</url>
+								<content-type>text/plain</content-type>
+								<encoding>utf-8</encoding>
+							</config>
+						</p:input>
+						<p:output name="data" id="query"/>
+					</p:processor>
+
+				</p:when>
+				<p:when test="/config/collection_type = 'object'">
+					<p:processor name="oxf:url-generator">
+						<p:input name="config">
+							<config>
+								<url>oxf:/apps/numishare/ui/sparql/ask-dies-for-coins.sparql</url>
+								<content-type>text/plain</content-type>
+								<encoding>utf-8</encoding>
+							</config>
+						</p:input>
+						<p:output name="data" id="query"/>
+					</p:processor>
+				</p:when>
+			</p:choose>
 
 			<p:processor name="oxf:text-converter">
 				<p:input name="data" href="#query"/>
@@ -51,19 +68,29 @@
 					<p:input name="data" href="#data"/>
 					<p:input name="config">
 						<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-							<xsl:variable name="typeURI" select="concat(/config/uri_space, tokenize(doc('input:request')/request/request-url, '/')[last()])"/>
+							<xsl:variable name="id" select="tokenize(doc('input:request')/request/request-url, '/')[last()]"/>
 							
 							<!-- config variables -->
-							<xsl:variable name="sparql_endpoint" select="/config/sparql_endpoint"/>				
-							
+							<xsl:variable name="url" select="/config/url"/>
+							<xsl:variable name="uri_space" select="/config/uri_space"/>
+							<xsl:variable name="sparql_endpoint" select="/config/sparql_endpoint"/>
+
+							<xsl:variable name="uri"
+								select="if (string($uri_space)) then
+								concat($uri_space, $id)
+								else
+								concat($url, 'id/', $id)"/>
+
 							<xsl:variable name="query">
 								<xsl:value-of select="doc('input:query')"/>
 							</xsl:variable>
-							
+
 							<xsl:variable name="service">
-								<xsl:value-of select="concat($sparql_endpoint, '?query=', encode-for-uri(replace(replace($query, '%typeURI%', $typeURI), '%graphURI%', doc('input:namedGraph')/namedGraph)), '&amp;output=xml')"/>
+								<xsl:value-of
+									select="concat($sparql_endpoint, '?query=', encode-for-uri(replace(replace($query, '%URI%', $uri), '%graphURI%', doc('input:namedGraph')/namedGraph)), '&amp;output=xml')"
+								/>
 							</xsl:variable>
-							
+
 							<xsl:template match="/">
 								<config>
 									<url>
@@ -77,14 +104,14 @@
 					</p:input>
 					<p:output name="data" id="url-generator-config"/>
 				</p:processor>
-				
+
 				<!-- get the data from fuseki -->
 				<p:processor name="oxf:url-generator">
 					<p:input name="config" href="#url-generator-config"/>
 					<p:output name="data" ref="sparql-response"/>
 				</p:processor>
 			</p:for-each>
-			
+
 			<p:processor name="oxf:identity">
 				<p:input name="data" href="#sparql-response"/>
 				<p:output name="data" ref="data"/>
@@ -95,7 +122,7 @@
 			<p:processor name="oxf:identity">
 				<p:input name="data">
 					<sparql xmlns="http://www.w3.org/2005/sparql-results#">
-						<head/> 
+						<head/>
 						<boolean>false</boolean>
 					</sparql>
 				</p:input>

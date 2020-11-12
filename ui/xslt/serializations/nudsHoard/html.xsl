@@ -273,6 +273,9 @@
 		as="xs:boolean"/>
 	<xsl:variable name="specimenCount" select="doc('input:specimenCount')//res:sparql/descendant::res:binding[@name = 'count']/res:literal" as="xs:integer"/>
 
+	<!-- empty dies param (used in html-templates) -->
+	<xsl:variable name="hasDies" as="xs:boolean">false</xsl:variable>
+
 	<xsl:template match="/">
 		<html
 			prefix="geo: http://www.w3.org/2003/01/geo/wgs84_pos# foaf: http://xmlns.com/foaf/0.1/ dcterms: http://purl.org/dc/terms/ xsd: http://www.w3.org/2001/XMLSchema# nm:

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 	Author: Ethan Gruber
-	Last modified: October 2020
+	Last modified: November 2020
 	Function: HTML view for NUDS. It involves conditionals for conceptual vs. physical specimens, 
 		including SPARQL queries for associated specimens and annoations.
 		July 2018: added type-examples.xpl into this XPL in order to avoid xsl:document() function call to /api pipeline within the XSLT
-		October 2020: Added support for die studies
+		October-November 2020: Added support for die studies
 -->
 <p:config xmlns:p="http://www.orbeon.com/oxf/pipeline" xmlns:oxf="http://www.orbeon.com/oxf/processors" xmlns:res="http://www.w3.org/2005/sparql-results#" xmlns:saxon="http://saxon.sf.net/">
 	<p:param type="input" name="data"/>
@@ -372,7 +372,45 @@ ASK {?s oa:hasBody <URI>}]]>
 				</p:otherwise>
 			</p:choose>
 		</p:when>
-		<p:otherwise>	
+		<p:otherwise>
+			<!-- evaluate the config for a die study and return true or false if there are dies associated with the coin type -->
+			<p:processor name="oxf:pipeline">						
+				<p:input name="data" href="#config"/>
+				<p:input name="config" href="../../../models/sparql/ask-dies.xpl"/>
+				<p:output name="data" id="hasDies"/>
+			</p:processor>
+			
+			<!-- if hasDies is true, then submit a SPARQL query for the die links to include into the HTML output for a coin -->
+			<p:choose href="#hasDies">
+				<p:when test="boolean(//res:boolean = true())">
+					<p:for-each href="#config" select="/config/die_study/namedGraph" root="dies" id="sparql-response">
+						<p:processor name="oxf:pipeline">						
+							<p:input name="data" href="#config"/>
+							<p:input name="request" href="#request"/>
+							<p:input name="namedGraph" href="current()"/>
+							<p:input name="side">
+								<side/>
+							</p:input>
+							<p:input name="config" href="../../../models/sparql/query-die-relations.xpl"/>
+							<p:output name="data" ref="sparql-response"/>
+						</p:processor>
+					</p:for-each>
+					
+					<p:processor name="oxf:identity">
+						<p:input name="data" href="#sparql-response"/>
+						<p:output name="data" id="dies"/>
+					</p:processor>
+				</p:when>
+				<p:otherwise>
+					<p:processor name="oxf:identity">
+						<p:input name="data">
+							<sparql xmlns="http://www.w3.org/2005/sparql-results#"/>
+						</p:input>
+						<p:output name="data" id="dies"/>
+					</p:processor>
+				</p:otherwise>
+			</p:choose>
+			
 			<p:choose href="#config">
 				<p:when test="matches(/config/annotation_sparql_endpoint, 'https?://')">
 					
@@ -427,6 +465,8 @@ ASK {?s oa:hasBody <URI>}]]>
 							<!-- if there is a problem with the SPARQL endpoint, then simply generate the HTML page -->
 							<p:processor name="oxf:unsafe-xslt">
 								<p:input name="request" href="#request"/>
+								<p:input name="hasDies" href="#hasDies"/>
+								<p:input name="dies" href="#dies"/>
 								<p:input name="data" href="aggregate('content', #data, #config)"/>
 								<p:input name="config" href="../../../../ui/xslt/serializations/nuds/html.xsl"/>
 								<p:output name="data" id="model"/>
@@ -441,6 +481,8 @@ ASK {?s oa:hasBody <URI>}]]>
 							
 							<p:processor name="oxf:unsafe-xslt">
 								<p:input name="request" href="#request"/>
+								<p:input name="hasDies" href="#hasDies"/>
+								<p:input name="dies" href="#dies"/>
 								<p:input name="annotations" href="#annotations"/>
 								<p:input name="data" href="aggregate('content', #data, #config)"/>
 								<p:input name="config" href="../../../../ui/xslt/serializations/nuds/html.xsl"/>
@@ -452,6 +494,8 @@ ASK {?s oa:hasBody <URI>}]]>
 				<p:otherwise>
 					<p:processor name="oxf:unsafe-xslt">
 						<p:input name="request" href="#request"/>
+						<p:input name="hasDies" href="#hasDies"/>
+						<p:input name="dies" href="#dies"/>
 						<p:input name="data" href="aggregate('content', #data, #config)"/>
 						<p:input name="config" href="../../../../ui/xslt/serializations/nuds/html.xsl"/>
 						<p:output name="data" id="model"/>

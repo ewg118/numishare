@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 	Author: Ethan Gruber
-	Date: October 2020
+	Date: November 2020
 	Function: Execute a SPARQL query in order to query the die links given a die URI or type URI, given the 'die' or 'type' HTTP
 	request parameter. 
 -->
