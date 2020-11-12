@@ -130,7 +130,7 @@
 					<xsl:when test="$label = 'private'">Privat</xsl:when>
 					<xsl:when test="$label = 'provenance'">Herkunft</xsl:when>
 					<xsl:when test="$label = 'public'">öffentlich</xsl:when>
-					<xsl:when test="$label = 'publisher'">Verlag</xsl:when>
+					<xsl:when test="$label = 'publisher'">Herausgeber</xsl:when>
 					<xsl:when test="$label = 'reference'">Zitat</xsl:when>
 					<xsl:when test="$label = 'refDesc'">Zitate</xsl:when>
 					<xsl:when test="$label = 'region'">Region</xsl:when>
@@ -1469,7 +1469,7 @@
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
-			<xsl:when test="$lang = 'gr'">
+			<xsl:when test="$lang = 'el'">
 				<xsl:choose>
 					<xsl:when test="$label = 'acknowledgment'">Ευχαριστίες</xsl:when>
 					<xsl:when test="$label = 'acquisition'">Πρόσκτημα</xsl:when>
@@ -1873,7 +1873,8 @@
 				</xsl:choose>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:choose>					
+				<xsl:choose>			
+					<xsl:when test="$label = 'ah'">Hijra Date</xsl:when>
 					<xsl:when test="$label = 'ancient_place'">Ancient Place</xsl:when>
 					<xsl:when test="$label = 'acquiredFrom'">Acquired From</xsl:when>
 					<xsl:when test="$label = 'adminDesc'">Administrative History</xsl:when>
@@ -1892,6 +1893,7 @@
 					<xsl:when test="$label = 'hoardDesc'">Hoard Description</xsl:when>
 					<xsl:when test="$label = 'fromDate'">From Date</xsl:when>
 					<xsl:when test="$label = 'toDate'">To Date</xsl:when>
+					<xsl:when test="$label = 'letter'">Monogram Letter</xsl:when>
 					<xsl:when test="$label = 'measurementsSet'">Measurements</xsl:when>
 					<xsl:when test="$label = 'noteSet'">Notes</xsl:when>
 					<xsl:when test="$label = 'objectType'">Object Type</xsl:when>
@@ -3650,7 +3652,7 @@
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
-			<xsl:when test="$lang = 'gr'">
+			<xsl:when test="$lang = 'el'">
 				<xsl:choose>
 					<xsl:when test="$label = 'header_home'">Αφετηρία</xsl:when>
 					<xsl:when test="$label = 'header_about'">Πληροφορίες</xsl:when>
@@ -4093,6 +4095,8 @@
 					<xsl:when test="$label = 'display_data-download'">Data Download</xsl:when>
 					<xsl:when test="$label = 'display_date-analysis'">Date Analysis</xsl:when>
 					<xsl:when test="$label = 'display_examples'">Examples of this type</xsl:when>
+					<xsl:when test="$label = 'display_die_examples'">Die Examples</xsl:when>
+					<xsl:when test="$label = 'display_die_analysis'">Die Analysis</xsl:when>
 					<xsl:when test="$label = 'results_all-terms'">All Terms</xsl:when>
 					<xsl:when test="$label = 'results_map-results'">Map Results</xsl:when>
 					<xsl:when test="$label = 'results_filters'">Filters</xsl:when>
@@ -4563,6 +4567,7 @@
 					<xsl:when test="$element = 'dcterms:isPartOf'">Field of Numismatics</xsl:when>
 					<xsl:when test="$element = 'dcterms:license'">License</xsl:when>
 					<xsl:when test="$element = 'dcterms:source'">Source</xsl:when>
+					<xsl:when test="$element = 'skos:broader'">Broader Concept</xsl:when>
 					<xsl:when test="$element = 'skos:definition'">Definition</xsl:when>
 					<xsl:when test="$element = 'skos:prefLabel'">Preferred Label</xsl:when>
 				</xsl:choose>
@@ -4774,8 +4779,9 @@
 	<!-- expand the @standardDate into a fully compliant xs:dateTime -->
 	<xsl:function name="numishare:expandDatetoDateTime">
 		<xsl:param name="date"/>
-
-		<xsl:variable name="time">T00:00:00Z</xsl:variable>
+		<xsl:param name="range"/>
+		
+		<xsl:variable name="time" select="if ($range = 'begin') then 'T00:00:00Z' else 'T23:59:59Z'"/>
 		
 		<!-- the data should be assumed to be XSD 1.0 compliant, which means that in order to make BC dates compliant to ISO 8601/XSD 1.1, 
 			a year should be added mathematically so that 1 BC is "0000" in the JSON output -->
@@ -4783,10 +4789,10 @@
 			<xsl:when test="substring($date, 1, 1) = '-'">
 				<xsl:choose>
 					<xsl:when test="$date castable as xs:gYear">
-						<xsl:value-of select="concat(xs:date(concat($date, '-01-01')) + xs:dayTimeDuration('P365DT0M'), $time)"/>
+						<xsl:value-of select="concat(xs:date(concat($date, if ($range = 'begin') then '-01-01' else '-12-31')) + xs:dayTimeDuration('P365DT0M'), $time)"/>
 					</xsl:when>
 					<xsl:when test="$date castable as xs:gYearMonth">
-						<xsl:value-of select="concat(xs:date(concat($date, '-01')) + xs:dayTimeDuration('P365DT0M'), $time)"/>
+						<xsl:value-of select="concat(xs:date(concat($date, if ($range = 'begin') then '-01' else '-31')) + xs:dayTimeDuration('P365DT0M'), $time)"/>
 					</xsl:when>
 					<xsl:when test="$date castable as xs:date">
 						<xsl:value-of select="concat(xs:date($date) + xs:dayTimeDuration('P365DT0M'), $time)"/>
@@ -4799,10 +4805,10 @@
 			<xsl:otherwise>
 				<xsl:choose>
 					<xsl:when test="$date castable as xs:gYear">
-						<xsl:value-of select="concat($date, '-01-01', $time)"/>
+						<xsl:value-of select="concat($date, if ($range = 'begin') then '-01-01' else '-12-31', $time)"/>
 					</xsl:when>
 					<xsl:when test="$date castable as xs:gYearMonth">
-						<xsl:value-of select="concat($date, '-01', $time)"/>
+						<xsl:value-of select="concat($date, if ($range = 'begin') then '-01' else '-31', $time)"/>
 					</xsl:when>
 					<xsl:when test="$date castable as xs:date">
 						<xsl:value-of select="concat($date, $time)"/>
@@ -4813,7 +4819,31 @@
 				</xsl:choose>
 			</xsl:otherwise>
 		</xsl:choose>
+	</xsl:function>
+	
+	
+	<!-- convert XSD compliant date datatypes into ISO 8601 dates (e.g., 1 B.C., "-0001"^^xsd:gYear = "0000" in ISO 8601) -->
+	<xsl:function name="numishare:xsdToIso">
+		<xsl:param name="date"/>
 		
+		<xsl:variable name="year" select="
+			if (substring($date, 1, 1) = '-') then
+			substring($date, 1, 5)
+			else
+			substring($date, 1, 4)"/>
+		<xsl:choose>
+			<xsl:when test="number($year) &lt; 0">
+				<!-- convert the year to ISO -->
+				<xsl:value-of select="format-number(number($year) + 1, '0000')"/>
+				<!-- include month and/or day when applicable -->
+				<xsl:if test="string-length($date) &gt; 5">
+					<xsl:value-of select="substring($date, 5)"/>
+				</xsl:if>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="$date"/>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:function>
 
 	<!-- result element names into AAT curies -->
