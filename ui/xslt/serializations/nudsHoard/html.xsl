@@ -344,14 +344,14 @@
 					<span id="page">record</span>
 					<div id="filterHoards">
 						<xsl:call-template name="search_forms"/>
-					</div>
+					</div>					
+					<span id="manifest"/>
+					<div class="iiif-container-template" style="width:100%;height:100%"/>
+					<iframe id="model-iframe-template" width="640" height="480" frameborder="0" allowvr="true" allowfullscreen="true" mozallowfullscreen="true"
+						webkitallowfullscreen="true" onmousewheel=""/>
+					<div id="iiif-window" style="width:600px;height:600px;display:none"/>
+					<div id="model-window" style="width:640px;height:480px;display:none"/>
 				</div>
-				<span id="manifest"/>
-				<div class="iiif-container-template" style="width:100%;height:100%"/>
-				<iframe id="model-iframe-template" width="640" height="480" frameborder="0" allowvr="true" allowfullscreen="true" mozallowfullscreen="true"
-					webkitallowfullscreen="true" onmousewheel=""/>
-				<div id="iiif-window" style="width:600px;height:600px;display:none"/>
-				<div id="model-window" style="width:640px;height:480px;display:none"/>
 			</body>
 		</html>
 	</xsl:template>

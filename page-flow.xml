@@ -41,11 +41,8 @@
 	<page path="/numishare/fralin/" model="xpl/models/config.xpl" view="oxf:/numishare-projects/fralin/xpl/views/pages/index.xpl"/>
 	<page path="/numishare/fralin/display-uva$" model="xpl/models/config.xpl" view="oxf:/numishare-projects/fralin/xpl/controllers/display-uva.xpl"/>
 
-	<!-- CHRR -->
-	<page path="/numishare/chrr/" model="xpl/models/config.xpl" view="oxf:/numishare-projects/chrr/xpl/views/pages/index.xpl"/>
-
-	<!-- RRC -->
-	<page path="/numishare/crro/" model="xpl/models/config.xpl" view="oxf:/numishare-projects/crro/xpl/views/pages/index.xpl"/>
+	<!-- CRRO, CHRR, RRDP consolidated into cohesive Republican style -->
+	<page path="/numishare/(crro|chrr|rrdp)/" model="xpl/models/config.xpl" view="oxf:/numishare-projects/crro/xpl/views/pages/index.xpl"/>
 
 	<!-- EGYPT -->
 	<page path="/numishare/egypt/" model="xpl/models/config.xpl" view="oxf:/numishare-projects/egypt/xpl/views/pages/index.xpl"/>
