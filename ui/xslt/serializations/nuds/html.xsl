@@ -1124,7 +1124,7 @@
 			</xsl:choose>
 		</div>
 	</xsl:template>
-	
+
 	<xsl:template match="nuds:descripton | nuds:legend" mode="physical">
 		<span property="{numishare:normalizeProperty($recordType, local-name())}">
 			<xsl:if test="@xml:lang">
@@ -1196,7 +1196,7 @@
 			<xsl:value-of select="."/>
 		</li>
 	</xsl:template>
-	
+
 	<!-- ***** provenance styling ***** -->
 	<xsl:template match="nuds:provenance" mode="descMeta">
 		<li>
@@ -1205,7 +1205,13 @@
 			</h4>
 			<ul>
 				<xsl:apply-templates select="descendant::nuds:chronItem">
-					<xsl:sort select="descendant::*/@standardDate" data-type="text" order="descending"/>
+					<!-- sort by latest date -->
+					<xsl:sort select="
+							if (nuds:date) then
+								nuds:date/@standardDate
+							else
+								nuds:dateRange/nuds:toDate/@standardDate"
+						data-type="text" order="descending"/>
 				</xsl:apply-templates>
 			</ul>
 		</li>
@@ -1219,10 +1225,14 @@
 	</xsl:template>
 
 	<xsl:template match="nuds:acquiredFrom | nuds:previousColl">
-		
+
 		<xsl:call-template name="display-label">
 			<xsl:with-param name="field">provenance</xsl:with-param>
-			<xsl:with-param name="value" select="if (nuds:saleCatalog) then normalize-space(nuds:saleCatalog) else normalize-space(.)"/>
+			<xsl:with-param name="value" select="
+					if (nuds:saleCatalog) then
+						normalize-space(nuds:saleCatalog)
+					else
+						normalize-space(.)"/>
 			<xsl:with-param name="href" select="nuds:saleCatalog/@xlink:href"/>
 			<xsl:with-param name="side"/>
 			<xsl:with-param name="position"/>
@@ -1242,7 +1252,7 @@
 		</strong>
 		<xsl:text>: </xsl:text>
 	</xsl:template>
-	
+
 	<xsl:template match="nuds:dateRange" mode="provenance">
 		<strong>
 			<xsl:value-of select="concat(nuds:fromDate, ' - ', nuds:toDate)"/>
