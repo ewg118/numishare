@@ -75,7 +75,7 @@
 
 	<xsl:template match="tab" mode="nav">
 		<xsl:choose>
-			<xsl:when test="@id = 'analyze' or @id = 'compare' or @id = 'apis' or @id = 'identify' or @id = 'symbols'">
+			<xsl:when test="@id = 'analyze' or @id = 'compare' or @id = 'apis' or @id = 'identify' or @id = 'symbols' or @id = 'feedback'">
 				<xsl:variable name="id" select="@id"/>
 				<xsl:variable name="href"
 					select="
