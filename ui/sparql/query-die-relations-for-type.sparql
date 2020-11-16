@@ -7,4 +7,4 @@ PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 
 SELECT ?die ?dieLabel ?altDie ?altDieLabel (count(?object) as ?count) ?type ?typeLabel WHERE {
     %STATEMENTS%
-} GROUP BY ?die ?dieLabel ?altDie ?altDieLabel ?type ?typeLabel ORDER BY ?die ?altDie
+} GROUP BY ?die ?dieLabel ?altDie ?altDieLabel ?type ?typeLabel ORDER BY ?dieLabel ?altDieLabel
