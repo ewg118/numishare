@@ -702,12 +702,15 @@
 										</h4>
 										<div namedGraph="{.}" class="network-graph hidden" id="{generate-id()}"/>
 
-										<div>
-											<h4>Die Links</h4>
-
-											<!-- serialize the SPARQL response relevant to the named graph into an HTML table -->
-											<xsl:apply-templates select="doc('input:dies')//res:sparql[$position]" mode="die-links"/>
-										</div>
+										<!-- display die link table only in a type page -->
+										<xsl:if test="$collection_type = 'cointype'">
+											<div>
+												<h4>Die Links</h4>
+												
+												<!-- serialize the SPARQL response relevant to the named graph into an HTML table -->
+												<xsl:apply-templates select="doc('input:dies')//res:sparql[$position]" mode="die-links"/>
+											</div>
+										</xsl:if>										
 									</xsl:for-each>
 								</div>
 							</div>
