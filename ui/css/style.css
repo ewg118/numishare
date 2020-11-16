@@ -138,71 +138,90 @@ ul li{
   ***************************************
  */
 .hidden{
-	display:none;
+    display: none;
 }
 .thumbnail_container{
-	margin-top:25px;
+    margin-top: 25px;
 }
 .display_thumb{
-	width:80px;
-	padding:2px;
-	cursor:pointer;
+    width: 80px;
+    padding: 2px;
+    cursor: pointer;
 }
 .metadata_section{
-	margin-bottom:20px;
-}
-.adminhist_div,
-.phystech,
-.bibref,
-.metadata_section ul{
-	margin-left:20px;
-	margin-bottom:10px;
-	padding:0;
+    margin-bottom: 20px;
 }
 .submenu{
-	width:100%;
-	vertical-align:bottom;
-	display:table;
-	text-align:right;
-	margin-top:3px;
+    width: 100%;
+    vertical-align: bottom;
+    display: table;
+    text-align: right;
+    margin-top: 3px;
 }
 .icons{
-	margin:5px 0;
+    margin: 5px 0;
 }
 .reference_image{
-	margin-bottom:20px;
-	text-align:center;
+    margin-bottom: 20px;
+    text-align: center;
 }
 .reference_image img{
-	max-width:100%;
-}
-.abstract{
-	margin-bottom:20px;
+    max-width: 100%;
 }
 .external_link{
-	margin:0 5px;
+    margin: 0 5px;
 }
 .legend-icon{
-	width:40px;
+    width: 40px;
 }
 .calculate{
-	display:none;
-	margin-top:20px;
+    display: none;
+    margin-top: 20px;
 }
 .iiif-window{
-	width:100%;
-	height:100%;
+    width: 100%;
+    height: 100%;
 }
-.iiif-container {
-    width:100%;
-    padding-top:100%;
-    background-color:white;
+.image-container{
+    margin-bottom: 20px;
+}
+.iiif-container{
+    width: 100%;
+    padding-top: 100%;
+    background-color: white;
 }
 .iiif-zoom-glyph{
     position: absolute;
     right: 0;
     bottom: 0;
     font-size: 120%
+}
+.model-window{
+    width: 640px;
+    height: 480px;
+}
+.obj-container{
+    z-index: 1;
+    /*cursor:pointer;*/
+    color: #c94f2a;
+}
+a.fancybox {
+    height:100%;
+    width:100%;
+    display:block;
+}
+/*Die Study pages*/
+.die-image {
+    height:325px;
+}
+.die-image img {
+    max-width:100%;
+    max-height:300px;
+}
+.die-title{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 /*
   ***************************************
