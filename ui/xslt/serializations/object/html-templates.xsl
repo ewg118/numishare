@@ -82,6 +82,17 @@
 			</xsl:choose>
 		</li>
 	</xsl:template>
+	
+	<xsl:template match="*:dateRange" mode="descMeta">
+		<li>
+			<b>
+				<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
+				<xsl:text>: </xsl:text>
+			</b>
+			
+			<xsl:value-of select="concat(nuds:fromDate, ' - ', nuds:toDate)"/>
+		</li>
+	</xsl:template>
 
 	<xsl:template match="*" mode="descMeta">
 		<xsl:choose>
@@ -627,7 +638,7 @@
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
-			<xsl:when test="boolean(index-of($facets, $facet)) = true()">
+			<xsl:when test="boolean(index-of($facets, $facet)) = true()">				
 				<!-- if the $lang is enabled in the config (implying indexing into solr), then direct the user to the language-specific Solr query based on Nomisma prefLabel,
 					otherwise use the English preferred label -->
 

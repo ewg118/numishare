@@ -282,7 +282,7 @@
 							</xsl:when>
 							<xsl:when test="$collection_type = 'die'">
 								<xsl:value-of select="number(//res:sparql[1]//descendant::res:binding[@name = 'count']/res:literal) &gt; 0"/>
-							</xsl:when>							
+							</xsl:when>
 							<xsl:otherwise>false</xsl:otherwise>
 						</xsl:choose>
 					</xsl:when>
@@ -1124,6 +1124,15 @@
 			</xsl:choose>
 		</div>
 	</xsl:template>
+	
+	<xsl:template match="nuds:descripton | nuds:legend" mode="physical">
+		<span property="{numishare:normalizeProperty($recordType, local-name())}">
+			<xsl:if test="@xml:lang">
+				<xsl:attribute name="lang" select="@xml:lang"/>
+			</xsl:if>
+			<xsl:value-of select="."/>
+		</span>
+	</xsl:template>
 
 	<xsl:template match="nuds:adminDesc">
 		<div class="metadata_section">
@@ -1187,7 +1196,8 @@
 			<xsl:value-of select="."/>
 		</li>
 	</xsl:template>
-
+	
+	<!-- ***** provenance styling ***** -->
 	<xsl:template match="nuds:provenance" mode="descMeta">
 		<li>
 			<h4>
@@ -1195,7 +1205,7 @@
 			</h4>
 			<ul>
 				<xsl:apply-templates select="descendant::nuds:chronItem">
-					<xsl:sort select="number(nuds:date/@standardDate)" data-type="number" order="descending"/>
+					<xsl:sort select="descendant::*/@standardDate" data-type="text" order="descending"/>
 				</xsl:apply-templates>
 			</ul>
 		</li>
@@ -1203,31 +1213,41 @@
 
 	<xsl:template match="nuds:chronItem">
 		<li>
-			<xsl:apply-templates/>
+			<xsl:apply-templates select="nuds:date | nuds:dateRange" mode="provenance"/>
+			<xsl:apply-templates select="nuds:acquiredFrom | nuds:previousColl"/>
 		</li>
 	</xsl:template>
 
-	<xsl:template match="nuds:date">
-		<xsl:choose>
-			<xsl:when test="parent::nuds:chronItem">
-				<strong>
-					<xsl:value-of select="."/>
-				</strong>
-				<xsl:text>:  </xsl:text>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:value-of select="."/>
-			</xsl:otherwise>
-		</xsl:choose>
+	<xsl:template match="nuds:acquiredFrom | nuds:previousColl">
+		
+		<xsl:call-template name="display-label">
+			<xsl:with-param name="field">provenance</xsl:with-param>
+			<xsl:with-param name="value" select="if (nuds:saleCatalog) then normalize-space(nuds:saleCatalog) else normalize-space(.)"/>
+			<xsl:with-param name="href" select="nuds:saleCatalog/@xlink:href"/>
+			<xsl:with-param name="side"/>
+			<xsl:with-param name="position"/>
+		</xsl:call-template>
+
+		<!-- create links to resources -->
+		<xsl:if test="string(nuds:saleCatalog/@xlink:href)">
+			<a href="{nuds:saleCatalog/@xlink:href}" target="_blank" class="external_link">
+				<span class="glyphicon glyphicon-new-window"/>
+			</a>
+		</xsl:if>
 	</xsl:template>
 
-	<xsl:template match="nuds:descripton | nuds:legend" mode="physical">
-		<span property="{numishare:normalizeProperty($recordType, local-name())}">
-			<xsl:if test="@xml:lang">
-				<xsl:attribute name="lang" select="@xml:lang"/>
-			</xsl:if>
+	<xsl:template match="nuds:date" mode="provenance">
+		<strong>
 			<xsl:value-of select="."/>
-		</span>
+		</strong>
+		<xsl:text>: </xsl:text>
+	</xsl:template>
+	
+	<xsl:template match="nuds:dateRange" mode="provenance">
+		<strong>
+			<xsl:value-of select="concat(nuds:fromDate, ' - ', nuds:toDate)"/>
+		</strong>
+		<xsl:text>: </xsl:text>
 	</xsl:template>
 
 	<!-- *********** IMAGE TEMPLATES FOR PHYSICAL OBJECTS ********** -->
@@ -1439,12 +1459,12 @@
 			<td>
 				<a href="{res:binding[@name = 'die']/res:uri}">
 					<xsl:value-of select="res:binding[@name = 'dieLabel']/res:literal"/>
-				</a>				
+				</a>
 			</td>
 			<td>
 				<a href="{res:binding[@name = 'altDie']/res:uri}">
 					<xsl:value-of select="res:binding[@name = 'altDieLabel']/res:literal"/>
-				</a>				
+				</a>
 			</td>
 			<td>
 				<xsl:value-of select="res:binding[@name = 'count']/res:literal"/>
