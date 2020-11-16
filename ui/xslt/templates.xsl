@@ -3,7 +3,7 @@
 	xmlns:xlink="http://www.w3.org/1999/xlink" exclude-result-prefixes="#all" version="2.0">
 	<xsl:template name="header">
 		<div class="navbar navbar-default navbar-static-top" role="navigation">
-			<xsl:if test="$lang = 'ar'">
+			<xsl:if test="//config/languages/language[@code = $lang]/@rtl = true()">
 				<xsl:attribute name="style">direction: rtl;</xsl:attribute>
 			</xsl:if>
 			<div class="container-fluid">
@@ -33,12 +33,12 @@
 					</a>
 				</div>
 				<div class="navbar-collapse collapse">
-					<xsl:if test="not($lang = 'ar')">
+					<xsl:if test="not(//config/languages/language[@code = $lang]/@rtl = true())">
 						<ul class="nav navbar-nav">
 							<xsl:call-template name="menubar"/>
 						</ul>
 					</xsl:if>
-					<div class="col-sm-3 col-md-3 pull-{if ($lang='ar') then 'left' else 'right'}">
+					<div class="col-sm-3 col-md-3 pull-{if (//config/languages/language[@code = $lang]/@rtl = true()) then 'left' else 'right'}">
 						<form class="navbar-form" role="search" action="{$display_path}results" method="get">
 							<div class="input-group">
 								<input type="text" class="form-control" placeholder="{numishare:normalizeLabel('header_search', $lang)}" name="q" id="srch-term"/>
@@ -50,7 +50,7 @@
 							</div>
 						</form>
 					</div>
-					<xsl:if test="$lang = 'ar'">
+					<xsl:if test="//config/languages/language[@code = $lang]/@rtl = true()">
 						<ul class="nav navbar-nav navbar-right">
 							<xsl:call-template name="menubar"/>
 						</ul>
@@ -59,10 +59,10 @@
 			</div>
 		</div>
 	</xsl:template>
-
+	
 	<xsl:template name="menubar">
 		<xsl:choose>
-			<xsl:when test="$lang = 'ar'">
+			<xsl:when test="//config/languages/language[@code = $lang]/@rtl = true()">
 				<xsl:apply-templates select="//config/navigation/tab" mode="nav">
 					<xsl:sort order="descending" select="position()"/>
 				</xsl:apply-templates>
@@ -72,18 +72,18 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
-
+	
 	<xsl:template match="tab" mode="nav">
 		<xsl:choose>
 			<xsl:when test="@id = 'analyze' or @id = 'compare' or @id = 'apis' or @id = 'identify' or @id = 'symbols'">
 				<xsl:variable name="id" select="@id"/>
 				<xsl:variable name="href"
 					select="
-						concat($display_path, @href, if (string($langParam)) then
-							concat('?lang=', $langParam)
-						else
-							'')"/>
-
+					concat($display_path, @href, if (string($langParam)) then
+					concat('?lang=', $langParam)
+					else
+					'')"/>
+				
 				<!-- only display tabs if the page has been activated in the config -->
 				<xsl:if test="//config/pages/*[name() = $id]/@enabled = true()">
 					<li>
@@ -102,7 +102,7 @@
 			</xsl:when>
 			<xsl:when test="@id = 'visualize'">
 				<xsl:variable name="id" select="@id"/>
-
+				
 				<xsl:if test="//config/pages/*[name() = $id]/@enabled = true()">
 					<!-- conditional for drop-down versus single link -->
 					<xsl:choose>
@@ -131,10 +131,10 @@
 						<xsl:otherwise>
 							<xsl:variable name="href"
 								select="
-									concat($display_path, @href, if (string($langParam)) then
-										concat('?lang=', $langParam)
-									else
-										'')"/>
+								concat($display_path, @href, if (string($langParam)) then
+								concat('?lang=', $langParam)
+								else
+								'')"/>
 							<li>
 								<a href="{$href}">
 									<xsl:choose>
@@ -155,18 +155,18 @@
 				<xsl:if test="//config/collection_type = 'cointype' and string(//config/sparql_endpoint)">
 					<xsl:variable name="href"
 						select="
-							concat($display_path, @href, if (string($langParam)) then
-								concat('?lang=', $langParam)
-							else
-								'')"/>
+						concat($display_path, @href, if (string($langParam)) then
+						concat('?lang=', $langParam)
+						else
+						'')"/>
 					<li>
 						<a href="{$href}">
 							<xsl:value-of
 								select="
-									if (@label) then
-										@label
-									else
-										numishare:normalizeLabel(concat('header_', @id), $lang)"
+								if (@label) then
+								@label
+								else
+								numishare:normalizeLabel(concat('header_', @id), $lang)"
 							/>
 						</a>
 					</li>
@@ -185,15 +185,15 @@
 						<xsl:otherwise>
 							<xsl:value-of
 								select="
-									concat($display_path, @href, if (string($langParam)) then
-										concat('?lang=', $langParam)
-									else
-										'')"
+								concat($display_path, @href, if (string($langParam)) then
+								concat('?lang=', $langParam)
+								else
+								'')"
 							/>
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:variable>
-
+				
 				<li>
 					<xsl:if test="child::tab">
 						<xsl:attribute name="class">dropdown</xsl:attribute>
@@ -205,10 +205,10 @@
 						</xsl:if>
 						<xsl:value-of
 							select="
-								if (@label) then
-									@label
-								else
-									numishare:normalizeLabel(concat('header_', @id), $lang)"/>
+							if (@label) then
+							@label
+							else
+							numishare:normalizeLabel(concat('header_', @id), $lang)"/>
 						<xsl:if test="child::tab">
 							<b class="caret"/>
 						</xsl:if>
@@ -222,11 +222,11 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
-
+	
 	<xsl:template name="pages">
 		<xsl:for-each select="//config/pages/page[@public = '1']">
 			<xsl:variable name="stub" select="@stub"/>
-
+			
 			<li>
 				<a href="{$display_path}pages/{@stub}{if (string($langParam)) then concat('?lang=', $langParam) else ''}">
 					<xsl:choose>
@@ -252,11 +252,11 @@
 			</li>
 		</xsl:for-each>
 	</xsl:template>
-
+	
 	<xsl:template name="languages">
 		<xsl:variable name="collection-name" select="substring-after(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/')"/>
 		<xsl:variable name="query" select="doc('input:request')/request/parameters/parameter[name = 'q']/value"/>
-
+		
 		<xsl:if test="count(//config/descendant::language[@enabled = 'true']) &gt; 1">
 			<li class="dropdown">
 				<a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -285,7 +285,7 @@
 			</li>
 		</xsl:if>
 	</xsl:template>
-
+	
 	<xsl:template name="footer">
 		<div id="footer" class="container-fluid">
 			<xsl:copy-of select="//config/footer/*"/>
