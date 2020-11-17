@@ -86,7 +86,7 @@
 					</p:processor>
 					
 					<!-- iterate through named graphs and execute a die-linking query for each named graph to evaluate links from the obverse or reverse -->					
-					<!--<p:for-each href="#config" select="/config/die_study/namedGraph" root="obverse" id="obv-dies">
+					<p:for-each href="#config" select="/config/die_study/namedGraph" root="obverse" id="obv-dies">
 						<p:processor name="oxf:pipeline">						
 							<p:input name="data" href="#config"/>
 							<p:input name="request" href="#request"/>
@@ -110,12 +110,12 @@
 							<p:input name="config" href="../../../models/sparql/query-die-relations.xpl"/>
 							<p:output name="data" ref="rev-dies"/>
 						</p:processor>
-					</p:for-each>-->
+					</p:for-each>
 					
 					<p:processor name="oxf:unsafe-xslt">
 						<p:input name="request" href="#request"/>
 						<p:input name="specimens" href="#specimens"/>
-						<!--<p:input name="dies" href="aggregate('dies', #obv-dies, #rev-dies)"/>-->
+						<p:input name="dies" href="aggregate('dies', #obv-dies, #rev-dies)"/>
 						<p:input name="query" href="#die-examples-query-document"/>
 						<p:input name="data" href="aggregate('content', #data, #specimenCount, #config)"/>
 						<p:input name="config" href="../../../../ui/xslt/serializations/nuds/html.xsl"/>

@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Author: Ethan Gruber
+    Last Modified: November 2020
+    Function: Templates for constructing the SPARQL metamodel for various sorts of API calls that execute a query for metrical analysis, distribution visualizations, network graphs,
+    SPARQL-based facets in vis UIs, etc. -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:numishare="https://github.com/ewg118/numishare"
     exclude-result-prefixes="#all" version="2.0">
 
@@ -235,6 +239,8 @@
         </optional>
     </xsl:template>
     
+    <!-- query the the relations from one die to another. This query is typically executed twice to look for the die URI in both the obverse and reverse, since
+        the side is not implicity within the die RDF data -->
     <xsl:template name="numishare:queryDieRelations">
         <xsl:param name="dieURI"/>
         <xsl:param name="namedGraph"/>
@@ -251,6 +257,7 @@
         <triple s="?altDie" p="skos:notation" o="?altDieLabel"/>
     </xsl:template>
     
+    <!-- query dies related to a particular coin type URI -->
     <xsl:template name="numishare:queryDieRelationsForType">
         <xsl:param name="typeURI"/>
         <xsl:param name="namedGraph"/>
@@ -268,6 +275,7 @@
         <triple s="?type" p="skos:prefLabel" o="?typeLabel" filter="(langMatches(lang(?typeLabel), &#x022;en&#x022;))"/>
     </xsl:template>
     
+    <!-- query the obverse and reverse dies associated with a coin URI for a given named graph -->
     <xsl:template name="numishare:queryDieRelationsForCoin">
         <xsl:param name="objectURI"/>
         <xsl:param name="namedGraph"/>

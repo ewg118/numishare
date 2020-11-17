@@ -703,14 +703,35 @@
 										<div namedGraph="{.}" class="network-graph hidden" id="{generate-id()}"/>
 
 										<!-- display die link table only in a type page -->
-										<xsl:if test="$collection_type = 'cointype'">
-											<div>
-												<h4>Die Links</h4>
-												
-												<!-- serialize the SPARQL response relevant to the named graph into an HTML table -->
-												<xsl:apply-templates select="doc('input:dies')//res:sparql[$position]" mode="die-links"/>
-											</div>
-										</xsl:if>										
+
+										<div>
+											<h4>Die Links</h4>
+
+											<!-- serialize the SPARQL response relevant to the named graph into an HTML table -->
+											<xsl:choose>
+												<xsl:when test="$collection_type = 'cointype'">
+													<xsl:apply-templates select="doc('input:dies')//res:sparql[$position]" mode="die-links">
+														<xsl:with-param name="reverse" as="xs:boolean">false</xsl:with-param>
+													</xsl:apply-templates>
+												</xsl:when>
+												<xsl:when test="$collection_type = 'die'">
+													<xsl:choose>
+														<xsl:when test="count(doc('input:dies')/dies/obverse/res:sparql[$position]/descendant::res:result) &gt; 0">
+															<xsl:apply-templates select="doc('input:dies')/dies/obverse/res:sparql[$position]" mode="die-links">
+																<xsl:with-param name="reverse" as="xs:boolean">false</xsl:with-param>
+															</xsl:apply-templates>
+														</xsl:when>
+														<xsl:when test="count(doc('input:dies')/dies/reverse/res:sparql[$position]/descendant::res:result) &gt; 0">
+															<xsl:apply-templates select="doc('input:dies')/dies/reverse/res:sparql[$position]" mode="die-links">
+																<xsl:with-param name="reverse" as="xs:boolean">true</xsl:with-param>
+															</xsl:apply-templates>
+														</xsl:when>
+													</xsl:choose>
+												</xsl:when>
+											</xsl:choose>
+											
+										</div>
+
 									</xsl:for-each>
 								</div>
 							</div>
@@ -1449,6 +1470,8 @@
 
 	<!-- ************** TEMPLATES FOR RENDERING SPARQL RESULTS INTO A TABLE OF DIE LINKS ************** -->
 	<xsl:template match="res:sparql" mode="die-links">
+		<xsl:param name="reverse" as="xs:boolean"/>
+		
 		<table class="table table-striped">
 			<thead>
 				<th>
@@ -1462,23 +1485,44 @@
 				</th>
 			</thead>
 			<tbody>
-				<xsl:apply-templates select="descendant::res:result" mode="die-links"/>
+				<xsl:apply-templates select="descendant::res:result" mode="die-links">
+					<xsl:with-param name="reverse" select="$reverse" as="xs:boolean"/>
+				</xsl:apply-templates>
 			</tbody>
 		</table>
 	</xsl:template>
 
 	<xsl:template match="res:result" mode="die-links">
+		<xsl:param name="reverse" as="xs:boolean"/>
+		
 		<tr>
-			<td>
-				<a href="{res:binding[@name = 'die']/res:uri}">
-					<xsl:value-of select="res:binding[@name = 'dieLabel']/res:literal"/>
-				</a>
-			</td>
-			<td>
-				<a href="{res:binding[@name = 'altDie']/res:uri}">
-					<xsl:value-of select="res:binding[@name = 'altDieLabel']/res:literal"/>
-				</a>
-			</td>
+			<xsl:choose>
+				<!-- switch die/altDie when the query is looking for the die URI in the reverse property -->
+				<xsl:when test="$reverse = true()">
+					<td>
+						<a href="{res:binding[@name = 'altDie']/res:uri}">
+							<xsl:value-of select="res:binding[@name = 'altDieLabel']/res:literal"/>
+						</a>
+					</td>
+					<td>
+						<a href="{res:binding[@name = 'die']/res:uri}">
+							<xsl:value-of select="res:binding[@name = 'dieLabel']/res:literal"/>
+						</a>						
+					</td>
+				</xsl:when>
+				<xsl:otherwise>
+					<td>
+						<a href="{res:binding[@name = 'die']/res:uri}">
+							<xsl:value-of select="res:binding[@name = 'dieLabel']/res:literal"/>
+						</a>
+					</td>
+					<td>
+						<a href="{res:binding[@name = 'altDie']/res:uri}">
+							<xsl:value-of select="res:binding[@name = 'altDieLabel']/res:literal"/>
+						</a>
+					</td>
+				</xsl:otherwise>
+			</xsl:choose>			
 			<td>
 				<xsl:value-of select="res:binding[@name = 'count']/res:literal"/>
 			</td>

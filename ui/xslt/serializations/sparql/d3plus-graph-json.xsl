@@ -48,6 +48,9 @@
 				<id>
 					<xsl:value-of select="tokenize(., '/')[last()]"/>
 				</id>
+				<uri>
+					<xsl:value-of select="."/>
+				</uri>
 				<label datatype="xs:string">
 					<xsl:value-of select="ancestor::res:result/res:binding[@name = concat($name, 'Label')]/res:literal"/>
 				</label>
@@ -97,6 +100,11 @@
 			<target>
 				<xsl:apply-templates select="res:binding[@name = 'altDie']" mode="edges"/>
 			</target>
+			<xsl:if test="res:binding[@name = 'count']">
+				<count>
+					<xsl:value-of select="res:binding[@name = 'count']/res:literal"/>
+				</count>
+			</xsl:if>
 			<weight>
 				<xsl:call-template name="numishare:networkWeight"/>
 			</weight>

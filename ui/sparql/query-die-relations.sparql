@@ -5,6 +5,6 @@ PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 
-SELECT DISTINCT ?die ?dieLabel ?altDie ?altDieLabel WHERE {
+SELECT DISTINCT ?die ?dieLabel ?altDie ?altDieLabel (count(?object) as ?count) WHERE {
     %STATEMENTS%
-}
+} GROUP BY ?die ?dieLabel ?altDie ?altDieLabel ORDER BY ?dieLabel ?altDieLabel
