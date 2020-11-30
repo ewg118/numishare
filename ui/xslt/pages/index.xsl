@@ -1,24 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:numishare="https://github.com/ewg118/numishare" version="2.0" exclude-result-prefixes="#all">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:numishare="https://github.com/ewg118/numishare" version="2.0"
+	exclude-result-prefixes="#all">
 	<xsl:include href="../templates.xsl"/>
 	<xsl:include href="../functions.xsl"/>
 
 	<xsl:param name="pipeline">display</xsl:param>
-	<xsl:param name="langParam" select="doc('input:request')/request/parameters/parameter[name='lang']/value"/>
+	<xsl:param name="langParam" select="doc('input:request')/request/parameters/parameter[name = 'lang']/value"/>
 	<xsl:param name="lang">
 		<xsl:choose>
 			<xsl:when test="string($langParam)">
 				<xsl:value-of select="$langParam"/>
 			</xsl:when>
-			<xsl:when test="string(doc('input:request')/request//header[name[.='accept-language']]/value)">
-				<xsl:value-of select="numishare:parseAcceptLanguage(doc('input:request')/request//header[name[.='accept-language']]/value)[1]"/>
+			<xsl:when test="string(doc('input:request')/request//header[name[. = 'accept-language']]/value)">
+				<xsl:value-of select="numishare:parseAcceptLanguage(doc('input:request')/request//header[name[. = 'accept-language']]/value)[1]"/>
 			</xsl:when>
 		</xsl:choose>
 	</xsl:param>
 	<xsl:variable name="display_path"/>
-	<xsl:variable name="include_path" select="if (string(//config/theme/themes_url)) then concat(//config/theme/themes_url, //config/theme/orbeon_theme) else concat('http://', doc('input:request')/request/server-name, ':8080/orbeon/themes/', //config/theme/orbeon_theme)"/>
-	
-	<!-- URI space for featured items -->	
+	<xsl:variable name="include_path"
+		select="
+			if (string(//config/theme/themes_url)) then
+				concat(//config/theme/themes_url, //config/theme/orbeon_theme)
+			else
+				concat('http://', doc('input:request')/request/server-name, ':8080/orbeon/themes/', //config/theme/orbeon_theme)"/>
+
+	<!-- URI space for featured items -->
 	<xsl:variable name="uri_space">
 		<xsl:choose>
 			<xsl:when test="string(//config/uri_space)">
@@ -39,7 +45,7 @@
 				<link rel="shortcut icon" type="image/x-icon" href="{$include_path}/images/favicon.png"/>
 				<meta name="viewport" content="width=device-width, initial-scale=1"/>
 				<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"/>
-				
+
 				<xsl:for-each select="includes/include">
 					<xsl:choose>
 						<xsl:when test="@type = 'css'">
@@ -50,7 +56,7 @@
 						</xsl:when>
 					</xsl:choose>
 				</xsl:for-each>
-				
+
 				<!-- bootstrap -->
 				<link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
 				<script src="https://netdna.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"/>
@@ -60,7 +66,7 @@
 						<xsl:value-of select="google_analytics"/>
 					</script>
 				</xsl:if>
-				
+
 				<!-- open graph/twitter metadata -->
 				<meta property="og:url" content="{url}"/>
 				<meta property="og:type" content="article"/>
@@ -78,43 +84,54 @@
 	</xsl:template>
 
 	<xsl:template name="index">
-		<div class="jumbotron">
+		<div class="jumbotron visible-xs visible-sm visible-md">
 			<div class="container">
 				<div class="row">
-					<!-- display title and description in the jumbotron, including featured object, if available -->
-					<xsl:choose>
-						<xsl:when test="features_enabled = true() and count(doc('input:feature-model')//doc) = 1">
-							<div class="col-md-9">
-								<h1><xsl:value-of select="title"/></h1>
-								<p><xsl:value-of select="description"/></p>
-							</div>
-							<div class="col-md-3">
-								<div id="feature" class="highlight text-center">
-									<xsl:apply-templates select="doc('input:feature-model')//doc"/>
-								</div>
-							</div>
-						</xsl:when>
-						<xsl:otherwise>
-							<div class="col-md-12">
-								<h1><xsl:value-of select="title"/></h1>
-								<p><xsl:value-of select="description"/></p>
-							</div>
-						</xsl:otherwise>
-					</xsl:choose>
+					<div class="col-md-4 text-center">
+						<img src="{$include_path}/images/ans_large.png" alt="logo" style="max-height:150px;"/>
+					</div>
+					<div class="col-md-8 text-center">
+						<h1>
+							<xsl:value-of select="title"/>
+						</h1>
+						<h3>
+							<xsl:value-of select="description"/>
+						</h3>
+					</div>
 				</div>
 			</div>
-		</div>	
+		</div>
+		<div class="container-fluid banner hidden-xs hidden-sm hidden-md">
+			<div class="row">
+				<div class="col-md-6 col-md-offset-6">
+					<div class="row banner-background">
+						<div class="col-lg-4 col-md-12 text-center">
+							<img src="{$include_path}/images/ans_large.png" alt="logo"/>
+						</div>
+						<div class="col-lg-8 col-md-12 text-center">
+							<h1>
+								<xsl:value-of select="title"/>
+							</h1>
+							<h4>
+								<xsl:value-of select="description"/>
+							</h4>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
 		<div class="container-fluid">
 			<xsl:if test="//config/languages/language[@code = $lang]/@rtl = true()">
-				<xsl:attribute name="style">direction: rtl;</xsl:attribute>							
+				<xsl:attribute name="style">direction: rtl;</xsl:attribute>
 			</xsl:if>
 			<div class="row">
-				<div class="col-md-9">					
+				<div class="col-md-9">
 					<xsl:choose>
 						<xsl:when test="string($lang)">
 							<xsl:choose>
-								<xsl:when test="string(//pages/index/content[@xml:lang=$lang])">
-									<xsl:copy-of select="//pages/index/content[@xml:lang=$lang]/*"/>
+								<xsl:when test="string(//pages/index/content[@xml:lang = $lang])">
+									<xsl:copy-of select="//pages/index/content[@xml:lang = $lang]/*"/>
 								</xsl:when>
 								<xsl:otherwise>
 									<xsl:choose>
@@ -125,11 +142,11 @@
 											<xsl:copy-of select="//pages/index/*"/>
 										</xsl:otherwise>
 									</xsl:choose>
-									
+
 								</xsl:otherwise>
 							</xsl:choose>
 						</xsl:when>
-						<xsl:otherwise>							
+						<xsl:otherwise>
 							<xsl:choose>
 								<xsl:when test="count(//pages/index/content) &gt; 0">
 									<xsl:copy-of select="//pages/index/content[1]/*"/>
@@ -142,17 +159,20 @@
 					</xsl:choose>
 				</div>
 				<div class="col-md-3">
+					<div id="feature" class="highlight text-center">
+						<xsl:apply-templates select="doc('input:feature-model')//doc"/>
+					</div>
 					<div class="highlight data_options">
 						<h3>Linked Data</h3>
 						<a href="{$display_path}feed/?q=*:*">
 							<img src="{$include_path}/images/atom-large.png" title="Atom" alt="Atom"/>
 						</a>
-						<xsl:if test="pelagios_enabled=true()">
+						<xsl:if test="pelagios_enabled = true()">
 							<a href="pelagios.void.rdf">
 								<img src="{$include_path}/images/pelagios_icon.png" title="Pelagios VOiD" alt="Pelagios VOiD"/>
 							</a>
 						</xsl:if>
-						<xsl:if test="ctype_enabled=true()">
+						<xsl:if test="ctype_enabled = true()">
 							<a href="nomisma.void.rdf">
 								<img src="{$include_path}/images/nomisma.png" title="nomisma VOiD" alt="nomisma VOiD"/>
 							</a>
@@ -162,9 +182,9 @@
 			</div>
 		</div>
 	</xsl:template>
-	
+
 	<!-- featured object -->
-	<xsl:template match="doc">		
+	<xsl:template match="doc">
 		<h3>Featured Object</h3>
 		<div>
 			<a href="{$uri_space}{str[@name='recordId']}{if(string($langParam)) then concat('?lang=', $langParam) else ''}">
@@ -172,12 +192,12 @@
 			</a>
 			<br/>
 			<a href="{$uri_space}{str[@name='recordId']}{if(string($langParam)) then concat('?lang=', $langParam) else ''}">
-				<xsl:value-of select="str[@name='title_display']"/>
+				<xsl:value-of select="str[@name = 'title_display']"/>
 			</a>
-			<xsl:if test="string(str[@name='imagesponsor'])">
+			<xsl:if test="string(str[@name = 'imagesponsor'])">
 				<br/>
 				<xsl:text>Image Sponsor: </xsl:text>
-				<xsl:value-of select="str[@name='imagesponsor']"/>
+				<xsl:value-of select="str[@name = 'imagesponsor']"/>
 			</xsl:if>
 		</div>
 	</xsl:template>

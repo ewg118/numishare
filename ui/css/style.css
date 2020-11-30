@@ -5,10 +5,90 @@
   ***************************************
  */
 html{
-    background-color: #F8F8F8;
+    background-color: #425b66;
 }
+body{
+    font-family: 'Raleway', Arial, sans-serif;
+}
+h1{
+    font-weight: bold;
+    text-transform: uppercase;
+    line-height: 1em;
+    color: #425b66;
+}
+h2{
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 36px;
+    color: #425b66;
+}
+h3{
+    text-transform: uppercase;
+    font-weight: 500;
+    font-size: 24px;
+    color: #425b66;
+}
+h4{
+    text-transform: uppercase;
+    font-weight: bold;
+    font-style: normal;
+    font-size: 19px;
+    color: #425b66;
+    text-transform: uppercase;
+}
+a{
+    color: #425b66;
+    text-decoration: underline;
+}
+a:hover{
+    color: black;
+}
+a:active{
+    color: #b5c8d1
+}
+.jumbotron{
+    background-color: #425b66;
+}
+.jumbotron h1, .jumbotron h2, .jumbotron h3, .jumbotron h4 {
+    color: white;
+}
+.banner{
+    border-bottom: 2px solid #b5c8d1;
+    color: white;
+    background-image: url("../images/jumbotron.jpg");
+    background-size: 100%;
+    background-repeat: no-repeat;
+    margin-bottom: 15px;
+}
+.banner-background{
+    margin: 20px 0;
+    color: white;
+    background-color: black;
+    border-radius: 20px;
+    padding: 20px 0;
+    background-color: rgba(66, 91, 102, 0.5);
+}
+.banner-background img{
+    max-height: 250px;
+
+}
+.banner-background h1{
+    font-size: 72px;
+}
+.banner-background h1,
+.banner-background h2,
+.banner-background h3,
+.banner-background h4{
+    margin-top: 0;
+    color: white;
+}
+
 .navbar{
     margin-bottom: 0;
+    border-bottom: 2px solid #b5c8d1;
+}
+.navbar a{
+    text-decoration: none;
 }
 a > img{
     border: none;
@@ -17,8 +97,8 @@ ul li{
     list-style-type: none;
 }
 .highlight{
-    background-color: #F8F8F8;
-    border: 1px solid #E7E7E7;
+    background-color: #e3ecef;
+    border: 1px solid #b5c8d1;
     border-radius: 4px;
     margin-bottom: 14px;
     padding: 9px 14px;
@@ -43,17 +123,64 @@ dl.ar dd{
     border: none;
     height: 600px;
 }
+/*Custom navbar*/
+.navbar-default .navbar-brand{
+    color: rgba(66, 91, 102, 1);
+}
+.navbar-default{
+    font-size: 14px;
+    background-color: rgba(227, 236, 239, 1);
+    border-width: 1px;
+    border-radius: 4px;
+}
+.navbar-default .navbar-nav > li > a{
+    color: rgba(66, 91, 102, 1);
+    background-color: rgba(227, 236, 239, 1);
+}
+.navbar-default .navbar-nav > li > a:hover,
+.navbar-default .navbar-nav > li > a:focus{
+    color: rgba(0, 0, 0, 1);
+    background-color: rgba(227, 236, 239, 1);
+}
+.navbar-default .navbar-nav > .active > a,
+.navbar-default .navbar-nav > .active > a:hover,
+.navbar-default .navbar-nav > .active > a:focus{
+    color: rgba(181, 200, 209, 1);
+    background-color: rgba(227, 236, 239, 1);
+}
+.navbar-default .navbar-toggle{
+    border-color: #e3ecef;
+}
+.navbar-default .navbar-toggle:hover,
+.navbar-default .navbar-toggle:focus{
+    background-color: #e3ecef;
+}
+.navbar-default .navbar-toggle .icon-bar{
+    background-color: #e3ecef;
+}
+.navbar-default .navbar-toggle:hover .icon-bar,
+.navbar-default .navbar-toggle:focus .icon-bar{
+    background-color: #e3ecef;
+}
 /*
   ***************************************
   FOOTER
   ***************************************
  */
 #footer{
-    background-color: #F8F8F8;
-    border-top: 1px solid #E7E7E7;
+    background-color: #425b66;
+    color: white;
+    border-top: 2px solid #b5c8d1;
     padding-top: 10px;
     padding-bottom: 10px;
     text-align: center;
+}
+#footer a{
+    color: white;
+    text-decoration: underline;
+}
+#footer a:hover{
+    color: #efefef;
 }
 /*
   ***************************************
@@ -108,6 +235,9 @@ dl.ar dd{
 .image-container{
     margin-bottom: 20px;
 }
+.image-container img{
+    max-width: 100%;
+}
 .iiif-container{
     width: 100%;
     padding-top: 100%;
@@ -128,18 +258,18 @@ dl.ar dd{
     /*cursor:pointer;*/
     color: #c94f2a;
 }
-a.fancybox {
-    height:100%;
-    width:100%;
-    display:block;
+a.fancybox{
+    height: 100%;
+    width: 100%;
+    display: block;
 }
 /*Die Study pages*/
-.die-image {
-    height:325px;
+.die-image{
+    height: 325px;
 }
-.die-image img {
-    max-width:100%;
-    max-height:300px;
+.die-image img{
+    max-width: 100%;
+    max-height: 300px;
 }
 .die-title{
     white-space: nowrap;
