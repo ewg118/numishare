@@ -171,6 +171,18 @@
 					</div>
 				</xsl:if>
 
+				<xsl:if test="$collection-name = 'rrdp'">
+					<div class="col-md-4">
+						<h3>Support</h3>
+						<a href="http://www.bigdatabase.com/Big-DB/USFoundation-profiles/ARETE%20FOUNDATION-236779271.HTML" title="Arete Foundation">
+							<img src="{$include_path}/images/logo_arete_foundation.jpg" alt="Arete Foundation" style="max-width:100%"/>
+						</a>
+
+						<p>In November 2020, the <a href="http://www.bigdatabase.com/Big-DB/USFoundation-profiles/ARETE%20FOUNDATION-236779271.HTML">Arete
+								Foundation</a> awarded RRDP $115,200 to complete the first phase of the project.</p>
+					</div>
+				</xsl:if>
+
 				<div class="col-md-4 data_options">
 					<h3>Data Export</h3>
 					<a href="{$display_path}feed/?q=*:*">
