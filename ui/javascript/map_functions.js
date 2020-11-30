@@ -328,10 +328,10 @@ $(document).ready(function () {
         var str = "<h4><a href='" + e.layer.feature.properties.objectURI + "' target='_blank'>" + e.layer.feature.properties.objectTitle + "</a></h4>" +
         "<div><strong>Findspot: </strong>" + e.layer.feature.properties.name + "<a href='" + e.layer.feature.properties.uri + "' target='_blank'> <span class='glyphicon glyphicon-new-window'/></a>";
         
-        if (e.layer.feature.properties.hasOwnProperty('closing_date')){
-            str += "<br/><strong>Closing Date: </strong>" + e.layer.feature.properties.closing_date; 
-        } else if (e.layer.feature.properties.hasOwnProperty('deposit')){
-            str += "<br/><strong>Deposit: </strong>" + e.layer.feature.properties.deposit; 
+        if (e.layer.feature.properties.hasOwnProperty('closing_date')) {
+            str += "<br/><strong>Closing Date: </strong>" + e.layer.feature.properties.closing_date;
+        } else if (e.layer.feature.properties.hasOwnProperty('deposit')) {
+            str += "<br/><strong>Deposit: </strong>" + e.layer.feature.properties.deposit;
         }
         
         str += "</div>";

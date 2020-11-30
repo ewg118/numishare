@@ -31,6 +31,7 @@ body{
 }
 .banner-background{
     margin: 20px 0;
+    color:white;
     background-color: black;
     border-radius: 20px;
     padding: 20px 0;
@@ -47,6 +48,7 @@ body{
 .banner-background h2,
 .banner-background h3{
     margin-top: 0;
+    color:white;
 }
 .navbar{
     margin-bottom: 0;
