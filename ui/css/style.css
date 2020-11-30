@@ -108,6 +108,9 @@ dl.ar dd{
 .image-container{
     margin-bottom: 20px;
 }
+.image-container img{
+    max-width:100%;
+}
 .iiif-container{
     width: 100%;
     padding-top: 100%;

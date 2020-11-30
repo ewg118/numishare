@@ -52,6 +52,9 @@
 
 	<!-- OCRE -->
 	<page path="/numishare/ocre/" model="xpl/models/config.xpl" view="oxf:/numishare-projects/ocre/xpl/views/pages/index.xpl"/>
+	
+	<!-- SITNAM -->
+	<page path="/numishare/sitnam/" model="xpl/models/config.xpl" view="oxf:/numishare-projects/sitnam/xpl/views/pages/index.xpl"/>
 
 	<!-- MANTIS -->
 	<page path="/numishare/mantis/department/[^\/]+" model="oxf:/numishare-projects/mantis/xpl/models/solr/department.xpl"
