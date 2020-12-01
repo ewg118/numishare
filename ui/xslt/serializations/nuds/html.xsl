@@ -716,12 +716,14 @@
 												</xsl:when>
 												<xsl:when test="$collection_type = 'die'">
 													<xsl:choose>
-														<xsl:when test="count(doc('input:dies')/dies/obverse/res:sparql[$position]/descendant::res:result) &gt; 0">
+														<xsl:when
+															test="count(doc('input:dies')/dies/obverse/res:sparql[$position]/descendant::res:result) &gt; 0">
 															<xsl:apply-templates select="doc('input:dies')/dies/obverse/res:sparql[$position]" mode="die-links">
 																<xsl:with-param name="reverse" as="xs:boolean">false</xsl:with-param>
 															</xsl:apply-templates>
 														</xsl:when>
-														<xsl:when test="count(doc('input:dies')/dies/reverse/res:sparql[$position]/descendant::res:result) &gt; 0">
+														<xsl:when
+															test="count(doc('input:dies')/dies/reverse/res:sparql[$position]/descendant::res:result) &gt; 0">
 															<xsl:apply-templates select="doc('input:dies')/dies/reverse/res:sparql[$position]" mode="die-links">
 																<xsl:with-param name="reverse" as="xs:boolean">true</xsl:with-param>
 															</xsl:apply-templates>
@@ -729,7 +731,7 @@
 													</xsl:choose>
 												</xsl:when>
 											</xsl:choose>
-											
+
 										</div>
 
 									</xsl:for-each>
@@ -1333,6 +1335,13 @@
 								resolution image</a>
 						</div>
 					</xsl:if>
+
+					<xsl:if test="//mets:fileGrp[@USE = $side]/mets:file[@USE = 'context']/mets:FLocat/@xlink:href">
+						<div>
+							<a href="{//mets:fileGrp[@USE = $side]/mets:file[@USE = 'context']/mets:FLocat/@xlink:href}" title="View in context" rel="nofollow"
+									><span class="glyphicon glyphicon-picture"/>View in context</a>
+						</div>
+					</xsl:if>
 				</xsl:when>
 			</xsl:choose>
 			<xsl:apply-templates select="$nudsGroup/object[1]/descendant::nuds:typeDesc/*[local-name() = $side]" mode="physical"/>
@@ -1471,7 +1480,7 @@
 	<!-- ************** TEMPLATES FOR RENDERING SPARQL RESULTS INTO A TABLE OF DIE LINKS ************** -->
 	<xsl:template match="res:sparql" mode="die-links">
 		<xsl:param name="reverse" as="xs:boolean"/>
-		
+
 		<table class="table table-striped">
 			<thead>
 				<th>
@@ -1494,7 +1503,7 @@
 
 	<xsl:template match="res:result" mode="die-links">
 		<xsl:param name="reverse" as="xs:boolean"/>
-		
+
 		<tr>
 			<xsl:choose>
 				<!-- switch die/altDie when the query is looking for the die URI in the reverse property -->
@@ -1507,7 +1516,7 @@
 					<td>
 						<a href="{res:binding[@name = 'die']/res:uri}">
 							<xsl:value-of select="res:binding[@name = 'dieLabel']/res:literal"/>
-						</a>						
+						</a>
 					</td>
 				</xsl:when>
 				<xsl:otherwise>
@@ -1522,7 +1531,7 @@
 						</a>
 					</td>
 				</xsl:otherwise>
-			</xsl:choose>			
+			</xsl:choose>
 			<td>
 				<xsl:value-of select="res:binding[@name = 'count']/res:literal"/>
 			</td>

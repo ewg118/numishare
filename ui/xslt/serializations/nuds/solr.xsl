@@ -678,7 +678,7 @@
 					</field>
 				</xsl:when>
 				<xsl:otherwise>
-					<xsl:for-each select="mets:file">
+					<xsl:for-each select="mets:file[@USE = 'iiif' or @USE = 'archive' or @USE = 'thumbnail' or @USE = 'reference']">
 						<field name="{@USE}_{$side}">
 							<xsl:value-of select="mets:FLocat/@xlink:href"/>
 						</field>

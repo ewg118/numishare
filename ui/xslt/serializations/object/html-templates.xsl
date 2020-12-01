@@ -18,8 +18,10 @@
 				<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
 			</xsl:element>
 			<ul>
-				<xsl:apply-templates select="*:reference[not(child::*[local-name() = 'objectXMLWrap']) and not(child::tei:*)] | *:citation" mode="descMeta"/>
-				<xsl:apply-templates select="*:reference/*[local-name() = 'objectXMLWrap'] | *:reference[child::tei:*]"/>
+				<xsl:apply-templates
+					select="*:reference[not(child::*[local-name() = 'objectXMLWrap']) and not(child::tei:*)] | *:citation[not(child::*[local-name() = 'objectXMLWrap']) and not(child::tei:*)]"
+					mode="descMeta"/>
+				<xsl:apply-templates select="*:reference/*[local-name() = 'objectXMLWrap'] | *:reference[child::tei:*] | *:citation[child::tei:*]"/>
 			</ul>
 		</div>
 	</xsl:template>
@@ -82,14 +84,14 @@
 			</xsl:choose>
 		</li>
 	</xsl:template>
-	
+
 	<xsl:template match="*:dateRange" mode="descMeta">
 		<li>
 			<b>
 				<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
 				<xsl:text>: </xsl:text>
 			</b>
-			
+
 			<xsl:value-of select="concat(nuds:fromDate, ' - ', nuds:toDate)"/>
 		</li>
 	</xsl:template>
@@ -558,10 +560,10 @@
 									<xsl:if test="$collection_type = 'object' and $hasDies = true()">
 										<xsl:choose>
 											<xsl:when test="local-name() = 'obverse' and parent::nuds:typeDesc">
-												<xsl:apply-templates select="doc('input:dies')//res:binding[@name='die']" mode="coin-die"/>
+												<xsl:apply-templates select="doc('input:dies')//res:binding[@name = 'die']" mode="coin-die"/>
 											</xsl:when>
 											<xsl:when test="local-name() = 'reverse' and parent::nuds:typeDesc">
-												<xsl:apply-templates select="doc('input:dies')//res:binding[@name='altDie']" mode="coin-die"/>
+												<xsl:apply-templates select="doc('input:dies')//res:binding[@name = 'altDie']" mode="coin-die"/>
 											</xsl:when>
 										</xsl:choose>
 									</xsl:if>
@@ -572,7 +574,7 @@
 				</xsl:choose>
 			</xsl:otherwise>
 		</xsl:choose>
-		
+
 		<!-- if the element is a persname with a Nomisma URI, then extract the state and dynasty from the Nomisma RDF -->
 		<xsl:if test="local-name() = 'persname' and contains(@xlink:href, 'nomisma.org')">
 			<xsl:variable name="href" select="@xlink:href"/>
@@ -638,7 +640,7 @@
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:when>
-			<xsl:when test="boolean(index-of($facets, $facet)) = true()">				
+			<xsl:when test="boolean(index-of($facets, $facet)) = true()">
 				<!-- if the $lang is enabled in the config (implying indexing into solr), then direct the user to the language-specific Solr query based on Nomisma prefLabel,
 					otherwise use the English preferred label -->
 
@@ -977,8 +979,71 @@
 		</li>
 	</xsl:template>
 
+	<xsl:template match="*:citation[child::tei:*]">
+		<li>
+			<b><xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>: </b>
+
+			<!-- structure a bibliographic reference -->
+			<xsl:for-each select="tei:author">
+				<xsl:if test="(position() = last()) and position() &gt; 1">
+					<xsl:text> and</xsl:text>
+				</xsl:if>
+				<xsl:text> </xsl:text>
+				<xsl:value-of select="."/>
+				<xsl:if test="not(position() = last()) and (count(../tei:author) &gt; 2)">
+					<xsl:text>,</xsl:text>
+				</xsl:if>
+			</xsl:for-each>
+
+			<!--insert period after final author if it isn't embedded in the value -->
+			<xsl:if test="not(substring(tei:author[last()], -1, 1) = '.')">
+				<xsl:text>. </xsl:text>
+			</xsl:if>
+
+			<xsl:apply-templates select="tei:title"/>
+
+			<xsl:if test="tei:publisher or tei:pubPlace or tei:date">
+				<xsl:text>. </xsl:text>
+
+				<xsl:for-each select="tei:pubPlace">
+					<xsl:if test="(position() = last()) and position() &gt; 1">
+						<xsl:text> and</xsl:text>
+					</xsl:if>
+					<xsl:text> </xsl:text>
+					<xsl:value-of select="."/>
+					<xsl:if test="not(position() = last()) and (count(../tei:pubPlace) &gt; 2)">
+						<xsl:text>,</xsl:text>
+					</xsl:if>
+				</xsl:for-each>
+				<xsl:if test="tei:pubPlace and tei:publisher">
+					<xsl:text>: </xsl:text>
+				</xsl:if>
+
+				<xsl:value-of select="tei:publisher"/>
+
+				<xsl:if test="tei:date">
+					<xsl:text>, </xsl:text>
+					<xsl:value-of select="tei:date"/>
+				</xsl:if>
+
+				<xsl:text>.</xsl:text>
+			</xsl:if>
+
+			<xsl:if test="@xlink:href">
+				<xsl:text> </xsl:text>
+				<a href="{@xlink:href}" target="_blank">
+					<span class="glyphicon glyphicon-new-window"/>
+				</a>
+			</xsl:if>
+
+		</li>
+	</xsl:template>
+
 	<xsl:template match="tei:title">
 		<i>
+			<xsl:if test="@type = 'sub'">
+				<xsl:text>: </xsl:text>
+			</xsl:if>
 			<xsl:apply-templates/>
 		</i>
 	</xsl:template>
@@ -1282,10 +1347,10 @@
 			<xsl:text>, </xsl:text>
 		</xsl:if>
 	</xsl:template>
-	
-	<xsl:template match="res:binding[@name = 'die'] | res:binding[@name='altDie']" mode="coin-die">
+
+	<xsl:template match="res:binding[@name = 'die'] | res:binding[@name = 'altDie']" mode="coin-die">
 		<xsl:variable name="name" select="@name"/>
-		
+
 		<li>
 			<b><xsl:value-of select="numishare:regularize_node('die', $lang)"/>: </b>
 			<a href="{res:uri}">
