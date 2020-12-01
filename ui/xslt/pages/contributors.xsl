@@ -159,6 +159,19 @@
 							</a>
 						</dd>
 					</xsl:if>
+					<xsl:if test="res:binding[@name = 'collection']">
+						<xsl:if test="not(res:binding[@name='homepage']/res:uri = res:binding[@name='dataset']/res:uri)">
+							<dt>
+								<xsl:value-of select="numishare:regularize_node('dataset', $lang)"/>
+							</dt>
+							<dd>
+								<a href="{res:binding[@name='dataset']/res:uri}">
+									<xsl:value-of select="res:binding[@name = 'title']/res:literal"/>
+								</a>
+							</dd>
+						</xsl:if>
+						
+					</xsl:if>
 					<xsl:if test="res:binding[@name = 'publisher']">
 						<dt>
 							<xsl:value-of select="numishare:regularize_node('publisher', $lang)"/>
