@@ -700,10 +700,14 @@
 												<xsl:value-of select="."/>
 											</a>
 										</h4>
-										<div namedGraph="{.}" class="network-graph hidden" id="{generate-id()}"/>
+
+										<!-- until the d3plus bug is fixed about 1:1 graphs, suppress the div -->
+										<xsl:if
+											test="count(doc('input:dies')/dies/obverse/res:sparql[$position]/descendant::res:result) &gt; 1 or count(doc('input:dies')/dies/reverse/res:sparql[$position]/descendant::res:result) &gt; 1">
+											<div namedGraph="{.}" class="network-graph hidden" id="{generate-id()}"/>
+										</xsl:if>										
 
 										<!-- display die link table only in a type page -->
-
 										<div>
 											<h4>Die Links</h4>
 
