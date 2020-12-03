@@ -1,0 +1,52 @@
+version: "3.3"
+services:
+  httpd:
+    container_name: apache
+    image: httpd:2.4
+    ports:
+      - "80:80"
+    volumes:
+      - "./httpd.conf:/usr/local/apache2/conf/httpd.conf"
+  orbeon:
+    container_name: orbeon
+    image: tiredofit/orbeon:latest
+    ports:
+      - "8081:8080"
+    volumes:
+      - "./orbeon.xml:/usr/local/tomcat/conf/Catalina/localhost/ROOT.xml"
+      - "..:/usr/local/projects/numishare"
+      - "..:/usr/local/tomcat/webapps/orbeon/WEB-INF/resources/apps/numishare"
+      - "./exist-config.xml:/usr/local/tomcat/webapps/orbeon/WEB-INF/resources/apps/numishare/exist-config.xml"
+      - "./tomcat-users.xml:/usr/local/tomcat/conf/tomcat-users.xml"
+      - "./web.xml:/usr/local/tomcat/webapps/orbeon/WEB-INF/web.xml"
+      - "./properties-local.xml:/usr/local/tomcat/webapps/orbeon/WEB-INF/resources/config/properties-local.xml"
+  solr:
+    container_name: solr
+    image: solr:8.6.2
+    ports:
+      - "8983:8983"
+    volumes:
+      - data:/var/solr
+      - "../solr-home/1.6:/var/solr/data/numishare"
+    command:
+      - solr-precreate
+      - gettingstarted
+  exist:
+    image: existdb/existdb:5.2.0
+    container_name: exist
+    ports:
+      - 8080:8080
+      - 8443:8443
+    volumes:
+      - type: volume
+        source: data
+        target: /exist/webapp/WEB-INF/data
+      - type: volume
+        source: config
+        target: /exist/config
+
+volumes:
+  data:
+    driver: local
+  config:
+    driver: local

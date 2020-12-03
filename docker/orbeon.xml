@@ -1,0 +1,4 @@
+<Context path="" docBase="orbeon">
+    <Resources allowLinking="true" />
+    <Valve className="org.apache.catalina.authenticator.BasicAuthenticator" changeSessionIdOnAuthentication="false"/>
+</Context>
