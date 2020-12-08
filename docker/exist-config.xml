@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- *************************** eXist URL *********************************
+The exist-config variable is referenced  by XForms web forms interact with the eXist database 
+default: "/exist/rest/db/"
+
+This points to Orbeon's internal eXist database (http://localhost:8080/orbeon/exist/rest/db/)
+
+Note: do not forget trailing / after db!
+-->
+<exist-config>
+	<username>admin</username>
+	<password></password>
+	<url>http://exist:8080/exist/rest/db/</url>
+</exist-config>
