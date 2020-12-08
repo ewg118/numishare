@@ -158,7 +158,7 @@ if (file_exists($eXist_config_path)) {
 				            $errors[] = $count . ': ' . $accnum . '(' . $row['department'] . ') invalid department.';
 				        } else {
 				            //block 1001.1.* and 1001.57.* ranges
-				            if (strpos($accnum, '1001.1.') === FALSE && strpos($accnum, '1001.57.') === FALSE &&  && strpos($accnum, '1002.') === FALSE){
+				            if (strpos($accnum, '1001.1.') === FALSE && strpos($accnum, '1001.57.') === FALSE && strpos($accnum, '1002.') === FALSE){
 				                echo "Processing {$accnum}\n";
 				                
 				                //generate a data object by parsing the contents of the Filemaker row
