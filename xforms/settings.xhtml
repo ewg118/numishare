@@ -562,6 +562,13 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 																<xforms:label>object</xforms:label>
 																<xforms:value>object</xforms:value>
 															</xforms:item>
+															
+															<xforms:action ev:event="xforms-value-changed">
+																<xforms:var name="val" select="."/>
+																
+																<xforms:setvalue ref="instance('config')/pages/compare/@enabled" value="false()" if="$val != 'object'"/>
+																<xforms:setvalue ref="instance('config')/pages/compare/@enabled" value="true()" if="$val = 'object'"/>
+															</xforms:action>
 														</xforms:select1>
 													</td>
 													<td></td>

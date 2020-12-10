@@ -944,6 +944,13 @@
 																<xforms:value>hoard</xforms:value>
 															</xforms:item>
 															<xforms:alert>Required</xforms:alert>
+															
+															<xforms:action ev:event="xforms-value-changed">
+																<xforms:var name="val" select="."/>
+																
+																<xforms:setvalue ref="instance('config-template')/pages/compare/@enabled" value="false()" if="$val != 'object'"/>
+																<xforms:setvalue ref="instance('config-template')/pages/compare/@enabled" value="true()" if="$val = 'object'"/>
+															</xforms:action>
 														</xforms:select1>
 													</div>
 													<div>
