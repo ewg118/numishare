@@ -2,7 +2,8 @@
 <!-- Repeated functions for regularization to be used through Numishare -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:nh="http://nomisma.org/nudsHoard" xmlns:nuds="http://nomisma.org/nuds"
 	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:numishare="https://github.com/ewg118/numishare"
-	xmlns:nomisma="http://nomisma.org/" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes="#all" version="2.0">
+	xmlns:nomisma="http://nomisma.org/" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	exclude-result-prefixes="#all" version="2.0">
 
 	<!-- ************** PARSE ACCEPT-LANGUAGE FROM HTTP HEADER ************** -->
 	<xsl:function name="numishare:parseAcceptLanguage">
@@ -15,7 +16,8 @@
 						<xsl:matching-substring>
 							<xsl:for-each select="regex-group(1)">
 								<xsl:for-each select="tokenize(., ',')">
-									<xsl:value-of select="
+									<xsl:value-of
+										select="
 											if (contains(., '-')) then
 												substring-before(., '-')
 											else
@@ -138,11 +140,18 @@
 					<xsl:when test="$label = 'reverse'">Rückseite</xsl:when>
 					<xsl:when test="$label = 'rev_leg'">Rückseitenlegende</xsl:when>
 					<xsl:when test="$label = 'rev_type'">Rückseitentyp</xsl:when>
+					<xsl:when test="$label = 'ruler'">Prägeherr</xsl:when>
 					<xsl:when test="$label = 'saleCatalog'">Auktionskatalog</xsl:when>
 					<xsl:when test="$label = 'saleItem'">Auktionslot</xsl:when>
 					<xsl:when test="$label = 'salePrice'">Verkaufspreis</xsl:when>
 					<xsl:when test="$label = 'shape'">Form</xsl:when>
-					<xsl:when test="$label = 'state'">Staat</xsl:when>
+					<xsl:when test="$label = 'state'">
+						<xsl:choose>
+							<xsl:when test="substring-before(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/') = 'oscar'"
+								>Münzherrschaft</xsl:when>
+							<xsl:otherwise>Staat</xsl:otherwise>
+						</xsl:choose>
+					</xsl:when>
 					<xsl:when test="$label = 'subject'">Subjekt</xsl:when>
 					<xsl:when test="$label = 'subjectSet'">Subjekte</xsl:when>
 					<xsl:when test="$label = 'symbol'">Symbol</xsl:when>
@@ -340,11 +349,18 @@
 					<xsl:when test="$label = 'reverse'">Revers</xsl:when>
 					<xsl:when test="$label = 'rev_leg'">Légende de revers</xsl:when>
 					<xsl:when test="$label = 'rev_type'">Type de revers</xsl:when>
+					<xsl:when test="$label = 'ruler'">Souverain</xsl:when>
 					<xsl:when test="$label = 'saleCatalog'">Catalogue de vente</xsl:when>
 					<xsl:when test="$label = 'saleItem'">Numéro de lot</xsl:when>
 					<xsl:when test="$label = 'salePrice'">Prix de vente</xsl:when>
 					<xsl:when test="$label = 'shape'">Forme</xsl:when>
-					<xsl:when test="$label = 'state'">Etat</xsl:when>
+					<xsl:when test="$label = 'state'">
+						<xsl:choose>
+							<xsl:when test="substring-before(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/') = 'oscar'">Autorité
+								émettrice</xsl:when>
+							<xsl:otherwise>Etat</xsl:otherwise>
+						</xsl:choose>
+					</xsl:when>
 					<xsl:when test="$label = 'subject'">Sujet</xsl:when>
 					<xsl:when test="$label = 'subjectSet'">Sujets</xsl:when>
 					<xsl:when test="$label = 'symbol'">Symbole</xsl:when>
@@ -1043,11 +1059,18 @@
 					<xsl:when test="$label = 'reverse'">Rovescio</xsl:when>
 					<xsl:when test="$label = 'rev_leg'">Legenda del rovescio</xsl:when>
 					<xsl:when test="$label = 'rev_type'">Tipo del rovescio</xsl:when>
+					<xsl:when test="$label = 'ruler'">Sovrano</xsl:when>
 					<xsl:when test="$label = 'saleCatalog'">Catalogo d'asta</xsl:when>
 					<xsl:when test="$label = 'saleItem'">Numero del lotto</xsl:when>
 					<xsl:when test="$label = 'salePrice'">Prezzo d'asta</xsl:when>
 					<xsl:when test="$label = 'shape'">Forma</xsl:when>
-					<xsl:when test="$label = 'state'">Stato</xsl:when>
+					<xsl:when test="$label = 'state'">
+						<xsl:choose>
+							<xsl:when test="substring-before(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/') = 'oscar'">Autorità
+								emittente</xsl:when>
+							<xsl:otherwise>Stato</xsl:otherwise>
+						</xsl:choose>
+					</xsl:when>
 					<xsl:when test="$label = 'subject'">Soggetto</xsl:when>
 					<xsl:when test="$label = 'subjectSet'">Soggetti</xsl:when>
 					<xsl:when test="$label = 'symbol'">Simbolo</xsl:when>
@@ -1873,7 +1896,7 @@
 				</xsl:choose>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:choose>			
+				<xsl:choose>
 					<xsl:when test="$label = 'ah'">Hijra Date</xsl:when>
 					<xsl:when test="$label = 'ancient_place'">Ancient Place</xsl:when>
 					<xsl:when test="$label = 'acquiredFrom'">Acquired From</xsl:when>
@@ -2019,14 +2042,14 @@
 					<xsl:when test="$label = 'maps_legend'">Legende</xsl:when>
 					<xsl:when test="$label = 'visualize_typological'">Typologische Analyse</xsl:when>
 					<xsl:when test="$label = 'visualize_measurement'">Analyse der Dimensionen</xsl:when>
-					<xsl:when test="$label = 'visualize_desc'">Verwenden Sie die Datenauswahl- und Visualisierungsoptionen, um eine auf ausgewählten Parametern basierte Grafik zu
-						erzeugen. Eine Gebrauchsanleitung dafür finden Sie hier</xsl:when>
+					<xsl:when test="$label = 'visualize_desc'">Verwenden Sie die Datenauswahl- und Visualisierungsoptionen, um eine auf ausgewählten Parametern
+						basierte Grafik zu erzeugen. Eine Gebrauchsanleitung dafür finden Sie hier</xsl:when>
 					<xsl:when test="$label = 'visualize_type_desc'">Verwenden Sie diese Option, um Prozent- bzw. absolute Zahlen der folgenden Typologien zu
 						visualisieren</xsl:when>
-					<xsl:when test="$label = 'visualize_date_desc'">Verwenden Sie diese Option, um das Vorkommen von Münzen eines bestimmten Datums in Schtazfunden als Prozent-
-						bzw. absolute Zahlen zu erhalten</xsl:when>
-					<xsl:when test="$label = 'visualize_csv_desc'">Verwenden Sie diese Option, um eine CSV-Datei für die Abfrage und die ausgewählten Schatzfunde zu
-						downloaden</xsl:when>
+					<xsl:when test="$label = 'visualize_date_desc'">Verwenden Sie diese Option, um das Vorkommen von Münzen eines bestimmten Datums in
+						Schtazfunden als Prozent- bzw. absolute Zahlen zu erhalten</xsl:when>
+					<xsl:when test="$label = 'visualize_csv_desc'">Verwenden Sie diese Option, um eine CSV-Datei für die Abfrage und die ausgewählten
+						Schatzfunde zu downloaden</xsl:when>
 					<xsl:when test="$label = 'visualize_select_measurement'">Dimensionen auswählen</xsl:when>
 					<xsl:when test="$label = 'visualize_chart_type'">Grafikart auswählen</xsl:when>
 					<xsl:when test="$label = 'visualize_categories'">Analysekategorien auswählen</xsl:when>
@@ -2046,8 +2069,8 @@
 					<xsl:when test="$label = 'visualize_filter_list'">Filterliste</xsl:when>
 					<xsl:when test="$label = 'visualize_filter_query'">Filterabfrage</xsl:when>
 					<xsl:when test="$label = 'visualize_remove_filter'">Filter entfernen</xsl:when>
-					<xsl:when test="$label = 'visualize_add_query_desc'">Verwenden Sie die Ausklappmenüs unten, um Ihre Dimensionsabfrage zu formulieren. Ein Datumsbereich kann für
-						jede Abfrage nur einmal angegeben werden</xsl:when>
+					<xsl:when test="$label = 'visualize_add_query_desc'">Verwenden Sie die Ausklappmenüs unten, um Ihre Dimensionsabfrage zu formulieren. Ein
+						Datumsbereich kann für jede Abfrage nur einmal angegeben werden</xsl:when>
 					<xsl:when test="$label = 'visualize_optional_settings'">Optionale Einstellungen</xsl:when>
 					<xsl:when test="$label = 'visualize_hide-show'">Optionen ausblenden/zeigen</xsl:when>
 					<xsl:when test="$label = 'visualize_stacking_options'">Stapeloptionen</xsl:when>
@@ -2143,10 +2166,12 @@
 					<xsl:when test="$label = 'maps_legend'">الكتابات</xsl:when>
 					<xsl:when test="$label = 'visualize_typological'">تحليل الخواص الهندسية و الفراغية</xsl:when>
 					<xsl:when test="$label = 'visualize_measurement'">تحليل القياسات</xsl:when>
-					<xsl:when test="$label = 'visualize_desc'">استخدم الخيارات و التصور المرئى للبيانات أدناه لتوليد مخطط بيانى استنادا إلى هذه المعايير. تعليمات إستخدام هذه
-						الخاصية يمكن العثور عليها هنا</xsl:when>
-					<xsl:when test="$label = 'visualize_type_desc'">استخدم هذه الخاصية لإظهار التصور البصرى للنسب المئوية أو الظهور العددى للنماذج التالية</xsl:when>
-					<xsl:when test="$label = 'visualize_date_desc'">إستخدم هذه الخاصية لتوليد النسب المئوية أو الظهور العددى للقطع النقدية من تاريخ معين ضمن الكنوز</xsl:when>
+					<xsl:when test="$label = 'visualize_desc'">استخدم الخيارات و التصور المرئى للبيانات أدناه لتوليد مخطط بيانى استنادا إلى هذه المعايير.
+						تعليمات إستخدام هذه الخاصية يمكن العثور عليها هنا</xsl:when>
+					<xsl:when test="$label = 'visualize_type_desc'">استخدم هذه الخاصية لإظهار التصور البصرى للنسب المئوية أو الظهور العددى للنماذج
+						التالية</xsl:when>
+					<xsl:when test="$label = 'visualize_date_desc'">إستخدم هذه الخاصية لتوليد النسب المئوية أو الظهور العددى للقطع النقدية من تاريخ معين ضمن
+						الكنوز</xsl:when>
 					<xsl:when test="$label = 'visualize_csv_desc'">إستخدم هذه الخاصية لتحميل سى-إس-ڤى للبحث المُقَدَّم و الكنوز المختارة</xsl:when>
 					<xsl:when test="$label = 'visualize_select_measurement'">إختر المقاس</xsl:when>
 					<xsl:when test="$label = 'visualize_chart_type'">حدد نوع الرسم البياني</xsl:when>
@@ -2167,8 +2192,8 @@
 					<xsl:when test="$label = 'visualize_filter_list'">قائمة عوامل التصفية</xsl:when>
 					<xsl:when test="$label = 'visualize_filter_query'">أضِف عوامل تصفية للإستفسارات</xsl:when>
 					<xsl:when test="$label = 'visualize_remove_filter'">إزالة عوامل التصفية</xsl:when>
-					<xsl:when test="$label = 'visualize_add_query_desc'">إستخدم القوائم المنسدلة أدناه لصياغة الإستعلام الخاص بك. لا يمكن تحديد نطاق التاريخ أكثر مرة واحدة في
-						الإستعلام</xsl:when>
+					<xsl:when test="$label = 'visualize_add_query_desc'">إستخدم القوائم المنسدلة أدناه لصياغة الإستعلام الخاص بك. لا يمكن تحديد نطاق التاريخ
+						أكثر مرة واحدة في الإستعلام</xsl:when>
 					<xsl:when test="$label = 'visualize_optional_settings'">محدِدات اختيارية</xsl:when>
 					<xsl:when test="$label = 'visualize_hide-show'">خيارات الإخفاء أو العرض</xsl:when>
 					<xsl:when test="$label = 'visualize_stacking_options'">تراص الخيارات</xsl:when>
@@ -2264,14 +2289,14 @@
 					<xsl:when test="$label = 'maps_legend'">Légende</xsl:when>
 					<xsl:when test="$label = 'visualize_typological'">Analyse typologique</xsl:when>
 					<xsl:when test="$label = 'visualize_measurement'">Analyse des mesures</xsl:when>
-					<xsl:when test="$label = 'visualize_desc'">Utilisez la sélection des informations et les options de visualisation ci-dessous pour créer un graphique basés sur
-						les paramètres sélectionnés. Les instructions d'utilisation de cette fonction peuvent être trouvés ici.</xsl:when>
-					<xsl:when test="$label = 'visualize_type_desc'">Utilisez cette fonctionalité pour visualiser les pourcentages ou le nombre de fois où cette typologie
-						apparaît</xsl:when>
-					<xsl:when test="$label = 'visualize_date_desc'">Utilisez cette fonctionalité pour obtenir le pourcentage ou le nombre de fois où cette monnaie apparaît à une
-						date particulière au sein des trésors</xsl:when>
-					<xsl:when test="$label = 'visualize_csv_desc'">Utilisez cette fonctionalité pour télécharger un CSV correspondant à la recherche et les trésors
-						sélectionnés</xsl:when>
+					<xsl:when test="$label = 'visualize_desc'">Utilisez la sélection des informations et les options de visualisation ci-dessous pour créer un
+						graphique basés sur les paramètres sélectionnés. Les instructions d'utilisation de cette fonction peuvent être trouvés ici.</xsl:when>
+					<xsl:when test="$label = 'visualize_type_desc'">Utilisez cette fonctionalité pour visualiser les pourcentages ou le nombre de fois où cette
+						typologie apparaît</xsl:when>
+					<xsl:when test="$label = 'visualize_date_desc'">Utilisez cette fonctionalité pour obtenir le pourcentage ou le nombre de fois où cette
+						monnaie apparaît à une date particulière au sein des trésors</xsl:when>
+					<xsl:when test="$label = 'visualize_csv_desc'">Utilisez cette fonctionalité pour télécharger un CSV correspondant à la recherche et les
+						trésors sélectionnés</xsl:when>
 					<xsl:when test="$label = 'visualize_select_measurement'">Selectionnez Mesure</xsl:when>
 					<xsl:when test="$label = 'visualize_chart_type'">Sélectionnez Type de graphe.</xsl:when>
 					<xsl:when test="$label = 'visualize_categories'">Sélectionnez Catégories pour analyse.</xsl:when>
@@ -2291,8 +2316,8 @@
 					<xsl:when test="$label = 'visualize_filter_list'">Filtre de liste</xsl:when>
 					<xsl:when test="$label = 'visualize_filter_query'">Demande de filtre</xsl:when>
 					<xsl:when test="$label = 'visualize_remove_filter'">Enlevez le filtre</xsl:when>
-					<xsl:when test="$label = 'visualize_add_query_desc'">Utilisez les fonctions de défilement ci-dessous pour fromuler votre demande de mesure. Une période entre
-						deux dates ne peut être spécifiée qu'une seule fois par demande</xsl:when>
+					<xsl:when test="$label = 'visualize_add_query_desc'">Utilisez les fonctions de défilement ci-dessous pour fromuler votre demande de mesure.
+						Une période entre deux dates ne peut être spécifiée qu'une seule fois par demande</xsl:when>
 					<xsl:when test="$label = 'visualize_optional_settings'">Cadre de travail optionnel</xsl:when>
 					<xsl:when test="$label = 'visualize_hide-show'">Options de Cacher/Afficher</xsl:when>
 					<xsl:when test="$label = 'visualize_stacking_options'">Options de mise en ordre</xsl:when>
@@ -2388,13 +2413,14 @@
 					<xsl:when test="$label = 'maps_legend'">Legenda</xsl:when>
 					<xsl:when test="$label = 'visualize_typological'">Analiză tipologică</xsl:when>
 					<xsl:when test="$label = 'visualize_measurement'">Analiză dimensiuni</xsl:when>
-					<xsl:when test="$label = 'visualize_desc'">Utilizați selecția de date și opțiunile de vizualizare de mai jos pentru a genera harta pe baza parametrilor
-						selectați. Instrucțiuni de utilizare pentru această funcție pot fi găsite aici.</xsl:when>
-					<xsl:when test="$label = 'visualize_type_desc'">Utilizați această funcție pentru a vizualiza procentajul sau cuantificarea următoarelor tipologii</xsl:when>
-					<xsl:when test="$label = 'visualize_date_desc'">Utilizați această funcție pentru a reda procentajul sau cuantificarea monedelor emise la o anumită dată din
-						cadrul tezaurelor</xsl:when>
-					<xsl:when test="$label = 'visualize_csv_desc'">Utilizați această funcție pentru a descărca CSV (valori separate prin virgulă) pentru cererea adresată și
-						tezaurele selectate</xsl:when>
+					<xsl:when test="$label = 'visualize_desc'">Utilizați selecția de date și opțiunile de vizualizare de mai jos pentru a genera harta pe baza
+						parametrilor selectați. Instrucțiuni de utilizare pentru această funcție pot fi găsite aici.</xsl:when>
+					<xsl:when test="$label = 'visualize_type_desc'">Utilizați această funcție pentru a vizualiza procentajul sau cuantificarea următoarelor
+						tipologii</xsl:when>
+					<xsl:when test="$label = 'visualize_date_desc'">Utilizați această funcție pentru a reda procentajul sau cuantificarea monedelor emise la o
+						anumită dată din cadrul tezaurelor</xsl:when>
+					<xsl:when test="$label = 'visualize_csv_desc'">Utilizați această funcție pentru a descărca CSV (valori separate prin virgulă) pentru cererea
+						adresată și tezaurele selectate</xsl:when>
 					<xsl:when test="$label = 'visualize_select_measurement'">Selectare dimensiuni</xsl:when>
 					<xsl:when test="$label = 'visualize_chart_type'">Selectare tip de hartă</xsl:when>
 					<xsl:when test="$label = 'visualize_categories'">Selectare Categorii pentru Analiză</xsl:when>
@@ -2414,8 +2440,8 @@
 					<xsl:when test="$label = 'visualize_filter_list'">Filtrare listă</xsl:when>
 					<xsl:when test="$label = 'visualize_filter_query'">Filtrare categorie</xsl:when>
 					<xsl:when test="$label = 'visualize_remove_filter'">Eliminare filtru</xsl:when>
-					<xsl:when test="$label = 'visualize_add_query_desc'">Utilizați meniul drop-down pentru a fomula criteriul de măsurare. Intervalul cronologic poate fi speificat
-						doar o dată pe cerere</xsl:when>
+					<xsl:when test="$label = 'visualize_add_query_desc'">Utilizați meniul drop-down pentru a fomula criteriul de măsurare. Intervalul cronologic
+						poate fi speificat doar o dată pe cerere</xsl:when>
 					<xsl:when test="$label = 'visualize_optional_settings'">Setări opționale</xsl:when>
 					<xsl:when test="$label = 'visualize_hide-show'">Ascunde/arată opțiuni</xsl:when>
 					<xsl:when test="$label = 'visualize_stacking_options'">Pachet de opțiuni</xsl:when>
@@ -2515,11 +2541,12 @@
 					<xsl:when test="$label = 'maps_legend'">Легенда</xsl:when>
 					<xsl:when test="$label = 'visualize_typological'">Типологический анализ</xsl:when>
 					<xsl:when test="$label = 'visualize_measurement'">Анализ измерений</xsl:when>
-					<xsl:when test="$label = 'visualize_desc'">Использовать выбор данных и визуализацию параметров дальше для создания диаграммы на основе выбранных параметров.
-						Инструкции по использованию этой функции можно найти здесь</xsl:when>
-					<xsl:when test="$label = 'visualize_type_desc'">Использовать эту функцию, чтобы визуализировать проценты или числовые совпадения имеющихся типологий</xsl:when>
-					<xsl:when test="$label = 'visualize_date_desc'">Использовать функцию, чтобы рассчитать проценты или количество монет определенной даты в рамках
-						кладов</xsl:when>
+					<xsl:when test="$label = 'visualize_desc'">Использовать выбор данных и визуализацию параметров дальше для создания диаграммы на основе
+						выбранных параметров. Инструкции по использованию этой функции можно найти здесь</xsl:when>
+					<xsl:when test="$label = 'visualize_type_desc'">Использовать эту функцию, чтобы визуализировать проценты или числовые совпадения имеющихся
+						типологий</xsl:when>
+					<xsl:when test="$label = 'visualize_date_desc'">Использовать функцию, чтобы рассчитать проценты или количество монет определенной даты в
+						рамках кладов</xsl:when>
 					<xsl:when test="$label = 'visualize_csv_desc'">Использовать функцию для загрузки CSV для данного запроса и выбранных кладов</xsl:when>
 					<xsl:when test="$label = 'visualize_select_measurement'">Выбрать измерения</xsl:when>
 					<xsl:when test="$label = 'visualize_chart_type'">Тип диаграммы</xsl:when>
@@ -2640,10 +2667,12 @@
 					<xsl:when test="$label = 'maps_legend'">Легенда</xsl:when>
 					<xsl:when test="$label = 'visualize_typological'">Типологічний аналіз</xsl:when>
 					<xsl:when test="$label = 'visualize_measurement'">Аналіз вимірювань</xsl:when>
-					<xsl:when test="$label = 'visualize_desc'">Використати вибір даних і візуалізацію параметрів далі для створення діаграми на основі вибраних параметрів.
-						Інструкції з використання цієї функції можна знайти тут</xsl:when>
-					<xsl:when test="$label = 'visualize_type_desc'">Використати функцію, щоб візуалізувати відсотки або числові збіги наступних типологій</xsl:when>
-					<xsl:when test="$label = 'visualize_date_desc'">Використати функцію, щоб вирахувати відсотки або кількість монет певної дати в межах скарбів</xsl:when>
+					<xsl:when test="$label = 'visualize_desc'">Використати вибір даних і візуалізацію параметрів далі для створення діаграми на основі вибраних
+						параметрів. Інструкції з використання цієї функції можна знайти тут</xsl:when>
+					<xsl:when test="$label = 'visualize_type_desc'">Використати функцію, щоб візуалізувати відсотки або числові збіги наступних
+						типологій</xsl:when>
+					<xsl:when test="$label = 'visualize_date_desc'">Використати функцію, щоб вирахувати відсотки або кількість монет певної дати в межах
+						скарбів</xsl:when>
 					<xsl:when test="$label = 'visualize_csv_desc'">Використати функцію для завантаження CSV для даного запиту та обраних скарбів</xsl:when>
 					<xsl:when test="$label = 'visualize_select_measurement'">Обрати вимірювання</xsl:when>
 					<xsl:when test="$label = 'visualize_chart_type'">Тип діаграми</xsl:when>
@@ -2762,12 +2791,14 @@
 					<xsl:when test="$label = 'maps_legend'">Legenda</xsl:when>
 					<xsl:when test="$label = 'visualize_typological'">Typologische analyse</xsl:when>
 					<xsl:when test="$label = 'visualize_measurement'">Analyse van de afmetingen</xsl:when>
-					<xsl:when test="$label = 'visualize_desc'">Gebruik de geselecteerde data en visualiseringsopties benedenaan, om een kaart te genereren op basis van de
-						geselecteerde parameters. Een toelichting om deze functie te gebruiken vindt u hier</xsl:when>
-					<xsl:when test="$label = 'visualize_type_desc'">Hiermee worden percentages of absolute aantallen van de volgende typologieën getoond</xsl:when>
-					<xsl:when test="$label = 'visualize_date_desc'">Hiermee wordt de aanwezigheid van munten van een specifiek jaar in schatvondsten in percentages of absolute
-						aantallen getoond</xsl:when>
-					<xsl:when test="$label = 'visualize_csv_desc'">Hiermee kunt u een CSV downloaden met de door u geselecteerde data en geselecteerde schatvondsten</xsl:when>
+					<xsl:when test="$label = 'visualize_desc'">Gebruik de geselecteerde data en visualiseringsopties benedenaan, om een kaart te genereren op
+						basis van de geselecteerde parameters. Een toelichting om deze functie te gebruiken vindt u hier</xsl:when>
+					<xsl:when test="$label = 'visualize_type_desc'">Hiermee worden percentages of absolute aantallen van de volgende typologieën
+						getoond</xsl:when>
+					<xsl:when test="$label = 'visualize_date_desc'">Hiermee wordt de aanwezigheid van munten van een specifiek jaar in schatvondsten in
+						percentages of absolute aantallen getoond</xsl:when>
+					<xsl:when test="$label = 'visualize_csv_desc'">Hiermee kunt u een CSV downloaden met de door u geselecteerde data en geselecteerde
+						schatvondsten</xsl:when>
 					<xsl:when test="$label = 'visualize_select_measurement'">Selecteer formaat</xsl:when>
 					<xsl:when test="$label = 'visualize_chart_type'">Selecteer kaartsoort</xsl:when>
 					<xsl:when test="$label = 'visualize_categories'">Selecteer analysecategorieën</xsl:when>
@@ -2787,8 +2818,8 @@
 					<xsl:when test="$label = 'visualize_filter_list'">Filter lijst</xsl:when>
 					<xsl:when test="$label = 'visualize_filter_query'">Filter zoekopdracht</xsl:when>
 					<xsl:when test="$label = 'visualize_remove_filter'">Verwijder filter</xsl:when>
-					<xsl:when test="$label = 'visualize_add_query_desc'">Gebruik de drop-down menu's hieronder om de zoekvraag op basis van afmetingen samen te stellen. Per
-						zoekvraag kan alleen één datumbereik worden opgegeven</xsl:when>
+					<xsl:when test="$label = 'visualize_add_query_desc'">Gebruik de drop-down menu's hieronder om de zoekvraag op basis van afmetingen samen te
+						stellen. Per zoekvraag kan alleen één datumbereik worden opgegeven</xsl:when>
 					<xsl:when test="$label = 'visualize_optional_settings'">Optionele instellingen</xsl:when>
 					<xsl:when test="$label = 'visualize_hide-show'">Opties tonen/verbergen</xsl:when>
 					<xsl:when test="$label = 'visualize_stacking_options'">Stapel opties</xsl:when>
@@ -2950,11 +2981,12 @@
 					<xsl:when test="$label = 'maps_legend'">legenda</xsl:when>
 					<xsl:when test="$label = 'visualize_typological'">analiza typologiczna</xsl:when>
 					<xsl:when test="$label = 'visualize_measurement'">analiza metrologiczna</xsl:when>
-					<xsl:when test="$label = 'visualize_desc'">Użyj opcji wybierania i wizualizacji danych poniżej aby uzyskać wykres oparty na wybranych parametrach. Instrukcje
-						korzystania z tej opcji znajdują się tu</xsl:when>
-					<xsl:when test="$label = 'visualize_type_desc'">Użyj tej opcji aby wizualizować procentowe lub liczbowe proporcje dla następujących typów</xsl:when>
-					<xsl:when test="$label = 'visualize_date_desc'">Użyj tej opcji aby przedstawić procentowe lub liczbowe proporocje monet o określonym datowaniu w
-						skarbach</xsl:when>
+					<xsl:when test="$label = 'visualize_desc'">Użyj opcji wybierania i wizualizacji danych poniżej aby uzyskać wykres oparty na wybranych
+						parametrach. Instrukcje korzystania z tej opcji znajdują się tu</xsl:when>
+					<xsl:when test="$label = 'visualize_type_desc'">Użyj tej opcji aby wizualizować procentowe lub liczbowe proporcje dla następujących
+						typów</xsl:when>
+					<xsl:when test="$label = 'visualize_date_desc'">Użyj tej opcji aby przedstawić procentowe lub liczbowe proporocje monet o określonym
+						datowaniu w skarbach</xsl:when>
 					<xsl:when test="$label = 'visualize_csv_desc'">Użyj tej opcji aby ściągnąć dokument CSV dla danej kwerendy i wybranych skarbów</xsl:when>
 					<xsl:when test="$label = 'visualize_select_measurement'">wybierz wymiary</xsl:when>
 					<xsl:when test="$label = 'visualize_chart_type'">wybierz typ wykresu</xsl:when>
@@ -2975,8 +3007,8 @@
 					<xsl:when test="$label = 'visualize_filter_list'">filtruj wyniki na liście</xsl:when>
 					<xsl:when test="$label = 'visualize_filter_query'">filtruj kwerendę</xsl:when>
 					<xsl:when test="$label = 'visualize_remove_filter'">usuń filtr</xsl:when>
-					<xsl:when test="$label = 'visualize_add_query_desc'">Użyj list rozwijanych poniżej aby sformułować swoją kwerendę dotyczącą wymiarów. Zakres dat może być tylko
-						raz określony</xsl:when>
+					<xsl:when test="$label = 'visualize_add_query_desc'">Użyj list rozwijanych poniżej aby sformułować swoją kwerendę dotyczącą wymiarów. Zakres
+						dat może być tylko raz określony</xsl:when>
 					<xsl:when test="$label = 'visualize_optional_settings'">ustawienia opcjonalne</xsl:when>
 					<xsl:when test="$label = 'visualize_hide-show'">ukryj/pokaż opcje</xsl:when>
 					<xsl:when test="$label = 'visualize_stacking_options'">opcje widoku</xsl:when>
@@ -3073,14 +3105,14 @@
 					<xsl:when test="$label = 'maps_legend'">Legenda</xsl:when>
 					<xsl:when test="$label = 'visualize_typological'">Analisi tipologica</xsl:when>
 					<xsl:when test="$label = 'visualize_measurement'">Analisi dimensionale</xsl:when>
-					<xsl:when test="$label = 'visualize_desc'">Utilizza le opzioni per la selezione e visualizzazione dei dati in basso per creare un grafico basato sui parametri
-						selezionati. Le istruzioni per utilizzare questa funzione si possono consultare qui.</xsl:when>
+					<xsl:when test="$label = 'visualize_desc'">Utilizza le opzioni per la selezione e visualizzazione dei dati in basso per creare un grafico
+						basato sui parametri selezionati. Le istruzioni per utilizzare questa funzione si possono consultare qui.</xsl:when>
 					<xsl:when test="$label = 'visualize_type_desc'">Utilizza questa funzione per visualizzare le percentuali o le frequenze numeriche di queste
 						tipologie.</xsl:when>
-					<xsl:when test="$label = 'visualize_date_desc'">Utilizza questa funzione per rappresentare le percentuali o le frequenze numeriche di monete con una datazione
-						specifica all'interno dei ripostigli.</xsl:when>
-					<xsl:when test="$label = 'visualize_csv_desc'">Utilizza questa funzione per scaricare CSV (valori separati da virgola) relativi alla query considerata e ai
-						ripostigli selezionati.</xsl:when>
+					<xsl:when test="$label = 'visualize_date_desc'">Utilizza questa funzione per rappresentare le percentuali o le frequenze numeriche di monete
+						con una datazione specifica all'interno dei ripostigli.</xsl:when>
+					<xsl:when test="$label = 'visualize_csv_desc'">Utilizza questa funzione per scaricare CSV (valori separati da virgola) relativi alla query
+						considerata e ai ripostigli selezionati.</xsl:when>
 					<xsl:when test="$label = 'visualize_select_measurement'">Seleziona dimensioni</xsl:when>
 					<xsl:when test="$label = 'visualize_chart_type'">Seleziona tipo di grafico</xsl:when>
 					<xsl:when test="$label = 'visualize_categories'">Seleziona categorie per le analisi</xsl:when>
@@ -3100,8 +3132,8 @@
 					<xsl:when test="$label = 'visualize_filter_list'">Filtra l'elenco</xsl:when>
 					<xsl:when test="$label = 'visualize_filter_query'">Filtra la query</xsl:when>
 					<xsl:when test="$label = 'visualize_remove_filter'">Rimuovi il filtro</xsl:when>
-					<xsl:when test="$label = 'visualize_add_query_desc'">Usa i menu a tendina qui sotto per elaborare la tua query di misura. Un arco cronologico può essere
-						specificato una sola volta per ogni query.</xsl:when>
+					<xsl:when test="$label = 'visualize_add_query_desc'">Usa i menu a tendina qui sotto per elaborare la tua query di misura. Un arco
+						cronologico può essere specificato una sola volta per ogni query.</xsl:when>
 					<xsl:when test="$label = 'visualize_optional_settings'">Configurazioni opzionali</xsl:when>
 					<xsl:when test="$label = 'visualize_hide-show'">Nascondi/mostra opzioni</xsl:when>
 					<xsl:when test="$label = 'visualize_stacking_options'">Opzioni per l'organizzazione</xsl:when>
@@ -3199,11 +3231,12 @@
 					<xsl:when test="$label = 'maps_legend'">Lejand</xsl:when>
 					<xsl:when test="$label = 'visualize_typological'">Tipolojik Analiz</xsl:when>
 					<xsl:when test="$label = 'visualize_measurement'">Ölçüm Analizi</xsl:when>
-					<xsl:when test="$label = 'visualize_desc'">Seçilen Parametrelere Dayalı bir Grafik Oluşturmak için Aşağıdaki Veri Seçimi ve Görselleştirme Seçenekleri Kullanın.
-						Bu Özelliği Kullanmak için Talimatları Burada Bulabilirsiniz</xsl:when>
-					<xsl:when test="$label = 'visualize_type_desc'">Takip eden Tipolojilerdeki Yüzdelik veya Sayısal Oluşumları Görselleştirmek İçin bu Özelliği Kullanın</xsl:when>
-					<xsl:when test="$label = 'visualize_date_desc'">Defineler İçindeki Belirli bir Tarihteki Yüzdelik veya Sayısal Oluşumları İşlemek İçin bu Özelliği
+					<xsl:when test="$label = 'visualize_desc'">Seçilen Parametrelere Dayalı bir Grafik Oluşturmak için Aşağıdaki Veri Seçimi ve Görselleştirme
+						Seçenekleri Kullanın. Bu Özelliği Kullanmak için Talimatları Burada Bulabilirsiniz</xsl:when>
+					<xsl:when test="$label = 'visualize_type_desc'">Takip eden Tipolojilerdeki Yüzdelik veya Sayısal Oluşumları Görselleştirmek İçin bu Özelliği
 						Kullanın</xsl:when>
+					<xsl:when test="$label = 'visualize_date_desc'">Defineler İçindeki Belirli bir Tarihteki Yüzdelik veya Sayısal Oluşumları İşlemek İçin bu
+						Özelliği Kullanın</xsl:when>
 					<xsl:when test="$label = 'visualize_csv_desc'">Yapılan Sorgu ve Seçilen Defineleri CSV Olarak İndirmek İçin bu Özelliği Seçin</xsl:when>
 					<xsl:when test="$label = 'visualize_select_measurement'">Ölçü Seç</xsl:when>
 					<xsl:when test="$label = 'visualize_chart_type'">Tablo Tipi Seç</xsl:when>
@@ -3224,8 +3257,8 @@
 					<xsl:when test="$label = 'visualize_filter_list'">Filtre Listesi</xsl:when>
 					<xsl:when test="$label = 'visualize_filter_query'">Sorguyu Filtrele</xsl:when>
 					<xsl:when test="$label = 'visualize_remove_filter'">Filtreleri Kaldır</xsl:when>
-					<xsl:when test="$label = 'visualize_add_query_desc'">Ölçüm sorgusunu formüle etmek için açılır menüleri kullanın. Bir tarih aralığı sorgu başına sadece bir kez
-						belirtilebilir.</xsl:when>
+					<xsl:when test="$label = 'visualize_add_query_desc'">Ölçüm sorgusunu formüle etmek için açılır menüleri kullanın. Bir tarih aralığı sorgu
+						başına sadece bir kez belirtilebilir.</xsl:when>
 					<xsl:when test="$label = 'visualize_optional_settings'">İsteğe bağlı seçenekeler</xsl:when>
 					<xsl:when test="$label = 'visualize_hide-show'">Seçenekleri gizle/göster</xsl:when>
 					<xsl:when test="$label = 'visualize_stacking_options'">Depolama seçenekleri</xsl:when>
@@ -3323,12 +3356,13 @@
 					<xsl:when test="$label = 'maps_legend'">legenda? kuvateksti?</xsl:when>
 					<xsl:when test="$label = 'visualize_typological'">typologinen analyysi/typologinen tutkimus</xsl:when>
 					<xsl:when test="$label = 'visualize_measurement'">mittauksen analyysi/ mittauksen tutkimus</xsl:when>
-					<xsl:when test="$label = 'visualize_desc'">Voit käytää alla olevia vaihtoehtoja luodaksesi valittujen rajoituksien tuottaman diagrammin. Neuvoja löydät
-						täältä</xsl:when>
+					<xsl:when test="$label = 'visualize_desc'">Voit käytää alla olevia vaihtoehtoja luodaksesi valittujen rajoituksien tuottaman diagrammin.
+						Neuvoja löydät täältä</xsl:when>
 					<xsl:when test="$label = 'visualize_type_desc'">Havainnollista näiden typologioiden ilmenemisprosentit tai numerot diagrammina</xsl:when>
 					<xsl:when test="$label = 'visualize_date_desc'">Havainnollista näiden typologioiden ilmenemisprosentit tai numerot tietyissa rahakätköissä
 						diagrammina</xsl:when>
-					<xsl:when test="$label = 'visualize_csv_desc'">Lataa tiettyihin rahakätköihin rajoitettujen tiettyjen hakujen hakutuloksien tiedot</xsl:when>
+					<xsl:when test="$label = 'visualize_csv_desc'">Lataa tiettyihin rahakätköihin rajoitettujen tiettyjen hakujen hakutuloksien
+						tiedot</xsl:when>
 					<xsl:when test="$label = 'visualize_select_measurement'">valitse mitat</xsl:when>
 					<xsl:when test="$label = 'visualize_chart_type'">valitse taulukkotyyppi</xsl:when>
 					<xsl:when test="$label = 'visualize_categories'">valitse kategoriat analyysiin/valitse luokat tutkimukseen</xsl:when>
@@ -3348,7 +3382,8 @@
 					<xsl:when test="$label = 'visualize_filter_list'">suodatinlista</xsl:when>
 					<xsl:when test="$label = 'visualize_filter_query'">suodattava haku</xsl:when>
 					<xsl:when test="$label = 'visualize_remove_filter'">poista suodatin</xsl:when>
-					<xsl:when test="$label = 'visualize_add_query_desc'">Käytä pudotusvalikkoja mittahaun luomiseen. Ajanjakson voi määrittää vain kerran joka haulle.</xsl:when>
+					<xsl:when test="$label = 'visualize_add_query_desc'">Käytä pudotusvalikkoja mittahaun luomiseen. Ajanjakson voi määrittää vain kerran joka
+						haulle.</xsl:when>
 					<xsl:when test="$label = 'visualize_optional_settings'">vaihtoehtoiset asetukset</xsl:when>
 					<xsl:when test="$label = 'visualize_hide-show'">Piilota/näytä vaihtoehdot</xsl:when>
 					<xsl:when test="$label = 'visualize_stacking_options'">Kokoamisvaihtoehdot?</xsl:when>
@@ -3446,12 +3481,12 @@
 					<xsl:when test="$label = 'maps_legend'">indskrift/omskrift</xsl:when>
 					<xsl:when test="$label = 'visualize_typological'">Typologisk analyse</xsl:when>
 					<xsl:when test="$label = 'visualize_measurement'">Analyser mål</xsl:when>
-					<xsl:when test="$label = 'visualize_desc'">Anvend de udvalgte data og visualiseringsmulighederne nedenfor til at danne en grafisk fremstilling baseret på
-						udvalgte parametre. Se instruktioner her </xsl:when>
-					<xsl:when test="$label = 'visualize_type_desc'">Brug dette redskab til at visualisere procenter eller absolutte tal for forekomster af de følgende
-						typer </xsl:when>
-					<xsl:when test="$label = 'visualize_date_desc'">Brug dette redskab til at gengive procenter eller antal af forekomster af mønter fra en bestemt periode i
-						skatte </xsl:when>
+					<xsl:when test="$label = 'visualize_desc'">Anvend de udvalgte data og visualiseringsmulighederne nedenfor til at danne en grafisk
+						fremstilling baseret på udvalgte parametre. Se instruktioner her </xsl:when>
+					<xsl:when test="$label = 'visualize_type_desc'">Brug dette redskab til at visualisere procenter eller absolutte tal for forekomster af de
+						følgende typer </xsl:when>
+					<xsl:when test="$label = 'visualize_date_desc'">Brug dette redskab til at gengive procenter eller antal af forekomster af mønter fra en
+						bestemt periode i skatte </xsl:when>
 					<xsl:when test="$label = 'visualize_csv_desc'">Brug dette redskab til download af CSV for søgningen og udvalgte skattefund </xsl:when>
 					<xsl:when test="$label = 'visualize_select_measurement'">Vælg mål</xsl:when>
 					<xsl:when test="$label = 'visualize_chart_type'">Vælg diagramtype</xsl:when>
@@ -3472,8 +3507,8 @@
 					<xsl:when test="$label = 'visualize_filter_list'">Filtre</xsl:when>
 					<xsl:when test="$label = 'visualize_filter_query'">Filtrer forespørgsel</xsl:when>
 					<xsl:when test="$label = 'visualize_remove_filter'">Fjern filter</xsl:when>
-					<xsl:when test="$label = 'visualize_add_query_desc'">Anvend menyerne nedenfor til at formulere forespørgsler om mål. Der kan kun defineres en periode pr.
-						forespørgsel</xsl:when>
+					<xsl:when test="$label = 'visualize_add_query_desc'">Anvend menyerne nedenfor til at formulere forespørgsler om mål. Der kan kun defineres
+						en periode pr. forespørgsel</xsl:when>
 					<xsl:when test="$label = 'visualize_optional_settings'">Valgfrie indstillinger</xsl:when>
 					<xsl:when test="$label = 'visualize_hide-show'">Gem/vis</xsl:when>
 					<xsl:when test="$label = 'visualize_stacking_options'">Organisering</xsl:when>
@@ -3571,14 +3606,14 @@
 					<xsl:when test="$label = 'maps_legend'">Felirat</xsl:when>
 					<xsl:when test="$label = 'visualize_typological'">tipológiai elemzés</xsl:when>
 					<xsl:when test="$label = 'visualize_measurement'">méret elemzés</xsl:when>
-					<xsl:when test="$label = 'visualize_desc'">Használja a kiválasztott adatokat és az alábbi megjelenítési lehetőségeket, hogy létrehozz egy kiválasztott
-						paramétereken alapuló táblázatot. Itt talál útmutatót a funkció használatáról</xsl:when>
-					<xsl:when test="$label = 'visualize_type_desc'">Használja ezt a funkciót, hogy meghatározza a százalékos vagy numerikus előfordulását a következő
-						tipológiáknak</xsl:when>
-					<xsl:when test="$label = 'visualize_date_desc'">Használja ezt a funkciót a kincsleleten belül az érmek százalékos vagy numerikus előfordulásának meghatározására
-						egy adott időpontban</xsl:when>
-					<xsl:when test="$label = 'visualize_csv_desc'">Használja ezt a funkciót, hogy a megadott lekérdezés és a kiválasztott kincslelethez letöltsön egy
-						CSV-t</xsl:when>
+					<xsl:when test="$label = 'visualize_desc'">Használja a kiválasztott adatokat és az alábbi megjelenítési lehetőségeket, hogy létrehozz egy
+						kiválasztott paramétereken alapuló táblázatot. Itt talál útmutatót a funkció használatáról</xsl:when>
+					<xsl:when test="$label = 'visualize_type_desc'">Használja ezt a funkciót, hogy meghatározza a százalékos vagy numerikus előfordulását a
+						következő tipológiáknak</xsl:when>
+					<xsl:when test="$label = 'visualize_date_desc'">Használja ezt a funkciót a kincsleleten belül az érmek százalékos vagy numerikus
+						előfordulásának meghatározására egy adott időpontban</xsl:when>
+					<xsl:when test="$label = 'visualize_csv_desc'">Használja ezt a funkciót, hogy a megadott lekérdezés és a kiválasztott kincslelethez
+						letöltsön egy CSV-t</xsl:when>
 					<xsl:when test="$label = 'visualize_select_measurement'">Méretek kiválasztása</xsl:when>
 					<xsl:when test="$label = 'visualize_chart_type'">Diagram típus kiválasztása</xsl:when>
 					<xsl:when test="$label = 'visualize_categories'">Kategóriák kiválasztása az elemzéshez</xsl:when>
@@ -3598,8 +3633,8 @@
 					<xsl:when test="$label = 'visualize_filter_list'">szűrőlista</xsl:when>
 					<xsl:when test="$label = 'visualize_filter_query'">szűrő lekérdezés</xsl:when>
 					<xsl:when test="$label = 'visualize_remove_filter'">szűrő eltávolítása</xsl:when>
-					<xsl:when test="$label = 'visualize_add_query_desc'">Használja az alábbi legördülő menüt a mérés lekérdezés megfogalmazásához. Dátumtartományok csak egyszer
-						adhatók meg egy lekérdezés során.</xsl:when>
+					<xsl:when test="$label = 'visualize_add_query_desc'">Használja az alábbi legördülő menüt a mérés lekérdezés megfogalmazásához.
+						Dátumtartományok csak egyszer adhatók meg egy lekérdezés során.</xsl:when>
 					<xsl:when test="$label = 'visualize_optional_settings'">Választható beállítások</xsl:when>
 					<xsl:when test="$label = 'visualize_hide-show'">Lehetéségek megmutatása / elrejtése</xsl:when>
 					<xsl:when test="$label = 'visualize_stacking_options'">Egymásra halmozott lehetőségek</xsl:when>
@@ -3697,14 +3732,14 @@
 					<xsl:when test="$label = 'maps_legend'">Επιγραφή</xsl:when>
 					<xsl:when test="$label = 'visualize_typological'">Τυπολογική ανάλυση</xsl:when>
 					<xsl:when test="$label = 'visualize_measurement'">Ανάλυση μετρικών δεδομένων</xsl:when>
-					<xsl:when test="$label = 'visualize_desc'">Χρησιμοποιείστε την επιλογή δεδομένων και τις δυνατότητες οπτικοποίησης κάτωθι για να δημιουργήσετε ένα γράφημα
-						βασισμένο σε επιλεγμένες παραμέτρους. Οδηγίες για τη χρήση αυτού του εργαλείου υπάρχουν εδώ.</xsl:when>
-					<xsl:when test="$label = 'visualize_type_desc'">Χρησιμοποιείστε αυτό το εργαλείο για να οπτικοποιήσετε ποσοστά ή αριθμητικά δεδομένα για τους παρακάτω
-						τύπους</xsl:when>
-					<xsl:when test="$label = 'visualize_date_desc'">Χρησιμοποιείστε αυτό το εργαλείο για να οπτικοποιήσετε ποσοστά ή αριθμητικά δεδομένα όσον αφορά σε νομίσματα
-						μιας ιδιαίτερης χρονολόγησης εντός «θησαυρών»</xsl:when>
-					<xsl:when test="$label = 'visualize_csv_desc'">Χρησιμοποιείστε αυτό το εργαλείο για να κατεβάσετε ένα αρχείο CSV (δεδομένα χωρισμένα με κόμματα) για τη
-						συγκεκριμένη αναζήτηση και τους επιλεγμένους «θησαυρούς»</xsl:when>
+					<xsl:when test="$label = 'visualize_desc'">Χρησιμοποιείστε την επιλογή δεδομένων και τις δυνατότητες οπτικοποίησης κάτωθι για να
+						δημιουργήσετε ένα γράφημα βασισμένο σε επιλεγμένες παραμέτρους. Οδηγίες για τη χρήση αυτού του εργαλείου υπάρχουν εδώ.</xsl:when>
+					<xsl:when test="$label = 'visualize_type_desc'">Χρησιμοποιείστε αυτό το εργαλείο για να οπτικοποιήσετε ποσοστά ή αριθμητικά δεδομένα για
+						τους παρακάτω τύπους</xsl:when>
+					<xsl:when test="$label = 'visualize_date_desc'">Χρησιμοποιείστε αυτό το εργαλείο για να οπτικοποιήσετε ποσοστά ή αριθμητικά δεδομένα όσον
+						αφορά σε νομίσματα μιας ιδιαίτερης χρονολόγησης εντός «θησαυρών»</xsl:when>
+					<xsl:when test="$label = 'visualize_csv_desc'">Χρησιμοποιείστε αυτό το εργαλείο για να κατεβάσετε ένα αρχείο CSV (δεδομένα χωρισμένα με
+						κόμματα) για τη συγκεκριμένη αναζήτηση και τους επιλεγμένους «θησαυρούς»</xsl:when>
 					<xsl:when test="$label = 'visualize_select_measurement'">Επιλέξτε μετρικά δεδομένα</xsl:when>
 					<xsl:when test="$label = 'visualize_chart_type'">Επιλέξτε τύπο γραφήματος</xsl:when>
 					<xsl:when test="$label = 'visualize_categories'">Επιλέξτε κατηγορίες ανάλυσης</xsl:when>
@@ -3724,8 +3759,8 @@
 					<xsl:when test="$label = 'visualize_filter_list'">Λίστα φίλτρων αναζήτησης</xsl:when>
 					<xsl:when test="$label = 'visualize_filter_query'">Φιλτράρισμα αναζήτησης</xsl:when>
 					<xsl:when test="$label = 'visualize_remove_filter'">Εκκαθάριση φίλτρου αναζήτησης</xsl:when>
-					<xsl:when test="$label = 'visualize_add_query_desc'">Χρησιμοποιείστε τα κάτωθι μενού για να διαμορφώσετε μια αναζήτηση μετρικών δεδομένων. Μόνο μία χρονική
-						περίοδος μπορεί να ορισθεί για κάθε αναζήτηση.</xsl:when>
+					<xsl:when test="$label = 'visualize_add_query_desc'">Χρησιμοποιείστε τα κάτωθι μενού για να διαμορφώσετε μια αναζήτηση μετρικών δεδομένων.
+						Μόνο μία χρονική περίοδος μπορεί να ορισθεί για κάθε αναζήτηση.</xsl:when>
 					<xsl:when test="$label = 'visualize_optional_settings'">Προαιρετικές ρυθμίσεις</xsl:when>
 					<xsl:when test="$label = 'visualize_hide-show'">Απόκρυψη/εμφάνιση επιλογών</xsl:when>
 					<xsl:when test="$label = 'visualize_stacking_options'">Επιλογές stacking</xsl:when>
@@ -3823,13 +3858,14 @@
 					<xsl:when test="$label = 'maps_legend'">Leyenda</xsl:when>
 					<xsl:when test="$label = 'visualize_typological'">Tipológico</xsl:when>
 					<xsl:when test="$label = 'visualize_measurement'">Dimensiones</xsl:when>
-					<xsl:when test="$label = 'visualize_desc'">Utiliza las opciones para la selección y visualización de los datos de debajo para crear un gráfico basado en los
-						parámetros seleccionados. Las instrucciones para utilizar esta función se pueden consultar aquí.</xsl:when>
-					<xsl:when test="$label = 'visualize_type_desc'">Utiliza esta función para visualizar el porcentaje o la frecuencia numérica de esta tipología.</xsl:when>
-					<xsl:when test="$label = 'visualize_date_desc'">Utilizar esta función para obtener el porcentaje o el número de veces en los que esta moneda aparece en una
-						fecha determinada en los tesoros</xsl:when>
-					<xsl:when test="$label = 'visualize_csv_desc'">Utiliza esta función para descargar CSV (valores separados por comas) relativos a la consulta realizada y a los
-						tesoros seleccionados.</xsl:when>
+					<xsl:when test="$label = 'visualize_desc'">Utiliza las opciones para la selección y visualización de los datos de debajo para crear un
+						gráfico basado en los parámetros seleccionados. Las instrucciones para utilizar esta función se pueden consultar aquí.</xsl:when>
+					<xsl:when test="$label = 'visualize_type_desc'">Utiliza esta función para visualizar el porcentaje o la frecuencia numérica de esta
+						tipología.</xsl:when>
+					<xsl:when test="$label = 'visualize_date_desc'">Utilizar esta función para obtener el porcentaje o el número de veces en los que esta moneda
+						aparece en una fecha determinada en los tesoros</xsl:when>
+					<xsl:when test="$label = 'visualize_csv_desc'">Utiliza esta función para descargar CSV (valores separados por comas) relativos a la consulta
+						realizada y a los tesoros seleccionados.</xsl:when>
 					<xsl:when test="$label = 'visualize_select_measurement'">Seleccionar dimensiones</xsl:when>
 					<xsl:when test="$label = 'visualize_chart_type'">Mapa tipo</xsl:when>
 					<xsl:when test="$label = 'visualize_categories'">Categorías</xsl:when>
@@ -3848,8 +3884,8 @@
 					<xsl:when test="$label = 'visualize_filter_list'">Lista de filtros</xsl:when>
 					<xsl:when test="$label = 'visualize_filter_query'">Filtrar la búsqueda</xsl:when>
 					<xsl:when test="$label = 'visualize_remove_filter'">Limpiar filtro</xsl:when>
-					<xsl:when test="$label = 'visualize_add_query_desc'">Utiliza el menú desplegable inferior para elaborar tu consulta de medida. Se puede especificar un arco
-						cronológico sólo una vez por cada consulta.</xsl:when>
+					<xsl:when test="$label = 'visualize_add_query_desc'">Utiliza el menú desplegable inferior para elaborar tu consulta de medida. Se puede
+						especificar un arco cronológico sólo una vez por cada consulta.</xsl:when>
 					<xsl:when test="$label = 'visualize_optional_settings'">Parámetros opcionales</xsl:when>
 					<xsl:when test="$label = 'visualize_hide-show'">Ocultar Mostrar</xsl:when>
 					<xsl:when test="$label = 'visualize_stacking_options'">Juntar opciones</xsl:when>
@@ -3945,12 +3981,14 @@
 					<xsl:when test="$label = 'maps_legend'">Легенда</xsl:when>
 					<xsl:when test="$label = 'visualize_typological'">Типологичен анализ</xsl:when>
 					<xsl:when test="$label = 'visualize_measurement'">Анализ на размерите</xsl:when>
-					<xsl:when test="$label = 'visualize_desc'">Използвайте избранните данни и възможностите за визуализиране отдолу, за да генерирате диаграма, базирана на
-						подбраните параметри. Инструкции за употребата на тази функция могат да бъдат намерени тук</xsl:when>
-					<xsl:when test="$label = 'visualize_type_desc'">Използвайте тази функция, за да визуализирате процентите или броя на появата на следните типологии</xsl:when>
-					<xsl:when test="$label = 'visualize_date_desc'">Използвайте тази функция, за да изведете процентите или броя на появата на монети с определена дата в
-						съкровищата</xsl:when>
-					<xsl:when test="$label = 'visualize_csv_desc'">Използвайте тази функция, за да свалите CSV за конкретното запитване и избраните монетни съкровища</xsl:when>
+					<xsl:when test="$label = 'visualize_desc'">Използвайте избранните данни и възможностите за визуализиране отдолу, за да генерирате диаграма,
+						базирана на подбраните параметри. Инструкции за употребата на тази функция могат да бъдат намерени тук</xsl:when>
+					<xsl:when test="$label = 'visualize_type_desc'">Използвайте тази функция, за да визуализирате процентите или броя на появата на следните
+						типологии</xsl:when>
+					<xsl:when test="$label = 'visualize_date_desc'">Използвайте тази функция, за да изведете процентите или броя на появата на монети с
+						определена дата в съкровищата</xsl:when>
+					<xsl:when test="$label = 'visualize_csv_desc'">Използвайте тази функция, за да свалите CSV за конкретното запитване и избраните монетни
+						съкровища</xsl:when>
 					<xsl:when test="$label = 'visualize_select_measurement'">Избери размери</xsl:when>
 					<xsl:when test="$label = 'visualize_chart_type'">Избери тип диаграма</xsl:when>
 					<xsl:when test="$label = 'visualize_categories'">Избери категории за анализ</xsl:when>
@@ -3970,8 +4008,8 @@
 					<xsl:when test="$label = 'visualize_filter_list'">Филтриране на списъка</xsl:when>
 					<xsl:when test="$label = 'visualize_filter_query'">Филтриране на запитванията</xsl:when>
 					<xsl:when test="$label = 'visualize_remove_filter'">Премахни филтъра</xsl:when>
-					<xsl:when test="$label = 'visualize_add_query_desc'">Използвайте падащото меню по-долу, за да формулирате своето запитване за размерите. Може да се избере само
-						по един времеви период на запитване.</xsl:when>
+					<xsl:when test="$label = 'visualize_add_query_desc'">Използвайте падащото меню по-долу, за да формулирате своето запитване за размерите.
+						Може да се избере само по един времеви период на запитване.</xsl:when>
 					<xsl:when test="$label = 'visualize_optional_settings'">Настройки по избор</xsl:when>
 					<xsl:when test="$label = 'visualize_hide-show'">Покажи / скрий опциите</xsl:when>
 					<xsl:when test="$label = 'visualize_stacking_options'">Опции за комбиниране</xsl:when>
@@ -4122,11 +4160,12 @@
 					<xsl:when test="$label = 'position_any'">Any Position</xsl:when>
 					<xsl:when test="$label = 'visualize_typological'">Typological Analysis</xsl:when>
 					<xsl:when test="$label = 'visualize_measurement'">Measurement Analysis</xsl:when>
-					<xsl:when test="$label = 'visualize_desc'">Use the data selection and visualization options below to generate a chart based on selected parameters. Instructions
-						for using this feature can be found here</xsl:when>
-					<xsl:when test="$label = 'visualize_type_desc'">Use this feature to visualize percentages or numeric occurrences of the following typologies</xsl:when>
-					<xsl:when test="$label = 'visualize_date_desc'">Use this feature to render percentages or numeric occurrences of coins of a particular date within
-						hoards</xsl:when>
+					<xsl:when test="$label = 'visualize_desc'">Use the data selection and visualization options below to generate a chart based on selected
+						parameters. Instructions for using this feature can be found here</xsl:when>
+					<xsl:when test="$label = 'visualize_type_desc'">Use this feature to visualize percentages or numeric occurrences of the following
+						typologies</xsl:when>
+					<xsl:when test="$label = 'visualize_date_desc'">Use this feature to render percentages or numeric occurrences of coins of a particular date
+						within hoards</xsl:when>
 					<xsl:when test="$label = 'visualize_csv_desc'">Use this feature to download a CSV for the given query and selected hoards</xsl:when>
 					<xsl:when test="$label = 'visualize_response_type'">Select Numeric Response Type</xsl:when>
 					<xsl:when test="$label = 'visualize_select_measurement'">Select Measurement</xsl:when>
@@ -4148,8 +4187,8 @@
 					<xsl:when test="$label = 'visualize_add_query'">Add Query</xsl:when>
 					<xsl:when test="$label = 'visualize_add_queries'">Add Queries</xsl:when>
 					<xsl:when test="$label = 'visualize_add_new'">Add New</xsl:when>
-					<xsl:when test="$label = 'visualize_add_query_desc'">Use the drop-down menus below to formulate your measurement query. A date range can only be specified once
-						per query.</xsl:when>
+					<xsl:when test="$label = 'visualize_add_query_desc'">Use the drop-down menus below to formulate your measurement query. A date range can
+						only be specified once per query.</xsl:when>
 					<xsl:when test="$label = 'visualize_optional_settings'">Optional Settings</xsl:when>
 					<xsl:when test="$label = 'visualize_hide-show'">Hide/Show Options</xsl:when>
 					<xsl:when test="$label = 'visualize_exclude_certainty_codes'">Exclude Certainty Codes</xsl:when>
@@ -4205,12 +4244,12 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:function>
-	
+
 	<!-- general purpose function for rendering descriptions based on available languages -->
 	<xsl:function name="numishare:display-description">
 		<xsl:param name="node" as="node()*"/>
 		<xsl:param name="lang"/>
-		
+
 		<xsl:choose>
 			<xsl:when test="$node/*:description[@xml:lang = $lang]">
 				<xsl:value-of select="$node/*:description[@xml:lang = $lang]"/>
@@ -4363,7 +4402,8 @@
 					<xsl:choose>
 						<xsl:when test="string(@xlink:href)">
 							<xsl:variable name="href" select="@xlink:href"/>
-							<xsl:apply-templates select="$nudsGroup//object[@xlink:href = $href]/descendant::nuds:typeDesc/nuds:denomination" mode="hoardContentsDescription">
+							<xsl:apply-templates select="$nudsGroup//object[@xlink:href = $href]/descendant::nuds:typeDesc/nuds:denomination"
+								mode="hoardContentsDescription">
 								<xsl:with-param name="contents" select="$contents"/>
 								<xsl:with-param name="lang" select="$lang"/>
 								<xsl:with-param name="rdf" select="$rdf"/>
@@ -4551,12 +4591,12 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
-	
+
 	<!-- create human-readable label for RDF properties or classes -->
 	<xsl:function name="numishare:getLabelforRDF">
 		<xsl:param name="element"/>
 		<xsl:param name="lang"/>
-		
+
 		<xsl:choose>
 			<xsl:when test="$lang = 'en'">
 				<xsl:choose>
@@ -4574,10 +4614,10 @@
 			</xsl:when>
 		</xsl:choose>
 	</xsl:function>
-	
+
 	<xsl:template name="numishare:getNudsDocument">
 		<xsl:param name="uri"/>
-		
+
 		<!-- evaluate pattern to determine how to get the NUDS XML export -->
 		<xsl:variable name="xml-url">
 			<xsl:choose>
@@ -4589,7 +4629,7 @@
 					<xsl:value-of select="concat($uri, '.xml')"/>
 				</xsl:otherwise>
 			</xsl:choose>
-			
+
 		</xsl:variable>
 		<object xlink:href="{$uri}">
 			<xsl:if test="doc-available($xml-url)">
@@ -4603,13 +4643,13 @@
 	<xsl:function name="numishare:parseSolrQuery">
 		<xsl:param name="query"/>
 		<xsl:param name="lang"/>
-		
+
 		<xsl:variable name="tokenized_q" select="tokenize(normalize-space($query), ' AND ')"/>
 		<xsl:variable name="pieces" as="element()*">
 			<pieces>
 				<xsl:for-each select="$tokenized_q">
 					<xsl:variable name="piece" select="normalize-space(.)"/>
-					
+
 					<piece>
 						<xsl:choose>
 							<xsl:when test="contains($piece, ':')">
@@ -4619,9 +4659,9 @@
 									</xsl:when>
 									<xsl:when test="substring($piece, 1, 1) = '('">
 										<!-- remove parentheses and parse the fields separated by 'OR' -->
-										<xsl:variable name="or_frags" select="tokenize(replace(replace($piece, '\(', ''), '\)', ''), ' OR ')"/>										
+										<xsl:variable name="or_frags" select="tokenize(replace(replace($piece, '\(', ''), '\)', ''), ' OR ')"/>
 										<xsl:variable name="field" select="substring-before($or_frags[1], ':')"/>
-										
+
 										<xsl:value-of select="numishare:normalize_fields($field, $lang)"/>
 										<xsl:text>: </xsl:text>
 										<xsl:for-each select="$or_frags">
@@ -4648,8 +4688,8 @@
 				</xsl:for-each>
 			</pieces>
 		</xsl:variable>
-		
-		<xsl:value-of select="string-join($pieces//piece, ' &amp; ')"/>		
+
+		<xsl:value-of select="string-join($pieces//piece, ' &amp; ')"/>
 	</xsl:function>
 
 	<!-- parse the SPARQL query into a human-readable string -->
@@ -4780,19 +4820,35 @@
 	<xsl:function name="numishare:expandDatetoDateTime">
 		<xsl:param name="date"/>
 		<xsl:param name="range"/>
-		
-		<xsl:variable name="time" select="if ($range = 'begin') then 'T00:00:00Z' else 'T23:59:59Z'"/>
-		
+
+		<xsl:variable name="time" select="
+				if ($range = 'begin') then
+					'T00:00:00Z'
+				else
+					'T23:59:59Z'"/>
+
 		<!-- the data should be assumed to be XSD 1.0 compliant, which means that in order to make BC dates compliant to ISO 8601/XSD 1.1, 
 			a year should be added mathematically so that 1 BC is "0000" in the JSON output -->
 		<xsl:choose>
 			<xsl:when test="substring($date, 1, 1) = '-'">
 				<xsl:choose>
 					<xsl:when test="$date castable as xs:gYear">
-						<xsl:value-of select="concat(xs:date(concat($date, if ($range = 'begin') then '-01-01' else '-12-31')) + xs:dayTimeDuration('P365DT0M'), $time)"/>
+						<xsl:value-of
+							select="
+								concat(xs:date(concat($date, if ($range = 'begin') then
+									'-01-01'
+								else
+									'-12-31')) + xs:dayTimeDuration('P365DT0M'), $time)"
+						/>
 					</xsl:when>
 					<xsl:when test="$date castable as xs:gYearMonth">
-						<xsl:value-of select="concat(xs:date(concat($date, if ($range = 'begin') then '-01' else '-31')) + xs:dayTimeDuration('P365DT0M'), $time)"/>
+						<xsl:value-of
+							select="
+								concat(xs:date(concat($date, if ($range = 'begin') then
+									'-01'
+								else
+									'-31')) + xs:dayTimeDuration('P365DT0M'), $time)"
+						/>
 					</xsl:when>
 					<xsl:when test="$date castable as xs:date">
 						<xsl:value-of select="concat(xs:date($date) + xs:dayTimeDuration('P365DT0M'), $time)"/>
@@ -4805,10 +4861,18 @@
 			<xsl:otherwise>
 				<xsl:choose>
 					<xsl:when test="$date castable as xs:gYear">
-						<xsl:value-of select="concat($date, if ($range = 'begin') then '-01-01' else '-12-31', $time)"/>
+						<xsl:value-of select="
+								concat($date, if ($range = 'begin') then
+									'-01-01'
+								else
+									'-12-31', $time)"/>
 					</xsl:when>
 					<xsl:when test="$date castable as xs:gYearMonth">
-						<xsl:value-of select="concat($date, if ($range = 'begin') then '-01' else '-31', $time)"/>
+						<xsl:value-of select="
+								concat($date, if ($range = 'begin') then
+									'-01'
+								else
+									'-31', $time)"/>
 					</xsl:when>
 					<xsl:when test="$date castable as xs:date">
 						<xsl:value-of select="concat($date, $time)"/>
@@ -4820,17 +4884,17 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:function>
-	
-	
+
+
 	<!-- convert XSD compliant date datatypes into ISO 8601 dates (e.g., 1 B.C., "-0001"^^xsd:gYear = "0000" in ISO 8601) -->
 	<xsl:function name="numishare:xsdToIso">
 		<xsl:param name="date"/>
-		
+
 		<xsl:variable name="year" select="
-			if (substring($date, 1, 1) = '-') then
-			substring($date, 1, 5)
-			else
-			substring($date, 1, 4)"/>
+				if (substring($date, 1, 1) = '-') then
+					substring($date, 1, 5)
+				else
+					substring($date, 1, 4)"/>
 		<xsl:choose>
 			<xsl:when test="number($year) &lt; 0">
 				<!-- convert the year to ISO -->
@@ -4849,7 +4913,7 @@
 	<!-- result element names into AAT curies -->
 	<xsl:function name="numishare:normalizeClassification">
 		<xsl:param name="name"/>
-		
+
 		<!-- obverse/reverse = fronts/backs in AAT, not obverse and reverse -->
 
 		<xsl:choose>
@@ -4884,7 +4948,8 @@
 			<xsl:when test="$namespaces//namespace[contains($uri, @uri)]/@prefix">
 				<xsl:choose>
 					<xsl:when test="$concept/skos:*[contains(local-name(), 'Match')][contains(@rdf:resource, 'http://vocab.getty.edu')]">
-						<xsl:variable name="gettyURI" select="$concept/skos:*[contains(local-name(), 'Match')][contains(@rdf:resource, 'http://vocab.getty.edu')][1]/@rdf:resource"/>
+						<xsl:variable name="gettyURI"
+							select="$concept/skos:*[contains(local-name(), 'Match')][contains(@rdf:resource, 'http://vocab.getty.edu')][1]/@rdf:resource"/>
 
 						<xsl:value-of
 							select="replace($gettyURI, $namespaces//namespace[contains($gettyURI, @uri)]/@uri, concat($namespaces//namespace[contains($gettyURI, @uri)]/@prefix, ':'))"

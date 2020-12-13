@@ -590,6 +590,7 @@
 				<xsl:when test="parent::nuds:obverse or parent::nuds:reverse">hasPortrait</xsl:when>
 				<!-- ignore maker and artist -->
 				<xsl:when test="@xlink:role = 'artist' or @xlink:role = 'maker'"/>
+				<xsl:when test="@xlink:role = 'ruler'">hasAuthority</xsl:when>
 				<xsl:otherwise>
 					<xsl:variable name="role" select="
 							if (@xlink:role) then
