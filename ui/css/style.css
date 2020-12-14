@@ -5,7 +5,10 @@
   ***************************************
  */
 html{
-    background-color: #F8F8F8;
+    background-color: #2d3939;
+}
+body{
+    font-family: Open Sans, sans-serif;
 }
 .navbar{
     margin-bottom: 0;
@@ -17,14 +20,20 @@ ul li{
     list-style-type: none;
 }
 .highlight{
-    background-color: #F8F8F8;
-    border: 1px solid #E7E7E7;
+    background-color: #a1c4d0;
+    border: 1px solid #1f627a;
     border-radius: 4px;
     margin-bottom: 14px;
     padding: 9px 14px;
 }
 .rtl{
     direction: rtl;
+}
+a:link{
+    color: #002147
+}
+a:hover{
+    color: #a1c4d0
 }
 dl.ar dt{
     float: right;
@@ -43,17 +52,64 @@ dl.ar dd{
     border: none;
     height: 600px;
 }
+.navbar-default .navbar-brand{
+    color: rgba(255, 255, 255, 1);
+}
+.navbar-default{
+    font-size: 14px;
+    background-color: rgba(0, 33, 71, 1);
+    border-width: 0px;
+    border-radius: 0px;
+}
+.navbar-default .navbar-nav > li > a{
+    color: rgba(255, 255, 255, 1);
+    background-color: rgba(248, 248, 248, 0);
+}
+.navbar-default .navbar-nav > li > a:hover,
+.navbar-default .navbar-nav > li > a:focus{
+    color: rgba(255, 255, 255, 1);
+    background-color: rgba(31, 98, 122, 1);
+}
+.navbar-default .navbar-nav > .active > a,
+.navbar-default .navbar-nav > .active > a:hover,
+.navbar-default .navbar-nav > .active > a:focus{
+    color: rgba(31, 98, 122, 1);
+    background-color: rgba(161, 196, 208, 1);
+}
+.navbar-default .navbar-nav > .open > a,
+.navbar-default .navbar-nav > .open > a:hover,
+.navbar-default .navbar-nav > .open > a:focus{
+    color: rgba(31, 98, 122, 1);
+    background-color: rgba(161, 196, 208, 1);
+}
+.navbar-default .navbar-toggle{
+    border-color: #a1c4d0;
+}
+.navbar-default .navbar-toggle:hover,
+.navbar-default .navbar-toggle:focus{
+    background-color: #a1c4d0;
+}
+.navbar-default .navbar-toggle .icon-bar{
+    background-color: #a1c4d0;
+}
+.navbar-default .navbar-toggle:hover .icon-bar,
+.navbar-default .navbar-toggle:focus .icon-bar{
+    background-color: #002147;
+}
 /*
   ***************************************
   FOOTER
   ***************************************
  */
 #footer{
-    background-color: #F8F8F8;
-    border-top: 1px solid #E7E7E7;
+    color: white;
+    background-color: #002147;
     padding-top: 10px;
     padding-bottom: 10px;
     text-align: center;
+}
+#footer a{
+    color: white;
 }
 /*
   ***************************************
@@ -109,7 +165,7 @@ dl.ar dd{
     margin-bottom: 20px;
 }
 .image-container img{
-    max-width:100%;
+    max-width: 100%;
 }
 .iiif-container{
     width: 100%;
@@ -131,18 +187,18 @@ dl.ar dd{
     /*cursor:pointer;*/
     color: #c94f2a;
 }
-a.fancybox {
-    height:100%;
-    width:100%;
-    display:block;
+a.fancybox{
+    height: 100%;
+    width: 100%;
+    display: block;
 }
 /*Die Study pages*/
-.die-image {
-    height:325px;
+.die-image{
+    height: 325px;
 }
-.die-image img {
-    max-width:100%;
-    max-height:300px;
+.die-image img{
+    max-width: 100%;
+    max-height: 300px;
 }
 .die-title{
     white-space: nowrap;
