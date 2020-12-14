@@ -200,10 +200,33 @@
 					<xsl:copy-of select="document($org-url)/rdf:RDF"/>
 				</xsl:if>
 			</xsl:variable>
+			
+			<!-- read distinct skos:broaders for mints in the RDF -->
+			<xsl:variable name="region-param">
+				<xsl:for-each select="distinct-values($id-var//nmo:Mint/skos:broader[not(@rdf:resource = $id-var//*/@rdf:about)]/@rdf:resource)">
+					<xsl:variable name="href" select="."/>
+					
+					<xsl:if test="not($id-var/*[@rdf:about = $href])">
+						<xsl:value-of select="substring-after($href, 'id/')"/>
+						<xsl:if test="not(position() = last())">
+							<xsl:text>|</xsl:text>
+						</xsl:if>
+					</xsl:if>
+				</xsl:for-each>
+			</xsl:variable>
+			
+			<xsl:variable name="region-url" select="concat('http://nomisma.org/apis/getRdf?identifiers=', encode-for-uri($region-param))"/>
+			
+			<xsl:variable name="region-var" as="element()*">
+				<xsl:if test="doc-available($region-url)">
+					<xsl:copy-of select="document($region-url)/rdf:RDF"/>
+				</xsl:if>
+			</xsl:variable>
 
 			<!-- copy the contents of the API request variables into this variable -->
 			<xsl:copy-of select="$id-var/*"/>
 			<xsl:copy-of select="$org-var/*"/>
+			<xsl:copy-of select="$region-var/*"/>
 
 			<!-- request RDF from the coinhoards.org URIs -->
 			<xsl:if test="descendant::nuds:findspotDesc[contains(@xlink:href, 'coinhoards.org')]">
@@ -298,7 +321,7 @@
 	<xsl:variable name="hasMints" as="xs:boolean">
 		<xsl:choose>
 			<xsl:when
-				test="$rdf//nmo:Mint[geo:location or skos:related] or $regions//mint[@lat and @long] or descendant::nuds:geographic/nuds:geogname[contains(@xlink:href, 'geonames.org')]"
+				test="$rdf//nmo:Mint[geo:location or skos:related] or $rdf//nmo:Region[geo:location] or $regions//mint[@lat and @long] or descendant::nuds:geographic/nuds:geogname[contains(@xlink:href, 'geonames.org')]"
 				>true</xsl:when>
 			<xsl:otherwise>false</xsl:otherwise>
 		</xsl:choose>

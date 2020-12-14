@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:gml="http://www.opengis.net/gml"
-	xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nmo="http://nomisma.org/ontology#" xmlns:nm="http://nomisma.org/id/"
-	xmlns:crm="http://www.cidoc-crm.org/cidoc-crm/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:nuds="http://nomisma.org/nuds"
-	xmlns:nh="http://nomisma.org/nudsHoard" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xxf="http://www.orbeon.com/oxf/pipeline"
+	xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:gml="http://www.opengis.net/gml" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+	xmlns:nmo="http://nomisma.org/ontology#" xmlns:nm="http://nomisma.org/id/" xmlns:crm="http://www.cidoc-crm.org/cidoc-crm/"
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:nuds="http://nomisma.org/nuds" xmlns:nh="http://nomisma.org/nudsHoard"
+	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:osgeo="http://data.ordnancesurvey.co.uk/ontology/geometry/"
 	xmlns:crmgeo="http://www.ics.forth.gr/isl/CRMgeo/" xmlns:numishare="https://github.com/ewg118/numishare" xmlns:res="http://www.w3.org/2005/sparql-results#"
 	xmlns:digest="org.apache.commons.codec.digest.DigestUtils" exclude-result-prefixes="#all" version="2.0">
 	<xsl:include href="../json/json-metamodel.xsl"/>
@@ -93,13 +94,16 @@
 	<xsl:variable name="rdf" as="element()*">
 		<rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:nm="http://nomisma.org/id/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
 			xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-			xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:org="http://www.w3.org/ns/org#"
-			xmlns:nomisma="http://nomisma.org/" xmlns:nmo="http://nomisma.org/ontology#">
+			xmlns:osgeo="http://data.ordnancesurvey.co.uk/ontology/geometry" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"
+			xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:org="http://www.w3.org/ns/org#" xmlns:nomisma="http://nomisma.org/"
+			xmlns:nmo="http://nomisma.org/ontology#">
+
+			<!-- aggregate distinct Nomisma URIs and perform an API lookup to get the RDF for all of them -->
 			<xsl:variable name="id-param">
 				<xsl:for-each
 					select="
 						distinct-values(descendant::*[not(local-name() = 'typeDesc') and not(local-name() = 'reference')][contains(@xlink:href,
-						'nomisma.org')]/@xlink:href | $nudsGroup/descendant::*[not(local-name() = 'object') and not(local-name() = 'typeDesc')][contains(@xlink:href, 'nomisma.org')]/@xlink:href)">
+						'nomisma.org')]/@xlink:href | $nudsGroup/descendant::*[not(local-name() = 'object') and not(local-name() = 'typeDesc')][contains(@xlink:href, 'nomisma.org')]/@xlink:href | descendant::*[contains(@certainty, 'nomisma.org')]/@certainty | $nudsGroup/descendant::*[contains(@certainty, 'nomisma.org')]/@certainty)">
 					<xsl:value-of select="substring-after(., 'id/')"/>
 					<xsl:if test="not(position() = last())">
 						<xsl:text>|</xsl:text>
@@ -107,8 +111,39 @@
 				</xsl:for-each>
 			</xsl:variable>
 
-			<xsl:variable name="rdf_url" select="concat('http://nomisma.org/apis/getRdf?identifiers=', encode-for-uri($id-param))"/>
-			<xsl:copy-of select="document($rdf_url)/rdf:RDF/*"/>
+			<xsl:variable name="id-url" select="concat('http://nomisma.org/apis/getRdf?identifiers=', encode-for-uri($id-param))"/>
+
+			<xsl:variable name="id-var" as="element()*">
+				<xsl:if test="doc-available($id-url)">
+					<xsl:copy-of select="document($id-url)/rdf:RDF"/>
+				</xsl:if>
+			</xsl:variable>
+
+			<!-- read distinct skos:broaders for mints in the RDF -->
+			<xsl:variable name="region-param">
+				<xsl:for-each select="distinct-values($id-var//nmo:Mint/skos:broader[not(@rdf:resource = $id-var//*/@rdf:about)]/@rdf:resource)">
+					<xsl:variable name="href" select="."/>
+
+					<xsl:if test="not($id-var/*[@rdf:about = $href])">
+						<xsl:value-of select="substring-after($href, 'id/')"/>
+						<xsl:if test="not(position() = last())">
+							<xsl:text>|</xsl:text>
+						</xsl:if>
+					</xsl:if>
+				</xsl:for-each>
+			</xsl:variable>
+
+			<xsl:variable name="region-url" select="concat('http://nomisma.org/apis/getRdf?identifiers=', encode-for-uri($region-param))"/>
+
+			<xsl:variable name="region-var" as="element()*">
+				<xsl:if test="doc-available($region-url)">
+					<xsl:copy-of select="document($region-url)/rdf:RDF"/>
+				</xsl:if>
+			</xsl:variable>
+
+			<!-- copy the contents of the API request variables into this variable -->
+			<xsl:copy-of select="$id-var/*"/>
+			<xsl:copy-of select="$region-var/*"/>
 
 			<xsl:if test="descendant::nuds:findspotDesc[contains(@xlink:href, 'coinhoards.org')]">
 				<xsl:copy-of select="document(concat(descendant::nuds:findspotDesc/@xlink:href, '.rdf'))/rdf:RDF/*"/>
@@ -120,6 +155,8 @@
 		<xsl:apply-templates select="/content/nuds:nuds"/>
 	</xsl:template>
 
+	<!-- TODO: get the region RDF from the mint -->
+
 	<xsl:template match="nuds:nuds">
 		<xsl:variable name="model" as="element()*">
 			<_object>
@@ -128,61 +165,80 @@
 					<_array>
 						<xsl:apply-templates
 							select="descendant::nuds:geogname[@xlink:role = 'findspot'][string(@xlink:href)] | descendant::nuds:findspotDesc[contains(@xlink:href, 'coinhoards.org') or contains(@xlink:href, 'nomisma.org')] | $nudsGroup/descendant::nuds:geogname[@xlink:role = 'mint'][string(@xlink:href)]"/>
-						
+
+						<!-- if there's no linkable mint look for a region -->
+						<xsl:if
+							test="not($nudsGroup/descendant::nuds:geogname[@xlink:role = 'mint']) or $nudsGroup/descendant::nuds:geogname[@xlink:role = 'mint'][not(@xlink:href)]">
+							<xsl:apply-templates select="descendant::nuds:geogname[@xlink:role = 'region'][string(@xlink:href)]"/>
+						</xsl:if>
+
+						<!-- if there's a linkable mint, look to see if it has coordinates, if not, look to see if its parent region has coordinates -->
+						<xsl:for-each select="$nudsGroup/descendant::nuds:geogname[@xlink:role = 'mint'][contains(@xlink:href, 'nomisma.org')]">
+							<xsl:variable name="mintURI" select="@xlink:href"/>
+
+							<xsl:if test="not($rdf//nmo:Mint[@rdf:about = $mintURI]/geo:location)">
+								<xsl:variable name="uri" select="$rdf//nmo:Mint[@rdf:about = $mintURI]/skos:broader/@rdf:resource"/>
+								
+								<xsl:call-template name="generateFeature">
+									<xsl:with-param name="uri" select="$uri"/>
+									<xsl:with-param name="type">mint</xsl:with-param>
+									<xsl:with-param name="label" select="numishare:getNomismaLabel($rdf/*[@rdf:about = $uri], $lang)"/>
+								</xsl:call-template>
+							</xsl:if>
+						</xsl:for-each>
+
 						<!-- gather associated hoards from Nomisma, but only for coin types and an active SPARQL endpoint  -->
-						<xsl:if test="/content/config/collection_type='cointype' and matches($sparql_endpoint, 'https?://')">
+						<xsl:if test="/content/config/collection_type = 'cointype' and matches($sparql_endpoint, 'https?://')">
 							<xsl:apply-templates select="doc('input:hoards')//res:result"/>
-						</xsl:if>				
+						</xsl:if>
 					</_array>
 				</features>
 			</_object>
-			
 		</xsl:variable>
-
+		
 		<xsl:apply-templates select="$model"/>
 	</xsl:template>
 
 	<xsl:template match="nuds:geogname">
+		<xsl:variable name="uri" select="@xlink:href"/>
+
 		<xsl:call-template name="generateFeature">
 			<xsl:with-param name="uri" select="@xlink:href"/>
 			<xsl:with-param name="type">
 				<xsl:choose>
-					<xsl:when test="@xlink:role = 'mint'">mint</xsl:when>
+					<xsl:when test="@xlink:role = 'mint' or @xlink:role = 'region'">mint</xsl:when>
 					<xsl:when test="@xlink:role = 'findspot'">findspot</xsl:when>
 				</xsl:choose>
 			</xsl:with-param>
+			<xsl:with-param name="label">
+				<xsl:choose>
+					<xsl:when test="@xlink:role = 'mint' or @xlink:role = 'region'">
+						<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about = $uri], $lang)"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="."/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:with-param>
+
 		</xsl:call-template>
 	</xsl:template>
 
 	<xsl:template match="nuds:findspotDesc">
+		<xsl:variable name="uri" select="@xlink:href"/>
+
 		<xsl:call-template name="generateFeature">
-			<xsl:with-param name="uri" select="@xlink:href"/>
+			<xsl:with-param name="uri" select="$uri"/>
 			<xsl:with-param name="type">findspot</xsl:with-param>
+			<xsl:with-param name="label" select="numishare:getNomismaLabel($rdf/*[@rdf:about = $uri], $lang)"/>
 		</xsl:call-template>
 	</xsl:template>
 
 	<xsl:template name="generateFeature">
 		<xsl:param name="uri"/>
 		<xsl:param name="type"/>
-
-		<xsl:variable name="name">
-			<!-- display the title (coin type reference) for hoards, place name for other points -->
-			<xsl:choose>
-				<xsl:when test="local-name() = 'findspotDesc'">
-					<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about = $uri], $lang)"/>
-				</xsl:when>
-				<xsl:when test="local-name() = 'findspot'">
-					<xsl:value-of select="nuds:geogname"/>
-				</xsl:when>
-				<xsl:when test="@xlink:role = 'mint'">
-					<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about = $uri], $lang)"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:value-of select="."/>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:variable>
-
+		<xsl:param name="label"/>
+		
 		<xsl:variable name="coordinates" as="element()*">
 			<_array>
 				<xsl:choose>
@@ -200,6 +256,11 @@
 										<_>
 											<xsl:value-of select="$rdf//*[@rdf:about = concat($uri, '#this')]/geo:lat"/>
 										</_>
+									</xsl:when>
+									<xsl:when test="$rdf//*[@rdf:about = concat($uri, '#this')]/osgeo:asGeoJSON">
+										<xsl:apply-templates
+											select="xxf:json-to-xml($rdf//*[@rdf:about = concat($uri, '#this')]/osgeo:asGeoJSON)/json/coordinates/*" mode="xxf"
+										/>
 									</xsl:when>
 									<!-- Hoard RDF in the variable has an nmo:hasFindspot, regardless of IGCH/CHRR or few Nomisma hoard origin -->
 									<xsl:when test="$rdf//*[@rdf:about = $uri]/nmo:hasFindspot">
@@ -319,7 +380,7 @@
 			<_object>
 				<type>Feature</type>
 				<label>
-					<xsl:value-of select="$name"/>
+					<xsl:value-of select="$label"/>
 				</label>
 				<geometry>
 					<_object>
@@ -327,7 +388,8 @@
 							<!-- when the $coordinates array has an element, then it is a point, otherwise if the array contains an array, it's a polygon -->
 							<xsl:choose>
 								<xsl:when test="$coordinates/_">Point</xsl:when>
-								<xsl:when test="$coordinates/_array">Polygon</xsl:when>
+								<xsl:when test="count($coordinates/_array) = 1">Polygon</xsl:when>
+								<xsl:when test="count($coordinates/_array) &gt; 1">MultiPolygon</xsl:when>
 							</xsl:choose>
 						</type>
 						<coordinates>
@@ -338,10 +400,10 @@
 				<properties>
 					<_object>
 						<toponym>
-							<xsl:value-of select="$name"/>
+							<xsl:value-of select="$label"/>
 						</toponym>
 						<gazetteer_label>
-							<xsl:value-of select="$name"/>
+							<xsl:value-of select="$label"/>
 						</gazetteer_label>
 						<xsl:if test="string($uri)">
 							<gazetteer_uri>
@@ -407,7 +469,7 @@
 					</gazetteer_uri>
 					<type>hoard</type>
 					<closing_date>
-						<xsl:value-of select="numishare:normalizeDate(res:binding[@name='closingDate']/res:literal)"/>
+						<xsl:value-of select="numishare:normalizeDate(res:binding[@name = 'closingDate']/res:literal)"/>
 					</closing_date>
 					<!--<xsl:if test="res:binding[@name = 'closingDate']">
 						<when>
@@ -431,6 +493,22 @@
 				</_object>
 			</properties>
 		</_object>
+	</xsl:template>
+
+	<!-- templates for writing the XForms 2.0 spec from the xxf processor into the Numishare XML-JSON metamodel -->
+	<xsl:template match="_" mode="xxf">
+		<xsl:choose>
+			<xsl:when test="@type = 'array'">
+				<_array>
+					<xsl:apply-templates mode="xxf"/>
+				</_array>
+			</xsl:when>
+			<xsl:otherwise>
+				<_>
+					<xsl:apply-templates mode="xxf"/>
+				</_>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 </xsl:stylesheet>
