@@ -109,7 +109,7 @@
 				<xsl:attribute name="style">direction: rtl;</xsl:attribute>							
 			</xsl:if>
 			
-			<img src="{$include_path}/images/banner-abc.png" style="width:100%"/>
+			<img src="{$include_path}/images/banner-abc.jpg" style="width:100%"/>
 			
 			<div class="row">
 				<div class="col-md-9">					
