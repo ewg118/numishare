@@ -34,6 +34,9 @@
 	*** -->
 
 	<!-- ************** PROJECT NUMISHARE PAGES *************-->
+	<!-- ABC -->
+	<page path="/numishare/(abc|cci)/" model="xpl/models/config.xpl" view="oxf:/numishare-projects/oxford/xpl/views/pages/index.xpl"/>
+	
 	<!-- AoD -->
 	<page path="/numishare/aod/" model="xpl/models/config.xpl" view="oxf:/numishare-projects/aod/xpl/views/pages/index.xpl"/>
 
