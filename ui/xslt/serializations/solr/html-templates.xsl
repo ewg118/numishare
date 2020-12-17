@@ -483,7 +483,7 @@
 					mode="facet"/>
 			</xsl:when>
 			<xsl:when test="$collection_type = 'cointype' or $collection_type = 'die'">
-				<xsl:apply-templates select="lst[not(contains(@name, '_geo')) and not(contains(@name, 'symbol_')) and number(int) &gt; 0]" mode="facet"/>
+				<xsl:apply-templates select="lst[not(contains(@name, '_geo')) and not(contains(@name, 'symbol_')) and not(ends-with(@name, '_num')) and number(int) &gt; 0]" mode="facet"/>
 				<xsl:if test="lst[contains(@name, 'symbol_')]">
 					<h4>
 						<xsl:value-of select="numishare:normalize_fields('symbol', $lang)"/>
