@@ -424,7 +424,7 @@
 	<xsl:template match="mets:fileSec" mode="nomisma">
 		<xsl:param name="id"/>
 
-		<xsl:for-each select="mets:fileGrp">
+		<xsl:for-each select="mets:fileGrp[@USE = 'obverse' or @USE = 'reverse']">
 			<xsl:variable name="side" select="@USE"/>
 			<rdf:Description rdf:about="{if (string($uri_space)) then concat($uri_space, $id) else concat($url, 'id/', $id)}#{$side}">
 				<xsl:for-each select="mets:file">
