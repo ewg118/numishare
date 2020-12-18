@@ -111,7 +111,7 @@
 			
 			<img src="{$include_path}/images/banner-abc.jpg" style="width:100%"/>
 			
-			<div class="row">
+			<div class="row content">
 				<div class="col-md-9">					
 					<xsl:choose>
 						<xsl:when test="string($lang)">
@@ -161,6 +161,13 @@
 							</a>
 						</xsl:if>
 					</div>
+				</div>								
+			</div>
+			
+			<div class="row">
+				<div class="col-md-3">
+					<h3>Support</h3>
+					<p>Links and logos go here.</p>
 				</div>
 			</div>
 		</div>
