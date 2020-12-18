@@ -439,20 +439,33 @@
 		<div class="col-md-5 col-lg-4 {if ($alignment = 'right') then 'pull-right' else ''}">
 			<xsl:choose>
 				<xsl:when test="str[@name = 'recordType'] = 'physical'">
-					<xsl:if test="string(str[@name = 'thumbnail_obv'])">
-						<a class="thumbImage" href="{str[@name='reference_obv']}" title="Obverse of {str[@name='title_display']}"
-							id="{$object-path}{str[@name='recordId']}{if (string($langParam)) then
-							concat('?lang=', $langParam) else ''}">
-							<img src="{str[@name='thumbnail_obv']}" class="side-thumbnail"/>
-						</a>
-					</xsl:if>
-					<xsl:if test="string(str[@name = 'thumbnail_rev'])">
-						<a class="thumbImage" href="{str[@name='reference_rev']}" title="Reverse of {str[@name='title_display']}"
-							id="{$object-path}{str[@name='recordId']}{if (string($langParam)) then
-							concat('?lang=', $langParam) else ''}">
-							<img src="{str[@name='thumbnail_rev']}" class="side-thumbnail"/>
-						</a>
-					</xsl:if>
+					<xsl:choose>
+						<xsl:when test="string(str[@name = 'reference_com'])">
+							<a class="thumbImage" href="{str[@name='reference_com']}" title="Obverse of {str[@name='title_display']}"
+								id="{$object-path}{str[@name='recordId']}{if (string($langParam)) then
+								concat('?lang=', $langParam) else ''}">
+								<img src="{str[@name='reference_com']}" class="combined-thumbnail"/>
+							</a>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:if test="string(str[@name = 'thumbnail_obv'])">
+								<a class="thumbImage" href="{str[@name='reference_obv']}" title="Obverse of {str[@name='title_display']}"
+									id="{$object-path}{str[@name='recordId']}{if (string($langParam)) then
+									concat('?lang=', $langParam) else ''}">
+									<img src="{str[@name='thumbnail_obv']}" class="side-thumbnail"/>
+								</a>
+							</xsl:if>
+							<xsl:if test="string(str[@name = 'thumbnail_rev'])">
+								<a class="thumbImage" href="{str[@name='reference_rev']}" title="Reverse of {str[@name='title_display']}"
+									id="{$object-path}{str[@name='recordId']}{if (string($langParam)) then
+									concat('?lang=', $langParam) else ''}">
+									<img src="{str[@name='thumbnail_rev']}" class="side-thumbnail"/>
+								</a>
+							</xsl:if>
+						</xsl:otherwise>
+					</xsl:choose>
+					
+					
 				</xsl:when>
 				<xsl:when test="//config/collection_type = 'cointype' and matches(/content/config/sparql_endpoint, '^https?://')">
 					<xsl:variable name="id" select="str[@name = 'recordId']"/>

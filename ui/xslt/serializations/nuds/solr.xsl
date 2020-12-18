@@ -662,7 +662,7 @@
 	</xsl:template>
 
 	<xsl:template match="mets:fileSec">
-		<xsl:for-each select="mets:fileGrp[@USE = 'obverse' or @USE = 'reverse']">
+		<xsl:for-each select="mets:fileGrp[@USE = 'obverse' or @USE = 'reverse' or @USE = 'combined']">
 			<xsl:variable name="side" select="substring(@USE, 1, 3)"/>
 
 			<xsl:choose>

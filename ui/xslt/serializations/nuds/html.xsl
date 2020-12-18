@@ -812,6 +812,9 @@
 												<xsl:call-template name="image">
 													<xsl:with-param name="side">reverse</xsl:with-param>
 												</xsl:call-template>
+												<xsl:call-template name="image">
+													<xsl:with-param name="side">combined</xsl:with-param>
+												</xsl:call-template>
 												<xsl:call-template name="legend_image"/>
 											</div>
 											<div class="col-md-8">
@@ -828,6 +831,9 @@
 												</xsl:call-template>
 												<xsl:call-template name="image">
 													<xsl:with-param name="side">reverse</xsl:with-param>
+												</xsl:call-template>
+												<xsl:call-template name="image">
+													<xsl:with-param name="side">combined</xsl:with-param>
 												</xsl:call-template>
 												<xsl:call-template name="legend_image"/>
 											</div>

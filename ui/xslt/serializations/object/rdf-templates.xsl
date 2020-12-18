@@ -356,6 +356,10 @@
 							<xsl:if test="descendant::mets:fileGrp[@USE = 'reverse']">
 								<nmo:hasReverse rdf:resource="{if (string($uri_space)) then concat($uri_space, $id) else concat($url, 'id/', $id)}#reverse"/>
 							</xsl:if>
+							
+							<!-- look for combined images -->
+							<xsl:apply-templates select="nuds:digRep/mets:fileSec/mets:fileGrp[@USE = 'combined']"/>			
+							
 							<void:inDataset rdf:resource="{$url}"/>
 						</xsl:element>
 
@@ -380,6 +384,41 @@
 				</xsl:choose>
 			</xsl:otherwise>
 		</xsl:choose>
+	</xsl:template>
+	
+	<xsl:template match="mets:fileGrp[@USE = 'combined']">
+		<xsl:for-each select="mets:file">
+			<xsl:choose>
+				<xsl:when test="@USE = 'thumbnail'">
+					<foaf:thumbnail>
+						<xsl:attribute name="rdf:resource">
+							<xsl:choose>
+								<xsl:when test="matches(mets:FLocat/@xlink:href, 'https?://')">
+									<xsl:value-of select="mets:FLocat/@xlink:href"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:value-of select="concat($url, mets:FLocat/@xlink:href)"/>
+								</xsl:otherwise>
+							</xsl:choose>
+						</xsl:attribute>
+					</foaf:thumbnail>
+				</xsl:when>
+				<xsl:when test="@USE = 'reference'">
+					<foaf:depiction>
+						<xsl:attribute name="rdf:resource">
+							<xsl:choose>
+								<xsl:when test="matches(mets:FLocat/@xlink:href, 'https?://')">
+									<xsl:value-of select="mets:FLocat/@xlink:href"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:value-of select="concat($url, mets:FLocat/@xlink:href)"/>
+								</xsl:otherwise>
+							</xsl:choose>
+						</xsl:attribute>
+					</foaf:depiction>
+				</xsl:when>
+			</xsl:choose>
+		</xsl:for-each>
 	</xsl:template>
 
 	<xsl:template match="mets:fileSec" mode="nomisma">

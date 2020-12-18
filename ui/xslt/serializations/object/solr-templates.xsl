@@ -473,11 +473,31 @@
 	<xsl:template match="nuds:persname | nuds:corpname | *[local-name() = 'geogname'] | nuds:famname | nuds:periodname">
 		<xsl:param name="lang"/>
 		<xsl:variable name="href" select="@xlink:href"/>
-		<xsl:variable name="role" select="
-				if (string(@xlink:role)) then
-					@xlink:role
-				else
-					local-name()"/>
+		<xsl:variable name="role" select="if (string(@xlink:role)) then
+			@xlink:role
+			else
+			local-name()">
+			
+			<!--<xsl:choose>
+				<xsl:when test="self::nuds:persname[string(@xlink:role)]">
+					<xsl:variable name="facet" select="concat(@xlink:role, '_facet')"/>
+					
+					<xsl:choose>
+						<xsl:when test="//config/facets[facet = $facet]">
+							<xsl:value-of select="@xlink:role"/>
+						</xsl:when>
+					</xsl:choose>					
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="if (string(@xlink:role)) then
+						@xlink:role
+						else
+						local-name()"/>
+				</xsl:otherwise>
+			</xsl:choose>-->
+			
+		</xsl:variable>
+		
 		<xsl:variable name="label">
 			<xsl:choose>
 				<xsl:when test="string($lang) and contains($href, 'nomisma.org')">
