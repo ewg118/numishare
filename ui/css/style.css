@@ -9,6 +9,7 @@ html{
 }
 body{
     font-family: Open Sans, sans-serif;
+    font-size:15px;
 }
 .navbar{
     margin-bottom: 0;
@@ -29,11 +30,8 @@ ul li{
 .rtl{
     direction: rtl;
 }
-a:link{
-    color: #002147
-}
-a:hover{
-    color: #a1c4d0
+a{
+    color: #337ab7
 }
 dl.ar dt{
     float: right;
