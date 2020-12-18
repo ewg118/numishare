@@ -209,6 +209,10 @@
   <field name="archive_rev" type="string" indexed="false" stored="true"/>
   <field name="reference_rev" type="string" indexed="false" stored="true"/>
   <field name="thumbnail_rev" type="string" indexed="false" stored="true"/>
+  <field name="iiif_com" type="string" indexed="false" stored="true"/>
+  <field name="archive_com" type="string" indexed="false" stored="true"/>
+  <field name="reference_com" type="string" indexed="false" stored="true"/>
+  <field name="thumbnail_com" type="string" indexed="false" stored="true"/>
 
   <!-- geographic coordinates -->
   <!-- *_geo format is 'mint/findspot name|URI of resource|KML-compliant geographic coordinates' -->

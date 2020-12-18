@@ -249,6 +249,13 @@
 				<nmo:hasFindspot rdf:resource="{$findspot[2]}"/>
 			</xsl:if>
 			<!-- images -->
+			<xsl:if test="string(str[@name = 'reference_com'])">
+				<foaf:depiction rdf:resource="{str[@name = 'reference_com']}"/>
+			</xsl:if>
+			<xsl:if test="string(str[@name = 'thumbnail_com'])">
+				<foaf:thumbnail rdf:resource="{str[@name = 'thumbnail_com']}"/>
+			</xsl:if>
+			
 			<!-- obverse -->
 			<xsl:if test="string(str[@name = 'reference_obv']) or string(str[@name = 'thumbnail_obv'])">
 				<nmo:hasObverse>
