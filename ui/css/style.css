@@ -27,6 +27,9 @@ ul li{
     margin-bottom: 14px;
     padding: 9px 14px;
 }
+.content {
+    padding:20px 0;
+}
 .rtl{
     direction: rtl;
 }
