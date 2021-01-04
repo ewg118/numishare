@@ -213,7 +213,7 @@
 									<xsl:if test="string($q)">
 										<param>
 											<xsl:text>q=</xsl:text>
-											<xsl:value-of select="$q"/>
+											<xsl:value-of select="encode-for-uri($q)"/>
 										</param>
 									</xsl:if>
 									<xsl:if test="string($langParam)">
