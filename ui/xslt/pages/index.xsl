@@ -78,19 +78,38 @@
 	</xsl:template>
 
 	<xsl:template name="index">
-			
+		<div class="jumbotron">
+			<div class="container">
+				<div class="row">
+					<!-- display title and description in the jumbotron, including featured object, if available -->
+					<xsl:choose>
+						<xsl:when test="features_enabled = true() and count(doc('input:feature-model')//doc) = 1">
+							<div class="col-md-9">
+								<h1><xsl:value-of select="title"/></h1>
+								<p><xsl:value-of select="description"/></p>
+							</div>
+							<div class="col-md-3">
+								<div id="feature" class="highlight text-center">
+									<xsl:apply-templates select="doc('input:feature-model')//doc"/>
+								</div>
+							</div>
+						</xsl:when>
+						<xsl:otherwise>
+							<div class="col-md-12">
+								<h1><xsl:value-of select="title"/></h1>
+								<p><xsl:value-of select="description"/></p>
+							</div>
+						</xsl:otherwise>
+					</xsl:choose>
+				</div>
+			</div>
+		</div>	
 		<div class="container-fluid">
 			<xsl:if test="//config/languages/language[@code = $lang]/@rtl = true()">
 				<xsl:attribute name="style">direction: rtl;</xsl:attribute>							
 			</xsl:if>
 			<div class="row">
-				<div class="col-md-12">
-					<img src="{$include_path}/images/oscar-banner.jpg" style="width:100%"/>
-				</div>
-				
-			</div>
-			<div class="row content">
-				<div class="col-md-8">					
+				<div class="col-md-9">					
 					<xsl:choose>
 						<xsl:when test="string($lang)">
 							<xsl:choose>
@@ -121,10 +140,8 @@
 							</xsl:choose>
 						</xsl:otherwise>
 					</xsl:choose>
-					<h3>Support</h3>
-					<img src="{$include_path}/images/Stfitung_Hirzel.jpg" title="Stfitung Hirzel" alt="Stfitung Hirzel" style="max-width:400px"/>
 				</div>
-				<div class="col-md-4">
+				<div class="col-md-3">
 					<div class="highlight data_options">
 						<h3>Linked Data</h3>
 						<a href="{$display_path}feed/?q=*:*">
