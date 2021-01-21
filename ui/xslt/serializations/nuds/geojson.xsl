@@ -178,7 +178,7 @@
 
 							<xsl:if test="not($rdf//nmo:Mint[@rdf:about = $mintURI]/geo:location)">
 								<xsl:variable name="uri" select="$rdf//nmo:Mint[@rdf:about = $mintURI]/skos:broader/@rdf:resource"/>
-								
+
 								<xsl:call-template name="generateFeature">
 									<xsl:with-param name="uri" select="$uri"/>
 									<xsl:with-param name="type">mint</xsl:with-param>
@@ -190,12 +190,13 @@
 						<!-- gather associated hoards from Nomisma, but only for coin types and an active SPARQL endpoint  -->
 						<xsl:if test="/content/config/collection_type = 'cointype' and matches($sparql_endpoint, 'https?://')">
 							<xsl:apply-templates select="doc('input:hoards')//res:result"/>
+							<xsl:apply-templates select="doc('input:findspots')//res:result"/>
 						</xsl:if>
 					</_array>
 				</features>
 			</_object>
 		</xsl:variable>
-		
+
 		<xsl:apply-templates select="$model"/>
 	</xsl:template>
 
@@ -238,7 +239,7 @@
 		<xsl:param name="uri"/>
 		<xsl:param name="type"/>
 		<xsl:param name="label"/>
-		
+
 		<xsl:variable name="coordinates" as="element()*">
 			<_array>
 				<xsl:choose>
@@ -424,21 +425,64 @@
 		<_object>
 			<type>Feature</type>
 			<label>
-				<xsl:value-of select="res:binding[@name = 'hoardLabel']/res:literal"/>
+				<xsl:choose>
+					<xsl:when test="res:binding[@name = 'findspotLabel']">
+						<xsl:value-of select="res:binding[@name = 'findspotLabel']/res:literal"/>
+					</xsl:when>
+					<xsl:when test="res:binding[@name = 'hoardLabel']">
+						<xsl:value-of select="res:binding[@name = 'hoardLabel']/res:literal"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="res:binding[@name = 'label']/res:literal"/>
+					</xsl:otherwise>
+				</xsl:choose>
 			</label>
-			<id>
-				<xsl:value-of select="res:binding[@name = 'hoard']/res:uri"/>
-			</id>
+			
+			<xsl:choose>
+				<xsl:when test="res:binding[@name = 'hoard']">
+					<id>
+						<xsl:value-of select="res:binding[@name = 'hoard']/res:uri"/>
+					</id>						
+				</xsl:when>
+				<xsl:when test="res:binding[@name = 'findspot']">
+					<id>
+						<xsl:choose>
+							<xsl:when test="res:binding[@name = 'findspot']/res:uri">
+								<xsl:value-of select="res:binding[@name = 'findspot']/res:uri"/>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:value-of select="res:binding[@name = 'findspot']/res:bnode"/>
+							</xsl:otherwise>
+						</xsl:choose>
+					</id>						
+				</xsl:when>				
+			</xsl:choose>
+			
 			<geometry>
 				<_object>
 					<type>Point</type>
 					<coordinates>
 						<_array>
 							<_>
-								<xsl:value-of select="res:binding[@name = 'long']/res:literal"/>
+								<xsl:choose>
+									<xsl:when test="res:binding[@name = 'findspotLong']">
+										<xsl:value-of select="res:binding[@name = 'findspotLong']/res:literal"/>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:value-of select="res:binding[@name = 'long']/res:literal"/>
+									</xsl:otherwise>
+								</xsl:choose>								
 							</_>
 							<_>
-								<xsl:value-of select="res:binding[@name = 'lat']/res:literal"/>
+								<xsl:choose>
+									<xsl:when test="res:binding[@name = 'findspotLat']">
+										<xsl:value-of select="res:binding[@name = 'findspotLat']/res:literal"/>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:value-of select="res:binding[@name = 'lat']/res:literal"/>
+									</xsl:otherwise>
+								</xsl:choose>
+								
 							</_>
 						</_array>
 					</coordinates>
@@ -467,29 +511,26 @@
 					<gazetteer_uri>
 						<xsl:value-of select="res:binding[@name = 'place']/res:uri"/>
 					</gazetteer_uri>
-					<type>hoard</type>
-					<closing_date>
-						<xsl:value-of select="numishare:normalizeDate(res:binding[@name = 'closingDate']/res:literal)"/>
-					</closing_date>
-					<!--<xsl:if test="res:binding[@name = 'closingDate']">
-						<when>
-							<_object>
-								<timespans>
-									<_array>
-										<_object>
-											<start>
-												<xsl:value-of select="abs(number(res:binding[@name = 'closingDate']/res:literal)) + 1000"/>
-											</start>
-											<end>
-												<xsl:value-of select="abs(number(res:binding[@name = 'closingDate']/res:literal)) + 1000"/>
-											</end>
-										</_object>
-									</_array>
-								</timespans>
-							</_object>
-							
-						</when>
-					</xsl:if>-->
+					<xsl:choose>
+						<xsl:when test="res:binding[@name = 'hoard']">
+							<type>hoard</type>
+						</xsl:when>
+						<xsl:otherwise>
+							<type>findspot</type>
+						</xsl:otherwise>
+					</xsl:choose>
+
+					<xsl:if test="res:binding[@name = 'closingDate']">
+						<closing_date>
+							<xsl:value-of select="numishare:normalizeDate(res:binding[@name = 'closingDate']/res:literal)"/>
+						</closing_date>
+					</xsl:if>
+					
+					<xsl:if test="res:binding[@name = 'count']">
+						<count>
+							<xsl:value-of select="res:binding[@name = 'count']/res:literal"/>
+						</count>
+					</xsl:if>
 				</_object>
 			</properties>
 		</_object>

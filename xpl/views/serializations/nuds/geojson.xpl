@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 	Author: Ethan Gruber
-	Date: September 2020
-	Function: Serialize NUDS document into GeoJSON. Optionally, include the results for a SPARQL query for hoards related to a coin type	
+	Date: January 2021
+	Function: Serialize NUDS document into GeoJSON. Optionally, include the results for a SPARQL query for hoards and individual finds related to a coin type	
 -->
 <p:config xmlns:p="http://www.orbeon.com/oxf/pipeline"
 	xmlns:oxf="http://www.orbeon.com/oxf/processors">
@@ -32,9 +32,15 @@
 				<p:output name="data" id="hoards"/>
 			</p:processor>
 			
+			<p:processor name="oxf:pipeline">
+				<p:input name="config" href="../../../models/sparql/getFindspots.xpl"/>
+				<p:output name="data" id="findspots"/>
+			</p:processor>
+			
 			<p:processor name="oxf:unsafe-xslt">
 				<p:input name="request" href="#request"/>
 				<p:input name="hoards" href="#hoards"/>
+				<p:input name="findspots" href="#findspots"/>
 				<p:input name="data" href="aggregate('content', #data, #config)"/>
 				<p:input name="config" href="../../../../ui/xslt/serializations/nuds/geojson.xsl"/>
 				<p:output name="data" id="model"/>

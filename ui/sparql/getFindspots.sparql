@@ -1,0 +1,22 @@
+PREFIX rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX dcterms:  <http://purl.org/dc/terms/>
+PREFIX dcmitype:	<http://purl.org/dc/dcmitype/>
+PREFIX nm:       <http://nomisma.org/id/>
+PREFIX nmo:	<http://nomisma.org/ontology#>
+PREFIX skos:      <http://www.w3.org/2004/02/skos/core#>
+PREFIX foaf:	<http://xmlns.com/foaf/0.1/>
+PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>
+PREFIX rdfs:	<http://www.w3.org/2000/01/rdf-schema#>
+PREFIX crm:	<http://www.cidoc-crm.org/cidoc-crm/>
+PREFIX crmgeo:	<http://www.ics.forth.gr/isl/CRMgeo/>
+
+SELECT DISTINCT ?place ?label ?lat ?long (count(?place) as ?count) WHERE {
+BIND (<COINTYPE> as ?coinType)  
+  ?object nmo:hasTypeSeriesItem|nmo:hasTypeSeriesItem/skos:exactMatch|nmo:hasTypeSeriesItem/skos:broader+ ?coinType ;
+    a nmo:NumismaticObject ;
+    nmo:hasFindspot/crm:P7_took_place_at/crm:P89_falls_within ?place .
+  ?place a crm:E53_Place ;
+    rdfs:label ?label ;
+    geo:location ?loc .
+?loc geo:lat ?lat ; geo:long ?long
+} GROUP BY ?place ?label ?lat ?long

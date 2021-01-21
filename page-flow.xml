@@ -58,6 +58,9 @@
 	
 	<!-- SITNAM -->
 	<page path="/numishare/sitnam/" model="xpl/models/config.xpl" view="oxf:/numishare-projects/sitnam/xpl/views/pages/index.xpl"/>
+	
+	<!-- OSCAR -->
+	<page path="/numishare/oscar/" model="xpl/models/config.xpl" view="oxf:/numishare-projects/oscar/xpl/views/pages/index.xpl"/>
 
 	<!-- MANTIS -->
 	<page path="/numishare/mantis/department/[^\/]+" model="oxf:/numishare-projects/mantis/xpl/models/solr/department.xpl"

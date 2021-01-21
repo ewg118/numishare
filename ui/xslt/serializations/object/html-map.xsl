@@ -190,6 +190,12 @@
 											<tr>
 												<td style="background-color:#d86458;border:2px solid black;width:50px;"/>
 												<td style="width:100px;padding-left:6px;">
+													<xsl:value-of select="numishare:regularize_node('hoard', $lang)"/>
+												</td>
+											</tr>
+											<tr>
+												<td style="background-color:#f98f0c;border:2px solid black;width:50px;"/>
+												<td style="width:100px;padding-left:6px;">
 													<xsl:value-of select="numishare:regularize_node('findspot', $lang)"/>
 												</td>
 											</tr>
