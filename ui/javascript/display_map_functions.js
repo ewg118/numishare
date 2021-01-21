@@ -1,8 +1,8 @@
 /***
- Author: Ethan Gruber
- Date: September 2020
- Function: Generate a Leaflet map for a specimen/type page and call the relevant GeoJSON serialization
-***/
+Author: Ethan Gruber
+Date: January 2021
+Function: Generate a Leaflet map for a specimen/type page and call the relevant GeoJSON serialization
+ ***/
 $(document).ready(function () {
     var id = $('title').attr('id');
     var collection_type = $('#collection_type').text();
@@ -45,22 +45,37 @@ function initialize_map(id, path, lang) {
         layers:[eval(baselayers[0])]
     });
     
-    //add mintLayer from AJAX
-    var overlay = L.geoJson.ajax(url, {
-        onEachFeature: onEachFeature,
-        style: function (feature) {
-            if (feature.geometry.type == 'Polygon') {
-                var fillColor = getFillColor(feature.properties.type);
-                
-                return {
-                    color: fillColor
+    //add GeoJSON from AJAX
+    $.getJSON(url, function (data) {
+        var maxDensity = 0;
+        $.each(data.features, function (key, value) {
+            if (value.properties.type == 'findspot' && value.properties.hasOwnProperty('count') == true) {
+                if (value.properties.count !== undefined) {
+                    if (value.properties.count > maxDensity) {
+                        maxDensity = value.properties.count;
+                    }
                 }
             }
-        },
-        pointToLayer: function (feature, latlng) {
-            return renderPoints(feature, latlng);
-        }
-    }).addTo(map);
+        });
+        
+        var overlay = L.geoJson(data, {
+            onEachFeature: onEachFeature,
+            style: function (feature) {
+                if (feature.geometry.type == 'Polygon') {
+                    var fillColor = getFillColor(feature.properties.type);
+                    
+                    return {
+                        color: fillColor
+                    }
+                }
+            },
+            pointToLayer: function (feature, latlng) {
+                return renderPoints(feature, latlng, maxDensity);
+            }
+        }).addTo(map);
+        
+        map.fitBounds(overlay.getBounds());
+    });
     
     //add controls
     var baseMaps = {
@@ -87,28 +102,49 @@ function initialize_map(id, path, lang) {
     //add controls
     var layerControl = L.control.layers(baseMaps, overlayMaps).addTo(map);
     
-    
-    
-    //zoom to groups on AJAX complete
-    overlay.on('data:loaded', function () {
-        map.fitBounds(overlay.getBounds());
-    }.bind(this));
-    
     /*****
      * Features for manipulating layers
      *****/
-    function renderPoints(feature, latlng) {
+    function renderPoints(feature, latlng, maxDensity) {
         
         var fillColor = getFillColor(feature.properties.type);
         
-        return new L.CircleMarker(latlng, {
-            radius: 5,
-            fillColor: fillColor,
-            color: "#000",
-            weight: 1,
-            opacity: 1,
-            fillOpacity: 0.6
-        });
+        if (feature.properties.type == 'findspot' && feature.properties.hasOwnProperty('count')) {
+            grade = maxDensity / 5;
+            
+            var radius = 5;
+            if (feature.properties.count < Math.round(grade)) {
+                radius = 5;
+            } else if (feature.properties.count >= Math.round(grade) && feature.properties.count < Math.round(grade * 2)) {
+                radius = 10;
+            } else if (feature.properties.count >= Math.round(grade * 2) && feature.properties.count < Math.round(grade * 3)) {
+                radius = 15;
+            } else if (feature.properties.count >= Math.round(grade * 3) && feature.properties.count < Math.round(grade * 4)) {
+                radius = 20;
+            } else if (feature.properties.count >= Math.round(grade * 4)) {
+                radius = 25;
+            } else {
+                radius = 5;
+            }
+            
+            return new L.CircleMarker(latlng, {
+                radius: radius,
+                fillColor: fillColor,
+                color: "#000",
+                weight: 1,
+                opacity: 1,
+                fillOpacity: 0.6
+            });
+        } else {
+            return new L.CircleMarker(latlng, {
+                radius: 5,
+                fillColor: fillColor,
+                color: "#000",
+                weight: 1,
+                opacity: 1,
+                fillOpacity: 0.6
+            });
+        }
     }
     
     function getFillColor (type) {
@@ -118,13 +154,13 @@ function initialize_map(id, path, lang) {
             fillColor = '#6992fd';
             break;
             case 'findspot':
-            fillColor = '#d86458';
+            fillColor = '#f98f0c';
             break;
             case 'hoard':
             fillColor = '#d86458';
             break;
             case 'subject':
-            fillColor = '#a1d490';
+            fillColor = '#00e64d';
             break;
             default:
             fillColor = '#efefef'
