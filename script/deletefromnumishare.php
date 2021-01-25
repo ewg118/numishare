@@ -39,7 +39,7 @@
 			$solrDeleteXml = '<delete><query>recordId:"' . $accnum . '"</query></delete>';
 			//post solr doc
 			$deleteFromSolr=curl_init();
-			curl_setopt($deleteFromSolr,CURLOPT_URL,'http://localhost:8080/solr/numishare/update/');
+			curl_setopt($deleteFromSolr,CURLOPT_URL,'http://localhost:8983/solr/numishare/update/');
 			curl_setopt($deleteFromSolr,CURLOPT_POST,1);
 			curl_setopt($deleteFromSolr,CURLOPT_HTTPHEADER, array("Content-Type: text/xml; charset=utf-8"));
 			curl_setopt($deleteFromSolr,CURLOPT_POSTFIELDS, $solrDeleteXml);
@@ -49,7 +49,7 @@
 			curl_close($deleteFromSolr);
 			
 			$commitToSolr=curl_init();
-			curl_setopt($commitToSolr,CURLOPT_URL,'http://localhost:8080/solr/numishare/update/');
+			curl_setopt($commitToSolr,CURLOPT_URL,'http://localhost:8983/solr/numishare/update/');
 			curl_setopt($commitToSolr,CURLOPT_POST,1);
 			curl_setopt($commitToSolr,CURLOPT_HTTPHEADER, array("Content-Type: text/xml; charset=utf-8"));
 			curl_setopt($commitToSolr,CURLOPT_POSTFIELDS, '<commit/>');

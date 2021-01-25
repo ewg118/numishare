@@ -46,7 +46,7 @@ echo "Done\n";
 function generate_solr_shell_script($array){
 	$uniqid = uniqid();
 	$solrDocUrl = 'http://localhost:8080/orbeon/numishare/mantis/ingest?identifiers=' . implode('%7C', $array);
-	$solrUrl = 'http://localhost:8080/solr/numishare/update';
+	$solrUrl = 'http://localhost:8983/solr/numishare/update';
 	
 	//generate content of bash script
 	$sh = "#!/bin/sh\n";
