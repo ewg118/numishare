@@ -4270,7 +4270,7 @@
 	<xsl:function name="numishare:normalizeDate">
 		<xsl:param name="date"/>
 
-		<xsl:if test="substring($date, 1, 1) != '-' and number(substring($date, 1, 4)) &lt; 500">
+		<xsl:if test="substring($date, 1, 1) != '-' and number(substring($date, 1, 4)) &lt;= 400">
 			<xsl:text>A.D. </xsl:text>
 		</xsl:if>
 
