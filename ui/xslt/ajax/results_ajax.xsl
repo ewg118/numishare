@@ -204,7 +204,10 @@
 								<xsl:value-of select="if (string-length(str[@name='obv_leg_display']) &gt; 30) then concat(substring(str[@name='obv_leg_display'], 1, 30), '...') else
 									str[@name='obv_leg_display']"/>
 								<xsl:if test="str[@name='obv_leg_display'] and str[@name='obv_type_display']">
-									<xsl:text>: </xsl:text>
+									<xsl:choose>
+										<xsl:when test="$lang = 'de'">; </xsl:when>
+										<xsl:otherwise>: </xsl:otherwise>
+									</xsl:choose>
 								</xsl:if>
 								<xsl:value-of select="if (string-length(str[@name='obv_type_display']) &gt; 30) then concat(substring(str[@name='obv_type_display'], 1, 30), '...') else
 									str[@name='obv_type_display']"/>
@@ -218,7 +221,10 @@
 								<xsl:value-of select="if (string-length(str[@name='rev_leg_display']) &gt; 30) then concat(substring(str[@name='rev_leg_display'], 1, 30), '...') else
 									str[@name='rev_leg_display']"/>
 								<xsl:if test="str[@name='rev_leg_display'] and str[@name='rev_type_display']">
-									<xsl:text>: </xsl:text>
+									<xsl:choose>
+										<xsl:when test="$lang = 'de'">; </xsl:when>
+										<xsl:otherwise>: </xsl:otherwise>
+									</xsl:choose>
 								</xsl:if>
 								<xsl:value-of select="if (string-length(str[@name='rev_type_display']) &gt; 30) then concat(substring(str[@name='rev_type_display'], 1, 30), '...') else
 									str[@name='rev_type_display']"/>

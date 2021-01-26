@@ -274,14 +274,20 @@
 								<xsl:when test="//config/languages/language[@code = $lang]/@rtl = true()">
 									<xsl:value-of select="str[@name = 'obv_type_display']"/>
 									<xsl:if test="string(str[@name = 'obv_leg_display']) and string(str[@name = 'obv_type_display'])">
-										<xsl:text> :</xsl:text>
+										<xsl:choose>
+											<xsl:when test="$lang = 'de'">; </xsl:when>
+											<xsl:otherwise>: </xsl:otherwise>
+										</xsl:choose>
 									</xsl:if>
 									<xsl:value-of select="str[@name = 'obv_leg_display']"/>
 								</xsl:when>
 								<xsl:otherwise>
 									<xsl:value-of select="str[@name = 'obv_leg_display']"/>
 									<xsl:if test="string(str[@name = 'obv_leg_display']) and string(str[@name = 'obv_type_display'])">
-										<xsl:text>: </xsl:text>
+										<xsl:choose>
+											<xsl:when test="$lang = 'de'">; </xsl:when>
+											<xsl:otherwise>: </xsl:otherwise>
+										</xsl:choose>
 									</xsl:if>
 									<xsl:value-of select="str[@name = 'obv_type_display']"/>
 								</xsl:otherwise>
@@ -297,14 +303,20 @@
 								<xsl:when test="//config/languages/language[@code = $lang]/@rtl = true()">
 									<xsl:value-of select="str[@name = 'rev_type_display']"/>
 									<xsl:if test="string(str[@name = 'rev_leg_display']) and string(str[@name = 'rev_type_display'])">
-										<xsl:text> :</xsl:text>
+										<xsl:choose>
+											<xsl:when test="$lang = 'de'">; </xsl:when>
+											<xsl:otherwise>: </xsl:otherwise>
+										</xsl:choose>
 									</xsl:if>
 									<xsl:value-of select="str[@name = 'rev_leg_display']"/>
 								</xsl:when>
 								<xsl:otherwise>
 									<xsl:value-of select="str[@name = 'rev_leg_display']"/>
 									<xsl:if test="string(str[@name = 'rev_leg_display']) and string(str[@name = 'rev_type_display'])">
-										<xsl:text>: </xsl:text>
+										<xsl:choose>
+											<xsl:when test="$lang = 'de'">; </xsl:when>
+											<xsl:otherwise>: </xsl:otherwise>
+										</xsl:choose>
 									</xsl:if>
 									<xsl:value-of select="str[@name = 'rev_type_display']"/>
 								</xsl:otherwise>
