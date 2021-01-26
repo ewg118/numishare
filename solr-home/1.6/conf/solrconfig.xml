@@ -705,6 +705,7 @@
       <int name="facet.mincount">1</int>
       <str name="df">fulltext</str>
       <str name="wt">xml</str> 
+      <str name="q.op">AND</str>
       
       <!-- Default search field
          <str name="df">text</str> 
@@ -777,6 +778,7 @@
       <int name="rows">100</int>	
       <str name="df">fulltext</str>
       <str name="wt">xml</str> 
+      <str name="q.op">AND</str>
     </lst>			
   </requestHandler>
 
