@@ -460,32 +460,48 @@
 			
 			<geometry>
 				<_object>
-					<type>Point</type>
-					<coordinates>
-						<_array>
-							<_>
-								<xsl:choose>
-									<xsl:when test="res:binding[@name = 'findspotLong']">
-										<xsl:value-of select="res:binding[@name = 'findspotLong']/res:literal"/>
-									</xsl:when>
-									<xsl:otherwise>
-										<xsl:value-of select="res:binding[@name = 'long']/res:literal"/>
-									</xsl:otherwise>
-								</xsl:choose>								
-							</_>
-							<_>
-								<xsl:choose>
-									<xsl:when test="res:binding[@name = 'findspotLat']">
-										<xsl:value-of select="res:binding[@name = 'findspotLat']/res:literal"/>
-									</xsl:when>
-									<xsl:otherwise>
-										<xsl:value-of select="res:binding[@name = 'lat']/res:literal"/>
-									</xsl:otherwise>
-								</xsl:choose>
-								
-							</_>
-						</_array>
-					</coordinates>
+					<xsl:choose>
+						<xsl:when test="res:binding[@name = 'geojson']">
+							<type>Polygon</type>
+							<coordinates>
+								<_array>
+									<xsl:apply-templates
+										select="xxf:json-to-xml(res:binding[@name = 'geojson']/res:literal)/json/coordinates/*" mode="xxf"
+									/>
+								</_array>								
+							</coordinates>							
+						</xsl:when>
+						<xsl:otherwise>
+							<type>Point</type>
+							<coordinates>
+								<_array>
+									<_>
+										<xsl:choose>
+											<xsl:when test="res:binding[@name = 'findspotLong']">
+												<xsl:value-of select="res:binding[@name = 'findspotLong']/res:literal"/>
+											</xsl:when>
+											<xsl:otherwise>
+												<xsl:value-of select="res:binding[@name = 'long']/res:literal"/>
+											</xsl:otherwise>
+										</xsl:choose>								
+									</_>
+									<_>
+										<xsl:choose>
+											<xsl:when test="res:binding[@name = 'findspotLat']">
+												<xsl:value-of select="res:binding[@name = 'findspotLat']/res:literal"/>
+											</xsl:when>
+											<xsl:otherwise>
+												<xsl:value-of select="res:binding[@name = 'lat']/res:literal"/>
+											</xsl:otherwise>
+										</xsl:choose>
+										
+									</_>
+								</_array>
+							</coordinates>
+						</xsl:otherwise>
+					</xsl:choose>
+					
+					
 				</_object>
 			</geometry>
 			<xsl:if test="res:binding[@name = 'closingDate']">

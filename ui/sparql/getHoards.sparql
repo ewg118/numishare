@@ -8,8 +8,9 @@ PREFIX skos:      <http://www.w3.org/2004/02/skos/core#>
 PREFIX foaf:	<http://xmlns.com/foaf/0.1/>
 PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>
 PREFIX rdfs:	<http://www.w3.org/2000/01/rdf-schema#>
+PREFIX osgeo:	<http://data.ordnancesurvey.co.uk/ontology/geometry/>
 
-SELECT DISTINCT ?hoard ?hoardLabel ?closingDate ?place ?label ?lat ?long WHERE {
+SELECT DISTINCT ?hoard ?hoardLabel ?closingDate ?place ?label ?lat ?long ?geojson WHERE {
 BIND (<COINTYPE> as ?coinType)
 {?object nmo:hasTypeSeriesItem|nmo:hasTypeSeriesItem/skos:exactMatch|nmo:hasTypeSeriesItem/skos:broader+ ?coinType ; 
   	a nmo:NumismaticObject ;
@@ -24,5 +25,6 @@ OPTIONAL {?hoard nmo:hasClosingDate ?closingDate}
 ?place a crm:E53_Place ;
     rdfs:label ?label ;
     geo:location ?loc .
-?loc geo:lat ?lat ; geo:long ?long
+OPTIONAL {?loc geo:lat ?lat ; geo:long ?long}
+OPTIONAL {?loc osgeo:asGeoJSON ?geojson}
 }
