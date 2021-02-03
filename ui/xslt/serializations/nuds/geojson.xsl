@@ -241,7 +241,7 @@
 		<xsl:param name="label"/>
 
 		<xsl:variable name="coordinates" as="element()*">
-			<_array>
+			<node>
 				<xsl:choose>
 					<!-- evaluate the URI and extract coordinates -->
 					<xsl:when test="string($uri)">
@@ -251,17 +251,27 @@
 									<!-- when there is a geo:SpatialThing associated with the mint that contains a lat and long: -->
 									<xsl:when
 										test="$rdf//*[@rdf:about = concat($uri, '#this')]/geo:long and $rdf//*[@rdf:about = concat($uri, '#this')]/geo:lat">
-										<_>
-											<xsl:value-of select="$rdf//*[@rdf:about = concat($uri, '#this')]/geo:long"/>
-										</_>
-										<_>
-											<xsl:value-of select="$rdf//*[@rdf:about = concat($uri, '#this')]/geo:lat"/>
-										</_>
+										<geometry>
+											<_object>
+												<type>Point</type>
+												<coordinates>
+													<_array>
+														<_>
+															<xsl:value-of select="$rdf//*[@rdf:about = concat($uri, '#this')]/geo:long"/>
+														</_>
+														<_>
+															<xsl:value-of select="$rdf//*[@rdf:about = concat($uri, '#this')]/geo:lat"/>
+														</_>
+													</_array>
+												</coordinates>
+											</_object>
+										</geometry>
+
 									</xsl:when>
 									<xsl:when test="$rdf//*[@rdf:about = concat($uri, '#this')]/osgeo:asGeoJSON">
-										<xsl:apply-templates
-											select="xxf:json-to-xml($rdf//*[@rdf:about = concat($uri, '#this')]/osgeo:asGeoJSON)/json/coordinates/*" mode="xxf"
-										/>
+										<geometry datatype="osgeo:asGeoJSON">
+											<xsl:value-of select="$rdf//*[@rdf:about = concat($uri, '#this')]/osgeo:asGeoJSON"/>
+										</geometry>
 									</xsl:when>
 									<!-- Hoard RDF in the variable has an nmo:hasFindspot, regardless of IGCH/CHRR or few Nomisma hoard origin -->
 									<xsl:when test="$rdf//*[@rdf:about = $uri]/nmo:hasFindspot">
@@ -275,36 +285,51 @@
 												select="$rdf//*[@rdf:about = $gazetteerURI]/crm:P168_place_is_defined_by/@rdf:resource"/>
 
 											<xsl:if test="$spatialThingURI">
-												<xsl:choose>
-													<!-- if there are a lat and long, then output an array of points -->
-													<xsl:when test="$rdf//*[@rdf:about = $spatialThingURI][geo:lat and geo:long]">
-														<_>
-															<xsl:value-of select="$rdf//*[@rdf:about = $spatialThingURI]/geo:long"/>
-														</_>
-														<_>
-															<xsl:value-of select="$rdf//*[@rdf:about = $spatialThingURI]/geo:lat"/>
-														</_>
-													</xsl:when>
-													<xsl:when test="$rdf//*[@rdf:about = $spatialThingURI][crmgeo:asWKT[contains(., 'POLYGON')]]">
-														<xsl:variable name="corners"
-															select="tokenize(substring-after(substring-before($rdf//*[@rdf:about = $spatialThingURI]/crmgeo:asWKT, ')'), '('), ',')"/>
-														<_array>
-															<xsl:for-each select="$corners">
-																<xsl:variable name="points" select="tokenize(normalize-space(.), ' ')"/>
+												<geometry>
+													<_object>
 
-																<_array>
-																	<xsl:for-each select="$points">
+														<xsl:choose>
+															<!-- if there are a lat and long, then output an array of points -->
+															<xsl:when test="$rdf//*[@rdf:about = $spatialThingURI][geo:lat and geo:long]">
+																<type>Point</type>
+																<coordinates>
+																	<_array>
 																		<_>
-																			<xsl:value-of select="normalize-space(.)"/>
+																			<xsl:value-of select="$rdf//*[@rdf:about = $spatialThingURI]/geo:long"/>
 																		</_>
-																	</xsl:for-each>
-																</_array>
+																		<_>
+																			<xsl:value-of select="$rdf//*[@rdf:about = $spatialThingURI]/geo:lat"/>
+																		</_>
+																	</_array>
+																</coordinates>
 
-															</xsl:for-each>
-														</_array>
+															</xsl:when>
+															<xsl:when test="$rdf//*[@rdf:about = $spatialThingURI][crmgeo:asWKT[contains(., 'POLYGON')]]">
+																<xsl:variable name="corners"
+																	select="tokenize(substring-after(substring-before($rdf//*[@rdf:about = $spatialThingURI]/crmgeo:asWKT, ')'), '('), ',')"/>
+																<type>Polygon</type>
+																<coordinates>
+																	<_array>
+																		<_array>
+																			<xsl:for-each select="$corners">
+																				<xsl:variable name="points" select="tokenize(normalize-space(.), ' ')"/>
 
-													</xsl:when>
-												</xsl:choose>
+																				<_array>
+																				<xsl:for-each select="$points">
+																				<_>
+																				<xsl:value-of select="normalize-space(.)"/>
+																				</_>
+																				</xsl:for-each>
+																				</_array>
+
+																			</xsl:for-each>
+																		</_array>
+																	</_array>
+																</coordinates>
+															</xsl:when>
+														</xsl:choose>
+													</_object>
+												</geometry>
 											</xsl:if>
 										</xsl:if>
 									</xsl:when>
@@ -317,12 +342,21 @@
 										</xsl:variable>
 
 										<xsl:if test="$uncertainMint//geo:long and $uncertainMint//geo:lat">
-											<_>
-												<xsl:value-of select="$uncertainMint//geo:long"/>
-											</_>
-											<_>
-												<xsl:value-of select="$uncertainMint//geo:lat"/>
-											</_>
+											<geometry>
+												<_object>
+													<type>Point</type>
+													<coordinates>
+														<_array>
+															<_>
+																<xsl:value-of select="$uncertainMint//geo:long"/>
+															</_>
+															<_>
+																<xsl:value-of select="$uncertainMint//geo:lat"/>
+															</_>
+														</_array>
+													</coordinates>
+												</_object>
+											</geometry>
 										</xsl:if>
 									</xsl:when>
 									<!-- if the mint does not have coordinates, but does have skos:broader, exectue the region hierarchy API call to look for parent mint/region coordinates -->
@@ -334,12 +368,21 @@
 										</xsl:variable>
 
 										<xsl:if test="$regions//mint[1][@lat and @long]">
-											<_>
-												<xsl:value-of select="$regions//mint[1]/@long"/>
-											</_>
-											<_>
-												<xsl:value-of select="$regions//mint[1]/@lat"/>
-											</_>
+											<geometry>
+												<_object>
+													<type>Point</type>
+													<coordinates>
+														<_array>
+															<_>
+																<xsl:value-of select="$regions//mint[1]/@long"/>
+															</_>
+															<_>
+																<xsl:value-of select="$regions//mint[1]/@lat"/>
+															</_>
+														</_array>
+													</coordinates>
+												</_object>
+											</geometry>
 										</xsl:if>
 									</xsl:when>
 								</xsl:choose>
@@ -351,53 +394,57 @@
 										select="document(concat($geonames-url, '/get?geonameId=', $geonameId, '&amp;username=', $geonames_api_key, '&amp;style=full'))/*"
 									/>
 								</xsl:variable>
-
-								<_>
-									<xsl:value-of select="$geonames_data//lng"/>
-								</_>
-								<_>
-									<xsl:value-of select="$geonames_data//lat"/>
-								</_>
+								<geometry>
+									<_object>
+										<type>Point</type>
+										<coordinates>
+											<_array>
+												<_>
+													<xsl:value-of select="$geonames_data//lng"/>
+												</_>
+												<_>
+													<xsl:value-of select="$geonames_data//lat"/>
+												</_>
+											</_array>
+										</coordinates>
+									</_object>
+								</geometry>
 							</xsl:when>
 						</xsl:choose>
 					</xsl:when>
 					<!-- otherwise use the gml:Point stored within NUDS -->
 					<xsl:when test="gml:location/gml:Point">
 						<xsl:variable name="coords" select="tokenize(gml:location/gml:Point/gml:coordinates, ',')"/>
-
-						<_>
-							<xsl:value-of select="normalize-space($coords[1])"/>
-						</_>
-						<_>
-							<xsl:value-of select="normalize-space($coords[2])"/>
-						</_>
+						<geometry>
+							<_object>
+								<type>Point</type>
+								<coordinates>
+									<_array>
+										<_>
+											<xsl:value-of select="normalize-space($coords[1])"/>
+										</_>
+										<_>
+											<xsl:value-of select="normalize-space($coords[2])"/>
+										</_>
+									</_array>
+								</coordinates>
+							</_object>
+						</geometry>
 					</xsl:when>
 				</xsl:choose>
-			</_array>
+			</node>
 
 		</xsl:variable>
 
-		<xsl:if test="$coordinates/child::*">
+		<xsl:if test="$coordinates/geometry">
 			<_object>
 				<type>Feature</type>
 				<label>
 					<xsl:value-of select="$label"/>
 				</label>
-				<geometry>
-					<_object>
-						<type>
-							<!-- when the $coordinates array has an element, then it is a point, otherwise if the array contains an array, it's a polygon -->
-							<xsl:choose>
-								<xsl:when test="$coordinates/_">Point</xsl:when>
-								<xsl:when test="count($coordinates/_array) = 1">Polygon</xsl:when>
-								<xsl:when test="count($coordinates/_array) &gt; 1">MultiPolygon</xsl:when>
-							</xsl:choose>
-						</type>
-						<coordinates>
-							<xsl:copy-of select="$coordinates"/>
-						</coordinates>
-					</_object>
-				</geometry>
+				
+				<xsl:copy-of select="$coordinates/geometry"/>
+				
 				<properties>
 					<_object>
 						<toponym>
@@ -437,12 +484,12 @@
 					</xsl:otherwise>
 				</xsl:choose>
 			</label>
-			
+
 			<xsl:choose>
 				<xsl:when test="res:binding[@name = 'hoard']">
 					<id>
 						<xsl:value-of select="res:binding[@name = 'hoard']/res:uri"/>
-					</id>						
+					</id>
 				</xsl:when>
 				<xsl:when test="res:binding[@name = 'findspot']">
 					<id>
@@ -454,24 +501,20 @@
 								<xsl:value-of select="res:binding[@name = 'findspot']/res:bnode"/>
 							</xsl:otherwise>
 						</xsl:choose>
-					</id>						
-				</xsl:when>				
+					</id>
+				</xsl:when>
 			</xsl:choose>
-			
-			<geometry>
-				<_object>
-					<xsl:choose>
-						<xsl:when test="res:binding[@name = 'geojson']">
-							<type>Polygon</type>
-							<coordinates>
-								<_array>
-									<xsl:apply-templates
-										select="xxf:json-to-xml(res:binding[@name = 'geojson']/res:literal)/json/coordinates/*" mode="xxf"
-									/>
-								</_array>								
-							</coordinates>							
-						</xsl:when>
-						<xsl:otherwise>
+
+
+			<xsl:choose>
+				<xsl:when test="res:binding[@name = 'geojson']">
+					<geometry datatype="osgeo:asGeoJSON">
+						<xsl:value-of select="res:binding[@name = 'geojson']/res:literal"/>
+					</geometry>
+				</xsl:when>
+				<xsl:otherwise>
+					<geometry>
+						<_object>
 							<type>Point</type>
 							<coordinates>
 								<_array>
@@ -483,7 +526,7 @@
 											<xsl:otherwise>
 												<xsl:value-of select="res:binding[@name = 'long']/res:literal"/>
 											</xsl:otherwise>
-										</xsl:choose>								
+										</xsl:choose>
 									</_>
 									<_>
 										<xsl:choose>
@@ -494,16 +537,13 @@
 												<xsl:value-of select="res:binding[@name = 'lat']/res:literal"/>
 											</xsl:otherwise>
 										</xsl:choose>
-										
 									</_>
 								</_array>
 							</coordinates>
-						</xsl:otherwise>
-					</xsl:choose>
-					
-					
-				</_object>
-			</geometry>
+						</_object>
+					</geometry>
+				</xsl:otherwise>
+			</xsl:choose>
 			<xsl:if test="res:binding[@name = 'closingDate']">
 				<when>
 					<_object>
@@ -541,7 +581,7 @@
 							<xsl:value-of select="numishare:normalizeDate(res:binding[@name = 'closingDate']/res:literal)"/>
 						</closing_date>
 					</xsl:if>
-					
+
 					<xsl:if test="res:binding[@name = 'count']">
 						<count>
 							<xsl:value-of select="res:binding[@name = 'count']/res:literal"/>

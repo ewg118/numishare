@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Author: Ethan Gruber
+    Date: February 2021
+    Function: Transform the JSON metamodel into text that is then serialized by Orbeon into JSON -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:numishare="https://github.com/ewg118/numishare" exclude-result-prefixes="xs" version="2.0">
 
@@ -19,6 +22,11 @@
                 <xsl:value-of select="concat('&#x022;', name(), '&#x022;')"/>
                 <xsl:text>:</xsl:text>
                 <xsl:apply-templates select="_object"/>
+            </xsl:when>
+            <xsl:when test="@datatype = 'osgeo:asGeoJSON'">
+                <xsl:value-of select="concat('&#x022;', name(), '&#x022;')"/>
+                <xsl:text>:</xsl:text>
+                <xsl:value-of select="."/>
             </xsl:when>
             <xsl:otherwise>
                 <!-- when the element is preceded by two underscores, prepend an @ character, e.g., for @id or @type -->
