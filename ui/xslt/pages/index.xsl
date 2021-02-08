@@ -175,6 +175,13 @@
 							</a>
 						</xsl:if>
 					</div>
+					<div class="highlight">
+						<h3>Get Involved</h3>
+						<p> Please consider becoming a Member of the American Numismatic Society, the publisher of this resource. Your membership helps
+							maintain our free and open digital projects and data, as well as other educational outreach activities that broaden public
+							access to numismatics. Membership comes with other benefits, such as the ANS Magazine and weekly virtual lectures and
+							discussions. See <a href="http://numismatics.org/membership/">Membership</a> for more information.</p>
+					</div>
 				</div>
 			</div>
 		</div>
