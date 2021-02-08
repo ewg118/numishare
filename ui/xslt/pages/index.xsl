@@ -40,6 +40,18 @@
 				<link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"/>
 				<script src="https://netdna.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"/>
 				<link type="text/css" href="{$include_path}/css/style.css" rel="stylesheet"/>
+				
+				<xsl:for-each select="includes/include">
+					<xsl:choose>
+						<xsl:when test="@type = 'css'">
+							<link type="text/{@type}" rel="stylesheet" href="{@url}"/>
+						</xsl:when>
+						<xsl:when test="@type = 'javascript'">
+							<script type="text/{@type}" src="{@url}"/>
+						</xsl:when>
+					</xsl:choose>
+				</xsl:for-each>
+				
 				<xsl:if test="string(google_analytics)">
 					<script type="text/javascript">
 						<xsl:value-of select="google_analytics"/>
@@ -187,6 +199,14 @@
 								href="http://www.neh.gov/grants/preservation/humanities-collections-and-reference-resources">Humanities Collections and
 								Reference Resources</a> program, to be dispersed over three years, to complete the project.</p>
 
+					</div>
+					
+					<div class="highlight">
+						<h3>Get Involved</h3>
+						<p> Please consider becoming a Member of the American Numismatic Society, the publisher of this resource. Your membership helps
+							maintain our free and open digital projects and data, as well as other educational outreach activities that broaden public
+							access to numismatics. Membership comes with other benefits, such as the ANS Magazine and weekly virtual lectures and
+							discussions. See <a href="http://numismatics.org/membership/">Membership</a> for more information.</p>						
 					</div>
 					<!--<div class="highlight">
 						<h3>Collaborators</h3>
