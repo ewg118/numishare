@@ -40,6 +40,18 @@
 				<link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"/>
 				<script src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"/>
 				<link type="text/css" href="{$include_path}/css/style.css" rel="stylesheet"/>
+				
+				<xsl:for-each select="includes/include">
+					<xsl:choose>
+						<xsl:when test="@type = 'css'">
+							<link type="text/{@type}" rel="stylesheet" href="{@url}"/>
+						</xsl:when>
+						<xsl:when test="@type = 'javascript'">
+							<script type="text/{@type}" src="{@url}"/>
+						</xsl:when>
+					</xsl:choose>
+				</xsl:for-each>
+				
 				<xsl:if test="string(google_analytics)">
 					<script type="text/javascript">
 						<xsl:value-of select="google_analytics"/>
@@ -156,7 +168,7 @@
 			</div>
 			<div class="row">
 				<xsl:if test="$collection-name = 'crro'">
-					<div class="col-md-4">
+					<div class="col-md-3">
 						<h3>Collaborators</h3>
 						<a href="http://numismatics.org" title="American Numismatic Society" style="margin:0 10px;">
 							<img src="{$include_path}/images/logo_ans.jpg" alt="ANS"/>
@@ -172,7 +184,7 @@
 				</xsl:if>
 
 				<xsl:if test="$collection-name = 'rrdp'">
-					<div class="col-md-4">
+					<div class="col-md-3">
 						<h3>Support</h3>
 						<a href="http://www.bigdatabase.com/Big-DB/USFoundation-profiles/ARETE%20FOUNDATION-236779271.HTML" title="Arete Foundation">
 							<img src="{$include_path}/images/logo_arete_foundation.jpg" alt="Arete Foundation" style="max-width:100%"/>
@@ -182,8 +194,16 @@
 								Foundation</a> awarded RRDP $115,200 to complete the first phase of the project.</p>
 					</div>
 				</xsl:if>
+				
+				<div class="col-md-3">
+					<h3>Get Involved</h3>
+					<p> Please consider becoming a Member of the American Numismatic Society, the publisher of this resource. Your membership helps
+						maintain our free and open digital projects and data, as well as other educational outreach activities that broaden public
+						access to numismatics. Membership comes with other benefits, such as the ANS Magazine and weekly virtual lectures and
+						discussions. See <a href="http://numismatics.org/membership/">Membership</a> for more information.</p>
+				</div>
 
-				<div class="col-md-4 data_options">
+				<div class="col-md-3 data_options">
 					<h3>Data Export</h3>
 					<a href="{$display_path}feed/?q=*:*">
 						<img src="{$include_path}/images/atom-large.png" title="Atom" alt="Atom"/>
