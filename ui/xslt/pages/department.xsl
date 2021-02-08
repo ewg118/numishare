@@ -99,6 +99,17 @@
 				<script type="text/javascript" src="{$include_path}/javascript/facet_functions.js"/>
 				<script type="text/javascript" src="{$include_path}/javascript/result_functions.js"/>
 				<script type="text/javascript" src="{$include_path}/javascript/department_functions.js"/>
+				
+				<xsl:for-each select="includes/include">
+					<xsl:choose>
+						<xsl:when test="@type = 'css'">
+							<link type="text/{@type}" rel="stylesheet" href="{@url}"/>
+						</xsl:when>
+						<xsl:when test="@type = 'javascript'">
+							<script type="text/{@type}" src="{@url}"/>
+						</xsl:when>
+					</xsl:choose>
+				</xsl:for-each>
 
 				<xsl:if test="string(config/google_analytics)">
 					<script type="text/javascript">
