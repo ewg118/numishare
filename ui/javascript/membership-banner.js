@@ -1,4 +1,4 @@
-/* Date: March 2020
+/* Date: February 2021
 Function: A Wikidata style funding banner loaded in the config/includes*/
 
 $(document).ready(function () {
@@ -15,6 +15,9 @@ $(document).ready(function () {
 	var bgcolor = $('.navbar').css('background-color');
 
     if (!sessionStorage.alreadyClicked) {
+        if (bgcolor == '#e7e7e7') {
+            bgcolor = '#000000';
+        }
         $(template).insertBefore('.navbar').css('background-color', bgcolor);
         sessionStorage.alreadyClicked = 1;
     }
