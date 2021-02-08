@@ -8,7 +8,7 @@ $(document).ready(function () {
 							'<div class="col-md-2 text-center"><a href="http://numismatics.org/membership/"><img src="http://numismatics.org/themes/ocre/images/ans-logo-inverse.png" alt="ANS Logo" style="max-width:100px"/></a></div>' +
 							'<div class="col-md-10 hidden-sm hidden-xs text-center" style="top:50%; font-size:20px"><a href="http://numismatics.org/membership/">Support this resource by joining the American Numismatic ' +
 								'Society as a member today!</a><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button></div>' +
-							'<div class="col-md-10 visible-sm visible-xs text-center"><a href="http://numismatics.org/membership/">Support this resource by joining the American Numismatic Society as a member today!</a>' +
+							'<div class="col-md-10 visible-sm visible-xs text-center" style="font-size:16px"><a href="http://numismatics.org/membership/">Support this resource by joining the American Numismatic Society as a member today!</a>' +
 									'<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button></div>' +
 						'</div></div></div>';
 						
