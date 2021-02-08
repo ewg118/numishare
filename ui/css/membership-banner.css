@@ -1,0 +1,13 @@
+/*CSS for the membership banner addon*/
+@font-face {
+    font-family: 'MinionPro-MediumIt';
+    src: url("MinionPro-MediumIt.otf") format("opentype");
+}
+#membership-banner {
+    color:white;
+    padding-top:5px;
+    font-family: 'MinionPro-MediumIt', times, serif;
+}
+#membership-banner a{
+    color:white;
+}
