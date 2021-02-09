@@ -40,6 +40,11 @@
 				<meta name="viewport" content="width=device-width, initial-scale=1"/>
 				<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"/>
 				
+				<!-- bootstrap -->
+				<link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+				<script src="https://netdna.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"/>
+				<link type="text/css" href="{$include_path}/css/style.css" rel="stylesheet"/>
+				
 				<xsl:for-each select="includes/include">
 					<xsl:choose>
 						<xsl:when test="@type = 'css'">
@@ -51,10 +56,6 @@
 					</xsl:choose>
 				</xsl:for-each>
 				
-				<!-- bootstrap -->
-				<link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
-				<script src="https://netdna.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"/>
-				<link type="text/css" href="{$include_path}/css/style.css" rel="stylesheet"/>
 				<xsl:if test="string(google_analytics)">
 					<script type="text/javascript">
 						<xsl:value-of select="google_analytics"/>
