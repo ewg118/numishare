@@ -1,13 +1,31 @@
 /*CSS for the membership banner addon*/
-@font-face {
+@font-face{
     font-family: 'MinionPro-MediumIt';
     src: url("http://numismatics.org/themes/ocre/css/MinionPro-MediumIt.otf") format("opentype");
 }
-#membership-banner {
-    color:white;
-    padding:5px 0;
+@media only screen and (max-width : 992px){
+    .membership-banner-container{
+        height: 60px;
+        position: relative
+    }
+    .membership-banner-logo{
+        max-width: 48px;
+    }
+}
+@media only screen and (min-width : 992px){
+    .membership-banner-logo{
+        max-width: 80px;
+    }
+    .membership-banner-container{
+        height: 80px;
+        position: relative
+    }
+}
+#membership-banner{
+    color: white;
+    padding: 5px 0;
     font-family: 'MinionPro-MediumIt', times, serif;
 }
 #membership-banner a{
-    color:white;
+    color: white;
 }
