@@ -94,12 +94,12 @@
 			
 			<xsl:if test="string-length(template/rights) &gt; 0">
 				<xsl:choose>
-					<xsl:when test="matches(template/rights, 'https?://')">
+					<xsl:when test="matches(template/rights, '^https?://')">
 						<dcterms:rights rdf:resource="{template/rights}"/>
 					</xsl:when>
 					<xsl:otherwise>
 						<dcterms:rights>
-							<xsl:value-of select="rights"/>
+							<xsl:value-of select="template/rights"/>
 						</dcterms:rights>
 					</xsl:otherwise>
 				</xsl:choose>
