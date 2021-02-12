@@ -78,19 +78,33 @@
 			<dcterms:publisher>
 				<xsl:value-of select="template/agencyName"/>
 			</dcterms:publisher>
-			<dcterms:license>
+			
+			<xsl:if test="string-length(template/license[1]) &gt; 0">
+				<dcterms:license>
+					<xsl:choose>
+						<xsl:when test="count(template/license) = 1">
+							<xsl:attribute name="rdf:resource" select="template/license"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:attribute name="rdf:resource" select="template/license[@for = 'data']"/>
+						</xsl:otherwise>
+					</xsl:choose>
+				</dcterms:license>
+			</xsl:if>
+			
+			<xsl:if test="string-length(template/rights) &gt; 0">
 				<xsl:choose>
-					<xsl:when test="count(template/license) = 1">
-						<xsl:attribute name="rdf:resource" select="template/license"/>	
+					<xsl:when test="matches(template/rights, 'https?://')">
+						<dcterms:rights rdf:resource="{template/rights}"/>
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:attribute name="rdf:resource" select="template/license[@for = 'data']"/>
+						<dcterms:rights>
+							<xsl:value-of select="rights"/>
+						</dcterms:rights>
 					</xsl:otherwise>
 				</xsl:choose>
-			</dcterms:license>			
-			<xsl:if test="matches(template/rights, 'https?://')">
-				<dcterms:rights rdf:resource="{template/rights}"/>
 			</xsl:if>
+
 			<void:uriSpace>
 				<xsl:value-of select="
 						if (string(uri_space)) then
