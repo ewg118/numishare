@@ -61,6 +61,7 @@
 	
 	<!-- OSCAR -->
 	<page path="/numishare/oscar/" model="xpl/models/config.xpl" view="oxf:/numishare-projects/oscar/xpl/views/pages/index.xpl"/>
+	<page path="/numishare/oscar/search" model="xpl/models/solr/search.xpl" view="oxf:/numishare-projects/oscar/xpl/views/pages/search.xpl"/>
 
 	<!-- MANTIS -->
 	<page path="/numishare/mantis/department/[^\/]+" model="oxf:/numishare-projects/mantis/xpl/models/solr/department.xpl"
