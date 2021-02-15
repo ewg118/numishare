@@ -122,7 +122,7 @@
 						</xsl:otherwise>
 					</xsl:choose>
 					<h3>Support</h3>
-					<img src="{$include_path}/images/Stfitung_Hirzel.jpg" title="Stfitung Hirzel" alt="Stfitung Hirzel" style="max-width:400px"/>
+					<img src="{$include_path}/images/Stfitung_Hirzel.jpg" title="Stfitung Hirzel" alt="Stfitung Hirzel" style="max-width:240px"/>
 				</div>
 				<div class="col-md-4">
 					<div class="highlight data_options">
