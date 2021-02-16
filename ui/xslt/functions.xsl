@@ -4364,6 +4364,7 @@
                     <xsl:when test="$label='results_hoards'">hoards</xsl:when>
                     <xsl:when test="$label='results_and'">and</xsl:when>
                     <xsl:when test="$label='maps_legend'">Legend</xsl:when>
+                	<xsl:when test="$label = 'position_any'">Any Position</xsl:when>
                     <xsl:when test="$label='visualize_typological'">Typological Analysis</xsl:when>
                     <xsl:when test="$label='visualize_measurement'">Measurement Analysis</xsl:when>
                     <xsl:when test="$label='visualize_desc'">Use the data selection and visualization options below to generate a chart based on selected parameters. Instructions for using this feature can be found here</xsl:when>
