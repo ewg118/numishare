@@ -1333,6 +1333,10 @@
 		<xsl:param name="field"/>
 		<xsl:param name="lang"/>
 		<xsl:choose>
+			<xsl:when test="contains($field, 'legendCondensed')">
+				<xsl:variable name="label" select="substring-before(replace($field, 'legendCondensed', 'leg'), '_text')"/>
+				<xsl:value-of select="numishare:regularize_node($label, $lang)"/>
+			</xsl:when>
 			<xsl:when test="contains($field, '_uri')">
 				<xsl:variable name="label" select="substring-before($field, '_uri')"/>
 				<xsl:value-of select="numishare:regularize_node($label, $lang)"/>
@@ -1682,7 +1686,7 @@
 					<xsl:when test="$label='visualize_duration'">Dauer</xsl:when>
 					<xsl:when test="$label='visualize_calculate'">Ausgewähltes berechnen</xsl:when>
 					<xsl:when test="$label='visualize_generate'">Grafik erzeugen</xsl:when>
-					<xsl:when test="$label='numeric_count'">Zählen</xsl:when>
+					<xsl:when test="$label='numeric_count'">Summe</xsl:when>
 					<xsl:when test="$label='numeric_percentage'">Prozentzahl</xsl:when>
 					<xsl:when test="$label='numeric_cumulative'">Cumulativ</xsl:when>
 					<xsl:when test="$label='numeric_cumulative_percentage'">Cumulative Prozentzahl</xsl:when>
