@@ -469,11 +469,19 @@ function generate_typeDesc_from_object ($writer, $typeDesc){
 	if (array_key_exists('ah_date', $typeDesc)){
 	    $writer->startElement('dateOnObject');
 	       $writer->writeAttribute('calendar', 'ah');
-	       $writer->writeElement('date', $typeDesc['ah_date']);
+	       $writer->startElement('date', $typeDesc['ah_date']);
+	       if (ctype_digit($typeDesc['ah_date'])) {
+	           $writer->writeAttribute('standardDate', $typeDesc['ah_date']);
+	       }
+	       $writer->endElement();
 	    $writer->endElement();
 	} elseif (array_key_exists('dob', $typeDesc)){
 	    $writer->startElement('dateOnObject');
-	       $writer->writeElement('date', $typeDesc['dob']);
+	       $writer->startElement('date', $typeDesc['dob']);
+	       if (ctype_digit($typeDesc['dob'])) {
+	           $writer->writeAttribute('standardDate', $typeDesc['dob']);
+	       }
+	       $writer->endElement();
 	    $writer->endElement();
 	}
 	
