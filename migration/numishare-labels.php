@@ -53,32 +53,59 @@ $writer->writeAttribute('xmlns:xsl', 'http://www.w3.org/1999/XSL/Transform');
 		$writer->startElement('xsl:choose');
 			foreach ($labels[0] as $k=>$v){
 				if ($k != 'field'){
+				    if ($k != 'en'){
+    				    $writer->startElement('xsl:when');
+    						$writer->writeAttribute('test', "\$lang='" . $k . "'");
+    						$writer->startElement('xsl:choose');
+    						$regularize_node = true;
+    						foreach ($$k as $row){
+    							if ($regularize_node == true){
+    								//echo "{$row[0]}-{$row[1]}\n";
+    								$writer->startElement('xsl:when');
+    									$writer->writeAttribute('test', "\$label='" . $row[0] . "'");
+    									$writer->text(trim($row[1]));
+    								$writer->endElement();
+    							}
+    							if ($row[0] == 'year'){
+    								$regularize_node = false;
+    							}
+    						}
+    							//otherwise call the function for English
+    							$writer->startElement('xsl:otherwise');
+    								$writer->startElement('xsl:value-of');
+    									$writer->writeAttribute('select', "numishare:regularize_node(\$label, 'en')");
+    								$writer->endElement();
+    							$writer->endElement();
+    						//end choose
+    						$writer->endElement();
+    					$writer->endElement();		    
+				    } else {
+				        $writer->startElement('xsl:otherwise');
+    				        $writer->startElement('xsl:choose');
+    				        $regularize_node = true;
+    				        foreach ($$k as $row){
+    				            if ($regularize_node == true){
+    				                //echo "{$row[0]}-{$row[1]}\n";
+    				                $writer->startElement('xsl:when');
+        				                $writer->writeAttribute('test', "\$label='" . $row[0] . "'");
+        				                $writer->text(trim($row[1]));
+    				                $writer->endElement();
+    				            }
+    				            if ($row[0] == 'year'){
+    				                $regularize_node = false;
+    				            }
+    				        }
+    				        //otherwise call the function for English
+    				        $writer->startElement('xsl:otherwise');
+        				        $writer->startElement('xsl:value-of');
+        				            $writer->writeAttribute('select', "concat(upper-case(substring(\$label, 1, 1)), substring(\$label, 2))");
+        				        $writer->endElement();
+    				        $writer->endElement();
+    				        //end choose
+    				        $writer->endElement();
+				        $writer->endElement();	
+				    }
 					
-					$writer->startElement('xsl:when');
-						$writer->writeAttribute('test', "\$lang='" . $k . "'");
-						$writer->startElement('xsl:choose');
-						$regularize_node = true;
-						foreach ($$k as $row){
-							if ($regularize_node == true){
-								//echo "{$row[0]}-{$row[1]}\n";
-								$writer->startElement('xsl:when');
-									$writer->writeAttribute('test', "\$label='" . $row[0] . "'");
-									$writer->text(trim($row[1]));
-								$writer->endElement();
-							}
-							if ($row[0] == 'year'){
-								$regularize_node = false;
-							}
-						}
-							//otherwise call the function for English
-							$writer->startElement('xsl:otherwise');
-								$writer->startElement('xsl:value-of');
-									$writer->writeAttribute('select', "numishare:regularize_node(\$label, 'en')");
-								$writer->endElement();
-							$writer->endElement();
-						//end choose
-						$writer->endElement();
-					$writer->endElement();		
 				}
 			}			
 		//end choose
@@ -98,32 +125,59 @@ $writer->writeAttribute('xmlns:xsl', 'http://www.w3.org/1999/XSL/Transform');
 		$writer->startElement('xsl:choose');
 			foreach ($labels[0] as $k=>$v){
 				if ($k != 'field'){
-					
-					$writer->startElement('xsl:when');
-						$writer->writeAttribute('test', "\$lang='" . $k . "'");
-						$writer->startElement('xsl:choose');
-						$regularize_node = true;
-						foreach ($$k as $row){
-							if ($regularize_node == false){
-								//echo "{$row[0]}-{$row[1]}\n";
-								$writer->startElement('xsl:when');
-									$writer->writeAttribute('test', "\$label='" . $row[0] . "'");
-									$writer->text(trim($row[1]));
-								$writer->endElement();
-							}
-							if ($row[0] == 'year'){
-								$regularize_node = false;
-							}
-						}
-							//otherwise call the function for English
-							$writer->startElement('xsl:otherwise');
-								$writer->startElement('xsl:value-of');
-									$writer->writeAttribute('select', "numishare:normalizeLabel(\$label, 'en')");
-								$writer->endElement();
-							$writer->endElement();
-						//end choose
-						$writer->endElement();
-					$writer->endElement();
+				    if ($k != 'en'){
+    				    $writer->startElement('xsl:when');
+    						$writer->writeAttribute('test', "\$lang='" . $k . "'");
+    						$writer->startElement('xsl:choose');
+    						$regularize_node = true;
+    						foreach ($$k as $row){
+    							if ($regularize_node == false){
+    								//echo "{$row[0]}-{$row[1]}\n";
+    								$writer->startElement('xsl:when');
+    									$writer->writeAttribute('test', "\$label='" . $row[0] . "'");
+    									$writer->text(trim($row[1]));
+    								$writer->endElement();
+    							}
+    							if ($row[0] == 'year'){
+    								$regularize_node = false;
+    							}
+    						}
+    							//otherwise call the function for English
+    							$writer->startElement('xsl:otherwise');
+    								$writer->startElement('xsl:value-of');
+    									$writer->writeAttribute('select', "numishare:normalizeLabel(\$label, 'en')");
+    								$writer->endElement();
+    							$writer->endElement();
+    						//end choose
+    						$writer->endElement();
+    					$writer->endElement();  				        
+				    } else {
+				        $writer->startElement('xsl:otherwise');
+    				        $writer->startElement('xsl:choose');
+    				        $regularize_node = true;
+    				        foreach ($$k as $row){
+    				            if ($regularize_node == false){
+    				                //echo "{$row[0]}-{$row[1]}\n";
+    				                $writer->startElement('xsl:when');
+        				                $writer->writeAttribute('test', "\$label='" . $row[0] . "'");
+        				                $writer->text(trim($row[1]));
+    				                $writer->endElement();
+    				            }
+    				            if ($row[0] == 'year'){
+    				                $regularize_node = false;
+    				            }
+    				        }
+    				        //otherwise call the function for English
+    				        $writer->startElement('xsl:otherwise');
+        				        $writer->startElement('xsl:value-of');
+        				            $writer->writeAttribute('select', "concat('[', \$label, ']')");
+        				        $writer->endElement();
+    				        $writer->endElement();
+    				        //end choose
+    				        $writer->endElement();
+				        $writer->endElement();
+				    }
+
 				}
 			}
 			
