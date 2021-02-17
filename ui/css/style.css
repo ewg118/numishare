@@ -43,6 +43,17 @@ ul li{
 .content {
 	padding-bottom:10px;
 }
+.rtl{
+    direction: rtl;
+}
+dl.dl-rtl dt{
+    float: right;
+    text-align: left;
+}
+dl.dl-rtl dd{
+    margin-right: 180px;
+    margin-left: 0;
+}
 .alert-box {
 	width:50%;
 	margin:20px auto;
