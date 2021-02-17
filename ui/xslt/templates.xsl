@@ -3,7 +3,7 @@
 	xmlns:xlink="http://www.w3.org/1999/xlink" exclude-result-prefixes="#all" version="2.0">
 	<xsl:template name="header">
 		<div class="navbar navbar-default navbar-static-top" role="navigation">
-			<xsl:if test="$lang = 'ar'">
+			<xsl:if test="//config/languages/language[@code = $lang]/@rtl = true()">
 				<xsl:attribute name="style">direction: rtl;</xsl:attribute>
 			</xsl:if>
 			<div class="container-fluid">
@@ -33,12 +33,12 @@
 					</a>
 				</div>
 				<div class="navbar-collapse collapse">
-					<xsl:if test="not($lang = 'ar')">
+					<xsl:if test="not(//config/languages/language[@code = $lang]/@rtl = true())">
 						<ul class="nav navbar-nav">
 							<xsl:call-template name="menubar"/>
 						</ul>
 					</xsl:if>
-					<div class="col-sm-3 col-md-3 pull-{if ($lang='ar') then 'left' else 'right'}">
+					<div class="col-sm-3 col-md-3 pull-{if (//config/languages/language[@code = $lang]/@rtl = true()) then 'left' else 'right'}">
 						<form class="navbar-form" role="search" action="{$display_path}results" method="get">
 							<div class="input-group">
 								<input type="text" class="form-control" placeholder="{numishare:normalizeLabel('header_search', $lang)}" name="q" id="srch-term"/>
@@ -50,7 +50,7 @@
 							</div>
 						</form>
 					</div>
-					<xsl:if test="$lang = 'ar'">
+					<xsl:if test="//config/languages/language[@code = $lang]/@rtl = true()">
 						<ul class="nav navbar-nav navbar-right">
 							<xsl:call-template name="menubar"/>
 						</ul>
@@ -62,7 +62,7 @@
 	
 	<xsl:template name="menubar">
 		<xsl:choose>
-			<xsl:when test="$lang = 'ar'">
+			<xsl:when test="//config/languages/language[@code = $lang]/@rtl = true()">
 				<xsl:apply-templates select="//config/navigation/tab" mode="nav">
 					<xsl:sort order="descending" select="position()"/>
 				</xsl:apply-templates>
