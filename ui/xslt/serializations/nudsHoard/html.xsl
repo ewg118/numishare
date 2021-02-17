@@ -398,7 +398,9 @@
 		<xsl:if test="$hasAnnotations = true()">
 			<div class="row">
 				<div class="col-md-12">
-					<xsl:apply-templates select="doc('input:annotations')/res:sparql" mode="annotations"/>
+					<xsl:apply-templates select="doc('input:annotations')/res:sparql" mode="annotations">
+						<xsl:with-param name="rtl" select="boolean(//config/languages/language[@code = $lang]/@rtl)"/>
+					</xsl:apply-templates>
 				</div>
 			</div>
 		</xsl:if>

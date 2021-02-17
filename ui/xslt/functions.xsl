@@ -1995,6 +1995,7 @@
                     <xsl:when test="$label='century'">Century</xsl:when>
                     <xsl:when test="$label='chronList'">Chronological List</xsl:when>
                     <xsl:when test="$label='chronItem'">Chronological Item</xsl:when>
+                    <xsl:when test="$label='closing_date'">Closing Date</xsl:when>
                     <xsl:when test="$label='coinType'">Coin Type</xsl:when>
                     <xsl:when test="$label='collection'">Collection</xsl:when>
                     <xsl:when test="$label='color'">Color</xsl:when>
