@@ -3,7 +3,7 @@
 	xmlns:xlink="http://www.w3.org/1999/xlink" exclude-result-prefixes="#all" version="2.0">
 	<xsl:template name="header">
 		<div class="navbar navbar-default navbar-static-top" role="navigation">
-			<xsl:if test="$lang = 'ar'">
+			<xsl:if test="//config/languages/language[@code = $lang]/@rtl = true()">
 				<xsl:attribute name="style">direction: rtl;</xsl:attribute>
 			</xsl:if>
 			<div class="container-fluid">
@@ -18,7 +18,7 @@
 						<xsl:choose>
 							<xsl:when test="string-length(//config/logo) &gt; 0">
 								<xsl:choose>
-									<xsl:when test="contains(//config/logo, 'http://')">
+									<xsl:when test="matches(//config/logo, 'https?://')">
 										<img src="{//config/logo}"/>
 									</xsl:when>
 									<xsl:otherwise>
@@ -33,12 +33,12 @@
 					</a>
 				</div>
 				<div class="navbar-collapse collapse">
-					<xsl:if test="not($lang = 'ar')">
+					<xsl:if test="not(//config/languages/language[@code = $lang]/@rtl = true())">
 						<ul class="nav navbar-nav">
 							<xsl:call-template name="menubar"/>
 						</ul>
 					</xsl:if>
-					<div class="col-sm-3 col-md-3 pull-{if ($lang='ar') then 'left' else 'right'}">
+					<div class="col-sm-3 col-md-3 pull-{if (//config/languages/language[@code = $lang]/@rtl = true()) then 'left' else 'right'}">
 						<form class="navbar-form" role="search" action="{$display_path}results" method="get">
 							<div class="input-group">
 								<input type="text" class="form-control" placeholder="{numishare:normalizeLabel('header_search', $lang)}" name="q" id="srch-term"/>
@@ -50,7 +50,7 @@
 							</div>
 						</form>
 					</div>
-					<xsl:if test="$lang = 'ar'">
+					<xsl:if test="//config/languages/language[@code = $lang]/@rtl = true()">
 						<ul class="nav navbar-nav navbar-right">
 							<xsl:call-template name="menubar"/>
 						</ul>
@@ -62,7 +62,7 @@
 
 	<xsl:template name="menubar">
 		<xsl:choose>
-			<xsl:when test="$lang = 'ar'">
+			<xsl:when test="//config/languages/language[@code = $lang]/@rtl = true()">
 				<xsl:apply-templates select="//config/navigation/tab" mode="nav">
 					<xsl:sort order="descending" select="position()"/>
 				</xsl:apply-templates>
@@ -75,7 +75,7 @@
 
 	<xsl:template match="tab" mode="nav">
 		<xsl:choose>
-			<xsl:when test="@id = 'analyze' or @id = 'compare' or @id = 'apis' or @id = 'identify' or @id = 'symbols'">
+			<xsl:when test="@id = 'analyze' or @id = 'compare' or @id = 'apis' or @id = 'identify' or @id = 'symbols' or @id = 'feedback'">
 				<xsl:variable name="id" select="@id"/>
 				<xsl:variable name="href"
 					select="
@@ -254,7 +254,7 @@
 	</xsl:template>
 
 	<xsl:template name="languages">
-		<xsl:variable name="page" select="substring-after(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/')"/>
+		<xsl:variable name="collection-name" select="substring-after(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/')"/>
 		<xsl:variable name="query" select="doc('input:request')/request/parameters/parameter[name = 'q']/value"/>
 
 		<xsl:if test="count(//config/descendant::language[@enabled = 'true']) &gt; 1">
@@ -268,13 +268,13 @@
 						<xsl:sort select="@code"/>
 						<li>
 							<xsl:choose>
-								<xsl:when test="string-length($page) = 0">
+								<xsl:when test="string-length($collection-name) = 0">
 									<a href="{//config/url}?lang={@code}">
 										<xsl:value-of select="numishare:normalizeLabel(concat('lang_', @code), $lang)"/>
 									</a>
 								</xsl:when>
 								<xsl:otherwise>
-									<a href="{$display_path}{$page}?lang={@code}{if (string-length($query) &gt; 0) then concat('&amp;q=', $query) else ''}">
+									<a href="{$display_path}{$collection-name}?lang={@code}{if (string-length($query) &gt; 0) then concat('&amp;q=', $query) else ''}">
 										<xsl:value-of select="numishare:normalizeLabel(concat('lang_', @code), $lang)"/>
 									</a>
 								</xsl:otherwise>
@@ -284,25 +284,6 @@
 				</ul>
 			</li>
 		</xsl:if>
-	</xsl:template>
-
-	<!-- general purpose template for rendering descriptions based on available languages -->
-	<xsl:template name="display-description">
-		<xsl:choose>
-			<xsl:when test="*:description[@xml:lang = $lang]">
-				<xsl:value-of select="*:description[@xml:lang = $lang]"/>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:choose>
-					<xsl:when test="*:description[@xml:lang = 'en']">
-						<xsl:value-of select="*:description[@xml:lang = 'en']"/>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:value-of select="*:description[1]"/>
-					</xsl:otherwise>
-				</xsl:choose>
-			</xsl:otherwise>
-		</xsl:choose>
 	</xsl:template>
 
 	<xsl:template name="footer">

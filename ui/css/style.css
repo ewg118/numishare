@@ -32,15 +32,15 @@ ul li{
 	color:black;
 }
 .rtl{
-	direction:rtl;
+    direction: rtl;
 }
-dl.ar dt {
-	float:right;
-	text-align:left;
+dl.dl-rtl dt{
+    float: right;
+    text-align: left;
 }
-dl.ar dd {
-	margin-right:180px;
-	margin-left:0;
+dl.dl-rtl dd{
+    margin-right: 180px;
+    margin-left: 0;
 }
 a:link {
 	color:#537900;
