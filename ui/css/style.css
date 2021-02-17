@@ -37,6 +37,17 @@ ul li,
 ol li{
 	list-style-type:none;
 }
+.rtl{
+    direction: rtl;
+}
+dl.dl-rtl dt{
+    float: right;
+    text-align: left;
+}
+dl.dl-rtl dd{
+    margin-right: 180px;
+    margin-left: 0;
+}
 .highlight{
 	background-color:#F8F8F8;
 	border:1px solid #E7E7E7;
