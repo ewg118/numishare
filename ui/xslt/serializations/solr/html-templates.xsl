@@ -172,7 +172,7 @@
 			<xsl:value-of select="numishare:normalize_fields($sort_category, $lang)"/>
 		</xsl:variable>
 
-		<dl class="{if(//config/languages/language[@code = $lang]/@rtl = true()) then 'dl-horizontal ar' else 'dl-horizontal'}">
+		<dl class="{if(//config/languages/language[@code = $lang]/@rtl = true()) then 'dl-horizontal dl-rtl' else 'dl-horizontal'}">
 			<xsl:choose>
 				<xsl:when test="str[@name = 'recordType'] = 'hoard'">
 					<xsl:if test="string(str[@name = 'findspot_display'])">

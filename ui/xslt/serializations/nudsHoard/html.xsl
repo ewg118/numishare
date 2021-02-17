@@ -750,7 +750,7 @@
 			</h3>
 
 			<xsl:if test="nh:description or (@count or @minCount or @maxCount)">
-				<dl class="dl-horizontal">
+				<dl class="{if(//config/languages/language[@code = $lang]/@rtl = true()) then 'dl-horizontal dl-rtl' else 'dl-horizontal'}">
 					<xsl:choose>
 						<xsl:when test="@count or @minCount or @maxCount">
 							<xsl:variable name="count-string">

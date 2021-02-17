@@ -1467,7 +1467,7 @@
 
 		<xsl:if test="number($measurements//axis) &gt; 0 or number($measurements//diameter) &gt; 0 or number($measurements//weight) &gt; 0">
 			<p>Average measurements for this coin type:</p>
-			<dl class=" {if(//config/languages/language[@code = $lang]/@rtl = true()) then 'dl-horizontal ar' else 'dl-horizontal'}">
+			<dl class=" {if(//config/languages/language[@code = $lang]/@rtl = true()) then 'dl-horizontal dl-rtl' else 'dl-horizontal'}">
 				<xsl:if test="number($measurements//axis) &gt; 0">
 					<dt>
 						<xsl:value-of select="numishare:regularize_node('axis', $lang)"/>

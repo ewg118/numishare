@@ -73,7 +73,7 @@
                     <xsl:value-of select="res:binding[@name = 'title']/res:literal"/>
                 </a>
             </span>
-            <dl class="{if($rtl = true()) then 'dl-horizontal ar' else 'dl-horizontal'}">
+            <dl class="{if($rtl = true()) then 'dl-horizontal dl-rtl' else 'dl-horizontal'}">
                 <xsl:choose>
                     <xsl:when test="res:binding[@name = 'collection']/res:literal">
                         <dt>
@@ -559,7 +559,7 @@
                                 <a href="{res:binding[@name='type']/res:uri}">
                                     <xsl:value-of select="res:binding[@name = 'label']/res:literal"/>
                                 </a>
-                                <dl class="dl-horizontal">
+                                <dl class="{if($rtl = true()) then 'dl-horizontal dl-rtl' else 'dl-horizontal'}">
                                     <xsl:if test="res:binding[@name = 'mint']/res:uri">
                                         <dt>Mint</dt>
                                         <dd>

@@ -26,11 +26,11 @@ ul li{
 .rtl{
     direction: rtl;
 }
-dl.ar dt{
+dl.dl-rtl dt{
     float: right;
     text-align: left;
 }
-dl.ar dd{
+dl.dl-rtl dd{
     margin-right: 180px;
     margin-left: 0;
 }

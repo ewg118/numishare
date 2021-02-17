@@ -276,7 +276,7 @@
 				</small>
 			</h2>
 
-			<dl class="dl-horizontal">
+			<dl class="{if(//config/languages/language[@code = $lang]/@rtl = true()) then 'dl-horizontal dl-rtl' else 'dl-horizontal'}">
 				<!-- display stable URI first -->
 				<dt>URI</dt>
 				<dd>
@@ -345,7 +345,7 @@
 		<h4>
 			<xsl:value-of select="concat('Image ', position())"/>
 		</h4>
-		<dl class="dl-horizontal">
+		<dl class="{if(//config/languages/language[@code = $lang]/@rtl = true()) then 'dl-horizontal dl-rtl' else 'dl-horizontal'}">
 			<dt>URI</dt>
 			<dd>
 				<a href="{@rdf:about}" title="Stable URI">

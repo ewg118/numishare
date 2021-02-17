@@ -150,7 +150,7 @@
 					</xsl:choose>
 
 				</h2>
-				<dl class=" {if(//config/languages/language[@code = $lang]/@rtl = true()) then 'dl-horizontal ar' else 'dl-horizontal'}">
+				<dl class=" {if(//config/languages/language[@code = $lang]/@rtl = true()) then 'dl-horizontal dl-rtl' else 'dl-horizontal'}">
 					<xsl:if test="res:binding[@name = 'collection']">
 						<dt>Nomisma URI</dt>
 						<dd>
