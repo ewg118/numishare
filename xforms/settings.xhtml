@@ -656,6 +656,7 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 											<h3>Map Baselayers<small>
 													<a href="#top">
 														<span class="glyphicon glyphicon-chevron-up"></span>Top </a></small></h3>
+											
 											<xforms:repeat nodeset="layer" id="layer-control">
 												<xforms:var name="position" select="position()"/>
 												<xforms:var name="layer-name" select="."/>
@@ -673,8 +674,10 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 															</xforms:label>
 															<xforms:action ev:event="DOMActivate">
 																<xforms:var name="val" select="data(.)"/>
+																<xforms:var name="enabled" select="@enabled"/>
+																
 																<xforms:insert context="ancestor::baselayers" nodeset="layer[index('layer-control') - 2]"
-																	origin="xforms:element('layer', $val)"/>
+																	origin="xforms:element('layer', (xforms:attribute('enabled', $enabled), $val))"/>
 																<xforms:delete nodeset="."/>
 															</xforms:action>
 														</xforms:trigger>
@@ -686,8 +689,10 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 															</xforms:label>
 															<xforms:action ev:event="DOMActivate">
 																<xforms:var name="val" select="data(.)"/>
+																<xforms:var name="enabled" select="@enabled"/>
+																
 																<xforms:insert context="ancestor::baselayers" nodeset="layer[index('layer-control') + 1]"
-																	origin="xforms:element('layer', $val)"/>
+																	origin="xforms:element('layer', (xforms:attribute('enabled', $enabled), $val))"/>
 																<xforms:delete nodeset="."/>
 															</xforms:action>
 														</xforms:trigger>
