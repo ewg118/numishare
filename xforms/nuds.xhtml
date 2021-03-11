@@ -73,12 +73,13 @@
 					<id/>
 					<solr-id/>
 					<collection-name/>
-					<typeDesc_correct/>
+					<typeDesc_xml/>
+					<typeDesc_correct/>					
 					<publicationStatus/>
 					<status/>
 					<broader_query/>
 					<publication_list/>
-					<side/>
+					<side/>					
 				</controls>
 			</xforms:instance>
 			<!-- collections/authentication instances -->
@@ -573,6 +574,19 @@
 					<!-- if typeDesc is an xlink:href, set the resource case -->
 					<xforms:action if="instance('object')/nuds:descMeta/nuds:typeDesc/@xlink:href">
 						<xforms:setvalue ref="instance('typedesc-type')">resource</xforms:setvalue>
+						<xforms:var name="uri" select="instance('object')/nuds:descMeta/nuds:typeDesc/@xlink:href"/>
+						
+						<!-- get XML for RPC Online URIs -->
+						<xforms:action if="matches($uri, '^https://rpc\.ashmus\.ox\.ac\.uk')">
+							<xforms:var name="pieces" select="tokenize($uri, '/')"/>
+							<xforms:setvalue ref="instance('control-instance')/typeDesc_xml" value="concat('https://rpc.ashmus.ox.ac.uk/id/rpc-', $pieces[5], '-', $pieces[6], '.xml')"/>
+						</xforms:action>
+						
+						<!-- all else, presume Numishare, append .xml -->
+						<xforms:action if="not(matches($uri, '^https://rpc\.ashmus\.ox\.ac\.uk'))">
+							<xforms:setvalue ref="instance('control-instance')/typeDesc_xml" value="concat($uri, '.xml')"/>
+						</xforms:action>
+						
 						<xforms:send submission="get-typeDesc"/>
 					</xforms:action>
 
@@ -799,8 +813,12 @@
 			</xforms:submission>
 
 			<!-- load typeDesc resource -->
-			<xforms:submission id="get-typeDesc" serialization="none" method="get" action="{instance('object')/nuds:descMeta/nuds:typeDesc/@xlink:href}.xml"
+			<xforms:submission id="get-typeDesc" serialization="none" method="get" action="{instance('control-instance')/typeDesc_xml}"
 				replace="instance" instance="typeDesc-resource">
+				<xforms:header>
+					<xforms:name>User-Agent</xforms:name>
+					<xforms:value>XForms/Numishare</xforms:value>
+				</xforms:header>
 				<xforms:message ev:event="xforms-submit-error" level="modal">Unable to load typeDesc at specified URI.</xforms:message>
 			</xforms:submission>
 
@@ -1268,7 +1286,21 @@
 													<xforms:group ref=".[string-length(@xlink:href) &gt; 0]">
 														<xforms:trigger>
 															<xforms:action ev:event="DOMActivate">
+																<xforms:var name="uri" select="@xlink:href"/>
+																
 																<xforms:setvalue ref="instance('control-instance')/typeDesc_correct">false</xforms:setvalue>
+																
+																<!-- get XML for RPC Online URIs -->
+																<xforms:action if="matches($uri, '^https://rpc\.ashmus\.ox\.ac\.uk')">
+																	<xforms:var name="pieces" select="tokenize($uri, '/')"/>
+																	<xforms:setvalue ref="instance('control-instance')/typeDesc_xml" value="concat('https://rpc.ashmus.ox.ac.uk/id/rpc-', $pieces[5], '-', $pieces[6], '.xml')"/>
+																</xforms:action>
+																
+																<!-- all else, presume Numishare, append .xml -->
+																<xforms:action if="not(matches($uri, '^https://rpc\.ashmus\.ox\.ac\.uk'))">
+																	<xforms:setvalue ref="instance('control-instance')/typeDesc_xml" value="concat($uri, '.xml')"/>
+																</xforms:action>
+																
 																<xforms:send submission="get-typeDesc"/>
 															</xforms:action>
 															<xforms:label>Search</xforms:label>
