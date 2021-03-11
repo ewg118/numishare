@@ -477,7 +477,7 @@ function generate_typeDesc_from_object ($writer, $typeDesc){
 	    $writer->endElement();
 	} elseif (array_key_exists('dob', $typeDesc)){
 	    $writer->startElement('dateOnObject');
-	       $writer->startElement('date', $typeDesc['dob']);
+	       $writer->writeElement('date', $typeDesc['dob']);
 	       if (ctype_digit($typeDesc['dob'])) {
 	           $writer->writeAttribute('standardDate', $typeDesc['dob']);
 	       }
