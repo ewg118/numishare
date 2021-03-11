@@ -857,6 +857,7 @@ function parse_typology ($accnum, $count, $row, $department){
 	$materials = array_filter(explode('|', $row['material']));
 	$mints = array_filter(explode('|', $row['mint']));
 	$regions = array_filter(explode('|', $row['region']));
+	$subregions = array_filter(explode('|', $row['subregion']));
 	$localities = array_filter(explode('|', $row['locality']));
 	$issuers = array_filter(explode('|', $row['issuer']));
 	$artists = array_filter(explode('|', $row['artist']));
@@ -1128,7 +1129,7 @@ function parse_typology ($accnum, $count, $row, $department){
 	}
 	
 	/***** GEOGRAPHICAL LOCATIONS *****/
-	if (count($mints) > 0 || count($regions) > 0 || count($localities) > 0){
+	if (count($mints) > 0 || count($regions) > 0 || count($subregions) > 0 || count($localities) > 0){
 		$typeDesc['geographic'] = array();
 		$geographic = array();
 		if (strlen(trim($row['mint'])) > 0){
@@ -1171,6 +1172,16 @@ function parse_typology ($accnum, $count, $row, $department){
 				
 				$geographic['region'][] = array('label'=>$label, 'uncertain'=>$uncertain);
 			}
+		}
+		//subregion
+		if (count($subregions) > 0){
+		    foreach ($subregions as $region){
+		        $val = trim(str_replace('"', '', $region));
+		        $uncertain = substr($val, -1) == '?' ? true : false;
+		        $label =trim(str_replace('?', '', $val));
+		        
+		        $geographic['region'][] = array('label'=>$label, 'uncertain'=>$uncertain);
+		    }
 		}
 		//locality
 		if (count($localities) > 0){

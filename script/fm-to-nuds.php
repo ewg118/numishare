@@ -54,7 +54,7 @@ error_log(date(DATE_W3C) . ": {$csv_id}.csv now entering fm-to-nuds.php.\n", 3, 
 //create an array with pre-defined labels and values passed from the Filemaker POST
 $labels = array("accnum","department","objtype","material","manufacture",
 		"shape","weight","measurements","axis","denomination","era","dob",
-		"startdate","enddate","refs","published","info","prevcoll","region",
+		"startdate","enddate","refs","published","info","prevcoll","region","subregion",
 		"locality","series","dynasty","mint","mintabbr","person","issuer",
 		"magistrate","maker","artist","sernum","subjevent","subjperson",
 		"subjissuer","subjplace","decoration","degree","findspot",
