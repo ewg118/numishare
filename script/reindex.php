@@ -12,25 +12,52 @@ $xpath->registerNamespace('exist', 'http://exist.sourceforge.net/NS/exist');
 $collections = $xpath->query("//exist:collection[not(child::node())]");
 
 foreach ($collections as $year){
-	echo "Processing {$year->getAttribute('name')}\n";
-	$collection = $master . '/' . $year->getAttribute('name');
+    if (isset($argv[1])){
+        if ($argv[1] == $year->getAttribute('name')){
+            
+            echo "Processing {$year->getAttribute('name')}\n";
+            $collection = $master . '/' . $year->getAttribute('name');
+            
+            $newDoc = new DOMDocument('1.0', 'UTF-8');
+            $newDoc->load($collection);
+            $files = $newDoc->getElementsByTagNameNS('http://exist.sourceforge.net/NS/exist', 'resource');
+            
+            foreach ($files as $file){
+                $accnums[] = str_replace('.xml', '', $file->getAttribute('name'));
+                
+                //index records into Solr in increments of 1,000
+                if (count($accnums) > 0 && count($accnums) % $perPage == 0 ){
+                    $start = count($accnums) - $perPage;
+                    $toIndex = array_slice($accnums, $start, $perPage);
+                    
+                    //POST TO SOLR
+                    generate_solr_shell_script($toIndex);
+                }
+            }
+        }
+    } else {
+        echo "Processing {$year->getAttribute('name')}\n";
+        $collection = $master . '/' . $year->getAttribute('name');
+        
+        $newDoc = new DOMDocument('1.0', 'UTF-8');
+        $newDoc->load($collection);
+        $files = $newDoc->getElementsByTagNameNS('http://exist.sourceforge.net/NS/exist', 'resource');
+        
+        foreach ($files as $file){
+            $accnums[] = str_replace('.xml', '', $file->getAttribute('name'));
+            
+            //index records into Solr in increments of 1,000
+            if (count($accnums) > 0 && count($accnums) % $perPage == 0 ){
+                $start = count($accnums) - $perPage;
+                $toIndex = array_slice($accnums, $start, $perPage);
+                
+                //POST TO SOLR
+                generate_solr_shell_script($toIndex);
+            }
+        }
+    }
+    
 	
-	$newDoc = new DOMDocument('1.0', 'UTF-8');
-	$newDoc->load($collection);
-	$files = $newDoc->getElementsByTagNameNS('http://exist.sourceforge.net/NS/exist', 'resource');		
-	
-	foreach ($files as $file){
-		$accnums[] = str_replace('.xml', '', $file->getAttribute('name'));
-		
-		//index records into Solr in increments of 1,000
-		if (count($accnums) > 0 && count($accnums) % $perPage == 0 ){
-			$start = count($accnums) - $perPage;
-			$toIndex = array_slice($accnums, $start, $perPage);
-			
-			//POST TO SOLR
-			generate_solr_shell_script($toIndex);
-		}
-	}
 }
 
 //index final chunk
