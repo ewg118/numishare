@@ -512,7 +512,7 @@
 						<xsl:value-of select="res:binding[@name = 'geojson']/res:literal"/>
 					</geometry>
 				</xsl:when>
-				<xsl:otherwise>
+				<xsl:when test="res:binding[@name = 'long'] and res:binding[@name = 'lat']">
 					<geometry>
 						<_object>
 							<type>Point</type>
@@ -542,7 +542,7 @@
 							</coordinates>
 						</_object>
 					</geometry>
-				</xsl:otherwise>
+				</xsl:when>
 			</xsl:choose>
 			<xsl:if test="res:binding[@name = 'closingDate']">
 				<when>
