@@ -1,4 +1,5 @@
 PREFIX rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX crm:	<http://www.cidoc-crm.org/cidoc-crm/>
 PREFIX dcterms:  <http://purl.org/dc/terms/>
 PREFIX nm:       <http://nomisma.org/id/>
 PREFIX nmo:	<http://nomisma.org/ontology#>
@@ -29,11 +30,9 @@ OPTIONAL { ?object nmo:hasCollection ?colUri .
 ?object void:inDataset ?dataset .
 ?dataset dcterms:publisher ?publisher FILTER (lang(?publisher) = "" || langMatches(lang(?publisher), "en")) .
 ?dataset dcterms:title ?datasetTitle FILTER (lang(?datasetTitle) = "" || langMatches(lang(?datasetTitle), "en")) .
-OPTIONAL {?object nmo:hasFindspot ?findUri .
-?findUri foaf:name|rdfs:label ?findspot }
-OPTIONAL {?object nmo:hasFindspot ?findUri .
-?nomismaUri geo:location ?findUri ;
-	skos:prefLabel ?findspot FILTER langMatches(lang(?findspot), "en")}
+OPTIONAL{ ?object nmo:hasFindspot/crm:P7_took_place_at/crm:P89_falls_within ?findUri .
+  ?findUri a crm:E53_Place ;
+  rdfs:label ?findspot }
 OPTIONAL {?object dcterms:isPartOf ?hoard .
  ?hoard a nmo:Hoard ;
  	skos:prefLabel ?findspot FILTER(langMatches(lang(?findspot), "EN")) }
