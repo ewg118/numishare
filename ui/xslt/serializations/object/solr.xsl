@@ -12,6 +12,7 @@
 	<xsl:include href="../../functions.xsl"/>
 	<xsl:include href="../nuds/solr.xsl"/>
 	<xsl:include href="../nudsHoard/solr.xsl"/>
+	<xsl:include href="../tei/solr.xsl"/>
 	<xsl:include href="solr-templates.xsl"/>
 
 	<xsl:variable name="collection-name" select="substring-before(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/')"/>
@@ -408,15 +409,19 @@
 
 	<xsl:template match="/">
 		<add>
-			<xsl:choose>
-				<xsl:when test="count(descendant::nuds:nuds) &gt; 0">
-					<xsl:call-template name="nuds"/>
-				</xsl:when>
-				<xsl:when test="count(descendant::nh:nudsHoard) &gt; 0">
-					<xsl:call-template name="nudsHoard"/>
-				</xsl:when>
-				<xsl:otherwise>false</xsl:otherwise>
-			</xsl:choose>
+			<!-- templates should be called for each if different sorts of files are stored in the same collection -->
+			
+			<xsl:if test="count(descendant::nuds:nuds) &gt; 0">
+				<xsl:call-template name="nuds"/>
+			</xsl:if>
+			
+			<xsl:if test="count(descendant::tei:TEI) &gt; 0">
+				<xsl:call-template name="tei"/>
+			</xsl:if>			
+			
+			<xsl:if test="count(descendant::nh:nudsHoard) &gt; 0">
+				<xsl:call-template name="nudsHoard"/>
+			</xsl:if>			
 		</add>
 	</xsl:template>
 </xsl:stylesheet>

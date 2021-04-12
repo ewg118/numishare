@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 	Author: Ethan Gruber
-	Last Modified: August 2020
-	Function: evaluate the root node of the XML document and determine which pipeline to call (NUDS vs NUDS Hoard) to serialize into HTML
+	Last Modified: April 2021
+	Function: evaluate the root node of the XML document and determine which pipeline to call (NUDS, NUDS Hoard, EpiDoc TEI) to serialize into HTML
 -->
 <p:config xmlns:p="http://www.orbeon.com/oxf/pipeline" xmlns:oxf="http://www.orbeon.com/oxf/processors">
 	<p:param type="input" name="data"/>
@@ -113,6 +113,7 @@
 								<xsl:choose>
 									<xsl:when test="*/namespace-uri()='http://nomisma.org/nudsHoard'">nudsHoard</xsl:when>
 									<xsl:when test="*/namespace-uri()='http://nomisma.org/nuds'">nuds</xsl:when>
+									<xsl:when test="*/namespace-uri()='http://www.tei-c.org/ns/1.0'">tei</xsl:when>
 								</xsl:choose>
 							</recordType>
 						</xsl:template>
@@ -133,6 +134,13 @@
 					<p:processor name="oxf:pipeline">
 						<p:input name="data" href="#data"/>
 						<p:input name="config" href="../nuds/html.xpl"/>
+						<p:output name="data" ref="data"/>
+					</p:processor>
+				</p:when>
+				<p:when test="recordType='tei'">
+					<p:processor name="oxf:pipeline">
+						<p:input name="data" href="#data"/>
+						<p:input name="config" href="../tei/html.xpl"/>
 						<p:output name="data" ref="data"/>
 					</p:processor>
 				</p:when>

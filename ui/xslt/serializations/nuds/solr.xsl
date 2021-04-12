@@ -119,7 +119,8 @@
 						/>
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:value-of select="format-dateTime(current-dateTime(), '[Y0001]-[M01]-[D01]T[h01]:[m01]:[s01]Z')"/> /> </xsl:otherwise>
+						<xsl:value-of select="format-dateTime(current-dateTime(), '[Y0001]-[M01]-[D01]T[h01]:[m01]:[s01]Z')"/>
+					</xsl:otherwise>
 				</xsl:choose>
 			</field>
 

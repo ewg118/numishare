@@ -12,6 +12,7 @@
 	xmlns:doap="http://usefulinc.com/ns/doap#" xmlns:numishare="https://github.com/ewg118/numishare" exclude-result-prefixes="xs xsl nuds nh xlink gml numishare"
 	version="2.0">
 	<xsl:include href="rdf-templates.xsl"/>
+	<xsl:include href="../tei/rdf.xsl"/>
 	<xsl:include href="../../functions.xsl"/>
 
 	<!-- URL parameters (only valid for GET API) -->
