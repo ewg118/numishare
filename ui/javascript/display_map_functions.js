@@ -151,6 +151,7 @@ function initialize_map(id, path, lang) {
         var fillColor;
         switch (type) {
             case 'mint':
+            case 'productionPlace':
             fillColor = '#6992fd';
             break;
             case 'findspot':

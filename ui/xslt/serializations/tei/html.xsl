@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Author: Ethan Gruber
-	Date Modified: April 2021
+	Date Modified: May 2021
 	Function: Develop HTML page structure for EpiDoc
 -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema"
@@ -36,16 +36,9 @@
 	<xsl:param name="pipeline">display</xsl:param>
 
 	<!-- config variables -->
-	<xsl:variable name="geonames-url">http://api.geonames.org</xsl:variable>
-	<xsl:variable name="geonames_api_key" select="/content/config/geonames_api_key"/>
 	<xsl:variable name="sparql_endpoint" select="/content/config/sparql_endpoint"/>
 	<xsl:variable name="url" select="/content/config/url"/>
-	<xsl:variable name="collection_type" select="/content/config/collection_type"/>
 	<xsl:variable name="regionHierarchy" select="boolean(/content/config/facets/facet[text() = 'region_hier'])" as="xs:boolean"/>
-
-	<!-- get layout -->
-	<xsl:variable name="orientation" select="/content/config/theme/layouts/display/nuds/orientation"/>
-	<xsl:variable name="image_location" select="/content/config/theme/layouts/display/nuds/image_location"/>
 	<xsl:variable name="display_path">
 		<xsl:choose>
 			<xsl:when test="string(//config/uri_space)">
@@ -80,9 +73,11 @@
 
 			<!-- aggregate distinct Nomisma URIs and perform an API lookup to get the RDF for all of them -->
 			<xsl:variable name="id-param">
-				<xsl:for-each select="
+				<xsl:for-each
+					select="
 						distinct-values(descendant::*[contains(@ref,
-						'nomisma.org')]/@ref)">
+						'nomisma.org')]/@ref | descendant::*[contains(@period,
+						'nomisma.org')]/@period)">
 					<xsl:value-of select="substring-after(., 'id/')"/>
 					<xsl:if test="not(position() = last())">
 						<xsl:text>|</xsl:text>
@@ -202,9 +197,7 @@
 					<span id="baselayers">
 						<xsl:value-of select="string-join(//config/baselayers/layer[@enabled = true()], ',')"/>
 					</span>
-					<span id="collection_type">
-						<xsl:value-of select="$collection_type"/>
-					</span>
+					<span id="collection_type">object</span>
 					<span id="path">
 						<xsl:value-of select="concat($display_path, 'id/')"/>
 					</span>
@@ -235,8 +228,8 @@
 		</div>
 	</xsl:template>
 
+	<!--********************************* TEI PAGE STRUCTURE ******************************************* -->
 	<xsl:template match="tei:TEI">
-
 		<div class="row">
 			<div class="col-md-12">
 				<h1 id="object_title" property="dcterms:title">
@@ -249,18 +242,14 @@
 		</div>
 
 		<div class="row">
-			<div class="col-md-12">
-				<xsl:call-template name="tei_content"/>
+
+			<div class="col-md-6 {if(//config/languages/language[@code = $lang]/@rtl = true()) then 'pull-right' else ''}">
+				<xsl:apply-templates select="tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:msDesc"/>
 			</div>
-		</div>
-	</xsl:template>
 
-
-	<!--********************************* NUDS STRUCTURE ******************************************* -->
-	<xsl:template name="tei_content">
-		<div class="row">
-			<xsl:call-template name="metadata-container"/>
+			<div class="col-md-6 {if(//config/languages/language[@code = $lang]/@rtl = true()) then 'pull-right' else ''}"> </div>
 		</div>
+
 		<xsl:if test="$geoEnabled = true()">
 			<div class="row">
 				<div class="col-md-12">
@@ -270,9 +259,259 @@
 		</xsl:if>
 	</xsl:template>
 
-	<xsl:template name="metadata-container">
-		<div class="col-md-6 {if(//config/languages/language[@code = $lang]/@rtl = true()) then 'pull-right' else ''}"> </div>
-		<div class="col-md-6 {if(//config/languages/language[@code = $lang]/@rtl = true()) then 'pull-right' else ''}"> </div>
+	<!-- TEI templates -->
+	<xsl:template match="tei:msDesc">
+		<xsl:apply-templates select="tei:physDesc"/>
+		<xsl:apply-templates select="tei:history"/>
+	</xsl:template>
+
+	<!-- top-level sections -->
+	<xsl:template match="tei:physDesc">
+		<div class="metadata_section">
+			<h3>
+				<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
+			</h3>
+			<ul>
+				<xsl:if
+					test="tei:objectDesc/tei:supportDesc/tei:support/tei:objectType or tei:objectDesc/tei:supportDesc/tei:support/tei:material or tei:objectDesc/tei:layoutDesc/tei:layout/tei:rs">
+					<li>
+						<h4>
+							<xsl:value-of select="numishare:regularize_node('medium', $lang)"/>
+						</h4>
+						<ul>
+							<xsl:apply-templates
+								select="tei:objectDesc/tei:supportDesc/tei:support/tei:objectType | tei:objectDesc/tei:supportDesc/tei:support/tei:material"/>
+							<xsl:apply-templates select="tei:objectDesc/tei:layoutDesc/tei:layout/tei:rs"/>
+						</ul>
+					</li>
+
+				</xsl:if>
+
+				<xsl:if test="tei:objectDesc/tei:supportDesc/tei:support/tei:dimensions or tei:objectDesc/tei:supportDesc/tei:support/tei:measure">
+					<li>
+						<h4>
+							<xsl:value-of select="numishare:regularize_node('measurementsSet', $lang)"/>
+						</h4>
+						<ul>
+							<xsl:apply-templates
+								select="tei:objectDesc/tei:supportDesc/tei:support/tei:dimensions/* | tei:objectDesc/tei:supportDesc/tei:support/tei:measure">
+								<xsl:sort select="
+										if (@type) then
+											@type
+										else
+											local-name()"/>
+							</xsl:apply-templates>
+						</ul>
+					</li>
+				</xsl:if>
+			</ul>
+		</div>
+	</xsl:template>
+
+	<xsl:template match="tei:history">
+		<div class="metadata_section">
+			<h3>
+				<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
+			</h3>
+
+			<ul>
+				<xsl:apply-templates select="tei:origin"/>
+				<xsl:apply-templates select="tei:provenance"/>
+			</ul>
+		</div>
+	</xsl:template>
+
+	<xsl:template match="tei:origin">
+		<li>
+			<h4>
+				<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
+			</h4>
+			<ul>
+				<xsl:apply-templates select="tei:origPlace/tei:placeName | tei:origDate | tei:persName"/>
+			</ul>
+		</li>
+	</xsl:template>
+
+	<xsl:template match="tei:provenance">
+		<li>
+			<h4>
+				<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
+			</h4>
+			<ul>
+				<xsl:apply-templates/>
+			</ul>
+		</li>
+	</xsl:template>
+
+	<!-- metadata elements -->
+	<xsl:template match="tei:objectType | tei:material | tei:rs | tei:measure | tei:dimensions/* | tei:persName | tei:placeName | tei:origDate">
+		<xsl:variable name="href" select="@ref"/>
+		<xsl:variable name="field">
+			<xsl:choose>
+				<xsl:when test="string(@role)">
+					<xsl:choose>
+						<xsl:when test="matches(@role, 'https?://nomisma\.org')">
+							<xsl:value-of select="tokenize(@role, '/')[last()]"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="@role"/>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:when>
+				<xsl:when test="string(@type)">
+					<!-- convert EpiDoc 'execution' with numismatic 'manufacture' -->
+					<xsl:choose>
+						<xsl:when test="@type = 'execution'">manufacture</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="@type"/>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:when>
+				<xsl:otherwise>
+					<!-- normalize misc. XML elements to existing fields, if possible -->
+					<xsl:choose>
+						<xsl:when test="local-name() = 'origDate'">period</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="local-name()"/>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+
+		<li>
+			<b>
+				<xsl:value-of select="numishare:regularize_node($field, $lang)"/>
+				<xsl:text>: </xsl:text>
+			</b>
+
+			<xsl:variable name="value">
+				<xsl:choose>
+					<xsl:when test="string($lang) and contains($href, 'nomisma.org')">
+						<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about = $href], $lang)"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:choose>
+							<xsl:when test="not(string(.))">
+								<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about = $href], 'en')"/>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:choose>
+									<xsl:when test="self::tei:date or self::tei:origDate">
+										<xsl:choose>
+											<xsl:when test="string($lang)">
+												<!--<xsl:value-of select="format-date(xs:date(concat(@standardDate, '-01-01')), '[Y1]-[Mno]-[D1] [E]', 'fr', 'AD', ())"/>-->
+												<xsl:value-of select="normalize-space(.)"/>
+											</xsl:when>
+											<xsl:otherwise>
+												<xsl:value-of select="normalize-space(.)"/>
+											</xsl:otherwise>
+										</xsl:choose>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:value-of select="normalize-space(.)"/>
+									</xsl:otherwise>
+								</xsl:choose>
+
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:variable>
+
+			<xsl:choose>
+				<xsl:when test="$field = 'region' and $regionHierarchy = true() and contains($href, 'nomisma.org')"> </xsl:when>
+				<xsl:otherwise>
+					<xsl:call-template name="display-label">
+						<xsl:with-param name="field" select="$field"/>
+						<xsl:with-param name="value" select="$value"/>
+						<xsl:with-param name="href" select="$href"/>
+					</xsl:call-template>
+				</xsl:otherwise>
+			</xsl:choose>
+
+			<!-- optional XML attributes -->
+			<xsl:if test="@unit">
+				<xsl:text> </xsl:text>
+				<xsl:value-of select="@unit"/>
+			</xsl:if>
+
+			<xsl:if test="@notBefore or @notAfter">
+				<i>
+					<xsl:text> (</xsl:text>
+					<xsl:if test="@notBefore">
+						<xsl:value-of select="numishare:normalizeDate(@notBefore)"/>
+					</xsl:if>
+					<xsl:if test="@notBefore and @notAfter">
+						<xsl:text>-</xsl:text>
+					</xsl:if>
+					<xsl:if test="@notAfter">
+						<xsl:value-of select="numishare:normalizeDate(@notAfter)"/>
+					</xsl:if>
+					<xsl:text>)</xsl:text>
+				</i>
+			</xsl:if>
+
+			<!-- create links to resources -->
+			<xsl:if test="matches(@ref, 'https?://') or matches(@period, 'https?://')">
+				<a href="{if (@ref) then @ref else @period}" target="_blank" rel="{numishare:normalizeProperty('physical', $field)}" class="external_link">
+					<span class="glyphicon glyphicon-new-window"/>
+				</a>
+			</xsl:if>
+		</li>
+
+
+	</xsl:template>
+
+	<!-- structural templates -->
+	<xsl:template name="display-label">
+		<xsl:param name="field"/>
+		<xsl:param name="value"/>
+		<xsl:param name="href"/>
+		<xsl:param name="side"/>
+
+		<xsl:variable name="facet" select="concat($field, '_facet')"/>
+
+		<xsl:choose>
+			<xsl:when test="boolean(index-of($facets, $facet)) = true()">
+				<!-- if the $lang is enabled in the config (implying indexing into solr), then direct the user to the language-specific Solr query based on Nomisma prefLabel,
+					otherwise use the English preferred label -->
+
+				<xsl:variable name="queryValue">
+					<xsl:choose>
+						<xsl:when test="contains($href, 'nomisma.org') and not($langEnabled = true())">
+							<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about = $href], 'en')"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="$value"/>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:variable>
+
+
+				<a
+					href="{$display_path}results?q={$field}_facet:&#x022;{$queryValue}&#x022;{if (string($langParam)) then concat('&amp;lang=', $langParam) else ''}">
+					<xsl:choose>
+						<xsl:when test="contains($href, 'geonames.org')">
+							<xsl:choose>
+								<xsl:when test="string(.)">
+									<xsl:value-of select="normalize-space(.)"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:value-of select="$value"/>
+								</xsl:otherwise>
+							</xsl:choose>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="$value"/>
+						</xsl:otherwise>
+					</xsl:choose>
+				</a>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="$value"/>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 	<xsl:template name="map-container">

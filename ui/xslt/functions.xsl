@@ -2015,6 +2015,7 @@
                     <xsl:when test="$label='denomination'">Denomination</xsl:when>
                     <xsl:when test="$label='department'">Department</xsl:when>
                     <xsl:when test="$label='deposit'">Deposit</xsl:when>
+                    <xsl:when test="$label='depth'">Depth</xsl:when>
                     <xsl:when test="$label='description'">Description</xsl:when>
                     <xsl:when test="$label='diameter'">Diameter</xsl:when>
                     <xsl:when test="$label='discovery'">Discovery</xsl:when>
@@ -2028,6 +2029,7 @@
                     <xsl:when test="$label='geographic'">Geographic</xsl:when>
                     <xsl:when test="$label='grade'">Grade</xsl:when>
                     <xsl:when test="$label='height'">Height</xsl:when>
+                    <xsl:when test="$label='history'">Object History</xsl:when>
                     <xsl:when test="$label='hoardDesc'">Hoard Description</xsl:when>
                     <xsl:when test="$label='identifier'">Identifier</xsl:when>
                     <xsl:when test="$label='issuer'">Issuer</xsl:when>
@@ -2043,11 +2045,13 @@
                     <xsl:when test="$label='obverse'">Obverse</xsl:when>
                     <xsl:when test="$label='obv_leg'">Obverse Legend</xsl:when>
                     <xsl:when test="$label='obv_type'">Obverse Type</xsl:when>
+                    <xsl:when test="$label='origin'">Origin</xsl:when>
                     <xsl:when test="$label='owner'">Owner</xsl:when>
                     <xsl:when test="$label='physDesc'">Physical Description</xsl:when>
                     <xsl:when test="$label='portrait'">Portrait</xsl:when>
                     <xsl:when test="$label='previousColl'">Previous Collection</xsl:when>
                     <xsl:when test="$label='private'">Private</xsl:when>
+                    <xsl:when test="$label='productionPlace'">Production Place</xsl:when>
                     <xsl:when test="$label='provenance'">Provenance</xsl:when>
                     <xsl:when test="$label='public'">Public</xsl:when>
                     <xsl:when test="$label='publisher'">Publisher</xsl:when>
@@ -4473,9 +4477,9 @@
 	<xsl:function name="numishare:normalizeDate">
 		<xsl:param name="date"/>
 
-		<xsl:if test="substring($date, 1, 1) != '-' and number(substring($date, 1, 4)) &lt;= 400">
+		<!--<xsl:if test="substring($date, 1, 1) != '-' and number(substring($date, 1, 4)) &lt;= 400">
 			<xsl:text>A.D. </xsl:text>
-		</xsl:if>
+		</xsl:if>-->
 
 		<xsl:choose>
 			<xsl:when test="$date castable as xs:dateTime">
@@ -4494,7 +4498,7 @@
 		</xsl:choose>
 
 		<xsl:if test="substring($date, 1, 1) = '-'">
-			<xsl:text> B.C.</xsl:text>
+			<xsl:text> BCE</xsl:text>
 		</xsl:if>
 	</xsl:function>
 

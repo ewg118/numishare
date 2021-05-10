@@ -18,6 +18,7 @@
 						<xsl:choose>
 							<xsl:when test="*/namespace-uri()='http://nomisma.org/nudsHoard'">nudsHoard</xsl:when>
 							<xsl:when test="*/namespace-uri()='http://nomisma.org/nuds'">nuds</xsl:when>
+							<xsl:when test="*/namespace-uri()='http://www.tei-c.org/ns/1.0'">tei</xsl:when>
 						</xsl:choose>
 					</recordType>
 				</xsl:template>
@@ -40,6 +41,13 @@
 				<p:input name="config" href="../nuds/geojson.xpl"/>
 				<p:output name="data" ref="data"/>
 			</p:processor>
-		</p:when>		
+		</p:when>	
+		<p:when test="recordType='tei'">
+			<p:processor name="oxf:pipeline">
+				<p:input name="data" href="#data"/>
+				<p:input name="config" href="../tei/geojson.xpl"/>
+				<p:output name="data" ref="data"/>
+			</p:processor>
+		</p:when>
 	</p:choose>
 </p:config>
