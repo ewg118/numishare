@@ -265,6 +265,19 @@
 							</xsl:for-each>
 						</dd>
 					</xsl:if>
+					<xsl:if test="string(arr[@name = 'productionPlace_facet']/str[1])">
+						<dt>
+							<xsl:value-of select="numishare:regularize_node('productionPlace', $lang)"/>
+						</dt>
+						<dd>
+							<xsl:for-each select="arr[@name = 'productionPlace_facet']/str">
+								<xsl:value-of select="."/>
+								<xsl:if test="not(position() = last())">
+									<xsl:text>, </xsl:text>
+								</xsl:if>
+							</xsl:for-each>
+						</dd>
+					</xsl:if>
 					<xsl:if test="string(str[@name = 'obv_leg_display']) or string(str[@name = 'obv_type_display'])">
 						<dt>
 							<xsl:value-of select="numishare:regularize_node('obverse', $lang)"/>

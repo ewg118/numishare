@@ -65,7 +65,7 @@
 					<xsl:choose>
 						<xsl:when test="/config/collection_type = 'hoard'">id,recordId,recordType,title_display,findspot_display,closing_date_display,deposit_display,description_display,reference_facet</xsl:when>
 						<xsl:when test="/config/collection_type = 'cointype' or /config/collection_type = 'die'">id,recordId,recordType,title_display,date_display,denomination_facet,mint_facet,obv_leg_display,obv_type_display,rev_leg_display,rev_type_display,reference_facet,uri_space</xsl:when>
-						<xsl:when test="/config/collection_type = 'object'">id,recordId,recordType,title_display,date_display,denomination_facet,mint_facet,obv_leg_display,obv_type_display,rev_leg_display,rev_type_display,reference_facet,provenance_facet,diameter_num,weight_num,thumbnail_obv,thumbnail_rev,reference_obv,reference_rev,reference_com,thumbnail_com</xsl:when>
+						<xsl:when test="/config/collection_type = 'object'">id,recordId,recordType,title_display,date_display,denomination_facet,mint_facet,productionPlace_facet,obv_leg_display,obv_type_display,rev_leg_display,rev_type_display,reference_facet,provenance_facet,diameter_num,weight_num,thumbnail_obv,thumbnail_rev,reference_obv,reference_rev,reference_com,thumbnail_com</xsl:when>
 					</xsl:choose>
 				</xsl:variable>
 				

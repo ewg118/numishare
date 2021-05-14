@@ -269,35 +269,52 @@
 					</query>
 					<query id="get-objects">
 						<![CDATA[xquery version "1.0";
-						declare namespace nuds="http://nomisma.org/nuds";
-						declare namespace nh="http://nomisma.org/nudsHoard";
-						<report> { 
-							for $record in subsequence(collection(), START, 20)
-								let $type := $record/*/local-name()
-								return if ($type='nuds') then
-									<record>
-										<type>{ $type }</type>
-										<maintenanceStatus>{$record/nuds:nuds/nuds:control/nuds:maintenanceStatus/text()}</maintenanceStatus>
-										<publicationStatus>{data($record/nuds:nuds/nuds:control/nuds:publicationStatus)}</publicationStatus>
-										<recordType>{ string($record/nuds:nuds/@recordType) }</recordType>
-										<id>{$record//nuds:recordId/text()}</id>
-										<title>{ $record//nuds:descMeta/nuds:title[@xml:lang='en']/text() }</title>
-										<obverse> {concat($record//nuds:typeDesc/nuds:obverse/nuds:type/nuds:description[@xml:lang='en'], '/', $record//nuds:typeDesc/nuds:obverse/nuds:legend) } </obverse>
-										<reverse> {concat($record//nuds:typeDesc/nuds:reverse/nuds:type/nuds:description[@xml:lang='en'], '/', $record//nuds:typeDesc/nuds:reverse/nuds:legend) } </reverse>
-										<published>false</published>
-									</record>
-								else if ($type='nudsHoard') then 
-									<record>
-										<type>{ $type }</type>
-										<maintenanceStatus>{$record/nh:nudsHoard/nh:control/nh:maintenanceStatus/text()}</maintenanceStatus>
-										<publicationStatus>{data($record/nh:nuds/nh:control/nh:publicationStatus)}</publicationStatus>
-										<id>{ $record//nh:recordId/text() }</id>
-										<title>{$record//nh:descMeta/nh:title[@xml:lang='en']/text()}</title>
-										<published>false</published>
-									</record>
-								else <record/>
-							}
-						</report>]]>
+declare namespace nuds = "http://nomisma.org/nuds";
+declare namespace nh = "http://nomisma.org/nudsHoard";
+declare namespace tei = "http://www.tei-c.org/ns/1.0";
+<report>
+    {
+        for $record in subsequence(collection(), START, 20)
+        let $type := $record/*/local-name()
+        return
+            if ($type = 'nuds') then
+                <record>
+                    <type>NUDS</type>
+                    <maintenanceStatus>{$record/nuds:nuds/nuds:control/nuds:maintenanceStatus/text()}</maintenanceStatus>
+                    <publicationStatus>{data($record/nuds:nuds/nuds:control/nuds:publicationStatus)}</publicationStatus>
+                    <recordType>{string($record/nuds:nuds/@recordType)}</recordType>
+                    <id>{$record//nuds:recordId/text()}</id>
+                    <title>{$record//nuds:descMeta/nuds:title[@xml:lang = 'en']/text()}</title>
+                    <obverse>
+                        {concat($record//nuds:typeDesc/nuds:obverse/nuds:type/nuds:description[@xml:lang = 'en'], '/', $record//nuds:typeDesc/nuds:obverse/nuds:legend)}
+                    </obverse>
+                    <reverse>
+                        {concat($record//nuds:typeDesc/nuds:reverse/nuds:type/nuds:description[@xml:lang = 'en'], '/', $record//nuds:typeDesc/nuds:reverse/nuds:legend)}
+                    </reverse>
+                    <published>false</published>
+                </record>
+            else if ($type = 'nudsHoard') then
+                    <record>
+                        <type>Hoard</type>
+                        <maintenanceStatus>{$record/nh:nudsHoard/nh:control/nh:maintenanceStatus/text()}</maintenanceStatus>
+                        <publicationStatus>{data($record/nh:nuds/nh:control/nh:publicationStatus)}</publicationStatus>
+                        <id>{$record//nh:recordId/text()}</id>
+                        <title>{$record//nh:descMeta/nh:title[@xml:lang = 'en']/text()}</title>
+                        <published>false</published>
+                    </record>
+            else if ($type = 'TEI') then 
+                    <record>
+                        <type>EpiDoc TEI</type>
+                        <maintenanceStatus>{data($record//tei:revisionDesc/@status)}</maintenanceStatus>
+                        <publicationStatus>{data($record//tei:revisionDesc/@status)}</publicationStatus>
+                        <id>{data($record//tei:TEI/@xml:id)}</id>
+                        <title>{data($record//tei:titleStmt/tei:title)}</title>
+                        <published>false</published>
+                    </record>
+                else
+                    <record/>
+    }
+</report>]]>
 					</query>
 					<query id="collection-metadata">
 						<![CDATA[xquery version "1.0";
@@ -338,39 +355,62 @@
 					</query>
 					<query id="query-objects">
 						<![CDATA[xquery version "1.0";
-						declare namespace nuds="http://nomisma.org/nuds";
-						declare namespace nh="http://nomisma.org/nudsHoard";
-						<report> { 
-							for $record in collection()[contains(descendant::*[local-name()='recordId'], 'QUERY') or descendant::*[local-name()='title'] = 'QUERY'] let $type := $record/*/local-name()
-							return if ($type='nuds') then 
-							<record>
-								<type>{ $type }</type>
-								<maintenanceStatus>{$record/nuds:nuds/nuds:control/nuds:maintenanceStatus/text()}</maintenanceStatus>
-								<publicationStatus>{data($record/nuds:nuds/nuds:control/nuds:publicationStatus)}</publicationStatus>
-								<recordType>{ string($record/nuds:nuds/@recordType) }</recordType>
-								<id>{ $record//nuds:recordId/text() }</id>
-								<title>{$record//nuds:descMeta/nuds:title[@xml:lang='en']/text() }</title>
-								<obverse> { concat($record//nuds:typeDesc/nuds:obverse/nuds:type/nuds:description[@xml:lang='en'], '/', $record//nuds:typeDesc/nuds:obverse/nuds:legend) } </obverse>
-								<reverse> { concat($record//nuds:typeDesc/nuds:reverse/nuds:type/nuds:description[@xml:lang='en'], '/', $record//nuds:typeDesc/nuds:reverse/nuds:legend) } </reverse>
-								<published>false</published>
-							</record> 
-							else if ($type='nudsHoard') then
-							<record>
-								<type>{ $type }</type>
-								<maintenanceStatus> {$record/nh:nudsHoard/nh:control/nh:maintenanceStatus/text()}</maintenanceStatus>								
-								<publicationStatus>{data($record/nh:nuds/nh:control/nh:publicationStatus)}</publicationStatus>
-								<id>{ $record//nh:recordId/text() }</id>
-								<title>{ $record//nh:descMeta/nh:title[@xml:lang='en']/text() }</title>
-								<published>false</published>
-							</record>
-							else <record/> 
-						} </report>]]>
+declare namespace nuds = "http://nomisma.org/nuds";
+declare namespace nh = "http://nomisma.org/nudsHoard";
+declare namespace tei = "http://www.tei-c.org/ns/1.0";
+<report>
+    {
+        for $record in collection()[contains(descendant::*[local-name() = 'recordId'], 'QUERY') or descendant::*[local-name() = 'title'] = 'QUERY']
+        let $type := $record/*/local-name()
+        return
+            if ($type = 'nuds') then
+                <record>
+                    <type>NUDS</type>
+                    <maintenanceStatus>{$record/nuds:nuds/nuds:control/nuds:maintenanceStatus/text()}</maintenanceStatus>
+                    <publicationStatus>{data($record/nuds:nuds/nuds:control/nuds:publicationStatus)}</publicationStatus>
+                    <recordType>{string($record/nuds:nuds/@recordType)}</recordType>
+                    <id>{$record//nuds:recordId/text()}</id>
+                    <title>{$record//nuds:descMeta/nuds:title[@xml:lang = 'en']/text()}</title>
+                    <obverse>
+                        {concat($record//nuds:typeDesc/nuds:obverse/nuds:type/nuds:description[@xml:lang = 'en'], '/', $record//nuds:typeDesc/nuds:obverse/nuds:legend)}
+                    </obverse>
+                    <reverse>
+                        {concat($record//nuds:typeDesc/nuds:reverse/nuds:type/nuds:description[@xml:lang = 'en'], '/', $record//nuds:typeDesc/nuds:reverse/nuds:legend)}
+                    </reverse>
+                    <published>false</published>
+                </record>
+            else
+                if ($type = 'nudsHoard') then
+                    <record>
+                        <type>Hoard</type>
+                        <maintenanceStatus>
+                            {$record/nh:nudsHoard/nh:control/nh:maintenanceStatus/text()}</maintenanceStatus>
+                        <publicationStatus>{data($record/nh:nuds/nh:control/nh:publicationStatus)}</publicationStatus>
+                        <id>{$record//nh:recordId/text()}</id>
+                        <title>{$record//nh:descMeta/nh:title[@xml:lang = 'en']/text()}</title>
+                        <published>false</published>
+                    </record>
+                else
+                    if ($type = 'TEI') then
+                        <record>
+                            <type>EpiDoc TEI</type>
+                            <maintenanceStatus>{data($record//tei:revisionDesc/@status)}</maintenanceStatus>
+                            <publicationStatus>{data($record//tei:revisionDesc/@status)}</publicationStatus>
+                            <id>{data($record//tei:TEI/@xml:id)}</id>
+                            <title>{data($record//tei:titleStmt/tei:title)}</title>
+                            <published>false</published>
+                        </record>
+                    else
+                        <record/>
+    }
+</report>]]>
 					</query>
 					<query id="publish-all">
 						<![CDATA[xquery version "1.0";
+						declare namespace tei = "http://www.tei-c.org/ns/1.0";
 						<report> { 
-							for $i at $position in collection()[descendant::*[local-name()='publicationStatus'] = 'approved' or descendant::*[local-name()='publicationStatus'] = 'approvedSubtype']
-								return concat(data($i//*:recordId), if ($position mod COUNT = 0) then ',' else '|') 
+							for $i at $position in collection()[descendant::*[local-name()='publicationStatus'] = 'approved' or descendant::*[local-name()='publicationStatus'] = 'approvedSubtype' or descendant::tei:revisionDesc/@status = 'approved']
+								return concat(if ($i//*:recordId) then data($i//*:recordId) else data($i//tei:TEI/@xml:id), if ($position mod COUNT = 0) then ',' else '|') 
 							}
 						</report>]]>
 					</query>
@@ -1264,13 +1304,15 @@
 													<tbody>
 														<xforms:repeat nodeset="instance('pagination-result')//record">
 															<xforms:var name="id" select="id"/>
+															<xforms:var name="type" select="type"/>
+															
 															<tr>
 																<td class="text-center">
 																	<xforms:output ref="type"/>
 																</td>
 																<td>
 																	<h4>
-																		<xforms:group ref=".[type='nuds']">
+																		<xforms:group ref=".[type='NUDS']">
 																			<xforms:trigger appearance="minimal">
 																				<xforms:label value="concat(title, ' (', $id, ')')"/>
 																				<xforms:action ev:event="DOMActivate">
@@ -1278,7 +1320,7 @@
 																				</xforms:action>
 																			</xforms:trigger>
 																		</xforms:group>
-																		<xforms:group ref=".[type!='nuds']">
+																		<xforms:group ref=".[type!='NUDS']">
 																			<xforms:output ref="title"/>
 																			<xforms:output ref="concat('(', $id, ')')"/>
 																		</xforms:group>
@@ -1317,7 +1359,7 @@
 																<td class="text-center">
 																	<!-- only enable publication if the maintenanceStatus allows it -->
 																	<xforms:group
-																		ref=".[maintenanceStatus='new' or maintenanceStatus='revised' or maintenanceStatus='derived']">
+																		ref=".[maintenanceStatus='new' or maintenanceStatus='revised' or maintenanceStatus='derived' or maintenanceStatus='approved']">
 																		<xforms:group ref="published[. = true()]">
 																			<xforms:trigger appearance="minimal">
 																				<xforms:label><span
@@ -1326,10 +1368,14 @@
 																				<xforms:action ev:event="DOMActivate">
 																				<xforms:var name="val" select="." as="xs:boolean"/>
 																				<xforms:setvalue ref="instance('control-instance')/id" value="$id"/>
-																				<!-- update publicationStatus -->
-																				<xforms:setvalue ref="instance('control-instance')/publicationStatus"
-																				>inProcess</xforms:setvalue>
-																				<xforms:send submission="load-object"/>
+																					
+																				<!-- update publicationStatus, only for NUDS -->
+																				<xforms:action if="$type != 'EpiDoc TEI'">
+																					<xforms:setvalue ref="instance('control-instance')/publicationStatus"
+																						>inProcess</xforms:setvalue>
+																					<xforms:send submission="load-object"/>
+																				</xforms:action>																				
+																				
 																				<!-- delete from Solr -->
 																				<xforms:setvalue ref="instance('deleteId')/query"
 																				value="concat('recordId:&#x022;', instance('control-instance')/id, '&#x022;')"/>
@@ -1347,9 +1393,14 @@
 																				<xforms:var name="val" select="." as="xs:boolean"/>
 																				<!-- publish the record if the box is checked -->
 																				<xforms:setvalue ref="instance('control-instance')/id" value="$id"/>
-																				<xforms:setvalue ref="instance('control-instance')/publicationStatus"
-																				>approved</xforms:setvalue>
-																				<xforms:send submission="load-object"/>
+																					
+																					<!-- update publicationStatus, only for NUDS -->
+																					<xforms:action if="$type != 'EpiDoc TEI'">
+																						<xforms:setvalue ref="instance('control-instance')/publicationStatus"
+																							>approved</xforms:setvalue>
+																						<xforms:send submission="load-object"/>
+																					</xforms:action>
+																				
 																				<!-- publish to solr -->
 																				<xforms:send submission="nuds-to-solr"/>
 																				<xforms:send submission="submit-commit"/>

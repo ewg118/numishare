@@ -21,6 +21,7 @@
 	<xsl:param name="layout" select="doc('input:request')/request/parameters/parameter[name='layout']/value"/>
 	<xsl:param name="request-uri" select="concat('http://localhost:', if (//config/server-port castable as xs:integer) then //config/server-port else '8080', substring-before(doc('input:request')/request/request-uri, 'results_ajax'))"/>
 	<xsl:variable name="authenticated" select="false()" as="xs:boolean"/>
+	<xsl:variable name="collection-name" select="substring-before(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/')"/>
 
 	<xsl:variable name="display_path">
 		<xsl:choose>

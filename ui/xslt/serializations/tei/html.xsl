@@ -344,7 +344,7 @@
 	</xsl:template>
 
 	<!-- metadata elements -->
-	<xsl:template match="tei:objectType | tei:material | tei:rs | tei:measure | tei:dimensions/* | tei:persName | tei:placeName | tei:origDate">
+	<xsl:template match="tei:objectType | tei:material | tei:rs | tei:measure | tei:dimensions/* | tei:persName | tei:placeName | tei:origDate | tei:date">
 		<xsl:variable name="href" select="@ref"/>
 		<xsl:variable name="field">
 			<xsl:choose>
@@ -459,9 +459,8 @@
 				</a>
 			</xsl:if>
 		</li>
-
-
 	</xsl:template>
+
 
 	<!-- structural templates -->
 	<xsl:template name="display-label">
@@ -572,7 +571,6 @@
 		<link rel="alternate" type="application/ld+json" href="{$objectUri}.jsonld"/>
 		<link rel="alternate" type="application/ld+json" profile="https://linked.art/ns/v1/linked-art.json" href="{$objectUri}.jsonld?profile=linkedart"/>
 		<link rel="alternate" type="text/turtle" href="{$objectUri}.ttl"/>
-		<link rel="alternate" type="application/vnd.google-earth.kml+xml" href="{$objectUri}.kml"/>
 		<link rel="alternate" type="application/vnd.geo+json" href="{$objectUri}.geojson"/>
 
 		<!-- open graph metadata -->

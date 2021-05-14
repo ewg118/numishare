@@ -138,14 +138,17 @@
 						<xsl:with-param name="ids"
 							select="
 								distinct-values(descendant::*[not(local-name() = 'typeDesc') and not(local-name() = 'reference')][contains(@xlink:href, 'nomisma.org')]/@xlink:href |
-								$nudsGroup/descendant::*[not(local-name() = 'typeDesc') and not(local-name() = 'object')][contains(@xlink:href, 'nomisma.org')]/@xlink:href)"
+								$nudsGroup/descendant::*[not(local-name() = 'typeDesc') and not(local-name() = 'object')][contains(@xlink:href, 'nomisma.org')]/@xlink:href | descendant::*[contains(@ref,
+								'nomisma.org')]/@ref | descendant::*[contains(@period,
+								'nomisma.org')]/@period)"
 						/>
 					</xsl:call-template>
 				</rdf:RDF>
 			</xsl:variable>
 
 			<!-- call API only for those org URIs that weren't in the initial API call -->
-			<xsl:variable name="org-count" select="count(distinct-values($id-var//org:organization/@rdf:resource | $id-var//org:memberOf/@rdf:resource)[not(. = $id-var/*/@rdf:about)])"/>
+			<xsl:variable name="org-count"
+				select="count(distinct-values($id-var//org:organization/@rdf:resource | $id-var//org:memberOf/@rdf:resource)[not(. = $id-var/*/@rdf:about)])"/>
 
 			<xsl:variable name="org-var" as="element()*">
 				<rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:nm="http://nomisma.org/id/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
@@ -156,7 +159,8 @@
 						<xsl:with-param name="start">1</xsl:with-param>
 						<xsl:with-param name="end">100</xsl:with-param>
 						<xsl:with-param name="count" select="$org-count"/>
-						<xsl:with-param name="ids" select="distinct-values($id-var//org:organization/@rdf:resource | $id-var//org:memberOf/@rdf:resource)[not(. = $id-var/*/@rdf:about)]"
+						<xsl:with-param name="ids"
+							select="distinct-values($id-var//org:organization/@rdf:resource | $id-var//org:memberOf/@rdf:resource)[not(. = $id-var/*/@rdf:about)]"
 						> </xsl:with-param>
 					</xsl:call-template>
 				</rdf:RDF>
@@ -410,18 +414,18 @@
 	<xsl:template match="/">
 		<add>
 			<!-- templates should be called for each if different sorts of files are stored in the same collection -->
-			
+
 			<xsl:if test="count(descendant::nuds:nuds) &gt; 0">
 				<xsl:call-template name="nuds"/>
 			</xsl:if>
-			
+
 			<xsl:if test="count(descendant::tei:TEI) &gt; 0">
 				<xsl:call-template name="tei"/>
-			</xsl:if>			
-			
+			</xsl:if>
+
 			<xsl:if test="count(descendant::nh:nudsHoard) &gt; 0">
 				<xsl:call-template name="nudsHoard"/>
-			</xsl:if>			
+			</xsl:if>
 		</add>
 	</xsl:template>
 </xsl:stylesheet>
