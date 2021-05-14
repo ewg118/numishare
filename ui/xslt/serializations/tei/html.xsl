@@ -230,6 +230,7 @@
 
 	<!--********************************* TEI PAGE STRUCTURE ******************************************* -->
 	<xsl:template match="tei:TEI">
+		<xsl:call-template name="icons"/>
 		<div class="row">
 			<div class="col-md-12">
 				<h1 id="object_title" property="dcterms:title">
@@ -519,7 +520,7 @@
 		</h3>
 		<div id="mapcontainer"/>
 
-		<!--<div class="legend">
+		<div class="legend">
 			<table>
 				<tbody>
 					<tr>
@@ -528,13 +529,13 @@
 						</th>
 						<td style="background-color:#6992fd;border:2px solid black;width:50px;"/>
 						<td style="width:100px;padding-left:6px;">
-							<xsl:value-of select="numishare:regularize_node('mint', $lang)"/>
+							<xsl:value-of select="numishare:regularize_node('productionPlace', $lang)"/>
 						</td>
 						<xsl:if test="$rdf//nmo:Mint[skos:related]">
-							<!-\- only display the uncertain mint key if there's an uncertain mint match -\->
+							<!-- only display the uncertain mint key if there's an uncertain mint match -->
 							<td style="background-color:#666666;border:2px solid black;width:50px;"/>
 							<td style="width:150px;padding-left:6px;">
-								<xsl:value-of select="numishare:regularize_node('mint', $lang)"/>
+								<xsl:value-of select="numishare:regularize_node('productionPlace', $lang)"/>
 								<xsl:text> (uncertain)</xsl:text>
 							</td>
 						</xsl:if>
@@ -542,20 +543,10 @@
 						<td style="width:100px;padding-left:6px;">
 							<xsl:value-of select="numishare:regularize_node('hoard', $lang)"/>
 						</td>
-						<td style="background-color:#f98f0c;border:2px solid black;width:50px;"/>
-						<td style="width:100px;padding-left:6px;">
-							<xsl:value-of select="numishare:regularize_node('findspot', $lang)"/>
-						</td>
-						<xsl:if test="descendant::nuds:subject[contains(@xlink:href, 'geonames.org')]">
-							<td style="background-color:#00e64d;border:2px solid black;width:50px;"/>
-							<td style="width:100px;padding-left:6px;">
-								<xsl:value-of select="numishare:regularize_node('subject', $lang)"/>
-							</td>
-						</xsl:if>
 					</tr>
 				</tbody>
 			</table>
-		</div>-->
+		</div>
 		<p>View map in <a href="{$display_path}map/{$id}">fullscreen</a>.</p>
 	</xsl:template>
 
@@ -622,6 +613,48 @@
 		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.0/dist/leaflet.css"/>
 		<script type="text/javascript" src="https://unpkg.com/leaflet@1.0.0/dist/leaflet.js"/>
 		<script type="text/javascript" src="{$include_path}/javascript/leaflet.ajax.min.js"/>
+	</xsl:template>
+	
+	<!--***************************************** OPTIONS BAR **************************************** -->
+	<xsl:template name="icons">
+		<div class="row pull-right icons">
+			<div class="col-md-12">
+				<ul class="list-inline">
+					<li>
+						<strong>EXPORT:</strong>
+					</li>
+					<li>
+						<a href="{$id}.xml">NUDS/XML</a>
+					</li>
+					<li>
+						<a href="{$id}.rdf">RDF/XML</a>
+					</li>
+					<li>
+						<a href="{$id}.ttl">TTL</a>
+					</li>
+					<li>
+						<a href="{$id}.jsonld">JSON-LD</a>
+					</li>
+					<li>
+						<a href="{$id}.jsonld?profile=linkedart">Linked.art JSON-LD</a>
+					</li>
+					<xsl:if test="$geoEnabled">						
+						<li>
+							<a href="{$id}.geojson">GeoJSON</a>
+						</li>
+					</xsl:if>
+					<!--<xsl:if test="descendant::mets:file[@USE = 'iiif']">
+						<xsl:variable name="manifestURI" select="concat($url, 'manifest/', $id)"/>
+						
+						<li>
+							<a href="{$manifestURI}">IIIF Manifest</a>
+							<xsl:text> </xsl:text>
+							<a href="http://numismatics.org/mirador/?manifest={encode-for-uri($manifestURI)}">(view)</a>
+						</li>
+					</xsl:if>-->					
+				</ul>
+			</div>
+		</div>
 	</xsl:template>
 
 </xsl:stylesheet>

@@ -192,18 +192,9 @@
 		<classified_as>
 			<_array>
 				<_object>
-					<id>aat:300387350</id>
+					<id>aat:300133025</id>
 					<type>Type</type>
-					<_label>exchange media</_label>
-					<classified_as>
-						<_array>
-							<_object>
-								<id>aat:300264092</id>
-								<type>Type</type>
-								<_label>Objects Facet</_label>
-							</_object>
-						</_array>
-					</classified_as>
+					<_label>Artwork</_label>
 				</_object>
 
 				<xsl:apply-templates select="nuds:denomination[@xlink:href] | nuds:objectType[@xlink:href]"/>
@@ -364,9 +355,9 @@
 					<classified_as>
 						<_array>
 							<_object>
-								<id>aat:300264092</id>
+								<id>aat:300435443</id>
 								<type>Type</type>
-								<_label>Objects Facet</_label>
+								<_label>Type of Work</_label>
 							</_object>
 						</_array>
 					</classified_as>

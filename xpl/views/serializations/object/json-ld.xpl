@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 	Author: Ethan Gruber
-	Date: Last modified July 2018
+	Date: Last modified May 2021
 	Function: Determine	the correct pipeline to serialize RDF/XML into JSON-LD for the the symbol or default jsonld pipeline (Nomisma data model), or 
-	call an XSLT transformation for NUDS->JSON-LD for linked.art data model
+	call an XSLT transformation for NUDS->JSON-LD or EpiDoc TEI->JSON-LD for linked.art data model
 -->
 <p:config xmlns:p="http://www.orbeon.com/oxf/pipeline"
 	xmlns:oxf="http://www.orbeon.com/oxf/processors">
@@ -82,11 +82,41 @@
 			
 			<p:choose href="#profile">		
 				<p:when test="profile='linkedart'">
-					<p:processor name="oxf:pipeline">
+					<!-- evalute the namespace of the root element and call either the NUDS or TEI serialization -->
+					<p:processor name="oxf:unsafe-xslt">
 						<p:input name="data" href="#data"/>
-						<p:input name="config" href="../nuds/linkedart-json-ld.xpl"/>
-						<p:output name="data" ref="data"/>
+						<p:input name="config">
+							<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+								<xsl:template match="/">
+									<recordType>
+										<xsl:choose>
+											<!--<xsl:when test="*/namespace-uri()='http://nomisma.org/nudsHoard'">nudsHoard</xsl:when>-->
+											<xsl:when test="*/namespace-uri()='http://nomisma.org/nuds'">nuds</xsl:when>
+											<xsl:when test="*/namespace-uri()='http://www.tei-c.org/ns/1.0'">tei</xsl:when>
+										</xsl:choose>
+									</recordType>
+								</xsl:template>
+							</xsl:stylesheet>
+						</p:input>
+						<p:output name="data" id="recordType"/>
 					</p:processor>
+					
+					<p:choose href="#recordType">				
+						<p:when test="recordType='nuds'">
+							<p:processor name="oxf:pipeline">
+								<p:input name="data" href="#data"/>
+								<p:input name="config" href="../nuds/linkedart-json-ld.xpl"/>
+								<p:output name="data" ref="data"/>
+							</p:processor>
+						</p:when>
+						<p:when test="recordType='tei'">
+							<p:processor name="oxf:pipeline">
+								<p:input name="data" href="#data"/>
+								<p:input name="config" href="../tei/linkedart-json-ld.xpl"/>
+								<p:output name="data" ref="data"/>
+							</p:processor>
+						</p:when>
+					</p:choose>
 				</p:when>
 				<p:otherwise>
 					<p:processor name="oxf:pipeline">

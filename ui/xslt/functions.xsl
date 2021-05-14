@@ -5125,7 +5125,7 @@
 
 		<xsl:choose>
 			<xsl:when test="$name = 'axis'">http://nomisma.org/id/axis</xsl:when>
-			<xsl:when test="$name = 'thickness'">aat:300072633</xsl:when>
+			<xsl:when test="$name = 'thickness' or $name = 'depth'">aat:300072633</xsl:when>
 			<xsl:when test="$name = 'diameter'">aat:300055624</xsl:when>
 			<xsl:when test="$name = 'height'">aat:300055644</xsl:when>
 			<xsl:when test="$name = 'identifier'">aat:300312355</xsl:when>
