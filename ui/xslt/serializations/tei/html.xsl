@@ -245,10 +245,15 @@
 		<div class="row">
 
 			<div class="col-md-6 {if(//config/languages/language[@code = $lang]/@rtl = true()) then 'pull-right' else ''}">
+				
+				<!-- typology and physical condition -->				
 				<xsl:apply-templates select="tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:msDesc"/>
 			</div>
 
-			<div class="col-md-6 {if(//config/languages/language[@code = $lang]/@rtl = true()) then 'pull-right' else ''}"> </div>
+			<div class="col-md-6 {if(//config/languages/language[@code = $lang]/@rtl = true()) then 'pull-right' else ''}">
+				
+				
+			</div>
 		</div>
 
 		<xsl:if test="$geoEnabled = true()">

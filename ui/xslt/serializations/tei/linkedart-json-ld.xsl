@@ -119,6 +119,14 @@
 			<xsl:value-of select="descendant::tei:titleStmt/tei:title"/>
 		</_label>
 
+		<!-- title and identifier -->
+		<identified_by>
+			<_array>
+				<xsl:apply-templates select="descendant::tei:titleStmt/tei:title"/>
+				<xsl:apply-templates select="descendant::tei:msIdentifier/tei:idno[@type = 'inventory']"/>
+			</_array>
+		</identified_by>
+
 		<xsl:apply-templates select="tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:msDesc"/>
 
 		<!--<xsl:apply-templates select="nuds:descMeta"/>-->
@@ -141,6 +149,9 @@
 	</xsl:template>
 
 	<xsl:template match="tei:msDesc">
+
+		<!-- collection -->
+		<xsl:apply-templates select="tei:msIdentifier"/>
 
 		<!-- physical description and general typologies -->
 		<xsl:apply-templates select="tei:physDesc"/>
@@ -165,8 +176,80 @@
 				</_object>
 			</produced_by>
 		</xsl:if>
+		
+		<!-- archaeological context -->
+		<xsl:apply-templates select="tei:history/tei:provenance"/>
 	</xsl:template>
 
+	<xsl:template match="tei:msIdentifier">
+		<xsl:apply-templates select="tei:repository[@ref]"/>
+	</xsl:template>
+	
+	<xsl:template match="tei:repository">
+		<xsl:variable name="uri" select="@ref"/>
+		
+		<current_owner>
+			<_object>
+				<id>
+					<xsl:value-of select="@ref"/>
+					<!--<xsl:value-of select="numishare:resolveUriToCurie($uri, $rdf//*[@rdf:about = $uri])"/>-->
+				</id>
+				<type>Group</type>
+				<_label>
+					<xsl:value-of select="."/>
+				</_label>
+				<!--<classified_as>
+					<_array>
+						<_object>
+							<id/>
+							<type>Type</type>
+							<_label/>
+						</_object>
+					</_array>
+				</classified_as>-->
+			</_object>
+		</current_owner>
+	</xsl:template>
+
+	<xsl:template match="tei:idno[@type = 'inventory']">
+		<_object>
+			<type>Identifier</type>
+			<content>
+				<xsl:value-of select="normalize-space(.)"/>
+			</content>
+			<classified_as>
+				<_array>
+					<_object>
+						<id>
+							<xsl:value-of select="numishare:normalizeClassification('identifier')"/>
+						</id>
+						<type>Type</type>
+						<_label>accession numbers</_label>
+					</_object>
+				</_array>
+			</classified_as>
+		</_object>
+	</xsl:template>
+	
+	<xsl:template match="tei:title">
+		<_object>
+			<type>Name</type>
+			<content>
+				<xsl:value-of select="normalize-space(.)"/>
+			</content>
+			<classified_as>
+				<_array>
+					<_object>
+						<id>aat:300404670</id>
+						<_label>preferred forms</_label>
+						<type>Type</type>
+					</_object>
+				</_array>
+			</classified_as>
+		</_object>
+	</xsl:template>
+
+	<!-- production related entities -->
 	<xsl:template match="tei:origin">
 		<xsl:if test="tei:persName[@ref]">
 			<influenced_by>
@@ -183,40 +266,62 @@
 				</_array>
 			</took_place_at>
 		</xsl:if>
-		
+
 		<xsl:apply-templates select="tei:origDate"/>
 	</xsl:template>
-	
-	<xsl:template match="tei:origDate">
-		<!-- timespan -->		
-		<xsl:if test="@notBefore castable as xs:gYear and @notAfter castable as xs:gYear">
+
+	<xsl:template match="tei:origDate | tei:date">
+		<!-- timespan -->
+		<xsl:if test="((@notBefore castable as xs:gYear or @notBefore castable as xs:gYearMonth or @notBefore castable as xs:date) and (@notAfter castable as xs:gYear or @notAfter castable as xs:gYearMonth or @notAfter castable as xs:date)) or (@when castable as xs:gYear or @when castable as xs:gYearMonth or @when castable as xs:date)">
 			<timespan>
 				<_object>
 					<type>TimeSpan</type>
 					<_label>
-						<xsl:if test="@notBefore">
-							<xsl:value-of select="numishare:normalizeDate(@notBefore)"/>
-						</xsl:if>
-						<xsl:if test="@notBefore and @notAfter">
-							<xsl:text>-</xsl:text>
-						</xsl:if>
-						<xsl:if test="@notAfter">
-							<xsl:value-of select="numishare:normalizeDate(@notAfter)"/>
-						</xsl:if>
+						<!-- if the text node is castable as an xsd datatype, then use that, otherwise generate the label from the @notBefore and @notAfter -->
+						<xsl:choose>
+							<xsl:when test="@when castable as xs:gYear or @when castable as xs:gYearMonth or @when castable as xs:date">
+								<xsl:value-of select="numishare:normalizeDate(@when)"/>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:if test="@notBefore">
+									<xsl:value-of select="numishare:normalizeDate(@notBefore)"/>
+								</xsl:if>
+								<xsl:if test="@notBefore and @notAfter">
+									<xsl:text>-</xsl:text>
+								</xsl:if>
+								<xsl:if test="@notAfter">
+									<xsl:value-of select="numishare:normalizeDate(@notAfter)"/>
+								</xsl:if>
+							</xsl:otherwise>
+						</xsl:choose>
 					</_label>
-					<begin_of_the_begin>
-						<xsl:value-of select="numishare:expandDatetoDateTime(@notBefore, 'begin')"/>
-					</begin_of_the_begin>
-					<end_of_the_end>
-						<xsl:value-of select="numishare:expandDatetoDateTime(@notAfter, 'end')"/>
-					</end_of_the_end>
+					
+					<xsl:choose>
+						<xsl:when test="@when">
+							<begin_of_the_begin>
+								<xsl:value-of select="numishare:expandDatetoDateTime(@when, 'begin')"/>
+							</begin_of_the_begin>
+							<end_of_the_end>
+								<xsl:value-of select="numishare:expandDatetoDateTime(@when, 'end')"/>
+							</end_of_the_end>
+						</xsl:when>
+						<xsl:otherwise>
+							<begin_of_the_begin>
+								<xsl:value-of select="numishare:expandDatetoDateTime(@notBefore, 'begin')"/>
+							</begin_of_the_begin>
+							<end_of_the_end>
+								<xsl:value-of select="numishare:expandDatetoDateTime(@notAfter, 'end')"/>
+							</end_of_the_end>
+						</xsl:otherwise>
+					</xsl:choose>
 				</_object>
 			</timespan>
-		</xsl:if>		
+		</xsl:if>
+		
+		<!-- period -->
 	</xsl:template>
 
 	<xsl:template match="tei:physDesc">
-
 		<!-- typological attributes -->
 		<classified_as>
 			<_array>
@@ -236,8 +341,6 @@
 				</_array>
 			</made_of>
 		</xsl:if>
-
-
 
 		<!-- tei:objectDesc/tei:layoutDesc/tei:layout/tei:rs[@ref]-->
 
@@ -323,6 +426,7 @@
 		</_object>
 	</xsl:template>
 
+	<!-- templates to turn generalizable elements into the proper JSON-LD object structure -->
 	<xsl:template match="tei:material | tei:objectType | tei:rs | tei:persName | tei:orgName | tei:placeName">
 		<xsl:variable name="uri" select="@ref"/>
 
@@ -356,7 +460,7 @@
 					</classified_as>
 				</xsl:when>
 
-				<xsl:when test="@role[not(. = 'region') and not(. = 'statedAuthority')]">
+				<xsl:when test="@role">
 					<xsl:variable name="role">
 						<xsl:choose>
 							<xsl:when test="matches(@role, 'https?://nomisma\.org')">
@@ -386,8 +490,12 @@
 										</xsl:choose>
 									</xsl:when>
 									<xsl:when test="$role = 'productionPlace'">
-										<id>aat:300006031</id>
-										<_label>mints (buildings)</_label>
+										<id>aat:300008347</id>
+										<_label>inhabited places</_label>
+									</xsl:when>
+									<xsl:when test="$role = 'findspot'">
+										<id>aat:300000810</id>
+										<_label>archaeological sites</_label>
 									</xsl:when>
 								</xsl:choose>
 
@@ -398,7 +506,23 @@
 			</xsl:choose>
 		</_object>
 	</xsl:template>
-
-
+	
+	<!-- provenance -->
+	<xsl:template match="tei:provenance">
+		<encountered_by>
+			<_object>
+				<type>Encounter</type>
+				<_label>Find</_label>
+				
+				<xsl:if test="tei:placeName[@ref]">
+					<took_place_at>
+						<xsl:apply-templates select="tei:placeName[@ref]"/>
+					</took_place_at>
+				</xsl:if>
+				
+				<xsl:apply-templates select="tei:date"/>
+			</_object>			
+		</encountered_by>
+	</xsl:template>
 
 </xsl:stylesheet>

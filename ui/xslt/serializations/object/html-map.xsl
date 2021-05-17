@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:nuds="http://nomisma.org/nuds"
-	xmlns:nmo="http://nomisma.org/ontology#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nh="http://nomisma.org/nudsHoard"
+	xmlns:nmo="http://nomisma.org/ontology#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nh="http://nomisma.org/nudsHoard" xmlns:tei="http://www.tei-c.org/ns/1.0"
 	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:numishare="https://github.com/ewg118/numishare" xmlns:res="http://www.w3.org/2005/sparql-results#"
 	exclude-result-prefixes="#all" version="2.0">
 	<xsl:include href="../../functions.xsl"/>
@@ -27,15 +27,27 @@
 				concat(//config/theme/themes_url, //config/theme/orbeon_theme)
 			else
 				concat('http://', doc('input:request')/request/server-name, ':8080/orbeon/themes/', //config/theme/orbeon_theme)"/>
+	
 	<xsl:variable name="recordType">
 		<xsl:choose>
 			<xsl:when test="descendant::nuds:nuds">
 				<xsl:value-of select="//nuds:nuds/@recordType"/>
 			</xsl:when>
 			<xsl:when test="descendant::nh:nudsHoard">hoard</xsl:when>
+			<xsl:when test="descendant::tei:TEI">physical</xsl:when>
 		</xsl:choose>
 	</xsl:variable>
-	<xsl:variable name="id" select="normalize-space(//*[local-name() = 'recordId'])"/>
+	
+	<xsl:variable name="id">
+		<xsl:choose>
+			<xsl:when test="//*[local-name() = 'recordId']">
+				<xsl:value-of select="//*[local-name() = 'recordId']"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="//tei:TEI/@xml:id"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:variable>
 
 	<xsl:variable name="hasFindspots"
 		select="
@@ -63,76 +75,8 @@
 			</xsl:choose>
 		</nudsGroup>
 	</xsl:variable>
-
-	<!-- get non-coin-type RDF in the document -->
-	<xsl:variable name="rdf" as="element()*">
-		<rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:nm="http://nomisma.org/id/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-			xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-			xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:org="http://www.w3.org/ns/org#"
-			xmlns:nomisma="http://nomisma.org/" xmlns:nmo="http://nomisma.org/ontology#">
-			<xsl:variable name="id-param">
-				<xsl:for-each
-					select="
-						distinct-values(descendant::*[not(local-name() = 'typeDesc') and not(local-name() = 'reference')][contains(@xlink:href,
-						'nomisma.org')]/@xlink:href | $nudsGroup/descendant::*[not(local-name() = 'object') and not(local-name() = 'typeDesc')][contains(@xlink:href, 'nomisma.org')]/@xlink:href)">
-					<xsl:value-of select="substring-after(., 'id/')"/>
-					<xsl:if test="not(position() = last())">
-						<xsl:text>|</xsl:text>
-					</xsl:if>
-				</xsl:for-each>
-			</xsl:variable>
-
-			<xsl:variable name="rdf_url" select="concat('http://nomisma.org/apis/getRdf?identifiers=', encode-for-uri($id-param))"/>
-			<xsl:copy-of select="document($rdf_url)/rdf:RDF/*"/>
-		</rdf:RDF>
-	</xsl:variable>
-
+	
 	<xsl:template match="/">
-		<xsl:choose>
-			<xsl:when
-				test="count(descendant::*:otherRecordId[@semantic = 'dcterms:isReplacedBy']) &gt; 1 and descendant::*:control/*:maintenanceStatus = 'cancelledSplit'">
-				<html>
-					<head>
-						<xsl:call-template name="generic_head"/>
-					</head>
-					<body>
-						<div class="container-fluid">
-							<xsl:if test="//config/languages/language[@code = $lang]/@rtl = true()">
-								<xsl:attribute name="style">direction: rtl;</xsl:attribute>
-							</xsl:if>
-							<div class="row">
-								<div class="col-md-12">
-									<h1>
-										<xsl:value-of select="$id"/>
-									</h1>
-									<p>This resource has been split and supplanted by the following new URIs:</p>
-									<ul>
-										<xsl:for-each select="descendant::*:otherRecordId[@semantic = 'dcterms:isReplacedBy']">
-											<xsl:variable name="uri"
-												select="
-													if (matches(., 'https?://')) then
-														.
-													else
-														concat($url, 'id/', .)"/>
-											<li>
-												<a href="{$uri}">
-													<xsl:value-of select="$uri"/>
-												</a>
-											</li>
-										</xsl:for-each>
-									</ul>
-								</div>
-							</div>
-						</div>
-					</body>
-				</html>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:call-template name="contruct_page"/>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>
-	<xsl:template name="contruct_page">
 		<html>
 			<head>
 				<xsl:call-template name="generic_head"/>
@@ -150,7 +94,7 @@
 							<script type="text/javascript" src="{$include_path}/javascript/timemap_full.pack.js"/>
 							<script type="text/javascript" src="{$include_path}/javascript/param.js"/>
 						</xsl:if>
-
+						
 						<script type="text/javascript" src="{$include_path}/javascript/display_map_functions.js"/>
 					</xsl:when>
 					<!-- hoard CSS and JS dependencies -->
@@ -179,14 +123,13 @@
 													<xsl:value-of select="numishare:regularize_node('mint', $lang)"/>
 												</td>
 											</tr>
-											<xsl:if test="$rdf//nmo:Mint[skos:related]">
-												<!-- only display the uncertain mint key if there's an uncertain mint match -->
+											<tr>
 												<td style="background-color:#666666;border:2px solid black;width:50px;"/>							
 												<td style="width:150px;padding-left:6px;">
 													<xsl:value-of select="numishare:regularize_node('mint', $lang)"/>
 													<xsl:text> (uncertain)</xsl:text>
 												</td>
-											</xsl:if>
+											</tr>											
 											<tr>
 												<td style="background-color:#d86458;border:2px solid black;width:50px;"/>
 												<td style="width:100px;padding-left:6px;">
@@ -259,6 +202,7 @@
 			</body>
 		</html>
 	</xsl:template>
+	
 	
 	<xsl:template name="generic_head">
 		<title id="{$id}">
