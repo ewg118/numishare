@@ -1,5 +1,5 @@
 <!-- 	author: Ethan Gruber, American Numismatic Society 
-	last modified: June 2018
+	last modified: May 2021
 	Function: Either upload an image to the config absolute_path for use by the iiif_server (if set) or manually enter image URLs.
 -->
 <xbl:xbl xmlns="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events"
@@ -46,12 +46,8 @@
 							</div>
 						</xforms:group>
 						
-						<div class="row">
-							
-													
+						<div class="row">		
 							<div class="col-md-3">
-
-
 								<xforms:select1 ref="instance('interface-type')" appearance="full" id="interface-type-control">
 									<!--<xforms:label>Image Type</xforms:label>-->
 									<xforms:itemset nodeset="instance('interfaces')/type">
@@ -69,7 +65,6 @@
 										</xforms:action>
 									</xforms:action>
 								</xforms:select1>
-
 							</div>
 
 							<div class="col-md-9">
