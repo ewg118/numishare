@@ -38,131 +38,140 @@
 					</xforms:action>
 
 					<xforms:group ref="$binding">
-						<div>
-							<xforms:select1 ref="instance('interface-type')" appearance="full" id="interface-type-control">
-								<xforms:label>Image Type</xforms:label>
-								<xforms:itemset nodeset="instance('interfaces')/type">
-									<xforms:label ref="."/>
-									<xforms:value ref="@id"/>
-								</xforms:itemset>
-								<xforms:action ev:event="xforms-value-changed">
-									<xforms:action if=". = 'upload'">
-										<xforms:toggle case="upload"/>
-									</xforms:action>
-									<xforms:action if=". = 'manual'">
-										<xforms:toggle case="manual"/>
-									</xforms:action>
-								</xforms:action>
-							</xforms:select1>
-						</div>
-
-
-						<div>
-							<xforms:switch>
-								<xforms:case id="manual">
-									<div class="trigger_container">
-										<xforms:group ref=".[count(mets:file[@USE='thumbnail']) = 0]">
-											<xforms:trigger appearance="minimal">
-												<xforms:label>
-													<span class="glyphicon glyphicon-plus"/> Thumbnail</xforms:label>
-												<xforms:action ev:event="DOMActivate">
-													<xforms:insert context="." nodeset="./child::node()[last()]" origin="instance('file-template')"/>
-													<xforms:setvalue ref="mets:file[last()]/@USE">thumbnail</xforms:setvalue>
-													<xforms:insert context="mets:file[last()]" origin="xforms:attribute('MIMETYPE', 'image/jpeg')"/>
-												</xforms:action>
-											</xforms:trigger>
-										</xforms:group>
-										
-										<xforms:group ref=".[count(mets:file[@USE='reference']) = 0]">
-											<xforms:trigger appearance="minimal">
-												<xforms:label>
-													<span class="glyphicon glyphicon-plus"/> Reference</xforms:label>
-												<xforms:action ev:event="DOMActivate">
-													<xforms:insert context="." nodeset="./child::node()[last()]" origin="instance('file-template')"/>
-													<xforms:setvalue ref="mets:file[last()]/@USE">reference</xforms:setvalue>
-													<xforms:insert context="mets:file[last()]" origin="xforms:attribute('MIMETYPE', 'image/jpeg')"/>
-												</xforms:action>
-											</xforms:trigger>
-										</xforms:group>
-										
-										<xforms:group ref=".[count(mets:file[@USE='iiif']) = 0]">
-											<xforms:trigger appearance="minimal">
-												<xforms:label>
-													<span class="glyphicon glyphicon-plus"/> IIIF Service</xforms:label>
-												<xforms:action ev:event="DOMActivate">
-													<xforms:insert context="." nodeset="./child::node()[last()]" origin="instance('file-template')"/>
-													<xforms:setvalue ref="mets:file[last()]/@USE">iiif</xforms:setvalue>
-												</xforms:action>
-											</xforms:trigger>
-										</xforms:group>
-									</div>
-									
-									<xforms:group ref=".[count(mets:file) = 0]">
-										<div class="bg-danger text-danger alert-box">
-											<p>
-												<span class="glyphicon glyphicon-warning-sign"/>
-												<strong>Warning!</strong> An image is required before the record can be saved.</p>
-										</div>
-									</xforms:group>
-									
-									<xforms:group ref=".[count(mets:file) &gt; 0]">
-										<xforms:repeat nodeset="mets:file">
-											<div>
-												<h4>
-													<xforms:output
-														value="if (@USE='iiif') then 'IIIF Service' else concat(upper-case(substring(@USE, 1, 1)), substring(@USE, 2))"
-													/>
-												</h4>
-												<xforms:trigger appearance="minimal">
-													<xforms:action ev:event="DOMActivate">
-														<xforms:delete nodeset="."/>
-													</xforms:action>
-													<xforms:label>
-														<span class="glyphicon glyphicon-remove"></span>
-													</xforms:label>
-												</xforms:trigger>
-												
-												<!-- create a different input for IIIF services in order to test validity of the URI -->
-												<xforms:group ref=".[@USE = 'iiif']">
-													<xforms:var name="element" select="concat(parent::node()/@USE, '_iiif')"/>
+						<xforms:group ref=".[count(mets:file) = 0]">
+							<div class="alert alert-box alert-danger">
+								<p>
+									<span class="glyphicon glyphicon-warning-sign"/>
+									<strong>Warning!</strong> An image is required before the record can be saved.</p>
+							</div>
+						</xforms:group>
+						
+						<div class="row">
+							
 													
-													<div>
-														<xforms:input ref="instance('control-instance')/*[local-name() = $element]">
-															<xforms:label>URL</xforms:label>
-															<xforms:alert>Must be an absolute URL pattern.</xforms:alert>
-															<xforms:hint>This should be the URL portion that precedes '/info.json'</xforms:hint>
-															<!--<xforms:action ev:event="xforms-value-changed">
-														<!-\- fire a submission to get the info.json for the given IIIF service -\->
-														<xforms:var name="service" select="."/>
-														<xforms:setvalue ref="instance('control-instance')/iiif_service" value="$service"/>
-														<xforms:send submission="get-info-json"/>
-														<!-\- if the JSON successfully loads, then set the value  -\->
-														<xforms:action ev:event="xforms-submit-done">
-															<xforms:action if="instance('control-instance')/obverse_iiif = instance('control-instance')/iiif_service">
-																<xforms:setvalue
-																	ref="instance('object')/nuds:digRep/mets:fileSec/mets:fileGrp[@USE='obverse']/mets:file[@USE='iiif']/mets:FLocat/@xlink:href"
-																	value="instance('control-instance')/obverse_iiif"/>
-															</xforms:action>
-															<xforms:action if="instance('control-instance')/reverse_iiif = instance('control-instance')/iiif_service">
-																<xforms:setvalue
-																	ref="instance('object')/nuds:digRep/mets:fileSec/mets:fileGrp[@USE='reverse']/mets:file[@USE='iiif']/mets:FLocat/@xlink:href"
-																	value="instance('control-instance')/reverse_iiif"/>
-															</xforms:action>
+							<div class="col-md-3">
+
+
+								<xforms:select1 ref="instance('interface-type')" appearance="full" id="interface-type-control">
+									<!--<xforms:label>Image Type</xforms:label>-->
+									<xforms:itemset nodeset="instance('interfaces')/type">
+										<xforms:label ref="."/>
+										<xforms:value ref="@id"/>
+									</xforms:itemset>
+									<xforms:action ev:event="xforms-value-changed">
+										<xforms:action if=". = 'upload'">
+											<xforms:delete nodeset="$binding/*"/>
+											<xforms:toggle case="upload"/>
+										</xforms:action>
+										<xforms:action if=". = 'manual'">
+											<xforms:delete nodeset="$binding/*"/>
+											<xforms:toggle case="manual"/>
+										</xforms:action>
+									</xforms:action>
+								</xforms:select1>
+
+							</div>
+
+							<div class="col-md-9">
+								<xforms:switch>
+									<xforms:case id="manual">
+										<div class="trigger_container">
+											<xforms:group ref=".[count(mets:file[@USE='thumbnail']) = 0]">
+												<xforms:trigger appearance="minimal">
+													<xforms:label>
+														<span class="glyphicon glyphicon-plus"/> Thumbnail</xforms:label>
+													<xforms:action ev:event="DOMActivate">
+														<xforms:insert context="." nodeset="./child::node()[last()]" origin="instance('file-template')"/>
+														<xforms:setvalue ref="mets:file[last()]/@USE">thumbnail</xforms:setvalue>
+														<xforms:insert context="mets:file[last()]" origin="xforms:attribute('MIMETYPE', 'image/jpeg')"/>
+													</xforms:action>
+												</xforms:trigger>
+											</xforms:group>
+
+											<xforms:group ref=".[count(mets:file[@USE='reference']) = 0]">
+												<xforms:trigger appearance="minimal">
+													<xforms:label>
+														<span class="glyphicon glyphicon-plus"/> Reference</xforms:label>
+													<xforms:action ev:event="DOMActivate">
+														<xforms:insert context="." nodeset="./child::node()[last()]" origin="instance('file-template')"/>
+														<xforms:setvalue ref="mets:file[last()]/@USE">reference</xforms:setvalue>
+														<xforms:insert context="mets:file[last()]" origin="xforms:attribute('MIMETYPE', 'image/jpeg')"/>
+													</xforms:action>
+												</xforms:trigger>
+											</xforms:group>
+
+											<xforms:group ref=".[count(mets:file[@USE='iiif']) = 0]">
+												<xforms:trigger appearance="minimal">
+													<xforms:label>
+														<span class="glyphicon glyphicon-plus"/> IIIF Service</xforms:label>
+													<xforms:action ev:event="DOMActivate">
+														<xforms:insert context="." nodeset="./child::node()[last()]" origin="instance('file-template')"/>
+														<xforms:setvalue ref="mets:file[last()]/@USE">iiif</xforms:setvalue>
+													</xforms:action>
+												</xforms:trigger>
+											</xforms:group>
+										</div>
+
+										<xforms:group ref=".[count(mets:file) &gt; 0]">
+											<xforms:repeat nodeset="mets:file">
+												<div>
+													<h4>
+														<xforms:output
+															value="if (@USE='iiif') then 'IIIF Service' else concat(upper-case(substring(@USE, 1, 1)), substring(@USE, 2))"
+														/>
+													</h4>
+													<xforms:trigger appearance="minimal">
+														<xforms:action ev:event="DOMActivate">
+															<xforms:delete nodeset="."/>
 														</xforms:action>
-													</xforms:action>-->
-														</xforms:input>
-													</div>
-												</xforms:group>
-												<xforms:group ref=".[not(@USE = 'iiif')]">
-													<div>
-														<xforms:input ref="mets:FLocat/@xlink:href">
-															<xforms:label>URL</xforms:label>
-															<xforms:alert>Must be an absolute URL pattern.</xforms:alert>
-														</xforms:input>
-													</div>
-												</xforms:group>
-												
-												<!--<xforms:group ref=".[@MIMETYPE]">
+														<xforms:label>
+															<span class="glyphicon glyphicon-remove"/>
+														</xforms:label>
+													</xforms:trigger>
+
+													<!-- create a different input for IIIF services in order to test validity of the URI -->
+													<xforms:group ref=".[@USE = 'iiif']">
+														<xforms:var name="element" select="concat(parent::node()/@USE, '_iiif')"/>
+
+														<div>
+															<xforms:input ref="instance('control-instance')/*[local-name() = $element]">
+																<xforms:label>URL</xforms:label>
+																<xforms:alert>Must be an absolute URL pattern.</xforms:alert>
+																<xforms:hint>This should be the URL portion that precedes '/info.json'</xforms:hint>
+																<xforms:action ev:event="xforms-value-changed">
+																	<!-- fire a submission to get the info.json for the given IIIF service -->
+																	<xforms:var name="service" select="."/>
+																	<xforms:setvalue ref="instance('control-instance')/iiif_service" value="$service"/>
+																	<xforms:send submission="get-info-json"/>
+																	<!-- if the JSON successfully loads, then set the value  -->
+																	<xforms:action ev:event="xforms-submit-done">
+																		<xforms:action
+																			if="instance('control-instance')/obverse_iiif = instance('control-instance')/iiif_service">
+																			<xforms:setvalue
+																				ref="$binding/mets:file[@USE='iiif']/mets:FLocat/@xlink:href"
+																				value="instance('control-instance')/obverse_iiif"/>
+																		</xforms:action>
+																		<xforms:action
+																			if="instance('control-instance')/reverse_iiif = instance('control-instance')/iiif_service">
+																			<xforms:setvalue
+																				ref="$binding/mets:file[@USE='iiif']/mets:FLocat/@xlink:href"
+																				value="instance('control-instance')/reverse_iiif"/>
+																		</xforms:action>
+																	</xforms:action>
+																</xforms:action>
+															</xforms:input>
+														</div>
+													</xforms:group>
+													<xforms:group ref=".[not(@USE = 'iiif')]">
+														<div>
+															<xforms:input ref="mets:FLocat/@xlink:href">
+																<xforms:label>URL</xforms:label>
+																<xforms:alert>Must be an absolute URL pattern.</xforms:alert>
+															</xforms:input>
+														</div>
+													</xforms:group>
+
+													<!--<xforms:group ref=".[@MIMETYPE]">
 												<div>
 													<xforms:select1 ref="@MIMETYPE">
 														<xforms:label>MIME Type</xforms:label>
@@ -173,55 +182,56 @@
 													</xforms:select1>
 												</div>
 											</xforms:group>-->
-											</div>
-										</xforms:repeat>
-									</xforms:group>
-								</xforms:case>
-								<xforms:case id="upload">
-									
-									<xforms:group ref=".[not(mets:file[@USE='iiif'])]">
-										<h4>Upload Image to IIIF Server</h4>
-										<xforms:upload ref="instance('file')" xxforms:size="60">
-											<xforms:filename ref="@filename"/>
-											<xforms:mediatype ref="@mediatype"/>
-											<xxforms:size ref="@size"/>
-										</xforms:upload>
-										
-										<xforms:trigger>
-											<xforms:label>Upload</xforms:label>
-											<xforms:action ev:event="DOMActivate">
-												<xforms:send submission="upload-resize"/>
-												<xforms:action ev:event="xforms-submit-done">
-													<xforms:setvalue ref="instance('control-instance')/side" value="substring($binding/@USE, 1, 3)"/>
-													<xforms:setvalue ref="instance('control-instance')/id"
-														value="$binding/ancestor::nuds:nuds/nuds:control/nuds:recordId"/>
-													
-													<!-- set the parameters for moving the file -->
-													<xforms:setvalue ref="instance('generator-config')/url" value="instance('file')"/>
-													<xforms:setvalue ref="instance('generator-config')/content-type" value="instance('file')/@mediatype"/>
-													
-													<xforms:var name="filename"
-														select="concat(instance('control-instance')/id, '.', instance('control-instance')/side, '.jpg')"/>
-													<xforms:setvalue ref="instance('serializer-config')/url"
-														value="concat(instance('config')/images/absolute_path, '/', $filename)"/>
-													<xforms:insert nodeset="instance('dump')"
-														origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/xforms/move-image.xpl', ('generator-config', 'serializer-config'), (instance('generator-config'), instance('serializer-config')), 'data')"/>
-													
-													<!-- set the IIIF Service metadata -->
-													<xforms:insert context="." nodeset="./child::node()[last()]" origin="instance('file-template')"/>
-													<xforms:setvalue ref="mets:file[last()]/@USE">iiif</xforms:setvalue>
-													<xforms:setvalue ref="$binding/mets:file[@USE='iiif']/mets:FLocat/@xlink:href"
-														value="concat(instance('config')/images/iiif_server, encode-for-uri($filename))"/>
+												</div>
+											</xforms:repeat>
+										</xforms:group>
+									</xforms:case>
+									<xforms:case id="upload">
+
+										<xforms:group ref=".[not(mets:file[@USE='iiif'])]">
+											<h4>Upload Image to IIIF Server</h4>
+											<xforms:upload ref="instance('file')" xxforms:size="60">
+												<xforms:filename ref="@filename"/>
+												<xforms:mediatype ref="@mediatype"/>
+												<xxforms:size ref="@size"/>
+											</xforms:upload>
+
+											<xforms:trigger>
+												<xforms:label>Upload</xforms:label>
+												<xforms:action ev:event="DOMActivate">
+													<xforms:send submission="upload-resize"/>
+													<xforms:action ev:event="xforms-submit-done">
+														<xforms:setvalue ref="instance('control-instance')/side" value="substring($binding/@USE, 1, 3)"/>
+														<xforms:setvalue ref="instance('control-instance')/id"
+															value="$binding/ancestor::nuds:nuds/nuds:control/nuds:recordId"/>
+
+														<!-- set the parameters for moving the file -->
+														<xforms:setvalue ref="instance('generator-config')/url" value="instance('file')"/>
+														<xforms:setvalue ref="instance('generator-config')/content-type" value="instance('file')/@mediatype"/>
+
+														<xforms:var name="filename"
+															select="concat(instance('control-instance')/id, '.', instance('control-instance')/side, '.jpg')"/>
+														<xforms:setvalue ref="instance('serializer-config')/url"
+															value="concat(instance('config')/images/absolute_path, '/', $filename)"/>
+														<xforms:insert nodeset="instance('dump')"
+															origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/xforms/move-image.xpl', ('generator-config', 'serializer-config'), (instance('generator-config'), instance('serializer-config')), 'data')"/>
+
+														<!-- set the IIIF Service metadata -->
+														<xforms:insert context="." nodeset="./child::node()[last()]" origin="instance('file-template')"/>
+														<xforms:setvalue ref="mets:file[last()]/@USE">iiif</xforms:setvalue>
+														<xforms:setvalue ref="$binding/mets:file[@USE='iiif']/mets:FLocat/@xlink:href"
+															value="concat(instance('config')/images/iiif_server, encode-for-uri($filename))"/>
+													</xforms:action>
 												</xforms:action>
-											</xforms:action>
-										</xforms:trigger>
-									</xforms:group>
-								</xforms:case>
-							</xforms:switch>
+											</xforms:trigger>
+										</xforms:group>
+									</xforms:case>
+								</xforms:switch>
+							</div>
 						</div>
-						
+
 					</xforms:group>
-					<!--<fr:xforms-inspector/>-->
+					<fr:xforms-inspector/>
 
 					<!-- ***********************  DIALOG INTERNAL MODEL *********************** -->
 					<xforms:model id="file-upload-model" xmlns:xi="http://www.w3.org/2001/XInclude">
@@ -307,6 +317,12 @@
 						<xforms:instance id="iiif-response">
 							<xml xmlns=""/>
 						</xforms:instance>
+						
+						<!-- ********** BINDINGS ********** -->
+						<xforms:bind nodeset="instance('control-instance')">
+							<xforms:bind nodeset="obverse_iiif" required="true()" constraint="matches(., '(https?|ftp)://(-\.)?([^\s/?\.#-]+\.?)+(/[^\s]*)?$')"/>
+							<xforms:bind nodeset="reverse_iiif" required="true()" constraint="matches(., '(https?|ftp)://(-\.)?([^\s/?\.#-]+\.?)+(/[^\s]*)?$')"/>
+						</xforms:bind>
 
 
 						<!-- ***** SUBMISSIONS ***** -->
@@ -316,7 +332,7 @@
 							<xforms:header>
 								<xforms:name>User-Agent</xforms:name>
 								<xforms:value>XForms/Numishare</xforms:value>
-							</xforms:header>							
+							</xforms:header>
 							<!-- if the response is not valid JSON -->
 							<xforms:message ev:event="xforms-submit-error" level="modal">Unable to get a valid JSON response from the IIIF service
 								URI.</xforms:message>

@@ -245,14 +245,13 @@
 		<div class="row">
 
 			<div class="col-md-6 {if(//config/languages/language[@code = $lang]/@rtl = true()) then 'pull-right' else ''}">
-				
-				<!-- typology and physical condition -->				
-				<xsl:apply-templates select="tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:msDesc"/>
+
+				<!-- typology and physical condition -->
+				<xsl:apply-templates select="tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:msDesc" mode="desc"/>
 			</div>
 
 			<div class="col-md-6 {if(//config/languages/language[@code = $lang]/@rtl = true()) then 'pull-right' else ''}">
-				
-				
+				<xsl:apply-templates select="tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:msDesc" mode="history"/>
 			</div>
 		</div>
 
@@ -266,8 +265,11 @@
 	</xsl:template>
 
 	<!-- TEI templates -->
-	<xsl:template match="tei:msDesc">
+	<xsl:template match="tei:msDesc" mode="desc">
 		<xsl:apply-templates select="tei:physDesc"/>
+	</xsl:template>
+
+	<xsl:template match="tei:msDesc" mode="history">
 		<xsl:apply-templates select="tei:history"/>
 	</xsl:template>
 
@@ -323,6 +325,7 @@
 			<ul>
 				<xsl:apply-templates select="tei:origin"/>
 				<xsl:apply-templates select="tei:provenance"/>
+				<xsl:apply-templates select="ancestor::tei:msDesc/tei:msIdentifier"/>
 			</ul>
 		</div>
 	</xsl:template>
@@ -349,8 +352,19 @@
 		</li>
 	</xsl:template>
 
+	<xsl:template match="tei:msIdentifier">
+		<li>
+			<h4>
+				<xsl:value-of select="numishare:regularize_node('collection', $lang)"/>
+			</h4>
+			<ul>
+				<xsl:apply-templates select="tei:repository | tei:idno"/>
+			</ul>
+		</li>
+	</xsl:template>
+
 	<!-- metadata elements -->
-	<xsl:template match="tei:objectType | tei:material | tei:rs | tei:measure | tei:dimensions/* | tei:persName | tei:placeName | tei:origDate | tei:date">
+	<xsl:template match="tei:objectType | tei:material | tei:rs | tei:measure | tei:dimensions/* | tei:persName | tei:placeName | tei:origDate | tei:date | tei:idno | tei:repository">
 		<xsl:variable name="href" select="@ref"/>
 		<xsl:variable name="field">
 			<xsl:choose>
@@ -364,10 +378,12 @@
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:when>
-				<xsl:when test="string(@type)">
-					<!-- convert EpiDoc 'execution' with numismatic 'manufacture' -->
+				<xsl:when test="string(@type)">					
 					<xsl:choose>
+						<!-- convert EpiDoc 'execution' with numismatic 'manufacture' -->
 						<xsl:when test="@type = 'execution'">manufacture</xsl:when>
+						<!-- inventory, accession, etc. numbers labeled identifier -->
+						<xsl:when test="@type = 'inventory'">identifier</xsl:when>
 						<xsl:otherwise>
 							<xsl:value-of select="@type"/>
 						</xsl:otherwise>
@@ -619,7 +635,7 @@
 		<script type="text/javascript" src="https://unpkg.com/leaflet@1.0.0/dist/leaflet.js"/>
 		<script type="text/javascript" src="{$include_path}/javascript/leaflet.ajax.min.js"/>
 	</xsl:template>
-	
+
 	<!--***************************************** OPTIONS BAR **************************************** -->
 	<xsl:template name="icons">
 		<div class="row pull-right icons">
@@ -643,7 +659,7 @@
 					<li>
 						<a href="{$id}.jsonld?profile=linkedart">Linked.art JSON-LD</a>
 					</li>
-					<xsl:if test="$geoEnabled">						
+					<xsl:if test="$geoEnabled">
 						<li>
 							<a href="{$id}.geojson">GeoJSON</a>
 						</li>
@@ -656,7 +672,7 @@
 							<xsl:text> </xsl:text>
 							<a href="http://numismatics.org/mirador/?manifest={encode-for-uri($manifestURI)}">(view)</a>
 						</li>
-					</xsl:if>-->					
+					</xsl:if>-->
 				</ul>
 			</div>
 		</div>
