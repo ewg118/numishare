@@ -152,6 +152,12 @@
 																				ref="$binding/mets:file[@USE='iiif']/mets:FLocat/@xlink:href"
 																				value="instance('control-instance')/reverse_iiif"/>
 																		</xforms:action>
+																		<xforms:action
+																			if="instance('control-instance')/combined_iiif = instance('control-instance')/iiif_service">
+																			<xforms:setvalue
+																				ref="$binding/mets:file[@USE='iiif']/mets:FLocat/@xlink:href"
+																				value="instance('control-instance')/combined_iiif"/>
+																		</xforms:action>
 																	</xforms:action>
 																</xforms:action>
 															</xforms:input>
@@ -240,6 +246,7 @@
 								<collection-name/>
 								<id/>
 								<side/>
+								<combined_iiif/>
 								<obverse_iiif/>
 								<reverse_iiif/>
 								<iiif_service/>
