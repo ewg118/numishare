@@ -53,7 +53,7 @@
 				concat(//config/theme/themes_url, //config/theme/orbeon_theme)
 			else
 				concat('http://', doc('input:request')/request/server-name, ':8080/orbeon/themes/', //config/theme/orbeon_theme)"/>
-	<xsl:variable name="id" select="//tei:TEI/@xml:id"/>
+	<xsl:variable name="id" select="descendant::tei:idno[@type='filename']"/>
 	<xsl:variable name="objectUri"
 		select="
 			if (/content/config/uri_space) then

@@ -16,7 +16,7 @@
 	exclude-result-prefixes="xs xsl nuds nh tei xlink gml numishare" version="2.0">
 
 	<xsl:template match="tei:TEI" mode="nomisma">
-		<xsl:variable name="id" select="@xml:id"/>
+		<xsl:variable name="id" select="descendant::tei:idno[@type='filename']"/>
 		
 		<xsl:element name="nmo:NumismaticObject">
 			<xsl:attribute name="rdf:about">

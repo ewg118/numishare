@@ -11,7 +11,7 @@
 
 	<!-- config variables -->
 	<xsl:variable name="url" select="/content/config/url"/>
-	<xsl:variable name="id" select="/content/tei:TEI/@xml:id"/>
+	<xsl:variable name="id" select="descendant::tei:idno[@type='filename']"/>
 	<xsl:variable name="objectUri"
 		select="
 			if (/content/config/uri_space) then

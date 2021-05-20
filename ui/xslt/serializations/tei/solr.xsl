@@ -24,7 +24,7 @@
 
 	<xsl:template match="tei:TEI">
 		<xsl:param name="lang"/>
-		<xsl:variable name="id" select="@xml:id"/>
+		<xsl:variable name="id" select="descendant::tei:idno[@type='filename']"/>
 
 		<doc>
 			<field name="id">

@@ -44,7 +44,7 @@
 				<xsl:value-of select="//*[local-name() = 'recordId']"/>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:value-of select="//tei:TEI/@xml:id"/>
+				<xsl:value-of select="descendant::tei:idno[@type='filename']"/>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:variable>
