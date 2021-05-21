@@ -53,7 +53,7 @@
 				concat(//config/theme/themes_url, //config/theme/orbeon_theme)
 			else
 				concat('http://', doc('input:request')/request/server-name, ':8080/orbeon/themes/', //config/theme/orbeon_theme)"/>
-	<xsl:variable name="id" select="descendant::tei:idno[@type='filename']"/>
+	<xsl:variable name="id" select="descendant::tei:idno[@type = 'filename']"/>
 	<xsl:variable name="objectUri"
 		select="
 			if (/content/config/uri_space) then
@@ -175,7 +175,7 @@
 			<head>
 				<xsl:call-template name="generic_head"/>
 				<!--- IIIF -->
-				<xsl:if test="descendant::mets:file[@USE = 'iiif']">
+				<xsl:if test="descendant::tei:graphic[@n = 'iiif']">
 					<script type="text/javascript" src="{$include_path}/javascript/leaflet-iiif.js"/>
 					<script type="text/javascript" src="{$include_path}/javascript/display_iiif_functions.js"/>
 				</xsl:if>
@@ -242,10 +242,32 @@
 			</div>
 		</div>
 
+		<!-- evaluate whether there are images -->
+		<xsl:choose>
+			<xsl:when test="descendant::tei:surface">
+				<div class="row">
+					<div class="col-md-4">
+						<xsl:call-template name="image">
+							<xsl:with-param name="side">obverse</xsl:with-param>
+						</xsl:call-template>
+						<xsl:call-template name="image">
+							<xsl:with-param name="side">reverse</xsl:with-param>
+						</xsl:call-template>
+					</div>
+					<div class="col-md-8">
+						<xsl:call-template name="metadata-container"/>
+					</div>
+				</div>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:call-template name="metadata-container"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template name="metadata-container">
 		<div class="row">
-
 			<div class="col-md-6 {if(//config/languages/language[@code = $lang]/@rtl = true()) then 'pull-right' else ''}">
-
 				<!-- typology and physical condition -->
 				<xsl:apply-templates select="tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:msDesc" mode="desc"/>
 			</div>
@@ -364,7 +386,8 @@
 	</xsl:template>
 
 	<!-- metadata elements -->
-	<xsl:template match="tei:objectType | tei:material | tei:rs | tei:measure | tei:dimensions/* | tei:persName | tei:placeName | tei:origDate | tei:date | tei:idno | tei:repository">
+	<xsl:template
+		match="tei:objectType | tei:material | tei:rs | tei:measure | tei:dimensions/* | tei:persName | tei:placeName | tei:origDate | tei:date | tei:idno | tei:repository">
 		<xsl:variable name="href" select="@ref"/>
 		<xsl:variable name="field">
 			<xsl:choose>
@@ -378,7 +401,7 @@
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:when>
-				<xsl:when test="string(@type)">					
+				<xsl:when test="string(@type)">
 					<xsl:choose>
 						<!-- convert EpiDoc 'execution' with numismatic 'manufacture' -->
 						<xsl:when test="@type = 'execution'">manufacture</xsl:when>
@@ -483,6 +506,127 @@
 		</li>
 	</xsl:template>
 
+	<!-- textual templates -->
+	<xsl:template match="tei:div" mode="image-caption">
+		<xsl:variable name="side" select="@n"/>
+		
+		<div>
+			<strong>
+				<xsl:value-of select="numishare:regularize_node($side, $lang)"/>
+				<xsl:choose>
+					<xsl:when test="$lang = 'de'">; </xsl:when>
+					<xsl:otherwise>: </xsl:otherwise>
+				</xsl:choose>
+			</strong>
+			<xsl:apply-templates select="tei:ab | tei:choice"/>
+			
+			<!-- display translation, if available -->
+			<xsl:if test="ancestor::tei:body/tei:div[@type = 'translation']/tei:div[@n = $side]">
+				<xsl:text> [</xsl:text>
+				<xsl:value-of select="numishare:regularize_node('translation', $lang)"/>
+				<xsl:choose>
+					<xsl:when test="$lang = 'de'">; </xsl:when>
+					<xsl:otherwise>: </xsl:otherwise>
+				</xsl:choose>
+				<xsl:apply-templates select="ancestor::tei:body/tei:div[@type = 'translation']/tei:div[@n = $side]/tei:ab"/>
+				<xsl:text>] </xsl:text>
+			</xsl:if>
+			
+			<xsl:if test="tei:ab and tei:figure">
+				<xsl:text> - </xsl:text>
+			</xsl:if>
+			
+			<!-- apply language-specific type description templates -->
+			<xsl:choose>
+				<xsl:when test="tei:figure/tei:figDesc[@xml:lang = $lang]">
+					<xsl:apply-templates select="tei:figure/tei:figDesc[@xml:lang = $lang]"/>
+				</xsl:when>
+				<xsl:when test="tei:figure/tei:figDesc[@xml:lang = 'en']">
+					<xsl:apply-templates select="tei:figure/tei:figDesc[@xml:lang = 'en']"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:apply-templates select="tei:figure/tei:figDesc[1]"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</div>
+	</xsl:template>
+
+	<xsl:template match="tei:gap">
+		<xsl:text>[gap: </xsl:text>
+		<i>
+			<xsl:value-of select="@reason"/>
+		</i>
+		<xsl:text>]</xsl:text>
+	</xsl:template>
+
+	<xsl:template match="tei:ab">
+		<xsl:apply-templates/>
+
+		<xsl:apply-templates select="@rend"/>
+
+		<xsl:if test="not(position() = last())">
+			<xsl:text> / </xsl:text>
+		</xsl:if>
+	</xsl:template>
+
+	<xsl:template match="tei:seg | tei:am | tei:g">
+
+		<xsl:choose>
+			<xsl:when test="child::*">
+				<xsl:apply-templates select="*"/>
+			</xsl:when>
+			<xsl:when test="string-length(normalize-space(.)) &gt; 0">
+				<xsl:apply-templates select="text()"/>
+			</xsl:when>
+		</xsl:choose>
+
+		<xsl:if test="self::tei:g and starts-with(@ref, 'http://numismatics.org')">
+			<xsl:variable name="href" select="@ref"/>
+			<xsl:apply-templates select="$rdf/*[@rdf:about = $href]"/>
+
+			<a href="{$href}" target="_blank" class="external_link">
+				<span class="glyphicon glyphicon-new-window"/>
+			</a>
+		</xsl:if>
+
+		<xsl:apply-templates select="@rend"/>
+
+		<xsl:if test="tei:unclear">
+			<i> (unclear)</i>
+		</xsl:if>
+	</xsl:template>
+
+	<xsl:template match="tei:choice">
+		<xsl:for-each select="*">
+			<xsl:apply-templates select="self::node()"/>
+			<xsl:if test="not(position() = last())">
+				<i> or </i>
+			</xsl:if>
+		</xsl:for-each>
+	</xsl:template>
+
+	<xsl:template match="tei:lb | tei:cb">
+		<xsl:choose>
+			<xsl:when test="@n">
+				<i>
+					<xsl:text>(</xsl:text>
+					<xsl:value-of select="@n"/>
+					<xsl:text>) </xsl:text>
+				</i>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:text>/</xsl:text>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+	
+	<xsl:template match="@rend">
+		<i>
+			<xsl:text> (</xsl:text>
+			<xsl:value-of select="."/>
+			<xsl:text>)</xsl:text>
+		</i>
+	</xsl:template>
 
 	<!-- structural templates -->
 	<xsl:template name="display-label">
@@ -634,6 +778,60 @@
 		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.0/dist/leaflet.css"/>
 		<script type="text/javascript" src="https://unpkg.com/leaflet@1.0.0/dist/leaflet.js"/>
 		<script type="text/javascript" src="{$include_path}/javascript/leaflet.ajax.min.js"/>
+	</xsl:template>
+
+	<xsl:template name="image">
+		<xsl:param name="side"/>
+		<xsl:variable name="reference-image" select="//tei:surface[@n = $side]/tei:graphic[@n = 'reference']/@url"/>
+		<xsl:variable name="iiif-service" select="//tei:surface[@n = $side]/tei:graphic[@n = 'iiif']/@url"/>
+
+		<!-- use the 'archive' direct URL for full-size download if available, otherwise like to IIIF service -->
+		<xsl:variable name="full-url">
+			<xsl:choose>
+				<xsl:when test="//tei:surface[@n = $side]/tei:graphic[@n = 'archive']/@url">
+					<xsl:value-of select="//tei:surface[@n = $side]/tei:graphic[@n = 'archive']/@url"/>
+				</xsl:when>
+				<xsl:when test="string($iiif-service)">
+					<xsl:value-of select="concat($iiif-service, '/full/full/0/default.jpg')"/>
+				</xsl:when>
+			</xsl:choose>
+		</xsl:variable>
+
+		<div class="image-container">
+			<xsl:choose>
+				<xsl:when test="string($iiif-service)">
+					<div id="{substring($side, 1, 3)}-iiif-container" class="iiif-container"/>
+					<span class="hidden" id="{substring($side, 1, 3)}-iiif-service">
+						<xsl:value-of select="$iiif-service"/>
+					</span>
+					<noscript>
+						<img src="{concat($iiif-service, '/full/400,/0/default.jpg')}" property="foaf:depiction" alt="{$side}"/>
+					</noscript>
+					<div>
+						<a href="{$full-url}" title="Full resolution image" rel="nofollow"><span class="glyphicon glyphicon-download-alt"/> Download full
+							resolution image</a>
+					</div>
+				</xsl:when>
+				<xsl:when test="string($reference-image)">
+					<xsl:variable name="image_url"
+						select="
+							if (matches($reference-image, 'https?://')) then
+								$reference-image
+							else
+								concat($display_path, $reference-image)"/>
+
+					<img src="{$image_url}" property="foaf:depiction" alt="{$side}"/>
+
+					<xsl:if test="string($full-url)">
+						<div>
+							<a href="{$full-url}" title="Full resolution image" rel="nofollow"><span class="glyphicon glyphicon-download-alt"/> Download full
+								resolution image</a>
+						</div>
+					</xsl:if>
+				</xsl:when>
+			</xsl:choose>
+			<xsl:apply-templates select="//tei:TEI/tei:text/tei:body/tei:div[@type = 'edition']/tei:div[@type = 'textpart'][@n = $side]" mode="image-caption"/>
+		</div>
 	</xsl:template>
 
 	<!--***************************************** OPTIONS BAR **************************************** -->

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Author: Ethan Gruber
-	Modified: April 2021
+	Modified: May 2021
 	Function: This stylesheet reads the incoming TEI model and serializes into a Solr document
 -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:nm="http://nomisma.org/id/" xmlns:xs="http://www.w3.org/2001/XMLSchema"
@@ -79,6 +79,14 @@
 			<xsl:apply-templates select="tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:msDesc">
 				<xsl:with-param name="lang" select="$lang"/>
 			</xsl:apply-templates>
+			
+			<!--body -->
+			<xsl:apply-templates select="tei:text/tei:body">
+				<xsl:with-param name="lang" select="$lang"/>
+			</xsl:apply-templates>
+			
+			<!-- images -->
+			<xsl:apply-templates select="tei:facsimile"/>
 
 			<!-- text -->
 			<field name="fulltext">
@@ -99,6 +107,94 @@
 		</field>
 		<field name="title_text">
 			<xsl:value-of select="."/>
+		</field>
+	</xsl:template>
+	
+	<xsl:template match="tei:body">
+		<xsl:param name="lang"/>
+		
+		<xsl:apply-templates select="tei:div[@type = 'edition']/tei:div[@type='textpart'][@n]">
+			<xsl:with-param name="lang" select="$lang"/>
+		</xsl:apply-templates>
+	</xsl:template>
+	
+	<xsl:template match="tei:div[@type='textpart']">
+		<xsl:param name="lang"/>
+		
+		<xsl:variable name="side" select="@n"/>
+		
+		<!-- include language-specific type description -->
+		<xsl:if test="tei:figure/tei:figDesc">
+			<xsl:choose>
+				<xsl:when test="tei:figure/tei:figDesc[@xml:lang = $lang]">
+					<field name="{$side}_type_display">
+						<xsl:value-of select="normalize-space(tei:figure/tei:figDesc[@xml:lang = $lang])"/>
+					</field>
+					<field name="{$side}_type_text">
+						<xsl:value-of select="normalize-space(tei:figure/tei:figDesc[@xml:lang = $lang])"/>
+					</field>
+				</xsl:when>
+				<xsl:when test="tei:figure/tei:figDesc[@xml:lang = 'en']">
+					<field name="{$side}_type_display">
+						<xsl:value-of select="normalize-space(tei:figure/tei:figDesc[@xml:lang = 'en'])"/>
+					</field>
+					<field name="{$side}_type_text">
+						<xsl:value-of select="normalize-space(tei:figure/tei:figDesc[@xml:lang = 'en'])"/>
+					</field>
+				</xsl:when>
+				<xsl:otherwise>
+					<field name="{$side}_type_display">
+						<xsl:value-of select="normalize-space(tei:figure/tei:figDesc[1])"/>
+					</field>
+					<field name="{$side}_type_text">
+						<xsl:value-of select="normalize-space(tei:figure/tei:figDesc[1])"/>
+					</field>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:if>
+		
+		<xsl:apply-templates select="tei:ab">
+			<xsl:with-param name="lang" select="$lang"/>
+			<xsl:with-param name="side" select="$side"/>
+		</xsl:apply-templates>
+		
+	</xsl:template>
+	
+	<xsl:template match="tei:ab">
+		<xsl:param name="side"/>
+		
+		
+		<field name="{$side}_leg_display">
+			<xsl:choose>
+				<xsl:when test="tei:g">
+					<xsl:value-of select="string-join(tei:g, '')"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="normalize-space(.)"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</field>
+		
+		<field name="{$side}_leg_text">
+			<xsl:choose>
+				<xsl:when test="tei:g">
+					<xsl:value-of select="string-join(tei:g, '')"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="normalize-space(.)"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</field>
+		
+		<field name="{$side}_legendCondensed_text">
+			<xsl:choose>
+				<xsl:when test="tei:g">
+					<xsl:value-of select="replace(string-join(tei:g, ''), ' ', '')"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="replace(string-join(., ' '), ' ', '')"/>
+				</xsl:otherwise>
+			</xsl:choose>
 		</field>
 	</xsl:template>
 
@@ -418,6 +514,36 @@
 				</xsl:if>
 			</xsl:if>
 		</xsl:if>
+	</xsl:template>
+	
+	<!-- images -->
+	<xsl:template match="tei:facsimile">
+		<xsl:for-each select="tei:surface[@n = 'obverse' or @n = 'reverse' or @n = 'combined']">
+			<xsl:variable name="side" select="substring(@n, 1, 3)"/>
+			
+			<xsl:choose>
+				<xsl:when test="count(tei:graphic) = 1 and tei:graphic[@n = 'iiif']">
+					<field name="iiif_{$side}">
+						<xsl:value-of select="tei:graphic/@url"/>
+					</field>
+					<field name="thumbnail_{$side}">
+						<xsl:value-of select="concat(tei:graphic/@url, '/full/,120/0/default.jpg')"/>
+					</field>
+					<field name="reference_{$side}">
+						<xsl:value-of select="concat(tei:graphic/@url, '/full/400,/0/default.jpg')"/>
+					</field>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:for-each select="tei:graphic[@n = 'iiif' or @n = 'archive' or @n = 'thumbnail' or @n = 'reference']">
+						<field name="{@n}_{$side}">
+							<xsl:value-of select="tei:graphic/@url"/>
+						</field>
+					</xsl:for-each>
+				</xsl:otherwise>
+			</xsl:choose>
+			
+		</xsl:for-each>
+		<field name="imagesavailable">true</field>
 	</xsl:template>
 
 	<xsl:template name="matches">
