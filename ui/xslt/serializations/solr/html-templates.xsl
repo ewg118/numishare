@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Author: Ethan Gruber
-	Date last modified: April 2019
+	Date last modified: May 2021
 	Function: Generic templates for serializing Solr documents for browse, ajax_results, and the compare section into HTML.
 		Inludes templates for serializing the numishareResults XML document into HTML for example specimens for coin type corpora -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema"
@@ -252,32 +252,37 @@
 							</xsl:for-each>
 						</dd>
 					</xsl:if>
-					<xsl:if test="string(arr[@name = 'mint_facet']/str[1])">
-						<dt>
-							<xsl:value-of select="numishare:regularize_node('mint', $lang)"/>
-						</dt>
-						<dd>
-							<xsl:for-each select="arr[@name = 'mint_facet']/str">
-								<xsl:value-of select="."/>
-								<xsl:if test="not(position() = last())">
-									<xsl:text>, </xsl:text>
-								</xsl:if>
-							</xsl:for-each>
-						</dd>
-					</xsl:if>
-					<xsl:if test="string(arr[@name = 'productionPlace_facet']/str[1])">
-						<dt>
-							<xsl:value-of select="numishare:regularize_node('productionPlace', $lang)"/>
-						</dt>
-						<dd>
-							<xsl:for-each select="arr[@name = 'productionPlace_facet']/str">
-								<xsl:value-of select="."/>
-								<xsl:if test="not(position() = last())">
-									<xsl:text>, </xsl:text>
-								</xsl:if>
-							</xsl:for-each>
-						</dd>
-					</xsl:if>
+					
+					<!-- display productionPlace instead of mint, if applicable -->
+					<xsl:choose>
+						<xsl:when test="string(arr[@name = 'productionPlace_facet']/str[1])">
+							<dt>
+								<xsl:value-of select="numishare:regularize_node('productionPlace', $lang)"/>
+							</dt>
+							<dd>
+								<xsl:for-each select="arr[@name = 'productionPlace_facet']/str">
+									<xsl:value-of select="."/>
+									<xsl:if test="not(position() = last())">
+										<xsl:text>, </xsl:text>
+									</xsl:if>
+								</xsl:for-each>
+							</dd>
+						</xsl:when>
+						<xsl:when test="string(arr[@name = 'mint_facet']/str[1])">
+							<dt>
+								<xsl:value-of select="numishare:regularize_node('mint', $lang)"/>
+							</dt>
+							<dd>
+								<xsl:for-each select="arr[@name = 'mint_facet']/str">
+									<xsl:value-of select="."/>
+									<xsl:if test="not(position() = last())">
+										<xsl:text>, </xsl:text>
+									</xsl:if>
+								</xsl:for-each>
+							</dd>
+						</xsl:when>
+					</xsl:choose>					
+					
 					<xsl:if test="string(str[@name = 'obv_leg_display']) or string(str[@name = 'obv_type_display'])">
 						<dt>
 							<xsl:value-of select="numishare:regularize_node('obverse', $lang)"/>

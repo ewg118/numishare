@@ -121,7 +121,7 @@
 	<xsl:template match="tei:div[@type='textpart']">
 		<xsl:param name="lang"/>
 		
-		<xsl:variable name="side" select="@n"/>
+		<xsl:variable name="side" select="substring(@n, 1, 3)"/>
 		
 		<!-- include language-specific type description -->
 		<xsl:if test="tei:figure/tei:figDesc">
