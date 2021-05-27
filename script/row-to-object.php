@@ -35,8 +35,9 @@ function parse_row($row, $count, $fileName){
 		$id = substr(trim($ref), -1) == '?' ? str_replace('?', '', trim($ref)) : trim($ref);
 		$uncertain = substr(trim($ref), -1) == '?' ? true : false;
 		
+		//first, look for URIs: Tokens of the Roman Empire, RPC Online, Iron Age Coins in Britain
 		if (preg_match('/^https?:\/\//', $ref)){
-		    //first, look for URIs (currently for Tokens of the Roman Empire)
+		    
 		    $uri = $id;
 		    $pieces = explode('/', $uri);
 		    $domain = $pieces[2];
@@ -53,7 +54,7 @@ function parse_row($row, $count, $fileName){
 		        $record['title'] = $coinTypes[$uri]['title'] . '. ' . $accnum;
 		    } else {
 		        $file_headers = @get_headers($uri);
-		        if ($file_headers[0] == 'HTTP/1.1 200 OK'){
+		        if (strpos($file_headers[0], '200') !== FALSE){
 		            echo "Found {$uri}\n";
 		            //generate the title from the NUDS
 		            $titles = generate_title_from_type($uri);
