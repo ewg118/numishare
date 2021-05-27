@@ -85,7 +85,7 @@ function parse_row($row, $count, $fileName){
 		        $record['title'] = $coinTypes[$uri]['title'] . '. ' . $accnum;
 		    } else {
 		        $file_headers = @get_headers($uri);		        
-		        if ($file_headers[0] == 'HTTP/1.1 200 OK'){
+		        if (strpos($file_headers[0], '200') !== FALSE){
 		            echo "Found {$uri}\n";
 		            //generate the title from the NUDS
 		            $titles = generate_title_from_type($uri);
@@ -176,7 +176,7 @@ function parse_row($row, $count, $fileName){
 					}
 				} else {
 					$file_headers = @get_headers($uri);
-					if ($file_headers[0] == 'HTTP/1.1 200 OK'){
+					if (strpos($file_headers[0], '200') !== FALSE){
 						echo "Found {$uri}\n";
 						//generate the title from the NUDS
 						$titles = generate_title_from_type($uri);
@@ -245,7 +245,7 @@ function parse_row($row, $count, $fileName){
 		            $record['title'] = $coinTypes[$uri]['title'] . '. ' . $accnum;
 		        } else {
 		            $file_headers = @get_headers($uri);
-		            if ($file_headers[0] == 'HTTP/1.1 200 OK'){
+		            if (strpos($file_headers[0], '200') !== FALSE){
 		                echo "Found {$uri}\n";
 		                //generate the title from the NUDS
 		                $titles = generate_title_from_type($uri);
@@ -273,7 +273,7 @@ function parse_row($row, $count, $fileName){
 				$record['title'] = $coinTypes[$uri]['title'] . '. ' . $accnum;
 			} else {
 				$file_headers = @get_headers($uri);
-				if ($file_headers[0] == 'HTTP/1.1 200 OK'){
+				if (strpos($file_headers[0], '200') !== FALSE){
 					echo "Found {$uri}\n";
 					//generate the title from the NUDS
 					$titles = generate_title_from_type($uri);
@@ -296,7 +296,7 @@ function parse_row($row, $count, $fileName){
 		        $record['title'] = $coinTypes[$uri]['title'] . '. ' . $accnum;
 		    } else {
 		        $file_headers = @get_headers($uri);
-		        if ($file_headers[0] == 'HTTP/1.1 200 OK'){
+		        if (strpos($file_headers[0], '200') !== FALSE){
 		            echo "Found {$uri}\n";
 		            //generate the title from the NUDS
 		            $titles = generate_title_from_type($uri);
@@ -320,7 +320,7 @@ function parse_row($row, $count, $fileName){
 		        $record['title'] = $coinTypes[$uri]['title'] . '. ' . $accnum;
 		    } else {
 		        $file_headers = @get_headers($uri);
-		        if ($file_headers[0] == 'HTTP/1.1 200 OK'){
+		        if (strpos($file_headers[0], '200') !== FALSE){
 		            echo "Found {$uri}\n";
 		            //generate the title from the NUDS
 		            $titles = generate_title_from_type($uri);
@@ -379,7 +379,7 @@ function parse_row($row, $count, $fileName){
 		            $record['title'] = $coinTypes[$uri]['title'] . '. ' . $accnum;
 		        } else {
 		            $file_headers = @get_headers($uri);
-		            if ($file_headers[0] == 'HTTP/1.1 200 OK'){
+		            if (strpos($file_headers[0], '200') !== FALSE){
 		                echo "Found {$uri}\n";
 		                //generate the title from the NUDS
 		                $titles = generate_title_from_type($uri);
@@ -418,7 +418,7 @@ function parse_row($row, $count, $fileName){
 	                
 	            } else {
 	                $file_headers = @get_headers($uri);
-	                if ($file_headers[0] == 'HTTP/1.1 200 OK'){
+	                if (strpos($file_headers[0], '200') !== FALSE){
 	                    echo "Found {$uri}\n";
 	                    //generate the title from the NUDS
 	                    $titles = generate_title_from_type($uri);
@@ -677,7 +677,7 @@ function parse_row($row, $count, $fileName){
 			$record['hoard'] = $url;
 		} else {
 			$file_headers = @get_headers($url);
-			if ($file_headers[0] == 'HTTP/1.1 200 OK'){
+			if (strpos($file_headers[0], '200') !== FALSE){
 				echo "Found {$url}\n";
 				$record['hoard'] = $url;
 				$hoards[] = $url;
