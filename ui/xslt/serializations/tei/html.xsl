@@ -843,7 +843,7 @@
 						<strong>EXPORT:</strong>
 					</li>
 					<li>
-						<a href="{$id}.xml">NUDS/XML</a>
+						<a href="{$id}.xml">TEI/XML</a>
 					</li>
 					<li>
 						<a href="{$id}.rdf">RDF/XML</a>
