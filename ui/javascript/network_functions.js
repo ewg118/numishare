@@ -16,22 +16,27 @@ $(document).ready(function () {
         
         if (collection_type == 'cointype') {
             urlParams[ 'type'] = $('#recordId').text();
+            urlParams[ 'namedGraph'] = $(this).attr('namedGraph');
         } else if (collection_type == 'die') {
             urlParams[ 'die'] = $('#recordId').text();
-        }
-        urlParams[ 'namedGraph'] = $(this).attr('namedGraph');
+            urlParams[ 'namedGraph'] = $(this).attr('namedGraph');
+        } else if (collection_type == 'symbol') {
+            urlParams[ 'uri'] = $('#objectURI').text();
+        }        
         
-        renderNetworkGraph(id, path, urlParams);
+        renderNetworkGraph(id, path, collection_type, urlParams);
     });
 });
 
 //initiate a call to the getDieLinks JSON API and parse the resulting object into a d3plus Network
-function renderNetworkGraph(id, path, urlParams) {
+function renderNetworkGraph(id, path, collection_type, urlParams) {
+    var api = (collection_type == 'symbol' ? 'getSymbolLinks' : 'getDieLinks'); 
+
     //alert(urlParams);
     $('#' + id).removeClass('hidden');
     $('#' + id).height(600);
     
-    $.get(path + 'apis/getDieLinks', $.param(urlParams, true),
+    $.get(path + 'apis/' + api, $.param(urlParams, true),
     function (data) {
         var nodeArray = data[ 'nodes'];
         var edgeArray = data[ 'edges'];

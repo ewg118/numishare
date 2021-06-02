@@ -138,8 +138,11 @@
 		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.0/dist/leaflet.css"/>
 		<script src="https://unpkg.com/leaflet@1.0.0/dist/leaflet.js"/>
 		<script type="text/javascript" src="{$include_path}/javascript/leaflet.ajax.min.js"/>
-		<script type="text/javascript" src="{$include_path}/javascript/leaflet-heatmap.js"/>
 		<script type="text/javascript" src="{$include_path}/javascript/symbol_map_functions.js"/>
+		
+		<!-- network graph functions -->
+		<script type="text/javascript" src="https://d3plus.org/js/d3plus-network.v0.6.full.min.js"/>
+		<script type="text/javascript" src="{$include_path}/javascript/network_functions.js"/>
 
 		<!-- google analytics -->
 		<xsl:if test="string(//config/google_analytics)">
@@ -201,10 +204,16 @@
 								</tbody>
 							</table>
 						</div>
-					</xsl:if>
+					</xsl:if>					
 
 					<!-- display associated coin types, if applicable -->
 					<xsl:if test="count(doc('input:types')//res:result) &gt; 0">
+						<div>
+							<h3>Network Graph</h3>
+							
+							<div class="network-graph hidden" id="{generate-id()}"/>
+						</div>						
+						
 						<xsl:apply-templates select="doc('input:types')/res:sparql" mode="listTypes">
 							<xsl:with-param name="objectUri" select="$objectUri"/>
 							<xsl:with-param name="endpoint"
@@ -252,6 +261,7 @@
 			<span id="objectURI">
 				<xsl:value-of select="$objectUri"/>
 			</span>
+			<span id="collection_type">symbol</span>
 		</div>
 	</xsl:template>
 
