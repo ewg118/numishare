@@ -51,7 +51,12 @@ function renderNetworkGraph(id, path, collection_type, urlParams) {
                 return node.side;
             },
             label: function (node) {
-                return node.label;
+                if (node.hasOwnProperty('image')) {
+                    return node.label + ' <img src="' + node.image + '" style="width:16px"/>';
+                } else {
+                    return node.label;
+                }
+                
             },
             color: function (node) {
                 if (node.side == 'obv' || node.side == 'altSymbol') {

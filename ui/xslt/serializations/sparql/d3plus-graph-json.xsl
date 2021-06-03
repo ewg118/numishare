@@ -18,7 +18,7 @@
 						<xsl:apply-templates
 							select="
 								descendant::res:binding[@name = 'die']/res:uri | descendant::res:binding[@name = 'altDie']/res:uri | descendant::res:binding[@name = 'type']/res:uri |
-								descendant::res:binding[@name = 'obv']/res:uri | descendant::res:binding[@name = 'rev']/res:uri"
+								descendant::res:binding[@name = 'symbol']/res:uri | descendant::res:binding[@name = 'altSymbol']/res:uri"
 							mode="nodes"/>
 					</_array>
 				</nodes>
@@ -33,15 +33,41 @@
 									else
 									count(//res:sparql[2]//res:result)"
 									as="xs:integer"/>
-								<xsl:variable name="specimenCount" select="sum(//res:binding[@name = 'count']/res:literal)"/>								
+								<xsl:variable name="specimenCount" select="sum(//res:binding[@name = 'count']/res:literal)"/>	
+								<xsl:variable name="minCount" select="min(//res:binding[@name = 'count']/res:literal)"/>
 								
 								<xsl:apply-templates select="descendant::res:result" mode="die-edges">
 									<xsl:with-param name="linkCount" select="$linkCount"/>
 									<xsl:with-param name="specimenCount" select="$specimenCount"/>
+									<xsl:with-param name="minCount" select="$minCount"/>
 								</xsl:apply-templates>
 							</xsl:when>
 							<xsl:when test="$api = 'getSymbolLinks'">
-								<xsl:apply-templates select="descendant::res:result" mode="symbol-edges"/>
+								
+								<!-- generate a unique list of edges -->
+								<xsl:variable name="edges" as="node()*">
+									<edges xmlns="http://www.w3.org/2005/sparql-results#">
+										<xsl:for-each select="descendant::res:result">
+											<xsl:variable name="source" select="res:binding[@name = 'symbol']/res:uri"/>
+											<xsl:variable name="target" select="res:binding[@name = 'altSymbol']/res:uri"/>
+											
+											<xsl:if test="not(preceding::res:result[res:binding[@name = 'altSymbol']/res:uri = $source and res:binding[@name = 'symbol']/res:uri = $target])">
+												<xsl:copy-of select="."/>
+											</xsl:if>
+											
+										</xsl:for-each>
+									</edges>
+								</xsl:variable>								
+								
+								<xsl:variable name="linkCount" select="count($edges//res:result)"/>
+								<xsl:variable name="specimenCount" select="sum($edges//res:binding[@name = 'count']/res:literal)"/>		
+								<xsl:variable name="minCount" select="min($edges//res:binding[@name = 'count']/res:literal)"/>
+								
+								<xsl:apply-templates select="$edges/descendant::res:result" mode="symbol-edges">
+									<xsl:with-param name="linkCount" select="$linkCount"/>
+									<xsl:with-param name="specimenCount" select="$specimenCount"/>									
+									<xsl:with-param name="minCount" select="$minCount"/>
+								</xsl:apply-templates>
 							</xsl:when>
 						</xsl:choose>
 					</_array>
@@ -68,6 +94,11 @@
 				<label datatype="xs:string">
 					<xsl:value-of select="ancestor::res:result/res:binding[@name = concat($name, 'Label')]/res:literal"/>
 				</label>
+				<xsl:if test="ancestor::res:result/res:binding[@name = concat($name, 'Image')]">
+					<image>
+						<xsl:value-of select="tokenize(ancestor::res:result/res:binding[@name = concat($name, 'Image')]/res:literal, '\|')[last()]"/>
+					</image>
+				</xsl:if>
 				<side>
 					<xsl:choose>
 						<xsl:when test="parent::res:binding[@name = 'type']">type</xsl:when>
@@ -105,26 +136,12 @@
 									</xsl:choose>
 								</xsl:when>
 								<xsl:when test="$api = 'getSymbolLinks'">
-									<xsl:choose>
-										<xsl:when test="//res:binding[@name = 'obv'][res:uri = $uri] and //res:binding[@name = 'rev'][res:uri = $uri]"
-											>both</xsl:when>
-										<xsl:otherwise>
-											<xsl:value-of select="$name"/>
-										</xsl:otherwise>
-									</xsl:choose>
+									<xsl:value-of select="$name"/>
 								</xsl:when>
 							</xsl:choose>
-
-
 						</xsl:otherwise>
 					</xsl:choose>
 				</side>
-				
-				<xsl:if test="$name = 'obv' or $name = 'rev'">
-					<count>
-						<xsl:value-of select="count(//res:result[res:binding[@name = $name]/res:uri = $uri])"/>
-					</count>
-				</xsl:if>
 			</_object>
 		</xsl:if>
 	</xsl:template>
@@ -132,6 +149,7 @@
 	<xsl:template match="res:result" mode="die-edges">
 		<xsl:param name="linkCount"/>
 		<xsl:param name="specimenCount"/>
+		<xsl:param name="minCount"/>
 
 		<_object>
 			<source>
@@ -164,7 +182,8 @@
 				<weight>
 					<xsl:call-template name="numishare:networkWeight">
 						<xsl:with-param name="linkCount" select="$linkCount"/>
-						<xsl:with-param name="specimenCount" select="$specimenCount"/>
+						<xsl:with-param name="specimenCount" select="$specimenCount"/>						
+						<xsl:with-param name="minCount" select="$minCount"/>
 					</xsl:call-template>
 				</weight>
 			</_object>
@@ -173,38 +192,40 @@
 	</xsl:template>
 	
 	<xsl:template match="res:result" mode="symbol-edges">
-		<xsl:if test="res:binding[@name = 'obv']/res:uri">			
-			<_object>
-				<source>
-					<xsl:apply-templates select="res:binding[@name = 'type']" mode="edges"/>
-				</source>
-				<target>
-					<xsl:apply-templates select="res:binding[@name = 'obv']" mode="edges"/>
-				</target>
-				<weight>4</weight>				
-			</_object>
-		</xsl:if>
+		<xsl:param name="linkCount"/>
+		<xsl:param name="specimenCount"/>
+		<xsl:param name="minCount"/>
 		
-		<xsl:if test="res:binding[@name = 'rev']/res:uri">
-			<_object>
-				<source>
-					<xsl:apply-templates select="res:binding[@name = 'type']" mode="edges"/>
-				</source>
-				<target>
-					<xsl:apply-templates select="res:binding[@name = 'rev']" mode="edges"/>
-				</target>
-				<weight>4</weight>				
-			</_object>
-		</xsl:if>
+		<_object>
+			<source>
+				<xsl:apply-templates select="res:binding[@name = 'symbol']" mode="edges"/>
+			</source>
+			<target>
+				<xsl:apply-templates select="res:binding[@name = 'altSymbol']" mode="edges"/>
+			</target>
+			<count>
+				<xsl:value-of select="res:binding[@name = 'count']/res:literal"/>
+			</count>	
+			<weight>
+				<xsl:call-template name="numishare:networkWeight">
+					<xsl:with-param name="linkCount" select="$linkCount"/>
+					<xsl:with-param name="specimenCount" select="$specimenCount"/>					
+					<xsl:with-param name="minCount" select="$minCount"/>
+				</xsl:call-template>
+			</weight>			
+		</_object>
+		
+		
 	</xsl:template>
 
-	<xsl:template match="res:binding[@name = 'altDie' or @name = 'die' or @name = 'type' or @name = 'obv' or @name = 'rev']" mode="edges">
+	<xsl:template match="res:binding[@name = 'altDie' or @name = 'die' or @name = 'type' or @name = 'symbol' or @name = 'altSymbol']" mode="edges">
 		<xsl:value-of select="tokenize(res:uri, '/')[last()]"/>
 	</xsl:template>
 
 	<xsl:template name="numishare:networkWeight">
 		<xsl:param name="linkCount"/>
 		<xsl:param name="specimenCount"/>
+		<xsl:param name="minCount"/>
 		
 		<xsl:choose>
 			<!-- determine the line weight for links related to coin types -->
@@ -222,14 +243,12 @@
 					<xsl:when test="$weight &lt; 1">
 						<!-- find the 1/x multiplier for the smallest count that would increase it to a minimum digit of 1 -->
 						<xsl:variable name="multiplier"
-							select="min(//res:binding[@name = 'count']/res:literal) div ((min(//res:binding[@name = 'count']/res:literal) div $specimenCount) * $max)"/>
+							select="$minCount div (($minCount div $specimenCount) * $max)"/>
 
 						<xsl:value-of select="round($multiplier * $weight)"/>
 					</xsl:when>
 					<!-- adjust weight down to a max displayable of 24 -->
-					<xsl:when test="$weight &gt; 24">
-						<xsl:value-of select="round($weight)"/>
-					</xsl:when>
+					<xsl:when test="$weight &gt; 24">24</xsl:when>
 					<xsl:otherwise>
 						<xsl:value-of select="round($weight)"/>
 					</xsl:otherwise>

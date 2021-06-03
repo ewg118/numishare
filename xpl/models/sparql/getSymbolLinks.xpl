@@ -4,7 +4,7 @@
 	Date Modified: June 2021
 	Function: Query the types and other symbols associated with a symbol URI.
 -->
-<p:config xmlns:p="http://www.orbeon.com/oxf/pipeline" xmlns:oxf="http://www.orbeon.com/oxf/processors">
+<p:config xmlns:p="http://www.orbeon.com/oxf/pipeline" xmlns:oxf="http://www.orbeon.com/oxf/processors" xmlns:res="http://www.w3.org/2005/sparql-results#">
 
 	<p:param type="input" name="data"/>
 	<p:param type="output" name="data"/>
@@ -42,61 +42,46 @@
 		</p:input>
 		<p:output name="data" id="query-document"/>
 	</p:processor>
-	
-	<!-- generator config for URL generator -->
+
+	<!-- get symbol URI from request parameter -->
 	<p:processor name="oxf:unsafe-xslt">
-		<p:input name="request" href="#request"/>
-		<p:input name="query" href="#query-document"/>
-		<p:input name="data" href="#config"/>
+		<p:input name="data" href="#request"/>
 		<p:input name="config">
-			<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:numishare="https://github.com/ewg118/numishare"
-				exclude-result-prefixes="#all">
-				<xsl:include href="../../../ui/xslt/controllers/metamodel-templates.xsl"/>
-				<xsl:include href="../../../ui/xslt/controllers/sparql-metamodel.xsl"/>
-				
-				<xsl:variable name="uri" select="doc('input:request')/request/parameters/parameter[name='uri']/value"/>
-				
-				<!-- config variables -->
-				<xsl:variable name="sparql_endpoint" select="/config/sparql_endpoint"/>				
-				
-				<xsl:variable name="query">
-					<xsl:value-of select="doc('input:query')"/>
-				</xsl:variable>
-				
-				<xsl:variable name="statements" as="element()*">
-					<statements>
-						<xsl:call-template name="numishare:querySymbolRelations">
-							<xsl:with-param name="uri" select="$uri"/>								
-						</xsl:call-template>			
-					</statements>
-				</xsl:variable>	
-				
-				<xsl:variable name="statementsSPARQL">
-					<xsl:apply-templates select="$statements/*"/>
-				</xsl:variable>
-				
-				<xsl:variable name="service">
-					<xsl:value-of select="concat($sparql_endpoint, '?query=', encode-for-uri(replace($query, '%STATEMENTS%', $statementsSPARQL)), '&amp;output=xml')"/>					
-				</xsl:variable>
-				
+			<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema">				
 				<xsl:template match="/">
-					<config>
-						<url>
-							<xsl:value-of select="$service"/>
-						</url>
-						<content-type>application/xml</content-type>
-						<encoding>utf-8</encoding>
-					</config>
+					<uri>
+						<xsl:value-of select="/request/parameters/parameter[name='uri']/value"/>
+					</uri>
 				</xsl:template>
-				
 			</xsl:stylesheet>
 		</p:input>
-		<p:output name="data" id="url-generator-config"/>
+		<p:output name="data" id="uri"/>
 	</p:processor>
 	
-	<!-- get the data from fuseki -->
-	<p:processor name="oxf:url-generator">
-		<p:input name="config" href="#url-generator-config"/>
+	<p:processor name="oxf:pipeline">						
+		<p:input name="data" href="#config"/>
+		<p:input name="request" href="#request"/>
+		<p:input name="query" href="#query-document"/>		
+		<p:input name="uri" href="#uri"/>
+		<p:input name="config" href="query-symbol-relations.xpl"/>
+		<p:output name="data" id="initial-response"/>
+	</p:processor>
+	
+	<!-- iterate through each symbol URI connected with the initial query and execute a SPARQL query -->
+	<p:for-each href="#initial-response" select="//res:binding[@name = 'altSymbol']/res:uri" root="response" id="sparql-response">
+		<p:processor name="oxf:pipeline">						
+			<p:input name="data" href="#config"/>
+			<p:input name="request" href="#request"/>
+			<p:input name="query" href="#query-document"/>		
+			<p:input name="uri" href="current()"/>
+			<p:input name="config" href="query-symbol-relations.xpl"/>
+			<p:output name="data" ref="sparql-response"/>
+		</p:processor>
+	</p:for-each>
+	
+	<p:processor name="oxf:identity">
+		<p:input name="data" href="aggregate('content', #initial-response, #sparql-response)"/>
 		<p:output name="data" ref="data"/>
 	</p:processor>
+	
 </p:config>

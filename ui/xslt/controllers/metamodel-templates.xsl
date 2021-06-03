@@ -211,19 +211,13 @@
     <xsl:template name="numishare:querySymbolRelations">
         <xsl:param name="uri"/>
 
-        <triple s="?type" p="nmo:hasObverse/nmo:hasControlmark|nmo:hasReverse/nmo:hasControlmark" o="&lt;{$uri}&gt;"/>
-        <triple s="?type" p="skos:prefLabel" o="?typeLabel"/>
-        <union>
-            <group>
-                <triple s="?type" p="nmo:hasObverse/nmo:hasControlmark" o="?obv"/>
-                <triple s="?obv" p="skos:prefLabel" o="?obvLabel"/>
-            </group>
-            <group>
-                <triple s="?type" p="nmo:hasReverse/nmo:hasControlmark" o="?rev"/>
-                <triple s="?rev" p="skos:prefLabel" o="?revLabel"/>
-            </group>
-        </union>
-
+        <bind statement="&lt;{$uri}&gt;" variable="?symbol"/>
+        <triple s="?type" p="nmo:hasObverse/nmo:hasControlmark|nmo:hasReverse/nmo:hasControlmark" o="?symbol"/>
+        <triple s="?symbol" p="skos:prefLabel" o="?symbolLabel"/>
+        <triple s="?symbol" p="crm:P165i_is_incorporated_in" o="?image"/>
+        <triple s="?type" p="nmo:hasObverse/nmo:hasControlmark|nmo:hasReverse/nmo:hasControlmark" o="?altSymbol" filter="(?altSymbol != ?symbol)"/>
+        <triple s="?altSymbol" p="skos:prefLabel" o="?altSymbolLabel"/>
+        <triple s="?altSymbol" p="crm:P165i_is_incorporated_in" o="?altImage"/>
     </xsl:template>
 
 

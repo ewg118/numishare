@@ -1,3 +1,4 @@
+PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/>
 PREFIX dcterms: <http://purl.org/dc/terms/>
 PREFIX nm: <http://nomisma.org/id/>
 PREFIX nmo: <http://nomisma.org/ontology#>
@@ -5,6 +6,6 @@ PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 
-SELECT ?type ?typeLabel ?obv ?obvLabel ?rev ?revLabel WHERE {
-    %STATEMENTS%
-}
+SELECT ?symbol ?symbolLabel ?altSymbol ?altSymbolLabel (count(?altSymbol) as ?count) (GROUP_CONCAT(DISTINCT ?image ; separator='|') AS ?symbolImage) (GROUP_CONCAT(DISTINCT ?altImage ; separator='|') AS ?altSymbolImage) WHERE {
+  %STATEMENTS%             
+} GROUP BY ?symbol ?symbolLabel ?altSymbol ?altSymbolLabel
