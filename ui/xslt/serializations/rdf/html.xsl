@@ -45,6 +45,7 @@
 
 	<xsl:variable name="hasFindspots" select="doc('input:hasFindspots')//res:boolean" as="xs:boolean"/>
 	<xsl:variable name="hasMints" select="doc('input:hasMints')//res:boolean" as="xs:boolean"/>
+	<xsl:variable name="hasSymbolRelations" select="doc('input:hasSymbolRelations')//res:boolean" as="xs:boolean"/>
 
 	<!-- namespaces -->
 	<xsl:variable name="namespaces" as="item()*">
@@ -186,34 +187,52 @@
 
 					<!-- display map -->
 					<xsl:if test="$hasMints = true() or $hasFindspots = true()">
-						<h3>Map</h3>
-						<div id="mapcontainer" class="map-normal">
-							<div id="info"/>
+						<div class="section">
+							<h3>Map</h3>
+							<div id="mapcontainer" class="map-normal">
+								<div id="info"/>
+							</div>
+							<div style="margin:10px 0">
+								<table>
+									<tbody>
+										<tr>
+											<td style="background-color:#6992fd;border:2px solid black;width:50px;"/>
+											<td style="width:100px">Mints</td>
+											<td style="background-color:#d86458;border:2px solid black;width:50px;"/>
+											<td style="width:100px">Hoards</td>
+											<td style="background-color:#a1d490;border:2px solid black;width:50px;"/>
+											<td style="width:100px">Finds</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>						
+					</xsl:if>	
+					
+					<!-- display network graph -->
+					<xsl:if test="$hasSymbolRelations = true()">
+						<div class="section">
+							<h3>Network Graph</h3>
+							<div style="margin:10px 0">
+								<table>
+									<tbody>
+										<tr>
+											<td style="background-color:#a8a8a8;border:2px solid black;width:50px;"/>
+											<td style="width:100px">This Symbol</td>
+											<td style="background-color:#6985c6;border:2px solid black;width:50px;"/>
+											<td style="width:100px">Immediate Link</td>
+											<td style="background-color:#b3c9fc;border:2px solid black;width:50px;"/>
+											<td style="width:100px">Secondary Link</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							<div class="network-graph hidden" id="{generate-id()}"/>
 						</div>
-						<div style="margin:10px 0">
-							<table>
-								<tbody>
-									<tr>
-										<td style="background-color:#6992fd;border:2px solid black;width:50px;"/>
-										<td style="width:100px">Mints</td>
-										<td style="background-color:#d86458;border:2px solid black;width:50px;"/>
-										<td style="width:100px">Hoards</td>
-										<td style="background-color:#a1d490;border:2px solid black;width:50px;"/>
-										<td style="width:100px">Finds</td>
-									</tr>
-								</tbody>
-							</table>
-						</div>
-					</xsl:if>					
+					</xsl:if>						
 
 					<!-- display associated coin types, if applicable -->
 					<xsl:if test="count(doc('input:types')//res:result) &gt; 0">
-						<div>
-							<h3>Network Graph</h3>
-							
-							<div class="network-graph hidden" id="{generate-id()}"/>
-						</div>						
-						
 						<xsl:apply-templates select="doc('input:types')/res:sparql" mode="listTypes">
 							<xsl:with-param name="objectUri" select="$objectUri"/>
 							<xsl:with-param name="endpoint"

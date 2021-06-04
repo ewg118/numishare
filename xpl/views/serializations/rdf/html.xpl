@@ -55,6 +55,13 @@
 		<p:output name="data" id="hasFindspots"/>
 	</p:processor>
 	
+	<!-- ask whether there are related symbols -->
+	<p:processor name="oxf:pipeline">						
+		<p:input name="data" href="#config"/>
+		<p:input name="config" href="../../../models/sparql/ask-symbol-relations.xpl"/>
+		<p:output name="data" id="hasSymbolRelations"/>
+	</p:processor>
+	
 	<!-- get a list of associated coin types -->
 	<p:processor name="oxf:pipeline">						
 		<p:input name="data" href="#data"/>
@@ -76,6 +83,7 @@
 		<p:input name="types" href="#types"/>
 		<p:input name="hasFindspots" href="#hasFindspots"/>
 		<p:input name="hasMints" href="#hasMints"/>
+		<p:input name="hasSymbolRelations" href="#hasSymbolRelations"/>
 		<p:input name="subsymbols" href="#subsymbols"/>
 		<p:input name="query" href="#query-document"/>
 		<p:input name="data" href="aggregate('content', #data, #config)"/>

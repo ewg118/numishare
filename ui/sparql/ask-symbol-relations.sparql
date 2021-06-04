@@ -1,0 +1,13 @@
+PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX nm: <http://nomisma.org/id/>
+PREFIX nmo: <http://nomisma.org/ontology#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+ASK {
+  BIND (<%URI%> as ?symbol)
+  ?type nmo:hasObverse/nmo:hasControlmark|nmo:hasReverse/nmo:hasControlmark ?symbol .
+  ?type nmo:hasObverse/nmo:hasControlmark|nmo:hasReverse/nmo:hasControlmark ?altSymbol FILTER (?altSymbol != ?symbol)
+}

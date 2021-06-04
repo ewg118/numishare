@@ -8,6 +8,7 @@
 	<xsl:include href="../json/json-metamodel.xsl"/>
 
 	<xsl:param name="api" select="tokenize(doc('input:request')/request/request-uri, '/')[last()]"/>
+	<xsl:param name="rootURI" select="doc('input:request')/request/parameters/parameter[name='uri']/value"/>
 	
 	<xsl:template match="/">
 
@@ -136,7 +137,11 @@
 									</xsl:choose>
 								</xsl:when>
 								<xsl:when test="$api = 'getSymbolLinks'">
-									<xsl:value-of select="$name"/>
+									<xsl:choose>
+										<xsl:when test="$uri = $rootURI">root</xsl:when>		
+										<xsl:when test="ancestor::res:result/res:binding[@name = 'symbol']/res:uri = $rootURI">first</xsl:when>
+										<xsl:otherwise>second</xsl:otherwise>
+									</xsl:choose>
 								</xsl:when>
 							</xsl:choose>
 						</xsl:otherwise>
