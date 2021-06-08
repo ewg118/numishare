@@ -2,8 +2,7 @@
 <!--
 	Author: Ethan Gruber
 	Date: June 2021
-	Function: Issues a SPARQL query to the established endpoint (usually Nomisma.org) in order to get a distinct list of coin hoards
-	associated with a particular coin type or monogram URI (including narrower matches, exact matches), following the updated ARIADNE-compatible findspot data model.
+	Function: Executes a SPARQL query to get the mints associated with a symbol URI, and the numeric count of these mints
 -->
 <p:config xmlns:p="http://www.orbeon.com/oxf/pipeline" xmlns:oxf="http://www.orbeon.com/oxf/processors">
 
@@ -24,7 +23,7 @@
 	<p:processor name="oxf:url-generator">
 		<p:input name="config">
 			<config>
-				<url>oxf:/apps/numishare/ui/sparql/getHoards.sparql</url>
+				<url>oxf:/apps/numishare/ui/sparql/getMints.sparql</url>
 				<content-type>text/plain</content-type>
 				<encoding>utf-8</encoding>
 			</config>
@@ -48,7 +47,7 @@
 		<p:input name="query" href="#query-document"/>
 		<p:input name="config">
 			<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema"
-				xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:nmo="http://nomisma.org/ontology#" xmlns:numishare="https://github.com/ewg118/numishare">				
+				xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:nmo="http://nomisma.org/ontology#" xmlns:numishare="https://github.com/ewg118/numishare">
 				<xsl:include href="../../../ui/xslt/controllers/metamodel-templates.xsl"/>
 				<xsl:include href="../../../ui/xslt/controllers/sparql-metamodel.xsl"/>
 				
@@ -73,33 +72,15 @@
 							</xsl:choose>
 						</xsl:otherwise>
 					</xsl:choose>
-				</xsl:param>	
+				</xsl:param>		
 				
-				<xsl:variable name="type">
-					<xsl:choose>
-						<xsl:when test="*/namespace-uri()='http://nomisma.org/nuds'">cointype</xsl:when>
-						<xsl:when test="*/namespace-uri()='http://www.w3.org/1999/02/22-rdf-syntax-ns#'">symbol</xsl:when>
-					</xsl:choose>
-				</xsl:variable>
-				
-				<xsl:variable name="uri">
-					<xsl:choose>
-						<xsl:when test="$type = 'cointype'">
-							<xsl:value-of select="concat(doc('input:config-xml')/config/uri_space, $id)"/>
-						</xsl:when>
-						<xsl:when test="$type = 'symbol'">
-							<xsl:value-of select="concat(replace(doc('input:config-xml')/config/uri_space, '/id/', '/symbol/'), $id)"/>
-						</xsl:when>
-					</xsl:choose>
-				</xsl:variable>
-				
+				<xsl:variable name="uri" select="concat(replace(doc('input:config-xml')/config/uri_space, '/id/', '/symbol/'), $id)"/>				
 				<xsl:variable name="query" select="doc('input:query')"/>
 				<xsl:variable name="endpoint" select="doc('input:config-xml')/config/sparql_endpoint"/>
 				
 				<xsl:variable name="statements" as="element()*">
 					<statements>
-						<xsl:call-template name="numishare:getHoards">
-							<xsl:with-param name="type" select="$type"/>
+						<xsl:call-template name="numishare:getMints">
 							<xsl:with-param name="uri" select="$uri"/>
 						</xsl:call-template>
 					</statements>					

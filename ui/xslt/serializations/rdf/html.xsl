@@ -139,7 +139,7 @@
 		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.0/dist/leaflet.css"/>
 		<script src="https://unpkg.com/leaflet@1.0.0/dist/leaflet.js"/>
 		<script type="text/javascript" src="{$include_path}/javascript/leaflet.ajax.min.js"/>
-		<script type="text/javascript" src="{$include_path}/javascript/symbol_map_functions.js"/>
+		<script type="text/javascript" src="{$include_path}/javascript/display_map_functions.js"/>
 		
 		<!-- network graph functions -->
 		<script type="text/javascript" src="https://d3plus.org/js/d3plus-network.v0.6.full.min.js"/>
@@ -200,7 +200,7 @@
 											<td style="width:100px">Mints</td>
 											<td style="background-color:#d86458;border:2px solid black;width:50px;"/>
 											<td style="width:100px">Hoards</td>
-											<td style="background-color:#a1d490;border:2px solid black;width:50px;"/>
+											<td style="background-color:#f98f0c;border:2px solid black;width:50px;"/>
 											<td style="width:100px">Finds</td>
 										</tr>
 									</tbody>
@@ -268,6 +268,9 @@
 
 		<!-- hidden variables -->
 		<div class="hidden">
+			<span id="path">
+				<xsl:value-of select="concat($display_path, 'symbol/')"/>
+			</span>
 			<span id="baselayers">
 				<xsl:value-of select="string-join(//config/baselayers/layer[@enabled = true()], ',')"/>
 			</span>

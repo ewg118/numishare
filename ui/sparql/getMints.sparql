@@ -11,10 +11,10 @@ PREFIX crm:	<http://www.cidoc-crm.org/cidoc-crm/>
 PREFIX crmgeo:	<http://www.ics.forth.gr/isl/CRMgeo/>
 PREFIX osgeo:	<http://data.ordnancesurvey.co.uk/ontology/geometry/>
 
-SELECT DISTINCT ?place ?label ?lat ?long (count(?place) as ?count) WHERE {
+SELECT DISTINCT ?mint ?label ?lat ?long (count(?mint) as ?count) WHERE {
 %STATEMENTS%
-  ?place a crm:E53_Place ;
-    rdfs:label ?label ;
-    geo:location ?loc .
-?loc geo:lat ?lat ; geo:long ?long
-} GROUP BY ?place ?label ?lat ?long
+?mint skos:prefLabel ?label . FILTER langMatches(lang(?label), "en").
+{?loc geo:lat ?lat ;
+       geo:long ?long }
+UNION {?loc osgeo:asGeoJSON ?poly }
+} GROUP BY ?mint ?label ?lat ?long

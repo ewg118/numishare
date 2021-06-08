@@ -11,15 +11,7 @@ PREFIX rdfs:	<http://www.w3.org/2000/01/rdf-schema#>
 PREFIX osgeo:	<http://data.ordnancesurvey.co.uk/ontology/geometry/>
 
 SELECT DISTINCT ?hoard ?hoardLabel ?closingDate ?place ?label ?lat ?long ?geojson WHERE {
-BIND (<COINTYPE> as ?coinType)
-{?object nmo:hasTypeSeriesItem|nmo:hasTypeSeriesItem/skos:exactMatch|nmo:hasTypeSeriesItem/skos:broader+ ?coinType ; 
-  	a nmo:NumismaticObject ;
-    dcterms:isPartOf ?hoard .
-  ?hoard nmo:hasFindspot/crm:P7_took_place_at/crm:P89_falls_within ?place }
-UNION { ?contents nmo:hasTypeSeriesItem ?coinType ;
-                  a dcmitype:Collection .
-  ?hoard dcterms:tableOfContents ?contents ;
-    nmo:hasFindspot/crm:P7_took_place_at/crm:P89_falls_within ?place }
+%STATEMENTS%
 OPTIONAL {?hoard skos:prefLabel ?hoardLabel FILTER langMatches(lang(?hoardLabel), "en")}
 OPTIONAL {?hoard nmo:hasClosingDate ?closingDate}
 ?place a crm:E53_Place ;

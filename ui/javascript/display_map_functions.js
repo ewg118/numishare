@@ -1,13 +1,11 @@
 /***
 Author: Ethan Gruber
-Date: January 2021
-Function: Generate a Leaflet map for a specimen/type page and call the relevant GeoJSON serialization
+Date: June 2021
+Function: Generate a Leaflet map for a specimen/type/symbol page and call the relevant GeoJSON serialization
  ***/
 $(document).ready(function () {
     var id = $('title').attr('id');
-    var collection_type = $('#collection_type').text();
     var path = $('#path').text();
-    var pipeline = $('#pipeline').text();
     var lang = $('#lang').text();
     
     if ($('#mapcontainer').length > 0) {
@@ -47,12 +45,19 @@ function initialize_map(id, path, lang) {
     
     //add GeoJSON from AJAX
     $.getJSON(url, function (data) {
-        var maxDensity = 0;
+        var maxFindspotDensity = 0;
+        var maxMintDensity = 0;
         $.each(data.features, function (key, value) {
             if (value.properties.type == 'findspot' && value.properties.hasOwnProperty('count') == true) {
                 if (value.properties.count !== undefined) {
-                    if (value.properties.count > maxDensity) {
-                        maxDensity = value.properties.count;
+                    if (value.properties.count > maxFindspotDensity) {
+                        maxFindspotDensity = value.properties.count;
+                    }
+                }
+            } else if (value.properties.type == 'mint' && value.properties.hasOwnProperty('count') == true) {
+                if (value.properties.count !== undefined) {
+                    if (value.properties.count > maxMintDensity) {
+                        maxMintDensity = value.properties.count;
                     }
                 }
             }
@@ -70,7 +75,7 @@ function initialize_map(id, path, lang) {
                 }
             },
             pointToLayer: function (feature, latlng) {
-                return renderPoints(feature, latlng, maxDensity);
+                return renderPoints(feature, latlng, maxFindspotDensity, maxMintDensity);
             }
         }).addTo(map);
         
@@ -95,25 +100,51 @@ function initialize_map(id, path, lang) {
         baseMaps[label] = eval(baselayers[i]);
     }
     
-    var overlayMaps = {
-        'Markers': overlay
-    };
-    
     //add controls
-    var layerControl = L.control.layers(baseMaps, overlayMaps).addTo(map);
+    var layerControl = L.control.layers(baseMaps).addTo(map);
     
     /*****
      * Features for manipulating layers
      *****/
-    function renderPoints(feature, latlng, maxDensity) {
+    function renderPoints(feature, latlng, maxFindspotDensity, maxMintDensity) {
         
         var fillColor = getFillColor(feature.properties.type);
         
         if (feature.properties.type == 'findspot' && feature.properties.hasOwnProperty('count')) {
-            grade = maxDensity / 5;
+            grade = maxFindspotDensity / 5;
             
             var radius = 5;
-            if (feature.properties.count < Math.round(grade)) {
+            if (Math.round(grade) == 0) {
+                radius = 5;
+            } else if (feature.properties.count < Math.round(grade)) {
+                radius = 5;
+            } else if (feature.properties.count >= Math.round(grade) && feature.properties.count < Math.round(grade * 2)) {
+                radius = 10;
+            } else if (feature.properties.count >= Math.round(grade * 2) && feature.properties.count < Math.round(grade * 3)) {
+                radius = 15;
+            } else if (feature.properties.count >= Math.round(grade * 3) && feature.properties.count < Math.round(grade * 4)) {
+                radius = 20;
+            } else if (feature.properties.count >= Math.round(grade * 4)) {
+                radius = 25;
+            } else {
+                radius = 5;
+            }
+            
+            return new L.CircleMarker(latlng, {
+                radius: radius,
+                fillColor: fillColor,
+                color: "#000",
+                weight: 1,
+                opacity: 1,
+                fillOpacity: 0.6
+            });
+        } else if (feature.properties.type == 'mint' && feature.properties.hasOwnProperty('count')) {
+            grade = maxMintDensity / 5;
+            
+            var radius = 5;
+            if (Math.round(grade) == 0) {
+                radius = 5;
+            } else if (feature.properties.count < Math.round(grade)) {
                 radius = 5;
             } else if (feature.properties.count >= Math.round(grade) && feature.properties.count < Math.round(grade * 2)) {
                 radius = 10;
@@ -151,7 +182,6 @@ function initialize_map(id, path, lang) {
         var fillColor;
         switch (type) {
             case 'mint':
-            case 'productionPlace':
             fillColor = '#6992fd';
             break;
             case 'findspot':
@@ -192,8 +222,8 @@ function initialize_map(id, path, lang) {
                 }
             }
             if (feature.properties.hasOwnProperty('count') == true) {
-				str += '<br/><b>Count: </b>' + feature.properties.count;
-			}
+                str += '<br/><b>Count: </b>' + feature.properties.count;
+            }
         }
         layer.bindPopup(str);
     }

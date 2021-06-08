@@ -124,6 +124,7 @@
 	<page path="/numishare/[^\/]+/symbol/(.*)\.rdf" view="xpl/models/symbol/get.xpl"/>
 	<page path="/numishare/[^\/]+/symbol/(.*)\.ttl" model="xpl/models/symbol/get.xpl" view="xpl/views/serializations/rdf/ttl.xpl"/>
 	<page path="/numishare/[^\/]+/symbol/(.*)\.jsonld" model="xpl/models/symbol/get.xpl" view="xpl/views/serializations/object/json-ld.xpl"/>
+	<page path="/numishare/[^\/]+/symbol/(.*)\.geojson" model="xpl/models/symbol/get.xpl" view="xpl/views/serializations/rdf/geojson.xpl"/>
 	<page path="/numishare/[^\/]+/symbol/(.*)$" model="xpl/models/symbol/get.xpl" view="xpl/controllers/conneg-symbol.xpl"/>
 
 	<!-- **** PAGES **** -->

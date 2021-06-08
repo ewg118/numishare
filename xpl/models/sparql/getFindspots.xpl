@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 	Author: Ethan Gruber
-	Date: April 2020
-	Function: Issues a SPARQL query to the established endpoint (usually Nomisma.org) in order to get a distinct list of coin hoards
-	associated with a particular coin type URI (including narrower matches, exact matches), following the updated ARIADNE-compatible findspot data model.
-	The SPARQL response is used in both the KML and TimeMap JSON serializations for a coin type.
+	Date: June 2021
+	Function: Issues a SPARQL query to the established endpoint (usually Nomisma.org) in order to get a distinct list of findspots and number of coins found at that location
+	associated with a particular coin type URI (including narrower matches, exact matches) or symbol URI, following the updated ARIADNE-compatible findspot data model.	
 -->
 <p:config xmlns:p="http://www.orbeon.com/oxf/pipeline" xmlns:oxf="http://www.orbeon.com/oxf/processors">
 
 	<p:param type="input" name="data"/>
+	<p:param type="input" name="config-xml"/>
 	<p:param type="output" name="data"/>
 
 	<p:processor name="oxf:request">
@@ -18,11 +18,6 @@
 			</config>
 		</p:input>
 		<p:output name="data" id="request"/>
-	</p:processor>
-	
-	<p:processor name="oxf:pipeline">
-		<p:input name="config" href="../config.xpl"/>
-		<p:output name="data" id="config"/>
 	</p:processor>
 	
 	<!-- get query from a text file on disk -->
@@ -48,11 +43,14 @@
 	<!-- generator config for URL generator -->
 	<p:processor name="oxf:unsafe-xslt">
 		<p:input name="request" href="#request"/>
-		<p:input name="data" href="#config"/>
+		<p:input name="config-xml" href="#config-xml"/>
+		<p:input name="data" href="#data"/>
 		<p:input name="query" href="#query-document"/>
 		<p:input name="config">
 			<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema"
-				xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:nmo="http://nomisma.org/ontology#">
+				xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:nmo="http://nomisma.org/ontology#" xmlns:numishare="https://github.com/ewg118/numishare">
+				<xsl:include href="../../../ui/xslt/controllers/metamodel-templates.xsl"/>
+				<xsl:include href="../../../ui/xslt/controllers/sparql-metamodel.xsl"/>
 				
 				<xsl:param name="id">
 					<xsl:choose>
@@ -75,12 +73,44 @@
 							</xsl:choose>
 						</xsl:otherwise>
 					</xsl:choose>
-				</xsl:param>				
+				</xsl:param>		
 				
-				<xsl:variable name="uri" select="concat(/config/uri_space, $id)"/>
+				<xsl:variable name="type">
+					<xsl:choose>
+						<xsl:when test="*/namespace-uri()='http://nomisma.org/nuds'">cointype</xsl:when>
+						<xsl:when test="*/namespace-uri()='http://www.w3.org/1999/02/22-rdf-syntax-ns#'">symbol</xsl:when>
+					</xsl:choose>
+				</xsl:variable>
+				
+				<xsl:variable name="uri">
+					<xsl:choose>
+						<xsl:when test="$type = 'cointype'">
+							<xsl:value-of select="concat(doc('input:config-xml')/config/uri_space, $id)"/>
+						</xsl:when>
+						<xsl:when test="$type = 'symbol'">
+							<xsl:value-of select="concat(replace(doc('input:config-xml')/config/uri_space, '/id/', '/symbol/'), $id)"/>
+						</xsl:when>
+					</xsl:choose>
+				</xsl:variable>
+				
 				<xsl:variable name="query" select="doc('input:query')"/>
-				<xsl:variable name="endpoint" select="/config/sparql_endpoint"/>
-				<xsl:variable name="service" select="concat($endpoint, '?query=', encode-for-uri(replace($query, 'COINTYPE', $uri)), '&amp;output=xml')"/>
+				<xsl:variable name="endpoint" select="doc('input:config-xml')/config/sparql_endpoint"/>
+				
+				<xsl:variable name="statements" as="element()*">
+					<statements>
+						<xsl:call-template name="numishare:getFindspots">
+							<xsl:with-param name="type" select="$type"/>
+							<xsl:with-param name="uri" select="$uri"/>
+						</xsl:call-template>
+					</statements>					
+				</xsl:variable>
+				
+				<xsl:variable name="statementsSPARQL">
+					<xsl:apply-templates select="$statements/*"/>
+				</xsl:variable>
+				
+				<xsl:variable name="service"
+					select="concat($endpoint, '?query=', encode-for-uri(replace($query, '%STATEMENTS%', $statementsSPARQL)), '&amp;output=xml')"/>
 
 				<xsl:template match="/">
 					<config>

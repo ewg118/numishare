@@ -206,6 +206,107 @@
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
+    
+    <!-- get hoards associated with either types or symbols -->
+    <xsl:template name="numishare:getHoards">
+        <xsl:param name="uri"/>
+        <xsl:param name="type"/>
+        
+        <xsl:choose>
+            <xsl:when test="$type = 'cointype'">
+                <bind statement="&lt;{$uri}&gt;" variable="?coinType"/>
+                <union>
+                    <group>
+                        <triple s="?object" p="nmo:hasTypeSeriesItem|nmo:hasTypeSeriesItem/skos:exactMatch|nmo:hasTypeSeriesItem/skos:broader+" o="?coinType"/>
+                        <triple s="?object" p="rdf:type" o="nmo:NumismaticObject"/>
+                        <triple s="?object" p="dcterms:isPartOf" o="?hoard"/>
+                        <triple s="?hoard" p="nmo:hasFindspot/crm:P7_took_place_at/crm:P89_falls_within" o="?place"/>
+                    </group>
+                    <group>
+                        <triple s="?contents" p="nmo:hasTypeSeriesItem" o="?coinType"/>
+                        <triple s="?contents" p="rdf:type" o="dcmitype:Collection"/>
+                        <triple s="?hoard" p="dcterms:tableOfContents" o="?contents"/>
+                        <triple s="?hoard" p="nmo:hasFindspot/crm:P7_took_place_at/crm:P89_falls_within" o="?place"/>
+                    </group>
+                </union>
+            </xsl:when>
+            <xsl:when test="$type = 'symbol'">
+                <xsl:call-template name="numishare:subSelectSymbols">
+                    <xsl:with-param name="uri" select="$uri"/>
+                </xsl:call-template>
+                
+                <union>
+                    <group>
+                        <triple s="?coinType" p="nmo:hasObverse|nmo:hasReverse" o="?side"/>
+                        <triple s="?object" p="nmo:hasTypeSeriesItem" o="?coinType"/>
+                        <triple s="?object" p="rdf:type" o="nmo:NumismaticObject"/>
+                        <triple s="?object" p="dcterms:isPartOf" o="?hoard"/>
+                        <triple s="?hoard" p="nmo:hasFindspot/crm:P7_took_place_at/crm:P89_falls_within" o="?place"/>
+                    </group>
+                    <group>
+                        <triple s="?coinType" p="nmo:hasObverse|nmo:hasReverse" o="?side"/>
+                        <triple s="?contents" p="nmo:hasTypeSeriesItem" o="?coinType"/>
+                        <triple s="?contents" p="rdf:type" o="dcmitype:Collection"/>
+                        <triple s="?hoard" p="dcterms:tableOfContents" o="?contents"/>
+                        <triple s="?hoard" p="nmo:hasFindspot/crm:P7_took_place_at/crm:P89_falls_within" o="?place"/>
+                    </group>
+                </union>
+            </xsl:when>
+        </xsl:choose>        
+    </xsl:template>
+    
+    <xsl:template name="numishare:getFindspots">
+        <xsl:param name="uri"/>
+        <xsl:param name="type"/>
+        
+        <xsl:choose>
+            <xsl:when test="$type = 'cointype'">
+                <bind statement="&lt;{$uri}&gt;" variable="?coinType"/>
+                <triple s="?object" p="nmo:hasTypeSeriesItem|nmo:hasTypeSeriesItem/skos:exactMatch|nmo:hasTypeSeriesItem/skos:broader+" o="?coinType"/>
+                <triple s="?object" p="rdf:type" o="nmo:NumismaticObject"/>
+                <triple s="?object" p="nmo:hasFindspot/crm:P7_took_place_at/crm:P89_falls_within" o="?place"/>
+            </xsl:when>
+            <xsl:when test="$type = 'symbol'">
+                <xsl:call-template name="numishare:subSelectSymbols">
+                    <xsl:with-param name="uri" select="$uri"/>
+                </xsl:call-template>
+                
+                <triple s="?coinType" p="nmo:hasObverse|nmo:hasReverse" o="?side"/>
+                <triple s="?object" p="nmo:hasTypeSeriesItem" o="?coinType"/>
+                <triple s="?object" p="rdf:type" o="nmo:NumismaticObject"/>
+                <triple s="?object" p="nmo:hasFindspot/crm:P7_took_place_at/crm:P89_falls_within" o="?place"/>
+            </xsl:when>
+        </xsl:choose>        
+    </xsl:template>
+    
+    <xsl:template name="numishare:getMints">
+        <xsl:param name="uri"/>
+        
+        <xsl:call-template name="numishare:subSelectSymbols">
+            <xsl:with-param name="uri" select="$uri"/>
+        </xsl:call-template>
+        
+        <triple s="?coinType" p="nmo:hasObverse|nmo:hasReverse" o="?side"/>
+        <triple s="?coinType" p="nmo:hasMint" o="?mint"/>
+        <triple s="?mint" p="geo:location" o="?loc"/>        
+    </xsl:template>
+    
+    <!-- creae a subselect query for sides of coins that are associated with particular symbol URIs -->
+    <xsl:template name="numishare:subSelectSymbols">
+        <xsl:param name="uri"/>
+        
+        <select variables="?side">
+            <union>
+                <group>
+                    <triple s="?side" p="nmo:hasControlmark" o="&lt;{$uri}&gt;"/>
+                </group>
+                <group>
+                    <triple s="?children" p="skos:broader+" o="&lt;{$uri}&gt;"/>
+                    <triple s="?side" p="nmo:hasControlmark" o="?children"/>
+                </group>
+            </union>
+        </select>
+    </xsl:template>    
 
     <!-- query the other monograms associated with a particular monogram -->
     <xsl:template name="numishare:querySymbolRelations">

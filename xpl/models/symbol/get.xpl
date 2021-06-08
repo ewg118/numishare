@@ -38,6 +38,9 @@
 							<xsl:when test="contains($doc, '.jsonld')">
 								<xsl:value-of select="substring-before($doc, '.jsonld')"/>
 							</xsl:when>
+							<xsl:when test="contains($doc, '.geojson')">
+								<xsl:value-of select="substring-before($doc, '.geojson')"/>
+							</xsl:when>
 							<xsl:otherwise>
 								<xsl:value-of select="$doc"/>
 							</xsl:otherwise>
