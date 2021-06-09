@@ -5,7 +5,7 @@ PREFIX nmo:	<http://nomisma.org/ontology#>
 PREFIX skos:	<http://www.w3.org/2004/02/skos/core#>
 PREFIX xsd:	<http://www.w3.org/2001/XMLSchema#>
 
-SELECT ?type ?label ?startDate ?endDate ?mint ?mintLabel ?den ?denLabel WHERE {
+SELECT ?type ?label ?startDate ?endDate ?mint ?mintLabel ?den ?denLabel ?authority ?authorityLabel WHERE {
   BIND (<%URI%> as ?symbol)
   {
     SELECT ?symbol ?side WHERE {
@@ -20,6 +20,9 @@ SELECT ?type ?label ?startDate ?endDate ?mint ?mintLabel ?den ?denLabel WHERE {
    skos:prefLabel ?label FILTER(langMatches(lang(?label), "en")) .
    OPTIONAL {?type nmo:hasStartDate ?startDate}
    OPTIONAL {?type nmo:hasEndDate ?endDate}
+   OPTIONAL {?type nmo:hasAuthority ?authority .
+        ?authority skos:prefLabel ?authorityLabel FILTER(langMatches(lang(?authorityLabel), "en"))
+   }
    OPTIONAL { {?type nmo:hasMint ?mint}
         UNION {?type nmo:hasMint/rdf:value ?mint }
         ?mint skos:prefLabel ?mintLabel FILTER(langMatches(lang(?mintLabel), "en"))

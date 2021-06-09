@@ -142,7 +142,7 @@
 		<script type="text/javascript" src="{$include_path}/javascript/display_map_functions.js"/>
 		
 		<!-- network graph functions -->
-		<script type="text/javascript" src="https://d3plus.org/js/d3plus-network.v0.6.full.min.js"/>
+		<script type="text/javascript" src="https://d3plus.org/js/d3plus-network.v1.0.full.min.js"/>
 		<script type="text/javascript" src="{$include_path}/javascript/network_functions.js"/>
 
 		<!-- google analytics -->
@@ -243,6 +243,7 @@
 										//config/sparql_endpoint"
 							/>
 							<xsl:with-param name="rtl" select="boolean(//config/languages/language[@code = $lang]/@rtl)"/>
+							<xsl:with-param name="lang" select="$lang"/>
 						</xsl:apply-templates>
 					</xsl:if>
 				</div>
@@ -260,6 +261,9 @@
 						</li>
 						<li>
 							<a href="{$id}.jsonld">JSON-LD</a>
+						</li>
+						<li>
+							<a href="{$id}.geojson">GeoJSON</a>
 						</li>
 					</ul>
 				</div>

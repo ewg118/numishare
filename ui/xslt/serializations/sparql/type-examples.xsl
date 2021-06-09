@@ -561,15 +561,27 @@
                                 </a>
                                 <dl class="{if($rtl = true()) then 'dl-horizontal dl-rtl' else 'dl-horizontal'}">
                                     <xsl:if test="res:binding[@name = 'mint']/res:uri">
-                                        <dt>Mint</dt>
+                                        <dt>
+                                            <xsl:value-of select="numishare:regularize_node('mint', $lang)"/>
+                                        </dt>
                                         <dd>
                                             <a href="{res:binding[@name='mint']/res:uri}">
                                                 <xsl:value-of select="res:binding[@name = 'mintLabel']/res:literal"/>
                                             </a>
                                         </dd>
                                     </xsl:if>
+                                    <xsl:if test="res:binding[@name = 'authority']/res:uri">
+                                        <dt>
+                                            <xsl:value-of select="numishare:regularize_node('authority', $lang)"/>
+                                        </dt>
+                                        <dd>
+                                            <a href="{res:binding[@name='authority']/res:uri}">
+                                                <xsl:value-of select="res:binding[@name = 'authorityLabel']/res:literal"/>
+                                            </a>
+                                        </dd>
+                                    </xsl:if>
                                     <xsl:if test="res:binding[@name = 'den']/res:uri">
-                                        <dt>Denomination</dt>
+                                        <dt><xsl:value-of select="numishare:regularize_node('denomination', $lang)"/></dt>
                                         <dd>
                                             <a href="{res:binding[@name='den']/res:uri}">
                                                 <xsl:value-of select="res:binding[@name = 'denLabel']/res:literal"/>
@@ -577,7 +589,7 @@
                                         </dd>
                                     </xsl:if>
                                     <xsl:if test="res:binding[@name = 'startDate']/res:literal or res:binding[@name = 'endDate']/res:literal">
-                                        <dt>Date</dt>
+                                        <dt><xsl:value-of select="numishare:regularize_node('date', $lang)"/></dt>
                                         <dd>
                                             <xsl:value-of select="numishare:normalizeDate(res:binding[@name = 'startDate']/res:literal)"/>
                                             <xsl:if test="res:binding[@name = 'startDate']/res:literal and res:binding[@name = 'startDate']/res:literal"> - </xsl:if>
