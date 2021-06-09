@@ -29,4 +29,4 @@ SELECT ?type ?label ?startDate ?endDate ?mint ?mintLabel ?den ?denLabel ?authori
    }
    OPTIONAL {?type nmo:hasDenomination ?den . 
    	?den skos:prefLabel ?denLabel FILTER(langMatches(lang(?denLabel), "en"))}
-}
+} ORDER BY ?startDate
