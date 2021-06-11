@@ -1,6 +1,6 @@
 /*******
 FORCED NETWORK GRAPH FUNCTIONS FOR D3PLUS
-Modified: October 2020
+Modified: June 2021
 Function: These are the functions for generating a forced network graph for die and type pages when a die study is actived.
  *******/
 $(document).ready(function () {
@@ -51,12 +51,16 @@ function renderNetworkGraph(id, path, collection_type, urlParams) {
                 return node.side;
             },
             label: function (node) {
-                return node.label;
+                if (node.hasOwnProperty('image')) {
+                    return '';
+                } else {
+                    return node.label;
+                }
             },
             tooltipConfig: {
                 body: function (node) {
                     if (node.hasOwnProperty('image')) {
-                        return '<div class="text-center"><img src="' + node.image + '" style="width:32px"/></div>';
+                        return '<div class="text-center"><strong>' + node.label + '</strong><br/><img src="' + node.image + '" style="width:32px"/></div>';
                     }
                 }
             },
@@ -65,8 +69,7 @@ function renderNetworkGraph(id, path, collection_type, urlParams) {
                     if (node.hasOwnProperty('image')) {
                         return node.image;
                     }
-                },
-                label: false
+                }
             },
             color: function (node) {
                 switch (node.side){
