@@ -1307,6 +1307,11 @@
 				<span class="glyphicon glyphicon-new-window"/>
 			</a>
 		</xsl:if>
+		
+		<xsl:if test="nuds:identifier">
+			<xsl:text>no. </xsl:text>
+			<xsl:value-of select="nuds:identifier"/>
+		</xsl:if>
 	</xsl:template>
 
 	<xsl:template match="nuds:date" mode="provenance">
