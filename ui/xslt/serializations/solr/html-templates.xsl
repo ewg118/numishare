@@ -526,8 +526,8 @@
 					mode="facet"/>
 			</xsl:when>
 			<xsl:when test="$collection_type = 'cointype' or $collection_type = 'die'">
-				<xsl:apply-templates select="lst[not(contains(@name, '_geo')) and not(contains(@name, 'symbol_')) and not(ends-with(@name, '_num')) and number(int) &gt; 0]" mode="facet"/>
-				<xsl:if test="lst[contains(@name, 'symbol_')]">
+				<xsl:apply-templates select="lst[not(contains(@name, '_geo')) and not(matches(@name, '^symbol_[obv|rev]')) and not(ends-with(@name, '_num')) and number(int) &gt; 0]" mode="facet"/>
+				<xsl:if test="lst[matches(@name, '^symbol_[obv|rev]')]">
 					<h4>
 						<xsl:value-of select="numishare:normalize_fields('symbol', $lang)"/>
 						<small>
@@ -556,7 +556,7 @@
 				</xsl:if>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:apply-templates select="lst[not(contains(@name, '_geo')) and not(contains(@name, 'symbol_')) and number(int) &gt; 0]" mode="facet"/>
+				<xsl:apply-templates select="lst[not(contains(@name, '_geo')) and not(matches(@name, '^symbol_[obv|rev]')) and number(int) &gt; 0]" mode="facet"/>
 			</xsl:otherwise>
 		</xsl:choose>
 
@@ -730,7 +730,7 @@
 			<xsl:otherwise>
 				<xsl:variable name="title">
 					<xsl:choose>
-						<xsl:when test="contains(@name, 'symbol_')">
+						<xsl:when test="matches(@name, '^symbol_[obv|rev]')">
 							<xsl:variable name="langParam" select="
 									if (string($lang)) then
 										$lang

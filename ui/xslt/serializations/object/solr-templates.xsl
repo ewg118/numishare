@@ -149,7 +149,11 @@
 		</xsl:apply-templates>
 
 		<xsl:apply-templates select="nuds:typeSeries"/>
-
+		
+		<!-- index symbols -->
+		<xsl:apply-templates select="nuds:symbol">
+			<xsl:with-param name="side"/>
+		</xsl:apply-templates>
 	</xsl:template>
 
 	<xsl:template match="nuds:obverse | nuds:reverse">
@@ -402,9 +406,19 @@
 								</xsl:apply-templates>
 							</xsl:when>
 							<xsl:otherwise>
-								<field name="{$symbolType}_{$side}_facet">
-									<xsl:value-of select="."/>
-								</field>
+								<xsl:choose>
+									<xsl:when test="string($side)">
+										<field name="{$symbolType}_{$side}_facet">
+											<xsl:value-of select="."/>
+										</field>
+									</xsl:when>
+									<xsl:otherwise>
+										<!-- index die symbols (irrelevant to side) -->
+										<field name="{$symbolType}_facet">
+											<xsl:value-of select="."/>
+										</field>
+									</xsl:otherwise>
+								</xsl:choose>
 							</xsl:otherwise>
 						</xsl:choose>
 					</xsl:otherwise>
