@@ -251,6 +251,7 @@
 							<statements>
 								<xsl:call-template name="numishare:queryDieRelationsForCoin">
 									<xsl:with-param name="objectURI" select="$uri"/>
+									<xsl:with-param name="side" select="doc('input:side')/side"/>
 									<xsl:with-param name="namedGraph" select="doc('input:namedGraph')/namedGraph"/>
 								</xsl:call-template>			
 							</statements>

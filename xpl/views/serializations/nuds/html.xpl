@@ -389,9 +389,25 @@ ASK {?s oa:hasBody <URI>}]]>
 							<p:input name="request" href="#request"/>
 							<p:input name="namedGraph" href="current()"/>
 							<p:input name="side">
-								<side/>
+								<side>Obverse</side>
 							</p:input>
 							<p:input name="config" href="../../../models/sparql/query-die-relations.xpl"/>
+							<p:output name="data" id="obv-response"/>
+						</p:processor>
+						
+						<p:processor name="oxf:pipeline">						
+							<p:input name="data" href="#config"/>
+							<p:input name="request" href="#request"/>
+							<p:input name="namedGraph" href="current()"/>
+							<p:input name="side">
+								<side>Reverse</side>
+							</p:input>
+							<p:input name="config" href="../../../models/sparql/query-die-relations.xpl"/>
+							<p:output name="data" id="rev-response"/>
+						</p:processor>
+						
+						<p:processor name="oxf:identity">
+							<p:input name="data" href="aggregate('query', #obv-response, #rev-response)"/>
 							<p:output name="data" ref="sparql-response"/>
 						</p:processor>
 					</p:for-each>

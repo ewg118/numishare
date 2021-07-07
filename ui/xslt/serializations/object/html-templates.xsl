@@ -566,10 +566,10 @@
 									<xsl:if test="$collection_type = 'object' and $hasDies = true()">
 										<xsl:choose>
 											<xsl:when test="local-name() = 'obverse' and parent::nuds:typeDesc">
-												<xsl:apply-templates select="doc('input:dies')//res:binding[@name = 'die']" mode="coin-die"/>
+												<xsl:apply-templates select="doc('input:dies')//query/res:sparql[1]/descendant::res:binding[@name = 'die']" mode="coin-die"/>
 											</xsl:when>
 											<xsl:when test="local-name() = 'reverse' and parent::nuds:typeDesc">
-												<xsl:apply-templates select="doc('input:dies')//res:binding[@name = 'altDie']" mode="coin-die"/>
+												<xsl:apply-templates select="doc('input:dies')//query/res:sparql[2]/descendant::res:binding[@name = 'die']" mode="coin-die"/>
 											</xsl:when>
 										</xsl:choose>
 									</xsl:if>

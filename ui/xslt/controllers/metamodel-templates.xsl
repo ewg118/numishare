@@ -396,22 +396,13 @@
     <xsl:template name="numishare:queryDieRelationsForCoin">
         <xsl:param name="objectURI"/>
         <xsl:param name="namedGraph"/>
+        <xsl:param name="side"/>
 
         <bind statement="&lt;{$objectURI}&gt;" variable="?object"/>
         <graph namedGraph="{$namedGraph}">
-            <union>
-                <triple s="?object" p="nmo:hasObverse/nmo:hasDie/rdf:value" o="?die"/>
-            </union>
-            <union>
-                <triple s="?object" p="nmo:hasReverse/nmo:hasDie/rdf:value" o="?altDie"/>
-            </union>
+            <triple s="?object" p="nmo:has{$side}/nmo:hasDie/rdf:value" o="?die"/>
         </graph>
-        <union>
-            <triple s="?die" p="skos:prefLabel" o="?dieLabel" filter="(langMatches(lang(?dieLabel), &#x022;en&#x022;))"/>
-        </union>
-        <union>
-            <triple s="?altDie" p="skos:prefLabel" o="?altDieLabel" filter="(langMatches(lang(?altDieLabel), &#x022;en&#x022;))"/>
-        </union>
+        <triple s="?die" p="skos:prefLabel" o="?dieLabel" filter="(langMatches(lang(?dieLabel), &#x022;en&#x022;))"/>
     </xsl:template>
 
 </xsl:stylesheet>
