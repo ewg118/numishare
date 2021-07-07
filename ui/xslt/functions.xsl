@@ -4347,6 +4347,7 @@
                     <xsl:when test="$label='display_contents'">Contents</xsl:when>
                     <xsl:when test="$label='display_examples'">Examples of this type</xsl:when>
                     <xsl:when test="$label='display_die_analysis'">Die Analysis</xsl:when>
+                    <xsl:when test="$label='display_die_examples'">Examples of this die</xsl:when>
                     <xsl:when test="$label='results_all-terms'">All Terms</xsl:when>
                     <xsl:when test="$label='results_map-results'">Map Results</xsl:when>
                     <xsl:when test="$label='results_filters'">Filters</xsl:when>
