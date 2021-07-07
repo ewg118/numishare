@@ -172,6 +172,7 @@
 				<xsl:call-template name="numishare:networkWeight">
 					<xsl:with-param name="linkCount" select="$linkCount"/>
 					<xsl:with-param name="specimenCount" select="$specimenCount"/>
+					<xsl:with-param name="minCount" select="$minCount"/>
 				</xsl:call-template>
 			</weight>
 		</_object>
