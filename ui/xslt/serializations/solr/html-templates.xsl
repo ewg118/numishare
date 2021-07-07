@@ -863,7 +863,7 @@
 						<xsl:choose>
 							<xsl:when test="string($field)">
 								<xsl:choose>
-									<xsl:when test="starts-with($field, 'symbol_')">
+									<xsl:when test="matches($field, '^symbol_[obv|rev]')">
 										<!-- evaluate whether the symbol is indexed at a certain position or pertains to the side more generally -->
 										<xsl:choose>
 											<xsl:when test="count(tokenize($field, '_')) = 4">
