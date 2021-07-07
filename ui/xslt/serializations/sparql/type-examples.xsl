@@ -226,7 +226,7 @@
             </xsl:call-template>
         </div>
     </xsl:template>
-    
+
     <!-- **************** PHYSICAL EXAMPLES OF OBVERSE/REVERSE RELATED TO DIE URIS ****************-->
     <xsl:template match="res:sparql" mode="die-examples">
         <xsl:param name="query"/>
@@ -236,13 +236,14 @@
         <xsl:param name="endpoint"/>
         <xsl:param name="objectUri"/>
         <xsl:param name="rtl"/>
-        
+
         <div class="row">
             <xsl:attribute name="id">examples</xsl:attribute>
-            
+
             <xsl:if test="count(descendant::res:result) &gt; 0">
                 <div class="col-md-12">
-                    <xsl:element name="h3"> Die Examples <!--<xsl:value-of select="numishare:normalizeLabel('display_die_examples', $lang)"/>-->
+                    <xsl:element name="h3">
+                        <xsl:value-of select="numishare:normalizeLabel('display_die_examples', $lang)"/>
                         <!-- insert link to download CSV -->
                         <small style="margin-left:10px">
                             <a href="{$endpoint}?query={encode-for-uri($query)}&amp;output=csv" title="Download CSV">
@@ -264,23 +265,23 @@
             </xsl:if>
         </div>
     </xsl:template>
-    
+
     <xsl:template match="res:result" mode="die-examples">
         <xsl:param name="rtl"/>
-        
+
         <xsl:variable name="title"
             select="
-            concat(if
-            (string(res:binding[@name = 'collection']/res:literal)) then
-            res:binding[@name = 'collection']/res:literal
-            else
-            res:binding[@name = 'datasetTitle']/res:literal, ' ', res:binding[@name = 'identifier']/*)"/>
-        
+                concat(if
+                (string(res:binding[@name = 'collection']/res:literal)) then
+                    res:binding[@name = 'collection']/res:literal
+                else
+                    res:binding[@name = 'datasetTitle']/res:literal, ' ', res:binding[@name = 'identifier']/*)"/>
+
         <div class="col-xs-12 col-sm-6 col-md-4 col-lg-2 die-image">
             <xsl:if test="res:binding[@name = 'manifest']">
                 <span class="glyphicon glyphicon-zoom-in iiif-zoom-glyph" title="Click image(s) to zoom" style="display:none"/>
             </xsl:if>
-            
+
             <xsl:if test="res:binding[@name = 'reference']/res:uri">
                 <a title="{$title}" id="{res:binding[@name='object']/res:uri}">
                     <xsl:choose>
@@ -296,13 +297,13 @@
                         </xsl:otherwise>
                     </xsl:choose>
                     <img src="{res:binding[@name='reference']/res:uri}" alt="Image of Die"/>
-                </a>                    
-            </xsl:if>
-            <div class="die-title">                    
-                <a href="{res:binding[@name='object']/res:uri}" title="{$title}">
-                    <xsl:value-of select="$title"/>                        
                 </a>
-            </div>           
+            </xsl:if>
+            <div class="die-title">
+                <a href="{res:binding[@name='object']/res:uri}" title="{$title}">
+                    <xsl:value-of select="$title"/>
+                </a>
+            </div>
         </div>
     </xsl:template>
 
@@ -581,7 +582,9 @@
                                         </dd>
                                     </xsl:if>
                                     <xsl:if test="res:binding[@name = 'den']/res:uri">
-                                        <dt><xsl:value-of select="numishare:regularize_node('denomination', $lang)"/></dt>
+                                        <dt>
+                                            <xsl:value-of select="numishare:regularize_node('denomination', $lang)"/>
+                                        </dt>
                                         <dd>
                                             <a href="{res:binding[@name='den']/res:uri}">
                                                 <xsl:value-of select="res:binding[@name = 'denLabel']/res:literal"/>
@@ -589,7 +592,9 @@
                                         </dd>
                                     </xsl:if>
                                     <xsl:if test="res:binding[@name = 'startDate']/res:literal or res:binding[@name = 'endDate']/res:literal">
-                                        <dt><xsl:value-of select="numishare:regularize_node('date', $lang)"/></dt>
+                                        <dt>
+                                            <xsl:value-of select="numishare:regularize_node('date', $lang)"/>
+                                        </dt>
                                         <dd>
                                             <xsl:value-of select="numishare:normalizeDate(res:binding[@name = 'startDate']/res:literal)"/>
                                             <xsl:if test="res:binding[@name = 'startDate']/res:literal and res:binding[@name = 'startDate']/res:literal"> - </xsl:if>
