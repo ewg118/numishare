@@ -399,15 +399,19 @@
 
         <bind statement="&lt;{$objectURI}&gt;" variable="?object"/>
         <graph namedGraph="{$namedGraph}">
-            <optional>
+            <union>
                 <triple s="?object" p="nmo:hasObverse/nmo:hasDie/rdf:value" o="?die"/>
-            </optional>
-            <optional>
+            </union>
+            <union>
                 <triple s="?object" p="nmo:hasReverse/nmo:hasDie/rdf:value" o="?altDie"/>
-            </optional>
+            </union>
         </graph>
-        <triple s="?die" p="skos:prefLabel" o="?dieLabel" filter="(langMatches(lang(?dieLabel), &#x022;en&#x022;))"/>
-        <triple s="?altDie" p="skos:prefLabel" o="?altDieLabel" filter="(langMatches(lang(?altDieLabel), &#x022;en&#x022;))"/>
+        <union>
+            <triple s="?die" p="skos:prefLabel" o="?dieLabel" filter="(langMatches(lang(?dieLabel), &#x022;en&#x022;))"/>
+        </union>
+        <union>
+            <triple s="?altDie" p="skos:prefLabel" o="?altDieLabel" filter="(langMatches(lang(?altDieLabel), &#x022;en&#x022;))"/>
+        </union>
     </xsl:template>
 
 </xsl:stylesheet>

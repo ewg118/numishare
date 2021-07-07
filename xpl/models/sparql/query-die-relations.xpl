@@ -201,7 +201,7 @@
 			<p:processor name="oxf:url-generator">
 				<p:input name="config">
 					<config>
-						<url>oxf:/apps/numishare/ui/sparql/query-die-relations.sparql</url>
+						<url>oxf:/apps/numishare/ui/sparql/query-die-relations-for-coin.sparql</url>
 						<content-type>text/plain</content-type>
 						<encoding>utf-8</encoding>
 					</config>
