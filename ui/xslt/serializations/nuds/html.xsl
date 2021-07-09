@@ -724,7 +724,10 @@
 											</a>
 										</h4>
 
-										<!--<div namedGraph="{.}" class="network-graph hidden" id="{generate-id()}"/>-->										
+										<!-- only display graph on die pages -->
+										<xsl:if test="$collection_type = 'die'">
+											<div namedGraph="{.}" class="network-graph hidden" id="{generate-id()}"/>
+										</xsl:if>							
 
 										<!-- display die link table only in a type page -->
 										<div>
