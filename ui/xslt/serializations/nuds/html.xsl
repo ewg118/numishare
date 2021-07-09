@@ -1290,7 +1290,12 @@
 	<xsl:template match="nuds:acquiredFrom | nuds:previousColl">
 
 		<xsl:call-template name="display-label">
-			<xsl:with-param name="field">provenance</xsl:with-param>
+			<xsl:with-param name="field">
+				<xsl:choose>
+					<xsl:when test="//config/facets/facet[. = 'provenance_facet']">provenance</xsl:when>
+					<xsl:when test="//config/facets/facet[. = 'source_facet']">source</xsl:when>
+				</xsl:choose>
+			</xsl:with-param>
 			<xsl:with-param name="value" select="
 					if (nuds:saleCatalog) then
 						normalize-space(nuds:saleCatalog)
