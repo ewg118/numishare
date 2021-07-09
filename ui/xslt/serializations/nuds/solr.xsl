@@ -757,6 +757,22 @@
 					else
 						normalize-space(.)"/>
 		</field>
+		
+		<field name="source_text">
+			<xsl:value-of select="
+				if (nuds:saleCatalog) then
+				normalize-space(nuds:saleCatalog)
+				else
+				normalize-space(.)"/>
+		</field>
+		
+		<field name="source_facet">
+			<xsl:value-of select="
+				if (nuds:saleCatalog) then
+				normalize-space(nuds:saleCatalog)
+				else
+				normalize-space(.)"/>
+		</field>
 	</xsl:template>
 
 	<xsl:template match="nuds:identifier">

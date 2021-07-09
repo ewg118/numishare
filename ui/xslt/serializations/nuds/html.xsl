@@ -724,7 +724,7 @@
 											</a>
 										</h4>
 
-										<div namedGraph="{.}" class="network-graph hidden" id="{generate-id()}"/>										
+										<!--<div namedGraph="{.}" class="network-graph hidden" id="{generate-id()}"/>-->										
 
 										<!-- display die link table only in a type page -->
 										<div>
