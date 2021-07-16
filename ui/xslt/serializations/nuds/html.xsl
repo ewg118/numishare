@@ -1267,7 +1267,12 @@
 	<xsl:template match="nuds:provenance" mode="descMeta">
 		<li>
 			<h4>
-				<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
+				<xsl:choose>
+					<xsl:when test="//config/facets/facet[. = 'source_facet']">Source</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
+					</xsl:otherwise>
+				</xsl:choose>
 			</h4>
 			<ul>
 				<xsl:apply-templates select="descendant::nuds:chronItem">
