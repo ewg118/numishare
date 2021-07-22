@@ -12,6 +12,7 @@
 
 	if (file_exists($eXist_config_path)) {
 	    $eXist_config = simplexml_load_file($eXist_config_path);
+	    $eXist_url = $eXist_config->url;
 	    $eXist_credentials = $eXist_config->username . ':' . $eXist_config->password;
 	    
 	    //delete accnum
@@ -24,7 +25,7 @@
 	        //PUT xml to eXist
 	        $deleteFromExist=curl_init();
 	        //set curl opts
-	        curl_setopt($deleteFromExist,CURLOPT_URL,'http://localhost:8080/exist/rest/db/mantis/objects/' . $collection . '/' . $basename);
+	        curl_setopt($deleteFromExist,CURLOPT_URL, $eXist_url . 'mantis/objects/' . $collection . '/' . $basename);
 	        curl_setopt($deleteFromExist,CURLOPT_HTTPHEADER, array("Content-Type: text/xml; charset=utf-8"));
 	        curl_setopt($deleteFromExist,CURLOPT_CONNECTTIMEOUT,2);
 	        curl_setopt($deleteFromExist,CURLOPT_RETURNTRANSFER,1);

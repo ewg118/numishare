@@ -107,6 +107,7 @@ $eXist_config_path = '/usr/local/projects/numishare/exist-config.xml';
 
 if (file_exists($eXist_config_path)) {
 	$eXist_config = simplexml_load_file($eXist_config_path);
+	$eXist_url = $eXist_config->url;
 	$eXist_credentials = $eXist_config->username . ':' . $eXist_config->password;
 	//echo $eXist_credentials . "\n";
 	
@@ -177,7 +178,7 @@ if (file_exists($eXist_config_path)) {
 				                    $putToExist=curl_init();
 				                    
 				                    //set curl opts
-				                    curl_setopt($putToExist,CURLOPT_URL,'http://localhost:8080/exist/rest/db/' . $collection . '/objects/' . $accYear . '/' . $accnum . '.xml');
+				                    curl_setopt($putToExist,CURLOPT_URL, $eXist_url . $collection . '/objects/' . $accYear . '/' . $accnum . '.xml');
 				                    curl_setopt($putToExist,CURLOPT_HTTPHEADER, array("Content-Type: text/xml; charset=utf-8"));
 				                    curl_setopt($putToExist,CURLOPT_CONNECTTIMEOUT,2);
 				                    curl_setopt($putToExist,CURLOPT_RETURNTRANSFER,1);
