@@ -214,9 +214,11 @@ function lookup_entity ($department, $val, $uncertain, $role){
                     return null;
                 } else {
                     //uncertainty column in spreadsheet overrides the parsed value
-                    if ($row['uncertain'] == 'TRUE'){
-                        $uncertain = true;
-                    }
+                    if (array_key_exists('uncertain', $row)){
+                        if ($row['uncertain'] == 'TRUE'){
+                            $uncertain = true;
+                        }
+                    }                    
                     return array('label'=>$row['prefLabel_en'], 'uri'=>$row['uri'], 'uncertain'=>$uncertain, 'element'=>$row['type'], 'role'=>$role);
                 }                
             } else {
