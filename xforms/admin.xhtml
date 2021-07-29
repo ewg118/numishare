@@ -689,25 +689,7 @@ declare namespace tei = "http://www.tei-c.org/ns/1.0";
 				<xforms:setvalue ev:event="xforms-submit-done" ref="instance('control-instance')/status">Object successfully deleted.</xforms:setvalue>
 			</xforms:submission>
 
-			<!-- ************************* SOLR SUBMISSIONS ************************** -->
-			<!-- query Solr for the id of all currently published documents and repost them to solr -->
-			<xforms:submission id="republish" serialization="none" method="get"
-				resource="{instance('config')/solr_published}select/?q=collection-name:{instance('control-instance')/collection-name}&amp;rows=100000&amp;start=0&amp;fl=id"
-				replace="instance" instance="list-published-response">
-				<xforms:message ev:event="xforms-submit-error" level="modal">Solr is inaccessible. Please check Solr configuration. [ADM001]</xforms:message>
-				<xforms:action ev:event="xforms-submit-done">
-					<xforms:setvalue ref="instance('control-instance')/identifiers"
-						value="string-join(instance('list-published-response')//doc/str[@name='id'], '|')"/>
-
-					<!-- get Solr document -->
-					<xforms:send submission="generate-add-document"/>
-					<!-- optimize index -->
-					<xforms:send submission="optimize"/>
-					<!-- reload table -->
-					<xforms:delete nodeset="instance('list')/*"/>
-					<xforms:send submission="query-solr"/>
-				</xforms:action>
-			</xforms:submission>
+			<!-- ************************* SOLR SUBMISSIONS ************************** -->			
 			<!-- access service to read in pre-transformed solr doc -->
 			<xforms:submission id="nuds-to-solr" method="get" replace="instance" instance="addIndex" serialization="none"
 				resource="/numishare/{instance('control-instance')/collection-name}/id/{instance('control-instance')/id}.solr">
@@ -1152,13 +1134,7 @@ declare namespace tei = "http://www.tei-c.org/ns/1.0";
 													<xforms:label>Publish All Approved Objects</xforms:label>
 													<xforms:dispatch target="publish-all-dialog" name="fr-show" ev:event="DOMActivate"/>
 												</xforms:trigger>
-											</li>
-											<li>
-												<xforms:trigger appearance="minimal">
-													<xforms:label>Reindex Published Objects</xforms:label>
-													<xforms:dispatch target="republish-dialog" name="fr-show" ev:event="DOMActivate"/>
-												</xforms:trigger>
-											</li>
+											</li>											
 											<li>
 												<xforms:trigger appearance="minimal">
 													<xforms:label>Unpublish All Objects</xforms:label>
@@ -1547,20 +1523,6 @@ declare namespace tei = "http://www.tei-c.org/ns/1.0";
 					<xforms:send submission="xquery-pagination"/>
 				</xforms:action>
 			</fr:positive-choice>
-		</fr:alert-dialog>
-		<fr:alert-dialog id="republish-dialog">
-			<fr:label>Republish</fr:label>
-			<fr:message>Do you want to reindex currently published objects?</fr:message>
-			<fr:negative-choice>
-				<fr:label>No</fr:label>
-			</fr:negative-choice>
-			<fr:positive-choice>
-				<fr:label>Yes</fr:label>
-				<xforms:action ev:event="DOMActivate">
-					<xforms:send submission="republish"/>
-					<xforms:send submission="optimize" ev:event="xforms-submit-done"/>
-				</xforms:action>
-			</fr:positive-choice>
-		</fr:alert-dialog>
+		</fr:alert-dialog>		
 	</body>
 </html>
