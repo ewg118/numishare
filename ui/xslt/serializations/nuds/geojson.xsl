@@ -231,7 +231,7 @@
 
 		<xsl:call-template name="generateFeature">
 			<xsl:with-param name="uri" select="$uri"/>
-			<xsl:with-param name="type">findspot</xsl:with-param>
+			<xsl:with-param name="type">hoard</xsl:with-param>
 			<xsl:with-param name="label" select="numishare:getNomismaLabel($rdf/*[@rdf:about = $uri], $lang)"/>
 		</xsl:call-template>
 	</xsl:template>
