@@ -994,13 +994,13 @@ function parse_typology ($accnum, $count, $row, $department){
 	//material
 	if (count($materials) > 0){
 		$typeDesc['material'] = array();
-		foreach ($materials as $material){;
-		$mat_array = parse_material(trim($material));
-		if (isset($mat_array['uri'])){
-			$typeDesc['material'][] = array('label'=>$mat_array['label'], 'uncertain'=>$mat_array['uncertain'], 'uri'=>$mat_array['uri']);
-		} else {
-			$typeDesc['material'][] = array('label'=>$mat_array['label'], 'uncertain'=>$mat_array['uncertain']);
-		}
+		foreach ($materials as $material){
+    		$mat_array = parse_material(trim($material));
+    		if (isset($mat_array['uri'])){
+    			$typeDesc['material'][] = array('label'=>$mat_array['label'], 'uncertain'=>$mat_array['uncertain'], 'uri'=>$mat_array['uri']);
+    		} else {
+    			$typeDesc['material'][] = array('label'=>$mat_array['label'], 'uncertain'=>$mat_array['uncertain']);
+    		}
 		}
 	}
 	//obverse
