@@ -84,8 +84,8 @@
 				<link type="text/css" href="{$include_path}/css/style.css" rel="stylesheet"/>
 
 				<!-- visualization libraries -->
-				<script type="text/javascript" src="https://d3plus.org/js/d3.min.js"/>
-				<script type="text/javascript" src="https://d3plus.org/js/d3plus-plot.v0.9.full.min.js"/>
+				<script type="text/javascript" src="{$include_path}/javascript/d3.min.js"/>
+				<script type="text/javascript" src="{$include_path}/javascript/d3plus-plot.full.min.js"/>
 				<script type="text/javascript" src="{$include_path}/javascript/search_functions.js"/>
 				<script type="text/javascript" src="{$include_path}/javascript/visualize_functions.js"/>
 

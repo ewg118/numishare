@@ -377,16 +377,16 @@
 								<script type="text/javascript" src="{$include_path}/javascript/display_functions.js"/>
 
 								<!-- visualization -->
-								<script type="text/javascript" src="https://d3plus.org/js/d3.min.js"/>
+								<script type="text/javascript" src="{$include_path}/javascript/d3.min.js"/>
 
 								<xsl:if test="$collection_type = 'cointype'">
-									<script type="text/javascript" src="https://d3plus.org/js/d3plus-plot.v0.9.full.min.js"/>
+									<script type="text/javascript" src="{$include_path}/javascript/d3plus-plot.full.min.js"/>
 									<script type="text/javascript" src="{$include_path}/javascript/vis_functions.js"/>
 								</xsl:if>
 
 								<!-- network graph functions -->
 								<xsl:if test="//config/die_study[@enabled = true()] and $hasSpecimens = true()">
-									<script type="text/javascript" src="https://d3plus.org/js/d3plus-network.v0.6.full.min.js"/>
+									<script type="text/javascript" src="{$include_path}/javascript/d3plus-network.full.min.js"/>
 									<script type="text/javascript" src="{$include_path}/javascript/network_functions.js"/>
 								</xsl:if>
 

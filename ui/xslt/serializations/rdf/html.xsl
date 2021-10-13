@@ -142,7 +142,7 @@
 		<script type="text/javascript" src="{$include_path}/javascript/display_map_functions.js"/>
 		
 		<!-- network graph functions -->
-		<script type="text/javascript" src="https://d3plus.org/js/d3plus-network.v1.0.full.min.js"/>
+		<script type="text/javascript" src="{$include_path}/javascript/d3plus-network.full.min.js"/>
 		<script type="text/javascript" src="{$include_path}/javascript/network_functions.js"/>
 
 		<!-- google analytics -->

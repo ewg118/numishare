@@ -71,8 +71,8 @@
 				<link rel="stylesheet" type="text/css" href="{$include_path}/css/style.css"/>
 
 				<!-- visualization libraries -->
-				<script type="text/javascript" src="https://d3plus.org/js/d3.min.js"/>
-				<script type="text/javascript" src="https://d3plus.org/js/d3plus-plot.v0.9.full.min.js"/>
+				<script type="text/javascript" src="{$include_path}/javascript/d3.min.js"/>
+				<script type="text/javascript" src="{$include_path}/javascript/d3plus-plot.full.min.js"/>
 				<script type="text/javascript" src="{$include_path}/javascript/vis_functions.js"/>
 
 				<!-- google analytics -->

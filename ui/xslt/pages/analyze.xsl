@@ -84,8 +84,8 @@
 				<script src="https://netdna.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"/>
 				
 				<!-- analysis scripts -->
-				<script type="text/javascript" src="https://d3plus.org/js/d3.min.js"/>
-				<script type="text/javascript" src="https://d3plus.org/js/d3plus-plot.v0.9.full.min.js"/>
+				<script type="text/javascript" src="{$include_path}/javascript/d3.min.js"/>
+				<script type="text/javascript" src="{$include_path}/javascript/d3plus-plot.min.js"/>
 				<script type="text/javascript" src="{$include_path}/javascript/hoard_analysis_functions.js"/>				
 				<script type="text/javascript" src="{$include_path}/javascript/search_functions.js"/>
 				
