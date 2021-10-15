@@ -142,6 +142,7 @@
 		<script type="text/javascript" src="{$include_path}/javascript/display_map_functions.js"/>
 		
 		<!-- network graph functions -->
+		<script type="text/javascript" src="{$include_path}/javascript/d3.min.js"/>
 		<script type="text/javascript" src="{$include_path}/javascript/d3plus-network.full.min.js"/>
 		<script type="text/javascript" src="{$include_path}/javascript/network_functions.js"/>
 
