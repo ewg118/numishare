@@ -218,7 +218,7 @@ if (file_exists($eXist_config_path)) {
 				                    
 				                    //close files and delete from /tmp
 				                    fclose($readFile);
-				                    //unlink($fileName);
+				                    unlink($fileName);
 				                }
 				            }
 				        }
