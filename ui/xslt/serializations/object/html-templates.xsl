@@ -1089,6 +1089,12 @@
 		</p>
 	</xsl:template>
 
+	<xsl:template match="tei:ref">
+		<a href="{@target}">
+			<xsl:apply-templates/>
+		</a>
+	</xsl:template>
+
 	<xsl:template match="tei:list">
 		<xsl:choose>
 			<xsl:when test="@rend = 'numbered'">
