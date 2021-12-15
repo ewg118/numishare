@@ -1259,7 +1259,7 @@
 
 	<xsl:template match="nuds:note">
 		<li>
-			<xsl:value-of select="."/>
+			<xsl:apply-templates/>
 		</li>
 	</xsl:template>
 
