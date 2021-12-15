@@ -16,6 +16,9 @@ a > img{
 ul li{
     list-style-type: none;
 }
+ol li {
+    list-style-type:normal
+}
 .highlight{
     background-color: #F8F8F8;
     border: 1px solid #E7E7E7;
