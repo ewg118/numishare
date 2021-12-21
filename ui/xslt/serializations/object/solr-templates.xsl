@@ -1126,54 +1126,76 @@
 	<xsl:template name="parse_dates">
 		<xsl:param name="typologies"/>
 
-		<xsl:variable name="dates" as="element()*">
-			<dates>
-				<xsl:for-each select="distinct-values($typologies/descendant::*/@standardDate)">
-					<xsl:sort order="ascending" data-type="number"/>
-					<xsl:if test="number(.)">
-						<date>
-							<xsl:value-of select="."/>
-						</date>
+		<xsl:choose>
+			<!-- use the date text when @notBefore and @notAfter are used -->
+			<xsl:when test="count($typologies//nuds:date) = 1 and $typologies//nuds:date[@notBefore and @notAfter]">
+				
+				<field name="year_minint">
+					<xsl:value-of select="number($typologies//nuds:date/@notBefore)"/>
+				</field>
+				<field name="year_num">
+					<xsl:value-of select="number($typologies//nuds:date/@notBefore)"/>
+				</field>
+				<field name="year_maxint">
+					<xsl:value-of select="number($typologies//nuds:date/@notAfter)"/>
+				</field>
+				<field name="year_num">
+					<xsl:value-of select="number($typologies//nuds:date/@notAfter)"/>
+				</field>
+				<field name="date_display">
+					<xsl:value-of select="$typologies//nuds:date"/>
+				</field>					
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:variable name="dates" as="element()*">
+					<dates>
+						<xsl:for-each select="distinct-values($typologies/descendant::*/@standardDate)">
+							<xsl:sort order="ascending" data-type="number"/>
+							<xsl:if test="number(.)">
+								<date>
+									<xsl:value-of select="."/>
+								</date>
+							</xsl:if>
+						</xsl:for-each>
+					</dates>
+				</xsl:variable>
+				
+				<xsl:for-each select="$dates//date">
+					<!-- add min and max, even if they are integers (for ISO dates) -->
+					<xsl:if test="position() = 1">
+						<field name="year_minint">
+							<xsl:value-of select="number(.)"/>
+						</field>
+						<field name="year_num">
+							<xsl:value-of select="number(.)"/>
+						</field>
+					</xsl:if>
+					<xsl:if test="position() = last()">
+						<field name="year_maxint">
+							<xsl:value-of select="number(.)"/>
+						</field>
+						<field name="year_num">
+							<xsl:value-of select="number(.)"/>
+						</field>
 					</xsl:if>
 				</xsl:for-each>
-			</dates>
-		</xsl:variable>
-
-		<xsl:for-each select="$dates//date">
-			<!-- add min and max, even if they are integers (for ISO dates) -->
-			<xsl:if test="position() = 1">
-				<field name="year_minint">
-					<xsl:value-of select="number(.)"/>
-				</field>
-				<field name="year_num">
-					<xsl:value-of select="number(.)"/>
-				</field>
-			</xsl:if>
-			<xsl:if test="position() = last()">
-				<field name="year_maxint">
-					<xsl:value-of select="number(.)"/>
-				</field>
-				<field name="year_num">
-					<xsl:value-of select="number(.)"/>
-				</field>
-			</xsl:if>
-		</xsl:for-each>
-
-		<xsl:if test="count($dates//date) &gt; 0">
-			<field name="date_display">
-				<xsl:choose>
-					<xsl:when test="$dates//date[1] = $dates//date[last()]">
-						<xsl:value-of select="numishare:normalizeDate($dates//date[1])"/>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:value-of select="numishare:normalizeDate($dates//date[1])"/>
-						<xsl:text> - </xsl:text>
-						<xsl:value-of select="numishare:normalizeDate($dates//date[last()])"/>
-					</xsl:otherwise>
-				</xsl:choose>
-			</field>
-		</xsl:if>
-
+				
+				<xsl:if test="count($dates//date) &gt; 0">
+					<field name="date_display">
+						<xsl:choose>
+							<xsl:when test="$dates//date[1] = $dates//date[last()]">
+								<xsl:value-of select="numishare:normalizeDate($dates//date[1])"/>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:value-of select="numishare:normalizeDate($dates//date[1])"/>
+								<xsl:text> - </xsl:text>
+								<xsl:value-of select="numishare:normalizeDate($dates//date[last()])"/>
+							</xsl:otherwise>
+						</xsl:choose>
+					</field>
+				</xsl:if>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 	<xsl:template name="get_hoard_sort_fields">

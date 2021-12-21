@@ -527,7 +527,7 @@
 		<xsl:apply-templates
 			select="nuds:geographic/nuds:geogname[@xlink:href] | nuds:authority/nuds:persname[@xlink:href] | nuds:authority/nuds:corpname[@xlink:href]"
 			mode="nomisma"/>
-		<xsl:apply-templates select="nuds:date[@standardDate] | nuds:dateRange[child::node()/@standardDate]" mode="nomisma"/>
+		<xsl:apply-templates select="nuds:date[@standardDate] | nuds:date[@notBefore and @notAfter] | nuds:dateRange[child::node()/@standardDate]" mode="nomisma"/>
 		<xsl:if test="nuds:obverse">
 			<nmo:hasObverse rdf:resource="{if (string($uri_space)) then concat($uri_space, $id) else concat($url, 'id/', $id)}#obverse"/>
 		</xsl:if>
@@ -670,12 +670,24 @@
 	</xsl:template>
 
 	<xsl:template match="nuds:date" mode="nomisma">
-		<nmo:hasStartDate rdf:datatype="http://www.w3.org/2001/XMLSchema#gYear">
-			<xsl:value-of select="@standardDate"/>
-		</nmo:hasStartDate>
-		<nmo:hasEndDate rdf:datatype="http://www.w3.org/2001/XMLSchema#gYear">
-			<xsl:value-of select="@standardDate"/>
-		</nmo:hasEndDate>
+		<xsl:choose>
+			<xsl:when test="@standardDate">
+				<nmo:hasStartDate rdf:datatype="http://www.w3.org/2001/XMLSchema#gYear">
+					<xsl:value-of select="@standardDate"/>
+				</nmo:hasStartDate>
+				<nmo:hasEndDate rdf:datatype="http://www.w3.org/2001/XMLSchema#gYear">
+					<xsl:value-of select="@standardDate"/>
+				</nmo:hasEndDate>
+			</xsl:when>
+			<xsl:when test="@notBefore and @notAfter">
+				<nmo:hasStartDate rdf:datatype="http://www.w3.org/2001/XMLSchema#gYear">
+					<xsl:value-of select="@notBefore"/>
+				</nmo:hasStartDate>
+				<nmo:hasEndDate rdf:datatype="http://www.w3.org/2001/XMLSchema#gYear">
+					<xsl:value-of select="@notAfter"/>
+				</nmo:hasEndDate>
+			</xsl:when>
+		</xsl:choose>
 	</xsl:template>
 
 	<xsl:template match="nuds:dateRange" mode="nomisma">
