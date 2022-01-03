@@ -1,8 +1,9 @@
 /************************************
 VISUALIZATION FUNCTIONS
 Written by Ethan Gruber, gruber@numismatics.org
+Date: May 2020
 Library: jQuery
-Description: Rendering graphics based on hoard counts
+Description: Display functions for coin type records. Extended 2020 for displaying images of physical coins connected to hoards
  ************************************/
 $(document).ready(function () {
 
@@ -17,7 +18,7 @@ $(document).ready(function () {
     $('a.thumbImage').fancybox({
         type: 'image',
         beforeShow: function () {
-            this.title = '<a href="' + this.element.attr('id') + '">' + this.element.attr('title') + '</a>';
+            this.title = '<a href="' + this.element.attr('id') + '">' + this.element.attr('title') + '</a>'
         },
         helpers: {
             title: {
@@ -29,6 +30,7 @@ $(document).ready(function () {
     $('.iiif-image').fancybox({
         beforeShow: function () {
             var manifest = this.element.attr('manifest');
+            this.title = '<a href="' + this.element.attr('id') + '">' + this.element.attr('title') + '</a>'
             //remove and replace #iiif-container, if different or new
             if (manifest != $('#manifest').text()) {          
                 $('#iiif-container').remove();
@@ -44,6 +46,7 @@ $(document).ready(function () {
         }
     });
     
+        
     $('.model-button').fancybox({
          beforeShow: function () {
             var url = this.element.attr('model-url');
@@ -71,7 +74,7 @@ $(document).ready(function () {
         // Grab a IIIF manifest
         $.getJSON(manifest, function (data) {       
             //determine where it is a collection or image manifest
-            if (data[ '@context'] == 'http://iiif.io/api/image/2/context.json') {
+            if (data[ '@context'] == 'http://iiif.io/api/image/2/context.json' || data['@context'] == 'http://library.stanford.edu/iiif/image-api/1.1/context.json') {
                 L.tileLayer.iiif(manifest).addTo(iiifImage);
             } else if (data[ '@context'] == 'http://iiif.io/api/presentation/2/context.json') {
                 var iiifLayers = {
