@@ -282,7 +282,7 @@
 					</xsl:choose>
 
 					<field name="{$side}_leg_text">
-						<xsl:value-of select="normalize-space(.)"/>
+						<xsl:value-of select="normalize-space(replace(., '·', ' '))"/>
 					</field>
 					<field name="{$side}_legendCondensed_text">
 						<xsl:value-of select="replace(., ' ', '')"/>
