@@ -1128,8 +1128,7 @@
 
 		<xsl:choose>
 			<!-- use the date text when @notBefore and @notAfter are used -->
-			<xsl:when test="count($typologies//nuds:date) = 1 and $typologies//nuds:date[@notBefore and @notAfter]">
-				
+			<xsl:when test="count($typologies//nuds:date) = 1 and $typologies//nuds:date[@notBefore and @notAfter]">				
 				<field name="year_minint">
 					<xsl:value-of select="number($typologies//nuds:date/@notBefore)"/>
 				</field>
@@ -1145,6 +1144,31 @@
 				<field name="date_display">
 					<xsl:value-of select="$typologies//nuds:date"/>
 				</field>					
+			</xsl:when>
+			<xsl:when test="count($typologies//nuds:date) = 1 and $typologies//nuds:date[@standardDate]">				
+				<field name="year_minint">
+					<xsl:value-of select="number($typologies//nuds:date/@standardDate)"/>
+				</field>
+				<field name="year_num">
+					<xsl:value-of select="number($typologies//nuds:date/@standardDate)"/>
+				</field>
+				<field name="year_maxint">
+					<xsl:value-of select="number($typologies//nuds:date/@standardDate)"/>
+				</field>		
+				
+				<xsl:choose>
+					<xsl:when test="$collection-name = 'oscar'">
+						<field name="date_display">
+							<xsl:value-of select="$typologies//nuds:date"/>
+						</field>
+					</xsl:when>
+					<xsl:otherwise>
+						<field name="date_display">
+							<xsl:value-of select="numishare:normalizeDate(@standardDate)"/>
+						</field>
+					</xsl:otherwise>
+				</xsl:choose>
+									
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:variable name="dates" as="element()*">
