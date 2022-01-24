@@ -1409,15 +1409,17 @@
 			<strong>
 				<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
 				<xsl:if test="string(nuds:legend) or string(nuds:type)">
-					<xsl:choose>
-						<xsl:when test="$lang = 'de'">; </xsl:when>
-						<xsl:otherwise>: </xsl:otherwise>
-					</xsl:choose>
+					<xsl:text>: </xsl:text>
 				</xsl:if>
 			</strong>
 			<xsl:apply-templates select="nuds:legend" mode="physical"/>
 			<xsl:if test="string(nuds:legend) and string(nuds:type)">
-				<xsl:text> - </xsl:text>
+				<xsl:choose>
+					<xsl:when test="$lang = 'de'">; </xsl:when>
+					<xsl:otherwise>
+						<xsl:text> - </xsl:text>
+					</xsl:otherwise>
+				</xsl:choose>				
 			</xsl:if>
 			<!-- apply language-specific type description templates -->
 			<xsl:choose>
