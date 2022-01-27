@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xxforms="http://orbeon.org/oxf/xml/xforms" xmlns:fr="http://orbeon.org/oxf/xml/form-runner"
+	xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xxf="http://orbeon.org/oxf/xml/xforms" xmlns:fr="http://orbeon.org/oxf/xml/form-runner"
 	xmlns:xi="http://www.w3.org/2001/XInclude">
 	<head>
 		<title>Numishare: Feedback</title>
@@ -13,8 +13,8 @@
 		<link rel="stylesheet" href="/apps/numishare/xforms/css/xforms.css" />
 
 		<!-- model -->
-		<xforms:model xxforms:function-library="org.orbeon.oxf.fr.library.FormRunnerFunctionLibrary">
-			<xforms:instance id="control-instance" xxforms:exclude-result-prefixes="#all">
+		<xforms:model xxf:function-library="org.orbeon.oxf.fr.library.FormRunnerFunctionLibrary">
+			<xforms:instance id="control-instance" xxf:exclude-result-prefixes="#all">
 				<controls xmlns="">
 					<status></status>
 					<feedback-type></feedback-type>
@@ -25,11 +25,11 @@
 				</controls>
 			</xforms:instance>
 
-			<xforms:instance id="config" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="config" xxf:exclude-result-prefixes="#all">
 				<config xmlns=""></config>
 			</xforms:instance>
 
-			<xforms:instance id="email-config" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="email-config" xxf:exclude-result-prefixes="#all">
 				<message xmlns="">
 					<smtp-host></smtp-host>
 					<from>
@@ -76,7 +76,7 @@
 			<xforms:action ev:event="xforms-model-construct-done">
 				<!-- load the config -->
 				<xforms:insert context="instance('dump')"
-					origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/models/config.xpl', 'data', instance('dump'), 'data')"/>
+					origin="xxf:call-xpl('oxf:/apps/numishare/xpl/models/config.xpl', 'data', instance('dump'), 'data')"/>
 				<xforms:insert context="instance('config')" origin="instance('dump')/config/*"/>
 
 				<!-- set email processor configuration from the config -->
@@ -187,7 +187,7 @@
 
 								<xforms:toggle case="response-success"/>
 								<xforms:insert context="instance('dump')"
-									origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/controllers/feedback-email.xpl', 'data', instance('email-config'), 'data')"
+									origin="xxf:call-xpl('oxf:/apps/numishare/xpl/controllers/feedback-email.xpl', 'data', instance('email-config'), 'data')"
 								/>
 							</xforms:action>
 						</xforms:action>

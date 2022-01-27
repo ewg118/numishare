@@ -1,5 +1,5 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events"
-	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xxforms="http://orbeon.org/oxf/xml/xforms" xmlns:xi="http://www.w3.org/2001/XInclude"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xxf="http://orbeon.org/oxf/xml/xforms" xmlns:xi="http://www.w3.org/2001/XInclude"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:numishare="https://github.com/ewg118/numishare"
 	xmlns:mets="http://www.loc.gov/METS/" xmlns:gml="http://www.opengis.net/gml" xmlns:nuds="http://nomisma.org/nuds" xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns:exist="http://exist.sourceforge.net/NS/exist" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:oxf="http://www.orbeon.com/oxf/processors">
@@ -16,7 +16,7 @@
 
 		<xforms:model xmlns="http://nomisma.org/nuds">
 
-			<xforms:instance id="object" xxforms:exclude-result-prefixes="xhtml xforms xxforms ev xs xi xsi fr oxf nuds numishare exist">
+			<xforms:instance id="object" xxf:exclude-result-prefixes="xhtml xforms xxforms ev xs xi xsi fr oxf nuds numishare exist">
 				<nuds recordType="physical" xmlns="http://nomisma.org/nuds" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:mets="http://www.loc.gov/METS/"
 					xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml">
 					<control>
@@ -55,7 +55,7 @@
 				</nuds>
 			</xforms:instance>
 
-			<xforms:instance id="parent-type" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="parent-type" xxf:exclude-result-prefixes="#all">
 				<nuds xmlns="http://nomisma.org/nuds" xmlns:mets="http://www.loc.gov/METS/" xmlns:xlink="http://www.w3.org/1999/xlink"/>
 			</xforms:instance>
 
@@ -139,7 +139,7 @@
 			</xforms:instance>
 
 			<!-- delete config for XPL, used for removing associated image files -->
-			<xforms:instance id="delete-config" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="delete-config" xxf:exclude-result-prefixes="#all">
 				<config xmlns="">
 					<delete>
 						<url/>
@@ -156,7 +156,7 @@
 			</xforms:instance>
 
 			<!-- control templates -->
-			<xforms:instance id="maintenanceEvent-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="maintenanceEvent-template" xxf:exclude-result-prefixes="#all">
 				<maintenanceEvent>
 					<eventType/>
 					<eventDateTime standardDateTime=""/>
@@ -164,173 +164,173 @@
 					<agent/>
 				</maintenanceEvent>
 			</xforms:instance>
-			<xforms:instance id="semanticDeclaration-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="semanticDeclaration-template" xxf:exclude-result-prefixes="#all">
 				<semanticDeclaration>
 					<prefix/>
 					<namespace/>
 				</semanticDeclaration>
 			</xforms:instance>
-			<xforms:instance id="otherRecordId-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="otherRecordId-template" xxf:exclude-result-prefixes="#all">
 				<otherRecordId/>
 			</xforms:instance>
 
 			<!-- rightsStmt templates -->
-			<xforms:instance id="copyrightHolder-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="copyrightHolder-template" xxf:exclude-result-prefixes="#all">
 				<copyrightHolder/>
 			</xforms:instance>
 
-			<xforms:instance id="rights-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="rights-template" xxf:exclude-result-prefixes="#all">
 				<rights xlink:type="simple" xlink:href=""/>
 			</xforms:instance>
 
 			<!-- commonly repeatable elements -->
-			<xforms:instance id="date-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="date-template" xxf:exclude-result-prefixes="#all">
 				<date standardDate=""/>
 			</xforms:instance>
-			<xforms:instance id="descriptionSet-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="descriptionSet-template" xxf:exclude-result-prefixes="#all">
 				<descriptionSet/>
 			</xforms:instance>
-			<xforms:instance id="description-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="description-template" xxf:exclude-result-prefixes="#all">
 				<description xml:lang=""/>
 			</xforms:instance>
-			<xforms:instance id="identifier-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="identifier-template" xxf:exclude-result-prefixes="#all">
 				<identifier/>
 			</xforms:instance>
-			<xforms:instance id="noteSet-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="noteSet-template" xxf:exclude-result-prefixes="#all">
 				<noteSet/>
 			</xforms:instance>
-			<xforms:instance id="note-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="note-template" xxf:exclude-result-prefixes="#all">
 				<note/>
 			</xforms:instance>
-			<xforms:instance id="obverse-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="obverse-template" xxf:exclude-result-prefixes="#all">
 				<obverse/>
 			</xforms:instance>
-			<xforms:instance id="reverse-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="reverse-template" xxf:exclude-result-prefixes="#all">
 				<reverse/>
 			</xforms:instance>
-			<xforms:instance id="edge-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="edge-template" xxf:exclude-result-prefixes="#all">
 				<edge/>
 			</xforms:instance>
 
 			<!-- descMeta templates -->
-			<xforms:instance id="department-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="department-template" xxf:exclude-result-prefixes="#all">
 				<department/>
 			</xforms:instance>
 
 			<!-- physDesc templates -->
-			<xforms:instance id="axis-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="axis-template" xxf:exclude-result-prefixes="#all">
 				<axis/>
 			</xforms:instance>
-			<xforms:instance id="completeness-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="completeness-template" xxf:exclude-result-prefixes="#all">
 				<completeness/>
 			</xforms:instance>
-			<xforms:instance id="condition-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="condition-template" xxf:exclude-result-prefixes="#all">
 				<condition/>
 			</xforms:instance>
-			<xforms:instance id="conservationState-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="conservationState-template" xxf:exclude-result-prefixes="#all">
 				<conservationState/>
 			</xforms:instance>
-			<xforms:instance id="countermark-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="countermark-template" xxf:exclude-result-prefixes="#all">
 				<countermark/>
 			</xforms:instance>
-			<xforms:instance id="diameter-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="diameter-template" xxf:exclude-result-prefixes="#all">
 				<diameter/>
 			</xforms:instance>
-			<xforms:instance id="grade-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="grade-template" xxf:exclude-result-prefixes="#all">
 				<grade/>
 			</xforms:instance>
-			<xforms:instance id="height-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="height-template" xxf:exclude-result-prefixes="#all">
 				<height/>
 			</xforms:instance>
-			<xforms:instance id="measurementsSet-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="measurementsSet-template" xxf:exclude-result-prefixes="#all">
 				<measurementsSet/>
 			</xforms:instance>			
-			<xforms:instance id="symbol-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="symbol-template" xxf:exclude-result-prefixes="#all">
 				<symbol/>
 			</xforms:instance>
-			<xforms:instance id="testmark-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="testmark-template" xxf:exclude-result-prefixes="#all">
 				<testmark/>
 			</xforms:instance>
-			<xforms:instance id="thickness-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="thickness-template" xxf:exclude-result-prefixes="#all">
 				<thickness/>
 			</xforms:instance>
-			<xforms:instance id="wear-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="wear-template" xxf:exclude-result-prefixes="#all">
 				<wear xlink:type="simple" xlink:href=""/>
 			</xforms:instance>
-			<xforms:instance id="weight-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="weight-template" xxf:exclude-result-prefixes="#all">
 				<weight units="g"/>
 			</xforms:instance>
-			<xforms:instance id="width-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="width-template" xxf:exclude-result-prefixes="#all">
 				<width/>
 			</xforms:instance>
 
 			<!-- objecttype -->
-			<xforms:instance id="objectType-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="objectType-template" xxf:exclude-result-prefixes="#all">
 				<objectType xlink:type="simple" xlink:href=""/>
 			</xforms:instance>
 
 			<!-- undertypeDesc -->
-			<xforms:instance id="undertypeDesc-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="undertypeDesc-template" xxf:exclude-result-prefixes="#all">
 				<undertypeDesc/>
 			</xforms:instance>
 
 			<!-- adminDesc -->
-			<xforms:instance id="adminDesc-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="adminDesc-template" xxf:exclude-result-prefixes="#all">
 				<adminDesc/>
 			</xforms:instance>
-			<xforms:instance id="acknowledgment-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="acknowledgment-template" xxf:exclude-result-prefixes="#all">
 				<acknowledgment/>
 			</xforms:instance>
 
-			<xforms:instance id="appraisal-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="appraisal-template" xxf:exclude-result-prefixes="#all">
 				<appraisal>
 					<date/>
 					<appraiser/>
 				</appraisal>
 			</xforms:instance>
 
-			<xforms:instance id="collection-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="collection-template" xxf:exclude-result-prefixes="#all">
 				<collection/>
 			</xforms:instance>
 
-			<xforms:instance id="chronitem-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="chronitem-template" xxf:exclude-result-prefixes="#all">
 				<chronitem>
 					<date/>
 					<previousColl/>
 				</chronitem>
 			</xforms:instance>
-			<xforms:instance id="sale-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="sale-template" xxf:exclude-result-prefixes="#all">
 				<sale>
 					<saleCatalog/>
 					<saleItem/>
 				</sale>
 			</xforms:instance>
-			<xforms:instance id="owner-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="owner-template" xxf:exclude-result-prefixes="#all">
 				<owner/>
 			</xforms:instance>
-			<xforms:instance id="physloc-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="physloc-template" xxf:exclude-result-prefixes="#all">
 				<physloc/>
 			</xforms:instance>
-			<xforms:instance id="repository-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="repository-template" xxf:exclude-result-prefixes="#all">
 				<repository/>
 			</xforms:instance>
 			<!-- references -->
-			<xforms:instance id="refDesc-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="refDesc-template" xxf:exclude-result-prefixes="#all">
 				<refDesc/>
 			</xforms:instance>
-			<xforms:instance id="reference-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="reference-template" xxf:exclude-result-prefixes="#all">
 				<reference>
 					<tei:title/>
 				</reference>
 			</xforms:instance>
-			<xforms:instance id="subjectSet-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="subjectSet-template" xxf:exclude-result-prefixes="#all">
 				<subjectSet/>
 			</xforms:instance>
-			<xforms:instance id="subject-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="subject-template" xxf:exclude-result-prefixes="#all">
 				<subject xlink:type="simple"/>
 			</xforms:instance>
 			<!-- findspotDesc -->
-			<xforms:instance id="findspotDesc-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="findspotDesc-template" xxf:exclude-result-prefixes="#all">
 				<findspotDesc>
 					<findspot>
 						<geogname xlink:role="findspot" xlink:href=""/>
@@ -338,39 +338,39 @@
 				</findspotDesc>
 			</xforms:instance>
 			<!-- digital representations -->
-			<xforms:instance id="digRep-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="digRep-template" xxf:exclude-result-prefixes="#all">
 				<digRep>
 					<mets:fileSec/>
 				</digRep>
 			</xforms:instance>
 			<!-- mets -->
-			<xforms:instance id="fileGrp-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="fileGrp-template" xxf:exclude-result-prefixes="#all">
 				<mets:fileGrp USE="" xmlns=""/>
 			</xforms:instance>
 
-			<xforms:instance id="file-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="file-template" xxf:exclude-result-prefixes="#all">
 				<mets:file USE="" xmlns="">
 					<mets:FLocat LOCTYPE="URL" xlink:href=""/>
 				</mets:file>
 			</xforms:instance>
 
 			<!-- MIME types for METS images -->
-			<xforms:instance id="mimetypes" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="mimetypes" xxf:exclude-result-prefixes="#all">
 				<types xmlns="">
 					<type>image/jpeg</type>
 					<type>image/png</type>
 				</types>
 			</xforms:instance>
 
-			<xforms:instance id="color-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="color-template" xxf:exclude-result-prefixes="#all">
 				<color/>
 			</xforms:instance>
 
-			<xforms:instance id="sernum-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="sernum-template" xxf:exclude-result-prefixes="#all">
 				<serialNumber/>
 			</xforms:instance>
 
-			<xforms:instance id="watermark-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="watermark-template" xxf:exclude-result-prefixes="#all">
 				<watermark/>
 			</xforms:instance>
 
@@ -557,7 +557,7 @@
 			<!-- Load File -->
 			<xforms:submission id="load-object" serialization="none" method="get"
 				action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/objects/{encode-for-uri(instance('control-instance')/id)}.xml"
-				xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}" replace="instance"
+				xxf:username="{instance('exist-config')/username}" xxf:password="{instance('exist-config')/password}" replace="instance"
 				instance="object">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Error loading file.</xforms:message>
 				<xforms:action ev:event="xforms-submit-done">
@@ -569,7 +569,7 @@
 					<xforms:setvalue ref="instance('object')/nuds:control/nuds:maintenanceHistory/nuds:maintenanceEvent[last()]/nuds:eventType"
 						>revised</xforms:setvalue>
 					<xforms:setvalue ref="instance('object')/nuds:control/nuds:maintenanceHistory/nuds:maintenanceEvent[last()]/nuds:agent"
-						value="xxforms:get-remote-user()"/>
+						value="xxf:get-remote-user()"/>
 
 					<!-- if typeDesc is an xlink:href, set the resource case -->
 					<xforms:action if="instance('object')/nuds:descMeta/nuds:typeDesc/@xlink:href">
@@ -604,7 +604,7 @@
 
 			<xforms:submission id="load-parent-type" serialization="none" method="get"
 				action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/objects/{instance('control-instance')/solr-id}.xml"
-				xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}" replace="instance"
+				xxf:username="{instance('exist-config')/username}" xxf:password="{instance('exist-config')/password}" replace="instance"
 				instance="parent-type">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Error loading parent type.</xforms:message>
 				<!-- index parent type into Solr if it's approved, but if it's an approvedSubtype, iterate through parent-type process -->
@@ -620,8 +620,8 @@
 			</xforms:submission>
 
 			<!-- Save File -->
-			<xforms:submission id="save-object" ref="instance('object')" xxforms:username="{instance('exist-config')/username}"
-				xxforms:password="{instance('exist-config')/password}"
+			<xforms:submission id="save-object" ref="instance('object')" xxf:username="{instance('exist-config')/username}"
+				xxf:password="{instance('exist-config')/password}"
 				action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/objects/{instance('object')/nuds:control/nuds:recordId}.xml"
 				method="put" replace="none">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Save Error. Are all required inputs filled?</xforms:message>
@@ -689,18 +689,18 @@
 			<!-- ***** LOADING COLLECTIONS/CONFIG *****-->
 			<xforms:submission id="load-config" serialization="none" method="get"
 				action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/config.xml"
-				xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}" replace="instance"
+				xxf:username="{instance('exist-config')/username}" xxf:password="{instance('exist-config')/password}" replace="instance"
 				instance="config">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Unable to load Numishare configuration</xforms:message>
 				<xforms:action ev:event="xforms-submit-done">
 					<!-- load object or create new one -->
-					<xforms:action if="string(xxforms:get-request-parameter('id'))">
-						<xforms:setvalue ref="instance('control-instance')/id" value="xxforms:get-request-parameter('id')"/>
+					<xforms:action if="string(xxf:get-request-parameter('id'))">
+						<xforms:setvalue ref="instance('control-instance')/id" value="xxf:get-request-parameter('id')"/>
 						<xforms:send submission="load-object"/>
 					</xforms:action>
-					<xforms:action if="not(string(xxforms:get-request-parameter('id')))">
+					<xforms:action if="not(string(xxf:get-request-parameter('id')))">
 						<xforms:var name="binding" as="node()?">
-							<xxforms:sequence select="instance('object')"/>
+							<xxf:sequence select="instance('object')"/>
 						</xforms:var>
 
 						<xforms:setvalue ref="instance('object')/nuds:control/nuds:recordId"
@@ -777,7 +777,7 @@
 
 						<!-- set the maintenanceEvent Agent -->
 						<xforms:setvalue ref="instance('object')/nuds:control/nuds:maintenanceHistory/nuds:maintenanceEvent[last()]/nuds:agent"
-							value="xxforms:get-remote-user()"/>
+							value="xxf:get-remote-user()"/>
 					</xforms:action>
 
 					<!-- perform specific tasks for a conceptual object -->
@@ -795,12 +795,12 @@
 			</xforms:submission>
 
 			<xforms:submission id="load-collections" serialization="none" method="get" action="{instance('exist-config')/url}collections-list.xml"
-				replace="instance" instance="collections-list" xxforms:username="{instance('exist-config')/username}"
-				xxforms:password="{instance('exist-config')/password}">
+				replace="instance" instance="collections-list" xxf:username="{instance('exist-config')/username}"
+				xxf:password="{instance('exist-config')/password}">
 				<!-- if the config loads successfully, set the collection names based on authentication -->
 				<xforms:action ev:event="xforms-submit-done">
 					<!-- by default set the collection-name from the security role -->
-					<xforms:action if="not(xxforms:is-user-in-role('numishare-admin'))">
+					<xforms:action if="not(xxf:is-user-in-role('numishare-admin'))">
 						<xforms:action if="string(instance('collections-list')/collection[@role=instance('control-instance')/request-security/role]/@name)">
 							<xforms:setvalue ref="instance('control-instance')/collection-name"
 								value="instance('collections-list')/collection[@role=instance('control-instance')/request-security/role]/@name"/>
@@ -825,20 +825,20 @@
 			<!-- ***** XQUERY *****-->
 			<xforms:submission id="xquery-collection" ref="instance('eXist-xquery')"
 				action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/objects" method="post" replace="instance"
-				instance="xquery-result" xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}">
+				instance="xquery-result" xxf:username="{instance('exist-config')/username}" xxf:password="{instance('exist-config')/password}">
 				<xforms:setvalue ref="instance('control-instance')/error" ev:event="xforms-submit-error">Error querying eXist database.</xforms:setvalue>
 			</xforms:submission>
 
 			<!-- ********** XFORMS-MODEL-CONSTRUCT-DONE ********** -->
 			<xforms:action ev:event="xforms-model-construct-done">
 				<!-- if there's a collection-name session attribute carried over from numishare-admin, then use it to set the collection-name -->
-				<xforms:action if="string(xxforms:get-session-attribute('collection-name'))">
-					<xforms:setvalue ref="instance('control-instance')/collection-name" value="xxforms:get-session-attribute('collection-name')"/>
+				<xforms:action if="string(xxf:get-session-attribute('collection-name'))">
+					<xforms:setvalue ref="instance('control-instance')/collection-name" value="xxf:get-session-attribute('collection-name')"/>
 					<xforms:send submission="load-config"/>
 				</xforms:action>
-				<xforms:action if="not(string(xxforms:get-session-attribute('collection-name')))">
+				<xforms:action if="not(string(xxf:get-session-attribute('collection-name')))">
 					<xforms:insert context="instance('control-instance')" nodeset="collection-name" position="after"
-						origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/get-authentication.xpl', 'dump', instance('dump'), 'data')"/>
+						origin="xxf:call-xpl('oxf:/apps/numishare/xpl/get-authentication.xpl', 'dump', instance('dump'), 'data')"/>
 					<xforms:send submission="load-collections"/>
 				</xforms:action>
 			</xforms:action>
@@ -915,7 +915,7 @@
 										if="not(instance('object')/nuds:descMeta/nuds:typeDesc/nuds:geographic/*)"/>
 
 									<!-- delete any empty obverse or reverse element in the NUDS document -->
-									<xforms:action xxforms:iterate="instance('object')//nuds:obverse|instance('object')//nuds:reverse">
+									<xforms:action xxf:iterate="instance('object')//nuds:obverse|instance('object')//nuds:reverse">
 										<xforms:delete nodeset="." if="not(child::*)"/>
 									</xforms:action>
 									<xforms:send submission="save-object"/>
@@ -969,7 +969,7 @@
 													origin="instance('otherRecordId-template')"/>
 												<xforms:insert context="instance('object')/nuds:control/nuds:otherRecordId[last()]"
 													origin="xforms:attribute('semantic', 'skos:broader')"/>
-												<xxforms:show dialog="broader-dialog"/>
+												<xxf:show dialog="broader-dialog"/>
 											</xforms:action>
 										</xforms:action>
 										<!--<xforms:action if=".!='approvedSubtype'">
@@ -1526,10 +1526,10 @@
 												<xforms:label>
 													<span class="glyphicon glyphicon-plus"></span>
 												</xforms:label>
-												<xxforms:show ev:event="DOMActivate" dialog="conservationState-objects"/>
+												<xxf:show ev:event="DOMActivate" dialog="conservationState-objects"/>
 											</xforms:trigger>
 										</span>
-										<xxforms:dialog id="conservationState-objects" appearance="full" level="modal" close="true" draggable="true"
+										<xxf:dialog id="conservationState-objects" appearance="full" level="modal" close="true" draggable="true"
 											visible="false">
 											<xforms:label>Conservation State Objects</xforms:label>
 											<xforms:group ref=".[count(nuds:conservationState/nuds:completeness) &lt; 1]">
@@ -1541,7 +1541,7 @@
 															nodeset="./child::node()[last()]" if="count(nuds:conservationState) = 0"/>
 														<xforms:insert context="nuds:conservationState" origin="instance('completeness-template')"
 															nodeset="./child::node()[last()]"/>
-														<xxforms:hide dialog="conservationState-objects"/>
+														<xxf:hide dialog="conservationState-objects"/>
 													</xforms:action>
 												</xforms:trigger>
 											</xforms:group>
@@ -1554,7 +1554,7 @@
 															nodeset="./child::node()[last()]" if="count(nuds:conservationState) = 0"/>
 														<xforms:insert context="nuds:conservationState" origin="instance('condition-template')"
 															nodeset="./child::node()[last()]"/>
-														<xxforms:hide dialog="conservationState-objects"/>
+														<xxf:hide dialog="conservationState-objects"/>
 													</xforms:action>
 												</xforms:trigger>
 											</xforms:group>
@@ -1567,7 +1567,7 @@
 															nodeset="./child::node()[last()]" if="count(nuds:conservationState) = 0"/>
 														<xforms:insert context="nuds:conservationState" origin="instance('grade-template')"
 															nodeset="./child::node()[last()]"/>
-														<xxforms:hide dialog="conservationState-objects"/>
+														<xxf:hide dialog="conservationState-objects"/>
 													</xforms:action>
 												</xforms:trigger>
 											</xforms:group>
@@ -1580,7 +1580,7 @@
 															nodeset="./child::node()[last()]" if="count(nuds:conservationState) = 0"/>
 														<xforms:insert context="nuds:conservationState" origin="instance('wear-template')"
 															nodeset="./child::node()[last()]"/>
-														<xxforms:hide dialog="conservationState-objects"/>
+														<xxf:hide dialog="conservationState-objects"/>
 													</xforms:action>
 												</xforms:trigger>
 											</xforms:group>
@@ -1596,7 +1596,7 @@
 															nodeset="./child::node()[last()]" if="count(nuds:conservationState/nuds:obverse) = 0"/>
 														<xforms:insert context="nuds:conservationState/nuds:obverse" origin="instance('completeness-template')"
 															nodeset="./child::node()[last()]"/>
-														<xxforms:hide dialog="conservationState-objects"/>
+														<xxf:hide dialog="conservationState-objects"/>
 													</xforms:action>
 												</xforms:trigger>
 											</xforms:group>
@@ -1611,7 +1611,7 @@
 															nodeset="./child::node()[last()]" if="count(nuds:conservationState/nuds:obverse) = 0"/>
 														<xforms:insert context="nuds:conservationState/nuds:obverse" origin="instance('condition-template')"
 															nodeset="./child::node()[last()]"/>
-														<xxforms:hide dialog="conservationState-objects"/>
+														<xxf:hide dialog="conservationState-objects"/>
 													</xforms:action>
 												</xforms:trigger>
 											</xforms:group>
@@ -1626,7 +1626,7 @@
 															nodeset="./child::node()[last()]" if="count(nuds:conservationState/nuds:obverse) = 0"/>
 														<xforms:insert context="nuds:conservationState/nuds:obverse" origin="instance('grade-template')"
 															nodeset="./child::node()[last()]"/>
-														<xxforms:hide dialog="conservationState-objects"/>
+														<xxf:hide dialog="conservationState-objects"/>
 													</xforms:action>
 												</xforms:trigger>
 											</xforms:group>
@@ -1641,7 +1641,7 @@
 															nodeset="./child::node()[last()]" if="count(nuds:conservationState/nuds:obverse) = 0"/>
 														<xforms:insert context="nuds:conservationState/nuds:obverse" origin="instance('wear-template')"
 															nodeset="./child::node()[last()]"/>
-														<xxforms:hide dialog="conservationState-objects"/>
+														<xxf:hide dialog="conservationState-objects"/>
 													</xforms:action>
 												</xforms:trigger>
 											</xforms:group>
@@ -1657,7 +1657,7 @@
 															nodeset="./child::node()[last()]" if="count(nuds:conservationState/nuds:reverse) = 0"/>
 														<xforms:insert context="nuds:conservationState/nuds:reverse" origin="instance('completeness-template')"
 															nodeset="./child::node()[last()]"/>
-														<xxforms:hide dialog="conservationState-objects"/>
+														<xxf:hide dialog="conservationState-objects"/>
 													</xforms:action>
 												</xforms:trigger>
 											</xforms:group>
@@ -1672,7 +1672,7 @@
 															nodeset="./child::node()[last()]" if="count(nuds:conservationState/nuds:reverse) = 0"/>
 														<xforms:insert context="nuds:conservationState/nuds:reverse" origin="instance('condition-template')"
 															nodeset="./child::node()[last()]"/>
-														<xxforms:hide dialog="conservationState-objects"/>
+														<xxf:hide dialog="conservationState-objects"/>
 													</xforms:action>
 												</xforms:trigger>
 											</xforms:group>
@@ -1687,7 +1687,7 @@
 															nodeset="./child::node()[last()]" if="count(nuds:conservationState/nuds:reverse) = 0"/>
 														<xforms:insert context="nuds:conservationState/nuds:reverse" origin="instance('grade-template')"
 															nodeset="./child::node()[last()]"/>
-														<xxforms:hide dialog="conservationState-objects"/>
+														<xxf:hide dialog="conservationState-objects"/>
 													</xforms:action>
 												</xforms:trigger>
 											</xforms:group>
@@ -1702,11 +1702,11 @@
 															nodeset="./child::node()[last()]" if="count(nuds:conservationState/nuds:reverse) = 0"/>
 														<xforms:insert context="nuds:conservationState/nuds:reverse" origin="instance('wear-template')"
 															nodeset="./child::node()[last()]"/>
-														<xxforms:hide dialog="conservationState-objects"/>
+														<xxf:hide dialog="conservationState-objects"/>
 													</xforms:action>
 												</xforms:trigger>
 											</xforms:group>
-										</xxforms:dialog>
+										</xxf:dialog>
 										<xforms:group ref="nuds:conservationState">
 											<numishare:conservationState/>
 											<xforms:group ref="nuds:obverse">
@@ -2036,7 +2036,7 @@
 												<span class="glyphicon glyphicon-plus"></span>Acknowledgment</xforms:label>
 											<xforms:action ev:event="DOMActivate">
 												<xforms:insert context="." origin="instance('acknowledgment-template')" nodeset="./child::node()[last()]"/>
-												<xxforms:hide dialog="adminDesc-objects"/>
+												<xxf:hide dialog="adminDesc-objects"/>
 											</xforms:action>
 										</xforms:trigger>
 										<!--<xforms:group ref=".[count(nuds:acqinfo) &lt; 1]">
@@ -2045,7 +2045,7 @@
 													<span class="glyphicon glyphicon-plus"></span>Acquisition Information</xforms:label>
 												<xforms:action ev:event="DOMActivate">
 													<xforms:insert context="." origin="instance('acqinfo-template')" nodeset="./child::node()[last()]"/>
-													<xxforms:hide dialog="adminDesc-objects"/>
+													<xxf:hide dialog="adminDesc-objects"/>
 												</xforms:action>
 											</xforms:trigger>
 										</xforms:group>-->
@@ -2054,7 +2054,7 @@
 												<span class="glyphicon glyphicon-plus"></span>Appraisal</xforms:label>
 											<xforms:action ev:event="DOMActivate">
 												<xforms:insert context="." origin="instance('appraisal-template')" nodeset="./child::node()[last()]"/>
-												<xxforms:hide dialog="adminDesc-objects"/>
+												<xxf:hide dialog="adminDesc-objects"/>
 											</xforms:action>
 										</xforms:trigger>
 										<xforms:group ref=".[count(nuds:collection) &lt; 1]">
@@ -2063,7 +2063,7 @@
 													<span class="glyphicon glyphicon-plus"></span>Collection</xforms:label>
 												<xforms:action ev:event="DOMActivate">
 													<xforms:insert context="." origin="instance('collection-template')" nodeset="./child::node()[last()]"/>
-													<xxforms:hide dialog="adminDesc-objects"/>
+													<xxf:hide dialog="adminDesc-objects"/>
 												</xforms:action>
 											</xforms:trigger>
 										</xforms:group>
@@ -2072,7 +2072,7 @@
 												<span class="glyphicon glyphicon-plus"></span>Department</xforms:label>
 											<xforms:action ev:event="DOMActivate">
 												<xforms:insert context="." origin="instance('department-template')" nodeset="./child::node()[last()]"/>
-												<xxforms:hide dialog="adminDesc-objects"/>
+												<xxf:hide dialog="adminDesc-objects"/>
 											</xforms:action>
 										</xforms:trigger>
 										<!--<xforms:group ref=".[count(nuds:custodhist) &lt; 1]">
@@ -2081,7 +2081,7 @@
 													<span class="glyphicon glyphicon-plus"></span>Custodial History</xforms:label>
 												<xforms:action ev:event="DOMActivate">
 													<xforms:insert context="." origin="instance('custodhist-template')" nodeset="./child::node()[last()]"/>
-													<xxforms:hide dialog="adminDesc-objects"/>
+													<xxf:hide dialog="adminDesc-objects"/>
 												</xforms:action>
 											</xforms:trigger>
 										</xforms:group>-->
@@ -2091,7 +2091,7 @@
 													<span class="glyphicon glyphicon-plus"></span>Identifier</xforms:label>
 												<xforms:action ev:event="DOMActivate">
 													<xforms:insert context="." origin="instance('identifier-template')" nodeset="./child::node()[last()]"/>
-													<xxforms:hide dialog="adminDesc-objects"/>
+													<xxf:hide dialog="adminDesc-objects"/>
 												</xforms:action>
 											</xforms:trigger>
 										</xforms:group>
@@ -2100,7 +2100,7 @@
 												<span class="glyphicon glyphicon-plus"></span>Owner</xforms:label>
 											<xforms:action ev:event="DOMActivate">
 												<xforms:insert context="." origin="instance('owner-template')" nodeset="./child::node()[last()]"/>
-												<xxforms:hide dialog="adminDesc-objects"/>
+												<xxf:hide dialog="adminDesc-objects"/>
 											</xforms:action>
 										</xforms:trigger>
 										<xforms:group ref=".[count(nuds:repository) &lt; 1]">
@@ -2109,7 +2109,7 @@
 													<span class="glyphicon glyphicon-plus"></span>Repository</xforms:label>
 												<xforms:action ev:event="DOMActivate">
 													<xforms:insert context="." origin="instance('repository-template')" nodeset="./child::node()[last()]"/>
-													<xxforms:hide dialog="adminDesc-objects"/>
+													<xxf:hide dialog="adminDesc-objects"/>
 												</xforms:action>
 											</xforms:trigger>
 										</xforms:group>
@@ -2435,7 +2435,7 @@
 										<xforms:setvalue ref="instance('delete-config')/delete/url"
 											value="concat(instance('config')/images/absolute_path, '/', $filename)"/>
 										<xforms:insert nodeset="instance('dump')"
-											origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/xforms/delete-image.xpl', 'configuration', instance('delete-config'), 'data')"/>
+											origin="xxf:call-xpl('oxf:/apps/numishare/xpl/xforms/delete-image.xpl', 'configuration', instance('delete-config'), 'data')"/>
 										<!-- blank the URL and mime type -->
 										<xforms:delete
 											nodeset="instance('object')/nuds:digRep/mets:fileSec/mets:fileGrp[@USE=instance('control-instance')/side]/mets:file[@USE='iiif']"
@@ -2509,7 +2509,7 @@
 								</fr:positive-choice>
 							</fr:alert-dialog>
 
-							<xxforms:dialog id="broader-dialog" appearance="full" level="modal" close="true" draggable="true" visible="false">
+							<xxf:dialog id="broader-dialog" appearance="full" level="modal" close="true" draggable="true" visible="false">
 								<xforms:label>Parent Type</xforms:label>
 								<p>Enter the parent type Record ID below</p>
 								<div>
@@ -2535,7 +2535,7 @@
 												value="instance('xquery-result')//record/@recordId"/>
 											<xforms:delete context="instance('xquery-result')/*"/>
 											<xforms:setvalue ref="instance('control-instance')/broader_query"/>
-											<xxforms:hide dialog="broader-dialog"/>
+											<xxf:hide dialog="broader-dialog"/>
 										</xforms:action>
 									</xforms:trigger>
 									<xforms:trigger>
@@ -2546,7 +2546,7 @@
 										</xforms:action>
 									</xforms:trigger>
 								</xforms:group>
-							</xxforms:dialog>
+							</xxf:dialog>
 						</xforms:group>
 					</div>
 				</div>

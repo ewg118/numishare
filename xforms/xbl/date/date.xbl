@@ -2,7 +2,7 @@
 	last modified: August, 2012
 	Function: Input modern dates in contexts other than typology. 
 -->
-<xbl:xbl xmlns="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xxforms="http://orbeon.org/oxf/xml/xforms"
+<xbl:xbl xmlns="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xxf="http://orbeon.org/oxf/xml/xforms"
 	xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:xbl="http://www.w3.org/ns/xbl" xmlns:xxbl="http://orbeon.org/oxf/xml/xbl" xmlns:oxf="http://www.orbeon.com/oxf/processors"
 	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:numishare="https://github.com/ewg118/numishare">
 	<xbl:binding id="numishare-date" element="numishare|date">
@@ -11,7 +11,7 @@
 				<xbl:content includes="xforms|label,xforms|help,xforms|hint,xforms|alert"/>
 				<xforms:group xxbl:scope="inner">
 					<xforms:var name="binding" as="node()?">
-						<xxforms:sequence select="." xxbl:scope="outer"/>
+						<xxf:sequence select="." xxbl:scope="outer"/>
 					</xforms:var>
 					
 					<xforms:group ref="$binding">
@@ -62,7 +62,7 @@
 									<xforms:alert>Required</xforms:alert>
 								</xforms:input>
 								<xforms:trigger appearance="minimal">
-									<xforms:insert  ev:event="DOMActivate"  context="." origin="xxforms:attribute('standardDate', '')"/>
+									<xforms:insert  ev:event="DOMActivate"  context="." origin="xxf:attribute('standardDate', '')"/>
 									<xforms:label><span class="glyphicon glyphicon-plus"/><xforms:output value="concat($label, ' (machine-readable)')"/></xforms:label>
 								</xforms:trigger>
 								

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms"
-	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xxforms="http://orbeon.org/oxf/xml/xforms"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xxf="http://orbeon.org/oxf/xml/xforms"
 	xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:res="http://www.w3.org/2005/sparql-results#" xmlns:xi="http://www.w3.org/2001/XInclude"
 	xmlns:dcterms="http://purl.org/dc/terms/" xmlns:nm="http://nomisma.org/id/" xmlns:foaf="http://xmlns.com/foaf/0.1/"
 	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
@@ -19,7 +19,7 @@
 
 		<!-- model -->
 		<xforms:model>
-			<xforms:instance id="doc" xxforms:exclude-result-prefixes="#default xs ev xxforms xforms fr res xi">
+			<xforms:instance id="doc" xxf:exclude-result-prefixes="#default xs ev xxforms xforms fr res xi">
 				<rdf:RDF xmlns="" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:nm="http://nomisma.org/id/" xmlns:nmo="http://nomisma.org/ontology#"
 					xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
 					xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:void="http://rdfs.org/ns/void#" xmlns:xsd="http://www.w3.org/2001/XMLSchema#"></rdf:RDF>
@@ -29,15 +29,15 @@
 				<xi:include href="../exist-config.xml"/>
 			</xforms:instance>
 
-			<xforms:instance id="config" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="config" xxf:exclude-result-prefixes="#all">
 				<config xmlns=""></config>
 			</xforms:instance>
 
-			<xforms:instance id="collections-list" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="collections-list" xxf:exclude-result-prefixes="#all">
 				<collections xmlns=""></collections>
 			</xforms:instance>
 
-			<xforms:instance id="control-instance" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="control-instance" xxf:exclude-result-prefixes="#all">
 				<controls xmlns="">
 					<status></status>
 					<id></id>
@@ -114,7 +114,7 @@
 				<sparql xmlns="http://www.w3.org/2005/sparql-results#"/>
 			</xforms:instance>
 
-			<xforms:instance id="source-list" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="source-list" xxf:exclude-result-prefixes="#all">
 				<list xmlns=""></list>
 			</xforms:instance>
 
@@ -182,7 +182,7 @@ PREFIX un:	<http://www.owl-ontologies.com/Ontology1181490123.owl#>]]></prefix>
 			<!-- ***** LOADING COLLECTIONS/CONFIG *****-->
 			<xforms:submission id="load-config" serialization="none" method="get"
 				action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/config.xml"
-				xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}" replace="instance"
+				xxf:username="{instance('exist-config')/username}" xxf:password="{instance('exist-config')/password}" replace="instance"
 				instance="config">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Unable to load Numishare configuration</xforms:message>
 				<xforms:action ev:event="xforms-submit-done">
@@ -194,12 +194,12 @@ PREFIX un:	<http://www.owl-ontologies.com/Ontology1181490123.owl#>]]></prefix>
 			</xforms:submission>
 
 			<xforms:submission id="load-collections" serialization="none" method="get" action="{instance('exist-config')/url}collections-list.xml"
-				replace="instance" instance="collections-list" xxforms:username="{instance('exist-config')/username}"
-				xxforms:password="{instance('exist-config')/password}">
+				replace="instance" instance="collections-list" xxf:username="{instance('exist-config')/username}"
+				xxf:password="{instance('exist-config')/password}">
 				<!-- if the config loads successfully, set the collection names based on authentication -->
 				<xforms:action ev:event="xforms-submit-done">
 					<!-- by default set the collection-name from the security role -->
-					<xforms:action if="not(xxforms:is-user-in-role('numishare-admin'))">
+					<xforms:action if="not(xxf:is-user-in-role('numishare-admin'))">
 						<xforms:action if="string(instance('collections-list')/collection[@role=instance('control-instance')/request-security/role]/@name)">
 							<xforms:setvalue ref="instance('control-instance')/collection-name"
 								value="instance('collections-list')/collection[@role=instance('control-instance')/request-security/role]/@name"/>
@@ -214,12 +214,12 @@ PREFIX un:	<http://www.owl-ontologies.com/Ontology1181490123.owl#>]]></prefix>
 			<!-- ***** SAVE/LOAD RDF/XML in EXIST *****-->
 			<xforms:submission id="load-doc" serialization="none" method="get"
 				action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/symbols/{encode-for-uri(instance('control-instance')/id)}.rdf"
-				xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}" replace="instance" instance="doc">
+				xxf:username="{instance('exist-config')/username}" xxf:password="{instance('exist-config')/password}" replace="instance" instance="doc">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Error loading RDF.</xforms:message>
 			</xforms:submission>
 
-			<xforms:submission id="save-doc" ref="instance('doc')" xxforms:username="{instance('exist-config')/username}"
-				xxforms:password="{instance('exist-config')/password}"
+			<xforms:submission id="save-doc" ref="instance('doc')" xxf:username="{instance('exist-config')/username}"
+				xxf:password="{instance('exist-config')/password}"
 				action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/symbols/{encode-for-uri(instance('control-instance')/id)}.rdf"
 				method="put" replace="none">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Save Error. Are all required inputs filled?</xforms:message>
@@ -238,20 +238,20 @@ PREFIX un:	<http://www.owl-ontologies.com/Ontology1181490123.owl#>]]></prefix>
 
 			<!-- **************** MODEL-CONSTRUCT-DONE ********************** -->
 			<xforms:action ev:event="xforms-model-construct-done">
-				<xforms:action if="string(xxforms:get-session-attribute('collection-name'))">
-					<xforms:setvalue ref="instance('control-instance')/collection-name" value="xxforms:get-session-attribute('collection-name')"/>
+				<xforms:action if="string(xxf:get-session-attribute('collection-name'))">
+					<xforms:setvalue ref="instance('control-instance')/collection-name" value="xxf:get-session-attribute('collection-name')"/>
 					<xforms:send submission="load-config"/>
 				</xforms:action>
-				<xforms:action if="not(string(xxforms:get-session-attribute('collection-name')))">
+				<xforms:action if="not(string(xxf:get-session-attribute('collection-name')))">
 					<xforms:insert context="instance('control-instance')" nodeset="collection-name" position="after"
-						origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/get-authentication.xpl', 'dump', instance('dump'), 'data')"/>
+						origin="xxf:call-xpl('oxf:/apps/numishare/xpl/get-authentication.xpl', 'dump', instance('dump'), 'data')"/>
 					<xforms:send submission="load-collections"/>
 				</xforms:action>
 
 				<xforms:action ev:event="xforms-submit-done">
 					<!-- load id if parameter is passed -->
-					<xforms:action if="string(xxforms:get-request-parameter('id'))">
-						<xforms:setvalue ref="instance('control-instance')/id" value="xxforms:get-request-parameter('id')"/>
+					<xforms:action if="string(xxf:get-request-parameter('id'))">
+						<xforms:setvalue ref="instance('control-instance')/id" value="xxf:get-request-parameter('id')"/>
 						<xforms:setvalue ref="instance('control-instance')/new_id" value="false()"/>
 						<xforms:send submission="load-doc"/>
 					</xforms:action>
@@ -260,7 +260,7 @@ PREFIX un:	<http://www.owl-ontologies.com/Ontology1181490123.owl#>]]></prefix>
 					<xforms:setvalue ref="instance('sparqlQuery')"
 						value="concat(instance('sparql-templates')/prefix, ' ', instance('sparql-templates')/query[@id='source'])"/>
 					<xforms:send submission="submit-sparqlQuery"/>
-					<xforms:action xxforms:iterate="instance('sparqlResponse')//res:result" ev:event="xforms-submit-done">
+					<xforms:action xxf:iterate="instance('sparqlResponse')//res:result" ev:event="xforms-submit-done">
 						<xforms:var name="uri" select="data(res:binding[@name='uri']/res:uri)"/>
 						<xforms:var name="label" select="data(res:binding[@name='label']/res:literal)"/>
 						<xforms:insert context="instance('source-list')" nodeset="./child::node()[last()]"
@@ -576,7 +576,7 @@ PREFIX un:	<http://www.owl-ontologies.com/Ontology1181490123.owl#>]]></prefix>
 																<xforms:label>Upload</xforms:label>
 																<xforms:filename ref="@filename"/>
 																<xforms:mediatype ref="@mediatype"/>
-																<xxforms:size ref="@size"/>
+																<xxf:size ref="@size"/>
 															</xforms:upload>
 															<xforms:trigger>
 																<xforms:label>Upload</xforms:label>
@@ -595,7 +595,7 @@ PREFIX un:	<http://www.owl-ontologies.com/Ontology1181490123.owl#>]]></prefix>
 																		<xforms:setvalue ref="instance('serializer-config')/url"
 																			value="concat('file:', instance('control-instance')/symbol_path, $monogram_id, '.', $extension)"/>
 																		<xforms:insert nodeset="instance('dump')"
-																			origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/xforms/move-file.xpl', ('generator-config', 'serializer-config'), (instance('generator-config'), instance('serializer-config')), 'data')"/>
+																			origin="xxf:call-xpl('oxf:/apps/numishare/xpl/xforms/move-file.xpl', ('generator-config', 'serializer-config'), (instance('generator-config'), instance('serializer-config')), 'data')"/>
 																		<!-- set the data within the MODS document -->
 																		<xforms:setvalue ref="instance('doc')/*[1]/foaf:depiction[$position]/@rdf:resource"
 																			value="concat(instance('control-instance')/symbol_url, $monogram_id)"/>
@@ -683,7 +683,7 @@ PREFIX un:	<http://www.owl-ontologies.com/Ontology1181490123.owl#>]]></prefix>
 					<xforms:setvalue ref="instance('delete-config')/id" value="instance('control-instance')/symbol_id"/>
 					<xforms:setvalue ref="instance('delete-config')/symbol_path" value="instance('control-instance')/symbol_path"/>
 					<xforms:insert nodeset="instance('dump')"
-						origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/xforms/delete-file.xpl', 'data', instance('delete-config'), 'data')"/>
+						origin="xxf:call-xpl('oxf:/apps/numishare/xpl/xforms/delete-file.xpl', 'data', instance('delete-config'), 'data')"/>
 				</xforms:action>
 			</fr:positive-choice>
 			<fr:negative-choice>

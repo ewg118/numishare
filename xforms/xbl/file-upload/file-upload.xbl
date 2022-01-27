@@ -3,7 +3,7 @@
 	Function: Either upload an image to the config absolute_path for use by the iiif_server (if set) or manually enter image URLs.
 -->
 <xbl:xbl xmlns="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events"
-	xmlns:xxforms="http://orbeon.org/oxf/xml/xforms" xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:xbl="http://www.w3.org/ns/xbl"
+	xmlns:xxf="http://orbeon.org/oxf/xml/xforms" xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:xbl="http://www.w3.org/ns/xbl"
 	xmlns:xxbl="http://orbeon.org/oxf/xml/xbl" xmlns:oxf="http://www.orbeon.com/oxf/processors" xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns:numishare="https://github.com/ewg118/numishare" xmlns:nuds="http://nomisma.org/nuds" xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	xmlns:mets="http://www.loc.gov/METS/">
@@ -13,17 +13,17 @@
 				<xbl:content includes="xforms|label,xforms|help,xforms|hint,xforms|alert"/>
 				<xforms:group xxbl:scope="inner">
 					<xforms:var name="binding" as="node()?">
-						<xxforms:sequence select="." xxbl:scope="outer"/>
+						<xxf:sequence select="." xxbl:scope="outer"/>
 					</xforms:var>
 					<!-- set collection name -->
 					<xforms:action ev:event="xforms-enabled" ev:target="#observer">
-						<xforms:action if="string(xxforms:get-session-attribute('collection-name'))">
-							<xforms:setvalue ref="instance('control-instance')/collection-name" value="xxforms:get-session-attribute('collection-name')"/>
+						<xforms:action if="string(xxf:get-session-attribute('collection-name'))">
+							<xforms:setvalue ref="instance('control-instance')/collection-name" value="xxf:get-session-attribute('collection-name')"/>
 							<xforms:send submission="load-config"/>
 						</xforms:action>
-						<xforms:action if="not(string(xxforms:get-session-attribute('collection-name')))">
+						<xforms:action if="not(string(xxf:get-session-attribute('collection-name')))">
 							<xforms:insert context="instance('control-instance')" nodeset="collection-name" position="after"
-								origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/get-authentication.xpl', 'dump', instance('dump'), 'data')"/>
+								origin="xxf:call-xpl('oxf:/apps/numishare/xpl/get-authentication.xpl', 'dump', instance('dump'), 'data')"/>
 							<xforms:send submission="load-collections"/>
 						</xforms:action>
 
@@ -191,10 +191,10 @@
 
 										<xforms:group ref=".[not(mets:file[@USE='iiif'])]">
 											<h4>Upload Image to IIIF Server</h4>
-											<xforms:upload ref="instance('file')" xxforms:size="60">
+											<xforms:upload ref="instance('file')" xxf:size="60">
 												<xforms:filename ref="@filename"/>
 												<xforms:mediatype ref="@mediatype"/>
-												<xxforms:size ref="@size"/>
+												<xxf:size ref="@size"/>
 											</xforms:upload>
 
 											<xforms:trigger>
@@ -215,7 +215,7 @@
 														<xforms:setvalue ref="instance('serializer-config')/url"
 															value="concat(instance('config')/images/absolute_path, '/', $filename)"/>
 														<xforms:insert nodeset="instance('dump')"
-															origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/xforms/move-image.xpl', ('generator-config', 'serializer-config'), (instance('generator-config'), instance('serializer-config')), 'data')"/>
+															origin="xxf:call-xpl('oxf:/apps/numishare/xpl/xforms/move-image.xpl', ('generator-config', 'serializer-config'), (instance('generator-config'), instance('serializer-config')), 'data')"/>
 
 														<!-- set the IIIF Service metadata -->
 														<xforms:insert context="." nodeset="./child::node()[last()]" origin="instance('file-template')"/>
@@ -237,11 +237,11 @@
 					<!-- ***********************  DIALOG INTERNAL MODEL *********************** -->
 					<xforms:model id="file-upload-model" xmlns:xi="http://www.w3.org/2001/XInclude">
 						<!-- exist URL is stored in an XML file -->
-						<xforms:instance id="exist-config" xxforms:exclude-result-prefixes="#all">
+						<xforms:instance id="exist-config" xxf:exclude-result-prefixes="#all">
 							<xi:include href="../../../exist-config.xml"/>
 						</xforms:instance>
 
-						<xforms:instance id="control-instance" xxforms:exclude-result-prefixes="#all">
+						<xforms:instance id="control-instance" xxf:exclude-result-prefixes="#all">
 							<control xmlns="">
 								<collection-name/>
 								<id/>
@@ -254,7 +254,7 @@
 						</xforms:instance>
 
 						<!-- collections/authentication instances -->
-						<xforms:instance id="collections-list" xxforms:exclude-result-prefixes="#all">
+						<xforms:instance id="collections-list" xxf:exclude-result-prefixes="#all">
 							<collections xmlns="">
 								<collection roll="admin" name="numishare"/>
 							</collections>
@@ -262,14 +262,14 @@
 
 						<!-- site info -->
 						<xforms:instance id="config">
-							<config xmlns="" xxforms:exclude-result-prefixes="#all"/>
+							<config xmlns="" xxf:exclude-result-prefixes="#all"/>
 						</xforms:instance>
 
-						<xforms:instance id="interface-type" xxforms:exclude-result-prefixes="#all">
+						<xforms:instance id="interface-type" xxf:exclude-result-prefixes="#all">
 							<type xmlns="">manual</type>
 						</xforms:instance>
 
-						<xforms:instance id="interfaces" xxforms:exclude-result-prefixes="#all">
+						<xforms:instance id="interfaces" xxf:exclude-result-prefixes="#all">
 							<interfaces xmlns="">
 								<type id="manual">Insert URIs Manually</type>
 							</interfaces>
@@ -282,7 +282,7 @@
 						</xforms:instance>
 
 						<!-- image uploading, base64 encoding and xml-rpc payload -->
-						<xforms:instance id="generator-config" xxforms:exclude-result-prefixes="#all">
+						<xforms:instance id="generator-config" xxf:exclude-result-prefixes="#all">
 							<config xmlns="">
 								<url/>
 								<mode>binary</mode>
@@ -290,13 +290,13 @@
 							</config>
 						</xforms:instance>
 
-						<xforms:instance id="serializer-config" xxforms:exclude-result-prefixes="#all">
+						<xforms:instance id="serializer-config" xxf:exclude-result-prefixes="#all">
 							<config xmlns="">
 								<url/>
 							</config>
 						</xforms:instance>
 
-						<xforms:instance id="delete-config" xxforms:exclude-result-prefixes="#all">
+						<xforms:instance id="delete-config" xxf:exclude-result-prefixes="#all">
 							<config xmlns="">
 								<delete>
 									<url/>
@@ -309,7 +309,7 @@
 						</xforms:instance>
 
 						<!-- METS templates -->
-						<xforms:instance id="file-template" xxforms:exclude-result-prefixes="#all">
+						<xforms:instance id="file-template" xxf:exclude-result-prefixes="#all">
 							<mets:file USE="" xmlns="">
 								<mets:FLocat LOCTYPE="URL" xlink:href=""/>
 							</mets:file>
@@ -344,8 +344,8 @@
 						<xforms:submission id="upload-resize" method="post" replace="none" resource="test:"/>
 
 						<xforms:submission id="load-collections" serialization="none" method="get" action="{instance('exist-config')/url}collections-list.xml"
-							replace="instance" instance="collections-list" xxforms:username="{instance('exist-config')/username}"
-							xxforms:password="{instance('exist-config')/password}">
+							replace="instance" instance="collections-list" xxf:username="{instance('exist-config')/username}"
+							xxf:password="{instance('exist-config')/password}">
 							<!-- if the config loads successfully, set the collection names based on authentication -->
 							<xforms:action ev:event="xforms-submit-done">
 								<!-- set default if security is false -->
@@ -369,7 +369,7 @@
 						<!-- get image dimensions from config -->
 						<xforms:submission id="load-config" serialization="none" method="get"
 							action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/config.xml"
-							xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}" replace="instance"
+							xxf:username="{instance('exist-config')/username}" xxf:password="{instance('exist-config')/password}" replace="instance"
 							instance="config">
 							<xforms:message ev:event="xforms-submit-error" level="modal">Unable to load Numishare configuration</xforms:message>
 							<xforms:action ev:event="xforms-submit-done" if="string(instance('config')/images/iiif_server)">

@@ -3,7 +3,7 @@
 	function: EAD state component; user taps into LCSH or local vocabulary for states
 -->
 <xbl:xbl xmlns="http://www.w3.org/1999/xhtml" xmlns:nuds="http://nomisma.org/nuds" xmlns:xforms="http://www.w3.org/2002/xforms"
-	xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xxforms="http://orbeon.org/oxf/xml/xforms" xmlns:fr="http://orbeon.org/oxf/xml/form-runner"
+	xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xxf="http://orbeon.org/oxf/xml/xforms" xmlns:fr="http://orbeon.org/oxf/xml/form-runner"
 	xmlns:xbl="http://www.w3.org/ns/xbl" xmlns:xxbl="http://orbeon.org/oxf/xml/xbl" xmlns:oxf="http://www.orbeon.com/oxf/processors"
 	xmlns:numishare="https://github.com/ewg118/numishare" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:atom="http://www.w3.org/2005/Atom">
 	<xbl:binding id="numishare-type-undertype" element="numishare|type-undertype">
@@ -12,7 +12,7 @@
 				<xbl:content includes="xforms|label,xforms|help,xforms|hint,xforms|alert"/>
 				<xforms:group xxbl:scope="inner">
 					<xforms:var name="binding" as="node()?">
-						<xxforms:sequence select="." xxbl:scope="outer"/>
+						<xxf:sequence select="." xxbl:scope="outer"/>
 					</xforms:var>
 					<xforms:action ev:event="xforms-enabled" ev:target="#observer">
 						<!-- load controlled vocabulary instances by querying nomisma -->
@@ -496,89 +496,89 @@
 					<!-- ***********************  DIALOG INTERNAL MODEL *********************** -->
 					<xforms:model id="type-undertype-model" xmlns="http://nomisma.org/nuds">
 						<!-- typeDesc templates -->
-						<xforms:instance id="date-template" xxforms:exclude-result-prefixes="#all">
+						<xforms:instance id="date-template" xxf:exclude-result-prefixes="#all">
 							<date standardDate=""/>
 						</xforms:instance>
-						<xforms:instance id="dateRange-template" xxforms:exclude-result-prefixes="#all">
+						<xforms:instance id="dateRange-template" xxf:exclude-result-prefixes="#all">
 							<dateRange>
 								<fromDate standardDate=""/>
 								<toDate standardDate=""/>
 							</dateRange>
 						</xforms:instance>
-						<xforms:instance id="dateOnObject-template" xxforms:exclude-result-prefixes="#all">
+						<xforms:instance id="dateOnObject-template" xxf:exclude-result-prefixes="#all">
 							<dateOnObject/>
 						</xforms:instance>
-						<xforms:instance id="denomination-template" xxforms:exclude-result-prefixes="#all">
+						<xforms:instance id="denomination-template" xxf:exclude-result-prefixes="#all">
 							<denomination xlink:type="simple" xlink:href=""/>
 						</xforms:instance>
-						<xforms:instance id="era-template" xxforms:exclude-result-prefixes="#all">
+						<xforms:instance id="era-template" xxf:exclude-result-prefixes="#all">
 							<era/>
 						</xforms:instance>
-						<xforms:instance id="manufacture-template" xxforms:exclude-result-prefixes="#all">
+						<xforms:instance id="manufacture-template" xxf:exclude-result-prefixes="#all">
 							<manufacture xlink:type="simple" xlink:href=""/>
 						</xforms:instance>
-						<xforms:instance id="material-template" xxforms:exclude-result-prefixes="#all">
+						<xforms:instance id="material-template" xxf:exclude-result-prefixes="#all">
 							<material xlink:type="simple" xlink:href=""/>
 						</xforms:instance>
 						<!--geographic -->
-						<xforms:instance id="geographic-template" xxforms:exclude-result-prefixes="#all">
+						<xforms:instance id="geographic-template" xxf:exclude-result-prefixes="#all">
 							<geographic/>
 						</xforms:instance>
-						<xforms:instance id="mint-template" xxforms:exclude-result-prefixes="#all">
+						<xforms:instance id="mint-template" xxf:exclude-result-prefixes="#all">
 							<geogname xlink:type="simple" xlink:role="mint" xlink:href=""/>
 						</xforms:instance>
-						<xforms:instance id="region-template" xxforms:exclude-result-prefixes="#all">
+						<xforms:instance id="region-template" xxf:exclude-result-prefixes="#all">
 							<geogname xlink:type="simple" xlink:role="region" xlink:href=""/>
 						</xforms:instance>
 						<!--authority/personal -->
-						<xforms:instance id="authpers-template" xxforms:exclude-result-prefixes="#all">
+						<xforms:instance id="authpers-template" xxf:exclude-result-prefixes="#all">
 							<authority/>
 						</xforms:instance>
 						<!-- obverse/reverse edge -->
-						<xforms:instance id="obverse-template" xxforms:exclude-result-prefixes="#all">
+						<xforms:instance id="obverse-template" xxf:exclude-result-prefixes="#all">
 							<obverse/>
 						</xforms:instance>
-						<xforms:instance id="reverse-template" xxforms:exclude-result-prefixes="#all">
+						<xforms:instance id="reverse-template" xxf:exclude-result-prefixes="#all">
 							<reverse/>
 						</xforms:instance>
-						<xforms:instance id="description-template" xxforms:exclude-result-prefixes="#all">
+						<xforms:instance id="description-template" xxf:exclude-result-prefixes="#all">
 							<description xml:lang=""/>
 						</xforms:instance>
-						<xforms:instance id="edge-template" xxforms:exclude-result-prefixes="#all">
+						<xforms:instance id="edge-template" xxf:exclude-result-prefixes="#all">
 							<edge/>
 						</xforms:instance>
-						<xforms:instance id="shape-template" xxforms:exclude-result-prefixes="#all">
+						<xforms:instance id="shape-template" xxf:exclude-result-prefixes="#all">
 							<shape/>
 						</xforms:instance>
-						<xforms:instance id="typeSeries-template" xxforms:exclude-result-prefixes="#all">
+						<xforms:instance id="typeSeries-template" xxf:exclude-result-prefixes="#all">
 							<typeSeries/>
 						</xforms:instance>
-						<xforms:instance id="weightStandard-template" xxforms:exclude-result-prefixes="#all">
+						<xforms:instance id="weightStandard-template" xxf:exclude-result-prefixes="#all">
 							<weightStandard origin="" units="g"/>
 						</xforms:instance>
 
 						<!-- controlled vocabulary instances -->
-						<xforms:instance id="feed" xxforms:exclude-result-prefixes="#all">
+						<xforms:instance id="feed" xxf:exclude-result-prefixes="#all">
 							<feed xmlns=""/>
 						</xforms:instance>
-						<xforms:instance id="control-instance" xxforms:exclude-result-prefixes="#all">
+						<xforms:instance id="control-instance" xxf:exclude-result-prefixes="#all">
 							<controls xmlns="">
 								<type/>
 							</controls>
 						</xforms:instance>
 
 						<!-- manufacture -->
-						<xforms:instance id="Manufacture-list" xxforms:exclude-result-prefixes="#all">
+						<xforms:instance id="Manufacture-list" xxf:exclude-result-prefixes="#all">
 							<list xmlns=""/>
 						</xforms:instance>
 						<!-- material -->
-						<xforms:instance id="Material-list" xxforms:exclude-result-prefixes="#all">
+						<xforms:instance id="Material-list" xxf:exclude-result-prefixes="#all">
 							<list xmlns=""/>
 						</xforms:instance>
-						<xforms:instance id="ObjectType-list" xxforms:exclude-result-prefixes="#all">
+						<xforms:instance id="ObjectType-list" xxf:exclude-result-prefixes="#all">
 							<list xmlns=""/>
 						</xforms:instance>
-						<xforms:instance id="listItem-template" xxforms:exclude-result-prefixes="#all">
+						<xforms:instance id="listItem-template" xxf:exclude-result-prefixes="#all">
 							<item href="" xmlns=""/>
 						</xforms:instance>
 						<xforms:instance id="calendar-list">
@@ -600,7 +600,7 @@
 							instance="feed" replace="instance">
 							<xforms:message ev:event="xforms-submit-error" level="modal">Unable to communicate with nomisma.org Atom feed.</xforms:message>
 							<!-- iterate through Atom feed, populating select list -->
-							<xforms:action ev:event="xforms-submit-done" xxforms:iterate="instance('feed')//atom:entry">
+							<xforms:action ev:event="xforms-submit-done" xxf:iterate="instance('feed')//atom:entry">
 								<xforms:setvalue ref="instance('listItem-template')" value="context()/atom:title"/>
 								<xforms:setvalue ref="instance('listItem-template')/@href" value="context()/atom:link[@rel = 'canonical']/@href"/>
 								<xforms:insert origin="instance('listItem-template')" context="instance(concat(instance('control-instance')/type, '-list'))"

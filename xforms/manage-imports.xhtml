@@ -6,7 +6,7 @@
 	Heavily modified from upload form developed by Orbeon	
 -->
 <html xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	xmlns="http://www.w3.org/1999/xhtml" xmlns:xxforms="http://orbeon.org/oxf/xml/xforms" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:fr="http://orbeon.org/oxf/xml/form-runner"
+	xmlns="http://www.w3.org/1999/xhtml" xmlns:xxf="http://orbeon.org/oxf/xml/xforms" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:fr="http://orbeon.org/oxf/xml/form-runner"
 	xmlns:xi="http://www.w3.org/2001/XInclude">
 	<head>
 		<title>Numishare: Manage CSV Imports</title>
@@ -84,7 +84,7 @@
 			</xforms:instance>
 
 			<xforms:submission id="load-collections" serialization="none" method="get" action="{instance('exist-config')/url}collections-list.xml" replace="instance" instance="collections-list"
-				xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}">
+				xxf:username="{instance('exist-config')/username}" xxf:password="{instance('exist-config')/password}">
 				<!-- if the config loads successfully, set the collection names based on authentication -->
 				<xforms:action ev:event="xforms-submit-done">
 					<!-- set default if security is false -->
@@ -106,10 +106,10 @@
 			</xforms:submission>
 
 			<!-- load site info -->
-			<xforms:submission id="load-config" serialization="none" method="get" action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/config.xml" xxforms:username="{instance('exist-config')/username}"
-				xxforms:password="{instance('exist-config')/password}" replace="instance" instance="config"/>
+			<xforms:submission id="load-config" serialization="none" method="get" action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/config.xml" xxf:username="{instance('exist-config')/username}"
+				xxf:password="{instance('exist-config')/password}" replace="instance" instance="config"/>
 
-			<xforms:submission id="delete-submission" action="/exist/rest/numishare/objects/{instance('current-id')}.xml" xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}" method="delete" replace="none">
+			<xforms:submission id="delete-submission" action="/exist/rest/numishare/objects/{instance('current-id')}.xml" xxf:username="{instance('exist-config')/username}" xxf:password="{instance('exist-config')/password}" method="delete" replace="none">
 				<xforms:send ev:event="xforms-submit-done" submission="delete-from-solr"/>
 			</xforms:submission>
 
@@ -122,10 +122,10 @@
 				<xforms:send submission="optimize" ev:event="xforms-submit-done"/>
 			</xforms:submission>
 
-			<xforms:submission id="load-imports" serialization="none" method="get" action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/imports.xml" xxforms:username="{instance('exist-config')/username}"
-				xxforms:password="{instance('exist-config')/password}" replace="instance" instance="imports"/>
+			<xforms:submission id="load-imports" serialization="none" method="get" action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/imports.xml" xxf:username="{instance('exist-config')/username}"
+				xxf:password="{instance('exist-config')/password}" replace="instance" instance="imports"/>
 
-			<xforms:submission id="save-imports" ref="instance('imports')" xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}"
+			<xforms:submission id="save-imports" ref="instance('imports')" xxf:username="{instance('exist-config')/username}" xxf:password="{instance('exist-config')/password}"
 				action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/imports.xml" method="put" replace="none">
 				<xforms:send submission="submitCommit" ev:event="xforms-submit-done"/>
 				<xforms:setvalue ref="instance('status')" ev:event="xforms-submit-done">CSV import and associated files removed.</xforms:setvalue>
@@ -206,7 +206,7 @@
 							<fr:negative-choice/>
 							<fr:positive-choice>
 								<xforms:action ev:event="DOMActivate">
-									<xforms:action xxforms:iterate="instance('imports')/import[@date = instance('timestamp')]/file">
+									<xforms:action xxf:iterate="instance('imports')/import[@date = instance('timestamp')]/file">
 										<xforms:var name="id" select="@id"/>
 										<xforms:setvalue ref="instance('current-id')" value="$id"/>
 										<xforms:setvalue ref="instance('deleteId')/id" value="$id"/>

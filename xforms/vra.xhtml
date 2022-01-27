@@ -1,5 +1,5 @@
 <html xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	xmlns="http://www.w3.org/1999/xhtml" xmlns:xxforms="http://orbeon.org/oxf/xml/xforms" xmlns:p="http://www.orbeon.com/oxf/pipeline" xmlns:xi="http://www.w3.org/2001/XInclude"
+	xmlns="http://www.w3.org/1999/xhtml" xmlns:xxf="http://orbeon.org/oxf/xml/xforms" xmlns:p="http://www.orbeon.com/oxf/pipeline" xmlns:xi="http://www.w3.org/2001/XInclude"
 	xmlns:fr="http://orbeon.org/oxf/xml/form-runner">
 	<head>
 		<title>Numishare: Edit Artifact</title>
@@ -561,7 +561,7 @@
 			<!-- set labels for all autocompletes -->
 			<!-- provenance: city -->
 			<xforms:action ev:event="xforms-ready">
-				<xforms:action xxforms:iterate="instance('vra')//location[@type='creation' or @type='discovery' or @type='performance' or @type='publication' or @type='site'][name/@extent='city']">
+				<xforms:action xxf:iterate="instance('vra')//location[@type='creation' or @type='discovery' or @type='performance' or @type='publication' or @type='site'][name/@extent='city']">
 					<xforms:var name="name" select="name/@extent"/>
 					<xforms:var name="facet" select="concat($name, '_facet')"/>
 					<xforms:insert context="instance(concat('suggestions-aggregate-', $name))" nodeset="response" origin="instance('response-temp')"/>
@@ -569,11 +569,11 @@
 					<xforms:setvalue ref="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst[@name=$facet]/int/@name" value="normalize-space(context())"/>
 					<xforms:setindex repeat="{concat($name, '-repeat')}" index="position()"/>
 					<xforms:dispatch target="{concat($name, '-autocomplete-control')}" name="fr-set-label">
-						<xxforms:context name="label" select="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst[@name=$facet]/int/@name"/>
+						<xxf:context name="label" select="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst[@name=$facet]/int/@name"/>
 					</xforms:dispatch>
 				</xforms:action>
 				<!-- corpname: political entity -->
-				<xforms:action xxforms:iterate="instance('vra')//name[@type='corporate']">
+				<xforms:action xxf:iterate="instance('vra')//name[@type='corporate']">
 					<xforms:var name="name" select="'corpname'"/>
 					<xforms:var name="facet" select="concat($name, '_facet')"/>
 					<xforms:insert context="instance(concat('suggestions-aggregate-', $name))" nodeset="response" origin="instance('response-temp')"/>
@@ -581,11 +581,11 @@
 					<xforms:setvalue ref="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst[@name=$facet]/int/@name" value="normalize-space(context())"/>
 					<xforms:setindex repeat="{concat($name, '-repeat')}" index="position()"/>
 					<xforms:dispatch target="{concat($name, '-autocomplete-control')}" name="fr-set-label">
-						<xxforms:context name="label" select="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst[@name=$facet]/int/@name"/>
+						<xxf:context name="label" select="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst[@name=$facet]/int/@name"/>
 					</xforms:dispatch>
 				</xforms:action>
 				<!-- famname -->
-				<xforms:action xxforms:iterate="instance('vra')//name[@type='family']">
+				<xforms:action xxf:iterate="instance('vra')//name[@type='family']">
 					<xforms:var name="name" select="'famname'"/>
 					<xforms:var name="facet" select="concat($name, '_facet')"/>
 					<xforms:insert context="instance(concat('suggestions-aggregate-', $name))" nodeset="response" origin="instance('response-temp')"/>
@@ -593,11 +593,11 @@
 					<xforms:setvalue ref="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst[@name=$facet]/int/@name" value="normalize-space(context())"/>
 					<xforms:setindex repeat="{concat($name, '-repeat')}" index="position()"/>
 					<xforms:dispatch target="{concat($name, '-autocomplete-control')}" name="fr-set-label">
-						<xxforms:context name="label" select="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst[@name=$facet]/int/@name"/>
+						<xxf:context name="label" select="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst[@name=$facet]/int/@name"/>
 					</xforms:dispatch>
 				</xforms:action>
 				<!-- institution/collector -->
-				<xforms:action xxforms:iterate="instance('vra')//location[name/@extent='institution']">
+				<xforms:action xxf:iterate="instance('vra')//location[name/@extent='institution']">
 					<xforms:var name="name" select="'institution'"/>
 					<xforms:var name="facet" select="concat($name, '_facet')"/>
 					<xforms:insert context="instance(concat('suggestions-aggregate-', $name))" nodeset="response" origin="instance('response-temp')"/>
@@ -605,11 +605,11 @@
 					<xforms:setvalue ref="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst[@name=$facet]/int/@name" value="normalize-space(context())"/>
 					<xforms:setindex repeat="{concat($name, '-repeat')}" index="position()"/>
 					<xforms:dispatch target="{concat($name, '-autocomplete-control')}" name="fr-set-label">
-						<xxforms:context name="label" select="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst[@name=$facet]/int/@name"/>
+						<xxf:context name="label" select="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst[@name=$facet]/int/@name"/>
 					</xforms:dispatch>
 				</xforms:action>
 				<!-- material -->
-				<xforms:action xxforms:iterate="instance('vra')//material">
+				<xforms:action xxf:iterate="instance('vra')//material">
 					<xforms:var name="name" select="name()"/>
 					<xforms:var name="facet" select="concat($name, '_facet')"/>
 					<xforms:insert context="instance(concat('suggestions-aggregate-', $name))" nodeset="response" origin="instance('response-temp')"/>
@@ -617,11 +617,11 @@
 					<xforms:setvalue ref="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst[@name=$facet]/int/@name" value="normalize-space(context())"/>
 					<xforms:setindex repeat="{concat($name, '-repeat')}" index="position()"/>
 					<xforms:dispatch target="{concat($name, '-autocomplete-control')}" name="fr-set-label">
-						<xxforms:context name="label" select="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst[@name=$facet]/int/@name"/>
+						<xxf:context name="label" select="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst[@name=$facet]/int/@name"/>
 					</xforms:dispatch>
 				</xforms:action>
 				<!-- persname -->
-				<xforms:action xxforms:iterate="instance('vra')//name[@type='personal']">
+				<xforms:action xxf:iterate="instance('vra')//name[@type='personal']">
 					<xforms:var name="name" select="'persname'"/>
 					<xforms:var name="facet" select="concat($name, '_facet')"/>
 					<xforms:insert context="instance(concat('suggestions-aggregate-', $name))" nodeset="response" origin="instance('response-temp')"/>
@@ -629,11 +629,11 @@
 					<xforms:setvalue ref="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst[@name=$facet]/int/@name" value="normalize-space(context())"/>
 					<xforms:setindex repeat="{concat($name, '-repeat')}" index="position()"/>
 					<xforms:dispatch target="{concat($name, '-autocomplete-control')}" name="fr-set-label">
-						<xxforms:context name="label" select="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst[@name=$facet]/int/@name"/>
+						<xxf:context name="label" select="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst[@name=$facet]/int/@name"/>
 					</xforms:dispatch>
 				</xforms:action>
 				<!-- provenance: region -->
-				<xforms:action xxforms:iterate="instance('vra')//location[@type='creation' or @type='discovery' or @type='performance' or @type='publication' or @type='site'][name/@extent='region']">
+				<xforms:action xxf:iterate="instance('vra')//location[@type='creation' or @type='discovery' or @type='performance' or @type='publication' or @type='site'][name/@extent='region']">
 					<xforms:var name="name" select="name/@extent"/>
 					<xforms:var name="facet" select="concat($name, '_facet')"/>
 					<xforms:insert context="instance(concat('suggestions-aggregate-', $name))" nodeset="response" origin="instance('response-temp')"/>
@@ -641,11 +641,11 @@
 					<xforms:setvalue ref="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst[@name=$facet]/int/@name" value="normalize-space(context())"/>
 					<xforms:setindex repeat="{concat($name, '-repeat')}" index="position()"/>
 					<xforms:dispatch target="{concat($name, '-autocomplete-control')}" name="fr-set-label">
-						<xxforms:context name="label" select="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst[@name=$facet]/int/@name"/>
+						<xxf:context name="label" select="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst[@name=$facet]/int/@name"/>
 					</xforms:dispatch>
 				</xforms:action>
 				<!-- provenance: state -->
-				<xforms:action xxforms:iterate="instance('vra')//location[@type='creation' or @type='discovery' or @type='performance' or @type='publication' or @type='site'][name/@extent='state']">
+				<xforms:action xxf:iterate="instance('vra')//location[@type='creation' or @type='discovery' or @type='performance' or @type='publication' or @type='site'][name/@extent='state']">
 					<xforms:var name="name" select="name/@extent"/>
 					<xforms:var name="facet" select="concat($name, '_facet')"/>
 					<xforms:insert context="instance(concat('suggestions-aggregate-', $name))" nodeset="response" origin="instance('response-temp')"/>
@@ -653,11 +653,11 @@
 					<xforms:setvalue ref="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst[@name=$facet]/int/@name" value="normalize-space(context())"/>
 					<xforms:setindex repeat="{concat($name, '-repeat')}" index="position()"/>
 					<xforms:dispatch target="{concat($name, '-autocomplete-control')}" name="fr-set-label">
-						<xxforms:context name="label" select="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst[@name=$facet]/int/@name"/>
+						<xxf:context name="label" select="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst[@name=$facet]/int/@name"/>
 					</xforms:dispatch>
 				</xforms:action>
 				<!-- technique -->
-				<xforms:action xxforms:iterate="instance('vra')//technique">
+				<xforms:action xxf:iterate="instance('vra')//technique">
 					<xforms:var name="name" select="name()"/>
 					<xforms:var name="facet" select="concat($name, '_facet')"/>
 					<xforms:insert context="instance(concat('suggestions-aggregate-', $name))" nodeset="response" origin="instance('response-temp')"/>
@@ -665,11 +665,11 @@
 					<xforms:setvalue ref="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst[@name=$facet]/int/@name" value="normalize-space(context())"/>
 					<xforms:setindex repeat="{concat($name, '-repeat')}" index="position()"/>
 					<xforms:dispatch target="{concat($name, '-autocomplete-control')}" name="fr-set-label">
-						<xxforms:context name="label" select="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst[@name=$facet]/int/@name"/>
+						<xxf:context name="label" select="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst[@name=$facet]/int/@name"/>
 					</xforms:dispatch>
 				</xforms:action>
 				<!-- style -->
-				<xforms:action xxforms:iterate="instance('vra')//style">
+				<xforms:action xxf:iterate="instance('vra')//style">
 					<xforms:var name="name" select="name()"/>
 					<xforms:var name="facet" select="concat($name, '_facet')"/>
 					<xforms:insert context="instance(concat('suggestions-aggregate-', $name))" nodeset="response" origin="instance('response-temp')"/>
@@ -677,11 +677,11 @@
 					<xforms:setvalue ref="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst[@name=$facet]/int/@name" value="normalize-space(context())"/>
 					<xforms:setindex repeat="{concat($name, '-repeat')}" index="position()"/>
 					<xforms:dispatch target="{concat($name, '-autocomplete-control')}" name="fr-set-label">
-						<xxforms:context name="label" select="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst[@name=$facet]/int/@name"/>
+						<xxf:context name="label" select="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst[@name=$facet]/int/@name"/>
 					</xforms:dispatch>
 				</xforms:action>
 				<!-- format -->
-				<xforms:action xxforms:iterate="instance('vra')//worktype">
+				<xforms:action xxf:iterate="instance('vra')//worktype">
 					<xforms:var name="name" select="'format'"/>
 					<xforms:var name="facet" select="concat($name, '_facet')"/>
 					<xforms:insert context="instance(concat('suggestions-aggregate-', $name))" nodeset="response" origin="instance('response-temp')"/>
@@ -689,11 +689,11 @@
 					<xforms:setvalue ref="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst[@name=$facet]/int/@name" value="normalize-space(context())"/>
 					<xforms:setindex repeat="{concat($name, '-repeat')}" index="position()"/>
 					<xforms:dispatch target="{concat($name, '-autocomplete-control')}" name="fr-set-label">
-						<xxforms:context name="label" select="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst[@name=$facet]/int/@name"/>
+						<xxf:context name="label" select="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst[@name=$facet]/int/@name"/>
 					</xforms:dispatch>
 				</xforms:action>
 				<!-- subject -->
-				<xforms:action xxforms:iterate="instance('vra')//subject">
+				<xforms:action xxf:iterate="instance('vra')//subject">
 					<xforms:var name="name" select="name()"/>
 					<xforms:var name="facet" select="concat($name, '_facet')"/>
 					<xforms:insert context="instance(concat('suggestions-aggregate-', $name))" nodeset="response" origin="instance('response-temp')"/>
@@ -701,7 +701,7 @@
 					<xforms:setvalue ref="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst[@name=$facet]/int/@name" value="normalize-space(context())"/>
 					<xforms:setindex repeat="{concat($name, '-repeat')}" index="position()"/>
 					<xforms:dispatch target="{concat($name, '-autocomplete-control')}" name="fr-set-label">
-						<xxforms:context name="label" select="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst[@name=$facet]/int/@name"/>
+						<xxf:context name="label" select="instance(concat('suggestions-aggregate-', $name))/response[last()]/lst[@name='terms']/lst[@name=$facet]/int/@name"/>
 					</xforms:dispatch>
 
 
@@ -710,8 +710,8 @@
 
 			<!-- for getting parameters for loading pages -->
 			<xforms:action ev:event="xforms-model-construct-done">
-				<xforms:setvalue ref="instance('vra')/work/@id" value="xxforms:get-request-parameter('id')"/>
-				<xforms:setvalue ref="instance('deleteId')/id" value="xxforms:get-request-parameter('id')"/>
+				<xforms:setvalue ref="instance('vra')/work/@id" value="xxf:get-request-parameter('id')"/>
+				<xforms:setvalue ref="instance('deleteId')/id" value="xxf:get-request-parameter('id')"/>
 			</xforms:action>
 
 			<!-- Type for language -->
@@ -749,11 +749,11 @@
 			</xforms:bind>
 
 			<!-- Load File -->
-			<xforms:submission id="load-submission" serialization="none" method="get" action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/vra/{instance('vra')/work/@id}.xml" xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}"
+			<xforms:submission id="load-submission" serialization="none" method="get" action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/vra/{instance('vra')/work/@id}.xml" xxf:username="{instance('exist-config')/username}" xxf:password="{instance('exist-config')/password}"
 				replace="instance" instance="vra"> </xforms:submission>
 
 			<!-- Save File -->
-			<xforms:submission id="save-submission" ref="instance('vra')" xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}" action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/vra/{instance('vra')/work/@id}.xml"
+			<xforms:submission id="save-submission" ref="instance('vra')" xxf:username="{instance('exist-config')/username}" xxf:password="{instance('exist-config')/password}" action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/vra/{instance('vra')/work/@id}.xml"
 				method="put" replace="none">
 				<xforms:setvalue ev:event="xforms-submit-done" ref="instance('status')">Artifact saved.</xforms:setvalue>
 				<xforms:message ev:event="xforms-submit-error" level="modal">Save Error!</xforms:message>
@@ -783,7 +783,7 @@
 			<xforms:send ev:event="xforms-model-construct-done" submission="load-submission"/>
 
 			<!-- load site info -->
-			<xforms:submission id="load-config" serialization="none" method="get" action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/config.xml" xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}"
+			<xforms:submission id="load-config" serialization="none" method="get" action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/config.xml" xxf:username="{instance('exist-config')/username}" xxf:password="{instance('exist-config')/password}"
 				replace="instance" instance="config"/>
 		</xforms:model>
 

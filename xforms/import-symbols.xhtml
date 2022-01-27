@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms"
-	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xxforms="http://orbeon.org/oxf/xml/xforms"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xxf="http://orbeon.org/oxf/xml/xforms"
 	xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:res="http://www.w3.org/2005/sparql-results#" xmlns:xi="http://www.w3.org/2001/XInclude"
 	xmlns:dcterms="http://purl.org/dc/terms/" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
 	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"
@@ -19,7 +19,7 @@
 
 		<xforms:model>
 			<!-- RDF template -->
-			<xforms:instance id="rdf" xxforms:exclude-result-prefixes="#default xhtml xforms xs ev xxforms fr res xi nomisma atom exist">
+			<xforms:instance id="rdf" xxf:exclude-result-prefixes="#default xhtml xforms xs ev xxforms fr res xi nomisma atom exist">
 				<rdf:RDF xmlns="" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:nmo="http://nomisma.org/ontology#" xmlns:foaf="http://xmlns.com/foaf/0.1/"
 					xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
 					xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:void="http://rdfs.org/ns/void#"
@@ -28,7 +28,7 @@
 			</xforms:instance>
 
 			<!-- configurations and form controls -->
-			<xforms:instance id="control-instance" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="control-instance" xxf:exclude-result-prefixes="#all">
 				<controls xmlns="">
 					<status></status>
 					<collection-name></collection-name>
@@ -77,7 +77,7 @@
 			</xforms:instance>
 
 			<!-- NUDS mappings and validation -->
-			<xforms:instance id="properties" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="properties" xxf:exclude-result-prefixes="#all">
 				<properties xmlns="">
 					<property label="Alternative Label">skos:altLabel</property>
 					<property label="Broader Concept">skos:broader</property>
@@ -101,32 +101,32 @@
 				<xi:include href="instances/languages.xml"/>
 			</xforms:instance>
 
-			<xforms:instance id="mappings" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="mappings" xxf:exclude-result-prefixes="#all">
 				<mappings xmlns=""></mappings>
 			</xforms:instance>
 
-			<xforms:instance id="validation-model" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="validation-model" xxf:exclude-result-prefixes="#all">
 				<validation xmlns=""></validation>
 			</xforms:instance>
 
-			<xforms:instance id="nomisma-ids" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="nomisma-ids" xxf:exclude-result-prefixes="#all">
 				<ids xmlns=""></ids>
 			</xforms:instance>
 
 			<!-- RDF templates -->
-			<xforms:instance id="image-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="image-template" xxf:exclude-result-prefixes="#all">
 				<crm:P165i_is_incorporated_in>
 					<crmdig:D1_Digital_Object rdf:about=""/>
 				</crm:P165i_is_incorporated_in>
 			</xforms:instance>
 
-			<xforms:instance id="provenance-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="provenance-template" xxf:exclude-result-prefixes="#all">
 				<dcterms:ProvenanceStatement rdf:about="">
 					<foaf:topic rdf:resource=""/>
 				</dcterms:ProvenanceStatement>
 			</xforms:instance>
 
-			<xforms:instance id="activity-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="activity-template" xxf:exclude-result-prefixes="#all">
 				<prov:Activity>
 					<prov:atTime rdf:datatype=""/>
 					<dcterms:type/>
@@ -134,7 +134,7 @@
 			</xforms:instance>
 
 			<!-- instance for spreadsheet RDF as a static file -->
-			<xforms:instance id="spreadsheet-rdf" xxforms:exclude-result-prefixes="#default xhtml xforms xs ev xxforms fr res xi nomisma atom exist">
+			<xforms:instance id="spreadsheet-rdf" xxf:exclude-result-prefixes="#default xhtml xforms xs ev xxforms fr res xi nomisma atom exist">
 				<rdf:RDF xmlns="" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:nmo="http://nomisma.org/ontology#" xmlns:foaf="http://xmlns.com/foaf/0.1/"
 					xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
 					xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:void="http://rdfs.org/ns/void#"
@@ -142,7 +142,7 @@
 					xmlns:crmdig="http://www.ics.forth.gr/isl/CRMdig/"/>
 			</xforms:instance>
 
-			<xforms:instance id="spreadsheet-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="spreadsheet-template" xxf:exclude-result-prefixes="#all">
 				<prov:Entity rdf:about="">
 					<dcterms:format>application/vnd.google-apps.spreadsheet</dcterms:format>
 					<dcterms:description xml:lang="en"/>
@@ -155,7 +155,7 @@
 				<feed xmlns=""></feed>
 			</xforms:instance>
 
-			<xforms:instance id="feed" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="feed" xxf:exclude-result-prefixes="#all">
 				<feed xmlns=""></feed>
 			</xforms:instance>
 
@@ -169,7 +169,7 @@
 			</xforms:instance>
 
 			<!-- editor list -->
-			<xforms:instance id="editor-list" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="editor-list" xxf:exclude-result-prefixes="#all">
 				<list xmlns=""></list>
 			</xforms:instance>
 
@@ -320,7 +320,7 @@ PREFIX skos:	<http://www.w3.org/2004/02/skos/core#>]]></prefix>
 					<!-- if there is at least one entry, set the mapping instance and toggle the mapping interface -->
 					<xforms:action if="count(instance('feed')//atom:entry) &gt; 0">
 						<xforms:action
-							xxforms:iterate="instance('feed')//atom:entry[1]/*[namespace-uri()='http://schemas.google.com/spreadsheets/2006/extended']">
+							xxf:iterate="instance('feed')//atom:entry[1]/*[namespace-uri()='http://schemas.google.com/spreadsheets/2006/extended']">
 							<xforms:var name="heading" select="name()"/>
 							<xforms:insert context="instance('mappings')" nodeset="./child::node()[last()]"
 								origin="xforms:element('mapping', (xforms:attribute('from', $heading), xforms:attribute('to', '')))"/>
@@ -347,7 +347,7 @@ PREFIX skos:	<http://www.w3.org/2004/02/skos/core#>]]></prefix>
 			<!-- ***** LOADING COLLECTIONS/CONFIG *****-->
 			<xforms:submission id="load-config" serialization="none" method="get"
 				action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/config.xml"
-				xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}" replace="instance"
+				xxf:username="{instance('exist-config')/username}" xxf:password="{instance('exist-config')/password}" replace="instance"
 				instance="config">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Unable to load Numishare configuration</xforms:message>
 
@@ -358,12 +358,12 @@ PREFIX skos:	<http://www.w3.org/2004/02/skos/core#>]]></prefix>
 			</xforms:submission>
 
 			<xforms:submission id="load-collections" serialization="none" method="get" action="{instance('exist-config')/url}collections-list.xml"
-				replace="instance" instance="collections-list" xxforms:username="{instance('exist-config')/username}"
-				xxforms:password="{instance('exist-config')/password}">
+				replace="instance" instance="collections-list" xxf:username="{instance('exist-config')/username}"
+				xxf:password="{instance('exist-config')/password}">
 				<!-- if the config loads successfully, set the collection names based on authentication -->
 				<xforms:action ev:event="xforms-submit-done">
 					<!-- by default set the collection-name from the security role -->
-					<xforms:action if="not(xxforms:is-user-in-role('numishare-admin'))">
+					<xforms:action if="not(xxf:is-user-in-role('numishare-admin'))">
 						<xforms:action if="string(instance('collections-list')/collection[@role=instance('control-instance')/request-security/role]/@name)">
 							<xforms:setvalue ref="instance('control-instance')/collection-name"
 								value="instance('collections-list')/collection[@role=instance('control-instance')/request-security/role]/@name"/>
@@ -376,8 +376,8 @@ PREFIX skos:	<http://www.w3.org/2004/02/skos/core#>]]></prefix>
 			</xforms:submission>
 
 			<!-- ************************* SAVE RDF FOR SYMBOL CONCEPT ************************** -->
-			<xforms:submission id="save-rdf" ref="instance('rdf')" xxforms:username="{instance('exist-config')/username}"
-				xxforms:password="{instance('exist-config')/password}"
+			<xforms:submission id="save-rdf" ref="instance('rdf')" xxf:username="{instance('exist-config')/username}"
+				xxf:password="{instance('exist-config')/password}"
 				action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/symbols/{instance('control-instance')/id}.rdf" method="put"
 				replace="none">
 				<xforms:message ev:event="xforms-submit-error" level="modal">
@@ -392,10 +392,10 @@ PREFIX skos:	<http://www.w3.org/2004/02/skos/core#>]]></prefix>
 			<!-- ************************* LOAD AND SAVE RDF FILE FOR SPREADSHEET METADATA ************************** -->
 			<xforms:submission id="load-spreadsheet-rdf" serialization="none" method="get"
 				action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/spreadsheets.rdf" replace="instance"
-				instance="spreadsheet-rdf" xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}"> </xforms:submission>
+				instance="spreadsheet-rdf" xxf:username="{instance('exist-config')/username}" xxf:password="{instance('exist-config')/password}"> </xforms:submission>
 
-			<xforms:submission id="save-spreadsheet-rdf" ref="instance('spreadsheet-rdf')" xxforms:username="{instance('exist-config')/username}"
-				xxforms:password="{instance('exist-config')/password}"
+			<xforms:submission id="save-spreadsheet-rdf" ref="instance('spreadsheet-rdf')" xxf:username="{instance('exist-config')/username}"
+				xxf:password="{instance('exist-config')/password}"
 				action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/spreadsheets.rdf" method="put" replace="none">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Error saving spreadsheet RDF.</xforms:message>
 			</xforms:submission>
@@ -436,17 +436,17 @@ PREFIX skos:	<http://www.w3.org/2004/02/skos/core#>]]></prefix>
 			<!-- ********** XFORMS-MODEL-CONSTRUCT-DONE ********** -->
 			<xforms:action ev:event="xforms-model-construct-done">
 				<!-- set username -->
-				<xforms:setvalue ref="instance('control-instance')/username" value="xxforms:get-remote-user()"/>
+				<xforms:setvalue ref="instance('control-instance')/username" value="xxf:get-remote-user()"/>
 
 				<!-- if there's a collection-name session attribute carried over from numishare-admin, then use it to set the collection-name -->
-				<xforms:action if="string(xxforms:get-session-attribute('collection-name'))">
-					<xforms:setvalue ref="instance('control-instance')/collection-name" value="xxforms:get-session-attribute('collection-name')"/>
+				<xforms:action if="string(xxf:get-session-attribute('collection-name'))">
+					<xforms:setvalue ref="instance('control-instance')/collection-name" value="xxf:get-session-attribute('collection-name')"/>
 					<xforms:send submission="load-config"/>
 				</xforms:action>
 
-				<xforms:action if="not(string(xxforms:get-session-attribute('collection-name')))">
+				<xforms:action if="not(string(xxf:get-session-attribute('collection-name')))">
 					<xforms:insert context="instance('control-instance')" nodeset="collection-name" position="after"
-						origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/get-authentication.xpl', 'dump', instance('dump'), 'data')"/>
+						origin="xxf:call-xpl('oxf:/apps/numishare/xpl/get-authentication.xpl', 'dump', instance('dump'), 'data')"/>
 					<xforms:send submission="load-collections"/>
 				</xforms:action>
 
@@ -457,7 +457,7 @@ PREFIX skos:	<http://www.w3.org/2004/02/skos/core#>]]></prefix>
 				<xforms:setvalue ref="instance('sparqlQuery')"
 					value="concat(instance('sparql-templates')/prefix, ' ', instance('sparql-templates')/query[@id='editor'])"/>
 				<xforms:send submission="submit-sparqlQuery"/>
-				<xforms:action xxforms:iterate="instance('sparqlResponse')//res:result" ev:event="xforms-submit-done">
+				<xforms:action xxf:iterate="instance('sparqlResponse')//res:result" ev:event="xforms-submit-done">
 					<xforms:var name="uri" select="data(res:binding[@name='uri']/res:uri)"/>
 					<xforms:var name="label" select="data(res:binding[@name='label']/res:literal)"/>
 					<xforms:insert context="instance('editor-list')" nodeset="./child::node()[last()]"
@@ -473,7 +473,7 @@ PREFIX skos:	<http://www.w3.org/2004/02/skos/core#>]]></prefix>
 			<!-- ********** XFORMS-READY ********** -->
 			<!--<xforms:action ev:event="xforms-ready">
 				<!-\- test spreadsheet RDF validity on xforms-ready -\->
-				<xforms:setvalue ref="instance('control-instance')/metadata-valid" value="true()" if="xxforms:valid(instance('spreadsheet-rdf'), true())"/>
+				<xforms:setvalue ref="instance('control-instance')/metadata-valid" value="true()" if="xxf:valid(instance('spreadsheet-rdf'), true())"/>
 			</xforms:action>-->
 		</xforms:model>
 	</head>
@@ -756,7 +756,7 @@ PREFIX skos:	<http://www.w3.org/2004/02/skos/core#>]]></prefix>
 												origin="xforms:element('error', 'Duplicate Record IDs.')"/>
 
 											<!-- then iterate through all Atom entries -->
-											<xforms:action xxforms:iterate="instance('feed')//atom:entry">
+											<xforms:action xxf:iterate="instance('feed')//atom:entry">
 												<!-- create record in the validation model -->
 												<xforms:var name="title" select="atom:title"/>
 												<xforms:var name="position" select="position()"/>
@@ -764,7 +764,7 @@ PREFIX skos:	<http://www.w3.org/2004/02/skos/core#>]]></prefix>
 													origin="xforms:element('record', (xforms:attribute('title', $title), ''))"/>
 
 												<!-- iterate through all gsx elements -->
-												<xforms:action xxforms:iterate="*[namespace-uri()='http://schemas.google.com/spreadsheets/2006/extended']">
+												<xforms:action xxf:iterate="*[namespace-uri()='http://schemas.google.com/spreadsheets/2006/extended']">
 													<xforms:var name="from" select="name()"/>
 													<xforms:var name="value" select="normalize-space(context())"/>
 
@@ -951,7 +951,7 @@ PREFIX skos:	<http://www.w3.org/2004/02/skos/core#>]]></prefix>
 											<xforms:var name="dateTime" select="current-dateTime()"/>
 
 											<!-- begin processing the spreadsheet into RDF -->
-											<xforms:action xxforms:iterate="instance('feed')//atom:entry">
+											<xforms:action xxf:iterate="instance('feed')//atom:entry">
 												<xforms:var name="id"
 													select="normalize-space(data(context()/*[namespace-uri()='http://schemas.google.com/spreadsheets/2006/extended'][name()=instance('mappings')/mapping[@to='id']/@from]))"/>
 												<xforms:setvalue ref="instance('control-instance')/id" value="$id"/>
@@ -996,7 +996,7 @@ PREFIX skos:	<http://www.w3.org/2004/02/skos/core#>]]></prefix>
 
 												<!-- iterate through columns -->
 												<xforms:action
-													xxforms:iterate="context()/*[namespace-uri()='http://schemas.google.com/spreadsheets/2006/extended']">
+													xxf:iterate="context()/*[namespace-uri()='http://schemas.google.com/spreadsheets/2006/extended']">
 													<xforms:var name="from" select="name()"/>
 													<xforms:var name="value" select="normalize-space(data(context()))"/>
 
@@ -1037,7 +1037,7 @@ PREFIX skos:	<http://www.w3.org/2004/02/skos/core#>]]></prefix>
 															<!-- if the value is not a URI, then split the string into letters -->
 															<xforms:action if="not(matches($value, 'https?://(-\.)?([^\s/?\.#]+\.?)+(/[^\s]*)?$'))">
 																<xforms:action
-																	xxforms:iterate="for $c in string-to-codepoints($value) return codepoints-to-string($c)">
+																	xxf:iterate="for $c in string-to-codepoints($value) return codepoints-to-string($c)">
 																	<xforms:var name="letter" select="normalize-space(.)"/>
 
 																	<!-- ignore whitespace in the sequence -->
@@ -1083,7 +1083,7 @@ PREFIX skos:	<http://www.w3.org/2004/02/skos/core#>]]></prefix>
 
 															<!-- only insert an image_creator if there are D1_Digital_Objects (this ignores unicode characters) -->
 															<xforms:action
-																xxforms:iterate="instance('rdf')/*[1]//crmdig:D1_Digital_Object">
+																xxf:iterate="instance('rdf')/*[1]//crmdig:D1_Digital_Object">
 																<xforms:insert context="." nodeset="./child::node()[last()]"
 																	origin="xforms:element('dcterms:creator', xforms:attribute('rdf:resource', $value))"/>
 															</xforms:action>
@@ -1092,7 +1092,7 @@ PREFIX skos:	<http://www.w3.org/2004/02/skos/core#>]]></prefix>
 														<xforms:action if="$mapping = 'image_license'">
 															<!-- only insert an image_license if there are D1_Digital_Objects (this ignores unicode characters) -->
 															<xforms:action
-																xxforms:iterate="instance('rdf')/*[1]//crmdig:D1_Digital_Object">
+																xxf:iterate="instance('rdf')/*[1]//crmdig:D1_Digital_Object">
 																<xforms:insert context="." nodeset="./child::node()[last()]"
 																	origin="xforms:element('dcterms:license', xforms:attribute('rdf:resource', $value))"/>
 															</xforms:action>
@@ -1163,7 +1163,7 @@ PREFIX skos:	<http://www.w3.org/2004/02/skos/core#>]]></prefix>
 													origin="xforms:element('prov:used', (xforms:attribute('rdf:resource', instance('control-instance')/spreadsheet-uri)))"/>
 
 												<!-- insert contributors -->
-												<xforms:action xxforms:iterate="$contributors">
+												<xforms:action xxf:iterate="$contributors">
 													<xforms:var name="value" select="normalize-space(data(.))"/>
 
 													<xforms:insert context="instance('rdf')/dcterms:ProvenanceStatement/prov:*[last()]/prov:Activity"

@@ -3,7 +3,7 @@
 	function: Conservation State: Nomisma is queried for CoinWear instances
 -->
 <xbl:xbl xmlns="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events"
-	xmlns:xxforms="http://orbeon.org/oxf/xml/xforms" xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:xbl="http://www.w3.org/ns/xbl"
+	xmlns:xxf="http://orbeon.org/oxf/xml/xforms" xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:xbl="http://www.w3.org/ns/xbl"
 	xmlns:xxbl="http://orbeon.org/oxf/xml/xbl" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:oxf="http://www.orbeon.com/oxf/processors"
 	xmlns:numishare="https://github.com/ewg118/numishare" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:nuds="http://nomisma.org/nuds"
 	xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -15,7 +15,7 @@
 				<xbl:content includes="xforms|label,xforms|help,xforms|hint,xforms|alert"/>
 				<xforms:group xxbl:scope="inner">
 					<xforms:var name="binding" as="node()?">
-						<xxforms:sequence select="." xxbl:scope="outer"/>
+						<xxf:sequence select="." xxbl:scope="outer"/>
 					</xforms:var>
 					<xforms:action ev:event="xforms-enabled" ev:target="#observer">
 						<!-- load controlled vocabulary instances by querying nomisma -->
@@ -103,11 +103,11 @@
 					</xforms:group>
 					<!-- ***********************  DIALOG INTERNAL MODEL *********************** -->
 					<xforms:model id="conservationState-model">
-						<xforms:instance id="feed" xxforms:exclude-result-prefixes="#all">
+						<xforms:instance id="feed" xxf:exclude-result-prefixes="#all">
 							<feed xmlns=""/>
 						</xforms:instance>
 
-						<xforms:instance id="control-instance" xxforms:exclude-result-prefixes="#all">
+						<xforms:instance id="control-instance" xxf:exclude-result-prefixes="#all">
 							<controls xmlns="">
 								<type/>
 							</controls>
@@ -130,11 +130,11 @@
 							</grades>
 						</xforms:instance>
 
-						<xforms:instance id="CoinWear-list" xxforms:exclude-result-prefixes="#all">
+						<xforms:instance id="CoinWear-list" xxf:exclude-result-prefixes="#all">
 							<list xmlns=""/>
 						</xforms:instance>
 
-						<xforms:instance id="listItem-template" xxforms:exclude-result-prefixes="#all">
+						<xforms:instance id="listItem-template" xxf:exclude-result-prefixes="#all">
 							<item href="" xmlns=""/>
 						</xforms:instance>
 
@@ -143,7 +143,7 @@
 							instance="feed" replace="instance">
 							<xforms:message ev:event="xforms-submit-error" level="modal">Unable to communicate with nomisma.org Atom feed.</xforms:message>
 							<!-- iterate through Atom feed, populating select list -->
-							<xforms:action ev:event="xforms-submit-done" xxforms:iterate="instance('feed')//atom:entry">
+							<xforms:action ev:event="xforms-submit-done" xxf:iterate="instance('feed')//atom:entry">
 								<xforms:setvalue ref="instance('listItem-template')" value="context()/atom:title"/>
 								<xforms:setvalue ref="instance('listItem-template')/@href" value="context()/atom:link[@rel = 'canonical']/@href"/>
 								<xforms:insert origin="instance('listItem-template')" context="instance(concat(instance('control-instance')/type, '-list'))"

@@ -4,7 +4,7 @@
 -->
 
 <xbl:xbl xmlns="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events"
-	xmlns:xxforms="http://orbeon.org/oxf/xml/xforms" xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:xbl="http://www.w3.org/ns/xbl"
+	xmlns:xxf="http://orbeon.org/oxf/xml/xforms" xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:xbl="http://www.w3.org/ns/xbl"
 	xmlns:xxbl="http://orbeon.org/oxf/xml/xbl" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:oxf="http://www.orbeon.com/oxf/processors"
 	xmlns:nuds="http://nomisma.org/nuds" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:georss="http://www.georss.org/georss"
 	xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:gml="http://www.opengis.net/gml" xmlns:atom="http://www.w3.org/2005/Atom"
@@ -15,7 +15,7 @@
 				<xbl:content includes="xforms|label,xforms|help,xforms|hint,xforms|alert"/>
 				<xforms:group xxbl:scope="inner">
 					<xforms:var name="binding" as="node()?">
-						<xxforms:sequence select="." xxbl:scope="outer"/>
+						<xxf:sequence select="." xxbl:scope="outer"/>
 					</xforms:var>
 					<xforms:action ev:event="xforms-enabled" ev:target="#observer">
 						<!-- load config -->
@@ -67,7 +67,7 @@
 													<xforms:delete context="$binding" nodeset="gml:Point"/>
 													<!-- create attributes, clear nuds:geogname text when applicable -->
 													<xforms:insert if="not($binding/nuds:geogname/@xlink:href)" context="$binding/nuds:geogname"
-														origin="xxforms:attribute('xlink:href', '')"/>
+														origin="xxf:attribute('xlink:href', '')"/>
 													<xforms:setvalue ref="$binding/nuds:geogname"/>
 													<xforms:toggle case="geonames-search"/>
 												</xforms:action>
@@ -213,13 +213,13 @@
 							<xi:include href="../../../exist-config.xml" xmlns=""/>
 						</xforms:instance>
 
-						<xforms:instance id="coordinates-template" xxforms:exclude-result-prefixes="#all">
+						<xforms:instance id="coordinates-template" xxf:exclude-result-prefixes="#all">
 							<gml:Point srsName="http://www.opengis.net/def/crs/EPSG/0/4326" xmlns="">
 								<gml:coordinates/>
 							</gml:Point>
 						</xforms:instance>
 						
-						<xforms:instance id="description-template" xxforms:exclude-result-prefixes="#all">
+						<xforms:instance id="description-template" xxf:exclude-result-prefixes="#all">
 							<description  xmlns="http://nomisma.org/nuds" xml:lang=""/>
 						</xforms:instance>
 
@@ -367,11 +367,11 @@
 						</xforms:instance>
 
 						<!-- findspot type radio button -->
-						<xforms:instance id="interface-type" xxforms:exclude-result-prefixes="#all">
+						<xforms:instance id="interface-type" xxf:exclude-result-prefixes="#all">
 							<interface xmlns="">specific</interface>
 						</xforms:instance>
 
-						<xforms:instance id="coordinates-temp" xxforms:exclude-result-prefixes="#all">
+						<xforms:instance id="coordinates-temp" xxf:exclude-result-prefixes="#all">
 							<coordinates xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns="">
 								<geo:lat/>
 								<geo:long/>
@@ -394,7 +394,7 @@
 								<xforms:message if="number(instance('geoname-temp')/totalResultsCount) = 0" level="modal">No results found for
 									query.</xforms:message>
 								<!--<xforms:insert if="number(instance('geoname-temp')/totalResultsCount) &gt; 0" context="instance('geonames')" origin="instance('geoname-temp')"/>-->
-								<xforms:action xxforms:iterate="instance('geoname-temp')//geoname">
+								<xforms:action xxf:iterate="instance('geoname-temp')//geoname">
 									<xforms:var name="countryCode" select="countryCode"/>
 									<xforms:var name="countryName" select="countryName"/>
 									<xforms:var name="name" select="name"/>
@@ -415,7 +415,7 @@
 							instance="geoname-query-response" replace="instance">
 							<xforms:action ev:event="xforms-submit-done">
 								<xforms:insert context="instance('geoname-temp')" origin="instance('geoname-query-response')"/>
-								<xforms:action xxforms:iterate="instance('geoname-temp')//geoname">
+								<xforms:action xxf:iterate="instance('geoname-temp')//geoname">
 									<xforms:var name="countryCode" select="countryCode"/>
 									<xforms:var name="countryName" select="countryName"/>
 									<xforms:var name="name" select="name"/>
@@ -433,8 +433,8 @@
 
 						<!-- load config -->
 						<xforms:submission id="load-config" serialization="none" method="get"
-							action="{instance('exist-config')/url}{xxforms:get-session-attribute('collection-name')}/config.xml" replace="instance"
-							instance="config" xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}">
+							action="{instance('exist-config')/url}{xxf:get-session-attribute('collection-name')}/config.xml" replace="instance"
+							instance="config" xxf:username="{instance('exist-config')/username}" xxf:password="{instance('exist-config')/password}">
 							<xforms:message ev:event="xforms-submit-error" level="modal">Error Loading Config.</xforms:message>
 						</xforms:submission>
 					</xforms:model>

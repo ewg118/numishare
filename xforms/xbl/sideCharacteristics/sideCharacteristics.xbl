@@ -4,7 +4,7 @@
 -->
 
 <xbl:xbl xmlns="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events"
-	xmlns:xxforms="http://orbeon.org/oxf/xml/xforms" xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:xbl="http://www.w3.org/ns/xbl"
+	xmlns:xxf="http://orbeon.org/oxf/xml/xforms" xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:xbl="http://www.w3.org/ns/xbl"
 	xmlns:xxbl="http://orbeon.org/oxf/xml/xbl" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:oxf="http://www.orbeon.com/oxf/processors"
 	xmlns:nuds="http://nomisma.org/nuds" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:numishare="https://github.com/ewg118/numishare"
 	xmlns:xs="http://www.w3.org/2001/XMLSchema">
@@ -14,7 +14,7 @@
 				<xbl:content includes="xforms|label,xforms|help,xforms|hint,xforms|alert"/>
 				<xforms:group xxbl:scope="inner">
 					<xforms:var name="binding" as="node()?">
-						<xxforms:sequence select="." xxbl:scope="outer"/>
+						<xxf:sequence select="." xxbl:scope="outer"/>
 					</xforms:var>
 
 					<xforms:group ref="$binding">
@@ -172,19 +172,19 @@
 					<xforms:model id="sideCharacteristics-model" xmlns="http://nomisma.org/nuds">
 
 						<!-- NUDS templates -->
-						<xforms:instance id="description-template" xxforms:exclude-result-prefixes="#all">
+						<xforms:instance id="description-template" xxf:exclude-result-prefixes="#all">
 							<description xml:lang=""/>
 						</xforms:instance>
 
-						<xforms:instance id="legend-template" xxforms:exclude-result-prefixes="#all">
+						<xforms:instance id="legend-template" xxf:exclude-result-prefixes="#all">
 							<legend/>
 						</xforms:instance>
 
-						<xforms:instance id="symbol-template" xxforms:exclude-result-prefixes="#all">
+						<xforms:instance id="symbol-template" xxf:exclude-result-prefixes="#all">
 							<symbol/>
 						</xforms:instance>
 
-						<xforms:instance id="type-template" xxforms:exclude-result-prefixes="#all">
+						<xforms:instance id="type-template" xxf:exclude-result-prefixes="#all">
 							<type/>
 						</xforms:instance>
 

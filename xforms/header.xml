@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <div class="navbar navbar-default navbar-static-top" role="navigation" xmlns="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms"
-	xmlns:xxforms="http://orbeon.org/oxf/xml/xforms">
+	xmlns:xxf="http://orbeon.org/oxf/xml/xforms">
 	<div class="container-fluid">
 		<div class="navbar-header">
 			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -16,19 +16,19 @@
 				<li>
 					<a href="{$display_path}.">Admin Home</a>
 				</li>				
-				<xforms:group ref=".[not(xxforms:is-user-in-role('numishare-admin')) or string(xxforms:get-session-attribute('collection-name'))]">
+				<xforms:group ref=".[not(xxf:is-user-in-role('numishare-admin')) or string(xxf:get-session-attribute('collection-name'))]">
 					<li>
 						<a href="{$display_path}edit/settings/">Modify Settings</a>
 					</li>					
 				</xforms:group>
-				<xforms:group ref=".[(not(xxforms:is-user-in-role('numishare-admin')) or string(xxforms:get-session-attribute('collection-name'))) and instance('config')/collection_type='cointype']">
+				<xforms:group ref=".[(not(xxf:is-user-in-role('numishare-admin')) or string(xxf:get-session-attribute('collection-name'))) and instance('config')/collection_type='cointype']">
 					<li>
 						<a href="{$display_path}symbols/">Symbols</a>
 					</li>					
 				</xforms:group>
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
-				<xforms:group ref=".[not(xxforms:is-user-in-role('numishare-admin')) or string(xxforms:get-session-attribute('collection-name'))]">
+				<xforms:group ref=".[not(xxf:is-user-in-role('numishare-admin')) or string(xxf:get-session-attribute('collection-name'))]">
 					<li>
 						<a href="{instance('config')/url}" target="_blank"><span class="glyphicon glyphicon-new-window"/> View Public Site</a>
 					</li>

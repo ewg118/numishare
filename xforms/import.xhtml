@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms"
-	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xxforms="http://orbeon.org/oxf/xml/xforms"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xxf="http://orbeon.org/oxf/xml/xforms"
 	xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:numishare="https://github.comu/ewg118/numishare" xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns:nuds="http://nomisma.org/nuds" xmlns:res="http://www.w3.org/2005/sparql-results#" xmlns:xi="http://www.w3.org/2001/XInclude"
 	xmlns:nm="http://nomisma.org/id/" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
@@ -18,7 +18,7 @@
 
 		<xforms:model xmlns="http://nomisma.org/nuds">
 			<xforms:instance id="nuds"
-				xxforms:exclude-result-prefixes="xhtml xforms xxforms ev xs xi xsi fr oxf nuds numishare exist res nm foaf rdf skos atom prov nmo rdac">
+				xxf:exclude-result-prefixes="xhtml xforms xxforms ev xs xi xsi fr oxf nuds numishare exist res nm foaf rdf skos atom prov nmo rdac">
 				<nuds recordType="" xmlns="http://nomisma.org/nuds" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:mets="http://www.loc.gov/METS/"
 					xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml"> </nuds>
 			</xforms:instance>
@@ -26,7 +26,7 @@
 			<!-- xhtml xforms xxforms ev xs xi xsi fr oxf foaf rdf skos atom prov nmo nm res nuds numishare exist -->
 
 			<!-- configurations and form controls -->
-			<xforms:instance id="control-instance" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="control-instance" xxf:exclude-result-prefixes="#all">
 				<controls xmlns="">
 					<status/>
 					<collection-name/>
@@ -71,7 +71,7 @@
 			</xforms:instance>
 
 			<!-- Nomisma RDF -->
-			<xforms:instance id="rdf-concept" xxforms:exclude-result-prefixes="#default xhtml xforms xs ev xxforms fr res xi nomisma atom">
+			<xforms:instance id="rdf-concept" xxf:exclude-result-prefixes="#default xhtml xforms xs ev xxforms fr res xi nomisma atom">
 				<rdf:RDF xmlns="" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:nm="http://nomisma.org/id/" xmlns:nmo="http://nomisma.org/ontology#"
 					xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
 					xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
@@ -81,7 +81,7 @@
 					xmlns:prov="http://www.w3.org/ns/prov#" xmlns:crm="http://www.cidoc-crm.org/cidoc-crm/"/>
 			</xforms:instance>
 
-			<xforms:instance id="rdf" xxforms:exclude-result-prefixes="#default xhtml xforms xs ev xxforms fr res xi nomisma atom">
+			<xforms:instance id="rdf" xxf:exclude-result-prefixes="#default xhtml xforms xs ev xxforms fr res xi nomisma atom">
 				<rdf:RDF xmlns="" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:nm="http://nomisma.org/id/" xmlns:nmo="http://nomisma.org/ontology#"
 					xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
 					xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
@@ -92,14 +92,14 @@
 			</xforms:instance>
 
 			<!-- NUDS templates -->
-			<xforms:instance id="descMeta-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="descMeta-template" xxf:exclude-result-prefixes="#all">
 				<descMeta>
 					<typeDesc/>
 				</descMeta>
 			</xforms:instance>
 
 			<!-- ***** CONTROL TEMPLATES ***** -->
-			<xforms:instance id="control-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="control-template" xxf:exclude-result-prefixes="#all">
 				<control>
 					<recordId/>
 					<publicationStatus/>
@@ -133,146 +133,146 @@
 				</control>
 			</xforms:instance>
 
-			<xforms:instance id="otherRecordId-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="otherRecordId-template" xxf:exclude-result-prefixes="#all">
 				<otherRecordId/>
 			</xforms:instance>
 
 			<!-- ***** DESCMETA ***** -->
-			<xforms:instance id="title-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="title-template" xxf:exclude-result-prefixes="#all">
 				<title xml:lang=""/>
 			</xforms:instance>
 
 			<!-- typeDesc templates -->
-			<xforms:instance id="authority-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="authority-template" xxf:exclude-result-prefixes="#all">
 				<authority/>
 			</xforms:instance>
 
-			<xforms:instance id="corpname-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="corpname-template" xxf:exclude-result-prefixes="#all">
 				<corpname xlink:type="simple" xlink:role="" xlink:href=""/>
 			</xforms:instance>
 
-			<xforms:instance id="date-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="date-template" xxf:exclude-result-prefixes="#all">
 				<date standardDate=""/>
 			</xforms:instance>
 
-			<xforms:instance id="dateRange-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="dateRange-template" xxf:exclude-result-prefixes="#all">
 				<dateRange>
 					<fromDate standardDate=""/>
 					<toDate standardDate=""/>
 				</dateRange>
 			</xforms:instance>
 
-			<xforms:instance id="denomination-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="denomination-template" xxf:exclude-result-prefixes="#all">
 				<denomination xlink:type="simple" xlink:href=""/>
 			</xforms:instance>
 
-			<xforms:instance id="description-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="description-template" xxf:exclude-result-prefixes="#all">
 				<description xml:lang=""/>
 			</xforms:instance>
 
-			<xforms:instance id="die-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="die-template" xxf:exclude-result-prefixes="#all">
 				<die state="nonexistent"/>
 			</xforms:instance>
 
-			<xforms:instance id="famname-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="famname-template" xxf:exclude-result-prefixes="#all">
 				<famname xlink:type="simple" xlink:role="" xlink:href=""/>
 			</xforms:instance>
 
-			<xforms:instance id="geogname-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="geogname-template" xxf:exclude-result-prefixes="#all">
 				<geogname xlink:type="simple" xlink:role="" xlink:href=""/>
 			</xforms:instance>
 
-			<xforms:instance id="geographic-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="geographic-template" xxf:exclude-result-prefixes="#all">
 				<geographic/>
 			</xforms:instance>
 
-			<xforms:instance id="legend-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="legend-template" xxf:exclude-result-prefixes="#all">
 				<legend/>
 			</xforms:instance>
 
-			<xforms:instance id="manufacture-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="manufacture-template" xxf:exclude-result-prefixes="#all">
 				<manufacture xlink:type="simple" xlink:href=""/>
 			</xforms:instance>
 
-			<xforms:instance id="material-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="material-template" xxf:exclude-result-prefixes="#all">
 				<material xlink:type="simple" xlink:href=""/>
 			</xforms:instance>
 
-			<xforms:instance id="noteSet-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="noteSet-template" xxf:exclude-result-prefixes="#all">
 				<noteSet/>
 			</xforms:instance>
 
-			<xforms:instance id="note-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="note-template" xxf:exclude-result-prefixes="#all">
 				<note xml:lang=""/>
 			</xforms:instance>
 
-			<xforms:instance id="objectType-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="objectType-template" xxf:exclude-result-prefixes="#all">
 				<objectType xlink:type="simple" xlink:href=""/>
 			</xforms:instance>
 
-			<xforms:instance id="obverse-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="obverse-template" xxf:exclude-result-prefixes="#all">
 				<obverse/>
 			</xforms:instance>
 
-			<xforms:instance id="persname-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="persname-template" xxf:exclude-result-prefixes="#all">
 				<persname xlink:type="simple" xlink:role="" xlink:href=""/>
 			</xforms:instance>
 
-			<xforms:instance id="reverse-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="reverse-template" xxf:exclude-result-prefixes="#all">
 				<reverse/>
 			</xforms:instance>
 
-			<xforms:instance id="symbol-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="symbol-template" xxf:exclude-result-prefixes="#all">
 				<symbol/>
 			</xforms:instance>
 
-			<xforms:instance id="type-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="type-template" xxf:exclude-result-prefixes="#all">
 				<type/>
 			</xforms:instance>
 
-			<xforms:instance id="typeSeries-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="typeSeries-template" xxf:exclude-result-prefixes="#all">
 				<typeSeries xlink:type="simple" xlink:href=""/>
 			</xforms:instance>
 
 			<!-- physDesc templates -->
-			<xforms:instance id="physDesc-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="physDesc-template" xxf:exclude-result-prefixes="#all">
 				<physDesc/>
 			</xforms:instance>
 
-			<xforms:instance id="measurementsSet-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="measurementsSet-template" xxf:exclude-result-prefixes="#all">
 				<measurementsSet/>
 			</xforms:instance>
 
-			<xforms:instance id="axis-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="axis-template" xxf:exclude-result-prefixes="#all">
 				<axis/>
 			</xforms:instance>
 
-			<xforms:instance id="diameter-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="diameter-template" xxf:exclude-result-prefixes="#all">
 				<diameter units="mm"/>
 			</xforms:instance>
 
-			<xforms:instance id="height-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="height-template" xxf:exclude-result-prefixes="#all">
 				<height units="mm"/>
 			</xforms:instance>
 
-			<xforms:instance id="thickness-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="thickness-template" xxf:exclude-result-prefixes="#all">
 				<thickness units="mm"/>
 			</xforms:instance>
 
-			<xforms:instance id="weight-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="weight-template" xxf:exclude-result-prefixes="#all">
 				<weight units="g"/>
 			</xforms:instance>
 
-			<xforms:instance id="width-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="width-template" xxf:exclude-result-prefixes="#all">
 				<width units="mm"/>
 			</xforms:instance>
 
 			<!-- refDesc templates -->
-			<xforms:instance id="refDesc-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="refDesc-template" xxf:exclude-result-prefixes="#all">
 				<refDesc/>
 			</xforms:instance>
 
-			<xforms:instance id="reference-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="reference-template" xxf:exclude-result-prefixes="#all">
 				<reference/>
 			</xforms:instance>
 
@@ -282,7 +282,7 @@
 			</xforms:instance>
 
 			<!-- NUDS mappings and validation -->
-			<xforms:instance id="properties" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="properties" xxf:exclude-result-prefixes="#all">
 				<properties xmlns="">
 					<property label="Authority URI">auth_authority_uri</property>
 					<property label="Axis" constraint="object">axis</property>
@@ -334,7 +334,7 @@
 				<xi:include href="instances/languages.xml"/>
 			</xforms:instance>
 
-			<xforms:instance id="semantic-properties" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="semantic-properties" xxf:exclude-result-prefixes="#all">
 				<properties xmlns="">
 					<property label="SKOS Definition">skos:definition</property>
 					<property label="SKOS Note">skos:note</property>
@@ -342,28 +342,28 @@
 				</properties>
 			</xforms:instance>
 
-			<xforms:instance id="mappings" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="mappings" xxf:exclude-result-prefixes="#all">
 				<mappings xmlns=""/>
 			</xforms:instance>
 
-			<xforms:instance id="validation-model" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="validation-model" xxf:exclude-result-prefixes="#all">
 				<validation xmlns=""/>
 			</xforms:instance>
 
-			<xforms:instance id="nomisma-uris" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="nomisma-uris" xxf:exclude-result-prefixes="#all">
 				<ids xmlns=""/>
 			</xforms:instance>
 
-			<xforms:instance id="type-symbol-uris" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="type-symbol-uris" xxf:exclude-result-prefixes="#all">
 				<types xmlns=""/>
 			</xforms:instance>
 
-			<xforms:instance id="parents-valid" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="parents-valid" xxf:exclude-result-prefixes="#all">
 				<ids xmlns=""/>
 			</xforms:instance>
 
 			<!-- NUDS instance for parent type -->
-			<xforms:instance id="related-nuds" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="related-nuds" xxf:exclude-result-prefixes="#all">
 				<nuds/>
 			</xforms:instance>
 
@@ -372,7 +372,7 @@
 				<feed xmlns=""/>
 			</xforms:instance>
 
-			<xforms:instance id="feed" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="feed" xxf:exclude-result-prefixes="#all">
 				<feed xmlns=""/>
 			</xforms:instance>
 
@@ -504,7 +504,7 @@
 			<!-- ***** LOADING COLLECTIONS/CONFIG *****-->
 			<xforms:submission id="load-config" serialization="none" method="get"
 				action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/config.xml"
-				xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}" replace="instance"
+				xxf:username="{instance('exist-config')/username}" xxf:password="{instance('exist-config')/password}" replace="instance"
 				instance="config">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Unable to load Numishare configuration</xforms:message>
 
@@ -515,12 +515,12 @@
 			</xforms:submission>
 
 			<xforms:submission id="load-collections" serialization="none" method="get" action="{instance('exist-config')/url}collections-list.xml"
-				replace="instance" instance="collections-list" xxforms:username="{instance('exist-config')/username}"
-				xxforms:password="{instance('exist-config')/password}">
+				replace="instance" instance="collections-list" xxf:username="{instance('exist-config')/username}"
+				xxf:password="{instance('exist-config')/password}">
 				<!-- if the config loads successfully, set the collection names based on authentication -->
 				<xforms:action ev:event="xforms-submit-done">
 					<!-- by default set the collection-name from the security role -->
-					<xforms:action if="not(xxforms:is-user-in-role('numishare-admin'))">
+					<xforms:action if="not(xxf:is-user-in-role('numishare-admin'))">
 						<xforms:action if="string(instance('collections-list')/collection[@role=instance('control-instance')/request-security/role]/@name)">
 							<xforms:setvalue ref="instance('control-instance')/collection-name"
 								value="instance('collections-list')/collection[@role=instance('control-instance')/request-security/role]/@name"/>
@@ -546,7 +546,7 @@
 					<!-- perform validation for any Concept URI that does not exist within the rdf response -->
 					<!-- apply for Nomisma -->
 					<xforms:action if="contains(instance('control-instance')/rdf-api, 'nomisma.org')">
-						<xforms:action xxforms:iterate="instance('nomisma-uris')/id">
+						<xforms:action xxf:iterate="instance('nomisma-uris')/id">
 							<xforms:setvalue if="instance('rdf-concept')/*[@rdf:about = context()/@uri]" ref="context()" value="true()"/>
 						</xforms:action>
 					</xforms:action>
@@ -554,7 +554,7 @@
 					<!-- apply for Numismatics.org type series -->
 					<xforms:action if="contains(instance('control-instance')/rdf-api, 'numismatics.org')">
 						<xforms:var name="series" select="substring-before(instance('control-instance')/rdf-api, 'apis')"/>
-						<xforms:action xxforms:iterate="instance('type-symbol-uris')/series[@uri = $series]/id">
+						<xforms:action xxf:iterate="instance('type-symbol-uris')/series[@uri = $series]/id">
 							<xforms:setvalue if="instance('rdf-concept')/*[@rdf:about = context()/@uri]" ref="context()" value="true()"/>
 						</xforms:action>
 					</xforms:action>
@@ -568,7 +568,7 @@
 			<!-- ************************* LOAD PARENT NUDS FILE ************************** -->
 			<xforms:submission id="load-nuds" serialization="none" method="get"
 				action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/objects/{encode-for-uri(instance('control-instance')/target-id)}.xml"
-				xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}" replace="instance"
+				xxf:username="{instance('exist-config')/username}" xxf:password="{instance('exist-config')/password}" replace="instance"
 				instance="related-nuds">
 
 				<!-- evaluate whether the NUDS document exists in the exist-db collection -->
@@ -583,8 +583,8 @@
 				</xforms:action>
 			</xforms:submission>
 
-			<xforms:submission id="save-nuds" ref="instance('nuds')" xxforms:username="{instance('exist-config')/username}"
-				xxforms:password="{instance('exist-config')/password}"
+			<xforms:submission id="save-nuds" ref="instance('nuds')" xxf:username="{instance('exist-config')/username}"
+				xxf:password="{instance('exist-config')/password}"
 				action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/objects/{instance('nuds')/nuds:control/nuds:recordId}.xml"
 				method="put" replace="none">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Error saving file to eXist-db collection.</xforms:message>
@@ -645,23 +645,23 @@
 			<!-- ********** XFORMS-MODEL-CONSTRUCT-DONE ********** -->
 			<xforms:action ev:event="xforms-model-construct-done">
 				<!-- set username -->
-				<xforms:setvalue ref="instance('control-instance')/username" value="xxforms:get-remote-user()"/>
+				<xforms:setvalue ref="instance('control-instance')/username" value="xxf:get-remote-user()"/>
 
 				<!-- if there's a collection-name session attribute carried over from numishare-admin, then use it to set the collection-name -->
-				<xforms:action if="string(xxforms:get-session-attribute('collection-name'))">
-					<xforms:setvalue ref="instance('control-instance')/collection-name" value="xxforms:get-session-attribute('collection-name')"/>
+				<xforms:action if="string(xxf:get-session-attribute('collection-name'))">
+					<xforms:setvalue ref="instance('control-instance')/collection-name" value="xxf:get-session-attribute('collection-name')"/>
 					<xforms:send submission="load-config"/>
 				</xforms:action>
 
-				<xforms:action if="not(string(xxforms:get-session-attribute('collection-name')))">
+				<xforms:action if="not(string(xxf:get-session-attribute('collection-name')))">
 					<xforms:insert context="instance('control-instance')" nodeset="collection-name" position="after"
-						origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/get-authentication.xpl', 'dump', instance('dump'), 'data')"/>
+						origin="xxf:call-xpl('oxf:/apps/numishare/xpl/get-authentication.xpl', 'dump', instance('dump'), 'data')"/>
 					<xforms:send submission="load-collections"/>
 				</xforms:action>
 
 				<!-- iterate through the available symbol positions in the config in order to populate the property list -->
 				<xforms:action
-					xxforms:iterate="xxforms:sort(instance('config')/positions/position, label[@lang = instance('control-instance')/language], 'text', 'ascending')">
+					xxf:iterate="xxf:sort(instance('config')/positions/position, label[@lang = instance('control-instance')/language], 'text', 'ascending')">
 					<xforms:var name="side" select="context()/@side"/>
 					<xforms:var name="position" select="context()/@value"/>
 					<xforms:var name="label" select="context()/label[@lang = instance('control-instance')/language]"/>
@@ -689,7 +689,7 @@
 			<!-- ********** XFORMS-READY ********** -->
 			<!--<xforms:action ev:event="xforms-ready">
 				<!-\- test spreadsheet RDF validity on xforms-ready -\->
-				<xforms:setvalue ref="instance('control-instance')/metadata-valid" value="true()" if="xxforms:valid(instance('spreadsheet-rdf'), true())"/>
+				<xforms:setvalue ref="instance('control-instance')/metadata-valid" value="true()" if="xxf:valid(instance('spreadsheet-rdf'), true())"/>
 			</xforms:action>-->
 		</xforms:model>
 	</head>
@@ -778,7 +778,7 @@
 
 															<xforms:action ev:event="xforms-submit-done">
 																<xforms:action
-																	xxforms:iterate="instance('feed')/*[namespace-uri()='http://schemas.google.com/spreadsheets/2006/extended']">
+																	xxf:iterate="instance('feed')/*[namespace-uri()='http://schemas.google.com/spreadsheets/2006/extended']">
 																	<xforms:var name="heading" select="name()"/>
 																	<xforms:insert context="instance('mappings')" nodeset="./child::node()[last()]"
 																		origin="xforms:element('mapping', (xforms:attribute('from', $heading), xforms:attribute('to', '')))"
@@ -1214,7 +1214,7 @@
 											<xforms:action ev:event="xforms-submit-done">
 												<!-- iterate through all of the distinct values of Nomisma URIs -->
 												<xforms:action
-													xxforms:iterate="distinct-values(instance('feed')//*[namespace-uri()='http://schemas.google.com/spreadsheets/2006/extended'][contains(., 'http://nomisma.org/') or contains(., 'http://numismatics.org/')])">
+													xxf:iterate="distinct-values(instance('feed')//*[namespace-uri()='http://schemas.google.com/spreadsheets/2006/extended'][contains(., 'http://nomisma.org/') or contains(., 'http://numismatics.org/')])">
 													<!-- ensure that the URI is not re-inserted due to trailing question mark for uncertainty -->
 													<xforms:var name="value"
 														select="if (contains(normalize-space(context()), '|')) then substring-before(normalize-space(context()), '|') else normalize-space(context())"/>
@@ -1260,7 +1260,7 @@
 
 												<!-- initiate getRDF API call for each individual type series -->
 												<xforms:action if="count(instance('type-symbol-uris')//id) &gt; 0">
-													<xforms:action xxforms:iterate="instance('type-symbol-uris')/series">
+													<xforms:action xxf:iterate="instance('type-symbol-uris')/series">
 														<xforms:var name="series" select="context()/@uri"/>
 
 														<!-- reset identifiers, position -->
@@ -1271,7 +1271,7 @@
 														<xforms:setvalue ref="instance('control-instance')/rdf-api" value="concat($series, 'apis/getRDF')"/>
 
 														<!-- getRDF for types needs to be broken down into manageable chunks of 100 in order to not exceed the server-set URL length -->
-														<xforms:action xxforms:iterate="context()/id">
+														<xforms:action xxf:iterate="context()/id">
 															<xforms:var name="uri" select="context()/@uri"/>
 
 															<!-- set position -->
@@ -1290,7 +1290,7 @@
 														<xforms:var name="tokens" select="tokenize(instance('control-instance')/identifiers, ',')"/>
 
 														<!-- call the /ingest pipeline with 100 IDs per API call, and post that to Solr -->
-														<xforms:action xxforms:iterate="$tokens">
+														<xforms:action xxf:iterate="$tokens">
 															<xforms:setvalue ref="instance('control-instance')/identifiers" value="context()"/>
 															<xforms:send submission="load-rdf"/>
 														</xforms:action>
@@ -1314,7 +1314,7 @@
 														origin="xforms:element('error', 'Duplicate Record IDs.')"/>
 
 													<!-- then iterate through all Atom entries -->
-													<xforms:action xxforms:iterate="instance('feed')//atom:entry">
+													<xforms:action xxf:iterate="instance('feed')//atom:entry">
 														<!-- create record in the validation model -->
 														<xforms:var name="title" select="atom:title"/>
 														<xforms:var name="position" select="position()"/>
@@ -1323,7 +1323,7 @@
 
 														<!-- iterate through all gsx elements -->
 														<xforms:action
-															xxforms:iterate="*[namespace-uri()='http://schemas.google.com/spreadsheets/2006/extended']">
+															xxf:iterate="*[namespace-uri()='http://schemas.google.com/spreadsheets/2006/extended']">
 															<xforms:var name="from" select="name()"/>
 															<xforms:var name="value" select="normalize-space(context())"/>
 
@@ -1648,7 +1648,7 @@
 											<xforms:setvalue ref="instance('control-instance')/position">0</xforms:setvalue>
 
 											<!-- begin processing the spreadsheet into RDF -->
-											<xforms:action xxforms:iterate="instance('feed')//atom:entry">
+											<xforms:action xxf:iterate="instance('feed')//atom:entry">
 												<xforms:var name="id"
 													select="normalize-space(data(context()/*[namespace-uri()='http://schemas.google.com/spreadsheets/2006/extended'][name()=instance('mappings')/mapping[@to='id']/@from]))"/>
 												<xforms:var name="position" select="position()"/>
@@ -1703,7 +1703,7 @@
 
 												<!-- *** BEGIN ATOM TO RDF IMPORT *** -->
 												<xforms:action
-													xxforms:iterate="context()/*[namespace-uri()='http://schemas.google.com/spreadsheets/2006/extended']">
+													xxf:iterate="context()/*[namespace-uri()='http://schemas.google.com/spreadsheets/2006/extended']">
 													<xforms:var name="from" select="name()"/>
 													<xforms:var name="value" select="normalize-space(data(context()))"/>
 
@@ -2176,7 +2176,7 @@
 												<xforms:var name="tokens" select="tokenize(instance('control-instance')/identifiers, ',')"/>
 
 												<!-- call the /ingest pipeline with 100 IDs per API call, and post that to Solr -->
-												<xforms:action xxforms:iterate="$tokens">
+												<xforms:action xxf:iterate="$tokens">
 													<xforms:setvalue ref="instance('control-instance')/identifiers" value="context()"/>
 													<!-- get Solr document -->
 													<xforms:send submission="generate-add-document"/>

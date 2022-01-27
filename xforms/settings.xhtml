@@ -1,5 +1,5 @@
 <html xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	xmlns="http://www.w3.org/1999/xhtml" xmlns:xxforms="http://orbeon.org/oxf/xml/xforms" xmlns:p="http://www.orbeon.com/oxf/pipeline"
+	xmlns="http://www.w3.org/1999/xhtml" xmlns:xxf="http://orbeon.org/oxf/xml/xforms" xmlns:p="http://www.orbeon.com/oxf/pipeline"
 	xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:saxon="http://saxon.sf.net/"
 	xmlns:numishare="https://github.com/ewg118/numishare" xmlns:res="http://www.w3.org/2005/sparql-results#">
 	<head>
@@ -19,11 +19,11 @@
 			</xforms:instance>
 
 			<!-- collections/authentication instances -->
-			<xforms:instance id="collections-list" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="collections-list" xxf:exclude-result-prefixes="#all">
 				<collections xmlns=""></collections>
 			</xforms:instance>
 
-			<xforms:instance id="config" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="config" xxf:exclude-result-prefixes="#all">
 				<config xmlns=""></config>
 			</xforms:instance>
 
@@ -35,7 +35,7 @@
 				<rsp xmlns=""></rsp>
 			</xforms:instance>
 
-			<xforms:instance id="control-instance" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="control-instance" xxf:exclude-result-prefixes="#all">
 				<control xmlns="">
 					<status></status>
 					<api-key-accepted></api-key-accepted>
@@ -63,7 +63,7 @@
 				</layers>
 			</xforms:instance>
 
-			<xforms:instance id="themes" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="themes" xxf:exclude-result-prefixes="#all">
 				<directory-scan xmlns=""></directory-scan>
 			</xforms:instance>
 
@@ -76,19 +76,19 @@
 			</xforms:instance>
 
 			<!-- template instances -->
-			<xforms:instance id="position-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="position-template" xxf:exclude-result-prefixes="#all">
 				<position value="" side="both" xmlns="">
 					<label lang="en"></label>
 				</position>
 			</xforms:instance>
 
-			<xforms:instance id="localType-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="localType-template" xxf:exclude-result-prefixes="#all">
 				<localType value="" xmlns="">
 					<label lang="en"></label>
 				</localType>
 			</xforms:instance>
 
-			<xforms:instance id="to-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="to-template" xxf:exclude-result-prefixes="#all">
 				<to type="" xmlns="">
 					<name></name>
 					<email></email>
@@ -229,8 +229,8 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 
 			<!-- ************************* SUBMISSIONS ************************** -->
 			<xforms:submission id="load-collections" serialization="none" method="get" action="{instance('exist-config')/url}collections-list.xml"
-				replace="instance" instance="collections-list" xxforms:username="{instance('exist-config')/username}"
-				xxforms:password="{instance('exist-config')/password}">
+				replace="instance" instance="collections-list" xxf:username="{instance('exist-config')/username}"
+				xxf:password="{instance('exist-config')/password}">
 				<!-- if the config loads successfully, set the collection names based on authentication -->
 				<xforms:action ev:event="xforms-submit-done">
 					<!-- set default if security is false -->
@@ -253,7 +253,7 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 			<!-- Load File -->
 			<xforms:submission id="load-config" serialization="none" method="get"
 				action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/config.xml"
-				xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}" replace="instance"
+				xxf:username="{instance('exist-config')/username}" xxf:password="{instance('exist-config')/password}" replace="instance"
 				instance="config">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Unable to load Numishare configuration file</xforms:message>
 				<!-- pre-validate required URLs for coin types -->
@@ -267,8 +267,8 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 			</xforms:submission>
 
 			<!-- Save File -->
-			<xforms:submission id="save-config" ref="instance('config')" xxforms:username="{instance('exist-config')/username}"
-				xxforms:password="{instance('exist-config')/password}"
+			<xforms:submission id="save-config" ref="instance('config')" xxf:username="{instance('exist-config')/username}"
+				xxf:password="{instance('exist-config')/password}"
 				action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/config.xml" method="put" replace="none">
 				<xforms:setvalue ev:event="xforms-submit-done" ref="instance('control-instance')/status">Numishare configuration saved.</xforms:setvalue>
 				<xforms:message ev:event="xforms-submit-error" level="modal">Error saving Numishare configuration file.</xforms:message>
@@ -309,13 +309,13 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 
 			<!-- ********** XFORMS-MODEL-CONSTRUCT-DONE ********** -->
 			<xforms:action ev:event="xforms-model-construct-done">
-				<xforms:action if="string(xxforms:get-session-attribute('collection-name'))">
-					<xforms:setvalue ref="instance('control-instance')/collection-name" value="xxforms:get-session-attribute('collection-name')"/>
+				<xforms:action if="string(xxf:get-session-attribute('collection-name'))">
+					<xforms:setvalue ref="instance('control-instance')/collection-name" value="xxf:get-session-attribute('collection-name')"/>
 					<xforms:send submission="load-config"/>
 				</xforms:action>
-				<xforms:action if="not(string(xxforms:get-session-attribute('collection-name')))">
+				<xforms:action if="not(string(xxf:get-session-attribute('collection-name')))">
 					<xforms:insert context="instance('control-instance')" nodeset="collection-name" position="after"
-						origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/get-authentication.xpl', 'dump', instance('dump'), 'data')"/>
+						origin="xxf:call-xpl('oxf:/apps/numishare/xpl/get-authentication.xpl', 'dump', instance('dump'), 'data')"/>
 					<xforms:send submission="load-collections"/>
 				</xforms:action>
 
@@ -326,7 +326,7 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 
 				<!-- scan the themes directory -->
 				<xforms:insert context="instance('themes')"
-					origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/xforms/scan-themes.xpl', 'dump', instance('dump'), 'data')"/>
+					origin="xxf:call-xpl('oxf:/apps/numishare/xpl/xforms/scan-themes.xpl', 'dump', instance('dump'), 'data')"/>
 
 				<!-- insert elements that didn't exist in previous versions -->
 				<xforms:insert context="instance('config')/theme" origin="xforms:element('themes_url', '')" if="not(instance('config')/theme/themes_url)"/>
@@ -859,7 +859,7 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 
 									<div class="section">
 										<h3>Enabled Pages</h3>
-										<xforms:repeat nodeset="xxforms:sort(*[not(self::index or self::page)], name(), 'text', 'ascending')">
+										<xforms:repeat nodeset="xxf:sort(*[not(self::index or self::page)], name(), 'text', 'ascending')">
 											<div>
 												<xforms:input ref="@enabled">
 													<xforms:label ref="parent::node()/name()"/>
@@ -1271,7 +1271,7 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 														<img src="/apps/numishare/xforms/images/alignment_display_vl.png" />
 													</xforms:label>
 													<xforms:action ev:event="DOMActivate">
-														<!--<xforms:setvalue xxforms:iterate="instance('control-instance')/display/*" value="''"/>-->
+														<!--<xforms:setvalue xxf:iterate="instance('control-instance')/display/*" value="''"/>-->
 														<xforms:setvalue ref="instance('control-instance')/display/vl">true</xforms:setvalue>
 													</xforms:action>
 												</xforms:trigger>
@@ -1283,7 +1283,7 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 														</xforms:item>
 														<xforms:action ev:event="xforms-value-changed" if="true()">
 															<xforms:var name="name" select="name()"/>
-															<xforms:action xxforms:iterate="instance('control-instance')/display/*[not(name() = $name)]">
+															<xforms:action xxf:iterate="instance('control-instance')/display/*[not(name() = $name)]">
 																<xforms:setvalue ref="context()" value="''"/>
 															</xforms:action>
 															<!-- set the config values -->
@@ -1303,7 +1303,7 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 														<img src="/apps/numishare/xforms/images/alignment_display_vr.png" />
 													</xforms:label>
 													<xforms:action ev:event="DOMActivate">
-														<!--<xforms:setvalue xxforms:iterate="instance('control-instance')/display/*" value="''"/>-->
+														<!--<xforms:setvalue xxf:iterate="instance('control-instance')/display/*" value="''"/>-->
 														<xforms:setvalue ref="instance('control-instance')/display/vr">true</xforms:setvalue>
 													</xforms:action>
 												</xforms:trigger>
@@ -1315,7 +1315,7 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 														</xforms:item>
 														<xforms:action ev:event="xforms-value-changed" if="true()">
 															<xforms:var name="name" select="name()"/>
-															<xforms:setvalue xxforms:iterate="instance('control-instance')/display/*[not(name() = $name)]"
+															<xforms:setvalue xxf:iterate="instance('control-instance')/display/*[not(name() = $name)]"
 																value="''"/>
 															<!-- set the config values -->
 															<xforms:setvalue ref="instance('config')/theme/layouts/display/nuds/orientation"
@@ -1334,7 +1334,7 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 														<img src="/apps/numishare/xforms/images/alignment_display_ht.png" />
 													</xforms:label>
 													<xforms:action ev:event="DOMActivate">
-														<!--<xforms:setvalue xxforms:iterate="instance('control-instance')/display/*" value="''"/>-->
+														<!--<xforms:setvalue xxf:iterate="instance('control-instance')/display/*" value="''"/>-->
 														<xforms:setvalue ref="instance('control-instance')/display/ht">true</xforms:setvalue>
 													</xforms:action>
 												</xforms:trigger>
@@ -1346,7 +1346,7 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 														</xforms:item>
 														<xforms:action ev:event="xforms-value-changed" if="true()">
 															<xforms:var name="name" select="name()"/>
-															<xforms:setvalue xxforms:iterate="instance('control-instance')/display/*[not(name() = $name)]"/>
+															<xforms:setvalue xxf:iterate="instance('control-instance')/display/*[not(name() = $name)]"/>
 															<!-- set the config values -->
 															<xforms:setvalue ref="instance('config')/theme/layouts/display/nuds/orientation"
 																>horizontal</xforms:setvalue>
@@ -1364,7 +1364,7 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 														<img src="/apps/numishare/xforms/images/alignment_display_hb.png" />
 													</xforms:label>
 													<xforms:action ev:event="DOMActivate">
-														<!--<xforms:setvalue xxforms:iterate="instance('control-instance')/display/*"/>-->
+														<!--<xforms:setvalue xxf:iterate="instance('control-instance')/display/*"/>-->
 														<xforms:setvalue ref="instance('control-instance')/display/hb">true</xforms:setvalue>
 													</xforms:action>
 												</xforms:trigger>
@@ -1376,7 +1376,7 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 														</xforms:item>
 														<xforms:action ev:event="xforms-value-changed" if="true()">
 															<xforms:var name="name" select="name()"/>
-															<xforms:setvalue xxforms:iterate="instance('control-instance')/display/*[not(name() = $name)]"/>
+															<xforms:setvalue xxf:iterate="instance('control-instance')/display/*[not(name() = $name)]"/>
 															<!-- set the config values -->
 															<xforms:setvalue ref="instance('config')/theme/layouts/display/nuds/orientation"
 																>horizontal</xforms:setvalue>

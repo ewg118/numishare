@@ -3,7 +3,7 @@
 	function: EAD state component; user taps into LCSH or local vocabulary for states
 -->
 <xbl:xbl xmlns:nuds="http://nomisma.org/nuds" xmlns="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms"
-	xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xxforms="http://orbeon.org/oxf/xml/xforms" xmlns:fr="http://orbeon.org/oxf/xml/form-runner"
+	xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xxf="http://orbeon.org/oxf/xml/xforms" xmlns:fr="http://orbeon.org/oxf/xml/form-runner"
 	xmlns:xbl="http://www.w3.org/ns/xbl" xmlns:xxbl="http://orbeon.org/oxf/xml/xbl" xmlns:oxf="http://www.orbeon.com/oxf/processors"
 	xmlns:numishare="https://github.com/ewg118/numishare" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xi="http://www.w3.org/2001/XInclude">
 	<xbl:binding id="numishare-control" element="numishare|control">
@@ -12,7 +12,7 @@
 				<xbl:content includes="xforms|label,xforms|help,xforms|hint,xforms|alert"/>
 				<xforms:group xxbl:scope="inner">
 					<xforms:var name="binding" as="node()?">
-						<xxforms:sequence select="." xxbl:scope="outer"/>
+						<xxf:sequence select="." xxbl:scope="outer"/>
 					</xforms:var>
 					<xforms:var name="display_path">../../</xforms:var>
 					
@@ -241,19 +241,19 @@
 					<!-- ********************************************************************** -->
 					<!-- ***********************  DIALOG INTERNAL MODEL *********************** -->
 					<xforms:model id="control-model" xmlns="http://nomisma.org/nuds">
-						<xforms:instance id="project-template" xxforms:exclude-result-prefixes="#all">
+						<xforms:instance id="project-template" xxf:exclude-result-prefixes="#all">
 							<project/>
 						</xforms:instance>
-						<xforms:instance id="eventDescription-template" xxforms:exclude-result-prefixes="#all">
+						<xforms:instance id="eventDescription-template" xxf:exclude-result-prefixes="#all">
 							<eventDescription/>
 						</xforms:instance>
-						<xforms:instance id="otherRecordId-template" xxforms:exclude-result-prefixes="#all">
+						<xforms:instance id="otherRecordId-template" xxf:exclude-result-prefixes="#all">
 							<otherRecordId/>
 						</xforms:instance>
-						<xforms:instance id="agencyCode-template" xxforms:exclude-result-prefixes="#all">
+						<xforms:instance id="agencyCode-template" xxf:exclude-result-prefixes="#all">
 							<agencyCode/>
 						</xforms:instance>
-						<xforms:instance id="otherAgencyCode-template" xxforms:exclude-result-prefixes="#all">
+						<xforms:instance id="otherAgencyCode-template" xxf:exclude-result-prefixes="#all">
 							<otherAgencyCode/>
 						</xforms:instance>
 						

@@ -2,7 +2,7 @@
 	   last modified: June, 2018
 	   function: reusable component for adding and deleting certainty anywhere within a NUDS record. Certainty is tied to Nomisma IDs -->
 <xbl:xbl xmlns="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events"
-    xmlns:xxforms="http://orbeon.org/oxf/xml/xforms" xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:xbl="http://www.w3.org/ns/xbl"
+    xmlns:xxf="http://orbeon.org/oxf/xml/xforms" xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:xbl="http://www.w3.org/ns/xbl"
     xmlns:xxbl="http://orbeon.org/oxf/xml/xbl" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:oxf="http://www.orbeon.com/oxf/processors"
     xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml"
     xmlns:atom="http://www.w3.org/2005/Atom" xmlns:numishare="https://github.com/ewg118/numishare">
@@ -12,7 +12,7 @@
                 <xbl:content includes="xforms|label,xforms|help,xforms|hint,xforms|alert"/>
                 <xforms:group xxbl:scope="inner">
                     <xforms:var name="binding" as="node()?">
-                        <xxforms:sequence select="." xxbl:scope="outer"/>
+                        <xxf:sequence select="." xxbl:scope="outer"/>
                     </xforms:var>
                     
                     <!-- execute Nomisma query for uncertain IDs if @certainty is already set -->
@@ -57,7 +57,7 @@
                     
                     <!-- ***********************  INTERNAL MODEL *********************** -->
                     <xforms:model id="certainty-model" xmlns:xi="http://www.w3.org/2001/XInclude">
-                        <xforms:instance id="control-instance" xxforms:exclude-result-prefixes="#all">
+                        <xforms:instance id="control-instance" xxf:exclude-result-prefixes="#all">
                             <control xmlns="">
                                 <type/>
                                 <description/>
@@ -65,7 +65,7 @@
                         </xforms:instance>
                         
                         <!-- Instances containing the query string -->
-                        <xforms:instance id="search-query" xxforms:exclude-result-prefixes="#all">
+                        <xforms:instance id="search-query" xxf:exclude-result-prefixes="#all">
                             <query xmlns=""/>
                         </xforms:instance>
                         
@@ -74,7 +74,7 @@
                             <feed xmlns=""/>
                         </xforms:instance>
                         
-                        <xforms:instance id="certainty-list" xxforms:exclude-result-prefixes="#all">
+                        <xforms:instance id="certainty-list" xxf:exclude-result-prefixes="#all">
                             <list xmlns=""/>
                         </xforms:instance>
                         
@@ -85,7 +85,7 @@
                             <xforms:message ev:event="xforms-submit-error" level="modal">Unable to communicate with nomisma.org Atom feed.</xforms:message>
                             <!-- if the type is uncertainty, then copy results into uncertainty list, but only if it's empty -->
                             <xforms:action ev:event="xforms-submit-done" if="instance('control-instance')/type = 'un:Uncertainty' and count(instance('certainty-list')/item) = 0">
-                                <xforms:action xxforms:iterate="instance('feed')//atom:entry">			
+                                <xforms:action xxf:iterate="instance('feed')//atom:entry">			
                                     <xforms:var name="label" select="context()/atom:title"/>
                                     <xforms:var name="value" select="context()/atom:link[@rel = 'canonical']/@href"/>
                                     <xforms:insert context="instance('certainty-list')" nodeset="./child::node()[last()]" origin="xforms:element('item', (xforms:attribute('id', $value), $label))"/>

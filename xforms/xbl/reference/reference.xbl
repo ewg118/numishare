@@ -3,7 +3,7 @@
 	Function: reference information, appears in acqinfo, custodhist/previousColl, and refDesc
 -->
 <xbl:xbl xmlns:nuds="http://nomisma.org/nuds" xmlns="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms"
-	xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xxforms="http://orbeon.org/oxf/xml/xforms" xmlns:fr="http://orbeon.org/oxf/xml/form-runner"
+	xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xxf="http://orbeon.org/oxf/xml/xforms" xmlns:fr="http://orbeon.org/oxf/xml/form-runner"
 	xmlns:xbl="http://www.w3.org/ns/xbl" xmlns:xxbl="http://orbeon.org/oxf/xml/xbl" xmlns:oxf="http://www.orbeon.com/oxf/processors"
 	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns:numishare="https://github.com/ewg118/numishare">
@@ -13,7 +13,7 @@
 				<xbl:content includes="xforms|label,xforms|help,xforms|hint,xforms|alert"/>
 				<xforms:group xxbl:scope="inner">
 					<xforms:var name="binding" as="node()?">
-						<xxforms:sequence select="." xxbl:scope="outer"/>
+						<xxf:sequence select="." xxbl:scope="outer"/>
 					</xforms:var>
 					<xforms:group ref="$binding">
 						<div>
@@ -244,7 +244,7 @@
 					<xforms:model id="reference-model">
 
 						<!-- instances -->
-						<xforms:instance id="control-instance" xxforms:exclude-result-prefixes="#all">
+						<xforms:instance id="control-instance" xxf:exclude-result-prefixes="#all">
 							<controls xmlns="">
 								<uri/>
 								<uri-changed>false</uri-changed>
@@ -253,16 +253,16 @@
 						</xforms:instance>
 
 						<!-- API responses -->
-						<xforms:instance id="type" xxforms:exclude-result-prefixes="xhtml xforms xxforms ev xs xi xsi fr oxf nuds numishare exist">
+						<xforms:instance id="type" xxf:exclude-result-prefixes="xhtml xforms xxforms ev xs xi xsi fr oxf nuds numishare exist">
 							<nuds xmlns="http://nomisma.org/nuds"/>
 						</xforms:instance>
 
 						<!-- TEI -->
-						<xforms:instance id="identifier-template" xxforms:exclude-result-prefixes="#all">
+						<xforms:instance id="identifier-template" xxf:exclude-result-prefixes="#all">
 							<tei:idno/>
 						</xforms:instance>
 
-						<xforms:instance id="title-template" xxforms:exclude-result-prefixes="#all">
+						<xforms:instance id="title-template" xxf:exclude-result-prefixes="#all">
 							<tei:title/>
 						</xforms:instance>
 

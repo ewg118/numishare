@@ -3,7 +3,7 @@
 	function: Lookup mechanism to link entities to Nomisma-defined concepts
 -->
 <xbl:xbl xmlns="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events"
-	xmlns:xxforms="http://orbeon.org/oxf/xml/xforms" xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:xbl="http://www.w3.org/ns/xbl"
+	xmlns:xxf="http://orbeon.org/oxf/xml/xforms" xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:xbl="http://www.w3.org/ns/xbl"
 	xmlns:xxbl="http://orbeon.org/oxf/xml/xbl" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns:nuds="http://nomisma.org/nuds" xmlns:oxf="http://www.orbeon.com/oxf/processors" xmlns:numishare="https://github.com/ewg118/numishare"
 	xmlns:res="http://www.w3.org/2005/sparql-results#" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:xs="http://www.w3.org/2001/XMLSchema">
@@ -14,7 +14,7 @@
 				<xbl:content includes="xforms|label,xforms|help,xforms|hint,xforms|alert"/>
 				<xforms:group xxbl:scope="inner">
 					<xforms:var name="binding" as="node()?">
-						<xxforms:sequence select="." xxbl:scope="outer"/>
+						<xxf:sequence select="." xxbl:scope="outer"/>
 					</xforms:var>
 
 					<!-- set the parent element to restrict the role list -->
@@ -177,7 +177,7 @@
 							<xi:include href="../../../exist-config.xml"/>
 						</xforms:instance>
 
-						<xforms:instance id="control-instance" xxforms:exclude-result-prefixes="#all">
+						<xforms:instance id="control-instance" xxf:exclude-result-prefixes="#all">
 							<control xmlns="">
 								<context/>
 								<role/>
@@ -191,11 +191,11 @@
 							</control>
 						</xforms:instance>
 
-						<xforms:instance id="temp" xxforms:exclude-result-prefixes="#all">
+						<xforms:instance id="temp" xxf:exclude-result-prefixes="#all">
 							<temp href="" type="" xmlns=""/>
 						</xforms:instance>
 
-						<xforms:instance id="roles" xxforms:exclude-result-prefixes="#all">
+						<xforms:instance id="roles" xxf:exclude-result-prefixes="#all">
 							<roles xmlns="">
 								<role id="artist" context="obverse|reverse|authority">Artist</role>
 								<role id="authority" context="authority|physDesc">Authority</role>
@@ -211,7 +211,7 @@
 							</roles>
 						</xforms:instance>
 
-						<xforms:instance id="feed" xxforms:exclude-result-prefixes="#all">
+						<xforms:instance id="feed" xxf:exclude-result-prefixes="#all">
 							<feed xmlns=""/>
 						</xforms:instance>
 
@@ -231,33 +231,33 @@ SELECT * WHERE {
 							</query>
 						</xforms:instance>
 
-						<xforms:instance id="sparqlQuery" xxforms:exclude-result-prefixes="#all">
+						<xforms:instance id="sparqlQuery" xxf:exclude-result-prefixes="#all">
 							<query/>
 						</xforms:instance>
 
-						<xforms:instance id="sparqlResponse" xxforms:exclude-result-prefixes="#all">
+						<xforms:instance id="sparqlResponse" xxf:exclude-result-prefixes="#all">
 							<sparql xmlns="http://www.w3.org/2005/sparql-results#"/>
 						</xforms:instance>
 
 						<!-- list of entities -->
-						<xforms:instance id="entity-list" xxforms:exclude-result-prefixes="#all">
+						<xforms:instance id="entity-list" xxf:exclude-result-prefixes="#all">
 							<entities xmlns=""/>
 						</xforms:instance>
 
 						<!-- NUDS templates -->
-						<xforms:instance id="famname-template" xxforms:exclude-result-prefixes="#all">
+						<xforms:instance id="famname-template" xxf:exclude-result-prefixes="#all">
 							<famname xlink:type="simple" xlink:role="" xlink:href="" xmlns="http://nomisma.org/nuds"/>
 						</xforms:instance>
 
-						<xforms:instance id="persname-template" xxforms:exclude-result-prefixes="#all">
+						<xforms:instance id="persname-template" xxf:exclude-result-prefixes="#all">
 							<persname xlink:type="simple" xlink:role="" xlink:href="" xmlns="http://nomisma.org/nuds"/>
 						</xforms:instance>
 
-						<xforms:instance id="corpname-template" xxforms:exclude-result-prefixes="#all">
+						<xforms:instance id="corpname-template" xxf:exclude-result-prefixes="#all">
 							<corpname xlink:type="simple" xlink:role="" xlink:href="" xmlns="http://nomisma.org/nuds"/>
 						</xforms:instance>
 
-						<xforms:instance id="geogname-template" xxforms:exclude-result-prefixes="#all">
+						<xforms:instance id="geogname-template" xxf:exclude-result-prefixes="#all">
 							<geogname xlink:type="simple" xlink:role="" xlink:href="" xmlns="http://nomisma.org/nuds"/>
 						</xforms:instance>
 
@@ -287,7 +287,7 @@ SELECT * WHERE {
 									<xforms:setvalue ref="instance('control-instance')/search-results" value="concat('Displaying ', $total, ' result(s).')"/>
 
 									<!-- iterate through the results to populate the entity-list -->
-									<xforms:action xxforms:iterate="instance('feed')//atom:entry">
+									<xforms:action xxf:iterate="instance('feed')//atom:entry">
 										<xforms:var name="title" select="context()/atom:title"/>
 										<xforms:var name="uri" select="context()/atom:link[@rel = 'canonical']/@href"/>
 										<xforms:var name="description" select="context()/atom:summary"/>
@@ -320,7 +320,7 @@ SELECT * WHERE {
 									<xforms:setvalue ref="instance('control-instance')/search-results" value="concat('Displaying ', $total, ' result(s).')"/>
 
 									<!-\- iterate through the results to populate the entity-list -\->
-									<xforms:action xxforms:iterate="instance('sparqlResponse')//res:result">
+									<xforms:action xxf:iterate="instance('sparqlResponse')//res:result">
 										<xforms:var name="title" select="context()/res:binding[@name='label']/res:literal"/>
 										<xforms:var name="uri" select="context()/res:binding[@name='uri']/res:uri"/>
 										<xforms:var name="description" select="context()/res:binding[@name='def']/res:literal"/>
