@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:xxforms="http://orbeon.org/oxf/xml/xforms"
+	xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:xxf="http://orbeon.org/oxf/xml/xforms"
 	xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:exist="http://exist.sourceforge.net/NS/exist"
 	xmlns:xxi="http://orbeon.org/oxf/xml/xinclude" xmlns:numishare="https://github.comu/ewg118/numishare" xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns:nuds="http://nomisma.org/nuds">
@@ -17,11 +17,11 @@
 
 		<xforms:model xmlns="http://nomisma.org/nuds">
 			<!-- exist URL is stored in an XML file -->
-			<xforms:instance id="exist-config" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="exist-config" xxf:exclude-result-prefixes="#all">
 				<xi:include href="../exist-config.xml"/>
 			</xforms:instance>
 
-			<xforms:instance id="control-instance" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="control-instance" xxf:exclude-result-prefixes="#all">
 				<controls xmlns="">
 					<id/>
 					<identifiers/>
@@ -39,15 +39,15 @@
 				</controls>
 			</xforms:instance>
 
-			<xforms:instance id="config" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="config" xxf:exclude-result-prefixes="#all">
 				<config xmlns=""/>
 			</xforms:instance>
 
-			<xforms:instance id="collections-list" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="collections-list" xxf:exclude-result-prefixes="#all">
 				<collections xmlns=""/>
 			</xforms:instance>
 
-			<xforms:instance id="config-template" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="config-template" xxf:exclude-result-prefixes="#all">
 				<config xmlns="" version="20.11" release="1.0">
 					<title>Numishare</title>
 					<description>A short description of the collection.</description>
@@ -227,7 +227,7 @@
 			</xforms:instance>
 			
 			<!-- instance for spreadsheet RDF as a static file -->
-			<xforms:instance id="spreadsheet-rdf" xxforms:exclude-result-prefixes="#default xhtml xforms xs ev xxforms fr res xi nomisma atom exist">
+			<xforms:instance id="spreadsheet-rdf" xxf:exclude-result-prefixes="#default xhtml xforms xs ev xxforms fr res xi nomisma atom exist">
 				<rdf:RDF xmlns="" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:nmo="http://nomisma.org/ontology#" xmlns:foaf="http://xmlns.com/foaf/0.1/"
 					xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
 					xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:void="http://rdfs.org/ns/void#"
@@ -235,7 +235,7 @@
 					xmlns:crmdig="http://www.ics.forth.gr/isl/CRMdig/"/>
 			</xforms:instance>
 			
-			<xforms:instance id="object" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="object" xxf:exclude-result-prefixes="#all">
 				<nuds xmlns=""/>
 			</xforms:instance>
 
@@ -251,12 +251,12 @@
 				<xi:include href="instances/rights.xml"/>
 			</xforms:instance>
 
-			<xforms:instance id="request" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="request" xxf:exclude-result-prefixes="#all">
 				<request/>
 			</xforms:instance>
 
 			<!-- XQuery instances -->
-			<xforms:instance id="eXist-xquery" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="eXist-xquery" xxf:exclude-result-prefixes="#all">
 				<exist:query xmlns="">
 					<exist:text/>
 				</exist:query>
@@ -437,7 +437,7 @@ declare namespace tei = "http://www.tei-c.org/ns/1.0";
 			</xforms:instance>
 
 			<!-- send to Solr -->
-			<xforms:instance id="addIndex" xxforms:exclude-result-prefixes="#all">
+			<xforms:instance id="addIndex" xxf:exclude-result-prefixes="#all">
 				<add xmlns=""/>
 			</xforms:instance>
 
@@ -515,7 +515,7 @@ declare namespace tei = "http://www.tei-c.org/ns/1.0";
 
 			<xforms:action ev:event="xxforms-valid" ev:observer="collections-list">
 				<xforms:setvalue ref="instance('control-instance')/create-collection-trigger" value="true()"
-					if="xxforms:valid(instance('config-template'), true())"/>
+					if="xxf:valid(instance('config-template'), true())"/>
 			</xforms:action>
 
 			<xforms:action ev:event="xxforms-invalid" ev:observer="config-template">
@@ -524,14 +524,14 @@ declare namespace tei = "http://www.tei-c.org/ns/1.0";
 
 			<xforms:action ev:event="xxforms-valid" ev:observer="config-template">
 				<xforms:setvalue ref="instance('control-instance')/create-collection-trigger" value="true()"
-					if="xxforms:valid(instance('collections-list'), true())"/>
+					if="xxf:valid(instance('collections-list'), true())"/>
 			</xforms:action>
 
 			<!-- ************************* SUBMISSIONS ************************** -->
 			<!-- load collections/roles config -->
 			<xforms:submission id="load-collections" serialization="none" method="get" resource="{instance('exist-config')/url}collections-list.xml"
-				replace="instance" instance="collections-list" xxforms:username="{instance('exist-config')/username}"
-				xxforms:password="{instance('exist-config')/password}">
+				replace="instance" instance="collections-list" xxf:username="{instance('exist-config')/username}"
+				xxf:password="{instance('exist-config')/password}">
 				<!-- if the config loads successfully, set the collection names based on authentication -->
 				<xforms:action ev:event="xforms-submit-done">
 					<!-- proceed with setting the interface for collection editing -->
@@ -558,12 +558,12 @@ declare namespace tei = "http://www.tei-c.org/ns/1.0";
 						<xforms:send submission="xquery-db"/>
 
 						<!-- set interface: if there is a session attribute for collection-name, then load the editor interface. otherwise load numishare-admin interface -->
-						<xforms:action if="string(xxforms:get-session-attribute('collection-name'))">
-							<xforms:setvalue ref="instance('control-instance')/collection-name" value="xxforms:get-session-attribute('collection-name')"/>
+						<xforms:action if="string(xxf:get-session-attribute('collection-name'))">
+							<xforms:setvalue ref="instance('control-instance')/collection-name" value="xxf:get-session-attribute('collection-name')"/>
 							<xforms:setvalue ref="instance('control-instance')/interface">numishare-editor</xforms:setvalue>
 							<xforms:send submission="load-config"/>
 						</xforms:action>
-						<xforms:action if="not(string(xxforms:get-session-attribute('collection-name')))">
+						<xforms:action if="not(string(xxf:get-session-attribute('collection-name')))">
 							<xforms:setvalue ref="instance('control-instance')/interface">numishare-admin</xforms:setvalue>
 						</xforms:action>
 
@@ -577,14 +577,14 @@ declare namespace tei = "http://www.tei-c.org/ns/1.0";
 			</xforms:submission>
 
 			<xforms:submission id="save-collections" ref="instance('collections-list')" resource="{instance('exist-config')/url}/collections-list.xml"
-				method="put" replace="none" xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}">
+				method="put" replace="none" xxf:username="{instance('exist-config')/username}" xxf:password="{instance('exist-config')/password}">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Error Saving Collections List.</xforms:message>
 			</xforms:submission>
 
 			<!-- loading, saving config -->
 			<xforms:submission id="load-config" serialization="none" method="get"
 				resource="{instance('exist-config')/url}{instance('control-instance')/collection-name}/config.xml" replace="instance" instance="config"
-				xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}">
+				xxf:username="{instance('exist-config')/username}" xxf:password="{instance('exist-config')/password}">
 				<xforms:action ev:event="xforms-submit-done">
 					
 					<!-- evaluate the config to identify whether it is a union type corpus or not -->
@@ -612,7 +612,7 @@ declare namespace tei = "http://www.tei-c.org/ns/1.0";
 
 			<xforms:submission id="save-config" ref="instance('config-template')"
 				resource="{instance('exist-config')/url}{instance('control-instance')/collection-name}/config.xml" method="put" replace="none"
-				xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}">
+				xxf:username="{instance('exist-config')/username}" xxf:password="{instance('exist-config')/password}">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Error Saving Config.</xforms:message>
 				<xforms:action ev:event="xforms-submit-done">
 					<!-- create eXist-db collections, config file, and XQuery files -->
@@ -632,8 +632,8 @@ declare namespace tei = "http://www.tei-c.org/ns/1.0";
 				</xforms:action>
 			</xforms:submission>
 			
-			<xforms:submission id="save-spreadsheet-rdf" ref="instance('spreadsheet-rdf')" xxforms:username="{instance('exist-config')/username}"
-				xxforms:password="{instance('exist-config')/password}"
+			<xforms:submission id="save-spreadsheet-rdf" ref="instance('spreadsheet-rdf')" xxf:username="{instance('exist-config')/username}"
+				xxf:password="{instance('exist-config')/password}"
 				action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/spreadsheets.rdf" method="put" replace="none">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Error saving spreadsheet RDF.</xforms:message>				
 			</xforms:submission>
@@ -642,11 +642,11 @@ declare namespace tei = "http://www.tei-c.org/ns/1.0";
 			<!-- xquery for getting and processing query results into pages of items -->
 			<xforms:submission id="xquery-pagination" ref="instance('eXist-xquery')"
 				resource="{instance('exist-config')/url}{instance('control-instance')/collection-name}/objects" method="post" replace="instance"
-				instance="pagination-result" xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}">
+				instance="pagination-result" xxf:username="{instance('exist-config')/username}" xxf:password="{instance('exist-config')/password}">
 				<xforms:setvalue ref="instance('control-instance')/error" ev:event="xforms-submit-error">Error querying eXist database.</xforms:setvalue>
 				<xforms:action ev:event="xforms-submit-done">
 					<!--iterate through docs, check for publication -->
-					<xforms:action xxforms:iterate="instance('pagination-result')//record">
+					<xforms:action xxf:iterate="instance('pagination-result')//record">
 						<xforms:setvalue ref="instance('control-instance')/id" value="context()/id"/>
 						<xforms:send submission="query-solr-for-publication"/>
 					</xforms:action>
@@ -655,19 +655,19 @@ declare namespace tei = "http://www.tei-c.org/ns/1.0";
 
 			<xforms:submission id="xquery-collection" ref="instance('eXist-xquery')"
 				resource="{instance('exist-config')/url}{instance('control-instance')/collection-name}/objects" method="post" replace="instance"
-				instance="xquery-result" xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}">
+				instance="xquery-result" xxf:username="{instance('exist-config')/username}" xxf:password="{instance('exist-config')/password}">
 				<xforms:setvalue ref="instance('control-instance')/error" ev:event="xforms-submit-error">Error querying eXist database.</xforms:setvalue>
 			</xforms:submission>
 
 			<xforms:submission id="xquery-db" ref="instance('eXist-xquery')" resource="{instance('exist-config')/url}" method="post" replace="instance"
-				instance="xquery-result" xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}">
+				instance="xquery-result" xxf:username="{instance('exist-config')/username}" xxf:password="{instance('exist-config')/password}">
 				<xforms:setvalue ref="instance('control-instance')/error" ev:event="xforms-submit-error">Error querying eXist database.</xforms:setvalue>
 			</xforms:submission>
 			<!-- ************************* CRUD ON OBJECT RECORDS ********************** -->
 			<!-- update publication status -->
 			<xforms:submission id="load-object" serialization="none" method="get"
 				resource="{instance('exist-config')/url}{instance('control-instance')/collection-name}/objects/{instance('control-instance')/id}.xml"
-				xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}" replace="instance"
+				xxf:username="{instance('exist-config')/username}" xxf:password="{instance('exist-config')/password}" replace="instance"
 				instance="object">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Error loading file.</xforms:message>
 				<xforms:action ev:event="xforms-submit-done">
@@ -676,8 +676,8 @@ declare namespace tei = "http://www.tei-c.org/ns/1.0";
 				</xforms:action>
 			</xforms:submission>
 
-			<xforms:submission id="save-object" ref="instance('object')" xxforms:username="{instance('exist-config')/username}"
-				xxforms:password="{instance('exist-config')/password}"
+			<xforms:submission id="save-object" ref="instance('object')" xxf:username="{instance('exist-config')/username}"
+				xxf:password="{instance('exist-config')/password}"
 				resource="{instance('exist-config')/url}{instance('control-instance')/collection-name}/objects/{instance('control-instance')/id}.xml"
 				method="put" replace="none">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Error saving file.</xforms:message>
@@ -685,7 +685,7 @@ declare namespace tei = "http://www.tei-c.org/ns/1.0";
 
 			<xforms:submission id="delete-object"
 				resource="{instance('exist-config')/url}{instance('control-instance')/collection-name}/objects/{instance('control-instance')/id}.xml"
-				method="delete" replace="none" xxforms:username="{instance('exist-config')/username}" xxforms:password="{instance('exist-config')/password}">
+				method="delete" replace="none" xxf:username="{instance('exist-config')/username}" xxf:password="{instance('exist-config')/password}">
 				<xforms:setvalue ev:event="xforms-submit-done" ref="instance('control-instance')/status">Object successfully deleted.</xforms:setvalue>
 			</xforms:submission>
 
@@ -758,7 +758,7 @@ declare namespace tei = "http://www.tei-c.org/ns/1.0";
 			<xforms:action ev:event="xforms-model-construct-done">
 				<!-- load numishare config file on xforms construction -->
 				<xforms:insert context="instance('control-instance')" nodeset="collection-name" position="after"
-					origin="xxforms:call-xpl('oxf:/apps/numishare/xpl/get-authentication.xpl', 'dump', instance('dump'), 'data')"/>
+					origin="xxf:call-xpl('oxf:/apps/numishare/xpl/get-authentication.xpl', 'dump', instance('dump'), 'data')"/>
 
 				<!-- if authentication has not been enabled, trigger a case -->
 				<xforms:action if="not(string(instance('control-instance')/request-security/role))">
@@ -866,7 +866,7 @@ declare namespace tei = "http://www.tei-c.org/ns/1.0";
 																				<xforms:setvalue ref="instance('control-instance')/collection-name"
 																				value="$name"/>
 																				<xforms:insert context="."
-																				origin="xxforms:set-session-attribute('collection-name', string(instance('control-instance')/collection-name))"/>
+																				origin="xxf:set-session-attribute('collection-name', string(instance('control-instance')/collection-name))"/>
 																				<!-- load the associated config and display the Numishare editor interface -->
 																				<xforms:send submission="load-config"/>
 																				<xforms:toggle case="numishare-editor"/>
@@ -1088,14 +1088,14 @@ declare namespace tei = "http://www.tei-c.org/ns/1.0";
 						<xforms:case id="numishare-editor">
 							<div id="form">
 								
-								<xforms:group ref=".[xxforms:is-user-in-role('numishare-admin')]">
+								<xforms:group ref=".[xxf:is-user-in-role('numishare-admin')]">
 									<div>
 										<xforms:trigger appearance="minimal">
 											<xforms:label><span class="glyphicon glyphicon-arrow-left"></span> Return to Collections List</xforms:label>
 											<xforms:action ev:event="DOMActivate">
 												<!-- clear session attributes -->
 												<xforms:setvalue ref="instance('control-instance')/collection-name"/>
-												<xforms:insert context="." origin="xxforms:set-session-attribute('collection-name', '')"/>
+												<xforms:insert context="." origin="xxf:set-session-attribute('collection-name', '')"/>
 												<!-- get collection metadata -->
 												<xforms:setvalue ref="instance('eXist-xquery')/exist:text"
 													value="replace(instance('xqueries')/query[@id='collection-metadata'], '%SEQUENCE%', string-join(instance('collections-list')/collection/@name, ','))"/>
@@ -1492,7 +1492,7 @@ declare namespace tei = "http://www.tei-c.org/ns/1.0";
 					<xforms:send submission="xquery-collection"/>
 					<xforms:action ev:event="xforms-submit-done">
 						<xforms:var name="tokens" select="tokenize(replace(instance('xquery-result')/report, ' ', ''), ',')"/>
-						<xforms:action xxforms:iterate="$tokens">
+						<xforms:action xxf:iterate="$tokens">
 							<xforms:setvalue ref="instance('control-instance')/identifiers" value="context()"/>
 							<!-- get Solr document -->
 							<xforms:send submission="generate-add-document"/>
