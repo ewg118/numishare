@@ -10,7 +10,7 @@
 //parse_str(implode('&', array_slice($argv, 1)), $_GET);
 $csv_id = $_GET['id'];
 
-if (($handle = fopen("/tmp/" . $csv_id . ".csv", "r")) !== FALSE) {
+if (($handle = fopen(sys_get_temp_dir() . "/" . $csv_id . ".csv", "r")) !== FALSE) {
 	error_log(date(DATE_W3C) . ": {$csv_id}.csv received via HTTP for processing.\n", 3, "/var/log/numishare/process.log");
 	exec("php fm-to-nuds.php id={$csv_id} > /dev/null &");
 	echo generate_html_response($csv_id, true);
