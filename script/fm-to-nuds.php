@@ -111,13 +111,13 @@ if (file_exists($eXist_config_path)) {
 	$eXist_credentials = $eXist_config->username . ':' . $eXist_config->password;
 	//echo $eXist_credentials . "\n";
 	
-	if (($handle = fopen(sys_get_temp_dir() . "/" . $csv_id . ".csv", "r")) !== FALSE) {
+	if (($handle = fopen("/tmp/" . $csv_id . ".csv", "r")) !== FALSE) {
 		error_log(date(DATE_W3C) . ": {$csv_id}.csv successfully opened for processing.\n", 3, "/var/log/numishare/process.log");
 		$startTime = date(DATE_W3C);
 		$count = 1;
 		
 		//open CSV file from FileMaker and clean it, writing it back to /tmp
-		$file = file_get_contents(sys_get_temp_dir() . "/" . $csv_id . ".csv");
+		$file = file_get_contents("/tmp/" . $csv_id . ".csv");
 		$cleanFile = '/tmp/' . substr(md5(rand()), 0, 7) . '.csv';
 		//escape conflicting XML characters
 		$cleaned = preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x80-\x9F]/u', '', preg_replace("[\x1D]", "|", str_replace('>', '&gt;', str_replace('<', '&lt;', str_replace('&', 'and', preg_replace("[\x0D]", "\n", $file))))));
@@ -246,7 +246,7 @@ if (file_exists($eXist_config_path)) {
 		generate_solr_shell_script($toIndex);
 		
 		fclose($handle);
-		//unlink(sys_get_temp_dir() . "/" . $csv_id . ".csv");
+		//unlink("/tmp/" . $csv_id . ".csv");
 		error_log(date(DATE_W3C) . ": Processing completed. /tmp/{$csv_id}.csv has been deleted.\n", 3, "/var/log/numishare/process.log");
 	} else {
 		$errors[] = date(DATE_W3C) . ": Unable to open {$csv_id}.csv.\n";
