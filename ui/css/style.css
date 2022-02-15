@@ -9,7 +9,7 @@ html{
 }
 body{
     font-family: Open Sans, sans-serif;
-    font-size:15px;
+    font-size: 15px;
 }
 .navbar{
     margin-bottom: 0;
@@ -27,8 +27,8 @@ ul li{
     margin-bottom: 14px;
     padding: 9px 14px;
 }
-.content {
-    padding:20px 0;
+.content{
+    padding: 20px 0;
 }
 a{
     color: #337ab7
@@ -47,6 +47,12 @@ dl.dl-rtl dd{
 .alert-box{
     width: 50%;
     margin: 20px auto;
+}
+.img-responsive{
+    max-width: none;
+    max-height: 640px;
+    min-height: 100%;
+    object-fit: cover;
 }
 #feedback-frame{
     width: 100%;
