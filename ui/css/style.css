@@ -49,10 +49,21 @@ dl.dl-rtl dd{
     margin: 20px auto;
 }
 .img-responsive{
-    max-width: none;
+    width: 100%;
     max-height: 640px;
     min-height: 100%;
     object-fit: cover;
+}
+.text-box-wrapper{
+    padding: 0px;
+    margin-top: 64px;
+    margin-bottom: 0;
+    right: 64px;
+    left: auto;
+    top: 0;
+    bottom: 0;
+    width: 520px;
+    max-height: 392px;
 }
 #feedback-frame{
     width: 100%;
