@@ -52,8 +52,9 @@ dl.dl-rtl dd{
     max-width: 1200px;
     max-height: 640px;
     min-height: 100%;
-    object-fit: cover;
-    display:block;
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
 }
 #feedback-frame{
     width: 100%;
