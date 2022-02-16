@@ -5,6 +5,7 @@
 	<xsl:include href="../functions.xsl"/>
 
 	<xsl:param name="pipeline">display</xsl:param>
+	<xsl:variable name="collection-name" select="substring-before(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/')"/>
 	<xsl:param name="langParam" select="doc('input:request')/request/parameters/parameter[name = 'lang']/value"/>
 	<xsl:param name="lang">
 		<xsl:choose>
@@ -84,38 +85,42 @@
 	</xsl:template>
 
 	<xsl:template name="index">
-		<!--<div class="jumbotron">
-			<div class="container">
-				<div class="row">
-					<!-\- display title and description in the jumbotron, including featured object, if available -\->
-					<xsl:choose>
-						<xsl:when test="features_enabled = true() and count(doc('input:feature-model')//doc) = 1">
-							<div class="col-md-9">
-								<h1><xsl:value-of select="title"/></h1>
-								<p><xsl:value-of select="description"/></p>
-							</div>
-							<div class="col-md-3">
-								<div id="feature" class="highlight text-center">
-									<xsl:apply-templates select="doc('input:feature-model')//doc"/>
-								</div>
-							</div>
-						</xsl:when>
-						<xsl:otherwise>
-							<div class="col-md-12">
-								<h1><xsl:value-of select="title"/></h1>
-								<p><xsl:value-of select="description"/></p>
-							</div>
-						</xsl:otherwise>
-					</xsl:choose>
-				</div>
-			</div>
-		</div>-->
 		<div class="container-fluid">
 			<xsl:if test="//config/languages/language[@code = $lang]/@rtl = true()">
 				<xsl:attribute name="style">direction: rtl;</xsl:attribute>
 			</xsl:if>
-
-			<img src="{$include_path}/images/banner-abc.jpg" style="width:100%"/>
+	
+			<xsl:choose>
+				<xsl:when test="$collection-name = 'abc' or $collection-name = 'cci'">
+					<img src="{$include_path}/images/banner-{$collection-name}.jpg" style="width:100%"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<div class="jumbotron">
+						<div class="container">
+							<div class="row">
+								<!-- display title and description in the jumbotron, including featured object, if available -->
+								<xsl:choose>
+									<xsl:when test="features_enabled = true()">
+										<div class="col-md-9">
+											<h1><xsl:value-of select="title"/></h1>
+											<p><xsl:value-of select="description"/></p>
+										</div>
+										<div class="col-md-3">
+											<xsl:copy-of select="/content/div[@id='feature']"/>	
+										</div>
+									</xsl:when>
+									<xsl:otherwise>
+										<div class="col-md-12">
+											<h1><xsl:value-of select="title"/></h1>
+											<p><xsl:value-of select="description"/></p>
+										</div>
+									</xsl:otherwise>
+								</xsl:choose>
+							</div>
+						</div>
+					</div>
+				</xsl:otherwise>
+			</xsl:choose>
 
 			<div class="row content">
 				<div class="col-md-9">
