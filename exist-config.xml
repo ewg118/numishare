@@ -10,5 +10,5 @@ Note: do not forget trailing / after db!
 <exist-config>
 	<username>admin</username>
 	<password></password>
-	<url>http://localhost:8080/exist/rest/db/</url>
+	<url>http://localhost:8888/exist/rest/db/</url>
 </exist-config>
