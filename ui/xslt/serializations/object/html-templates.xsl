@@ -37,6 +37,50 @@
 		</div>
 	</xsl:template>
 
+	<xsl:template match="nuds:chemicalAnalysis" mode="descMeta">
+		<h4>
+			<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
+		</h4>
+
+		<xsl:apply-templates/>
+	</xsl:template>
+
+	<xsl:template match="nuds:components">
+		<li>
+			<b>
+				<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
+				<xsl:text>: </xsl:text>
+			</b>
+
+			<xsl:for-each select="nuds:component">
+				<xsl:apply-templates select="self::node()"/>
+				<xsl:if test="not(position() = last())">
+					<xsl:text>, </xsl:text>
+				</xsl:if>
+			</xsl:for-each>
+		</li>
+	</xsl:template>
+
+	<xsl:template match="nuds:component">
+		<xsl:variable name="href" select="@xlink:href"/>
+
+		<!-- use the Nomisma label, if the URI is present -->
+		<xsl:choose>
+			<xsl:when test="string($lang) and contains($href, 'nomisma.org')">
+				<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about = $href], $lang)"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="."/>
+			</xsl:otherwise>
+		</xsl:choose>
+
+		<xsl:if test="@percentage">
+			<i>
+				<xsl:value-of select="concat(' (', @percentage, '%)')"/>
+			</i>
+		</xsl:if>
+	</xsl:template>
+
 	<xsl:template match="nuds:typeDesc">
 		<xsl:param name="typeDesc_resource"/>
 		<div class="metadata_section">
@@ -543,41 +587,77 @@
 						</xsl:if>
 					</xsl:when>
 					<xsl:otherwise>
-						<!-- suppress type and legend from nested list output for physical records: these fields are displayed with the images -->
-						<!-- November 2020: display the section and heading if $hasDies = true() -->
-						<xsl:if test="(child::*[not(local-name() = 'type' or local-name() = 'legend')]) or $hasDies = true()">
-							<li>
+						<xsl:choose>
+							<xsl:when test="(self::nuds:obverse or self::nuds:reverse) and parent::nuds:typeDesc">
 								<xsl:choose>
-									<xsl:when test="parent::physDesc">
-										<h3>
-											<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
-										</h3>
+									<!-- always display the legend and type when there are dies or there are not side images -->
+									<xsl:when test="$sideImages = false() or $hasDies = true()">
+										<li>
+											<h4>
+												<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
+											</h4>
+											<ul>
+												<xsl:apply-templates mode="descMeta"/>
+											</ul>
+										</li>
 									</xsl:when>
 									<xsl:otherwise>
-										<h4>
-											<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
-										</h4>
+										<xsl:if test="*[not(local-name() = 'type' or local-name() = 'legend')]">
+											<li>
+												<h4>
+													<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
+												</h4>
+												<ul>
+													<xsl:apply-templates select="*[not(local-name() = 'type' or local-name() = 'legend')]" mode="descMeta"/>
+												</ul>
+											</li>
+										</xsl:if>
 									</xsl:otherwise>
 								</xsl:choose>
-								<ul>
-									<xsl:apply-templates select="*[not(local-name() = 'type' or local-name() = 'legend')]" mode="descMeta"/>
-
-									<!-- if $hasDies is true for a physical collection, then display the die link(s) in the appropriate obverse/reverse section -->
-									<xsl:if test="$collection_type = 'object' and $hasDies = true()">
+							</xsl:when>
+							<xsl:otherwise>
+								<li>
+									<xsl:choose>
+										<xsl:when test="parent::physDesc">
+											<h3>
+												<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
+											</h3>
+										</xsl:when>
+										<xsl:otherwise>
+											<h4>
+												<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
+											</h4>
+										</xsl:otherwise>
+									</xsl:choose>
+									<ul>
+										<!-- suppress type and legend from nested list output for physical records: these fields are displayed with the 
+									obverse and reverse images, if available -->
 										<xsl:choose>
-											<xsl:when test="local-name() = 'obverse' and parent::nuds:typeDesc">
-												<xsl:apply-templates select="doc('input:dies')//query/res:sparql[1]/descendant::res:binding[@name = 'die']"
-													mode="coin-die"/>
+											<xsl:when test="$sideImages = true()">
+												<xsl:apply-templates select="*[not(local-name() = 'type' or local-name() = 'legend')]" mode="descMeta"/>
 											</xsl:when>
-											<xsl:when test="local-name() = 'reverse' and parent::nuds:typeDesc">
-												<xsl:apply-templates select="doc('input:dies')//query/res:sparql[2]/descendant::res:binding[@name = 'die']"
-													mode="coin-die"/>
-											</xsl:when>
+											<xsl:otherwise>
+												<xsl:apply-templates mode="descMeta"/>
+											</xsl:otherwise>
 										</xsl:choose>
-									</xsl:if>
-								</ul>
-							</li>
-						</xsl:if>
+
+										<!-- if $hasDies is true for a physical collection, then display the die link(s) in the appropriate obverse/reverse section -->
+										<xsl:if test="$collection_type = 'object' and $hasDies = true()">
+											<xsl:choose>
+												<xsl:when test="local-name() = 'obverse' and parent::nuds:typeDesc">
+													<xsl:apply-templates select="doc('input:dies')//query/res:sparql[1]/descendant::res:binding[@name = 'die']"
+														mode="coin-die"/>
+												</xsl:when>
+												<xsl:when test="local-name() = 'reverse' and parent::nuds:typeDesc">
+													<xsl:apply-templates select="doc('input:dies')//query/res:sparql[2]/descendant::res:binding[@name = 'die']"
+														mode="coin-die"/>
+												</xsl:when>
+											</xsl:choose>
+										</xsl:if>
+									</ul>
+								</li>
+							</xsl:otherwise>
+						</xsl:choose>
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:otherwise>
@@ -1088,7 +1168,7 @@
 			<xsl:apply-templates/>
 		</p>
 	</xsl:template>
-	
+
 	<xsl:template match="tei:list">
 		<xsl:choose>
 			<xsl:when test="@rend = 'numbered'">
@@ -1109,7 +1189,7 @@
 			<xsl:apply-templates/>
 		</li>
 	</xsl:template>
-	
+
 	<xsl:template match="tei:ref">
 		<a href="{@target}">
 			<xsl:apply-templates/>

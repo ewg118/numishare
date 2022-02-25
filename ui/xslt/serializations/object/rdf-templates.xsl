@@ -367,19 +367,6 @@
 						<xsl:apply-templates select="nuds:digRep/mets:fileSec" mode="nomisma">
 							<xsl:with-param name="id" select="$id"/>
 						</xsl:apply-templates>
-
-						<!-- findspot object -->
-						<xsl:if test="nuds:descMeta/nuds:findspotDesc/nuds:findspot[gml:location]">
-							<xsl:apply-templates select="nuds:descMeta/nuds:findspotDesc/nuds:findspot[gml:location]" mode="nomisma-object">
-								<xsl:with-param name="objectURI"
-									select="
-										if (string($uri_space)) then
-											concat($uri_space, $id)
-										else
-											concat($url, 'id/', $id)"
-								/>
-							</xsl:apply-templates>
-						</xsl:if>
 					</xsl:when>
 				</xsl:choose>
 			</xsl:otherwise>
@@ -708,8 +695,11 @@
 				<!-- if the @xlink:href is in the findspotDesc, this is presumed to be the hoard -->
 				<dcterms:isPartOf rdf:resource="{@xlink:href}"/>
 			</xsl:when>
+			<xsl:when test="nuds:hoard/@xlink:href">
+				<dcterms:isPartOf rdf:resource="{nuds:hoard/@xlink:href}"/>
+			</xsl:when>
 			<xsl:otherwise>
-				<xsl:apply-templates select="nuds:findspot" mode="nomisma">
+				<xsl:apply-templates select="nuds:findspot[nuds:fallsWithin/nuds:geogname[@xlink:href]]" mode="nomisma">
 					<xsl:with-param name="objectURI" select="$objectURI"/>
 				</xsl:apply-templates>
 			</xsl:otherwise>
@@ -720,14 +710,33 @@
 	<xsl:template match="nuds:findspot" mode="nomisma">
 		<xsl:param name="objectURI"/>
 
-		<xsl:choose>
-			<xsl:when test="nuds:geogname/@xlink:href">
-				<nmo:hasFindspot rdf:resource="{nuds:geogname/@xlink:href}"/>
-			</xsl:when>
-			<xsl:otherwise>
-				<nmo:hasFindspot rdf:resource="{$objectURI}#findspot"/>
-			</xsl:otherwise>
-		</xsl:choose>
+		<nmo:hasFindSpot>
+			<nmo:Find>
+				<crm:P7_took_place_at>
+					<crm:E53_Place>
+						<xsl:choose>
+							<xsl:when test="nuds:description">
+								<xsl:for-each select="nuds:description">
+									<rdfs:label>
+										<xsl:attribute name="xml:lang" select="@xml:lang"/>
+										<xsl:value-of select="."/>
+									</rdfs:label>
+								</xsl:for-each>
+							</xsl:when>
+							<xsl:when test="nuds:fallsWithin/nuds:geogname[@xlink:role = 'findspot']">
+								<rdfs:label xml:lang="en">
+									<xsl:value-of select="nuds:fallsWithin/nuds:geogname[@xlink:role = 'findspot']"/>
+								</rdfs:label>
+							</xsl:when>
+						</xsl:choose>
+						
+						<xsl:for-each select="nuds:fallsWithin/nuds:geogname[@xlink:href]">
+							<crm:P89_falls_within rdf:resource="{@xlink:href}"/>
+						</xsl:for-each>
+					</crm:E53_Place>
+				</crm:P7_took_place_at>
+			</nmo:Find>
+		</nmo:hasFindSpot>
 	</xsl:template>
 
 	<xsl:template match="nuds:findspot" mode="nomisma-object">

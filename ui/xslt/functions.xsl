@@ -1993,6 +1993,7 @@
                     <xsl:when test="$label='authorizingEntity'">Political/Dynastic Entity</xsl:when>
                     <xsl:when test="$label='axis'">Axis</xsl:when>
                     <xsl:when test="$label='century'">Century</xsl:when>
+                    <xsl:when test="$label='chemicalAnalysis'">Chemical Analysis</xsl:when>
                     <xsl:when test="$label='chronList'">Chronological List</xsl:when>
                     <xsl:when test="$label='chronItem'">Chronological Item</xsl:when>
                     <xsl:when test="$label='closing_date'">Closing Date</xsl:when>
@@ -2024,6 +2025,7 @@
                     <xsl:when test="$label='edge'">Edge</xsl:when>
                     <xsl:when test="$label='era'">Era</xsl:when>
                     <xsl:when test="$label='finder'">Finder</xsl:when>
+                    <xsl:when test="$label='findspotDesc'">Findspot Description</xsl:when>
                     <xsl:when test="$label='findspot'">Findspot</xsl:when>
                     <xsl:when test="$label='fromDate'">From Date</xsl:when>
                     <xsl:when test="$label='geographic'">Geographic</xsl:when>
@@ -2067,6 +2069,7 @@
                     <xsl:when test="$label='saleItem'">Sale Item</xsl:when>
                     <xsl:when test="$label='salePrice'">Sale Price</xsl:when>
                     <xsl:when test="$label='shape'">Shape</xsl:when>
+                    <xsl:when test="$label='specificGravity'">Specific Gravity</xsl:when>                    
                     <xsl:when test="$label='state'">State</xsl:when>
                     <xsl:when test="$label='statedAuthority'">Stated Authority</xsl:when>
                     <xsl:when test="$label='subject'">Subject</xsl:when>

@@ -5,7 +5,8 @@
 	xmlns:dcmitype="http://purl.org/dc/dcmitype/" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nm="http://nomisma.org/id/"
 	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:oa="http://www.w3.org/ns/oa#"
 	xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xmlns:foaf="http://xmlns.com/foaf/0.1/"
-	xmlns:edm="http://www.europeana.eu/schemas/edm/" xmlns:svcs="http://rdfs.org/sioc/services#" xmlns:doap="http://usefulinc.com/ns/doap#" version="2.0">
+	xmlns:crm="http://www.cidoc-crm.org/cidoc-crm/" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:edm="http://www.europeana.eu/schemas/edm/"
+	xmlns:svcs="http://rdfs.org/sioc/services#" xmlns:doap="http://usefulinc.com/ns/doap#" version="2.0">
 
 	<xsl:param name="mode" select="//lst[@name = 'params']/str[@name = 'mode']"/>
 	<xsl:param name="url" select="/content/config/url"/>
@@ -142,7 +143,7 @@
 				<xsl:with-param name="service" select="str[@name = 'iiif_obv']"/>
 			</xsl:call-template>
 		</xsl:if>
-		
+
 		<xsl:if test="string(str[@name = 'reference_rev']) and string(str[@name = 'iiif_rev'])">
 			<xsl:call-template name="iiif">
 				<xsl:with-param name="reference" select="str[@name = 'reference_rev']"/>
@@ -210,7 +211,7 @@
 						<xsl:for-each select="arr[@name = 'coinType_uri']/str">
 							<xsl:if test="not(contains(., 'sc.2.'))">
 								<nmo:hasTypeSeriesItem rdf:resource="{.}"/>
-							</xsl:if>							
+							</xsl:if>
 						</xsl:for-each>
 					</xsl:otherwise>
 				</xsl:choose>
@@ -245,8 +246,19 @@
 
 			<!-- only include findspot if the coin is not part of a hoard -->
 			<xsl:if test="arr[@name = 'findspot_geo']/str and not(arr[@name = 'hoard_uri'])">
-				<xsl:variable name="findspot" select="tokenize(arr[@name = 'findspot_geo']/str, '\|')"/>
-				<nmo:hasFindspot rdf:resource="{$findspot[2]}"/>
+				<xsl:variable name="findspot" select="tokenize(arr[@name = 'findspot_geo']/str[1], '\|')"/>
+				<nmo:hasFindSpot>
+					<nmo:Find>
+						<crm:P7_took_place_at>
+							<crm:E53_Place>
+								<rdfs:label>
+									<xsl:value-of select="$findspot[1]"/>
+								</rdfs:label>
+								<crm:P89_falls_within rdf:resource="{$findspot[2]}"/>
+							</crm:E53_Place>
+						</crm:P7_took_place_at>
+					</nmo:Find>
+				</nmo:hasFindSpot>
 			</xsl:if>
 			<!-- images -->
 			<xsl:if test="string(str[@name = 'reference_com'])">
@@ -255,7 +267,7 @@
 			<xsl:if test="string(str[@name = 'thumbnail_com'])">
 				<foaf:thumbnail rdf:resource="{str[@name = 'thumbnail_com']}"/>
 			</xsl:if>
-			
+
 			<!-- obverse -->
 			<xsl:if test="string(str[@name = 'reference_obv']) or string(str[@name = 'thumbnail_obv'])">
 				<nmo:hasObverse>
@@ -326,7 +338,7 @@
 			</xsl:if>
 			<void:inDataset rdf:resource="{$url}"/>
 		</xsl:element>
-		
+
 		<!-- include IIIF services if applicable -->
 		<xsl:if test="string(str[@name = 'reference_obv']) and string(str[@name = 'iiif_obv'])">
 			<xsl:call-template name="iiif">
@@ -334,7 +346,7 @@
 				<xsl:with-param name="service" select="str[@name = 'iiif_obv']"/>
 			</xsl:call-template>
 		</xsl:if>
-		
+
 		<xsl:if test="string(str[@name = 'reference_rev']) and string(str[@name = 'iiif_rev'])">
 			<xsl:call-template name="iiif">
 				<xsl:with-param name="reference" select="str[@name = 'reference_rev']"/>
@@ -349,33 +361,13 @@
 				</xsl:for-each>
 			</dcmitype:Collection>
 		</xsl:if>
-
-		<xsl:if test="arr[@name = 'findspot_geo']/str and not(arr[@name = 'hoard_uri'])">
-			<xsl:variable name="findspot" select="tokenize(arr[@name = 'findspot_geo']/str, '\|')"/>
-			<xsl:choose>
-				<xsl:when test="contains($findspot[2], 'nomisma.org')"/>
-				<xsl:otherwise>
-					<geo:SpatialThing rdf:about="{$findspot[2]}">
-						<geo:lat>
-							<xsl:value-of select="substring-after($findspot[3], ',')"/>
-						</geo:lat>
-						<geo:long>
-							<xsl:value-of select="substring-before($findspot[3], ',')"/>
-						</geo:long>
-						<foaf:name>
-							<xsl:value-of select="$findspot[1]"/>
-						</foaf:name>
-					</geo:SpatialThing>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:if>
 	</xsl:template>
-	
+
 	<!--- IIIF service template -->
 	<xsl:template name="iiif">
 		<xsl:param name="reference"/>
 		<xsl:param name="service"/>
-		
+
 		<edm:WebResource rdf:about="{if (matches($reference, '^https?://')) then $reference else concat($url, $reference)}">
 			<svcs:has_service rdf:resource="{$service}"/>
 			<dcterms:isReferencedBy rdf:resource="{$service}/info.json"/>

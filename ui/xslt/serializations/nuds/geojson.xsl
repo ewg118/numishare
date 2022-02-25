@@ -411,11 +411,29 @@
 									</_object>
 								</geometry>
 							</xsl:when>
+							<xsl:when test="parent::node()/gml:location/gml:Point">
+								<xsl:variable name="coords" select="tokenize(parent::node()/gml:location/gml:Point/gml:coordinates, ',')"/>
+								<geometry>
+									<_object>
+										<type>Point</type>
+										<coordinates>
+											<_array>
+												<_>
+													<xsl:value-of select="normalize-space($coords[1])"/>
+												</_>
+												<_>
+													<xsl:value-of select="normalize-space($coords[2])"/>
+												</_>
+											</_array>
+										</coordinates>
+									</_object>
+								</geometry>
+							</xsl:when>
 						</xsl:choose>
 					</xsl:when>
 					<!-- otherwise use the gml:Point stored within NUDS -->
-					<xsl:when test="gml:location/gml:Point">
-						<xsl:variable name="coords" select="tokenize(gml:location/gml:Point/gml:coordinates, ',')"/>
+					<xsl:when test="parent::node()/gml:location/gml:Point">
+						<xsl:variable name="coords" select="tokenize(parent::node()/gml:location/gml:Point/gml:coordinates, ',')"/>
 						<geometry>
 							<_object>
 								<type>Point</type>

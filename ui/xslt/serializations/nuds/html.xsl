@@ -41,6 +41,14 @@
 
 	<xsl:param name="mode" select="doc('input:request')/request/parameters/parameter[name = 'mode']/value"/>
 	<xsl:param name="pipeline">display</xsl:param>
+	
+	<!-- a boolean variable if there are both obverse and reverse images -->
+	<xsl:variable name="sideImages" as="xs:boolean">
+		<xsl:choose>
+			<xsl:when test="//mets:fileGrp[@USE = 'obverse'] and //mets:fileGrp[@USE = 'reverse']">true</xsl:when>
+			<xsl:otherwise>false</xsl:otherwise>
+		</xsl:choose>
+	</xsl:variable>
 
 	<!-- pagination parameter for iterating through pages of physical specimens -->
 	<xsl:param name="page" as="xs:integer">
@@ -200,12 +208,12 @@
 					<xsl:copy-of select="document($org-url)/rdf:RDF"/>
 				</xsl:if>
 			</xsl:variable>
-			
+
 			<!-- read distinct skos:broaders for mints in the RDF -->
 			<xsl:variable name="region-param">
 				<xsl:for-each select="distinct-values($id-var//nmo:Mint/skos:broader[not(@rdf:resource = $id-var//*/@rdf:about)]/@rdf:resource)">
 					<xsl:variable name="href" select="."/>
-					
+
 					<xsl:if test="not($id-var/*[@rdf:about = $href])">
 						<xsl:value-of select="substring-after($href, 'id/')"/>
 						<xsl:if test="not(position() = last())">
@@ -214,9 +222,9 @@
 					</xsl:if>
 				</xsl:for-each>
 			</xsl:variable>
-			
+
 			<xsl:variable name="region-url" select="concat('http://nomisma.org/apis/getRdf?identifiers=', encode-for-uri($region-param))"/>
-			
+
 			<xsl:variable name="region-var" as="element()*">
 				<xsl:if test="doc-available($region-url)">
 					<xsl:copy-of select="document($region-url)/rdf:RDF"/>
@@ -727,7 +735,7 @@
 										<!-- only display graph on die pages -->
 										<xsl:if test="$collection_type = 'die'">
 											<div namedGraph="{.}" class="network-graph hidden" id="{generate-id()}"/>
-										</xsl:if>							
+										</xsl:if>
 
 										<!-- display die link table only in a type page -->
 										<div>
@@ -785,133 +793,125 @@
 						</xsl:if>
 					</xsl:when>
 					<xsl:when test="$recordType = 'physical'">
-						<xsl:choose>
-							<xsl:when test="$orientation = 'vertical'">
-								<div class="row">
-									<div class="col-md-12">
-										<h1 id="object_title" property="dcterms:title">
-											<xsl:if test="//config/languages/language[@code = $lang]/@rtl = true()">
-												<xsl:attribute name="style">direction: ltr; text-align:right</xsl:attribute>
-											</xsl:if>
-											<xsl:choose>
-												<xsl:when test="descendant::*:descMeta/*:title[@xml:lang = $lang]">
-													<xsl:attribute name="lang" select="$lang"/>
-													<xsl:value-of select="descendant::*:descMeta/*:title[@xml:lang = $lang]"/>
-												</xsl:when>
-												<xsl:otherwise>
-													<xsl:attribute name="lang">en</xsl:attribute>
-													<xsl:value-of select="descendant::*:descMeta/*:title[@xml:lang = 'en']"/>
-												</xsl:otherwise>
-											</xsl:choose>
-										</h1>
-									</div>
-								</div>
-
-								<div class="row">
+						<div class="row">
+							<div class="col-md-12">
+								<h1 id="object_title" property="dcterms:title">
+									<xsl:if test="//config/languages/language[@code = $lang]/@rtl = true()">
+										<xsl:attribute name="style">direction: ltr; text-align:right</xsl:attribute>
+									</xsl:if>
 									<xsl:choose>
-										<xsl:when test="$image_location = 'left'">
-											<div class="col-md-4">
-												<xsl:call-template name="image">
-													<xsl:with-param name="side">obverse</xsl:with-param>
-												</xsl:call-template>
-												<xsl:call-template name="image">
-													<xsl:with-param name="side">reverse</xsl:with-param>
-												</xsl:call-template>
-												<xsl:call-template name="image">
-													<xsl:with-param name="side">combined</xsl:with-param>
-												</xsl:call-template>
-												<xsl:call-template name="legend_image"/>
-											</div>
-											<div class="col-md-8">
-												<xsl:call-template name="nuds_content"/>
-											</div>
+										<xsl:when test="descendant::*:descMeta/*:title[@xml:lang = $lang]">
+											<xsl:attribute name="lang" select="$lang"/>
+											<xsl:value-of select="descendant::*:descMeta/*:title[@xml:lang = $lang]"/>
 										</xsl:when>
-										<xsl:when test="$image_location = 'right'">
-											<div class="col-md-8">
-												<xsl:call-template name="nuds_content"/>
-											</div>
-											<div class="col-md-4">
-												<xsl:call-template name="image">
-													<xsl:with-param name="side">obverse</xsl:with-param>
-												</xsl:call-template>
-												<xsl:call-template name="image">
-													<xsl:with-param name="side">reverse</xsl:with-param>
-												</xsl:call-template>
-												<xsl:call-template name="image">
-													<xsl:with-param name="side">combined</xsl:with-param>
-												</xsl:call-template>
-												<xsl:call-template name="legend_image"/>
-											</div>
-										</xsl:when>
+										<xsl:otherwise>
+											<xsl:attribute name="lang">en</xsl:attribute>
+											<xsl:value-of select="descendant::*:descMeta/*:title[@xml:lang = 'en']"/>
+										</xsl:otherwise>
 									</xsl:choose>
-								</div>
-							</xsl:when>
-							<xsl:when test="$orientation = 'horizontal'">
-
-								<div class="row">
-									<div class="col-md-12">
-										<h1 id="object_title" property="dcterms:title">
-											<xsl:if test="//config/languages/language[@code = $lang]/@rtl = true()">
-												<xsl:attribute name="style">direction: ltr; text-align:right</xsl:attribute>
-											</xsl:if>
-											<xsl:choose>
-												<xsl:when test="descendant::*:descMeta/*:title[@xml:lang = $lang]">
-													<xsl:attribute name="lang" select="$lang"/>
-													<xsl:value-of select="descendant::*:descMeta/*:title[@xml:lang = $lang]"/>
-												</xsl:when>
-												<xsl:otherwise>
-													<xsl:attribute name="lang">en</xsl:attribute>
-													<xsl:value-of select="descendant::*:descMeta/*:title[@xml:lang = 'en']"/>
-												</xsl:otherwise>
-											</xsl:choose>
-										</h1>
-									</div>
-								</div>
-
+								</h1>
+							</div>
+						</div>
+						
+						<!-- if there are not METS files, then only display the NUDS content -->
+						<xsl:choose>
+							<xsl:when test="descendant::mets:fileSec">
 								<xsl:choose>
-									<xsl:when test="$image_location = 'top'">
+									<xsl:when test="$orientation = 'vertical'">
 										<div class="row">
-											<div class="col-md-6">
-												<xsl:call-template name="image">
-													<xsl:with-param name="side">obverse</xsl:with-param>
-												</xsl:call-template>
-
-											</div>
-											<div class="col-md-6">
-												<xsl:call-template name="image">
-													<xsl:with-param name="side">reverse</xsl:with-param>
-												</xsl:call-template>
-											</div>
-										</div>
-										<div class="row">
-											<div class="col-md-12">
-												<xsl:call-template name="nuds_content"/>
-											</div>
+											<xsl:choose>
+												<xsl:when test="$image_location = 'left'">
+													<div class="col-md-4">
+														<xsl:call-template name="image">
+															<xsl:with-param name="side">obverse</xsl:with-param>
+														</xsl:call-template>
+														<xsl:call-template name="image">
+															<xsl:with-param name="side">reverse</xsl:with-param>
+														</xsl:call-template>
+														<xsl:call-template name="image">
+															<xsl:with-param name="side">combined</xsl:with-param>
+														</xsl:call-template>
+														<xsl:call-template name="legend_image"/>
+													</div>
+													<div class="col-md-8">
+														<xsl:call-template name="nuds_content"/>
+													</div>
+												</xsl:when>
+												<xsl:when test="$image_location = 'right'">
+													<div class="col-md-8">
+														<xsl:call-template name="nuds_content"/>
+													</div>
+													<div class="col-md-4">
+														<xsl:call-template name="image">
+															<xsl:with-param name="side">obverse</xsl:with-param>
+														</xsl:call-template>
+														<xsl:call-template name="image">
+															<xsl:with-param name="side">reverse</xsl:with-param>
+														</xsl:call-template>
+														<xsl:call-template name="image">
+															<xsl:with-param name="side">combined</xsl:with-param>
+														</xsl:call-template>
+														<xsl:call-template name="legend_image"/>
+													</div>
+												</xsl:when>
+											</xsl:choose>
 										</div>
 									</xsl:when>
-									<xsl:when test="$image_location = 'bottom'">
-										<div class="row">
-											<div class="col-md-12">
-												<xsl:call-template name="nuds_content"/>
-											</div>
-										</div>
-										<div class="row">
-											<div class="col-md-6">
-												<xsl:call-template name="image">
-													<xsl:with-param name="side">obverse</xsl:with-param>
-												</xsl:call-template>
-											</div>
-											<div class="col-md-6">
-												<xsl:call-template name="image">
-													<xsl:with-param name="side">reverse</xsl:with-param>
-												</xsl:call-template>
-											</div>
-										</div>
+									<xsl:when test="$orientation = 'horizontal'">
+										<xsl:choose>
+											<xsl:when test="$image_location = 'top'">
+												<div class="row">
+													<div class="col-md-6">
+														<xsl:call-template name="image">
+															<xsl:with-param name="side">obverse</xsl:with-param>
+														</xsl:call-template>
+														
+													</div>
+													<div class="col-md-6">
+														<xsl:call-template name="image">
+															<xsl:with-param name="side">reverse</xsl:with-param>
+														</xsl:call-template>
+													</div>
+												</div>
+												<div class="row">
+													<div class="col-md-12">
+														<xsl:call-template name="nuds_content"/>
+													</div>
+												</div>
+											</xsl:when>
+											<xsl:when test="$image_location = 'bottom'">
+												<div class="row">
+													<div class="col-md-12">
+														<xsl:call-template name="nuds_content"/>
+													</div>
+												</div>
+												<div class="row">
+													<div class="col-md-6">
+														<xsl:call-template name="image">
+															<xsl:with-param name="side">obverse</xsl:with-param>
+														</xsl:call-template>
+													</div>
+													<div class="col-md-6">
+														<xsl:call-template name="image">
+															<xsl:with-param name="side">reverse</xsl:with-param>
+														</xsl:call-template>
+													</div>
+												</div>
+											</xsl:when>
+										</xsl:choose>
 									</xsl:when>
 								</xsl:choose>
-							</xsl:when>
+							</xsl:when>							
+							<xsl:otherwise>
+								<!-- otherwise, simply display NUDS content -->								
+								<div class="row">
+									<div class="col-md-12">
+										<xsl:call-template name="nuds_content"/>
+									</div>
+								</div>
+							</xsl:otherwise>
 						</xsl:choose>
-
+						
 						<!-- if there are annotations, then render -->
 						<xsl:if test="$hasAnnotations = true()">
 							<div class="row">
@@ -1183,12 +1183,27 @@
 					</xsl:choose>
 				</xsl:when>
 				<xsl:otherwise>
-					<ul>
-						<xsl:apply-templates mode="descMeta"/>
+					<ul>						
+						<xsl:apply-templates select="nuds:findspot"/>
+						<xsl:apply-templates select="nuds:hoard" mode="descMeta"/>
 					</ul>
 				</xsl:otherwise>
 			</xsl:choose>
 		</div>
+	</xsl:template>
+
+	<xsl:template match="nuds:findspot">
+		<li>
+			<!-- when the label of the findspot is the same as the gazetteer label, then only apply template to geogname -->
+			<xsl:choose>
+				<xsl:when test="nuds:description = nuds:fallsWithin/nuds:geogname">
+					<xsl:apply-templates select="nuds:fallsWithin/nuds:geogname" mode="descMeta"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:apply-templates select="nuds:description | nuds:fallsWithin/nuds:geogname" mode="descMeta"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</li>
 	</xsl:template>
 
 	<xsl:template match="nuds:descripton | nuds:legend" mode="physical">
@@ -1259,6 +1274,27 @@
 
 	<xsl:template match="nuds:note" mode="descMeta">
 		<li>
+			<xsl:if test="@localType">
+				<xsl:variable name="langParam" select="
+						if (string($lang)) then
+							$lang
+						else
+							'en'"/>
+				<xsl:variable name="localType" select="@localType"/>
+
+				<b>
+					<xsl:choose>
+						<xsl:when test="$localTypes//localType[@value = $localType]/label[@lang = $langParam]">
+							<xsl:value-of select="$localTypes//localType[@value = $localType]/label[@lang = $langParam]"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="concat(upper-case(substring(@localType, 1, 1)), substring(@localType, 2))"/>
+						</xsl:otherwise>
+					</xsl:choose>
+					<xsl:text>: </xsl:text>
+				</b>
+			</xsl:if>
+
 			<xsl:apply-templates/>
 		</li>
 	</xsl:template>
@@ -1320,7 +1356,7 @@
 				<span class="glyphicon glyphicon-new-window"/>
 			</a>
 		</xsl:if>
-		
+
 		<xsl:if test="nuds:identifier">
 			<xsl:text>no. </xsl:text>
 			<xsl:value-of select="nuds:identifier"/>
@@ -1419,7 +1455,7 @@
 					<xsl:otherwise>
 						<xsl:text> - </xsl:text>
 					</xsl:otherwise>
-				</xsl:choose>				
+				</xsl:choose>
 			</xsl:if>
 			<!-- apply language-specific type description templates -->
 			<xsl:choose>
