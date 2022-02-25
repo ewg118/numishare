@@ -284,7 +284,7 @@
 				<xsl:choose>
 					<xsl:when test="descendant::nuds:findspotDesc/@xlink:href">true</xsl:when>
 					<xsl:when test="descendant::nuds:geogname[@xlink:role = 'findspot'][contains(@xlink:href, 'geonames.org')]">true</xsl:when>
-					<xsl:when test="descendant::nuds:findspot/gml:location/gml:Point">true</xsl:when>
+					<xsl:when test="descendant::nuds:findspot/nuds:fallsWithin/gml:location/gml:Point">true</xsl:when>
 					<xsl:otherwise>false</xsl:otherwise>
 				</xsl:choose>
 			</xsl:otherwise>
