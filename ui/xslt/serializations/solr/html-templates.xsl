@@ -93,21 +93,39 @@
 			</h4>
 
 			<xsl:choose>
-				<xsl:when test="str[@name = 'recordType'] = 'physical'">
-					<xsl:if test="string(str[@name = 'thumbnail_obv'])">
-						<a class="thumbImage" href="{str[@name='reference_obv']}" title="Obverse of {str[@name='title_display']}"
-							id="{$object-path}{str[@name='recordId']}{if (string($langParam)) then
-							concat('?lang=', $langParam) else ''}">
-							<img src="{str[@name='thumbnail_obv']}" class="side-thumbnail"/>
-						</a>
-					</xsl:if>
-					<xsl:if test="string(str[@name = 'thumbnail_rev'])">
-						<a class="thumbImage" href="{str[@name='reference_rev']}" title="Reverse of {str[@name='title_display']}"
-							id="{$object-path}{str[@name='recordId']}{if (string($langParam)) then
-							concat('?lang=', $langParam) else ''}">
-							<img src="{str[@name='thumbnail_rev']}" class="side-thumbnail"/>
-						</a>
-					</xsl:if>
+				<xsl:when test="str[@name = 'recordType'] = 'physical'">					
+					
+					<xsl:choose>
+						<!-- display obverse and reverse images, if available -->
+						<xsl:when test="string(str[@name = 'thumbnail_obv']) or string(str[@name = 'thumbnail_rev'])">
+							<xsl:if test="string(str[@name = 'thumbnail_obv'])">
+								<a class="thumbImage" href="{str[@name='reference_obv']}" title="Obverse of {str[@name='title_display']}"
+									id="{$object-path}{str[@name='recordId']}{if (string($langParam)) then
+									concat('?lang=', $langParam) else ''}">
+									<img src="{str[@name='thumbnail_obv']}" alt="Obverse Thumbnail Image" class="side-thumbnail"/>
+								</a>
+							</xsl:if>
+							<xsl:if test="string(str[@name = 'thumbnail_rev'])">
+								<a class="thumbImage" href="{str[@name='reference_rev']}" title="Reverse of {str[@name='title_display']}"
+									id="{$object-path}{str[@name='recordId']}{if (string($langParam)) then
+									concat('?lang=', $langParam) else ''}">
+									<img src="{str[@name='thumbnail_rev']}" alt="Reverse Thumbnail Image" class="side-thumbnail"/>
+								</a>
+							</xsl:if>
+						</xsl:when>
+						
+						<!-- otherwise, display combined images, if available -->
+						<xsl:when test="string(str[@name = 'thumbnail_com'])">
+							<a class="thumbImage" href="{str[@name='reference_com']}" title="Reverse of {str[@name='title_display']}"
+								id="{$object-path}{str[@name='recordId']}{if (string($langParam)) then
+								concat('?lang=', $langParam) else ''}">
+								<img src="{str[@name='thumbnail_com']}" alt="Thumbnail Image" class="side-thumbnail"/>
+							</a>
+						</xsl:when>
+						
+					</xsl:choose>
+					
+					
 				</xsl:when>
 				<xsl:when test="//config/collection_type = 'cointype' and matches(/content/config/sparql_endpoint, '^https?://')">
 					<xsl:variable name="id" select="str[@name = 'recordId']"/>

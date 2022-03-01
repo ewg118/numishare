@@ -357,8 +357,10 @@
 								<nmo:hasReverse rdf:resource="{if (string($uri_space)) then concat($uri_space, $id) else concat($url, 'id/', $id)}#reverse"/>
 							</xsl:if>
 							
-							<!-- look for combined images -->
-							<xsl:apply-templates select="nuds:digRep/mets:fileSec/mets:fileGrp[@USE = 'combined']"/>			
+							<!-- look for combined images / treat the recto of the first card image the same -->
+							<xsl:apply-templates select="nuds:digRep/mets:fileSec/mets:fileGrp[@USE = 'combined'] | nuds:digRep/mets:fileSec/mets:fileGrp[@USE = 'card'][1]/mets:fileGrp[@USE = 'recto']"/>			
+							
+							
 							
 							<void:inDataset rdf:resource="{$url}"/>
 						</xsl:element>
@@ -367,13 +369,18 @@
 						<xsl:apply-templates select="nuds:digRep/mets:fileSec" mode="nomisma">
 							<xsl:with-param name="id" select="$id"/>
 						</xsl:apply-templates>
+						
+						<!-- IIIF images for card -->
+						<xsl:apply-templates select="nuds:digRep/mets:fileSec/mets:fileGrp[@USE = 'card'][1]/mets:fileGrp[@USE = 'recto']/mets:file[@USE = 'iiif']">
+							<xsl:with-param name="reference" select="nuds:digRep/mets:fileSec/mets:fileGrp[@USE = 'card'][1]/mets:fileGrp[@USE = 'recto']/mets:file[@USE = 'reference']/mets:FLocat/@xlink:href"/>
+						</xsl:apply-templates>
 					</xsl:when>
 				</xsl:choose>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
 	
-	<xsl:template match="mets:fileGrp[@USE = 'combined']">
+	<xsl:template match="mets:fileGrp[@USE = 'combined'] | mets:fileGrp[@USE = 'recto']">
 		<xsl:for-each select="mets:file">
 			<xsl:choose>
 				<xsl:when test="@USE = 'thumbnail'">
@@ -402,6 +409,8 @@
 								</xsl:otherwise>
 							</xsl:choose>
 						</xsl:attribute>
+						
+						
 					</foaf:depiction>
 				</xsl:when>
 			</xsl:choose>

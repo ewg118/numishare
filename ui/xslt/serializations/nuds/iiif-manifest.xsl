@@ -9,33 +9,33 @@
 	<!-- variables -->
 	<xsl:variable name="recordType" select="//nuds:nuds/@recordType"/>
 	<xsl:variable name="lang">en</xsl:variable>
-	<xsl:variable name="id" select="normalize-space(//*[local-name() = 'recordId'])"/>
+	<xsl:variable name="recordId" select="normalize-space(//*[local-name() = 'recordId'])"/>
 	<xsl:variable name="url" select="/content/config/url"/>
 	<xsl:variable name="objectUri"
 		select="
 			if (/content/config/uri_space) then
-				concat(/content/config/uri_space, $id)
+				concat(/content/config/uri_space, $recordId)
 			else
-				concat($url, 'id/', $id)"/>
+				concat($url, 'id/', $recordId)"/>
 
 	<!-- read other manifest URI patterns -->
-	<xsl:variable name="pieces" select="tokenize(substring-after(doc('input:request')/request/request-url, $id), '/')"/>
+	<xsl:variable name="pieces" select="tokenize(substring-after(doc('input:request')/request/request-url, $recordId), '/')"/>
 
 	<xsl:variable name="manifestUri">
-		<xsl:variable name="before" select="tokenize(substring-before(doc('input:request')/request/request-url, concat('/', $id)), '/')"/>
+		<xsl:variable name="before" select="tokenize(substring-before(doc('input:request')/request/request-url, concat('/', $recordId)), '/')"/>
 
 		<xsl:choose>
 			<xsl:when test="$before[last()] = 'manifest'">
-				<xsl:value-of select="concat($url, 'manifest/', $id)"/>
+				<xsl:value-of select="concat($url, 'manifest/', $recordId)"/>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:value-of select="concat($url, 'manifest/', $before[last()], '/', $id)"/>
+				<xsl:value-of select="concat($url, 'manifest/', $before[last()], '/', $recordId)"/>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:variable>
 
 	<xsl:variable name="manifestSide">
-		<xsl:variable name="before" select="tokenize(substring-before(doc('input:request')/request/request-url, concat('/', $id)), '/')"/>
+		<xsl:variable name="before" select="tokenize(substring-before(doc('input:request')/request/request-url, concat('/', $recordId)), '/')"/>
 
 		<xsl:choose>
 			<xsl:when test="$before[last()] = 'manifest'"/>
@@ -243,12 +243,15 @@
 								<xsl:when test="$recordType = 'physical'">
 									<xsl:variable name="sizes" as="element()*">
 										<sizes>
-											<obverse>
-												<xsl:apply-templates select="doc('input:obverse-json')/*"/>
-											</obverse>
-											<reverse>
-												<xsl:apply-templates select="doc('input:reverse-json')/*"/>
-											</reverse>
+											<xsl:if
+												test="descendant::mets:fileGrp[@USE = 'obverse']/mets:file[@USE = 'iiif'] or descendant::mets:fileGrp[@USE = 'reverse']/mets:file[@USE = 'iiif']">
+												<obverse>
+													<xsl:apply-templates select="doc('input:obverse-json')/*"/>
+												</obverse>
+												<reverse>
+													<xsl:apply-templates select="doc('input:reverse-json')/*"/>
+												</reverse>
+											</xsl:if>
 										</sizes>
 									</xsl:variable>
 
@@ -259,9 +262,22 @@
 											</xsl:apply-templates>
 										</xsl:when>
 										<xsl:otherwise>
-											<xsl:apply-templates select="descendant::mets:file[@USE = 'iiif']">
-												<xsl:with-param name="sizes" select="$sizes"/>
-											</xsl:apply-templates>
+											
+											<xsl:choose>
+												<xsl:when test="descendant::mets:fileGrp[@USE = 'obverse']/mets:file[@USE = 'iiif'] or descendant::mets:fileGrp[@USE = 'reverse']/mets:file[@USE = 'iiif']">
+													<xsl:apply-templates select="descendant::mets:file[@USE = 'iiif']">
+														<xsl:with-param name="postion"/>
+														<xsl:with-param name="sizes" select="$sizes"/>
+													</xsl:apply-templates>
+												</xsl:when>
+												<xsl:when test="descendant::mets:fileGrp[@USE='card']/descendant::mets:file[@USE='iiif']">
+													
+													<xsl:apply-templates select="descendant::mets:fileGrp[@USE = 'card']">
+														<xsl:with-param name="sizes" select="$sizes"/>
+													</xsl:apply-templates>
+												</xsl:when>
+											</xsl:choose>
+											
 										</xsl:otherwise>
 									</xsl:choose>
 								</xsl:when>
@@ -278,15 +294,30 @@
 			</_array>
 		</sequences>
 	</xsl:template>
+	
+	<xsl:template match="mets:fileGrp[@USE = 'card']">
+		<xsl:param name="sizes"/>
+		
+		<xsl:variable name="position" select="position()"/>
+		
+		<xsl:apply-templates select="descendant::mets:file[@USE = 'iiif']">
+			<xsl:with-param name="sizes" select="$sizes"/>
+			<xsl:with-param name="position" select="$position"/>
+		</xsl:apply-templates>
+	</xsl:template>
 
 	<!-- create canvases out of mets:files -->
 	<xsl:template match="mets:file">
 		<xsl:param name="sizes"/>
+		<xsl:param name="position"/>
 		<xsl:variable name="side" select="parent::mets:fileGrp/@USE"/>
+		
+		<xsl:variable name="id" select="if (string($position)) then concat($position, '_', $side) else $side"/>
+		
 
 		<_object>
 			<__id>
-				<xsl:value-of select="concat($manifestUri, '/canvas/', $side)"/>
+				<xsl:value-of select="concat($manifestUri, '/canvas/', $id)"/>
 			</__id>
 			<__type>sc:Canvas</__type>
 			<label>
@@ -310,17 +341,21 @@
 					<width>175</width>
 				</_object>
 			</thumbnail>
-			<height>
-				<xsl:value-of select="$sizes/*[name() = $side]/height"/>
-			</height>
-			<width>
-				<xsl:value-of select="$sizes/*[name() = $side]/width"/>
-			</width>
+			<xsl:if test="$sizes/*">
+				<height>
+					<xsl:value-of select="$sizes/*[name() = $side]/height"/>
+				</height>
+				<width>
+					<xsl:value-of select="$sizes/*[name() = $side]/width"/>
+				</width>
+			</xsl:if>
+
 			<images>
 				<_array>
 					<xsl:apply-templates select="mets:FLocat">
 						<xsl:with-param name="side" select="$side"/>
 						<xsl:with-param name="sizes" select="$sizes"/>
+						<xsl:with-param  name="id" select="$id"/>
 					</xsl:apply-templates>
 				</_array>
 			</images>
@@ -330,10 +365,11 @@
 	<xsl:template match="mets:FLocat">
 		<xsl:param name="sizes"/>
 		<xsl:param name="side"/>
+		<xsl:param name="id"/>
 
 		<_object>
 			<__id>
-				<xsl:value-of select="concat($manifestUri, '/annotation/', $side)"/>
+				<xsl:value-of select="concat($manifestUri, '/annotation/', $id)"/>
 			</__id>
 			<__type>oa:Annotation</__type>
 			<motivation>sc:painting</motivation>
@@ -347,12 +383,14 @@
 					</__id>
 					<__type>dctypes:Image</__type>
 					<format>image/jpeg</format>
-					<height>
-						<xsl:value-of select="$sizes/*[name() = $side]/height"/>
-					</height>
-					<width>
-						<xsl:value-of select="$sizes/*[name() = $side]/width"/>
-					</width>
+					<xsl:if test="$sizes/*">
+						<height>
+							<xsl:value-of select="$sizes/*[name() = $side]/height"/>
+						</height>
+						<width>
+							<xsl:value-of select="$sizes/*[name() = $side]/width"/>
+						</width>
+					</xsl:if>
 					<service>
 						<_object>
 							<__context>http://iiif.io/api/image/2/context.json</__context>
@@ -483,10 +521,10 @@
 									<__id>
 										<xsl:value-of
 											select="
-											concat($obvService, '/full/120,120/0/', if ($obvInfo/_context[@name = '@context'] = 'http://iiif.io/api/image/2/context.json') then
-											'default'
-											else
-											'native', '.jpg')"
+												concat($obvService, '/full/120,120/0/', if ($obvInfo/_context[@name = '@context'] = 'http://iiif.io/api/image/2/context.json') then
+													'default'
+												else
+													'native', '.jpg')"
 										/>
 									</__id>
 									<__type>dctypes:Image</__type>

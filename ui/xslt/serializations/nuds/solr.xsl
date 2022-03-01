@@ -696,6 +696,8 @@
 	</xsl:template>
 
 	<xsl:template match="mets:fileSec">
+		
+		<!-- handle standard photographs -->
 		<xsl:for-each select="mets:fileGrp[@USE = 'obverse' or @USE = 'reverse' or @USE = 'combined']">
 			<xsl:variable name="side" select="substring(@USE, 1, 3)"/>
 
@@ -721,7 +723,34 @@
 			</xsl:choose>
 
 		</xsl:for-each>
+		
+		<!-- otherwise, apply a template to the first fileGrp for a card and index the recto of the first file -->
+		<xsl:apply-templates select="mets:fileGrp[@USE = 'card'][1]/mets:fileGrp[@USE = 'recto']"/>
+		
 		<field name="imagesavailable">true</field>
+	</xsl:template>
+	
+	<xsl:template match="mets:fileGrp[@USE = 'recto']">
+		<xsl:choose>
+			<xsl:when test="count(mets:file) = 1 and mets:file[@USE = 'iiif']">
+				<field name="iiif_com">
+					<xsl:value-of select="mets:file/mets:FLocat/@xlink:href"/>
+				</field>
+				<field name="thumbnail_com">
+					<xsl:value-of select="concat(mets:file/mets:FLocat/@xlink:href, '/full/,120/0/default.jpg')"/>
+				</field>
+				<field name="reference_com">
+					<xsl:value-of select="concat(mets:file/mets:FLocat/@xlink:href, '/full/400,/0/default.jpg')"/>
+				</field>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:for-each select="mets:file[@USE = 'iiif' or @USE = 'archive' or @USE = 'thumbnail' or @USE = 'reference']">
+					<field name="{@USE}_com">
+						<xsl:value-of select="mets:FLocat/@xlink:href"/>
+					</field>
+				</xsl:for-each>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 	<xsl:template match="nuds:physDesc">

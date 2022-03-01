@@ -354,6 +354,13 @@
 			</xsl:call-template>
 		</xsl:if>
 
+		<xsl:if test="string(str[@name = 'reference_com']) and string(str[@name = 'iiif_com'])">
+			<xsl:call-template name="iiif">
+				<xsl:with-param name="reference" select="str[@name = 'reference_com']"/>
+				<xsl:with-param name="service" select="str[@name = 'iiif_com']"/>
+			</xsl:call-template>
+		</xsl:if>
+
 		<xsl:if test="count(arr[@name = 'coinType_uri']/str) &gt; 0 and $recordType = 'hoard'">
 			<dcmitype:Collection rdf:about="{concat($url, 'id/', $id, '#contents')}">
 				<xsl:for-each select="arr[@name = 'coinType_uri']/str">

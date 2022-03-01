@@ -363,9 +363,16 @@
 						<xsl:choose>
 							<xsl:when test="$recordType = 'physical'">
 								<!--- IIIF -->
-								<xsl:if test="descendant::mets:file[@USE = 'iiif']">
+								
+								<!-- use Leaflet for standard photographs of coins in IIIF -->
+								<xsl:if test="descendant::mets:fileGrp[@USE = 'obverse' or @USE = 'reverse' or @USE = 'combined']/mets:file[@USE = 'iiif']">									
 									<script type="text/javascript" src="{$include_path}/javascript/leaflet-iiif.js"/>
 									<script type="text/javascript" src="{$include_path}/javascript/display_iiif_functions.js"/>
+								</xsl:if>
+								
+								<!-- display cards as a IIIF manifest loaded in Mirador -->
+								<xsl:if test="descendant::mets:fileGrp[@USE = 'card']/descendant::mets:file[@USE = 'iiif']">
+									
 								</xsl:if>
 
 								<xsl:if test="$geoEnabled = true()">

@@ -178,6 +178,15 @@
 						<p:output name="data" id="model"/>
 					</p:processor>
 				</p:when>
+				<!-- multiple cards -->
+				<p:when test="descendant::mets:fileGrp[@USE='card']/descendant::mets:file[@USE='iiif']">
+					<p:processor name="oxf:unsafe-xslt">
+						<p:input name="request" href="#request"/>
+						<p:input name="data" href="aggregate('content', #data, #config)"/>
+						<p:input name="config" href="../../../../ui/xslt/serializations/nuds/iiif-manifest.xsl"/>
+						<p:output name="data" id="model"/>
+					</p:processor>
+				</p:when>
 				<p:otherwise>
 					<p:processor name="oxf:unsafe-xslt">
 						<p:input name="data" href="#data"/>
