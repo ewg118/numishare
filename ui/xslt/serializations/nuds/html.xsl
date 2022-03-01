@@ -373,7 +373,7 @@
 								
 								<!-- display cards as a IIIF manifest loaded in Mirador -->
 								<xsl:if test="descendant::mets:fileGrp[@USE = 'card']/descendant::mets:file[@USE = 'iiif']">
-									<script type="text/javascript" src="https://cci.arch.ox.ac.uk/mirador/mirador.min.js"/>	
+									<script type="text/javascript" src="https://cci.arch.ox.ac.uk/mirador/build/mirador/mirador.min.js"/>	
 									<script type="text/javascript" src="{$include_path}/javascript/display_mirador_functions.js"/>
 								</xsl:if>
 
@@ -1535,7 +1535,12 @@
 	
 	<!-- template for using Mirador IIIF viewer to display archival card images -->
 	<xsl:template name="mirador">
-		<div style="width:100%;height:800px" id="mirador-div"/>
+		<div class="row">
+			<div class="col-md-12">
+				<div style="width:100%;height:800px" id="mirador-div"/>
+			</div>
+		</div>
+		
 	</xsl:template>
 
 	<!-- ***** CHARTS TEMPLATES ***** -->
