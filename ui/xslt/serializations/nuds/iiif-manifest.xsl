@@ -243,17 +243,30 @@
 								<xsl:when test="$recordType = 'physical'">
 									<xsl:variable name="sizes" as="element()*">
 										<sizes>
-											<xsl:if
-												test="descendant::mets:fileGrp[@USE = 'obverse']/mets:file[@USE = 'iiif'] or descendant::mets:fileGrp[@USE = 'reverse']/mets:file[@USE = 'iiif']">
-												<obverse>
-													<xsl:apply-templates select="doc('input:obverse-json')/*"/>
-												</obverse>
-												<reverse>
-													<xsl:apply-templates select="doc('input:reverse-json')/*"/>
-												</reverse>
-											</xsl:if>
+											<xsl:choose>
+												<xsl:when
+													test="descendant::mets:fileGrp[@USE = 'obverse']/mets:file[@USE = 'iiif'] or descendant::mets:fileGrp[@USE = 'reverse']/mets:file[@USE = 'iiif']">
+													<obverse>
+														<xsl:apply-templates select="doc('input:obverse-json')/*"/>
+													</obverse>
+													<reverse>
+														<xsl:apply-templates select="doc('input:reverse-json')/*"/>
+													</reverse>
+												</xsl:when>
+												<xsl:when test="descendant::mets:fileGrp[@USE='card']/descendant::mets:file[@USE='iiif']">
+													<xsl:for-each select="doc('input:iiif-json')//json[@type = 'object']">
+														<image>
+															<xsl:apply-templates select="self::node()"/>
+														</image>
+													</xsl:for-each>													
+													
+												</xsl:when>
+											</xsl:choose>
+											
 										</sizes>
 									</xsl:variable>
+									
+									
 
 									<xsl:choose>
 										<xsl:when test="$manifestSide = 'obverse' or $manifestSide = 'reverse'">
@@ -272,9 +285,18 @@
 												</xsl:when>
 												<xsl:when test="descendant::mets:fileGrp[@USE='card']/descendant::mets:file[@USE='iiif']">
 													
-													<xsl:apply-templates select="descendant::mets:fileGrp[@USE = 'card']">
+													<xsl:for-each select="descendant::mets:file[@USE = 'iiif']">
+														<xsl:variable name="position" select="position()"/>
+														
+														<xsl:apply-templates select="self::node()">
+															<xsl:with-param name="position" select="$position"/>
+															<xsl:with-param name="sizes" select="$sizes"/>
+														</xsl:apply-templates>
+													</xsl:for-each>
+													
+													<!--<xsl:apply-templates select="descendant::mets:fileGrp[@USE = 'card']">
 														<xsl:with-param name="sizes" select="$sizes"/>
-													</xsl:apply-templates>
+													</xsl:apply-templates>-->
 												</xsl:when>
 											</xsl:choose>
 											
@@ -312,7 +334,7 @@
 		<xsl:param name="position"/>
 		<xsl:variable name="side" select="parent::mets:fileGrp/@USE"/>
 		
-		<xsl:variable name="id" select="if (string($position)) then concat($position, '_', $side) else $side"/>
+		<xsl:variable name="id" select="if (string($position)) then $position else $side"/>
 		
 
 		<_object>
@@ -341,20 +363,32 @@
 					<width>175</width>
 				</_object>
 			</thumbnail>
-			<xsl:if test="$sizes/*">
-				<height>
-					<xsl:value-of select="$sizes/*[name() = $side]/height"/>
-				</height>
-				<width>
-					<xsl:value-of select="$sizes/*[name() = $side]/width"/>
-				</width>
-			</xsl:if>
+			
+			<xsl:choose>
+				<xsl:when test="string($position)">
+					<height>
+						<xsl:value-of select="$sizes/image[$position]/height"/>
+					</height>
+					<width>
+						<xsl:value-of select="$sizes/image[$position]/width"/>
+					</width>
+				</xsl:when>
+				<xsl:otherwise>
+					<height>
+						<xsl:value-of select="$sizes/*[name() = $side]/height"/>
+					</height>
+					<width>
+						<xsl:value-of select="$sizes/*[name() = $side]/width"/>
+					</width>
+				</xsl:otherwise>
+			</xsl:choose>			
 
 			<images>
 				<_array>
 					<xsl:apply-templates select="mets:FLocat">
 						<xsl:with-param name="side" select="$side"/>
 						<xsl:with-param name="sizes" select="$sizes"/>
+						<xsl:with-param name="position" select="$position"/>
 						<xsl:with-param  name="id" select="$id"/>
 					</xsl:apply-templates>
 				</_array>
@@ -365,6 +399,7 @@
 	<xsl:template match="mets:FLocat">
 		<xsl:param name="sizes"/>
 		<xsl:param name="side"/>
+		<xsl:param name="position"/>
 		<xsl:param name="id"/>
 
 		<_object>
@@ -374,7 +409,7 @@
 			<__type>oa:Annotation</__type>
 			<motivation>sc:painting</motivation>
 			<on>
-				<xsl:value-of select="concat($manifestUri, '/canvas/', $side)"/>
+				<xsl:value-of select="concat($manifestUri, '/canvas/', $id)"/>
 			</on>
 			<resource>
 				<_object>
@@ -383,14 +418,24 @@
 					</__id>
 					<__type>dctypes:Image</__type>
 					<format>image/jpeg</format>
-					<xsl:if test="$sizes/*">
-						<height>
-							<xsl:value-of select="$sizes/*[name() = $side]/height"/>
-						</height>
-						<width>
-							<xsl:value-of select="$sizes/*[name() = $side]/width"/>
-						</width>
-					</xsl:if>
+					<xsl:choose>
+						<xsl:when test="string($position)">
+							<height>
+								<xsl:value-of select="$sizes/image[$position]/height"/>
+							</height>
+							<width>
+								<xsl:value-of select="$sizes/image[$position]/width"/>
+							</width>
+						</xsl:when>
+						<xsl:otherwise>
+							<height>
+								<xsl:value-of select="$sizes/*[name() = $side]/height"/>
+							</height>
+							<width>
+								<xsl:value-of select="$sizes/*[name() = $side]/width"/>
+							</width>
+						</xsl:otherwise>
+					</xsl:choose>
 					<service>
 						<_object>
 							<__context>http://iiif.io/api/image/2/context.json</__context>
