@@ -108,6 +108,7 @@
 				concat('http://', doc('input:request')/request/server-name, ':8080/orbeon/themes/', //config/theme/orbeon_theme)"/>
 	<xsl:variable name="recordType" select="//nuds:nuds/@recordType"/>
 	<xsl:variable name="id" select="normalize-space(//*[local-name() = 'recordId'])"/>
+	<xsl:variable name="manifestURI" select="concat($url, 'manifest/', $id)"/>
 	<xsl:variable name="objectUri"
 		select="
 			if (/content/config/uri_space) then
@@ -372,7 +373,8 @@
 								
 								<!-- display cards as a IIIF manifest loaded in Mirador -->
 								<xsl:if test="descendant::mets:fileGrp[@USE = 'card']/descendant::mets:file[@USE = 'iiif']">
-									
+									<script type="text/javascript" src="https://cci.arch.ox.ac.uk/mirador/mirador.min.js"/>	
+									<script type="text/javascript" src="{$include_path}/javascript/display_mirador_functions.js"/>
 								</xsl:if>
 
 								<xsl:if test="$geoEnabled = true()">
@@ -467,6 +469,12 @@
 							</span>
 							<span id="lang">
 								<xsl:value-of select="$lang"/>
+							</span>
+							<span id="manifestURI">
+								<xsl:value-of select="$manifestURI"/>
+							</span>
+							<span id="publisher">
+								<xsl:value-of select="descendant::nuds:copyrightHolder"/>
 							</span>
 
 							<!-- metrical analysis params -->
@@ -867,43 +875,79 @@
 									<xsl:when test="$orientation = 'horizontal'">
 										<xsl:choose>
 											<xsl:when test="$image_location = 'top'">
-												<div class="row">
-													<div class="col-md-6">
-														<xsl:call-template name="image">
-															<xsl:with-param name="side">obverse</xsl:with-param>
-														</xsl:call-template>
+												<xsl:choose>
+													<!-- standard output of photographs -->
+													<xsl:when test="$sideImages = true()">
+														<div class="row">
+															<div class="col-md-6">
+																<xsl:call-template name="image">
+																	<xsl:with-param name="side">obverse</xsl:with-param>
+																</xsl:call-template>
+																
+															</div>
+															<div class="col-md-6">
+																<xsl:call-template name="image">
+																	<xsl:with-param name="side">reverse</xsl:with-param>
+																</xsl:call-template>
+															</div>
+														</div>	
 														
-													</div>
-													<div class="col-md-6">
-														<xsl:call-template name="image">
-															<xsl:with-param name="side">reverse</xsl:with-param>
-														</xsl:call-template>
-													</div>
-												</div>
-												<div class="row">
-													<div class="col-md-12">
-														<xsl:call-template name="nuds_content"/>
-													</div>
-												</div>
+														<div class="row">
+															<div class="col-md-12">
+																<xsl:call-template name="nuds_content"/>
+															</div>
+														</div>
+													</xsl:when>													
+													<xsl:otherwise>
+														<!-- display mirador for cards, if applicable -->
+														<xsl:if test="descendant::mets:fileGrp[@USE = 'card']/descendant::mets:file[@USE = 'iiif']">
+															<xsl:call-template name="mirador"/>
+														</xsl:if>														
+														
+														<div class="row">
+															<div class="col-md-12">
+																<xsl:call-template name="nuds_content"/>
+															</div>
+														</div>
+													</xsl:otherwise>
+												</xsl:choose>
 											</xsl:when>
 											<xsl:when test="$image_location = 'bottom'">
-												<div class="row">
-													<div class="col-md-12">
-														<xsl:call-template name="nuds_content"/>
-													</div>
-												</div>
-												<div class="row">
-													<div class="col-md-6">
-														<xsl:call-template name="image">
-															<xsl:with-param name="side">obverse</xsl:with-param>
-														</xsl:call-template>
-													</div>
-													<div class="col-md-6">
-														<xsl:call-template name="image">
-															<xsl:with-param name="side">reverse</xsl:with-param>
-														</xsl:call-template>
-													</div>
-												</div>
+												
+												
+												<xsl:choose>
+													<!-- standard output of photographs -->
+													<xsl:when test="$sideImages = true()">
+														<div class="row">
+															<div class="col-md-12">
+																<xsl:call-template name="nuds_content"/>
+															</div>
+														</div>
+														<div class="row">
+															<div class="col-md-6">
+																<xsl:call-template name="image">
+																	<xsl:with-param name="side">obverse</xsl:with-param>
+																</xsl:call-template>
+															</div>
+															<div class="col-md-6">
+																<xsl:call-template name="image">
+																	<xsl:with-param name="side">reverse</xsl:with-param>
+																</xsl:call-template>
+															</div>
+														</div>
+													</xsl:when>
+													
+													<xsl:otherwise>
+														<div class="row">
+															<div class="col-md-12">
+																<xsl:call-template name="nuds_content"/>
+															</div>
+														</div>			
+														
+														<!-- display mirador for cards, if applicable -->
+													</xsl:otherwise>
+												</xsl:choose>
+												
 											</xsl:when>
 										</xsl:choose>
 									</xsl:when>
@@ -1488,8 +1532,13 @@
 			</div>
 		</xsl:if>
 	</xsl:template>
+	
+	<!-- template for using Mirador IIIF viewer to display archival card images -->
+	<xsl:template name="mirador">
+		<div style="width:100%;height:800px" id="mirador-div"/>
+	</xsl:template>
 
-	<!-- charts template -->
+	<!-- ***** CHARTS TEMPLATES ***** -->
 	<xsl:template name="charts">
 
 		<!-- if the SPARQL endpoint is Nomisma.org, use the Nomisma measurement APIs, otherwise query the locally-defined SPARQL endpoint -->
