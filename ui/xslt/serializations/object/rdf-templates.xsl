@@ -719,7 +719,7 @@
 	<xsl:template match="nuds:findspot" mode="nomisma">
 		<xsl:param name="objectURI"/>
 
-		<nmo:hasFindSpot>
+		<nmo:hasFindspot>
 			<nmo:Find>
 				<crm:P7_took_place_at>
 					<crm:E53_Place>
@@ -745,7 +745,7 @@
 					</crm:E53_Place>
 				</crm:P7_took_place_at>
 			</nmo:Find>
-		</nmo:hasFindSpot>
+		</nmo:hasFindspot>
 	</xsl:template>
 
 	<xsl:template match="nuds:findspot" mode="nomisma-object">
