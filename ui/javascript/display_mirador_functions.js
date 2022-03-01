@@ -35,7 +35,7 @@ $(document).ready(function () {
             "allowMaximize": false,
             "defaultSideBarPanel": 'info',
             "defaultView": 'gallery',
-            "sideBarOpenByDefault": hasAnnotations,
+            "sideBarOpenByDefault": false,
             "forceDrawAnnotations": true
         },
         "thumbnailNavigation": {
