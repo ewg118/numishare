@@ -247,7 +247,7 @@
 			<!-- only include findspot if the coin is not part of a hoard -->
 			<xsl:if test="arr[@name = 'findspot_geo']/str and not(arr[@name = 'hoard_uri'])">
 				<xsl:variable name="findspot" select="tokenize(arr[@name = 'findspot_geo']/str[1], '\|')"/>
-				<nmo:hasFindSpot>
+				<nmo:hasFindspot>
 					<nmo:Find>
 						<crm:P7_took_place_at>
 							<crm:E53_Place>
@@ -258,7 +258,7 @@
 							</crm:E53_Place>
 						</crm:P7_took_place_at>
 					</nmo:Find>
-				</nmo:hasFindSpot>
+				</nmo:hasFindspot>
 			</xsl:if>
 			<!-- images -->
 			<xsl:if test="string(str[@name = 'reference_com'])">
