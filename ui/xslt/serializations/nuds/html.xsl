@@ -373,7 +373,7 @@
 								
 								<!-- display cards as a IIIF manifest loaded in Mirador -->
 								<xsl:if test="descendant::mets:fileGrp[@USE = 'card']/descendant::mets:file[@USE = 'iiif']">
-									<script type="text/javascript" src="https://cci.arch.ox.ac.uk/mirador/build/mirador/mirador.min.js"/>	
+									<script type="text/javascript" src="{$include_path}/javascript/mirador.min.js"/>	
 									<script type="text/javascript" src="{$include_path}/javascript/display_mirador_functions.js"/>
 								</xsl:if>
 
