@@ -143,7 +143,7 @@
 							<a href="department/Modern"><img title="Modern" alt="Modern" src="{$include_path}/images/modern.jpg"/><br/>Modern</a>
 						</div>
 						<div class="col-sm-6 col-lg-3">
-							<a href="department/UnitedStates"><img title="United States" alt="United States" src="{$include_path}/images/united_states.jpg"/><br/>United States</a>
+							<a href="department/NorthAmerican"><img title="North American" alt="North American" src="{$include_path}/images/united_states.jpg"/><br/>North American</a>
 						</div>
 						<div class="col-sm-6 col-lg-3">
 							<a href="department/LatinAmerican"><img title="Latin American" alt="Latin American" src="{$include_path}/images/latin_american.jpg"/><br/>Latin American</a>

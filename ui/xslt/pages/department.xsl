@@ -29,8 +29,8 @@
 				concat('http://', doc('input:request')/request/server-name, ':8080/orbeon/themes/', //config/theme/orbeon_theme)"/>
 	<xsl:variable name="department_facet">
 		<xsl:choose>
-			<xsl:when test="$department = 'UnitedStates'">
-				<xsl:text>United States</xsl:text>
+			<xsl:when test="$department = 'NorthAmerican'">
+				<xsl:text>North American</xsl:text>
 			</xsl:when>
 			<xsl:when test="$department = 'EastAsian'">
 				<xsl:text>East Asian</xsl:text>
@@ -62,10 +62,10 @@
 	<xsl:param name="side"/>
 	<xsl:param name="layout"/>
 	<xsl:param name="authenticated"/>
-	
+
 	<xsl:variable name="numFound" select="//result[@name = 'response']/@numFound" as="xs:integer"/>
-	<xsl:variable name="tokenized_q"/>	
-	
+	<xsl:variable name="tokenized_q"/>
+
 	<!-- config variables -->
 	<xsl:variable name="collection_type" select="/content//collection_type"/>
 	<xsl:variable name="positions" as="node()*">
@@ -99,7 +99,7 @@
 				<script type="text/javascript" src="{$include_path}/javascript/facet_functions.js"/>
 				<script type="text/javascript" src="{$include_path}/javascript/result_functions.js"/>
 				<script type="text/javascript" src="{$include_path}/javascript/department_functions.js"/>
-				
+
 				<xsl:for-each select="config/includes/include">
 					<xsl:choose>
 						<xsl:when test="@type = 'css'">
@@ -147,64 +147,63 @@
 							<p>The collection of ancient Greek coins comprises some 100,000 items, classified according to regions and mints of the ancient
 								world, from Spain and North Africa in the west to Afghanistan in the east. It includes all Greek coins, struck roughly between
 								650 BC and the time of the Roman conquest, and also the bronze coinages of Greek and other cities under Roman administration
-								down to the late 3rd century AD.</p>
-							<p>To learn more about the collection please click here.</p>
+								down to the late 3rd century AD.</p>							
 						</xsl:when>
 						<xsl:when test="$department_facet = 'Byzantine'">
 							<p>The Byzantine collection comprises some 13,000 coins struck at Byzantium and at the regional mints of the Byzantine Empire from
-								the reign of Anastasius I (AD 419-518).</p>
-							<p>To learn more about the collection please click here.</p>
+								the reign of Anastasius I (AD 419-518).</p>							
 						</xsl:when>
 						<xsl:when test="$department_facet = 'East Asian'">
 							<p>The Department of East Asian Coins comprises some 50,000 coins and other objects produced in the area of modern China, Korea,
 								Japan, and Vietnam. The Department includes all coins struck in these regions from the beginning of coinage in the 6th century
-								BC down to the modern day. It also includes paper money.</p>
-							<p>To learn more about the collection please click here.</p>
+								BC down to the modern day. It also includes paper money.</p>							
 						</xsl:when>
 						<xsl:when test="$department_facet = 'Medieval'">
 							<p>The Medieval Department, comprising some 50,000 objects, contains the coinage of Latin Europe from the fall of the Roman Empire
 								down to the end of hammer-struck coinage during the course of the 17th century.</p>
-							<p>To learn more about the collection please click here.</p>
+							
 						</xsl:when>
 						<xsl:when test="$department_facet = 'Medal'">
 							<p>The Medals and Decorations Department contains more than 50,000 medals from around the world of all varieties, including
 								commemorative medals, art medals and society medals. It also includes decorations issued in the United States.</p>
-							<p>To learn more about the collection please click here.</p>
+							
 						</xsl:when>
 						<xsl:when test="$department_facet = 'Roman'">
 							<p>The department includes all coins conventionally identified as Republican or imperial, as well as the silver coins of the
 								imperial provinces and all coins of Roman Alexandria. There are approximately 6000 coins of the Republic, about 56000 of the
 								mainstream imperial coinage, about 3000 provincial silver and nearly 13000 of Alexandria.</p>
-							<p>To learn more about the collection please click here.</p>
+							
 						</xsl:when>
 						<xsl:when test="$department_facet = 'Islamic'">
 							<p>The Islamic Department contains over 70,000 coins and other objects. It includes all coins and paper money from North Africa and
 								the Middle East, as far as Afghanistan and Central Asia, from the Islamic conquests of the seventh and eighth centuries to the
 								present day.</p>
-							<p>To learn more about the collection please click here.</p>
+							
 						</xsl:when>
 						<xsl:when test="$department_facet = 'South Asian'">
 							<p>The South Asian Department, consisting of some 50,000 objects, includes the coins and paper money of all periods from three
 								principal regions: the Indian subcontinent, including the Islamic period; Southeast Asia, including Burma, Thailand, Laos,
 								Cambodia, Indonesia, Malaysia, and the Philippines; and ancient Central Asia, including the Indo-Parthians, Sakas, Kushans, and
 								Hephthalites.</p>
-							<p>To learn more about the collection please click here.</p>
+							
 						</xsl:when>
 						<xsl:when test="$department_facet = 'Modern'">
 							<p>The Modern Department includes all coins minted by minting machinery and all paper money produced in Europe, Canada, Oceania and
 								sub-Saharan Africa. The total figure for the modern cabinet is approximately 100,000 pieces.</p>
-							<p>To learn more about the collection please click here.</p>
+							
 						</xsl:when>
 						<xsl:when test="$department_facet = 'Latin American'">
 							<p>The Latin American Department contains coins and paper money of Central America, South American and the Caribbean. The total
 								figure for the Latin American cabinet is approximately 30,000 pieces.</p>
-							<p>To learn more about the collection please click here.</p>
+							
 						</xsl:when>
-						<xsl:when test="$department_facet = 'United States'">
-							<p>The United States Department includes all coins issued in and for the British North American Plantations until 1783 and for the
-								United States thereafter, including Alaska and Hawaii. The total figure for the United States cabinet is approximately 32,000
-								pieces.</p>
-							<p>To learn more about the collection please click here.</p>
+						<xsl:when test="$department_facet = 'North American'">
+							<p>The North American Department includes all coins issued in and for the British North American colonies until 1783 and thereafter
+								for the United States and Canada, as well as Alaska and Hawaii before annexation. The total figure is around 44,000 coins,
+								tokens, banknotes, and other items. Some of the strongest areas of the collection include the colonial silver coins of
+								Massachusetts; the Confederation-period state coinages (especially of New Jersey and Connecticut); Federal large cents, Gobrecht
+								dollars, and proof gold; and Civil War tokens.</p>
+							
 						</xsl:when>
 					</xsl:choose>
 					<p>
@@ -306,7 +305,7 @@
 						<option value="" selected="selected">A.D.</option>
 					</select>
 				</div>
-				
+
 				<div class="form-group" id="ah_dateRange">
 					<label>Hijra </label>
 					<input type="text" id="ah_fromDate" class="form-control" placeholder="{numishare:normalize_fields('fromDate', $lang)}"/>
@@ -314,7 +313,7 @@
 					<input type="text" id="ah_toDate" class="form-control" placeholder="{numishare:normalize_fields('toDate', $lang)}"/>
 				</div>
 			</div>
-			
+
 		</div>
 	</xsl:template>
 
@@ -351,14 +350,14 @@
 						<!--<xsl:apply-templates select="lst[@name='century_num']" mode="facet"/>-->
 					</xsl:when>
 					<xsl:when
-						test="$department_facet = 'Islamic' or $department_facet = 'East Asian' or $department_facet = 'South Asian' or $department_facet = 'Modern' or $department_facet = 'United States' or $department_facet = 'Latin American'">
+						test="$department_facet = 'Islamic' or $department_facet = 'East Asian' or $department_facet = 'South Asian' or $department_facet = 'Modern' or $department_facet = 'North American' or $department_facet = 'Latin American'">
 						<xsl:apply-templates select="lst[@name = 'region_facet']" mode="facet"/>
 						<xsl:apply-templates select="lst[@name = 'locality_facet']" mode="facet"/>
 						<xsl:apply-templates select="lst[@name = 'mint_facet']" mode="facet"/>
-						<xsl:if test="$department_facet = 'United States' or $department_facet = 'Latin American'">
+						<xsl:if test="$department_facet = 'North American' or $department_facet = 'Latin American'">
 							<xsl:apply-templates select="lst[@name = 'category_hier']" mode="facet"/>
 						</xsl:if>
-						<xsl:if test="$department_facet != 'United States'">
+						<xsl:if test="$department_facet != 'North American'">
 							<xsl:apply-templates select="lst[@name = 'dynasty_facet']" mode="facet"/>
 						</xsl:if>
 						<xsl:apply-templates select="lst[@name = 'state_facet']" mode="facet"/>
@@ -400,7 +399,7 @@
 					<xsl:apply-templates select="lst[@name = 'material_facet']" mode="facet"/>
 				</xsl:if>
 				<xsl:choose>
-					<xsl:when test="$department_facet = 'Modern' or $department_facet = 'United States'">
+					<xsl:when test="$department_facet = 'Modern' or $department_facet = 'North American'">
 						<xsl:if test="$department_facet = 'Modern'">
 							<xsl:apply-templates select="lst[@name = 'era_facet']" mode="facet"/>
 						</xsl:if>
