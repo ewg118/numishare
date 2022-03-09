@@ -7,19 +7,14 @@
   GLOBAL
   ***************************************
  */
-@import url(//fonts.googleapis.com/css?family=Cuprum&#038;subset=latin);
 html{
-    background-color: #F8F8F8;
-    background-attachment: scroll;
-    background-image: url("http://numismatics.org/authorities/ui/images/pattern.gif");
-    background-position: center top;
-    background-repeat: repeat;
+    background-color: #fafafa;
 }
 body{
-    color: #535e70;
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 14px;
-    line-height: 18px;
+    font-family: "Roboto", sans-serif;
+    font-size: 18px;
+    font-weight: 300;
+    color: #262626;
 }
 .banner{
     border-bottom: 4px solid black;
@@ -31,7 +26,7 @@ body{
 }
 .banner-background{
     margin: 20px 0;
-    color:white;
+    color: white;
     background-color: black;
     border-radius: 20px;
     padding: 20px 0;
@@ -48,10 +43,11 @@ body{
 .banner-background h2,
 .banner-background h3{
     margin-top: 0;
-    color:white;
+    color: white;
 }
 .navbar{
     margin-bottom: 0;
+    font-family: warnock-pro, serif;
     border-bottom: 4px solid black;
 }
 .navbar-brand{
@@ -63,8 +59,8 @@ a > img{
 ul li{
     list-style-type: none;
 }
-ol li {
-    list-style-type:normal
+ol li{
+    list-style-type: normal
 }
 .highlight{
     background-color: #F8F8F8;
@@ -79,16 +75,16 @@ h3,
 h4,
 h5,
 h6{
-    color: #434343;
-    font-family: Cuprum, sans-serif;
+    color: #dca153;
+    font-family: warnock-pro, serif;
 }
 a{
-    color: #e64100;
+    color: #dca153;
     text-decoration: none;
 }
 a:hover,
 a:focus{
-    color: #535e70;
+    color: #eed0a9;
     text-decoration: underline
 }
 .alert-box{
@@ -112,17 +108,12 @@ dl.dl-rtl dd{
   ***************************************
  */
 #footer{
-    background-color: #535e70;
-    border-top: 1px solid #F8F8F8;
+    background-color: #fafafa;
     padding-top: 10px;
     padding-bottom: 10px;
-    text-align: center;
-    font-size: 80%;
-    color: white;
-}
-#footer a{
-    color: white;
-    text-decoration: underline;
+    color: #262626;
+    font-weight: 300;
+    font-size: 15px;
 }
 /*
   ***************************************

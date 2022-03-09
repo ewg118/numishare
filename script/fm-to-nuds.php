@@ -80,7 +80,7 @@ $Medieval_array = generate_json('https://docs.google.com/spreadsheets/d/e/2PACX-
 $Modern_array = generate_json('https://docs.google.com/spreadsheets/d/e/2PACX-1vQbGr1pk3X9dTtJN_xox10Ze94nHCy1Q7qYHy0KPngCMiThTZhDtihyRPS3Mx2XVKsOSur3C1r7KURu/pub?output=csv');
 $Roman_array = generate_json('https://docs.google.com/spreadsheets/d/e/2PACX-1vSy6fRVmhLRkJQcsWmxaQfch6oVGUtP3M_hjNDmuGNQXvF266PLi4vjsrXnxFDEo0I1KRoMjYZ815Xm/pub?output=csv');
 $South_Asian_array = generate_json('https://docs.google.com/spreadsheets/d/e/2PACX-1vRuTGEVOB3v5qOigC1ubHJ82QDApxiPxRR8q7TFhVKLZTRJCwCMsk8_0VvekM_kUufwb646XPAuAdil/pub?output=csv');
-$United_States_array = generate_json('https://docs.google.com/spreadsheets/d/e/2PACX-1vQLO452BttROCPIvTq5USc2SXxXYwxCVMK_nR3NUmPLiYG-cg-mejS5VtAEsd-W2IHSKSnfZo2ckIR8/pub?output=csv');
+$North_American_array = generate_json('https://docs.google.com/spreadsheets/d/e/2PACX-1vQLO452BttROCPIvTq5USc2SXxXYwxCVMK_nR3NUmPLiYG-cg-mejS5VtAEsd-W2IHSKSnfZo2ckIR8/pub?output=csv');
 $Greek_authorities_array = generate_json('https://docs.google.com/spreadsheets/d/e/2PACX-1vSLKDSk4XUSnTyoYdvHTGPH906wnWtaHcZRxufR2BLRTdaira5m-LPvHsJCxV15dwGIk7NUevPmSDzl/pub?output=csv');
 $Islamic_authorities_array = generate_json('https://docs.google.com/spreadsheets/d/e/2PACX-1vSBIAYUmxMxp_--jLHYcNoapdUiWCNc99ZcEo8Vo9fwZXK78TkK34fMzptZu5mLH3ylOYUXwCOI6bQY/pub?output=csv');
 

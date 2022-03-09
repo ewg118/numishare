@@ -897,7 +897,7 @@ function parse_typology ($accnum, $count, $row, $department){
 	    $dob_num = (is_digit($num) == true ? intval($num) : false);
 	    
 	    //only begin the evaluation of the date on object if it's an integer value	    
-        if ($department == 'United States' || $department == 'Modern' || $department == 'Latin American'){
+        if ($department == 'North American' || $department == 'Modern' || $department == 'Latin American'){
             if ($dob_num == true){
                 $typeDesc['title_dob'] = $num;
             }
@@ -1308,7 +1308,7 @@ function parse_typology ($accnum, $count, $row, $department){
 				$uncertain = substr($val, -1) == '?' ? true : false;
 				$val = trim(str_replace('?', '', $val));
 				
-				if ($department == 'Roman' || $department == 'Byzantine' || $department == 'Medal' || $department == 'United States' || $department == 'Decoration'){
+				if ($department == 'Roman' || $department == 'Byzantine' || $department == 'Medal' || $department == 'North American' || $department == 'Decoration'){
 					$entity = array('label'=>$val, 'uncertain'=>$uncertain, 'element'=>'persname', 'role'=>'portrait');
 				}
 				if ($department == 'Roman' || $department == 'Byzantine' || $department == 'Medieval'|| $department == 'East Asian' || $department == 'South Asian' || $department == 'Modern' || $department == 'Latin American'){

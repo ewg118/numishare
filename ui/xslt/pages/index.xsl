@@ -153,7 +153,7 @@
 								Decorations</a>
 						</div>
 					</div>
-					<p>ANS policies on the acquisition and deacquisition of numismatic items are available <a href="http://numismatics.org/About/AcquisitionDeacquisition">online</a>. </p>
+					<p>ANS policies on the acquisition and deacquisition of numismatic items are available <a href="http://numismatics.org/governance/collections-management-policy/">online</a>. </p>
 				</div>
 				<div class="col-md-3 col-lg-3 col-sm-3">
 					<div id="feature" class="highlight text-center">
@@ -193,89 +193,86 @@
 				<a href="http://numismatics.org/">Home</a>
 			</li>
 			<li>
-				<a href="http://numismatics.org/About/About">About the ANS</a>
+				<a href="http://numismatics.org/about-us/">About the ANS</a>
 			</li>
 			<li>
 				<a href="http://numismatics.org/search/">Collections</a>
-				<ul>
+				<ul>					
 					<li>
-						<a href="http://numismatics.org/Collections/RecentAcquisitions">Recent Acquisitions</a>
-					</li>
-					<li>
-						<a href="http://numismatics.org/Collections/Photography">Photography</a>
+						<a href="http://numismatics.org/our-collections/photography-permissions/">Photography</a>
 					</li>
 					<li>
 						<i>Departments</i>
 						<ul>
 							<li>
-								<a href="http://numismatics.org/Collections/Greek">Greek</a>
+								<a href="http://numismatics.org/our-collections/Greek/">Greek</a>
 							</li>
 							<li>
-								<a href="http://numismatics.org/Collections/Roman">Roman</a>
+								<a href="http://numismatics.org/our-collections/Roman">Roman</a>
 							</li>
 							<li>
-								<a href="http://numismatics.org/Collections/Byzantine">Byzantine</a>
+								<a href="http://numismatics.org/our-collections/Byzantine">Byzantine</a>
 							</li>
 							<li>
-								<a href="http://numismatics.org/Collections/Islamic">Islamic</a>
+								<a href="http://numismatics.org/our-collections/islamic">Islamic</a>
 							</li>
 							<li>
-								<a href="http://numismatics.org/Collections/EastAsian">East Asian</a>
+								<a href="http://numismatics.org/our-collections/east-asian">East Asian</a>
 							</li>
 							<li>
-								<a href="http://numismatics.org/Collections/SouthAsian">South Asian</a>
+								<a href="http://numismatics.org/our-collections/south-asian">South Asian</a>
 							</li>
 							<li>
-								<a href="http://numismatics.org/Collections/Medieval">Medieval</a>
+								<a href="http://numismatics.org/our-collections/Medieval">Medieval</a>
 							</li>
 							<li>
-								<a href="http://numismatics.org/Collections/UnitedStates">United States</a>
+								<a href="http://numismatics.org/our-collections/Modern">Modern</a>
 							</li>
 							<li>
-								<a href="http://numismatics.org/Collections/LatinAmerica">Latin America</a>
+								<a href="http://numismatics.org/our-collections/united-states">United States</a>
 							</li>
 							<li>
-								<a href="http://numismatics.org/Collections/Modern">Modern</a>
-							</li>
+								<a href="http://numismatics.org/our-collections/latin-america">Latin America</a>
+							</li>							
 							<li>
-								<a href="http://numismatics.org/Collections/MedalsAndDecorations">Medals and Decorations</a>
+								<a href="http://numismatics.org/our-collections/medals-and-decorations">Medals and Decorations</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 			</li>
 			<li>
-				<a href="http://numismatics.org/Library/Library">Library</a>
+				<a href="http://numismatics.org/basslibrary/">Library</a>
 			</li>
 			<li>
 				<a href="http://numismatics.org/archives/">Archives</a>
 			</li>
 			<li>
-				<a href="http://numismatics.org/Publications/Publications">Publications</a>
+				<a href="http://numismatics.org/about-us/publications/">Publications</a>
 			</li>
 			<li>
-				<a href="http://numismatics.org/Membership/Membership">Membership</a>
+				<a href="http://numismatics.org/membership/">Membership</a>
 			</li>
 			<li>
-				<a href="http://numismatics.org/EventsExhibitions/EventsExhibitions">Events and Exhibitions</a>
+				<a href="http://numismatics.org/exhibitions-uc/">Events and Exhibitions</a>
 			</li>
 			<li>
-				<a href="http://numismatics.org/Education/Education">Education</a>
+				<a href="http://numismatics.org/about-us/education/">Education</a>
 			</li>
 			<li>
-				<a href="http://numismatics.org/resources">Online Resources</a>
+				<a href="http://numismatics.org/our-collections/online-resources/">Online Resources</a>
 			</li>
 			<li>
-				<a href="http://numismatics.org/Development/Development">Support the ANS</a>
+				<a href="http://numismatics.org/giving/">Support the ANS</a>
 			</li>
 			<li>
-				<a href="http://numismatics.org/About/Contact">Contact</a>
+				<a href="http://numismatics.org/contact-us/">Contact</a>
 			</li>
 			<li>
-				<a target="_blank" href="http://ansmagazine.com" title="" rel="nofollow">ANS Magazine</a>
+				<a href="http://numismatics.org/pocketchange-type/magazine/">ANS Magazine</a>
 			</li>
 			<li>
-				<a target="_blank" href="http://numismatics.org/Store/Store">The ANS Store</a>
+				<a href="http://numismatics.org/store/">The ANS Store</a>
 			</li>
 		</ul>
 	</xsl:template>

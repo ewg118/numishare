@@ -21,7 +21,7 @@ function parse_mint($department, $mint, $regions, $localities){
 	GLOBAL $Modern_array;
 	GLOBAL $Roman_array;
 	GLOBAL $South_Asian_array;
-	GLOBAL $United_States_array;
+	GLOBAL $North_American_array;
 	
 	$geoData = str_replace(' ', '_', $department) . '_array';
 	
@@ -327,7 +327,7 @@ function get_department($department){
 			$dept_string = 'South Asian';
 			break;
 		case 'US':
-			$dept_string = 'United States';
+			$dept_string = 'North American';
 			break;
 		default:
 			$dept_string = 'FAIL';

@@ -100,7 +100,7 @@
 				<script type="text/javascript" src="{$include_path}/javascript/result_functions.js"/>
 				<script type="text/javascript" src="{$include_path}/javascript/department_functions.js"/>
 				
-				<xsl:for-each select="includes/include">
+				<xsl:for-each select="config/includes/include">
 					<xsl:choose>
 						<xsl:when test="@type = 'css'">
 							<link type="text/{@type}" rel="stylesheet" href="{@url}"/>
