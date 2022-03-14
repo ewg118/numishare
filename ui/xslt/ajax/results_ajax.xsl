@@ -31,20 +31,6 @@
 		</xsl:choose>
 	</xsl:variable>
 	
-	<xsl:variable name="object-path">
-		<xsl:choose>
-			<xsl:when test="//config/collection_type = 'object' and string(//config/uri_space)">
-				<xsl:value-of select="//config/uri_space"/>
-			</xsl:when>
-			<xsl:when test="//config/union_type_catalog/@enabled = true()">
-				<xsl:value-of select="str[@name='uri_space']"/>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:value-of select="concat($display_path, 'id/')"/>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:variable>
-
 	<!-- empty variables -->
 	<xsl:variable name="mode"/>
 	<xsl:variable name="image"/>
@@ -107,6 +93,20 @@
 		<xsl:variable name="sort_category" select="substring-before($sort, ' ')"/>
 		<xsl:variable name="regularized_sort">
 			<xsl:value-of select="numishare:normalize_fields($sort_category, $lang)"/>
+		</xsl:variable>
+		
+		<xsl:variable name="object-path">
+			<xsl:choose>
+				<xsl:when test="//config/collection_type = 'object' and string(//config/uri_space)">
+					<xsl:value-of select="//config/uri_space"/>
+				</xsl:when>
+				<xsl:when test="//config/union_type_catalog/@enabled = true()">
+					<xsl:value-of select="str[@name='uri_space']"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="concat($display_path, 'id/')"/>
+				</xsl:otherwise>
+			</xsl:choose>
 		</xsl:variable>
 
 		<div class="g_doc col-md-4">

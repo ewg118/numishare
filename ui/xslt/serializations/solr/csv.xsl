@@ -23,7 +23,7 @@
 	<xsl:variable name="url" select="/content/config/url"/>
 	<xsl:variable name="uri_space" select="/content/config/uri_space"/>
 	<xsl:variable name="collection_type" select="/content/config/collection_type"/>
-
+	
 	<!-- list of fields to display in the csv -->
 	<xsl:variable name="fields" as="element()*">
 		<fields>
@@ -133,6 +133,20 @@
 
 				<!-- each doc -->
 				<xsl:for-each select="descendant::doc">
+					<xsl:variable name="object-path">
+						<xsl:choose>
+							<xsl:when test="//config/collection_type = 'object' and string(//config/uri_space)">
+								<xsl:value-of select="//config/uri_space"/>
+							</xsl:when>
+							<xsl:when test="//config/union_type_catalog/@enabled = true()">
+								<xsl:value-of select="str[@name = 'uri_space']"/>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:value-of select="concat($url, 'id/')"/>
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:variable>
+					
 					<xsl:variable name="doc" as="element()*">
 						<xsl:copy-of select="."/>
 					</xsl:variable>
@@ -140,14 +154,7 @@
 					<row>
 						<column>
 							<val>
-								<xsl:choose>
-									<xsl:when test="string($uri_space)">
-										<xsl:value-of select="concat($uri_space, str[@name = 'recordId'])"/>
-									</xsl:when>
-									<xsl:otherwise>
-										<xsl:value-of select="concat($url, 'id/', str[@name = 'recordId'])"/>
-									</xsl:otherwise>
-								</xsl:choose>
+								<xsl:value-of select="concat($object-path, str[@name = 'recordId'])"/>
 							</val>
 						</column>
 
