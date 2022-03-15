@@ -252,7 +252,7 @@
                     <xsl:when test="$label='subjectSet'">Subjekte</xsl:when>
                     <xsl:when test="$label='symbol'">Symbol</xsl:when>
                     <xsl:when test="$label='testmark'">Prüfmarke</xsl:when>
-                    <xsl:when test="$label='timestamp'">Moodifizierungsdatum</xsl:when>
+                    <xsl:when test="$label='timestamp'">Modifizierungsdatum</xsl:when>
                     <xsl:when test="$label='title'">Titel</xsl:when>
                     <xsl:when test="$label='toDate'">Datum bis</xsl:when>
                     <xsl:when test="$label='type'">Typ</xsl:when>
