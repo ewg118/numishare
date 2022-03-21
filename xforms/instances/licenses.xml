@@ -8,10 +8,12 @@
 		<statement value="https://creativecommons.org/licenses/by-nc-sa/4.0/">Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)</statement>
 		<statement value="https://creativecommons.org/licenses/by-nc-nd/4.0/">Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)</statement>
 		<statement value="https://creativecommons.org/choose/mark/">Public Domain Mark</statement>
+		<statement value="http://rightsstatements.org/vocab/UND/1.0/">Copyright undetermined</statement>
 	</images>
 	<data>
 		<statement value="http://opendatacommons.org/licenses/odbl/">Open Data Commons Open Database License (ODbL)</statement>
 		<statement value="http://opendatacommons.org/licenses/by/">Open Data Commons Attribution License</statement>
 		<statement value="http://opendatacommons.org/licenses/pddl/">Open Data Commons Public Domain Dedication and License (PDDL)</statement>
+		<statement value="http://rightsstatements.org/vocab/UND/1.0/">Copyright undetermined</statement>
 	</data>
 </licenses>
