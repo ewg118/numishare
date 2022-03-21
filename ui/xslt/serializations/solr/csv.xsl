@@ -246,9 +246,17 @@
 
 	<!-- Solr templates -->
 	<xsl:template match="*[@name = 'year_num']" mode="content">
-		<xsl:apply-templates select="int">
+		<xsl:for-each select="int">
 			<xsl:sort order="ascending" data-type="number"/>
-		</xsl:apply-templates>
+			
+			<xsl:if test="position() = 1">
+				<xsl:apply-templates select="self::node()"/>
+			</xsl:if>
+			<xsl:if test="position() = last()">
+				<xsl:apply-templates select="self::node()"/>
+			</xsl:if>
+		</xsl:for-each>
+		
 	</xsl:template>
 
 	<xsl:template match="int">
