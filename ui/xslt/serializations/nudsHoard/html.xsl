@@ -275,6 +275,7 @@
 
 	<!-- empty dies param (used in html-templates) -->
 	<xsl:variable name="hasDies" as="xs:boolean">false</xsl:variable>
+	<xsl:variable name="sideImages" as="xs:boolean">false</xsl:variable>
 
 	<xsl:template match="/">
 		<html
