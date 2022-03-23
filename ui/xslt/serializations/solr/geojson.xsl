@@ -158,6 +158,7 @@
 								<xsl:value-of select="str[@name = 'deposit_display']"/>
 							</deposit>
 						</xsl:if>
+						<radius>5</radius>
 					</_object>
 				</properties>
 				
