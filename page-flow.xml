@@ -187,7 +187,7 @@
 	<page path="/numishare/[^\/]+/mints.kml" model="xpl/models/solr/geographic-facets.xpl" view="xpl/views/serializations/solr/kml.xpl"/>
 	<page path="/numishare/[^\/]+/mints.geojson" model="xpl/models/solr/geographic-facets.xpl" view="xpl/views/serializations/solr/geojson.xpl"/>
 	<page path="/numishare/[^\/]+/query.kml" model="xpl/models/solr/geographic-docs.xpl" view="xpl/views/serializations/solr/kml.xpl"/>
-	<page path="/numishare/[^\/]+/query.geojson" model="xpl/models/solr/geographic-docs.xpl" view="xpl/views/serializations/solr/geojson.xpl"/>
+	<page path="/numishare/[^\/]+/query.geojson" model="xpl/models/solr/geographic-facets.xpl"  view="xpl/views/serializations/solr/geojson.xpl"/>
 	<page path="/numishare/[^\/]+/subjects.kml" model="xpl/models/solr/geographic-facets.xpl" view="xpl/views/serializations/solr/kml.xpl"/>
 	<page path="/numishare/[^\/]+/subjects.geojson" model="xpl/models/solr/geographic-facets.xpl" view="xpl/views/serializations/solr/geojson.xpl"/>
 

@@ -62,15 +62,13 @@
 				<!-- Add fancyBox -->
 				<link rel="stylesheet" href="{$include_path}/css/jquery.fancybox.css?v=2.1.5" type="text/css" media="screen"/>
 				<script type="text/javascript" src="{$include_path}/javascript/jquery.fancybox.pack.js?v=2.1.5"/>
+				
 				<!-- maps-->
 				<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.0/dist/leaflet.css"/>
-				<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css"/>
-				<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css"/>
 				
 				<!-- js -->
 				<script src="https://unpkg.com/leaflet@1.0.0/dist/leaflet.js"/>					
 				<script type="text/javascript" src="{$include_path}/javascript/leaflet.ajax.min.js"/>
-				<script type="text/javascript" src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"/>
 				<script type="text/javascript" src="{$include_path}/javascript/map_functions.js"/>
 				<script type="text/javascript" src="{$include_path}/javascript/facet_functions.js"/>
 

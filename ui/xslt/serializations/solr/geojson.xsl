@@ -44,6 +44,9 @@
 
 	<xsl:template match="lst">
 		<xsl:variable name="pointType" select="substring-before(@name, '_')"/>
+		<xsl:variable name="maxCount" select="max(int)"/>
+		<xsl:variable name="grade" select="ceiling($maxCount div 5)"/>
+		
 		<xsl:for-each select="int">
 			<xsl:variable name="value" select="tokenize(@name, '\|')[1]"/>
 			<xsl:variable name="uri" select="tokenize(@name, '\|')[2]"/>
@@ -73,12 +76,27 @@
 							<name>
 								<xsl:value-of select="$value"/>
 							</name>
+							<count>
+								<xsl:value-of select="."/>
+							</count>
 							<uri>
 								<xsl:value-of select="$uri"/>
 							</uri>
 							<type>
 								<xsl:value-of select="$pointType"/>
 							</type>
+							<radius>
+								<xsl:variable name="count" select="number(.)"/>
+								
+								<xsl:choose>
+									<xsl:when test="$count &lt;= $grade">5</xsl:when>
+									<xsl:when test="$count &gt; $grade and $count &lt;= ($grade * 2)">10</xsl:when>
+									<xsl:when test="$count &gt; ($grade * 2) and $count &lt;= ($grade * 3)">15</xsl:when>
+									<xsl:when test="$count &gt; ($grade * 3) and $count &lt;= ($grade * 4)">20</xsl:when>
+									<xsl:when test="$count &gt; ($grade * 4)">25</xsl:when>
+									<xsl:otherwise>5</xsl:otherwise>
+								</xsl:choose>
+							</radius>
 						</_object>
 					</properties>
 				</_object>
@@ -216,7 +234,7 @@
 					<_object>
 						<name>
 							<xsl:value-of select="str[@name = 'title_display']"/>
-						</name>
+						</name>						
 						<uri>
 							<xsl:value-of
 								select="
