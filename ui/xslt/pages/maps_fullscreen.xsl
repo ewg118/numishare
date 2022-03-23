@@ -36,6 +36,12 @@
 				'8080', substring-before(doc('input:request')/request/request-uri, 'maps'))"/>
 	<xsl:variable name="tokenized_q" select="tokenize($q, ' AND ')"/>
 
+	<xsl:variable name="positions" as="node()*">
+		<config>
+			<xsl:copy-of select="/content/config/positions"/>
+		</config>
+	</xsl:variable>
+
 	<xsl:template match="/">
 		<html>
 			<head>
@@ -44,7 +50,8 @@
 					<xsl:text>: </xsl:text>
 					<xsl:value-of select="numishare:normalizeLabel('header_maps', $lang)"/>
 				</title>
-				<link rel="shortcut icon" type="image/x-icon" href="{$include_path}/images/{if (string(//config/favicon)) then //config/favicon else 'favicon.png'}"/>
+				<link rel="shortcut icon" type="image/x-icon"
+					href="{$include_path}/images/{if (string(//config/favicon)) then //config/favicon else 'favicon.png'}"/>
 				<meta name="viewport" content="width=device-width, initial-scale=1"/>
 
 				<!-- jquery -->
@@ -207,24 +214,94 @@
 	</xsl:template>
 
 	<xsl:template match="lst[@name = 'facet_fields']">
-		<xsl:for-each select="lst[not(@name = 'mint_geo') and not(@name = 'mint_facet')] | lst[@name = 'mint_facet' and $collection_type = 'hoard']">
-
-			<xsl:variable name="val" select="@name"/>
-			<xsl:variable name="new_query">
-				<xsl:for-each select="$tokenized_q[not(contains(., $val))]">
-					<xsl:value-of select="."/>
-					<xsl:if test="position() != last()">
-						<xsl:text> AND </xsl:text>
-					</xsl:if>
-				</xsl:for-each>
-			</xsl:variable>
-
-			<xsl:variable name="title">
-				<xsl:value-of select="numishare:normalize_fields(@name, $lang)"/>
-			</xsl:variable>
+		
+		<div class="row">
+			<xsl:apply-templates
+				select="lst[not(@name = 'mint_geo') and not(@name = 'mint_facet') and not(matches(@name, '^symbol_[obv|rev]'))] | lst[@name = 'mint_facet' and $collection_type = 'hoard']"
+				mode="facet"/>
+			
+		</div>
+		
+		<xsl:if test="lst[contains(@name, 'symbol_obv_') and number(int) &gt; 0]">
+			<div class="row">
+				<div class="col-md-12">
+					<h4>
+						<xsl:value-of select="numishare:normalize_fields('symbol', $lang)"/>
+						<xsl:text>, </xsl:text>
+						<xsl:value-of select="numishare:normalize_fields('obverse', $lang)"/>
+					</h4>
+				</div>
+				
+				<xsl:apply-templates select="lst[contains(@name, 'symbol_obv') and number(int) &gt; 0]" mode="facet"/>
+			</div>
+			
+		</xsl:if>
+		<xsl:if test="lst[contains(@name, 'symbol_rev_') and number(int) &gt; 0]">
+			<div class="row">
+				<div class="col-md-12">
+					<h4>
+						<xsl:value-of select="numishare:normalize_fields('symbol', $lang)"/>
+						<xsl:text>, </xsl:text>
+						<xsl:value-of select="numishare:normalize_fields('reverse', $lang)"/>
+					</h4>
+				</div>
+				
+				<xsl:apply-templates select="lst[contains(@name, 'symbol_rev') and number(int) &gt; 0]" mode="facet"/>
+			</div>
+		</xsl:if>
+	</xsl:template>
+	
+	<xsl:template match="lst" mode="facet">
+		
+		<xsl:variable name="val" select="@name"/>
+		<xsl:variable name="new_query">
+			<xsl:for-each select="$tokenized_q[not(contains(., $val))]">
+				<xsl:value-of select="."/>
+				<xsl:if test="position() != last()">
+					<xsl:text> AND </xsl:text>
+				</xsl:if>
+			</xsl:for-each>
+		</xsl:variable>
+		
+		<xsl:variable name="title">
 			<xsl:choose>
-				<xsl:when test="contains(@name, '_hier')">
-					<!--<xsl:variable name="title" select="numishare:regularize_node(substring-before(@name, '_'), $lang)"/>
+				<xsl:when test="matches(@name, '^symbol_[obv|rev]')">
+					<xsl:variable name="langParam" select="
+						if (string($lang)) then
+						$lang
+						else
+						'en'"/>
+					
+					<!-- evaluate whether the symbol is indexed at a certain position or pertains to the side more generally -->
+					<xsl:choose>
+						<xsl:when test="count(tokenize(@name, '_')) = 4">
+							<xsl:variable name="position" select="tokenize(@name, '_')[3]"/>
+							
+							<xsl:choose>
+								<xsl:when test="$position = 'letter'">
+									<xsl:value-of select="numishare:normalize_fields('letter', $lang)"/>
+								</xsl:when>
+								<xsl:when test="$positions//position[@value = $position]/label[@lang = $langParam]">
+									<xsl:value-of select="$positions//position[@value = $position]/label[@lang = $langParam]"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:value-of select="concat(upper-case(substring($position, 1, 1)), substring($position, 2))"/>
+								</xsl:otherwise>
+							</xsl:choose>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="numishare:normalizeLabel('position_any', $lang)"/>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="numishare:normalize_fields(@name, $lang)"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<xsl:choose>
+			<xsl:when test="contains(@name, '_hier')">
+				<!--<xsl:variable name="title" select="numishare:regularize_node(substring-before(@name, '_'), $lang)"/>
 					
 					<div class="btn-group">
 						<button class="dropdown-toggle btn btn-default hierarchical-facet" type="button" style="width:250px;margin-bottom:10px;" title="{$title}" id="{@name}-btn" label="{$q}">
@@ -244,14 +321,11 @@
 							</xsl:if>
 						</ul>
 					</div>-->
-				</xsl:when>
-				<xsl:when test="@name = 'century_num'">
-					<!--<button class="ui-multiselect ui-widget ui-state-default ui-corner-all" type="button" title="{numishare:regularize_node('date', $lang)}" aria-haspopup="true"
-							style="width: 180px;" id="{@name}_link" label="{$q}">
+			</xsl:when>
+			<xsl:when test="@name = 'century_num'">
+				<!--<button class="ui-multiselect ui-widget ui-state-default ui-corner-all" type="button" title="Date" aria-haspopup="true" style="width: 180px;" id="{@name}_link" label="{$q}">
 							<span class="ui-icon ui-icon-triangle-2-n-s"/>
-							<span>
-								<xsl:value-of select="numishare:regularize_node('date', $lang)"/>
-							</span>
+							<span>Date</span>
 						</button>
 						<div class="ui-multiselect-menu ui-widget ui-widget-content ui-corner-all date-div" style="width: 180px;">
 							<div class="ui-widget-header ui-corner-all ui-multiselect-header ui-helper-clearfix ui-multiselect-hasfilter">
@@ -264,36 +338,35 @@
 							</div>
 							<ul class="century-multiselect-checkboxes ui-helper-reset" id="{@name}-list" style="height: 175px;"/>
 						</div>-->
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:variable name="mincount" as="xs:integer">
-						<xsl:choose>
-							<xsl:when test="$numFound &gt; 200000">
-								<xsl:value-of select="ceiling($numFound div 200000)"/>
-							</xsl:when>
-							<xsl:otherwise>1</xsl:otherwise>
-						</xsl:choose>
-					</xsl:variable>
-					<xsl:variable name="select_new_query">
-						<xsl:choose>
-							<xsl:when test="string($new_query)">
-								<xsl:value-of select="$new_query"/>
-							</xsl:when>
-							<xsl:otherwise>
-								<xsl:text>*:*</xsl:text>
-							</xsl:otherwise>
-						</xsl:choose>
-					</xsl:variable>
-					<div class="col-md-4">
-						<select id="{@name}-select" multiple="multiple" class="multiselect" title="{$title}" q="{$q}" mincount="{$mincount}"
-							new_query="{if (contains($q, @name)) then $select_new_query else ''}">
-							<xsl:if test="$pipeline = 'maps'">
-								<xsl:attribute name="style">width:180px</xsl:attribute>
-							</xsl:if>
-						</select>
-					</div>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:for-each>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:variable name="mincount" as="xs:integer">
+					<xsl:choose>
+						<xsl:when test="$numFound &gt; 200000">
+							<xsl:value-of select="ceiling($numFound div 200000)"/>
+						</xsl:when>
+						<xsl:otherwise>1</xsl:otherwise>
+					</xsl:choose>
+				</xsl:variable>
+				<xsl:variable name="select_new_query">
+					<xsl:choose>
+						<xsl:when test="string($new_query)">
+							<xsl:value-of select="$new_query"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:text>*:*</xsl:text>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:variable>
+				<div class="col-md-4">
+					<select id="{@name}-select" multiple="multiple" class="multiselect" title="{$title}" q="{$q}" mincount="{$mincount}"
+						new_query="{if (contains($q, @name)) then $select_new_query else ''}">
+						<xsl:if test="$pipeline = 'maps'">
+							<xsl:attribute name="style">width:180px</xsl:attribute>
+						</xsl:if>
+					</select>
+				</div>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 </xsl:stylesheet>
