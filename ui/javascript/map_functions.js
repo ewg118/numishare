@@ -182,6 +182,7 @@ $(document).ready(function () {
         buttonWidth: '250px',
         enableCaseInsensitiveFiltering: true,
         maxHeight: 250,
+        enableHTML: true,
         buttonText: function (options, select) {
             if (options.length == 0) {
                 return select.attr('title');
@@ -190,7 +191,15 @@ $(document).ready(function () {
             } else {
                 var selected = '';
                 options.each(function () {
-                    selected += $(this).text() + ', ';
+                    var val = $(this).text();
+                    //if there is an img in the label, then parse the HTML and display only the label
+                    if (val.indexOf('<img') >= 0){
+                        var el = $( '<div></div>' );
+                        el.html(val);
+                        selected += el.text().trim() + ', ';
+                    } else {
+                        selected += $(this).text() + ', ';
+                    }
                 });
                 label = selected.substr(0, selected.length - 2);
                 if (label.length > 20) {
@@ -267,7 +276,7 @@ $(document).ready(function () {
      * LEAFLET FUNCTIONS
      *****/
     function refreshMap() {
-        var query = getQuery();
+        var query = encodeURI(getQuery());
         //refresh maps.
         if (collection_type == 'hoard') {
             mintUrl = path + "mints.geojson?q=" + query + (lang.length > 0 ? '&lang=' + lang: '');
