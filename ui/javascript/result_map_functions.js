@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    var q = encodeURI($('#current-query').text());
+    var q = $('#current-query').text();
     $("#map_results").fancybox({
         beforeShow: function () {
             if ($('#resultMap').html().length == 0) {
@@ -10,15 +10,10 @@ $(document).ready(function () {
     });
     
     function initialize_map(q) {
-        var langStr = getURLParameter('lang');
-        if (langStr == 'null') {
-            var lang = '';
-        } else {
-            var lang = langStr;
-        }
-        
+        var path = $('#path').text();
         var mapboxKey = $('#mapboxKey').text();
         var baselayers = $('#baselayers').text().split(',');
+        var collection_type = $('#collection_type').text();
         
         //baselayers
         var osm = L.tileLayer(
@@ -33,34 +28,16 @@ $(document).ready(function () {
             attribution: 'Powered by <a href="http://leafletjs.com/">Leaflet</a>. Map base: <a href="https://dh.gu.se/dare/" title="Digital Atlas of the Roman Empire, Department of Archaeology and Ancient History, Lund University, Sweden">DARE</a>, 2015 (cc-by-sa).'
         });
         var mb_physical = L.tileLayer(
-    'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
-        attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
-        '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
-        'Imagery © <a href="http://mapbox.com">Mapbox</a>', id: 'mapbox/outdoors-v11', maxZoom: 12, accessToken: mapboxKey
-    });
+        'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+            '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+            'Imagery © <a href="http://mapbox.com">Mapbox</a>', id: 'mapbox/outdoors-v11', maxZoom: 12, accessToken: mapboxKey
+        });
         
         var map = new L.Map('resultMap', {
             center: new L.LatLng(0, 0),
             zoom: 4,
             layers:[eval(baselayers[0])]
-        });
-        
-        //add mintLayer from AJAX
-        var mintLayer = L.geoJson.ajax("mints.geojson?q=" + q, {
-            onEachFeature: onEachFeature,
-            pointToLayer: renderPoints
-        }).addTo(map);
-        
-        var subjectLayer = L.geoJson.ajax("subjects.geojson?q=" + q, {
-            onEachFeature: onEachFeature,
-            pointToLayer: renderPoints
-        }).addTo(map);
-        
-        //add hoards, but don't make visible by default
-        var markers = L.markerClusterGroup();
-        var findspotLayer = L.geoJson.ajax("findspots.geojson?q=" + q, {
-            onEachFeature: onEachFeature,
-            pointToLayer: renderPoints
         });
         
         //add controls
@@ -71,43 +48,83 @@ $(document).ready(function () {
         for (i = 0; i < baselayers.length; i++) {
             var label;
             switch (baselayers[i]) {
-                case 'osm': label = "OpenStreetMap";
-                break;
-                case 'imperium': label = 'Imperium Romanum';
-                break;
-                case 'mb_physical': label = 'Terrain and Streets';
-                break;
+                case 'osm': label = "OpenStreetMap"; break;
+                case 'imperium': label = 'Imperium Romanum'; break;
+                case 'mb_physical': label = 'Terrain and Streets'; break;
             }
             baseMaps[label] = eval(baselayers[i]);
         }
         
-        var overlayMaps = {
-            'Mints': mintLayer,
-            'Findspots': markers,
-            'Subjects': subjectLayer
-        };
-        
-        //add controls
-        var layerControl = L.control.layers(baseMaps, overlayMaps).addTo(map);
-        
-        //zoom to groups on AJAX complete
-        mintLayer.on('data:loaded', function () {
-            var group = new L.featureGroup([mintLayer, findspotLayer, subjectLayer]);
-            map.fitBounds(group.getBounds());
-        }.bind(this));
-        
-        subjectLayer.on('data:loaded', function () {
-            var group = new L.featureGroup([mintLayer, findspotLayer, subjectLayer]);
-            map.fitBounds(group.getBounds());
-        }.bind(this));
-        
-        findspotLayer.on('data:loaded', function () {
-            markers.addLayer(findspotLayer);
-            map.addLayer(markers);
+        if (collection_type == 'hoard') {
+            var mintLayer = L.geoJson.ajax(path + "mints.geojson?q=" + q, {
+                onEachFeature: onEachFeature,
+                pointToLayer: renderPoints
+            }).addTo(map);
             
-            var group = new L.featureGroup([mintLayer, findspotLayerr, subjectLayer]);
-            map.fitBounds(group.getBounds());
-        }.bind(this));
+            var hoardLayer = L.geoJson.ajax(path + "hoards.geojson?q=" + q, {
+                onEachFeature: onEachFeature,
+                pointToLayer: renderPoints
+            }).addTo(map);
+            
+            var overlayMaps = {
+                'Hoards': hoardLayer,
+                'Mints': mintLayer
+            };
+            
+            //add controls
+            var layerControl = L.control.layers(baseMaps, overlayMaps).addTo(map);
+            
+            //zoom to groups on AJAX complete
+            mintLayer.on('data:loaded', function () {
+                var group = new L.featureGroup([hoardLayer, mintLayer]);
+                map.fitBounds(group.getBounds());
+            }.bind(this));
+            
+            hoardLayer.on('data:loaded', function () {
+                var group = new L.featureGroup([hoardLayer, mintLayer]);
+                map.fitBounds(group.getBounds());
+            }.bind(this));
+        } else {
+            
+            var mintLayer = L.geoJson.ajax(path + "mints.geojson?q=" + q, {
+                onEachFeature: onEachFeature,
+                pointToLayer: renderPoints
+            }).addTo(map);
+            
+            var subjectLayer = L.geoJson.ajax(path + "subjects.geojson?q=" + q, {
+                onEachFeature: onEachFeature,
+                pointToLayer: renderPoints
+            }).addTo(map);
+            
+            var findspotLayer = L.geoJson.ajax(path + "findspots.geojson?q=" + q, {
+                onEachFeature: onEachFeature,
+                pointToLayer: renderPoints
+            }).addTo(map);
+            
+            var overlayMaps = {
+                'Mints': mintLayer,
+                'Findspots': findspotLayer,
+                'Subjects': subjectLayer
+            };
+            
+            var layerControl = L.control.layers(baseMaps, overlayMaps).addTo(map);
+            
+            //zoom to groups on AJAX complete
+            mintLayer.on('data:loaded', function () {
+                var group = new L.featureGroup([mintLayer, findspotLayer, subjectLayer]);
+                map.fitBounds(group.getBounds());
+            }.bind(this));
+            
+            findspotLayer.on('data:loaded', function () {
+                var group = new L.featureGroup([mintLayer, findspotLayer, subjectLayer]);
+                map.fitBounds(group.getBounds());
+            }.bind(this));
+            
+            subjectLayer.on('data:loaded', function () {
+                var group = new L.featureGroup([mintLayer, findspotLayer, subjectLayer]);
+                map.fitBounds(group.getBounds());
+            }.bind(this));
+        }
         
         /*****
          * Features for manipulating layers
@@ -118,15 +135,18 @@ $(document).ready(function () {
                 case 'mint':
                 fillColor = '#6992fd';
                 break;
-                case 'findspot':
+                case 'hoard':
                 fillColor = '#d86458';
+                break;
+                case 'findspot':
+                fillColor = '#f98f0c';
                 break;
                 case 'subject':
                 fillColor = '#a1d490';
             }
             
             return new L.CircleMarker(latlng, {
-                radius: 5,
+                radius: feature.properties.radius,
                 fillColor: fillColor,
                 color: "#000",
                 weight: 1,
