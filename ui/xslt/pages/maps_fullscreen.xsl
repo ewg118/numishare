@@ -131,7 +131,11 @@
 											<xsl:value-of select="numishare:regularize_node('mint', $lang)"/>
 										</td>
 										<td style="background-color:#d86458;border:2px solid black;width:50px;"/>
-										<td style="width:100px">
+										<td style="width:100px;padding-left:6px;">
+											<xsl:value-of select="numishare:regularize_node('hoard', $lang)"/>
+										</td>
+										<td style="background-color:#f98f0c;border:2px solid black;width:50px;"/>
+										<td style="width:100px;padding-left:6px;">
 											<xsl:value-of select="numishare:regularize_node('findspot', $lang)"/>
 										</td>
 										<xsl:if test="$collection_type != 'hoard'">
