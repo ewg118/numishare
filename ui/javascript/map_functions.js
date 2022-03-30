@@ -136,13 +136,13 @@ $(document).ready(function () {
         }).addTo(map);
         
         //add hoards, but don't make visible by default
-        var markers = '';
         var findspotLayer = L.geoJson.ajax(path + "findspots.geojson?q=" + q + '&department=' + department, {
             pointToLayer: renderPoints
-        });
+        }).addTo(map);
         
         var overlayMaps = {
             'Mints': mintLayer,
+            'Findspots': findspotLayer,
             'Subjects': subjectLayer
         };
         
@@ -156,11 +156,6 @@ $(document).ready(function () {
         }.bind(this));
         
         findspotLayer.on('data:loaded', function () {
-            markers = L.markerClusterGroup();
-            layerControl.addOverlay(markers, 'Findspots');
-            markers.addLayer(findspotLayer);
-            map.addLayer(markers);
-            
             var group = new L.featureGroup([mintLayer, findspotLayer, subjectLayer]);
             map.fitBounds(group.getBounds());
         }.bind(this));
@@ -187,6 +182,7 @@ $(document).ready(function () {
         buttonWidth: '250px',
         enableCaseInsensitiveFiltering: true,
         maxHeight: 250,
+        enableHTML: true,
         buttonText: function (options, select) {
             if (options.length == 0) {
                 return select.attr('title');
@@ -195,7 +191,15 @@ $(document).ready(function () {
             } else {
                 var selected = '';
                 options.each(function () {
-                    selected += $(this).text() + ', ';
+                    var val = $(this).text();
+                    //if there is an img in the label, then parse the HTML and display only the label
+                    if (val.indexOf('<img') >= 0){
+                        var el = $( '<div></div>' );
+                        el.html(val);
+                        selected += el.text().trim() + ', ';
+                    } else {
+                        selected += $(this).text() + ', ';
+                    }
                 });
                 label = selected.substr(0, selected.length - 2);
                 if (label.length > 20) {
@@ -272,7 +276,7 @@ $(document).ready(function () {
      * LEAFLET FUNCTIONS
      *****/
     function refreshMap() {
-        var query = getQuery();
+        var query = encodeURI(getQuery());
         //refresh maps.
         if (collection_type == 'hoard') {
             mintUrl = path + "mints.geojson?q=" + query + (lang.length > 0 ? '&lang=' + lang: '');
@@ -282,11 +286,11 @@ $(document).ready(function () {
             hoardLayer.refresh(hoardUrl);
         } else {
             mintUrl = path + "mints.geojson?q=" + query + (lang.length > 0 ? '&lang=' + lang: '');
-            hoardUrl = path + "findspots.geojson?q=" + query + (lang.length > 0 ? '&lang=' + lang: '');
+            findspotUrl = path + "findspots.geojson?q=" + query + (lang.length > 0 ? '&lang=' + lang: '');
             subjectUrl = path + "subjects.geojson?q=" + query + (lang.length > 0 ? '&lang=' + lang: '');
             
             mintLayer.refresh(mintUrl);
-            findspotLayer.refresh(hoardUrl);
+            findspotLayer.refresh(findspotUrl);
             subjectLayer.refresh(subjectUrl);
         }
     }
@@ -297,7 +301,13 @@ $(document).ready(function () {
     function renderPopup(e) {
         var query = getQuery();
         query += ' AND ' + e.layer.feature.properties.type + '_uri:"' + e.layer.feature.properties.uri + '"';
-        var str = e.layer.feature.properties.type + ": <a href='#results' class='show_coins' q='" + query + "'>" + e.layer.feature.properties.name + "</a> <a href='" + e.layer.feature.properties.uri + "' target='_blank'><span class='glyphicon glyphicon-new-window'/></a>";
+        
+        var type = e.layer.feature.properties.type;
+        type = type[0].toUpperCase() + type.substring(1);
+        
+        var str = "<strong>" + type + "</strong>: <a href='#results' class='show_coins' q='" + query + "'>" + e.layer.feature.properties.name + "</a> <a href='" + e.layer.feature.properties.uri + "' target='_blank'><span class='glyphicon glyphicon-new-window'/></a>";
+        str += '<br/><strong>Count</strong>: ' + e.layer.feature.properties.count; 
+        
         e.layer.bindPopup(str).openPopup();
         $('.show_coins').on('click', function (event) {
             var query = $(this).attr('q');
@@ -328,10 +338,10 @@ $(document).ready(function () {
         var str = "<h4><a href='" + e.layer.feature.properties.objectURI + "' target='_blank'>" + e.layer.feature.properties.objectTitle + "</a></h4>" +
         "<div><strong>Findspot: </strong>" + e.layer.feature.properties.name + "<a href='" + e.layer.feature.properties.uri + "' target='_blank'> <span class='glyphicon glyphicon-new-window'/></a>";
         
-        if (e.layer.feature.properties.hasOwnProperty('closing_date')){
-            str += "<br/><strong>Closing Date: </strong>" + e.layer.feature.properties.closing_date; 
-        } else if (e.layer.feature.properties.hasOwnProperty('deposit')){
-            str += "<br/><strong>Deposit: </strong>" + e.layer.feature.properties.deposit; 
+        if (e.layer.feature.properties.hasOwnProperty('closing_date')) {
+            str += "<br/><strong>Closing Date: </strong>" + e.layer.feature.properties.closing_date;
+        } else if (e.layer.feature.properties.hasOwnProperty('deposit')) {
+            str += "<br/><strong>Deposit: </strong>" + e.layer.feature.properties.deposit;
         }
         
         str += "</div>";
@@ -347,15 +357,18 @@ $(document).ready(function () {
             case 'mint':
             fillColor = '#6992fd';
             break;
-            case 'findspot', 'hoard':
+            case 'hoard':
             fillColor = '#d86458';
+            break;
+            case 'findspot':
+            fillColor = '#f98f0c';
             break;
             case 'subject':
             fillColor = '#a1d490';
         }
         
         return new L.CircleMarker(latlng, {
-            radius: 5,
+            radius: feature.properties.radius,
             fillColor: fillColor,
             color: "#000",
             weight: 1,
