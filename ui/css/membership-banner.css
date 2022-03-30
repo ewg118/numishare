@@ -1,7 +1,7 @@
 /*CSS for the membership banner addon*/
 @font-face{
     font-family: 'MinionPro-MediumIt';
-    src: url("http://numismatics.org/themes/ocre/css/MinionPro-MediumIt.otf") format("opentype");
+    src: url("https://numismatics.org/themes/ocre/css/MinionPro-MediumIt.otf") format("opentype");
 }
 @media only screen and (max-width : 992px){
     .membership-banner-container{
