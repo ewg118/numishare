@@ -41,7 +41,7 @@
 
 	<xsl:param name="mode" select="doc('input:request')/request/parameters/parameter[name = 'mode']/value"/>
 	<xsl:param name="pipeline">display</xsl:param>
-	
+
 	<!-- a boolean variable if there are both obverse and reverse images -->
 	<xsl:variable name="sideImages" as="xs:boolean">
 		<xsl:choose>
@@ -364,16 +364,16 @@
 						<xsl:choose>
 							<xsl:when test="$recordType = 'physical'">
 								<!--- IIIF -->
-								
+
 								<!-- use Leaflet for standard photographs of coins in IIIF -->
-								<xsl:if test="descendant::mets:fileGrp[@USE = 'obverse' or @USE = 'reverse' or @USE = 'combined']/mets:file[@USE = 'iiif']">									
+								<xsl:if test="descendant::mets:fileGrp[@USE = 'obverse' or @USE = 'reverse' or @USE = 'combined']/mets:file[@USE = 'iiif']">
 									<script type="text/javascript" src="{$include_path}/javascript/leaflet-iiif.js"/>
 									<script type="text/javascript" src="{$include_path}/javascript/display_iiif_functions.js"/>
 								</xsl:if>
-								
+
 								<!-- display cards as a IIIF manifest loaded in Mirador -->
 								<xsl:if test="descendant::mets:fileGrp[@USE = 'card']/descendant::mets:file[@USE = 'iiif']">
-									<script type="text/javascript" src="{$include_path}/javascript/mirador.min.js"/>	
+									<script type="text/javascript" src="{$include_path}/javascript/mirador.min.js"/>
 									<script type="text/javascript" src="{$include_path}/javascript/display_mirador_functions.js"/>
 								</xsl:if>
 
@@ -592,6 +592,15 @@
 										</xsl:otherwise>
 									</xsl:choose>
 								</h1>
+
+								<p>
+									<strong>Canonical URI: </strong>
+									<code>
+										<a href="{$objectUri}" title="{$objectUri}">
+											<xsl:value-of select="$objectUri"/>
+										</a>
+									</code>
+								</p>
 
 								<p>
 									<xsl:if test="$hasSpecimens = true()">
@@ -825,9 +834,18 @@
 										</xsl:otherwise>
 									</xsl:choose>
 								</h1>
+								
+								<p>
+									<strong>Canonical URI: </strong>
+									<code>
+										<a href="{$objectUri}" title="{$objectUri}">
+											<xsl:value-of select="$objectUri"/>
+										</a>
+									</code>
+								</p>
 							</div>
 						</div>
-						
+
 						<!-- if there are not METS files, then only display the NUDS content -->
 						<xsl:choose>
 							<xsl:when test="descendant::mets:fileSec">
@@ -883,27 +901,27 @@
 																<xsl:call-template name="image">
 																	<xsl:with-param name="side">obverse</xsl:with-param>
 																</xsl:call-template>
-																
+
 															</div>
 															<div class="col-md-6">
 																<xsl:call-template name="image">
 																	<xsl:with-param name="side">reverse</xsl:with-param>
 																</xsl:call-template>
 															</div>
-														</div>	
-														
+														</div>
+
 														<div class="row">
 															<div class="col-md-12">
 																<xsl:call-template name="nuds_content"/>
 															</div>
 														</div>
-													</xsl:when>													
+													</xsl:when>
 													<xsl:otherwise>
 														<!-- display mirador for cards, if applicable -->
 														<xsl:if test="descendant::mets:fileGrp[@USE = 'card']/descendant::mets:file[@USE = 'iiif']">
 															<xsl:call-template name="mirador"/>
-														</xsl:if>														
-														
+														</xsl:if>
+
 														<div class="row">
 															<div class="col-md-12">
 																<xsl:call-template name="nuds_content"/>
@@ -913,8 +931,8 @@
 												</xsl:choose>
 											</xsl:when>
 											<xsl:when test="$image_location = 'bottom'">
-												
-												
+
+
 												<xsl:choose>
 													<!-- standard output of photographs -->
 													<xsl:when test="$sideImages = true()">
@@ -936,25 +954,25 @@
 															</div>
 														</div>
 													</xsl:when>
-													
+
 													<xsl:otherwise>
 														<div class="row">
 															<div class="col-md-12">
 																<xsl:call-template name="nuds_content"/>
 															</div>
-														</div>			
-														
+														</div>
+
 														<!-- display mirador for cards, if applicable -->
 													</xsl:otherwise>
 												</xsl:choose>
-												
+
 											</xsl:when>
 										</xsl:choose>
 									</xsl:when>
 								</xsl:choose>
-							</xsl:when>							
+							</xsl:when>
 							<xsl:otherwise>
-								<!-- otherwise, simply display NUDS content -->								
+								<!-- otherwise, simply display NUDS content -->
 								<div class="row">
 									<div class="col-md-12">
 										<xsl:call-template name="nuds_content"/>
@@ -962,7 +980,7 @@
 								</div>
 							</xsl:otherwise>
 						</xsl:choose>
-						
+
 						<!-- if there are annotations, then render -->
 						<xsl:if test="$hasAnnotations = true()">
 							<div class="row">
@@ -1234,7 +1252,7 @@
 					</xsl:choose>
 				</xsl:when>
 				<xsl:otherwise>
-					<ul>						
+					<ul>
 						<xsl:apply-templates select="nuds:findspot"/>
 						<xsl:apply-templates select="nuds:hoard" mode="descMeta"/>
 					</ul>
@@ -1532,7 +1550,7 @@
 			</div>
 		</xsl:if>
 	</xsl:template>
-	
+
 	<!-- template for using Mirador IIIF viewer to display archival card images -->
 	<xsl:template name="mirador">
 		<div class="row">
@@ -1540,7 +1558,7 @@
 				<div style="width:100%;height:800px" id="mirador-div"/>
 			</div>
 		</div>
-		
+
 	</xsl:template>
 
 	<!-- ***** CHARTS TEMPLATES ***** -->

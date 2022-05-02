@@ -428,7 +428,7 @@
 
 		<div class="row">
 			<div class="col-md-12">
-				<h1 property="dcterms:title">
+				<h1 property="skos:prefLabel">
 					<xsl:if test="string(nh:descMeta/nh:title/@xml:lang)">
 						<xsl:attribute name="lang" select="nh:descMeta/nh:title/@xml:lang"/>
 					</xsl:if>
@@ -441,6 +441,16 @@
 						</xsl:otherwise>
 					</xsl:choose>
 				</h1>
+				
+				<p>
+					<strong>Canonical URI: </strong>
+					<code>
+						<a href="{$objectUri}" title="{$objectUri}">
+							<xsl:value-of select="$objectUri"/>
+						</a>
+					</code>
+				</p>
+				
 				<xsl:if test="$hasSpecimens = true()">
 					<a href="#examples">Coins from this Hoard</a>
 				</xsl:if>
