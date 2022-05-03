@@ -176,7 +176,66 @@ function parse_row($row, $count, $fileName){
 					}
 				} else {
 					$file_headers = @get_headers($uri);
-					if (strpos($file_headers[0], '200') !== FALSE){
+					if (strpos($file_headers[0], '300') !== FALSE){
+					    $choices = str_replace('Link: ', '', $file_headers[7]);
+					    $warnings[] = 'Line ' . $count . ': ' . $accnum . ' (' . $department . ') has multiple choices for current coin type URI: ' . $choices;
+					    
+					    $record['refs'][] = array('label'=>$id, 'uncertain'=>$uncertain);
+					}					
+					else if (strpos($file_headers[0], '303') !== FALSE){					    
+					    //redirect old Hadrian to new URIs
+					    $cointype = str_replace('Location: ', '', $file_headers[7]);
+					    echo "Matching: {$uri} -> {$cointype}\n";
+					    
+					    //make OCRE URI the new $uri variable
+					    $uri = $cointype;
+					    
+					    //generate the title from the NUDS
+					    $titles = generate_title_from_type($uri);
+					    $coinTypes[$uri] = array('title'=>$titles['title'], 'reference'=>$titles['reference'], 'object'=>$titles['object']);
+					    
+					    $record['title'] = $titles['title'] . ' ' . $accnum;
+					    $coinType = array('label'=>$titles['reference'], 'uri'=>$uri, 'uncertain'=>$uncertain);
+					    $record['types']['OCRE'] = $coinType;
+					    
+					    //insert legend and type description from FileMaker
+					    if (strlen($row['obverselegend']) > 0 || strlen($row['obversesymbol']) > 0 || strlen($row['obversetype']) > 0){
+					        $obverse = array();
+					        
+					        //obverselegend
+					        if (strlen($row['obverselegend']) > 0){
+					            $obverse['legend'] = trim($row['obverselegend']);
+					        }
+					        //obversesymbol
+					        if (strlen($row['obversesymbol']) > 0){
+					            $obverse['symbol'] = trim($row['obversesymbol']);
+					        }
+					        //obversetype
+					        if (strlen($row['obversetype']) > 0){
+					            $obverse['type'] = trim($row['obversetype']);
+					        }
+					        $record['typeDesc']['obverse'] = $obverse;
+					        
+					    }
+					    if (strlen($row['reverselegend']) > 0 || strlen($row['reversesymbol']) > 0 || strlen($row['reversetype']) > 0){
+					        $reverse = array();
+					        
+					        //reverselegend
+					        if (strlen($row['reverselegend']) > 0){
+					            $reverse['legend'] = trim($row['reverselegend']);
+					        }
+					        //reversesymbol
+					        if (strlen($row['reversesymbol']) > 0){
+					            $reverse['symbol'] = trim($row['reversesymbol']);
+					        }
+					        //reversetype
+					        if (strlen($row['reversetype']) > 0){
+					            $reverse['type'] = trim($row['reversetype']);
+					        }
+					        $record['typeDesc']['reverse'] = $reverse;
+					        
+					    }
+					} else if (strpos($file_headers[0], '200') !== FALSE){
 						echo "Found {$uri}\n";
 						//generate the title from the NUDS
 						$titles = generate_title_from_type($uri);
