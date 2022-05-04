@@ -177,12 +177,16 @@ function parse_row($row, $count, $fileName){
 				} else {
 					$file_headers = @get_headers($uri);
 					if (strpos($file_headers[0], '300') !== FALSE){
+					    //HTTP 300 Multiple choices
+					    
 					    $choices = str_replace('Link: ', '', $file_headers[7]);
+					    
+					    echo "OCRE URI {$uri} has multiple choices: {$choices}\n";
+					    
 					    $warnings[] = 'Line ' . $count . ': ' . $accnum . ' (' . $department . ') has multiple choices for current coin type URI: ' . $choices;
 					    
 					    $record['refs'][] = array('label'=>$id, 'uncertain'=>$uncertain);
-					}					
-					else if (strpos($file_headers[0], '303') !== FALSE){					    
+					} else if (strpos($file_headers[0], '303') !== FALSE){					    
 					    //redirect old Hadrian to new URIs
 					    $cointype = str_replace('Location: ', '', $file_headers[7]);
 					    echo "Matching: {$uri} -> {$cointype}\n";
@@ -192,6 +196,7 @@ function parse_row($row, $count, $fileName){
 					    
 					    //generate the title from the NUDS
 					    $titles = generate_title_from_type($uri);
+					    
 					    $coinTypes[$uri] = array('title'=>$titles['title'], 'reference'=>$titles['reference'], 'object'=>$titles['object']);
 					    
 					    $record['title'] = $titles['title'] . ' ' . $accnum;
@@ -590,7 +595,7 @@ function parse_row($row, $count, $fileName){
 		//depth
 		$depth = trim($row['depth']);
 		if (is_numeric($depth) && $depth > 0){
-			$measurement['thickness'] = $depth;
+			$measurements['thickness'] = $depth;
 		} elseif(!is_numeric($depth) && strlen($depth) > 0){
 			$warnings[] = 'Line ' . $count . ': ' . $accnum . ' (' . $department . ') has non-numeric depth.';
 		}
