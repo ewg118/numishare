@@ -1009,27 +1009,95 @@
 
 		<xsl:if test="string(.)">
 			<xsl:choose>
-				<xsl:when test="$recordType = 'physical'">
-					<xsl:if test="$primary = true()">
-						<field name="{$side}_leg_display">
-							<xsl:value-of select="string-join(tei:div, ' ')"/>
-						</field>
-					</xsl:if>
-				</xsl:when>
-				<xsl:when test="$recordType = 'conceptual'">
-					<field name="{$side}_leg_display">
+				<xsl:when test="child::tei:div">
+					<xsl:choose>
+						<xsl:when test="$recordType = 'physical'">
+							<xsl:if test="$primary = true()">
+								<field name="{$side}_leg_display">
+									<xsl:value-of select="string-join(tei:div, ' ')"/>
+								</field>
+							</xsl:if>
+						</xsl:when>
+						<xsl:when test="$recordType = 'conceptual'">
+							<field name="{$side}_leg_display">
+								<xsl:value-of select="string-join(tei:div, ' ')"/>
+							</field>
+						</xsl:when>
+					</xsl:choose>
+					
+					<field name="{$side}_leg_text">
 						<xsl:value-of select="string-join(tei:div, ' ')"/>
 					</field>
+					<field name="{$side}_legendCondensed_text">
+						<xsl:value-of select="replace(string-join(tei:div, ' '), ' ', '')"/>
+					</field>
 				</xsl:when>
+				
+				<xsl:otherwise>
+					<xsl:choose>
+						<xsl:when test="$recordType = 'physical'">
+							<xsl:if test="$primary = true()">
+								<field name="{$side}_leg_display">
+									<xsl:apply-templates/>
+								</field>
+							</xsl:if>
+						</xsl:when>
+						<xsl:when test="$recordType = 'conceptual'">
+							<field name="{$side}_leg_display">
+								<xsl:apply-templates/>
+							</field>
+						</xsl:when>
+					</xsl:choose>
+					
+					<field name="{$side}_leg_text">
+						<xsl:value-of select="."/>
+					</field>
+					<field name="{$side}_legendCondensed_text">
+						<xsl:value-of select="."/>
+					</field>
+				</xsl:otherwise>
 			</xsl:choose>
-
-			<field name="{$side}_leg_text">
-				<xsl:value-of select="string-join(tei:div, ' ')"/>
-			</field>
-			<field name="{$side}_legendCondensed_text">
-				<xsl:value-of select="replace(string-join(tei:div, ' '), ' ', '')"/>
-			</field>
+			
+			
 		</xsl:if>
+	</xsl:template>
+	
+	<xsl:template match="tei:ab">
+		<xsl:apply-templates/>
+	</xsl:template>
+	
+	<xsl:template match="tei:hi[@rend]">
+		<xsl:choose>
+			<xsl:when test="@rend = 'ligature'">				
+				<xsl:call-template name="ligaturizeText">
+					<xsl:with-param name="textLigaturize" select="normalize-space(.)"/>
+				</xsl:call-template>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="."/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+	
+	<!-- template from EpiDoc: https://github.com/EpiDoc/Stylesheets/blob/master/teihi.xsl -->
+	<xsl:template name="ligaturizeText">
+		<xsl:param name="textLigaturize"/>
+		<xsl:analyze-string select="$textLigaturize" regex="\p{{L}}"> <!-- select letters only (will omit combining chars) -->
+			<xsl:matching-substring>
+				<xsl:choose>
+					<xsl:when test="position()=1"> <!-- skip first ligatured char -->
+						<xsl:value-of select="."/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:text>&#x0361;</xsl:text> <!-- emit ligature combining char -->
+						<xsl:value-of select="."/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:matching-substring>
+			<xsl:non-matching-substring>
+				<xsl:value-of select="."/>
+			</xsl:non-matching-substring>
+		</xsl:analyze-string>
 	</xsl:template>
 
 	<!-- generalize refDesc for NUDS and NUDS Hoard records -->

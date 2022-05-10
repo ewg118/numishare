@@ -236,17 +236,34 @@
 							<!-- legend -->
 							<xsl:if test="$hasLegends = false() and $subtypes//type[@recordId = $id]/subtype/descendant::*[local-name() = $side]/nuds:legend">
 								<xsl:variable name="pieces" as="item()*">
-									<xsl:for-each
-										select="distinct-values($subtypes//type[@recordId = $id]/subtype/descendant::*[local-name() = $side]/nuds:legend)">
-										<xsl:value-of select="."/>
-									</xsl:for-each>
+									<legends>
+										<xsl:for-each
+											select="$subtypes//type[@recordId = $id]/subtype/descendant::*[local-name() = $side]/nuds:legend">
+											<xsl:if test="not(self::node() = preceding::nuds:legend)">
+												<xsl:copy-of select="self::node()"/>
+											</xsl:if>
+										</xsl:for-each>
+									</legends>
+									
 								</xsl:variable>
 
 								<field name="{$sideAbbr}_leg_display">
-									<xsl:value-of select="string-join($pieces, ' | ')"/>
+									<xsl:for-each select="$pieces//nuds:legend">
+										<xsl:choose>
+											<xsl:when test="tei:div[@type = 'edition']/tei:ab">
+												<xsl:apply-templates select="tei:div[@type = 'edition']/tei:ab"/>
+											</xsl:when>
+											<xsl:otherwise>
+												<xsl:value-of select="."/>
+											</xsl:otherwise>
+										</xsl:choose>
+										<xsl:if test="not(position() = last())">
+											<xsl:text> | </xsl:text>
+										</xsl:if>
+									</xsl:for-each>									
 								</field>
 
-								<xsl:for-each select="$pieces">
+								<xsl:for-each select="$pieces//nuds:legend">
 									<field name="{$sideAbbr}_leg_text">
 										<xsl:value-of select="."/>
 									</field>

@@ -1191,7 +1191,7 @@
 	</xsl:template>
 
 	<xsl:template match="tei:ref">
-		<a href="{@target}">
+		<a href="{@target}">  
 			<xsl:apply-templates/>
 		</a>
 	</xsl:template>
@@ -1203,6 +1203,43 @@
 		</i>
 		<xsl:text>]</xsl:text>
 	</xsl:template>
+	
+	<!-- rendering -->
+	<xsl:template match="tei:hi[@rend]">
+		<xsl:choose>
+			<xsl:when test="@rend = 'ligature'">
+				<xsl:call-template name="ligaturizeText">
+					<xsl:with-param name="textLigaturize" select="normalize-space(.)"/>
+				</xsl:call-template>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="."/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+	
+	<!-- template from EpiDoc: https://github.com/EpiDoc/Stylesheets/blob/master/teihi.xsl -->
+	<xsl:template name="ligaturizeText">
+		<xsl:param name="textLigaturize"/>
+		<xsl:analyze-string select="$textLigaturize" regex="\p{{L}}"> <!-- select letters only (will omit combining chars) -->
+			<xsl:matching-substring>
+				<xsl:choose>
+					<xsl:when test="position()=1"> <!-- skip first ligatured char -->
+						<xsl:value-of select="."/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:text>&#x0361;</xsl:text> <!-- emit ligature combining char -->
+						<xsl:value-of select="."/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:matching-substring>
+			<xsl:non-matching-substring>
+				<xsl:value-of select="."/>
+			</xsl:non-matching-substring>
+		</xsl:analyze-string>
+	</xsl:template>
+	
+	
 
 	<!-- complex symbols and monograms encoded in EpiDoc -->
 	<xsl:template match="tei:div" mode="symbols">
