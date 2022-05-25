@@ -510,7 +510,13 @@
 				<xsl:attribute name="rdf:datatype">http://www.w3.org/2001/XMLSchema#decimal</xsl:attribute>
 				<xsl:value-of select="."/>
 			</xsl:element>
-		</xsl:for-each>
+		</xsl:for-each>		
+		
+		<xsl:apply-templates select="nuds:authenticity[@xlink:href]" mode="nomisma"/>		
+	</xsl:template>
+
+	<xsl:template match="nuds:authenticity[@xlink:href]" mode="nomisma">
+		<nmo:hasAuthenticity rdf:resource="{@xlink:href}"/>
 	</xsl:template>
 
 	<!-- typological description -->
@@ -519,9 +525,9 @@
 
 		<xsl:apply-templates select="nuds:objectType[@xlink:href]" mode="nomisma"/>
 
-		<xsl:apply-templates select="nuds:material[@xlink:href] | nuds:denomination[@xlink:href] | nuds:manufacture[@xlink:href]" mode="nomisma"/>
+		<xsl:apply-templates select="nuds:material[@xlink:href] | nuds:denomination[@xlink:href] | nuds:manufacture[@xlink:href] | nuds:shape[@xlink:href]" mode="nomisma"/>
 		<xsl:apply-templates
-			select="nuds:geographic/nuds:geogname[@xlink:href] | nuds:authority/nuds:persname[@xlink:href] | nuds:authority/nuds:corpname[@xlink:href]"
+			select="nuds:geographic/nuds:geogname[@xlink:href] | nuds:authority/nuds:persname[@xlink:href] | nuds:authority/nuds:corpname[@xlink:href] | nuds:authority/nuds:authenticity[@xlink:href]"
 			mode="nomisma"/>
 		<xsl:apply-templates select="nuds:date[@standardDate] | nuds:date[@notBefore and @notAfter] | nuds:dateRange[child::node()/@standardDate]" mode="nomisma"/>
 		<xsl:if test="nuds:obverse">
@@ -549,7 +555,14 @@
 				<xsl:if test="string(@xml:lang)">
 					<xsl:attribute name="xml:lang" select="@xml:lang"/>
 				</xsl:if>
-				<xsl:value-of select="."/>
+				<xsl:choose>
+					<xsl:when test="child::tei:div[@type = 'edition']">
+						<xsl:apply-templates select="tei:div[@type = 'edition']"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="."/>
+					</xsl:otherwise>
+				</xsl:choose>
 			</nmo:hasLegend>
 		</xsl:if>
 	</xsl:template>
@@ -617,7 +630,7 @@
 		</xsl:choose>
 	</xsl:template>
 
-	<xsl:template match="nuds:material | nuds:denomination | nuds:manufacture | nuds:geogname | nuds:persname | nuds:corpname" mode="nomisma">
+	<xsl:template match="nuds:material | nuds:denomination | nuds:manufacture | nuds:geogname | nuds:persname | nuds:corpname | nuds:shape" mode="nomisma">
 		<xsl:variable name="href" select="@xlink:href"/>
 
 		<xsl:variable name="element">

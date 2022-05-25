@@ -2,7 +2,7 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:res="http://www.w3.org/2005/sparql-results#"
 	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mets="http://www.loc.gov/METS/" xmlns:numishare="https://github.com/ewg118/numishare"
 	xmlns:nm="http://nomisma.org/id/" xmlns:nmo="http://nomisma.org/ontology#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-	xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nuds="http://nomisma.org/nuds" exclude-result-prefixes="#all" version="2.0">
+	xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nuds="http://nomisma.org/nuds" xmlns:tei="http://www.tei-c.org/ns/1.0" exclude-result-prefixes="#all" version="2.0">
 	<xsl:include href="../../functions.xsl"/>
 	<xsl:include href="../json/json-metamodel.xsl"/>
 
@@ -213,7 +213,7 @@
 		<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
 		<xsl:text>: </xsl:text>
 		<xsl:if test="nuds:legend">
-			<xsl:value-of select="nuds:legend"/>
+			<xsl:apply-templates select="nuds:legend"/>
 		</xsl:if>
 		<xsl:if test="nuds:legend and nuds:type">
 			<xsl:text> - </xsl:text>
@@ -224,6 +224,17 @@
 		<xsl:if test="not(position() = last())">
 			<xsl:text>\n</xsl:text>
 		</xsl:if>
+	</xsl:template>
+	
+	<xsl:template match="nuds:legend">
+		<xsl:choose>
+			<xsl:when test="child::tei:div[@type = 'edition']">
+				<xsl:apply-templates select="tei:div[@type = 'edition']"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="."/>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 	<!-- generate sequence -->

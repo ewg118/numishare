@@ -3,8 +3,8 @@
 	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:nuds="http://nomisma.org/nuds" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:nm="http://nomisma.org/id/"
 	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
 	xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:org="http://www.w3.org/ns/org#"
-	xmlns:nomisma="http://nomisma.org/" xmlns:nmo="http://nomisma.org/ontology#" xmlns:numishare="https://github.com/ewg118/numishare"
-	exclude-result-prefixes="#all" version="2.0">
+	xmlns:nomisma="http://nomisma.org/" xmlns:nmo="http://nomisma.org/ontology#" xmlns:tei="http://www.tei-c.org/ns/1.0"
+	xmlns:numishare="https://github.com/ewg118/numishare" exclude-result-prefixes="#all" version="2.0">
 	<xsl:include href="../json/json-metamodel.xsl"/>
 	<xsl:include href="../../functions.xsl"/>
 
@@ -339,7 +339,7 @@
 			<_label>
 				<xsl:value-of select="."/>
 			</_label>
-			
+
 			<xsl:choose>
 				<xsl:when test="local-name() = 'denomination'">
 					<part_of>aat:300037222</part_of>
@@ -348,10 +348,10 @@
 					<part_of>aat:300387350</part_of>
 				</xsl:when>
 			</xsl:choose>
-			
-			
+
+
 			<xsl:choose>
-				<xsl:when test="local-name() = 'denomination' or local-name()='objectType'">
+				<xsl:when test="local-name() = 'denomination' or local-name() = 'objectType'">
 					<classified_as>
 						<_array>
 							<_object>
@@ -391,9 +391,9 @@
 									<xsl:when test="@xlink:role = 'mint'">
 										<id>aat:300006031</id>
 										<_label>mints (buildings)</_label>
-									</xsl:when>								
+									</xsl:when>
 								</xsl:choose>
-								
+
 							</_object>
 						</_array>
 					</classified_as>
@@ -460,7 +460,14 @@
 				<_object>
 					<type>LinguisticObject</type>
 					<content>
-						<xsl:value-of select="normalize-space(.)"/>
+						<xsl:choose>
+							<xsl:when test="child::tei:div[@type = 'edition']">
+								<xsl:apply-templates select="tei:div[@type = 'edition']"/>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:value-of select="."/>
+							</xsl:otherwise>
+						</xsl:choose>
 					</content>
 				</_object>
 			</_array>

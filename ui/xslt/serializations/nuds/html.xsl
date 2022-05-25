@@ -1280,7 +1280,15 @@
 			<xsl:if test="@xml:lang">
 				<xsl:attribute name="lang" select="@xml:lang"/>
 			</xsl:if>
-			<xsl:value-of select="."/>
+			<xsl:choose>
+				<xsl:when test="child::tei:div">
+					<xsl:apply-templates select="tei:div[@type = 'edition']" mode="legend"/>	
+					<xsl:apply-templates select="tei:div[@type = 'transliteration']" mode="legend"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="."/>
+				</xsl:otherwise>
+			</xsl:choose>
 		</span>
 	</xsl:template>
 

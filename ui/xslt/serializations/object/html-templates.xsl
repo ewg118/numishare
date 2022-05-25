@@ -3,7 +3,7 @@
 	Author: Ethan Gruber
 	Function: this XSLT stylesheet is included into display.xsl.  It contains shared templates and functions that may be used in object-
 	specific stylesheets. Includes templates for bibliographies in MODS and TEI/EpiDoc extensions
-	Modification date: 2018
+	Modification date: 2022
 -->
 <xsl:stylesheet xmlns:nuds="http://nomisma.org/nuds" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:numishare="https://github.com/ewg118/numishare"
 	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
@@ -124,6 +124,25 @@
 							<xsl:value-of select="nuds:description[1]"/>
 						</xsl:otherwise>
 					</xsl:choose>
+				</xsl:otherwise>
+			</xsl:choose>
+		</li>
+	</xsl:template>
+
+	<!-- enable handling of TEI EpiDoc in legend, if applicable -->
+	<xsl:template match="nuds:legend" mode="descMeta">
+		<li>
+			<b>
+				<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
+				<xsl:text>: </xsl:text>
+			</b>
+			<xsl:choose>
+				<xsl:when test="child::tei:div">
+					<xsl:apply-templates select="tei:div[@type = 'edition']" mode="legend"/>	
+					<xsl:apply-templates select="tei:div[@type = 'transliteration']" mode="legend"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:apply-templates/>
 				</xsl:otherwise>
 			</xsl:choose>
 		</li>
@@ -1162,6 +1181,16 @@
 			<xsl:apply-templates/>
 		</li>
 	</xsl:template>
+	
+	<xsl:template match="tei:div[@type = 'edition']" mode="legend">
+		<xsl:apply-templates/>
+	</xsl:template>
+	
+	<xsl:template match="tei:div[@type = 'transliteration']" mode="legend">
+		<xsl:text> [transliteration:</xsl:text>
+		<xsl:apply-templates/>
+		<xsl:text>]</xsl:text>
+	</xsl:template>
 
 	<xsl:template match="tei:p">
 		<p>
@@ -1191,9 +1220,18 @@
 	</xsl:template>
 
 	<xsl:template match="tei:ref">
-		<a href="{@target}">  
+		<a href="{@target}">
 			<xsl:apply-templates/>
 		</a>
+	</xsl:template>
+
+	<xsl:template match="tei:ab">
+		<xsl:apply-templates/>
+		<xsl:if test="@rend">
+			<xsl:text> (orientation: </xsl:text>
+			<xsl:value-of select="@rend"/>
+			<xsl:text>)</xsl:text>
+		</xsl:if>
 	</xsl:template>
 
 	<xsl:template match="tei:gap">
@@ -1203,7 +1241,7 @@
 		</i>
 		<xsl:text>]</xsl:text>
 	</xsl:template>
-	
+
 	<!-- rendering -->
 	<xsl:template match="tei:hi[@rend]">
 		<xsl:choose>
@@ -1217,18 +1255,21 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
-	
+
 	<!-- template from EpiDoc: https://github.com/EpiDoc/Stylesheets/blob/master/teihi.xsl -->
 	<xsl:template name="ligaturizeText">
 		<xsl:param name="textLigaturize"/>
-		<xsl:analyze-string select="$textLigaturize" regex="\p{{L}}"> <!-- select letters only (will omit combining chars) -->
+		<xsl:analyze-string select="$textLigaturize" regex="\p{{L}}">
+			<!-- select letters only (will omit combining chars) -->
 			<xsl:matching-substring>
 				<xsl:choose>
-					<xsl:when test="position()=1"> <!-- skip first ligatured char -->
+					<xsl:when test="position() = 1">
+						<!-- skip first ligatured char -->
 						<xsl:value-of select="."/>
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:text>&#x0361;</xsl:text> <!-- emit ligature combining char -->
+						<xsl:text>&#x0361;</xsl:text>
+						<!-- emit ligature combining char -->
 						<xsl:value-of select="."/>
 					</xsl:otherwise>
 				</xsl:choose>
@@ -1238,8 +1279,8 @@
 			</xsl:non-matching-substring>
 		</xsl:analyze-string>
 	</xsl:template>
-	
-	
+
+
 
 	<!-- complex symbols and monograms encoded in EpiDoc -->
 	<xsl:template match="tei:div" mode="symbols">

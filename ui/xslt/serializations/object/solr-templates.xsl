@@ -138,13 +138,17 @@
 		<xsl:apply-templates
 			select="
 				nuds:objectType | nuds:denomination[string(.) or string(@xlink:href)] | nuds:manufacture[string(.) or string(@xlink:href)] | nuds:material[string(.) or
-				string(@xlink:href)]">
+				string(@xlink:href)] | nuds:shape[string(.) or string(@xlink:href)]">
 			<xsl:with-param name="lang" select="$lang"/>
 		</xsl:apply-templates>
 		<xsl:apply-templates
 			select="
 				descendant::nuds:persname[string(.) or string(@xlink:href)] | descendant::nuds:corpname[string(.) or string(@xlink:href)] | descendant::nuds:geogname[string(.) or
 				string(@xlink:href)] | descendant::nuds:famname[string(.) or string(@xlink:href)] | descendant::nuds:periodname[string(.) or string(@xlink:href)]">
+			<xsl:with-param name="lang" select="$lang"/>
+		</xsl:apply-templates>
+		
+		<xsl:apply-templates select="nuds:authority/nuds:authenticity[string(.) or string(@xlink:href)]">
 			<xsl:with-param name="lang" select="$lang"/>
 		</xsl:apply-templates>
 
@@ -290,6 +294,13 @@
 				</xsl:if>
 			</xsl:otherwise>
 		</xsl:choose>
+		
+		<!-- index transliterations for text searchign -->
+		<xsl:if test="child::tei:div[@type = 'transliteration']">
+			<field name="{$side}_leg_text">
+				<xsl:apply-templates select="tei:div[@type = 'transliteration']"/>
+			</field>
+		</xsl:if>
 	</xsl:template>
 
 	<xsl:template match="nuds:die">
@@ -427,7 +438,7 @@
 		</xsl:choose>
 	</xsl:template>
 
-	<xsl:template match="nuds:objectType | nuds:denomination | nuds:manufacture | nuds:material | nuds:typeSeries">
+	<xsl:template match="nuds:objectType | nuds:denomination | nuds:manufacture | nuds:material | nuds:shape | nuds:typeSeries">
 		<xsl:param name="lang"/>
 		<xsl:variable name="facet" select="local-name()"/>
 		<xsl:variable name="href" select="@xlink:href"/>
@@ -484,7 +495,7 @@
 		</xsl:if>
 	</xsl:template>
 
-	<xsl:template match="nuds:persname | nuds:corpname | *[local-name() = 'geogname'] | nuds:famname | nuds:periodname">
+	<xsl:template match="nuds:persname | nuds:corpname | *[local-name() = 'geogname'] | nuds:famname | nuds:periodname | nuds:authenticity">
 		<xsl:param name="lang"/>
 		<xsl:variable name="href" select="@xlink:href"/>
 		<xsl:variable name="role" select="if (string(@xlink:role)) then
