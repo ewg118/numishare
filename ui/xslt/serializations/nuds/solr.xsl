@@ -193,7 +193,7 @@
 						<xsl:copy-of select="descendant::nuds:typeDesc"/>
 					</xsl:variable>
 
-
+					<xsl:variable name="hasReferences" select="boolean(descendant::nuds:reference)" as="xs:boolean"/>
 
 
 					<xsl:if test="count($subtypes//type[@recordId = $id]/subtype) &gt; 0">
@@ -301,18 +301,21 @@
 
 						<xsl:for-each select="$refs//ref[string-length(normalize-space(.)) &gt; 0]">
 							<xsl:sort order="ascending"/>
+							
+							
+							
 							<field name="reference_facet">
 								<xsl:value-of select="."/>
 							</field>
 							<field name="reference_text">
 								<xsl:value-of select="."/>
 							</field>
-							<xsl:if test="position() = 1">
+							<xsl:if test="position() = 1 and $hasReferences = false()">
 								<field name="reference_min">
 									<xsl:value-of select="."/>
 								</field>
 							</xsl:if>
-							<xsl:if test="position() = last()">
+							<xsl:if test="position() = last() and $hasReferences = false()">
 								<field name="reference_max">
 									<xsl:value-of select="."/>
 								</field>
