@@ -182,7 +182,7 @@
 			</xsl:apply-templates>
 
 
-			<!-- if there are subtypes, extract the legend and type description or symbols, if missing from parent record (only extract information to index for type-level type -->
+			<!-- if there are subtypes, extract the legend and type description or symbols, if missing from parent record (only extract information to index for type-level type)-->
 			<xsl:if
 				test="not(nuds:control/nuds:otherRecordId[@semantic = 'skos:broader']) and ($index_subtype_metadata = true() or $index_subtypes_as_references = true())">
 
@@ -288,6 +288,9 @@
 							</xsl:if>
 
 						</xsl:for-each>
+						
+						<!-- index type references for the subtypes -->
+						<xsl:apply-templates select="$subtypes//type[@recordId = $id]/subtype/descendant::nuds:refDesc"/>
 					</xsl:if>
 				</xsl:if>
 
