@@ -237,14 +237,13 @@
 							<xsl:if test="$hasLegends = false() and $subtypes//type[@recordId = $id]/subtype/descendant::*[local-name() = $side]/nuds:legend">
 								<xsl:variable name="pieces" as="item()*">
 									<legends>
-										<xsl:for-each
-											select="$subtypes//type[@recordId = $id]/subtype/descendant::*[local-name() = $side]/nuds:legend">
+										<xsl:for-each select="$subtypes//type[@recordId = $id]/subtype/descendant::*[local-name() = $side]/nuds:legend">
 											<xsl:if test="not(self::node() = preceding::nuds:legend)">
 												<xsl:copy-of select="self::node()"/>
 											</xsl:if>
 										</xsl:for-each>
 									</legends>
-									
+
 								</xsl:variable>
 
 								<field name="{$sideAbbr}_leg_display">
@@ -260,7 +259,7 @@
 										<xsl:if test="not(position() = last())">
 											<xsl:text> | </xsl:text>
 										</xsl:if>
-									</xsl:for-each>									
+									</xsl:for-each>
 								</field>
 
 								<xsl:for-each select="$pieces//nuds:legend">
@@ -288,9 +287,37 @@
 							</xsl:if>
 
 						</xsl:for-each>
-						
+
 						<!-- index type references for the subtypes -->
-						<xsl:apply-templates select="$subtypes//type[@recordId = $id]/subtype/descendant::nuds:refDesc"/>
+						<xsl:variable name="refs" as="element()*">
+							<refs>
+								<xsl:for-each select="$subtypes//type[@recordId = $id]/subtype/descendant::nuds:refDesc/nuds:reference">
+									<ref>
+										<xsl:call-template name="get_ref"/>
+									</ref>
+								</xsl:for-each>
+							</refs>
+						</xsl:variable>
+
+						<xsl:for-each select="$refs//ref[string-length(normalize-space(.)) &gt; 0]">
+							<xsl:sort order="ascending"/>
+							<field name="reference_facet">
+								<xsl:value-of select="."/>
+							</field>
+							<field name="reference_text">
+								<xsl:value-of select="."/>
+							</field>
+							<xsl:if test="position() = 1">
+								<field name="reference_min">
+									<xsl:value-of select="."/>
+								</field>
+							</xsl:if>
+							<xsl:if test="position() = last()">
+								<field name="reference_max">
+									<xsl:value-of select="."/>
+								</field>
+							</xsl:if>
+						</xsl:for-each>
 					</xsl:if>
 				</xsl:if>
 
@@ -511,7 +538,7 @@
 					<xsl:when test="nuds:findspot/nuds:fallsWithin/nuds:geogname/@xlink:href">
 						<xsl:call-template name="parse_findspot_uri">
 							<xsl:with-param name="href" select="nuds:findspot/nuds:fallsWithin/nuds:geogname/@xlink:href"/>
-							<xsl:with-param name="label" select="nuds:findspot/nuds:fallsWithin/nuds:geogname"/>							
+							<xsl:with-param name="label" select="nuds:findspot/nuds:fallsWithin/nuds:geogname"/>
 						</xsl:call-template>
 					</xsl:when>
 					<xsl:otherwise>
@@ -533,16 +560,16 @@
 				</xsl:choose>
 			</xsl:otherwise>
 		</xsl:choose>
-		
+
 		<xsl:apply-templates select="nuds:hoard"/>
-		
+
 	</xsl:template>
-	
+
 	<xsl:template match="nuds:hoard">
 		<field name="hoard_facet">
 			<xsl:value-of select="normalize-space(.)"/>
 		</field>
-		
+
 		<xsl:if test="@xlink:href">
 			<field name="hoard_uri">
 				<xsl:value-of select="@xlink:href"/>
@@ -554,9 +581,10 @@
 		<xsl:param name="objectURI"/>
 
 		<xsl:variable name="label" select="nuds:fallsWithin/nuds:geogname"/>
-		<xsl:variable name="uri" select="
-			if (nuds:fallsWithin/nuds:geogname/@xlink:href) then
-			nuds:fallsWithin/nuds:geogname/@xlink:href
+		<xsl:variable name="uri"
+			select="
+				if (nuds:fallsWithin/nuds:geogname/@xlink:href) then
+					nuds:fallsWithin/nuds:geogname/@xlink:href
 				else
 					concat($objectURI, '#findspot')"> </xsl:variable>
 		<xsl:variable name="coords" select="tokenize(nuds:fallsWithin/gml:location/gml:Point/gml:coordinates, ',')"/>
@@ -704,7 +732,7 @@
 						<xsl:value-of select="nuds:findspot/nuds:fallsWithin/gml:location/gml:Point/gml:coordinates"/>
 					</field>
 				</xsl:if>
-				
+
 			</xsl:when>
 		</xsl:choose>
 	</xsl:template>
@@ -716,7 +744,7 @@
 	</xsl:template>
 
 	<xsl:template match="mets:fileSec">
-		
+
 		<!-- handle standard photographs -->
 		<xsl:for-each select="mets:fileGrp[@USE = 'obverse' or @USE = 'reverse' or @USE = 'combined']">
 			<xsl:variable name="side" select="substring(@USE, 1, 3)"/>
@@ -743,13 +771,13 @@
 			</xsl:choose>
 
 		</xsl:for-each>
-		
+
 		<!-- otherwise, apply a template to the first fileGrp for a card and index the recto of the first file -->
 		<xsl:apply-templates select="mets:fileGrp[@USE = 'card'][1]/mets:fileGrp[@USE = 'recto']"/>
-		
+
 		<field name="imagesavailable">true</field>
 	</xsl:template>
-	
+
 	<xsl:template match="mets:fileGrp[@USE = 'recto']">
 		<xsl:choose>
 			<xsl:when test="count(mets:file) = 1 and mets:file[@USE = 'iiif']">
@@ -839,21 +867,21 @@
 					else
 						normalize-space(.)"/>
 		</field>
-		
+
 		<field name="source_text">
 			<xsl:value-of select="
-				if (nuds:saleCatalog) then
-				normalize-space(nuds:saleCatalog)
-				else
-				normalize-space(.)"/>
+					if (nuds:saleCatalog) then
+						normalize-space(nuds:saleCatalog)
+					else
+						normalize-space(.)"/>
 		</field>
-		
+
 		<field name="source_facet">
 			<xsl:value-of select="
-				if (nuds:saleCatalog) then
-				normalize-space(nuds:saleCatalog)
-				else
-				normalize-space(.)"/>
+					if (nuds:saleCatalog) then
+						normalize-space(nuds:saleCatalog)
+					else
+						normalize-space(.)"/>
 		</field>
 	</xsl:template>
 
