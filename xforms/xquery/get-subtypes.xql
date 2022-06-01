@@ -18,7 +18,7 @@ return
                         for $doc in collection()[descendant::nuds:otherRecordId[@semantic = 'skos:broader'] = $id]
                         return
                             <subtype
-                                recordId="{data($doc//nuds:recordId)}"><descMeta
+                                recordId="{data($doc//nuds:recordId)}" sortId="{data($doc//nuds:otherRecordId[@localType = 'sortId'])}"><descMeta
                                     xmlns="http://nomisma.org/nuds">
                                     {$doc//nuds:descMeta/*}
                                 </descMeta></subtype>

@@ -725,7 +725,8 @@
 							<a name="subtypes"/>
 							<h3>Subtypes</h3>
 							<xsl:apply-templates select="$subtypes//subtype">
-								<xsl:sort select="@recordId" order="ascending"/>
+								<xsl:sort select="if(@sortId) then @sortId else @recordId" order="ascending"/>									
+								
 
 								<xsl:with-param name="uri_space" select="//config/uri_space"/>
 								<xsl:with-param name="endpoint"
