@@ -1241,6 +1241,10 @@
 		</i>
 		<xsl:text>]</xsl:text>
 	</xsl:template>
+	
+	<xsl:template match="tei:space">
+		<xsl:text>[intentional space]</xsl:text>
+	</xsl:template>
 
 	<!-- rendering -->
 	<xsl:template match="tei:hi[@rend]">
@@ -1328,6 +1332,10 @@
 		<xsl:if test="not(position() = last())">
 			<xsl:text> / </xsl:text>
 		</xsl:if>
+	</xsl:template>
+	
+	<xsl:template match="tei:space" mode="symbols">
+		<xsl:text>[no monogram]</xsl:text>
 	</xsl:template>
 
 	<xsl:template match="tei:seg | tei:am | tei:g" mode="symbols">
