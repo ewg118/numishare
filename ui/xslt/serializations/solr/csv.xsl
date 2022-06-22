@@ -43,6 +43,7 @@
 				<xsl:when test="$collection_type = 'cointype'">
 					<field>title_display</field>
 					<field>recordId</field>
+					<field>parentType_uri</field>
 					<field>year_num</field>
 
 					<!-- facets -->

@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-	Copyright (C) 2010 Ethan Gruber
-	EADitor: https://github.com/ewg118/eaditor
-	Apache License 2.0: https://github.com/ewg118/eaditor
-	
+	Author: Ethan Gruber
+	Date modified: June 2022
+	Function: Execute a general Solr query to /feed requestHandler to include subtypes in the CSV export
 -->
 <p:config xmlns:p="http://www.orbeon.com/oxf/pipeline" xmlns:oxf="http://www.orbeon.com/oxf/processors">
 
@@ -59,7 +58,7 @@
 					</xsl:choose>
 				</xsl:param>
 				<!-- config variables -->
-				<xsl:variable name="solr-url" select="concat(/config/solr_published, 'select/')"/>
+				<xsl:variable name="solr-url" select="concat(/config/solr_published, 'feed/')"/>
 				
 
 				<xsl:variable name="service">

@@ -44,6 +44,8 @@
 			</xsl:if>
 
 			<xsl:if test="@recordType = 'conceptual'">
+				<xsl:variable name="uri_space" select="//config/uri_space"/>
+				
 				<!-- get the sort id for coin type records, used for ordering by type number -->
 				<xsl:choose>
 					<xsl:when test="nuds:control/nuds:otherRecordId[@localType = 'sortId']">
@@ -73,6 +75,12 @@
 						</xsl:call-template>
 					</xsl:otherwise>
 				</xsl:choose>
+				
+				<xsl:for-each select="nuds:control/nuds:otherRecordId[@semantic = 'skos:broader']">
+					<field name="parentType_uri">
+						<xsl:value-of select="concat($uri_space, .)"/>
+					</field>
+				</xsl:for-each>
 
 				<xsl:choose>
 					<xsl:when test="$collection-type = 'cointype'">
@@ -95,7 +103,7 @@
 
 
 				<field name="uri_space">
-					<xsl:value-of select="//config/uri_space"/>
+					<xsl:value-of select="$uri_space"/>
 				</field>
 			</xsl:if>
 
