@@ -75,20 +75,20 @@
 						<xsl:when test="string($q)">
 							<xsl:choose>
 								<xsl:when test="string($lang)">
-									<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+lang:', $lang, '+AND+', encode-for-uri($q), '&amp;rows=', $rows, '&amp;start=', $start, '&amp;sort=', $sort)"/>
+									<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+lang:', $lang, '+AND+', encode-for-uri($q), '&amp;rows=', $rows, '&amp;start=', $start, '&amp;sort=', encode-for-uri($sort))"/>
 								</xsl:when>
 								<xsl:otherwise>
-									<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+NOT(lang:*)+AND+', encode-for-uri($q), '&amp;rows=', $rows, '&amp;start=', $start, '&amp;sort=', $sort)"/>
+									<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+NOT(lang:*)+AND+', encode-for-uri($q), '&amp;rows=', $rows, '&amp;start=', $start, '&amp;sort=', encode-for-uri($sort))"/>
 								</xsl:otherwise>
 							</xsl:choose>
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:choose>
 								<xsl:when test="string($lang)">
-									<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+lang:', $lang, '&amp;rows=', $rows, '&amp;start=', $start, '&amp;sort=', $sort)"/>
+									<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+lang:', $lang, '&amp;rows=', $rows, '&amp;start=', $start, '&amp;sort=', encode-for-uri($sort))"/>
 								</xsl:when>
 								<xsl:otherwise>
-									<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+NOT(lang:*)&amp;rows=', $rows, '&amp;start=', $start, '&amp;sort=', $sort)"/>
+									<xsl:value-of select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+NOT(lang:*)&amp;rows=', $rows, '&amp;start=', $start, '&amp;sort=', encode-for-uri($sort))"/>
 								</xsl:otherwise>
 							</xsl:choose>
 						</xsl:otherwise>
