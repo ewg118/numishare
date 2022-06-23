@@ -171,7 +171,7 @@
 				<xsl:for-each
 					select="
 						distinct-values(descendant::*[not(local-name() = 'typeDesc') and not(local-name() = 'reference')][contains(@xlink:href,
-						'nomisma.org')]/@xlink:href | $nudsGroup/descendant::*[not(local-name() = 'object') and not(local-name() = 'typeDesc')][contains(@xlink:href, 'nomisma.org')]/@xlink:href | descendant::*[contains(@certainty, 'nomisma.org')]/@certainty | $nudsGroup/descendant::*[contains(@certainty, 'nomisma.org')]/@certainty)">
+						'nomisma.org')]/@xlink:href | $nudsGroup/descendant::*[not(local-name() = 'object') and not(local-name() = 'typeDesc')][contains(@xlink:href, 'nomisma.org')]/@xlink:href | descendant::*[contains(@certainty, 'nomisma.org')]/@certainty | $nudsGroup/descendant::*[contains(@certainty, 'nomisma.org')]/@certainty | $subtypes/descendant::*[contains(@xlink:href, 'nomisma.org')]/@xlink:href )">
 					<xsl:value-of select="substring-after(., 'id/')"/>
 					<xsl:if test="not(position() = last())">
 						<xsl:text>|</xsl:text>
