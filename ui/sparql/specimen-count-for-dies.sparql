@@ -9,6 +9,7 @@ PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 
 SELECT (count(?coin) as ?count) WHERE {
     GRAPH <graphURI> {
-	?coin nmo:hasObverse/nmo:hasDie|nmo:hasReverse/nmo:hasDie ?die .
+	{?coin nmo:hasObverse/nmo:hasDie ?die}
+	UNION {?coin nmo:hasReverse/nmo:hasDie ?die}
  	?die rdf:value <dieURI> }
 }
