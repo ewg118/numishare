@@ -13,7 +13,7 @@
 
     <!-- **************** PHYSICAL EXAMPLES OF COIN TYPES ****************-->
     <xsl:template match="res:sparql" mode="type-examples">
-        <xsl:param name="subtype"/>
+        <xsl:param name="subtypes"/>
         <xsl:param name="page"/>
         <xsl:param name="numFound"/>
         <xsl:param name="limit"/>
@@ -21,34 +21,34 @@
         <xsl:param name="objectUri"/>
         <xsl:param name="rtl"/>
 
-
         <xsl:variable name="query" select="replace(doc('input:query'), 'typeURI', $objectUri)"/>
 
-        <div class="row">
-            <xsl:if test="not($subtype = true())">
-                <xsl:attribute name="id">examples</xsl:attribute>
-            </xsl:if>
+        <div class="row" id="examples">            
             <xsl:if test="count(descendant::res:result) &gt; 0">
                 <div class="col-md-12">
-                    <xsl:element name="{if($subtype=true()) then 'h4' else 'h3'}">
+                    <h3>
                         <xsl:value-of select="numishare:normalizeLabel('display_examples', $lang)"/>
                         <!-- insert link to download CSV -->
                         <small style="margin-left:10px">
                             <a href="{$endpoint}?query={encode-for-uri($query)}&amp;output=csv" title="Download CSV">
                                 <span class="glyphicon glyphicon-download"/>Download CSV</a>
                         </small>
-                    </xsl:element>
-                </div>
-                <xsl:if test="not($subtype = true())">
-                    <!-- display the pagination toolbar only if there are multiple pages -->
-                    <xsl:if test="$numFound &gt; $limit">
-                        <xsl:call-template name="pagination">
-                            <xsl:with-param name="page" select="$page" as="xs:integer"/>
-                            <xsl:with-param name="numFound" select="$numFound" as="xs:integer"/>
-                            <xsl:with-param name="limit" select="$limit" as="xs:integer"/>
-                        </xsl:call-template>
+                    </h3>
+                    
+                    <xsl:if test="$subtypes = true()">
+                        <p>Examples include all subtypes. Click on the subtype links above to view examples for an individual subtype.</p>
                     </xsl:if>
+                </div>
+                
+                <!-- display the pagination toolbar only if there are multiple pages -->
+                <xsl:if test="$numFound &gt; $limit">
+                    <xsl:call-template name="pagination">
+                        <xsl:with-param name="page" select="$page" as="xs:integer"/>
+                        <xsl:with-param name="numFound" select="$numFound" as="xs:integer"/>
+                        <xsl:with-param name="limit" select="$limit" as="xs:integer"/>
+                    </xsl:call-template>
                 </xsl:if>
+                
                 <xsl:apply-templates select="descendant::res:result" mode="type-examples">
                     <xsl:with-param name="rtl" select="$rtl" as="xs:boolean"/>
                 </xsl:apply-templates>

@@ -138,7 +138,7 @@
 			</b>
 			<xsl:choose>
 				<xsl:when test="child::tei:div">
-					<xsl:apply-templates select="tei:div[@type = 'edition']" mode="legend"/>	
+					<xsl:apply-templates select="tei:div[@type = 'edition']" mode="legend"/>
 					<xsl:apply-templates select="tei:div[@type = 'transliteration']" mode="legend"/>
 				</xsl:when>
 				<xsl:otherwise>
@@ -900,30 +900,29 @@
 		<xsl:variable name="subtypeId" select="@recordId"/>
 		<xsl:variable name="objectUri" select="concat($uri_space, $subtypeId)"/>
 
-		<div class="row">
-			<div class="col-md-3" about="{$objectUri}" typeof="nmo:TypeSeriesItem">
-				<h4 property="skos:prefLabel">
-					<a href="{$objectUri}">
-						<xsl:value-of select="nuds:descMeta/nuds:title"/>
-					</a>
-				</h4>
+		<tr about="{$objectUri}" typeof="nmo:TypeSeriesItem">
+			<td>
+				<a href="{$objectUri}" property="skos:prefLabel">
+					<xsl:value-of select="nuds:descMeta/nuds:title"/>
+				</a>
 				<span class="hidden" property="skos:broader">
 					<xsl:value-of select="concat($uri_space, $id)"/>
 				</span>
-				<ul>
-					<xsl:apply-templates select="nuds:descMeta/*[not(local-name() = 'title')]"/>
+			</td>
+			<td>
+				<ul style="padding:0">
+					<xsl:apply-templates select="nuds:descMeta/nuds:typeDesc/nuds:obverse/*" mode="descMeta"/>
 				</ul>
-			</div>
-			<div class="col-md-9">
-				<xsl:apply-templates select="document(concat($request-uri, 'apis/type-examples?id=', $subtypeId))/res:sparql" mode="type-examples">
-					<xsl:with-param name="subtype" select="true()" as="xs:boolean"/>
-					<xsl:with-param name="objectUri" select="$objectUri"/>
-					<xsl:with-param name="endpoint" select="$endpoint"/>
-					<xsl:with-param name="rtl" select="$rtl"/>
-				</xsl:apply-templates>
-			</div>
-		</div>
-		<hr/>
+			</td>
+			<td>
+				<ul style="padding:0">
+					<xsl:apply-templates select="nuds:descMeta/nuds:typeDesc/nuds:reverse/*" mode="descMeta"/>
+				</ul>
+			</td>
+			<td>
+				<xsl:apply-templates select="doc('input:numishareResults')//group[@id = $subtypeId]" mode="results"/>
+			</td>
+		</tr>
 	</xsl:template>
 
 	<!-- *************** RDF TEMPLATES ******************-->
@@ -1181,11 +1180,11 @@
 			<xsl:apply-templates/>
 		</li>
 	</xsl:template>
-	
+
 	<xsl:template match="tei:div[@type = 'edition']" mode="legend">
 		<xsl:apply-templates/>
 	</xsl:template>
-	
+
 	<xsl:template match="tei:div[@type = 'transliteration']" mode="legend">
 		<xsl:text> [transliteration:</xsl:text>
 		<xsl:apply-templates/>
@@ -1241,7 +1240,7 @@
 		</i>
 		<xsl:text>]</xsl:text>
 	</xsl:template>
-	
+
 	<xsl:template match="tei:space">
 		<xsl:text>[intentional space]</xsl:text>
 	</xsl:template>
@@ -1333,7 +1332,7 @@
 			<xsl:text> / </xsl:text>
 		</xsl:if>
 	</xsl:template>
-	
+
 	<xsl:template match="tei:space" mode="symbols">
 		<xsl:text>[no monogram]</xsl:text>
 	</xsl:template>

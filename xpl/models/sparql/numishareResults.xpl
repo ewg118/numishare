@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 	Author: Ethan Gruber
-	Date: April 2019
-	Function: Execute a series of SPARQL queries to get the count and sample images for each identifier listed in the Solr-based browse page.
+	Date: June 2022
+	Function: Execute a series of SPARQL queries to get the count and sample images for each identifier listed in the Solr-based browse page and subtypes on type record pages.
 		This is intended to be used when the SPARQL endpoint defined in the config differs from Nomisma.org	
 -->
 <p:config xmlns:p="http://www.orbeon.com/oxf/pipeline" xmlns:oxf="http://www.orbeon.com/oxf/processors">
@@ -33,17 +33,28 @@
 							</xsl:when>
 							<xsl:otherwise>
 								<xsl:variable name="uri_space" select="doc('input:config-xml')/config/uri_space"/>
-								
-								<xsl:for-each select="descendant::doc">
-									<identifier>
-										<xsl:value-of select="concat($uri_space, str[@name='recordId'])"/>
-									</identifier>
-								</xsl:for-each>	
+
+								<!-- evaluate Solr docs vs subtype elements -->								
+								<xsl:choose>
+									<xsl:when test="count(descendant::doc) &gt; 0">
+										<xsl:for-each select="descendant::doc">
+											<identifier>
+												<xsl:value-of select="concat($uri_space, str[@name='recordId'])"/>
+											</identifier>
+										</xsl:for-each>
+									</xsl:when>
+									<xsl:when test="count(descendant::subtype) &gt; 0">
+										<xsl:for-each select="descendant::subtype">
+											<identifier>
+												<xsl:value-of select="concat($uri_space, @recordId)"/>
+											</identifier>
+										</xsl:for-each>
+									</xsl:when> 
+								</xsl:choose>
 							</xsl:otherwise>
 						</xsl:choose>
 					</identifiers>
 				</xsl:template>
-				
 			</xsl:stylesheet>
 		</p:input>
 		<p:output name="data" id="identifiers"/>

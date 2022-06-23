@@ -140,12 +140,8 @@
 		</nudsGroup>
 	</xsl:variable>
 
-	<!-- get subtypes -->
-	<xsl:variable name="subtypes" as="element()*">
-		<xsl:if test="$recordType = 'conceptual' and //config/collection_type = 'cointype'">
-			<xsl:copy-of select="document(concat($request-uri, 'get_subtypes?identifiers=', $id))/*"/>
-		</xsl:if>
-	</xsl:variable>
+	<!-- empty subtypes  -->
+	<xsl:variable name="subtypes" as="element()*"/>
 
 	<!-- get the facets as a sequence -->
 	<xsl:variable name="facets" select="//config/facets/facet"/>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 	Author: Ethan Gruber
-	Date: June 2020
+	Date: June 2022
 	Function: Call the get-subtypes XQuery file that is stored in eXist-db	
 -->
 <p:config xmlns:p="http://www.orbeon.com/oxf/pipeline" xmlns:oxf="http://www.orbeon.com/oxf/processors">
@@ -25,8 +25,21 @@
 				<xsl:output indent="yes"/>
 				<xsl:template match="/">
 					<xsl:variable name="collection-name" select="substring-before(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/')"/>
-					<xsl:variable name="identifiers" select="doc('input:request')/request/parameters/parameter[name='identifiers']/value"/>
+					
+					<!-- get identifiers from request parameter for the batch Solr serialization, otherwise get the ID from URL sequence -->
+					<xsl:variable name="identifiers">
+						<xsl:choose>
+							<xsl:when test="string(doc('input:request')/request/parameters/parameter[name='identifiers']/value)">
+								<xsl:value-of select="doc('input:request')/request/parameters/parameter[name='identifiers']/value"/>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:value-of select="tokenize(doc('input:request')/request/request-uri, '/')[last()]"/>
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:variable>
+					
 					<xsl:variable name="identifiers-clean" select="string-join(tokenize($identifiers, '\|')[string-length(.) &gt; 0], '|')"/>
+					
 					<config>
 						<url>
 							<xsl:value-of select="concat(/exist-config/url, $collection-name, '/get-subtypes.xql?identifiers=', encode-for-uri($identifiers-clean))"/>

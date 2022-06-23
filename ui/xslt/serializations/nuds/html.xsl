@@ -16,6 +16,7 @@
 	<xsl:include href="../sparql/type-examples.xsl"/>
 	<xsl:include href="../../controllers/metamodel-templates.xsl"/>
 	<xsl:include href="../../controllers/sparql-metamodel.xsl"/>
+	<xsl:include href="../../ajax/numishareResults.xsl"/>
 
 	<!-- URL params -->
 	<xsl:variable name="collection-name" select="substring-before(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/')"/>
@@ -151,9 +152,7 @@
 	<!-- get subtypes -->
 	<xsl:variable name="subtypes" as="element()*">
 		<xsl:if test="$recordType = 'conceptual' and $collection_type = 'cointype'">
-			<xsl:if test="doc-available(concat($request-uri, 'get_subtypes?identifiers=', $id))">
-				<xsl:copy-of select="document(concat($request-uri, 'get_subtypes?identifiers=', $id))/*"/>
-			</xsl:if>
+			<xsl:copy-of select="doc('input:subtypes')/*"/>
 		</xsl:if>
 	</xsl:variable>
 
@@ -603,6 +602,10 @@
 								</p>
 
 								<p>
+									<xsl:if test="count($subtypes//subtype) &gt; 0">
+										<a href="#subtypes">Subtypes</a>
+										<xsl:text> | </xsl:text>
+									</xsl:if>
 									<xsl:if test="$hasSpecimens = true()">
 										<a href="#examples">
 											<xsl:value-of
@@ -620,10 +623,6 @@
 										<a href="#dieAnalysis">
 											<xsl:value-of select="numishare:normalizeLabel('display_die_analysis', $lang)"/>
 										</a>
-									</xsl:if>
-									<xsl:if test="count($subtypes//subtype) &gt; 0">
-										<xsl:text> | </xsl:text>
-										<a href="#subtypes">Subtypes</a>
 									</xsl:if>
 									<xsl:if test="$hasSpecimens = true() and $collection_type = 'cointype'">
 										<xsl:text> | </xsl:text>
@@ -644,6 +643,58 @@
 							</div>
 						</div>
 						<xsl:call-template name="nuds_content"/>
+
+						<!-- handle subtypes if they exist -->
+						<xsl:if test="count($subtypes//subtype) &gt; 0">
+							<div class="row" id="subtypes">
+								<div class="col-md-12">
+									<h3>Subtypes</h3>
+									<p>Click on the link to the subtype to view all examples.</p>
+									<div class="table-responsive">
+										<table class="table table-striped">
+											<thead>
+												<tr>
+													<th>Subtype</th>
+													<th>
+														<xsl:value-of select="numishare:regularize_node('obverse', $lang)"/>
+													</th>
+													<th>
+														<xsl:value-of select="numishare:regularize_node('reverse', $lang)"/>
+													</th>
+													<th style="width:320px">
+														<xsl:value-of select="numishare:normalizeLabel('display_examples', $lang)"/>
+													</th>
+												</tr>
+											</thead>
+											<tbody>
+												<xsl:apply-templates select="$subtypes//subtype">
+													<xsl:sort
+														select="
+															if (@sortId) then
+																@sortId
+															else
+																@recordId"
+														order="ascending"/>
+
+
+													<xsl:with-param name="uri_space" select="//config/uri_space"/>
+													<xsl:with-param name="endpoint"
+														select="
+															if (contains($sparql_endpoint, 'localhost')) then
+																'http://nomisma.org/query'
+															else
+																$sparql_endpoint"/>
+													<xsl:with-param name="rtl" select="boolean(//config/languages/language[@code = $lang]/@rtl)"/>
+												</xsl:apply-templates>
+											</tbody>
+										</table>
+									</div>
+
+									<hr/>
+
+								</div>
+							</div>
+						</xsl:if>
 
 						<!-- examples and subtypes -->
 						<xsl:if test="$hasSpecimens = true()">
@@ -669,6 +720,7 @@
 													$sparql_endpoint"/>
 										<xsl:with-param name="objectUri" select="$objectUri"/>
 										<xsl:with-param name="rtl" select="boolean(//config/languages/language[@code = $lang]/@rtl)"/>
+										<xsl:with-param name="subtypes" as="xs:boolean" select="boolean(doc('input:subtypes')//subtype)"/>
 									</xsl:apply-templates>
 								</xsl:when>
 								<xsl:when test="$collection_type = 'die'">
@@ -717,26 +769,6 @@
 									</xsl:apply-templates>
 								</xsl:when>
 							</xsl:choose>
-						</xsl:if>
-
-						<!-- handle subtypes if they exist -->
-						<xsl:if test="count($subtypes//subtype) &gt; 0">
-							<hr/>
-							<a name="subtypes"/>
-							<h3>Subtypes</h3>
-							<xsl:apply-templates select="$subtypes//subtype">
-								<xsl:sort select="if(@sortId) then @sortId else @recordId" order="ascending"/>									
-								
-
-								<xsl:with-param name="uri_space" select="//config/uri_space"/>
-								<xsl:with-param name="endpoint"
-									select="
-										if (contains($sparql_endpoint, 'localhost')) then
-											'http://nomisma.org/query'
-										else
-											$sparql_endpoint"/>
-								<xsl:with-param name="rtl" select="boolean(//config/languages/language[@code = $lang]/@rtl)"/>
-							</xsl:apply-templates>
 						</xsl:if>
 
 						<!-- display die analysis, visualization, only if there are dies in the SPARQL endpoint -->
@@ -835,7 +867,7 @@
 										</xsl:otherwise>
 									</xsl:choose>
 								</h1>
-								
+
 								<p>
 									<strong>Canonical URI: </strong>
 									<code>
@@ -1283,7 +1315,7 @@
 			</xsl:if>
 			<xsl:choose>
 				<xsl:when test="child::tei:div">
-					<xsl:apply-templates select="tei:div[@type = 'edition']" mode="legend"/>	
+					<xsl:apply-templates select="tei:div[@type = 'edition']" mode="legend"/>
 					<xsl:apply-templates select="tei:div[@type = 'transliteration']" mode="legend"/>
 				</xsl:when>
 				<xsl:otherwise>
