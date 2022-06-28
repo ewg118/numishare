@@ -44,7 +44,12 @@
 		<p:input name="config">
 			<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema"
 				xmlns:numishare="https://github.com/ewg118/numishare">
-				<xsl:param name="identifiers" select="/request/parameters/parameter[name='identifiers']/value"/>
+
+				<!-- get identifier from request headers if they exist, otherwise, get ID from URL pattern -->
+				<xsl:param name="identifiers"
+					select="if (string(/request/parameters/parameter[name='identifiers']/value)) 
+						then /request/parameters/parameter[name='identifiers']/value 
+						else tokenize(/request/request-url, '/')[last()]"/>
 
 				<xsl:template match="/">
 					<identifiers>
@@ -79,7 +84,7 @@
 							select="concat($sparql_endpoint, '?query=', encode-for-uri(replace(replace($query, '%graphURI%', $namedGraph), '%dieURI%', $dieURI)), '&amp;output=xml')"
 						/>
 					</xsl:variable>
-					
+
 					<xsl:template match="/">
 						<config>
 							<url>
@@ -105,7 +110,7 @@
 			<p:output name="data" ref="aggregate-response"/>
 		</p:processor>
 	</p:for-each>
-	
+
 	<p:processor name="oxf:identity">
 		<p:input name="data" href="#aggregate-response"/>
 		<p:output name="data" ref="data"/>

@@ -171,7 +171,7 @@
 				<xsl:for-each
 					select="
 						distinct-values(descendant::*[not(local-name() = 'typeDesc') and not(local-name() = 'reference')][contains(@xlink:href,
-						'nomisma.org')]/@xlink:href | $nudsGroup/descendant::*[not(local-name() = 'object') and not(local-name() = 'typeDesc')][contains(@xlink:href, 'nomisma.org')]/@xlink:href | descendant::*[contains(@certainty, 'nomisma.org')]/@certainty | $nudsGroup/descendant::*[contains(@certainty, 'nomisma.org')]/@certainty | $subtypes/descendant::*[contains(@xlink:href, 'nomisma.org')]/@xlink:href )">
+						'nomisma.org')]/@xlink:href | $nudsGroup/descendant::*[not(local-name() = 'object') and not(local-name() = 'typeDesc')][contains(@xlink:href, 'nomisma.org')]/@xlink:href | descendant::*[contains(@certainty, 'nomisma.org')]/@certainty | $nudsGroup/descendant::*[contains(@certainty, 'nomisma.org')]/@certainty | $subtypes/descendant::*[contains(@xlink:href, 'nomisma.org')]/@xlink:href)">
 					<xsl:value-of select="substring-after(., 'id/')"/>
 					<xsl:if test="not(position() = last())">
 						<xsl:text>|</xsl:text>
@@ -724,6 +724,9 @@
 									</xsl:apply-templates>
 								</xsl:when>
 								<xsl:when test="$collection_type = 'die'">
+
+									<!-- display associated coin types -->
+									<xsl:apply-templates select="doc('input:die-types')//res:sparql" mode="die-types"/>
 
 									<!-- form the SPARQL query and pass it to the template parameter -->
 									<xsl:variable name="statements" as="element()*">
@@ -1753,4 +1756,25 @@
 			</td>
 		</tr>
 	</xsl:template>
+
+	<!-- ************** TEMPLATES FOR RENDERING SPARQL A LIST OF TYPES RELATED TO DIES ************** -->
+	<xsl:template match="res:sparql" mode="die-types">
+		<div class="row">
+			<div class="col-md-12">
+				<h3>Associated Types</h3>
+				<ul>
+					<xsl:apply-templates select="descendant::res:result" mode="die-types"/>
+				</ul>
+			</div>
+		</div>
+	</xsl:template>
+
+	<xsl:template match="res:result" mode="die-types">
+		<li>
+			<a href="{res:binding[@name = 'type']/res:uri}">
+				<xsl:value-of select="res:binding[@name = 'label']/res:literal"/>
+			</a>
+		</li>
+	</xsl:template>
+
 </xsl:stylesheet>

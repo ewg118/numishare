@@ -113,9 +113,17 @@
 						</p:processor>
 					</p:for-each>
 					
+					<!-- get a list of associated coin type URIs -->
+					<p:processor name="oxf:pipeline">						
+						<p:input name="data" href="#config"/>
+						<p:input name="config" href="../../../models/sparql/getDieTypes.xpl"/>
+						<p:output name="data" id="die-types"/>
+					</p:processor>
+					
 					<p:processor name="oxf:unsafe-xslt">
 						<p:input name="request" href="#request"/>
 						<p:input name="specimens" href="#specimens"/>
+						<p:input name="die-types" href="#die-types"/>
 						<p:input name="dies" href="aggregate('dies', #obv-dies, #rev-dies)"/>
 						<p:input name="query" href="#die-examples-query-document"/>
 						<p:input name="data" href="aggregate('content', #data, #specimenCount, #config)"/>
