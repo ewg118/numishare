@@ -11,7 +11,7 @@
 	<xsl:template match="doc" mode="default">
 		<xsl:variable name="object-path">
 			<xsl:choose>
-				<xsl:when test="//config/collection_type = 'object' and string(//config/uri_space)">
+				<xsl:when test="$collection_type = 'object' and string(//config/uri_space)">
 					<xsl:value-of select="//config/uri_space"/>
 				</xsl:when>
 				<xsl:when test="//config/union_type_catalog/@enabled = true()">
@@ -60,7 +60,7 @@
 	<xsl:template match="doc" mode="grid">
 		<xsl:variable name="object-path">
 			<xsl:choose>
-				<xsl:when test="//config/collection_type = 'object' and string(//config/uri_space)">
+				<xsl:when test="$collection_type = 'object' and string(//config/uri_space)">
 					<xsl:value-of select="//config/uri_space"/>
 				</xsl:when>
 				<xsl:when test="//config/union_type_catalog/@enabled = true()">
@@ -127,7 +127,7 @@
 					
 					
 				</xsl:when>
-				<xsl:when test="//config/collection_type = 'cointype' and matches(/content/config/sparql_endpoint, '^https?://')">
+				<xsl:when test="$collection_type = 'cointype' and matches(/content/config/sparql_endpoint, '^https?://')">
 					<xsl:variable name="id" select="str[@name = 'recordId']"/>
 					<xsl:apply-templates select="doc('input:numishareResults')//group[@id = $id]" mode="results"/>
 				</xsl:when>
@@ -138,7 +138,7 @@
 	<xsl:template match="doc" mode="compare">
 		<xsl:variable name="object-path">
 			<xsl:choose>
-				<xsl:when test="//config/collection_type = 'object' and string(//config/uri_space)">
+				<xsl:when test="$collection_type = 'object' and string(//config/uri_space)">
 					<xsl:value-of select="//config/uri_space"/>
 				</xsl:when>
 				<xsl:otherwise>
@@ -403,6 +403,42 @@
 							</xsl:for-each>
 						</dd>
 					</xsl:if>
+					
+					<!-- additional die fields -->
+					<xsl:if test="$collection_type = 'die'">
+						<xsl:if test="arr[@name = 'relatedType_facet']">
+							<dt>
+								<xsl:value-of select="numishare:regularize_node('coinType', $lang)"/>
+							</dt>
+							<dd>
+								<xsl:for-each select="arr[@name = 'relatedType_facet']/str">
+									<xsl:variable name="pieces" select="tokenize(., '\|')"/>
+									
+									<a href="{$pieces[1]}">
+										<xsl:value-of select="$pieces[2]"/>
+									</a>
+									
+									<xsl:if test="not(position() = last())">
+										<xsl:text>, </xsl:text>
+									</xsl:if>
+								</xsl:for-each>
+							</dd>
+						</xsl:if>
+						
+						<xsl:if test="arr[@name = 'symbol_facet']">
+							<dt>
+								<xsl:value-of select="numishare:regularize_node('symbol', $lang)"/>
+							</dt>
+							<dd>
+								<xsl:for-each select="arr[@name = 'symbol_facet']/str">
+									<xsl:value-of select="."/>
+									<xsl:if test="not(position() = last())">
+										<xsl:text>, </xsl:text>
+									</xsl:if>
+								</xsl:for-each>
+							</dd>
+						</xsl:if>
+					</xsl:if>					
 				</xsl:otherwise>
 			</xsl:choose>
 			<!-- display appropriate sort category if it isn't one of the default display fields -->
@@ -515,7 +551,7 @@
 					
 					
 				</xsl:when>
-				<xsl:when test="//config/collection_type = 'cointype' and matches(/content/config/sparql_endpoint, '^https?://')">
+				<xsl:when test="$collection_type = 'cointype' and matches(/content/config/sparql_endpoint, '^https?://')">
 					<xsl:variable name="id" select="str[@name = 'recordId']"/>
 					<xsl:apply-templates select="doc('input:numishareResults')//group[@id = $id]" mode="results"/>
 				</xsl:when>

@@ -98,6 +98,9 @@
 						<field name="dieSeries">
 							<xsl:value-of select="//config/die_series"/>
 						</field>
+						
+						<!-- list associated coin types -->
+						<xsl:apply-templates select="$die-types//group[identifier = $id]/descendant::res:result" mode="die-types"/>
 					</xsl:when>
 				</xsl:choose>
 
@@ -979,6 +982,21 @@
 			</xsl:for-each>
 		</xsl:if>
 
+	</xsl:template>
+	
+	<!-- ********** SERIALIZE SPARQL RESULTS FOR TYPES RELATED TO DIES INTO SOLR FIELDS ********** -->
+	<!-- New in June 2022: the getDieTypes API is called in order to aggregate a list of coin types associated with a die URI -->
+	
+	<xsl:template match="res:result" mode="die-types">
+		<field name="coinType_uri">
+			<xsl:value-of select="res:binding[@name = 'type']/res:uri"/>
+		</field>
+		<field name="coinType_facet">
+			<xsl:value-of select="res:binding[@name = 'label']/res:literal"/>
+		</field>
+		<field name="relatedType_facet">
+			<xsl:value-of select="concat(res:binding[@name = 'type']/res:uri, '|', res:binding[@name = 'label']/res:literal)"/>
+		</field>
 	</xsl:template>
 
 </xsl:stylesheet>

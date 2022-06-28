@@ -158,6 +158,8 @@
 	<page path="/numishare/[^\/]+/apis/getSolrDistribution" model="xpl/models/solr/getDistribution.xpl" view="xpl/controllers/sparql/visualization.xpl"/>
 	<page path="/numishare/[^\/]+/apis/getHoardQuant" model="xpl/controllers/getHoardQuant.xpl" view="xpl/controllers/sparql/visualization.xpl"/>
 	<page path="/numishare/[^\/]+/apis/getDieLinks" model="xpl/models/sparql/getDieLinks.xpl" view="xpl/views/serializations/sparql/d3plus-graph-json.xpl"/>
+	<page path="/numishare/[^\/]+/apis/getDieTypes" model="xpl/models/config.xpl" view="xpl/models/sparql/getDieTypes.xpl"/>
+	<page path="/numishare/[^\/]+/apis/getSubtypes" view="xpl/models/xquery/get-subtypes.xpl"/>
 	<page path="/numishare/[^\/]+/apis/getSymbolLinks" model="xpl/models/sparql/getSymbolLinks.xpl" view="xpl/views/serializations/sparql/d3plus-graph-json.xpl"/>
 
 	<!-- OpenRefine reconciliation services -->
@@ -202,8 +204,7 @@
 	<page path="/numishare/[^\/]+/get_facet_options" model="xpl/models/solr/get_facet_options.xpl" view="xpl/views/ajax/get_facet_options.xpl"/>
 	<page path="/numishare/[^\/]+/get_hier" model="xpl/models/solr/get_hier.xpl" view="xpl/views/ajax/get_hier.xpl"/>
 	<page path="/numishare/[^\/]+/get_hoards" model="xpl/models/solr/get_hoards.xpl" view="xpl/views/ajax/get_hoards.xpl"/>
-	<page path="/numishare/[^\/]+/get_search_facets" model="xpl/models/solr/get_search_facets.xpl" view="xpl/views/ajax/get_search_facets.xpl"/>
-	<page path="/numishare/[^\/]+/get_subtypes" view="xpl/models/xquery/get-subtypes.xpl"/>
+	<page path="/numishare/[^\/]+/get_search_facets" model="xpl/models/solr/get_search_facets.xpl" view="xpl/views/ajax/get_search_facets.xpl"/>	
 	<page path="/numishare/[^\/]+/results_ajax" model="xpl/models/solr/results_ajax.xpl" view="xpl/views/ajax/results_ajax.xpl"/>
 	<page path="/numishare/[^\/]+/ajax/getSparqlFacets" model="xpl/models/sparql/getSparqlFacets.xpl" view="xpl/views/serializations/sparql/getSparqlFacets.xpl"/>
 
