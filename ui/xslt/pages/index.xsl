@@ -190,89 +190,89 @@
 	<xsl:template name="navigation">
 		<ul class="navigation-ul">
 			<li>
-				<a href="http://numismatics.org/">Home</a>
+				<a href="https://numismatics.org/">Home</a>
 			</li>
 			<li>
-				<a href="http://numismatics.org/about-us/">About the ANS</a>
+				<a href="https://numismatics.org/about-us/">About the ANS</a>
 			</li>
 			<li>
 				<a href="http://numismatics.org/search/">Collections</a>
 				<ul>					
 					<li>
-						<a href="http://numismatics.org/our-collections/photography-permissions/">Photography</a>
+						<a href="https://numismatics.org/collections/photography-permissions/">Photography</a>
 					</li>
 					<li>
 						<i>Departments</i>
 						<ul>
 							<li>
-								<a href="http://numismatics.org/our-collections/Greek/">Greek</a>
+								<a href="https://numismatics.org/collections/greek/">Greek</a>
 							</li>
 							<li>
-								<a href="http://numismatics.org/our-collections/Roman">Roman</a>
+								<a href="https://numismatics.org/collections/roman/">Roman</a>
 							</li>
 							<li>
-								<a href="http://numismatics.org/our-collections/Byzantine">Byzantine</a>
+								<a href="https://numismatics.org/exhibitions-uc/byzantine/">Byzantine</a>
 							</li>
 							<li>
-								<a href="http://numismatics.org/our-collections/islamic">Islamic</a>
+								<a href="https://numismatics.org/collections/islamic/">Islamic</a>
 							</li>
 							<li>
-								<a href="http://numismatics.org/our-collections/east-asian">East Asian</a>
+								<a href="https://numismatics.org/collections/east-asian/">East Asian</a>
 							</li>
 							<li>
-								<a href="http://numismatics.org/our-collections/south-asian">South Asian</a>
+								<a href="https://numismatics.org/collections/south-asian/">South Asian</a>
 							</li>
 							<li>
-								<a href="http://numismatics.org/our-collections/Medieval">Medieval</a>
+								<a href="https://numismatics.org/collections/medieval/">Medieval</a>
 							</li>
 							<li>
-								<a href="http://numismatics.org/our-collections/Modern">Modern</a>
+								<a href="https://numismatics.org/collections/modern/">Modern</a>
 							</li>
 							<li>
-								<a href="http://numismatics.org/our-collections/united-states">United States</a>
+								<a href="https://numismatics.org/collections/united-states/">North American</a>
 							</li>
 							<li>
-								<a href="http://numismatics.org/our-collections/latin-america">Latin America</a>
+								<a href="https://numismatics.org/collections/latin-america/">Latin American</a>
 							</li>							
 							<li>
-								<a href="http://numismatics.org/our-collections/medals-and-decorations">Medals and Decorations</a>
+								<a href="https://numismatics.org/collections/medals-and-decorations/">Medals and Decorations</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 			</li>
 			<li>
-				<a href="http://numismatics.org/basslibrary/">Library</a>
+				<a href="https://numismatics.org/basslibrary/">Library</a>
 			</li>
 			<li>
 				<a href="http://numismatics.org/archives/">Archives</a>
 			</li>
 			<li>
-				<a href="http://numismatics.org/about-us/publications/">Publications</a>
+				<a href="https://numismatics.org/about-us/publications/">Publications</a>
 			</li>
 			<li>
-				<a href="http://numismatics.org/membership/">Membership</a>
+				<a href="https://numismatics.org/membership/">Membership</a>
 			</li>
 			<li>
-				<a href="http://numismatics.org/exhibitions-uc/">Events and Exhibitions</a>
+				<a href="https://numismatics.org/exhibitions-uc/">Events and Exhibitions</a>
 			</li>
 			<li>
-				<a href="http://numismatics.org/about-us/education/">Education</a>
+				<a href="https://numismatics.org/about-us/education/">Education</a>
 			</li>
 			<li>
-				<a href="http://numismatics.org/our-collections/online-resources/">Online Resources</a>
+				<a href="https://numismatics.org/resources/">Online Resources</a>
 			</li>
 			<li>
-				<a href="http://numismatics.org/giving/">Support the ANS</a>
+				<a href="https://numismatics.org/giving/">Support the ANS</a>
 			</li>
 			<li>
-				<a href="http://numismatics.org/contact-us/">Contact</a>
+				<a href="https://numismatics.org/contact-us/">Contact</a>
 			</li>
 			<li>
-				<a href="http://numismatics.org/pocketchange-type/magazine/">ANS Magazine</a>
+				<a href="https://numismatics.org/pocketchange-type/magazine/">ANS Magazine</a>
 			</li>
 			<li>
-				<a href="http://numismatics.org/store/">The ANS Store</a>
+				<a href="https://numismatics.org/store/">The ANS Store</a>
 			</li>
 		</ul>
 	</xsl:template>
