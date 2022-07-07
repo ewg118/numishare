@@ -1,0 +1,17 @@
+PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX nm: <http://nomisma.org/id/>
+PREFIX nmo: <http://nomisma.org/ontology#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?frequency (count(?die) as ?dieCount) WHERE {
+  {
+    SELECT DISTINCT ?die (count(?object) as ?frequency)  WHERE {
+        ?object nmo:hasTypeSeriesItem <%typeURI%> .
+        GRAPH <%dieStudy%> {
+          ?object nmo:has%SIDE%/nmo:hasDie/rdf:value ?die 
+        }
+    } GROUP BY ?die
+  }
+} GROUP BY ?frequency ORDER BY ?frequency

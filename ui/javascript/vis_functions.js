@@ -777,7 +777,7 @@ function renderDistChart(path, urlParams) {
     
     $.get(path + 'apis/getDistribution', $.param(urlParams, true),
     function (data) {
-        new d3plus.BarChart().data(data).groupBy('subset').x(distValue).y(y).tooltipConfig({
+        new d3plus.BarChart().data(data).groupBy('subset').x(distValue).y(y).legend('true').legendPosition('bottom').tooltipConfig({
                 title: function (d) {
                     return d['subset'];
                 },
@@ -796,7 +796,7 @@ function renderMetricalChart(path, urlParams) {
     if ($.isNumeric(urlParams[ 'interval'])) {
         $.get(path + 'apis/getMetrical', $.param(urlParams, true),
         function (data) {
-            new d3plus.LinePlot().data(data).baseline(0).groupBy("subset").x('value').y('average').shapeConfig({
+            new d3plus.LinePlot().data(data).baseline(0).groupBy("subset").x('value').y('average').legend('true').legendPosition('bottom').shapeConfig({
                 Line: {
                     strokeWidth: 2
                 }
@@ -812,7 +812,7 @@ function renderMetricalChart(path, urlParams) {
     } else {
         $.get(path + 'apis/getMetrical', $.param(urlParams, true),
         function (data) {
-            new d3plus.BarChart().data(data).groupBy('subset').x('value').y('average').tooltipConfig({
+            new d3plus.BarChart().data(data).groupBy('subset').x('value').y('average').legend('true').legendPosition('bottom').tooltipConfig({
                 title: function (d) {
                     return d["subset"];
                 },

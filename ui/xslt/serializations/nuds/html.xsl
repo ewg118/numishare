@@ -398,10 +398,16 @@
 								<xsl:if test="$collection_type = 'cointype'">
 									<script type="text/javascript" src="{$include_path}/javascript/d3plus-plot.full.min.js"/>
 									<script type="text/javascript" src="{$include_path}/javascript/vis_functions.js"/>
+
+									<!-- if there are dies, then activate the die visualizations -->
+									<xsl:if test="$hasDies = true()">
+										<script type="text/javascript" src="{$include_path}/javascript/die_vis_functions.js"/>
+									</xsl:if>
+
 								</xsl:if>
 
 								<!-- network graph functions -->
-								<xsl:if test="//config/die_study[@enabled = true()] and $hasSpecimens = true()">
+								<xsl:if test="$collection_type = 'die' and $hasSpecimens = true()">
 									<script type="text/javascript" src="{$include_path}/javascript/d3plus-network.full.min.js"/>
 									<script type="text/javascript" src="{$include_path}/javascript/network_functions.js"/>
 								</xsl:if>
@@ -437,6 +443,9 @@
 						<div class="hidden">
 							<span id="recordId">
 								<xsl:value-of select="$id"/>
+							</span>
+							<span id="objectURI">
+								<xsl:value-of select="$objectUri"/>
 							</span>
 							<span id="baselayers">
 								<xsl:value-of select="string-join(//config/baselayers/layer[@enabled = true()], ',')"/>
@@ -476,8 +485,9 @@
 								<xsl:value-of select="descendant::nuds:copyrightHolder"/>
 							</span>
 
-							<!-- metrical analysis params -->
+							
 							<xsl:if test="$recordType = 'conceptual'">
+								<!-- metrical analysis params -->
 								<span id="page">record</span>
 								<span id="interface">metrical</span>
 								<span id="base-query">
@@ -498,9 +508,21 @@
 								</xsl:call-template>
 
 								<xsl:call-template name="ajax-loader-template"/>
-							</xsl:if>
-
-							<xsl:if test="$recordType = 'conceptual'">
+								
+								<!-- die study/named graph variables -->
+								<xsl:if test="//config/die_study[@enabled = true()]">
+									<span id="dieStudy">
+										<xsl:value-of select="//config/die_study/namedGraph"/>
+									</span>
+								</xsl:if>
+								<xsl:if test="$collection_type = 'cointype'">
+									<span id="die-frequencies-query">
+										<xsl:value-of select="doc('input:die-frequencies-query')"/>
+									</span>
+								</xsl:if>
+								
+								
+								<!-- IIIF -->
 								<span id="hasFindspots">
 									<xsl:value-of select="$hasFindspots"/>
 								</span>
@@ -781,52 +803,75 @@
 									<h3>
 										<xsl:value-of select="numishare:normalizeLabel('display_die_analysis', $lang)"/>
 									</h3>
+
+									<!-- only display options for die calculations in coin type corpora, not die URIs -->
+									<xsl:if test="$collection_type = 'cointype'">
+										<div id="dieCount-container"/>
+
+										<div class="chart-container">
+											<div id="dieVis-chart" style="height:600px"/>
+										</div>
+									</xsl:if>
+
 									<!-- display a div for each d3js forced network graph for each namedGraph for die attributions -->
 									<xsl:for-each select="//config/die_study/namedGraph">
 										<xsl:variable name="position" select="position()"/>
 
-										<h4>
-											<xsl:text>Attribution: </xsl:text>
-											<a href="{.}">
-												<xsl:value-of select="."/>
-											</a>
-										</h4>
 
-										<!-- only display graph on die pages -->
-										<xsl:if test="$collection_type = 'die'">
-											<div namedGraph="{.}" class="network-graph hidden" id="{generate-id()}"/>
-										</xsl:if>
+										<xsl:choose>
+											<!-- only display the table if there are links -->
+											<xsl:when test="doc('input:dies')//res:sparql[$position]/descendant::res:result">
+												<h4>
+													<xsl:text>Attribution: </xsl:text>
+													<a href="{.}">
+														<xsl:value-of select="."/>
+													</a>
+												</h4>
 
-										<!-- display die link table only in a type page -->
-										<div>
-											<h4>Die Links</h4>
+												<!-- only display graph on die pages -->
+												<xsl:if test="$collection_type = 'die'">
+													<div namedGraph="{.}" class="network-graph hidden" id="{generate-id()}"/>
+												</xsl:if>
 
-											<!-- serialize the SPARQL response relevant to the named graph into an HTML table -->
-											<xsl:choose>
-												<xsl:when test="$collection_type = 'cointype'">
-													<xsl:apply-templates select="doc('input:dies')//res:sparql[$position]" mode="die-links">
-														<xsl:with-param name="reverse" as="xs:boolean">false</xsl:with-param>
-													</xsl:apply-templates>
-												</xsl:when>
-												<xsl:when test="$collection_type = 'die'">
+												<!-- display die link table only in a type page -->
+												<div>
+													<h4>Die Links</h4>
+
+													<!-- serialize the SPARQL response relevant to the named graph into an HTML table -->
 													<xsl:choose>
-														<xsl:when
-															test="count(doc('input:dies')/dies/obverse/res:sparql[$position]/descendant::res:result) &gt; 0">
-															<xsl:apply-templates select="doc('input:dies')/dies/obverse/res:sparql[$position]" mode="die-links">
+														<xsl:when test="$collection_type = 'cointype'">
+															<xsl:apply-templates select="doc('input:dies')//res:sparql[$position]" mode="die-links">
 																<xsl:with-param name="reverse" as="xs:boolean">false</xsl:with-param>
 															</xsl:apply-templates>
 														</xsl:when>
-														<xsl:when
-															test="count(doc('input:dies')/dies/reverse/res:sparql[$position]/descendant::res:result) &gt; 0">
-															<xsl:apply-templates select="doc('input:dies')/dies/reverse/res:sparql[$position]" mode="die-links">
-																<xsl:with-param name="reverse" as="xs:boolean">true</xsl:with-param>
-															</xsl:apply-templates>
+														<xsl:when test="$collection_type = 'die'">
+															<xsl:choose>
+																<xsl:when
+																	test="count(doc('input:dies')/dies/obverse/res:sparql[$position]/descendant::res:result) &gt; 0">
+																	<xsl:apply-templates select="doc('input:dies')/dies/obverse/res:sparql[$position]"
+																		mode="die-links">
+																		<xsl:with-param name="reverse" as="xs:boolean">false</xsl:with-param>
+																	</xsl:apply-templates>
+																</xsl:when>
+																<xsl:when
+																	test="count(doc('input:dies')/dies/reverse/res:sparql[$position]/descendant::res:result) &gt; 0">
+																	<xsl:apply-templates select="doc('input:dies')/dies/reverse/res:sparql[$position]"
+																		mode="die-links">
+																		<xsl:with-param name="reverse" as="xs:boolean">true</xsl:with-param>
+																	</xsl:apply-templates>
+																</xsl:when>
+															</xsl:choose>
 														</xsl:when>
 													</xsl:choose>
-												</xsl:when>
-											</xsl:choose>
-
-										</div>
+												</div>
+											</xsl:when>
+											<!-- otherwise, display an alert about the lack of dies links -->
+											<xsl:otherwise>
+												<div class="alert alert-box alert-info">
+													<span class="glyphicon glyphicon-info-sign"/>
+													<strong>Attention:</strong> There are dies associated with this type, but no links between obverse and reverse dies.</div>
+											</xsl:otherwise>
+										</xsl:choose>
 
 									</xsl:for-each>
 								</div>
