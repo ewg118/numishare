@@ -782,7 +782,7 @@ function renderDistChart(path, urlParams) {
                     return d['subset'];
                 },
                 tbody:[[function (d) {
-                    return y + ': ' + d[y] + (y == 'percentage' ? '%' : '')
+                    return d[distValue] + ': ' + d[y] + (y == 'percentage' ? '%' : '')
                 }]]
             }).select("#distribution-chart").render();
     });
@@ -796,7 +796,7 @@ function renderMetricalChart(path, urlParams) {
     if ($.isNumeric(urlParams[ 'interval'])) {
         $.get(path + 'apis/getMetrical', $.param(urlParams, true),
         function (data) {
-            new d3plus.LinePlot().data(data).baseline(0).groupBy("subset").x('value').y('average').legend('true').legendPosition('bottom').shapeConfig({
+            new d3plus.LinePlot().data(data).baseline(0).groupBy("subset").x('value').y('average').legend('true').legendPosition('bottom').lineMarkers('true').shapeConfig({
                 Line: {
                     strokeWidth: 2
                 }

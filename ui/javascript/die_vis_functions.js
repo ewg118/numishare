@@ -33,8 +33,8 @@ function renderDieCount (urlParams) {
         }
         
         //display statistical data
-        renderCounts(data, 'obverse');
-        renderCounts(data, 'reverse');
+        renderCounts(data, urlParams, 'obverse');
+        renderCounts(data, urlParams, 'reverse');
         
         //render chart
         new d3plus.LinePlot().data(f).baseline(0).groupBy('side').x('frequency').y('dies').title(title).legend('true').legendPosition('bottom').lineMarkers('true').shapeConfig({
@@ -57,13 +57,14 @@ function renderDieCount (urlParams) {
 }
 
 //create HTML display from
-function renderCounts(data, side) {
+function renderCounts(data, urlParams, side) {
     var obj = data.data[side];
     var sideLabel = side[0].toUpperCase() + side.substring(1);
     
-    var query = $('#die-frequencies-query').text();
+    var query = $('#die-frequencies-query').text().replace('%SIDE%', sideLabel).replace('%typeURI%', urlParams['type']).replace('%dieStudy%', urlParams['dieStudy']);
+    var sparql_url = 'http://nomisma.org/query?query=' + encodeURIComponent(query) + "&output=csv";
     
-    var html = '<div><h4>' + sideLabel + '</h4>';
+    var html = '<div><h4>' + sideLabel + '<small style="margin-left:10px"><a href="' + sparql_url + '" title="Download CSV"><span class="glyphicon glyphicon-download"/>Download CSV</a></small></h4>';
     html += '<dl class="dl-horizontal">';
     if (obj.n == 0) {
         html += '<dt>Specimens (n)</dt><dd>0</dd>';
