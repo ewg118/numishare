@@ -1,7 +1,7 @@
 <?php 
 /************************
  AUTHOR: Ethan Gruber
- MODIFIED: January, 2018
+ MODIFIED: July 2022
  DESCRIPTION: Processes the data object/associative array for a coin into NUDS/XML
  ************************/
 

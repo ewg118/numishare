@@ -2,7 +2,7 @@
 
 /************************
  AUTHOR: Ethan Gruber
- MODIFIED: June, 2020
+ MODIFIED: July 2022
  DESCRIPTION: Functions for processing the row from the Filemaker export CSV into a data object for later 
  processing into NUDS/XML
  ************************/

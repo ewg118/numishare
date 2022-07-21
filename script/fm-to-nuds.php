@@ -1,7 +1,7 @@
 <?php
 /************************
 AUTHOR: Ethan Gruber
-MODIFIED: January, 2018
+MODIFIED: July 2022
 DESCRIPTION: Receive and interpret escaped CSV sent from Filemaker Pro database
 to public server, transform to Numishare-compliant NUDS XML (performing cleanup of data),
 post to eXist XML database via cURL, and get Solr add document from Orbeon and post to Solr.
