@@ -341,7 +341,7 @@ function generate_nuds($record, $fileName){
 		$writer->endElement();
 		
 		/***** IMAGES AVAILABLE *****/
-		if ($record['imageavailable'] == true){
+		if (array_key_exists('images', $record)){
 			$accnum = $record['accnum'];
 			$accession_array = explode('.', $accnum);
 			$collection_year = $accession_array[0];
@@ -363,7 +363,9 @@ function generate_nuds($record, $fileName){
 		
 			$writer->startElement('digRep');
 				$writer->startElement('mets:fileSec');
-					//obverse images
+				
+				//obverse images
+				if (array_key_exists('obv', $record['images'])){
 					$writer->startElement('mets:fileGrp');
 						$writer->writeAttribute('USE', 'obverse');
 						//IIIF
@@ -401,8 +403,11 @@ function generate_nuds($record, $fileName){
 								$writer->writeAttribute('xlink:href', "https://numismatics.org/collectionimages/{$image_path}/{$collection_year}/{$accnum}.obv.width175.jpg");
 							$writer->endElement();
 						$writer->endElement();
-					$writer->endElement();
-					//reverse images
+					$writer->endElement();				    
+				}
+				
+				//reverse images
+				if (array_key_exists('rev', $record['images'])){					
 					$writer->startElement('mets:fileGrp');
 						$writer->writeAttribute('USE', 'reverse');
 						//IIIF
@@ -440,7 +445,29 @@ function generate_nuds($record, $fileName){
 								$writer->writeAttribute('xlink:href', "https://numismatics.org/collectionimages/{$image_path}/{$collection_year}/{$accnum}.rev.width175.jpg");
 							$writer->endElement();
 						$writer->endElement();
-					$writer->endElement();
+					$writer->endElement();				    
+				}
+				
+				//iterate through additional images
+				foreach ($record['images'] as $k=>$v){
+				    $use = explode('.', $v)[3];
+				    
+				    if ($k != 'obv' && $k != 'rev'){
+				        $writer->startElement('mets:fileGrp');
+				            $writer->writeAttribute('USE', $use);
+    				            //IIIF
+    				            $writer->startElement('mets:file');
+        				            $writer->writeAttribute('USE', 'iiif');
+        				            $writer->startElement('mets:FLocat');
+        				                $writer->writeAttribute('LOCYPE', 'URL');
+        				                $writer->writeAttribute('xlink:href', "https://images.numismatics.org/collectionimages%2F{$image_path}%2F{$collection_year}%2F{$v}");
+        				            $writer->endElement();
+    				            $writer->endElement();
+				            $writer->endElement();
+				        $writer->endElement();
+				    }
+				}			
+			    //end mets:fileSec and digRep
 				$writer->endElement();
 			$writer->endElement();
 		}
