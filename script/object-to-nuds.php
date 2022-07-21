@@ -463,7 +463,7 @@ function generate_nuds($record, $fileName){
         				                $writer->writeAttribute('xlink:href', "https://images.numismatics.org/collectionimages%2F{$image_path}%2F{$collection_year}%2F{$v}");
         				            $writer->endElement();
     				            $writer->endElement();
-				            $writer->endElement();
+    				            
 				        $writer->endElement();
 				    }
 				}			
