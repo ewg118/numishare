@@ -945,6 +945,17 @@
 														<xsl:call-template name="image">
 															<xsl:with-param name="side">combined</xsl:with-param>
 														</xsl:call-template>
+														
+														<!-- show additional images -->														
+														<xsl:if test="descendant::mets:fileGrp[not(@USE = 'obverse') and not(@USE = 'reverse') and not(@USE = 'combined') and not(@USE = 'legend')]">
+															<h3>Additional Images</h3>
+															<xsl:for-each select="descendant::mets:fileGrp[not(@USE = 'obverse') and not(@USE = 'reverse') and not(@USE = 'combined') and not(@USE = 'legend')]">
+																<xsl:call-template name="image">
+																	<xsl:with-param name="side" select="@USE"/>
+																</xsl:call-template>
+															</xsl:for-each>
+														</xsl:if>
+														
 														<xsl:call-template name="legend_image"/>
 													</div>
 													<div class="col-md-8">
@@ -965,6 +976,17 @@
 														<xsl:call-template name="image">
 															<xsl:with-param name="side">combined</xsl:with-param>
 														</xsl:call-template>
+														
+														<!-- show additional images -->														
+														<xsl:if test="descendant::mets:fileGrp[not(@USE = 'obverse') and not(@USE = 'reverse') and not(@USE = 'combined') and not(@USE = 'legend')]">
+															<h3>Additional Images</h3>
+															<xsl:for-each select="descendant::mets:fileGrp[not(@USE = 'obverse') and not(@USE = 'reverse') and not(@USE = 'combined') and not(@USE = 'legend')]">
+																<xsl:call-template name="image">
+																	<xsl:with-param name="side" select="@USE"/>
+																</xsl:call-template>
+															</xsl:for-each>
+														</xsl:if>
+														
 														<xsl:call-template name="legend_image"/>
 													</div>
 												</xsl:when>
@@ -989,6 +1011,18 @@
 																	<xsl:with-param name="side">reverse</xsl:with-param>
 																</xsl:call-template>
 															</div>
+															
+															<!-- show additional images -->														
+															<xsl:if test="descendant::mets:fileGrp[not(@USE = 'obverse') and not(@USE = 'reverse') and not(@USE = 'combined') and not(@USE = 'legend')]">
+																<div class="col-md-12">
+																	<h3>Additional Images</h3>
+																	<xsl:for-each select="descendant::mets:fileGrp[not(@USE = 'obverse') and not(@USE = 'reverse') and not(@USE = 'combined') and not(@USE = 'legend')]">
+																		<xsl:call-template name="image">
+																			<xsl:with-param name="side" select="@USE"/>
+																		</xsl:call-template>
+																	</xsl:for-each>
+																</div>
+															</xsl:if>
 														</div>
 
 														<div class="row">
@@ -1033,6 +1067,18 @@
 																	<xsl:with-param name="side">reverse</xsl:with-param>
 																</xsl:call-template>
 															</div>
+															
+															<!-- show additional images -->														
+															<xsl:if test="descendant::mets:fileGrp[not(@USE = 'obverse') and not(@USE = 'reverse') and not(@USE = 'combined') and not(@USE = 'legend')]">
+																<div class="col-md-12">
+																	<h3>Additional Images</h3>
+																	<xsl:for-each select="descendant::mets:fileGrp[not(@USE = 'obverse') and not(@USE = 'reverse') and not(@USE = 'combined') and not(@USE = 'legend')]">
+																		<xsl:call-template name="image">
+																			<xsl:with-param name="side" select="@USE"/>
+																		</xsl:call-template>
+																	</xsl:for-each>
+																</div>
+															</xsl:if>
 														</div>
 													</xsl:when>
 
@@ -1556,10 +1602,7 @@
 		<div class="image-container">
 			<xsl:choose>
 				<xsl:when test="string($iiif-service)">
-					<div id="{substring($side, 1, 3)}-iiif-container" class="iiif-container"/>
-					<span class="hidden" id="{substring($side, 1, 3)}-iiif-service">
-						<xsl:value-of select="$iiif-service"/>
-					</span>
+					<div id="{$side}-iiif-container" class="iiif-container" service="{$iiif-service}"/>
 					<noscript>
 						<img src="{concat($iiif-service, '/full/400,/0/default.jpg')}" property="foaf:depiction" alt="{$side}"/>
 					</noscript>
@@ -1593,7 +1636,11 @@
 					</xsl:if>
 				</xsl:when>
 			</xsl:choose>
-			<xsl:apply-templates select="$nudsGroup/object[1]/descendant::nuds:typeDesc/*[local-name() = $side]" mode="physical"/>
+			
+			<!-- only display legend/type for obverse/reverse/edge images -->
+			<xsl:if test="$side = 'obverse' or $side = 'reverse' or $side = 'edge'">
+				<xsl:apply-templates select="$nudsGroup/object[1]/descendant::nuds:typeDesc/*[local-name() = $side]" mode="physical"/>
+			</xsl:if>
 		</div>
 
 	</xsl:template>
