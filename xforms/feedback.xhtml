@@ -21,6 +21,7 @@
 					<recipient-type></recipient-type>
 					<verified>false</verified>
 					<error>false</error>
+					<cc>false</cc>
 					<send-trigger>false</send-trigger>
 				</controls>
 			</xforms:instance>
@@ -40,6 +41,13 @@
 					<body content-type="text/plain"></body>
 				</message>
 			</xforms:instance>
+			
+			<xforms:instance id="to-template" xxf:exclude-result-prefixes="#all">
+				<to xmlns="">
+					<name/>
+					<email/>
+				</to>
+			</xforms:instance>
 
 			<!-- null element for call-xpl -->
 			<xforms:instance id="dump">
@@ -50,6 +58,7 @@
 			<xforms:bind nodeset="instance('control-instance')">
 				<xforms:bind nodeset="verified" type="xs:boolean"/>
 				<xforms:bind nodeset="error" type="xs:boolean"/>
+				<xforms:bind nodeset="cc" type="xs:boolean"/>
 				<!-- enable/disable the send email trigger based on validation of the form -->
 				<xforms:bind id="send-trigger" nodeset="send-trigger" type="xs:boolean" readonly=". != true()"/>
 			</xforms:bind>
@@ -152,6 +161,12 @@
 						</div>
 					</div>
 				</xforms:group>
+				
+				<div>
+					<xforms:input ref="instance('control-instance')/cc">
+						<xforms:label>CC to Self</xforms:label>						
+					</xforms:input>
+				</div>
 
 				<fr:recaptcha id="my-recaptcha">
 					<xforms:action ev:event="fr-verify-done">
@@ -177,6 +192,14 @@
 								<xforms:var name="type" select="instance('control-instance')/recipient-type"/>
 								<xforms:insert context="instance('email-config')" nodeset="from" position="after"
 									origin="instance('config')/pages/feedback/to[contains($type, @type)]"/>
+								
+								<!-- insert the from into a to when the email should be cc'd -->
+								<xforms:action if="instance('control-instance')/cc = true()">
+									<xforms:insert context="instance('email-config')" nodeset="to[last()]" position="after" origin="instance('to-template')"/>
+									<xforms:setvalue ref="instance('email-config')/to[last()]/name" value="instance('email-config')/from/name"/>
+									<xforms:setvalue ref="instance('email-config')/to[last()]/email" value="instance('email-config')/from/email"/>
+								</xforms:action>
+								
 
 								<!-- delete @to attribute -->
 								<xforms:delete nodeset="instance('email-config')/to/@type"/>
