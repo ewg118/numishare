@@ -57,7 +57,8 @@
 					</xsl:choose>
 				</xsl:param>
 				
-				<xsl:param name="rows">1000</xsl:param>
+				<xsl:param name="rows">10000</xsl:param>
+				
 				<xsl:param name="start">
 					<xsl:choose>
 						<xsl:when test="string(doc('input:request')/request/parameters/parameter[name='start']/value)">
