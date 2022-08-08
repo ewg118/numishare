@@ -247,23 +247,23 @@
 							<xsl:if test="count(//lst[@name='mint_geo']/int) &gt; 0">
 								<xsl:choose>
 									<xsl:when test="/content/config/collection_type = 'hoard'">
-										<a href="{$display_path}findspots.kml{$query}">
+										<a href="{$display_path}findspots.kml{$query}" rel="nofollow">
 											<img src="{$include_path}/images/googleearth.png" alt="KML" title="KML: Limit, 500 objects"/>
 										</a>
 									</xsl:when>
 									<xsl:otherwise>
-										<a href="{$display_path}query.kml{$query}">
+										<a href="{$display_path}query.kml{$query}" rel="nofollow">
 											<img src="{$include_path}/images/googleearth.png" alt="KML" title="KML: Limit, 500 objects"/>
 										</a>
 									</xsl:otherwise>
 								</xsl:choose>
 
 							</xsl:if>
-							<a href="{$display_path}query.csv{$query}">
+							<a href="{$display_path}query.csv{$query}" rel="nofollow">
 								<!-- the image below is copyright of Silvestre Herrera, available freely on wikimedia commons: http://commons.wikimedia.org/wiki/File:X-office-spreadsheet_Gion.svg -->
-								<img src="{$include_path}/images/spreadsheet.png" title="CSV" alt="CSV"/>
+								<img src="{$include_path}/images/spreadsheet.png" title="CSV: Limit, 5000 objects" alt="CSV"/>
 							</a>
-							<a href="{$display_path}visualize?compare={if (string($q)) then substring-after($query, 'q=') else '*:*'}">
+							<a href="{$display_path}visualize?compare={if (string($q)) then substring-after($query, 'q=') else '*:*'}" rel="nofollow">
 								<!-- the image below is copyright of Mark James, available freely on wikimedia commons: http://commons.wikimedia.org/wiki/File:Chart_bar.png -->
 								<img src="{$include_path}/images/visualize.png" title="Visualize" alt="Visualize"/>
 							</a>
@@ -272,10 +272,10 @@
 									<h4><xsl:value-of select="numishare:regularize_node('geographic', $lang)"/></h4>
 									<ul>
 										<xsl:if test="//lst[@name='mint_geo'][count(int) &gt; 0]">
-											<li><b>Mints: </b> <a href="{$display_path}mints.geojson{$query}">geoJSON</a>, <a href="{$display_path}mints.kml{$query}">KML</a></li>
+											<li><b>Mints: </b> <a href="{$display_path}mints.geojson{$query}" rel="nofollow">GeoJSON</a>, <a href="{$display_path}mints.kml{$query}" rel="nofollow">KML</a></li>
 										</xsl:if>
 										<xsl:if test="//lst[@name='findspot_geo'][count(int) &gt; 0]">
-											<li><b>Findspots: </b>  <a href="{$display_path}findspots.geojson{$query}">geoJSON</a>, <a href="{$display_path}findspots.kml{$query}">KML</a></li>
+											<li><b>Findspots: </b>  <a href="{$display_path}findspots.geojson{$query}" rel="nofollow">GeoJSON</a>, <a href="{$display_path}findspots.kml{$query}" rel="nofollow">KML</a></li>
 										</xsl:if>									
 									</ul>
 								</div>
