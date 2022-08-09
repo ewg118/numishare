@@ -314,6 +314,7 @@ ASK {?s oa:hasBody <URI>}]]>
 										<p:input name="hasDies" href="#hasDies"/>
 										<p:input name="dies" href="#dies"/>
 										<p:input name="subtypes" href="#subtypes"/>
+										<p:input name="numishareResults" href="#numishareResults"/>
 										<p:input name="query" href="#type-examples-query-document"/>
 										<p:input name="die-frequencies-query" href="#die-frequencies-query-document"/>
 										<p:input name="data" href="aggregate('content', #data, #specimenCount, #hasFindspots, #config)"/>
@@ -360,7 +361,8 @@ ASK {?s oa:hasBody <URI>}]]>
 										<p:input name="hasIIIF" href="#hasIIIF"/>
 										<p:input name="hasDies" href="#hasDies"/>
 										<p:input name="dies" href="#dies"/>
-										<p:input name="subtypes" href="#subtypes"/>										
+										<p:input name="subtypes" href="#subtypes"/>		
+										<p:input name="numishareResults" href="#numishareResults"/>
 										<p:input name="query" href="#type-examples-query-document"/>
 										<p:input name="die-frequencies-query" href="#die-frequencies-query-document"/>
 										<p:input name="data" href="aggregate('content', #data, #specimenCount, #hasFindspots, #config)"/>
@@ -404,6 +406,7 @@ ASK {?s oa:hasBody <URI>}]]>
 								<p:input name="hasDies" href="#hasDies"/>
 								<p:input name="dies" href="#dies"/>
 								<p:input name="subtypes" href="#subtypes"/>
+								<p:input name="numishareResults" href="#numishareResults"/>
 								<p:input name="query" href="#type-examples-query-document"/>
 								<p:input name="die-frequencies-query" href="#die-frequencies-query-document"/>
 								<p:input name="data" href="aggregate('content', #data, #specimenCount, #hasFindspots, #config)"/>
