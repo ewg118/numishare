@@ -47,9 +47,6 @@ function renderNetworkGraph(id, path, collection_type, urlParams) {
                 return edge.weight;
             },
             nodes: nodeArray,
-            groupBy: function (node) {
-                return node.side;
-            },
             label: function (node) {
                 if (node.hasOwnProperty('image')) {
                     return '';
