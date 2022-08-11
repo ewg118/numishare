@@ -1,6 +1,6 @@
 /*******
 DISTRIBUTION VISUALIZATION FUNCTIONS
-Modified: March 2019
+Modified: August 2022
 Function: These are the functions for generating charts and graphs with d3js
  *******/
 
@@ -234,7 +234,7 @@ $(document).ready(function () {
         }
         
         //display duplicate property alert if there is more than one from or to date
-        duplicates = countDates($(this).closest('.filter-container'));
+        duplicates = countDates($(this).closest('.filter-container'), 'filter');
         if (duplicates == true) {
             $(this).closest('.filter-container').children('.duplicate-date-alert').removeClass('hidden');
         } else {
@@ -286,7 +286,7 @@ $(document).ready(function () {
         $(this).closest('.filter').remove();
         
         //display duplicate property alert if there is more than one from or to date
-        duplicates = countDates(container);
+        duplicates = countDates(container, 'filter');
         if (duplicates == true) {
             container.children('.duplicate-date-alert').removeClass('hidden');
         } else {
@@ -372,7 +372,8 @@ $(document).ready(function () {
         }
         
         //display duplicate property alert if there is more than one from or to date
-        duplicates = countDates($(this).closest('.compare-container'));
+        
+        duplicates = countDates($(this).closest('.compare-container'), 'compare');
         if (duplicates == true) {
             $(this).closest('.compare-container').children('.duplicate-date-alert').removeClass('hidden');
         } else {
@@ -411,7 +412,7 @@ $(document).ready(function () {
         $(this).closest('.filter').remove();
         
         //display duplicate property alert if there is more than one from or to date. must count after deletion of filter
-        duplicates = countDates(container);
+        duplicates = countDates(container, 'compare');
         if (duplicates == true) {
             container.children('.duplicate-date-alert').removeClass('hidden');
         } else {
@@ -478,16 +479,28 @@ function generateFilter(formId) {
 }
 
 //count occurrences of from and to date query fields to display error warning or negate query validation
-function countDates(self) {
+function countDates(self, container) {
     var toCount = 0;
     var fromCount = 0;
-    self.siblings().addBack().children('.filter').children('.add-filter-prop').each(function () {
-        if ($(this).val() == 'to') {
-            toCount++;
-        } else if ($(this).val() == 'from') {
-            fromCount++;
-        }
-    });
+    
+    if (container == 'filter') {
+        self.siblings().addBack().children('.filter').children('.add-filter-prop').each(function () {
+            if ($(this).val() == 'to') {
+                toCount++;
+            } else if ($(this).val() == 'from') {
+                fromCount++;
+            }
+        });
+    } else {
+         self.children('.filter').children('.add-filter-prop').each(function () {
+            if ($(this).val() == 'to') {
+                toCount++;
+            } else if ($(this).val() == 'from') {
+                fromCount++;
+            }
+        });
+    }
+    
     
     if (fromCount > 1 || toCount > 1) {
         return true;
@@ -578,7 +591,7 @@ function validate(formId) {
     //evaluate every compare query
     $('#' + formId + ' .compare-master-container .compare-container').each(function () {
         //look for duplicate from or to dates
-        duplicates = countDates($(this));
+        duplicates = countDates($(this), 'compare');
         if (duplicates == true) {
             elements.push(false);
         }
@@ -777,14 +790,14 @@ function renderDistChart(path, urlParams) {
     
     $.get(path + 'apis/getDistribution', $.param(urlParams, true),
     function (data) {
-        new d3plus.BarChart().data(data).groupBy('subset').x(distValue).y(y).tooltipConfig({
-                title: function (d) {
-                    return d['subset'];
-                },
-                tbody:[[function (d) {
-                    return y + ': ' + d[y] + (y == 'percentage' ? '%' : '')
-                }]]
-            }).select("#distribution-chart").render();
+        new d3plus.BarChart().data(data).groupBy('subset').x(distValue).y(y).legend('true').legendPosition('bottom').tooltipConfig({
+            title: function (d) {
+                return d[ 'subset'];
+            },
+            tbody:[[ function (d) {
+                return d[distValue] + ': ' + d[y] + (y == 'percentage' ? '%': '')
+            }]]
+        }).select("#distribution-chart").render();
     });
 }
 
@@ -796,15 +809,15 @@ function renderMetricalChart(path, urlParams) {
     if ($.isNumeric(urlParams[ 'interval'])) {
         $.get(path + 'apis/getMetrical', $.param(urlParams, true),
         function (data) {
-            new d3plus.LinePlot().data(data).baseline(0).groupBy("subset").x('value').y('average').shapeConfig({
+            new d3plus.LinePlot().data(data).baseline(0).groupBy("subset").x('value').y('average').legend('true').legendPosition('bottom').lineMarkers('true').shapeConfig({
                 Line: {
                     strokeWidth: 2
                 }
             }).tooltipConfig({
                 title: function (d) {
-                    return d["label"];
+                    return d[ "label"];
                 },
-                tbody:[[function (d) {
+                tbody:[[ function (d) {
                     return "Average: " + d[ "average"]
                 }]]
             }).select("#metrical-chart").render();
@@ -812,11 +825,11 @@ function renderMetricalChart(path, urlParams) {
     } else {
         $.get(path + 'apis/getMetrical', $.param(urlParams, true),
         function (data) {
-            new d3plus.BarChart().data(data).groupBy('subset').x('value').y('average').tooltipConfig({
+            new d3plus.BarChart().data(data).groupBy('subset').x('value').y('average').legend('true').legendPosition('bottom').tooltipConfig({
                 title: function (d) {
-                    return d["subset"];
+                    return d[ "subset"];
                 },
-                tbody:[[function (d) {
+                tbody:[[ function (d) {
                     return "Average: " + d[ "average"]
                 }]]
             }).select("#metrical-chart").render();
