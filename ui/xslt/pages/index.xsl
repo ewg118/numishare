@@ -66,7 +66,7 @@
 				<meta property="twitter:title" content="{title}"/>
 				<meta name="twitter:card" content="summary_large_image"/>
 				
-				<xsl:if test="$collection-name = 'pella' or $collection-name = 'sco' or $collection-name = 'pco' or $collection-name = 'hrc' or $collection-name = 'igch' or $collection-name='agco'">
+				<xsl:if test="$collection-name = 'pella' or $collection-name = 'sco' or $collection-name = 'pco' or $collection-name = 'hrc' or $collection-name = 'igch' or $collection-name='agco' or $collection-name = 'bigr'">
 					<meta property="og:image" content="{$include_path}/images/{$collection-name}-banner.jpg"/>
 					<meta property="twitter:image" content="{$include_path}/images/{$collection-name}-banner.jpg"/>
 				</xsl:if>
