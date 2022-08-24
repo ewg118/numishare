@@ -87,7 +87,7 @@
 			<div class="row">
 				<div class="col-md-12">
 					<xsl:choose>
-						<xsl:when test="$collection-name = 'pella' or $collection-name = 'sco' or $collection-name = 'pco' or $collection-name = 'hrc' or $collection-name = 'igch' or $collection-name='agco'">
+						<xsl:when test="$collection-name = 'pella' or $collection-name = 'sco' or $collection-name = 'pco' or $collection-name = 'hrc' or $collection-name = 'igch' or $collection-name='agco' or $collection-name = 'bigr'">
 							<img src="{$include_path}/images/{$collection-name}-banner.jpg" style="width:100%"/>
 						</xsl:when>
 						<xsl:otherwise>
