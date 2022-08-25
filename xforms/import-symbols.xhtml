@@ -4,9 +4,9 @@
 	xmlns:fr="http://orbeon.org/oxf/xml/form-runner" xmlns:res="http://www.w3.org/2005/sparql-results#" xmlns:xi="http://www.w3.org/2001/XInclude"
 	xmlns:dcterms="http://purl.org/dc/terms/" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
 	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"
-	xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:nomisma="https://github.com/nomisma"
-	xmlns:prov="http://www.w3.org/ns/prov#" xmlns:nmo="http://nomisma.org/ontology#" xmlns:crm="http://www.cidoc-crm.org/cidoc-crm/"
-	xmlns:void="http://rdfs.org/ns/void#" xmlns:crmdig="http://www.ics.forth.gr/isl/CRMdig/" xmlns:exist="http://exist.sourceforge.net/NS/exist">
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xmlns:nomisma="https://github.com/nomisma" xmlns:prov="http://www.w3.org/ns/prov#"
+	xmlns:nmo="http://nomisma.org/ontology#" xmlns:crm="http://www.cidoc-crm.org/cidoc-crm/" xmlns:void="http://rdfs.org/ns/void#"
+	xmlns:crmdig="http://www.ics.forth.gr/isl/CRMdig/" xmlns:exist="http://exist.sourceforge.net/NS/exist">
 	<head>
 		<title>Numishare: Symbols CSV</title>
 		<link rel="stylesheet" href="/fr/style/bootstrap/css/bootstrap.css" type="text/css" />
@@ -33,11 +33,12 @@
 					<status></status>
 					<collection-name></collection-name>
 					<username></username>
-					<spreadsheet-key></spreadsheet-key>
-					<spreadsheet-uri></spreadsheet-uri>
+					<spreadsheet_key></spreadsheet_key>
+					<sheets_api_url></sheets_api_url>
+					<spreadsheet_uri></spreadsheet_uri>
 					<worksheet_id></worksheet_id>
 					<id></id>
-					<conceptScheme_uri/>
+					<conceptScheme_uri></conceptScheme_uri>
 					<type>nmo:Monogram</type>
 					<position>0</position>
 					<mapping></mapping>
@@ -111,6 +112,16 @@
 
 			<xforms:instance id="nomisma-ids" xxf:exclude-result-prefixes="#all">
 				<ids xmlns=""></ids>
+			</xforms:instance>
+
+			<!-- Google Sheets API v4 JSON response -->
+			<xforms:instance id="api" xxf:exclude-result-prefixes="#all">
+				<json xmlns=""></json>
+			</xforms:instance>
+
+			<!-- refactor the API response into a processable model -->
+			<xforms:instance id="sheet" xxf:exclude-result-prefixes="#all">
+				<sheet xmlns=""></sheet>
 			</xforms:instance>
 
 			<!-- RDF templates -->
@@ -203,7 +214,7 @@ PREFIX skos:	<http://www.w3.org/2004/02/skos/core#>]]></prefix>
 			<xforms:bind nodeset="instance('control-instance')">
 				<xforms:bind nodeset="type" required="true()"/>
 				<xforms:bind nodeset="load-trigger" id="load-trigger" type="xs:boolean" readonly=". != true()"
-					calculate="string-length(../spreadsheet-key) != 0"/>
+					calculate="string-length(../spreadsheet_key) != 0"/>
 				<xforms:bind nodeset="position" type="xs:integer"/>
 
 				<!-- enable/disable buttons based on validation -->
@@ -293,52 +304,64 @@ PREFIX skos:	<http://www.w3.org/2004/02/skos/core#>]]></prefix>
 
 			<!-- ************* SUBMISSIONS **********************-->
 			<!-- ************* GOOGLE DRIVE **********************-->
-			<xforms:submission id="query-spreadsheet-feed" serialization="none" method="get"
-				action="https://spreadsheets.google.com/feeds/worksheets/{instance('control-instance')/spreadsheet-key}/public/full" instance="spreadsheet-feed"
-				replace="instance">
-				<xforms:message ev:event="xforms-submit-error" level="modal">Unable to receive Atom from Google Drive for the key provided.</xforms:message>
-				<!-- if a feed is successfully received, set the id for the workshop -->
+			<xforms:submission id="query-spreadsheet" serialization="application/json" method="get" action="{instance('control-instance')/sheets_api_url}"
+				instance="api" replace="instance">
+				<xforms:message ev:event="xforms-submit-error" level="modal">Unable to receive JSON Response from Google Sheets API for the key
+					provided.</xforms:message>
+
+				<!-- query the API gain to load the first sheet JSON -->
 				<xforms:action ev:event="xforms-submit-done">
-					<!-- set conceptScheme_uri -->
-					<xforms:setvalue ref="instance('control-instance')/conceptScheme_uri"
-						value="replace(instance('config')/uri_space, '/id/', '/symbol/')"/>
-					
-					<xforms:setvalue ref="instance('control-instance')/spreadsheet-uri"
-						value="concat('https://docs.google.com/spreadsheets/d/', instance('control-instance')/spreadsheet-key, '/pubhtml')"/>
-					<xforms:setvalue ref="instance('control-instance')/worksheet_id"
-						value="tokenize(instance('spreadsheet-feed')//atom:entry[1]/atom:id, '/')[last()]"/>
-					<xforms:send submission="load-worksheet"/>
+					<xforms:setvalue ref="instance('control-instance')/spreadsheet_uri"
+						value="concat('https://docs.google.com/spreadsheets/d/', instance('control-instance')/spreadsheet_key, '/pubhtml')"/>
+
+					<xforms:setvalue ref="instance('control-instance')/sheets_api_url"
+						value="concat('https://sheets.googleapis.com/v4/spreadsheets/', instance('control-instance')/spreadsheet_key, '/values/', encode-for-uri(instance('api')/sheets/_[1]/properties/title), '?key=', instance('config')/googleKey)"/>
+
+					<xforms:send submission="query-sheet"/>
 				</xforms:action>
 			</xforms:submission>
 
-			<xforms:submission id="load-worksheet" serialization="none" method="get"
-				action="https://spreadsheets.google.com/feeds/list/{instance('control-instance')/spreadsheet-key}/{instance('control-instance')/worksheet_id}/public/full"
-				instance="feed" replace="instance">
-				<xforms:message ev:event="xforms-submit-error" level="modal">Unable to receive Atom from Google Drive for the worksheet ID.</xforms:message>
-				<!-- if a feed is successfully received, set the id for the workshop -->
+			<xforms:submission id="query-sheet" serialization="application/json" method="get" action="{instance('control-instance')/sheets_api_url}"
+				instance="api" replace="instance">
+				<xforms:message ev:event="xforms-submit-error" level="modal">Unable to receive JSON Response from Google Sheets API for the key
+					provided.</xforms:message>
+
+				<!-- process the sheet JSON response and create the mappings -->
 				<xforms:action ev:event="xforms-submit-done">
-					<!-- if there is at least one entry, set the mapping instance and toggle the mapping interface -->
-					<xforms:action if="count(instance('feed')//atom:entry) &gt; 0">
-						<xforms:action
-							xxf:iterate="instance('feed')//atom:entry[1]/*[namespace-uri()='http://schemas.google.com/spreadsheets/2006/extended']">
-							<xforms:var name="heading" select="name()"/>
+					<xforms:action if="count(instance('api')/values/_) &gt; 0">
+						<xforms:action xxf:iterate="instance('api')/values/_[@type = 'array'][1]/_">
+							<xforms:var name="heading" select="normalize-space(context())"/>
 							<xforms:insert context="instance('mappings')" nodeset="./child::node()[last()]"
-								origin="xforms:element('mapping', (xforms:attribute('from', $heading), xforms:attribute('to', '')))"/>
+								origin="xforms:element('mapping', (xforms:attribute('from', $heading), xforms:attribute('to', '')))"
+								if="not(instance('mappings')/mapping/@from = $heading)"/>
 						</xforms:action>
 
 						<!-- read whether or not the spreadsheet already exists in the system -->
-						<xforms:action if="not(instance('spreadsheet-rdf')/prov:Entity[@rdf:about = instance('control-instance')/spreadsheet-uri])">
+						<xforms:action if="not(instance('spreadsheet-rdf')/prov:Entity[@rdf:about = instance('control-instance')/spreadsheet_uri])">
 							<!-- if there is no matching URI for the spreadsheet (prov:Entity), then insert the spreadsheet template into the spreadsheet RDF -->
 							<xforms:insert context="instance('spreadsheet-rdf')" nodeset="./child::node()[last()]" origin="instance('spreadsheet-template')"/>
 							<xforms:setvalue ref="instance('spreadsheet-rdf')/prov:Entity[last()]/@rdf:about"
-								value="instance('control-instance')/spreadsheet-uri"/>
+								value="instance('control-instance')/spreadsheet_uri"/>
 						</xforms:action>
 
-						<!-- if there are errors, then display the mapping interface -->
+						<!-- process the remaining rows into a sheet -->
+						<xforms:action xxf:iterate="instance('api')/values/_[@type = 'array'][position() &gt; 1]">
+
+							<xforms:insert context="instance('sheet')" nodeset="./child::node()[last()]" origin="xforms:element('row')"/>
+
+							<xforms:action xxf:iterate="context()/_">
+								<xforms:var name="val" select="normalize-space(.)"/>
+								<xforms:var name="position" select="position()"/>
+								<xforms:var name="heading" select="instance('mappings')/mapping[$position]/@from"/>
+								<xforms:insert context="instance('sheet')/row[last()]" nodeset="./child::node()[last()]"
+									origin="xforms:element('cell', (xforms:attribute('name', $heading), $val))"/>
+							</xforms:action>
+						</xforms:action>
+
 						<xforms:toggle case="mapping-interface"/>
 					</xforms:action>
 					<!-- if there are no entries in the Atom feed, set the error interface -->
-					<xforms:action if="count(instance('feed')//atom:entry) = 0">
+					<xforms:action if="count(instance('api')/values/_) = 0">
 						<xforms:toggle case="mapping-error-interface"/>
 					</xforms:action>
 				</xforms:action>
@@ -347,8 +370,7 @@ PREFIX skos:	<http://www.w3.org/2004/02/skos/core#>]]></prefix>
 			<!-- ***** LOADING COLLECTIONS/CONFIG *****-->
 			<xforms:submission id="load-config" serialization="none" method="get"
 				action="{instance('exist-config')/url}{instance('control-instance')/collection-name}/config.xml"
-				xxf:username="{instance('exist-config')/username}" xxf:password="{instance('exist-config')/password}" replace="instance"
-				instance="config">
+				xxf:username="{instance('exist-config')/username}" xxf:password="{instance('exist-config')/password}" replace="instance" instance="config">
 				<xforms:message ev:event="xforms-submit-error" level="modal">Unable to load Numishare configuration</xforms:message>
 
 				<xforms:action ev:event="xforms-submit-done">
@@ -518,19 +540,30 @@ PREFIX skos:	<http://www.w3.org/2004/02/skos/core#>]]></prefix>
 										</xforms:select1>
 									</div>
 									<div>
-										<xforms:input ref="spreadsheet-key">
+										<xforms:input ref="spreadsheet_key">
 											<xforms:label>Spreadsheet ID</xforms:label>
 										</xforms:input>
 										<xforms:trigger bind="load-trigger">
 											<xforms:label>Load Spreadsheet</xforms:label>
-											<xforms:send submission="query-spreadsheet-feed" ev:event="DOMActivate"/>
+											<xforms:action ev:event="DOMActivate">
+
+												<!-- set conceptScheme_uri -->
+												<xforms:setvalue ref="instance('control-instance')/conceptScheme_uri"
+													value="replace(instance('config')/uri_space, '/id/', '/symbol/')"/>
+
+												<!-- load spreadsheet JSON metadata -->
+												<xforms:setvalue ref="instance('control-instance')/sheets_api_url"
+													value="concat('https://sheets.googleapis.com/v4/spreadsheets/', instance('control-instance')/spreadsheet_key, '?includeGridData=false&amp;key=', instance('config')/googleKey)"/>
+
+												<xforms:send submission="query-spreadsheet"/>
+											</xforms:action>
 										</xforms:trigger>
 									</div>
 								</div>
 							</xforms:group>
 						</xforms:case>
 						<xforms:case id="mapping-interface">
-							<xforms:group ref="instance('spreadsheet-rdf')/prov:Entity[@rdf:about = instance('control-instance')/spreadsheet-uri]">
+							<xforms:group ref="instance('spreadsheet-rdf')/prov:Entity[@rdf:about = instance('control-instance')/spreadsheet_uri]">
 								<div class="section">
 									<h3>Spreadsheet Metadata</h3>
 									<div class="trigger_container">
@@ -698,7 +731,7 @@ PREFIX skos:	<http://www.w3.org/2004/02/skos/core#>]]></prefix>
 
 											<tr>
 												<td>
-													<xforms:output ref="substring-after(@from, ':')"/>
+													<xforms:output ref="@from"/>
 												</td>
 												<td>
 													<xforms:select1 ref="@to">
@@ -749,23 +782,23 @@ PREFIX skos:	<http://www.w3.org/2004/02/skos/core#>]]></prefix>
 											<!-- first delete entries, in the event of changing the mapping -->
 											<xforms:delete nodeset="instance('validation-model')/record"/>
 
-											<!-- ensure that Record IDs are unique -->
-											<xforms:insert
-												if="count(instance('feed')//atom:entry/*[name()=instance('mappings')/mapping[@to='id']/@from]) != count(distinct-values(instance('feed')//atom:entry/*[name()=instance('mappings')/mapping[@to='id']/@from]))"
-												context="instance('validation-model')" nodeset="./child::node()[last()]"
-												origin="xforms:element('error', 'Duplicate Record IDs.')"/>
-
 											<!-- then iterate through all Atom entries -->
-											<xforms:action xxf:iterate="instance('feed')//atom:entry">
+											<xforms:action xxf:iterate="instance('sheet')/row">
 												<!-- create record in the validation model -->
-												<xforms:var name="title" select="atom:title"/>
+												<xforms:var name="title" select="cell[@name=instance('mappings')/mapping[@to='id']/@from]"/>
 												<xforms:var name="position" select="position()"/>
 												<xforms:insert context="instance('validation-model')" nodeset="./child::node()[last()]"
 													origin="xforms:element('record', (xforms:attribute('title', $title), ''))"/>
 
-												<!-- iterate through all gsx elements -->
-												<xforms:action xxf:iterate="*[namespace-uri()='http://schemas.google.com/spreadsheets/2006/extended']">
-													<xforms:var name="from" select="name()"/>
+												<!-- ensure that nomisma ids are unique -->
+												<xforms:insert
+													if="count(instance('sheet')/row/cell[@name=instance('mappings')/mapping[@to='id']/@from]) != count(distinct-values(instance('sheet')/row/cell[@name=instance('mappings')/mapping[@to='id']/@from]))"
+													context="instance('validation-model')" nodeset="./child::node()[last()]"
+													origin="xforms:element('error', 'Duplicate IDs.')"/>
+
+												<!-- iterate through all the cells -->
+												<xforms:action xxf:iterate="context()/cell">
+													<xforms:var name="from" select="@name"/>
 													<xforms:var name="value" select="normalize-space(context())"/>
 
 													<!-- only process those fields which have been mapped in the user interface -->
@@ -804,7 +837,7 @@ PREFIX skos:	<http://www.w3.org/2004/02/skos/core#>]]></prefix>
 
 														<!-- fields that can be any type of URI -->
 														<xforms:action
-															if="$mapping = 'contributor' or $mapping = 'crm:P165i_is_incorporated_in' or $mapping = 'image_creator' 
+															if="$mapping = 'contributor' or $mapping = 'image_creator' 
 															or $mapping = 'skos:exactMatch' or $mapping = 'image_license'">
 
 															<xforms:var name="isValid" select="matches($value, 'https?://(-\.)?([^\s/?\.#]+\.?)+(/[^\s]*)?$')"/>
@@ -812,18 +845,25 @@ PREFIX skos:	<http://www.w3.org/2004/02/skos/core#>]]></prefix>
 																context="instance('validation-model')/record[last()]" nodeset="./child::node()[last()]"
 																origin="xforms:element('error', concat('URI is invalid: ', $value))"> </xforms:insert>
 														</xforms:action>
-														
+
+														<!-- allow 5 character leeway for Unicode -->
+														<xforms:action if="$mapping = 'crm:P165i_is_incorporated_in'">
+															<xforms:var name="isValid" select="matches($value, 'https?://(-\.)?([^\s/?\.#]+\.?)+(/[^\s]*)?$')"/>
+															<xforms:insert if="string-length($value) &gt;= 5 and $isValid = false()"
+																context="instance('validation-model')/record[last()]" nodeset="./child::node()[last()]"
+																origin="xforms:element('error', concat('URI is invalid: ', $value))"> </xforms:insert>
+														</xforms:action>
+
 														<!-- ensure that the broader ID exists in the spreadsheet -->
 														<xforms:action if="$mapping = 'skos:broader' and string-length($value) &gt; 0">
 															<xforms:var name="id" select="$value"/>
-															
+
 															<xforms:action
-																if="not(instance('feed')//atom:entry[*[namespace-uri()='http://schemas.google.com/spreadsheets/2006/extended'][name()=instance('mappings')/mapping[@to='id']/@from] = $id])">
-																<xforms:insert
-																	context="instance('validation-model')/record[last()]"
+																if="not(instance('sheet')/row[cell[@name=instance('mappings')/mapping[@to='id']/@from] = $id])">
+																<xforms:insert context="instance('validation-model')/record[last()]"
 																	nodeset="./child::node()[last()]"
 																	origin="xforms:element('error', concat('skos:broader ID ', $value, ' is not found in spreadsheet.'))"
-																/>																
+																/>
 															</xforms:action>
 														</xforms:action>
 
@@ -951,28 +991,29 @@ PREFIX skos:	<http://www.w3.org/2004/02/skos/core#>]]></prefix>
 											<xforms:var name="dateTime" select="current-dateTime()"/>
 
 											<!-- begin processing the spreadsheet into RDF -->
-											<xforms:action xxf:iterate="instance('feed')//atom:entry">
+											<xforms:action xxf:iterate="instance('sheet')/row">
 												<xforms:var name="id"
-													select="normalize-space(data(context()/*[namespace-uri()='http://schemas.google.com/spreadsheets/2006/extended'][name()=instance('mappings')/mapping[@to='id']/@from]))"/>
+													select="normalize-space(data(context()/cell[@name=instance('mappings')/mapping[@to='id']/@from]))"/>
 												<xforms:setvalue ref="instance('control-instance')/id" value="$id"/>
 												<xforms:var name="dataset" select="substring-before(instance('config')/uri_space, 'id/')"/>
 
 												<!-- evaluate whether a creation_date is castable as xs:date or xs:dateTime for provenance statement -->
 												<xforms:var name="creation_date"
-													select="normalize-space(data(context()/*[namespace-uri()='http://schemas.google.com/spreadsheets/2006/extended'][name()=instance('mappings')/mapping[@to='creation_date']/@from]))"/>
+													select="normalize-space(data(context()/cell[@name=instance('mappings')/mapping[@to='creation_date']/@from]))"/>
 												<xforms:var name="isNew"
 													select="if ($creation_date castable as xs:date or $creation_date castable as xs:dateTime) then false() else true()"/>
 
 												<!-- get contributors, which should be inserted into the last possible activity -->
 												<xforms:var name="contributors"
-													select="context()/*[namespace-uri()='http://schemas.google.com/spreadsheets/2006/extended'][name()=instance('mappings')/mapping[@to='contributor']/@from]"/>
+													select="context()/cell[@name=instance('mappings')/mapping[@to='contributor']/@from]"/>
 
 												<!-- clear data from RDF instance before loading-->
 												<xforms:delete nodeset="instance('rdf')/*"/>
 
 												<!-- create the Concept object -->
-												<xforms:var name="uri" select="concat(instance('control-instance')/conceptScheme_uri, instance('control-instance')/id)"/>
-												
+												<xforms:var name="uri"
+													select="concat(instance('control-instance')/conceptScheme_uri, instance('control-instance')/id)"/>
+
 												<xforms:insert context="instance('rdf')"
 													origin="xforms:element(instance('control-instance')/type, xforms:attribute('rdf:about', $uri))"/>
 												<!-- insert rdf:type as skos:Concept -->
@@ -995,9 +1036,8 @@ PREFIX skos:	<http://www.w3.org/2004/02/skos/core#>]]></prefix>
 												<xforms:setvalue ref="instance('rdf')/dcterms:ProvenanceStatement/foaf:topic/@rdf:resource" value="$uri"/>
 
 												<!-- iterate through columns -->
-												<xforms:action
-													xxf:iterate="context()/*[namespace-uri()='http://schemas.google.com/spreadsheets/2006/extended']">
-													<xforms:var name="from" select="name()"/>
+												<xforms:action xxf:iterate="context()/cell">
+													<xforms:var name="from" select="@name"/>
 													<xforms:var name="value" select="normalize-space(data(context()))"/>
 
 													<!-- only process those fields which have been mapped in the user interface -->
@@ -1019,11 +1059,12 @@ PREFIX skos:	<http://www.w3.org/2004/02/skos/core#>]]></prefix>
 															<xforms:insert context="instance('rdf')/*[1]" nodeset="./child::node()[last()]"
 																origin="xforms:element($mapping, (xforms:attribute('rdf:resource', $value)))"/>
 														</xforms:action>
-														
+
 														<!-- combine skos:broader ID with URI Space -->
-														<xforms:action if="$mapping = 'skos:broader'">															
+														<xforms:action if="$mapping = 'skos:broader'">
 															<xforms:insert context="instance('rdf')/*[1]" nodeset="./child::node()[last()]"
-																origin="xforms:element($mapping, (xforms:attribute('rdf:resource', concat(instance('control-instance')/conceptScheme_uri, $value))))"/>
+																origin="xforms:element($mapping, (xforms:attribute('rdf:resource', concat(instance('control-instance')/conceptScheme_uri, $value))))"
+															/>
 														</xforms:action>
 
 														<!-- constituent letters and symbols -->
@@ -1052,7 +1093,7 @@ PREFIX skos:	<http://www.w3.org/2004/02/skos/core#>]]></prefix>
 														<!-- image references -->
 														<xforms:action if="$mapping = 'crm:P165i_is_incorporated_in'">
 															<!-- If the string length is 1, then the symbol is represented by an existing unicode character -->
-															<xforms:action if="string-length($value) = 1">
+															<xforms:action if="string-length($value) &lt;= 5">
 																<xforms:insert context="instance('rdf')/*[1]" nodeset="./child::node()[last()]"
 																	origin="xforms:element('crm:P165i_is_incorporated_in', $value)"/>
 															</xforms:action>
@@ -1082,8 +1123,7 @@ PREFIX skos:	<http://www.w3.org/2004/02/skos/core#>]]></prefix>
 														<xforms:action if="$mapping = 'image_creator'">
 
 															<!-- only insert an image_creator if there are D1_Digital_Objects (this ignores unicode characters) -->
-															<xforms:action
-																xxf:iterate="instance('rdf')/*[1]//crmdig:D1_Digital_Object">
+															<xforms:action xxf:iterate="instance('rdf')/*[1]//crmdig:D1_Digital_Object">
 																<xforms:insert context="." nodeset="./child::node()[last()]"
 																	origin="xforms:element('dcterms:creator', xforms:attribute('rdf:resource', $value))"/>
 															</xforms:action>
@@ -1091,8 +1131,7 @@ PREFIX skos:	<http://www.w3.org/2004/02/skos/core#>]]></prefix>
 
 														<xforms:action if="$mapping = 'image_license'">
 															<!-- only insert an image_license if there are D1_Digital_Objects (this ignores unicode characters) -->
-															<xforms:action
-																xxf:iterate="instance('rdf')/*[1]//crmdig:D1_Digital_Object">
+															<xforms:action xxf:iterate="instance('rdf')/*[1]//crmdig:D1_Digital_Object">
 																<xforms:insert context="." nodeset="./child::node()[last()]"
 																	origin="xforms:element('dcterms:license', xforms:attribute('rdf:resource', $value))"/>
 															</xforms:action>
@@ -1152,7 +1191,7 @@ PREFIX skos:	<http://www.w3.org/2004/02/skos/core#>]]></prefix>
 													ref="instance('rdf')/dcterms:ProvenanceStatement/prov:*[last()]/prov:Activity/prov:atTime/@rdf:datatype"
 													>http://www.w3.org/2001/XMLSchema#dateTime</xforms:setvalue>
 												<xforms:setvalue ref="instance('rdf')/dcterms:ProvenanceStatement/prov:*[last()]/prov:Activity/prov:atTime"
-													value="current-dateTime()"/>
+													value="$dateTime"/>
 
 												<!-- set type -->
 												<xforms:setvalue ref="instance('rdf')/dcterms:ProvenanceStatement/prov:*[last()]/prov:Activity/dcterms:type"
@@ -1160,7 +1199,7 @@ PREFIX skos:	<http://www.w3.org/2004/02/skos/core#>]]></prefix>
 
 												<!-- insert spreadsheet URI -->
 												<xforms:insert context="instance('rdf')/dcterms:ProvenanceStatement/prov:*[last()]/prov:Activity"
-													origin="xforms:element('prov:used', (xforms:attribute('rdf:resource', instance('control-instance')/spreadsheet-uri)))"/>
+													origin="xforms:element('prov:used', (xforms:attribute('rdf:resource', instance('control-instance')/spreadsheet_uri)))"/>
 
 												<!-- insert contributors -->
 												<xforms:action xxf:iterate="$contributors">
@@ -1172,11 +1211,11 @@ PREFIX skos:	<http://www.w3.org/2004/02/skos/core#>]]></prefix>
 
 												<!-- *** BEGIN CRUD OPERATIONS *** -->
 												<!-- save RDF/XML to eXist-db collection -->
-												<xforms:send submission="save-rdf"/>
+												<!--<xforms:send submission="save-rdf"/>-->
 											</xforms:action>
 
 											<!-- save the spreadsheet rdf -->
-											<xforms:send submission="save-spreadsheet-rdf"/>
+											<!--<xforms:send submission="save-spreadsheet-rdf"/>-->
 
 											<xforms:toggle case="process-complete"/>
 										</xforms:action>
@@ -1188,7 +1227,7 @@ PREFIX skos:	<http://www.w3.org/2004/02/skos/core#>]]></prefix>
 							<p>The process has been completed successfully. Click the link above to return to the Admin panel.</p>
 						</xforms:case>
 					</xforms:switch>
-					<!--<fr:xforms-inspector/>-->
+					<fr:xforms-inspector/>
 				</div>
 			</div>
 		</div>
