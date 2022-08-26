@@ -849,7 +849,7 @@ PREFIX skos:	<http://www.w3.org/2004/02/skos/core#>]]></prefix>
 														<!-- allow 5 character leeway for Unicode -->
 														<xforms:action if="$mapping = 'crm:P165i_is_incorporated_in'">
 															<xforms:var name="isValid" select="matches($value, 'https?://(-\.)?([^\s/?\.#]+\.?)+(/[^\s]*)?$')"/>
-															<xforms:insert if="string-length($value) &gt;= 5 and $isValid = false()"
+															<xforms:insert if="string-length($value) &gt; 5 and $isValid = false()"
 																context="instance('validation-model')/record[last()]" nodeset="./child::node()[last()]"
 																origin="xforms:element('error', concat('URI is invalid: ', $value))"> </xforms:insert>
 														</xforms:action>
@@ -1211,11 +1211,11 @@ PREFIX skos:	<http://www.w3.org/2004/02/skos/core#>]]></prefix>
 
 												<!-- *** BEGIN CRUD OPERATIONS *** -->
 												<!-- save RDF/XML to eXist-db collection -->
-												<!--<xforms:send submission="save-rdf"/>-->
+												<xforms:send submission="save-rdf"/>
 											</xforms:action>
 
 											<!-- save the spreadsheet rdf -->
-											<!--<xforms:send submission="save-spreadsheet-rdf"/>-->
+											<xforms:send submission="save-spreadsheet-rdf"/>
 
 											<xforms:toggle case="process-complete"/>
 										</xforms:action>
@@ -1227,7 +1227,7 @@ PREFIX skos:	<http://www.w3.org/2004/02/skos/core#>]]></prefix>
 							<p>The process has been completed successfully. Click the link above to return to the Admin panel.</p>
 						</xforms:case>
 					</xforms:switch>
-					<fr:xforms-inspector/>
+					<!--<fr:xforms-inspector/>-->
 				</div>
 			</div>
 		</div>

@@ -37,7 +37,9 @@
 					<xsl:variable name="xquery">
 						<![CDATA[xquery version "1.0"; 
 						declare namespace crm = "http://www.cidoc-crm.org/cidoc-crm/";
+						declare namespace crmdig = "http://www.ics.forth.gr/isl/CRMdig/";
 						declare namespace nmo = "http://nomisma.org/ontology#";
+						declare namespace rdf = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
 						<count>
 							{
 							count(collection(COLLECTION)XPATH)
@@ -94,9 +96,9 @@
 									<xsl:variable name="xpath">
 										<xsl:text>[</xsl:text>
 										<!-- only display monograms with images (eliminates supertypes) -->
-										<xsl:text>descendant::crm:P165i_is_incorporated_in and </xsl:text>			
+										<xsl:text>descendant::crm:P165i_is_incorporated_in[@rdf:resource or child::crmdig:D1_Digital_Object] and </xsl:text>			
 										<xsl:for-each select="$symbol//value">
-											<xsl:value-of select="concat('descendant::crm:P106_is_composed_of = &#x022;', ., '&#x022;')"/>
+											<xsl:value-of select="concat('(descendant::crm:P106_is_composed_of = &#x022;', ., '&#x022; or descendant::crm:P165i_is_incorporated_in = &#x022;', ., '&#x022;)')"/>
 											<xsl:if test="not(position() = last())">
 												<xsl:text> and </xsl:text>
 											</xsl:if>
@@ -107,7 +109,7 @@
 									<xsl:value-of select="replace(replace($xquery, 'COLLECTION', $collection), 'XPATH', $xpath)"/>
 								</xsl:when>
 								<xsl:otherwise>
-									<xsl:variable name="xpath">[descendant::crm:P165i_is_incorporated_in]</xsl:variable>
+									<xsl:variable name="xpath">[descendant::crm:P165i_is_incorporated_in[@rdf:resource or child::crmdig:D1_Digital_Object]]</xsl:variable>
 									<xsl:value-of select="replace(replace($xquery, 'COLLECTION', $collection), 'XPATH', $xpath)"/>
 								</xsl:otherwise>
 							</xsl:choose>

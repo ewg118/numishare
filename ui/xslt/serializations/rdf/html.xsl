@@ -140,7 +140,7 @@
 		<script src="https://unpkg.com/leaflet@1.0.0/dist/leaflet.js"/>
 		<script type="text/javascript" src="{$include_path}/javascript/leaflet.ajax.min.js"/>
 		<script type="text/javascript" src="{$include_path}/javascript/display_map_functions.js"/>
-		
+
 		<!-- network graph functions -->
 		<script type="text/javascript" src="{$include_path}/javascript/d3.min.js"/>
 		<script type="text/javascript" src="{$include_path}/javascript/d3plus-network.full.min.js"/>
@@ -157,9 +157,9 @@
 	<xsl:template name="body">
 		<div class="container-fluid content">
 			<div class="row">
-				<xsl:if test="descendant::crm:P165i_is_incorporated_in">
+				<xsl:if test="descendant::crm:P165i_is_incorporated_in[@rdf:resource or child::crmdig:D1_Digital_Object]">
 					<div class="col-md-3">
-						<xsl:for-each select="descendant::crm:P165i_is_incorporated_in">
+						<xsl:for-each select="descendant::crm:P165i_is_incorporated_in[@rdf:resource or child::crmdig:D1_Digital_Object]">
 							<xsl:variable name="uri"
 								select="
 									if (@rdf:resource) then
@@ -175,14 +175,15 @@
 
 					</div>
 				</xsl:if>
-				<div class="col-md-{if (descendant::crm:P165i_is_incorporated_in) then '9' else '12'}">
+				<div class="col-md-{if (descendant::crm:P165i_is_incorporated_in[@rdf:resource or child::crmdig:D1_Digital_Object]) then '9' else '12'}">
 					<!-- render RDF -->
 					<xsl:apply-templates select="/content/rdf:RDF/*[1]" mode="symbol"/>
 
 					<xsl:if test="doc('input:subsymbols')/descendant::*[name() = 'nmo:Monogram' or name() = 'crm:E37_Mark']">
-						<h3>Sub Monograms</h3>
+						<h3>Sub Symbols</h3>
 						<div class="row">
-							<xsl:apply-templates select="doc('input:subsymbols')/descendant::*[name() = 'nmo:Monogram' or name() = 'crm:E37_Mark']" mode="subsymbol"/>
+							<xsl:apply-templates select="doc('input:subsymbols')/descendant::*[name() = 'nmo:Monogram' or name() = 'crm:E37_Mark']"
+								mode="subsymbol"/>
 						</div>
 					</xsl:if>
 
@@ -207,9 +208,9 @@
 									</tbody>
 								</table>
 							</div>
-						</div>						
-					</xsl:if>	
-					
+						</div>
+					</xsl:if>
+
 					<!-- display network graph -->
 					<xsl:if test="$hasSymbolRelations = true()">
 						<div class="section">
@@ -230,7 +231,7 @@
 							</div>
 							<div class="network-graph hidden" id="{generate-id()}"/>
 						</div>
-					</xsl:if>						
+					</xsl:if>
 
 					<!-- display associated coin types, if applicable -->
 					<xsl:if test="count(doc('input:types')//res:result) &gt; 0">
@@ -241,8 +242,7 @@
 									if (contains(//config/sparql_endpoint, 'localhost')) then
 										'http://nomisma.org/query'
 									else
-										//config/sparql_endpoint"
-							/>
+										//config/sparql_endpoint"/>
 							<xsl:with-param name="rtl" select="boolean(//config/languages/language[@code = $lang]/@rtl)"/>
 							<xsl:with-param name="lang" select="$lang"/>
 						</xsl:apply-templates>
@@ -339,7 +339,7 @@
 				<xsl:apply-templates select="skos:definition" mode="list-item">
 					<xsl:sort select="@xml:lang"/>
 				</xsl:apply-templates>
-				
+
 				<xsl:apply-templates select="skos:broader" mode="list-item"/>
 
 				<!-- constituent letters -->
@@ -365,6 +365,20 @@
 					</dd>
 				</xsl:if>
 
+				<!-- Unicode characters -->
+				<xsl:if test="crm:P165i_is_incorporated_in[string(.) and not(child::*)]">
+					<xsl:variable name="name">crm:P165i_is_incorporated_in</xsl:variable>
+
+					<dt>
+						<a href="{concat($namespaces//namespace[@prefix=substring-before($name, ':')]/@uri, substring-after($name, ':'))}">
+							<xsl:value-of select="numishare:getLabelforRDF($name, $lang)"/>
+						</a>
+					</dt>
+					<dd>
+						<xsl:value-of select="crm:P165i_is_incorporated_in[string(.) and not(child::*)]"/>
+					</dd>
+				</xsl:if>
+
 				<xsl:apply-templates select="dcterms:source | dcterms:isPartOf" mode="list-item">
 					<xsl:sort select="name()"/>
 					<xsl:sort select="@rdf:resource"/>
@@ -374,7 +388,7 @@
 			<xsl:if test="descendant::crmdig:D1_Digital_Object">
 				<h3>Digital Image Metadata</h3>
 				<xsl:apply-templates select="descendant::crmdig:D1_Digital_Object"/>
-			</xsl:if>			
+			</xsl:if>
 		</div>
 	</xsl:template>
 
@@ -456,18 +470,18 @@
 			</xsl:choose>
 		</dd>
 	</xsl:template>
-	
+
 	<xsl:template match="*" mode="subsymbol">
 		<div class="col-md-3 col-sm-6 col-lg-2 monogram" style="height:240px">
 			<div class="text-center">
 				<a href="{@rdf:about}">
 					<img
 						src="{
-						if (crm:P165i_is_incorporated_in[1]/@rdf:resource) then
-						crm:P165i_is_incorporated_in[1]/@rdf:resource
+						if (crm:P165i_is_incorporated_in[@rdf:resource]) then
+						crm:P165i_is_incorporated_in[@rdf:resource][1]/@rdf:resource
 						else
-						crm:P165i_is_incorporated_in[1]/crmdig:D1_Digital_Object/@rdf:about}"
-						alt="Symbol image" style="max-height:200px;max-width:100%;"/>
+						crm:P165i_is_incorporated_in//crmdig:D1_Digital_Object[@rdf:about][1]/@rdf:about}"
+						alt="Symbol image" style="max-height:200px;max-width:100%"/>
 				</a>
 			</div>
 			<a href="{@rdf:about}">
@@ -496,5 +510,5 @@
 			</xsl:if>
 		</div>
 	</xsl:template>
-	
+
 </xsl:stylesheet>

@@ -20,4 +20,15 @@ declare namespace crmdig = "http://www.ics.forth.gr/isl/CRMdig/";
                 }
             </letter>
     }
+    {
+        for $x in distinct-values(collection(COLLECTION)//crm:P165i_is_incorporated_in[string(.) and not(child::*)])
+        order by $x
+        return
+            <glyph codepoint="{string-to-codepoints($x)}">
+                {
+                    $x
+                }
+            </glyph>
+    }
 </letters>
+

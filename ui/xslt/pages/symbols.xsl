@@ -68,23 +68,24 @@
 					<xsl:value-of select="numishare:normalizeLabel('header_symbols', $lang)"/>
 				</title>
 				<meta name="viewport" content="width=device-width, initial-scale=1"/>
-				<link rel="shortcut icon" type="image/x-icon" href="{$include_path}/images/{if (string(//config/favicon)) then //config/favicon else 'favicon.png'}"/>
+				<link rel="shortcut icon" type="image/x-icon"
+					href="{$include_path}/images/{if (string(//config/favicon)) then //config/favicon else 'favicon.png'}"/>
 
 				<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"/>
 				<link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
 				<script type="text/javascript" src="https://netdna.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"/>
-		
+
 				<!-- map functions -->
 				<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.0/dist/leaflet.css"/>
 				<script src="https://unpkg.com/leaflet@1.0.0/dist/leaflet.js"/>
 				<script type="text/javascript" src="{$include_path}/javascript/leaflet.ajax.min.js"/>
-				
+
 				<!-- fancybox -->
 				<link rel="stylesheet" href="{$include_path}/css/jquery.fancybox.css?v=2.1.5" type="text/css" media="screen"/>
 				<script type="text/javascript" src="{$include_path}/javascript/jquery.fancybox.pack.js?v=2.1.5"/>
 				<script type="text/javascript" src="{$include_path}/javascript/symbol_functions.js"/>
 				<link type="text/css" href="{$include_path}/css/style.css" rel="stylesheet"/>
-				
+
 				<xsl:for-each select="//config/includes/include">
 					<xsl:choose>
 						<xsl:when test="@type = 'css'">
@@ -95,7 +96,7 @@
 						</xsl:when>
 					</xsl:choose>
 				</xsl:for-each>
-				
+
 				<xsl:if test="string(//config/google_analytics)">
 					<script type="text/javascript">
 						<xsl:value-of select="//config/google_analytics"/>
@@ -170,7 +171,7 @@
 				</div>
 			</div>
 		</div>
-		
+
 		<div class="hidden">
 			<span id="baselayers">
 				<xsl:value-of select="string-join(//config/baselayers/layer[@enabled = true()], ',')"/>
@@ -182,7 +183,13 @@
 				<xsl:value-of select="$lang"/>
 			</span>
 			<span id="typeSeries">
-				<xsl:value-of select="if (//config/union_type_catalog/@enabled = true()) then string-join(//config/union_type_catalog/series/@typeSeries, '|') else //config/type_series"/>
+				<xsl:value-of
+					select="
+						if (//config/union_type_catalog/@enabled = true()) then
+							string-join(//config/union_type_catalog/series/@typeSeries, '|')
+						else
+							//config/type_series"
+				/>
 			</span>
 		</div>
 	</xsl:template>
@@ -195,17 +202,22 @@
 					@rdf:about
 				else
 					concat('symbol/', tokenize(@rdf:about, '/')[last()])"/>
-		<xsl:variable name="label" select="if (skos:prefLabel[@xml:lang = $lang]) then skos:prefLabel[@xml:lang = $lang] else skos:prefLabel[@xml:lang = 'en']"/>
+		<xsl:variable name="label"
+			select="
+				if (skos:prefLabel[@xml:lang = $lang]) then
+					skos:prefLabel[@xml:lang = $lang]
+				else
+					skos:prefLabel[@xml:lang = 'en']"/>
 
 		<div class="col-md-3 col-sm-6 col-lg-2 monogram" style="height:240px">
 			<div class="text-center">
 				<a href="{$uri}">
 					<img
 						src="{
-						if (crm:P165i_is_incorporated_in[1]/@rdf:resource) then
-						crm:P165i_is_incorporated_in[1]/@rdf:resource
+						if (crm:P165i_is_incorporated_in[@rdf:resource]) then
+						crm:P165i_is_incorporated_in[@rdf:resource][1]/@rdf:resource
 						else
-						crm:P165i_is_incorporated_in[1]/crmdig:D1_Digital_Object/@rdf:about}"
+						crm:P165i_is_incorporated_in//crmdig:D1_Digital_Object[@rdf:about][1]/@rdf:about}"
 						alt="Symbol image" style="max-height:200px;max-width:100%"/>
 				</a>
 			</div>
@@ -218,7 +230,7 @@
 			</a>
 			<xsl:if test="crm:P106_is_composed_of">
 				<br/>
-				<strong>Constituent Letters: </strong>
+				<strong><xsl:value-of select="numishare:getLabelforRDF('crm:P106_is_composed_of', $lang)"/>: </strong>
 				<xsl:for-each select="crm:P106_is_composed_of">
 					<xsl:if test="position() = last() and position() &gt; 1">
 						<xsl:text> and</xsl:text>
@@ -229,6 +241,11 @@
 						<xsl:text>,</xsl:text>
 					</xsl:if>
 				</xsl:for-each>
+			</xsl:if>
+			<xsl:if test="crm:P165i_is_incorporated_in[string(.) and not(child::*)]">
+				<br/>
+				<strong><xsl:value-of select="numishare:getLabelforRDF('crm:P165i_is_incorporated_in', $lang)"/>: </strong>
+				<xsl:value-of select="crm:P165i_is_incorporated_in[string(.) and not(child::*)]"/>
 			</xsl:if>
 		</div>
 	</xsl:template>
@@ -264,6 +281,15 @@
 						<xsl:apply-templates select="letter[@codepoint &gt;= 880 and @codepoint &lt;= 1023]"/>
 					</div>
 				</xsl:if>
+				
+				<xsl:if test="glyph[matches(@codepoint, '68[0-9]{3}', 'i')]">
+					
+					
+					<div id="symbol-container">
+						<h4>Kharoshthi</h4>
+						<xsl:apply-templates select="glyph[matches(@codepoint, '68[0-9]{3}', 'i')]"/>
+					</div>
+				</xsl:if>
 
 				<div id="form-container">
 					<form role="form" method="get" action="symbols" id="symbol-form">
@@ -285,7 +311,7 @@
 		</div>
 	</xsl:template>
 
-	<xsl:template match="letter">
+	<xsl:template match="letter|glyph">
 		<xsl:variable name="active" as="xs:boolean">
 			<xsl:choose>
 				<xsl:when test="$symbol//value = .">true</xsl:when>

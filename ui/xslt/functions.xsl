@@ -4813,6 +4813,7 @@
 			<xsl:when test="$lang = 'en'">
 				<xsl:choose>
 					<xsl:when test="$element = 'crm:P106_is_composed_of'">Constituent Letters</xsl:when>
+				    <xsl:when test="$element = 'crm:P165i_is_incorporated_in'">Represents</xsl:when>
 					<xsl:when test="$element = 'crmdig:D1_Digital_Object'">Digital Object</xsl:when>
 					<xsl:when test="$element = 'dcterms:creator'">Creator</xsl:when>
 					<xsl:when test="$element = 'dcterms:format'">Media Type</xsl:when>
