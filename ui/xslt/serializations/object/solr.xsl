@@ -183,8 +183,8 @@
 			<!-- perform an RDF request for each distinct monogram/symbol URI -->
 			<xsl:for-each
 				select="
-					distinct-values($nudsGroup/descendant::nuds:symbol[contains(@xlink:href, 'http://numismatics.org')]/@xlink:href | $nudsGroup/descendant::nuds:symbol/descendant::tei:g[contains(@ref, 'http://numismatics.org')]/@ref |
-					$subtypes/descendant::nuds:symbol[contains(@xlink:href, 'http://numismatics.org')]/@xlink:href | $subtypes/descendant::nuds:symbol/descendant::tei:g[contains(@ref, 'http://numismatics.org')]/@ref)">
+				distinct-values($nudsGroup/descendant::nuds:symbol[matches(@xlink:href, 'https?://numismatics\.org')]/@xlink:href | $nudsGroup/descendant::nuds:symbol/descendant::tei:g[matches(@ref, 'https?://numismatics\.org')]/@ref |
+				$subtypes/descendant::nuds:symbol[matches(@xlink:href, 'https?://numismatics\.org')]/@xlink:href | $subtypes/descendant::nuds:symbol/descendant::tei:g[matches(@ref, 'https?://numismatics\.org')]/@ref)">
 				<xsl:variable name="href" select="."/>
 
 				<xsl:if test="doc-available(concat($href, '.rdf'))">

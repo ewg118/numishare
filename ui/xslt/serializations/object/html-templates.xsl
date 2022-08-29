@@ -1362,7 +1362,7 @@
 
 
 
-		<xsl:if test="self::tei:g and starts-with(@ref, 'http://numismatics.org')">
+		<xsl:if test="self::tei:g and matches(@ref, '^https?://numismatics\.org')">
 			<xsl:variable name="href" select="@ref"/>
 			<xsl:apply-templates select="$rdf/*[@rdf:about = $href]"/>
 
