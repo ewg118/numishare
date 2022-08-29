@@ -209,7 +209,7 @@
 								</div>
 								<div class="col-md-6">
 									<a href="https://www.ukri.org/councils/ahrc/">
-										<img src="{$include_path}/images/ukri-ahrc-square-logo.png" style="max-width:100%"/>
+										<img src="{$include_path}/images/Arts_and_Humanities_Research_Council_logo.svg" style="max-width:100%"/>
 									</a>	
 								</div>
 								<p> The OXUS-INDUS project is funded by the <a href="https://www.neh.gov/divisions/odh/new-directions">New Directions in Digital
