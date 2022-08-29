@@ -374,7 +374,7 @@
 								</field>
 
 								<!-- index constuent letters -->
-								<xsl:apply-templates select="$rdf//*[@rdf:about = $uri]/crm:P106_is_composed_of">
+								<xsl:apply-templates select="$rdf//*[@rdf:about = $uri]/crm:P106_is_composed_of | $rdf//*[@rdf:about = $uri]/crm:P165i_is_incorporated_in[string(.) and not(child::*)]">
 									<xsl:with-param name="side" select="$side"/>
 								</xsl:apply-templates>
 							</xsl:when>
@@ -412,7 +412,7 @@
 								</field>
 
 								<!-- index constuent letters -->
-								<xsl:apply-templates select="$rdf//*[@rdf:about = $uri]/crm:P106_is_composed_of">
+								<xsl:apply-templates select="$rdf//*[@rdf:about = $uri]/crm:P106_is_composed_of | $rdf//*[@rdf:about = $uri]/crm:P165i_is_incorporated_in[string(.) and not(child::*)]">
 									<xsl:with-param name="side" select="$side"/>
 								</xsl:apply-templates>
 							</xsl:when>
@@ -961,7 +961,7 @@
 						</field>
 
 						<!-- index constuent letters -->
-						<xsl:apply-templates select="$rdf//*[@rdf:about = $href]/crm:P106_is_composed_of">
+						<xsl:apply-templates select="$rdf//*[@rdf:about = $href]/crm:P106_is_composed_of | $rdf//*[@rdf:about = $href]/crm:P165i_is_incorporated_in[string(.) and not(child::*)]">
 							<xsl:with-param name="side" select="$side"/>
 						</xsl:apply-templates>
 					</xsl:when>
@@ -998,7 +998,7 @@
 						</field>
 
 						<!-- index constuent letters -->
-						<xsl:apply-templates select="$rdf//*[@rdf:about = $href]/crm:P106_is_composed_of">
+						<xsl:apply-templates select="$rdf//*[@rdf:about = $href]/crm:P106_is_composed_of | $rdf//*[@rdf:about = $href]/crm:P165i_is_incorporated_in[string(.) and not(child::*)]">
 							<xsl:with-param name="side" select="$side"/>
 						</xsl:apply-templates>
 					</xsl:when>
@@ -1163,7 +1163,7 @@
 	</xsl:template>
 
 	<!-- index constituent letters -->
-	<xsl:template match="crm:P106_is_composed_of">
+	<xsl:template match="crm:P106_is_composed_of | crm:P165i_is_incorporated_in[string(.) and not(child::*)]">
 		<xsl:param name="side"/>
 
 		<xsl:if test="string(.)">

@@ -825,6 +825,7 @@
 			<xsl:with-param name="uri" select="@rdf:about"/>
 		</xsl:apply-templates>
 
+		<!-- constituent letters -->
 		<xsl:if test="crm:P106_is_composed_of">
 			<xsl:text>, consists of </xsl:text>
 			<xsl:for-each select="crm:P106_is_composed_of">
@@ -837,6 +838,12 @@
 					<xsl:text>,</xsl:text>
 				</xsl:if>
 			</xsl:for-each>
+		</xsl:if>
+		
+		<!-- Unicode characters -->
+		<xsl:if test="crm:P165i_is_incorporated_in[string(.) and not(child::*)]">
+			<xsl:text>, represents </xsl:text>
+			<xsl:value-of select="crm:P165i_is_incorporated_in[string(.) and not(child::*)]"/>
 		</xsl:if>
 	</xsl:template>
 
