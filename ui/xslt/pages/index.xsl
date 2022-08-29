@@ -5,7 +5,7 @@
 	<xsl:include href="../functions.xsl"/>
 
 	<!-- URL params -->
-	<xsl:param name="pipeline">display</xsl:param>	
+	<xsl:param name="pipeline">display</xsl:param>
 	<xsl:variable name="collection-name" select="substring-before(substring-after(doc('input:request')/request/request-uri, 'numishare/'), '/')"/>
 	<xsl:param name="langParam" select="doc('input:request')/request/parameters/parameter[name = 'lang']/value"/>
 	<xsl:param name="lang">
@@ -40,7 +40,7 @@
 				<link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"/>
 				<script src="https://netdna.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"/>
 				<link type="text/css" href="{$include_path}/css/style.css" rel="stylesheet"/>
-				
+
 				<xsl:for-each select="includes/include">
 					<xsl:choose>
 						<xsl:when test="@type = 'css'">
@@ -51,13 +51,13 @@
 						</xsl:when>
 					</xsl:choose>
 				</xsl:for-each>
-				
+
 				<xsl:if test="string(google_analytics)">
 					<script type="text/javascript">
 						<xsl:value-of select="google_analytics"/>
 					</script>
 				</xsl:if>
-				
+
 				<!-- open graph/twitter metadata -->
 				<meta property="og:url" content="{url}"/>
 				<meta property="og:type" content="article"/>
@@ -65,8 +65,9 @@
 				<meta property="twitter:url" content="{url}"/>
 				<meta property="twitter:title" content="{title}"/>
 				<meta name="twitter:card" content="summary_large_image"/>
-				
-				<xsl:if test="$collection-name = 'pella' or $collection-name = 'sco' or $collection-name = 'pco' or $collection-name = 'hrc' or $collection-name = 'igch' or $collection-name='agco' or $collection-name = 'bigr'">
+
+				<xsl:if
+					test="$collection-name = 'pella' or $collection-name = 'sco' or $collection-name = 'pco' or $collection-name = 'hrc' or $collection-name = 'igch' or $collection-name = 'agco' or $collection-name = 'bigr'">
 					<meta property="og:image" content="{$include_path}/images/{$collection-name}-banner.jpg"/>
 					<meta property="twitter:image" content="{$include_path}/images/{$collection-name}-banner.jpg"/>
 				</xsl:if>
@@ -87,7 +88,8 @@
 			<div class="row">
 				<div class="col-md-12">
 					<xsl:choose>
-						<xsl:when test="$collection-name = 'pella' or $collection-name = 'sco' or $collection-name = 'pco' or $collection-name = 'hrc' or $collection-name = 'igch' or $collection-name='agco' or $collection-name = 'bigr'">
+						<xsl:when
+							test="$collection-name = 'pella' or $collection-name = 'sco' or $collection-name = 'pco' or $collection-name = 'hrc' or $collection-name = 'igch' or $collection-name = 'agco' or $collection-name = 'bigr'">
 							<img src="{$include_path}/images/{$collection-name}-banner.jpg" style="width:100%"/>
 						</xsl:when>
 						<xsl:otherwise>
@@ -98,17 +100,25 @@
 										<xsl:choose>
 											<xsl:when test="features_enabled = true()">
 												<div class="col-md-9">
-													<h1><xsl:value-of select="title"/></h1>
-													<p><xsl:value-of select="description"/></p>
+													<h1>
+														<xsl:value-of select="title"/>
+													</h1>
+													<p>
+														<xsl:value-of select="description"/>
+													</p>
 												</div>
 												<div class="col-md-3">
-													<xsl:copy-of select="/content/div[@id='feature']"/>	
+													<xsl:copy-of select="/content/div[@id = 'feature']"/>
 												</div>
 											</xsl:when>
 											<xsl:otherwise>
 												<div class="col-md-12">
-													<h1><xsl:value-of select="title"/></h1>
-													<p><xsl:value-of select="description"/></p>
+													<h1>
+														<xsl:value-of select="title"/>
+													</h1>
+													<p>
+														<xsl:value-of select="description"/>
+													</p>
 												</div>
 											</xsl:otherwise>
 										</xsl:choose>
@@ -117,7 +127,7 @@
 							</div>
 						</xsl:otherwise>
 					</xsl:choose>
-					
+
 				</div>
 			</div>
 			<div class="row content">
@@ -152,7 +162,7 @@
 							</xsl:choose>
 						</xsl:otherwise>
 					</xsl:choose>
-					<div class="row">						
+					<div class="row">
 						<div class="col-md-6 data_options">
 							<h3>Linked Data</h3>
 							<a href="{$display_path}feed/?q=*:*">
@@ -189,24 +199,44 @@
 					</div>-->
 					<div class="highlight">
 						<h3>Support</h3>
-						<p>
-							<a href="http://www.neh.gov/">
-								<img src="{$include_path}/images/neh_logo_horizontal_rgb.jpg" style="max-width:100%"/>
-							</a>
-						</p>
-						<p>In March 2017, the National Endowment for the Humanities awarded <xsl:value-of select="title"/> $262,000 as part of the the broader <a
-								href="http://numismatics.org/neh-hrc2017/">Hellenistic Royal Coinages (HRC)</a> initiative. This grant is issued through the NEH <a
-								href="http://www.neh.gov/grants/preservation/humanities-collections-and-reference-resources">Humanities Collections and
-								Reference Resources</a> program, to be dispersed over three years, to complete the project.</p>
 
+						<xsl:choose>
+							<xsl:when test="$collection-name = 'bigr'">
+								<div class="col-md-6">
+									<a href="http://www.neh.gov/">
+										<img src="{$include_path}/images/NEH-Preferred-Seal.svg" style="max-width:100%"/>
+									</a>	
+								</div>
+								<div class="col-md-6">
+									<a href="https://www.ukri.org/councils/ahrc/">
+										<img src="{$include_path}/images/ukri-ahrc-square-logo.png" style="max-width:100%"/>
+									</a>	
+								</div>
+								<p> The OXUS-INDUS project is funded by the <a href="https://www.neh.gov/divisions/odh/new-directions">New Directions in Digital
+									Scholarship in Cultural Institutions</a> program that partners the U.S. National Endowment for the Humanities with the
+									United Kingdom’s Arts and Humanities Research Council (AHRC). NEH grant number <a
+										href="https://securegrants.neh.gov/publicquery/main.aspx?f=1&amp;gn=HC-278063-21">HC-278063-21</a>.</p>
+							</xsl:when>
+							<xsl:otherwise>
+								<p>
+									<a href="http://www.neh.gov/">
+										<img src="{$include_path}/images/NEH-Preferred-Seal.svg" style="max-width:100%"/>
+									</a>
+								</p>
+								<p>In March 2017, the National Endowment for the Humanities awarded <xsl:value-of select="title"/> $262,000 as part of the the
+									broader <a href="http://numismatics.org/neh-hrc2017/">Hellenistic Royal Coinages (HRC)</a> initiative. This grant is issued
+									through the NEH <a href="http://www.neh.gov/grants/preservation/humanities-collections-and-reference-resources">Humanities
+										Collections and Reference Resources</a> program, to be dispersed over three years, to complete the project.</p>
+							</xsl:otherwise>
+						</xsl:choose>
 					</div>
-					
+
 					<div class="highlight">
 						<h3>Get Involved</h3>
-						<p> Please consider becoming a Member of the American Numismatic Society, the publisher of this resource. Your membership helps
-							maintain our free and open digital projects and data, as well as other educational outreach activities that broaden public
-							access to numismatics. Membership comes with other benefits, such as the ANS Magazine and weekly virtual lectures and
-							discussions. See <a href="http://numismatics.org/membership/">Membership</a> for more information.</p>						
+						<p> Please consider becoming a Member of the American Numismatic Society, the publisher of this resource. Your membership helps maintain
+							our free and open digital projects and data, as well as other educational outreach activities that broaden public access to
+							numismatics. Membership comes with other benefits, such as the ANS Magazine and weekly virtual lectures and discussions. See <a
+								href="http://numismatics.org/membership/">Membership</a> for more information.</p>
 					</div>
 					<!--<div class="highlight">
 						<h3>Collaborators</h3>
