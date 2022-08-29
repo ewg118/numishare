@@ -199,23 +199,29 @@
 					</div>-->
 					<div class="highlight">
 						<h3>Support</h3>
-
+						
 						<xsl:choose>
 							<xsl:when test="$collection-name = 'bigr'">
-								<div class="col-md-6">
-									<a href="http://www.neh.gov/">
-										<img src="{$include_path}/images/NEH-Preferred-Seal.svg" style="max-width:100%"/>
-									</a>	
+								<div class="row">
+									<div class="col-md-6">
+										<a href="http://www.neh.gov/">
+											<img src="{$include_path}/images/NEH-Preferred-Seal.svg" style="max-width:100%"/>
+										</a>	
+									</div>
+									<div class="col-md-6">
+										<a href="https://www.ukri.org/councils/ahrc/">
+											<img src="{$include_path}/images/Arts_and_Humanities_Research_Council_logo.svg" style="max-width:100%"/>
+										</a>	
+									</div>
+									<div class="col-md-12">
+										<br/>
+										<p> The OXUS-INDUS project is funded by the <a href="https://www.neh.gov/divisions/odh/new-directions">New Directions in Digital
+											Scholarship in Cultural Institutions</a> program that partners the U.S. National Endowment for the Humanities with the
+											United Kingdom’s Arts and Humanities Research Council (AHRC). NEH grant number <a
+												href="https://securegrants.neh.gov/publicquery/main.aspx?f=1&amp;gn=HC-278063-21">HC-278063-21</a>.</p>
+									</div>
 								</div>
-								<div class="col-md-6">
-									<a href="https://www.ukri.org/councils/ahrc/">
-										<img src="{$include_path}/images/Arts_and_Humanities_Research_Council_logo.svg" style="max-width:100%"/>
-									</a>	
-								</div>
-								<p> The OXUS-INDUS project is funded by the <a href="https://www.neh.gov/divisions/odh/new-directions">New Directions in Digital
-									Scholarship in Cultural Institutions</a> program that partners the U.S. National Endowment for the Humanities with the
-									United Kingdom’s Arts and Humanities Research Council (AHRC). NEH grant number <a
-										href="https://securegrants.neh.gov/publicquery/main.aspx?f=1&amp;gn=HC-278063-21">HC-278063-21</a>.</p>
+								
 							</xsl:when>
 							<xsl:otherwise>
 								<p>
