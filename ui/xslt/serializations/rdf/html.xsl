@@ -353,7 +353,7 @@
 					</dt>
 					<dd>
 						<xsl:for-each select="crm:P106_is_composed_of">
-							<xsl:if test="position() = last()">
+							<xsl:if test="position() &gt; 1 and position() = last()">
 								<xsl:text> and</xsl:text>
 							</xsl:if>
 							<xsl:text> </xsl:text>
