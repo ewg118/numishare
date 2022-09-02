@@ -29,7 +29,7 @@
 				<!-- config variables -->
 				<xsl:variable name="solr-url" select="concat(/config/solr_published, 'select/')"/>
 
-				<xsl:variable name="service" select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+NOT(lang:*)+AND+', if ($model='pelagios') then 'pleiades' else 'coinType', '_uri:*&amp;rows=0&amp;facet=false')"/>
+				<xsl:variable name="service" select="concat($solr-url, '?q=collection-name:', $collection-name, '+AND+NOT(lang:*)+AND+(coinType_uri:*+OR+hoard_uri:*)&amp;rows=0&amp;facet=false')"/>
 
 				<xsl:template match="/">
 					<config>
