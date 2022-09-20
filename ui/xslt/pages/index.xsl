@@ -165,11 +165,34 @@
 	</xsl:template>
 	
 	<!-- featured object -->
-	<xsl:template match="doc">		
+	<xsl:template match="doc">	
+		<xsl:variable name="image_url">
+			<xsl:choose>
+				<xsl:when test="str[@name='thumbnail_obv']">
+					<xsl:value-of select="str[@name='thumbnail_obv']"/>
+				</xsl:when>
+				<xsl:when test="str[@name='iiif_obv']">
+					<xsl:value-of select="concat(str[@name='iiif_obv'], '/full/120,/0/default.jpg')"/>
+				</xsl:when>
+				<xsl:when test="str[@name='reference_obv']">
+					<xsl:value-of select="str[@name='reference_obv']"/>
+				</xsl:when>
+				<xsl:when test="str[@name='thumbnail_com']">
+					<xsl:value-of select="str[@name='thumbnail_com']"/>
+				</xsl:when>
+				<xsl:when test="str[@name='iiif_com']">
+					<xsl:value-of select="concat(str[@name='iiif_obv'], '/full/240,/0/default.jpg')"/>
+				</xsl:when>
+				<xsl:when test="str[@name='reference_com']">
+					<xsl:value-of select="str[@name='reference_com']"/>
+				</xsl:when>				
+			</xsl:choose>
+		</xsl:variable>
+		
 		<h3>Featured Object</h3>
 		<div>
 			<a href="{$uri_space}{str[@name='recordId']}{if(string($langParam)) then concat('?lang=', $langParam) else ''}">
-				<img src="{str[@name='thumbnail_obv']}"/>
+				<img src="{$image_url}" alt="Featured Object Image" style="max-width:240px"/>
 			</a>
 			<br/>
 			<a href="{$uri_space}{str[@name='recordId']}{if(string($langParam)) then concat('?lang=', $langParam) else ''}">
