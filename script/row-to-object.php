@@ -777,18 +777,14 @@ function parse_row($row, $count, $fileName){
 		$record['findspot'] = trim($row['findspot']);
 	}
 	
-	/*if (strlen(trim($row['imageavailable'])) > 0){
-		$record['imageavailable'] = true;
-	} else {
-		$record['imageavailable'] = false;
-	}*/
-	
-	//images are now read from files.list generated from image files on disk rather than from FileMaker
-	foreach ($image_files as $image){
-	    $pattern = '/^' . str_replace('.', '\.', $accnum) . '\.(.*)\.noscale\.jpg$/';
-	    if (preg_match($pattern, $image, $matches)){
-	        echo "Found image {$image}: {$matches[1]}\n";
-	        $record['images'][$matches[1]] = $image;
+	if (strlen(trim($row['imageavailable'])) > 0){
+	    //images are now read from files.list generated from image files on disk rather than from FileMaker
+	    foreach ($image_files as $image){
+	        $pattern = '/^' . str_replace('.', '\.', $accnum) . '\.(.*)\.noscale\.jpg$/';
+	        if (preg_match($pattern, $image, $matches)){
+	            echo "Found image {$image}: {$matches[1]}\n";
+	            $record['images'][$matches[1]] = $image;
+	        }
 	    }
 	}
 	
