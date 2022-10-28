@@ -38,7 +38,7 @@
 					<xsl:value-of select="normalize-space($filter)"/>
 				</query>
 			</xsl:if>
-			<xsl:for-each select="$compare">
+			<xsl:for-each select="$compare">				
 				<query>
 					<xsl:attribute name="label" select="numishare:parseFilter(normalize-space(.), $lang)"/>
 					<xsl:value-of select="."/>
@@ -51,7 +51,23 @@
 		<xsl:text>[</xsl:text>
 		<xsl:choose>
 			<xsl:when test="$api = 'getDistribution'">
-				<xsl:apply-templates select="descendant::res:sparql" mode="getDistribution"/>
+				<xsl:for-each select="descendant::res:sparql">
+					<xsl:variable name="position" select="position()"/>
+					<xsl:variable name="query" select="$queries/query[$position]"/>
+					<xsl:variable name="subset" select="$queries/query[$position]/@label"/>
+					
+					<xsl:apply-templates select="self::node()[descendant::res:result]" mode="getDistribution">
+						<xsl:with-param name="query" select="$query"/>
+						<xsl:with-param name="subset" select="$subset"/>
+					</xsl:apply-templates>
+					
+					<xsl:if test="descendant::res:result and following-sibling::res:sparql[descendant::res:result]">
+						<xsl:text>, </xsl:text>
+					</xsl:if>
+					
+				</xsl:for-each>
+				
+				
 			</xsl:when>
 			<xsl:when test="$api = 'getMetrical'">
 				<xsl:choose>
@@ -82,9 +98,8 @@
 
 	<!-- templates for the getDistribution API: display numeric counts or percentages for distribution queries -->
 	<xsl:template match="res:sparql" mode="getDistribution">
-		<xsl:variable name="position" select="position()"/>
-		<xsl:variable name="query" select="$queries/query[$position]"/>
-		<xsl:variable name="subset" select="$queries/query[$position]/@label"/>
+		<xsl:param name="query"/>
+		<xsl:param name="subset"/>
 
 		<xsl:variable name="total" select="sum(descendant::res:binding[@name = 'count']/res:literal)"/>
 
@@ -93,10 +108,6 @@
 			<xsl:with-param name="subset" select="$subset"/>
 			<xsl:with-param name="total" select="$total"/>
 		</xsl:apply-templates>
-
-		<xsl:if test="not(position() = last())">
-			<xsl:text>,</xsl:text>
-		</xsl:if>
 	</xsl:template>
 
 	<xsl:template match="res:result" mode="getDistribution">

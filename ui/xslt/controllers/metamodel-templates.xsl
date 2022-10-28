@@ -53,7 +53,7 @@
 
                         <triple s="{$subject}" p="nmo:hasStartDate" o="?startDate">
                             <xsl:attribute name="filter">
-                                <xsl:text>(?startDate >= "</xsl:text>
+                                <xsl:text>(?startDate &gt;= "</xsl:text>
                                 <xsl:value-of select="$gYear"/>
                                 <xsl:text>"^^xsd:gYear)</xsl:text>
                             </xsl:attribute>
