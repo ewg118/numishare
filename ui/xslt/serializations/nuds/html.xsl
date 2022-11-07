@@ -244,8 +244,8 @@
 			<!-- perform an RDF request for each distinct monogram/symbol URI -->
 			<xsl:for-each
 				select="
-				distinct-values($nudsGroup/descendant::nuds:symbol[matches(@xlink:href, 'https?://numismatics\.org')]/@xlink:href | $nudsGroup/descendant::nuds:symbol/descendant::tei:g[matches(@ref, 'https?://numismatics\.org')]/@ref |
-				$subtypes/descendant::nuds:symbol[matches(@xlink:href, 'https?://numismatics\.org')]/@xlink:href | $subtypes/descendant::nuds:symbol/descendant::tei:g[matches(@ref, 'https?://numismatics\.org')]/@ref)">
+					distinct-values($nudsGroup/descendant::nuds:symbol[matches(@xlink:href, 'https?://numismatics\.org')]/@xlink:href | $nudsGroup/descendant::nuds:symbol/descendant::tei:g[matches(@ref, 'https?://numismatics\.org')]/@ref |
+					$subtypes/descendant::nuds:symbol[matches(@xlink:href, 'https?://numismatics\.org')]/@xlink:href | $subtypes/descendant::nuds:symbol/descendant::tei:g[matches(@ref, 'https?://numismatics\.org')]/@ref)">
 				<xsl:variable name="href" select="."/>
 
 				<xsl:if test="doc-available(concat($href, '.rdf'))">
@@ -485,7 +485,7 @@
 								<xsl:value-of select="descendant::nuds:copyrightHolder"/>
 							</span>
 
-							
+
 							<xsl:if test="$recordType = 'conceptual'">
 								<!-- metrical analysis params -->
 								<span id="page">record</span>
@@ -508,7 +508,7 @@
 								</xsl:call-template>
 
 								<xsl:call-template name="ajax-loader-template"/>
-								
+
 								<!-- die study/named graph variables -->
 								<xsl:if test="//config/die_study[@enabled = true()]">
 									<span id="dieStudy">
@@ -520,8 +520,8 @@
 										<xsl:value-of select="doc('input:die-frequencies-query')"/>
 									</span>
 								</xsl:if>
-								
-								
+
+
 								<!-- IIIF -->
 								<span id="hasFindspots">
 									<xsl:value-of select="$hasFindspots"/>
@@ -615,7 +615,7 @@
 								</h1>
 
 								<p>
-									<strong>Canonical URI: </strong>
+									<strong><xsl:value-of select="numishare:normalizeLabel('display_canonical_uri', $lang)"/>: </strong>
 									<code>
 										<a href="{$objectUri}" title="{$objectUri}">
 											<xsl:value-of select="$objectUri"/>
@@ -625,7 +625,9 @@
 
 								<p>
 									<xsl:if test="count($subtypes//subtype) &gt; 0">
-										<a href="#subtypes">Subtypes</a>
+										<a href="#subtypes">
+											<xsl:value-of select="numishare:normalizeLabel('display_subtypes', $lang)"/>
+										</a>
 										<xsl:text> | </xsl:text>
 									</xsl:if>
 									<xsl:if test="$hasSpecimens = true()">
@@ -659,8 +661,8 @@
 								</p>
 								<xsl:if test="nuds:control/nuds:otherRecordId[@semantic = 'skos:broader']">
 									<xsl:variable name="broader" select="nuds:control/nuds:otherRecordId[@semantic = 'skos:broader']"/>
-									<p>Parent Type: <a href="{concat(//config/uri_space, $broader)}" rel="skos:broader"><xsl:value-of select="$broader"
-										/></a></p>
+									<p><xsl:value-of select="numishare:normalizeLabel('display_parent_type', $lang)"/>: <a
+											href="{concat(//config/uri_space, $broader)}" rel="skos:broader"><xsl:value-of select="$broader"/></a></p>
 								</xsl:if>
 							</div>
 						</div>
@@ -670,8 +672,12 @@
 						<xsl:if test="count($subtypes//subtype) &gt; 0">
 							<div class="row" id="subtypes">
 								<div class="col-md-12">
-									<h3>Subtypes</h3>
-									<p>Click on the link to the subtype to view all examples.</p>
+									<h3>
+										<xsl:value-of select="numishare:normalizeLabel('display_subtypes', $lang)"/>
+									</h3>
+									<p>
+										<xsl:value-of select="numishare:normalizeLabel('display_subtype_desc', $lang)"/>
+									</p>
 									<div class="table-responsive">
 										<table class="table table-striped">
 											<thead>
@@ -869,7 +875,8 @@
 											<xsl:otherwise>
 												<div class="alert alert-box alert-info">
 													<span class="glyphicon glyphicon-info-sign"/>
-													<strong>Attention:</strong> There are dies associated with this type, but no links between obverse and reverse dies.</div>
+													<strong>Attention:</strong> There are dies associated with this type, but no links between obverse and
+													reverse dies.</div>
 											</xsl:otherwise>
 										</xsl:choose>
 
@@ -945,17 +952,19 @@
 														<xsl:call-template name="image">
 															<xsl:with-param name="side">combined</xsl:with-param>
 														</xsl:call-template>
-														
-														<!-- show additional images -->														
-														<xsl:if test="descendant::mets:fileGrp[not(@USE = 'obverse') and not(@USE = 'reverse') and not(@USE = 'combined') and not(@USE = 'legend')]">
+
+														<!-- show additional images -->
+														<xsl:if
+															test="descendant::mets:fileGrp[not(@USE = 'obverse') and not(@USE = 'reverse') and not(@USE = 'combined') and not(@USE = 'legend')]">
 															<h3>Additional Images</h3>
-															<xsl:for-each select="descendant::mets:fileGrp[not(@USE = 'obverse') and not(@USE = 'reverse') and not(@USE = 'combined') and not(@USE = 'legend')]">
+															<xsl:for-each
+																select="descendant::mets:fileGrp[not(@USE = 'obverse') and not(@USE = 'reverse') and not(@USE = 'combined') and not(@USE = 'legend')]">
 																<xsl:call-template name="image">
 																	<xsl:with-param name="side" select="@USE"/>
 																</xsl:call-template>
 															</xsl:for-each>
 														</xsl:if>
-														
+
 														<xsl:call-template name="legend_image"/>
 													</div>
 													<div class="col-md-8">
@@ -976,17 +985,19 @@
 														<xsl:call-template name="image">
 															<xsl:with-param name="side">combined</xsl:with-param>
 														</xsl:call-template>
-														
-														<!-- show additional images -->														
-														<xsl:if test="descendant::mets:fileGrp[not(@USE = 'obverse') and not(@USE = 'reverse') and not(@USE = 'combined') and not(@USE = 'legend')]">
+
+														<!-- show additional images -->
+														<xsl:if
+															test="descendant::mets:fileGrp[not(@USE = 'obverse') and not(@USE = 'reverse') and not(@USE = 'combined') and not(@USE = 'legend')]">
 															<h3>Additional Images</h3>
-															<xsl:for-each select="descendant::mets:fileGrp[not(@USE = 'obverse') and not(@USE = 'reverse') and not(@USE = 'combined') and not(@USE = 'legend')]">
+															<xsl:for-each
+																select="descendant::mets:fileGrp[not(@USE = 'obverse') and not(@USE = 'reverse') and not(@USE = 'combined') and not(@USE = 'legend')]">
 																<xsl:call-template name="image">
 																	<xsl:with-param name="side" select="@USE"/>
 																</xsl:call-template>
 															</xsl:for-each>
 														</xsl:if>
-														
+
 														<xsl:call-template name="legend_image"/>
 													</div>
 												</xsl:when>
@@ -1011,12 +1022,14 @@
 																	<xsl:with-param name="side">reverse</xsl:with-param>
 																</xsl:call-template>
 															</div>
-															
-															<!-- show additional images -->														
-															<xsl:if test="descendant::mets:fileGrp[not(@USE = 'obverse') and not(@USE = 'reverse') and not(@USE = 'combined') and not(@USE = 'legend')]">
+
+															<!-- show additional images -->
+															<xsl:if
+																test="descendant::mets:fileGrp[not(@USE = 'obverse') and not(@USE = 'reverse') and not(@USE = 'combined') and not(@USE = 'legend')]">
 																<div class="col-md-12">
 																	<h3>Additional Images</h3>
-																	<xsl:for-each select="descendant::mets:fileGrp[not(@USE = 'obverse') and not(@USE = 'reverse') and not(@USE = 'combined') and not(@USE = 'legend')]">
+																	<xsl:for-each
+																		select="descendant::mets:fileGrp[not(@USE = 'obverse') and not(@USE = 'reverse') and not(@USE = 'combined') and not(@USE = 'legend')]">
 																		<xsl:call-template name="image">
 																			<xsl:with-param name="side" select="@USE"/>
 																		</xsl:call-template>
@@ -1067,12 +1080,14 @@
 																	<xsl:with-param name="side">reverse</xsl:with-param>
 																</xsl:call-template>
 															</div>
-															
-															<!-- show additional images -->														
-															<xsl:if test="descendant::mets:fileGrp[not(@USE = 'obverse') and not(@USE = 'reverse') and not(@USE = 'combined') and not(@USE = 'legend')]">
+
+															<!-- show additional images -->
+															<xsl:if
+																test="descendant::mets:fileGrp[not(@USE = 'obverse') and not(@USE = 'reverse') and not(@USE = 'combined') and not(@USE = 'legend')]">
 																<div class="col-md-12">
 																	<h3>Additional Images</h3>
-																	<xsl:for-each select="descendant::mets:fileGrp[not(@USE = 'obverse') and not(@USE = 'reverse') and not(@USE = 'combined') and not(@USE = 'legend')]">
+																	<xsl:for-each
+																		select="descendant::mets:fileGrp[not(@USE = 'obverse') and not(@USE = 'reverse') and not(@USE = 'combined') and not(@USE = 'legend')]">
 																		<xsl:call-template name="image">
 																			<xsl:with-param name="side" select="@USE"/>
 																		</xsl:call-template>
@@ -1636,7 +1651,7 @@
 					</xsl:if>
 				</xsl:when>
 			</xsl:choose>
-			
+
 			<!-- only display legend/type for obverse/reverse/edge images -->
 			<xsl:if test="$side = 'obverse' or $side = 'reverse' or $side = 'edge'">
 				<xsl:apply-templates select="$nudsGroup/object[1]/descendant::nuds:typeDesc/*[local-name() = $side]" mode="physical"/>

@@ -189,7 +189,7 @@
                     <xsl:when test="$label='contents'">Inhalt</xsl:when>
                     <xsl:when test="$label='coordinates'">Koordinaten</xsl:when>
                     <xsl:when test="$label='countermark'">Gegenstempel</xsl:when>
-                    <xsl:when test="$label='date'">Datierung</xsl:when>
+                    <xsl:when test="$label='date'">Datum</xsl:when>
                     <xsl:when test="$label='dateOnObject'">Datum auf Gegenstand</xsl:when>
                     <xsl:when test="$label='dob'">Datum auf Gegenstand</xsl:when>
                     <xsl:when test="$label='dateRange'">Datierungsspanne</xsl:when>
@@ -213,7 +213,7 @@
                     <xsl:when test="$label='grade'">Grad</xsl:when>
                     <xsl:when test="$label='height'">Höhe</xsl:when>
                     <xsl:when test="$label='hoardDesc'">Schatzfundbeschreibung</xsl:when>
-                    <xsl:when test="$label='identifier'">Inventarnummer</xsl:when>
+                    <xsl:when test="$label='identifier'">Bestimmt von</xsl:when>
                     <xsl:when test="$label='issuer'">Herausgeber</xsl:when>
                     <xsl:when test="$label='landowner'">Grundstückseigentümer</xsl:when>
                     <xsl:when test="$label='legend'">Legende</xsl:when>
@@ -246,13 +246,14 @@
                     <xsl:when test="$label='saleCatalog'">Auktionskatalog</xsl:when>
                     <xsl:when test="$label='saleItem'">Auktionslot</xsl:when>
                     <xsl:when test="$label='salePrice'">Verkaufspreis</xsl:when>
+                    <xsl:when test="$label='secondaryTreatment'">Nachbehandlung</xsl:when>
                     <xsl:when test="$label='shape'">Form</xsl:when>
-                    <xsl:when test="$label='state'">Münzherrschaft</xsl:when>
+                    <xsl:when test="$label='state'">Staat</xsl:when>
                     <xsl:when test="$label='subject'">Subjekt</xsl:when>
                     <xsl:when test="$label='subjectSet'">Subjekte</xsl:when>
                     <xsl:when test="$label='symbol'">Symbol</xsl:when>
                     <xsl:when test="$label='testmark'">Prüfmarke</xsl:when>
-                    <xsl:when test="$label='timestamp'">Modifizierungsdatum</xsl:when>
+                    <xsl:when test="$label='timestamp'">Moodifizierungsdatum</xsl:when>
                     <xsl:when test="$label='title'">Titel</xsl:when>
                     <xsl:when test="$label='toDate'">Datum bis</xsl:when>
                     <xsl:when test="$label='type'">Typ</xsl:when>
@@ -1993,7 +1994,6 @@
                     <xsl:when test="$label='authorizingEntity'">Political/Dynastic Entity</xsl:when>
                     <xsl:when test="$label='axis'">Axis</xsl:when>
                     <xsl:when test="$label='century'">Century</xsl:when>
-                    <xsl:when test="$label='chemicalAnalysis'">Chemical Analysis</xsl:when>
                     <xsl:when test="$label='chronList'">Chronological List</xsl:when>
                     <xsl:when test="$label='chronItem'">Chronological Item</xsl:when>
                     <xsl:when test="$label='closing_date'">Closing Date</xsl:when>
@@ -2025,7 +2025,6 @@
                     <xsl:when test="$label='edge'">Edge</xsl:when>
                     <xsl:when test="$label='era'">Era</xsl:when>
                     <xsl:when test="$label='finder'">Finder</xsl:when>
-                    <xsl:when test="$label='findspotDesc'">Findspot Description</xsl:when>
                     <xsl:when test="$label='findspot'">Findspot</xsl:when>
                     <xsl:when test="$label='fromDate'">From Date</xsl:when>
                     <xsl:when test="$label='geographic'">Geographic</xsl:when>
@@ -2053,7 +2052,6 @@
                     <xsl:when test="$label='portrait'">Portrait</xsl:when>
                     <xsl:when test="$label='previousColl'">Previous Collection</xsl:when>
                     <xsl:when test="$label='private'">Private</xsl:when>
-                    <xsl:when test="$label='productionPlace'">Production Place</xsl:when>
                     <xsl:when test="$label='provenance'">Provenance</xsl:when>
                     <xsl:when test="$label='public'">Public</xsl:when>
                     <xsl:when test="$label='publisher'">Publisher</xsl:when>
@@ -2068,13 +2066,15 @@
                     <xsl:when test="$label='saleCatalog'">Sale Catalog</xsl:when>
                     <xsl:when test="$label='saleItem'">Sale Item</xsl:when>
                     <xsl:when test="$label='salePrice'">Sale Price</xsl:when>
+                    <xsl:when test="$label='secondaryTreatment'">Secondary Treatment</xsl:when>
                     <xsl:when test="$label='shape'">Shape</xsl:when>
-                    <xsl:when test="$label='specificGravity'">Specific Gravity</xsl:when>                    
                     <xsl:when test="$label='state'">State</xsl:when>
                     <xsl:when test="$label='statedAuthority'">Stated Authority</xsl:when>
                     <xsl:when test="$label='subject'">Subject</xsl:when>
                     <xsl:when test="$label='subjectSet'">Subjects</xsl:when>
                     <xsl:when test="$label='symbol'">Symbol</xsl:when>
+                    <xsl:when test="$label='taq'">Terminus Ante Quem</xsl:when>
+                    <xsl:when test="$label='tpq'">Terminus Post Quem</xsl:when>
                     <xsl:when test="$label='testmark'">Test Mark</xsl:when>
                     <xsl:when test="$label='timestamp'">Date Record Modified</xsl:when>
                     <xsl:when test="$label='title'">Title</xsl:when>
@@ -2288,6 +2288,10 @@
                     <xsl:when test="$label='display_date-analysis'">Datumsanalyse</xsl:when>
                     <xsl:when test="$label='display_contents'">Inhalt</xsl:when>
                     <xsl:when test="$label='display_examples'">Exemplare dieses Typs</xsl:when>
+                    <xsl:when test="$label='display_subtypes'">Untertypen</xsl:when>
+                    <xsl:when test="$label='display_subtype_desc'">Ein Klick auf den Link zum Untertyp zeigt alle Exemplare.</xsl:when>
+                    <xsl:when test="$label='display_canonical_uri'">Kanonischer URI</xsl:when>
+                    <xsl:when test="$label='display_parent_type'">Übergeordneter Typ</xsl:when>
                     <xsl:when test="$label='results_all-terms'">Alle Begriffe</xsl:when>
                     <xsl:when test="$label='results_map-results'">Kartierungsergebnisse</xsl:when>
                     <xsl:when test="$label='results_filters'">Filter</xsl:when>
@@ -4350,7 +4354,11 @@
                     <xsl:when test="$label='display_contents'">Contents</xsl:when>
                     <xsl:when test="$label='display_examples'">Examples of this type</xsl:when>
                     <xsl:when test="$label='display_die_analysis'">Die Analysis</xsl:when>
-                    <xsl:when test="$label='display_die_examples'">Die Examples</xsl:when>
+                    <xsl:when test="$label='display_die_examples'">Examples of this die</xsl:when>
+                    <xsl:when test="$label='display_subtypes'">Subtypes</xsl:when>
+                    <xsl:when test="$label='display_subtype_desc'">Click on the link to the subtype to view all examples.</xsl:when>
+                    <xsl:when test="$label='display_canonical_uri'">Canonical URI</xsl:when>
+                    <xsl:when test="$label='display_parent_type'">Parent Type</xsl:when>
                     <xsl:when test="$label='results_all-terms'">All Terms</xsl:when>
                     <xsl:when test="$label='results_map-results'">Map Results</xsl:when>
                     <xsl:when test="$label='results_filters'">Filters</xsl:when>
@@ -4374,7 +4382,7 @@
                     <xsl:when test="$label='results_hoards'">hoards</xsl:when>
                     <xsl:when test="$label='results_and'">and</xsl:when>
                     <xsl:when test="$label='maps_legend'">Legend</xsl:when>
-                	<xsl:when test="$label = 'position_any'">Any Position</xsl:when>
+                    <xsl:when test="$label='position_any'">Any Position</xsl:when>
                     <xsl:when test="$label='visualize_typological'">Typological Analysis</xsl:when>
                     <xsl:when test="$label='visualize_measurement'">Measurement Analysis</xsl:when>
                     <xsl:when test="$label='visualize_desc'">Use the data selection and visualization options below to generate a chart based on selected parameters. Instructions for using this feature can be found here</xsl:when>
