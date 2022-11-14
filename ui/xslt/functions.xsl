@@ -207,6 +207,7 @@
                     <xsl:when test="$label='edge'">Rand</xsl:when>
                     <xsl:when test="$label='era'">Epoche</xsl:when>
                     <xsl:when test="$label='finder'">Finder</xsl:when>
+		    <xsl:when test="$label='findspotDesc'">Fundstellenbeschreibung</xsl:when>
                     <xsl:when test="$label='findspot'">Fundstelle</xsl:when>
                     <xsl:when test="$label='fromDate'">Datum von</xsl:when>
                     <xsl:when test="$label='geographic'">geographisch</xsl:when>
