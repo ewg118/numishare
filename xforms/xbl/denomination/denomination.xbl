@@ -83,7 +83,7 @@
 										<xforms:label>Term</xforms:label>
 										<xforms:itemset nodeset="instance('feed')//atom:entry">
 											<xforms:label ref="atom:title"/>
-											<xforms:value ref="atom:link[not(@rel)]/@href"/>
+											<xforms:value ref="atom:link[@rel = 'canonical']/@href"/>
 										</xforms:itemset>
 										<xforms:action ev:event="xforms-value-changed">
 											<xforms:var name="id" select="tokenize(instance('temp')/@href, '/')[last()]"/>
@@ -96,7 +96,7 @@
 										<xforms:action ev:event="DOMActivate">
 											<xforms:setvalue ref="@xlink:href" value="instance('temp')/@href"/>
 											<xforms:setvalue ref="."
-												value="instance('feed')//atom:entry[atom:link[not(@rel)]/@href = instance('temp')/@href]/atom:title"/>
+												value="instance('feed')//atom:entry[atom:link[@rel = 'canonical']/@href = instance('temp')/@href]/atom:title"/>
 										</xforms:action>
 									</xforms:trigger>
 								</xforms:group>
