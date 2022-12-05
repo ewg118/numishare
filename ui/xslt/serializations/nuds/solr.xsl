@@ -818,6 +818,7 @@
 	<xsl:template match="nuds:physDesc">
 		<xsl:apply-templates select="nuds:axis"/>
 		<xsl:apply-templates select="nuds:measurementsSet"/>
+		<xsl:apply-templates select="nuds:conservationState"/>		
 		<xsl:for-each select="descendant::nuds:grade">
 			<field name="grade_facet">
 				<xsl:value-of select="."/>
@@ -842,6 +843,10 @@
 				</field>
 			</xsl:if>
 		</xsl:for-each>
+	</xsl:template>
+	
+	<xsl:template match="nuds:conservationState">
+		<xsl:apply-templates select="descendant::nuds:secondaryTreatment[string(.) or string(@xlink:href)] | descendant::nuds:condition[string(.) or string(@xlink:href)] | descendant::nuds:wear[string(.) or string(@xlink:href)]"/>
 	</xsl:template>
 
 	<xsl:template match="nuds:adminDesc">
