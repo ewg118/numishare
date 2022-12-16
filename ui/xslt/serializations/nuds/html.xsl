@@ -321,6 +321,9 @@
 					<xsl:when
 						test="descendant::nuds:findspot/nuds:fallsWithin/gml:location/gml:Point"
 						>true</xsl:when>
+					<xsl:when
+						test="descendant::nuds:findspot/gml:location"
+						>true</xsl:when>
 					<xsl:otherwise>false</xsl:otherwise>
 				</xsl:choose>
 			</xsl:otherwise>
