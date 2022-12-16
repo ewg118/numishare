@@ -2,20 +2,24 @@
 <!-- Author: Ethan Gruber
 	Modified: April 2020
 	Function: Serialize the NUDS or NUDS Hoard into KML. The NUDS record for a coin type will serialize a SPARQL response of associated hoards into Placemarks -->
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:saxon="http://saxon.sf.net/"
-	xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nm="http://nomisma.org/id/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-	xmlns:nuds="http://nomisma.org/nuds" xmlns:nh="http://nomisma.org/nudsHoard" xmlns:xlink="http://www.w3.org/1999/xlink"
-	xmlns:gml="http://www.opengis.net/gml" xmlns:crm="http://www.cidoc-crm.org/cidoc-crm/" xmlns:crmgeo="http://www.ics.forth.gr/isl/CRMgeo/"
-	xmlns:res="http://www.w3.org/2005/sparql-results#" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:nmo="http://nomisma.org/ontology#"
-	xmlns:numishare="https://github.com/ewg118/numishare" exclude-result-prefixes="#all" version="2.0">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+	xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:saxon="http://saxon.sf.net/"
+	xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:nm="http://nomisma.org/id/"
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:nuds="http://nomisma.org/nuds"
+	xmlns:nh="http://nomisma.org/nudsHoard" xmlns:xlink="http://www.w3.org/1999/xlink"
+	xmlns:gml="http://www.opengis.net/gml" xmlns:crm="http://www.cidoc-crm.org/cidoc-crm/"
+	xmlns:crmgeo="http://www.ics.forth.gr/isl/CRMgeo/"
+	xmlns:res="http://www.w3.org/2005/sparql-results#" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:nmo="http://nomisma.org/ontology#" xmlns:numishare="https://github.com/ewg118/numishare"
+	exclude-result-prefixes="#all" version="2.0">
 	<xsl:include href="../../functions.xsl"/>
-	
+
 	<xsl:output name="html" encoding="UTF-8" method="html" indent="no" omit-xml-declaration="yes"/>
-	
+
 	<xsl:variable name="id" select="descendant::*:recordId"/>
-	<xsl:variable name="lang" select="doc('input:request')/request/parameters/parameter[name = 'lang']/value"/>
-	<xsl:variable name="request-uri"
-		select="
+	<xsl:variable name="lang"
+		select="doc('input:request')/request/parameters/parameter[name = 'lang']/value"/>
+	<xsl:variable name="request-uri" select="
 			concat('http://localhost:', if (//config/server-port castable as xs:integer) then
 				//config/server-port
 			else
@@ -36,7 +40,8 @@
 						select="distinct-values(descendant::nuds:typeDesc[string(@xlink:href)]/@xlink:href | descendant::nuds:reference[@xlink:arcrole = 'nmo:hasTypeSeriesItem'][string(@xlink:href)]/@xlink:href)">
 						<type_series_item>
 							<xsl:if test="contains(., '/id/')">
-								<xsl:attribute name="type_series" select="substring-before(., 'id/')"/>
+								<xsl:attribute name="type_series"
+									select="substring-before(., 'id/')"/>
 							</xsl:if>
 
 							<xsl:value-of select="."/>
@@ -49,7 +54,8 @@
 				<xsl:variable name="type_series_uri" select="."/>
 
 				<xsl:variable name="id-param">
-					<xsl:for-each select="$type_list//type_series_item[contains(., $type_series_uri)]">
+					<xsl:for-each
+						select="$type_list//type_series_item[contains(., $type_series_uri)]">
 						<xsl:value-of select="substring-after(., 'id/')"/>
 						<xsl:if test="not(position() = last())">
 							<xsl:text>|</xsl:text>
@@ -58,7 +64,8 @@
 				</xsl:variable>
 
 				<xsl:if test="string-length($id-param) &gt; 0">
-					<xsl:for-each select="document(concat($type_series_uri, 'apis/getNuds?identifiers=', encode-for-uri($id-param)))//nuds:nuds">
+					<xsl:for-each
+						select="document(concat($type_series_uri, 'apis/getNuds?identifiers=', encode-for-uri($id-param)))//nuds:nuds">
 						<object xlink:href="{$type_series_uri}id/{nuds:control/nuds:recordId}">
 							<xsl:copy-of select="."/>
 						</object>
@@ -86,13 +93,15 @@
 
 	<!-- get non-coin-type RDF in the document -->
 	<xsl:variable name="rdf" as="element()*">
-		<rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:nm="http://nomisma.org/id/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-			xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-			xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:org="http://www.w3.org/ns/org#"
+		<rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:nm="http://nomisma.org/id/"
+			xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+			xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+			xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+			xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"
+			xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:org="http://www.w3.org/ns/org#"
 			xmlns:nomisma="http://nomisma.org/" xmlns:nmo="http://nomisma.org/ontology#">
 			<xsl:variable name="id-param">
-				<xsl:for-each
-					select="
+				<xsl:for-each select="
 						distinct-values(descendant::*[not(local-name() = 'typeDesc') and not(local-name() = 'reference')][contains(@xlink:href,
 						'nomisma.org')]/@xlink:href | $nudsGroup/descendant::*[not(local-name() = 'object') and not(local-name() = 'typeDesc')][contains(@xlink:href, 'nomisma.org')]/@xlink:href)">
 					<xsl:value-of select="substring-after(., 'id/')"/>
@@ -102,11 +111,14 @@
 				</xsl:for-each>
 			</xsl:variable>
 
-			<xsl:variable name="rdf_url" select="concat('http://nomisma.org/apis/getRdf?identifiers=', encode-for-uri($id-param))"/>
+			<xsl:variable name="rdf_url"
+				select="concat('http://nomisma.org/apis/getRdf?identifiers=', encode-for-uri($id-param))"/>
 			<xsl:copy-of select="document($rdf_url)/rdf:RDF/*"/>
 
 			<xsl:if test="descendant::nuds:findspotDesc[contains(@xlink:href, 'coinhoards.org')]">
-				<xsl:copy-of select="document(concat(descendant::nuds:findspotDesc/@xlink:href, '.rdf'))/rdf:RDF/*"/>
+				<xsl:copy-of
+					select="document(concat(descendant::nuds:findspotDesc/@xlink:href, '.rdf'))/rdf:RDF/*"
+				/>
 			</xsl:if>
 		</rdf:RDF>
 	</xsl:variable>
@@ -119,7 +131,7 @@
 						<scale>1</scale>
 						<hotSpot x="0.5" y="0" xunits="fraction" yunits="fraction"/>
 						<Icon>
-							<href>http://maps.google.com/intl/en_us/mapfiles/ms/micons/blue-dot.png</href>
+							<href>https://maps.google.com/intl/en_us/mapfiles/ms/micons/blue-dot.png</href>
 						</Icon>
 					</IconStyle>
 				</Style>
@@ -128,7 +140,16 @@
 						<scale>1</scale>
 						<hotSpot x="0.5" y="0" xunits="fraction" yunits="fraction"/>
 						<Icon>
-							<href>http://maps.google.com/intl/en_us/mapfiles/ms/micons/red-dot.png</href>
+							<href>https://maps.google.com/intl/en_us/mapfiles/ms/micons/red-dot.png</href>
+						</Icon>
+					</IconStyle>
+				</Style>
+				<Style id="findspot">
+					<IconStyle>
+						<scale>1</scale>
+						<hotSpot x="0.5" y="0" xunits="fraction" yunits="fraction"/>
+						<Icon>
+							<href>https://maps.google.com/intl/en_us/mapfiles/ms/micons/orange-dot.png</href>
 						</Icon>
 					</IconStyle>
 				</Style>
@@ -137,7 +158,7 @@
 						<scale>1</scale>
 						<hotSpot x="0.5" y="0" xunits="fraction" yunits="fraction"/>
 						<Icon>
-							<href>http://maps.google.com/intl/en_us/mapfiles/ms/micons/red-dot.png</href>
+							<href>https://maps.google.com/intl/en_us/mapfiles/ms/micons/red-dot.png</href>
 						</Icon>
 					</IconStyle>
 				</Style>
@@ -146,7 +167,7 @@
 						<scale>1</scale>
 						<hotSpot x="0.5" y="0" xunits="fraction" yunits="fraction"/>
 						<Icon>
-							<href>http://maps.google.com/intl/en_us/mapfiles/ms/micons/green-dot.png</href>
+							<href>https://maps.google.com/intl/en_us/mapfiles/ms/micons/green-dot.png</href>
 						</Icon>
 					</IconStyle>
 				</Style>
@@ -164,19 +185,27 @@
 
 	<xsl:template match="nuds:nuds">
 		<!-- create mint points -->
-		<xsl:for-each select="$nudsGroup/descendant::nuds:geogname[@xlink:role = 'mint'][string(@xlink:href)]">
+		<xsl:for-each
+			select="$nudsGroup/descendant::nuds:geogname[@xlink:role = 'mint'][string(@xlink:href)]">
 			<xsl:call-template name="getPlacemark">
 				<xsl:with-param name="uri" select="@xlink:href"/>
 				<xsl:with-param name="styleUrl">#mint</xsl:with-param>
 			</xsl:call-template>
 		</xsl:for-each>
 
-		<!-- create findspot points (for physical coins -->
-		<xsl:for-each
-			select="descendant::nuds:geogname[@xlink:role = 'findspot'][string(@xlink:href)] | descendant::nuds:findspot[gml:location/gml:Point/gml:coordinates] | descendant::nuds:findspotDesc[string(@xlink:href)]">
+		<!-- create hoard/findspot points (for physical coins) -->
+		<xsl:for-each select="descendant::nuds:findspotDesc[string(@xlink:href)]">
 			<xsl:call-template name="getPlacemark">
 				<xsl:with-param name="uri" select="@xlink:href"/>
 				<xsl:with-param name="styleUrl">#hoard</xsl:with-param>
+			</xsl:call-template>
+		</xsl:for-each>
+
+		<xsl:for-each
+			select="descendant::nuds:geogname[@xlink:role = 'findspot'][string(@xlink:href)] | descendant::nuds:findspot[gml:location/gml:Point/gml:pos]">
+			<xsl:call-template name="getPlacemark">
+				<xsl:with-param name="uri" select="@xlink:href"/>
+				<xsl:with-param name="styleUrl">#findspot</xsl:with-param>
 			</xsl:call-template>
 		</xsl:for-each>
 
@@ -195,13 +224,15 @@
 	</xsl:template>
 
 	<xsl:template match="nh:nudsHoard">
-		<xsl:for-each select="descendant::nh:geogname[@xlink:role = 'findspot'][string(@xlink:href)]">
+		<xsl:for-each
+			select="descendant::nh:geogname[@xlink:role = 'findspot'][string(@xlink:href)]">
 			<xsl:call-template name="getPlacemark">
 				<xsl:with-param name="uri" select="@xlink:href"/>
 				<xsl:with-param name="styleUrl">#hoard</xsl:with-param>
 			</xsl:call-template>
 		</xsl:for-each>
-		<xsl:for-each select="$nudsGroup/descendant::nuds:geogname[@xlink:role = 'mint'][string(@xlink:href)]">
+		<xsl:for-each
+			select="$nudsGroup/descendant::nuds:geogname[@xlink:role = 'mint'][string(@xlink:href)]">
 			<!-- commenting out unique portion: [not(.=preceding::nuds:geogname)] -->
 			<xsl:call-template name="getPlacemark">
 				<xsl:with-param name="uri" select="@xlink:href"/>
@@ -210,11 +241,11 @@
 			</xsl:call-template>
 		</xsl:for-each>
 	</xsl:template>
-	
+
 	<xsl:template match="res:result">
 		<Placemark xmlns="http://earth.google.com/kml/2.0">
 			<name>
-				<xsl:value-of select="res:binding[@name='hoardLabel']/res:literal"/>
+				<xsl:value-of select="res:binding[@name = 'hoardLabel']/res:literal"/>
 			</name>
 			<description>
 				<xsl:variable name="desc" as="element()*">
@@ -222,7 +253,8 @@
 						<li>
 							<b>URL: </b>
 							<a href="{res:binding[@name='hoard']/res:uri}">
-								<xsl:value-of select="res:binding[@name = 'hoardLabel']/res:literal"/>
+								<xsl:value-of select="res:binding[@name = 'hoardLabel']/res:literal"
+								/>
 							</a>
 						</li>
 						<li>
@@ -233,13 +265,15 @@
 						</li>
 					</ul>
 				</xsl:variable>
-				
+
 				<xsl:value-of select="saxon:serialize($desc, 'html')"/>
 			</description>
 			<styleUrl>#hoard</styleUrl>
 			<Point>
 				<coordinates>
-					<xsl:value-of select="concat(res:binding[@name = 'long']/res:literal, ',', res:binding[@name = 'lat']/res:literal)"/>
+					<xsl:value-of
+						select="concat(res:binding[@name = 'long']/res:literal, ',', res:binding[@name = 'lat']/res:literal)"
+					/>
 				</coordinates>
 			</Point>
 		</Placemark>
@@ -257,7 +291,8 @@
 				</xsl:when>
 				<xsl:when test="local-name() = 'findspotDesc'">
 					<xsl:choose>
-						<xsl:when test="contains($uri, 'nomisma.org') or contains($uri, 'coinhoards.org')">
+						<xsl:when
+							test="contains($uri, 'nomisma.org') or contains($uri, 'coinhoards.org')">
 							<xsl:value-of select="$rdf/*[@rdf:about = $uri]/skos:prefLabel"/>
 						</xsl:when>
 						<xsl:otherwise>
@@ -287,13 +322,20 @@
 							test="ancestor::nuds:nuds/nuds:descMeta/nuds:typeDesc/nuds:date or ancestor::nuds:nuds/nuds:descMeta/nuds:typeDesc/nuds:dateRange">
 							<xsl:text>, </xsl:text>
 							<xsl:choose>
-								<xsl:when test="string(ancestor::nuds:nuds/nuds:descMeta/nuds:typeDesc/nuds:date)">
-									<xsl:value-of select="ancestor::nuds:nuds/nuds:descMeta/nuds:typeDesc/nuds:date"/>
+								<xsl:when
+									test="string(ancestor::nuds:nuds/nuds:descMeta/nuds:typeDesc/nuds:date)">
+									<xsl:value-of
+										select="ancestor::nuds:nuds/nuds:descMeta/nuds:typeDesc/nuds:date"
+									/>
 								</xsl:when>
-								<xsl:when test="string(ancestor::nuds:nuds/nuds:descMeta/nuds:typeDesc/nuds:dateRange)">
-									<xsl:value-of select="ancestor::nuds:nuds/nuds:descMeta/nuds:typeDesc/nuds:dateRange/nuds:fromDate"/>
+								<xsl:when
+									test="string(ancestor::nuds:nuds/nuds:descMeta/nuds:typeDesc/nuds:dateRange)">
+									<xsl:value-of
+										select="ancestor::nuds:nuds/nuds:descMeta/nuds:typeDesc/nuds:dateRange/nuds:fromDate"/>
 									<xsl:text> - </xsl:text>
-									<xsl:value-of select="ancestor::nuds:nuds/nuds:descMeta/nuds:typeDesc/nuds:dateRange/nuds:toDate"/>
+									<xsl:value-of
+										select="ancestor::nuds:nuds/nuds:descMeta/nuds:typeDesc/nuds:dateRange/nuds:toDate"
+									/>
 								</xsl:when>
 							</xsl:choose>
 						</xsl:if>
@@ -302,7 +344,8 @@
 				<xsl:otherwise>
 					<description>
 						<![CDATA[
-          					<span><a href="]]><xsl:value-of select="$uri"/><![CDATA[" target="_blank">]]><xsl:value-of select="$label"/><![CDATA[</a>]]>
+          					<span><a href="]]><xsl:value-of select="$uri"
+							/><![CDATA[" target="_blank">]]><xsl:value-of select="$label"/><![CDATA[</a>]]>
 						<![CDATA[</span>
         				]]>
 					</description>
@@ -317,7 +360,8 @@
 					<xsl:variable name="coordinates">
 						<xsl:choose>
 							<!-- when there is a geo:SpatialThing associated with the mint that contains a lat and long: -->
-							<xsl:when test="$rdf//*[@rdf:about = concat($uri, '#this')]/geo:long and $rdf//*[@rdf:about = concat($uri, '#this')]/geo:lat">
+							<xsl:when
+								test="$rdf//*[@rdf:about = concat($uri, '#this')]/geo:long and $rdf//*[@rdf:about = concat($uri, '#this')]/geo:lat">
 								<xsl:value-of
 									select="concat($rdf//*[@rdf:about = concat($uri, '#this')]/geo:long, ',', $rdf//*[@rdf:about = concat($uri, '#this')]/geo:lat)"
 								/>
@@ -326,11 +370,14 @@
 							<xsl:when test="$rdf//*[@rdf:about = $uri]/skos:related">
 								<xsl:variable name="uncertainMint" as="node()*">
 									<xsl:copy-of
-										select="document(concat($rdf//*[@rdf:about = $uri]/skos:related/rdf:Description/rdf:value/@rdf:resource, '.rdf'))"/>
+										select="document(concat($rdf//*[@rdf:about = $uri]/skos:related/rdf:Description/rdf:value/@rdf:resource, '.rdf'))"
+									/>
 								</xsl:variable>
 
 								<xsl:if test="$uncertainMint//geo:long and $uncertainMint//geo:lat">
-									<xsl:value-of select="concat($uncertainMint//geo:long, ',', $uncertainMint//geo:lat)"/>
+									<xsl:value-of
+										select="concat($uncertainMint//geo:long, ',', $uncertainMint//geo:lat)"
+									/>
 								</xsl:if>
 							</xsl:when>
 							<!-- if the mint does not have coordinates, but does have skos:broader, exectue the region hierarchy API call to look for parent mint/region coordinates -->
@@ -342,7 +389,9 @@
 								</xsl:variable>
 
 								<xsl:if test="$regions//mint[1][@lat and @long]">
-									<xsl:value-of select="concat($regions//mint[1]/@long, ',', $regions//mint[1]/@lat)"/>
+									<xsl:value-of
+										select="concat($regions//mint[1]/@long, ',', $regions//mint[1]/@lat)"
+									/>
 								</xsl:if>
 							</xsl:when>
 							<!-- Hoard RDF in the variable has an nmo:hasFindspot, regardless of IGCH/CHRR or few Nomisma hoard origin -->
@@ -353,18 +402,22 @@
 									select="$rdf//*[@rdf:about = $uri]/nmo:hasFindspot/descendant::crm:P89_falls_within[contains(@rdf:resource, 'geonames.org')]/@rdf:resource"/>
 
 								<xsl:if test="string($gazetteerURI)">
-									<xsl:variable name="spatialThingURI" select="$rdf//*[@rdf:about = $gazetteerURI]/crm:P168_place_is_defined_by/@rdf:resource"/>
+									<xsl:variable name="spatialThingURI"
+										select="$rdf//*[@rdf:about = $gazetteerURI]/crm:P168_place_is_defined_by/@rdf:resource"/>
 
 									<xsl:if test="$spatialThingURI">
 										<xsl:choose>
 											<!-- if there are a lat and long, then output an array of points -->
-											<xsl:when test="$rdf//*[@rdf:about = $spatialThingURI][geo:lat and geo:long]">
+											<xsl:when
+												test="$rdf//*[@rdf:about = $spatialThingURI][geo:lat and geo:long]">
 												<xsl:value-of
-													select="concat($rdf//*[@rdf:about = $spatialThingURI]/geo:long, ',', $rdf//*[@rdf:about = $spatialThingURI]/geo:lat)"
+												select="concat($rdf//*[@rdf:about = $spatialThingURI]/geo:long, ',', $rdf//*[@rdf:about = $spatialThingURI]/geo:lat)"
 												/>
 											</xsl:when>
 											<!-- polygon later -->
-											<xsl:when test="$rdf//*[@rdf:about = $spatialThingURI][crmgeo:asWKT[contains(., 'POLYGON')]]"> </xsl:when>
+											<xsl:when
+												test="$rdf//*[@rdf:about = $spatialThingURI][crmgeo:asWKT[contains(., 'POLYGON')]]"
+											> </xsl:when>
 										</xsl:choose>
 									</xsl:if>
 								</xsl:if>
@@ -384,21 +437,26 @@
 					<xsl:variable name="geonameId" select="tokenize($uri, '/')[4]"/>
 					<xsl:variable name="geonames_data" as="element()*">
 						<xsl:copy-of
-							select="document(concat($geonames-url, '/get?geonameId=', $geonameId, '&amp;username=', $geonames_api_key, '&amp;style=full'))/*"/>
+							select="document(concat($geonames-url, '/get?geonameId=', $geonameId, '&amp;username=', $geonames_api_key, '&amp;style=full'))/*"
+						/>
 					</xsl:variable>
-					<xsl:variable name="coordinates" select="concat($geonames_data//lng, ',', $geonames_data//lat)"/>
+					<xsl:variable name="coordinates"
+						select="concat($geonames_data//lng, ',', $geonames_data//lat)"/>
 					<Point>
 						<coordinates>
 							<xsl:value-of select="$coordinates"/>
 						</coordinates>
 					</Point>
 				</xsl:when>
-				<xsl:when test="gml:location/gml:Point/gml:coordinates">
-					<xsl:variable name="coords" select="tokenize(gml:location/gml:Point/gml:coordinates, ',')"/>
+				<xsl:when test="gml:location/gml:Point/gml:pos">
+					<xsl:variable name="coords"
+						select="tokenize(gml:location/gml:Point/gml:pos, ' ')"/>
 
 					<Point>
 						<coordinates>
-							<xsl:value-of select="concat(normalize-space($coords[2]), ',', normalize-space($coords[1]))"/>
+							<xsl:value-of
+								select="concat(normalize-space($coords[2]), ',', normalize-space($coords[1]))"
+							/>
 						</coordinates>
 					</Point>
 				</xsl:when>
@@ -410,14 +468,18 @@
 						<xsl:when test="ancestor::nh:hoardDesc/nh:deposit/nh:date/@standardDate">
 							<TimeStamp>
 								<when>
-									<xsl:value-of select="number(ancestor::nh:hoardDesc/nh:deposit/nh:date/@standardDate)"/>
+									<xsl:value-of
+										select="number(ancestor::nh:hoardDesc/nh:deposit/nh:date/@standardDate)"
+									/>
 								</when>
 							</TimeStamp>
 						</xsl:when>
 						<xsl:when test="ancestor::nh:hoardDesc/nh:closingDate/nh:date/@standardDate">
 							<TimeStamp>
 								<when>
-									<xsl:value-of select="number(ancestor::nh:hoardDesc/nh:closingDate/nh:date/@standardDate)"/>
+									<xsl:value-of
+										select="number(ancestor::nh:hoardDesc/nh:closingDate/nh:date/@standardDate)"
+									/>
 								</when>
 							</TimeStamp>
 						</xsl:when>
@@ -425,10 +487,14 @@
 							test="ancestor::nh:hoardDesc/nh:closingDate/nh:dateRange/nh:fromDate/@standardDate and ancestor::nh:hoardDesc/nh:closingDate/nh:dateRange/nh:toDate/@standardDate">
 							<TimeSpan>
 								<begin>
-									<xsl:value-of select="number(ancestor::nh:hoardDesc/nh:closingDate/nh:dateRange/nh:fromDate/@standardDate)"/>
+									<xsl:value-of
+										select="number(ancestor::nh:hoardDesc/nh:closingDate/nh:dateRange/nh:fromDate/@standardDate)"
+									/>
 								</begin>
 								<end>
-									<xsl:value-of select="number(ancestor::nh:hoardDesc/nh:closingDate/nh:dateRange/nh:toDate/@standardDate)"/>
+									<xsl:value-of
+										select="number(ancestor::nh:hoardDesc/nh:closingDate/nh:dateRange/nh:toDate/@standardDate)"
+									/>
 								</end>
 							</TimeSpan>
 						</xsl:when>
@@ -436,10 +502,14 @@
 							test="ancestor::nh:hoardDesc/nh:deposit/nh:dateRange/nh:fromDate/@standardDate and ancestor::nh:hoardDesc/nh:deposit/nh:dateRange/nh:toDate/@standardDate">
 							<TimeSpan>
 								<begin>
-									<xsl:value-of select="number(ancestor::nh:hoardDesc/nh:deposit/nh:dateRange/nh:fromDate/@standardDate)"/>
+									<xsl:value-of
+										select="number(ancestor::nh:hoardDesc/nh:deposit/nh:dateRange/nh:fromDate/@standardDate)"
+									/>
 								</begin>
 								<end>
-									<xsl:value-of select="number(ancestor::nh:hoardDesc/nh:deposit/nh:dateRange/nh:toDate/@standardDate)"/>
+									<xsl:value-of
+										select="number(ancestor::nh:hoardDesc/nh:deposit/nh:dateRange/nh:toDate/@standardDate)"
+									/>
 								</end>
 							</TimeSpan>
 						</xsl:when>
@@ -450,7 +520,9 @@
 						<xsl:when test="ancestor::nuds:typeDesc/nuds:date/@standardDate">
 							<TimeStamp>
 								<when>
-									<xsl:value-of select="number(ancestor::nuds:typeDesc/nuds:date/@standardDate)"/>
+									<xsl:value-of
+										select="number(ancestor::nuds:typeDesc/nuds:date/@standardDate)"
+									/>
 								</when>
 							</TimeStamp>
 						</xsl:when>
@@ -458,10 +530,14 @@
 							test="ancestor::nuds:typeDesc/nuds:dateRange/nuds:fromDate/@standardDate and ancestor::nuds:typeDesc/nuds:dateRange/nuds:toDate/@standardDate">
 							<TimeSpan>
 								<begin>
-									<xsl:value-of select="number(ancestor::nuds:typeDesc/nuds:dateRange/nuds:fromDate/@standardDate)"/>
+									<xsl:value-of
+										select="number(ancestor::nuds:typeDesc/nuds:dateRange/nuds:fromDate/@standardDate)"
+									/>
 								</begin>
 								<end>
-									<xsl:value-of select="number(ancestor::nuds:typeDesc/nuds:dateRange/nuds:toDate/@standardDate)"/>
+									<xsl:value-of
+										select="number(ancestor::nuds:typeDesc/nuds:dateRange/nuds:toDate/@standardDate)"
+									/>
 								</end>
 							</TimeSpan>
 						</xsl:when>
