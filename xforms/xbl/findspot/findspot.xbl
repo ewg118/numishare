@@ -20,11 +20,11 @@
 					<xforms:action ev:event="xforms-enabled" ev:target="#observer">
 						<!-- load config -->
 						<xforms:send submission="load-config"/>
-						<xforms:action if="$binding/gml:Point">
-							<xforms:setvalue ref="instance('coordinates-temp')/geo:lat" value="substring-before($binding/gml:Point/gml:coordinates, ', ')"/>
-							<xforms:setvalue ref="instance('coordinates-temp')/geo:long" value="substring-after($binding/gml:Point/gml:coordinates, ', ')"/>
+						<xforms:action if="$binding/gml:location">
+							<xforms:setvalue ref="instance('coordinates-temp')/geo:lat" value="substring-before($binding/gml:location/gml:Point/gml:pos, ' ')"/>
+							<xforms:setvalue ref="instance('coordinates-temp')/geo:long" value="substring-after($binding/gml:location/gml:Point/gml:pos, ' ')"/>
 						</xforms:action>
-						<xforms:action if="not($binding/gml:Point)">
+						<xforms:action if="not($binding/gml:location)">
 							<!-- evaluate whether then Geonames username/API key has been set. If so, then insert geonames as the interface type -->
 							<xforms:action if="string(instance('config')/*[local-name()='geonames_api_key'])">
 								<xforms:setvalue ref="instance('interface-type')">geonames</xforms:setvalue>
@@ -64,7 +64,7 @@
 
 													<!-- remove temporary values, applicable when switching back to geonames from local -->
 													<xforms:delete context="instance('feed')/*"/>
-													<xforms:delete context="$binding" nodeset="gml:Point"/>
+													<xforms:delete context="$binding" nodeset="gml:location"/>
 													<!-- create attributes, clear nuds:geogname text when applicable -->
 													<xforms:insert if="not($binding/nuds:geogname/@xlink:href)" context="$binding/nuds:geogname"
 														origin="xxf:attribute('xlink:href', '')"/>
@@ -81,7 +81,7 @@
 													<xforms:delete context="$binding" nodeset="nuds:geogname/@xlink:href"/>
 													<xforms:setvalue ref="$binding/nuds:geogname"/>
 													<xforms:insert origin="instance('coordinates-template')" context="$binding"
-														nodeset="./child::node()[last()]" if="not($binding/gml:Point)"/>
+														nodeset="./child::node()[last()]" if="not($binding/gml:location)"/>
 													<xforms:toggle case="specific-coordinates"/>
 												</xforms:action>
 											</xforms:action>
@@ -125,14 +125,14 @@
 													<xforms:alert>Required</xforms:alert>
 												</xforms:input>
 											</div>
-											<xforms:group ref="gml:Point">
+											<xforms:group ref="gml:location">
 												<h4>Coordinates</h4>
 												<div>
 													<xforms:input ref="instance('coordinates-temp')/geo:lat">
 														<xforms:label>Latitude</xforms:label>
 														<xforms:alert>Must be decimal coordinate less than or equal to 180.00</xforms:alert>
-														<xforms:setvalue ref="$binding/gml:Point/gml:coordinates"
-															value="concat(instance('coordinates-temp')/geo:lat, ', ', instance('coordinates-temp')/geo:long)"
+														<xforms:setvalue ref="$binding/gml:location/gml:Point/gml:pos"
+															value="concat(instance('coordinates-temp')/geo:lat, ' ', instance('coordinates-temp')/geo:long)"
 															ev:event="xforms-value-changed"/>
 													</xforms:input>
 												</div>
@@ -140,8 +140,8 @@
 													<xforms:input ref="instance('coordinates-temp')/geo:long">
 														<xforms:label>Longitude</xforms:label>
 														<xforms:alert>Must be decimal coordinate less than or equal to 180.00</xforms:alert>
-														<xforms:setvalue ref="$binding/gml:Point/gml:coordinates"
-															value="concat(instance('coordinates-temp')/geo:lat, ', ', instance('coordinates-temp')/geo:long)"
+														<xforms:setvalue ref="$binding/gml:location/gml:Point/gml:pos"
+															value="concat(instance('coordinates-temp')/geo:lat, ' ', instance('coordinates-temp')/geo:long)"
 															ev:event="xforms-value-changed"/>
 													</xforms:input>
 												</div>
@@ -214,9 +214,11 @@
 						</xforms:instance>
 
 						<xforms:instance id="coordinates-template" xxf:exclude-result-prefixes="#all">
-							<gml:Point srsName="http://www.opengis.net/def/crs/EPSG/0/4326" xmlns="">
-								<gml:coordinates/>
-							</gml:Point>
+							<gml:location srsName="http://www.opengis.net/def/crs/EPSG/0/4326" xmlns="">
+								<gml:Point>
+									<gml:pos/>
+								</gml:Point>
+							</gml:location>
 						</xforms:instance>
 						
 						<xforms:instance id="description-template" xxf:exclude-result-prefixes="#all">

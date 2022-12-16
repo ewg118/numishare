@@ -467,11 +467,13 @@
 					<xforms:bind nodeset="nuds:findspotDesc" id="findspotDesc">
 						<xforms:bind nodeset="nuds:findspot">
 							<xforms:bind nodeset="nuds:geogname" required="true()"/>
-							<xforms:bind nodeset="gml:Point">
-								<xforms:bind nodeset="gml:coordinates" required="true()"
-									constraint="normalize-space(tokenize(., ',')[1]) castable as xs:decimal and normalize-space(tokenize(., ',')[2]) castable as xs:decimal"
-								/>
-							</xforms:bind>
+							<xforms:bind nodeset="gml:location">
+								<xforms:bind nodeset="gml:Point">
+									<xforms:bind nodeset="gml:pos" required="true()"
+										constraint="normalize-space(tokenize(., ' ')[1]) castable as xs:decimal and normalize-space(tokenize(., ' ')[2]) castable as xs:decimal"
+									/>
+								</xforms:bind>
+							</xforms:bind>							
 						</xforms:bind>
 					</xforms:bind>
 					<xforms:bind nodeset="nuds:refDesc" id="refDesc"> </xforms:bind>

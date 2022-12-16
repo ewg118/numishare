@@ -187,6 +187,11 @@
 								</xsl:call-template>
 							</xsl:if>
 						</xsl:for-each>
+						
+						<!-- if there is a manually entered findspot point -->
+						<xsl:if test="descendant::nuds:findspot[gml:location]">
+							<xsl:apply-templates select="descendant::nuds:findspot[gml:location]"/>
+						</xsl:if>
 
 						<!-- gather associated hoards from Nomisma, but only for coin types and an active SPARQL endpoint  -->
 						<xsl:if test="/content/config/collection_type = 'cointype' and matches($sparql_endpoint, 'https?://')">
@@ -233,6 +238,14 @@
 			<xsl:with-param name="uri" select="$uri"/>
 			<xsl:with-param name="type">hoard</xsl:with-param>
 			<xsl:with-param name="label" select="numishare:getNomismaLabel($rdf/*[@rdf:about = $uri], $lang)"/>
+		</xsl:call-template>
+	</xsl:template>
+	
+	<xsl:template match="nuds:findspot">
+		<xsl:call-template name="generateFeature">
+			<xsl:with-param name="uri"/>
+			<xsl:with-param name="type">findspot</xsl:with-param>
+			<xsl:with-param name="label" select="nuds:geogname[@xlink:role = 'findspot']"/>
 		</xsl:call-template>
 	</xsl:template>
 
@@ -411,18 +424,18 @@
 									</_object>
 								</geometry>
 							</xsl:when>
-							<xsl:when test="parent::node()/gml:location/gml:Point">
-								<xsl:variable name="coords" select="tokenize(parent::node()/gml:location/gml:Point/gml:coordinates, ',')"/>
+							<xsl:when test="descendant::gml:Point">
+								<xsl:variable name="coords" select="tokenize(descendant::gml:Point/gml:pos, ' ')"/>
 								<geometry>
 									<_object>
 										<type>Point</type>
 										<coordinates>
 											<_array>
 												<_>
-													<xsl:value-of select="normalize-space($coords[1])"/>
+													<xsl:value-of select="normalize-space($coords[2])"/>
 												</_>
 												<_>
-													<xsl:value-of select="normalize-space($coords[2])"/>
+													<xsl:value-of select="normalize-space($coords[1])"/>
 												</_>
 											</_array>
 										</coordinates>
@@ -432,18 +445,18 @@
 						</xsl:choose>
 					</xsl:when>
 					<!-- otherwise use the gml:Point stored within NUDS -->
-					<xsl:when test="parent::node()/gml:location/gml:Point">
-						<xsl:variable name="coords" select="tokenize(parent::node()/gml:location/gml:Point/gml:coordinates, ',')"/>
+					<xsl:when test="descendant::gml:Point">
+						<xsl:variable name="coords" select="tokenize(descendant::gml:Point/gml:pos, ' ')"/>
 						<geometry>
 							<_object>
 								<type>Point</type>
 								<coordinates>
 									<_array>
 										<_>
-											<xsl:value-of select="normalize-space($coords[1])"/>
+											<xsl:value-of select="normalize-space($coords[2])"/>
 										</_>
 										<_>
-											<xsl:value-of select="normalize-space($coords[2])"/>
+											<xsl:value-of select="normalize-space($coords[1])"/>
 										</_>
 									</_array>
 								</coordinates>
