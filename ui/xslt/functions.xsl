@@ -218,6 +218,7 @@
                     <xsl:when test="$label='issuer'">Herausgeber</xsl:when>
                     <xsl:when test="$label='landowner'">Grundstückseigentümer</xsl:when>
                     <xsl:when test="$label='legend'">Legende</xsl:when>
+		    <xsl:when test="$label='license'">Lizenz</xsl:when>
                     <xsl:when test="$label='manufacture'">Herstellung</xsl:when>
                     <xsl:when test="$label='material'">Material</xsl:when>
                     <xsl:when test="$label='measurementsSet'">Maße</xsl:when>
@@ -2273,11 +2274,13 @@
             </xsl:when>
             <xsl:when test="$lang='de'">
                 <xsl:choose>
-                    <xsl:when test="$label='header_home'">Start</xsl:when>
+                    <xsl:when test="$label='header_about'">Über</xsl:when>
+		    <xsl:when test="$label='header_home'">Start</xsl:when>
                     <xsl:when test="$label='header_browse'">Browsen</xsl:when>
                     <xsl:when test="$label='header_search'">Suchen</xsl:when>
                     <xsl:when test="$label='header_maps'">Karten</xsl:when>
                     <xsl:when test="$label='header_compare'">Vergleichen</xsl:when>
+		    <xsl:when test="$label='header_contributors'">Beitragende</xsl:when>
                     <xsl:when test="$label='header_language'">Sprache</xsl:when>
                     <xsl:when test="$label='header_analyze'">Hortfunde analysieren</xsl:when>
                     <xsl:when test="$label='header_visualize'">Anfragen visualisieren</xsl:when>
