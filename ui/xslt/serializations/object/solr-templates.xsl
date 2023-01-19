@@ -444,7 +444,7 @@
 		<xsl:variable name="href" select="@xlink:href"/>
 		<xsl:variable name="label">
 			<xsl:choose>
-				<xsl:when test="string($lang) and contains($href, 'nomisma.org')">
+				<xsl:when test="string($lang) and contains($href, 'nomisma.org')">					
 					<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about = $href], $lang)"/>
 				</xsl:when>
 				<xsl:otherwise>

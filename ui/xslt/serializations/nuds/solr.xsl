@@ -507,7 +507,9 @@
 		</field>
 
 		<xsl:apply-templates select="nuds:subjectSet"/>
-		<xsl:apply-templates select="nuds:physDesc"/>
+		<xsl:apply-templates select="nuds:physDesc">
+			<xsl:with-param name="lang" select="$lang"/>
+		</xsl:apply-templates>
 
 
 		<!-- ***** typeDesc and/or reference typology indexing ***** -->
@@ -913,9 +915,13 @@
 	</xsl:template>
 
 	<xsl:template match="nuds:physDesc">
+		<xsl:param name="lang"/>
+		
 		<xsl:apply-templates select="nuds:axis"/>
 		<xsl:apply-templates select="nuds:measurementsSet"/>
-		<xsl:apply-templates select="nuds:conservationState"/>
+		<xsl:apply-templates select="nuds:conservationState">
+			<xsl:with-param name="lang" select="$lang"/>
+		</xsl:apply-templates>
 		<xsl:for-each select="descendant::nuds:grade">
 			<field name="grade_facet">
 				<xsl:value-of select="."/>
@@ -943,9 +949,13 @@
 	</xsl:template>
 
 	<xsl:template match="nuds:conservationState">
+		<xsl:param name="lang"/>
+		
 		<xsl:apply-templates
 			select="descendant::nuds:secondaryTreatment[string(.) or string(@xlink:href)] | descendant::nuds:condition[string(.) or string(@xlink:href)] | descendant::nuds:wear[string(.) or string(@xlink:href)]"
-		/>
+		>
+			<xsl:with-param name="lang" select="$lang"/>
+		</xsl:apply-templates>
 	</xsl:template>
 
 	<xsl:template match="nuds:adminDesc">
