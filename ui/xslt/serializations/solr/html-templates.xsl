@@ -671,8 +671,8 @@
 					</div>
 					<input type="text" id="from_date" class="form-control"/>
 					<select id="from_era" class="form-control">
-						<option value="minus">B.C.</option>
-						<option value="" selected="selected">A.D.</option>
+						<option value="minus">BCE</option>
+						<option value="" selected="selected">CE</option>
 					</select>
 				</div>
 				<div class="form-group">
@@ -683,8 +683,8 @@
 					</div>
 					<input type="text" id="to_date" class="form-control"/>
 					<select id="to_era" class="form-control">
-						<option value="minus">B.C.</option>
-						<option value="" selected="selected">A.D.</option>
+						<option value="minus">BCE</option>
+						<option value="" selected="selected">CE</option>
 					</select>
 				</div>
 				

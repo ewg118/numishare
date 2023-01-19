@@ -5182,11 +5182,7 @@
 
     <xsl:function name="numishare:normalizeDate">
         <xsl:param name="date"/>
-
-        <!--<xsl:if test="substring($date, 1, 1) != '-' and number(substring($date, 1, 4)) &lt;= 400">
-			<xsl:text>A.D. </xsl:text>
-		</xsl:if>-->
-
+        
         <xsl:choose>
             <xsl:when test="$date castable as xs:dateTime">
                 <xsl:value-of select="format-dateTime($date, '[D] [MNn] [Y], [H01]:[m01]')"/>
@@ -5206,6 +5202,9 @@
         <xsl:if test="substring($date, 1, 1) = '-'">
             <xsl:text> BCE</xsl:text>
         </xsl:if>
+        <!--<xsl:if test="substring($date, 1, 1) != '-' and number(substring($date, 1, 4)) &lt;= 400">
+		<xsl:text>CE</xsl:text>
+	</xsl:if>-->
     </xsl:function>
 
     <xsl:function name="numishare:normalize_century">
@@ -5230,7 +5229,7 @@
         </xsl:variable>
         <xsl:value-of select="concat($century, $suffix)"/>
         <xsl:if test="$cleaned &lt; 0">
-            <xsl:text> B.C.</xsl:text>
+            <xsl:text> BCE</xsl:text>
         </xsl:if>
     </xsl:function>
 
@@ -5833,7 +5832,7 @@
     </xsl:function>
 
 
-    <!-- convert XSD compliant date datatypes into ISO 8601 dates (e.g., 1 B.C., "-0001"^^xsd:gYear = "0000" in ISO 8601) -->
+    <!-- convert XSD compliant date datatypes into ISO 8601 dates (e.g., 1 BCE, "-0001"^^xsd:gYear = "0000" in ISO 8601) -->
     <xsl:function name="numishare:xsdToIso">
         <xsl:param name="date"/>
 

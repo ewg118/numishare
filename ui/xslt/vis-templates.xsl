@@ -128,7 +128,7 @@
 											<xsl:attribute name="selected">selected</xsl:attribute>
 										</xsl:if>
 									</xsl:if>
-									<xsl:text>B.C.</xsl:text>
+									<xsl:text>BCE</xsl:text>
 								</option>
 								<option value="ad">
 									<xsl:if test="$from castable as xs:integer">
@@ -136,7 +136,7 @@
 											<xsl:attribute name="selected">selected</xsl:attribute>
 										</xsl:if>
 									</xsl:if>
-									<xsl:text>A.D.</xsl:text>
+									<xsl:text>CE</xsl:text>
 								</option>
 							</select>
 							<xsl:text> to </xsl:text>
@@ -152,7 +152,7 @@
 											<xsl:attribute name="selected">selected</xsl:attribute>
 										</xsl:if>
 									</xsl:if>
-									<xsl:text>B.C.</xsl:text>
+									<xsl:text>BCE</xsl:text>
 								</option>
 								<option value="ad">
 									<xsl:if test="$to castable as xs:integer">
@@ -160,7 +160,7 @@
 											<xsl:attribute name="selected">selected</xsl:attribute>
 										</xsl:if>
 									</xsl:if>
-									<xsl:text>A.D.</xsl:text>
+									<xsl:text>CE</xsl:text>
 								</option>
 							</select>
 
@@ -540,7 +540,7 @@
 							<xsl:attribute name="selected">selected</xsl:attribute>
 						</xsl:if>
 					</xsl:if>
-					<xsl:text>B.C.</xsl:text>
+					<xsl:text>BCE</xsl:text>
 				</option>
 				<option value="ad">
 					<xsl:if test="$year castable as xs:integer">
@@ -548,7 +548,7 @@
 							<xsl:attribute name="selected">selected</xsl:attribute>
 						</xsl:if>
 					</xsl:if>
-					<xsl:text>A.D.</xsl:text>
+					<xsl:text>CE</xsl:text>
 				</option>
 			</select>
 		</span>
