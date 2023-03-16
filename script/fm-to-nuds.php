@@ -363,7 +363,7 @@ function generate_html_response($csv_id, $accnums, $errors, $warnings, $startTim
 
 //send an email report
 function generate_email_report ($csv_id, $accnums, $errors, $warnings, $startTime, $endTime){
-	$to = 'database@numismatics.org';
+	$to = 'database@numismatics.org, jthomassen@numismatics.org';
 	$subject = "Error report for {$csv_id}.csv";
 	$body = "Error Report for {$csv_id}.csv\n\n";
 	$body .= "Successful objects: " . count($accnums) . "\n";
