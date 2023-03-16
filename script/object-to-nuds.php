@@ -576,8 +576,10 @@ function generate_typeDesc_from_OCRE($writer, $typeDesc, $fields, $uncertain){
 		$writer->writeAttribute('certainty', 'uncertain');
 	}
 	foreach ($fields as $field){
-		if ($field->nodeName != 'authority' && $field->nodeName != 'geographic' && $field->nodeName != 'dateRange' && $field->nodeName != 'obverse' && $field->nodeName != 'reverse'){
-			$writer->startElement($field->nodeName);
+	    $nodeName = $field->localName;
+	    
+		if ($nodeName != 'authority' && $nodeName != 'geographic' && $nodeName != 'dateRange' && $nodeName != 'obverse' && $nodeName != 'reverse'){
+			$writer->startElement($nodeName);
 			if ($field->getAttribute('xlink:href')){
 				$writer->writeAttribute('xlink:href', $field->getAttribute('xlink:href'));
 			}
@@ -594,12 +596,12 @@ function generate_typeDesc_from_OCRE($writer, $typeDesc, $fields, $uncertain){
 			$writer->endElement();
 			
 			
-		} elseif ($field->nodeName == 'authority' || $field->nodeName == 'geographic'){
-			$writer->startElement($field->nodeName);
+		} elseif ($nodeName == 'authority' || $nodeName == 'geographic'){
+			$writer->startElement($nodeName);
 			foreach ($field->childNodes as $child){
 				//if an element XML_ELEMENT_NODE
 				if ($child->nodeType == 1){
-					$writer->startElement($child->nodeName);
+					$writer->startElement($child->localName);
 					if ($child->getAttribute('xlink:href')){
 						$writer->writeAttribute('xlink:href', $child->getAttribute('xlink:href'));
 					}
@@ -614,22 +616,21 @@ function generate_typeDesc_from_OCRE($writer, $typeDesc, $fields, $uncertain){
 				}
 			}
 			$writer->endElement();
-		} elseif ($field->nodeName == 'dateRange'){
+		} elseif ($nodeName == 'dateRange'){
 			$writer->startElement('dateRange');
 			foreach ($field->childNodes as $child){
 				//if an element XML_ELEMENT_NODE
 				if ($child->nodeType == 1){
-					$writer->startElement($child->nodeName);
-					if ($child->getAttribute('standardDate')){
-						$writer->writeAttribute('standardDate', $child->getAttribute('standardDate'));
-					}
-					$writer->text($child->nodeValue);
+					$writer->startElement($child->localName);
+    					if ($child->getAttribute('standardDate')){
+    						$writer->writeAttribute('standardDate', $child->getAttribute('standardDate'));
+    					}
+    					$writer->text($child->nodeValue);
 					$writer->endElement();
 				}
 			}
 			$writer->endElement();
-		} elseif ($field->nodeName == 'obverse' || $field->nodeName == 'reverse') {
-			$nodeName = $field->nodeName;
+		} elseif ($nodeName == 'obverse' || $nodeName == 'reverse') {
 			$writer->startElement($nodeName);
 			//insert legend, description, and symbol from filemaker
 			
@@ -650,24 +651,24 @@ function generate_typeDesc_from_OCRE($writer, $typeDesc, $fields, $uncertain){
 			}
 			if (array_key_exists('symbol', $typeDesc[$nodeName])){
 				$writer->startElement('symbol');
-					$writer->text($typeDesc[$nodeName]['symbol']);
+				$writer->text($typeDesc[$nodeName]['symbol']);
 				$writer->endElement();
 			}
 			
 			//pluck out entities
 			foreach ($field->childNodes as $child){
-				if ($child->nodeName == 'persname' || $child->nodeName == 'corpname' || $child->nodeName == 'famname'){
-					$writer->startElement($child->nodeName);
-					if ($child->getAttribute('xlink:href')){
-						$writer->writeAttribute('xlink:href', $child->getAttribute('xlink:href'));
-					}
-					if ($child->getAttribute('xlink:type')){
-						$writer->writeAttribute('xlink:type', 'simple');
-					}
-					if ($child->getAttribute('xlink:role')){
-						$writer->writeAttribute('xlink:role', $child->getAttribute('xlink:role'));
-					}
-					$writer->text($child->nodeValue);
+			    if ($child->localName == 'persname' || $child->localName == 'corpname' || $child->localName == 'famname'){
+			        $writer->startElement($child->localName);
+    					if ($child->getAttribute('xlink:href')){
+    						$writer->writeAttribute('xlink:href', $child->getAttribute('xlink:href'));
+    					}
+    					if ($child->getAttribute('xlink:type')){
+    						$writer->writeAttribute('xlink:type', 'simple');
+    					}
+    					if ($child->getAttribute('xlink:role')){
+    						$writer->writeAttribute('xlink:role', $child->getAttribute('xlink:role'));
+    					}
+    					$writer->text($child->nodeValue);
 					$writer->endElement();
 				}
 			}
