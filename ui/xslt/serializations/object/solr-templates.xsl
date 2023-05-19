@@ -1243,7 +1243,7 @@
 					</xsl:when>
 					<xsl:otherwise>
 						<field name="date_display">
-							<xsl:value-of select="numishare:normalizeDate(@standardDate)"/>
+							<xsl:value-of select="numishare:normalizeDate($typologies//nuds:date[1]/@standardDate)"/>
 						</field>
 					</xsl:otherwise>
 				</xsl:choose>

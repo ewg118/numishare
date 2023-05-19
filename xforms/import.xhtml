@@ -31,11 +31,11 @@
 					<status/>
 					<collection-name/>
 					<username/>
-					<spreadsheet-key/>
-					<spreadsheet-uri/>
-					<worksheet_id/>
+					<spreadsheet_key>1MSLr7ICJZ8TPOYroVC98h4njCXEdKk23uC6j24WoHls</spreadsheet_key>
+					<sheets_api_url></sheets_api_url>
+					<spreadsheet_uri></spreadsheet_uri>
+					<worksheet_id></worksheet_id>
 					<sheets-api-action/>
-					<sheets-api-url/>
 					<language>en</language>
 					<nomisma-uri/>
 					<rdf-api/>
@@ -303,6 +303,8 @@
 					<property label="Obverse Deity URI">obv_deity_uri</property>
 					<property label="Obverse Die ID">obv_die</property>
 					<property label="Obverse Legend">obv_legend</property>
+					<property label="Obverse Legend Language">obv_legend_lang</property>
+					<property label="Obverse Legend Script">obv_legend_script</property>
 					<property label="Obverse Portrait URI">obv_portrait_uri</property>
 					<property label="Obverse Symbol">obv_symbol</property>
 					<property label="Obverse Type Description">obv_type</property>
@@ -315,6 +317,8 @@
 					<property label="Reverse Deity URI">rev_deity_uri</property>
 					<property label="Reverse Die ID">rev_die</property>
 					<property label="Reverse Legend">rev_legend</property>
+					<property label="Reverse Legend Language">rev_legend_lang</property>
+					<property label="Reverse Legend Script">rev_legend_script</property>
 					<property label="Reverse Portrait URI">rev_portrait_uri</property>
 					<property label="Reverse Symbol">rev_symbol</property>
 					<property label="Reverse Type Description">rev_type</property>
@@ -366,16 +370,17 @@
 			<xforms:instance id="related-nuds" xxf:exclude-result-prefixes="#all">
 				<nuds/>
 			</xforms:instance>
-
-			<!-- Google Spreadsheet Atom -->
-			<xforms:instance id="spreadsheet-feed">
-				<feed xmlns=""/>
+			
+			<!-- Google Sheets API v4 JSON response -->
+			<xforms:instance id="api" xxf:exclude-result-prefixes="#all">
+				<json xmlns=""></json>
 			</xforms:instance>
-
-			<xforms:instance id="feed" xxf:exclude-result-prefixes="#all">
-				<feed xmlns=""/>
+			
+			<!-- refactor the API response into a processable model -->
+			<xforms:instance id="sheet" xxf:exclude-result-prefixes="#all">
+				<sheet xmlns=""></sheet>
 			</xforms:instance>
-
+			
 			<!-- Solr instances -->
 			<xforms:instance id="addIndex">
 				<add xmlns=""/>
@@ -389,7 +394,7 @@
 			<xforms:bind nodeset="instance('control-instance')">
 				<xforms:bind nodeset="type" required="true()"/>
 				<xforms:bind nodeset="load-trigger" id="load-trigger" type="xs:boolean" readonly=". != true()"
-					calculate="string-length(../spreadsheet-key) != 0"/>
+					calculate="string-length(../spreadsheet_key) != 0"/>
 				<xforms:bind nodeset="position" type="xs:integer"/>
 
 				<!-- enable/disable buttons based on validation -->
@@ -421,6 +426,8 @@
 				constraint="count(mapping[@to = 'id']) = 1 and count(mapping[@to = 'title']) &gt;= 1 and 
 				(count(mapping[@to = 'fromDate']) = count(mapping[@to = 'toDate'])) and count(mapping[@to = 'fromDate']) &lt;= 1 and
 				count(//mapping[@to='obv_legend']) &lt;= 1 and count(//mapping[@to='rev_legend']) &lt;= 1 and
+				count(//mapping[@to='obv_legend_lang']) &lt;= 1 and count(//mapping[@to='rev_legend_lang']) &lt;= 1 and
+				count(//mapping[@to='obv_legend_script']) &lt;= 1 and count(//mapping[@to='rev_legend_script']) &lt;= 1 and
 				count(//mapping[@to='obv_die']) &lt;= 1 and count(//mapping[@to='rev_die']) &lt;= 1 and
 				(if (instance('config')/collection_type = 'cointype') then count(mapping[@to = 'objectType_uri']) = 1 else if (instance('control-instance')/link-to-coinType = false()) then count(mapping[@to = 'objectType_uri']) = 1 else count(mapping[@to = 'objectType_uri']) &lt;= 1) and
 				(if (instance('control-instance')/link-to-coinType = true() and instance('config')/collection_type = 'object') then count(mapping[@to = 'coinType']) = 1 else count(mapping[@to = 'coinType']) = 0)
@@ -481,23 +488,62 @@
 
 			<!-- ************* SUBMISSIONS **********************-->
 			<!-- ************* GOOGLE DRIVE **********************-->
-			<xforms:submission id="get-sheets-api" serialization="none" method="get" action="{instance('control-instance')/sheets-api-url}" instance="feed"
-				replace="instance">
-				<xforms:message ev:event="xforms-submit-error" level="modal">Unable to receive Atom from Google Drive for the worksheet ID.</xforms:message>
-				<!-- if a feed is successfully received, set the id for the workshop -->
+			<xforms:submission id="query-spreadsheet" serialization="application/json" method="get" action="{instance('control-instance')/sheets_api_url}"
+				instance="api" replace="instance">
+				<xforms:message ev:event="xforms-submit-error" level="modal">Unable to receive JSON Response from Google Sheets API for the key
+					provided.</xforms:message>
+				
+				<!-- query the API gain to load the first sheet JSON -->
 				<xforms:action ev:event="xforms-submit-done">
-					<!--<xforms:action if="count(instance('feed')//atom:entry) &gt; 0">
-						<!-\- read whether or not the spreadsheet already exists in the system -\->
-						<xforms:action if="not(instance('spreadsheet-rdf')/prov:Entity[@rdf:about = instance('control-instance')/spreadsheet-uri])">
-							<!-\- if there is no matching URI for the spreadsheet (prov:Entity), then insert the spreadsheet template into the spreadsheet RDF -\->
-							<xforms:insert context="instance('spreadsheet-rdf')" nodeset="./child::node()[last()]" origin="instance('spreadsheet-template')"/>
-							<xforms:setvalue ref="instance('spreadsheet-rdf')/prov:Entity[last()]/@rdf:about"
-								value="instance('control-instance')/spreadsheet-uri"/>
-						</xforms:action>
-
+					<xforms:setvalue ref="instance('control-instance')/spreadsheet_uri"
+						value="concat('https://docs.google.com/spreadsheets/d/', instance('control-instance')/spreadsheet_key, '/pubhtml')"/>
+					
+					<xforms:setvalue ref="instance('control-instance')/sheets_api_url"
+						value="concat('https://sheets.googleapis.com/v4/spreadsheets/', instance('control-instance')/spreadsheet_key, '/values/', encode-for-uri(instance('api')/sheets/_[1]/properties/title), '?key=', instance('config')/googleKey)"/>
+					
+					<xforms:send submission="query-sheet"/>
+				</xforms:action>
+			</xforms:submission>
+			
+			<xforms:submission id="query-sheet" serialization="application/json" method="get" action="{instance('control-instance')/sheets_api_url}"
+				instance="api" replace="instance">
+				<xforms:message ev:event="xforms-submit-error" level="modal">Unable to receive JSON Response from Google Sheets API for the key
+					provided.</xforms:message>
+				
+				<!-- process the sheet JSON response and create the mappings -->
+				<xforms:action ev:event="xforms-submit-done">
+					
+					<xforms:action if="count(instance('api')/values/_) &gt; 0">
 						
-					</xforms:action>-->
+						<xforms:toggle case="mapping-interface"/>
+						
+						<xforms:action xxf:iterate="instance('api')/values/_[@type = 'array'][1]/_">
+							<xforms:var name="heading" select="normalize-space(context())"/>
+							<xforms:insert context="instance('mappings')" nodeset="./child::node()[last()]"
+								origin="xforms:element('mapping', (xforms:attribute('from', $heading), xforms:attribute('to', '')))"
+								if="not(instance('mappings')/mapping/@from = $heading)"/>
+						</xforms:action>
+						
+						<!-- process the remaining rows into a sheet -->
+						<xforms:action xxf:iterate="instance('api')/values/_[@type = 'array'][position() &gt; 1]">
+							
+							<xforms:insert context="instance('sheet')" nodeset="./child::node()[last()]" origin="xforms:element('row')"/>
+							
+							<xforms:action xxf:iterate="context()/_">
+								<xforms:var name="val" select="normalize-space(.)"/>
+								<xforms:var name="position" select="position()"/>
+								<xforms:var name="heading" select="instance('mappings')/mapping[$position]/@from"/>
+								<xforms:insert context="instance('sheet')/row[last()]" nodeset="./child::node()[last()]"
+									origin="xforms:element('cell', (xforms:attribute('name', $heading), $val))"/>
+							</xforms:action>
+						</xforms:action>
+						
+						
+					</xforms:action>
 					<!-- if there are no entries in the Atom feed, set the error interface -->
+					<xforms:action if="count(instance('api')/values/_) = 0">
+						<xforms:toggle case="mapping-error-interface"/>
+					</xforms:action>
 				</xforms:action>
 			</xforms:submission>
 
@@ -738,59 +784,19 @@
 										</xforms:select1>
 									</div>
 									<div>
-										<xforms:input ref="spreadsheet-key">
+										<xforms:input ref="spreadsheet_key">
 											<xforms:label>Spreadsheet ID</xforms:label>
 										</xforms:input>
 										<xforms:trigger bind="load-trigger">
 											<xforms:label>Load Spreadsheet</xforms:label>
 											<!-- load the spreadsheet and write the column mappings instance -->
 											<xforms:action ev:event="DOMActivate">
-												<xforms:setvalue ref="instance('control-instance')/sheets-api-url"
-													value="concat('https://spreadsheets.google.com/feeds/worksheets/', instance('control-instance')/spreadsheet-key, '/public/full')"/>
-												<xforms:setvalue ref="instance('control-instance')/sheets-api-action">read-sheets</xforms:setvalue>
-												<xforms:send submission="get-sheets-api"/>
 
-												<xforms:action ev:event="xforms-submit-done">
-													<!-- get the worksheet ID and call the Google Sheets API in order to read the column headings for the mapping interface -->
-													<xforms:setvalue ref="instance('control-instance')/spreadsheet-uri"
-														value="concat('https://docs.google.com/spreadsheets/d/', instance('control-instance')/spreadsheet-key, '/pubhtml')"/>
-													<xforms:setvalue ref="instance('control-instance')/worksheet_id"
-														value="tokenize(instance('feed')//atom:entry[1]/atom:id, '/')[last()]"/>
-													<xforms:setvalue ref="instance('control-instance')/sheets-api-url"
-														value="concat('https://spreadsheets.google.com/feeds/list/', instance('control-instance')/spreadsheet-key, '/', instance('control-instance')/worksheet_id, '/public/basic')"/>
-
-													<xforms:setvalue ref="instance('control-instance')/sheets-api-action">populate-mappings</xforms:setvalue>
-													<xforms:send submission="get-sheets-api"/>
-
-													<!-- load the basic sheet and read the URI of the first entry in order to prepare the column mappings -->
-													<xforms:action ev:event="xforms-submit-done">
-														<!-- if there are no entries, then toggle the error interface -->
-														<xforms:action if="count(instance('feed')//atom:entry) = 0">
-															<xforms:toggle case="mapping-error-interface"/>
-														</xforms:action>
-
-														<xforms:action if="count(instance('feed')//atom:entry) &gt; 0">
-															<!-- get the full model for the first row in the sheet -->
-															<xforms:setvalue ref="instance('control-instance')/sheets-api-url"
-																value="replace(instance('feed')//atom:entry[1]/atom:id, '/basic/', '/full/')"/>
-															<xforms:send submission="get-sheets-api"/>
-
-
-															<xforms:action ev:event="xforms-submit-done">
-																<xforms:action
-																	xxf:iterate="instance('feed')/*[namespace-uri()='http://schemas.google.com/spreadsheets/2006/extended']">
-																	<xforms:var name="heading" select="name()"/>
-																	<xforms:insert context="instance('mappings')" nodeset="./child::node()[last()]"
-																		origin="xforms:element('mapping', (xforms:attribute('from', $heading), xforms:attribute('to', '')))"
-																	/>
-																</xforms:action>
-
-																<!-- toggle to the mapping interface -->
-																<xforms:toggle case="mapping-interface"/>
-															</xforms:action>
-														</xforms:action>
-													</xforms:action>
-												</xforms:action>
+												<!-- load spreadsheet JSON metadata -->
+												<xforms:setvalue ref="instance('control-instance')/sheets_api_url"
+													value="concat('https://sheets.googleapis.com/v4/spreadsheets/', instance('control-instance')/spreadsheet_key, '?includeGridData=false&amp;key=', instance('config')/googleKey)"/>
+												
+												<xforms:send submission="query-spreadsheet"/>
 											</xforms:action>
 										</xforms:trigger>
 									</div>
@@ -900,7 +906,7 @@
 							</div>
 						</xforms:case>
 						<xforms:case id="mapping-interface">
-							<!--<xforms:group ref="instance('spreadsheet-rdf')/prov:Entity[@rdf:about  =instance('control-instance')/spreadsheet-uri]">
+							<!--<xforms:group ref="instance('spreadsheet-rdf')/prov:Entity[@rdf:about  =instance('control-instance')/spreadsheet_uri]">
 								<div class="section">
 									<h3>Spreadsheet Metadata</h3>
 									<div class="trigger_container">
@@ -1039,12 +1045,31 @@
 											<span class="glyphicon glyphicon-exclamation-sign"></span>
 											<strong>Alert:</strong> There can only be one Obverse Legend.</div>
 									</xforms:group>
+									<xforms:group ref=".[count(mapping[@to='obv_legend_lang']) != count(distinct-values(mapping[@to='obv_legend_lang']))]">
+										<div class="alert-danger alert-box alert">
+											<span class="glyphicon glyphicon-exclamation-sign"></span>
+											<strong>Alert:</strong> There can only be one Obverse Legend Language.</div>
+									</xforms:group>
+									<xforms:group ref=".[count(mapping[@to='obv_legend_script']) != count(distinct-values(mapping[@to='obv_legend_script']))]">
+										<div class="alert-danger alert-box alert">
+											<span class="glyphicon glyphicon-exclamation-sign"></span>
+											<strong>Alert:</strong> There can only be one Obverse Legend Script.</div>
+									</xforms:group>
 									<xforms:group ref=".[count(mapping[@to='rev_legend']) != count(distinct-values(mapping[@to='rev_legend']))]">
 										<div class="alert-danger alert-box alert">
 											<span class="glyphicon glyphicon-exclamation-sign"></span>
 											<strong>Alert:</strong> There can only be one Reverse Legend.</div>
 									</xforms:group>
-
+									<xforms:group ref=".[count(mapping[@to='rev_legend_lang']) != count(distinct-values(mapping[@to='rev_legend_lang']))]">
+										<div class="alert-danger alert-box alert">
+											<span class="glyphicon glyphicon-exclamation-sign"></span>
+											<strong>Alert:</strong> There can only be one Reverse Legend Language.</div>
+									</xforms:group>
+									<xforms:group ref=".[count(mapping[@to='rev_legend_script']) != count(distinct-values(mapping[@to='rev_legend_script']))]">
+										<div class="alert-danger alert-box alert">
+											<span class="glyphicon glyphicon-exclamation-sign"></span>
+											<strong>Alert:</strong> There can only be one Reverse Legend Script.</div>
+									</xforms:group>
 									<xforms:group ref=".[count(mapping[@to='obv_die']) != count(distinct-values(mapping[@to='obv_die']))]">
 										<div class="alert-danger alert-box alert">
 											<span class="glyphicon glyphicon-exclamation-sign"></span>
@@ -1125,7 +1150,7 @@
 
 											<tr>
 												<td>
-													<xforms:output ref="substring-after(@from, ':')"/>
+													<xforms:output ref="@from"/>
 												</td>
 												<td>
 													<xforms:select1 ref="@to">
@@ -1204,7 +1229,7 @@
 										<xforms:action ev:event="DOMActivate">
 											<!-- load the full feed -->
 											<xforms:setvalue ref="instance('control-instance')/sheets-api-url"
-												value="concat('https://spreadsheets.google.com/feeds/list/', instance('control-instance')/spreadsheet-key, '/', instance('control-instance')/worksheet_id, '/public/full')"/>
+												value="concat('https://spreadsheets.google.com/feeds/list/', instance('control-instance')/spreadsheet_key, '/', instance('control-instance')/worksheet_id, '/public/full')"/>
 											<xforms:send submission="get-sheets-api"/>
 
 											<!-- ********** NOMISMA/NUMISMATICS.ORG uri VALIDATION ********* -->
@@ -1214,7 +1239,7 @@
 											<xforms:action ev:event="xforms-submit-done">
 												<!-- iterate through all of the distinct values of Nomisma URIs -->
 												<xforms:action
-													xxf:iterate="distinct-values(instance('feed')//*[namespace-uri()='http://schemas.google.com/spreadsheets/2006/extended'][contains(., 'http://nomisma.org/') or contains(., 'http://numismatics.org/')])">
+													xxf:iterate="distinct-values(instance('sheet')/row/cell[contains(., 'http://nomisma.org/') or contains(., 'http://numismatics.org/')])">
 													<!-- ensure that the URI is not re-inserted due to trailing question mark for uncertainty -->
 													<xforms:var name="value"
 														select="if (contains(normalize-space(context()), '|')) then substring-before(normalize-space(context()), '|') else normalize-space(context())"/>
@@ -1309,22 +1334,21 @@
 
 													<!-- ensure that Record IDs are unique -->
 													<xforms:insert
-														if="count(instance('feed')//atom:entry/*[name()=instance('mappings')/mapping[@to='id']/@from]) != count(distinct-values(instance('feed')//atom:entry/*[name()=instance('mappings')/mapping[@to='id']/@from]))"
+														if="count(instance('sheet')/row/cell[@name=instance('mappings')/mapping[@to='id']/@from]) != count(distinct-values(instance('sheet')/row/cell[@name=instance('mappings')/mapping[@to='id']/@from]))"
 														context="instance('validation-model')" nodeset="./child::node()[last()]"
-														origin="xforms:element('error', 'Duplicate Record IDs.')"/>
+														origin="xforms:element('error', 'Duplicate IDs.')"/>
 
 													<!-- then iterate through all Atom entries -->
-													<xforms:action xxf:iterate="instance('feed')//atom:entry">
+													<xforms:action xxf:iterate="instance('sheet')/row">
 														<!-- create record in the validation model -->
-														<xforms:var name="title" select="atom:title"/>
+														<xforms:var name="title" select="cell[@name=instance('mappings')/mapping[@to='id']/@from]"/>
 														<xforms:var name="position" select="position()"/>
 														<xforms:insert context="instance('validation-model')" nodeset="./child::node()[last()]"
 															origin="xforms:element('record', (xforms:attribute('title', $title), ''))"/>
 
-														<!-- iterate through all gsx elements -->
-														<xforms:action
-															xxf:iterate="*[namespace-uri()='http://schemas.google.com/spreadsheets/2006/extended']">
-															<xforms:var name="from" select="name()"/>
+														<!-- iterate through all the cells -->
+														<xforms:action xxf:iterate="context()/cell">
+															<xforms:var name="from" select="@name"/>
 															<xforms:var name="value" select="normalize-space(context())"/>
 
 															<!-- only process those fields which have been mapped in the user interface -->
@@ -1361,14 +1385,14 @@
 
 																			<!-- if the ID is in the spreadsheet, add the ID to the 'parents-valid' instance -->
 																			<xforms:action
-																				if="instance('feed')//atom:entry/*[name()=instance('mappings')/mapping[@to='id']/@from][normalize-space(.) = $target-id]">
+																				if="instance('sheet')/row[cell[@name = instance('mappings')/mapping[@to='id']/@from][normalize-space(.) = $target-id]]">
 																				<xforms:insert context="instance('parents-valid')"
 																				nodeset="./child::node()[last()]" origin="xforms:element('id', $target-id)"/>
 																			</xforms:action>
 
 																			<!-- if the ID is not in the spreadsheet, load a NUDS file of that ID from exist-db -->
 																			<xforms:action
-																				if="not(instance('feed')//atom:entry/*[name()=instance('mappings')/mapping[@to='id']/@from][normalize-space(.) = $target-id])">
+																				if="not(instance('sheet')/row[cell[@name = instance('mappings')/mapping[@to='id']/@from][normalize-space(.) = $target-id]])">
 																				<xforms:setvalue ref="instance('control-instance')/target-id" value="$target-id"/>
 																				<xforms:setvalue ref="instance('control-instance')/mapping" value="$mapping"/>
 																				<xforms:send submission="load-nuds"/>
@@ -1446,9 +1470,9 @@
 																	<xforms:action if="string-length($value) = 0">
 																		<!-- if there is an objectType URI mapping set, evaluate whether there is a value if the coin type is blank -->
 																		<xforms:action
-																			if="parent::node()/*[namespace-uri()='http://schemas.google.com/spreadsheets/2006/extended'][name()=instance('mappings')/mapping[@to='objectType_uri']/@from]">
+																			if="parent::node()/cell[@name=instance('mappings')/mapping[@to='objectType_uri']/@from]">
 																			<xforms:var name="objectType_uri"
-																				select="normalize-space(parent::node()/*[namespace-uri()='http://schemas.google.com/spreadsheets/2006/extended'][name()=instance('mappings')/mapping[@to='objectType_uri']/@from])"/>
+																				select="normalize-space(parent::node()/cell[@name=instance('mappings')/mapping[@to='objectType_uri']/@from])"/>
 
 																			<!-- if the Object Type URI is blank and there is no Coin Type URI set -->
 																			<xforms:insert if="not(string($objectType_uri))"
@@ -1460,7 +1484,7 @@
 
 																		<!-- if there is no objectType URI mapping, throw a different error -->
 																		<xforms:action
-																			if="not(parent::node()/*[namespace-uri()='http://schemas.google.com/spreadsheets/2006/extended'][name()=instance('mappings')/mapping[@to='objectType_uri']/@from])">
+																			if="not(parent::node()/cell[@name=instance('mappings')/mapping[@to='objectType_uri']/@from])">
 																			<xforms:insert context="instance('validation-model')/record[last()]"
 																				nodeset="./child::node()[last()]"
 																				origin="xforms:element('error', 'If there is no Coin Type URI, the Object Type URI must be mapped instead')"
@@ -1647,10 +1671,10 @@
 											<xforms:setvalue ref="instance('control-instance')/identifiers"/>
 											<xforms:setvalue ref="instance('control-instance')/position">0</xforms:setvalue>
 
-											<!-- begin processing the spreadsheet into RDF -->
-											<xforms:action xxf:iterate="instance('feed')//atom:entry">
+											<!-- begin processing the spreadsheet into NUDS -->
+											<xforms:action xxf:iterate="instance('sheet')/row">
 												<xforms:var name="id"
-													select="normalize-space(data(context()/*[namespace-uri()='http://schemas.google.com/spreadsheets/2006/extended'][name()=instance('mappings')/mapping[@to='id']/@from]))"/>
+													select="normalize-space(data(context()/cell[@name=instance('mappings')/mapping[@to='id']/@from]))"/>
 												<xforms:var name="position" select="position()"/>
 
 												<xforms:setvalue ref="instance('control-instance')/id" value="$id"/>
@@ -1666,16 +1690,16 @@
 												<xforms:setvalue ref="instance('nuds')/nuds:control/nuds:publicationStatus"
 													value="if (instance('control-instance')/deprecate-ids = true())
 															then 'deprecatedType'
-														else if (count(context()/*[namespace-uri()='http://schemas.google.com/spreadsheets/2006/extended'][name()=instance('mappings')/mapping[@to='isReplacedBy']/@from][normalize-space()]) &gt;= 1) 
+														else if (count(context()/cell[@name=instance('mappings')/mapping[@to='isReplacedBy']/@from][normalize-space()]) &gt;= 1) 
 															then 'deprecatedType'															
-														else if (count(context()/*[namespace-uri()='http://schemas.google.com/spreadsheets/2006/extended'][name()=instance('mappings')/mapping[@to='broader']/@from][normalize-space()]) &gt;= 1)
+														else if (count(context()/cell[@name=instance('mappings')/mapping[@to='broader']/@from][normalize-space()]) &gt;= 1)
 															then 'approvedSubtype'														
 														else 'approved'"/>
 												<!-- if there's more than one isReplacedBy, then the status is cancelledSplit -->
 												<xforms:setvalue ref="instance('nuds')/nuds:control/nuds:maintenanceStatus"
-													value="if (count(context()/*[namespace-uri()='http://schemas.google.com/spreadsheets/2006/extended'][name()=instance('mappings')/mapping[@to='isReplacedBy']/@from][normalize-space()]) &gt; 1)
+													value="if (count(context()/cell[@name=instance('mappings')/mapping[@to='isReplacedBy']/@from][normalize-space()]) &gt; 1)
 															then 'cancelledSplit'
-														else if (count(context()/*[namespace-uri()='http://schemas.google.com/spreadsheets/2006/extended'][name()=instance('mappings')/mapping[@to='isReplacedBy']/@from][normalize-space()]) = 1) 
+														else if (count(context()/cell[@name=instance('mappings')/mapping[@to='isReplacedBy']/@from][normalize-space()]) = 1) 
 															then 'cancelledReplaced'
 														else if (instance('control-instance')/deprecate-ids = true())
 															then 'cancelled'
@@ -1695,16 +1719,16 @@
 													ref="instance('nuds')/nuds:control/nuds:maintenanceHistory/nuds:maintenanceEvent/nuds:eventDateTime"
 													value="format-dateTime($dateTime, '[D] [MNn] [Y0001], [H01]:[m01]:[s01]')"/>
 												<xforms:setvalue ref="instance('nuds')/nuds:control/nuds:maintenanceHistory/nuds:maintenanceEvent/nuds:source"
-													value="instance('control-instance')/spreadsheet-uri"/>
+													value="instance('control-instance')/spreadsheet_uri"/>
 
 												<!-- if there is a coin type URI -->
 												<xforms:var name="coinType_uri"
-													select="normalize-space(data(context()/*[namespace-uri()='http://schemas.google.com/spreadsheets/2006/extended'][name()=instance('mappings')/mapping[@to='coinType']/@from][normalize-space()]))"/>
+													select="normalize-space(data(context()/cell[@name=instance('mappings')/mapping[@to='coinType']/@from][normalize-space()]))"/>
 
-												<!-- *** BEGIN ATOM TO RDF IMPORT *** -->
+												<!-- *** BEGIN SHEETS TO NUDS IMPORT *** -->
 												<xforms:action
-													xxf:iterate="context()/*[namespace-uri()='http://schemas.google.com/spreadsheets/2006/extended']">
-													<xforms:var name="from" select="name()"/>
+													xxf:iterate="context()/cell">
+													<xforms:var name="from" select="@name"/>
 													<xforms:var name="value" select="normalize-space(data(context()))"/>
 
 													<!-- only process those fields which have been mapped in the user interface -->
@@ -1943,10 +1967,18 @@
 																<xforms:action if="$element = 'legend' or $element = 'die'">
 																	<xforms:insert
 																		context="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container]"
-																		nodeset="./*[name() &lt;= $element]" origin="instance(concat($element, '-template'))"/>
+																		nodeset="./*[name() &lt;= $element]" origin="instance(concat($element, '-template'))" 
+																		if="not(instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container]/*[name() = $element])"/>
 																	<xforms:setvalue
 																		ref="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container]/*[local-name()=$element][last()]"
 																		value="$value"/>
+																</xforms:action>
+																
+																<xforms:action if="$element = 'legend_script' or $element = 'legend_lang'">
+																	<xforms:var name="attribute" select="if ($element = 'legend_script') then 'scriptCode' else 'xml:lang'"/>
+																	
+																	<xforms:insert
+																		context="instance('nuds')/nuds:descMeta/nuds:typeDesc/*[local-name()=$container]/*[name() = 'legend']" origin="xforms:attribute($attribute, $value)"/>
 																</xforms:action>
 
 																<xforms:action if="ends-with($element, 'symbol')">
