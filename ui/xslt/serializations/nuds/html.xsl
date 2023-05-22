@@ -321,9 +321,7 @@
 					<xsl:when
 						test="descendant::nuds:findspot/nuds:fallsWithin/gml:location/gml:Point"
 						>true</xsl:when>
-					<xsl:when
-						test="descendant::nuds:findspot/gml:location"
-						>true</xsl:when>
+					<xsl:when test="descendant::nuds:findspot/gml:location">true</xsl:when>
 					<xsl:otherwise>false</xsl:otherwise>
 				</xsl:choose>
 			</xsl:otherwise>
@@ -1549,32 +1547,49 @@
 					</xsl:choose>
 				</xsl:when>
 				<xsl:otherwise>
-					<ul>
-						<xsl:apply-templates select="nuds:findspot"/>
-						<xsl:apply-templates select="nuds:hoard" mode="descMeta"/>
-					</ul>
+					<xsl:apply-templates select="nuds:findspot"/>
+					<xsl:apply-templates select="nuds:deposit"/>
+					<xsl:apply-templates select="nuds:discovery"/>
+					<xsl:apply-templates select="nuds:disposition"/>
+					<xsl:apply-templates select="nuds:hoard" mode="descMeta"/>
 				</xsl:otherwise>
 			</xsl:choose>
 		</div>
 	</xsl:template>
 
 	<xsl:template match="nuds:findspot">
-		<!-- when the label of the findspot is the same as the gazetteer label, then only apply template to geogname -->
-		<xsl:choose>
-			<xsl:when test="nuds:description = nuds:fallsWithin/nuds:geogname">
-				<xsl:apply-templates select="nuds:fallsWithin/nuds:geogname" mode="descMeta"/>
-			</xsl:when>
-			<xsl:when test="nuds:geogname[not(@xlink:href)]">
-				<xsl:apply-templates select="nuds:geogname[@xlink:role = 'findspot']"
-					mode="descMeta"/>
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:apply-templates select="nuds:description | nuds:fallsWithin/nuds:geogname"
-					mode="descMeta"/>
-			</xsl:otherwise>
-		</xsl:choose>
 
-		<xsl:apply-templates select="gml:location"/>
+		<h4>
+			<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
+		</h4>
+
+		<!-- when the label of the findspot is the same as the gazetteer label, then only apply template to geogname -->
+		<ul>
+			<xsl:choose>
+				<xsl:when test="nuds:description = nuds:fallsWithin/nuds:geogname">
+					<xsl:apply-templates select="nuds:fallsWithin/nuds:geogname" mode="descMeta"/>
+				</xsl:when>
+				<xsl:otherwise>
+					
+					<xsl:apply-templates select="nuds:description | nuds:fallsWithin/nuds:geogname"
+						mode="descMeta"/>
+					<xsl:apply-templates select="nuds:geogname[not(@xlink:href)]" mode="descMeta"/>
+					<xsl:apply-templates select="nuds:spatialContext" mode="descMeta"/>
+				</xsl:otherwise>
+			</xsl:choose>
+
+			<xsl:apply-templates select="gml:location"/>
+		</ul>
+	</xsl:template>
+
+	<xsl:template match="nuds:deposit | nuds:discovery | nuds:disposition">
+		<h4>
+			<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
+		</h4>
+
+		<ul>
+			<xsl:apply-templates select="*" mode="descMeta"/>
+		</ul>
 	</xsl:template>
 
 	<xsl:template match="gml:location">
