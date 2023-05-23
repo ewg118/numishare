@@ -145,8 +145,8 @@ ASK {%TYPE_SERIES% rdf:type nmo:TypeSeries}]]>
 				<xforms:bind nodeset="features_enabled" readonly="../collection_type != 'object'" type="xs:boolean"/>
 				<xforms:bind nodeset="pelagios_enabled" type="xs:boolean"/>
 				<xforms:bind nodeset="ctype_enabled" type="xs:boolean"/>
-				<xforms:bind nodeset="sparql_endpoint" readonly="../collection_type != 'cointype' and ../collection_type != 'die'"
-					constraint="if (../collection_type='cointype' or ../collection_type='die') then (. castable as xs:anyURI and matches(., 'https?://.+')) else '. castable as xs:string'"/>
+				<xforms:bind nodeset="sparql_endpoint" readonly="../collection_type = 'object'"
+					constraint="if (../collection_type != 'object') then (. castable as xs:anyURI and matches(., 'https?://.+')) else '. castable as xs:string'"/>
 				<xforms:bind nodeset="type_series" readonly="../collection_type!='cointype'"
 					constraint="if (../collection_type='cointype') then (. castable as xs:anyURI and matches(., 'https?://.+')) else '. castable as xs:string'"/>
 				<xforms:bind nodeset="die_series" readonly="../collection_type!='die'"/>
