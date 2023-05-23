@@ -1107,6 +1107,7 @@
                     <xsl:when test="$label = 'contents'">Sommario</xsl:when>
                     <xsl:when test="$label = 'coordinates'">Coordinate</xsl:when>
                     <xsl:when test="$label = 'countermark'">Contromarca</xsl:when>
+                    <xsl:when test="$label = 'custodian'">Ente responsabile Scavo</xsl:when>
                     <xsl:when test="$label = 'date'">Data</xsl:when>
                     <xsl:when test="$label = 'dateOnObject'">Datazione dell'oggetto</xsl:when>
                     <xsl:when test="$label = 'dob'">Datazione dell'oggetto</xsl:when>
@@ -1117,6 +1118,7 @@
                     <xsl:when test="$label = 'denomination'">Nominale</xsl:when>
                     <xsl:when test="$label = 'department'">Dipartimento</xsl:when>
                     <xsl:when test="$label = 'deposit'">Deposito</xsl:when>
+                    <xsl:when test="$label = 'depositContext'">Definizione e funzione US</xsl:when>
                     <xsl:when test="$label = 'description'">Descrizione</xsl:when>
                     <xsl:when test="$label = 'diameter'">Diametro</xsl:when>
                     <xsl:when test="$label = 'discovery'">Scoperta</xsl:when>
@@ -1129,15 +1131,18 @@
                     <xsl:when test="$label = 'fromDate'">A partire dall'anno</xsl:when>
                     <xsl:when test="$label = 'geographic'">Geografico</xsl:when>
                     <xsl:when test="$label = 'grade'">Grado</xsl:when>
+                    <xsl:when test="$label = 'grave'">Numero tomba</xsl:when>
                     <xsl:when test="$label = 'height'">Altezza</xsl:when>
                     <xsl:when test="$label = 'hoardDesc'">Descrizione del ripostiglio</xsl:when>
                     <xsl:when test="$label = 'identifier'">Numero identificativo</xsl:when>
+                    <xsl:when test="$label = 'intendedUsage'">Destinazione d’uso</xsl:when>
                     <xsl:when test="$label = 'issuer'">Emittente</xsl:when>
                     <xsl:when test="$label = 'landowner'">Proprietario del terreno</xsl:when>
                     <xsl:when test="$label = 'legend'">Legenda</xsl:when>
                     <xsl:when test="$label = 'manufacture'">Tecnica di produzione</xsl:when>
                     <xsl:when test="$label = 'material'">Materiale</xsl:when>
                     <xsl:when test="$label = 'measurementsSet'">Dimensioni</xsl:when>
+                    <xsl:when test="$label = 'method'">Tipo acquisizione</xsl:when>
                     <xsl:when test="$label = 'mint'">Zecca</xsl:when>
                     <xsl:when test="$label = 'note'">Nota</xsl:when>
                     <xsl:when test="$label = 'noteSet'">Annotazioni</xsl:when>
@@ -1146,10 +1151,13 @@
                     <xsl:when test="$label = 'obv_leg'">Legenda del dritto</xsl:when>
                     <xsl:when test="$label = 'obv_type'">Tipo del dritto</xsl:when>
                     <xsl:when test="$label = 'owner'">Proprietario</xsl:when>
+                    <xsl:when test="$label = 'period'">Periodo</xsl:when>
                     <xsl:when test="$label = 'physDesc'">Descrizione fisica</xsl:when>
-                    <xsl:when test="$label = 'portrait'">Ritratto</xsl:when>
+                    <xsl:when test="$label = 'portrait'">Ritratto</xsl:when>                    
                     <xsl:when test="$label = 'previousColl'">Collezione precedente</xsl:when>
+                    <xsl:when test="$label = 'principalInvestigator'">Responsabile scientifico dello scavo</xsl:when>
                     <xsl:when test="$label = 'private'">Privato</xsl:when>
+                    <xsl:when test="$label = 'projectName'">Denominazione scavo</xsl:when>
                     <xsl:when test="$label = 'provenance'">Provenienza</xsl:when>
                     <xsl:when test="$label = 'public'">Pubblico</xsl:when>
                     <xsl:when test="$label = 'publisher'">Editore</xsl:when>
@@ -1160,12 +1168,14 @@
                     <xsl:when test="$label = 'reverse'">Rovescio</xsl:when>
                     <xsl:when test="$label = 'rev_leg'">Legenda del rovescio</xsl:when>
                     <xsl:when test="$label = 'rev_type'">Tipo del rovescio</xsl:when>
+                    <xsl:when test="$label = 'room'">Ambiente</xsl:when>
                     <xsl:when test="$label = 'ruler'">Sovrano</xsl:when>
                     <xsl:when test="$label = 'saleCatalog'">Catalogo d'asta</xsl:when>
                     <xsl:when test="$label = 'saleItem'">Numero del lotto</xsl:when>
                     <xsl:when test="$label = 'salePrice'">Prezzo d'asta</xsl:when>
                     <xsl:when test="$label = 'shape'">Forma</xsl:when>
                     <xsl:when test="$label = 'state'">Stato</xsl:when>
+                    <xsl:when test="$label = 'stratigraphicUnit'">Unità stratigrafica</xsl:when>
                     <xsl:when test="$label = 'subject'">Soggetto</xsl:when>
                     <xsl:when test="$label = 'subjectSet'">Soggetti</xsl:when>
                     <xsl:when test="$label = 'symbol'">Simbolo</xsl:when>
@@ -2032,6 +2042,7 @@
                     <xsl:when test="$label = 'denomination'">Denomination</xsl:when>
                     <xsl:when test="$label = 'department'">Department</xsl:when>
                     <xsl:when test="$label = 'deposit'">Deposit</xsl:when>
+                    <xsl:when test="$label = 'depositContext'">Deposit Context</xsl:when>
                     <xsl:when test="$label = 'depth'">Depth</xsl:when>
                     <xsl:when test="$label = 'description'">Description</xsl:when>
                     <xsl:when test="$label = 'diameter'">Diameter</xsl:when>
@@ -2050,6 +2061,7 @@
                     <xsl:when test="$label = 'history'">Object History</xsl:when>
                     <xsl:when test="$label = 'hoardDesc'">Hoard Description</xsl:when>
                     <xsl:when test="$label = 'identifier'">Identifier</xsl:when>
+                    <xsl:when test="$label = 'intendedUsage'">Intended Usage</xsl:when>
                     <xsl:when test="$label = 'issuer'">Issuer</xsl:when>
                     <xsl:when test="$label = 'landowner'">Landowner</xsl:when>
                     <xsl:when test="$label = 'legend'">Legend</xsl:when>
@@ -2068,7 +2080,9 @@
                     <xsl:when test="$label = 'physDesc'">Physical Description</xsl:when>
                     <xsl:when test="$label = 'portrait'">Portrait</xsl:when>
                     <xsl:when test="$label = 'previousColl'">Previous Collection</xsl:when>
+                    <xsl:when test="$label = 'principalInvestigator'">Principal Investigator</xsl:when>
                     <xsl:when test="$label = 'private'">Private</xsl:when>
+                    <xsl:when test="$label = 'projectName'">Project Name</xsl:when>
                     <xsl:when test="$label = 'provenance'">Provenance</xsl:when>
                     <xsl:when test="$label = 'public'">Public</xsl:when>
                     <xsl:when test="$label = 'publisher'">Publisher</xsl:when>
@@ -2088,6 +2102,7 @@
                     <xsl:when test="$label = 'specificGravity'">Specific Gravity</xsl:when>
                     <xsl:when test="$label = 'state'">State</xsl:when>
                     <xsl:when test="$label = 'statedAuthority'">Stated Authority</xsl:when>
+                    <xsl:when test="$label = 'stratigraphicUnit'">Stratigraphic Unit</xsl:when>
                     <xsl:when test="$label = 'subject'">Subject</xsl:when>
                     <xsl:when test="$label = 'subjectSet'">Subjects</xsl:when>
                     <xsl:when test="$label = 'symbol'">Symbol</xsl:when>

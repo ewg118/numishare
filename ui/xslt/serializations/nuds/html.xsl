@@ -1574,8 +1574,7 @@
 				<xsl:when test="nuds:description = nuds:fallsWithin/nuds:geogname">
 					<xsl:apply-templates select="nuds:fallsWithin/nuds:geogname" mode="descMeta"/>
 				</xsl:when>
-				<xsl:otherwise>
-					
+				<xsl:otherwise>					
 					<xsl:apply-templates select="nuds:description | nuds:fallsWithin/nuds:geogname"
 						mode="descMeta"/>
 					<xsl:apply-templates select="nuds:geogname[not(@xlink:href)]" mode="descMeta"/>
@@ -1595,6 +1594,17 @@
 		<ul>
 			<xsl:apply-templates select="*" mode="descMeta"/>
 		</ul>
+	</xsl:template>
+	
+	<xsl:template match="nuds:project" mode="descMeta">
+		<xsl:apply-templates select="*" mode="descMeta"/>
+	</xsl:template>
+	
+	<xsl:template match="nuds:project/nuds:title" mode="descMeta">
+		<li>
+			<b><xsl:value-of select="numishare:regularize_node('projectName', $lang)"/>: </b>
+			<xsl:value-of select="."/>
+		</li>				
 	</xsl:template>
 
 	<xsl:template match="gml:location">
