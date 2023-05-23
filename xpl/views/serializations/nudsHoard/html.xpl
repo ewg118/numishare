@@ -202,15 +202,38 @@ ASK {?s oa:hasBody <URI>}]]>
 			</p:choose>
 		</p:when>
 		<p:otherwise>
-			<p:processor name="oxf:unsafe-xslt">
-				<p:input name="request" href="#request"/>
-				<p:input name="hoards-list" href="#hoards-list"/>
-				<p:input name="query" href="#hoard-examples-query-document"/>
-				<p:input name="specimenCount" href="#specimenCount"/>
-				<p:input name="data" href="aggregate('content', #data, #config, #codes-view)"/>
-				<p:input name="config" href="../../../../ui/xslt/serializations/nudsHoard/html.xsl"/>
-				<p:output name="data" id="model"/>
-			</p:processor>
+			<p:choose href="#specimenCount">
+				<p:when test="//res:binding[@name='count']/res:literal = 0">
+					<!-- otherwise, combine the XML model with the annotations SPARQL response and execute transformation into HTML -->
+					<p:processor name="oxf:unsafe-xslt">
+						<p:input name="request" href="#request"/>
+						<p:input name="hoards-list" href="#hoards-list"/>
+						<p:input name="query" href="#hoard-examples-query-document"/>
+						<p:input name="specimenCount" href="#specimenCount"/>
+						<p:input name="data" href="aggregate('content', #data, #config, #codes-view)"/>
+						<p:input name="config" href="../../../../ui/xslt/serializations/nudsHoard/html.xsl"/>
+						<p:output name="data" id="model"/>
+					</p:processor>
+				</p:when>
+				<p:otherwise>
+					<p:processor name="oxf:pipeline">
+						<p:input name="data" href="#config"/>
+						<p:input name="config" href="../../../models/sparql/hoard-examples.xpl"/>
+						<p:output name="data" id="specimens"/>
+					</p:processor>
+					
+					<p:processor name="oxf:unsafe-xslt">
+						<p:input name="request" href="#request"/>
+						<p:input name="hoards-list" href="#hoards-list"/>
+						<p:input name="query" href="#hoard-examples-query-document"/>
+						<p:input name="specimens" href="#specimens"/>
+						<p:input name="specimenCount" href="#specimenCount"/>
+						<p:input name="data" href="aggregate('content', #data, #config, #codes-view)"/>
+						<p:input name="config" href="../../../../ui/xslt/serializations/nudsHoard/html.xsl"/>
+						<p:output name="data" id="model"/>
+					</p:processor>
+				</p:otherwise>
+			</p:choose>
 		</p:otherwise>
 	</p:choose>
 
