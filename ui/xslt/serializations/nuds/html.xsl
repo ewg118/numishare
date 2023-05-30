@@ -1603,7 +1603,13 @@
 	<xsl:template match="nuds:project/nuds:title" mode="descMeta">
 		<li>
 			<b><xsl:value-of select="numishare:regularize_node('projectName', $lang)"/>: </b>
-			<xsl:value-of select="."/>
+			
+			<xsl:call-template name="display-label">
+				<xsl:with-param name="field">projectName</xsl:with-param>
+				<xsl:with-param name="value" select="."/>
+				<xsl:with-param name="href"/>
+				<xsl:with-param name="position"/>
+			</xsl:call-template>
 		</li>				
 	</xsl:template>
 
