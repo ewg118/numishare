@@ -582,50 +582,58 @@
 				</xsl:call-template>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:if test="nuds:findspot/nuds:description">
-					<field name="context_facet">
-						<xsl:value-of select="nuds:findspot/nuds:description"/>
-					</field>
-				</xsl:if>
+				<xsl:apply-templates select="nuds:findspot">
+					<xsl:with-param name="objectURI" select="$objectURI"/>
+				</xsl:apply-templates>
+			</xsl:otherwise>
+		</xsl:choose>
 
+		<xsl:apply-templates select="nuds:hoard | nuds:discovery"/>
+
+	</xsl:template>
+	
+	<xsl:template match="nuds:findspot">
+		<xsl:param name="objectURI"/>
+		
+		<xsl:if test="nuds:description">
+			<field name="context_facet">
+				<xsl:value-of select="nuds:description"/>
+			</field>
+		</xsl:if>
+		
+		<xsl:choose>
+			<xsl:when test="nuds:fallsWithin/nuds:geogname/@xlink:href">
+				<xsl:call-template name="parse_findspot_uri">
+					<xsl:with-param name="href"
+						select="nuds:fallsWithin/nuds:geogname/@xlink:href"/>
+					<xsl:with-param name="label"
+						select="nuds:fallsWithin/nuds:geogname"/>
+				</xsl:call-template>
+			</xsl:when>
+			<xsl:otherwise>
 				<xsl:choose>
-					<xsl:when test="nuds:findspot/nuds:fallsWithin/nuds:geogname/@xlink:href">
-						<xsl:call-template name="parse_findspot_uri">
-							<xsl:with-param name="href"
-								select="nuds:findspot/nuds:fallsWithin/nuds:geogname/@xlink:href"/>
-							<xsl:with-param name="label"
-								select="nuds:findspot/nuds:fallsWithin/nuds:geogname"/>
-						</xsl:call-template>
+					<xsl:when test="nuds:fallsWithin/gml:location/gml:Point">
+						<xsl:apply-templates select="self::node()" mode="parse-gml">
+							<xsl:with-param name="objectURI" select="$objectURI"/>
+						</xsl:apply-templates>
+					</xsl:when>
+					<xsl:when test="gml:location">
+						<xsl:apply-templates select="self::node()" mode="parse-gml">
+							<xsl:with-param name="objectURI" select="$objectURI"/>
+						</xsl:apply-templates>
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:choose>
-							<xsl:when test="nuds:findspot/nuds:fallsWithin/gml:location/gml:Point">
-								<xsl:apply-templates select="nuds:findspot" mode="parse-gml">
-									<xsl:with-param name="objectURI" select="$objectURI"/>
-								</xsl:apply-templates>
-							</xsl:when>
-							<xsl:when test="nuds:findspot/gml:location">
-								<xsl:apply-templates select="nuds:findspot" mode="parse-gml">
-									<xsl:with-param name="objectURI" select="$objectURI"/>
-								</xsl:apply-templates>
-							</xsl:when>
-							<xsl:otherwise>
-								<xsl:if test="nuds:findspot">
-									<field name="findspot_facet">
-										<xsl:value-of
-											select="nuds:findspot/nuds:fallsWithin/nuds:geogname[@xlink:role = 'findspot']"
-										/>
-									</field>
-								</xsl:if>
-							</xsl:otherwise>
-						</xsl:choose>
+						<field name="findspot_facet">
+							<xsl:value-of
+								select="nuds:fallsWithin/nuds:geogname[@xlink:role = 'findspot']"
+							/>
+						</field>
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:otherwise>
 		</xsl:choose>
-
-		<xsl:apply-templates select="nuds:hoard"/>
-
+		
+		<xsl:apply-templates select="nuds:geogname[@xlink:role = 'stratigraphicUnit'] | nuds:geogname[@xlink:role='area']|nuds:spatialContext"/>
 	</xsl:template>
 
 	<xsl:template match="nuds:hoard">
@@ -638,6 +646,39 @@
 				<xsl:value-of select="@xlink:href"/>
 			</field>
 		</xsl:if>
+	</xsl:template>
+	
+	<xsl:template match="nuds:discovery">
+		<xsl:apply-templates select="nuds:date | nuds:project/nuds:title" mode="discovery"/>
+	</xsl:template>
+	
+	<xsl:template match="nuds:date"  mode="discovery">
+		
+		<field name="discoveryDate_display">
+			<xsl:value-of select="."/>
+		</field>
+		
+		<xsl:if test="@standardDate castable as xs:integer">
+			<field name="discoveryDate_num">
+				<xsl:value-of select="@standardDate"/>
+			</field>
+			<field name="discoveryDate_minint">
+				<xsl:value-of select="@standardDate"/>
+			</field>
+			<field name="discoveryDate_maxint">
+				<xsl:value-of select="@standardDate"/>
+			</field>
+		</xsl:if>
+		
+	</xsl:template>
+	
+	<xsl:template match="nuds:title" mode="discovery">
+		<field name="projectName_facet">
+			<xsl:value-of select="."/>
+		</field>
+		<field name="projectName_text">
+			<xsl:value-of select="."/>
+		</field>
 	</xsl:template>
 
 	<xsl:template match="nuds:findspot" mode="parse-gml">

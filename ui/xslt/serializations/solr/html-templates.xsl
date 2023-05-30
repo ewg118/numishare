@@ -581,6 +581,8 @@
 			</xsl:when>
 			<xsl:when test="$collection_type = 'cointype' or $collection_type = 'die'">
 				<xsl:apply-templates select="lst[not(contains(@name, '_geo')) and not(matches(@name, '^symbol_[obv|rev]')) and not(ends-with(@name, '_num')) and number(int) &gt; 0]" mode="facet"/>
+				
+				<!-- display symbol facets in separate section -->
 				<xsl:if test="lst[matches(@name, '^symbol_[obv|rev]')]">
 					<h4>
 						<xsl:value-of select="numishare:normalize_fields('symbol', $lang)"/>
@@ -610,7 +612,11 @@
 				</xsl:if>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:apply-templates select="lst[not(contains(@name, '_geo')) and not(matches(@name, '^symbol_[obv|rev]')) and number(int) &gt; 0]" mode="facet"/>
+				<xsl:apply-templates select="lst[not(contains(@name, '_geo')) and not(matches(@name, '^symbol_[obv|rev]')) and not(@name = 'year_num') and number(int) &gt; 0]" mode="facet"/>
+				
+				<!-- separate findspot related facets -->
+								
+				
 			</xsl:otherwise>
 		</xsl:choose>
 
