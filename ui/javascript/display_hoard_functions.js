@@ -57,7 +57,7 @@ function initialize_map(id, path, lang) {
     
     $.getJSON(url, function (data) {
         var maxDensity = 0;
-        $.each(data, function (key, value) {
+        $.each(data.features, function (key, value) {
             if (value.properties.average_count !== undefined) {
                 if (value.properties.average_count > maxDensity) {
                     maxDensity = value.properties.average_count;

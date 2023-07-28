@@ -240,10 +240,15 @@
 
 	<xsl:template match="nh:nudsHoard">
 		<xsl:variable name="model" as="element()*">
-			<_array>
-				<xsl:apply-templates select="nh:descMeta/nh:hoardDesc/nh:findspot"/>
-				<xsl:apply-templates select="$mints//mint"/>
-			</_array>
+			<_object>
+				<type>FeatureCollection</type>
+				<features>
+					<_array>
+						<xsl:apply-templates select="nh:descMeta/nh:hoardDesc/nh:findspot"/>
+						<xsl:apply-templates select="$mints//mint"/>
+					</_array>
+				</features>
+			</_object>			
 		</xsl:variable>
 
 		<xsl:apply-templates select="$model"/>
