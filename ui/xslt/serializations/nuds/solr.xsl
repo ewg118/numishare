@@ -1000,7 +1000,8 @@
 	</xsl:template>
 
 	<xsl:template match="nuds:adminDesc">
-		<xsl:for-each select="nuds:collection | nuds:repository | nuds:owner | nuds:department">
+		<xsl:for-each select="nuds:collection | nuds:repository | nuds:owner | nuds:department | nuds:physloc">
+			
 			<field name="{local-name()}_facet">
 				<xsl:value-of select="normalize-space(.)"/>
 			</field>
@@ -1008,6 +1009,17 @@
 				<field name="{local-name()}_uri">
 					<xsl:value-of select="@xlink:href"/>
 				</field>
+			</xsl:if>
+			
+			<xsl:if test="@localType">
+				<field name="{@localType}_facet">
+					<xsl:value-of select="normalize-space(.)"/>
+				</field>
+				<xsl:if test="string(@xlink:href)">
+					<field name="{@localType}_uri">
+						<xsl:value-of select="@xlink:href"/>
+					</field>
+				</xsl:if>
 			</xsl:if>
 		</xsl:for-each>
 

@@ -1577,6 +1577,7 @@
 				<xsl:otherwise>					
 					<xsl:apply-templates select="nuds:description | nuds:fallsWithin/nuds:geogname"
 						mode="descMeta"/>
+					<xsl:apply-templates select="parent::node()/nuds:discovery/nuds:project/nuds:title" mode="descMeta"/>
 					<xsl:apply-templates select="nuds:geogname[not(@xlink:href)]" mode="descMeta"/>
 					<xsl:apply-templates select="nuds:spatialContext" mode="descMeta"/>
 				</xsl:otherwise>
@@ -1597,7 +1598,7 @@
 	</xsl:template>
 	
 	<xsl:template match="nuds:project" mode="descMeta">
-		<xsl:apply-templates select="*" mode="descMeta"/>
+		<xsl:apply-templates select="*[not(self::nuds:title)]" mode="descMeta"/>
 	</xsl:template>
 	
 	<xsl:template match="nuds:project/nuds:title" mode="descMeta">
@@ -1820,6 +1821,11 @@
 			<xsl:value-of select="concat(nuds:fromDate, ' - ', nuds:toDate)"/>
 		</strong>
 		<xsl:text>: </xsl:text>
+	</xsl:template>
+	
+	<!-- flatten adminDesc editors -->
+	<xsl:template match="nuds:editors" mode="descMeta">
+		<xsl:apply-templates mode="descMeta"/>
 	</xsl:template>
 
 	<!-- *********** IMAGE TEMPLATES FOR PHYSICAL OBJECTS ********** -->
