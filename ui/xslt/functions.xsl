@@ -236,7 +236,7 @@
                     <xsl:when test="$label = 'owner'">Eigentümer</xsl:when>
                     <xsl:when test="$label = 'physDesc'">Physische Beschreibung</xsl:when>
                     <xsl:when test="$label = 'portrait'">Porträt</xsl:when>
-                    <xsl:when test="$label = 'previousColl'">Vormalige sammlung</xsl:when>
+                    <xsl:when test="$label = 'previousColl'">Vormalige Sammlung</xsl:when>
                     <xsl:when test="$label = 'private'">Privat</xsl:when>
                     <xsl:when test="$label = 'provenance'">Herkunft</xsl:when>
                     <xsl:when test="$label = 'public'">öffentlich</xsl:when>
