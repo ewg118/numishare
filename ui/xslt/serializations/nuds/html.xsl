@@ -1616,7 +1616,7 @@
 
 	<xsl:template match="gml:location">
 		<li>
-			<h4>Coordinates</h4>
+			<h4><xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/></h4>
 			<xsl:apply-templates select="gml:Point/gml:pos"/>
 		</li>
 	</xsl:template>
@@ -1667,7 +1667,7 @@
 
 	<xsl:template match="nuds:rightsStmt">
 		<div class="metadata_section">
-			<h3>Rights</h3>
+			<h3><xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/></h3>
 			<ul>
 				<xsl:apply-templates
 					select="nuds:license[@for = 'images'] | nuds:rights | nuds:copyrightHolder"
