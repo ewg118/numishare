@@ -105,7 +105,7 @@
 		</xsl:if>
 
 		<!-- AH dates -->
-		<xsl:apply-templates select="nuds:dateOnObject[@calendar = 'ah']"/>
+		<xsl:apply-templates select="nuds:dateOnObject[@calendar = 'ah' or @calendar = 'Hijri']"/>
 
 		<xsl:choose>
 			<xsl:when test="$recordType = 'physical'">
@@ -812,7 +812,7 @@
 		</xsl:if>
 	</xsl:template>
 
-	<xsl:template match="nuds:dateOnObject[@calendar = 'ah']">
+	<xsl:template match="nuds:dateOnObject[@calendar = 'ah' or @calendar = 'Hijri']">
 		<xsl:if test="normalize-space(.) castable as xs:integer">
 			<field name="ah_num">
 				<xsl:value-of select="normalize-space(.)"/>
