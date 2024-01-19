@@ -2100,6 +2100,7 @@
                     <xsl:when test="$label = 'identifier'">Identifier</xsl:when>
                     <xsl:when test="$label = 'intendedUsage'">Intended Usage</xsl:when>
                     <xsl:when test="$label = 'issuer'">Issuer</xsl:when>
+                    <xsl:when test="$label = 'issuePlace'">Place of Issue</xsl:when>
                     <xsl:when test="$label = 'landowner'">Landowner</xsl:when>
                     <xsl:when test="$label = 'legend'">Legend</xsl:when>
                     <xsl:when test="$label = 'manufacture'">Manufacture</xsl:when>
@@ -2120,6 +2121,7 @@
                     <xsl:when test="$label = 'principalInvestigator'">Principal
                         Investigator</xsl:when>
                     <xsl:when test="$label = 'private'">Private</xsl:when>
+                    <xsl:when test="$label = 'productionPlace'">Place of Productoin</xsl:when>
                     <xsl:when test="$label = 'projectName'">Project Name</xsl:when>
                     <xsl:when test="$label = 'provenance'">Provenance</xsl:when>
                     <xsl:when test="$label = 'public'">Public</xsl:when>
@@ -2127,6 +2129,7 @@
                     <xsl:when test="$label = 'reference'">Reference</xsl:when>
                     <xsl:when test="$label = 'refDesc'">References</xsl:when>
                     <xsl:when test="$label = 'region'">Region</xsl:when>
+                    <xsl:when test="$label = 'relatedPlace'">Place of Cataloging Relevance</xsl:when>
                     <xsl:when test="$label = 'repository'">Repository</xsl:when>
                     <xsl:when test="$label = 'reverse'">Reverse</xsl:when>
                     <xsl:when test="$label = 'rev_leg'">Reverse Legend</xsl:when>

@@ -168,7 +168,16 @@
 				<xsl:variable name="field">
 					<xsl:choose>
 						<xsl:when test="string(@xlink:role)">
-							<xsl:value-of select="@xlink:role"/>
+							
+							<!-- convert artist subcategories to artist -->
+							<xsl:choose>
+								<xsl:when test="@xlink:role = 'castBy' or @xlink:role = 'copyist' or @xlink:role = 'designer' or @xlink:role = 'engraver' or @xlink:role = 'modeler' or @xlink:role = 'sculptor'">
+									<xsl:text>artist</xsl:text>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:value-of select="@xlink:role"/>
+								</xsl:otherwise>
+							</xsl:choose>
 						</xsl:when>
 						<xsl:when test="string(@localType)">
 							<xsl:value-of select="@localType"/>

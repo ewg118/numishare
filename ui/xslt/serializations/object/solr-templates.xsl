@@ -574,6 +574,21 @@
 				<xsl:value-of select="@xlink:href"/>
 			</field>
 		</xsl:if>
+		
+		<!-- index subtypes of artist as artist -->
+		<xsl:if test="$role = 'castBy' or $role = 'copyist' or $role = 'designer' or $role = 'engraver' or $role = 'modeler' or $role = 'sculptor'">
+			<field name="artist_facet">
+				<xsl:value-of select="$label"/>
+			</field>
+			<field name="artist_text">
+				<xsl:value-of select="$label"/>
+			</field>
+			<xsl:if test="string(@xlink:href)">
+				<field name="artist_uri">
+					<xsl:value-of select="@xlink:href"/>
+				</field>
+			</xsl:if>
+		</xsl:if>
 
 		<!-- additional content -->
 		<xsl:if test="contains($href, 'nomisma.org')">
