@@ -2121,7 +2121,7 @@
                     <xsl:when test="$label = 'principalInvestigator'">Principal
                         Investigator</xsl:when>
                     <xsl:when test="$label = 'private'">Private</xsl:when>
-                    <xsl:when test="$label = 'productionPlace'">Place of Productoin</xsl:when>
+                    <xsl:when test="$label = 'productionPlace'">Place of Production</xsl:when>
                     <xsl:when test="$label = 'projectName'">Project Name</xsl:when>
                     <xsl:when test="$label = 'provenance'">Provenance</xsl:when>
                     <xsl:when test="$label = 'public'">Public</xsl:when>
