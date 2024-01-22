@@ -657,7 +657,7 @@
 			</xsl:for-each>
 		</xsl:if>
 
-		<xsl:if test="string(@xlink:href) and ($role = 'mint' or $role = 'findspot')">
+		<xsl:if test="string(@xlink:href) and ($role = 'mint' or $role = 'findspot' or $role = 'productionPlace')">
 			<xsl:choose>
 				<xsl:when test="contains(@xlink:href, 'geonames')">
 					<xsl:variable name="href" select="@xlink:href"/>

@@ -186,7 +186,7 @@
 	<xsl:template match="nuds:nuds">
 		<!-- create mint points -->
 		<xsl:for-each
-			select="$nudsGroup/descendant::nuds:geogname[@xlink:role = 'mint'][string(@xlink:href)]">
+			select="$nudsGroup/descendant::nuds:geogname[@xlink:role = 'mint' or @xlink:role = 'productionPlace'][string(@xlink:href)]">
 			<xsl:call-template name="getPlacemark">
 				<xsl:with-param name="uri" select="@xlink:href"/>
 				<xsl:with-param name="styleUrl">#mint</xsl:with-param>
