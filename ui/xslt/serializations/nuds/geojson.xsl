@@ -169,7 +169,7 @@
 
 						<!-- if there's no linkable mint look for a region -->
 						<xsl:if
-							test="not($nudsGroup/descendant::nuds:geogname[@xlink:role = 'mint']) or $nudsGroup/descendant::nuds:geogname[@xlink:role = 'mint'][not(@xlink:href)]">
+							test="not($nudsGroup/descendant::nuds:geogname[@xlink:role = 'mint' or @xlink:role = 'productionPlace']) or $nudsGroup/descendant::nuds:geogname[@xlink:role = 'mint' or @xlink:role = 'productionPlace'][not(@xlink:href)]">
 							<xsl:apply-templates select="$nudsGroup//descendant::nuds:geogname[@xlink:role = 'region'][string(@xlink:href)]"/>
 						</xsl:if>
 

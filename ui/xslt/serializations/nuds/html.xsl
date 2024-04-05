@@ -370,7 +370,7 @@
 	<xsl:variable name="hasMints" as="xs:boolean">
 		<xsl:choose>
 			<xsl:when
-				test="$rdf//nmo:Mint[geo:location or skos:related] or $rdf//nmo:Region[geo:location] or $regions//mint[@lat and @long] or descendant::nuds:geographic/nuds:geogname[contains(@xlink:href, 'geonames.org')]"
+				test="$rdf//nmo:Mint[geo:location or skos:related] or $rdf//nmo:Region[geo:location] or $regions//mint[@lat and @long] or descendant::nuds:geographic/nuds:geogname[(@xlink:role = 'mint' or @xlink:role = 'productionPlace') and contains(@xlink:href, 'geonames.org')]"
 				>true</xsl:when>
 			<xsl:otherwise>false</xsl:otherwise>
 		</xsl:choose>
