@@ -165,6 +165,7 @@
   <field name="axis_num" type="pint" indexed="true" stored="true"/>
   <field name="century_num" type="pint" indexed="true" stored="true" multiValued="true"/>
   <field name="decade_num" type="pint" indexed="true" stored="true" multiValued="true"/>
+  <field name="length_num" type="pfloat" indexed="true" stored="true" multiValued="true"/>
   <field name="diameter_num" type="pfloat" indexed="true" stored="true"/>
   <field name="height_num" type="pfloat" indexed="true" stored="true"/>
   <field name="taq_num" type="pint" indexed="true" stored="true"/>
