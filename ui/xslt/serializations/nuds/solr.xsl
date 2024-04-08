@@ -1073,7 +1073,7 @@
 	</xsl:template>
 
 	<xsl:template match="nuds:measurementsSet">
-		<xsl:for-each select="*[not(self::nuds:specificGravity)]">
+		<xsl:for-each select="*[not(self::nuds:specificGravity) and not(self::nuds:length)]">
 			<xsl:if test="number(.)">
 				<field name="{local-name()}_num">
 					<xsl:value-of select="normalize-space(.)"/>
