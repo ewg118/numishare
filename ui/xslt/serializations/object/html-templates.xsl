@@ -773,10 +773,10 @@
 				<xsl:variable name="queryValue">
 					<xsl:choose>
 						<xsl:when test="contains($href, 'nomisma.org') and not($langEnabled = true())">
-							<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about = $href], 'en')"/>
+							<xsl:value-of select="encode-for-uri(numishare:getNomismaLabel($rdf/*[@rdf:about = $href], 'en'))"/>
 						</xsl:when>
 						<xsl:otherwise>
-							<xsl:value-of select="$value"/>
+							<xsl:value-of select="encode-for-uri($value)"/>
 						</xsl:otherwise>
 					</xsl:choose>
 				</xsl:variable>
