@@ -498,10 +498,18 @@
 	<xsl:template match="nuds:persname | nuds:corpname | *[local-name() = 'geogname'] | nuds:famname | nuds:periodname | nuds:authenticity | nuds:spatialContext">
 		<xsl:param name="lang"/>
 		<xsl:variable name="href" select="@xlink:href"/>
-		<xsl:variable name="role" select="if (string(@xlink:role)) then
-			@xlink:role
-			else
-			local-name()">
+		<xsl:variable name="role">
+			<xsl:choose>
+				<!-- force 'mint' places from harvested typologies to index into productionPlace for ANS Mantis only -->
+				<xsl:when test="$collection-name = 'mantis' and @xlink:role='mint'">productionPlace</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="if (string(@xlink:role)) then
+						@xlink:role
+						else
+						local-name()"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
 			
 			<!--<xsl:choose>
 				<xsl:when test="self::nuds:persname[string(@xlink:role)]">
