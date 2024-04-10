@@ -9,8 +9,8 @@
 	xmlns:datetime="http://exslt.org/dates-and-times" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:mods="http://www.loc.gov/mods/v3" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"
 	xmlns:crmdig="http://www.ics.forth.gr/isl/CRMdig/" xmlns:crm="http://www.cidoc-crm.org/cidoc-crm/" xmlns:org="http://www.w3.org/ns/org#"
-	xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:numishare="https://github.com/ewg118/numishare" xmlns:tei="http://www.tei-c.org/ns/1.0"
-	exclude-result-prefixes="#all" version="2.0">
+	xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:numishare="https://github.com/ewg118/numishare" xmlns:tei="http://www.tei-c.org/ns/1.0" exclude-result-prefixes="#all"
+	version="2.0">
 
 	<!-- general subject indexing -->
 	<xsl:template match="*:subjectSet">
@@ -135,25 +135,23 @@
 		</xsl:choose>
 
 		<!-- *********** FACETS ************** -->
-		<xsl:apply-templates
-			select="
+		<xsl:apply-templates select="
 				nuds:objectType | nuds:denomination[string(.) or string(@xlink:href)] | nuds:manufacture[string(.) or string(@xlink:href)] | nuds:material[string(.) or
 				string(@xlink:href)] | nuds:shape[string(.) or string(@xlink:href)]">
 			<xsl:with-param name="lang" select="$lang"/>
 		</xsl:apply-templates>
-		<xsl:apply-templates
-			select="
+		<xsl:apply-templates select="
 				descendant::nuds:persname[string(.) or string(@xlink:href)] | descendant::nuds:corpname[string(.) or string(@xlink:href)] | descendant::nuds:geogname[string(.) or
 				string(@xlink:href)] | descendant::nuds:famname[string(.) or string(@xlink:href)] | descendant::nuds:periodname[string(.) or string(@xlink:href)]">
 			<xsl:with-param name="lang" select="$lang"/>
 		</xsl:apply-templates>
-		
+
 		<xsl:apply-templates select="nuds:authority/nuds:authenticity[string(.) or string(@xlink:href)]">
 			<xsl:with-param name="lang" select="$lang"/>
 		</xsl:apply-templates>
 
 		<xsl:apply-templates select="nuds:typeSeries"/>
-		
+
 		<!-- index symbols -->
 		<xsl:apply-templates select="nuds:symbol">
 			<xsl:with-param name="side"/>
@@ -294,7 +292,7 @@
 				</xsl:if>
 			</xsl:otherwise>
 		</xsl:choose>
-		
+
 		<!-- index transliterations for text searchign -->
 		<xsl:if test="child::tei:div[@type = 'transliteration']">
 			<field name="{$side}_leg_text">
@@ -325,7 +323,11 @@
 		<xsl:param name="side"/>
 
 		<xsl:variable name="symbolType">symbol</xsl:variable>
-		<xsl:variable name="position" select="if (@position) then @position else @localType"/>
+		<xsl:variable name="position" select="
+				if (@position) then
+					@position
+				else
+					@localType"/>
 
 		<!-- parse text fragments and monograms encoded in EpiDoc TEI -->
 		<xsl:choose>
@@ -333,7 +335,11 @@
 				<xsl:apply-templates select="tei:div" mode="symbols">
 					<xsl:with-param name="symbolType" select="$symbolType"/>
 					<xsl:with-param name="side" select="$side"/>
-					<xsl:with-param name="position" select="if (@position) then @position else @localType"/>
+					<xsl:with-param name="position" select="
+							if (@position) then
+								@position
+							else
+								@localType"/>
 				</xsl:apply-templates>
 			</xsl:when>
 			<xsl:otherwise>
@@ -374,7 +380,8 @@
 								</field>
 
 								<!-- index constuent letters -->
-								<xsl:apply-templates select="$rdf//*[@rdf:about = $uri]/crm:P106_is_composed_of | $rdf//*[@rdf:about = $uri]/crm:P165i_is_incorporated_in[string(.) and not(child::*)]">
+								<xsl:apply-templates
+									select="$rdf//*[@rdf:about = $uri]/crm:P106_is_composed_of | $rdf//*[@rdf:about = $uri]/crm:P165i_is_incorporated_in[string(.) and not(child::*)]">
 									<xsl:with-param name="side" select="$side"/>
 								</xsl:apply-templates>
 							</xsl:when>
@@ -412,7 +419,8 @@
 								</field>
 
 								<!-- index constuent letters -->
-								<xsl:apply-templates select="$rdf//*[@rdf:about = $uri]/crm:P106_is_composed_of | $rdf//*[@rdf:about = $uri]/crm:P165i_is_incorporated_in[string(.) and not(child::*)]">
+								<xsl:apply-templates
+									select="$rdf//*[@rdf:about = $uri]/crm:P106_is_composed_of | $rdf//*[@rdf:about = $uri]/crm:P165i_is_incorporated_in[string(.) and not(child::*)]">
 									<xsl:with-param name="side" select="$side"/>
 								</xsl:apply-templates>
 							</xsl:when>
@@ -438,13 +446,14 @@
 		</xsl:choose>
 	</xsl:template>
 
-	<xsl:template match="nuds:objectType | nuds:denomination | nuds:manufacture | nuds:material | nuds:shape | nuds:typeSeries | nuds:secondaryTreatment | nuds:condition | nuds:wear">
+	<xsl:template
+		match="nuds:objectType | nuds:denomination | nuds:manufacture | nuds:material | nuds:shape | nuds:typeSeries | nuds:secondaryTreatment | nuds:condition | nuds:wear">
 		<xsl:param name="lang"/>
 		<xsl:variable name="facet" select="local-name()"/>
 		<xsl:variable name="href" select="@xlink:href"/>
 		<xsl:variable name="label">
 			<xsl:choose>
-				<xsl:when test="string($lang) and contains($href, 'nomisma.org')">					
+				<xsl:when test="string($lang) and contains($href, 'nomisma.org')">
 					<xsl:value-of select="numishare:getNomismaLabel($rdf/*[@rdf:about = $href], $lang)"/>
 				</xsl:when>
 				<xsl:otherwise>
@@ -482,8 +491,7 @@
 				</field>
 			</xsl:for-each>
 			<!-- ingest alternate labels -->
-			<xsl:for-each
-				select="
+			<xsl:for-each select="
 					$rdf/*[@rdf:about = $href]/skos:altLabel[if (string($lang)) then
 						@xml:lang = $lang
 					else
@@ -501,17 +509,18 @@
 		<xsl:variable name="role">
 			<xsl:choose>
 				<!-- force 'mint' places from harvested typologies to index into productionPlace for ANS Mantis only -->
-				<xsl:when test="$collection-name = 'mantis' and @xlink:role='mint'">productionPlace</xsl:when>
+				<xsl:when test="$collection-name = 'mantis' and @xlink:role = 'mint'">productionPlace</xsl:when>
 				<xsl:otherwise>
-					<xsl:value-of select="if (string(@xlink:role)) then
-						@xlink:role
-						else
-						local-name()"/>
+					<xsl:value-of select="
+							if (string(@xlink:role)) then
+								@xlink:role
+							else
+								local-name()"/>
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-			
-			<!--<xsl:choose>
+
+		<!--<xsl:choose>
 				<xsl:when test="self::nuds:persname[string(@xlink:role)]">
 					<xsl:variable name="facet" select="concat(@xlink:role, '_facet')"/>
 					
@@ -528,9 +537,7 @@
 						local-name()"/>
 				</xsl:otherwise>
 			</xsl:choose>-->
-			
-		</xsl:variable>
-		
+
 		<xsl:variable name="label">
 			<xsl:choose>
 				<xsl:when test="string($lang) and contains($href, 'nomisma.org')">
@@ -582,7 +589,7 @@
 				<xsl:value-of select="@xlink:href"/>
 			</field>
 		</xsl:if>
-		
+
 		<!-- index subtypes of artist as artist -->
 		<xsl:if test="$role = 'castBy' or $role = 'copyist' or $role = 'designer' or $role = 'engraver' or $role = 'modeler' or $role = 'sculptor'">
 			<field name="artist_facet">
@@ -608,8 +615,7 @@
 			</xsl:for-each>
 
 			<!-- ingest alternate labels -->
-			<xsl:for-each
-				select="
+			<xsl:for-each select="
 					$rdf/*[@rdf:about = $href]/skos:altLabel[if (string($lang)) then
 						@xml:lang = $lang
 					else
@@ -622,17 +628,18 @@
 			<!-- get dynasty/political entity from Nomisma RDF -->
 			<xsl:for-each select="$rdf/*[@rdf:about = $href]/org:memberOf">
 				<xsl:variable name="dynasty_uri" select="@rdf:resource"/>
-				<xsl:variable name="label" select="$rdf/*[@rdf:about = $dynasty_uri]/skos:prefLabel[if (string($lang)) then
-					@xml:lang = $lang
-					else
-					@xml:lang = 'en']"/>
+				<xsl:variable name="label" select="
+						$rdf/*[@rdf:about = $dynasty_uri]/skos:prefLabel[if (string($lang)) then
+							@xml:lang = $lang
+						else
+							@xml:lang = 'en']"/>
 
 				<field name="dynasty_uri">
 					<xsl:value-of select="$dynasty_uri"/>
 				</field>
 
-				
-				
+
+
 				<field name="dynasty_facet">
 					<xsl:value-of select="$label"/>
 				</field>
@@ -646,10 +653,11 @@
 
 				<xsl:if test="$rdf/*[@rdf:about = $membership_uri]/org:organization">
 					<xsl:variable name="org_uri" select="$rdf/*[@rdf:about = $membership_uri]/org:organization/@rdf:resource"/>
-					<xsl:variable name="label" select="$rdf/*[@rdf:about = $org_uri]/skos:prefLabel[if (string($lang)) then
-						@xml:lang = $lang
-						else
-						@xml:lang = 'en']"/>
+					<xsl:variable name="label" select="
+							$rdf/*[@rdf:about = $org_uri]/skos:prefLabel[if (string($lang)) then
+								@xml:lang = $lang
+							else
+								@xml:lang = 'en']"/>
 
 					<field name="state_uri">
 						<xsl:value-of select="$org_uri"/>
@@ -681,8 +689,7 @@
 							<xsl:value-of select="$geonames//place[@id = $href]"/>
 						</field>
 						<field name="{$role}_loc">
-							<xsl:value-of select="concat(tokenize($geonames//place[@id = $href], ',')[2], ',', tokenize($geonames//place[@id = $href], ',')[1])"
-							/>
+							<xsl:value-of select="concat(tokenize($geonames//place[@id = $href], ',')[2], ',', tokenize($geonames//place[@id = $href], ',')[1])"/>
 						</field>
 					</xsl:if>
 
@@ -702,8 +709,7 @@
 							<xsl:otherwise>
 								<field name="{$role}_hier">
 									<xsl:value-of
-										select="concat(substring-before($hierarchy_pieces[$position - 1], '/'), '|', substring-after(., '/'), '/', substring-before(., '/'))"
-									/>
+										select="concat(substring-before($hierarchy_pieces[$position - 1], '/'), '|', substring-after(., '/'), '/', substring-before(., '/'))"/>
 								</field>
 							</xsl:otherwise>
 						</xsl:choose>
@@ -984,7 +990,8 @@
 						</field>
 
 						<!-- index constuent letters -->
-						<xsl:apply-templates select="$rdf//*[@rdf:about = $href]/crm:P106_is_composed_of | $rdf//*[@rdf:about = $href]/crm:P165i_is_incorporated_in[string(.) and not(child::*)]">
+						<xsl:apply-templates
+							select="$rdf//*[@rdf:about = $href]/crm:P106_is_composed_of | $rdf//*[@rdf:about = $href]/crm:P165i_is_incorporated_in[string(.) and not(child::*)]">
 							<xsl:with-param name="side" select="$side"/>
 						</xsl:apply-templates>
 					</xsl:when>
@@ -1021,7 +1028,8 @@
 						</field>
 
 						<!-- index constuent letters -->
-						<xsl:apply-templates select="$rdf//*[@rdf:about = $href]/crm:P106_is_composed_of | $rdf//*[@rdf:about = $href]/crm:P165i_is_incorporated_in[string(.) and not(child::*)]">
+						<xsl:apply-templates
+							select="$rdf//*[@rdf:about = $href]/crm:P106_is_composed_of | $rdf//*[@rdf:about = $href]/crm:P165i_is_incorporated_in[string(.) and not(child::*)]">
 							<xsl:with-param name="side" select="$side"/>
 						</xsl:apply-templates>
 					</xsl:when>
@@ -1058,7 +1066,7 @@
 							</field>
 						</xsl:when>
 					</xsl:choose>
-					
+
 					<field name="{$side}_leg_text">
 						<xsl:value-of select="string-join(tei:div, ' ')"/>
 					</field>
@@ -1066,7 +1074,7 @@
 						<xsl:value-of select="replace(string-join(tei:div, ' '), ' ', '')"/>
 					</field>
 				</xsl:when>
-				
+
 				<xsl:otherwise>
 					<xsl:choose>
 						<xsl:when test="$recordType = 'physical'">
@@ -1082,7 +1090,7 @@
 							</field>
 						</xsl:when>
 					</xsl:choose>
-					
+
 					<field name="{$side}_leg_text">
 						<xsl:value-of select="."/>
 					</field>
@@ -1091,18 +1099,18 @@
 					</field>
 				</xsl:otherwise>
 			</xsl:choose>
-			
-			
+
+
 		</xsl:if>
 	</xsl:template>
-	
+
 	<xsl:template match="tei:ab">
 		<xsl:apply-templates/>
 	</xsl:template>
-	
+
 	<xsl:template match="tei:hi[@rend]">
 		<xsl:choose>
-			<xsl:when test="@rend = 'ligature'">				
+			<xsl:when test="@rend = 'ligature'">
 				<xsl:call-template name="ligaturizeText">
 					<xsl:with-param name="textLigaturize" select="normalize-space(.)"/>
 				</xsl:call-template>
@@ -1112,18 +1120,21 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
-	
+
 	<!-- template from EpiDoc: https://github.com/EpiDoc/Stylesheets/blob/master/teihi.xsl -->
 	<xsl:template name="ligaturizeText">
 		<xsl:param name="textLigaturize"/>
-		<xsl:analyze-string select="$textLigaturize" regex="\p{{L}}"> <!-- select letters only (will omit combining chars) -->
+		<xsl:analyze-string select="$textLigaturize" regex="\p{{L}}">
+			<!-- select letters only (will omit combining chars) -->
 			<xsl:matching-substring>
 				<xsl:choose>
-					<xsl:when test="position()=1"> <!-- skip first ligatured char -->
+					<xsl:when test="position() = 1">
+						<!-- skip first ligatured char -->
 						<xsl:value-of select="."/>
 					</xsl:when>
 					<xsl:otherwise>
-						<xsl:text>&#x0361;</xsl:text> <!-- emit ligature combining char -->
+						<xsl:text>&#x0361;</xsl:text>
+						<!-- emit ligature combining char -->
 						<xsl:value-of select="."/>
 					</xsl:otherwise>
 				</xsl:choose>
@@ -1230,7 +1241,7 @@
 
 		<xsl:choose>
 			<!-- use the date text when @notBefore and @notAfter are used -->
-			<xsl:when test="count($typologies//nuds:date) = 1 and $typologies//nuds:date[@notBefore and @notAfter]">				
+			<xsl:when test="count($typologies//nuds:date) = 1 and $typologies//nuds:date[@notBefore and @notAfter]">
 				<field name="year_minint">
 					<xsl:value-of select="number($typologies//nuds:date/@notBefore)"/>
 				</field>
@@ -1245,9 +1256,9 @@
 				</field>
 				<field name="date_display">
 					<xsl:value-of select="$typologies//nuds:date"/>
-				</field>					
+				</field>
 			</xsl:when>
-			<xsl:when test="count($typologies//nuds:date) = 1 and $typologies//nuds:date[@standardDate]">				
+			<xsl:when test="count($typologies//nuds:date) = 1 and $typologies//nuds:date[@standardDate]">
 				<field name="year_minint">
 					<xsl:value-of select="number($typologies//nuds:date/@standardDate)"/>
 				</field>
@@ -1256,8 +1267,8 @@
 				</field>
 				<field name="year_maxint">
 					<xsl:value-of select="number($typologies//nuds:date/@standardDate)"/>
-				</field>		
-				
+				</field>
+
 				<xsl:choose>
 					<xsl:when test="$collection-name = 'oscar'">
 						<field name="date_display">
@@ -1270,7 +1281,7 @@
 						</field>
 					</xsl:otherwise>
 				</xsl:choose>
-									
+
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:variable name="dates" as="element()*">
@@ -1285,7 +1296,7 @@
 						</xsl:for-each>
 					</dates>
 				</xsl:variable>
-				
+
 				<xsl:for-each select="$dates//date">
 					<!-- add min and max, even if they are integers (for ISO dates) -->
 					<xsl:if test="position() = 1">
@@ -1305,7 +1316,7 @@
 						</field>
 					</xsl:if>
 				</xsl:for-each>
-				
+
 				<xsl:if test="count($dates//date) &gt; 0">
 					<field name="date_display">
 						<xsl:choose>
@@ -1474,13 +1485,11 @@
 					<!--<xsl:variable name="segs" select="tokenize(substring-after(nuds:control/nuds:recordId, 'rrc-'), '\.')"/>-->
 					<xsl:analyze-string select="substring-after(nuds:control/nuds:recordId, 'rrc-')" regex="([0-9]+)(^[\.]+)?(\.)?([0-9]+)?([A-z]+)?">
 						<xsl:matching-substring>
-							<xsl:value-of
-								select="
+							<xsl:value-of select="
 									concat(format-number(number(regex-group(1)), '0000'), regex-group(2), regex-group(3), if (number(regex-group(4))) then
 										format-number(number(regex-group(4)), '0000')
 									else
-										'', regex-group(5))"
-							/>
+										'', regex-group(5))"/>
 						</xsl:matching-substring>
 						<xsl:non-matching-substring>
 							<xsl:value-of select="."/>
