@@ -324,9 +324,9 @@
 				<xsl:choose>
 					<xsl:when test="$department_facet = 'Greek'">
 						<xsl:apply-templates select="lst[@name = 'region_facet']" mode="facet"/>
-						<xsl:apply-templates select="lst[@name = 'locality_facet']" mode="facet"/>
 						<xsl:apply-templates select="lst[@name = 'mint_facet']" mode="facet"/>
 						<xsl:apply-templates select="lst[@name = 'productionPlace_facet']" mode="facet"/>
+						<xsl:apply-templates select="lst[@name = 'state_facet']" mode="facet"/>
 						<xsl:apply-templates select="lst[@name = 'dynasty_facet']" mode="facet"/>
 						<xsl:apply-templates select="lst[@name = 'authority_facet']" mode="facet"/>
 						<xsl:apply-templates select="lst[@name = 'issuer_facet']" mode="facet"/>
@@ -335,6 +335,8 @@
 					</xsl:when>
 					<xsl:when test="$department_facet = 'Roman'">
 						<xsl:apply-templates select="lst[@name = 'category_hier']" mode="facet"/>
+						<xsl:apply-templates select="lst[@name = 'state_facet']" mode="facet"/>
+						<xsl:apply-templates select="lst[@name = 'dynasty_facet']" mode="facet"/>
 						<xsl:apply-templates select="lst[@name = 'authority_facet']" mode="facet"/>
 						<xsl:apply-templates select="lst[@name = 'issuer_facet']" mode="facet"/>
 						<xsl:apply-templates select="lst[@name = 'region_facet']" mode="facet"/>
@@ -345,7 +347,8 @@
 					<xsl:when test="$department_facet = 'Byzantine'">
 						<xsl:apply-templates select="lst[@name = 'region_facet']" mode="facet"/>
 						<xsl:apply-templates select="lst[@name = 'mint_facet']" mode="facet"/>
-						<xsl:apply-templates select="lst[@name = 'productionPlace_facet']" mode="facet"/>
+						<xsl:apply-templates select="lst[@name = 'productionPlace_facet']" mode="facet"/>						
+						<xsl:apply-templates select="lst[@name = 'state_facet']" mode="facet"/>
 						<xsl:apply-templates select="lst[@name = 'dynasty_facet']" mode="facet"/>
 						<xsl:apply-templates select="lst[@name = 'authority_facet']" mode="facet"/>
 						<xsl:apply-templates select="lst[@name = 'issuer_facet']" mode="facet"/>
@@ -376,7 +379,8 @@
 						<xsl:apply-templates select="lst[@name = 'locality_facet']" mode="facet"/>
 						<xsl:apply-templates select="lst[@name = 'mint_facet']" mode="facet"/>
 						<xsl:apply-templates select="lst[@name = 'productionPlace_facet']" mode="facet"/>
-						<xsl:apply-templates select="lst[@name = 'category_hier']" mode="facet"/>
+						<xsl:apply-templates select="lst[@name = 'category_hier']" mode="facet"/>						
+						<xsl:apply-templates select="lst[@name = 'state_facet']" mode="facet"/>
 						<xsl:apply-templates select="lst[@name = 'dynasty_facet']" mode="facet"/>
 						<xsl:apply-templates select="lst[@name = 'authority_facet']" mode="facet"/>
 						<xsl:apply-templates select="lst[@name = 'issuer_facet']" mode="facet"/>
@@ -452,9 +456,7 @@
 					</xsl:when>
 					<xsl:when test="$department_facet = 'Medals and Decorations'">
 						<xsl:apply-templates select="lst[@name = 'portrait_facet']" mode="facet"/>
-						<xsl:apply-templates select="lst[@name = 'subjectPerson_facet']" mode="facet"/>
 						<xsl:apply-templates select="lst[@name = 'subjectPlace_facet']" mode="facet"/>
-						<xsl:apply-templates select="lst[@name = 'subjectIssuer_facet']" mode="facet"/>
 						<xsl:apply-templates select="lst[@name = 'subjectEvent_facet']" mode="facet"/>
 						<xsl:apply-templates select="lst[@name = 'dob_num']" mode="facet"/>
 						<xsl:apply-templates select="lst[@name = 'material_facet']" mode="facet"/>
