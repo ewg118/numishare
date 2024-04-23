@@ -163,7 +163,7 @@
 								down to the end of hammer-struck coinage during the course of the 17th century.</p>
 							
 						</xsl:when>
-						<xsl:when test="$department_facet = 'Medal'">
+						<xsl:when test="$department_facet = 'Medals and Decorations'">
 							<p>The Medals and Decorations Department contains more than 50,000 medals from around the world of all varieties, including
 								commemorative medals, art medals and society medals. It also includes decorations issued in the United States.</p>
 							
@@ -377,7 +377,7 @@
 						<xsl:apply-templates select="lst[@name = 'issuer_facet']" mode="facet"/>
 						<!--<xsl:apply-templates select="lst[@name='century_num']" mode="facet"/>-->
 					</xsl:when>
-					<xsl:when test="$department_facet = 'Medal'">
+					<xsl:when test="$department_facet = 'Medals and Decorations'">
 						<!--<xsl:apply-templates select="lst[@name='century_num']" mode="facet"/>-->
 						<xsl:apply-templates select="lst[@name = 'region_facet']" mode="facet"/>
 						<xsl:apply-templates select="lst[@name = 'locality_facet']" mode="facet"/>
@@ -394,7 +394,7 @@
 			</div>
 			<div class="col-md-4">
 				<h3>Object Description</h3>
-				<xsl:if test="$department_facet != 'Medal'">
+				<xsl:if test="$department_facet != 'Medals and Decorations'">
 					<xsl:apply-templates select="lst[@name = 'denomination_facet']" mode="facet"/>
 					<xsl:apply-templates select="lst[@name = 'material_facet']" mode="facet"/>
 				</xsl:if>
@@ -445,7 +445,7 @@
 						<xsl:apply-templates select="lst[@name = 'subjectEvent_facet']" mode="facet"/>
 						<xsl:apply-templates select="lst[@name = 'objectType_facet']" mode="facet"/>
 					</xsl:when>
-					<xsl:when test="$department_facet = 'Medal'">
+					<xsl:when test="$department_facet = 'Medals and Decorations'">
 						<xsl:apply-templates select="lst[@name = 'portrait_facet']" mode="facet"/>
 						<xsl:apply-templates select="lst[@name = 'subjectPerson_facet']" mode="facet"/>
 						<xsl:apply-templates select="lst[@name = 'subjectPlace_facet']" mode="facet"/>
