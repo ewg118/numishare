@@ -42,7 +42,7 @@
 				<xsl:text>Latin American</xsl:text>
 			</xsl:when>
 			<xsl:when test="$department = 'MedalsAndDecorations'">
-				<xsl:text>Medal</xsl:text>
+				<xsl:text>Medals and Decorations</xsl:text>
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:value-of select="$department"/>
