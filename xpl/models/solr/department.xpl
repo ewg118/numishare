@@ -28,7 +28,7 @@
 				<xsl:variable name="department_facet">
 					<xsl:choose>
 						<xsl:when test="$department = 'UnitedStates'">
-							<xsl:text>United States</xsl:text>
+							<xsl:text>North American</xsl:text>
 						</xsl:when>
 						<xsl:when test="$department = 'EastAsian'">
 							<xsl:text>East Asian</xsl:text>
@@ -40,7 +40,7 @@
 							<xsl:text>Latin American</xsl:text>
 						</xsl:when>
 						<xsl:when test="$department = 'MedalsAndDecorations'">
-							<xsl:text>Medal</xsl:text>
+							<xsl:text>Medals and Decorations</xsl:text>
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:value-of select="$department"/>
