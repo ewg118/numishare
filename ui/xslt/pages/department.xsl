@@ -384,7 +384,7 @@
 					</xsl:when>
 					<xsl:when test="$department_facet = 'Medals and Decorations'">
 						<!--<xsl:apply-templates select="lst[@name='century_num']" mode="facet"/>-->
-						<xsl:apply-templates select="lst[@name = 'relevantPlace_facet']" mode="facet"/>
+						<xsl:apply-templates select="lst[@name = 'relatedPlace_facet']" mode="facet"/>
 						<xsl:apply-templates select="lst[@name = 'issuePlace_facet']" mode="facet"/>
 						<xsl:apply-templates select="lst[@name = 'productionPlace_facet']" mode="facet"/>
 						<xsl:apply-templates select="lst[@name = 'maker_facet']" mode="facet"/>
