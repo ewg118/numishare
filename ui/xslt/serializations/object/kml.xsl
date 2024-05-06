@@ -116,9 +116,10 @@
 			<xsl:copy-of select="document($rdf_url)/rdf:RDF/*"/>
 
 			<xsl:if test="descendant::nuds:findspotDesc[contains(@xlink:href, 'coinhoards.org')]">
-				<xsl:copy-of
-					select="document(concat(descendant::nuds:findspotDesc/@xlink:href, '.rdf'))/rdf:RDF/*"
-				/>
+				<xsl:copy-of select="document(concat(descendant::nuds:findspotDesc/@xlink:href, '.rdf'))/rdf:RDF/*"/>
+			</xsl:if>
+			<xsl:if test="descendant::nuds:hoard[contains(@xlink:href, 'coinhoards.org') or contains(@xlink:href, 'numismatics.org')]">
+				<xsl:copy-of select="document(concat(descendant::nuds:hoard/@xlink:href, '.rdf'))/rdf:RDF/*"/>
 			</xsl:if>
 		</rdf:RDF>
 	</xsl:variable>
@@ -194,7 +195,7 @@
 		</xsl:for-each>
 
 		<!-- create hoard/findspot points (for physical coins) -->
-		<xsl:for-each select="descendant::nuds:findspotDesc[string(@xlink:href)]">
+		<xsl:for-each select="descendant::nuds:findspotDesc[string(@xlink:href)]|descendant::nuds:hoard[string(@xlink:href)]">
 			<xsl:call-template name="getPlacemark">
 				<xsl:with-param name="uri" select="@xlink:href"/>
 				<xsl:with-param name="styleUrl">#hoard</xsl:with-param>

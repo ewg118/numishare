@@ -146,8 +146,11 @@
 			<xsl:copy-of select="$id-var/*"/>
 			<xsl:copy-of select="$region-var/*"/>
 
-			<xsl:if test="descendant::nuds:findspotDesc[contains(@xlink:href, 'coinhoards.org')]">
+			<xsl:if test="descendant::nuds:findspotDesc[contains(@xlink:href, 'coinhoards.org') or contains(@xlink:href, 'numismatics.org')]">
 				<xsl:copy-of select="document(concat(descendant::nuds:findspotDesc/@xlink:href, '.rdf'))/rdf:RDF/*"/>
+			</xsl:if>
+			<xsl:if test="descendant::nuds:hoard[contains(@xlink:href, 'coinhoards.org') or contains(@xlink:href, 'numismatics.org')]">
+				<xsl:copy-of select="document(concat(descendant::nuds:hoard/@xlink:href, '.rdf'))/rdf:RDF/*"/>
 			</xsl:if>
 		</rdf:RDF>
 	</xsl:variable>
@@ -165,7 +168,7 @@
 				<features>
 					<_array>
 						<xsl:apply-templates
-							select="descendant::nuds:geogname[@xlink:role = 'findspot'][string(@xlink:href)] | descendant::nuds:findspotDesc[contains(@xlink:href, 'coinhoards.org') or contains(@xlink:href, 'nomisma.org')] | $nudsGroup/descendant::nuds:geogname[@xlink:role = 'mint'][string(@xlink:href)] | $nudsGroup/descendant::nuds:geogname[@xlink:role = 'productionPlace'][string(@xlink:href)]"/>
+							select="descendant::nuds:geogname[@xlink:role = 'findspot'][string(@xlink:href)] | descendant::nuds:findspotDesc[contains(@xlink:href, 'coinhoards.org') or contains(@xlink:href, 'numismatics.org')] | descendant::nuds:hoard[contains(@xlink:href, 'coinhoards.org') or contains(@xlink:href, 'numismatics.org')] | $nudsGroup/descendant::nuds:geogname[@xlink:role = 'mint'][string(@xlink:href)] | $nudsGroup/descendant::nuds:geogname[@xlink:role = 'productionPlace'][string(@xlink:href)]"/>
 
 						<!-- if there's no linkable mint look for a region -->
 						<xsl:if
@@ -237,7 +240,7 @@
 		</xsl:call-template>
 	</xsl:template>
 
-	<xsl:template match="nuds:findspotDesc">
+	<xsl:template match="nuds:findspotDesc | nuds:hoard">
 		<xsl:variable name="uri" select="@xlink:href"/>
 
 		<xsl:call-template name="generateFeature">

@@ -261,9 +261,14 @@
 			<xsl:copy-of select="$region-var/*"/>
 
 			<!-- request RDF from the coinhoards.org URIs -->
-			<xsl:if test="descendant::nuds:findspotDesc[contains(@xlink:href, 'coinhoards.org')]">
+			<xsl:if test="descendant::nuds:findspotDesc[contains(@xlink:href, 'coinhoards.org') or contains(@xlink:href, 'numismatics.org')]">
 				<xsl:copy-of
 					select="document(concat(descendant::nuds:findspotDesc/@xlink:href, '.rdf'))/rdf:RDF/*"
+				/>
+			</xsl:if>
+			<xsl:if test="descendant::nuds:hoard[contains(@xlink:href, 'coinhoards.org') or contains(@xlink:href, 'numismatics.org')]">
+				<xsl:copy-of
+					select="document(concat(descendant::nuds:hoard/@xlink:href, '.rdf'))/rdf:RDF/*"
 				/>
 			</xsl:if>
 
@@ -314,7 +319,7 @@
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:choose>
-					<xsl:when test="descendant::nuds:findspotDesc/@xlink:href">true</xsl:when>
+					<xsl:when test="descendant::nuds:findspotDesc/@xlink:href or descendant::nuds:hoard/@xlink:href">true</xsl:when>
 					<xsl:when
 						test="descendant::nuds:geogname[@xlink:role = 'findspot'][contains(@xlink:href, 'geonames.org')]"
 						>true</xsl:when>
