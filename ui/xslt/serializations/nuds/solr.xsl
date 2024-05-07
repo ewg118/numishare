@@ -571,10 +571,7 @@
 			<xsl:when test="string(@xlink:href)">
 				<xsl:variable name="href" select="@xlink:href"/>
 
-				<!-- the @xlink:href of a findspotDesc is presumed to a a hoard URI -->
-				<field name="hoard_facet">
-					<xsl:value-of select="$rdf//*[@rdf:about = $href]/skos:prefLabel[@xml:lang = 'en']"/>
-				</field>
+				<!-- the @xlink:href of a findspotDesc is presumed to a a hoard URI -->				
 				<field name="hoard_uri">
 					<xsl:value-of select="$href"/>
 				</field>

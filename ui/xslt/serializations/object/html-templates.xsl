@@ -617,6 +617,8 @@
 					<xsl:otherwise>
 						<xsl:choose>
 							<xsl:when test="(self::nuds:obverse or self::nuds:reverse) and parent::nuds:typeDesc">
+								<xsl:variable name="side" select="local-name()"/>
+								
 								<xsl:choose>
 									<!-- always display the legend and type when there are dies or there are not side images -->
 									<xsl:when test="$sideImages = false() or $hasDies = true()">
@@ -628,15 +630,22 @@
 												<xsl:apply-templates mode="descMeta"/>
 											</ul>
 										</li>
-									</xsl:when>
+									</xsl:when>									
 									<xsl:otherwise>
-										<xsl:if test="*[not(local-name() = 'type' or local-name() = 'legend')]">
+										<xsl:if test="*[not(local-name() = 'type' or local-name() = 'legend')] or (not(nuds:symbol) and $nudsGroup//object[@xlink:href][1]/descendant::nuds:typeDesc/*[local-name() = $side]/nuds:symbol)">
 											<li>
 												<h4>
 													<xsl:value-of select="numishare:regularize_node(local-name(), $lang)"/>
 												</h4>
 												<ul>
 													<xsl:apply-templates select="*[not(local-name() = 'type' or local-name() = 'legend')]" mode="descMeta"/>
+													
+													<!-- display symbols from the first coin type URI NUDS if there are none -->
+													
+													<xsl:if test="not(nuds:symbol)">
+														<xsl:apply-templates select="$nudsGroup//object[@xlink:href][1]/descendant::nuds:typeDesc/*[local-name() = $side]/nuds:symbol" mode="descMeta"/>
+													</xsl:if>
+													
 												</ul>
 											</li>
 										</xsl:if>

@@ -1552,16 +1552,15 @@
 					</xsl:choose>
 				</xsl:when>
 				<xsl:otherwise>
-					<xsl:apply-templates select="nuds:findspot"/>
-					<xsl:apply-templates select="nuds:deposit"/>
-					<xsl:apply-templates select="nuds:discovery"/>
-					<xsl:apply-templates select="nuds:disposition"/>
-					
 					<xsl:if test="nuds:hoard">
 						<ul>
 							<xsl:apply-templates select="nuds:hoard" mode="descMeta"/>
 						</ul>
-					</xsl:if>					
+					</xsl:if>
+					<xsl:apply-templates select="nuds:findspot"/>
+					<xsl:apply-templates select="nuds:deposit"/>
+					<xsl:apply-templates select="nuds:discovery"/>
+					<xsl:apply-templates select="nuds:disposition"/>
 				</xsl:otherwise>
 			</xsl:choose>
 		</div>
