@@ -447,7 +447,7 @@
 	</xsl:template>
 
 	<xsl:template
-		match="nuds:objectType | nuds:denomination | nuds:manufacture | nuds:material | nuds:shape | nuds:typeSeries | nuds:secondaryTreatment | nuds:condition | nuds:wear">
+		match="nuds:objectType | nuds:denomination | nuds:manufacture | nuds:material | nuds:shape | nuds:typeSeries | nuds:secondaryTreatment | nuds:condition | nuds:wear | nuds:authenticity | nuds:originalIntendedUse">
 		<xsl:param name="lang"/>
 		<xsl:variable name="facet" select="local-name()"/>
 		<xsl:variable name="href" select="@xlink:href"/>

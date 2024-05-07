@@ -963,6 +963,7 @@
 		<xsl:apply-templates select="nuds:conservationState">
 			<xsl:with-param name="lang" select="$lang"/>
 		</xsl:apply-templates>
+		<xsl:apply-templates select="nuds:authenticity | nuds:originalIntendedUse"/>
 		<xsl:for-each select="descendant::nuds:grade">
 			<field name="grade_facet">
 				<xsl:value-of select="."/>
@@ -987,6 +988,8 @@
 				</field>
 			</xsl:if>
 		</xsl:for-each>
+		
+		
 	</xsl:template>
 
 	<xsl:template match="nuds:conservationState">
