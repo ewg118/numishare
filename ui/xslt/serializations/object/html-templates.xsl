@@ -1448,9 +1448,85 @@
 
 	<!--***************************************** CREATE LINK FROM CATEGORY **************************************** -->
 	<xsl:template name="assemble_category_query">
-		<xsl:param name="level"/>
-		<xsl:param name="tokenized-category"/>
-		<xsl:for-each select="$tokenized-category[position() &lt;= $level]">
+		<xsl:param name="full-id"/>
+		
+		<xsl:variable name="hierarchy" as="node()*">
+			<hierarchy>
+				<xsl:for-each select="tokenize(., '--')">
+					<xsl:variable name="position" select="position()"/>
+					<xsl:variable name="id" select="tokenize($full-id, '--')[$position]"/>
+					
+					<item>
+						<xsl:attribute name="id" select="$id"/>
+						<xsl:value-of select="."/>
+					</item>
+				</xsl:for-each>
+			</hierarchy>
+		</xsl:variable>
+		
+		<xsl:copy-of select="$hierarchy"/>
+		
+		<xsl:for-each select="$hierarchy//item">
+			<xsl:variable name="id" select="@id"/>
+			
+			<xsl:variable name="fragment">
+				<xsl:choose>
+					<xsl:when test="position() = 1">
+						<xsl:value-of select="concat('+&#x022;L', position(), '|', ., '/', $id, '&#x022;')"/>
+					</xsl:when>
+					<xsl:otherwise>						
+						<xsl:for-each select="preceding-sibling::node()">
+							<xsl:text> </xsl:text>
+							<xsl:value-of
+								select="
+								concat('+&#x022;', if (position() = 1) then
+								'L1'
+								else
+								preceding-sibling::node()[1]/@id, '|', ., '/', @id, '&#x022;')"
+							/>
+						</xsl:for-each>
+						<xsl:value-of select="concat('+&#x022;', preceding-sibling::node()[1]/@id, '|', ., '/', $id, '&#x022;')"/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:variable>
+			
+			<a href="{$display_path}results?q=category_hier:({encode-for-uri($fragment)}){if (string($langParam)) then concat('&amp;lang=', $langParam) else ''}">
+				<xsl:value-of select="."/>
+			</a>
+			<xsl:if test="not(position() = last())">
+				<xsl:text>--</xsl:text>
+			</xsl:if>
+		</xsl:for-each>
+		
+		<!--<xsl:for-each select="tokenize(., '-\-')">
+			<xsl:variable name="position" select="position()"/>
+			
+			<xsl:variable name="id" select="tokenize($full-id, '-\-')[$position]"/>
+			
+			<field name="category_hier">
+				<xsl:choose>
+					<xsl:when test="position() = 1">
+						<xsl:value-of select="concat('+&#x022;L', position(), '|', ., '/', $id, '&#x022;')"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="concat('+&#x022;', tokenize($full-id, '-\-')[$position - 1], '|', ., '/', $id, '&#x022;')"/>
+						<xsl:for-each select="following-sibling::node()">
+							<xsl:text> </xsl:text>
+							<xsl:value-of
+								select="
+								concat('+&#x022;', if (position() = last()) then
+								'L1'
+								else
+								substring-after(following-sibling::node()[1]/@uri, 'id/'), '|', ., '/', substring-after(@uri,
+								'id/'), '&#x022;')"
+							/>
+						</xsl:for-each>
+					</xsl:otherwise>
+				</xsl:choose>										
+			</field>
+		</xsl:for-each>-->
+		
+		<!--<xsl:for-each select="$tokenized-category[position() &lt;= $level]">
 			<xsl:value-of select="concat('+&#x022;L', position(), '|', ., '&#x022;')"/>
 		</xsl:for-each>
 		<xsl:if test="position() &lt;= $level">
@@ -1458,7 +1534,7 @@
 				<xsl:with-param name="level" as="xs:integer" select="$level + 1"/>
 				<xsl:with-param name="tokenized-category" select="$tokenized-category"/>
 			</xsl:call-template>
-		</xsl:if>
+		</xsl:if>-->
 	</xsl:template>
 
 	<!--***************************************** CREATE LINKS FROM NOMISMA REGION HIERARCHY **************************************** -->

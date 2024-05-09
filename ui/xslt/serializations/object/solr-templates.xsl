@@ -19,15 +19,35 @@
 				<xsl:when test="string(@localType)">
 					<xsl:choose>
 						<xsl:when test="@localType = 'category'">
+							<xsl:variable name="id" select="@xml:id"/>
+							
 							<field name="category_display">
 								<xsl:value-of select="."/>
 							</field>
-							<xsl:variable name="subsets" select="tokenize(., '--')"/>
-							<xsl:for-each select="$subsets">
-								<field name="category_facet">
-									<xsl:value-of select="concat('L', position(), '|', .)"/>
-								</field>
-							</xsl:for-each>
+							
+							<!-- only index hierarchy if @xml:id is present -->							
+							<xsl:if test="string(@xml:id)">
+								<xsl:variable name="full-id" select="@xml:id"/>
+								
+								<xsl:for-each select="tokenize(., '--')">
+									<xsl:variable name="position" select="position()"/>
+									
+									<xsl:variable name="id" select="tokenize($full-id, '--')[$position]"/>
+									
+									<field name="category_hier">
+										<xsl:choose>
+											<xsl:when test="position() = 1">
+												<xsl:value-of select="concat('L', position(), '|', ., '/', $id)"/>
+											</xsl:when>
+											<xsl:otherwise>
+												<xsl:value-of select="concat(tokenize($full-id, '--')[$position - 1], '|', ., '/', $id)"/>
+											</xsl:otherwise>
+										</xsl:choose>										
+									</field>
+								</xsl:for-each>
+							</xsl:if>
+							
+							
 						</xsl:when>
 						<xsl:otherwise>
 							<field name="{@localType}_facet">

@@ -1305,13 +1305,26 @@
 			</xsl:when>
 			<xsl:when test="contains($field, '_hier')">
 				<xsl:variable name="tokens" select="tokenize(substring($term, 2, string-length($term) - 2), '\+')"/>
-				<xsl:for-each select="$tokens[position() &gt; 1]">
-					<xsl:sort select="position()" order="descending"/>
-					<xsl:value-of select="normalize-space(substring-after(substring-before(., '/'), '|'))"/>
-					<xsl:if test="not(position() = last())">
-						<xsl:text>--</xsl:text>
-					</xsl:if>
-				</xsl:for-each>
+				
+				<xsl:choose>
+					<xsl:when test="$field = 'category_hier'">				
+						<xsl:for-each select="$tokens[position() &gt; 1]">				
+							<xsl:value-of select="normalize-space(substring-after(substring-before(., '/'), '|'))"/>
+							<xsl:if test="not(position() = last())">
+								<xsl:text>--</xsl:text>
+							</xsl:if>
+						</xsl:for-each>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:for-each select="$tokens[position() &gt; 1]">					
+							<xsl:sort select="position()" order="descending"/>					
+							<xsl:value-of select="normalize-space(substring-after(substring-before(., '/'), '|'))"/>
+							<xsl:if test="not(position() = last())">
+								<xsl:text>--</xsl:text>
+							</xsl:if>
+						</xsl:for-each>
+					</xsl:otherwise>
+				</xsl:choose>
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:value-of select="$term"/>
