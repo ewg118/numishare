@@ -1464,8 +1464,6 @@
 			</hierarchy>
 		</xsl:variable>
 		
-		<xsl:copy-of select="$hierarchy"/>
-		
 		<xsl:for-each select="$hierarchy//item">
 			<xsl:variable name="id" select="@id"/>
 			
