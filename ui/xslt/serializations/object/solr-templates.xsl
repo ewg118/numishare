@@ -645,52 +645,54 @@
 				</field>
 			</xsl:for-each>
 
-			<!-- get dynasty/political entity from Nomisma RDF -->
-			<xsl:for-each select="$rdf/*[@rdf:about = $href]/org:memberOf">
-				<xsl:variable name="dynasty_uri" select="@rdf:resource"/>
-				<xsl:variable name="label" select="
-						$rdf/*[@rdf:about = $dynasty_uri]/skos:prefLabel[if (string($lang)) then
-							@xml:lang = $lang
-						else
-							@xml:lang = 'en']"/>
-
-				<field name="dynasty_uri">
-					<xsl:value-of select="$dynasty_uri"/>
-				</field>
-
-
-
-				<field name="dynasty_facet">
-					<xsl:value-of select="$label"/>
-				</field>
-				<field name="dynasty_text">
-					<xsl:value-of select="$label"/>
-				</field>
-			</xsl:for-each>
-
-			<xsl:for-each select="$rdf/*[@rdf:about = $href]/org:hasMembership">
-				<xsl:variable name="membership_uri" select="@rdf:resource"/>
-
-				<xsl:if test="$rdf/*[@rdf:about = $membership_uri]/org:organization">
-					<xsl:variable name="org_uri" select="$rdf/*[@rdf:about = $membership_uri]/org:organization/@rdf:resource"/>
+			<!-- get dynasty/political entity from Nomisma RDF, but only if the role is not statedAuthority -->			
+			<xsl:if test="not($role = 'statedAuthority')">
+				<xsl:for-each select="$rdf/*[@rdf:about = $href]/org:memberOf">
+					<xsl:variable name="dynasty_uri" select="@rdf:resource"/>
 					<xsl:variable name="label" select="
+						$rdf/*[@rdf:about = $dynasty_uri]/skos:prefLabel[if (string($lang)) then
+						@xml:lang = $lang
+						else
+						@xml:lang = 'en']"/>
+					
+					<field name="dynasty_uri">
+						<xsl:value-of select="$dynasty_uri"/>
+					</field>
+					
+					
+					
+					<field name="dynasty_facet">
+						<xsl:value-of select="$label"/>
+					</field>
+					<field name="dynasty_text">
+						<xsl:value-of select="$label"/>
+					</field>
+				</xsl:for-each>
+				
+				<xsl:for-each select="$rdf/*[@rdf:about = $href]/org:hasMembership">
+					<xsl:variable name="membership_uri" select="@rdf:resource"/>
+					
+					<xsl:if test="$rdf/*[@rdf:about = $membership_uri]/org:organization">
+						<xsl:variable name="org_uri" select="$rdf/*[@rdf:about = $membership_uri]/org:organization/@rdf:resource"/>
+						<xsl:variable name="label" select="
 							$rdf/*[@rdf:about = $org_uri]/skos:prefLabel[if (string($lang)) then
-								@xml:lang = $lang
+							@xml:lang = $lang
 							else
-								@xml:lang = 'en']"/>
-
-					<field name="state_uri">
-						<xsl:value-of select="$org_uri"/>
-					</field>
-
-					<field name="state_facet">
-						<xsl:value-of select="$label"/>
-					</field>
-					<field name="state_text">
-						<xsl:value-of select="$label"/>
-					</field>
-				</xsl:if>
-			</xsl:for-each>
+							@xml:lang = 'en']"/>
+						
+						<field name="state_uri">
+							<xsl:value-of select="$org_uri"/>
+						</field>
+						
+						<field name="state_facet">
+							<xsl:value-of select="$label"/>
+						</field>
+						<field name="state_text">
+							<xsl:value-of select="$label"/>
+						</field>
+					</xsl:if>
+				</xsl:for-each>
+			</xsl:if>			
 		</xsl:if>
 
 		<xsl:if test="string(@xlink:href) and ($role = 'mint' or $role = 'findspot' or $role = 'productionPlace')">
