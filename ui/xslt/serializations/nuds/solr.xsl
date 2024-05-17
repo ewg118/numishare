@@ -742,8 +742,8 @@
 			<xsl:when test="contains($href, 'nomisma.org')">
 				<xsl:variable name="label">
 					<xsl:choose>
-						<xsl:when test="string($rdf/*[@rdf:about = $href]/skos:prefLabel)">
-							<xsl:value-of select="$rdf/*[@rdf:about = $href]/skos:prefLabel"/>
+						<xsl:when test="$rdf/*[@rdf:about = $href]/skos:prefLabel[@xml:lang='en']">
+							<xsl:value-of select="$rdf/*[@rdf:about = $href]/skos:prefLabel[@xml:lang='en']"/>
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:value-of select="$href"/>
